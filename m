@@ -1,185 +1,103 @@
-Received: from smtp.forwardemail.net (smtp.forwardemail.net [121.127.44.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D8691E4BE
-	for <linux-kernel@vger.kernel.org>; Sat,  1 Mar 2025 12:48:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=121.127.44.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C217923F372;
+	Sat,  1 Mar 2025 12:51:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740833288; cv=none; b=ErUM3ziTb+QrzPZkqRJaVBXlfbmSPh8FNt0lCBoIk4G6ULcgrI+fV4doqQS50ympRzpwrahxbJArT4yrZekEl/8Pi5uKRe1Iy4LWKubsFUg03PNBerMG1yL7YsPdBZN53nZXJeOZJTtu52uTTSZIThrS3xUaMLkaf96L83OtZyg=
+	t=1740833480; cv=none; b=Zx3XNcj4bsTkoVPUOB25JF8WYc4X4WeGcEBQNzppVY6BRo3eYeL4f0fQ7tqAcRE4yQcv3HpIM0N3EcR3oT/0o3hgf8UYTXQEOG+90+cXQ4YRqnpftG+gcUGQbeazzEmHq6eKBiQCYzovWc9QNM1Zsuz4afUblRXKDhniHOTUx1o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740833288; c=relaxed/simple;
-	bh=3MCj/WCvoWMoAc4bJMk7a306JBmP9qXA6McF5MDfN30=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=l+1gPs4GTnJt+m8WKZxmu+VoEMVYSyENez4vPpHKoPU3NncQOO13ds3ziRAWgr2HitCzTDpG17eXyRmwgg9twoWZqytfkl99pd/SdIQ8kHDz+KSd/K5rALvvzPgR7suPMvPLEJ/fYvvXH6NYe3RcTWpjZ5etQdy9gC6uTOV9Oe8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se; dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b=zTzeqQwC; arc=none smtp.client-ip=121.127.44.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se
+	s=arc-20240116; t=1740833480; c=relaxed/simple;
+	bh=JG9TJ2L/zACNt5mQUh/jkFvy1Qa2TfFfH4f4dtsjYRI=;
+	h=Message-ID:Subject:From:To:CC:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=DGV6CSAnWa/lJ0vPPvHV9Xpct7R99vWxrKGa5zXUrGIr3AUgGXJf3b69uptKDWVEBQ45eV0YsxWOviWjmpSacN5qA4RJwOVdv7DI4POGRE2mFxFgwVZuPMapgVQ3tEkWuxwgJM0WL8rVgUi8slybJ0xZGDsioLQnk/u6Y6pTVTE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=C5bnyU29; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="zTzeqQwC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiboo.se;
- h=Content-Transfer-Encoding: Content-Type: In-Reply-To: From: References:
- Cc: To: Subject: MIME-Version: Date: Message-ID; q=dns/txt;
- s=fe-e1b5cab7be; t=1740833279;
- bh=vlAHgpbS8ocJiIPCyubD8pMYmZoM/v7ggXzVGihd27E=;
- b=zTzeqQwCcJ3DgnR1jMreKMAnqZQfND/zFKTvzkkl92THMmYTUnIUB+8W2iSjhds+TYGNbNiJK
- Z+zncAJugc/6lgSP2eQb/yeAvtjmo3hmFfR+XkbWJ9VeSRkQFAF/+8F3ugx8eko5wG+ra0louzG
- dK0o2KA1udCrCuddrB60GdADwv9wGdE7znDJHsD8T2c8yUYTCUHazZwURJ71xUyAYOGvgI6oOdl
- tmeNB6eGK22j/G5ePIBq8a1w1jCOYntoqUj/rFFEkelkTnyzxL78ndDBxxF2ijkRtm0m7GF7vNg
- bBPwsBovX7ZBYn08wpfXa6sKl0qJxtZkNUuJYCdvJxxQ==
-X-Forward-Email-ID: 67c301f890cf55d47dbe8d70
-X-Forward-Email-Sender: rfc822; jonas@kwiboo.se, smtp.forwardemail.net,
- 121.127.44.73
-X-Forward-Email-Version: 0.4.40
-X-Forward-Email-Website: https://forwardemail.net
-X-Complaints-To: abuse@forwardemail.net
-X-Report-Abuse: abuse@forwardemail.net
-X-Report-Abuse-To: abuse@forwardemail.net
-Message-ID: <9fd51bcb-3e6a-46b6-b1f7-ff16fa562d9e@kwiboo.se>
-Date: Sat, 1 Mar 2025 13:47:47 +0100
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="C5bnyU29"
+Received: from pps.filterd (m0369458.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 521AZo96011094;
+	Sat, 1 Mar 2025 13:50:48 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	JG9TJ2L/zACNt5mQUh/jkFvy1Qa2TfFfH4f4dtsjYRI=; b=C5bnyU29jfv1dGHc
+	Mkz6xW6Qc+ZTWsNX33wJs2piEgGT3bRtxBa+NLFA8vMm1puc1yZfthmUV+pK/sGr
+	OwfCmEg1qgxrK1I95qlpaWBNxO/4APnsieL7nAgtZ1DDGRlahwWy7C5PZsZntx9+
+	CDfp/OA96bMyZzSf9DeS55BImW3Oqv7VIyTFbEITQUBs8v1wnd67vmy7IXg6meCp
+	Fu1CX+qDR2JtBIoPQd/NawJKSvPBh+8jPFiMDL76Gy79AeD6PQGsESRKKv46urmq
+	9nTTuiPTKwNo4EGUHSzVGLKGZTe57+bdkqU2j/0VR9eZJlI9lZTMHd9LmJr+f9yr
+	LDpakw==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 453tc4avpb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 01 Mar 2025 13:50:48 +0100 (CET)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 875A6400B0;
+	Sat,  1 Mar 2025 13:49:26 +0100 (CET)
+Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 3E5CE586DBE;
+	Sat,  1 Mar 2025 13:45:13 +0100 (CET)
+Received: from [192.168.8.15] (10.252.9.148) by SHFDAG1NODE1.st.com
+ (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Sat, 1 Mar
+ 2025 13:45:11 +0100
+Message-ID: <1ae59b115cb2e4570c6e77a01bcdac11dff03ae1.camel@foss.st.com>
+Subject: Re: [Linux-stm32] [PATCH] ARM: dts: stm32: use
+ IRQ_TYPE_EDGE_FALLING on stm32mp157c-dk2
+From: Antonio Borneo <antonio.borneo@foss.st.com>
+To: Dario Binacchi <dario.binacchi@amarulasolutions.com>,
+        <linux-kernel@vger.kernel.org>
+CC: Rob Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+        <devicetree@vger.kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        <linux-amarula@amarulasolutions.com>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>
+Date: Sat, 1 Mar 2025 13:45:08 +0100
+In-Reply-To: <20250301115116.2862353-1-dario.binacchi@amarulasolutions.com>
+References: <20250301115116.2862353-1-dario.binacchi@amarulasolutions.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
+User-Agent: Evolution 3.48.4 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 7/8] arm64: dts: rockchip: Add SDMMC/SDIO controllers for
- RK3528
-To: Yao Zi <ziyao@disroot.org>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Frank Wang <frank.wang@rock-chips.com>,
- Shresth Prasad <shresthprasad7@gmail.com>,
- Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
- Detlev Casanova <detlev.casanova@collabora.com>, linux-mmc@vger.kernel.org,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-clk@vger.kernel.org
-References: <20250301104250.36295-1-ziyao@disroot.org>
- <20250301104749.36423-1-ziyao@disroot.org>
-Content-Language: en-US
-From: Jonas Karlman <jonas@kwiboo.se>
-In-Reply-To: <20250301104749.36423-1-ziyao@disroot.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE1.st.com
+ (10.75.129.69)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-01_05,2025-02-28_01,2024-11-22_01
 
-Hi,
-
-On 2025-03-01 11:47, Yao Zi wrote:
-> RK3528 features two SDIO controllers and one SD/MMC controller, describe
-> them in devicetree. Since their sample and drive clocks are located in
-> the VO and VPU GRFs, corresponding syscons are added to make these
-> clocks available.
-> 
-> Signed-off-by: Yao Zi <ziyao@disroot.org>
-> ---
->  arch/arm64/boot/dts/rockchip/rk3528.dtsi | 62 ++++++++++++++++++++++++
->  1 file changed, 62 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3528.dtsi b/arch/arm64/boot/dts/rockchip/rk3528.dtsi
-> index 5b334690356a..078c97fa1d9f 100644
-> --- a/arch/arm64/boot/dts/rockchip/rk3528.dtsi
-> +++ b/arch/arm64/boot/dts/rockchip/rk3528.dtsi
-> @@ -7,6 +7,7 @@
->  #include <dt-bindings/interrupt-controller/arm-gic.h>
->  #include <dt-bindings/interrupt-controller/irq.h>
->  #include <dt-bindings/clock/rockchip,rk3528-cru.h>
-> +#include <dt-bindings/reset/rockchip,rk3528-cru.h>
->  
->  / {
->  	compatible = "rockchip,rk3528";
-> @@ -122,6 +123,16 @@ gic: interrupt-controller@fed01000 {
->  			#interrupt-cells = <3>;
->  		};
->  
-> +		vpu_grf: syscon@ff340000 {
-> +			compatible = "rockchip,rk3528-vpu-grf", "syscon";
-
-vpu_grf is also used for gmac1, so should possible be a "syscon",
-"simple-mfd", or have I misunderstood when to use simple-mfd ?
-
-> +			reg = <0x0 0xff340000 0x0 0x8000>;
-> +		};
-> +
-> +		vo_grf: syscon@ff360000 {
-> +			compatible = "rockchip,rk3528-vo-grf", "syscon";
-
-similar here, vo_grf is also used for gmac0.
-
-> +			reg = <0x0 0xff360000 0x0 0x10000>;
-> +		};
-> +
->  		cru: clock-controller@ff4a0000 {
->  			compatible = "rockchip,rk3528-cru";
->  			reg = <0x0 0xff4a0000 0x0 0x30000>;
-> @@ -251,5 +262,56 @@ uart7: serial@ffa28000 {
->  			reg-shift = <2>;
->  			status = "disabled";
->  		};
-> +
-> +		sdio0: mmc@ffc10000 {
-> +			compatible = "rockchip,rk3528-dw-mshc",
-> +				     "rockchip,rk3288-dw-mshc";
-> +			reg = <0x0 0xffc10000 0x0 0x4000>;
-> +			clocks = <&cru HCLK_SDIO0>,
-> +				 <&cru CCLK_SRC_SDIO0>,
-> +				 <&cru SCLK_SDIO0_DRV>,
-> +				 <&cru SCLK_SDIO0_SAMPLE>;
-> +			clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
-> +			fifo-depth = <0x100>;
-> +			interrupts = <GIC_SPI 137 IRQ_TYPE_LEVEL_HIGH>;
-> +			max-frequency = <150000000>;
-> +			resets = <&cru SRST_H_SDIO0>;
-> +			reset-names = "reset";
-> +			status = "disabled";
-> +		};
-> +
-> +		sdio1: mmc@ffc20000 {
-> +			compatible = "rockchip,rk3528-dw-mshc",
-> +				     "rockchip,rk3288-dw-mshc";
-> +			reg = <0x0 0xffc20000 0x0 0x4000>;
-> +			clocks = <&cru HCLK_SDIO1>,
-> +				 <&cru CCLK_SRC_SDIO1>,
-> +				 <&cru SCLK_SDIO1_DRV>,
-> +				 <&cru SCLK_SDIO1_SAMPLE>;
-> +			clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
-> +			fifo-depth = <0x100>;
-> +			interrupts = <GIC_SPI 138 IRQ_TYPE_LEVEL_HIGH>;
-> +			max-frequency = <150000000>;
-> +			resets = <&cru SRST_H_SDIO1>;
-> +			reset-names = "reset";
-> +			status = "disabled";
-> +		};
-> +
-> +		sdmmc: mmc@ffc30000 {
-> +			compatible = "rockchip,rk3528-dw-mshc",
-> +				     "rockchip,rk3288-dw-mshc";
-> +			reg = <0x0 0xffc30000 0x0 0x4000>;
-> +			clocks = <&cru HCLK_SDMMC0>,
-> +				 <&cru CCLK_SRC_SDMMC0>,
-> +				 <&cru SCLK_SDMMC_DRV>,
-> +				 <&cru SCLK_SDMMC_SAMPLE>;
-> +			clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
-> +			fifo-depth = <0x100>;
-> +			interrupts = <GIC_SPI 133 IRQ_TYPE_LEVEL_HIGH>;
-> +			max-frequency = <150000000>;
-> +			resets = <&cru SRST_H_SDMMC0>;
-> +			reset-names = "reset";
-
-Suggest adding default pinctrl props here:
-
-  pinctrl-names = "default";
-  pinctrl-0 = <&sdmmc_bus4>, <&sdmmc_clk>, <&sdmmc_cmd>, <&sdmmc_det>;
-
-And possible also for sdio0 and sdio1.
-
-Regards,
-Jonas
-
-> +			status = "disabled";
-> +		};
->  	};
->  };
+T24gU2F0LCAyMDI1LTAzLTAxIGF0IDEyOjUxICswMTAwLCBEYXJpbyBCaW5hY2NoaSB3cm90ZToK
+PiBSZXBsYWNlIHRoZSBudW1iZXIgMiB3aXRoIHRoZSBhcHByb3ByaWF0ZSBudW1lcmljYWwgY29u
+c3RhbnQgZGVmaW5lZCBpbgo+IGR0LWJpbmRpbmdzL2ludGVycnVwdC1jb250cm9sbGVyL2lycS5o
+Lgo+IAo+IFNpZ25lZC1vZmYtYnk6IERhcmlvIEJpbmFjY2hpIDxkYXJpby5iaW5hY2NoaUBhbWFy
+dWxhc29sdXRpb25zLmNvbT4KPiAKPiAtLS0KPiAKPiDCoGFyY2gvYXJtL2Jvb3QvZHRzL3N0L3N0
+bTMybXAxNTdjLWRrMi5kdHMgfCAzICsrLQo+IMKgMSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9u
+cygrKSwgMSBkZWxldGlvbigtKQo+IAo+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9z
+dC9zdG0zMm1wMTU3Yy1kazIuZHRzIGIvYXJjaC9hcm0vYm9vdC9kdHMvc3Qvc3RtMzJtcDE1N2Mt
+ZGsyLmR0cwo+IGluZGV4IDVmOWMwMTYwYTljNC4uZGNmMTdjNDkzMDIyIDEwMDY0NAo+IC0tLSBh
+L2FyY2gvYXJtL2Jvb3QvZHRzL3N0L3N0bTMybXAxNTdjLWRrMi5kdHMKPiArKysgYi9hcmNoL2Fy
+bS9ib290L2R0cy9zdC9zdG0zMm1wMTU3Yy1kazIuZHRzCj4gQEAgLTExLDYgKzExLDcgQEAKPiDC
+oCNpbmNsdWRlICJzdG0zMm1wMTUtcGluY3RybC5kdHNpIgo+IMKgI2luY2x1ZGUgInN0bTMybXAx
+NXh4YWMtcGluY3RybC5kdHNpIgo+IMKgI2luY2x1ZGUgInN0bTMybXAxNXh4LWRreC5kdHNpIgo+
+ICsjaW5jbHVkZSA8ZHQtYmluZGluZ3MvaW50ZXJydXB0LWNvbnRyb2xsZXIvaXJxLmg+Cj4gwqAK
+PiDCoC8gewo+IMKgwqDCoMKgwqDCoMKgwqBtb2RlbCA9ICJTVE1pY3JvZWxlY3Ryb25pY3MgU1RN
+MzJNUDE1N0MtREsyIERpc2NvdmVyeSBCb2FyZCI7Cj4gQEAgLTY3LDcgKzY4LDcgQEAgJmkyYzEg
+ewo+IMKgwqDCoMKgwqDCoMKgwqB0b3VjaHNjcmVlbkAzOCB7Cj4gwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqBjb21wYXRpYmxlID0gImZvY2FsdGVjaCxmdDYyMzYiOwo+IMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgcmVnID0gPDB4Mzg+Owo+IC3CoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqBpbnRlcnJ1cHRzID0gPDIgMj47Cj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoGludGVycnVwdHMgPSA8MiBJUlFfVFlQRV9FREdFX0ZBTExJTkc+Owo+IMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgaW50ZXJydXB0LXBhcmVudCA9IDwmZ3Bpb2Y+Owo+
+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgdG91Y2hzY3JlZW4tc2l6ZS14ID0gPDQ4
+MD47Cj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqB0b3VjaHNjcmVlbi1zaXplLXkg
+PSA8ODAwPjsKClRoYW5rcyEKClJldmlld2VkLWJ5OiBBbnRvbmlvIEJvcm5lbyA8YW50b25pby5i
+b3JuZW9AZm9zcy5zdC5jb20+Cg==
 
