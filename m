@@ -1,122 +1,214 @@
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0E2CBE6C;
-	Sat,  1 Mar 2025 01:23:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B73163A9
+	for <linux-kernel@vger.kernel.org>; Sat,  1 Mar 2025 01:23:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740792215; cv=none; b=frHixKTRORyrXclMDR2/EE6x/rcL98/DfHlH4fTTij+B9J9WIE/0/EdBbGHBD1qYkdEevFSQVIe+FN0yS/UsOj9K762NJcBjuC97HHURzduzqtbzUuu/y/EAu4MyNkri391dgy9k+MqnyEYrhFIg2cgDCcdytS9foMUBuwo1Ckw=
+	t=1740792235; cv=none; b=tRZlW3KBNZR3C6I018k+VCBBBzWWYCL99DD80GpMuGJ2d4MlsjafGDwwLWEFUbWYVinFrcZ3Xzy5RcEphWidnOCAEKajDFz/A9cQsNrjLZg5b3Q8h13wgrZL98SLtvmM8pjH7/pEulDMyJkYbxncthslt6zY5LjenIMAhUC/vxE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740792215; c=relaxed/simple;
-	bh=PTNepDljdJmBLPx1Vt119k3gOjDnw3szWpNNxq3pGPY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=f4xCkZEkHAMOQ5Q0YdCgK29Isw2p12s3awZyDiSIzWbxxx2Xn3ZDURZbsGdIwy5LGB/CJ3fNS+CDvExPUE6yhtI3gGp25I9GF58TZu159zNEklQL4miqysg+3CzHCYEBp78hhxXzlogXZPMVQxxYFypeDUqDYMlhcFcSWy+5De4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OiCNdXTh; arc=none smtp.client-ip=209.85.208.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1740792235; c=relaxed/simple;
+	bh=o1p+ne+HAvY4DDZ63M6vfhpNc3u5cYCy3IlSrcF7C2I=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=E5lMWqUwc2/Tm6/jPxmCHcfRb0z/snSGqBJ70oP7tZQkZWZaP3LnyFJeO51g3wNzwXgVqNOm/knaaiB+qXVdOA1kpnTXAKASHMSIFQh3j1DP+OIzzrhSjrSBlsgPVnYevn9W0UMBLUEUNK1i04ymFH6g30qg7bTrCukROK2FZgw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CkN/2Stl; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OiCNdXTh"
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5e4dc3d22b8so2555189a12.0;
-        Fri, 28 Feb 2025 17:23:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740792212; x=1741397012; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=uMeHz62fDGvf8tHSG9UR0lUzfNjHQKzyZfW4Wd98gl8=;
-        b=OiCNdXThHWlUlA0Vvm9JMiPWqo6rskc1v74Ww9Xa/wl2GErIRjAvqIFuZ02eZlXP6e
-         A20B3vHwSZrTzNM9g9Iu3T1XewQfl5c5aLAxTtlhJYkLV7GGWcWtI7mqWphvsyyhf3PW
-         M27y3zwBnzu3LPvZKGmxhE1bXbxjrUPRRUzW5Ph731q5NtQrE6tFS6dDe6VgamiYj7vH
-         prSFXypPs64GtBOjdfb+77muFdQstg2rv03UVzTU0YSB2vobTi3tvYlaJC1uR+N2lTJu
-         Sxk2+BKW7J1WKppWCtXvEzNI9QnDIjVHO9lX2CNLb0UAK3lt0ARY2bIvmMtcqfyULUeN
-         EnEg==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CkN/2Stl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1740792232;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8OAJrklYzp8/r3g4lixGYj7CZWiatxwAHqPRLaD3+jg=;
+	b=CkN/2StlvJ8SJ7paAQakChOdKvQcNe4IJ6Stfe6FMg7Vj4xhMTxrBTWY7zYjI5WGVMeGR2
+	43DZSn+i78/TCzKpGZ82zQLe6Xt4bPQcfEU7EJhg5pFgHe4hxoFGvF+QZWrL+GQKUGqNMS
+	HpRjSCt58c2hrtZqVKF5hmq1ickecJY=
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
+ [209.85.160.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-651-kWmq9q2nMZmvYMRLtw6hvQ-1; Fri, 28 Feb 2025 20:23:50 -0500
+X-MC-Unique: kWmq9q2nMZmvYMRLtw6hvQ-1
+X-Mimecast-MFC-AGG-ID: kWmq9q2nMZmvYMRLtw6hvQ_1740792230
+Received: by mail-qt1-f197.google.com with SMTP id d75a77b69052e-471f1b00de4so56211081cf.0
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 17:23:50 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740792212; x=1741397012;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=uMeHz62fDGvf8tHSG9UR0lUzfNjHQKzyZfW4Wd98gl8=;
-        b=pIpdtNjf2cnrGzud7Lt1tHqz3EqTHrtgZyJPN/YwTJpS4VQtKgwOSB+u2q6ozu/ZR2
-         HaVtD6538vZx1NJp59uTX3OvjjRf0srvsIMzzC5hT/tcw0fmWQwE2+PF6z5gjRyxxGi/
-         0fe33cqyZR3LQUDnoTLVmSeWlIA/IHfyeWP4XZ7Vw+sSSbdwFh1SfwwO3bU6g8/Ur+Xm
-         buFAyOVCGlLkWYt+PiEwKuK1XGwwJ1s/QgdxHZ7Q8+/wlEJxifpx0LTSZlVWnEj+ufhA
-         J5LQD+NGJvFDxAQynF6UqIwjHXLZWtRWHTiHJ9hbb25GkXKDxUlo1ADeYxrJYQGV3aG3
-         aMBw==
-X-Forwarded-Encrypted: i=1; AJvYcCWvd7mvBNKxPBZqInINHU6tgANWO11sI4xNemcP1z9A4owDqouYwU885wrDVADY7oNb38l0l0dRSe0PRJE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzz+cziR97XOGhsmiVFeIRLWqZ648YmTZMkFPWIWeSNAdMKgepK
-	W8fjmK9RGZOPV7FfXuhS08hpTvrZyn/CJdcymu/EJbTFdGfuKg6jcU+6wA==
-X-Gm-Gg: ASbGncsVhxb3K7lD+CkGR39fTg2S4zV1Y2P50CO0S47jI8ueMPY18bpAwa4c7qFA2ES
-	kiVNVZeTkNP1bmX3grz6mLwivth42kh9vl73U0r3rgn6PwWckk2XVmkNKc3qP6y1BjBuGwqE6bO
-	Y6Jt6EDdv2A7Rhqgd6ym2NgzxP2smUB+nqdwzOVcPKGQW50+99MqJiS6qZD637DTs+syWQHSGcJ
-	9vAH6viThfGiasKPhR8pVUd3TMUc57ZGkCgQ+tV8fCZYaI+1Fl7SYQt+ARHDmgwYev0DnJ4yx18
-	KWYhq3n+KAL3VS6Wxj2soX6/JdhCxeG6dmyIBxz00fsaWkjDxxq9U/w=
-X-Google-Smtp-Source: AGHT+IHtFXWej0XzCMOuuyU0kbm3HzU+Nw3gsnAMeOWJO4CqvFP+K5eNx+djd4/aojUFBbQanSEADA==
-X-Received: by 2002:a17:907:1c8d:b0:abf:23a7:fc6 with SMTP id a640c23a62f3a-abf2656e759mr608356066b.16.1740792211898;
-        Fri, 28 Feb 2025 17:23:31 -0800 (PST)
-Received: from [192.168.8.100] ([148.252.144.117])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abf20eebff7sm274705266b.60.2025.02.28.17.23.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 28 Feb 2025 17:23:30 -0800 (PST)
-Message-ID: <6272ce74-cd1e-4386-ac84-2ca7df5dab33@gmail.com>
-Date: Sat, 1 Mar 2025 01:24:36 +0000
+        d=1e100.net; s=20230601; t=1740792230; x=1741397030;
+        h=content-transfer-encoding:mime-version:user-agent:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=8OAJrklYzp8/r3g4lixGYj7CZWiatxwAHqPRLaD3+jg=;
+        b=P19CZEW7/j64/ed59j+OewlQOZjlQVNvFjPphF0pb177FItoYIGeoJQk7ozy8HN1wG
+         Yf/C/uWCJUcTgn8cLRiB8emFgcvnMI/zM0OJBfP5NxvQ8C3rNKt08qLuTjpyP9RzGeCU
+         lwpN/Kt8oBqg0OeNIbfYPClPwj1Xf4mQof23tf0e+imbRd+7Eh1qIHnKRBBiJT9ZLxIX
+         oymvA43oWTE6CUn7ZKAlAzNcoXWw2cQuqNCFukWFGzTT0l4ELse771QuUHnWnsexuEv4
+         mbDZ4tF37jnNH6UZQZcnST7cm0FoPSJ/KEgDpUe+MG3CKxPkUz9z69YWAXRGLGMmFbgJ
+         YWfg==
+X-Forwarded-Encrypted: i=1; AJvYcCWJ/G4Xc1maTvbCMjdqowprc7VQU/gNLeD0TTWepf9AGCE+qACKjT9Zzem/wHUiG1hIZKSu7GPyXRNncDg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YydkMJBDzyS840vC5PwELhnAigmJZ86M45RQuknn7Y1BeXmpG97
+	K7CJN0hgdaWsrnokOWxS2EP2xueyVWJQXLFlcEPq3u4B765wnaAuwmlmFOt/46nka4Ng5B8QjKl
+	RgpLYAtTd9DPeF4gIdcZ4B9yb28T7jsT48vfb9yPWP5PwhufntbMM25rFqN7TRw==
+X-Gm-Gg: ASbGncsAodnfTMTT4m5jXcjJ/kphrvNTTh1mOcc4F3S2c+szIo7x9k6mZhOI/2b+kdk
+	7XGVsgUpHiSdMLuXcmJERKlTHbGmp6TR3ZYZOcoDq/dAPmjO3XhiPmizd9DNLVcV8cKOz/FjAyP
+	pdzR4gMw/B6AZ4vtxRRN0Y9lVDLoQh/Rg9pZWFGxZxy6kEIxNJfIsDzFWTuAE2BfWvRaxXlwUiD
+	XXBOSJr2evfCU/gDbDFXzjyv/nFKFSjKOmEvw237gOSHnEGogdhn37KgQdppPFptTcuSMaPOQ+a
+	VmKxDQohhcw1Mo8=
+X-Received: by 2002:ad4:574c:0:b0:6e6:64e8:28e7 with SMTP id 6a1803df08f44-6e8a0d0895amr88661486d6.15.1740792230268;
+        Fri, 28 Feb 2025 17:23:50 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGqrmNkALLpnsrIVr0ZBViMhrVD8kVQJKE0j3X/XcwAt87q8J9yjv80JpSGnSy0+3KHJEeJbA==
+X-Received: by 2002:ad4:574c:0:b0:6e6:64e8:28e7 with SMTP id 6a1803df08f44-6e8a0d0895amr88661316d6.15.1740792229955;
+        Fri, 28 Feb 2025 17:23:49 -0800 (PST)
+Received: from starship ([2607:fea8:fc01:8d8d:6adb:55ff:feaa:b156])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e8976ccbefsm27878336d6.85.2025.02.28.17.23.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Feb 2025 17:23:49 -0800 (PST)
+Message-ID: <7addde721e3f67bfa8ec5c9671f51d131f84bc6b.camel@redhat.com>
+Subject: Re: [RFC PATCH 01/13] KVM: nSVM: Track the ASID per-VMCB
+From: Maxim Levitsky <mlevitsk@redhat.com>
+To: Yosry Ahmed <yosry.ahmed@linux.dev>, Sean Christopherson
+ <seanjc@google.com>,  Paolo Bonzini <pbonzini@redhat.com>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Fri, 28 Feb 2025 20:23:48 -0500
+In-Reply-To: <20250205182402.2147495-2-yosry.ahmed@linux.dev>
+References: <20250205182402.2147495-1-yosry.ahmed@linux.dev>
+	 <20250205182402.2147495-2-yosry.ahmed@linux.dev>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.5 (3.36.5-2.fc32) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] io_uring/rsrc: use rq_data_dir() to compute bvec dir
-To: Caleb Sander Mateos <csander@purestorage.com>,
- Jens Axboe <axboe@kernel.dk>
-Cc: io-uring@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250228223057.615284-1-csander@purestorage.com>
-Content-Language: en-US
-From: Pavel Begunkov <asml.silence@gmail.com>
-In-Reply-To: <20250228223057.615284-1-csander@purestorage.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 2/28/25 22:30, Caleb Sander Mateos wrote:
-> The macro rq_data_dir() already computes a request's data direction.
-> Use it in place of the if-else to set imu->dir.
+On Wed, 2025-02-05 at 18:23 +0000, Yosry Ahmed wrote:
+> The ASID is currently tracked per-vCPU, because the same ASID is used by
+> L1 and L2. That ASID is flushed on every transition between L1 and L2.
 > 
-> Signed-off-by: Caleb Sander Mateos <csander@purestorage.com>
+> Track the ASID separately for each VMCB (similar to the
+> asid_generation), giving L2 a separate ASID. This is in preparation for
+> doing fine-grained TLB flushes on nested transitions instead of
+> unconditional full flushes.
+> 
+> The ASIDs are still not fully maintained (e.g. a remote flush will only
+> flush the current ASID), so keep the TLB flush on every transition until
+> this is sorted out.
+> 
+> L1's ASID will be flushed on KVM_REQ_TLB_FLUSH_GUEST if it is the
+> active context, so remove the TODO in nested_svm_transition_tlb_flush()
+> about it.
+> 
+> Signed-off-by: Yosry Ahmed <yosry.ahmed@linux.dev>
 > ---
->   io_uring/rsrc.c | 6 +-----
->   1 file changed, 1 insertion(+), 5 deletions(-)
+>  arch/x86/kvm/svm/nested.c |  1 -
+>  arch/x86/kvm/svm/sev.c    |  2 +-
+>  arch/x86/kvm/svm/svm.c    | 12 +++++++-----
+>  arch/x86/kvm/svm/svm.h    |  2 +-
+>  4 files changed, 9 insertions(+), 8 deletions(-)
 > 
-> diff --git a/io_uring/rsrc.c b/io_uring/rsrc.c
-> index 45bfb37bca1e..3107a03d56b8 100644
-> --- a/io_uring/rsrc.c
-> +++ b/io_uring/rsrc.c
-> @@ -957,15 +957,11 @@ int io_buffer_register_bvec(struct io_uring_cmd *cmd, struct request *rq,
->   	imu->nr_bvecs = nr_bvecs;
->   	refcount_set(&imu->refs, 1);
->   	imu->release = release;
->   	imu->priv = rq;
->   	imu->is_kbuf = true;
-> -
-> -	if (op_is_write(req_op(rq)))
-> -		imu->dir = IO_IMU_SOURCE;
-> -	else
-> -		imu->dir = IO_IMU_DEST;
-> +	imu->dir = 1 << rq_data_dir(rq);
+> diff --git a/arch/x86/kvm/svm/nested.c b/arch/x86/kvm/svm/nested.c
+> index 04c375bf1ac2a..bbe4f3ac9f250 100644
+> --- a/arch/x86/kvm/svm/nested.c
+> +++ b/arch/x86/kvm/svm/nested.c
+> @@ -495,7 +495,6 @@ static void nested_svm_transition_tlb_flush(struct kvm_vcpu *vcpu)
+>  	 *  - Honor L1's request to flush an ASID on nested VMRUN
+>  	 *  - Sync nested NPT MMU on VMRUN that flushes L2's ASID[*]
+>  	 *  - Don't crush a pending TLB flush in vmcb02 on nested VMRUN
+> -	 *  - Flush L1's ASID on KVM_REQ_TLB_FLUSH_GUEST
+>  	 *
+>  	 * [*] Unlike nested EPT, SVM's ASID management can invalidate nested
+>  	 *     NPT guest-physical mappings on VMRUN.
+> diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
+> index 799f8494b599c..b0adfd0537d00 100644
+> --- a/arch/x86/kvm/svm/sev.c
+> +++ b/arch/x86/kvm/svm/sev.c
+> @@ -3468,7 +3468,7 @@ void pre_sev_run(struct vcpu_svm *svm, int cpu)
+>  	unsigned int asid = sev_get_asid(svm->vcpu.kvm);
+>  
+>  	/* Assign the asid allocated with this SEV guest */
+> -	svm->asid = asid;
+> +	svm->current_vmcb->asid = asid;
+>  
+>  	/*
+>  	 * Flush guest TLB:
+> diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
+> index 7640a84e554a6..08340ae57777b 100644
+> --- a/arch/x86/kvm/svm/svm.c
+> +++ b/arch/x86/kvm/svm/svm.c
+> @@ -1335,8 +1335,10 @@ static void init_vmcb(struct kvm_vcpu *vcpu)
+>  		save->g_pat = vcpu->arch.pat;
+>  		save->cr3 = 0;
+>  	}
+> -	svm->current_vmcb->asid_generation = 0;
+> -	svm->asid = 0;
+> +	svm->vmcb01.asid_generation = 0;
+> +	svm->vmcb01.asid = 0;
+> +	svm->nested.vmcb02.asid_generation = 0;
+> +	svm->nested.vmcb02.asid = 0;
+>  
+>  	svm->nested.vmcb12_gpa = INVALID_GPA;
+>  	svm->nested.last_vmcb12_gpa = INVALID_GPA;
+> @@ -1988,7 +1990,7 @@ static void new_asid(struct vcpu_svm *svm, struct svm_cpu_data *sd)
+>  	}
+>  
+>  	svm->current_vmcb->asid_generation = sd->asid_generation;
+> -	svm->asid = sd->next_asid++;
+> +	svm->current_vmcb->asid = sd->next_asid++;
+>  }
+>  
+>  static void svm_set_dr6(struct vcpu_svm *svm, unsigned long value)
+> @@ -4235,8 +4237,8 @@ static __no_kcsan fastpath_t svm_vcpu_run(struct kvm_vcpu *vcpu,
+>  
+>  	sync_lapic_to_cr8(vcpu);
+>  
+> -	if (unlikely(svm->asid != svm->vmcb->control.asid)) {
+> -		svm->vmcb->control.asid = svm->asid;
+> +	if (unlikely(svm->current_vmcb->asid != svm->vmcb->control.asid)) {
+> +		svm->vmcb->control.asid = svm->current_vmcb->asid;
+>  		vmcb_mark_dirty(svm->vmcb, VMCB_ASID);
+>  	}
+>  	svm->vmcb->save.cr2 = vcpu->arch.cr2;
+> diff --git a/arch/x86/kvm/svm/svm.h b/arch/x86/kvm/svm/svm.h
+> index 9d7cdb8fbf872..ebbb0b1a64676 100644
+> --- a/arch/x86/kvm/svm/svm.h
+> +++ b/arch/x86/kvm/svm/svm.h
+> @@ -133,6 +133,7 @@ struct kvm_vmcb_info {
+>  	unsigned long pa;
+>  	int cpu;
+>  	uint64_t asid_generation;
+> +	u32 asid;
+>  };
+>  
+>  struct vmcb_save_area_cached {
+> @@ -247,7 +248,6 @@ struct vcpu_svm {
+>  	struct vmcb *vmcb;
+>  	struct kvm_vmcb_info vmcb01;
+>  	struct kvm_vmcb_info *current_vmcb;
+> -	u32 asid;
+>  	u32 sysenter_esp_hi;
+>  	u32 sysenter_eip_hi;
+>  	uint64_t tsc_aux;
 
-rq_data_dir returns READ/WRITE, which should be fine, but it'd
-be nicer to be more explicit unless it's already enforced
-somewhere else
-
-BUILD_BUG_ON(WRITE ==  ITER_SOURCE);
-ditto for READ
+Hi,
 
 
->   
->   	bvec = imu->bvec;
->   	rq_for_each_bvec(bv, rq, rq_iter)
->   		*bvec++ = bv;
->   
+I think it should be possible to eliminate separate ASID field (current_vmcb->asid/svm->asid)
+completely and instead just use the value stored in the vmcb.
 
--- 
-Pavel Begunkov
+When there is a need to update it, KVM can also set the corresponding dirty bit
+as done in svm_vcpu_run (new_asid also already does this when the asid generation increases)
+
+Also KVM already sets the tlb_ctl directly in the vmcb.
+
+What do you think?
+
+Best regards,
+	Maxim Levitsky
+
+
+
+
 
