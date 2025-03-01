@@ -1,62 +1,64 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9C061E9B08;
-	Sat,  1 Mar 2025 20:07:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA7631E9B3D;
+	Sat,  1 Mar 2025 20:07:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740859657; cv=none; b=JZXj73YkLEWtPVoqhPhR5yFBL1woPJVYG0/qQnJM0IKUT90jeLQQwOoXUtnVeVcuY2VaiSKBjiRah3+GpNJbRfzlWyUrkZWXEYNAXa3Jjb2vIwsktPAo9obSa7tMBvePHtvUbhTyBPF9wjEsM/YGP1Z4BVtSMpRgiEOur8IYnUk=
+	t=1740859658; cv=none; b=CLpqFXxBBAe5RSfTUWl/EUczXedH7JFF/KbfwxjrY3XkTdRnJc1Ezf732KrvIym+rktaWfE8IzRzwWMJZAj68or/yF40uvObrxlRpYN5Q7HoWHapNnlpHxFmWtCHr4BUkfxhK8tRXF/79D5IGA0oCijUiZZxubw5G2ySyZdrrpE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740859657; c=relaxed/simple;
-	bh=JwZJzHhiQ7Z94VAB8wpXDGpa5KQMmYufv1thC0w579M=;
+	s=arc-20240116; t=1740859658; c=relaxed/simple;
+	bh=aFdPjHr0HjJCjUy0lBw283OnUUbizEVq6PkoA3PrA9E=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=tpV4GjpT/9oDz4bFK7uIBvxjfjuWDUhSCibFoJkgs7S8jL5xBqvObjY07Gazlqnjrn5KRmgrzvlkdyORW9AX6ussGuK0iarXuBmCwURfO3oc+3p71y+k3VgVQZNcfCwHRiQuNIpBn6foZZ0nW35mJrOSMP7NbPESFc5OvTH2+PY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=zDCha87y; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ZtuXNiBH; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=SwKNu58OBokq/lMD6vLjMFbvtBINF4Bod63K1rOAj3BerNW9Vr4MgPc4rxI3IVlTpZeROD/E/K82hqYdggbsTI5b86AANt2vMvIyeRTCaiEpM4sjQ+Fs0TiTgMWAxgziskwA0mwv6FTGcKaILqHvHGB7ecyQOocZomf71SflZfk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=GhBs+1lZ; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=7bso4rAM; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="zDCha87y";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ZtuXNiBH"
-Date: Sat, 01 Mar 2025 20:07:33 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="GhBs+1lZ";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="7bso4rAM"
+Date: Sat, 01 Mar 2025 20:07:35 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1740859654;
+	s=2020; t=1740859655;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Z20tt95jdyXy5GthmJaT85ijipUAxH1eo4R0XWCM5h4=;
-	b=zDCha87ymbqvTLtcP1ocKBb+nruTnr1HF8CjLEQX5dQgMfWGlItDXIFwNACleSg7BPDwq8
-	Tm+HtG5YlCIxFkgka09W69XQtbAoSFQsao5p2D5T7FR9p1YRU5P8SA58AKEWdCf0aDu3/P
-	gE/uFVaPGw0rzJR6PYf1aS8BQr09YaWttYn8ge2jAWFiIR4BHUrz5TpL5v6o2fWmCspXgq
-	C1w9wxhCOnnPMv4J0ReV3iqgSGijKwcd6rKYIs+cULBVnMgQBNrnI6KxCVfKZ+EarDvtKF
-	itBrqmErvkdhzybMYcy+1BddOj1DQFnTXbKpMkcvXf8toW64rwAl7abbJoWfvw==
+	bh=IiqVn2GOYOPPFcWo8OZZZ3grDEK1XwooHp0eUQ3Lqew=;
+	b=GhBs+1lZZSUEzVwhPoOIor1oJIm9cG2JDoAjnL3se1BAWx1DBPIfN4k1Ik9R3yjvhw8/O9
+	f1i543vZt1uRNEKojF+0J3QeQlp4buwGScZ9u3ZoVGxYgnR7AIotwk+IN1zvA46zBQlofK
+	E4EgWCKr5w4YV14n2DGpp+HTGi2MiXcQeF4uQ82n5WrylfIvwfESw/I75ejeOthAi6DwmC
+	utygYQwBKu+ULiaeB+lBrQVpMANtMSmejYPX0a6xDxQffYLWLVD91tU7MIJdDFkTlUNLET
+	0lgvk5fgdk0KlqHytmj+tny16s3dOIN/+FxZlhH8wL/mY6GJuNA0cgZdgDjaIw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1740859654;
+	s=2020e; t=1740859655;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Z20tt95jdyXy5GthmJaT85ijipUAxH1eo4R0XWCM5h4=;
-	b=ZtuXNiBHoz/WmqckHONaKsCCGJrCEkZZvnt9GYem2G5+NMxMvo3ojYtOxvWwDfym/4cqDX
-	j+qmEjF1c5Ydi3BA==
+	bh=IiqVn2GOYOPPFcWo8OZZZ3grDEK1XwooHp0eUQ3Lqew=;
+	b=7bso4rAM5zgYZaIb7tfH+n0MPKLyKsB8ZI61wpSojIGZDCtTTgihXtr61oKT0ntJTplmm2
+	oz4AJw9UtgO3dTCg==
 From: "tip-bot2 for Peter Zijlstra" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf/core: Simplify perf_event_alloc()
+Subject:
+ [tip: perf/core] perf/core: Simplify the perf_pmu_register() error path
 Cc: "Peter Zijlstra (Intel)" <peterz@infradead.org>,
- Ingo Molnar <mingo@kernel.org>, x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20241104135518.410755241@infradead.org>
-References: <20241104135518.410755241@infradead.org>
+ Ingo Molnar <mingo@kernel.org>, Ravi Bangoria <ravi.bangoria@amd.com>,
+ x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20241104135518.090915501@infradead.org>
+References: <20241104135518.090915501@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174085965375.10177.14960924353010260131.tip-bot2@tip-bot2>
+Message-ID: <174085965505.10177.16335629969425990496.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -66,164 +68,175 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     ebfe83832e392f25b4fe1fedf816eebb76f1f5b4
-Gitweb:        https://git.kernel.org/tip/ebfe83832e392f25b4fe1fedf816eebb76f1f5b4
+Commit-ID:     e6b17cfd528d141b69b5a1b948f6bf619c922bf4
+Gitweb:        https://git.kernel.org/tip/e6b17cfd528d141b69b5a1b948f6bf619c922bf4
 Author:        Peter Zijlstra <peterz@infradead.org>
-AuthorDate:    Mon, 04 Nov 2024 14:39:17 +01:00
+AuthorDate:    Mon, 04 Nov 2024 14:39:14 +01:00
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Sat, 01 Mar 2025 19:54:06 +01:00
+CommitterDate: Sat, 01 Mar 2025 19:54:05 +01:00
 
-perf/core: Simplify perf_event_alloc()
+perf/core: Simplify the perf_pmu_register() error path
 
-Using the previous simplifications, transition perf_event_alloc() to
-the cleanup way of things -- reducing error path magic.
+The error path of perf_pmu_register() is of course very similar to a
+subset of perf_pmu_unregister(). Extract this common part in
+perf_pmu_free() and simplify things.
 
-[ mingo: Ported it to recent kernels. ]
+[ mingo: Forward ported it ]
 
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Link: https://lore.kernel.org/r/20241104135518.410755241@infradead.org
+Acked-by: Ravi Bangoria <ravi.bangoria@amd.com>
+Link: https://lore.kernel.org/r/20241104135518.090915501@infradead.org
 ---
- kernel/events/core.c | 59 ++++++++++++++++---------------------------
- 1 file changed, 22 insertions(+), 37 deletions(-)
+ kernel/events/core.c | 67 +++++++++++++++++++------------------------
+ 1 file changed, 30 insertions(+), 37 deletions(-)
 
 diff --git a/kernel/events/core.c b/kernel/events/core.c
-index fd35236..348a379 100644
+index 1b8b1c8..ee5cdd6 100644
 --- a/kernel/events/core.c
 +++ b/kernel/events/core.c
-@@ -5410,6 +5410,8 @@ static void __free_event(struct perf_event *event)
- 	call_rcu(&event->rcu_head, free_event_rcu);
+@@ -11675,11 +11675,6 @@ static int perf_event_idx_default(struct perf_event *event)
+ 	return 0;
  }
  
-+DEFINE_FREE(__free_event, struct perf_event *, if (_T) __free_event(_T))
-+
- /* vs perf_event_alloc() success */
- static void _free_event(struct perf_event *event)
- {
-@@ -12291,7 +12293,6 @@ perf_event_alloc(struct perf_event_attr *attr, int cpu,
- 		 void *context, int cgroup_fd)
- {
- 	struct pmu *pmu;
--	struct perf_event *event;
- 	struct hw_perf_event *hwc;
- 	long err = -EINVAL;
- 	int node;
-@@ -12306,8 +12307,8 @@ perf_event_alloc(struct perf_event_attr *attr, int cpu,
- 	}
- 
- 	node = (cpu >= 0) ? cpu_to_node(cpu) : -1;
--	event = kmem_cache_alloc_node(perf_event_cache, GFP_KERNEL | __GFP_ZERO,
--				      node);
-+	struct perf_event *event __free(__free_event) =
-+		kmem_cache_alloc_node(perf_event_cache, GFP_KERNEL | __GFP_ZERO, node);
- 	if (!event)
- 		return ERR_PTR(-ENOMEM);
- 
-@@ -12414,65 +12415,53 @@ perf_event_alloc(struct perf_event_attr *attr, int cpu,
- 	 * See perf_output_read().
- 	 */
- 	if (has_inherit_and_sample_read(attr) && !(attr->sample_type & PERF_SAMPLE_TID))
--		goto err;
-+		return ERR_PTR(-EINVAL);
- 
- 	if (!has_branch_stack(event))
- 		event->attr.branch_sample_type = 0;
- 
- 	pmu = perf_init_event(event);
--	if (IS_ERR(pmu)) {
--		err = PTR_ERR(pmu);
--		goto err;
--	}
-+	if (IS_ERR(pmu))
-+		return (void*)pmu;
- 
- 	/*
- 	 * Disallow uncore-task events. Similarly, disallow uncore-cgroup
- 	 * events (they don't make sense as the cgroup will be different
- 	 * on other CPUs in the uncore mask).
- 	 */
--	if (pmu->task_ctx_nr == perf_invalid_context && (task || cgroup_fd != -1)) {
--		err = -EINVAL;
--		goto err;
--	}
-+	if (pmu->task_ctx_nr == perf_invalid_context && (task || cgroup_fd != -1))
-+		return ERR_PTR(-EINVAL);
- 
- 	if (event->attr.aux_output &&
- 	    (!(pmu->capabilities & PERF_PMU_CAP_AUX_OUTPUT) ||
--	     event->attr.aux_pause || event->attr.aux_resume)) {
--		err = -EOPNOTSUPP;
--		goto err;
--	}
-+	     event->attr.aux_pause || event->attr.aux_resume))
-+		return ERR_PTR(-EOPNOTSUPP);
- 
--	if (event->attr.aux_pause && event->attr.aux_resume) {
--		err = -EINVAL;
--		goto err;
--	}
-+	if (event->attr.aux_pause && event->attr.aux_resume)
-+		return ERR_PTR(-EINVAL);
- 
- 	if (event->attr.aux_start_paused) {
--		if (!(pmu->capabilities & PERF_PMU_CAP_AUX_PAUSE)) {
--			err = -EOPNOTSUPP;
--			goto err;
--		}
-+		if (!(pmu->capabilities & PERF_PMU_CAP_AUX_PAUSE))
-+			return ERR_PTR(-EOPNOTSUPP);
- 		event->hw.aux_paused = 1;
- 	}
- 
- 	if (cgroup_fd != -1) {
- 		err = perf_cgroup_connect(cgroup_fd, event, attr, group_leader);
- 		if (err)
--			goto err;
-+			return ERR_PTR(err);
- 	}
- 
- 	err = exclusive_event_init(event);
- 	if (err)
--		goto err;
-+		return ERR_PTR(err);
- 
- 	if (has_addr_filter(event)) {
- 		event->addr_filter_ranges = kcalloc(pmu->nr_addr_filters,
- 						    sizeof(struct perf_addr_filter_range),
- 						    GFP_KERNEL);
--		if (!event->addr_filter_ranges) {
--			err = -ENOMEM;
--			goto err;
--		}
-+		if (!event->addr_filter_ranges)
-+			return ERR_PTR(-ENOMEM);
- 
- 		/*
- 		 * Clone the parent's vma offsets: they are valid until exec()
-@@ -12496,23 +12485,19 @@ perf_event_alloc(struct perf_event_attr *attr, int cpu,
- 		if (event->attr.sample_type & PERF_SAMPLE_CALLCHAIN) {
- 			err = get_callchain_buffers(attr->sample_max_stack);
- 			if (err)
--				goto err;
-+				return ERR_PTR(err);
- 			event->attach_state |= PERF_ATTACH_CALLCHAIN;
- 		}
- 	}
- 
- 	err = security_perf_event_alloc(event);
- 	if (err)
--		goto err;
-+		return ERR_PTR(err);
- 
- 	/* symmetric to unaccount_event() in _free_event() */
- 	account_event(event);
- 
--	return event;
+-static void free_pmu_context(struct pmu *pmu)
+-{
+-	free_percpu(pmu->cpu_pmu_context);
+-}
 -
--err:
--	__free_event(event);
--	return ERR_PTR(err);
-+	return_ptr(event);
+ /*
+  * Let userspace know that this PMU supports address range filtering:
+  */
+@@ -11885,6 +11880,7 @@ del_dev:
+ 
+ free_dev:
+ 	put_device(pmu->dev);
++	pmu->dev = NULL;
+ 	goto out;
  }
  
- static int perf_copy_attr(struct perf_event_attr __user *uattr,
+@@ -11906,25 +11902,38 @@ static bool idr_cmpxchg(struct idr *idr, unsigned long id, void *old, void *new)
+ 	return true;
+ }
+ 
++static void perf_pmu_free(struct pmu *pmu)
++{
++	free_percpu(pmu->pmu_disable_count);
++	if (pmu_bus_running && pmu->dev && pmu->dev != PMU_NULL_DEV) {
++		if (pmu->nr_addr_filters)
++			device_remove_file(pmu->dev, &dev_attr_nr_addr_filters);
++		device_del(pmu->dev);
++		put_device(pmu->dev);
++	}
++	free_percpu(pmu->cpu_pmu_context);
++}
++
+ int perf_pmu_register(struct pmu *pmu, const char *name, int type)
+ {
+ 	int cpu, ret, max = PERF_TYPE_MAX;
+ 
++	pmu->type = -1;
++
+ 	mutex_lock(&pmus_lock);
+ 	ret = -ENOMEM;
+ 	pmu->pmu_disable_count = alloc_percpu(int);
+ 	if (!pmu->pmu_disable_count)
+ 		goto unlock;
+ 
+-	pmu->type = -1;
+ 	if (WARN_ONCE(!name, "Can not register anonymous pmu.\n")) {
+ 		ret = -EINVAL;
+-		goto free_pdc;
++		goto free;
+ 	}
+ 
+ 	if (WARN_ONCE(pmu->scope >= PERF_PMU_MAX_SCOPE, "Can not register a pmu with an invalid scope.\n")) {
+ 		ret = -EINVAL;
+-		goto free_pdc;
++		goto free;
+ 	}
+ 
+ 	pmu->name = name;
+@@ -11934,24 +11943,23 @@ int perf_pmu_register(struct pmu *pmu, const char *name, int type)
+ 
+ 	ret = idr_alloc(&pmu_idr, NULL, max, 0, GFP_KERNEL);
+ 	if (ret < 0)
+-		goto free_pdc;
++		goto free;
+ 
+ 	WARN_ON(type >= 0 && ret != type);
+ 
+-	type = ret;
+-	pmu->type = type;
++	pmu->type = ret;
+ 	atomic_set(&pmu->exclusive_cnt, 0);
+ 
+ 	if (pmu_bus_running && !pmu->dev) {
+ 		ret = pmu_dev_alloc(pmu);
+ 		if (ret)
+-			goto free_idr;
++			goto free;
+ 	}
+ 
+ 	ret = -ENOMEM;
+ 	pmu->cpu_pmu_context = alloc_percpu(struct perf_cpu_pmu_context);
+ 	if (!pmu->cpu_pmu_context)
+-		goto free_dev;
++		goto free;
+ 
+ 	for_each_possible_cpu(cpu) {
+ 		struct perf_cpu_pmu_context *cpc;
+@@ -11992,8 +12000,10 @@ int perf_pmu_register(struct pmu *pmu, const char *name, int type)
+ 	/*
+ 	 * Now that the PMU is complete, make it visible to perf_try_init_event().
+ 	 */
+-	if (!idr_cmpxchg(&pmu_idr, pmu->type, NULL, pmu))
+-		goto free_context;
++	if (!idr_cmpxchg(&pmu_idr, pmu->type, NULL, pmu)) {
++		ret = -EINVAL;
++		goto free;
++	}
+ 	list_add_rcu(&pmu->entry, &pmus);
+ 
+ 	ret = 0;
+@@ -12002,20 +12012,10 @@ unlock:
+ 
+ 	return ret;
+ 
+-free_context:
+-	free_percpu(pmu->cpu_pmu_context);
+-
+-free_dev:
+-	if (pmu->dev && pmu->dev != PMU_NULL_DEV) {
+-		device_del(pmu->dev);
+-		put_device(pmu->dev);
+-	}
+-
+-free_idr:
+-	idr_remove(&pmu_idr, pmu->type);
+-
+-free_pdc:
+-	free_percpu(pmu->pmu_disable_count);
++free:
++	if (pmu->type >= 0)
++		idr_remove(&pmu_idr, pmu->type);
++	perf_pmu_free(pmu);
+ 	goto unlock;
+ }
+ EXPORT_SYMBOL_GPL(perf_pmu_register);
+@@ -12034,14 +12034,7 @@ void perf_pmu_unregister(struct pmu *pmu)
+ 	synchronize_srcu(&pmus_srcu);
+ 	synchronize_rcu();
+ 
+-	free_percpu(pmu->pmu_disable_count);
+-	if (pmu_bus_running && pmu->dev && pmu->dev != PMU_NULL_DEV) {
+-		if (pmu->nr_addr_filters)
+-			device_remove_file(pmu->dev, &dev_attr_nr_addr_filters);
+-		device_del(pmu->dev);
+-		put_device(pmu->dev);
+-	}
+-	free_pmu_context(pmu);
++	perf_pmu_free(pmu);
+ }
+ EXPORT_SYMBOL_GPL(perf_pmu_unregister);
+ 
