@@ -1,89 +1,156 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 087ED1CAA99;
-	Sat,  1 Mar 2025 12:25:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
+Received: from mx4.wp.pl (mx4.wp.pl [212.77.101.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E979F1D5CD7
+	for <linux-kernel@vger.kernel.org>; Sat,  1 Mar 2025 12:28:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.77.101.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740831947; cv=none; b=HFh/1ZFDEmrx9e6SRt785tvBlk+7mX7z3u4gRosTqWFh74T1MRp+2CiW6vRfwLlcgcSOht92gNnrS27CdjnSGylBxAi9gGLgh6DYZniHWltGFvBxAIm8wavXQGtOOMK5IzQWuMHz/IBDAGFqhnWCcy4e/i0m175mhQL5nlFE+Xg=
+	t=1740832127; cv=none; b=HFm88pwdv36o4g5oiiTEwROlFfnyg8LgKwXYz7pJi5agK0rIT1vdNy5yWi1Wmc6/40xXM/fguRWNHTXwXC/41UHVHL9O6XSa0J9j/l1WtB8dCGrnZB6vqn5Vgw7MEyEc5YSMvfwI0P4wdZDpJj8tpG7bLHxGqX18i/wEvjQ1yBs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740831947; c=relaxed/simple;
-	bh=uk/TVbQmEdhrRriBBk8oaPcQkjOcMSzkB2nVTddFJcY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID; b=Jbcp6VPTaTewjz3q3UOmfIudu1mPt0VnxOMFXvRw9yS4awusJX53/UwXY7xnBCVfwkcj7NdFzYggxYvFmuMgaBRK4WdCX47MpkYm5vYHuiO6qxyLnyKZtzxzfzR4pco4q5PM1AKYhzmgzsVUvrxvmkVWSiBL7/vb5flt1unc8eo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=fail (1024-bit key) header.d=163.com header.i=@163.com header.b=S2wcqCYj reason="signature verification failed"; arc=none smtp.client-ip=220.197.31.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1740832127; c=relaxed/simple;
+	bh=NqrbvWy4FjnXM7il11X7GEnPis/8CASWT3OsbTC9DsY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LVKBHJjRBAQRdRIIY2lyC2YrmOzfmJvkAZg/urtfw0IKZWelE22nVVw6nWzmMuLnVbQKGVdPd0al3bjK00wBU8Ht7Ndr/Hu+4i8J6HUIVJ9y+im4jjXVtFti6adFgRGEHO/+wKAqGyqlw+JMvJYzIiRubC2yuwERihBY1+aLB0E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=wp.pl; spf=pass smtp.mailfrom=wp.pl; dkim=pass (2048-bit key) header.d=wp.pl header.i=@wp.pl header.b=zaxc8Sea; arc=none smtp.client-ip=212.77.101.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=wp.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wp.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="S2wcqCYj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Date:From:Subject:Content-Type:MIME-Version:
-	Message-ID; bh=OoaYmHX0XxMb3ZGRzqhrOqA+8ik0zFy9oaiXUktOM0A=; b=S
-	2wcqCYjrorMjz0J+aoOHGkQMzk1/HZoe378Dg6qq2Bvi3+iWO4pVzMiKlm51zlXM
-	NHUpBgtTGvLaityI1KHr6V/hyQNAdurRMt+4Bx9dU4aTL/rde6dix2eCHPFk5te1
-	ctQ9plpH2Zi2crBPTys9FKRwmlJtjWsvcS+UNB2Vl8=
-Received: from andyshrk$163.com ( [58.22.7.114] ) by
- ajax-webmail-wmsvr-40-107 (Coremail) ; Sat, 1 Mar 2025 20:24:34 +0800 (CST)
-Date: Sat, 1 Mar 2025 20:24:34 +0800 (CST)
-From: "Andy Yan" <andyshrk@163.com>
-To: "Piotr Oniszczuk" <piotr.oniszczuk@gmail.com>
-Cc: heiko@sntech.de, neil.armstrong@linaro.org,
-	sebastian.reichel@collabora.com, devicetree@vger.kernel.org,
-	hjc@rock-chips.com, mripard@kernel.org, linux-kernel@vger.kernel.org,
-	linux-rockchip@lists.infradead.org, yubing.zhang@rock-chips.com,
-	dri-devel@lists.freedesktop.org,
-	"Andy Yan" <andy.yan@rock-chips.com>, krzk+dt@kernel.org,
-	robh@kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re:Re: [PATCH 0/6] Add support for RK3588 DisplayPort Controller
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20240801(9da12a7b)
- Copyright (c) 2002-2025 www.mailtech.cn 163com
-In-Reply-To: <AC3DE87B-64B1-4C34-8E1B-3900E2C53AA3@gmail.com>
-References: <20250223113036.74252-1-andyshrk@163.com>
- <AC3DE87B-64B1-4C34-8E1B-3900E2C53AA3@gmail.com>
-X-NTES-SC: AL_Qu2fAvSYvkAs4imaYekfmkcVgOw9UcO5v/Qk3oZXOJF8jCHpyAceeXBTHlbv/PCDBDqXkAiHVDdI89xeb5lhU4kMvpw71wI8xCMUqheypabd2w==
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8
+	dkim=pass (2048-bit key) header.d=wp.pl header.i=@wp.pl header.b="zaxc8Sea"
+Received: (wp-smtpd smtp.wp.pl 36133 invoked from network); 1 Mar 2025 13:28:35 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wp.pl; s=20241105;
+          t=1740832115; bh=3hL3gu4+phjo6I/CspOjLAoXyyGic55LKqTv9Puz30w=;
+          h=From:To:Cc:Subject;
+          b=zaxc8SeaUciiZUKVbZnqy47FCT1BHrj84ds+FBPeBI09vDaB8KbgbVH4m+cTUhCB4
+           +CQug0EJ3oEa4T+AYLwL/ZECP2RN/XheLfmfphVQ7cJ/0EKSlSkjC4aFDMW2T3lhfI
+           XzmZnEnLGqtMxCUteejldUTJVQqesxl6qcPMEHZs6gqzust+SInUAFiI55WKge9jyy
+           uSlN4gcUf5Ax7gEXqf9JdhqKnBRuqfXHVI40CvpxqIxIwVjOFDV8/0GnHZzA6bqpuU
+           UZz2puN11B5Tmn1VPnR2eb+zhAPV4Ba/X76GVxPjWvKClZ0RDO1nbU9Bzuk1e45LkL
+           6okDkiqz3y5eg==
+Received: from 89-64-0-97.dynamic.chello.pl (HELO localhost) (stf_xl@wp.pl@[89.64.0.97])
+          (envelope-sender <stf_xl@wp.pl>)
+          by smtp.wp.pl (WP-SMTPD) with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP
+          for <arnd@kernel.org>; 1 Mar 2025 13:28:35 +0100
+Date: Sat, 1 Mar 2025 13:28:34 +0100
+From: Stanislaw Gruszka <stf_xl@wp.pl>
+To: Arnd Bergmann <arnd@kernel.org>
+Cc: Johannes Berg <johannes@sipsolutions.net>,
+	Arnd Bergmann <arnd@arndb.de>, Kalle Valo <kvalo@kernel.org>,
+	Ben Hutchings <ben@decadent.org.uk>,
+	"Dr. David Alan Gilbert" <linux@treblig.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] [v2] iwlegacy: don't warn for unused variables with
+ DEBUG_FS=n
+Message-ID: <20250301122834.GA55739@wp.pl>
+References: <20250225145359.1126786-1-arnd@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <7b8767fc.3607.19551aa5f74.Coremail.andyshrk@163.com>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID:aygvCgA3X+eD_MJna0JzAA--.55803W
-X-CM-SenderInfo: 5dqg52xkunqiywtou0bp/xtbB0hoDXmfC+twJKAABs2
-X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250225145359.1126786-1-arnd@kernel.org>
+X-WP-MailID: 42cec4a7e71b348584fd2301367d5215
+X-WP-AV: skaner antywirusowy Poczty Wirtualnej Polski
+X-WP-SPAM: NO 0000001 [geIR]                               
 
-CkhpIFBpb3RyLAoK5ZyoIDIwMjUtMDMtMDEgMDQ6MzA6MzPvvIwiUGlvdHIgT25pc3pjenVrIiA8
-cGlvdHIub25pc3pjenVrQGdtYWlsLmNvbT4g5YaZ6YGT77yaCj4KPgo+PiBXaWFkb21vxZvEhyBu
-YXBpc2FuYSBwcnpleiBBbmR5IFlhbiA8YW5keXNocmtAMTYzLmNvbT4gdyBkbml1IDIzIGx1dCAy
-MDI1LCBvIGdvZHouIDEyOjMwOgo+PiAKPj4gRnJvbTogQW5keSBZYW4gPGFuZHkueWFuQHJvY2st
-Y2hpcHMuY29tPgo+PiAKPj4gCj4+IFRoZXJlIGFyZSB0d28gRFcgRFBUWCBiYXNlZCBEaXNwbGF5
-UG9ydCBDb250cm9sbGVyIG9uIHJrMzU4OCB3aGljaAo+PiBhcmUgY29tcGxpYW50IHdpdGggdGhl
-IERpc3BsYXlQb3J0IFNwZWNpZmljYXRpb24gVmVyc2lvbiAxLjQgd2l0aAo+PiB0aGUgZm9sbG93
-aW5nIGZlYXR1cmVzOgo+PiAKPj4gKiBEaXNwbGF5UG9ydCAxLjRhCj4+ICogTWFpbiBMaW5rOiAx
-LzIvNCBsYW5lcwo+PiAqIE1haW4gTGluayBTdXBwb3J0IDEuNjJHYnBzLCAyLjdHYnBzLCA1LjRH
-YnBzIGFuZCA4LjFHYnBzCj4+ICogQVVYIGNoYW5uZWwgMU1icHMKPj4gKiBTaW5nbGUgU3RyZWFt
-IFRyYW5zcG9ydChTU1QpCj4+ICogTXVsdGlzdHJlYW0gVHJhbnNwb3J0IChNU1QpCj4+ICrvga5U
-eXBlLUMgc3VwcG9ydCAoYWx0ZXJuYXRlIG1vZGUpCj4+ICogSERDUCAyLjIsIEhEQ1AgMS4zCj4+
-ICogU3VwcG9ydHMgdXAgdG8gOC8xMCBiaXRzIHBlciBjb2xvciBjb21wb25lbnQKPj4gKiBTdXBw
-b3J0cyBSQkcsIFlDYkNyNDo0OjQsIFlDYkNyNDoyOjIsIFlDYkNyNDoyOjAKPj4gKiBQaXhlbCBj
-bG9jayB1cCB0byA1OTRNSHoKPj4gKiBJMlMsIFNQRElGIGF1ZGlvIGludGVyZmFjZQo+PiAKPj4g
-VGhlIGN1cnJlbnQgdmVyc2lvbiBvZiB0aGlzIHBhdGNoIHNlcmllcyBvbmx5IHN1cHBvcnRzIGJh
-c2ljIGRpc3BsYXkgb3V0cHV0cy4KPj4gSSBjb25kdWN0ZWQgdGVzdHMgaW4gMTA4MHAgYW5kIDRL
-QDYwIFlDYkNyNDoyOjAgbW9kZXM7IHRoZSBBTFQvVHlwZS1DIG1vZGUKPj4gaGFzbid0IGJlZW4g
-dGVzdGVkIHlldCwgYnV0IEkgc3VzcGVjdCBpdCB3aWxsIGxpa2VseSB3b3JrLiBIRENQIGFuZCBh
-dWRpbwo+PiBmZWF0dXJlcyByZW1haW4gdW5pbXBsZW1lbnRlZC4gRm9yIFJLMzU4OCwgaXQncyBv
-bmx5IHN1cHBvcnQgU1NULCB3aGlsZSBpbgo+PiB0aGUgdXBjb21pbmcgUkszNTc2LCBpdCBjYW4g
-c3VwcG9ydCBNU1Qgb3V0cHV0Lgo+PiAKPgo+QW5keSwKPgo+SXMgdGlzIHNlcmllcyBlbm91Z2gg
-dG8gZ2V0IHVzYmMxL2RwMSB3b3JraW5nIGFzIHZpZGVvIG91dHB1dCA/Cj4oYXNzdW1pbmcgaSB3
-aWxsIGFkZCBuZWNlc3NhcnkgY29kZSBpbiBkdCkgCj4KPnJvY2s1LWl0eCBoYXMgc2Vjb25kIGhk
-bWkgcG9ydCB1c2luZyB1c2JjMS9kcDEgbGFuZXMgMiwzIHRvIHJhNjIwIGRwLT5oZG1pIGNvbnZl
-cnRlcgo+Cj5pcyBpdCB3b3J0aCB0byBwbGF5IHdpdGggdGhpcyBvciBpdCBpcyB0b28gZWFybHk/
-CgpJIHRoaW5rIHlvdSBjb3VsZCBnaXZlIGl0IGEgdHJ5IGlmIGl0IHVzaW5nIHRoZSBTdGFuZGFy
-ZCBEUO+8iG5vbi1BTFQgbW9kZe+8iSBwb3J0IGZvciBvdXRwdXQuIApTaW5jZSBJIGRvbid0IGN1
-cnJlbnRseSBoYXZlIGEgZGV2ZWxvcG1lbnQgYm9hcmQgd2l0aCBEUDEgb3V0cHV0IGF2YWlsYWJs
-ZSwgSSBoYXZlbid0IGJlZW4KYWJsZSB0byB0ZXN0IGl0IHlldC4gQXMgZm9yIHRoZSBUeXBlLUMg
-QWx0ZXJuYXRlIE1vZGUgb3V0cHV0LCBzb21lIHBhdGNoZXMgYXJlIHN0aWxsIHJlcXVpcmVkIApJ
-J2xsICBzZW5kIGl0IHdpdGggVjIgdG9tb3Jyb3cgb3IgbmV4dCB3ZWVrLgpGZWVsIGZyZWUgdG8g
-bGV0IG1lIGtub3cgaWYgSWYgeW91IGVuY291bnRlciBhbnkgaXNzdWVz44CCCgoKPiAK
+On Tue, Feb 25, 2025 at 03:53:53PM +0100, Arnd Bergmann wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
+> 
+> The reference to il_rate_mcs is inside of an #ifdef, causing a W=1 warning:
+> 
+> drivers/net/wireless/intel/iwlegacy/4965-rs.c:189:38: error: unused variable 'il_rate_mcs' [-Werror,-Wunused-const-variable]
+> static const struct il_rate_mcs_info il_rate_mcs[RATE_COUNT] = {
+> 
+> Replace the #ifdef with a PTR_IF() for better compile time analysis.
+> The dead code will still get eliminated, but the warning goes away.
+
+But then the code will be compiled for !CONFIG_MAC80211_DEBUGFS
+case, it does compile for me:
+
+-  22475	   1160	      0	  23635	   5c53	drivers/net/wireless/intel/iwlegacy/4965-rs.o
++  23008	   1168	      0	  24176	   5e70	drivers/net/wireless/intel/iwlegacy/4965-rs.o
+
+How about moving  
+static const struct il_rate_mcs_info il_rate_mcs[RATE_COUNT]
+under CONFIG_MAC80211_DEBUGFS ? Maybe inside the function that use it ? 
+
+Regards
+Stanislaw
+
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+> v2: use correct config symbol consistently
+> ---
+>  drivers/net/wireless/intel/iwlegacy/4965-rs.c | 15 ++-------------
+>  drivers/net/wireless/intel/iwlegacy/common.h  |  2 --
+>  2 files changed, 2 insertions(+), 15 deletions(-)
+> 
+> diff --git a/drivers/net/wireless/intel/iwlegacy/4965-rs.c b/drivers/net/wireless/intel/iwlegacy/4965-rs.c
+> index 718efb1aa1b0..f754fb979546 100644
+> --- a/drivers/net/wireless/intel/iwlegacy/4965-rs.c
+> +++ b/drivers/net/wireless/intel/iwlegacy/4965-rs.c
+> @@ -132,15 +132,8 @@ static void il4965_rs_fill_link_cmd(struct il_priv *il,
+>  static void il4965_rs_stay_in_table(struct il_lq_sta *lq_sta,
+>  				    bool force_search);
+>  
+> -#ifdef CONFIG_MAC80211_DEBUGFS
+>  static void il4965_rs_dbgfs_set_mcs(struct il_lq_sta *lq_sta,
+>  				    u32 *rate_n_flags, int idx);
+> -#else
+> -static void
+> -il4965_rs_dbgfs_set_mcs(struct il_lq_sta *lq_sta, u32 * rate_n_flags, int idx)
+> -{
+> -}
+> -#endif
+>  
+>  /*
+>   * The following tables contain the expected throughput metrics for all rates
+> @@ -2495,8 +2488,6 @@ il4965_rs_free_sta(void *il_r, struct ieee80211_sta *sta, void *il_sta)
+>  	D_RATE("leave\n");
+>  }
+>  
+> -#ifdef CONFIG_MAC80211_DEBUGFS
+> -
+>  static void
+>  il4965_rs_dbgfs_set_mcs(struct il_lq_sta *lq_sta, u32 * rate_n_flags, int idx)
+>  {
+> @@ -2758,7 +2749,6 @@ il4965_rs_add_debugfs(void *il, void *il_sta, struct dentry *dir)
+>  	debugfs_create_u8("tx_agg_tid_enable", 0600, dir,
+>  			  &lq_sta->tx_agg_tid_en);
+>  }
+> -#endif
+>  
+>  /*
+>   * Initialization of rate scaling information is done by driver after
+> @@ -2781,9 +2771,8 @@ static const struct rate_control_ops rs_4965_ops = {
+>  	.free = il4965_rs_free,
+>  	.alloc_sta = il4965_rs_alloc_sta,
+>  	.free_sta = il4965_rs_free_sta,
+> -#ifdef CONFIG_MAC80211_DEBUGFS
+> -	.add_sta_debugfs = il4965_rs_add_debugfs,
+> -#endif
+> +	.add_sta_debugfs = PTR_IF(IS_ENABLED(CONFIG_MAC80211_DEBUGFS),
+> +				  il4965_rs_add_debugfs),
+>  };
+>  
+>  int
+> diff --git a/drivers/net/wireless/intel/iwlegacy/common.h b/drivers/net/wireless/intel/iwlegacy/common.h
+> index 92285412ab10..52610f5e57a3 100644
+> --- a/drivers/net/wireless/intel/iwlegacy/common.h
+> +++ b/drivers/net/wireless/intel/iwlegacy/common.h
+> @@ -2815,9 +2815,7 @@ struct il_lq_sta {
+>  	struct il_scale_tbl_info lq_info[LQ_SIZE];	/* "active", "search" */
+>  	struct il_traffic_load load[TID_MAX_LOAD_COUNT];
+>  	u8 tx_agg_tid_en;
+> -#ifdef CONFIG_MAC80211_DEBUGFS
+>  	u32 dbg_fixed_rate;
+> -#endif
+>  	struct il_priv *drv;
+>  
+>  	/* used to be in sta_info */
+> -- 
+> 2.39.5
+> 
