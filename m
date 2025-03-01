@@ -1,111 +1,171 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D8231E522;
-	Sat,  1 Mar 2025 13:52:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBD081E522;
+	Sat,  1 Mar 2025 13:55:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740837140; cv=none; b=ZGevIo7FxDJX70XF54z50P4qvzc/UgSXj9HawKlpLvihbrTH8oZrtok2HPr00eH9wX1izrSFIru7hsyuwriSyoQK3wdTq7vbHpsuYgJmR18hnODClueE/vxEFxsEGwqQkip2BYgxoxZRunA7gku7NOlKgM0y6JvilLLU2hcejog=
+	t=1740837326; cv=none; b=nBPCtKecysU4Kr2N4UpaEjqjlvyT2HvAhSA20nAIgmDYZy/jxjf+ycu7TiPFNtejDr0DckedkdK9gjg55R/lTjNPKEFyx96+GVAJEUqg7K5bj1C+pqZUhpfLD7cbkuWXmJDiTKmC0DMpYkun7taStqMPovTfgSi1t8un0Ntfxbk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740837140; c=relaxed/simple;
-	bh=6Bih9s9N8cIQd39nOyUIaKyFZAl5RW/d0MiIvTb1BN8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VcuPRCZUhI5YLOX0KplHDE3K8H6GgUCC1rrD/xYQQscKLiLk3iA+KswnSHRtFKl0mqXUVsQV9UJPnwCT7R8ftsqMVnO1QVcQDKb4orTcvzMDpz8Qd30pryNBned/HSDIiRmn4+KqRoeJ1ygOC6VgX14v1gM6Y6o6LzOse+0ruhQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gwDH8z8O; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740837326; c=relaxed/simple;
+	bh=+mrPZHHSsQP7nU/rMAbtkBPhwztod/wRhwfeKlP8lC4=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=bz4XCCod6Q+BUcEb7ZQXEg3N4NRX81G4OSnZRuNjPec0UfRfZ3YnIeGSf53PDQ7AvLBQsq8mFT5ouzgaqBKplnx0dJunWV35RYufMjDLEuMd2JXyMfu9c7iliZPLocvDqKBjKU49k7q8is2Kek7G8NeYmbldSr397jFMoaDluo4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CeZpDrTC; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gwDH8z8O"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6D41C4CEDD;
-	Sat,  1 Mar 2025 13:52:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740837139;
-	bh=6Bih9s9N8cIQd39nOyUIaKyFZAl5RW/d0MiIvTb1BN8=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=gwDH8z8OahVL4xJA79BSFzl7HEPM7doRZjfSKnxZoU3kMzB88v6kMiOVpXDcpFdJh
-	 zs6W07NQU7AzganEDppq2f1uCUY58tpTK/I9Z47WpICjT2jLgGwX7ZpVlHfzxKNApJ
-	 nGNFq4BEUatEqqM2QD3AssKKV7ZXQLYLZmQHgx/0B2gqhzqmXyfsxn5+LsOruDVzkg
-	 XkMn9rM866oirhkmt0sRNbw2PKuzs82YlG8ksdSUtA92Ee+5b1K2ZlV/msHFfkjEVP
-	 FedWp37l2KN3BSG9vQec8hZhCCxbV4o2y/I2soiRGLD7W262fUpWjO9T+ap+W67o0L
-	 ikCxpsnK+lzjw==
-Message-ID: <09674d15-d639-4cb3-837a-9575f0028a76@kernel.org>
-Date: Sat, 1 Mar 2025 07:52:15 -0600
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CeZpDrTC"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-223959039f4so3334695ad.3;
+        Sat, 01 Mar 2025 05:55:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740837324; x=1741442124; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=l1I8PVfs4+GvFFMfDb24JsmlYi7QK/OiALkoJ1xatCg=;
+        b=CeZpDrTCwIkkb6FvmCexsM1kkvzjI2QxeJw9Dw3T2lNibDQDrYcZR88xuJ12/2AXV4
+         QTdAtUT+Hl9SVfu6SkfG11dXnRWfUU+Y9vZ5BDpWLFx0HZFC1YJK0830iCF5ls/mgAWc
+         RZz1Z6vaIhDle4CUIgTKfk9937Wn0yDdFFEyl7JPKroDNsLLf5tIT7ydUdxexTTBuW8E
+         oZnkKI+c9UC3bQzywXX3wVMHHAx9DZIHAqeFqqx6U3kwJoondAzIMS5EEjG95jvtSKyW
+         ww913PA9no26RJAXM9BnYSlgvN9mlMf3WAXAuSwVH3mqqPskkmZa1yqbVxW3w2p3U0Fq
+         xweA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740837324; x=1741442124;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=l1I8PVfs4+GvFFMfDb24JsmlYi7QK/OiALkoJ1xatCg=;
+        b=doUdfCaFWt8GaE5ejhfC/wse974QKg4RO579zpA/iwNQiLv34my3HUjspq7ymwg5CC
+         yZ15YBys/SkY4h6cS8VjcE2KISaXEwvjc0XkPrcBvg0QNx5UKtU07be7MZrpC0zoYJuS
+         gnZUHyqIqnOI93jzAR3DxDUYyjMmu84KdJCXELGLPZamfBFnrV3ZYmWYTx5IT60e1NWL
+         qbKY8zaZYDs38gRs8cRs2hR2VeiGS7FFH3n9/mxCnn4rGKJUud97LNOH1Op4EgwPhOub
+         0PEjmA6a0QUYm0bUYvdyiESvzQcFSW7zk/6y2cL1FylUz6gf2QKJl4j5vLTp/GHMfgOx
+         RkpQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU8yGATKSzJAvz0ljovnuS0NuXa/ydJjsoCoQubizypV86p9lV0DEYiAb4CVekdeY4WfBAHq9C/@vger.kernel.org, AJvYcCUUcVzcxnfV1VsoKsRCkaAMQRIWW1rXeDH2y4Ss0rV2W8ti7M5IC2TGiQxFCosnTCFcl03Ynx6LQQYF/Gg=@vger.kernel.org, AJvYcCXeMq4XcAc/REzqKHEQlGcmqE6QBUPUJpaDwRwSRfzzffmkzrvSzEVUsQ/RUYV8nhRJ4CDvRAUdguS0@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw2cAMz2Hye3P+pBzXWCf6ITPYmOz0UwRKW1bH1ttAyYUiNhio2
+	4PTOW9kROZAsuDaJunNTlMNjsKhsOilJb26ZNQWxzBzaSesARxDt
+X-Gm-Gg: ASbGnctiwJuBD7zZS0ZhRKOpadfLwPE0XsCMHwn6zBhR6wZoJVHJ9O1/tYcLhrgdfBW
+	b7wD2KFCRAfY+ZQS3Pg/47087fPSsLAtPwcLeveZBj56XzkQTyrIk07+E311lNI9JSkhSLJ/Nuj
+	03URHunlY9rKpzdFM/Tqcat9liTf0lCppjOD5lJIfSk9dLS1oP/oJxGA5DU3tegJQyXaYY4reVl
+	OvprOIfBkTrTbWCj/b5AcjuqYlaOV/OjhIeiSA/ZwS0CIqWgBHMBDXtg4gu94is06JhoQIfvVHS
+	grHkaBhCoODRvsVAKYr5+1RQTx2wTycAHqFYQg==
+X-Google-Smtp-Source: AGHT+IHGKZRZmAndOYzn/cvVVCvYI8zxa3WIt8+bh7D6LpjEMNa15wqGPXXiDXP4Q07JmV+GvXCqRQ==
+X-Received: by 2002:a17:902:fccf:b0:220:e63c:5b08 with SMTP id d9443c01a7336-22368f6a1b5mr82188755ad.11.1740837323880;
+        Sat, 01 Mar 2025 05:55:23 -0800 (PST)
+Received: from gmail.com ([116.237.135.88])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-223501d529fsm49058765ad.48.2025.03.01.05.55.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 01 Mar 2025 05:55:23 -0800 (PST)
+From: Qingfang Deng <dqfext@gmail.com>
+To: =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Michal Ostrowski <mostrows@earthlink.net>,
+	James Chapman <jchapman@katalix.com>,
+	Simon Horman <horms@kernel.org>,
+	linux-ppp@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH net-next] ppp: use IFF_NO_QUEUE in virtual interfaces
+Date: Sat,  1 Mar 2025 21:55:16 +0800
+Message-ID: <20250301135517.695809-1-dqfext@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/3] ACPI: platform_profile: Add support for hidden
- choices
-To: Antheas Kapenekakis <lkml@antheas.dev>
-Cc: Kurt Borja <kuurtb@gmail.com>, Shyam Sundar S K
- <Shyam-sundar.S-k@amd.com>, "Rafael J . Wysocki" <rafael@kernel.org>,
- Hans de Goede <hdegoede@redhat.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- "Luke D . Jones" <luke@ljones.dev>, Mark Pearson
- <mpearson-lenovo@squebb.ca>,
- "open list:AMD PMF DRIVER" <platform-driver-x86@vger.kernel.org>,
- open list <linux-kernel@vger.kernel.org>,
- "open list:ACPI" <linux-acpi@vger.kernel.org>,
- "Derek J . Clark" <derekjohn.clark@gmail.com>, me@kylegospodneti.ch,
- Denis Benato <benato.denis96@gmail.com>,
- Mario Limonciello <mario.limonciello@amd.com>, Armin Wolf <W_Armin@gmx.de>
-References: <20250228170155.2623386-1-superm1@kernel.org>
- <20250228170155.2623386-2-superm1@kernel.org>
- <D84F6QF8EU3D.3RUI1PKXP2DZ3@gmail.com>
- <6f56571a-3090-4323-a29d-008b916abf39@kernel.org>
- <CAGwozwGFLQxGEQ-nb+d9yrikz=fx+u48mpTYUyUtvgFD-9ypQg@mail.gmail.com>
-Content-Language: en-US
-From: Mario Limonciello <superm1@kernel.org>
-In-Reply-To: <CAGwozwGFLQxGEQ-nb+d9yrikz=fx+u48mpTYUyUtvgFD-9ypQg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
->>> Let me know what you think!
->>
->> I don't really like that profiles can get out of sync, this is asking
->> for a non-deterministic behavior that can be difficult to diagnose
->> issues and also difficult for userspace to work with.
-> 
-> I agree with Mario here. Imagine two drivers, one with low-power and
-> one with quiet. They both begin at performance.
-> 
-> Then, userspace software gets confused (incl. ppd) and sets firmware
-> profile to low-power. The latter gets left in performance, causing
-> excess drain.
-> 
-> I do not believe the legacy interface should be deprecated. Right now,
-> amd-pmf is a NOOP in most devices 
+For PPPoE, PPTP, and PPPoL2TP, the start_xmit() function directly
+forwards packets to the underlying network stack and never returns
+anything other than 1. So these interfaces do not require a qdisc,
+and the IFF_NO_QUEUE flag should be set.
 
-"Most" devices is not accurate.  There are a lot of devices that it does 
-enable.  In the gaming space right now it's often behaving as a no-op.
+Introduces a direct_xmit flag in struct ppp_channel to indicate when
+IFF_NO_QUEUE should be applied. The flag is set in ppp_connect_channel()
+for relevant protocols.
 
-> so there is actually 0 reason for
-> generic power handlers to move to the new API. Just extra work. So
-> lets make sure the legacy endpoint works properly for the foreseeable
-> future.
-> 
-> Also, when power handlers start moving to the new interface, they will
-> hardcode choices based on the name. As they should. TDP needs to be
-> customized per device/manufacturer. So moving handlers between
-> low-power and quiet will not be possible.
-> 
-> @Mario: I do not have a device with an amd-pmf integration. All of
-> mine have stub handlers. I would expect that a properly configured pmf
-> handler for e.g., Asus would do the same as the armoury interface, so
-> that users do not have to rely to vendor software on WIndows. Then
-> power profiles would be synced between windows and armoury. In that
-> case, we have a problem of setting the power mode twice. What would be
-> the mitigation for something like that?
-> 
-> Antheas
+While at it, remove the usused latency member from struct ppp_channel.
 
-"Power mode" is a concept, it doesn't just apply to configuring sPPT and 
-fPPT.  I envisage that a vendor that actively uses PMF and their own 
-interface would be changing different things by the different interfaces.
+Signed-off-by: Qingfang Deng <dqfext@gmail.com>
+---
+RFC v3 -> v1: drop RFC, and remove the unused member
 
-For "example" PMF may reconfigure sPPT, fPPT, STT and STAPM but their 
-driver may notify their EC to change a fan curve.
+ drivers/net/ppp/ppp_generic.c | 4 ++++
+ drivers/net/ppp/pppoe.c       | 1 +
+ drivers/net/ppp/pptp.c        | 1 +
+ include/linux/ppp_channel.h   | 3 +--
+ net/l2tp/l2tp_ppp.c           | 1 +
+ 5 files changed, 8 insertions(+), 2 deletions(-)
 
-If we really end up with a situation that vendor interface and PMF do 
-the same thing we can cross that bridge then.
+diff --git a/drivers/net/ppp/ppp_generic.c b/drivers/net/ppp/ppp_generic.c
+index 6220866258fc..815108c98b78 100644
+--- a/drivers/net/ppp/ppp_generic.c
++++ b/drivers/net/ppp/ppp_generic.c
+@@ -3493,6 +3493,10 @@ ppp_connect_channel(struct channel *pch, int unit)
+ 		ret = -ENOTCONN;
+ 		goto outl;
+ 	}
++	if (pch->chan->direct_xmit)
++		ppp->dev->priv_flags |= IFF_NO_QUEUE;
++	else
++		ppp->dev->priv_flags &= ~IFF_NO_QUEUE;
+ 	spin_unlock_bh(&pch->downl);
+ 	if (pch->file.hdrlen > ppp->file.hdrlen)
+ 		ppp->file.hdrlen = pch->file.hdrlen;
+diff --git a/drivers/net/ppp/pppoe.c b/drivers/net/ppp/pppoe.c
+index 2ea4f4890d23..68e631718ab0 100644
+--- a/drivers/net/ppp/pppoe.c
++++ b/drivers/net/ppp/pppoe.c
+@@ -693,6 +693,7 @@ static int pppoe_connect(struct socket *sock, struct sockaddr *uservaddr,
+ 		po->chan.mtu = dev->mtu - sizeof(struct pppoe_hdr) - 2;
+ 		po->chan.private = sk;
+ 		po->chan.ops = &pppoe_chan_ops;
++		po->chan.direct_xmit = true;
+ 
+ 		error = ppp_register_net_channel(dev_net(dev), &po->chan);
+ 		if (error) {
+diff --git a/drivers/net/ppp/pptp.c b/drivers/net/ppp/pptp.c
+index 689687bd2574..5feaa70b5f47 100644
+--- a/drivers/net/ppp/pptp.c
++++ b/drivers/net/ppp/pptp.c
+@@ -465,6 +465,7 @@ static int pptp_connect(struct socket *sock, struct sockaddr *uservaddr,
+ 	po->chan.mtu -= PPTP_HEADER_OVERHEAD;
+ 
+ 	po->chan.hdrlen = 2 + sizeof(struct pptp_gre_header);
++	po->chan.direct_xmit = true;
+ 	error = ppp_register_channel(&po->chan);
+ 	if (error) {
+ 		pr_err("PPTP: failed to register PPP channel (%d)\n", error);
+diff --git a/include/linux/ppp_channel.h b/include/linux/ppp_channel.h
+index 45e6e427ceb8..f73fbea0dbc2 100644
+--- a/include/linux/ppp_channel.h
++++ b/include/linux/ppp_channel.h
+@@ -42,8 +42,7 @@ struct ppp_channel {
+ 	int		hdrlen;		/* amount of headroom channel needs */
+ 	void		*ppp;		/* opaque to channel */
+ 	int		speed;		/* transfer rate (bytes/second) */
+-	/* the following is not used at present */
+-	int		latency;	/* overhead time in milliseconds */
++	bool		direct_xmit;	/* no qdisc, xmit directly */
+ };
+ 
+ #ifdef __KERNEL__
+diff --git a/net/l2tp/l2tp_ppp.c b/net/l2tp/l2tp_ppp.c
+index 53baf2dd5d5d..fc5c2fd8f34c 100644
+--- a/net/l2tp/l2tp_ppp.c
++++ b/net/l2tp/l2tp_ppp.c
+@@ -806,6 +806,7 @@ static int pppol2tp_connect(struct socket *sock, struct sockaddr *uservaddr,
+ 	po->chan.private = sk;
+ 	po->chan.ops	 = &pppol2tp_chan_ops;
+ 	po->chan.mtu	 = pppol2tp_tunnel_mtu(tunnel);
++	po->chan.direct_xmit	= true;
+ 
+ 	error = ppp_register_net_channel(sock_net(sk), &po->chan);
+ 	if (error) {
+-- 
+2.43.0
+
