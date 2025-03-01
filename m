@@ -1,36 +1,36 @@
-Received: from out199-2.us.a.mail.aliyun.com (out199-2.us.a.mail.aliyun.com [47.90.199.2])
+Received: from out30-100.freemail.mail.aliyun.com (out30-100.freemail.mail.aliyun.com [115.124.30.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8408A1E3DF7
-	for <linux-kernel@vger.kernel.org>; Sat,  1 Mar 2025 14:50:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=47.90.199.2
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3896C1E47A9
+	for <linux-kernel@vger.kernel.org>; Sat,  1 Mar 2025 14:50:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740840629; cv=none; b=Djsfjzu0TG9i4g8z1Jpg+amUhYQVEKgvhLGvbkGZHjaxHfXKVw06LzRa3qMFZnQ7WIGzA43L4U/SN8G7KSOAf4r7bZ5CuVVAQV/p9adNoYkL/TRiwf9OjDvD29leDiOVZc9BF1Irw+fazH+znTYMouaY4BikP4DIEIrUF0yFICw=
+	t=1740840630; cv=none; b=RKLRh2afgpRw1m4atXZQfbp/VogrxSkyeCh/RO5ap3e9mWms5A9UTHaTO6/Vde7R9yLSI+yDeQvcRgfX06w/nPjsJZG/szgKO2ZkuAcsUqftXQffxuF0hqzXUwK6Fd6jNZmn8v5GWT7N5mGuBMjtUhEkqr6K0iZf6Fzkr645OqE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740840629; c=relaxed/simple;
-	bh=0RM1j+DywwWJ8i4SROytSoMfisLkjp04QQv7+pnWFiY=;
+	s=arc-20240116; t=1740840630; c=relaxed/simple;
+	bh=SjANaxWCmJNj7oi93bssrFLPFZbesMUZ2Sr1VspqT/s=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=IDI6u+HmMnkz9hPuGASTVbc5TBlYy3uSNm9XkJz5wUeIpGV1Jk0YapT2WboRzop+0UO3mVlpSNuVkd/PVFg9ADI0ScrSR7ZK2VgDCHHFxSH96DzgDs7K/5ZHyKaPyrSwLaHA5UdZ1r8Yc8W7L2T24W39ii9hiY3usWROM+GO/i0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=xT9hvynK; arc=none smtp.client-ip=47.90.199.2
+	 MIME-Version; b=u4KkgjrwggwV5kT40sJgCwFz3XhgH1JHW0BVAnIoWRtIHZORs/17Kk0sbtc2jy4LDhJ/91kYJJ3wNUA8KWDDcGJXfco4UXo9hdjfMMSXirhMGr8XnmcF3Ukj82ia4wAUwVsfBnPaAnE5naZMjDcsgqRvy2SvShQlD+6S+2OHjEo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=vP3RPgHM; arc=none smtp.client-ip=115.124.30.100
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="xT9hvynK"
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="vP3RPgHM"
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1740840614; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=F1wkNOLPVE+3E35nVrJ+MFirrarMWBSrgK7jQArB6mY=;
-	b=xT9hvynKLSIsKcoOYrulVRINGDu9/ZImQWvPdXynbcE+v8FIueAkRgD/q938RVQChgiwDP0LuSaNZIAtqlgBOC+Qnk3/C48qNkC2uLBgOs/5RcuL4ISeVB1JDIRNB9XEtl855ef+THfgH2QtYozslDj+U1gSmG24o+0AyK5q1vw=
-Received: from localhost(mailfrom:hongzhen@linux.alibaba.com fp:SMTPD_---0WQSfpXs_1740840613 cluster:ay36)
+	t=1740840618; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=BOTXNFCiusEeI6Bv6xOR/ZPHNnysL9qJrOFxRXLReDE=;
+	b=vP3RPgHMSzIAPHz8aTu6ZjY4xUOztAbZMm80vDbi1CkVUidoqg9QC/s1ISypt+VU7ysizTTesi3TmMc/+pF68NoyAtu931nagBseUxS4yLk5D/PW+/oBa+pSr8i2GMf/0xz481pR+RosnNEr47DOZOHNNcj7HuqT9IaUQeuclz4=
+Received: from localhost(mailfrom:hongzhen@linux.alibaba.com fp:SMTPD_---0WQSjMs._1740840617 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Sat, 01 Mar 2025 22:50:13 +0800
+          Sat, 01 Mar 2025 22:50:18 +0800
 From: Hongzhen Luo <hongzhen@linux.alibaba.com>
 To: linux-erofs@lists.ozlabs.org
 Cc: linux-kernel@vger.kernel.org,
 	Hongzhen Luo <hongzhen@linux.alibaba.com>
-Subject: [RFC PATCH v6 1/7] erofs: move `struct erofs_anon_fs_type` to super.c
-Date: Sat,  1 Mar 2025 22:49:38 +0800
-Message-ID: <20250301145002.2420830-2-hongzhen@linux.alibaba.com>
+Subject: [RFC PATCH v6 7/7] erofs: implement .fadvise for page cache share
+Date: Sat,  1 Mar 2025 22:49:44 +0800
+Message-ID: <20250301145002.2420830-8-hongzhen@linux.alibaba.com>
 X-Mailer: git-send-email 2.43.5
 In-Reply-To: <20250301145002.2420830-1-hongzhen@linux.alibaba.com>
 References: <20250301145002.2420830-1-hongzhen@linux.alibaba.com>
@@ -42,92 +42,42 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Move the `struct erofs_anon_fs_type` to the super.c and
-expose it in preparation for the upcoming page cache share
-feature.
+This patch implements the .fadvise interface for page cache share.
+Similar to overlayfs, it drops those clean, unused pages through
+vfs_fadvise().
 
 Signed-off-by: Hongzhen Luo <hongzhen@linux.alibaba.com>
 ---
- fs/erofs/fscache.c  | 13 -------------
- fs/erofs/internal.h |  2 ++
- fs/erofs/super.c    | 13 +++++++++++++
- 3 files changed, 15 insertions(+), 13 deletions(-)
+ fs/erofs/ishare.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/fs/erofs/fscache.c b/fs/erofs/fscache.c
-index ce3d8737df85..ae7bd9ebff38 100644
---- a/fs/erofs/fscache.c
-+++ b/fs/erofs/fscache.c
-@@ -3,7 +3,6 @@
-  * Copyright (C) 2022, Alibaba Cloud
-  * Copyright (C) 2022, Bytedance Inc. All rights reserved.
-  */
--#include <linux/pseudo_fs.h>
- #include <linux/fscache.h>
- #include "internal.h"
+diff --git a/fs/erofs/ishare.c b/fs/erofs/ishare.c
+index e68bb1a6cf4b..a7c2be5d6f25 100644
+--- a/fs/erofs/ishare.c
++++ b/fs/erofs/ishare.c
+@@ -230,6 +230,14 @@ static int erofs_ishare_mmap(struct file *file, struct vm_area_struct *vma)
+ 	return 0;
+ }
  
-@@ -13,18 +12,6 @@ static LIST_HEAD(erofs_domain_list);
- static LIST_HEAD(erofs_domain_cookies_list);
- static struct vfsmount *erofs_pseudo_mnt;
- 
--static int erofs_anon_init_fs_context(struct fs_context *fc)
--{
--	return init_pseudo(fc, EROFS_SUPER_MAGIC) ? 0 : -ENOMEM;
--}
--
--static struct file_system_type erofs_anon_fs_type = {
--	.owner		= THIS_MODULE,
--	.name           = "pseudo_erofs",
--	.init_fs_context = erofs_anon_init_fs_context,
--	.kill_sb        = kill_anon_super,
--};
--
- struct erofs_fscache_io {
- 	struct netfs_cache_resources cres;
- 	struct iov_iter		iter;
-diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
-index 686d835eb533..47004eb89838 100644
---- a/fs/erofs/internal.h
-+++ b/fs/erofs/internal.h
-@@ -379,6 +379,8 @@ extern const struct file_operations erofs_dir_fops;
- 
- extern const struct iomap_ops z_erofs_iomap_report_ops;
- 
-+extern struct file_system_type erofs_anon_fs_type;
-+
- /* flags for erofs_fscache_register_cookie() */
- #define EROFS_REG_COOKIE_SHARE		0x0001
- #define EROFS_REG_COOKIE_NEED_NOEXIST	0x0002
-diff --git a/fs/erofs/super.c b/fs/erofs/super.c
-index 827b62665649..eb052a770088 100644
---- a/fs/erofs/super.c
-+++ b/fs/erofs/super.c
-@@ -11,6 +11,7 @@
- #include <linux/fs_parser.h>
- #include <linux/exportfs.h>
- #include <linux/backing-dev.h>
-+#include <linux/pseudo_fs.h>
- #include "xattr.h"
- 
- #define CREATE_TRACE_POINTS
-@@ -850,6 +851,18 @@ static struct file_system_type erofs_fs_type = {
- };
- MODULE_ALIAS_FS("erofs");
- 
-+static int erofs_anon_init_fs_context(struct fs_context *fc)
++static int erofs_ishare_fadvice(struct file *realfile, loff_t offset, loff_t len,
++				int advice)
 +{
-+	return init_pseudo(fc, EROFS_SUPER_MAGIC) ? 0 : -ENOMEM;
++	struct file *file = realfile->private_data;
++
++	return vfs_fadvise(file, offset, len, advice);
 +}
 +
-+struct file_system_type erofs_anon_fs_type = {
-+	.owner		= THIS_MODULE,
-+	.name           = "pseudo_erofs",
-+	.init_fs_context = erofs_anon_init_fs_context,
-+	.kill_sb        = kill_anon_super,
-+};
-+
- static int __init erofs_module_init(void)
- {
- 	int err;
+ const struct file_operations erofs_ishare_fops = {
+ 	.open		= erofs_ishare_file_open,
+ 	.llseek		= generic_file_llseek,
+@@ -238,6 +246,7 @@ const struct file_operations erofs_ishare_fops = {
+ 	.release	= erofs_ishare_file_release,
+ 	.get_unmapped_area = thp_get_unmapped_area,
+ 	.splice_read	= filemap_splice_read,
++	.fadvise	= erofs_ishare_fadvice,
+ };
+ 
+ void erofs_read_begin(struct erofs_read_ctx *rdctx)
 -- 
 2.43.5
 
