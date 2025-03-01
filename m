@@ -1,85 +1,126 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F6291DE2C5;
-	Sat,  1 Mar 2025 14:48:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D30031DF986;
+	Sat,  1 Mar 2025 14:50:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740840515; cv=none; b=QbHRLmhD5J0VdIr1X8T3vqRCRdbCWifXkmZVfe5YVtuBdLWGwthGJ9Ei6CEgk+AkLMTaQ4537LpzCU2sf2+HLKC3ji0OsRL5QzZiwG3FZvFGUcI/fJJptITYi0WtYX5aRkRpVMEo4bxE8F9bIvCsoz+/SLnQxi33kjxsbQec37A=
+	t=1740840610; cv=none; b=mOx5k637wt34vJpqwWEImbtv4p5m+ANJhXMQdnTd1eus3pHJ26SDpqEfgofbH5ym7jDouukfaZiV6dMXtx7Ekv9coQINsK31DnrvxNPCmzflPH03XKsw2YNRJVJCYc9TDRfGMgfHLLaLo5UrmNVvVeRB0CrkTD/SHR33X9799tw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740840515; c=relaxed/simple;
-	bh=oEof2d65Y4ijW9SCYkxX17wvrnpghi/bJmR8xi9/hAY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iPI6zYxvKiQmrU9IXbN0VrGjyUWdzs4a4wuxbaIasTG1qCJLmBAJTz3HKZ7RWW34/vwAlzo/hshsWvvqirnz7XNOJ72QGM/tYrQv/pENEdFLoEW2s1Wd422zY6kQ6lSNHLn1kGVV1hu459OfK3A2NzQ0yXydURTsssTBAJrXQCE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2234daaf269so17438795ad.3;
-        Sat, 01 Mar 2025 06:48:34 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740840513; x=1741445313;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Kxirebw5kDkF1+wRXCoNpE/6TwpkidGg4t4NyZVsJ/w=;
-        b=qJJLQVojiU1MtKcK+rc5L8ZATnny61YFsdUdxtLhvWjPespIwUe4Jabx++rv9ej/rN
-         5g2wJWlR/M01ejlnA1kpbOVJqvulEDUH+U/3szB338pyhkyjuM192K0qOcHocIxsp4u6
-         Cv99XL1D6BrgLjV3pYGK1MI+iNciYrBGWfVoXSrvHY9ceAPGD8jJZFo5eN3S7IXdYBS3
-         AaL1tH80iGq9TxtKNasDTaOv1/NVdMvzH2grc0GSf1jWHlnUQWRoPGgcP/BG7ZMSRleB
-         RxvQx12dT8foaR4D+ih4SlqSTZi0NpKvH9STyPNHWc2XnirFa1Dtr39RK555VimWGUSA
-         j53A==
-X-Forwarded-Encrypted: i=1; AJvYcCWJVFVpIboMiU+V2o+MLua5+msTMd7HPrD4p9V7hNLrxkGH+SS2oIu3h9OA3U7slYVmVadmP5bHGzpcEeE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwsYWjbDRfg2cuBLQHd4DQW2EGPs/ZOKYhm+Eam2VCNnbu30Hyz
-	hEXXO73+e8Rt74TyTOi3KlWIJ1WnLgw629iSC0mrK+91opkbajrwXbXAwlpITSE=
-X-Gm-Gg: ASbGncuevfHbMN/dMQ+75LxNM6BlLU80oyJef08IAOTYZEbECc7/4aA0zxhByOiTv+A
-	cjnnOsuE03+OZeeLzFxH4+Xb7mFLmWBva+0jJdDtApjLT1x0WSr+Js7lHflMBdn+CsZXvy/hqwI
-	6TKKUxS3pMWe92PVPaQlDXKM6r+3O71yTvtzMG8CtDV6AAYN44qBS5QdA0Rob2Hd9I0e0jrBoSz
-	fh+BSCEIRjzMhcLdoNGuecPIlWB2JR2Sd12pq0bsKQn3FdGeJw0bQiugcgfaoDmVn/M+fGcOrEF
-	BCln6O+18JXcNmvDVQCtLrIUYyvyNkQHUrRj1sWMmEA9qkg2koM/fO4uczqPCE9up0V8FLl/dbi
-	+pqI=
-X-Google-Smtp-Source: AGHT+IHG4g0PEDW0krzlx5kdodp+yvsIBSjDMcx+eciBkPw4wgN7QvM+HqAQBJgdzNXvy+rEnV1R2w==
-X-Received: by 2002:a17:902:fc84:b0:220:d28a:c5c7 with SMTP id d9443c01a7336-22368fc267emr124814875ad.21.1740840513441;
-        Sat, 01 Mar 2025 06:48:33 -0800 (PST)
-Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
-        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-223501f9d8bsm49585955ad.81.2025.03.01.06.48.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 01 Mar 2025 06:48:32 -0800 (PST)
-Date: Sat, 1 Mar 2025 23:48:31 +0900
-From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To: Jim Quinlan <james.quinlan@broadcom.com>
-Cc: linux-pci@vger.kernel.org, Nicolas Saenz Julienne <nsaenz@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-	Cyril Brulebois <kibi@debian.org>,
-	Stanimir Varbanov <svarbanov@suse.de>,
-	bcm-kernel-feedback-list@broadcom.com, jim2101024@gmail.com,
-	Andrew Murray <amurray@thegoodpenguin.co.uk>,
-	Jeremy Linton <jeremy.linton@arm.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-rpi-kernel@lists.infradead.org>
-Subject: Re: [PATCH v2 0/8] PCI: brcmstb: Misc small tweaks and fixes
-Message-ID: <20250301144831.GA846783@rocinante>
-References: <20250214173944.47506-1-james.quinlan@broadcom.com>
+	s=arc-20240116; t=1740840610; c=relaxed/simple;
+	bh=dv6x0iYtgHNQ2ns9yHnsJFTE8xqU4p8nlVAKsdKx4Xw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=u1lhHE5i4awL00/NpxlFeLJZ1buXcKBMzKWpiErUfbURJ2SxLZbzHYtp4HOKEJ3FILR2lH2MfAQkOktvjyyJrByqGDa1REarBBda9YeyxhC+8KMjjho7Xgznft6RuPA9wTTt109QonhlvKQkX2ghkIvDe3ZHsLxn9Rc4NUrz078=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Tv0DE8Sb; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Tv0DE8Sb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5FCCC4CEDD;
+	Sat,  1 Mar 2025 14:50:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740840609;
+	bh=dv6x0iYtgHNQ2ns9yHnsJFTE8xqU4p8nlVAKsdKx4Xw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Tv0DE8SbU2QXAMEqip5cL2lbVT6xFD3q9xX8RfadIMDcBw00+f5b6/Ew+22qYEm8A
+	 ylulnSRt2tKpVGIC18KazaMLIAoL+CF7pIvhdh3S/SwtzjwTSMJih07IDm0U1glzbm
+	 zQ9j/5HzyI3spU/Cly8qqndz5a4tyGkd4W83x6CezsPUGo9BhrP2FUPdmkU3sfpxx3
+	 2WswbIuLqHvpW/HkSDmI46gBCu668l1no73tIDX1bmdsJB1h09mqngBIZFBAdWX2DG
+	 J0JBsre7jnDr2EY25S/UdC0hac1jXjKxhUA5CDxyypae7h6k+j/0KLKwqeCrbHp5tN
+	 37TiC46dS9T3Q==
+Message-ID: <7cd3bc4c-318e-4327-a00d-bfe42d4504c9@kernel.org>
+Date: Sat, 1 Mar 2025 15:50:03 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250214173944.47506-1-james.quinlan@broadcom.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 4/4] MAINTAINERS: add entry for Samsung Exynos2200 SoC
+To: Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>
+Cc: linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20250223123044.725493-1-ivo.ivanov.ivanov1@gmail.com>
+ <20250223123044.725493-5-ivo.ivanov.ivanov1@gmail.com>
+Content-Language: en-US
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20250223123044.725493-5-ivo.ivanov.ivanov1@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hello,
+On 23/02/2025 13:30, Ivaylo Ivanov wrote:
+> Add maintainers entry for the Samsung Exynos2200 SoC based platforms.
+> 
+> Signed-off-by: Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>
+> ---
+>  MAINTAINERS | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index e4f5d8f68..7da20faf7 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -20937,6 +20937,18 @@ B:	mailto:linux-samsung-soc@vger.kernel.org
+>  F:	Documentation/devicetree/bindings/sound/samsung*
+>  F:	sound/soc/samsung/
+>  
+> +SAMSUNG EXYNOS2200 SoC SUPPORT
+> +M:	Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>
+> +L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+> +L:	linux-samsung-soc@vger.kernel.org
+> +S:	Maintained
+> +F:	Documentation/devicetree/bindings/clock/samsung,exynos2200-cmu.yaml
+> +F:	Documentation/devicetree/bindings/phy/samsung,exynos2200-usbcon-phy.yaml
+> +F:	arch/arm64/boot/dts/exynos/exynos2200*
+> +F:	drivers/clk/samsung/clk-exynos2200.c
+> +F:	drivers/phy/samsung/phy-exynos2200-usbcon.c
 
-[...]
->   Six small fixes and improvements for the driver.  This may be applied
->   before or after Stan's V5 [1] on pci-next (they should not conflict).
+Please add separate entry for the PHY driver.
 
-Applied to controller/brcmstb, thank you!
 
-	Krzysztof
+Best regards,
+Krzysztof
