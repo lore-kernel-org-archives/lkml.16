@@ -1,185 +1,239 @@
-Received: from chameleon.ash.relay.mailchannels.net (chameleon.ash.relay.mailchannels.net [23.83.222.33])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6692A101C8;
-	Sat,  1 Mar 2025 01:47:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.222.33
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740793660; cv=pass; b=XtXJSYxWRXdPXHgn71lZ/7cqJDU0S2c3pUGzVA+ekonYp4LwMqv1+wGp3KiZq9dtLR3uhmGfXR+9ptu78T5OKKL38Uscphpv0NXHrQQoath1EYxJPjX5DyIZ1YXGWhKDsqdSWcqirnnkGILkIwgER0hXWXlgemavR0BXgSn2H/I=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740793660; c=relaxed/simple;
-	bh=9fNC/TSXGeRCJeu4GxrTuGuZUj4kYPFMrLufRw4n5OY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pTnDEptkppgJKa7r8nyjkhcHBYiomX25fgrufrHJpv3qpfxWon8oIPn72VZkcFHzHNp9e4YE5mu5qfLrtaTZjXOKn2H4XZDYijkKiVnFEITklZ02bPOocAN1tB53HAfH1s8TiONDH4qcDkT0SC+jhDd/BMYR6HDX+GAD9NSYjTA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=landley.net; spf=pass smtp.mailfrom=landley.net; dkim=pass (2048-bit key) header.d=landley.net header.i=@landley.net header.b=N5fsOeJH; arc=pass smtp.client-ip=23.83.222.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=landley.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=landley.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A25385C5E;
+	Sat,  1 Mar 2025 01:48:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740793720; cv=none; b=XhylCvGurilUp636KP/w/ex4ZTZaBWN7QlOiOkYlJn4se2eQGYjgAn2mwDQ+eZo8Q6dPGsmICkjnj5osgigUiUpTfPXfIQ8QO9ovqoy7gSnY2PD21o2hDL5r1CjVTxTCuUdvZTgBy/tjMMWSLc1YvOj5c1uWxQ2uUUmjLoKUu8s=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740793720; c=relaxed/simple;
+	bh=qZBOn/Wng+BIV3lXMuztkKv+nvAUVZl/1eNFY5+QDRA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=m+t3Wm+ucI+bQAUNgrWEa9qhkBnpJqmYnDf4/ySQclqUkbPegF2Jown3+q0cKuxWcxkgHKcRXNFkqqa0arRmGyvEiIVJosqcxlT+exdvPyRtjs8NPmWrSbuPWD+2ITtxUP/muctgTm9dHDPqkqi7/O1EVFzGkmshygEhT2Huy5g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SU+BfRII; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=landley.net header.i=@landley.net header.b="N5fsOeJH"
-X-Sender-Id: dreamhost|x-authsender|rob@landley.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id 4A2D232135D;
-	Fri, 28 Feb 2025 22:19:15 +0000 (UTC)
-Received: from pdx1-sub0-mail-a202.dreamhost.com (trex-5.trex.outbound.svc.cluster.local [100.104.191.118])
-	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id AD380321A3F;
-	Fri, 28 Feb 2025 22:19:14 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1740781154; a=rsa-sha256;
-	cv=none;
-	b=BCGEzvIWQPpjxslxQuy9oRccz33nICueK5+EfszIs+VM9KKknQjsTh5Wmz6boRyaUyFCD8
-	4ZllSQi+THfh8nL2kRefnzHWjPJP0O4u2S/w79MEnLf4xcayDZUrdeUz5MCtBuDiTz/JeQ
-	ymMU74PmL4jn9lN+QA9Mx03tw+qwJ8qMY16ikWGUQAOpi5A44VeC7UZSXyBIZH3ZNzjhXI
-	4sj3HoFQWo2Kfx2f5jW1LwF0zb4gsUjCHaumjwCTyBrHkPF+7Q4ZoyFx16RY8MAzMUEFcn
-	nXTGs+W9BEZ6myc5ulw7/k6vLV4dOUN7aTyIStY2XJ+08ioG4VIy3XSEBJQ/rg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-	s=arc-2022; t=1740781154;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:dkim-signature;
-	bh=PzlTgRr9Vo0BLTv0WNL2DnLn4rYUWOQKuKEVykzfUFI=;
-	b=wUYoqJY3zAbyLLpB4SELmy219TE8Bk9d6FYwDBPYJhrJnspJ7o/KojsH4Xzj+iulhOmdZT
-	6SfnIZcIktxIG0M8wgN5giKEEcs+hxTCsuIf+VHjCL1pBRYBQ918yyizsPo/QJIBxeLwRz
-	4dJOdqV/bBltgQ0szBbSbwLIgA1K5cvdIlgVfrw12dEWrs97+WLbXGaLv5EoDJHbPG24dC
-	+scTKRKtNtaG+PNQajhmn9cmMKI+NUksiiEXgfmjgU+JjqjL1tiZe0db3efVDFi+FXaKXW
-	xJzSCER1BhAFHvBfhqmZKfYTXLKhw2GWewUHoSCAGUNiYK3a6k25NXVVfExxJg==
-ARC-Authentication-Results: i=1;
-	rspamd-58748c789d-cwdgv;
-	auth=pass smtp.auth=dreamhost smtp.mailfrom=rob@landley.net
-X-Sender-Id: dreamhost|x-authsender|rob@landley.net
-X-MC-Relay: Bad
-X-MailChannels-SenderId: dreamhost|x-authsender|rob@landley.net
-X-MailChannels-Auth-Id: dreamhost
-X-Madly-Ski: 792fe26e66da1dbe_1740781154993_3018745810
-X-MC-Loop-Signature: 1740781154993:1433236021
-X-MC-Ingress-Time: 1740781154993
-Received: from pdx1-sub0-mail-a202.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.104.191.118 (trex/7.0.2);
-	Fri, 28 Feb 2025 22:19:14 +0000
-Received: from [172.16.32.88] (unknown [198.232.126.202])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: rob@landley.net)
-	by pdx1-sub0-mail-a202.dreamhost.com (Postfix) with ESMTPSA id 4Z4N0d4JR0zBQ;
-	Fri, 28 Feb 2025 14:19:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=landley.net;
-	s=dreamhost; t=1740781154;
-	bh=PzlTgRr9Vo0BLTv0WNL2DnLn4rYUWOQKuKEVykzfUFI=;
-	h=Date:Subject:To:Cc:From:Content-Type:Content-Transfer-Encoding;
-	b=N5fsOeJHftCZu+LfgdR2UNMcSwDEVh6d3Hf/OQgibSx22nfaaDJRSuYrt/xlIIz6w
-	 uwNlubKZ0Nmj2Gqjj/+zhK8E0NKURR/tCPS1G4sDkw5RRLMzUhjNs05o7o2aMZIRdI
-	 58+MDIU6G7SFDpKYog1163aZALQKlxDXQTaXR6UywjuyyIaGuSIo4yVLZFE5Zge8PI
-	 kmjQEVuuV1DeGltROBzu49NOCdA9QvaFrSsV8RT2tUqLQB/ZDVht3ht8gaN5S4a0BK
-	 964nJRt6JAEwtusN7eLkNykb4XJtm13XhXszd0SGsNwv61ymo1xDUAg57uBqLUlmAe
-	 +0GnCjlVKfrTA==
-Message-ID: <9cf43bbe-898f-4b29-bd85-04f5320bce77@landley.net>
-Date: Fri, 28 Feb 2025 16:19:12 -0600
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SU+BfRII"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5FB86C4CED6;
+	Sat,  1 Mar 2025 01:48:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740793719;
+	bh=qZBOn/Wng+BIV3lXMuztkKv+nvAUVZl/1eNFY5+QDRA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=SU+BfRIINqmDpUNfjIU7OwJDRljFfSkTl5cW5hyQy7oeJHsmZAHGWziM8WOBs4Iz+
+	 FIX7Tc2g0MsEkB2vUOi95T3Rw26xzZR5bHwVR8mlavAB9Ns2bd737MEvW7XCxC2lVy
+	 J0ge2QAYzmSfgO6/XvZpIFK9Dzj69WblN5/kFNS8BoCZih04gWPMae/0mDHC4fVjit
+	 AuhDxef4Kl/T7r/tXd2z8BorcQyl4zV8qJUclwEp88gWDWQja5NKvKYTZhybFY0flR
+	 3GZ29aeI4ceJ41eLVRVsaNBenyDoqhrE55tXWEQ8ofhHzdI19pRGWX4uawdNpMEif6
+	 PLi/ICcrVGQ8Q==
+Date: Sat, 1 Mar 2025 03:48:35 +0200
+From: Jarkko Sakkinen <jarkko@kernel.org>
+To: Stefano Garzarella <sgarzare@redhat.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+	Claudio Carvalho <cclaudio@linux.ibm.com>,
+	Peter Huewe <peterhuewe@gmx.de>, x86@kernel.org,
+	Dov Murik <dovmurik@linux.ibm.com>, linux-coco@lists.linux.dev,
+	Dionna Glaze <dionnaglaze@google.com>,
+	James Bottomley <James.Bottomley@hansenpartnership.com>,
+	Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
+	Jason Gunthorpe <jgg@ziepe.ca>, linux-integrity@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Tom Lendacky <thomas.lendacky@amd.com>,
+	Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>
+Subject: Re: [RFC PATCH v2 4/6] tpm: add interface to interact with devices
+ based on TCG Simulator
+Message-ID: <Z8JncxQM7Nkit0Q6@kernel.org>
+References: <20250228170720.144739-1-sgarzare@redhat.com>
+ <20250228170720.144739-5-sgarzare@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/2] J2 Turtle Board fixes
-To: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
- Artur Rojek <contact@artur-rojek.eu>,
- Yoshinori Sato <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>,
- Daniel Lezcano <daniel.lezcano@linaro.org>,
- Thomas Gleixner <tglx@linutronix.de>, Uros Bizjak <ubizjak@gmail.com>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>,
- "D . Jeff Dionne" <jeff@coresemi.io>, linux-sh@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250216175545.35079-1-contact@artur-rojek.eu>
- <f574808500e2c5fb733c1e5d9b4d17c2884d1b9f.camel@physik.fu-berlin.de>
- <1551804b-fc78-4a3f-add8-af693f340a01@landley.net>
- <48881e2d8efa9d7df8156f5f81cd662c2286e597.camel@physik.fu-berlin.de>
-Content-Language: en-US
-From: Rob Landley <rob@landley.net>
-In-Reply-To: <48881e2d8efa9d7df8156f5f81cd662c2286e597.camel@physik.fu-berlin.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250228170720.144739-5-sgarzare@redhat.com>
 
-On 2/28/25 02:34, John Paul Adrian Glaubitz wrote:
-> Hi Rob,
+On Fri, Feb 28, 2025 at 06:07:18PM +0100, Stefano Garzarella wrote:
+> This is primarily designed to support an enlightened driver for the
+
+The commit message is half-way cut.
+
+I.e. it lacks the explanation of "this".
+
+> AMD SVSM based vTPM, but it could be used by any TPM driver which
+> communicates with a TPM device implemented through the TCG TPM reference
+> implementation (https://github.com/TrustedComputingGroup/TPM)
 > 
-> On Thu, 2025-02-27 at 21:03 -0600, Rob Landley wrote:
->> On 2/27/25 01:52, John Paul Adrian Glaubitz wrote:
->>> Hi Artur,
->>>
->>> On Sun, 2025-02-16 at 18:55 +0100, Artur Rojek wrote:
->>>> this series fixes boot issues and allows J2 Turtle Board to boot
->>>> upstream Linux again.
->>>>
->>>> Patch [1/2] enforces 8-byte alignment for the dtb offset.
->>>>
->>>> Patch [2/2] resolves a problem with PIT interrupts failing to register.
->>>
->>> I can confirm that this series makes my J2 Turtle Board boot again!
->>>
->>>> Even with the above fixes, Turtle Board is prone to occasional freezes
->>>> related to clock source transition from periodic to hrtimers. I however
->>>> decided to send those two patches ahead and debug the third issue at a
->>>> later time.
->>>
->>> Yep, it just got stuck for me right after these messages at my first boot attempt:
->>>
->>> clocksource: jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 7645041785100000 ns
->>> futex hash table entries: 512 (order: 1, 8192 bytes, linear)
->>> NET: Registered PF_NETLINK/PF_ROUTE protocol family
->>> clocksource: Switched to clocksource jcore_pit_cs
->>>
->>> It boots past these messages on second attempt, although it's now stuck trying to start
->>> /init. However, it's still echoing <RETURN> strokes, so it might be an issue with Toybox.
->>
->> Which was fixed a year ago, which is why I told you to use the new
->> toolchain with a current musl-libc:
->>
->> http://lists.landley.net/pipermail/toybox-landley.net/2024-February/030040.html
->>
->> Unless you're hitting the OTHER issue I fixed last year...
->>
->> https://github.com/landley/toybox/commit/0b2d5c2bb3f1
+> Co-developed-by: James Bottomley <James.Bottomley@HansenPartnership.com>
+> Signed-off-by: James Bottomley <James.Bottomley@HansenPartnership.com>
+> Co-developed-by: Claudio Carvalho <cclaudio@linux.ibm.com>
+> Signed-off-by: Claudio Carvalho <cclaudio@linux.ibm.com>
+> Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
+> ---
+> James, Claudio are you fine with the Cdb, Sob?
+> The code is based to what was in the initial RFC, but I removed the
+> tpm_platform module, moved some code in the header, changed some names,
+> etc.
+> For these reasons I reset the author but added C-o-b.
+> Please, let me know if this is okay or if I need to do anything
+> else (reset the author, etc.)
+> ---
+>  include/linux/tpm_tcgsim.h | 136 +++++++++++++++++++++++++++++++++++++
+>  1 file changed, 136 insertions(+)
+>  create mode 100644 include/linux/tpm_tcgsim.h
 > 
-> I just downloaded the latest toolchain from:
+> diff --git a/include/linux/tpm_tcgsim.h b/include/linux/tpm_tcgsim.h
+> new file mode 100644
+> index 000000000000..bd5b123c393b
+> --- /dev/null
+> +++ b/include/linux/tpm_tcgsim.h
+> @@ -0,0 +1,136 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +/*
+> + * Copyright (C) 2023 James.Bottomley@HansenPartnership.com
+> + * Copyright (C) 2025 Red Hat, Inc. All Rights Reserved.
+> + *
+> + * Generic interface usable by TPM drivers interacting with devices
+> + * implemented through the TCG Simulator.
+> + */
+> +#ifndef _TPM_TCGSIM_H_
+> +#define _TPM_TCGSIM_H_
+> +
+> +#include <linux/errno.h>
+> +#include <linux/string.h>
+> +#include <linux/types.h>
+> +
+> +/*
+> + * The current TCG Simulator TPM commands we support.  The complete list is
+> + * in the TcpTpmProtocol header:
+> + *
+> + * https://github.com/TrustedComputingGroup/TPM/blob/main/TPMCmd/Simulator/include/TpmTcpProtocol.h
+
+We should not be dependent on any out-of-tree headers.
+
+> + */
+> +
+> +#define TPM_SEND_COMMAND		8
+> +#define TPM_SIGNAL_CANCEL_ON		9
+> +#define TPM_SIGNAL_CANCEL_OFF		10
+> +/*
+> + * Any platform specific commands should be placed here and should start
+> + * at 0x8000 to avoid clashes with the TCG Simulator protocol.  They should
+> + * follow the same self describing buffer format below.
+> + */
+> +
+> +#define TPM_TCGSIM_MAX_BUFFER		4096 /* max req/resp buffer size */
+> +
+> +/**
+> + * struct tpm_req - generic request header for single word command
+> + *
+> + * @cmd:	The command to send
+> + */
+> +struct tpm_req {
+> +	u32 cmd;
+> +} __packed;
+> +
+> +/**
+> + * struct tpm_resp - generic response header
+> + *
+> + * @size:	The response size (zero if nothing follows)
+> + *
+> + * Note: most TCG Simulator commands simply return zero here with no indication
+> + * of success or failure.
+> + */
+> +struct tpm_resp {
+> +	u32 size;
+> +} __packed;
+> +
+> +/**
+> + * struct tpm_send_cmd_req - Structure for a TPM_SEND_COMMAND request
+> + *
+> + * @hdr:	The request header whit the command (must be TPM_SEND_COMMAND)
+> + * @locality:	The locality
+> + * @inbuf_size:	The size of the input buffer following
+> + * @inbuf:	A buffer of size inbuf_size
+> + *
+> + * Note that TCG Simulator expects @inbuf_size to be equal to the size of the
+> + * specific TPM command, otherwise an TPM_RC_COMMAND_SIZE error is
+> + * returned.
+> + */
+> +struct tpm_send_cmd_req {
+> +	struct tpm_req hdr;
+> +	u8 locality;
+> +	u32 inbuf_size;
+> +	u8 inbuf[];
+> +} __packed;
+> +
+> +/**
+> + * struct tpm_send_cmd_req - Structure for a TPM_SEND_COMMAND response
+> + *
+> + * @hdr:	The response header whit the following size
+> + * @outbuf:	A buffer of size hdr.size
+> + */
+> +struct tpm_send_cmd_resp {
+> +	struct tpm_resp hdr;
+> +	u8 outbuf[];
+> +} __packed;
+> +
+> +/**
+> + * tpm_tcgsim_fill_send_cmd() - fill a struct tpm_send_cmd_req to be sent to the
+> + * TCG Simulator.
+> + * @req: The struct tpm_send_cmd_req to fill
+> + * @locality: The locality
+> + * @buf: The buffer from where to copy the payload of the command
+> + * @len: The size of the buffer
+> + *
+> + * Return: 0 on success, negative error code on failure.
+> + */
+> +static inline int
+> +tpm_tcgsim_fill_send_cmd(struct tpm_send_cmd_req *req, u8 locality,
+> +			 const u8 *buf, size_t len)
+> +{
+> +	if (len > TPM_TCGSIM_MAX_BUFFER - sizeof(*req))
+> +		return -EINVAL;
+> +
+> +	req->hdr.cmd = TPM_SEND_COMMAND;
+> +	req->locality = locality;
+> +	req->inbuf_size = len;
+> +
+> +	memcpy(req->inbuf, buf, len);
+> +
+> +	return 0;
+> +}
+> +
+> +/**
+> + * tpm_tcgsim_parse_send_cmd() - Parse a struct tpm_send_cmd_resp received from
+> + * the TCG Simulator
+> + * @resp: The struct tpm_send_cmd_resp to parse
+> + * @buf: The buffer where to copy the response
+> + * @len: The size of the buffer
+> + *
+> + * Return: buffer size filled with the response on success, negative error
+> + * code on failure.
+> + */
+> +static inline int
+> +tpm_tcgsim_parse_send_cmd(const struct tpm_send_cmd_resp *resp, u8 *buf,
+> +			  size_t len)
+> +{
+> +	if (len < resp->hdr.size)
+> +		return -E2BIG;
+> +
+> +	if (resp->hdr.size > TPM_TCGSIM_MAX_BUFFER - sizeof(*resp))
+> +		return -EINVAL;  // Invalid response from the platform TPM
+> +
+> +	memcpy(buf, resp->outbuf, resp->hdr.size);
+> +
+> +	return resp->hdr.size;
+> +}
+> +
+> +#endif /* _TPM_TCGSIM_H_ */
+> -- 
+> 2.48.1
 > 
-> https://landley.net/bin/toolchains/latest/sh2eb-linux-muslfdpic-cross.tar.xz
-> 
-> and the issue still persists.
-> 
-> Am I missing anything?
 
-The march 2024 rebuild was in response to that Feb 2024 bugfix, so it 
-_should_ have the fix? (I'm waiting for another musl release to rebuild 
-them again...)
+This commit got me lost tbh.
 
-I just downloaded the toolchain currently at that URL and built mkroot 
-and it worked for me:
-
-Run /init as init process
-sntp: time.google.com:123: Try again
-Type exit when done.
-$ cat /proc/version
-Linux version 6.14.0-rc3 (landley@driftwood) (sh2eb-linux-muslfdpic-cc 
-(GCC) 11.2.0, GNU ld (GNU Binutils) 2.33.1) #1 SMP Fri Feb 28 15:47:36 
-CST 2025
-
-And the failure _without_ the fix was deterministic rather than 
-intermittent, so...
-
-Keep in mind the init script has a 3 second timeout trying to call sntp 
-to set the clock, which will fail if the ethernet isn't connected (or no 
-driver, or no internet...)
-
-Rob
-
-P.S. Speaking of intermittent, I hit that hang after "clocksource: 
-Switched to clocksource jcore_pit_cs" on one attempt just now. I should 
-sit down with the engineers next time I'm in japan and try to root cause 
-it. The scheduler fires reliably, so it's _probably_ not a hardware 
-issue? We've had Linux uptime of over a year, not just idle but running 
-an energy monitoring app, so it's pretty stable in our systems...
+BR, Jarkko
