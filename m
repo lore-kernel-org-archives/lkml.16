@@ -1,115 +1,114 @@
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A87BB1519BE
-	for <linux-kernel@vger.kernel.org>; Sat,  1 Mar 2025 04:16:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B1B3E2C9A;
+	Sat,  1 Mar 2025 04:23:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740802575; cv=none; b=EHB5H82C9gHXfUmI/fi0Lghz/49sW3Dv8PpNyE9JvOngKh8MAxLQjNydosyDYLCOEYsoZMA9otcUB+Ej2SOy50Ig+vsTLTTUSPRey873/DXmS7XfrZMn7nWzqTYaYxrnJAwG+qVUipTwUUDno3X4t05udpu9FS7c0Pp8R4MrLpo=
+	t=1740802986; cv=none; b=BRezp4iGCPK5Fmnrh0JXaAxz1kFrDgCMM5Jbjp3udivLksRxTIR6942NFuv03hQxLSTqdzCYRPEC8xHUFGV8ahiOio2k3YxNct/P7cb4A2D7FsWUkWPfUIpOBSiy8Bx36onVkfFPEpzgN2GGMMS6hm3MoQ+F7Q7WEe21UBrUkmA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740802575; c=relaxed/simple;
-	bh=nRJXVNbZUpNIBtt8TFs13UDH3fN+Tw1tbm1ZW4YHs/4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DUqVxM491GwLRhwGx0SYyUmUr8cilM8zFEKc6XUcT9tUSxCztOGMrC99yxS04RUmp60X7A7Ou5W2gsuHSCd4nmECbB56V20pLwDGe3X/huNqfuF2W+CdkEm//Rv17BgucW3U0GBe4DVTRI6mVEL/cEFJr8KgWcvyr/mw64IUO9o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=dqxEFTN4; arc=none smtp.client-ip=209.85.167.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1740802986; c=relaxed/simple;
+	bh=p8VM9Bl0ApB7gurlDfnc5ERgWv0qjUanc6mf2uHC3aI=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=eBUX98Wy+IsX51PDIik8KwPAuHqNtFts6zxdKIplpPrGU6ZeMHRrT0G/iBg8p044iE3ci0X+q/eVIYs3ZgKWW1yYil2Sq2+mAW6MPaEmMP8q3J54TfMaOt4P/7xWjuIo+ASyckACE8uTewfnI6QxbrEVyUnGhd22zC4UBCPz7ok=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=HyEJE2kg; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dqxEFTN4"
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-54298ec925bso4138423e87.3
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 20:16:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1740802572; x=1741407372; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=nRJXVNbZUpNIBtt8TFs13UDH3fN+Tw1tbm1ZW4YHs/4=;
-        b=dqxEFTN4T+LXT8b/WGkWy3B6mb3egi21CVMTXjvbd8GUrkJEp4RsQLMXzwFjABlnys
-         EyWGxaN8RxwDJgmT4Ho4J9wQdn5NhnLVV/r6vvH21ehUIR1OdbpsdWZYh9g6Zi+9qQp+
-         LYUBFiMTHCdALkboNfGsDFdVXQRS5dZg7VaS4v8L7prSDQbwV6Mg58oFUfDhv0PUyNLl
-         8R3nmWcgPsJWIDG/19gPv0zOU5YJwwMDVbJRXQi0GChfB8BxkFjNiDnZzaR48PIQN5zG
-         OFhGRLmJiA5uyelk2i5G8lfVUjLjyARxh65oE9aanbQjYy0WMzwgMYwcrkSGtSeedAGo
-         KwLQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740802572; x=1741407372;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=nRJXVNbZUpNIBtt8TFs13UDH3fN+Tw1tbm1ZW4YHs/4=;
-        b=nHADhTFrbSQgJBhVkjQhUQXDRHnuFkgEIQVK62gTQA0EtNavadJ4fE3B9HLkyrlA2o
-         Fdz6wLcc5jy9OapKIjECrPnetftQlwdn5lI1nSjCTvnQtAU35jTkiB3f4+ysR0Th4hdK
-         qgpBQ2QB34TMiX6+Hf/Z7OGNfYktMp2+KNMXsvOoFxR2hovnvupgkAJW2yQuh/CgImxK
-         4lyxCFQBoB6HRf8hshbAcI16K8rK43ztJfOXEZkRaEoyh7muuC3Jra2Yu3l8vpzU8oQZ
-         gEk3dpALRt0CXmcyLoe/FuJdonl64ghBB1zyUNhN35WhQFPVfuRAWtfPC9O5nLIa3TI6
-         pu1A==
-X-Forwarded-Encrypted: i=1; AJvYcCX7uwwaCMAwniN1B8AGgSP6p09m2+45YxvJPsBnD7IOCaJog1auSl+Q0gF+m34gjcbCPagcosbwmYov5KM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwZhfNxK4usD1uGfB3yAXDGS3wdlywGS8CK8S9pOxRcIrfl71WH
-	SRDcjz+w0h86xUFAceEopsfPh228Lua9dv0hs+SC+PII9JbLfEvQxcxiavReAVh7oZfQgtJPKf9
-	6dElv85sH9DZOYsmjmJ+IOLDqVk6zKGrR0xYTrUAgElUkb37R+//xj9Nt
-X-Gm-Gg: ASbGnct4plmNx0HKvs1P2tgT/sd964zUyqmv/mWy5xtHGwA8mLWULUhtVMlwkFhzCkX
-	70xs4/fSfpi5WHf6R1qxgOtMuRTnh3tMjw27vcYT+vPCSqdBw/kqLt9UpaTuOIyZgv5tffkF2d7
-	OYnOpV81yvGlmJYRNpD/QOuMDkl/xXixE=
-X-Google-Smtp-Source: AGHT+IFP5aCHULz6zpIiPlJszPYhhIKQa4bjgAfv6H6nwuK5koq1iQ2nHbNDaxSV+n8l900FUXdJNFmIzAGeKlhCAx4=
-X-Received: by 2002:a05:6512:693:b0:545:b28:2fa9 with SMTP id
- 2adb3069b0e04-5494c122af7mr2774025e87.16.1740802571668; Fri, 28 Feb 2025
- 20:16:11 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="HyEJE2kg"
+Received: from eahariha-devbox.internal.cloudapp.net (unknown [40.91.112.99])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 54CED2038A28;
+	Fri, 28 Feb 2025 20:23:04 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 54CED2038A28
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1740802984;
+	bh=3jHYa/0Xarc29iomR76KgYiKvPwnE0MNnWeMmBfBZWk=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=HyEJE2kghS30G13zEV2j4oV/PdhuWKfaBvtF3ETmd9B3SdS38oITvwLfSMzQZ+tZy
+	 dKeOxA1llHMf3jcgK7clLp2zTZXKXfuZzt3KGVl8OsarJrxu5dr38c8fXAtphcMvvx
+	 HSkXif3K1ieDai/11Fct5h/so6j/gQNrXloYsnkY=
+From: Easwar Hariharan <eahariha@linux.microsoft.com>
+Date: Sat, 01 Mar 2025 04:22:52 +0000
+Subject: [PATCH v4 1/2] rbd: convert timeouts to secs_to_jiffies()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1740504232.git.nicolinc@nvidia.com>
-In-Reply-To: <cover.1740504232.git.nicolinc@nvidia.com>
-From: Zhangfei Gao <zhangfei.gao@linaro.org>
-Date: Sat, 1 Mar 2025 12:16:00 +0800
-X-Gm-Features: AQ5f1Jq1aPPNEUtuYw2bvAu1XDeZv-PKWUyrHeAmpxtPMb0nHo1DtYawDISk28E
-Message-ID: <CABQgh9FYqzoUxjR246QBPGW9jqngK1JpgfACvBTLTHq-mBBCJg@mail.gmail.com>
-Subject: Re: [PATCH v8 00/14] iommufd: Add vIOMMU infrastructure (Part-3: vEVENTQ)
-To: Nicolin Chen <nicolinc@nvidia.com>
-Cc: jgg@nvidia.com, kevin.tian@intel.com, corbet@lwn.net, will@kernel.org, 
-	joro@8bytes.org, suravee.suthikulpanit@amd.com, robin.murphy@arm.com, 
-	dwmw2@infradead.org, baolu.lu@linux.intel.com, linux-kernel@vger.kernel.org, 
-	iommu@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
-	linux-kselftest@vger.kernel.org, linux-doc@vger.kernel.org, 
-	eric.auger@redhat.com, jean-philippe@linaro.org, mdf@kernel.org, 
-	mshavit@google.com, shameerali.kolothum.thodi@huawei.com, smostafa@google.com, 
-	ddutile@redhat.com, yi.l.liu@intel.com, praan@google.com, 
-	patches@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250301-converge-secs-to-jiffies-part-two-v4-1-c9226df9e4ed@linux.microsoft.com>
+References: <20250301-converge-secs-to-jiffies-part-two-v4-0-c9226df9e4ed@linux.microsoft.com>
+In-Reply-To: <20250301-converge-secs-to-jiffies-part-two-v4-0-c9226df9e4ed@linux.microsoft.com>
+To: Andrew Morton <akpm@linux-foundation.org>, 
+ Christophe JAILLET <christophe.jaillet@wanadoo.fr>, 
+ Daniel Vacek <neelx@suse.com>, Ilya Dryomov <idryomov@gmail.com>, 
+ Dongsheng Yang <dongsheng.yang@easystack.cn>, Jens Axboe <axboe@kernel.dk>, 
+ Xiubo Li <xiubli@redhat.com>
+Cc: ceph-devel@vger.kernel.org, linux-block@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ Easwar Hariharan <eahariha@linux.microsoft.com>
+X-Mailer: b4 0.14.2
 
-On Wed, 26 Feb 2025 at 01:33, Nicolin Chen <nicolinc@nvidia.com> wrote:
->
-> As the vIOMMU infrastructure series part-3, this introduces a new vEVENTQ
-> object. The existing FAULT object provides a nice notification pathway to
-> the user space with a queue already, so let vEVENTQ reuse that.
->
-> Mimicing the HWPT structure, add a common EVENTQ structure to support its
-> derivatives: IOMMUFD_OBJ_FAULT (existing) and IOMMUFD_OBJ_VEVENTQ (new).
->
-> An IOMMUFD_CMD_VEVENTQ_ALLOC is introduced to allocate vEVENTQ object for
-> vIOMMUs. One vIOMMU can have multiple vEVENTQs in different types but can
-> not support multiple vEVENTQs in the same type.
->
-> The forwarding part is fairly simple but might need to replace a physical
-> device ID with a virtual device ID in a driver-level event data structure.
-> So, this also adds some helpers for drivers to use.
->
-> As usual, this series comes with the selftest coverage for this new ioctl
-> and with a real world use case in the ARM SMMUv3 driver.
->
-> This is on Github:
-> https://github.com/nicolinc/iommufd/commits/iommufd_veventq-v8
-> Paring QEMU branch for testing:
-> https://github.com/nicolinc/qemu/commits/wip/for_iommufd_veventq-v8
+Commit b35108a51cf7 ("jiffies: Define secs_to_jiffies()") introduced
+secs_to_jiffies().  As the value here is a multiple of 1000, use
+secs_to_jiffies() instead of msecs_to_jiffies() to avoid the multiplication
 
-Thanks Nico
+This is converted using scripts/coccinelle/misc/secs_to_jiffies.cocci with
+the following Coccinelle rules:
 
-Tested-by: Zhangfei Gao <zhangfei.gao@linaro.org>
+@depends on patch@ expression E; @@
 
-After rebase on your branch
-https://github.com/Linaro/linux-kernel-warpdrive/tree/iommufd_veventq-v8
-https://github.com/Linaro/qemu/tree/for_iommufd_veventq-v8
+-msecs_to_jiffies(E * 1000)
++secs_to_jiffies(E)
 
-Tested with multi-device in guests, with io page faults happen.
+@depends on patch@ expression E; @@
 
-Thanks
+-msecs_to_jiffies(E * MSEC_PER_SEC)
++secs_to_jiffies(E)
+
+Change the check for range to check against HZ.
+
+Acked-by: Ilya Dryomov <idryomov@gmail.com>
+Signed-off-by: Easwar Hariharan <eahariha@linux.microsoft.com>
+---
+ drivers/block/rbd.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/block/rbd.c b/drivers/block/rbd.c
+index faafd7ff43d6ef53110ab3663cc7ac322214cc8c..1c406b17f3cee741b7bdd9f742958b3f1d5b1bbe 100644
+--- a/drivers/block/rbd.c
++++ b/drivers/block/rbd.c
+@@ -108,7 +108,7 @@ static int atomic_dec_return_safe(atomic_t *v)
+ #define RBD_OBJ_PREFIX_LEN_MAX	64
+ 
+ #define RBD_NOTIFY_TIMEOUT	5	/* seconds */
+-#define RBD_RETRY_DELAY		msecs_to_jiffies(1000)
++#define RBD_RETRY_DELAY		secs_to_jiffies(1)
+ 
+ /* Feature bits */
+ 
+@@ -4162,7 +4162,7 @@ static void rbd_acquire_lock(struct work_struct *work)
+ 		dout("%s rbd_dev %p requeuing lock_dwork\n", __func__,
+ 		     rbd_dev);
+ 		mod_delayed_work(rbd_dev->task_wq, &rbd_dev->lock_dwork,
+-		    msecs_to_jiffies(2 * RBD_NOTIFY_TIMEOUT * MSEC_PER_SEC));
++		    secs_to_jiffies(2 * RBD_NOTIFY_TIMEOUT));
+ 	}
+ }
+ 
+@@ -6283,9 +6283,9 @@ static int rbd_parse_param(struct fs_parameter *param,
+ 		break;
+ 	case Opt_lock_timeout:
+ 		/* 0 is "wait forever" (i.e. infinite timeout) */
+-		if (result.uint_32 > INT_MAX / 1000)
++		if (result.uint32 > INT_MAX / HZ)
+ 			goto out_of_range;
+-		opt->lock_timeout = msecs_to_jiffies(result.uint_32 * 1000);
++		opt->lock_timeout = secs_to_jiffies(result.uint_32);
+ 		break;
+ 	case Opt_pool_ns:
+ 		kfree(pctx->spec->pool_ns);
+
+-- 
+2.43.0
+
