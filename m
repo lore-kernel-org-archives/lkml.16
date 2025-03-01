@@ -1,204 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.smtpout.orange.fr (smtp-20.smtpout.orange.fr [80.12.242.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9ACD81CEAC3;
-	Sat,  1 Mar 2025 11:37:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D21DE1C5D40;
+	Sat,  1 Mar 2025 11:41:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740829039; cv=none; b=uIc28j42mnQRbpP+dFuiz33I8XDGH23/RtBVz0mlZjJJQU2UqwHWxKbLZmizkw6zoLj5JB5+B/tY5rlE9cWMp/8jWEbFLYxWqzeEleh1Ldp3Y9LdRi4x9vZ5+4BHzK+VjeHuxboZQIsdDVjiOKtUvU1FHE36uHe/3LdFoE2mrvQ=
+	t=1740829319; cv=none; b=R8vN8R6znQnoOi9qgghLyBUdJ9HAZPJnuwULSVmvKxd+sp8rGYp3OMsLvMbgTDDLV4sLg6IoXDYsydzTx6X++Vvj65TPDnv2Bue0Gfk0FqSTtF/KqDNSo2A5k7lNwwVZS2Umlhah/IwROtBOM42m+hEGZowEFNPsqPmudXWjuoc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740829039; c=relaxed/simple;
-	bh=dT1M1OX+ylPajgi5Td8FsnYT9PqPEbMJ8aqpho8rjqg=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=f5tTayQWvl83Lm1moGzPOHS2jJdhwG7tlpGZfFyj6C10wa32ATpFNK94YzLJWQQC1tnj1rVZbFOKJKS4tRxwAZ+Q7XTP/qGqO147id7Jhp8TGLgW21nyVnvhiaVcnjfQ9M4nf3EUnlAcfG40vJZdl6olJXuT5OGrGQzJjROVlNk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C4YkjQGX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740829319; c=relaxed/simple;
+	bh=jP7i8EhtTmiP4K0NJmZjXXlHvGIOyh0IDiAXjKJ3vWM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CS240yRsPzI+qtQHaZ2dtglCsJ5zA1wGS3wUhjBvAcYXR9abutEvHu57JWwWocIfGo+IXKgRs/lLzSpnOQsznJpLRAOx1miyBRk72d5PuFqSGXep93G8515+Re8Sx7PUD2Aoygu3Cr8la/HrBQvWSnO561nfpOH8RVrDfRUh6Xo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=sijftE7s; arc=none smtp.client-ip=80.12.242.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C4YkjQGX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A65B4C4CEDD;
-	Sat,  1 Mar 2025 11:37:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740829038;
-	bh=dT1M1OX+ylPajgi5Td8FsnYT9PqPEbMJ8aqpho8rjqg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=C4YkjQGX6x6uoqD6Yp0dQzTZmmjynM5ZIjQO1YdQc/B25rqm+rh5x1Bvsl3Dj58HK
-	 YScw9Ja1tcJ+UlVcN96f3Jy3ZvCLC1oGKJxQcwbyNt5yXICRQyar9NwH56rNV0topG
-	 jrVpGwESZOOLk5ipIfxlDX5vS8c+mUKwL0v88GwfqX20dXbetBND2cLR2SEdaQhU4k
-	 IITTb+dvnaHe598YW8cwOLVdH9RtR9jrl1Il7lpAqzLA/77pRVd8khTcG878nI227d
-	 QMiaFy+Li24BsLTa+GTXdBejTqgQ+27pLw8Y1XEw33fAy0FBukYnULAwheiuenQiU9
-	 unJQ/MU58slxQ==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1toL9f-009LZ4-9D;
-	Sat, 01 Mar 2025 11:37:15 +0000
-Date: Sat, 01 Mar 2025 11:37:14 +0000
-Message-ID: <86o6ylouc5.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Frank Li <Frank.Li@nxp.com>
-Cc: Kishon Vijay Abraham I <kishon@kernel.org>,	"Rafael J. Wysocki"
- <rafael@kernel.org>,	Thomas Gleixner <tglx@linutronix.de>,	Anup Patel
- <apatel@ventanamicro.com>,	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Danilo Krummrich <dakr@kernel.org>,	Manivannan Sadhasivam
- <manivannan.sadhasivam@linaro.org>,	Krzysztof =?UTF-8?B?V2lsY3p5xYRza2k=?=
- <kw@linux.com>,	Bjorn Helgaas <bhelgaas@google.com>,	Arnd Bergmann
- <arnd@arndb.de>,	Shuah Khan <shuah@kernel.org>,	Richard Zhu
- <hongxing.zhu@nxp.com>,	Lucas Stach <l.stach@pengutronix.de>,	Lorenzo
- Pieralisi <lpieralisi@kernel.org>,	Rob Herring <robh@kernel.org>,	Shawn Guo
- <shawnguo@kernel.org>,	Sascha Hauer <s.hauer@pengutronix.de>,	Pengutronix
- Kernel Team <kernel@pengutronix.de>,	Fabio Estevam <festevam@gmail.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,	Conor Dooley
- <conor+dt@kernel.org>,	Niklas Cassel <cassel@kernel.org>,
-	dlemoal@kernel.org,	jdmason@kudzu.us,	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,	linux-pci@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,	imx@lists.linux.dev,
-	devicetree@vger.kernel.org
-Subject: Re: [PATCH v15 04/15] irqchip/gic-v3-its: Add support for device tree msi-map and msi-mask
-In-Reply-To: <20250211-ep-msi-v15-4-bcacc1f2b1a9@nxp.com>
-References: <20250211-ep-msi-v15-0-bcacc1f2b1a9@nxp.com>
-	<20250211-ep-msi-v15-4-bcacc1f2b1a9@nxp.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.4
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="sijftE7s"
+Received: from [192.168.1.37] ([90.11.132.44])
+	by smtp.orange.fr with ESMTPA
+	id oL54tXbKXfIwSoL58tBTRu; Sat, 01 Mar 2025 12:32:43 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1740828763;
+	bh=kF+JmnmWEiXFKVYF48g4gqnqY3PNBaqivGj7uEXTqjU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From;
+	b=sijftE7skR2XXW93IzejiQEjIf6j3bZOOuIfOzFNxkJk00z852jVrEJlxhc9Xlijp
+	 TdG5ozCCQElD/YyGrXfsmO+pbWIwhsi6XXJPdQvPNPOyX1d0fsPys98UKZekt3/aPX
+	 wLse4WGD63nYRqyKBt0dJUbrt/mzlyoMhb8zWH9hCZYHQQ0DtxcYYL3r60ZcL/nPQj
+	 A2ISimlk9d7CY+Uh42g43BFR8/edYcw1hAZ+5hiQM2FcKcOIXDLHpHWwl+XGA6KX89
+	 WyTv6JMYlNnKl9H4O0MCBvamko6qypWBWZ4ve4Bx2xXRZcMOqbQMvPulEiBNbBTpxa
+	 IS29Qxv0Ksq+Q==
+X-ME-Helo: [192.168.1.37]
+X-ME-Auth: bWFyaW9uLmphaWxsZXRAd2FuYWRvby5mcg==
+X-ME-Date: Sat, 01 Mar 2025 12:32:43 +0100
+X-ME-IP: 90.11.132.44
+Message-ID: <cff4d412-abbf-44b5-9705-ba14dff7d5d0@wanadoo.fr>
+Date: Sat, 1 Mar 2025 12:32:30 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: Frank.Li@nxp.com, kishon@kernel.org, rafael@kernel.org, tglx@linutronix.de, apatel@ventanamicro.com, gregkh@linuxfoundation.org, dakr@kernel.org, manivannan.sadhasivam@linaro.org, kw@linux.com, bhelgaas@google.com, arnd@arndb.de, shuah@kernel.org, hongxing.zhu@nxp.com, l.stach@pengutronix.de, lpieralisi@kernel.org, robh@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, krzk+dt@kernel.org, conor+dt@kernel.org, cassel@kernel.org, dlemoal@kernel.org, jdmason@kudzu.us, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, linux-kselftest@vger.kernel.org, imx@lists.linux.dev, devicetree@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] media: cec: avoid wraparound in timer interval
+ calculation
+To: Vitaliy Shevtsov <v.shevtsov@mt-integration.ru>,
+ Hans Verkuil <hverkuil@xs4all.nl>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
+ Jani Nikula <jani.nikula@intel.com>, linux-media@vger.kernel.org,
+ linux-kernel@vger.kernel.org, lvc-project@linuxtesting.org
+References: <20250301111053.2661-1-v.shevtsov@mt-integration.ru>
+Content-Language: en-US, fr-FR
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+In-Reply-To: <20250301111053.2661-1-v.shevtsov@mt-integration.ru>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Tue, 11 Feb 2025 19:21:57 +0000,
-Frank Li <Frank.Li@nxp.com> wrote:
->=20
-> Some platform devices create child devices dynamically and require the
-> parent device's msi-map to map device IDs to actual sideband information.
->=20
-> A typical use case is using ITS as a PCIe Endpoint Controller(EPC)'s
-> doorbell function, where PCI hosts send TLP memory writes to the EP
-> controller. The EP controller converts these writes to AXI transactions
-> and appends platform-specific sideband information.  See below figure.
->=20
->                =E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
-=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
-=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
-=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
-=94=80=E2=94=80=E2=94=90
->                =E2=94=82                                =E2=94=82
->                =E2=94=82     PCI Endpoint Controller    =E2=94=82
->                =E2=94=82                                =E2=94=82
->                =E2=94=82  =E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
-=E2=94=80=E2=94=90   =E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
-=E2=94=90     =E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
-=90 =E2=94=82
->     PCI Bus    =E2=94=82  =E2=94=82     =E2=94=82   =E2=94=82     =E2=94=
-=82     =E2=94=82     =E2=94=82 =E2=94=82
->     =E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
-=80=E2=94=80=E2=96=BA =E2=94=82  =E2=94=82Func1=E2=94=82   =E2=94=82Func2=
-=E2=94=82 ... =E2=94=82Func =E2=94=82 =E2=94=82
->     TLP Memory =E2=94=82  =E2=94=82     =E2=94=82   =E2=94=82     =E2=94=
-=82     =E2=94=82<n>  =E2=94=82 =E2=94=82
->     Write Push =E2=94=82  =E2=94=82     =E2=94=82   =E2=94=82     =E2=94=
-=82     =E2=94=82     =E2=94=82 =E2=94=82
->     DoorBell   =E2=94=82  =E2=94=94=E2=94=80=E2=94=AC=E2=94=80=E2=94=AC=
-=E2=94=80=E2=94=98   =E2=94=94=E2=94=80=E2=94=80=E2=94=AC=E2=94=80=E2=94=80=
-=E2=94=98     =E2=94=94=E2=94=80=E2=94=80=E2=94=AC=E2=94=80=E2=94=80=E2=94=
-=98 =E2=94=82
->                =E2=94=82    =E2=94=82 =E2=94=82        =E2=94=82         =
-  =E2=94=82    =E2=94=82
->                =E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=BC=E2=
-=94=80=E2=94=BC=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
-=80=E2=94=80=E2=94=BC=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
-=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=BC=E2=94=80=E2=94=80=E2=
-=94=80=E2=94=80=E2=94=98
->         sideband    =E2=94=82 =E2=94=82 Address=E2=94=82           =E2=94=
-=82
->         information =E2=96=BC =E2=96=BC /Data  =E2=96=BC           =E2=96=
-=BC
->                    =E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
-=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
-=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
-=80=E2=94=80=E2=94=80=E2=94=90
->                    =E2=94=82    MSI Controller      =E2=94=82
->                    =E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
-=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
-=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
-=80=E2=94=80=E2=94=80=E2=94=98
->
-
-Please stop using these figures in commit messages. I don't think they
-help, and they are not in consistent with the way the commit messages
-are managed.
-
-> EPC's DTS will provide such information by msi-map and msi-mask. A
-> simplified dts as
->=20
-> pcie-ep@10000000 {
-> 	...
-> 	msi-map =3D <0 &its 0xc 8>;
->                           ^^^ 0xc is implement defined sideband informati=
-on,
-> 			      which append to AXI write transaction.
-> 	           ^ 0 is function index.
-
-What does this sideband field represent? How is the ITS driver
-supposed to use that data? Is it the full devid as presented to the
-ITS? Something combined with the "function index"? Is the "function
-index" a full RID, as defined in the documentation?
-
-Also, msi-map is so far reserved to a PCIe RC, not this sort of wonky
-contraption. This needs to be documented.
-
->=20
-> 	msi-mask =3D <0x7>
-> }
->=20
-> Check msi-map if msi-parent missed to keep compatility with existed syste=
-m.
->=20
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+Le 01/03/2025 à 12:09, Vitaliy Shevtsov a écrit :
+> [Why]
+> The timer function code may have an integer wraparound issue. Since both
+> pin->tx_custom_low_usecs and pin->tx_custom_high_usecs can be set to up to
+> 9999999 from the user space via cec_pin_error_inj_parse_line(), this may
+> cause usecs to be overflowed when adap->monitor_pin_cnt is zero and usecs
+> is multiplied by 1000.
+> 
+> [How]
+> Fix this by casting usecs to u64 when it is being converted from
+> microseconds to nanoseconds.
+> 
+> Found by Linux Verification Center (linuxtesting.org) with Svace.
+> 
+> Fixes: 865463fc03ed ("media: cec-pin: add error injection support")
+> Signed-off-by: Vitaliy Shevtsov <v.shevtsov@mt-integration.ru>
 > ---
-> change from v14 to v15
-> - none
->=20
-> change from v13 to v14
-> new patch
-> ---
->  drivers/irqchip/irq-gic-v3-its-msi-parent.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
->=20
-> diff --git a/drivers/irqchip/irq-gic-v3-its-msi-parent.c b/drivers/irqchi=
-p/irq-gic-v3-its-msi-parent.c
-> index e150365fbe892..6c7389bb84a4a 100644
-> --- a/drivers/irqchip/irq-gic-v3-its-msi-parent.c
-> +++ b/drivers/irqchip/irq-gic-v3-its-msi-parent.c
-> @@ -118,6 +118,14 @@ static int of_pmsi_get_dev_id(struct irq_domain *dom=
-ain, struct device *dev,
->  		index++;
->  	} while (!ret);
-> =20
-> +	if (ret) {
-> +		struct device_node *np =3D NULL;
-> +
-> +		ret =3D of_map_id(dev->of_node, dev->id, "msi-map", "msi-map-mask", &n=
-p, dev_id);
-> +		if (np)
-> +			of_node_put(np);
-> +	}
-> +
->  	return ret;
->  }
-> =20
->=20
+>   drivers/media/cec/core/cec-pin.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/media/cec/core/cec-pin.c b/drivers/media/cec/core/cec-pin.c
+> index a70451d99ebc..f15ed5c67a65 100644
+> --- a/drivers/media/cec/core/cec-pin.c
+> +++ b/drivers/media/cec/core/cec-pin.c
+> @@ -1021,7 +1021,7 @@ static enum hrtimer_restart cec_pin_timer(struct hrtimer *timer)
+>   		pin->wait_usecs = 0;
+>   		pin->timer_ts = ktime_add_us(ts, usecs);
+>   		hrtimer_forward_now(timer,
+> -				ns_to_ktime(usecs * 1000));
+> +				ns_to_ktime((u64)usecs * 1000));
 
-Thanks,
+Or maybe us_to_ktime() to be less verbose?
 
-	M.
+CJ
 
---=20
-Without deviation from the norm, progress is not possible.
+>   		return HRTIMER_RESTART;
+>   	}
+>   	pin->wait_usecs = usecs - 100;
+
