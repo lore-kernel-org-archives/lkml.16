@@ -1,97 +1,394 @@
-Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 196BE1E49F;
-	Sat,  1 Mar 2025 10:38:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE65C1BE251
+	for <linux-kernel@vger.kernel.org>; Sat,  1 Mar 2025 10:43:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740825537; cv=none; b=hlqc+0TpHZSghemcQlAUn53jUzJzMTCAIpp975JQWws5CwbxlDoM+COx+trC4kZi88UYE0rzKKSlEnKIt1aRy/UGR0j8qVlN7uWUUa35OCRekcc8FhMLThXLuSOojsm9PgnqvU/lzbLkejPvhr+a5XDsWO0Qe6bcfWAic06ZgOk=
+	t=1740825793; cv=none; b=VWhnTpK9CtBStfJu30uNvKMedUuMSrw5ALZrvfS4P/EVtkn4VuhVc5ARx32It51UOAJhRqcSABDWqjTLYT0BJ39aXkz4lcxB7Lv+eauDgff1KTu4o+wv+Kg1u9+DAI2zd/EtvYT4iijp4dcndpQxe/KCkKMbzdcAyAdSytnNUkg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740825537; c=relaxed/simple;
-	bh=JQTs9bUhqydxLMWgj3vjSgvpLViqdm/Zd29g09a7KWo=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=FnUrzCMG2XTb6zL7unkJpsx1dLC6vxLZASoVWYShvz2FTt1Nsx7p2gSYHRin+mYBMUAWv9sW1bN1UbRaZXwe360N/I8z60n+nnBs+jXWNIZnrbaR9TAN44nDchnP1A0U6ccZaHZfWj/Mhhb7y/kUyXNR0VX57NaeZiIa4IURIN0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=KqrgluW3; arc=none smtp.client-ip=217.70.183.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1740825793; c=relaxed/simple;
+	bh=7ZaYonJCSLWP/DYOS2vetXe5WtqDn1Wvmjawh21tRQQ=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=gYKBAVpGSdKgBuuUqiqgJr9rViIZczqZhFj2SWxWzsS8m59ADkFUfNuaB2/Hm7jNt26NvhsOyVl3FwHxmaV8AZvzUKCIyeRQYtCzfTVG7sYrXdbHZQEXgsWdeynOsb44i7NimEmYqMKsfVfgCezqO7InU+RtuSFO0seBb4/G85g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=xcN26atI; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=7Qo97uPJ; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=xcN26atI; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=7Qo97uPJ; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="KqrgluW3"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 7478E43319;
-	Sat,  1 Mar 2025 10:38:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1740825527;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="xcN26atI";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="7Qo97uPJ";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="xcN26atI";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="7Qo97uPJ"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 1D24F21179;
+	Sat,  1 Mar 2025 10:43:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1740825783; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=jnlxC8ZW/CfqDjl5QKxrbPd8VoYU7dt7zFWgQ1CDGLw=;
-	b=KqrgluW3hC8SfIGrUKkMKKLadJ1eu2tJh+1OKwN8pLZ5ENFClQlIrao6JGWw2C3gsdpNQu
-	0G7xW9aXdBnDd6Et46S01DCo2N+WTw4OHKnjhpY+QoR/dwU0Va3ov3eB0RvImmMpm47fSv
-	NYsUh0Klq7BvPIULXisXYYyG8RGPqMZgOINXbBEYG2wnpbyvD85Ej6rsrjatSn2R/RbiBh
-	GjL8kPHVxYxwBb2f65GC0aNe2Rug8j2bEzOaJKqH17t1M3GRSZ271Ktmo8xpZvtjT3N/2F
-	DD5faTJSD49wgxQns2R+Q2GacNNIr+DBmk7PNSvRpEDuMVU5wjaoPmjYysr5gQ==
-Date: Sat, 1 Mar 2025 11:38:43 +0100
-From: Maxime Chevallier <maxime.chevallier@bootlin.com>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: davem@davemloft.net, Andrew Lunn <andrew@lunn.ch>, Eric Dumazet
- <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Heiner Kallweit
- <hkallweit1@gmail.com>, Parthiban Veerasooran
- <parthiban.veerasooran@microchip.com>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com,
- linux-arm-kernel@lists.infradead.org, Christophe Leroy
- <christophe.leroy@csgroup.eu>, Herve Codina <herve.codina@bootlin.com>,
- Florian Fainelli <f.fainelli@gmail.com>, Vladimir Oltean
- <vladimir.oltean@nxp.com>, =?UTF-8?B?S8O2cnk=?= Maincent
- <kory.maincent@bootlin.com>, Oleksij Rempel <o.rempel@pengutronix.de>,
- Simon Horman <horms@kernel.org>, Romain Gantois
- <romain.gantois@bootlin.com>, Piergiorgio Beruto
- <piergiorgio.beruto@gmail.com>
-Subject: Re: [PATCH net 2/2] net: ethtool: netlink: Pass a context for
- default ethnl notifications
-Message-ID: <20250301113843.3b9df0fe@fedora.home>
-In-Reply-To: <20250228182440.3c7f4709@kernel.org>
-References: <20250227182454.1998236-1-maxime.chevallier@bootlin.com>
-	<20250227182454.1998236-3-maxime.chevallier@bootlin.com>
-	<20250228182440.3c7f4709@kernel.org>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	bh=N1Poud6LuAB30cVGItEfJ9VufWc1hBKXQ3R/b5A1Zec=;
+	b=xcN26atIufgYunL4Km5EFZ+lfO2Mwl79cX/7r0uCsjfPF+88EF99jDEGK/dI+siLp8+SWS
+	VL1VvqvrFiJcyUH7l+epBSa6Lej2ORlnfa6YrY3ZHpb+Oz6orYZxAO+xEV0QtvBM8O/TNR
+	zaBXmWAvgWhl30aqmpDiCjWXMy94YzY=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1740825783;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=N1Poud6LuAB30cVGItEfJ9VufWc1hBKXQ3R/b5A1Zec=;
+	b=7Qo97uPJ9Vuj0xX52L+hEI9L6AKh0nnmMX3O4wcD6C5Pxx1dx6pq6nPU1Oekwpm2UNm/dt
+	S8kFa0TI7pihXBDA==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1740825783; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=N1Poud6LuAB30cVGItEfJ9VufWc1hBKXQ3R/b5A1Zec=;
+	b=xcN26atIufgYunL4Km5EFZ+lfO2Mwl79cX/7r0uCsjfPF+88EF99jDEGK/dI+siLp8+SWS
+	VL1VvqvrFiJcyUH7l+epBSa6Lej2ORlnfa6YrY3ZHpb+Oz6orYZxAO+xEV0QtvBM8O/TNR
+	zaBXmWAvgWhl30aqmpDiCjWXMy94YzY=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1740825783;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=N1Poud6LuAB30cVGItEfJ9VufWc1hBKXQ3R/b5A1Zec=;
+	b=7Qo97uPJ9Vuj0xX52L+hEI9L6AKh0nnmMX3O4wcD6C5Pxx1dx6pq6nPU1Oekwpm2UNm/dt
+	S8kFa0TI7pihXBDA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id C3B6A13419;
+	Sat,  1 Mar 2025 10:43:02 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id lC7WLbbkwmcWLAAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Sat, 01 Mar 2025 10:43:02 +0000
+Date: Sat, 01 Mar 2025 11:43:02 +0100
+Message-ID: <87r03h9gll.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Zhongqiu Han <quic_zhonhan@quicinc.com>
+Cc: <syzbot+4cb9fad083898f54c517@syzkaller.appspotmail.com>,
+	<linux-kernel@vger.kernel.org>,
+	<linux-sound@vger.kernel.org>,
+	<perex@perex.cz>,
+	<syzkaller-bugs@googlegroups.com>,
+	<tiwai@suse.com>
+Subject: Re: [syzbot] [sound?] BUG: sleeping function called from invalid context in snd_card_locked
+In-Reply-To: <87tt8d9hj7.wl-tiwai@suse.de>
+References: <6610cdb8-072e-47fe-b9bc-f4f5b9a79f8e@quicinc.com>
+	<87y0xp9jr8.wl-tiwai@suse.de>
+	<c57573e5-8208-495f-ba53-4d9962c0e9b6@quicinc.com>
+	<87tt8d9hj7.wl-tiwai@suse.de>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdelfedtjecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkjghfohfogggtgfesthejredtredtvdenucfhrhhomhepofgrgihimhgvucevhhgvvhgrlhhlihgvrhcuoehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeegveeltddvveeuhefhvefhlefhkeevfedtgfeiudefffeiledttdfgfeeuhfeukeenucfkphepvdgrtddumegtsgduleemkegugegtmeelfhdttdemsggtvddumeekkeelleemheegtdgtmegvheelvgenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudelmeekugegtgemlehftddtmegstgdvudemkeekleelmeehgedttgemvgehlegvpdhhvghlohepfhgvughorhgrrdhhohhmvgdpmhgrihhlfhhrohhmpehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvtddprhgtphhtthhopehkuhgsrgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepuggrvhgvmhesuggrvhgvmhhlohhfthdrnhgvthdprhgtphhtthhopegrnhgurhgvfieslhhunhhnrdgthhdprhgtphhtthhopegvughum
- hgriigvthesghhoohhglhgvrdgtohhmpdhrtghpthhtohepphgrsggvnhhisehrvgguhhgrthdrtghomhdprhgtphhtthhopehhkhgrlhhlfigvihhtudesghhmrghilhdrtghomhdprhgtphhtthhopehprghrthhhihgsrghnrdhvvggvrhgrshhoohhrrghnsehmihgtrhhotghhihhprdgtohhmpdhrtghpthhtohepnhgvthguvghvsehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-GND-Sasl: maxime.chevallier@bootlin.com
+X-Spam-Level: 
+X-Spamd-Result: default: False [-0.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	MID_CONTAINS_FROM(1.00)[];
+	URI_HIDDEN_PATH(1.00)[https://syzkaller.appspot.com/x/.config?x=8f2f8fb6ad08b539];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-0.999];
+	MIME_GOOD(-0.10)[text/plain];
+	MIME_TRACE(0.00)[0:+];
+	TAGGED_RCPT(0.00)[4cb9fad083898f54c517];
+	ARC_NA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_COUNT_TWO(0.00)[2];
+	SUBJECT_HAS_QUESTION(0.00)[]
+X-Spam-Score: -0.80
+X-Spam-Flag: NO
 
-On Fri, 28 Feb 2025 18:24:40 -0800
-Jakub Kicinski <kuba@kernel.org> wrote:
-
-> On Thu, 27 Feb 2025 19:24:52 +0100 Maxime Chevallier wrote:
-> > The only relevant user for now is PLCA, and it very likely that we never
-> > ended-up in a situation where the follow-up notif wasn't targeting the
-> > correct PHY as :  
+On Sat, 01 Mar 2025 11:22:52 +0100,
+Takashi Iwai wrote:
 > 
-> PLCA uses the ethnl_default_* handlers but it seems to operate on PHYs
-> now. How does the dump work? Shoehorning the PHY support into
-> the ethnl_default_* handlers is starting to look pretty messy.
+> On Sat, 01 Mar 2025 10:50:43 +0100,
+> Zhongqiu Han wrote:
+> > 
+> > On 3/1/2025 5:34 PM, Takashi Iwai wrote:
+> > > On Sat, 01 Mar 2025 10:25:55 +0100,
+> > > Zhongqiu Han wrote:
+> > >> 
+> > >>> Hello,
+> > >>> 
+> > >>> syzbot found the following issue on:
+> > >>> 
+> > >>> HEAD commit:    d082ecbc71e9 Linux 6.14-rc4
+> > >>> git tree:       upstream
+> > >>> console output: https://syzkaller.appspot.com/x/log.txt?x=14e3d7a4580000
+> > >>> kernel config:
+> > >> https://syzkaller.appspot.com/x/.config?x=8f2f8fb6ad08b539
+> > >>> dashboard link:
+> > >> https://syzkaller.appspot.com/bug?extid=4cb9fad083898f54c517
+> > >>> compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils
+> > >> for Debian) 2.40
+> > >> 
+> > >> 
+> > >> BUG: sleeping function called from invalid context and
+> > >> raw_local_irq_restore() called with IRQs enabled seems can be
+> > >> fixed by below change. if it is valid, will arise the PATCH.
+> > > 
+> > > snd_timer_process_callbacks() gets called from two places, one from
+> > > snd_timer_work() and another from snd_timer_interrupt() where both
+> > > caller cover already with guard(spinlock_irqsave).  That is, it's a
+> > > nested lock, hence without _irqsave().
+> > > 
+> > > IMO, the question is rather why the check of "!in_interrupt()" in
+> > > snd_seq_client_use_ptr() passed in this call path.
+> > > 
+> > > 
+> > > thanks,
+> > > 
+> > > Takashi
+> > > 
+> > 
+> > Thanks Takashi for the discussion.
+> > 
+> > I have an initial check:
+> > func snd_seq_check_queue is called from func snd_seq_timer_interrupt,
+> > and the scoped_guard can not cover it. maybe this the reason of
+> > !in_interrupt() check pass.
+> > 
+> > just like my patch shared, snd_timer_process_callbacks called
+> > spin_unlock but not spin_unlock_irqrestore, which caused
+> > irqs_disabled(): 1 , and then caused the BUG.
+> > 
+> > 
+> > BUG: sleeping function called from invalid context at
+> > kernel/locking/mutex.c:562
+> > in_atomic(): 0, irqs_disabled(): 1, non_block: 0, pid: 1167, name:
+> > kworker/0:1H
+> > 
+> > 
+> > please feel free and kindly correct me if any misunderstanding.
+> 
+> Ah, no, the code in timer.c worked as expected; the lock in the caller
+> side is temporarily released intentionally for avoiding deadlock.
+> 
+> It's rather the problem in seq_clientmgr.c side, as I mentioned.  The
+> check with !in_interrupt() is fragile in this case, and it's an
+> overkill to handle the module loading whenever it's referenced.
+> 
+> I'm going to submit the fix patch later.
 
-Thinking more about this, this patch shouldn't have targetted -net in
-the first place, as no usecase regressed yet (we don't have any
-multi-PHY PLCA setup that exists). The DUMP keeps working as it did
-before for that command, in that we dump the PLCA info for
-netdev->phydev.
+Below is the copy:
 
-That DUMP / notify situation needs to be addressed as tome point thouh,
-before the multi-PHY support through muxes lands (haven't sent it yet,
-I'm still on the preliminary series for phy_ports).
 
-So I think that indeed, I'll resend patch 1, and find a more graceful
-solution for the phy-targetting commands in a separate series.
+Takashi
 
-Maxime
+-- 8< --
+From: Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH] ALSA: seq: Avoid module auto-load handling at event delivery
+
+snd_seq_client_use_ptr() is supposed to return the snd_seq_client
+object for the given client ID, and it tries to handle the module
+auto-loading when no matching object is found.  Although the module
+handling is performed only conditionally with "!in_interrupt()", this
+condition may be fragile, e.g. when the code is called from the ALSA
+timer callback where the spinlock is temporarily disabled while the
+irq is disabled.  Then his doesn't fit well and spews the error about
+sleep from invalid context, as complained recently by syzbot.
+
+Also, in general, handling the module-loading at each time if no
+matching object is found is really an overkill.  It can be still
+useful when performed at the top-level ioctl or proc reads, but it
+shouldn't be done at event delivery at all.
+
+For addressing the issues above, this patch disables the module
+handling in snd_seq_client_use_ptr() in normal cases like event
+deliveries, but allow only in limited and safe situations.
+A new function client_load_and_use_ptr() is used for the cases where
+the module loading can be done safely, instead.
+
+Reported-by: syzbot+4cb9fad083898f54c517@syzkaller.appspotmail.com
+Closes: https://lore.kernel.org/67c272e5.050a0220.dc10f.0159.GAE@google.com
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+---
+ sound/core/seq/seq_clientmgr.c | 46 ++++++++++++++++++++++------------
+ 1 file changed, 30 insertions(+), 16 deletions(-)
+
+diff --git a/sound/core/seq/seq_clientmgr.c b/sound/core/seq/seq_clientmgr.c
+index cb66ec42a3f8..706f53e39b53 100644
+--- a/sound/core/seq/seq_clientmgr.c
++++ b/sound/core/seq/seq_clientmgr.c
+@@ -106,7 +106,7 @@ static struct snd_seq_client *clientptr(int clientid)
+ 	return clienttab[clientid];
+ }
+ 
+-struct snd_seq_client *snd_seq_client_use_ptr(int clientid)
++static struct snd_seq_client *client_use_ptr(int clientid, bool load_module)
+ {
+ 	unsigned long flags;
+ 	struct snd_seq_client *client;
+@@ -126,7 +126,7 @@ struct snd_seq_client *snd_seq_client_use_ptr(int clientid)
+ 	}
+ 	spin_unlock_irqrestore(&clients_lock, flags);
+ #ifdef CONFIG_MODULES
+-	if (!in_interrupt()) {
++	if (load_module) {
+ 		static DECLARE_BITMAP(client_requested, SNDRV_SEQ_GLOBAL_CLIENTS);
+ 		static DECLARE_BITMAP(card_requested, SNDRV_CARDS);
+ 
+@@ -168,6 +168,20 @@ struct snd_seq_client *snd_seq_client_use_ptr(int clientid)
+ 	return client;
+ }
+ 
++/* get snd_seq_client object for the given id quickly */
++struct snd_seq_client *snd_seq_client_use_ptr(int clientid)
++{
++	return client_use_ptr(clientid, false);
++}
++
++/* get snd_seq_client object for the given id;
++ * if not found, retry after loading the modules
++ */
++static struct snd_seq_client *client_load_and_use_ptr(int clientid)
++{
++	return client_use_ptr(clientid, IS_ENABLED(CONFIG_MODULES));
++}
++
+ /* Take refcount and perform ioctl_mutex lock on the given client;
+  * used only for OSS sequencer
+  * Unlock via snd_seq_client_ioctl_unlock() below
+@@ -176,7 +190,7 @@ bool snd_seq_client_ioctl_lock(int clientid)
+ {
+ 	struct snd_seq_client *client;
+ 
+-	client = snd_seq_client_use_ptr(clientid);
++	client = client_load_and_use_ptr(clientid);
+ 	if (!client)
+ 		return false;
+ 	mutex_lock(&client->ioctl_mutex);
+@@ -1195,7 +1209,7 @@ static int snd_seq_ioctl_running_mode(struct snd_seq_client *client, void  *arg)
+ 	int err = 0;
+ 
+ 	/* requested client number */
+-	cptr = snd_seq_client_use_ptr(info->client);
++	cptr = client_load_and_use_ptr(info->client);
+ 	if (cptr == NULL)
+ 		return -ENOENT;		/* don't change !!! */
+ 
+@@ -1257,7 +1271,7 @@ static int snd_seq_ioctl_get_client_info(struct snd_seq_client *client,
+ 	struct snd_seq_client *cptr;
+ 
+ 	/* requested client number */
+-	cptr = snd_seq_client_use_ptr(client_info->client);
++	cptr = client_load_and_use_ptr(client_info->client);
+ 	if (cptr == NULL)
+ 		return -ENOENT;		/* don't change !!! */
+ 
+@@ -1396,7 +1410,7 @@ static int snd_seq_ioctl_get_port_info(struct snd_seq_client *client, void *arg)
+ 	struct snd_seq_client *cptr;
+ 	struct snd_seq_client_port *port;
+ 
+-	cptr = snd_seq_client_use_ptr(info->addr.client);
++	cptr = client_load_and_use_ptr(info->addr.client);
+ 	if (cptr == NULL)
+ 		return -ENXIO;
+ 
+@@ -1503,10 +1517,10 @@ static int snd_seq_ioctl_subscribe_port(struct snd_seq_client *client,
+ 	struct snd_seq_client *receiver = NULL, *sender = NULL;
+ 	struct snd_seq_client_port *sport = NULL, *dport = NULL;
+ 
+-	receiver = snd_seq_client_use_ptr(subs->dest.client);
++	receiver = client_load_and_use_ptr(subs->dest.client);
+ 	if (!receiver)
+ 		goto __end;
+-	sender = snd_seq_client_use_ptr(subs->sender.client);
++	sender = client_load_and_use_ptr(subs->sender.client);
+ 	if (!sender)
+ 		goto __end;
+ 	sport = snd_seq_port_use_ptr(sender, subs->sender.port);
+@@ -1871,7 +1885,7 @@ static int snd_seq_ioctl_get_client_pool(struct snd_seq_client *client,
+ 	struct snd_seq_client_pool *info = arg;
+ 	struct snd_seq_client *cptr;
+ 
+-	cptr = snd_seq_client_use_ptr(info->client);
++	cptr = client_load_and_use_ptr(info->client);
+ 	if (cptr == NULL)
+ 		return -ENOENT;
+ 	memset(info, 0, sizeof(*info));
+@@ -1975,7 +1989,7 @@ static int snd_seq_ioctl_get_subscription(struct snd_seq_client *client,
+ 	struct snd_seq_client_port *sport = NULL;
+ 
+ 	result = -EINVAL;
+-	sender = snd_seq_client_use_ptr(subs->sender.client);
++	sender = client_load_and_use_ptr(subs->sender.client);
+ 	if (!sender)
+ 		goto __end;
+ 	sport = snd_seq_port_use_ptr(sender, subs->sender.port);
+@@ -2006,7 +2020,7 @@ static int snd_seq_ioctl_query_subs(struct snd_seq_client *client, void *arg)
+ 	struct list_head *p;
+ 	int i;
+ 
+-	cptr = snd_seq_client_use_ptr(subs->root.client);
++	cptr = client_load_and_use_ptr(subs->root.client);
+ 	if (!cptr)
+ 		goto __end;
+ 	port = snd_seq_port_use_ptr(cptr, subs->root.port);
+@@ -2073,7 +2087,7 @@ static int snd_seq_ioctl_query_next_client(struct snd_seq_client *client,
+ 	if (info->client < 0)
+ 		info->client = 0;
+ 	for (; info->client < SNDRV_SEQ_MAX_CLIENTS; info->client++) {
+-		cptr = snd_seq_client_use_ptr(info->client);
++		cptr = client_load_and_use_ptr(info->client);
+ 		if (cptr)
+ 			break; /* found */
+ 	}
+@@ -2096,7 +2110,7 @@ static int snd_seq_ioctl_query_next_port(struct snd_seq_client *client,
+ 	struct snd_seq_client *cptr;
+ 	struct snd_seq_client_port *port = NULL;
+ 
+-	cptr = snd_seq_client_use_ptr(info->addr.client);
++	cptr = client_load_and_use_ptr(info->addr.client);
+ 	if (cptr == NULL)
+ 		return -ENXIO;
+ 
+@@ -2193,7 +2207,7 @@ static int snd_seq_ioctl_client_ump_info(struct snd_seq_client *caller,
+ 		size = sizeof(struct snd_ump_endpoint_info);
+ 	else
+ 		size = sizeof(struct snd_ump_block_info);
+-	cptr = snd_seq_client_use_ptr(client);
++	cptr = client_load_and_use_ptr(client);
+ 	if (!cptr)
+ 		return -ENOENT;
+ 
+@@ -2475,7 +2489,7 @@ int snd_seq_kernel_client_enqueue(int client, struct snd_seq_event *ev,
+ 	if (check_event_type_and_length(ev))
+ 		return -EINVAL;
+ 
+-	cptr = snd_seq_client_use_ptr(client);
++	cptr = client_load_and_use_ptr(client);
+ 	if (cptr == NULL)
+ 		return -EINVAL;
+ 	
+@@ -2707,7 +2721,7 @@ void snd_seq_info_clients_read(struct snd_info_entry *entry,
+ 
+ 	/* list the client table */
+ 	for (c = 0; c < SNDRV_SEQ_MAX_CLIENTS; c++) {
+-		client = snd_seq_client_use_ptr(c);
++		client = client_load_and_use_ptr(c);
+ 		if (client == NULL)
+ 			continue;
+ 		if (client->type == NO_CLIENT) {
