@@ -1,240 +1,234 @@
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48CFD1E5B75
-	for <linux-kernel@vger.kernel.org>; Sat,  1 Mar 2025 17:36:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBC851DF985;
+	Sat,  1 Mar 2025 17:48:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740850591; cv=none; b=p4cKMmCH06YPJMCM9itNTqObetMoVy9Xkou5VZMMb7+5N4HAd1lBypJxXaJEt3kNs4WiJM9RdITKYPfcTpvlkckxzHYF3ZqsKO4KdxWAJCjOuiMv1ntSIvAjV6hbLffzlfPWEr8cl+M9iGMrg2OzbbKEF/TLX7cFOet2BYzu53U=
+	t=1740851311; cv=none; b=XFtl2nsOE/k/9NIGmBpWlFkwccWE7EnLhGQgoTf2p9t8NcBNm2laOIM1u/fn1dLgP5XPj0o3SNLvD4/9ic6Sp/WH8YANsYPcVHk9RJoGQ6tYmC2atVdjHkUirGMZmvCblP0pFR2ePDHj99h4VTC1mYf30eKALDkKq08rWj7KXX4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740850591; c=relaxed/simple;
-	bh=3cSeg5GwvnCo+tre/YDJWXX0o42C0vQkWcKow0a5Nfg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=T1DdXQsFck8a8jpJvccmACAfiqDOXXW3Ex/xeZ5iDWpWWxU8bBo+/JBuBMZ6p5u/LA9/RAEX23fxaQcQLyBQ/ndR9XNTfz9QBsQVIu3J9o/Mwv7tlr1hCf6xE57RG6k3/0252Z2F32q9a0Od0HOX9SkVXY82QM6R/fEgcfnuobY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=Q84TEPT3; arc=none smtp.client-ip=185.11.138.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
+	s=arc-20240116; t=1740851311; c=relaxed/simple;
+	bh=IMSIu8jvdDwIJAM4fLeDemvtPcKTwRRhp37hHpIn+X4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Pd3XZ/2m1KYzhuZxkU0jXEZls1WizwJ0bWpUVDufP5LteO7KFRTV/mj9+TYQmW/0AE5AVhPa7sKVdgEtPODe/Zr+3IYO9CBbqAJlcNj2i/olVlMkzBOwTJsB3DY6yIBIqXrpwy1iUpZQk8WkNwTQUlsOP5kVuQBv6NjGh6IXGJg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aItFFWsC; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="Q84TEPT3"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
-	s=gloria202408; h=Content-Transfer-Encoding:MIME-Version:References:
-	In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=bqrftD8D/m+VwtB6WWXkN3nmmoijpnDNS2a+SxSawOE=; b=Q84TEPT3RY1a94rODGKy4I7/6n
-	PaTb7Gps1jGksrOAo6BX7GVFVYAXxJnubNBE3pCAjaQNkMHxlQUV5M/Y5ZY9tdSxa9aFZHOq5QngB
-	frgnj28N7/HPMYrNM1xVznRncR7+eqtfVnO5MF/JYpqcSswE8Emseal5/5vHBvArhgkn8W5gSl462
-	EKty6xleSqI5ka2S+OtEsdV+igKi+u57v8m6+KKF2A0XOfGJVJjmxXj9V40tRnYWkwNgNQqO78cPI
-	+RVkEDJ3cCzjptIX6ExspG9LgewNdQKC465C+JWY9w/38t81x008HX3IFkIGqKRMxbMPgIGJRbjaj
-	1RVzaImg==;
-Received: from i53875b47.versanet.de ([83.135.91.71] helo=localhost.localdomain)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1toQko-0001Tm-83; Sat, 01 Mar 2025 18:35:58 +0100
-From: Heiko Stuebner <heiko@sntech.de>
-To: heiko@sntech.de
-Cc: andy.yan@rock-chips.com,
-	maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org,
-	tzimmermann@suse.de,
-	dri-devel@lists.freedesktop.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	quentin.schulz@cherry.de,
-	Heiko Stuebner <heiko.stuebner@cherry.de>
-Subject: [PATCH v2 2/2] drm/rockchip: lvds: Hide scary error messages on probe deferral
-Date: Sat,  1 Mar 2025 18:35:47 +0100
-Message-ID: <20250301173547.710245-3-heiko@sntech.de>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250301173547.710245-1-heiko@sntech.de>
-References: <20250301173547.710245-1-heiko@sntech.de>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aItFFWsC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740851310; x=1772387310;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=IMSIu8jvdDwIJAM4fLeDemvtPcKTwRRhp37hHpIn+X4=;
+  b=aItFFWsC2x64dQLdnGQi2xEwaRiaZbAbhVMhhINZb6mEZyZuzBhp17Pm
+   bQP+zTbSZUMPBC+D8zVRTeO3nsQ5yUnBsPdlJ3RswEW73uKxN7fAVQHJR
+   D5zLd6ywrPTn8Sp2kTEBF+iUIVnzRkQiqZFSgi3POyevW/txiTPPJ7h8Y
+   mrHQTsrPQYUlxnMRtgeB9H9cyKxF926Q2yObkJVS1MzchUeNRI5z5B/YC
+   h5UQDz8bP9Lmy8wuRrUi7BkohCYYjo2sYbMnNBbneKhbcZzQFAqyAQn4n
+   I1zrJseuAtF5Gv7RQZi8S4JBbf7CA+2kdvcJyxZ22qNjUltyezyWRuRnJ
+   w==;
+X-CSE-ConnectionGUID: nZihORliT5GCaurnzZqiAw==
+X-CSE-MsgGUID: ThTpe3eNS+6T0Lx8WS7iUg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11360"; a="41650278"
+X-IronPort-AV: E=Sophos;i="6.13,325,1732608000"; 
+   d="scan'208";a="41650278"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Mar 2025 09:48:29 -0800
+X-CSE-ConnectionGUID: vgYcIYDcRt+mQdx99iLk9w==
+X-CSE-MsgGUID: L50jgmYYT9+XgO2hztfjcg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,325,1732608000"; 
+   d="scan'208";a="140844857"
+Received: from lkp-server02.sh.intel.com (HELO 76cde6cc1f07) ([10.239.97.151])
+  by fmviesa002.fm.intel.com with ESMTP; 01 Mar 2025 09:48:24 -0800
+Received: from kbuild by 76cde6cc1f07 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1toQwo-000GWE-0u;
+	Sat, 01 Mar 2025 17:48:22 +0000
+Date: Sun, 2 Mar 2025 01:47:17 +0800
+From: kernel test robot <lkp@intel.com>
+To: =?iso-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>,
+	Chanwoo Choi <cw00.choi@samsung.com>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Joel Stanley <joel@jms.id.au>,
+	Andrew Jeffery <andrew@codeconstruct.com.au>,
+	Hans Ulli Kroll <ulli.kroll@googlemail.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Kevin Hilman <khilman@baylibre.com>,
+	Jerome Brunet <jbrunet@baylibre.com>,
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+	=?iso-8859-1?Q?T=F3th_J=E1nos?= <gomba007@gmail.com>,
+	Dianlong Li <long17.cool@163.com>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org,
+	linux-samsung-soc@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org,
+	linux-amlogic@lists.infradead.org,
+	=?iso-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>
+Subject: Re: [PATCH 02/18] rtc: s5m: drop needless struct s5m_rtc_info::i2c
+ member
+Message-ID: <202503020150.LkqTktVQ-lkp@intel.com>
+References: <20250228-rtc-cleanups-v1-2-b44cec078481@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250228-rtc-cleanups-v1-2-b44cec078481@linaro.org>
 
-From: Heiko Stuebner <heiko.stuebner@cherry.de>
+Hi André,
 
-Commit 52d11c863ac9 ("drm/rockchip: lvds: do not print scary message when
-probing defer") already started hiding scary messages that are not relevant
-if the requested supply just returned EPROBE_DEFER, but there are more
-possible sources - like the phy.
+kernel test robot noticed the following build warnings:
 
-So modernize the whole logging in the probe path by replacing the
-remaining deprecated DRM_DEV_ERROR with appropriate dev_err(_probe)
-and drm_err calls.
+[auto build test WARNING on 0226d0ce98a477937ed295fb7df4cc30b46fc304]
 
-The distinction here is that all messages talking about mishaps of the
-lvds element use dev_err(_probe) while messages caused by interaction
-with the main Rockchip drm-device use drm_err.
+url:    https://github.com/intel-lab-lkp/linux/commits/Andr-Draszik/rtc-max77686-drop-needless-struct-max77686_rtc_info-rtc-member/20250228-221320
+base:   0226d0ce98a477937ed295fb7df4cc30b46fc304
+patch link:    https://lore.kernel.org/r/20250228-rtc-cleanups-v1-2-b44cec078481%40linaro.org
+patch subject: [PATCH 02/18] rtc: s5m: drop needless struct s5m_rtc_info::i2c member
+config: arm-randconfig-004-20250301 (https://download.01.org/0day-ci/archive/20250302/202503020150.LkqTktVQ-lkp@intel.com/config)
+compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project 14170b16028c087ca154878f5ed93d3089a965c6)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250302/202503020150.LkqTktVQ-lkp@intel.com/reproduce)
 
-Signed-off-by: Heiko Stuebner <heiko.stuebner@cherry.de>
----
- drivers/gpu/drm/rockchip/rockchip_lvds.c | 61 ++++++++++--------------
- 1 file changed, 26 insertions(+), 35 deletions(-)
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202503020150.LkqTktVQ-lkp@intel.com/
 
-diff --git a/drivers/gpu/drm/rockchip/rockchip_lvds.c b/drivers/gpu/drm/rockchip/rockchip_lvds.c
-index ecfae8d5da89..d8b2007123fa 100644
---- a/drivers/gpu/drm/rockchip/rockchip_lvds.c
-+++ b/drivers/gpu/drm/rockchip/rockchip_lvds.c
-@@ -453,10 +453,9 @@ static int rk3288_lvds_probe(struct platform_device *pdev,
- 		return PTR_ERR(lvds->regs);
- 
- 	lvds->pclk = devm_clk_get_prepared(lvds->dev, "pclk_lvds");
--	if (IS_ERR(lvds->pclk)) {
--		DRM_DEV_ERROR(lvds->dev, "could not get or prepare pclk_lvds\n");
--		return PTR_ERR(lvds->pclk);
--	}
-+	if (IS_ERR(lvds->pclk))
-+		return dev_err_probe(lvds->dev, PTR_ERR(lvds->pclk),
-+				     "could not get or prepare pclk_lvds\n");
- 
- 	lvds->pins = devm_kzalloc(lvds->dev, sizeof(*lvds->pins),
- 				  GFP_KERNEL);
-@@ -465,14 +464,14 @@ static int rk3288_lvds_probe(struct platform_device *pdev,
- 
- 	lvds->pins->p = devm_pinctrl_get(lvds->dev);
- 	if (IS_ERR(lvds->pins->p)) {
--		DRM_DEV_ERROR(lvds->dev, "no pinctrl handle\n");
-+		dev_err(lvds->dev, "no pinctrl handle\n");
- 		devm_kfree(lvds->dev, lvds->pins);
- 		lvds->pins = NULL;
- 	} else {
- 		lvds->pins->default_state =
- 			pinctrl_lookup_state(lvds->pins->p, "lcdc");
- 		if (IS_ERR(lvds->pins->default_state)) {
--			DRM_DEV_ERROR(lvds->dev, "no default pinctrl state\n");
-+			dev_err(lvds->dev, "no default pinctrl state\n");
- 			devm_kfree(lvds->dev, lvds->pins);
- 			lvds->pins = NULL;
- 		}
-@@ -547,11 +546,10 @@ static int rockchip_lvds_bind(struct device *dev, struct device *master,
- 
- 	lvds->drm_dev = drm_dev;
- 	port = of_graph_get_port_by_id(dev->of_node, 1);
--	if (!port) {
--		DRM_DEV_ERROR(dev,
--			      "can't found port point, please init lvds panel port!\n");
--		return -EINVAL;
--	}
-+	if (!port)
-+		return dev_err_probe(dev, -EINVAL,
-+				     "can't found port point, please init lvds panel port!\n");
-+
- 	for_each_child_of_node(port, endpoint) {
- 		child_count++;
- 		of_property_read_u32(endpoint, "reg", &endpoint_id);
-@@ -563,8 +561,7 @@ static int rockchip_lvds_bind(struct device *dev, struct device *master,
- 		}
- 	}
- 	if (!child_count) {
--		DRM_DEV_ERROR(dev, "lvds port does not have any children\n");
--		ret = -EINVAL;
-+		ret = dev_err_probe(dev, -EINVAL, "lvds port does not have any children\n");
- 		goto err_put_port;
- 	} else if (ret) {
- 		dev_err_probe(dev, ret, "failed to find panel and bridge node\n");
-@@ -581,8 +578,7 @@ static int rockchip_lvds_bind(struct device *dev, struct device *master,
- 		lvds->output = rockchip_lvds_name_to_output(name);
- 
- 	if (lvds->output < 0) {
--		DRM_DEV_ERROR(dev, "invalid output type [%s]\n", name);
--		ret = lvds->output;
-+		ret = dev_err_probe(dev, lvds->output, "invalid output type [%s]\n", name);
- 		goto err_put_remote;
- 	}
- 
-@@ -593,7 +589,7 @@ static int rockchip_lvds_bind(struct device *dev, struct device *master,
- 		lvds->format = rockchip_lvds_name_to_format(name);
- 
- 	if (lvds->format < 0) {
--		DRM_DEV_ERROR(dev, "invalid data-mapping format [%s]\n", name);
-+		dev_err(dev, "invalid data-mapping format [%s]\n", name);
- 		ret = lvds->format;
- 		goto err_put_remote;
- 	}
-@@ -604,8 +600,8 @@ static int rockchip_lvds_bind(struct device *dev, struct device *master,
- 
- 	ret = drm_simple_encoder_init(drm_dev, encoder, DRM_MODE_ENCODER_LVDS);
- 	if (ret < 0) {
--		DRM_DEV_ERROR(drm_dev->dev,
--			      "failed to initialize encoder: %d\n", ret);
-+		drm_err(drm_dev,
-+			"failed to initialize encoder: %d\n", ret);
- 		goto err_put_remote;
- 	}
- 
-@@ -618,8 +614,8 @@ static int rockchip_lvds_bind(struct device *dev, struct device *master,
- 					 &rockchip_lvds_connector_funcs,
- 					 DRM_MODE_CONNECTOR_LVDS);
- 		if (ret < 0) {
--			DRM_DEV_ERROR(drm_dev->dev,
--				      "failed to initialize connector: %d\n", ret);
-+			drm_err(drm_dev,
-+				"failed to initialize connector: %d\n", ret);
- 			goto err_free_encoder;
- 		}
- 
-@@ -633,9 +629,9 @@ static int rockchip_lvds_bind(struct device *dev, struct device *master,
- 
- 		connector = drm_bridge_connector_init(lvds->drm_dev, encoder);
- 		if (IS_ERR(connector)) {
--			DRM_DEV_ERROR(drm_dev->dev,
--				      "failed to initialize bridge connector: %pe\n",
--				      connector);
-+			drm_err(drm_dev,
-+				"failed to initialize bridge connector: %pe\n",
-+				connector);
- 			ret = PTR_ERR(connector);
- 			goto err_free_encoder;
- 		}
-@@ -643,8 +639,7 @@ static int rockchip_lvds_bind(struct device *dev, struct device *master,
- 
- 	ret = drm_connector_attach_encoder(connector, encoder);
- 	if (ret < 0) {
--		DRM_DEV_ERROR(drm_dev->dev,
--			      "failed to attach encoder: %d\n", ret);
-+		drm_err(drm_dev, "failed to attach encoder: %d\n", ret);
- 		goto err_free_connector;
- 	}
- 
-@@ -706,24 +701,20 @@ static int rockchip_lvds_probe(struct platform_device *pdev)
- 
- 	lvds->grf = syscon_regmap_lookup_by_phandle(dev->of_node,
- 						    "rockchip,grf");
--	if (IS_ERR(lvds->grf)) {
--		DRM_DEV_ERROR(dev, "missing rockchip,grf property\n");
--		return PTR_ERR(lvds->grf);
--	}
-+	if (IS_ERR(lvds->grf))
-+		return dev_err_probe(dev, PTR_ERR(lvds->grf), "missing rockchip,grf property\n");
- 
- 	ret = lvds->soc_data->probe(pdev, lvds);
--	if (ret) {
--		DRM_DEV_ERROR(dev, "Platform initialization failed\n");
--		return ret;
--	}
-+	if (ret)
-+		return dev_err_probe(dev, ret, "Platform initialization failed\n");
- 
- 	dev_set_drvdata(dev, lvds);
- 
- 	ret = component_add(&pdev->dev, &rockchip_lvds_component_ops);
- 	if (ret < 0)
--		DRM_DEV_ERROR(dev, "failed to add component\n");
-+		return dev_err_probe(dev, ret, "failed to add component\n");
- 
--	return ret;
-+	return 0;
- }
- 
- static void rockchip_lvds_remove(struct platform_device *pdev)
+All warnings (new ones prefixed by >>):
+
+   In file included from drivers/rtc/rtc-s5m.c:11:
+   In file included from include/linux/i2c.h:19:
+   In file included from include/linux/regulator/consumer.h:35:
+   In file included from include/linux/suspend.h:5:
+   In file included from include/linux/swap.h:9:
+   In file included from include/linux/memcontrol.h:21:
+   In file included from include/linux/mm.h:2287:
+   include/linux/vmstat.h:507:36: warning: arithmetic between different enumeration types ('enum node_stat_item' and 'enum lru_list') [-Wenum-enum-conversion]
+     507 |         return node_stat_name(NR_LRU_BASE + lru) + 3; // skip "nr_"
+         |                               ~~~~~~~~~~~ ^ ~~~
+>> drivers/rtc/rtc-s5m.c:678:46: warning: variable 'i2c' is uninitialized when used here [-Wuninitialized]
+     678 |         i2c = devm_i2c_new_dummy_device(&pdev->dev, i2c->adapter,
+         |                                                     ^~~
+   drivers/rtc/rtc-s5m.c:642:24: note: initialize the variable 'i2c' to silence this warning
+     642 |         struct i2c_client *i2c;
+         |                               ^
+         |                                = NULL
+   2 warnings generated.
+
+
+vim +/i2c +678 drivers/rtc/rtc-s5m.c
+
+   637	
+   638	static int s5m_rtc_probe(struct platform_device *pdev)
+   639	{
+   640		struct sec_pmic_dev *s5m87xx = dev_get_drvdata(pdev->dev.parent);
+   641		struct s5m_rtc_info *info;
+   642		struct i2c_client *i2c;
+   643		const struct regmap_config *regmap_cfg;
+   644		int ret, alarm_irq;
+   645	
+   646		info = devm_kzalloc(&pdev->dev, sizeof(*info), GFP_KERNEL);
+   647		if (!info)
+   648			return -ENOMEM;
+   649	
+   650		switch (platform_get_device_id(pdev)->driver_data) {
+   651		case S2MPS15X:
+   652			regmap_cfg = &s2mps14_rtc_regmap_config;
+   653			info->regs = &s2mps15_rtc_regs;
+   654			alarm_irq = S2MPS14_IRQ_RTCA0;
+   655			break;
+   656		case S2MPS14X:
+   657			regmap_cfg = &s2mps14_rtc_regmap_config;
+   658			info->regs = &s2mps14_rtc_regs;
+   659			alarm_irq = S2MPS14_IRQ_RTCA0;
+   660			break;
+   661		case S2MPS13X:
+   662			regmap_cfg = &s2mps14_rtc_regmap_config;
+   663			info->regs = &s2mps13_rtc_regs;
+   664			alarm_irq = S2MPS14_IRQ_RTCA0;
+   665			break;
+   666		case S5M8767X:
+   667			regmap_cfg = &s5m_rtc_regmap_config;
+   668			info->regs = &s5m_rtc_regs;
+   669			alarm_irq = S5M8767_IRQ_RTCA1;
+   670			break;
+   671		default:
+   672			dev_err(&pdev->dev,
+   673					"Device type %lu is not supported by RTC driver\n",
+   674					platform_get_device_id(pdev)->driver_data);
+   675			return -ENODEV;
+   676		}
+   677	
+ > 678		i2c = devm_i2c_new_dummy_device(&pdev->dev, i2c->adapter,
+   679						RTC_I2C_ADDR);
+   680		if (IS_ERR(i2c)) {
+   681			dev_err(&pdev->dev, "Failed to allocate I2C for RTC\n");
+   682			return PTR_ERR(i2c);
+   683		}
+   684	
+   685		info->regmap = devm_regmap_init_i2c(i2c, regmap_cfg);
+   686		if (IS_ERR(info->regmap)) {
+   687			ret = PTR_ERR(info->regmap);
+   688			dev_err(&pdev->dev, "Failed to allocate RTC register map: %d\n",
+   689					ret);
+   690			return ret;
+   691		}
+   692	
+   693		info->dev = &pdev->dev;
+   694		info->s5m87xx = s5m87xx;
+   695		info->device_type = platform_get_device_id(pdev)->driver_data;
+   696	
+   697		if (s5m87xx->irq_data) {
+   698			info->irq = regmap_irq_get_virq(s5m87xx->irq_data, alarm_irq);
+   699			if (info->irq <= 0) {
+   700				dev_err(&pdev->dev, "Failed to get virtual IRQ %d\n",
+   701					alarm_irq);
+   702				return -EINVAL;
+   703			}
+   704		}
+   705	
+   706		platform_set_drvdata(pdev, info);
+   707	
+   708		ret = s5m8767_rtc_init_reg(info);
+   709		if (ret)
+   710			return ret;
+   711	
+   712		info->rtc_dev = devm_rtc_allocate_device(&pdev->dev);
+   713		if (IS_ERR(info->rtc_dev))
+   714			return PTR_ERR(info->rtc_dev);
+   715	
+   716		info->rtc_dev->ops = &s5m_rtc_ops;
+   717	
+   718		info->rtc_dev->range_min = RTC_TIMESTAMP_BEGIN_2000;
+   719		info->rtc_dev->range_max = RTC_TIMESTAMP_END_2099;
+   720	
+   721		if (!info->irq) {
+   722			clear_bit(RTC_FEATURE_ALARM, info->rtc_dev->features);
+   723		} else {
+   724			ret = devm_request_threaded_irq(&pdev->dev, info->irq, NULL,
+   725							s5m_rtc_alarm_irq, 0, "rtc-alarm0",
+   726							info);
+   727			if (ret < 0) {
+   728				dev_err(&pdev->dev, "Failed to request alarm IRQ: %d: %d\n",
+   729					info->irq, ret);
+   730				return ret;
+   731			}
+   732			device_init_wakeup(&pdev->dev, true);
+   733		}
+   734	
+   735		return devm_rtc_register_device(info->rtc_dev);
+   736	}
+   737	
+
 -- 
-2.47.2
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
