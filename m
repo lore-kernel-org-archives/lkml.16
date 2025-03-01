@@ -1,36 +1,36 @@
-Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
+Received: from out199-2.us.a.mail.aliyun.com (out199-2.us.a.mail.aliyun.com [47.90.199.2])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BD5B1E3769
-	for <linux-kernel@vger.kernel.org>; Sat,  1 Mar 2025 14:50:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8408A1E3DF7
+	for <linux-kernel@vger.kernel.org>; Sat,  1 Mar 2025 14:50:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=47.90.199.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740840628; cv=none; b=S1QGCDoLVprwECdLiZI7svjhysu7nvjssR8ZiOwT7HTm05c5xU5EaH+Yw81kQ0l935Qs91rKpUOQKj0QvEB07kFc0FvSp5KGw+crW685Mm/4l3b6RGvWCN7M/be1Pf8oeVkfZzqXBHUC+/ucm3GnIEeDTxGTy+NbKTtA58aP3JY=
+	t=1740840629; cv=none; b=Djsfjzu0TG9i4g8z1Jpg+amUhYQVEKgvhLGvbkGZHjaxHfXKVw06LzRa3qMFZnQ7WIGzA43L4U/SN8G7KSOAf4r7bZ5CuVVAQV/p9adNoYkL/TRiwf9OjDvD29leDiOVZc9BF1Irw+fazH+znTYMouaY4BikP4DIEIrUF0yFICw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740840628; c=relaxed/simple;
-	bh=TXe/AJi4P0405t0Nn8ub1Nz6aLbMsSePOpe5bgKwALs=;
+	s=arc-20240116; t=1740840629; c=relaxed/simple;
+	bh=0RM1j+DywwWJ8i4SROytSoMfisLkjp04QQv7+pnWFiY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=F4hsZxitiPyIuJbawB8XeGFpSXle/Du4K6Ku62J455XdQs6O358sMkHY5vE+b2QSY+eUw/IQQnTDHup3Yfyf6FGdDn8vQvz/fOqdsv96oJj8d87Mc37vs1wLG64DCg+h4LZwie4Sm81dm/EvVhcWdMsQLEQuel9doZgoOxrPBKg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=B5F3CPmV; arc=none smtp.client-ip=115.124.30.131
+	 MIME-Version; b=IDI6u+HmMnkz9hPuGASTVbc5TBlYy3uSNm9XkJz5wUeIpGV1Jk0YapT2WboRzop+0UO3mVlpSNuVkd/PVFg9ADI0ScrSR7ZK2VgDCHHFxSH96DzgDs7K/5ZHyKaPyrSwLaHA5UdZ1r8Yc8W7L2T24W39ii9hiY3usWROM+GO/i0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=xT9hvynK; arc=none smtp.client-ip=47.90.199.2
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="B5F3CPmV"
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="xT9hvynK"
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1740840618; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=LsN4AVILIAF5l64ooZXWfDVtzbln1b/ogW51HXy4MRg=;
-	b=B5F3CPmVrptC4nafYB2La266UwPWmytf4kxNsaAjWBilVE27yjdkNVnfio9nxU+FzaP8WO+ibfoCofF3eNaLecfhN1Sei7ysc74u1rbmQLtxn9Tj4I4Y/A/GZ3OSmRlqC4P3leG5cLJPdHKHugbp4AB41YoXKmsKmH7QsCuvKj8=
-Received: from localhost(mailfrom:hongzhen@linux.alibaba.com fp:SMTPD_---0WQSfpYr_1740840617 cluster:ay36)
+	t=1740840614; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=F1wkNOLPVE+3E35nVrJ+MFirrarMWBSrgK7jQArB6mY=;
+	b=xT9hvynKLSIsKcoOYrulVRINGDu9/ZImQWvPdXynbcE+v8FIueAkRgD/q938RVQChgiwDP0LuSaNZIAtqlgBOC+Qnk3/C48qNkC2uLBgOs/5RcuL4ISeVB1JDIRNB9XEtl855ef+THfgH2QtYozslDj+U1gSmG24o+0AyK5q1vw=
+Received: from localhost(mailfrom:hongzhen@linux.alibaba.com fp:SMTPD_---0WQSfpXs_1740840613 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Sat, 01 Mar 2025 22:50:17 +0800
+          Sat, 01 Mar 2025 22:50:13 +0800
 From: Hongzhen Luo <hongzhen@linux.alibaba.com>
 To: linux-erofs@lists.ozlabs.org
 Cc: linux-kernel@vger.kernel.org,
 	Hongzhen Luo <hongzhen@linux.alibaba.com>
-Subject: [RFC PATCH v6 6/7] erofs: support compressed inodes for page cache share
-Date: Sat,  1 Mar 2025 22:49:43 +0800
-Message-ID: <20250301145002.2420830-7-hongzhen@linux.alibaba.com>
+Subject: [RFC PATCH v6 1/7] erofs: move `struct erofs_anon_fs_type` to super.c
+Date: Sat,  1 Mar 2025 22:49:38 +0800
+Message-ID: <20250301145002.2420830-2-hongzhen@linux.alibaba.com>
 X-Mailer: git-send-email 2.43.5
 In-Reply-To: <20250301145002.2420830-1-hongzhen@linux.alibaba.com>
 References: <20250301145002.2420830-1-hongzhen@linux.alibaba.com>
@@ -42,133 +42,92 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This patch adds page cache sharing functionality for compressed inodes.
+Move the `struct erofs_anon_fs_type` to the super.c and
+expose it in preparation for the upcoming page cache share
+feature.
 
 Signed-off-by: Hongzhen Luo <hongzhen@linux.alibaba.com>
 ---
- fs/erofs/zdata.c | 57 +++++++++++++++++++++++++++++++++++++++---------
- 1 file changed, 47 insertions(+), 10 deletions(-)
+ fs/erofs/fscache.c  | 13 -------------
+ fs/erofs/internal.h |  2 ++
+ fs/erofs/super.c    | 13 +++++++++++++
+ 3 files changed, 15 insertions(+), 13 deletions(-)
 
-diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
-index aff09f94afb2..b6383cb26acb 100644
---- a/fs/erofs/zdata.c
-+++ b/fs/erofs/zdata.c
-@@ -5,6 +5,7 @@
-  * Copyright (C) 2022 Alibaba Cloud
+diff --git a/fs/erofs/fscache.c b/fs/erofs/fscache.c
+index ce3d8737df85..ae7bd9ebff38 100644
+--- a/fs/erofs/fscache.c
++++ b/fs/erofs/fscache.c
+@@ -3,7 +3,6 @@
+  * Copyright (C) 2022, Alibaba Cloud
+  * Copyright (C) 2022, Bytedance Inc. All rights reserved.
   */
- #include "compress.h"
-+#include "ishare.h"
- #include <linux/psi.h>
- #include <linux/cpuhotplug.h>
- #include <trace/events/erofs.h>
-@@ -474,7 +475,7 @@ enum z_erofs_pclustermode {
+-#include <linux/pseudo_fs.h>
+ #include <linux/fscache.h>
+ #include "internal.h"
+ 
+@@ -13,18 +12,6 @@ static LIST_HEAD(erofs_domain_list);
+ static LIST_HEAD(erofs_domain_cookies_list);
+ static struct vfsmount *erofs_pseudo_mnt;
+ 
+-static int erofs_anon_init_fs_context(struct fs_context *fc)
+-{
+-	return init_pseudo(fc, EROFS_SUPER_MAGIC) ? 0 : -ENOMEM;
+-}
+-
+-static struct file_system_type erofs_anon_fs_type = {
+-	.owner		= THIS_MODULE,
+-	.name           = "pseudo_erofs",
+-	.init_fs_context = erofs_anon_init_fs_context,
+-	.kill_sb        = kill_anon_super,
+-};
+-
+ struct erofs_fscache_io {
+ 	struct netfs_cache_resources cres;
+ 	struct iov_iter		iter;
+diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
+index 686d835eb533..47004eb89838 100644
+--- a/fs/erofs/internal.h
++++ b/fs/erofs/internal.h
+@@ -379,6 +379,8 @@ extern const struct file_operations erofs_dir_fops;
+ 
+ extern const struct iomap_ops z_erofs_iomap_report_ops;
+ 
++extern struct file_system_type erofs_anon_fs_type;
++
+ /* flags for erofs_fscache_register_cookie() */
+ #define EROFS_REG_COOKIE_SHARE		0x0001
+ #define EROFS_REG_COOKIE_NEED_NOEXIST	0x0002
+diff --git a/fs/erofs/super.c b/fs/erofs/super.c
+index 827b62665649..eb052a770088 100644
+--- a/fs/erofs/super.c
++++ b/fs/erofs/super.c
+@@ -11,6 +11,7 @@
+ #include <linux/fs_parser.h>
+ #include <linux/exportfs.h>
+ #include <linux/backing-dev.h>
++#include <linux/pseudo_fs.h>
+ #include "xattr.h"
+ 
+ #define CREATE_TRACE_POINTS
+@@ -850,6 +851,18 @@ static struct file_system_type erofs_fs_type = {
  };
+ MODULE_ALIAS_FS("erofs");
  
- struct z_erofs_frontend {
--	struct inode *const inode;
-+	struct inode *inode;
- 	struct erofs_map_blocks map;
- 	struct z_erofs_bvec_iter biter;
- 
-@@ -1835,11 +1836,24 @@ static void z_erofs_pcluster_readmore(struct z_erofs_frontend *f,
- 
- static int z_erofs_read_folio(struct file *file, struct folio *folio)
++static int erofs_anon_init_fs_context(struct fs_context *fc)
++{
++	return init_pseudo(fc, EROFS_SUPER_MAGIC) ? 0 : -ENOMEM;
++}
++
++struct file_system_type erofs_anon_fs_type = {
++	.owner		= THIS_MODULE,
++	.name           = "pseudo_erofs",
++	.init_fs_context = erofs_anon_init_fs_context,
++	.kill_sb        = kill_anon_super,
++};
++
+ static int __init erofs_module_init(void)
  {
--	struct inode *const inode = folio->mapping->host;
--	Z_EROFS_DEFINE_FRONTEND(f, inode, folio_pos(folio));
-+	struct inode *const inode = folio->mapping->host, *realinode;
-+	Z_EROFS_DEFINE_FRONTEND(f, NULL, folio_pos(folio));
-+	struct erofs_read_ctx rdctx = {
-+		.file = file,
-+		.inode = inode,
-+	};
  	int err;
- 
- 	trace_erofs_read_folio(folio, false);
-+
-+	erofs_read_begin(&rdctx);
-+
-+	if (erofs_is_ishare_inode(inode))
-+		realinode = erofs_ishare_iget(inode);
-+	else
-+		realinode = inode;
-+
-+	f.inode = realinode;
- 	z_erofs_pcluster_readmore(&f, NULL, true);
- 	err = z_erofs_scan_folio(&f, folio, false);
- 	z_erofs_pcluster_readmore(&f, NULL, false);
-@@ -1848,25 +1862,43 @@ static int z_erofs_read_folio(struct file *file, struct folio *folio)
- 	/* if some pclusters are ready, need submit them anyway */
- 	err = z_erofs_runqueue(&f, 0) ?: err;
- 	if (err && err != -EINTR)
--		erofs_err(inode->i_sb, "read error %d @ %lu of nid %llu",
--			  err, folio->index, EROFS_I(inode)->nid);
-+		erofs_err(realinode->i_sb, "read error %d @ %lu of nid %llu",
-+			  err, folio->index, EROFS_I(realinode)->nid);
- 
- 	erofs_put_metabuf(&f.map.buf);
- 	erofs_release_pages(&f.pagepool);
-+
-+	if (erofs_is_ishare_inode(inode))
-+		erofs_ishare_iput(realinode);
-+
-+	erofs_read_end(&rdctx);
-+
- 	return err;
- }
- 
- static void z_erofs_readahead(struct readahead_control *rac)
- {
--	struct inode *const inode = rac->mapping->host;
--	Z_EROFS_DEFINE_FRONTEND(f, inode, readahead_pos(rac));
-+	struct inode *const inode = rac->mapping->host, *realinode;
-+	Z_EROFS_DEFINE_FRONTEND(f, NULL, readahead_pos(rac));
- 	struct folio *head = NULL, *folio;
- 	unsigned int nrpages = readahead_count(rac);
-+	struct erofs_read_ctx rdctx = {
-+		.file = rac->file,
-+		.inode = inode,
-+	};
- 	int err;
- 
-+	erofs_read_begin(&rdctx);
-+
-+	if (erofs_is_ishare_inode(inode))
-+		realinode = erofs_ishare_iget(inode);
-+	else
-+		realinode = inode;
-+
-+	f.inode = realinode;
- 	z_erofs_pcluster_readmore(&f, rac, true);
- 	nrpages = readahead_count(rac);
--	trace_erofs_readpages(inode, readahead_index(rac), nrpages, false);
-+	trace_erofs_readpages(realinode, readahead_index(rac), nrpages, false);
- 	while ((folio = readahead_folio(rac))) {
- 		folio->private = head;
- 		head = folio;
-@@ -1879,8 +1911,8 @@ static void z_erofs_readahead(struct readahead_control *rac)
- 
- 		err = z_erofs_scan_folio(&f, folio, true);
- 		if (err && err != -EINTR)
--			erofs_err(inode->i_sb, "readahead error at folio %lu @ nid %llu",
--				  folio->index, EROFS_I(inode)->nid);
-+			erofs_err(realinode->i_sb, "readahead error at folio %lu @ nid %llu",
-+				  folio->index, EROFS_I(realinode)->nid);
- 	}
- 	z_erofs_pcluster_readmore(&f, rac, false);
- 	z_erofs_pcluster_end(&f);
-@@ -1888,6 +1920,11 @@ static void z_erofs_readahead(struct readahead_control *rac)
- 	(void)z_erofs_runqueue(&f, nrpages);
- 	erofs_put_metabuf(&f.map.buf);
- 	erofs_release_pages(&f.pagepool);
-+
-+	if (erofs_is_ishare_inode(inode))
-+		erofs_ishare_iput(realinode);
-+
-+	erofs_read_end(&rdctx);
- }
- 
- const struct address_space_operations z_erofs_aops = {
 -- 
 2.43.5
 
