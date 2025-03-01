@@ -1,77 +1,53 @@
-Received: from mail-pl1-f226.google.com (mail-pl1-f226.google.com [209.85.214.226])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.smtpout.orange.fr (smtp-74.smtpout.orange.fr [80.12.242.74])
+	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC18C1C3F36
-	for <linux-kernel@vger.kernel.org>; Sat,  1 Mar 2025 18:39:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.226
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E464223F37C;
+	Sat,  1 Mar 2025 18:44:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740854346; cv=none; b=a2+ELH0gcOifM1R3aASSdt9xgI2snFlEnl9oKJJCJY3Gj4TZROLky+vPyQLRiMZ2hRb/tKsiZrlOTXE4k+z5tLNNhG9lK64PKfFKr/4JYzMZCV0doPrMAap6QvLNyEA42RJgXnxGN9fXb315/+AWpmvPFiQTvge+fUsR4gjBA48=
+	t=1740854657; cv=none; b=aeTa3hDl9BsH/rH4t+2V21/v8dXeZovFSMRanGO+G5E2XNmrsooafXwuTcHUTO1WMLDulCrKokmBF2qOR3SHSf1TOiA9zcu4Ej8ncauSaoX8/OVpLG3gB8UTRYgBkchFWSkmPsOpjmjtlT57a8EDbe0rLHqHsZT3621ca4JoAkA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740854346; c=relaxed/simple;
-	bh=stkOczj9wsk0yC8FVzBVC0ck+FsRwlXVEQXdC7KVrtY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lx5Ko9qWjHqv9zLmE52lGzBEmlmVpNSNEvuxrckdaKoh+g4OMXwZcxT70rFRluvljiEnfIJmnUCLgVIYrSURf3AaakkBXY4PSBJ8BCcVi+vnGJYtiW4utTCkmuRkFR7Ow846rMHeoisY65gFZsvNF5yQbWonnbPRSKqXuEDpRNo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=f+o30AO0; arc=none smtp.client-ip=209.85.214.226
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
+	s=arc-20240116; t=1740854657; c=relaxed/simple;
+	bh=T433eUfkMrUo1Wprk9rrV953OoJLM5qrhVCq/CAQvvs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=E6rCKDQSlDIwifyJfdGXgoaArQBQ+fCktdmDs14Q645+ws1ImjUZ+PHEvblHrCVng0rzBohAwP9/dG+gm9lVnCkNt0TLCM7LOCy0SFWEmhYooBupQvHAQOg8Ykv0htMAOZQkr3axozY1mmHL5bNw/nn2BuB1ntnVAsFgy26DypQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=k+8qDxWv; arc=none smtp.client-ip=80.12.242.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="f+o30AO0"
-Received: by mail-pl1-f226.google.com with SMTP id d9443c01a7336-22348051cf7so7721105ad.1
-        for <linux-kernel@vger.kernel.org>; Sat, 01 Mar 2025 10:39:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=purestorage.com; s=google2022; t=1740854344; x=1741459144; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=c6GWDVHZ7DE4o6lUs4iU3R7AoMZoHDxMO0VSLoOpHdM=;
-        b=f+o30AO0LDxeh4kqTc4fN99LzrIH+BLPDBPpK65MGi0oYIKHdTQGAyLusotrDYvh1p
-         MyqbYFSomg/1uu0fjHvsl2XhScBoiv+s3FufWQBKEdZBupvh2d52kEZFiVd1EiWXotdP
-         nqh8FbExAv3RBylDaHdxGzQI/BhD6xmhkBLppbRptDZ7EolP7Vrx45mtua5SYqTThFpu
-         JGSyxrETa8Ve8hMykWCoPqvVwsXuU1VkMCaRswXbj77XwhpjhkulMCKjlVDc7f2U1rIQ
-         4eZvAbXZYRAEO1iYO6qineWTVGcE20eyQMyT+ja0U0Ny/j4YFPY1FE//s4gFLRwIxbB3
-         dmZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740854344; x=1741459144;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=c6GWDVHZ7DE4o6lUs4iU3R7AoMZoHDxMO0VSLoOpHdM=;
-        b=Sx3QvvHw15prKsSEi3Yf341ndPKDctkEx21Pwq6tWfscdII6Tq0mLmHl2NGf/odq/S
-         ErkVExtLNbghBpGhBNMLVAsgaEaNodUlqKT9HcYFZ054qt7u13gQ4eaGkNFAXeAZMzqf
-         LqUawcEh7lyv/h9yEmYfBwF9Gk9DEM35tkkFv/56koHoNn909JYXsBhGUQwFA3ITOF7X
-         CT8qBvXBDGGT+ukDYEEgDAs7l2hLKggXA3WKgDoOzm6Q7aXNAGfe9fcUWOxfIl9frVSq
-         JmABPdFMyKDS9RCLu990hq9CJostam3lQ573ZQeSDJYCezFoTb5a65BcM1FBFSpIhk3H
-         9jkA==
-X-Forwarded-Encrypted: i=1; AJvYcCVFopwyxf7O3WYXXCr9Ppi2mEJ5XhZHfLeT6rH8Pm9uuPxrS/milRyo1oBJOpdn8Rkhj12VJvIrfN6CswY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyTk/t/Ivn3xX9qrDG5gSfP7CjmbEHcSzFb92Xf+YjnsIipYWRz
-	bGXRRZ+GwiTKasUCTzwvGBYOVE41fNFG5YybzjZToP3rT3ANYXiEwe0Q9nMBrsrYYOsG87JkyX1
-	Uuf7AUDpqg4J8n6btuE6XdCvEdyys/RNl
-X-Gm-Gg: ASbGnct/Ky/V+UiERLvAm2jVKULl539K+jSjXjNYZkzH8PtKSdfGHEdWzzyzgKGK37w
-	8ZbTPFxnQnhKUm34IRMq+rUfJ+9UrCh8wtko4Bf3KZv330o/qyiHTSQP2En16ZQqX4AWHb08H85
-	6hqpyWjLByD/zDKKcrrW7H2Mb9+MKLJ9r0p+io1fYMqoe9rfjDm87+7lsqDEMyk0UWfVDjPM/X3
-	JJJPDhZ3BZ5/twneRhII+h/YhrBjVJEylsD0LaeUeNg7og1ILl2wXggNB0ehEzyPayxAxe7w4YO
-	a+P5GTmoakb9n8JvpVbTQntXQh2mkaUIBJzVhAgDJ1MjIn/4
-X-Google-Smtp-Source: AGHT+IFQXb1LamgOtsmsL5y5qtuMCmuSy0BmT7WOm4l455JDk/1ik0dpiEWhsFU6IHMLgADhF9R4SZeJQb5q
-X-Received: by 2002:aa7:9903:0:b0:736:3326:2bc with SMTP id d2e1a72fcca58-736332606aemr1850758b3a.5.1740854344073;
-        Sat, 01 Mar 2025 10:39:04 -0800 (PST)
-Received: from c7-smtp-2023.dev.purestorage.com ([208.88.159.129])
-        by smtp-relay.gmail.com with ESMTPS id d2e1a72fcca58-7349feb4080sm361682b3a.17.2025.03.01.10.39.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 01 Mar 2025 10:39:04 -0800 (PST)
-X-Relaying-Domain: purestorage.com
-Received: from dev-csander.dev.purestorage.com (dev-csander.dev.purestorage.com [10.7.70.37])
-	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id 694F6340314;
-	Sat,  1 Mar 2025 11:39:03 -0700 (MST)
-Received: by dev-csander.dev.purestorage.com (Postfix, from userid 1557716354)
-	id 63CF2E4112E; Sat,  1 Mar 2025 11:39:03 -0700 (MST)
-From: Caleb Sander Mateos <csander@purestorage.com>
-To: Jens Axboe <axboe@kernel.dk>,
-	Pavel Begunkov <asml.silence@gmail.com>
-Cc: Caleb Sander Mateos <csander@purestorage.com>,
-	io-uring@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] io_uring/rsrc: include io_uring_types.h in rsrc.h
-Date: Sat,  1 Mar 2025 11:36:11 -0700
-Message-ID: <20250301183612.937529-1-csander@purestorage.com>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="k+8qDxWv"
+Received: from fedora.home ([90.11.132.44])
+	by smtp.orange.fr with ESMTPA
+	id oRndttkZclzKeoRngtwIir; Sat, 01 Mar 2025 19:43:02 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1740854583;
+	bh=kivS0j5YlRBr/NK4eTwHFGgQZng6nDYYZFuu6CKvKgs=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=k+8qDxWvuRHPkPZSB2Uaccu3gZfp77O4E/sYM+P8NRjnFIP9uUEBpkZnnl8u2eLb0
+	 6u9jmR90VAlyT42PfnGwq6/ow/Z5G8leuU/sJcLobMZQx7EKgn0EA9NJl0a98hrIaj
+	 p1Kqk2pAh6hBPiyiz3pUYbck45ud5clerjXjAjZtW6nZTk/z+CObM5SUXuZ0am009R
+	 RM3PoxRvMxQ4c/cRkX8hVZsZS0jATFscJ65ZBBss8PWxXV1QxgSEsR/8wQ1ICC1vb2
+	 u1uEdqniDswEcUwN1sor0UR1reugBes7qeTI2cA7mwsIEOAbVFoO10SmEw786nALoz
+	 ob14oIapN5qpw==
+X-ME-Helo: fedora.home
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Sat, 01 Mar 2025 19:43:03 +0100
+X-ME-IP: 90.11.132.44
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To: Shawn Guo <shawn.guo@linaro.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Jianguo Sun <sunjianguo1@huawei.com>
+Cc: linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	linux-pci@vger.kernel.org
+Subject: [PATCH] PCI: histb: Fix an error handling path in histb_pcie_probe()
+Date: Sat,  1 Mar 2025 19:42:54 +0100
+Message-ID: <8301fc15cdea5d2dac21f57613e8e6922fb1ad95.1740854531.git.christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -80,30 +56,50 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-io_uring/rsrc.h uses several types from include/linux/io_uring_types.h.
-Include io_uring_types.h explicitly in rsrc.h to avoid depending on
-users of rsrc.h including io_uring_types.h first.
+If an error occurs after a successful phy_init() call, then phy_exit()
+should be called.
 
-Signed-off-by: Caleb Sander Mateos <csander@purestorage.com>
+Add the missing call, as already done in the remove function.
+
+Fixes: bbd11bddb398 ("PCI: hisi: Add HiSilicon STB SoC PCIe controller driver")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 ---
- io_uring/rsrc.h | 1 +
- 1 file changed, 1 insertion(+)
+This patch is compile tested only.
 
-diff --git a/io_uring/rsrc.h b/io_uring/rsrc.h
-index 8f912aa6bcc9..f10a1252b3e9 100644
---- a/io_uring/rsrc.h
-+++ b/io_uring/rsrc.h
-@@ -1,9 +1,10 @@
- // SPDX-License-Identifier: GPL-2.0
- #ifndef IOU_RSRC_H
- #define IOU_RSRC_H
+It is also completly speculative. Review with care.
+---
+ drivers/pci/controller/dwc/pcie-histb.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/pci/controller/dwc/pcie-histb.c b/drivers/pci/controller/dwc/pcie-histb.c
+index 615a0e3e6d7e..63b701881357 100644
+--- a/drivers/pci/controller/dwc/pcie-histb.c
++++ b/drivers/pci/controller/dwc/pcie-histb.c
+@@ -409,16 +409,22 @@ static int histb_pcie_probe(struct platform_device *pdev)
+ 	ret = histb_pcie_host_enable(pp);
+ 	if (ret) {
+ 		dev_err(dev, "failed to enable host\n");
+-		return ret;
++		goto err_exit_phy;
+ 	}
  
-+#include <linux/io_uring_types.h>
- #include <linux/lockdep.h>
+ 	ret = dw_pcie_host_init(pp);
+ 	if (ret) {
+ 		dev_err(dev, "failed to initialize host\n");
+-		return ret;
++		goto err_exit_phy;
+ 	}
  
- enum {
- 	IORING_RSRC_FILE		= 0,
- 	IORING_RSRC_BUFFER		= 1,
+ 	return 0;
++
++err_exit_phy:
++	if (hipcie->phy)
++		phy_exit(hipcie->phy);
++
++	return ret;
+ }
+ 
+ static void histb_pcie_remove(struct platform_device *pdev)
 -- 
-2.45.2
+2.48.1
 
