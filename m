@@ -1,102 +1,95 @@
-Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A68B123F372;
-	Sat,  1 Mar 2025 12:36:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C96711DE4C5
+	for <linux-kernel@vger.kernel.org>; Sat,  1 Mar 2025 12:38:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740832574; cv=none; b=tx6CPyWvClYWdZyoYb5pa/pP9zmVswTpBFcVW6aObMfNxJeZc0QUw76tPxZGwjzNJL+KjIPv2Ez2GbgaEEE8YZxqCeNd5oSUveoa/qMZWvOY1+F8WCvvVPtCnCFvFmD+r+5CgVfG/DQuT/ULfK3tFWThnPIaPvdHyBKJImW/ReU=
+	t=1740832711; cv=none; b=kPTb94e9LJuJWuo2I3k3Bp9NkLuGocFj5PIn7I5QsKgXJR08/q3pTAsiJnRMDeVVEF2x10wsLyyiQGYt+IDDaeOPQtQecIKJ61ykeHYHQzcAaiaPdWFXIjVXIqKfGjnNJZMQUsod7B8VL4L6OpmRL/5ZUiV4JOM7v5fVVmO5hOQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740832574; c=relaxed/simple;
-	bh=tQYPuG6Ii/l98cVIkI3pivmYR2x8MKY/gWKoA8SUagA=;
+	s=arc-20240116; t=1740832711; c=relaxed/simple;
+	bh=/MAYFdTg2s1JIn+YeMQLNYPys6T0G0qZaPWu6aGY+Hg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=biqYjVM6S+U+BIwLRo1Ic78tvE2LDt+OJC4L1W5p+oEJrEp+dMrd1UXDC0elnOGNDP+c0MW/vZPZ3ZLoWUsU7azmCJuU4vEZNBiGTXWpEQmi2ruyCICFzYDVbldfWcslZxWs8qp2aTM3IIy7h4k0L9j14G9nHkUtmcoQXPdXyak=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=f/ye+d10; arc=none smtp.client-ip=46.235.229.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=U3iRyROynGoeP2DyBAUJ/OZ1p4+P9o36ZM5QxLKtC0Nme42JhF0/BQRK28cqfs215FkmdmfzRCc0cduvd4pofaV3x43oK7MFXA/l2/JYvQOjz67YaCMQI/5Vo4SHhg3w4S8Gdz9VTVb/mXA5qCGpHUbJXRkUr0XOebkPaTinmGg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=Hhx/cgP0; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="f/ye+d10"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
-	; s=bytemarkmx; h=Content-Type:MIME-Version:Message-ID:Subject:From:Date:From
-	:Subject; bh=P3/qjrfLtWYJDebvoDnNBB0jTi3XIrdnZ0O+aHW2BIM=; b=f/ye+d10lC3QiYvG
-	pHW+c2INfQEuEYy1KkYauJBXMemdAujPqVC2eLg3iSKWj7XTsI+cNoLpTAYkJ+3RmUhZGIRIIM929
-	K6GXPQ/Ls+1Lg994KqWr2jaxKvAZvstaMENOdvBCSlzmq7zyFi8KAdm3VZULsPfd/dAZnmqh8pERt
-	DWYhubypGNXQIgSwx+q2uVk1/s9+0fgnJEhoG9m2iMbzVd4V54SlWxwIgz+GBniDhJtcaKUVrKOJ/
-	pHu9Rm80WS2FJVeZkZEU9c7n+6TC4FK5WSKA4k4uZC1hmiTMaNddm87x++XfqJKK6nmsIMeG2EQFv
-	FYdB29KiD8dOQXYUIg==;
-Received: from dg by mx.treblig.org with local (Exim 4.96)
-	(envelope-from <dg@treblig.org>)
-	id 1toM4S-001pv8-2I;
-	Sat, 01 Mar 2025 12:35:56 +0000
-Date: Sat, 1 Mar 2025 12:35:56 +0000
-From: "Dr. David Alan Gilbert" <linux@treblig.org>
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: p.zabel@pengutronix.de, airlied@gmail.com, simona@ffwll.ch,
-	deller@gmx.de, shawnguo@kernel.org, s.hauer@pengutronix.de,
-	kernel@pengutronix.de, festevam@gmail.com,
-	dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/7] gpu: ipu-v3: Remove unused functions
-Message-ID: <Z8L_LOkOfRXUAKN6@gallifrey>
-References: <20241226022752.219399-1-linux@treblig.org>
- <174082343297.2941786.11452976094065423321.b4-ty@linaro.org>
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="Hhx/cgP0"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 9474D40E0177;
+	Sat,  1 Mar 2025 12:38:21 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id 8FIDxid9khlg; Sat,  1 Mar 2025 12:38:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1740832697; bh=l3U5Q56h0Pc9dYo8E9WbSuPE5G7BzgNui4LMlQOWpYY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Hhx/cgP0bRWH+dVf84Zm34VzdOzQKLTy/rmp4n4Z8i6A5gKV5lCmh8LrURK7zHUQ5
+	 x26tiCj4U7Y6xiTjxuZzU0JotrnBMDQtQE9TyiE1z2hCOGSL8sFeaJsyVnQzT2ji83
+	 ax85mQW1PCljRZ3vEm/wjLohOEj/CvS9YOy/SfrMp48apQySAB5ZPszBNE0VWgU0dx
+	 DklqMdS1TkQrKxO+yHOyVZzAteNpgmXSQcoB+JUFaf/oBBHmTIK4YMoQthra1KgNi7
+	 GOS4OHZq31KPzffippMYUeDbmgJZbWJVDCUUTD1+odTS0i/tFPh3V2KYtD8vfI1NAQ
+	 RQmFgG9WDMzA5nk1RdIGtzhhGV2oZk3wmh3NWnEMBUAxCA8KCvrRHJXPWyLDJNNyoc
+	 FcmKkRbRmjwldsPNlKrJtiLdzdwhxUebu7ZHdtg+50/UrGIHp4ShSYkKtetFcEtA7f
+	 r+zLh0SRMCLXU4NkHqvvTy7sDjhxvqd6e4ofCNLporJwt9zncOa3/6ZkVXrA/YPVv9
+	 mdfJiE5TdGD/jdft6p+SMtt8MWMk2IadJjBQPuMuuK8ZwTf6DZJZ0MNNxLWMrs7OYS
+	 ZEjFXTnJqWdCTpFRg34ZSvjEfBPaL+/30xlxWoLlsgvB/d4p82bWPD0LA2rVwAzeC1
+	 4Z865wfuZYp8vdPUjzLrfdyA=
+Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id BEBE840E015F;
+	Sat,  1 Mar 2025 12:38:07 +0000 (UTC)
+Date: Sat, 1 Mar 2025 13:38:02 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: Uros Bizjak <ubizjak@gmail.com>
+Cc: Dave Hansen <dave.hansen@intel.com>, x86@kernel.org,
+	linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@kernel.org>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>
+Subject: Re: [PATCH -tip] x86/locking/atomic: Use asm_inline for atomic
+ locking insns
+Message-ID: <20250301123802.GCZ8L_qsv7-WwUwqt5@fat_crate.local>
+References: <20250228123825.2729925-1-ubizjak@gmail.com>
+ <20f1af22-71dc-4d62-9615-03030012222e@intel.com>
+ <CAFULd4bpHGE83qc37sbh=rpGj+SFqQrsNDLzL_-NQpo6pQH3jw@mail.gmail.com>
+ <c4aca08a-95c1-48ee-b4da-55a69b74101c@intel.com>
+ <CAFULd4YVOEtT+bsp9H7ijaoJn2e2108tWhiFarRv=QxoUMZaiw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <174082343297.2941786.11452976094065423321.b4-ty@linaro.org>
-X-Chocolate: 70 percent or better cocoa solids preferably
-X-Operating-System: Linux/6.1.0-21-amd64 (x86_64)
-X-Uptime: 12:35:40 up 296 days, 23:49,  1 user,  load average: 0.00, 0.00,
- 0.00
-User-Agent: Mutt/2.2.12 (2023-09-09)
+In-Reply-To: <CAFULd4YVOEtT+bsp9H7ijaoJn2e2108tWhiFarRv=QxoUMZaiw@mail.gmail.com>
 
-* Dmitry Baryshkov (dmitry.baryshkov@linaro.org) wrote:
-> On Thu, 26 Dec 2024 02:27:45 +0000, linux@treblig.org wrote:
-> > From: "Dr. David Alan Gilbert" <linux@treblig.org>
-> > 
-> > Hi,
-> >   This set removes a bunch of functions in ipu-v3 that
-> > have been unused for a long time (since 2012-2017).
-> > 
-> >   No changes to functions are made, just full deletions.
-> > 
-> > [...]
-> 
-> Applied to drm-misc-next, thanks!
+On Sat, Mar 01, 2025 at 10:05:56AM +0100, Uros Bizjak wrote:
+> OTOH, -Os, where different code size/performance heuristics are used, now
+> performs better w.r.t code size.
 
-Thanks!
+Did anything change since:
 
-Dave
+281dc5c5ec0f ("Give up on pushing CC_OPTIMIZE_FOR_SIZE")
+3a55fb0d9fe8 ("Tell the world we gave up on pushing CC_OPTIMIZE_FOR_SIZE")
 
-> [1/7] gpu: ipu-v3: ipu-ic: Remove unused ipu_ic_task_graphics_init
->       commit: 16e3bf497fb2d379f3d461fa0c85d14de0a3d183
-> [2/7] gpu: ipu-v3: Remove unused ipu_rot_mode_to_degrees
->       commit: a52ba18c254c0a3819e632e6371554f1c6f5bd16
-> [3/7] gpu: ipu-v3: Remove unused ipu_idmac_channel_busy
->       commit: 4f9c64e95c3510f4a5192bd401de5611c1dd5637
-> [4/7] gpu: ipu-v3: Remove unused ipu_image_convert_* functions
->       commit: 96e9d754b35e87a5be2de7dce3c810ffdd769c84
-> [5/7] gpu: ipu-v3: Remove unused ipu_vdi_unsetup
->       commit: 27985c86e283e1e5ac8a9809f189f03643a6f5f2
-> [6/7] gpu: ipu-v3: ipu-csi: Remove unused functions
->       commit: c687c3147d5de801ed835b077802b68fe85d8a3d
-> [7/7] gpu: ipu-v3 ipu-cpmem: Remove unused functions
->       commit: 2800028d5bdee8e9a3cda2fec782dadc32225d8d
-> 
-> Best regards,
-> -- 
-> With best wishes
-> Dmitry
-> 
-> 
+wrt -Os?
+
+Because if not, we still don't love -Os and you can drop the -Os argument.
+
+And without any perf data showing any improvement, this patch does nothing but
+enlarge -O2 size...
+
 -- 
- -----Open up your eyes, open up your mind, open up your code -------   
-/ Dr. David Alan Gilbert    |       Running GNU/Linux       | Happy  \ 
-\        dave @ treblig.org |                               | In Hex /
- \ _________________________|_____ http://www.treblig.org   |_______/
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
