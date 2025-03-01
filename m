@@ -1,166 +1,71 @@
-Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E55041E98F3;
-	Sat,  1 Mar 2025 23:16:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8E651D7982;
+	Sat,  1 Mar 2025 23:16:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740870967; cv=none; b=OpMkN5mlV8CVIrdhhtMEppfZ8krzgjfROM0rf0MB993CDxNo6Rs6sNC/HQNvuSA1Q0BhEh9m+ImN9DmC/hh89pBykuoJsbkbpTM1v7wim8yPzCw8r+zHSmWrLKygGIHJh6egNM9YluEghd27MI4W9p9DRplZZ+V/+MsJ+Gue2zY=
+	t=1740870973; cv=none; b=cRCMcRUFMTsLg937f2soi9rBx/nwAj+SFaEvjeJt/9IutKJTQ6D29i5wWma8o2GbkY3sB+hlYuFqyGQSh2oYdGZYae1CmAcRKEA+30gRYOY49gusj3Yba9evadFHyCYx/wr+8YwTR5F2Rv/UYC5K0r5auwuTXrE8xphBeCBRESk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740870967; c=relaxed/simple;
-	bh=hyZqVR03EhL39rF1NmzjFOxT29nNBXH9JZ/Nl44J5dw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=cpE0AzusOopHWQHEjdeak1HVct9r3MBsKw4ja8VD8KipLnWQQkt67EdWvy26D1hI3G0agEk2pFbFl7MB/Hq4tKEiRIRQpBxNRGSvwdGFUx2xrsa5Ssqk2rfCTbwpEW4opN7/wkSnIW2MORamUQ51/uaNW1+hm8hXqQvq8NM+mzI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
-Received: from [127.0.0.1] (unknown [116.232.55.252])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dlan)
-	by smtp.gentoo.org (Postfix) with ESMTPSA id C1FB5342FE4;
-	Sat, 01 Mar 2025 23:16:02 +0000 (UTC)
-From: Yixun Lan <dlan@gentoo.org>
-Date: Sun, 02 Mar 2025 07:15:33 +0800
-Subject: [PATCH v2 2/2] gpiolib: support parsing gpio three-cell interrupts
- scheme
+	s=arc-20240116; t=1740870973; c=relaxed/simple;
+	bh=nWpDQmZNg8zKVk12QskQ7NNS05C4fI/JmZBKLdKyu8Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=e7PThw5pmu/hcz/EamG3w77TXcZL+WR3Owy3gpcq2iYwDD8z8wGHVhNJbI0mN7Ao7BOiPHZgex2T3njMbvtXc2Oh2atgSHmFvV2kgjZCnoYznX6yKGvv6wrTqjkPEXPjNzVDQ/ti1Kot71Y9VYnMZ115y3wTJHQ/ih3mlV0dWME=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-390e3b3d3f4so1552464f8f.2;
+        Sat, 01 Mar 2025 15:16:09 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740870968; x=1741475768;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=nWpDQmZNg8zKVk12QskQ7NNS05C4fI/JmZBKLdKyu8Q=;
+        b=FzUSJ2xu6pUSmUF0zAFFDG74KhvMoJEJR4X/h/5D5GdaCmOOBAJN3TAzlJOQobLMdU
+         xV2cRxWYqkC56j9q7/zgEv3fp+dhhRey/IMZ/vfBONVgiYnjJfQJ/owEx64CBXLWrUTM
+         N2C++sz/OaYX9tR+PVSUiF7WWSdr2MvLyZQhx4LUnimV3zSMtQLa6Go8XWbYFr3x+fc3
+         YsAi9hMxCXtDUrWGvEIpMwUritnrpB5pWO4R+74K/r4TNeNz3/t/EkaOYflvTfUbfg5r
+         w4M+Vj+dXIpJvUs2xgq9t/94tkzxA5KFOY3Ggda2G9HQTBbSk1x6wUyBgQB2d5uR5nu9
+         rs0g==
+X-Forwarded-Encrypted: i=1; AJvYcCWRw2HecGows7BpKk6dZdVyFJvo4tu6RdBJkHYriTIgSLMO1UWp+nAaoa5pJSBpkkaaFu1mThp6h97jQN2taF0=@vger.kernel.org, AJvYcCXPmV0Unxgs33OVqwTWuOsXrJaIFAtpU7w/OG2yP4nO+JrD7/020K8EMziUd42fOiExLw6WuTQ0VlVtjfX3@vger.kernel.org
+X-Gm-Message-State: AOJu0YxxyOS+70M9SfuefSlVR9wQYhp+zzHid8ZmlMnP6/iCzadCm/z7
+	+k9awMyZq0ATwATYoHZK8AcZiXuHnqjeuCl+MpPJIRgdMFdxNLY9
+X-Gm-Gg: ASbGncuyUz9RLjlDW+W2KOhPEeUDYreotN868JWTtpEQcmWoORJ/1bRV+g3DCf2Y9GU
+	N/pX+i79qebscmP788RvgzEmbL8SOoVrsN9k37TE9EDQ9nJh+d9rK3oxva/k8zgiuYGd+NZxgTg
+	6HEhDmNj8am52m3FCOfv41lPzjSxyNzi5qZuQH1B+D9RrHL9eXQ7Nln5WI8g2nJqYkSMxlYD5cl
+	0fKZC9HwI2Sc6SsrHMNtMz5EpR/nleLqtgRJni4uEBt/RIwYb6f0EvCUHQ+dyTdUn6oB9DC/ad7
+	D15toy33d6IbSkxxm6vPkxkNS94FFGyYmK3YAJhTwQjyrSonwlBO1nNh4ALs30ACFhij/IVZheN
+	XC7G3
+X-Google-Smtp-Source: AGHT+IHPLd9+jiab01w985BywzrEuE99VxuwkdCg02g97bwTjyXFL7H2etMm7iPNU0L9KED/95Jb5g==
+X-Received: by 2002:a5d:64a6:0:b0:390:e48a:3869 with SMTP id ffacd0b85a97d-390ec7c8e54mr8198941f8f.11.1740870967855;
+        Sat, 01 Mar 2025 15:16:07 -0800 (PST)
+Received: from [10.100.102.74] (89-138-75-149.bb.netvision.net.il. [89.138.75.149])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-390e47965e8sm9428853f8f.1.2025.03.01.15.16.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 01 Mar 2025 15:16:07 -0800 (PST)
+Message-ID: <ddc3b589-909e-43ea-a02b-7d0b26d730ec@grimberg.me>
+Date: Sun, 2 Mar 2025 01:16:05 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] nvme-tcp: fix signedness bug in
+ nvme_tcp_init_connection()
+To: Dan Carpenter <dan.carpenter@linaro.org>,
+ Caleb Sander Mateos <csander@purestorage.com>
+Cc: Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>,
+ Christoph Hellwig <hch@lst.de>, Hannes Reinecke <hare@suse.de>,
+ linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org,
+ kernel-janitors@vger.kernel.org
+References: <0f3be9ff-81a1-4c33-8960-75de2c239ae0@stanley.mountain>
+Content-Language: en-US
+From: Sagi Grimberg <sagi@grimberg.me>
+In-Reply-To: <0f3be9ff-81a1-4c33-8960-75de2c239ae0@stanley.mountain>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250302-04-gpio-irq-threecell-v2-2-34f13ad37ea4@gentoo.org>
-References: <20250302-04-gpio-irq-threecell-v2-0-34f13ad37ea4@gentoo.org>
-In-Reply-To: <20250302-04-gpio-irq-threecell-v2-0-34f13ad37ea4@gentoo.org>
-To: Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Alex Elder <elder@riscstar.com>, Inochi Amaoto <inochiama@gmail.com>, 
- linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
- linux-riscv@lists.infradead.org, spacemit@lists.linux.dev, 
- Yixun Lan <dlan@gentoo.org>
-X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3986; i=dlan@gentoo.org;
- h=from:subject:message-id; bh=hyZqVR03EhL39rF1NmzjFOxT29nNBXH9JZ/Nl44J5dw=;
- b=owEBzQIy/ZANAwAKATGq6kdZTbvtAcsmYgBnw5UoVznx9yFnmZyWsDdwM23YTeLoSM+HCHRLH
- aCSZ0EAzPmJApMEAAEKAH0WIQS1urjJwxtxFWcCI9wxqupHWU277QUCZ8OVKF8UgAAAAAAuAChp
- c3N1ZXItZnByQG5vdGF0aW9ucy5vcGVucGdwLmZpZnRoaG9yc2VtYW4ubmV0QjVCQUI4QzlDMzF
- CNzExNTY3MDIyM0RDMzFBQUVBNDc1OTREQkJFRAAKCRAxqupHWU277Vh6D/9xRzzWCqG8JpGYAy
- 2gMH3Q7ngDnqrpP94VNrrDdpnt3L5R4rhZNqlBMB1dYBaWJGOIEkcPs6Ir1k3/gL8QW31FIEqJ5
- BsHHyd2WA6QSWrIJEfcSCwDaWSsoA8dze2ZxB6Zf590wmqB7M8cCSFqfSW83pTlWxuwpcQrinq7
- geY5osBXav0wsfHBlIHVtk2qVRhE7gZShF6xfyrjSpSCylAKz41ogpgUdyUpk21SMlhGiSqy4Pd
- gaIlasnEh3N6f2tBZnM9r/Djtq8ll/iNA4bLnF0g5ePX2+NSmz8QrAXHdBpekyqePKiezLxQRq1
- r9ASGYDj0PWX20lLupaEFCr08HCgNQWZ4ssuyhDyTOazJjqUNH/PgNrp5pxdXqBki+GktRZw2aY
- AWRTq8MC/nvWoO357TfIRqjy+pDp8veDR/etuppG25uQcWnpWCzZPCtCMsgTrWiM9NMNPFPqJTc
- 09s/vd5TY/BgQKoEt11JeoDNbvfH6NehyfHOUjCinPlS0BJRnzxbFtoHJYo3Lkh9VUmXwh23JSf
- bndbvh1MSR8Ol/ZxTs/IIhtVleIrQWrhGanXjr2aVrjVrNzXCGTnX6jegzC2i/RoeTFAOWoneKb
- nnsKOgy1+9BVBF9Z8d9JDEYWhMDTKkZoeAt0pAmd74oy01quE3Z3qzFgz4KZt646qsGg==
-X-Developer-Key: i=dlan@gentoo.org; a=openpgp;
- fpr=50B03A1A5CBCD33576EF8CD7920C0DBCAABEFD55
 
-gpio irq which using three-cell scheme should always call
-instance_match() function to find the correct irqdomain.
-
-The select() function will be called with !DOMAIN_BUS_ANY,
-so for specific gpio irq driver, it need to set bus token
-explicitly, something like:
-  irq_domain_update_bus_token(girq->domain, DOMAIN_BUS_WIRED);
-
-Signed-off-by: Yixun Lan <dlan@gentoo.org>
----
- drivers/gpio/gpiolib-of.c |  8 ++++++++
- drivers/gpio/gpiolib-of.h |  6 ++++++
- drivers/gpio/gpiolib.c    | 23 +++++++++++++++++++----
- 3 files changed, 33 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
-index 2e537ee979f3e2b6e8d5f86f3e121a66f2a8e083..e19904569fb1b71c1fff237132d17050ef02b074 100644
---- a/drivers/gpio/gpiolib-of.c
-+++ b/drivers/gpio/gpiolib-of.c
-@@ -1187,3 +1187,11 @@ void of_gpiochip_remove(struct gpio_chip *chip)
- {
- 	of_node_put(dev_of_node(&chip->gpiodev->dev));
- }
-+
-+bool of_gpiochip_instance_match(struct gpio_chip *gc, unsigned int index)
-+{
-+	if (gc->of_node_instance_match)
-+		return gc->of_node_instance_match(gc, index);
-+
-+	return false;
-+}
-diff --git a/drivers/gpio/gpiolib-of.h b/drivers/gpio/gpiolib-of.h
-index 16d6ac8cb156c02232ea868b755bbdc46c78e3c7..3eebfac290c571e3b90e4437295db8eaacb021a3 100644
---- a/drivers/gpio/gpiolib-of.h
-+++ b/drivers/gpio/gpiolib-of.h
-@@ -22,6 +22,7 @@ struct gpio_desc *of_find_gpio(struct device_node *np,
- 			       unsigned long *lookupflags);
- int of_gpiochip_add(struct gpio_chip *gc);
- void of_gpiochip_remove(struct gpio_chip *gc);
-+bool of_gpiochip_instance_match(struct gpio_chip *gc, unsigned int index);
- int of_gpio_count(const struct fwnode_handle *fwnode, const char *con_id);
- #else
- static inline struct gpio_desc *of_find_gpio(struct device_node *np,
-@@ -33,6 +34,11 @@ static inline struct gpio_desc *of_find_gpio(struct device_node *np,
- }
- static inline int of_gpiochip_add(struct gpio_chip *gc) { return 0; }
- static inline void of_gpiochip_remove(struct gpio_chip *gc) { }
-+static inline bool of_gpiochip_instance_match(struct gpio_chip *gc,
-+					      unsigned int index)
-+{
-+	return false;
-+}
- static inline int of_gpio_count(const struct fwnode_handle *fwnode,
- 				const char *con_id)
- {
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index 679ed764cb143c4b3357106de1570e8d38441372..266be465b9103c17861a0d76f2dfbf1f1de3a073 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -1449,10 +1449,9 @@ static int gpiochip_hierarchy_irq_domain_translate(struct irq_domain *d,
- 						   unsigned long *hwirq,
- 						   unsigned int *type)
- {
--	/* We support standard DT translation */
--	if (is_of_node(fwspec->fwnode) && fwspec->param_count == 2) {
--		return irq_domain_translate_twocell(d, fwspec, hwirq, type);
--	}
-+	/* We support standard DT translation up to three cells */
-+	if (is_of_node(fwspec->fwnode))
-+		return irq_domain_translate_cells(d, fwspec, hwirq, type);
- 
- 	/* This is for board files and others not using DT */
- 	if (is_fwnode_irqchip(fwspec->fwnode)) {
-@@ -1754,9 +1753,25 @@ static void gpiochip_irq_unmap(struct irq_domain *d, unsigned int irq)
- 	irq_set_chip_data(irq, NULL);
- }
- 
-+static int gpiochip_irq_select(struct irq_domain *d, struct irq_fwspec *fwspec,
-+			enum irq_domain_bus_token bus_token)
-+{
-+	struct fwnode_handle *fwnode = fwspec->fwnode;
-+	struct gpio_chip *gc = d->host_data;
-+	unsigned int index = fwspec->param[0];
-+
-+	if (fwspec->param_count == 3 && is_of_node(fwnode))
-+		return of_gpiochip_instance_match(gc, index);
-+
-+	/* Fallback for twocells */
-+	return ((fwnode != NULL) && (d->fwnode == fwnode) &&
-+		(d->bus_token == bus_token));
-+}
-+
- static const struct irq_domain_ops gpiochip_domain_ops = {
- 	.map	= gpiochip_irq_map,
- 	.unmap	= gpiochip_irq_unmap,
-+	.select	= gpiochip_irq_select,
- 	/* Virtually all GPIO irqchips are twocell:ed */
- 	.xlate	= irq_domain_xlate_twocell,
- };
-
--- 
-2.48.1
-
+Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
