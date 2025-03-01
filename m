@@ -1,63 +1,63 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AB571E9906;
-	Sat,  1 Mar 2025 20:07:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59FE91E9B22;
+	Sat,  1 Mar 2025 20:07:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740859657; cv=none; b=bfGRN+XaWymwTjCC1xCn2ZyffUKWAfpZbL4TsiMw+jsZY4pRMLxbcHxAsBlogsyxWHDMU3Gq8aGBOu5OcohWsG/bEPyLGVvA/Goy66Au2WGfZPDwrt/dWKk0mqV73NYUK1pRiwoH9HLfCLK4LofoEsjZp489NdmyT4jA/FIZu+c=
+	t=1740859658; cv=none; b=jyIDm99xjsDckAXt00M60NrMrNaErbfU0XaIRHScQCOByQQOH3eWz/7jq5pO1yJ/Qd+cUfjwXtnb+nCaiuKWN21Kzw9h1UWKS3hxomH9bdBPLAz8FpMOYRb2iaSqm58iY8HA7j/U0bSTRMeD+/0bS5tX3b1puQhoVoQeuYiyBxA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740859657; c=relaxed/simple;
-	bh=StIZGEb4ic/H2cmYGZ/TyOyDK52KcGWJF4mwZ+qfit0=;
+	s=arc-20240116; t=1740859658; c=relaxed/simple;
+	bh=CBKzGW9oYPCkC2Uzo+lkX7iun9R0R6Fb75UCeOfTCd8=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=qgtsypzChGg6u78+KpaRbClVxx8fph0jeWZiOtRIlnT4/c6sTXl7wURCU4+5G3fjmUFRowqpMLIZW2qfMsPQVQhSinjIXy9gJeAp0Kf6dCNNMy0HZ2Of3VBeTTRRJQ9pHm2UQ/FmxzX0UYXrjN5AvOSn2IJy9+8BvzyA09C9TkA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=WLJJJq1E; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=gw5nIJAZ; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=Z746mp8d8ZgU2wiz4r/VRv3ceZaTZgTQlESmdiy4C/cuMPAMLHVLxmNj9/7jmdrrkJVfbbasjJWhHBUUyWWhKs/Kj3JJ5bCp/2tPr2cyiiA2Luylt+Kr26evyYlwVZG4gbJifNA1If19qk0/qFoOOVDJJKk+XjKlL9XvakYM91c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=rf7B0dgq; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=lN9LLW4Y; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="WLJJJq1E";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="gw5nIJAZ"
-Date: Sat, 01 Mar 2025 20:07:32 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="rf7B0dgq";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="lN9LLW4Y"
+Date: Sat, 01 Mar 2025 20:07:34 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1740859653;
+	s=2020; t=1740859654;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=RX2f5EfL3rXOWJMkXmUHx9UJal6rsy9W8BOmLbbTUkA=;
-	b=WLJJJq1EbJkKBUV9sX5UmyFvwHl2dhFEQhmEjLDYwFzDwwqEbFuLrzH2ktZLIyrnU0qcYu
-	/c1Tbb9LIhOrMdT8CJX99Jr+tc+rCAroC36iFq97IGnKkIvne/EXwcpxDzi+haR9zhAddH
-	zF7ypNS1IbcDTk1SOaSvKYAYK1fj8YsklIg7v27O+XS3/GNZfYFHMOM3TkpnPgFehUu7E1
-	wJTa4+ifuaMHPQFn0Q1LMBJHHC6+oxoQdT/nn1DeC0dZJHgMqYLp+Wl5WBt5nSHb6vSuyp
-	QnvaZq22SdrhLvB+bm9KcHdZu+EksdioxSuU5aCRD53fgRNkkNOIDiWGXwF9tg==
+	bh=QvsB8E/cgISoAVD4lBn5h5syqscNH5rJZZIKQCkYtO4=;
+	b=rf7B0dgqQk317CrtPpipaVUtn4d5CICbmKZvnHHb+xyNoHYjr2gX0wfPkdBaihrM6qQ8Wq
+	0bC3XVFewmhd7YAyL9IRukhJMBP/SlLdjz+VLCd/OApEW+U6LJ3CHnF2YnP72y/Hhk+JAE
+	sQCTREn1Fjs6wcalVmIl2Wmt+s9aTcmcYzdzBm+YqnR4jj3+KSMSbC3rkrLYjhgyx9la9g
+	kHf5lHZjmECVXj9Xs4vLHAklfQgEBltXbELRuuwBduVEeqTcYbpxNjCPOj/rm1dysQh+oD
+	e0UzPIk+m+5SzJJUakiWfIo8rcd7G0Iv2DO3pGRsZaiVvH7ownZQyBnA4vyn5w==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1740859653;
+	s=2020e; t=1740859654;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=RX2f5EfL3rXOWJMkXmUHx9UJal6rsy9W8BOmLbbTUkA=;
-	b=gw5nIJAZlI3k0aecAi3mOaslNiN4uBwwgwO9Xw23KNu/sl7npI1r2gmWbjIH5yaNJEoHay
-	W/GdMzNXR34UzpBQ==
+	bh=QvsB8E/cgISoAVD4lBn5h5syqscNH5rJZZIKQCkYtO4=;
+	b=lN9LLW4YYHxbLfgoExvaScGgOl+qY6QmM7kct4V9zsrU3/y4xcjfZlhce6LD4BzCb4/X8e
+	zaDfKEoW2SUiIsBQ==
 From: "tip-bot2 for Peter Zijlstra" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf/core: Merge struct pmu::pmu_disable_count into
- struct perf_cpu_pmu_context::pmu_disable_count
+Subject: [tip: perf/core] perf/core: Simplify perf_init_event()
 Cc: "Peter Zijlstra (Intel)" <peterz@infradead.org>,
- Ingo Molnar <mingo@kernel.org>, x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20241104135518.518730578@infradead.org>
-References: <20241104135518.518730578@infradead.org>
+ Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+ x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20241104135518.302444446@infradead.org>
+References: <20241104135518.302444446@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174085965291.10177.5103031623453156623.tip-bot2@tip-bot2>
+Message-ID: <174085965416.10177.16488182367399775052.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -67,91 +67,100 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     46cc0835d258934bcad1fa921c2688db98b2dabd
-Gitweb:        https://git.kernel.org/tip/46cc0835d258934bcad1fa921c2688db98b2dabd
+Commit-ID:     9954ea69de5c06c5bf073d366d6768c1c4a2a1c7
+Gitweb:        https://git.kernel.org/tip/9954ea69de5c06c5bf073d366d6768c1c4a2a1c7
 Author:        Peter Zijlstra <peterz@infradead.org>
-AuthorDate:    Mon, 04 Nov 2024 14:39:18 +01:00
+AuthorDate:    Mon, 04 Nov 2024 14:39:16 +01:00
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Sat, 01 Mar 2025 20:00:11 +01:00
+CommitterDate: Sat, 01 Mar 2025 19:54:05 +01:00
 
-perf/core: Merge struct pmu::pmu_disable_count into struct perf_cpu_pmu_context::pmu_disable_count
+perf/core: Simplify perf_init_event()
 
-Because it makes no sense to have two per-cpu allocations per pmu.
+Use the <linux/cleanup.h> guard() and scoped_guard() infrastructure
+to simplify the control flow.
 
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Link: https://lore.kernel.org/r/20241104135518.518730578@infradead.org
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lore.kernel.org/r/20241104135518.302444446@infradead.org
 ---
- include/linux/perf_event.h |  2 +-
- kernel/events/core.c       | 12 ++++--------
- 2 files changed, 5 insertions(+), 9 deletions(-)
+ kernel/events/core.c | 31 ++++++++++++-------------------
+ 1 file changed, 12 insertions(+), 19 deletions(-)
 
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index 8c0117b..5f293e6 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -343,7 +343,6 @@ struct pmu {
- 	 */
- 	unsigned int			scope;
- 
--	int __percpu			*pmu_disable_count;
- 	struct perf_cpu_pmu_context __percpu *cpu_pmu_context;
- 	atomic_t			exclusive_cnt; /* < 0: cpu; > 0: tsk */
- 	int				task_ctx_nr;
-@@ -1031,6 +1030,7 @@ struct perf_cpu_pmu_context {
- 
- 	int				active_oncpu;
- 	int				exclusive;
-+	int				pmu_disable_count;
- 
- 	raw_spinlock_t			hrtimer_lock;
- 	struct hrtimer			hrtimer;
 diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 348a379..8321b71 100644
+index 215dad5..fd35236 100644
 --- a/kernel/events/core.c
 +++ b/kernel/events/core.c
-@@ -1219,21 +1219,22 @@ static int perf_mux_hrtimer_restart_ipi(void *arg)
- 
- void perf_pmu_disable(struct pmu *pmu)
+@@ -12101,10 +12101,10 @@ static int perf_try_init_event(struct pmu *pmu, struct perf_event *event)
+ static struct pmu *perf_init_event(struct perf_event *event)
  {
--	int *count = this_cpu_ptr(pmu->pmu_disable_count);
-+	int *count = &this_cpu_ptr(pmu->cpu_pmu_context)->pmu_disable_count;
- 	if (!(*count)++)
- 		pmu->pmu_disable(pmu);
+ 	bool extended_type = false;
+-	int idx, type, ret;
+ 	struct pmu *pmu;
++	int type, ret;
+ 
+-	idx = srcu_read_lock(&pmus_srcu);
++	guard(srcu)(&pmus_srcu);
+ 
+ 	/*
+ 	 * Save original type before calling pmu->event_init() since certain
+@@ -12117,7 +12117,7 @@ static struct pmu *perf_init_event(struct perf_event *event)
+ 		pmu = event->parent->pmu;
+ 		ret = perf_try_init_event(pmu, event);
+ 		if (!ret)
+-			goto unlock;
++			return pmu;
+ 	}
+ 
+ 	/*
+@@ -12136,13 +12136,12 @@ static struct pmu *perf_init_event(struct perf_event *event)
+ 	}
+ 
+ again:
+-	rcu_read_lock();
+-	pmu = idr_find(&pmu_idr, type);
+-	rcu_read_unlock();
++	scoped_guard (rcu)
++		pmu = idr_find(&pmu_idr, type);
+ 	if (pmu) {
+ 		if (event->attr.type != type && type != PERF_TYPE_RAW &&
+ 		    !(pmu->capabilities & PERF_PMU_CAP_EXTENDED_HW_TYPE))
+-			goto fail;
++			return ERR_PTR(-ENOENT);
+ 
+ 		ret = perf_try_init_event(pmu, event);
+ 		if (ret == -ENOENT && event->attr.type != type && !extended_type) {
+@@ -12151,27 +12150,21 @@ again:
+ 		}
+ 
+ 		if (ret)
+-			pmu = ERR_PTR(ret);
++			return ERR_PTR(ret);
+ 
+-		goto unlock;
++		return pmu;
+ 	}
+ 
+ 	list_for_each_entry_rcu(pmu, &pmus, entry, lockdep_is_held(&pmus_srcu)) {
+ 		ret = perf_try_init_event(pmu, event);
+ 		if (!ret)
+-			goto unlock;
++			return pmu;
+ 
+-		if (ret != -ENOENT) {
+-			pmu = ERR_PTR(ret);
+-			goto unlock;
+-		}
++		if (ret != -ENOENT)
++			return ERR_PTR(ret);
+ 	}
+-fail:
+-	pmu = ERR_PTR(-ENOENT);
+-unlock:
+-	srcu_read_unlock(&pmus_srcu, idx);
+ 
+-	return pmu;
++	return ERR_PTR(-ENOENT);
  }
  
- void perf_pmu_enable(struct pmu *pmu)
- {
--	int *count = this_cpu_ptr(pmu->pmu_disable_count);
-+	int *count = &this_cpu_ptr(pmu->cpu_pmu_context)->pmu_disable_count;
- 	if (!--(*count))
- 		pmu->pmu_enable(pmu);
- }
- 
- static void perf_assert_pmu_disabled(struct pmu *pmu)
- {
--	WARN_ON_ONCE(*this_cpu_ptr(pmu->pmu_disable_count) == 0);
-+	int *count = &this_cpu_ptr(pmu->cpu_pmu_context)->pmu_disable_count;
-+	WARN_ON_ONCE(*count == 0);
- }
- 
- static inline void perf_pmu_read(struct perf_event *event)
-@@ -11906,7 +11907,6 @@ static bool idr_cmpxchg(struct idr *idr, unsigned long id, void *old, void *new)
- 
- static void perf_pmu_free(struct pmu *pmu)
- {
--	free_percpu(pmu->pmu_disable_count);
- 	if (pmu_bus_running && pmu->dev && pmu->dev != PMU_NULL_DEV) {
- 		if (pmu->nr_addr_filters)
- 			device_remove_file(pmu->dev, &dev_attr_nr_addr_filters);
-@@ -11925,10 +11925,6 @@ int perf_pmu_register(struct pmu *_pmu, const char *name, int type)
- 	struct pmu *pmu __free(pmu_unregister) = _pmu;
- 	guard(mutex)(&pmus_lock);
- 
--	pmu->pmu_disable_count = alloc_percpu(int);
--	if (!pmu->pmu_disable_count)
--		return -ENOMEM;
--
- 	if (WARN_ONCE(!name, "Can not register anonymous pmu.\n"))
- 		return -EINVAL;
- 
+ static void attach_sb_event(struct perf_event *event)
