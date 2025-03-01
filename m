@@ -1,140 +1,151 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7ABF2A935
-	for <linux-kernel@vger.kernel.org>; Sat,  1 Mar 2025 01:24:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5204A935
+	for <linux-kernel@vger.kernel.org>; Sat,  1 Mar 2025 01:26:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740792291; cv=none; b=mu+2QTFmu+B9z7IPUqihLivxKHTbn36wppjTLsk7pCNf1+4kpFkHPSKmU3skijyqWWUtqIZL83i9d0bcCxTWv+jqPtorF4zg57g1+VpbK87E6mUZLp/dW/JLDvLCnawcShofjhTSnLVuVxPdtG+Z76fCGShi6mrZkwYB9vWfmnM=
+	t=1740792413; cv=none; b=ZHgfH4S4X4AQ4Btp2u/qjAMeJFbRMa0sy6/hhdCBCmVtYnJyKZDum8GvNb5YON3GBsIGXFg5+dOjIwSgH7wfn0Nbd4LdIWaZBpXLHzZtpiJvR9Y/m2JjdKA/ekUqht6cGVw5N3TZwddsAY7TmqrzXnWmQmhdzL8FSxQvshykEPw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740792291; c=relaxed/simple;
-	bh=5nOsIwHbbcbLoA3xmRhsRYuQAs3fWV0c4VOuHUGKw3o=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=VExHNwyX8km5JTfx9gp0+eQMQlui5WIFo4IVa6xDiMnRv7BqKHHvCfg0ShRE9DY0AQwEvYhfaHUHaN+WGww/F79s0GzIKzl27PzReJnso1VqReAIf+JkLirPNmKc5XAFv28f/YbQIfJYYvtvojpk08SwJN6l9U375jsVdISB3BA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CnfgnKyk; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1740792413; c=relaxed/simple;
+	bh=GJRdH7Py2r4TCQURAl8QCe4ysMucIaXY8Z8uqx8/VG8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=LD98aYnSV2aUS4YcA7OhtAgz1PjNOIkOaNuRgOHDs6zOd4OXlN9eTYtiBCLyb2mMtprDIsZ9w+Q/G6CuOc31Rqxv9CxuRff72pWfTo/+JR8r6rrIZi0qu7emN/uJg3pUKBxWmUnIlgqIv1KeFndoC7CQBt5h9MGKBPK7s2qj8dU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MHeGYUMT; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CnfgnKyk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740792290; x=1772328290;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=5nOsIwHbbcbLoA3xmRhsRYuQAs3fWV0c4VOuHUGKw3o=;
-  b=CnfgnKyk5JtaaGbvJ0+UYV2PC0RuhiVD8QfvMFN7IjS+JIMyJPsgNFCB
-   C48Qh/Lg5quWtir8BoxzQ5L74UhAf7XpNsr4KlwbViUqMdRUu/E28QgSb
-   dFwpczJwlIPKyjwoA48h3S0r563RxqFAny7p3CHnqPIqQ3tY49oOKWZ0n
-   nBKnFFDmYYcv5E+WqXKxYA71/ODlejl+ekeflz8u3etkup2ApsvsOfPiC
-   NdBbA2wzI7Akffw2TvXliKvSWXsORIHaKWz2qr76gvTFsntJNCIgMibpT
-   G8z1UMHXf6ML3x9bW6dtC+Bxzq2UmAysmxdFOacHSTc1xD8e81c4YOPuV
-   Q==;
-X-CSE-ConnectionGUID: yENmr0CZTiWfepYIm7q4ow==
-X-CSE-MsgGUID: GJyTNsP1Tl2tdA1WN717iQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11359"; a="41619043"
-X-IronPort-AV: E=Sophos;i="6.13,324,1732608000"; 
-   d="scan'208";a="41619043"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2025 17:24:49 -0800
-X-CSE-ConnectionGUID: x8x86C9qS+C/yhTEgObFDA==
-X-CSE-MsgGUID: 6mj10fIJQsKTP8yTF4UhHA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,324,1732608000"; 
-   d="scan'208";a="122097547"
-Received: from lkp-server02.sh.intel.com (HELO 76cde6cc1f07) ([10.239.97.151])
-  by fmviesa005.fm.intel.com with ESMTP; 28 Feb 2025 17:24:47 -0800
-Received: from kbuild by 76cde6cc1f07 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1toBau-000FiI-39;
-	Sat, 01 Mar 2025 01:24:44 +0000
-Date: Sat, 1 Mar 2025 09:24:24 +0800
-From: kernel test robot <lkp@intel.com>
-To: Huang Ying <ying.huang@intel.com>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Linux Memory Management List <linux-mm@kvack.org>
-Subject: kernel/resource.c:1838:43: warning: implicit conversion from
- 'unsigned long long' to 'resource_size_t' (aka 'unsigned int') changes value
- from 68719476735 to 4294967295
-Message-ID: <202503010926.R1fZJVo3-lkp@intel.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MHeGYUMT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1740792409;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=w6dnxp9WYsNQwZ9vI6v1G24aXs3uhHVto8Xb5zEf7MI=;
+	b=MHeGYUMT8DYeJ2c4l/n9g/iKHIWgcSRW8NEA9t5TbLbqMyjSy87c/fF5g1KEAxr4zEBnY3
+	0OMl/YEnJEpWissG1lV/X0+1LmFp7Hib45k1BE4B98Lz9NBcMgi2OKvXu/ey3Wt56g8/yX
+	uJWEYD7pn8S2sxhlBkPuiYmKOUrjOQc=
+Received: from mail-ua1-f70.google.com (mail-ua1-f70.google.com
+ [209.85.222.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-364-bPushaAqOKK5GspLSOQMcg-1; Fri, 28 Feb 2025 20:26:48 -0500
+X-MC-Unique: bPushaAqOKK5GspLSOQMcg-1
+X-Mimecast-MFC-AGG-ID: bPushaAqOKK5GspLSOQMcg_1740792407
+Received: by mail-ua1-f70.google.com with SMTP id a1e0cc1a2514c-86b4301c07cso1131629241.2
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 17:26:48 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740792407; x=1741397207;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=w6dnxp9WYsNQwZ9vI6v1G24aXs3uhHVto8Xb5zEf7MI=;
+        b=b/bYppTa/n3OciLR+xEaUBmUPqySNo4VqHokiKoLDbIHXR5xIz/lBwWNUiWZxXT5e4
+         /9nDCoT3Bwmfs0ql/ga10UvrA2n8gC0j06Ag/09o5AyWUSN95/8KRXXhuDO0fUtJ8PD9
+         rKUHEnaa4zPDiAQsWxFkzc0TVJaeW3Z0YK//yehfFAvEbHufnmodIf4FNXmGERt5a++K
+         cMVTmbiQT1pXgPddcu3Ta3FwMB5UeLyeV/upnPV8L41uYSezD9UJ3B/TtJtSZxBiJRPy
+         H/ymjD67bmhT7TxeeOD5rIu8REnyAmweusDTmWwmLnwUjwFJ67qcLybp+y0iZlAjEyMf
+         coHg==
+X-Gm-Message-State: AOJu0Yzsrqm9bxWSK2ybrVEvj7jOYWmDbisFdsea0sztrHIz4iV1raQ6
+	M72T2m6JAXS9lsFiezO/tXDH6MfWVv3Idwwjya0TR9GEpKBiQ2eXGZmo3Jq87F1gdCpbcoqMTQo
+	Oneb/o1AnmDAGDULoPBqdM7rhoATkScx7KM+9rLZIYdetjTPycpjBCuuX259giNVm32Uyty1WPb
+	n4pTT9KuLOmgAXTnTgZiT0aRK12Cl6g9jy/6eOejgLJ2oacRI=
+X-Gm-Gg: ASbGncvnp12zWUzs4kcCCeUcpRDtqVLlgcbE+KPYjQUwrjCK4jSG8PZCNYtTG4uYx+s
+	Mg0w5HAKswIaVdXme/QHmEDUkh/gMrFyZM3tDE8vJ1IUfstw5U6bTiMIrMM50DyOWlZSYEH2a5Q
+	==
+X-Received: by 2002:a05:6122:8293:b0:520:51a4:b819 with SMTP id 71dfb90a1353d-5235b519b28mr3507236e0c.1.1740792407167;
+        Fri, 28 Feb 2025 17:26:47 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGO3+RRkopwHC744q1bF4z/l7fKpr6okBzyltA/RQWqBy18J327LdjsIFzinZgD1ijE/BP+TkrCT/6/4YPSDv4=
+X-Received: by 2002:a05:6122:8293:b0:520:51a4:b819 with SMTP id
+ 71dfb90a1353d-5235b519b28mr3507233e0c.1.1740792406855; Fri, 28 Feb 2025
+ 17:26:46 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <4ae6d363-2f9b-5028-db1a-061b6f1e8fbe@canonical.com> <892c7de5-d257-d4d6-2bfc-62f543965cff@canonical.com>
+In-Reply-To: <892c7de5-d257-d4d6-2bfc-62f543965cff@canonical.com>
+From: Ming Lei <ming.lei@redhat.com>
+Date: Sat, 1 Mar 2025 09:26:35 +0800
+X-Gm-Features: AQ5f1JrkB2tCsFeunXfn4giFbw2Z7oo7kEk_rkiaUrID7LrQOCtJb0ha_haUg04
+Message-ID: <CAFj5m9JEDW0kLfnDhF4xNFzMTpHBH6Xpdb+XVLf73oq3vzCjQg@mail.gmail.com>
+Subject: Re: [PATCH 1/1] block: fix conversion of GPT partition name to 7-bit
+To: Olivier Gayot <olivier.gayot@canonical.com>
+Cc: linux-kernel@vger.kernel.org, 
+	Daniel Bungert <daniel.bungert@canonical.com>, linux-block <linux-block@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Huang,
+On Tue, May 23, 2023 at 6:53=E2=80=AFAM Olivier Gayot
+<olivier.gayot@canonical.com> wrote:
+>
+> The utf16_le_to_7bit function claims to, naively, convert a UTF-16
+> string to a 7-bit ASCII string. By naively, we mean that it:
+>  * drops the first byte of every character in the original UTF-16 string
+>  * checks if all characters are printable, and otherwise replaces them
+>    by exclamation mark "!".
+>
+> This means that theoretically, all characters outside the 7-bit ASCII
+> range should be replaced by another character. Examples:
+>
+>  * lower-case alpha (=C9=92) 0x0252 becomes 0x52 (R)
+>  * ligature OE (=C5=93) 0x0153 becomes 0x53 (S)
+>  * hangul letter pieup (=E3=85=82) 0x3142 becomes 0x42 (B)
+>  * upper-case gamma (=C6=94) 0x0194 becomes 0x94 (not printable) so gets
+>    replaced by "!"
+>
+> The result of this conversion for the GPT partition name is passed to
+> user-space as PARTNAME via udev, which is confusing and feels questionabl=
+e.
+>
+> However, there is a flaw in the conversion function itself. By dropping
+> one byte of each character and using isprint() to check if the remaining
+> byte corresponds to a printable character, we do not actually guarantee
+> that the resulting character is 7-bit ASCII.
+>
+> This happens because we pass 8-bit characters to isprint(), which
+> in the kernel returns 1 for many values > 0x7f - as defined in ctype.c.
+>
+> This results in many values which should be replaced by "!" to be kept
+> as-is, despite not being valid 7-bit ASCII. Examples:
+>
+>  * e with acute accent (=C3=A9) 0x00E9 becomes 0xE9 - kept as-is because
+>    isprint(0xE9) returns 1.
+>  * euro sign (=E2=82=AC) 0x20AC becomes 0xAC - kept as-is because isprint=
+(0xAC)
+>    returns 1.
+>
+> Fixed by using a mask of 7 bits instead of 8 bits before calling
+> isprint.
+>
+> Signed-off-by: Olivier Gayot <olivier.gayot@canonical.com>
+> ---
+>  block/partitions/efi.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/block/partitions/efi.c b/block/partitions/efi.c
+> index 5e9be13a56a8..7acba66eed48 100644
+> --- a/block/partitions/efi.c
+> +++ b/block/partitions/efi.c
+> @@ -682,7 +682,7 @@ static void utf16_le_to_7bit(const __le16 *in, unsign=
+ed int size, u8 *out)
+>         out[size] =3D 0;
+>
+>         while (i < size) {
+> -               u8 c =3D le16_to_cpu(in[i]) & 0xff;
+> +               u8 c =3D le16_to_cpu(in[i]) & 0x7f;
+>
+>                 if (c && !isprint(c))
+>                         c =3D '!';
 
-FYI, the error/warning still remains.
+Hello Olivier,
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   5c44ddaf7df3a06391684dde65083a092e06052b
-commit: 99185c10d5d9214d0d0c8b7866660203e344ee3b resource, kunit: add test case for region_intersects()
-date:   6 months ago
-config: arm-randconfig-001-20241228 (https://download.01.org/0day-ci/archive/20250301/202503010926.R1fZJVo3-lkp@intel.com/config)
-compiler: clang version 15.0.7 (https://github.com/llvm/llvm-project 8dfdcc7b7bf66834a761bd8de445840ef68e4d1a)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250301/202503010926.R1fZJVo3-lkp@intel.com/reproduce)
+Looks like you didn't Cc linux-block maillist and Jens, can you
+re-send the patch to
+linux-block for review?
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202503010926.R1fZJVo3-lkp@intel.com/
+Thanks,
+Ming
 
-All warnings (new ones prefixed by >>):
-
->> kernel/resource.c:1838:43: warning: implicit conversion from 'unsigned long long' to 'resource_size_t' (aka 'unsigned int') changes value from 68719476735 to 4294967295 [-Wconstant-conversion]
-                   end = min_t(resource_size_t, base->end, MAX_PHYS_ADDR);
-                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~
-   kernel/resource.c:1827:52: note: expanded from macro 'MAX_PHYS_ADDR'
-   #define MAX_PHYS_ADDR           ((1ULL << MAX_PHYSMEM_BITS) - 1)
-                                                               ^
-   include/linux/minmax.h:213:52: note: expanded from macro 'min_t'
-   #define min_t(type, x, y) __cmp_once(min, type, x, y)
-                             ~~~~~~~~~~~~~~~~~~~~~~~~~^~
-   include/linux/minmax.h:96:33: note: expanded from macro '__cmp_once'
-           __cmp_once_unique(op, type, x, y, __UNIQUE_ID(x_), __UNIQUE_ID(y_))
-           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/minmax.h:93:31: note: expanded from macro '__cmp_once_unique'
-           ({ type ux = (x); type uy = (y); __cmp(op, ux, uy); })
-                                  ~~    ^
-   kernel/resource.c:1855:45: warning: implicit conversion from 'unsigned long long' to 'resource_size_t' (aka 'unsigned int') changes value from 68719476735 to 4294967295 [-Wconstant-conversion]
-                   addr <= min_t(resource_size_t, base->end, MAX_PHYS_ADDR);
-                           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~
-   kernel/resource.c:1827:52: note: expanded from macro 'MAX_PHYS_ADDR'
-   #define MAX_PHYS_ADDR           ((1ULL << MAX_PHYSMEM_BITS) - 1)
-                                                               ^
-   include/linux/minmax.h:213:52: note: expanded from macro 'min_t'
-   #define min_t(type, x, y) __cmp_once(min, type, x, y)
-                             ~~~~~~~~~~~~~~~~~~~~~~~~~^~
-   include/linux/minmax.h:96:33: note: expanded from macro '__cmp_once'
-           __cmp_once_unique(op, type, x, y, __UNIQUE_ID(x_), __UNIQUE_ID(y_))
-           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/minmax.h:93:31: note: expanded from macro '__cmp_once_unique'
-           ({ type ux = (x); type uy = (y); __cmp(op, ux, uy); })
-                                  ~~    ^
-   2 warnings generated.
-
-
-vim +1838 kernel/resource.c
-
-  1831	
-  1832	static resource_size_t gfr_start(struct resource *base, resource_size_t size,
-  1833					 resource_size_t align, unsigned long flags)
-  1834	{
-  1835		if (flags & GFR_DESCENDING) {
-  1836			resource_size_t end;
-  1837	
-> 1838			end = min_t(resource_size_t, base->end, MAX_PHYS_ADDR);
-  1839			return end - size + 1;
-  1840		}
-  1841	
-  1842		return ALIGN(max(base->start, align), align);
-  1843	}
-  1844	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
