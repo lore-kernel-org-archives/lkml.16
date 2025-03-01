@@ -1,113 +1,169 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF3D11BFE00;
-	Sat,  1 Mar 2025 23:17:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 991778BF8;
+	Sat,  1 Mar 2025 23:29:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740871063; cv=none; b=nDDI0GhxTNpQCc/KjT00XTeYTtxrRT4Mye0N3PoxlbAUKnMOno9B8izy9yPWxWco8jt6sZQX9+Ts1hg2iUQbSLdOfMk9ZugKrZ4TC9EuM1q98uBobauP/O/5ASqpSuHKshsXptUB05q353XX4pzMyYoWSa7vKt1nTvj31MqnISs=
+	t=1740871791; cv=none; b=VGffhfaZHhxt0hAOVnijHCY9kdaUU/CGUWh6JVzJje+ti8muwH+X7EyvL+/8BIwOoMY0gZ1SiVLkDvtj/EeKEBnpMXYqzk0d29+yvMD9rozNpLQw4ON1alzHPXAKEuXDZZqrN/2K1ok1WZaigGRp8lBvpMGBTC4veKz+gtCbZT8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740871063; c=relaxed/simple;
-	bh=7z62IPkiSO6NRrH3JPArIZUmv34+1yiL4Zr/2/1Cx0w=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=YkSa/ru/Fy4aQGkKqwyizeJeFHD4jfXRq3ivSRs5X0LpsY46unjwuAPuD+XwhmZ6j0g6qYdjl1f7VdZ6/Mamtw8Q/2a3eyrnFMA+jwZTUiLD8Dbm2FIcq+R8ZaEmji2lq0Qx1bIPLDLCjrYs9XM/HanYDcnT2zjt1Bsq2gU5dNw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FnHXiQ2x; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FnHXiQ2x"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5B59C4CEE6;
-	Sat,  1 Mar 2025 23:17:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740871063;
-	bh=7z62IPkiSO6NRrH3JPArIZUmv34+1yiL4Zr/2/1Cx0w=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=FnHXiQ2xEbRr5F3YpSu1XLm5w8OYyZv5x8jnSWDq+LVHj3dJiW00wljMWKbWWTxuF
-	 DhniRqvOQwN3MOjANmDN15zTbDyQA9ohuU3FrC957csOl/zsm2XJVhS05Hf0M2C+ub
-	 Hy/GGKKvTpxhC8lsToXIFRcAsCAtmp+yW9hGEkIpwKXnHr8MK7+uESyEk9gPHmXg0X
-	 DK0hAD6vnWvqMtbUuJQ1skcIIGS5rnPvpTklgUqsr/Zvs4uF8rZ+L8FmvMUKpavPas
-	 QrjzeTbFs6gJF54VSbVm3LzzLjOsZ6zSfbj9/ZDObJmVrr4C2AXr7i7CCdGMNgXfhO
-	 MncgUNTk7BpFw==
-From: Miguel Ojeda <ojeda@kernel.org>
-To: Jocelyn Falempe <jfalempe@redhat.com>,
-	=?UTF-8?q?Thomas=20B=C3=B6hler?= <witcher@wiredspace.de>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>
-Cc: dri-devel@lists.freedesktop.org,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Gary Guo <gary@garyguo.net>,
-	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>,
-	Trevor Gross <tmgross@umich.edu>,
-	rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	patches@lists.linux.dev
-Subject: [PATCH 2/2] drm/panic: fix overindented list items in documentation
-Date: Sun,  2 Mar 2025 00:16:02 +0100
-Message-ID: <20250301231602.917580-2-ojeda@kernel.org>
-In-Reply-To: <20250301231602.917580-1-ojeda@kernel.org>
-References: <20250301231602.917580-1-ojeda@kernel.org>
+	s=arc-20240116; t=1740871791; c=relaxed/simple;
+	bh=XoA9oReb6CJth7thsqapf840HIXHfr+rBAqbIplUdrg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=i2gq36C063wDF6Qs3jKTHxz0FhQreMdKHGqfAAhZwNaSBGbRrosjairinJn8oaxa1L3sTJd2R6FXqlHPWIRG17R/pEmCi5UA0BnUn5I5avHEbN7hN0IMH3DMsgezU8kvFRiqr1a0jCDsdUCLvIL8ald+iQJ6uMOO7sJEH/mJFwc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
+Received: from localhost (unknown [116.232.55.252])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dlan)
+	by smtp.gentoo.org (Postfix) with ESMTPSA id 8A58A343152;
+	Sat, 01 Mar 2025 23:29:48 +0000 (UTC)
+Date: Sat, 1 Mar 2025 23:29:44 +0000
+From: Yixun Lan <dlan@gentoo.org>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Thomas Gleixner <tglx@linutronix.de>
+Cc: Alex Elder <elder@riscstar.com>, Inochi Amaoto <inochiama@gmail.com>,
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-riscv@lists.infradead.org, spacemit@lists.linux.dev
+Subject: Re: [PATCH v2 2/2] gpiolib: support parsing gpio three-cell
+ interrupts scheme
+Message-ID: <20250301232944-GYA55471@gentoo>
+References: <20250302-04-gpio-irq-threecell-v2-0-34f13ad37ea4@gentoo.org>
+ <20250302-04-gpio-irq-threecell-v2-2-34f13ad37ea4@gentoo.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250302-04-gpio-irq-threecell-v2-2-34f13ad37ea4@gentoo.org>
 
-Starting with the upcoming Rust 1.86.0 (to be released 2025-04-03),
-Clippy warns:
+Hi Linus, Thomas:
 
-    error: doc list item overindented
-       --> drivers/gpu/drm/drm_panic_qr.rs:914:5
-        |
-    914 | ///    will be encoded as binary segment, otherwise it will be encoded
-        |     ^^^ help: try using `  ` (2 spaces)
-        |
-        = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#doc_overindented_list_items
+On 07:15 Sun 02 Mar     , Yixun Lan wrote:
+> gpio irq which using three-cell scheme should always call
+> instance_match() function to find the correct irqdomain.
+> 
+> The select() function will be called with !DOMAIN_BUS_ANY,
+> so for specific gpio irq driver, it need to set bus token
+> explicitly, something like:
+>   irq_domain_update_bus_token(girq->domain, DOMAIN_BUS_WIRED);
+> 
+> Signed-off-by: Yixun Lan <dlan@gentoo.org>
+> ---
+>  drivers/gpio/gpiolib-of.c |  8 ++++++++
+>  drivers/gpio/gpiolib-of.h |  6 ++++++
+>  drivers/gpio/gpiolib.c    | 23 +++++++++++++++++++----
+>  3 files changed, 33 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
+> index 2e537ee979f3e2b6e8d5f86f3e121a66f2a8e083..e19904569fb1b71c1fff237132d17050ef02b074 100644
+> --- a/drivers/gpio/gpiolib-of.c
+> +++ b/drivers/gpio/gpiolib-of.c
+> @@ -1187,3 +1187,11 @@ void of_gpiochip_remove(struct gpio_chip *chip)
+>  {
+>  	of_node_put(dev_of_node(&chip->gpiodev->dev));
+>  }
+> +
+> +bool of_gpiochip_instance_match(struct gpio_chip *gc, unsigned int index)
+> +{
+> +	if (gc->of_node_instance_match)
+> +		return gc->of_node_instance_match(gc, index);
+> +
+> +	return false;
+> +}
+> diff --git a/drivers/gpio/gpiolib-of.h b/drivers/gpio/gpiolib-of.h
+> index 16d6ac8cb156c02232ea868b755bbdc46c78e3c7..3eebfac290c571e3b90e4437295db8eaacb021a3 100644
+> --- a/drivers/gpio/gpiolib-of.h
+> +++ b/drivers/gpio/gpiolib-of.h
+> @@ -22,6 +22,7 @@ struct gpio_desc *of_find_gpio(struct device_node *np,
+>  			       unsigned long *lookupflags);
+>  int of_gpiochip_add(struct gpio_chip *gc);
+>  void of_gpiochip_remove(struct gpio_chip *gc);
+> +bool of_gpiochip_instance_match(struct gpio_chip *gc, unsigned int index);
+>  int of_gpio_count(const struct fwnode_handle *fwnode, const char *con_id);
+>  #else
+>  static inline struct gpio_desc *of_find_gpio(struct device_node *np,
+> @@ -33,6 +34,11 @@ static inline struct gpio_desc *of_find_gpio(struct device_node *np,
+>  }
+>  static inline int of_gpiochip_add(struct gpio_chip *gc) { return 0; }
+>  static inline void of_gpiochip_remove(struct gpio_chip *gc) { }
+> +static inline bool of_gpiochip_instance_match(struct gpio_chip *gc,
+> +					      unsigned int index)
+> +{
+> +	return false;
+> +}
+>  static inline int of_gpio_count(const struct fwnode_handle *fwnode,
+>  				const char *con_id)
+>  {
+> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+> index 679ed764cb143c4b3357106de1570e8d38441372..266be465b9103c17861a0d76f2dfbf1f1de3a073 100644
+> --- a/drivers/gpio/gpiolib.c
+> +++ b/drivers/gpio/gpiolib.c
+> @@ -1449,10 +1449,9 @@ static int gpiochip_hierarchy_irq_domain_translate(struct irq_domain *d,
+>  						   unsigned long *hwirq,
+>  						   unsigned int *type)
+>  {
+> -	/* We support standard DT translation */
+> -	if (is_of_node(fwspec->fwnode) && fwspec->param_count == 2) {
+> -		return irq_domain_translate_twocell(d, fwspec, hwirq, type);
+> -	}
+> +	/* We support standard DT translation up to three cells */
+> +	if (is_of_node(fwspec->fwnode))
+> +		return irq_domain_translate_cells(d, fwspec, hwirq, type);
 
-The overindentation is slightly hard to notice, since all the items
-start with a backquote that makes it look OK, but it is there.
+I'm not sure if you like this way for calling generic cells parser here,
+as it should work for 1, 2, 3 cells model, which save a few lines meanwhile
 
-Thus fix it.
+otherwise we end something like
 
-Signed-off-by: Miguel Ojeda <ojeda@kernel.org>
----
- drivers/gpu/drm/drm_panic_qr.rs | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+	if (is_of_node(fwspec->fwnode) {
+		if (fwspec->param_count == 2) {
+			return irq_domain_translate_twocell(d, fwspec, hwirq, type);
+		if (fwspec->param_count == 3) {
+			return irq_domain_translate_threecell(d, fwspec, hwirq, type);
+	}
+>  
+>  	/* This is for board files and others not using DT */
+>  	if (is_fwnode_irqchip(fwspec->fwnode)) {
+> @@ -1754,9 +1753,25 @@ static void gpiochip_irq_unmap(struct irq_domain *d, unsigned int irq)
+>  	irq_set_chip_data(irq, NULL);
+>  }
+>  
+> +static int gpiochip_irq_select(struct irq_domain *d, struct irq_fwspec *fwspec,
+> +			enum irq_domain_bus_token bus_token)
+> +{
+> +	struct fwnode_handle *fwnode = fwspec->fwnode;
+> +	struct gpio_chip *gc = d->host_data;
+> +	unsigned int index = fwspec->param[0];
+> +
+> +	if (fwspec->param_count == 3 && is_of_node(fwnode))
+> +		return of_gpiochip_instance_match(gc, index);
+> +
+> +	/* Fallback for twocells */
+> +	return ((fwnode != NULL) && (d->fwnode == fwnode) &&
+> +		(d->bus_token == bus_token));
+> +}
+> +
+>  static const struct irq_domain_ops gpiochip_domain_ops = {
+>  	.map	= gpiochip_irq_map,
+>  	.unmap	= gpiochip_irq_unmap,
+> +	.select	= gpiochip_irq_select,
+>  	/* Virtually all GPIO irqchips are twocell:ed */
+>  	.xlate	= irq_domain_xlate_twocell,
+>  };
+> 
+> -- 
+> 2.48.1
+> 
 
-diff --git a/drivers/gpu/drm/drm_panic_qr.rs b/drivers/gpu/drm/drm_panic_qr.rs
-index 8bb5e52d75cc..6903e2010cb9 100644
---- a/drivers/gpu/drm/drm_panic_qr.rs
-+++ b/drivers/gpu/drm/drm_panic_qr.rs
-@@ -911,16 +911,16 @@ fn draw_all(&mut self, data: impl Iterator<Item = u8>) {
- ///
- /// * `url`: The base URL of the QR code. It will be encoded as Binary segment.
- /// * `data`: A pointer to the binary data, to be encoded. if URL is NULL, it
--///    will be encoded as binary segment, otherwise it will be encoded
--///    efficiently as a numeric segment, and appended to the URL.
-+///   will be encoded as binary segment, otherwise it will be encoded
-+///   efficiently as a numeric segment, and appended to the URL.
- /// * `data_len`: Length of the data, that needs to be encoded, must be less
--///    than data_size.
-+///   than data_size.
- /// * `data_size`: Size of data buffer, it should be at least 4071 bytes to hold
--///    a V40 QR code. It will then be overwritten with the QR code image.
-+///   a V40 QR code. It will then be overwritten with the QR code image.
- /// * `tmp`: A temporary buffer that the QR code encoder will use, to write the
--///    segments and ECC.
-+///   segments and ECC.
- /// * `tmp_size`: Size of the temporary buffer, it must be at least 3706 bytes
--///    long for V40.
-+///   long for V40.
- ///
- /// # Safety
- ///
 -- 
-2.48.1
-
+Yixun Lan (dlan)
+Gentoo Linux Developer
+GPG Key ID AABEFD55
