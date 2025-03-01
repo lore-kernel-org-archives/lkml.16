@@ -1,52 +1,72 @@
-Received: from mx3.wp.pl (mx3.wp.pl [212.77.101.9])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B08BF1E572A
-	for <linux-kernel@vger.kernel.org>; Sat,  1 Mar 2025 18:02:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.77.101.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EECA1C3308;
+	Sat,  1 Mar 2025 18:08:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740852174; cv=none; b=Mxe6FsPb0FjVKEBfPURJd1C6xvC1Jmrvjj5iYtKpnKziQgVcgjRh4pL44efUXrQXh9RZLW6cbfNbV14GPiftwm5I0uCh7QHroTg9mKSiHadWcAjrumqcEGDn7hJPMLpz3YlXdzOe85CHFrFmJsXzVdsisoUO6FcE/qMJbnglHxs=
+	t=1740852495; cv=none; b=hu6STwf50wCFx1z5jGM1xOL5XX2upMssBSG+FYJI2z4fP+fiQusPOBxpfUQwOWpgR5qIDNt4byHHNJxVZW9wI2r6Cf2n9NYhy8R9AeB3Mq/8tgTRHike32KIqgS0AYcZkatAKvzwTo4XXjSKOIA7KD347rDyUftAuj5/9fp2+tc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740852174; c=relaxed/simple;
-	bh=PMZphVDkAF5aPMon3qh5vtfYZi7nELusLHYh4ZNi3yo=;
+	s=arc-20240116; t=1740852495; c=relaxed/simple;
+	bh=W55l/pUCAdveWF379Cya8xRZuTSRTba/xGgojnWUq6E=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YPHNMv8QnbmA9KwUBPA1YT4YO9XCuKZ8H3xcLGN9b0pxa/qD6f/FCq+mdnsN1OCzEXIDqmVdVNUh+psvyeyoHuCmyIo58EpjPBvW2VFTrMdTePJb053I7fRVN7+ZkAG+Iya5bK7GOIlR42CXFMlcyhDlYy2yBkrjgJyRkfG/Tq4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=wp.pl; spf=pass smtp.mailfrom=wp.pl; dkim=pass (2048-bit key) header.d=wp.pl header.i=@wp.pl header.b=osXgXLC9; arc=none smtp.client-ip=212.77.101.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=wp.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wp.pl
+	 Content-Type:Content-Disposition:In-Reply-To; b=bMCXFEZu+UyJqU1amirGUHbJkoxiwQnk46OKHMW3bYm8mMXz3LQZL4xDqyba8zFCwKs+mhqIo1bbHWgQj+KFnN46vXU3yESD9xIxZmgKrw0puIhCDT98nqb7+sfT4ymmGtA9Bb9t9LdRpBcAWcFz7uriDhJ2+WvjROP6ooU4aWY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gXDi+HrY; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wp.pl header.i=@wp.pl header.b="osXgXLC9"
-Received: (wp-smtpd smtp.wp.pl 15599 invoked from network); 1 Mar 2025 19:02:41 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wp.pl; s=20241105;
-          t=1740852161; bh=72eOQ/MqtKm4OU9kul9+dWtDYSCW8AaG4vLVBVfVUzs=;
-          h=From:To:Cc:Subject;
-          b=osXgXLC9pJX8RfrLXisZ8+LebRpXM+m9zvsTerBwTA7JyQOodLGIBZjLpJzi1mMqF
-           TqO+SF0hTyeR60ieHyM2m4nNQv7nxH+mAuJg5REGofU1BTYF3z/6PFDuKOAXQCm3G+
-           ytYrfSOvhqzRpJbW97mx4NWpg5T8dulhrS9mhhqbEoOjMjQR8Dxqg6/6/tJ7gDcm/R
-           FH3TlHnB3eeO2xuRdnwFeJ6bMMrxcq57IpKoZnjdL2Z9PFqXWW1hirIzYZPXjeX0Pj
-           yTOlqidswEh3PNGcnb7AKznqPXEcZ4U43sOnYqKVIQ8Cs8l8MJKaufc0HP7lei2eNc
-           EoC0vtyg1B0+A==
-Received: from 89-64-0-97.dynamic.chello.pl (HELO localhost) (stf_xl@wp.pl@[89.64.0.97])
-          (envelope-sender <stf_xl@wp.pl>)
-          by smtp.wp.pl (WP-SMTPD) with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP
-          for <arnd@arndb.de>; 1 Mar 2025 19:02:41 +0100
-Date: Sat, 1 Mar 2025 19:02:40 +0100
-From: Stanislaw Gruszka <stf_xl@wp.pl>
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Arnd Bergmann <arnd@kernel.org>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	Kalle Valo <kvalo@kernel.org>, Ben Hutchings <ben@decadent.org.uk>,
-	linux <linux@treblig.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] [v2] iwlegacy: don't warn for unused variables with
- DEBUG_FS=n
-Message-ID: <20250301180240.GA61229@wp.pl>
-References: <20250225145359.1126786-1-arnd@kernel.org>
- <20250301122834.GA55739@wp.pl>
- <994e4827-0e16-4e05-be7c-1ca7a86e4daf@app.fastmail.com>
- <20250301133652.GA60453@wp.pl>
- <7e472cbe-bf29-432b-93da-d1fc87630939@app.fastmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gXDi+HrY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740852494; x=1772388494;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=W55l/pUCAdveWF379Cya8xRZuTSRTba/xGgojnWUq6E=;
+  b=gXDi+HrYjLH7yI1iXHuP5MjbHydgEkoW6t1UjmUqVH/gLEnDNSlDSij7
+   hixOCB+V9t7ivLVNHzfo30DecpjJbwDv1XyMMZXSsxhgMnyQgWY0jHjqT
+   6kbZ7a7uBtoIHRNX8/ww0rg9G6QAqK771W9h4syUdh1hKdmuyYf+22/7j
+   ZFlBcoU5QRWpck9e1oc3jOhezM4l0DfZ++DmPy0mfy93p43pkKUYbHTnn
+   QWsOvYyYJ3p1YcH+w1kHZeERJem0TL/6ri9CNmdXVJSpC+mtSvqWfPOMy
+   fR8/2RuQzUTmHDUp8l5kPj8/9w5QBc7WLTUQXRSB1OHbSvSISp9jEbTDA
+   Q==;
+X-CSE-ConnectionGUID: 2Ho9+vjITa6K1br1Ovhe/g==
+X-CSE-MsgGUID: JltUvSh4SbGN40y0EC6jNA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11360"; a="52751290"
+X-IronPort-AV: E=Sophos;i="6.13,325,1732608000"; 
+   d="scan'208";a="52751290"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Mar 2025 10:08:13 -0800
+X-CSE-ConnectionGUID: QiERENeURFOimTASE61rGg==
+X-CSE-MsgGUID: cFNZt0FoRbSKrY/nnMbfhA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,325,1732608000"; 
+   d="scan'208";a="122574038"
+Received: from lkp-server02.sh.intel.com (HELO 76cde6cc1f07) ([10.239.97.151])
+  by orviesa003.jf.intel.com with ESMTP; 01 Mar 2025 10:08:09 -0800
+Received: from kbuild by 76cde6cc1f07 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1toRFu-000GXe-2W;
+	Sat, 01 Mar 2025 18:08:06 +0000
+Date: Sun, 2 Mar 2025 02:07:53 +0800
+From: kernel test robot <lkp@intel.com>
+To: "Derek J. Clark" <derekjohn.clark@gmail.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: oe-kbuild-all@lists.linux.dev, Armin Wolf <W_Armin@gmx.de>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Mario Limonciello <superm1@kernel.org>,
+	Luke Jones <luke@ljones.dev>, Xino Ni <nijs1@lenovo.com>,
+	Zhixin Zhang <zhangzx36@lenovo.com>, Mia Shao <shaohz1@lenovo.com>,
+	Mark Pearson <mpearson-lenovo@squebb.ca>,
+	"Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>,
+	"Cody T . -H . Chiu" <codyit@gmail.com>,
+	John Martens <johnfanv2@gmail.com>,
+	"Derek J . Clark" <derekjohn.clark@gmail.com>,
+	platform-driver-x86@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/4] platform/x86: Add lenovo-wmi drivers Documentation
+Message-ID: <202503020122.t8BHxWLm-lkp@intel.com>
+References: <20250225220037.16073-2-derekjohn.clark@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -55,65 +75,42 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <7e472cbe-bf29-432b-93da-d1fc87630939@app.fastmail.com>
-X-WP-MailID: 31fa1973e68bfed795e2c0e3bcfcda2b
-X-WP-AV: skaner antywirusowy Poczty Wirtualnej Polski
-X-WP-SPAM: NO 0000000 [oaOU]                               
+In-Reply-To: <20250225220037.16073-2-derekjohn.clark@gmail.com>
 
-On Sat, Mar 01, 2025 at 02:49:38PM +0100, Arnd Bergmann wrote:
-> On Sat, Mar 1, 2025, at 14:36, Stanislaw Gruszka wrote:
-> > On Sat, Mar 01, 2025 at 01:38:16PM +0100, Arnd Bergmann wrote:
-> >> On Sat, Mar 1, 2025, at 13:28, Stanislaw Gruszka wrote:
-> >> > On Tue, Feb 25, 2025 at 03:53:53PM +0100, Arnd Bergmann wrote:
-> >> >
-> >> > But then the code will be compiled for !CONFIG_MAC80211_DEBUGFS
-> >> > case, it does compile for me:
-> >> >
-> >> > -  22475	   1160	      0	  23635	   
-> >> > 5c53	drivers/net/wireless/intel/iwlegacy/4965-rs.o
-> >> > +  23008	   1168	      0	  24176	   
-> >> > 5e70	drivers/net/wireless/intel/iwlegacy/4965-rs.o
-> >> 
-> >> Very strange, this really shouldn't happen. Which symbols
-> >> exactly do you see the compiler fail to drop with my patch,
-> >
-> > nm 4965-rs.o diffrence before and after patch:
-> 
-> >  00000000000000dd t il4965_rs_alloc_sta.cold
-> > -0000000000001810 t il4965_rs_collect_tx_data.isra.0
-> > -00000000000012b0 t il4965_rs_fill_link_cmd
-> > -0000000000000495 t il4965_rs_fill_link_cmd.cold
-> > +0000000000001850 t il4965_rs_collect_tx_data.isra.0
-> > +0000000000000e90 t il4965_rs_dbgfs_set_mcs.isra.0
-> > +00000000000002f6 t il4965_rs_dbgfs_set_mcs.isra.0.cold
-> > +0000000000001340 t il4965_rs_fill_link_cmd
-> > +0000000000000518 t il4965_rs_fill_link_cmd.cold
-> >  00000000000002a0 t il4965_rs_free
-> 
-> Ah, so the debugfs files get eliminated, but
-> il4965_rs_dbgfs_set_mcs() does not.
-> 
-> I think this should do it:
-> 
-> --- a/drivers/net/wireless/intel/iwlegacy/4965-rs.c
-> +++ b/drivers/net/wireless/intel/iwlegacy/4965-rs.c
-> @@ -2495,6 +2495,9 @@ il4965_rs_dbgfs_set_mcs(struct il_lq_sta *lq_sta, u32 * rate_n_flags, int idx)
->         u8 valid_tx_ant;
->         u8 ant_sel_tx;
->  
-> +       if (!IS_ENABLED(CONFIG_MAC80211_DEBUGFS))
-> +               return;
-> +
->         il = lq_sta->drv;
->         valid_tx_ant = il->hw_params.valid_tx_ant;
->         if (lq_sta->dbg_fixed_rate) {
-> 
-> or possibly il4965_rs_dbgfs_set_mcs() can stay in the #ifdef
-> if you prefer.
+Hi Derek,
 
-I'm ok with this solution. The size stays the same with above
-change.
+kernel test robot noticed the following build warnings:
 
-Regards
-Stanislaw
+[auto build test WARNING on amd-pstate/linux-next]
+[also build test WARNING on amd-pstate/bleeding-edge linus/master v6.14-rc4 next-20250228]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
+url:    https://github.com/intel-lab-lkp/linux/commits/Derek-J-Clark/platform-x86-Add-lenovo-wmi-drivers-Documentation/20250226-060548
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/superm1/linux.git linux-next
+patch link:    https://lore.kernel.org/r/20250225220037.16073-2-derekjohn.clark%40gmail.com
+patch subject: [PATCH v3 1/4] platform/x86: Add lenovo-wmi drivers Documentation
+reproduce: (https://download.01.org/0day-ci/archive/20250302/202503020122.t8BHxWLm-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202503020122.t8BHxWLm-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+   Warning: Documentation/translations/ja_JP/SubmittingPatches references a file that doesn't exist: linux-2.6.12-vanilla/Documentation/dontdiff
+   Warning: Documentation/translations/zh_CN/admin-guide/README.rst references a file that doesn't exist: Documentation/dev-tools/kgdb.rst
+   Warning: Documentation/translations/zh_CN/dev-tools/gdb-kernel-debugging.rst references a file that doesn't exist: Documentation/dev-tools/gdb-kernel-debugging.rst
+   Warning: Documentation/translations/zh_TW/admin-guide/README.rst references a file that doesn't exist: Documentation/dev-tools/kgdb.rst
+   Warning: Documentation/translations/zh_TW/dev-tools/gdb-kernel-debugging.rst references a file that doesn't exist: Documentation/dev-tools/gdb-kernel-debugging.rst
+>> Warning: MAINTAINERS references a file that doesn't exist: Documentation/wmi/devices/lenovo-wmi-other.rst
+   Warning: MAINTAINERS references a file that doesn't exist: Documentation/devicetree/bindings/misc/fsl,qoriq-mc.txt
+   Warning: MAINTAINERS references a file that doesn't exist: Documentation/devicetree/bindings/leds/backlight/ti,lp8864.yaml
+   Warning: lib/Kconfig.debug references a file that doesn't exist: Documentation/dev-tools/fault-injection/fault-injection.rst
+   Using alabaster theme
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
