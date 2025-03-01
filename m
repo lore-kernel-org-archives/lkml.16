@@ -1,127 +1,127 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35A618BF8;
-	Sat,  1 Mar 2025 01:03:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D13622F11;
+	Sat,  1 Mar 2025 01:08:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740790995; cv=none; b=LnCEziRyKiPKoP6VcaYQontxZoDewrxnpDEYqmNXqtMLwxdcbUhlmHkpWynrpWtqkGjEQhwnscouMxgL9tk+QPPYNoGvmtfv1PKITbJlfo8eGeORjZJnFE/bJ4hI21ZisXHWEc0OlqLOoykNAPD9ouPeTk95xkz69Xudcc3YZeM=
+	t=1740791330; cv=none; b=to/BPiza4f3l3BoBj+9zjLSemM/j++wAB+NDNdNTkGi0KXCxO6cw+uyxqIXpqWdPl8iEGSYE2j+eyXjA2oMLbrv9jad8HO5ahBO+JcdGN0qwHwujPty99pskwWG/TNsFCIpGg8JDaqHaMcbCktlAEMOezGLSNWKglxq/FICKe5c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740790995; c=relaxed/simple;
-	bh=E4CFDdWpLRuR6cWZBhtXLShaSWGwBIT3NTPSNKAfUWU=;
+	s=arc-20240116; t=1740791330; c=relaxed/simple;
+	bh=4M2ydCax4n1CzEN8VEpLsGvuYamMKtjBsavgnJmIvtM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sx3bj8+X3idKk6T5cDsiRPSs1naoHyUhGKRJSIYL726tvlLYJl0Mk22Ur20KAPBjbFnrd7ahoVYRmetzEclwrqgTqUKBCbo5dCNLTExOnFwVtFdMgWbooa0217QbkcIRcyiGlrbnpQNiKS7133eUpQYK3Y6WVdUUqBprDyzJbLc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=Uc9F/QBI; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=KAqEBTOAFEjxbnnL9zT/l0UR5DiUwJqo4Nhc00qeBYlJmsGt8O9Tos3fFeK0HpNuWppZ/LZZNu+3YjsAiTBKEDqA1Y0DaS/uWLogYmzpUFM417S+rdVUkOipXDrpWB/vNYuEDX2Qit6svVFAOL7IbCLTEjqK2qLTQACQqvo0SOE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OTAFspss; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="Uc9F/QBI"
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 834BF8BE;
-	Sat,  1 Mar 2025 02:01:42 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1740790902;
-	bh=E4CFDdWpLRuR6cWZBhtXLShaSWGwBIT3NTPSNKAfUWU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Uc9F/QBIBnzEY8mfv0uRYcjyLx1ko30GlR6UK9oG6Mg+09RDBQuv4YBoid0CDNW2v
-	 ClYEYPokYcreyrwHOzssSlYCW7T63hzqvhor+H0Pnlo0UBpr4jU26EL2mvEczEG8YN
-	 i1BqUzwfl53p9s+Mei8kwCD4gBCZQdigbbpa7BTc=
-Date: Sat, 1 Mar 2025 03:02:52 +0200
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Stefan Klug <stefan.klug@ideasonboard.com>
-Cc: linux-media@vger.kernel.org, Dafna Hirschfeld <dafna@fastmail.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Heiko Stuebner <heiko@sntech.de>,
-	linux-rockchip@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] media: rkisp1: Set format defaults based on
- requested color space
-Message-ID: <20250301010252.GI7342@pendragon.ideasonboard.com>
-References: <20250227114558.3097101-1-stefan.klug@ideasonboard.com>
- <20250227114558.3097101-2-stefan.klug@ideasonboard.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OTAFspss"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73A8AC4CEE2;
+	Sat,  1 Mar 2025 01:08:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740791329;
+	bh=4M2ydCax4n1CzEN8VEpLsGvuYamMKtjBsavgnJmIvtM=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=OTAFspsstyzHAuqbWGEev9Bpoy6WVlGQxgRlmGHvm/DU5hkydBGCKkO8x48r7+WPA
+	 kvUmc98fvlIoGgy5iqWmqF53d/lZT4fBaa3M1TF6pjuPI8C4tpqsUdpz5exGc81x6M
+	 GI42VmOZDRdB+dRHVWsAbXVDbQXDLE0JYM1GOSepQpyD2iNDVwj/Gz4gI8lEzr/L7d
+	 1YE+/CZnq0FIuElqOTMGZRTsh+phywqXJWG4o6QSWCZ/H64U6eicl70PXGSg5OFoAl
+	 r+Z/A3Z8dTPzHevMpW2NasrAA1L7QhDYXNQ5NIersJS0VNaLMIs7i8xbZQPXSy2gt2
+	 e8gVuvF4FenLg==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id 1AE10CE0DEB; Fri, 28 Feb 2025 17:08:49 -0800 (PST)
+Date: Fri, 28 Feb 2025 17:08:49 -0800
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Uladzislau Rezki <urezki@gmail.com>
+Cc: Boqun Feng <boqun.feng@gmail.com>, RCU <rcu@vger.kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Cheung Wall <zzqq0103.hey@gmail.com>,
+	Neeraj upadhyay <Neeraj.Upadhyay@amd.com>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Oleksiy Avramchenko <oleksiy.avramchenko@sony.com>
+Subject: Re: [PATCH v4 3/3] rcu: Use _full() API to debug synchronize_rcu()
+Message-ID: <f6803081-8243-4723-a3ba-00db351aafff@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <Z8CdB0Hzvdu5ZVSI@Mac.home>
+ <d8b196c1-c1b5-4bf9-b1cb-dde8642cc34b@paulmck-laptop>
+ <Z8Ckb6spK35-Ez4U@pc636>
+ <1408fc88-e2c6-4f49-b581-0e9ad5620fe0@paulmck-laptop>
+ <Z8HmH85bYNU8enJ2@pc636>
+ <dd15fa79-70a5-4929-9339-51a47099c916@paulmck-laptop>
+ <Z8H_aYBUHD2sS2Ir@pc636>
+ <73724164-71f4-4671-b612-eb82a784da58@paulmck-laptop>
+ <Z8IKs-I-YsOoS4uw@pc636>
+ <cdab57a4-8d58-41d9-a9b5-71d425a7375e@paulmck-laptop>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250227114558.3097101-2-stefan.klug@ideasonboard.com>
+In-Reply-To: <cdab57a4-8d58-41d9-a9b5-71d425a7375e@paulmck-laptop>
 
-Hi Stefan,
-
-Thank you for the patch.
-
-On Thu, Feb 27, 2025 at 12:44:59PM +0100, Stefan Klug wrote:
-> When color space JPEG is requested, the ISP sets the quantization
-> incorrectly to limited range. To fix that, set the xfer_func, ycbcr_enc
-> and quantization to the defaults for the requested color space if they
-> are not specified explicitly.
-
-The commit message fails to explain why you're addressing xfer_func and
-ycbcr_enc to fix the quantization issue.
-
-> Do this only in case we are converting
-> from RAW to YUV.
-
-And this should explain why.
-
-> Signed-off-by: Stefan Klug <stefan.klug@ideasonboard.com>
-> ---
->  .../media/platform/rockchip/rkisp1/rkisp1-isp.c   | 15 ++++++++++++++-
->  1 file changed, 14 insertions(+), 1 deletion(-)
+On Fri, Feb 28, 2025 at 11:59:55AM -0800, Paul E. McKenney wrote:
+> On Fri, Feb 28, 2025 at 08:12:51PM +0100, Uladzislau Rezki wrote:
+> > Hello, Paul!
+> > 
+> > > > > > > 
+> > > > > > > Except that I got this from overnight testing of rcu/dev on the shared
+> > > > > > > RCU tree:
+> > > > > > > 
+> > > > > > > WARNING: CPU: 5 PID: 14 at kernel/rcu/tree.c:1636 rcu_sr_normal_complete+0x5c/0x80
+> > > > > > > 
+> > > > > > > I see this only on TREE05.  Which should not be too surprising, given
+> > > > > > > that this is the scenario that tests it.  It happened within five minutes
+> > > > > > > on all 14 of the TREE05 runs.
+> > > > > > > 
+> > > > > > Hm.. This is not fun. I tested this on my system and i did not manage to
+> > > > > > trigger this whereas you do. Something is wrong.
+> > > > > 
+> > > > > If you have a debug patch, I would be happy to give it a go.
+> > > > > 
+> > > > I can trigger it. But.
+> > > > 
+> > > > Some background. I tested those patches during many hours on the stable
+> > > > kernel which is 6.13. On that kernel i was not able to trigger it. Running
+> > > > the rcutorture on the our shared "dev" tree, which i did now, triggers this
+> > > > right away.
+> > > 
+> > > Bisection?  (Hey, you knew that was coming!)
+> > > 
+> > Looks like this: rcu: Fix get_state_synchronize_rcu_full() GP-start detection
+> > 
+> > After revert in the dev, rcutorture passes TREE05, 16 instances.
 > 
-> diff --git a/drivers/media/platform/rockchip/rkisp1/rkisp1-isp.c b/drivers/media/platform/rockchip/rkisp1/rkisp1-isp.c
-> index d94917211828..468f5a7d03c7 100644
-> --- a/drivers/media/platform/rockchip/rkisp1/rkisp1-isp.c
-> +++ b/drivers/media/platform/rockchip/rkisp1/rkisp1-isp.c
-> @@ -680,10 +680,23 @@ static void rkisp1_isp_set_src_fmt(struct rkisp1_isp *isp,
+> Huh.  We sure don't get to revert that one...
+> 
+> Do we have a problem with the ordering in rcu_gp_init() between the calls
+> to rcu_seq_start() and portions of rcu_sr_normal_gp_init()?  For example,
+> do we need to capture the relevant portion of the list before the call
+> to rcu_seq_start(), and do the grace-period-start work afterwards?
 
-Adding a bit more context:
+I tried moving the call to rcu_sr_normal_gp_init() before the call to
+rcu_seq_start() and got no failures in a one-hour run of 200*TREE05.
+Which does not necessarily mean that this is the correct fix, but I
+figured that it might at least provide food for thought.
 
-	set_csc = format->flags & V4L2_MBUS_FRAMEFMT_SET_CSC;
+							Thanx, Paul
 
-	if (set_csc && src_info->pixel_enc == V4L2_PIXEL_ENC_YUV) {
+------------------------------------------------------------------------
 
-If V4L2_MBUS_FRAMEFMT_SET_CSC isn't set, the colorspace fields on the
-source pad will be copied from the sink pad, which doesn't seem right.
-It's a separate issue, but fixing both together may lead to better code.
-
->  		if (sink_info->pixel_enc == V4L2_PIXEL_ENC_BAYER) {
->  			if (format->colorspace != V4L2_COLORSPACE_DEFAULT)
->  				src_fmt->colorspace = format->colorspace;
-> -			if (format->xfer_func != V4L2_XFER_FUNC_DEFAULT)
-> +
-> +			if (format->xfer_func == V4L2_XFER_FUNC_DEFAULT)
-
-Are you sure the condition should be inverted ?
-
->  				src_fmt->xfer_func = format->xfer_func;
-> +			else
-> +				src_fmt->xfer_func =
-> +					V4L2_MAP_XFER_FUNC_DEFAULT(format->colorspace);
-> +
->  			if (format->ycbcr_enc != V4L2_YCBCR_ENC_DEFAULT)
->  				src_fmt->ycbcr_enc = format->ycbcr_enc;
-> +			else
-> +				src_fmt->ycbcr_enc =
-> +					V4L2_MAP_YCBCR_ENC_DEFAULT(format->colorspace);
-> +
-> +			if (format->quantization == V4L2_QUANTIZATION_DEFAULT)
-> +				src_fmt->quantization =
-> +					V4L2_MAP_QUANTIZATION_DEFAULT(false,
-> +						format->colorspace, format->ycbcr_enc);
-
-Shouldn't this use src_fmt instead of format ?
-
-I think quantization handling could be moved below.
-
->  		}
->  
->  		if (format->quantization != V4L2_QUANTIZATION_DEFAULT)
-
--- 
-Regards,
-
-Laurent Pinchart
+diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+index 48384fa2eaeb8..d3efeff7740e7 100644
+--- a/kernel/rcu/tree.c
++++ b/kernel/rcu/tree.c
+@@ -1819,10 +1819,10 @@ static noinline_for_stack bool rcu_gp_init(void)
+ 
+ 	/* Advance to a new grace period and initialize state. */
+ 	record_gp_stall_check_time();
++	start_new_poll = rcu_sr_normal_gp_init();
+ 	/* Record GP times before starting GP, hence rcu_seq_start(). */
+ 	rcu_seq_start(&rcu_state.gp_seq);
+ 	ASSERT_EXCLUSIVE_WRITER(rcu_state.gp_seq);
+-	start_new_poll = rcu_sr_normal_gp_init();
+ 	trace_rcu_grace_period(rcu_state.name, rcu_state.gp_seq, TPS("start"));
+ 	rcu_poll_gp_seq_start(&rcu_state.gp_seq_polled_snap);
+ 	raw_spin_unlock_irq_rcu_node(rnp);
