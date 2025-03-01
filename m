@@ -1,449 +1,196 @@
-Received: from relay01a.gzo.com (relay01a.gzo.com [96.31.72.50])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E4092FC23;
-	Sat,  1 Mar 2025 13:49:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.31.72.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 678932FC23;
+	Sat,  1 Mar 2025 13:49:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740836942; cv=none; b=cZ60umC3Yj/3pugMdGCz3ENPiGHj/3a8ZjF+7BgURyfPFro6p/ZWclrSlfN3s3a56qBOteIEt0EkIhMA+QfuFuBVKsuyCfMXS8/TJSj8a0kK4q7u5JPUCpcmkJ9d356lCrgH4T2U27puUBaIPdFMKuiJvF8iamV+9yixBly0w0o=
+	t=1740836955; cv=none; b=RlEYVWSJaJYWS6+sMhzKDQzVkm+lLPfXG0FZdOme4/T47744Mu4XJbPYwLmMOnwpQs3PBAPhj3Ey5F/op/FiC7BlO6YGAPLrjBhICfCqVr6nnEFLB2Fl4FtjGX8mI2Dga9ZZ0F+/+hG/1/JcnFnhZW9bOibfqL45e2vlYtMSlBQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740836942; c=relaxed/simple;
-	bh=Zs/AFWptXOzxWlBfFZNpkm5I8HF+h59Uj0M4WsxYcVM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ep5qMKPyVD+JPKAOnZibiBWFLB+0AQweadsJ4WRswaLWHm23MkhmZ46+WcukmML6zA7o3NhBUpr9KbsdbNzMLXqsLKT1K76qFxhK4JHruMBQf6vvy3n0H91AWS+uh5jzmehmXbawiLPi64rBp0hxhjJxOZn8bsxO4ldgxDj6VTQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=shurup.com; spf=pass smtp.mailfrom=shurup.com; dkim=pass (2048-bit key) header.d=shurup.com header.i=@shurup.com header.b=2fzsmgFS; arc=none smtp.client-ip=96.31.72.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=shurup.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shurup.com
+	s=arc-20240116; t=1740836955; c=relaxed/simple;
+	bh=+7BkRCaAMc58KXpPqobpivf31lnIl3j+4Emd+l300nk=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=olm0/NcixasupP1Qw1ONg6efD2JUGjjpTIkRCvDxX/7npc2f0PPyjwxAnw3QH3NqVrUwHQZacfCMOg7H9ipVx4326keKiK2301uOwj/IdAPYh0m0OmfL+vvIyfyAf2DQZdk0G+8iqi4l95EgwehR+eqSOX0YBzwHP3/LvYcGPuk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uqwv1xUJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=shurup.com header.i=@shurup.com header.b="2fzsmgFS"
-Received: from cpanel84.gzo.com ([96.31.72.74]:51318)
-	by relay02.gzo.com with esmtps  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.98)
-	(envelope-from <yury@shurup.com>)
-	id 1toMn6-00000009CNb-3FCm;
-	Sat, 01 Mar 2025 07:22:04 -0600
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=shurup.com;
-	s=default; h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:
-	Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=M/4D0No8fihiA50vilcn45zrDftRqEY7ccNRk+bpV00=; b=2fzsmgFSszO7yjFONRLB1kCdTt
-	P/wMcbysrb/Nns7fEw8zhnIQ6qwYBiO74BUW/sfZiRvVzk1WS7KQiP6yypq798hKir4x5csymiZCY
-	K7p3pJuWFuC2YmTAe6tYxjW0BbqC9dKALiNxAwTshfI7p3WTjASNwrDTb9UOnQuljwPOYZFFggkWv
-	rHmrcG8HGufiYFdffvYrkOD6riWfGV0TA/a102coVQKqd9Fr5WQ+K1OgMA3lllGCvpuXMI8X1MrpM
-	iNZ8tiXv9a6XAHr0uypYCkkIZZSj4m/Irm1O8Gudwkhhd82oy4+HSuOWUSUDW+uY1eAhTv/2BqEj7
-	dg/brjYw==;
-Received: from [178.202.191.231] (port=16048 helo=localhost.localdomain)
-	by cpanel84.gzo.com with esmtpsa  (TLS1.3) tls TLS_CHACHA20_POLY1305_SHA256
-	(Exim 4.98.1)
-	(envelope-from <yury@shurup.com>)
-	id 1toMn6-0000000HO05-0HmH;
-	Sat, 01 Mar 2025 07:22:04 -0600
-From: "Yury V. Zaytsev" <yury@shurup.com>
-To: gregkh@linuxfoundation.org,
-	jirislaby@kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-serial@vger.kernel.org
-Cc: "Yury V. Zaytsev" <yury@shurup.com>
-Subject: [PATCH RESEND] tty: vt: make defkeymap for shifted F-keys consistent with kbd
-Date: Sat,  1 Mar 2025 14:21:08 +0100
-Message-Id: <20250301132108.62761-1-yury@shurup.com>
-X-Mailer: git-send-email 2.39.5 (Apple Git-154)
-In-Reply-To: <20250119184733.9468-1-yury@shurup.com>
-References: <20250119184733.9468-1-yury@shurup.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uqwv1xUJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D19BC4CEDD;
+	Sat,  1 Mar 2025 13:49:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740836954;
+	bh=+7BkRCaAMc58KXpPqobpivf31lnIl3j+4Emd+l300nk=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=uqwv1xUJNLzBJ1t/hU5t0tEi03hedao4PSnQpep+U31PEUwmomlVrYQDhxMiQ2IX3
+	 aSGYQTc5/kwE874DucxsVcSDX9vnvIa0xsqP7fmhGg1RW6VTSu53LR9OTBOhb763s9
+	 xR6dNiFs2skx2Xw+1F9GkAFheG2IwlFr8Y/i9Eya4FO+WbTzsei1/HBEy0LKUGwAOr
+	 Js874oreIerHFSk74MTLDXu1I+8l9E4mih8Zyer+MTaJE0mlKSAlCg09H3Oy9xsHr3
+	 lrUNxsnZgjUsO+Wq5CpnCoYtLrgZ0wMG+YAdeRUnQk+COyF5aMCBFCQSzl6PDjMpC4
+	 FurCXC3Wf+d7w==
+Message-ID: <20946ee0-4973-4831-bc77-4d9942f1a348@kernel.org>
+Date: Sat, 1 Mar 2025 14:49:07 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - cpanel84.gzo.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - shurup.com
-X-Get-Message-Sender-Via: cpanel84.gzo.com: authenticated_id: yury@shurup.com
-X-Authenticated-Sender: cpanel84.gzo.com: yury@shurup.com
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-GZO-MailScanner-Information: Please contact the ISP for more information
-X-GZO-MailScanner-ID: 1toMn6-00000009CNb-3FCm
-X-GZO-MailScanner: Found to be clean
-X-GZO-MailScanner-SpamCheck: not spam, SpamAssassin (not cached,
-	score=-2.099, required 6, autolearn=not spam, BAYES_00 -1.90,
-	DKIM_SIGNED 0.10, DKIM_VALID -0.10, DKIM_VALID_AU -0.10,
-	DKIM_VALID_EF -0.10, RCVD_IN_VALIDITY_RPBL_BLOCKED 0.00,
-	RCVD_IN_VALIDITY_SAFE_BLOCKED 0.00, SPF_HELO_PASS -0.00,
-	SPF_PASS -0.00, URIBL_BLOCKED 0.00)
-X-GZO-MailScanner-From: yury@shurup.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [EXTERNAL] Re: [PATCH v3 3/3] arm64: dts: marvell: cp11x: Add
+ reset controller node
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Wilson Ding <dingwei@marvell.com>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+ "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Cc: "andrew@lunn.ch" <andrew@lunn.ch>,
+ "gregory.clement@bootlin.com" <gregory.clement@bootlin.com>,
+ "sebastian.hesselbarth@gmail.com" <sebastian.hesselbarth@gmail.com>,
+ "robh@kernel.org" <robh@kernel.org>, "krzk+dt@kernel.org"
+ <krzk+dt@kernel.org>, "conor+dt@kernel.org" <conor+dt@kernel.org>,
+ "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
+ Sanghoon Lee <salee@marvell.com>, Geethasowjanya Akula <gakula@marvell.com>
+References: <20250227192536.2426490-1-dingwei@marvell.com>
+ <20250227192536.2426490-4-dingwei@marvell.com>
+ <d085c34a-fdbf-4950-a2e3-b3d25a1c0145@kernel.org>
+ <BY3PR18MB46730C150D4CB9619B3B05FBA7CC2@BY3PR18MB4673.namprd18.prod.outlook.com>
+ <050ae833-10b5-4d80-9856-8bc2f434a74f@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <050ae833-10b5-4d80-9856-8bc2f434a74f@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-The default kernel keymap is modeled after VT220, which had F-keys from
-F1 to F20. However, IBM Model F keyboards only had F-keys from F1 to
-F10, so a mapping convention was established where F11 to F20 mapped to
-Shift-F1 to Shift-F10. This convention is still used in the kernel
-today.
+On 01/03/2025 14:46, Krzysztof Kozlowski wrote:
+>>>> Signed-off-by: Wilson Ding <dingwei@marvell.com>
+>>>> ---
+>>>>  arch/arm64/boot/dts/marvell/armada-cp11x.dtsi | 8 ++++++++
+>>>>  1 file changed, 8 insertions(+)
+>>>>
+>>>> diff --git a/arch/arm64/boot/dts/marvell/armada-cp11x.dtsi
+>>> b/arch/arm64/boot/dts/marvell/armada-cp11x.dtsi
+>>>> index 161beec0b6b0..c27058d1534e 100644
+>>>> --- a/arch/arm64/boot/dts/marvell/armada-cp11x.dtsi
+>>>> +++ b/arch/arm64/boot/dts/marvell/armada-cp11x.dtsi
+>>>> @@ -226,6 +226,8 @@ CP11X_LABEL(rtc): rtc@284000 {
+>>>>  		CP11X_LABEL(syscon0): system-controller@440000 {
+>>>>  			compatible = "syscon", "simple-mfd";
+>>>>  			reg = <0x440000 0x2000>;
+>>>> +			#address-cells = <1>;
+>>>> +			#size-cells = <1>;
+>>>>
+>>>>  			CP11X_LABEL(clk): clock {
+>>>
+>>> Wait, no unit address here.
+>>
+>> This subnode came from the existing code. I didn't touch this subnode
+>> in my patch. As you can see, the system-controller has a wide address
+>> range, which includes clock, GPIO registers as well as the unit-softreset
+>> register.
+>>
+>>>
+>>>>  				compatible = "marvell,cp110-clock";
+>>>> @@ -273,6 +275,12 @@ CP11X_LABEL(gpio2): gpio@140 {
+>>>>  					 <&CP11X_LABEL(clk) 1 17>;
+>>>>  				status = "disabled";
+>>>>  			};
+>>>> +
+>>>> +			CP11X_LABEL(swrst): reset-controller@268 {
+>>>
+>>>
+>>> So why here it appeared? This is wrong and not even necessary. Entire
+>>> child should be folded into parent, so finally you will fix the
+>>> incomplete parent compatible.
+>>
+>> We do need the reset-controller as a subnode under system-controller node
+>> for the following reasons:
+>>
+>> - We need to have 'reg' property in this subnode so that we can get the offset
+>>   to system-controller register base defined in parent node. This is suggested
+>>   by Rob in V2 comments. 
+>>   And we need to know the register size to calculate the number of reset lines.
+>>   This is suggested by Philipp in V1 comments.
+> 
+> You do not need and you received that comment as well. It is implied by
+> compatible.
+> 
+>>
+>> - We also need to define the 'reset-cells' in this subnode. And the consumer of
+>>   the reset controller uses the label of this subnode for the phandle and reset
+>>   specifier pair. 
+> 
+> reset-cells will be in the parent once you fold it.
+> 
+>>
+>> As I mentioned in my reply to the first comment, the reset-controller is not the
+>> only device within the system-controller register spaces. Do you still think I
+> 
+> You provided very little hardware description of the device. So based on
+> hardware description you provided: yes.
 
-Newer IBM Model M keyboards, introduced in the 90s, had F keys from F1
-to F12. As these keyboards became more common, a new mapping convention
-emerged where F13 would be Shift-F1. This new mapping convention has
-been implemented in kbd for at least the last 20 years:
+and to clarify - by device I mean the parent node, the system controller.
 
-https://github.com/legionus/kbd/blame/master/data/keymaps/i386/include/linux-keys-bare.inc#L17
+Your commit even mentions driver, not the hardware:
+"Add device-tree binding documentation for the Armada8K reset driver..."
+not hardware, so you will get the review as good as you describe things.
 
-Unfortunately, the kernel keymap has never been updated accordingly. As
-a result, depending on whether kbd or the kernel keymap is used, console
-software sees an "off-by-two" where Shift-F3 acts as Shift-F1.
+Bindings are about hardware so if you disagree with the review here,
+please provide arguments in terms of hardware.
 
-This patch synchronizes the kernel keymap with the kbd keymap, which
-uses the Model M layout. The escape sequences that were previously
-emitted by both F11 and Shift-F1 (`\033[23~`) & F12 and Shift-F2
-(`\033[24~`) are now emitted only by F11 and F12, and the sequences for
-F13 (`\033[25~`), F14 (`\033[26~`), etc. are emitted for Shift-F1,
-Shift-F2, etc. instead.
+> 
+>> should fold it into the parent node. And what I proposed is exactly same as
+>> that the armada_thermal driver did (See below). I wonder why what was accepted
+>> in the past become not accepted now. 
+> 
+> We did not discuss here drivers, but if you insist talking about
+> "marvell,armada-cp110-thermal" then point me to review or ack from DT
+> people. You claim it was accepted so how did we accept it?
+> 
+> It was 2013 so that's another answer: many things done 12 years ago were
+> done not according to best practices. Also best practices evolved.
 
-The sequences for the additional F-keys from F21 to F24 are defined
-consistently with the rest of the sequences and are used for Shift-F9 to
-Shift-F12.
 
-The C file (defkeymap.c_shipped) has been re-generated from the new map
-by loadkeys from kbd 2.6.4.
 
-This patch was motivated by work on Midnight Commander.
-
-Signed-off-by: Yury V. Zaytsev <yury@shurup.com>
----
- drivers/tty/vt/defkeymap.c_shipped | 151 ++++++++++++++++++++++++++---
- drivers/tty/vt/defkeymap.map       |  28 +++---
- 2 files changed, 151 insertions(+), 28 deletions(-)
-
-diff --git a/drivers/tty/vt/defkeymap.c_shipped b/drivers/tty/vt/defkeymap.c_shipped
-index 0c043e4f292e..6e8a8035ebbd 100644
---- a/drivers/tty/vt/defkeymap.c_shipped
-+++ b/drivers/tty/vt/defkeymap.c_shipped
-@@ -2,7 +2,6 @@
- /* Do not edit this file! It was automatically generated by     */
- /*    loadkeys --mktable --unicode defkeymap.map > defkeymap.c  */
- 
--#include <linux/types.h>
- #include <linux/keyboard.h>
- #include <linux/kd.h>
- 
-@@ -23,6 +22,22 @@ unsigned short plain_map[NR_KEYS] = {
- 	0xf118,	0xf601,	0xf602,	0xf117,	0xf600,	0xf119,	0xf115,	0xf116,
- 	0xf11a,	0xf10c,	0xf10d,	0xf11b,	0xf11c,	0xf110,	0xf311,	0xf11d,
- 	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
- };
- 
- static unsigned short shift_map[NR_KEYS] = {
-@@ -33,15 +48,31 @@ static unsigned short shift_map[NR_KEYS] = {
- 	0xfb44,	0xfb46,	0xfb47,	0xfb48,	0xfb4a,	0xfb4b,	0xfb4c,	0xf03a,
- 	0xf022,	0xf07e,	0xf700,	0xf07c,	0xfb5a,	0xfb58,	0xfb43,	0xfb56,
- 	0xfb42,	0xfb4e,	0xfb4d,	0xf03c,	0xf03e,	0xf03f,	0xf700,	0xf30c,
--	0xf703,	0xf020,	0xf207,	0xf10a,	0xf10b,	0xf10c,	0xf10d,	0xf10e,
--	0xf10f,	0xf110,	0xf111,	0xf112,	0xf113,	0xf213,	0xf203,	0xf307,
-+	0xf703,	0xf020,	0xf207,	0xf10c,	0xf10d,	0xf10e,	0xf10f,	0xf110,
-+	0xf111,	0xf112,	0xf113,	0xf11e,	0xf11f,	0xf213,	0xf203,	0xf307,
- 	0xf308,	0xf309,	0xf30b,	0xf304,	0xf305,	0xf306,	0xf30a,	0xf301,
--	0xf302,	0xf303,	0xf300,	0xf310,	0xf206,	0xf200,	0xf03e,	0xf10a,
--	0xf10b,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
--	0xf30e,	0xf702,	0xf30d,	0xf200,	0xf701,	0xf205,	0xf114,	0xf603,
-+	0xf302,	0xf303,	0xf300,	0xf310,	0xf206,	0xf200,	0xf03e,	0xf120,
-+	0xf121,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf30e,	0xf702,	0xf30d,	0xf01c,	0xf701,	0xf205,	0xf114,	0xf603,
- 	0xf20b,	0xf601,	0xf602,	0xf117,	0xf600,	0xf20a,	0xf115,	0xf116,
- 	0xf11a,	0xf10c,	0xf10d,	0xf11b,	0xf11c,	0xf110,	0xf311,	0xf11d,
- 	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
- };
- 
- static unsigned short altgr_map[NR_KEYS] = {
-@@ -57,10 +88,26 @@ static unsigned short altgr_map[NR_KEYS] = {
- 	0xf912,	0xf913,	0xf30b,	0xf90e,	0xf90f,	0xf910,	0xf30a,	0xf90b,
- 	0xf90c,	0xf90d,	0xf90a,	0xf310,	0xf206,	0xf200,	0xf07c,	0xf516,
- 	0xf517,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
--	0xf30e,	0xf702,	0xf30d,	0xf200,	0xf701,	0xf205,	0xf114,	0xf603,
-+	0xf30e,	0xf702,	0xf30d,	0xf01c,	0xf701,	0xf205,	0xf114,	0xf603,
- 	0xf118,	0xf601,	0xf602,	0xf117,	0xf600,	0xf119,	0xf115,	0xf116,
- 	0xf11a,	0xf10c,	0xf10d,	0xf11b,	0xf11c,	0xf110,	0xf311,	0xf11d,
- 	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
- };
- 
- static unsigned short ctrl_map[NR_KEYS] = {
-@@ -80,6 +127,22 @@ static unsigned short ctrl_map[NR_KEYS] = {
- 	0xf118,	0xf601,	0xf602,	0xf117,	0xf600,	0xf119,	0xf115,	0xf116,
- 	0xf11a,	0xf10c,	0xf10d,	0xf11b,	0xf11c,	0xf110,	0xf311,	0xf11d,
- 	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
- };
- 
- static unsigned short shift_ctrl_map[NR_KEYS] = {
-@@ -95,10 +158,26 @@ static unsigned short shift_ctrl_map[NR_KEYS] = {
- 	0xf308,	0xf309,	0xf30b,	0xf304,	0xf305,	0xf306,	0xf30a,	0xf301,
- 	0xf302,	0xf303,	0xf300,	0xf310,	0xf206,	0xf200,	0xf200,	0xf200,
- 	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
--	0xf30e,	0xf702,	0xf30d,	0xf200,	0xf701,	0xf205,	0xf114,	0xf603,
-+	0xf30e,	0xf702,	0xf30d,	0xf01c,	0xf701,	0xf205,	0xf114,	0xf603,
- 	0xf118,	0xf601,	0xf602,	0xf117,	0xf600,	0xf119,	0xf115,	0xf116,
- 	0xf11a,	0xf10c,	0xf10d,	0xf11b,	0xf11c,	0xf110,	0xf311,	0xf11d,
- 	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
- };
- 
- static unsigned short alt_map[NR_KEYS] = {
-@@ -118,6 +197,22 @@ static unsigned short alt_map[NR_KEYS] = {
- 	0xf118,	0xf210,	0xf211,	0xf117,	0xf600,	0xf119,	0xf115,	0xf116,
- 	0xf11a,	0xf10c,	0xf10d,	0xf11b,	0xf11c,	0xf110,	0xf311,	0xf11d,
- 	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
- };
- 
- static unsigned short ctrl_alt_map[NR_KEYS] = {
-@@ -133,17 +228,33 @@ static unsigned short ctrl_alt_map[NR_KEYS] = {
- 	0xf308,	0xf309,	0xf30b,	0xf304,	0xf305,	0xf306,	0xf30a,	0xf301,
- 	0xf302,	0xf303,	0xf300,	0xf20c,	0xf206,	0xf200,	0xf200,	0xf50a,
- 	0xf50b,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
--	0xf30e,	0xf702,	0xf30d,	0xf200,	0xf701,	0xf205,	0xf114,	0xf603,
-+	0xf30e,	0xf702,	0xf30d,	0xf01c,	0xf701,	0xf205,	0xf114,	0xf603,
- 	0xf118,	0xf601,	0xf602,	0xf117,	0xf600,	0xf119,	0xf115,	0xf20c,
- 	0xf11a,	0xf10c,	0xf10d,	0xf11b,	0xf11c,	0xf110,	0xf311,	0xf11d,
- 	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
-+	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,	0xf200,
- };
- 
- unsigned short *key_maps[MAX_NR_KEYMAPS] = {
--	plain_map, shift_map, altgr_map, NULL,
--	ctrl_map, shift_ctrl_map, NULL, NULL,
--	alt_map, NULL, NULL, NULL,
--	ctrl_alt_map, NULL
-+	plain_map, shift_map, altgr_map, 0,
-+	ctrl_map, shift_ctrl_map, 0, 0,
-+	alt_map, 0, 0, 0,
-+	ctrl_alt_map,	0
- };
- 
- unsigned int keymap_count = 7;
-@@ -183,6 +294,10 @@ char func_buf[] = {
- 	'\033', '[', '6', '~', 0, 
- 	'\033', '[', 'M', 0, 
- 	'\033', '[', 'P', 0, 
-+	'\033', '[', '3', '5', '~', 0, 
-+	'\033', '[', '3', '6', '~', 0, 
-+	'\033', '[', '3', '7', '~', 0, 
-+	'\033', '[', '3', '8', '~', 0, 
- };
- 
- char *funcbufptr = func_buf;
-@@ -217,10 +332,14 @@ char *func_table[MAX_NR_FUNC] = {
- 	func_buf + 135,
- 	func_buf + 140,
- 	func_buf + 145,
--	NULL,
--	NULL,
-+	0,
-+	0,
- 	func_buf + 149,
--	NULL,
-+	func_buf + 153,
-+	func_buf + 159,
-+	func_buf + 165,
-+	func_buf + 171,
-+	0,
- };
- 
- struct kbdiacruc accent_table[MAX_DIACR] = {
-diff --git a/drivers/tty/vt/defkeymap.map b/drivers/tty/vt/defkeymap.map
-index 37f1ac6ddfb9..0afd0ea64493 100644
---- a/drivers/tty/vt/defkeymap.map
-+++ b/drivers/tty/vt/defkeymap.map
-@@ -121,43 +121,43 @@ keycode  57 = space            space
- 	control keycode  57 = nul             
- 	alt     keycode  57 = Meta_space      
- keycode  58 = Caps_Lock       
--keycode  59 = F1               F11              Console_13      
-+keycode  59 = F1               F13              Console_13      
- 	control keycode  59 = F1              
- 	alt     keycode  59 = Console_1       
- 	control alt     keycode  59 = Console_1       
--keycode  60 = F2               F12              Console_14      
-+keycode  60 = F2               F14              Console_14      
- 	control keycode  60 = F2              
- 	alt     keycode  60 = Console_2       
- 	control alt     keycode  60 = Console_2       
--keycode  61 = F3               F13              Console_15      
-+keycode  61 = F3               F15              Console_15      
- 	control keycode  61 = F3              
- 	alt     keycode  61 = Console_3       
- 	control alt     keycode  61 = Console_3       
--keycode  62 = F4               F14              Console_16      
-+keycode  62 = F4               F16              Console_16      
- 	control keycode  62 = F4              
- 	alt     keycode  62 = Console_4       
- 	control alt     keycode  62 = Console_4       
--keycode  63 = F5               F15              Console_17      
-+keycode  63 = F5               F17              Console_17      
- 	control keycode  63 = F5              
- 	alt     keycode  63 = Console_5       
- 	control alt     keycode  63 = Console_5       
--keycode  64 = F6               F16              Console_18      
-+keycode  64 = F6               F18              Console_18      
- 	control keycode  64 = F6              
- 	alt     keycode  64 = Console_6       
- 	control alt     keycode  64 = Console_6       
--keycode  65 = F7               F17              Console_19      
-+keycode  65 = F7               F19              Console_19      
- 	control keycode  65 = F7              
- 	alt     keycode  65 = Console_7       
- 	control alt     keycode  65 = Console_7       
--keycode  66 = F8               F18              Console_20      
-+keycode  66 = F8               F20              Console_20      
- 	control keycode  66 = F8              
- 	alt     keycode  66 = Console_8       
- 	control alt     keycode  66 = Console_8       
--keycode  67 = F9               F19              Console_21      
-+keycode  67 = F9               F21              Console_21      
- 	control keycode  67 = F9              
- 	alt     keycode  67 = Console_9       
- 	control alt     keycode  67 = Console_9       
--keycode  68 = F10              F20              Console_22      
-+keycode  68 = F10              F22              Console_22      
- 	control keycode  68 = F10             
- 	alt     keycode  68 = Console_10      
- 	control alt     keycode  68 = Console_10      
-@@ -205,11 +205,11 @@ keycode  84 = Last_Console
- keycode  85 =
- keycode  86 = less             greater          bar             
- 	alt     keycode  86 = Meta_less       
--keycode  87 = F11              F11              Console_23      
-+keycode  87 = F11              F23              Console_23      
- 	control keycode  87 = F11             
- 	alt     keycode  87 = Console_11      
- 	control alt     keycode  87 = Console_11      
--keycode  88 = F12              F12              Console_24      
-+keycode  88 = F12              F24              Console_24      
- 	control keycode  88 = F12             
- 	alt     keycode  88 = Console_12      
- 	control alt     keycode  88 = Console_12      
-@@ -280,6 +280,10 @@ string F17 = "\033[31~"
- string F18 = "\033[32~"
- string F19 = "\033[33~"
- string F20 = "\033[34~"
-+string F21 = "\033[35~"
-+string F22 = "\033[36~"
-+string F23 = "\033[37~"
-+string F24 = "\033[38~"
- string Find = "\033[1~"
- string Insert = "\033[2~"
- string Remove = "\033[3~"
--- 
-2.39.5 (Apple Git-154)
-
+Best regards,
+Krzysztof
