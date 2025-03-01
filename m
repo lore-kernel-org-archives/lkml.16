@@ -1,89 +1,111 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 839371DE8B5
-	for <linux-kernel@vger.kernel.org>; Sat,  1 Mar 2025 12:28:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A42A11E519;
+	Sat,  1 Mar 2025 12:32:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740832130; cv=none; b=NWI7rRHfIWccfvcbhNSA8/NqcViYv0fTxOgUWwTSst6M7rnqjZ2ktdOmrm4S7FMHgyqhx9SWqFcewt3q40Y8a9qLlabP4et36HVji/0qN3m1NLj3MS7ySCV4zYfPxFx6jHTvvOlnCIiqwNjSFx+0JcRcQaKY7kItV9LUI2tDRts=
+	t=1740832338; cv=none; b=np+36HosLmf40U/tt+m8U5/t4vULf1FTxpvryHTSSM4Ly+IG74RnuVv8flMw58u5+oKl0qE/OldM+yp7G4GkDFaKDjbw1en16sXv/q5JuHdrydLqyxNo3e0D3EhOlImRnClLX9rmtK+kq2yNoHYnQwqV2fuuVPqSi6B1h0L01xA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740832130; c=relaxed/simple;
-	bh=BtHaaJAKdO/dx9C3I30hhoUrqtfLoE3YIVIlzcRuiDk=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=tcr0Uoli2WHWzS2lbeCmPT1PqoRXWILNw1c1o6Thg5tQE7T7TxL7Y4mNjPkFH5xuoD6NkOajI+zCC3cyC97tOCO7oLDvHMVedltSsv2Zk+IGf2wsqYipYDGkHspG3+p6WxKa9bQFxOtuNg5hbFFi0cCkI7Xszta/envizQwg/l8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gcK9hWMq; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1740832338; c=relaxed/simple;
+	bh=ra8gIKFKFiVeUd/HquZVV+FuM2qhRTGX+65IuN5qPDE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jp9CcG9ewnRRUGbyWevpLNwU82fUrgaldGjA7LccDbi/IePqLM+ATTCxqG2bBKEhmExNb7DQfrAPn7/R+TKRMaqAn1zcNjq236IVEUFI8ZHoNE4fDUvmzzw6edarzbG2xc5XfJkx9BjqwV3NoEX/MefVqZwmehtIabhnumKS1aU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BCbys6NZ; arc=none smtp.client-ip=209.85.216.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gcK9hWMq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740832129; x=1772368129;
-  h=date:from:to:cc:subject:message-id;
-  bh=BtHaaJAKdO/dx9C3I30hhoUrqtfLoE3YIVIlzcRuiDk=;
-  b=gcK9hWMqIQjCjtImhy9PzBnTDPgzw2vFpMQ++ZonpbOQpcr3OcCdocNA
-   4N6bs6fM9CcJVYhUlQU03BU2srH1Vr7OzBZqGoWLEPvCJ4Yi6pWE11NLM
-   erZKcmNNUXnXNrQjEUDXZALoN1nkdZc53welHNJELWFGcEySe1Ze3XmPq
-   11l1D0KNBPz5+lyRJZPV/0KpKi1F1RpmzKH7wvzSzZ4wgVjpb2XeiMdCd
-   hdyUPVNrSnsuF8uf0naHVykxFKPk/VEZErb08d2fxYhMHsz3v1J6plmok
-   PkXOqUS1qZpvO4sGz5cOwzcOxAHFNwuyqlAb2AbijwezGKmJZNtA+jcci
-   w==;
-X-CSE-ConnectionGUID: nXmJmueCRASNs8wMhVSsQQ==
-X-CSE-MsgGUID: guBDqYnJR92+40GHcyxNyg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11359"; a="40993077"
-X-IronPort-AV: E=Sophos;i="6.13,325,1732608000"; 
-   d="scan'208";a="40993077"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Mar 2025 04:28:48 -0800
-X-CSE-ConnectionGUID: lBftC68kSTaqvcTOAnrp+A==
-X-CSE-MsgGUID: epJTWfqBQYWy2JJUiWfOWA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,325,1732608000"; 
-   d="scan'208";a="117763955"
-Received: from lkp-server02.sh.intel.com (HELO 76cde6cc1f07) ([10.239.97.151])
-  by fmviesa008.fm.intel.com with ESMTP; 01 Mar 2025 04:28:43 -0800
-Received: from kbuild by 76cde6cc1f07 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1toLxQ-000GEQ-2W;
-	Sat, 01 Mar 2025 12:28:40 +0000
-Date: Sat, 01 Mar 2025 20:28:23 +0800
-From: kernel test robot <lkp@intel.com>
-To: "x86-ml" <x86@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: [tip:x86/bugs] BUILD SUCCESS
- b8ce25df2999ac6a135ce1bd14b7243030a1338a
-Message-ID: <202503012017.F4rYD7Y3-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BCbys6NZ"
+Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-2fea795bafeso4560900a91.1;
+        Sat, 01 Mar 2025 04:32:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740832335; x=1741437135; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ra8gIKFKFiVeUd/HquZVV+FuM2qhRTGX+65IuN5qPDE=;
+        b=BCbys6NZ5jNzNS/dH8lRQs/PfOyYNr4pCN6D0cMCc8YPMf8Unglr3tJv9b4xB7nl2i
+         cnCZajqy4UZKnUoSAIcLIfDzEwJIAOdiPjTsQJ+P1g0upGmDSyhlobWs+ceIplP0ib+0
+         uNTslGWhULzZQv/mcJWkqXUmOiSXJkDNAdKTqmw/41Xaq+hU5JWh78YLNn6K+p84yV40
+         xwKM4vOxQiK30/5UBIheJ1J265xTdUHs50fTSqAK5DXffqyfmvWsuTrlxAPZZzS8jaQH
+         smH63BNb2a0JKS4fsu4Rj5CTXuwab2RJWj3gpjmZSKlEAhwXej/1vwGJxstZoGej5F71
+         ZOxA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740832335; x=1741437135;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ra8gIKFKFiVeUd/HquZVV+FuM2qhRTGX+65IuN5qPDE=;
+        b=DZ+GHphvl1Rqe4LpcmJcFcunqBBBkWSzY9tqG03El93D0U6+XtGlYIn+IjN3TfvHPP
+         Jk4D6fnZdtt7yU0mbv19L9AcLyKf/wBaEHGeVOtdMWU4hdtIr7LK4aRutodlS0S9q2lT
+         5IBJlZs8l+J9T9EV//X3fayAejcJONIfCP63nQWgfha9jt7+kvr20QBu9DisLr85OJ+4
+         E+MRoQoZXFtJhdCvppxM+Drv9yb/WB9rFIbdXk1gViEC/quYF+rNOHiVHMV9GJvQbqNT
+         eAslre0s49Oi4D4NXYn42mXbp4PRqftVddEW0x2SSpPVAYSLDJp0I6ZYHwG/l9tpTN8X
+         WrkQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV+zRhZ5bvjIb5YyWLu/VQ8Epr7rS3V3FnCQW83n3oMJ+LUppaXb5MZIOgUusvxUSQ7TlZpx3cTAVYNrlWZ@vger.kernel.org, AJvYcCWflUayYWTytunxHR+p0pFnaS2Ehc8oazXqEM1LdMq9+pnGE+yWPLn7uyUPlk++/tfT/xY5yxJLpFVd@vger.kernel.org
+X-Gm-Message-State: AOJu0YyNFVttTaQ7CVac8ro3uMN1rc/ode1YwBbi4qECcahwBq/R98My
+	+UwKBwMmsAyTqqJBothCgImancn8nlDDZ32jnSQp0ceVo3Uq2Ytt
+X-Gm-Gg: ASbGncsYe+Lor2rrZfIF6Fj961ZNtqDsQV9pU3tCdqL7eR/MjVVUOmYxME+IYJms1mu
+	S90HOWn5uqwzXmDTmFRWgWMM3V8HSqTsi1mAFjITJlYmXnLinybuJC0kl+CnlsNIY3MHZgQ6OpL
+	NIGPpHboeqVErbRhu8/SeJE85E5aT0RsTVFQj0L7huh9asm4ENu080obh7VwnzoUyq5oXaxtbQw
+	vMXR9PrnVyZshH0ArVEidvHVVOUR+3He0xsfH2WCe7pXKAKf2Jv0Bb19475+gDN5gIutvZS7Yu/
+	s++c5N+u4JflnTdxC8xSfdzynltpRIm9uUpWqD47FWOTh8Sjobn/dLZOYE5G40XL4wW9
+X-Google-Smtp-Source: AGHT+IF1mhUuctMChazLjJnYgbLD4i8xF/OkaFyb4KVb61pxcTtGOZi+8D/BZaLS5+Cyjw+B2Dpcww==
+X-Received: by 2002:a17:90b:1e51:b0:2ee:c30f:33c9 with SMTP id 98e67ed59e1d1-2feba92bfc9mr11663696a91.14.1740832334925;
+        Sat, 01 Mar 2025 04:32:14 -0800 (PST)
+Received: from [192.168.0.101] ([59.188.211.160])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2fe825a99a7sm8346849a91.6.2025.03.01.04.32.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 01 Mar 2025 04:32:14 -0800 (PST)
+Message-ID: <83130117-509a-45ff-bf96-26beb77246e1@gmail.com>
+Date: Sat, 1 Mar 2025 20:32:10 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/9] arm64: dts: apple: Add CPU cache information for
+ Apple A7-A11, T2 SoCs
+To: Sven Peter <sven@svenpeter.dev>, Janne Grunau <j@jannau.net>,
+ Alyssa Rosenzweig <alyssa@rosenzweig.io>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
+Cc: asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250220-caches-v1-0-2c7011097768@gmail.com>
+ <4670e5f8-2a92-46bd-8faa-dd3774517f3e@app.fastmail.com>
+Content-Language: en-US
+From: Nick Chan <towinchenmi@gmail.com>
+In-Reply-To: <4670e5f8-2a92-46bd-8faa-dd3774517f3e@app.fastmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/bugs
-branch HEAD: b8ce25df2999ac6a135ce1bd14b7243030a1338a  x86/bugs: Add AUTO mitigations for mds/taa/mmio/rfds
 
-elapsed time: 1458m
+Sven Peter 於 2025/3/1 夜晚7:11 寫道:
+> Hi,
+>
+> On Thu, Feb 20, 2025, at 13:21, Nick Chan wrote:
+>> Add CPU cache information for Apple A7-A11, T2 SoCs. On Apple
+>> A10 (T8010), A10X (T8011), T2 (T8012), only the caches in one of the
+>> CPU clusters can be used due to the "Apple Fusion Architecture"
+>> big.LITTLE switcher. The values for the P-cluster is used in this
+>> case.
+> So this means that the cache information will be "wrong" when the CPU
+> is in the lower power states and only correct for the higher ones?
+> I'm not familiar with how these values are used; are you and do you
+> know if this will have any weird or unexpected effects?
+> Would it be better to use the cache size for the lower rather than
+> the higher states or does this not matter much?
+The information in the device tree is only used for reporting cache sizes in /sys/devices/system/cpu.
+It represents the physical cache size which may not be the same as the architecturally visible cache
+size. Cache operations in the kernel consult ccsidr_el1 and csselr_el1, so it should be fine.
+>
+>
+>
+> Best,
+>
+>
+> Sven
+Nick Chan
 
-configs tested: 12
-configs skipped: 126
-
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-tested configs:
-i386    buildonly-randconfig-001-20250228    clang-19
-i386    buildonly-randconfig-002-20250228    clang-19
-i386    buildonly-randconfig-003-20250228    gcc-12
-i386    buildonly-randconfig-004-20250228    clang-19
-i386    buildonly-randconfig-005-20250228    clang-19
-i386    buildonly-randconfig-006-20250228    clang-19
-x86_64  buildonly-randconfig-001-20250228    clang-19
-x86_64  buildonly-randconfig-002-20250228    clang-19
-x86_64  buildonly-randconfig-003-20250228    gcc-12
-x86_64  buildonly-randconfig-004-20250228    clang-19
-x86_64  buildonly-randconfig-005-20250228    gcc-12
-x86_64  buildonly-randconfig-006-20250228    gcc-12
-
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
