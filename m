@@ -1,107 +1,147 @@
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3EF61D8A0B
-	for <linux-kernel@vger.kernel.org>; Sat,  1 Mar 2025 11:29:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14E511CEAC3
+	for <linux-kernel@vger.kernel.org>; Sat,  1 Mar 2025 11:36:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740828546; cv=none; b=aQhGs45kocfNrFk4LnlakE2KRSmUxbydq3YAArF+X0IvanOZqZ7xRUJCN9w3VRIt+JaEjOkqcGCN0ap4pCzy/B5/VQiWtoetE9RVDeBEJdtbgAZdclOmAFM3Bt3p3a0vCFaD1S0JqDFN/u0an5fU6NE0bSRnuAQeyqA1oFm+gmE=
+	t=1740829007; cv=none; b=a8+cKzuctf9xMPLHBc4/0DErhvmcQ70eGc0JglGeZJYVjUxOvI/IfLxbt07heMWQkDMyr1KBf1C8kAB/pcpJxya6ykGMgo0ZuIEWLJ0O5EKmmMjQQDhe7NGdvxIfVl9z2QNwnvv+IRdESJVCUEBPGkzP5QrmpDs4U/Gn/duehwQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740828546; c=relaxed/simple;
-	bh=E9DujR3IizOT6sbv3rY7g2iXJ9du8KJP7l9vYi2xhUs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Hi+x/MI3OBekdRJao/iuJSBcCYagCy9jEUHfp2Ccix7fhbNd3HjSGpZvOZRN9CaRhHGm2+dvL172YzEbLracVP0d551sdJJsHsxWELmtf/G6ZDjdtFxF1WfPZJfnw0/tjffn6GlQ5kUVn8Eaumgk4biusj3rGn7lXJcAKQz1Vrg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=prGAcD6k; arc=none smtp.client-ip=209.85.218.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1740829007; c=relaxed/simple;
+	bh=1N0XJWm2DllF8RnfekMenla1Kf7ixW0UheHRRT6WGPU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UYJ37z3wcVrZAbjrY95JG10H/rTOFQGO145QwNY5O/LT4Y/Mr7IqK9f+MXIiDw+Z+0Pk+AupDLbRk8KYi7BPO1BVoqFQuTzfICXTIhS2AiAXSAYJDNSNt68gpacdrcTWcDSLbxo2YETTLjFPWNixLBJYYt57OTbGcSb9Q1BXOEc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=R1WRrfQY; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="prGAcD6k"
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-aaf0f1adef8so584179566b.3
-        for <linux-kernel@vger.kernel.org>; Sat, 01 Mar 2025 03:29:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1740828543; x=1741433343; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=HhzJnfdycFMueoTPI5BXB8D50gcLoAdCXXuIai65Q+Q=;
-        b=prGAcD6kwhreyqaQAREmdznrao895DvpGog1nY/0aYIX0iGVF+8mKpYPvATUfeNffu
-         NZbfMM5GEOlCu/QhXQUhBB6diLIcblSsx8vXDtY3861Likecw9nahxy+e0IRnMR2QfsB
-         pfuRtMaAICBt2Bksgav748AUNeQ4FCbA4fulY5a8AVMku3VjGPL0L/lNvRexHJVwrIMU
-         viBM0/iomcD50VD9qj+QJ3TQCXCprotVe3GCoyUIWSIglJLgeU0e0o12OFcn1bT0kpeD
-         r8xEgszUTztQcAOiV+HSEPu5S/+B0evNMtA2JF3suyJvlW0O8vqsNlgEnbbplExkhpJI
-         iIdw==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="R1WRrfQY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1740829004;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=fbORu6qgQcd6DUt/THQ0CSEvNH/qSwH/OAlOYxx8xys=;
+	b=R1WRrfQYq57Zo1gSD7GDi0YfiD0BcFd81BzorJbsEQMlpZpE7qHqpjERqB32R6OiMnz8If
+	aOkLAfRPLynuinnk52fQAdhyG2yMwj8elggNI4idQkX6Ii9esDtLmq3oNmIDHFPJ/8Y4Uc
+	Jvqc7FY7MCZlT7y0d9Iy+PwtaaXZ4m4=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-678-kmdUGAj_M7SrTCXy6_fw5g-1; Sat, 01 Mar 2025 06:36:43 -0500
+X-MC-Unique: kmdUGAj_M7SrTCXy6_fw5g-1
+X-Mimecast-MFC-AGG-ID: kmdUGAj_M7SrTCXy6_fw5g_1740829002
+Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-abf46dba035so90653566b.0
+        for <linux-kernel@vger.kernel.org>; Sat, 01 Mar 2025 03:36:43 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740828543; x=1741433343;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HhzJnfdycFMueoTPI5BXB8D50gcLoAdCXXuIai65Q+Q=;
-        b=ZBPT+8sCSx7JFDJJmm4h/udcCh7ADRT6o9aSvhd96q4FLqbkSAEWDQTT7Wx3U0E7cE
-         uDfLz7I5y6MKY6Rt8RRIHKRZlJ3+WGjlgqnZB/a8SmyYcwisJkL+c+iV1BCevsurOFq7
-         pLA6pVrdAnyyDv/c/DLvOf3A64Rbv2cmq03J2mtF9X9w7/PzR916DBnqAMG/7xF2JGFV
-         JBajswUuMU+RsW0Ph1EJsDTfC4BaAdWbvkn5LBIDJkDqHzyG183hZ+1dDmfFxw1N8NpT
-         V35RMoK9bhP6LaOzYxybSYVh/JkvPD37Gedo1zO/WJj719gVW5XJgf1YOsmeAVZadjb+
-         ycSQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVuqcks/jBHyGrQo72a2DyNPd0ovdAODB5iI/9q7FPoZeEvBgOj9VbUnGOpiQLgbnQsjzj1nWusa4ZsmGU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw3qbHlBPMalPClnRL9Bw0+kCUfOXA4KfQeX9SmWogd51WKi2C+
-	BiSpvtGLZi4UNQV8XSb5YtKZ0IqNjwHWwzcsacpu2v+kgyIewZJPRXv62ZMlL6g=
-X-Gm-Gg: ASbGnctmB0XaCzOPKFNJyYv390lciKffy/gMU5+y07Fy9RR6tkprOyy7YCdqdwInnp4
-	dZ2QNbJkpFEBrqHUjFVSU3YU3C6n71CjbxNHU9AH4oukqbfF3UOBRh64VJWFd9xtlJPfRO9lreV
-	3oDxYBTfxUAbmZAOeqBZG5XcH58pBVWfu9qcNMGWe5obfv7qklWinnVmeKswmczIhsy72qNDsNx
-	0yghrSE4Vgs9Gc+q8AoeykgWlk9iiDLjkFV2cORg7+X2WrsUeVZbDyhoXlqrXMAqq/Mn1eGaFE3
-	07RD1uOSxsLpo+uvkw925SpOhp9X9574PO4GfsjrSuLyx06DJA==
-X-Google-Smtp-Source: AGHT+IEmtT5UDlv6mGlToR9LRcWyhK4Zao/oqUAxcObLaZwH1AUk9XBYd76/u37kZ+ts9n5DOSxrLQ==
-X-Received: by 2002:a17:906:26d2:b0:abf:40a2:40ce with SMTP id a640c23a62f3a-abf40a24533mr409191666b.31.1740828543140;
-        Sat, 01 Mar 2025 03:29:03 -0800 (PST)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id a640c23a62f3a-abf0c0b9cbfsm462821866b.14.2025.03.01.03.29.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 01 Mar 2025 03:29:02 -0800 (PST)
-Date: Sat, 1 Mar 2025 14:28:58 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Karan Tilak Kumar <kartilak@cisco.com>
-Cc: sebaddel@cisco.com, arulponn@cisco.com, djhawar@cisco.com,
-	gcboffa@cisco.com, mkai2@cisco.com, satishkh@cisco.com,
-	aeasi@cisco.com, jejb@linux.ibm.com, martin.petersen@oracle.com,
-	linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] scsi: fnic: Remove unnecessary spinlock locking
- and unlocking
-Message-ID: <95135f06-cd1f-47a3-8253-c4275e7a5c3a@stanley.mountain>
-References: <20250301013712.3115-1-kartilak@cisco.com>
- <20250301013712.3115-2-kartilak@cisco.com>
+        d=1e100.net; s=20230601; t=1740829002; x=1741433802;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=fbORu6qgQcd6DUt/THQ0CSEvNH/qSwH/OAlOYxx8xys=;
+        b=jVAcFhYJQuDDmtxSY4wR0DmJBpS27B1nRPiRgRVmHk35yuAuAeFZP9XQyg+8kPaUyp
+         wR7aDQptVqwToTmvflq7hswCp561DcY3p0IMma7yJnniaA3l4wsXNSbSjaLj54f892Mc
+         JEW0K4wNPBYVkJ8z3pP6TlmXilf0erqAHM44rNjIfU885FjyZkLIAXih0xldMAMJtJTL
+         Xt127hAbx2iTYHvzDJ3so9Ye4d+PhtcL519q4h7PorlyD+aQhGAuzY8Bl5HsstJ7B4jU
+         gHv2EJGzpOCjfmzg2jLD3Iw7zqYQM8a2wwClXZ1wp3Liv7wppPkNMtJAvv7uTCVjSerZ
+         XnFQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV+JNQpMl4FGEb/QMq0pQh00PzQwRVbWlJmmqLLeFSmrysagj+LFnM5LN0f1xgOoKDI9rWAQiQZktqAjRQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyO4Pt8L7PV3oElrfTkDOOdbL9DHqREa2JgaYvXSl4zeeWVqhoD
+	5uOX7NtvYtV38tAVq2xXIsgyTm/CdySib3WgS6wNSohMzOpB/PnGUMF2bWRkyBJ/vw35vLTrYcg
+	Uvl650h1krhOFfwPXMMHbHbFUFBhDr9TVfbPb+hyJk1s2KOr5+BTxLDk3klj0yA==
+X-Gm-Gg: ASbGncsGjtGzakLHIvK7QI5Ib3klR8PHeIzB8t5IVaY++kUkjwRfAG+Wep8/bhYyRV6
+	s9/4FK47lCjNt7+KCScmbuYj9729yLE85p/tlJOt9pQTO6qeF0UG3djIVi6jWMHjrqhV3Z4vTZ8
+	618roCE6gGn5iyE8OnkVqnssWY2Ef434TYBJB/9KDmBSc7WlKvEY8IchlI6uQToXmjiTZcwNHB2
+	eSNfZ+S53ED681/1TXsA9QhrZKcF4/LXsofi9up9Elmg81AOHR3mq06StFmUS8NC46SVThMeAeI
+	MYkbn1N9hA4p66zsqfvF/YcWa3NjmGzsBzmyv2mewEqasEtWM7lXPCTsxqai2/vrvfyHKAxYu+J
+	g2tx09QFW2P68b+k01vnIN6/QCaQ4FjM95IOcy1AyEPlCRGVwgjnNaoF4F/03MNUnpA==
+X-Received: by 2002:a17:907:7285:b0:abf:2b4:c6fb with SMTP id a640c23a62f3a-abf2686a09amr843681266b.57.1740829002221;
+        Sat, 01 Mar 2025 03:36:42 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHPCf2wWBViuMG6idxiK+1QfLm7qmZEGg/zDdM1CgqlrIMVKlaPktbzXdcY8xCu+LIzOF/c0g==
+X-Received: by 2002:a17:907:7285:b0:abf:2b4:c6fb with SMTP id a640c23a62f3a-abf2686a09amr843679466b.57.1740829001798;
+        Sat, 01 Mar 2025 03:36:41 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abf0c0b92d3sm463900866b.12.2025.03.01.03.36.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 01 Mar 2025 03:36:41 -0800 (PST)
+Message-ID: <72619870-bf83-47f9-9b66-6678e245364c@redhat.com>
+Date: Sat, 1 Mar 2025 12:36:40 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250301013712.3115-2-kartilak@cisco.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [QUESTION] Plans for GDIX1003 Support in Goodix Touchscreen
+ Driver
+To: Weikang Guo <guoweikang.kernel@gmail.com>
+Cc: Bastien Nocera <hadess@hadess.net>,
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-kernel@vger.kernel.org,
+ linux-input@vger.kernel.org
+References: <CAOm6qnnhR9++REgtjhZpqNXkBbBAZsGAY8Oy89cXUF9S=Vy-9Q@mail.gmail.com>
+ <8c7b5560-27d0-42bc-8f25-0797500fb889@redhat.com>
+ <CAOm6qnmYSQz_YVaWw1c-fMm3NCVV9MoQhLQ0XGzK9o2RybLHmw@mail.gmail.com>
+Content-Language: en-US, nl
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <CAOm6qnmYSQz_YVaWw1c-fMm3NCVV9MoQhLQ0XGzK9o2RybLHmw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Feb 28, 2025 at 05:37:12PM -0800, Karan Tilak Kumar wrote:
-> Remove unnecessary locking and unlocking of spinlock in
-> fdls_schedule_oxid_free_retry_work.
-> This will shorten the time in the critical section.
+Hi WeiKang,
+
+On 27-Feb-25 12:36 PM, Weikang Guo wrote:
+> Hi, Hans
 > 
-> Suggested-by: Dan Carpenter <dan.carpenter@linaro.org>
-> Fixes: a63e78eb2b0f ("scsi: fnic: Add support for fabric based solicited requests and responses")
-> Reviewed-by: Sesidhar Baddela <sebaddel@cisco.com>
-> Reviewed-by: Arulprabhu Ponnusamy <arulponn@cisco.com>
-> Reviewed-by: Gian Carlo Boffa <gcboffa@cisco.com>
-> Reviewed-by: Arun Easi <aeasi@cisco.com>
-> Tested-by: Karan Tilak Kumar <kartilak@cisco.com>
-> Signed-off-by: Karan Tilak Kumar <kartilak@cisco.com>
-> ---
-> Changes between v1 and v2:
->     Incorporate review comments by Dan:
-> 	Replace test and clear bit with clear bit.
-> ---
+> On Tue, 25 Feb 2025 at 20:09, Hans de Goede <hdegoede@redhat.com> wrote:
+>>
+>> Hi WeiKang,
+>>
+>> On 25-Feb-25 3:04 AM, Weikang Guo wrote:
+>>> Hi Bastien, Hans, Dmitry,
+>>>
+>>> I am currently working on the Ayaneo Flip DS device, which I installed Kali
+>>> Linux with kernel version 6.8.11-amd. This device has two touchscreens,
+>>> but only one is functional. After investigating, I found that the second
+>>> touchscreen has the device ID GDIX1003(confirmed by exporting the results
+>>> through acpidump), and upon comparing with the current driver, I noticed
+>>> that only GDIX1001, GDIX1002, and GDX9110 are supported.
+>>>
+>>> I have also reviewed the ACPI description and can provide the details if
+>>> needed. Any guidance or updates on this would be greatly appreciated.
+>>
+>> I think this might just work with the existing goodix driver, just
+>> add the new GDIX1003 HID to the goodix_acpi_match table:
+>>
+>> diff --git a/drivers/input/touchscreen/goodix.c b/drivers/input/touchscreen/goodix.c
+>> index a3e8a51c9144..4b497540ed2d 100644
+>> --- a/drivers/input/touchscreen/goodix.c
+>> +++ b/drivers/input/touchscreen/goodix.c
+>> @@ -1519,6 +1519,7 @@ MODULE_DEVICE_TABLE(i2c, goodix_ts_id);
+>>  static const struct acpi_device_id goodix_acpi_match[] = {
+>>         { "GDIX1001", 0 },
+>>         { "GDIX1002", 0 },
+>> +       { "GDIX1003", 0 },
+>>         { "GDX9110", 0 },
+>>         { }
+>>  };
+>>
+>> Note I'm not sure this will work, but is worth a try.
+>>
+> 
+> It works, thank you very much.
 
-Thanks!
+Thank you for testing.
 
-I'm not really qualified to give a reviewed-by tag to this, but it looks
-okay to me.
+I've submitted a patch upstream to add this new hardware-ID
+to the kernel:
 
-regards,
-dan carpenter
+https://lore.kernel.org/linux-input/20250301113525.6997-1-hdegoede@redhat.com/
+
+Regards,
+
+Hans
+
+
 
