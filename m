@@ -1,79 +1,90 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E83D288A5;
-	Sat,  1 Mar 2025 02:00:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 152E4192B82
+	for <linux-kernel@vger.kernel.org>; Sat,  1 Mar 2025 02:00:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740794404; cv=none; b=VZVBfY3lu53L+FqLX2hIgi89YJ4wx6UwwjKyrEUp8vE2cZmJ/ZN4jumnY5gXA4RWMuVugdcXem1cKYvyaUeUs25/MfyWZ5pJOt7HnXeeQA3Ay0+4Wy1xetyaNDgGgNPW5JeGPtw4TgkOX5eJ8AMmGoW0n9YX5HLG8wQMK3kqsgU=
+	t=1740794408; cv=none; b=JhIHa5T1LPTatfA9K+BEx6MSQ2MpibY++/L2hTYnFoOWAdEj0KT7jebLkEs4wBVZ587oHoGb176Mn2DaQPJKXREMYTIQbbEXOo7a0jFrmmS47cE8fApQOmhP4SE5/GvnkKwsMuJU0MfOjXyVO8c6N3s23tvt5w3nVaRZO7QzmdM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740794404; c=relaxed/simple;
-	bh=tfCtY5NJ5BOE0sjZ7QUWMS4vQMbSN7d9BCF5Jk0nH2E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oPlRqmtMCKFB4feHfYDQDF4/xEVQcTuYgPMTwQX1I2jb+IiN47z94xzyk569KhJDp4uQmOzXG9QxZmwdqqoUgYVrBO6TPkPvbpzDdfn5rN+OwUjWR59v+7OU3TTgeRY+kkLmFwwn6tY444O6UF4+Qn1ip+CXM4FEPHkfX9ZcEQk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k/7rVFOX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740794408; c=relaxed/simple;
+	bh=3rVKTn9Lo72VRyzGqIdvDGx0fFP2S8YqjKnP3uQ0mD0=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=SiWQGLL7YRxeop475LIlHx+LZoqgcy/jtp+4XHBCtt2rkzvS77vCAR5rQjaVHdNjgzgenefHCAeEApxr2pI4q1wo0jl5fOw4LK+8U7CcjdI++DOMBlZMDLPev+7SRgnDt7c5v1AmA+I6JPhaAlL1NOhWw9y2aHuJ1GiCOtqTwjU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YYHG36GA; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k/7rVFOX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06EB5C4CED6;
-	Sat,  1 Mar 2025 02:00:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740794403;
-	bh=tfCtY5NJ5BOE0sjZ7QUWMS4vQMbSN7d9BCF5Jk0nH2E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=k/7rVFOX8vtqiNkIjCdVugpNQNe7eEURb4EocMuBmpL0q/3lIoEfQ7kreZotvXsrU
-	 AT/auXa1M9oSI0aBDncu+RAmlSTeRrb8mMEGYUMvFHacLvj5wB0BW8ybs6rtFyYYLP
-	 z8rmcr9UTxWn9TytVlWxZjqYWcwUQUiRfmxJD/Vh1xJCXvaA9BOquAx67stlIOt1Xd
-	 QdSg/iEPrLXwZ2GxxTGLbmUw/70I1rraRR1pAz99enq9SwgB0XTO/ncbAwJv3zgPeb
-	 iRcK/YCNMR1SQCtKQ8vOYboIlfZKnIsFKZwmSXbAtTmKLtOQpnIVPaiX+OS0oqhfQ4
-	 6q4x8JO84PBVQ==
-Date: Sat, 1 Mar 2025 03:59:59 +0200
-From: Jarkko Sakkinen <jarkko@kernel.org>
-To: Paul Moore <paul@paul-moore.com>
-Cc: "Ricardo B. Marliere" <ricardo@marliere.net>,
-	David Howells <dhowells@redhat.com>,
-	James Morris <jmorris@namei.org>,
-	"Serge E. Hallyn" <serge@hallyn.com>, keyrings@vger.kernel.org,
-	linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>,
-	"Ricardo B. Marliere" <rbm@suse.com>
-Subject: Re: [PATCH] security: keys: Make sysctl table const
-Message-ID: <Z8JqHy6IDOR_X-RJ@kernel.org>
-References: <20250123-sysctl_const-pcmoore-v1-1-d9f918dbb0be@suse.com>
- <CAHC9VhQpkyqaJsxj9_d4d6Vpc+FVbSnH_HeAFAVEdj0trGCh1g@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YYHG36GA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740794406; x=1772330406;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=3rVKTn9Lo72VRyzGqIdvDGx0fFP2S8YqjKnP3uQ0mD0=;
+  b=YYHG36GAiOEt+tYQU7GCpAJvR5RpVbMkBwFCE/tKbfcbfuYbdpjAX1+K
+   vfSg2Wj+xVo3MWmpzhe1e3oC2sZdbaX4AqpinAF+LisPfcQuXAEyfgFty
+   kFuvRegWjl5Jyya6w2y2mpllc8865FF9R+I+/q1VfjAoo7AvXyywiXj0j
+   OtGiWxMyYETJ3EZeqaPhLHKPcHm89ARg9YaxM1iLzZzgQMOq0wJIW5iz5
+   Jtm05eLSC6qZca7SN+vIKtFF9o2wjnIhmAqVIfFVx4c8mJk7TuaxX7G43
+   U32KPqc+ArZQm3A8IRFjH5a2ODp0tGELP9ozLZoma8sNRYnJSG+TERu0E
+   Q==;
+X-CSE-ConnectionGUID: Ouo+NCBuStym2GpYI286FQ==
+X-CSE-MsgGUID: rVzz14WmSjyzaWUWUejpIg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11359"; a="41583006"
+X-IronPort-AV: E=Sophos;i="6.13,324,1732608000"; 
+   d="scan'208";a="41583006"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2025 18:00:05 -0800
+X-CSE-ConnectionGUID: OGucqvyDQVyR1jt5Cghstg==
+X-CSE-MsgGUID: AyL7SPdoSn6YUjgGsSOJ1Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,324,1732608000"; 
+   d="scan'208";a="117277541"
+Received: from lkp-server02.sh.intel.com (HELO 76cde6cc1f07) ([10.239.97.151])
+  by fmviesa006.fm.intel.com with ESMTP; 28 Feb 2025 17:59:45 -0800
+Received: from kbuild by 76cde6cc1f07 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1toC8I-000Fjd-2M;
+	Sat, 01 Mar 2025 01:59:39 +0000
+Date: Sat, 1 Mar 2025 09:55:20 +0800
+From: kernel test robot <lkp@intel.com>
+To: Miaohe Lin <linmiaohe@huawei.com>
+Cc: Paul Gazzillo <paul@pgazz.com>,
+	Necip Fazil Yildiran <fazilyildiran@gmail.com>,
+	oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Linux Memory Management List <linux-mm@kvack.org>
+Subject: kismet: WARNING: unmet direct dependencies detected for HUGETLBFS
+ when selected by PPC_8xx
+Message-ID: <202503010944.5eKUTSGt-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHC9VhQpkyqaJsxj9_d4d6Vpc+FVbSnH_HeAFAVEdj0trGCh1g@mail.gmail.com>
 
-On Wed, Feb 26, 2025 at 07:21:39PM -0500, Paul Moore wrote:
-> On Thu, Jan 23, 2025 at 2:50 PM Ricardo B. Marliere
-> <ricardo@marliere.net> wrote:
-> >
-> > Since commit 7abc9b53bd51 ("sysctl: allow registration of const struct
-> > ctl_table"), the sysctl registration API allows for struct ctl_table to be
-> > in read-only memory. Move key_sysctls to be declared at build time, instead
-> > of having to be dynamically allocated at boot time.
-> >
-> > Cc: Thomas Weißschuh <linux@weissschuh.net>
-> > Suggested-by: Thomas Weißschuh <linux@weissschuh.net>
-> > Signed-off-by: Ricardo B. Marliere <rbm@suse.com>
-> > ---
-> >  security/keys/sysctl.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> Looks fine to me.  David or Jarkko, this looks like something for the
-> keys tree, yes?
-> 
-> Reviewed-by: Paul Moore <paul@paul-moore.com>
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   276f98efb64a2c31c099465ace78d3054c662a0f
+commit: f8142cf94d4737ea0c3baffb3b9bad8addcb9b6b hugetlb: make hugetlb depends on SYSFS or SYSCTL
+date:   2 years, 6 months ago
+config: powerpc-kismet-CONFIG_HUGETLBFS-CONFIG_PPC_8xx-0-0 (https://download.01.org/0day-ci/archive/20250301/202503010944.5eKUTSGt-lkp@intel.com/config)
+reproduce: (https://download.01.org/0day-ci/archive/20250301/202503010944.5eKUTSGt-lkp@intel.com/reproduce)
 
-I can pick this after back from holiday on next week.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202503010944.5eKUTSGt-lkp@intel.com/
 
-Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
+kismet warnings: (new ones prefixed by >>)
+>> kismet: WARNING: unmet direct dependencies detected for HUGETLBFS when selected by PPC_8xx
+   WARNING: unmet direct dependencies detected for HUGETLBFS
+     Depends on [n]: (X86 || IA64 || SPARC64 || ARCH_SUPPORTS_HUGETLBFS [=y] || BROKEN [=n]) && (SYSFS [=n] || SYSCTL [=n])
+     Selected by [y]:
+     - PPC_8xx [=y] && <choice>
 
-BR, Jarkko
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
