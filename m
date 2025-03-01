@@ -1,155 +1,115 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 125541B87F0;
-	Sat,  1 Mar 2025 04:02:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A87BB1519BE
+	for <linux-kernel@vger.kernel.org>; Sat,  1 Mar 2025 04:16:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740801776; cv=none; b=HJSivuYWCNWjqsZEUASNCX3F3SYpSYs/lJLR2z3jdtfJLnc8HQPSvyOKbkrBR/r/rg59HkJNqpeSrtGT4OL3LUs5PWuph0yhF5TMERhEBFiltl9xLFTOfAVLqlK277grcHruHYuJj9cCjWZQPGzwxZvoKPTcqxGDddBUUQzMX2I=
+	t=1740802575; cv=none; b=EHB5H82C9gHXfUmI/fi0Lghz/49sW3Dv8PpNyE9JvOngKh8MAxLQjNydosyDYLCOEYsoZMA9otcUB+Ej2SOy50Ig+vsTLTTUSPRey873/DXmS7XfrZMn7nWzqTYaYxrnJAwG+qVUipTwUUDno3X4t05udpu9FS7c0Pp8R4MrLpo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740801776; c=relaxed/simple;
-	bh=d901Y/hjDUT/pU0UBAW8Em2x+X51gXf/2YaVHj81Xq0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Q/Se/0nGd4jlt+qHfGu69/mW7JF2QjS8tV8br2LaidOA5HxUWWOGby0WeDqToBSFrcNBJ64vmXZ3QbEN2JCWOrv6v0Upg/RSgOZbURz+MEE0PwHNPq7EdWroCWENzutPkYUr+jrXiH4fhyQKEhhln+gY7+3q8BTuk3hlqTnCbmU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F4xZVTKR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740802575; c=relaxed/simple;
+	bh=nRJXVNbZUpNIBtt8TFs13UDH3fN+Tw1tbm1ZW4YHs/4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=DUqVxM491GwLRhwGx0SYyUmUr8cilM8zFEKc6XUcT9tUSxCztOGMrC99yxS04RUmp60X7A7Ou5W2gsuHSCd4nmECbB56V20pLwDGe3X/huNqfuF2W+CdkEm//Rv17BgucW3U0GBe4DVTRI6mVEL/cEFJr8KgWcvyr/mw64IUO9o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=dqxEFTN4; arc=none smtp.client-ip=209.85.167.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F4xZVTKR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5DDE2C4CEEA;
-	Sat,  1 Mar 2025 04:02:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740801774;
-	bh=d901Y/hjDUT/pU0UBAW8Em2x+X51gXf/2YaVHj81Xq0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=F4xZVTKRgOkBhiYeEjseUPb3NxTpr+XHFa+i6lHdE55KvQU3g/AVgypO2lJFRm6uC
-	 /lUu4+vMEHy6012YTeMe0iTS6RDa+k9jGgJF9Wc6SxxYJ2Kzy/5BabPGDvpA7BF9Wd
-	 PbvMqvBzKLqcMltNCttieuzDAyQLoMqO9zv4z9TkESf/x36QA8VVWeb+Tejb3GFhnr
-	 /HXDZIP91fC7jiwP5UpKqODwbaHPvIvKtIklWceqWW73AbnNVEb931xL5+0o0+jbRk
-	 K2+AnuklBSR8SsJ/1maTpLW5uFgfw++HD+rlezGOAP5h3H7WZeZzl8nN+BNxyc3bTJ
-	 Go2WfOu8BgtFw==
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH 2/4] perf test: Skip perf probe tests when running as non-root
-Date: Fri, 28 Feb 2025 20:02:50 -0800
-Message-ID: <20250301040252.1586750-3-namhyung@kernel.org>
-X-Mailer: git-send-email 2.48.1.711.g2feabab25a-goog
-In-Reply-To: <20250301040252.1586750-1-namhyung@kernel.org>
-References: <20250301040252.1586750-1-namhyung@kernel.org>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dqxEFTN4"
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-54298ec925bso4138423e87.3
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 20:16:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1740802572; x=1741407372; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=nRJXVNbZUpNIBtt8TFs13UDH3fN+Tw1tbm1ZW4YHs/4=;
+        b=dqxEFTN4T+LXT8b/WGkWy3B6mb3egi21CVMTXjvbd8GUrkJEp4RsQLMXzwFjABlnys
+         EyWGxaN8RxwDJgmT4Ho4J9wQdn5NhnLVV/r6vvH21ehUIR1OdbpsdWZYh9g6Zi+9qQp+
+         LYUBFiMTHCdALkboNfGsDFdVXQRS5dZg7VaS4v8L7prSDQbwV6Mg58oFUfDhv0PUyNLl
+         8R3nmWcgPsJWIDG/19gPv0zOU5YJwwMDVbJRXQi0GChfB8BxkFjNiDnZzaR48PIQN5zG
+         OFhGRLmJiA5uyelk2i5G8lfVUjLjyARxh65oE9aanbQjYy0WMzwgMYwcrkSGtSeedAGo
+         KwLQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740802572; x=1741407372;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=nRJXVNbZUpNIBtt8TFs13UDH3fN+Tw1tbm1ZW4YHs/4=;
+        b=nHADhTFrbSQgJBhVkjQhUQXDRHnuFkgEIQVK62gTQA0EtNavadJ4fE3B9HLkyrlA2o
+         Fdz6wLcc5jy9OapKIjECrPnetftQlwdn5lI1nSjCTvnQtAU35jTkiB3f4+ysR0Th4hdK
+         qgpBQ2QB34TMiX6+Hf/Z7OGNfYktMp2+KNMXsvOoFxR2hovnvupgkAJW2yQuh/CgImxK
+         4lyxCFQBoB6HRf8hshbAcI16K8rK43ztJfOXEZkRaEoyh7muuC3Jra2Yu3l8vpzU8oQZ
+         gEk3dpALRt0CXmcyLoe/FuJdonl64ghBB1zyUNhN35WhQFPVfuRAWtfPC9O5nLIa3TI6
+         pu1A==
+X-Forwarded-Encrypted: i=1; AJvYcCX7uwwaCMAwniN1B8AGgSP6p09m2+45YxvJPsBnD7IOCaJog1auSl+Q0gF+m34gjcbCPagcosbwmYov5KM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwZhfNxK4usD1uGfB3yAXDGS3wdlywGS8CK8S9pOxRcIrfl71WH
+	SRDcjz+w0h86xUFAceEopsfPh228Lua9dv0hs+SC+PII9JbLfEvQxcxiavReAVh7oZfQgtJPKf9
+	6dElv85sH9DZOYsmjmJ+IOLDqVk6zKGrR0xYTrUAgElUkb37R+//xj9Nt
+X-Gm-Gg: ASbGnct4plmNx0HKvs1P2tgT/sd964zUyqmv/mWy5xtHGwA8mLWULUhtVMlwkFhzCkX
+	70xs4/fSfpi5WHf6R1qxgOtMuRTnh3tMjw27vcYT+vPCSqdBw/kqLt9UpaTuOIyZgv5tffkF2d7
+	OYnOpV81yvGlmJYRNpD/QOuMDkl/xXixE=
+X-Google-Smtp-Source: AGHT+IFP5aCHULz6zpIiPlJszPYhhIKQa4bjgAfv6H6nwuK5koq1iQ2nHbNDaxSV+n8l900FUXdJNFmIzAGeKlhCAx4=
+X-Received: by 2002:a05:6512:693:b0:545:b28:2fa9 with SMTP id
+ 2adb3069b0e04-5494c122af7mr2774025e87.16.1740802571668; Fri, 28 Feb 2025
+ 20:16:11 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <cover.1740504232.git.nicolinc@nvidia.com>
+In-Reply-To: <cover.1740504232.git.nicolinc@nvidia.com>
+From: Zhangfei Gao <zhangfei.gao@linaro.org>
+Date: Sat, 1 Mar 2025 12:16:00 +0800
+X-Gm-Features: AQ5f1Jq1aPPNEUtuYw2bvAu1XDeZv-PKWUyrHeAmpxtPMb0nHo1DtYawDISk28E
+Message-ID: <CABQgh9FYqzoUxjR246QBPGW9jqngK1JpgfACvBTLTHq-mBBCJg@mail.gmail.com>
+Subject: Re: [PATCH v8 00/14] iommufd: Add vIOMMU infrastructure (Part-3: vEVENTQ)
+To: Nicolin Chen <nicolinc@nvidia.com>
+Cc: jgg@nvidia.com, kevin.tian@intel.com, corbet@lwn.net, will@kernel.org, 
+	joro@8bytes.org, suravee.suthikulpanit@amd.com, robin.murphy@arm.com, 
+	dwmw2@infradead.org, baolu.lu@linux.intel.com, linux-kernel@vger.kernel.org, 
+	iommu@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
+	linux-kselftest@vger.kernel.org, linux-doc@vger.kernel.org, 
+	eric.auger@redhat.com, jean-philippe@linaro.org, mdf@kernel.org, 
+	mshavit@google.com, shameerali.kolothum.thodi@huawei.com, smostafa@google.com, 
+	ddutile@redhat.com, yi.l.liu@intel.com, praan@google.com, 
+	patches@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-perf trace requires root because it needs to use [ku]probes.
-Skip those test when it's not run as root.
+On Wed, 26 Feb 2025 at 01:33, Nicolin Chen <nicolinc@nvidia.com> wrote:
+>
+> As the vIOMMU infrastructure series part-3, this introduces a new vEVENTQ
+> object. The existing FAULT object provides a nice notification pathway to
+> the user space with a queue already, so let vEVENTQ reuse that.
+>
+> Mimicing the HWPT structure, add a common EVENTQ structure to support its
+> derivatives: IOMMUFD_OBJ_FAULT (existing) and IOMMUFD_OBJ_VEVENTQ (new).
+>
+> An IOMMUFD_CMD_VEVENTQ_ALLOC is introduced to allocate vEVENTQ object for
+> vIOMMUs. One vIOMMU can have multiple vEVENTQs in different types but can
+> not support multiple vEVENTQs in the same type.
+>
+> The forwarding part is fairly simple but might need to replace a physical
+> device ID with a virtual device ID in a driver-level event data structure.
+> So, this also adds some helpers for drivers to use.
+>
+> As usual, this series comes with the selftest coverage for this new ioctl
+> and with a real world use case in the ARM SMMUv3 driver.
+>
+> This is on Github:
+> https://github.com/nicolinc/iommufd/commits/iommufd_veventq-v8
+> Paring QEMU branch for testing:
+> https://github.com/nicolinc/qemu/commits/wip/for_iommufd_veventq-v8
 
-Before:
-  $ perf test probe
-   47: Probe SDT events                                                : Ok
-  104: test perf probe of function from different CU                   : FAILED!
-  115: perftool-testsuite_probe                                        : FAILED!
-  117: Add vfs_getname probe to get syscall args filenames             : FAILED!
-  118: probe libc's inet_pton & backtrace it with ping                 : FAILED!
-  119: Use vfs_getname probe to get syscall args filenames             : FAILED!
+Thanks Nico
 
-After:
-  $ perf test probe
-   47: Probe SDT events                                                : Ok
-  104: test perf probe of function from different CU                   : Skip
-  115: perftool-testsuite_probe                                        : Skip
-  117: Add vfs_getname probe to get syscall args filenames             : Skip
-  118: probe libc's inet_pton & backtrace it with ping                 : Skip
-  119: Use vfs_getname probe to get syscall args filenames             : Skip
+Tested-by: Zhangfei Gao <zhangfei.gao@linaro.org>
 
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/tests/shell/perftool-testsuite_probe.sh    |  1 +
- tools/perf/tests/shell/probe_vfs_getname.sh           |  1 +
- tools/perf/tests/shell/record+probe_libc_inet_pton.sh |  1 +
- .../tests/shell/record+script_probe_vfs_getname.sh    |  1 +
- .../perf/tests/shell/test_uprobe_from_different_cu.sh | 11 +++++------
- 5 files changed, 9 insertions(+), 6 deletions(-)
+After rebase on your branch
+https://github.com/Linaro/linux-kernel-warpdrive/tree/iommufd_veventq-v8
+https://github.com/Linaro/qemu/tree/for_iommufd_veventq-v8
 
-diff --git a/tools/perf/tests/shell/perftool-testsuite_probe.sh b/tools/perf/tests/shell/perftool-testsuite_probe.sh
-index 7b1bfd0f888fc30c..add77aaeb26421a5 100755
---- a/tools/perf/tests/shell/perftool-testsuite_probe.sh
-+++ b/tools/perf/tests/shell/perftool-testsuite_probe.sh
-@@ -2,6 +2,7 @@
- # perftool-testsuite_probe (exclusive)
- # SPDX-License-Identifier: GPL-2.0
- 
-+[ "$(id -u)" == 0 ] || exit 2
- test -d "$(dirname "$0")/base_probe" || exit 2
- cd "$(dirname "$0")/base_probe" || exit 2
- status=0
-diff --git a/tools/perf/tests/shell/probe_vfs_getname.sh b/tools/perf/tests/shell/probe_vfs_getname.sh
-index 0c5aacc446b3ef76..b8e53a9d8473bf6b 100755
---- a/tools/perf/tests/shell/probe_vfs_getname.sh
-+++ b/tools/perf/tests/shell/probe_vfs_getname.sh
-@@ -8,6 +8,7 @@
- . "$(dirname $0)"/lib/probe.sh
- 
- skip_if_no_perf_probe || exit 2
-+[ "$(id -u)" == 0 ] || exit 2
- 
- # shellcheck source=lib/probe_vfs_getname.sh
- . "$(dirname $0)"/lib/probe_vfs_getname.sh
-diff --git a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
-index d5e5193cceb625fd..07a1527c5c03b93d 100755
---- a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
-+++ b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
-@@ -105,6 +105,7 @@ delete_libc_inet_pton_event() {
- 
- # Check for IPv6 interface existence
- ip a sh lo | grep -F -q inet6 || exit 2
-+[ "$(id -u)" == 0 ] || exit 2
- 
- skip_if_no_perf_probe && \
- add_libc_inet_pton_event && \
-diff --git a/tools/perf/tests/shell/record+script_probe_vfs_getname.sh b/tools/perf/tests/shell/record+script_probe_vfs_getname.sh
-index 5940fdc1df37c502..0af3af90a8dcc742 100755
---- a/tools/perf/tests/shell/record+script_probe_vfs_getname.sh
-+++ b/tools/perf/tests/shell/record+script_probe_vfs_getname.sh
-@@ -13,6 +13,7 @@
- . "$(dirname "$0")/lib/probe.sh"
- 
- skip_if_no_perf_probe || exit 2
-+[ "$(id -u)" == 0 ] || exit 2
- 
- # shellcheck source=lib/probe_vfs_getname.sh
- . "$(dirname "$0")/lib/probe_vfs_getname.sh"
-diff --git a/tools/perf/tests/shell/test_uprobe_from_different_cu.sh b/tools/perf/tests/shell/test_uprobe_from_different_cu.sh
-index 33387c329f92b6ed..7adf9755d6de240e 100755
---- a/tools/perf/tests/shell/test_uprobe_from_different_cu.sh
-+++ b/tools/perf/tests/shell/test_uprobe_from_different_cu.sh
-@@ -4,12 +4,11 @@
- 
- set -e
- 
--# Skip if there's no probe command.
--if ! perf | grep probe
--then
--        echo "Skip: probe command isn't present"
--        exit 2
--fi
-+# shellcheck source=lib/probe.sh
-+. "$(dirname $0)"/lib/probe.sh
-+
-+skip_if_no_perf_probe || exit 2
-+[ "$(id -u)" == 0 ] || exit 2
- 
- # skip if there's no gcc
- if ! [ -x "$(command -v gcc)" ]; then
--- 
-2.48.1.711.g2feabab25a-goog
+Tested with multi-device in guests, with io page faults happen.
 
+Thanks
