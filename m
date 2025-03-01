@@ -1,643 +1,311 @@
-Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78E4C23F399;
-	Sat,  1 Mar 2025 03:57:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 949251B87D1
+	for <linux-kernel@vger.kernel.org>; Sat,  1 Mar 2025 03:57:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740801471; cv=none; b=oK2/LuFYW5AQchD95qGUj4Qf6n9zA+rqMu5abMHTIGrfcKOKEi/K0MIf62M1xpxm7hLs1pNZ5w46cMDCVYpPZHwSi4BhHu4VnrTP1hl6inBLuw9+cA1bInd8VpCBJP7evN5fdSLyzH/kwEJzxBHna3S8RpriZ9u9hwy3e+T48Yo=
+	t=1740801475; cv=none; b=UWRj4s90fyOb3lqgawUp0DfdBChP6IjbkRdMoPFHyjadXh0awhtSA/bqO/xt9QJICMlwCKzIdEF/H8q9tTEYS1tbc57wGolMOSWPl8vR36uxN1MDcD1Ca6l2rYMMsBJ/HeejVHEGKgGZPNcj2knrhjCJ56SX/xRJCHB9jXGB79U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740801471; c=relaxed/simple;
-	bh=CtxHLLsie/bOEiK3PUfshu29QbiU3zvmBgwi8pgWO3E=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=IZB6toivlmY9CTGCiqw8NF5z+hRCYJbU0qYDtgkHibzhkWzxhY/Ha56i3vSLu4BVtELkAB5xZufNPcfMV7ol4NCoipwBRI5jn5MLJAZ2Xpl8fpNaswgeaEXOu4MNx52XbQLwcO0Ix36wVcBv6KfWUk5V6+zGiTcJgcRr8Jt53As=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=fVOjbRg0; arc=none smtp.client-ip=178.21.23.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
+	s=arc-20240116; t=1740801475; c=relaxed/simple;
+	bh=30CaJDZlEDQtLSL94YEwD5Gz+13JaSvJOhLCtLPBXKY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fGWtMIw8VuWdphYg/cQZYKlfIKjDqsgR0YZo9A1mEe0zSJh5OQ98GSsI+UyJFZ82BG2lxebUC0TBANGIC8TMoF7WvxtPYkfj+gZSLIITbE2X/9jf5x+Fd+R5pjmeY72qJNRJq9OiUITfcv9ttpSGfX6XijbAxr+OuLf+k10bdJo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=n0WLb7C9; arc=none smtp.client-ip=209.85.218.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="fVOjbRg0"
-Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id C24A425C41;
-	Sat,  1 Mar 2025 04:57:47 +0100 (CET)
-X-Virus-Scanned: SPAM Filter at disroot.org
-Received: from layka.disroot.org ([127.0.0.1])
- by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id uqHMHgERkbgO; Sat,  1 Mar 2025 04:57:42 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1740801462; bh=CtxHLLsie/bOEiK3PUfshu29QbiU3zvmBgwi8pgWO3E=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=fVOjbRg0pUB8QMl2q8h5/cbE9a0cbjztZY0zz3BTDHfKPu42/F2iuoGxEhtoTLrzr
-	 pXlfG6Ss7ATOAYdZVPR30Yol6d2/xT+v2ahgIdAO/XJicePyNzigQaVhl7qiMhLz+R
-	 tGRSsswtygPRwdAKPtevCV0FVT6jd/59YpFGWT2dKSUR2//1SNRDBIR/QDnLZG8349
-	 4afLrdiOuDJj20QSfTJPWmf2GIuwHjRD0aJORos2Tj2oNlNW1f4tyeV30isLQfBfzE
-	 Djyf/pOC8ONxs9TvzNGL/4uW1UvAQoTavzBzq1mG/bWc5T8adv8wHLe3NxqZF2tMpN
-	 O6RixeMJl/lbA==
-From: Kaustabh Chakraborty <kauschluss@disroot.org>
-Date: Sat, 01 Mar 2025 09:27:12 +0530
-Subject: [PATCH v5 1/2] dt-bindings: clock: add clock definitions and
- documentation for exynos7870 CMU
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="n0WLb7C9"
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-ab744d5e567so472076266b.1
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 19:57:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1740801472; x=1741406272; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JzBuQTL7rvWDA/0NQ8Mh3xPzC01ym1TE0UV7JlOA02M=;
+        b=n0WLb7C9KgX4HkXpwiYuIYHOw/jV1k37PlOH+5W3IJosgwlujVOX5jFJIKLIsQbKhR
+         Lkf/dxKOa6oIqdvJIouCSHoE8onxMPw0BF7PCfwcdz+q78vP/BYPzuIy0p0PjGoaHgZS
+         NCnAgKxnmjvhHSFqGtkFQKoSDpUR+7RcRWPHFn53pardPe+cWmokxNGK3XjDuRV7BTEI
+         WSu9GSSohQYCCZgH+CQqTACdQ6Bog7/K1HR41Ybp6fL80L96hfGa3nSbRW9QQVTDOQzP
+         lvBPgWGDp8faihmaCdaCtuM+FI3Fw4cxoQCgbP0GCvZwsQ8oDC96p+JCL7tAndjY60E9
+         HhOQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740801472; x=1741406272;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=JzBuQTL7rvWDA/0NQ8Mh3xPzC01ym1TE0UV7JlOA02M=;
+        b=AFLcggYpYnk3ln/xbHFyQwxA3dM1UJcppGg3Di4MVIvEEjgZ2aWXczjwp0xmPkbfvQ
+         C9aAzSrryVBDhQlPnkoL61999aa3GO1WstMhG1ArgTak6Po4iiNNBayQvZjktUOBw7dc
+         6LERcS9LM/pdtrFgkbAfTdbJiKdcRKeky0Lq0CItB6u+dKAAG+NqQsxYFqZ4h0b2Ic0Y
+         GYNWwR9C5mAH8UPC40VnARDBZlFnvhdm70I77Gm2ICgH6Vxo9fkyPJDcKbBd79Vs/DKb
+         3mCuryShtnb1J26cVSfueuMO+c4dUq5Hs/cvjiBIrkjFuthdHzwKDWlq0q1bFlYPzFQv
+         xXkQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWOGRZ2I0bzhWbEl8a1b1J6des/yvXvyOny+GkKJMquyHZFpEFf1hakqh4zklt2+R43G+yJXJ3MXhF4wNk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxeYKD0P+GTzeJT0b7MqDSdQ7cFmpp4jayjHPkIfPXF1EB37tdU
+	dx3HX5zEhzdx8Ac8ZGoggF6w3NZ6jH07WQmdaZGH1XGoQ09j393lDn6+TqtnN9XfK+AzSPXPwoh
+	W4N2dXAcrzJKSsceH1GhzANfSN/xwX68zKHVP
+X-Gm-Gg: ASbGnct0dhU1t+4KX31GpakNI1T31FtSw3GK/zdevlKWCjdsOVFl/yrOijF0UjUbSkc
+	S+h6bAAg8Msw0tGaVZMkeaUC0jfwlwLSwkZPoaom8a+LyekfUVOAE/CX9qaY+tX82t1ljynkna2
+	bWgd5CSX3AEA1HeOOsqE5XPbyczw==
+X-Google-Smtp-Source: AGHT+IGWLkCWgDFHODHJlsbWwTJyQIh8E1Xyr5nB71LBUq0uYDy96wWAwc67sc0nGBEwqrEkJE92OZie5BiOZXaLY2o=
+X-Received: by 2002:a17:907:c247:b0:abb:b154:c064 with SMTP id
+ a640c23a62f3a-abf062869c8mr1108901466b.18.1740801471755; Fri, 28 Feb 2025
+ 19:57:51 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250301-exynos7870-pmu-clocks-v5-1-715b646d5206@disroot.org>
-References: <20250301-exynos7870-pmu-clocks-v5-0-715b646d5206@disroot.org>
-In-Reply-To: <20250301-exynos7870-pmu-clocks-v5-0-715b646d5206@disroot.org>
-To: Krzysztof Kozlowski <krzk@kernel.org>, 
- Sylwester Nawrocki <s.nawrocki@samsung.com>, 
- Chanwoo Choi <cw00.choi@samsung.com>, Alim Akhtar <alim.akhtar@samsung.com>, 
- Michael Turquette <mturquette@baylibre.com>, 
- Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-kernel@vger.kernel.org, Kaustabh Chakraborty <kauschluss@disroot.org>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1740801448; l=20925;
- i=kauschluss@disroot.org; s=20250202; h=from:subject:message-id;
- bh=CtxHLLsie/bOEiK3PUfshu29QbiU3zvmBgwi8pgWO3E=;
- b=y5MCSuiDpRD1SAoYBpwPj6rWShBysC5bA4A5XvfC5Dnk30oP2Squ0F9uiVwcXUsyJM2GlvXF+
- ToHvcB5aPNfD54xkfadxLq6Zxk7Z/aehg9DMwOMJSBM2sEcj1QdmA27
-X-Developer-Key: i=kauschluss@disroot.org; a=ed25519;
- pk=h2xeR+V2I1+GrfDPAhZa3M+NWA0Cnbdkkq1bH3ct1hE=
+References: <20250228170720.144739-1-sgarzare@redhat.com> <20250228170720.144739-6-sgarzare@redhat.com>
+ <Z8JoMrUm9Dnoqgoi@kernel.org>
+In-Reply-To: <Z8JoMrUm9Dnoqgoi@kernel.org>
+From: Dionna Amalie Glaze <dionnaglaze@google.com>
+Date: Fri, 28 Feb 2025 19:57:40 -0800
+X-Gm-Features: AQ5f1Jqko1N4oIcfRfm7F_nVUDkJnzQ_SnqW5xCCgfgJrG6mFjCxwMbChUujVE0
+Message-ID: <CAAH4kHYqQOm8JrKDDDBgWqOY4QFX3zksfdDGr2nWQBFUEbh8OQ@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 5/6] tpm: add SNP SVSM vTPM driver
+To: Jarkko Sakkinen <jarkko@kernel.org>
+Cc: Stefano Garzarella <sgarzare@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, 
+	Claudio Carvalho <cclaudio@linux.ibm.com>, Peter Huewe <peterhuewe@gmx.de>, x86@kernel.org, 
+	Dov Murik <dovmurik@linux.ibm.com>, linux-coco@lists.linux.dev, 
+	James Bottomley <James.Bottomley@hansenpartnership.com>, Ingo Molnar <mingo@redhat.com>, 
+	Joerg Roedel <jroedel@suse.de>, Jason Gunthorpe <jgg@ziepe.ca>, linux-integrity@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Dave Hansen <dave.hansen@linux.intel.com>, 
+	Tom Lendacky <thomas.lendacky@amd.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add unique identifiers for exynos7870 clocks for every bank. It adds all
-clocks of CMU_MIF, CMU_DISPAUD, CMU_G3D, CMU_ISP, CMU_MFCMSCL, and
-CMU_PERI. Document the devicetree bindings as well.
+On Fri, Feb 28, 2025 at 5:51=E2=80=AFPM Jarkko Sakkinen <jarkko@kernel.org>=
+ wrote:
+>
+> On Fri, Feb 28, 2025 at 06:07:19PM +0100, Stefano Garzarella wrote:
+> > Add driver for the vTPM defined by the AMD SVSM spec [1].
+> >
+> > The specification defines a protocol that a SEV-SNP guest OS can use to
+> > discover and talk to a vTPM emulated by the Secure VM Service Module (S=
+VSM)
+> > in the guest context, but at a more privileged level (VMPL0).
+> >
+> > The new tpm-svsm platform driver uses two functions exposed by x86/sev
+> > to verify that the device is actually emulated by the platform and to
+> > send commands and receive responses.
+> >
+> > The vTPM is emulated through the TCG reference implementation, so this
+> > driver leverages tpm_tcgsim.h to fill commands and parse responses.
+>
+> Why? Please don't.
+>
+> >
+> > The device cannot be hot-plugged/unplugged as it is emulated by the
+> > platform, so we can use module_platform_driver_probe(). The probe
+> > function will only check whether in the current runtime configuration,
+> > SVSM is present and provides a vTPM.
+> >
+> > [1] "Secure VM Service Module for SEV-SNP Guests"
+> >     Publication # 58019 Revision: 1.00
+> >     https://www.amd.com/content/dam/amd/en/documents/epyc-technical-doc=
+s/specifications/58019.pdf
+> >
+> > Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
+> > ---
+> >  drivers/char/tpm/tpm_svsm.c | 120 ++++++++++++++++++++++++++++++++++++
+> >  drivers/char/tpm/Kconfig    |  10 +++
+> >  drivers/char/tpm/Makefile   |   1 +
+> >  3 files changed, 131 insertions(+)
+> >  create mode 100644 drivers/char/tpm/tpm_svsm.c
+> >
+> > diff --git a/drivers/char/tpm/tpm_svsm.c b/drivers/char/tpm/tpm_svsm.c
+> > new file mode 100644
+> > index 000000000000..1c34133990c5
+> > --- /dev/null
+> > +++ b/drivers/char/tpm/tpm_svsm.c
+> > @@ -0,0 +1,120 @@
+> > +// SPDX-License-Identifier: GPL-2.0-only
+> > +/*
+> > + * Copyright (C) 2025 Red Hat, Inc. All Rights Reserved.
+> > + *
+> > + * Driver for the vTPM defined by the AMD SVSM spec [1].
+> > + *
+> > + * The specification defines a protocol that a SEV-SNP guest OS can us=
+e to
+> > + * discover and talk to a vTPM emulated by the Secure VM Service Modul=
+e (SVSM)
+> > + * in the guest context, but at a more privileged level (usually VMPL0=
+).
+> > + *
+> > + * The vTPM is emulated through the TCG reference implementation, so t=
+his
+> > + * driver leverages tpm_tcgsim.h to fill commands and parse responses.
+> > + *
+> > + * [1] "Secure VM Service Module for SEV-SNP Guests"
+> > + *     Publication # 58019 Revision: 1.00
+> > + *     https://www.amd.com/content/dam/amd/en/documents/epyc-technical=
+-docs/specifications/58019.pdf
+> > + */
+> > +
+> > +#include <asm/sev.h>
+> > +#include <linux/module.h>
+> > +#include <linux/kernel.h>
+> > +#include <linux/platform_device.h>
+> > +#include <linux/tpm_tcgsim.h>
+> > +
+> > +#include "tpm.h"
+> > +
+> > +struct tpm_svsm_priv {
+> > +     u8 buffer[TPM_TCGSIM_MAX_BUFFER];
+> > +     u8 locality;
+> > +};
+> > +
+> > +static int tpm_svsm_send_recv(struct tpm_chip *chip, u8 *buf, size_t b=
+uf_len,
+> > +                           size_t to_send)
+> > +{
+> > +     struct tpm_svsm_priv *priv =3D dev_get_drvdata(&chip->dev);
+> > +     int ret;
+> > +
+> > +     ret =3D tpm_tcgsim_fill_send_cmd((struct tpm_send_cmd_req *)priv-=
+>buffer,
+> > +                                    priv->locality, buf, to_send);
+> > +     if (ret)
+> > +             return ret;
+> > +
+> > +     ret =3D snp_svsm_vtpm_send_command(priv->buffer);
+> > +     if (ret)
+> > +             return ret;
+> > +
+> > +     return tpm_tcgsim_parse_send_cmd((struct tpm_send_cmd_resp *)priv=
+->buffer,
+> > +                                      buf, buf_len);
+> > +}
+> > +
+> > +static struct tpm_class_ops tpm_chip_ops =3D {
+> > +     .flags =3D TPM_OPS_AUTO_STARTUP,
+> > +     .send_recv =3D tpm_svsm_send_recv,
+> > +};
+> > +
+> > +static int __init tpm_svsm_probe(struct platform_device *pdev)
+> > +{
+> > +     struct device *dev =3D &pdev->dev;
+> > +     struct tpm_svsm_priv *priv;
+> > +     struct tpm_chip *chip;
+> > +     int err;
+> > +
+> > +     if (!snp_svsm_vtpm_probe())
+> > +             return -ENODEV;
+> > +
+> > +     priv =3D devm_kmalloc(dev, sizeof(*priv), GFP_KERNEL);
+> > +     if (!priv)
+> > +             return -ENOMEM;
+> > +
+> > +     /*
+> > +      * FIXME: before implementing locality we need to agree what it m=
+eans
+> > +      * for the SNP SVSM vTPM
+> > +      */
+> > +     priv->locality =3D 0;
+> > +
+> > +     chip =3D tpmm_chip_alloc(dev, &tpm_chip_ops);
+> > +     if (IS_ERR(chip))
+> > +             return PTR_ERR(chip);
+> > +
+> > +     dev_set_drvdata(&chip->dev, priv);
+> > +
+> > +     err =3D tpm2_probe(chip);
+> > +     if (err)
+> > +             return err;
+> > +
+> > +     err =3D tpm_chip_register(chip);
+> > +     if (err)
+> > +             return err;
+> > +
+> > +     dev_info(dev, "SNP SVSM vTPM %s device\n",
+> > +              (chip->flags & TPM_CHIP_FLAG_TPM2) ? "2.0" : "1.2");
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +static void __exit tpm_svsm_remove(struct platform_device *pdev)
+> > +{
+> > +     struct tpm_chip *chip =3D platform_get_drvdata(pdev);
+> > +
+> > +     tpm_chip_unregister(chip);
+> > +}
+> > +
+> > +/*
+> > + * tpm_svsm_remove() lives in .exit.text. For drivers registered via
+> > + * module_platform_driver_probe() this is ok because they cannot get u=
+nbound
+> > + * at runtime. So mark the driver struct with __refdata to prevent mod=
+post
+> > + * triggering a section mismatch warning.
+> > + */
+> > +static struct platform_driver tpm_svsm_driver __refdata =3D {
+> > +     .remove =3D __exit_p(tpm_svsm_remove),
+> > +     .driver =3D {
+> > +             .name =3D "tpm-svsm",
+> > +     },
+> > +};
+> > +
+> > +module_platform_driver_probe(tpm_svsm_driver, tpm_svsm_probe);
+> > +
+> > +MODULE_DESCRIPTION("SNP SVSM vTPM Driver");
+> > +MODULE_LICENSE("GPL");
+> > +MODULE_ALIAS("platform:tpm-svsm");
+> > diff --git a/drivers/char/tpm/Kconfig b/drivers/char/tpm/Kconfig
+> > index 0fc9a510e059..fc3f1d10d31d 100644
+> > --- a/drivers/char/tpm/Kconfig
+> > +++ b/drivers/char/tpm/Kconfig
+> > @@ -225,5 +225,15 @@ config TCG_FTPM_TEE
+> >       help
+> >         This driver proxies for firmware TPM running in TEE.
+> >
+> > +config TCG_SVSM
+> > +     tristate "SNP SVSM vTPM interface"
+> > +     depends on AMD_MEM_ENCRYPT
+> > +     help
+> > +       This is a driver for the AMD SVSM vTPM protocol that a SEV-SNP =
+guest
+> > +       OS can use to discover and talk to a vTPM emulated by the Secur=
+e VM
+> > +       Service Module (SVSM) in the guest context, but at a more privi=
+leged
+> > +       level (usually VMPL0).  To compile this driver as a module, cho=
+ose M
+> > +       here; the module will be called tpm_svsm.
+> > +
+> >  source "drivers/char/tpm/st33zp24/Kconfig"
+> >  endif # TCG_TPM
+> > diff --git a/drivers/char/tpm/Makefile b/drivers/char/tpm/Makefile
+> > index 9bb142c75243..52d9d80a0f56 100644
+> > --- a/drivers/char/tpm/Makefile
+> > +++ b/drivers/char/tpm/Makefile
+> > @@ -44,3 +44,4 @@ obj-$(CONFIG_TCG_XEN) +=3D xen-tpmfront.o
+> >  obj-$(CONFIG_TCG_CRB) +=3D tpm_crb.o
+> >  obj-$(CONFIG_TCG_VTPM_PROXY) +=3D tpm_vtpm_proxy.o
+> >  obj-$(CONFIG_TCG_FTPM_TEE) +=3D tpm_ftpm_tee.o
+> > +obj-$(CONFIG_TCG_SVSM) +=3D tpm_svsm.o
+> > --
+> > 2.48.1
+> >
+>
+> OK, so this is like ARM's driver architecture using SMC, and I think
+> tpm_ftpm_tee is probably one great reflection for this overall. Is this
+> correct analysis, or not?
 
-Signed-off-by: Kaustabh Chakraborty <kauschluss@disroot.org>
----
- .../bindings/clock/samsung,exynos7870-cmu.yaml     | 227 +++++++++++++++
- include/dt-bindings/clock/samsung,exynos7870-cmu.h | 324 +++++++++++++++++++++
- 2 files changed, 551 insertions(+)
+Using ftpm is really obtuse, at least with my attempt
+https://github.com/deeglaze/amdese-linux/tree/svsmftpm
+I don't really know how to cleanly bind the platform_driver to the one devi=
+ce.
+I don't think that this is any way better than what this patch series propo=
+ses.
 
-diff --git a/Documentation/devicetree/bindings/clock/samsung,exynos7870-cmu.yaml b/Documentation/devicetree/bindings/clock/samsung,exynos7870-cmu.yaml
-new file mode 100644
-index 0000000000000000000000000000000000000000..3c58712f12b9fe33890687fb0a70dc1b8015b78b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/samsung,exynos7870-cmu.yaml
-@@ -0,0 +1,227 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/clock/samsung,exynos7870-cmu.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Samsung Exynos7870 SoC clock controller
-+
-+maintainers:
-+  - Kaustabh Chakraborty <kauschluss@disroot.org>
-+
-+description: |
-+  Exynos7870 clock controller is comprised of several CMU units, generating
-+  clocks for different domains. Those CMU units are modeled as separate device
-+  tree nodes, and might depend on each other. The root clock in that root tree
-+  is an external clock: OSCCLK (26 MHz). This external clock must be defined
-+  as a fixed-rate clock in dts.
-+
-+  Each clock is assigned an identifier and client nodes can use this identifier
-+  to specify the clock which they consume. All clocks available for usage
-+  in clock consumer nodes are defined as preprocessor macros in
-+  include/dt-bindings/clock/samsung,exynos7870-cmu.h header.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - samsung,exynos7870-cmu-mif
-+      - samsung,exynos7870-cmu-dispaud
-+      - samsung,exynos7870-cmu-fsys
-+      - samsung,exynos7870-cmu-g3d
-+      - samsung,exynos7870-cmu-isp
-+      - samsung,exynos7870-cmu-mfcmscl
-+      - samsung,exynos7870-cmu-peri
-+
-+  clocks:
-+    minItems: 1
-+    maxItems: 10
-+
-+  clock-names:
-+    minItems: 1
-+    maxItems: 10
-+
-+  "#clock-cells":
-+    const: 1
-+
-+  reg:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - clocks
-+  - clock-names
-+  - "#clock-cells"
-+  - reg
-+
-+allOf:
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: samsung,exynos7870-cmu-mif
-+    then:
-+      properties:
-+        clocks:
-+          items:
-+            - description: External reference clock (26 MHz)
-+
-+        clock-names:
-+          items:
-+            - const: oscclk
-+
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: samsung,exynos7870-cmu-dispaud
-+    then:
-+      properties:
-+        clocks:
-+          items:
-+            - description: External reference clock (26 MHz)
-+            - description: CMU_DISPAUD bus clock (from CMU_MIF)
-+            - description: DECON external clock (from CMU_MIF)
-+            - description: DECON vertical clock (from CMU_MIF)
-+
-+        clock-names:
-+          items:
-+            - const: oscclk
-+            - const: bus
-+            - const: decon_eclk
-+            - const: decon_vclk
-+
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: samsung,exynos7870-cmu-fsys
-+    then:
-+      properties:
-+        clocks:
-+          items:
-+            - description: External reference clock (26 MHz)
-+            - description: CMU_FSYS bus clock (from CMU_MIF)
-+            - description: USB20DRD clock (from CMU_MIF)
-+
-+        clock-names:
-+          items:
-+            - const: oscclk
-+            - const: bus
-+            - const: usb20drd
-+
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: samsung,exynos7870-cmu-g3d
-+    then:
-+      properties:
-+        clocks:
-+          items:
-+            - description: External reference clock (26 MHz)
-+            - description: G3D switch clock (from CMU_MIF)
-+
-+        clock-names:
-+          items:
-+            - const: oscclk
-+            - const: switch
-+
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: samsung,exynos7870-cmu-isp
-+    then:
-+      properties:
-+        clocks:
-+          items:
-+            - description: External reference clock (26 MHz)
-+            - description: ISP camera clock (from CMU_MIF)
-+            - description: ISP clock (from CMU_MIF)
-+            - description: ISP VRA clock (from CMU_MIF)
-+
-+        clock-names:
-+          items:
-+            - const: oscclk
-+            - const: cam
-+            - const: isp
-+            - const: vra
-+
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: samsung,exynos7870-cmu-mfcmscl
-+    then:
-+      properties:
-+        clocks:
-+          items:
-+            - description: External reference clock (26 MHz)
-+            - description: MSCL clock (from CMU_MIF)
-+            - description: MFC clock (from CMU_MIF)
-+
-+        clock-names:
-+          items:
-+            - const: oscclk
-+            - const: mfc
-+            - const: mscl
-+
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: samsung,exynos7870-cmu-peri
-+    then:
-+      properties:
-+        clocks:
-+          items:
-+            - description: External reference clock (26 MHz)
-+            - description: CMU_PERI bus clock (from CMU_MIF)
-+            - description: SPI0 clock (from CMU_MIF)
-+            - description: SPI1 clock (from CMU_MIF)
-+            - description: SPI2 clock (from CMU_MIF)
-+            - description: SPI3 clock (from CMU_MIF)
-+            - description: SPI4 clock (from CMU_MIF)
-+            - description: UART0 clock (from CMU_MIF)
-+            - description: UART1 clock (from CMU_MIF)
-+            - description: UART2 clock (from CMU_MIF)
-+
-+        clock-names:
-+          items:
-+            - const: oscclk
-+            - const: bus
-+            - const: spi0
-+            - const: spi1
-+            - const: spi2
-+            - const: spi3
-+            - const: spi4
-+            - const: uart0
-+            - const: uart1
-+            - const: uart2
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/samsung,exynos7870-cmu.h>
-+
-+    cmu_peri: clock-controller@101f0000 {
-+      compatible = "samsung,exynos7870-cmu-peri";
-+      reg = <0x101f0000 0x1000>;
-+      #clock-cells = <1>;
-+
-+      clock-names = "oscclk", "bus", "spi0", "spi1", "spi2",
-+                    "spi3", "spi4", "uart0", "uart1", "uart2";
-+      clocks = <&oscclk>,
-+               <&cmu_mif CLK_GOUT_MIF_CMU_PERI_BUS>,
-+               <&cmu_mif CLK_GOUT_MIF_CMU_PERI_SPI0>,
-+               <&cmu_mif CLK_GOUT_MIF_CMU_PERI_SPI1>,
-+               <&cmu_mif CLK_GOUT_MIF_CMU_PERI_SPI2>,
-+               <&cmu_mif CLK_GOUT_MIF_CMU_PERI_SPI3>,
-+               <&cmu_mif CLK_GOUT_MIF_CMU_PERI_SPI4>,
-+               <&cmu_mif CLK_GOUT_MIF_CMU_PERI_UART0>,
-+               <&cmu_mif CLK_GOUT_MIF_CMU_PERI_UART1>,
-+               <&cmu_mif CLK_GOUT_MIF_CMU_PERI_UART2>;
-+    };
-+
-+...
-diff --git a/include/dt-bindings/clock/samsung,exynos7870-cmu.h b/include/dt-bindings/clock/samsung,exynos7870-cmu.h
-new file mode 100644
-index 0000000000000000000000000000000000000000..57d04bbe342d835abbba34df542671dbdea427b5
---- /dev/null
-+++ b/include/dt-bindings/clock/samsung,exynos7870-cmu.h
-@@ -0,0 +1,324 @@
-+/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) */
-+/*
-+ * Copyright (C) 2015 Samsung Electronics Co., Ltd.
-+ * Author: Kaustabh Chakraborty <kauschluss@disroot.org>
-+ *
-+ * Device Tree binding constants for Exynos7870 clock controller.
-+ */
-+
-+#ifndef _DT_BINDINGS_CLOCK_EXYNOS7870_H
-+#define _DT_BINDINGS_CLOCK_EXYNOS7870_H
-+
-+/* CMU_MIF */
-+#define CLK_DOUT_MIF_APB				1
-+#define CLK_DOUT_MIF_BUSD				2
-+#define CLK_DOUT_MIF_CMU_DISPAUD_BUS			3
-+#define CLK_DOUT_MIF_CMU_DISPAUD_DECON_ECLK		4
-+#define CLK_DOUT_MIF_CMU_DISPAUD_DECON_VCLK		5
-+#define CLK_DOUT_MIF_CMU_FSYS_BUS			6
-+#define CLK_DOUT_MIF_CMU_FSYS_MMC0			7
-+#define CLK_DOUT_MIF_CMU_FSYS_MMC1			8
-+#define CLK_DOUT_MIF_CMU_FSYS_MMC2			9
-+#define CLK_DOUT_MIF_CMU_FSYS_USB20DRD_REFCLK		10
-+#define CLK_DOUT_MIF_CMU_G3D_SWITCH			11
-+#define CLK_DOUT_MIF_CMU_ISP_CAM			12
-+#define CLK_DOUT_MIF_CMU_ISP_ISP			13
-+#define CLK_DOUT_MIF_CMU_ISP_SENSOR0			14
-+#define CLK_DOUT_MIF_CMU_ISP_SENSOR1			15
-+#define CLK_DOUT_MIF_CMU_ISP_SENSOR2			16
-+#define CLK_DOUT_MIF_CMU_ISP_VRA			17
-+#define CLK_DOUT_MIF_CMU_MFCMSCL_MFC			18
-+#define CLK_DOUT_MIF_CMU_MFCMSCL_MSCL			19
-+#define CLK_DOUT_MIF_CMU_PERI_BUS			20
-+#define CLK_DOUT_MIF_CMU_PERI_SPI0			21
-+#define CLK_DOUT_MIF_CMU_PERI_SPI1			22
-+#define CLK_DOUT_MIF_CMU_PERI_SPI2			23
-+#define CLK_DOUT_MIF_CMU_PERI_SPI3			24
-+#define CLK_DOUT_MIF_CMU_PERI_SPI4			25
-+#define CLK_DOUT_MIF_CMU_PERI_UART0			26
-+#define CLK_DOUT_MIF_CMU_PERI_UART1			27
-+#define CLK_DOUT_MIF_CMU_PERI_UART2			28
-+#define CLK_DOUT_MIF_HSI2C				29
-+#define CLK_FOUT_MIF_BUS_PLL				30
-+#define CLK_FOUT_MIF_MEDIA_PLL				31
-+#define CLK_FOUT_MIF_MEM_PLL				32
-+#define CLK_GOUT_MIF_CMU_DISPAUD_BUS			33
-+#define CLK_GOUT_MIF_CMU_DISPAUD_DECON_ECLK		34
-+#define CLK_GOUT_MIF_CMU_DISPAUD_DECON_VCLK		35
-+#define CLK_GOUT_MIF_CMU_FSYS_BUS			36
-+#define CLK_GOUT_MIF_CMU_FSYS_MMC0			37
-+#define CLK_GOUT_MIF_CMU_FSYS_MMC1			38
-+#define CLK_GOUT_MIF_CMU_FSYS_MMC2			39
-+#define CLK_GOUT_MIF_CMU_FSYS_USB20DRD_REFCLK		40
-+#define CLK_GOUT_MIF_CMU_G3D_SWITCH			41
-+#define CLK_GOUT_MIF_CMU_ISP_CAM			42
-+#define CLK_GOUT_MIF_CMU_ISP_ISP			43
-+#define CLK_GOUT_MIF_CMU_ISP_SENSOR0			44
-+#define CLK_GOUT_MIF_CMU_ISP_SENSOR1			45
-+#define CLK_GOUT_MIF_CMU_ISP_SENSOR2			46
-+#define CLK_GOUT_MIF_CMU_ISP_VRA			47
-+#define CLK_GOUT_MIF_CMU_MFCMSCL_MFC			48
-+#define CLK_GOUT_MIF_CMU_MFCMSCL_MSCL			49
-+#define CLK_GOUT_MIF_CMU_PERI_BUS			50
-+#define CLK_GOUT_MIF_CMU_PERI_SPI0			51
-+#define CLK_GOUT_MIF_CMU_PERI_SPI1			52
-+#define CLK_GOUT_MIF_CMU_PERI_SPI2			53
-+#define CLK_GOUT_MIF_CMU_PERI_SPI3			54
-+#define CLK_GOUT_MIF_CMU_PERI_SPI4			55
-+#define CLK_GOUT_MIF_CMU_PERI_UART0			56
-+#define CLK_GOUT_MIF_CMU_PERI_UART1			57
-+#define CLK_GOUT_MIF_CMU_PERI_UART2			58
-+#define CLK_GOUT_MIF_CP_PCLK_HSI2C			59
-+#define CLK_GOUT_MIF_CP_PCLK_HSI2C_BAT_0		60
-+#define CLK_GOUT_MIF_CP_PCLK_HSI2C_BAT_1		61
-+#define CLK_GOUT_MIF_HSI2C_AP_PCLKM			62
-+#define CLK_GOUT_MIF_HSI2C_AP_PCLKS			63
-+#define CLK_GOUT_MIF_HSI2C_CP_PCLKM			64
-+#define CLK_GOUT_MIF_HSI2C_CP_PCLKS			65
-+#define CLK_GOUT_MIF_HSI2C_IPCLK			66
-+#define CLK_GOUT_MIF_HSI2C_ITCLK			67
-+#define CLK_GOUT_MIF_MUX_BUSD				68
-+#define CLK_GOUT_MIF_MUX_BUS_PLL			69
-+#define CLK_GOUT_MIF_MUX_BUS_PLL_CON			70
-+#define CLK_GOUT_MIF_MUX_CMU_DISPAUD_BUS		71
-+#define CLK_GOUT_MIF_MUX_CMU_DISPAUD_DECON_ECLK		72
-+#define CLK_GOUT_MIF_MUX_CMU_DISPAUD_DECON_VCLK		73
-+#define CLK_GOUT_MIF_MUX_CMU_FSYS_BUS			74
-+#define CLK_GOUT_MIF_MUX_CMU_FSYS_MMC0			75
-+#define CLK_GOUT_MIF_MUX_CMU_FSYS_MMC1			76
-+#define CLK_GOUT_MIF_MUX_CMU_FSYS_MMC2			77
-+#define CLK_GOUT_MIF_MUX_CMU_FSYS_USB20DRD_REFCLK	78
-+#define CLK_GOUT_MIF_MUX_CMU_ISP_CAM			79
-+#define CLK_GOUT_MIF_MUX_CMU_ISP_ISP			80
-+#define CLK_GOUT_MIF_MUX_CMU_ISP_SENSOR0		81
-+#define CLK_GOUT_MIF_MUX_CMU_ISP_SENSOR1		82
-+#define CLK_GOUT_MIF_MUX_CMU_ISP_SENSOR2		83
-+#define CLK_GOUT_MIF_MUX_CMU_ISP_VRA			84
-+#define CLK_GOUT_MIF_MUX_CMU_MFCMSCL_MFC		85
-+#define CLK_GOUT_MIF_MUX_CMU_MFCMSCL_MSCL		86
-+#define CLK_GOUT_MIF_MUX_CMU_PERI_BUS			87
-+#define CLK_GOUT_MIF_MUX_CMU_PERI_SPI0			88
-+#define CLK_GOUT_MIF_MUX_CMU_PERI_SPI1			89
-+#define CLK_GOUT_MIF_MUX_CMU_PERI_SPI2			90
-+#define CLK_GOUT_MIF_MUX_CMU_PERI_SPI3			91
-+#define CLK_GOUT_MIF_MUX_CMU_PERI_SPI4			92
-+#define CLK_GOUT_MIF_MUX_CMU_PERI_UART0			93
-+#define CLK_GOUT_MIF_MUX_CMU_PERI_UART1			94
-+#define CLK_GOUT_MIF_MUX_CMU_PERI_UART2			95
-+#define CLK_GOUT_MIF_MUX_MEDIA_PLL			96
-+#define CLK_GOUT_MIF_MUX_MEDIA_PLL_CON			97
-+#define CLK_GOUT_MIF_MUX_MEM_PLL			98
-+#define CLK_GOUT_MIF_MUX_MEM_PLL_CON			99
-+#define CLK_GOUT_MIF_WRAP_ADC_IF_OSC_SYS		100
-+#define CLK_GOUT_MIF_WRAP_ADC_IF_PCLK_S0		101
-+#define CLK_GOUT_MIF_WRAP_ADC_IF_PCLK_S1		102
-+#define CLK_MOUT_MIF_BUSD				103
-+#define CLK_MOUT_MIF_CMU_DISPAUD_BUS			104
-+#define CLK_MOUT_MIF_CMU_DISPAUD_DECON_ECLK		105
-+#define CLK_MOUT_MIF_CMU_DISPAUD_DECON_VCLK		106
-+#define CLK_MOUT_MIF_CMU_FSYS_BUS			107
-+#define CLK_MOUT_MIF_CMU_FSYS_MMC0			108
-+#define CLK_MOUT_MIF_CMU_FSYS_MMC1			109
-+#define CLK_MOUT_MIF_CMU_FSYS_MMC2			110
-+#define CLK_MOUT_MIF_CMU_FSYS_USB20DRD_REFCLK		111
-+#define CLK_MOUT_MIF_CMU_ISP_CAM			112
-+#define CLK_MOUT_MIF_CMU_ISP_ISP			113
-+#define CLK_MOUT_MIF_CMU_ISP_SENSOR0			114
-+#define CLK_MOUT_MIF_CMU_ISP_SENSOR1			115
-+#define CLK_MOUT_MIF_CMU_ISP_SENSOR2			116
-+#define CLK_MOUT_MIF_CMU_ISP_VRA			117
-+#define CLK_MOUT_MIF_CMU_MFCMSCL_MFC			118
-+#define CLK_MOUT_MIF_CMU_MFCMSCL_MSCL			119
-+#define CLK_MOUT_MIF_CMU_PERI_BUS			120
-+#define CLK_MOUT_MIF_CMU_PERI_SPI0			121
-+#define CLK_MOUT_MIF_CMU_PERI_SPI1			122
-+#define CLK_MOUT_MIF_CMU_PERI_SPI2			123
-+#define CLK_MOUT_MIF_CMU_PERI_SPI3			124
-+#define CLK_MOUT_MIF_CMU_PERI_SPI4			125
-+#define CLK_MOUT_MIF_CMU_PERI_UART0			126
-+#define CLK_MOUT_MIF_CMU_PERI_UART1			127
-+#define CLK_MOUT_MIF_CMU_PERI_UART2			128
-+#define MIF_NR_CLK					129
-+
-+/* CMU_DISPAUD */
-+#define CLK_DOUT_DISPAUD_APB					1
-+#define CLK_DOUT_DISPAUD_DECON_ECLK				2
-+#define CLK_DOUT_DISPAUD_DECON_VCLK				3
-+#define CLK_DOUT_DISPAUD_MI2S					4
-+#define CLK_DOUT_DISPAUD_MIXER					5
-+#define CLK_FOUT_DISPAUD_AUD_PLL				6
-+#define CLK_FOUT_DISPAUD_PLL					7
-+#define CLK_GOUT_DISPAUD_APB_AUD				8
-+#define CLK_GOUT_DISPAUD_APB_AUD_AMP				9
-+#define CLK_GOUT_DISPAUD_APB_DISP				10
-+#define CLK_GOUT_DISPAUD_BUS					11
-+#define CLK_GOUT_DISPAUD_BUS_DISP				12
-+#define CLK_GOUT_DISPAUD_BUS_PPMU				13
-+#define CLK_GOUT_DISPAUD_CON_AUD_I2S_BCLK_BT_IN			14
-+#define CLK_GOUT_DISPAUD_CON_AUD_I2S_BCLK_FM_IN			15
-+#define CLK_GOUT_DISPAUD_CON_CP2AUD_BCK				16
-+#define CLK_GOUT_DISPAUD_CON_EXT2AUD_BCK_GPIO_I2S		17
-+#define CLK_GOUT_DISPAUD_DECON_ECLK				18
-+#define CLK_GOUT_DISPAUD_DECON_VCLK				19
-+#define CLK_GOUT_DISPAUD_MI2S_AMP_I2SCODCLKI			20
-+#define CLK_GOUT_DISPAUD_MI2S_AUD_I2SCODCLKI			21
-+#define CLK_GOUT_DISPAUD_MIXER_AUD_SYSCLK			22
-+#define CLK_GOUT_DISPAUD_MUX_AUD_PLL				23
-+#define CLK_GOUT_DISPAUD_MUX_AUD_PLL_CON			24
-+#define CLK_GOUT_DISPAUD_MUX_BUS_USER				25
-+#define CLK_GOUT_DISPAUD_MUX_DECON_ECLK				26
-+#define CLK_GOUT_DISPAUD_MUX_DECON_ECLK_USER			27
-+#define CLK_GOUT_DISPAUD_MUX_DECON_VCLK				28
-+#define CLK_GOUT_DISPAUD_MUX_DECON_VCLK_USER			29
-+#define CLK_GOUT_DISPAUD_MUX_MI2S				30
-+#define CLK_GOUT_DISPAUD_MUX_MIPIPHY_RXCLKESC0_USER		31
-+#define CLK_GOUT_DISPAUD_MUX_MIPIPHY_RXCLKESC0_USER_CON		32
-+#define CLK_GOUT_DISPAUD_MUX_MIPIPHY_TXBYTECLKHS_USER		33
-+#define CLK_GOUT_DISPAUD_MUX_MIPIPHY_TXBYTECLKHS_USER_CON	34
-+#define CLK_GOUT_DISPAUD_MUX_PLL				35
-+#define CLK_GOUT_DISPAUD_MUX_PLL_CON				36
-+#define CLK_MOUT_DISPAUD_BUS_USER				37
-+#define CLK_MOUT_DISPAUD_DECON_ECLK				38
-+#define CLK_MOUT_DISPAUD_DECON_ECLK_USER			39
-+#define CLK_MOUT_DISPAUD_DECON_VCLK				40
-+#define CLK_MOUT_DISPAUD_DECON_VCLK_USER			41
-+#define CLK_MOUT_DISPAUD_MI2S					42
-+#define DISPAUD_NR_CLK						43
-+
-+/* CMU_FSYS */
-+#define CLK_FOUT_FSYS_USB_PLL				1
-+#define CLK_GOUT_FSYS_BUSP3_HCLK			2
-+#define CLK_GOUT_FSYS_MMC0_ACLK				3
-+#define CLK_GOUT_FSYS_MMC1_ACLK				4
-+#define CLK_GOUT_FSYS_MMC2_ACLK				5
-+#define CLK_GOUT_FSYS_MUX_USB20DRD_PHYCLOCK_USER	6
-+#define CLK_GOUT_FSYS_MUX_USB20DRD_PHYCLOCK_USER_CON	7
-+#define CLK_GOUT_FSYS_MUX_USB_PLL			8
-+#define CLK_GOUT_FSYS_MUX_USB_PLL_CON			9
-+#define CLK_GOUT_FSYS_PDMA0_ACLK_PDMA0			10
-+#define CLK_GOUT_FSYS_PPMU_ACLK				11
-+#define CLK_GOUT_FSYS_PPMU_PCLK				12
-+#define CLK_GOUT_FSYS_SROMC_HCLK			13
-+#define CLK_GOUT_FSYS_UPSIZER_BUS1_ACLK			14
-+#define CLK_GOUT_FSYS_USB20DRD_ACLK_HSDRD		15
-+#define CLK_GOUT_FSYS_USB20DRD_HCLK_USB20_CTRL		16
-+#define CLK_GOUT_FSYS_USB20DRD_HSDRD_REF_CLK		17
-+#define FSYS_NR_CLK					18
-+
-+/* CMU_G3D */
-+#define CLK_DOUT_G3D_APB		1
-+#define CLK_DOUT_G3D_BUS		2
-+#define CLK_FOUT_G3D_PLL		3
-+#define CLK_GOUT_G3D_ASYNCS_D0_CLK	4
-+#define CLK_GOUT_G3D_ASYNC_PCLKM	5
-+#define CLK_GOUT_G3D_CLK		6
-+#define CLK_GOUT_G3D_MUX		7
-+#define CLK_GOUT_G3D_MUX_PLL		8
-+#define CLK_GOUT_G3D_MUX_PLL_CON	9
-+#define CLK_GOUT_G3D_MUX_SWITCH_USER	10
-+#define CLK_GOUT_G3D_PPMU_ACLK		11
-+#define CLK_GOUT_G3D_PPMU_PCLK		12
-+#define CLK_GOUT_G3D_QE_ACLK		13
-+#define CLK_GOUT_G3D_QE_PCLK		14
-+#define CLK_GOUT_G3D_SYSREG_PCLK	15
-+#define CLK_MOUT_G3D			16
-+#define CLK_MOUT_G3D_SWITCH_USER	17
-+#define G3D_NR_CLK			18
-+
-+/* CMU_ISP */
-+#define CLK_DOUT_ISP_APB				1
-+#define CLK_DOUT_ISP_CAM_HALF				2
-+#define CLK_FOUT_ISP_PLL				3
-+#define CLK_GOUT_ISP_CAM				4
-+#define CLK_GOUT_ISP_CAM_HALF				5
-+#define CLK_GOUT_ISP_ISPD				6
-+#define CLK_GOUT_ISP_ISPD_PPMU				7
-+#define CLK_GOUT_ISP_MUX_CAM				8
-+#define CLK_GOUT_ISP_MUX_CAM_USER			9
-+#define CLK_GOUT_ISP_MUX_ISP				10
-+#define CLK_GOUT_ISP_MUX_ISPD				11
-+#define CLK_GOUT_ISP_MUX_PLL				12
-+#define CLK_GOUT_ISP_MUX_PLL_CON			13
-+#define CLK_GOUT_ISP_MUX_RXBYTECLKHS0_SENSOR0_USER	14
-+#define CLK_GOUT_ISP_MUX_RXBYTECLKHS0_SENSOR0_USER_CON	15
-+#define CLK_GOUT_ISP_MUX_RXBYTECLKHS0_SENSOR1_USER	16
-+#define CLK_GOUT_ISP_MUX_RXBYTECLKHS0_SENSOR1_USER_CON	17
-+#define CLK_GOUT_ISP_MUX_USER				18
-+#define CLK_GOUT_ISP_MUX_VRA				19
-+#define CLK_GOUT_ISP_MUX_VRA_USER			20
-+#define CLK_GOUT_ISP_VRA				21
-+#define CLK_MOUT_ISP_CAM				22
-+#define CLK_MOUT_ISP_CAM_USER				23
-+#define CLK_MOUT_ISP_ISP				24
-+#define CLK_MOUT_ISP_ISPD				25
-+#define CLK_MOUT_ISP_USER				26
-+#define CLK_MOUT_ISP_VRA				27
-+#define CLK_MOUT_ISP_VRA_USER				28
-+#define ISP_NR_CLK					29
-+
-+/* CMU_MFCMSCL */
-+#define CLK_DOUT_MFCMSCL_APB		1
-+#define CLK_GOUT_MFCMSCL_MFC		2
-+#define CLK_GOUT_MFCMSCL_MSCL		3
-+#define CLK_GOUT_MFCMSCL_MSCL_BI	4
-+#define CLK_GOUT_MFCMSCL_MSCL_D		5
-+#define CLK_GOUT_MFCMSCL_MSCL_JPEG	6
-+#define CLK_GOUT_MFCMSCL_MSCL_POLY	7
-+#define CLK_GOUT_MFCMSCL_MSCL_PPMU	8
-+#define CLK_GOUT_MFCMSCL_MUX_MFC_USER	9
-+#define CLK_GOUT_MFCMSCL_MUX_MSCL_USER	10
-+#define CLK_MOUT_MFCMSCL_MFC_USER	11
-+#define CLK_MOUT_MFCMSCL_MSCL_USER	12
-+#define MFCMSCL_NR_CLK			13
-+
-+/* CMU_PERI */
-+#define CLK_GOUT_PERI_BUSP1_PERIC0_HCLK		1
-+#define CLK_GOUT_PERI_GPIO2_PCLK		2
-+#define CLK_GOUT_PERI_GPIO5_PCLK		3
-+#define CLK_GOUT_PERI_GPIO6_PCLK		4
-+#define CLK_GOUT_PERI_GPIO7_PCLK		5
-+#define CLK_GOUT_PERI_HSI2C1_IPCLK		6
-+#define CLK_GOUT_PERI_HSI2C2_IPCLK		7
-+#define CLK_GOUT_PERI_HSI2C3_IPCLK		8
-+#define CLK_GOUT_PERI_HSI2C4_IPCLK		9
-+#define CLK_GOUT_PERI_HSI2C5_IPCLK		10
-+#define CLK_GOUT_PERI_HSI2C6_IPCLK		11
-+#define CLK_GOUT_PERI_I2C0_PCLK			12
-+#define CLK_GOUT_PERI_I2C1_PCLK			13
-+#define CLK_GOUT_PERI_I2C2_PCLK			14
-+#define CLK_GOUT_PERI_I2C3_PCLK			15
-+#define CLK_GOUT_PERI_I2C4_PCLK			16
-+#define CLK_GOUT_PERI_I2C5_PCLK			17
-+#define CLK_GOUT_PERI_I2C6_PCLK			18
-+#define CLK_GOUT_PERI_I2C7_PCLK			19
-+#define CLK_GOUT_PERI_I2C8_PCLK			20
-+#define CLK_GOUT_PERI_MCT_PCLK			21
-+#define CLK_GOUT_PERI_PWM_MOTOR_OSCCLK		22
-+#define CLK_GOUT_PERI_PWM_MOTOR_PCLK_S0		23
-+#define CLK_GOUT_PERI_SFRIF_TMU_CPUCL0_PCLK	24
-+#define CLK_GOUT_PERI_SFRIF_TMU_CPUCL1_PCLK	25
-+#define CLK_GOUT_PERI_SFRIF_TMU_PCLK		26
-+#define CLK_GOUT_PERI_SPI0_PCLK			27
-+#define CLK_GOUT_PERI_SPI0_SPI_EXT_CLK		28
-+#define CLK_GOUT_PERI_SPI1_PCLK			29
-+#define CLK_GOUT_PERI_SPI1_SPI_EXT_CLK		30
-+#define CLK_GOUT_PERI_SPI2_PCLK			31
-+#define CLK_GOUT_PERI_SPI2_SPI_EXT_CLK		32
-+#define CLK_GOUT_PERI_SPI3_PCLK			33
-+#define CLK_GOUT_PERI_SPI3_SPI_EXT_CLK		34
-+#define CLK_GOUT_PERI_SPI4_PCLK			35
-+#define CLK_GOUT_PERI_SPI4_SPI_EXT_CLK		36
-+#define CLK_GOUT_PERI_TMU_CLK			37
-+#define CLK_GOUT_PERI_TMU_CPUCL0_CLK		38
-+#define CLK_GOUT_PERI_TMU_CPUCL1_CLK		39
-+#define CLK_GOUT_PERI_UART0_EXT_UCLK		40
-+#define CLK_GOUT_PERI_UART0_PCLK		41
-+#define CLK_GOUT_PERI_UART1_EXT_UCLK		42
-+#define CLK_GOUT_PERI_UART1_PCLK		43
-+#define CLK_GOUT_PERI_UART2_EXT_UCLK		44
-+#define CLK_GOUT_PERI_UART2_PCLK		45
-+#define CLK_GOUT_PERI_WDT_CPUCL0_PCLK		46
-+#define CLK_GOUT_PERI_WDT_CPUCL1_PCLK		47
-+#define PERI_NR_CLK				48
-+
-+#endif /* _DT_BINDINGS_CLOCK_EXYNOS7870_H */
+>
+> BR, Jarkko
 
--- 
-2.48.1
 
+
+--=20
+-Dionna Glaze, PhD, CISSP, CCSP (she/her)
