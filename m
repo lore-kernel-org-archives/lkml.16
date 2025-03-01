@@ -1,126 +1,91 @@
-Received: from linux1587.grserver.gr (linux1587.grserver.gr [185.138.42.100])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48BD61D89FD;
-	Sat,  1 Mar 2025 11:09:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.138.42.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 739FD1A5B97;
+	Sat,  1 Mar 2025 11:10:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740827361; cv=none; b=F9qq49KUgLbNGFl5R8QbbUDqQiYd+NLERmYYWnV7oF1bl7Whg+yz0+DFe2wfvg/AIAwlgXqja4K8HtX/B1+0KCN6bFSKITI2uWZqxMOLry8VrHrd7luRZv3bg+R02zIflHlOw4MGGxPC8lv6ifqElb874tS1rPpznpaXc2c+cIQ=
+	t=1740827441; cv=none; b=nJ0DAY7Z/b6WE/q8k7mPvc9MWPy/HMJ8M7dfF8/qJrVk61Q5hTQG9F5/fa7eZaho9HY8Cm17MJyKnu5jOnOTGuISuPbTVrYYikPplufwJsw80eEwOt8TJrLIseVUw3984xTEsdK+Tu1FvWRVcDXF2SWcjNnSyfRVom9+/T0/qkQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740827361; c=relaxed/simple;
-	bh=u8j9VzTVmndaVO3HrV8NL99wet7gCToCq5y54FRq/LM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LB4ZP02ZzBVL/obiKsBbIerJ+40nGy10qy7d7vBYzsibMdXQyvbHUSbodEng61L9wlCOx+vGLWctVa1d2uKcMVws5WSVKxd6sNJcFpZggtnP3hOGIgc6QE/m83alcy2HW5mKxSvNHXF6k4BxMFK8DPGiv/rfV9EpCj5xmKslFzU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=YwUKfg9K; arc=none smtp.client-ip=185.138.42.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
+	s=arc-20240116; t=1740827441; c=relaxed/simple;
+	bh=nNqG0GMewRObnyRAAVI9p6JFUYawaXI8WiP+ukd2A5o=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=EwQutLlUhC5d/bIRepbzwDQYS+4msRVN867eRnRlViBd+OY9aQPmzqR2VSzWatfPnFC12zbhhl6UbREKZWEGndqOcV03jvtHFuLvMDJF8GA9ucjEUq2sNZPsshLXe2qHZ61++XYt3xKWpF6aaXADog1LOtlJ90K82fwhGvj4qL0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RqcJd/cY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="YwUKfg9K"
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
-	by linux1587.grserver.gr (Postfix) with ESMTPSA id F3C9A2E024A4;
-	Sat,  1 Mar 2025 13:09:14 +0200 (EET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
-	s=default; t=1740827355;
-	bh=ODZmMANDWFstVv7l6HIL2/TBZdfFHuhroNovE4QTtSY=;
-	h=Received:From:Subject:To;
-	b=YwUKfg9KX1jk+DV2OCNqOm4j/2oL9f9oro6KZUQw8xbpgcSgyPkAuH5qZgsZkiNO0
-	 Vc6gQ01eJbZ7Qj//twHWYiter7+Xle5Ett5F1+XQJ12sZHy+bV1uNa5LTuzQNA0HvH
-	 sa5y46tM/SilENTWfPNLnA3FL5375bV9/vD0DQzM=
-Authentication-Results: linux1587.grserver.gr;
-        spf=pass (sender IP is 209.85.208.178) smtp.mailfrom=lkml@antheas.dev smtp.helo=mail-lj1-f178.google.com
-Received-SPF: pass (linux1587.grserver.gr: connection is authenticated)
-Received: by mail-lj1-f178.google.com with SMTP id
- 38308e7fff4ca-30a36eecb9dso34486541fa.2;
-        Sat, 01 Mar 2025 03:09:14 -0800 (PST)
-X-Forwarded-Encrypted: i=1;
- AJvYcCVU52APMA4lrVfxwCPfOfLaH+zp5xPRXIDeH2/+qGeqaRLIVydPI7G0AxOWS87/YyTv/W6C6+3t2Sn0@vger.kernel.org,
- AJvYcCWXPRMwDUga05uelisqDIC4tl2Ejh0sQEvbEiU/uAhro+fU49f/u5130gCacnfzRj1wfq+CwUbD1PtFEeqN@vger.kernel.org,
- AJvYcCXM72Z1gmHigsRgEzTkHuvZKj0NNeKd7rqhxtKWAejHrDun4tPKFrd1jF/I/R8mWhg6keR3hHNZAGr0smDah4fkmdZ3Yw==@vger.kernel.org
-X-Gm-Message-State: AOJu0YyfaXqClGbmc3a8rggLV1FrLvuDSmXZqHT85QMD0Bc7FMd02Xcl
-	HOwNsovDTQuo0Q0URrYo0HHx/y8JVB3K4TClZDozY1Ek6GvI7xAUCHl6tNCjunHyxpSwIPZNEPv
-	U1rsPUQf+1FgOCnonzN9V1kgnLHs=
-X-Google-Smtp-Source: 
- AGHT+IHTOa4F6D9CTZsCBIW6VFH+IFkkhOF8T74ihTQSD4AUyeJQikuHi1jq0jqcTJiIoHPf9JAzsEVz37+2ViBhjr0=
-X-Received: by 2002:a2e:bc26:0:b0:300:3bcd:8d05 with SMTP id
- 38308e7fff4ca-30b9320eb4fmr22069881fa.15.1740827354350; Sat, 01 Mar 2025
- 03:09:14 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RqcJd/cY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2E79C4CEDD;
+	Sat,  1 Mar 2025 11:10:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740827439;
+	bh=nNqG0GMewRObnyRAAVI9p6JFUYawaXI8WiP+ukd2A5o=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=RqcJd/cYGKltRT9h6KNka1heUSDbeIOA2o7SOUY8yXx1mXGc/buNEIQrzp8usT0R5
+	 oIIAoVNh0/DFsFRbxtgmVt5jIleViLUgMrXRnxLJeOPdu0Fhv6ZiVvg6T7/6vJBl6D
+	 QxEbxiEZeQC53aFcFH2ROVff6XP2uhKcZDO8GUBU/ndaT3+ZdKFvuOGWcf/+NkyIIM
+	 yOr4n7pLdKhjqdyyCBiHm4Pwpm650y90r0D/I6bYgRHAWjMSE7fV7tOKEP39Rb2RnM
+	 WyhQnNBNMTsQdpIlcwxbUoMhjZzG440kCGXu7d/ZX6w82326HJnqQ9NbHvq+EG7t9k
+	 ZI7SN1pmRobeA==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1toKjt-009LKs-1e;
+	Sat, 01 Mar 2025 11:10:37 +0000
+Date: Sat, 01 Mar 2025 11:10:35 +0000
+Message-ID: <86plj1ovkk.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Frank Li <Frank.Li@nxp.com>
+Cc: Kishon Vijay Abraham I <kishon@kernel.org>,	"Rafael J. Wysocki"
+ <rafael@kernel.org>,	Thomas Gleixner <tglx@linutronix.de>,	Anup Patel
+ <apatel@ventanamicro.com>,	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Danilo Krummrich <dakr@kernel.org>,	Manivannan Sadhasivam
+ <manivannan.sadhasivam@linaro.org>,	Krzysztof =?UTF-8?B?V2lsY3p5xYRza2k=?=
+ <kw@linux.com>,	Bjorn Helgaas <bhelgaas@google.com>,	Arnd Bergmann
+ <arnd@arndb.de>,	Shuah Khan <shuah@kernel.org>,	Richard Zhu
+ <hongxing.zhu@nxp.com>,	Lucas Stach <l.stach@pengutronix.de>,	Lorenzo
+ Pieralisi <lpieralisi@kernel.org>,	Rob Herring <robh@kernel.org>,	Shawn Guo
+ <shawnguo@kernel.org>,	Sascha Hauer <s.hauer@pengutronix.de>,	Pengutronix
+ Kernel Team <kernel@pengutronix.de>,	Fabio Estevam <festevam@gmail.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,	Conor Dooley
+ <conor+dt@kernel.org>,	Niklas Cassel <cassel@kernel.org>,
+	dlemoal@kernel.org,	jdmason@kudzu.us,	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,	linux-pci@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,	imx@lists.linux.dev,
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH v15 02/15] irqdomain: Add IRQ_DOMAIN_FLAG_MSI_IMMUTABLE and irq_domain_is_msi_immutable()
+In-Reply-To: <20250211-ep-msi-v15-2-bcacc1f2b1a9@nxp.com>
+References: <20250211-ep-msi-v15-0-bcacc1f2b1a9@nxp.com>
+	<20250211-ep-msi-v15-2-bcacc1f2b1a9@nxp.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.4
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250228170155.2623386-1-superm1@kernel.org>
-In-Reply-To: <20250228170155.2623386-1-superm1@kernel.org>
-From: Antheas Kapenekakis <lkml@antheas.dev>
-Date: Sat, 1 Mar 2025 12:09:03 +0100
-X-Gmail-Original-Message-ID: 
- <CAGwozwFoqUPiZjozj5MHV5-4dVF3Ef0Wy-Sn5v38keHp2BfStQ@mail.gmail.com>
-X-Gm-Features: AQ5f1JqjRZxLi0ktJ29MmA7xLit19qlo9jBgU5EzfP79arEXoDKIV5ceEM3pjbk
-Message-ID: 
- <CAGwozwFoqUPiZjozj5MHV5-4dVF3Ef0Wy-Sn5v38keHp2BfStQ@mail.gmail.com>
-Subject: Re: [PATCH 0/3] Add support for hidden choices to platform_profile
-To: Mario Limonciello <superm1@kernel.org>
-Cc: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
- "Rafael J . Wysocki" <rafael@kernel.org>,
-	Hans de Goede <hdegoede@redhat.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	"Luke D . Jones" <luke@ljones.dev>, Mark Pearson <mpearson-lenovo@squebb.ca>,
-	"open list:AMD PMF DRIVER" <platform-driver-x86@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	"open list:ACPI" <linux-acpi@vger.kernel.org>,
- "Derek J . Clark" <derekjohn.clark@gmail.com>,
-	me@kylegospodneti.ch, Denis Benato <benato.denis96@gmail.com>,
-	Mario Limonciello <mario.limonciello@amd.com>
-Content-Type: text/plain; charset="UTF-8"
-X-PPP-Message-ID: 
- <174082735531.24655.3644409426825857509@linux1587.grserver.gr>
-X-PPP-Vhost: antheas.dev
-X-Virus-Scanned: clamav-milter 0.103.11 at linux1587.grserver.gr
-X-Virus-Status: Clean
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: Frank.Li@nxp.com, kishon@kernel.org, rafael@kernel.org, tglx@linutronix.de, apatel@ventanamicro.com, gregkh@linuxfoundation.org, dakr@kernel.org, manivannan.sadhasivam@linaro.org, kw@linux.com, bhelgaas@google.com, arnd@arndb.de, shuah@kernel.org, hongxing.zhu@nxp.com, l.stach@pengutronix.de, lpieralisi@kernel.org, robh@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, krzk+dt@kernel.org, conor+dt@kernel.org, cassel@kernel.org, dlemoal@kernel.org, jdmason@kudzu.us, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, linux-kselftest@vger.kernel.org, imx@lists.linux.dev, devicetree@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-I just tested this. The behavior of this patch series matches mine
-1-1. Feel free to add a tested-by.
+On Tue, 11 Feb 2025 19:21:55 +0000,
+Frank Li <Frank.Li@nxp.com> wrote:
+> 
+> Add the flag IRQ_DOMAIN_FLAG_MSI_IMMUTABLE and the API function
+> irq_domain_is_msi_immutable() to check if the MSI controller retains an
+> immutable address/data pair during irq_set_affinity().
+> 
+> Ensure compatibility with MSI users like PCIe Endpoint Doorbell, which
+> require the address/data pair to remain unchanged after setup. Use this
+> function to verify if the MSI controller is immutable.
 
-IMO it is a bit cleaner/thought through than my series, so I am fine
-with dropping mine. Should be as it is essentially a V3
+Why is that a requirement? Why should a driver even care?
 
-Antheas
+	M.
 
-On Fri, 28 Feb 2025 at 18:02, Mario Limonciello <superm1@kernel.org> wrote:
->
-> From: Mario Limonciello <mario.limonciello@amd.com>
->
-> When two drivers provide platform profile handlers but use different
-> strings to mean (essentially) the same thing the legacy interface won't
-> export them because it only shows profiles common to multiple drivers.
->
-> This causes an unexpected behavior to people who have upgraded from an
-> earlier kernel because if multiple drivers have bound platform profile
-> handlers they might not be able to access profiles they were expecting.
->
-> Introduce a concept of a "hidden choice" that drivers can register and
-> the platform profile handler code will utilize when using the legacy
-> interface.
->
-> There have been some other attempts at solving this issue in other ways.
-> This serves as an alternative to those attempts.
->
-> Link: https://lore.kernel.org/platform-driver-x86/e64b771e-3255-42ad-9257-5b8fc6c24ac9@gmx.de/T/#t
-> Link: https://lore.kernel.org/platform-driver-x86/CAGwozwF-WVEgiAbWbRCiUaXf=BVa3KqmMJfs06trdMQHpTGmjQ@mail.gmail.com/T/#m2f3929e2d4f73cc0eedd14738170dad45232fd18
-> Cc: Antheas Kapenekakis <lkml@antheas.dev>
-> Cc: "Luke D. Jones" <luke@ljones.dev>
->
-> Mario Limonciello (3):
->   ACPI: platform_profile: Add support for hidden choices
->   platform/x86/amd: pmf: Add 'quiet' to hidden choices
->   platform/x86/amd: pmf: Add balanced-performance to hidden choices
->
->  drivers/acpi/platform_profile.c    | 94 +++++++++++++++++++++++-------
->  drivers/platform/x86/amd/pmf/sps.c | 11 ++++
->  include/linux/platform_profile.h   |  3 +
->  3 files changed, 87 insertions(+), 21 deletions(-)
->
-> --
-> 2.43.0
->
+-- 
+Without deviation from the norm, progress is not possible.
