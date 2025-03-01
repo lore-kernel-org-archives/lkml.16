@@ -1,79 +1,78 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FB224C98;
-	Sat,  1 Mar 2025 00:20:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18591F9CB
+	for <linux-kernel@vger.kernel.org>; Sat,  1 Mar 2025 00:22:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740788442; cv=none; b=rVyMrCN7VXOxr3c0FeLmisQJqUilihm4Oliy6kg8W3iqwCkyn7trCELWpXGGFnl6KgKSwhgYi3sIVBtOz5wImskn9E/yf+xQEJ5gBnIrrtNJV9V6Voceh5Vgecf3U67N8ljxFDFyNc0zgKJEZ/myYAEsE+DGhOYxQoEeaQPJkWQ=
+	t=1740788524; cv=none; b=leQo/H5RwvmxJJ5ZuELvIV2rL72CaY3EMlzuayIZNFvHOzSzcys7JWt2nALKhcPFUKtEXLPVj0qV7nr+aseLxd0zE3JSo3z+Ob5dFuYKpQ8UcfWVs5q3J61ZJf/quh8cJiCpVH1Y3OSqWpMCZpk873G9du0kazz/r6xMYC7hpkY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740788442; c=relaxed/simple;
-	bh=KiD7RunlUVt0MKCXSK3YEiHcDKUWIMvyIfV1XKCBRw4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Fny6Dw7HZpVo++ZcQZVOt6ZgQ5YCbC08/YfBAveEulfMsbdmC+WTm2dVT9tty+Sr+ah3p5+oS/cPagQtKpm1GJ/1MTMPXYlbzfCBLsVg+LhE2TYBHgAIcpQ/8slhICB2DeZxRqgVqdYVAq1qES0yp1sNuMbzqN2O1a2xX+zJZWw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zt+bFeMt; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zt+bFeMt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 932AFC4CED6;
-	Sat,  1 Mar 2025 00:20:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740788442;
-	bh=KiD7RunlUVt0MKCXSK3YEiHcDKUWIMvyIfV1XKCBRw4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Zt+bFeMt5mslDlbmpCIEOyBj3iHYUrN01yrhsxl0ZKZzKG5JyepdEKZlYEIQMBvpt
-	 nf6leOGUiZ9+FSKS9v9FKfp46RcOEDN/81/1V1isHu+Es/v023dFnl+lr9ge1vey1l
-	 HH3YIF3y5Hrknnm+OLY8E/dz2olsPnWSoolS6/4RiaobCeSinWC++s8IHCYCZZKdeg
-	 8cew16nKq6ooCOMrji29xJOpy7etpwp8VOcdLkuBUfPfpvTOyIGjD9eqpJ2s88Z5BD
-	 1zGhloTdarG+EjDxTIEBVSsOfFluxvrw2pzmVUcF3QppGjiOV3PFX9pXXF8KxxWW/s
-	 zGnK6XI/qvtNA==
-Date: Fri, 28 Feb 2025 16:20:40 -0800
-From: Namhyung Kim <namhyung@kernel.org>
-To: Song Liu <song@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	James Clark <james.clark@linaro.org>
-Subject: Re: [PATCH v2] perf tools: Skip BPF sideband event for userspace
- profiling
-Message-ID: <Z8JS2P-QwHcPUpTV@google.com>
-References: <20250227051718.1176930-1-namhyung@kernel.org>
- <CAPhsuW6wuBjCo9ygCFhyYimEHg5ZNtN7-Yd+gWuMJPTU781vFw@mail.gmail.com>
+	s=arc-20240116; t=1740788524; c=relaxed/simple;
+	bh=d23CwhsVnNOdGWq6rbWCMbTUmxYX49JZJarGho1lNME=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=k8GX8222cALbb5IcDBGpX5kOSQ6yWyoGfS2i/YnMLpc/AO9jk9xyJcabfEp8p7dJg2Grx4vJN3qSafJeu6bT7msLt8JOtSjvcCXqsXv95aA54KBqipsXZ/hk95FaDqHU4iZi8OrWRuT1aZEnI2c4THcmiN6ZmlRQ4xrxe6Xb5Ao=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-851a991cf8bso294356439f.0
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 16:22:02 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740788522; x=1741393322;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=SnjErBV+M0/5ybVsx6d7eAIoc/JglLB98P2e5faRA7E=;
+        b=gHgJ6SgH+wncJ7NxvSYhUp8tT6AChATZ+huWCeS0Jw+7RUIVWeTdjffjsZZec7JLi6
+         EUDprS9Qe85jsD6YhA43KmNh3aFW+8F2zn4KhEhmDHbY3PcmYFoRtYQL9bO7bZDNRpV3
+         TVaHBh9XurDIqG4dKoKhXdfIoyVM9CUOzU/HcqzlRrrSEon8PpNDx0GqqNl/DGsbvN0P
+         +v2amHKS62hEo8DdEXj4GJanng1rAMXv695EEtG4Y/JgKuYLDWqKtuC7LJZJ9BJpkCmd
+         N5PMRsAudCUey+hpyUpEHkooLfK3lZCTZu/b4GFSF21kZ1Dh2nUa3A7Wrut7dVKWfEIS
+         PXzw==
+X-Forwarded-Encrypted: i=1; AJvYcCV4e5Tsf/0y++yH4tnLrp632RtRHPgJlyrJCOpb+6G79GEdXnoAQY6VxyGfv60pzbHsrwIB6tcYA9aIQ7M=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxM1X0S6+Ha0kmXXPc3p72ARuIKVHpR7+SA4ooIIC2zS03nzGUE
+	9MHRosXY7UcHcBdJ2wS4oOuGqzXaodsws6VZneeE7Ii78+gTpg7w86ERVB/rN4zBSbWJ3cux4Wy
+	g5K3RQyNVUXS6rLDc3ATam5DoJnI7U/mM5l8lF2n6zfQLO9jootpFiiY=
+X-Google-Smtp-Source: AGHT+IFK/+Voer3eS9nJJ3bYQfdwYAE5ugYuJdGLAyLLQCY/ACDcPRlCyhOrxJ0CnyTRZ+tpJBVu0AIj8ZAgaveZ2D5+L68bWSvD
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAPhsuW6wuBjCo9ygCFhyYimEHg5ZNtN7-Yd+gWuMJPTU781vFw@mail.gmail.com>
+X-Received: by 2002:a05:6e02:194b:b0:3d0:26a5:b2c with SMTP id
+ e9e14a558f8ab-3d3e6bc6b2emr43948505ab.8.1740788522212; Fri, 28 Feb 2025
+ 16:22:02 -0800 (PST)
+Date: Fri, 28 Feb 2025 16:22:02 -0800
+In-Reply-To: <67c16ce2.050a0220.1baf.000e.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67c2532a.050a0220.dc10f.0154.GAE@google.com>
+Subject: Re: [syzbot] [bcachefs?] INFO: task hung in invalidate_inode_pages2_range
+ (3)
+From: syzbot <syzbot+de1434c5355cc909b734@syzkaller.appspotmail.com>
+To: bfoster@redhat.com, kent.overstreet@linux.dev, 
+	linux-bcachefs@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, Feb 27, 2025 at 10:50:26AM -0800, Song Liu wrote:
-> On Wed, Feb 26, 2025 at 9:17 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> >
-> > The BPF sideband information is tracked using a separate thread and
-> > evlist.  But it's only useful for profiling kernel and we can skip it
-> > when users profile their application only in userspace.
-> >
-> > It seems it already fails to open the sideband event in that case.
-> > Let's remove the noise in the verbose output anyway.
-> >
-> > Cc: Song Liu <song@kernel.org>
-> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> 
-> This turns out to be more complicated than I thought. I actually
-> like v1 better.
+syzbot has bisected this issue to:
 
-Sure, the complexity comes from moving the code to reduce the
-duplication.  But either is fine to me.
+commit 1d16c605cc55ef26f0c65b362665a6c99080ccbc
+Author: Kent Overstreet <kent.overstreet@linux.dev>
+Date:   Thu Nov 9 19:22:46 2023 +0000
 
-Can I add your Acked-by to v1, then?
+    bcachefs: Disk space accounting rewrite
 
-Thanks,
-Namhyung
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=116557b8580000
+start commit:   1e15510b71c9 Merge tag 'net-6.14-rc5' of git://git.kernel...
+git tree:       upstream
+final oops:     https://syzkaller.appspot.com/x/report.txt?x=136557b8580000
+console output: https://syzkaller.appspot.com/x/log.txt?x=156557b8580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=8de9cc84d5960254
+dashboard link: https://syzkaller.appspot.com/bug?extid=de1434c5355cc909b734
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11d297b8580000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=119af064580000
 
+Reported-by: syzbot+de1434c5355cc909b734@syzkaller.appspotmail.com
+Fixes: 1d16c605cc55 ("bcachefs: Disk space accounting rewrite")
+
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
