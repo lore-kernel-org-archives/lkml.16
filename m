@@ -1,167 +1,189 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E32D5FC0E;
-	Sun,  2 Mar 2025 09:01:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBA631C695;
+	Sun,  2 Mar 2025 09:16:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740906067; cv=none; b=Q906tMTYjM3Ns1lWwhRSnlUqTi8JKQK3GZCnkC3mRpN1TFAbX5sfowk7fQ7zADBqgVmrfzKa0MR4L6AMVSPxvU4z9jM9AODV/bWtbZWsignGRyiRBSDwHb24xkDTz/1d5L5xLBT/ctJvnuprZ3UgD0o2cRdPUhw1kkOX7+A4KEI=
+	t=1740907004; cv=none; b=YJvsWRb6papDzna2BRRUqk9lZf2bGjGRMRMMANWB3EAeRSaLS6B21dQlLPPNlmIS5mpFGdvwELIdzkvhG++TeSU3GbZ3B2qd8BRx3pc695o+y2hR5r3YehnlovaKTP80SJfkwpuLn9SNy9/2jZ7IoJXNz9YpCt/dUfBVWnf8pE8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740906067; c=relaxed/simple;
-	bh=C6tq+Dlkj8fuLHJjs2IpPWa9ylx/Xwa5aOmduQBT0QI=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=g+UhO0SFcpyyWr55WyPDNHuBguWZeePcf+pUK/AgDUHB+GOlMNtztT9Eb6CMnfZb8AyfAwWG5gHGIGyhKPLGmr6WmTVO+9L6BXWiqWUh9v5lxx0qamddbfSKsHGjbz3JdWBKZCsQ4GMgJ9wQk8flpkI7m+bZXGoqpSvzQLCrVSM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=GypIFtvj; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=alBn7Xau; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1740907004; c=relaxed/simple;
+	bh=H44sFfK1LqDLlQt24Q6gB7Vof+guX4WP72Q4KQ0UZj0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ugTtw3YvVCFWRBsNGYRNFEbB1uElRUqOvdNt8dWLFsV155lDt797DlUcgJf2FWQFUrF3ZqvJou4P5YZr2AneigG3k5pqCQrRVaIpa/o4tZ4ztEReRwYM5+ltYuF9vbN412+icKfmcxZbK1jCWCC15SXtX48bSrLdNYkjFUPIuIk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VqtUrY5n; arc=none smtp.client-ip=209.85.208.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="GypIFtvj";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="alBn7Xau"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1740906062;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=AQYzc6zsy7BVJfHkAaJxgxJ42ZnaVDHORnyS6oWMR/k=;
-	b=GypIFtvj3hxRXzg7f8uxJTd52Tn5hUkbAILZHWdGc2vHbWpaw6NpWWfSbgWnE8quXPII6/
-	gooHMVln+coU69y9knIULoUTv3E8LdXyRbm87xVjfl+GDduSXt+L3ZNTSRnNmN47EqhQZV
-	mskF0OYBAW7FkMeXlOpq6nluBUIHI7FSBpdTFU2omB0xE/HWoCb1rLNKrlyqUzjCbqBjew
-	yTkTTWsqB9z7khIWAv2tTPWK7NCSzWzCHANdWLG3Ve9pMxLjgSV1XYDrtSCtgErWGkosW3
-	4I9MwwglCLo6jaPxEmAADvaWXZsnO2wU3j6/VGVRJQoZcsYtVpAk9zCtu7I2gw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1740906062;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=AQYzc6zsy7BVJfHkAaJxgxJ42ZnaVDHORnyS6oWMR/k=;
-	b=alBn7XauSzoChXOicRdwxPVSOUm7GhEbHyOG/HgPcSK7ruhmsetRdi9lXLNO1ttKxBOIB7
-	M25JGqeVZFo1WtCA==
-To: Hans Zhang <18255117159@163.com>
-Cc: manivannan.sadhasivam@linaro.org, kw@linux.com, kwilczynski@kernel.org,
- bhelgaas@google.com, Frank.Li@nxp.com, cassel@kernel.org,
- linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, Hans Zhang
- <18255117159@163.com>
-Subject: Re: [v2] genirq/msi: Add the address and data that show MSI/MSIX
-In-Reply-To: <20250301123953.291675-1-18255117159@163.com>
-References: <20250301123953.291675-1-18255117159@163.com>
-Date: Sun, 02 Mar 2025 10:01:02 +0100
-Message-ID: <87plizdcxd.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VqtUrY5n"
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5e04064af07so6296559a12.0;
+        Sun, 02 Mar 2025 01:16:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740907001; x=1741511801; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Gt4e/Q1bzVAKDz/zUzGYf19qKql6n2SPXCwUMfSa3zM=;
+        b=VqtUrY5nnlS3Aa0vP/29A123vZXDlxGeVwUcqGepPVvQ0po5F6rAhby2K4gBfbfibH
+         uYEMTA05VtesO8Cp2mHTLNBOL+toWjmZK6AWKDLPWRHQSkln66+35ccHnWIQBlz70+3n
+         7IoECgvmrYYWkfTZMqjmTTnhVq+BCJEZeZbeNDiLNgC0EhoQnK5ddIfAG2WI6nhX0GEs
+         PU+hzwhcwfB48S6GQCN4xUPYwIoeP51dmulyUvljsR3EsW34ywhsCcXCb5ICxturaI5p
+         Ur3oleq2EnqA24bfMtGZlJq4PcLB+iaOPJAEmSeBFz0ySv9Hrfhgo/OvruGhAZ7VqnWj
+         k5DA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740907001; x=1741511801;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Gt4e/Q1bzVAKDz/zUzGYf19qKql6n2SPXCwUMfSa3zM=;
+        b=TSYjuwipiE0xp4T3wNDfNmhA6PIM8O74QzWo5e3pz26VLiexyfiTzHRI7dmvlfX0Pp
+         VSr52wMsnlMCwCQT66TCa1/rOivzwxavrHxS7JtQmkz7Gs9EAIZzS1tcOpk30fx7JJYR
+         LXv4tPrvRxdXlBDr+HrgvtWMk7+MdxeB/krC7wxR12O5CedwXOdrc9oec7AeqXnJvEEa
+         YqKwN9lQPH9+u7fIu1w4dRmzxTUdaeRanQ0xjLlpRsDQOzBOOnvDJWADuXPIadmFO77x
+         CvUcyqC/kWhSX1XhV11afUJXbrXqEPl3L13+6vXgT5aWVMgYosTAnKTCCY7+pLvomlKc
+         p2XQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUC0a/o3NqZpUMeN4awjJalGTvHi/GUOEJ58eNF367PgSmkhSQeJAshV8zCXbsQEQSgwYERRUAeGVAjwmJ9tQ==@vger.kernel.org, AJvYcCUVo9ipuNnuNp7jwfEut/XC8bpymJteYr79IvWyeYgvbRwyoRWIa2PK62b/hT344QxeMaCT3jhikEia@vger.kernel.org, AJvYcCUq3oDlGDGjdjYgJPViYmEwVPYiZYhNvkChWwTOSX24ZA2eOTrVLzwuwWG2vZE7uXZ6aJxuYdq6tfXFdRql@vger.kernel.org, AJvYcCXNWumUJqiVJ3cjvXtw97Ksexd4VTCHb29UbdHMtxClamEQ7IbWyIm14/fPeEGDaM5nesEe5gVn1LGtlnLddmW0m1o=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzJNScHIaVjV0XMM2/WOtT4rvXgr0Yf5oH/l3KjoNh9Bb4FrZmA
+	WwDjibAf1DM+MgdEEcEx7odYYqWQ8NO7G6OWybKAANiOPADWe2/HluWLqA==
+X-Gm-Gg: ASbGnctZtldh1S7J2dc6p5Kh9AxfN6+9L3CMU7e5lvdkZAqGGS6VkjkyXBii55UgvjX
+	mEpSwO3JsjEfNs543l9FIb95lnIce7Z3l7fbLPLJ83pDBoUwmbGplmEMZxMI65QxM1NsU8A85tc
+	FyhEJQxF4ZS2iX6iUZs29Mhz9Q1/pU0lS+GOFZ6VEm9JuaTmc/3zxwjz9viscnffmxZiXIEkSe7
+	KsQhuIXEfCOMUQs8uHOmeF6mLuF+uqdcF3dRS02scQFKsM5AQHn0EkutzUdSD50U/1MWZzrBvuw
+	Ewmbygx1sxF6otwlKNNiig+q6sU268PDd/3+Xxs91wKbMsw1sUNr4yBv2Xj6TV2AESOQOcm/Cuz
+	8okVaE34F643xhLSzEjlbfNI=
+X-Google-Smtp-Source: AGHT+IEYSDw2sP7Dh+Z2pA1UtfA1dKfkOfTidFVCkHLXhYUdHVMwVkHLto91nPU2C2aCCuTbWanVJQ==
+X-Received: by 2002:a17:907:3f22:b0:abe:c3a8:7aa2 with SMTP id a640c23a62f3a-abf268228c1mr1096068066b.46.1740907000673;
+        Sun, 02 Mar 2025 01:16:40 -0800 (PST)
+Received: from [192.168.1.105] (91-139-201-119.stz.ddns.bulsat.com. [91.139.201.119])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abf0c6ee49dsm624648366b.105.2025.03.02.01.16.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 02 Mar 2025 01:16:39 -0800 (PST)
+Message-ID: <4502b578-96e6-49e0-8f3b-54f6e5640c55@gmail.com>
+Date: Sun, 2 Mar 2025 11:16:38 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 3/8] dt-bindings: phy: add
+ samsung,exynos2200-usbcon-phy schema file
+Content-Language: en-US
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I
+ <kishon@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>,
+ Philipp Zabel <p.zabel@pengutronix.de>, Abel Vesa <abel.vesa@linaro.org>,
+ linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-samsung-soc@vger.kernel.org, linux-phy@lists.infradead.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250223122227.725233-1-ivo.ivanov.ivanov1@gmail.com>
+ <20250223122227.725233-4-ivo.ivanov.ivanov1@gmail.com>
+ <20250224-curly-cyber-spaniel-efdc39@krzk-bin>
+ <a4f63721-d094-4eda-b68a-6ef62ff54680@gmail.com>
+ <c8184542-5dab-4403-bee4-867810397ae4@kernel.org>
+From: Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>
+In-Reply-To: <c8184542-5dab-4403-bee4-867810397ae4@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hans!
-
-On Sat, Mar 01 2025 at 20:39, Hans Zhang wrote:
-> The debug_show() callback function is implemented in the MSI core code.
-> And assign it to the domain ops::debug_show() creation.
+On 2/25/25 10:11, Krzysztof Kozlowski wrote:
+> On 24/02/2025 11:48, Ivaylo Ivanov wrote:
+>> On 2/24/25 10:56, Krzysztof Kozlowski wrote:
+>>> On Sun, Feb 23, 2025 at 02:22:22PM +0200, Ivaylo Ivanov wrote:
+>>>> The Exynos2200 SoC has a USB controller PHY, which acts as an
+>>>> intermediary between a USB controller (typically DWC3) and other PHYs
+>>>> (UTMI, PIPE3). Add a dt-binding schema for it.
+>>>>
+>>>> Signed-off-by: Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>
+>>>> ---
+>>>>  .../phy/samsung,exynos2200-usbcon-phy.yaml    | 76 +++++++++++++++++++
+>>>>  1 file changed, 76 insertions(+)
+>>>>  create mode 100644 Documentation/devicetree/bindings/phy/samsung,exynos2200-usbcon-phy.yaml
+>>> You have undocumented dependencies which prevent merging this file.
+>>> First, dependencies have to be clearly expressed.
+>> They are, in the cover letter.
+> Where? I read it twice. Dependencies is the most important thing and
+> should scream at beginning of the cover letter, so if you bury them
+> somewhere deep it also would not matter - just like they were missing.
 >
-> cat /sys/kernel/debug/irq/irqs/msi_irq_num, the address and data stored
-> in the MSI capability or the address and data stored in the MSIX vector
-> table will be displayed.
+>>> Second, you should
+>>> rather decouple the code from header dependencies, otherwise this cannot
+>>> be merged for current release (just use clocks with long names, without IDs).
+>> Sure
+>
+>>>> diff --git a/Documentation/devicetree/bindings/phy/samsung,exynos2200-usbcon-phy.yaml b/Documentation/devicetree/bindings/phy/samsung,exynos2200-usbcon-phy.yaml
+>>>> new file mode 100644
+>>>> index 000000000..7d879ec8b
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/phy/samsung,exynos2200-usbcon-phy.yaml
+>>>> @@ -0,0 +1,76 @@
+>>>> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+>>>> +%YAML 1.2
+>>>> +---
+>>>> +$id: http://devicetree.org/schemas/phy/samsung,exynos2200-usbcon-phy.yaml#
+>>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>>>> +
+>>>> +title: Exynos2200 USB controller PHY
+>>>> +
+>>>> +maintainers:
+>>>> +  - Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>
+>>>> +
+>>>> +description:
+>>>> +  Exynos2200 USB controller PHY is an intermediary between a USB controller
+>>>> +  (typically DWC3) and other PHYs (UTMI, PIPE3).
+>>> Isn't this the same as usbdrd phy? see: samsung,usb3-drd-phy.yaml
+>> It's not (I think). There's a few reasons I've decided to make this separate
+>> from the usb3-drd-phy bindings and exynos5-usbdrd driver:
+>>
+>> 1. This PHY does not provide UTMI and PIPE3 on its own. There's no tuning
+> USBDRD phy does not provide UTMI and PIPE on its own either if you look
+> at diagram - they call it phy controller.
 
-So this explains what the patch is doing and what the output is. But it
-fails to explain the _why_. Documentation gives proper guidance:
+Ughm. What? So in most exynos cases, there's a combination of multiple phys?
 
- https://www.kernel.org/doc/html/latest/process/maintainer-tip.html#changelog
- https://www.kernel.org/doc/html/latest/process/submitting-patches.html#describe-changes
+>
+>> for them, and all that is needed from it is to disable HWACG, assert/
+>> deassert reset and force bvalid/vbusvalid. After that SNPS eUSB2
+>> initialization can be done and USB2 works. If the USBCON phy is not set
+>> up before the eUSB2 one, the device hangs, so there is definitely a
+>> dependancy between them. For PIPE3 we'd need to control the pipe3
+>> attaching/deattaching and then initialize the synopsys USBDP combophy.
+> Does it mean there is no USB DRD phy controller as before?
+>
+> Anyway the problem is you have DWC3 -> PHY -> PHY. Looks one phy too many.
 
-> e.g.
-> root@root:/sys/kernel/debug/irq/irqs# cat /proc/interrupts | grep ITS
->  85:          0          0          0          0          0          0          0          0          0          0          0          0   ITS-MSI 75497472 Edge      PCIe PME, aerdrv
->  86:          0         30          0          0          0          0          0          0          0          0          0          0   ITS-MSI 76021760 Edge      nvme0q0
->  87:        287          0          0          0          0          0          0          0          0          0          0          0   ITS-MSI 76021761 Edge      nvme0q1
->  88:          0        265          0          0          0          0          0          0          0          0          0          0   ITS-MSI 76021762 Edge      nvme0q2
->  89:          0          0        177          0          0          0          0          0          0          0          0          0   ITS-MSI 76021763 Edge      nvme0q3
->  90:          0          0          0         76          0          0          0          0          0          0          0          0   ITS-MSI 76021764 Edge      nvme0q4
->  91:          0          0          0          0        161          0          0          0          0          0          0          0   ITS-MSI 76021765 Edge      nvme0q5
->  92:          0          0          0          0          0        991          0          0          0          0          0          0   ITS-MSI 76021766 Edge      nvme0q6
->  93:          0          0          0          0          0          0        194          0          0          0          0          0   ITS-MSI 76021767 Edge      nvme0q7
->  94:          0          0          0          0          0          0          0         94          0          0          0          0   ITS-MSI 76021768 Edge      nvme0q8
->  95:          0          0          0          0          0          0          0          0        148          0          0          0   ITS-MSI 76021769 Edge      nvme0q9
->  96:          0          0          0          0          0          0          0          0          0        261          0          0   ITS-MSI 76021770 Edge      nvme0q10
->  97:          0          0          0          0          0          0          0          0          0          0        127          0   ITS-MSI 76021771 Edge      nvme0q11
->  98:          0          0          0          0          0          0          0          0          0          0          0        317   ITS-MSI 76021772 Edge      nvme0q12
+So...
 
-How is this relevant to describe the patch?
+DWC3 -> USBDRD (USBCON) -> PHYs?
 
-> root@root:/sys/kernel/debug/irq/irqs#
-> root@root:/sys/kernel/debug/irq/irqs# cat 87
-> handler:  handle_fasteoi_irq
-> device:   0000:91:00.0
-> status:   0x00000000
-> istate:   0x00004000
-> ddepth:   0
-> wdepth:   0
-> dstate:   0x31600200
->             IRQD_ACTIVATED
->             IRQD_IRQ_STARTED
->             IRQD_SINGLE_TARGET
->             IRQD_AFFINITY_MANAGED
->             IRQD_AFFINITY_ON_ACTIVATE
->             IRQD_HANDLE_ENFORCE_IRQCTX
-> node:     0
-> affinity: 0
-> effectiv: 0
-> domain:  :soc@0:interrupt-controller@0e001000:its@0e050000-3
->  hwirq:   0x4880001
->  chip:    ITS-MSI
+...with usbdrd controller connecting and controlling the USB2 and USB3
+phys, as well as dual role mode? Well, where is the DRD part in the exynos5
+driver?
 
-This output is from a pre 6.11 kernel...
+I guess it does perfectly fit the job of a usbdrd controller then (if it
+even deals with DRD). But then again,  this brings up two questions:
+1. Should this driver even be named exynos2200-usbcon and not, for
+example, exynos2200-usbdrd?
+2. Are the exynos5-usbdrd phys really only USBDRD, or do they implement
+USB speed functionality? What is the UTMI/PIPE3 setup for then?
 
->   flags:   0x20
->              IRQCHIP_ONESHOT_SAFE
->  msix:
->   address_hi: 0x00000000
->   address_lo: 0x0e060040
->   msg_data:   0x00000001
+ps: dealing with this without any documentations sucks.
 
-For demonstration it's enough to stop here, no?
-  
-> +static void msi_domain_debug_show(struct seq_file *m, struct irq_domain *d,
-> +				  struct irq_data *irqd, int ind)
-> +{
-> +	struct msi_desc *desc;
-> +	bool is_msix;
-> +
-> +	desc = irq_get_msi_desc(irqd->irq);
+Best regards,
+Ivaylo
 
-Move this up to the declaration.
+>
+>
+>> 2. With the way it's modelled, we need to parse phandles from eUSB2 and
+>> USBDP to the controller. Adding that to the usbdrd driver would be...
+>> weird. It makes more sense to model it as a separate driver, because
+>> it functions in a different way.
+> Just to be clear: we don't talk about drivers here.
+>
+>
+> Best regards,
+> Krzysztof
 
-> +	if (!desc)
-> +		return;
-> +
-> +	is_msix = desc->pci.msi_attrib.is_msix;
-
-That's not valid for non PCI MSI interrupts.
-
-This function is used for all types of MSI interrupts. So for non PCI
-MSI interrupts this will output random garbage. Just print the address
-and be done with it. The MSI variant is visible from the chip name on
-current kernels. It's either ITS-PCI-MSI or ITS-PCI-MSIX and not
-ITS-MSI.
-
-> +	seq_printf(m, "%*s%s:", ind, "", is_msix ? "msix" : "msi");
-> +	seq_printf(m, "\n%*saddress_hi: 0x%08x", ind + 1, "", desc->msg.address_hi);
-> +	seq_printf(m, "\n%*saddress_lo: 0x%08x", ind + 1, "", desc->msg.address_lo);
-> +	seq_printf(m, "\n%*smsg_data:   0x%08x\n", ind + 1, "", desc->msg.data);
-> +}
-> +
->  static const struct irq_domain_ops msi_domain_ops = {
->  	.alloc		= msi_domain_alloc,
->  	.free		= msi_domain_free,
->  	.activate	= msi_domain_activate,
->  	.deactivate	= msi_domain_deactivate,
->  	.translate	= msi_domain_translate,
-> +	.debug_show     = msi_domain_debug_show,
-
-This does not build when CONFIG_GENERIC_IRQ_DEBUGFS=n.
-
-Thanks,
-
-        tglx
