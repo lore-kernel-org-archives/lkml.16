@@ -1,31 +1,31 @@
-Received: from m16.mail.126.com (m16.mail.126.com [117.135.210.9])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B4AD11EB1A9
-	for <linux-kernel@vger.kernel.org>; Sun,  2 Mar 2025 06:58:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.9
+Received: from m16.mail.126.com (m16.mail.126.com [220.197.31.7])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D34B21EC006
+	for <linux-kernel@vger.kernel.org>; Sun,  2 Mar 2025 06:58:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740898743; cv=none; b=m4V4D+QGx+44ZCsN/ya20n58NJAyHKJeAJPDXJd6SJ7O6yMbEDdo4hcs2agqV4LDba8T8+mJT/m5pe5i+/EMVaxZPzzu9g2AJ9zgWkm8BP7QUcCv4maqrsHYd4mICNd5bglv97ntZaKOCXlY7knI8Mia2vk2v2QOQM318rO+lwY=
+	t=1740898743; cv=none; b=BnJzDyj0cxnYWmXcPA9n82Z2/CuGavOU89UJapKF7rDnF/JbZsbN0o9SFujev7uoExWK8dsFviyM4sAMZFfh5m+qIzv/hBEh7ujgsG9XU7vTcYVIpkXwG/XUlEf7MkMPJYE8Gskdf7y9fLchyq7WG1vn13cdJXSNJqZS+gMipsU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1740898743; c=relaxed/simple;
-	bh=m3WWx7WaxOLxHF4l3ehA7ZpOfcH46DacagbXvgNtOUU=;
-	h=From:To:Cc:Subject:MIME-Version:Content-Type:Message-Id:Date; b=rOxtnYgfh1WtPIRQYZGSSnEEebhTb/5q5XJ2wnyGIDe9GajSy3AzuJZtytB7tb98rZSosrRGdOpM20xz0WXD9Xh7CJ/+xz3SRFd552g+qJSBBiX2oHos7sa7M5syBz0z6zEpaR+lqXYo93Zez78Y8gwaQAzUP5utAL/wCg0wnpo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com; spf=pass smtp.mailfrom=126.com; dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b=RNaU5fwh; arc=none smtp.client-ip=117.135.210.9
+	bh=PfixNPQ/uTp/hFvZCGY1TVY84A7zL5WAfQIAbeeaQe8=;
+	h=From:To:Cc:Subject:MIME-Version:Content-Type:Message-Id:Date; b=n2JLua60uIzHHuWg/K+k/ru7nFh7+F3RvjP7wyHFoPC+LvSgSuBUz/f23W4UWEeQEj4xa0W50UIuf0Gsc5EpwL3+87cNdgloX81c5WaDN3W7nFbXuJtpu1yDJjtVrSdjKM9duEgug5gTQOKSVxedzAs3ccnVTXlYajUbQNm5CDk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com; spf=pass smtp.mailfrom=126.com; dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b=f5w7sHnX; arc=none smtp.client-ip=220.197.31.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=126.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="RNaU5fwh"
+	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="f5w7sHnX"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
 	s=s110527; h=From:Subject:MIME-Version:Content-Type:Message-Id:
-	Date; bh=m3WWx7WaxOLxHF4l3ehA7ZpOfcH46DacagbXvgNtOUU=; b=RNaU5fw
-	hRllt4tIkp/YUbufOLED9gcatkF9Gv9LjU2AMh5Xg96z6dfqVCrfhdUC8xU3lL8I
-	WC1mqLkjqkAtwYbsYL7IZ/ttns/4A6heNjIlmjNqkMpCS264j+2inTNsnl5cdO6p
-	OsT3R2GxkdXiMLwsMICTLIuVmRfRzjFBUBRs=
+	Date; bh=PfixNPQ/uTp/hFvZCGY1TVY84A7zL5WAfQIAbeeaQe8=; b=f5w7sHn
+	XDgBvnzPlj9AqavkrS6S99QAqFqyv0SOI1fGNIXdE069jddkv+9f9TeKtSddydo0
+	3qjA6eGd84z73DuX/73eyFKI5Mr/RW6HI7W4m2VpxEGA9OGSHawn0djDh2q9OOmD
+	7PnJxvITd2qhOMl8rQbnj01VQxNKYW4WeIII=
 Received: from localhost (unknown [])
-	by gzga-smtp-mtada-g1-0 (Coremail) with SMTP id _____wD3d7Ah_sNnxjzeBQ--.11113S2;
-	Sun, 02 Mar 2025 14:43:45 +0800 (CST)
+	by gzsmtp2 (Coremail) with SMTP id PSkvCgD396oi_sNn9EJhBQ--.4563S2;
+	Sun, 02 Mar 2025 14:43:46 +0800 (CST)
 From: adam_smystery@126.com
 To: linux-kernel@vger.kernel.org
 Cc: 
-Subject: Hello! Rust is better than Golang
+Subject: Hello! Rust is better than Python
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -33,12 +33,12 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-X-CM-TRANSID:_____wD3d7Ah_sNnxjzeBQ--.11113S2
-Message-Id:<67C3FE21.059B36.00001@m16.mail.126.com>
+X-CM-TRANSID:PSkvCgD396oi_sNn9EJhBQ--.4563S2
+Message-Id:<67C3FE22.0B5A67.19577@m16.mail.126.com>
 X-Coremail-Antispam: 1Uf129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
-	VFW2AGmfu7bjvjm3AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjxU63C7UUUUU
-Date: Sun, 2 Mar 2025 14:58:55 +0800 (CST)
-X-CM-SenderInfo: 5dgdzspvp123xhu1qiyswou0bp/1tbifhsEumfD7erXlgAAs5
+	VFW2AGmfu7bjvjm3AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjxUgbAzUUUUU
+Date: Sun, 2 Mar 2025 14:58:54 +0800 (CST)
+X-CM-SenderInfo: 5dgdzspvp123xhu1qiyswou0bp/1tbiig4EumfD7fHXogAAs3
 
-Hello! Rust is better than Golang
+Hello! Rust is better than Python
 
