@@ -1,37 +1,40 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30C3C1C5D59
-	for <linux-kernel@vger.kernel.org>; Sun,  2 Mar 2025 19:36:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B5511EC01B
+	for <linux-kernel@vger.kernel.org>; Sun,  2 Mar 2025 19:36:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740944206; cv=none; b=tz+DGSPhuMzfi/KsUDcVapImSEq3z71ml/AtzSjFZ2LIKxYtd1MGNPqZZrBNGs8xeg7PVZOB9y1lS2mBMLoyf//nHcqNhKEatCnYH8TWrRrtmqFCHQU667jbXeuiFFUBqycDQCCB3sVTP0Bh0xeQcEbLpR+9cW+H5v0kt0jV/+4=
+	t=1740944209; cv=none; b=XAKo3qU9rTmQuVNV+G+lEqrxvyWVylqTnp9jrHvj1DHaGZXIewhEhKEqiOEVeVlslpYK8NNCM5sFyhMoGdX9EA1jlC1zAMC/XiCHNL0VdJ2qyoIhjptJBOIkJV+aWXy20b52gJ4aKO8D2hjga4SA0lBg/XDrmPaksdfVidh9H1A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740944206; c=relaxed/simple;
-	bh=AKXqU/Vi41ODr7wcCKNP8JX8eVDns7nsjJYI72WqjVo=;
-	h=Message-ID:From:To:Cc:Subject:Date; b=OkFNhkOWuSr75o56U1AZ1H/O6942HC11W8mtRs0L/DfgAStPrdyabFGtWBoRnla5lo1LRhDQu8rrWCgz9iM4pFQiJs7tboAnFhBpIkEyjMplA4fMtfEfaAf57f9An2amaMCMivMrT+Z06tkVvoemmcrug3W2yXL1BXq7smogfC8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=c51mwfy8; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=iugWUrhb; arc=none smtp.client-ip=193.142.43.55
+	s=arc-20240116; t=1740944209; c=relaxed/simple;
+	bh=oQlvzcCQFZGNU6jYrXc8Ejg3LVjNXwVuwT4rrg25Vc4=;
+	h=Message-ID:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type:Date; b=ZU4FkW7D/Jjx1oNRAEZ75Q43UC1yiQLg3JMakFXboWaP4fqDNE0SI9UTzPrDGHuF+MmlR04q+ge2Yj2nOWrsWICP7rlSU8LptvGyFjoOILEtA1jlepV9wgGB5czT83cO10wkVfCFYVzYn51o3hlLTuweP7bcMJwPTwWGciGaY4s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=xmgvyz3L; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=6T7NRgbA; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="c51mwfy8";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="iugWUrhb"
-Message-ID: <20250302185753.311903554@linutronix.de>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="xmgvyz3L";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="6T7NRgbA"
+Message-ID: <20250302193627.037768273@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1740944202;
+	s=2020; t=1740944206;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc; bh=Q/mV007jYcayTmph+9LmwJ9INtOxvOPoJygA6b9i+8A=;
-	b=c51mwfy8aHU0Zx546UA1AuSln4fU2Y6lS4YP8/FNdJ9RyXhdnffOwJ9hrOCVLsCNyDO44g
-	RF5LUaCxMjD46QohzT8MkEM6hiJ6Y6j+YOHU4fWuxrxxF+TfPJGk4Rzw9ZlgnAv7pIPi9i
-	KFijh2Sw2fzDXPKnFyrAVPFdV3cL6h7ADHAF6BOCjIM3g5MuCT1gjbUktmBL9Vh2JaJEDX
-	Bzsh6TAe5w9GHNAeG50TS0z34Pw5LEJk6pZhP6qPFO15ZwAb8Tmj+6mO8akP9Iq8vJkpqr
-	OW+s/F8IAlGuafjjleaUpjKvcdA6mBdo6lxytCGgL8lAEfYkHHjEQx6+nTCu6w==
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 references:references; bh=01lH/N7MkBCPfiP/7juACA911yRh9opjqKqKmt1gXEs=;
+	b=xmgvyz3Lz2oqfV8XvLpQNPUczcFaLIp6LNooyT+yc49fKde1CuqDYvNyKNy6GkVxrlsnwK
+	TNlAEQYDN8mRRgpcMqoiBMAcwiAqWjwbWeNwEbn3jPZXRl/6Aqpi6GHLpZk5BdnTF0xicd
+	5TvfHnufM0sBeGrzn7cfiglujka6yhvVwhY46Zyg9a9ZF8osTQ5dJ2U88JNTS2ZwX9oT89
+	fDQZgDJw2McX5k3rex28TK2g8oElz2fDWb/Q1iUraHTmqa8fVZuiC99ZuAoufl9BH8kicp
+	Fo0+Ay+uvCavmKv0g1wQJgvMS7mM1t9YY37xyVVDO9BUPaKMvd2IJJmC9UIqHA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1740944202;
+	s=2020e; t=1740944206;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc; bh=Q/mV007jYcayTmph+9LmwJ9INtOxvOPoJygA6b9i+8A=;
-	b=iugWUrhbdEQAwdP7UXJgtaGHf+pRGBrcJLHcq/dZIDBBS+YmRyQ6Zh3FndFUmlJacLpE+p
-	YIGXQiIHDPnQFPDQ==
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 references:references; bh=01lH/N7MkBCPfiP/7juACA911yRh9opjqKqKmt1gXEs=;
+	b=6T7NRgbApbr1ytTNyf7p6cTe+v5gPj75on1ynxjzknusjrHW8vR9AYWskNwZGwiYkftch6
+	oaBCHdiStkUtKoAQ==
 From: Thomas Gleixner <tglx@linutronix.de>
 To: LKML <linux-kernel@vger.kernel.org>
 Cc: Anna-Maria Behnsen <anna-maria@linutronix.de>,
@@ -41,80 +44,42 @@ Cc: Anna-Maria Behnsen <anna-maria@linutronix.de>,
  Andrey Vagin <avagin@openvz.org>,
  Pavel Tikhomirov <ptikhomirov@virtuozzo.com>,
  Peter Zijlstra <peterz@infradead.org>
-Subject: [patch V2 00/17] posix-timers: Rework the global hash table and
- provide a sane mechanism for CRIU
-Date: Sun,  2 Mar 2025 20:36:42 +0100 (CET)
+Subject: [patch V2 02/17] posix-timers: Add cond_resched() to
+ posix_timer_add() search loop
+References: <20250302185753.311903554@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Date: Sun,  2 Mar 2025 20:36:46 +0100 (CET)
 
-This is a follow up on V1 of this work, which can be found here:
+From: Eric Dumazet <edumazet@google.com>
 
-     https://lore.kernel.org/all/20250224095736.145530367@linutronix.de
+With a large number of POSIX timers the search for a valid ID might cause a
+soft lockup on PREEMPT_NONE/VOLUNTARY kernels.
 
-It addresses the scalability problem of the posix timer hash and provides a
-performant mechanism to restore Posix timers with a given ID along with a
-couple of preperatory cleanups and enhancements. More details about
-implementation choices are in the change logs and the cover letter of V1.
+Add cond_resched() to the loop to prevent that.
 
-Changes vs. V1:
+[ tglx: Split out from Eric's series ]
 
-  - Simplify the timer removal cleanup - PeterZ
-  - Use guards consistently - PeterZ
-  - Switch to jhash32()
-  - Avoid false sharing by reordering struct k_itimer
-  - Advance the ID counter when restoring
-  - A few additional cleanups
-
-The series survives all posix timer tests and did not show any regressions
-so far.
-
-The series is based on:
-
-    git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip timers/core
-
-and is also available from git:
-
-    git://git.kernel.org/pub/scm/linux/kernel/git/tglx/devel.git timers/posix
-
-Thanks,
-
-	tglx
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lore.kernel.org/all/20250214135911.2037402-2-edumazet@google.com
 ---
-Eric Dumazet (3):
-      posix-timers: Initialise timer before adding it to the hash table
-      posix-timers: Add cond_resched() to posix_timer_add() search loop
-      posix-timers: Make signal_struct::next_posix_timer_id an atomic_t
+ kernel/time/posix-timers.c |    1 +
+ 1 file changed, 1 insertion(+)
 
-Peter Zijlstra (1):
-      posix-timers: Make lock_timer() use guard()
-
-Thomas Gleixner (13):
-      posix-timers: Cleanup includes
-      posix-timers: Remove a few paranoid warnings
-      posix-timers: Remove SLAB_PANIC from kmem cache
-      posix-timers: Use guards in a few places
-      posix-timers: Simplify lock/unlock_timer()
-      posix-timers: Rework timer removal
-      posix-timers: Improve hash table performance
-      posix-timers: Switch to jhash32()
-      posix-timers: Avoid false cacheline sharing
-      posix-timers: Make per process list RCU safe
-      posix-timers: Don't iterate /proc/$PID/timers with sighand::siglock held
-      posix-timers: Provide a mechanism to allocate a given timer ID
-      selftests/timers/posix-timers: Add a test for exact allocation mode
-
- fs/proc/base.c                                |   48 --
- include/linux/cleanup.h                       |   22 -
- include/linux/posix-timers.h                  |   30 +
- include/linux/sched/signal.h                  |    3 
- include/uapi/linux/prctl.h                    |   10 
- kernel/signal.c                               |    2 
- kernel/sys.c                                  |    5 
- kernel/time/posix-timers.c                    |  530 +++++++++++++-------------
- tools/testing/selftests/timers/posix_timers.c |   60 ++
- 9 files changed, 403 insertions(+), 307 deletions(-)
-
+--- a/kernel/time/posix-timers.c
++++ b/kernel/time/posix-timers.c
+@@ -144,6 +144,7 @@ static int posix_timer_add(struct k_itim
+ 			return id;
+ 		}
+ 		spin_unlock(&hash_lock);
++		cond_resched();
+ 	}
+ 	/* POSIX return code when no timer ID could be allocated */
+ 	return -EAGAIN;
 
