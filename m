@@ -1,73 +1,115 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E99391519BE
-	for <linux-kernel@vger.kernel.org>; Sun,  2 Mar 2025 14:27:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6318336AF5
+	for <linux-kernel@vger.kernel.org>; Sun,  2 Mar 2025 14:33:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740925624; cv=none; b=imOKZLJI2sZyAOo2mdFHm+gbG2A6EGTdTaVZui6Q3sZ0UKxCxf6LRQaZuESAnzKnTCbK4Zkmqu+jR26eRCUw7n6GGbuqg9GuxKfkxhv2+9Zxyigv/Nd1wqW6XXmAV3H8oIN9K135xePjcRXR5BsXQMdz0jxjJGhtXUpBxujeKgM=
+	t=1740926009; cv=none; b=raG5F3qeyLODD40arinFM8BkQ0HVBqfOKCySODE+C+1WsHqnOj8gkCWVnA3y2lTQ4dGFWIKfvhXwG8cQjCC/NdTjpB902/urOg8y5euLgTSnGay+ZE+1mC+06/B4YO8jtdzvuCfJU1SbsKTrzy2kkwzIx8SPgst4a73wjSZPw34=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740925624; c=relaxed/simple;
-	bh=aKaIxUY0VRW52Ui8iC6HgHNpx18yvJM6J9k61Z/ZbQQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=o0Fq6EUu8OqhP1Xtg4bR6JAHnukBkK0h0RvaLJogJi/oZWeElMGvC8QcOQ9Tn1ejVBeThbquNW6hCNfy6/Zqu0OZpepGB6qXGzdXYG6sufRqnIvJfPhxi6b40SKiKFlL1ESF1HB7D1F6pxLsDN+aTeZElIDHBw8cf3yp3qiRSro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=H8ymg5Q8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740926009; c=relaxed/simple;
+	bh=C/xAItdObRhE+7CYDvFZUYp59fIC72o7p9syeQ2nR0M=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=lk2fILgtyN//rNp4Z8JoxNro0Oq34mpG1hNge9qN95w/PGjWIVINq2Buqhftg9K+6CpiZ3ThIRNcNXaGz1ahjiOs8Z0/0y7JRhE5+D0p4U9BOMtWQSZLLtpDmCOvxTKkxRcw+pAO2LbBnFlyLS85dNXXwYsmR+p9INWLd3u04RQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VEIrSbAO; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="H8ymg5Q8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20AF3C4CED6;
-	Sun,  2 Mar 2025 14:27:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1740925623;
-	bh=aKaIxUY0VRW52Ui8iC6HgHNpx18yvJM6J9k61Z/ZbQQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=H8ymg5Q8bIdFt93m2U5HK15vHs5s9VHwJLvssNBmSdTgto4kT8YyHKGg5EfGXcC20
-	 O5lYoo62RjrJMbBbD7UJrfoqoV6m2+6r7KlF1Z9YU2ScjF+mtlB7YPDAJuQXqr680c
-	 nump01TzP46udHSDNQMEwEbRWRYsh6thp384BZ54=
-Date: Sun, 2 Mar 2025 15:25:50 +0100
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Juergen Gross <jgross@suse.com>
-Cc: cve@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: CVE-2025-21818: x86/xen: fix xen_hypercall_hvm() to not clobber
- %rbx
-Message-ID: <2025030236-item-coral-d4b3@gregkh>
-References: <2025022710-CVE-2025-21818-27ee@gregkh>
- <f78c7925-8057-4503-93ec-c50386a63862@suse.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VEIrSbAO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1740926006;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=xGq2Axvzt/J7qgw1KDrXhDAtkMcdMfmrQjoiox/FEqY=;
+	b=VEIrSbAO5Nm75+lhFB+DhUlQEoFzZqnxpGKKFJPWm8wJ2OqAD9eoISGEJO0EfNrHEBaiNe
+	bvPndHSXvIS0YF/la9VJTHTA/cwf9ZodTTRSetVjpXjjjKcbb6srt0qX4u7xIrXgxYHHEZ
+	tymavuxHyflQUX+tsWdzacdiqHON4JY=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-649-8Mwhey9yN2umJaXpiBKHVQ-1; Sun,
+ 02 Mar 2025 09:33:20 -0500
+X-MC-Unique: 8Mwhey9yN2umJaXpiBKHVQ-1
+X-Mimecast-MFC-AGG-ID: 8Mwhey9yN2umJaXpiBKHVQ_1740925999
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 098391944F04;
+	Sun,  2 Mar 2025 14:33:19 +0000 (UTC)
+Received: from server.redhat.com (unknown [10.72.112.49])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 752F21800359;
+	Sun,  2 Mar 2025 14:33:14 +0000 (UTC)
+From: Cindy Lu <lulu@redhat.com>
+To: lulu@redhat.com,
+	jasowang@redhat.com,
+	mst@redhat.com,
+	michael.christie@oracle.com,
+	sgarzare@redhat.com,
+	linux-kernel@vger.kernel.org,
+	virtualization@lists.linux-foundation.org,
+	netdev@vger.kernel.org
+Subject: [PATCH v7 1/8] vhost: Add a new parameter in vhost_dev to allow user select kthread
+Date: Sun,  2 Mar 2025 22:32:03 +0800
+Message-ID: <20250302143259.1221569-2-lulu@redhat.com>
+In-Reply-To: <20250302143259.1221569-1-lulu@redhat.com>
+References: <20250302143259.1221569-1-lulu@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f78c7925-8057-4503-93ec-c50386a63862@suse.com>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-On Fri, Feb 28, 2025 at 08:28:48AM +0100, Juergen Gross wrote:
-> On 27.02.25 21:03, Greg Kroah-Hartman wrote:
-> > Description
-> > ===========
-> > 
-> > In the Linux kernel, the following vulnerability has been resolved:
-> > 
-> > x86/xen: fix xen_hypercall_hvm() to not clobber %rbx
-> > 
-> > xen_hypercall_hvm(), which is used when running as a Xen PVH guest at
-> > most only once during early boot, is clobbering %rbx. Depending on
-> > whether the caller relies on %rbx to be preserved across the call or
-> > not, this clobbering might result in an early crash of the system.
-> > 
-> > This can be avoided by using an already saved register instead of %rbx.
-> > 
-> > The Linux kernel CVE team has assigned CVE-2025-21818 to this issue.
-> 
-> Please revoke this CVE.
-> 
-> There is no way an unprivileged user can trigger this issue at will.
-> The issue is guest local and will either happen very early at boot or
-> it won't happen at all.
-> 
-> So no security issue.
+The vhost now uses vhost_task and workers as a child of the owner thread.
+While this aligns with containerization principles,it confuses some legacy
+userspace app, Therefore, we are reintroducing kthread API support.
 
-Now rejected, thanks for the review.
+Introduce a new parameter to enable users to choose between
+kthread and task mode.
 
-greg k-h
+Signed-off-by: Cindy Lu <lulu@redhat.com>
+---
+ drivers/vhost/vhost.c | 1 +
+ drivers/vhost/vhost.h | 9 +++++++++
+ 2 files changed, 10 insertions(+)
+
+diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
+index 63612faeab72..250dc43f1786 100644
+--- a/drivers/vhost/vhost.c
++++ b/drivers/vhost/vhost.c
+@@ -552,6 +552,7 @@ void vhost_dev_init(struct vhost_dev *dev,
+ 	dev->byte_weight = byte_weight;
+ 	dev->use_worker = use_worker;
+ 	dev->msg_handler = msg_handler;
++	dev->inherit_owner = true;
+ 	init_waitqueue_head(&dev->wait);
+ 	INIT_LIST_HEAD(&dev->read_list);
+ 	INIT_LIST_HEAD(&dev->pending_list);
+diff --git a/drivers/vhost/vhost.h b/drivers/vhost/vhost.h
+index bb75a292d50c..19bb94922a0e 100644
+--- a/drivers/vhost/vhost.h
++++ b/drivers/vhost/vhost.h
+@@ -176,6 +176,15 @@ struct vhost_dev {
+ 	int byte_weight;
+ 	struct xarray worker_xa;
+ 	bool use_worker;
++	/*
++	 * If inherit_owner is true we use vhost_tasks to create
++	 * the worker so all settings/limits like cgroups, NPROC,
++	 * scheduler, etc are inherited from the owner. If false,
++	 * we use kthreads and only attach to the same cgroups
++	 * as the owner for compat with older kernels.
++	 * here we use true as default value
++	 */
++	bool inherit_owner;
+ 	int (*msg_handler)(struct vhost_dev *dev, u32 asid,
+ 			   struct vhost_iotlb_msg *msg);
+ };
+-- 
+2.45.0
+
