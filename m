@@ -1,72 +1,71 @@
-Received: from out162-62-58-216.mail.qq.com (out162-62-58-216.mail.qq.com [162.62.58.216])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86A4F4C85
-	for <linux-kernel@vger.kernel.org>; Sun,  2 Mar 2025 12:04:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.58.216
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4092F1ADC6C
+	for <linux-kernel@vger.kernel.org>; Sun,  2 Mar 2025 12:04:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740917047; cv=none; b=BAtXhUKdUPqulXLgIPraVBf8NlZyheSHHSGcWibi2iriB7hTWVAPZNZWtShVbKkF7NRybw/wU25gMOk0FMEJ+wxDjfqQ233FSfEteOzNpI47+RyyCDgU7aTCZeOBcGcmRJsRFnOvSBvAyYARb7vgWKgThO1SShJ/qpf97ymgOug=
+	t=1740917068; cv=none; b=Chxlxic5iawp4mue2Iz0wCVlsdmmvKItbSdTg8eEWuj1Rjcr8SMmUnxBercWRnXFDI2JmoUkAD/yceizfThOwoWImagkSSrT67yOEsVDr33uaNPRSwgLms7UkktD8BfhTdJIh96Ox7V6hto4x5ngn6dQKYlX5zoSdivER4c5ZrI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740917047; c=relaxed/simple;
-	bh=rUSK+MPqWK7JW6t+Kl156HmvY1C0gKinUp6cPdJpfY8=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=pZJmt2v55M7cDpwfYOA/C6q9KZo0+FOsjbYBgf551w/9n6XacQgqcYhKkg7GvGtw1k+nMFDfxuWXsgBVhUmot4UXHP6QWI3mlydMnu7AnUSGbVkJIpTsvhZNy+tPDz2Q4RiHj48TkXRChYITTavvktYre05EtRLbmcdsEaFnARo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=z3Rip9CW; arc=none smtp.client-ip=162.62.58.216
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1740917068; c=relaxed/simple;
+	bh=JY2SMHuBAeQA5ymjsS5TI2bhfemIjAsjx0CTHtgqxv0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jZ8ItPLPCBvUVB6so5LxKW915Cx2FyQK1j0Dd5X1gMcUK8jrmr3dvs7dMr3/nRiMSwPtHc22vhOjkNqJB1ZTgx9+pCNE/LIKUiion++6yS7TA7vdOW4rh3nF9zp813GWC67zzj7PISimcYtVnsUnPzUrq7mo41hE58E3M3rMcFE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=vVEwMdHV; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="z3Rip9CW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1740916738; bh=MP9cTQS18F1Nay+dJn0ruW2FP+4xeNvoNS0Kd03Zylk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=z3Rip9CW2RC7xF2B8NiDp0eUWN1emUBLUAWRKGIg+fdiqRj5Uf5UWW20sF/BozdCm
-	 L0Wco+eIihMqZtQAsLbaDjfZ3iGdlNTrfzzmCBICoLLoJVSQ8h2baxmnSqRHnESG08
-	 x5is8BkBBSYIMi7OZZKcXDmbF5pNyzObaSK/y6DY=
-Received: from jckeep-Lenovo-XiaoXinAir-14IIL-2020.. ([240e:3b1:d00c:8e21:ca33:76fa:6eaa:ba4e])
-	by newxmesmtplogicsvrszc11-0.qq.com (NewEsmtp) with SMTP
-	id CEEA88A1; Sun, 02 Mar 2025 19:51:46 +0800
-X-QQ-mid: xmsmtpt1740916306tzgkvdr02
-Message-ID: <tencent_E9A9DFA5B2C6059DAF39777A40FB86753606@qq.com>
-X-QQ-XMAILINFO: MJf32pulH481pe77k9pFMDKMt8LQXajXPlG3FPBFZ+6X9Gh4bexTU+KoZf1uVP
-	 eCg1IPJA5xFTOpQdvkJRlJr0HcarFPKF3IFP2kFOK75DJ6JxXrzfMGxMElqsO2H0RfEi/rLr9H4m
-	 xdYxfFJ5mTtO+zEhmPLH8wnwiDcZFJi3Xq+8GpAkLEcmEwh+VLlQ107L3Tzt21Cj5HCrTB450XY0
-	 qPxHcGwJGtbKfBjGCyDqj8lga/izpeHTnsr65DFJFzt85eYLGypiiQnFLRV6kaB1VdVV+t2DczBR
-	 3xFQCvHCWS4GXmVFh1jOWpqL/waUKfzqz0LBBeExGpItERE/S3NYIWbkw9SjA3zbWlkrzr+qABTD
-	 KcW1W1uvW/ibuLNcjPRLEGUjPD7KLWSFG+IyBvQpa4E+562vYw1u1nIFockyMYYvAWImXFg3gPwG
-	 ph1pFiiuI/rJ4RDgFgE3g+z7iOuepEJ7M2ls60DO0I3YMhnqU/GoaC8EjNB8Ho8U8PAVoWX42DQl
-	 GE6pMf/qYxF+aHbeHiU5GpAqCfKtj/5SPUPJo7Giu7PKn4NPTYN3eUpGJBYDoKIO2TtfWxB8efNF
-	 +lo9n0fHqGwRxwh245Kff7hrW5La/kLe2TV44No1EqxyWbaQYVzMx5sTnsdnfXN9ycVEmYosSgWH
-	 lj/7szLldexy8FT3hAdrpoBkKwC1ZaiweuOfhlgT3mkDa2gLAAYvaP/Hokxiif9o3yjMQwbGkaF8
-	 Vqon7xl/d7LWshH1XrbmWyd/E0uqI20ChinC4uuu3FYwGbMbq9p0scNiurpKcsWs9XJIIDJ0DF0I
-	 wmCayHc20zJK3GqFQm59pLXVuez7mRDhAEyjUy6Ds+etO4Y7aOpDf89tvgxRiVy81MgdlobjKMHR
-	 GdfMS7JDUydaaH2HbZUM17KS6fVTlHbnWIHnDmk+UiiRVjEgHB1fRq37/mja1GjMyLUKHTqYwGp0
-	 Crd7jglu1cSjnSdoKYbnaZ2ihxi2KJcAy5YJWLuue0/wuzymq3+Q==
-X-QQ-XMRINFO: MSVp+SPm3vtS1Vd6Y4Mggwc=
-From: Guangbo Cui <2407018371@qq.com>
-To: lyude@redhat.com
-Cc: a.hindborg@kernel.org,
-	alex.gaynor@gmail.com,
-	aliceryhl@google.com,
-	benno.lossin@proton.me,
-	bjorn3_gh@protonmail.com,
-	boqun.feng@gmail.com,
-	gary@garyguo.net,
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="vVEwMdHV"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-4398e839cd4so27971965e9.0
+        for <linux-kernel@vger.kernel.org>; Sun, 02 Mar 2025 04:04:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1740917064; x=1741521864; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=E1qy2jLougotV3caTX4Ep2cJ4NAMVmZ8tLXJeXGlG68=;
+        b=vVEwMdHVUQlSITNi3K+AfdgGK9jwdHrfAjPio47pfPuyd0IQevJ5cTicHKcZi/vw11
+         dwPTQ6O9lveA171y9jwcG7jQKF+I5c4WMPFOy+6cqJR5uwIrSg3WB2mQusfWJlhftjQ8
+         xcm7gQRAauWyAkL9tQ8EhJ0zLPmdejE91w7Ja0qfaXVUh9a+H2hEQ3QOfnQdR4/6YnS1
+         dyzBJtMbgocRxo/zABmLwQfljGdCLzNoeafOwO78mNmHUnSRw/NdAHbJ+4zjSvG8Hf6A
+         lb0Y64BHwos/oLJ+IOYzqhjKZ1waOrDElt0yZzyYHytvj8vxYZwsExZ6jJD2cHZlDGSM
+         YAzQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740917064; x=1741521864;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=E1qy2jLougotV3caTX4Ep2cJ4NAMVmZ8tLXJeXGlG68=;
+        b=F7DikFdKRvcxp4EOg9tJdh3LVNl2ksHl5KrEUtzukqADkInGQ/CMD1RKFwduKfLVng
+         l3MWYTx4sU3HKF5PpynLK3GEzH6mg3dMbSNxukdJ43Di6HZ/q+K26+a8VJv+189Nh15u
+         3HCigmAppSecWFywsDh/lsA7D/yObidXB5Zo0eda52/AvOV1p3iHHj2VKy+pHTwrg6A+
+         XDmRvwSBii+rJVqFwnnYP9OfNDbD7j5u57xFhs106QBx2xWjkm1wLBOXcYPlRFXGwCMi
+         qT9gKqL+071ZCEuZSt+TTKt2O4J5Niwz3qhFJH1KrcUgiqvoVaoX3ONRpUvT+BXXyjEy
+         N7pg==
+X-Forwarded-Encrypted: i=1; AJvYcCXQuGyQR4bqDgTafGYUZIkvi8g5QK1dD1Vygac3chmtziYYIGxVD9rw3Dj0kuZRzB0JomLnC9atUrGBuHc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxuVTs6BMhLLQYRt6ygSudZ489YkdFMCqXmlXtR9HFFOdahF//z
+	rqpaX4sMBvH2bMgZ80UIeRVtaGtO7bU9+H9JFgSfyBRq/PxkLCz4xtD6Tr5E9os=
+X-Gm-Gg: ASbGncvBAEAY9Bao+8qTym+OLbnXCE++9ddu5EsmECbCN69LevJytx/nEv0q8SEg8o0
+	BLCK31yMUqTmDiU8uw8B0YdQvEpFecUbx/Za+uCOvxoq/5WsuofBV217EB2ytwiIc5hw4ZMh3/f
+	/YiA7GcADmMsb8FP4G0UEB/HqFIanJW/6xCKijjLlVs8d5NT3jecuukuErr1Coboh6g8ARdKjwt
+	oqaI0vOA7+uvGU27wEGz+3V6HG2yqh7jpI+4QV0I0vTKEyxdkCoKoQqC7TdPeHgYsfpc1HFI3nJ
+	OzPOpeo45XtvvEqeAOErH1yLg4XTYEKd5SnahOaQJwgAQIkXwwAfo9mWO8qYCW3hrorLxLm1GqQ
+	nQTG9fEtM37GK9icD/9WGm0FH1p3y
+X-Google-Smtp-Source: AGHT+IHR3hYe7lOWShj1M4Lnoxwgm4CAjYEMp+mZTw1yhNs6P9tuRCYrU+0kbP1EGX8xC7w5mMYf4A==
+X-Received: by 2002:a05:6000:188d:b0:390:f8b9:7b18 with SMTP id ffacd0b85a97d-390f8b97d3emr4041145f8f.12.1740917064292;
+        Sun, 02 Mar 2025 04:04:24 -0800 (PST)
+Received: from brgl-pocket.. (2a02-8440-e500-b74f-e98c-3c2c-6d88-f923.rev.sfr.net. [2a02:8440:e500:b74f:e98c:3c2c:6d88:f923])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-390e47b7d69sm11436906f8f.60.2025.03.02.04.04.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 02 Mar 2025 04:04:23 -0800 (PST)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	linux-gpio@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	longman@redhat.com,
-	mingo@redhat.com,
-	ojeda@kernel.org,
-	peterz@infradead.org,
-	rust-for-linux@vger.kernel.org,
-	tglx@linutronix.de,
-	tmgross@umich.edu,
-	wedsonaf@gmail.com,
-	will@kernel.org
-Subject: Re: [PATCH v9 6/9] rust: sync: Add SpinLockIrq
-Date: Sun,  2 Mar 2025 19:51:46 +0800
-X-OQ-MSGID: <20250302115146.59946-1-2407018371@qq.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250227221924.265259-7-lyude@redhat.com>
-References: <20250227221924.265259-7-lyude@redhat.com>
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: [GIT PULL] gpio fixes for v6.14-rc5
+Date: Sun,  2 Mar 2025 13:04:10 +0100
+Message-ID: <20250302120410.5600-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,85 +74,36 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-> +/// A kernel `spinlock_t` lock backend that is acquired in interrupt disabled contexts.
-> +pub struct SpinLockIrqBackend;
-> +
-> +/// A [`Guard`] acquired from locking a [`SpinLockIrq`] using [`lock()`].
-> +///
-> +/// This is simply a type alias for a [`Guard`] returned from locking a [`SpinLockIrq`] using
-> +/// [`lock_with()`]. It will unlock the [`SpinLockIrq`] and decrement the local processor's
-> +/// interrupt disablement refcount upon being dropped.
-> +///
-> +/// [`Guard`]: super::Guard
-> +/// [`lock()`]: SpinLockIrq::lock
-> +/// [`lock_with()`]: SpinLockIrq::lock_with
-> +pub type SpinLockIrqGuard<'a, T> = super::Guard<'a, T, SpinLockIrqBackend>;
-> +
-> +// SAFETY: The underlying kernel `spinlock_t` object ensures mutual exclusion. `relock` uses the
-> +// default implementation that always calls the same locking method.
-> +unsafe impl super::Backend for SpinLockIrqBackend {
-> +    type State = bindings::spinlock_t;
-> +    type GuardState = ();
-> +
-> +    unsafe fn init(
-> +        ptr: *mut Self::State,
-> +        name: *const crate::ffi::c_char,
-> +        key: *mut bindings::lock_class_key,
-> +    ) {
-> +        // SAFETY: The safety requirements ensure that `ptr` is valid for writes, and `name` and
-> +        // `key` are valid for read indefinitely.
-> +        unsafe { bindings::__spin_lock_init(ptr, name, key) }
-> +    }
-> +
-> +    unsafe fn lock(ptr: *mut Self::State) -> Self::GuardState {
-> +        // SAFETY: The safety requirements of this function ensure that `ptr` points to valid
-> +        // memory, and that it has been initialised before.
-> +        unsafe { bindings::spin_lock_irq_disable(ptr) }
-> +    }
-> +
-> +    unsafe fn unlock(ptr: *mut Self::State, _guard_state: &Self::GuardState) {
-> +        // SAFETY: The safety requirements of this function ensure that `ptr` is valid and that the
-> +        // caller is the owner of the spinlock.
-> +        unsafe { bindings::spin_unlock_irq_enable(ptr) }
-> +    }
-> +
-> +    unsafe fn try_lock(ptr: *mut Self::State) -> Option<Self::GuardState> {
-> +        // SAFETY: The `ptr` pointer is guaranteed to be valid and initialized before use.
-> +        let result = unsafe { bindings::spin_trylock_irq_disable(ptr) };
-> +
-> +        if result != 0 {
-> +            Some(())
-> +        } else {
-> +            None
-> +        }
-> +    }
-> +
-> +    unsafe fn assert_is_held(ptr: *mut Self::State) {
-> +        // SAFETY: The `ptr` pointer is guaranteed to be valid and initialized before use.
-> +        unsafe { bindings::spin_assert_is_held(ptr) }
-> +    }
-> +}
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-It would be nice to add `SpinLockIrqBackend` to `global_lock`.
+Linus,
 
----
- rust/kernel/sync/lock/global.rs | 3 +++
- 1 file changed, 3 insertions(+)
+Please pull a follow-up fix for a previous commit that introduced a
+potential crash and was already backported to stable.
 
-diff --git a/rust/kernel/sync/lock/global.rs b/rust/kernel/sync/lock/global.rs
-index 480ee724e3..60b88f362b 100644
---- a/rust/kernel/sync/lock/global.rs
-+++ b/rust/kernel/sync/lock/global.rs
-@@ -298,4 +298,7 @@ macro_rules! global_lock_inner {
-     (backend SpinLock) => {
-         $crate::sync::lock::spinlock::SpinLockBackend
-     };
-+    (backend SpinLockIrq) => {
-+        $crate::sync::lock::spinlock::SpinLockIrqBackend
-+    };
- }
--- 
+Thanks,
+Bartosz
 
-Best regards,
-Guangbo Cui
+The following changes since commit d082ecbc71e9e0bf49883ee4afd435a77a5101b6:
 
+  Linux 6.14-rc4 (2025-02-23 12:32:57 -0800)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v6.14-rc5
+
+for you to fetch changes up to 64407f4b5807dc9dec8135e1bfd45d2cb11b4ea0:
+
+  gpiolib: Fix Oops in gpiod_direction_input_nonotify() (2025-02-28 16:30:48 +0100)
+
+----------------------------------------------------------------
+gpio fixes for v6.14-rc5
+
+- fix a buggy get_direction() retval check
+
+----------------------------------------------------------------
+Dan Carpenter (1):
+      gpiolib: Fix Oops in gpiod_direction_input_nonotify()
+
+ drivers/gpio/gpiolib.c | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
