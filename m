@@ -1,64 +1,64 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 856331E9B37;
-	Sun,  2 Mar 2025 16:52:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A112111AD;
+	Sun,  2 Mar 2025 16:54:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740934374; cv=none; b=NBeXZ0On0PSGWPzs+Nf+jE4LWcMJzec9fP/fBxICNBxJiqpwHzkwOCjpWSajdjTq2TtF2eQSJkFnGBIqTrhqFA9UJ78tp3jXzKbYDqtu6wA9iB34JKE/2GWcc/1E0pRr464ribl3cgmQ89/OhpV5VMK3gEKmAPHlfSYvNkc38TY=
+	t=1740934468; cv=none; b=mAdNXfQuvk2kM3cA/3BzUgXNoWWYypOTaT3uD6EXkL78bcUbAPHK4bgnBJOFra7sOu466FzXURe1PWvsUskXQCEVRSAGW/ePgfSa6EZGKXmoQ9gm1lHqTRXUKfDyVfwfYko9R7g9SOR+TL3Jwd7K6kFY59INvlEdu3b72j4sqpw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740934374; c=relaxed/simple;
-	bh=ddhHuPWddXFULLyKDqcRVtdIW78qfKh4LTdI/RvKq2o=;
+	s=arc-20240116; t=1740934468; c=relaxed/simple;
+	bh=2sEkFRy20kwTMTzZHswCvXeBdPUCwpLecoV93xMRqSc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UyzuLOwTnHZ6a+Ji3MZL/zMQsB4uppls1XKYJv/IRkaiSkZUJ+uqU4+rutgbZvrxWweaaxOT/IjY48XccZ3f413T1E5sf0GQQjAW/1Y87S7Ov9lIkqAa2ouw+QokqRAJWVrd8xnm2579/Z/lkf6UUVMPl5WvewJd+nOgIhy3S/g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=exxMjTxP; arc=none smtp.client-ip=209.85.214.170
+	 Content-Type:Content-Disposition:In-Reply-To; b=WuMdUF9A1G3P4JqyL7Xb58WJXr87AhJ5CtZUFtRpNQqEBJoeuc0XAHAk8rYgxHypJUeDS2L0Fi2YY7tN2EiQqhOGZ6ZizSZzIZNEH20bU1bxWTzsX1NIngCmaO2syQeS5yC1n6drofMZmBOhi5np9M0a8YLlHHEEtaH+vtuz1D0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HUTTh4e8; arc=none smtp.client-ip=209.85.214.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="exxMjTxP"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-22355618fd9so59793765ad.3;
-        Sun, 02 Mar 2025 08:52:52 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HUTTh4e8"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-22385253e2bso26832415ad.1;
+        Sun, 02 Mar 2025 08:54:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740934372; x=1741539172; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1740934466; x=1741539266; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=pHjyd2+8BBNc6EytceePp1WtXNhD5jRQFNuplVOpLOg=;
-        b=exxMjTxPqlwR3Pou815UzzmjywHDQ9d2Z9i/Zj/UXdqhpBhcJJWkDltoa7fIELSwgo
-         Wy12FF93WPeKw+lF6ck4B9TOFFydt3TN3umFrTzfFeGj+FhefhZSghrFqH9OaNQZPuzP
-         T8MHtmtAnTper1yWnU9qSzfQSgB8c3844L9szo2E4NXohxEkYV/anxEISAspHUHxNgvB
-         zTmkgYkVX8LoqYEyXbCvd6MmWZpTeaqusDe7hrd71FDGNfmKnmwhH62mVfzTnffXxIRl
-         QN+jjmnBSmPHHAuvIFFtCGuV++Z0kW0nh3199vCXOAZGLR2q2mFNNM5xEoZLngxOH5QO
-         O6ZA==
+        bh=MxZY24dAQ53eQXmEalW2+FomGGOx0qMKAfEWi8eXumo=;
+        b=HUTTh4e8FEdGZ9UC+7WKIBPgPN40bRmwZjrJEizTgP1eewG2LBiIeAEX4ACZShZcMX
+         i2NZT/fZ/MwAuEI+8XAgIuc46h1xWmoWtLj5Avwq69xegy99rdUwwYasD/+rs/qkvW1Y
+         j6Rp52u53vuTnNdQY1o/MSTLqh54csas9oD2FgfQ5TCbl372SFxRslzWUWQChT/lSVeH
+         f3vbRl1VSsNhddWBeijoB1bFP2j0/kmvKavozX54iF2p1Gk7flJQBbZTBe7QSvcR6z2j
+         cvSTpNaGRS8xkBZ+PXAcZRUTxnELJGAHeNkrPRVModHO9bBPsw1F6tQbHAy8qYI6RRfD
+         8WFQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740934372; x=1741539172;
+        d=1e100.net; s=20230601; t=1740934466; x=1741539266;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=pHjyd2+8BBNc6EytceePp1WtXNhD5jRQFNuplVOpLOg=;
-        b=VLUPkU9wKaiQHlwHfW76bTEhmahgW1e/DyWA8WakSYAzu/moQZPXyCkgK6MJ2fNKSn
-         k4D3CxRrw+vdzBFLs3i2VDj4cOXQB5EAJXA1bXKSMCCw2TigGXtkuzR9fvOKGGq9QeB4
-         Dq2+c2w8lKRbeHBjachr8HUSiuRIZz5PhJTsPpKQ4xNbzhWiCaz6FhNXP1iDMO18npuF
-         loRsd6pOwrWAb1grW2dIp4bOEYEYhA23LfpeE9t2w/LPRaT2pIyCPjYOhxvXaWooSzZj
-         eq0bViCQQxE6v6FL28wCT3kDBaLV01nSAsbKxKtfMg9yDvIcjvOzUw/iqzakyj13T/m5
-         xCEA==
-X-Forwarded-Encrypted: i=1; AJvYcCW2CKg4UI8+1udCFmYT74cjdHr6L3gtfFI/ZQa0Q2t375jGhJCRm9Eq9XwXTrtDh8+xIO4/3EVhHmdzaZMn@vger.kernel.org, AJvYcCW6HiKAlqAGniyh5PasxeSQ5RIED+3gVj3JPy0iG8N+j2D1e8TXQ9/2aJiIzRWwFk0pyKXTWhQNbxMWeCk=@vger.kernel.org, AJvYcCXxzFuHFSXYMG8ltna0WEtPg4CCdyo7evLX0wO/96pwfNGVZmiakEiHCBfQmNeSJgR/ZuKeZi4Gwxxh@vger.kernel.org
-X-Gm-Message-State: AOJu0YwkgMyPF1tKlWnuWkMwO6h5NUcqgifyf7t8obuuooYdFDxNZG0K
-	u2/CQS3kuZ+uNpSxJ0kutGvHHrOm0FNxYccPxvWfL+W99rypvHSM
-X-Gm-Gg: ASbGnctLmFE1m8A1d8mrXkqb5hBO0sKyne+7dzapWyJG+xtdyuX/Rd3Z8IB+JWIqX44
-	zH4JCgRU+XuX2rWRWAievhKxu6bRbk9j/6XtfmuCAfPsqjPuG1ItpoYcxK95aHrN0zfFTKWzLoA
-	u6v12Et6TbZ7rt59KdH2XTZfsRUxQB+hxRIotE6nAleOblYxKKMrVO/eUQYm6zbXAmxUYs24NmT
-	2jQTaTyOOGQEFBSkJkyvK3kj3Dt9Q5Xz9p4ZvbdOZwsQ+tS6LXbsELYs/tdvDCvwHgx7pClhC0+
-	aNjDuGGqrC7OjRx5Gds7Opeca2w5juvIguC6o6bCkVFqmM4P7fj1E4zbSw==
-X-Google-Smtp-Source: AGHT+IEdQfY2xYloBoJlSiFpa8U6C4SDFC7Q1AD4CcxoQ4hf+lt4XFoERlFofGrffjglqSIFSx1u1w==
-X-Received: by 2002:a05:6a00:3e25:b0:734:b53:5826 with SMTP id d2e1a72fcca58-734ac379b63mr14236026b3a.14.1740934371781;
-        Sun, 02 Mar 2025 08:52:51 -0800 (PST)
+        bh=MxZY24dAQ53eQXmEalW2+FomGGOx0qMKAfEWi8eXumo=;
+        b=GE986+fpWkc3vL81psJ5yUH4rNVG5ouj1UwQIZTYz4w6V11i7FdVhmWC7RsMwjLzw2
+         z7MjOBgs75tWuTZXgdf+SI41u22UzTS1JGtWcYle1a0MH7AYU54yudkfNh+JU+x75VHS
+         OQbT+RDgYAYWjcD2omtIVy6EFxpuMJdQYhBYNR80IHyLS4v3JXMK4qC6BnUbrdfLPkqh
+         v5HsqBzw1CQl0iv91JL52Nu/2fwuBhaOBd7BQtj3Lbt0OB47okqNdT1ZENNk9JMN6ETX
+         CFYqK18jaZG4o7WbaV3NAaccWJ8L4NquCTB377YbzeLkgPNPaWUwLBm+dloMu7APw/mS
+         /ncg==
+X-Forwarded-Encrypted: i=1; AJvYcCU6AlZMBODEDcb9amFnXaDNFULqzIWHcNiUcdOviw/amj7N4ov10HFHqsAmasU20eMqj+wIpHfScuFXimeP@vger.kernel.org, AJvYcCU7pZdySLYg3qf04T7fM0209cgkEyHZD3nXw5kUaDfb2P+nHRtqLBX7laM3Ynh3vYndT3UtA0DGX659@vger.kernel.org, AJvYcCWeFMEEntXrM3Np3DQXBcqyUcRFR0xsLpRjtHGs12dJE5QebK90B3reKeR3Y9QJhjW56v88G8QXlCklRsM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzmzHpxQTReEg5nA2tqHuNx3sdyDAsi6daJ3WBInBhYzubdNmQX
+	uhuGcjeeH8vfPC0z2tUBkWh7t/u3/ROQVogOUe3wzWP7YUNC7DRj
+X-Gm-Gg: ASbGncuWCX4fpclFhey/pfIUiUqJfM6SHh6h9AqRrQUD1Px6ztFztif+E67m6zoOKpr
+	hj3ZV7qz/RSrdiFHl3SYro+6lR3Gu4X4Xk/XgL7HbB9DXh906MMeZIJ4IpfzuHSgb9tsqEfcoRi
+	/wgBvrdmn/8o4o876fz1ztAF5gSOy5kfJgr3uTucQU86JfI8Z4FX6V6daXwM3CRH/Pe9RAmxk9Y
+	a6i541NIZENmKrT2FdG5+K6pVRlkC/KVzmmvz7Rh1U+U90QAHdi96E6pgP9SiV8scVJLSgdArX0
+	LFGVCnR2UuJoLl5NZzgLqCfD5l4zCzXq+ZoCqTsYHqIH9cGaBPtQ8aOTHQ==
+X-Google-Smtp-Source: AGHT+IGwwzyPQ3zkuQ1JhSrQirDpapES/n0lb4nQumNRj1kESwZNphy/T6uym4uZbvCxYp8VKiE6tA==
+X-Received: by 2002:a05:6a00:a1e:b0:730:8ed8:6cd0 with SMTP id d2e1a72fcca58-734ac42ed49mr16602550b3a.16.1740934466442;
+        Sun, 02 Mar 2025 08:54:26 -0800 (PST)
 Received: from server.roeck-us.net ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-734a0040208sm7157176b3a.154.2025.03.02.08.52.51
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73642c73e0esm1655938b3a.109.2025.03.02.08.54.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 02 Mar 2025 08:52:51 -0800 (PST)
+        Sun, 02 Mar 2025 08:54:26 -0800 (PST)
 Sender: Guenter Roeck <groeck7@gmail.com>
-Date: Sun, 2 Mar 2025 08:52:50 -0800
+Date: Sun, 2 Mar 2025 08:54:25 -0800
 From: Guenter Roeck <linux@roeck-us.net>
 To: Alexander Stein <alexander.stein@ew.tq-group.com>
 Cc: Jean Delvare <jdelvare@suse.com>, Rob Herring <robh@kernel.org>,
@@ -67,10 +67,11 @@ Cc: Jean Delvare <jdelvare@suse.com>, Rob Herring <robh@kernel.org>,
 	Liam Girdwood <lgirdwood@gmail.com>,
 	Mark Brown <broonie@kernel.org>, linux-hwmon@vger.kernel.org,
 	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/5] hwmon: (gpio-fan) Add missing mutex locks
-Message-ID: <d6648655-1f99-48ca-9c8b-4ebc489fac50@roeck-us.net>
+Subject: Re: [PATCH 3/5] hwmon: (gpio-fan) Ensure lock is held during
+ set_fan_speed()
+Message-ID: <98226c50-6f36-40f5-97b8-3ade0dd9ff3c@roeck-us.net>
 References: <20250210145934.761280-1-alexander.stein@ew.tq-group.com>
- <20250210145934.761280-3-alexander.stein@ew.tq-group.com>
+ <20250210145934.761280-4-alexander.stein@ew.tq-group.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -79,15 +80,31 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250210145934.761280-3-alexander.stein@ew.tq-group.com>
+In-Reply-To: <20250210145934.761280-4-alexander.stein@ew.tq-group.com>
 
-On Mon, Feb 10, 2025 at 03:59:30PM +0100, Alexander Stein wrote:
-> set_fan_speed() is expected to be called with fan_data->lock being locked.
-> Add locking for proper synchronization.
+On Mon, Feb 10, 2025 at 03:59:31PM +0100, Alexander Stein wrote:
+> Instead of just documenting by comment, ensure locking per code.
 > 
 > Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
+> ---
+>  drivers/hwmon/gpio-fan.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/hwmon/gpio-fan.c b/drivers/hwmon/gpio-fan.c
+> index b779240328d59..322b161d5ca1f 100644
+> --- a/drivers/hwmon/gpio-fan.c
+> +++ b/drivers/hwmon/gpio-fan.c
+> @@ -124,9 +124,10 @@ static int __get_fan_ctrl(struct gpio_fan_data *fan_data)
+>  	return ctrl_val;
+>  }
+>  
+> -/* Must be called with fan_data->lock held, except during initialization. */
+>  static void set_fan_speed(struct gpio_fan_data *fan_data, int speed_index)
+>  {
+> +	WARN_ON_ONCE(!mutex_is_locked(&fan_data->lock));
+> +
 
-Applied.
+No, this just increases code size for no good reason. The comment is
+perfectly fine and sufficient.
 
-Thanks,
 Guenter
