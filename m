@@ -1,86 +1,159 @@
-Received: from smtp.smtpout.orange.fr (smtp-22.smtpout.orange.fr [80.12.242.22])
-	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F8131DF25C
-	for <linux-kernel@vger.kernel.org>; Sun,  2 Mar 2025 16:23:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B7E6101C8;
+	Sun,  2 Mar 2025 16:25:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740932583; cv=none; b=FQLfycLmBoOXjM2ja2TucB+8TJ6187Hzd1dEhOlpN6zhfCLK1J1ZWe70y04wQm6IhPUvaLK0fV4qgMe1S2YZaiW1KPqTVsPCHG8ZkQOcOMRd7/b1fUb5oa90eOMhOykvbnIDu3haWs6tnLSwxCGF7TNb8z0PhwdORqRMkjygy0c=
+	t=1740932717; cv=none; b=Luc0pGfNW1/xJxZ3aDPGHtUGE6DONOSLynjL4tp5gvcI/y6QHArUvvyehyR4Z963czOVfU+/pjub/kg+1HILDYOT9GaccBTaYlILHM8mcQsCuizn12OKoyZOsLmKk37N0uYDcgVEiDdJD6sntxTQmumX6U6IjSvfOPjW4GASoYU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740932583; c=relaxed/simple;
-	bh=09g6Coqei+13CyCYJ1cI+TQVdeRHgvvBgjZGZ/PPO4s=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Bsg+xaeafUgFe2cW+dKvNJW1YpEUmAOMjWUwQ/UgRM+yqZtf46wYDwdnkl7eIbgNXo5VsYW3UM/SLNmLuhxG3i/YW9zGsI2lytKjnW/q/8PTbZ2NLz1rt/iYfBOE9I5sM/JdXEkl5orn8KEu/rvg+OhuEWqgZswgTpo9E2QMs6A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=WYvIgtEx; arc=none smtp.client-ip=80.12.242.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1740932717; c=relaxed/simple;
+	bh=IueETMcBZ9ZV0L8qSENZ6FOOcKTKO5+OyA9fjyfYfXw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=k4Md1LrNrQxvUtkWnuLC/6Qp6i2hmJDX2mTMatatQzbvjugP/NXHGCUKVJ4pUU/WOL86wr576bWeTFBLqHVut27g1T7tRgGMxl5E2gtrPm20LPx5RjyX5H8BBjimWvFb+8x5wn5oE6VXicCKD0ITppWPOGtEWdgpsWG06+SF4UI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ELvag68Q; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="WYvIgtEx"
-Received: from fedora.home ([90.11.132.44])
-	by smtp.orange.fr with ESMTPA
-	id om4YtTJnYVX8Kom4ltOvuI; Sun, 02 Mar 2025 17:21:59 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1740932519;
-	bh=IGEa4U+OHLF8eysA8nCuOd6RrVGeAMmuutlPlvEww+0=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=WYvIgtExkiwYK9SxP67B5vDLTXJK2gxMuJ0CeYnZFr0XH7aktim432IADDboUQzTC
-	 i1/y4rElfza+Iedg+IO4dFFGelDI0QZdEswkvtub2Lttf6jKnzDoN5yq+GEkiMHINB
-	 KeuRYevyH9bmeKE7iHj8UJD+Yc1/eSnpcjqwSNnW5YNp+8P3k50cs2+cprQOPqZ586
-	 wKCHxpU+35MRXDmPHfxsohwjO7x2jNhNulLEcKeOFP5Ggm8m322DUMd6cHeAGNrluZ
-	 yGb+s3/PEHtyGIqgqBUp0aUuP8ThqQlT88pn2696G3eiu2XqDAbz+588XFYaisQW6Q
-	 aTrpRb9YTTseQ==
-X-ME-Helo: fedora.home
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Sun, 02 Mar 2025 17:21:59 +0100
-X-ME-IP: 90.11.132.44
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To: andersson@kernel.org,
-	Michael.Srba@seznam.cz,
-	konradybcio@kernel.org,
-	jeffrey.l.hugo@gmail.com
-Cc: linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: [PATCH 1/2] bus: qcom-ssc-block-bus: Remove some duplicated iounmap() calls
-Date: Sun,  2 Mar 2025 17:21:34 +0100
-Message-ID: <efd06711b126e761a06eb5ef82daf9ad4e116a10.1740932040.git.christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <cover.1740932040.git.christophe.jaillet@wanadoo.fr>
-References: <cover.1740932040.git.christophe.jaillet@wanadoo.fr>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ELvag68Q"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-2235c5818a3so27164625ad.1;
+        Sun, 02 Mar 2025 08:25:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740932714; x=1741537514; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=KR5+7ZfSihMRvEHUcRTJ2IqjNlHyIOJzJIu0Ec0jYh4=;
+        b=ELvag68QXaztwCh6oT1fV5dNQ4dANJTSR92GAwsablQq3nGpJKoSLnHUIEvE2lwVIQ
+         hVzdiyE6pdMqequPm/hPiYTC0N5U76R/Bx9E5dHHg9Q7kWrw8uZ+3QmSC8HeGR4P+9Zp
+         ZaaW1r+s6xbRTXtS2+eAWILWUFqZtTvmDC4wborbBmSuSspspnomUBv9R58wbASnB7pB
+         js9TYUU5WDmRn3I9AMmV0NPvePmUhypChUYtIcLgLpN4qEddws0NFsYYIAgIG9AxmQdK
+         QvSUhrvqF2Ga4fYXDgOUJMy5OKT7E8l65Wbswc8H2ON7/G2H4EFe+qPKqpoq2Hzzxd9j
+         b9bQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740932714; x=1741537514;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KR5+7ZfSihMRvEHUcRTJ2IqjNlHyIOJzJIu0Ec0jYh4=;
+        b=q09TB/vNjKrumR63+LEDeObqiRNWJ44x5swBxgNGLZhh03M1aUHFDJ/gUqU3x+3Sr2
+         lIuIYm3wMj1sJWKKkcO4hD8yAnWHsFHVpahS8ZxtV7fk0MTqfBuToKwdJlKSOKKXqvPC
+         3/PoraojBgp6aS2RssiSsNixYo04oDW9OVK6wr8IDmXZxrq4zE8JhCnLCsYhlHBxXPFC
+         7N29WL2GLHd5v75J69nGrYwL1uLusemxw9rL9JlHnnHn0o/q6O7CzSS5P/cycFrzefhM
+         W+fwAzC3SGlcgAFAJLufIsujc6lcdXxb3sRkkn8+V3MX5awLzDCLL1CRTFAZv1w/s3QZ
+         s4og==
+X-Forwarded-Encrypted: i=1; AJvYcCWlEDXSJcF8RDhDWTmnIgl+0y+1W1sHHbs98Y/GFZmCewe57L0LeTmKTc8hp56MzhBqJ3nPnEmBHNZc00E=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxA4i36r6saz/LAoEJPkZApCNvmjhZhJqNjV6axC7FhBisVho7A
+	g0fVPdKe6okdcwZ77/7xmArnkT7v4ZoDVCVuf+kdTc8jA/CgK/8K
+X-Gm-Gg: ASbGnctlY2md2Ai9/+t6+plD+B5Lk8QSRoV9KpOlasX2mOdO4zXGiigjkkGLvHoE0BM
+	m+jlM1w17tH2I6r12qF40B6g7giBVN6wYHHjQ31XFpOBPQC30tGYwLURjhASXNRFd5g2bC9CpOx
+	p1M998Op+8Cen8QM/M/My+1TZCv/kU2OJjxwUAiCgJBUtpjsUPwbDGKJvIjISt696oc/dV5puWj
+	Osab9U2lbKD6gNTMKGUvhFf9mNnXNiZKOOGZF1J2gxjo+K3jV3bzs1rH5WEQt1W+iaV5+wlK1bn
+	1+RRCdR7d/2cKaiyBCA3THafiwFI9OzfmgQJ3ZbKsNxs24HgeDCL1DECPgyNfL+vuI+ojLmrW31
+	yijglCbjulKUJ5BK5cw==
+X-Google-Smtp-Source: AGHT+IEPIwxkmI0LxsTYCVfAD6i8Q66/kRocIx0iC/MAvDl4KouOlRWJg5n1vXJ1NwFZRcsW1pxyHw==
+X-Received: by 2002:a17:903:fa4:b0:223:5c33:56a8 with SMTP id d9443c01a7336-223692585d2mr165857505ad.35.1740932714147;
+        Sun, 02 Mar 2025 08:25:14 -0800 (PST)
+Received: from ?IPV6:2600:1700:e321:62f0:da43:aeff:fecc:bfd5? ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2235050f3c6sm62628135ad.210.2025.03.02.08.25.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 02 Mar 2025 08:25:13 -0800 (PST)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Message-ID: <fadb9614-306a-4fcd-9829-bf3e50490707@roeck-us.net>
+Date: Sun, 2 Mar 2025 08:25:12 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] hwmon: fix a NULL vs IS_ERR() check in
+ xgene_hwmon_probe()
+To: xinghuo.chen@foxmail.com, jdelvare@suse.com
+Cc: linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
+ jingfelix@hust.edu.cn
+References: <tencent_370DBB5BD8EF699EC030ACA74BCB440FFA0A@qq.com>
+Content-Language: en-US
+From: Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+In-Reply-To: <tencent_370DBB5BD8EF699EC030ACA74BCB440FFA0A@qq.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-reg_mpm_sscaon_config[01] are allocated with devm_ioremap_resource(). So,
-they will be unmapped automatically by the manage resource framework.
+On 3/1/25 19:43, xinghuo.chen@foxmail.com wrote:
+> From: Xinghuo Chen <xinghuo.chen@foxmail.com>
+> 
+> The devm_memremap() function returns error pointers on error,
+> it doesn't return NULL.
+> 
+> Signed-off-by: Xinghuo Chen <xinghuo.chen@foxmail.com>
 
-Remove the incorrect explicit iounmap() calls from the remove function.
+Fixes: c7cefce03e69 ("hwmon: (xgene) access mailbox as RAM")
 
-Fixes: 97d485edc1d9 ("bus: add driver for initializing the SSC bus on (some) qcom SoCs")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
----
- drivers/bus/qcom-ssc-block-bus.c | 3 ---
- 1 file changed, 3 deletions(-)
+> ---
+>   drivers/hwmon/xgene-hwmon.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/hwmon/xgene-hwmon.c b/drivers/hwmon/xgene-hwmon.c
+> index 1e3bd129a922..4fe30198bae8 100644
+> --- a/drivers/hwmon/xgene-hwmon.c
+> +++ b/drivers/hwmon/xgene-hwmon.c
+> @@ -706,7 +706,7 @@ static int xgene_hwmon_probe(struct platform_device *pdev)
+>   			goto out;
+>   		}
+>   
+> -		if (!ctx->pcc_comm_addr) {
+> +		if (IS_ERR(ctx->pcc_comm_addr)) {
+>   			dev_err(&pdev->dev,
+>   				"Failed to ioremap PCC comm region\n");
+>   			rc = -ENOMEM;
 
-diff --git a/drivers/bus/qcom-ssc-block-bus.c b/drivers/bus/qcom-ssc-block-bus.c
-index 85d781a32df4..c95a985e3498 100644
---- a/drivers/bus/qcom-ssc-block-bus.c
-+++ b/drivers/bus/qcom-ssc-block-bus.c
-@@ -356,9 +356,6 @@ static void qcom_ssc_block_bus_remove(struct platform_device *pdev)
- 
- 	qcom_ssc_block_bus_deinit(&pdev->dev);
- 
--	iounmap(data->reg_mpm_sscaon_config0);
--	iounmap(data->reg_mpm_sscaon_config1);
--
- 	qcom_ssc_block_bus_pds_disable(data->pds, data->num_pds);
- 	qcom_ssc_block_bus_pds_detach(&pdev->dev, data->pds, data->num_pds);
- 	pm_runtime_disable(&pdev->dev);
--- 
-2.48.1
+While it is correct that devm_memremap() returns an ERR_PTR() on error,
+devm_ioremap() returns NULL. So this has to be IS_ERR_OR_NULL().
+
+Guenter
 
