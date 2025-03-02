@@ -1,82 +1,193 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.2])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3147C23F362
-	for <linux-kernel@vger.kernel.org>; Sun,  2 Mar 2025 11:53:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.2
+Received: from mail-il1-f207.google.com (mail-il1-f207.google.com [209.85.166.207])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79B651D88BE
+	for <linux-kernel@vger.kernel.org>; Sun,  2 Mar 2025 11:56:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.207
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740916420; cv=none; b=jGb/x7998D9fJn5+0BI4I+5JsOJ4q/IFZB7Tn25nZpbluvoF1yiDe1aIArRnTq4pnG0KdtOlpi484R8qrjRG6fyh2eViry91M5yAaCXvbPDKvpIwv0lwL+UkQvVZh7HpXBxSXa2lq1ZJSyVIJ4izJZQgKzfvI/fOifb5pmMS348=
+	t=1740916591; cv=none; b=WD8wPjM8HrkFvba/BJijq2fQU3JhYWEv5wUyDdth5jW0xGfPUTJKHkA1etTm5uCmtslwEz2WAbLw6auyL8iYQAATzZ04RYvJHm7nExSmrJFqUUqgUU/3Ookc+BnbHi8VOCLqv/PujSf7bNPlXGTR6I479y/RbtFcCzEfKebT6M0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740916420; c=relaxed/simple;
-	bh=fmvaLsuBwr+BAoLruHx0KTD2FPYZm2of1y8wtO2v/TQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qcZP4bDuHsN0okWC1rXOcy5/m8Sa9FS2M7EDHP9I+UyxggyVTKNrhs+MdD2YX8eZaEpnNSszgLfs81LSPrBNhcco0v3UFWp43P2a29Ye3vGUqrnn510Vg44yLhXuKqtWI5NAs+8/We2Suji2olFvLOiMgooGlxTcoAGAk4wTPzs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=F2p21+Gy; arc=none smtp.client-ip=220.197.31.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="F2p21+Gy"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-ID:MIME-Version; bh=SmPQB
-	lqXrmfR9VtbjijOcKCFBcU1W7mI69iXxUDsho0=; b=F2p21+GyzvJe09w2IK7a4
-	NedXS8U/++ZwCduRtm40dyKiUWLzZprG0uQyIS7ZWKqEI8J9hyjienBBlBYnPKwq
-	vhgErnrTOaNE2+eRy35l91ButR7mFEhQ6/LyXGMtqheWwvB4BpfWLI0TdFBaO96Z
-	U5EIETt8YFyhkgEWRvnxjs=
-Received: from ProDesk.. (unknown [])
-	by gzga-smtp-mtada-g1-4 (Coremail) with SMTP id _____wCXDkqaRsRnKLAUPA--.50095S2;
-	Sun, 02 Mar 2025 19:53:02 +0800 (CST)
-From: Andy Yan <andyshrk@163.com>
-To: vkoul@kernel.org
-Cc: heiko@sntech.de,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-phy@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	frank.wang@rock-chips.com,
-	sebastian.reichel@collabora.com,
-	yubing.zhang@rock-chips.com,
-	Andy Yan <andy.yan@rock-chips.com>
-Subject: [PATCH] phy: rockchip: usbdp: Avoid call hpd_event_trigger in dp_phy_init
-Date: Sun,  2 Mar 2025 19:52:25 +0800
-Message-ID: <20250302115257.188774-1-andyshrk@163.com>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1740916591; c=relaxed/simple;
+	bh=e/8NPDdl/C/KSXMToHEJfdK6HDA3izRuXWUlU+92O0I=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=dDjP97C005RmAaPobKBQ4sjA8j3N+4oH2aYUrhpbAM72JXNl8fuhsjpcdVmp0WOPaHl6BGBQM2fB07CxTqIeChvV6+3Rhy8cSnd5JqPgFx/TGd1czTjwVGB0/AJKj1Ammch6KKeY6qeZlCPIg3g7+fKeNzJLTdVLpNuxpfP0tjQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.207
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f207.google.com with SMTP id e9e14a558f8ab-3ce843b51c3so86707295ab.0
+        for <linux-kernel@vger.kernel.org>; Sun, 02 Mar 2025 03:56:29 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740916588; x=1741521388;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=nNGiguucKv36XtMhASonsxGpIptdKPoI8VZ3oCZc80s=;
+        b=H6AIh5+4rncHed0L/0TZxco7F/Fuh6CRJT0skGM5ve+YIWxkR8x+pCrYnwWGsGGNrp
+         fV1yvcZ7mg9N6C6G3SjRql8IE4b0gardX8rHkcNUzCAYrlWojXbzZSf13PBXemeAqRW6
+         9ReL/EwjpxWCLAizvf99kT1c5P/d/3KtK/qD0Bt/aYoxezMOwwS39Pm46apuO0K1P4mV
+         hvjJHKoNQpwuz1HADUcI0IqmGe9HDaOMUzmnrKi6/vroQHoNMfhQugDlMsTI60eWV3xM
+         HFFJZODIfHqPXF8BUTqzcnrafK5IWxvjOjGDHBcacERwGQKGQJatvNm0xJhfspyJ2zbW
+         J8hg==
+X-Forwarded-Encrypted: i=1; AJvYcCVuqzxKO+/QnMonIEPTCU90yDU24JKoNkTxOK/ec7GVnCxkY9uy28wsfVnrr5PcKS30mVJf7ee25w1cK4s=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxzXaBGjAeAEq72vqu/Fa4Brmt75KjTAlfY0kJlPOu+Ay+3hWl1
+	P5gZ82OT6rLfWtPgH2eci4YIlBGlqE65qXZIJnJYQOq9lTJRnTXhixdc/MBexlkd35t2wGnQw5u
+	LFD/SJL10uIwxRCRlZenILuhIboxskUWs7xBSg7T6cFvccq/NXNQSbYE=
+X-Google-Smtp-Source: AGHT+IG/AxJ/rdapw6H25dl5mizA7wEBrjLdBPtMjUpEus6mGgvC4bTWY9Q58kHEpiOt4mqX6lw3sq8PW1WoYpXB7BBgzuEScVye
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wCXDkqaRsRnKLAUPA--.50095S2
-X-Coremail-Antispam: 1Uf129KBjvdXoW7GrykXw1kGryUGFW7GrW8Xrb_yoWDXwcE93
-	WkZa4xJF4kJFsYy34DGa4fA34jyw4v93W8Wa10ya9Iy3Z2qan2vF93Xa17JFWUXF47Cr93
-	Cas8ZryxKFy5KjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IUbsjjPUUUUU==
-X-CM-SenderInfo: 5dqg52xkunqiywtou0bp/xtbB0gwEXmfENlbwhQAAsy
+X-Received: by 2002:a05:6e02:180f:b0:3d3:de8a:630e with SMTP id
+ e9e14a558f8ab-3d3e6f9b14fmr97696255ab.16.1740916588609; Sun, 02 Mar 2025
+ 03:56:28 -0800 (PST)
+Date: Sun, 02 Mar 2025 03:56:28 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67c4476c.050a0220.1dee4d.002e.GAE@google.com>
+Subject: [syzbot] [cgroups?] [mm?] [ntfs3?] KASAN: global-out-of-bounds Read
+ in get_mem_cgroup_from_mm
+From: syzbot <syzbot+7687c9b2316f07027b29@syzkaller.appspotmail.com>
+To: akpm@linux-foundation.org, almaz.alexandrovich@paragon-software.com, 
+	cgroups@vger.kernel.org, hannes@cmpxchg.org, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, mhocko@kernel.org, muchun.song@linux.dev, 
+	ntfs3@lists.linux.dev, roman.gushchin@linux.dev, shakeel.butt@linux.dev, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-From: Andy Yan <andy.yan@rock-chips.com>
+Hello,
 
-Function rk_udphy_dp_hpd_event_trigger will set vogrf let it
-trigger HPD interrupt to DP by Type-C. This configuration is only
-required when the DP work in Alternate Mode, and called by
-typec_mux_set. In standard DP mode, such settings will prevent
-the DP from receiving HPD interrupts.
+syzbot found the following issue on:
 
-Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
+HEAD commit:    03d38806a902 Merge tag 'thermal-6.14-rc5' of git://git.ker..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=17d6a864580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=5b4c41bdaeea1964
+dashboard link: https://syzkaller.appspot.com/bug?extid=7687c9b2316f07027b29
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=144528b7980000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1036a864580000
+
+Downloadable assets:
+disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7feb34a89c2a/non_bootable_disk-03d38806.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/67cb2018261a/vmlinux-03d38806.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/a6169e75b74a/bzImage-03d38806.xz
+mounted in repro: https://storage.googleapis.com/syzbot-assets/b184f3480c95/mount_0.gz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+7687c9b2316f07027b29@syzkaller.appspotmail.com
+
+ntfs3(loop0): Failed to initialize $Extend.
+overlayfs: upper fs does not support tmpfile.
+overlayfs: upper fs does not support RENAME_WHITEOUT.
+==================================================================
+BUG: KASAN: global-out-of-bounds in __lock_acquire+0x78/0x2100 kernel/locking/lockdep.c:5091
+Read of size 8 at addr ffffffff8eb38f9f by task syz-executor682/7971
+
+CPU: 0 UID: 0 PID: 7971 Comm: syz-executor682 Not tainted 6.14.0-rc4-syzkaller-00248-g03d38806a902 #0
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:94 [inline]
+ dump_stack_lvl+0x241/0x360 lib/dump_stack.c:120
+ print_address_description mm/kasan/report.c:408 [inline]
+ print_report+0x16e/0x5b0 mm/kasan/report.c:521
+ kasan_report+0x143/0x180 mm/kasan/report.c:634
+ __lock_acquire+0x78/0x2100 kernel/locking/lockdep.c:5091
+ lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5851
+ rcu_lock_acquire include/linux/rcupdate.h:337 [inline]
+ rcu_read_lock include/linux/rcupdate.h:849 [inline]
+ get_mem_cgroup_from_mm+0x55/0x2a0 mm/memcontrol.c:943
+ __mem_cgroup_charge+0x16/0x80 mm/memcontrol.c:4504
+ mem_cgroup_charge include/linux/memcontrol.h:644 [inline]
+ filemap_add_folio+0xb7/0x380 mm/filemap.c:976
+ __filemap_get_folio+0x52b/0xae0 mm/filemap.c:1980
+ ntfs_get_frame_pages+0xbe/0x4b0 fs/ntfs3/file.c:945
+ ntfs_compress_write+0x1154/0x2170 fs/ntfs3/file.c:1101
+ ntfs_file_write_iter+0x697/0x7f0 fs/ntfs3/file.c:1266
+ iter_file_splice_write+0xbfa/0x1510 fs/splice.c:743
+ do_splice_from fs/splice.c:941 [inline]
+ direct_splice_actor+0x11b/0x220 fs/splice.c:1164
+ splice_direct_to_actor+0x586/0xc80 fs/splice.c:1108
+ do_splice_direct_actor fs/splice.c:1207 [inline]
+ do_splice_direct+0x289/0x3e0 fs/splice.c:1233
+ ovl_copy_up_file+0x5ed/0x7e0 fs/overlayfs/copy_up.c:349
+ ovl_copy_up_data+0x216/0x290 fs/overlayfs/copy_up.c:654
+ ovl_copy_up_workdir fs/overlayfs/copy_up.c:796 [inline]
+ ovl_do_copy_up fs/overlayfs/copy_up.c:1001 [inline]
+ ovl_copy_up_one fs/overlayfs/copy_up.c:1202 [inline]
+ ovl_copy_up_flags+0x1e86/0x47e0 fs/overlayfs/copy_up.c:1257
+ ovl_open+0x139/0x310 fs/overlayfs/file.c:211
+ do_dentry_open+0xdec/0x1960 fs/open.c:956
+ vfs_open+0x3b/0x370 fs/open.c:1086
+ dentry_open+0x61/0xa0 fs/open.c:1109
+ ima_calc_file_hash+0x16b/0x1b30 security/integrity/ima/ima_crypto.c:553
+ ima_collect_measurement+0x529/0xb20 security/integrity/ima/ima_api.c:293
+ process_measurement+0x1351/0x1fb0 security/integrity/ima/ima_main.c:375
+ ima_file_check+0xd9/0x120 security/integrity/ima/ima_main.c:603
+ security_file_post_open+0xb9/0x280 security/security.c:3130
+ do_open fs/namei.c:3832 [inline]
+ path_openat+0x2cca/0x3590 fs/namei.c:3989
+ do_filp_open+0x27f/0x4e0 fs/namei.c:4016
+ do_sys_openat2+0x13e/0x1d0 fs/open.c:1428
+ do_sys_open fs/open.c:1443 [inline]
+ __do_sys_openat fs/open.c:1459 [inline]
+ __se_sys_openat fs/open.c:1454 [inline]
+ __x64_sys_openat+0x247/0x2a0 fs/open.c:1454
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f492e5d8d19
+Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 b1 18 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f492e58f218 EFLAGS: 00000246 ORIG_RAX: 0000000000000101
+RAX: ffffffffffffffda RBX: 00007f492e6806a8 RCX: 00007f492e5d8d19
+RDX: 0000000000000083 RSI: 0000400000000000 RDI: 00000000ffffff9c
+RBP: 00007f492e6806a0 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007f492e64c920
+R13: 0000400000000000 R14: 0000400000000140 R15: 0030656c69662f2e
+ </TASK>
+
+The buggy address belongs to the variable:
+ rcu_expedited_nesting+0x1f/0x20
+
+The buggy address belongs to the physical page:
+page: refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0xeb38
+flags: 0xfff00000002000(reserved|node=0|zone=1|lastcpupid=0x7ff)
+raw: 00fff00000002000 ffffea00003ace08 ffffea00003ace08 0000000000000000
+raw: 0000000000000000 0000000000000000 00000001ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
+page_owner info is not present (never set?)
+
+Memory state around the buggy address:
+ ffffffff8eb38e80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 f9
+ ffffffff8eb38f00: f9 f9 f9 f9 00 00 00 00 00 f9 f9 f9 f9 f9 f9 f9
+>ffffffff8eb38f80: 04 f9 f9 f9 00 00 00 00 00 f9 f9 f9 f9 f9 f9 f9
+                            ^
+ ffffffff8eb39000: 00 00 00 00 00 f9 f9 f9 f9 f9 f9 f9 00 00 00 00
+ ffffffff8eb39080: 00 f9 f9 f9 f9 f9 f9 f9 00 00 00 00 00 00 00 00
+==================================================================
+
+
 ---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
- drivers/phy/rockchip/phy-rockchip-usbdp.c | 1 -
- 1 file changed, 1 deletion(-)
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
-diff --git a/drivers/phy/rockchip/phy-rockchip-usbdp.c b/drivers/phy/rockchip/phy-rockchip-usbdp.c
-index 5b1e8a3806ed..c04cf64f8a35 100644
---- a/drivers/phy/rockchip/phy-rockchip-usbdp.c
-+++ b/drivers/phy/rockchip/phy-rockchip-usbdp.c
-@@ -1045,7 +1045,6 @@ static int rk_udphy_dp_phy_init(struct phy *phy)
- 	mutex_lock(&udphy->mutex);
- 
- 	udphy->dp_in_use = true;
--	rk_udphy_dp_hpd_event_trigger(udphy, udphy->dp_sink_hpd_cfg);
- 
- 	mutex_unlock(&udphy->mutex);
- 
--- 
-2.34.1
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
 
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
