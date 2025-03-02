@@ -1,147 +1,129 @@
-Received: from mail-il1-f207.google.com (mail-il1-f207.google.com [209.85.166.207])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38FE01F03D8
-	for <linux-kernel@vger.kernel.org>; Sun,  2 Mar 2025 16:32:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.207
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 778F41F03FB;
+	Sun,  2 Mar 2025 16:32:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740933153; cv=none; b=KcSfdY7lzk+XHG3skL8cBMqkyAM/xsik4YYb2tPkKdYrWlsPZCSBcd3lURjKNmkk83K5+WsfLqgT8M/bPvsU/WJddBuIyr8gkSATUvO7m6rycV//kQxyhTo5i72ZC+1QDPgwM4pVSTftvqG8FCd2n6M6Iy3GXURh6hiPjDW06Ww=
+	t=1740933156; cv=none; b=n/hBbzoqmPuKyOI4rrr95cwxVq2SV3dygkvD3I5zrCqm4CUCsg8Q91e0DlVC0EMKmrw9iXai7hi9Qn46kDH0IJVqd6l4gxyJfW+WoReKGpfszfa/puuuOxixhCSDZPhxOkZbTWceytogPAIhmBPzDEBAj1hHj46zXTrwtCaA56Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740933153; c=relaxed/simple;
-	bh=57P+tNcbnfNXnT7hnuH21I1R3f0eQBHiddVU+5F7Ds0=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=MO9LXjujzoje9imFsADLI+8dwqiLRY4F0urIED8gd9gfyWnDUCM8sPp0iAp6S38lKgGA74wHSpfHnH9yHXMbO5ah5EYkOZX4lvwfEFaZSAVavw7ZxYiIrRQTqA8GaPgt64fE7jsp7rNKQWtsz4/O5RlgdjUCnmzHxzja49cuDTU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.207
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f207.google.com with SMTP id e9e14a558f8ab-3d3e63256abso57817675ab.3
-        for <linux-kernel@vger.kernel.org>; Sun, 02 Mar 2025 08:32:30 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740933150; x=1741537950;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ujfoa9e7plnZ+Zb6IhbOn1wyIhQ3U/5af6ykQUmzi5g=;
-        b=KsN03BE67STXp+/Z/S0n4JA+N2kvoIcWj1tr5wB9bmbbhYWwgfdGYYQC+OI8KPQBGK
-         X8/ld3Mx3Y52rvq3rKfJOKodBwYtjSa10EF0HzxEe6a0QSuMLAV1a3g2IkrZnIkVnC+e
-         BKsjCfuABs4ZlMNC5JDxkY/wMXCkrWb5ZcTgSZWmQDnrHABtfDjKuxqwL8cs3yWi6v3E
-         tKXKR62KEvAKT5MpeD39lH5pUYF+F8oVpbNOCUivxWXrUcfTjJDw6bEMWISAjWko3uMi
-         XlOq/UCip5nIoc3YpCNyRPUoi19o+7AQxhCVMyktJQiQ3OPg0teISAEJpIBBpGr4Dl1M
-         t9Ow==
-X-Forwarded-Encrypted: i=1; AJvYcCUszisWXfIlFeX42mpEQmnEwVDCeHsjhSs51LvuNqPM7ZZKiG/hHxDw+CLij9YbKflbZQW6iWe0kIhpEpQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyhTVaAQ7tpgwO2yDNGcHhswrT0UOgciojbRQqB6Kuv50CpTnJG
-	rvN8hLLJkFmuxWVw4EtVnP0ulnAiAcBXebkBw/kQWRG945Bvx6AQyY0/XeOd7/XUlw0r5q0TI8w
-	Ne/7rmXpywWq65f7g4xoWlyBeX8ACQO2epWwr6Msp23YMod2aUmDGgeQ=
-X-Google-Smtp-Source: AGHT+IGnsZcdzsCEkoV8H0T67CnG8PAHWQbjdFSkr/L2AIw2HlQEEmxCAdCaA/avNPrDqgQDo8zaUYK62e97nnU6FDpRWXYowuaY
+	s=arc-20240116; t=1740933156; c=relaxed/simple;
+	bh=Q8q9/iehdorRcBwKZ4Cn0dk07/+IjdqsbtrE00SPNg4=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=smhOJS+H532Nh6fvHu+4zK0Irz9mS3lYpOUAsU6Ad9D6rZEkeDBL0arBfEezv546wfZ/kTz7OX34MjdangHnW793h5K0YF1mHL4uTzmnVyg6roHCEz5XR2hvPY+0nXm46O4ZxCx0vkPra+/2iQSNLOX84zSk31InJim4wGOF6og=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=CtewjSn5; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="CtewjSn5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1740933152;
+	bh=Q8q9/iehdorRcBwKZ4Cn0dk07/+IjdqsbtrE00SPNg4=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=CtewjSn5nE+5PROzUrKP7hg/DB7xjV07/vM97EHyiUopwBJw3Jt/TTu5XwBAF9SvF
+	 JKZYhRRXP1jtAqIYEYi4t+30mOTSNrKKFGAYaGPZRO5xokqkhY7IQ4sxkkzwOzogJF
+	 g7AmsTIoJVgRWMfw+JTwq/51tK66P68VazMf3gAStzm0+in8sbyvXOOc/qFPQPeAWs
+	 N34ys+c7BmfWyhLT6O65JJyiohp9OVvOu7WlRn6uXx5zGGXK9LqsvEC+3uEbgJ4XBE
+	 9X9xzb+9XCkmUOb6Ta6QtY+cxpXxzb5BidSuRYi+KPzRitnua1NIdT058nDDMGIvgd
+	 lttmX4jt/cHgg==
+Received: from [192.168.0.47] (unknown [IPv6:2804:14c:1a9:53ee::1002])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: nfraprado)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 8CFDC17E07F8;
+	Sun,  2 Mar 2025 17:32:27 +0100 (CET)
+From: =?utf-8?q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= <nfraprado@collabora.com>
+Date: Sun, 02 Mar 2025 13:30:56 -0300
+Subject: [PATCH v2 17/20] ASoC: mediatek: mt6359-accdet: Always set
+ comp-vth to 1.6V
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:138d:b0:3d3:dd60:bc37 with SMTP id
- e9e14a558f8ab-3d3e6fadcb1mr102772425ab.22.1740933150327; Sun, 02 Mar 2025
- 08:32:30 -0800 (PST)
-Date: Sun, 02 Mar 2025 08:32:30 -0800
-In-Reply-To: <67a487f7.050a0220.19061f.05fc.GAE@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67c4881e.050a0220.1dee4d.0054.GAE@google.com>
-Subject: Re: [syzbot] [xfs?] WARNING in fsnotify_file_area_perm
-From: syzbot <syzbot+7229071b47908b19d5b7@syzkaller.appspotmail.com>
-To: akpm@linux-foundation.org, amir73il@gmail.com, axboe@kernel.dk, 
-	brauner@kernel.org, cem@kernel.org, chandan.babu@oracle.com, 
-	djwong@kernel.org, jack@suse.cz, josef@toxicpanda.com, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, linux-xfs@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20250302-mt6359-accdet-dts-v2-17-5bd633ee0d47@collabora.com>
+References: <20250302-mt6359-accdet-dts-v2-0-5bd633ee0d47@collabora.com>
+In-Reply-To: <20250302-mt6359-accdet-dts-v2-0-5bd633ee0d47@collabora.com>
+To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Matthias Brugger <matthias.bgg@gmail.com>, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+ Sen Chu <sen.chu@mediatek.com>, Sean Wang <sean.wang@mediatek.com>, 
+ Macpaul Lin <macpaul.lin@mediatek.com>, Lee Jones <lee@kernel.org>, 
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
+Cc: kernel@collabora.com, linux-sound@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
+ linux-pm@vger.kernel.org, 
+ =?utf-8?q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= <nfraprado@collabora.com>
+X-Mailer: b4 0.14.2
 
-syzbot has found a reproducer for the following issue on:
+The driver currently reads a mediatek,eint-comp-vth property from DT to
+determine the voltage threshold of the EINT comparator. Since there are
+no current users of the property and setting it to 1.6V is known to work
+across multiple boards, remove the code handling this property and
+instead always configure it to 1.6V. The property can be properly
+introduced in the binding in the future if it really turns out that
+different boards need different configurations.
 
-HEAD commit:    e056da87c780 Merge remote-tracking branch 'will/for-next/p..
-git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-kernelci
-console output: https://syzkaller.appspot.com/x/log.txt?x=11f61864580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=d6b7e15dc5b5e776
-dashboard link: https://syzkaller.appspot.com/bug?extid=7229071b47908b19d5b7
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-userspace arch: arm64
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=162aba97980000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15f61864580000
-
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/3d8b1b7cc4c0/disk-e056da87.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/b84c04cff235/vmlinux-e056da87.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/2ae4d0525881/Image-e056da87.gz.xz
-mounted in repro: https://storage.googleapis.com/syzbot-assets/4ea12659f0c0/mount_0.gz
-  fsck result: failed (log: https://syzkaller.appspot.com/x/fsck.log?x=1584cfb8580000)
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+7229071b47908b19d5b7@syzkaller.appspotmail.com
-
-XFS (loop0): Mounting V5 Filesystem bfdc47fc-10d8-4eed-a562-11a831b3f791
-XFS (loop0): Ending clean mount
-XFS (loop0): Quotacheck needed: Please wait.
-XFS (loop0): Quotacheck: Done.
-------------[ cut here ]------------
-WARNING: CPU: 1 PID: 6440 at ./include/linux/fsnotify.h:145 fsnotify_file_area_perm+0x20c/0x25c include/linux/fsnotify.h:145
-Modules linked in:
-CPU: 1 UID: 0 PID: 6440 Comm: syz-executor370 Not tainted 6.14.0-rc4-syzkaller-ge056da87c780 #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 12/27/2024
-pstate: 80400005 (Nzcv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-pc : fsnotify_file_area_perm+0x20c/0x25c include/linux/fsnotify.h:145
-lr : fsnotify_file_area_perm+0x20c/0x25c include/linux/fsnotify.h:145
-sp : ffff8000a42569d0
-x29: ffff8000a42569d0 x28: ffff0000dcec1b48 x27: ffff0000d68a1708
-x26: ffff0000d68a16c0 x25: dfff800000000000 x24: 0000000000008000
-x23: 0000000000000001 x22: ffff8000a4256b00 x21: 0000000000001000
-x20: 0000000000000010 x19: ffff0000d68a16c0 x18: ffff8000a42566e0
-x17: 000000000000e388 x16: ffff800080466c24 x15: 0000000000000001
-x14: 1fffe0001b31513c x13: 0000000000000000 x12: 0000000000000000
-x11: 0000000000000001 x10: 0000000000ff0100 x9 : 0000000000000000
-x8 : ffff0000c6d98000 x7 : 0000000000000000 x6 : 0000000000000000
-x5 : 0000000000000020 x4 : 0000000000000000 x3 : 0000000000001000
-x2 : ffff8000a4256b00 x1 : 0000000000000001 x0 : 0000000000000000
-Call trace:
- fsnotify_file_area_perm+0x20c/0x25c include/linux/fsnotify.h:145 (P)
- filemap_fault+0x12b0/0x1518 mm/filemap.c:3509
- xfs_filemap_fault+0xc4/0x194 fs/xfs/xfs_file.c:1543
- __do_fault+0xf8/0x498 mm/memory.c:4988
- do_read_fault mm/memory.c:5403 [inline]
- do_fault mm/memory.c:5537 [inline]
- do_pte_missing mm/memory.c:4058 [inline]
- handle_pte_fault+0x3504/0x57b0 mm/memory.c:5900
- __handle_mm_fault mm/memory.c:6043 [inline]
- handle_mm_fault+0xfa8/0x188c mm/memory.c:6212
- do_page_fault+0x570/0x10a8 arch/arm64/mm/fault.c:690
- do_translation_fault+0xc4/0x114 arch/arm64/mm/fault.c:783
- do_mem_abort+0x74/0x200 arch/arm64/mm/fault.c:919
- el1_abort+0x3c/0x5c arch/arm64/kernel/entry-common.c:432
- el1h_64_sync_handler+0x60/0xcc arch/arm64/kernel/entry-common.c:510
- el1h_64_sync+0x6c/0x70 arch/arm64/kernel/entry.S:595
- __uaccess_mask_ptr arch/arm64/include/asm/uaccess.h:169 [inline] (P)
- fault_in_readable+0x168/0x310 mm/gup.c:2234 (P)
- fault_in_iov_iter_readable+0x1dc/0x22c lib/iov_iter.c:94
- iomap_write_iter fs/iomap/buffered-io.c:950 [inline]
- iomap_file_buffered_write+0x490/0xd54 fs/iomap/buffered-io.c:1039
- xfs_file_buffered_write+0x2dc/0xac8 fs/xfs/xfs_file.c:792
- xfs_file_write_iter+0x2c4/0x6ac fs/xfs/xfs_file.c:881
- new_sync_write fs/read_write.c:586 [inline]
- vfs_write+0x704/0xa9c fs/read_write.c:679
- ksys_pwrite64 fs/read_write.c:786 [inline]
- __do_sys_pwrite64 fs/read_write.c:794 [inline]
- __se_sys_pwrite64 fs/read_write.c:791 [inline]
- __arm64_sys_pwrite64+0x188/0x220 fs/read_write.c:791
- __invoke_syscall arch/arm64/kernel/syscall.c:35 [inline]
- invoke_syscall+0x98/0x2b8 arch/arm64/kernel/syscall.c:49
- el0_svc_common+0x130/0x23c arch/arm64/kernel/syscall.c:132
- do_el0_svc+0x48/0x58 arch/arm64/kernel/syscall.c:151
- el0_svc+0x54/0x168 arch/arm64/kernel/entry-common.c:744
- el0t_64_sync_handler+0x84/0x108 arch/arm64/kernel/entry-common.c:762
- el0t_64_sync+0x198/0x19c arch/arm64/kernel/entry.S:600
-irq event stamp:
-
-
+Signed-off-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
 ---
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
+ sound/soc/codecs/mt6359-accdet.c | 8 ++------
+ sound/soc/codecs/mt6359-accdet.h | 1 -
+ 2 files changed, 2 insertions(+), 7 deletions(-)
+
+diff --git a/sound/soc/codecs/mt6359-accdet.c b/sound/soc/codecs/mt6359-accdet.c
+index 12697b02faff1be39317116cd7d8ffa359f2cd4e..3f6a97e8de8d174e59e512d53135fadc5765b5c1 100644
+--- a/sound/soc/codecs/mt6359-accdet.c
++++ b/sound/soc/codecs/mt6359-accdet.c
+@@ -61,6 +61,7 @@
+ #define ACCDET_EINT_INVERTER_DEBOUNCE_256MS 0xe
+ #define ACCDET_EINT_CMPMEN_PWM_WIDTH_400MS 4
+ #define ACCDET_EINT_CMPMEN_PWM_THRESH_2MS 1
++#define ACCDET_EINT_COMP_VTH_1600MV 2
+ 
+ static struct platform_driver mt6359_accdet_driver;
+ static const struct snd_soc_component_driver mt6359_accdet_soc_driver;
+@@ -506,11 +507,6 @@ static int mt6359_accdet_parse_dt(struct mt6359_accdet *priv)
+ 	else if (tmp == 2)
+ 		priv->caps |= ACCDET_PMIC_BI_EINT;
+ 
+-	ret = of_property_read_u32(node, "mediatek,eint-comp-vth",
+-				   &priv->data->eint_comp_vth);
+-	if (ret)
+-		priv->data->eint_comp_vth = 0x0;
+-
+ 	of_node_put(node);
+ 	dev_warn(priv->dev, "accdet caps=%x\n", priv->caps);
+ 
+@@ -594,7 +590,7 @@ static void config_eint_init_by_mode(struct mt6359_accdet *priv)
+ 			   0x3 << RG_ACCDETSPARE_SFT,
+ 			   0x3 << RG_ACCDETSPARE_SFT);
+ 	regmap_write(priv->regmap, RG_EINTCOMPVTH_ADDR,
+-		     val | priv->data->eint_comp_vth << RG_EINTCOMPVTH_SFT);
++		     val | ACCDET_EINT_COMP_VTH_1600MV << RG_EINTCOMPVTH_SFT);
+ }
+ 
+ static void mt6359_accdet_init(struct mt6359_accdet *priv)
+diff --git a/sound/soc/codecs/mt6359-accdet.h b/sound/soc/codecs/mt6359-accdet.h
+index 579373807c414130b2a7384db4978e01cf1d046c..288b8fbf7c5efaee6520a2c0a5845e156f3b805d 100644
+--- a/sound/soc/codecs/mt6359-accdet.h
++++ b/sound/soc/codecs/mt6359-accdet.h
+@@ -48,7 +48,6 @@ enum {
+ 
+ struct dts_data {
+ 	bool hp_eint_high;
+-	unsigned int eint_comp_vth;
+ };
+ 
+ struct mt6359_accdet {
+
+-- 
+2.48.1
+
