@@ -1,111 +1,94 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from server02.seltendoof.de (server02.seltendoof.de [168.119.48.163])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 010C81E3761;
-	Sun,  2 Mar 2025 16:07:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1CF51E9B20;
+	Sun,  2 Mar 2025 16:07:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.48.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740931622; cv=none; b=bmXbSBoD944EhsnOQh/K2gjEnVHLByBN9lfXbPAD3URFHjRfqVPDb8DL7kncwn/yrSGDgSGofdEBgYHrplnOWH3A2SNjRcZFjFTlCasO6CjJBjjfBj54DoXguZD/O/JYaZ0hHnduOuYEtBAxm3+HwHYHaexLMWP+j7e5y034FU8=
+	t=1740931627; cv=none; b=Ybb3qzCCWZiXML6Axp89w7i4oIPUlJIBQmdemEEfUVJIxz7fG4slO6d8l3ir170x5mps2P0ZVx+dH9b+cp9OeeR3gK+9dX3ktfnxga918L8sbYTlAXb80HTebUJcE3BLT9YV8YJ+q8X4lK/NK6y9jhmGYMuWQaqL0tmRbk+AR1U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740931622; c=relaxed/simple;
-	bh=6Z1K2XeEqTJ+PjSTHPmZvbQCAwrBgXMnsTzeuQ32us4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PYQM4fY3UUQXX0jw016HfZ/JbNSVgOWTq3LJ3PHnoX75L2mEZzmkW19Yhjz4rdO58r9WyXWb27frb+JTHTyuujiNvjeTyWL75OQgV/EyrGKSvcUd0a6RGOGVby8Fq5Z0uiol+hV2VnRgvzpDFBbSruqNIMXBG/99xy4AMoIXG3I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TLEwWNmR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740931627; c=relaxed/simple;
+	bh=Jl1OONU/HPYf7/P1zk30SJXk1bcmft8tcRaTvFtTY6Y=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=QApefA4HTuoAd9f0AJBi7RhALpr+Bkm4WoLrwG5rFW1BXluK5xtAjHKpLsqPNDmMqtbsIvcM2QOlGxnQ5UDxlAyqa9PC0H0OgE8N0Zp9Fs1rtV+pUBZnfrA0syt+WYmvGxDDmAj2gavKUGxnsfkRC0m166Lx8usprUH1LT9S6/Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=seltendoof.de; spf=pass smtp.mailfrom=seltendoof.de; dkim=pass (2048-bit key) header.d=seltendoof.de header.i=@seltendoof.de header.b=PiWSfiie; arc=none smtp.client-ip=168.119.48.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=seltendoof.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=seltendoof.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TLEwWNmR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69D08C4CEEA;
-	Sun,  2 Mar 2025 16:07:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740931621;
-	bh=6Z1K2XeEqTJ+PjSTHPmZvbQCAwrBgXMnsTzeuQ32us4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=TLEwWNmRzoxu50gGetzLmCrV55ix9FhhrsO+ah2335y0pn9Qi3RFBfkZYkYOMS2ab
-	 j9TjFANBQb+7XL6fMzePFbbvwAN7fMzd+fPngIunbIpQ5mhvfdDzuEFiBkS9YU4WVs
-	 zpJ38yLhwZYTN79b/EvKXeFBpHgyPRR1LG8yei1iV882TMyauEBkHI0lhsvb9Udwhj
-	 khewVtukix9yqVAnPHB5w3JAXCfWS0Vtx3NR/1vcQp8NkoOoZZ97hBHfMdKuOTWxK3
-	 MpXDyRlc4Btp+XN74DkPAyeUa0/j+hd/C0QFzKjkDfGb4Ke4tQ/96asbH8mU6mELPR
-	 oVWCFltGcEQvg==
-Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-2fef5c978ccso644254a91.1;
-        Sun, 02 Mar 2025 08:07:01 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUW5ouLqluKhtR6kbgCKj2q+0GW4GMPQrgkzX5JFiL6iwOUICAqtWM1/mlwvq2TeKUv8NlX8gSroXxM@vger.kernel.org, AJvYcCVlQXwbHDOh/s5LWPhOKrDFATodg+a9Hy0hsgC97/QTQNbrhXMRCIg9BC22JBnWOV8fVEkzGgV0iGuUW33e@vger.kernel.org
-X-Gm-Message-State: AOJu0YxQJRKvg2xCQjlHWwbH23HZUZM/worhMBcwdQnrZYs1vLRvhKxE
-	oewGa9koFhDNeFyOPlnSOyYTWiEFaCE8HLTwhrKbynQQN+b9lpQc54WkYi+gv89PoooXF84pMgg
-	pVC96yKObqRuaS55tZ3k+cgRbwg==
-X-Google-Smtp-Source: AGHT+IGgpVK4aKVTw1AYLTQHunnH0lP0Xo7e0HySRK7+dlps4YjnoiELgWFMnKkx9EIddZ2irPPWBjpXbYwY6LnMy7Q=
-X-Received: by 2002:a17:90b:3511:b0:2fa:1f1b:3db2 with SMTP id
- 98e67ed59e1d1-2febabcfedfmr14936364a91.25.1740931620948; Sun, 02 Mar 2025
- 08:07:00 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=seltendoof.de header.i=@seltendoof.de header.b="PiWSfiie"
+From: =?UTF-8?q?Christian=20G=C3=B6ttsche?= <cgoettsche@seltendoof.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=seltendoof.de;
+	s=2023072701; t=1740931622;
+	h=from:from:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
+	bh=O6DE7DCpJw4TB8feyeSd8BWfUFVAmf0EuvvRwHMeulI=;
+	b=PiWSfiieggVS+NN774Yowdm3BHp08bxuRLv4yBIU7WPvptO1S3gmmiHLeYXYmtpJQbuxHE
+	tl+oUyQ+zI2i7B8Fn2bEToyS9YLGcjJU2dHkRupFBaT4ALGWcaV8pJowicqwQQlvB2W4ql
+	MxoMfrj07KDalLy6DIrunO6hBwM8CcszdwW65tv2rj1krx1nyFWPyI4gvzcL9r7FVn78E/
+	jlYF4VMCNL/G7PK40V/u0UhZOFkGs/jnixY6Rm+Q0yggOaJszuLy5jRKKljTFboNhwyxMX
+	spm1dWYccPY499VqDlbImT/va1d+AtfepabQe8ew7e7bZ+uTckZrB8diqJ8DEg==
+To: 
+Cc: =?UTF-8?q?Christian=20G=C3=B6ttsche?= <cgzones@googlemail.com>,
+	Serge Hallyn <serge@hallyn.com>,
+	Jan Kara <jack@suse.com>,
+	Julia Lawall <Julia.Lawall@inria.fr>,
+	Nicolas Palix <nicolas.palix@imag.fr>,
+	linux-kernel@vger.kernel.org,
+	linux-security-module@vger.kernel.org,
+	cocci@inria.fr
+Subject: [PATCH v2 02/11] quota: reorder capability check last
+Date: Sun,  2 Mar 2025 17:06:38 +0100
+Message-ID: <20250302160657.127253-1-cgoettsche@seltendoof.de>
+Reply-To: cgzones@googlemail.com
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250218090427.20318-1-angelogioacchino.delregno@collabora.com>
-In-Reply-To: <20250218090427.20318-1-angelogioacchino.delregno@collabora.com>
-From: Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Date: Mon, 3 Mar 2025 00:07:48 +0800
-X-Gmail-Original-Message-ID: <CAAOTY__aFqL=LnE5vU2RP9JHmQEgkrvPmiYjxmETWo9CvwiwLA@mail.gmail.com>
-X-Gm-Features: AQ5f1JrHQ_avSblgi4HZQ7x19rsI4_LP2M6FFBaV9IRM5Ur_SJsfW7MiHzcF_cw
-Message-ID: <CAAOTY__aFqL=LnE5vU2RP9JHmQEgkrvPmiYjxmETWo9CvwiwLA@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: display: mediatek: dsc: Add MT8188 compatible
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: chunkuang.hu@kernel.org, p.zabel@pengutronix.de, 
-	maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de, 
-	airlied@gmail.com, simona@ffwll.ch, robh@kernel.org, krzk+dt@kernel.org, 
-	conor+dt@kernel.org, matthias.bgg@gmail.com, dri-devel@lists.freedesktop.org, 
-	linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	kernel@collabora.com, pablo.sun@mediatek.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi, Angelo:
+From: Christian Göttsche <cgzones@googlemail.com>
 
-AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com> =E6=96=
-=BC
-2025=E5=B9=B42=E6=9C=8818=E6=97=A5 =E9=80=B1=E4=BA=8C =E4=B8=8B=E5=8D=885:0=
-4=E5=AF=AB=E9=81=93=EF=BC=9A
->
-> Add compatible for Display Stream Compression (DSC) IP found in
-> the display controller of the MT8188 SoC.
->
-> This IP is fully compatible with the one found on MT8195.
+capable() calls refer to enabled LSMs whether to permit or deny the
+request.  This is relevant in connection with SELinux, where a
+capability check results in a policy decision and by default a denial
+message on insufficient permission is issued.
+It can lead to three undesired cases:
+  1. A denial message is generated, even in case the operation was an
+     unprivileged one and thus the syscall succeeded, creating noise.
+  2. To avoid the noise from 1. the policy writer adds a rule to ignore
+     those denial messages, hiding future syscalls, where the task
+     performs an actual privileged operation, leading to hidden limited
+     functionality of that task.
+  3. To avoid the noise from 1. the policy writer adds a rule to permit
+     the task the requested capability, while it does not need it,
+     violating the principle of least privilege.
 
-Applied to mediatek-drm-next [1], thanks.
+Signed-off-by: Christian Göttsche <cgzones@googlemail.com>
+Reviewed-by: Serge Hallyn <serge@hallyn.com>
+---
+ fs/quota/dquot.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-[1] https://web.git.kernel.org/pub/scm/linux/kernel/git/chunkuang.hu/linux.=
-git/log/?h=3Dmediatek-drm-next
+diff --git a/fs/quota/dquot.c b/fs/quota/dquot.c
+index 825c5c2e0962..5c56babf581c 100644
+--- a/fs/quota/dquot.c
++++ b/fs/quota/dquot.c
+@@ -1283,9 +1283,9 @@ static int ignore_hardlimit(struct dquot *dquot)
+ {
+ 	struct mem_dqinfo *info = &sb_dqopt(dquot->dq_sb)->info[dquot->dq_id.type];
+ 
+-	return capable(CAP_SYS_RESOURCE) &&
+-	       (info->dqi_format->qf_fmt_id != QFMT_VFS_OLD ||
+-		!(info->dqi_flags & DQF_ROOT_SQUASH));
++	return (info->dqi_format->qf_fmt_id != QFMT_VFS_OLD ||
++		!(info->dqi_flags & DQF_ROOT_SQUASH)) &&
++		capable(CAP_SYS_RESOURCE);
+ }
+ 
+ static int dquot_add_inodes(struct dquot *dquot, qsize_t inodes,
+-- 
+2.47.2
 
-Regards,
-Chun-Kuang.
-
->
-> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@coll=
-abora.com>
-> ---
->  .../devicetree/bindings/display/mediatek/mediatek,dsc.yaml     | 3 +++
->  1 file changed, 3 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,=
-dsc.yaml b/Documentation/devicetree/bindings/display/mediatek/mediatek,dsc.=
-yaml
-> index 846de6c17d93..a5b88eb97e3b 100644
-> --- a/Documentation/devicetree/bindings/display/mediatek/mediatek,dsc.yam=
-l
-> +++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,dsc.yam=
-l
-> @@ -22,6 +22,9 @@ properties:
->      oneOf:
->        - enum:
->            - mediatek,mt8195-disp-dsc
-> +      - items:
-> +          - const: mediatek,mt8188-disp-dsc
-> +          - const: mediatek,mt8195-disp-dsc
->
->    reg:
->      maxItems: 1
-> --
-> 2.48.1
->
