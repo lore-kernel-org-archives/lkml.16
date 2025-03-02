@@ -1,130 +1,98 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8147C2AD13
-	for <linux-kernel@vger.kernel.org>; Sun,  2 Mar 2025 20:50:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 166031D514A;
+	Sun,  2 Mar 2025 20:53:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740948616; cv=none; b=eK3Zv6jGnWCDie4XzjHyUqjsco7RBXhXAaJdRkEz1D2mjh1mWn/CkjIF7WCXFvnX/h4evF+Dv1K1pSiEaajxk2l8w5i/iwx5TRuM8YNqA1nUgWo9KkXl9T+kybd2wgBD72EYWu52Bui6XuBL9jRAe4RKvUfZAQpqvyG4ExDIBN4=
+	t=1740948840; cv=none; b=o1YrYp66pq3RZ4s0qqgSzO0rRyhWQVFNFV80SVTh9zjbxKZxZvhyxu/1MefcjY1wrDWGGRIdQUXHZKc+rV5q2OOV51ldoAwaHK5EZTxcvLi5sexWMWMNCM15p0TkgY5eL0sElKxzD8DJuoGdc9v0OgbPIBSauOj3xcOg/3kGgyk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740948616; c=relaxed/simple;
-	bh=iKKiULY4FrHKeHfEkzQVmNq5MpBQvJcZT6hoXQtN69s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nYDjyfDfVrht058d6rxT8Py6YojTLOxNUpg4AvpCajzgD2GZ0GTjLJXJbAJBT+GYcpUVRNQRRKBw8EXJbDOsuhdXela03fU3gO+4yHSufPNXwMBtnU+63iXBBfAd4n/k02MLv/HK3cIEzw9ELxo+8kD9TLth4XhM+1Z8kbKdebQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Yp2DeGSP; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Yp2DeGSP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740948615; x=1772484615;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=iKKiULY4FrHKeHfEkzQVmNq5MpBQvJcZT6hoXQtN69s=;
-  b=Yp2DeGSPqF8zw86mLgcB1R1AKp7yxx1pDqEdj84oIrYEv4cpKWIIMKtk
-   3QufjFTbXeET1h4Cv9oKi+xwgyYefjpEzyHtlansD5He+cSN7SARyzSqc
-   behnERujRG6dowzkyhwa7QXx9m+qebGNTiy0YQEJUan2d5fExA/O9d4pm
-   isXHQztwdNmp7cnoQytBltC10HFuaqP5sVmG1D8686LgyI4alJ4JiLLLG
-   DTwf+Rq2rjQTFMhEbU/eD8AT81cvXeNsdIKqR54ERv6OBO9f1ALx/FSql
-   giWsivFzbUWLayDlW9piMkv1ysheZGQlV+dpLM28di6T2BrN38qTh/D1+
-   g==;
-X-CSE-ConnectionGUID: 77M7UnPMRL6j5MgZSWJXzw==
-X-CSE-MsgGUID: 3hrvNXrPS/GH+bayseEd2w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11361"; a="52461093"
-X-IronPort-AV: E=Sophos;i="6.13,328,1732608000"; 
-   d="scan'208";a="52461093"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Mar 2025 12:50:14 -0800
-X-CSE-ConnectionGUID: hsh7De5aRaqhCoc8UibPvg==
-X-CSE-MsgGUID: RdcPx0RwRfay3N2DQ3ZppQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,328,1732608000"; 
-   d="scan'208";a="118019499"
-Received: from lkp-server02.sh.intel.com (HELO 76cde6cc1f07) ([10.239.97.151])
-  by fmviesa008.fm.intel.com with ESMTP; 02 Mar 2025 12:50:10 -0800
-Received: from kbuild by 76cde6cc1f07 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1toqG3-000HcQ-08;
-	Sun, 02 Mar 2025 20:50:05 +0000
-Date: Mon, 3 Mar 2025 04:49:33 +0800
-From: kernel test robot <lkp@intel.com>
-To: Vincent Guittot <vincent.guittot@linaro.org>, mingo@redhat.com,
-	peterz@infradead.org, juri.lelli@redhat.com,
-	dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
-	mgorman@suse.de, vschneid@redhat.com, lukasz.luba@arm.com,
-	rafael.j.wysocki@intel.com, pierre.gondois@arm.com,
+	s=arc-20240116; t=1740948840; c=relaxed/simple;
+	bh=okt66jowKnr8P1gS/V0Grkb5/i69SinqpyTkWAv2GIM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TgZC7WdU67W8xQAGqMDO2o1UvzxGLiAu+s+2KL47LNSwXMMdA/0VLG4QiddYBMCHe53p67eqOyQ3x0p+V+Z84LbCc909DK7cD7NuDotOM/8wcQAOSnQEKaa7RZxGGtYzYic2aMHjzD8bvIcW2sXYbvvsT/gOnoa2gd40vjYq4Ro=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joshuagrisham.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.167.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joshuagrisham.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-54955222959so2307614e87.3;
+        Sun, 02 Mar 2025 12:53:58 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740948837; x=1741553637;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=vbF7SstiS81tyyQn4jYtTQz9WN4THoU5nLwkv2gXnKc=;
+        b=ucVVQ+zNBKIw6XD3O0qw6BLGi2Bugb9SZomZ52cF12pu3oDThKsQRGu/UHGUOe4RAo
+         2eES3Ca9Cek3rpO16XMFJZk8gJYvZvTPqWLzriXcMZjCTKXMgF/KH3RxF8ZTES9kOfGz
+         N5yNsw7e7mOUiDPa9qpxVeJ+HOJdew8neepQS3ohX8YVMcXKJAexiGG+AltKbs4ThOLL
+         xlJZBNQR9cwgmZAoga8o7Yyh/vPJXlGeF1IB150S6CTXqRtXJ09cmEhmrEU/X0DzGv1O
+         As26dN+5PqwFuTN/Da6mWS6mBazXLnvXxEtgNPzIni0qeR9HT5yFEMDV1wn1fAGPuOSB
+         DU2g==
+X-Forwarded-Encrypted: i=1; AJvYcCUH2V6wFjnRGRXjwCnnrki6FNIx9XGwiCfZIMDTQyHYqF6y64mS7T9OJVAAC6qK+dBL0qx/G2pdYkpCiSK1p/7PUpy4rw==@vger.kernel.org, AJvYcCVKjkAfOH2WQuvAlWeJVNoNWjz2MHzbOt3ffcu1XsfcJxUSqUDso1Z4PufObdyqPj8vuRjyKhF24WFpG8w=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz4c3VU7lD+da1tFgQJOUzGLK/rVAAXyD5BCvQYv3sS+h872uR0
+	0iY3TUNPkec/0gY2NZYDjdU9S6lzCRODhrv5SvxAiFkmsZF6y/NHezKaE1Qq
+X-Gm-Gg: ASbGncsZ93+EyubzIC/jMvG0l8VsoEjTEcbitXMj7CVbxQb5Fw9nPYa9XCAlAw4VFCU
+	uGPaY7LpLoKrdYupy1D9d/rMSoiI4uN73yiaYTvAMOYjQb2A0IVY+vmNXNSxYxo/VgkwVaZAlmr
+	LwvjFJ/FUzaHJ21noDgu5/XLyp09vKEDnUQ1HpUZx21gG8o6wtkG+pF2vpXZX8KFKGETB/YFpvJ
+	wXA38MksClgiPjsmkkSscjc7cx33pshO6X9uRDgwuNr020ixqUtyzztbRCxFynPuQGBBxkVq7VX
+	2w4ZRM2k1mkw7gpJ4dfHoOqKyeP0oR8RyCc8Y+Rf1qBB2Q8ORcpQzL62ctjLQJkwYt4sMNDjmSc
+	F74jN0vcf8Q==
+X-Google-Smtp-Source: AGHT+IE6MyS2pgjTJ+722X33JtSPDUm7iMNv7I9obQtZcC0fR0X87iN5u5+4hMSLd/9yV8eYH4jwzw==
+X-Received: by 2002:a05:6512:3e0c:b0:545:c89:2bb7 with SMTP id 2adb3069b0e04-5494c31a0dbmr4248582e87.24.1740948836771;
+        Sun, 02 Mar 2025 12:53:56 -0800 (PST)
+Received: from galaxybook.local (82-183-24-76.customers.ownit.se. [82.183.24.76])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5494a175b34sm945997e87.245.2025.03.02.12.53.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 02 Mar 2025 12:53:56 -0800 (PST)
+From: Joshua Grisham <josh@joshuagrisham.com>
+To: W_Armin@gmx.de,
+	thomas@t-8ch.de,
+	kuurtb@gmail.com,
+	ilpo.jarvinen@linux.intel.com,
+	hdegoede@redhat.com,
+	platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, qyousef@layalina.io,
-	hongyan.xia2@arm.com, christian.loehle@arm.com,
-	luis.machado@arm.com, qperret@google.com,
-	Vincent Guittot <vincent.guittot@linaro.org>
-Subject: Re: [PATCH 6/7 v4] sched/fair: Add misfit case to push task mecanism
- for EAS
-Message-ID: <202503030443.zgft6lMb-lkp@intel.com>
-References: <20250302161321.1476139-7-vincent.guittot@linaro.org>
+Cc: Joshua Grisham <josh@joshuagrisham.com>
+Subject: [PATCH] platform/x86: samsung-galaxybook: Fix block_recording not supported logic
+Date: Sun,  2 Mar 2025 21:53:50 +0100
+Message-ID: <20250302205350.32509-1-josh@joshuagrisham.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250302161321.1476139-7-vincent.guittot@linaro.org>
+Content-Transfer-Encoding: 7bit
 
-Hi Vincent,
+Fixes logic error when block_recording is not supported but the fw attr is
+being added anyway (reported by GitHub user bbregeault).
 
-kernel test robot noticed the following build errors:
+Signed-off-by: Joshua Grisham <josh@joshuagrisham.com>
+---
+ drivers/platform/x86/samsung-galaxybook.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-[auto build test ERROR on tip/sched/core]
-[also build test ERROR on peterz-queue/sched/core linus/master v6.14-rc4 next-20250228]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Vincent-Guittot/sched-fair-Filter-false-overloaded_group-case-for-EAS/20250303-001556
-base:   tip/sched/core
-patch link:    https://lore.kernel.org/r/20250302161321.1476139-7-vincent.guittot%40linaro.org
-patch subject: [PATCH 6/7 v4] sched/fair: Add misfit case to push task mecanism for EAS
-config: riscv-randconfig-002-20250303 (https://download.01.org/0day-ci/archive/20250303/202503030443.zgft6lMb-lkp@intel.com/config)
-compiler: riscv32-linux-gcc (GCC) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250303/202503030443.zgft6lMb-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202503030443.zgft6lMb-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   kernel/sched/fair.c: In function 'check_pushable_task':
->> kernel/sched/fair.c:8964:21: error: expected ';' before '}' token
-    8964 |         return false
-         |                     ^
-         |                     ;
-    8965 | }
-         | ~                    
-
-
-vim +8964 kernel/sched/fair.c
-
-  8952	
-  8953	static int
-  8954	balance_fair(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
-  8955	{
-  8956		if (sched_fair_runnable(rq))
-  8957			return 1;
-  8958	
-  8959		return sched_balance_newidle(rq, rf) != 0;
-  8960	}
-  8961	#else
-  8962	static inline bool check_pushable_task(struct task_struct *p, struct rq *rq)
-  8963	{
-> 8964		return false
-  8965	}
-  8966	
-
+diff --git a/drivers/platform/x86/samsung-galaxybook.c b/drivers/platform/x86/samsung-galaxybook.c
+index de1ed2dc6..5878a3519 100644
+--- a/drivers/platform/x86/samsung-galaxybook.c
++++ b/drivers/platform/x86/samsung-galaxybook.c
+@@ -1100,11 +1100,13 @@ static int galaxybook_fw_attrs_init(struct samsung_galaxybook *galaxybook)
+ 	}
+ 
+ 	err = galaxybook_block_recording_init(galaxybook);
+-	if (!err)
+-		galaxybook->has_block_recording = true;
+-	else if (err != GB_NOT_SUPPORTED)
++	if (err == GB_NOT_SUPPORTED)
++		return 0;
++	else if (err)
+ 		return err;
+ 
++	galaxybook->has_block_recording = true;
++
+ 	return galaxybook_fw_attr_init(galaxybook,
+ 				       GB_ATTR_BLOCK_RECORDING,
+ 				       &block_recording_acpi_get,
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.45.2
+
