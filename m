@@ -1,67 +1,62 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+Received: from sonic314-26.consmr.mail.ne1.yahoo.com (sonic314-26.consmr.mail.ne1.yahoo.com [66.163.189.152])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D2EF3398A;
-	Sun,  2 Mar 2025 17:01:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC4493594F
+	for <linux-kernel@vger.kernel.org>; Sun,  2 Mar 2025 17:03:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=66.163.189.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740934918; cv=none; b=Zn0pM7BL5LwbHmqC0esTjrjbt0cgBxDIHm6bzWaUdrs3Y2uGg8IFyY3KD0r+BJN+HcfpSo6hUxvs6i/G+claxXCGZaOfdiFUO1GPfo3qZfUUigYwx7ZmH27qHFYRShjO8I+q2Bwu0UGaHOLHXqqDZx8wQi0RQrQPaAc8gPXnzE4=
+	t=1740935040; cv=none; b=dUf7aivAlltIxPlBNKwXd73CAYDWLcnGxzxnhZpdJDZn+Vtm74D4Acxrdrs7ac99S1KqARHAAsqsGFX3pS7vj7yvMTVeVJNlznrLxAYeRHohC1AVtmBCNNqpJP4M2MOu1aE4/Lmi+airnP6BtSw0fVvrNiZMss4d58LGpEoIsm0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740934918; c=relaxed/simple;
-	bh=YuQt2U/8QSb3sbWPURxzGthMIlRF+5nkqkiLbVHTEe8=;
+	s=arc-20240116; t=1740935040; c=relaxed/simple;
+	bh=Jr9R8vIzdNfnl+63+7Tld7PHUSKbPDcWlZRyvrPyR/A=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OTIbymeGI+S/MS3P3NOf+HK1XCBpeaser7ahPhZ3+XFdfCKs14s3xvYya1Z6vT/+tUvB0BBKIEePXLtmVgyaTZ3prpL1B131KN5MTay3lcpye3rWEutPSfMatOWU1zbkDdySFCe+tqc2HiPleJx1E9/ecgfQnPrgHJtiI6gvbGc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EWg+Jvgn; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 In-Reply-To:Content-Type; b=bHxRWrfcHLamL9ZkfgQGfo2Bt5YPT5BqLxTRrj7ZsmX4ICVoD8r4cndyjcK/4ewntlslMWNV2ImrRuuJbXNkv6L3xQQSL0bdmmxsFKfBxfJWPyeyQfPIFmTkfUO6H1bHPyv/EXhdXgJ7dOcz3I/IGuCR7MjFI/jVNl+enMqI5kI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=schaufler-ca.com; spf=none smtp.mailfrom=schaufler-ca.com; dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b=TX2P197F; arc=none smtp.client-ip=66.163.189.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=schaufler-ca.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=schaufler-ca.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EWg+Jvgn"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-22113560c57so69922675ad.2;
-        Sun, 02 Mar 2025 09:01:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740934916; x=1741539716; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=T0a7qhGwKEpW5bi2H1C+aMLGQoy8HE9wO8KfFD8wrf8=;
-        b=EWg+JvgnBNdrrxrLPirlXt0692Wl8tvtxHWsUZmm868ZnJkOwNBE8S46Gj42knDXVh
-         Du8pcNPOrf6x5MARR5MOOP7F8eUQfAPrHk5XoZ9W7zwihVHIrPobEXbvBGPDtCFBlTU1
-         LrKiCObNpXpUrLvKxI2sJGPGO1NNAXyFHX5DTYQiV1Xq6ShSf2x5bzBdm7NRebYhTKg/
-         a9fIYwYsN0pVyLUTvvyA0oAKe9p8IbkRZOBP9Jc15CQqOzsxX8tmpKgiIqSM/JF5JfPk
-         3NUJEfQy3l9ZkQ2IoHYm3D3yY9x7TMxZGb01jzw2uqiGHH0zq7YZsU3F66Vxq4ab1thp
-         oUsQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740934916; x=1741539716;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=T0a7qhGwKEpW5bi2H1C+aMLGQoy8HE9wO8KfFD8wrf8=;
-        b=JcH5btBdi9eRaL10qTYJWtfYy7IYxQPcFTGfuWRe3QzkzywOKqqISY89FNOfQvtfjk
-         hOuGaORIZ2bedep3aAyIA3/4TGrXXBHSDXytdMghAf/SMd396kxLDFNKN1hw7x8Fe1fe
-         lncQjruPGdSEjUpRcWWESG68lAnLi1YwsE1cCgku7I54E9Qr47FJqtJgOiOn0Z/Fdsib
-         M86S8Np+BgbG7PUhzUQFtecnfQavAaxuadOPOWVs4J/JEApObZ/pZXMicD2DRHFOfJnI
-         6sguSgycDT6/9s7enFtpKlWzCpSyWHvJelOrAEgLvn05ItvtwaFWqrxVGUEXYoCB7JWm
-         z8JQ==
-X-Forwarded-Encrypted: i=1; AJvYcCULcKYjtbCb4nI5hHtSGFxp20+dLHQMK1hhy5Gcn5o8nuWf0vTMSAChZCExqBeRm5rTZnEnckrZdxdS@vger.kernel.org, AJvYcCULwXuF224zj24azM27TnM8thlBHx/Te4Xqaknz2nEAoe9nYjkA+iSXIxz/OmMaNyXft9cr4Jat5eNRu1Ns@vger.kernel.org, AJvYcCV6LYwLAxKQQiXuuC9E9BQZoyKk6kSx1Sx6dXXma7nXBJzybXbXbir5dYaZyECEsa3IZmQJse5Is/Ohu5A=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzULxIDvSH5SDXdhMvK9XbJbBnMDzDht4SSdu6uC8QPqJP5r6es
-	lF2hVHLOhdP4JEnZt3AXygSmd2dZ8noh5+zBRkrcXsSPexgbmWLy
-X-Gm-Gg: ASbGncsw43jEKYjHdHy9NFhhHF9ycGR+qwWdfBtjsWpISRt7eGYjidkp4R7WmufcdJ0
-	ugtvJ4NnExobwEEFvP6VOa1+AcWv+uS86OHct3x2acQYGmgMRuByidnXXpgL+CW78zBy6wfossU
-	25/YjfLi3+sF9NNYRCVCrCRjB8w6cb59e3b6wCuNVn9oOynpJVtPfWpb2BJwCpzGyLibVVCSOQK
-	Q8dZujYxTOU+HKHpTcuBmD+/Svucxj6zpV6Zcrq1BmtSxiLO8h97QTx5rt+550osKwf7inmIgHg
-	1MZ0tDL3xa5Q6Xdd8XRbUOPbu06cgXrNCQsjgvg1i+krYYLSaWB2uKP6UQcVfo/3oTo40ft0zZo
-	RfF9znMGfIpWfcPC7UQ==
-X-Google-Smtp-Source: AGHT+IHgqlzA5i0nCrronM75XZWW2F87AKaN4vOdx1hjJ54U3yo7vLK7/agc3ospbHaT/h0nqv9wvg==
-X-Received: by 2002:a17:903:2ca:b0:223:4998:a75e with SMTP id d9443c01a7336-22368f73c05mr158570295ad.3.1740934916518;
-        Sun, 02 Mar 2025 09:01:56 -0800 (PST)
-Received: from ?IPV6:2600:1700:e321:62f0:da43:aeff:fecc:bfd5? ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2235051132asm62596885ad.221.2025.03.02.09.01.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 02 Mar 2025 09:01:56 -0800 (PST)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Message-ID: <b1133989-368a-4933-b326-43edbf179d5c@roeck-us.net>
-Date: Sun, 2 Mar 2025 09:01:54 -0800
+	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="TX2P197F"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1740935032; bh=Lra0vUwN1K4kba2+U3+GskifVMgR2zgvSIvCEe7aAto=; h=Date:Subject:To:Cc:References:From:In-Reply-To:From:Subject:Reply-To; b=TX2P197Fvz+7VaJkUJEl8jkPvhe+QtaLMZYG0Gt7gno1uc7OO4WwJ7w03X8mt5Yh4La3QUxwv2qOSOEdkke4G5uIzdu4Qd3dVHyVzBxHQBtQt4NOqiLr91G60s0bBg4rXkbsyBnA7NA4GwgrBPjQK1VpPOWPKwVAmafBgGvMDf1u086xD64jIzUGzQT32+gdTImwaPe2k66s6y4HV/QFtY1JrBps96vc+rtj9gf/uGLgk2hNfTCYrLCz+vE7t+htHH5pz86WtTCD1dgsK5DCV2ZwnxcnCqK1W49zmy8WAeKoK6/JyMXyep2qkjLURKrwSPiNA+pMQhfG4ZWjgMpqew==
+X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1740935032; bh=ZiBIlshbrJCFdbCuxUYFC3twWdA6ReObviYXL7aRCV7=; h=X-Sonic-MF:Date:Subject:To:From:From:Subject; b=ijYMGM/U0ua+IolUxsJgvrT8uEZHxmXmiDH66oDS01rAcDKjlpkBDG+zQw++1WZ20+V1hRAMjfaFxM/KWdk57AoFAw04FCnGD1Q0euCrarw/Lz5yJyuLJZE0IxmAaRlBZQowoz2zN3SBRIyLb+okFTGgAiqv1nr1+y5w8rl0AdFBoo4LTXDOvec7VOz7XVA6Mi8up2F2S+fnPfRdC0kAEe7dYxCG14SlsrJZ6WtAAiLRHKcGxm3ML7lCdscOnkufcRgjAm5CguxKo0F2LPOFi4cygjqOGSCZbt7EFzvsF0FdXN8loIIUQez6sKjztEJ7RNOEW9e5YRawlycGx3eaKQ==
+X-YMail-OSG: wv88pfkVM1njmcOBhx7tsi13s8FX9bSGHrTdzXuW9d5Ytl4LUgPOXIn3ptgiYD8
+ pqeg7fI6FRp.KjL0VsEnb6U1Nq8viH2wkEORY_DTxvTBF8l_YZ2LYU3IZbDn_n5uYBtatAzXNf1U
+ fwAQmVwrbX7THPBR3n6Rk7eIq7FMCpWiQDsyGnsG7j7yfw1iQgZGONsOG3SYDGLK6wjCSeC5mSbJ
+ vwf2eNCeY5zvRhpsKjvAfxV7x.xaGw7s377mhDsHTnDWawKUx7JGXRyYQOIw6SkkexziT3qtlI9b
+ AlWIR9xI5_IaQNxXjfh.rLWJrCFr28AN5dWktIxJAyHj1Lj2q97Y4177BA28Vh55ljWvzCS5Hnf2
+ yIE275tgqoxssSeHfXTtmqnL_Aj4MWGOjVbGjrUqPPXOPYJ4jlnrJd2D3lO6cinJEx0k8ewF1IBv
+ z3d8GE.KOs5iyeMjpQolTZObMrZMErJdusFPWUd7vQhvhgfRvXqzN9EVndlavLow3FQ.WdWQDlPX
+ Dp6klnQJlDPMUTD7NxaqINsZoweyKX5a7mFfB7dpMbtxglhkPb1qH9_mMm8RKbf2bI5bbyUprP.u
+ cNIAQQQyAdsWR9l6m38SOSbChB6MxyPPyW.XgGeB4L7jX2TushxpffsP8IcD9u_5gX6yK.UEUBG2
+ uGap1iO3kDnkjynKxHMD.yxuvAf_eRHaVGT11gsl2fVLDAMUo925V44hNvSaOi9R6P2CenEC8mnl
+ nqH4soY1p9G9PQxndqK8MYmWNY7Dk4mMYPTlLKufOI_88_yTeNiMMPmpmfRBGthYAltijl2uGw46
+ clR7c3g0TKWWC5E4KVW62nJu2wQyJTZr0nQFPwQCShv_ZQ20LfXRIBcrrew6g_n2ljv1HBCTuXX.
+ aWhhgh_tsGnN5QaCpRc56Q4lqZqKc60h__QZvQ5NNPP52SfDkRQDAEhQAt94tuCy3y9eBTrAlD2U
+ DQjn.F1OkPvFjSh9UFUivliA9.ZF.lq4glNlvpOrsAvbHSioSJ3ZNB7lmhfaClrK0p.7UKMHjHqC
+ 1aBMKP4sJy7x4UDHyWRnXQ3e98rShGoulLKlFKU4TF2sGLcKEyMr3btXkOvdsVVddvrdsyTGkd2X
+ R9Nq42EnCgZ.HhiKJrI7YOhxFktAHgXVB1e6mkLbiapFcwVC0tvUqcIJji5a5NteqlcgVFx_LF4E
+ 6kRe6kv0PCkSXwF6SZB66tUdu.TThECekzP6Pri2gKoCeqFqg8x9G8lPAjwVxdm4MripQ9atJphv
+ qpkf1MIJiWpS4lTnU7Z.23uAr1HcwbRpaLwuVtnf7qV0X0RqtAURXF8T7sXGYiXW7GFvBJh4q1F0
+ df8juOfxsIxAHjLr9GHwvJ0gnSWKVXomWcCdLp1d.I.8SbaowxHHTWmf9TEwCKkjwzAa7_dcLPZs
+ CRdVYHfWT1chRC9J3JTPqThg0_R827i4uBY_FFjy0qf.dVTsn4IEKNTEGvW.GkW2mXrv_ahGFaKp
+ cLYr2TAllGe.319oMToJIZTy_2Iks4zrPiLMm2atfwR3.xJUPZIv9fWGCh_K9I__a7fOvtYaXl7v
+ OiQS0Z9tcgB0R6VGAORHminYObCI1WAOMhUx0XNKEWLpavxjLsRN6pHggA3c1EOsaAn1WoUXe04e
+ Ii7bOJ.5Wze5jpNrYTNDDy0J3fbbFQzJhuAJR7RPFURmPmBd032J7HIuzAtpYqD71xp5EoCzoWTq
+ cXreqOT7fUGlBf0SdHefABcLsqkYn1fhcO0Q0XCYAbo5wumQcKJs4.8FWEamHPUAPmCB5tul_d98
+ ks0qI.lO6WZHjZ3HdbZrUtioQmiki5MP3LbO2fefHU1nt2QQAlRSIJeFDYD3zUoR8XqKcnC0PMAp
+ bWLHWNrx2KmZSZ0sFGkpp2RLKmbjp.Iu6OAe1hOgVzvoDWkLQoNSkOdbMmYdUawRID6ZIzG_fcoT
+ F.wJjVAcweiL0wrJBWdvxw5sXzppbIbxFARg0xRaKvnkOYX.s98XvzMmrAYXkvQCg3DI9O02xe5d
+ pIEvPV7VAa5IapvVb_vkx0B.u1EMegSTbdCR6YBqNnQ6CIu2zKD6uJzxHAmUznphqp.hUHEBV.AA
+ azu8pBmi6Xl97L54ozTRZpk30uvkRMnJ__al_wzyERfbUjBsYE2srryjNYRtEBZWK21dV_Y_hW8w
+ xIEdI8NyaOfoJXLyrdlYbHTRYpkO8DcacD3giXNxKAzdwatjwe5CJqlKtTFvcCnOty5UMdrpgqsF
+ eJutUMIPekgJzyzmgPCIzEr4PoMqgsrJPhfz9dmaJv7gDNvBTzn7GV9bpGdg8ZZZILLyl7mU3xAw
+ 7KcU1MrKmyg--
+X-Sonic-MF: <casey@schaufler-ca.com>
+X-Sonic-ID: 2b07aca3-e99e-418f-8d19-36a7f689996d
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic314.consmr.mail.ne1.yahoo.com with HTTP; Sun, 2 Mar 2025 17:03:52 +0000
+Received: by hermes--production-gq1-75cc957d6c-7gjr6 (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID 69b926c9c32d591f2598364d1898b010;
+          Sun, 02 Mar 2025 16:53:41 +0000 (UTC)
+Message-ID: <6f74f18f-ba64-4372-8307-efba97c03bf2@schaufler-ca.com>
+Date: Sun, 2 Mar 2025 08:53:41 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,80 +64,169 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 5/5] hwmon: (gpio-fan) Add regulator support
-To: Mark Brown <broonie@kernel.org>,
- Alexander Stein <alexander.stein@ew.tq-group.com>
-Cc: Jean Delvare <jdelvare@suse.com>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
- linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250210145934.761280-1-alexander.stein@ew.tq-group.com>
- <20250210145934.761280-6-alexander.stein@ew.tq-group.com>
- <0c82f6dc-4f5b-4787-9e43-4990681ea6a2@sirena.org.uk>
+Subject: Re: [PATCH v2 01/11] coccinelle: Add script to reorder capable()
+ calls
+To: cgzones@googlemail.com
+Cc: Serge Hallyn <serge@hallyn.com>, Jan Kara <jack@suse.com>,
+ Julia Lawall <Julia.Lawall@inria.fr>, Nicolas Palix <nicolas.palix@imag.fr>,
+ linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org,
+ cocci@inria.fr, Casey Schaufler <casey@schaufler-ca.com>
+References: <20250302160657.127253-1-cgoettsche@seltendoof.de>
+ <20250302160657.127253-11-cgoettsche@seltendoof.de>
 Content-Language: en-US
-From: Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-In-Reply-To: <0c82f6dc-4f5b-4787-9e43-4990681ea6a2@sirena.org.uk>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Casey Schaufler <casey@schaufler-ca.com>
+In-Reply-To: <20250302160657.127253-11-cgoettsche@seltendoof.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Mailer: WebService/1.1.23369 mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.yahoo
 
-On 2/10/25 07:26, Mark Brown wrote:
-> On Mon, Feb 10, 2025 at 03:59:33PM +0100, Alexander Stein wrote:
-> 
->> +	fan_data->supply = devm_regulator_get_optional(dev, "fan");
->> +	if (IS_ERR(fan_data->supply)) {
->> +		err = PTR_ERR(fan_data->supply);
-> 
-> Unless fans are expected to operate without power (which does seem
-> unlikely) the supply should really be mandatory.
+On 3/2/2025 8:06 AM, Christian Göttsche wrote:
+> From: Christian Göttsche <cgzones@googlemail.com>
+>
+> capable() calls refer to enabled LSMs whether to permit or deny the
+> request.  This is relevant in connection with SELinux, where a
+> capability check results in a policy decision and by default a denial
+> message on insufficient permission is issued.
+> It can lead to three undesired cases:
+>   1. A denial message is generated, even in case the operation was an
+>      unprivileged one and thus the syscall succeeded, creating noise.
+>   2. To avoid the noise from 1. the policy writer adds a rule to ignore
+>      those denial messages, hiding future syscalls, where the task
+>      performs an actual privileged operation, leading to hidden limited
+>      functionality of that task.
+>   3. To avoid the noise from 1. the policy writer adds a rule to permit
+>      the task the requested capability, while it does not need it,
+>      violating the principle of least privilege.
 
-Agreed. devm_regulator_get() returns a dummy regulator of none is
-configured in devicetree, so this should be fine. Worse,
-regulator_get_optional() returns an error pointer if regulator
-support is disabled, while devm_regulator_get() returns NULL.
+What steps are you taking to ensure that these changes do not
+negatively impact LSMs other than SELinux? At a glance, I don't
+see that there is likely to be a problem. I do see a possibility
+that changes in error returns could break test suites and, more
+importantly, applications that are careful about using privileged
+operations.
 
-Guenter
-
+>
+> Signed-off-by: Christian Göttsche <cgzones@googlemail.com>
+> Reviewed-by: Serge Hallyn <serge@hallyn.com>
+> ---
+>  MAINTAINERS                                |  1 +
+>  scripts/coccinelle/api/capable_order.cocci | 98 ++++++++++++++++++++++
+>  2 files changed, 99 insertions(+)
+>  create mode 100644 scripts/coccinelle/api/capable_order.cocci
+>
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 8e0736dc2ee0..b1d1c801765b 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -5196,6 +5196,7 @@ F:	include/linux/capability.h
+>  F:	include/trace/events/capability.h
+>  F:	include/uapi/linux/capability.h
+>  F:	kernel/capability.c
+> +F:	scripts/coccinelle/api/capable_order.cocci
+>  F:	security/commoncap.c
+>  
+>  CAPELLA MICROSYSTEMS LIGHT SENSOR DRIVER
+> diff --git a/scripts/coccinelle/api/capable_order.cocci b/scripts/coccinelle/api/capable_order.cocci
+> new file mode 100644
+> index 000000000000..4150d91b0f33
+> --- /dev/null
+> +++ b/scripts/coccinelle/api/capable_order.cocci
+> @@ -0,0 +1,98 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +///
+> +/// Checks for capable() calls of the left side of a binary expression.
+> +/// Reordering might avoid needless checks, LSM log messages, and more
+> +/// restrictive LSM security policies (e.g. SELinux).
+> +/// Can report false positives if the righthand side contains a nested
+> +/// capability check or has side effects.
+> +///
+> +// Confidence: Moderate
+> +// Copyright: (C) 2024 Christian Göttsche.
+> +// Options: --no-includes --include-headers
+> +// Keywords: capable, ns_capable, sockopt_ns_capable
+> +//
+> +
+> +virtual patch
+> +virtual context
+> +virtual org
+> +virtual report
+> +
+> +//----------------------------------------------------------
+> +//  Pattern to ignore
+> +//----------------------------------------------------------
+> +
+> +@ignore@
+> +identifier F1 = { capable, ns_capable, sockopt_ns_capable };
+> +identifier F2 = { capable, ns_capable, sockopt_ns_capable };
+> +binary operator op,op1,op2;
+> +expression E;
+> +position p;
+> +@@
+> +
+> +(
+> +F1@p(...) op F2(...)
+> +|
+> +E op1 F1@p(...) op2 F2(...)
+> +)
+> +
+> +
+> +//----------------------------------------------------------
+> +//  For patch mode
+> +//----------------------------------------------------------
+> +
+> +@ depends on patch@
+> +identifier F = { capable, ns_capable, sockopt_ns_capable };
+> +binary operator op,op1,op2;
+> +expression E,E1,E2;
+> +expression list EL;
+> +position p != ignore.p;
+> +@@
+> +
+> +(
+> +-  F@p(EL) op E
+> ++  E op F(EL)
+> +|
+> +-  E1 op1 F@p(EL) op2 E2
+> ++  E1 op1 E2 op2 F(EL)
+> +)
+> +
+> +
+> +//----------------------------------------------------------
+> +//  For context mode
+> +//----------------------------------------------------------
+> +
+> +@r1 depends on !patch exists@
+> +identifier F = { capable, ns_capable, sockopt_ns_capable };
+> +binary operator op,op1,op2;
+> +expression E, E1, E2;
+> +position p != ignore.p;
+> +@@
+> +
+> +(
+> +*  F@p(...) op E
+> +|
+> +*  E1 op1 F@p(...) op2 E2
+> +)
+> +
+> +
+> +//----------------------------------------------------------
+> +//  For org mode
+> +//----------------------------------------------------------
+> +
+> +@script:python depends on org@
+> +p << r1.p;
+> +@@
+> +
+> +cocci.print_main("WARNING opportunity for capable reordering",p)
+> +
+> +
+> +//----------------------------------------------------------
+> +//  For report mode
+> +//----------------------------------------------------------
+> +
+> +@script:python depends on report@
+> +p << r1.p;
+> +@@
+> +
+> +msg = "WARNING opportunity for capable reordering"
+> +coccilib.report.print_report(p[0], msg)
