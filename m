@@ -1,40 +1,40 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44B441EF38A
-	for <linux-kernel@vger.kernel.org>; Sun,  2 Mar 2025 19:37:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C72A11F03C8
+	for <linux-kernel@vger.kernel.org>; Sun,  2 Mar 2025 19:37:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740944223; cv=none; b=QtrwkV1B5oU6+crcaYd05dggMaZFTYU8HaC8ASowreVG3qoSfuuPi/CjI64F1qRRUCNqO7wMmIu1Sp0R4zghwnjMECE6ppXCyszqCA18uys0djg5xDey0o0HkaZo9NNOJrsfoxMiQc3wKe7ETkXRHfKaqcaZVQYXAvC8s6RY0h4=
+	t=1740944227; cv=none; b=I5Z+usthaeW0SLKQf4JKEPUJxIN4CnWdvM7lPKEGyDxe8DSa935vQTzqTb4KvxllyM9WiGIvMkcPPIaHxhEFFT3ZFYB1Db3n1GKVss/ibPFBWPnbc7QD8FtLHPQpkQFZVU6vscQnxWUtdI6gu151OiiJ2mYEdgDnqonxRnFrBys=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740944223; c=relaxed/simple;
-	bh=ozLgWlnWW1qGcVv1VhQ91QXrKtsv7YuN2YdSlFVFPY0=;
+	s=arc-20240116; t=1740944227; c=relaxed/simple;
+	bh=etY3ts9K3o7g29edq8/d7QUsN8eckbmfkidmCmhVHa0=;
 	h=Message-ID:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type:Date; b=pUZu8mB2vR0XAzgx53lnBaTTjHm57dY9PP7scmHQsiihJZ/IrCdhaHxIkYW44OPrR9JHl9jz7lVCXI65/gMqwSegy4oDTvYgMkOa55g8Wx3ZmsbQUdzRNc2WltAafMamHYNWmhCHQytGpv6H8Tu6oEFaros76cAY8elSAfPlENw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=TG6vcHbT; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=dCnS3G1V; arc=none smtp.client-ip=193.142.43.55
+	 Content-Type:Date; b=UvzPuoBgEyiu9aZhWRw+1YVjDlHPbudlHhylq+zMJwhgu/6ovHUSZKI6tE1tTIJjsF+jenlA10mVu8UTXXAzE2x3mfzWF/UkvHDV4q/gn1GQMP3fJWSY93F80p3WJ+hzfX+z/AnMwB7KIZI7i84cOJ2sd+nPI046fCGC+E3taBw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=g30fDJVl; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=dMY7cQ8S; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="TG6vcHbT";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="dCnS3G1V"
-Message-ID: <20250302193627.543399558@linutronix.de>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="g30fDJVl";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="dMY7cQ8S"
+Message-ID: <20250302193627.669047127@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1740944220;
+	s=2020; t=1740944224;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 references:references; bh=I3coZdNMcVaNaxvXTVu5YsAG2ik/WdCO4w3UUsUch0Y=;
-	b=TG6vcHbTsLVOuNPf+tkBFMC67mI6CqwR9e3g+glfJYgs7XuDp7NvmDBmvQQSt9eFiQAjei
-	naVGvhZpC8ipRKF78MrEoBYppbgYRcluJn8NjN168erZGT99RMCWdNyFErxvacZXLFSAy9
-	JFUEpgX3VNmE5sL+/U4sDTVb62BpK1j2EFBU69iJQtttCuSWjARfdkRHVns+mgIRYHS66d
-	1eCGy7u62LeFVnqy0XszlMtLb31CTbwFoP+q3Xs8ZzX7Tw3yrloSin9BuqgoJdi7mfUJsh
-	GBIIsqRIH64tbQYtBmG5sIadka4hrZ7eDcPvALj8VR5IK/5+MMmzjeEMmrF+Cw==
+	 references:references; bh=JZzdR41mOA7M2Y9QSCZRrpukrbjjYu8nSktij2l6yxA=;
+	b=g30fDJVlqyT2GqiEiki7hmlDMqvIyBJ93xesOrcmwOLTD9B6UmPKsUbdv6LLRtMuWaxz5w
+	kubAlOamTfJI6mWwhNrJ1lJUak2+QMbNFwr3z/FOJlNXxP7FsB43fIhR482H+Is5gs4bY3
+	ufiWb1AOFd8WkJOZuIah5tSvV9bjIHVZ3FcFwJ2NQqSpXS10P9tjlM474H0RZixoRKKlVB
+	2O2ku7y0pdhdp5dklqsviTim+D4FsscUUXymWhnB7rgvGXBCM9HOTfIebI3duinDhOXLmx
+	Vug/t/vCEdDstxwwCW5UGlG0+/KrZlmqTaR6ZLTpLS+EOglH0dGWTpLOzq2VXw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1740944220;
+	s=2020e; t=1740944224;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 references:references; bh=I3coZdNMcVaNaxvXTVu5YsAG2ik/WdCO4w3UUsUch0Y=;
-	b=dCnS3G1V42ksHT5eyAkf73lEpkrglzlupYSNfjFf9JEYe0tJo0BNxOSVPseaJheZVhKUjn
-	GY0UDBcLNlicLVBw==
+	 references:references; bh=JZzdR41mOA7M2Y9QSCZRrpukrbjjYu8nSktij2l6yxA=;
+	b=dMY7cQ8SWggpfxCE3YKYzDtU8rz7A2qrpcqwM7TpNd9XFqCznsEjHCYrEtMoN5POlj4JjP
+	1z3lQEGWIGPJonCQ==
 From: Thomas Gleixner <tglx@linutronix.de>
 To: LKML <linux-kernel@vger.kernel.org>
 Cc: Anna-Maria Behnsen <anna-maria@linutronix.de>,
@@ -44,8 +44,7 @@ Cc: Anna-Maria Behnsen <anna-maria@linutronix.de>,
  Andrey Vagin <avagin@openvz.org>,
  Pavel Tikhomirov <ptikhomirov@virtuozzo.com>,
  Peter Zijlstra <peterz@infradead.org>
-Subject: [patch V2 10/17] posix-timers: Make
- signal_struct::next_posix_timer_id an atomic_t
+Subject: [patch V2 12/17] posix-timers: Switch to jhash32()
 References: <20250302185753.311903554@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -54,75 +53,70 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Date: Sun,  2 Mar 2025 20:36:59 +0100 (CET)
+Date: Sun,  2 Mar 2025 20:37:03 +0100 (CET)
 
-From: Eric Dumazet <edumazet@google.com>
+The hash distribution of hash_32() is suboptimal. jhash32() provides a way
+better distribution, which evens out the length of the hash bucket lists,
+which in turn avoids large outliers in list walk times.
 
-The global hash_lock protecting the posix timer hash table can be heavily
-contended especially when there is an extensive linear search for a timer
-ID.
+Due to the sparse ID space (thanks CRIU) there is no guarantee that the
+timers will be fully evenly distributed over the hash buckets, but the
+behaviour is way better than with hash_32() even for randomly sparse ID
+spaces.
 
-Timer IDs are handed out by monotonically increasing next_posix_timer_id
-and then validating that there is no timer with the same ID in the hash
-table. Both operations happen with the global hash lock held.
+For a pathological test case with 64 processes creating and accessing
+20000 timers each, this results in a runtime reduction of ~10% and a
+significantly reduced runtime variation.
 
-To reduce the hash lock contention the hash will be reworked to a scaled
-hash with per bucket locks, which requires to handle the ID counter
-lockless.
-
-Prepare for this by making next_posix_timer_id an atomic_t, which can be
-used lockless with atomic_inc_return().
-
-[ tglx: Adopted from Eric's series, massaged change log and simplified it ]
-
-Signed-off-by: Eric Dumazet <edumazet@google.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/all/20250219125522.2535263-2-edumazet@google.com
 ---
-V2: Use atomic_fetch_inc() - PeterZ
+V2: New patch
 ---
- include/linux/sched/signal.h |    2 +-
- kernel/time/posix-timers.c   |   14 +++++---------
- 2 files changed, 6 insertions(+), 10 deletions(-)
+ kernel/time/posix-timers.c |   10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
---- a/include/linux/sched/signal.h
-+++ b/include/linux/sched/signal.h
-@@ -136,7 +136,7 @@ struct signal_struct {
- #ifdef CONFIG_POSIX_TIMERS
- 
- 	/* POSIX.1b Interval Timers */
--	unsigned int		next_posix_timer_id;
-+	atomic_t		next_posix_timer_id;
- 	struct hlist_head	posix_timers;
- 	struct hlist_head	ignored_posix_timers;
- 
 --- a/kernel/time/posix-timers.c
 +++ b/kernel/time/posix-timers.c
-@@ -118,21 +118,17 @@ static bool posix_timer_hashed(struct hl
- static int posix_timer_add(struct k_itimer *timer)
+@@ -11,8 +11,8 @@
+  */
+ #include <linux/compat.h>
+ #include <linux/compiler.h>
+-#include <linux/hash.h>
+ #include <linux/init.h>
++#include <linux/jhash.h>
+ #include <linux/interrupt.h>
+ #include <linux/list.h>
+ #include <linux/memblock.h>
+@@ -47,11 +47,11 @@ struct timer_hash_bucket {
+ 
+ static struct {
+ 	struct timer_hash_bucket	*buckets;
+-	unsigned long			bits;
++	unsigned long			mask;
+ } __timer_data __ro_after_init __aligned(2*sizeof(long));
+ 
+ #define timer_buckets	(__timer_data.buckets)
+-#define timer_hashbits	(__timer_data.bits)
++#define timer_hashmask	(__timer_data.mask)
+ 
+ static const struct k_clock * const posix_clocks[];
+ static const struct k_clock *clockid_to_kclock(const clockid_t id);
+@@ -86,7 +86,7 @@ DEFINE_CLASS_IS_COND_GUARD(lock_timer);
+ 
+ static struct timer_hash_bucket *hash_bucket(struct signal_struct *sig, unsigned int nr)
  {
- 	struct signal_struct *sig = current->signal;
--	struct hlist_head *head;
--	unsigned int cnt, id;
+-	return &timer_buckets[hash_32(hash32_ptr(sig) ^ nr, timer_hashbits)];
++	return &timer_buckets[jhash2((u32 *)&sig, sizeof(sig) / sizeof(u32), nr) & timer_hashmask];
+ }
  
- 	/*
- 	 * FIXME: Replace this by a per signal struct xarray once there is
- 	 * a plan to handle the resulting CRIU regression gracefully.
- 	 */
--	for (cnt = 0; cnt <= INT_MAX; cnt++) {
--		spin_lock(&hash_lock);
--		id = sig->next_posix_timer_id;
--
--		/* Write the next ID back. Clamp it to the positive space */
--		sig->next_posix_timer_id = (id + 1) & INT_MAX;
-+	for (unsigned int cnt = 0; cnt <= INT_MAX; cnt++) {
-+		/* Get the next timer ID and clamp it to positive space */
-+		unsigned int id = atomic_fetch_inc(&sig->next_posix_timer_id) & INT_MAX;
-+		struct hlist_head *head = &posix_timers_hashtable[hash(sig, id)];
+ static struct k_itimer *posix_timer_by_id(timer_t id)
+@@ -1505,7 +1505,7 @@ static int __init posixtimer_init(void)
+ 	timer_buckets = alloc_large_system_hash("posixtimers", sizeof(*timer_buckets),
+ 						size, 0, 0, &shift, NULL, size, size);
+ 	size = 1UL << shift;
+-	timer_hashbits = ilog2(size);
++	timer_hashmask = size - 1;
  
--		head = &posix_timers_hashtable[hash(sig, id)];
-+		spin_lock(&hash_lock);
- 		if (!posix_timer_hashed(head, sig, id)) {
- 			/*
- 			 * Set the timer ID and the signal pointer to make
+ 	for (i = 0; i < size; i++) {
+ 		spin_lock_init(&timer_buckets[i].lock);
 
