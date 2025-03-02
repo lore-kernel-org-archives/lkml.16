@@ -1,362 +1,96 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B74EA1EF0A1;
-	Sun,  2 Mar 2025 16:32:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 158A51EC009;
+	Sun,  2 Mar 2025 16:32:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740933139; cv=none; b=muzq5WrMY3nafNmQhJtVN7Gi8nwE3cWC1lXlw2tmseUwLV4A+qOLnVHXMhXTO2xwFulaCFwIqSgZ4qKoY1emBh42ho7WPQL10iUiXQnasVC3b8FPXaTQA59rPv+fjpsW0ACfK8BY9gvBKS/VN8mti7wVml+eZB8FkSwgQM/M2p8=
+	t=1740933143; cv=none; b=L0hgfLMkWtu8SvlaystDLkGbOTvCYsFV7lT3osdlPztx791SjFQPquiAFKzhMdi40PHQk5mmnrmrNaUOHc0uwUs769sZuHb0Vbj5uos41hOg5cBLz+10AqQIoKy0GFcbS1Jrjsl4iLXqnvGAirPGc8ENakPR3SVMS74w6CZAlf4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740933139; c=relaxed/simple;
-	bh=dkyZL8Ll+sShg6MHgOZ7FrAdbANx4Hqmy6yr0yQHymI=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=AZneNNwXCHLxgbm5Qg6Vspr/OaLYH3ywh1M49wgMeIyUTHArBz2kJ1cB4d1Tf9LERqKIF/haAf4zP1k+UJeZgVm6UoPuFAi4rmhauK+9YJ8UzghijzzINa7SR8LW/Zhemy9JIlGnvHTYdJkRVlmt85cyoVno0g71H9i9AA8WSmo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=CZlJm9Ig; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1740933143; c=relaxed/simple;
+	bh=cK73xlcnwoxldEkGmD4EFh8XODiKSi9jYby1FTeTsVo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=G4p6VGP0gk4Dr2Jg1IcMjQLJxQXMWM2ow3N8332yT80J8MJS7ecBJQlHu96VDOu4AsHG8TOmt7dxi7Fc8lG1/7vScSGi9Mydo9hujw09t6SygEzaQjQy+gpe0oYTTstxSwBiRBa7FxcjtuehCionexiZUwdtu5bDg4AirsNx8Cg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=efzTdWvg; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="CZlJm9Ig"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1740933135;
-	bh=dkyZL8Ll+sShg6MHgOZ7FrAdbANx4Hqmy6yr0yQHymI=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=CZlJm9Igmy1eJXBXLcfJEk+ySl7VBxuL/gpum500LF+q6co283Om8TsDAubUL3lEE
-	 Wpz9WxNQLqZ6Sbs9eZ7zopwto6m78t4qtWdm0Xlhfc7SQyMJUJ/ROpmn9v/C11xtrO
-	 /NF17KjKsyl18KsixGeDgR7NW+jUwnvJfeg9UJU38WJNU7zRD8dH3E/yHeIFNuBhiS
-	 cC3qbuYL1a1ESC+l62QYcW5nuoJrpsY5Ul9Z4pFUf7VMTvCHNJA577qhjlTnE8Zh0U
-	 FnJvFuE7e8wb4pPSZxLuAOPCcFNLuVoORGpCo9cZvyc9Us+MyYG/u53DC3IH/nK7ra
-	 lsJj4Fdn7tPQA==
-Received: from [192.168.0.47] (unknown [IPv6:2804:14c:1a9:53ee::1002])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: nfraprado)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id F13DC17E05EA;
-	Sun,  2 Mar 2025 17:32:10 +0100 (CET)
-From: =?utf-8?q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= <nfraprado@collabora.com>
-Date: Sun, 02 Mar 2025 13:30:53 -0300
-Subject: [PATCH v2 14/20] ASoC: mediatek: mt6359-accdet: Always use eint
- detect mode 4
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="efzTdWvg"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-223a7065ff8so9300795ad.0;
+        Sun, 02 Mar 2025 08:32:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740933141; x=1741537941; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=O5QRhJ4JsspC82Pv8p4aZzdxcDW7s51WKS+5ABEU2ns=;
+        b=efzTdWvggNeZ3PRmctf2Vn7drCRvtcmeRudtJvyHwHiuXS1OPka4ZaXezvSVNrvxTi
+         llNbkdU10mGtu+JTIEoR2/T4ZQ4SurU5LOUA+2Pg1I3btzY2wSVcxfjt28kuNFnzQXkI
+         BAUrpcHbteG0W1+zJ4BDBF2mYHQkdzO7dRMTPwSv9O1CymwEuLIgpCzb4HzbIwQxOOH0
+         DMie+StCbaxCWqvWX9c2bFQ6HdPAJoF3RQ6RlgP32ybE+3wrQXWmVA+5Vvl6Qcn/tkqY
+         CrKB9Z/4FwftEcYSeyhmCUASxe0O64CgQFv+YR6qYKAbyBQVh1XMACJZ67euqqQkEubL
+         yWFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740933141; x=1741537941;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=O5QRhJ4JsspC82Pv8p4aZzdxcDW7s51WKS+5ABEU2ns=;
+        b=AKoMY5JMOmsJ50vCFje/ExfR1lpVQfm0yGMtjSzm5kqsXleqaxBQA9NIJwrJBb1APp
+         AEltUcLfzp2HgckkQrJW4rA///1zbyDMD0THDb/Zd9j8Yz1dpK8FBOBXaZwrf+3lt7rD
+         80Olb/3JIgEBAZyXklzoBh821Z3xMUSUOT5EzmBAzEPv+Xcn3sDknIpIYkZZx2x+yPFx
+         UahyQDN/Kzk7Ckar+h5I0+y4ELpeu/IC8NvR880XDROgMSxLYhlKZ/tv7TbAH5FSUlQR
+         q1AmS2b12m0XqDitlIJLh2Eq6O1pU+0u9BzkidT2srXV29x0BQTb1qaTa1fsiHmrLGyI
+         eY/w==
+X-Forwarded-Encrypted: i=1; AJvYcCUqQjUSnpOSLZm9G6M7guJcoB7mN6PdKAwV5CO3YJJ1CMnd68irUjQcoTZLSdk/0me7zncO94NSiRWXbVnC@vger.kernel.org, AJvYcCVl6Fty/v1JsnFZa3H67gJGbNgIyECz/3gjVJMPfGf1mQS+/iCbcd0YrXysQS2dR9RVWXZLo6GdyHXf@vger.kernel.org, AJvYcCXze3oIbWYeqHpqEXgELEwFn/EIu3POB1F0jT5qFqLXNHO2WULcYhhV1JkRSIq5IzekSSjnhLaAvbFtuUI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywt/6LL8gKKvXyBCRogwgzc0wqbjNjg1j9ZWMZ64qh60NmlL4eB
+	aBzQAazi9amdgt54zlQbOhb2j2d8OBt0R+Uhf3Z5onn/cyX25rX/
+X-Gm-Gg: ASbGncv3RzJFYl35Q6W+7WX6mIS9Vw6whK04KrqeBdkk2Ve1AXFoGvHebwhbqJDz/uh
+	3WxHI7l1CGFZiS8eEXFixP6qjQdYzzL5gVfRJlPUJdkAJk+gxF67SSp5P6zQsiCH6Y6Vj9t1Oi2
+	nFd/m1x/x8gfyOJPtYZj+H+VjsInvjJecnBS0u3K1iAq2Igfk0NVUpYz8FQq9Pnnsk6bOo/uILg
+	sapLUDcKTbKPeHpDoUoYVKyMdpQOEfHAoFmTNqEijqO1fZk8Mo2iU2qQQ1oxXc+9BzXKjGSAU0L
+	JFwWuZmnPzHEQXQRwQlyYJb+Z4kmhCh7rDDIAF6XPtbcuFHnbfjF2HBcmw==
+X-Google-Smtp-Source: AGHT+IEDANnttZAPBaCcKyUFiBfmVbgwHH2uQfeXbhWXWdLRJgTKpojDnBFAU+XDPaNmK9ksSx2caQ==
+X-Received: by 2002:a17:902:f548:b0:223:6180:1bf7 with SMTP id d9443c01a7336-2236925874cmr137212745ad.42.1740933141138;
+        Sun, 02 Mar 2025 08:32:21 -0800 (PST)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-223501faff7sm63080445ad.75.2025.03.02.08.32.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 02 Mar 2025 08:32:20 -0800 (PST)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date: Sun, 2 Mar 2025 08:32:19 -0800
+From: Guenter Roeck <linux@roeck-us.net>
+To: maudspierings@gocontroll.com
+Cc: Jean Delvare <jdelvare@suse.com>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Joseph McNally <jmcna06@gmail.com>, linux-hwmon@vger.kernel.org,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH 1/3] hwmon: (ntc_thermistor) Fix module name in the
+ Kconfig
+Message-ID: <f0e34ec5-5c6a-4518-8c5e-da2b95ae2af2@roeck-us.net>
+References: <20250227-ntc_thermistor_fixes-v1-0-70fa73200b52@gocontroll.com>
+ <20250227-ntc_thermistor_fixes-v1-1-70fa73200b52@gocontroll.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20250302-mt6359-accdet-dts-v2-14-5bd633ee0d47@collabora.com>
-References: <20250302-mt6359-accdet-dts-v2-0-5bd633ee0d47@collabora.com>
-In-Reply-To: <20250302-mt6359-accdet-dts-v2-0-5bd633ee0d47@collabora.com>
-To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Matthias Brugger <matthias.bgg@gmail.com>, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
- Sen Chu <sen.chu@mediatek.com>, Sean Wang <sean.wang@mediatek.com>, 
- Macpaul Lin <macpaul.lin@mediatek.com>, Lee Jones <lee@kernel.org>, 
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
-Cc: kernel@collabora.com, linux-sound@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
- linux-pm@vger.kernel.org, 
- =?utf-8?q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= <nfraprado@collabora.com>
-X-Mailer: b4 0.14.2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250227-ntc_thermistor_fixes-v1-1-70fa73200b52@gocontroll.com>
 
-The driver currently reads a mediatek,eint-detect-mode property from DT,
-which determines certain register configurations. Since there are no
-users of the property, it doesn't directly describe the hardware, and
-the default value (4) is known to work across multiple boards, remove
-the handling for this property and always assume mode 4 is used. The
-property can be properly introduced in the binding in the future if
-different boards actually need different configurations.
+On Thu, Feb 27, 2025 at 01:57:51PM +0100, Maud Spierings via B4 Relay wrote:
+> From: Maud Spierings <maudspierings@gocontroll.com>
+> 
+> The module name is incorrectly stated with a hyphen while it is an
+> underscore.
+> 
+> Signed-off-by: Maud Spierings <maudspierings@gocontroll.com>
 
-Signed-off-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
----
- sound/soc/codecs/mt6359-accdet.c | 208 +++++++++++++--------------------------
- sound/soc/codecs/mt6359-accdet.h |   1 -
- 2 files changed, 70 insertions(+), 139 deletions(-)
+Applied.
 
-diff --git a/sound/soc/codecs/mt6359-accdet.c b/sound/soc/codecs/mt6359-accdet.c
-index 6728f1018c992fc9d4e4133dbaf091d256567683..83e65b6d5845dea00a8a77d68df4b7df1f62a87c 100644
---- a/sound/soc/codecs/mt6359-accdet.c
-+++ b/sound/soc/codecs/mt6359-accdet.c
-@@ -81,31 +81,22 @@ static void recover_eint_setting(struct mt6359_accdet *priv);
- 
- static unsigned int adjust_eint_analog_setting(struct mt6359_accdet *priv)
- {
--	if (priv->data->eint_detect_mode == 0x3 ||
--	    priv->data->eint_detect_mode == 0x4) {
--		/* ESD switches off */
--		regmap_update_bits(priv->regmap,
--				   RG_ACCDETSPARE_ADDR, 1 << 8, 0);
--	}
--	if (priv->data->eint_detect_mode == 0x4) {
--		if (priv->caps & ACCDET_PMIC_EINT0) {
--			/* enable RG_EINT0CONFIGACCDET */
--			regmap_update_bits(priv->regmap,
--					   RG_EINT0CONFIGACCDET_ADDR,
--					   RG_EINT0CONFIGACCDET_MASK_SFT,
--					   BIT(RG_EINT0CONFIGACCDET_SFT));
--		} else if (priv->caps & ACCDET_PMIC_EINT1) {
--			/* enable RG_EINT1CONFIGACCDET */
--			regmap_update_bits(priv->regmap,
--					   RG_EINT1CONFIGACCDET_ADDR,
--					   RG_EINT1CONFIGACCDET_MASK_SFT,
--					   BIT(RG_EINT1CONFIGACCDET_SFT));
--		}
--		/*select 500k, use internal resistor */
--		regmap_update_bits(priv->regmap, RG_EINT0HIRENB_ADDR,
--				   RG_EINT0HIRENB_MASK_SFT,
--				   BIT(RG_EINT0HIRENB_SFT));
-+	/* ESD switches off */
-+	regmap_update_bits(priv->regmap, RG_ACCDETSPARE_ADDR, 1 << 8, 0);
-+	if (priv->caps & ACCDET_PMIC_EINT0) {
-+		/* enable RG_EINT0CONFIGACCDET */
-+		regmap_update_bits(priv->regmap, RG_EINT0CONFIGACCDET_ADDR,
-+				   RG_EINT0CONFIGACCDET_MASK_SFT,
-+				   BIT(RG_EINT0CONFIGACCDET_SFT));
-+	} else if (priv->caps & ACCDET_PMIC_EINT1) {
-+		/* enable RG_EINT1CONFIGACCDET */
-+		regmap_update_bits(priv->regmap, RG_EINT1CONFIGACCDET_ADDR,
-+				   RG_EINT1CONFIGACCDET_MASK_SFT,
-+				   BIT(RG_EINT1CONFIGACCDET_SFT));
- 	}
-+	/*select 500k, use internal resistor */
-+	regmap_update_bits(priv->regmap, RG_EINT0HIRENB_ADDR,
-+			   RG_EINT0HIRENB_MASK_SFT, BIT(RG_EINT0HIRENB_SFT));
- 	return 0;
- }
- 
-@@ -123,18 +114,14 @@ static unsigned int adjust_eint_digital_setting(struct mt6359_accdet *priv)
- 				   ACCDET_EINT1_INVERTER_SW_EN_MASK_SFT, 0);
- 	}
- 
--	if (priv->data->eint_detect_mode == 0x4) {
--		if (priv->caps & ACCDET_PMIC_EINT0) {
--			/* set DA stable signal */
--			regmap_update_bits(priv->regmap,
--					   ACCDET_DA_STABLE_ADDR,
--					   ACCDET_EINT0_CEN_STABLE_MASK_SFT, 0);
--		} else if (priv->caps & ACCDET_PMIC_EINT1) {
--			/* set DA stable signal */
--			regmap_update_bits(priv->regmap,
--					   ACCDET_DA_STABLE_ADDR,
--					   ACCDET_EINT1_CEN_STABLE_MASK_SFT, 0);
--		}
-+	if (priv->caps & ACCDET_PMIC_EINT0) {
-+		/* set DA stable signal */
-+		regmap_update_bits(priv->regmap, ACCDET_DA_STABLE_ADDR,
-+				   ACCDET_EINT0_CEN_STABLE_MASK_SFT, 0);
-+	} else if (priv->caps & ACCDET_PMIC_EINT1) {
-+		/* set DA stable signal */
-+		regmap_update_bits(priv->regmap, ACCDET_DA_STABLE_ADDR,
-+				   ACCDET_EINT1_CEN_STABLE_MASK_SFT, 0);
- 	}
- 	return 0;
- }
-@@ -159,27 +146,19 @@ static unsigned int mt6359_accdet_jd_setting(struct mt6359_accdet *priv)
- 
- static void recover_eint_analog_setting(struct mt6359_accdet *priv)
- {
--	if (priv->data->eint_detect_mode == 0x3 ||
--	    priv->data->eint_detect_mode == 0x4) {
--		/* ESD switches on */
--		regmap_update_bits(priv->regmap, RG_ACCDETSPARE_ADDR,
--				   1 << 8, 1 << 8);
--	}
--	if (priv->data->eint_detect_mode == 0x4) {
--		if (priv->caps & ACCDET_PMIC_EINT0) {
--			/* disable RG_EINT0CONFIGACCDET */
--			regmap_update_bits(priv->regmap,
--					   RG_EINT0CONFIGACCDET_ADDR,
--					   RG_EINT0CONFIGACCDET_MASK_SFT, 0);
--		} else if (priv->caps & ACCDET_PMIC_EINT1) {
--			/* disable RG_EINT1CONFIGACCDET */
--			regmap_update_bits(priv->regmap,
--					   RG_EINT1CONFIGACCDET_ADDR,
--					   RG_EINT1CONFIGACCDET_MASK_SFT, 0);
--		}
--		regmap_update_bits(priv->regmap, RG_EINT0HIRENB_ADDR,
--				   RG_EINT0HIRENB_MASK_SFT, 0);
-+	/* ESD switches on */
-+	regmap_update_bits(priv->regmap, RG_ACCDETSPARE_ADDR, 1 << 8, 1 << 8);
-+	if (priv->caps & ACCDET_PMIC_EINT0) {
-+		/* disable RG_EINT0CONFIGACCDET */
-+		regmap_update_bits(priv->regmap, RG_EINT0CONFIGACCDET_ADDR,
-+				   RG_EINT0CONFIGACCDET_MASK_SFT, 0);
-+	} else if (priv->caps & ACCDET_PMIC_EINT1) {
-+		/* disable RG_EINT1CONFIGACCDET */
-+		regmap_update_bits(priv->regmap, RG_EINT1CONFIGACCDET_ADDR,
-+				   RG_EINT1CONFIGACCDET_MASK_SFT, 0);
- 	}
-+	regmap_update_bits(priv->regmap, RG_EINT0HIRENB_ADDR,
-+			   RG_EINT0HIRENB_MASK_SFT, 0);
- }
- 
- static void recover_eint_digital_setting(struct mt6359_accdet *priv)
-@@ -193,37 +172,30 @@ static void recover_eint_digital_setting(struct mt6359_accdet *priv)
- 				   ACCDET_EINT1_M_SW_EN_ADDR,
- 				   ACCDET_EINT1_M_SW_EN_MASK_SFT, 0);
- 	}
--	if (priv->data->eint_detect_mode == 0x4) {
-+	if (priv->caps & ACCDET_PMIC_EINT0) {
- 		/* enable eint0cen */
--		if (priv->caps & ACCDET_PMIC_EINT0) {
--			/* enable eint0cen */
--			regmap_update_bits(priv->regmap,
--					   ACCDET_DA_STABLE_ADDR,
--					   ACCDET_EINT0_CEN_STABLE_MASK_SFT,
--					   BIT(ACCDET_EINT0_CEN_STABLE_SFT));
--		} else if (priv->caps & ACCDET_PMIC_EINT1) {
--			/* enable eint1cen */
--			regmap_update_bits(priv->regmap,
--					   ACCDET_DA_STABLE_ADDR,
--					   ACCDET_EINT1_CEN_STABLE_MASK_SFT,
--					   BIT(ACCDET_EINT1_CEN_STABLE_SFT));
--		}
-+		regmap_update_bits(priv->regmap, ACCDET_DA_STABLE_ADDR,
-+				   ACCDET_EINT0_CEN_STABLE_MASK_SFT,
-+				   BIT(ACCDET_EINT0_CEN_STABLE_SFT));
-+	} else if (priv->caps & ACCDET_PMIC_EINT1) {
-+		/* enable eint1cen */
-+		regmap_update_bits(priv->regmap, ACCDET_DA_STABLE_ADDR,
-+				   ACCDET_EINT1_CEN_STABLE_MASK_SFT,
-+				   BIT(ACCDET_EINT1_CEN_STABLE_SFT));
- 	}
- 
--	if (priv->data->eint_detect_mode != 0x1) {
--		if (priv->caps & ACCDET_PMIC_EINT0) {
--			/* enable inverter */
--			regmap_update_bits(priv->regmap,
--					   ACCDET_EINT0_INVERTER_SW_EN_ADDR,
--					   ACCDET_EINT0_INVERTER_SW_EN_MASK_SFT,
--					   BIT(ACCDET_EINT0_INVERTER_SW_EN_SFT));
--		} else if (priv->caps & ACCDET_PMIC_EINT1) {
--			/* enable inverter */
--			regmap_update_bits(priv->regmap,
--					   ACCDET_EINT1_INVERTER_SW_EN_ADDR,
--					   ACCDET_EINT1_INVERTER_SW_EN_MASK_SFT,
--					   BIT(ACCDET_EINT1_INVERTER_SW_EN_SFT));
--		}
-+	if (priv->caps & ACCDET_PMIC_EINT0) {
-+		/* enable inverter */
-+		regmap_update_bits(priv->regmap,
-+				   ACCDET_EINT0_INVERTER_SW_EN_ADDR,
-+				   ACCDET_EINT0_INVERTER_SW_EN_MASK_SFT,
-+				   BIT(ACCDET_EINT0_INVERTER_SW_EN_SFT));
-+	} else if (priv->caps & ACCDET_PMIC_EINT1) {
-+		/* enable inverter */
-+		regmap_update_bits(priv->regmap,
-+				   ACCDET_EINT1_INVERTER_SW_EN_ADDR,
-+				   ACCDET_EINT1_INVERTER_SW_EN_MASK_SFT,
-+				   BIT(ACCDET_EINT1_INVERTER_SW_EN_SFT));
- 	}
- }
- 
-@@ -534,13 +506,6 @@ static int mt6359_accdet_parse_dt(struct mt6359_accdet *priv)
- 
- 	priv->data->hp_eint_high = of_property_read_bool(node, "mediatek,hp-eint-high");
- 
--	ret = of_property_read_u32(node, "mediatek,eint-detect-mode",
--				   &priv->data->eint_detect_mode);
--	if (ret) {
--		/* eint detection mode equals to EINT HW Mode */
--		priv->data->eint_detect_mode = 0x4;
--	}
--
- 	ret = of_property_read_u32(node, "mediatek,eint-num", &tmp);
- 	if (ret)
- 		tmp = 0;
-@@ -592,31 +557,16 @@ static void config_digital_init_by_mode(struct mt6359_accdet *priv)
- 	/* enable PWM */
- 	regmap_write(priv->regmap, ACCDET_CMP_PWM_EN_ADDR, 0x67);
- 	/* enable inverter detection */
--	if (priv->data->eint_detect_mode == 0x1) {
--		/* disable inverter detection */
--		if (priv->caps & ACCDET_PMIC_EINT0) {
--			regmap_update_bits(priv->regmap,
--					   ACCDET_EINT0_INVERTER_SW_EN_ADDR,
--					   ACCDET_EINT0_INVERTER_SW_EN_MASK_SFT,
--					   0);
--		} else if (priv->caps & ACCDET_PMIC_EINT1) {
--			regmap_update_bits(priv->regmap,
--					   ACCDET_EINT1_INVERTER_SW_EN_ADDR,
--					   ACCDET_EINT1_INVERTER_SW_EN_MASK_SFT,
--					   0);
--		}
--	} else {
--		if (priv->caps & ACCDET_PMIC_EINT0) {
--			regmap_update_bits(priv->regmap,
--					   ACCDET_EINT0_INVERTER_SW_EN_ADDR,
--					   ACCDET_EINT0_INVERTER_SW_EN_MASK_SFT,
--					   BIT(ACCDET_EINT0_INVERTER_SW_EN_SFT));
--		} else if (priv->caps & ACCDET_PMIC_EINT1) {
--			regmap_update_bits(priv->regmap,
--					   ACCDET_EINT1_INVERTER_SW_EN_ADDR,
--					   ACCDET_EINT1_INVERTER_SW_EN_MASK_SFT,
--					   BIT(ACCDET_EINT1_INVERTER_SW_EN_SFT));
--		}
-+	if (priv->caps & ACCDET_PMIC_EINT0) {
-+		regmap_update_bits(priv->regmap,
-+				   ACCDET_EINT0_INVERTER_SW_EN_ADDR,
-+				   ACCDET_EINT0_INVERTER_SW_EN_MASK_SFT,
-+				   BIT(ACCDET_EINT0_INVERTER_SW_EN_SFT));
-+	} else if (priv->caps & ACCDET_PMIC_EINT1) {
-+		regmap_update_bits(priv->regmap,
-+				   ACCDET_EINT1_INVERTER_SW_EN_ADDR,
-+				   ACCDET_EINT1_INVERTER_SW_EN_MASK_SFT,
-+				   BIT(ACCDET_EINT1_INVERTER_SW_EN_SFT));
- 	}
- 
- 	if (priv->data->hp_eint_high) {
-@@ -649,28 +599,10 @@ static void config_eint_init_by_mode(struct mt6359_accdet *priv)
- 	regmap_update_bits(priv->regmap, RG_NCP_PDDIS_EN_ADDR,
- 			   RG_NCP_PDDIS_EN_MASK_SFT, BIT(RG_NCP_PDDIS_EN_SFT));
- 
--	if (priv->data->eint_detect_mode == 0x1 ||
--	    priv->data->eint_detect_mode == 0x2 ||
--	    priv->data->eint_detect_mode == 0x3) {
--		if (priv->caps & ACCDET_PMIC_EINT0) {
--			regmap_update_bits(priv->regmap,
--					   RG_EINT0CONFIGACCDET_ADDR,
--					   RG_EINT0CONFIGACCDET_MASK_SFT,
--					   BIT(RG_EINT0CONFIGACCDET_SFT));
--		} else if (priv->caps & ACCDET_PMIC_EINT1) {
--			regmap_update_bits(priv->regmap,
--					   RG_EINT1CONFIGACCDET_ADDR,
--					   RG_EINT1CONFIGACCDET_MASK_SFT,
--					   BIT(RG_EINT1CONFIGACCDET_SFT));
--		}
--	}
--
--	if (priv->data->eint_detect_mode != 0x1) {
--		/* current detect set 0.25uA */
--		regmap_update_bits(priv->regmap, RG_ACCDETSPARE_ADDR,
--				   0x3 << RG_ACCDETSPARE_SFT,
--				   0x3 << RG_ACCDETSPARE_SFT);
--	}
-+	/* current detect set 0.25uA */
-+	regmap_update_bits(priv->regmap, RG_ACCDETSPARE_ADDR,
-+			   0x3 << RG_ACCDETSPARE_SFT,
-+			   0x3 << RG_ACCDETSPARE_SFT);
- 	regmap_write(priv->regmap, RG_EINTCOMPVTH_ADDR,
- 		     val | priv->data->eint_comp_vth << RG_EINTCOMPVTH_SFT);
- }
-diff --git a/sound/soc/codecs/mt6359-accdet.h b/sound/soc/codecs/mt6359-accdet.h
-index 287201eebe0330fa170093fd6192bf5694c30469..ff5cd6ea1b06f045b6e1b9f6bc53ef80d78e3b92 100644
---- a/sound/soc/codecs/mt6359-accdet.h
-+++ b/sound/soc/codecs/mt6359-accdet.h
-@@ -54,7 +54,6 @@ struct dts_data {
- 	unsigned int mic_vol;
- 	unsigned int mic_mode;
- 	bool hp_eint_high;
--	unsigned int eint_detect_mode;
- 	unsigned int eint_comp_vth;
- };
- 
-
--- 
-2.48.1
-
+Thanks,
+Guenter
