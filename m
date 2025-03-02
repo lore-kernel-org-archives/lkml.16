@@ -1,185 +1,96 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C9931E51F3
-	for <linux-kernel@vger.kernel.org>; Sat,  1 Mar 2025 23:46:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81067A31;
+	Sun,  2 Mar 2025 00:04:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740872807; cv=none; b=BRZUzj6lOMVrtnR7Rg0OwILj6bZdcTb8F5ShnSyPcLMXzytPDf24YOcRPbwkO2lZAhvxPnxh8ZyLGw9EL/vHnQxst7xBGeavM/cvoKtHqCyJlw88n5+Qm+EVJNse8dsqRhZBX0NMtpKibVLz8nHMbs4KeBj9TGOiORFdy/3gTTo=
+	t=1740873843; cv=none; b=uEA7rZlmhRT8cggAbkNOeVPI3FOvMlxUePRQvfc3fODM+4PLedxIWg3tmMhhdTTrXC9ueaeXSz+KyBvpEgZcTvAmR1oWfNj/+mYllqHTdJY7UbBGKxc0DV78T+QuOxqDDnlV5oEibrnBvSn57cYCdsYiL9ZwZJFo1R8tngUtWZs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740872807; c=relaxed/simple;
-	bh=GO8/mVDF9FRG3bqnjIKRLOqWg1VBrOkzr/i5h5BP9UA=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=VQOaILFYb86KJbfuXvI/ib/ufsH81a5GaYIquDb91or72y5qupmErl0yeWz2kHQ393fExIjlTlNf/2RGlQ5+MIPxnKR7xQ0jB+BSWVwYpyxsyR/mj2wOvzcQ9A/+vKNq/5t4H2e9Y9BqcZvLNKQ2AQs8TJnYqC+Mm2Ojv9oLV5c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ORiGV1xY; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1740873843; c=relaxed/simple;
+	bh=FQHEIQqLU+bNSkSzOsPHprxMyZmJzB3tcqTwUCSXz7U=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=m0i9On9mOanARo16M0I93i4Dg89E5GoxLfe3OnoMk7AaQMB+QPr8axMlF8TuRPDm0pAzgg/J1CSLdlk5snKsogF1IC9xfOBrwYvZfoX0gydYhnbPYgQKXaw1bp/OC6CHAKnSwn6MXtrpfU1Rn+SOKjdtwHz8LYw4L3JldRw2fmg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AwgdQdXg; arc=none smtp.client-ip=209.85.167.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ORiGV1xY"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740872804; x=1772408804;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=GO8/mVDF9FRG3bqnjIKRLOqWg1VBrOkzr/i5h5BP9UA=;
-  b=ORiGV1xYzJarzBJC6xnlAJ5Q4QmOV7ErhxHat29NBzhEl14oIXDc9Hj5
-   8xiD452TSlEii46vEvBt3CwkkybwAJB1XCPzuQJk7wQUNgil98zq4D/ex
-   RtCm9f/L0Vn88o61r88mMqycYz5qLYqDsagZAEtt/LuTChYfnlPaT6Yzm
-   UbrSt6ZdYbMJDMewsfTbV/xlv6rMb0mD0AuskCSjX2c5NlFBD+ABE4QgZ
-   ae0EGPmQtpgc8SKzOio3dF77imFPLvCD8iBlgM9NX7QpnBcNV2FNOe/tl
-   ypWey5YxChgvLcF6DN2HluVxDkrZ8AUWMG1pcnF04KLQqhW6Ac4MnIfQN
-   A==;
-X-CSE-ConnectionGUID: AJBE/3npRxiqMkTc3dqfog==
-X-CSE-MsgGUID: vm5krdt2QQeBDpdUTBekDw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11360"; a="41659047"
-X-IronPort-AV: E=Sophos;i="6.13,326,1732608000"; 
-   d="scan'208";a="41659047"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Mar 2025 15:46:44 -0800
-X-CSE-ConnectionGUID: 5/Lo6Cy6S/eDd/F77LQD6w==
-X-CSE-MsgGUID: XThP7gBJSomXhTA16dOTyA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,326,1732608000"; 
-   d="scan'208";a="118342487"
-Received: from lkp-server02.sh.intel.com (HELO 76cde6cc1f07) ([10.239.97.151])
-  by fmviesa009.fm.intel.com with ESMTP; 01 Mar 2025 15:46:43 -0800
-Received: from kbuild by 76cde6cc1f07 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1toWXY-000Gqa-2E;
-	Sat, 01 Mar 2025 23:46:40 +0000
-Date: Sun, 2 Mar 2025 07:46:16 +0800
-From: kernel test robot <lkp@intel.com>
-To: Johannes Berg <johannes.berg@intel.com>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: lib/test_bitmap.c:1269:2: error: call to '__compiletime_assert_315'
- declared with 'error' attribute: BUILD_BUG_ON failed:
- !__builtin_constant_p(res)
-Message-ID: <202503020721.LqaunSM9-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AwgdQdXg"
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-5495c1e1b63so708793e87.0;
+        Sat, 01 Mar 2025 16:04:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740873839; x=1741478639; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=zIbw6YYMdLf5UvkTslQghX7D9/dCamp4LxA8/4044M0=;
+        b=AwgdQdXgdokYGIJFrBnv6BSCIld+gcUZjvuQEX9ZuF5Ck86eVUK8F33BloFuOTCNVF
+         2uYFnU6gKZ0o4SMx7ZQ0TF223VjFZTiGTwm80gG8IxtRfCgBuVL/NYMh6paSG1GxYhNO
+         FUyDmlS5iyhQFd7Ck8w4RssGq0e9ZSC9sVNWu3r36+6nk5UCaBZWI7duzZmFHvMVWJET
+         p6UNDf/liPg61Cdjgb+cwmSEmLDGiu6QbBifUf+fMAE5XZGO8A4VyIJjSl9ekfsp8Mmz
+         X3W5L6oBbwSNVqPiIHMJPAjWWxF7pTQOonCzNdOzo/O3wzWeh9nO349Jxf5fVOpoHcLZ
+         +iRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740873839; x=1741478639;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=zIbw6YYMdLf5UvkTslQghX7D9/dCamp4LxA8/4044M0=;
+        b=vQHnl61RKGsbbRT80wT+dVSTt3i3WeIemkxUhiivo22MIq2U6mqNwb0jhbHVQ/gC0C
+         aHK8WfhIOc+fIcfa6zdA9cp+7FtM0O6iXr1tTJZcP5sI3FOD6MGQV1XU/oPpxx2ZIUBb
+         XsvsaZxqu9h6V+QPaaM1M46syPzfrfFJQox5IYJpUTTtdngyf8DvicsidYQHiKmKmGtH
+         mlvzCKeZZyGJmlvlpyWgA1gC1THz40vrYg/0VQoNgX+flNEPqKiKihdl5+nJ/5K6WPcX
+         n1YSvDo9C+jZjDGt6VGTLtKt7OC2nXTl9NBd/QQZ8MgvuZBS3UFp7b1xzJIOJEILk43N
+         r4Mg==
+X-Forwarded-Encrypted: i=1; AJvYcCV3I/nvNMbXh9oimMPImCAfXA5UYASTR++duwGc8JKM5JpIn8PhNssqb4C2vtauyclRHbqvg4NdQaglir63@vger.kernel.org, AJvYcCWs1ZsO0OkqCNhKlZpcKpi7QOd1sWQ6zdIcmL+2w18y4kHboltw1KDe/2Lg4M2l1CYONX9wnPt6e9L9@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw430L51JfR2a4/oVflNPB6GarhiC+ZwIOPwpKmjRMjOGlETebU
+	X6K8C2q61DvlIP+JOboComYqeNWO4QXdcpA1MNuVrGrtGDL1RtdUTlHJiYTUVk5rEXka4ufxnzi
+	MGGWtrc8Wozgssr6upcGFw5WAVNg=
+X-Gm-Gg: ASbGncv5ZWTDxpSt7vK/+A3AdxuGkSbQkpoo6ovbN6GOP5gRRTWZjw7lZl0BSYepQhL
+	IuhLvy2evad9in6xfEHmwnewgRavCeKcuqYhTWLUawCL8PkBfDAs8eAvqh7APPsLtsCsI9R8b9O
+	1P0xOHGiwL79jcCkPiPHmjWa0MWk4tdCbo4iA6rHDZMvFUSrwyaZc1FsJCRusS
+X-Google-Smtp-Source: AGHT+IGGXcUBe1XDHQRFil/1qy3s5CRopuBdak1kZRC4nCjL7PDiHulW9uFy/lF//JlTGlDvGE+hiUMVTCHR/yLYBkU=
+X-Received: by 2002:a05:6512:1292:b0:545:c5f:8551 with SMTP id
+ 2adb3069b0e04-5494c3517b6mr3702718e87.35.1740873839356; Sat, 01 Mar 2025
+ 16:03:59 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+From: Steve French <smfrench@gmail.com>
+Date: Sat, 1 Mar 2025 18:03:47 -0600
+X-Gm-Features: AQ5f1JrZvPAU1_MTEZJoE2n1BQfatZy8eYFVVIdvXxHpQoZMqH-II2UAgfjn4ac
+Message-ID: <CAH2r5msEB9nwoZOq70XWmHPV98_gy145DKoY_wiDRwP+N2wOXw@mail.gmail.com>
+Subject: [GIT PULL] smb client fix
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: David Howells <dhowells@redhat.com>, CIFS <linux-cifs@vger.kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Johannes,
+Please pull the following changes since commit
+d082ecbc71e9e0bf49883ee4afd435a77a5101b6:
 
-FYI, the error/warning still remains.
+  Linux 6.14-rc4 (2025-02-23 12:32:57 -0800)
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   9d20040d71ede4c0e5fc6ae7aaa92788de1e713a
-commit: 53585f9ea40a9466ab9c1151f15984513eb542f7 um: enable UBSAN
-date:   8 months ago
-config: um-randconfig-002-20250302 (https://download.01.org/0day-ci/archive/20250302/202503020721.LqaunSM9-lkp@intel.com/config)
-compiler: clang version 16.0.6 (https://github.com/llvm/llvm-project 7cbf1a2591520c2491aa35339f227775f4d3adf6)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250302/202503020721.LqaunSM9-lkp@intel.com/reproduce)
+are available in the Git repository at:
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202503020721.LqaunSM9-lkp@intel.com/
+  git://git.samba.org/sfrench/cifs-2.6.git tags/v6.14-rc4-smb3-client-fix
 
-All errors (new ones prefixed by >>):
+for you to fetch changes up to 66cb85c441cd9c44b193ff75b4d0358fccdc6b9c:
 
->> lib/test_bitmap.c:1269:2: error: call to '__compiletime_assert_315' declared with 'error' attribute: BUILD_BUG_ON failed: !__builtin_constant_p(res)
-           BUILD_BUG_ON(!__builtin_constant_p(res));
-           ^
-   include/linux/build_bug.h:50:2: note: expanded from macro 'BUILD_BUG_ON'
-           BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condition)
-           ^
-   include/linux/build_bug.h:39:37: note: expanded from macro 'BUILD_BUG_ON_MSG'
-   #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
-                                       ^
-   include/linux/compiler_types.h:510:2: note: expanded from macro 'compiletime_assert'
-           _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-           ^
-   include/linux/compiler_types.h:498:2: note: expanded from macro '_compiletime_assert'
-           __compiletime_assert(condition, msg, prefix, suffix)
-           ^
-   include/linux/compiler_types.h:491:4: note: expanded from macro '__compiletime_assert'
-                           prefix ## suffix();                             \
-                           ^
-   <scratch space>:206:1: note: expanded from here
-   __compiletime_assert_315
-   ^
-   1 error generated.
+  cifs: Fix the smb1 readv callback to correctly call netfs
+(2025-02-25 18:35:23 -0600)
 
+----------------------------------------------------------------
+Fix SMB1 client regression in netfs read code path
 
-vim +1269 lib/test_bitmap.c
+----------------------------------------------------------------
+David Howells (1):
+      cifs: Fix the smb1 readv callback to correctly call netfs
 
-291f93ca339f5b Barry Song        2021-08-06  1227  
-2356d198d2b4dd Yury Norov        2023-07-17  1228  /*
-2356d198d2b4dd Yury Norov        2023-07-17  1229   * FIXME: Clang breaks compile-time evaluations when KASAN and GCOV are enabled.
-2356d198d2b4dd Yury Norov        2023-07-17  1230   * To workaround it, GCOV is force-disabled in Makefile for this configuration.
-2356d198d2b4dd Yury Norov        2023-07-17  1231   */
-dc34d5036692c6 Alexander Lobakin 2022-06-24  1232  static void __init test_bitmap_const_eval(void)
-dc34d5036692c6 Alexander Lobakin 2022-06-24  1233  {
-dc34d5036692c6 Alexander Lobakin 2022-06-24  1234  	DECLARE_BITMAP(bitmap, BITS_PER_LONG);
-dc34d5036692c6 Alexander Lobakin 2022-06-24  1235  	unsigned long initvar = BIT(2);
-dc34d5036692c6 Alexander Lobakin 2022-06-24  1236  	unsigned long bitopvar = 0;
-dc34d5036692c6 Alexander Lobakin 2022-06-24  1237  	unsigned long var = 0;
-dc34d5036692c6 Alexander Lobakin 2022-06-24  1238  	int res;
-dc34d5036692c6 Alexander Lobakin 2022-06-24  1239  
-dc34d5036692c6 Alexander Lobakin 2022-06-24  1240  	/*
-dc34d5036692c6 Alexander Lobakin 2022-06-24  1241  	 * Compilers must be able to optimize all of those to compile-time
-dc34d5036692c6 Alexander Lobakin 2022-06-24  1242  	 * constants on any supported optimization level (-O2, -Os) and any
-dc34d5036692c6 Alexander Lobakin 2022-06-24  1243  	 * architecture. Otherwise, trigger a build bug.
-dc34d5036692c6 Alexander Lobakin 2022-06-24  1244  	 * The whole function gets optimized out then, there's nothing to do
-dc34d5036692c6 Alexander Lobakin 2022-06-24  1245  	 * in runtime.
-dc34d5036692c6 Alexander Lobakin 2022-06-24  1246  	 */
-dc34d5036692c6 Alexander Lobakin 2022-06-24  1247  
-7adaf37f7f104a Alexander Lobakin 2024-03-27  1248  	/* Equals to `unsigned long bitmap[1] = { GENMASK(6, 5), }` */
-dc34d5036692c6 Alexander Lobakin 2022-06-24  1249  	bitmap_clear(bitmap, 0, BITS_PER_LONG);
-dc34d5036692c6 Alexander Lobakin 2022-06-24  1250  	if (!test_bit(7, bitmap))
-dc34d5036692c6 Alexander Lobakin 2022-06-24  1251  		bitmap_set(bitmap, 5, 2);
-dc34d5036692c6 Alexander Lobakin 2022-06-24  1252  
-dc34d5036692c6 Alexander Lobakin 2022-06-24  1253  	/* Equals to `unsigned long bitopvar = BIT(20)` */
-dc34d5036692c6 Alexander Lobakin 2022-06-24  1254  	__change_bit(31, &bitopvar);
-dc34d5036692c6 Alexander Lobakin 2022-06-24  1255  	bitmap_shift_right(&bitopvar, &bitopvar, 11, BITS_PER_LONG);
-dc34d5036692c6 Alexander Lobakin 2022-06-24  1256  
-dc34d5036692c6 Alexander Lobakin 2022-06-24  1257  	/* Equals to `unsigned long var = BIT(25)` */
-dc34d5036692c6 Alexander Lobakin 2022-06-24  1258  	var |= BIT(25);
-dc34d5036692c6 Alexander Lobakin 2022-06-24  1259  	if (var & BIT(0))
-dc34d5036692c6 Alexander Lobakin 2022-06-24  1260  		var ^= GENMASK(9, 6);
-dc34d5036692c6 Alexander Lobakin 2022-06-24  1261  
-dc34d5036692c6 Alexander Lobakin 2022-06-24  1262  	/* __const_hweight<32|64>(GENMASK(6, 5)) == 2 */
-dc34d5036692c6 Alexander Lobakin 2022-06-24  1263  	res = bitmap_weight(bitmap, 20);
-dc34d5036692c6 Alexander Lobakin 2022-06-24  1264  	BUILD_BUG_ON(!__builtin_constant_p(res));
-dc34d5036692c6 Alexander Lobakin 2022-06-24  1265  	BUILD_BUG_ON(res != 2);
-dc34d5036692c6 Alexander Lobakin 2022-06-24  1266  
-dc34d5036692c6 Alexander Lobakin 2022-06-24  1267  	/* !(BIT(31) & BIT(18)) == 1 */
-dc34d5036692c6 Alexander Lobakin 2022-06-24  1268  	res = !test_bit(18, &bitopvar);
-dc34d5036692c6 Alexander Lobakin 2022-06-24 @1269  	BUILD_BUG_ON(!__builtin_constant_p(res));
-dc34d5036692c6 Alexander Lobakin 2022-06-24  1270  	BUILD_BUG_ON(!res);
-dc34d5036692c6 Alexander Lobakin 2022-06-24  1271  
-dc34d5036692c6 Alexander Lobakin 2022-06-24  1272  	/* BIT(2) & GENMASK(14, 8) == 0 */
-dc34d5036692c6 Alexander Lobakin 2022-06-24  1273  	res = initvar & GENMASK(14, 8);
-dc34d5036692c6 Alexander Lobakin 2022-06-24  1274  	BUILD_BUG_ON(!__builtin_constant_p(res));
-dc34d5036692c6 Alexander Lobakin 2022-06-24  1275  	BUILD_BUG_ON(res);
-dc34d5036692c6 Alexander Lobakin 2022-06-24  1276  
-dc34d5036692c6 Alexander Lobakin 2022-06-24  1277  	/* ~BIT(25) */
-dc34d5036692c6 Alexander Lobakin 2022-06-24  1278  	BUILD_BUG_ON(!__builtin_constant_p(~var));
-dc34d5036692c6 Alexander Lobakin 2022-06-24  1279  	BUILD_BUG_ON(~var != ~BIT(25));
-7adaf37f7f104a Alexander Lobakin 2024-03-27  1280  
-7adaf37f7f104a Alexander Lobakin 2024-03-27  1281  	/* ~BIT(25) | BIT(25) == ~0UL */
-7adaf37f7f104a Alexander Lobakin 2024-03-27  1282  	bitmap_complement(&var, &var, BITS_PER_LONG);
-7adaf37f7f104a Alexander Lobakin 2024-03-27  1283  	__assign_bit(25, &var, true);
-7adaf37f7f104a Alexander Lobakin 2024-03-27  1284  
-7adaf37f7f104a Alexander Lobakin 2024-03-27  1285  	/* !(~(~0UL)) == 1 */
-7adaf37f7f104a Alexander Lobakin 2024-03-27  1286  	res = bitmap_full(&var, BITS_PER_LONG);
-7adaf37f7f104a Alexander Lobakin 2024-03-27  1287  	BUILD_BUG_ON(!__builtin_constant_p(res));
-7adaf37f7f104a Alexander Lobakin 2024-03-27  1288  	BUILD_BUG_ON(!res);
-dc34d5036692c6 Alexander Lobakin 2022-06-24  1289  }
-dc34d5036692c6 Alexander Lobakin 2022-06-24  1290  
+ fs/smb/client/cifssmb.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-:::::: The code at line 1269 was first introduced by commit
-:::::: dc34d5036692c614eef23c1130ee42a201c316bf lib: test_bitmap: add compile-time optimization/evaluations assertions
+--
+Thanks,
 
-:::::: TO: Alexander Lobakin <alexandr.lobakin@intel.com>
-:::::: CC: Yury Norov <yury.norov@gmail.com>
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Steve
