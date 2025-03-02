@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83DF2EEC8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83E3F1B424F
 	for <linux-kernel@vger.kernel.org>; Sun,  2 Mar 2025 08:22:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740903737; cv=none; b=fGOZWs39QSscVOITvMqCYWE/3FN8rcCbDM5d/X4RRUdHS+3ryeby4/8MbELz5H+Sak+SeYfiPa40P3p98R/cBttN94eEtYUA6vfwdYsffCShjTEm2Q9PMU+1DlypQs8v17RtkjecmEkmHJ/p6P5ApaUb/Ic4ryXzEWSPUUnQkTQ=
+	t=1740903737; cv=none; b=rpON5ZirAM0zQUreZ+YeknQ+5rXdmKIPJoD092m0VYxxg8ehaov9AvEO8uiMMnOzFy51TRkc94aOCzUSwVtHDROhwsHq1Vy97n5tNknACR22rIDafLxQLsceenvYdVAMKEtsR66iHlr1kLQH5ijL5UNMYPxqhQb3a6XTeuzdTUE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1740903737; c=relaxed/simple;
-	bh=LvlI96l+YbIl5MsIJDnbtQxU7YniO+B5OBQkHO2lJqA=;
+	bh=J/oceRB+tMp1dlwMr5XDGzHWlOY6Ma1Afet+7GnEmTE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=kVBjUrNKj0MXEogxuHFMHDJruG6qcJYJOIjdtF3dSqtuXNmRmQYEy9a0COhtLxeqZ0AhZGhWvCBWSM0WMGfv+IGVf4uzArCI30yQ2li5ln/n+MIGJSa3SJG9oAPYhy8lwVoOpZxmuLbgeHgviXQIIzybxF9fPGnYlkQUOe//FM4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p7C/SZ1u; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=qnLTEq6E0+oOc5eUf0tQ8zwU0kaN5KeciZdWwW5SSBJFIONhKvONU/m9xzJ2MLDeK//wXAfyd86VTfzwlc6QHZXELi6DA60oghsSixtlHl2hZ+BdxWTucKthyB2oOg2QYUNXNV/t1CLPeFZWedwHXHiExhCYnP41zP/ZdEJDtxI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jemOMNJ0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p7C/SZ1u"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0CFC0C4AF0B;
-	Sun,  2 Mar 2025 08:22:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jemOMNJ0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08A54C4CEE5;
+	Sun,  2 Mar 2025 08:22:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1740903737;
-	bh=LvlI96l+YbIl5MsIJDnbtQxU7YniO+B5OBQkHO2lJqA=;
+	bh=J/oceRB+tMp1dlwMr5XDGzHWlOY6Ma1Afet+7GnEmTE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=p7C/SZ1uHSjQxjnVUw53vjjHVcqNcPp6caMOXp8UNn+LwKDFIxSnFaXgtD3G8D2KC
-	 dDaRs34uFwu3dp8T247CnHJgnvsijRQGjJhuNv+ZsUU7N+ff0j8h3QCUwdbTceYgkZ
-	 1qNReLuH/DGNJUYYRVf7dcqclWoG1AIQBdCvmGmJ+qe8k2Ixp6sbtRX6kVDFh5oLeg
-	 E+G5xo9hYgJlMMMfQwwcSolt++8Zbl3jjnV1HwzYUsMRAaBiXBe1+1Dc6TjenhUCEn
-	 943ml/YhxvFF7zUKgjLd7zzgdvUJUYXbAawM4sLLwKXBEwQB1KeNE3yeEInsz1dp1W
-	 KX7+iiWGQj0Gg==
+	b=jemOMNJ0sdMYkrmDAGdHlOsQXBPs+xpwwJpuqmCYVvdI5oGpqD3C4guBhoxUxg6/I
+	 pxVAMYbyoHQKZqyqytzF1WdOyPKkJHrxJdxzFjv4Q+4yILOuk0i+nlV4DJOA5beqpQ
+	 HmsG4rmKwUYJlUx3NUf0vbRGlEXcg+SML0YRHf4K4W7sqlUMsDCyCvfachi7vwpZKb
+	 8nh6TZdOgnaFHCxXSiFFJ3WR6pwnauS5se/MwHxt0C49w6kKeR1YM9V+RS85QM+YBO
+	 yo2vB/B8wUxZQaGCuMpsngMmW8+TpXN2GEon3+2M/fasMhEwHKlJ/zewlJ2F6q5X17
+	 46ULWBFAUt2MA==
 Received: from mchehab by mail.kernel.org with local (Exim 4.98)
 	(envelope-from <mchehab+huawei@kernel.org>)
-	id 1toeaU-000000043S4-2xlj;
+	id 1toeaU-000000043Sg-40PD;
 	Sun, 02 Mar 2025 09:22:14 +0100
 From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To: Igor Mammedov <imammedo@redhat.com>,
@@ -38,12 +38,11 @@ Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
 	qemu-arm@nongnu.org,
 	qemu-devel@nongnu.org,
 	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-	Ani Sinha <anisinha@redhat.com>,
 	Dongjiu Geng <gengdongjiu1@gmail.com>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v7 09/19] acpi/ghes: add a notifier to notify when error data is ready
-Date: Sun,  2 Mar 2025 09:21:56 +0100
-Message-ID: <50b5db8420a552e3502b4f9f654f48ee8546dcdf.1740903110.git.mchehab+huawei@kernel.org>
+Subject: [PATCH v7 18/19] docs: hest: add new "etc/acpi_table_hest_addr" and update workflow
+Date: Sun,  2 Mar 2025 09:22:05 +0100
+Message-ID: <01c7709b139038dd2845f4f3904bf9d7075e4292.1740903110.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <cover.1740903110.git.mchehab+huawei@kernel.org>
 References: <cover.1740903110.git.mchehab+huawei@kernel.org>
@@ -56,55 +55,62 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-Some error injection notify methods are async, like GPIO
-notify. Add a notifier to be used when the error record is
-ready to be sent to the guest OS.
+While the HEST layout didn't change, there are some internal
+changes related to how offsets are calculated and how memory error
+events are triggered.
+
+Update specs to reflect such changes.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Acked-by: Igor Mammedov <imammedo@redhat.com>
+Reviewed-by: Igor Mammedov <imammedo@redhat.com>
 ---
- hw/acpi/ghes.c         | 5 ++++-
- include/hw/acpi/ghes.h | 3 +++
- 2 files changed, 7 insertions(+), 1 deletion(-)
+ docs/specs/acpi_hest_ghes.rst | 28 +++++++++++++++++-----------
+ 1 file changed, 17 insertions(+), 11 deletions(-)
 
-diff --git a/hw/acpi/ghes.c b/hw/acpi/ghes.c
-index f49d0d628fc4..0135ac844bcf 100644
---- a/hw/acpi/ghes.c
-+++ b/hw/acpi/ghes.c
-@@ -510,6 +510,9 @@ static void get_ghes_source_offsets(uint16_t source_id,
-     *read_ack_start_addr = le64_to_cpu(*read_ack_start_addr);
- }
+diff --git a/docs/specs/acpi_hest_ghes.rst b/docs/specs/acpi_hest_ghes.rst
+index c3e9f8d9a702..3d1b85d74b70 100644
+--- a/docs/specs/acpi_hest_ghes.rst
++++ b/docs/specs/acpi_hest_ghes.rst
+@@ -89,12 +89,21 @@ Design Details
+     addresses in the "error_block_address" fields with a pointer to the
+     respective "Error Status Data Block" in the "etc/hardware_errors" blob.
  
-+NotifierList acpi_generic_error_notifiers =
-+    NOTIFIER_LIST_INITIALIZER(error_device_notifiers);
+-(8) QEMU defines a third and write-only fw_cfg blob which is called
+-    "etc/hardware_errors_addr". Through that blob, the firmware can send back
+-    the guest-side allocation addresses to QEMU. The "etc/hardware_errors_addr"
+-    blob contains a 8-byte entry. QEMU generates a single WRITE_POINTER command
+-    for the firmware. The firmware will write back the start address of
+-    "etc/hardware_errors" blob to the fw_cfg file "etc/hardware_errors_addr".
++(8) QEMU defines a third and write-only fw_cfg blob to store the location
++    where the error block offsets, read ack registers and CPER records are
++    stored.
 +
- void ghes_record_cper_errors(AcpiGhesState *ags, const void *cper, size_t len,
-                              uint16_t source_id, Error **errp)
- {
-@@ -550,7 +553,7 @@ void ghes_record_cper_errors(AcpiGhesState *ags, const void *cper, size_t len,
-     /* Write the generic error data entry into guest memory */
-     cpu_physical_memory_write(cper_addr, cper, len);
- 
--    return;
-+    notifier_list_notify(&acpi_generic_error_notifiers, NULL);
- }
- 
- int acpi_ghes_memory_errors(AcpiGhesState *ags, uint16_t source_id,
-diff --git a/include/hw/acpi/ghes.h b/include/hw/acpi/ghes.h
-index 8c4b08433760..390943e46d99 100644
---- a/include/hw/acpi/ghes.h
-+++ b/include/hw/acpi/ghes.h
-@@ -24,6 +24,9 @@
- 
- #include "hw/acpi/bios-linker-loader.h"
- #include "qapi/error.h"
-+#include "qemu/notify.h"
++    Up to QEMU 9.2, the location was at "etc/hardware_errors_addr", and
++    contains a GPA for the beginning of "etc/hardware_errors".
 +
-+extern NotifierList acpi_generic_error_notifiers;
++    Newer versions place the location at "etc/acpi_table_hest_addr",
++    pointing to the GPA of the HEST table.
++
++    Using above mentioned 'fw_cfg' files, the firmware can send back the
++    guest-side allocation addresses to QEMU. They contain a 8-byte entry.
++    QEMU generates a single WRITE_POINTER command for the firmware. The
++    firmware will write back the start address of either "etc/hardware_errors"
++    or HEST table at the corresponding fw_cfg file.
  
- /*
-  * Values for Hardware Error Notification Type field
+ (9) When QEMU gets a SIGBUS from the kernel, QEMU writes CPER into corresponding
+     "Error Status Data Block", guest memory, and then injects platform specific
+@@ -105,8 +114,5 @@ Design Details
+      kernel, on receiving notification, guest APEI driver could read the CPER error
+      and take appropriate action.
+ 
+-(11) kvm_arch_on_sigbus_vcpu() uses source_id as index in "etc/hardware_errors" to
+-     find out "Error Status Data Block" entry corresponding to error source. So supported
+-     source_id values should be assigned here and not be changed afterwards to make sure
+-     that guest will write error into expected "Error Status Data Block" even if guest was
+-     migrated to a newer QEMU.
++(11) kvm_arch_on_sigbus_vcpu() report RAS errors via a SEA notifications,
++     when a SIGBUS event is triggered.
 -- 
 2.48.1
 
