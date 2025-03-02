@@ -1,258 +1,129 @@
-Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com [209.85.128.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A25F1E5B99;
-	Sun,  2 Mar 2025 15:42:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F213AAD5A;
+	Sun,  2 Mar 2025 15:47:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740930152; cv=none; b=iw27hFsMzK/j3AYcg78u5j79AhU5t8tZ2x0Y7pnV1FXBJ6jxPhRarQn/50qoKPWk3a4K6Ch+25ajf6ExJntiuMEJjBbNzyqtSy+tIrdkdQcn0j+6P4I3qN9u0/xvPyIvLAQN9fB9Vk21rTYjfcUMq2ie3UwlKkPjm0IjiZ2o6A4=
+	t=1740930459; cv=none; b=lNTRafMObCtnu/ujuKEXK0zqn+JljOUnp1zYuy/Sr0p1YqD9Ugu0jLgXDkTNNIEzwjNCl+iDJ6xbJo1NOfinkw8yBU4EDaWEB9u5Zz+/QtZ16VgSH89qtuqi0a9psZjHjl+B7lXEUpGqkFujrTwZVkKpSKnnwPyB7XclV23JB8E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740930152; c=relaxed/simple;
-	bh=VXUTh34TX1miTwMK5vqmpftNHqzI23BV359QO4L5zCA=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=U2SrxEE5mlqsNVQ3zD5AmP7I/JigwK0FVdWb1l+4jbXncyGO1wzBViHw05AGXUOem8Eg0lbwCRFR4x7OiZjEPKR5OaXqC1ZitHFJfHZ/FaWmCO8Ag8BLaVPJHLRINZ82eg8eC28qNczxwVayTyzA7An9FKP/bBl1XKGkfgWKvfg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=hYNsEq4q; arc=none smtp.client-ip=217.70.183.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1740930459; c=relaxed/simple;
+	bh=n4tNp56tq6z5EW0Qy91aYPbEKWEtOFMdSPmch9pmErE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=S5nAbGdYzINHyN9kcBPuH9av8VSgrMMJRGZ9yoEJc4IJXzHJboBFPN2ViSWXdP+Ed6YzVZ6J94an/MSNqg8Lm3HezdOiedYNZpuoHqupaerpaf+SDhxYHAKequMwNXsBuraspBANO5rtvSXvT+vLn3omOyHnM7EFis7B2pslfTU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=H2w7pm/x; arc=none smtp.client-ip=209.85.128.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="hYNsEq4q"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 93CC444416;
-	Sun,  2 Mar 2025 15:42:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1740930142;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=pdu+llpCHIijzzSuA4AKVEUxnoDKFr7+qiRqelIM65s=;
-	b=hYNsEq4qi6NcLtZ1QvMXr9woIHKhmH+712Ae82G5dQv7greIF/ulZUWLGUmdSaW1I5afJO
-	X8H1+Jz0OthWLEBLhrMxAoRfVKbg9BV4Ow+0C8plLBsWJiqqEtflHK9vsE8/5tEFuon9Xd
-	WXB08a6I07LnV+G+QZ3LrqYTzXvZckeP4xH+EjJWNC69P2nt50zH+vwkLzHqGa9vMXKayl
-	dTRAcBk9RPhHLfApkOHjlRT8LY2wclKrXbfQf+Lgxcg4g+6mD6YRBhkxslBdSpAOPx8tWU
-	kIEM8X3I8u5UpI29sphi4BsVAvZTlEjImaACwS3fFE+l6xGR8WoNMU6KlOEUPQ==
-From: Olivier Benjamin <olivier.benjamin@bootlin.com>
-Date: Sun, 02 Mar 2025 16:41:02 +0100
-Subject: [PATCH v2 1/2] arm64: dts: rockchip: describe I2c Bus 1 and IMX258
- world camera on PinePhone Pro
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="H2w7pm/x"
+Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-6fd64eea9c1so7382587b3.2;
+        Sun, 02 Mar 2025 07:47:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20230601; t=1740930457; x=1741535257; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hL+Pb6+3LP0e5E6K/WXHBL7Tetw+ktOPyQjrugSsppc=;
+        b=H2w7pm/x9XezxJONaS75/tZamde1+TI8b225uYfCTsXBQ4heOv3MiO2/XiVjkYbMY+
+         S2a53nsHGm8XXohXvDqQtjOiIEv5rGD/sOfifqOQPEYvr8Sz3KwIE2O1IlbLmiBDIm+F
+         2HAkI5/MTwiE86DpZUCbrYfDNzpB9aB4AO5nrP8kRQjpn5wDPjVtm8ztIxE6YVHP6ZNS
+         h6fyp+sfgNxe/So73bnSZgPXe6rO15PBJHwtKJaezTXOvtNUh2hpYBifHKa3XI0tAZBa
+         ILnuGoCXNE+H6lsEl162yfEXQyMUWfa4H71zBzdtTMNRmcpoKAAySf6No5ezvVwoz5JY
+         SbIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740930457; x=1741535257;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=hL+Pb6+3LP0e5E6K/WXHBL7Tetw+ktOPyQjrugSsppc=;
+        b=pCMdlsRqoRgMBU0I16d7B6qvnaPmrN9nO1euknXakutARd6dyAsO+XV0OyZiDKYRvC
+         BwDg9u6xaAbENRdkmSzmtXPZ+2zuoRGfSe8jD5aI8AS0e21i4VBsq8Ghdokh+GmPMkt9
+         IaZqUPn7r/9sQ6BphwmxOSWaruCnaMMkLxTrTyxLupks9mZKnBhi57o83VYii6YIp7wZ
+         RUtrdZkMDHVazTtcoxvknVNxy9bouatQKKOkv72Gvsuw/i9foPNUtYhRlVqPOPOllCJx
+         StAtRHnXga8ej5tCX9np28D1lJ+CnOmM+tZzUQUKRb+8AOqJy2y15G8A0+UoRa4ZtZgB
+         /uNg==
+X-Forwarded-Encrypted: i=1; AJvYcCVKjJMM3UJSP0Z0RiD8AVUST1OHktmnaTYDS31ij6LaaMYPE9wFUPNgjJgL8ayG9gkzY2ZQazKyik8SmUk=@vger.kernel.org, AJvYcCWiiM2zMtow4qc6v9fwRVJ+P4aUbu/c5d8diu7wpm1Yobd3gshcExqymfnWKnK4SDkLxnRT/eF7eaGxAgOxJCfx@vger.kernel.org
+X-Gm-Message-State: AOJu0YwFgI3vzOqs8mMN7aSOAo3wlh4B46BdRMFmbTRysq+lTav7LAhN
+	0Ydr8YoRxdJ3cYNwmvY1vaJpEjxYGh0uma4CZvzlNu55mMwgo95//Rcwo7eF3ATVHqYf4vkwii6
+	QF0PWSvYw0Y1LGGPTc0d6MCC8yyU=
+X-Gm-Gg: ASbGncvN9ofwM7gDF+NNlewLMdqenHFFu4sZ4CTleeo0uwTU1RrpTAdTulDJ6in5Pyy
+	RGlDR/VM6LYK2vF8kF/U8txOe/ZLfBu/hIiV8rvGwmmqsyJ2B4YqimEHHCZRgAmzwdAlxqYZT7U
+	aBhoyvdLNVF1fPdoDSeB+mfEgt
+X-Google-Smtp-Source: AGHT+IECfeIaLvATjf7x+fKIEl9KKhtoIMwfOdbC/luMAZVqtF6DjvXHnsacHL30hRniywMWTxjOHNruJyO4D9foBM4=
+X-Received: by 2002:a05:690c:360d:b0:6fb:1c5a:80ea with SMTP id
+ 00721157ae682-6fd4a15e96amr135680557b3.32.1740930456795; Sun, 02 Mar 2025
+ 07:47:36 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250302-camera-v2-1-312b44b4a89c@bootlin.com>
-References: <20250302-camera-v2-0-312b44b4a89c@bootlin.com>
-In-Reply-To: <20250302-camera-v2-0-312b44b4a89c@bootlin.com>
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>
-Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, 
- Olivier Benjamin <olivier.benjamin@bootlin.com>, oren@taumoda.com, 
- Dragan Simic <dsimic@manjaro.org>, Ondrej Jirman <megi@xff.cz>
-X-Mailer: b4 0.14.2
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdelieeitdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephfffufggtgfgkfhfjgfvvefosehtjeertdertdejnecuhfhrohhmpefqlhhivhhivghruceuvghnjhgrmhhinhcuoeholhhivhhivghrrdgsvghnjhgrmhhinhessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepgeeugeeivddvveevvedvudefjeevffdtuefgffekieelheehfeeihefgleefieelnecukfhppedvrgdtudemvgefgeemvggtfeekmedvgegvtdemfhehtggvmehffeegvdemieehkeejmehfieehieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemvgefgeemvggtfeekmedvgegvtdemfhehtggvmehffeegvdemieehkeejmehfieehiedphhgvlhhopegludelvddrudeikedruddrvddtngdpmhgrihhlfhhrohhmpeholhhivhhivghrrdgsvghnjhgrmhhinhessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudefpdhrtghpthhtoheplhhinhhugidqrhhotghktghhihhpsehlihhsthhsrdhinhhfrhgruggvrggurdhorhhgpdhrtghpthhtoheptghonhhorhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehmvghgihesgihffhdrt
- giipdhrtghpthhtohepughsihhmihgtsehmrghnjhgrrhhordhorhhgpdhrtghpthhtoheplhhinhhugidqrghrmhdqkhgvrhhnvghlsehlihhsthhsrdhinhhfrhgruggvrggurdhorhhgpdhrtghpthhtohepohhrvghnsehtrghumhhouggrrdgtohhmpdhrtghpthhtohepuggvvhhitggvthhrvggvsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepthhhohhmrghsrdhpvghtrgiiiihonhhisegsohhothhlihhnrdgtohhm
-X-GND-Sasl: olivier.benjamin@bootlin.com
+References: <20241125105240.44219-1-cgoettsche@seltendoof.de>
+In-Reply-To: <20241125105240.44219-1-cgoettsche@seltendoof.de>
+From: =?UTF-8?Q?Christian_G=C3=B6ttsche?= <cgzones@googlemail.com>
+Date: Sun, 2 Mar 2025 16:47:26 +0100
+X-Gm-Features: AQ5f1Jo4-nZ2PKhNgmOMUX9U6MF0Mz3tvRHEWQV-RQnSBNgDnFm30mQewFKZxuU
+Message-ID: <CAJ2a_Dc1-KSsV9aS8P0x4SePRrjO228wRF=4=5f18wAk0G+AAQ@mail.gmail.com>
+Subject: Re: [PATCH] kunit: constify return of string literals
+To: cgzones@googlemail.com
+Cc: Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, 
+	Rae Moar <rmoar@google.com>, Nathan Chancellor <nathan@kernel.org>, 
+	Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling <morbo@google.com>, 
+	Justin Stitt <justinstitt@google.com>, linux-kselftest@vger.kernel.org, 
+	kunit-dev@googlegroups.com, linux-kernel@vger.kernel.org, 
+	llvm@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add the description of the rear/world camera (IMX258) on the PinePhone Pro
-to the device dts file.
-It receives commands on the I2C Bus 1 at address 0x1a and transmits data
-over CSI-MIPI.
+On Tue, 26 Nov 2024 at 12:36, Christian G=C3=B6ttsche
+<cgoettsche@seltendoof.de> wrote:
+>
+> From: Christian G=C3=B6ttsche <cgzones@googlemail.com>
+>
+> The function kunit_status_to_ok_not_ok() returns string literals, thus
+> declare the return value as such.
+>
+> Reported by clang:
+>
+>     ./include/kunit/test.h:143:10: warning: returning 'const char[3]' fro=
+m a function with result type 'char *' discards qualifiers [-Wincompatible-=
+pointer-types-discards-qualifiers]
+>       143 |                 return "ok";
+>           |                        ^~~~
+>     ./include/kunit/test.h:145:10: warning: returning 'const char[7]' fro=
+m a function with result type 'char *' discards qualifiers [-Wincompatible-=
+pointer-types-discards-qualifiers]
+>       145 |                 return "not ok";
+>           |                        ^~~~~~~~
+>     ./include/kunit/test.h:147:9: warning: returning 'const char[8]' from=
+ a function with result type 'char *' discards qualifiers [-Wincompatible-p=
+ointer-types-discards-qualifiers]
+>       147 |         return "invalid";
+>           |                ^~~~~~~~~
+>
+> Signed-off-by: Christian G=C3=B6ttsche <cgzones@googlemail.com>
 
-The I2C address for IMX258 can be found in the IMX258-0AQH5 Software
-Reference Manual, page 24, section 2.3.1: 0b0011010 = 0x1a.
-Section 3 indicates the module has 4 pairs of data lines. While 4-lane
-mode is nominal, 2-lane mode should also be supported.
+Kindly ping.
 
-The pin muxing info was extracted from the PinePhone Pro schematic v1.0
-as well as the RK3399 datasheet revision 1.8.
-
-Table 2-3 in section 2.8 of the RK3399 datasheet contains the mapping
-of IO functions for the SoC pins. Page 52 shows GPIO1_A0, page 54 shows
-GPIO2_D4.
-
-For I2C power, the PinePhone Pro schematic page 11 quadrants A4 and A5:
-RK3399_J.AA8 and RK3399_J.Y8 get power from vcaa1v8_codec, so turn it on
-
-The IMX258 also uses the following regulators, expected by its driver:
- - vana (2.8V analog), called AVDD2V8_DVP on P.18 q.C1 and derived from
-   VCC1V8_S3 on P.13 q.B2
- - vdig (1.2V digital core), called DVDD_DVP on P.18 q.C1 and shown on
-   P.18 q.D3 to be equivalent to VCC1V2_DVP derived from VCC3V3_SYS on
-   P.13 q.B3. Note that this regulator's voltage is inconsistently
-   labeled either 1.2V or 1.5V
-
-RK3399_J.AG1 is GPIO4_A1/I2C1_SDA, RK3399_J.Y6 is GPIO4_A2/I2C1_SCL
-This is the default pinctrl "i2c1_xfer" for i2c1 from rk3399-base.
-
-For the reset (RESET) signal:
-page 11 quadrant D2             | p.18 q.C3-4 | p.18 q.C2
-RK3399_E.R25 -> GPIO1_A0 -> Camera_RST -> MIPI_RST0 -> IMX258.12
-
-For the powerdown (PWDN) signal:
-page 11 quadrants B4-5          | p.18 q.C2
-RK3399_G.AF8 -> GPIO2_D4 -> DVP_PDN1_H -> IMX258.14
-
-Helped-by: Dragan Simic <dsimic@manjaro.org>
-Co-developed-by: Ondrej Jirman <megi@xff.cz>
-Signed-off-by: Ondrej Jirman <megi@xff.cz>
-Signed-off-by: Olivier Benjamin <olivier.benjamin@bootlin.com>
----
- .../boot/dts/rockchip/rk3399-pinephone-pro.dts     | 93 ++++++++++++++++++++++
- 1 file changed, 93 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-pinephone-pro.dts b/arch/arm64/boot/dts/rockchip/rk3399-pinephone-pro.dts
-index 04ba4c4565d0a205e2e46d7535c6a3190993621d..7f8fe7577d240f330328b6ea44ea6b06bbc8595b 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-pinephone-pro.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-pinephone-pro.dts
-@@ -114,6 +114,16 @@ vcc3v3_sys: regulator-vcc3v3-sys {
- 		vin-supply = <&vcc_sys>;
- 	};
- 
-+	avdd2v8_dvp: regulator-avdd2v8-dvp {
-+		compatible = "regulator-fixed";
-+		regulator-name = "avdd2v8_dvp";
-+		regulator-always-on;
-+		regulator-boot-on;
-+		regulator-min-microvolt = <2800000>;
-+		regulator-max-microvolt = <2800000>;
-+		vin-supply = <&vcc3v3_sys>;
-+	};
-+
- 	vcca1v8_s3: regulator-vcc1v8-s3 {
- 		compatible = "regulator-fixed";
- 		regulator-name = "vcca1v8_s3";
-@@ -136,6 +146,16 @@ vcc1v8_codec: regulator-vcc1v8-codec {
- 		vin-supply = <&vcc3v3_sys>;
- 	};
- 
-+	vcc1v2_dvp: regulator-vcc1v2-dvp {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc1v2_dvp";
-+		regulator-always-on;
-+		regulator-boot-on;
-+		regulator-min-microvolt = <1200000>;
-+		regulator-max-microvolt = <1200000>;
-+		vin-supply = <&vcca1v8_s3>;
-+	};
-+
- 	wifi_pwrseq: sdio-wifi-pwrseq {
- 		compatible = "mmc-pwrseq-simple";
- 		clocks = <&rk818 1>;
-@@ -312,6 +332,8 @@ vcc3v0_touch: LDO_REG2 {
- 
- 			vcca1v8_codec: LDO_REG3 {
- 				regulator-name = "vcca1v8_codec";
-+				regulator-always-on;
-+				regulator-boot-on;
- 				regulator-min-microvolt = <1800000>;
- 				regulator-max-microvolt = <1800000>;
- 			};
-@@ -420,6 +442,45 @@ regulator-state-mem {
- 	};
- };
- 
-+&i2c1 {
-+	clock-frequency = <400000>;
-+	pinctrl-0 = <&i2c1_xfer &cif_clkouta>;
-+	assigned-clocks = <&cru SCLK_CIF_OUT>;
-+	assigned-clock-rates = <24000000>;
-+	status = "okay";
-+
-+	wcam: camera@1a {
-+		compatible = "sony,imx258";
-+		reg = <0x1a>;
-+		clocks = <&cru SCLK_CIF_OUT>; /* MIPI_MCLK0, derived from CIF_CLKO */
-+		clock-names = "xvclk";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&wcam_rst>;
-+		/* Note: both cameras also depend on vcca1v8_codec to power the I2C bus. */
-+		vif-supply = <&vcc1v8_dvp>;
-+		vana-supply = <&avdd2v8_dvp>;
-+		vdig-supply = <&vcc1v2_dvp>; /* DVDD_DVP is the same as VCC1V2_DVP */
-+		reset-gpios = <&gpio1 RK_PA0 GPIO_ACTIVE_LOW>;
-+		orientation = <1>; /* V4L2_CAMERA_ORIENTATION_BACK */
-+		rotation = <270>;
-+		lens-focus = <&wcam_lens>;
-+
-+		port {
-+			wcam_out: endpoint {
-+				remote-endpoint = <&mipi_in_wcam>;
-+				data-lanes = <1 2 3 4>;
-+			};
-+		};
-+	};
-+
-+	wcam_lens: camera-lens@c {
-+		compatible = "dongwoon,dw9714";
-+		reg = <0x0c>;
-+		/* Same I2c bus as both cameras, depends on vcca1v8_codec for power. */
-+		vcc-supply = <&vcc1v8_dvp>;
-+	};
-+};
-+
- &i2c3 {
- 	i2c-scl-rising-time-ns = <450>;
- 	i2c-scl-falling-time-ns = <15>;
-@@ -462,6 +523,28 @@ &io_domains {
- 	status = "okay";
- };
- 
-+&isp1 {
-+	status = "okay";
-+
-+	ports {
-+		port@0 {
-+			mipi_in_wcam: endpoint@0 {
-+				reg = <0>;
-+				remote-endpoint = <&wcam_out>;
-+				data-lanes = <1 2 3 4>;
-+			};
-+		};
-+	};
-+};
-+
-+&mipi_dphy_rx0 {
-+	status = "okay";
-+};
-+
-+&isp1_mmu {
-+	status = "okay";
-+};
-+
- &mipi_dsi {
- 	status = "okay";
- 	clock-master;
-@@ -495,6 +578,10 @@ mipi_in_panel: endpoint {
- 	};
- };
- 
-+&mipi_dsi1 {
-+	status = "okay";
-+};
-+
- &pmu_io_domains {
- 	pmu1830-supply = <&vcc_1v8>;
- 	status = "okay";
-@@ -507,6 +594,12 @@ pwrbtn_pin: pwrbtn-pin {
- 		};
- 	};
- 
-+	camera {
-+		wcam_rst: wcam-rst {
-+			rockchip,pins = <1 RK_PA0 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+	};
-+
- 	leds {
- 		red_led_pin: red-led-pin {
- 			rockchip,pins = <4 RK_PD2 RK_FUNC_GPIO &pcfg_pull_none>;
-
--- 
-2.48.1
-
+> ---
+>  include/kunit/test.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/include/kunit/test.h b/include/kunit/test.h
+> index 34b71e42fb10..ae1b57578476 100644
+> --- a/include/kunit/test.h
+> +++ b/include/kunit/test.h
+> @@ -135,7 +135,7 @@ struct kunit_case {
+>         struct string_stream *log;
+>  };
+>
+> -static inline char *kunit_status_to_ok_not_ok(enum kunit_status status)
+> +static inline const char *kunit_status_to_ok_not_ok(enum kunit_status st=
+atus)
+>  {
+>         switch (status) {
+>         case KUNIT_SKIPPED:
+> --
+> 2.45.2
+>
