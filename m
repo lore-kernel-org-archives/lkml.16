@@ -1,147 +1,92 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58F681EB1BC;
-	Sun,  2 Mar 2025 16:40:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EC6F1E9B1D;
+	Sun,  2 Mar 2025 16:41:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740933604; cv=none; b=YYkc78dRQIvp1klP4jKbRhUzOhhl/B8MwJ0wb0fqDp0wKv/bdEpMVpSullO9AIfc89Ve5Dt/ziitDfR7mwNvpa//8oTrnAZsz+PHeEg+0BmGvaYkTscJafWlRDpHZ2Rr4o10//sSM63tCSUHRLtPvrl5LPvbHfengMeH9mWRB5w=
+	t=1740933695; cv=none; b=iUVQkuEBoN7xZdAmUOKEJKVSZgRWCLJU4IXm+cfK04Q74r79duZCUxqg6M5Upif+HFxtzpLVh8jV+Avi6vkHD7zN8XTiByYv+eXk0+3m2BN9+Bh0lV/EotzXWuIaPq1YYCNlTw1FbtJfR3AqRZXDabo+6ptDVKKDAcMZAjiLgDo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740933604; c=relaxed/simple;
-	bh=NEeg3Rzg4iVhgFfkKQDTPV/BcBGgtllUpSTfPO0yAfY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ODlcgbnXn64cTL3BBNw/5Wr9U3loK0kjMdcRA/qUN6gOmRdwyoiin5gAmA9ai/3FUsBqqrTFfuZduXf2+YNTBLuJZ9IM+g9R9ZKZHSVOooCmWQJXvBsXfzfpJoNfxJpxz0kWF0vmSXCuf4ukEN8Ba1KLAGET8/0Ui7O5dtButT4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hufJx0N4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740933695; c=relaxed/simple;
+	bh=tEykHLpWHdGlU30tcuNXzm1YIjLCsDIELusYg/BpCjs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tiX/Bbv1SVZLldoM/1dZSpO+XTX6pIOgduKASPv3wqbZcQ5s2eD/lhD2LSNI6ujzgoa62L0jAGnTPoiE2PB3YOgwxbHjv7bq4UyUYtn/D4RrjWnGD8P3C3BobJ7UAVhAEzU01eZBKSnpKTBrV+YtFklKfDApAVCe20VNVMXx4VI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XQjI4bWd; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hufJx0N4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E44CEC4CED6;
-	Sun,  2 Mar 2025 16:40:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740933603;
-	bh=NEeg3Rzg4iVhgFfkKQDTPV/BcBGgtllUpSTfPO0yAfY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=hufJx0N4c0G84oJQEpXi/WveiqfZbijHQtkmbyWub7mvpTzjKFNWgyGwXqK/WWRWd
-	 xgFh4fHprEyIq1JQp/RhIpfFLjoos9b3ejAKXILIlkBivg1KOtWul7Q4nmZlSDLN1n
-	 FaVGpXx4/DhInLxFQWQ/ms7kYHyd+pcieIU3yeC6bRg/z9+oYKfTKN2q7L1IOWHoxe
-	 xy0If8qlopPvlBicKlIXdrNEhrSg569EDzHSKIXyicJZ+HXPbGis9Z6lAYWhaMBkSm
-	 vBP6zBvXlLOcx+NOv2IGjV9M+dmwx36CePkNy/Xuk84T6Xsbj5z8lmc3g/ae6W8cUJ
-	 x9aLR3ribmy5g==
-Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-30bae572157so8543451fa.3;
-        Sun, 02 Mar 2025 08:40:03 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUTpYHRzqpfLb83yjMoVUDJVVwSbTRiGUOHMiakgyJVJCCYR5DX4mprYYVk7Zs63ER3lMNpLDeNLBDsjac=@vger.kernel.org, AJvYcCWszcKuHHZYFWHTcLznMsn/OIWjmbSUfWY3o1mhNlbPuqtdZ5wouBdt0xsRwp7/4a4P1AWcZycDOYZb+0KO@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy3ZNu4+SLx+DBeZnCmQNcA0nMgnHDI3Ysc/Z2Ktq/qLGTTv903
-	zpcUQm32zRzWTFOU8nmyQT1256GfMO3cBqQ+gjaHumdKPvBP3YBsZ7go/JPH/u16eye7KnXmyVx
-	wWCgyLU4gLkAFhf3a7jgx+VNRffM=
-X-Google-Smtp-Source: AGHT+IF15yal6+bEvY5jhnNcanqgWka40b7JrgueD5ZuzAyJAl6y+S6WZMIJKOhOBJUHpF3vniRofuLSOVjy525/zc4=
-X-Received: by 2002:a05:651c:505:b0:30b:a187:516e with SMTP id
- 38308e7fff4ca-30ba187518dmr25563241fa.13.1740933602612; Sun, 02 Mar 2025
- 08:40:02 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XQjI4bWd"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-22382657540so17883275ad.2;
+        Sun, 02 Mar 2025 08:41:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740933693; x=1741538493; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=lSqVId43C+d9NkwaRM37ZAAPDvqFWLEHC98L04TojJQ=;
+        b=XQjI4bWdKEO42grOby0ywAdojCpAYugk9GOiFz0NPIpQOBADJfPzuZjBoiTHm94SdA
+         DztAsduAWnGULXqT3PcAXJKU3ffQ/N+p5BNSOJsUXYKP8VcV7NgaBCYu7DkWewO3mpsr
+         MO8qXCMlg8kSEUnWXtjc0TarwzucckTqiWnOdOnwFniytmnQEN1BlHyykRH0V6/6pjVq
+         +IW6FFlhLrGBWHoGviCSdRqIzT5a3+dk/Svh5s0f62ZwkDALDW0NxM5d6qtIMk3l3VHm
+         Vyb3E9Yp2ov9G+GqfzxXBIJnoYf1zAOfggCtFh2uKEzSunglhPThx0Xwl6jTNy1DRreN
+         RAvg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740933693; x=1741538493;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=lSqVId43C+d9NkwaRM37ZAAPDvqFWLEHC98L04TojJQ=;
+        b=YlREED0EGtUvl4OClmSf/P9LVvvwuR5bSDZ7fbDtad5CzZLUgAid2j216Gi+LFEEUu
+         dSK1yrWx3rvCEI051kajzfi/wyQ+0SGMXy25dIfOmXPp6LvSH8MXHakiln4DbHAZjo0Z
+         luWFOt9maeEbYXvG/yY2zu7iYBvNYv5rlC4jndTtN3E2ENpjqmd8SrOz2nmTUX1rk26k
+         +0326Ii/FsuSe5FRa9EQgTUjMxvQjJ7Y8gpAcgYaOgxEJNXyBKA4P961t10pp9lyy8zw
+         v8qv5i74tl5nNF83K2WenO4luDOVEBbPKc7i9wdzKO8sUGKJAvxhwAhT2VHwepzLO6T4
+         Ph0w==
+X-Forwarded-Encrypted: i=1; AJvYcCXtCzcwrIcyn9ATYhGzF0QnX12y1d+jVnQUihmDiIy0hnaYIQUR1162PuoAjpeZx4IhQmQ2vtXYNL3B/xw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxbH0841+0mtNsc2JZ1YnLF6+RjuP18ofMW7nj3A9BBfFce2oz8
+	Fdy6yjmdqccxfRsx8gBENwpAhvCjwpOTKabMe6QtGIbhB14FGpDi
+X-Gm-Gg: ASbGncsrQIEfemuk1fbE96XtZz42HPicg+07KlC/Idl2rP7sUZ8vCUkO0mz/MyKM2mg
+	PbmeTkOdzgJfnUuxo7lihcopqBuMhm7UWDTs9aP0oxGSFjdJ6hK7HzvyMGPRUuMJzz0OhcKde3l
+	tstfPzXCEZHQHCPXvywU7DiC450YiVgHprN4ZnqP17TtLdMIbxSLs8cWXEfTExHVNz3xLygE1MU
+	nVr3L3jQ2PGpNsh9ieCXCjgNQ0pslOlYNJtxVWPgr29+0TmcLfc+lr7YSIfW9YkJDKSvB2QzyUS
+	BtDUqzqkEurZBt7bC/pt5bthrEmVt6nmgrV8BhoHeCpQQ6/5dBuZJUNVqg==
+X-Google-Smtp-Source: AGHT+IGNojCJm9XiFhbHonpxzAZmoIpJVflYc/mmZ6BYZp7pBF+HScrO78L0oKjxUz4XZ2JWqegHNA==
+X-Received: by 2002:a05:6a21:2d84:b0:1ee:cdda:b8f8 with SMTP id adf61e73a8af0-1f2f4cafd60mr18332062637.7.1740933693318;
+        Sun, 02 Mar 2025 08:41:33 -0800 (PST)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-736427c7290sm1682977b3a.177.2025.03.02.08.41.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 02 Mar 2025 08:41:32 -0800 (PST)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date: Sun, 2 Mar 2025 08:41:32 -0800
+From: Guenter Roeck <linux@roeck-us.net>
+To: Erik Schumacher <erik.schumacher@iris-sensing.com>
+Cc: "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"jdelvare@suse.com" <jdelvare@suse.com>
+Subject: Re: [PATCH v2] hwmon: (ad7314) Validate leading zero bits and return
+ error
+Message-ID: <bfc22327-657f-4cee-914b-a2c0d19d7817@roeck-us.net>
+References: <24a50c2981a318580aca8f50d23be7987b69ea00.camel@iris-sensing.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250301222137.18617-1-ImanDevel@gmail.com>
-In-Reply-To: <20250301222137.18617-1-ImanDevel@gmail.com>
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Mon, 3 Mar 2025 01:39:25 +0900
-X-Gmail-Original-Message-ID: <CAK7LNASjGwDOmmv9eowHaNXj3YcFSCThVYLGZ-F=v+4gZF1+3Q@mail.gmail.com>
-X-Gm-Features: AQ5f1Jo6rb6YIRu-v40v3RfLPZUE09xpzXF5y5MriW7Tpi_eN_Qpp-_2L-QvxsQ
-Message-ID: <CAK7LNASjGwDOmmv9eowHaNXj3YcFSCThVYLGZ-F=v+4gZF1+3Q@mail.gmail.com>
-Subject: Re: [PATCH v2] kbuild: fix argument parsing in scripts/config
-To: Seyediman Seyedarab <imandevel@gmail.com>
-Cc: nathan@kernel.org, nicolas@fjasle.eu, linux-kbuild@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-kernel-mentees@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <24a50c2981a318580aca8f50d23be7987b69ea00.camel@iris-sensing.com>
 
-On Sun, Mar 2, 2025 at 7:20=E2=80=AFAM Seyediman Seyedarab <imandevel@gmail=
-.com> wrote:
->
-> The script previously assumed --file was always the first argument,
-> which caused issues when it appeared later. This patch updates the
-> parsing logic to scan all arguments to find --file, sets the config
-> file correctly, and resets the argument list with the remaining
-> commands.
->
-> It also fixes --refresh to respect --file by passing KCONFIG_CONFIG=3D$FN
-> to make oldconfig.
->
-> Signed-off-by: Seyediman Seyedarab <ImanDevel@gmail.com>
-> ---
+On Mon, Feb 24, 2025 at 09:19:04AM +0000, Erik Schumacher wrote:
+> Leading zero bits are sent on the bus before the temperature value is
+> transmitted. If any of these bits are high, the connection might be
+> unstable or there could be no AD7314 / ADT730x (or compatible) at all.
+> Return -EIO in that case.
+> 
+> Signed-off-by: Erik Schumacher <erik.schumacher@iris-sensing.com>
 
-Applied to linux-kbuild.
-Thanks.
+Applied.
 
-
-
-> Changes in v2:
-> Specified the script name in the commit message.
->
->  scripts/config | 26 ++++++++++++++++----------
->  1 file changed, 16 insertions(+), 10 deletions(-)
->
-> diff --git a/scripts/config b/scripts/config
-> index ff88e2faefd3..ea475c07de28 100755
-> --- a/scripts/config
-> +++ b/scripts/config
-> @@ -32,6 +32,7 @@ commands:
->                               Disable option directly after other option
->         --module-after|-M beforeopt option
->                               Turn option into module directly after othe=
-r option
-> +       --refresh            Refresh the config using old settings
->
->         commands can be repeated multiple times
->
-> @@ -124,16 +125,22 @@ undef_var() {
->         txt_delete "^# $name is not set" "$FN"
->  }
->
-> -if [ "$1" =3D "--file" ]; then
-> -       FN=3D"$2"
-> -       if [ "$FN" =3D "" ] ; then
-> -               usage
-> +FN=3D.config
-> +CMDS=3D()
-> +while [[ $# -gt 0 ]]; do
-> +       if [ "$1" =3D "--file" ]; then
-> +               if [ "$2" =3D "" ]; then
-> +                       usage
-> +               fi
-> +               FN=3D"$2"
-> +               shift 2
-> +       else
-> +               CMDS+=3D("$1")
-> +               shift
->         fi
-> -       shift 2
-> -else
-> -       FN=3D.config
-> -fi
-> +done
->
-> +set -- "${CMDS[@]}"
->  if [ "$1" =3D "" ] ; then
->         usage
->  fi
-> @@ -217,9 +224,8 @@ while [ "$1" !=3D "" ] ; do
->                 set_var "${CONFIG_}$B" "${CONFIG_}$B=3Dm" "${CONFIG_}$A"
->                 ;;
->
-> -       # undocumented because it ignores --file (fixme)
->         --refresh)
-> -               yes "" | make oldconfig
-> +               yes "" | make oldconfig KCONFIG_CONFIG=3D$FN
->                 ;;
->
->         *)
-> --
-> 2.48.1
->
-
-
---
-Best Regards
-Masahiro Yamada
+Thanks,
+Guenter
