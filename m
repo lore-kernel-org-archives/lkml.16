@@ -1,104 +1,111 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 014321E3761;
-	Sun,  2 Mar 2025 16:03:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 010C81E3761;
+	Sun,  2 Mar 2025 16:07:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740931433; cv=none; b=VfGDEX2WgqUKo9zvjIrZva/aDQKC2G6YhnW60EgeGlokuX9Rk/h08vwo8QfYzB/O/kw7C2LQ4WW9yP7kCKL5XDNTvPbSl4GU2KIb1GDtZk7m47Mr50hTyvMFCw5ZidLr+k/8Bz3OsS0Tjq0z9RhVn/E5UP2FmG0NGvZ9fSz9Em4=
+	t=1740931622; cv=none; b=bmXbSBoD944EhsnOQh/K2gjEnVHLByBN9lfXbPAD3URFHjRfqVPDb8DL7kncwn/yrSGDgSGofdEBgYHrplnOWH3A2SNjRcZFjFTlCasO6CjJBjjfBj54DoXguZD/O/JYaZ0hHnduOuYEtBAxm3+HwHYHaexLMWP+j7e5y034FU8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740931433; c=relaxed/simple;
-	bh=PpoiA7zcL5siK6dUoXkSOW7sxsC4plRQ9I9AThPDGb4=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=qP9o9E6bzInFTFtMLT4zwRttdFSeZ/RxJiHkHWLK6D7h6YzKKncCCRq+8mEP6XFVZ66XW28ZAf2aApOexs58L7O3I0mRdKlFkw3oc3hS8mqkxa2WWSvCoCIvdDI2R8jjmsDbbZx5pSACMquWv7T9bPO2UjKQ3sVOi3Vi+8AYhdA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lCqQPWyX; arc=none smtp.client-ip=209.85.208.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1740931622; c=relaxed/simple;
+	bh=6Z1K2XeEqTJ+PjSTHPmZvbQCAwrBgXMnsTzeuQ32us4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PYQM4fY3UUQXX0jw016HfZ/JbNSVgOWTq3LJ3PHnoX75L2mEZzmkW19Yhjz4rdO58r9WyXWb27frb+JTHTyuujiNvjeTyWL75OQgV/EyrGKSvcUd0a6RGOGVby8Fq5Z0uiol+hV2VnRgvzpDFBbSruqNIMXBG/99xy4AMoIXG3I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TLEwWNmR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lCqQPWyX"
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5e4f88ea298so3878994a12.2;
-        Sun, 02 Mar 2025 08:03:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740931430; x=1741536230; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=KqMUvt/Ij4ONg3Ys/j5SSJwq5McLd1u+T3IXK69/iY0=;
-        b=lCqQPWyXvkBFzlU0kMyOCT92GdRsREG7ud0SVVQBkf+re/1wDxgUYxYvx+xpGHTBrR
-         fk4ms0Dlgmcd3uJDwbWGD7M6jdrGTEdH5oDj2PH9JqMTggzncpEF3VrgSNaUhKJ7sBjc
-         oO9AigvBdJK+RwCJ0RgiG6L0GdE+u8ur+JX66or694TV/isqteN3+VYDt2UwQBIVDaE5
-         TXwJcfUMFYP4977ApcL3d1xT588EompzGJUzSPA6KqL0WigXnNaviXCdbS2Yl65xD75q
-         o345tJVlUCNpKpsRuSUpYsXcN26ymYxO5ozynhli+VgzFqTZGFGSCriC70d4Fm4vpGgw
-         igVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740931430; x=1741536230;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :sender:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=KqMUvt/Ij4ONg3Ys/j5SSJwq5McLd1u+T3IXK69/iY0=;
-        b=Esq6LREs5UXrq8u6+qUjI0/ocDsXSSjloUEFeZ2xRkTIifMn8VaxoAcINT5GQW08CY
-         vfJgu+EYtPkPzeYqDlxO45UQRRZU15R4rWQxNn0Iy7jVSSoID7q39iHnmuWLuGe5PTGe
-         VkY8wE395bSDYTlwe3MrcJmDMob2lnVCgf73ababhH9ZUZtlkOlufyJd48278nDPMdgt
-         OqCot4mcVes74juBMo9PeArXtWsP5y2fz7lx0UAbJnqhmNWaSIkGADCie7wYthaAwlAd
-         vhrbdactTPcMyl58bqXPJrfMTa0QzADkbFqzFzx8TtqPqd28T3uVeKUHS2iMDeOiW3HG
-         G4eA==
-X-Forwarded-Encrypted: i=1; AJvYcCU9HFn+YPsPCT6/7P17gzkHxq2tgRB/4s3d7mXNdsCdbfYKGVXrqunOykFEgZCnE3LQH4L4zxfPQQw=@vger.kernel.org, AJvYcCUHRbcN3pmrX5+2F6PtVcn/m571LBOaCnsAtEd58NaEInlJwT3S+Wn4R3Jic7OnrIvP8gdBQdNR@vger.kernel.org, AJvYcCVMr97EnxbI4IG3idupUhCxNGBNJtNFwMj7Ai7I2PYDjpgzvkPbtPSKxJ0sz3l7xOvmFwACbUvzSTlP8Iyf@vger.kernel.org
-X-Gm-Message-State: AOJu0YyvzsFGKyFH1Mf/whFnoSSOc0an7oMDY1T17UPPEM81ZinGas8t
-	FLj2oBFnmWKIbFNI0P+BsSA8c9IgtRs16JWNoiA9B7gzKl+UA3ge
-X-Gm-Gg: ASbGncuWwKlUssavFqghDHdNfpEZFrwjs4owXqrsvUaShYi1oNQbEEqh4niesmMHeyK
-	XLMTEkj6TDuonIX5pgtgN3NBJXIZUgSELpUi5kOy8ykCTvHlk1xHdiA+CGLZteQfw+N1Haa2ewT
-	wj7gfE3DJ3Oo9P3LYOcPxCAwhUh9RIzLlShCq5Ll8f4pcEoEVr0H6TJflNG82hC35kQl1HUoUfq
-	pnJKJJxyuYyvpZaepWn+Aa5KbZ2g2ntvSkDMcpbRFxbCcH9n3E7KpIzIjXrA4x//z3hw7ebWPKE
-	VU6/vOaumF7/tPBR+BH45RcPsVz0RbEiOQqmBxy749pytjulhNE1w9KJ2IRZlBsccePlxcja3Ad
-	OyA==
-X-Google-Smtp-Source: AGHT+IFWXl0EDKxgBsDCDLhNQV3+yBJQ0X9U1IHYqXyA4xxGqEq/sAuqyM6Oe7BG4J2BsNkWYT1QVg==
-X-Received: by 2002:a05:6402:520f:b0:5e0:9254:c10e with SMTP id 4fb4d7f45d1cf-5e4d6ad85famr11127566a12.11.1740931429973;
-        Sun, 02 Mar 2025 08:03:49 -0800 (PST)
-Received: from eldamar.lan (c-82-192-244-13.customer.ggaweb.ch. [82.192.244.13])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5e4c3fb5927sm5564238a12.53.2025.03.02.08.03.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 02 Mar 2025 08:03:49 -0800 (PST)
-Sender: Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>
-Received: by eldamar.lan (Postfix, from userid 1000)
-	id A74BCBE2DE0; Sun, 02 Mar 2025 17:03:48 +0100 (CET)
-Date: Sun, 2 Mar 2025 17:03:48 +0100
-From: Salvatore Bonaccorso <carnil@debian.org>
-To: Mario Limonciello <mario.limonciello@amd.com>,
-	Niklas Cassel <cassel@kernel.org>,
-	Christoph Hellwig <hch@infradead.org>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Jian-Hong Pan <jhp@endlessos.org>,
-	Eric Degenetais <eric.4.debian@grabatoulnz.fr>
-Cc: regressions@lists.linux.dev, linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org, linux-ide@vger.kernel.org
-Subject: Regression from 7627a0edef54 ("ata: ahci: Drop low power policy
- board type") on reboot (but not cold boot)
-Message-ID: <Z8SBZMBjvVXA7OAK@eldamar.lan>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TLEwWNmR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69D08C4CEEA;
+	Sun,  2 Mar 2025 16:07:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740931621;
+	bh=6Z1K2XeEqTJ+PjSTHPmZvbQCAwrBgXMnsTzeuQ32us4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=TLEwWNmRzoxu50gGetzLmCrV55ix9FhhrsO+ah2335y0pn9Qi3RFBfkZYkYOMS2ab
+	 j9TjFANBQb+7XL6fMzePFbbvwAN7fMzd+fPngIunbIpQ5mhvfdDzuEFiBkS9YU4WVs
+	 zpJ38yLhwZYTN79b/EvKXeFBpHgyPRR1LG8yei1iV882TMyauEBkHI0lhsvb9Udwhj
+	 khewVtukix9yqVAnPHB5w3JAXCfWS0Vtx3NR/1vcQp8NkoOoZZ97hBHfMdKuOTWxK3
+	 MpXDyRlc4Btp+XN74DkPAyeUa0/j+hd/C0QFzKjkDfGb4Ke4tQ/96asbH8mU6mELPR
+	 oVWCFltGcEQvg==
+Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-2fef5c978ccso644254a91.1;
+        Sun, 02 Mar 2025 08:07:01 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUW5ouLqluKhtR6kbgCKj2q+0GW4GMPQrgkzX5JFiL6iwOUICAqtWM1/mlwvq2TeKUv8NlX8gSroXxM@vger.kernel.org, AJvYcCVlQXwbHDOh/s5LWPhOKrDFATodg+a9Hy0hsgC97/QTQNbrhXMRCIg9BC22JBnWOV8fVEkzGgV0iGuUW33e@vger.kernel.org
+X-Gm-Message-State: AOJu0YxQJRKvg2xCQjlHWwbH23HZUZM/worhMBcwdQnrZYs1vLRvhKxE
+	oewGa9koFhDNeFyOPlnSOyYTWiEFaCE8HLTwhrKbynQQN+b9lpQc54WkYi+gv89PoooXF84pMgg
+	pVC96yKObqRuaS55tZ3k+cgRbwg==
+X-Google-Smtp-Source: AGHT+IGgpVK4aKVTw1AYLTQHunnH0lP0Xo7e0HySRK7+dlps4YjnoiELgWFMnKkx9EIddZ2irPPWBjpXbYwY6LnMy7Q=
+X-Received: by 2002:a17:90b:3511:b0:2fa:1f1b:3db2 with SMTP id
+ 98e67ed59e1d1-2febabcfedfmr14936364a91.25.1740931620948; Sun, 02 Mar 2025
+ 08:07:00 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20250218090427.20318-1-angelogioacchino.delregno@collabora.com>
+In-Reply-To: <20250218090427.20318-1-angelogioacchino.delregno@collabora.com>
+From: Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Date: Mon, 3 Mar 2025 00:07:48 +0800
+X-Gmail-Original-Message-ID: <CAAOTY__aFqL=LnE5vU2RP9JHmQEgkrvPmiYjxmETWo9CvwiwLA@mail.gmail.com>
+X-Gm-Features: AQ5f1JrHQ_avSblgi4HZQ7x19rsI4_LP2M6FFBaV9IRM5Ur_SJsfW7MiHzcF_cw
+Message-ID: <CAAOTY__aFqL=LnE5vU2RP9JHmQEgkrvPmiYjxmETWo9CvwiwLA@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: display: mediatek: dsc: Add MT8188 compatible
+To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: chunkuang.hu@kernel.org, p.zabel@pengutronix.de, 
+	maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de, 
+	airlied@gmail.com, simona@ffwll.ch, robh@kernel.org, krzk+dt@kernel.org, 
+	conor+dt@kernel.org, matthias.bgg@gmail.com, dri-devel@lists.freedesktop.org, 
+	linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	kernel@collabora.com, pablo.sun@mediatek.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Mario et al,
+Hi, Angelo:
 
-Eric Degenetais reported in Debian (cf. https://bugs.debian.org/1091696) for
-his report, that after 7627a0edef54 ("ata: ahci: Drop low power policy  board
-type") rebooting the system fails (but system boots fine if cold booted).
+AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com> =E6=96=
+=BC
+2025=E5=B9=B42=E6=9C=8818=E6=97=A5 =E9=80=B1=E4=BA=8C =E4=B8=8B=E5=8D=885:0=
+4=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+> Add compatible for Display Stream Compression (DSC) IP found in
+> the display controller of the MT8188 SoC.
+>
+> This IP is fully compatible with the one found on MT8195.
 
-His report mentions that the SSD is not seen on warm reboots anymore.
+Applied to mediatek-drm-next [1], thanks.
 
-Does this ring some bell which might be caused by the above bisected[1] commit?
-
-#regzbot introduced: 7627a0edef54
-#regzbot link: https://bugs.debian.org/1091696
-
-What information to you could be helpful to identify the problem?
+[1] https://web.git.kernel.org/pub/scm/linux/kernel/git/chunkuang.hu/linux.=
+git/log/?h=3Dmediatek-drm-next
 
 Regards,
-Salvatore
+Chun-Kuang.
 
- [1] https://bugs.debian.org/1091696#10
+>
+> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@coll=
+abora.com>
+> ---
+>  .../devicetree/bindings/display/mediatek/mediatek,dsc.yaml     | 3 +++
+>  1 file changed, 3 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,=
+dsc.yaml b/Documentation/devicetree/bindings/display/mediatek/mediatek,dsc.=
+yaml
+> index 846de6c17d93..a5b88eb97e3b 100644
+> --- a/Documentation/devicetree/bindings/display/mediatek/mediatek,dsc.yam=
+l
+> +++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,dsc.yam=
+l
+> @@ -22,6 +22,9 @@ properties:
+>      oneOf:
+>        - enum:
+>            - mediatek,mt8195-disp-dsc
+> +      - items:
+> +          - const: mediatek,mt8188-disp-dsc
+> +          - const: mediatek,mt8195-disp-dsc
+>
+>    reg:
+>      maxItems: 1
+> --
+> 2.48.1
+>
