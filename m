@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE6381D79A3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C44431D7E2F
 	for <linux-kernel@vger.kernel.org>; Sun,  2 Mar 2025 08:22:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740903737; cv=none; b=sArye8OQ2PVQO8J1nq1aOYizuA0IQpG2GqgwN3YOvOgPLHsqHGBDk7z1OyZXfBpp7dHRJf1JaiWFqggkoaC5sDoISIDXI36jWS2ZpmiMnxEMgHbdodVQD3QrQ3affEM9ZxeSxuZJ39PkLyomPF7DKZF7fTgMgcJQoRvlBQqgBuk=
+	t=1740903737; cv=none; b=lHyZ/QidA3nv7NeGqQeuY2nuT6VlwiO1aRfiSLCM6bNTYYHuzM8aPf/V8K+4OGz/doOG8Fc2FaUg37SVaEnge5yCcvkSEJlKeGyCvPkS2WTwTyqlpHfAUJYYzeRJwbvzYv34U1NxN3YZ6+3I8vXgKenUQjUYqo8Q/5cxSh/rMAg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1740903737; c=relaxed/simple;
-	bh=Czz8Tt4JQ7OG2qz83DhQ/rDSfMDYdFVFtyoa2IaQ3O0=;
+	bh=AJ4q+ksNB/S+00rtzYs71awF+2iIilrq6aaRwUt1Pzg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=e2v+nXlLnf58tXSOKKSY0JKUwb51oR/XlFW161rkwxTqDHsJPfQTIQQU5CXE6t/gkDRS3qf8KRmHGru9uhF6h12IhAMbjRUFc0s8HdEORyO5pH/YVs0TUBcJNKEH1T22e7Bq+VsjZuAJ7c1yGab7JxJUB4pwZRt/r6q1Ho2BVRw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O8QyEXIN; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=ewnLgE+hOBFjLcCCnvaCSCuEZDALg4sml/WE3VWeJLjUlcVd6lF7q9D4GJ0ZijOeu41NgXWKMwy3EaLTQXIA6Pyl28iHikDVXJLBJXiuRzguIWl9QgZfJvyFr+rt/s8b4vRzER+hn6Uwvwb1iW9Hn/ImDs81P/0XHce0YVkgmCo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Pv2dG8fu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O8QyEXIN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A9B3C4CEF0;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Pv2dG8fu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B52DC4AF0D;
 	Sun,  2 Mar 2025 08:22:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1740903737;
-	bh=Czz8Tt4JQ7OG2qz83DhQ/rDSfMDYdFVFtyoa2IaQ3O0=;
+	bh=AJ4q+ksNB/S+00rtzYs71awF+2iIilrq6aaRwUt1Pzg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=O8QyEXINFTWzApmNC0FNcBLEdM321xwzt4+SgjHBTqFMKPv4bvTEOmzz1Hs6ZNC7z
-	 NEDGxuGxE8a4bnEoiYeAS8OtElrI784f5uEALtTrJQSAYkq8sF7Jk5EIPTagrdi0ce
-	 Tr6q58rXmwcjGAUXhRjUlSTHDYYBIcM7TLLFFk9WG9j2Fss5L/qYISd8kBfj5dps2V
-	 SVu7j/24y3qvZHZr/xKLMKF39/YCWlkk4vWS7PZGDWhq+E/tB0TKjiw3TMJ/sRSf3Y
-	 lyTDM4rN6lDfsCJrjcJaosRoZXgzczVG3l7od3bLLbZf2y4nPatwtivyua6YyLYYnh
-	 Ig8+gOQaNXTug==
+	b=Pv2dG8fu93ct+79d/61JpiusgAq+JoLHAphAK7sZs3hmCDzIsS6x+lfj1la+Cej6c
+	 bJTG2UyrKVSrPqdHeRdjhTUHw2fo1dh7rIsuTp9pvdWTkGRJ5kFTrb6sB87K2BltTY
+	 4iuwWpWHkNMuEchvUnKDoxabmratY22MizJLar2+/NV29PDfy6YbbVorieEPcye6Ld
+	 7EYpsUoIJsmzrw4Bknk0/U7uN6ekGix79pGh6jUzFHEnx+GUYLZznfRG2+9z6HsOlK
+	 9JbmUj1vroWPCdjccqScHT+qzkXzyVPbjUxm+0Q8APxN82aDdEvUgp3gohaJPoMaC6
+	 RQUTkNShgweRg==
 Received: from mchehab by mail.kernel.org with local (Exim 4.98)
 	(envelope-from <mchehab+huawei@kernel.org>)
-	id 1toeaU-000000043SW-3mMR;
+	id 1toeaU-000000043Rc-2945;
 	Sun, 02 Mar 2025 09:22:14 +0100
 From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To: Igor Mammedov <imammedo@redhat.com>,
@@ -40,9 +40,9 @@ Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
 	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
 	Ani Sinha <anisinha@redhat.com>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v7 16/19] acpi/generic_event_device.c: enable use_hest_addr for QEMU 10.x
-Date: Sun,  2 Mar 2025 09:22:03 +0100
-Message-ID: <c0f383320944d8d4bac199b25370842753e2c296.1740903110.git.mchehab+huawei@kernel.org>
+Subject: [PATCH v7 02/19] tests/qtest/bios-tables-test: extend to also check HEST table
+Date: Sun,  2 Mar 2025 09:21:49 +0100
+Message-ID: <d0f7dcb187f4b73ce9ab88c701d802756d8dda1d.1740903110.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <cover.1740903110.git.mchehab+huawei@kernel.org>
 References: <cover.1740903110.git.mchehab+huawei@kernel.org>
@@ -55,29 +55,29 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-Now that we have everything in place, enable using HEST GPA
-instead of etc/hardware_errors GPA.
+Currently, aarch64 can generate a HEST table when loaded with
+-machine ras=on. Add support for it.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Reviewed-by: Igor Mammedov <imammedo@redhat.com>
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 ---
- hw/acpi/generic_event_device.c | 2 +-
+ tests/qtest/bios-tables-test.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/hw/acpi/generic_event_device.c b/hw/acpi/generic_event_device.c
-index f029753ab709..9fe70b74bd42 100644
---- a/hw/acpi/generic_event_device.c
-+++ b/hw/acpi/generic_event_device.c
-@@ -332,7 +332,7 @@ static void acpi_ged_send_event(AcpiDeviceIf *adev, AcpiEventStatusBits ev)
- static const Property acpi_ged_properties[] = {
-     DEFINE_PROP_UINT32("ged-event", AcpiGedState, ged_event_bitmap, 0),
-     DEFINE_PROP_BOOL("x-has-hest-addr", AcpiGedState,
--                     ghes_state.use_hest_addr, false),
-+                     ghes_state.use_hest_addr, true),
- };
+diff --git a/tests/qtest/bios-tables-test.c b/tests/qtest/bios-tables-test.c
+index 0a333ec43536..8d41601cc9e9 100644
+--- a/tests/qtest/bios-tables-test.c
++++ b/tests/qtest/bios-tables-test.c
+@@ -2122,7 +2122,7 @@ static void test_acpi_aarch64_virt_tcg(void)
  
- static const VMStateDescription vmstate_memhp_state = {
+     data.smbios_cpu_max_speed = 2900;
+     data.smbios_cpu_curr_speed = 2700;
+-    test_acpi_one("-cpu cortex-a57 "
++    test_acpi_one("-cpu cortex-a57 -machine ras=on "
+                   "-smbios type=4,max-speed=2900,current-speed=2700", &data);
+     free_test_data(&data);
+ }
 -- 
 2.48.1
 
