@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83E3F1B424F
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83EE51D61A7
 	for <linux-kernel@vger.kernel.org>; Sun,  2 Mar 2025 08:22:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740903737; cv=none; b=rpON5ZirAM0zQUreZ+YeknQ+5rXdmKIPJoD092m0VYxxg8ehaov9AvEO8uiMMnOzFy51TRkc94aOCzUSwVtHDROhwsHq1Vy97n5tNknACR22rIDafLxQLsceenvYdVAMKEtsR66iHlr1kLQH5ijL5UNMYPxqhQb3a6XTeuzdTUE=
+	t=1740903737; cv=none; b=HM0UmpuMC119a7RKk3YKoFqXNe5Ef6MlEu/lTobOsu742PRgwqKxEp6hTyARhx2letDjH28l1B8KIGclJ/H6jCFtieBaARjkTtK/SqhVHtPRhxB6xFcfC/tFIxibUookzKDy+HEa6gFwiYZUAF2pCHbKj/as+HQi8vol1tQv1wM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1740903737; c=relaxed/simple;
-	bh=J/oceRB+tMp1dlwMr5XDGzHWlOY6Ma1Afet+7GnEmTE=;
+	bh=PXDuvGCw4Oy1Eis85V4fp5z4cmrG5FBbUSIdEJpjrRk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=qnLTEq6E0+oOc5eUf0tQ8zwU0kaN5KeciZdWwW5SSBJFIONhKvONU/m9xzJ2MLDeK//wXAfyd86VTfzwlc6QHZXELi6DA60oghsSixtlHl2hZ+BdxWTucKthyB2oOg2QYUNXNV/t1CLPeFZWedwHXHiExhCYnP41zP/ZdEJDtxI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jemOMNJ0; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=QhW9qKqx3LTThNhnwfULYIac3kq4MjzZcIMWwJk+6/DvyEzpdxMlD5K0TJvxigasXzqwL5ZjUg9z1f0Fw4DrwZCsZ4++AY+6YFZsBSW70v8zUTJZZHCbkg8gaKfdufmXA+qa6BFXtVz84mSloSMYM5gLov0A+XWr0LxEz6f1y2k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qWJ677d0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jemOMNJ0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08A54C4CEE5;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qWJ677d0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03B9BC4AF09;
 	Sun,  2 Mar 2025 08:22:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1740903737;
-	bh=J/oceRB+tMp1dlwMr5XDGzHWlOY6Ma1Afet+7GnEmTE=;
+	bh=PXDuvGCw4Oy1Eis85V4fp5z4cmrG5FBbUSIdEJpjrRk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=jemOMNJ0sdMYkrmDAGdHlOsQXBPs+xpwwJpuqmCYVvdI5oGpqD3C4guBhoxUxg6/I
-	 pxVAMYbyoHQKZqyqytzF1WdOyPKkJHrxJdxzFjv4Q+4yILOuk0i+nlV4DJOA5beqpQ
-	 HmsG4rmKwUYJlUx3NUf0vbRGlEXcg+SML0YRHf4K4W7sqlUMsDCyCvfachi7vwpZKb
-	 8nh6TZdOgnaFHCxXSiFFJ3WR6pwnauS5se/MwHxt0C49w6kKeR1YM9V+RS85QM+YBO
-	 yo2vB/B8wUxZQaGCuMpsngMmW8+TpXN2GEon3+2M/fasMhEwHKlJ/zewlJ2F6q5X17
-	 46ULWBFAUt2MA==
+	b=qWJ677d0so+U0mKb2aP5x0YgNNlb3B7/LRYPa9qmhVUL5tljRZcqAM9Qqmrc8HFu4
+	 Kv+HyGKLnJ9L9nT/RBWcX87hAvUEOff0Gds6M4rZgAVgB74g9NZD2oFxKNFDJ4uX+k
+	 xI6EFViHr0FCkekleoemtAIvhnDOxrwB0BcnlmFf4vhwPhKHiiCbpeNcTHe1Yssawb
+	 gFFqEvRJ9aqjV1OqppigME15OaWBBEfd8oQ9bIGTzkaeUjHaHLcjqzU4q+z4p+Id7t
+	 t9yDZ0FyhOgwH10SD9tGobfpRdi0Qc8F7oYvLnBeuJgwnRAQIMtYtpEmd1HNtMj7F2
+	 A8nbKOFAHbJRw==
 Received: from mchehab by mail.kernel.org with local (Exim 4.98)
 	(envelope-from <mchehab+huawei@kernel.org>)
-	id 1toeaU-000000043Sg-40PD;
+	id 1toeaU-000000043SG-3JMa;
 	Sun, 02 Mar 2025 09:22:14 +0100
 From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To: Igor Mammedov <imammedo@redhat.com>,
@@ -38,11 +38,11 @@ Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
 	qemu-arm@nongnu.org,
 	qemu-devel@nongnu.org,
 	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-	Dongjiu Geng <gengdongjiu1@gmail.com>,
+	Ani Sinha <anisinha@redhat.com>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v7 18/19] docs: hest: add new "etc/acpi_table_hest_addr" and update workflow
-Date: Sun,  2 Mar 2025 09:22:05 +0100
-Message-ID: <01c7709b139038dd2845f4f3904bf9d7075e4292.1740903110.git.mchehab+huawei@kernel.org>
+Subject: [PATCH v7 12/19] acpi/generic_event_device: add an APEI error device
+Date: Sun,  2 Mar 2025 09:21:59 +0100
+Message-ID: <d29591ba3f0d50953db44f569c0ad35c74670946.1740903110.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <cover.1740903110.git.mchehab+huawei@kernel.org>
 References: <cover.1740903110.git.mchehab+huawei@kernel.org>
@@ -55,62 +55,127 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-While the HEST layout didn't change, there are some internal
-changes related to how offsets are calculated and how memory error
-events are triggered.
+Adds a generic error device to handle generic hardware error
+events as specified at ACPI 6.5 specification at 18.3.2.7.2:
+https://uefi.org/specs/ACPI/6.5/18_Platform_Error_Interfaces.html#event-notification-for-generic-error-sources
+using HID PNP0C33.
 
-Update specs to reflect such changes.
+The PNP0C33 device is used to report hardware errors to
+the guest via ACPI APEI Generic Hardware Error Source (GHES).
 
+Co-authored-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Co-authored-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Reviewed-by: Igor Mammedov <imammedo@redhat.com>
 ---
- docs/specs/acpi_hest_ghes.rst | 28 +++++++++++++++++-----------
- 1 file changed, 17 insertions(+), 11 deletions(-)
+ hw/acpi/aml-build.c                    | 10 ++++++++++
+ hw/acpi/generic_event_device.c         | 13 +++++++++++++
+ include/hw/acpi/acpi_dev_interface.h   |  1 +
+ include/hw/acpi/aml-build.h            |  2 ++
+ include/hw/acpi/generic_event_device.h |  1 +
+ 5 files changed, 27 insertions(+)
 
-diff --git a/docs/specs/acpi_hest_ghes.rst b/docs/specs/acpi_hest_ghes.rst
-index c3e9f8d9a702..3d1b85d74b70 100644
---- a/docs/specs/acpi_hest_ghes.rst
-+++ b/docs/specs/acpi_hest_ghes.rst
-@@ -89,12 +89,21 @@ Design Details
-     addresses in the "error_block_address" fields with a pointer to the
-     respective "Error Status Data Block" in the "etc/hardware_errors" blob.
+diff --git a/hw/acpi/aml-build.c b/hw/acpi/aml-build.c
+index f8f93a9f66c8..e4bd7b611372 100644
+--- a/hw/acpi/aml-build.c
++++ b/hw/acpi/aml-build.c
+@@ -2614,3 +2614,13 @@ Aml *aml_i2c_serial_bus_device(uint16_t address, const char *resource_source)
  
--(8) QEMU defines a third and write-only fw_cfg blob which is called
--    "etc/hardware_errors_addr". Through that blob, the firmware can send back
--    the guest-side allocation addresses to QEMU. The "etc/hardware_errors_addr"
--    blob contains a 8-byte entry. QEMU generates a single WRITE_POINTER command
--    for the firmware. The firmware will write back the start address of
--    "etc/hardware_errors" blob to the fw_cfg file "etc/hardware_errors_addr".
-+(8) QEMU defines a third and write-only fw_cfg blob to store the location
-+    where the error block offsets, read ack registers and CPER records are
-+    stored.
+     return var;
+ }
 +
-+    Up to QEMU 9.2, the location was at "etc/hardware_errors_addr", and
-+    contains a GPA for the beginning of "etc/hardware_errors".
++/* ACPI 5.0b: 18.3.2.6.2 Event Notification For Generic Error Sources */
++Aml *aml_error_device(void)
++{
++    Aml *dev = aml_device(ACPI_APEI_ERROR_DEVICE);
++    aml_append(dev, aml_name_decl("_HID", aml_string("PNP0C33")));
++    aml_append(dev, aml_name_decl("_UID", aml_int(0)));
 +
-+    Newer versions place the location at "etc/acpi_table_hest_addr",
-+    pointing to the GPA of the HEST table.
-+
-+    Using above mentioned 'fw_cfg' files, the firmware can send back the
-+    guest-side allocation addresses to QEMU. They contain a 8-byte entry.
-+    QEMU generates a single WRITE_POINTER command for the firmware. The
-+    firmware will write back the start address of either "etc/hardware_errors"
-+    or HEST table at the corresponding fw_cfg file.
++    return dev;
++}
+diff --git a/hw/acpi/generic_event_device.c b/hw/acpi/generic_event_device.c
+index 471d1a7afc76..f029753ab709 100644
+--- a/hw/acpi/generic_event_device.c
++++ b/hw/acpi/generic_event_device.c
+@@ -26,6 +26,7 @@ static const uint32_t ged_supported_events[] = {
+     ACPI_GED_PWR_DOWN_EVT,
+     ACPI_GED_NVDIMM_HOTPLUG_EVT,
+     ACPI_GED_CPU_HOTPLUG_EVT,
++    ACPI_GED_ERROR_EVT,
+ };
  
- (9) When QEMU gets a SIGBUS from the kernel, QEMU writes CPER into corresponding
-     "Error Status Data Block", guest memory, and then injects platform specific
-@@ -105,8 +114,5 @@ Design Details
-      kernel, on receiving notification, guest APEI driver could read the CPER error
-      and take appropriate action.
+ /*
+@@ -116,6 +117,16 @@ void build_ged_aml(Aml *table, const char *name, HotplugHandler *hotplug_dev,
+                            aml_notify(aml_name(ACPI_POWER_BUTTON_DEVICE),
+                                       aml_int(0x80)));
+                 break;
++            case ACPI_GED_ERROR_EVT:
++                /*
++                 * ACPI 5.0b: 5.6.6 Device Object Notifications
++                 * Table 5-135 Error Device Notification Values
++                 * Defines 0x80 as the value to be used on notifications
++                 */
++                aml_append(if_ctx,
++                           aml_notify(aml_name(ACPI_APEI_ERROR_DEVICE),
++                                      aml_int(0x80)));
++                break;
+             case ACPI_GED_NVDIMM_HOTPLUG_EVT:
+                 aml_append(if_ctx,
+                            aml_notify(aml_name("\\_SB.NVDR"),
+@@ -295,6 +306,8 @@ static void acpi_ged_send_event(AcpiDeviceIf *adev, AcpiEventStatusBits ev)
+         sel = ACPI_GED_MEM_HOTPLUG_EVT;
+     } else if (ev & ACPI_POWER_DOWN_STATUS) {
+         sel = ACPI_GED_PWR_DOWN_EVT;
++    } else if (ev & ACPI_GENERIC_ERROR) {
++        sel = ACPI_GED_ERROR_EVT;
+     } else if (ev & ACPI_NVDIMM_HOTPLUG_STATUS) {
+         sel = ACPI_GED_NVDIMM_HOTPLUG_EVT;
+     } else if (ev & ACPI_CPU_HOTPLUG_STATUS) {
+diff --git a/include/hw/acpi/acpi_dev_interface.h b/include/hw/acpi/acpi_dev_interface.h
+index 68d9d15f50aa..8294f8f0ccca 100644
+--- a/include/hw/acpi/acpi_dev_interface.h
++++ b/include/hw/acpi/acpi_dev_interface.h
+@@ -13,6 +13,7 @@ typedef enum {
+     ACPI_NVDIMM_HOTPLUG_STATUS = 16,
+     ACPI_VMGENID_CHANGE_STATUS = 32,
+     ACPI_POWER_DOWN_STATUS = 64,
++    ACPI_GENERIC_ERROR = 128,
+ } AcpiEventStatusBits;
  
--(11) kvm_arch_on_sigbus_vcpu() uses source_id as index in "etc/hardware_errors" to
--     find out "Error Status Data Block" entry corresponding to error source. So supported
--     source_id values should be assigned here and not be changed afterwards to make sure
--     that guest will write error into expected "Error Status Data Block" even if guest was
--     migrated to a newer QEMU.
-+(11) kvm_arch_on_sigbus_vcpu() report RAS errors via a SEA notifications,
-+     when a SIGBUS event is triggered.
+ #define TYPE_ACPI_DEVICE_IF "acpi-device-interface"
+diff --git a/include/hw/acpi/aml-build.h b/include/hw/acpi/aml-build.h
+index c18f68134246..f38e12971932 100644
+--- a/include/hw/acpi/aml-build.h
++++ b/include/hw/acpi/aml-build.h
+@@ -252,6 +252,7 @@ struct CrsRangeSet {
+ /* Consumer/Producer */
+ #define AML_SERIAL_BUS_FLAG_CONSUME_ONLY        (1 << 1)
+ 
++#define ACPI_APEI_ERROR_DEVICE   "GEDD"
+ /**
+  * init_aml_allocator:
+  *
+@@ -382,6 +383,7 @@ Aml *aml_dma(AmlDmaType typ, AmlDmaBusMaster bm, AmlTransferSize sz,
+              uint8_t channel);
+ Aml *aml_sleep(uint64_t msec);
+ Aml *aml_i2c_serial_bus_device(uint16_t address, const char *resource_source);
++Aml *aml_error_device(void);
+ 
+ /* Block AML object primitives */
+ Aml *aml_scope(const char *name_format, ...) G_GNUC_PRINTF(1, 2);
+diff --git a/include/hw/acpi/generic_event_device.h b/include/hw/acpi/generic_event_device.h
+index d2dac87b4a9f..1c18ac296fcb 100644
+--- a/include/hw/acpi/generic_event_device.h
++++ b/include/hw/acpi/generic_event_device.h
+@@ -101,6 +101,7 @@ OBJECT_DECLARE_SIMPLE_TYPE(AcpiGedState, ACPI_GED)
+ #define ACPI_GED_PWR_DOWN_EVT      0x2
+ #define ACPI_GED_NVDIMM_HOTPLUG_EVT 0x4
+ #define ACPI_GED_CPU_HOTPLUG_EVT    0x8
++#define ACPI_GED_ERROR_EVT          0x10
+ 
+ typedef struct GEDState {
+     MemoryRegion evt;
 -- 
 2.48.1
 
