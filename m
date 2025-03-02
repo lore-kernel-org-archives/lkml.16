@@ -1,107 +1,128 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 594F62B2D7;
-	Sun,  2 Mar 2025 03:44:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C9408494;
+	Sun,  2 Mar 2025 03:47:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740887061; cv=none; b=kBJc2ue46cRdPwcbP15sxW2vrDXRNpa3yizOlAg5I3+/AoZ7oh4i6WhDOLRz7aUqwc5fEyVN+Cqpq15RdwDdLfVy9xaOaS4qKL8Ex7nnzgYkFnDdzap7kPzckADPereOS+/8czc26E9VvvqhyQhm0sgmLP9qRwrcb6/Cifern1w=
+	t=1740887232; cv=none; b=slZyz9FSdUTkgZl7jRtf0+Yzl+N0TMkboVDRZ2FsyW2uFrlrlNMVeFaAfoE1qHXFzEIr2FXSqQdFIsc8ELEBgydmBRv7doN3oCNs7g0qOr/rJrsM+8ysGkE5DrF/Ba9u3caF7PozLlqxGILvKUaQM0r0BeEBkfnjP0H+Ny47LJ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740887061; c=relaxed/simple;
-	bh=m3N4VQ/oe6q2C/cxszgUZu9Og5nAv5g4t/VlK/KxkVI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jbq253OW6sWbnrTNQCVLCZjdW3ovSVsKluMcZ0Iw8yFBC452A1ixLUzX7h555eQp9pWfh4vMFGm3vfZNbXMm53SnP8551qctqhTU1jSDtxxhgDyb6Ke8lP0kmotyW/9V1C4768WZ2uzwZSiboxuaxUDgY7ImIppbeMHLD1YbkAE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hY8T9ApX; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1740887232; c=relaxed/simple;
+	bh=O1SNm9G2v5Ugd5UySXzu1wFcmNPfiG9j1G7ECdHcH2Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=CM/+MOpXk7ggrTLxa5epZJMWggJmHTuR1KjEyDCsciVkH65Yd6nBim6jCgvNEF4dl+VfxfC7WwfVQfabp35auonVAzm3Oxp5dZHPIM+FNDv7xLjaDEaV/aXkQK6spXyasAv1hk7QcXjE4kgp71MCRrxx4lOWbw/N1b41zJxF7Zo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MkCcPaMm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hY8T9ApX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740887059; x=1772423059;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=m3N4VQ/oe6q2C/cxszgUZu9Og5nAv5g4t/VlK/KxkVI=;
-  b=hY8T9ApXGsQafUP6wOMdO2jH29agq74h7F9KcVPAVt0j4/5R3i9uxYKh
-   b6xpPsD7/T+SuGcMRYIEIsunMWrVYB8xAzpQx7YGYoHnTCCnMyHnTgnB1
-   wtOo/dRUCNDSgcf2aFKay6AbOhidfZ/yrs+m7/qEzFlWNVbFuD1Kj3uD2
-   zvnOMzxWwTLxdGnMcTgchdVzY1exp44jx4ftr6Yyh4j35kG5ITPygu7J2
-   s6hwk4aOHmjSicxE8iOLCS19dz+TDfZ54G6j8wN6XpsEFtNA1XrVhvkNP
-   SrpXgt3ABYA/eTxLwxznQ4OHWe34cQ+qmsVxSqLsVuqhPgI6sPJZSAOmx
-   w==;
-X-CSE-ConnectionGUID: UBpKiwJKTmipPfzZHeNIZw==
-X-CSE-MsgGUID: RqKUJ26KRryq2x2I7Air2w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11360"; a="41905486"
-X-IronPort-AV: E=Sophos;i="6.13,326,1732608000"; 
-   d="scan'208";a="41905486"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Mar 2025 19:44:18 -0800
-X-CSE-ConnectionGUID: HXhVAiSRSJqyyC01ZRIg1A==
-X-CSE-MsgGUID: wEDPsAapQt+6rQTrafEGGw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,326,1732608000"; 
-   d="scan'208";a="118371674"
-Received: from lkp-server02.sh.intel.com (HELO 76cde6cc1f07) ([10.239.97.151])
-  by fmviesa009.fm.intel.com with ESMTP; 01 Mar 2025 19:44:14 -0800
-Received: from kbuild by 76cde6cc1f07 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1toaFA-000H0c-0N;
-	Sun, 02 Mar 2025 03:44:03 +0000
-Date: Sun, 2 Mar 2025 11:42:56 +0800
-From: kernel test robot <lkp@intel.com>
-To: Pratap Nirujogi <pratap.nirujogi@amd.com>, linus.walleij@linaro.org
-Cc: oe-kbuild-all@lists.linux.dev, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org, benjamin.chan@amd.com,
-	Pratap Nirujogi <pratap.nirujogi@amd.com>
-Subject: Re: [PATCH] pinctrl: amd: isp411: Add amdisp GPIO pinctrl
-Message-ID: <202503021137.LAkq3bMU-lkp@intel.com>
-References: <20250228165749.3476210-1-pratap.nirujogi@amd.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MkCcPaMm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90261C4CEE2;
+	Sun,  2 Mar 2025 03:46:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740887231;
+	bh=O1SNm9G2v5Ugd5UySXzu1wFcmNPfiG9j1G7ECdHcH2Q=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=MkCcPaMmrOCyOo9EpJvxcT+v05XO+mjFs+cGtaaPcQlIHiy0ZfmfySc9YoOfmWccy
+	 ka+9Yr6T6T6jrWgOTmtJRKb9mZ5y4+u7hP4nA7DyJ1i4CgVuzhFlZ94xIT7Z51f0jn
+	 HhDuWVMXpZ/UQlCqV3A6wBkk8vg94H4/HRAeRgvssdXI5KlUEDaBV66fSBD0qRbgXq
+	 1KZPcfK+E2eNTkF1MWJf02jhfbP/K910Im0Gpf7+4ySoThmXYbV0DXkK2v1Z9Axv+o
+	 +zIZJIBDhxa+muFAFDoma5JEuBhKpojQo8P40D0ZK52twsM3mNyMjj6I0FDiahSZZd
+	 z5epcFx/utLWQ==
+Date: Sun, 2 Mar 2025 03:46:49 +0000
+From: Jonathan Cameron <jic23@kernel.org>
+To: Matti Vaittinen <mazziesaccount@gmail.com>
+Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>, Lars-Peter Clausen
+ <lars@metafoo.de>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
+ <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Andy Shevchenko
+ <andriy.shevchenko@linux.intel.com>, Daniel Scally <djrscally@gmail.com>,
+ Heikki Krogerus <heikki.krogerus@linux.intel.com>, Sakari Ailus
+ <sakari.ailus@linux.intel.com>, Greg Kroah-Hartman
+ <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
+ Danilo Krummrich <dakr@kernel.org>, Lad Prabhakar
+ <prabhakar.mahadev-lad.rj@bp.renesas.com>, Chen-Yu Tsai <wens@csie.org>,
+ Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland
+ <samuel@sholland.org>, Hugo Villeneuve <hvilleneuve@dimonoff.com>, Nuno Sa
+ <nuno.sa@analog.com>, David Lechner <dlechner@baylibre.com>, Javier
+ Carrasco <javier.carrasco.cruz@gmail.com>, Guillaume Stols
+ <gstols@baylibre.com>, Olivier Moysan <olivier.moysan@foss.st.com>, Dumitru
+ Ceclan <mitrutzceclan@gmail.com>, Trevor Gamblin <tgamblin@baylibre.com>,
+ Matteo Martelli <matteomartelli3@gmail.com>, Alisa-Dariana Roman
+ <alisadariana@gmail.com>, Ramona Alexandra Nechita
+ <ramona.nechita@analog.com>, AngeloGioacchino Del Regno
+ <angelogioacchino.delregno@collabora.com>, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-acpi@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev
+Subject: Re: [PATCH v4 06/10] iio: adc: ti-ads7924 Drop unnecessary function
+ parameters
+Message-ID: <20250302034649.2d9ec2a4@jic23-huawei>
+In-Reply-To: <38d39befcca110132fd4349c87fcb5d7ff51a2c8.1740421248.git.mazziesaccount@gmail.com>
+References: <cover.1740421248.git.mazziesaccount@gmail.com>
+	<38d39befcca110132fd4349c87fcb5d7ff51a2c8.1740421248.git.mazziesaccount@gmail.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250228165749.3476210-1-pratap.nirujogi@amd.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi Pratap,
+On Mon, 24 Feb 2025 20:34:01 +0200
+Matti Vaittinen <mazziesaccount@gmail.com> wrote:
 
-kernel test robot noticed the following build warnings:
+> Device pointer is the only variable which is used by the
+> ads7924_get_channels_config() and which is declared outside this
+> function. Still, the function gets the iio_device and i2c_client as
+> parameters. The sole caller of this function (probe) already has the
+> device pointer which it can directly pass to the function.
+> 
+> Simplify code by passing the device pointer directly as a parameter
+> instead of digging it from the iio_device's private data.
+> 
+> Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
+Looking again at this function it doesn't seem to be doing anything
+useful at all.  It checks the channel nodes are in range, but
+does nothing with that data. I'd just drop it entirely.
 
-[auto build test WARNING on linusw-pinctrl/devel]
-[also build test WARNING on linusw-pinctrl/for-next linus/master v6.14-rc4 next-20250228]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Ah. I see David suggested the same.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Pratap-Nirujogi/pinctrl-amd-isp411-Add-amdisp-GPIO-pinctrl/20250301-011050
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
-patch link:    https://lore.kernel.org/r/20250228165749.3476210-1-pratap.nirujogi%40amd.com
-patch subject: [PATCH] pinctrl: amd: isp411: Add amdisp GPIO pinctrl
-config: um-randconfig-r112-20250302 (https://download.01.org/0day-ci/archive/20250302/202503021137.LAkq3bMU-lkp@intel.com/config)
-compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project 14170b16028c087ca154878f5ed93d3089a965c6)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250302/202503021137.LAkq3bMU-lkp@intel.com/reproduce)
+We can't really 'fix' what this was perhaps intended to do now
+as what it does has become ABI :(
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202503021137.LAkq3bMU-lkp@intel.com/
 
-sparse warnings: (new ones prefixed by >>)
->> drivers/pinctrl/pinctrl-amdisp.c:113:26: sparse: sparse: symbol 'amdisp_pinctrl_ops' was not declared. Should it be static?
+Jonathan
 
-vim +/amdisp_pinctrl_ops +113 drivers/pinctrl/pinctrl-amdisp.c
+> 
+> ---
+> This commit is compile-tested only! All further testing is appreciated.
+> ---
+>  drivers/iio/adc/ti-ads7924.c | 7 ++-----
+>  1 file changed, 2 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/iio/adc/ti-ads7924.c b/drivers/iio/adc/ti-ads7924.c
+> index 66b54c0d75aa..b1f745f75dbe 100644
+> --- a/drivers/iio/adc/ti-ads7924.c
+> +++ b/drivers/iio/adc/ti-ads7924.c
+> @@ -251,11 +251,8 @@ static const struct iio_info ads7924_info = {
+>  	.read_raw = ads7924_read_raw,
+>  };
+>  
+> -static int ads7924_get_channels_config(struct i2c_client *client,
+> -				       struct iio_dev *indio_dev)
+> +static int ads7924_get_channels_config(struct device *dev)
+>  {
+> -	struct ads7924_data *priv = iio_priv(indio_dev);
+> -	struct device *dev = priv->dev;
+>  	struct fwnode_handle *node;
+>  	int num_channels = 0;
+>  
+> @@ -380,7 +377,7 @@ static int ads7924_probe(struct i2c_client *client)
+>  	indio_dev->num_channels = ARRAY_SIZE(ads7924_channels);
+>  	indio_dev->info = &ads7924_info;
+>  
+> -	ret = ads7924_get_channels_config(client, indio_dev);
+> +	ret = ads7924_get_channels_config(dev);
+>  	if (ret < 0)
+>  		return dev_err_probe(dev, ret,
+>  				     "failed to get channels configuration\n");
 
-   112	
- > 113	const struct pinctrl_ops amdisp_pinctrl_ops = {
-   114		.get_groups_count	= amdisp_get_groups_count,
-   115		.get_group_name		= amdisp_get_group_name,
-   116		.get_group_pins		= amdisp_get_group_pins,
-   117	};
-   118	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
