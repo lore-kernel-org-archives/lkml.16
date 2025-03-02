@@ -1,126 +1,90 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailbackend.panix.com (mailbackend.panix.com [166.84.1.89])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE6DB1EB1BF
-	for <linux-kernel@vger.kernel.org>; Sun,  2 Mar 2025 16:13:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB6EE1EA7D2;
+	Sun,  2 Mar 2025 16:13:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.84.1.89
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740932020; cv=none; b=nSsFOLuePjtedZ9ic57EboXWxmpiyoXLUcnwYCbDYb5RVw52YkXTvRUE5F8abizDbbPTcu0R89WKQVDjbU73V0ge6brcAo7IV7BSmdXtbQpza9skC1zc3qq9ZrhDHNJWLezZK2Qx9JmQp3ZyFYNki3QS5WetOIlW+WRbbcV43Zw=
+	t=1740932037; cv=none; b=qLe5EzZl8LNMualteFE4g84cGeZLHYZgbJq28vQ5SAuQDclnD51Q3jG8O/d6SRnwfuIg0ydj3MP9v2XLFP6cPLFSvmyUHM5oLbv5b54fOW9QQ7xb3jB8ge8p7aFruxC8I9Dcn2CcOMmrfayZ6+Nt3hamTVb9qY7r3bQrdtzNOCc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740932020; c=relaxed/simple;
-	bh=AVs0Ojczs2C0TDloanPrJOxloY5r9ENCO5oTgFrQAcc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ZUAaBcoMWEPm6iNL77A9mvUZb2vDaQCmmo/gl0ZTqhEIJLtR2csT7wgGLNce9USukyuBJCIAHECPYYoF5a3DuAAkqahaQTWNM4ANOxOWLYZi9wYcGDXZdZMkmf2nhG9cyRqGVgfE27azR93jxBLn4KCYTbNlp1RyfDGb5M+Hdu0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=lbabW0H9; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1740932037; c=relaxed/simple;
+	bh=R44zS5UstGW/mbwuvd3eia/RIOCoDdVVzI52z01wnuE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Vg0PWBXVnVvQNPy2uCBAB32iARD5bPX/cVCV6K82WQ081J26Dn2p50VVmuWAq+Obby+mokUX/R1h2n1x4Fp936NukHVVlIPL8d2iviNqD4pHx0IDNJaUJXvrzm0I0zGazAWHj5IY4Yo6H8sHd/ALGtSghXdeHdXaSNie3bzf46U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=panix.com; spf=pass smtp.mailfrom=panix.com; dkim=pass (1024-bit key) header.d=panix.com header.i=@panix.com header.b=qok9IWfG; arc=none smtp.client-ip=166.84.1.89
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=panix.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=panix.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lbabW0H9"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-43994ef3872so23235815e9.2
-        for <linux-kernel@vger.kernel.org>; Sun, 02 Mar 2025 08:13:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1740932017; x=1741536817; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=K45XWNnUOn6Er5XZHpb+55lI3DiFvNPiXBbeHlptjoo=;
-        b=lbabW0H9z7IGl5nzkUOcTI4gVSgwvYBdQH+rUK3lb+8Zxy+q1WOnO/Bj6Xe15FH8k1
-         WGc0vM+FUmyDDfQ5reY18wyLi1QNQto5AVn9u1s3H+hC9W7TC/y9vWTrJCqLrgilOmeP
-         qdKbecs9pWt24DNl363hsf/uzixq3ih4UTwzYk7xAZM6hDcOfPhxxbStEmIodd4yicOF
-         LZn9Tj8sbH9eDL5OFxtN+XL9iEB2OEpCU149X96KGjch+HOrezT8KOM0m2cmO79SVDE2
-         UyWrUN74Linp6P+DAO8W1Dn44nSRgGe1oeRCZ6Zbf1dohAwmeQqktpCIzJTrlZrZySWR
-         47Jw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740932017; x=1741536817;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=K45XWNnUOn6Er5XZHpb+55lI3DiFvNPiXBbeHlptjoo=;
-        b=oX8vofCAUG86R+5JkCxCx4bL91ZqM0Mx5k35G1shqfk0WaAISRCmHmp+uU0tyIDtR3
-         UJ6oLA396A18d1k3+bTSlblLYnM6vB45qBtuQ+tZNTZPeTP1vIlQMmcVXoAebocQoafK
-         AiEiJMH0kq5hbgj4mp3A4qhwL6g1NP2A/YETqL/QQ5XqP9cfjwM490KCt497ptREbVCZ
-         pYR46kVo522Xp694zqcCBcf5Mw4/0/RuqPZJpynmJSrxkPo5eKKYwZjD4/BBnBoMupR2
-         0lVo8NCjdM/Vgdg4ax1c6ezhsp/PH7feWHAsD9npCGJOWYD849R9K5OTZcQCJ7/jpoM7
-         Qeig==
-X-Forwarded-Encrypted: i=1; AJvYcCXml61L3kv6B46Ij5t1pY23B1WyHSOIbFATxvFJlV6thYsnOwD8rnsLOF2bTfa6txz6h6JZZuTsFxkCy/k=@vger.kernel.org
-X-Gm-Message-State: AOJu0YytFzGqA6pdUfGDtxtoVkhrA2eU9tREJWSNATHPp0TCC0A1CSjP
-	RgPcllGBppdlAYZ/wJAbemojbCabW/0xtQmLZWIoKEas3Vao0V4gX8dVWnooOCc=
-X-Gm-Gg: ASbGncvow21JN0ZOC+3mC/uxDtUSezRHsHD0CqZn3c/XEJ9VbhNiSXNajKgJamLOUtS
-	2lq+mTDkKFE9IYSbU3om5UycWzHkxsjQbwNwsHdY4KkCqHnj8Nvn8Qdw6bRyP9rWjJz9LTU3ISG
-	ZOH+hbwicre/FzafgO1usQgZMOZRYwJQJQt0uyw/3aU1c2j4HGyPqaebC6tZ2mbD4wt4DAFNqZi
-	aBTgoDLovHAI+o8VyGmvvoZDJOa6LgoYzCQOkGzULQaeG8mV2iW4AnobnT2zPfjwyO5opHoIDhs
-	pLygSpvQ33o/jXjKTLXjn9FAHHogwft6O9cvZjozhuckZ8cbdNH6
-X-Google-Smtp-Source: AGHT+IF8gIrmLbkZ0HcbA64fVvHOXkZrLd1NWZQbv+5hMoBo8OIAet/FvNNhQY0r7SC3xOA2BnNJ/g==
-X-Received: by 2002:a05:600c:444d:b0:43b:8198:f6fc with SMTP id 5b1f17b1804b1-43ba66e6d07mr97553735e9.11.1740932017153;
-        Sun, 02 Mar 2025 08:13:37 -0800 (PST)
-Received: from vingu-cube.. ([2a01:e0a:f:6020:cbb1:d64:4932:5446])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43bb767a977sm25530245e9.18.2025.03.02.08.13.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 02 Mar 2025 08:13:35 -0800 (PST)
-From: Vincent Guittot <vincent.guittot@linaro.org>
-To: mingo@redhat.com,
-	peterz@infradead.org,
-	juri.lelli@redhat.com,
-	dietmar.eggemann@arm.com,
-	rostedt@goodmis.org,
-	bsegall@google.com,
-	mgorman@suse.de,
-	vschneid@redhat.com,
-	lukasz.luba@arm.com,
-	rafael.j.wysocki@intel.com,
-	pierre.gondois@arm.com,
-	linux-kernel@vger.kernel.org
-Cc: qyousef@layalina.io,
-	hongyan.xia2@arm.com,
-	christian.loehle@arm.com,
-	luis.machado@arm.com,
-	qperret@google.com,
-	Vincent Guittot <vincent.guittot@linaro.org>
-Subject: [PATCH 7/7 v4] sched/fair: Update overutilized detection
-Date: Sun,  2 Mar 2025 17:13:21 +0100
-Message-ID: <20250302161321.1476139-8-vincent.guittot@linaro.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250302161321.1476139-1-vincent.guittot@linaro.org>
-References: <20250302161321.1476139-1-vincent.guittot@linaro.org>
+	dkim=pass (1024-bit key) header.d=panix.com header.i=@panix.com header.b="qok9IWfG"
+Received: from [192.168.126.122] (ip72-219-82-239.oc.oc.cox.net [72.219.82.239])
+	by mailbackend.panix.com (Postfix) with ESMTPSA id 4Z5Rp76ZvVz49rv;
+	Sun,  2 Mar 2025 11:13:51 -0500 (EST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=panix.com; s=panix;
+	t=1740932033; bh=R44zS5UstGW/mbwuvd3eia/RIOCoDdVVzI52z01wnuE=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=qok9IWfGHF/F7P/onSSsmeJCBeB78J/opqxwNdyzCWIhiV9yQzAky+sb41aREomKx
+	 w7JI6ATSTJ8p2nve7jFMPmNSq9FcS2R0RIYATEi0mPb9d+C0lAqUQ/dXGW+ObaUI7B
+	 kRofCB2aPbCOaFw/cqjt/JqcRukI/TzG6ItPb1tQ=
+Message-ID: <e5badaa8-20e2-4160-be20-75e174d241bc@panix.com>
+Date: Sun, 2 Mar 2025 08:13:51 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: diagnosing resume failures after disconnected USB4 drives (Was:
+ Re: PCI/ASPM: Fix L1SS saving (linus/master commit 7507eb3e7bfac))
+To: Mika Westerberg <mika.westerberg@linux.intel.com>,
+ Kenneth Crudup <kenny@panix.com>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, ilpo.jarvinen@linux.intel.com,
+ Bjorn Helgaas <bhelgaas@google.com>, Jian-Hong Pan <jhp@endlessos.org>,
+ linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+ =?UTF-8?B?TmlrbMSBdnMgS2/EvGVzxYZpa292cw==?= <pinkflames.linux@gmail.com>,
+ Andreas Noever <andreas.noever@gmail.com>,
+ Michael Jamet <michael.jamet@intel.com>, Lukas Wunner <lukas@wunner.de>,
+ Yehezkel Bernat <YehezkelShB@gmail.com>, linux-usb@vger.kernel.org
+References: <21b72adf-aac6-49fa-af40-6db596c87432@panix.com>
+ <20250211055722.GW3713119@black.fi.intel.com>
+ <83d9302a-f743-43e4-9de2-2dd66d91ab5b@panix.com>
+ <20250213135911.GG3713119@black.fi.intel.com>
+ <a8d6ca75-8f50-4c46-8c67-fcf20d870dcc@panix.com>
+ <20250214162948.GJ3713119@black.fi.intel.com>
+ <661459dd-67d0-4e1c-bb28-9adf1417f660@panix.com>
+ <20250226084404.GM3713119@black.fi.intel.com>
+ <b6eff06e-1a8c-48c3-b536-39b567015d0c@panix.com>
+ <5c131927-87c1-4e21-90f8-8e3a34cd6dbf@panix.com>
+ <20250228104925.GO3713119@black.fi.intel.com>
+ <1f214d95-61c0-4be9-8b19-5aef76631c0e@panix.com>
+Content-Language: en-US
+From: Kenneth Crudup <kenny@panix.com>
+In-Reply-To: <1f214d95-61c0-4be9-8b19-5aef76631c0e@panix.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Checking uclamp_min is useless and counterproductive for overutilized state
-as misfit can now happen without being in overutilized state
 
-Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
----
- kernel/sched/fair.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+On 2/28/25 08:04, Kenneth Crudup wrote:
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 21bd62cf138c..c241d9d57a0c 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -6831,16 +6831,15 @@ static inline void hrtick_update(struct rq *rq)
- #ifdef CONFIG_SMP
- static inline bool cpu_overutilized(int cpu)
- {
--	unsigned long  rq_util_min, rq_util_max;
-+	unsigned long rq_util_max;
- 
- 	if (!sched_energy_enabled())
- 		return false;
- 
--	rq_util_min = uclamp_rq_get(cpu_rq(cpu), UCLAMP_MIN);
- 	rq_util_max = uclamp_rq_get(cpu_rq(cpu), UCLAMP_MAX);
- 
- 	/* Return true only if the utilization doesn't fit CPU's capacity */
--	return !util_fits_cpu(cpu_util_cfs(cpu), rq_util_min, rq_util_max, cpu);
-+	return !util_fits_cpu(cpu_util_cfs(cpu), 0, rq_util_max, cpu);
- }
- 
- /*
+> Don't worry about the printk()s WRT to the code; a couple of weeks ago 
+> I'd seen an NPE on resume in __tb_path_deactivate_hop so threw in a 
+> bunch of tb_port_info(port, "%s(): %d\n", __func__, __LINE__); so I 
+> could get an idea of where the crash was.
+
+I've started a separate E-mail about this, but I'd determined those 
+crashes were due to d6d458d42e1 ("Handle DisplayPort tunnel activation 
+asynchronously").
+
+Since reverting 9d573d1954 and d6d458d42e1 I've been testing several 
+resume scenarios (NVMe connected/disconnected and/or external 
+DP-tunneled monitor connected/disconnected and have yet to have a resume 
+or hibernate failure over several cycles.
+
+Now, how do I help you guys go about fixing these commits?
+
+-K
+
 -- 
-2.43.0
+Kenneth R. Crudup / Sr. SW Engineer, Scott County Consulting, Orange 
+County CA
 
