@@ -1,31 +1,31 @@
 Received: from m16.mail.126.com (m16.mail.126.com [220.197.31.9])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C554D1D54C2
-	for <linux-kernel@vger.kernel.org>; Sun,  2 Mar 2025 06:44:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7B8CA1D5CD4
+	for <linux-kernel@vger.kernel.org>; Sun,  2 Mar 2025 06:44:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740897866; cv=none; b=e4YJuFdWQO0ENLjHTOd2DwJmFKWIAs2fBDHoYpPrZ1Ft05dfefn2gmAPDZB8qHy7TEt6ad2BzCSlDXtpxUJD4qOjDn3imX99zJrf0lgeaD+4NXmJIXwmLj6Ht8KAET9MqJvAWfKcluQrLM0NEgkjG7IaLI+E1oyN4p9COXTUHfw=
+	t=1740897867; cv=none; b=h71geY0KWHcMHJQaW/gHvx+5MFiBJIiuuIu2ExXeUKH+GVoBzvblHXkrjBQXD6T5uHpLthYXg7LoWnqXp0Jatrdur/byyJp0enP7H1vuEkt633xJUiUSgPB5T7mqUYhkP7HQliynO7mNOORszlkazBbzIVuAb79umsuAm+9v4Dw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740897866; c=relaxed/simple;
-	bh=PchpREbeVuSu33VarUHMnUKVR1nscKOKnSIs1Y8iilo=;
-	h=From:To:Cc:Subject:MIME-Version:Content-Type:Message-Id:Date; b=sPZwnfYq7nuNgvgOWPMujlsULW5Hubqq7GAGXdnFxJo4AzB9uWTTvabdf57a/l2kuerPUnV6Zr4mGFUd5Hs6P5f14oMol1PjUWvcBoAwnjH1e6aeoRT7gPZlMQ6W1NYGpZZpB2DBalJ+hPRbqOGuAT1ygORQuyvsAqzDgjGbVnM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com; spf=pass smtp.mailfrom=126.com; dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b=LhKcrKsw; arc=none smtp.client-ip=220.197.31.9
+	s=arc-20240116; t=1740897867; c=relaxed/simple;
+	bh=PfixNPQ/uTp/hFvZCGY1TVY84A7zL5WAfQIAbeeaQe8=;
+	h=From:To:Cc:Subject:MIME-Version:Content-Type:Message-Id:Date; b=BKmO8Il8ovh3eLYClLt0MQJ+ahTRD6ykKOd5+fcmwCfWvUeYrfVjitDsIY4RLNlkvNJW/YQekZfCVMM03APqRM6DFvqldiADXq8mVw/n2jn2KT4MgpA/fOB3R5IuXQ33ppTe6HRPEO5cEEfXKe+8AL07lC0ahjEoQfYbzo7iUJ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com; spf=pass smtp.mailfrom=126.com; dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b=F8MA9IXq; arc=none smtp.client-ip=220.197.31.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=126.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="LhKcrKsw"
+	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="F8MA9IXq"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
 	s=s110527; h=From:Subject:MIME-Version:Content-Type:Message-Id:
-	Date; bh=PchpREbeVuSu33VarUHMnUKVR1nscKOKnSIs1Y8iilo=; b=LhKcrKs
-	wNjcLf/jBYiPVizdwvlo/gn0C0THQfe0GHnVZN9/2umoRCBK2L5MPa5v1Bqsm174
-	P9d/V3eIlYd0WzxEmsRsSvuBTnCXQPWg5CeDLu/HYLXJGfS5LxlA++2+Hgk3ceIk
-	9jgE50hS9dOjvdmQ8vjxoP17rGRoxEmH/IAo=
+	Date; bh=PfixNPQ/uTp/hFvZCGY1TVY84A7zL5WAfQIAbeeaQe8=; b=F8MA9IX
+	q7TWOAZiJmn/BL4MZuuPFsUdqrINe6yWTkupsQMs1/9zAWuvG8t9p1oKc0qN9qxs
+	kkH7qm3QI4p938bojlACv54VrUNjiI//iL1kxU9xnwi8Htto5UOHOGpObbEvtPku
+	VSGuUI+8Coo3q0j9c3GLsPCf4wMIIdhGfAug=
 Received: from localhost (unknown [])
-	by gzga-smtp-mtada-g0-3 (Coremail) with SMTP id _____wDnr7lE_sNnTtMgBg--.23836S2;
+	by gzsmtp1 (Coremail) with SMTP id PCkvCgDXPzxF_sNnfnzdBA--.10871S2;
 	Sun, 02 Mar 2025 14:44:21 +0800 (CST)
 From: adam_smystery@126.com
 To: linux-kernel@vger.kernel.org
 Cc: 
-Subject: Hello! Rust is better than Javascript
+Subject: Hello! Rust is better than Python
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -33,12 +33,12 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-X-CM-TRANSID:_____wDnr7lE_sNnTtMgBg--.23836S2
-Message-Id:<67C3FE45.066DC9.00001@m16.mail.126.com>
+X-CM-TRANSID:PCkvCgDXPzxF_sNnfnzdBA--.10871S2
+Message-Id:<67C3FE45.0F01BB.16940@m16.mail.126.com>
 X-Coremail-Antispam: 1Uf129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
-	VFW2AGmfu7bjvjm3AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjxUq5x6UUUUU
+	VFW2AGmfu7bjvjm3AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjxUg_cfUUUUU
 Date: Sun, 2 Mar 2025 14:44:21 +0800 (CST)
-X-CM-SenderInfo: 5dgdzspvp123xhu1qiyswou0bp/1tbiOhQEumfD7Anz0gAAsw
+X-CM-SenderInfo: 5dgdzspvp123xhu1qiyswou0bp/1tbiihsEumfD7fHZfAAAsy
 
-Hello! Rust is better than Javascript
+Hello! Rust is better than Python
 
