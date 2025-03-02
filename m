@@ -1,161 +1,225 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com [209.85.128.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EE4A1922E7
-	for <linux-kernel@vger.kernel.org>; Sun,  2 Mar 2025 02:50:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47B4AA944;
+	Sun,  2 Mar 2025 03:10:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740883812; cv=none; b=sJRqZbNao4LyRUgAZsjuqqFyDvtriL6YO9+Ui0OA/rQTWxA9jiLZvPM+5iLY/jrKEsVJAiifsg4R//NOHPNCVvt3SSiEJBV9TLHPXP8lWw70lCMXoyJDfDgQ01vZI322uTldTtAAAmJrDEIpNL27acz4kPCyMFAiuq6UOA1gmM8=
+	t=1740885026; cv=none; b=jnInRAJ9+lWtqLo0Stv1bF6t8X9Yv9BmQuTtxqJZvFgi/j2ibgr8gPwpcOR87M4QyJdb0wTKxioYCqoNSRojq7a6Z7sM8T5xcTBt6VOyegFRmKGcIkGbHtz6aF5bnIBEmxnUmDQzzAfg5H0t1N+vHIUBctfsbJcR9+ylBcIa10A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740883812; c=relaxed/simple;
-	bh=SlByiTDxYgd85794TFUJfJk6EJELUYRPQB26XL4VOA4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=FqUjOncA0bd1ziwaAtIK/IPOMHDlF8EuW6Ead8szSBESKZmD7uPBs+DvPmVYYEI6QYwSvHq3UrfUDX2LSeOg46Vguu0ssghGpjusVBSbJ4fXfLN/JphGKaylfR0r4cJFPTzbIHcc0d216FsPtwsVOqw9VuPErSWzZWZMGMK0uFk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=cZcvDFSX; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1740885026; c=relaxed/simple;
+	bh=GfVA9iYjHO8XmgappW8jDQpwvJ712gVxe73p2a1Wyq0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lzh32sx/liWbb4DfR9vKx0j0bfrp+eIMKC4FIwMoTyfYwwXdmre9o0eHSy9Rw4G2z4u46W+H35EgjEmwO3Pe343VUeNITLYm3S0K99PsnPsERjqwdsi9W/EJNqdhcYakY3FMTI/Bf7h+or9ry1RQeWK0bXH2zhPoZ7DJGSu/GjE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aP8FiN+6; arc=none smtp.client-ip=209.85.128.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cZcvDFSX"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4398e3dfc66so30166325e9.0
-        for <linux-kernel@vger.kernel.org>; Sat, 01 Mar 2025 18:50:08 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aP8FiN+6"
+Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-6fd5a24a8d8so10823717b3.1;
+        Sat, 01 Mar 2025 19:10:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1740883807; x=1741488607; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=DVE7MMoQ2WthyPOL2l/3V1MXkj9hPNOqHWuQkJid+/c=;
-        b=cZcvDFSXjVmoD2eTQZoU5dkAFcuB9Pa6Xf4E2ICzrRF8acb1OmMdW4iFf2zhA1iK5q
-         az2aQQ3tZEGyJHKxQhrenZx/IqhpC8GxLl77npYBLzRFo04XpVfY/p1CiD47aJ5ChZUK
-         f1vgSBd35MH3I8Mmq4KvcUCTTh7sYZIUdeNmoaqcxjZMKfL8L2e3FFkUeJgw/+o+lWYI
-         K6Zp7T1ZPvXfY2uogexDbmcAIzzbJNDUMN62cVW8HUfilfJ2uNabHb06NO8cSwsop7FT
-         w51WVsAJZynDLtAeRbqDD7Z2mt/CaVKMaAjz3oTzHfxaX6hENfCI7AbqB0k/xiDm/S2V
-         4xfA==
+        d=gmail.com; s=20230601; t=1740885024; x=1741489824; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=4LbN5fYyUHQt3Ti89i5IrvWdlm9UYzm7rEomie5t+cc=;
+        b=aP8FiN+6DzcA/R8Iq7Ni+fzBMbE02fMUhwsW7ph3YRnZtct6+VS9+G7bjd/Sce0xNR
+         Tlqv3E4XyuUENeY4hXUXpT60iQOVAnPYusgrVwHQ6JIuZ6nRCWusSxLWIIpwKmgOZoHY
+         kHvqI83E/ez7J9AZI4xubsgJO7rIxYntfXJCGhhW8rjO7SglfH2N1rV7Iumxo61sS2rz
+         HT/5b5CBElZZI0qSM1cCp1w0o/Bvsh3tKzOJzEOoVg6ToTX5DVYmmTQh0tzDr+HQ5pkD
+         R52zu8eG+KkolVRICvFRmWw9DbxdCsiuP1nd+XqxmV+TQ6VWTKcnFzlIdL+uzH9f546+
+         K6lA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740883807; x=1741488607;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=DVE7MMoQ2WthyPOL2l/3V1MXkj9hPNOqHWuQkJid+/c=;
-        b=FGMmSRLo76HK7+0A1wanc1cKK0Y9h6400ErppR8CqCUFh8EBDRQ5FxawIKd5v93AJJ
-         pTEqdfCOKmusRaSdnpVER2Y+d4w3IIVTT4ZWATWtXZHHApRc5XLtax1YzrcEK4aSv3jd
-         MIjlGPbOlchRwdcGoSXiBkrV6DO7q9MXG/yxhTe9i14AWJsOg2pmVkgLX4Mu8AYiq4y9
-         dxXe8Hbp5WPPffomc22HOT/llXrK91z5r5bEegoXpw6ViMDjP8ccuXYLLQkrRsnGT7m7
-         7HW1da9wxgu+JEWWHqoPQD7esD2l1GtpO72iJmEhpcdvcDVRJKQUUbvARqEAb667q/dW
-         iopw==
-X-Forwarded-Encrypted: i=1; AJvYcCWtFbb+i930iJjP8UmIlxOVLzcsfhN0bLM3k6rlLAHrqZ3Zx9kUxmnlaHJ6XzIZqvZjaoEUSaBu5kgDrZg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxRscidvfrNxaPMo8luZAIvp4Pv3sqWWhxQyq1iZjFsAdK81OGR
-	1D+1Vxd8XVMtegHx7oecczqYFqCJdhIvnxRXIV77mVm0KU41HphImQTV16KmpBA=
-X-Gm-Gg: ASbGncvvDIjDN3fWjkZBPxPdJAsnvj3Q9T3l8GWc/2Vk/MwCUaEubCH6r7wNGr9MQd1
-	qoXlqVrR55omXl3ACiV86b9GC58gZRhhwOqCBlVune0znCZvJ7JMiqq50jBw5H2/lDa3w9oV71y
-	Oir8/2ZOAFowGCKNd2vVW4EwizGqWQ/aOSkus4FA3Uzck69RKQ1hWW71RMPaX9AYBK4MdVUiAhB
-	0YUM84zymBJvvcj8vufrW4JyroySi5TncUIrhz6JB9RgjiK9eFkRtkc9QegRKuARcfuh+R2bK4q
-	RGCgTYkiNUvxkZC37fOq5U4Mg9VnmO+cdL2vwnNGl8pDStTNdT42RQ==
-X-Google-Smtp-Source: AGHT+IF1OyUGX9QaED/sDZkS9eJZ9gYij7zwJ8c8ovq4U+BP6af7VsWqnEYCb6d6Amdd2x4tpI0G/Q==
-X-Received: by 2002:a05:600c:1550:b0:439:6dba:adf2 with SMTP id 5b1f17b1804b1-43ba66e7550mr81082225e9.15.1740883807490;
-        Sat, 01 Mar 2025 18:50:07 -0800 (PST)
-Received: from [127.0.1.1] ([2a02:c7c:7213:c700:e992:6869:474c:a63f])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43aba532b0dsm137845975e9.13.2025.03.01.18.50.06
+        d=1e100.net; s=20230601; t=1740885024; x=1741489824;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4LbN5fYyUHQt3Ti89i5IrvWdlm9UYzm7rEomie5t+cc=;
+        b=FF7jRWTTwgsBL8iBQ0XoO+84RgoaFH4756o+47LEdVz/Ll28sM49a+bry0youadyds
+         FjsR9c4es64Q56+/QVqhjWXKGgMcRylmh4nHLKbI2Ksowd+fHs0PvK1r0XO8+0vXZtgo
+         aB7fiFDOWRd6Ehnm+Kyp69NVzjCCGJmOvQUsIppXVS+ueNnq/k2bK3xK1TY3QK71F9UW
+         UkwUcFfgy1ICGr4I/adwC4OVDxOghQYHm6MCkFMdRuhxatcUODEqBCR0sU24i8Lpa8U2
+         OrQ0qsiviF+Gzk/e8Q3ktGAEibDvd60HtLToiNNEY71DuSLJeXMBzo3BxbZHVNhUZ1Cj
+         jrQQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVvgHHlOROPfy417MvznPgThn1XsayAYj6A97m/bubaIhAwJzRzULDYZWbGi2CGUTROJ2OmE7umPPoIfc3K@vger.kernel.org, AJvYcCWLQrWs3aosqLafWlzRaYlL0thsPLxHJG2WAtM4ZXde++cpEgCE1Vz8WN9GL1UHeHmpjWcZiLCqpxavBow=@vger.kernel.org, AJvYcCWXb7dDkoKWYLasvTV/HsWyliF813vB7Qn8YYoyDL71MFSTo4Ax0RAmjoUGRRSMCeRz+SxAlVFtnwNONb0=@vger.kernel.org, AJvYcCX4OaqZy0sc5fPo+IyEYahpOt1bSVgbSKjBIwo5d6k3K1gCnJ6QUgLo0gz8AKEcro8yuts=@vger.kernel.org, AJvYcCXE5bLHyey3rju9G/ceeiL54zMIs3naCKPN5BY/Be/CkxVr0oEU2UZ6w7YiOBVWg7t0mS05IBsO@vger.kernel.org, AJvYcCXV5KF9GsUcDNqXAAcaG9rftfA7Tlb2ArwDPI513W2Wv3p9mhGdE/nkUxkJizORqIPalQZpkezv62X7YWypoh8=@vger.kernel.org, AJvYcCXh3q353AZlTupjo01BAraT0ws4EgJrI8YJZfKgRg8PxgQLCQZT1eiR47Qd++iuMP7WZaXHDg/uXNQiYd9T@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy3N9Jcu8DHASSKddK6RLPCGML8T1/uns2KZBRbonj1fOjaL8su
+	crjplkCosc49rT4zVhrKMw66v2DkG7TjU4CunlicpYbf/lBAjhHa
+X-Gm-Gg: ASbGncvPShCKLwgvKZBwtzReaLityn5is4F1+cQmVLxHkoEupn0DrVxFFPD9xsbGGXD
+	oaZIo4skHgeZa52mU6YliaBWj84iF5I4Rv7JvHc8ma5tOhalH4Ij8ZddLIoh5obi48rdN1qEUjd
+	389ujoaaHJ78zujhXrQF6S4dh/ySsmHW0tgcQu9iOkF5C+0JKljbdvtkhnjJKiwFMdzzL5nMlgU
+	Vku8Pk6ccvumui5Dn+tes5/xEdUSkIQPJU1iMlF+bSL1tOfquG+tkifgSo2gQGquvUdGN69/pM1
+	MUG4sa/7w+AcvUUYec1XdiPzR6BFHxGeshb0pPyDjy9aiZUKiIDLs9rFYWkFuLlP8t64lTVm/s7
+	NJ+xr
+X-Google-Smtp-Source: AGHT+IEy03FjYEvkbsUi6/ttRTlOKe4T1PD9HCNrsgjQ3AH1f8i6gR4SnirQZ7DNyXo/QUPkw2L8/g==
+X-Received: by 2002:a05:690c:4b12:b0:6fb:9450:b0c3 with SMTP id 00721157ae682-6fd4a02b0d8mr124121857b3.19.1740885024067;
+        Sat, 01 Mar 2025 19:10:24 -0800 (PST)
+Received: from localhost (c-73-224-175-84.hsd1.fl.comcast.net. [73.224.175.84])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-6fd3cb9dac4sm13986657b3.102.2025.03.01.19.10.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 01 Mar 2025 18:50:07 -0800 (PST)
-From: Alexey Klimov <alexey.klimov@linaro.org>
-Date: Sun, 02 Mar 2025 02:49:54 +0000
-Subject: [PATCH 4/5] arm64: dts: qcom: qcm2290: add LPASS LPI pin
- controller
+        Sat, 01 Mar 2025 19:10:22 -0800 (PST)
+Date: Sat, 1 Mar 2025 22:10:20 -0500
+From: Yury Norov <yury.norov@gmail.com>
+To: Kuan-Wei Chiu <visitorckw@gmail.com>
+Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+	dave.hansen@linux.intel.com, x86@kernel.org, jk@ozlabs.org,
+	joel@jms.id.au, eajames@linux.ibm.com, andrzej.hajda@intel.com,
+	neil.armstrong@linaro.org, rfoss@kernel.org,
+	maarten.lankhorst@linux.intel.com, mripard@kernel.org,
+	tzimmermann@suse.de, airlied@gmail.com, simona@ffwll.ch,
+	dmitry.torokhov@gmail.com, mchehab@kernel.org,
+	awalls@md.metrocast.net, hverkuil@xs4all.nl,
+	miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
+	louis.peens@corigine.com, andrew+netdev@lunn.ch,
+	davem@davemloft.net, edumazet@google.com, pabeni@redhat.com,
+	parthiban.veerasooran@microchip.com, arend.vanspriel@broadcom.com,
+	johannes@sipsolutions.net, gregkh@linuxfoundation.org,
+	jirislaby@kernel.org, akpm@linux-foundation.org, hpa@zytor.com,
+	alistair@popple.id.au, linux@rasmusvillemoes.dk,
+	Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se,
+	jernej.skrabec@gmail.com, kuba@kernel.org,
+	linux-kernel@vger.kernel.org, linux-fsi@lists.ozlabs.org,
+	dri-devel@lists.freedesktop.org, linux-input@vger.kernel.org,
+	linux-media@vger.kernel.org, linux-mtd@lists.infradead.org,
+	oss-drivers@corigine.com, netdev@vger.kernel.org,
+	linux-wireless@vger.kernel.org, brcm80211@lists.linux.dev,
+	brcm80211-dev-list.pdl@broadcom.com, linux-serial@vger.kernel.org,
+	bpf@vger.kernel.org, jserv@ccns.ncku.edu.tw,
+	david.laight.linux@gmail.com, andrew.cooper3@citrix.com,
+	Yu-Chun Lin <eleanor15x@gmail.com>
+Subject: Re: [PATCH v2 01/18] lib/parity: Add __builtin_parity() fallback
+ implementations
+Message-ID: <Z8PMHLYHOkCZJpOh@thinkpad>
+References: <20250301142409.2513835-1-visitorckw@gmail.com>
+ <20250301142409.2513835-2-visitorckw@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250302-rb1_hdmi_sound_first-v1-4-81a87ae1503c@linaro.org>
-References: <20250302-rb1_hdmi_sound_first-v1-0-81a87ae1503c@linaro.org>
-In-Reply-To: <20250302-rb1_hdmi_sound_first-v1-0-81a87ae1503c@linaro.org>
-To: Bjorn Andersson <andersson@kernel.org>, 
- Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
- Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, 
- Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-sound@vger.kernel.org, 
- Alexey Klimov <alexey.klimov@linaro.org>
-X-Mailer: b4 0.14.2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250301142409.2513835-2-visitorckw@gmail.com>
 
-Add the Low Power Audio SubSystem Low Power Island (LPASS LPI) pin
-controller device node required for audio subsystem on Qualcomm
-QRB2210 RB1. QRB2210 is based on qcm2290 which is based on sm6115.
+On Sat, Mar 01, 2025 at 10:23:52PM +0800, Kuan-Wei Chiu wrote:
+> Add generic C implementations of __paritysi2(), __paritydi2(), and
+> __parityti2() as fallback functions in lib/parity.c. These functions
+> compute the parity of a given integer using a bitwise approach and are
+> marked with __weak, allowing architecture-specific implementations to
+> override them.
+> 
+> This patch serves as preparation for using __builtin_parity() by
+> ensuring a fallback mechanism is available when the compiler does not
+> inline the __builtin_parity().
+> 
+> Co-developed-by: Yu-Chun Lin <eleanor15x@gmail.com>
+> Signed-off-by: Yu-Chun Lin <eleanor15x@gmail.com>
+> Signed-off-by: Kuan-Wei Chiu <visitorckw@gmail.com>
+> ---
+>  lib/Makefile |  2 +-
+>  lib/parity.c | 48 ++++++++++++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 49 insertions(+), 1 deletion(-)
+>  create mode 100644 lib/parity.c
+> 
+> diff --git a/lib/Makefile b/lib/Makefile
+> index 7bab71e59019..45affad85ee4 100644
+> --- a/lib/Makefile
+> +++ b/lib/Makefile
+> @@ -51,7 +51,7 @@ obj-y += bcd.o sort.o parser.o debug_locks.o random32.o \
+>  	 bsearch.o find_bit.o llist.o lwq.o memweight.o kfifo.o \
+>  	 percpu-refcount.o rhashtable.o base64.o \
+>  	 once.o refcount.o rcuref.o usercopy.o errseq.o bucket_locks.o \
+> -	 generic-radix-tree.o bitmap-str.o
+> +	 generic-radix-tree.o bitmap-str.o parity.o
+>  obj-y += string_helpers.o
+>  obj-y += hexdump.o
+>  obj-$(CONFIG_TEST_HEXDUMP) += test_hexdump.o
+> diff --git a/lib/parity.c b/lib/parity.c
+> new file mode 100644
+> index 000000000000..a83ff8d96778
+> --- /dev/null
+> +++ b/lib/parity.c
+> @@ -0,0 +1,48 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * lib/parity.c
+> + *
+> + * Copyright (C) 2025 Kuan-Wei Chiu <visitorckw@gmail.com>
+> + * Copyright (C) 2025 Yu-Chun Lin <eleanor15x@gmail.com>
+> + *
+> + * __parity[sdt]i2 can be overridden by linking arch-specific versions.
+> + */
+> +
+> +#include <linux/export.h>
+> +#include <linux/kernel.h>
+> +
+> +/*
+> + * One explanation of this algorithm:
+> + * https://funloop.org/codex/problem/parity/README.html
 
-While at this, also add description of lpi_i2s2 pins (active state)
-required for audio playback via HDMI/I2S.
+I already asked you not to spread this link. Is there any reason to
+ignore it?
 
-Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Signed-off-by: Alexey Klimov <alexey.klimov@linaro.org>
----
- arch/arm64/boot/dts/qcom/qcm2290.dtsi | 41 +++++++++++++++++++++++++++++++++++
- 1 file changed, 41 insertions(+)
+> + */
+> +int __weak __paritysi2(u32 val);
+> +int __weak __paritysi2(u32 val)
+> +{
+> +	val ^= val >> 16;
+> +	val ^= val >> 8;
+> +	val ^= val >> 4;
+> +	return (0x6996 >> (val & 0xf)) & 1;
+> +}
+> +EXPORT_SYMBOL(__paritysi2);
+> +
+> +int __weak __paritydi2(u64 val);
+> +int __weak __paritydi2(u64 val)
+> +{
+> +	val ^= val >> 32;
+> +	val ^= val >> 16;
+> +	val ^= val >> 8;
+> +	val ^= val >> 4;
+> +	return (0x6996 >> (val & 0xf)) & 1;
+> +}
+> +EXPORT_SYMBOL(__paritydi2);
+> +
+> +int __weak __parityti2(u64 val);
+> +int __weak __parityti2(u64 val)
+> +{
+> +	val ^= val >> 32;
+> +	val ^= val >> 16;
+> +	val ^= val >> 8;
+> +	val ^= val >> 4;
+> +	return (0x6996 >> (val & 0xf)) & 1;
+> +}
+> +EXPORT_SYMBOL(__parityti2);
 
-diff --git a/arch/arm64/boot/dts/qcom/qcm2290.dtsi b/arch/arm64/boot/dts/qcom/qcm2290.dtsi
-index 2c90047f7dd867580836284721c60ed5983f3f34..623046ba833b6da284ffa4e30e65ea4ae5fb77a2 100644
---- a/arch/arm64/boot/dts/qcom/qcm2290.dtsi
-+++ b/arch/arm64/boot/dts/qcom/qcm2290.dtsi
-@@ -18,6 +18,7 @@
- #include <dt-bindings/power/qcom-rpmpd.h>
- #include <dt-bindings/soc/qcom,apr.h>
- #include <dt-bindings/sound/qcom,q6asm.h>
-+#include <dt-bindings/sound/qcom,q6dsp-lpass-ports.h>
- 
- / {
- 	interrupt-parent = <&intc>;
-@@ -650,6 +651,46 @@ data-pins {
- 			};
- 		};
- 
-+		lpass_tlmm: pinctrl@a7c0000 {
-+			compatible = "qcom,qcm2290-lpass-lpi-pinctrl",
-+				     "qcom,sm6115-lpass-lpi-pinctrl";
-+			reg = <0x0 0x0a7c0000 0x0 0x20000>,
-+			      <0x0 0x0a950000 0x0 0x10000>;
-+
-+			clocks = <&q6afecc LPASS_HW_DCODEC_VOTE LPASS_CLK_ATTRIBUTE_COUPLE_NO>;
-+			clock-names = "audio";
-+
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio-ranges = <&lpass_tlmm 0 0 19>;
-+
-+			lpi_i2s2_active: lpi-i2s2-active-state {
-+				sck-pins {
-+					pins = "gpio10";
-+					function = "i2s2_clk";
-+					bias-disable;
-+					drive-strength = <8>;
-+					output-high;
-+				};
-+
-+				ws-pins {
-+					pins = "gpio11";
-+					function = "i2s2_ws";
-+					bias-disable;
-+					drive-strength = <8>;
-+					output-high;
-+				};
-+
-+				data-pins {
-+					pins = "gpio12";
-+					function = "i2s2_data";
-+					bias-disable;
-+					drive-strength = <8>;
-+					output-high;
-+				};
-+			};
-+		};
-+
- 		gcc: clock-controller@1400000 {
- 			compatible = "qcom,gcc-qcm2290";
- 			reg = <0x0 0x01400000 0x0 0x1f0000>;
+OK, it seems I wasn't clear enough on the previous round, so I'll try
+to be very straightforward now.
 
--- 
-2.47.2
+To begin with, the difference between __parityti2 and __paritydi2 
+doesn't exist. I'm seriously. I put them side by side, and there's
+no difference at all.
 
+Next, this all is clearly an overengineering. You bake all those weak,
+const and (ironically, missing) high-efficient arch implementations.
+But you show no evidence that:
+ - it improves on code generation,
+ - the drivers care about parity()'s performance, and
+ - show no perf tests at all.
+
+So you end up with +185/-155 LOCs.
+
+Those +30 lines add no new functionality. You copy-paste the same
+algorithm again and again in very core kernel files. This is a no-go
+for a nice consolidation series.
+
+In the previous round reviewers gave you quite a few nice suggestions.
+H. Peter Anvin suggested to switch the function to return a boolean, I
+suggested to make it a macro and even sent you a patch, Jiri and David
+also spent their time trying to help you, and became ignored.
+
+Nevertheless. NAK for the series. Whatever you end up, if it comes to
+v3, please make it simple, avoid code duplication and run checkpatch.
+
+Thanks,
+Yury
