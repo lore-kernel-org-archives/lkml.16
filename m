@@ -1,116 +1,80 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB4A41D5CC7;
-	Sun,  2 Mar 2025 17:16:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 445182BD04
+	for <linux-kernel@vger.kernel.org>; Sun,  2 Mar 2025 17:17:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740935764; cv=none; b=YM0PlRq8/dCsqPGabIK9ujvVDb9NkaRRBWdZaU4PtQYdxWpi6GjzLFbblf8QTZt1W/ZFHXQi3gw0ZczKtNusXcVcpx5aqyVLk75G13IL2a3j4lVWoaPkskFFllrk0jDmRQELfkOLTxFG1RlJxr8f8yt3PabU1ytfG5rEAUa58IM=
+	t=1740935881; cv=none; b=PltNg969tJVkfjeMofTnRIVMu8c+cnrjzmyX8aJunQZ3dMB0eUl5dindMC07P4UrINkvxZ038MjYu5JEmveeHDUwWNe6VlxfxoHVOZCfh3Q3M/LZerYc1cAxcEIm/fr0cEhe/ECmc/Y3o/pE3ELFp2CE0VbdgBKZF2gxlPGF8t8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740935764; c=relaxed/simple;
-	bh=C+5LcGfBUtvq89KxisTyEENM0n4q2gqsCs7v54Y82pI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BuDwoc7If6fvT77rSCpNZwtfBDJMm4ZzjDuXJq5qK4AdwTOTZVx43u3JX2tz064k9XR0CG+585p2cpy5Q9PY+gBNYhE85ms7tC8/ngK6PSk9q3D/FymZMXbKLA+3mM7AnQLG9noCZ4Ct6m+hbAsl94pEQ6d+MGqc3W1RGaZmAvM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HDj4WH9/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740935881; c=relaxed/simple;
+	bh=iVmWlrKU4nBtHa8hxKOuSe6SPI9KYuZKEtbsJnBTzLA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EZpBQ960XqtBNxKO/Uxmk9GcERNPUYtmwKbS8W5V1bHuRSKx+VeY/ljOia145HRI/wqJp2Ad/QQvpOaiDnrPkysctGrK6qA5ZG26XjaPTnf1uFBCU0Y1pU6/qk0dD1t+NRzOmKADKTWE5PP6Oy4NqP4FrJfesZcQu2iyzgOGd0k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=LzOvHwN6; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HDj4WH9/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 564B7C4CEE8;
-	Sun,  2 Mar 2025 17:16:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740935763;
-	bh=C+5LcGfBUtvq89KxisTyEENM0n4q2gqsCs7v54Y82pI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=HDj4WH9/fXb4a6FHY8+/WyoVpyhprrK1a8xum5NBI8MAsvoW7YOcnX5YVS3EltEux
-	 cBGPJMsmIFWQLZAgNBPaCFm/gSJdViEQ4BObczfPqv/ronOU2bYsT5bB1sztwCey96
-	 mBopFYdAqbE9bypiHA43xzR6upiqg6O0dihhB8NkfE6HU5aX3mj8bFbo3KAgCYkwBd
-	 3Od8IIPY4iQ7+Q1Sko8DKh2h+VvoRgGJnnShTFTBhpPME9I9IRS0TpPpR12/Yzbjzo
-	 1WtLekTirw4iDDrS8o7hbmvDfoRcqczewnCQEz28gWUTvJVnUaj170m1Ogzh39/NHa
-	 t5mg/sXRmXMSg==
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-5496301c6afso567680e87.0;
-        Sun, 02 Mar 2025 09:16:03 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWHSSkCIT0osJ8pOBRYUSZAiVapFMITvxBwbtEGr+xKAZxQNSbGE7R+p6YRaqXTaiPaVEL3V8VQ1IocPtss@vger.kernel.org, AJvYcCWK/Zi/lXPlHB2B6wxeg15gZXk6OrjCbUiYiCiG8HolAN79ARnnaBkaYzp07Ga4OSn1MNoAO82B61DI0So=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzqbdwEwAphDHFwOfzf9W2epI4WaWAvz8H2lFvbZxEE/HTd0I6v
-	HFPYbnbn1oRwuxG68AjEWHz1VPz5d83Lthu2fwDfvCzkRq99oB4h398Z2Rqs7sZgJGJVYN6NHly
-	o+tkZ7bie/nJrTJAY3SNCUBF6kXY=
-X-Google-Smtp-Source: AGHT+IE37MiTtp2DXxPPSPuVqZfd9k0kkjXkkvCGTVMafD7ZcM6Ah7S8qYxRs8jydGahzE5e9WltMc2yukg0OnBMWok=
-X-Received: by 2002:a05:6512:e8b:b0:546:1fd8:3876 with SMTP id
- 2adb3069b0e04-549432de15dmr5315785e87.14.1740935761962; Sun, 02 Mar 2025
- 09:16:01 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="LzOvHwN6"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=41Urw9pUS3IkmTIPuFqUDyIbxUtgIUEIRMkgs9tsTLw=; b=LzOvHwN66Ik5fv+w2t06injFiY
+	YnZ7FHFsu59lHmZLKCvLkcctp2IUR0KNjkAdFAkvTNZCPjf/c7IYZsKVIyum/p4cX1ILzZU5GuwZU
+	VXpiiAnLFveSWPBVTgDxYJHOFDXA0HmHI8FPU35tID0MBZQFz+U+tSmT0kJHCb2TOhxgqxshZ0vl5
+	CWrVkqWwloCR2ZstuziJXR4hpHrSely7AiMtoXLuWjEUxOLVZiO10d29xWzzKzzIT70LUGnPcQZqa
+	9Cwa9Uk8S7Cq/X84pbEfJ0i8Roq8/2HaVUI0Slg7NTYGoFG6jN4dbn7+KSQQgniAwoDqFcmAQpheC
+	JsTriIpQ==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:60310)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1tomwi-0006rb-2U;
+	Sun, 02 Mar 2025 17:17:44 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1tomwg-0002vQ-2a;
+	Sun, 02 Mar 2025 17:17:42 +0000
+Date: Sun, 2 Mar 2025 17:17:42 +0000
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: phil995511 <phil995511@proton.me>
+Cc: "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"arnd@arndb.de" <arnd@arndb.de>,
+	"tglx@linutronix.de" <tglx@linutronix.de>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"paulmck@kernel.org" <paulmck@kernel.org>
+Subject: Re: [GIT PULL] Generic entry for ARM
+Message-ID: <Z8SSthQ-gK686k8u@shell.armlinux.org.uk>
+References: <0oXU8PP2CHCw1Qblhw1cKOTt90K2CLbHo4BLw9LOs-J1klN1Y_N7IagulWZHR7bGhmxyPXlZTOUEqVZDtwcXj9j93_BxdrdnmW7qk3uIrU4=@proton.me>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250225100037.2709624-1-arnd@kernel.org>
-In-Reply-To: <20250225100037.2709624-1-arnd@kernel.org>
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Mon, 3 Mar 2025 02:15:25 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARsT2sop_uUgERvJ_EhbFj825MPPrqqZv64_13z19KeHQ@mail.gmail.com>
-X-Gm-Features: AQ5f1JpSchcyIguDDJsm_gNw4MryJBtW1epPJBL1qrMzD1bJvalXRCihjJfRFnA
-Message-ID: <CAK7LNARsT2sop_uUgERvJ_EhbFj825MPPrqqZv64_13z19KeHQ@mail.gmail.com>
-Subject: Re: [PATCH] [v3] kbuild: hdrcheck: fix cross build with clang
-To: Arnd Bergmann <arnd@kernel.org>
-Cc: Nathan Chancellor <nathan@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Nicolas Schier <nicolas@fjasle.eu>, 
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, Geert Uytterhoeven <geert+renesas@glider.be>, 
-	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	llvm@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0oXU8PP2CHCw1Qblhw1cKOTt90K2CLbHo4BLw9LOs-J1klN1Y_N7IagulWZHR7bGhmxyPXlZTOUEqVZDtwcXj9j93_BxdrdnmW7qk3uIrU4=@proton.me>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-On Tue, Feb 25, 2025 at 7:00=E2=80=AFPM Arnd Bergmann <arnd@kernel.org> wro=
-te:
->
-> From: Arnd Bergmann <arnd@arndb.de>
->
-> The headercheck tries to call clang with a mix of compiler arguments
-> that don't include the target architecture. When building e.g. x86
-> headers on arm64, this produces a warning like
->
->    clang: warning: unknown platform, assuming -mfloat-abi=3Dsoft
->
-> Add in the KBUILD_CPPFLAGS, which contain the target, in order to make it
-> build properly.
->
-> See also 1b71c2fb04e7 ("kbuild: userprogs: fix bitsize and target
-> detection on clang").
->
-> Reviewed-by: Nathan Chancellor <nathan@kernel.org>
-> Fixes: feb843a469fb ("kbuild: add $(CLANG_FLAGS) to KBUILD_CPPFLAGS")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
+On Sun, Mar 02, 2025 at 03:23:20PM +0000, phil995511 wrote:
+> It is a very bad idea to want to code the Linux kernel for ARM in C++ !!!
+> 
+> Our ARM CPUs on RPi and others are not powerful enough to use a Linux kernel written in C++ and therefore lose performance, while these ARM CPUs are already extremely low-performance !!!
+> 
+> Suggesting to code like this is to be in favor of planned obsolescence, of the scrapping of thousands of small machines ;-(
 
-Applied to linux-kbuild. Thanks.
+With all due respect, you have your knickers in a twist.
 
+This is not about C++, it's about plain old fashioned C, which has been
+the preferred kernel programming language for decades. I have no idea
+where you've got the idea that LinusW's commit has anything to do with
+C++.
 
-> v2: use same approach as the other patch.
-> v3: fix changelog text
-> ---
->  usr/include/Makefile | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/usr/include/Makefile b/usr/include/Makefile
-> index 58a9cbe4eba4..b9a2640b4bb7 100644
-> --- a/usr/include/Makefile
-> +++ b/usr/include/Makefile
-> @@ -10,7 +10,7 @@ UAPI_CFLAGS :=3D -std=3Dc90 -Wall -Werror=3Dimplicit-fu=
-nction-declaration
->
->  # In theory, we do not care -m32 or -m64 for header compile tests.
->  # It is here just because CONFIG_CC_CAN_LINK is tested with -m32 or -m64=
-.
-> -UAPI_CFLAGS +=3D $(filter -m32 -m64 --target=3D%, $(KBUILD_CFLAGS))
-> +UAPI_CFLAGS +=3D $(filter -m32 -m64 --target=3D%, $(KBUILD_CPPFLAGS) $(K=
-BUILD_CFLAGS))
->
->  # USERCFLAGS might contain sysroot location for CC.
->  UAPI_CFLAGS +=3D $(USERCFLAGS)
-> --
-> 2.39.5
->
-
-
---=20
-Best Regards
-Masahiro Yamada
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
