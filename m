@@ -1,196 +1,73 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D214C1E7C27
-	for <linux-kernel@vger.kernel.org>; Sun,  2 Mar 2025 14:21:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E99391519BE
+	for <linux-kernel@vger.kernel.org>; Sun,  2 Mar 2025 14:27:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740925303; cv=none; b=vCTbOGurl+btjC51BeXAsKw4Qgs/vXgTX/sh+CCP1fb1J7ImRGEDgEcwgmf3F/6I6a/tlAxi6ewjT14aA7jyA+/zdZoSSlBXe6MKcaLWOXI3J3d2iP4gK4t5QMHaSh3btcRGTcwa2DRMWBofIUPjPCOEwHAzRn6BLmzfMx4Vgnw=
+	t=1740925624; cv=none; b=imOKZLJI2sZyAOo2mdFHm+gbG2A6EGTdTaVZui6Q3sZ0UKxCxf6LRQaZuESAnzKnTCbK4Zkmqu+jR26eRCUw7n6GGbuqg9GuxKfkxhv2+9Zxyigv/Nd1wqW6XXmAV3H8oIN9K135xePjcRXR5BsXQMdz0jxjJGhtXUpBxujeKgM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740925303; c=relaxed/simple;
-	bh=rjKY1l/SEQEYfQRD5GQW4b/ZP8WwEI3BeQdcMqQ/5zY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Rknxk2GHeJmEqNYrnqDG/Kwk1kZLBsrLwVU/3e2MYgQx0EC+i7VscXl1HAtpr9lilWEzLXCpqaH+Ms8ccNKT2iMmSn9579L5bJ339trmZowM1nXwdgBOwqdi619POJ3qxsa4iFKIuf9DDwgsOlFI9gtR7Yi9F/dNCQ2ULLMBIdc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kILuXNbV; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1740925624; c=relaxed/simple;
+	bh=aKaIxUY0VRW52Ui8iC6HgHNpx18yvJM6J9k61Z/ZbQQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=o0Fq6EUu8OqhP1Xtg4bR6JAHnukBkK0h0RvaLJogJi/oZWeElMGvC8QcOQ9Tn1ejVBeThbquNW6hCNfy6/Zqu0OZpepGB6qXGzdXYG6sufRqnIvJfPhxi6b40SKiKFlL1ESF1HB7D1F6pxLsDN+aTeZElIDHBw8cf3yp3qiRSro=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=H8ymg5Q8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kILuXNbV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740925302; x=1772461302;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=rjKY1l/SEQEYfQRD5GQW4b/ZP8WwEI3BeQdcMqQ/5zY=;
-  b=kILuXNbVbAMi9EXdzbaD1SHyiNu688MmHA+t94CcjDJdult81xY2bzGa
-   cRyq0kGotRjWC5oUVB6SSQ3NKnQxoYL874JyZlxfSrEgZau1g5MpbdWTU
-   ryuZaLQ1VlJveuPIaZJVcigMT/lctaGThE7Pt5pgxzSChX35X5UjooSxo
-   EpbXj7b5fu1xR3ANpmF13I2+qgpVm9fgO7kqapAU+H400KywbM3lcZ1N3
-   VoYS5MgE0uBhpIoD1TMCjMwtolULHghKhbtF6OHmts+bs7w3/rrgoCDjp
-   GoJjVbw19QbNyDaSoXEz3puPPZHv7YZyDuBxU86Hl5i6FnteupW1w4hco
-   w==;
-X-CSE-ConnectionGUID: eZSrQzK/QCG0SjeAlaYs6g==
-X-CSE-MsgGUID: 53KHN1wjT7Clr0LdYF58hQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11361"; a="67176515"
-X-IronPort-AV: E=Sophos;i="6.13,327,1732608000"; 
-   d="scan'208";a="67176515"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Mar 2025 06:21:42 -0800
-X-CSE-ConnectionGUID: F0lrrH2LR3aSZOIBrkpqvQ==
-X-CSE-MsgGUID: MrjAYm3+RlKBPEaAyAr+3g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,327,1732608000"; 
-   d="scan'208";a="122737475"
-Received: from sannilnx-dsk.jer.intel.com ([10.12.231.107])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Mar 2025 06:21:35 -0800
-From: Alexander Usyskin <alexander.usyskin@intel.com>
-To: Miquel Raynal <miquel.raynal@bootlin.com>,
-	Richard Weinberger <richard@nod.at>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Lucas De Marchi <lucas.demarchi@intel.com>,
-	=?UTF-8?q?Thomas=20Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Jani Nikula <jani.nikula@linux.intel.com>,
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-	Tvrtko Ursulin <tursulin@ursulin.net>,
-	Karthik Poosa <karthik.poosa@intel.com>
-Cc: Reuven Abliyev <reuven.abliyev@intel.com>,
-	Oren Weil <oren.jer.weil@intel.com>,
-	linux-mtd@lists.infradead.org,
-	dri-devel@lists.freedesktop.org,
-	intel-gfx@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	Alexander Usyskin <alexander.usyskin@intel.com>
-Subject: [PATCH v6 11/11] drm/xe/nvm: add support for access mode
-Date: Sun,  2 Mar 2025 16:09:21 +0200
-Message-ID: <20250302140921.504304-12-alexander.usyskin@intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250302140921.504304-1-alexander.usyskin@intel.com>
-References: <20250302140921.504304-1-alexander.usyskin@intel.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="H8ymg5Q8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20AF3C4CED6;
+	Sun,  2 Mar 2025 14:27:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1740925623;
+	bh=aKaIxUY0VRW52Ui8iC6HgHNpx18yvJM6J9k61Z/ZbQQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=H8ymg5Q8bIdFt93m2U5HK15vHs5s9VHwJLvssNBmSdTgto4kT8YyHKGg5EfGXcC20
+	 O5lYoo62RjrJMbBbD7UJrfoqoV6m2+6r7KlF1Z9YU2ScjF+mtlB7YPDAJuQXqr680c
+	 nump01TzP46udHSDNQMEwEbRWRYsh6thp384BZ54=
+Date: Sun, 2 Mar 2025 15:25:50 +0100
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Juergen Gross <jgross@suse.com>
+Cc: cve@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: CVE-2025-21818: x86/xen: fix xen_hypercall_hvm() to not clobber
+ %rbx
+Message-ID: <2025030236-item-coral-d4b3@gregkh>
+References: <2025022710-CVE-2025-21818-27ee@gregkh>
+ <f78c7925-8057-4503-93ec-c50386a63862@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f78c7925-8057-4503-93ec-c50386a63862@suse.com>
 
-Check NVM access mode from GSC FW status registers
-and overwrite access status read from SPI descriptor, if needed.
+On Fri, Feb 28, 2025 at 08:28:48AM +0100, Juergen Gross wrote:
+> On 27.02.25 21:03, Greg Kroah-Hartman wrote:
+> > Description
+> > ===========
+> > 
+> > In the Linux kernel, the following vulnerability has been resolved:
+> > 
+> > x86/xen: fix xen_hypercall_hvm() to not clobber %rbx
+> > 
+> > xen_hypercall_hvm(), which is used when running as a Xen PVH guest at
+> > most only once during early boot, is clobbering %rbx. Depending on
+> > whether the caller relies on %rbx to be preserved across the call or
+> > not, this clobbering might result in an early crash of the system.
+> > 
+> > This can be avoided by using an already saved register instead of %rbx.
+> > 
+> > The Linux kernel CVE team has assigned CVE-2025-21818 to this issue.
+> 
+> Please revoke this CVE.
+> 
+> There is no way an unprivileged user can trigger this issue at will.
+> The issue is guest local and will either happen very early at boot or
+> it won't happen at all.
+> 
+> So no security issue.
 
-Reviewed-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
-Signed-off-by: Alexander Usyskin <alexander.usyskin@intel.com>
----
- drivers/gpu/drm/xe/regs/xe_gsc_regs.h |  4 +++
- drivers/gpu/drm/xe/xe_heci_gsc.c      |  5 +---
- drivers/gpu/drm/xe/xe_nvm.c           | 37 ++++++++++++++++++++++++++-
- 3 files changed, 41 insertions(+), 5 deletions(-)
+Now rejected, thanks for the review.
 
-diff --git a/drivers/gpu/drm/xe/regs/xe_gsc_regs.h b/drivers/gpu/drm/xe/regs/xe_gsc_regs.h
-index 7702364b65f1..9b66cc972a63 100644
---- a/drivers/gpu/drm/xe/regs/xe_gsc_regs.h
-+++ b/drivers/gpu/drm/xe/regs/xe_gsc_regs.h
-@@ -16,6 +16,10 @@
- #define MTL_GSC_HECI1_BASE	0x00116000
- #define MTL_GSC_HECI2_BASE	0x00117000
- 
-+#define DG1_GSC_HECI2_BASE	0x00259000
-+#define PVC_GSC_HECI2_BASE	0x00285000
-+#define DG2_GSC_HECI2_BASE	0x00374000
-+
- #define HECI_H_CSR(base)	XE_REG((base) + 0x4)
- #define   HECI_H_CSR_IE		REG_BIT(0)
- #define   HECI_H_CSR_IS		REG_BIT(1)
-diff --git a/drivers/gpu/drm/xe/xe_heci_gsc.c b/drivers/gpu/drm/xe/xe_heci_gsc.c
-index 27d11e06a82b..6d7b62724126 100644
---- a/drivers/gpu/drm/xe/xe_heci_gsc.c
-+++ b/drivers/gpu/drm/xe/xe_heci_gsc.c
-@@ -11,15 +11,12 @@
- #include "xe_device_types.h"
- #include "xe_drv.h"
- #include "xe_heci_gsc.h"
-+#include "regs/xe_gsc_regs.h"
- #include "xe_platform_types.h"
- #include "xe_survivability_mode.h"
- 
- #define GSC_BAR_LENGTH  0x00000FFC
- 
--#define DG1_GSC_HECI2_BASE			0x259000
--#define PVC_GSC_HECI2_BASE			0x285000
--#define DG2_GSC_HECI2_BASE			0x374000
--
- static void heci_gsc_irq_mask(struct irq_data *d)
- {
- 	/* generic irq handling */
-diff --git a/drivers/gpu/drm/xe/xe_nvm.c b/drivers/gpu/drm/xe/xe_nvm.c
-index 26de7d4472c8..8aec20bc629a 100644
---- a/drivers/gpu/drm/xe/xe_nvm.c
-+++ b/drivers/gpu/drm/xe/xe_nvm.c
-@@ -6,8 +6,11 @@
- #include <linux/intel_dg_nvm_aux.h>
- #include <linux/pci.h>
- 
-+#include "xe_device.h"
- #include "xe_device_types.h"
-+#include "xe_mmio.h"
- #include "xe_nvm.h"
-+#include "regs/xe_gsc_regs.h"
- #include "xe_sriov.h"
- 
- #define GEN12_GUNIT_NVM_BASE 0x00102040
-@@ -25,6 +28,38 @@ static void xe_nvm_release_dev(struct device *dev)
- {
- }
- 
-+static bool xe_nvm_writable_override(struct xe_device *xe)
-+{
-+	struct xe_gt *gt = xe_root_mmio_gt(xe);
-+	resource_size_t base;
-+	bool writable_override;
-+
-+	switch (xe->info.platform) {
-+	case XE_BATTLEMAGE:
-+		base = DG2_GSC_HECI2_BASE;
-+		break;
-+	case XE_PVC:
-+		base = PVC_GSC_HECI2_BASE;
-+		break;
-+	case XE_DG2:
-+		base = DG2_GSC_HECI2_BASE;
-+		break;
-+	case XE_DG1:
-+		base = DG1_GSC_HECI2_BASE;
-+		break;
-+	default:
-+		drm_err(&xe->drm, "Unknown platform\n");
-+		return true;
-+	}
-+
-+	writable_override =
-+		!(xe_mmio_read32(&gt->mmio, HECI_FWSTS2(base)) &
-+		  HECI_FW_STATUS_2_NVM_ACCESS_MODE);
-+	if (writable_override)
-+		drm_info(&xe->drm, "NVM access overridden by jumper\n");
-+	return writable_override;
-+}
-+
- void xe_nvm_init(struct xe_device *xe)
- {
- 	struct pci_dev *pdev = to_pci_dev(xe->drm.dev);
-@@ -49,7 +84,7 @@ void xe_nvm_init(struct xe_device *xe)
- 
- 	nvm = xe->nvm;
- 
--	nvm->writeable_override = false;
-+	nvm->writable_override = xe_nvm_writable_override(xe);
- 	nvm->bar.parent = &pdev->resource[0];
- 	nvm->bar.start = GEN12_GUNIT_NVM_BASE + pdev->resource[0].start;
- 	nvm->bar.end = nvm->bar.start + GEN12_GUNIT_NVM_SIZE - 1;
--- 
-2.43.0
-
+greg k-h
