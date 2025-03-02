@@ -1,154 +1,160 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C97971E9B1A;
-	Sun,  2 Mar 2025 16:14:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8212AAD39;
+	Sun,  2 Mar 2025 16:16:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740932059; cv=none; b=SG3pOfTgIIO9OygqGeRDJ9aEAIKFGfUgukEsm/BCSSk+Anb4aGBbENuyCwi/o6v0qsi3doPuduqnfHkGCaxPo98gEfnUZminKQmsSPtn0TruOlu2tcJ8XSE5BJlygBmiGUb7J/I2ibyoqgRmtATdi31S2BM0/iE+jddevNp5HOc=
+	t=1740932218; cv=none; b=D/QrnF/4ndMcl6zDZkFsBJWrA0AyEQhT2ueyHctXdMKnWF4lHn6nif1fcORhGj2cDd8J4ZYCpaCUM1sBxazlNYl8UeZT+2v13hP14apJrv2JkOUP3Sb2+wDGV4NRuVDnlR/9ALxCHyIRGvpFPk3JK6cbExzYPQJ+1ZCsDOVNe24=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740932059; c=relaxed/simple;
-	bh=oxdHfYnR3WT0kdh9JqWocNJzCnrGPK7WPN31unxi4Bc=;
+	s=arc-20240116; t=1740932218; c=relaxed/simple;
+	bh=24etwHDO43cgkA43Fvv7V97Li/I7jEmBfGtyam7R4FA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RSCFA+2+emxMCzp6hBxLWAw6PNU8knECVcYXrtxoAau15wMY71lLkLcsHwWRgBVU/lMrfnZwCZWIi/rC9VOlvlEBJt0K/Cnp31+mwKsX0c7u5E0odFj+Ob945Cgv6fDuiEkIpgEaGItgaBT3yB/yYkecF+XC0ualDRwMiJb7Gkw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=G80g2gHm; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	 Content-Type:Content-Disposition:In-Reply-To; b=kqto+fPvqbpI91dZdVOB09lAqDGxqYX+0gGKFPTwLJwoIgo5AJJk/IeK9Sqz3qQ4idAv+h4Epyo5O3bTu2MCU/abKdA+WXfkr0dG2ZKYhA5fXSyjFVCpegDIqJmJLrsOJzNLS1i1k2K9K/yOtGfClSXI3Tu80H3799ssNP9Ulbw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=K1qDYU19; arc=none smtp.client-ip=178.21.23.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="G80g2gHm"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Transfer-Encoding:Content-Disposition:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:From:
-	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Content-Disposition:
-	In-Reply-To:References; bh=+EEHHNKC7qnukuM0E3MdN9IeORIinbgYYPYrhGC8Q5A=; b=G8
-	0g2gHmzJXHxsPgc/TCzQPVOUWge4g3qPw7PvPwmyqNelMNt9FhOURO2BwwBibYY6Wavd9NuOkrtBp
-	DtG4YrCNj8AHmn+aif6O+vE5o6eyJkMuM70UrN/dKSOr3eyearHbFhYPf+4ivFHcmmeybainm4KLH
-	lCgr3nj7jawHEkQ=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1tolwp-001Y9j-WA; Sun, 02 Mar 2025 17:13:48 +0100
-Date: Sun, 2 Mar 2025 17:13:47 +0100
-From: Andrew Lunn <andrew@lunn.ch>
-To: "Lifshits, Vitaly" <vitaly.lifshits@intel.com>
-Cc: Mark Pearson <mpearson-lenovo@squebb.ca>, anthony.l.nguyen@intel.com,
-	przemyslaw.kitszel@intel.com, andrew+netdev@lunn.ch,
-	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-	pabeni@redhat.com, intel-wired-lan@lists.osuosl.org,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [Intel-wired-lan] [PATCH] e1000e: Link flap workaround option
- for false IRP events
-Message-ID: <698700ab-fd36-4a09-8457-a356d92f00ea@lunn.ch>
-References: <mpearson-lenovo@squebb.ca>
- <20250226194422.1030419-1-mpearson-lenovo@squebb.ca>
- <36ae9886-8696-4f8a-a1e4-b93a9bd47b2f@lunn.ch>
- <50d86329-98b1-4579-9cf1-d974cf7a748d@app.fastmail.com>
- <1a4ed373-9d27-4f4b-9e75-9434b4f5cad9@lunn.ch>
- <9f460418-99c6-49f9-ac2c-7a957f781e17@app.fastmail.com>
- <4b5b0f52-7ed8-7eef-2467-fa59ca5de937@intel.com>
+	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="K1qDYU19"
+Received: from mail01.disroot.lan (localhost [127.0.0.1])
+	by disroot.org (Postfix) with ESMTP id B59DD25286;
+	Sun,  2 Mar 2025 17:16:54 +0100 (CET)
+X-Virus-Scanned: SPAM Filter at disroot.org
+Received: from layka.disroot.org ([127.0.0.1])
+ by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id K8mzO5PnjFYc; Sun,  2 Mar 2025 17:16:53 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
+	t=1740932213; bh=24etwHDO43cgkA43Fvv7V97Li/I7jEmBfGtyam7R4FA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=K1qDYU19UIJxtbJclJuBESKTf/+cG2z3j4fCzAWLSJ9qrzXbEly5vnmFqOixyoZfL
+	 0YPsoEXi3eeNwH4/i/1i1RNlVaQMXfmRDqO/i1dBqMQacCT6F8bDcT7Hc0vun21Ny2
+	 N+XPzWaSuRmyvo1zfibKrIh+YWmsRFm2vMMNp4rTXSqqMv352pA7lnEo+6bkCIb1l1
+	 AW7Cb3a5kG7vtkED73cKZ2x5E9CxGarKuG77IBb1zvY1z447ghKpySnuSaWUwo52ev
+	 yQMAJ7Rj4YQyrAao7Beif4DJi0VdjqFuzXaGZci0YY91a6k8HdZuX0FGztJptwfRhE
+	 Bxtu6nu9FtxqA==
+Date: Sun, 2 Mar 2025 16:16:36 +0000
+From: Yao Zi <ziyao@disroot.org>
+To: Jonas Karlman <jonas@kwiboo.se>, FUKAUMI Naoki <naoki@radxa.com>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Frank Wang <frank.wang@rock-chips.com>,
+	Shresth Prasad <shresthprasad7@gmail.com>,
+	Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
+	Detlev Casanova <detlev.casanova@collabora.com>,
+	linux-mmc@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-clk@vger.kernel.org
+Subject: Re: [PATCH 8/8] arm64: dts: rockchip: Enable SD-card interface on
+ Radxa E20C
+Message-ID: <Z8SEZOoQWiS4jl7n@pie.lan>
+References: <20250301104250.36295-1-ziyao@disroot.org>
+ <20250301104835.36439-1-ziyao@disroot.org>
+ <0aefd292-7980-434d-9c18-4ab9f6a0b40e@kwiboo.se>
+ <Z8MklJfFz2EA6oNS@pie.lan>
+ <d6928adc-1df2-494f-a3d3-7b028c220547@kwiboo.se>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <4b5b0f52-7ed8-7eef-2467-fa59ca5de937@intel.com>
+In-Reply-To: <d6928adc-1df2-494f-a3d3-7b028c220547@kwiboo.se>
 
-On Sun, Mar 02, 2025 at 03:09:35PM +0200, Lifshits, Vitaly wrote:
+On Sun, Mar 02, 2025 at 12:56:42PM +0100, Jonas Karlman wrote:
+> Hi Yao Zi,
 > 
-> 
-> Hi Mark,
-> 
-> > Hi Andrew
+> On 2025-03-01 16:15, Yao Zi wrote:
+> > On Sat, Mar 01, 2025 at 02:01:05PM +0100, Jonas Karlman wrote:
+> >> Hi,
+> >>
+> >> On 2025-03-01 11:48, Yao Zi wrote:
+> >>> SD-card is available on Radxa E20C board.
+> >>>
+> >>> Signed-off-by: Yao Zi <ziyao@disroot.org>
+> >>> ---
+> >>>  arch/arm64/boot/dts/rockchip/rk3528-radxa-e20c.dts | 14 ++++++++++++++
+> >>>  1 file changed, 14 insertions(+)
+> >>>
+> >>> diff --git a/arch/arm64/boot/dts/rockchip/rk3528-radxa-e20c.dts b/arch/arm64/boot/dts/rockchip/rk3528-radxa-e20c.dts
+> >>> index d2cdb63d4a9d..473065aa4228 100644
+> >>> --- a/arch/arm64/boot/dts/rockchip/rk3528-radxa-e20c.dts
+> >>> +++ b/arch/arm64/boot/dts/rockchip/rk3528-radxa-e20c.dts
+> >>> @@ -12,6 +12,10 @@ / {
+> >>>  	model = "Radxa E20C";
+> >>>  	compatible = "radxa,e20c", "rockchip,rk3528";
+> >>>  
+> >>> +	aliases {
+> >>> +		mmc0 = &sdmmc;
+> >>
+> >> Suggest using mmc1 for sd-card because the e20c typically have onboard
+> >> emmc, compared to removable sd-card.
 > > 
-> > On Thu, Feb 27, 2025, at 11:07 AM, Andrew Lunn wrote:
-> > > > > > +			e1e_rphy(hw, PHY_REG(772, 26), &phy_data);
-> > > > > 
-> > > > > Please add some #define for these magic numbers, so we have some idea
-> > > > > what PHY register you are actually reading. That in itself might help
-> > > > > explain how the workaround actually works.
-> > > > > 
-> > > > 
-> > > > I don't know what this register does I'm afraid - that's Intel knowledge and has not been shared.
-> > > 
-> > > What PHY is it? Often it is just a COTS PHY, and the datasheet might
-> > > be available.
-> > > 
-> > > Given your setup description, pause seems like the obvious thing to
-> > > check. When trying to debug this, did you look at pause settings?
-> > > Knowing what this register is might also point towards pause, or
-> > > something totally different.
-> > > 
-> > > 	Andrew
+> > My board doesn't have an eMMC: it's optional as well, but all variants
+> > of Radxa E20C come with an SD-card interface. The vendor devicetree sets
+> > sdmmc as mmc0 as well[1].
+> 
+> This is strange as Radxa typically want to align with mmc0=emmc and
+> mmc1=sd-card, as seen in [3] and [4].
+> 
+>   Align with other Radxa products.
+>   - mmc0 is eMMC
+>   - mmc1 is microSD
+> 
+> Also mainline U-Boot for Rockchip SoCs typically always treat mmc0 as
+> emmc and mmc1 as sd-card, and for most SoCs it will even override the
+> board aliases to have some predictability across boards.
+> 
 > > 
-> > For the PHY - do you know a way of determining this easily? I can reach out to the platform team but that will take some time. I'm not seeing anything in the kernel logs, but if there's a recommended way of confirming that would be appreciated.
+> > I won't insist on it and am willing to take the change if you still
+> > consider mmc0 is better.
 > 
-> The PHY is I219 PHY.
-> The datasheet is indeed accessible to the public:
-> https://cdrdv2-public.intel.com/612523/ethernet-connection-i219-datasheet.pdf
+> Yes, my position is that we should use following:
 
-Thanks for the link.
+Ack. I got your point but there's a typo (s/mmc0/mmc1) in my reply.
 
-So it is reading page 772, register 26. Page 772 is all about LPI. So
-we can have a #define for that. Register 26 is Memories Power. So we
-can also have an #define for that.
-
-However, that does not really help explain how this helps prevent an
-interrupt. I assume playing with EEE settings was also played
-with. Not that is register appears to have anything to do with EEE!
-
-> Reading this register was suggested for debug purposes to understand if
-> there is some misconfiguration. We did not find any misconfiguration.
-> The issue as we discovered was a link status change interrupt caused the
-> CSME to reset the adapter causing the link flap.
+>   mmc0 = &sdhci;
+>   mmc1 = &sdmmc;
 > 
-> We were unable to determine what causes the link status change interrupt in
-> the first place. As stated in the comment, it was only ever observed on
-> Lenovo P5/P7systems and we couldn't ever reproduce on other systems. The
-> reproduction in our lab was on a P5 system as well.
+> I will send out a short sdhci series based on top of v2 of this series.
+> Driver changes was not needed to get basic sdhci working on RK3528 and
+> is only required to get HS400 modes working.
 > 
+> [3] https://lore.kernel.org/r/20240620224435.2752-1-naoki@radxa.com
+> [4] https://lore.kernel.org/r/20240619050047.1217-2-naoki@radxa.com
 > 
-> Regarding the suggested workaround, there isn’t a clear understanding why it
-> works. We suspect that reading a PHY register is probably prevents the CSME
-> from resetting the PHY when it handles the LSC interrupt it gets. However,
-> it can also be a matter of slight timing variations.
+> > 
+> >>> +	};
+> >>> +
+> >>>  	chosen {
+> >>>  		stdout-path = "serial0:1500000n8";
+> >>>  	};
+> >>> @@ -20,3 +24,13 @@ chosen {
+> >>>  &uart0 {
+> >>>  	status = "okay";
+> >>>  };
+> >>> +
+> >>> +&sdmmc {
+> 
+> This node should be placed above &uart0 to be in alphabetical order.
+> 
 
-I don't follow what you are saying here. As far as i can see, the
-interrupt handler will triggers a read of the BMCR to determine the
-link status. It should not matter if there is a spurious interrupt,
-the BMCR should report the truth. So does BMCR actually indicate the
-link did go down? I also see there is the usual misunderstanding with
-how BMCR is latching. It should not be read twice, processed once, it
-should be processed each time, otherwise you miss quick link down/up
-events.
+The original patch keeps the order of nodes in the SoC devicetree
+(sorted by MMIO address), but alphabetical order seems more common. Will
+fix in v2, thanks.
 
-> We communicated that this solution is not likely to be accepted to the
-> kernel as is, and the initial responses on the mailing list demonstrate the
-> pushback.
-
-What it has done is start a discussion towards an acceptable
-solution. Which is a good thing. But at the moment, the discussion
-does not have sufficient details.
-
-Please could somebody describe the chain of events which results in
-the link down, and subsequent link up. Is the interrupt spurious, or
-does BMCR really indicate the link went down and up again?
-
-> On a different topic, I suggest removing the part of the comment below:
-> * Intel unable to determine root cause.
-> The issue went through joint debug by Intel and Lenovo, and no obvious spec
-> violations by either party were found. There doesn’t seem to be value in
-> including this information in the comments of upstream code.
-
-I partially agree. Assuming the root cause is not found, and a
-workaround is used, i expect a commit message with a detailed
-description of the chain of events which results in the link
-flap. Then a statement that the root cause is unknown, and lastly the
-commit message should say the introduced change, for unknown reasons,
-solves the issue, and is considered safe because.... Ideally the
-workaround should be safe for everybody, and can be just enabled.
-
-	Andrew
+> >>> +	bus-width = <4>;
+> >>> +	cap-mmc-highspeed;
+> >>> +	cap-sd-highspeed;
+> >>> +	disable-wp;
+> >>> +	rockchip,default-sample-phase = <90>;
+> >>> +	sd-uhs-sdr104;
+ 
+Thanks,
+Yao Zi
