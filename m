@@ -1,120 +1,71 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BE081E0B9C;
-	Sun,  2 Mar 2025 14:07:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 509931E0B9C
+	for <linux-kernel@vger.kernel.org>; Sun,  2 Mar 2025 14:12:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740924476; cv=none; b=ZdAu0CKyM6j6pgWfbcYTIDhcwwJsz1X4tcWgmuXmcpZKrLwmwwSTljS7tfXU+i1Dnu51a9yx2wOm3CIvwZHTMp8oeAanQQiM7gSI8BOszTrKwXO4/HapIKbFY48HcNOxQ+LBg+wWDwR/s2mKlGWvmoRlgt52k9JO9X30qGgS67U=
+	t=1740924724; cv=none; b=lwPcPNUgLODnb7jTO5V3dkTtdEee7nyYHrZ1NKrTWG0G3uSD/Nb9aLhZFltLwDuvaq5vuJf2NI8t20TEEPnLCfA/8oXKp8r13bLm1M9fk6gkpiEfppk9YAIy79jTiaq1QN1S3xJ6hF5VSVFJ7lKwToVHQ+zuWPKs3ahCZrI01Uk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740924476; c=relaxed/simple;
-	bh=xRi/VtBmjy7VGAxEHebrRxUL6EARF7T0KosgVwz4ubU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gd01dWlQJTrKStWT0Hg3oey+pky5BaEjgQukDGNBMt4jYFWPUtXKff5EnKVNKpzc44li4fid1Y7YnAWlMOhP8CLamvuFOe/XAv8mqidS50vHzaV/VUNqnd/5QvFzUOnhE/MmKq6BZZdfxamYHR15Rrsci7rahNdrsg0MfvHCwds=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=YEiDu79Q; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="YEiDu79Q"
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 0F4712D5;
-	Sun,  2 Mar 2025 15:06:21 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1740924382;
-	bh=xRi/VtBmjy7VGAxEHebrRxUL6EARF7T0KosgVwz4ubU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YEiDu79Q0f12zm1UxwsJP8JTuUfg4hi9BHPxUZo5DuGlSHny4RwXsLcXwhwoZy9ad
-	 u8iKNNIzzxrtCfETVcPGbXhcY1euvKj+RnCiRyVCnsCIkpKIBZoKa79ekk7sJ9eDi4
-	 GQOFhnPrpHH6ulg8tVjN9htAgY/BwFYFWYJfpF48=
-Date: Sun, 2 Mar 2025 16:07:34 +0200
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Jacopo Mondi <jacopo.mondi+renesas@ideasonboard.com>
-Cc: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] media: renesas: vsp1: Add support for VSPX
-Message-ID: <20250302140734.GA27177@pendragon.ideasonboard.com>
-References: <20241220-v4-vspx-id-v2-1-5cf05c7352df@ideasonboard.com>
+	s=arc-20240116; t=1740924724; c=relaxed/simple;
+	bh=LQGhS1IgVoLtLPDyLsR2GwAILnmH2G7ltniJ9g+FUQU=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=s+WXRbsPphoiU8b/WQlnrOF7jVMOr/x5eK7lAGMxA9Qw1rPAX6g94LmwGOL9IrTO0lLO0cvPatA+ZdorchrytbfA7OaNJ4b4yRJLlrNokkfNs4G050vqDaV/yTTgBGzn8X0k6ajqiYWlzs8uLUSXshcYVoWRIqIucZ6qV2jajCI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-855959aa39dso785628139f.2
+        for <linux-kernel@vger.kernel.org>; Sun, 02 Mar 2025 06:12:03 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740924722; x=1741529522;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=bf5gfceYpsp7FbCj88SSV7/XG491g4ThSK9w2xPLEZQ=;
+        b=YlfhDhxgRNSeQPXMqRmoZFrQnJ/6Z2edJjJl+LYb5inixM9A41YavWYCCPjae09Xt5
+         BzYTF1NlszVfGZRCkJISTiNWfywKhvlBOhCvn3tO2NZyYnEwF5SLC/bA4RNbv9OSRlye
+         Qnl9xDnYje3aWzaoJ45SF1Eg1jjTxmyw/zAK1VKsNveo1iMmzsEFteXh/Rya/FeoCQ5t
+         IfMfGW4SqPZHmKNhvmG5orSVvWD8NEwxE9Bj4CNgFGCxQ94rYfkO1RMmade7ZrH3ldFG
+         XX35rddz32/jvRur3BJlRs0aFPrM6yx9qB9Q89c8Bi7GwObnLyFyUkNjLwTj9qE/sBIO
+         1Tcg==
+X-Gm-Message-State: AOJu0YwobTuFHx+SvEn4cBsfHy0TTYI4GRaN4IFb4W7JXzR5x92HLg4O
+	T/W6vHX1sSb9yKdzWFfpRw1gU8c24EkjoO0ZjQs14x3kRg7gfkWGvM4DN3jBQYfLkMmBbHHfshP
+	557i/BmT64vG1nf5yxFE3xkQxdtpP3l1x6+NmnixnRKpDsuY68eTSA8s=
+X-Google-Smtp-Source: AGHT+IGv5D+pQx7DUBece7R3Rt8CDHb4Kr1ltoCRce4hKVYN49jk6JQJy6FWVVzuTpTJWvkPpqQsazX1fdOPghLXCKXEGdX8nHys
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20241220-v4-vspx-id-v2-1-5cf05c7352df@ideasonboard.com>
+X-Received: by 2002:a05:6e02:19ca:b0:3d3:e3fc:d5e1 with SMTP id
+ e9e14a558f8ab-3d3e6e42248mr106175205ab.1.1740924722432; Sun, 02 Mar 2025
+ 06:12:02 -0800 (PST)
+Date: Sun, 02 Mar 2025 06:12:02 -0800
+In-Reply-To: <20250302134342.1598192-1-n.zhandarovich@fintech.ru>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67c46732.050a0220.1dee4d.0038.GAE@google.com>
+Subject: Re: [syzbot] [media?] WARNING in call_s_stream
+From: syzbot <syzbot+5bcd7c809d365e14c4df@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, n.zhandarovich@fintech.ru, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Jacopo,
+Hello,
 
-On Fri, Dec 20, 2024 at 10:22:01AM +0100, Jacopo Mondi wrote:
-> Add support for VSPX to the vsp1 driver.
-> 
-> VSPX is an instance of Renesas VSP2 IP found on R-Car gen4 SoCs
-> that performs external memory access on behalf of the ISP.
-> 
-> Reviewed-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-> Signed-off-by: Jacopo Mondi <jacopo.mondi+renesas@ideasonboard.com>
-> ---
-> Add an vsp1_device_info entry for Gen4 VSPX.
-> 
-> VSPX will likely need custom features, hence do no set any feature
-> for the time being to prepare to expand later on.
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
-Now that you've posted "[PATCH v2 0/6] media: renesas: vsp1: Add support
-for IIF", this patch should be rebased on top, and set the VSP1_HAS_IIF
-feature. You can include it in v3 of the IIF support series.
+Reported-by: syzbot+5bcd7c809d365e14c4df@syzkaller.appspotmail.com
+Tested-by: syzbot+5bcd7c809d365e14c4df@syzkaller.appspotmail.com
 
-> ---
-> Changes in v2:
-> - Changed the patch authorship to my +renesas address
-> - Collect tags
-> - Link to v1: https://lore.kernel.org/r/20241219-v4-vspx-id-v1-1-e45225b02bf3@ideasonboard.com
-> ---
->  drivers/media/platform/renesas/vsp1/vsp1_drv.c  | 10 ++++++++++
->  drivers/media/platform/renesas/vsp1/vsp1_regs.h |  1 +
->  2 files changed, 11 insertions(+)
-> 
-> diff --git a/drivers/media/platform/renesas/vsp1/vsp1_drv.c b/drivers/media/platform/renesas/vsp1/vsp1_drv.c
-> index 9fc6bf624a520ae38e9c5f30dfa4dfa412eec38e..4dfc5e1640264f23772964f2b48c66d76599cb70 100644
-> --- a/drivers/media/platform/renesas/vsp1/vsp1_drv.c
-> +++ b/drivers/media/platform/renesas/vsp1/vsp1_drv.c
-> @@ -835,6 +835,16 @@ static const struct vsp1_device_info vsp1_device_infos[] = {
->  		.uif_count = 2,
->  		.wpf_count = 1,
->  		.num_bru_inputs = 5,
-> +	}, {
-> +		.version = VI6_IP_VERSION_MODEL_VSPX_GEN4,
-> +		.model = "VSP2-X",
-> +		.gen = 4,
-> +		.features = 0,
-> +		.lif_count = 0,
-> +		.rpf_count = 2,
-> +		.uif_count = 0,
-> +		.wpf_count = 0,
-> +		.num_bru_inputs = 2,
->  	},
->  };
->  
-> diff --git a/drivers/media/platform/renesas/vsp1/vsp1_regs.h b/drivers/media/platform/renesas/vsp1/vsp1_regs.h
-> index 7eca82e0ba7ec5e02a5f3b9a30ccdcb48db39ed2..75e064429f4e231ecd2e291a10c09931e8096a97 100644
-> --- a/drivers/media/platform/renesas/vsp1/vsp1_regs.h
-> +++ b/drivers/media/platform/renesas/vsp1/vsp1_regs.h
-> @@ -791,6 +791,7 @@
->  #define VI6_IP_VERSION_MODEL_VSPDL_GEN3	(0x19 << 8)
->  #define VI6_IP_VERSION_MODEL_VSPBS_GEN3	(0x1a << 8)
->  #define VI6_IP_VERSION_MODEL_VSPD_GEN4	(0x1c << 8)
-> +#define VI6_IP_VERSION_MODEL_VSPX_GEN4	(0x1d << 8)
->  /* RZ/G2L SoCs have no version register, So use 0x80 as the model version */
->  #define VI6_IP_VERSION_MODEL_VSPD_RZG2L	(0x80 << 8)
->  
-> 
-> ---
-> base-commit: 50d451b19cc58cf374160e30cbf72a5ed5b1b129
-> change-id: 20241219-v4-vspx-id-1dd2bb4aedfd
+Tested on:
 
--- 
-Regards,
+commit:         1973160c Merge tag 'gpio-fixes-for-v6.14-rc5' of git:/..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=15cc68b7980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=aad00f970c774056
+dashboard link: https://syzkaller.appspot.com/bug?extid=5bcd7c809d365e14c4df
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=16bfe864580000
 
-Laurent Pinchart
+Note: testing is done by a robot and is best-effort only.
