@@ -1,102 +1,90 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CC81222ACE7
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 18:56:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4B531E285A;
+	Mon,  3 Mar 2025 18:57:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741028218; cv=none; b=Y8u/XubMiCFbC0dkEF0RklovUIe9ahihizeY5iYI6KIpu5+hvxtfIjLrliQYZhXILWQ71WutwTUtUREC/jNXN17FJxSlaV//kbBJYJvAPiPfje+4z531XuoUS3U6BcY29syoq0DhYRn8jomSbT+sOnCSCLAlzyk1l505MtIwGs8=
+	t=1741028274; cv=none; b=ReCbvYvApq4rdjoNwvQM83xBcYH078o/9U+4kMLsMJjWqzUje7R4YZra7j/KaaJjHedlSBam47SkUv/7BEiwqfj9Ec/0PZMPdqil5fsO+jbePwqnM0H8dN62pc0JuJ3yCGGsH+sBbRulLyuixmpDN5WSaENq2NpKpbvXALlC1Io=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741028218; c=relaxed/simple;
-	bh=sEMiL2Ho1IsSlIAIVCi/1/FvINg8wZ7ckVGyJC49j1M=;
+	s=arc-20240116; t=1741028274; c=relaxed/simple;
+	bh=nz9b+KN8viu5jpXWs0v+jylV/As5vhmBBiGN/NrbvWY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oMAJZSI23cZJOyDBwa0XWibpulp4GyP0jCT+E43a19KYSiv3+7MyINKFoErotnYvSw+5VnW/VQveToNG88NlMPd6oExYw97dcVqPKPgYkUXSSlIEmSS5ZRUPaAK5bqWoSgySMkGYd/AEu5L8wsdJZfDCBa8d2lrZXFZZ9YXAt9Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3C766113E
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 10:57:10 -0800 (PST)
-Received: from e110455-lin.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 050BC3F5A1
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 10:56:55 -0800 (PST)
-Date: Mon, 3 Mar 2025 18:56:42 +0000
-From: Liviu Dudau <liviu.dudau@arm.com>
-To: Ashley Smith <ashley.smith@collabora.com>
-Cc: Boris Brezillon <boris.brezillon@collabora.com>,
-	Steven Price <steven.price@arm.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Heiko Stuebner <heiko@sntech.de>, kernel@collabora.com,
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] drm/panthor: Update CS_STATUS_ defines to correct
- values
-Message-ID: <Z8X7aj3VmL10TQx7@e110455-lin.cambridge.arm.com>
-References: <20250303180444.3768993-1-ashley.smith@collabora.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=iEBe9nqMkEw1FjiywRXZMxzVopqYfklpVgtHqf7oq7519Cvq4bGvy+RQLU8xyQqISqzQpX9NXirkMVmuD1wGVem8DEJVPefRMUkreDvFNPEHZt3f7jAj63du4jX0mVhUCjwRgNtD/luHL6WUk7+WlPccqjlgEwpMJtAwtNldpWo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=lB4je+E4; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="lB4je+E4"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=UCGrrsnfzIXfRwPBNxtTjaF7Ywp+E+UDRp4J9GD91M0=; b=lB4je+E4i6PhlNF5eqqdT+yjXy
+	gX68ODfch4QEdak/34F4Hfad1+LNEMFFcIFiUNcWYgFcDTseBRdLJy4WHoOFwLhVGcnTOPTcsfn7Q
+	OIGILN+hCqO5rwrqCPzJiXuDHCk9aXDF9AQDPi2VK523RKBuBCHycJ/hnzP7/1bUHnyraoXSGfG0Y
+	o0Jv82IuiVkdX+V0X9bB+fqh1we2+uwphgDW+w++vfj4XIQUgxAmWCTTj8qWwq+Qa39BA1zZZO0sN
+	WcVjx3FiuEjuKX5V47d0kVd1rgB0tcKkbF3wTiXC3wyKV9IYeZ4qaDc72EY+T/GJifHZ2CoR7L9yx
+	nxBldq8Q==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1tpAz7-00000004bTL-14Tm;
+	Mon, 03 Mar 2025 18:57:49 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 8F5B430049D; Mon,  3 Mar 2025 19:57:48 +0100 (CET)
+Date: Mon, 3 Mar 2025 19:57:48 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: Kees Cook <kees@kernel.org>
+Cc: kernel test robot <lkp@intel.com>, llvm@lists.linux.dev,
+	oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	x86@kernel.org, Ingo Molnar <mingo@kernel.org>
+Subject: Re: [tip:x86/core 16/17] vmlinux.o: warning: objtool: do_jit+0x276:
+ relocation to !ENDBR: .noinstr.text+0x6a60
+Message-ID: <20250303185748.GC15322@noisy.programming.kicks-ass.net>
+References: <202503030704.H9KFysNS-lkp@intel.com>
+ <20250303092459.GI5880@noisy.programming.kicks-ass.net>
+ <202503030910.55EBC9A76@keescook>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250303180444.3768993-1-ashley.smith@collabora.com>
+In-Reply-To: <202503030910.55EBC9A76@keescook>
 
-On Mon, Mar 03, 2025 at 06:04:32PM +0000, Ashley Smith wrote:
-> Values for SC_STATUS_BLOCKED_REASON_ are documented in the G610 "Odin"
-> GPU specification (CS_STATUS_BLOCKED_REASON register).
-> 
-> This change updates the defines to the correct values.
-> 
-> Fixes: 2718d91816ee ("drm/panthor: Add the FW logical block")
-> Signed-off-by: Ashley Smith <ashley.smith@collabora.com>
+On Mon, Mar 03, 2025 at 09:11:54AM -0800, Kees Cook wrote:
+> On Mon, Mar 03, 2025 at 10:24:59AM +0100, Peter Zijlstra wrote:
 
-Reviewed-by: Liviu Dudau <liviu.dudau@arm.com>
+> > > >> vmlinux.o: warning: objtool: do_jit+0x276: relocation to !ENDBR: .noinstr.text+0x6a60
 
-You could also add Steven's r-b, as per his email if you send another version,
-otherwise it will need to be edited by whomever merges it.
+> Just for my own curiosity, how did you track this down? (The
+> relationship between cfi_bhi and do_jit is not immediately obvious to
+> me. Or rather, what was needing DCE?)
 
-Best regards,
-Liviu
+If you build dfebe7362f6f461d771cdb9ac2c5172a4721f064 (tip/x86/core^2 so
+as to not have the fix) and build a FINEIBT=y kernel with clang-19 (so
+as not to have support for kcfi-ariry) then:
 
-> ---
-> Changes in v2:
->   - Rename _RES to _RESOURCE
-> ---
->  drivers/gpu/drm/panthor/panthor_fw.h | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/panthor/panthor_fw.h b/drivers/gpu/drm/panthor/panthor_fw.h
-> index 22448abde992..6598d96c6d2a 100644
-> --- a/drivers/gpu/drm/panthor/panthor_fw.h
-> +++ b/drivers/gpu/drm/panthor/panthor_fw.h
-> @@ -102,9 +102,9 @@ struct panthor_fw_cs_output_iface {
->  #define CS_STATUS_BLOCKED_REASON_SB_WAIT	1
->  #define CS_STATUS_BLOCKED_REASON_PROGRESS_WAIT	2
->  #define CS_STATUS_BLOCKED_REASON_SYNC_WAIT	3
-> -#define CS_STATUS_BLOCKED_REASON_DEFERRED	5
-> -#define CS_STATUS_BLOCKED_REASON_RES		6
-> -#define CS_STATUS_BLOCKED_REASON_FLUSH		7
-> +#define CS_STATUS_BLOCKED_REASON_DEFERRED	4
-> +#define CS_STATUS_BLOCKED_REASON_RESOURCE	5
-> +#define CS_STATUS_BLOCKED_REASON_FLUSH		6
->  #define CS_STATUS_BLOCKED_REASON_MASK		GENMASK(3, 0)
->  	u32 status_blocked_reason;
->  	u32 status_wait_sync_value_hi;
-> 
-> base-commit: 16e57a72780931c3c70dbc928aeee4a0518075de
-> -- 
-> 2.43.0
-> 
+$ ./scripts/objdump-func tmp-build/vmlinux.o do_jit
+...
+0267    6a2a7:  48 c1 e9 20             shr    $0x20,%rcx
+026b    6a2ab:  0f 85 16 39 00 00       jne    6dbc7 <do_jit+0x3b87>
+0271    6a2b1:  48 8b 44 24 20          mov    0x20(%rsp),%rax
+0276    6a2b6:  48 c7 c1 00 00 00 00    mov    $0x0,%rcx        6a2b9: R_X86_64_32S     __bhi_args+0x20
+027d    6a2bd:  c6 43 0b e8             movb   $0xe8,0xb(%rbx)
+0281    6a2c1:  48 83 c0 10             add    $0x10,%rax
+0285    6a2c5:  29 c1                   sub    %eax,%ecx
+0287    6a2c7:  89 4b 0c                mov    %ecx,0xc(%rbx)
+...
 
--- 
-====================
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    ¯\_(ツ)_/¯
+
+So the reference is to __bhi_args[1], this is the result of
+emit_fineibt(.arity=1).
+
+Anyway, the point is that for FINEIBT_BHI=n the __bhi_args[]
+array is 'empty' and the +0x20 thing points into random.
+
+What needs DCE is the whole if (cfi_bhi) branch in emit_fineibt(),
+making that whole __bhi_args[] reference go away.
