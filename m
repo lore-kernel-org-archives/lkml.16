@@ -1,79 +1,74 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF8321F2369
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 17:47:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from gentwo.org (gentwo.org [62.72.0.81])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BA07214A8F
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 17:47:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.72.0.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741024071; cv=none; b=SH5UNIVOGw28uk1NKuG8fiVyqJP7Dx9g7KP6NRgzrpV4MlHmoaMYnaMBBOyUIP0BSZpWMjPyJHvqLFM8wbcgg0IwNVmPWrVrE6aog3ELbbxs+NW6GpetH0OHvWCefaUtzS+ut5+INT5QhDkOVN3RSc5dXevdadD1bS6PMOI0uxw=
+	t=1741024073; cv=none; b=c4QWNxS7PS/Ol2xl519i2L1nlQ8yTbOSWZqIsNOG2kyCObI/IDfJmhyhDHWk7QursrDu0xuqmPOFGMKG6/B16w+baC9RyInPdY9G53u4K6H8vtwAZbJkPHPy5m3rheVk/fotp8LZ4EQNRfUbAlVYVOvxODLM8B1EqGAichx0rus=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741024071; c=relaxed/simple;
-	bh=ENeLXkajZ1XmegI24iKgWhC88jOENk4HHBJ5Oq5Wa48=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HZFmkK2CZ3LqCHG4AYovFL8TR9vKjpiZHCpreaO9Ip2UPEOLjn92V7/tQbAByCa9qZJJPXoOtbwLiF/buHw2knF8I0VDXcsPMNsV7J0aub1GjmkYjSnDHQSS9HqLXamJje61Nob56e0p/ejD5e2lVw9pnjvaYaoTk6W6x0EIg/A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C2923106F;
-	Mon,  3 Mar 2025 09:48:02 -0800 (PST)
-Received: from [10.1.196.40] (e121345-lin.cambridge.arm.com [10.1.196.40])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0B8C53F673;
-	Mon,  3 Mar 2025 09:47:47 -0800 (PST)
-Message-ID: <e92da382-b5a3-400a-a382-4ffb35397c81@arm.com>
-Date: Mon, 3 Mar 2025 17:47:46 +0000
+	s=arc-20240116; t=1741024073; c=relaxed/simple;
+	bh=FiY2u3I0Pn5QWdXrH/UVFOT449MBOOEniXOmPNiVtSM=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=rfZ/Z9Kurf/HVD6IAXg2gIg3de8LqMm0iKn8rFd7jGxf/4kLTQmY6W54PXRndoaD6ZU2zShbKSyjKjTSVhNejfYlxUy4OiS9em/ePgVzhfRk2t8aJbWEW/XI2730jfKpJfDaGBGSzJwrrWWWMUME+2FJ7YJLu4kP9HVRGDuQTXk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=gentwo.org; spf=pass smtp.mailfrom=gentwo.org; dkim=pass (1024-bit key) header.d=gentwo.org header.i=@gentwo.org header.b=aleLwJo1; arc=none smtp.client-ip=62.72.0.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=gentwo.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentwo.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=gentwo.org header.i=@gentwo.org header.b="aleLwJo1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gentwo.org;
+	s=default; t=1741023575;
+	bh=FiY2u3I0Pn5QWdXrH/UVFOT449MBOOEniXOmPNiVtSM=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+	b=aleLwJo10drgxiQ8VelxmBmtSUDjoYcsjlrw6+qC2RIGoWqcD6WQx0khgwFHRp6O1
+	 ErIsghXIVgcf7gycpWmO+SYJOofkK4Hr+8/oePSe32M8E0qa4G9QUB1Owa4XVrBpBa
+	 GWgO/g9QxyYmRgd2796+ILlhX36WhVMbCp43P9mo=
+Received: by gentwo.org (Postfix, from userid 1003)
+	id 928C5401E6; Mon,  3 Mar 2025 09:39:35 -0800 (PST)
+Received: from localhost (localhost [127.0.0.1])
+	by gentwo.org (Postfix) with ESMTP id 9193A401E4;
+	Mon,  3 Mar 2025 09:39:35 -0800 (PST)
+Date: Mon, 3 Mar 2025 09:39:35 -0800 (PST)
+From: "Christoph Lameter (Ampere)" <cl@gentwo.org>
+To: Lilith Gkini <lilithpgkini@gmail.com>
+cc: Vlastimil Babka <vbabka@suse.cz>, Pekka Enberg <penberg@kernel.org>, 
+    David Rientjes <rientjes@google.com>, Joonsoo Kim <iamjoonsoo.kim@lge.com>, 
+    Andrew Morton <akpm@linux-foundation.org>, 
+    Roman Gushchin <roman.gushchin@linux.dev>, 
+    Hyeonggon Yoo <42.hyeyoo@gmail.com>, linux-mm@kvack.org, 
+    linux-kernel@vger.kernel.org, harry.yoo@oracle.com
+Subject: Re: [PATCH] slub: Fix Off-By-One in the While condition in
+ on_freelist()
+In-Reply-To: <Z8XbomV9WCabATIM@Arch>
+Message-ID: <71ae6abc-d900-d5a2-84cf-8480a518e29b@gentwo.org>
+References: <Z8Sc4DEIVs-lDV1J@Arch> <b951acd4-5510-4d03-8f1e-accf38d909b6@suse.cz> <Z8XbomV9WCabATIM@Arch>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] iommu: Sort out domain user data
-To: Jason Gunthorpe <jgg@nvidia.com>, Nicolin Chen <nicolinc@nvidia.com>
-Cc: will@kernel.org, joro@8bytes.org, iommu@lists.linux.dev,
- linux-kernel@vger.kernel.org
-References: <4e68d5820be06adc1b34fc0d1c9399481151daee.1740742271.git.robin.murphy@arm.com>
- <Z8IapaN1ZD0wImak@Asurada-Nvidia> <20250303172746.GB133783@nvidia.com>
-From: Robin Murphy <robin.murphy@arm.com>
-Content-Language: en-GB
-In-Reply-To: <20250303172746.GB133783@nvidia.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
 
-On 03/03/2025 5:27 pm, Jason Gunthorpe wrote:
-> On Fri, Feb 28, 2025 at 12:20:53PM -0800, Nicolin Chen wrote:
->> On Fri, Feb 28, 2025 at 11:31:11AM +0000, Robin Murphy wrote:
->>> +enum iommu_domain_cookie_type {
->>> +	IOMMU_NO_COOKIE,
->>> +	IOMMU_DMA_IOVA_COOKIE,
->>> +	IOMMU_DMA_MSI_COOKIE,
->>> +	IOMMU_FAULT_HANDLER_COOKIE,
->>> +	IOMMU_SVA_COOKIE,
->>
->> I would like to change them to IOMMU_COOKIE_* so the iommufd one
->> wouldn't feel redundant like "IOMMU_IOMMUFD_COOKIE".
+In Mon, 3 Mar 2025, Lilith Gkini wrote:
 
-Heh, I guess strictly it might just be IOMMUFD_COOKIE, since what I've 
-really done here is messily overlap a new IOMMU_x namespace with the 
-original IOMMU_DMA_x one... :)
+> Alright, If you want to be more technical it's
+> `1 (true), otherwise 0 (false).`
+> Its just easier to communicate with the true or false concepts, but in C
+> we usually don't use bools cause its just 1s or 0s.
 
->> If you don't mind, I will make the following list:
->> -	IOMMU_NO_COOKIE,
->> -	IOMMU_DMA_IOVA_COOKIE,
->> -	IOMMU_DMA_MSI_COOKIE,
->> -	IOMMU_FAULT_HANDLER_COOKIE,
->> -	IOMMU_SVA_COOKIE,
->> +	IOMMU_COOKIE_NONE,
->> +	IOMMU_COOKIE_DMA_IOVA,
->> +	IOMMU_COOKIE_DMA_MSI,
->> +	IOMMU_COOKIE_FAULT_HANDLER,
->> +	IOMMU_COOKIE_SVA,
->> +	IOMMU_COOKIE_IOMMUFD,
-> 
-> I like that better too
+Its not about "technicalities". Please use the bool return type as
+provided for kernel code.
 
-...but yeah, no objection to going this way for consistency - splitting 
-into IOMMU_x_DMA does seem more logical and understandable than the 
-other alternative of having one weird IOMMU_FD_x symbol.
+Compare f.e.
 
-Thanks,
-Robin.
+
+static inline bool kmem_cache_has_cpu_partial(struct kmem_cache *s)
+{
+#ifdef CONFIG_SLUB_CPU_PARTIAL
+        return !kmem_cache_debug(s);
+#else
+        return false;
+#endif
+}
+
