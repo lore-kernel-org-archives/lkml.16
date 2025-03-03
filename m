@@ -1,64 +1,50 @@
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EF351EF080
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 08:26:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC9C81EB192;
+	Mon,  3 Mar 2025 08:27:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740990416; cv=none; b=Loi89mZW+QwI5tuuXMaymVOUQUI003TD7SC8NqJabTxEOVHUG5ISvka62ZXKbbKdMyHL/VVzAwJoFhNvykOk7gni40Kl5SRuHu6lYGwsqBUuwy2gmDF5dtBQMb/rXc9sHjWeOTBs9P/cSIiRAH/VbAvYhBdVHnmXS3fKXpy6Nrg=
+	t=1740990440; cv=none; b=ksjeSJFTqZFNgHIaGiH+2nqTk+Tk2d9Zivw6fbCa6/HVmUxXQo5jhc/PKBhqcxoDhVOD+ejP0Knz9FAb0v0xA5sVwnRmy9K899/NNfccKrH0ZkN26bGYvyCAiwBthdlFR3N1AdkJxlJoVNg5i1q12WEYNNtr1XjRO2wBIHgckMs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740990416; c=relaxed/simple;
-	bh=lJXPyymC+Bn7eNg7QGwNenIBMEiR5kuGsl3f2E+vwL0=;
+	s=arc-20240116; t=1740990440; c=relaxed/simple;
+	bh=gfkLZLX0yooK4MMPMKN+Ae9vAFIEBayZf/3aAJEh/Xc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=plrUPafLcqoGPWCE9PlCaAgfUR8xLrBZjXVaizpV2fABwpoJwxYJHvPH+aQnDBU8f9ALFsFrCa81ae+5StX2r0GsuGXczeR97jYgQ5JT2URtdO2YRS6TxETcluLQ3a8WIzyFuiEW7wuGKBG9O54hojruBsAiW/RvOqRns6CLNzE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=Lhp5eRfD; arc=none smtp.client-ip=209.85.218.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
+	 In-Reply-To:Content-Type; b=YkbUYwmE7YKMBfTgFELPfXQUQ2myLiCQbZhXPTs+HVihnpeUMTbXzsLhEhWWeXo4MnxHExbLfbJ0FU4dLRu6RaOtlWbLAA0S0CHqDB+Z/f7m+R+z+hPYq/vRj52dIuhExDHXpsj2TyzDh9SiLxA1ObKqOJSvOCG8YpH5vxCObL4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AWWw2ljQ; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="Lhp5eRfD"
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-aaedd529ba1so480810866b.1
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Mar 2025 00:26:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1740990412; x=1741595212; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=BD0ged1tbWk7V8+0mBgsPRbGV+NS/Ji1P1tciZQV6bE=;
-        b=Lhp5eRfDH8wGcAYGfwM89OO+e8ZKEvJ8G30YTmuWKwp3UwHrBWUElxio4311xTFaJZ
-         dfibFmO7LQnho+Rwu8SoiCWi3y0BcDd8CQwttwW4XbP1kRxVEeFw7VkauJymrzUupTY2
-         ayMGbkBrgQL/puxu8MZne/R5KP6Dj3CuMceUAXWke2RtcXJMDl64/OBDylZpKTZNK1kG
-         IXaKee8r5vtGMxUEICWpLi6VGe6FaJbuSVnCDrjpxKlzJqx1skg27aC0NvK1Rwplz8jl
-         OkPgh4AkdndEYYAwrB0H4j2k2TFAS63K0KqhSygfYsVH5yAG8bMDPDMo2r1aoZRtWDji
-         2+Hg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740990412; x=1741595212;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=BD0ged1tbWk7V8+0mBgsPRbGV+NS/Ji1P1tciZQV6bE=;
-        b=kVNraAHHl/7jSdtvPxt2NIOYqbFWtKA9LmwmPdzKqW1X9C0Z8nPiiftG0Kx1rJzerD
-         Yq8rzsQ33Hh4DYhPm0exIXw3lk+8P/5MT35ydQOyhRXW9UStNYNTJTCcagVwI0Cs2P1V
-         i3qtGanadpMXjJ7dmVV2sWl51SB1gs7JQGJVRSfyd9COZqbe0+HQIUVZs45KoPUBNw9c
-         9ZwsL75jQdRhbcL3Y9MrNixMTLRjqUfqFrfYLzL1wnDEICHv1llJRXP7Fdw/BQ/poVGO
-         lpLmzRyVCxhcixVMdmC6Ur21697fNmilWNy0Y1n37ZBBJxjBSdeJhbZBX6h55UZpBeAN
-         09bQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVYvbFVwuk+ITtM61QMdXfA3waFhrVgzn9XNkJXEm+bAkn4AiefUhV5+P6pBSHvWbkOtDak3SmSCzvgjks=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy6iZEg/TS2Nl+3hyIa240ucxTR8SypbItv4XLFHdwJ5BAvEQ7B
-	FBn1DjDni0oTIFPdHdva6PHSfJQsRbK8rlJqsKWa8PRBSfrB2xE99A5iZiQKJTk=
-X-Gm-Gg: ASbGncuqqJDDHODaZtfItej0RcGm6iYsAq27dUGQsLYj4PMn3PIghiqJiUBhY5XIlyF
-	W5Z6c6ioR1e2x2ctMt6ai5ws931v+hIvjxKWHK6PLiu+hEVLdNVKp8vamu1ZCXcoA8xMXrSA4gL
-	5qszZmw7SOPCiamcJnHOR96hDj5pAeUT5eAEp4PjVWtCRq6IOfwo/z5JDLC4RGnGSzhhpnKpYJP
-	tDyJglYev+XTkrRp46+feWdzBSRmg+bHkQLM0TobxcdZqoDoVfG7JusIY5rBnGKIbdS9YLKM+fG
-	QZs85HK047qPHnDLF5FVa+n9472b3tpfq/7Bqth22w2bV5SZgirLKw==
-X-Google-Smtp-Source: AGHT+IFB0ef71YNR9dJGXCO7UqAzxgYbd67xW8P9JXXgL21idOk1dW4h3KG6K2wPSXyAzJ2F6c4cew==
-X-Received: by 2002:a05:6402:2692:b0:5d0:bf5e:eb8 with SMTP id 4fb4d7f45d1cf-5e4d6b4baabmr28693051a12.23.1740990412164;
-        Mon, 03 Mar 2025 00:26:52 -0800 (PST)
-Received: from [192.168.50.4] ([82.78.167.138])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abf0c6ee491sm776723966b.103.2025.03.03.00.26.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 03 Mar 2025 00:26:51 -0800 (PST)
-Message-ID: <f03946a8-24bc-4a1a-8d06-d5652a4db34f@tuxon.dev>
-Date: Mon, 3 Mar 2025 10:26:49 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AWWw2ljQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740990438; x=1772526438;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=gfkLZLX0yooK4MMPMKN+Ae9vAFIEBayZf/3aAJEh/Xc=;
+  b=AWWw2ljQGSHaLKiuV4dEamox3kXMKYex7ULDn4B89hyn5brtnkXtpUSE
+   yQaFDhmPV4RRmpPCxiCnsd5+KnqFdWIphi4E1rBscaelDk7+Y/hh6HQP+
+   5fghrQoDY4JabduN1aA+C3cMKDPDAw3Kvrt0qmSg2Vidu7StUbdzldCGE
+   WwuxZNAHYvu6OrDeVGciY3jhWuzqoaL9XwZBU8WKNlMr1NUvXr22EgooH
+   tL3aqWcsVQH6gQR+Ip9cL9zKQEnkoh0coKh2AFd8o7Syfm4CsOg3pHv11
+   jthDL8gvx50vZYb+kRj3s6vy3lVXYDBsBA8++9PA+GLOj+5Pi7gymab2N
+   Q==;
+X-CSE-ConnectionGUID: sRSWvC2kSWu6vvn2cdgZgA==
+X-CSE-MsgGUID: LTN6fn5lSiSIJSX2/h6rdA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11361"; a="29442383"
+X-IronPort-AV: E=Sophos;i="6.13,329,1732608000"; 
+   d="scan'208";a="29442383"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Mar 2025 00:27:17 -0800
+X-CSE-ConnectionGUID: VbCv2Ah+RvqqRPOSiOzT+A==
+X-CSE-MsgGUID: 8hCEqOGWQzW9ywrFdbgxhA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,329,1732608000"; 
+   d="scan'208";a="117963136"
+Received: from unknown (HELO [10.237.72.199]) ([10.237.72.199])
+  by orviesa006.jf.intel.com with ESMTP; 03 Mar 2025 00:27:16 -0800
+Message-ID: <53a7a698-410f-47b2-b50b-9368e4f02cf9@linux.intel.com>
+Date: Mon, 3 Mar 2025 10:28:17 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,48 +52,41 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 08/21] ARM: at91: Add PM support to sama7d65
-To: Ryan.Wanner@microchip.com, lee@kernel.org, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, sre@kernel.org,
- nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com,
- p.zabel@pengutronix.de
-Cc: linux@armlinux.org.uk, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-rtc@vger.kernel.org
-References: <cover.1740671156.git.Ryan.Wanner@microchip.com>
- <f4634d70f1e7002db059f2cc892fbbbfe1a95dac.1740671156.git.Ryan.Wanner@microchip.com>
-From: Claudiu Beznea <claudiu.beznea@tuxon.dev>
+Subject: Re: [RFT PATCH] xhci: Handle spurious events on Etron host isoc
+ enpoints
+To: Kuangyi Chiang <ki.chiang65@gmail.com>
+Cc: michal.pecio@gmail.com, gregkh@linuxfoundation.org,
+ linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <41847336-9111-4aaa-b3dc-f3c18bb03508@linux.intel.com>
+ <20250228161824.3164826-1-mathias.nyman@linux.intel.com>
+ <CAHN5xi0mf8G4ODMQ9jDXAM4CRXtafZeMh_2KF7efbiFJahO4bw@mail.gmail.com>
 Content-Language: en-US
-In-Reply-To: <f4634d70f1e7002db059f2cc892fbbbfe1a95dac.1740671156.git.Ryan.Wanner@microchip.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+From: Mathias Nyman <mathias.nyman@linux.intel.com>
+In-Reply-To: <CAHN5xi0mf8G4ODMQ9jDXAM4CRXtafZeMh_2KF7efbiFJahO4bw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi, Ryan,
-
-On 27.02.2025 17:51, Ryan.Wanner@microchip.com wrote:
-> From: Ryan Wanner <Ryan.Wanner@microchip.com>
+On 1.3.2025 4.05, Kuangyi Chiang wrote:
+> Hi,
 > 
-> Add PM support to SAMA7D65 SoC.
+> Thanks for the patch.
 > 
-> Signed-off-by: Ryan Wanner <Ryan.Wanner@microchip.com>
-> ---
->  arch/arm/mach-at91/Kconfig | 1 +
->  1 file changed, 1 insertion(+)
+> Mathias Nyman <mathias.nyman@linux.intel.com> 於 2025年3月1日 週六 上午12:17寫道：
+
+>> index 8c164340a2c3..c75c2c12ce53 100644
+>> --- a/drivers/usb/host/xhci.h
+>> +++ b/drivers/usb/host/xhci.h
+>> @@ -1371,7 +1371,7 @@ struct xhci_ring {
+>>          unsigned int            num_trbs_free; /* used only by xhci DbC */
+>>          unsigned int            bounce_buf_len;
+>>          enum xhci_ring_type     type;
+>> -       bool                    last_td_was_short;
+>> +       u32                     last_td_comp_code;
 > 
-> diff --git a/arch/arm/mach-at91/Kconfig b/arch/arm/mach-at91/Kconfig
-> index 04bd91c72521..f3ff1220c0fb 100644
-> --- a/arch/arm/mach-at91/Kconfig
-> +++ b/arch/arm/mach-at91/Kconfig
-> @@ -65,6 +65,7 @@ config SOC_SAMA7D65
->  	select HAVE_AT91_SAM9X60_PLL
->  	select HAVE_AT91_USB_CLK
->  	select HAVE_AT91_UTMI
-> +	select PM_OPP
+> Should be changed to old_trb_comp_code.
+> 
 
-This is for OPP not PM support. For this series this should not be needed.
+Thanks, forgot to add that last xhci.h change to the patch
 
-
->  	select SOC_SAMA7
->  	help
->  	  Select this if you are using one of Microchip's SAMA7D65 family SoC.
+-Mathias
 
