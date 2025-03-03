@@ -1,116 +1,147 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2770523F36D;
-	Mon,  3 Mar 2025 03:50:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85E3F1D5CDE
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 03:54:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740973825; cv=none; b=lVwu5tbLUzXjYKbMIO15eSDIHy71h/kBckJqDty00mp3FXJbwi7z9q173JNUVeVq9Hb4qw1OBzRXiyP7JgcJywYO6vP2tS4Z8jq+OaDoZOrkBosy/yv51QL/kp25wZlcBQO/RmIXO8n0S9hqDXJW6EJq7R4hz0gDnq4/faXZIPo=
+	t=1740974073; cv=none; b=EZi1vJsvo1YOSHYZaUd6C1GfNFgIcRAfq/xytwyNxi3mxcff+ZxfGt1WcGLIdJ18AyHg9jExx3BJ+vJQNnNaa0iCe7f1nM9u/l2aroVgFm0eRNucizfQLWTuBtp0r0RT76aWD4dTw6LYthX7jxHXEQMdbw3mcfQ6a6Au2ZUDoP8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740973825; c=relaxed/simple;
-	bh=JjBkoOmpamdWZjwHJsC6fD52gJHLByww1lbem+DKcDs=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=D4dEy2FUHQ6/EzHyicQUlzRmtmg14ESSrGMoaPSPAmuPswMSbWNBnSQHN43Ba2u9mzl4hxCeLT2HtsInG4nC6JI0F5NbS/f9EW8ay0jL3nyHPkjQiKZmr16kjZjzkbi/iu8c/Lga77s5069USGXXLeGby8toDWL8e6jFODmAac4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=qL7jw/5X; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1740974073; c=relaxed/simple;
+	bh=jmE2Vn4q8ujhXYsmfUAnML8kKHr25o0OmECPkFT6eL4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=cDZUNJdSqmksJObkkPrraat0qiB7oE+h54DeOmJvdnd0ulySzcjT3e/kM091pZbPsBcZL0KZNvqoCdayRP4cfEu8sQzC86IKj9Fj1y/vsyfsGx/CBa2M1skvjstqjEhKzqESSbQ5umHe1Nlnx7Rv9xRud20tBSLH1+47bnzOOd8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n6qHAb1Z; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="qL7jw/5X"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=201702; t=1740973821;
-	bh=Zr/h43Zh5pL9KD6JE/gziQFlzF5v35kno022dI2jbaE=;
-	h=Date:From:To:Cc:Subject:From;
-	b=qL7jw/5XRCuHrgueOEV9sch6x/IYbLBpQlknM5KjMvOwTulWfaWcPKYJA/x6uaHJB
-	 zYZPBljVICGjp4T6Jn7WI7Yf9ERUuT+XIh4vAqLIiZK+dY8aEyuBiO+/o/mZdGtCy+
-	 y/iOjJMG6Rfxm7f3cNwhdSEgVI6pjhTV8p0Kev8bnz5+MKgEzMPwSkQPpYvVrHus8M
-	 ihteiY5ZRicpQmxukkw70EDSlU7QqYrEE2FGoo8iZgMqwKDY5bSkJt3oeOxRquBfv0
-	 muYcq5UB2NQagVan+6DGXwcGT702/YGqG+pmq+9yBszycV5YxMywm45DGqcB9/24rU
-	 OJ5DiO+m1EFuQ==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4Z5lFm0zGdz4x0L;
-	Mon,  3 Mar 2025 14:50:20 +1100 (AEDT)
-Date: Mon, 3 Mar 2025 14:50:19 +1100
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- "H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>,
- Huacai Chen <chenhuacai@loongson.cn>
-Cc: Huacai Chen <chenhuacai@kernel.org>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>, Nam Cao <namcao@linutronix.de>, Thomas
- =?UTF-8?B?V2Vpw59zY2h1aA==?= <thomas.weissschuh@linutronix.de>, Wentao Guan
- <guanwentao@uniontech.com>, Yuli Wang <wangyuli@uniontech.com>
-Subject: linux-next: manual merge of the tip tree with the loongarch tree
-Message-ID: <20250303145019.16b6b153@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n6qHAb1Z"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37A0FC4CEE9;
+	Mon,  3 Mar 2025 03:54:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740974073;
+	bh=jmE2Vn4q8ujhXYsmfUAnML8kKHr25o0OmECPkFT6eL4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=n6qHAb1ZT0mtXXD4buwieVnV3w+LvkJOlXvp47FHIEoPlVMWJdOM2p2fyOpPA3vPX
+	 V6ZLkiOiYi/HpWx4v8wLjBBAuCR6gPCAO28g2e9Hq1qY30qIFt0wEYIaRwc18eJY8V
+	 H5ayHwgUJqyXs6+1ExYQpfpDJnT29sir1UCF8Kj6MRTElZNT4LycpXY/Em0/75fQMI
+	 +fzXX30eFyAt0+dexiVTIowWKIXeBbJla3OjmbxVuqFufrnRCVzY0PUdfctqkKl4Ap
+	 EJkFTg0krU1ZwOUp/KlBRxlT7q819/O099DTkln/SPEEHD6XwBDJzfOlxOYLgM1qs4
+	 Ej3FbXkRs0lUg==
+From: Chao Yu <chao@kernel.org>
+To: jaegeuk@kernel.org
+Cc: linux-f2fs-devel@lists.sourceforge.net,
+	linux-kernel@vger.kernel.org,
+	Chao Yu <chao@kernel.org>
+Subject: [PATCH 2/3] f2fs: do sanity check on xattr node footer in f2fs_get_xnode_page()
+Date: Mon,  3 Mar 2025 11:54:22 +0800
+Message-ID: <20250303035423.1357211-2-chao@kernel.org>
+X-Mailer: git-send-email 2.48.1.711.g2feabab25a-goog
+In-Reply-To: <20250303035423.1357211-1-chao@kernel.org>
+References: <20250303035423.1357211-1-chao@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/NhzCiUc+4Adm5tI32rLcoM0";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
 
---Sig_/NhzCiUc+4Adm5tI32rLcoM0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+This patch introduces a new wrapper f2fs_get_xnode_page(), then, caller
+can use it to load xattr block to page cache, meanwhile it will do sanity
+check on xattr node footer.
 
-Hi all,
+Signed-off-by: Chao Yu <chao@kernel.org>
+---
+ fs/f2fs/f2fs.h  |  1 +
+ fs/f2fs/node.c  | 14 ++++++++++++--
+ fs/f2fs/node.h  |  1 +
+ fs/f2fs/xattr.c |  4 ++--
+ 4 files changed, 16 insertions(+), 4 deletions(-)
 
-Today's linux-next merge of the tip tree got a conflict in:
+diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+index 74a80bb06f06..38016d24e59c 100644
+--- a/fs/f2fs/f2fs.h
++++ b/fs/f2fs/f2fs.h
+@@ -3704,6 +3704,7 @@ void f2fs_ra_node_page(struct f2fs_sb_info *sbi, nid_t nid);
+ struct page *f2fs_get_node_page(struct f2fs_sb_info *sbi, pgoff_t nid);
+ struct folio *f2fs_get_inode_folio(struct f2fs_sb_info *sbi, pgoff_t ino);
+ struct page *f2fs_get_inode_page(struct f2fs_sb_info *sbi, pgoff_t ino);
++struct page *f2fs_get_xnode_page(struct f2fs_sb_info *sbi, pgoff_t xnid);
+ struct page *f2fs_get_node_page_ra(struct page *parent, int start);
+ int f2fs_move_node_page(struct page *node_page, int gc_type);
+ void f2fs_flush_inline_data(struct f2fs_sb_info *sbi);
+diff --git a/fs/f2fs/node.c b/fs/f2fs/node.c
+index ee5daa6f7408..5be8badc6261 100644
+--- a/fs/f2fs/node.c
++++ b/fs/f2fs/node.c
+@@ -1245,7 +1245,7 @@ int f2fs_truncate_xattr_node(struct inode *inode)
+ 	if (!nid)
+ 		return 0;
+ 
+-	npage = f2fs_get_node_page(sbi, nid);
++	npage = f2fs_get_xnode_page(sbi, nid);
+ 	if (IS_ERR(npage))
+ 		return PTR_ERR(npage);
+ 
+@@ -1461,7 +1461,9 @@ static int sanity_check_node_footer(struct f2fs_sb_info *sbi,
+ 					enum node_type ntype)
+ {
+ 	if (unlikely(nid != nid_of_node(page) ||
+-		(ntype == NODE_TYPE_INODE && !IS_INODE(page)))) {
++		(ntype == NODE_TYPE_INODE && !IS_INODE(page)) ||
++		(ntype == NODE_TYPE_XATTR &&
++		!f2fs_has_xattr_block(ofs_of_node(page))))) {
+ 		f2fs_warn(sbi, "inconsistent node block, node_type:%d, nid:%lu, "
+ 			  "node_footer[nid:%u,ino:%u,ofs:%u,cpver:%llu,blkaddr:%u]",
+ 			  ntype, nid, nid_of_node(page), ino_of_node(page),
+@@ -1551,6 +1553,14 @@ struct page *f2fs_get_inode_page(struct f2fs_sb_info *sbi, pgoff_t ino)
+ 	return &folio->page;
+ }
+ 
++struct page *f2fs_get_xnode_page(struct f2fs_sb_info *sbi, pgoff_t xnid)
++{
++	struct folio *folio = __get_node_folio(sbi, xnid, NULL, 0,
++						NODE_TYPE_XATTR);
++
++	return &folio->page;
++}
++
+ struct page *f2fs_get_node_page_ra(struct page *parent, int start)
+ {
+ 	struct f2fs_sb_info *sbi = F2FS_P_SB(parent);
+diff --git a/fs/f2fs/node.h b/fs/f2fs/node.h
+index 5079c6a2298d..103a437e6425 100644
+--- a/fs/f2fs/node.h
++++ b/fs/f2fs/node.h
+@@ -56,6 +56,7 @@ enum {
+ enum node_type {
+ 	NODE_TYPE_REGULAR,
+ 	NODE_TYPE_INODE,
++	NODE_TYPE_XATTR,
+ };
+ 
+ /*
+diff --git a/fs/f2fs/xattr.c b/fs/f2fs/xattr.c
+index d5b42e1005d8..c691b35618ad 100644
+--- a/fs/f2fs/xattr.c
++++ b/fs/f2fs/xattr.c
+@@ -303,7 +303,7 @@ static int read_xattr_block(struct inode *inode, void *txattr_addr)
+ 	void *xattr_addr;
+ 
+ 	/* The inode already has an extended attribute block. */
+-	xpage = f2fs_get_node_page(sbi, xnid);
++	xpage = f2fs_get_xnode_page(sbi, xnid);
+ 	if (IS_ERR(xpage))
+ 		return PTR_ERR(xpage);
+ 
+@@ -475,7 +475,7 @@ static inline int write_all_xattrs(struct inode *inode, __u32 hsize,
+ 
+ 	/* write to xattr node block */
+ 	if (F2FS_I(inode)->i_xattr_nid) {
+-		xpage = f2fs_get_node_page(sbi, F2FS_I(inode)->i_xattr_nid);
++		xpage = f2fs_get_xnode_page(sbi, F2FS_I(inode)->i_xattr_nid);
+ 		if (IS_ERR(xpage)) {
+ 			err = PTR_ERR(xpage);
+ 			f2fs_alloc_nid_failed(sbi, new_nid);
+-- 
+2.48.1
 
-  arch/loongarch/Kconfig
-
-between commit:
-
-  30051fca4509 ("LoongArch: Enable UBSAN (Undefined Behavior Sanitizer)")
-
-from the loongarch tree and commit:
-
-  d2862bb9d9ca ("LoongArch: vDSO: Switch to generic storage implementation")
-
-from the tip tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc arch/loongarch/Kconfig
-index 0043d5d4b5ea,d7ddf2a43e63..000000000000
---- a/arch/loongarch/Kconfig
-+++ b/arch/loongarch/Kconfig
-@@@ -30,7 -30,7 +30,8 @@@ config LOONGARC
-  	select ARCH_HAS_SET_MEMORY
-  	select ARCH_HAS_SET_DIRECT_MAP
-  	select ARCH_HAS_TICK_BROADCAST if GENERIC_CLOCKEVENTS_BROADCAST
- +	select ARCH_HAS_UBSAN
-+ 	select ARCH_HAS_VDSO_ARCH_DATA
-  	select ARCH_INLINE_READ_LOCK if !PREEMPTION
-  	select ARCH_INLINE_READ_LOCK_BH if !PREEMPTION
-  	select ARCH_INLINE_READ_LOCK_IRQ if !PREEMPTION
-
---Sig_/NhzCiUc+4Adm5tI32rLcoM0
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmfFJvsACgkQAVBC80lX
-0GzSbwf/TqCfyGhRU8S8RSZDG6jqtjS8p/DGb+Nw3iM4cqmvYFNUmurfnwO0zbvG
-2D8UrrM9Fl+w7ly0B3ICdq5wT9QyIi8Wp3EERW42hJ+2jmgAMwsWgyThCe/QpxnO
-zAOZSIbe4kH+o8ynJ5XWLyPu/kFhjYqRi1bUSNXwgSdxfmM5LLssQ0bqK/XUP7Iw
-Lw62zHX5fInG3Yqx87Dco5uTkKd6RGx1txpwUpwpi5J2s1yiLZKyinSps4LAFRAg
-LRIfKTfmS5dcNfKVaMX8AdXFx2KzFIcYFGMadVXVeG7vFhOxxoONNngiOUjpvlR7
-LNxihPx6sy7Km65IK9PPqBFGR/Zymg==
-=28GK
------END PGP SIGNATURE-----
-
---Sig_/NhzCiUc+4Adm5tI32rLcoM0--
