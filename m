@@ -1,35 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FC5223ED75;
-	Mon,  3 Mar 2025 17:26:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E0B023FC41;
+	Mon,  3 Mar 2025 17:26:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741022777; cv=none; b=NwW6JB7TLEGy1QPEGC+lDy8gzxrqRujlp6qIgm29w2gsQtRibKsPmMawvLrvPJHjoVfm/ORPd0m465O6NgcNb4Au3irTw++jeHfHjeFIsf6Pj7CDlZeo2tG9+D9VOEt+UN7stODxP9ozQupay0cGA3fmUdqu07L87S3xtXXSAuc=
+	t=1741022778; cv=none; b=fWaAFUK/DS+LfxNAgz1IcCpud8pDKue7xU0m8FJG4Ox314+e6BukuvGTZYsbksNt86bWUamerEaqhRColU80X3P1+p+7NRhtL7dpsBLO8Uq5YOGlkGvDos5pJoh7ZWeuIdbQ7EpWUyu0CkAMqiklVXTylDZOHgPSYh6RtMIVlcQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741022777; c=relaxed/simple;
-	bh=TLjwn8OvC2xRxNHgLGlT6YzixDeTdY+umrapqFPiZi0=;
+	s=arc-20240116; t=1741022778; c=relaxed/simple;
+	bh=ligIRskMGI2mV0cB3fQGOC9rdkD5pCR+/sRa7O/I+mw=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=qRo/a+r4KGmfa5nNe3MP8+BCsOIWEvnucPU+fmzQ2Lvnn5BhzBB/uNrsN6MZxE/g6Rw4qgdBVTVtaDDFX3FOhVSugHix8DlDcTRuv5wgyEdMhp4YHzZw+WMImp84ICaFWjPGHAH6I8jivcgBTLRZzyzkzcFSQBvqXXDPjiiLxV4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OKxibQsr; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=WZimIUtUPKqjCve0LYLEVz9ZF3V56oSEl6fiiVxIb8RVZR+LuIXVIGqEmxFrGzKDsKWkyyjmrZYDWi26f+y+IwAYwvOiFoMpwVyef4lEHMs10fnLcXHMVD0YdzraUXzCTEKTuLgCU2yBUWGHatm61DMtckva8CVlFANDMt26v9Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y64vweQ9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OKxibQsr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B427C4CEEA;
-	Mon,  3 Mar 2025 17:26:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y64vweQ9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23F4AC4CEED;
+	Mon,  3 Mar 2025 17:26:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741022776;
-	bh=TLjwn8OvC2xRxNHgLGlT6YzixDeTdY+umrapqFPiZi0=;
+	s=k20201202; t=1741022777;
+	bh=ligIRskMGI2mV0cB3fQGOC9rdkD5pCR+/sRa7O/I+mw=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=OKxibQsrqsSTlM968LNwlspsWF8Uy/fTD+rLkV7irdXi6/9OQ8qqhyZFKu3/P9xj5
-	 y72faIAopJY9IC59BdkC9iWfKlT8/ZegSEZJqAWQqF1sQMrcWt2bMbeff4vjXjUkkU
-	 kQWHrppB8ZCI0ErgE+VtucS2NEBNm3z3INO/RZfyX3KycdROBFie3ZV68bTEF4hpgq
-	 fPWcmKWODgIZlLTmWUk4QgvoKmKewb6MKmTBsQ5LvqYLbq2Ss24rS3xBeAXrM+1imt
-	 QK8EkU8Orqp2qoYSlJBVnVsU0ufpAXeFnhPtBRHQ62qJTw5ICV3Bk+/ViLjMfqiGKh
-	 9//8kiqIlkplg==
+	b=Y64vweQ9292qpLCUMqoQHwGmp/9RDoz5DVIg8T2qg7wrSzWhV/RILm4N2xCSC0peJ
+	 gxmxBw8PRSKW07/tK7pn15vmqr0bhoQdqZJbvd0OqhyPbgQCa3c4ArcC+uGIIkJzWU
+	 DD1Lk/k2RFcSmWUJDPE6YaT97bpLsx6pYMCse7UTt8yrN+axeOHNnomc1nCKOj1zJD
+	 g2ijZn0jWXQh0uoBoNEL9YGfeC4ImPRIlpp1HbNZiW8ML0GoS9fMzSc5PtYdMojPUY
+	 dShlUmDf1eW2TcDZfGlTTzxZabnCUQk5KGHuHruiZ5nRA0D3C5gfG+a58rxNSyf+zh
+	 DC6jLY9Ewm2XA==
 From: Jeff Layton <jlayton@kernel.org>
-Date: Mon, 03 Mar 2025 12:25:59 -0500
-Subject: [PATCH 1/5] nfsd: reorganize struct nfs4_delegation for better
- packing
+Date: Mon, 03 Mar 2025 12:26:01 -0500
+Subject: [PATCH 3/5] nfsd: remove obsolete comment from nfs4_alloc_stid
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -38,7 +37,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250303-nfsd-cleanup-v1-1-14068e8f59c5@kernel.org>
+Message-Id: <20250303-nfsd-cleanup-v1-3-14068e8f59c5@kernel.org>
 References: <20250303-nfsd-cleanup-v1-0-14068e8f59c5@kernel.org>
 In-Reply-To: <20250303-nfsd-cleanup-v1-0-14068e8f59c5@kernel.org>
 To: Chuck Lever <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>, 
@@ -47,44 +46,50 @@ To: Chuck Lever <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>,
 Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
  Jeff Layton <jlayton@kernel.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=731; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=TLjwn8OvC2xRxNHgLGlT6YzixDeTdY+umrapqFPiZi0=;
- b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBnxeY1vpggjGoEj3YtDf3e7GWM44RrbydQi9fQO
- Yfp6tgzRPKJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZ8XmNQAKCRAADmhBGVaC
- FRKJD/9CpXM4lbJxvqIwY2WxIDJQFCHSJopqNTHXtjxmm6NZwkGcXNHRM/czh7P5n1fuvXHUZJY
- uSFyzgpil3n1XHwFhisEfrzJJEGpPFQo7QrhykUM99K+M72bHjxXRw7idlxLD/m3cAHQa5fkXKN
- f43ucScxXTc2z5dDo+cKieHJIEiLGPQjoWIzysv3SE6xjlqG1tItF0mrScYW4jdx/3mEctl7JmM
- +H6a4JljVgNkDPoXQbg9pnNWCMaL2moQCGIxDRw6lf55ODJc1ToYV5d9TnoqusT0peul5DEShZd
- yND58EAqTXxeHsZIKXvKmiasViraVv9PEQIJwARzNNkJv2V4H3WXV9mU2DS1JSwo7QkdmbtG8yq
- kHUgVqOyin9S28NK8/43tSBA6W1p002EfxRsEhZMaO3YdI0AdU1TAkaq+/GK8xGF2KM2PolegP3
- WEMFJrXk0k7gGi4ph1lJoZ0vr0si/rYGIK7Gs4FjHsDM2+3Rmm7MtDdPtgpA1+7ZQ1gjvA5qYw/
- ApTkIETwtJVbnxTmsHwkb4G+buQpoMmYky9AL6D24dtfUs4YUpkVvjnE1+ns1kM6DqlLoWrJAUK
- jQbi9caFjaBYxgHS31PTfyMcnXledj0ComQeXeha/Vy9IyUHCcndGXEb3S1PBbsyNM3XSVvOupa
- QnlYCyTE4OyxW1g==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1104; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=ligIRskMGI2mV0cB3fQGOC9rdkD5pCR+/sRa7O/I+mw=;
+ b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBnxeY1HutDQSlAnbxV16/ZyBkhuB9knC0rcD7hE
+ 66FVpRyANiJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZ8XmNQAKCRAADmhBGVaC
+ FYNzEACPaIIuStNWQbooMdPCkNFqqsgi02PbpU3RhvYL/OWDZeOqKQNz/zXeyVkGktc2KJhXHYa
+ 6l49mND3sgtSPkrnLedQLxNqtaByZFPS/2ww+Sc9q/PpJ5CBgFDCkyI5puXWIC7i5eK8+7mZMWf
+ PDdy6lvycVZS23HEbtuLHH8tKnXwaJnghLnwApEEGRaHboS+FrvDpDqRmID8BAdi7DRDpc9npKw
+ Ehc81xIVc88XMYXatla6jzwcWjhXMKHQ7yRFAQjBdWUVI7vrN/kMO+L+VJf82zcNbWwJO1rfCzw
+ Z/+HObpQMLR+1BH6bJRBs/LqjXlWnj+vx5TX8CT9SRSL/NDhXKmLjp/TltDhaG8v3MksYgtmFp5
+ 220B5WBsBIO+8BUYbeoJdLlu0APcwBw5x6n8++webELRb/OGO7orZzb2TiTw5B5qxMS9trnu2F1
+ 2AaswMWR0EUhA4fmjvBb6YkH/1OsvdwAxhSIuhM2IcQlFrKPhoFBpURTG2cn/8sdkKAYtm+BxvH
+ Sa0e+S4OJHvpwTBcvKHdFjppFSAM8vXNQas2mDb6meVXQoUmgtlXxqy0RS4AZnAREOSSiP4XCIs
+ WwK/LdSlCMRnDu+JyCpdfqbfvatzbLHcltoOxntHc7vRbBvwCP5gmGGbzravgm/J90+S7FjsPiL
+ hJG1Dlma23WPKpA==
 X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
  fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-Move dl_type field above dl_time, which shaves 8 bytes off this struct.
+idr_alloc_cyclic() is what guarantees that now, not this long-gone trick.
 
 Signed-off-by: Jeff Layton <jlayton@kernel.org>
 ---
- fs/nfsd/state.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/nfsd/nfs4state.c | 9 ---------
+ 1 file changed, 9 deletions(-)
 
-diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
-index 0537f5c001a4d581433ca5aca235188fe68b14e5..625a77107d29121d630d456183e01c9f903f758a 100644
---- a/fs/nfsd/state.h
-+++ b/fs/nfsd/state.h
-@@ -215,8 +215,8 @@ struct nfs4_delegation {
- 	struct list_head	dl_perclnt;
- 	struct list_head	dl_recall_lru;  /* delegation recalled */
- 	struct nfs4_clnt_odstate *dl_clnt_odstate;
--	u32			dl_type;
- 	time64_t		dl_time;
-+	u32			dl_type;
- /* For recall: */
- 	int			dl_retries;
- 	struct nfsd4_callback	dl_recall;
+diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+index e245c479ef271b6d6b20bcaf468f6de40d62ee00..a7bac93445e2fdbe743b77e66238d652094907cb 100644
+--- a/fs/nfsd/nfs4state.c
++++ b/fs/nfsd/nfs4state.c
+@@ -946,15 +946,6 @@ struct nfs4_stid *nfs4_alloc_stid(struct nfs4_client *cl, struct kmem_cache *sla
+ 	spin_lock_init(&stid->sc_lock);
+ 	INIT_LIST_HEAD(&stid->sc_cp_list);
+ 
+-	/*
+-	 * It shouldn't be a problem to reuse an opaque stateid value.
+-	 * I don't think it is for 4.1.  But with 4.0 I worry that, for
+-	 * example, a stray write retransmission could be accepted by
+-	 * the server when it should have been rejected.  Therefore,
+-	 * adopt a trick from the sctp code to attempt to maximize the
+-	 * amount of time until an id is reused, by ensuring they always
+-	 * "increase" (mod INT_MAX):
+-	 */
+ 	return stid;
+ out_free:
+ 	kmem_cache_free(slab, stid);
 
 -- 
 2.48.1
