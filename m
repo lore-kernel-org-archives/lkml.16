@@ -1,117 +1,103 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from mout.web.de (mout.web.de [212.227.15.4])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 547DA23F383;
-	Mon,  3 Mar 2025 10:36:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E36B51F0E44;
+	Mon,  3 Mar 2025 10:36:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740998189; cv=none; b=IhiOdTUStJHhVOW9/yf8BjdUXxKVgZpJYQoG17cY/JV5Myo6AjmmaGSuNIie94s23ld4KYAd0BcDuChqz7hO8xk4Sa+5otou2d57Vy8nPpA937TQZgyPx8R0EsVL2UlqHIEoVowDbPkpElqTmTt8jLVbP0VWcdmrREkq9cP60lQ=
+	t=1740998221; cv=none; b=BOWZwKCW2x1NufVGcQ1q4D+SiNGXA9PxrGL+8EZUD/rngKMUrtmqUzYl64uuBGZFcCQqglRCsPNUynaROCmlbPi/kHiKXwnSoBfr91xDGQfu5WOc9PG5W/KuozQ/y3KGzQqugrShK8anKpcxZUjX37NLix6dV0nMqrL/OQ8695A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740998189; c=relaxed/simple;
-	bh=N3sPKcpbk+N345Z6QfXw1a68D9uC0IXP2GiFiY2vjV8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=j8B+cx1QCludubWhoJ5eKe+mVfzOY6WGyR1tzRy3RFULimmx48v2WXc+3C9BY/fTpirJkv1SyAcDF0vng0CwoH5IOQcRFxYulqv0HMh80JkHjBEf5OlayxftQ8FKMIWarvFCdBMXPBlo+eGoO1ioARRdP7Mly4u5oFd7V9LcVn4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=CIeizD2K; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1740998221; c=relaxed/simple;
+	bh=Gd1dlzOdtFDhJaQmIY23pfMlDTcKoNMpTpwfvcXDjhY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=U0VDRw/gYgJqDq6BtHMb1Dxw9XaDgBddOszfmmmXofXkb6LvBsZnuQfqQPefHi8cTLx85XfLhzeUztW1m5pvIEQLa1KVzu0TVGNs+D85Pt5Pe/mJwgWbGbdn+tT9U4xykEO5E1QCdpz6OyNavcgO3fkuVUYe4bKJJj9D4EBU7y0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=syaRRWYg; arc=none smtp.client-ip=212.227.15.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="CIeizD2K"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id AE1BE40E0202;
-	Mon,  3 Mar 2025 10:36:23 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id bd2HeietVv99; Mon,  3 Mar 2025 10:36:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1740998178; bh=XNI3SnVJolAxVhmPjt2JrEwot6jN/8zHjxYEktMG+4Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=CIeizD2KFeTbtYEKdnNDnpUDBbCjZpqwAkO17eGwBzpecuIzivjikXY8+BLNqxtL2
-	 TfnD+4lmhvBtg1RPiedflnah3OqDiwlBEBTHScYraeZze7/vUBJVWbqOtLh/XIEfjf
-	 vn/H+X1OHwlS2JlD8EBWQMFyYz/AgvkAOLcqLSgOtfU4Szlas4X45SSXuDPsVsV4Do
-	 Q7ZFUIHAXlbqcNetihj/DrGOUoaMkmc9qwyrh5qv72T88BBIbMpkWzY1kvcEiCVVWH
-	 F+vMqJ1sz3KLAeG2gLiG+Q+iwVsztkq8WEwP8NTNzwMyDJSXxV3GowCo7DzwWVSuyS
-	 rTwrDZtqJWLGIi3sq8VTlwCqmYP1JEhwzQMkNt+zboA+0kjJp/ufc0cVIsN9uWI5rT
-	 KADNathwh6qa4OElEeBSQ+KHdgd5GosTf/1l4FXVgdfjUUW0j2W5RIklyg3XpjXNn9
-	 8UoqEkzjBKx7RzqCx7/fG+/iIAANKeTrCYJv5O0dqlv8dcqZXFbR/QHjgYSuPpvGTV
-	 zqweiOFcXs/A/sbIvjqzKFK/yw9U/5dTi1XPNk4jyk8uMBmgV8ICdpd0kzMELYqAmK
-	 JdJnxk878YZy4HeTp+fgj+qZ/OFOXuPRXHUaXQS3+x4U6yPqmh0o+MOSmbIAM1magZ
-	 KbUuiDvnDuZkQIiP7vXiu4eo=
-Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id CAC8940E01D1;
-	Mon,  3 Mar 2025 10:35:34 +0000 (UTC)
-Date: Mon, 3 Mar 2025 11:35:29 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: shiju.jose@huawei.com, linux-edac@vger.kernel.org,
-	linux-acpi@vger.kernel.org, rafael@kernel.org, tony.luck@intel.com,
-	lenb@kernel.org, mchehab@kernel.org, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
-	j.williams@intel.com, dave@stgolabs.net, dave.jiang@intel.com,
-	alison.schofield@intel.com, vishal.l.verma@intel.com,
-	ira.weiny@intel.com, david@redhat.com, Vilas.Sridharan@amd.com,
-	leo.duran@amd.com, Yazen.Ghannam@amd.com, rientjes@google.com,
-	jiaqiyan@google.com, Jon.Grimm@amd.com, dave.hansen@linux.intel.com,
-	naoya.horiguchi@nec.com, james.morse@arm.com, jthoughton@google.com,
-	somasundaram.a@hpe.com, erdemaktas@google.com, pgonda@google.com,
-	duenwen@google.com, gthelen@google.com,
-	wschwartz@amperecomputing.com, dferguson@amperecomputing.com,
-	wbs@os.amperecomputing.com, nifan.cxl@gmail.com,
-	tanxiaofei@huawei.com, prime.zeng@hisilicon.com,
-	roberto.sassu@huawei.com, kangkang.shen@futurewei.com,
-	wanghuiqiang@huawei.com, linuxarm@huawei.com
-Subject: Re: [PATCH linux-next 0/2] ACPI: Add support for ACPI RAS2 feature
- table
-Message-ID: <20250303103529.GBZ8WF8flezRahE-1h@fat_crate.local>
-References: <20250228122752.2062-1-shiju.jose@huawei.com>
- <20250303173538.000007cd@huawei.com>
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="syaRRWYg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1740998190; x=1741602990; i=markus.elfring@web.de;
+	bh=3I1wcV88eyEZRxUAaJIlfqeblDAV/oemtgH82LOxxOs=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=syaRRWYgiccYmjw9qtXIAxcZR+keMGcrCcJdHVt3VXZv09UXatyFGPrquv2NFk2k
+	 8rkHgHgD2g7XPO0fprbnhkv5tiw9dbQ7kToh8TeUXF2qrzl0gPkszu7S1y9QYT0uJ
+	 EdrUOqUsU3gcsYd0migjTQbC7m89boUFAQ3arY3U+U5KpxRsvuuWXw6Fqn+/vXIJA
+	 /JB1W7WK4mstuz12wAav1C8lfgxLH90kLihkhaM9hRy3pxFLl9ufqxjItLQCiJ9e2
+	 y1+sB5ANVpnTWI2WPIHiytD9OZD1+m6CkUMSnBiYSD9OnWFy50JqU5cd91m+dhzyx
+	 NPWiJzd8UiFK0dXpCQ==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.29] ([94.31.93.19]) by smtp.web.de (mrweb006
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1Mc1VL-1tH5qj13Ed-00i7EN; Mon, 03
+ Mar 2025 11:36:30 +0100
+Message-ID: <82bce096-271a-43a7-a2cf-95b48669ce3c@web.de>
+Date: Mon, 3 Mar 2025 11:36:28 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250303173538.000007cd@huawei.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: video: au1100fb: Move a variable assignment behind a null pointer
+ check in au1100fb_setmode()
+To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
+ Dan Carpenter <dan.carpenter@linaro.org>, kernel-janitors@vger.kernel.org,
+ linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org
+Cc: Antonino Daplas <adaplas@pol.net>, Helge Deller <deller@gmx.de>,
+ Thomas Zimmermann <tzimmermann@suse.de>, Yihao Han <hanyihao@vivo.com>,
+ cocci@inria.fr, LKML <linux-kernel@vger.kernel.org>
+References: <40c60719-4bfe-b1a4-ead7-724b84637f55@web.de>
+ <1a11455f-ab57-dce0-1677-6beb8492a257@web.de>
+ <86551e6f-d529-1ff6-6ce6-b9669d10e6cb@web.de>
+ <3f1e7aaa-501a-44f1-8122-28e9efa0a33c@web.de>
+ <ugymllbkcsg22ffgyofvkquh5afbvoyv2nna5udmy3xfhv2rjz@jhgghzldzm4u>
+ <eebf8c0c-7a6a-405f-aaab-2a8a8c2bd91f@stanley.mountain>
+ <hwk2nf62owdo3olxrwt5tu7nwfpjkrr3yawizfpb3xn6ydeekx@xwz7nh5ece2c>
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <hwk2nf62owdo3olxrwt5tu7nwfpjkrr3yawizfpb3xn6ydeekx@xwz7nh5ece2c>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:vdcLTwaxRRUTNKgdh3PAdhRaE7ojz7Hr9lnrj+MHgE+1lORdgI3
+ LdUTlDAHkrkILlfVtj8Y+FWZ7efdKmsh7dpqRFXHOeHBR7Y2LJkXflzI4TeVUHOA+5S6WK7
+ ducSX12HIESWGnfoCyf5qkT0mmHMrzlzrSiA2hi/nzhZG/O60wWcTcMWWLl8EQv29pU76Qj
+ NN4uq50yUWCyJv4fhWAoA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:6QNZLrdoyzo=;Egynd8vm+A0h2t4Qd75YIb7BLKe
+ VujM9TYK15+bBtsLBJI53tpI65Z4qlFAJE3j27GIjFsUKW3YLbe6Ml7tsNYhWq8ZZsczz9FB8
+ GMgmVT7galXa2FAsES6Vm4e2mqhxh0T3k8okb1CE+oz0zcBelDXH4X9hHRPZ1WDYzTiQC+1/z
+ 7Z5yA++/5VTizt5XBCfRe/Rk8FeecqeV0tcUrfMcbedMFJKyTXkXRBUWvB8jl7wAhKuvOHv28
+ wUjJ57e6/oJfNchJKaGwkHrqYalUgvcfgrUav1YLTB/ZErIiAu/InyQjaNaOhNf921AxS1wP5
+ KMTvBhrB/jNUGhvB2Vu7g9T0Aa/LponvTTVJb/MjQslfUhKEtB22JiQuRW5QJNgsTqIt9TpGF
+ voUzCyoJJ73UnuH0qQiyrQEvJeOt4D6ysgXc0D0T0ejvSXqaFQGThYmdqBzF08OkuAlgTE3FN
+ QXyUsQDZYK+Ao9gsml6vzF04hcH9wcN07W8jvrRtE858AYpo9mLff3+MFwSWQZZjbw7IU2Ktq
+ sGlcfJn+LLnNRNA6YGrs/gnE1mXZHia8aZKJIroUHOufq12kNdJJ1aOVn8xeE9EPa+2TM9jwF
+ u+zQINKT/giAGzWtl9aUo1Y1Q7JiIOCG5IOMB3imAzbWn+uEvxyI/aTdCKRcVMjJ/Jpnb/i09
+ ukl/8yYwNFnYUmFcYWwgxhnpdW2QIXRmXNs8gZAAKnZ7H6fhXsKb76SBsMtLek+gUQygi1FYl
+ AwMiQuxAFmWA/BoG2wyx81eB2y2oqsRlGOsPB7eN+2/YA9P/XtvoRZHpfQzW9NaJHm2mMJr+E
+ d0wLekUgx0m8tzDUOEhzK01OzEb0PpogQ4vbf8/zNshffO+iAHCCwe++RmaEr/NW6DoCJVGGZ
+ AKHyuqFG7EsegodcRap+TSO5amIhA8eAvb3iyCEiCX4YEsB+UHKavrceeuvoR5n1yngXui2sV
+ hTS4uTTfeGEdC0HARsj/h2tJn4PsmkEv8/pKaZ3SEjCLSNU/I7QnRbUHt++MIoCI94mmOVtEe
+ wyLH6sQ8rowX/WWh7heBZrI8klsxOA6k2q+OavDc3UnIdAw9WV7Ob84tjlCdlljYGmNUs2QzN
+ FaDVv/RLFHixOjpF72nSHnDzZubHXNSAdJE4rNufcPYv3x8d/W47Xs8T/4HEkG21KwW6dcw8O
+ sQY4I8H8lyn+SDBhynfhsFODV7w3PYs8bRWeoBsy4Thg57EEIn1XW1DX9BVp9xzuvRQWr8et1
+ gZnVkpmWZt2ChNp1QP5hzUUxp3w80ANE4R7MFUwdqzCcsIsrvT/qmZGAqhkujs3bjZTvU3fN1
+ UphLrxY+3rSfMzlIUG7KBA0/qJk7CRVuCSSyYE9I1xX4TovyKtV6Eg0u7YzHHi7u1Cdzr0u2C
+ VONrsep64vb7vqsMn4mZSn12IFGLP0O6anM3zoxd0XapdR8G+0iHCECWBHeAXsw1ODFMGcnro
+ /v/p4Ag==
 
-On Mon, Mar 03, 2025 at 05:35:38PM +0800, Jonathan Cameron wrote:
-> Borislav via ras.git, or Rafael via acpi.git?  I don't really
-> have any preference other than making sure it doesn't fall down
-> the cracks!
+> 	struct fb_info *info =3D &fbdev->info;
+>
+> 	if (!fbdev)
+> 		return -EINVAL;
 
-It's probably easier if I take it.
+Is such a null pointer check still relevant for the discussed function imp=
+lementation?
 
-However, just from a cursory look, it would need some scrubbing. There's stuff
-like:
-
-+               ps_sm->params.requested_address_range[0] = 0;
-+               ps_sm->params.requested_address_range[1] = 0;
-+               ps_sm->params.scrub_params_in &= ~RAS2_PATROL_SCRUB_SCHRS_IN_MASK;
-+               ps_sm->params.scrub_params_in |= FIELD_PREP(RAS2_PATROL_SCRUB_SCHRS_IN_MASK,
-+                                                           ras2_ctx->scrub_cycle_hrs);
-+               ps_sm->params.patrol_scrub_command = RAS2_START_PATROL_SCRUBBER;
-
-
-which definitely needs shortening. There's no need for a wholly written out
-"requested_address_range". I know variables should have meaningfull names but
-writing fiction shouldn't be either.
-
-+static int ras2_acpi_parse_table(struct acpi_table_header *pAcpiTable)
-
-Yuck, CamelCase?!
-
-And I'm pretty sure if I start looking more, I'll find more funky stuff.
-
-HTH.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Regards,
+Markus
