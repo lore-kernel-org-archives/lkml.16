@@ -1,65 +1,66 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA3C423719E;
-	Mon,  3 Mar 2025 19:13:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5683A239086;
+	Mon,  3 Mar 2025 19:13:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741029185; cv=none; b=geWICmv1k2FctIDnW0Bu4x8ywxv6B51HanE+mKcvtcFOE34FzozoE81zZnCKF08wbwePYMeKAGWqaZeIBMNhXeXymCYPs3GG72Ve3D12gfTr7pThFEXWZT5aE7Lfd7OZIzSa1qwwrheP5D6VkKvBH+pZtQ46Yc/Vs+Vt7bGQQqk=
+	t=1741029186; cv=none; b=XMZeUXAL2wfya80/XXUJCyP4LjYSanUuZwV+EUJja3JMPaGtv3f8yEhN2OgT6GQxaHel3ojf9TNQjdv1lo2Ne98YqoB0chDEBAjcl4nUF6TJ2OzG78CyWOQN5QMwsPj/Tx/uE2WvCdg1ISn6giMQ7iHNdtneHNykHIeZ0Jql+SU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741029185; c=relaxed/simple;
-	bh=8TrOaxFg76IClECN0wLJ5eLfpiQ9GTEJk7c1yAHjgig=;
+	s=arc-20240116; t=1741029186; c=relaxed/simple;
+	bh=qwPopfhOFrFAZBXufrxTXJWNHkyyGQwJS75nIJ2hblk=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=LDTEwHTNgKCQVlBb32cW30FitNszhiFxJJvpfaD1Rms2MwmX+6mS/hXHmgCVEkRbp8OQi31RrTaC2IQfFTyBdXSVd1yivwS6QJMDk5hTafcUeXRAseos1YDt8UKTKTf0n22NHCpBv6ULEVFroTQElP07558+IqhYls9x4oEusrQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=dqc5asM+; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=7fe67Ojw; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=DePTq44J6GxGjjYcq4twd3E64mdwFIptqwxK6TlQ/3i6TX33StlRnx1xOu5P87Q3ogirdh6XDoX1tcNNoWgfS0aYkDOm6b7iFvTyKF78WDGqNEVcC76ch6toNUZuPuJkdtgoCSJy6q2O9W0RatjF07F7vM9jOpxot/BJPozHJmg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=neNJ3J13; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=AwKvZsGP; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="dqc5asM+";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="7fe67Ojw"
-Date: Mon, 03 Mar 2025 19:13:01 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="neNJ3J13";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="AwKvZsGP"
+Date: Mon, 03 Mar 2025 19:13:03 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1741029182;
+	s=2020; t=1741029184;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=vmN8UFg+aMGVj8+TyaWzG7venv06Na8e+49PvqfTgbg=;
-	b=dqc5asM+OGb2A0y7dOf4jNcWu6t/tvqk1BWnn+4RDxP5XXfopbmdwwCjj06OXnlxWYLzr6
-	3N7WCSTTRQx/0PykCYJO5Err36hgiOqiu0L6dtcTzq41HMYXCu3dKrRDoOjzvy4ocGEVeI
-	pB7kNMDHlNjkj5y6xVFKfpgG1KlTeDBQUWwj8LEdkGZ7N0v45Hf60pjkhKqKlVduW9Nu9W
-	f2dxSq1NAX0lE9vKZyRs/yoPaXADQ5q0rx9DcTc1OIT49Fdg4EnkabVgN5cRNBhPKJLMOB
-	Kj4dgO0Bqc5rniUkv16C7n5rhj2PxicSY66XYTdrIvf1B8WX0tuhW0ALo7iW6g==
+	bh=0UUB0LR2aX4qL5tpeKJhnSAOCZQIh9kqaMpPMMy13l4=;
+	b=neNJ3J13qVbLe7CdIu9JrRdee9FQc6ufNy0ZE6QZZ9j8CKa2E1GB1IgVaA1+z2QxHVZtpJ
+	37HdsQdQLnKDwZqn0DYrh1/wUoWSx0JnM9B3v35HB32M/sI0RebyUsPlE/aEQlflM31AXt
+	Igq4izpFL//BwSGj8JOpqS8MOWd0ZcwKBwb6frjWGiCSPr4mEUFOGwwMJkCLEpMJyQ92DY
+	P77s3sp/Di5YIIXNJlDkVZN77E1x1gNDp+Y3+spPEKX1TetR0gmXDUo1tU/a2zulOxTjVB
+	MlUdzjxgRItJ+E73wUuyZVVJ+vdD+uYYdqTZxMgJMqej1wb9U+RK0EOhkSjQWw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1741029182;
+	s=2020e; t=1741029184;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=vmN8UFg+aMGVj8+TyaWzG7venv06Na8e+49PvqfTgbg=;
-	b=7fe67Ojwgo6vS8quIJ21DV0j8Ey7LBbh704cPPeLllWcnmNlS3Pli7nEUtX3iB4+AIkCco
-	O/CARC1Edf+WdRCA==
+	bh=0UUB0LR2aX4qL5tpeKJhnSAOCZQIh9kqaMpPMMy13l4=;
+	b=AwKvZsGPyJwSh2DcIjPujMlB0wH7XIfNkT9tScFNYQ0QNmhVBo98pTyYTPfbKZdzSTjtSR
+	27I25dUtjzXIB6BQ==
 From:
  tip-bot2 for Thomas =?utf-8?q?Wei=C3=9Fschuh?= <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/vdso] elf, uapi: Add types ElfXX_Verdef and ElfXX_Veraux
+Subject: [tip: timers/vdso] elf, uapi: Add definitions for VER_FLG_BASE and
+ VER_FLG_WEAK
 Cc: thomas.weissschuh@linutronix.de, Thomas Gleixner <tglx@linutronix.de>,
  Kees Cook <kees@kernel.org>, Vincenzo Frascino <vincenzo.frascino@arm.com>,
  Shuah Khan <skhan@linuxfoundation.org>, x86@kernel.org,
  linux-kernel@vger.kernel.org
-In-Reply-To: <20250226-parse_vdso-nolibc-v2-6-28e14e031ed8@linutronix.de>
-References: <20250226-parse_vdso-nolibc-v2-6-28e14e031ed8@linutronix.de>
+In-Reply-To: <20250226-parse_vdso-nolibc-v2-4-28e14e031ed8@linutronix.de>
+References: <20250226-parse_vdso-nolibc-v2-4-28e14e031ed8@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174102918199.14745.13995480879251791212.tip-bot2@tip-bot2>
+Message-ID: <174102918345.14745.11018462127149858100.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -69,70 +70,44 @@ Content-Transfer-Encoding: quoted-printable
 
 The following commit has been merged into the timers/vdso branch of tip:
 
-Commit-ID:     e0d15896f5dc90f4bd36ab79c958f6eff3f7f403
-Gitweb:        https://git.kernel.org/tip/e0d15896f5dc90f4bd36ab79c958f6eff3f=
-7f403
+Commit-ID:     049d19bb3807e10902d41125c9d511025389718f
+Gitweb:        https://git.kernel.org/tip/049d19bb3807e10902d41125c9d51102538=
+9718f
 Author:        Thomas Wei=C3=9Fschuh <thomas.weissschuh@linutronix.de>
-AuthorDate:    Wed, 26 Feb 2025 12:44:45 +01:00
+AuthorDate:    Wed, 26 Feb 2025 12:44:43 +01:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Mon, 03 Mar 2025 20:00:12 +01:00
+CommitterDate: Mon, 03 Mar 2025 20:00:11 +01:00
 
-elf, uapi: Add types ElfXX_Verdef and ElfXX_Veraux
+elf, uapi: Add definitions for VER_FLG_BASE and VER_FLG_WEAK
 
-The types are used by tools/testing/selftests/vDSO/parse_vdso.c.
+The definitions are used by tools/testing/selftests/vDSO/parse_vdso.c.
 
 To be able to build the vDSO selftests without a libc dependency,
-add the types to the kernels own UAPI headers.
+add the definitions to the kernels own UAPI headers.
 
 Signed-off-by: Thomas Wei=C3=9Fschuh <thomas.weissschuh@linutronix.de>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Reviewed-by: Kees Cook <kees@kernel.org>
 Reviewed-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
 Acked-by: Shuah Khan <skhan@linuxfoundation.org>
-Link: https://refspecs.linuxfoundation.org/LSB_5.0.0/LSB-Core-generic/LSB-Cor=
-e-generic/symversion.html#VERDEFEXTS
-Link: https://lore.kernel.org/all/20250226-parse_vdso-nolibc-v2-6-28e14e031ed=
+Link: https://docs.oracle.com/cd/E19683-01/816-1386/chapter6-80869/index.html
+Link: https://lore.kernel.org/all/20250226-parse_vdso-nolibc-v2-4-28e14e031ed=
 8@linutronix.de
 ---
- include/uapi/linux/elf.h | 30 ++++++++++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
+ include/uapi/linux/elf.h | 3 +++
+ 1 file changed, 3 insertions(+)
 
 diff --git a/include/uapi/linux/elf.h b/include/uapi/linux/elf.h
-index 8846fe0..49f9f90 100644
+index c5383cc..d040f12 100644
 --- a/include/uapi/linux/elf.h
 +++ b/include/uapi/linux/elf.h
-@@ -491,4 +491,34 @@ typedef struct elf64_note {
- /* Bits for GNU_PROPERTY_AARCH64_FEATURE_1_BTI */
- #define GNU_PROPERTY_AARCH64_FEATURE_1_BTI	(1U << 0)
+@@ -136,6 +136,9 @@ typedef __s64	Elf64_Sxword;
+ #define STT_COMMON  5
+ #define STT_TLS     6
 =20
-+typedef struct {
-+  Elf32_Half	vd_version;
-+  Elf32_Half	vd_flags;
-+  Elf32_Half	vd_ndx;
-+  Elf32_Half	vd_cnt;
-+  Elf32_Word	vd_hash;
-+  Elf32_Word	vd_aux;
-+  Elf32_Word	vd_next;
-+} Elf32_Verdef;
++#define VER_FLG_BASE 0x1
++#define VER_FLG_WEAK 0x2
 +
-+typedef struct {
-+  Elf64_Half	vd_version;
-+  Elf64_Half	vd_flags;
-+  Elf64_Half	vd_ndx;
-+  Elf64_Half	vd_cnt;
-+  Elf64_Word	vd_hash;
-+  Elf64_Word	vd_aux;
-+  Elf64_Word	vd_next;
-+} Elf64_Verdef;
-+
-+typedef struct {
-+  Elf32_Word    vda_name;
-+  Elf32_Word    vda_next;
-+} Elf32_Verdaux;
-+
-+typedef struct {
-+  Elf64_Word    vda_name;
-+  Elf64_Word    vda_next;
-+} Elf64_Verdaux;
-+
- #endif /* _UAPI_LINUX_ELF_H */
+ #define ELF_ST_BIND(x)		((x) >> 4)
+ #define ELF_ST_TYPE(x)		((x) & 0xf)
+ #define ELF32_ST_BIND(x)	ELF_ST_BIND(x)
