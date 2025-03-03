@@ -1,119 +1,107 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5842920D4E9
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 13:22:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 775EB78F32;
+	Mon,  3 Mar 2025 13:25:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741008167; cv=none; b=rIsMwx+0hsc6odoMmdb7qotGmqJEcPVT74Krg+lkrcew93yFYko0qFXRLq0KYTCQMg4/XmNu9V8cDwCe3ba2vTyAf1biULL6vC96nox+CQ2y55rkFQnvTatb0f5pZTp+VUztv7yJdlUSdvMjIEsj4uWDdLkxZ3e2MbZYituPtBg=
+	t=1741008321; cv=none; b=pMrLq7oTZAw34O9B0L8Lc2kJcSIb0aDH/U2b8GGiHP76P+Focf+K1fPypEuuLDsAF+haC2Z7CEKn39TEYEBICoYkO35JDQcgx4trG6F3nKtisM05RLlPN8whMDkc6Hvt9zS7DI4yTF5CQhJ+MNx7OAHWKj9Gv1evsqODT5H5BSM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741008167; c=relaxed/simple;
-	bh=5i9uP2Ze50hwz43llaF1f86tTfk7p6fywziSf77roYY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jgaeOvATE1a8dFrC7UoDMTPUGVhaLAzXaQTUz/KEpN7dCR+6S7jGT4kmiPB0oLYf5/amPiKY/7uc+DK7MUve8bfaKuiTKkm+VOPSCpwAzqgIFYcEbf72ypTITAjARTas4ER/qSIe9gGDhrd8HYP9E14x49PEiMeVmY6DCTmMiLI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=4sigma.it; spf=pass smtp.mailfrom=4sigma.it; dkim=pass (1024-bit key) header.d=4sigma.it header.i=@4sigma.it header.b=nDt6q4/K; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=4sigma.it
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=4sigma.it
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=4sigma.it header.i=@4sigma.it header.b="nDt6q4/K"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-4399d14334aso40859525e9.0
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Mar 2025 05:22:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=4sigma.it; s=google; t=1741008162; x=1741612962; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ECd7n/EGUmOy5J+E/dKH2tzC4YWX/xlVp74bjlxoPQg=;
-        b=nDt6q4/K0N8xzRqLxFMqd6p1ibGHiV7xxPWXT+usVbOPibIx5bWm7/n/dn9DYCj9hj
-         c2H4VCsB/m13egqj5b5paRRnZK9yUobXj1xIDb7HDEuTJ6Dx51+xV7isuyfBODiDWnli
-         NeDXt2m+BisCAEvycr6XqxaD/0VQu9tuMYZFI=
+	s=arc-20240116; t=1741008321; c=relaxed/simple;
+	bh=CF68ITkEzio2lwFpdhhqfi0tekXN0M3JCQJhfd1ikgE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=MCWwmgfd3ikoQTSH8mZYreDXJlNRBc6PZznavyMx354Gj1jcv/sCCZp3ezp8eXiqTG9dwPHd7xxqGLnyyLDtZC+TukhBApVN253amxxoO9PiuBci70RNVkQm3ybMHQwlFB7AyZ1k3KV+bQR0CYgXSf4+yz/GH4VyanZmX9oJIlU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joshuagrisham.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.167.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joshuagrisham.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-5495c1e1b63so2035368e87.0;
+        Mon, 03 Mar 2025 05:25:19 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741008162; x=1741612962;
+        d=1e100.net; s=20230601; t=1741008317; x=1741613117;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=ECd7n/EGUmOy5J+E/dKH2tzC4YWX/xlVp74bjlxoPQg=;
-        b=D15uM038hP5FfZqIUs7XQsfOQZLBDRJ2ro3sIjax1rQZ+x/djzW2byP7mvSJJJO6o2
-         f+1UpFGoHpV3MqaO0bRmvGvd+bgfokby//oVdZaJOMStyKWQ/ot5Y+8Ngo54SYP5e7il
-         y/QxThZAL8Wt/f3akBWVET+w73HQuKbAH3+HmeC645GgfHX6Bu9S4cGoBeicSmmBHKzB
-         67pjXqTctilRBOPZGr1JSdHIxRunrOz6gvkD6sPdbt7EIsO6qfSO2nkkkbuyHz9HvPBL
-         wk9OR2B4QSAwxaaLiyEHyHdBm/Amaody+UqlJquSqBa9R7YS1DBxuNKd1cVi7QhXA8qj
-         jBgA==
-X-Forwarded-Encrypted: i=1; AJvYcCVu+8jGGKMHVoHc/y5Jb1HdXaxLWCpnqqPKTJVOS7tYlqGBzRzVlwXZvL49vnRfUcXLmNqLMv55U3vKQiE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzVuJe6nVrDEC67+UMawctI1f2O+dsl9XG8OZN7dw3YcV0djyNv
-	L1dyQHaX4LWcQJkO3u13KVv+OyJOLhJXLudgh49L4DfRQ73Qkh/Z52tfeKZ2BA==
-X-Gm-Gg: ASbGnct8bhUiV/5RWEf3RODVaaeaLiHuWxE9b02E1HGwc/SfJwjQ1/v8LHoEmVkFI1F
-	1Jz8AS65+yuoaJlNEvkiyXZ+v32BlRi1pK7bCGHd1gKz0U2Yb9j3ppg+XM22O7eRty+JjAJJrBL
-	Y9VLdI7vs9iZIm3xN2YroB4GiwT3pZ7L+fz6b3lWpPP702//Qk9RzvOyULJo2anyip2purCX3f1
-	hRM8Q+pnVBQGV6xt32ASw2xHKqJta5HEMUJ3zfzI0vvDLo3lePbSnqARmb5Y7DoChWvrsuXU1rH
-	U546NTPCwtrSgbySfW3gs+HoInL7KTe1JYG7Klg+P9H1C0jmBhy2HeglJgOyfGhzLZ7n9vQyQo9
-	kl8Z5rCs=
-X-Google-Smtp-Source: AGHT+IGakxsdP7cssVmEZsfodi7ojWu3CfAaSJKH4e/l+/9KTp9+UWQBz14kFBtrP7h34XIaqmym6w==
-X-Received: by 2002:a05:6000:2a3:b0:390:f9d0:5ed with SMTP id ffacd0b85a97d-390f9d007fdmr4858802f8f.1.1741008161601;
-        Mon, 03 Mar 2025 05:22:41 -0800 (PST)
-Received: from marvin.localdomain (94-35-64-90.client-mvno.tiscali.it. [94.35.64.90])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43b736f770asm166769265e9.6.2025.03.03.05.22.40
+        bh=LvI8UXCWnMKFItrWuIun9EnniZdpCTtSLK3drgRiXNY=;
+        b=TiPaRhxt9OWS1FT+p0fD08f02ZBBu//NJgiBYLMbh6xhXXylTTA1qXpeHYVAtPWzL9
+         Ls/71il1Sfu9fBwPDzXXeKZC9soAVwnNZq6bn4MrQnI6t/iMTLAm3eHbhINSkFKdHA2r
+         6xZTTBOxMtY1w9Ir97gPcUaxCRrhRwQrnxlnu9NpLzDkUMLhUGWRMGLjMdkZE+fmNfHw
+         KkX1VqPJEN826qr8vXL76Ty7PwlOKtcT95PeTYpI2yS6CCQ/doulVIoG0f5J6918KATy
+         NaNkKXrJ+sdrrAcGACvtssoniLv+XCXjFu4nL4DvHOJgBPvTS7l+FSwZmn9TsykUv0r+
+         OUuw==
+X-Forwarded-Encrypted: i=1; AJvYcCVyXv1XX+u4UViqH/zgFUlAUHvNAql1gtSyUrvD2p3L8MX53vUrF6XZqCv2EGICYTvTMmAndXHAPVmffo9E33QPJcTE5A==@vger.kernel.org, AJvYcCXnM5z8ORff9rQFxpdtX8M8VmMAktiPOSpZAux9tRIAuHgx7Mzo+6SyIOVsZJRjaFO4Kqft0FcLAF+6AGE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YydXnjhAJLNxfX2SDB07rhAFoGD52+1+V43GPqVT9JV85iaEEI4
+	ttxIWLlRKpDHJUuhZr3t4laNUOeTzteEz9/HCBuCCQWdOXh71rDN
+X-Gm-Gg: ASbGncvw6ng6NeoB1U4cLsRT7O49FsIaZW3vwfMUIAcejn9ktiKKNF7xb0u4mffvwtL
+	QwlarFnO7qL0jgPjrfNRwlZ3f/cSOM2TWwXEodZqYL8keIOB86Oc3kMRBAFuktd39+OykP8fyZk
+	LY0fsa0F4WOx1+/l2zxccwHOS18SI/dNf/Og/4HUgZ+sqgK2waL12RzeHd6fLSLsWLCqFszTFr9
+	cE4a4e6ZAFRcIfl5kUKuZoEvh0duJOOyIwT/orIZ+0YJV1tFTdq9DOtz5QD1xvUyGfEu4NLwspl
+	umpxXPL0CC2UCuy82UsCeTV+i5KElF2ApLd0UUmKtdim0kYjsO1C2+0QlbnXTLXN/PP/xuOZ1IX
+	9ggPw3UTZQw==
+X-Google-Smtp-Source: AGHT+IEWiJqiN80wxUoSGkDQiEjqewC3CEjHxlQkylO7RhGd89y/xiyRzvl6dA6nkfkKffRfu4Gg6Q==
+X-Received: by 2002:a05:6512:3d19:b0:548:794f:f9dd with SMTP id 2adb3069b0e04-5494c111896mr4440514e87.10.1741008317210;
+        Mon, 03 Mar 2025 05:25:17 -0800 (PST)
+Received: from galaxybook.local (82-183-24-76.customers.ownit.se. [82.183.24.76])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-549497fd3c6sm1141139e87.206.2025.03.03.05.25.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Mar 2025 05:22:41 -0800 (PST)
-From: Silvano Seva <s.seva@4sigma.it>
-To: lorenzo@kernel.org
-Cc: a.greco@4sigma.it,
-	Silvano Seva <s.seva@4sigma.it>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	linux-iio@vger.kernel.org (open list:ST LSM6DSx IMU IIO DRIVER),
-	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] iio: imu: st_lsm6dsx: fix possible lockup during FIFO read
-Date: Mon,  3 Mar 2025 14:21:25 +0100
-Message-ID: <20250303132124.52811-2-s.seva@4sigma.it>
-X-Mailer: git-send-email 2.48.1
+        Mon, 03 Mar 2025 05:25:15 -0800 (PST)
+From: Joshua Grisham <josh@joshuagrisham.com>
+To: W_Armin@gmx.de,
+	thomas@t-8ch.de,
+	kuurtb@gmail.com,
+	ilpo.jarvinen@linux.intel.com,
+	hdegoede@redhat.com,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Joshua Grisham <josh@joshuagrisham.com>
+Subject: [PATCH v2] platform/x86: samsung-galaxybook: Fix block_recording not supported logic
+Date: Mon,  3 Mar 2025 14:24:32 +0100
+Message-ID: <20250303132433.348653-1-josh@joshuagrisham.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-Prevent st_lsm6dsx_read_fifo and st_lsm6dsx_read_tagged_fifo functions
-from falling in an infinite loop in case pattern_len is equal to zero and
-the device FIFO is not empty.
+Fixes logic error when block_recording is not supported but the fw attr was
+being added anyway (reported by GitHub user bbregeault).
 
-Signed-off-by: Silvano Seva <s.seva@4sigma.it>
+Tested myself on a Samsung Galaxy Book2 Pro (has block_recording) and by
+bbregeault on a Galaxy Book2 Business (does not have block_recording).
+
+Fixes: 56f529ce4370 ("platform/x86: samsung-galaxybook: Add samsung-galaxybook driver")
+
+Signed-off-by: Joshua Grisham <josh@joshuagrisham.com>
+
 ---
- drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+v1->v2:
+- Add Fixes tag with prior commit (thanks Ilpo for catching!)
+---
+ drivers/platform/x86/samsung-galaxybook.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c
-index 0a7cd8c1aa33..7f343614f8a5 100644
---- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c
-+++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c
-@@ -395,12 +395,17 @@ int st_lsm6dsx_read_fifo(struct st_lsm6dsx_hw *hw)
- 	fifo_len = (le16_to_cpu(fifo_status) & fifo_diff_mask) *
- 		   ST_LSM6DSX_CHAN_SIZE;
- 	fifo_len = (fifo_len / pattern_len) * pattern_len;
-+	if (!fifo_len)
+diff --git a/drivers/platform/x86/samsung-galaxybook.c b/drivers/platform/x86/samsung-galaxybook.c
+index de1ed2dc6..5878a3519 100644
+--- a/drivers/platform/x86/samsung-galaxybook.c
++++ b/drivers/platform/x86/samsung-galaxybook.c
+@@ -1100,11 +1100,13 @@ static int galaxybook_fw_attrs_init(struct samsung_galaxybook *galaxybook)
+ 	}
+ 
+ 	err = galaxybook_block_recording_init(galaxybook);
+-	if (!err)
+-		galaxybook->has_block_recording = true;
+-	else if (err != GB_NOT_SUPPORTED)
++	if (err == GB_NOT_SUPPORTED)
 +		return 0;
++	else if (err)
+ 		return err;
  
- 	acc_sensor = iio_priv(hw->iio_devs[ST_LSM6DSX_ID_ACC]);
- 	gyro_sensor = iio_priv(hw->iio_devs[ST_LSM6DSX_ID_GYRO]);
- 	if (hw->iio_devs[ST_LSM6DSX_ID_EXT0])
- 		ext_sensor = iio_priv(hw->iio_devs[ST_LSM6DSX_ID_EXT0]);
- 
-+	if (!pattern_len)
-+		pattern_len = ST_LSM6DSX_SAMPLE_SIZE;
++	galaxybook->has_block_recording = true;
 +
- 	for (read_len = 0; read_len < fifo_len; read_len += pattern_len) {
- 		err = st_lsm6dsx_read_block(hw, ST_LSM6DSX_REG_FIFO_OUTL_ADDR,
- 					    hw->buff, pattern_len,
-@@ -623,6 +628,9 @@ int st_lsm6dsx_read_tagged_fifo(struct st_lsm6dsx_hw *hw)
- 	if (!fifo_len)
- 		return 0;
- 
-+	if (!pattern_len)
-+		pattern_len = ST_LSM6DSX_TAGGED_SAMPLE_SIZE;
-+
- 	for (read_len = 0; read_len < fifo_len; read_len += pattern_len) {
- 		err = st_lsm6dsx_read_block(hw,
- 					    ST_LSM6DSX_REG_FIFO_OUT_TAG_ADDR,
+ 	return galaxybook_fw_attr_init(galaxybook,
+ 				       GB_ATTR_BLOCK_RECORDING,
+ 				       &block_recording_acpi_get,
 -- 
-2.48.1
+2.45.2
 
