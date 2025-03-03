@@ -1,118 +1,90 @@
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6CFE1E285A
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 18:56:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D16FA22ACE7
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 18:56:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741028167; cv=none; b=gFD3259/t/v2bbofzMGgE8FZ3bh7suyF4Um2iCG6I2e0rRabFHi66MkwonaNJEk1njlhpGJoP2AZdWRXZL3SInrQNiH+5M45XAu0YCDWYn7ECNgYl/ArXAm7skJDLiYrKSwQT5tLiTmNYCCjjwxPSkwe6KgbnUUo8Tw4rxjeNG0=
+	t=1741028213; cv=none; b=kmsLKTVzwWCOFW5n0PRg5Q2y3YjFaUecVkRQRwXtn6oFsysvtQwB5FO/iMOQv+TVKTZd6J1JTmsRZS5lSNZQbBrGTB5+WRTmRlrz5akTujHKK6NmFfPSLaj6V5D2F4xu9X/n+kcHglgetUwxDz+4SfM6oH/dRE0UHBzcRJtpy0E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741028167; c=relaxed/simple;
-	bh=40lZ1B3I0WpagjJJY3c7pknBCiXUw+PnTGKE9/WolFE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Gjmuy6qyqcQy/2YESOPWCT6I34+JHEFBYd3sg+9fAlrQNDF4J1KV0XReYR6seiE/qv0XwzVLw1fhXsZmKro7yY5XvT+FQuUihKbsZjMsQ/8QwE95v4VF9ZwNEWijZ0K2FkXYy+rq12DTsY0uUahHpnrzvLn73blmLi7tdb7//+0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=M1LVSZkD; arc=none smtp.client-ip=209.85.208.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1741028213; c=relaxed/simple;
+	bh=I+YMifaWTe/KtcKWykwnguS02DQwUt/9Nd7ZBZTaipM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=emVD+1IwQV5y4iyckTE2Pg3o0Evj33Nx/Nay3soXULmWyRfUhYKCLPsCoBaeZdzgxvAeHqFHIWtWmuPl26vGxRz05dI/NGoY/Kp85AVLY53NK48H+mrkrvQUF0nm483tKHQ4eL4meF0WnQFaiYgjWdZ4gLzJ3J75JKCIL5b39mg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=aGVYKuGy; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="M1LVSZkD"
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5e4f5cc3172so5241835a12.0
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Mar 2025 10:56:03 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="aGVYKuGy"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-43bbb440520so16872725e9.2
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Mar 2025 10:56:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1741028162; x=1741632962; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=fSfhJwWsj+zXdSemjGaY4k9oeyz7B20wLL/Ct0QzSTI=;
-        b=M1LVSZkDldcz9I4LJA5X3gQprKLSrcONjSFUo36f3NJbn33ZccfEagbWcekmF3keEq
-         OzAprCqaQGLCQSISRvXNEmvydUq1eolauvf+EBwpiwtIv3V2tiQF5CP8VRxO+K6caEIq
-         bmAmgtHlFzvxH9rzPpwzaWbK3gsCPtLM7Z68c=
+        d=tuxon.dev; s=google; t=1741028210; x=1741633010; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ByURWW4/51grEFFoJ5cNbGWq84mjT1dgOMDzzVdymTY=;
+        b=aGVYKuGyOfyU9UcQavzr01XQNPAZs5kAe6gKMjYHl4T7XQjPiPHek5YgM1iqH/1oDM
+         M0xI8p3Ty1nK0IPEGz9ZQi0Ti2fi764sF/BZDfJRzJncCTkfG/BV4xA7z4hwkmtdzjLI
+         BspErz0GpDg707j8UFSbl1drZaCkibpsQkcmK2/+F4wB8YW+ednOV946QvKqE1UxUMYL
+         uahffyCxut23erQrfWsI577jiTlvec0IJqDVFYy29BKWM5xvEgAdxqXmM1yboAzK/geS
+         YhgO5eOFtBbhSGu7L54G/fhZfS116c/uvGPtEOEtEQR/7yKFHqyulGPuVWupTgeZ9s2S
+         7XqQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741028162; x=1741632962;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=fSfhJwWsj+zXdSemjGaY4k9oeyz7B20wLL/Ct0QzSTI=;
-        b=JolUWcFI+csa1tAGRp7LEOdZHQtGqOBd16yBq7ygiaZkwSg7ne7kPr8/SplYQoNoj7
-         bvcXizXlx07kqKkcZ+WTV0/O5pczKgyC1IBhDzfW/zKLm2gUb1Jt0Hdp8PUWE8Tat6Nz
-         5vJRmcW+lPfQtMxNj+5Ng52PghyrpwXi8LprntX1H2ZPmljhUiIN12tyZnZ+f1j0eRwl
-         JLAJ/igP5JHpq6aZNc426mw5X/Kf6v7RlVBpKZWAS9sG7/xiYS/gMeXKJWf6GqofwLSj
-         hVPR15mmJKhO39nt98Pz7/M6Q/O7emyvet7otvSTa5eKYnQstW7aHaeAA/ysEnO0eCte
-         zZXg==
-X-Forwarded-Encrypted: i=1; AJvYcCWXApsxll9lpOfRFqIHnvDum83FYls0ZQq70KvUJyZH+oOl4ppey05Bew8NWbvu/UR4VgIxaQ90jCs2PRk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywk2dMa1JIJIdZS15d6iCVWouJkWCytz3D4z9TFCkhuT3jX5RnW
-	4B4IbFXcmOTPx4RkJlr6ZZjwjq9EGDuNvFIURmnK1tabZ6SxGGucUFbGj5HqyWr8X5O53kAvi2Q
-	A658=
-X-Gm-Gg: ASbGncs2LkfU0aDMJSRaJVo0kcPiJxx15RKZ6hiIkPBWtWbIKrFcTGaCt8l+NsTB5gS
-	pAPiApta1/sx8TuN6lEWagTRn4C1EmYjj3xV/EiogAxingZY5vfHHsuCOJ1fJar1fgGwAwdmmXt
-	n+Mv0Uw3Kwc47K13o1PTFvepIXhN/sU5rsWv9xovolkR60cq4tH/9Aa64g6Q2Y2QPpBZ2PpxQgn
-	M/8rRm5wq6BQL+gI34D4w2zSSyghpbtgRR3FgIQFW8ZOn1SHUZh5X0pqOUrqsujRixVTrlUb8qF
-	5pe+qTBVZZ2VYE1qL7RJQHRi89Irmk6CMg2VYO7a9IY3qsx4FDnCqSz2p+y3YLVCMejt6blB3fC
-	fxLhbiyvYVkhf7fxzrWk=
-X-Google-Smtp-Source: AGHT+IEoifFjmxIXFF4XcdjA+yh5jZl3O06uH1519swKAX/3MYCx6Oz4B3iVpzBBy37As86cx9TNYA==
-X-Received: by 2002:a17:907:7213:b0:abf:75b8:cb38 with SMTP id a640c23a62f3a-abf75b8cc51mr641407066b.36.1741028161800;
-        Mon, 03 Mar 2025 10:56:01 -0800 (PST)
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com. [209.85.208.53])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abf78023d7esm238287466b.34.2025.03.03.10.56.00
-        for <linux-kernel@vger.kernel.org>
+        d=1e100.net; s=20230601; t=1741028210; x=1741633010;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ByURWW4/51grEFFoJ5cNbGWq84mjT1dgOMDzzVdymTY=;
+        b=g2I/J1yf6EAhd61Uh2+ymDVKFGurPYybY/BRM/DK3nBJiyCfcG/Pc0tHI3d+nUR+rT
+         gr7bowRQQQUATc4ckUX1LQegd34+b4vY/STdsCKmTw/R/2bYRLb6ZvzXhz3m09kxh2Bk
+         c6Q6EZihmtHgS+PXRCTsYbbWFyvWH89t9YrFNqZmKN/aToBLIwiknV8hZVgZBRmD4jyc
+         J/1iTmZF/THSd9EnEozitze/sazRhCDSjOUlr5UVBmriihq0U3pbKEsnLwzaznySv01h
+         tBLGCkHksTAysJi4VjiDt11GYjL3HhAnMfm/wBHkkg02jpX5wa7S5RcSjEozUa5ioZYH
+         uGRQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUqu2FlrDp57F//McT55MtzXjcBEGqELcteWF0dKwMIjfXKIEV/cfT8nmdzHO6UOW/uO7yHsbezuWGWrp0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw8td07asB4Ma/Am1NAaiPh2w/dcKflpbo5lU6P+yhs6V2blQ3R
+	6+ezT5mlxZ9dLeGQjJAYTNejMb3z8qt5sO2+OCySr/K+9M5nXm/rtjRY/3hodt/djq3BiGjIaow
+	7Q4k=
+X-Gm-Gg: ASbGncsz0RuIogiMa9dRgTMdE9UmpUtCmp9yI+yPQZfWOh35itxs6T0vrqqeAmDnwxk
+	nOJromRpciC4QNXubVED1DloKDl+K/IGaQxmoWqLUgNZQ9SJKwaFBR6oRBH8cOBv118GtdX6f7T
+	UHfGv1wy/EEO6RM9mKFOOgGAW3zM7KuI+bLMG5APuT+9lSjQY+6a1iXxLRKVxZd6silBGYFw2sH
+	bYrrH6eB9hOdOeWOQx3T09M9TuFUMMkkGW6Z47+P8P11lesr3CJBXrTfJg09HrRyGrsDV1sqUoX
+	FMMcED1VKctPf+CsV+6jpvegeT8iw0AwvbYincYZphSeQADuIEtDGw==
+X-Google-Smtp-Source: AGHT+IGVUE0CQu4ReThqwR4ny9E8a1exZ2jLsRFt7w170BeB8vADyu6EQUUGy2xTMtQFYKiXpDs9Pg==
+X-Received: by 2002:a05:600c:4fd3:b0:439:a255:b2ed with SMTP id 5b1f17b1804b1-43ba66e5f09mr144551665e9.9.1741028209871;
+        Mon, 03 Mar 2025 10:56:49 -0800 (PST)
+Received: from [192.168.50.4] ([82.78.167.138])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43bc9c0fb1esm12229025e9.20.2025.03.03.10.56.48
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 03 Mar 2025 10:56:00 -0800 (PST)
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5e4f88ea298so5852246a12.2
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Mar 2025 10:56:00 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWVBSHFIt6LY+aZ8+XH4SRtl53F0p0WW2eHUm+HT6IIERVhyBUEOSRlPoWYFmMXLIxZWUIBbT8oqXSbIHw=@vger.kernel.org
-X-Received: by 2002:a17:907:6090:b0:abe:fa1a:4eab with SMTP id
- a640c23a62f3a-abf260d496dmr1907190066b.25.1741028160310; Mon, 03 Mar 2025
- 10:56:00 -0800 (PST)
+        Mon, 03 Mar 2025 10:56:49 -0800 (PST)
+Message-ID: <39213e99-3041-4602-9dd2-536e9b09ad11@tuxon.dev>
+Date: Mon, 3 Mar 2025 20:56:47 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <qsehsgqnti4csvsg2xrrsof4qm4smhdhv6s4v4twspf76bp3jo@2mpz5xtqhmgt>
- <c63cc8e8-424f-43e2-834f-fc449b24787e@amd.com> <20250227211229.GD25639@redhat.com>
- <06ae9c0e-ba5c-4f25-a9b9-a34f3290f3fe@amd.com> <20250228143049.GA17761@redhat.com>
- <20250228163347.GB17761@redhat.com> <03a1f4af-47e0-459d-b2bf-9f65536fc2ab@amd.com>
- <CAGudoHHA7uAVUmBWMy4L50DXb4uhi72iU+nHad=Soy17Xvf8yw@mail.gmail.com>
- <CAGudoHE_M2MUOpqhYXHtGvvWAL4Z7=u36dcs0jh3PxCDwqMf+w@mail.gmail.com>
- <741fe214-d534-4484-9cf3-122aabe6281e@amd.com> <3jnnhipk2at3f7r23qb7fvznqg6dqw4rfrhajc7h6j2nu7twi2@wc3g5sdlfewt>
- <CAHk-=whuLzj37umjCN9CEgOrZkOL=bQPFWA36cpb24Mnm3mgBw@mail.gmail.com> <CAGudoHG2PuhHte91BqrnZi0VbhLBfZVsrFYmYDVrmx4gaLUX3A@mail.gmail.com>
-In-Reply-To: <CAGudoHG2PuhHte91BqrnZi0VbhLBfZVsrFYmYDVrmx4gaLUX3A@mail.gmail.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Mon, 3 Mar 2025 08:55:42 -1000
-X-Gmail-Original-Message-ID: <CAHk-=whVfFhEq=Hw4boXXqpnKxPz96TguTU5OfnKtCXo0hWgVw@mail.gmail.com>
-X-Gm-Features: AQ5f1JooMQOhgpSZJUgMFpU_jRsla4fjvec84mqVPfIW7QyBHFNNtlSgyObw66Y
-Message-ID: <CAHk-=whVfFhEq=Hw4boXXqpnKxPz96TguTU5OfnKtCXo0hWgVw@mail.gmail.com>
-Subject: Re: [PATCH] pipe_read: don't wake up the writer if the pipe is still full
-To: Mateusz Guzik <mjguzik@gmail.com>
-Cc: K Prateek Nayak <kprateek.nayak@amd.com>, "Sapkal, Swapnil" <swapnil.sapkal@amd.com>, 
-	Oleg Nesterov <oleg@redhat.com>, Manfred Spraul <manfred@colorfullife.com>, 
-	Christian Brauner <brauner@kernel.org>, David Howells <dhowells@redhat.com>, 
-	WangYuli <wangyuli@uniontech.com>, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, 
-	"Shenoy, Gautham Ranjal" <gautham.shenoy@amd.com>, Neeraj.Upadhyay@amd.com, Ananth.narayan@amd.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 0/2] Add System Components for Microchip SAMA7D65 SoC
+To: Ryan.Wanner@microchip.com, robh@kernel.org, krzk+dt@kernel.org,
+ conor+dt@kernel.org, nicolas.ferre@microchip.com,
+ alexandre.belloni@bootlin.com, wim@linux-watchdog.org, linux@roeck-us.net
+Cc: vkoul@kernel.org, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ dmaengine@vger.kernel.org, linux-watchdog@vger.kernel.org
+References: <cover.1740675317.git.Ryan.Wanner@microchip.com>
+From: Claudiu Beznea <claudiu.beznea@tuxon.dev>
+Content-Language: en-US
+In-Reply-To: <cover.1740675317.git.Ryan.Wanner@microchip.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, 3 Mar 2025 at 08:33, Mateusz Guzik <mjguzik@gmail.com> wrote:
->
-> The stock code already has a dedicated routine to advance the tail,
-> adding one for head (instead of an ad-hoc increment) is borderline
-> just clean up.
 
-There's currently a fair number of open-coded assignments:
 
-    git grep -E 'pipe->((tail)|(head)).*=' fs/
+On 28.02.2025 17:24, Ryan.Wanner@microchip.com wrote:
+> Ryan Wanner (2):
+>   ARM: dts: microchip: sama7d65: Add watchdog for sama7d65
 
-and some of those are under specific locking rules together with other
-updates (ie the watch-queue 'note_loss' thing.
-
-But hey, if some explicit empty/full flag is simpler, then it
-certainly does fit with our current model too, since we already do
-have those other flags (exactly like 'note_loss')
-
-I do particularly hate seeing 'bool' in structures like this. On alpha
-it is either fundamentally racy, or it's 32-bit. On other
-architectures, it's typically 8 bits for a 1-bit value.
-
-But we do have holes in that structure where it slots.
-
-             Linus
+Applied to at91-dt, thanks!
