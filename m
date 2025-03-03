@@ -1,158 +1,118 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from out30-112.freemail.mail.aliyun.com (out30-112.freemail.mail.aliyun.com [115.124.30.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1E4C22611
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 02:03:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A670A11CA9;
+	Mon,  3 Mar 2025 02:03:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.112
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740967387; cv=none; b=dZc4CgSLP6j2MBR228ebhI4RmVoC7uuAUDurKYZsUEMwXEKyAxQwsuVW1J4TCnF1ZsrMMVFzDYtMv3xX75TCahJ7oIMH1mwMZP3dU9JxYwWR+FxImVGc5xU5aLXjzTAgZpyX1Jb6llkTbdsZeTzqnjiGqoNq8JinMO4q/UdnujE=
+	t=1740967435; cv=none; b=IoJctNJPktW5Kvb1H1+mIGDPIfaX5yopVHOfv7QRgXMtMYytYxFZnYYeN85+2NTcZVgLnlT1bL5ktGIw4WAicNUHyIPKGIRbBSILVyVHo7INOU9EmrNs1/Y3Q2AnvAXd0rVmJySuAe3+USgbfOnuvGfUhgp4PIi779GeLJQcdj0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740967387; c=relaxed/simple;
-	bh=QYwFbD6K8kfnwtsSG5ynvTsAO1YwO3NjsjGQXGXZghk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MVCoCW3J3gLkb1bv/zhKLSFANw4UByVn4a7ItRWn856a9B0WFFLhp1ylfDJNB3t2GjoYW80vJiNGRlWpe+XnhF7aQ6Ea6t/VhEtIsSBKOc3Xh9ih0JpDni705EI6rFD6qkhYyUFuCKio5Xb7bz5llUfiq6h0i7gp6z0UPYDBPo4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QMRTyHQc; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1740967435; c=relaxed/simple;
+	bh=SEl1Hhf8NGcojuiMYmabQEzaNG0PSXe4Q1cOqkei6w0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=S0bGOsMWRrjkdJOMnh0UpioslXNMe54jAskyOj0kwHtADD/BcYwcmYPBHWtcud1JTCrdPXNZg5m9181/CfKuVHhEQU3I4w1C/zexVT+liJHgedsuf5h6pDWHPC+sjDqOKJv015DKks5HmDlB13JUodrvRrquHDLNydi5MpVXRLo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=nhPlIaTN; arc=none smtp.client-ip=115.124.30.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QMRTyHQc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1740967384;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lAV0uCT+WsooVoz6S69qz2vMhclHH6xzQjRGhGLXYng=;
-	b=QMRTyHQcRiGPa64heeUdtWL/7QMSPcZpgJwHSWIiqYQyaTavOpGv2k2mXvlix+lCJibHh6
-	MYqWqXU9YA35lvL6jHSr8Y2FGr+pHaM5VHWl6JLj+wIJICx+HFmhZVhSYPwauuwhAY3cCp
-	XtdwdTPGyESWqHbkbkgcynfQEU6bjJk=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-501-Cg5-S6tIMv6V34vDypTwow-1; Sun,
- 02 Mar 2025 21:02:46 -0500
-X-MC-Unique: Cg5-S6tIMv6V34vDypTwow-1
-X-Mimecast-MFC-AGG-ID: Cg5-S6tIMv6V34vDypTwow_1740967365
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 03B401800873;
-	Mon,  3 Mar 2025 02:02:45 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.52])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A4DD21801768;
-	Mon,  3 Mar 2025 02:02:43 +0000 (UTC)
-Date: Mon, 3 Mar 2025 10:02:38 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Jiri Bohac <jbohac@suse.cz>
-Cc: Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>,
-	kexec@lists.infradead.org, Philipp Rudo <prudo@redhat.com>,
-	Donald Dutile <ddutile@redhat.com>, Pingfan Liu <piliu@redhat.com>,
-	Tao Liu <ltao@redhat.com>, linux-kernel@vger.kernel.org,
-	David Hildenbrand <dhildenb@redhat.com>,
-	Michal Hocko <mhocko@suse.cz>
-Subject: Re: [PATCH v2 4/5] kdump: wait for DMA to finish when using CMA
-Message-ID: <Z8UNvvEF2Ow/qigk@MiWiFi-R3L-srv>
-References: <Z7dc9Cd8KX3b_brB@dwarf.suse.cz>
- <Z7demEmgm-D_fqi2@dwarf.suse.cz>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="nhPlIaTN"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1740967423; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=ovJU3Q9h8hU/G3fkOoZ1jgiNl8W2k7s8Lwa5u8Ka3Hk=;
+	b=nhPlIaTNEI+rXbuTfVUF4mR3ko8wjzygstZJ6gFuYi68VLE0t8TmMQxJux7BHfMSlKWfQQ//jJYPcYhH2AH6nxk2jyQQ5iIojPCUZb2qs0E7z3ZuFhw80amd8koiSwDbK/S4fa1S+PfNhsb7K+SSUP4BAlvhvdC9viwGi7eyGy4=
+Received: from 30.246.161.128(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WQWfcKP_1740967421 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Mon, 03 Mar 2025 10:03:42 +0800
+Message-ID: <8c7b0cbf-fc93-4d97-b388-bfd0f13e404b@linux.alibaba.com>
+Date: Mon, 3 Mar 2025 10:03:41 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z7demEmgm-D_fqi2@dwarf.suse.cz>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 0/3] PCI/AER: Report fatal errors of RCiEP and EP if
+ link recoverd
+To: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, bhelgaas@google.com, kbusch@kernel.org,
+ sathyanarayanan.kuppuswamy@linux.intel.com
+Cc: mahesh@linux.ibm.com, oohall@gmail.com, Jonathan.Cameron@huawei.com,
+ terry.bowman@amd.com, tianruidong@linux.alibaba.com
+References: <20250217024218.1681-1-xueshuai@linux.alibaba.com>
+From: Shuai Xue <xueshuai@linux.alibaba.com>
+In-Reply-To: <20250217024218.1681-1-xueshuai@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On 02/20/25 at 05:55pm, Jiri Bohac wrote:
-> When re-using the CMA area for kdump there is a risk of pending DMA into
-> pinned user pages in the CMA area.
-> 
-> Pages that are pinned long-term are migrated away from CMA, so these are not a
-> concern. Pages pinned without FOLL_LONGTERM remain in the CMA and may possibly
-> be the source or destination of a pending DMA transfer.
-> 
-> Although there is no clear specification how long a page may be pinned without
-> FOLL_LONGTERM, pinning without the flag shows an intent of the caller to
-> only use the memory for short-lived DMA transfers, not a transfer initiated
-> by a device asynchronously at a random time in the future.
-> 
-> Add a delay of CMA_DMA_TIMEOUT_MSEC milliseconds before starting the kdump
-> kernel, giving such short-lived DMA transfers time to finish before the CMA
-> memory is re-used by the kdump kernel.
-> 
-> Set CMA_DMA_TIMEOUT_MSEC to 1000 (one second) - chosen arbitrarily as both a
-> huge margin for a DMA transfer, yet not increasing the kdump time
-> significantly.
-> 
-> Signed-off-by: Jiri Bohac <jbohac@suse.cz>
-> ---
->  include/linux/crash_core.h |  5 +++++
->  kernel/crash_core.c        | 10 ++++++++++
->  2 files changed, 15 insertions(+)
-> 
-> diff --git a/include/linux/crash_core.h b/include/linux/crash_core.h
-> index 44305336314e..543e4a71f13c 100644
-> --- a/include/linux/crash_core.h
-> +++ b/include/linux/crash_core.h
-> @@ -56,6 +56,11 @@ static inline unsigned int crash_get_elfcorehdr_size(void) { return 0; }
->  /* Alignment required for elf header segment */
->  #define ELF_CORE_HEADER_ALIGN   4096
->  
-> +/* Time to wait for possible DMA to finish before starting the kdump kernel
-> + * when a CMA reservation is used
-> + */
-> +#define CMA_DMA_TIMEOUT_MSEC 1000
-> +
->  extern int crash_exclude_mem_range(struct crash_mem *mem,
->  				   unsigned long long mstart,
->  				   unsigned long long mend);
-> diff --git a/kernel/crash_core.c b/kernel/crash_core.c
-> index 078fe5bc5a74..543e509b7926 100644
-> --- a/kernel/crash_core.c
-> +++ b/kernel/crash_core.c
-> @@ -21,6 +21,7 @@
->  #include <linux/reboot.h>
->  #include <linux/btf.h>
->  #include <linux/objtool.h>
-> +#include <linux/delay.h>
->  
->  #include <asm/page.h>
->  #include <asm/sections.h>
-> @@ -97,6 +98,14 @@ int kexec_crash_loaded(void)
->  }
->  EXPORT_SYMBOL_GPL(kexec_crash_loaded);
->  
-> +static void crash_cma_clear_pending_dma(void)
-> +{
-> +	if (!crashk_cma_cnt)
-> +		return;
-> +
-> +	mdelay(CMA_DMA_TIMEOUT_MSEC);
-> +}
-> +
->  /*
->   * No panic_cpu check version of crash_kexec().  This function is called
->   * only when panic_cpu holds the current CPU number; this is the only CPU
-> @@ -116,6 +125,7 @@ void __noclone __crash_kexec(struct pt_regs *regs)
->  		if (kexec_crash_image) {
->  			struct pt_regs fixed_regs;
->  
-> +			crash_cma_clear_pending_dma();
 
-This could be too ideal, I am not sure if it's a good way. When crash
-triggered, we need do the urgent and necessary thing as soon as
-possible, then shutdown all CPU to avoid further damage. This one second
-of waiting could give the strayed system too much time. My personal
-opinion.
 
->  			crash_setup_regs(&fixed_regs, regs);
->  			crash_save_vmcoreinfo();
->  			machine_crash_shutdown(&fixed_regs);
+在 2025/2/17 10:42, Shuai Xue 写道:
+> changes since v3:
+> - squash patch 1 and 2 into one patch per Sathyanarayanan
+> - add comments note for dpc_process_error per Sathyanarayanan
+> - pick up Reviewed-by tag from Sathyanarayanan
 > 
-> -- 
-> Jiri Bohac <jbohac@suse.cz>
-> SUSE Labs, Prague, Czechia
+> changes since v2:
+> - moving the "err_port" rename to a separate patch per Sathyanarayanan
+> - rewrite comments of dpc_process_error per Sathyanarayanan
+> - remove NULL initialization for err_dev per Sathyanarayanan
+> 
+> changes since v1:
+> - rewrite commit log per Bjorn
+> - refactor aer_get_device_error_info to reduce duplication per Keith
+> - fix to avoid reporting fatal errors twice for root and downstream ports per Keith
+> 
+> The AER driver has historically avoided reading the configuration space of an
+> endpoint or RCiEP that reported a fatal error, considering the link to that
+> device unreliable. Consequently, when a fatal error occurs, the AER and DPC
+> drivers do not report specific error types, resulting in logs like:
+> 
+>     pcieport 0000:30:03.0: EDR: EDR event received
+>     pcieport 0000:30:03.0: DPC: containment event, status:0x0005 source:0x3400
+>     pcieport 0000:30:03.0: DPC: ERR_FATAL detected
+>     pcieport 0000:30:03.0: AER: broadcast error_detected message
+>     nvme nvme0: frozen state error detected, reset controller
+>     nvme 0000:34:00.0: ready 0ms after DPC
+>     pcieport 0000:30:03.0: AER: broadcast slot_reset message
+> 
+> AER status registers are sticky and Write-1-to-clear. If the link recovered
+> after hot reset, we can still safely access AER status of the error device.
+> In such case, report fatal errors which helps to figure out the error root
+> case.
+> 
+> After this patch set, the logs like:
+> 
+>     pcieport 0000:30:03.0: EDR: EDR event received
+>     pcieport 0000:30:03.0: DPC: containment event, status:0x0005 source:0x3400
+>     pcieport 0000:30:03.0: DPC: ERR_FATAL detected
+>     pcieport 0000:30:03.0: AER: broadcast error_detected message
+>     nvme nvme0: frozen state error detected, reset controller
+>     pcieport 0000:30:03.0: waiting 100 ms for downstream link, after activation
+>     nvme 0000:34:00.0: ready 0ms after DPC
+>     nvme 0000:34:00.0: PCIe Bus Error: severity=Uncorrectable (Fatal), type=Data Link Layer, (Receiver ID)
+>     nvme 0000:34:00.0:   device [144d:a804] error status/mask=00000010/00504000
+>     nvme 0000:34:00.0:    [ 4] DLP                    (First)
+>     pcieport 0000:30:03.0: AER: broadcast slot_reset message
+> 
+> Shuai Xue (3):
+>    PCI/DPC: Clarify naming for error port in DPC Handling
+>    PCI/DPC: Run recovery on device that detected the error
+>    PCI/AER: Report fatal errors of RCiEP and EP if link recoverd
+> 
+>   drivers/pci/pci.h      |  5 +++--
+>   drivers/pci/pcie/aer.c | 11 +++++++----
+>   drivers/pci/pcie/dpc.c | 34 +++++++++++++++++++++++++++-------
+>   drivers/pci/pcie/edr.c | 35 ++++++++++++++++++-----------------
+>   drivers/pci/pcie/err.c |  9 +++++++++
+>   5 files changed, 64 insertions(+), 30 deletions(-)
 > 
 
+
+Hi, All,
+
+Gentle ping.
+
+Thanks.
+Shuai
