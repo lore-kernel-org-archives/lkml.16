@@ -1,94 +1,159 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9507B20DD4E;
-	Mon,  3 Mar 2025 12:13:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48CBF20DD4E
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 12:13:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741004024; cv=none; b=Ho7gsujvf19lxO7DH/cjkqgxOa5r5JYR24jTJSrnvF9MZ22kbv/VOz/EkJFstunuQzPqtz/s9b9kZmnmP7ChMd8GvBeVWsxQnoZkzuUIDFdOFU4shS7DX5An0YDDqiGgyrSg8Zd6TrZJsDweDvgFoQBwz9y2DVXSk591g6Lq8+w=
+	t=1741004039; cv=none; b=WK8fuof1bGWXf0ytEcTkymtNcTQKpElkEU5ZEajMmE9kW0x0cjmMeX+5TNXVlwlWJyEswtrML/t27Q/N6afaFSWQyZqNL/x2sbVotqiZOCY3kp2g9TJsfBoENY3nryVDXNDw41GzhqeEGLYy5UpnAq4SxucQQ29xLaTAqhWcIrs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741004024; c=relaxed/simple;
-	bh=zcoHmJVRGCzEOjTFHAk4AIfKSp+4rU6AGhfegvpY+Bw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Qh61JTUyhkPN7pZPKqMBeluvTEX7kW9H/wksSxbEoEPVVMrH2o1dSm9b7mEtVbUFBS2VNr2Qa40GbpTMHgeKKbXOeu7m8eSiEe7H3YxvxUOGIARiFmkyIAZushZQTPzotSLc+I2fSaww4ReybQaAL5az/tgiq9TYpeLZMOPrQts=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LJk0mEmA; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1741004039; c=relaxed/simple;
+	bh=1l2K5ENCvojaVHBmxEy6/eqJ3lSTgk5W23LVBI3DKgI=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=Sca6aopX3cmBcYf0Ty5To8O+DX1iLrDhwTofRqrz0YiD+jEgpJilM2SGIWORUxsMyxaukCFX894zrQyQOsuO4LDIU27dB4dUf+2FJ/8Gl0NNq7YrX70ITVqTMr9vFO7RARrawWOSinxsGn6pD8EcJfTFbHWfMgiFmaQEbX+oVpQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jackmanb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pxyuBo7o; arc=none smtp.client-ip=209.85.128.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jackmanb.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LJk0mEmA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741004022; x=1772540022;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=zcoHmJVRGCzEOjTFHAk4AIfKSp+4rU6AGhfegvpY+Bw=;
-  b=LJk0mEmASEscG661onOdN0aAyI0Ff2WD8SE+NK/g3aBr7RzRHNI+H3p8
-   rG3lx3PE4559nLWyYg8e9ArwcfDmKoF3vONRDrtgDQw0eui3Q2EZdIVk2
-   1+segbmL4hVobU6VeNbsLt1J4TZTQr2eSzitWjCVIxkgkxgFDkPizP2jC
-   A0JTRCIhjONgd2D/4smO7lWw5IFoUuF53phQEn8YhQ3goTU/fo5V/NMjF
-   xS4FPAdKolGrlz1CRc3HkKiODvsleGBYUAgGPggqWcTlKvJFTQNfy0jfg
-   BRsFqv1AZq/URJlWKSdLlaHwFoRvfSVUEN+nkhk4C+FQs+561V2wYoDpp
-   g==;
-X-CSE-ConnectionGUID: MfqF+tK7QGGKKDOGX5Bq9w==
-X-CSE-MsgGUID: TVSvww9TSYOWaEEtpV35Zw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11362"; a="59421570"
-X-IronPort-AV: E=Sophos;i="6.13,329,1732608000"; 
-   d="scan'208";a="59421570"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Mar 2025 04:13:41 -0800
-X-CSE-ConnectionGUID: rf0or1z3RQObM8edw1S0sQ==
-X-CSE-MsgGUID: /Yub0qJ3TaSaacINLyK07g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,329,1732608000"; 
-   d="scan'208";a="148802489"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Mar 2025 04:13:39 -0800
-Date: Mon, 3 Mar 2025 14:13:35 +0200
-From: Raag Jadav <raag.jadav@intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: lee@kernel.org, giometti@enneenne.com, gregkh@linuxfoundation.org,
-	raymond.tan@intel.com, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/5] gpio: elkhartlake: depend on
- MFD_INTEL_EHL_PSE_GPIO
-Message-ID: <Z8Wc73OytMx3khP_@black.fi.intel.com>
-References: <20250303044745.268964-1-raag.jadav@intel.com>
- <20250303044745.268964-3-raag.jadav@intel.com>
- <Z8VmebNcrH6CjHp6@smile.fi.intel.com>
- <Z8WUpzDHbhp0aMoN@black.fi.intel.com>
- <Z8WWNHL1rZKV4c4o@smile.fi.intel.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pxyuBo7o"
+Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-4394c0a58e7so30078655e9.0
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Mar 2025 04:13:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1741004034; x=1741608834; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=3XM/kMIL2XLwkwjwLCWrp4SEasAEO2v2SGHBA5kN3uY=;
+        b=pxyuBo7ozcbzq/3t8FWNEA14flVNJwwOPycg3sjd+opi/bM1KLMffnZoJH1VgavG/C
+         1ol/oDQftL04Hi/aGmP3aSxi4Edp/DSthSol2cvXnCr8DitmqaSUd3szYr0p+DBfOgiP
+         WgMAIv/765vyaLgSITjWU+KYILpih88xn/bcR2rGeBuUQB5XqyzCyAFzgzXh7tq9Qk8B
+         WkrkFmEviDdjrKRnkcVtf9xQzTizww55a5vegorJFoXOiFBHd5jz8Z5Lq137T8x7AGfM
+         Exn5zjPA/l7TDioeR0nUOV9A+AoG8aXFfxuh1oIeMj49ErOVKcDsFefqavAivYL854M/
+         3kqw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741004034; x=1741608834;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=3XM/kMIL2XLwkwjwLCWrp4SEasAEO2v2SGHBA5kN3uY=;
+        b=kOVQY3NcWoBVgs5rZXXpEG+Wj2N29lb7CXnO9mRjJwVORq2Gb7vT/A7i+VvfCS5/Pl
+         9YweSPUH6qPBDBToQprVkXWwK38Z1FyVzzJJQt7RHqYjj1GoiT1oQUVNwLK6Ej04LQl3
+         +FCmOCrzXmt87JShTEI8pC00xTj7Hxtlb1gX6vwSHQKaMp93t/fnRyiEAvadv6XhnzEJ
+         o9Nd5yyov5QvcdaW/rZoZBtkaVLgXKuMqbMlZabrxbEwFP97vfDHUXhLi1Rf4pSslZCl
+         DY9fHYSb3wrIfSCkNWdw2UGHhfJo8UPT9Ua1SIcCNyn1MoiihWkdr7Qc1EfJcW8h0jhi
+         wdfA==
+X-Forwarded-Encrypted: i=1; AJvYcCVjnm3BhjvGFmqyv29qj5lTzCyPo2GQEOJ7W73OPAHfCtopSLRmr2U5ot/KFdnKyVxN0V7O8MGH5OYVMWE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz3l5QenzpZyG5SE3Ac5CEgYRRNTRwqIweHo6NIUayhFTQVjUNA
+	E79f5NReg9BmnI6iW+DEj6bS+mzSmh+6tWItl9ygMi8vnytrxaVn5YuL6kQQV9sUB0QXqPSDyA4
+	h8r1txdFRWg==
+X-Google-Smtp-Source: AGHT+IGYc3bDnw0zgL8aV6CcStUU7x4W8H3EWnZWGR+FbnL9xa0DOINfyPtYIKSdc9eErLJbdsTXinjHx6+yIQ==
+X-Received: from wmbg14.prod.google.com ([2002:a05:600c:a40e:b0:439:9438:468b])
+ (user=jackmanb job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:600c:511e:b0:439:9aca:3285 with SMTP id 5b1f17b1804b1-43ba66dfe1amr102550035e9.6.1741004022222;
+ Mon, 03 Mar 2025 04:13:42 -0800 (PST)
+Date: Mon, 03 Mar 2025 12:13:26 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z8WWNHL1rZKV4c4o@smile.fi.intel.com>
+Mime-Version: 1.0
+X-B4-Tracking: v=1; b=H4sIAOWcxWcC/32NTQ7CIBSEr9K8tRh+VNCV9zBdFHilxFoIGKJpu
+ Lu0B3AzyTfJfLNCxuQxw61bIWHx2YelAT90YKZhcUi8bQyc8jPlXJI4ONRzME+yhcVIrheuzEl
+ ZiVRB28WEo//szkffePL5HdJ3vyhsa//ZCiOMCEkZjloIpvXdheBmPJrwgr7W+gOR0x54swAAA A==
+X-Change-Id: 20250227-pageblock-lockdep-9628c48d7e08
+X-Mailer: b4 0.15-dev
+Message-ID: <20250303-pageblock-lockdep-v2-1-3fc0c37e9532@google.com>
+Subject: [PATCH v2] mm/page_alloc: Add lockdep assertion for pageblock type change
+From: Brendan Jackman <jackmanb@google.com>
+To: Andrew Morton <akpm@linux-foundation.org>, David Hildenbrand <david@redhat.com>, 
+	Oscar Salvador <osalvador@suse.de>
+Cc: Johannes Weiner <hannes@cmpxchg.org>, Vlastimil Babka <vbabka@suse.cz>, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, Brendan Jackman <jackmanb@google.com>
+Content-Type: text/plain; charset="utf-8"
 
-On Mon, Mar 03, 2025 at 01:44:52PM +0200, Andy Shevchenko wrote:
-> On Mon, Mar 03, 2025 at 01:38:15PM +0200, Raag Jadav wrote:
-> > On Mon, Mar 03, 2025 at 10:21:13AM +0200, Andy Shevchenko wrote:
-> > > On Mon, Mar 03, 2025 at 10:17:42AM +0530, Raag Jadav wrote:
-> 
-> ...
-> 
-> > > >  config GPIO_ELKHARTLAKE
-> > > >  	tristate "Intel Elkhart Lake PSE GPIO support"
-> > > > -	depends on X86 || COMPILE_TEST
-> > > > +	depends on (X86 && MFD_INTEL_EHL_PSE_GPIO) || COMPILE_TEST
-> > > >  	select GPIO_TANGIER
-> > > 
-> > > Looking on how GPIO PMIC drivers are written, I would redo this as
-> > > 
-> > > 	depends on (X86 || COMPILE_TEST) && MFD_INTEL_EHL_PSE_GPIO
-> > 
-> > True, but perhaps allow independent COMPILE_TEST where possible?
-> 
-> It will be tested in all-or-none way. Or you think it has to be tested
-> individually? If so, why is it needed?
+Since the migratetype hygiene patches [0], the locking here is
+a bit more formalised.
 
-Better CI coverage? We also have it for Intel pinctrl drivers.
+For other stuff, it's pretty obvious that it would be protected by the
+zone lock. But it didn't seem totally self-evident that it should
+protect the pageblock type. So it seems particularly helpful to have it
+written in the code.
 
-Raag
+[0] https://lore.kernel.org/lkml/20240320180429.678181-3-hannes@cmpxchg.org/T/
+
+Signed-off-by: Brendan Jackman <jackmanb@google.com>
+---
+Note Vlastimil Acked the first version, I did not carry his ack since
+I've changed the diff. Not sure if I'm being overly pedantic there?
+
+Changes in v2:
+- Fixed missing in_mem_hotplug() setup for !CONFIG_MEMORY_HOTPLUG
+- Expanded commit message to include a bit more rationale
+- Link to v1: https://lore.kernel.org/r/20250227-pageblock-lockdep-v1-1-3701efb331bb@google.com
+---
+ include/linux/memory_hotplug.h | 5 +++++
+ mm/memory_hotplug.c            | 5 +++++
+ mm/page_alloc.c                | 4 ++++
+ 3 files changed, 14 insertions(+)
+
+diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplug.h
+index eaac5ae8c05c8ee2f2868d5bc1b04d1f68235b3f..508a1d074527a3349c1c9789ecf35d5ab08a5ba6 100644
+--- a/include/linux/memory_hotplug.h
++++ b/include/linux/memory_hotplug.h
+@@ -175,6 +175,7 @@ void put_online_mems(void);
+ 
+ void mem_hotplug_begin(void);
+ void mem_hotplug_done(void);
++bool in_mem_hotplug(void);
+ 
+ /* See kswapd_is_running() */
+ static inline void pgdat_kswapd_lock(pg_data_t *pgdat)
+@@ -223,6 +224,10 @@ static inline void put_online_mems(void) {}
+ 
+ static inline void mem_hotplug_begin(void) {}
+ static inline void mem_hotplug_done(void) {}
++static inline bool in_mem_hotplug(void)
++{
++	return false;
++}
+ 
+ static inline bool movable_node_is_enabled(void)
+ {
+diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+index e3655f07dd6e33efb3e811cab07f240649487441..c44c2765b21f1e9e4b2d68abda9ac161fb2869ec 100644
+--- a/mm/memory_hotplug.c
++++ b/mm/memory_hotplug.c
+@@ -267,6 +267,11 @@ void mem_hotplug_done(void)
+ 	cpus_read_unlock();
+ }
+ 
++bool in_mem_hotplug(void)
++{
++	return percpu_is_write_locked(&mem_hotplug_lock);
++}
++
+ u64 max_mem_size = U64_MAX;
+ 
+ /* add this memory to iomem resource */
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index 579789600a3c7bfb7b0d847d51af702a9d4b139a..1ed21179676d05c66f77f9dbebf88e36bbe402e9 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -417,6 +417,10 @@ void set_pfnblock_flags_mask(struct page *page, unsigned long flags,
+ 
+ void set_pageblock_migratetype(struct page *page, int migratetype)
+ {
++	lockdep_assert_once(system_state == SYSTEM_BOOTING ||
++		in_mem_hotplug() ||
++		lockdep_is_held(&page_zone(page)->lock));
++
+ 	if (unlikely(page_group_by_mobility_disabled &&
+ 		     migratetype < MIGRATE_PCPTYPES))
+ 		migratetype = MIGRATE_UNMOVABLE;
+
+---
+base-commit: 83c34e70d8dd67525c2547e8c5ee1a4bf37ac06b
+change-id: 20250227-pageblock-lockdep-9628c48d7e08
+
+Best regards,
+-- 
+Brendan Jackman <jackmanb@google.com>
+
