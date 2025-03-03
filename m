@@ -1,169 +1,151 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 885991F0E33;
-	Mon,  3 Mar 2025 10:32:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A6C11F17E5;
+	Mon,  3 Mar 2025 10:32:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740997954; cv=none; b=DGOYIiQFEWNokI81sT4/CqcDggD9S9YYA+Wr6zZCJini5RlckayzoLCWcawyf+F/ET0eC6saJrk7gxeG1UqseALicexT22aq9bHEW+GVCHCsXHwYo1EdNbtFAYrnpnjfyrTE4qg4kWBFnkszbnUOgrBnJ817NKKHOUwug39FguY=
+	t=1740997971; cv=none; b=It0qnx/WM10QIiKtRT+FBrIrB9C6F5DzMryZlL1VR1qeaioD4JTeHXqS6fODllX8t6/wHo6smen1sl1C5p7hp9dtEMmqagfllFD8O2v7ZV8c9vuhLJlfyEIk0MSUoM/JcHdOde0jnxkFfjA1Oc+2SmCknU+dtpDYlxJ3e0Im41c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740997954; c=relaxed/simple;
-	bh=+nfQiXqnCwGle5BXXhDY8Jd23oGojb8YDfjAGygBfIk=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=RFtIFSR9M3H3fpushFy8xjXRJtUBjPJ/UJ9aZ9ugpm76JTjczOfOwJf2ZfMRmON7sAtMKqwqXoZknxAP5D/ud49ujYkpmoqZhr+fMVn/oZjf7CEDqPXaULQ4+g2suwqpZXpZScDZ8ZZOWr6rnIZZs+Rqc42k9fWOHFN5IvIbD74=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=iqF/cnW8; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=qir/20Ds; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1740997971; c=relaxed/simple;
+	bh=fqF5ukVSFGV3EgFZXiEa4ck6u9+DJwi8aWwrJtLxWE8=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LU/Bh0RbNCrQgkaHXRPMnVKZE7O9xbCBFS4TMzVpc/FpWLjtSzGWMxzxjRvp6y6H0TPzSuxw0MJRhr5KTSdS0LW/TpBT+UT87rw7jOh/hE1eCAe6NLzBwGGMSOasASn/JWJd57qm9IvAZxw2l5gzI1JVnL7zeBdm8k8x/c8YcPM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=fN4m84i5; arc=none smtp.client-ip=68.232.153.233
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="iqF/cnW8";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qir/20Ds"
-Date: Mon, 03 Mar 2025 10:32:29 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1740997950;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hFvO7tkmJTwwVinxlrw08FtBFbbUgFb4s/Mwsd9TKP0=;
-	b=iqF/cnW8eHpe5QDXl/jRmJ/1v88SsjzPiu+p9pHYYJYetFwTLsoSvjlSfxS3XJ3FlDaBbW
-	0RhNdCBHQbOxp5Mb9+E79jTf7QcuSE2SOuJSqNicdGZyk0Cu1D1CgwhWCw7+8J6+6pdvXh
-	3K1X0MkNdPbBSy0zVdymOGr5ZabjVRnicdSn6zK5hilkFvCgzqWuM5r0OG1yI9IzmTtdlX
-	8M6kFgoMn1B+TGiMTSzfpT9/Gy2+us1POm1UVCiYsgiyA8IGgktRKaP+bA6sU5uuZcR3+x
-	rFNeX7ffCjV52EuItdQLkuRHwDRAIZ4mFKlyawK4ZsKbuWcT0iOO41lBxprshA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1740997950;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hFvO7tkmJTwwVinxlrw08FtBFbbUgFb4s/Mwsd9TKP0=;
-	b=qir/20DsN7jeMAGvuOJ/n90x2QXs3QZso5HD1PTjfJ/radlEuIfmzP2z0vipMGdWDR63lm
-	mCQQ2Iua6B1BcFDQ==
-From: "tip-bot2 for Nysal Jan K.A" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject:
- [tip: sched/core] sched/membarrier: Fix redundant load of membarrier_state
-Cc: "Nysal Jan K.A." <nysal@linux.ibm.com>, Ingo Molnar <mingo@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Michael Ellerman <mpe@ellerman.id.au>,
- Segher Boessenkool <segher@kernel.crashing.org>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <20250303060457.531293-1-nysal@linux.ibm.com>
-References: <20250303060457.531293-1-nysal@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="fN4m84i5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1740997969; x=1772533969;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=fqF5ukVSFGV3EgFZXiEa4ck6u9+DJwi8aWwrJtLxWE8=;
+  b=fN4m84i5wuM2djRp1cyPu7EKug3xiDx+M3EJwEZdNsaGiZGpwpxEizut
+   50geFW1oPgkLDeivXSPrxvNJlKY2CGC4YOOmRcW2mtqgfDxsOz/z+Avtz
+   mWXpcLdjzmnUiG/zU0rRo2V92546KxR2eDmzRup85u3lSWy/tDcGJrlsA
+   SB7dacCPLDxmV3fyMY/+TN0QUCWu+/Ni2AuUnwtKVthFHtM7Hlpa3RuW3
+   izeHBkJh5n3LoOqPuhZb9nSGU/65cEY5ihzxLnrx4IyFrnYXO8Ec8Q2M4
+   DNK8adAtLTFq3iyFQvE3YdqNF9+io9njdXcrUo5XKB4lcafRLc56ViVVd
+   A==;
+X-CSE-ConnectionGUID: I/+YZuCUTEWlY9bn8j7eEA==
+X-CSE-MsgGUID: q+QHdo2+QKqpUxRb+G3ZWQ==
+X-IronPort-AV: E=Sophos;i="6.13,329,1732604400"; 
+   d="asc'?scan'208";a="38333761"
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 03 Mar 2025 03:32:42 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Mon, 3 Mar 2025 03:32:33 -0700
+Received: from wendy (10.10.85.11) by chn-vm-ex01.mchp-main.com (10.10.85.143)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35 via Frontend
+ Transport; Mon, 3 Mar 2025 03:32:31 -0700
+Date: Mon, 3 Mar 2025 10:31:44 +0000
+From: Conor Dooley <conor.dooley@microchip.com>
+To: Ian Dannapel <iansdannapel@gmail.com>
+CC: Conor Dooley <conor@kernel.org>, <linux-fpga@vger.kernel.org>, Moritz
+ Fischer <mdf@kernel.org>, Wu Hao <hao.wu@intel.com>, Xu Yilun
+	<yilun.xu@intel.com>, Tom Rix <trix@redhat.com>, Rob Herring
+	<robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+	<conor+dt@kernel.org>, Neil Armstrong <neil.armstrong@linaro.org>, Jonathan
+ Cameron <Jonathan.Cameron@huawei.com>, =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?=
+	<rafal@milecki.pl>, Aradhya Bhatia <a-bhatia1@ti.com>, "open list:OPEN
+ FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
+	open list <linux-kernel@vger.kernel.org>
+Subject: Re: [v4 2/3] dt-bindings: fpga: Add Efinix SPI programming bindings
+Message-ID: <20250303-imply-ferocity-bbb6d866b149@wendy>
+References: <20250228094732.54642-1-iansdannapel@gmail.com>
+ <20250228094732.54642-3-iansdannapel@gmail.com>
+ <20250228-copilot-trekker-72a20709e9f7@spud>
+ <CAKrir7hdyP-bPKkZOpK3cFp=rvH_MJ98DLKnsRni_BWsQEg5yw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174099794984.10177.13233860243995497269.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="6qSyW+QWd6cb4mh+"
+Content-Disposition: inline
+In-Reply-To: <CAKrir7hdyP-bPKkZOpK3cFp=rvH_MJ98DLKnsRni_BWsQEg5yw@mail.gmail.com>
 
-The following commit has been merged into the sched/core branch of tip:
+--6qSyW+QWd6cb4mh+
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Commit-ID:     7ab02bd36eb444654183ad6c5b15211ddfa32a8f
-Gitweb:        https://git.kernel.org/tip/7ab02bd36eb444654183ad6c5b15211ddfa32a8f
-Author:        Nysal Jan K.A <nysal@linux.ibm.com>
-AuthorDate:    Mon, 03 Mar 2025 11:34:50 +05:30
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Mon, 03 Mar 2025 11:25:40 +01:00
+On Mon, Mar 03, 2025 at 11:10:53AM +0100, Ian Dannapel wrote:
+> Hi Conor, thanks for the quick response.
+>=20
+> On Fri, Feb 28, 2025 at 7:28=E2=80=AFPM Conor Dooley <conor@kernel.org> w=
+rote:
+> > > +description: |
+> > > +  Efinix FPGAs (Trion, Topaz, and Titanium families) support loading=
+ bitstreams
+> > > +  through "SPI Passive Mode".
+> > > +  Note 1: Only bus width 1x is supported.
+> > > +  Note 2: Additional pins hogs for bus width configuration must be s=
+et
+> > > +  elsewhere, if necessary.
+> > > +  Note 3: Topaz and Titanium support is based on documentation but r=
+emains
+> > > +  untested.
+> >
+> > Points 1 and 3 here seem to be driver limitations, and shouldn't really
+> > be present in a document describing the hardware?
+> >
+> Yes, they are driver limitations and probably do not belong here.
+>=20
+> > > +properties:
+> > > +  compatible:
+> > > +    enum:
+> > > +      - efinix,trion-spi
+> > > +      - efinix,titanium-spi
+> > > +      - efinix,topaz-spi
+> >
+> > > +      - efinix,fpga-spi
+> >
+> > What hardware does this device represent? Other ones are obvious matches
+> > to the families you mention, but what is this one?
 
-sched/membarrier: Fix redundant load of membarrier_state
+> The proposed compatible is a generic fallback for any Efinix FPGA Series.
 
-On architectures where ARCH_HAS_SYNC_CORE_BEFORE_USERMODE
-is not selected, sync_core_before_usermode() is a no-op.
-In membarrier_mm_sync_core_before_usermode() the compiler does not
-eliminate redundant branches and load of mm->membarrier_state
-for this case as the atomic_read() cannot be optimized away.
+If it is a fallback, your binding should look like:
+compatible:
+  items:
+    - enum:
+        - efinix,trion-spi
+        - efinix,titanium-spi
+        - efinix,topaz-spi
+    - const: efinix,fpga-spi
 
-Here's a snippet of the code generated for finish_task_switch() on powerpc
-prior to this change:
+|+static const struct of_device_id efinix_spi_of_match[] =3D {
+|+       { .compatible =3D "efinix,trion-spi", },
+|+       { .compatible =3D "efinix,titanium-spi", },
+|+       { .compatible =3D "efinix,topaz-spi", },
 
-  1b786c:   ld      r26,2624(r30)   # mm = rq->prev_mm;
-  .......
-  1b78c8:   cmpdi   cr7,r26,0
-  1b78cc:   beq     cr7,1b78e4 <finish_task_switch+0xd0>
-  1b78d0:   ld      r9,2312(r13)    # current
-  1b78d4:   ld      r9,1888(r9)     # current->mm
-  1b78d8:   cmpd    cr7,r26,r9
-  1b78dc:   beq     cr7,1b7a70 <finish_task_switch+0x25c>
-  1b78e0:   hwsync
-  1b78e4:   cmplwi  cr7,r27,128
-  .......
-  1b7a70:   lwz     r9,176(r26)     # atomic_read(&mm->membarrier_state)
-  1b7a74:   b       1b78e0 <finish_task_switch+0xcc>
+And these three compatibles can/should be removed from the driver, since
+the fallback is required.
 
-This was found while analyzing "perf c2c" reports on kernels prior
-to commit c1753fd02a00 ("mm: move mm_count into its own cache line")
-where mm_count was false sharing with membarrier_state.
+|+       { .compatible =3D "efinix,fpga-spi", },
+|+       {}
+|+};
 
-There is a minor improvement in the size of finish_task_switch().
-The following are results from bloat-o-meter for ppc64le:
 
-  GCC 7.5.0
-  ---------
-  add/remove: 0/0 grow/shrink: 0/1 up/down: 0/-32 (-32)
-  Function                                     old     new   delta
-  finish_task_switch                           884     852     -32
+--6qSyW+QWd6cb4mh+
+Content-Type: application/pgp-signature; name="signature.asc"
 
-  GCC 12.2.1
-  ----------
-  add/remove: 0/0 grow/shrink: 0/1 up/down: 0/-32 (-32)
-  Function                                     old     new   delta
-  finish_task_switch.isra                      852     820     -32
+-----BEGIN PGP SIGNATURE-----
 
-  LLVM 17.0.6
-  -----------
-  add/remove: 0/0 grow/shrink: 0/2 up/down: 0/-36 (-36)
-  Function                                     old     new   delta
-  rt_mutex_schedule                            120     104     -16
-  finish_task_switch                           792     772     -20
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZ8WFEAAKCRB4tDGHoIJi
+0mjaAP9sKCcpox/aH/Z7wfpAn1ngc3aHe9qRSNM9Pg58kBau0gD/Z0MX38lEpA6u
+9WckYxf5O3kqdLEngN8LcxlSx/Atggs=
+=3tRF
+-----END PGP SIGNATURE-----
 
-Results on aarch64:
-
-  GCC 14.1.1
-  ----------
-  add/remove: 0/2 grow/shrink: 1/1 up/down: 4/-60 (-56)
-  Function                                     old     new   delta
-  get_nohz_timer_target                        352     356      +4
-  e843419@0b02_0000d7e7_408                      8       -      -8
-  e843419@01bb_000021d2_868                      8       -      -8
-  finish_task_switch.isra                      592     548     -44
-
-Signed-off-by: Nysal Jan K.A. <nysal@linux.ibm.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Reviewed-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Reviewed-by: Michael Ellerman <mpe@ellerman.id.au>
-Reviewed-by: Segher Boessenkool <segher@kernel.crashing.org>
-Link: https://lore.kernel.org/r/20250303060457.531293-1-nysal@linux.ibm.com
----
- include/linux/sched/mm.h | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/include/linux/sched/mm.h b/include/linux/sched/mm.h
-index 928a626..b134748 100644
---- a/include/linux/sched/mm.h
-+++ b/include/linux/sched/mm.h
-@@ -531,6 +531,13 @@ enum {
- 
- static inline void membarrier_mm_sync_core_before_usermode(struct mm_struct *mm)
- {
-+	/*
-+	 * The atomic_read() below prevents CSE. The following should
-+	 * help the compiler generate more efficient code on architectures
-+	 * where sync_core_before_usermode() is a no-op.
-+	 */
-+	if (!IS_ENABLED(CONFIG_ARCH_HAS_SYNC_CORE_BEFORE_USERMODE))
-+		return;
- 	if (current->mm != mm)
- 		return;
- 	if (likely(!(atomic_read(&mm->membarrier_state) &
+--6qSyW+QWd6cb4mh+--
