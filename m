@@ -1,127 +1,122 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 464D1218AA5
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 16:19:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E757215F52
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 16:19:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741018759; cv=none; b=FdVo8fRQvxNV8ARHaXQGeCqpFih2DzKQiDe8jl3k/rZoWO7O/DQcrwoKHZP7hXenI/OwB0irZarp15KG46FJqslXju5C4ThgH690VbWugqgrhdnCvNJI9sWBafR6dw9Yd7WhNT9hzmWkAyVU1b+ZM/aiO4wwDX6j/Q+hJi1x2GE=
+	t=1741018798; cv=none; b=cothPNp6el11xP7+2U/Oym0PWCP60IMVbWOigc4s56NXe1A0sWccOYzmxyIoYiLLwKvCVpzsW2Xu0h9+0/pzlqZusjMPvg4Xwd2ASIerGvKpJBPjdk4OQHJzX0OonhlaFKcXS6nLG7+FO11gXQiZ+dpEw+ecgAuvraSGpMppn54=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741018759; c=relaxed/simple;
-	bh=kkHQcZoTJndCnwcbB9E+wpOiprPx3EnYCYUyF+KeBqo=;
+	s=arc-20240116; t=1741018798; c=relaxed/simple;
+	bh=KaGmUQu6vX9CGkW4/xHWmqzfNUCeiOrjklvyH7jHB5c=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iSXgqj1x94UIouxau4pFs7MFsx2TacV99z3rIwSC9DI2ZjCjgerTTPbW0DS5twcsl47s4l/P9SRoACJ/R6przEOVguGydWNeNrJCEaLpio5Ga1tofOtl41xOqLAHR/fzO472JHK68NQiAoOLcBn0AIppWdyKp8hNDcqss4BSpw8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=T9uUE1pU; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=ga5mJpuH1VATuX4qhJ1RNv+EYN9CgaJc13rxQwju3+efeEeC3FZCuELT5d8xyqoTfP9K1dl10R/ZMHs+E8ic3eWo30hNqy2EzOrstT2IInri0gnpHLQUZBnZTcmRwG8bsBWWn8GEIEKuSy7FC+KNvxkGexaDhZSX35WuX7PLBRY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=SDIXkAym; arc=none smtp.client-ip=209.85.222.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="T9uUE1pU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1741018755;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=L5XdYcpLAdNxNfxY8Lfqw4ebX+gqF0nBQ5UXPPTJPbQ=;
-	b=T9uUE1pUD18iaSSpqkaWYpHwrdGdATH1CPVYM+qmx4bMNNuujfK7DiJlNUsX6YFmfGh1bM
-	hyNPO26Z3QLO91pllcspaf5UL6bsJM7b2TEoOuY5cXKp4hZN4AgfiIPIGFVcMFWgLlCEFZ
-	V5gWcnWZizMiAWS0upo7IyDZozLpHWA=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-563-kinOd46kNaOULbrkfCHfbQ-1; Mon, 03 Mar 2025 11:19:12 -0500
-X-MC-Unique: kinOd46kNaOULbrkfCHfbQ-1
-X-Mimecast-MFC-AGG-ID: kinOd46kNaOULbrkfCHfbQ_1741018751
-Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-390fd681712so928234f8f.3
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Mar 2025 08:19:12 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="SDIXkAym"
+Received: by mail-qk1-f178.google.com with SMTP id af79cd13be357-7c3b3e11f28so172897485a.1
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Mar 2025 08:19:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1741018796; x=1741623596; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=npU4Q2NKzI8EHqsYS1IQDm8fptT5XAkaolwjBVod8c4=;
+        b=SDIXkAym6QpvZf/ycYItY0gcvJ2Luwu0rESmvOBnp9L0IiAeeSIiqJo9LLXMytzrqY
+         0o7mwgOzQgpovHsxfS4k6qgWya1xhKzN5xUXD9qrE9mIULvuzfbWkHpSPqrjrAyHh3c4
+         vpPedX2t2QblzbEEXUNLQlNj/dqCEGdK0SuTQsR3CUW0ONRAehtsruj3Y3rPu+9CiCgM
+         9J1hEqHR3T6/moJESIaxrzZap1Culj9UjTZQy5XnxxBDHBMoYy8k3TPeXY1kr+HUFu/F
+         1bszyMRAFFG9WVT4jCnVZwC5anw7GMdc4Kj253fIplivOnch3FRaXDWevLEjGpk2seY1
+         B4xA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741018751; x=1741623551;
+        d=1e100.net; s=20230601; t=1741018796; x=1741623596;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=L5XdYcpLAdNxNfxY8Lfqw4ebX+gqF0nBQ5UXPPTJPbQ=;
-        b=MkFvbKMwWOAq7EiMMDwhyQCKUjgST9dePsf56+gNIPyVeCQPrF7dGHjKvs/HA00Mc5
-         iGEieS8oeQ8PW6QWPxrzo/cfDa2LEJbm9FyjgVhxQAhIr83ZkRvgafRnHZVug4N1k4Dc
-         nuuLYPaBN/s23ryPvc9MFkycUFyMHV0+MeYE8mm0D94GWCkEIYBDmU7tAr18IJbXhe6X
-         lTT+Fo2UUEd1M4j+YKY2QUiOLUiD+WjKoMEbgrR3ctB/1E/BT8eqzmG8XrsvMb6ZhOLE
-         /9vq0BjlIcq3zQD8qoN95ts6nx41usZyh9hht9UpUY7WtOYscg0ILOF2ikQLXSGj4u/F
-         Q4Qg==
-X-Forwarded-Encrypted: i=1; AJvYcCXn9hBPTvxggcdPwUFgQb3aAK55rcxKxrE6WT9R/N83XhZaJdO1qSlIwTWj7kfuw6Q+rXtFUsb5SIWrZng=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywy4OppFV+jEqx1cSMMagljKxTpq9xeHL510XVA1Y5nosdHQ5ih
-	Dt23tGNrnnbv1S7UlYn30PR1Oi3XoHU34z1NLCqBAXaEDVjRuuRw6Q8ZjI67IsLnQeiQ4Q2yGEA
-	5/iNuszKnsRRmrPG1PTSYCjrGYd/odxWjEYO+/hcdpoC05eusGmBc9cYhVEMtuA==
-X-Gm-Gg: ASbGncurIQLqNKA9PM1WnZ16VPYik+qFwUvxkuI/XqDhjPBooHDDSkggkOsxiDVWXiE
-	EpROeIBg/fWWW5GBuznuqCQoNK1txgG/MfbyfPBPwSRlK4wS7jRb6Beslgh8xRclDgkwFsApj+5
-	y+prqpeoUVGTn0P/GkUnyJbQ5uQEDU20y2WF1EGXoUPFSHLr7uVz0AS6ydn90ayiPH32ubwzIQj
-	tAxrjasmtqgazP8rCkOVWfbjnhghPwEoLuZr/0whQUdeSWaI6BMcFvQRLAnPjM3K2weJ74HN/fo
-	fxr5lHBteAnR+VW2yXNCsSXQCEwWztORHDBoI89N8nBPH2XzeSiVqyo2in1MmiCZ
-X-Received: by 2002:a05:6000:2ac:b0:391:42f:7e94 with SMTP id ffacd0b85a97d-391042f836emr4415542f8f.18.1741018751457;
-        Mon, 03 Mar 2025 08:19:11 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHNgTP7CW85b75d/hToTcBGfinaj7PcJa9xIMaekWrZFC7WO4fkAD1vXiloSjC5Lawdn0s6dg==
-X-Received: by 2002:a05:6000:2ac:b0:391:42f:7e94 with SMTP id ffacd0b85a97d-391042f836emr4415499f8f.18.1741018750944;
-        Mon, 03 Mar 2025 08:19:10 -0800 (PST)
-Received: from sgarzare-redhat (host-79-46-200-29.retail.telecomitalia.it. [79.46.200.29])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43aba53943asm193042295e9.19.2025.03.03.08.19.09
+        bh=npU4Q2NKzI8EHqsYS1IQDm8fptT5XAkaolwjBVod8c4=;
+        b=o52xmI5UnVfGfcKfQ45FjJW3Du8rV58nK3effMx4ZLS8n55cz4WB6yH6pjAAONfTrG
+         HUVXFvEnPNWDcEVamWIMQiT6jIUEIzedVneCjyLA9l7AhQTeXcZjbXiHNvryhpZB6LA+
+         fXIsrOW6eG6BLEJi0UkJWSqzvuujxgY6tkX42qcTcEv3VRNijk8KB6gUqu9TOgHPgshb
+         Z3bF43kRUG9TIhtCo5Y68dEFUhIY6lxQ1GIjv3sQDKYRPG7UqGjTddWNOxX0YtJGbJ9h
+         ZRPjA/8qj6tfwOyvbD0IzKwKD89wgJkellZh11weomoHhoSevckwIkTP3Wxqt3vc3HJ6
+         UhXg==
+X-Forwarded-Encrypted: i=1; AJvYcCVi1DBL4WM/PchFEuqwrHq5cB7oyJOyL0kmrFKh5mS937gA7saChpmcFT0mV3Gth0LTSbNwV/YnIuKUg5s=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyeR2EpWqffFrh3A/Hu9dj732BpskTunEQ+aBJU8N+6JoriTRgG
+	qh6jHEzvkMSEAIh6vRRUXaHs7isBHMS4TTqBOw/HGsNa4niqrP8sg751ZjnpBSk=
+X-Gm-Gg: ASbGncvuPiSJ2xIkztbNmPSp850hzbP/9sbx051MI78cV3IQofZA/xtYWQztPQDzyyM
+	srLVV2v1vqHlzer8waVE0VyHyNxSsiT1DCt7St3TREpmhj3uvSV6tYeJtmws8TxHXYWJXs4VYMx
+	p4Om/T1FZrcycPYSsWacBYXV8r1SeXWSDpoQmaw6CUvYN7TLNgz25+sh5X3K9FVTOvW//J+C+lV
+	gmGG/VbWt/ytjYwuAZHLirJdLcNvTMSPmlo1+D4x2FMEpTmrZvUvsM7D3/jnnPsWZswBSi8b5Bc
+	nY5X5P2iOfI3iApjBka9yv4UbY/zr6JnVtOGqXo4q76NTko6A0Wyh7wRRHRZ7oygbiyPlut1XV+
+	Ic0h4ktQsVbhyE46lVKUEYLBmd5U=
+X-Google-Smtp-Source: AGHT+IFrkNQWQ1CiJuDWkCSRKag4xlr1szBO39O50NkgwvocW88WS9f8hGcizY9NgWfP7fb3nWp2Qw==
+X-Received: by 2002:a0c:c387:0:b0:6e8:adee:2e6a with SMTP id 6a1803df08f44-6e8adee2f29mr134420576d6.36.1741018796194;
+        Mon, 03 Mar 2025 08:19:56 -0800 (PST)
+Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e8976ec0f8sm54776936d6.120.2025.03.03.08.19.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Mar 2025 08:19:10 -0800 (PST)
-Date: Mon, 3 Mar 2025 17:19:05 +0100
-From: Stefano Garzarella <sgarzare@redhat.com>
-To: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: Jarkko Sakkinen <jarkko@kernel.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Claudio Carvalho <cclaudio@linux.ibm.com>, 
-	Peter Huewe <peterhuewe@gmx.de>, x86@kernel.org, Dov Murik <dovmurik@linux.ibm.com>, 
-	linux-coco@lists.linux.dev, Dionna Glaze <dionnaglaze@google.com>, 
-	James Bottomley <James.Bottomley@hansenpartnership.com>, Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>, 
-	linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Dave Hansen <dave.hansen@linux.intel.com>, Tom Lendacky <thomas.lendacky@amd.com>, 
-	Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>
-Subject: Re: [RFC PATCH v2 5/6] tpm: add SNP SVSM vTPM driver
-Message-ID: <45ze5sxvcvg2ituxrefw6konxtwjgs4zs5bscrp2khfqkf3jb4@zozeerbmtik5>
-References: <20250228170720.144739-1-sgarzare@redhat.com>
- <20250228170720.144739-6-sgarzare@redhat.com>
- <20250301002819.GO5011@ziepe.ca>
+        Mon, 03 Mar 2025 08:19:55 -0800 (PST)
+Date: Mon, 3 Mar 2025 11:19:53 -0500
+From: Gregory Price <gourry@gourry.net>
+To: Honggyu Kim <honggyu.kim@sk.com>
+Cc: Joshua Hahn <joshua.hahnjy@gmail.com>, harry.yoo@oracle.com,
+	ying.huang@linux.alibaba.com, kernel_team@skhynix.com,
+	gregkh@linuxfoundation.org, rakie.kim@sk.com,
+	akpm@linux-foundation.org, rafael@kernel.org, lenb@kernel.org,
+	dan.j.williams@intel.com, Jonathan.Cameron@huawei.com,
+	dave.jiang@intel.com, horen.chuang@linux.dev, hannes@cmpxchg.org,
+	linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+	linux-mm@kvack.org, kernel-team@meta.com, yunjeong.mun@sk.com
+Subject: Re: [PATCH 2/2 v6] mm/mempolicy: Don't create weight sysfs for
+ memoryless nodes
+Message-ID: <Z8XWqQdPC7245FA2@gourry-fedora-PF4VCD3F>
+References: <20250226213518.767670-1-joshua.hahnjy@gmail.com>
+ <20250226213518.767670-2-joshua.hahnjy@gmail.com>
+ <b8ac8654-92bd-4c08-a3fc-e28a7be5e0e6@sk.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250301002819.GO5011@ziepe.ca>
+In-Reply-To: <b8ac8654-92bd-4c08-a3fc-e28a7be5e0e6@sk.com>
 
-On Fri, Feb 28, 2025 at 08:28:19PM -0400, Jason Gunthorpe wrote:
->On Fri, Feb 28, 2025 at 06:07:19PM +0100, Stefano Garzarella wrote:
->> +/*
->> + * tpm_svsm_remove() lives in .exit.text. For drivers registered via
->> + * module_platform_driver_probe() this is ok because they cannot get unbound
->> + * at runtime. So mark the driver struct with __refdata to prevent modpost
->> + * triggering a section mismatch warning.
->> + */
->
->??? Is that really true? I didn't know that
+On Thu, Feb 27, 2025 at 11:32:26AM +0900, Honggyu Kim wrote:
+> 
+> But using N_MEMORY doesn't fix this problem and it hides the entire CXL
+> memory nodes in our system because the CXL memory isn't detected at this
+> point of creating node*.  Maybe there is some difference when multiple
+> CXL memory is detected as a single node.
+> 
 
-I initially followed drivers/virt/coco/sev-guest/sev-guest.c to figure 
-out how to clean a driver registered with 
-module_platform_driver_probe(), then I saw that pattern with the same 
-comment is used in several other drivers.
+Hm, well, the node is "created" during early boot when ACPI tables are
+read and the CFMW are discovered - but they aren't necessarily "online"
+at the time they're created.
 
->
->I thought you could unbind anything using /sys/../unbind?
+There is no true concept of a "Hotplug NUMA Node" - as the node must be
+created at boot time. (tl;dr: N_POSSIBLE will never change).
 
-I can't see `unbind` for this driver:
+This patch may have been a bit overzealous of us, I forgot to ask
+whether N_MEMORY is set for nodes created but not onlined at boot. So
+this is a good observation.
 
-   $ ls /sys/bus/platform/drivers/tpm-svsm/
-   module	tpm-svsm  uevent
+It also doesn't help that this may introduce a subtle race condition.
 
-While I can see it for example for others like fw_cfg:
+If a node exists (N_POSSIBLE) but hasn't been onlined (!N_MEMORY) and
+bandwidth information is reported - then we store the bandwidth info
+but don't include the node in the reduction.  Then if the node comes
+online later, we don't re-trigger reduction.
 
-   $ ls /sys/bus/platform/drivers/fw_cfg
-   bind  module  QEMU0002:00  uevent  unbind
+Joshua we should just drop this patch for now and work with Honggyu and
+friends separately on this issue.  In the meantime we can stick with
+N_POSSIBLE.
 
-BTW I can unload the `tpm-svsm` module. Loading it again will cause 
-issues if I don't have a remove function that calls 
-tpm_chip_unregister().
+There are more problems in this space - namely how to handle a system
+whereby 8 CXL nodes are "possible" but the user only configures 2 (as
+described by Hyonggye here).  We will probably need to introduce
+hotplug/node on/offline callbacks to re-configure weights.
 
-Thanks,
-Stefano
-
+~Gregory
