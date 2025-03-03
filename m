@@ -1,242 +1,166 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D76E225332A
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 16:31:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49380253F3C;
+	Mon,  3 Mar 2025 16:31:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741019464; cv=none; b=RmsKDKoNpcOOMqltupk3raFrKvv80225fhSfnKiiwfLSboAKcfLeSQTdy/WAODcEaKESSea6hwfD2f19rDw8h+zhIeA5Nz1VSfyeJDIQL06Bf06Ic6a3UZqin4y1soeQ9Wmhzp13yqNVJrIZ9AGPeI0jrvPJBMSq2B3bD7RqToI=
+	t=1741019465; cv=none; b=aH236CuuSEgLpivoqZOCL+U8DCsDz9xu77F1jHmfD0RzCf8c0tvpyAkTwEzoV/IAblNZNOKBre5e29dDMKIQ4AuZY6R7pK0Q2nFavQ3jHvefgmef1Cu0rUZIQGuwYUjAEzVfIwbMx/Mn+gW74N03D5YDMTf6Rl+1ry8EeA78yAI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741019464; c=relaxed/simple;
-	bh=Ycu3g93agHZ5+lzaLOnuhINjqTNBvJJTMooJF9ouEus=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WxkLYWWr3cXlmBFxPPxXLQJ3k5oE0od5BBKPg3AevPa6XWNne9yFF0Cq1mPfbyZidjgBRsAr9Iwsq7MyJPUa6UXCF/FNDSLKIjDNFZd9UDesXJqsJ1JO9VgiDn3qonympXAkL7MgLSM7M4dqFbOfkk6EOXt0TsgtkP/L/Wgdgbs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OAF6AlNW; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1741019465; c=relaxed/simple;
+	bh=mJ+CTWjsF1WEAUmcIsLpoB/AUkQF4rLDxaxYp9oR0Aw=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=qfejB/uq8Xr7x6wO/xTCvk6TiyeqRGQxmOS5qt0o6XsN/27/DbxLE0M65MfUZevh6Sqnz7P/A4j5yMLD41Y6x/URJZUpeSVZbwFr1+bQTS+q9DXJQ6fehS2Os53Pojhn0vMdj7wUgDwGEPk6AWI0fZopub5PqexixKdjF94+VEY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KyWNv2Rh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OAF6AlNW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1741019460;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Cb8Ah8lJoOkHJddlEV7mqidKdKB3PYdRohUjXTfR2AA=;
-	b=OAF6AlNWkDrk01nWEwtOFUwzB3TlLwE1vsqCZWZeleA05afVGLHY8vyMccfn9UceTjexIL
-	GH4wSBHvxNY4xtz230LoiM22s14t86hQcqlyjGPEaf+hIivzPxCEPjzJM2N8Ua2BGJ16lw
-	oJ+Xd83IdlEa6c5uLeBZUsMrSLwbHoE=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-509-141bMXA0PRiQEaVO3-mx_g-1; Mon, 03 Mar 2025 11:30:39 -0500
-X-MC-Unique: 141bMXA0PRiQEaVO3-mx_g-1
-X-Mimecast-MFC-AGG-ID: 141bMXA0PRiQEaVO3-mx_g_1741019438
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-43bbfc1681eso6626755e9.0
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Mar 2025 08:30:39 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741019438; x=1741624238;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Cb8Ah8lJoOkHJddlEV7mqidKdKB3PYdRohUjXTfR2AA=;
-        b=BBBO8ByaPhL9NfArA9sAqgIoYVT543/v4RJ7d4IMbH8oKhBc6oLLmhlL45Ne9UAS8n
-         vauIjBjtvRZjy1se9bavXSJPy8vCINCceIAUX7mcd9BnxIV2FK6KJOcc4zUILsIRqqBn
-         W+rfQpXfYFLQHUQaoJ9rWyMA4K1tQFNOXuXdoz6nIe/8I1akpz7XABvxCBZTMUxnTfAJ
-         uaRgbZJph2+gnxNM8AjFxqF4Li1aUy+AbVj6EdLVWXbXouDI2yS6/b1uR9YwyxDc9M8W
-         flHiyeuPd74vi66OIMXl/UKj7rOtMU9ihq+ORB4tcbB/JNWJJDQnwytFR2Xv5j3FGbB3
-         mHAQ==
-X-Gm-Message-State: AOJu0YwBZ4OsRZVXv7S+6/E5LyyBWAFWJqvB8Qxjj6plZn3FmaUf+OoA
-	XGVC6Uk0cKc63d7CCn7iMwjGOATQj5QINgkBRd2euNJmWO6YOGxkF1VSK6js3QQ9TkD8szqs6p6
-	FltJ+utsydXCBqCLaQER47OA+K0K3TgPFWUtITBbHa6r6KYTOPoLVOlb8Ollh+UM/TEV9qvrDg2
-	MXvqhQV9ZVMV+1+4WVY6mdFjq5Q+OcWquRIrmgfV2gBX+g
-X-Gm-Gg: ASbGncslfkCjJwR9hMvP/nqisn0VnFBDQegMEOGb8XRszNkzTSvqwapZelomE6mAg3X
-	2Xra2SYRI/CDh+yc/stT7kNd2YsffMvnu82wC6XisRMsAaY5jNpQs7qTgYy+6ePUJVcyevRW+hm
-	KtULSJpyCVvNjodFm9LGtu3uhbcH+IclM4XTib2T8jAvAF0nOQerwLH/2AzytwojKYdFhpIjZei
-	ocribwrJpIFyNlyyN5zBwA44ki6gP9JHNWU7Ka4+Ko0p+JIg00eXGRfu7/t8RQwL+CVGvIMl1tq
-	bKk110bIddwHLZExKoHZtIjFaFL5mkpuo13NN66DFkLtScJ3OvBL42eBvoKwllQ7c6UyiNVUfSd
-	w
-X-Received: by 2002:a05:600c:4f0c:b0:439:91dd:cf9c with SMTP id 5b1f17b1804b1-43ba66e1f3amr118908225e9.10.1741019438288;
-        Mon, 03 Mar 2025 08:30:38 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFdpz0gqig8RUNxdVw3Ebkq3f5eeFacb1rX/1/2my2Nw7/Vx42fOquiEWgwrBfEGJjD+4uhoA==
-X-Received: by 2002:a05:600c:4f0c:b0:439:91dd:cf9c with SMTP id 5b1f17b1804b1-43ba66e1f3amr118907545e9.10.1741019437826;
-        Mon, 03 Mar 2025 08:30:37 -0800 (PST)
-Received: from localhost (p200300cbc7349600af274326a2162bfb.dip0.t-ipconnect.de. [2003:cb:c734:9600:af27:4326:a216:2bfb])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-43bc06eba55sm45297035e9.21.2025.03.03.08.30.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 03 Mar 2025 08:30:37 -0800 (PST)
-From: David Hildenbrand <david@redhat.com>
-To: linux-kernel@vger.kernel.org
-Cc: linux-doc@vger.kernel.org,
-	cgroups@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-api@vger.kernel.org,
-	David Hildenbrand <david@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
-	Tejun Heo <tj@kernel.org>,
-	Zefan Li <lizefan.x@bytedance.com>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	=?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Andy Lutomirski <luto@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Muchun Song <muchun.song@linux.dev>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Jann Horn <jannh@google.com>
-Subject: [PATCH v3 09/20] mm/rmap: abstract large mapcount operations for large folios (!hugetlb)
-Date: Mon,  3 Mar 2025 17:30:02 +0100
-Message-ID: <20250303163014.1128035-10-david@redhat.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250303163014.1128035-1-david@redhat.com>
-References: <20250303163014.1128035-1-david@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KyWNv2Rh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5EFD2C4CEEA;
+	Mon,  3 Mar 2025 16:31:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741019465;
+	bh=mJ+CTWjsF1WEAUmcIsLpoB/AUkQF4rLDxaxYp9oR0Aw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=KyWNv2Rh6SsM9oJgcYU5uUTWhsIgnJPeNkVs4MUJn5cY46tbJAxVQRyypjJLfgRue
+	 PTCZHOz+EX6+G19gc6A7orN+YjsDIigvnOU4lSQzgg16TujQqiuvlsYSFFC9uqdDh6
+	 bHhbaqQu1REYlXKszFpm4Eet0cTzbvbXFtD+ywU8912kuqoK49m9kaKUzDM7IBelp1
+	 k2zP0+bkJQtMxWtdl13ROE0Wip0y72RxHHG9gCpAvvoOzK200ax8dPwDssUQ62MZMQ
+	 dvYSgvOmzEGUI1sr4pSsovDzFFwaTeZ7w2dBJI0OA+2ikmGWCpIj1ixaggYmTPF7Ik
+	 DQNow7v+VdTkA==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Frederic Weisbecker <frederic@kernel.org>,
+	Paul Menzel <pmenzel@molgen.mpg.de>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Francois Romieu <romieu@fr.zoreil.com>,
+	Breno Leitao <leitao@debian.org>,
+	Eric Dumazet <edumazet@google.com>,
+	Sasha Levin <sashal@kernel.org>,
+	davem@davemloft.net,
+	pabeni@redhat.com,
+	kuniyu@amazon.com,
+	bigeasy@linutronix.de,
+	jdamato@fastly.com,
+	aleksander.lobakin@intel.com,
+	netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.12 15/17] net: Handle napi_schedule() calls from non-interrupt
+Date: Mon,  3 Mar 2025 11:30:27 -0500
+Message-Id: <20250303163031.3763651-15-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250303163031.3763651-1-sashal@kernel.org>
+References: <20250303163031.3763651-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.12.17
 Content-Transfer-Encoding: 8bit
 
-Let's abstract the operations so we can extend these operations easily.
+From: Frederic Weisbecker <frederic@kernel.org>
 
-Signed-off-by: David Hildenbrand <david@redhat.com>
+[ Upstream commit 77e45145e3039a0fb212556ab3f8c87f54771757 ]
+
+napi_schedule() is expected to be called either:
+
+* From an interrupt, where raised softirqs are handled on IRQ exit
+
+* From a softirq disabled section, where raised softirqs are handled on
+  the next call to local_bh_enable().
+
+* From a softirq handler, where raised softirqs are handled on the next
+  round in do_softirq(), or further deferred to a dedicated kthread.
+
+Other bare tasks context may end up ignoring the raised NET_RX vector
+until the next random softirq handling opportunity, which may not
+happen before a while if the CPU goes idle afterwards with the tick
+stopped.
+
+Such "misuses" have been detected on several places thanks to messages
+of the kind:
+
+	"NOHZ tick-stop error: local softirq work is pending, handler #08!!!"
+
+For example:
+
+       __raise_softirq_irqoff
+        __napi_schedule
+        rtl8152_runtime_resume.isra.0
+        rtl8152_resume
+        usb_resume_interface.isra.0
+        usb_resume_both
+        __rpm_callback
+        rpm_callback
+        rpm_resume
+        __pm_runtime_resume
+        usb_autoresume_device
+        usb_remote_wakeup
+        hub_event
+        process_one_work
+        worker_thread
+        kthread
+        ret_from_fork
+        ret_from_fork_asm
+
+And also:
+
+* drivers/net/usb/r8152.c::rtl_work_func_t
+* drivers/net/netdevsim/netdev.c::nsim_start_xmit
+
+There is a long history of issues of this kind:
+
+	019edd01d174 ("ath10k: sdio: Add missing BH locking around napi_schdule()")
+	330068589389 ("idpf: disable local BH when scheduling napi for marker packets")
+	e3d5d70cb483 ("net: lan78xx: fix "softirq work is pending" error")
+	e55c27ed9ccf ("mt76: mt7615: add missing bh-disable around rx napi schedule")
+	c0182aa98570 ("mt76: mt7915: add missing bh-disable around tx napi enable/schedule")
+	970be1dff26d ("mt76: disable BH around napi_schedule() calls")
+	019edd01d174 ("ath10k: sdio: Add missing BH locking around napi_schdule()")
+	30bfec4fec59 ("can: rx-offload: can_rx_offload_threaded_irq_finish(): add new  function to be called from threaded interrupt")
+	e63052a5dd3c ("mlx5e: add add missing BH locking around napi_schdule()")
+	83a0c6e58901 ("i40e: Invoke softirqs after napi_reschedule")
+	bd4ce941c8d5 ("mlx4: Invoke softirqs after napi_reschedule")
+	8cf699ec849f ("mlx4: do not call napi_schedule() without care")
+	ec13ee80145c ("virtio_net: invoke softirqs after __napi_schedule")
+
+This shows that relying on the caller to arrange a proper context for
+the softirqs to be handled while calling napi_schedule() is very fragile
+and error prone. Also fixing them can also prove challenging if the
+caller may be called from different kinds of contexts.
+
+Therefore fix this from napi_schedule() itself with waking up ksoftirqd
+when softirqs are raised from task contexts.
+
+Reported-by: Paul Menzel <pmenzel@molgen.mpg.de>
+Reported-by: Jakub Kicinski <kuba@kernel.org>
+Reported-by: Francois Romieu <romieu@fr.zoreil.com>
+Closes: https://lore.kernel.org/lkml/354a2690-9bbf-4ccb-8769-fa94707a9340@molgen.mpg.de/
+Cc: Breno Leitao <leitao@debian.org>
+Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
+Reviewed-by: Eric Dumazet <edumazet@google.com>
+Link: https://patch.msgid.link/20250223221708.27130-1-frederic@kernel.org
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/rmap.h | 32 ++++++++++++++++++++++++++++----
- mm/rmap.c            | 14 ++++++--------
- 2 files changed, 34 insertions(+), 12 deletions(-)
+ net/core/dev.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/rmap.h b/include/linux/rmap.h
-index e795610bade80..d1e888cc97a58 100644
---- a/include/linux/rmap.h
-+++ b/include/linux/rmap.h
-@@ -173,6 +173,30 @@ static inline void anon_vma_merge(struct vm_area_struct *vma,
- 
- struct anon_vma *folio_get_anon_vma(const struct folio *folio);
- 
-+static inline void folio_set_large_mapcount(struct folio *folio, int mapcount,
-+		struct vm_area_struct *vma)
-+{
-+	/* Note: mapcounts start at -1. */
-+	atomic_set(&folio->_large_mapcount, mapcount - 1);
-+}
-+
-+static inline void folio_add_large_mapcount(struct folio *folio,
-+		int diff, struct vm_area_struct *vma)
-+{
-+	atomic_add(diff, &folio->_large_mapcount);
-+}
-+
-+static inline void folio_sub_large_mapcount(struct folio *folio,
-+		int diff, struct vm_area_struct *vma)
-+{
-+	atomic_sub(diff, &folio->_large_mapcount);
-+}
-+
-+#define folio_inc_large_mapcount(folio, vma) \
-+	folio_add_large_mapcount(folio, 1, vma)
-+#define folio_dec_large_mapcount(folio, vma) \
-+	folio_sub_large_mapcount(folio, 1, vma)
-+
- /* RMAP flags, currently only relevant for some anon rmap operations. */
- typedef int __bitwise rmap_t;
- 
-@@ -352,12 +376,12 @@ static __always_inline void __folio_dup_file_rmap(struct folio *folio,
- 		do {
- 			atomic_inc(&page->_mapcount);
- 		} while (page++, --nr_pages > 0);
--		atomic_add(orig_nr_pages, &folio->_large_mapcount);
-+		folio_add_large_mapcount(folio, orig_nr_pages, dst_vma);
- 		break;
- 	case RMAP_LEVEL_PMD:
- 	case RMAP_LEVEL_PUD:
- 		atomic_inc(&folio->_entire_mapcount);
--		atomic_inc(&folio->_large_mapcount);
-+		folio_inc_large_mapcount(folio, dst_vma);
- 		break;
- 	}
+diff --git a/net/core/dev.c b/net/core/dev.c
+index c761f862bc5a2..d286e400c0d87 100644
+--- a/net/core/dev.c
++++ b/net/core/dev.c
+@@ -4608,7 +4608,7 @@ static inline void ____napi_schedule(struct softnet_data *sd,
+ 	 * we have to raise NET_RX_SOFTIRQ.
+ 	 */
+ 	if (!sd->in_net_rx_action)
+-		__raise_softirq_irqoff(NET_RX_SOFTIRQ);
++		raise_softirq_irqoff(NET_RX_SOFTIRQ);
  }
-@@ -451,7 +475,7 @@ static __always_inline int __folio_try_dup_anon_rmap(struct folio *folio,
- 				ClearPageAnonExclusive(page);
- 			atomic_inc(&page->_mapcount);
- 		} while (page++, --nr_pages > 0);
--		atomic_add(orig_nr_pages, &folio->_large_mapcount);
-+		folio_add_large_mapcount(folio, orig_nr_pages, dst_vma);
- 		break;
- 	case RMAP_LEVEL_PMD:
- 	case RMAP_LEVEL_PUD:
-@@ -461,7 +485,7 @@ static __always_inline int __folio_try_dup_anon_rmap(struct folio *folio,
- 			ClearPageAnonExclusive(page);
- 		}
- 		atomic_inc(&folio->_entire_mapcount);
--		atomic_inc(&folio->_large_mapcount);
-+		folio_inc_large_mapcount(folio, dst_vma);
- 		break;
- 	}
- 	return 0;
-diff --git a/mm/rmap.c b/mm/rmap.c
-index 8a7d023b02e0c..08846b7eced60 100644
---- a/mm/rmap.c
-+++ b/mm/rmap.c
-@@ -1266,7 +1266,7 @@ static __always_inline unsigned int __folio_add_rmap(struct folio *folio,
- 		    atomic_add_return_relaxed(first, mapped) < ENTIRELY_MAPPED)
- 			nr = first;
  
--		atomic_add(orig_nr_pages, &folio->_large_mapcount);
-+		folio_add_large_mapcount(folio, orig_nr_pages, vma);
- 		break;
- 	case RMAP_LEVEL_PMD:
- 	case RMAP_LEVEL_PUD:
-@@ -1290,7 +1290,7 @@ static __always_inline unsigned int __folio_add_rmap(struct folio *folio,
- 				nr = 0;
- 			}
- 		}
--		atomic_inc(&folio->_large_mapcount);
-+		folio_inc_large_mapcount(folio, vma);
- 		break;
- 	}
- 	return nr;
-@@ -1556,14 +1556,12 @@ void folio_add_new_anon_rmap(struct folio *folio, struct vm_area_struct *vma,
- 				SetPageAnonExclusive(page);
- 		}
- 
--		/* increment count (starts at -1) */
--		atomic_set(&folio->_large_mapcount, nr - 1);
-+		folio_set_large_mapcount(folio, nr, vma);
- 		atomic_set(&folio->_nr_pages_mapped, nr);
- 	} else {
- 		/* increment count (starts at -1) */
- 		atomic_set(&folio->_entire_mapcount, 0);
--		/* increment count (starts at -1) */
--		atomic_set(&folio->_large_mapcount, 0);
-+		folio_set_large_mapcount(folio, 1, vma);
- 		atomic_set(&folio->_nr_pages_mapped, ENTIRELY_MAPPED);
- 		if (exclusive)
- 			SetPageAnonExclusive(&folio->page);
-@@ -1665,7 +1663,7 @@ static __always_inline void __folio_remove_rmap(struct folio *folio,
- 			break;
- 		}
- 
--		atomic_sub(nr_pages, &folio->_large_mapcount);
-+		folio_sub_large_mapcount(folio, nr_pages, vma);
- 		do {
- 			last += atomic_add_negative(-1, &page->_mapcount);
- 		} while (page++, --nr_pages > 0);
-@@ -1678,7 +1676,7 @@ static __always_inline void __folio_remove_rmap(struct folio *folio,
- 		break;
- 	case RMAP_LEVEL_PMD:
- 	case RMAP_LEVEL_PUD:
--		atomic_dec(&folio->_large_mapcount);
-+		folio_dec_large_mapcount(folio, vma);
- 		last = atomic_add_negative(-1, &folio->_entire_mapcount);
- 		if (last) {
- 			nr = atomic_sub_return_relaxed(ENTIRELY_MAPPED, mapped);
+ #ifdef CONFIG_RPS
 -- 
-2.48.1
+2.39.5
 
