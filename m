@@ -1,103 +1,153 @@
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.web.de (mout.web.de [212.227.15.3])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19693210F6A
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 13:04:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D1691E521B;
+	Mon,  3 Mar 2025 13:04:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741007088; cv=none; b=Jvl60CQlZalK8x+K0ozY2Hs6U2zBFZ6tb9XAawgsTlRYJXhKVVd+bY/cLjfTfm/3p9lcybpXNPF8Q7xzfpUKXGuuP3hkAbauXFIQnH2lz9o4eavNC4r/mQyud8zjU38MZWsitTfFhuhnSICU/u64Az0QjbreuvswH9UR2IqhqhI=
+	t=1741007089; cv=none; b=cpMyCf+gUDsC6WBIGjZgyDZfN7UE7fdYAkATO83fODmPtbw0r43gUnPcwA3g7BsZZG4YpkXctPHmumkEp6IwfxH/a8y9XDOAlFwbZcSzeUaWilZZsmCfu33s2rdsM8XAcFxfkP+DA6kc+mh3poLYcd3J3yZA8FmsoqCoRHFj1lA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741007088; c=relaxed/simple;
-	bh=VTGS9z3V6Q/xCHN1camC46iCwwa/aosOC3MAy/OdECw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Nr/HarwW/wjwhGyTUm7Xq4yIblotzoEnJcfJLXoBUB2a66hxTJrZYL8GWHPhYdPMrgpS23ULIfN5EBu1PtW3GcoqpUDX+CUqG7Dr8nXHyY/uWS6CnBtWqfTIP187Wi4/Or10b9x1Kv+8U6QpSgGFPY/Xo+e/tCMd6RwIHEp7D6s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=jczENyf6; arc=none smtp.client-ip=209.85.208.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1741007089; c=relaxed/simple;
+	bh=bK2QYxfhL69EA5hm+p1hxMIpBV4AYdVsRtMU8Btuowc=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=dG1fwNcCz69IlVFD6gjYVU4A70DR9UEhlrKHVC4iNgWq54We9QdhddqVZazhr8MhEpa7Ncy6bfS31h1oWYgnXlWyWjGO7g1ndfLytl+MvUzBWakz6hHezOMyGfDz1lM+uWeJlsW9Zn1+JzXFBe4WjTWOO/JOJr4H7U01+9089ys=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=VUOQXwyk; arc=none smtp.client-ip=212.227.15.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jczENyf6"
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-30762598511so47005441fa.0
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Mar 2025 05:04:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741007084; x=1741611884; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=hs6021W+ZEF1jgVJIvkS1BoBhBl+Zadb4lQ906tSWc8=;
-        b=jczENyf61LzcAxDTc2zSS0GQnfs5gRzkh75eQHdMWLkx8WGL9mfqNb9wMFVMYeblG/
-         Jfwg5rulSHH9/Pwc4VyEzCyQYBWhjNjWD1P6pj8+K/3HzIkZMByLXRBQFFgA/CUxVEcO
-         5awAlcPUOq7xo6hz2ELSIcM+oycV3+cd3xzFHfAD8Mg7e5kf6A3gF0bIn/erUD+sBldh
-         XndMFL47OyBpGEldNVqePFqMhX+2v3Znq/2ivn/XJNDBtTyRa+J8YZz2BzHkeTjes22A
-         0sYaOi6ACTkWCsOErxYPh+roMBWexFJkyDipQPRbJOzLmkWnbhPHMaugdgUezvRkRYIM
-         5jqA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741007084; x=1741611884;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hs6021W+ZEF1jgVJIvkS1BoBhBl+Zadb4lQ906tSWc8=;
-        b=jX8WgJSKyVg803wGvZolvBnFlLxK2Y+7tRR4GECvKUvmLTR+Ctaay/cfMcjC6UcZ77
-         jtQMpNukwWGYkADIV6Vlm3kb9evOgr9FtrSWqMzvRshU3kuJeMn9a7tDCA+mBSNA8r6j
-         i/4ZKR44h/yT7+8N/2rZ8OoF2B+AJZFPxjvNmH+AdwTxlPlTwp6UGMOs1S8i8S7GL39R
-         F29LAseSLhKQlAUMx+I2byzrMoqwfRxCU+sCd0ViE77aEEgEJwNxHWRNugfoMeeLq4Or
-         Y7Kx5TY3TbEmTHf2GYG0h5G5BpW1RtBYVgUoMksM0KovZ9C4+Hq+BSznlewQhiRsdVMg
-         +szA==
-X-Forwarded-Encrypted: i=1; AJvYcCVBRFjlrizDQFsf5DqiJ3fTlfbtwCWew2f8tXK9q9rGjekzeut5BKgzegOtxPSxNTinZUZw9aI9PBC0r7k=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzXfigYOPni1kakTI1IAgsa3t76hN1Z1jkTcFChfPUOagg9KhzG
-	vAUes6o30z3YrbPe0gI2vQa5XV35YiGgACBJk/uNW6mdHRbkw7v6Elc0wWTssgQ=
-X-Gm-Gg: ASbGncvvXLaPOMTKLhsbNCRe+zlfCzprqcpkoadY13SGu6Bpw/IumsPwPv98wTCp2EY
-	cEcrXkq5hioGw8kpKNrkRAvbGGM2c4/iUR3UlDBECyQ6PELmCWjQmTEEqV0R0KzigRYttfMc1/r
-	1ZJnsL1r8gMYSjXbtnMSQwS0HfN0iMZMhwcd8Tsc76AYbd6uSxj3oKF/5Qx4nx36sDrIJoSS/P2
-	dCZzVXahhjTG6gmPkFlHhMaKdsaY07n9i2jGu3l0DauVwb9fEN6DithUSmSV7bBnZz0wXmsF5e4
-	JZGxrQ5At5eytzUTLZ/GziltublbuDc3yWvIjpInqzaESX8Yvae3f+rsyqypx8d/JJB1JyHC/vQ
-	iIOb8aLcSIXbOtpxRPlADul1A
-X-Google-Smtp-Source: AGHT+IFbAQM4Vg7NnCwXJQnOl/QXFO0jLcxGWTd7UWWRYV7p4mjc/3nqCPtXbPNZGlRw3vJtvB3rdQ==
-X-Received: by 2002:a2e:a9a9:0:b0:309:2ed:7331 with SMTP id 38308e7fff4ca-30b9325a905mr62065031fa.18.1741007084138;
-        Mon, 03 Mar 2025 05:04:44 -0800 (PST)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30bb14d00b0sm4996411fa.56.2025.03.03.05.04.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Mar 2025 05:04:42 -0800 (PST)
-Date: Mon, 3 Mar 2025 15:04:41 +0200
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Sricharan Ramabadhran <quic_srichara@quicinc.com>
-Cc: jassisinghbrar@gmail.com, robh@kernel.org, krzk+dt@kernel.org, 
-	conor+dt@kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	devicetree@vger.kernel.org, andersson@kernel.org, konradybcio@kernel.org, 
-	manivannan.sadhasivam@linaro.org
-Subject: Re: [PATCH V3 2/2] mailbox: tmelite-qmp: Introduce TMEL QMP mailbox
- driver
-Message-ID: <2xpu26pu4ovnchumwx7xzlp2gldpfgsurnhuqaioygb4a6xmsp@ygmpk6furqs6>
-References: <20250228045356.3527662-1-quic_srichara@quicinc.com>
- <20250228045356.3527662-3-quic_srichara@quicinc.com>
- <lakoxihaqlu3vq42eoqtlip23ggdieizotyzax5up5n6ndbwsi@ddqyzvsdtmkv>
- <1359984c-2ace-450b-a3ff-bac0b9fb5cc9@quicinc.com>
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="VUOQXwyk"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1741007051; x=1741611851; i=markus.elfring@web.de;
+	bh=ZefGaaDikQnjs1LGtmcyi6zUvqK48gTikrVFialZuG8=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:From:To:
+	 Cc:References:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=VUOQXwykHDmRACVU8X33Rt1uW0UUPZiZAC3Wcg0Y4VnTpWz4BJHox8LC2q2aKGj3
+	 /mteEDNZVtYMlJSp50eLAIXVzEQLyajTwhoQZ8gMklF1Fbplz20+4rl9bh8voktCh
+	 7cEYgDwORv85DsKoYhyMiLyQD9/mtqoDk/a6zvi5VYslE9kHUVMJn5N9HurQ4F4tP
+	 5oVv4t8BOx3GfzzP/nkB85IB/UxtjUUx2/CoLb1UzVdyetd4DHwEikdRx3/L0wiJj
+	 21HPZDsF/vGDINJjIVvDtdhH8IrYJpCcLChljjeT/Ck9u+8UwVzVNcTsPuCaLYiBV
+	 I9OSbhrL7JEIcdruKw==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.29] ([94.31.93.19]) by smtp.web.de (mrweb006
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1Mpl0r-1tTkt42vvR-00eFMs; Mon, 03
+ Mar 2025 14:04:11 +0100
+Message-ID: <535ce5e9-9ad0-4a8e-9fc2-0e759417d1b5@web.de>
+Date: Mon, 3 Mar 2025 14:04:08 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1359984c-2ace-450b-a3ff-bac0b9fb5cc9@quicinc.com>
+User-Agent: Mozilla Thunderbird
+Subject: [PATCH RESEND] iwlegacy: Adjust input parameter validation in
+ il_set_ht_add_station()
+From: Markus Elfring <Markus.Elfring@web.de>
+To: kernel-janitors@vger.kernel.org, linux-wireless@vger.kernel.org,
+ netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Johannes Berg <johannes.berg@intel.com>, Kalle Valo <kvalo@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Sriram R <quic_srirrama@quicinc.com>,
+ Stanislaw Gruszka <stf_xl@wp.pl>
+Cc: cocci@inria.fr, LKML <linux-kernel@vger.kernel.org>,
+ Simon Horman <horms@kernel.org>
+References: <40c60719-4bfe-b1a4-ead7-724b84637f55@web.de>
+ <1a11455f-ab57-dce0-1677-6beb8492a257@web.de>
+ <d90b8c11-7a40-eec4-007d-3640c0725a56@web.de>
+Content-Language: en-GB
+In-Reply-To: <d90b8c11-7a40-eec4-007d-3640c0725a56@web.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:jymu+Pr/1TM+UE1JmuPUEORIpf2+qiF1lVGAScvypt9vYK8bt5v
+ idl/iM8PTR6GeLd8dQ/PV/NBe0QVMImhaGA/no3YROXP3+O/ZMOy4OehC8kK1NC2wLPrUvt
+ mJEk30C10DOjyID6CK8aBMgsaNMkOjtScGq/Ry79uPBtaLQhcIZOOcMSxwHv5KgFjxKOoBL
+ v2j/MsWi3yyovatcuxhRQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:uVOiMT9twh4=;NMDytpay6lIFj3dsqdE/Z4Yl4c/
+ t592kNeaCLxQJXeAmgukVFmcI623zCrOqNmZIWtsJOfMWfm+KPzGUaD+bukKKNt9QupSsprUS
+ eryIqHbO+P/CgFsCs1cljKSTsUodBNmNHfg77J9K9QBRh1hdQXs5hXrrQgcECr0ih/FdOLxp9
+ 2fDlGbiCR7yzXHW+wCiZk3bhQRf5T4E3x+UwpNZ2rsn+jtnlk9EEAKZpv7gtmJjOtKZt1dB1p
+ yQ8kYbxeBgbcZLAFMz6ospRvWCf2B3lWMZcCRiWipObsYtnM50kFRxxFFeEXih2S2+HWHG69w
+ hnd0HWQW5MbxO96aDIAvpIFGWFcPGDY9DGArE8VvtUuOeRH/jk7A/AkqBpJ5CymTc22IvTRH9
+ 8zdrwBZMhC4SDK8KWAbiALVy6j7y1nOQrNX89TgvE3oTACLW1/uAkP1+A2N3jPMtRyF9CZKtA
+ jbLt6Fvk+0inAjpbIzXZyA05rNpP2SnBvm9cXlQGWe+/D5xoNx6cmX2vi3QNLxndGhhTWWIUO
+ G2yu6Gp7Y5vZAllrjWB104TQ754TBOIZPJi7LmnCAJ3j9ej471RsuyRpHiI81YYff01NJva9d
+ rsSTkuTeucTVezfTplviL/cLvGGGqIYzTqDWPhYaMPElMWJAyJEmFtpvfxceZYMA3t6nvDdEZ
+ l+qWL5NbV0cdTRnnXXMCzpQztkXihe/fnS+sKq8DwJORqkMr18CUKj5t52cu4114jpS9E0d4r
+ IhdFDt6gq9jRO7dADQtmHKsBAnMnjLcDK3VsJxUlaDYefXnQCGNdSrQmAEtUupKnKL0ESYJSM
+ W+xqVwjbpQqGdyKGwi9xfI+wCpAxx5Sg/McPGYwVFJjKNhsv1TyDqwIZqt1JNvHQKvuTxAk5x
+ FQ1LdHN7h+4+K31L9Uv/D0bjGxvNzAzkC9nXad5AZ8VZWc2+OS47kOkSeRbY9auS4jZfQCi9B
+ 0K5eXCYA6BCFP+JwYOWe7B2dWfhx7rFft289lQFW2cuhThgcSJk/aD7KGMORPxbRqhMem2iNE
+ /Aqj2uDhNAZvQOlK/zulc6hWf0Q4ckiBnN96Q704GV988t+wFWn54jXGUbHODCfM17hBs2Suv
+ wrfLBztoieDegRtA6YBhegRCL/EG1WhaB1AkEbA4y+r07nC2JkJWBVvll11IyjtLdfIn7jCSz
+ pvCsN5ZljvPq3QXxY9wQTCArITqU8afvoGTFGXQbgFDG4zTO9MKk7iauXDiMQXn9IXv3Aju3u
+ etaLLjGHpdY1L6t7AvuuDo9XbPTuJy3wYJXWsYI1EZqrtwrWZnJZaIsGkuojCz88m4mGL9tJ6
+ WTviBm2dVQrszANHsNdjCfWLuRyhDTiMmRiD5s9tvYImRQs87/tkZQ0E2XCfA3FcPoZ2JVx0Z
+ Jzxe5c4toDudXb1oe93JEGuRP3EMfJjmXDLdg3e/p7uwvAOIwB5PwuInPuBnhLLYC2XgNNixo
+ iVdIJYNXq3AFU7mVU129qBvfhyk4=
 
-On Mon, Mar 03, 2025 at 03:58:42PM +0530, Sricharan Ramabadhran wrote:
-> 
-> 
-> On 2/28/2025 12:03 PM, Dmitry Baryshkov wrote:
-> > On Fri, Feb 28, 2025 at 10:23:56AM +0530, Sricharan R wrote:
+From: Markus Elfring <elfring@users.sourceforge.net>
+Date: Wed, 19 Apr 2023 18:35:55 +0200
 
-> > > +		dev_err(dev, "Failed with status: %d\n", msg.resp.status);
-> > > +		ret = msg.resp.status;
-> > 
-> > return msg.resp.status (is it really errno?)
-> > 
-> ok, yes error.
+The address of a data structure member was determined before
+a corresponding null pointer check in the implementation of
+the function =E2=80=9Cil_set_ht_add_station=E2=80=9D.
 
-The question was if it is an errno, not if it is an error.
+Thus avoid the risk for undefined behaviour by moving the assignment
+for the variable =E2=80=9Csta_ht_inf=E2=80=9D behind the null pointer chec=
+k.
 
-> 
+This issue was detected by using the Coccinelle software.
 
--- 
-With best wishes
-Dmitry
+
+Delete also the jump target =E2=80=9Cdone=E2=80=9D by using return stateme=
+nts directly
+for two if branches.
+
+Fixes: 046d2e7c50e3 ("mac80211: prepare sta handling for MLO support")
+Fixes: e7392364fcd1 ("iwlegacy: indentions and whitespaces")
+Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+=2D--
+ drivers/net/wireless/intel/iwlegacy/common.c | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/net/wireless/intel/iwlegacy/common.c b/drivers/net/wi=
+reless/intel/iwlegacy/common.c
+index 96002121bb8b..8f6fd17b02a8 100644
+=2D-- a/drivers/net/wireless/intel/iwlegacy/common.c
++++ b/drivers/net/wireless/intel/iwlegacy/common.c
+@@ -1863,11 +1863,15 @@ EXPORT_SYMBOL(il_send_add_sta);
+ static void
+ il_set_ht_add_station(struct il_priv *il, u8 idx, struct ieee80211_sta *s=
+ta)
+ {
+-	struct ieee80211_sta_ht_cap *sta_ht_inf =3D &sta->deflink.ht_cap;
++	struct ieee80211_sta_ht_cap *sta_ht_inf;
+ 	__le32 sta_flags;
+
+-	if (!sta || !sta_ht_inf->ht_supported)
+-		goto done;
++	if (!sta)
++		return;
++
++	sta_ht_inf =3D &sta->deflink.ht_cap;
++	if (!sta_ht_inf->ht_supported)
++		return;
+
+ 	D_ASSOC("spatial multiplexing power save mode: %s\n",
+ 		(sta->deflink.smps_mode =3D=3D IEEE80211_SMPS_STATIC) ? "static" :
+@@ -1906,8 +1910,6 @@ il_set_ht_add_station(struct il_priv *il, u8 idx, st=
+ruct ieee80211_sta *sta)
+ 		sta_flags &=3D ~STA_FLG_HT40_EN_MSK;
+
+ 	il->stations[idx].sta.station_flags =3D sta_flags;
+-done:
+-	return;
+ }
+
+ /*
+=2D-
+2.40.0
+
