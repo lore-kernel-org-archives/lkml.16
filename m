@@ -1,491 +1,101 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from SHSQR01.spreadtrum.com (unknown [222.66.158.135])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 293A21F2B99
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 10:53:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C28961F460B
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 10:53:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=222.66.158.135
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740999209; cv=none; b=Qn0bLwO1MOMLVIm+ZAsrcGyIHHD3BH8nBpsl8pObuMu5S8X/6VnnzQsjyIvgGqRfJIHAz9CMP8haLdrDeL7g2fckpMSQJIsCaw3Wy1uYe3NA6Ag7ECY/INskfi8/EvNUSv8FPoA1z5NeRuWOpWmmgQrlu6Biwdfv2jmlJLagPhE=
+	t=1740999215; cv=none; b=UPQsPw1spyF2MxEepMMJOuSYX/MMlowsHbayJkvc62pLo+TiPVtPPCwXr2TOcDq2rSVkUqfRYwkel6gt65DI4oNHdHFsIOADhl8gBQKFd4d5xqBp7srWxfFCDASwySVwgkWlIzdtRozLV1xRnBfeKfN+wCwztQsO/OhjVSxzxxw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740999209; c=relaxed/simple;
-	bh=O/n1cN/pULZnhP8Vt1zz2rQUzfGlW0aWxCPzENDiiIg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZqDuif5DDFRX2R3IWUhI8EjrpmOoxlL383f7AWjgg5AN7lQwT/xKNlLnRh4WCLMIziw/B2k45l0hqUUqkKcx+9pGZXBfzOTbp86gyFvXff+zkUj1qZtYdSZ8VU2V1pm68oQRsIhZ+z3DsEiT8a3AqMMNzU/Y0hz+QGbucpbRPKc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bGu5L1CD; arc=none smtp.client-ip=209.85.218.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bGu5L1CD"
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-abf3cf3d142so328493666b.2
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Mar 2025 02:53:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740999205; x=1741604005; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NfC4EUHzjOvx/sqQD97WH0wCB9NYOdqvIzRt50L23LI=;
-        b=bGu5L1CDpKQEN0eNK801DXPKf5OnRvPqNfnRZ3EBmr6mpxRl+ZE32mxke1f68GvlO5
-         sQoFZ1l7+uW4W7IS8ZGeoXBMju9cIEifBVGQEqebHNM6wE8z4suprLYBJVb4BAdQQQyJ
-         LUwEaa11C0W3ICPPXC9cmMpHcO/8aAe2dc+dAI07w7+8PG/Ef+x1vRHyDLiy7SAD3PLZ
-         u9ax55L8KcUAFPWsOInIeLl6oZSmKkxWHQM61pLunDJiO5sk3+pHxy29ZTOH0vzdLKg0
-         g2CEpDyVB3/RLv+o3YIkOksjsVmLtzA/YeQ+z1AZFiLd1Jw3fKwHSEPAFo3R/dJ8houg
-         ZTjA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740999205; x=1741604005;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=NfC4EUHzjOvx/sqQD97WH0wCB9NYOdqvIzRt50L23LI=;
-        b=l6TiQvelkO9HvX5LWg+5JXxBocRbQnAKpZ40f39rIzYt2VosHRdETH7NZTO7Uvgzzu
-         /0GYDf/yn+oA0J1noE4SVgtWVzjRJ5sVXn66Awd+Kw9GODzGXTWYS+luhXhCqW/MHLM7
-         XqSjjaMGDisrxlUR03yFBCrwI3U72/aHTJetZGCoIuArnWZ9dPqXTyOgDBMYz++SGv72
-         OvthzZRybATXnyr2GAqxgXiXv+5qJz8BcxJZs+bGlsItI4A4rqxS2OEsG84Rkzt867k+
-         dvNpIdPEYJEacLbu2W6HzHpZ//NiJvZO0t1smrfWQoOrcTiIkTOM11lnAedTW7L9XqsN
-         sCUg==
-X-Forwarded-Encrypted: i=1; AJvYcCVEMFYBj1a5DU6pvMBu9+ctZiLFo6xqfCxyWvZPVe8MaAL6YnLyJkA5yhtdd7NuePcdvUv+Jh48jF8ZnrA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwUYHuBmdKMjt3mU9paoRIncWXDpB4DALMBhepoTtF9tLI81R0c
-	hTv3kLUmUJF4od88yAPD+4mTqX0zrvwvoocAHSJN0ZLNo6rY8MoYtF1zWwQmRV370Z0pHLfdwIQ
-	iTIebdf56h23fhj6Xom16Fzlqg9F4mxf3
-X-Gm-Gg: ASbGnctKJAlBZbKbENTl6hctzukrqkUVw0tB1/NQUdJXpRMnabqYN3HJdK3TpSciXYz
-	3V+7YsgNlM292D7MtwMs8/kpAD2YtVy2Sh3fdwQrKcOvgns0Z2Ru1er0+X+c1y9EXHBV/b627G1
-	1fQnsphq0dSc5hlXyi/GtpFANm6eDW
-X-Google-Smtp-Source: AGHT+IF0CRYuLH+z8KBMJFQOwVjjvDozeVaHE/3Zb/Pc7Uxep3lMRMAGDPxcLvQDWFg6kRK+yvlSoWyBQSFgFFwxD7g=
-X-Received: by 2002:a05:6402:234e:b0:5de:a6a8:5ec6 with SMTP id
- 4fb4d7f45d1cf-5e4d6ad8686mr38469039a12.10.1740999204974; Mon, 03 Mar 2025
- 02:53:24 -0800 (PST)
+	s=arc-20240116; t=1740999215; c=relaxed/simple;
+	bh=NA0aZjnv29CzK7eDSeZL4KPyo9JgFZx3N5dSEtDTILA=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=n9JmqXZrJICxO+VppqxpyHnpmxtY699KBcemcRpLeZ7sKfN6nLxz9BrNmPPmAh+AXr2lzTiVs95rK1ztwa281M/3Z9Q7XQVMDG0CDgCIlCrkAEib5d3n577zMFweMw0libghBLk6NJOgyoXhiQxakPGKFZqa/DzAGMTUjOAFHMM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com; spf=pass smtp.mailfrom=unisoc.com; arc=none smtp.client-ip=222.66.158.135
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=unisoc.com
+Received: from dlp.unisoc.com ([10.29.3.86])
+	by SHSQR01.spreadtrum.com with ESMTP id 523ArJRx092018;
+	Mon, 3 Mar 2025 18:53:19 +0800 (+08)
+	(envelope-from Xuewen.Yan@unisoc.com)
+Received: from SHDLP.spreadtrum.com (bjmbx01.spreadtrum.com [10.0.64.7])
+	by dlp.unisoc.com (SkyGuard) with ESMTPS id 4Z5wXL58vBz2K8nM6;
+	Mon,  3 Mar 2025 18:48:34 +0800 (CST)
+Received: from BJ10918NBW01.spreadtrum.com (10.0.73.73) by
+ BJMBX01.spreadtrum.com (10.0.64.7) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.23; Mon, 3 Mar 2025 18:53:17 +0800
+From: Xuewen Yan <xuewen.yan@unisoc.com>
+To: <vincent.guittot@linaro.org>, <peterz@infradead.org>, <mingo@redhat.com>,
+        <juri.lelli@redhat.com>, <dietmar.eggemann@arm.com>,
+        <rostedt@goodmis.org>, <bsegall@google.com>, <mgorman@suse.de>,
+        <vschneid@redhat.com>
+CC: <linux-kernel@vger.kernel.org>, <ke.wang@unisoc.com>, <di.shen@unisoc.com>,
+        <xuewen.yan94@gmail.com>
+Subject: [RFC PATCH V2 1/3] sched/fair: Fixup-wake_up_sync-vs-DELAYED_DEQUEUE
+Date: Mon, 3 Mar 2025 18:52:39 +0800
+Message-ID: <20250303105241.17251-2-xuewen.yan@unisoc.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20250303105241.17251-1-xuewen.yan@unisoc.com>
+References: <20250303105241.17251-1-xuewen.yan@unisoc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250301055102.88746-1-ioworker0@gmail.com> <20250303152907.d61151bbdaf0b8a6a8f9978f@kernel.org>
-In-Reply-To: <20250303152907.d61151bbdaf0b8a6a8f9978f@kernel.org>
-From: Lance Yang <ioworker0@gmail.com>
-Date: Mon, 3 Mar 2025 18:52:48 +0800
-X-Gm-Features: AQ5f1JqSBFbm8-vzNy-VSmgmHzxXYeGD676WZJ47IHD3xAFGOxOdw01VQdfNDUA
-Message-ID: <CAK1f24=EH4d2Zboke82YY3DjxfDwJBtoZDPEfDvD6vYiGROMKg@mail.gmail.com>
-Subject: Re: [PATCH 1/1] hung_task: show the blocker task if the task is hung
- on semaphore
-To: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: akpm@linux-foundation.org, will@kernel.org, peterz@infradead.org, 
-	mingo@redhat.com, longman@redhat.com, anna.schumaker@oracle.com, 
-	boqun.feng@gmail.com, joel.granados@kernel.org, kent.overstreet@linux.dev, 
-	leonylgao@tencent.com, linux-kernel@vger.kernel.org, rostedt@goodmis.org, 
-	senozhatsky@chromium.org, tfiga@chromium.org, 
-	Mingzhe Yang <mingzhe.yang@ly.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SHCAS03.spreadtrum.com (10.0.1.207) To
+ BJMBX01.spreadtrum.com (10.0.64.7)
+X-MAIL:SHSQR01.spreadtrum.com 523ArJRx092018
 
-Hi Masami,
+Delayed dequeued feature keeps a sleeping task enqueued until its
+lag has elapsed. As a result, it stays also visible in rq->nr_running.
+So when in wake_affine_idle(), we should use the real running-tasks
+in rq to check whether we should place the wake-up task to
+current cpu.
+On the other hand, add a helper function to return the nr-delayed.
 
-Thanks a lot for taking time to review!
+Fixes: 152e11f6df29 ("sched/fair: Implement delayed dequeue")
+Signed-off-by: Xuewen Yan <xuewen.yan@unisoc.com>
+---
+V2:
+- add helper function (Vincent)
+---
+ kernel/sched/fair.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
-On Mon, Mar 3, 2025 at 2:29=E2=80=AFPM Masami Hiramatsu <mhiramat@kernel.or=
-g> wrote:
->
-> On Sat,  1 Mar 2025 13:51:02 +0800
-> Lance Yang <ioworker0@gmail.com> wrote:
->
-> > Inspired by mutex blocker tracking[1], this patch makes a trade-off to
-> > balance the overhead and utility of the hung task detector.
->
-> Thanks for adding new one!
->
-> >
-> > Unlike mutexes, semaphores lack explicit ownership tracking, making it
-> > challenging to identify the root cause of hangs. To address this, we
-> > introduce a last_holder field to the semaphore structure, which is
-> > updated when a task successfully calls down() and cleared during up().
-> >
-> > The assumption is that if a task is blocked on a semaphore, the holders
-> > must not have released it. While this does not guarantee that the last
-> > holder is one of the current blockers, it likely provides a practical h=
-int
-> > for diagnosing semaphore-related stalls.
->
-> Yeah, if we can have something like the owner_list, we can find the
-> longest time blocker (owner) but it takes more {memory, performance}
-> overheads.
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 1c0ef435a7aa..a354f29c4f6f 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -7181,6 +7181,11 @@ static bool dequeue_task_fair(struct rq *rq, struct task_struct *p, int flags)
+ 	return true;
+ }
+ 
++static inline unsigned int cfs_h_nr_delayed(struct rq *rq)
++{
++	return (rq->cfs.h_nr_queued - rq->cfs.h_nr_runnable);
++}
++
+ #ifdef CONFIG_SMP
+ 
+ /* Working cpumask for: sched_balance_rq(), sched_balance_newidle(). */
+@@ -7342,8 +7347,12 @@ wake_affine_idle(int this_cpu, int prev_cpu, int sync)
+ 	if (available_idle_cpu(this_cpu) && cpus_share_cache(this_cpu, prev_cpu))
+ 		return available_idle_cpu(prev_cpu) ? prev_cpu : this_cpu;
+ 
+-	if (sync && cpu_rq(this_cpu)->nr_running == 1)
+-		return this_cpu;
++	if (sync) {
++		struct rq *rq = cpu_rq(this_cpu);
++
++		if ((rq->nr_running - cfs_h_nr_delayed(rq)) == 1)
++			return this_cpu;
++	}
+ 
+ 	if (available_idle_cpu(prev_cpu))
+ 		return prev_cpu;
+-- 
+2.25.1
 
-You're right. Let's keep it simple and light for now without more
- {memory, performance} overheads ;p
-
->
-> >
-> > With this change, the hung task detector can now show blocker task's in=
-fo
-> > like below:
-> >
-> > [Sat Mar  1 02:39:52 2025] INFO: task cat:1437 blocked for more than 12=
-2 seconds.
-> > [Sat Mar  1 02:39:52 2025]       Tainted: G           OE      6.14.0-rc=
-3+ #9
-> > [Sat Mar  1 02:39:52 2025] "echo 0 > /proc/sys/kernel/hung_task_timeout=
-_secs" disables this message.
-> > [Sat Mar  1 02:39:52 2025] task:cat             state:D stack:0     pid=
-:1437  tgid:1437  ppid:1007   task_flags:0x400000 flags:0x00000004
-> > [Sat Mar  1 02:39:52 2025] Call trace:
-> > [Sat Mar  1 02:39:52 2025]  __switch_to+0x1ec/0x380 (T)
-> > [Sat Mar  1 02:39:52 2025]  __schedule+0xc30/0x44f8
-> > [Sat Mar  1 02:39:52 2025]  schedule+0xb8/0x3b0
-> > [Sat Mar  1 02:39:52 2025]  schedule_timeout+0x1d0/0x208
-> > [Sat Mar  1 02:39:52 2025]  __down_common+0x27c/0x600
-> > [Sat Mar  1 02:39:52 2025]  __down+0x24/0x50
-> > [Sat Mar  1 02:39:52 2025]  down+0xe0/0x140
-> > [Sat Mar  1 02:39:52 2025]  read_dummy+0x3c/0xa0 [hung_task_sem]
-> > [Sat Mar  1 02:39:52 2025]  full_proxy_read+0xfc/0x1d0
-> > [Sat Mar  1 02:39:52 2025]  vfs_read+0x1a0/0x858
-> > [Sat Mar  1 02:39:52 2025]  ksys_read+0x100/0x220
-> > [Sat Mar  1 02:39:52 2025]  __arm64_sys_read+0x78/0xc8
-> > [Sat Mar  1 02:39:52 2025]  invoke_syscall+0xd8/0x278
-> > [Sat Mar  1 02:39:52 2025]  el0_svc_common.constprop.0+0xb8/0x298
-> > [Sat Mar  1 02:39:52 2025]  do_el0_svc+0x4c/0x88
-> > [Sat Mar  1 02:39:52 2025]  el0_svc+0x44/0x108
-> > [Sat Mar  1 02:39:52 2025]  el0t_64_sync_handler+0x134/0x160
-> > [Sat Mar  1 02:39:52 2025]  el0t_64_sync+0x1b8/0x1c0
-> > [Sat Mar  1 02:39:52 2025] INFO: task cat:1437 blocked on a semaphore l=
-ikely last held by task cat:1436
-> > [Sat Mar  1 02:39:52 2025] task:cat             state:S stack:0     pid=
-:1436  tgid:1436  ppid:1007   task_flags:0x400000 flags:0x00000004
-> > [Sat Mar  1 02:39:52 2025] Call trace:
-> > [Sat Mar  1 02:39:52 2025]  __switch_to+0x1ec/0x380 (T)
-> > [Sat Mar  1 02:39:52 2025]  __schedule+0xc30/0x44f8
-> > [Sat Mar  1 02:39:52 2025]  schedule+0xb8/0x3b0
-> > [Sat Mar  1 02:39:52 2025]  schedule_timeout+0xf4/0x208
-> > [Sat Mar  1 02:39:52 2025]  msleep_interruptible+0x70/0x130
-> > [Sat Mar  1 02:39:52 2025]  read_dummy+0x48/0xa0 [hung_task_sem]
-> > [Sat Mar  1 02:39:52 2025]  full_proxy_read+0xfc/0x1d0
-> > [Sat Mar  1 02:39:52 2025]  vfs_read+0x1a0/0x858
-> > [Sat Mar  1 02:39:52 2025]  ksys_read+0x100/0x220
-> > [Sat Mar  1 02:39:52 2025]  __arm64_sys_read+0x78/0xc8
-> > [Sat Mar  1 02:39:52 2025]  invoke_syscall+0xd8/0x278
-> > [Sat Mar  1 02:39:52 2025]  el0_svc_common.constprop.0+0xb8/0x298
-> > [Sat Mar  1 02:39:52 2025]  do_el0_svc+0x4c/0x88
-> > [Sat Mar  1 02:39:52 2025]  el0_svc+0x44/0x108
-> > [Sat Mar  1 02:39:52 2025]  el0t_64_sync_handler+0x134/0x160
-> > [Sat Mar  1 02:39:52 2025]  el0t_64_sync+0x1b8/0x1c0
-> >
-> > [1] https://lore.kernel.org/all/174046694331.2194069.154729520502408074=
-69.stgit@mhiramat.tok.corp.google.com
-> >
-> > Signed-off-by: Mingzhe Yang <mingzhe.yang@ly.com>
-> > Signed-off-by: Lance Yang <ioworker0@gmail.com>
-> > ---
-> >  include/linux/sched.h      |  1 +
-> >  include/linux/semaphore.h  | 15 ++++++++++-
-> >  kernel/hung_task.c         | 52 ++++++++++++++++++++++++++-----------
-> >  kernel/locking/semaphore.c | 53 ++++++++++++++++++++++++++++++++++----
-> >  4 files changed, 100 insertions(+), 21 deletions(-)
-> >
-> > diff --git a/include/linux/sched.h b/include/linux/sched.h
-> > index 0cebdd736d44..5dfdca879ac4 100644
-> > --- a/include/linux/sched.h
-> > +++ b/include/linux/sched.h
-> > @@ -1219,6 +1219,7 @@ struct task_struct {
-> >
-> >  #ifdef CONFIG_DETECT_HUNG_TASK_BLOCKER
-> >       struct mutex                    *blocker_mutex;
-> > +     struct semaphore                *blocker_sem;
->
-> Can we make this a union because only one blocker is active at a time?
-> Waiman has been suggested the update way;
->
-> https://lore.kernel.org/all/9f9150b4-1cf5-4380-b431-419f70775a7d@redhat.c=
-om/
->
-> If we can use MSB or LSB of those pointers, it is the smallest memory
-> footprint.
-
-Nice! Thanks for sharing the link and the idea. I will look into it and see
-if we can make it work ;)
-
->
-> >  #endif
-> >
-> >  #ifdef CONFIG_DEBUG_ATOMIC_SLEEP
-> > diff --git a/include/linux/semaphore.h b/include/linux/semaphore.h
-> > index 04655faadc2d..ca8240a5dbfc 100644
-> > --- a/include/linux/semaphore.h
-> > +++ b/include/linux/semaphore.h
-> > @@ -16,13 +16,25 @@ struct semaphore {
-> >       raw_spinlock_t          lock;
-> >       unsigned int            count;
-> >       struct list_head        wait_list;
-> > +
-> > +#ifdef CONFIG_DETECT_HUNG_TASK_BLOCKER
-> > +     atomic_long_t last_holder;
-> > +#endif
->
-> Would we need to make this atomic? I think mutex needs to use it directly
-> as a pointer, but debug_show_blocker() searches the task, so we can
-> use an unsigned long + WRITE_ONCE()/READ_ONCE().
-
-Good spot! Using 'an unsigned long + WRITE_ONCE()/READ_ONCE()' is
-the way to go, so let me give it a try ;)
-
->
-> >  };
-> >
-> > +#ifdef CONFIG_DETECT_HUNG_TASK_BLOCKER
-> > +#define __LAST_HOLDER_SEMAPHORE_INITIALIZER                          \
-> > +     , .last_holder =3D ATOMIC_LONG_INIT(0)
-> > +#else
-> > +#define __LAST_HOLDER_SEMAPHORE_INITIALIZER
-> > +#endif
-> > +
-> >  #define __SEMAPHORE_INITIALIZER(name, n)                             \
-> >  {                                                                    \
-> >       .lock           =3D __RAW_SPIN_LOCK_UNLOCKED((name).lock),       =
- \
-> >       .count          =3D n,                                           =
- \
-> > -     .wait_list      =3D LIST_HEAD_INIT((name).wait_list),            =
- \
-> > +     .wait_list      =3D LIST_HEAD_INIT((name).wait_list)             =
- \
-> > +     __LAST_HOLDER_SEMAPHORE_INITIALIZER                             \
-> >  }
-> >
-> >  /*
-> > @@ -47,5 +59,6 @@ extern int __must_check down_killable(struct semaphor=
-e *sem);
-> >  extern int __must_check down_trylock(struct semaphore *sem);
-> >  extern int __must_check down_timeout(struct semaphore *sem, long jiffi=
-es);
-> >  extern void up(struct semaphore *sem);
-> > +extern unsigned long sem_last_holder(struct semaphore *sem);
-> >
-> >  #endif /* __LINUX_SEMAPHORE_H */
-> > diff --git a/kernel/hung_task.c b/kernel/hung_task.c
-> > index ccd7217fcec1..332f555a97a9 100644
-> > --- a/kernel/hung_task.c
-> > +++ b/kernel/hung_task.c
-> > @@ -98,30 +98,52 @@ static struct notifier_block panic_block =3D {
-> >  static void debug_show_blocker(struct task_struct *task)
-> >  {
-> >       struct task_struct *g, *t;
-> > -     unsigned long owner;
-> > -     struct mutex *lock;
-> > +     unsigned long owner, holder;
-> > +     struct semaphore *sem_lock;
-> > +     struct mutex *mutex_lock;
-> >
-> >       RCU_LOCKDEP_WARN(!rcu_read_lock_held(), "No rcu lock held");
-> >
-> > -     lock =3D READ_ONCE(task->blocker_mutex);
-> > -     if (!lock)
-> > -             return;
-> > +     mutex_lock =3D READ_ONCE(task->blocker_mutex);
-> > +     if (mutex_lock) {
-> > +             owner =3D mutex_get_owner(mutex_lock);
-> > +             if (unlikely(!owner)) {
-> > +                     pr_err("INFO: task %s:%d is blocked on a mutex, b=
-ut the owner is not found.\n",
-> > +                            task->comm, task->pid);
-> > +                     goto blocker_sem;
-> > +             }
-> >
-> > -     owner =3D mutex_get_owner(lock);
-> > -     if (unlikely(!owner)) {
-> > -             pr_err("INFO: task %s:%d is blocked on a mutex, but the o=
-wner is not found.\n",
-> > -                     task->comm, task->pid);
-> > +             /* Ensure the owner information is correct. */
-> > +             for_each_process_thread(g, t) {
-> > +                     if ((unsigned long)t =3D=3D owner) {
-> > +                             pr_err("INFO: task %s:%d is blocked on a =
-mutex likely owned by task %s:%d.\n",
-> > +                                    task->comm, task->pid, t->comm, t-=
->pid);
-> > +                             sched_show_task(t);
-> > +                             return;
-> > +                     }
-> > +             }
-> >               return;
-> >       }
-> >
-> > -     /* Ensure the owner information is correct. */
-> > -     for_each_process_thread(g, t) {
-> > -             if ((unsigned long)t =3D=3D owner) {
-> > -                     pr_err("INFO: task %s:%d is blocked on a mutex li=
-kely owned by task %s:%d.\n",
-> > -                             task->comm, task->pid, t->comm, t->pid);
-> > -                     sched_show_task(t);
-> > +blocker_sem:
-> > +     sem_lock =3D READ_ONCE(task->blocker_sem);
-> > +     if (sem_lock) {
-> > +             holder =3D sem_last_holder(sem_lock);
-> > +             if (unlikely(!holder)) {
-> > +                     pr_err("INFO: task %s:%d is blocked on a semaphor=
-e, but the last holder is not found.\n",
-> > +                            task->comm, task->pid);
-> >                       return;
-> >               }
-> > +
-> > +             for_each_process_thread(g, t) {
-> > +                     if ((unsigned long)t =3D=3D holder) {
-> > +                             pr_err("INFO: task %s:%d blocked on a sem=
-aphore likely last held by task %s:%d\n",
-> > +                                    task->comm, task->pid, t->comm, t-=
->pid);
-> > +                             sched_show_task(t);
-> > +                             return;
-> > +                     }
-> > +             }
-> > +             return;
-> >       }
-> >  }
-> >  #else
-> > diff --git a/kernel/locking/semaphore.c b/kernel/locking/semaphore.c
-> > index 34bfae72f295..5a684c0a3087 100644
-> > --- a/kernel/locking/semaphore.c
-> > +++ b/kernel/locking/semaphore.c
-> > @@ -39,6 +39,7 @@ static noinline int __down_interruptible(struct semap=
-hore *sem);
-> >  static noinline int __down_killable(struct semaphore *sem);
-> >  static noinline int __down_timeout(struct semaphore *sem, long timeout=
-);
-> >  static noinline void __up(struct semaphore *sem);
-> > +static inline void __sem_acquire(struct semaphore *sem);
-> >
-> >  /**
-> >   * down - acquire the semaphore
-> > @@ -58,7 +59,7 @@ void __sched down(struct semaphore *sem)
-> >       might_sleep();
-> >       raw_spin_lock_irqsave(&sem->lock, flags);
-> >       if (likely(sem->count > 0))
-> > -             sem->count--;
-> > +             __sem_acquire(sem);
-> >       else
-> >               __down(sem);
-> >       raw_spin_unlock_irqrestore(&sem->lock, flags);
-> > @@ -82,7 +83,7 @@ int __sched down_interruptible(struct semaphore *sem)
-> >       might_sleep();
-> >       raw_spin_lock_irqsave(&sem->lock, flags);
-> >       if (likely(sem->count > 0))
-> > -             sem->count--;
-> > +             __sem_acquire(sem);
-> >       else
-> >               result =3D __down_interruptible(sem);
-> >       raw_spin_unlock_irqrestore(&sem->lock, flags);
-> > @@ -109,7 +110,7 @@ int __sched down_killable(struct semaphore *sem)
-> >       might_sleep();
-> >       raw_spin_lock_irqsave(&sem->lock, flags);
-> >       if (likely(sem->count > 0))
-> > -             sem->count--;
-> > +             __sem_acquire(sem);
-> >       else
-> >               result =3D __down_killable(sem);
-> >       raw_spin_unlock_irqrestore(&sem->lock, flags);
-> > @@ -139,7 +140,7 @@ int __sched down_trylock(struct semaphore *sem)
-> >       raw_spin_lock_irqsave(&sem->lock, flags);
-> >       count =3D sem->count - 1;
-> >       if (likely(count >=3D 0))
-> > -             sem->count =3D count;
-> > +             __sem_acquire(sem);
-> >       raw_spin_unlock_irqrestore(&sem->lock, flags);
-> >
-> >       return (count < 0);
-> > @@ -164,7 +165,7 @@ int __sched down_timeout(struct semaphore *sem, lon=
-g timeout)
-> >       might_sleep();
-> >       raw_spin_lock_irqsave(&sem->lock, flags);
-> >       if (likely(sem->count > 0))
-> > -             sem->count--;
-> > +             __sem_acquire(sem);
-> >       else
-> >               result =3D __down_timeout(sem, timeout);
-> >       raw_spin_unlock_irqrestore(&sem->lock, flags);
-> > @@ -242,10 +243,18 @@ static inline int __sched __down_common(struct se=
-maphore *sem, long state,
-> >  {
-> >       int ret;
-> >
-> > +#ifdef CONFIG_DETECT_HUNG_TASK_BLOCKER
-> > +     WRITE_ONCE(current->blocker_sem, sem);
-> > +#endif
-> > +
-> >       trace_contention_begin(sem, 0);
-> >       ret =3D ___down_common(sem, state, timeout);
-> >       trace_contention_end(sem, ret);
-> >
-> > +#ifdef CONFIG_DETECT_HUNG_TASK_BLOCKER
-> > +     WRITE_ONCE(current->blocker_sem, NULL);
-> > +#endif
-> > +
-> >       return ret;
-> >  }
-> >
-> > @@ -274,6 +283,40 @@ static noinline void __sched __up(struct semaphore=
- *sem)
-> >       struct semaphore_waiter *waiter =3D list_first_entry(&sem->wait_l=
-ist,
-> >                                               struct semaphore_waiter, =
-list);
-> >       list_del(&waiter->list);
-> > +
-> > +#ifdef CONFIG_DETECT_HUNG_TASK_BLOCKER
-> > +     atomic_long_cmpxchg_release(&sem->last_holder, (unsigned long)cur=
-rent,
-> > +                                 0UL);
->
-> Ah, you don't need atomic here because __up() is called with sem->lock lo=
-cked.
-
-Indeed.
-
-> Also, if wait_list is empty, the 'up()' does only sem->count++. In this c=
-ase,
-> the owner is not cleared.
-
-Good catch! I totally missed that and will fix it in the next version.
-
-Thanks a lot again for your time!
-Lance
-
-
->
-> Thank you,
->
-> > +#endif
-> > +
-> >       waiter->up =3D true;
-> >       wake_up_process(waiter->task);
-> >  }
-> > +
-> > +static inline struct task_struct *__holder_task(unsigned long holder)
-> > +{
-> > +     return (struct task_struct *)holder;
-> > +}
-> > +
-> > +#ifdef CONFIG_DETECT_HUNG_TASK_BLOCKER
-> > +/* Do not use the return value as a pointer directly. */
-> > +unsigned long sem_last_holder(struct semaphore *sem)
-> > +{
-> > +     unsigned long holder =3D atomic_long_read(&sem->last_holder);
-> > +
-> > +     return (unsigned long)__holder_task(holder);
-> > +}
-> > +#else
-> > +unsigned long sem_last_holder(struct semaphore *sem)
-> > +{
-> > +     return 0;
-> > +}
-> > +#endif
-> > +
-> > +static inline void __sem_acquire(struct semaphore *sem)
-> > +{
-> > +     sem->count--;
-> > +#ifdef CONFIG_DETECT_HUNG_TASK_BLOCKER
-> > +     atomic_long_set(&sem->last_holder, (unsigned long)current);
-> > +#endif
-> > +}
-> > --
-> > 2.45.2
-> >
-> >
->
->
-> --
-> Masami Hiramatsu (Google) <mhiramat@kernel.org>
