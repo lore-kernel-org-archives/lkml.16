@@ -1,218 +1,226 @@
-Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C1961F12E7
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 08:45:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 747231EE014;
+	Mon,  3 Mar 2025 08:47:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740991561; cv=none; b=PcYNEhYcAHmbJYTBd02XM1qotKBSh4p15Tw/mw+9dPkZwmfIWK4OlGsQ/ReR2kTbVVW2YIzArcyoqmZzamft+RuitxXVmdcI6gXGF4zI1XB518pGeZKUcYm6fBmTq42KIp3DM5hR4c7sOxaynil2G0Nf9llppmCwFT2S57tfh20=
+	t=1740991653; cv=none; b=Mew+Bz+5CcBzzPfCcKuSKG22Vn4YTxmGZ15l7J52G5LgtBG50rJJeXqh4AoMaqi7MFi5nat6heR2DAdzEEI9kxkQdYb8EW0cO7oaJqApWRHraAcwSKfm2DvmnuxoA5V/xi5NURSBI+uENo8qavBzWUzPChDtlI/wsRabvNUsokc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740991561; c=relaxed/simple;
-	bh=h39madShj1asyLtbf2sfVdBNK2RyKkwe8T8CD9+EWUU=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=a7gPtkBXwPsL2Jq2QjVlgCLKH2hZgQ/WjevRvvfL1SAOa0ohmbGNNdiMv8J43ae5wPd3kx9353ridPwIunob0wSSI9o1Cv3qbj6K2PvlO9bJekIfAi7NqhJt8K9p+hqX6QWNw88Ec/R0INUtxUYuW8JL7z9UVFpzrdDBaM5ZsmI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pRVew8xk; arc=none smtp.client-ip=209.85.128.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
+	s=arc-20240116; t=1740991653; c=relaxed/simple;
+	bh=LJoG0hwzy11IwSS0GA7f2KkCoIWMhfdeKs7bZI/C2Jg=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=M5TnE/OvlApkDBfIpnZhDBQL6N/jVoJQW6cCDGnxZ/VGUznWIHLeYMDL8NdnN1F1C9Eu1IJqV5EAYfnzzmZGqbOAzCGtJsYjXSFVKQA/oJCkxo28K0M49rSHCmhN/nit+Gylur1DQpyCpygGJgkp7XctYQImVX2K6NqzrQWpWkw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Gt1dw67V; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pRVew8xk"
-Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-43941ad86d4so18162215e9.2
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Mar 2025 00:45:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1740991557; x=1741596357; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=0DQHcaO0nvqPOcD0xXA6BfduaWtfQQJcuNoquBNRtQM=;
-        b=pRVew8xkZ3dx76UDMEb5V5Ln0Zrn19RnI5UNBN3imF+cdAd3P5dKdKXSD097jduQ1Z
-         hZfQsnVy5qXTmvDUQuSeT+7hm8iab/iHttka6yYU8AvtbdxDjRC7WG4+k/FM9VXhYmRd
-         qg3JW79D2XsRY+IFG1p9KlEAhSA/5Es8qCluW2j1lg/JbPwtYLqaVb3iKxpXeLh6C3Nm
-         kcO29QyghbQouvkyRiEx1nTOW9f+uwTRnmG/0lOUu7kJZXSYcaP6ffAR6+teNa5AwY9v
-         FtL4/CB4/2ZsHeBqN8O5pKm1OSMZVUMFwUL0NXJBE3k5tE+JDzyqm76RKjhTYpR1JkKb
-         6acg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740991557; x=1741596357;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=0DQHcaO0nvqPOcD0xXA6BfduaWtfQQJcuNoquBNRtQM=;
-        b=mx4YYY69mm77Dwe2RhBKoa6HEwVya5REa/RE/Ing4Py1uF+4epn9BOTN2sRIxHzH8A
-         3n/mdsENPLPtN8Bm+J3/wHMvQe7rZz2GgV15WdfGvv1V/wnpgTvC64ZlKHfuENvgFlzV
-         Inapi/h/RA1MQJ89i308YYyBRcIFJROuJblg0ZNZPAyoLt2dH7RHTFGmAp+45QmGQUlH
-         NJTq9Lj8OUjDLtVMVm8NLVRKhQ7QsDWnk2TIqd7GQP3YFUmdrggNfnVGUxjfFH9VrcwI
-         h4FyfasPMQ5hPrJx86u3A5JXtKQfTri50Um+KfWYXB7BnnTafJsf8V3StYfgULooRo8C
-         Hzwg==
-X-Forwarded-Encrypted: i=1; AJvYcCUrlYmYVMDNaZkCpOGO2yzC6nS7+nWC2JblI1Rl/ZqTtWHfyeiVJLCUmnzoP/IX1evgJ4hjVzruwzJ5IIk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw5wQ3LqBkKnxZJ9yeobPH2v7MEwBNTnzSeI/58dWma9X9zlICl
-	3Fxk8jglUh5X5FXkcBSNLY4/z8hMzOtJ280MlZ9hzYBihnZgDWR93G5jMTpHRBA8N44A0us9hoe
-	Qkwn5gdCu56iHow==
-X-Google-Smtp-Source: AGHT+IEbR3/WcyPiaNNIulZcuIWaKGsu5gY2WjUpjPLpgdJov23gFYjscM1b2KomiFKt1HIexbDsjk8ll3zgBPY=
-X-Received: from wmbay26.prod.google.com ([2002:a05:600c:1e1a:b0:439:80fc:8bb2])
- (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:1c25:b0:439:5a37:8157 with SMTP id 5b1f17b1804b1-43ba6774a03mr109919695e9.30.1740991557659;
- Mon, 03 Mar 2025 00:45:57 -0800 (PST)
-Date: Mon, 03 Mar 2025 08:45:16 +0000
-In-Reply-To: <20250303-export-macro-v3-0-41fbad85a27f@google.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Gt1dw67V"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740991652; x=1772527652;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=LJoG0hwzy11IwSS0GA7f2KkCoIWMhfdeKs7bZI/C2Jg=;
+  b=Gt1dw67VHBl2jicCy4GNgKflZmGKwdh2AK22+0oGcmxWeAzBAUD+aoc9
+   HFrVu1k8bXmTMvX5Jo//HZ3WPopJJTb1/U2TuvU1C14T84eUZOTusSoso
+   4GNJVIJyyyZa+qOr7IyfXsaEQwi70zyHkcW7/iWsIBsuRNpM3v/P4OrF0
+   9C2CH/E58A2Dn5Q0dXegFX0ePqS0O4Uas2GScumwxLW3IBEFAQ3gy8z5f
+   g+XUYMXyfkoJ4EaEwOu+2EF73V9mCGgXWMMxpfCaEykZ4F98WxnNp5JHs
+   B2QuhAqg+t63fi7KQvMvRsUXvuA2Go5wOhKyLifuBttJONVlvCmi42/jg
+   A==;
+X-CSE-ConnectionGUID: dMwp9FegRd2dXB1nZxp7pQ==
+X-CSE-MsgGUID: nVk5gWsbRN+neeYt63zuaw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11361"; a="42111867"
+X-IronPort-AV: E=Sophos;i="6.13,329,1732608000"; 
+   d="scan'208";a="42111867"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Mar 2025 00:47:28 -0800
+X-CSE-ConnectionGUID: BqnvijDaScOzKITX7vs36w==
+X-CSE-MsgGUID: yCwbwk1qQtu2vMCztNB7sg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,329,1732608000"; 
+   d="scan'208";a="118426765"
+Received: from jf5300-b11a338t.jf.intel.com ([10.242.51.115])
+  by fmviesa010.fm.intel.com with ESMTP; 03 Mar 2025 00:47:26 -0800
+From: Kanchana P Sridhar <kanchana.p.sridhar@intel.com>
+To: linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	hannes@cmpxchg.org,
+	yosry.ahmed@linux.dev,
+	nphamcs@gmail.com,
+	chengming.zhou@linux.dev,
+	usamaarif642@gmail.com,
+	ryan.roberts@arm.com,
+	21cnbao@gmail.com,
+	ying.huang@linux.alibaba.com,
+	akpm@linux-foundation.org,
+	linux-crypto@vger.kernel.org,
+	herbert@gondor.apana.org.au,
+	davem@davemloft.net,
+	clabbe@baylibre.com,
+	ardb@kernel.org,
+	ebiggers@google.com,
+	surenb@google.com,
+	kristen.c.accardi@intel.com
+Cc: wajdi.k.feghali@intel.com,
+	vinodh.gopal@intel.com,
+	kanchana.p.sridhar@intel.com
+Subject: [PATCH v8 02/14] crypto: acomp - New interfaces to facilitate batching support in acomp & drivers.
+Date: Mon,  3 Mar 2025 00:47:12 -0800
+Message-Id: <20250303084724.6490-3-kanchana.p.sridhar@intel.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20250303084724.6490-1-kanchana.p.sridhar@intel.com>
+References: <20250303084724.6490-1-kanchana.p.sridhar@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250303-export-macro-v3-0-41fbad85a27f@google.com>
-X-Developer-Key: i=aliceryhl@google.com; a=openpgp; fpr=49F6C1FAA74960F43A5B86A1EE7A392FDE96209F
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4809; i=aliceryhl@google.com;
- h=from:subject:message-id; bh=h39madShj1asyLtbf2sfVdBNK2RyKkwe8T8CD9+EWUU=;
- b=owEBbQKS/ZANAwAKAQRYvu5YxjlGAcsmYgBnxWw3pj1BuO7nm85LYW8CAGocu7fhqRw9nvE8r
- O7rU8v0FnuJAjMEAAEKAB0WIQSDkqKUTWQHCvFIvbIEWL7uWMY5RgUCZ8VsNwAKCRAEWL7uWMY5
- Ru5uEACnfnvDNKGTdfDWkGpV2cmEz+XPIKAv+OAav/nOsh2wf+SfXkLPHDH7ruxHfwIZIgBxSN0
- XNYeBV/QOAcBcfj7kCEnALSOYbYa68MODYU3lWLzoYQGcTKnIvgBpZcQNcIw6XoiTggnSfS4pRN
- twnRo0DybJXquoJRODCF7pPH1zuKCeDtLN4pEBmlSQz4JJr4lm9jHA2UxFUYxzGNmRBYpPxK3sA
- gzDGC1QnvX1VjNHlwTJV9otv6N0zCdO3zdQ/FW0byi7n9wxNs91XO1qcbwOraS/zqXnSJujthF9
- g/DF9vk9C9vtZYhOUPPUdeYjapB4wG9+h8TlKGembKDI4h7zk/XPUxfp6siqoMycq+lGTAEepNz
- +sT9UyQN+jUXepDM2K2FM4AA1cu3hMqJkfDZgI4x49hrXRmBJ1VGEt308d5DPco6Um7EQtheFGc
- 0fNhGeafPpTduaf2Ebi+xrdhZQ2ZBTzGDxRFgRMTOFSANfmum5+BX4ZuThqe9scF5REbMHD65y0
- nvytaWAsv4lSnYIg9wMuWBKn+4uCuI1QWlTyjvLtl4aOcceJFpdKBShLjTO+8UvL6H9CqvjDm0y
- VQ0iys7hDYKZ+bk5RgqB3PZWRsc8fbJlsZUk8pdSqFSdC4ibbPV67kpPGD7QcElJrgJYkllt3no E+HSkBYCbHVjBeQ==
-X-Mailer: b4 0.14.1
-Message-ID: <20250303-export-macro-v3-5-41fbad85a27f@google.com>
-Subject: [PATCH v3 5/5] panic_qr: use new #[export] macro
-From: Alice Ryhl <aliceryhl@google.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Miguel Ojeda <ojeda@kernel.org>
-Cc: Petr Mladek <pmladek@suse.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>, Sergey Senozhatsky <senozhatsky@chromium.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, 
-	"=?utf-8?q?Bj=C3=B6rn_Roy_Baron?=" <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Tamir Duberstein <tamird@gmail.com>, linux-kernel@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	Alice Ryhl <aliceryhl@google.com>, Simona Vetter <simona.vetter@ffwll.ch>
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-This validates at compile time that the signatures match what is in the
-header file. It highlights one annoyance with the compile-time check,
-which is that it can only be used with functions marked unsafe.
+This commit adds a get_batch_size() interface to:
 
-If the function is not unsafe, then this error is emitted:
+  struct acomp_alg
+  struct crypto_acomp
 
-error[E0308]: `if` and `else` have incompatible types
-   --> <linux>/drivers/gpu/drm/drm_panic_qr.rs:987:19
-    |
-986 | #[export]
-    | --------- expected because of this
-987 | pub extern "C" fn drm_panic_qr_max_data_size(version: u8, url_len: usize) -> usize {
-    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^ expected unsafe fn, found safe fn
-    |
-    = note: expected fn item `unsafe extern "C" fn(_, _) -> _ {kernel::bindings::drm_panic_qr_max_data_size}`
-               found fn item `extern "C" fn(_, _) -> _ {drm_panic_qr_max_data_size}`
+A crypto_acomp compression algorithm that supports batching of compressions
+and decompressions must register and provide an implementation for this
+API, so that higher level modules such as zswap and zram can allocate
+resources for submitting multiple compress/decompress jobs that can be
+batched. In addition, the compression algorithm must register itself
+to use request chaining (cra_flags |= CRYPTO_ALG_REQ_CHAIN).
 
-The signature declarations are moved to a header file so it can be
-included in the Rust bindings helper, and the extern keyword is removed
-as it is unnecessary.
+A new helper function acomp_has_async_batching() can be invoked to query if
+a crypto_acomp has registered this API. Further, the newly added
+crypto_acomp API "crypto_acomp_batch_size()" is provided for use by higher
+level modules like zswap and zram. crypto_acomp_batch_size() returns 1 if
+the acomp has not provided an implementation for get_batch_size().
 
-Reviewed-by: Andreas Hindborg <a.hindborg@kernel.org>
-Reviewed-by: Tamir Duberstein <tamird@gmail.com>
-Acked-by: Simona Vetter <simona.vetter@ffwll.ch>
-Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Alice Ryhl <aliceryhl@google.com>
+For instance, zswap can call crypto_acomp_batch_size() to get the maximum
+batch-size supported by the compressor. Based on this, zswap can use the
+minimum of any zswap-specific upper limits for batch-size and the
+compressor's max batch-size, to allocate batching resources. Further,
+the way that zswap can avail of the compressor's batching capability is by
+using request chaining to create a list requests chained to a head request.
+zswap can call crypto_acomp_compress() or crypto_acomp_decompress() with
+the head request in the chain for processing the chain as a batch. The call
+into crypto for compress/decompress will thus remain the same from zswap's
+perspective for both, batching and sequential compressions/decompressions.
+
+An acomp_is_reqchain() API is introduced, that a driver can call to query
+if a request received from compress/decompress represents a request chain,
+and accordingly, process the request chain using either one of:
+
+  acomp_do_req_chain()
+  acomp_do_async_req_chain()
+
+These capabilities allow the iaa_crypto Intel IAA driver to register and
+implement the get_batch_size() acomp_alg interface, that can subsequently
+be invoked from the kernel zswap/zram modules to construct a request chain
+to compress/decompress pages in parallel in the IAA hardware accelerator to
+improve swapout/swapin performance.
+
+Signed-off-by: Kanchana P Sridhar <kanchana.p.sridhar@intel.com>
 ---
- drivers/gpu/drm/drm_panic.c     |  5 -----
- drivers/gpu/drm/drm_panic_qr.rs | 15 +++++++++++----
- include/drm/drm_panic.h         |  7 +++++++
- rust/bindings/bindings_helper.h |  5 +++++
- 4 files changed, 23 insertions(+), 9 deletions(-)
+ crypto/acompress.c                  |  1 +
+ include/crypto/acompress.h          | 28 ++++++++++++++++++++++++++++
+ include/crypto/internal/acompress.h |  4 ++++
+ 3 files changed, 33 insertions(+)
 
-diff --git a/drivers/gpu/drm/drm_panic.c b/drivers/gpu/drm/drm_panic.c
-index f128d345b16d..dee5301dd729 100644
---- a/drivers/gpu/drm/drm_panic.c
-+++ b/drivers/gpu/drm/drm_panic.c
-@@ -486,11 +486,6 @@ static void drm_panic_qr_exit(void)
- 	stream.workspace = NULL;
+diff --git a/crypto/acompress.c b/crypto/acompress.c
+index cb6444d09dd7..b2a6c06d7262 100644
+--- a/crypto/acompress.c
++++ b/crypto/acompress.c
+@@ -84,6 +84,7 @@ static int crypto_acomp_init_tfm(struct crypto_tfm *tfm)
+ 
+ 	acomp->compress = alg->compress;
+ 	acomp->decompress = alg->decompress;
++	acomp->get_batch_size = alg->get_batch_size;
+ 	acomp->dst_free = alg->dst_free;
+ 	acomp->reqsize = alg->reqsize;
+ 
+diff --git a/include/crypto/acompress.h b/include/crypto/acompress.h
+index e6783deba3ac..147f184b6bea 100644
+--- a/include/crypto/acompress.h
++++ b/include/crypto/acompress.h
+@@ -43,6 +43,9 @@ struct acomp_req {
+  *
+  * @compress:		Function performs a compress operation
+  * @decompress:		Function performs a de-compress operation
++ * @get_batch_size:     Maximum batch-size for batching compress/decompress
++ *                      operations. If registered, the acomp must provide
++ *                      a batching implementation using request chaining.
+  * @dst_free:		Frees destination buffer if allocated inside the
+  *			algorithm
+  * @reqsize:		Context size for (de)compression requests
+@@ -51,6 +54,7 @@ struct acomp_req {
+ struct crypto_acomp {
+ 	int (*compress)(struct acomp_req *req);
+ 	int (*decompress)(struct acomp_req *req);
++	unsigned int (*get_batch_size)(void);
+ 	void (*dst_free)(struct scatterlist *dst);
+ 	unsigned int reqsize;
+ 	struct crypto_tfm base;
+@@ -142,6 +146,13 @@ static inline bool acomp_is_async(struct crypto_acomp *tfm)
+ 	       CRYPTO_ALG_ASYNC;
  }
  
--extern size_t drm_panic_qr_max_data_size(u8 version, size_t url_len);
--
--extern u8 drm_panic_qr_generate(const char *url, u8 *data, size_t data_len, size_t data_size,
--				u8 *tmp, size_t tmp_size);
--
- static int drm_panic_get_qr_code_url(u8 **qr_image)
++static inline bool acomp_has_async_batching(struct crypto_acomp *tfm)
++{
++	return (acomp_is_async(tfm) &&
++		(crypto_comp_alg_common(tfm)->base.cra_flags & CRYPTO_ALG_TYPE_ACOMPRESS) &&
++		tfm->get_batch_size);
++}
++
+ static inline struct crypto_acomp *crypto_acomp_reqtfm(struct acomp_req *req)
  {
- 	struct kmsg_dump_iter iter;
-diff --git a/drivers/gpu/drm/drm_panic_qr.rs b/drivers/gpu/drm/drm_panic_qr.rs
-index bcf248f69252..906943b02beb 100644
---- a/drivers/gpu/drm/drm_panic_qr.rs
-+++ b/drivers/gpu/drm/drm_panic_qr.rs
-@@ -27,7 +27,10 @@
- //! * <https://github.com/bjguillot/qr>
+ 	return __crypto_acomp_tfm(req->base.tfm);
+@@ -311,4 +322,21 @@ static inline int crypto_acomp_decompress(struct acomp_req *req)
+ 	return crypto_acomp_reqtfm(req)->decompress(req);
+ }
  
- use core::cmp;
--use kernel::str::CStr;
-+use kernel::{
-+    prelude::*,
-+    str::CStr,
-+};
- 
- #[derive(Debug, Clone, Copy, PartialEq, Eq, Ord, PartialOrd)]
- struct Version(usize);
-@@ -929,7 +932,7 @@ fn draw_all(&mut self, data: impl Iterator<Item = u8>) {
- /// * `tmp` must be valid for reading and writing for `tmp_size` bytes.
- ///
- /// They must remain valid for the duration of the function call.
--#[no_mangle]
-+#[export]
- pub unsafe extern "C" fn drm_panic_qr_generate(
-     url: *const kernel::ffi::c_char,
-     data: *mut u8,
-@@ -980,8 +983,12 @@ fn draw_all(&mut self, data: impl Iterator<Item = u8>) {
- /// * If `url_len` > 0, remove the 2 segments header/length and also count the
- ///   conversion to numeric segments.
- /// * If `url_len` = 0, only removes 3 bytes for 1 binary segment.
--#[no_mangle]
--pub extern "C" fn drm_panic_qr_max_data_size(version: u8, url_len: usize) -> usize {
-+///
-+/// # Safety
-+///
-+/// Always safe to call.
-+#[export] // required to be unsafe due to this annotation
-+pub unsafe extern "C" fn drm_panic_qr_max_data_size(version: u8, url_len: usize) -> usize {
-     #[expect(clippy::manual_range_contains)]
-     if version < 1 || version > 40 {
-         return 0;
-diff --git a/include/drm/drm_panic.h b/include/drm/drm_panic.h
-index f4e1fa9ae607..ff78d00c3da5 100644
---- a/include/drm/drm_panic.h
-+++ b/include/drm/drm_panic.h
-@@ -163,4 +163,11 @@ static inline void drm_panic_unlock(struct drm_device *dev, unsigned long flags)
- 
++/**
++ * crypto_acomp_batch_size() -- Get the algorithm's batch size
++ *
++ * Function returns the algorithm's batch size for batching operations
++ *
++ * @tfm:	ACOMPRESS tfm handle allocated with crypto_alloc_acomp()
++ *
++ * Return:	crypto_acomp's batch size.
++ */
++static inline unsigned int crypto_acomp_batch_size(struct crypto_acomp *tfm)
++{
++	if (acomp_has_async_batching(tfm))
++		return tfm->get_batch_size();
++
++	return 1;
++}
++
  #endif
- 
-+#if defined(CONFIG_DRM_PANIC_SCREEN_QR_CODE)
-+size_t drm_panic_qr_max_data_size(u8 version, size_t url_len);
-+
-+u8 drm_panic_qr_generate(const char *url, u8 *data, size_t data_len, size_t data_size,
-+			 u8 *tmp, size_t tmp_size);
-+#endif
-+
- #endif /* __DRM_PANIC_H__ */
-diff --git a/rust/bindings/bindings_helper.h b/rust/bindings/bindings_helper.h
-index 55354e4dec14..607e90a682ca 100644
---- a/rust/bindings/bindings_helper.h
-+++ b/rust/bindings/bindings_helper.h
-@@ -36,6 +36,11 @@
- #include <linux/workqueue.h>
- #include <trace/events/rust_sample.h>
- 
-+#if defined(CONFIG_DRM_PANIC_SCREEN_QR_CODE)
-+// Used by #[export] in drivers/gpu/drm/drm_panic_qr.rs
-+#include <drm/drm_panic.h>
-+#endif
-+
- /* `bindgen` gets confused at certain things. */
- const size_t RUST_CONST_HELPER_ARCH_SLAB_MINALIGN = ARCH_SLAB_MINALIGN;
- const size_t RUST_CONST_HELPER_PAGE_SIZE = PAGE_SIZE;
-
+diff --git a/include/crypto/internal/acompress.h b/include/crypto/internal/acompress.h
+index 53b4ef59b48c..24b63db56dfb 100644
+--- a/include/crypto/internal/acompress.h
++++ b/include/crypto/internal/acompress.h
+@@ -17,6 +17,9 @@
+  *
+  * @compress:	Function performs a compress operation
+  * @decompress:	Function performs a de-compress operation
++ * @get_batch_size:     Maximum batch-size for batching compress/decompress
++ *                      operations. If registered, the acomp must provide
++ *                      a batching implementation using request chaining.
+  * @dst_free:	Frees destination buffer if allocated inside the algorithm
+  * @init:	Initialize the cryptographic transformation object.
+  *		This function is used to initialize the cryptographic
+@@ -37,6 +40,7 @@
+ struct acomp_alg {
+ 	int (*compress)(struct acomp_req *req);
+ 	int (*decompress)(struct acomp_req *req);
++	unsigned int (*get_batch_size)(void);
+ 	void (*dst_free)(struct scatterlist *dst);
+ 	int (*init)(struct crypto_acomp *tfm);
+ 	void (*exit)(struct crypto_acomp *tfm);
 -- 
-2.48.1.711.g2feabab25a-goog
+2.27.0
 
