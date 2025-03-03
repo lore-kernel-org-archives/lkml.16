@@ -1,41 +1,49 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.5])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DBB0C7DA6D;
-	Mon,  3 Mar 2025 03:44:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.5
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.3])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8CD6770805;
+	Mon,  3 Mar 2025 03:45:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740973444; cv=none; b=GH3r+2FO3HPMDOP/JGtrLyyXH4SU7mMmJGxReJV3PxQSxm/52VsaTq6oQl67W3s9xwtSqcaUB0l4QtvcocmzdoY0mE2NszZoKC8DGq4yg4mJo7IiHh6fOrq2JYnXtCdB1tJmSmKoLCKITLXkIpaBWCaE17XKs5MSmVbFam40GVI=
+	t=1740973517; cv=none; b=rxtfMmAIO/qvdwZNZQcTQ4t1DEn4YC92SsEk/rCTGS15Ex9D+Zoe12rrRs9VMIjD8gSSKlOUnT+lQddenfRd84XzDhNXwHglgkCb1C2bloWqn4QePoSqnlO+XrT1PWp2Ly9LuXPlKJW+EYaykY0gau+7YO4//DcnqqnE0/N1o5s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740973444; c=relaxed/simple;
-	bh=FDczm35Zjmmbm3X17U5LkYtumttuXroOM3bL1lGECGc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=n4YhZdAww0TK+zVben2H44P8A7kb0a8Yu7ABRhdwTpDl90JndjbkvrN9iih6uIrp6jh5C82uTZW/rPz+JGd3pI7BOmfCf/vgspi8knH/0PK9LNWi+IBRXgeVsctvWeSAZCShDa3OEVAMCBfJobcYAqQRj3G9a4dZolU2FAvpxQw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=UQfrwKzw; arc=none smtp.client-ip=117.135.210.5
+	s=arc-20240116; t=1740973517; c=relaxed/simple;
+	bh=djWsWjg0S9oMhoI7aouvBl77d3FEFDIiyx3E6y9FBcY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=nxHKHtbNs25FvZzPJxuA9YrRtPG25LficHZSXKKsYtqgMicDesZYBmjxfRXB5iOSpQX06nyNqIvcNAk8op3M1mTCKNGppLhAa/KIYIkPlH+GKbha6XmO9MW0zcupV6YlqTSfTpDICQlGFpv5KSLy7dxcC/zYQWrkcclh4tezpjA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=CA7EffsL; arc=none smtp.client-ip=220.197.31.3
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="UQfrwKzw"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="CA7EffsL"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=vgHDJ
-	+8lJjUKHpr74AmWiy9dROiP1tus9eHykEPvSfc=; b=UQfrwKzwBRAqH9qINlw0C
-	kIluMFS5oPfOZZp6CbmX/UebDJcnq6G/X2lNcFh4keVwkiv3eDByLJqaJvme067n
-	eHhT2gYgL6rDV82A+qwnbNKQ5OBmVkFoR4MKHrrcKinUSJh9OSjDewfs7zO5qj8R
-	hXZ6KZEGnQtyO5PaJ6NoF0=
-Received: from icess-ProLiant-DL380-Gen10.. (unknown [])
-	by gzga-smtp-mtada-g1-1 (Coremail) with SMTP id _____wDnt1lrJcVnIhzdPw--.41944S4;
-	Mon, 03 Mar 2025 11:43:40 +0800 (CST)
-From: Haoxiang Li <haoxiang_li2024@163.com>
-To: rafael@kernel.org,
-	len.brown@intel.com,
-	pavel@kernel.org,
-	dietmar.eggemann@arm.com,
-	lukasz.luba@arm.com
-Cc: linux-pm@vger.kernel.org,
+	s=s110527; h=From:Subject:Date:Message-ID:MIME-Version; bh=x5wpq
+	KJUmSg4bQV96jwM4c9cPSXvq7N01GUYeXUKlfk=; b=CA7EffsLWpedAONWrpiKw
+	EGFJh76138yfLmZ3tK1S4h7TKKMsE6zWfHm/znJ5gFtpUYZKuc9R5GUdm5RzivDz
+	MbLgduQXrf33Abzsuwc1UHGEMqJAvBtq+gtHSlt6AQydtxt2H/LHUiBNkZWJ9IzQ
+	QPADEAYo4KweVp1pWWGjKo=
+Received: from ProDesk.. (unknown [])
+	by gzsmtp2 (Coremail) with SMTP id PSgvCgC3Oc2lJcVnaJliJg--.43523S7;
+	Mon, 03 Mar 2025 11:44:48 +0800 (CST)
+From: Andy Yan <andyshrk@163.com>
+To: heiko@sntech.de
+Cc: hjc@rock-chips.com,
+	krzk+dt@kernel.org,
+	devicetree@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
-	Haoxiang Li <haoxiang_li2024@163.com>,
-	stable@vger.kernel.org
-Subject: [PATCH] PM: EM: fix an API misuse issue in em_create_pd()
-Date: Mon,  3 Mar 2025 11:43:37 +0800
-Message-Id: <20250303034337.3868497-1-haoxiang_li2024@163.com>
-X-Mailer: git-send-email 2.25.1
+	linux-rockchip@lists.infradead.org,
+	derek.foreman@collabora.com,
+	detlev.casanova@collabora.com,
+	robh@kernel.org,
+	sebastian.reichel@collabora.com,
+	Andy Yan <andy.yan@rock-chips.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH v16 5/7] dt-bindings: display: vop2: Add missing rockchip,grf property for rk3566/8
+Date: Mon,  3 Mar 2025 11:44:19 +0800
+Message-ID: <20250303034436.192400-6-andyshrk@163.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250303034436.192400-1-andyshrk@163.com>
+References: <20250303034436.192400-1-andyshrk@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,36 +51,58 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wDnt1lrJcVnIhzdPw--.41944S4
-X-Coremail-Antispam: 1Uf129KBjvdXoW7Jw4rWFy7uF43CFy8Wry3Jwb_yoW3JFc_u3
-	40qw1vgr9rZw4Y9an0yws5Zr13Kw1UXFWfur1xKFZ5t34kWr4FvrnIgFn5Zrsxur4FkrZr
-	Ca1DCFs8Kw4xGjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7sRN9a9UUUUUU==
-X-CM-SenderInfo: xkdr5xpdqjszblsqjki6rwjhhfrp/xtbBkB8FbmfFIcN3zgAAsd
+X-CM-TRANSID:PSgvCgC3Oc2lJcVnaJliJg--.43523S7
+X-Coremail-Antispam: 1Uf129KBjvJXoW7tF4fZw43KFWxury3JF43KFg_yoW8Gr43pa
+	93CFWDWay0gr12qw1DtFn5Cr4v9F97Ca1UJFs3G3WIywnIgFn8Ka4agrn8XF4UGF4xZFWf
+	ua1Ygry5trs2vr7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jz0PfUUUUU=
+X-CM-SenderInfo: 5dqg52xkunqiywtou0bp/xtbB0gMFXmfFIit2JAAAsz
 
-Replace kfree() with em_table_free() to free
-the memory allocated by em_table_alloc().
+From: Andy Yan <andy.yan@rock-chips.com>
 
-Fixes: 24e9fb635df2 ("PM: EM: Remove old table")
-Cc: stable@vger.kernel.org
-Signed-off-by: Haoxiang Li <haoxiang_li2024@163.com>
+The clock polarity of RGB signal output is controlled by GRF, this
+property is already being used in the current device tree, but
+forgot to describe it as a required property in the binding file.
+
+Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+
 ---
- kernel/power/energy_model.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/power/energy_model.c b/kernel/power/energy_model.c
-index 3874f0e97651..71b60aa20227 100644
---- a/kernel/power/energy_model.c
-+++ b/kernel/power/energy_model.c
-@@ -447,7 +447,7 @@ static int em_create_pd(struct device *dev, int nr_states,
- 	return 0;
+(no changes since v13)
+
+Changes in v13:
+- typo fix
+- Explain the function of this property.
+
+Changes in v12:
+- Split from patch 10/13
+
+ .../devicetree/bindings/display/rockchip/rockchip-vop2.yaml   | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/display/rockchip/rockchip-vop2.yaml b/Documentation/devicetree/bindings/display/rockchip/rockchip-vop2.yaml
+index a5771edd83b5..083eadcf0588 100644
+--- a/Documentation/devicetree/bindings/display/rockchip/rockchip-vop2.yaml
++++ b/Documentation/devicetree/bindings/display/rockchip/rockchip-vop2.yaml
+@@ -146,6 +146,9 @@ allOf:
+         rockchip,vop-grf: false
+         rockchip,pmu: false
  
- free_pd_table:
--	kfree(em_table);
-+	em_table_free(em_table);
- free_pd:
- 	kfree(pd);
- 	return -EINVAL;
++      required:
++        - rockchip,grf
++
+   - if:
+       properties:
+         compatible:
+@@ -200,6 +203,7 @@ examples:
+                               "dclk_vp1",
+                               "dclk_vp2";
+                 power-domains = <&power RK3568_PD_VO>;
++                rockchip,grf = <&grf>;
+                 iommus = <&vop_mmu>;
+                 vop_out: ports {
+                     #address-cells = <1>;
 -- 
-2.25.1
+2.34.1
 
