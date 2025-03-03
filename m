@@ -1,120 +1,135 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C0101E5701;
-	Mon,  3 Mar 2025 10:41:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83EC91D7E4C;
+	Mon,  3 Mar 2025 10:43:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740998480; cv=none; b=G5Yi8AeMl5DiMflrJAq62pRMlTo5m1n2O4zy1QrlVohH7RgI0A/EGBS/yuU8Mk7aS7XVXGr26fK9STwkUK9EZNEcJBqWejVoR/xlFSc6Jgz+tfveNgArH3QSMgV/hMNYIZuspEASSpOxNpkrnpj63JDhlQnsKlWH1rNDowlneQk=
+	t=1740998582; cv=none; b=qSQJoSpsdI9peuJKqwnQxg5itN6L7DS8zpxB7ZlpNcmrW+b6fe++xJraIo/UwOZXsyFTdWbsY3D/eFAcv1X2BrqSizw+l6K92BgKVLj5UkADwXQ1nsOu4v/XFhgTgPMI8JgW1HVcWJxHuodmjQ33Cc0mlfVqf7gqSPt2Gbl4HDA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740998480; c=relaxed/simple;
-	bh=wRfeu3myA8DlcG7L0jyMzYQHF2TQYvmkJlMq4oW/No8=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:Content-Type; b=bgJxxMs46ES/lvPzz86aFu3xtXzb49F4I49+50JP26Z6Uhbe3iEz7kRMlDDDmwQ/KbZltiKLqQxZaUXv4nd7Evc+seO2e2Qt1KV4tMyNAtGuTK5iaPcVFG7WJ+2aY1nEW6r4+WaumaG0XqAycHmRzu8tsurE53oIHR3cVEJ7GK8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UyLaojJ/; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1740998582; c=relaxed/simple;
+	bh=1QnWUTMaGq1CSWuPNkJ+lfEn7r+nafrHffycB6LM/RY=;
+	h=Date:From:To:Subject:Cc:MIME-Version:Message-ID:Content-Type; b=GB+aN5Zesq0dBRx6QYIlB8duVnuwoOpnrIkJpv7DHytBcAPfMpX/8DQPCVskxaejdkQGOiOqhsPfdB3eie7KblwBY4+fbUtOKLzLJeSXudoDZ7Irj5lyoHwUtwRWZSbxVyHlGZgMGn2nNa7Sj6g0W4n6OXi+ufy0CG58XGSqFJU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=hV8E4UQC; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=E0gW7N7a; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UyLaojJ/"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-223378e2b0dso59332495ad.0;
-        Mon, 03 Mar 2025 02:41:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740998478; x=1741603278; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:from:content-language
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sQ0o17tx16nh8ROJW+wum1WUOBWBmUVIaZRfqxjse6A=;
-        b=UyLaojJ/xQDOcTop57u6S58tEFJ1G4eJwFBZm6QrWf9Z0XnGFlzMlFbast1ssrkGKP
-         OfmfOulobWqGqtnh3vsvwYbAlkA7ILA8dTmT+/iKtk+XZ/uiSE+0Wk8CK/qr+hlTxMq+
-         s0HmMnX0mnIQ7d9luYWemBXPViO9wPNX6fpm26vU5+QNOmPPYiXksCSLU718BUoi3Aic
-         Ssb7KIP0acyaO5nEvgEKpZrgrU0xBlWKdQipFvQLUXGVmVQn7Nbkr9KOSLl//ufqvxfQ
-         G1Ptq32mHFjmWvvh9J+7ixdp/37CdH4W0N/7imso19MPcq4gZlonrb0xryjm04NBs7FU
-         10AQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740998478; x=1741603278;
-        h=content-transfer-encoding:cc:to:subject:from:content-language
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=sQ0o17tx16nh8ROJW+wum1WUOBWBmUVIaZRfqxjse6A=;
-        b=X67WwReTeW9+ABYs9AH8jRVJtNMsduhXTNdWiK57vTBsnCwBkRws9CFwrR9uZSGHJj
-         XQE7PlpYVF7N/qdixc8Qa20yjoSSh/fy9WNMi29LjpIF03ovMRxsgoWsIWYlYM0GQ61M
-         W+HLfjyg4IvX5uyDeCwBn/HeyDcXAYgRkEjjbcqNJg8yVyz/LvukiDWXUidOU9KSnggt
-         PRqLJr704+Cv7Yt5leEnKsNdaUWqgl3pWc9R0LtORKRVG/ilf8Yru53jWqBYu7GGOhVw
-         1qzcLswJD0IasZCAj8FzD4OsiDhD2lkLadS7cbO6gmvW9oUS6/YxRBCaEP51q85ZQ7l+
-         deFQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX4rnlQxqFGZh70OpVL5klCDeUDmKdVZX7AB3BfZ4DYdAppgSBvhwWrJfKHvV8x7dZ9CcwBv8z2qEBkMes=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwQiILZRzVMvHPAuza0pA/LBi6sPWfSlBTaBC8LgpXMCIoRe/MX
-	iQVvWxMkbfHtLqHZmA9bsV2/W6uz14VpsLwOM4dxTEXBMmjbWNkHN58AFsId
-X-Gm-Gg: ASbGncswNUM4Y3idiU+HpRwz/3k6NQl8qsCuoezgebBvmmff47+V6e99gQcSXFF7oEQ
-	ZWDzC2Lhrgtrcax5wZK1QNiw7CojcHBR6tOyJf5hnhAKyCVJLIu+gUrANI2nZEjT4oFIxztX3ep
-	NIGXJRQ2i1EtlYzcswKDTfOcKAiol0676KmrQLYiyQ11Bu9RMw0puW53YuCXvRtScOjvxCmO6SX
-	dNHD2fRHlC4dy2RksDScqpPKQbyMNjf3NN55k1Be3mv0U3ODvRSRUxQ2TKbjP8tmmAUeon8Vg+n
-	bSIS8GWg0M+wtl93M4ZdErn14/DLcr5Q+65KkXuqMiku0eHBHB8HERY=
-X-Google-Smtp-Source: AGHT+IE3azibPuRjx310yW152ViH2FUwBPLDMP0MX06wsixQ7iCeGtZokWJyylVXVkiCQO5dq5ySWw==
-X-Received: by 2002:a17:902:ecc8:b0:21f:61a9:be7d with SMTP id d9443c01a7336-22369223651mr236845335ad.49.1740998478067;
-        Mon, 03 Mar 2025 02:41:18 -0800 (PST)
-Received: from [147.47.189.163] ([147.47.189.163])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2235050fca1sm75018875ad.211.2025.03.03.02.41.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 03 Mar 2025 02:41:17 -0800 (PST)
-Message-ID: <987ba865-3517-4e2e-8e32-6e46482d019a@gmail.com>
-Date: Mon, 3 Mar 2025 19:41:14 +0900
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="hV8E4UQC";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="E0gW7N7a"
+Date: Mon, 03 Mar 2025 10:42:58 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1740998578;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
+	bh=lwpKAzS+0ovIZb5f6DDlAfZQC9muuFrDY3J442cbg7o=;
+	b=hV8E4UQCGvO0jR1TxmrG3CvjfOKna4guouF1m9ULFH32aIjk9Sqo45Ki2JYCcs/pY2YRTQ
+	m/1rJ1Vp33JX/KOldO06BRuNNqI1rOIYG4h2+D95YPRGaU/w8Ivs6uNKydbx0n+DqoNni+
+	IwRzgbOM+LD1Acft9ml7flU7ZbluJ5LAPZAHAkHJ1W+bioHFDgNlett7mgzcPvj/Nr71Y8
+	DO6ConK74ENneMqKT/tx1dHHQfROG9JXSh8K9uvSzCgOw6ey0WNFsCfWa1iDiAGPH3Jtl1
+	+7RcGy6/Sluomt/6EbhwJc4VyMqRC3aZZFZMfH+fY93azB2zvvhNLqowYK8zfA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1740998578;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
+	bh=lwpKAzS+0ovIZb5f6DDlAfZQC9muuFrDY3J442cbg7o=;
+	b=E0gW7N7abzvG1+Ja+EqjW8RyvK1kRN6X2S0q0kJ4uedpk5jCC1/i5Q/gTpL/C8Dz4zM83T
+	x6o5Qq8iPSJ20MCQ==
+From: "tip-bot2 for Anna-Maria Behnsen" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: timers/vdso] vdso: Move arch related data before basetime
+Cc: "Anna-Maria Behnsen" <anna-maria@linutronix.de>,
+ Nam Cao <namcao@linutronix.de>, thomas.weissschuh@linutronix.de,
+ Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-US
-From: Kyungwook Boo <bookyungwook@gmail.com>
-Subject: MMIO region out-of-bounds access in bnx2x_init_shmem()
-To: Sudarsana Kalluru <skalluru@marvell.com>,
- Manish Chopra <manishc@marvell.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Message-ID: <174099857821.10177.8446012809637932009.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello, 
+The following commit has been merged into the timers/vdso branch of tip:
 
-It seems there's an issue in bnx2x_init_shmem() that allows an MMIO access
-address offset to be set directly from the device without either range check or
-filtering, potentially leading to an out-of-bounds MMIO region access.
+Commit-ID:     ece1e22d2caea94d1d836c22c4262c221f3b7f95
+Gitweb:        https://git.kernel.org/tip/ece1e22d2caea94d1d836c22c4262c221f3=
+b7f95
+Author:        Anna-Maria Behnsen <anna-maria@linutronix.de>
+AuthorDate:    Tue, 25 Feb 2025 13:36:50 +01:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Mon, 03 Mar 2025 10:24:35 +01:00
 
-In bnx2x_init_shmem(), bp->common.shmem_base is assigned from an MMIO read:
+vdso: Move arch related data before basetime
 
-bp->common.shmem_base = REG_RD(bp, MISC_REG_SHARED_MEM_ADDR);
+Architecture related vdso data is required in the fastpath when acquiring
+CLOCK_MONOTONIC or CLOCK_REALTIME. At the moment, this information is
+located at the end of the vdso_time_data structure. The whole structure has
+to be loaded into the cache to be able to access this information.
 
+To minimize the number of required cachelines, move the architecture
+specific vdso data struct right before the basetime (basetime information
+is required anyway).
 
-This shmem_base value is then used to calculate an address for another MMIO
-read:
+This change does not have an impact on architectures with
+CONFIG_ARCH_HAS_VDSO_DATA=3Dn. All other architectures could spare reading
+unnecessary cachelines.
 
-if (bp->common.shmem_base) {
-    val = SHMEM_RD(bp, validity_map[BP_PORT(bp)]);  // Out-of-bounds access here
-/*
-   in bnx2x.h, 
-   #define SHMEM_ADDR(bp, field)	(bp->common.shmem_base + \
-			offsetof(struct shmem_region, field))
-   #define SHMEM_RD(bp, field)		REG_RD(bp, SHMEM_ADDR(bp, field))
-*/
+Signed-off-by: Anna-Maria Behnsen <anna-maria@linutronix.de>
+Signed-off-by: Nam Cao <namcao@linutronix.de>
+Signed-off-by: Thomas Wei=C3=9Fschuh <thomas.weissschuh@linutronix.de>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 
-If shmem_base was set with an unexpected large value, causing an MMIO region
-out-of-bounds read access.
+---
+ include/vdso/datapage.h | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-Futhermore, I think similar issue could occur also at shmem2_base case:
-
-// in bnx2x_get_common_hwinfo()
-bp->common.shmem2_base = REG_RD(bp, (BP_PATH(bp) ?
-				MISC_REG_GENERIC_CR_1 :
-				MISC_REG_GENERIC_CR_0));
-...
-if (SHMEM2_RD(bp, size) >
-	(u32)offsetof(struct shmem2_region, lfa_host_addr[BP_PORT(bp)]))
-
-
-It seems that a range check patch is needed for shmem_base and shmem2_base, but
-I am not entirely sure what the correct range should be.
-
-Could you check this?
-
-Best regards,
-Kyungwook Boo
+diff --git a/include/vdso/datapage.h b/include/vdso/datapage.h
+index 1df22e8..bcd19c2 100644
+--- a/include/vdso/datapage.h
++++ b/include/vdso/datapage.h
+@@ -70,6 +70,8 @@ struct vdso_timestamp {
+=20
+ /**
+  * struct vdso_time_data - vdso datapage representation
++ * @arch_data:		architecture specific data (optional, defaults
++ *			to an empty struct)
+  * @seq:		timebase sequence counter
+  * @clock_mode:		clock mode
+  * @cycle_last:		timebase at clocksource init
+@@ -83,8 +85,6 @@ struct vdso_timestamp {
+  * @tz_dsttime:		type of DST correction
+  * @hrtimer_res:	hrtimer resolution
+  * @__unused:		unused
+- * @arch_data:		architecture specific data (optional, defaults
+- *			to an empty struct)
+  *
+  * vdso_time_data will be accessed by 64 bit and compat code at the same time
+  * so we should be careful before modifying this structure.
+@@ -105,6 +105,8 @@ struct vdso_timestamp {
+  * offset must be zero.
+  */
+ struct vdso_time_data {
++	struct arch_vdso_time_data arch_data;
++
+ 	u32			seq;
+=20
+ 	s32			clock_mode;
+@@ -125,8 +127,6 @@ struct vdso_time_data {
+ 	s32			tz_dsttime;
+ 	u32			hrtimer_res;
+ 	u32			__unused;
+-
+-	struct arch_vdso_time_data arch_data;
+ } ____cacheline_aligned;
+=20
+ #define vdso_clock vdso_time_data
