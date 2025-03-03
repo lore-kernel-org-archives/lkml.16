@@ -1,140 +1,140 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8BB7E1EDA04;
-	Mon,  3 Mar 2025 10:22:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 825681DB551;
+	Mon,  3 Mar 2025 10:23:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740997332; cv=none; b=K5b2jorN+bj5hFZjPHV5rThRYSqjvKWh/fq6NFbhu2M5KUG3stpALASTx6gBNpSNFENWtQireD+DcionEemvb2afRNdQhLb1/6GT+PWsr8sj7wGJpWqYFzXIqlOhypEou9oVt2+4Fg6xeTT9upERWnyxdruW6A6BIwO/s/Dww3A=
+	t=1740997389; cv=none; b=EvDk8k4006U3m0vW58dCbNYWX/z+yAq2z8sZgqWDRkAMYLXoa774K0TsonK2aYDTm/rzfIsFX5rHuHUiexhq8J7BKIblFmcXeQWFJ9eD+WWoaoZNfT8IMKuQNz6qeJUN0cSFA8LZNYW1THICXvXOZr4oN3MtcvGKueaCShQA2PY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740997332; c=relaxed/simple;
-	bh=7be/Msm+H+RtUT38wFcu4DC963JAinemIQkyzCmXDwQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HD7eenxiEj1fvokvELJRnZgKKTrdjTC4V7eIm41p29AQC5ytivKjaSmK+EOWRaH24pqwyYxnuY5djU6bdMzMWMJ+3mHtxlLODC0x9Cuv0tbU6laTQETcP5LFG/adBHFHECkRYZPd2SDbo3OivYegV1V7GfKAHjtCXVr8RwWG4+w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F08EC12FC;
-	Mon,  3 Mar 2025 02:22:23 -0800 (PST)
-Received: from [10.1.26.155] (XHFQ2J9959.cambridge.arm.com [10.1.26.155])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7EC963F66E;
-	Mon,  3 Mar 2025 02:22:07 -0800 (PST)
-Message-ID: <1ff509c7-187b-4e43-b266-db8ada33b9a2@arm.com>
-Date: Mon, 3 Mar 2025 10:22:05 +0000
+	s=arc-20240116; t=1740997389; c=relaxed/simple;
+	bh=rb6HiHdTrrfQcE6pGBqpshK1auuAjYTiGBZi4GUMEQg=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=h9/wd3oebcTATXPM/dQP5hgHaEBCurP8RljcDohDHDgAr0M97CulDb1bTfq5UnTS5DLuLbYN8W1bHtfo9TlDdRScKURFQfCU9gFwLVP0M9KdNmb10Rsl5sAwZpmQQhbwHbk6w5mzxpbMim2oghgmxRzQX47UEIAekKb5kLApuF0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=mm5vzNqn; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Qs8RDPGm; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="mm5vzNqn";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Qs8RDPGm"
+Date: Mon, 03 Mar 2025 10:23:01 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1740997383;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=L93HLqzNF/w4Btg40ftW1mueR1K1M75TuT6aU5m3ApE=;
+	b=mm5vzNqndV7TUbtbTyk1c8Kv6JE8sILgPk/I4OIpJA22D8lVrxr45ddRRW0eFdIGSj/Ch/
+	vAoqOBebLzISUgfGJUF0NISL3LUrTxS0agqMm/jjJyJVVKIZPs+4GVsTTlsZx05KiqAe5u
+	5gHBABH3NpQrvP7taOaSqt+camvDW4IZ7Rr/KNqk++0lbHxv1O8P2tFD82WncjBDQBF6jY
+	/Mh3gY3ZUw75ChDoibCjYYUYcYshS8i2Es4K2Q7DJ2hmlno8UDXNPt5DfziGpqOVZhXO3v
+	gk7qSioJMjZfNpLmZwuJVdD8/I+pxmXcepiDDCCdvFTHjdE5Q/vgKfzAOijhzw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1740997383;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=L93HLqzNF/w4Btg40ftW1mueR1K1M75TuT6aU5m3ApE=;
+	b=Qs8RDPGmeGYotipGuX6X/x7R6KoSQx1TZkYCDMWSTIYekdLPWXzrm4Pa0C3DoxxZGpO7Pr
+	JBO2ziwVpHiG+hBg==
+From: "tip-bot2 for Dr. David Alan Gilbert" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject:
+ [tip: x86/cleanups] x86/paravirt: Remove unused paravirt_disable_iospace()
+Cc: "Dr. David Alan Gilbert" <linux@treblig.org>,
+ "Borislav Petkov (AMD)" <bp@alien8.de>, Juergen Gross <jgross@suse.com>,
+ x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250303004441.250451-1-linux@treblig.org>
+References: <20250303004441.250451-1-linux@treblig.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 1/4] mm: Fix lazy mmu docs and usage
-Content-Language: en-GB
-To: David Hildenbrand <david@redhat.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- "David S. Miller" <davem@davemloft.net>,
- Andreas Larsson <andreas@gaisler.com>, Juergen Gross <jgross@suse.com>,
- Boris Ostrovsky <boris.ostrovsky@oracle.com>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- "H. Peter Anvin" <hpa@zytor.com>,
- "Matthew Wilcox (Oracle)" <willy@infradead.org>,
- Catalin Marinas <catalin.marinas@arm.com>
-Cc: linux-mm@kvack.org, sparclinux@vger.kernel.org,
- xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org
-References: <20250302145555.3236789-1-ryan.roberts@arm.com>
- <20250302145555.3236789-2-ryan.roberts@arm.com>
- <5418a661-dbd0-46e9-8ef7-b1c5a34acce3@redhat.com>
- <a9e21c14-d390-4119-ad93-b23e6ccbac15@redhat.com>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <a9e21c14-d390-4119-ad93-b23e6ccbac15@redhat.com>
-Content-Type: text/plain; charset=UTF-8
+Message-ID: <174099738198.10177.3185496763546260161.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 
-On 03/03/2025 08:52, David Hildenbrand wrote:
-> On 03.03.25 09:49, David Hildenbrand wrote:
->> On 02.03.25 15:55, Ryan Roberts wrote:
->>> The docs, implementations and use of arch_[enter|leave]_lazy_mmu_mode()
->>> is a bit of a mess (to put it politely). There are a number of issues
->>> related to nesting of lazy mmu regions and confusion over whether the
->>> task, when in a lazy mmu region, is preemptible or not. Fix all the
->>> issues relating to the core-mm. Follow up commits will fix the
->>> arch-specific implementations. 3 arches implement lazy mmu; powerpc,
->>> sparc and x86.
->>>
->>> When arch_[enter|leave]_lazy_mmu_mode() was first introduced by commit
->>> 6606c3e0da53 ("[PATCH] paravirt: lazy mmu mode hooks.patch"), it was
->>> expected that lazy mmu regions would never nest and that the appropriate
->>> page table lock(s) would be held while in the region, thus ensuring the
->>> region is non-preemptible. Additionally lazy mmu regions were only used
->>> during manipulation of user mappings.
->>>
->>> Commit 38e0edb15bd0 ("mm/apply_to_range: call pte function with lazy
->>> updates") started invoking the lazy mmu mode in apply_to_pte_range(),
->>> which is used for both user and kernel mappings. For kernel mappings the
->>> region is no longer protected by any lock so there is no longer any
->>> guarantee about non-preemptibility. Additionally, for RT configs, the
->>> holding the PTL only implies no CPU migration, it doesn't prevent
->>> preemption.
->>>
->>> Commit bcc6cc832573 ("mm: add default definition of set_ptes()") added
->>> arch_[enter|leave]_lazy_mmu_mode() to the default implementation of
->>> set_ptes(), used by x86. So after this commit, lazy mmu regions can be
->>> nested. Additionally commit 1a10a44dfc1d ("sparc64: implement the new
->>> page table range API") and commit 9fee28baa601 ("powerpc: implement the
->>> new page table range API") did the same for the sparc and powerpc
->>> set_ptes() overrides.
->>>
->>> powerpc couldn't deal with preemption so avoids it in commit
->>> b9ef323ea168 ("powerpc/64s: Disable preemption in hash lazy mmu mode"),
->>> which explicitly disables preemption for the whole region in its
->>> implementation. x86 can support preemption (or at least it could until
->>> it tried to add support nesting; more on this below). Sparc looks to be
->>> totally broken in the face of preemption, as far as I can tell.
->>>
->>> powewrpc can't deal with nesting, so avoids it in commit 47b8def9358c
->>> ("powerpc/mm: Avoid calling arch_enter/leave_lazy_mmu() in set_ptes"),
->>> which removes the lazy mmu calls from its implementation of set_ptes().
->>> x86 attempted to support nesting in commit 49147beb0ccb ("x86/xen: allow
->>> nesting of same lazy mode") but as far as I can tell, this breaks its
->>> support for preemption.
->>>
->>> In short, it's all a mess; the semantics for
->>> arch_[enter|leave]_lazy_mmu_mode() are not clearly defined and as a
->>> result the implementations all have different expectations, sticking
->>> plasters and bugs.
->>>
->>> arm64 is aiming to start using these hooks, so let's clean everything up
->>> before adding an arm64 implementation. Update the documentation to state
->>> that lazy mmu regions can never be nested, must not be called in
->>> interrupt context and preemption may or may not be enabled for the
->>> duration of the region.
->>>
->>> Additionally, update the way arch_[enter|leave]_lazy_mmu_mode() is
->>> called in pagemap_scan_pmd_entry() to follow the normal pattern of
->>> holding the ptl for user space mappings. As a result the scope is
->>> reduced to only the pte table, but that's where most of the performance
->>> win is. While I believe there wasn't technically a bug here, the
->>> original scope made it easier to accidentally nest or, worse,
->>> accidentally call something like kmap() which would expect an immediate
->>> mode pte modification but it would end up deferred.
->>>
->>> arch-specific fixes to conform to the new spec will proceed this one.
->>>
->>> These issues were spotted by code review and I have no evidence of
->>> issues being reported in the wild.
->>>
->>
->> All looking good to me!
->>
->> Acked-by: David Hildenbrand <david@redhat.com>
->>
-> 
-> ... but I do wonder if the set_ptes change should be split from the pagemap change.
+The following commit has been merged into the x86/cleanups branch of tip:
 
-So set_ptes + docs changes in one patch, and pagemap change in another? I can do
-that.
+Commit-ID:     47f0008ed7774dd3b12bd5f596e8d106dfea305a
+Gitweb:        https://git.kernel.org/tip/47f0008ed7774dd3b12bd5f596e8d106dfea305a
+Author:        Dr. David Alan Gilbert <linux@treblig.org>
+AuthorDate:    Mon, 03 Mar 2025 00:44:41 
+Committer:     Borislav Petkov (AMD) <bp@alien8.de>
+CommitterDate: Mon, 03 Mar 2025 10:59:16 +01:00
 
-I didn't actually cc stable on these, I'm wondering if I should do that? Perhaps
-for all patches except the pagemap change?
+x86/paravirt: Remove unused paravirt_disable_iospace()
 
-Thanks for the quick review!
+The last use of paravirt_disable_iospace() was removed in 2015 by
+commit d1c29465b8a5 ("lguest: don't disable iospace.")
+
+Remove it.
+
+Note the comment above it about 'entry.S' is unrelated to this
+but stayed when intervening code got deleted.
+
+Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
+Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
+Reviewed-by: Juergen Gross <jgross@suse.com>
+Link: https://lore.kernel.org/r/20250303004441.250451-1-linux@treblig.org
+---
+ arch/x86/include/asm/paravirt_types.h |  2 --
+ arch/x86/kernel/paravirt.c            | 20 --------------------
+ 2 files changed, 22 deletions(-)
+
+diff --git a/arch/x86/include/asm/paravirt_types.h b/arch/x86/include/asm/paravirt_types.h
+index fea56b0..3c54ac5 100644
+--- a/arch/x86/include/asm/paravirt_types.h
++++ b/arch/x86/include/asm/paravirt_types.h
+@@ -242,8 +242,6 @@ extern struct paravirt_patch_template pv_ops;
+ 
+ #define paravirt_ptr(op)	[paravirt_opptr] "m" (pv_ops.op)
+ 
+-int paravirt_disable_iospace(void);
+-
+ /* This generates an indirect call based on the operation type number. */
+ #define PARAVIRT_CALL					\
+ 	ANNOTATE_RETPOLINE_SAFE				\
+diff --git a/arch/x86/kernel/paravirt.c b/arch/x86/kernel/paravirt.c
+index 1ccaa33..debe928 100644
+--- a/arch/x86/kernel/paravirt.c
++++ b/arch/x86/kernel/paravirt.c
+@@ -90,26 +90,6 @@ void paravirt_set_sched_clock(u64 (*func)(void))
+ 	static_call_update(pv_sched_clock, func);
+ }
+ 
+-/* These are in entry.S */
+-static struct resource reserve_ioports = {
+-	.start = 0,
+-	.end = IO_SPACE_LIMIT,
+-	.name = "paravirt-ioport",
+-	.flags = IORESOURCE_IO | IORESOURCE_BUSY,
+-};
+-
+-/*
+- * Reserve the whole legacy IO space to prevent any legacy drivers
+- * from wasting time probing for their hardware.  This is a fairly
+- * brute-force approach to disabling all non-virtual drivers.
+- *
+- * Note that this must be called very early to have any effect.
+- */
+-int paravirt_disable_iospace(void)
+-{
+-	return request_resource(&ioport_resource, &reserve_ioports);
+-}
+-
+ #ifdef CONFIG_PARAVIRT_XXL
+ static noinstr void pv_native_write_cr2(unsigned long val)
+ {
