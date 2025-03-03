@@ -1,162 +1,114 @@
-Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com [209.85.128.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F23A20C016
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 11:50:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33E091FF5EB;
+	Mon,  3 Mar 2025 11:51:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741002632; cv=none; b=rJMPmNQr5jxnHBvpiowYGcuv8PkLfmP4CC0vgZuKLP50rBkTYyYpyeBdIYNphR/1pdvGqSCwYXZG8CU9f2AxbiVyny+gYjDK4ANiagZkVFXYt3+ZLxmi9+JDLkDlmZ62iAaHcfmMPAJfUblT8oMwJlG6h4BIQDIFy3iTRryxo8s=
+	t=1741002674; cv=none; b=BUZdUFInSjdZQcgGUOQd2YRGBGKgUWOOVomMRjnFLF8rsadHvbgewjvlrSbQDicHYI6j+R+C9/karuUccgwuIJvmZ8VMKavIhUTIeGvpsM/0XlU1dEJZyx0mDAH2RQADHNLayIQuJ8Ro/11qPHjaTGcCuluDp53KaqpvmwVneUA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741002632; c=relaxed/simple;
-	bh=iYUckyVAVeI7XDNNji2uBn6ccd7npEcaiKeFcolCkl4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZobWUkm3uzySMl14US8Mbf+XTHbAfcGGvjbqUrZi8KKlLXnWDTJncSEY5bdgJAFa1ZhDKYkcgxwBsl4sz1eZF4xMJZRMyUoDYXnxISKcZMP5Bbl9nDeYRWW9iFApUTaiNcWXTvMqAcjAvFwet5egUYEB7nDvQl6serTx+KWQjk0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=F8hsg1Ui; arc=none smtp.client-ip=209.85.128.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1741002674; c=relaxed/simple;
+	bh=yVaQgogHVfVgAJCLdmZvRLoWtKzJvI/zw0xzw+t5DZ4=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=aJpvebyNiJY8ZriLoUB7imE0lM8u9raaT9VZjfkYfHfI/HuENArZW2TpWmZc/6+PGYOP2uIZ6XRMFNzMc0r4oxEX9WNd1YuEDuEsKkOO+iOQXrqmAo0TnUon/N57rgWha24Um2Z751CzYKbEAykQE2De/ABuQYNvgfOHi1lCxyE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=yTbm9ITN; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=MVrHjNYt; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="F8hsg1Ui"
-Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-6fd3b6a6a24so28438537b3.3
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Mar 2025 03:50:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741002629; x=1741607429; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=uk4RC6gYyKlg81cJh6W+VhPYO5gDI/YlGZXXv16k7MQ=;
-        b=F8hsg1UiwKECfQsGtOKKbFDKGEqu6ZIXQDa1QTruaoye6q78NWZQHYBzvcQ4B2iuWI
-         1o8gez1SEP7H37/UixC4ZDON6HsTim+Aj6WvUFxmrlymX5Xs3+XB35XCtlI/X2Y5kTlc
-         wj8bAMqDg9mXtAdq/e0QRkB1szc12HpCUDsHTxrOS1jMWptro81bmUyTJcHV1HFxkJCL
-         gM/ouAshpbk3r/zDp6J2WVawtLvsmZGj6VPQBaVCyJsLH9ihO9XY5qGjB4Y5hyF5iCcj
-         FVclzS6mR9jXufNj1uasHP+WQI3T/Zqn/THUJgqYDBRo7iuuN2p4bKV0ELXPCc8AzVHR
-         iPPQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741002629; x=1741607429;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=uk4RC6gYyKlg81cJh6W+VhPYO5gDI/YlGZXXv16k7MQ=;
-        b=tYl9WLD1NpqHyWJGcEp6DJPpW8JHZRmdFgHnFA02qOojE2Gt7pxKjWRzLH0uE8uys/
-         kJLiCsEeNhLO2MlfGJA6turfziNQbv0fO7aBMF5c4p247YpwX/XJk1oZluMWYKWeOrWa
-         yv4uzwLY/fVsHoh7n1rx2k5bvW+guiUdJ7pnpAQip25A3jQAheCEeYxrKAs8t52JkVHV
-         42dNhN6hoarckTif8cyEFcQiJirgZahI0DAV7snOnWXc0zPCoDxRoKXyYaVCuwiJK0dN
-         4FzKNGYLd7HkRPCPXS1TmTTfbbY/D9CZEzdS+R5InMTRF8K2qQRPYKw7xehSLA/e2Hny
-         xbng==
-X-Forwarded-Encrypted: i=1; AJvYcCVQrHsXtoJlCypNl4clQVV53bR0mfa+jY7yGhP4rU47UgV6lxedQuAr9aCb46NMNKcQOzYuqSYfWUMIhN0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz2yDMuZ67eF4faFRMhYwyFf/x3WRgYvEJqUjgEjEjzckJF1AGr
-	seyX1ZmJKyM9T7ZUkamrNsOBH5qP+t+UfOvgxbWCpY0ErdiKCVA3xSyIVYvi74otot1k56fxy00
-	OAt1izITSeHncDURvGB1VJO+TqELy8fDqprRS1w==
-X-Gm-Gg: ASbGnctHG8befiAhfHdv+OOo73EZ8weoDA5rg7MajEe6ud8wO7Y0Ym88CYzP4S+Yf3G
-	1EEnP9KoJepL5qMeXCiME2sQkhQxhBk+zRfs2YGwol4jbvsJz+uSKNb/SINh8r0lFBmzGhuzubW
-	HIVCeLu0aA+trbWKHxJW8YohaZHLE=
-X-Google-Smtp-Source: AGHT+IHbEZTHl8hhFga4vQY/ULqM1THSQSqqYAdq51p7CVUXvrld+wWN+muocGAUEDlP0o1E2tcH3vx/K7c1uLHnFyY=
-X-Received: by 2002:a05:690c:4b8c:b0:6fd:47b7:9730 with SMTP id
- 00721157ae682-6fd49fb60a6mr161831797b3.12.1741002628443; Mon, 03 Mar 2025
- 03:50:28 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="yTbm9ITN";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="MVrHjNYt"
+Date: Mon, 03 Mar 2025 11:51:10 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1741002671;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=oR7C7cB+Rq7amZpDkkyqysh1+OEzoIXxnKJo7bN22Mc=;
+	b=yTbm9ITNJdHz9PuYf17lWUJye0s9uQG5AdXiovnDzNxLQ9DeEwNcVbtHd36zWsUvsLEqHf
+	qmPlcWTuV8XXBWiMQEXgMH2+nZswBqX9KzQt2A5sufuPt0Gz5F6g7y94lwk8juVXkcmf3E
+	pORHfNKuLnY8A/JRDAR28Qa+3OeUkuYD4Ppo4VkU/zUwCBfiT+3kKlhWtaMPYGEHfg0yuf
+	QvB0BnNtoMxUXf3oM6IjRxTqkL9pgICYu+Rfud2nnxj+4B4pS+dWaiXTfrIhYKiO6V6yyQ
+	/T6gQU1wdNZCJMpT4/xsARLE0fjZXBXm++xvnzIagbKgOmSPHfDFgkUe5J1WPw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1741002671;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=oR7C7cB+Rq7amZpDkkyqysh1+OEzoIXxnKJo7bN22Mc=;
+	b=MVrHjNYtJsAkig0GPjSHwUE56yLxrVbeOLlJzc+TaL3REsI98/6qymoHyNI0o2qCK++VDq
+	9nk3FRemGeCJ3pDQ==
+From: "tip-bot2 for Mirsad Todorovac" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/cleanups] selftests/x86/syscall: Fix coccinelle WARNING
+ recommending the use of ARRAY_SIZE()
+Cc: Mirsad Todorovac <mtodorovac69@gmail.com>, Ingo Molnar <mingo@kernel.org>,
+ Muhammad Usama Anjum <usama.anjum@collabora.com>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20241101111523.1293193-2-mtodorovac69@gmail.com>
+References: <20241101111523.1293193-2-mtodorovac69@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <3353728.44csPzL39Z@rjwysocki.net>
-In-Reply-To: <3353728.44csPzL39Z@rjwysocki.net>
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Mon, 3 Mar 2025 12:49:52 +0100
-X-Gm-Features: AQ5f1JrH4q1zOIaTrqYzbdkfjiU66g40RtbSmo7LK-gb4j9oNzq1abNpZhBdAkc
-Message-ID: <CAPDyKFoQvKFmwpzPtHGzPKzPv7KLo_7-2oYb2=BXEZAm4xpVbQ@mail.gmail.com>
-Subject: Re: [PATCH v2] PM: sleep: Adjust check before setting power.must_resume
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Linux PM <linux-pm@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	Alan Stern <stern@rowland.harvard.edu>, Johan Hovold <johan@kernel.org>, 
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Jon Hunter <jonathanh@nvidia.com>
-Content-Type: text/plain; charset="UTF-8"
+Message-ID: <174100267008.10177.10892664815604328750.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-On Thu, 27 Feb 2025 at 11:53, Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
->
-> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
->
-> The check before setting power.must_resume in device_suspend_noirq()
-> does not take power.child_count into account, but it should do that, so
-> use pm_runtime_need_not_resume() in it for this purpose and adjust the
-> comment next to it accordingly.
->
-> Fixes: 107d47b2b95e ("PM: sleep: core: Simplify the SMART_SUSPEND flag handling")
-> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+The following commit has been merged into the x86/cleanups branch of tip:
 
-Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+Commit-ID:     40fc7561013914ec08c200bb7a0805643a23e070
+Gitweb:        https://git.kernel.org/tip/40fc7561013914ec08c200bb7a0805643a23e070
+Author:        Mirsad Todorovac <mtodorovac69@gmail.com>
+AuthorDate:    Fri, 01 Nov 2024 12:15:23 +01:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Mon, 03 Mar 2025 12:38:49 +01:00
 
-Kind regards
-Uffe
+selftests/x86/syscall: Fix coccinelle WARNING recommending the use of ARRAY_SIZE()
 
-> ---
->
-> The previous version of this patch is here:
->
-> https://lore.kernel.org/linux-pm/3548152.QJadu78ljV@rjwysocki.net/
->
-> v1 -> v2:
->    * Changelog rewrite.
->    * Added the Fixes: tag.
->    * Refined the comment adjustment.
->
-> ---
->  drivers/base/power/main.c    |   13 ++++++-------
->  drivers/base/power/runtime.c |    2 +-
->  include/linux/pm_runtime.h   |    2 ++
->  3 files changed, 9 insertions(+), 8 deletions(-)
->
-> --- a/drivers/base/power/main.c
-> +++ b/drivers/base/power/main.c
-> @@ -1382,14 +1382,13 @@
->         dev->power.is_noirq_suspended = true;
->
->         /*
-> -        * Skipping the resume of devices that were in use right before the
-> -        * system suspend (as indicated by their PM-runtime usage counters)
-> -        * would be suboptimal.  Also resume them if doing that is not allowed
-> -        * to be skipped.
-> +        * Devices must be resumed unless they are explicitly allowed to be left
-> +        * in suspend, but even in that case skipping the resume of devices that
-> +        * were in use right before the system suspend (as indicated by their
-> +        * runtime PM usage counters and child counters) would be suboptimal.
->          */
-> -       if (atomic_read(&dev->power.usage_count) > 1 ||
-> -           !(dev_pm_test_driver_flags(dev, DPM_FLAG_MAY_SKIP_RESUME) &&
-> -             dev->power.may_skip_resume))
-> +       if (!(dev_pm_test_driver_flags(dev, DPM_FLAG_MAY_SKIP_RESUME) &&
-> +             dev->power.may_skip_resume) || !pm_runtime_need_not_resume(dev))
->                 dev->power.must_resume = true;
->
->         if (dev->power.must_resume)
-> --- a/drivers/base/power/runtime.c
-> +++ b/drivers/base/power/runtime.c
-> @@ -1897,7 +1897,7 @@
->         pm_request_idle(link->supplier);
->  }
->
-> -static bool pm_runtime_need_not_resume(struct device *dev)
-> +bool pm_runtime_need_not_resume(struct device *dev)
->  {
->         return atomic_read(&dev->power.usage_count) <= 1 &&
->                 (atomic_read(&dev->power.child_count) == 0 ||
-> --- a/include/linux/pm_runtime.h
-> +++ b/include/linux/pm_runtime.h
-> @@ -66,6 +66,7 @@
->
->  extern int pm_generic_runtime_suspend(struct device *dev);
->  extern int pm_generic_runtime_resume(struct device *dev);
-> +extern bool pm_runtime_need_not_resume(struct device *dev);
->  extern int pm_runtime_force_suspend(struct device *dev);
->  extern int pm_runtime_force_resume(struct device *dev);
->
-> @@ -254,6 +255,7 @@
->
->  static inline int pm_generic_runtime_suspend(struct device *dev) { return 0; }
->  static inline int pm_generic_runtime_resume(struct device *dev) { return 0; }
-> +static inline bool pm_runtime_need_not_resume(struct device *dev) {return true; }
->  static inline int pm_runtime_force_suspend(struct device *dev) { return 0; }
->  static inline int pm_runtime_force_resume(struct device *dev) { return 0; }
->
->
->
->
+Coccinelle gives WARNING recommending the use of ARRAY_SIZE() macro definition
+to improve the code readability:
+
+  ./tools/testing/selftests/x86/syscall_numbering.c:316:35-36: WARNING: Use ARRAY_SIZE
+
+Fixes: 15c82d98a0f78 ("selftests/x86/syscall: Update and extend syscall_numbering_64")
+Signed-off-by: Mirsad Todorovac <mtodorovac69@gmail.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Reviewed-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
+Link: https://lore.kernel.org/r/20241101111523.1293193-2-mtodorovac69@gmail.com
+---
+ tools/testing/selftests/x86/syscall_numbering.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/tools/testing/selftests/x86/syscall_numbering.c b/tools/testing/selftests/x86/syscall_numbering.c
+index 9915917..41c42b7 100644
+--- a/tools/testing/selftests/x86/syscall_numbering.c
++++ b/tools/testing/selftests/x86/syscall_numbering.c
+@@ -25,6 +25,7 @@
+ #include <sys/mman.h>
+ 
+ #include <linux/ptrace.h>
++#include "../kselftest.h"
+ 
+ /* Common system call numbers */
+ #define SYS_READ	  0
+@@ -313,7 +314,7 @@ static void test_syscall_numbering(void)
+ 	 * The MSB is supposed to be ignored, so we loop over a few
+ 	 * to test that out.
+ 	 */
+-	for (size_t i = 0; i < sizeof(msbs)/sizeof(msbs[0]); i++) {
++	for (size_t i = 0; i < ARRAY_SIZE(msbs); i++) {
+ 		int msb = msbs[i];
+ 		run("Checking system calls with msb = %d (0x%x)\n",
+ 		    msb, msb);
