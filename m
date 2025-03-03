@@ -1,41 +1,33 @@
-Received: from mout.web.de (mout.web.de [212.227.15.4])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36D8A1F190E;
-	Mon,  3 Mar 2025 08:23:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 449631EF370;
+	Mon,  3 Mar 2025 08:23:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740990191; cv=none; b=NtY3V1uKyVUjGnFEfFZ//HFQ6Vh2hZUevvMdOssRIaHDzv+CMdeqHi0aWFdg3cP+wKkZeESQ6XhK4I5t7FeSyAdAqHEmFj1iG1ZrGKJPj9+pyVFYcxysuZItspxjwGmPg84hSL1PA2/sh/cjJKInO+KKwQvGkKRALcMy1JArO6A=
+	t=1740990224; cv=none; b=YeNpwptjQ6U6jfGrrQ4F8XoyNBWy3PsMWutDR1se33zfZVIgbrkhMRjxQjE2s0yC8eBNKg4kI8lgGWvU1Svgm6PGXyLvo2EbQLqdk3Y/9oLtT2fWC42+zzkdkUvVGtsNmUMaB8oILDEk34m2hehRcrn+otTCC4vApBeTspbKlZ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740990191; c=relaxed/simple;
-	bh=YRq6oVQqeCdHKG5sea7pdbS+m9m7qFjktB2rPbJHuI8=;
+	s=arc-20240116; t=1740990224; c=relaxed/simple;
+	bh=JBYtPPedySIRtCIdRicfOKbQHdjbOfdWis8gttwCsKI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ecmIYiUT/CtRLt5I/ihH2P+sq6Qox0xYjOTSnQ87KOjCyJJRlprRJzCoP184+9dFXxKkGdD79AsH8Wd4GKX9DOLjmdNs4HfYB5Rf/FK1f2JRam1/jtUcz6qqeM4zrts2wdVNU9Mmb3TteUH7ObDuxWYHz0qXUNbFexFth3Uk6IM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=IHyrl3N8; arc=none smtp.client-ip=212.227.15.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	 In-Reply-To:Content-Type; b=B6FvrZqC+W6V46yPb7Ff2eN6i0EMkbFPh34rTayNVUaJgabFpd/9qkyZsX5igcK8kk7b5IP01g/jrDjs/5peB0zUHk8qGYjbKeAAdZgbNKy79DCn6UcbgKQEMW8H4wXjlxSm3ptd4fV21BO1C2a1EY/2vKaJegxgi4BaEieV08Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nVDm6mrH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="IHyrl3N8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1740990183; x=1741594983; i=markus.elfring@web.de;
-	bh=pQr1WZ548ecZB3xoVxnsW4k7x9sHO8xZY4WGSA4vMwU=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=IHyrl3N8nH/24Fv2D59sEna66ZDL6YcZx1VuTjYlv8zOxC6kfM+Hn4Dzqg9oOzhK
-	 k9S3xBw8V19ADKeFb8D3lG1/azmFLeKXxgimfL7aEDePqPgOHLVTnnfV3HD4g8lB+
-	 D0yD8Bpby1Hsx41T/KE7FS5tuurVvcN4IPMx+jAvLghHyhLTuaycUqNc76zK7fAM2
-	 t86Dcok96zxz7qU2Z3t3iLdw/Ba76G2fKm5qXt8jj8XmcBe0T/bQFMUx89AePKhS2
-	 XkXbdtVyhEYb+AVxIM3BtgNxnEA9+LzWOH4sqNwmxqT+ZkcP7lH7dvxU/MbuKO6TY
-	 m1mxmHHEoDMS++nMlw==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.93.19]) by smtp.web.de (mrweb006
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1N0Zs0-1t1bHv22Fw-0171x0; Mon, 03
- Mar 2025 09:23:03 +0100
-Message-ID: <64725552-d915-429d-b8f8-1350c3cc17ae@web.de>
-Date: Mon, 3 Mar 2025 09:22:58 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nVDm6mrH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BCC04C4CED6;
+	Mon,  3 Mar 2025 08:23:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740990223;
+	bh=JBYtPPedySIRtCIdRicfOKbQHdjbOfdWis8gttwCsKI=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=nVDm6mrH12QLK3/qUGEVPT3+GKwhphezMCb3UYIFD2ammHyvoXLfegpFXS35yl7wP
+	 iXAtbjJ81a3G3cAnJPMh2gX7ThMNXotuiezB1R2iwBozQKUtI/az9KcGpGrKa0hbfX
+	 sxIFGSWyqRiLFmiKd/sTiAynk6ZlSoW0DEPRoCOz6hRNJiNqnkJO8N8YaYaj9VEbrL
+	 I+RMLenU3E2DKzLx13fWN3rbKamCKZf30X6qYN21gC7d4+1b1HheP+KW4go/pQ8uTh
+	 pzlUSNBjBBx3Y1gdu86czAZdr9zQiESi4E2sLVt5KZcR86KqZIs6zji4qpoCidL2Gn
+	 GrbFt881OjQNQ==
+Message-ID: <a091f085-a7f0-4aaa-997d-cd478764c18a@kernel.org>
+Date: Mon, 3 Mar 2025 09:23:38 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,67 +35,145 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RESEND] qed: Move a variable assignment behind a null pointer
- check in two functions
-To: Dan Carpenter <dan.carpenter@linaro.org>,
- Michal Swiatkowski <michal.swiatkowski@linux.intel.com>,
- netdev@vger.kernel.org
-Cc: kernel-janitors@vger.kernel.org, Andrew Lunn <andrew+netdev@lunn.ch>,
- Ariel Elior <aelior@marvell.com>, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Manish Chopra <manishc@marvell.com>, Paolo Abeni <pabeni@redhat.com>,
- Ram Amrani <Ram.Amrani@caviumnetworks.com>,
- Yuval Mintz <Yuval.Mintz@caviumnetworks.com>, cocci@inria.fr,
- LKML <linux-kernel@vger.kernel.org>
-References: <40c60719-4bfe-b1a4-ead7-724b84637f55@web.de>
- <1a11455f-ab57-dce0-1677-6beb8492a257@web.de>
- <f7967bee-f3f1-54c4-7352-40c39dd7fead@web.de>
- <6958583a-77c0-41ca-8f80-7ff647b385bb@web.de>
- <Z8VKaGm1YqkxK4GM@mev-dev.igk.intel.com>
- <325e67fc-48df-4571-a87e-5660a3d3968f@stanley.mountain>
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <325e67fc-48df-4571-a87e-5660a3d3968f@stanley.mountain>
+Subject: Re: [PATCH v2 1/2] dt-bindings: power: supply: Document Maxim MAX8971
+ charger
+To: Svyatoslav Ryhel <clamor95@gmail.com>
+Cc: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250226093700.44726-1-clamor95@gmail.com>
+ <20250226093700.44726-2-clamor95@gmail.com>
+ <20250227-cherubic-mantis-from-betelgeuse-86f5ff@krzk-bin>
+ <CAPVz0n2kfxTJUkqrtLia6xBJ8t+fwjujjsc9k=mOk-P06bJH7A@mail.gmail.com>
+ <f83b2a95-e8f6-4e16-bd7f-f7dc96264c04@kernel.org>
+ <CAPVz0n0KVE8baFyGSgM+0rNfY8+Y2LFZbAhHHzPWTV358gc+Bw@mail.gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
+ cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
+ JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
+ gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
+ J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
+ NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
+ BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
+ vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
+ Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
+ TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
+ S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
+ FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJgPO8PBQkUX63hAAoJEBuTQ307
+ QWKbBn8P+QFxwl7pDsAKR1InemMAmuykCHl+XgC0LDqrsWhAH5TYeTVXGSyDsuZjHvj+FRP+
+ gZaEIYSw2Yf0e91U9HXo3RYhEwSmxUQ4Fjhc9qAwGKVPQf6YuQ5yy6pzI8brcKmHHOGrB3tP
+ /MODPt81M1zpograAC2WTDzkICfHKj8LpXp45PylD99J9q0Y+gb04CG5/wXs+1hJy/dz0tYy
+ iua4nCuSRbxnSHKBS5vvjosWWjWQXsRKd+zzXp6kfRHHpzJkhRwF6ArXi4XnQ+REnoTfM5Fk
+ VmVmSQ3yFKKePEzoIriT1b2sXO0g5QXOAvFqB65LZjXG9jGJoVG6ZJrUV1MVK8vamKoVbUEe
+ 0NlLl/tX96HLowHHoKhxEsbFzGzKiFLh7hyboTpy2whdonkDxpnv/H8wE9M3VW/fPgnL2nPe
+ xaBLqyHxy9hA9JrZvxg3IQ61x7rtBWBUQPmEaK0azW+l3ysiNpBhISkZrsW3ZUdknWu87nh6
+ eTB7mR7xBcVxnomxWwJI4B0wuMwCPdgbV6YDUKCuSgRMUEiVry10xd9KLypR9Vfyn1AhROrq
+ AubRPVeJBf9zR5UW1trJNfwVt3XmbHX50HCcHdEdCKiT9O+FiEcahIaWh9lihvO0ci0TtVGZ
+ MCEtaCE80Q3Ma9RdHYB3uVF930jwquplFLNF+IBCn5JRzsFNBFVDXDQBEADNkrQYSREUL4D3
+ Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
+ MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
+ OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
+ GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
+ 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
+ YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
+ 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
+ BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
+ JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
+ 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
+ YpsFAmA872oFCRRflLYACgkQG5NDfTtBYpvScw/9GrqBrVLuJoJ52qBBKUBDo4E+5fU1bjt0
+ Gv0nh/hNJuecuRY6aemU6HOPNc2t8QHMSvwbSF+Vp9ZkOvrM36yUOufctoqON+wXrliEY0J4
+ ksR89ZILRRAold9Mh0YDqEJc1HmuxYLJ7lnbLYH1oui8bLbMBM8S2Uo9RKqV2GROLi44enVt
+ vdrDvo+CxKj2K+d4cleCNiz5qbTxPUW/cgkwG0lJc4I4sso7l4XMDKn95c7JtNsuzqKvhEVS
+ oic5by3fbUnuI0cemeizF4QdtX2uQxrP7RwHFBd+YUia7zCcz0//rv6FZmAxWZGy5arNl6Vm
+ lQqNo7/Poh8WWfRS+xegBxc6hBXahpyUKphAKYkah+m+I0QToCfnGKnPqyYIMDEHCS/RfqA5
+ t8F+O56+oyLBAeWX7XcmyM6TGeVfb+OZVMJnZzK0s2VYAuI0Rl87FBFYgULdgqKV7R7WHzwD
+ uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
+ 7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
+ 5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
+In-Reply-To: <CAPVz0n0KVE8baFyGSgM+0rNfY8+Y2LFZbAhHHzPWTV358gc+Bw@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:FYo4KR0DHw8kUBrjrDdkOAm8f/u2tVyaWSQA2DnGNc9JQQ86MDa
- bwKKYeavDxHfWlkAduCnA25E+m3vTJHha1KI0SBitDv5vFfARQ5dauvVrFkfEwldr6cbXGt
- rQCLvY3oVIof17p3AwBXCexkZzFqAr/NbbgHPUCe435Or7d5J5W3ZbwPWaQ1l8mwih/Qifp
- C0Slqd/P/qBIyY3LvcXTQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:RCqRm2Eproo=;ZlnPkZrhZ60vOLSzosM2YPI9Wto
- 3AmsBSv9KLN+XyU0X1LyjqAKQErpWV7K6f05wETBTPAZ58PzopnFENYzawmjl1X/VJKmGLojS
- 2gI2KS0iET6vrphGGHhXKi1Hzd7UTG7Lj39AHYffLz/t1iUOGLHlOWsI8GFWdwmBzMhOxZ936
- jYsVdJjPsUKRoTMKQOvziv+Mix+NSl631TqKmwCd8F3MqQRsafqZN/j8A96UMPA+u/hWgspI/
- 9BFmyqSk8N+rtYm6BbOlqYeGPM6dm7F+s8L/R04JR0fGXVLPmWHCtci/efVhlIZ2VKj0Kt1Cy
- MZ5iIzxadso6cB0Eh2vnv/jnbWdxxK8JvKB32CK7PFz7BOC72Um0Mdx4Mwb4iGPgdCU3Ef/5o
- 4VWXjwFQaDqGBf9oxZkyIK92y24Ybyj5px1tl3SEoN2GsyFXt4LYjQSTJlgKtcHant1XcaBKd
- z9T23ZxWcLPomObRfxz9YgU3ddGaCWfX1CD5eabzjnXNeBYkB7V19WFsf5M4Bh4mxYjbF+g9B
- dOPVAUUiWwzOjW9oT4gBl2m4nlOvthkrYx+2uERqnvVmuNCJFkcIdyhNUHIeWtbo4riP+coH8
- o2bMu7Yj4Vt2tMl1Xx+uJ702p61Z9m2sh28JanSW+YB1ReG8jWmulP6cex8cFvIf5YgpmPceM
- z2kn9sRul/TcxXewJUsiZ4fdBQxO3nj5o6W0vDB/3zkQtBcFs80op67pZc4ARQYIZKGCFwcZv
- YWV8xMIHVpy4+ByUeiwCpSwlACl6HLN49KVgXKgR738RfUxjcFwe8DoaJlywHbGDP2j8einMB
- tzEb+f9Emed0rVpPoyce8yguveZDnEPDQcXWDkkXblFxKzP7A8wFsbkMM7mgi04hIt+b0W6Do
- ot/IgkptfQSXr70rj0yADvh9OsOfeTw9qnm34ZW0xSPk/laeR6qCudvliP9ZI5EIlUpp7ynW4
- IalZfSiycRjcPxf20I/4YC3YpTkeOf6YBbfQCTnQ7CnB5Uv8gDVrG2mwGlJsh91ew8AQVxPjU
- ZN4fqMenZfLLuUHdrURqhYgHJcUYdTIiRjEsM09zj8qgylPtdJfrLSN999h5uF2rsvUK6ZfZH
- QxNmHT2jYTH4y7BkMNEpMYBNwfVV0aexJkcfZJFuuMAp9kxLqy6GV5CsI+K4IsDtvzyjqum2v
- yYZ/H+KLAoXzWRB60R4NCTPpVyRzW4u7m8hqQOEa2Hs1diHLgvYsaaHnDCycHT25ag/Dc5oJV
- ALfintfOGP14oHY+hM0pjag4b1Z5c2gCfof8jFqfEbzRoSDAJwJtLnqVzKMwX2cxWYRy6GUG+
- lr/aBRLLD+XwerMop4uYGSUXvpDHJzevnvAOL+/dx5nGQez9eJiTFeV3qXsk8DR+lTcqBijvd
- JvvjGhM4eJ6sY8FOKdVMKc46vz5mYYJCU3jp9EwmyKr9e0Nm9G7IDXFqT+M9NgKMnptPfcxZ7
- 447OJIA==
+Content-Transfer-Encoding: 8bit
 
-> The assignment:
->
-> 	p_rx =3D &p_ll2_conn->rx_queue;
->
-> does not dereference "p_ll2_conn".  It just does pointer math.  So the
-> original code works fine.
+On 03/03/2025 09:13, Svyatoslav Ryhel wrote:
+> пн, 3 бер. 2025 р. о 09:52 Krzysztof Kozlowski <krzk@kernel.org> пише:
+>>
+>> On 27/02/2025 12:03, Svyatoslav Ryhel wrote:
+>>> чт, 27 лют. 2025 р. о 12:45 Krzysztof Kozlowski <krzk@kernel.org> пише:
+>>>>
+>>>> On Wed, Feb 26, 2025 at 11:36:59AM +0200, Svyatoslav Ryhel wrote:
+>>>>> +  maxim,fcharge-current-limit-microamp:
+>>>>> +    description:
+>>>>> +      Fast-Charge current limit
+>>>>> +    minimum: 250000
+>>>>> +    default: 500000
+>>>>> +    maximum: 1550000
+>>>>> +
+>>>>> +  maxim,fcharge-timer-hours:
+>>>>> +    description:
+>>>>> +      Fast-Charge timer in hours. Setting this value 3 and lower or 11 and higher
+>>>>> +      will disable Fast-Charge timer.
+>>>>> +    $ref: /schemas/types.yaml#/definitions/uint32
+>>>>> +    default: 5
+>>>>
+>>>> You still did not answer why this is board specific. This was rejected
+>>>> in the past because of that reason and nothing here changed. Nothing
 
-Is there a need to clarify affected implementation details any more?
-https://wiki.sei.cmu.edu/confluence/display/c/EXP34-C.+Do+not+dereference+=
-null+pointers
+Where are the arguments to existing/previous decisions?
 
-Regards,
-Markus
+>>>> will change without detailed explanation, so use other interfaces if you
+
+Again, where is detailed explanation why time is determined per board,
+unlike previously agreed that it is not?
+
+>>>> need user-space to configure it (see other drivers, e.g. maxim)
+
+
+
+
+>>>>
+>>>
+>>> Btw, I have used this awesome example you have provided. Take a look
+>>
+>> Where did I provide this example?
+>>
+> 
+> Its presence in the docs is an example on its no? You have explicitly
+> told to check other maxim devices, I did so, they all have similar set
+> of convifurations.
+
+Choose rather later or latest, not 12 YO, binding as an example.
+
+> 
+>>>
+>>> https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/power/supply/maxim,max77693.yaml?h=v6.14-rc4
+>>
+>> I opened it and I do not see anything about time. Please point to
+>> specific line.
+>>
+>> But regardless, how did I propose to use 12 year old binding? Where did
+>> I suggest that one?
+>>
+>>>
+>>> Oh, I wonder why it uses so much values which duplicate battery? I
+>>> know, it lacks battery, I assume that is why?
+>>
+>> No. You added to DT something which is not a hardware property, but
+>> user-space choice or policy.
+>>
+> 
+> It is NOT a user-space choice or policy!
+Previous discussions on the lists - since you mention 12 year old
+binding, so also discussions 12 years ago - determined that they are
+closer to them than board configuration.
+
+I already said - this was rejected in the past - so now I am repeating
+myself.
+
+You did not bring any arguments just keep repeating "no", so I suggest
+reading previous discussions and coming with arguments against them.
+
+Best regards,
+Krzysztof
