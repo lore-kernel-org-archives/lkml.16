@@ -1,93 +1,143 @@
-Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC2621F30A8;
-	Mon,  3 Mar 2025 11:08:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AE141F37C3
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 11:08:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741000090; cv=none; b=lYVXN4lnQSQOf1UQkYCU+7HkBFl9Ktdz1K2FHU0K5eZamuVYgUjwKcydwnB3/enjSFY51KjCX+xD89XJxdmEdaiHHsU+wODvCUd+5lUCnA184xlRHkGUQ1+WhFOWoObCWTbCxwcT1+6K/K0pW6pxZSWrcLPfalmb5V9uenzCedM=
+	t=1741000098; cv=none; b=VmYMIk7c/cISAhXuVXZuM5+Z+xE76T7s+BwKGTKCNQBfuAjB1WmZFyFWXrZVlZNUyZIA1KGEcoI03ftfPH6x4JyMlVdmPFf9pTsWMtprPKmfQDuvARPDQJGRF2qexS7FC8WIYyDCsyYnrAuiJcZfLcFWd5oiM4lF4zVK0W9Cr48=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741000090; c=relaxed/simple;
-	bh=jRMG5PGngLHs/9xxag87OmjWKDPfKYKNnw6ItHCD00w=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YFRcIcUEFFxjIfvx2z+Vorf/mN1j5MwsDFm/6Sikx7xCOEDPN9yGy+9vmVzmH+t+yknx3Z9RR/u96Ja6bBAwU++4+6ZfPhEZyvX6tF8/GfJtpJPsfBbI8Qte7HhCzzp0DSVhuhTCQXUCJZlJGPwzMFKJIuMN2N7noV/ff0pI4Kg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost.localdomain (unknown [124.16.141.245])
-	by APP-05 (Coremail) with SMTP id zQCowAC3IMqOjcVn5SC5EQ--.43195S2;
-	Mon, 03 Mar 2025 19:08:03 +0800 (CST)
-From: Wentao Liang <vulab@iscas.ac.cn>
-To: pali@kernel.org,
-	dmitry.torokhov@gmail.com
-Cc: erick.archer@outlook.com,
-	linux-input@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Wentao Liang <vulab@iscas.ac.cn>
-Subject: [PATCH] Input: alps - Propagate alps_passthrough_mode_v2() errors in alps_poll()
-Date: Mon,  3 Mar 2025 19:07:31 +0800
-Message-ID: <20250303110731.1491-1-vulab@iscas.ac.cn>
-X-Mailer: git-send-email 2.42.0.windows.2
+	s=arc-20240116; t=1741000098; c=relaxed/simple;
+	bh=sB62K8wzOoMq7iYIPZzQzh73bdFdBfG2WSbcYg3oeVw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Nc/h0fBJOzm2gxz+9+g4uclDyPYWHq+T1PetUWofsfiPeRrCuGJoFp7i4oxHqORkiA/z2Bn06xOsOyeR9VpfCAlrs8e0M0sxibkb3Skc9xqJhAPO1NG1dZsAICcwT9fGs1sBBbcyuaF9ZYr/txFMYKnY9EmzoVGulHbWZxjQt88=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=WY3Bcvwq; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=weIS7mWu; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="WY3Bcvwq";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="weIS7mWu"
+Date: Mon, 3 Mar 2025 12:08:11 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1741000095;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=L1D+CnraKUZCvWBX2D//PKQHKSwg0AKuuuoMcb0rgws=;
+	b=WY3BcvwqJfY3+izuTEss/XpsgEDHLEaBomUNon3BENJfcWrR9vFNFyQh+HE0Ng0LU3VJOV
+	cLOhtw/pgT7QEX5+3fnLR+WZEgEEcg3m057qcuRhitc8b9EcjiVXxSGEPipOy8QaGULV1n
+	FMbP+++SB7bbOd7OkE0/sSp4nfRb0wC4D7ObJZEGhDxnn4HFPIo8zIjBr/GQxQbrg2xuvt
+	5WE3Frj635yzpVKORmTTpXTuUOjDnfpWeDu2kxbXbUTDFlKe+gziyLP4TogcUvzKudOl5W
+	3x7WOYHzmQj0qAjeL1jcBmDr20VHXPT/KIhn4zIP8CiDsVlxRfYPzTlnFhKPRA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1741000095;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=L1D+CnraKUZCvWBX2D//PKQHKSwg0AKuuuoMcb0rgws=;
+	b=weIS7mWuYbNKbYzEpacOGd7w6cmMf55sMrM4/Mj2I5nQ/q7V+crriNXkCP2mUClA/2cbkK
+	328REvnkCOCCwFDQ==
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+To: "Maciej W. Rozycki" <macro@orcam.me.uk>
+Cc: Christophe Leroy <christophe.leroy@csgroup.eu>, 
+	Mahesh J Salgaonkar <mahesh@linux.ibm.com>, Oliver O'Halloran <oohall@gmail.com>, 
+	Madhavan Srinivasan <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, 
+	Nicholas Piggin <npiggin@gmail.com>, Naveen N Rao <naveen@kernel.org>, linuxppc-dev@lists.ozlabs.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] powerpc: Don't use %pK through printk
+Message-ID: <20250303115007-beb39d5b-71f5-458a-82fe-9e82c9ab720e@linutronix.de>
+References: <20250217-restricted-pointers-powerpc-v1-1-32c6bff63c9a@linutronix.de>
+ <ffd5dd44-babc-480a-b1bc-61bd7ff1e920@csgroup.eu>
+ <alpine.DEB.2.21.2502241840360.65342@angie.orcam.me.uk>
+ <20250225091250-eac544ad-4e5b-47f7-83fc-5212c720483a@linutronix.de>
+ <alpine.DEB.2.21.2502251654370.65342@angie.orcam.me.uk>
+ <20250226105757-e935ee3e-f70d-4e0e-83bb-61307722a186@linutronix.de>
+ <alpine.DEB.2.21.2502281957310.12637@angie.orcam.me.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:zQCowAC3IMqOjcVn5SC5EQ--.43195S2
-X-Coremail-Antispam: 1UD129KBjvJXoWrKF1kGFyktw1DWFW5Ww45KFg_yoW8JF45pr
-	W5XF15Kryvvw17tw4ktF45CayFqwnFva45tFWkWa4SkF9rtF4jvryvkFZagFyxtr1Y9F43
-	tayDAFW5CF4DAaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUkl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r1j
-	6r4UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r
-	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY1x0262kKe7AKxVWU
-	AVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14
-	v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkG
-	c2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4U
-	MIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7VUjO6pDUUUU
-	U==
-X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiBwwKA2fFTkT6bAAAs8
+In-Reply-To: <alpine.DEB.2.21.2502281957310.12637@angie.orcam.me.uk>
 
-Add error handling to propagate alps_passthrough_mode_v2() failures
-to the caller. When alps_passthrough_mode_v2() fails, immediately
-return -1 to stop further processing and maintain consistent error
-reporting.
+On Fri, Feb 28, 2025 at 08:15:02PM +0000, Maciej W. Rozycki wrote:
+> On Wed, 26 Feb 2025, Thomas Weißschuh wrote:
+> 
+> > > > By default, when kptr_restrict is set to 0, %pK behaves the same as %p.
+> > > > The same happened for a bunch of other architectures and nobody seems
+> > > > to have noticed in the past.
+> > > > The symbol-relative pointers or pointer formats designed for backtraces,
+> > > > as notes by Christophe, seem to be enough.
+> > > 
+> > >  I do hope so.
+> > 
+> > As mentioned before, personally I am fine with using %px here.
+> 
+>  Glad to hear!
+> 
+> > The values are in the register dumps anyways and security sensitive deployments
+> > will panic on WARN(), making the information disclosure useless.
+> 
+>  And even more so, I wasn't aware of this feature.  But this code doesn't 
+> make use of the WARN() facility, it just prints at the heightened KERN_ERR 
+> priority.
 
-Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
----
- drivers/input/mouse/alps.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+Indeed, I got confused with some other patches where WARN() is used mostly.
+This makes it a bit murkier.
 
-diff --git a/drivers/input/mouse/alps.c b/drivers/input/mouse/alps.c
-index 0728b5c08f02..557de3d0fce6 100644
---- a/drivers/input/mouse/alps.c
-+++ b/drivers/input/mouse/alps.c
-@@ -1994,14 +1994,16 @@ static int alps_poll(struct psmouse *psmouse)
- 	unsigned char buf[sizeof(psmouse->packet)];
- 	bool poll_failed;
- 
--	if (priv->flags & ALPS_PASS)
--		alps_passthrough_mode_v2(psmouse, true);
-+	if ((priv->flags & ALPS_PASS) &&
-+		alps_passthrough_mode_v2(psmouse, true))
-+		return -1;
- 
- 	poll_failed = ps2_command(&psmouse->ps2dev, buf,
- 				  PSMOUSE_CMD_POLL | (psmouse->pktsize << 8)) < 0;
- 
--	if (priv->flags & ALPS_PASS)
--		alps_passthrough_mode_v2(psmouse, false);
-+	if ((priv->flags & ALPS_PASS) &&
-+		alps_passthrough_mode_v2(psmouse, false))
-+		return -1;
- 
- 	if (poll_failed || (buf[0] & priv->mask0) != priv->byte0)
- 		return -1;
--- 
-2.42.0.windows.2
+> > > > But personally I'm also fine with using %px, as my goal is to remove the
+> > > > error-prone and confusing %pK.
+> > > 
+> > >  It's clear that `%pK' was meant to restrict access to /proc files and the 
+> > > like that may be accessible by unprivileged users:
+> > 
+> > Then let's stop abusing it. For something that is clear, it is
+> > misunderstood very often.
+> 
+>  Absolutely, I haven't questioned the removal of `%pK', but the switch to 
+> `%p' rather than `%px' specifically for this single hunk of your patch.
 
+Sure. It would be great if one of the maintainers could confirm this preference.
+
+> > > "
+> > > kptr_restrict
+> > > =============
+> > > 
+> > > This toggle indicates whether restrictions are placed on
+> > > exposing kernel addresses via ``/proc`` and other interfaces.
+> > > "
+> > > 
+> > > and not the kernel log, the information in which may come from rare events 
+> > > that are difficult to trigger and hard to recover via other means.  Sigh. 
+> > > Once you've got access to the kernel log, you may as well wipe the system 
+> > > or do any other harm you might like.
+> > 
+> > As I understand it, both the security and printk maintainers don't want the
+> > kernel log in general to be security sensitive and restricted.
+> > My goal here is not to push site-specific policy into the kernel but make life
+> > easier for kernel developers by removing the confusing and error-prone %pK
+> > altogether.
+> 
+>  Let me ask a different question then: is your approach to bulk-switch all 
+> instances of `%pK' to `%p' as the safe default and let other people figure 
+> out afterwards whether a different conversion specifier ought to be used 
+> instead on a case-by-case basis and then follow up with another patch, or 
+> will you consider these alternatives right away?
+
+I am considering on a case-by-case basis. But mostly the decision is that %p is
+enough, because by default %pK has been the same as %p anyways.
+Also the current wave of replacements does not touch valid users of %pK.
+They will stay and later be replaced with a new and better API.
+
+> > Security is only one aspect.
+> 
+>  I think it's important enough though for us to ensure we don't compromise 
+> it by chance.
+
+Agreed.
