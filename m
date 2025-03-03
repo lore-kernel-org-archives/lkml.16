@@ -1,74 +1,81 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A43D023BFA6;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9C1823C8A7;
 	Mon,  3 Mar 2025 23:35:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741044934; cv=none; b=BzLlnPV4Vn8sCJnAaPQ5eqKy/Hse0OjiwrMZGhlkvuL9rKBawSSVAC1x+utnZbJ1fhF7iPvRXo4b5CQYXBVkjlsY8DSrKfU1UwntA9SlsIzg3MZvyY4iFKcvfyuaJBROJqj1lK9nO9GKFwON3cqGVe2ruvzxSAqyok3r32bFW1k=
+	t=1741044935; cv=none; b=bkED4EMefg3JM4tN0j9hizWXrdOXwGhXxZU0Efy9bxH1B3wGhJ79XH1NLOwAkKgR1zOmtrgHPlLb4Lq5kuqlLgXCoRFps3AVBl8kdsEoLuxzQaM1UzTBIOcktIT3PIGXLfH7LKUtlhJhLLq2czzEBQIt1NFYE8yk7wlQ9oNIipY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741044934; c=relaxed/simple;
-	bh=GR6hpDShTHYuM5MN65bxH92P4OE/9lJl7f2NLjNYShg=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=MD7Y4rIovdyx3CEIVlhK5+45jVTp5Bv8lSlnXOBnmexvrW19HJYRtPh8VIG05P/uEyPkvRNu9rrCRafKLAXuOWA9KLu2vjZXlopRqSNNOVQ7QNDVmB6apNd6sTSj5yflveMRZpvo8QlGU02z3OsLuI0sjxCppqWg+DA/HgrEsqI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0EDC0C4CEEA;
-	Mon,  3 Mar 2025 23:35:32 +0000 (UTC)
-Date: Mon, 3 Mar 2025 18:36:25 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Bharadwaj Raju <bharadwaj.raju777@gmail.com>
-Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com, shuah@kernel.org,
- skhan@linuxfoundation.org, linux-trace-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-kernel-mentees@lists.linux.dev
-Subject: Re: [PATCH] selftests/ftrace: add 'poll' binary to gitignore
-Message-ID: <20250303183625.5acc59ec@gandalf.local.home>
-In-Reply-To: <20250210160138.4745-1-bharadwaj.raju777@gmail.com>
-References: <20250210160138.4745-1-bharadwaj.raju777@gmail.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1741044935; c=relaxed/simple;
+	bh=MTmdEmC2+ZdM+IJliZV8YI/e9ZZJr5Z5GvKKUbvgs60=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=QNGekilWbA6cbBiXakzkiNpkysnp211BsnZE8zFldzQm5n5JgahVuVo25z2I8jtBP+6ou7luLN1LjTwS2lj8bPcGyT6BEm71c1qtuF2vzJ1K1cLF0OUnVzJRM2OMckYisPf/lIZf8180SAlTVT3MQ3aJB8wdBMGUtXhuDH4fm8k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G0u23X7R; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G0u23X7R"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6BE13C4CEF1;
+	Mon,  3 Mar 2025 23:35:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741044934;
+	bh=MTmdEmC2+ZdM+IJliZV8YI/e9ZZJr5Z5GvKKUbvgs60=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=G0u23X7RywBCMWPmzl/9T6PQM4Idad3rEnrNMzlviKJ63ZNCfkqIjKkfmEof7MIjR
+	 DgPrXWjRUQDMJCiIoC4wB0bqqcRFGajJICH402uv0mmoLl/pvh+4dzWn3syOqUJ2be
+	 KzKEpXtmXHuEsYK5gDZc6+QvQhc35XuRbZ94puOxiMK9fR4FYxZ7L6fl6GMAoQD7zV
+	 K8R+aebVBWM0FQjAimNVopODNH+2+/HGZOvyw7DKk+lHDlaj2z5Fi3Zwg1Uf5EwLRt
+	 oIrwVYJIvp2u+e2TdDzY2P33MeWVl92cV5HPu7oh3u0ggowSiG5mFtpJGjAJYTeXQr
+	 lB+i2qvHVmq5w==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70CE93809A8F;
+	Mon,  3 Mar 2025 23:36:08 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next] net: filter: Avoid shadowing variable in
+ bpf_convert_ctx_access()
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174104496699.3745415.15179484349437262281.git-patchwork-notify@kernel.org>
+Date: Mon, 03 Mar 2025 23:36:06 +0000
+References: <20250228-fix_filter-v1-1-ce13eae66fe9@debian.org>
+In-Reply-To: <20250228-fix_filter-v1-1-ce13eae66fe9@debian.org>
+To: Breno Leitao <leitao@debian.org>
+Cc: martin.lau@linux.dev, daniel@iogearbox.net, john.fastabend@gmail.com,
+ ast@kernel.org, andrii@kernel.org, eddyz87@gmail.com, song@kernel.org,
+ yonghong.song@linux.dev, kpsingh@kernel.org, sdf@fomichev.me,
+ haoluo@google.com, jolsa@kernel.org, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
+ bpf@vger.kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Mon, 10 Feb 2025 21:31:34 +0530
-Bharadwaj Raju <bharadwaj.raju777@gmail.com> wrote:
+Hello:
 
-> When building this test, a binary file 'poll' is
-> generated and should be gitignore'd.
+This patch was applied to bpf/bpf-next.git (master)
+by Martin KaFai Lau <martin.lau@kernel.org>:
+
+On Fri, 28 Feb 2025 10:43:34 -0800 you wrote:
+> Rename the local variable 'off' to 'offset' to avoid shadowing the existing
+> 'off' variable that is declared as an `int` in the outer scope of
+> bpf_convert_ctx_access().
 > 
-> Signed-off-by: Bharadwaj Raju <bharadwaj.raju777@gmail.com>
-
-Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-
-Shuah,
-
-Can you take this for your tree?
-
-Possibly with:
-
-Fixes: 80c3e28528ff9 ("selftests/tracing: Add hist poll() support test")
-
-So it should go into this rc release.
-
-Thanks,
-
--- Steve
-
-> ---
->  tools/testing/selftests/ftrace/.gitignore | 1 +
->  1 file changed, 1 insertion(+)
+> This fixes a compiler warning:
 > 
-> diff --git a/tools/testing/selftests/ftrace/.gitignore b/tools/testing/selftests/ftrace/.gitignore
-> index 2659417cb2c7..4d7fcb828850 100644
-> --- a/tools/testing/selftests/ftrace/.gitignore
-> +++ b/tools/testing/selftests/ftrace/.gitignore
-> @@ -1,2 +1,3 @@
->  # SPDX-License-Identifier: GPL-2.0-only
->  logs
-> +poll
+>  net/core/filter.c:9679:8: warning: declaration shadows a local variable [-Wshadow]
+> 
+> [...]
+
+Here is the summary with links:
+  - [net-next] net: filter: Avoid shadowing variable in bpf_convert_ctx_access()
+    https://git.kernel.org/bpf/bpf-next/c/122f1fd14f44
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
