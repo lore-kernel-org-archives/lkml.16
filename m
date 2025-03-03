@@ -1,208 +1,295 @@
-Received: from AS8PR04CU009.outbound.protection.outlook.com (mail-westeuropeazon11011000.outbound.protection.outlook.com [52.101.70.0])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f53.google.com (mail-ot1-f53.google.com [209.85.210.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6A45AD27;
-	Mon,  3 Mar 2025 03:28:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.70.0
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740972512; cv=fail; b=V58RE68HGnWQmPONeJYKGJzKs6SPRICHHVv5L1GCzpd4DqeR3yYdFK94d9fjjcEsGWOKG97YFqIicIf068G18kgxzNA3goOXWScDdV+UGAzOG6vuBVUrEQEZGD8c+fd0npGEhxv9T45wab5yYsS0HPl0eiqyK9/NHrlmKzCH7Ag=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740972512; c=relaxed/simple;
-	bh=XMGvxyvzSxS8zJMU0Nl5DTqvGIgs3LiY/gK/dYawxs8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=PDQeLDONYbK+Sagw5dyxGilWlPhu7+/OuqjJwbeZD16yiidd1A8X3feErPDhyuXcXAxIqlzzqV5v8KYj9iy2BmeAx2p3qwUrQnUsQTvbhXjQxPQMxkWnquISDnrSiJGFu+FNNDD6SbYpdmmfxbc1MeacoJLDgxURFg5j3+wB4Sc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=xD4iZ3+I; arc=fail smtp.client-ip=52.101.70.0
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30A74AD27
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 03:29:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.53
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740972550; cv=none; b=WCT1tKC/dCcIdC1/6Q3Ai4KpUo3SnAgh9lsvEJrD/M/VRdqqIZZD3YEVcaX6bG0/fQn+Iq3AKa8Ua6npJHFLXrkXnn6eEtMgWRelwVBHGe6LbKLUAX/C9Xgm9h0NfAP44QyITy7wjVqOzZSnakW/Oz/0l8lGGgBXNUvBY/zKS9M=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740972550; c=relaxed/simple;
+	bh=PH+UgVpduJvVs4Sv/iL4r4yCTZGVDVkTj8oJSBImvMk=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=EXzFBdAJ4sQRXufQ4vDuioD6NWNc+in/Z5af1i9K8Gg+JsXvFnOxA69klx8hRuCFLCg6ehj1FuloIBoQ0HXyMlM+tPV1EHUTCcN+ow0t0Te82iYiIiwKCnHJA4xxK4OtREFrLpz2qyMDrsne41cxzJSqmrukL3cMwD4ZfSby7vw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BgWzHEaZ; arc=none smtp.client-ip=209.85.210.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="xD4iZ3+I"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=l/Z1Ln1E3mCWxHmoPmxAH0f1wmS01tnLVQ1CFNVIjYv5UqdbdSICH9M/51rnG/PHdl7lffHV1LdPvbeLDe6Ccor5mGZUkEFflwC7WLUauFWBaZBPV5TolP59Tnqo457qWctjScJiQNqwVoGa6UeKma5CUs28VXHoEU1Gmt5cBae1IkqnIhcgPmvMvrTbXE1nbBT6HupWimh+bJydi320s1j4H9Agy+LBU/lCv3hLkqqkAWJBHCqxVUxNy1yEQlK6j7N8G9TS0dogLXuhTC7IGxdhG3/xR3MHReVVJrMvb6ZDomN2S4goETeIhhhSoVwq7RC1Tzj6mgdY00TVhIq0rA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=XMGvxyvzSxS8zJMU0Nl5DTqvGIgs3LiY/gK/dYawxs8=;
- b=pylmwsjZ2MM5+CHja7VOyQ6jMowsLUqc0idqqtfRVDdksqFv4oaxCmaz6rzcidB4EQaVfFdbyQWb71WuEZHYxBmvQDg0eJVu4/kJrCssfCz6p27NKqS8f0KjHdPzo8NdPz3VwIjBdeNKjfn2gySWB6DO0Bdnduh18uOtA3jqrV7QPhSuCf2NCYc0g1orOn9HBmI56ANWkpRfXLFjEZBZfalhCROuQkIKKtYuc0zNqwBhFa3ZaIGEw9KHboMjlFPVSNAOem3yr6ybJPTUEtLlb54Ve9PdgrhT+Vs9bNSibb/pNL+1g+rVvcAu0kV7kCXneJ48mFzeRQJEFG6YEDQwcQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector1-NXP1-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XMGvxyvzSxS8zJMU0Nl5DTqvGIgs3LiY/gK/dYawxs8=;
- b=xD4iZ3+ISH7bklImlv3LrCdXOg+qLoQm4pSRMVWaXCK3SsZy9UCwu0m9hHWwxo8LCvqhL3x1HxgbseX0lsLBtcKgWVlN+sR4Y/6XbXrxgfp8xPnEL1G4mQQ1lSNaxU5j0zNJsRZNc0AInjmTkjJTHVKAEiHt5hRF21KEQ6kfOaHQ6trQleZSAhlUsNFTwibyxbT3eehCQfYErDK63NVC4HPAA7uA0nb1ZoGSnsZRxhOQxKqn9W09exOG/HESJwx5gLMZRLfPB+mH+uM6ljRtukcPdRTndfzoPDFD+6xENGTNpEp27/j0pBNNIxpxeqPKKU+zp3nx3ktxHIkzlkqQmA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=oss.nxp.com;
-Received: from PAXPR04MB8459.eurprd04.prod.outlook.com (2603:10a6:102:1da::15)
- by DBBPR04MB7722.eurprd04.prod.outlook.com (2603:10a6:10:207::24) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.28; Mon, 3 Mar
- 2025 03:28:26 +0000
-Received: from PAXPR04MB8459.eurprd04.prod.outlook.com
- ([fe80::165a:30a2:5835:9630]) by PAXPR04MB8459.eurprd04.prod.outlook.com
- ([fe80::165a:30a2:5835:9630%4]) with mapi id 15.20.8489.025; Mon, 3 Mar 2025
- 03:28:26 +0000
-Date: Mon, 3 Mar 2025 12:35:51 +0800
-From: Peng Fan <peng.fan@oss.nxp.com>
-To: Rob Herring <robh@kernel.org>
-Cc: Sudeep Holla <sudeep.holla@arm.com>, saravanak@google.com,
-	cristian.marussi@arm.com, krzk+dt@kernel.org, conor+dt@kernel.org,
-	arm-scmi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Peng Fan <peng.fan@nxp.com>
-Subject: Re: [RFC] dt-bindings: firmware: scmi: Introduce compatible string
-Message-ID: <20250303043551.GE13236@nxa18884-linux>
-References: <20250226094456.2351571-1-peng.fan@oss.nxp.com>
- <20250226160945.GA2505223-robh@kernel.org>
- <20250227030924.GB11411@nxa18884-linux>
- <CAL_JsqJOqKeDRuASWxCT=EA5LJbONpCX=Re8=XxKUbPToWy2Dg@mail.gmail.com>
- <Z8HCZQQLofaiGtpG@bogus>
- <CAL_JsqLePri5m_dE989poUV4auasAxFvgAiYuXVuZHqLcOBGMg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAL_JsqLePri5m_dE989poUV4auasAxFvgAiYuXVuZHqLcOBGMg@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-ClientProxiedBy: SG2PR06CA0218.apcprd06.prod.outlook.com
- (2603:1096:4:68::26) To PAXPR04MB8459.eurprd04.prod.outlook.com
- (2603:10a6:102:1da::15)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BgWzHEaZ"
+Received: by mail-ot1-f53.google.com with SMTP id 46e09a7af769-724d1724657so2554208a34.0
+        for <linux-kernel@vger.kernel.org>; Sun, 02 Mar 2025 19:29:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740972548; x=1741577348; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=aWknhiFa0B4WqxpoLJBg7zPZQxK85hrLUV4++fYVOc4=;
+        b=BgWzHEaZIct810VwTaUyEnri5NYETHJeiYKNoE3xGGE4cCXbq06v4du0CSM8fIZ3No
+         4Qhq80HPdSfNtpBT7HSFgCkLi942/qQcGEHQZz2o0UkGtwoxVm089z5B3y5q18mhU0V1
+         u9DV8skHh7yi5Z2oiQDdsaZO58UeRnqsz1tRBOhrGMszvPWZHcmKaKbZuPA/NpFsG5xC
+         yKk4xIQZ7RHdAe/3vySHwfTsO+UUbsa9HKMt7jLq/XB8KMwxV7pVlq4x4Qlo8ahqksLQ
+         FHTSJiRkrLpPPNw/aR9cW9T/rGMaoAoUKNgtawd4+f3qB6r+OZ0aPfc8wVs8d3asAi1j
+         rRgw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740972548; x=1741577348;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=aWknhiFa0B4WqxpoLJBg7zPZQxK85hrLUV4++fYVOc4=;
+        b=Lx9HUZsONDR6qies4C0flNpsjaTi4NdVyUMP9zQaGkIJoXRyXrKqFaOaNSYZTLYkPd
+         Ni6UWPQra51+LVyYGb+DfDFT6cdPcg+8WfoPnaN5TlGn2VdSugpMgVfUvAKUWnGMkK+u
+         tJ+kNj4QWLkcHB/DNU7KjvtVx5NZhr3CgySF3S6CodEDbjQgf/9VYTOB18lskPt7l2As
+         deS4cD15SSoYpYMHp8/F+io9BYHc2CZSrUjf9ARoWsnLkvyDT6iR01zWREix0mUnghGP
+         0rfgorA2zhHmkwQpScWGjOdIBVUgiJ5cNg2PaINyk2Hy9Azr1rSDsXVNi9951HK6FWuD
+         o/Xg==
+X-Forwarded-Encrypted: i=1; AJvYcCVRDopgbRLNm/r3XZUZ8+ATjaq0XFcC5Zbc6rv5EeBv1lI9FVcYaGSiotpQOfK1XA4/EUNamkvYxFeWK9o=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwYlzz85xDaW1HWs/5tTdegHwkM8uy+1Y3R72fHgwPO4WtjKzsx
+	OGK5qnena4sADmVgGnmO+OF/C/dCwZ4PHnQZEBXQAd9IMbCpHURBCdzk9RP7mZhQ/EuRmy7DGt0
+	TceKop8Rl0UpHeLI0ROvx2dEz6Ik=
+X-Gm-Gg: ASbGncupWl1rgPAKp3IEAyX3fNNFV0uG8aNrpdUSzHZVZ1eQ2CofD4VemgkcPOTMB1j
+	YZgGo0NOPFvdkGPFA8jACqQzKPOU65uBIbn4QcFPhttcpgHFCeMZ5JbEk9NQz/RZnmqJ4PqtFb5
+	EfjGY5UhegWrKGV05AqgvzUkjBQw==
+X-Google-Smtp-Source: AGHT+IF431HQo0sh51P/q4eWGcWUJ4aJPIzgNglznC/u/q9dI7YEsaGN6v6CFxn86/4fe3OwfJVuMhGQpjAQrHTEeWs=
+X-Received: by 2002:a05:6830:1e76:b0:727:2fad:105a with SMTP id
+ 46e09a7af769-728ae56f48bmr9008452a34.1.1740972547972; Sun, 02 Mar 2025
+ 19:29:07 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB8459:EE_|DBBPR04MB7722:EE_
-X-MS-Office365-Filtering-Correlation-Id: babc3737-6ba1-4229-6591-08dd5a0375e0
-X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|7416014|376014|52116014|1800799024|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?Qnpzd1dzZWt5Unh2aWZKdkNlZHkwenVWUVhBL0ZmOGVxbnVwWm92SGpVTjA5?=
- =?utf-8?B?V2RzU2QyVS9zaWo0d2w1VVJkVFkzRUhBL1FOcTJQQkxxVzQyRnJ0NXZ5dExy?=
- =?utf-8?B?emo2cWJsRHIwOVVtWXNSekdWTFJFNjAxOUkyeFRsTUhZVWQ4cTlhempiZEZ5?=
- =?utf-8?B?TXc2dmRLb3p1STAyTGZCakFsTXJUdXM4TmllL25uK0dPN05zS3N0RHAzQlhQ?=
- =?utf-8?B?WEJkOC9CQUxGamp4NXpVaDhQL3d4QzVualc2cDU4RWhLKzdTd0hPVmVKWEJ2?=
- =?utf-8?B?ZVA4cjdGSWNRdEVlVS8vOW8xTENuRnNCRzdjcXFSMGpNNzhTd1NCOWZRNjJu?=
- =?utf-8?B?WHhnMDdvUlVFaVM2akRLZTFVeENCTWJLM1Q0WDM1UE5kK2pNb0FnalFmQ0lE?=
- =?utf-8?B?RzhjbmtEWWYzUmdWY1lIRGhkV2NQWlQ1Q2dEOElvRHRkUEJ4Q0tIc2lRVU9Y?=
- =?utf-8?B?L28zU2liMUF6UzRoRHEvYWlkWnlFYnJPMzZibE8vbXVvcTR4RjlYMmxIRlJ4?=
- =?utf-8?B?TFI5UTN2OGM4L1BVeEV2bTJnWkY1SVd3VWt1eTRyOWlZb08rZk82UUhkTTZu?=
- =?utf-8?B?aGRxK3J6WkdPb3l6Vkl0aGpxRE1yOFIvUDhTaE91NGMvTW5PVnJIeFNDYS8x?=
- =?utf-8?B?R21Fa3I1RHluZlBYZ1JMdWVXN3E2aEdOVUpxc25HUHVFZmx1NW1DNnlWMEpP?=
- =?utf-8?B?WXlJRXJXZVBOTXdrMHR1cS83c3AyMTRGcHdQVW9XUHB5Ukt5U0pkQ2lQUUF2?=
- =?utf-8?B?ekJZRTFnUytpcWZ2QThoakdEaFNic0FuSGtXRmpMS082Z0JzanQ1Si9pS3hK?=
- =?utf-8?B?VnJZKy9XK3IxZEpIRGoxSHA0YjNQSDVpRUsxMDR1ejhtbDlhdDNsdU5RbEI5?=
- =?utf-8?B?VTBXK0JEdEYzTDNxYkdZalpSL01lM3hZbGJ1TnUzODMxdG5WTzQ1Q21rN2NZ?=
- =?utf-8?B?a0E4UHhCUk1mMUpNLzljYnZNNUlKdm5wRDk5ckxtYmJQdU5oMEE3K0dZY0FG?=
- =?utf-8?B?aC9WTCtURU82RzlVK3ArWVpVd3lHeDJ5Z1BlVXMvUnZyOVp2bDR6cXVDNHBG?=
- =?utf-8?B?QUYrZ1JQOFlpWVdpSHVoWVM5clAvY2lvN2ZMMjErcWdWb0RmVTRHdjRyMXdW?=
- =?utf-8?B?Y0lkbjJBcW1BRVA4eWdwbTlwbDRDMERPaXlKT1FReGU2blQ3bjZRWlE3Q0lU?=
- =?utf-8?B?RlVFK2l2NVpqN1lsZmROTXB4RTNWQTBVKytMSDFZUHpCUk5xSEo5YThwd1ZG?=
- =?utf-8?B?YkhJZitFYmc4d1d0VTY0RDVtSWltWVQvM1RlNStDZW5vTHl0R2Y3TGhwUVg0?=
- =?utf-8?B?YmNhOC8wdis0NytKeXI2T3RZNEJpYTFBbkxXVHBvdkVGZUZqZHN2ck9JWGxG?=
- =?utf-8?B?RU5Nc1oycnJPVXAwQzQ5K0NzQ2d5bUU4RTFsL0lZWHJZS2FFeTRMam5XRm15?=
- =?utf-8?B?MG9HTjAzSDRXSXhObmdQLzQybncyZFZ5MUVaY3A3U0VUZGpiUU10MTVVeDla?=
- =?utf-8?B?QXlPTENtc1UyYUZ3Q3RKYW14alRhN2dDd2Y3WEhRQ282ZzRiZ2EzMllDZ2Na?=
- =?utf-8?B?ekRTVWRBYmJybjN1ZUV4c2tkN2NZMjRvWm5WbWFJUDRjdGtmdWtkdW9mSm5n?=
- =?utf-8?B?ZEJtRDlFK0pVT1lQb2FuODdhMzFnZ3dzYVNHWFhDbmU5dlNHR01ucGprckNB?=
- =?utf-8?B?b3E5T1o4ZU5sb0xObHh4YjRabjhRK29wN2J4VVdIZVpHVVpHbm9XYkNENDFp?=
- =?utf-8?B?ejhSNUNDSnorYmVFZUhlMjBMeE55N01aOS9ZRVJVY3o4b0U2dTI0WnBkbStD?=
- =?utf-8?B?WlE3R2JPS05SM0lKdTJzMXI1OXZtVlJKWFQ3QUlxcE5BWXZOSW9qeDFOWmd6?=
- =?utf-8?B?YkNHZHdLNW8zRDFlL1BITlF5cEFkVEtxMXBRL3ZEY1M5dytjaERyNHNZVEdC?=
- =?utf-8?Q?NAt9vADbwI11fwqU//Cn+Kkn4QLPY8ho?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB8459.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(52116014)(1800799024)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?aU9uMFVGckFZbUs1Z2FTNXNGNmxxNFNneXdFUkJmdE9XbU5qbkZ3VlN6b3dZ?=
- =?utf-8?B?UzlPNVFGSXgrZXkvK3pNYmJMSEowTnMrajhkK3FpWHZzUjZVb0xPR1ZVeFls?=
- =?utf-8?B?QWpPdXdxMk16dkptQmRHbXd3a2JxZCtvZGlSamRDNzlUaWxXN0pvTHIrNk1Y?=
- =?utf-8?B?MFlEY2owREFoUXBnMzE4Y2pnMXZtUGlla1NCYzlQS2RMN2xzcWQ1OXJBRVRu?=
- =?utf-8?B?N0FPVDJ4ZnZVTG4wa2pXMk1QY0ZzbzNvUWExWUpzdWQ1V3gvdUFWc3o1UWN3?=
- =?utf-8?B?L1NGZTNoWXhHVFEweVRQR0s4Wm9ucUtkalowZ0c5alF0Y0tLSlhxTWcvNnho?=
- =?utf-8?B?MnhrV3VTZE1nMXJTeW5QTTIxT0lBTVhVd3FmM25VVkRoNWNyYi9zOTNvRTFO?=
- =?utf-8?B?U3Z5MGlHZ2tab1B6ekY1Ni9vQ2p5MlRSZXQ0WkdEbzAxZWJYTlNlbVFVSFBy?=
- =?utf-8?B?SFRSaVRyamRabGF5TFE3dlBIWmxZVDY1YmNRaGFCM053enJDbjg0UWNXdlFD?=
- =?utf-8?B?NWt4Y1lmb2l4Rm1xZEpxbTBiWlB3cmpJT3JxTFJXU3gxSUlFTmdmay85ZzIx?=
- =?utf-8?B?QTEvZEVmV3J0bFBISkc0SGJ0U05uaGtGeTRuNi9LQ0tOc0t0UzBQL1FIRmky?=
- =?utf-8?B?eXZGZC92cmRSQm9RMWxXTHFnM0xMUlFTZzlrMDNMN0NqQ25XVGJ2Ynk0NnBv?=
- =?utf-8?B?ZUNNNnNiZ0x1SHZjYk9wUFY0RjFmSkNWYytTV1psWlFzZzI1TFdDR0hrZTNU?=
- =?utf-8?B?bnErQW9BWGRGcGdDelI3OHc2dm0yb3J2WFQrZEJDVktUdXVKSndUUDFxblgr?=
- =?utf-8?B?bDdHQlR2VWRqWmhSWmNvbkppWHM5UXh6RUhwWUt6OTdPdERyMUxyMDFZU3hR?=
- =?utf-8?B?U3Y4emxZKzQvbkIvQzY5bGdMMW9jU3JJQ216SVo5dmlERDVuRC9LT29xd0Fv?=
- =?utf-8?B?bDFwOXpJRElsRkNnQUs3dExIWjFWaHl1M1JwdTVEdDR5bXI5b3FnU0kvMno2?=
- =?utf-8?B?Vk1GWDZuQnpZaXQwTG41dzJ5UXZYYkpDWWJQUVZnaDJBSW56d3RxVHllV1Ew?=
- =?utf-8?B?WXF3bkhPcUdpaVZIRE9WV21GSFVGS3VpMUZCTTRpRHJKQlhqMTZrSldBOVFG?=
- =?utf-8?B?c0pyMldYRjltWE52V3o4Tjh0U2o1amV5V3huV0VxSUMwd2t0WURhenZUT3BH?=
- =?utf-8?B?YVk2cTFCeWZaSGx6Zmg0dThiY0IyMUo3QSt0VE5xVkNhekJjVHhtSmpLTDR4?=
- =?utf-8?B?andBYWxBdkIxQmJJcXJvTkFJRUZMVVJyUzVvNmNoMDVQcXVGalZnV01aK3JW?=
- =?utf-8?B?ZmVHSTZZU1Q0SjQyZHU2b1ltVWswRDMvci8wMWpSOEUraTFaN2VkTkR4YU5K?=
- =?utf-8?B?TWRuTUdxeWc2RWk5ZVJFSmtEbld6SjNNRys3Vm1Qb0ZhTUYwdCszdHc1ZWtF?=
- =?utf-8?B?M3JkeTg1WDcyZFQxNStCM1dJamlhUmxTOU50YmpoQnZpWk1iaitROHU3aDBw?=
- =?utf-8?B?NjBlRHA4OEFpRzlkQy9UUFdtVlFhbER1eTEybDlxcXdBdnZiWVNMc1ExeDhH?=
- =?utf-8?B?THovenUyeGdrTmhBZ0tkTVErUlU4VDJpZmFROVoyTDFmVDdESVBZZVNsOSt6?=
- =?utf-8?B?TGJXK251RGU2TkhTMk1UTktlcVpTMjJjRGp2Q3J3MXAxeDgzdkp2YWlZVnp3?=
- =?utf-8?B?V2V0c3FReFpCNFlUTEMyeHY3RzVyTzhmTzFjOE5sbTNheXFPQWZKN2J5UGE0?=
- =?utf-8?B?QXJJT2FNRXoxVG9HTWJWUHlJcjNKNzVhRG9LVVN6Z3lDSmNzMU1iV1BEL041?=
- =?utf-8?B?dXJrWUJxUFNNZldSUEJsaVc2YmFtZUZ3UkpmU0JBMEd5VVpSM0RITWR6Ym5Y?=
- =?utf-8?B?SmtDZVJoZU5DOFJBNHU2bzVuWlYyRU4rbkFLTVJ3ZVd6TlB0eWxLSURteHpL?=
- =?utf-8?B?QzdFZ3YrNGc0a01MQXJERkpsVTZhbkFEalZyeVVkcVM1aStmYUxKc1Y3OHlG?=
- =?utf-8?B?RXpYckZqaGVXaXNBenpoQWQ2RHI1YlhBV2MxVVZMVTZaZlVOakh2TlV2VlFs?=
- =?utf-8?B?dmJ4aVVKMHowVVJPYnNCVWV1Q3Z0SXdKNlEyeER4Ni80cEJKOU8zdG8rWk55?=
- =?utf-8?Q?zBiqk7hwgHLnTi/I5TPqyyQ6I?=
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: babc3737-6ba1-4229-6591-08dd5a0375e0
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB8459.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Mar 2025 03:28:26.7107
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ZBV10tNVmW+Pe2zxVrgqtfgcXKEoL/kOk17VAM9NMlmCIInq9+W/5V7eCwI01VfZxrKsgtBDlJSNgVZT7QdvWQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR04MB7722
+From: Strforexc yn <strforexc@gmail.com>
+Date: Mon, 3 Mar 2025 11:28:57 +0800
+X-Gm-Features: AQ5f1Jo-WCLwzAVS6nUrg3Z8UlF4GpsTpf5wKbrsDhXE_5g5gQBskG_9H8erOog
+Message-ID: <CA+HokZok8x=9Z=o0Y+hFWTNbeokM3Gmenq741HKqHOMLfarezw@mail.gmail.com>
+Subject: =?UTF-8?Q?KASAN=3A_slab=2Duse=2Dafter=2Dfree_Read_in_hdm=5Fdisconnect_?=
+	=?UTF-8?Q?=EF=BC=88_v6=2E14=2Drc4_kernel=EF=BC=89?=
+To: Parthiban Veerasooran <parthiban.veerasooran@microchip.com>, 
+	Christian Gromm <christian.gromm@microchip.com>, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Rob,
-On Fri, Feb 28, 2025 at 08:17:03AM -0600, Rob Herring wrote:
->On Fri, Feb 28, 2025 at 8:04 AM Sudeep Holla <sudeep.holla@arm.com> wrote:
->>
->> On Fri, Feb 28, 2025 at 07:34:09AM -0600, Rob Herring wrote:
->> >
->> > - The parent driver creates child devices. The child devices can
->> > either reuse the parent DT node (i.e. set dev.of_node) or just get it
->> > from the parent device if needed.
->> >
->>
->> This is exactly what I was thinking to deal with the issue since this
->> discussion started. I will give this a go. I believe this must solve
->> the issue, but I didn't want to spit it out loud until I tried to hack
->> and check.
->
+Dear Maintainers, When using our customized Syzkaller to fuzz the
+latest Linux kernel, the following crashwas triggered.
 
->The issue with fw_devlink is that it only checks the dependency of the
->parent which won't be enough. When the parent's probe creates the
->child device, that doesn't mean the child has probed. The child driver
->might not be loaded and/or probe is async. I don't think there's
->anyway for the parent probe to wait for child drivers to be probed and
+Kernel commit: v6.14-rc4 (Commits on Feb 24, 2025)
+Kernel Config : https://github.com/Strforexc/LinuxKernelbug/blob/main/.conf=
+ig
+Kernel Log=EF=BC=9A https://github.com/Strforexc/LinuxKernelbug/blob/main/s=
+lab_uaf_read_gfs2_dis/log0
+Reproduce.c:  https://github.com/Strforexc/LinuxKernelbug/blob/main/slab_ua=
+f_read_hdm_disconnect/repro.cprog
 
-Please forgive if my understanding is wrong.
-Based on device tree, there is fwnode link created using fwnode_link_add,
-then in device_add, the fw_devlink_link_device will do the device supplier
-and consumer link. It is just device level link, not related to child's probe.
+KASAN detects a use-after-free read of size 8 at address
+ffff88806e3c9898 in hdm_disconnect (drivers/most/most_usb.c:1125),
+triggered by a USB disconnect event processed via the usb_hub_wq
+workqueue.
 
-So if child device(work as supplier) is created only when a prarent's probe
-done, the consumer of the child device will not have link ready and consumer
-device's driver will not probe until the child device created and probe done.
+This bug seems to have been reported and fixed in the old kernel,
+which seems to be a regression issue? If you fix this issue, please
+add the following tag to the commit:
+Reported-by: Zhizhuo Tang strforexctzzchange@foxmail.com, Jianzhou
+Zhao xnxc22xnxc22@qq.com, Haoran Liu <cherest_san@163.com>
 
-Thanks,
-Peng
+usb 7-1: USB disconnect, device number 9
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+BUG: KASAN: slab-use-after-free in hdm_disconnect+0x227/0x250
+drivers/most/most_usb.c:1125
+Read of size 8 at addr ffff88806e3c9898 by task kworker/0:1/9
 
->ready. I think there's similar issues with the DWC3 wrapper and core
->driver split.
->
->Rob
+CPU: 0 UID: 0 PID: 9 Comm: kworker/0:1 Not tainted 6.14.0-rc4 #1
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.15.0-1 04/01/=
+2014
+Workqueue: usb_hub_wq hub_event
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:94 [inline]
+ dump_stack_lvl+0x116/0x1b0 lib/dump_stack.c:120
+ print_address_description.constprop.0+0x2c/0x420 mm/kasan/report.c:408
+ print_report+0xaa/0x270 mm/kasan/report.c:521
+ kasan_report+0xbd/0x100 mm/kasan/report.c:634
+ hdm_disconnect+0x227/0x250 drivers/most/most_usb.c:1125
+ usb_unbind_interface+0x1e5/0x980 drivers/usb/core/driver.c:458
+ device_remove+0x125/0x170 drivers/base/dd.c:569
+ __device_release_driver drivers/base/dd.c:1273 [inline]
+ device_release_driver_internal+0x443/0x620 drivers/base/dd.c:1296
+ bus_remove_device+0x22f/0x420 drivers/base/bus.c:579
+ device_del+0x395/0x9e0 drivers/base/core.c:3854
+ usb_disable_device+0x360/0x7b0 drivers/usb/core/message.c:1418
+ usb_disconnect+0x2db/0x930 drivers/usb/core/hub.c:2316
+ hub_port_connect+0x1f7/0x2730 drivers/usb/core/hub.c:5373
+ hub_port_connect_change+0x27c/0x7f0 drivers/usb/core/hub.c:5673
+ port_event+0xe3d/0x1220 drivers/usb/core/hub.c:5833
+ hub_event+0x517/0xca0 drivers/usb/core/hub.c:5915
+ process_one_work+0x109d/0x18c0 kernel/workqueue.c:3236
+ process_scheduled_works kernel/workqueue.c:3317 [inline]
+ worker_thread+0x677/0xe90 kernel/workqueue.c:3398
+ kthread+0x3b3/0x760 kernel/kthread.c:464
+ ret_from_fork+0x48/0x80 arch/x86/kernel/process.c:148
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
+ </TASK>
+
+Allocated by task 9:
+ kasan_save_stack+0x24/0x50 mm/kasan/common.c:47
+ kasan_save_track+0x14/0x40 mm/kasan/common.c:68
+ poison_kmalloc_redzone mm/kasan/common.c:377 [inline]
+ __kasan_kmalloc+0xba/0xc0 mm/kasan/common.c:394
+ kmalloc_noprof include/linux/slab.h:901 [inline]
+ kzalloc_noprof include/linux/slab.h:1037 [inline]
+ hdm_probe+0xb7/0x18b0 drivers/most/most_usb.c:959
+ usb_probe_interface+0x30b/0x9e0 drivers/usb/core/driver.c:396
+ call_driver_probe drivers/base/dd.c:579 [inline]
+ really_probe+0x252/0xaa0 drivers/base/dd.c:658
+ __driver_probe_device+0x1df/0x460 drivers/base/dd.c:800
+ driver_probe_device+0x49/0x120 drivers/base/dd.c:830
+ __device_attach_driver+0x1e3/0x2f0 drivers/base/dd.c:958
+ bus_for_each_drv+0x14c/0x1e0 drivers/base/bus.c:462
+ __device_attach+0x1f2/0x4d0 drivers/base/dd.c:1030
+ bus_probe_device+0x17f/0x1c0 drivers/base/bus.c:537
+ device_add+0xc5e/0x1490 drivers/base/core.c:3665
+ usb_set_configuration+0x11a5/0x1c50 drivers/usb/core/message.c:2210
+ usb_generic_driver_probe+0xbf/0x120 drivers/usb/core/generic.c:250
+ usb_probe_device+0xed/0x3e0 drivers/usb/core/driver.c:291
+ call_driver_probe drivers/base/dd.c:579 [inline]
+ really_probe+0x252/0xaa0 drivers/base/dd.c:658
+ __driver_probe_device+0x1df/0x460 drivers/base/dd.c:800
+ driver_probe_device+0x49/0x120 drivers/base/dd.c:830
+ __device_attach_driver+0x1e3/0x2f0 drivers/base/dd.c:958
+ bus_for_each_drv+0x14c/0x1e0 drivers/base/bus.c:462
+ __device_attach+0x1f2/0x4d0 drivers/base/dd.c:1030
+ bus_probe_device+0x17f/0x1c0 drivers/base/bus.c:537
+ device_add+0xc5e/0x1490 drivers/base/core.c:3665
+ usb_new_device+0x8f4/0x1430 drivers/usb/core/hub.c:2663
+ hub_port_connect+0x1122/0x2730 drivers/usb/core/hub.c:5533
+ hub_port_connect_change+0x27c/0x7f0 drivers/usb/core/hub.c:5673
+ port_event+0xe3d/0x1220 drivers/usb/core/hub.c:5833
+ hub_event+0x517/0xca0 drivers/usb/core/hub.c:5915
+ process_one_work+0x109d/0x18c0 kernel/workqueue.c:3236
+ process_scheduled_works kernel/workqueue.c:3317 [inline]
+ worker_thread+0x677/0xe90 kernel/workqueue.c:3398
+ kthread+0x3b3/0x760 kernel/kthread.c:464
+ ret_from_fork+0x48/0x80 arch/x86/kernel/process.c:148
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
+
+Freed by task 9:
+ kasan_save_stack+0x24/0x50 mm/kasan/common.c:47
+ kasan_save_track+0x14/0x40 mm/kasan/common.c:68
+ kasan_save_free_info+0x3b/0x80 mm/kasan/generic.c:576
+ poison_slab_object mm/kasan/common.c:247 [inline]
+ __kasan_slab_free+0x54/0x80 mm/kasan/common.c:264
+ kasan_slab_free include/linux/kasan.h:233 [inline]
+ slab_free_hook mm/slub.c:2353 [inline]
+ slab_free mm/slub.c:4609 [inline]
+ kfree+0x12e/0x420 mm/slub.c:4757
+ device_release+0xa6/0x240 drivers/base/core.c:2567
+ kobject_cleanup+0x136/0x410 lib/kobject.c:689
+ kobject_release lib/kobject.c:720 [inline]
+ kref_put include/linux/kref.h:65 [inline]
+ kobject_put+0xf0/0x130 lib/kobject.c:737
+ put_device drivers/base/core.c:3773 [inline]
+ device_unregister+0x30/0xc0 drivers/base/core.c:3896
+ hdm_disconnect+0x10b/0x250 drivers/most/most_usb.c:1123
+ usb_unbind_interface+0x1e5/0x980 drivers/usb/core/driver.c:458
+ device_remove+0x125/0x170 drivers/base/dd.c:569
+ __device_release_driver drivers/base/dd.c:1273 [inline]
+ device_release_driver_internal+0x443/0x620 drivers/base/dd.c:1296
+ bus_remove_device+0x22f/0x420 drivers/base/bus.c:579
+ device_del+0x395/0x9e0 drivers/base/core.c:3854
+ usb_disable_device+0x360/0x7b0 drivers/usb/core/message.c:1418
+ usb_disconnect+0x2db/0x930 drivers/usb/core/hub.c:2316
+ hub_port_connect+0x1f7/0x2730 drivers/usb/core/hub.c:5373
+ hub_port_connect_change+0x27c/0x7f0 drivers/usb/core/hub.c:5673
+ port_event+0xe3d/0x1220 drivers/usb/core/hub.c:5833
+ hub_event+0x517/0xca0 drivers/usb/core/hub.c:5915
+ process_one_work+0x109d/0x18c0 kernel/workqueue.c:3236
+ process_scheduled_works kernel/workqueue.c:3317 [inline]
+ worker_thread+0x677/0xe90 kernel/workqueue.c:3398
+ kthread+0x3b3/0x760 kernel/kthread.c:464
+ ret_from_fork+0x48/0x80 arch/x86/kernel/process.c:148
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
+
+The buggy address belongs to the object at ffff88806e3c8000
+ which belongs to the cache kmalloc-8k of size 8192
+The buggy address is located 6296 bytes inside of
+ freed 8192-byte region [ffff88806e3c8000, ffff88806e3ca000)
+
+The buggy address belongs to the physical page:
+page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x6e3c8
+head: order:3 mapcount:0 entire_mapcount:0 nr_pages_mapped:0 pincount:0
+ksm flags: 0x4fff00000000040(head|node=3D1|zone=3D1|lastcpupid=3D0x7ff)
+page_type: f5(slab)
+raw: 04fff00000000040 ffff88801b442280 ffffea0001242000 dead000000000003
+raw: 0000000000000000 0000000080020002 00000000f5000000 0000000000000000
+head: 04fff00000000040 ffff88801b442280 ffffea0001242000 dead000000000003
+head: 0000000000000000 0000000080020002 00000000f5000000 0000000000000000
+head: 04fff00000000003 ffffea0001b8f201 ffffffffffffffff 0000000000000000
+head: 0000000000000008 0000000000000000 00000000ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
+page_owner tracks the page as allocated
+page last allocated via order 3, migratetype Unmovable, gfp_mask
+0xd20c0(__GFP_IO|__GFP_FS|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP|__GFP_NOMEM=
+ALLOC),
+pid 16917, tgid 16916 (syz.6.368), ts 182425166303, free_ts
+182208588085
+ set_page_owner include/linux/page_owner.h:32 [inline]
+ post_alloc_hook+0x1a3/0x1d0 mm/page_alloc.c:1551
+ prep_new_page mm/page_alloc.c:1559 [inline]
+ get_page_from_freelist+0x8a5/0xfa0 mm/page_alloc.c:3477
+ __alloc_frozen_pages_noprof+0x1d8/0x3b0 mm/page_alloc.c:4739
+ alloc_pages_mpol+0x1f2/0x550 mm/mempolicy.c:2270
+ alloc_slab_page mm/slub.c:2423 [inline]
+ allocate_slab+0x229/0x310 mm/slub.c:2587
+ ___slab_alloc+0x7f3/0x12b0 mm/slub.c:3826
+ __slab_alloc.constprop.0+0x56/0xc0 mm/slub.c:3916
+ __slab_alloc_node mm/slub.c:3991 [inline]
+ slab_alloc_node mm/slub.c:4152 [inline]
+ __kmalloc_cache_noprof+0x280/0x450 mm/slub.c:4320
+ kmalloc_noprof include/linux/slab.h:901 [inline]
+ kzalloc_noprof include/linux/slab.h:1037 [inline]
+ cryptomgr_schedule_probe+0x92/0xab0 crypto/algboss.c:87
+ cryptomgr_notify+0x49/0x70 crypto/algboss.c:225
+ notifier_call_chain+0xd7/0x250 kernel/notifier.c:85
+ blocking_notifier_call_chain+0x6b/0xb0 kernel/notifier.c:380
+ crypto_probing_notify crypto/api.c:322 [inline]
+ crypto_alg_mod_lookup+0x350/0x500 crypto/api.c:352
+ crypto_type_has_alg+0x2d/0xa0 crypto/algapi.c:1006
+ xfrm_probe_algs+0x16b/0x400 net/xfrm/xfrm_algo.c:825
+ pfkey_register+0xef/0x270 net/key/af_key.c:1701
+page last free pid 5211 tgid 5211 stack trace:
+ reset_page_owner include/linux/page_owner.h:25 [inline]
+ free_pages_prepare mm/page_alloc.c:1127 [inline]
+ free_frozen_pages+0x71f/0xff0 mm/page_alloc.c:2660
+ __put_partials+0x13b/0x190 mm/slub.c:3153
+ qlink_free mm/kasan/quarantine.c:163 [inline]
+ qlist_free_all+0x50/0x130 mm/kasan/quarantine.c:179
+ kasan_quarantine_reduce+0x1a5/0x1f0 mm/kasan/quarantine.c:286
+ __kasan_slab_alloc+0x6f/0xa0 mm/kasan/common.c:329
+ kasan_slab_alloc include/linux/kasan.h:250 [inline]
+ slab_post_alloc_hook mm/slub.c:4115 [inline]
+ slab_alloc_node mm/slub.c:4164 [inline]
+ kmem_cache_alloc_noprof+0x167/0x400 mm/slub.c:4171
+ getname_flags+0xd2/0x620 fs/namei.c:139
+ do_sys_openat2+0xf2/0x1d0 fs/open.c:1422
+ do_sys_open fs/open.c:1443 [inline]
+ __do_sys_openat fs/open.c:1459 [inline]
+ __se_sys_openat fs/open.c:1454 [inline]
+ __x64_sys_openat+0x140/0x200 fs/open.c:1454
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xcb/0x260 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+Memory state around the buggy address:
+ ffff88806e3c9780: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff88806e3c9800: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>ffff88806e3c9880: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                            ^
+ ffff88806e3c9900: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff88806e3c9980: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+
+Regards,
+Zhizhuo Tang
