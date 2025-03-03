@@ -1,170 +1,94 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98E681F17E5;
-	Mon,  3 Mar 2025 15:21:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CDAC2144D8
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 15:22:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741015311; cv=none; b=o2xaCmKUxjn6pfxmekW6CeprYEofesbNLBOGIFwtqIqbPbmwRd7buH2ufd8mdWhQAlIHFM/LGcVYC8AS3PVC1e6vy8YUs54GRoR1hiRfCqG2QR4dPGgKuQxh0cRmtWtjdIV3iOlkBmzY45W7FYmr476qnkQ7pL051Hpj9vKAowA=
+	t=1741015373; cv=none; b=Mh7O62vbly1gbS3HHcRT+NZzg/DbFagX3ruRzdys4oRvXhrfuR0rUfVA1OqkIERBxALBo8RDUPE6zXMoxPfr6Jx+M/Rq5r3noSUwtIEX1KuOmWWRC34oWfmfP76t4Ze11sR7nec8GvE8S8xIzMb2gjoisaL/YEtLmhVT4gCqxCI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741015311; c=relaxed/simple;
-	bh=ihqQyMBnJY63qUP0vGr1bCvvjfr6shvvPW4NTMuZEhQ=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=oKcnz0xE+V6O994CXxWNbX0vhi9E/+q30mWh7ib9ORSi8gLXxfO0aBqqksdDhV189LpYZCzUPsVOUsvQSllyCU7Gl1ZaaFbL2q3RMaxNuqL1QuQDnc8469BcLA3F6hQWkSSBC04i6ntzdCvRhZpsE6Fn6spZHn5AEfJWXZ90hgE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C25FvsDW; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741015373; c=relaxed/simple;
+	bh=9nNZBR8ulxcMWT/rE4CRC8o0CEGdzGUM1bgO3F5PiHM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=kUxFAhXhhwzsElF2gh+9vIhCQWm/yi1VzkKf0TiPRLywWZ8c/+DXCQIyWhOwtdVhjmpmQI+56wBaec8RM1iYeFGWl8k6PIiL42MQROyWi/gvUDOoP/6tBKpg2DVqzMYgIqwrSyB192mg5NLA+ogbvaLLhruLBVZvhvSO9apA/u8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=IY5Ot7im; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C25FvsDW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3770C4CED6;
-	Mon,  3 Mar 2025 15:21:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741015311;
-	bh=ihqQyMBnJY63qUP0vGr1bCvvjfr6shvvPW4NTMuZEhQ=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=C25FvsDWAoMuIXXqDzcEEUaFA65saxywYeDZkW6e3/Iqk7VcVGyNqAw1yhJ6HBrRA
-	 8LVFSeXnYQbt+k5QMhD6xla6BOb4iAKrnUWLXEuGwrONEQ+umOvudnRogL4xh89V8l
-	 RkboWaFISYnoHuSokQSslHRsuWdpzwdhLXRG+8KT4PS61oUgfI9ADoCiLFHfcsDUgs
-	 ojr6t8XmCJC+MWbeIp3xDN40J22KEsaCWGUwiMDX5yo5lAXvhD/js17prMqh19rYIa
-	 jlz0FjtdFLXpVCChMyFQRvlaFXpOVVu5UltJh9yYbye64RddfANFsNQS0DGQVbqhQo
-	 FbgPbiL8d/2LA==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-To: "Alice Ryhl" <aliceryhl@google.com>
-Cc: "Daniel Almeida" <daniel.almeida@collabora.com>,  "Benno Lossin"
- <benno.lossin@proton.me>,  "Abdiel Janulgue" <abdiel.janulgue@gmail.com>,
-  <dakr@kernel.org>,  <robin.murphy@arm.com>,
-  <rust-for-linux@vger.kernel.org>,  "Miguel Ojeda" <ojeda@kernel.org>,
-  "Alex Gaynor" <alex.gaynor@gmail.com>,  "Boqun Feng"
- <boqun.feng@gmail.com>,  "Gary Guo" <gary@garyguo.net>,  =?utf-8?Q?Bj?=
- =?utf-8?Q?=C3=B6rn?= Roy Baron
- <bjorn3_gh@protonmail.com>,  "Trevor Gross" <tmgross@umich.edu>,
-  "Valentin Obst" <kernel@valentinobst.de>,
-  <linux-kernel@vger.kernel.org>,  "Christoph Hellwig" <hch@lst.de>,
-  "Marek Szyprowski" <m.szyprowski@samsung.com>,  <airlied@redhat.com>,
-  <iommu@lists.linux.dev>
-Subject: Re: [PATCH v12 2/3] rust: add dma coherent allocator abstraction.
-In-Reply-To: <CAH5fLgg5MuUu=TX8mMsPf5RcLhMLHSU4Vct=h8rFX6Z7HjPxeA@mail.gmail.com>
- (Alice
-	Ryhl's message of "Mon, 03 Mar 2025 14:13:07 +0100")
-References: <20250224115007.2072043-1-abdiel.janulgue@gmail.com>
-	<20250224115007.2072043-3-abdiel.janulgue@gmail.com>
-	<6dea7b6a-1534-47e7-94d2-d67417c3d4c1@proton.me>
-	<tnwDK3QN_Xr0Yoa3U8HVxS5OqjvxIhgmmO_ifTGJR_EtIzjoxawOHtnbOJ9yChsUWXyFPcU9beIdrgbpfGZI8w==@protonmail.internalid>
-	<3202F69F-397E-4BC4-8DD8-E2D4B0AB056F@collabora.com>
-	<87bjuil15w.fsf@kernel.org>
-	<t4HxdvR7WBX_861hiTXo72jqC9F9oRpIzgA_dD2yhcSuLISEkC-shMfSgllrFPpnkSZXGfRcc47keudMooNiIQ==@protonmail.internalid>
-	<CAH5fLgg5MuUu=TX8mMsPf5RcLhMLHSU4Vct=h8rFX6Z7HjPxeA@mail.gmail.com>
-User-Agent: mu4e 1.12.7; emacs 29.4
-Date: Mon, 03 Mar 2025 16:21:40 +0100
-Message-ID: <87ikoqjg1n.fsf@kernel.org>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="IY5Ot7im"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1741015369;
+	bh=9nNZBR8ulxcMWT/rE4CRC8o0CEGdzGUM1bgO3F5PiHM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=IY5Ot7im1fkeAwUnJV2V9VqIF9ku9fh7F+dmZxdPMrUhLbhVsMpOKvGr5VhAt9FUI
+	 uNlhJlybGZTGHU92EQBAGi2hhDmnAAcxFXYe9DZrLETzd1RWCbMvTk23oGtxofB3M4
+	 iyqBwfhMMi6c0V0+vOVHMiOYJabZiaHX68ZohrXNUNd0Mae8XOWpAf+t5Gp1CxX0G0
+	 LCVKDLz/OBbXw446BwswP2VnlI9dPNZgZYqIgC9ano3+xw0PLxLxvoqhvwbRo+Pg1R
+	 6l12llV0nQFNWhdAce0/8u7VXRGIb6XliuDj/B98vKZkoJi4E5cIm/vHmlpfzcA7PU
+	 bGdhIrca6EeKg==
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: bbrezillon)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 1C6B817E0657;
+	Mon,  3 Mar 2025 16:22:49 +0100 (CET)
+Date: Mon, 3 Mar 2025 16:22:43 +0100
+From: Boris Brezillon <boris.brezillon@collabora.com>
+To: Ashley Smith <ashley.smith@collabora.com>
+Cc: Steven Price <steven.price@arm.com>, Liviu Dudau <liviu.dudau@arm.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
+ <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
+ <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, kernel@collabora.com,
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drm/panthor: Update CS_STATUS_ defines to correct
+ values
+Message-ID: <20250303162243.42c9c85b@collabora.com>
+In-Reply-To: <20250303151840.3669656-1-ashley.smith@collabora.com>
+References: <20250303151840.3669656-1-ashley.smith@collabora.com>
+Organization: Collabora
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-"Alice Ryhl" <aliceryhl@google.com> writes:
+On Mon,  3 Mar 2025 15:18:37 +0000
+Ashley Smith <ashley.smith@collabora.com> wrote:
 
-> On Mon, Mar 3, 2025 at 2:00=E2=80=AFPM Andreas Hindborg <a.hindborg@kerne=
-l.org> wrote:
->>
->> "Daniel Almeida" <daniel.almeida@collabora.com> writes:
->>
->> > Hi Benno,
->> >
->>
->> [...]
->>
->> >>> +    /// Writes data to the region starting from `offset`. `offset` =
-is in units of `T`, not the
->> >>> +    /// number of bytes.
->> >>> +    ///
->> >>> +    /// # Examples
->> >>> +    ///
->> >>> +    /// ```
->> >>> +    /// # fn test(alloc: &mut kernel::dma::CoherentAllocation<u8>) =
--> Result {
->> >>> +    /// let somedata: [u8; 4] =3D [0xf; 4];
->> >>> +    /// let buf: &[u8] =3D &somedata;
->> >>> +    /// alloc.write(buf, 0)?;
->> >>> +    /// # Ok::<(), Error>(()) }
->> >>> +    /// ```
->> >>> +    pub fn write(&self, src: &[T], offset: usize) -> Result {
->> >>> +        let end =3D offset.checked_add(src.len()).ok_or(EOVERFLOW)?;
->> >>> +        if end >=3D self.count {
->> >>> +            return Err(EINVAL);
->> >>> +        }
->> >>> +        // SAFETY:
->> >>> +        // - The pointer is valid due to type invariant on `Coheren=
-tAllocation`
->> >>> +        // and we've just checked that the range and index is withi=
-n bounds.
->> >>> +        // - `offset` can't overflow since it is smaller than `self=
-count` and we've checked
->> >>> +        // that `self.count` won't overflow early in the constructo=
-r.
->> >>> +        unsafe {
->> >>> +            core::ptr::copy_nonoverlapping(src.as_ptr(), self.cpu_a=
-ddr.add(offset), src.len())
->> >>
->> >> Why are there no concurrent write or read operations on `cpu_addr`?
->> >
->> > Sorry, can you rephrase this question?
->>
->> This write is suffering the same complications as discussed here [1].
->> There are multiple issues with this implementation.
->>
->> 1) `write` takes a shared reference and thus may be called concurrently.
->> There is no synchronization, so `copy_nonoverlapping` could be called
->> concurrently on the same address. The safety requirements for
->> `copy_nonoverlapping` state that the destination must be valid for
->> write. Alice claims in [1] that any memory area that experience data
->> races are not valid for writes. So the safety requirement of
->> `copy_nonoverlapping` is violated and this call is potential UB.
->>
->> 2) The destination of this write is DMA memory. It could be concurrently
->> modified by hardware, leading to the same issues as 1). Thus the
->> function cannot be safe if we cannot guarantee hardware will not write
->> to the region while this function is executing.
->>
->> Now, I don't think that these _should_ be issues, but according to our
->> Rust language experts they _are_.
->>
->> I really think that copying data through a raw pointer to or from a
->> place that experiences data races, should _not_ be UB if the data is not
->> interpreted in any way, other than moving it.
->>
->>
->> Best regards,
->> Andreas Hindborg
->
-> We need to make progress on this series, and it's starting to get late
-> in the cycle. I suggest we:
+> Values for SC_STATUS_BLOCKED_REASON_ are documented at https://arm.pages.collabora.com/mali-docs/g610-odin-csf/register/CS_KERNEL_OUTPUT_BLOCK.htm#rp_CS_KERNEL_OUTPUT_BLOCK/CS_STATUS_BLOCKED_REASON
+> 
+> This change updates the defines to the correct values.
+> 
+> Signed-off-by: Ashley Smith <ashley.smith@collabora.com>
 
-There is always another cycle.
+Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
 
->
-> 1. Delete as_slice, as_slice_mut, write, and skip_drop.
-> 2. Change field_read/field_write to use a volatile read/write.
-
-Volatile reads/writes that race are OK?
-
->
-> This will let us make progress now and sidestep this discussion. The
-> deleted methods can happen in a follow-up.
-
-`item_from_index`, the `dma_read` and `dma_write` macros as well, I would t=
-hink?
-
->
-> Similarly for the dma mask methods, let's either drop them to a
-> follow-up patch or just put them anywhere and move them later.
-
-Sure.
-
-
-Best regards,
-Andreas Hindborg
-
+> ---
+>  drivers/gpu/drm/panthor/panthor_fw.h | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/panthor/panthor_fw.h b/drivers/gpu/drm/panthor/panthor_fw.h
+> index 22448abde992..4d3c8b585dcb 100644
+> --- a/drivers/gpu/drm/panthor/panthor_fw.h
+> +++ b/drivers/gpu/drm/panthor/panthor_fw.h
+> @@ -102,9 +102,9 @@ struct panthor_fw_cs_output_iface {
+>  #define CS_STATUS_BLOCKED_REASON_SB_WAIT	1
+>  #define CS_STATUS_BLOCKED_REASON_PROGRESS_WAIT	2
+>  #define CS_STATUS_BLOCKED_REASON_SYNC_WAIT	3
+> -#define CS_STATUS_BLOCKED_REASON_DEFERRED	5
+> -#define CS_STATUS_BLOCKED_REASON_RES		6
+> -#define CS_STATUS_BLOCKED_REASON_FLUSH		7
+> +#define CS_STATUS_BLOCKED_REASON_DEFERRED	4
+> +#define CS_STATUS_BLOCKED_REASON_RES		5
+> +#define CS_STATUS_BLOCKED_REASON_FLUSH		6
+>  #define CS_STATUS_BLOCKED_REASON_MASK		GENMASK(3, 0)
+>  	u32 status_blocked_reason;
+>  	u32 status_wait_sync_value_hi;
+> 
+> base-commit: 16e57a72780931c3c70dbc928aeee4a0518075de
 
