@@ -1,79 +1,76 @@
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBD1C23A988
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 22:43:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C8ADEC4;
+	Mon,  3 Mar 2025 22:45:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741041818; cv=none; b=CJyd/2adLMYVpPthPDt24BQ5BgUlcRmXMXGCxfIKdBi0up6D0cUQWNkqpgTbTNR4NFVaXHZVugtbkbJVZQrSeghuTXGKmQsmsomU964hFd9Zk/+QOe27YXfKgtNDoBKG6aNPA7qpcq1C+QVdBES5od1xahUlxsZfZ3jxPUc7Wrk=
+	t=1741041951; cv=none; b=pvKYpS1Gv2zC5E2IalCB2ZlEdrkRBNOvop7166k0R41+f0oMHWAA72nQ9pLS2V84oaoRtoMzacJ8rhmM+6yiiv2HS3oRFXtEP+AeT2hTWe57orC+DmtPCKo3SvC9qn4i/O8Ys0yLuvCkKY3EvRf5qekcHbiVAtROxifVZ/QPh4Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741041818; c=relaxed/simple;
-	bh=iaOb7SOGoDTKBEdFcdchCA5rfNRAvnKA7sIZ9ATcDwg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=HxUEtILO8EEc3pdC80qSbT/uuecyd6GgM85Hr5sWmKWThhvi4ZTx1gOZZ1EeGv8ee/wOqBGA6GeGqRKqnfKuNlNrhS+wx3H+x+QHvgZZPjwAIkCe/Zb1eQ8CE6C9nN/welXK4bhwE1w7VUZKiMbC5eIFm4eiEm2k6ZeF4U4+480=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=aDnmYlnm; arc=none smtp.client-ip=185.11.138.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
+	s=arc-20240116; t=1741041951; c=relaxed/simple;
+	bh=HRCtB39QEYB0RXLZEtY3FMWatuIIo1+rC3OO0u6DFUA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=em4ExfZBA46B37E3GpvlVGTJONbk82Kx7IkHtGMggZCbNXpRetzysuKK/Sit2HECA5VJcObivI5T+zjUIadyDhceNw1UOAm4Qhcpd3M93m3mPyr1Q0dEO5SF0H4zkBnqx1oMQWqrwZ1+0BIr2jX60b5aTHkesxcm3DQum/zCcZk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p36ZhGwX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="aDnmYlnm"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
-	s=gloria202408; h=Content-Transfer-Encoding:Content-Type:MIME-Version:
-	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=AVKxuo1W1BxE3FJKf7YbMkOhKpBvK2Ol0T0KlNBKv7o=; b=aDnmYlnmuYrhIaA0ONYcTOUxRY
-	KZ7m8hrWZnAkSc/n4H5qBIjO2jzAITieERvYwcbgNsC4HJv6piGgoWLvrHd4WZ1lc25QWfFwcgXcC
-	KgrI0KQ5BSzpUXxPF1Mvlrms/K0lNbBNLgJmHB7ne0/52hnujUALKrWqF4TSTalaRCCr4upJ5Q9u8
-	Bt2a0hojXOOlm7Bzd24GXk0CKbp1jUmMa1OE/cEcYW6WGyjQdUHAu8mbMQ18aj6mbr8PlTPehwi4q
-	Mc1e//pi1ncYZlLsURNMjw2K0ed9G4Lh+9S/BGXKzEe5o7yfDHhIF55gN/jz3MRXEeJFalp06uhh2
-	pIE9G4RQ==;
-Received: from i53875a38.versanet.de ([83.135.90.56] helo=phil.fritz.box)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1tpEVK-0005z3-Hk; Mon, 03 Mar 2025 23:43:18 +0100
-From: Heiko Stuebner <heiko@sntech.de>
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: hjc@rock-chips.com,
-	andy.yan@rock-chips.com,
-	maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org,
-	tzimmermann@suse.de,
-	dri-devel@lists.freedesktop.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	kernel test robot <lkp@intel.com>
-Subject: Re: [PATCH] drm/rockchip: vop2: add missing bitfield.h include
-Date: Mon,  3 Mar 2025 23:43:16 +0100
-Message-ID: <174104179297.19992.1129192365556530821.b4-ty@sntech.de>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250303182256.1727178-1-heiko@sntech.de>
-References: <20250303182256.1727178-1-heiko@sntech.de>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p36ZhGwX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36281C4CED6;
+	Mon,  3 Mar 2025 22:45:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741041950;
+	bh=HRCtB39QEYB0RXLZEtY3FMWatuIIo1+rC3OO0u6DFUA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=p36ZhGwXpGfPRHuyNwPo9GIViC6Bx7LN8jM2bsfFRcOZ6Yitmwscfb/g+rKmqm4hv
+	 qXglpDxJ4DiK/K+hbdR6YwIcrEYPq+Nz8O+ErHfwwtxJa+gB2CUSm+2pc8k1QfmcFm
+	 vWawBQyyA4QbLgvk2gb6jad0G+J5NiKgu+BBzTnYr8CzRxGRmcYVU/YCN6ncdmaxpp
+	 7glnmy5BgtoBbulJ5FOvoU4NGCGmKgUin1JlJPhbfbxMA7hneUpxNFMQ69tiaC0GWJ
+	 qfKb5eBjKczAQSaNo88ow0SKSU17FFfbHJ8EfOI3vG8YYEC2wzDhQsm+eekPtfgnjr
+	 lk1TpUoKvGLvQ==
+Date: Mon, 3 Mar 2025 14:45:48 -0800
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: "H. Peter Anvin" <hpa@zytor.com>
+Cc: linux-kernel@vger.kernel.org,
+	tip-bot2 for Josh Poimboeuf <tip-bot2@linutronix.de>,
+	linux-tip-commits@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
+	"Peter Zijlstra (Intel)" <peterz@infradead.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Brian Gerst <brgerst@gmail.com>, x86@kernel.org
+Subject: Re: [tip: x86/asm] x86/asm: Make ASM_CALL_CONSTRAINT conditional on
+ frame pointers
+Message-ID: <20250303224548.pghzo2j4hdww7nxt@jpoimboe>
+References: <174099976188.10177.7153571701278544000.tip-bot2@tip-bot2>
+ <C77024F6-3087-40A3-8AFB-A642EECAFF4E@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <C77024F6-3087-40A3-8AFB-A642EECAFF4E@zytor.com>
 
-
-On Mon, 03 Mar 2025 19:22:56 +0100, Heiko Stuebner wrote:
-> Commit 328e6885996c ("drm/rockchip: vop2: Add platform specific callback")
-> moved per soc configuration code to the other per-soc data into
-> rockchip_vop2_reg.c, but forgot to also include bitfield.h for the used
-> FIELD_PREP macro. Add this missing include.
+On Mon, Mar 03, 2025 at 02:31:50PM -0800, H. Peter Anvin wrote:
+> >+#ifdef CONFIG_UNWINDER_FRAME_POINTER
+> > #define ASM_CALL_CONSTRAINT "r" (__builtin_frame_address(0))
+> >+#else
+> >+#define ASM_CALL_CONSTRAINT
+> >+#endif
+> > 
+> > #endif /* __ASSEMBLY__ */
+> > 
 > 
-> 
+> Wait, why was this changed? I actually tested this form at least once
+> and found that it didn't work under all circumstances...
 
-Applied, thanks!
+Do you have any more details about where this didn't work?  I tested
+with several configs and it seems to work fine.  Objtool will complain
+if it doesn't work.
 
-[1/1] drm/rockchip: vop2: add missing bitfield.h include
-      commit: 95a5c9d197bb22a506913acb330a926d4e51aa95
+See here for the justification (the previous version was producing crap
+code in Clang):
 
-Best regards,
+  https://lore.kernel.org/dbea2ae2fb39bece21013f939ddeb15507baa7d3.1740964309.git.jpoimboe@kernel.org
+
 -- 
-Heiko Stuebner <heiko@sntech.de>
+Josh
