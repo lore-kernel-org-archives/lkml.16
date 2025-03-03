@@ -1,195 +1,67 @@
-Received: from smtp-fw-52002.amazon.com (smtp-fw-52002.amazon.com [52.119.213.150])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BD09211297;
-	Mon,  3 Mar 2025 13:09:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.119.213.150
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 699F121128D;
+	Mon,  3 Mar 2025 13:09:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741007375; cv=none; b=gkdp1CL1CjpFXt9foKVHb/z+cTaTwuErfPsVUiMhgb3goU+AAJx+zm+IrZj2HVE3xHuWnYeKsBFLWI2wlyj+KCz1nSDWYgMjLxAdSQ2pm6VCvWY8jC5bx9zx67sy7c8ahR2iVLa/9/xj0SF9/RHwj3v/MNk1XYwSDum7gVXoGwI=
+	t=1741007390; cv=none; b=FdJQf3C0V6z+/iJwkmai9q0EUpkpGnF1m2ZxTM1etBOl94WxqZl777yR/R9sL5atzBdVh3RVqXu90sVcdjcxdVN6ecQDpRS16lrD0gfWxfhs9yViKbruy4/qD7xjW0m7VSrvugKXVdP0+lWjyzXALv0FFGqta0ijY3O0j3N1Kvc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741007375; c=relaxed/simple;
-	bh=Q1BGVztK8kR5/ZW+9TFXncK+fkh6xuxcZierK7FxuQk=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=EiLnEerfY3exM4UVjv/pO+IEuNV+QWZdi5E5sVm07Y41git2Buu1DDLphzXo2eib6uCix524xN6YVZzj5BepzC35VnSF6p2d4xJU6gzg3eBsYS8YWbB++6SHOhdYtSiFQmr5EPCbpd1DH0ralKIEz44/SqFQo7bPvaUjPnxXTco=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.uk; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=DZizKf0I; arc=none smtp.client-ip=52.119.213.150
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.uk
+	s=arc-20240116; t=1741007390; c=relaxed/simple;
+	bh=o/Y21k3K8BAtGuRlqRGQ5WfAu2QMrDK4uLxkfdiPHqw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Mz7JZMWxnvOViyg8wVY04DyIRkeqKZ+oEu4ZRiyHuhsz5XHQAl4r+EPFNofGblR1kzaeuO1bDyHQYI3x3/kvs/Us9qzqx9ZKaSwV8FxRKnWiUukBuq2XVG0R+M+BLWgV2o04O848YMZn6SrWCeruRRF5vxKBVjOHVAwVhkNbQDQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=swyEXDmw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="DZizKf0I"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1741007374; x=1772543374;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=XKenNyKlzRx3KFaAkl7fAqp0QyjUeRzS8JHs+ogdzvo=;
-  b=DZizKf0IR8cY2FWnmqzBNyo4Oz8uVIntq+ZuXoO6qcJJ9WRXU8KHIAwO
-   lPXMM6U9lV0jPxyPP0xQpINO03QrMWWJbGW+irYo4LG7cb+cj7Zs8cYyl
-   MzdKiwOrCEPQDK0MBkcddzEZvTwx5ZIgBSm8M7pjIBgC8RAIIoe7VR+Dw
-   U=;
-X-IronPort-AV: E=Sophos;i="6.13,329,1732579200"; 
-   d="scan'208";a="701674208"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.6])
-  by smtp-border-fw-52002.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Mar 2025 13:09:11 +0000
-Received: from EX19MTAUWA002.ant.amazon.com [10.0.38.20:55265]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.35.48:2525] with esmtp (Farcaster)
- id f7436fc3-0ba0-4ad2-aabb-25e5142b6a4d; Mon, 3 Mar 2025 13:09:09 +0000 (UTC)
-X-Farcaster-Flow-ID: f7436fc3-0ba0-4ad2-aabb-25e5142b6a4d
-Received: from EX19D020UWC004.ant.amazon.com (10.13.138.149) by
- EX19MTAUWA002.ant.amazon.com (10.250.64.202) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Mon, 3 Mar 2025 13:09:05 +0000
-Received: from EX19MTAUWC001.ant.amazon.com (10.250.64.145) by
- EX19D020UWC004.ant.amazon.com (10.13.138.149) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Mon, 3 Mar 2025 13:09:05 +0000
-Received: from email-imr-corp-prod-iad-1box-1a-6851662a.us-east-1.amazon.com
- (10.25.36.210) by mail-relay.amazon.com (10.250.64.145) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id
- 15.2.1544.14 via Frontend Transport; Mon, 3 Mar 2025 13:09:05 +0000
-Received: from dev-dsk-kalyazin-1a-a12e27e2.eu-west-1.amazon.com (dev-dsk-kalyazin-1a-a12e27e2.eu-west-1.amazon.com [172.19.103.116])
-	by email-imr-corp-prod-iad-1box-1a-6851662a.us-east-1.amazon.com (Postfix) with ESMTPS id 2E5D640513;
-	Mon,  3 Mar 2025 13:09:03 +0000 (UTC)
-From: Nikita Kalyazin <kalyazin@amazon.com>
-To: <pbonzini@redhat.com>, <shuah@kernel.org>
-CC: <kvm@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <michael.day@amd.com>, <david@redhat.com>,
-	<quic_eberman@quicinc.com>, <jthoughton@google.com>, <brijesh.singh@amd.com>,
-	<michael.roth@amd.com>, <graf@amazon.de>, <jgowans@amazon.com>,
-	<roypat@amazon.co.uk>, <derekmn@amazon.com>, <nsaenz@amazon.es>,
-	<xmarcalx@amazon.com>, <kalyazin@amazon.com>
-Subject: [v3 PATCH 2/2] KVM: selftests: update guest_memfd write tests
-Date: Mon, 3 Mar 2025 13:08:38 +0000
-Message-ID: <20250303130838.28812-3-kalyazin@amazon.com>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <20250303130838.28812-1-kalyazin@amazon.com>
-References: <20250303130838.28812-1-kalyazin@amazon.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="swyEXDmw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4727C4CED6;
+	Mon,  3 Mar 2025 13:09:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741007389;
+	bh=o/Y21k3K8BAtGuRlqRGQ5WfAu2QMrDK4uLxkfdiPHqw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=swyEXDmw0R0g7ZRw44ogOiq1HHP3y2FeZWG29C850ReRwgC8lzNdttVBTaHFVe65o
+	 zVYLN/A4vGP8u73Ji/YrtcfHWGBO9pVsAXxaZDTIvI6w4WA5owD39ZYG+WPsqvtxtt
+	 6rfvzRPiOvRX9p4m3FK9k0hAmJI4VifjelwS3VIi+Qqzx89O2pq8cSMhGEWt4zeX5g
+	 /J7PQGlObpo+3VnrZr33tGBzuiHEkzryDdXAGsvjicCP+5GLyi2yw93+6o12fFMSVU
+	 ytDYWysry3KgQaYBbbyO5mF0BnaqsPZnYFKudU33iNwWvClH0C+6o57GuX/9dcgFSt
+	 U2WifXCRtyomg==
+Date: Mon, 3 Mar 2025 13:09:45 +0000
+From: Simon Horman <horms@kernel.org>
+To: Jaakko Karrenpalo <jkarrenpalo@gmail.com>
+Cc: "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Lukasz Majewski <lukma@denx.de>,
+	MD Danish Anwar <danishanwar@ti.com>, linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	Jaakko Karrenpalo <jaakko.karrenpalo@fi.abb.com>
+Subject: Re: [PATCH net-next v3 2/2] net: hsr: Add KUnit test for PRP
+Message-ID: <20250303130945.GS1615191@kernel.org>
+References: <20250227050923.10241-1-jkarrenpalo@gmail.com>
+ <20250227050923.10241-2-jkarrenpalo@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250227050923.10241-2-jkarrenpalo@gmail.com>
 
-This is to reflect that the write syscall is now implemented for
-guest_memfd.
+On Thu, Feb 27, 2025 at 07:09:23AM +0200, Jaakko Karrenpalo wrote:
+> Add unit tests for the PRP duplicate detection
+> 
+> Signed-off-by: Jaakko Karrenpalo <jkarrenpalo@gmail.com>
+> ---
+> Changes in v2:
+> - Changed KUnit tests to compile as built-in only
+> Changes in v3:
+> - Changed the KUnit tests to compile as a module
 
-Signed-off-by: Nikita Kalyazin <kalyazin@amazon.com>
----
- .../testing/selftests/kvm/guest_memfd_test.c  | 85 +++++++++++++++++--
- 1 file changed, 79 insertions(+), 6 deletions(-)
+Thanks, I see that this addresses Paolo's review of v2
+and overall looks good to me.
 
-diff --git a/tools/testing/selftests/kvm/guest_memfd_test.c b/tools/testing/selftests/kvm/guest_memfd_test.c
-index 38c501e49e0e..b07221aa54c9 100644
---- a/tools/testing/selftests/kvm/guest_memfd_test.c
-+++ b/tools/testing/selftests/kvm/guest_memfd_test.c
-@@ -20,18 +20,90 @@
- #include "kvm_util.h"
- #include "test_util.h"
- 
--static void test_file_read_write(int fd)
-+static void test_file_read(int fd)
- {
- 	char buf[64];
- 
- 	TEST_ASSERT(read(fd, buf, sizeof(buf)) < 0,
- 		    "read on a guest_mem fd should fail");
--	TEST_ASSERT(write(fd, buf, sizeof(buf)) < 0,
--		    "write on a guest_mem fd should fail");
- 	TEST_ASSERT(pread(fd, buf, sizeof(buf), 0) < 0,
- 		    "pread on a guest_mem fd should fail");
--	TEST_ASSERT(pwrite(fd, buf, sizeof(buf), 0) < 0,
--		    "pwrite on a guest_mem fd should fail");
-+}
-+
-+static void test_file_write(int fd, size_t total_size)
-+{
-+	size_t page_size = getpagesize();
-+	void *buf = NULL;
-+	int ret;
-+
-+	ret = posix_memalign(&buf, page_size, total_size);
-+	TEST_ASSERT_EQ(ret, 0);
-+
-+	/* Check arguments correctness checks work as expected */
-+
-+	ret = pwrite(fd, buf, page_size - 1, 0);
-+	TEST_ASSERT(ret == -1, "write unaligned count on a guest_mem fd should fail");
-+	TEST_ASSERT_EQ(errno, EINVAL);
-+
-+	ret = pwrite(fd, buf, page_size, 1);
-+	TEST_ASSERT(ret == -1, "write unaligned offset on a guest_mem fd should fail");
-+	TEST_ASSERT_EQ(errno, EINVAL);
-+
-+	ret = pwrite(fd, buf, page_size, total_size);
-+	TEST_ASSERT(ret == -1, "writing past the file size on a guest_mem fd should fail");
-+	TEST_ASSERT_EQ(errno, EINVAL);
-+
-+	ret = pwrite(fd, NULL, page_size, 0);
-+	TEST_ASSERT(ret == -1, "supplying a NULL buffer when writing a guest_mem fd should fail");
-+	TEST_ASSERT_EQ(errno, EINVAL);
-+
-+	/* Check double population is not allowed */
-+
-+	ret = pwrite(fd, buf, page_size, 0);
-+	TEST_ASSERT(ret == page_size, "page-aligned write on a guest_mem fd should succeed");
-+
-+	ret = pwrite(fd, buf, page_size, 0);
-+	TEST_ASSERT(ret == -1, "write on already populated guest_mem fd should fail");
-+	TEST_ASSERT_EQ(errno, ENOSPC);
-+
-+	ret = fallocate(fd, FALLOC_FL_KEEP_SIZE | FALLOC_FL_PUNCH_HOLE, 0, page_size);
-+	TEST_ASSERT(!ret, "fallocate(PUNCH_HOLE) should succeed");
-+
-+	/* Check population is allowed again after punching a hole */
-+
-+	ret = pwrite(fd, buf, page_size, 0);
-+	TEST_ASSERT(ret == page_size, "page-aligned write on a punched guest_mem fd should succeed");
-+
-+	ret = fallocate(fd, FALLOC_FL_KEEP_SIZE | FALLOC_FL_PUNCH_HOLE, 0, page_size);
-+	TEST_ASSERT(!ret, "fallocate(PUNCH_HOLE) should succeed");
-+
-+	/* Check population of already allocated memory is allowed */
-+
-+	ret = fallocate(fd, FALLOC_FL_KEEP_SIZE, 0, page_size);
-+	TEST_ASSERT(!ret, "fallocate with aligned offset and size should succeed");
-+
-+	ret = pwrite(fd, buf, page_size, 0);
-+	TEST_ASSERT(ret == page_size, "write on a preallocated guest_mem fd should succeed");
-+
-+	ret = fallocate(fd, FALLOC_FL_KEEP_SIZE | FALLOC_FL_PUNCH_HOLE, 0, page_size);
-+	TEST_ASSERT(!ret, "fallocate(PUNCH_HOLE) should succeed");
-+
-+	/* Check population works until an already populated page is encountered */
-+
-+	ret = pwrite(fd, buf, total_size, 0);
-+	TEST_ASSERT(ret == total_size, "page-aligned write on a guest_mem fd should succeed");
-+
-+	ret = fallocate(fd, FALLOC_FL_KEEP_SIZE | FALLOC_FL_PUNCH_HOLE, 0, page_size);
-+	TEST_ASSERT(!ret, "fallocate(PUNCH_HOLE) should succeed");
-+
-+	ret = pwrite(fd, buf, total_size, 0);
-+	TEST_ASSERT(ret == page_size, "write on a guest_mem fd should not overwrite data");
-+
-+	ret = fallocate(fd, FALLOC_FL_KEEP_SIZE | FALLOC_FL_PUNCH_HOLE, 0, total_size);
-+	TEST_ASSERT(!ret, "fallocate(PUNCH_HOLE) should succeed");
-+
-+
-+	free(buf);
- }
- 
- static void test_mmap_allowed(int fd, size_t total_size)
-@@ -233,7 +305,8 @@ void test_vm_type(unsigned long type, bool is_shared)
- 
- 	fd = vm_create_guest_memfd(vm, total_size, 0);
- 
--	test_file_read_write(fd);
-+	test_file_read(fd);
-+	test_file_write(fd, total_size);
- 
- 	if (is_shared)
- 		test_mmap_allowed(fd, total_size);
--- 
-2.47.1
+Reviewed-by: Simon Horman <horms@kernel.org>
 
