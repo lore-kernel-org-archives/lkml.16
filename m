@@ -1,161 +1,113 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D467D33F6;
-	Mon,  3 Mar 2025 19:12:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6DBE214A66;
+	Mon,  3 Mar 2025 19:12:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741029125; cv=none; b=LNjqQ3yRczVQSPL5Tt6Y69jfeCJZijeR9VILJErPkeSmgJKg+aOixR5H7X7wjq/oELTNLbCfoxib9wNrvYqVYKRQggq+VDGxJ7tr78pOalIxGWG3o15Xo4viEDBGJ/qEIhHoXKHVjtodZyhIc0EYojTifw+HF11OTwSeBLiXQb0=
+	t=1741029179; cv=none; b=DtDOV49rDp6fSLkqAhHhvRIrU+bRnFW7GhKJK+k3aDycisCiy3EfL9xJ4FThJyT5SDE4Wyd4U+ExKfpM1mVCe+5gRTp5muhDZSIHo4jTwb3Hf46I6dnNxE/fNoVYWUbTMN/OPS7KHyhaj7v3z0uv9u5Y4xybj5YQQY+40ZkY2kg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741029125; c=relaxed/simple;
-	bh=HRBDb/01Aoz/Xbn/HWrMNCNs4hJQ+oaS+r2C1Bxu8ag=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gzACzu4bttGroADCgUlrS+B/F1xBxNvkqzR9jZ6muhTTnXmfFs95Aiy/J7l1xPjqlnZZRXWJlEvZreGEnPH1KnJZNmjhGNwAOWD/FAx2mE2Q6ZR46vrA1ue/cS5GQPZrh/qU4ATGA8kL901JSYZ5GwDfr2Z8T8HOoz0sLwE6DiI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=BCFVJpif; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1741029179; c=relaxed/simple;
+	bh=+QOxQ5cXSBwQiG2dUzR9CDnZO6GVtut2b9kCIBlZTm0=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=Zy2+G96ISUvuUyR6MKGTho4k/VvpZ3W4/H1+zi0/l8iAXg3l1euKGiROO+HttXkbdXJvH7Bxug7EGWR0YCnC+6/sX0KVU0x2UcXWag1bgcXj2sLQmRIAGgCt/fPB1TfgWOYm1ba8CYCs+aK80yAZb44OzqK5PdjIan7l89e5+KY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=jckpg3Ja; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=nWuEwJ3T; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="BCFVJpif"
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 523F53EF002272;
-	Mon, 3 Mar 2025 19:12:01 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=pp1; bh=KkerPnmZLypqnbkqHWCG8ODSVofP4Dm6qZuF15VXw
-	wM=; b=BCFVJpif0WlvB3nW+oj9FIMUJYaC9bRP1TSJsrlGw8VqnZ1P2FAQEeEgs
-	+Nu+NRXs4pheNsTyQ9fVIr37FRtJvpHejtncuS5XDNY91XHSAZ2tcy7m9Bp9AupJ
-	X8DTd/RQGklxA3KaG1NPaE/PKjiybsmEkXHU1CbouP8uW+W+wU9RcQaimvJHTETJ
-	nLVMo5L9jtuwv6e+Bre7C+Goi8aXiLadJjSECbsLDTkPTa2Kq2I+btYUlDY60BKS
-	awWWaw6xFFsIZJ3qk3gV4aD9RvgmDii5Rupp1bbtUdBDpAr/S4wn8Qd2fiFkHEuX
-	OXb46BSJt9EYRqaCVZsQ/bOiLw06w==
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 454xr4x6eh-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 03 Mar 2025 19:12:01 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 523G8lsD020845;
-	Mon, 3 Mar 2025 19:12:00 GMT
-Received: from smtprelay05.dal12v.mail.ibm.com ([172.16.1.7])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 454djn9k6g-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 03 Mar 2025 19:12:00 +0000
-Received: from smtpav05.dal12v.mail.ibm.com (smtpav05.dal12v.mail.ibm.com [10.241.53.104])
-	by smtprelay05.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 523JBxi931326774
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 3 Mar 2025 19:11:59 GMT
-Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 95B3758052;
-	Mon,  3 Mar 2025 19:11:59 +0000 (GMT)
-Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id C9B195805D;
-	Mon,  3 Mar 2025 19:11:58 +0000 (GMT)
-Received: from MacBookPro.ibm.com (unknown [9.61.240.87])
-	by smtpav05.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Mon,  3 Mar 2025 19:11:58 +0000 (GMT)
-From: Rorie Reyes <rreyes@linux.ibm.com>
-To: linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Cc: hca@linux.ibm.com, borntraeger@de.ibm.com, agordeev@linux.ibm.com,
-        gor@linux.ibm.com, pasic@linux.ibm.com, jjherne@linux.ibm.com,
-        alex.williamson@redhat.com, akrowiak@linux.ibm.com,
-        rreyes@linux.ibm.com
-Subject: [RFC PATCH v1] fixup! s390/vfio-ap: Notify userspace that guest's AP config changed when mdev removed
-Date: Mon,  3 Mar 2025 14:11:58 -0500
-Message-ID: <20250303191158.49317-1-rreyes@linux.ibm.com>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="jckpg3Ja";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="nWuEwJ3T"
+Date: Mon, 03 Mar 2025 19:12:55 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1741029176;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4iWIrCtaOS5gbNdQdtFOaRjlGkeWa+U/MDid/QVTyx4=;
+	b=jckpg3Ja0iG5su0BymMNRyCCXZYppcGfWiGKmarjoPCBEv44vxC6iw9xwadaQb1Jid0sgL
+	XXkkO2s1fWQdCiurSzU1n8GgAmSYVjfu9Ui3KCo7n8n0uF66rG4akOguxjwNejndja4Y/b
+	ZpbS5fmJOlpmjc7N/mG+CCezKgf+WjqCINcPPfG0NcNteoijGvR5viWjNK969VbbdJIJEx
+	tfgxmawcEeeVZZwUSxM1mQubwJ6EG2VhE8eZoIvEasghorSTfuOX++LaBCaFUDQy4DKaPN
+	K2aWhY6dTHetUk3OUoaf7ZBQVi6KwLENTVdejJ6qZB1BPbqg7/IfWACw15AxMw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1741029176;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4iWIrCtaOS5gbNdQdtFOaRjlGkeWa+U/MDid/QVTyx4=;
+	b=nWuEwJ3TSyRJjSPXLEFJsXrDJl8Qf37zTbZzme6JkqpnhuCsdiucPusGmS6n2n5DX3EN/i
+	B+I0UZsxEvym+QCw==
+From:
+ tip-bot2 for Thomas =?utf-8?q?Wei=C3=9Fschuh?= <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: timers/vdso] selftests: vDSO: vdso_test_gettimeofday: Make
+ compatible with nolibc
+Cc: thomas.weissschuh@linutronix.de, Thomas Gleixner <tglx@linutronix.de>,
+ Vincenzo Frascino <vincenzo.frascino@arm.com>,
+ Shuah Khan <skhan@linuxfoundation.org>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250226-parse_vdso-nolibc-v2-15-28e14e031ed8@linutronix.de>
+References: <20250226-parse_vdso-nolibc-v2-15-28e14e031ed8@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: mtees-123PRKTcihCHVDAVpovJQdXesc
-X-Proofpoint-ORIG-GUID: mtees-123PRKTcihCHVDAVpovJQdXesc
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-03_09,2025-03-03_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
- priorityscore=1501 lowpriorityscore=0 clxscore=1015 bulkscore=0
- adultscore=0 suspectscore=0 phishscore=0 spamscore=0 impostorscore=0
- malwarescore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502100000 definitions=main-2503030144
+Message-ID: <174102917580.14745.6072116244714414189.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-This patch is based on the s390/features branch
+The following commit has been merged into the timers/vdso branch of tip:
 
-The guest's AP configuration is cleared when the mdev is removed, so
-userspace must be notified that the AP configuration has changed. To this
-end, this patch:
+Commit-ID:     4f65df6a58b3de5132f978305c5f807ec3803943
+Gitweb:        https://git.kernel.org/tip/4f65df6a58b3de5132f978305c5f807ec38=
+03943
+Author:        Thomas Wei=C3=9Fschuh <thomas.weissschuh@linutronix.de>
+AuthorDate:    Wed, 26 Feb 2025 12:44:54 +01:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Mon, 03 Mar 2025 20:00:13 +01:00
 
-* Removes call to 'signal_guest_ap_cfg_changed()' function from the
-  'vfio_ap_mdev_unset_kvm()' function because it has no affect given it is
-  called after the mdev fd is closed.
+selftests: vDSO: vdso_test_gettimeofday: Make compatible with nolibc
 
-* Adds call to 'signal_guest_ap_cfg_changed()' function to the
-  'vfio_ap_mdev_request()' function to notify userspace that the guest's
-  AP configuration has changed before signaling the request to remove the
-  mdev.
+nolibc does not provide sys/time.h and sys/auxv.h,
+instead their definitions are available unconditionally.
 
-Minor change - Fixed an indentation issue in function
-'signal_guest_ap_cfg_changed()'
+Guard the includes so they are not attempted on nolibc.
 
-Fixes: 2ba4410dd477 ("s390/vfio-ap: Signal eventfd when guest AP configuration is changed")
-Signed-off-by: Rorie Reyes <rreyes@linux.ibm.com>
+Signed-off-by: Thomas Wei=C3=9Fschuh <thomas.weissschuh@linutronix.de>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+Acked-by: Shuah Khan <skhan@linuxfoundation.org>
+Link: https://lore.kernel.org/all/20250226-parse_vdso-nolibc-v2-15-28e14e031e=
+d8@linutronix.de
 ---
- drivers/s390/crypto/vfio_ap_ops.c | 19 ++++++++++++++++---
- 1 file changed, 16 insertions(+), 3 deletions(-)
+ tools/testing/selftests/vDSO/vdso_test_gettimeofday.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
-index 571f5dcb49c5..c1afac5ac555 100644
---- a/drivers/s390/crypto/vfio_ap_ops.c
-+++ b/drivers/s390/crypto/vfio_ap_ops.c
-@@ -652,8 +652,8 @@ static void vfio_ap_matrix_init(struct ap_config_info *info,
- 
- static void signal_guest_ap_cfg_changed(struct ap_matrix_mdev *matrix_mdev)
- {
--		if (matrix_mdev->cfg_chg_trigger)
--			eventfd_signal(matrix_mdev->cfg_chg_trigger);
-+	if (matrix_mdev->cfg_chg_trigger)
-+		eventfd_signal(matrix_mdev->cfg_chg_trigger);
- }
- 
- static void vfio_ap_mdev_update_guest_apcb(struct ap_matrix_mdev *matrix_mdev)
-@@ -1870,7 +1870,6 @@ static void vfio_ap_mdev_unset_kvm(struct ap_matrix_mdev *matrix_mdev)
- 		get_update_locks_for_kvm(kvm);
- 
- 		kvm_arch_crypto_clear_masks(kvm);
--		signal_guest_ap_cfg_changed(matrix_mdev);
- 		vfio_ap_mdev_reset_queues(matrix_mdev);
- 		kvm_put_kvm(kvm);
- 		matrix_mdev->kvm = NULL;
-@@ -2057,6 +2056,14 @@ static void vfio_ap_mdev_request(struct vfio_device *vdev, unsigned int count)
- 
- 	matrix_mdev = container_of(vdev, struct ap_matrix_mdev, vdev);
- 
-+	if (matrix_mdev->kvm) {
-+		get_update_locks_for_kvm(matrix_mdev->kvm);
-+		kvm_arch_crypto_clear_masks(matrix_mdev->kvm);
-+		signal_guest_ap_cfg_changed(matrix_mdev);
-+	} else {
-+		mutex_lock(&matrix_dev->mdevs_lock);
-+	}
-+
- 	if (matrix_mdev->req_trigger) {
- 		if (!(count % 10))
- 			dev_notice_ratelimited(dev,
-@@ -2068,6 +2075,12 @@ static void vfio_ap_mdev_request(struct vfio_device *vdev, unsigned int count)
- 		dev_notice(dev,
- 			   "No device request registered, blocked until released by user\n");
- 	}
-+
-+	if (matrix_mdev->kvm)
-+		release_update_locks_for_kvm(matrix_mdev->kvm);
-+	else
-+		mutex_unlock(&matrix_dev->mdevs_lock);
-+
- }
- 
- static int vfio_ap_mdev_get_device_info(unsigned long arg)
--- 
-2.48.1
-
+diff --git a/tools/testing/selftests/vDSO/vdso_test_gettimeofday.c b/tools/te=
+sting/selftests/vDSO/vdso_test_gettimeofday.c
+index 636a56c..9ce795b 100644
+--- a/tools/testing/selftests/vDSO/vdso_test_gettimeofday.c
++++ b/tools/testing/selftests/vDSO/vdso_test_gettimeofday.c
+@@ -11,8 +11,10 @@
+  */
+=20
+ #include <stdio.h>
++#ifndef NOLIBC
+ #include <sys/auxv.h>
+ #include <sys/time.h>
++#endif
+=20
+ #include "../kselftest.h"
+ #include "parse_vdso.h"
