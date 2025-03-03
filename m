@@ -1,114 +1,178 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 487F923AE60;
-	Mon,  3 Mar 2025 16:30:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1F1823BF88
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 16:30:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741019434; cv=none; b=QVCAgHrqMdejO0cL5r37i+Nxt5QA2uGLG/aYInkpPZh67roWZD5vIW8F0fUL35fpuTmLMuJ6Iw/FGBw/D/WwLNSA0G8UXYkIv7IWnS7ikTn4LTWVVm4iPljyVGVSlSclR8jpX0jQEA+8FxTtrKgX9RlTVxspjC1aus+7ZTu9WRw=
+	t=1741019435; cv=none; b=sESba6hK6d79Hj/2OS2fla8Y2edm8Dz98ONGxMud7N5AAdRGRCgn30VFHBGYaWj1h9ixyQ/oDAMawB+lO01rkatO9fgn2oAIksn/S+N5sufjx2gWV4qKGMONQITj9f8wEfWzRNFICTP5WKFlyjilUyhOVAZFWP5lcXOwsdxqWgU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741019434; c=relaxed/simple;
-	bh=wTFypdAzIqZeFYswuOLBZsENvscfswT3WAEBeEYt4+o=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=sOvHnbUbFbZi9CH0zfEpihnXTXyNUUUpVGh3lxKq3+1Fnrvv/qjNMcE/czIVR+jK7hPBtcVzSeeiWMBGVfiSLcdSgNZdx4nmgDRbUioprk/HBlJtlKtggG/9OJCTGqIGqmo7nmFn+1ji34wZQUbtjDcuZicjzca5dJTMe41BZfA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Pt30NuGa; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741019435; c=relaxed/simple;
+	bh=3SmHXztWFIDnuQM+XInecxapotD7TtFOOmhMRtX7whw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=A9aWg27dOk72/iT1yvZ3n4V5Mv3M6KMS6jCU1JJAyZZnLz9cQiWaE5GVncoh5E6xRLNkguy8YTg7Io4rLDg9seXwJ8gPXawVjACYAvkMjEdI6OVBDscsH9maQNbcIMUHyA2Q+1ARIwTFw1lqr+/oA90jdEW+BAEtOMKr42noHAg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UkEcHXnI; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Pt30NuGa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F6C0C4CEEA;
-	Mon,  3 Mar 2025 16:30:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741019433;
-	bh=wTFypdAzIqZeFYswuOLBZsENvscfswT3WAEBeEYt4+o=;
-	h=From:To:Cc:Subject:Date:From;
-	b=Pt30NuGaAar/9GspoWMpmv3lkvqiWxv9ZE2ky1dppAhhe+9lBin9atIeAeZPu2Frh
-	 zxuTf20LNevc2vccB73Fpk3N1efmwHgtf09gE75/78TaKKzlc9mhUX6mXmGhaJvtbu
-	 QNuJ61oMZkLgTrufMRw8vYsDSKgfily5yF+ArIDxSHxQmQAEsCJrQFUynlZfE7ZAK9
-	 Tgg8Fk4//aBx7Ya47IrpleXrzr1EAOjn0R0ow7F6c+KP5fwfOSJCdtxaEdIqYSO4yF
-	 ZsvhAiQEhWNDdw3LhoKyQBgpp/9msqIU3DM06mQSmliQVK46sjUjqasjf1EWIfET8r
-	 8ZSNH1rHmxb3w==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Andrew Davis <afd@ti.com>,
-	Nishanth Menon <nm@ti.com>,
-	Vinod Koul <vkoul@kernel.org>,
-	Sasha Levin <sashal@kernel.org>,
-	kishon@kernel.org,
-	krzysztof.kozlowski@linaro.org,
-	rogerq@kernel.org,
-	s-vadapalli@ti.com,
-	linux-phy@lists.infradead.org
-Subject: [PATCH AUTOSEL 6.12 01/17] phy: ti: gmii-sel: Do not use syscon helper to build regmap
-Date: Mon,  3 Mar 2025 11:30:13 -0500
-Message-Id: <20250303163031.3763651-1-sashal@kernel.org>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UkEcHXnI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1741019432;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8IqquS7ke+4+XOv5L24m6qSx7K0PzdfhIUdS/cnqyVA=;
+	b=UkEcHXnI3GLF8ReZDaoyS0YCTDlM4iKUqNgir6Zga/hCyQZHPEahy5rg/7BiDe+3GfwyhN
+	4TXK9mmgQh3sIWTg5Xf41pHviu+1LfvO7uMmGL8zzV5BSYkYODEPlhbHg/ayyethG7m6ep
+	DFgjkvr4KCrIPAq/1CSjnu3weqgfnZc=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-361-lvltfKQNPbyJGdnSiMcbBg-1; Mon, 03 Mar 2025 11:30:20 -0500
+X-MC-Unique: lvltfKQNPbyJGdnSiMcbBg-1
+X-Mimecast-MFC-AGG-ID: lvltfKQNPbyJGdnSiMcbBg_1741019419
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-39101511442so704078f8f.1
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Mar 2025 08:30:20 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741019419; x=1741624219;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8IqquS7ke+4+XOv5L24m6qSx7K0PzdfhIUdS/cnqyVA=;
+        b=UqJwbp9bQy03YXeL3f6h8p6WYy3cOXN6HmAYsqJREL6khhBYJtFZQwR3IU39WOiA7X
+         /PAFcXP/Ma99EzozN0zAxbGdkSTueXI841MUwzS2rIwFBkxwI8mSl2dXadC4BCTIMJ4e
+         +j9fnbwvoOe2xCVDwATrQ+CkqBItgvSgWNhVSisAtSaUWWdRl8NWueZ5vwLpUivyLS4D
+         Ifu0D0xUElBnCf6ZlXpZrRzQymTzJkmYUUDXIRZrPT+IDHaR0KrVxyQ00esqHybU7igo
+         P1JRguxtU/lf7nH8uO9/eUyvs8YjvGpvViU6DoF8fCkjovefADCwIi0RaUZ3hgcC7Pt7
+         oauw==
+X-Gm-Message-State: AOJu0Yy+94Jl8r6jqY/1d64N+4GVEhTdtu5s22M/XyZml0oT3/kFGaA9
+	O492C7vrG4QMIftMpLpQ+dx5+APj4UykVvJSFBuq3u2hGCn+y4bzWzPikiY+k4bDdKf7o9izlRh
+	nqLf1sOKX1b2esnMmVT7UbYRVmEYqaY+Vjajttvjvzq5jqCi1L+x9ElLOBLqjqI8L880g1zj9YH
+	RLzv0WPfsRBDn0bj3rz76mXyYBGJIAsj56fFr1KZGyuzdh
+X-Gm-Gg: ASbGncuudJE4WX0DfaASppkJBE6qX7iJ6bKJMs3kTUxv0rtG0d8lwi6WS6UvM8ke9f7
+	vQ5mKF7f48Kj1eu9gn1qDx8jUC6grphUfnIDkEYIb7tfai522JiGTcmI1bPnoofFMNhX2DfSY69
+	orUnRwTUVS4y1lllB3o0be6AGVTqytvmrhAFKuYSsRf9qI0h9s6xAFTY9693ghKbyULdrVl0cXA
+	NIYGOBidYn3WK41Lqi4F91dY5D50VRljN1giIUzf5YZycCm5Zg7o08xr/0NRqsILrTs9iDKe/5l
+	TUdTzw9JFfpNDFrJNtUVssRzdnmNdusRjiFb+OaqLC67FG4WflF1xw5fuKYj6abzTEto0RnTGtJ
+	j
+X-Received: by 2002:a05:6000:156e:b0:390:f9d0:5e7 with SMTP id ffacd0b85a97d-390f9d00782mr6547302f8f.13.1741019419323;
+        Mon, 03 Mar 2025 08:30:19 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGXzBd/+KVXhEWpKLy7bok4As8+LKdGdnCV2QCwLiXkX4QDGRFFrxDGOYHa7Hz+LJLKECZ5dQ==
+X-Received: by 2002:a05:6000:156e:b0:390:f9d0:5e7 with SMTP id ffacd0b85a97d-390f9d00782mr6547256f8f.13.1741019418889;
+        Mon, 03 Mar 2025 08:30:18 -0800 (PST)
+Received: from localhost (p200300cbc7349600af274326a2162bfb.dip0.t-ipconnect.de. [2003:cb:c734:9600:af27:4326:a216:2bfb])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-390e47a6a5esm15196816f8f.35.2025.03.03.08.30.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 03 Mar 2025 08:30:18 -0800 (PST)
+From: David Hildenbrand <david@redhat.com>
+To: linux-kernel@vger.kernel.org
+Cc: linux-doc@vger.kernel.org,
+	cgroups@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-api@vger.kernel.org,
+	David Hildenbrand <david@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	Tejun Heo <tj@kernel.org>,
+	Zefan Li <lizefan.x@bytedance.com>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	=?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Andy Lutomirski <luto@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Muchun Song <muchun.song@linux.dev>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Jann Horn <jannh@google.com>,
+	Lance Yang <ioworker0@gmail.com>,
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Subject: [PATCH v3 01/20] mm: factor out large folio handling from folio_order() into folio_large_order()
+Date: Mon,  3 Mar 2025 17:29:54 +0100
+Message-ID: <20250303163014.1128035-2-david@redhat.com>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250303163014.1128035-1-david@redhat.com>
+References: <20250303163014.1128035-1-david@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.12.17
 Content-Transfer-Encoding: 8bit
 
-From: Andrew Davis <afd@ti.com>
+Let's factor it out into a simple helper function. This helper will
+also come in handy when working with code where we know that our
+folio is large.
 
-[ Upstream commit 5ab90f40121a9f6a9b368274cd92d0f435dc7cfa ]
+Maybe in the future we'll have the order readily available for small and
+large folios; in that case, folio_large_order() would simply translate to
+folio_order().
 
-The syscon helper device_node_to_regmap() is used to fetch a regmap
-registered to a device node. It also currently creates this regmap
-if the node did not already have a regmap associated with it. This
-should only be used on "syscon" nodes. This driver is not such a
-device and instead uses device_node_to_regmap() on its own node as
-a hacky way to create a regmap for itself.
-
-This will not work going forward and so we should create our regmap
-the normal way by defining our regmap_config, fetching our memory
-resource, then using the normal regmap_init_mmio() function.
-
-Signed-off-by: Andrew Davis <afd@ti.com>
-Tested-by: Nishanth Menon <nm@ti.com>
-Link: https://lore.kernel.org/r/20250123182234.597665-1-afd@ti.com
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Reviewed-by: Lance Yang <ioworker0@gmail.com>
+Reviewed-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Signed-off-by: David Hildenbrand <david@redhat.com>
 ---
- drivers/phy/ti/phy-gmii-sel.c | 15 ++++++++++++++-
- 1 file changed, 14 insertions(+), 1 deletion(-)
+ include/linux/mm.h | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/phy/ti/phy-gmii-sel.c b/drivers/phy/ti/phy-gmii-sel.c
-index 103b266fec771..2c2256fe5a3b6 100644
---- a/drivers/phy/ti/phy-gmii-sel.c
-+++ b/drivers/phy/ti/phy-gmii-sel.c
-@@ -423,6 +423,12 @@ static int phy_gmii_sel_init_ports(struct phy_gmii_sel_priv *priv)
- 	return 0;
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index 7b21b48627b05..b2903bc705997 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -1194,6 +1194,11 @@ struct inode;
+ 
+ extern void prep_compound_page(struct page *page, unsigned int order);
+ 
++static inline unsigned int folio_large_order(const struct folio *folio)
++{
++	return folio->_flags_1 & 0xff;
++}
++
+ /*
+  * compound_order() can be called without holding a reference, which means
+  * that niceties like page_folio() don't work.  These callers should be
+@@ -1207,7 +1212,7 @@ static inline unsigned int compound_order(struct page *page)
+ 
+ 	if (!test_bit(PG_head, &folio->flags))
+ 		return 0;
+-	return folio->_flags_1 & 0xff;
++	return folio_large_order(folio);
  }
  
-+static const struct regmap_config phy_gmii_sel_regmap_cfg = {
-+	.reg_bits = 32,
-+	.val_bits = 32,
-+	.reg_stride = 4,
-+};
-+
- static int phy_gmii_sel_probe(struct platform_device *pdev)
+ /**
+@@ -1223,7 +1228,7 @@ static inline unsigned int folio_order(const struct folio *folio)
  {
- 	struct device *dev = &pdev->dev;
-@@ -467,7 +473,14 @@ static int phy_gmii_sel_probe(struct platform_device *pdev)
+ 	if (!folio_test_large(folio))
+ 		return 0;
+-	return folio->_flags_1 & 0xff;
++	return folio_large_order(folio);
+ }
  
- 	priv->regmap = syscon_node_to_regmap(node->parent);
- 	if (IS_ERR(priv->regmap)) {
--		priv->regmap = device_node_to_regmap(node);
-+		void __iomem *base;
-+
-+		base = devm_platform_ioremap_resource(pdev, 0);
-+		if (IS_ERR(base))
-+			return dev_err_probe(dev, PTR_ERR(base),
-+					     "failed to get base memory resource\n");
-+
-+		priv->regmap = regmap_init_mmio(dev, base, &phy_gmii_sel_regmap_cfg);
- 		if (IS_ERR(priv->regmap))
- 			return dev_err_probe(dev, PTR_ERR(priv->regmap),
- 					     "Failed to get syscon\n");
+ #include <linux/huge_mm.h>
+@@ -2139,7 +2144,7 @@ static inline long folio_nr_pages(const struct folio *folio)
+ #ifdef CONFIG_64BIT
+ 	return folio->_folio_nr_pages;
+ #else
+-	return 1L << (folio->_flags_1 & 0xff);
++	return 1L << folio_large_order(folio);
+ #endif
+ }
+ 
+@@ -2164,7 +2169,7 @@ static inline unsigned long compound_nr(struct page *page)
+ #ifdef CONFIG_64BIT
+ 	return folio->_folio_nr_pages;
+ #else
+-	return 1L << (folio->_flags_1 & 0xff);
++	return 1L << folio_large_order(folio);
+ #endif
+ }
+ 
 -- 
-2.39.5
+2.48.1
 
