@@ -1,198 +1,150 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from beeline2.cc.itu.edu.tr (beeline2.cc.itu.edu.tr [160.75.25.116])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E46792E336E
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 17:51:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741110718; cv=none; b=cZuvpuAAmxwQunzMm+GhH8vE84rcCHowF8tdhgdQjKs+tWOrn970svobpJm4sZsHSYPRuEx3dl08S0RSb4LcsbqTALOkSRvpSHAro+eRlLj1mD4X+Uh7oyiE1uv2mLkCQSXLGdmUQBDgwxoluWk6QXbtuGbPXmg9QgfOTSK4B4E=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741110718; c=relaxed/simple;
-	bh=TUZ1PEKuDlaVu2H/sWtLP74hzoT82EHUfDQolb2ZQtA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Ev49tzDtGQNraM6dmvjP0PNinWn44maCpV2ep0TBff1uLmuJqHw8/0qbqYb0/pbxF+miZfEDjRNCbwvI6dzGrsl88v28q6hVT0/ZR6P9gZboAQh6mrpTwN+iMVHgsBPREEsqWytCkimC0frZdDamL5bLqUaiQno+cpdReMHgMHU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hG5c89HJ; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0012280401
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 17:52:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=160.75.25.116
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741110731; cv=fail; b=SVEIGxB0EFCreUrmCAT+RNhMx1Li5r6FXrtQomMs2C7Dq8jONgWOphddiwbTRa9z0yItIH5GOfdpaJzGkqv5zA+vaJxXAGkmViY0RCa0Z6iwF6yyHLNHOi53t5GN9cXyvW3rLHCbrSpjcfZNcy9FDqcXer+159v2AyxF5hnUmzM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741110731; c=relaxed/simple;
+	bh=Jpb+o8kZmle8ALsCLg4utbX+Tdvv5P/Fwam+h44eiwQ=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=CnTxHxGCAPwmK/mivLrkLTfDu3SLKZ5JEmYwZeDp2ScaDghGa7j08AFj7JAJXOdal4I2BJvHgheyTiPr3TyvgQbxic1AuNN4443nfqEIwfXNOBGmLh78+3UKHrYSvak+i1bBVMXavK1Kqj1c3ngeQwRNeg1UbhMZGVr1kR7JjJA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linutronix.de; spf=none smtp.mailfrom=cc.itu.edu.tr; dkim=fail (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=UbCusKeg reason="signature verification failed"; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=1fOvo9r/; arc=none smtp.client-ip=193.142.43.55; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; arc=fail smtp.client-ip=160.75.25.116
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=cc.itu.edu.tr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hG5c89HJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741110717; x=1772646717;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=TUZ1PEKuDlaVu2H/sWtLP74hzoT82EHUfDQolb2ZQtA=;
-  b=hG5c89HJX558rPBXYTyJ7ugkEcE3lIdf2yb5SqRMrsE3+7MGv++j0d1j
-   Qs6Mg1eO1J39NZcxdFJMstw5JTm4Y4yKIxd5v85cjeI3cQrgf+AXFAuuF
-   7k4FPdlYtJYjEiSsJ3ts8vV7rw7Q9n6vyyf9Cwe3z0QHn/yZoFfXpsV9U
-   E5QhO8ohq+us0pvr9nlUQvEL3quDOEDGXRjm1uyO6Ytn/2sQCo8bSHC5u
-   qzyEafwBT2zB3iH7ADeH7+gbdt0iRA8BpEuJ7WYIeH5Pk8eGv+lS0sZUv
-   UUhIfjfIGwZL58n4sQL4pasGcs0JYGHkkML/qoyRAT1A6Hc77zckZF3q3
-   g==;
-X-CSE-ConnectionGUID: cHMqowuvRTWpQUh/OU97Qw==
-X-CSE-MsgGUID: OMyzX4aZS3uiAyy0JWuO+w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11363"; a="45694100"
-X-IronPort-AV: E=Sophos;i="6.14,220,1736841600"; 
-   d="scan'208";a="45694100"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2025 09:51:30 -0800
-X-CSE-ConnectionGUID: JNDFc07+RKqO30qmaDOe2g==
-X-CSE-MsgGUID: hQgU/ItRTCKMx3iawgtrFw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="118956267"
-Received: from kinlongk-desk.amr.corp.intel.com (HELO [10.125.109.94]) ([10.125.109.94])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2025 09:51:30 -0800
-Message-ID: <f5fab528-c8fd-47ea-ba25-6d59ff517b03@intel.com>
-Date: Tue, 4 Mar 2025 09:51:48 -0800
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="UbCusKeg";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="1fOvo9r/"
+Received: from lesvatest1.cc.itu.edu.tr (lesvatest1.cc.itu.edu.tr [10.146.128.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits))
+	(No client certificate requested)
+	by beeline2.cc.itu.edu.tr (Postfix) with ESMTPS id 12627408B650
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 20:52:08 +0300 (+03)
+X-Envelope-From: <root@cc.itu.edu.tr>
+Authentication-Results: lesvatest1.cc.itu.edu.tr;
+	dkim=fail reason="signature verification failed" (2048-bit key, unprotected) header.d=linutronix.de header.i=@linutronix.de header.a=rsa-sha256 header.s=2020 header.b=UbCusKeg;
+	dkim=fail reason="signature verification failed" header.d=linutronix.de header.i=@linutronix.de header.a=ed25519-sha256 header.s=2020e header.b=1fOvo9r/
+Received: from lesva1.cc.itu.edu.tr (unknown [160.75.70.79])
+	by lesvatest1.cc.itu.edu.tr (Postfix) with ESMTP id 4Z6gzV66TzzG36j
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 19:26:14 +0300 (+03)
+Received: by le1 (Postfix, from userid 0)
+	id 0976D42722; Tue,  4 Mar 2025 19:25:12 +0300 (+03)
+Authentication-Results: lesva1.cc.itu.edu.tr;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=UbCusKeg;
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=1fOvo9r/
+X-Envelope-From: <linux-kernel+bounces-541540-bozkiru=itu.edu.tr@vger.kernel.org>
+Authentication-Results: lesva2.cc.itu.edu.tr;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=UbCusKeg;
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=1fOvo9r/
+Received: from fgw1.itu.edu.tr (fgw1.itu.edu.tr [160.75.25.103])
+	by le2 (Postfix) with ESMTP id D0ECC423DC
+	for <bozkiru@itu.edu.tr>; Mon,  3 Mar 2025 14:23:56 +0300 (+03)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by fgw1.itu.edu.tr (Postfix) with SMTP id 66CD13063EFC
+	for <bozkiru@itu.edu.tr>; Mon,  3 Mar 2025 14:23:56 +0300 (+03)
+Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7EC833BD470
+	for <bozkiru@itu.edu.tr>; Mon,  3 Mar 2025 11:17:39 +0000 (UTC)
+Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 297111FECD7;
+	Mon,  3 Mar 2025 11:11:25 +0000 (UTC)
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 855131F8BAA;
+	Mon,  3 Mar 2025 11:11:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741000280; cv=none; b=S9cmjqW7FGyLKtiNhg1bX21xKFMV7JFXZJgcMedkMJsa7bj4uhmTrddtboPPIikCbsJLCk+kln3b+n9L18kLPyv7JIAxOoWeyh2p3QcoEUUxf+QSZBIldGBphA/V06fwT+MIlQJ3DK3ve255JAhC2/Sbb/69SpvroccYmfva76E=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741000280; c=relaxed/simple;
+	bh=ysgS01DaUNRNFmCyqFaIEAFFgwufR+E1yAt/1uNSO8U=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=hkhkJSkv9mw+HRllY+c3WSGlN2pBmAqllondoQKVk8gnOdWYJpa69y5vdswwjcBe6MinueK/kNunTHA0ATi11KYB7+BehbiOtJZLYNr6tzYEkVo6MN9ei4EaYvdg4iY8ceg66cKZ0vhrCG57aUNyWfknb0o9mBWLGjd+x3dSkKc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=UbCusKeg; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=1fOvo9r/; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1741000276;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=rgB3LhMqOZ+YBkO0ZZD/ZAGt3jgrVFlcoSgeSBFrG1A=;
+	b=UbCusKegiY4htXtXb6cmiKpgLftrm8OW6HF0kY4SBA0xVA6X8uBoNc4HcYBYgf3qB7EKjy
+	0vnRhbCV99EGmEO9CIOQU5AdcQcMfSuVz/5cfuOEsSLtkpmIdb9tmSJn0nh1ZOEYvHWBXd
+	x5ohKq3YewG7wcBF2kCJNgLCwTZ1D8/+mkjUHVAlRsJkask5JVQkRUpUXvBwP5yhscXqaz
+	XCh3Z8GjDsSWj8I/uJ8qzqf1Kvs1B2NRxSEdIpg0gcMkgu4ew/f79wpGOjeFlZX68JF+W3
+	yzEpHQhM86wPsh+PyaBRXS68MAr6198hI5WbIhM1S9V/TuYtYWMg1LfvvT3P/A==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1741000276;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=rgB3LhMqOZ+YBkO0ZZD/ZAGt3jgrVFlcoSgeSBFrG1A=;
+	b=1fOvo9r/qH+GjFBoFmV4Mq1GTv7uo31luHW62OlEVNNKdplS0DAqHgugpnuoBkmS+FSCDn
+	OTxv7inUt8L/yyCQ==
+Date: Mon, 03 Mar 2025 12:11:17 +0100
+Subject: [PATCH 15/19] x86/vdso: Prepare introduction of struct vdso_clock
+Precedence: bulk
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v14 11/13] x86/mm: do targeted broadcast flushing from
- tlbbatch code
-To: Brendan Jackman <jackmanb@google.com>, Borislav Petkov <bp@alien8.de>
-Cc: Rik van Riel <riel@surriel.com>, x86@kernel.org,
- linux-kernel@vger.kernel.org, peterz@infradead.org,
- dave.hansen@linux.intel.com, zhengqi.arch@bytedance.com,
- nadav.amit@gmail.com, thomas.lendacky@amd.com, kernel-team@meta.com,
- linux-mm@kvack.org, akpm@linux-foundation.org, jannh@google.com,
- mhklinux@outlook.com, andrew.cooper3@citrix.com, Manali.Shukla@amd.com,
- mingo@kernel.org
-References: <20250226030129.530345-1-riel@surriel.com>
- <20250226030129.530345-12-riel@surriel.com>
- <20250303114618.GBZ8WWihMDjf-oy8P0@fat_crate.local>
- <7e1ca8c7-6f3e-44dc-9dd8-bd273a03a83e@intel.com>
- <Z8b3n85dpkz_-2ci@google.com>
- <20250304141134.GIZ8cKFom3W0ChHiXk@fat_crate.local>
- <Z8cdQwVnx8dmFDLA@google.com>
-From: Dave Hansen <dave.hansen@intel.com>
-Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <Z8cdQwVnx8dmFDLA@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Message-ID: <20250303-vdso-clock-v1-15-c1b5c69a166f@linutronix.de>
+References: <20250303-vdso-clock-v1-0-c1b5c69a166f@linutronix.de>
+In-Reply-To: <20250303-vdso-clock-v1-0-c1b5c69a166f@linutronix.de>
+To: Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
+ Vincenzo Frascino <vincenzo.frascino@arm.com>, 
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+ Anna-Maria Behnsen <anna-maria@linutronix.de>, 
+ Frederic Weisbecker <frederic@kernel.org>, Ingo Molnar <mingo@redhat.com>, 
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
+ x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
+ Madhavan Srinivasan <maddy@linux.ibm.com>, 
+ Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
+ Christophe Leroy <christophe.leroy@csgroup.eu>, 
+ Naveen N Rao <naveen@kernel.org>, Heiko Carstens <hca@linux.ibm.com>, 
+ Vasily Gorbik <gor@linux.ibm.com>, 
+ Alexander Gordeev <agordeev@linux.ibm.com>, 
+ Christian Borntraeger <borntraeger@linux.ibm.com>, 
+ Sven Schnelle <svens@linux.ibm.com>, Arnd Bergmann <arnd@arndb.de>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, 
+ linux-arch@vger.kernel.org, Nam Cao <namcao@linutronix.de>, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1741000267; l=3053;
+ i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
+ bh=xyNISseLOTNZW4PPjUER0EQo8UUOOyYEKCLROc72ytc=;
+ b=0qWgzjrxn8OGxXIBksBvp9I3CDmpmtrU83qA8jyzdK/S89J9zVZl5lnjSVCXoSYPOtqJjB5z6
+ Eds45EkmeVCCIxtaR0ZY0XAX3AF9MFiqoAGHbKfXMXIBaSvGGgd69bM
+X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
+ pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
+Content-Transfer-Encoding: quoted-printable
+X-ITU-Libra-ESVA-Information: Please contact Istanbul Teknik Universitesi for more information
+X-ITU-Libra-ESVA-ID: 4Z6gzV66TzzG36j
+X-ITU-Libra-ESVA: No virus found
+X-ITU-Libra-ESVA-From: root@cc.itu.edu.tr
+X-ITU-Libra-ESVA-Watermark: 1741715413.20955@hq+KZeNovhml9Wgl9gb9qQ
+X-ITU-MailScanner-SpamCheck: not spam
+Message-ID: <20250303111117.0IHyV3kfLRmu6ZcbU4zcgXT8_nQU4dnCEdfxfjLktmY@z>
 
-On 3/4/25 07:33, Brendan Jackman wrote:
-> On Tue, Mar 04, 2025 at 03:11:34PM +0100, Borislav Petkov wrote:
->> On Tue, Mar 04, 2025 at 12:52:47PM +0000, Brendan Jackman wrote:
->>> https://lore.kernel.org/all/CA+i-1C31TrceZiizC_tng_cc-zcvKsfXLAZD_XDftXnp9B2Tdw@mail.gmail.com/
->>
->> Lemme try to understand what you're suggesting on that subthread:
->>
->>> static inline void arch_start_context_switch(struct task_struct *prev)
->>> {
->>>     arch_paravirt_start_context_switch(prev);
->>>     tlb_start_context_switch(prev);
->>> }
->>
->> This kinda makes sense to me...
-> 
-> Yeah so basically my concern here is that we are doing something
-> that's about context switching, but we're doing it in mm-switching
-> code, entangling an assumption that "context_switch() must either call
-> this function or that function". Whereas if we just call it explicitly
-> from context_switch() it will be much clearer.
+From: Anna-Maria Behnsen <anna-maria@linutronix.de>
 
-I was coming to a similar conclusion. All of the nastiness here would
-come from an operation like:
+To support multiple PTP clocks, the VDSO data structure needs to be
+reworked. All clock specific data will end up in struct vdso_clock and in
+struct vdso_time_data there will be array of it. By now, vdso_clock is
+simply a define which maps vdso_clock to vdso_time_data.
 
-	INVLPGB
-	=> get scheduled on another CPU
-	TLBSYNC
-
-But there's no nastiness with:
-
-	INVLPGB
-	=> switch to init_mm
-	TLBSYNC
-
-at *all*. Because the TLBSYNC still works just fine. In fact, it *has*
-to work just fine because you can get an TLB flush IPI in that window
-already.
-
->>> Now I think about it... if we always tlbsync() before a context switch, is the
->>> cant_migrate() above actually required? I think with that, even if we migrated
->>> in the middle of e.g.  broadcast_kernel_range_flush(), we'd be fine? (At
->>> least, from the specific perspective of the invplgb code, presumably having
->>> preemption on there would break things horribly in other ways).
->>
->> I think we still need it because you need to TLBSYNC on the same CPU you've
->> issued the INVLPGB and actually, you want all TLBs to have been synched
->> system-wide.
->>
->> Or am I misunderstanding it?
-> 
-> Er, I might be exposing my own ignorance here. I was thinking that you
-> always go through context_switch() before you get migrated, but I
-> might not understand hwo migration happens.
-
-Let's take a step back. Most of our IPI-based TLB flushes end up in this
-code:
-
-        preempt_disable();
-        smp_call_function_many_cond(...);
-        preempt_enable();
-
-We don't have any fanciness around to keep the initiating thread on the
-same CPU or check for pending TLB flushes at context switch time or lazy
-tlb entry. We don't send asynchronous IPIs from the tlbbatch code and
-then check for completion at batch finish time.
-
-There's a lot of complexity to stuffing these TLB flushes into a
-microarchitectural buffer and making *sure* they are flushed out.
-INVLPGB is not free. It's not clear at all to me that doing loads of
-them in reclaim code is superior to doing loads of:
-
-	inc_mm_tlb_gen(mm);
-	cpumask_or(&batch->cpumask, &batch->cpumask, mm_cpumask(mm));
-
-and then just zapping the whole TLB on the next context switch.
-
-I think we should defer this for now. Let's look at it again when there
-are some performance numbers to justify it.
+To prepare for the rework of the data structures, replace the struct
+vdso_time_data pointer with struct vdso_clock pointer whenever applicable=
