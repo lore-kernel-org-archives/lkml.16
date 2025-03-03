@@ -1,326 +1,222 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 065978634C;
-	Mon,  3 Mar 2025 13:32:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 346D686347
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 13:33:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741008765; cv=none; b=V6nh0kt+O7IV/xDlv7nNDstWEisPqS8IdKYEov977PZXIUO/cugPV7kQQGmFbDnSLhWz/mOGvD4C1h8T6b+IP3UsIyjrSCc//dbyMi7DUlzNd+AXyosTiU+6BcZEeF7vGdBJANQ3iDjz7wFVnztY1sEqXAbkXlO5BxDhs7GRQPg=
+	t=1741008835; cv=none; b=ccHCZA3luPPwjTHV6PtY9eg99+bFDew2LT7v/DEA7rthzhBjAs1ZLywGh5D0pDHzFuzr5E910a/eXuFpjr29Gpwm4qoT3XGFiScQMkE5Gs/+X/yqsvVtX5+sxZqyYERUoEb6LKZwfjS+4OIlx3HzA9ndFeiv0NCOutadRwEd1dI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741008765; c=relaxed/simple;
-	bh=JVfg1N8LSE+DTYPTu0sMQmjySx4p+I4p4xIPv4FZHn4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mzMf8KA3EL5xMSikKQeuPOowlArwohaqx9ALSuKv5rDSLCur5ca7cEpuQ8SVFvER5zXtvjab6R3U+Xnxh3W9/cloUOBTD/EMnpCr32fKd++pOWITFgcV9ntemeDdAxIIoXQlbCTlhlzm7zHnvY+6yt0hlFKeElrfaL7dUCx5wJ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8DADC4CED6;
-	Mon,  3 Mar 2025 13:32:41 +0000 (UTC)
-Message-ID: <6944a221-b0b4-4042-9d4a-98a0cc806116@xs4all.nl>
-Date: Mon, 3 Mar 2025 14:32:40 +0100
+	s=arc-20240116; t=1741008835; c=relaxed/simple;
+	bh=0CT7Dtja27wpKuPK0J3uUyCc6Y5dVR1K8M0npmQguYI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Ecznkx8tm/EGJVF1/IVWs47NoAe/G+2sGM6XuAlOiDgHnRysom27kqdhDrzCZL3GCnvXJX+Shum54mH2xQNcBAPWHsdlkMH5V9xBv6ifWts4OQJ2amSW4A5VEIjvdSez5BqerLo4kYHSqieF8P6P0FkANjoc2Yp7NUSILQQFOTo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jIDHEwe8; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jIDHEwe8"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-390dc0a7605so2412448f8f.1
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Mar 2025 05:33:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1741008831; x=1741613631; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=98OQ8wvaJ9wtoqY/FnFWTw/2aTBVHaqyurEF1+7THsM=;
+        b=jIDHEwe8LddwPcJpPJ14BYSsjhgEx5uDCa9OesQDIbkqjZ0fY9BoInkPGfMTs4Bz7r
+         mRkuVQ7KtVP/TMHzZyHocJq1K4UzCoGlx9EH0hLlhY/n5vBzj1suMZlupnRnAeKBF/Xe
+         f6OUh4i24JleVcO7L8yTjdRDx1WbLbfsWpvtRwaw1Dej3wx0INwYjWODnMu6GEvFI6D0
+         rI7wLFqwLysDFohAwsBhRLhYCNlj8FoODWBupnFpl+xkHQUOwwv+6sipRqlGz9hG4APA
+         oDCBcSCyNCkr0G/NNZ6bOi2HYHGiFIBbzzvz6uv01pELaHVn0T8LN5x4h/jd2XvGG9Tg
+         mpnQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741008831; x=1741613631;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=98OQ8wvaJ9wtoqY/FnFWTw/2aTBVHaqyurEF1+7THsM=;
+        b=a2v9yvbpGldxUJlHftsdzKSDL9xtVdkVnFfeVZEbCSUEdh/7iwGN1fAC6mSQ2MBftA
+         rSUh8kvEziw10YhJzocsHIykKdlNWyxfiojBfZJmHVhow3TYvDi2CzkXX1BZCgp4cgLy
+         NKGQbIWmHqoWjIgSTGRVO+fMcPISUGUAdTqFtiPizgM9ByU+8sTuDeq/3SdrrW3tgdR7
+         CSjyAaMDtCvgUAMOB9j3hoBRDZvGqcBOTt42qqUUB3k3jcSvBLv2qqylexdhZ1QtwNn1
+         UUOGD9565VVRHj4CTgxjlAmqf+5jwtwtFZftpSEOr9ez+8foloxQe376W6PntY5N1jbq
+         UK/Q==
+X-Gm-Message-State: AOJu0Yxf/AlCDmheIJbKL+Te1K9QG/JCAzYo/1brVHzT6/U94k/Ry4o0
+	3mShYX4V/vSrleJZkYX/3yvLTY0VhBHrfK9zqp6Use7VYaAPkxpgNb24EjLgZoHXpubFWfvr6so
+	tGnOq2vAtzMTuc8s/+jRONssAYms2hLgWDlV8
+X-Gm-Gg: ASbGncvsgy1sm6jPP2uy7/9qMGWHCMlsGO6+Js7qKwlTZ7B5bayf2jaL1fEL7nUojEZ
+	Pfhwt7rvGgOKFwy3J/DBNu5Wqf57bS8RpDaMyd50HH6UhPUZ60j6P7qQNSJFiYMxeciGcunj+f/
+	VDjuJjPDE1Qs+QNRTOC8Jm8VQFWW6VVmYs1cOzDAHZ6d9opcH94bOs8jfZ
+X-Google-Smtp-Source: AGHT+IE8JWpQtarWwp+2hNt/MR6epGuJDDazTrc2gMvmQUZSN/QRsDdQQeOGHqHvxcXWjRP0+QCxyieUoVOMPKqMUFM=
+X-Received: by 2002:a05:6000:1f8a:b0:390:fc83:a070 with SMTP id
+ ffacd0b85a97d-390fc83a160mr6688529f8f.0.1741008831435; Mon, 03 Mar 2025
+ 05:33:51 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v17 16/17] media: uvcvideo: implement UVC v1.5 ROI
-To: Ricardo Ribalda <ribalda@chromium.org>,
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>,
- Hans de Goede <hdegoede@redhat.com>,
- Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Yunke Cao <yunkec@chromium.org>, linux-media@vger.kernel.org,
- linux-kernel@vger.kernel.org, Yunke Cao <yunkec@google.com>
-References: <20250203-uvc-roi-v17-0-5900a9fed613@chromium.org>
- <20250203-uvc-roi-v17-16-5900a9fed613@chromium.org>
-Content-Language: en-US, nl
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Autocrypt: addr=hverkuil@xs4all.nl; keydata=
- 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
-In-Reply-To: <20250203-uvc-roi-v17-16-5900a9fed613@chromium.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20250213135759.190006-1-fujita.tomonori@gmail.com> <20250213135759.190006-6-fujita.tomonori@gmail.com>
+In-Reply-To: <20250213135759.190006-6-fujita.tomonori@gmail.com>
+From: Alice Ryhl <aliceryhl@google.com>
+Date: Mon, 3 Mar 2025 14:33:39 +0100
+X-Gm-Features: AQ5f1JoT3yLvXrcqi1UY1px9Dirgxz3oFETPYn_JBDKUcmKVulP6_KvtwihScxI
+Message-ID: <CAH5fLgjX9hh+QRrKggOKr+6p+UwqHSavzu4UXy9iGNL2wSJXtg@mail.gmail.com>
+Subject: Re: [PATCH v3 5/5] rust: Add warn_on and warn_on_once
+To: FUJITA Tomonori <fujita.tomonori@gmail.com>
+Cc: linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
+	x86@kernel.org, linux-riscv@lists.infradead.org, 
+	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev, 
+	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
+	dave.hansen@linux.intel.com, peterz@infradead.org, hpa@zytor.com, 
+	paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu, 
+	catalin.marinas@arm.com, will@kernel.org, chenhuacai@kernel.org, 
+	kernel@xen0n.name, tangyouling@loongson.cn, hejinyang@loongson.cn, 
+	yangtiezhu@loongson.cn, ojeda@kernel.org, alex.gaynor@gmail.com, 
+	boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com, 
+	benno.lossin@proton.me, a.hindborg@kernel.org, tmgross@umich.edu
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hans, Laurent, Yunke,
-
-On 03/02/2025 12:55, Ricardo Ribalda wrote:
-> From: Yunke Cao <yunkec@google.com>
-> 
-> Implement support for ROI as described in UVC 1.5:
-> 4.2.2.1.20 Digital Region of Interest (ROI) Control
-> 
-> ROI control is implemented using V4L2 control API as
-> two UVC-specific controls:
-> V4L2_CID_UVC_REGION_OF_INTEREST_RECT and
-> V4L2_CID_UVC_REGION_OF_INTEREST_AUTO.
-> 
-> Reviewed-by: Ricardo Ribalda <ribalda@chromium.org>
-> Signed-off-by: Yunke Cao <yunkec@google.com>
-> Reviewed-by: Yunke Cao <yunkec@google.com>
-> Tested-by: Yunke Cao <yunkec@google.com>
-> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
-> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
+On Thu, Feb 13, 2025 at 3:01=E2=80=AFPM FUJITA Tomonori
+<fujita.tomonori@gmail.com> wrote:
+>
+> Add warn_on and warn_on_once macros. Wrapping the C's WARN_* and BUG_*
+> macros doesn't work so this uses the assembly code exported by the C
+> side via ARCH_WARN_ASM macro. Like the static branch code, this
+> generates the assembly code for rust at compile time by using the C
+> preprocessor.
+>
+> file()! macro doesn't work for the Rust inline assembly in the same
+> way as __FILE__ for the C inline assembly. So the code to handle a
+> file name is different from the C assembly code (similar to the
+> arm64/loongarch assembly).
+>
+> Similarly, ARCH_WARN_REACHABLE is also used at compile time to
+> generate the assembly code; objtool's reachable anotation code. Only
+> architectures that use objtool (x86 and loongarch) need it.
+>
+> Signed-off-by: FUJITA Tomonori <fujita.tomonori@gmail.com>
 > ---
->  drivers/media/usb/uvc/uvc_ctrl.c   | 81 ++++++++++++++++++++++++++++++++++++++
->  drivers/media/usb/uvc/uvcvideo.h   |  7 ++++
->  include/uapi/linux/usb/video.h     |  1 +
->  include/uapi/linux/uvcvideo.h      | 13 ++++++
->  include/uapi/linux/v4l2-controls.h |  7 ++++
->  5 files changed, 109 insertions(+)
-> 
-> diff --git a/drivers/media/usb/uvc/uvc_ctrl.c b/drivers/media/usb/uvc/uvc_ctrl.c
-> index 17a7ce525f71..1906ce5b7d50 100644
-> --- a/drivers/media/usb/uvc/uvc_ctrl.c
-> +++ b/drivers/media/usb/uvc/uvc_ctrl.c
-> @@ -358,6 +358,24 @@ static const struct uvc_control_info uvc_ctrls[] = {
->  		.flags		= UVC_CTRL_FLAG_GET_CUR
->  				| UVC_CTRL_FLAG_AUTO_UPDATE,
->  	},
-> +	/*
-> +	 * UVC_CTRL_FLAG_AUTO_UPDATE is needed because the RoI may get updated
-> +	 * by sensors.
-> +	 * "This RoI should be the same as specified in most recent SET_CUR
-> +	 * except in the case where the ‘Auto Detect and Track’ and/or
-> +	 * ‘Image Stabilization’ bit have been set."
-> +	 * 4.2.2.1.20 Digital Region of Interest (ROI) Control
-> +	 */
-> +	{
-> +		.entity		= UVC_GUID_UVC_CAMERA,
-> +		.selector	= UVC_CT_REGION_OF_INTEREST_CONTROL,
-> +		.index		= 21,
-> +		.size		= 10,
-> +		.flags		= UVC_CTRL_FLAG_SET_CUR | UVC_CTRL_FLAG_GET_CUR
-> +				| UVC_CTRL_FLAG_GET_MIN | UVC_CTRL_FLAG_GET_MAX
-> +				| UVC_CTRL_FLAG_GET_DEF
-> +				| UVC_CTRL_FLAG_AUTO_UPDATE,
-> +	},
->  };
->  
->  static const u32 uvc_control_classes[] = {
-> @@ -603,6 +621,44 @@ static const struct uvc_control_mapping *uvc_ctrl_filter_plf_mapping(
->  	return out_mapping;
->  }
->  
-> +static int uvc_get_rect(struct uvc_control_mapping *mapping, u8 query,
-> +			const void *uvc_in, size_t v4l2_size, void *v4l2_out)
-> +{
-> +	const struct uvc_rect *uvc_rect = uvc_in;
-> +	struct v4l2_rect *v4l2_rect = v4l2_out;
+>  rust/Makefile                                 |   8 ++
+>  rust/kernel/.gitignore                        |   2 +
+>  rust/kernel/bug.rs                            | 100 ++++++++++++++++++
+>  rust/kernel/generated_arch_reachable_asm.rs.S |   7 ++
+>  rust/kernel/generated_arch_warn_asm.rs.S      |   7 ++
+>  rust/kernel/lib.rs                            |   1 +
+>  6 files changed, 125 insertions(+)
+>  create mode 100644 rust/kernel/bug.rs
+>  create mode 100644 rust/kernel/generated_arch_reachable_asm.rs.S
+>  create mode 100644 rust/kernel/generated_arch_warn_asm.rs.S
+>
+> diff --git a/rust/Makefile b/rust/Makefile
+> index 8fcfd60447bc..a295b65c43f3 100644
+> --- a/rust/Makefile
+> +++ b/rust/Makefile
+> @@ -34,6 +34,9 @@ obj-$(CONFIG_RUST_KERNEL_DOCTESTS) +=3D doctests_kernel=
+_generated.o
+>  obj-$(CONFIG_RUST_KERNEL_DOCTESTS) +=3D doctests_kernel_generated_kunit.=
+o
+>
+>  always-$(subst y,$(CONFIG_RUST),$(CONFIG_JUMP_LABEL)) +=3D kernel/genera=
+ted_arch_static_branch_asm.rs
+> +ifndef CONFIG_UML
+> +always-$(subst y,$(CONFIG_RUST),$(CONFIG_BUG)) +=3D kernel/generated_arc=
+h_warn_asm.rs kernel/generated_arch_reachable_asm.rs
+> +endif
+>
+>  # Avoids running `$(RUSTC)` when it may not be available.
+>  ifdef CONFIG_RUST
+> @@ -481,5 +484,10 @@ $(obj)/kernel.o: $(src)/kernel/lib.rs $(obj)/build_e=
+rror.o \
+>  ifdef CONFIG_JUMP_LABEL
+>  $(obj)/kernel.o: $(obj)/kernel/generated_arch_static_branch_asm.rs
+>  endif
+> +ifndef CONFIG_UML
+> +ifdef CONFIG_BUG
+> +$(obj)/kernel.o: $(obj)/kernel/generated_arch_warn_asm.rs $(obj)/kernel/=
+generated_arch_reachable_asm.rs
+> +endif
+> +endif
+>
+>  endif # CONFIG_RUST
+> diff --git a/rust/kernel/.gitignore b/rust/kernel/.gitignore
+> index 6ba39a178f30..f1d7f4225332 100644
+> --- a/rust/kernel/.gitignore
+> +++ b/rust/kernel/.gitignore
+> @@ -1,3 +1,5 @@
+>  # SPDX-License-Identifier: GPL-2.0
+>
+>  /generated_arch_static_branch_asm.rs
+> +/generated_arch_warn_asm.rs
+> +/generated_arch_reachable_asm.rs
+> \ No newline at end of file
+> diff --git a/rust/kernel/bug.rs b/rust/kernel/bug.rs
+> new file mode 100644
+> index 000000000000..7ffd9cb1ad75
+> --- /dev/null
+> +++ b/rust/kernel/bug.rs
+> @@ -0,0 +1,100 @@
+> +// SPDX-License-Identifier: GPL-2.0
 > +
-> +	if (WARN_ON(v4l2_size != sizeof(struct v4l2_rect)))
-> +		return -EINVAL;
+> +// Copyright (C) 2024 FUJITA Tomonori
 > +
-> +	if (uvc_rect->left > uvc_rect->right ||
-> +	    uvc_rect->top > uvc_rect->bottom)
-> +		return -EIO;
+> +//! Support for BUG_* and WARN_* functionality.
+> +//!
+> +//! C header: [`include/asm-generic/bug.h`](srctree/include/asm-generic/=
+bug.h)
 > +
-> +	v4l2_rect->top = uvc_rect->top;
-> +	v4l2_rect->left = uvc_rect->left;
-> +	v4l2_rect->height = uvc_rect->bottom - uvc_rect->top + 1;
-> +	v4l2_rect->width = uvc_rect->right - uvc_rect->left + 1;
-> +
-> +	return 0;
-> +}
-> +
-> +static int uvc_set_rect(struct uvc_control_mapping *mapping, size_t v4l2_size,
-> +			const void *v4l2_in, void *uvc_out)
-> +{
-> +	struct uvc_rect *uvc_rect = uvc_out;
-> +	const struct v4l2_rect *v4l2_rect = v4l2_in;
-> +
-> +	if (WARN_ON(v4l2_size != sizeof(struct v4l2_rect)))
-> +		return -EINVAL;
-> +
-> +	uvc_rect->top = min(0xffff, v4l2_rect->top);
-> +	uvc_rect->left = min(0xffff, v4l2_rect->left);
-> +	uvc_rect->bottom = min(0xffff, v4l2_rect->top + v4l2_rect->height - 1);
-> +	uvc_rect->right = min(0xffff, v4l2_rect->left + v4l2_rect->width - 1);
-> +
-> +	return 0;
-> +}
-> +
->  static const struct uvc_control_mapping uvc_ctrl_mappings[] = {
->  	{
->  		.id		= V4L2_CID_BRIGHTNESS,
-> @@ -897,6 +953,28 @@ static const struct uvc_control_mapping uvc_ctrl_mappings[] = {
->  		.selector	= UVC_PU_POWER_LINE_FREQUENCY_CONTROL,
->  		.filter_mapping	= uvc_ctrl_filter_plf_mapping,
->  	},
-> +	{
-> +		.id		= V4L2_CID_UVC_REGION_OF_INTEREST_RECT,
-> +		.entity		= UVC_GUID_UVC_CAMERA,
-> +		.selector	= UVC_CT_REGION_OF_INTEREST_CONTROL,
-> +		.size		= sizeof(struct uvc_rect) * 8,
-> +		.offset		= 0,
-> +		.v4l2_type	= V4L2_CTRL_TYPE_RECT,
-> +		.data_type	= UVC_CTRL_DATA_TYPE_RECT,
-> +		.get		= uvc_get_rect,
-> +		.set		= uvc_set_rect,
-> +		.name		= "Region Of Interest Rectangle",
+> +#[macro_export]
+> +#[doc(hidden)]
+> +#[cfg(all(CONFIG_BUG, not(CONFIG_UML)))]
+> +macro_rules! warn_flags {
+> +    ($flags:expr) =3D> {
+> +        const FLAGS: u32 =3D $crate::bindings::BUGFLAG_WARNING | $flags;
+> +        // SAFETY: Just an FFI call.
+> +        #[cfg(CONFIG_DEBUG_BUGVERBOSE)]
+> +        unsafe {
+> +            $crate::asm!(concat!(
+> +                "/* {size} */",
+> +                ".pushsection .rodata.str1.1, \"aMS\",@progbits, 1\n",
+> +                "111:\t .string ", "\"", file!(), "\"\n",
+> +                ".popsection\n",
 
-According to how titles are capitalized in english, this should be lower-case "of".
+It looks like you're doing this so that you can reference the filename
+with "111b", but could you do this instead:
 
-> +	},
-> +	{
-> +		.id		= V4L2_CID_UVC_REGION_OF_INTEREST_AUTO,
-> +		.entity		= UVC_GUID_UVC_CAMERA,
-> +		.selector	= UVC_CT_REGION_OF_INTEREST_CONTROL,
-> +		.size		= 16,
-> +		.offset		= 64,
-> +		.v4l2_type	= V4L2_CTRL_TYPE_BITMASK,
-> +		.data_type	= UVC_CTRL_DATA_TYPE_BITMASK,
-> +		.name		= "Region Of Interest Auto Controls",
+const _FILE: &[u8] =3D file!().as_bytes();
+// Plus one for nul-terminator.
+static FILE: [u8; 1 + _FILE.len()] =3D {
+    let mut bytes =3D [0; 1 + _FILE.len()];
+    let mut i =3D 0;
+    while i < _FILE.len() {
+        bytes[i] =3D _FILE[i];
+        i +=3D 1;
+    }
+    bytes
+};
 
-Ditto.
+and then use
 
-This string is also one character too long (the control description string is at
-most 31 characters). Suggested alternatives:
+asm!(
+    concat!(
+        "/* {size} */",
+        include!(concat!(env!("OBJTREE"),
+"/rust/kernel/generated_arch_warn_asm.rs")),
+        include!(concat!(env!("OBJTREE"),
+"/rust/kernel/generated_arch_reachable_asm.rs")));
+    file =3D sym FILE,
+    line =3D const line!(),
+    ...
+);
 
-"Region of Interest Auto Ctrls"
-"ROI Auto Controls"
-"Region Of Interest Auto Control"
+with
+::kernel::concat_literals!(ARCH_WARN_ASM("{file}", "{line}",
+"{flags}", "{size}")),
 
-I can make the changes myself, but I need to know which alternative to use for
-this string.
+That would be a lot simpler to understand than what you are doing.
 
-Regards,
 
-	Hans
-
-> +	},
->  };
->  
->  /* ------------------------------------------------------------------------
-> @@ -1473,6 +1551,9 @@ static int __uvc_queryctrl_boundaries(struct uvc_video_chain *chain,
->  
->  static size_t uvc_mapping_v4l2_size(struct uvc_control_mapping *mapping)
->  {
-> +	if (mapping->v4l2_type == V4L2_CTRL_TYPE_RECT)
-> +		return sizeof(struct v4l2_rect);
-> +
->  	if (uvc_ctrl_mapping_is_compound(mapping))
->  		return DIV_ROUND_UP(mapping->size, 8);
->  
-> diff --git a/drivers/media/usb/uvc/uvcvideo.h b/drivers/media/usb/uvc/uvcvideo.h
-> index 6fc1cb9e99d1..b63720e21075 100644
-> --- a/drivers/media/usb/uvc/uvcvideo.h
-> +++ b/drivers/media/usb/uvc/uvcvideo.h
-> @@ -543,6 +543,13 @@ struct uvc_device_info {
->  	u16	uvc_version;
->  };
->  
-> +struct uvc_rect {
-> +	u16 top;
-> +	u16 left;
-> +	u16 bottom;
-> +	u16 right;
-> +} __packed;
-> +
->  struct uvc_status_streaming {
->  	u8	button;
->  } __packed;
-> diff --git a/include/uapi/linux/usb/video.h b/include/uapi/linux/usb/video.h
-> index 526b5155e23c..e1d9f5773187 100644
-> --- a/include/uapi/linux/usb/video.h
-> +++ b/include/uapi/linux/usb/video.h
-> @@ -104,6 +104,7 @@
->  #define UVC_CT_ROLL_ABSOLUTE_CONTROL			0x0f
->  #define UVC_CT_ROLL_RELATIVE_CONTROL			0x10
->  #define UVC_CT_PRIVACY_CONTROL				0x11
-> +#define UVC_CT_REGION_OF_INTEREST_CONTROL		0x14
->  
->  /* A.9.5. Processing Unit Control Selectors */
->  #define UVC_PU_CONTROL_UNDEFINED			0x00
-> diff --git a/include/uapi/linux/uvcvideo.h b/include/uapi/linux/uvcvideo.h
-> index f86185456dc5..cbe15bca9569 100644
-> --- a/include/uapi/linux/uvcvideo.h
-> +++ b/include/uapi/linux/uvcvideo.h
-> @@ -16,6 +16,7 @@
->  #define UVC_CTRL_DATA_TYPE_BOOLEAN	3
->  #define UVC_CTRL_DATA_TYPE_ENUM		4
->  #define UVC_CTRL_DATA_TYPE_BITMASK	5
-> +#define UVC_CTRL_DATA_TYPE_RECT		6
->  
->  /* Control flags */
->  #define UVC_CTRL_FLAG_SET_CUR		(1 << 0)
-> @@ -38,6 +39,18 @@
->  
->  #define UVC_MENU_NAME_LEN 32
->  
-> +/* V4L2 driver-specific controls */
-> +#define V4L2_CID_UVC_REGION_OF_INTEREST_RECT	(V4L2_CID_USER_UVC_BASE + 1)
-> +#define V4L2_CID_UVC_REGION_OF_INTEREST_AUTO	(V4L2_CID_USER_UVC_BASE + 2)
-> +#define V4L2_UVC_REGION_OF_INTEREST_AUTO_EXPOSURE		(1 << 0)
-> +#define V4L2_UVC_REGION_OF_INTEREST_AUTO_IRIS			(1 << 1)
-> +#define V4L2_UVC_REGION_OF_INTEREST_AUTO_WHITE_BALANCE		(1 << 2)
-> +#define V4L2_UVC_REGION_OF_INTEREST_AUTO_FOCUS			(1 << 3)
-> +#define V4L2_UVC_REGION_OF_INTEREST_AUTO_FACE_DETECT		(1 << 4)
-> +#define V4L2_UVC_REGION_OF_INTEREST_AUTO_DETECT_AND_TRACK	(1 << 5)
-> +#define V4L2_UVC_REGION_OF_INTEREST_AUTO_IMAGE_STABILIZATION	(1 << 6)
-> +#define V4L2_UVC_REGION_OF_INTEREST_AUTO_HIGHER_QUALITY		(1 << 7)
-> +
->  struct uvc_menu_info {
->  	__u32 value;
->  	__u8 name[UVC_MENU_NAME_LEN];
-> diff --git a/include/uapi/linux/v4l2-controls.h b/include/uapi/linux/v4l2-controls.h
-> index 974fd254e573..72e32814ea83 100644
-> --- a/include/uapi/linux/v4l2-controls.h
-> +++ b/include/uapi/linux/v4l2-controls.h
-> @@ -215,6 +215,13 @@ enum v4l2_colorfx {
->   */
->  #define V4L2_CID_USER_THP7312_BASE		(V4L2_CID_USER_BASE + 0x11c0)
->  
-> +/*
-> + * The base for the uvc driver controls.
-> + * See linux/uvcvideo.h for the list of controls.
-> + * We reserve 64 controls for this driver.
-> + */
-> +#define V4L2_CID_USER_UVC_BASE			(V4L2_CID_USER_BASE + 0x11e0)
-> +
->  /* MPEG-class control IDs */
->  /* The MPEG controls are applicable to all codec controls
->   * and the 'MPEG' part of the define is historical */
-> 
-
+Alice
