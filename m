@@ -1,181 +1,252 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84B528BEE
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 14:18:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9DFFA213E81
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 14:18:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741011490; cv=none; b=lzzuQbF1ZQAi5RbmvmA726enOH7NiBfONfjQN7F67tDpMDpN7Mr8jemcRk8rPDA+9jtpdHbmFxSqU6Z922raDkgOnWsef0KJ2/MY4AL/gvKZo6F4AzT1IIr1HbQyE4E1ngWUu+xdxYs0zMd3o4I0o5g2YBArfFDASo93l9xRGTE=
+	t=1741011493; cv=none; b=lmHR94Ygo923EwyuoD4nwPCIutC7FTnnNuNXlw9kS37nVAnfFbstYm8HAKYnt+GvXN6c4xqQd6cE89FQ2v7qGtVi6hC1Rr/PpFXdhDaqrkFXiayQtwhUbdNDnNdZbKWUwiJFpbM08ex7zMUINIkt9sxe5LK2oGyniejrChmDNk8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741011490; c=relaxed/simple;
-	bh=BUM9ttkYbtJjW3C8zKc+o016L2T9uUvJDr+BTba3W78=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IyYZ4WOMraYco0nQXkzV6JlCBmkWF0Sk4C3kQaqP5zGelF5XeFCmkwEW0Qwzo3XLGmpqQxHJVeH2bTQfGX3GV9g8DVCcDxNHd7Qy6j4AaIsjyPGeCSo1sTg6ftBw2jlowG3jqkgIzVi5LMsHFQqh28zhxEMzch+CEXHaFLW7gXc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RPXfH+av; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RPXfH+av"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1741011487;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Wpjej3MTc3XOacT0vWjYbsIvrY+TVNTNDbp8vW97joQ=;
-	b=RPXfH+avcTLpFxWF4e1qF7NV2LeVylzeYlTFWAqxgW9tqUQ6RPBFilaVWnRMX/8/txqONQ
-	FQFdPkZVJCXFAgAcPtstM55N43HyfgiT2fpRt8JnupjwerdwMsSkSmg96kwZfrYRvjHXdR
-	zJGiZnm1+VEdJl5841vawB2CyPOe/08=
-Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com
- [209.85.219.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-118-QKQhFV3KNtOZgp_D0dCTfA-1; Mon, 03 Mar 2025 09:17:56 -0500
-X-MC-Unique: QKQhFV3KNtOZgp_D0dCTfA-1
-X-Mimecast-MFC-AGG-ID: QKQhFV3KNtOZgp_D0dCTfA_1741011476
-Received: by mail-qv1-f71.google.com with SMTP id 6a1803df08f44-6e8a1eb7148so65359386d6.1
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Mar 2025 06:17:56 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741011476; x=1741616276;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Wpjej3MTc3XOacT0vWjYbsIvrY+TVNTNDbp8vW97joQ=;
-        b=hW9fqMfOgQFAcSKKpmhrDxhfDHjwAbWKC7+TLXLXZveHAqiJtcPnYsoAYovBGCct32
-         /18RVtTwA79wiPT9ZT3r0vX12Ule5BMGJ88+j1hhdHzFyL6EutmNuriLEYUngK4aqt1j
-         bTSU3mNDx55f3rgjvwuyggBN15Q+q8497yCrsWwGKFZlvDfnqQ01nKxePKKSWkzlAuhI
-         SmZgRsGx/S1Hcnr/Mf8Z0mlZ6TkMhEgGyzwvy862DI47XGwAEem08ErnOa4kAi8Z9/VJ
-         iHb7XJlLO5hYEXeXBQXJepOL+SzUwOs5YEGZ5tTZPy9Vji/JoJEQyKsphKaNhLBzwWZC
-         m6KQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWCp1zi6a++2COJ3WELpqf6ihlweHRPLjNjGPIgHfOiilRoWbXHKqo1eeXfCs/OU4IEQuKUKSEmzvLXGyY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzl4bGMs2IGNBQMFufPfcp8Kk8bZubq0gzjYaTm+RVW1mVFRkf6
-	OGzkFi7RsRtu7lFv3fojeMF9SHyJjaJdzDFNX7TxL4FxoDnIySS3d6e+EGXHRAFOxrgkihQxFqX
-	EIgISrGU+GyDgc0EcdinK/VdmSLQcEb3hmzy6tLL3wcsrKxRpqWI6xbXgVS591w==
-X-Gm-Gg: ASbGncuqNcI8HH+JwIXbWk6c//OrXz7jRCuNRlFBXsI3UDtMn+jdQSXi4sDy05D+AZw
-	BcQqnREcwrr1/wPC/iBLf+H+2Vd5J/5tYdHhT5znzl+ec0vgkG1pRKbKuAACMF8GLh3Hb3gF7ss
-	eRO4xhCHvMUnRAQHjb4e2PlCWftSwqIcEenLVgMr+SZzIZbNYNUTCRlzoC0H9NCw+tdQTrolWqp
-	M9FWojrvz2A+mIU0j5aacm2xos38KqIC/DlzzI4s3mqGaaBQ8T+wkDhxpUUoPcR/KDWYA1w3U/n
-	n2mSiC8rQVKi/EoV
-X-Received: by 2002:ad4:596c:0:b0:6e4:4012:b6f1 with SMTP id 6a1803df08f44-6e8a0c87aadmr199731266d6.3.1741011475924;
-        Mon, 03 Mar 2025 06:17:55 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFmuW2YklpwiY35WaKDpDsU1ARThxbZZn04wnIPZGm7kflmoV5fmkgK0Cghft8CcoGbqMJqGg==
-X-Received: by 2002:ad4:596c:0:b0:6e4:4012:b6f1 with SMTP id 6a1803df08f44-6e8a0c87aadmr199730956d6.3.1741011475548;
-        Mon, 03 Mar 2025 06:17:55 -0800 (PST)
-Received: from [192.168.40.164] ([70.105.235.240])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e897661633sm53378136d6.58.2025.03.03.06.17.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 03 Mar 2025 06:17:55 -0800 (PST)
-Message-ID: <427fec88-2a74-471e-aeb6-a108ca8c4336@redhat.com>
-Date: Mon, 3 Mar 2025 09:17:51 -0500
+	s=arc-20240116; t=1741011493; c=relaxed/simple;
+	bh=0SP3nAnya9shQwTJ904iRRAXvKH8WbEBbTbDbMI7ag0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ItH327hGbjGZ6IHNZ0kXJJ1lx4XAlOM1JP1KzDiyGIJNLPZsTH5VifVXJt1uNL8vEMkJdgFq8+9YFvAvIXNa6moN/UMG4ul2+LNvL9eW7OWNtP5+iGYoAvjhzpnoVtJEisNTicEnXwA6rwXmb6nQsF8KUWF6sEJzmWGQlfafIOY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1B173106F;
+	Mon,  3 Mar 2025 06:18:25 -0800 (PST)
+Received: from J2N7QTR9R3.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 034E83F66E;
+	Mon,  3 Mar 2025 06:18:09 -0800 (PST)
+Date: Mon, 3 Mar 2025 14:18:05 +0000
+From: Mark Rutland <mark.rutland@arm.com>
+To: Paul Benoit <paul@os.amperecomputing.com>
+Cc: linux-kernel@vger.kernel.org, Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Sudeep Holla <sudeep.holla@arm.com>,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v4] firmware: smccc: Support optional Arm SMC SOC_ID name
+Message-ID: <Z8W6HXZy46K7ebWe@J2N7QTR9R3.cambridge.arm.com>
+References: <20241114030452.10149-1-paul@os.amperecomputing.com>
+ <20250219005932.3466-1-paul@os.amperecomputing.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/5] kdump: crashkernel reservation from CMA
-Content-Language: en-US
-To: David Hildenbrand <david@redhat.com>, Jiri Bohac <jbohac@suse.cz>,
- Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>,
- Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org
-Cc: Philipp Rudo <prudo@redhat.com>, Pingfan Liu <piliu@redhat.com>,
- Tao Liu <ltao@redhat.com>, linux-kernel@vger.kernel.org,
- David Hildenbrand <dhildenb@redhat.com>, Michal Hocko <mhocko@suse.cz>
-References: <Z7dc9Cd8KX3b_brB@dwarf.suse.cz>
- <04904e86-5b5f-4aa1-a120-428dac119189@redhat.com>
-From: Donald Dutile <ddutile@redhat.com>
-In-Reply-To: <04904e86-5b5f-4aa1-a120-428dac119189@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250219005932.3466-1-paul@os.amperecomputing.com>
 
+Hi Paul,
 
+This looks generally good with a couple of minor nits.
 
-On 3/3/25 3:25 AM, David Hildenbrand wrote:
-> On 20.02.25 17:48, Jiri Bohac wrote:
->> Hi,
->>
->> this series implements a way to reserve additional crash kernel
->> memory using CMA.
->>
->> Link to the v1 discussion:
->> https://lore.kernel.org/lkml/ZWD_fAPqEWkFlEkM@dwarf.suse.cz/
->> See below for the changes since v1 and how concerns from the
->> discussion have been addressed.
->>
->> Currently, all the memory for the crash kernel is not usable by
->> the 1st (production) kernel. It is also unmapped so that it can't
->> be corrupted by the fault that will eventually trigger the crash.
->> This makes sense for the memory actually used by the kexec-loaded
->> crash kernel image and initrd and the data prepared during the
->> load (vmcoreinfo, ...). However, the reserved space needs to be
->> much larger than that to provide enough run-time memory for the
->> crash kernel and the kdump userspace. Estimating the amount of
->> memory to reserve is difficult. Being too careful makes kdump
->> likely to end in OOM, being too generous takes even more memory
->> from the production system. Also, the reservation only allows
->> reserving a single contiguous block (or two with the "low"
->> suffix). I've seen systems where this fails because the physical
->> memory is fragmented.
->>
->> By reserving additional crashkernel memory from CMA, the main
->> crashkernel reservation can be just large enough to fit the
->> kernel and initrd image, minimizing the memory taken away from
->> the production system. Most of the run-time memory for the crash
->> kernel will be memory previously available to userspace in the
->> production system. As this memory is no longer wasted, the
->> reservation can be done with a generous margin, making kdump more
->> reliable. Kernel memory that we need to preserve for dumping is
->> never allocated from CMA. User data is typically not dumped by
->> makedumpfile. When dumping of user data is intended this new CMA
->> reservation cannot be used.
+On Tue, Feb 18, 2025 at 04:59:32PM -0800, Paul Benoit wrote:
+> Issue Number 1.6 of the Arm SMC Calling Convention introduces an optional
+> SOC_ID name string.  If implemented, point the 'machine' field of the SoC
+> Device Attributes at this string so that it will appear under
+> /sys/bus/soc/devices/soc0/machine.
 > 
+> On Arm SMC compliant SoCs, this will allow things like 'lscpu' to
+> eventually get a SoC provider model name from there rather than each
+> tool/utility needing to get a possibly inconsistent, obsolete, or incorrect
+> model/machine name from its own hardcoded model/machine name table.
 > 
-> Hi,
+> Signed-off-by: Paul Benoit <paul@os.amperecomputing.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>
+> Cc: Sudeep Holla <sudeep.holla@arm.com>
+> Cc: linux-arm-kernel@lists.infradead.org
+> ---
 > 
-> I'll note that your comment about "user space" is currently the case, but will likely not hold in the long run. The assumption you are making is that only user-space memory will be allocated from MIGRATE_CMA, which is not necessarily the case. Any movable allocation will end up in there.
+> v3->v4: Address code review identified issues of v3.
+> v2->v3: Add conditionalization to exclude SOC_ID Name from 32-bit builds.
+> v1->v2: Address code review identified issues.
 > 
-> Besides LRU folios (user space memory and the pagecache), we already support migration of some kernel allocations using the non-lru migration framework. Such allocations (which use __GFP_MOVABLE, see __SetPageMovable()) currently only include
-> * memory balloon: pages we never want to dump either way
-> * zsmalloc (->zpool): only used by zswap (-> compressed LRU pages)
-> * z3fold (->zpool): only used by zswap (-> compressed LRU pages)
+>  drivers/firmware/smccc/soc_id.c | 81 +++++++++++++++++++++++++++++++++
+>  include/linux/arm-smccc.h       | 40 ++++++++++++++++
+>  2 files changed, 121 insertions(+)
 > 
-> Just imagine if we support migration of other kernel allocations, such as user page tables. The dump would be missing important information.
-> 
-IOMMUFD is a near-term candidate for user page tables with multi-stage iommu support with going through upstream review atm.
-Just saying, that David's case will be a norm in high-end VMs with performance-enhanced guest-driven iommu support (for GPUs).
+> diff --git a/drivers/firmware/smccc/soc_id.c b/drivers/firmware/smccc/soc_id.c
+> index 1990263fbba0..7b0688d78dab 100644
+> --- a/drivers/firmware/smccc/soc_id.c
+> +++ b/drivers/firmware/smccc/soc_id.c
+> @@ -32,6 +32,86 @@
+>  static struct soc_device *soc_dev;
+>  static struct soc_device_attribute *soc_dev_attr;
+>  
+> +#ifdef CONFIG_ARM64
+> +
+> +static char __ro_after_init smccc_soc_id_name[136] = "";
+> +
+> +static inline void str_fragment_from_reg(char *dst, unsigned long reg)
+> +{
+> +	dst[0] = (reg >> 0)  & 0xff;
+> +	dst[1] = (reg >> 8)  & 0xff;
+> +	dst[2] = (reg >> 16) & 0xff;
+> +	dst[3] = (reg >> 24) & 0xff;
+> +	dst[4] = (reg >> 32) & 0xff;
+> +	dst[5] = (reg >> 40) & 0xff;
+> +	dst[6] = (reg >> 48) & 0xff;
+> +	dst[7] = (reg >> 56) & 0xff;
+> +}
+> +
+> +static char __init *smccc_soc_name_init(void)
+> +{
+> +	struct arm_smccc_1_2_regs args;
+> +	struct arm_smccc_1_2_regs res;
+> +	size_t len;
+> +
+> +	/*
+> +	 * Issue Number 1.6 of the Arm SMC Calling Convention
+> +	 * specification introduces an optional "name" string
+> +	 * to the ARM_SMCCC_ARCH_SOC_ID function.  Fetch it if
+> +	 * available.
+> +	 */
+> +	args.a0 = ARM_SMCCC_ARCH_SOC_ID;
+> +	args.a1 = 2;    /* SOC_ID name */
+> +	arm_smccc_1_2_invoke(&args, &res);
+> +	if ((u32)res.a0 == 0) {
+> +		const unsigned int regsize = sizeof(res.a1);
+> +
+> +		/*
+> +		 * Copy res.a1..res.a17 to the smccc_soc_id_name string
+> +		 * 8 bytes at a time.  As per Issue 1.6 of the Arm SMC
+> +		 * Calling Convention, the string will be NUL terminated
+> +		 * and padded, from the end of the string to the end of the
+> +		 * 136 byte buffer, with NULs.
+> +		 */
+> +		str_fragment_from_reg(smccc_soc_id_name + 0*regsize, res.a1);
+> +		str_fragment_from_reg(smccc_soc_id_name + 1*regsize, res.a2);
+> +		str_fragment_from_reg(smccc_soc_id_name + 2*regsize, res.a3);
+> +		str_fragment_from_reg(smccc_soc_id_name + 3*regsize, res.a4);
+> +		str_fragment_from_reg(smccc_soc_id_name + 4*regsize, res.a5);
+> +		str_fragment_from_reg(smccc_soc_id_name + 5*regsize, res.a6);
+> +		str_fragment_from_reg(smccc_soc_id_name + 6*regsize, res.a7);
+> +		str_fragment_from_reg(smccc_soc_id_name + 7*regsize, res.a8);
+> +		str_fragment_from_reg(smccc_soc_id_name + 8*regsize, res.a9);
+> +		str_fragment_from_reg(smccc_soc_id_name + 9*regsize, res.a10);
+> +		str_fragment_from_reg(smccc_soc_id_name + 10*regsize, res.a11);
+> +		str_fragment_from_reg(smccc_soc_id_name + 11*regsize, res.a12);
+> +		str_fragment_from_reg(smccc_soc_id_name + 12*regsize, res.a13);
+> +		str_fragment_from_reg(smccc_soc_id_name + 13*regsize, res.a14);
+> +		str_fragment_from_reg(smccc_soc_id_name + 14*regsize, res.a15);
+> +		str_fragment_from_reg(smccc_soc_id_name + 15*regsize, res.a16);
+> +		str_fragment_from_reg(smccc_soc_id_name + 16*regsize, res.a17);
 
-> Once that happens, it will become a lot harder to judge whether CMA can be used or not. At least, the kernel could bail out/warn for these kernel configs.
-> 
-I don't think the aforementioned focus is to use CMA, but given its performance benefits, it won't take long to be the next perf improvement step taken.
+Please get rid of 'regsize' and use '8' directly. This only exists for
+arm64, where the registeres are 8 bytes, and the comment immediately
+above refers to "8 bytes" specifically anyway, so 'regsize' only serves
+to make this harder to read.
 
->>
->> There are five patches in this series:
->>
->> The first adds a new ",cma" suffix to the recenly introduced generic
->> crashkernel parsing code. parse_crashkernel() takes one more
->> argument to store the cma reservation size.
->>
->> The second patch implements reserve_crashkernel_cma() which
->> performs the reservation. If the requested size is not available
->> in a single range, multiple smaller ranges will be reserved.
->>
->> The third patch updates Documentation/, explicitly mentioning the
->> potential DMA corruption of the CMA-reserved memory.
->>
->> The fourth patch adds a short delay before booting the kdump
->> kernel, allowing pending DMA transfers to finish.
-> 
-> 
-> What does "short" mean? At least in theory, long-term pinning is forbidden for MIGRATE_CMA, so we should not have such pages mapped into an iommu where DMA can happily keep going on for quite a while.
-> 
-Hmmm, in the case I mentioned above, should there be a kexec hook in multi-stage IOMMU support for the hypervisor/VMM to invalidate/shut-off stage 2 mappings asap (a multi-microsecond process) so
-DMA termination from VMs is stunted ?  is that already done today (due to 'simple', single-stage, device assignment in a VM)?
+It'd be a bit clearer as:
 
-> But that assumes that our old kernel is not buggy, and doesn't end up mapping these pages into an IOMMU where DMA will just continue. I recall that DRM might currently be a problem, described here [1].
-> 
-> If kdump starts not working as expected in case our old kernel is buggy, doesn't that partially destroy the purpose of kdump (-> debug bugs in the old kernel)?
-> 
-> 
-> [1] https://lore.kernel.org/all/Z6MV_Y9WRdlBYeRs@phenom.ffwll.local/T/#u
-> 
+	str_fragment_from_reg(smccc_soc_id_name + 8 * 0,  res.a1);
+	str_fragment_from_reg(smccc_soc_id_name + 8 * 1,  res.a2);
+	...
+	str_fragment_from_reg(smccc_soc_id_name + 8 * 15, res.a16);
+	str_fragment_from_reg(smccc_soc_id_name + 8 * 16, res.a17);
 
+Sudeep, are you happy to fix that up when applying?
+
+> +
+> +		len = strnlen(smccc_soc_id_name, sizeof(smccc_soc_id_name));
+> +		if (len) {
+> +			if (len == sizeof(smccc_soc_id_name))
+> +				pr_warn(FW_BUG "Ignoring improperly formatted Name\n");
+
+It's odd that 'Name' is capitalized here. Not a big deal, but it doesn't
+look quite right.
+
+> +			else
+> +				return smccc_soc_id_name;
+> +		}
+> +	}
+> +
+> +	return NULL;
+> +}
+> +
+> +#else
+> +
+> +static char __init *smccc_soc_name_init(void)
+> +{
+> +	return NULL;
+> +}
+> +
+> +#endif
+> +
+>  static int __init smccc_soc_init(void)
+>  {
+>  	int soc_id_rev, soc_id_version;
+> @@ -72,6 +152,7 @@ static int __init smccc_soc_init(void)
+>  	soc_dev_attr->soc_id = soc_id_str;
+>  	soc_dev_attr->revision = soc_id_rev_str;
+>  	soc_dev_attr->family = soc_id_jep106_id_str;
+> +	soc_dev_attr->machine = smccc_soc_name_init();
+>  
+>  	soc_dev = soc_device_register(soc_dev_attr);
+>  	if (IS_ERR(soc_dev)) {
+> diff --git a/include/linux/arm-smccc.h b/include/linux/arm-smccc.h
+> index 67f6fdf2e7cd..eb7eab04755a 100644
+> --- a/include/linux/arm-smccc.h
+> +++ b/include/linux/arm-smccc.h
+> @@ -639,5 +639,45 @@ asmlinkage void __arm_smccc_hvc(unsigned long a0, unsigned long a1,
+>  		method;							\
+>  	})
+>  
+> +#ifdef CONFIG_ARM64
+> +
+> +#define __fail_smccc_1_2(___res)					\
+> +	do {								\
+> +		if (___res)						\
+> +			___res->a0 = SMCCC_RET_NOT_SUPPORTED;		\
+> +	} while (0)
+> +
+> +/*
+> + * arm_smccc_1_2_invoke() - make an SMCCC v1.2 compliant call
+> + *
+> + * @args: SMC args are in the a0..a17 fields of the arm_smcc_1_2_regs structure
+> + * @res: result values from registers 0 to 17
+> + *
+> + * This macro will make either an HVC call or an SMC call depending on the
+> + * current SMCCC conduit. If no valid conduit is available then -1
+> + * (SMCCC_RET_NOT_SUPPORTED) is returned in @res.a0 (if supplied).
+> + *
+> + * The return value also provides the conduit that was used.
+> + */
+> +#define arm_smccc_1_2_invoke(args, res) ({				\
+> +		struct arm_smccc_1_2_regs *__args = args;		\
+> +		struct arm_smccc_1_2_regs *__res = res;			\
+> +		int method = arm_smccc_1_1_get_conduit();		\
+> +		switch (method) {					\
+> +		case SMCCC_CONDUIT_HVC:					\
+> +			arm_smccc_1_2_hvc(__args, __res);		\
+> +			break;						\
+> +		case SMCCC_CONDUIT_SMC:					\
+> +			arm_smccc_1_2_smc(__args, __res);		\
+> +			break;						\
+> +		default:						\
+> +			__fail_smccc_1_2(__res);			\
+> +			method = SMCCC_CONDUIT_NONE;			\
+> +			break;						\
+> +		}							\
+> +		method;							\
+> +	})
+> +#endif /*CONFIG_ARM64*/
+
+At some point I intend to rework the existing helpers to not return the
+conduit, but this is fine for now.
+
+With the fixups above:
+
+Acked-by: Mark Rutland <mark.rutland@arm.com>
+
+Mark.
+
+> +
+>  #endif /*__ASSEMBLY__*/
+>  #endif /*__LINUX_ARM_SMCCC_H*/
+> -- 
+> 2.48.1
+> 
