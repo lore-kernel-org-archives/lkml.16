@@ -1,99 +1,43 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-187.mta1.migadu.com (out-187.mta1.migadu.com [95.215.58.187])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B22F1EE00D
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 22:21:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1342A1DDA3C
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 22:22:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741040464; cv=none; b=p5C9rCJ7fLxQR9UUck1IX4hTYtciZZt20zGvm+ZtJTF1GmQw++d9AJHSQQy1wCyRO3Ng/u4zC1yQumexhMwtD+723xBol4gJZXN/kozzw6hTLIjLB7N7gsC8YdTHBS0mJNiCZb1NgOGCUllEbQhbBUTurt7q6HVWOez0ZDYj1PQ=
+	t=1741040523; cv=none; b=gYrS2UvBPylpW7JjKtPO2ZKWlRbc50lbat94BYg3w2EhAq7K3IQulhMwQzPLyXPheFq/WtRSbTbD4K5gqOvs0vNUVc+fQ4FVq2NFTTb74VgzhdAy8LwVgafIRXQ5xhJ1Z28Zu4pxlEB2Tx55By43tQWGqlYFLv1VYc6CHst2lGQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741040464; c=relaxed/simple;
-	bh=8lSPo+KIIq2qYRr/9d3MJdKf0ce1XIDRY2s2HaDhhXs=;
+	s=arc-20240116; t=1741040523; c=relaxed/simple;
+	bh=AVvde8e9ud7ZCrieN85PrhdPi/SKF2EGfAuEoMezMAA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=K5N8o+7EfaXjodaiZmUQpYwWzI+yTZC24gcjDt2GuMo++xeUt6tmgxdBbO7mxv1AgMe+f/HJYfktBcxFu/EEx2y3wI/+QRNq0wEv8lZFjKE6UPMX75qKNQ0jyioKHI66ZitDI+h8KCfM15vDggBSxFQhoDgvtJnzjzVfFRU0TyA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=OA80H5t3; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=QJQEdlVaTuB/QkmWST20arsqkYMZ9SfYOxrzrdg0ynRbaCc3al76Piy8/QFlRe/SEaIT0hYY4ze+NE3Jkj9RQGvZ8rlq3lnKBZSnkAEPv4mdsBdvT0e4avuFShvIfPmKnStJbNkH9IKI71WK+tuix6A+IiekzsxVQ+Vult3E59g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=cMhefseP; arc=none smtp.client-ip=95.215.58.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OA80H5t3"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-223a0da61easo56975ad.0
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Mar 2025 14:21:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1741040462; x=1741645262; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=TIPE161XE6h+XbpKbqRdjbwFF+hmkeZmLDbhV/M2UTU=;
-        b=OA80H5t3RtNNuYvjlw0//qqL+sgjc7wPnLNGw/yNi52z072O13Tf2MSnjo30V8Kg4V
-         Qewn+EV+ncE+yhSE4ywBHWeaaGXO0F+4W/wL0rU2FxRZ0gLeNMYO8bKB3llmU6E4+ZsK
-         a9fJ6tiTN5SSWkCgXCYg3/RbxpTust+fSeYn50usD2WEi+3s5FDVBF+RUJzqgV8o2V1x
-         qkD96rac4IqwmDJEn9RaHFaRFYbym1JkvufH66xJd4HksBDQU3vVKCDYuLm8TosQ2UQP
-         LL174c+nrOMgn+UwzfxpsMJ97055SaNXfw96i8rREDzt+ZFOgih2YRAO6OI+dl4Lsmuf
-         BeSA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741040462; x=1741645262;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TIPE161XE6h+XbpKbqRdjbwFF+hmkeZmLDbhV/M2UTU=;
-        b=Ru1pzHl6mW6STLL1emM632aTgqwc3LWsseuJL0KCBs+I6mR9znP0h0MxMGn0Vc4j9A
-         M+R8NJ7TWRGCtSM2WJiNKlhHzw7lqpKYMefQtglbQDi43A2KPyFNZPZQrBYxbYdUM+gd
-         w708iDMXxxFC4RdSYVSDrG8iYPciySbj1cjCAuHqCkSvBDUWINiVtVPYVy6LRF00ZIZd
-         RZ0FF0/cg7mAhuKOdLt08T6F/33Lb0pGxNTnEQYx7bq+To5lOlXALqhfDr9YGlvYBnv8
-         5gDzuZo+Xz67NQSKcyM1igwRBcxHvVxWbsz/gm1AErgZdarDzdViKLCCDL2b11xKF0wi
-         cstw==
-X-Forwarded-Encrypted: i=1; AJvYcCULOOiOIHV7wfjS8AMfU0Kr2j2czB+AGVTAAyE4LMtpO2F/p0AlG1uHyOVfbuwVMJUZfYW40QCgNIhaFI0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwiysAfEe0ultH9XJch/uiIHdc6IQYjsAjE8KkLbJt/p/7eh9aJ
-	L/FSuFVb9y3iJ3jkgOiGlScM2D4GYJrtiDLs96HcTOCcmCSX4cwXmxIQh1IXOw==
-X-Gm-Gg: ASbGncvKPTAUiiFAfu30XFlcN61rAoSJeHTw3KEwhtUAtBuQEnSs4etvD7KgjIjWRi1
-	npn/o0kDX9yd1benHeOPHq7jSre2JwtRo6Vu/F6DDdxmv1KvaVBstG/by6nWaaB17MzTuilmRfX
-	DBK0WdbxgS38x68uwO1VvkXRFfgAGnULet/MmfXyjm8W0TtEjvbTn4CMJyxfa4yV0PDZNmK/eDK
-	BUDSowEsOt7R8g+rxOYSotJJI4zYE7V3SlxS1ox9xcQDi/JqyNdu15pS6Ct04TK6R1R8909ghF8
-	KsvyqVKKH2MS63ns3tVinRSLJXK1Vc1x4Lw6SoPIEvIjgVStUheJFXLDZ82PV+J8IAqAHMNmFxM
-	/TjIeG2o=
-X-Google-Smtp-Source: AGHT+IHFnd6jZyLm3rBh852SMedzrz4n0Ml2vmv/2ld5Rglar/I+rjdCt1PE6PBirI1AmbiL/BJNuA==
-X-Received: by 2002:a17:902:e546:b0:21f:3e29:9cd4 with SMTP id d9443c01a7336-223d9e656cfmr770325ad.20.1741040462117;
-        Mon, 03 Mar 2025 14:21:02 -0800 (PST)
-Received: from google.com (147.141.16.34.bc.googleusercontent.com. [34.16.141.147])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-aee7dedd22esm7402504a12.63.2025.03.03.14.21.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Mar 2025 14:21:01 -0800 (PST)
-Date: Mon, 3 Mar 2025 22:20:55 +0000
-From: Peilin Ye <yepeilin@google.com>
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: bpf <bpf@vger.kernel.org>,
-	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-	bpf@ietf.org, Alexei Starovoitov <ast@kernel.org>,
-	Xu Kuohai <xukuohai@huaweicloud.com>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	David Vernet <void@manifault.com>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
-	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Puranjay Mohan <puranjay@kernel.org>,
-	Ilya Leoshkevich <iii@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Quentin Monnet <qmo@kernel.org>,
-	Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>,
-	Ihor Solodrai <ihor.solodrai@linux.dev>,
-	Yingchi Long <longyingchi24s@ict.ac.cn>,
-	Josh Don <joshdon@google.com>, Barret Rhoden <brho@google.com>,
-	Neel Natu <neelnatu@google.com>,
-	Benjamin Segall <bsegall@google.com>,
-	LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH bpf-next v4 03/10] bpf/verifier: Factor out
- check_load_mem() and check_store_reg()
-Message-ID: <Z8YrR7p7ikaw0Kpr@google.com>
-References: <cover.1740978603.git.yepeilin@google.com>
- <8b39c94eac2bb7389ff12392ca666f939124ec4f.1740978603.git.yepeilin@google.com>
- <CAADnVQKyMx64_mP+u+rmnRGyzVoBs4rViTHeE4_0Rr+Kf3R5Tg@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="cMhefseP"
+Date: Mon, 3 Mar 2025 22:21:41 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1741040509;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=BYrgJBaa1/wGcdat97a1kwri4kikfmUhgip+C5EAWY4=;
+	b=cMhefsePY6VzZS4izliyQG9/8mNX+LztTTLm5CoG1oIuSMilJi9mSEFFe21fL3plsQvCNs
+	0qPAjWNTQCWMkGgOVH1UDIV5AhlkphPhzzqsTtKyGz4thVCafAe6bnYdR0o3vOaAo7Eqmd
+	XTAnb0dNbfXMbSBcCclxCCbXNDKJ+sc=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Yosry Ahmed <yosry.ahmed@linux.dev>
+To: Maxim Levitsky <mlevitsk@redhat.com>
+Cc: Sean Christopherson <seanjc@google.com>,
+	Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 13/13] KVM: nSVM: Stop bombing the TLB on nested
+ transitions
+Message-ID: <Z8YrdcWd1PD76adM@google.com>
+References: <20250205182402.2147495-1-yosry.ahmed@linux.dev>
+ <20250205182402.2147495-14-yosry.ahmed@linux.dev>
+ <da0b13813b11e5b13f01dced9a629ac07fad27cd.camel@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -102,24 +46,83 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAADnVQKyMx64_mP+u+rmnRGyzVoBs4rViTHeE4_0Rr+Kf3R5Tg@mail.gmail.com>
+In-Reply-To: <da0b13813b11e5b13f01dced9a629ac07fad27cd.camel@redhat.com>
+X-Migadu-Flow: FLOW_OUT
 
-On Mon, Mar 03, 2025 at 10:52:08AM -0800, Alexei Starovoitov wrote:
-> > Extract BPF_LDX and most non-ATOMIC BPF_STX instruction handling logic
-> > in do_check() into helper functions to be used later.  While we are
-> > here, make that comment about "reserved fields" more specific.
-> >
-> > Suggested-by: Eduard Zingerman <eddyz87@gmail.com>
-> > Acked-by: Eduard Zingerman <eddyz87@gmail.com>
-> > Signed-off-by: Peilin Ye <yepeilin@google.com>
+On Fri, Feb 28, 2025 at 09:21:54PM -0500, Maxim Levitsky wrote:
+> On Wed, 2025-02-05 at 18:24 +0000, Yosry Ahmed wrote:
+> > Now that nested TLB flushes are properly tracked with a well-maintained
+> > separate ASID for L2 and proper handling of L1's TLB flush requests,
+> > drop the unconditional flushes and syncs on nested transitions.
+> > 
+> > On a Milan machine, an L1 and L2 guests were booted, both with a single
+> > vCPU, and pinned to a single physical CPU to maximize TLB collisions. In
+> > this setup, the cpuid_rate microbenchmark [1] showed the following
+> > changes with this patch:
+> > 
+> > +--------+--------+-------------------+----------------------+
+> > > L0     | L1     | cpuid_rate (base) | cpuid_rate (patched) |
+> > +========+========+===================+======================+
+> > > NPT    | NPT    | 256621            | 301113 (+17.3%)      |
+> > > NPT    | Shadow | 180017            | 203347 (+12.96%)     |
+> > > Shadow | Shadow | 177006            | 189150 (+6.86%)      |
+> > +--------+--------+-------------------+----------------------+
+> > 
+> > [1]https://lore.kernel.org/kvm/20231109180646.2963718-1-khorenko@virtuozzo.com/
+> > 
+> > Signed-off-by: Yosry Ahmed <yosry.ahmed@linux.dev>
+> > ---
+> >  arch/x86/kvm/svm/nested.c | 7 -------
+> >  1 file changed, 7 deletions(-)
+> > 
+> > diff --git a/arch/x86/kvm/svm/nested.c b/arch/x86/kvm/svm/nested.c
+> > index 8e40ff21f7353..45a187d4c23d1 100644
+> > --- a/arch/x86/kvm/svm/nested.c
+> > +++ b/arch/x86/kvm/svm/nested.c
+> > @@ -512,9 +512,6 @@ static void nested_svm_entry_tlb_flush(struct kvm_vcpu *vcpu)
+> >  		svm->nested.last_asid = svm->nested.ctl.asid;
+> >  		kvm_make_request(KVM_REQ_TLB_FLUSH_GUEST, vcpu);
+> >  	}
+> > -	/* TODO: optimize unconditional TLB flush/MMU sync */
+> > -	kvm_make_request(KVM_REQ_MMU_SYNC, vcpu);
+> > -	kvm_make_request(KVM_REQ_TLB_FLUSH_CURRENT, vcpu);
+> >  }
+> >  
+> >  static void nested_svm_exit_tlb_flush(struct kvm_vcpu *vcpu)
+> > @@ -530,10 +527,6 @@ static void nested_svm_exit_tlb_flush(struct kvm_vcpu *vcpu)
+> >  	 */
+> >  	if (svm->nested.ctl.tlb_ctl == TLB_CONTROL_FLUSH_ALL_ASID)
+> >  		kvm_make_request(KVM_REQ_TLB_FLUSH_GUEST, vcpu);
+> > -
+> > -	/* TODO: optimize unconditional TLB flush/MMU sync */
+> > -	kvm_make_request(KVM_REQ_MMU_SYNC, vcpu);
+> > -	kvm_make_request(KVM_REQ_TLB_FLUSH_CURRENT, vcpu);
+> >  }
+> >  
+> >  /*
 > 
-> Applied the first 3 patches.
+> 
+> Assuming that all previous patches are correct this one should work as well.
+> 
+> However only a very heavy stress testing, including hyperv, windows guests
+> of various types, etc can give me confidence that there is no some ugly bug lurking
+> somewhere.
+
+I tried booting an L2 and running some workloads like netperf in there.
+I also tried booting an L3.
+
+I am planning to try and run some testing with a windows L2 guest. I am
+assuming this exercises the hyper-V emulation in L1, which could be
+interesting.
+
+I am not sure if I will be able to test more scenarios though,
+especially Windows as an L1 (and something else as an L2).
+
+Let me know if you have something specific in mind.
+
+> 
+> TLB management can be very tricky, so I can't be 100% sure that I haven't missed something.
+> 
+> Reviewed-by: Maxim Levitsky <mlevitsk@redhat.com>
 
 Thanks!
-
-I'll fix that build issue for 32-bit arches, then send remaining patches
-(except v4 10/10) as v5.
-
-Cheers,
-Peilin Ye
-
