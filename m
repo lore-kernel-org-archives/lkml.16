@@ -1,153 +1,210 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 85EC72101A0;
-	Mon,  3 Mar 2025 13:08:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp-fw-80007.amazon.com (smtp-fw-80007.amazon.com [99.78.197.218])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 181CA21129F;
+	Mon,  3 Mar 2025 13:08:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=99.78.197.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741007338; cv=none; b=kcTlTqkWvpGg77USDLAlXLhjFb/9Bvy1Ef433MR4iQW57/a/FPZ9YhQ4Cq2XZjemX2KOHRuu8TW4BwoRPRXZvvm5gTcmXDp5PWMuKniMfny0yDzviTt0jgD3oTdw0otMoA8SVmRPs8up6Kkb4VKLBPU9rxn6dNhmTZT1SEjZxnw=
+	t=1741007337; cv=none; b=pECj3u8HVlYM/1jGdnbmLyk/Kzo7Lq8ndBAc9X+hJMMsyOX5Jd5dEi6l787IURpjufX3gmorCzHpemNuZw58Fbog61SDH2Le5GYgObjK0rs6km5uB3EBfztpeasPraHP2cxo8M6KYxDzqVmv97KcKvH4lkL6/WGSD5sP/GhF+7Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741007338; c=relaxed/simple;
-	bh=8ngrTt5vPnWxJvv5WXsUHu+32lRdZwzHFsBffAE8eJE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dpYHzPPecFb6r9wiUmAJ/T5N+KcYXH5T+J/V7xUZSenlB6p8uRjj9BkG06YCrtS+ql7oKxBg9VFzXFMHhJzCnefJ/n8+Re1xQrKeRX2R9Ahh39BbrByz8W+vfLacQ7CI10fcn8Gfvn2qbqegyHsvSuolPMakFPvavwjLVZAWsR8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D60CE113E;
-	Mon,  3 Mar 2025 05:09:07 -0800 (PST)
-Received: from [10.1.196.40] (e121345-lin.cambridge.arm.com [10.1.196.40])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3EB5C3F673;
-	Mon,  3 Mar 2025 05:08:51 -0800 (PST)
-Message-ID: <fdfb8200-1b07-4dba-9659-ef25a1391f00@arm.com>
-Date: Mon, 3 Mar 2025 13:08:49 +0000
+	s=arc-20240116; t=1741007337; c=relaxed/simple;
+	bh=O+1kyzMjMuVSclP/dGDX7WvTQ3qb9jZg68fPpc8T+yE=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=qGYKEEMFbZ9bXK5xECkZE0nf2Qe3QLrO++zzfxBFtX8Ric7qoSsFvRutGRLHrNxvri31lIuVC7iPq130xJE7djxXGd+N09nWEt5b/6q35SkGImk796xFdLzWg9nmHF6TYAtxhaEesfwm2SZh2qE774WgOqPGTcY0EI7KJoNLnIw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.uk; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=I2IDkUtl; arc=none smtp.client-ip=99.78.197.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.uk
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="I2IDkUtl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1741007337; x=1772543337;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=fo0RfFhjOlaWjyHUEezlWZqA9yMhjyUNGY8gIayRQKY=;
+  b=I2IDkUtliTSdICOOZOja+o2KRv/R5z5Ky+EeWO9Y9O4GRF/gbY69iM7k
+   TWLuitm4OcSoflrJ5CngkN27xEKPjLSQqnLfuOe72oFsE1Ma2nBy1J+S1
+   xEEMGj053E6Gw+dKiCB8KR92kcTU6drBRrM7O2/yzOONZNphwzDI1u6JE
+   s=;
+X-IronPort-AV: E=Sophos;i="6.13,329,1732579200"; 
+   d="scan'208";a="382575134"
+Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO smtpout.prod.us-east-1.prod.farcaster.email.amazon.dev) ([10.25.36.210])
+  by smtp-border-fw-80007.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Mar 2025 13:08:55 +0000
+Received: from EX19MTAEUA001.ant.amazon.com [10.0.10.100:44365]
+ by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.12.5:2525] with esmtp (Farcaster)
+ id a3ca6071-d059-430d-be89-565f65c948ae; Mon, 3 Mar 2025 13:08:53 +0000 (UTC)
+X-Farcaster-Flow-ID: a3ca6071-d059-430d-be89-565f65c948ae
+Received: from EX19D015EUA002.ant.amazon.com (10.252.50.219) by
+ EX19MTAEUA001.ant.amazon.com (10.252.50.192) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Mon, 3 Mar 2025 13:08:53 +0000
+Received: from EX19MTAUEB002.ant.amazon.com (10.252.135.47) by
+ EX19D015EUA002.ant.amazon.com (10.252.50.219) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Mon, 3 Mar 2025 13:08:52 +0000
+Received: from email-imr-corp-prod-iad-all-1b-3ae3de11.us-east-1.amazon.com
+ (10.43.8.2) by mail-relay.amazon.com (10.252.135.97) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id
+ 15.2.1544.14 via Frontend Transport; Mon, 3 Mar 2025 13:08:52 +0000
+Received: from dev-dsk-kalyazin-1a-a12e27e2.eu-west-1.amazon.com (dev-dsk-kalyazin-1a-a12e27e2.eu-west-1.amazon.com [172.19.103.116])
+	by email-imr-corp-prod-iad-all-1b-3ae3de11.us-east-1.amazon.com (Postfix) with ESMTPS id 0E275A0686;
+	Mon,  3 Mar 2025 13:08:50 +0000 (UTC)
+From: Nikita Kalyazin <kalyazin@amazon.com>
+To: <pbonzini@redhat.com>, <shuah@kernel.org>
+CC: <kvm@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <michael.day@amd.com>, <david@redhat.com>,
+	<quic_eberman@quicinc.com>, <jthoughton@google.com>, <brijesh.singh@amd.com>,
+	<michael.roth@amd.com>, <graf@amazon.de>, <jgowans@amazon.com>,
+	<roypat@amazon.co.uk>, <derekmn@amazon.com>, <nsaenz@amazon.es>,
+	<xmarcalx@amazon.com>, <kalyazin@amazon.com>
+Subject: [v3 PATCH 1/2] KVM: guest_memfd: add generic population via write
+Date: Mon, 3 Mar 2025 13:08:37 +0000
+Message-ID: <20250303130838.28812-2-kalyazin@amazon.com>
+X-Mailer: git-send-email 2.47.1
+In-Reply-To: <20250303130838.28812-1-kalyazin@amazon.com>
+References: <20250303130838.28812-1-kalyazin@amazon.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v12 2/3] rust: add dma coherent allocator abstraction.
-To: Abdiel Janulgue <abdiel.janulgue@gmail.com>, aliceryhl@google.com,
- dakr@kernel.org, daniel.almeida@collabora.com, rust-for-linux@vger.kernel.org
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
- Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
- =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
- Benno Lossin <benno.lossin@proton.me>,
- Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>,
- Valentin Obst <kernel@valentinobst.de>,
- open list <linux-kernel@vger.kernel.org>, Christoph Hellwig <hch@lst.de>,
- Marek Szyprowski <m.szyprowski@samsung.com>, airlied@redhat.com,
- "open list:DMA MAPPING HELPERS" <iommu@lists.linux.dev>
-References: <20250224115007.2072043-1-abdiel.janulgue@gmail.com>
- <20250224115007.2072043-3-abdiel.janulgue@gmail.com>
-From: Robin Murphy <robin.murphy@arm.com>
-Content-Language: en-GB
-In-Reply-To: <20250224115007.2072043-3-abdiel.janulgue@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 
-On 24/02/2025 11:49 am, Abdiel Janulgue wrote:
-> Add a simple dma coherent allocator rust abstraction. Based on
-> Andreas Hindborg's dma abstractions from the rnvme driver, which
-> was also based on earlier work by Wedson Almeida Filho.
-> 
-> Nacked-by: Christoph Hellwig <hch@lst.de>
-> Signed-off-by: Abdiel Janulgue <abdiel.janulgue@gmail.com>
-> ---
->   rust/bindings/bindings_helper.h |   1 +
->   rust/helpers/dma.c              |  13 +
->   rust/helpers/helpers.c          |   1 +
->   rust/kernel/dma.rs              | 421 ++++++++++++++++++++++++++++++++
->   rust/kernel/lib.rs              |   1 +
->   5 files changed, 437 insertions(+)
->   create mode 100644 rust/helpers/dma.c
->   create mode 100644 rust/kernel/dma.rs
-> 
-> diff --git a/rust/bindings/bindings_helper.h b/rust/bindings/bindings_helper.h
-> index 55354e4dec14..f69b05025e52 100644
-> --- a/rust/bindings/bindings_helper.h
-> +++ b/rust/bindings/bindings_helper.h
-> @@ -11,6 +11,7 @@
->   #include <linux/blk_types.h>
->   #include <linux/blkdev.h>
->   #include <linux/cred.h>
-> +#include <linux/dma-mapping.h>
->   #include <linux/errname.h>
->   #include <linux/ethtool.h>
->   #include <linux/file.h>
-> diff --git a/rust/helpers/dma.c b/rust/helpers/dma.c
-> new file mode 100644
-> index 000000000000..30da079d366c
-> --- /dev/null
-> +++ b/rust/helpers/dma.c
-> @@ -0,0 +1,13 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +#include <linux/dma-mapping.h>
-> +
-> +int rust_helper_dma_set_mask_and_coherent(struct device *dev, u64 mask)
-> +{
-> +	return dma_set_mask_and_coherent(dev, mask);
-> +}
-> +
-> +int rust_helper_dma_set_mask(struct device *dev, u64 mask)
-> +{
-> +	return dma_set_mask(dev, mask);
-> +}
-> diff --git a/rust/helpers/helpers.c b/rust/helpers/helpers.c
-> index 0640b7e115be..8f3808c8b7fe 100644
-> --- a/rust/helpers/helpers.c
-> +++ b/rust/helpers/helpers.c
-> @@ -13,6 +13,7 @@
->   #include "build_bug.c"
->   #include "cred.c"
->   #include "device.c"
-> +#include "dma.c"
->   #include "err.c"
->   #include "fs.c"
->   #include "io.c"
-> diff --git a/rust/kernel/dma.rs b/rust/kernel/dma.rs
-> new file mode 100644
-> index 000000000000..b4dd5d411711
-> --- /dev/null
-> +++ b/rust/kernel/dma.rs
-> @@ -0,0 +1,421 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +//! Direct memory access (DMA).
-> +//!
-> +//! C header: [`include/linux/dma-mapping.h`](srctree/include/linux/dma-mapping.h)
-> +
-> +use crate::{
-> +    bindings, build_assert,
-> +    device::Device,
-> +    error::code::*,
-> +    error::Result,
-> +    transmute::{AsBytes, FromBytes},
-> +    types::ARef,
-> +};
-> +
-> +/// Inform the kernel about the device's DMA addressing capabilities. This will set the mask for
-> +/// both streaming and coherent APIs together.
-> +pub fn dma_set_mask_and_coherent(dev: &Device, mask: u64) -> i32 {
-> +    // SAFETY: device pointer is guaranteed as valid by invariant on `Device`.
-> +    unsafe { bindings::dma_set_mask_and_coherent(dev.as_raw(), mask) }
-> +}
-> +
-> +/// Same as `dma_set_mask_and_coherent`, but set the mask only for streaming mappings.
-> +pub fn dma_set_mask(dev: &Device, mask: u64) -> i32 {
-> +    // SAFETY: device pointer is guaranteed as valid by invariant on `Device`.
-> +    unsafe { bindings::dma_set_mask(dev.as_raw(), mask) }
-> +}
+write syscall populates guest_memfd with user-supplied data in a generic
+way, ie no vendor-specific preparation is performed.  This is supposed
+to be used in non-CoCo setups where guest memory is not
+hardware-encrypted.
 
-It's a bit funny that dma_set_coherent_mask() is the only one you really 
-need at this point (with only the coherent API), yet it's the one that's 
-been left out.
+The following behaviour is implemented:
+ - only page-aligned count and offset are allowed
+ - if the memory is already allocated, the call will successfully
+   populate it
+ - if the memory is not allocated, the call will both allocate and
+   populate
+ - if the memory is already populated, the call will not repopulate it
 
-FWIW, also +1 to the consensus that the DMA masks are, both logically 
-and functionally, properties of the device, so making these Device 
-methods seems sensible.
+Signed-off-by: Nikita Kalyazin <kalyazin@amazon.com>
+---
+ virt/kvm/guest_memfd.c | 94 ++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 91 insertions(+), 3 deletions(-)
 
-Thanks,
-Robin.
+diff --git a/virt/kvm/guest_memfd.c b/virt/kvm/guest_memfd.c
+index 30b47ff0e6d2..f93fe5835173 100644
+--- a/virt/kvm/guest_memfd.c
++++ b/virt/kvm/guest_memfd.c
+@@ -417,12 +417,97 @@ static int kvm_gmem_mmap(struct file *file, struct vm_area_struct *vma)
+ 
+ 	return 0;
+ }
+-#else
+-#define kvm_gmem_mmap NULL
++
++static ssize_t kvm_kmem_gmem_write(struct file *file, const char __user *buf,
++				   size_t count, loff_t *offset)
++{
++	pgoff_t start, end, index;
++	ssize_t ret = 0;
++
++	if (!PAGE_ALIGNED(*offset) || !PAGE_ALIGNED(count))
++		return -EINVAL;
++
++	if (*offset + count > i_size_read(file_inode(file)))
++		return -EINVAL;
++
++	if (!buf)
++		return -EINVAL;
++
++	start = *offset >> PAGE_SHIFT;
++	end = (*offset + count) >> PAGE_SHIFT;
++
++	filemap_invalidate_lock_shared(file->f_mapping);
++
++	for (index = start; index < end; ) {
++		struct folio *folio;
++		void *vaddr;
++		pgoff_t buf_offset = (index - start) << PAGE_SHIFT;
++
++		if (signal_pending(current)) {
++			ret = -EINTR;
++			goto out;
++		}
++
++		folio = kvm_gmem_get_folio(file_inode(file), index);
++		if (IS_ERR(folio)) {
++			ret = -EFAULT;
++			goto out;
++		}
++
++		if (folio_test_hwpoison(folio)) {
++			folio_unlock(folio);
++			folio_put(folio);
++			ret = -EFAULT;
++			goto out;
++		}
++
++		/* No support for huge pages. */
++		if (WARN_ON_ONCE(folio_test_large(folio))) {
++			folio_unlock(folio);
++			folio_put(folio);
++			ret = -EFAULT;
++			goto out;
++		}
++
++		if (folio_test_uptodate(folio)) {
++			folio_unlock(folio);
++			folio_put(folio);
++			ret = -ENOSPC;
++			goto out;
++		}
++
++		folio_unlock(folio);
++
++		vaddr = kmap_local_folio(folio, 0);
++		ret = copy_from_user(vaddr, buf + buf_offset, PAGE_SIZE);
++		kunmap_local(vaddr);
++		if (ret) {
++			ret = -EINVAL;
++			folio_put(folio);
++			goto out;
++		}
++
++		kvm_gmem_mark_prepared(folio);
++		folio_put(folio);
++
++		index = folio_next_index(folio);
++		*offset += PAGE_SIZE;
++	}
++
++out:
++	filemap_invalidate_unlock_shared(file->f_mapping);
++
++	return ret && start == (*offset >> PAGE_SHIFT) ?
++		ret : *offset - (start << PAGE_SHIFT);
++}
+ #endif /* CONFIG_KVM_GMEM_SHARED_MEM */
+ 
+ static struct file_operations kvm_gmem_fops = {
+-	.mmap		= kvm_gmem_mmap,
++#ifdef CONFIG_KVM_GMEM_SHARED_MEM
++	.mmap           = kvm_gmem_mmap,
++	.llseek         = default_llseek,
++	.write          = kvm_kmem_gmem_write,
++#endif /* CONFIG_KVM_GMEM_SHARED_MEM */
+ 	.open		= generic_file_open,
+ 	.release	= kvm_gmem_release,
+ 	.fallocate	= kvm_gmem_fallocate,
+@@ -538,6 +623,9 @@ static int __kvm_gmem_create(struct kvm *kvm, loff_t size, u64 flags)
+ 	}
+ 
+ 	file->f_flags |= O_LARGEFILE;
++#ifdef CONFIG_KVM_GMEM_SHARED_MEM
++	file->f_mode |= FMODE_LSEEK | FMODE_PWRITE;
++#endif /* CONFIG_KVM_GMEM_SHARED_MEM */
+ 
+ 	inode = file->f_inode;
+ 	WARN_ON(file->f_mapping != inode->i_mapping);
+-- 
+2.47.1
+
