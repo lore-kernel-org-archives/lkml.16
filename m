@@ -1,170 +1,162 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp16.bhosted.nl (smtp16.bhosted.nl [94.124.121.27])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DFA71C8FB5
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 08:28:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C07A81EEA5A
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 08:28:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=94.124.121.27
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740990497; cv=none; b=FgucKuVRJC+DmPtkg13vIXmUSXfghE38qXol7wW5eATmdb66p28NaxUrGjAxj2FDm2lt2ujwtoLCpxB/8hbfu/E6KXKpKAFi8AluGwJpAeOcp7GZdHopJBxoVXhP+lDdJ+XnppthvCe5e6opr3hBpbMlxi6utEAPqeD36Vh1KYw=
+	t=1740990515; cv=none; b=KjJFY+Ez670Lk9coa5qZrQA3LBJRiVssAfIU2Zpa4P8J92LWBISdbxiv9zD1UrdyDn0Pl/mVVbIFIRiQ2N25JgaDwVe4L13Xwl7KKe3h/EUklnq0P+OxjWjQUGESPwUuU58KPLR8RLri9HCHB2G3LSX4DEWO1KPqcw34rRf2OAg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740990497; c=relaxed/simple;
-	bh=lRmX3N1C+LM4n4qOw6aMES+ET/YFvMicl8riRqpvkCI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=i/7PaLbBYF3/NAcfyyUNOi4lygyXJZobNDTtpQHIx07go+sPWLAPDV/v0V8JYP+ef426j2TIr6CuYHb9d6Z5FHpAN7WOu+hTSnznyPM2JRepcWvLGUTY+eMyWyflGigNmLJLZ5UmEzJxKeM+JzV30DYigzK+qU3yzaYJ3hq4/vE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=JkG+ewZL; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1740990515; c=relaxed/simple;
+	bh=vn4uUAOxHL4xNpWQx1w7T/QzgTeLHfcz3m2pqPNmXeU=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=KmSgDbu8Nkb06ZZCf98wg8bNrcIkF3iJ6KYv4j5OPiRlr/SlAVAehiIeniktw1sCe01osJWSjxi5ujx+APwZv8eLu+m07HPkbWl0874bTpQypNZA0H5YeVX2/XyH1gSKj/5TrlrHWmFdAUYiT2c5q7oPn1zdU8uUw6+OYFxPANk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=protonic.nl; spf=pass smtp.mailfrom=protonic.nl; dkim=pass (2048-bit key) header.d=protonic.nl header.i=@protonic.nl header.b=SrRa8Xlq; arc=none smtp.client-ip=94.124.121.27
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=protonic.nl
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protonic.nl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JkG+ewZL"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-43948f77f1aso26310655e9.0
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Mar 2025 00:28:14 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=protonic.nl header.i=@protonic.nl header.b="SrRa8Xlq"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1740990492; x=1741595292; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gLvDvN37rSZdD6m86XjZbKgQ5aDQc83ylMnqHwB2npw=;
-        b=JkG+ewZLm7TH+wsAxlsdrCluT51JoNSyv7o59yJshiwmoHzoNxa6Dhq6sTU1BAqQhA
-         wZ+xqvp3b/9ZGEBQh3pqjawMAEMZrEGAx/Tdg/7pCczxVFI78MPhO/Qo1URR2dFFrc5H
-         nM5wnAzRlaBl+do4yCkJU92vmrHznIUK+u/rM25cs7vabAqFdUEXmY4vt2JY4HxMKUsf
-         0dpchgwtDcya8AHMYi97DvCRfq+oAXhgBLXULIVWXv+hBkpVqPJvC5E6r0ZLjQpRAe4z
-         JQOGr7qIkyf+XUYcJAHG1TkDMtqpGNwN72fO+80kV/ifH5tyzJ3lp97EebahW3KPMThq
-         Zrzw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740990492; x=1741595292;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=gLvDvN37rSZdD6m86XjZbKgQ5aDQc83ylMnqHwB2npw=;
-        b=Gky3FlF53ThaJIt0/qSW/rcPsiu8GR2dhMLQm2g0cxNIb0QZhbr5he5WuX57+zn7Ze
-         2iRtOCPYGyqrhneqljrKjaegxwNN/qg8YoClIzSrxNFw1wml1ihcrdTwlehlxeXhsfzm
-         0BMw1aCpLWVlext/8u7VeRg05PNv/MInAokM4KZBdJAu28EbMwvYt4RY8rdubwOcS//v
-         30EKBl+r6wI80VCbiK9Kpq/rrbFmRKOlGrsZ3d3Sb4ykRhCcJFUFGQEtjPopmHUVhUKB
-         8JEZXoz1L/M/S1oaaAX3nlV4kHIeStdunR+UqJqZNcrBPYQYPLpNEAFQrpEDTQ2tDCVo
-         XiHw==
-X-Forwarded-Encrypted: i=1; AJvYcCUaU7Zwymple/vhoGjYslOEHtnysQaXc8RuZJCjYbkwBljjBFA0U1lySc4/NolCfKCq1UsOtSo6NYylIj8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyk9s+NZJqz0pEPOMq2UiMu3gX/Ua1w3jrlf4Mhz3LISpjIq/RU
-	UEUQp9y+MRoHBQ1e3jaP+xXc7F1rMbiRiUXxZ+GsYmwfxiRUyM6f9cRYjVSmCsaxMJqVSv1L7M+
-	vSFwD/jgo/8P12Wyg4B/VfLp+c3dW4v2yxiwi
-X-Gm-Gg: ASbGncu6oXl2NCYhK4Mvv0ky+KWrfenZEN2uXJvA7fWkHRd0YfPCTN9QnByZo4KMSZq
-	OdP4RaMUpbtsochroZwJyMZy37h8kWMtks9Oq20L3/M56wnHV0ebVjGaRXhzWCwCV8qt+GfQ2nY
-	Stlt27kJNUKGVff9lmkPrz76MxvihmP+QenQKrJyQgyW8Fimal0FzmbmzJ
-X-Google-Smtp-Source: AGHT+IHnj4KwcJwR4hqqqZ0/9sOxcRdaZsnmJP5IDASm2FTMhGCue7uJvacKssbH0SCdqUWPbng41JGRR50dPvmLyKs=
-X-Received: by 2002:a05:6000:156d:b0:38f:5057:5810 with SMTP id
- ffacd0b85a97d-390ec7d1e40mr10547737f8f.25.1740990492516; Mon, 03 Mar 2025
- 00:28:12 -0800 (PST)
+	d=protonic.nl; s=202111;
+	h=content-transfer-encoding:content-type:mime-version:references:in-reply-to:
+	 message-id:subject:cc:to:from:date:from;
+	bh=faxAO4aiY4ll+/5SJ/txmaMEq1y/Nw8JWRch36mRZ8o=;
+	b=SrRa8XlqVyxRv2v4tXJ11LoTshnohU9InG0jZIukPC6UV3CwEyN9ZwN16gSCFVfX1Yaj9yX5n11Jm
+	 3Fp1Tm3+42d0ucHilm0Pw5V7WfnZiMpaAFhEKaa+MN9xQI/epKcDohmo+gm22TzHZjSbT8Cp+35pcC
+	 zwSYUfBKVKzFsMIhezky6B4nLIxiornmHL5Tgwzi+x1UPQT3V30EtG9As644o1F2n5F4QpJFQFWcm3
+	 IAqrhWgpUU3ImLMCYTlD2N9avjM2eE5qDPsaYi8xPwysNF8oUJxnUQW5GPUGdhrN16DQkvA77KHCVc
+	 U5qCQmDjUinlmmmYU59VAN7HOmqZRPA==
+X-MSG-ID: 77cb1355-f809-11ef-8b46-005056817704
+Date: Mon, 3 Mar 2025 09:28:21 +0100
+From: David Jander <david@protonic.nl>
+To: David Lechner <dlechner@baylibre.com>
+Cc: linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, Jonathan Corbet
+ <corbet@lwn.net>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
+ <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+ devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Nuno Sa
+ <nuno.sa@analog.com>, Jonathan Cameron <jic23@kernel.org>, Oleksij Rempel
+ <o.rempel@pengutronix.de>
+Subject: Re: [RFC PATCH 0/7] Add Linux Motion Control subsystem
+Message-ID: <20250303092821.51f7ed11@erd003.prtnl>
+In-Reply-To: <09afc3cc-a307-4662-bd70-0cf83f8f38e0@baylibre.com>
+References: <20250227162823.3585810-1-david@protonic.nl>
+	<09afc3cc-a307-4662-bd70-0cf83f8f38e0@baylibre.com>
+Organization: Protonic Holland
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250228-export-macro-v2-0-569cc7e8926c@google.com>
- <20250228-export-macro-v2-3-569cc7e8926c@google.com> <CAJ-ks9ng6AqmDynFebR+2_ZEpmvxkUNWdTed2vr0kede0dxcxw@mail.gmail.com>
-In-Reply-To: <CAJ-ks9ng6AqmDynFebR+2_ZEpmvxkUNWdTed2vr0kede0dxcxw@mail.gmail.com>
-From: Alice Ryhl <aliceryhl@google.com>
-Date: Mon, 3 Mar 2025 09:28:00 +0100
-X-Gm-Features: AQ5f1Jp_z3J9oogrNYre-GB0tMVaV9ocvNHvETVAolm9W0Emv57UL3K3-UTPtKA
-Message-ID: <CAH5fLgj6jQ9Ga2HMqXF3bypxy4qA-wgrfQx2htq0k=V0jfNMpQ@mail.gmail.com>
-Subject: Re: [PATCH v2 3/5] rust: add #[export] macro
-To: Tamir Duberstein <tamird@gmail.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Miguel Ojeda <ojeda@kernel.org>, 
-	Petr Mladek <pmladek@suse.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>, Sergey Senozhatsky <senozhatsky@chromium.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Trevor Gross <tmgross@umich.edu>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, linux-kernel@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org, dri-devel@lists.freedesktop.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Fri, Feb 28, 2025 at 4:40=E2=80=AFPM Tamir Duberstein <tamird@gmail.com>=
- wrote:
->
-> On Fri, Feb 28, 2025 at 7:40=E2=80=AFAM Alice Ryhl <aliceryhl@google.com>=
- wrote:
-> >
-> > Rust has two different tools for generating function declarations to
-> > call across the FFI boundary:
-> >
-> > * bindgen. Generates Rust declarations from a C header.
-> > * cbindgen. Generates C headers from Rust declarations.
-> >
-> > In the kernel, we only use bindgen. This is because cbindgen assumes a
-> > cargo-based buildsystem, so it is not compatible with the kernel's buil=
-d
-> > system. This means that when C code calls a Rust function by name, its
-> > signature must be duplicated in both Rust code and a C header, and the
-> > signature needs to be kept in sync manually.
->
-> This needs an update given Miguel's comments on the cover letter. I
-> wonder if the code should also justify the choice (over cbindgen).
 
-Will do.
+Dear David,
 
-> > +/// Please see [`crate::export`] for documentation.
-> > +pub(crate) fn export(_attr: TokenStream, ts: TokenStream) -> TokenStre=
-am {
-> > +    let Some(name) =3D function_name(ts.clone()) else {
-> > +        return "::core::compile_error!(\"The #[export] attribute must =
-be used on a function.\");"
-> > +            .parse::<TokenStream>()
-> > +            .unwrap();
-> > +    };
->
-> Could you also show in the commit message what this error looks like
-> when the macro is misused?
+Thanks for reviewing!
 
-It looks like this:
+On Fri, 28 Feb 2025 16:36:31 -0600
+David Lechner <dlechner@baylibre.com> wrote:
 
-error: The #[export] attribute must be used on a function.
-   --> <linux>/rust/kernel/lib.rs:241:1
-    |
-241 | #[export]
-    | ^^^^^^^^^
-    |
-    =3D note: this error originates in the attribute macro `export` (in
-Nightly builds, run with -Z macro-backtrace for more info)
+> On 2/27/25 10:28 AM, David Jander wrote:
+> > Request for comments on: adding the Linux Motion Control subsystem to the
+> > kernel.
+> > 
+> > The Linux Motion Control subsystem (LMC) is a new kernel subsystem and
+> > associated device drivers for hardware devices that control mechanical
+> > motion. Most often these are different types of motors, but can also be
+> > linear actuators for example.  
+> 
+> This is something that I played around with when I first got into Linux
+> kernel hacking as a hobbyist. It's something I've always wanted to see get
+> upstreamed, so feel free to cc me on any future revisions of this series.
+> I'm very interested. :-)
 
-But I don't really think it's very useful to include this in the commit mes=
-sage.
+Cool! Will keep you posted.
 
-> > +    let no_mangle =3D "#[no_mangle]".parse::<TokenStream>().unwrap();
->
-> Would this be simpler as `let no_mangle =3D quote!("#[no_mangle]");`?
+> We made drivers for basic DC motors driven by an H-bridge both with and without
+> position feedback and also a driver for hobby-type servo motors. For those
+> interested, there is code [1] and docs [2]. One thing we would do different
+> if doing it over again is use a character device instead of sysfs attributes
+> as the interface for starting/stopping/adjusting actuation.
+> 
+> [1]: https://github.com/ev3dev/lego-linux-drivers/tree/ev3dev-stretch/motors
+> [2]: http://docs.ev3dev.org/projects/lego-linux-drivers/en/ev3dev-stretch/motors.html
+> 
+> > 
+> > This subsystem defines a new UAPI for motion devices on the user-space
+> > side, as well as common functionality for hardware device drivers on the
+> > driver side.
+> > 
+> > The UAPI is based on a ioctl() interface on character devices representing
+> > a specific hardware device. The hardware device can control one or more
+> > actuators (motors), which are identified as channels in the UAPI. It is
+> > possible to execute motions on individual channels, or combined
+> > affecting several selected (or all) channels simutaneously. Examples of
+> > coordinated movements of several channels could be the individual axes
+> > of a 3D printer or CNC machine for example.
+> > 
+> > On the hardware side, this initial set of patches also includes two drivers
+> > for two different kinds of motors. One is a stepper motor controller
+> > device that containes a ramp generator capable of autonomously executing
+> > controlled motions following a multi-point acceleration profile
+> > (TMC5240), as well as a simple DC motor controller driver that can control
+> > DC motors via a half-bridge or full H-bridge driver such as the TI DRV8873
+> > for example.
+> > 
+> > Towards the IIO subsystem, LMC supports generating iio trigger events that
+> > fire at certain motion events, such as passing a pre-programmed position or
+> > when reaching the motion target position, depending on the capabilities of
+> > the hardware device. This enables for example triggering an ADC measurement
+> > at a certain position during a movement.  
+> 
+> I would expect to be using the counter subsystem for position, at least in
+> cases where there is something like a quadrature encoder involved.
 
-I'll do that. It requires adding the # token to the previous commit.
+I will have to think about it. Since there are some Linux capable SoC's that
+have counter inputs able to do quadrature decoding, it might make sense to
+support that. For now, the TMC5240 controller for example has support for
+encoders and while in this patch-set support for it is minimal, the idea was
+that a motion controller that supports an encoder would just offer the option
+to use the encoder as the authoritative source for position information. So
+let's say you have a DC motor for example. Without an encoder or any other
+means for of speed/position feedback, the best one can do is establish a 1:1
+relationship between duty-cycle and speed, obviating all inaccuracies of doing
+so. So a motion controller using a DC motor would just do that if it has no
+encoder. OTOH, if there is an encoder as a source of position and speed
+information, the driver could work with more accurate data. It all depends, but
+in the end the interface towards the user is the same: move with some speed
+towards some position or for some amount of time.
 
-> > +/// This macro is *not* the same as the C macros `EXPORT_SYMBOL_*`, si=
-nce all Rust symbols are
-> > +/// currently automatically exported with `EXPORT_SYMBOL_GPL`.
->
-> nit: "since" implies causation, which isn't the case, I think.
-> Consider if ", since" can be replaced with a semicolon.
+> > In the future, making use of PREEMPT_RT, even dumb STEP/DIR type stepper
+> > motor controller drivers may be implemented entirely in the kernel,
+> > depending on some characteristics of the hardware (latency jittter,
+> > interrupt latency and CPU speed mainly).
+> > 
+> > The existence of this subsystem may affect other projects, such as
+> > Linux-CNC and Klipper for example.
+> > 
+> > This code is already in use controlling machines with up to 16 stepper
+> > motors and up to 4 DC motors simutaneously. Up to this point the UAPI
+> > has shown to be adequate and sufficient. Careful thought has gone into
+> > the UAPI design to make sure it coveres as many use-cases as possible,
+> > while being versioned and extensible in the future, with backwards
+> > compatibility in mind.
+> > 
+> > David Jander (7):
+> >   drivers: Add motion control subsystem  
+> 
+> Would it be too broad to call this an actuation subsystem instead where motion
+> is just one kind of actuation?
 
-Will reword.
+I think it is hard enough already to make a UAPI for motion that is general
+enough to encompass all types of different motors and motion actuators.
+Generalizing even further without a serious risk of shortcomings seems almost
+impossible, but I am open to suggestions.
 
-> > +#[proc_macro_attribute]
-> > +pub fn export(attr: TokenStream, ts: TokenStream) -> TokenStream {
-> > +    export::export(attr, ts)
-> > +}
-> > +
-> >  /// Concatenate two identifiers.
-> >  ///
-> >  /// This is useful in macros that need to declare or reference items w=
-ith names
-> >
-> > --
-> > 2.48.1.711.g2feabab25a-goog
->
-> Minor comments.
->
-> Reviewed-by: Tamir Duberstein <tamird@gmail.com>
+Best regards,
 
-Thanks!
-
-Alice
+-- 
+David Jander
