@@ -1,164 +1,176 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mail.mleia.com (mleia.com [178.79.152.223])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9772713C9D4
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 04:26:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 298AB13C9D4;
+	Mon,  3 Mar 2025 04:27:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.79.152.223
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740975976; cv=none; b=Ur7ctqhaHjk8SRz1Nohh+YxySyuU6gVRuAu6+2tAOYUgYuiUiHkR7eYuu8rLbPdiqQliAD2YX4pHOlX0WfoSIccbp3EoQmPVhB8c3cynxkYt/6GNTE5TyRTWAp6lfOAI1dCtLqijhPImQnpfp2bteYWCly73T5Qn/Gs5qP7JMfs=
+	t=1740976074; cv=none; b=dhQLAPyQ7sqFJB+R0F3d9g5H8D+JIg39e2YIwAS+pFspk5FRTxq//J5Fy0/cC2qKjyCiXEDtRKkOEp8Q0Zq8KbgCpGlXILqshGe59+GerKfzNjJkUz1fQJqQcK567nEkKXC8rfqWIEjYG89m5WqfwvYm/8woJa3lwRA1Yv4qoQA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740975976; c=relaxed/simple;
-	bh=C5iL4+UgEfYtFgc0oU8GEsbInCv6xJrYflTOLd9mLlE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ix5AG4pphrcjIM3Wkl4zmFNuhNK/IFlen0Z4HJRwMTZXJiLttxAZggSp0ufrv5TK2Nv4a5JhX5UwSpdmZ1zSQd3F/iPSVgXTgu5DaSwhuADmc8qzBF2qXI6hvGVN/+PZEGwF0ZCszNc9T4VDG/YR1fEYEct4lcRghsOzgP4w0uI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LsLhjoyU; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1740976074; c=relaxed/simple;
+	bh=HNnaj8o2a9E4BdcLiTNMcgTKpVot/6Pzc4Y5SZw5i+4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ohypdMT6tCAKNg5rsDRt6J8ErShKfz7ndWSJ8sIXfR4AsLeyG+6W8hzfkW0Dvd73sehnvtnvp5NH18NhlHoc8jwUokf7J1Hzu5Gs1AwDiG5naDl4tRmFS1lr/v3/CM2kgZRB2Ba9ZblfNFGHhORCAriP8/W7lDp+IU8tGf3LDJ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mleia.com; spf=none smtp.mailfrom=mleia.com; dkim=pass (2048-bit key) header.d=mleia.com header.i=@mleia.com header.b=f58rg0mU; dkim=pass (2048-bit key) header.d=mleia.com header.i=@mleia.com header.b=f58rg0mU; arc=none smtp.client-ip=178.79.152.223
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mleia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=mleia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LsLhjoyU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1740975973;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=I5dSGTpmLn97joWduARVp0cs22gFzxB4/mv/r4vqwy8=;
-	b=LsLhjoyUTfXwLuCQJUhkN2qQuHYKwhzjFRmhXRujSUG5fAPhthskqrPm7gCRY3BTU88Koo
-	QOTtbZ0bttn9J0fkH+2eh1JXRebH9mzGYal/mAP4fwQeqRCzogyvFR3zCs3SCFI/IpOr3T
-	kqh0AV61ejkBSPGhX3paqYRW0EpX5g8=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-644-CE3TG2njOHSwD-n4A6fhuw-1; Sun, 02 Mar 2025 23:26:12 -0500
-X-MC-Unique: CE3TG2njOHSwD-n4A6fhuw-1
-X-Mimecast-MFC-AGG-ID: CE3TG2njOHSwD-n4A6fhuw_1740975971
-Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-abf46dba035so196653366b.0
-        for <linux-kernel@vger.kernel.org>; Sun, 02 Mar 2025 20:26:12 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740975971; x=1741580771;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=I5dSGTpmLn97joWduARVp0cs22gFzxB4/mv/r4vqwy8=;
-        b=mtDChC9c+zaSsbXyRO9lqYEpLgTJDfP5gyxHjh3BvrYZTL0hdCIyzsZ0ITVhQUkF6F
-         UQmDASYEbjcgZZmAzZxYWFMkUouCrTHVpBB6IHE/UgKeK8wbKLvPvR7OW7X8obxkYNpI
-         TLeapm4iIUNnxp7zIOJ3jgNBP/3vQeZSSTKwgTJkivAw2JjNAXzu0QGPpEByb93cMYYK
-         MHzwSRjMSMu3gZWgYbu4Af/Epq0TWs017B9Q+A3+sH9j7JcWl6NPpjSBDH+B2xbW3YTv
-         KsGD3Ul0aFmRSZdfmQEpUz428/9WOcm0w9bw5BfCPdYMr+OP79Hmrq+NomAOBjeT0xD+
-         o/Cg==
-X-Forwarded-Encrypted: i=1; AJvYcCVzdPJKuOas3JfKO9IDaMZZ0Td61TiUNjxzdmgAEcBf1NpMlnWMOLanhvOD8VDsZxthI1OqBMNmb6JV0Rk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxMtUBNGUPrqUQPPAIscRjS0BhqDje5PcbQY8WL0IwPZ0psEtgz
-	uTirtQq64OG2v0CnO5ceXqjW0a6Z0yRzQ5ZC1LmQokIetDURIniAfUu+cT1b1YaOo1Q9HRblHmk
-	JQKSh3p1ggFGa6DE8t5AFgCtNEennUuuIjJwOGr7KLuB/zLUjTEzufox6gpYj0E11Shp2juUjLc
-	cn57Shd7rEHSga9Boxpn61sXe5JFfAwIHcgyLA
-X-Gm-Gg: ASbGnctsb7pn290Z0jKSAL9WTdfsev8hWvf1V0TCnrXzv1W+U3AGY6bVWXWJENtJMRZ
-	5Sk/NtSIVKIEziGuF5iYXczzBZn29ZONoKiOKphaChZXjZ5npKQT99Ery0YvVNNjKWAosoQQtEQ
-	==
-X-Received: by 2002:a17:906:f587:b0:abf:7a26:c470 with SMTP id a640c23a62f3a-abf7a26c65emr198736866b.51.1740975970955;
-        Sun, 02 Mar 2025 20:26:10 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IF0DZmam62M33CFchi6Iot8/yKD5WtjQeX8AZY42o8lCmFpVtXhHd6dmyoN1uMg3/AghFVz73sYvs21PnyxwaA=
-X-Received: by 2002:a17:906:f587:b0:abf:7a26:c470 with SMTP id
- a640c23a62f3a-abf7a26c65emr198735166b.51.1740975970622; Sun, 02 Mar 2025
- 20:26:10 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=mleia.com header.i=@mleia.com header.b="f58rg0mU";
+	dkim=pass (2048-bit key) header.d=mleia.com header.i=@mleia.com header.b="f58rg0mU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mleia.com; s=mail;
+	t=1740976064; bh=HNnaj8o2a9E4BdcLiTNMcgTKpVot/6Pzc4Y5SZw5i+4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=f58rg0mUSJFkiF2jKMIj4qql/VpoAyyk2nXAiakanyYdo8VsxK/clVewI7yYdgPGL
+	 6FFFrqkVc68kX3g2TLDLG6iZUOLguuhahEKtCKcMOij2k+tbdhRw2XABSc2epNDFHr
+	 wggn5ZLW4bElEdFmBib62x5CgD72TiIAw/ZEBY6yK+x+0l8WDj6KAxqN+3L1911FGB
+	 5VfQEOeZOiuzFJmXSPTPaJgjKVTiHYuCcr+UwuGvaEDoZLjsYay4pG573+HOw/RQja
+	 F7sdqWyXokSgxeRnybAdxnebEu3gjfqth76/n53hWFhJR9S26reJhZTtxZ2S5+l0dp
+	 iGsdFJq2lNlSw==
+Received: from mail.mleia.com (localhost [127.0.0.1])
+	by mail.mleia.com (Postfix) with ESMTP id C6A653A627F;
+	Mon,  3 Mar 2025 04:27:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mleia.com; s=mail;
+	t=1740976064; bh=HNnaj8o2a9E4BdcLiTNMcgTKpVot/6Pzc4Y5SZw5i+4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=f58rg0mUSJFkiF2jKMIj4qql/VpoAyyk2nXAiakanyYdo8VsxK/clVewI7yYdgPGL
+	 6FFFrqkVc68kX3g2TLDLG6iZUOLguuhahEKtCKcMOij2k+tbdhRw2XABSc2epNDFHr
+	 wggn5ZLW4bElEdFmBib62x5CgD72TiIAw/ZEBY6yK+x+0l8WDj6KAxqN+3L1911FGB
+	 5VfQEOeZOiuzFJmXSPTPaJgjKVTiHYuCcr+UwuGvaEDoZLjsYay4pG573+HOw/RQja
+	 F7sdqWyXokSgxeRnybAdxnebEu3gjfqth76/n53hWFhJR9S26reJhZTtxZ2S5+l0dp
+	 iGsdFJq2lNlSw==
+Message-ID: <09acba97-70e1-448e-8453-c4e1f67a035c@mleia.com>
+Date: Mon, 3 Mar 2025 06:27:43 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250302143259.1221569-1-lulu@redhat.com>
-In-Reply-To: <20250302143259.1221569-1-lulu@redhat.com>
-From: Lei Yang <leiyang@redhat.com>
-Date: Mon, 3 Mar 2025 12:25:34 +0800
-X-Gm-Features: AQ5f1JrtDM4meGmqZ71iruwsh2y39gPiEVFEaxe4BlZl8h_Xwrnd5iQqMoRKc2E
-Message-ID: <CAPpAL=yGBNWYCCEKi049_yBQs0QjSCCA=AjiT-9NoMZikCOKjw@mail.gmail.com>
-Subject: Re: [PATCH v7 0/8] vhost: Add support of kthread API
-To: Cindy Lu <lulu@redhat.com>
-Cc: jasowang@redhat.com, mst@redhat.com, michael.christie@oracle.com, 
-	sgarzare@redhat.com, linux-kernel@vger.kernel.org, 
-	virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] dt-bindings: interrupt-controller: Convert
+ nxp,lpc3220-mic.txt to yaml format
+Content-Language: ru-RU
+To: Leonardo Felipe Takao Hirata <leo.fthirata@gmail.com>,
+ tglx@linutronix.de, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+ skhan@linuxfoundation.org, linux-kernel-mentees@lists.linuxfoundation.org
+References: <20250228034021.607135-1-leo.fthirata@gmail.com>
+From: Vladimir Zapolskiy <vz@mleia.com>
+In-Reply-To: <20250228034021.607135-1-leo.fthirata@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-49551924 
+X-CRM114-CacheID: sfid-20250303_042744_836100_F3D90AA7 
+X-CRM114-Status: GOOD (  11.71  )
 
-QE tested this series of patches with virtio-net regression tests,
-everything works fine.
+Hello Leonardo.
 
-Tested-by: Lei Yang <leiyang@redhat.com>
+On 2/28/25 05:39, Leonardo Felipe Takao Hirata wrote:
+> Convert NXP LPC3220-MIC to DT schema.
+> 
+> Signed-off-by: Leonardo Felipe Takao Hirata <leo.fthirata@gmail.com>
+> ---
+> Changes in v3:
+>   - Add interrupts property description
+>   - Fix interrupts items descriptions
+>   - Remove else condition
+> ---
 
-On Sun, Mar 2, 2025 at 10:33=E2=80=AFPM Cindy Lu <lulu@redhat.com> wrote:
->
-> In commit 6e890c5d5021 ("vhost: use vhost_tasks for worker threads"),
-> the vhost now uses vhost_task and operates as a child of the
-> owner thread. This aligns with containerization principles.
-> However, this change has caused confusion for some legacy
-> userspace applications. Therefore, we are reintroducing
-> support for the kthread API.
->
-> In this series, a new UAPI is implemented to allow
-> userspace applications to configure their thread mode.
->
-> Changelog v2:
->  1. Change the module_param's name to enforce_inherit_owner, and the defa=
-ult value is true.
->  2. Change the UAPI's name to VHOST_SET_INHERIT_FROM_OWNER.
->
-> Changelog v3:
->  1. Change the module_param's name to inherit_owner_default, and the defa=
-ult value is true.
->  2. Add a structure for task function; the worker will select a different=
- mode based on the value inherit_owner.
->  3. device will have their own inherit_owner in struct vhost_dev
->  4. Address other comments
->
-> Changelog v4:
->  1. remove the module_param, only keep the UAPI
->  2. remove the structure for task function; change to use the function po=
-inter in vhost_worker
->  3. fix the issue in vhost_worker_create and vhost_dev_ioctl
->  4. Address other comments
->
-> Changelog v5:
->  1. Change wakeup and stop function pointers in struct vhost_worker to vo=
-id.
->  2. merging patches 4, 5, 6 in a single patch
->  3. Fix spelling issues and address other comments.
->
-> Changelog v6:
->  1. move the check of VHOST_NEW_WORKER from vhost_scsi to vhost
->  2. Change the ioctl name VHOST_SET_INHERIT_FROM_OWNER to VHOST_FORK_FROM=
-_OWNER
->  3. reuse the function __vhost_worker_flush
->  4. use a ops sturct to support worker relates function
->  5. reset the value of inherit_owner in vhost_dev_reset_owner s.
->
-> Changelog v7:
->  1. add a KConfig knob to disable legacy app support
->  2. Split the changes into two patches to separately introduce the ops an=
-d add kthread support.
->  3. Utilized INX_MAX to avoid modifications in __vhost_worker_flush
->  4. Rebased on the latest kernel
->  5. Address other comments
->
-> Tested with QEMU with kthread mode/task mode/kthread+task mode
->
-> Cindy Lu (8):
->   vhost: Add a new parameter in vhost_dev to allow user select kthread
->   vhost: Reintroduce vhost_worker to support kthread
->   vhost: Add the cgroup related function
->   vhost: Introduce vhost_worker_ops in vhost_worker
->   vhost: Reintroduce kthread mode support in vhost
->   vhost: uapi to control task mode (owner vs kthread)
->   vhost: Add check for inherit_owner status
->   vhost: Add a KConfig knob to enable IOCTL VHOST_FORK_FROM_OWNER
->
->  drivers/vhost/Kconfig      |  15 +++
->  drivers/vhost/vhost.c      | 227 +++++++++++++++++++++++++++++++++----
->  drivers/vhost/vhost.h      |  21 ++++
->  include/uapi/linux/vhost.h |  15 +++
->  4 files changed, 259 insertions(+), 19 deletions(-)
->
-> --
-> 2.45.0
->
->
+<snip>
 
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/nxp,lpc3220-mic.yaml b/Documentation/devicetree/bindings/interrupt-controller/nxp,lpc3220-mic.yaml
+> new file mode 100644
+> index 000000000000..59e8814a15b7
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/nxp,lpc3220-mic.yaml
+> @@ -0,0 +1,69 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/interrupt-controller/nxp,lpc3220-mic.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: NXP LPC32xx MIC, SIC1 and SIC2 Interrupt Controllers
+> +
+> +maintainers:
+> +  - Vladimir Zapolskiy <vz@mleia.com>
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - nxp,lpc3220-mic
+> +      - nxp,lpc3220-sic
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupt-controller: true
+> +
+> +  '#interrupt-cells':
+> +    const: 2
+> +
+> +  interrupts:
+
+Please put here
+
+   minItems: 2
+   maxItems: 2
+
+> +    items:
+> +      - description: Regular interrupt request
+> +      - description: Fast interrupt request
+> +    description: IRQ and FIQ outputs of SIC1/SIC2 to the MIC.
+
+Having both two descriptions under 'items:' and another description is
+excessive, please leave only one of two.
+
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupt-controller
+> +  - '#interrupt-cells'
+> +
+> +allOf:
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            const: nxp,lpc3220-sic
+> +    then:
+> +      required:
+> +        - interrupts
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +
+> +    mic: interrupt-controller@40008000 {
+> +        compatible = "nxp,lpc3220-mic";
+> +        reg = <0x40008000 0x4000>;
+> +        interrupt-controller;
+> +        #interrupt-cells = <2>;
+> +    };
+> +
+> +    sic1: interrupt-controller@4000c000 {
+
+Here sic1 label is not used, please remove.
+
+> +        compatible = "nxp,lpc3220-sic";
+> +        reg = <0x4000c000 0x4000>;
+> +        interrupt-controller;
+> +        #interrupt-cells = <2>;
+> +        interrupt-parent = <&mic>;
+> +        interrupts = <0 IRQ_TYPE_LEVEL_LOW>,
+> +                    <30 IRQ_TYPE_LEVEL_LOW>;
+> +    };
+
+After the fixes please feel free to add the tag:
+
+Reviewed-by: Vladimir Zapolskiy <vz@mleia.com>
+
+--
+Best wishes,
+Vladimir
