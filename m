@@ -1,106 +1,121 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCAFC1F0E3D;
-	Mon,  3 Mar 2025 10:23:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F2601F12F8
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 10:23:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740997389; cv=none; b=Eqqet5xPSyj3sMVcGhEkB/jPefFkrVR2cuLF5bES9k7xgWHqRLNg5a803jNM9P+rKvuUuLRYeDAI4azWfxlRc5y/NLBWV+IE4JsDRX6gUAGKD/TRks6TyirTFJYJM2MW+VZo/3vhqd0AIt70Kd645qJ3c3VigES+XIeDBGIoABg=
+	t=1740997392; cv=none; b=duzudS5Nv1FBhr+LXxwtz/KoGGT10pcjOVDct/NKPTJZqz01VIjODy7zw+Mw7arOISf1Ocs7QQSA7kOxO6sKSQ5/M0bsEuAotPk2z146LV71bAZyty+ixawDvQFsItIqNZ4S3XOs7Z81SLgDbLB93fJg4gguMUBwzChgoed7/1Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740997389; c=relaxed/simple;
-	bh=wYOBcnI3XVtlHLC1GGMPUeDv5qroZJftBhJv4x7ysSY=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=OFFCOkLRfG9O+bj3EEqT1spG3g2MXmOSwhtHRuYTSITOI+zryZgRZjDHKMAV8QBF/VzWMRxG8E239wucooG6ylsqCNpRvRhG1MUkTkkDY+j/XZdnRxDkIHiVanlS/MRPcrRIVLG5lsFunkZgSlJrjdG2wDzjjZvB8/WLJ9duefI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ZFFiCPCg; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=p5zYz4L1; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1740997392; c=relaxed/simple;
+	bh=45N3CTCQyFNYATVodSXBAL+a94s2+Sf5PekV0GfAnzk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=opL1J33DLJZLEWpjwMyU9jixegFw4i2Bj2RFjkSLp2SJDSgLhJagCQkfsBYKH1TTPdfPdyu5GDXt6U0HSfdm1dnROxa+xkTww5GseWPIcWtYE4rcfiO28Jf0oTr287ZWVSrPvPiYuqtD818ICUkSy8iXvKj5NYgFlLhq6g/k1UM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=VNt3uvV1; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ZFFiCPCg";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="p5zYz4L1"
-Date: Mon, 03 Mar 2025 10:23:03 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1740997385;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ForH1bO4z81FxmkT/jXljNK17Iu9LFYhxm7JTnTzFFQ=;
-	b=ZFFiCPCgDonw1ELW9ODtIoYot9dJpxZ0M4MTfqqNfeR88k0IlpCuVkqAHEW0g7IGGHyHI8
-	EZc9JQ0RCX3VXmm3LPqBYZdv4qaAljp0G23kSTjuOXBf1ds1aQHtNMIApP3/FhSBEn6vQ7
-	mPy2YtnfchSe0g4sfphviGc8ZpPTn5jHvqhhfy7k4/ZYTPnYBLX0HF9y+w17JdeCs6rTqS
-	CdhmJj5Pj/20EKUyXzqRgws4YLvX2SXZOzJ6MGbB7c6RsTEnNYKaF6fTUKIlT652ohiK2w
-	Hq0QDGuN5R17p76x3ClxrPUN9lDu4ofhOcTRSdJXyvzigtPFWT5TcE7dg+adtw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1740997385;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ForH1bO4z81FxmkT/jXljNK17Iu9LFYhxm7JTnTzFFQ=;
-	b=p5zYz4L1jQ870pXiNwac2RymCnIH/KmcNYOi4SHeVvAYSRv2EfsPH1uIC5llk/lg+58x7x
-	NmsOWlthgL0Ji7AA==
-From: "tip-bot2 for Lukas Bulwahn" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/cpu] xen: Kconfig: Drop reference to obsolete configs
- MCORE2 and MK8
-Cc: Lukas Bulwahn <lukas.bulwahn@redhat.com>, Ingo Molnar <mingo@kernel.org>,
- Juergen Gross <jgross@suse.com>, x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250303093759.371445-1-lukas.bulwahn@redhat.com>
-References: <20250303093759.371445-1-lukas.bulwahn@redhat.com>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="VNt3uvV1"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52300fmg001154
+	for <linux-kernel@vger.kernel.org>; Mon, 3 Mar 2025 10:23:08 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	GKhAMHMv9Qj1+aCKv/F3rYQfkqyHFXlh7B6Upy8lJ2c=; b=VNt3uvV1VYM+zOhx
+	a4GpvWlv3sWQkm9TJqOKwNqZ21pPhTc+0p2ybbNPcXQqSWPwMR/N1SUM6kBK5C+W
+	4wsvzev9/nqhbmeRPRnkpdCtTmw8yIs36ATAe3oO1VTqXZ8TdZhEY0IqLV8fyshG
+	Tm6Ko65Qls5jIOuy7M3HhgPzJd2N6On87zDsizwEggbGu9AtqPKTq0jfIl5RSCdJ
+	9QCEWRvj8s+sSdeHpTPkiRK6qWorTEqHe0A9NOn6KaAC06BtdmRON4P335xXO4Z8
+	bE0Sqb6S564E88peQ3qg3HO6uyMQ3ymjW/Jw5cuFpK8JRcIhcHGupaCavVDG+8lD
+	IJ3XGw==
+Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com [209.85.214.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 453tascktq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Mon, 03 Mar 2025 10:23:08 +0000 (GMT)
+Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-22328fb6cbfso76901745ad.2
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Mar 2025 02:23:07 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740997387; x=1741602187;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=GKhAMHMv9Qj1+aCKv/F3rYQfkqyHFXlh7B6Upy8lJ2c=;
+        b=lyXuAgKMIfpQXE86uoPsuiwGEJMER+NDj7N7OCh7lUSan4ClhiF0C/07fn6j2apx15
+         6LOdy1vtR7gVTto4ZrKwo1dT4QU4uyqvj6qJ1r96LR6UgOgviW99XVImqXEK2tnuHzYy
+         s/dSo/mfYqQqVjACIrjuI3hQvXMOu/HkELccYbvmVXTHNNXLWfrWXaYJtZMnvsNol5iL
+         IkHNiIrR96aoYppheqUmtCECr2Pl7z2ccQXlbavl7FmscthLb8LmlwPw4vg986J+7Ovw
+         S5MLccsvrBAJznNbljJXqYzWEiOZjP5MfKFaMNfEnixrQtlPWYemMtdLMtVwc0MRTRDc
+         qAaQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU2DlYrDmp8+pJPT01Z4pvoZ+wxupwUOTF+V0xz7CZMdqoAZ9hAu5OK08NOzpyyc/BHiA2tbzsRH/knCHk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwiOUNTeRT+j5ZHh0qrPOuWCHuHNkpOZGxE9mfCdZli5qcZZ9Hd
+	pUKnA/1ADdPniHULkI0wtzkqhS77B1car0xNdVHWpPdRa1MeL2y9FKMU2Kf7MUr7r9L8Ty/XH0l
+	SPRgoM/czCmyEux/0eO/KpSmZkJBOBa9puty3CMP30wiyC40DDU46/lJQROs2aDY=
+X-Gm-Gg: ASbGncttzIiQkqH7zXaDxfAGWsvg4H1qrqACa5y55zjhvt5BoGC5xbzGeqlxT0OkM38
+	zDujRk9TwZ9p9vJdYOQhp2S3zbIjipMf7BvfWX6WMDRmhQ0bsDiLi2ou3Gd6SpVuMWiBcmI+HTP
+	VbRGpcHkHhmN3k5CVtJtPM4PfEDD5ndYYYXsWe5m3cdPjdBjwhaTzUlmIDINmuzpbVqSYxEpul/
+	XY9rJN2ea4wlonojgpHMIBYGoM2GYSJjtlKt16VG1AAbTUty2F15teUo2IrGiB0i91wZHhINb7n
+	qkbcy0GweQNr7rND3c18vltZjAaX8eWzFs8PtuUXImQ6tyWpccQ1Lb3pdNA=
+X-Received: by 2002:a17:902:e54b:b0:21f:7880:8472 with SMTP id d9443c01a7336-2236924fa13mr206373605ad.35.1740997386641;
+        Mon, 03 Mar 2025 02:23:06 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEzewlI+MdkavpK5IxUd9OuTeDDFG7whKIl5HH92YgygrrZJJ+26+G+Xae6Q3us5qqTy1cWBA==
+X-Received: by 2002:a17:902:e54b:b0:21f:7880:8472 with SMTP id d9443c01a7336-2236924fa13mr206373175ad.35.1740997386280;
+        Mon, 03 Mar 2025 02:23:06 -0800 (PST)
+Received: from [192.168.1.35] ([117.236.245.126])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-223505293ddsm73795215ad.229.2025.03.03.02.23.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 03 Mar 2025 02:23:05 -0800 (PST)
+Message-ID: <8dda7af4-b318-4e39-b79d-738b6084feb3@oss.qualcomm.com>
+Date: Mon, 3 Mar 2025 15:53:00 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174099738443.10177.5303212192707444006.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 19/23] arm64: dts: qcom: ipq6018: Add missing MSI and
+ 'global' IRQs
+To: manivannan.sadhasivam@linaro.org,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+ <conor+dt@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        cros-qcom-dts-watchers@chromium.org
+Cc: linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250227-pcie-global-irq-v1-0-2b70a7819d1e@linaro.org>
+ <20250227-pcie-global-irq-v1-19-2b70a7819d1e@linaro.org>
+Content-Language: en-US
+From: Kathiravan Thirumoorthy <kathiravan.thirumoorthy@oss.qualcomm.com>
+In-Reply-To: <20250227-pcie-global-irq-v1-19-2b70a7819d1e@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-Proofpoint-GUID: Srpdol0LP4IUxYC9Pw7zSgdAWyHCfsG2
+X-Proofpoint-ORIG-GUID: Srpdol0LP4IUxYC9Pw7zSgdAWyHCfsG2
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-03_04,2025-03-03_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
+ mlxlogscore=601 spamscore=0 phishscore=0 mlxscore=0 priorityscore=1501
+ bulkscore=0 lowpriorityscore=0 malwarescore=0 impostorscore=0 adultscore=0
+ clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502100000 definitions=main-2503030080
 
-The following commit has been merged into the x86/cpu branch of tip:
+On 2/27/2025 7:11 PM, Manivannan Sadhasivam via B4 Relay wrote:
+> From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+>
+> IPQ6018 has 8 MSI SPI interrupts and one 'global' interrupt.
+>
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> ---
+>   arch/arm64/boot/dts/qcom/ipq6018.dtsi | 20 ++++++++++++++++++--
+>   1 file changed, 18 insertions(+), 2 deletions(-)
 
-Commit-ID:     5c98a674dcb85be3f42854a80e630f08b436131e
-Gitweb:        https://git.kernel.org/tip/5c98a674dcb85be3f42854a80e630f08b436131e
-Author:        Lukas Bulwahn <lukas.bulwahn@redhat.com>
-AuthorDate:    Mon, 03 Mar 2025 10:37:59 +01:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Mon, 03 Mar 2025 11:15:07 +01:00
+Reviewed-by: Kathiravan Thirumoorthy 
+<kathiravan.thirumoorthy@oss.qualcomm.com>
 
-xen: Kconfig: Drop reference to obsolete configs MCORE2 and MK8
-
-Commit f388f60ca904 ("x86/cpu: Drop configuration options for early 64-bit CPUs")
-removes the config symbols MCORE2 and MK8.
-
-With that, the references to those two config symbols in xen's x86 Kconfig
-are obsolete. Drop them.
-
-Fixes: f388f60ca904 ("x86/cpu: Drop configuration options for early 64-bit CPUs")
-Signed-off-by: Lukas Bulwahn <lukas.bulwahn@redhat.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Reviewed-by: Juergen Gross <jgross@suse.com>
-Link: https://lore.kernel.org/r/20250303093759.371445-1-lukas.bulwahn@redhat.com
----
- arch/x86/xen/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/x86/xen/Kconfig b/arch/x86/xen/Kconfig
-index 77e788e..98d8a50 100644
---- a/arch/x86/xen/Kconfig
-+++ b/arch/x86/xen/Kconfig
-@@ -9,7 +9,7 @@ config XEN
- 	select PARAVIRT_CLOCK
- 	select X86_HV_CALLBACK_VECTOR
- 	depends on X86_64 || (X86_32 && X86_PAE)
--	depends on X86_64 || (X86_GENERIC || MPENTIUM4 || MCORE2 || MATOM || MK8)
-+	depends on X86_64 || (X86_GENERIC || MPENTIUM4 || MATOM)
- 	depends on X86_LOCAL_APIC && X86_TSC
- 	help
- 	  This is the Linux Xen port.  Enabling this will allow the
