@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA6A823957C;
-	Mon,  3 Mar 2025 22:17:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1F9D23BFA6;
+	Mon,  3 Mar 2025 22:17:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741040255; cv=none; b=ksEHxMMna3yWFKXo5IyWCV8vNJRjmWoYVKV7vDLUWka+bpeQ4FjveB74wf7GvISHN2dnnV2Z515kdFJS/Z4OXpTPbUcEBbeNdAshpCvlBjOsMZvk6f4Zfdlfv8gH7lOSmFyb42LtxxJFNbMs9dz62OAhzqg+Os2ANTs918cnW/I=
+	t=1741040258; cv=none; b=p+5g1lcfiSaaURBhJSvq3hiZy2KhW4UE/DtVEf6yrcI/5Crw5wgS1zKcMEC0VbQUUF/OZGEfRbmUJqfHMvCEvLaF/xQyqKbH1W+8q+za7wv1ZXQ51R3iMQvhaiMYiNjAgX1kKW2/13/aSYOSKCcIAjD/K4iDRh1bO0MiYIIUYcE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741040255; c=relaxed/simple;
-	bh=oYTrlxmiR5BNoFrioFop/hpnftvDsKcm3PmL/H0/UqA=;
+	s=arc-20240116; t=1741040258; c=relaxed/simple;
+	bh=LSjpeMzXWVkQm84u7Pg3DRD/aAE+XvDLQxgeGEMx2JU=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=mI2oaJtznHKNymVvSB3O1bu48B0K2TL0Wk/G3Z9OtvACTFMqb+CpIebDTfGl+kjC5PhZM7N1GznV/bVqtiZivAU4b4nH9iKMZwTPUzn+qqPG0c87nTE4RBIeIeQ9THqWuxDkfTwOFpoNyoAEL6oVpPnvEfBa7PU9hY5jKrbe230=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Soi9THCj; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Z0mI4ngt3pzXCquLxc1Pv3D8Q+EMyOkR6YpfosOiZQmCt72o18aNyH208YJMrHbjRvsscnl4KAPGutFTZi4BJbX01nNXRo8pYVB2hcnyFniSNneolhybkQJ6Mu329i9IGacSv1TMfsQLIVXrq5sgu6LWQ4JzVmMKykTCkvRFGCo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K3yMVWuR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Soi9THCj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C63DC4CED6;
-	Mon,  3 Mar 2025 22:17:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K3yMVWuR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92DF7C4CEE5;
+	Mon,  3 Mar 2025 22:17:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741040255;
-	bh=oYTrlxmiR5BNoFrioFop/hpnftvDsKcm3PmL/H0/UqA=;
+	s=k20201202; t=1741040257;
+	bh=LSjpeMzXWVkQm84u7Pg3DRD/aAE+XvDLQxgeGEMx2JU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Soi9THCj2vEwCsPhfxxhbpnWH+DVFLPZsuCOYAcBSoInfDeSLhlJZDv24GLuUGw5W
-	 a2NOwqyU4qvSt+5s828s9NElO2yk9Ead4EfEC07tplzZBHpUDUmEVJlzAPHR7nA3YO
-	 IBJUYVhP64Ofv/tcQ3HrufgwhxzsB9mgYeoJ2sri319uJnS/2fjG95acUTeCnmJyvv
-	 CfOElNg8IijVJ/uEB4CKfT+7O5zMbf3VQPfqKpcZGT57mO9UBsIx0kY/CADLhPI/oZ
-	 SNGeJ+rbJk3Pbe4+vTX5b8zQdtyNMmHd6v5616QfD5Nshzp8ZITkND+USL0rVp5H4k
-	 YhwvrbXH2TU9A==
+	b=K3yMVWuRfTjd+OyCEQ1rThotSmYg5rgYu57djwTjR90VhkqveAnxODI3I0Pj4atbc
+	 j3HFSGmVorGtEjAkBwVCQqmyVl658yX+bMgKswz48VI1lXTx42RxuJ2g4SgDYWPFZy
+	 yvILiydHL10R9iiy+aARh+LsJ/oIfEOJyrnGyN2OKhsLLfqYlXRs9iJ0jiEAkKZXt+
+	 vcG0ed+tEQ/o2YcJKlB9E+1A48j8Yw8lKAQZyiydaRBTPwNbc0noFrAs1fXFyzqVQU
+	 q6O0BUlIqc3ns5CY4NALEzVr+EUdusKWYmRzW4MgM1hF2U+Q8AAaDjRVw8hsGz0w+o
+	 e1nfPi6+CEJjg==
 From: SeongJae Park <sj@kernel.org>
 To: Andrew Morton <akpm@linux-foundation.org>
 Cc: SeongJae Park <sj@kernel.org>,
@@ -33,9 +33,9 @@ Cc: SeongJae Park <sj@kernel.org>,
 	kernel-team@meta.com,
 	linux-kernel@vger.kernel.org,
 	linux-mm@kvack.org
-Subject: [PATCH 3/8] mm/damon/sysfs: implement intervals tuning goal directory
-Date: Mon,  3 Mar 2025 14:17:21 -0800
-Message-Id: <20250303221726.484227-4-sj@kernel.org>
+Subject: [PATCH 5/8] mm/damon/sysfs: implement a command to update auto-tuned monitoring intervals
+Date: Mon,  3 Mar 2025 14:17:23 -0800
+Message-Id: <20250303221726.484227-6-sj@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250303221726.484227-1-sj@kernel.org>
 References: <20250303221726.484227-1-sj@kernel.org>
@@ -47,241 +47,71 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Implement DAMON sysfs interface directory and its files for setting
-DAMON sampling and aggregation intervals auto-tuning goal.
+DAMON kernel API callers can show auto-tuned sampling and aggregation
+intervals from the monmitoring attributes data structure.  That can be
+useful for debugging or tuning of the feature.  DAMON user-space ABI
+users has no way to see that, though.  Implement a new DAMON sysfs
+interface command, namely 'update_tuned_intervals', for the purpose.
+If the command is written to the kdamond state file, the tuned sampling
+and aggregation intervals will be updated to the corresponding sysfs
+interface files.
 
 Signed-off-by: SeongJae Park <sj@kernel.org>
 ---
- mm/damon/sysfs.c | 189 +++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 189 insertions(+)
+ mm/damon/sysfs.c | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
 diff --git a/mm/damon/sysfs.c b/mm/damon/sysfs.c
-index deeab04d3b46..a772060300b4 100644
+index fa5f004f0670..ccd435d234b9 100644
 --- a/mm/damon/sysfs.c
 +++ b/mm/damon/sysfs.c
-@@ -408,6 +408,164 @@ static const struct kobj_type damon_sysfs_targets_ktype = {
- 	.default_groups = damon_sysfs_targets_groups,
+@@ -1213,6 +1213,11 @@ enum damon_sysfs_cmd {
+ 	 * effective size quota of the scheme in bytes.
+ 	 */
+ 	DAMON_SYSFS_CMD_UPDATE_SCHEMES_EFFECTIVE_QUOTAS,
++	/*
++	 * @DAMON_SYSFS_CMD_UPDATE_TUNED_INTERVALS: Update the tuned monitoring
++	 * intevals.
++	 */
++	DAMON_SYSFS_CMD_UPDATE_TUNED_INTERVALS,
+ 	/*
+ 	 * @NR_DAMON_SYSFS_CMDS: Total number of DAMON sysfs commands.
+ 	 */
+@@ -1230,6 +1235,7 @@ static const char * const damon_sysfs_cmd_strs[] = {
+ 	"update_schemes_tried_regions",
+ 	"clear_schemes_tried_regions",
+ 	"update_schemes_effective_quotas",
++	"update_tuned_intervals",
  };
  
-+/*
-+ * intervals goal directory
-+ */
-+
-+struct damon_sysfs_intervals_goal {
-+	struct kobject kobj;
-+	unsigned long access_bp;
-+	unsigned long aggrs;
-+	unsigned long min_sample_us;
-+	unsigned long max_sample_us;
-+};
-+
-+static struct damon_sysfs_intervals_goal *damon_sysfs_intervals_goal_alloc(
-+		unsigned long access_bp, unsigned long aggrs,
-+		unsigned long min_sample_us, unsigned long max_sample_us)
-+{
-+	struct damon_sysfs_intervals_goal *goal = kmalloc(sizeof(*goal),
-+			GFP_KERNEL);
-+
-+	if (!goal)
-+		return NULL;
-+
-+	goal->kobj = (struct kobject){};
-+	goal->access_bp = access_bp;
-+	goal->aggrs = aggrs;
-+	goal->min_sample_us = min_sample_us;
-+	goal->max_sample_us = max_sample_us;
-+	return goal;
-+}
-+
-+static ssize_t access_bp_show(struct kobject *kobj,
-+		struct kobj_attribute *attr, char *buf)
-+{
-+	struct damon_sysfs_intervals_goal *goal = container_of(kobj,
-+			struct damon_sysfs_intervals_goal, kobj);
-+
-+	return sysfs_emit(buf, "%lu\n", goal->access_bp);
-+}
-+
-+static ssize_t access_bp_store(struct kobject *kobj,
-+		struct kobj_attribute *attr, const char *buf, size_t count)
-+{
-+	struct damon_sysfs_intervals_goal *goal = container_of(kobj,
-+			struct damon_sysfs_intervals_goal, kobj);
-+	unsigned long nr;
-+	int err = kstrtoul(buf, 0, &nr);
-+
-+	if (err)
-+		return err;
-+
-+	goal->access_bp = nr;
-+	return count;
-+}
-+
-+static ssize_t aggrs_show(struct kobject *kobj,
-+		struct kobj_attribute *attr, char *buf)
-+{
-+	struct damon_sysfs_intervals_goal *goal = container_of(kobj,
-+			struct damon_sysfs_intervals_goal, kobj);
-+
-+	return sysfs_emit(buf, "%lu\n", goal->aggrs);
-+}
-+
-+static ssize_t aggrs_store(struct kobject *kobj,
-+		struct kobj_attribute *attr, const char *buf, size_t count)
-+{
-+	struct damon_sysfs_intervals_goal *goal = container_of(kobj,
-+			struct damon_sysfs_intervals_goal, kobj);
-+	unsigned long nr;
-+	int err = kstrtoul(buf, 0, &nr);
-+
-+	if (err)
-+		return err;
-+
-+	goal->aggrs = nr;
-+	return count;
-+}
-+
-+static ssize_t min_sample_us_show(struct kobject *kobj,
-+		struct kobj_attribute *attr, char *buf)
-+{
-+	struct damon_sysfs_intervals_goal *goal = container_of(kobj,
-+			struct damon_sysfs_intervals_goal, kobj);
-+
-+	return sysfs_emit(buf, "%lu\n", goal->min_sample_us);
-+}
-+
-+static ssize_t min_sample_us_store(struct kobject *kobj,
-+		struct kobj_attribute *attr, const char *buf, size_t count)
-+{
-+	struct damon_sysfs_intervals_goal *goal = container_of(kobj,
-+			struct damon_sysfs_intervals_goal, kobj);
-+	unsigned long nr;
-+	int err = kstrtoul(buf, 0, &nr);
-+
-+	if (err)
-+		return err;
-+
-+	goal->min_sample_us = nr;
-+	return count;
-+}
-+
-+static ssize_t max_sample_us_show(struct kobject *kobj,
-+		struct kobj_attribute *attr, char *buf)
-+{
-+	struct damon_sysfs_intervals_goal *goal = container_of(kobj,
-+			struct damon_sysfs_intervals_goal, kobj);
-+
-+	return sysfs_emit(buf, "%lu\n", goal->max_sample_us);
-+}
-+
-+static ssize_t max_sample_us_store(struct kobject *kobj,
-+		struct kobj_attribute *attr, const char *buf, size_t count)
-+{
-+	struct damon_sysfs_intervals_goal *goal = container_of(kobj,
-+			struct damon_sysfs_intervals_goal, kobj);
-+	unsigned long nr;
-+	int err = kstrtoul(buf, 0, &nr);
-+
-+	if (err)
-+		return err;
-+
-+	goal->max_sample_us = nr;
-+	return count;
-+}
-+
-+static void damon_sysfs_intervals_goal_release(struct kobject *kobj)
-+{
-+	kfree(container_of(kobj, struct damon_sysfs_intervals_goal, kobj));
-+}
-+
-+static struct kobj_attribute damon_sysfs_intervals_goal_access_bp_attr =
-+		__ATTR_RW_MODE(access_bp, 0600);
-+
-+static struct kobj_attribute damon_sysfs_intervals_goal_aggrs_attr =
-+		__ATTR_RW_MODE(aggrs, 0600);
-+
-+static struct kobj_attribute damon_sysfs_intervals_goal_min_sample_us_attr =
-+		__ATTR_RW_MODE(min_sample_us, 0600);
-+
-+static struct kobj_attribute damon_sysfs_intervals_goal_max_sample_us_attr =
-+		__ATTR_RW_MODE(max_sample_us, 0600);
-+
-+static struct attribute *damon_sysfs_intervals_goal_attrs[] = {
-+	&damon_sysfs_intervals_goal_access_bp_attr.attr,
-+	&damon_sysfs_intervals_goal_aggrs_attr.attr,
-+	&damon_sysfs_intervals_goal_min_sample_us_attr.attr,
-+	&damon_sysfs_intervals_goal_max_sample_us_attr.attr,
-+	NULL,
-+};
-+ATTRIBUTE_GROUPS(damon_sysfs_intervals_goal);
-+
-+static const struct kobj_type damon_sysfs_intervals_goal_ktype = {
-+	.release = damon_sysfs_intervals_goal_release,
-+	.sysfs_ops = &kobj_sysfs_ops,
-+	.default_groups = damon_sysfs_intervals_goal_groups,
-+};
-+
  /*
-  * intervals directory
-  */
-@@ -417,6 +575,7 @@ struct damon_sysfs_intervals {
- 	unsigned long sample_us;
- 	unsigned long aggr_us;
- 	unsigned long update_us;
-+	struct damon_sysfs_intervals_goal *intervals_goal;
- };
- 
- static struct damon_sysfs_intervals *damon_sysfs_intervals_alloc(
-@@ -436,6 +595,32 @@ static struct damon_sysfs_intervals *damon_sysfs_intervals_alloc(
- 	return intervals;
+@@ -1502,6 +1508,17 @@ static int damon_sysfs_upd_schemes_effective_quotas(void *data)
+ 	return 0;
  }
  
-+static int damon_sysfs_intervals_add_dirs(struct damon_sysfs_intervals *intervals)
++static int damon_sysfs_upd_tuned_intervals(void *data)
 +{
-+	struct damon_sysfs_intervals_goal *goal;
-+	int err;
++	struct damon_sysfs_kdamond *kdamond = data;
++	struct damon_ctx *ctx = kdamond->damon_ctx;
 +
-+	goal = damon_sysfs_intervals_goal_alloc(0, 0, 0, 0);
-+	if (!goal)
-+		return -ENOMEM;
-+
-+	err = kobject_init_and_add(&goal->kobj,
-+			&damon_sysfs_intervals_goal_ktype, &intervals->kobj,
-+			"intervals_goal");
-+	if (err) {
-+		kobject_put(&goal->kobj);
-+		intervals->intervals_goal = NULL;
-+		return err;
-+	}
-+	intervals->intervals_goal = goal;
++	kdamond->contexts->contexts_arr[0]->attrs->intervals->sample_us =
++		ctx->attrs.sample_interval;
++	kdamond->contexts->contexts_arr[0]->attrs->intervals->aggr_us =
++		ctx->attrs.aggr_interval;
 +	return 0;
 +}
-+
-+static void damon_sysfs_intervals_rm_dirs(struct damon_sysfs_intervals *intervals)
-+{
-+	kobject_put(&intervals->intervals_goal->kobj);
-+}
-+
- static ssize_t sample_us_show(struct kobject *kobj,
- 		struct kobj_attribute *attr, char *buf)
- {
-@@ -569,6 +754,9 @@ static int damon_sysfs_attrs_add_dirs(struct damon_sysfs_attrs *attrs)
- 	err = kobject_init_and_add(&intervals->kobj,
- 			&damon_sysfs_intervals_ktype, &attrs->kobj,
- 			"intervals");
-+	if (err)
-+		goto put_intervals_out;
-+	err = damon_sysfs_intervals_add_dirs(intervals);
- 	if (err)
- 		goto put_intervals_out;
- 	attrs->intervals = intervals;
-@@ -599,6 +787,7 @@ static int damon_sysfs_attrs_add_dirs(struct damon_sysfs_attrs *attrs)
- static void damon_sysfs_attrs_rm_dirs(struct damon_sysfs_attrs *attrs)
- {
- 	kobject_put(&attrs->nr_regions_range->kobj);
-+	damon_sysfs_intervals_rm_dirs(attrs->intervals);
- 	kobject_put(&attrs->intervals->kobj);
- }
  
+ /*
+  * damon_sysfs_cmd_request_callback() - DAMON callback for handling requests.
+@@ -1723,6 +1740,9 @@ static int damon_sysfs_handle_cmd(enum damon_sysfs_cmd cmd,
+ 		return damon_sysfs_damon_call(
+ 				damon_sysfs_upd_schemes_effective_quotas,
+ 				kdamond);
++	case DAMON_SYSFS_CMD_UPDATE_TUNED_INTERVALS:
++		return damon_sysfs_damon_call(
++				damon_sysfs_upd_tuned_intervals, kdamond);
+ 	default:
+ 		break;
+ 	}
 -- 
 2.39.5
