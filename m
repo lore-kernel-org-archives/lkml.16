@@ -1,195 +1,331 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA3CA20C013
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 12:57:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11EF820FAB9
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 12:57:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741006641; cv=none; b=hK4TxFZ5QC/E2TX3ZCh6g+VZ+XK31LNr/0Vbp4FGOU6gK8LTLCMfRjlfzatvncVItBllKrdhGblBOmKgdo8WzLCIwvr0xaUkYbuKlYAizz8N0fh+rLjFqqdnwY2Ehx/I/KGroy8VI3rtzb5Le5M1rkOJqgSYPmEdSHfrT7JZWI8=
+	t=1741006669; cv=none; b=b8t2Ei4e6O/RPQW4SRuXvH+cUosjKAWIPwWeTP7lV0u7GL8Y6qFZe7RkYNeJBhhsWB17HQ4Zuj7AH4LiZIQP7tkL2l5zRp8OwO/h6wV953IKtFsuxEfZB49cIloshF8PhYArkKWRwk6xqClvKoQgpoZlLvO/rixmka0QHnXc2mk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741006641; c=relaxed/simple;
-	bh=7mCZRSnZn6C0/7YA5z8AqNvMolVAwCvm/RRxyvQ8eTs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iTCU8Zm+a3RO3obPBD9JJdS7N5CCJ50b+Q1xHW5n47sBw2tGYE/OvywUDdaSlZEAsbcGyFtyK/V4HENNx0ozFEp14SZvO8RhYp+MC2CM/1IlANLFAPdUS/Zme/7ZPiiRb9Z+gKgQxA/9XxTrtjyjFodrhkQBrUMo1Q5hJaOnBfg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Xa1z0/Bi; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1741006669; c=relaxed/simple;
+	bh=IoVPJZoD+MRYN7K8Z/aSIkdRQ3zTWS23VUWhjteSX6c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=J/ySmGIbVNkWstdA9LuvX6hZVeNPAun6vvF68vou7eIN66JkXlkc5XEs+quQXFlRQsmKQRaw4Ac9pLbXzxRHH9TcYqOKH+Q51r6oS8dbed1PXJ39kkfxDL7tOLsySbVCkYXwJluXA3+tjusYlyh8sl1xVziIG5Mvbe81DilVt2k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Db+nwSKj; arc=none smtp.client-ip=209.85.208.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Xa1z0/Bi"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1741006638;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=ZbBY5HPs9/ORp5FjR/nRtWeFfyn4LQ+KsSmcov6oEIs=;
-	b=Xa1z0/BiZT99ivHJiyA+lkp5GipCkNnEXAi+UZVCRF6DvqPuE0mIe95WUvuvG4FL73WqIr
-	5mCw27osiJdeyZEy6zYAA6D9jhvM17SCgN8Yk02IeVjpP114/969OcC45+n/va5eUY3mjx
-	OdYAtP/UMpXwCc45UDpFLG852hhKoc4=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-462-5chr6aHQM7WwlwqAbzU4AQ-1; Mon, 03 Mar 2025 07:57:17 -0500
-X-MC-Unique: 5chr6aHQM7WwlwqAbzU4AQ-1
-X-Mimecast-MFC-AGG-ID: 5chr6aHQM7WwlwqAbzU4AQ_1741006637
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-43935e09897so32165075e9.1
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Mar 2025 04:57:17 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Db+nwSKj"
+Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-30615661f98so45820671fa.2
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Mar 2025 04:57:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1741006665; x=1741611465; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=rw6/8c80oXJe6NH1bCDHhdB7//uqsyHdcvO1rFYowNk=;
+        b=Db+nwSKjNPsEJRj7xuym4OXVP4yaveFUbgfyaXhwSSBqAjvGNPmhu5ma+QSVENikbE
+         DWUSsoGh+mBaNArVdsB3QrNyzr6BUXy8ax3zn4VpilNznZKGit1SKLDDHt7Rg6+4nKXc
+         xgRi9PqA2WHqWlZ8Ft8gxlv2So6EfQGHmJ3Pkd6iwy8WRBOFBMa+60nsyzD3ca3E/5Ee
+         rH/8T4Y/x1xambg0PIHx5dG7EiEnWEpeXnV/MAoFJUv+YLvRZ18Ecv3BU3zU4NlSGgdh
+         t5ky+7GHE0Xd/B6+RyljPzr38hD9JtnSy8iP98Pe4epJlXKS5V9s1YZrWDr55tjpSn0p
+         T9jw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741006636; x=1741611436;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=ZbBY5HPs9/ORp5FjR/nRtWeFfyn4LQ+KsSmcov6oEIs=;
-        b=MWGfPmxplUNretUj5ZfiZWOc0e42Wzm760s4uLON/cPal/fwMq34wpreHlKde9L81j
-         BC9EgEnOZhzztvM+if+b7XXY1/Mya+0nGJglCJsB/1RIcQ9OSfFI4MuJLM64lt1Tmh0n
-         B/YXrXOwmBlH4V1sPU0WGchYY0Ygw8rxCBUj4s5iFbHVEXEoRAMvIKUzy1sLvvrDhND8
-         Ibxw+rIDejwZbr71rJuOgWVuooQG9PdlLdBsV5WMMHuBim7CnRYq+NH0QcxDdJULBRkF
-         /KkyPxJt4cWyZc6QO6kkN+9Onr1CGQUsmZo2UaqJ9pav5+OPoCBpdUWlI7xRRd4KJI77
-         Zztw==
-X-Forwarded-Encrypted: i=1; AJvYcCWDd247OjupBIDH90p2wRcoax/3hSJATDJezUFB7dmLnADGTrECqVHNYAhBen0VGP20zK5WHnPMAdSL4Fk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzwostbkrg2BZhMeIgXBXS+BKtnCpvtyoR3w/DO0wlqWPJ+jMAZ
-	jr65pTqj1AmIR54URlXF4i1J1ngFvlkwvtvfJiMWWgBZ5cgd6+SJeaCCIYlUXVGP5DHhJwpUCqi
-	HBuf5pA1OIuMLbBV3b0RERq+hRtH3wAiK3j9vHKvRfEtYTVssM3ydaG6Zuk3OlA==
-X-Gm-Gg: ASbGncuHNVhND6R2v9QGdJW/uXLsLTVkggaUI+4270R6OjPooGoqpbzul1Rf0DETIjI
-	Zdz8IlHtNvuwIhha0uXsDQWolEGsxviCf/3I1N2uXcsfQ+f/q4j0qI2sWtZiA0iQk8igzTMMq09
-	iRQS3TgiHmAyBStX7Xws3iHn71NpU3c9E1xZcztVRTGt3HXwn1FCbwkoKrGD4/fKjQi9puSedWY
-	hu4KgOX9tkKip5iESJhfD1LPgwagjEnGszEbwuY52haN55PjVkyUQcCYegZf/9OmRfPPKMAvacA
-	eztLeWZDXi0p8BDCrKaxMz/5sXCUtxyIpbDCY8+boMu1kFz58BX9j+yHkVRQdxEp0uRV5kxtPyP
-	gyIEd67PC9dXOsxcprO3S2G0ZWCzRUQGZhXX4KSo3JSI=
-X-Received: by 2002:a05:6000:1568:b0:390:f6aa:4e7c with SMTP id ffacd0b85a97d-390f6aa506dmr8548947f8f.28.1741006636467;
-        Mon, 03 Mar 2025 04:57:16 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGt3HqyWX69UNDm73XEavs4Jp5ikaGr7A82bFQLZfzfQ+Yf4WqMH1KFtPhi3+sLuqezP58sLw==
-X-Received: by 2002:a05:6000:1568:b0:390:f6aa:4e7c with SMTP id ffacd0b85a97d-390f6aa506dmr8548914f8f.28.1741006636083;
-        Mon, 03 Mar 2025 04:57:16 -0800 (PST)
-Received: from ?IPV6:2003:cb:c734:9600:af27:4326:a216:2bfb? (p200300cbc7349600af274326a2162bfb.dip0.t-ipconnect.de. [2003:cb:c734:9600:af27:4326:a216:2bfb])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43aba58720esm192864235e9.40.2025.03.03.04.57.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 03 Mar 2025 04:57:15 -0800 (PST)
-Message-ID: <1fc8281b-72a2-454f-88dc-288084482cec@redhat.com>
-Date: Mon, 3 Mar 2025 13:57:14 +0100
+        d=1e100.net; s=20230601; t=1741006665; x=1741611465;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=rw6/8c80oXJe6NH1bCDHhdB7//uqsyHdcvO1rFYowNk=;
+        b=UryN29devdawA33LduagXvDFn0anfstIog7VTF142nQEBPX3R8gy2ziBXcY21Y37Md
+         MWl+2uy2rvE9LJNzy/OHJjnJYwQZOEzP0eG8CK6L0WPfAfy7dmo/PgpEFG8/ivBawY7M
+         mk0ZLNeDbjWDf2Ww9O3Jwn8qjJS5HSv3QiUxcITbkmScWflLUdkd9ttRTn98QmiBWZfe
+         SJW4S4BQThbAZbyHX9KwGLu1wYpk1LeoEDvUuralNQGbChbYyddeUZ/JhqQEkE+ih4l6
+         a2l5YPAhjjo9t96lHEbiTZfajhfSJAZDbUoURIBdq3Q9PNcMd5pRu6pwHO2VR0F9YWyH
+         qF2w==
+X-Forwarded-Encrypted: i=1; AJvYcCUgQ2noTESVyGiNT6c7Tk3PdEdKVFD5l+r0d4O4+XrKwS0+W8tdaajo8KtPzUBNnBdAtBtcmajqj7tCD/w=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwpUINkQhQNhsuAd3hGrY7WPjkKe6DrZ0GGtkEQ1Xl8p0A2ykmg
+	51a9zmF9TzVhhrvBxs+or31MVkILnYJ/jAFQMoKtiTbFIS62hMU7gYFiv9bQmDg=
+X-Gm-Gg: ASbGncuwc1SIhhdueUvoviUdFnT1prvwGmp8bnvSh6xbhA0U3Z/SPlUQFkNffoUvBlr
+	RytLgzDEzFee/Z7cCYPb9mBebMfJTS0739xfJxjvVkj8+gu56RnZXyXjc2JoQC0niA5cOH4Pxru
+	BAO2f8FWw1TfEVH53LVTJVtawx0Qi6F9+dg7Plx3ketOtv+Q/hiJpM6ZMpkpuoxWgQ6h5gLGGdB
+	rq+dXFPIBwKscptjWAtIEbb6zd8HPv6lLgKoFZPTqjWfK+bjbW51gCoCBzZmN4EAnh/iJlb4PDd
+	pH8mjRT4hg261k/ApR/cNzZB2sfIBSR9ISRL7vS85gZImJ/MkmZOG0vILk/rlfMjVQobY3r9ZnA
+	T3tDWAlmr9mmN/lgQVoyZUCfO
+X-Google-Smtp-Source: AGHT+IEjjiVkoNRYdat4T0qxmeBYEe6kE8gmB95rUVf9r8bSvejeCAHmMqYFebm9jSnJR4afSnK9VA==
+X-Received: by 2002:a05:6512:318e:b0:549:38d5:8858 with SMTP id 2adb3069b0e04-5494c124ab1mr4483210e87.20.1741006664977;
+        Mon, 03 Mar 2025 04:57:44 -0800 (PST)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5494ad419acsm1117002e87.127.2025.03.03.04.57.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Mar 2025 04:57:44 -0800 (PST)
+Date: Mon, 3 Mar 2025 14:57:42 +0200
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Yubing Zhang <yubing.zhang@rock-chips.com>
+Cc: Andy Yan <andyshrk@163.com>, neil.armstrong@linaro.org, 
+	sebastian.reichel@collabora.com, heiko@sntech.de, devicetree@vger.kernel.org, hjc@rock-chips.com, 
+	mripard@kernel.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, 
+	dri-devel@lists.freedesktop.org, Andy Yan <andy.yan@rock-chips.com>, krzk+dt@kernel.org, 
+	robh@kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 2/6] drm/bridge: synopsys: Add DW DPTX Controller support
+ library
+Message-ID: <udunb6r3yvjc5i5cfk5xeaz6ezvyzbnor3gujjhcfoavdwtrsl@26yxnjan6yqb>
+References: <20250223113036.74252-1-andyshrk@163.com>
+ <20250223113036.74252-3-andyshrk@163.com>
+ <563i7xcbbsxfezkgs4txsa6lar5tb5folp7zk7dc7sbvf54n6y@vqbtuwvj3fcw>
+ <65706d63-18aa-41e0-81c4-4eab3d186250@rock-chips.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 4/4] Revert "x86/xen: allow nesting of same lazy mode"
-To: Ryan Roberts <ryan.roberts@arm.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- "David S. Miller" <davem@davemloft.net>,
- Andreas Larsson <andreas@gaisler.com>, Juergen Gross <jgross@suse.com>,
- Boris Ostrovsky <boris.ostrovsky@oracle.com>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- "H. Peter Anvin" <hpa@zytor.com>,
- "Matthew Wilcox (Oracle)" <willy@infradead.org>,
- Catalin Marinas <catalin.marinas@arm.com>
-Cc: linux-mm@kvack.org, sparclinux@vger.kernel.org,
- xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org
-References: <20250302145555.3236789-1-ryan.roberts@arm.com>
- <20250302145555.3236789-5-ryan.roberts@arm.com>
- <75031fe1-50d7-48d0-87bb-9c5c88f3b41c@redhat.com>
- <8b218b95-f0e3-424c-815f-5131e3e54031@arm.com>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <8b218b95-f0e3-424c-815f-5131e3e54031@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <65706d63-18aa-41e0-81c4-4eab3d186250@rock-chips.com>
 
-On 03.03.25 13:33, Ryan Roberts wrote:
-> On 03/03/2025 11:52, David Hildenbrand wrote:
->> On 02.03.25 15:55, Ryan Roberts wrote:
->>> Commit 49147beb0ccb ("x86/xen: allow nesting of same lazy mode") was
->>> added as a solution for a core-mm code change where
->>> arch_[enter|leave]_lazy_mmu_mode() started to be called in a nested
->>> manner; see commit bcc6cc832573 ("mm: add default definition of
->>> set_ptes()").
->>>
->>> However, now that we have fixed the API to avoid nesting, we no longer
->>> need this capability in the x86 implementation.
->>>
->>> Additionally, from code review, I don't believe the fix was ever robust
->>> in the case of preemption occurring while in the nested lazy mode. The
->>> implementation usually deals with preemption by calling
->>> arch_leave_lazy_mmu_mode() from xen_start_context_switch() for the
->>> outgoing task if we are in the lazy mmu mode. Then in
->>> xen_end_context_switch(), it restarts the lazy mode by calling
->>> arch_enter_lazy_mmu_mode() for an incoming task that was in the lazy
->>> mode when it was switched out. But arch_leave_lazy_mmu_mode() will only
->>> unwind a single level of nesting. If we are in the double nest, then
->>> it's not fully unwound and per-cpu variables are left in a bad state.
->>>
->>> So the correct solution is to remove the possibility of nesting from the
->>> higher level (which has now been done) and remove this x86-specific
->>> solution.
->>>
->>> Fixes: 49147beb0ccb ("x86/xen: allow nesting of same lazy mode")
->>
->> Does this patch here deserve this tag? IIUC, it's rather a cleanup now that it
->> was properly fixed elsewhere.
+On Mon, Mar 03, 2025 at 04:59:50PM +0800, Yubing Zhang wrote:
+> Hi Dmitry,
 > 
-> Now that nesting is not possible, yes it is just a cleanup. But when nesting was
-> possible, as far as I can tell it was buggy, as per my description.
+> On 2025/3/2 2:14, Dmitry Baryshkov wrote:
+> > On Sun, Feb 23, 2025 at 07:30:25PM +0800, Andy Yan wrote:
+> > > From: Andy Yan <andy.yan@rock-chips.com>
+> > > 
+> > > The DW DP TX Controller is compliant with the DisplayPort Specification
+> > > Version 1.4 with the following features:
+> > > 
+> > > * DisplayPort 1.4a
+> > > * Main Link: 1/2/4 lanes
+> > > * Main Link Support 1.62Gbps, 2.7Gbps, 5.4Gbps and 8.1Gbps
+> > > * AUX channel 1Mbps
+> > > * Single Stream Transport(SST)
+> > > * Multistream Transport (MST)
+> > > *Type-C support (alternate mode)
+> > > * HDCP 2.2, HDCP 1.3
+> > > * Supports up to 8/10 bits per color component
+> > > * Supports RBG, YCbCr4:4:4, YCbCr4:2:2, YCbCr4:2:0
+> > > * Pixel clock up to 594MHz
+> > > * I2S, SPDIF audio interface
+> > > 
+> > > Add library with common helpers to make it can be shared with
+> > > other SoC.
+> > > 
+> > > Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
+> > > 
+> > > drm/bridge: cleanup
+> > 
+> > Stray line?
+> > 
+> > > 
+> > > ---
+> > > 
+> > >   drivers/gpu/drm/bridge/synopsys/Kconfig  |    7 +
+> > >   drivers/gpu/drm/bridge/synopsys/Makefile |    1 +
+> > >   drivers/gpu/drm/bridge/synopsys/dw-dp.c  | 2155 ++++++++++++++++++++++
+> > >   include/drm/bridge/dw_dp.h               |   19 +
+> > >   4 files changed, 2182 insertions(+)
+> > >   create mode 100644 drivers/gpu/drm/bridge/synopsys/dw-dp.c
+> 
+> ......
+> 
+> > > +
+> > > +static u8 dw_dp_voltage_max(u8 preemph)
+> > > +{
+> > > +	switch (preemph & DP_TRAIN_PRE_EMPHASIS_MASK) {
+> > > +	case DP_TRAIN_PRE_EMPH_LEVEL_0:
+> > > +		return DP_TRAIN_VOLTAGE_SWING_LEVEL_3;
+> > > +	case DP_TRAIN_PRE_EMPH_LEVEL_1:
+> > > +		return DP_TRAIN_VOLTAGE_SWING_LEVEL_2;
+> > > +	case DP_TRAIN_PRE_EMPH_LEVEL_2:
+> > > +		return DP_TRAIN_VOLTAGE_SWING_LEVEL_1;
+> > > +	case DP_TRAIN_PRE_EMPH_LEVEL_3:
+> > > +	default:
+> > > +		return DP_TRAIN_VOLTAGE_SWING_LEVEL_0;
+> > > +	}
+> > > +}
+> > > +
+> > > +static void dw_dp_link_get_adjustments(struct dw_dp_link *link,
+> > > +				       u8 status[DP_LINK_STATUS_SIZE])
+> > > +{
+> > > +	struct dw_dp_link_train_set *adjust = &link->train.adjust;
+> > > +	u8 v = 0;
+> > > +	u8 p = 0;
+> > > +	unsigned int i;
+> > > +
+> > > +	for (i = 0; i < link->lanes; i++) {
+> > > +		v = drm_dp_get_adjust_request_voltage(status, i);
+> > > +		p = drm_dp_get_adjust_request_pre_emphasis(status, i);
+> > > +		if (p >=  DP_TRAIN_PRE_EMPH_LEVEL_3) {
+> > > +			adjust->pre_emphasis[i] = DP_TRAIN_PRE_EMPH_LEVEL_3 >>
+> > > +						  DP_TRAIN_PRE_EMPHASIS_SHIFT;
+> > > +			adjust->pre_max_reached[i] = true;
+> > > +		} else {
+> > > +			adjust->pre_emphasis[i] = p >> DP_TRAIN_PRE_EMPHASIS_SHIFT;
+> > > +			adjust->pre_max_reached[i] = false;
+> > > +		}
+> > > +		v = min(v, dw_dp_voltage_max(p));
+> > > +		if (v >= DP_TRAIN_VOLTAGE_SWING_LEVEL_3) {
+> > > +			adjust->voltage_swing[i] = DP_TRAIN_VOLTAGE_SWING_LEVEL_3 >>
+> > > +						   DP_TRAIN_VOLTAGE_SWING_SHIFT;
+> > > +			adjust->voltage_max_reached[i] = true;
+> > > +		} else {
+> > > +			adjust->voltage_swing[i] = v >> DP_TRAIN_VOLTAGE_SWING_SHIFT;
+> > > +			adjust->voltage_max_reached[i] = false;
+> > > +		}
+> > > +	}
+> > > +}
+> > > +
+> > > +static void dw_dp_link_train_adjust(struct dw_dp_link_train *train)
+> > > +{
+> > > +	struct dw_dp_link_train_set *request = &train->request;
+> > > +	struct dw_dp_link_train_set *adjust = &train->adjust;
+> > > +	unsigned int i;
+> > > +
+> > > +	for (i = 0; i < 4; i++) {
+> > 
+> > Shouldn't it be a loop up to link->lanes?
+> > 
+> > > +		if (request->voltage_swing[i] != adjust->voltage_swing[i])
+> > > +			request->voltage_swing[i] = adjust->voltage_swing[i];
+> > > +		if (request->voltage_max_reached[i] != adjust->voltage_max_reached[i])
+> > > +			request->voltage_max_reached[i] = adjust->voltage_max_reached[i];
+> > > +	}
+> > > +
+> > > +	for (i = 0; i < 4; i++) {
+> > > +		if (request->pre_emphasis[i] != adjust->pre_emphasis[i])
+> > > +			request->pre_emphasis[i] = adjust->pre_emphasis[i];
+> > > +		if (request->pre_max_reached[i] != adjust->pre_max_reached[i])
+> > > +			request->pre_max_reached[i] = adjust->pre_max_reached[i];
+> > 
+> > Why do you need separate request and adjustment structs?
+> During link training cr sequence, if dprx keep the LANEx_CR_DONE bit(s)
+> cleared, the request and adjustment structs are used to check the
+> old and new valud of ADJUST_REQUEST_LANEx_y register(s) is changed or not.
 
-Right, I understood that part.
+This can be compared in dw_dp_link_get_adjustments(), before / while
+updating the request data.
 
-> So it's a
-> bug bug that won't ever trigger once the other fixes are applied. Happy to
-> remove the Fixes and then not include it for stable for v2. That's probably
-> simplest.
+> 
+> > 
+> > > +	}
+> > > +}
+> > > +
+> > > +static int dw_dp_link_clock_recovery(struct dw_dp *dp)
+> > > +{
+> > > +	struct dw_dp_link *link = &dp->link;
+> > > +	u8 status[DP_LINK_STATUS_SIZE];
+> > > +	unsigned int tries = 0;
+> > > +	int ret;
+> > > +
+> > > +	ret = dw_dp_link_train_set_pattern(dp, DP_TRAINING_PATTERN_1);
+> > > +	if (ret)
+> > > +		return ret;
+> > > +
+> > > +	for (;;) {
+> > > +		ret = dw_dp_link_train_update_vs_emph(dp);
+> > > +		if (ret)
+> > > +			return ret;
+> > > +
+> > > +		drm_dp_link_train_clock_recovery_delay(&dp->aux, link->dpcd);
+> > > +
+> > > +		ret = drm_dp_dpcd_read_link_status(&dp->aux, status);
+> > > +		if (ret < 0) {
+> > > +			dev_err(dp->dev, "failed to read link status: %d\n", ret);
+> > > +			return ret;
+> > > +		}
+> > > +
+> > > +		if (drm_dp_clock_recovery_ok(status, link->lanes)) {
+> > > +			link->train.clock_recovered = true;
+> > > +			break;
+> > > +		}
+> > > +
+> > > +		dw_dp_link_get_adjustments(link, status);
+> > > +
+> > > +		if (link->train.request.voltage_swing[0] ==
+> > > +		    link->train.adjust.voltage_swing[0])
+> > 
+> > Should this take all lanes to account? I think it might be posssible to
+> > drop the adjust / request split and adjust tries in
+> > dw_dp_link_get_adjustments() instead.
+> Yes, here shall compare both swing and pre-emphasis for all lanes. It's a
+> good idea to drop the adjust / request split. The swing and pre-emphasis
+> compare just need by cr sequence. But both cr and eq sequences use
+> dw_dp_link_get_adjustments(). It will be better to delete
+> dw_dp_link_train_adjust() and add a new function to adjust tries for cr
+> sequence.
 
-I was just curious, because it sounded like the actual fix was the other 
-patch. Whatever you think is best :)
+SGTM.
+
+> > 
+> > > +			tries++;
+> > > +		else
+> > > +			tries = 0;
+> > > +
+> > > +		if (tries == 5)
+> > > +			break;
+> > > +
+> > > +		dw_dp_link_train_adjust(&link->train);
+> > > +	}
+> > > +
+> > > +	return 0;
+> > > +}
+> > > +
+> > > +static int dw_dp_link_channel_equalization(struct dw_dp *dp)
+> > > +{
+> > > +	struct dw_dp_link *link = &dp->link;
+> > > +	u8 status[DP_LINK_STATUS_SIZE], pattern;
+> > > +	unsigned int tries;
+> > > +	int ret;
+> > > +
+> > > +	if (link->caps.tps4_supported)
+> > > +		pattern = DP_TRAINING_PATTERN_4;
+> > > +	else if (link->caps.tps3_supported)
+> > > +		pattern = DP_TRAINING_PATTERN_3;
+> > > +	else
+> > > +		pattern = DP_TRAINING_PATTERN_2;
+> > > +	ret = dw_dp_link_train_set_pattern(dp, pattern);
+> > > +	if (ret)
+> > > +		return ret;
+> > > +
+> > > +	for (tries = 1; tries < 5; tries++) {
+> > > +		ret = dw_dp_link_train_update_vs_emph(dp);
+> > > +		if (ret)
+> > > +			return ret;
+> > > +
+> > > +		drm_dp_link_train_channel_eq_delay(&dp->aux, link->dpcd);
+> > > +
+> > > +		ret = drm_dp_dpcd_read_link_status(&dp->aux, status);
+> > > +		if (ret < 0)
+> > > +			return ret;
+> > > +
+> > > +		if (!drm_dp_clock_recovery_ok(status, link->lanes)) {
+> > > +			dev_err(dp->dev, "clock recovery lost while equalizing channel\n");
+> > > +			link->train.clock_recovered = false;
+> > > +			break;
+> > > +		}
+> > > +
+> > > +		if (drm_dp_channel_eq_ok(status, link->lanes)) {
+> > > +			link->train.channel_equalized = true;
+> > > +			break;
+> > > +		}
+> > > +
+> > > +		dw_dp_link_get_adjustments(link, status);
+> > > +		dw_dp_link_train_adjust(&link->train);
+> > > +	}
+> > > +
+> > > +	return 0;
+> > > +}
+> ......
+> > > +
+> > > +struct dw_dp *dw_dp_bind(struct device *dev, struct drm_encoder *encoder,
+> > > +			 const struct dw_dp_plat_data *plat_data);
+> > > +#endif /* __DW_DP__ */
+> > > -- 
+> > > 2.34.1
+> > > 
+> > 
+> 
 
 -- 
-Cheers,
-
-David / dhildenb
-
+With best wishes
+Dmitry
