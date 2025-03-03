@@ -1,167 +1,309 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp15.bhosted.nl (smtp15.bhosted.nl [94.124.121.26])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF9C91F0E4F
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E4F120F093
 	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 13:18:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=94.124.121.26
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741007923; cv=none; b=j326+3yEls7YkLQBYXi/ziiJInFT9K1A+30inS5lHZI32xvoMbwvAIJmB/X1yvoPgVoVPhNQdnVQLt1UEbb6TX0XznMnoHlARFWu3MIXUY69hzfyy/Ox5JK41x1yEHjcJT9yja1p1avfKNOAHx3+kAyJlL8aeCRP1q8VFodE/UY=
+	t=1741007923; cv=none; b=fKuBsotT/r/oTKUFj/dRXPtxU+rpDz1sXecsgbthSSum4WnvtaweEnsiRiNBKsJ7MT4jTCi9LGYyxnKRLhoj3halOojX/8Qnk+hopDxobi+qd6rJeim4gsdbOxOP8Pkb/nQ1obZe0V200wcs+TTJB+6P5L1xEXI/imZXnNzY2GA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1741007923; c=relaxed/simple;
-	bh=9lzejMsgIcVx6o3k2HM9XE0p8xgIq5wdNaTmJJ8s+zI=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=iUUjM1lha/lgbOxQ9E4F4RpovBUC5ie41PM2jKnHLutCHcyqaD7v1gFvGuz6UnfIybdQd72Ax7ppFclXg6dm7NuCMps5p2KDII2ujTu6QVm4Wgd+Xvg3ILPTqLWMERwwM0z/Nb0DtLw2lBj2RUpXBlEU8JFpTx2rpNZKYHCeEpQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=Fwyvdffa; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	bh=AMDQ9eFx0aMl37aNjAdud2rQll+8S9hW7w2yT459u9w=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Q7ywlUY++JYkYwDOiJ6lnVZaFRwVQK5h6Mr/TGzRn0DBWxwKy3EBYMmQiYtcQBfyEgANCtFB/ZfJ7SQOJZ0mG6+WkiQ1C1BOiS7uMsOLYAWKIW/t+sfjbkOULDLcVxXSjWkFd+l4D85juZwALB3+IfKbDBCyNQLXKVRqqWczII4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=protonic.nl; spf=pass smtp.mailfrom=protonic.nl; dkim=pass (2048-bit key) header.d=protonic.nl header.i=@protonic.nl header.b=V2VWHjdH; arc=none smtp.client-ip=94.124.121.26
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=protonic.nl
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protonic.nl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="Fwyvdffa"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-439ac3216dcso30218615e9.1
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Mar 2025 05:18:40 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=protonic.nl header.i=@protonic.nl header.b="V2VWHjdH"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1741007919; x=1741612719; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=TidBt2SWkGKP+ilcC4ucnacYIVlA19tuK+wOmbWsRkQ=;
-        b=FwyvdffaDwH2VzM0BeDLEDW21LffWk9fbARXXaFO1ugV159wMmG1Ufm/wqMdwWZURU
-         4AYRczxNR6s1uF/EzW7mXd78bf1wm34/dLIPKodSvvHNzLK2TZH72wknNy8aGBk1EfK+
-         PX/XdnTbcfvHdDLf0UyWxKSu48g2O6PwYrA5UasFulq7u9eTosUfQNwZ3+bmBv+q8LIw
-         PkFfw+0mgXorh7rtgoWtRMk5xnt0W5CF8ZPpf4r9PU/q/JBB4qJ34hh9DfCvYxS0wsu1
-         nbVfsDYC2auVNniJYEz2lpA/lrvzloG9IYuRnKB1C4XBu4oeEvu9j5Wscb29gFgroLNg
-         xaFw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741007919; x=1741612719;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=TidBt2SWkGKP+ilcC4ucnacYIVlA19tuK+wOmbWsRkQ=;
-        b=ciNPd+Sr6ygpbmpJeRJwC+ijT9vZa6XaraIbJHQulyAWKjRnSrpzSYZ/JZnzhUHHbE
-         4GDsk68VQXUciO8RJf4orKofY7LyY7MSYN2/Z1AQ7pJBA70XhCo9enyHEM2VaVUNs52C
-         w8gqFGHxod6OTOl2bv0zJodkTNzmKD852VMv9WVVY62nwsHpaSJGb8HshVGLbsppaK3V
-         H8KJgXipnfufnAQHlNdCSNngrBKG49PZsz/cuZgj/4HYx8OzP7AyojjERUTE3hwuBvHg
-         HZ23qT9RVKcsb7ytdsEFppVQG3EisO9M8MuaLVofzTJmheGYdcQPapjUfJvC/GfuMWPs
-         BhxQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV8LNLnAgnYP3KUvu0YeGTA7zwlQIPbkF7ilQwonjGAMts3sFCw/7anqTOI72AHzSk43L5sZTeEoZWRwnA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxJXkQ89U7Aa7ll80HyfmZl94Bss2v1PuXibxig56rFl2gUB8uV
-	j3XVcXG9ehJzOdIfLiGRulm/ISQL1A3jjMRvsTU15O5Gnecw1NbHrQpskC6qiD4=
-X-Gm-Gg: ASbGnctTRBBwUp74Pq/R9WXg1i81zWngjqMU7gw8y4xkn5MC5EdSQEuFvOAoad0hd9z
-	uzemx/3LCVpr5QfBHaT/gWG/+csYASv5GflbafLuWbVJJeKBseAwPXu+9UlMjBLHaK3/8Vu/WzB
-	rKzv6tUVSgsVBhMYZEkYTaJednU4VR27L4QWFnzqWdix6CSS7M7PzI/vfQZUhDdgUM13OvbOMxL
-	d5gLqr+aGS/ic58qSRgCIa2xvbRTKPsR0fhXJe2Zfaxgx4TDGXfhUvDErEK4B4/z1GUqwr4qr/0
-	UTo7cn0TdLE2w+ukRFmwimfVt/fWC5MU6KC42w==
-X-Google-Smtp-Source: AGHT+IEGZIkGsjS/ODOZpGkDFGZZ9llwwB4c/+lpidwwZqW9qJGdaX/avIm1867Tn1hlaTWUqZfeFA==
-X-Received: by 2002:a05:600c:a01:b0:439:8a44:1e65 with SMTP id 5b1f17b1804b1-43ba66e67b6mr114493835e9.7.1741007919063;
-        Mon, 03 Mar 2025 05:18:39 -0800 (PST)
-Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:664a:9e92:6aa8:6007])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43aba538b9fsm194821915e9.17.2025.03.03.05.18.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Mar 2025 05:18:38 -0800 (PST)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Mon, 03 Mar 2025 14:18:26 +0100
-Subject: [PATCH 01/15] gpio: 74x164: use new line value setter callbacks
+	d=protonic.nl; s=202111;
+	h=content-transfer-encoding:content-type:mime-version:references:in-reply-to:
+	 message-id:subject:cc:to:from:date:from;
+	bh=07jHBQ0Ocr20eMkBHU7wCv3Kb+u8M2gSl1jHl4Krjyw=;
+	b=V2VWHjdH50wFOAzqiqTCz4ucfQSAqCESzCrmKnlGDokUdrXyVCjY95wGlKxQEqab88IbyapJ8HitR
+	 HhPCkTVbdTVmITlaPVwF3DF45rsjZ8KKS9QR1QgL9Z9ZJ5PpeqMyb4Z4Br1b1QGHaU9XuSjwQA5XjL
+	 A9EK9KrVHqZcBBGpkCbhwHNy2zuIXnCvY+Yqh6IJUonUEaNniEQT+LOJaiv8qIBYHv/lxzT4aRN+2w
+	 0Ycn1oeGVIj2B/QPxKjK8H50uESCFnozuiYgwKdA25We/6ZDtA7Zez1CmVi/IbJCfJ/OrJ8aJ40Ipn
+	 ZWeXSYlWcX+QRqZW16a2zXBCEZZ+o4g==
+X-MSG-ID: 04a26b70-f832-11ef-a39b-00505681446f
+Date: Mon, 3 Mar 2025 14:18:37 +0100
+From: David Jander <david@protonic.nl>
+To: David Lechner <dlechner@baylibre.com>
+Cc: linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, Jonathan Corbet
+ <corbet@lwn.net>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
+ <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+ devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Nuno Sa
+ <nuno.sa@analog.com>, Jonathan Cameron <jic23@kernel.org>, Oleksij Rempel
+ <o.rempel@pengutronix.de>
+Subject: Re: [RFC PATCH 6/7] dt-bindings: motion: Add adi,tmc5240 bindings
+Message-ID: <20250303141837.782e57f7@erd003.prtnl>
+In-Reply-To: <CAMknhBFoRoaXWBL-vDnDrepqw_KJ-VrYeOoGJfjz8q=wDNM6xA@mail.gmail.com>
+References: <20250227162823.3585810-1-david@protonic.nl>
+	<20250227162823.3585810-7-david@protonic.nl>
+	<7b2a8d71-9d83-4d40-903b-ba7ef1c686f3@baylibre.com>
+	<20250303122253.26fec335@erd003.prtnl>
+	<CAMknhBFoRoaXWBL-vDnDrepqw_KJ-VrYeOoGJfjz8q=wDNM6xA@mail.gmail.com>
+Organization: Protonic Holland
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250303-gpiochip-set-conversion-v1-1-1d5cceeebf8b@linaro.org>
-References: <20250303-gpiochip-set-conversion-v1-0-1d5cceeebf8b@linaro.org>
-In-Reply-To: <20250303-gpiochip-set-conversion-v1-0-1d5cceeebf8b@linaro.org>
-To: Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>, 
- Michael Hennerich <michael.hennerich@analog.com>, 
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
- Mun Yew Tham <mun.yew.tham@intel.com>, Joel Stanley <joel@jms.id.au>, 
- Andrew Jeffery <andrew@codeconstruct.com.au>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-pwm@vger.kernel.org, patches@opensource.cirrus.com, 
- linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, 
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2379;
- i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
- bh=fJTqv/+sZnRFGZ6FlOnt5hhk1BWl5pYK/rnPH5nY6Lg=;
- b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBnxawpW8tUrAxZZ/uk/w5xMTaLwsBNhfY98oNOV
- E6KDpZn+g2JAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCZ8WsKQAKCRARpy6gFHHX
- cpXFD/90YRmLFeyVnmIsi24hzo26FQhOWMYIRRDxzqpqNifd2b5mGvcBLkEwjzddss4IcMVw21Q
- gS0MpbNM+Rc/5g0YTAsQj5MKkpA5BSTvWyBUSA1trgrg0jZycAOGWBzRlpTYds/BH8yhCs/0pi6
- jmr90cZ6YXNnwnn6tU8Dmm+VOEDTnJimqBajFU+X9LDauS9ztFrbujTbVnfYMdSVjZHq6ZwLrIi
- qstWSErBzvhIAgAI0C/a2NrE6fh9Cw405kAE1wNI9DZAIo8gsSfP1leoDzVZ7i/LWurlnBRYmq0
- QapIAkzpl/Z1eBJkeS2ZR9OarmJeckFvuZHB96FRxvYG+wCYXxQYz25spUm8V5z4wxtxWKPA+5k
- 5eA41bD5JlEtpb6QfTBin5dIlQU27UMrYZcZ7t6iBpE/gJyin7Os6R3fZaiM4qXR3wQ5RGYKJQz
- nGaaq5t6vTwUGDHsrJ4Bo1OQX/HISzfI5SGeaKUXhCfQ+1Geq8bLOD2wTeOt1BKtLvktU6CZh8a
- 3V4IUfcddbMtemRGIcxcLM7Miy9cC+Kp/vZi4tWNpI6OwWkVg2C5WlBbKprsR39MQ9JqYdzS7RO
- PS3NYhJUj8YVocKe2vSeRtpW96rU3G1Qru8AXqkzD0URk7Nnbin41UUdW8Y+9ytmXjndYhGT1gh
- JDb3B9tKdW80oag==
-X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
- fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-struct gpio_chip now has callbacks for setting line values that return
-an integer, allowing to indicate failures. Convert the driver to using
-them.
+Dear David,
 
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
- drivers/gpio/gpio-74x164.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+On Mon, 3 Mar 2025 13:28:35 +0100
+David Lechner <dlechner@baylibre.com> wrote:
 
-diff --git a/drivers/gpio/gpio-74x164.c b/drivers/gpio/gpio-74x164.c
-index 640ac24b72a2..4dd5c2c330bb 100644
---- a/drivers/gpio/gpio-74x164.c
-+++ b/drivers/gpio/gpio-74x164.c
-@@ -50,8 +50,8 @@ static int gen_74x164_get_value(struct gpio_chip *gc, unsigned offset)
- 	return !!(chip->buffer[bank] & BIT(pin));
- }
- 
--static void gen_74x164_set_value(struct gpio_chip *gc,
--		unsigned offset, int val)
-+static int gen_74x164_set_value(struct gpio_chip *gc,
-+				unsigned int offset, int val)
- {
- 	struct gen_74x164_chip *chip = gpiochip_get_data(gc);
- 	u8 bank = chip->registers - 1 - offset / 8;
-@@ -64,11 +64,11 @@ static void gen_74x164_set_value(struct gpio_chip *gc,
- 	else
- 		chip->buffer[bank] &= ~BIT(pin);
- 
--	__gen_74x164_write_config(chip);
-+	return __gen_74x164_write_config(chip);
- }
- 
--static void gen_74x164_set_multiple(struct gpio_chip *gc, unsigned long *mask,
--				    unsigned long *bits)
-+static int gen_74x164_set_multiple(struct gpio_chip *gc, unsigned long *mask,
-+				   unsigned long *bits)
- {
- 	struct gen_74x164_chip *chip = gpiochip_get_data(gc);
- 	unsigned long offset;
-@@ -85,7 +85,7 @@ static void gen_74x164_set_multiple(struct gpio_chip *gc, unsigned long *mask,
- 		chip->buffer[bank] &= ~bankmask;
- 		chip->buffer[bank] |= bitmask;
- 	}
--	__gen_74x164_write_config(chip);
-+	return __gen_74x164_write_config(chip);
- }
- 
- static int gen_74x164_direction_output(struct gpio_chip *gc,
-@@ -141,8 +141,8 @@ static int gen_74x164_probe(struct spi_device *spi)
- 	chip->gpio_chip.label = spi->modalias;
- 	chip->gpio_chip.direction_output = gen_74x164_direction_output;
- 	chip->gpio_chip.get = gen_74x164_get_value;
--	chip->gpio_chip.set = gen_74x164_set_value;
--	chip->gpio_chip.set_multiple = gen_74x164_set_multiple;
-+	chip->gpio_chip.set_rv = gen_74x164_set_value;
-+	chip->gpio_chip.set_multiple_rv = gen_74x164_set_multiple;
- 	chip->gpio_chip.base = -1;
- 	chip->gpio_chip.ngpio = GEN_74X164_NUMBER_GPIOS * chip->registers;
- 	chip->gpio_chip.can_sleep = true;
+> (Sorry if you get this twice. I don't have my regular computer today
+> and didn't realize I was sending HTML the first time. Resending in
+> plain text so the lists pick it up.)
+>=20
+> On Mon, Mar 3, 2025 at 12:22=E2=80=AFPM David Jander <david@protonic.nl> =
+wrote:
+> >
+> >
+> > Dear David,
+> >
+> > On Fri, 28 Feb 2025 16:38:51 -0600
+> > David Lechner <dlechner@baylibre.com> wrote:
+> > =20
+> > > On 2/27/25 10:28 AM, David Jander wrote: =20
+> > > > Add device-tree bindings for Analog Devices TMC5240 stepper control=
+lers.
+> > > >
+> > > > Signed-off-by: David Jander <david@protonic.nl>
+> > > > ---
+> > > >  .../bindings/motion/adi,tmc5240.yaml          | 60 +++++++++++++++=
+++++
+> > > >  1 file changed, 60 insertions(+)
+> > > >  create mode 100644 Documentation/devicetree/bindings/motion/adi,tm=
+c5240.yaml
+> > > >
+> > > > diff --git a/Documentation/devicetree/bindings/motion/adi,tmc5240.y=
+aml b/Documentation/devicetree/bindings/motion/adi,tmc5240.yaml
+> > > > new file mode 100644
+> > > > index 000000000000..3364f9dfccb1
+> > > > --- /dev/null
+> > > > +++ b/Documentation/devicetree/bindings/motion/adi,tmc5240.yaml
+> > > > @@ -0,0 +1,60 @@
+> > > > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> > > > +%YAML 1.2
+> > > > +---
+> > > > +$id: http://devicetree.org/schemas/motion/adi,tmc5240.yaml#
+> > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > > +
+> > > > +title: Analog Devices TMC5240 Stepper Motor controller
+> > > > +
+> > > > +maintainers:
+> > > > +  - David Jander <david@protonic>
+> > > > +
+> > > > +description: |
+> > > > +   Stepper motor controller with motion engine and SPI interface. =
+=20
+> > >
+> > > Please include a link to the datasheet. =20
+> >
+> > Will do.
+> > =20
+> > > > +
+> > > > +properties:
+> > > > +  compatible:
+> > > > +    enum:
+> > > > +      - adi,tmc5240
+> > > > +
+> > > > +  reg:
+> > > > +    maxItems: 1
+> > > > +
+> > > > +  interrupts:
+> > > > +    maxItems: 1 =20
+> > >
+> > > I assume that this is the overvoltage output (OV pin). Would be nice =
+to have
+> > > a description here saying that. There are also NAO and DIAG0/1 output=
+ pins, so
+> > > it's a bit ambiguous otherwise. =20
+> >
+> > This is the DIAG0 output pin which on this chip has a dual function as =
+either
+> > a STEP output or an interrupt output. The pin name is a bit misleading,=
+ but it
+> > is the "interrupt" function that is meant here. The datasheet documents=
+ all
+> > the different events that can trigger this interrupt.
+> > I will add a description to clarify this.
+> > =20
+>=20
+> If it makes sense that other pins could possibly ever be connected to
+> interrupts then we can add those and also add interrupt-names (but
+> only if there is more than one possible interrupt).
 
--- 
-2.45.2
+AFAIK, only DIAG1 would potentially make sense to be connected to an
+interrupt. It can be programmed to go low when the motor position matches t=
+he
+contents of the X_COMPARE/X_COMPARE_REPEAT register setting.
 
+I will add that one if you agree. It will not be mandatory of course.
+
+In any case, if that pin was connected to an interrupt pin right now, it co=
+uld
+already be used as an IIO trigger for example. Just not (yet) via this driv=
+er.
+
+>[...]
+> > The resistor connected to the IREF pin (Rref) OTOH does have an implica=
+tion to
+> > the software, as it sets the full-range current of the output stage.
+> >
+> > How should we specify that? Is it adequate to add an optional DT proper=
+ty
+> > "rref" or "rref-ohm" with an int32 value in Ohm? The default value if
+> > unspecified is 12000 Ohm. =20
+>=20
+> It looks like there are a few standardized properties, like
+> sense-resistor-ohms if that fits the use case. Otherwise, an
+> vendor-specific ti,rref-ohms would work. FYI, you can find the
+> preferred units at [1].
+>=20
+> [1]: https://github.com/devicetree-org/dt-schema/blob/main/dtschema/schem=
+as/property-units.yaml
+
+Ah, thanks! This is helpful.
+
+Will use this for ti,rref-ohms. I guess in this case that would be easier to
+understand than "sense-resistor-ohms", which is also okay, but would require
+reading the description to know what exactly is meant in this context.
+
+> > > And if there are any pins would make sense to connect to a gpio, we c=
+an add
+> > > those even if the driver doesn't use it currently.
+> > > =20
+> > > > +  clocks:
+> > > > +    maxItems: 1
+> > > > +
+> > > > +required:
+> > > > +  - compatible
+> > > > +  - reg
+> > > > +  - interrupts
+> > > > +  - clocks
+> > > > +
+> > > > +allOf:
+> > > > +  - $ref: /schemas/spi/spi-peripheral-props.yaml#
+> > > > +  - $ref: /schemas/motion/common.yaml# =20
+> > >
+> > > If we need to know about what is connected to the output of a motor c=
+ontroller
+> > > I would expect it to be done with child node for each output. That wa=
+y each
+> > > output can be unique, if needed. Basically, similar to iio/adc.yaml i=
+s used to
+> > > provide common properties for channel@ child nodes on iio devices. =20
+> >
+> > This controller chip only has one single output for one stepper motor (4
+> > wires). While technically you could connect something else to those 4 w=
+ires, I
+> > don't think it is the scope of LMC to support that. The chip itself isn=
+'t
+> > designed for that purpose and it would clearly go far beyond the intend=
+ed
+> > purpose of this device.
+> >
+> > That being said, your suggestion of supporting child nodes may actually=
+ be a
+> > good idea. Right now, we specify the type of motor (basically nominal- =
+and hold
+> > current settings) in user-space and set the IRUN/IHOLD parameters from
+> > user-space via the sysfs attributes interface. It might make sense to h=
+ave a DT
+> > child node to specify this, although in our current application this is=
+ not
+> > very practical, since there are many motor controllers on one board, an=
+d it is
+> > configurable in software (runtime) which motor is connected to which ou=
+tput.
+> >
+> > But I can imagine a situation where it may be fixed and thus can be des=
+cribed
+> > in the DT of a board.
+> >
+> > Then again I don't know if it would be over-complicating things with so=
+mething
+> > like this:
+> >
+> >         motor-controller@0 {
+> >                 ...
+> >                 motor@0 {
+> >                         compatible =3D "nanotec,st4118s1006";
+> >                         irun-ma =3D <1800>;
+> >                         ihold-ma =3D <270>;
+> >                 };
+> >         };
+> >
+> > where we'd possibly have a stepper-motors.c file with a lot of structs =
+and
+> > matching tables for the different motor types.... sounds like overkill =
+to me,
+> > but maybe not? =20
+>=20
+> A compatible for motors seems too much. I was just thinking along the
+> lines that 1) if we need to so some scaling or something that depends
+> on a motor constant, then it would make sense to put those constants
+> in the DT and 2) if there is a motor controller with more than one
+> output that could be connected to two or more different sizes of
+> motors with different constants, then we either need child nodes or an
+> array to be able to enter the different constants. Either one would
+> work. So maybe simpler to just use an array instead of child nodes now
+> that I'm thinking about it more.
+
+Well, in the case of the TMC5240 there isn't much more than a single motor
+with possibly some fixed setting of irun/ihold in some cases, but like I sa=
+id,
+in our case it is run-time configurable, so not something fixed to the
+hardware-description. Apart from that, there are the speed- and acceleratio=
+n-
+conversion constants, which per default are the constants stated in the
+datasheet. In some rare cases one might want to overrule them, but that can
+already be done.
+
+LMC does als support multi-channel controllers, and in that case I intend to
+make use of child nodes for the different channels, to be able to specify
+those parameters per motor.
+
+So maybe just leave it as it currently is for the tmc5240?
+
+> > > > +
+> > > > +unevaluatedProperties: false
+> > > > +
+> > > > +examples:
+> > > > +  - |
+> > > > +    spi {
+> > > > +        #address-cells =3D <1>;
+> > > > +        #size-cells =3D <0>;
+> > > > +
+> > > > +        motor@0 { =20
+> > >
+> > > motor-controller@ or actuator-controller@
+> > >
+> > > The chip is the controller/driver, it is not a motor. =20
+> >
+> > Make sense. Will change this.
+> > =20
+> > > > +            compatible =3D "adi,tmc5240";
+> > > > +            reg =3D <0>;
+> > > > +            interrupts-extended =3D <&gpiok 7 0>;
+> > > > +            clocks =3D <&clock_tmc5240>;
+> > > > +            enable-supply =3D <&stpsleepn>;
+> > > > +            spi-max-frequency =3D <1000000>;
+> > > > +        };
+> > > > +    }; =20
+
+Best regards,
+
+--=20
+David Jander
