@@ -1,131 +1,110 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEA17192B84;
-	Mon,  3 Mar 2025 12:01:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C318192B84
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 12:02:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741003272; cv=none; b=aUISRxakeFYQj9DYKXP5qvw2rrCL63DcPVoDwaQTtjn1l2/6yM0aWUjEvUKN4qcKTf0FgoKUpLdWa5yHL5q1r+l3va4p0RSJ15Gs2Wt+Y8eH/8l/II6kqMXy2Qkxe3KfqW5EZxgLnyVZjUo805Yu0KBswRhl+3TA+JfjZlHSKkQ=
+	t=1741003341; cv=none; b=gQSie/oRrXv1N6xLEHL47Fg4AQHrpTKgYgpCdwlMnS/E681vQRE+L7sQv9zAwnQKW+4eZekOFLU2yEMQdBzHwgqS9cD6A3yBfv4hNQqLHwuppkKJYdaYNRs7RwcDpySdlQYXri1Ohkw7yR7XLqsIihvi6gpN7dU6+WuYDPTiHSw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741003272; c=relaxed/simple;
-	bh=Hq8O1gGb+P40tEcirF5xOUQzXZ4h6pVNVOlur8zSbzo=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=NWTbY17pGCzSeAaFQk8/MkaIgZNvdxupdmUVmp3TViHsuS7USqxSkARdrj2l2z5Fa301OLHbJ8insFitSLxCFZt/4p746II+ilabPhT3mY4UkhxO+00uHHeUMGzlHCFt7AfNy3BlXLE5RgRybhiVukuPKnKwH+NI3b4X/mpZFFw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ph1NqR2e; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=G6sVbLbX; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1741003341; c=relaxed/simple;
+	bh=uWrqL7qwHJ1xRe81W1yZdqN0xrTeQwVstuEoqTp4vdM=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=f2j8NZJRH65zf9HH2hZ2WELM7ObcSLq0LXQesLYxRVech2bsdiTqdLReCz7eguPmlv3y6Dc3//aslQHj+p7xvQQgu36jTNNCww11AG+cgZFtl3UQCc4qc20U4v9i0Ux2+m9rcWTlyKSIm+EBDfZ0ZIxOxMumQyKw4jD67VUnNKk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=J+z8GQ6K; arc=none smtp.client-ip=209.85.208.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ph1NqR2e";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="G6sVbLbX"
-Date: Mon, 03 Mar 2025 12:01:06 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1741003269;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=oy/72BhdRmeKN0WCcoRdfRHpn4eagc5lEBQIp1+DUmo=;
-	b=ph1NqR2eyvPFKSXpl3NJIfcpuBqOXcJz3iOPk3D+GLEtevMyK7swaY95U95AWPLfdbkZx5
-	J8k7oOsyBzmZvl74vCs4k+FAr8dLKvXK2JLfzT+iAExgf9nKUzfcODVoivIqFFe6vNpWfg
-	ZJ/uFCQLLaKnii5oZCxuXpuKZqr1RI2KlmHFnt8LETBzOgS6hZB3skW7y7YBlnnIFtbyTm
-	A+akmD3uvChg8RpOqXpVaSaJuzZlHR6sR+AVfvsCYR+6C/RbVQfSKzdou+lFic/zFi52Ye
-	dquBLC/7pFTja6wbh7OcZHAw0f66LhggTZW6CNJY8opZAis6o3ddQ0WWnXHmZA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1741003269;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=oy/72BhdRmeKN0WCcoRdfRHpn4eagc5lEBQIp1+DUmo=;
-	b=G6sVbLbXJ3hI64XzPvV/O9CnLihB2s2fUPadh9Liu+XWL8tr2XOgAD1TZduwYiKX6svSKt
-	aKLfujem8ZyuuiCw==
-From: "tip-bot2 for Breno Leitao" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/bugs] x86/bugs: Use the cpu_smt_possible() helper instead
- of open-coded code
-Cc: Breno Leitao <leitao@debian.org>, Ingo Molnar <mingo@kernel.org>,
- Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
- David Kaplan <David.Kaplan@amd.com>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <20241031-x86_bugs_last_v2-v2-1-b7ff1dab840e@debian.org>
-References: <20241031-x86_bugs_last_v2-v2-1-b7ff1dab840e@debian.org>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="J+z8GQ6K"
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5e4ebc78da5so5512220a12.2
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Mar 2025 04:02:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1741003336; x=1741608136; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=FvjfazhXAUkX+q9ADQWctMmDsHuSAcb7Kglrffn5CF8=;
+        b=J+z8GQ6KzwxpWwpV3YGxkzqQikDOY63gQurQH/Y/cL8OWNZA0azkubadKmtksdtqYc
+         xU+gyI2iFllMV41ktZAsoFx6JyWM+JIlRLkVcyVsSNcwrfCqYXqikeJpr7XPutD6LMLW
+         HENRTHMLZF48To0S3r/rpJLovnqUzJLhiJzyv6140a+OaqK+E9lX9/2tEmys/W9gYAYX
+         wqFYDqbDkKSqk5stsLKfLF8p+o25nsxJxkcq6OBfHKa6Wc5jXQZnnjTJnjlhfK0XgbAG
+         jY9JcMXhq9BB2LjMMI7FUIrkqpnSVpHfR0L7z6q/GJICdSX24UnNlUG49pN+M7GrYq4p
+         o2Xw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741003336; x=1741608136;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=FvjfazhXAUkX+q9ADQWctMmDsHuSAcb7Kglrffn5CF8=;
+        b=pyk4N3bUfp3gysCeAToB6B/yxsERcYaGW65Aj1Q3n/mVQtYYgMC3ABE71MA+pukY1y
+         DeZZZnS7IN2KMbm8dS5Ed5TEZLczc+7J67L6W8wlJr+0amuoD1ghzaBxdzRtZWUQazOk
+         Kgbj+bMNfkSBJxfKW59D8DPsA4QWNomCDvdrfsdXAIphRbD5Slv9p0q9VnhqKmDhz73Q
+         uQtxqduYj69fG9eSqLGqKjHm7S9hO8NOHknomIDUvNsTguq+SJsNWLKzeb1Pffhxri4m
+         xeGmWN62hRd5yUdlQaWt7CJsK3InmhmzeAKMiYoM7kYH8/0yvnDbAzk8L+CcqSnV46Sy
+         +8Ew==
+X-Forwarded-Encrypted: i=1; AJvYcCVxDb6yf+7unuGilLTQ2A3Q2uvSGjwCaCTUFexwuEMif6J04Z8GfV0JRdeRjfDAgUBORUVDtmUHgoVfkhU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzIXBIH2KmrWWU98ZBFeM8dvPmEdkB5ea8rHiMOpAIJShlVPJHp
+	u2gdftZXmavKYBYHQ6pmmLCueGf7fa4zkTSO0T4VNTazw5N1oGo5YkeXig8P0EnVSuzqhfK7K2c
+	m
+X-Gm-Gg: ASbGncu3n8jDa5K1BtKhemkaY2JrpoG3jhLsxe4iOfym3UOj3Ap0NmLUIkeGZ7FxJ/r
+	4Z8mkDSbsymLqK3GZoIgnY0KpbGnSFpdJLp5FugS2ZEmrBQnxTTyo61NrENoBXGsJ5dM9TZRZJ7
+	G67hXxC1lNktlQc4oz6euXEkoCBk/DmrDSsv1zr3cKeN1jomAUpVfEmr8c7MjIiXmiPC1YvQ22Y
+	+GC8Cg5fQCu3rjBNs8nXibzYq6GaJKyzM2xYU7juqM+u4nYx/Wy5Hr8IbgpaQ2AFv9uUFDj3Gpr
+	P3Kqr2/AkEizKgHIllq7Ewys5eLgaWSuuutcIamfpipsR5WFKQ==
+X-Google-Smtp-Source: AGHT+IEVLpvwi6O6OBs0WN+GyOzE3jpuGJmps4EUiNQjjGbXYoZLIY4WBBNb3SuJAGnkmtz62ElidA==
+X-Received: by 2002:a05:6402:5190:b0:5db:f26d:fff1 with SMTP id 4fb4d7f45d1cf-5e4d6b62c36mr13405841a12.21.1741003336577;
+        Mon, 03 Mar 2025 04:02:16 -0800 (PST)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with UTF8SMTPSA id 4fb4d7f45d1cf-5e4c2f408cdsm6696931a12.0.2025.03.03.04.02.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Mar 2025 04:02:16 -0800 (PST)
+Date: Mon, 3 Mar 2025 15:02:12 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Ahmed Zaki <ahmed.zaki@intel.com>
+Cc: "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Kuniyuki Iwashima <kuniyu@amazon.com>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Alexander Lobakin <aleksander.lobakin@intel.com>,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org
+Subject: [PATCH net-next] net: Prevent use after free in
+ netif_napi_set_irq_locked()
+Message-ID: <5a9c53a4-5487-4b8c-9ffa-d8e5343aaaaf@stanley.mountain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174100326694.10177.17515354436837072065.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Mailer: git-send-email haha only kidding
 
-The following commit has been merged into the x86/bugs branch of tip:
+The cpu_rmap_put() will call kfree() when the last reference is dropped
+so it could result in a use after free when we dereference the same
+pointer the next line.  Move the cpu_rmap_put() after the dereference.
 
-Commit-ID:     2a08b832712980b9eb0e913d64a42c74fc56319b
-Gitweb:        https://git.kernel.org/tip/2a08b832712980b9eb0e913d64a42c74fc56319b
-Author:        Breno Leitao <leitao@debian.org>
-AuthorDate:    Thu, 31 Oct 2024 04:06:16 -07:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Mon, 03 Mar 2025 12:48:17 +01:00
-
-x86/bugs: Use the cpu_smt_possible() helper instead of open-coded code
-
-There is a helper function to check if SMT is available. Use this helper
-instead of performing the check manually.
-
-The helper function cpu_smt_possible() does exactly the same thing as
-was being done manually inside spectre_v2_user_select_mitigation().
-Specifically, it returns false if CONFIG_SMP is disabled, otherwise
-it checks the cpu_smt_control global variable.
-
-This change improves code consistency and reduces duplication.
-
-No change in functionality intended.
-
-Signed-off-by: Breno Leitao <leitao@debian.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Reviewed-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-Cc: David Kaplan <David.Kaplan@amd.com>
-Link: https://lore.kernel.org/r/20241031-x86_bugs_last_v2-v2-1-b7ff1dab840e@debian.org
+Fixes: bd7c00605ee0 ("net: move aRFS rmap management and CPU affinity to core")
+Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
 ---
- arch/x86/kernel/cpu/bugs.c | 7 +------
- 1 file changed, 1 insertion(+), 6 deletions(-)
+ net/core/dev.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
-index 93c437f..346bebf 100644
---- a/arch/x86/kernel/cpu/bugs.c
-+++ b/arch/x86/kernel/cpu/bugs.c
-@@ -1346,16 +1346,11 @@ static void __init
- spectre_v2_user_select_mitigation(void)
- {
- 	enum spectre_v2_user_mitigation mode = SPECTRE_V2_USER_NONE;
--	bool smt_possible = IS_ENABLED(CONFIG_SMP);
- 	enum spectre_v2_user_cmd cmd;
- 
- 	if (!boot_cpu_has(X86_FEATURE_IBPB) && !boot_cpu_has(X86_FEATURE_STIBP))
- 		return;
- 
--	if (cpu_smt_control == CPU_SMT_FORCE_DISABLED ||
--	    cpu_smt_control == CPU_SMT_NOT_SUPPORTED)
--		smt_possible = false;
--
- 	cmd = spectre_v2_parse_user_cmdline();
- 	switch (cmd) {
- 	case SPECTRE_V2_USER_CMD_NONE:
-@@ -1416,7 +1411,7 @@ spectre_v2_user_select_mitigation(void)
- 	 * so allow for STIBP to be selected in those cases.
- 	 */
- 	if (!boot_cpu_has(X86_FEATURE_STIBP) ||
--	    !smt_possible ||
-+	    !cpu_smt_possible() ||
- 	    (spectre_v2_in_eibrs_mode(spectre_v2_enabled) &&
- 	     !boot_cpu_has(X86_FEATURE_AUTOIBRS)))
- 		return;
+diff --git a/net/core/dev.c b/net/core/dev.c
+index 9189c4a048d7..c102349e04ee 100644
+--- a/net/core/dev.c
++++ b/net/core/dev.c
+@@ -7072,8 +7072,8 @@ void netif_napi_set_irq_locked(struct napi_struct *napi, int irq)
+ put_rmap:
+ #ifdef CONFIG_RFS_ACCEL
+ 	if (napi->dev->rx_cpu_rmap_auto) {
+-		cpu_rmap_put(napi->dev->rx_cpu_rmap);
+ 		napi->dev->rx_cpu_rmap->obj[napi->napi_rmap_idx] = NULL;
++		cpu_rmap_put(napi->dev->rx_cpu_rmap);
+ 		napi->napi_rmap_idx = -1;
+ 	}
+ #endif
+-- 
+2.47.2
+
