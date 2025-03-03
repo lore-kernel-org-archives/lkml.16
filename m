@@ -1,46 +1,46 @@
-Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2069.outbound.protection.outlook.com [40.107.100.69])
+Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1nam02on2040.outbound.protection.outlook.com [40.107.96.40])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2BB21E991A;
-	Mon,  3 Mar 2025 11:00:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.100.69
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C1301F63C3;
+	Mon,  3 Mar 2025 11:00:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.96.40
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740999613; cv=fail; b=sVrovgBKBtJpaXcyabPzF+UnWmrI1E/1xCUXJqo8bsaNmBmIBWHdbd7kipgisaa7RVRaxxomMU+3aEBZLRgt9CI39j4srFKNIqMgcO25ETVOdmm4JKwWxpVvhcv6uhO0xqh43XWoJ9qLstmfmhuXwNyp1mPn9VeBBQKhu2idec0=
+	t=1740999618; cv=fail; b=VJgbtnhYEEDndBEsca9/CFXmFPw5XaqaJWUV+waXc4LeJTk3KKTOjXmaBBOjurY8CZNXZaeAKJxwpUIshJpUpDGvzNgng5+cQJ2VFOeJHazLvzbSS2kO7xdGxz/aitLDiUHqpLgY2/lKLrqKAKvI69eUNwhSuRWN5TXUKfTv9mY=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740999613; c=relaxed/simple;
-	bh=7AYevgm/dk0FY3evDjkmxRve/nPzE3jjDYRHUDalSQo=;
+	s=arc-20240116; t=1740999618; c=relaxed/simple;
+	bh=QwFjzdIGLHuIEjCKotTW/idS8H+wha8bKV+IXQ2lSPA=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=G92Bd0fOIJmlwbjtl2uVYrO9ydZvX/i//4asiRxPNVRRPh48l7fV7s/UONN59D/KIm5Z5fUPB8lr8SwQz/ktBrh/9DDelH9Eo5ePbcB/N0Yr/H7dUMMK0q8UKcYdvAlhYAfog0UvL/GpNa/AZiJr12nAT/S70l4hfjaS0yoAHDg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=KxdVfa/0; arc=fail smtp.client-ip=40.107.100.69
+	 MIME-Version:Content-Type; b=oFpZQpOl0fcbkUyEYNb05iBh/BldnZfxwjzm0znkTCtTlM5UEffRUPx6fZ4SUXLbd2m0ERmxpdG2zFbRylo+/S9Ew+XkQp0N6ElPDyMRNgtmhTA9FJX5+FP+7zBzEWa9UE0QowznaGRanIG2HfBwtw8h7rXVwIrd+MglRNVx8gw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=oVmDJMQU; arc=fail smtp.client-ip=40.107.96.40
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="KxdVfa/0"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="oVmDJMQU"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=mh0wE6B2hPz+CncnzdMwH1u7azP+T7TizMhiqUnIdXyOfALN74hyEbCTVrtu2NshZyolZTTQPMwjLl0itbWxgSFg3di8fSHYgUWC9t/4lfaAwF1A5+RI6sJBMNNnb4g5rEw9canOAb5MkxOMLTyHiV46l6h+w7lamkWQM1vJL+ZP4kq5Jl4jSXu3p/X8/8MzOGfYazT87VY8QDHQnD4MugXZyrnJ+PrfgMJeZ1taGInRARRvxj2DMdR0xMzAhwGJQZ49ltmfXjWTcnV2Z5EpIu4kAHA5Z4sIMdHNBgjnHh2dBCukl0pMSXyer9WnqvfYq0DdLbIarQgAPjqyNNr5sQ==
+ b=VLJTZysGuTGqG/o/i4CBc3uCibGA9y4cZ3JUw3/+7Sazv4T00m0Q2RgTV3usdqkLQZscrpwNUNOZdcoq6/l2UdJF9cHltcs02z57m723Ru6jE/6NS8loCAfNOuzEw10Sy855XW8EelMAXCB2sqqfgQPC5/5yZ1yZ9j5Hx9HsVzuN0RXH3gNCcu2sHPcUuSwyQO2GAXNhd3sQJiZ26vIt5n8mta5rW+/wVl81Bo1R5iTB6Ir07ThNohoFIbpqGjVLGb5/0gks+M0XKla5nUVtH+LB49aMbiExVYFjP+oF79DhrRy9tK45fduEB8D2ba8TRi0omlj+cookTrSIJNTJLA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=OGMoeu14lEt8msC9YkjZnWB4zDinMCue4dnI2muRl0g=;
- b=QhT1zxgtY6q8Hr+/3xjeTgnvIfPbZy2PdWNleIDusV1jt8p+dwz3oIoUUoyaKWoeyrSg0REpyIQ3TXOLFj6gM8ZnN86ZhRlmSbNhtY4F9hg8KLMYnLMkEYIKlOgBsNb2I6W+A3965VvXwGVFvj0izMoAljxqWq4iLFcf45bANnZ00JEmVz4xa5Ay12XiKIAWGcnyCDP/FeeAFQi1w136GQlD3wGYFQX/Lc+l9y+t6T2ZWK02n3mln5QwZjI0OtrJI4IG5AXSgPA5Y9vEY1jXwz219ONNjB8MqyV6CrWHHgiYAJmtEC1znFK6jf3Lefm5nkA4ys+8rtosho7R4lkPbg==
+ bh=Ehs4H6t56Ucd9PHTttShbnw51gMTfpuRJh+cUERi9lU=;
+ b=h7F4/1z1Kc9EHfpnZx/iW0kXNk0h3t04V0Uom6ll3e1FXVLpq9cXZWGuC2jv9oCE2SwHXxj6frnYAiPJEqkbc98/1YQ/NKHdvkYow7zQmjqjBWlPXfdWWjTlgmZCUf48aphWwj+15xUDpDPoFeWeYWhhQtOXe6W1ye5cKg+6gEkg91wnDTmxQD/qVbzDvDF2yzg3IeacIa8Bb2ydq8BXYU7bM3t2V95DJ8FdaEknMnDNeTqx3/973cZEvtNnFg06c8//hXGXx0VkVRj+aWQonqY6SCu/fX44cu4XNtcN5zyQKbL8xD7wuLwQ+o/irh24axoG8AazItZQF+nOKFEDkg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
  dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
  header.from=amd.com; dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=OGMoeu14lEt8msC9YkjZnWB4zDinMCue4dnI2muRl0g=;
- b=KxdVfa/0FxId++72gTPi6moVmpW1s1kcv2KPbxxWvSmvAK/4thJgPuyIzBxnZo3OCEAz/qGl8pkiTTIMUNZ/mtMSdLb+gV4YZnq2en76T8NkNhjV+CcPWx8phOOPGCzbcTbk+VKHdRzCWE8Y2PNcdouGh+A9rJQLk8kMaXOIX8A=
-Received: from SA1PR05CA0017.namprd05.prod.outlook.com (2603:10b6:806:2d2::20)
- by SA1PR12MB6847.namprd12.prod.outlook.com (2603:10b6:806:25e::12) with
+ bh=Ehs4H6t56Ucd9PHTttShbnw51gMTfpuRJh+cUERi9lU=;
+ b=oVmDJMQUoFirC/qZZssPprkkst/3lghVWHD2TcQHiNcbXdQWkYFBrbte/6SIp5P5exhGbRQ+pgWErTBcaSIDporOctn0Mvtv5WqmXDquvZ4A1sCVu/++W9MBbWvH9kjDhxEfE6d/9l5Xe7xEPuQty8sdsqgXQWEkaValRo5TQp4=
+Received: from SA1PR05CA0007.namprd05.prod.outlook.com (2603:10b6:806:2d2::9)
+ by PH7PR12MB9128.namprd12.prod.outlook.com (2603:10b6:510:2f7::7) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.25; Mon, 3 Mar
- 2025 11:00:02 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.24; Mon, 3 Mar
+ 2025 11:00:11 +0000
 Received: from SN1PEPF00036F40.namprd05.prod.outlook.com
- (2603:10b6:806:2d2:cafe::7) by SA1PR05CA0017.outlook.office365.com
- (2603:10b6:806:2d2::20) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8511.13 via Frontend Transport; Mon,
- 3 Mar 2025 11:00:02 +0000
+ (2603:10b6:806:2d2:cafe::61) by SA1PR05CA0007.outlook.office365.com
+ (2603:10b6:806:2d2::9) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8511.12 via Frontend Transport; Mon,
+ 3 Mar 2025 11:00:10 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -50,20 +50,20 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
  SN1PEPF00036F40.mail.protection.outlook.com (10.167.248.24) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8511.15 via Frontend Transport; Mon, 3 Mar 2025 11:00:02 +0000
+ 15.20.8511.15 via Frontend Transport; Mon, 3 Mar 2025 11:00:10 +0000
 Received: from amd.amd.com (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 3 Mar
- 2025 04:59:55 -0600
+ 2025 05:00:04 -0600
 From: Akshay Gupta <akshay.gupta@amd.com>
 To: <linux-hwmon@vger.kernel.org>, <linux-kernel@vger.kernel.org>
 CC: <linux@roeck-us.net>, <gregkh@linuxfoundation.org>, <arnd@arndb.de>,
 	<shyam-sundar.s-k@amd.com>, <gautham.shenoy@amd.com>,
 	<mario.limonciello@amd.com>, <naveenkrishna.chatradhi@amd.com>, Akshay Gupta
 	<akshay.gupta@amd.com>
-Subject: [PATCH v5 09/11] misc: amd-sbi: Add support for read MCA register protocol
-Date: Mon, 3 Mar 2025 10:59:00 +0000
-Message-ID: <20250303105902.215009-10-akshay.gupta@amd.com>
+Subject: [PATCH v5 11/11] misc: amd-sbi: Add document for AMD SB IOCTL description
+Date: Mon, 3 Mar 2025 10:59:02 +0000
+Message-ID: <20250303105902.215009-12-akshay.gupta@amd.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20250303105902.215009-1-akshay.gupta@amd.com>
 References: <20250303105902.215009-1-akshay.gupta@amd.com>
@@ -79,281 +79,177 @@ X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
  (10.181.40.145)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN1PEPF00036F40:EE_|SA1PR12MB6847:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4744807a-ea41-4a9f-807f-08dd5a428c38
+X-MS-TrafficTypeDiagnostic: SN1PEPF00036F40:EE_|PH7PR12MB9128:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6bf55eb2-6151-4628-fcca-08dd5a4290e2
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|376014|1800799024|82310400026;
+	BCL:0;ARA:13230040|82310400026|36860700013|1800799024|376014|13003099007;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?yD8EaVLkQp+mzDjiTshh+Jp6gixV3iCFzLHYroC/+h3yKuAa/GMmUzOCzB6o?=
- =?us-ascii?Q?hhivhPiMYU9nC4uBuyeG919jErenSEIQ0l+FpzBda2qybiCt6WaNo24iW5Mo?=
- =?us-ascii?Q?w9SfxO+INE0xGQJ/Tuf+jaQ3qNxJTIUgxRu+/ZuCQbHMDpnLQ0IRwRYGb2c3?=
- =?us-ascii?Q?h4Y2PswL3bBCfFWNS91VXFQyaYmksEbKnIGd3i8hUcfh8Hd7j9Ces5qPZzZS?=
- =?us-ascii?Q?yk2HCusW+nZpP5DZ3nuBWGcR0uaO++3FFHhfIyRtaqYSkeJEvYmiwzVuTaPU?=
- =?us-ascii?Q?3LKNKh52tiPm5cZnh4RghPhLmwsXz/vapwrjryKXFSlPWfIPbq7LtCzvA8y9?=
- =?us-ascii?Q?jdPyuM8x+7ywjqBJvpv4H4idLrlENCZ0kKd58dV8aX8ff4LR4WkavVpVMCQl?=
- =?us-ascii?Q?7jHdKop7Xi4UEkawE3s8/3QyNAbBWPt0qC23ryl71AWA5GYLU71xlwu88V0M?=
- =?us-ascii?Q?frv7yc8k2PR0MpNvLvvDib3KEwf34bWP4wrPBkPprEd3xmqtW5l8rOX9DpHD?=
- =?us-ascii?Q?nGc6HZrRVZeSt2UU6IVLd0WCM2m0Bn/3PllbhbDIGKZmaqsw4Z0EbPW7D8R7?=
- =?us-ascii?Q?iq4wv3wQTzVzk/z3yU3jS3vvQfDTNL1Kmwhyt3IAYS/WdrPakhqaJ4EgKplb?=
- =?us-ascii?Q?fMwF+R6s6OWGdISzQnqiRkwasMoY0SC4kCchPuXNySFf3SRZz2RAg1DCx1JI?=
- =?us-ascii?Q?eTptdwFIEy4tYut3F3Njo5ywU5VJ56v+tv1xSzRAWRXgBBF/6RouyczNAr2P?=
- =?us-ascii?Q?xxaczS5tNErMAyAAZs1mOpPEVWxribZ8XHlSKa1nSvKoNreBbKPDeqMyVfNA?=
- =?us-ascii?Q?lI97FPfrPx0CAgx9xGA16Ty3RLcwReTHNB02tMFGvpaMXZLT1fx5crwjtr2a?=
- =?us-ascii?Q?69DJmYhFH9sktDVDt5gHq43CuZ1C8/j8lc+tgE2IXOw5dF0vWb4YSq//7R1i?=
- =?us-ascii?Q?iYUa131uQax7DkDy+8rOo3d7HLdAvwScUYCvoA1jg0gSUPyW4E3EKY8FHp9q?=
- =?us-ascii?Q?LW0J7HFK+Pb7bD6cceJgmSgyPTRRK+hMSUYaVRSeAhzfQmYGnjPyASM9upZF?=
- =?us-ascii?Q?7Pfb6/BxosF3yHIzTZuDhduJrKMI1iNAEbgyKc+jt9Mwr1kaRV7D+9eNsZtD?=
- =?us-ascii?Q?M6IBmynnjRgWXceZy7BpznzbxFYOenKPdrKm43pktKSK6Izjr8dXpTW7nEsq?=
- =?us-ascii?Q?QMEwmLjXvG/ubuXjRpkV2iqYVKlQxgbsBcfvkJZZEoQDqvKZ4Vr5ftVp1bM/?=
- =?us-ascii?Q?E2N/3QZUqd7GiLgv3hpyacSgrDhzF7ST1Yd24zy+S19fND+HMuJPJE6Sifjz?=
- =?us-ascii?Q?NaaigLJQJSPMz3E+avcPtMOe0gU51ozDbooaEiE/u0wf+Dyq2jHrsvb1t7g9?=
- =?us-ascii?Q?GiLcDg76ttTstUHyigtVWQr63k+oTTdBk+rWagDLdfAi3ryJDqzKAWaB3MEw?=
- =?us-ascii?Q?cfzzsRt12wIPaQRWjpIT7MqZxfFkKQga3gYP22CfeITbkiTrEtsEDI0DRozo?=
- =?us-ascii?Q?tfdbEPOCeQqZCMA=3D?=
+	=?us-ascii?Q?TiexCFTykxeKXVUFAGlQiZPa3/fLCXW6Yr7Kf4ITz6t5c5ajGw439iSKSkwm?=
+ =?us-ascii?Q?feIce3F62I/VN/4oSWnqcsaUJ9mhO12KPJqRbIei0w8dNXGmGCKlEEaBmVq7?=
+ =?us-ascii?Q?QPMpW77pNnr3Op9x/envHHNQIHH+ou26+3d+hPmxSrIO02dmDjZspIKWoVjD?=
+ =?us-ascii?Q?scqd9WtXM0wAGV6PtsVGnRMo4kDC+r+Y0dD3QlUFIpeDRLrCb/bsZ+SbGVAH?=
+ =?us-ascii?Q?mddtaK8AlRLTMCW10V3r4CPfVHLgSA8UgWD98QFnPAu5C03l0y1qiW4QLEtA?=
+ =?us-ascii?Q?kP3QvpAz1RApMQ2SWVvFWl5XfuSpHwIaI2xLcIiwnZPnmaWojMzmJPyta68Q?=
+ =?us-ascii?Q?Iyccm9swSLtgYmgv3mE46JgB/0pPFonutUD40Y1KurMPmjm/X5bariKhs5ru?=
+ =?us-ascii?Q?S+C4Z8VcZMDuiKSN1qJ3518GqdUzyZ+dW8zhlsTiMcJnSygFmFUhaMqzzzu6?=
+ =?us-ascii?Q?Es+l8so3rptPkG8/y6C84HPsM/d/Mg/5LXZcNb0SboOwyGvWRlHnkOwWzHVz?=
+ =?us-ascii?Q?lVjtcH59eCFWebhUPV2Sf2wKhrb0Ot8a8w5ENaMQhaHzat+eXF4m7Ag9M+yj?=
+ =?us-ascii?Q?0By72Spnt3om4lXq9Q3gxrhO7olPSK4z+shQOZKvRD66ov7pgEOPONy6SP0l?=
+ =?us-ascii?Q?2QwSaEkIo/Nxw7pW0PkGfbrjavjd47A9q+ViQsYN+zjae6PfNS1mg1JasDCL?=
+ =?us-ascii?Q?7yM+/D7SqM5szH4FaMKZ77tma3LFeJjQ7J7GlDhdwiDv0SJ6EobvR/Ka4mfq?=
+ =?us-ascii?Q?crq4+iVWOMF2eKKaYQDvpRghN+IVS1EfiKlvKdPCwdwaNuNNLd4vIlpyBo/o?=
+ =?us-ascii?Q?bpEMcAPpauW+2D/1cOhjGKoKFhFcGpGiFeJf4ln4sdH1aiew4YArewXZKZqg?=
+ =?us-ascii?Q?dkAWtUQPagbLkgs5Li/fKHnhtStIQ6F+r6HJZsW5s9F04e4d8h70nUchfH8F?=
+ =?us-ascii?Q?ZQFT1NT0GbSHkCBHB7GOo1xVJdwV/jf9lmn4ToqioQR5AEUqUTNp4S0CrRVe?=
+ =?us-ascii?Q?2Dmhn9y6nacxsFfAttc6s8Rlt3fnpfthwDmcucSAipsBu5O6OIucEpAfuSDI?=
+ =?us-ascii?Q?BwFvPvoElcN6zF9lA2GGBrQy1gxqYdeyuRrqJt4qkPCkdtzeWj/RWkDTpGcW?=
+ =?us-ascii?Q?A27thTdGCsnXQtIrmzb6Ndhq5GOcFBUDF+SYPwd46g6Hdb+Z2OspCFt9IZCR?=
+ =?us-ascii?Q?rFcEvXTe88aMaieNI036FPkvZYGIuDGUmcRKqG+OTbgg2Yy7eD1NHmy1WS5h?=
+ =?us-ascii?Q?J/xEvZqJr6kqZIXvAeDu9FdOKA91kce+u5KFqhWxgdZQZJbElSlTCmxsgxey?=
+ =?us-ascii?Q?1jM2bPKCffgxzxtcoB+Z99F3B+3mem0er4d39qb4117yLrF7rJe7SmwUmhdR?=
+ =?us-ascii?Q?m6ibVph6d7xjYClBkB0bkDycmAhIkvCVGuY0kE/eVyS3ox4lvJlPCCG6z7gp?=
+ =?us-ascii?Q?D1hxmY1Ruwn0UknNpG/qpfXMtrEA5YuS95wa8y22rHbXOqHKRizoqYAfAnYu?=
+ =?us-ascii?Q?aqNdXXtBQHv8Npg=3D?=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(376014)(1800799024)(82310400026);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(36860700013)(1800799024)(376014)(13003099007);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Mar 2025 11:00:02.2395
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Mar 2025 11:00:10.0677
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4744807a-ea41-4a9f-807f-08dd5a428c38
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6bf55eb2-6151-4628-fcca-08dd5a4290e2
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
 	SN1PEPF00036F40.namprd05.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB6847
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB9128
 
-- AMD provides custom protocol to read Machine Check Architecture(MCA)
-  registers over sideband. The information is accessed for range of
-  MCA registers by passing register address and thread ID to the protocol.
-  MCA register read command using the register address to access
-  Core::X86::Msr::MCG_CAP which determines the number of MCA banks.
-  Access is read-only
+- This document provides AMD side band IOCTL description defined
+  for APML and its usage.
+  Multiple AMD custom protocols defined for side band system
+  management uses this IOCTL.
+  User space C-APIs are made available by esmi_oob_library [1],
+  which is provided by the E-SMS project [2].
+
+Link: https://github.com/amd/esmi_oob_library [1]
+Link: https://www.amd.com/en/developer/e-sms.html [2]
 
 Reviewed-by: Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>
 Signed-off-by: Akshay Gupta <akshay.gupta@amd.com>
 ---
 Changes since v4:
-- Previously patch 7
-- Address review comment for documentation warning
+- Previously patch 9
+- Update description as per review comment
+- Address the review comments for documentation warning
 
 Changes since v3:
-- Address review comments:
-  - update the #define to inline function
-  - pack the union inside the structure
+- Address the review comments 
 
 Changes since v2:
 - update the MACROS name as per feedback
 
 Changes since v1:
-- bifurcated from previous patch 5
+- New patch
 
- drivers/misc/amd-sbi/rmi-core.c | 100 ++++++++++++++++++++++++++++++++
- include/uapi/misc/amd-apml.h    |  18 ++++--
- 2 files changed, 112 insertions(+), 6 deletions(-)
+ Documentation/misc-devices/amd-sbi.rst | 87 ++++++++++++++++++++++++++
+ 1 file changed, 87 insertions(+)
+ create mode 100644 Documentation/misc-devices/amd-sbi.rst
 
-diff --git a/drivers/misc/amd-sbi/rmi-core.c b/drivers/misc/amd-sbi/rmi-core.c
-index 6fd6e8e579d5..662aa90980fc 100644
---- a/drivers/misc/amd-sbi/rmi-core.c
-+++ b/drivers/misc/amd-sbi/rmi-core.c
-@@ -30,10 +30,16 @@
- #define CPUID_WR_DATA_LEN	0x8
- #define CPUID_RD_REG_LEN	0xa
- #define CPUID_WR_REG_LEN	0x9
-+/* MSR */
-+#define MSR_RD_REG_LEN		0xa
-+#define MSR_WR_REG_LEN		0x8
-+#define MSR_RD_DATA_LEN		0x8
-+#define MSR_WR_DATA_LEN		0x7
- 
- /* CPUID MSR Command Ids */
- #define CPUID_MCA_CMD	0x73
- #define RD_CPUID_CMD	0x91
-+#define RD_MCA_CMD	0x86
- 
- /* input for bulk write to CPUID protocol */
- struct cpu_msr_indata {
-@@ -70,6 +76,16 @@ static inline void prepare_cpuid_input_message(struct cpu_msr_indata *input,
- 	input->ext		= ext_func;
- }
- 
-+static inline void prepare_mca_msr_input_message(struct cpu_msr_indata *input,
-+						 u8 thread_id, u32 data_in)
-+{
-+	input->rd_len		= MSR_RD_DATA_LEN;
-+	input->wr_len		= MSR_WR_DATA_LEN;
-+	input->proto_cmd	= RD_MCA_CMD;
-+	input->thread		= thread_id << 1;
-+	input->value		= data_in;
-+}
+diff --git a/Documentation/misc-devices/amd-sbi.rst b/Documentation/misc-devices/amd-sbi.rst
+new file mode 100644
+index 000000000000..9fbb01b33032
+--- /dev/null
++++ b/Documentation/misc-devices/amd-sbi.rst
+@@ -0,0 +1,87 @@
++.. SPDX-License-Identifier: GPL-2.0
 +
- static int sbrmi_get_rev(struct sbrmi_data *data)
- {
- 	struct apml_message msg = { 0 };
-@@ -167,6 +183,86 @@ static int rmi_cpuid_read(struct sbrmi_data *data,
- 	return ret;
- }
- 
-+/* MCA MSR protocol */
-+static int rmi_mca_msr_read(struct sbrmi_data *data,
-+			    struct apml_message *msg)
-+{
-+	struct cpu_msr_outdata output = {0};
-+	struct cpu_msr_indata input = {0};
-+	int ret, val = 0;
-+	int hw_status;
-+	u16 thread;
++=======================
++AMD SIDE BAND interface
++=======================
 +
-+	mutex_lock(&data->lock);
-+	/* cache the rev value to identify if protocol is supported or not */
-+	if (!data->rev) {
-+		ret = sbrmi_get_rev(data);
-+		if (ret < 0)
-+			goto exit_unlock;
-+	}
-+	/* MCA MSR protocol for REV 0x10 is not supported*/
-+	if (data->rev == 0x10) {
-+		ret = -EOPNOTSUPP;
-+		goto exit_unlock;
-+	}
++Some AMD Zen based processors supports system management
++functionality via side-band interface (SBI) called
++Advanced Platform Management Link (APML). APML is an I2C/I3C
++based 2-wire processor target interface. APML is used to
++communicate with the Remote Management Interface
++(SB Remote Management Interface (SB-RMI)
++and SB Temperature Sensor Interface (SB-TSI)).
 +
-+	thread = msg->data_in.reg_in[AMD_SBI_THREAD_LOW_INDEX] |
-+		 msg->data_in.reg_in[AMD_SBI_THREAD_HI_INDEX] << 8;
++More details on the interface can be found in chapter
++"5 Advanced Platform Management Link (APML)" of the family/model PPR [1]_.
 +
-+	/* Thread > 127, Thread128 CS register, 1'b1 needs to be set to 1 */
-+	if (thread > 127) {
-+		thread -= 128;
-+		val = 1;
-+	}
-+	ret = regmap_write(data->regmap, SBRMI_THREAD128CS, val);
-+	if (ret < 0)
-+		goto exit_unlock;
++.. [1] https://www.amd.com/content/dam/amd/en/documents/epyc-technical-docs/programmer-references/55898_B1_pub_0_50.zip
 +
-+	prepare_mca_msr_input_message(&input, thread,
-+				      msg->data_in.mb_in[AMD_SBI_RD_WR_DATA_INDEX]);
 +
-+	ret = regmap_bulk_write(data->regmap, CPUID_MCA_CMD,
-+				&input, MSR_WR_REG_LEN);
-+	if (ret < 0)
-+		goto exit_unlock;
++SBRMI device
++============
 +
-+	/*
-+	 * For RMI Rev 0x20, new h/w status bit is introduced. which is used
-+	 * by firmware to indicate completion of commands (0x71, 0x72, 0x73).
-+	 * wait for the status bit to be set by the hardware before
-+	 * reading the data out.
-+	 */
-+	ret = regmap_read_poll_timeout(data->regmap, SBRMI_STATUS, hw_status,
-+				       hw_status & HW_ALERT_MASK, 500, 2000000);
-+	if (ret)
-+		goto exit_unlock;
++apml_sbrmi driver under the drivers/misc/amd-sbi creates miscdevice
++/dev/sbrmi-* to let user space programs run APML mailbox, CPUID,
++MCAMSR and register xfer commands.
 +
-+	ret = regmap_bulk_read(data->regmap, CPUID_MCA_CMD,
-+			       &output, MSR_RD_REG_LEN);
-+	if (ret < 0)
-+		goto exit_unlock;
++Register sets is common across APML protocols. IOCTL is providing synchronization
++among protocols as transactions may create race condition.
 +
-+	ret = regmap_write(data->regmap, SBRMI_STATUS,
-+			   HW_ALERT_MASK);
-+	if (ret < 0)
-+		goto exit_unlock;
++$ ls -al /dev/sbrmi-3c
++crw-------    1 root     root       10,  53 Jul 10 11:13 /dev/sbrmi-3c
 +
-+	if (output.num_bytes != MSR_RD_REG_LEN - 1) {
-+		ret = -EMSGSIZE;
-+		goto exit_unlock;
-+	}
-+	if (output.status) {
-+		ret = -EPROTOTYPE;
-+		msg->fw_ret_code = output.status;
-+		goto exit_unlock;
-+	}
-+	msg->data_out.cpu_msr_out = output.value;
++apml_sbrmi driver registers hwmon sensors for monitoring power_cap_max,
++current power consumption and managing power_cap.
 +
-+exit_unlock:
-+	mutex_unlock(&data->lock);
-+	return ret;
-+}
++Characteristics of the dev node:
++ * message ids are defined to run differnet xfer protocols:
++	* Mailbox:		0x0 ... 0x999
++	* CPUID:		0x1000
++	* MCA_MSR:		0x1001
++	* Register xfer:	0x1002
 +
- int rmi_mailbox_xfer(struct sbrmi_data *data,
- 		     struct apml_message *msg)
- {
-@@ -282,6 +378,10 @@ static long sbrmi_ioctl(struct file *fp, unsigned int cmd, unsigned long arg)
- 	case APML_CPUID:
- 		ret = rmi_cpuid_read(data, &msg);
- 		break;
-+	case APML_MCA_MSR:
-+		/* MCAMSR protocol */
-+		ret = rmi_mca_msr_read(data, &msg);
-+		break;
- 	default:
- 		return -EINVAL;
- 	}
-diff --git a/include/uapi/misc/amd-apml.h b/include/uapi/misc/amd-apml.h
-index 847a83770ab0..0a841809ca84 100644
---- a/include/uapi/misc/amd-apml.h
-+++ b/include/uapi/misc/amd-apml.h
-@@ -7,8 +7,11 @@
- 
- #include <linux/types.h>
- 
--/* command ID to identify CPUID protocol */
--#define APML_CPUID	0x1000
-+enum apml_protocol {
-+	APML_CPUID	= 0x1000,
-+	APML_MCA_MSR,
-+};
++Access restrictions:
++ * Only root user is allowed to open the file.
++ * APML Mailbox messages and Register xfer access are read-write,
++ * CPUID and MCA_MSR access is read-only.
 +
- /* These are byte indexes into data_in and data_out arrays */
- #define AMD_SBI_RD_WR_DATA_INDEX	0
- #define AMD_SBI_REG_OFF_INDEX		0
-@@ -24,13 +27,14 @@ struct apml_message {
- 	/* message ids:
- 	 * Mailbox Messages:	0x0 ... 0x999
- 	 * APML_CPUID:		0x1000
-+	 * APML_MCA_MSR:	0x1001
- 	 */
- 	__u32 cmd;
- 
- 	/*
- 	 * 8 bit data for reg read,
- 	 * 32 bit data in case of mailbox,
--	 * up to 64 bit in case of cpuid
-+	 * up to 64 bit in case of cpuid and mca msr
- 	 */
- 	union {
- 		__u64 cpu_msr_out;
-@@ -40,8 +44,9 @@ struct apml_message {
- 
- 	/*
- 	 * [0]...[3] mailbox 32bit input
--	 *	     cpuid,
--	 * [4][5] cpuid: thread
-+	 *	     cpuid & mca msr,
-+	 * [4][5] cpuid & mca msr: thread
-+	 * [4] rmi reg wr: value
- 	 * [6] cpuid: ext function & read eax/ebx or ecx/edx
- 	 *	[7:0] -> bits [7:4] -> ext function &
- 	 *	bit [0] read eax/ebx or ecx/edx
-@@ -53,7 +58,7 @@ struct apml_message {
- 		__u8 reg_in[8];
- 	} data_in;
- 	/*
--	 * Status code is returned in case of CPUID access
-+	 * Status code is returned in case of CPUID/MCA access
- 	 * Error code is returned in case of soft mailbox
- 	 */
- 	__u32 fw_ret_code;
-@@ -79,6 +84,7 @@ struct apml_message {
-  * The APML RMI module checks whether the cmd is
-  * - Mailbox message read/write(0x0~0x999)
-  * - CPUID read(0x1000)
-+ * - MCAMSR read(0x1001)
-  * - returning "-EFAULT" if none of the above
-  * "-EPROTOTYPE" error is returned to provide additional error details
-  */
++Driver IOCTLs
++=============
++
++.. c:macro:: SBRMI_IOCTL_CMD
++.. kernel-doc:: include/uapi/misc/amd-apml.h
++   :doc: SBRMI_IOCTL_CMD
++
++User-space usage
++================
++
++To access side band interface from a C program.
++First, user need to include the headers::
++
++  #include <uapi/misc/amd-apml.h>
++
++Which defines the supported IOCTL and data structure to be passed
++from the user space.
++
++Next thing, open the device file, as follows::
++
++  int file;
++
++  file = open("/dev/sbrmi-*", O_RDWR);
++  if (file < 0) {
++    /* ERROR HANDLING */
++    exit(1);
++  }
++
++The following IOCTL is defined:
++
++``#define SB_BASE_IOCTL_NR      0xF9``
++``#define SBRMI_IOCTL_CMD          _IOWR(SB_BASE_IOCTL_NR, 0, struct apml_message)``
++
++
++User space C-APIs are made available by esmi_oob_library, hosted at
++[2]_ which is provided by the E-SMS project [3]_.
++
++.. [2] https://github.com/amd/esmi_oob_library
++.. [3] https://www.amd.com/en/developer/e-sms.html
 -- 
 2.25.1
 
