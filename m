@@ -1,323 +1,114 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22F432417F4
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 16:30:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46B21248887;
+	Mon,  3 Mar 2025 16:30:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741019444; cv=none; b=KKVXMmWQ4Tf4mM7y6I9H7kTTktOoQlM+4rifIh4CUqxyKmfBLklL5Xcaz6mIqMpA8pxL5TILjNSY3OC4tizL4IqgcqGaeFQ/kT3yo3Fn6Jq/iELTMPkX8Is9SdcHEaV49pDNCVqAz8OjIZE2d6EWlxpRYITzK2L+d8bhVNFCi/Y=
+	t=1741019446; cv=none; b=PSR4WQWYzLJ00adnA6UuGznzBQ23usHKHLQDeX+UH/pAZEIV3oticxnshNoi7GU+vSRQFNMXL4ljWOt9rfz5K4EA+SD1RkSdJRAf7IEDOotUoaQmhqKH8nIdh8I3xkqPpg3FhJBm1WeCA3HyQPQAbUJgyENSfrGU63MZeijujbA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741019444; c=relaxed/simple;
-	bh=XS+18kAaoj7sIS9sU7RTWYBo+sPOl6gKdkav3g44shQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RM6PLL8iu86T9XgibZQYtCmAUMIoYj/Nb81NmRBoA4mZkbI8wj1J36O7ehMxRmh0JeJbgj2veOkMf+GKqielhjSuiwScS/2IGf4F9GBwAmKw92HN6tNb1S8kYn8wmchdAHGBsKYsrl/nwyFwUTN1Uv/u/zYsNP62y3cUaUOOinU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QRZ2N5gE; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1741019446; c=relaxed/simple;
+	bh=DXHhBZFGrI8qS3v2N4sk8Q5iUu0EKKm29mVvD5NINA4=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=KjzEVwuEiK3tHxDoVAIjZOHeTzFAVkDWRxjjGrXCbAc5QkkPh3VGCMU1RgwQT4ThS/BfkVa22noOG9SsGMzcY2DlrC+Jb+S0OFHvRtMsIbQmkzt8LlVLKIpAjx7M8g4LflOKw0xK2EkBsuLK8khGaouc6dW9VSPYEFKS70DWqzc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TYHMsfGA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QRZ2N5gE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1741019441;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2ZRGaM3lOA1apQzTwMmA5Ztu3DsqGrxsLDUuGH3sRgQ=;
-	b=QRZ2N5gE7hbhUQ6ep+pVTrmeOTa0nQAaIQXKrtjSDDuLPwPvn/VvXEuBE+f5OzhBq0d0Ww
-	vmVDOscA8NbeWIn8inb/QxlFSAXq4pjLzpL+tHkfW+67D2THcj1i3a8P3t6BhmyhOhyaqH
-	SsmHZo0PTSNHJpsNnOdczXD7He2XPLw=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-462-0uPWmqx1NkqxWSJHmxrBBg-1; Mon, 03 Mar 2025 11:30:29 -0500
-X-MC-Unique: 0uPWmqx1NkqxWSJHmxrBBg-1
-X-Mimecast-MFC-AGG-ID: 0uPWmqx1NkqxWSJHmxrBBg_1741019428
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-438e180821aso24934255e9.1
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Mar 2025 08:30:29 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741019428; x=1741624228;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2ZRGaM3lOA1apQzTwMmA5Ztu3DsqGrxsLDUuGH3sRgQ=;
-        b=lPSpYlmcM5BfNpnyaEzMN+OVuwOBKylW49i4340KqcjtFME/Y/5QKFTN1Ltk/zmO8O
-         WyVQQF5R3zJNG2jX3SF/e+XphBk0yAza/vgkSTkX1xNFtX7QLU2YFO9w3hLYAq5lzd1N
-         j0GXdPM2zQe5s78UZOBrwp1PLn0Haod0n/bORhkuJ5qZ4Zolx0ZWnidmMlAqAj/l/xrX
-         kPvW7OhNpKZORkVqE3ptOlBSEofPqCslI8mDBH7VuWwIKO16mCOv0NPcbaZ0ck0Yd8lD
-         SqtpEv3G0dk5GZW9lNyqtGyPx7Uqbn982rIqLhlyVCk8T8JgeZqRVHJE4xUTug9jdZTb
-         Yn9Q==
-X-Gm-Message-State: AOJu0YxWaBObVL+YoLH5XTqy05zXStELPwea5Fo56SJaQnA/ilY0Xk1j
-	agrAmqSewYItaYvKXms3hw4vrSX6XIglAxDElAT4ihqxfqJ6S5GOiGJTeZQpObFWLipZV/0BKzk
-	Bm3/wCv63f69KQGccPLU9znPgm2OS0et2fl0HOh9SZxlvuwaSQJmGocuUl56vi2CPA8QM1Pu0Pm
-	pXBEngwohvlqnXNM6FccyuCKHj0RyhqxuRKQxS5SoFVLBJ
-X-Gm-Gg: ASbGncvsLCS78oLgqZGEH3BOZ1xO1fGhhTOZFP3SrlGqa9cpxXFHxPcCKOSxEqjUhJw
-	tWj/1+N2MKZSxZTN+2jBVGpeak2HYKZ2dyhig1qE1FJZFyJUhB8lTfPzHCCEQAIf4ho2NegUFMZ
-	89T6k0pgtiPY39Vd7lNzx6xHRd0A5GP5HTH3DdLHsuYxKNYTg69p5fKOviVsOhiezxz9ay6OCuZ
-	ox6jwGKyETCHpCan3r7iDUIH7ovN3NSzCYvVQ2InLKmRCSkrxjV2QdjLB8tPqtxTt9UzwKkUcto
-	JIDbi16//KtSeVf7Z5/f1wzuJclgrbYjKT5yoEysLIF/2+GRy75m9VaQ1V+ru9LSg/3Sd/lj+Pl
-	g
-X-Received: by 2002:a05:600c:a0b:b0:439:8c80:6af2 with SMTP id 5b1f17b1804b1-43ba675dc1emr98608235e9.21.1741019428120;
-        Mon, 03 Mar 2025 08:30:28 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IF6dZzZR0lDpQGPMEmueLq9IDDBNY6mKLfVqXKdpTe4yUOjFN5iEduxrBBHG4nXUacNUeptAQ==
-X-Received: by 2002:a05:600c:a0b:b0:439:8c80:6af2 with SMTP id 5b1f17b1804b1-43ba675dc1emr98607715e9.21.1741019427652;
-        Mon, 03 Mar 2025 08:30:27 -0800 (PST)
-Received: from localhost (p200300cbc7349600af274326a2162bfb.dip0.t-ipconnect.de. [2003:cb:c734:9600:af27:4326:a216:2bfb])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-43bc52369f2sm28653165e9.38.2025.03.03.08.30.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 03 Mar 2025 08:30:27 -0800 (PST)
-From: David Hildenbrand <david@redhat.com>
-To: linux-kernel@vger.kernel.org
-Cc: linux-doc@vger.kernel.org,
-	cgroups@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-api@vger.kernel.org,
-	David Hildenbrand <david@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
-	Tejun Heo <tj@kernel.org>,
-	Zefan Li <lizefan.x@bytedance.com>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	=?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Andy Lutomirski <luto@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Muchun Song <muchun.song@linux.dev>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Jann Horn <jannh@google.com>
-Subject: [PATCH v3 05/20] mm: move _pincount in folio to page[2] on 32bit
-Date: Mon,  3 Mar 2025 17:29:58 +0100
-Message-ID: <20250303163014.1128035-6-david@redhat.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250303163014.1128035-1-david@redhat.com>
-References: <20250303163014.1128035-1-david@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TYHMsfGA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E1A7C4CEE9;
+	Mon,  3 Mar 2025 16:30:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741019446;
+	bh=DXHhBZFGrI8qS3v2N4sk8Q5iUu0EKKm29mVvD5NINA4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=TYHMsfGAOhbc+4aAZZbApBw7nP+oVQps+TXxIR/1nUHTjQ/CwlUDJIaFbRx3pLKnf
+	 vfzsn6KY2UwLXdrqJPAGceQXp+H3D6dVBxErcTjs7qMWoHO/vh5sK73GNDoKKnqzzk
+	 3jlGDePGLJW0aZThDhxiDapcTEUJoUHme+4WYrNoceADvFAo9h91aLxgXJOZIANNsR
+	 aRNAJhk7tPiBlwNoqIjbtYAwy12eKswy3DLE5a3MQ0QyzWIyYXzKW36p/rjSyYL+w5
+	 OoH72+XKCGq9ZPxQPKIdp6GMvMhhDotG//PM+j1gNVUPh4ZRm4utbCHlQtr/mVfq1S
+	 n8at5qShkj1KQ==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Bard Liao <yung-chuan.liao@linux.intel.com>,
+	Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+	=?UTF-8?q?P=C3=A9ter=20Ujfalusi?= <peter.ujfalusi@linux.intel.com>,
+	Mark Brown <broonie@kernel.org>,
+	Sasha Levin <sashal@kernel.org>,
+	lgirdwood@gmail.com,
+	daniel.baluta@nxp.com,
+	perex@perex.cz,
+	tiwai@suse.com,
+	pierre-louis.bossart@linux.dev,
+	brent.lu@intel.com,
+	sound-open-firmware@alsa-project.org,
+	linux-sound@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.12 07/17] ASoC: SOF: Intel: don't check number of sdw links when set dmic_fixup
+Date: Mon,  3 Mar 2025 11:30:19 -0500
+Message-Id: <20250303163031.3763651-7-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250303163031.3763651-1-sashal@kernel.org>
+References: <20250303163031.3763651-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.12.17
 Content-Transfer-Encoding: 8bit
 
-Let's free up some space on 32bit in page[1] by moving the _pincount to
-page[2].
+From: Bard Liao <yung-chuan.liao@linux.intel.com>
 
-For order-1 folios (never anon folios!) on 32bit, we will now also use the
-GUP_PIN_COUNTING_BIAS approach. A fully-mapped order-1 folio requires
-2 references. With GUP_PIN_COUNTING_BIAS being 1024, we'd detect such
-folios as "maybe pinned" with 512 full mappings, instead of 1024 for
-order-0. As anon folios are out of the picture (which are the most relevant
-users of checking for pinnings on *mapped* pages) and we are talking about
-32bit, this is not expected to cause any trouble.
+[ Upstream commit 56a677293509b2a0d39ac8d02b583c1ab1fe4d94 ]
 
-In __dump_page(), copy one additional folio page if we detect a folio
-with an order > 1, so we can dump the pincount on order > 1 folios
-reliably.
+Currently, we assume that the PCH DMIC pins are pin-muxed with SoundWire
+links. However, we do see a HW design that use PCH DMIC along with 3
+SoundWire links. Remove the check now.
+With this change the PCM DMIC will be presented if it is reported by the
+BIOS irrespective of whether there are SDW links present or not.
 
-Note that THPs on 32bit are not particularly common (and we don't care
-too much about performance), but we want to keep it working reliably,
-because likely we want to use large folios there as well in the future,
-independent of PMD leaf support.
-
-Once we dynamically allocate "struct folio", fortunately the 32bit
-specifics will likely go away again; even small folios could then have a
-pincount and folio_has_pincount() would essentially always return
-"true".
-
-Signed-off-by: David Hildenbrand <david@redhat.com>
+Signed-off-by: Bard Liao <yung-chuan.liao@linux.intel.com>
+Reviewed-by: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
+Reviewed-by: Péter Ujfalusi <peter.ujfalusi@linux.intel.com>
+Link: https://patch.msgid.link/20250225093716.67240-2-yung-chuan.liao@linux.intel.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/mm.h       | 11 +++++++++--
- include/linux/mm_types.h |  5 +++++
- mm/debug.c               | 10 +++++++++-
- mm/gup.c                 |  8 ++++----
- mm/internal.h            |  3 ++-
- mm/page_alloc.c          | 14 +++++++++++---
- 6 files changed, 40 insertions(+), 11 deletions(-)
+ sound/soc/sof/intel/hda.c | 18 ++----------------
+ 1 file changed, 2 insertions(+), 16 deletions(-)
 
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 694704217df8a..c1414491c0de2 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -2004,6 +2004,13 @@ static inline struct folio *pfn_folio(unsigned long pfn)
- 	return page_folio(pfn_to_page(pfn));
- }
+diff --git a/sound/soc/sof/intel/hda.c b/sound/soc/sof/intel/hda.c
+index f10ed4d102501..c924a998d6f90 100644
+--- a/sound/soc/sof/intel/hda.c
++++ b/sound/soc/sof/intel/hda.c
+@@ -1305,22 +1305,8 @@ struct snd_soc_acpi_mach *hda_machine_select(struct snd_sof_dev *sdev)
+ 		/* report to machine driver if any DMICs are found */
+ 		mach->mach_params.dmic_num = check_dmic_num(sdev);
  
-+static inline bool folio_has_pincount(const struct folio *folio)
-+{
-+	if (IS_ENABLED(CONFIG_64BIT))
-+		return folio_test_large(folio);
-+	return folio_order(folio) > 1;
-+}
-+
- /**
-  * folio_maybe_dma_pinned - Report if a folio may be pinned for DMA.
-  * @folio: The folio.
-@@ -2020,7 +2027,7 @@ static inline struct folio *pfn_folio(unsigned long pfn)
-  * get that many refcounts, and b) all the callers of this routine are
-  * expected to be able to deal gracefully with a false positive.
-  *
-- * For large folios, the result will be exactly correct. That's because
-+ * For most large folios, the result will be exactly correct. That's because
-  * we have more tracking data available: the _pincount field is used
-  * instead of the GUP_PIN_COUNTING_BIAS scheme.
-  *
-@@ -2031,7 +2038,7 @@ static inline struct folio *pfn_folio(unsigned long pfn)
-  */
- static inline bool folio_maybe_dma_pinned(struct folio *folio)
- {
--	if (folio_test_large(folio))
-+	if (folio_has_pincount(folio))
- 		return atomic_read(&folio->_pincount) > 0;
+-		if (sdw_mach_found) {
+-			/*
+-			 * DMICs use up to 4 pins and are typically pin-muxed with SoundWire
+-			 * link 2 and 3, or link 1 and 2, thus we only try to enable dmics
+-			 * if all conditions are true:
+-			 * a) 2 or fewer links are used by SoundWire
+-			 * b) the NHLT table reports the presence of microphones
+-			 */
+-			if (hweight_long(mach->link_mask) <= 2)
+-				dmic_fixup = true;
+-			else
+-				mach->mach_params.dmic_num = 0;
+-		} else {
+-			if (mach->tplg_quirk_mask & SND_SOC_ACPI_TPLG_INTEL_DMIC_NUMBER)
+-				dmic_fixup = true;
+-		}
++		if (sdw_mach_found || mach->tplg_quirk_mask & SND_SOC_ACPI_TPLG_INTEL_DMIC_NUMBER)
++			dmic_fixup = true;
  
- 	/*
-diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
-index 1d9c68c551d42..31f466d8485bc 100644
---- a/include/linux/mm_types.h
-+++ b/include/linux/mm_types.h
-@@ -387,7 +387,9 @@ struct folio {
- 					atomic_t _large_mapcount;
- 					atomic_t _entire_mapcount;
- 					atomic_t _nr_pages_mapped;
-+#ifdef CONFIG_64BIT
- 					atomic_t _pincount;
-+#endif /* CONFIG_64BIT */
- 				};
- 				unsigned long _usable_1[4];
- 			};
-@@ -406,6 +408,9 @@ struct folio {
- 			unsigned long _head_2;
- 	/* public: */
- 			struct list_head _deferred_list;
-+#ifndef CONFIG_64BIT
-+			atomic_t _pincount;
-+#endif /* !CONFIG_64BIT */
- 	/* private: the union with struct page is transitional */
- 		};
- 		struct page __page_2;
-diff --git a/mm/debug.c b/mm/debug.c
-index 2d1bd67d957bc..83ef3bd0ccd32 100644
---- a/mm/debug.c
-+++ b/mm/debug.c
-@@ -79,12 +79,17 @@ static void __dump_folio(struct folio *folio, struct page *page,
- 			folio_ref_count(folio), mapcount, mapping,
- 			folio->index + idx, pfn);
- 	if (folio_test_large(folio)) {
-+		int pincount = 0;
-+
-+		if (folio_has_pincount(folio))
-+			pincount = atomic_read(&folio->_pincount);
-+
- 		pr_warn("head: order:%u mapcount:%d entire_mapcount:%d nr_pages_mapped:%d pincount:%d\n",
- 				folio_order(folio),
- 				folio_mapcount(folio),
- 				folio_entire_mapcount(folio),
- 				folio_nr_pages_mapped(folio),
--				atomic_read(&folio->_pincount));
-+				pincount);
- 	}
- 
- #ifdef CONFIG_MEMCG
-@@ -146,6 +151,9 @@ static void __dump_page(const struct page *page)
- 	if (idx < MAX_FOLIO_NR_PAGES) {
- 		memcpy(&folio, foliop, 2 * sizeof(struct page));
- 		nr_pages = folio_nr_pages(&folio);
-+		if (nr_pages > 1)
-+			memcpy(&folio.__page_2, &foliop->__page_2,
-+			       sizeof(struct page));
- 		foliop = &folio;
- 	}
- 
-diff --git a/mm/gup.c b/mm/gup.c
-index e5040657870ea..2944fe8cf3174 100644
---- a/mm/gup.c
-+++ b/mm/gup.c
-@@ -109,7 +109,7 @@ static void gup_put_folio(struct folio *folio, int refs, unsigned int flags)
- 		if (is_zero_folio(folio))
- 			return;
- 		node_stat_mod_folio(folio, NR_FOLL_PIN_RELEASED, refs);
--		if (folio_test_large(folio))
-+		if (folio_has_pincount(folio))
- 			atomic_sub(refs, &folio->_pincount);
- 		else
- 			refs *= GUP_PIN_COUNTING_BIAS;
-@@ -164,7 +164,7 @@ int __must_check try_grab_folio(struct folio *folio, int refs,
- 		 * Increment the normal page refcount field at least once,
- 		 * so that the page really is pinned.
- 		 */
--		if (folio_test_large(folio)) {
-+		if (folio_has_pincount(folio)) {
- 			folio_ref_add(folio, refs);
- 			atomic_add(refs, &folio->_pincount);
- 		} else {
-@@ -223,7 +223,7 @@ void folio_add_pin(struct folio *folio)
- 	 * page refcount field at least once, so that the page really is
- 	 * pinned.
- 	 */
--	if (folio_test_large(folio)) {
-+	if (folio_has_pincount(folio)) {
- 		WARN_ON_ONCE(atomic_read(&folio->_pincount) < 1);
- 		folio_ref_inc(folio);
- 		atomic_inc(&folio->_pincount);
-@@ -575,7 +575,7 @@ static struct folio *try_grab_folio_fast(struct page *page, int refs,
- 	 * is pinned.  That's why the refcount from the earlier
- 	 * try_get_folio() is left intact.
- 	 */
--	if (folio_test_large(folio))
-+	if (folio_has_pincount(folio))
- 		atomic_add(refs, &folio->_pincount);
- 	else
- 		folio_ref_add(folio,
-diff --git a/mm/internal.h b/mm/internal.h
-index bcda1f604038f..378464246f259 100644
---- a/mm/internal.h
-+++ b/mm/internal.h
-@@ -721,7 +721,8 @@ static inline void prep_compound_head(struct page *page, unsigned int order)
- 	atomic_set(&folio->_large_mapcount, -1);
- 	atomic_set(&folio->_entire_mapcount, -1);
- 	atomic_set(&folio->_nr_pages_mapped, 0);
--	atomic_set(&folio->_pincount, 0);
-+	if (IS_ENABLED(CONFIG_64BIT) || order > 1)
-+		atomic_set(&folio->_pincount, 0);
- 	if (order > 1)
- 		INIT_LIST_HEAD(&folio->_deferred_list);
- }
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index 2fc03cb13e49d..594a552c735cd 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -963,9 +963,11 @@ static int free_tail_page_prepare(struct page *head_page, struct page *page)
- 			bad_page(page, "nonzero nr_pages_mapped");
- 			goto out;
- 		}
--		if (unlikely(atomic_read(&folio->_pincount))) {
--			bad_page(page, "nonzero pincount");
--			goto out;
-+		if (IS_ENABLED(CONFIG_64BIT)) {
-+			if (unlikely(atomic_read(&folio->_pincount))) {
-+				bad_page(page, "nonzero pincount");
-+				goto out;
-+			}
- 		}
- 		break;
- 	case 2:
-@@ -974,6 +976,12 @@ static int free_tail_page_prepare(struct page *head_page, struct page *page)
- 			bad_page(page, "on deferred list");
- 			goto out;
- 		}
-+		if (!IS_ENABLED(CONFIG_64BIT)) {
-+			if (unlikely(atomic_read(&folio->_pincount))) {
-+				bad_page(page, "nonzero pincount");
-+				goto out;
-+			}
-+		}
- 		break;
- 	case 3:
- 		/* the third tail page: hugetlb specifics overlap ->mappings */
+ 		if (tplg_fixup &&
+ 		    dmic_fixup &&
 -- 
-2.48.1
+2.39.5
 
