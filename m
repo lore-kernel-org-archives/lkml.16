@@ -1,141 +1,106 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85DD81F131C;
-	Mon,  3 Mar 2025 09:49:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04D481D79A3
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 09:49:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740995355; cv=none; b=tYafWlFc0StdoWurTmcTK8E/RSRDPtKHi2dEfgXykPXMp/ijYAIJP00Z51cqbD34IuXarejZ6gvdQOXKXcWQj/dphye6yWp+/MGyswPHAxV+0t+fjqAeciebwgAzYq5rssP+9Omjx4qPZMOfCCq9IbgDorJ0qrJArnlqpdBCQ54=
+	t=1740995364; cv=none; b=oCaM/64/hddOip6/aAl8uqtPwa3pDkhW2ajXv1xsYkEfJ8B4aEuC7NsNQ4TPFewmlbVQcS14T473N6vnWgXY61tkF+U+gpWX0QNtvUvshCaN7VDJHxDzq1jJ6GweLRkYBkhr300AIpA7lGmCStpjXsdfOc0YXqTJRXBwXwcpKbw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740995355; c=relaxed/simple;
-	bh=bKBTyhky71uYBsaxCFXi3vy/CYFmpwehRG1HobK2WLA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ptMl2TyNvNcxZ2QAfuKa9LVYHsBBk8beDR8oM5eSJ9iTiiTbMwCkBQGJCHJya4e6z4ED2DY6KN0MF5ER5o6vIkgwazK4nAKOhm9PowpQ9KG4a5wJ/o48hbwxIQSh+rDf3zOM8QefRD4Z18FIghhA/o9qd5cOH7SxEvMDI/EHp1w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=uYdUwo3N; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1740995364; c=relaxed/simple;
+	bh=tzlgVVNvAlNlgaa2JvUJRo2pG9JqwRvR3QWZKyunCfQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Zr87bhVJVBe0Q5OnMRf4HsfCLHMAfjAyOUYgVI1A8CXv0eD2hTmm3FD1LVx/hDz7Sayt8vqY7FkTfRebZcAm5tFnIgvRYkDCF0dEU34ScilLO3BSVn8xghC5I4Nra6vFc1BR3Cd8XJOx5vKwAI5ZNdoPeS8Gv7+QjPIHb5kFPKk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=kNF0VxKG; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="uYdUwo3N"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=ex6mL5N3y2HnLj8Bam/c+5++LbL+FQRGmaE08QtykjE=; b=uYdUwo3NP446bW5DtXGr+gLlKm
-	3q7P896CCaZPM1ZlewJ1QitoJ9p6puv6V5u85QQRjyB/RAYgFaem1YgOR+N2vYxG4/1oEwXpK/Vny
-	ul9+2nxCC1iY8BgAyIrDrFROXKRBmOzdN1fT3S6ksMhlhXZNtPunLTL9N1IAengf8LG6244P4r8FA
-	UXItZ73N7cP93YsjsXyVp7+cTd9w1IHFr0ijBc2A0BKK3iClchg0AWicyraF7CcIO8Kpy/PS660Nu
-	RGW8hb8Mf5MfdgsuFloZXWHVC7xaApcE5Jlt0ebteSJlT/ekBi1KZCtm2bzaZjWr17u5Z1McimXsN
-	cqatSMmA==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tp2QB-0000000BQR2-2UJu;
-	Mon, 03 Mar 2025 09:49:11 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 2EB2230049D; Mon,  3 Mar 2025 10:49:11 +0100 (CET)
-Date: Mon, 3 Mar 2025 10:49:11 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: kernel test robot <lkp@intel.com>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-kernel@vger.kernel.org, x86@kernel.org,
-	Ingo Molnar <mingo@kernel.org>, Kees Cook <kees@kernel.org>
-Subject: Re: [tip:x86/core 16/17] vmlinux.o: warning: objtool: do_jit+0x276:
- relocation to !ENDBR: .noinstr.text+0x6a60
-Message-ID: <20250303094911.GL5880@noisy.programming.kicks-ass.net>
-References: <202503030704.H9KFysNS-lkp@intel.com>
- <20250303092459.GI5880@noisy.programming.kicks-ass.net>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kNF0VxKG"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-390e3b3d432so2849359f8f.2
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Mar 2025 01:49:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1740995361; x=1741600161; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SnL9Hz24S3kNKDp8b2cNl9jZ/3k9Ss4gpw9SmsSpB2g=;
+        b=kNF0VxKGrJ/XBpY9WttfMcaPrNvGMptak+UZED7TtrbnPhxIpHBH8VNp4lAifF0oUr
+         hQSBlI8y4OXaMoqOKhRx0IHOmnOX3TBmCFquYX3U8HHEKwXOBoqd7jFaalxrp8siQQ7D
+         DTnctTKSFwsZwlg41ssQ7ZHbVWlMknkmlDdfDFlsk9FGr45xOngR3ESyQGlzrEvBlq8+
+         sLHH+cI/PPSpwx03J0EMnnL6lY1yz6dkGAs5SANzBc3sm1BzmhU/VVRwkL45aoLGatxD
+         yK/ynBdzb/1gNzlDQwIWURY8KCqfg2Hs6ZACAx2ulj1NO8wu0rSM53XAPe5ZneQfudaH
+         CQtA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740995361; x=1741600161;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=SnL9Hz24S3kNKDp8b2cNl9jZ/3k9Ss4gpw9SmsSpB2g=;
+        b=Sc4qchDTfnQZ+LMmwPPB5P62bA7nshIuEGUF9njdKBbwabpL1LBGnCGsCBVYUshjEV
+         l2cds10OYGy7NK0q6fPI5w22dSZgeS18lGsjinkPd8yo7R5UHdc+xkfxlC+X3y1Ni3p/
+         k5FyUSiyLbkWCQ0Nw6NOGivoRAoyNExvECvaBV1wNvOD5V61+UKTxKDORWKYzA8zp/4k
+         qh8prBO5HKPfrVJlMKJA/b7Jec/Ql5ruwI+xCaPw0Tkz1LuuwLBxpAJS0HvUyetShzYE
+         8czs4il+2hwvh6QMd+TFahtVWZ8OHr36Z9KSuw/2F180kCyn1Bj2fwKcic4ixQj+VfuF
+         5jzw==
+X-Forwarded-Encrypted: i=1; AJvYcCW32DXo7mGwKuQqS9vbEj0YcPIkYVQzMKEiE37dWRALnk5UYOCNN2B49Q4/Z7q8Fz+4yTggEazZkPIt1AU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwLpNfa0V5gs61eovQAS251opf607m2CI8cj77tQUg1o74UzjpD
+	mem+BJQMLz11rrZNxMqSPWn8xsczSxl7hjiQA8OgfSVHXQJmlm2MJZfTOWkHuJbi8GSh5q96YPw
+	F1w303Q3mDv4KQdQgN1tGgPDigfd7yQloRhk2
+X-Gm-Gg: ASbGnctRWi/Ut68DEi1bBl1UE6bMIsqPg4vBGhSIwQOBrHP0S4/Y4asz11zBznYb7Ue
+	NtoJFkGVg6vB1BnRtskFIaZPrAA1CmlXc0OQ+8I0AfoPGL8NIjnKSWGAHAHelUFfwbNDUUI3O5E
+	/7DmLiCuBWdiXuWaJENj3h9nihRI+MIMWv8v0RLRcfffgXdJ8xGoTo9EbF
+X-Google-Smtp-Source: AGHT+IGTVr2JIj2NM1dARmHjx2Q20a0Sj+PRO/QysiCo1gjTEuQGm9OoWgT0wK6Y1r6W2Tsdd+R6BGWXSNz0RLNl2NM=
+X-Received: by 2002:a05:6000:270f:b0:390:ea34:7d83 with SMTP id
+ ffacd0b85a97d-390ec9c166cmr8927299f8f.31.1740995361321; Mon, 03 Mar 2025
+ 01:49:21 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250303092459.GI5880@noisy.programming.kicks-ass.net>
+References: <20250303-export-macro-v3-0-41fbad85a27f@google.com>
+ <20250303-export-macro-v3-4-41fbad85a27f@google.com> <Z8V6XafrTyrB4z8D@smile.fi.intel.com>
+In-Reply-To: <Z8V6XafrTyrB4z8D@smile.fi.intel.com>
+From: Alice Ryhl <aliceryhl@google.com>
+Date: Mon, 3 Mar 2025 10:49:09 +0100
+X-Gm-Features: AQ5f1JoxwuAGeit50aUfVN8jQmqWDDJZmGrbhn2c83aPm7MkhBxBt-nYtmFZSyw
+Message-ID: <CAH5fLgimM6gL2v4z_x717iYU8LYTfypEi=wkj3mXS4uu8Raq0A@mail.gmail.com>
+Subject: Re: [PATCH v3 4/5] print: use new #[export] macro for rust_fmt_argument
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Miguel Ojeda <ojeda@kernel.org>, 
+	Petr Mladek <pmladek@suse.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>, Sergey Senozhatsky <senozhatsky@chromium.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Trevor Gross <tmgross@umich.edu>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Tamir Duberstein <tamird@gmail.com>, 
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Mar 03, 2025 at 10:24:59AM +0100, Peter Zijlstra wrote:
-> On Mon, Mar 03, 2025 at 07:47:57AM +0800, kernel test robot wrote:
-> > tree:   https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/core
-> > head:   dfebe7362f6f461d771cdb9ac2c5172a4721f064
-> > commit: 0c92385dc05ee9637c04372ea95a11bbf6e010ff [16/17] x86/ibt: Implement FineIBT-BHI mitigation
-> > config: x86_64-randconfig-071-20250303 (https://download.01.org/0day-ci/archive/20250303/202503030704.H9KFysNS-lkp@intel.com/config)
-> > compiler: clang version 19.1.7 (https://github.com/llvm/llvm-project cd708029e0b2869e80abe31ddb175f7c35361f90)
-> > reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250303/202503030704.H9KFysNS-lkp@intel.com/reproduce)
-> > 
-> > If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> > the same patch/commit), kindly add following tags
-> > | Reported-by: kernel test robot <lkp@intel.com>
-> > | Closes: https://lore.kernel.org/oe-kbuild-all/202503030704.H9KFysNS-lkp@intel.com/
-> > 
-> > All warnings (new ones prefixed by >>):
-> > 
-> > >> vmlinux.o: warning: objtool: do_jit+0x276: relocation to !ENDBR: .noinstr.text+0x6a60
-> 
-> Thanks, below seems to cure it for me.
-> 
-> ---
-> Subject: x86/ibt: Make cfi_bhi a constant for FINEIBT_BHI=n
-> From: Peter Zijlstra <peterz@infradead.org>
-> Date: Mon Mar 3 10:21:47 CET 2025
-> 
-> Robot yielded a .config that tripped:
-> 
->   vmlinux.o: warning: objtool: do_jit+0x276: relocation to !ENDBR: .noinstr.text+0x6a60
-> 
-> This is the result of using __bhi_args[1] in unreachable code; make
-> sure the compiler is able to determine this is unreachable and trigger
-> DCE.
-> 
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202503030704.H9KFysNS-lkp@intel.com/
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> ---
+On Mon, Mar 3, 2025 at 10:46=E2=80=AFAM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> On Mon, Mar 03, 2025 at 08:45:15AM +0000, Alice Ryhl wrote:
+> > This moves the rust_fmt_argument function over to use the new #[export]
+> > macro, which will verify at compile-time that the function signature
+> > matches what is in the header file.
+>
+> ...
+>
+> >  extern bool no_hash_pointers;
+> >  int no_hash_pointers_enable(char *str);
+> >
+> > +/* Used for Rust formatting ('%pA'). */
+>
+> In case you need a new version, please drop a period at the end as this i=
+s the
+> style used in the sprintf.h already.
 
-diff --git a/arch/x86/include/asm/cfi.h b/arch/x86/include/asm/cfi.h
-index 2f6a01f098b5..3e51ba459154 100644
---- a/arch/x86/include/asm/cfi.h
-+++ b/arch/x86/include/asm/cfi.h
-@@ -100,7 +100,12 @@ enum cfi_mode {
- };
- 
- extern enum cfi_mode cfi_mode;
-+
-+#ifdef CONFIG_FINEIBT_BHI
- extern bool cfi_bhi;
-+#else
-+#define cfi_bhi (0)
-+#endif
- 
- typedef u8 bhi_thunk[32];
- extern bhi_thunk __bhi_args[];
-diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
-index 32e4b801db99..bf82c6f7d690 100644
---- a/arch/x86/kernel/alternative.c
-+++ b/arch/x86/kernel/alternative.c
-@@ -936,7 +936,10 @@ void __init_or_module apply_seal_endbr(s32 *start, s32 *end) { }
- #endif
- 
- enum cfi_mode cfi_mode __ro_after_init = __CFI_DEFAULT;
-+
-+#ifdef CONFIG_FINEIBT_BHI
- bool cfi_bhi __ro_after_init = false;
-+#endif
- 
- #ifdef CONFIG_CFI_CLANG
- struct bpf_insn;
-@@ -1070,11 +1073,15 @@ static __init int cfi_parse_cmdline(char *str)
- 				pr_err("Ignoring paranoid; depends on fineibt.\n");
- 			}
- 		} else if (!strcmp(str, "bhi")) {
-+#ifdef CONFIG_FINEIBT_BHI
- 			if (cfi_mode == CFI_FINEIBT) {
- 				cfi_bhi = true;
- 			} else {
- 				pr_err("Ignoring bhi; depends on fineibt.\n");
- 			}
-+#else
-+			pr_err("Ignoring bhi; depends on FINEIBT_BHI=y.\n");
-+#endif
- 		} else {
- 			pr_err("Ignoring unknown cfi option (%s).", str);
- 		}
+Sure, I will remove the period if I send a new version.
+
+Alice
