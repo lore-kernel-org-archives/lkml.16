@@ -1,72 +1,25 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F2601F12F8
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 10:23:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E21ED1E8338
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 10:23:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740997392; cv=none; b=duzudS5Nv1FBhr+LXxwtz/KoGGT10pcjOVDct/NKPTJZqz01VIjODy7zw+Mw7arOISf1Ocs7QQSA7kOxO6sKSQ5/M0bsEuAotPk2z146LV71bAZyty+ixawDvQFsItIqNZ4S3XOs7Z81SLgDbLB93fJg4gguMUBwzChgoed7/1Q=
+	t=1740997423; cv=none; b=mJxNNc9SozBRN78FijRQ42KuBgRiv9IHMetXnaUTnNqhXjBG5FBpcaMhjIxhWyQRovhB75ZrduVm17tiqUIBcBUfdOj1PD2IETIEmayiQ7Vr11bfrPGWMmQzwf4gFM3+SL2tLShtGGA5mU6nS3VOBKXwE+duIVdMWcz78onA5/4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740997392; c=relaxed/simple;
-	bh=45N3CTCQyFNYATVodSXBAL+a94s2+Sf5PekV0GfAnzk=;
+	s=arc-20240116; t=1740997423; c=relaxed/simple;
+	bh=HMYFcT1D/Mq/XIZ0zFhB6ymz6wEqEq1zIq2vANNrofo=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=opL1J33DLJZLEWpjwMyU9jixegFw4i2Bj2RFjkSLp2SJDSgLhJagCQkfsBYKH1TTPdfPdyu5GDXt6U0HSfdm1dnROxa+xkTww5GseWPIcWtYE4rcfiO28Jf0oTr287ZWVSrPvPiYuqtD818ICUkSy8iXvKj5NYgFlLhq6g/k1UM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=VNt3uvV1; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="VNt3uvV1"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52300fmg001154
-	for <linux-kernel@vger.kernel.org>; Mon, 3 Mar 2025 10:23:08 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	GKhAMHMv9Qj1+aCKv/F3rYQfkqyHFXlh7B6Upy8lJ2c=; b=VNt3uvV1VYM+zOhx
-	a4GpvWlv3sWQkm9TJqOKwNqZ21pPhTc+0p2ybbNPcXQqSWPwMR/N1SUM6kBK5C+W
-	4wsvzev9/nqhbmeRPRnkpdCtTmw8yIs36ATAe3oO1VTqXZ8TdZhEY0IqLV8fyshG
-	Tm6Ko65Qls5jIOuy7M3HhgPzJd2N6On87zDsizwEggbGu9AtqPKTq0jfIl5RSCdJ
-	9QCEWRvj8s+sSdeHpTPkiRK6qWorTEqHe0A9NOn6KaAC06BtdmRON4P335xXO4Z8
-	bE0Sqb6S564E88peQ3qg3HO6uyMQ3ymjW/Jw5cuFpK8JRcIhcHGupaCavVDG+8lD
-	IJ3XGw==
-Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com [209.85.214.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 453tascktq-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Mon, 03 Mar 2025 10:23:08 +0000 (GMT)
-Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-22328fb6cbfso76901745ad.2
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Mar 2025 02:23:07 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740997387; x=1741602187;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=GKhAMHMv9Qj1+aCKv/F3rYQfkqyHFXlh7B6Upy8lJ2c=;
-        b=lyXuAgKMIfpQXE86uoPsuiwGEJMER+NDj7N7OCh7lUSan4ClhiF0C/07fn6j2apx15
-         6LOdy1vtR7gVTto4ZrKwo1dT4QU4uyqvj6qJ1r96LR6UgOgviW99XVImqXEK2tnuHzYy
-         s/dSo/mfYqQqVjACIrjuI3hQvXMOu/HkELccYbvmVXTHNNXLWfrWXaYJtZMnvsNol5iL
-         IkHNiIrR96aoYppheqUmtCECr2Pl7z2ccQXlbavl7FmscthLb8LmlwPw4vg986J+7Ovw
-         S5MLccsvrBAJznNbljJXqYzWEiOZjP5MfKFaMNfEnixrQtlPWYemMtdLMtVwc0MRTRDc
-         qAaQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU2DlYrDmp8+pJPT01Z4pvoZ+wxupwUOTF+V0xz7CZMdqoAZ9hAu5OK08NOzpyyc/BHiA2tbzsRH/knCHk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwiOUNTeRT+j5ZHh0qrPOuWCHuHNkpOZGxE9mfCdZli5qcZZ9Hd
-	pUKnA/1ADdPniHULkI0wtzkqhS77B1car0xNdVHWpPdRa1MeL2y9FKMU2Kf7MUr7r9L8Ty/XH0l
-	SPRgoM/czCmyEux/0eO/KpSmZkJBOBa9puty3CMP30wiyC40DDU46/lJQROs2aDY=
-X-Gm-Gg: ASbGncttzIiQkqH7zXaDxfAGWsvg4H1qrqACa5y55zjhvt5BoGC5xbzGeqlxT0OkM38
-	zDujRk9TwZ9p9vJdYOQhp2S3zbIjipMf7BvfWX6WMDRmhQ0bsDiLi2ou3Gd6SpVuMWiBcmI+HTP
-	VbRGpcHkHhmN3k5CVtJtPM4PfEDD5ndYYYXsWe5m3cdPjdBjwhaTzUlmIDINmuzpbVqSYxEpul/
-	XY9rJN2ea4wlonojgpHMIBYGoM2GYSJjtlKt16VG1AAbTUty2F15teUo2IrGiB0i91wZHhINb7n
-	qkbcy0GweQNr7rND3c18vltZjAaX8eWzFs8PtuUXImQ6tyWpccQ1Lb3pdNA=
-X-Received: by 2002:a17:902:e54b:b0:21f:7880:8472 with SMTP id d9443c01a7336-2236924fa13mr206373605ad.35.1740997386641;
-        Mon, 03 Mar 2025 02:23:06 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEzewlI+MdkavpK5IxUd9OuTeDDFG7whKIl5HH92YgygrrZJJ+26+G+Xae6Q3us5qqTy1cWBA==
-X-Received: by 2002:a17:902:e54b:b0:21f:7880:8472 with SMTP id d9443c01a7336-2236924fa13mr206373175ad.35.1740997386280;
-        Mon, 03 Mar 2025 02:23:06 -0800 (PST)
-Received: from [192.168.1.35] ([117.236.245.126])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-223505293ddsm73795215ad.229.2025.03.03.02.23.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 03 Mar 2025 02:23:05 -0800 (PST)
-Message-ID: <8dda7af4-b318-4e39-b79d-738b6084feb3@oss.qualcomm.com>
-Date: Mon, 3 Mar 2025 15:53:00 +0530
+	 In-Reply-To:Content-Type; b=EJGrWbRbiCCWF8ku42qZB77I2J45KTqmKC/0c0Ee13oxX10CcF6N/aosDzThhQqk0Ag211IU37md+LjmPbHtDoEkdYyvsFKQzwqJOzOZRWRKMs9QoFFwIsNN58GY+FMkJqgvMDbFyp29T2LUncXm/P7UoisoCN8NjIf+GJL0AGY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6491F12FC;
+	Mon,  3 Mar 2025 02:23:55 -0800 (PST)
+Received: from [10.1.26.155] (XHFQ2J9959.cambridge.arm.com [10.1.26.155])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 814F63F66E;
+	Mon,  3 Mar 2025 02:23:39 -0800 (PST)
+Message-ID: <9dd8e02c-9abb-47e6-92df-cf7af6cda99c@arm.com>
+Date: Mon, 3 Mar 2025 10:23:37 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,48 +27,121 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 19/23] arm64: dts: qcom: ipq6018: Add missing MSI and
- 'global' IRQs
-To: manivannan.sadhasivam@linaro.org,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
- <conor+dt@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        cros-qcom-dts-watchers@chromium.org
-Cc: linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250227-pcie-global-irq-v1-0-2b70a7819d1e@linaro.org>
- <20250227-pcie-global-irq-v1-19-2b70a7819d1e@linaro.org>
-Content-Language: en-US
-From: Kathiravan Thirumoorthy <kathiravan.thirumoorthy@oss.qualcomm.com>
-In-Reply-To: <20250227-pcie-global-irq-v1-19-2b70a7819d1e@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Subject: Re: [PATCH V2 0/8] arm64/mm: Drop PXD_TABLE_BIT
+Content-Language: en-GB
+To: Anshuman Khandual <anshuman.khandual@arm.com>,
+ arm-kernel@lists.infradead.org
+Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>,
+ James Morse <james.morse@arm.com>, Catalin Marinas
+ <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Ard Biesheuvel <ardb@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+References: <20250221044227.1145393-1-anshuman.khandual@arm.com>
+ <aa71c6ed-8ff2-4b52-b8f7-49147c7769ba@arm.com>
+ <a9600c92-bef0-4dd1-95d4-c696d686da18@arm.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <a9600c92-bef0-4dd1-95d4-c696d686da18@arm.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Proofpoint-GUID: Srpdol0LP4IUxYC9Pw7zSgdAWyHCfsG2
-X-Proofpoint-ORIG-GUID: Srpdol0LP4IUxYC9Pw7zSgdAWyHCfsG2
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-03_04,2025-03-03_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
- mlxlogscore=601 spamscore=0 phishscore=0 mlxscore=0 priorityscore=1501
- bulkscore=0 lowpriorityscore=0 malwarescore=0 impostorscore=0 adultscore=0
- clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502100000 definitions=main-2503030080
 
-On 2/27/2025 7:11 PM, Manivannan Sadhasivam via B4 Relay wrote:
-> From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
->
-> IPQ6018 has 8 MSI SPI interrupts and one 'global' interrupt.
->
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> ---
->   arch/arm64/boot/dts/qcom/ipq6018.dtsi | 20 ++++++++++++++++++--
->   1 file changed, 18 insertions(+), 2 deletions(-)
+On 03/03/2025 05:02, Anshuman Khandual wrote:
+> 
+> 
+> On 2/28/25 21:02, Ryan Roberts wrote:
+>> On 21/02/2025 04:42, Anshuman Khandual wrote:
+>>> Remove the PXX_TABLE_BIT definitions and instead rely on PXX_TYPE_MASK,
+>>> PXX_TYPE_SECT and PXX_TYPE_TABLE. The latter versions are more abstract
+>>> and also include the PTE_VALID bit.
+>>>
+>>> This abstraction is valuable for the impending D128 page table support,
+>>> which doesn't have a single page table bit to determine table vs block.
+>>> Instead it has the skip level (SKL) field, where it will consider 0 to
+>>> mean table and any other value to mean a block entry. So PXX_TABLE_BIT
+>>> therefore doesn't fit into the D128 model well, but the type fields do.
+>>
+>> All the patches look logically correct to me and I agree with the intention of
+>> removing PXX_TABLE_BIT. But personally I'd prefer to see a single patch that
+>> just does everything that's required to remove PXX_TABLE_BIT. And then a second
+>> patch for the pud_bad() fix/improvement (currently patch 6) which is orthogonal
+>> to the removal of PXX_TABLE_BIT.
+>>
+>> That would make it much easier to review IMHO, and would also allow for writing
+>> a single commit log which provides the justification for the change. I find the
+>> current set of 7 commit logs to not be hugely helpful.
+> 
+> Dropping PXX_TABLE_BIT from individual functional components which stand on their
+> own progressively leads to its complete removal from the tree. Even though goal
+> is PXX_TABLE_BIT mask's complete removal, each patch here could be justified on
+> its own improving consistent reasoning around various section mapping creation
+> and identification while keeping the functionality unchanged and also improving
+> code readability as well.
+> 
+>>
+>> But I wrote the original patches and wrote them as I'm suggesting, so I would
+>> say that :)
+> 
+> I can understand :) Although it also follows and expands on the previous attempt
+> in removing this mask that formed a patch series instead.
+> 
+> https://lore.kernel.org/all/20241005123824.1366397-1-anshuman.khandual@arm.com/
+> 
+> TBH this is not a big deal. I can merge all but last one into a single patch as
+> you have suggested if that's a general consensus. Although I would prefer the
+> current logically progressive series based approach but that's just me.
 
-Reviewed-by: Kathiravan Thirumoorthy 
-<kathiravan.thirumoorthy@oss.qualcomm.com>
+I guess leave as is for now and see what others say.
+
+> 
+>>
+>> I'm guessing I shouldn't provide a Reviewed-By here, given I wrote the code
+>> originally...
+>>
+>> Thanks,
+>> Ryan
+>>
+>>
+>>>
+>>> This series applies on v6.14-rc3.
+>>>
+>>> Changes in V2:
+>>>
+>>> - Changed pmd_mkhuge() and pud_mkhuge() implementation
+>>> - Changed pud_bad() implementation with an additional patch
+>>>
+>>> Changes in V1:
+>>>
+>>> https://lore.kernel.org/all/20241005123824.1366397-1-anshuman.khandual@arm.com/
+>>>
+>>> Cc: Marc Zyngier <maz@kernel.org>
+>>> Cc: Oliver Upton <oliver.upton@linux.dev>
+>>> Cc: James Morse <james.morse@arm.com>
+>>> Cc: Catalin Marinas <catalin.marinas@arm.com>
+>>> Cc: Will Deacon <will@kernel.org>
+>>> Cc: Ard Biesheuvel <ardb@kernel.org>
+>>> Cc: Ryan Roberts <ryan.roberts@arm.com>
+>>> Cc: Mark Rutland <mark.rutland@arm.com>
+>>> Cc: kvmarm@lists.linux.dev
+>>> Cc: linux-arm-kernel@lists.infradead.org
+>>> Cc: linux-kernel@vger.kernel.org
+>>>
+>>> Anshuman Khandual (6):
+>>>   KVM: arm64: ptdump: Test PMD_TYPE_MASK for block mapping
+>>>   arm64/ptdump: Test PMD_TYPE_MASK for block mapping
+>>>   arm64/mm: Clear PXX_TYPE_MASK in mk_[pmd|pud]_sect_prot()
+>>>   arm64/mm: Clear PXX_TYPE_MASK and set PXD_TYPE_SECT in [pmd|pud]_mkhuge()
+>>>   arm64/mm: Check PXD_TYPE_TABLE in [p4d|pgd]_bad()
+>>>   arm64/mm: Drop PXD_TABLE_BIT
+>>>
+>>> Ryan Roberts (2):
+>>>   arm64/mm: Check PUD_TYPE_TABLE in pud_bad()
+>>>   arm64/mm: Check pmd_table() in pmd_trans_huge()
+>>>
+>>>  arch/arm64/include/asm/pgtable-hwdef.h |  5 --
+>>>  arch/arm64/include/asm/pgtable.h       | 65 ++++++++++++++++++--------
+>>>  arch/arm64/kvm/ptdump.c                |  4 +-
+>>>  arch/arm64/mm/ptdump.c                 |  4 +-
+>>>  4 files changed, 50 insertions(+), 28 deletions(-)
+>>>
+>>
 
