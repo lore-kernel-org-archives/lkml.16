@@ -1,72 +1,105 @@
-Received: from elvis.franken.de (elvis.franken.de [193.175.24.41])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7C5791CDFCA;
-	Mon,  3 Mar 2025 09:42:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.175.24.41
+Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57B151CDFCA;
+	Mon,  3 Mar 2025 09:43:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740994970; cv=none; b=aQ4rrmxe7OCQa6XX4JUPUdPi/nwDvWq2KQJj5zNsaxA1UYCefLooQ1Cnig5lI4naknpdHyps5aApZlNeJFfFRm3R1UKf/MamldhD9VgokRxEfCBzWeYzOV0Vy2loAZwYE3FxQeir1kMA0ivNOvVPvW9a0rxRKJHibtvpuzr0+7A=
+	t=1740994983; cv=none; b=ubD85LpSwCDvu/aZez4O2pkwLHip2qBe1IOapu6YdoYkHZanbEwERTcSa1KjVQGvsYcbMNu9Qu5ac9EPxanHE+i7yy1LFMaXtdG96wHnP98baKmcOjzEH9AuLrbIjCzsik1zzfrygeO6uqjNuwCbMMfTMmGCRK4ceVg5ivRyRk0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740994970; c=relaxed/simple;
-	bh=8ubVrzYWizR6osHcNQDP+rw/4ntNCFl4JDZQ0PLFcrM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=svYUS8GDQokQMVgXY8h4aKgeUHuPW6V29dRP4R4xA8RLu+kVOt/gXuBdu6YvAvlgQP1j/HFHCu6QsxzqLkR4xH+i5Q6PFx0RsGwk6a1d1QTOiC4hgO9hjE+3MwHfXlz+0pan5uVx+JDVIOsAzR2/mSpxs3O0HogvfCg9yrpRE3c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de; spf=pass smtp.mailfrom=alpha.franken.de; arc=none smtp.client-ip=193.175.24.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alpha.franken.de
-Received: from uucp by elvis.franken.de with local-rmail (Exim 3.36 #1)
-	id 1tp2Jo-000182-00; Mon, 03 Mar 2025 10:42:36 +0100
-Received: by alpha.franken.de (Postfix, from userid 1000)
-	id A3488C0135; Mon,  3 Mar 2025 10:06:45 +0100 (CET)
-Date: Mon, 3 Mar 2025 10:06:45 +0100
-From: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To: WangYuli <wangyuli@uniontech.com>
-Cc: "Maciej W. Rozycki" <macro@orcam.me.uk>, chenlinxuan@uniontech.com,
-	guanwentao@uniontech.com, linux-kernel@vger.kernel.org,
-	linux-mips@vger.kernel.org, niecheng1@uniontech.com,
-	zhanjun@uniontech.com
-Subject: Re: [PATCH 5/7] MIPS: dec: Remove dec_irq_dispatch()
-Message-ID: <Z8VxJbTqHhIE-Q-w@alpha.franken.de>
-References: <487CE8AA937621E2+20250218125101.663980-1-wangyuli@uniontech.com>
- <222468E85948B141+20250218125842.667798-1-wangyuli@uniontech.com>
- <alpine.DEB.2.21.2502220019210.65342@angie.orcam.me.uk>
- <A1142BF8B63D5EC4+98768bf8-7bde-46ec-85fc-f077d67a1798@uniontech.com>
+	s=arc-20240116; t=1740994983; c=relaxed/simple;
+	bh=Ef92XLEjUubEUguFoFaEsSiJbp2zpAJ3HBgHzHTie0g=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=SHG6U1JJwnmoY1tYTwF/0bsQgNVuCxNpceZ98u8ilW0Liyk9EcjCQqINiObK+46GjCM7XjKc915pXYaUOP/kth8qeSXg5sxxN2QFT+xIXF9FeObePn3t6hFRnwIv8XgQOmzsvSi6fXWoltvHUfN/LxqbyflYSvl6oOzvuRUwUow=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=BlXvatPq; arc=none smtp.client-ip=217.70.183.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="BlXvatPq"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id E476243308;
+	Mon,  3 Mar 2025 09:42:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1740994979;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=aohfSAJAihchV7qkXkrdXJ9Pj4eAK1H+KH7QBBsTIk4=;
+	b=BlXvatPqxMPRvd6/D9QDvMcM6PIzd/xRBddwsU+RNRT9dt5gXyksu4odKthtnWZQjSJ6as
+	Ff7dBmKLfYCeECddGoIWPHB21IjSLaYhHMn0nlzxtRfZte7X/8IP2LnLCr7YShrA3vFXsU
+	+1KkfK2HOIT75WA3ct9BGp2vzauUUJZYQkDhPrVCc8BA8zhDVWYWDu6AtkalQWq2EoIlCu
+	pufyw2tRBwZbBklZ4LGgaaSKfYpxf6UJJXti9H66EZyJ268bAk8HESRbjPN5Xj6mFwzGSG
+	Q7Pp67li5M1vQXb8btIPoFEsF2Wt6sYts8fdmoDCt1NLX7Y6/QFcgWcp3mv9Pg==
+Date: Mon, 3 Mar 2025 10:42:56 +0100
+From: Herve Codina <herve.codina@bootlin.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, Rob Herring
+ <robh@kernel.org>, Saravana Kannan <saravanak@google.com>, Bjorn Helgaas
+ <bhelgaas@google.com>, Lizhi Hou <lizhi.hou@amd.com>,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-pci@vger.kernel.org, Allan Nielsen <allan.nielsen@microchip.com>,
+ Horatiu Vultur <horatiu.vultur@microchip.com>, Steen Hegelund
+ <steen.hegelund@microchip.com>, Thomas Petazzoni
+ <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v8 2/5] PCI: of: Use device_{add,remove}_of_node() to
+ attach of_node to existing device
+Message-ID: <20250303104256.48329d89@bootlin.com>
+In-Reply-To: <20250228205855.GA67436@bhelgaas>
+References: <20250224141356.36325-3-herve.codina@bootlin.com>
+	<20250228205855.GA67436@bhelgaas>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <A1142BF8B63D5EC4+98768bf8-7bde-46ec-85fc-f077d67a1798@uniontech.com>
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdelkeejlecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkjghfohfogggtgfesthekredtredtjeenucfhrhhomhepjfgvrhhvvgcuvehoughinhgruceohhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeeviefffeegiedtleelieeghfejleeuueevkeevteegffehledtkeegudeigffgvdenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehhvghrvhgvrdgtohguihhnrgessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudehpdhrtghpthhtohephhgvlhhgrggrsheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepghhrvghgkhhhsehlihhnuhigfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthhtoheprhgrfhgrvghlsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegurghkrheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehsrghrrghvrghnrghksehgohhog
+ hhlvgdrtghomhdprhgtphhtthhopegshhgvlhhgrggrshesghhoohhglhgvrdgtohhmpdhrtghpthhtoheplhhiiihhihdrhhhouhesrghmugdrtghomh
+X-GND-Sasl: herve.codina@bootlin.com
 
-On Mon, Mar 03, 2025 at 12:23:13PM +0800, WangYuli wrote:
-> Hi Maciej,
-> 
-> On 2025/3/1 00:01, Maciej W. Rozycki wrote:
-> >   Up to commit 8f99a16265353 ("MIPS: Tracing: Add IRQENTRY_EXIT section for
-> > MIPS") `do_IRQ' used to be a macro, that's why.  At the time `do_IRQ' was
-> > converted to a macro `dec_irq_dispatch' was created and previously this
-> > place used to call `do_IRQ' too.
+On Fri, 28 Feb 2025 14:58:55 -0600
+Bjorn Helgaas <helgaas@kernel.org> wrote:
+
+> On Mon, Feb 24, 2025 at 03:13:52PM +0100, Herve Codina wrote:
+> > The commit 407d1a51921e ("PCI: Create device tree node for bridge")
+> > creates of_node for PCI devices. The newly created of_node is attached
+> > to an existing device. This is done setting directly pdev->dev.of_node
+> > in the code.
 > > 
-> >   It's always good finding out why things are as they are so as to make
-> > sure you haven't been missing something.  This cleanup should have been
-> > made along with commit 8f99a16265353, so it's pretty old a technical debt
-> > being sorted here.
+> > Even if pdev->dev.of_node cannot be previously set, this doesn't handle
+> > the fwnode field of the struct device. Indeed, this field needs to be
+> > set if it hasn't already been set.
 > > 
-> >   Please add these findings to your commit description in v2.
+> > device_{add,remove}_of_node() have been introduced to handle this case.  
 > 
-> Alright, thank you for the correction.
+> I guess another way to say this is:
 > 
-> I do see that this commit has already been applied to mips-next.
+>   - If dev->of_node has already been set, it is an error and we want
+>     to do nothing.  The error is impossible in this case because
+>     of_pci_make_dev_node() returns early if dev->of_node has been set.
 > 
-> †If it's alright with you and Thomas, I'm happy to send a patch v2 to
-> include these details soon.
+>   - Otherwise, we want to set dev->of_node (just as we previously
+>     did), and
+> 
+>   - if dev->fwnode has not been set, we want to set that too.
+> 
+> So the whole point of this is to set dev->fwnode, which we didn't do
+> before.  But has np->fwnode been set to anything?  Maybe it's buried
+> somewhere inside of_changeset_create_node(), but I didn't see it.
 
-I'll drop the applied patch and take your v2.
+np->fwnode can be set by ACPI. We are at the frontier between ACPI and
+device-tree.
 
-Thomas.
+The ofnode is created and filled from an already existing device. This
+device can be created from information provided by the ACPI world.
+In that case, np->fwnode is set to and ACPI fwnode.
 
--- 
-Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-good idea.                                                [ RFC1925, 2.3 ]
+Best regards,
+Herv√©
