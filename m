@@ -1,106 +1,97 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 99A77214227;
-	Mon,  3 Mar 2025 14:16:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D194F2144A7;
+	Mon,  3 Mar 2025 14:16:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741011366; cv=none; b=C/qoc671e9j1DjrvY3rFBxodLDI6jyTSFYnsVo2EmaIidp8zzCO+yJPluz3FtzixpkV54HepUca3BPm3vlYSximuv6/UVAQtWs58FRMVUORoVkXiaft2n05skwU68EMClFyBNomBQkxKg4EfxdWHZNhiG3py1vWSI/9maUCkmcg=
+	t=1741011367; cv=none; b=c1WzbLsNBjcaOylykBUbyokAs0yhwI3Q5tFMGCDFHubnqMjqQnK3wEW1hi/hX2kiE2EuoLPcIXdC6BMWnb4LFW3TxoKFrJauh17DMmb5FmEI69XoT6s5zaJneUEV64APgEQpg10NQLpJljCTqix6of7aPjUBJGVDDzCJNm3dpsU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741011366; c=relaxed/simple;
-	bh=rya0kgyfnlnpLPCSRTi6Y/jlT5vZGN17FLZ5g9rS9Mc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=DyQeh+P6dC60HYoQskF7oCZeNzqNUo3u6/aG6Y8g27Y6j7CA9cYxkJzXtYJGvG2DJUSiDI9Z94gUn5LfW+Ca6SEQdqDb235aOgofxJ+XscFZ1tpXiGgkTFHG9k+UFVX+cGISfhKJE+oSs2JGdatbrU7f3TSacQghhc9seRm9jiU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F230A1C01;
-	Mon,  3 Mar 2025 06:16:17 -0800 (PST)
-Received: from e125769.cambridge.arm.com (e125769.cambridge.arm.com [10.1.196.27])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B43663F66E;
-	Mon,  3 Mar 2025 06:16:01 -0800 (PST)
-From: Ryan Roberts <ryan.roberts@arm.com>
-To: Andrew Morton <akpm@linux-foundation.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Andreas Larsson <andreas@gaisler.com>,
-	Juergen Gross <jgross@suse.com>,
-	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
-	Catalin Marinas <catalin.marinas@arm.com>
-Cc: Ryan Roberts <ryan.roberts@arm.com>,
-	linux-mm@kvack.org,
-	sparclinux@vger.kernel.org,
-	xen-devel@lists.xenproject.org,
-	linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org,
-	David Hildenbrand <david@redhat.com>
-Subject: [PATCH v2 4/5] sparc/mm: Avoid calling arch_enter/leave_lazy_mmu() in set_ptes
-Date: Mon,  3 Mar 2025 14:15:38 +0000
-Message-ID: <20250303141542.3371656-5-ryan.roberts@arm.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250303141542.3371656-1-ryan.roberts@arm.com>
-References: <20250303141542.3371656-1-ryan.roberts@arm.com>
+	s=arc-20240116; t=1741011367; c=relaxed/simple;
+	bh=/UXL2rJW52FUBLTRrRMZTH46RpXodpUCmURoDu7I3t4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KFQ+c0P6pHp3PhU8TyVmFpDraYXm4qMImnJtPKb4wP4zFa5enSbxQHejmzY7s4TSeDjXo8Kvh5lMvrGW7AbIgz8dwt/mz4qWf6a8KGzpEhWCvE8Tg++18b27M+Uo6+GxjRZFkMeSp3Kg8ug/qt1S5/GRrA4TofCQNngBzSRTHTQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZMw43K/W; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZMw43K/W"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C91A6C4CEEE;
+	Mon,  3 Mar 2025 14:16:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741011365;
+	bh=/UXL2rJW52FUBLTRrRMZTH46RpXodpUCmURoDu7I3t4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ZMw43K/Wbzl2v9+btosaazyG50OrMjOYgSO8pvI8sya1M6ePOKj3F8ZQcuTZl9aUd
+	 uQL6oviJwI5qEUP/68qK0rXnh5Bp2kr6sgAlNaUsGvt7lIyvBV41IC1Sb4pQCd8KEI
+	 oVUgb5euXPdYat+zWshMJVwgd2ty8Ftkb/evDnIUoRjrZhCs/+9vMmhwklvdqD9geB
+	 Hq/j0usyAacAjg9316vFxeIeN3rFWuic2aqAMNouyW9YGjq0dRvUHdpw58gFB5uUty
+	 JTA+3Z6plwWsyo3smlZvG56chbd45iwT7XFg1biSgXe4iqlpseloG7ZRO7VTSJ9IMj
+	 +7UgFhfCrQP2A==
+Date: Mon, 3 Mar 2025 15:15:59 +0100
+From: Joel Granados <joel.granados@kernel.org>
+To: nicolas.bouchinet@clip-os.org
+Cc: linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org, 
+	linux-scsi@vger.kernel.org, codalist@coda.cs.cmu.edu, linux-nfs@vger.kernel.org, 
+	Nicolas Bouchinet <nicolas.bouchinet@ssi.gouv.fr>, Joel Granados <j.granados@samsung.com>, 
+	Clemens Ladisch <clemens@ladisch.de>, Arnd Bergmann <arnd@arndb.de>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jason Gunthorpe <jgg@ziepe.ca>, 
+	Leon Romanovsky <leon@kernel.org>, "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, 
+	"Martin K. Petersen" <martin.petersen@oracle.com>, Jan Harkes <jaharkes@cs.cmu.edu>, 
+	Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>, 
+	Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, 
+	Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
+	Bart Van Assche <bvanassche@acm.org>, Zhu Yanjun <yanjun.zhu@linux.dev>, 
+	Al Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>
+Subject: Re: [PATCH v2 3/6] sysctl/coda: Fixes timeout bounds
+Message-ID: <u7q5rpzw6mohtnnhpa2j3u4photckmgllsl3noafnyfttepbui@rzmndu533xcv>
+References: <20250224095826.16458-1-nicolas.bouchinet@clip-os.org>
+ <20250224095826.16458-4-nicolas.bouchinet@clip-os.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250224095826.16458-4-nicolas.bouchinet@clip-os.org>
 
-With commit 1a10a44dfc1d ("sparc64: implement the new page table range
-API") set_ptes was added to the sparc architecture. The implementation
-included calling arch_enter/leave_lazy_mmu() calls.
+On Mon, Feb 24, 2025 at 10:58:18AM +0100, nicolas.bouchinet@clip-os.org wrote:
+> From: Nicolas Bouchinet <nicolas.bouchinet@ssi.gouv.fr>
+> 
+> Bound coda timeout sysctl writings between SYSCTL_ZERO
+> and SYSCTL_INT_MAX.
+> 
+> The proc_handler has thus been updated to proc_dointvec_minmax.
+> 
+> Signed-off-by: Nicolas Bouchinet <nicolas.bouchinet@ssi.gouv.fr>
+> ---
+>  fs/coda/sysctl.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/fs/coda/sysctl.c b/fs/coda/sysctl.c
+> index 0df46f09b6cc5..d6f8206c51575 100644
+> --- a/fs/coda/sysctl.c
+> +++ b/fs/coda/sysctl.c
+> @@ -20,7 +20,9 @@ static const struct ctl_table coda_table[] = {
+>  		.data		= &coda_timeout,
+I noticed that coda_timeout is an unsigned long. With that in mind I
+would change it to unsigned int. It seems to be a value that can be
+ranged within [0,INT_MAX]
 
-The patch removes the usage of arch_enter/leave_lazy_mmu() since this
-implies nesting of lazy mmu regions which is not supported. Without this
-fix, lazy mmu mode is effectively disabled because we exit the mode
-after the first set_ptes:
+Best
+>  		.maxlen		= sizeof(int),
+>  		.mode		= 0644,
+> -		.proc_handler	= proc_dointvec
+> +		.proc_handler	= proc_dointvec_minmax,
+> +		.extra1		= SYSCTL_ZERO,
+> +		.extra2		= SYSCTL_INT_MAX,
+>  	},
+>  	{
+>  		.procname	= "hard",
+> -- 
+> 2.48.1
+> 
 
-remap_pte_range()
-  -> arch_enter_lazy_mmu()
-  -> set_ptes()
-      -> arch_enter_lazy_mmu()
-      -> arch_leave_lazy_mmu()
-  -> arch_leave_lazy_mmu()
-
-Powerpc suffered the same problem and fixed it in a corresponding way
-with commit 47b8def9358c ("powerpc/mm: Avoid calling
-arch_enter/leave_lazy_mmu() in set_ptes").
-
-Cc: <stable@vger.kernel.org>
-Fixes: 1a10a44dfc1d ("sparc64: implement the new page table range API")
-Acked-by: David Hildenbrand <david@redhat.com>
-Acked-by: Andreas Larsson <andreas@gaisler.com>
-Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
----
- arch/sparc/include/asm/pgtable_64.h | 2 --
- 1 file changed, 2 deletions(-)
-
-diff --git a/arch/sparc/include/asm/pgtable_64.h b/arch/sparc/include/asm/pgtable_64.h
-index 2b7f358762c1..dc28f2c4eee3 100644
---- a/arch/sparc/include/asm/pgtable_64.h
-+++ b/arch/sparc/include/asm/pgtable_64.h
-@@ -936,7 +936,6 @@ static inline void __set_pte_at(struct mm_struct *mm, unsigned long addr,
- static inline void set_ptes(struct mm_struct *mm, unsigned long addr,
- 		pte_t *ptep, pte_t pte, unsigned int nr)
- {
--	arch_enter_lazy_mmu_mode();
- 	for (;;) {
- 		__set_pte_at(mm, addr, ptep, pte, 0);
- 		if (--nr == 0)
-@@ -945,7 +944,6 @@ static inline void set_ptes(struct mm_struct *mm, unsigned long addr,
- 		pte_val(pte) += PAGE_SIZE;
- 		addr += PAGE_SIZE;
- 	}
--	arch_leave_lazy_mmu_mode();
- }
- #define set_ptes set_ptes
- 
 -- 
-2.43.0
 
+Joel Granados
