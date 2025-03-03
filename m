@@ -1,59 +1,39 @@
-Received: from smtpbgsg1.qq.com (smtpbgsg1.qq.com [54.254.200.92])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C06581E1C09
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 03:45:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.254.200.92
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55DB170805
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 03:46:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740973552; cv=none; b=UlfIddWLtcEHaqfLeumgRedfXLhamCEbsoq29Hk5oDbOlzPm9GIua0gbh1gE9N0K9m31W4hYNcBSnnH2iYEZYxJmyLt4he3ehLzQuPRoJeRMQYno+nEFBFTIbsTYK6cESl14A6CXbqVvJTLmoGGUnKaztT94puPMNR0KHO/jW1k=
+	t=1740973581; cv=none; b=ELh2gIfT3fK/Xl5txz68mNYKIzW0Jc1zllGxDhI1yIpbX4Io3DVqjHq9nrcVj/aW0nJR8/X7BLKprEae6k96upLku8TDZqqPq4dFeY6dcEZy48cgu6PjJYTg4ykzG6nIfHNm7Y4Ktb5n7bIhk3YlofHHUkOyqhA2jKAeoQ9/gcs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740973552; c=relaxed/simple;
-	bh=+GLdX9sHI8ZEONmGSp7rm95EmGqv9Wksp7L0ZbJsQls=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=o0kgeET1PRk4kh1qJaovHzNvq8sZwSIjzts91Dp9FwKptYKDD0+f3Xu5u0QqJqD2tXrKsx70fKmIZygZYa20m6f4YULnBdK8MwzOdUxZ3RsivwfzvmZU/CcrguMiY1ibLTItzXJrgzBZPnRpRejpq2Qks3akVIOtGWOmpLZxnQE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=OBcyIG9k; arc=none smtp.client-ip=54.254.200.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+	s=arc-20240116; t=1740973581; c=relaxed/simple;
+	bh=LIa3c5jErC+Fa9BEa/bZPI0QfpHqsWVhgevulq+HzFo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=P5MH+IP/eUrPyVXWggUi/C1FKLtNKKExO5QJj06UOh/GBJrGJ19acTNpEorGL/fEvEmSr2ukrAp0MJRDSs+OGS2/x1c2RrfWY+c8DLANCtcVjgkc6yqXa3buxwSm09/L3FyalE2MKd5v+0MOjoU29re/vGAW8N/PntEzvpQEHT4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LIcMW/5F; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="OBcyIG9k"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1740973413;
-	bh=+GLdX9sHI8ZEONmGSp7rm95EmGqv9Wksp7L0ZbJsQls=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=OBcyIG9kt4aDQucmA6mY2ppigdgwie4H8cIqPe1nlEVCqjld7gMeT2onYtRNaMvHs
-	 inIfXFP4sVPcLA/rTfDfzmyiysQqS0NNwD/0sipaNd7ecn4T4n8XHyuoJZyNXsNJua
-	 AXkFFna0suSH+6feKrpzR4s03WO6yBpjzO1CV68E=
-X-QQ-mid: bizesmtpip3t1740973358th3q8gl
-X-QQ-Originating-IP: FIUGPBJpsYmKZr5GvnZTK/CHIy6KAfMajbkZnFmbZVM=
-Received: from localhost.localdomain ( [localhost])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Mon, 03 Mar 2025 11:42:35 +0800 (CST)
-X-QQ-SSF: 0002000000000000000000000000000
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 16988100910576150127
-From: WangYuli <wangyuli@uniontech.com>
-To: mingo@kernel.org
-Cc: bp@alien8.de,
-	chenhuacai@loongson.cn,
-	chenlinxuan@uniontech.com,
-	dave.hansen@linux.intel.com,
-	guanwentao@uniontech.com,
-	hpa@zytor.com,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LIcMW/5F"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF3A4C4CEE6;
+	Mon,  3 Mar 2025 03:46:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740973580;
+	bh=LIa3c5jErC+Fa9BEa/bZPI0QfpHqsWVhgevulq+HzFo=;
+	h=From:To:Cc:Subject:Date:From;
+	b=LIcMW/5FVny7KJOkpdM4Ug/xO6v/wn0jO2LGfrNR8V6wusL6G5mzdoEdA/wW1gWNU
+	 3hs3Hq4XRzFKTuviescIVJEayvB9UV87shgMQnsXSIieTDBsC6kOihN6W3G0U/5O1V
+	 DBFJorNfwTHk3liD/qGDTILgjJyQsQY/q6EVA/+8jdftsbL84pK6X49O4h9pv7GtjB
+	 7y4ZxHbBQFcgDcp68aWM2ONuUvHwYUto9ctTUPD2Pibi6PgAti3RDBIpbJ6GUSahT+
+	 20iNMnYzx9aT6Q/aZMCwm2fq3DKddvaFRt8KB3hbYThiZMJb2m7zK4jfiM9zIpx/sh
+	 NgotyexoQODng==
+From: Chao Yu <chao@kernel.org>
+To: jaegeuk@kernel.org
+Cc: linux-f2fs-devel@lists.sourceforge.net,
 	linux-kernel@vger.kernel.org,
-	luto@kernel.org,
-	mingo@redhat.com,
-	niecheng1@uniontech.com,
-	peterz@infradead.org,
-	tglx@linutronix.de,
-	wangyuli@uniontech.com,
-	x86@kernel.org,
-	zhanjun@uniontech.com
-Subject: Re: Re: [PATCH] x86/srat: Conditional apic_id vs MAX_LOCAL_APIC comparison
-Date: Mon,  3 Mar 2025 11:42:34 +0800
-Message-ID: <E504BDEF131EA0DB+20250303034234.24917-1-wangyuli@uniontech.com>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <Z8GCyyt0Dud0kvwq@gmail.com>
-References: <Z8GCyyt0Dud0kvwq@gmail.com>
+	Chao Yu <chao@kernel.org>
+Subject: [PATCH] f2fs: support F2FS_NOLINEAR_LOOKUP_FL
+Date: Mon,  3 Mar 2025 11:46:06 +0800
+Message-ID: <20250303034606.1355224-1-chao@kernel.org>
+X-Mailer: git-send-email 2.48.1.711.g2feabab25a-goog
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,39 +41,142 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
-X-QQ-XMAILINFO: OM0exKGC/eNye9NliXRTMZNkVe7WRJkw/gdHnJ/KFeKwM63Gz76TpcnN
-	DhlGHaeUxefFKgZFtvNyUCawv0Ccr1SS26XFtnuOmPE+0tVrGclfyJ0vHIUM2jHAm9l+I9/
-	rvByek+DUFlsNhrm7CSHnPe3P+h+mMbHijh+PH63REZRgDeCmNWpHwdQhj2cpn4VAXUh/mY
-	oLt+3TLxAq2ZhpzVp4mtxH65kIonkaadJ3CLbyIcq/GXWcl8+NG+HmcOOBJNAsizTXEVil0
-	cH6Mg8nRcBW5aW8v68/AyqDpBK+v6DzjHWqC3c/auBo7Jq9DqmMvX/dfvRWljc0QzSy9DpH
-	ILMBaTPez0n7dDcIOoCpJxbjK2LUB25z8mSrzJt3ccVMh0MBrNCPKM0e1+Cs06w8WIr8D1Y
-	7UqxVAdlD4Cv/thkvCKQpiLAg7tL7eDh4bvyukUrexg9itsEi5XcuCSG7N5HpjDWdErEtkP
-	3bHjV9rQ734veWO06FjiVoRxVwYwE8hAtEHlxT9lNeo8DhjnAKl2mqhrJl3t4cjOlwFEzpC
-	wzoE+OM12UDoOGsIKecpFN1fRfW6p82wsldqTBkHIOZSdfvRBk9bTkAo0ssBizfgeyrKQJ+
-	dYTSRkuPvg9KSHshqEE+Gcn/4UWOJi3VXD8RTzwbarUhIaGGmg7k3R7ggXowhIIZCckcaq9
-	9AAAVIlIllQ7d57Vezi0WTNozugufxxI2cEP4c0w3XJF3XOrTEC1UrEe5h0TJEmpxjbaigq
-	IvAuO9LP30cwR1h044w6A4vUKyw0LUWvoXSqIieuU3aI45zSiOy2WvrVdLKISuZuOTgqPM7
-	9gnXw12UvGcPiuXY2UfOhSdmHi+I7sF0qOmuDKXUbeseWpEaCbzUcOrxyul1O4JmBGr08oo
-	Rfu074Lhl/kfW+6utsWVc+rL9FsbFpfQ9ImdDOP0GFlrbPnUaSVV1wley6mmcV+CXbr+a06
-	YSLgdZKgLqrCXdGJ/PaM/FSaRdyxFpreg2IAwnX623AcEwDWyHLEKIP+XsLkG7h9Ma40F0P
-	5lUeSRiV0VyG5z0in1PFhT+ZEzRCLon7cm89rxJw==
-X-QQ-XMRINFO: MSVp+SPm3vtS1Vd6Y4Mggwc=
-X-QQ-RECHKSPAM: 0
 
-Hi Ingo,
+This patch introduces a new flag F2FS_NOLINEAR_LOOKUP_FL, so that we can
+tag casefolded directory w/ it to disable linear lookup functionality,
+it can be used for QA.
 
-The commit message already clearly explains that, uniquely,
-acpi_numa_processor_affinity_init() utilizes the apic_id from the
-acpi_srat_cpu_affinity struct, which is typed as u8 rather than u32.
+Signed-off-by: Chao Yu <chao@kernel.org>
+---
+ fs/f2fs/dir.c             |  3 ++-
+ fs/f2fs/f2fs.h            |  2 ++
+ fs/f2fs/file.c            | 36 +++++++++++++++++++++++-------------
+ include/uapi/linux/f2fs.h |  5 +++++
+ 4 files changed, 32 insertions(+), 14 deletions(-)
 
-The apic_id becomes (pa->apic_id << 8) | pa->local_sapic_eid if and
-only if CONFIG_X86_X2APIC is enabled; otherwise, it remains pa->apic_id.
+diff --git a/fs/f2fs/dir.c b/fs/f2fs/dir.c
+index 54dd52de7269..4c74f29a2c73 100644
+--- a/fs/f2fs/dir.c
++++ b/fs/f2fs/dir.c
+@@ -366,7 +366,8 @@ struct f2fs_dir_entry *__f2fs_find_entry(struct inode *dir,
+ 
+ out:
+ #if IS_ENABLED(CONFIG_UNICODE)
+-	if (IS_CASEFOLDED(dir) && !de && use_hash) {
++	if (IS_CASEFOLDED(dir) && !de && use_hash &&
++				!IS_NOLINEAR_LOOKUP(dir)) {
+ 		use_hash = false;
+ 		goto start_find_entry;
+ 	}
+diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+index 05879c6dc4d6..787f1e5a52d7 100644
+--- a/fs/f2fs/f2fs.h
++++ b/fs/f2fs/f2fs.h
+@@ -3047,6 +3047,7 @@ static inline void f2fs_change_bit(unsigned int nr, char *addr)
+ #define F2FS_NOCOMP_FL			0x00000400 /* Don't compress */
+ #define F2FS_INDEX_FL			0x00001000 /* hash-indexed directory */
+ #define F2FS_DIRSYNC_FL			0x00010000 /* dirsync behaviour (directories only) */
++#define F2FS_NOLINEAR_LOOKUP_FL		0x08000000 /* do not use linear lookup */
+ #define F2FS_PROJINHERIT_FL		0x20000000 /* Create with parents projid */
+ #define F2FS_CASEFOLD_FL		0x40000000 /* Casefolded file */
+ #define F2FS_DEVICE_ALIAS_FL		0x80000000 /* File for aliasing a device */
+@@ -3066,6 +3067,7 @@ static inline void f2fs_change_bit(unsigned int nr, char *addr)
+ #define F2FS_OTHER_FLMASK	(F2FS_NODUMP_FL | F2FS_NOATIME_FL)
+ 
+ #define IS_DEVICE_ALIASING(inode)	(F2FS_I(inode)->i_flags & F2FS_DEVICE_ALIAS_FL)
++#define IS_NOLINEAR_LOOKUP(inode)	(F2FS_I(inode)->i_flags & F2FS_NOLINEAR_LOOKUP_FL)
+ 
+ static inline __u32 f2fs_mask_flags(umode_t mode, __u32 flags)
+ {
+diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+index 014cb7660a9a..1acddc4d11e4 100644
+--- a/fs/f2fs/file.c
++++ b/fs/f2fs/file.c
+@@ -2062,6 +2062,11 @@ static int f2fs_setflags_common(struct inode *inode, u32 iflags, u32 mask)
+ 		}
+ 	}
+ 
++	if ((iflags ^ masked_flags) & F2FS_NOLINEAR_LOOKUP_FLAG) {
++		if (!S_ISDIR(inode->i_mode) || !IS_CASEFOLDED(inode))
++			return -EINVAL;
++	}
++
+ 	fi->i_flags = iflags | (fi->i_flags & ~mask);
+ 	f2fs_bug_on(F2FS_I_SB(inode), (fi->i_flags & F2FS_COMPR_FL) &&
+ 					(fi->i_flags & F2FS_NOCOMP_FL));
+@@ -2093,17 +2098,18 @@ static const struct {
+ 	u32 iflag;
+ 	u32 fsflag;
+ } f2fs_fsflags_map[] = {
+-	{ F2FS_COMPR_FL,	FS_COMPR_FL },
+-	{ F2FS_SYNC_FL,		FS_SYNC_FL },
+-	{ F2FS_IMMUTABLE_FL,	FS_IMMUTABLE_FL },
+-	{ F2FS_APPEND_FL,	FS_APPEND_FL },
+-	{ F2FS_NODUMP_FL,	FS_NODUMP_FL },
+-	{ F2FS_NOATIME_FL,	FS_NOATIME_FL },
+-	{ F2FS_NOCOMP_FL,	FS_NOCOMP_FL },
+-	{ F2FS_INDEX_FL,	FS_INDEX_FL },
+-	{ F2FS_DIRSYNC_FL,	FS_DIRSYNC_FL },
+-	{ F2FS_PROJINHERIT_FL,	FS_PROJINHERIT_FL },
+-	{ F2FS_CASEFOLD_FL,	FS_CASEFOLD_FL },
++	{ F2FS_COMPR_FL,		FS_COMPR_FL },
++	{ F2FS_SYNC_FL,			FS_SYNC_FL },
++	{ F2FS_IMMUTABLE_FL,		FS_IMMUTABLE_FL },
++	{ F2FS_APPEND_FL,		FS_APPEND_FL },
++	{ F2FS_NODUMP_FL,		FS_NODUMP_FL },
++	{ F2FS_NOATIME_FL,		FS_NOATIME_FL },
++	{ F2FS_NOCOMP_FL,		FS_NOCOMP_FL },
++	{ F2FS_INDEX_FL,		FS_INDEX_FL },
++	{ F2FS_DIRSYNC_FL,		FS_DIRSYNC_FL },
++	{ F2FS_PROJINHERIT_FL,		FS_PROJINHERIT_FL },
++	{ F2FS_CASEFOLD_FL,		FS_CASEFOLD_FL },
++	{ F2FS_NOLINEAR_LOOKUP_FL,	F2FS_NOLINEAR_LOOKUP_FL },
+ };
+ 
+ #define F2FS_GETTABLE_FS_FL (		\
+@@ -2121,7 +2127,8 @@ static const struct {
+ 		FS_INLINE_DATA_FL |	\
+ 		FS_NOCOW_FL |		\
+ 		FS_VERITY_FL |		\
+-		FS_CASEFOLD_FL)
++		FS_CASEFOLD_FL |	\
++		F2FS_NOLINEAR_LOOKUP_FL)
+ 
+ #define F2FS_SETTABLE_FS_FL (		\
+ 		FS_COMPR_FL |		\
+@@ -2133,7 +2140,8 @@ static const struct {
+ 		FS_NOCOMP_FL |		\
+ 		FS_DIRSYNC_FL |		\
+ 		FS_PROJINHERIT_FL |	\
+-		FS_CASEFOLD_FL)
++		FS_CASEFOLD_FL |	\
++		F2FS_NOLINEAR_LOOKUP_FL)
+ 
+ /* Convert f2fs on-disk i_flags to FS_IOC_{GET,SET}FLAGS flags */
+ static inline u32 f2fs_iflags_to_fsflags(u32 iflags)
+@@ -3344,6 +3352,8 @@ int f2fs_fileattr_get(struct dentry *dentry, struct fileattr *fa)
+ 		fsflags |= FS_INLINE_DATA_FL;
+ 	if (is_inode_flag_set(inode, FI_PIN_FILE))
+ 		fsflags |= FS_NOCOW_FL;
++	if (IS_NOLINEAR_LOOKUP(inode))
++		fsflags |= F2FS_NOLINEAR_LOOKUP_FL;
+ 
+ 	fileattr_fill_flags(fa, fsflags & F2FS_GETTABLE_FS_FL);
+ 
+diff --git a/include/uapi/linux/f2fs.h b/include/uapi/linux/f2fs.h
+index 795e26258355..a03626fdcf35 100644
+--- a/include/uapi/linux/f2fs.h
++++ b/include/uapi/linux/f2fs.h
+@@ -104,4 +104,9 @@ struct f2fs_comp_option {
+ 	__u8 log_cluster_size;
+ };
+ 
++/* used for FS_IOC_GETFLAGS and FS_IOC_SETFLAGS */
++enum {
++	F2FS_NOLINEAR_LOOKUP_FLAG = 0x08000000,
++};
++
+ #endif /* _UAPI_LINUX_F2FS_H */
+-- 
+2.48.1
 
-Consequently, even with apic_id being of type int, its maximum value is
-still constrained to 255.
-
-Thanks,
---
-WangYuli
