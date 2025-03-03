@@ -1,101 +1,120 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA5AB1F1300;
-	Mon,  3 Mar 2025 09:49:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 853F01F1300;
+	Mon,  3 Mar 2025 09:50:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740995395; cv=none; b=U9y0PqEtmsqngQusPbsNmeM7vXIe0Opa3To1dCA4gGumVFHWoWrcjcUCJeCsBe0R9kqIVz4ion0Pn3xpDSTotZk9FA5jKoYVHsIDeAJCtU0ZYLGXNMLA2U2FPe5s8m2zYoS4w4PuDtmF4pv8jcjnoD032/sloUZaASdJzZQ+cQk=
+	t=1740995408; cv=none; b=KB0K+VKeygY6Bq4wXxiXyPlET3k+uvubAPW66BZE8g5t8YOiSaQwO669Wg+NbT+/QXWOkcW1zVvjMhD+kR76LUBiyxv3Ulx9h3E8jBFtsJGFEzAvjTRcKegQfZygs4tQsSlq0rI9h/vbhzyRSwAAqjsCOFCr9Z0wftInSmX1OVQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740995395; c=relaxed/simple;
-	bh=Bo1yf188xcuw3IK9QrIc76aTVVJHnLWeA4UExXopE4E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=raAkuFZny4UEH9hkr7D3/1FsPBaIvXVrpdlNQlA/zAZDoNs5HxhcwOuKHL6HHr+gU8VYab72mQVHErheBr3RQUgD41a8rTTCPx7f9/P70LSVhNj7dmErDKcgHp6iwy/EfYbatJAIPYXFeqOi1E1XNMXwCHQp3GSk5CEb9uU0MYU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bXOcgK1Z; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1740995408; c=relaxed/simple;
+	bh=YrL7lBJ8oAc02s3z8Zojwlbn+Tin70LuBO8u1zjAZbA=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=awP0LTy2II8gQQgN5j69SpDQRTYDpgUrMees7XVrjbg+/yKsG0PFM8PH0/ARxbU5zSaQXUWmy1yomw8oVdaHjkuWFpsiivRHjy9dqwX4RE/3arWhUuJqK47UOjMohwzMnX47/efg2QcnhNONwIMKIcaYnUuT/aVUHOkla7QFe7A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=RDhKJa8j; arc=none smtp.client-ip=217.70.183.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bXOcgK1Z"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740995394; x=1772531394;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Bo1yf188xcuw3IK9QrIc76aTVVJHnLWeA4UExXopE4E=;
-  b=bXOcgK1ZoWELxvKzQBTaALpasguziCxtI8p3xEPSRWrDxFjCGEAaAA4Y
-   28V0FtShgdA+comx7BmpF90ob+jS3TdcvaBURWC6uCS090VwwnV1xKv4F
-   AQ3fv/otVOIP/bAB2xGtLXk2cnMETteJT3F2vNDhhh7Nar9/jXA5W7Tpr
-   Vj1r15Emna8CLeIOLF1xPse9mluENtv740ZBwT3CZEwvUPH2eZ9IvN76d
-   LyjFyxj1XP1//NX+hEsyPiRE7FOu+cnPGjXRD/WbHj/vuTCXKbDgiBi76
-   hrAHVQM5O0ljrZtMp6QJZCWjSJTj/0LtdS9kuYpD1HEwTORfeXk9B+lOP
-   w==;
-X-CSE-ConnectionGUID: gvfph5E1TKyE8AQ3w0HZKg==
-X-CSE-MsgGUID: I0B8c/VYRz6WW1NqQOf6WA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11361"; a="44674334"
-X-IronPort-AV: E=Sophos;i="6.13,329,1732608000"; 
-   d="scan'208";a="44674334"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Mar 2025 01:49:53 -0800
-X-CSE-ConnectionGUID: 4SzUMc1GRdavlZ+yhy7IMg==
-X-CSE-MsgGUID: uk7hq89SSX+Z07yFzn0LuA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="118503785"
-Received: from lkp-server02.sh.intel.com (HELO 76cde6cc1f07) ([10.239.97.151])
-  by orviesa007.jf.intel.com with ESMTP; 03 Mar 2025 01:49:51 -0800
-Received: from kbuild by 76cde6cc1f07 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tp2Qn-000IId-0B;
-	Mon, 03 Mar 2025 09:49:49 +0000
-Date: Mon, 3 Mar 2025 17:49:46 +0800
-From: kernel test robot <lkp@intel.com>
-To: Pratap Nirujogi <pratap.nirujogi@amd.com>, andi.shyti@kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, linux-i2c@vger.kernel.org,
-	linux-kernel@vger.kernel.org, benjamin.chan@amd.com,
-	Pratap Nirujogi <pratap.nirujogi@amd.com>
-Subject: Re: [PATCH] i2c: amd-isp: Add ISP i2c-designware driver
-Message-ID: <202503031743.THpYJdQE-lkp@intel.com>
-References: <20250228164519.3453927-1-pratap.nirujogi@amd.com>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="RDhKJa8j"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id D7178432F4;
+	Mon,  3 Mar 2025 09:49:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1740995399;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qR5QgJotOCF1eFXi0LYVVo5+GDBF3gUo4Bkrohe5o4A=;
+	b=RDhKJa8jRUogPl7e/7nrf2DXZwQzqN+GAvd2OmlhxhcDUbUfVraMOgiSDZzX96MjPlKRFC
+	WnO5ic6DAqzZCvLOFV1AybLAJGA3Ovgkad+GichMFvwkVM8Fxa66C3T8VM+s82wl41rBDj
+	3fzLZDuo8CmNs0Q44TK+0uoOvDRaop/n5ibv1Zb5ZBnXEqGQrD9maeqMND7grIHREvOTan
+	oY9vQv84WiY0MzLx7QUu8lSx6uYdvuxCiwE/xtiJiyCugsJTmufW2yYPEtZ23lrrZqj60J
+	CkD1qOAz4Ib3NlnhN0fm29X7eROCYlQLA/doP5qA5LXW0sW9J1EjtTGyoWW7mw==
+Date: Mon, 3 Mar 2025 10:49:58 +0100
+From: Herve Codina <herve.codina@bootlin.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, Rob Herring
+ <robh@kernel.org>, Saravana Kannan <saravanak@google.com>, Bjorn Helgaas
+ <bhelgaas@google.com>, Lizhi Hou <lizhi.hou@amd.com>,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-pci@vger.kernel.org, Allan Nielsen <allan.nielsen@microchip.com>,
+ Horatiu Vultur <horatiu.vultur@microchip.com>, Steen Hegelund
+ <steen.hegelund@microchip.com>, Thomas Petazzoni
+ <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v8 5/5] PCI: of: Create device-tree PCI host bridge node
+Message-ID: <20250303104958.459e72ed@bootlin.com>
+In-Reply-To: <20250228212157.GA70383@bhelgaas>
+References: <20250224141356.36325-6-herve.codina@bootlin.com>
+	<20250228212157.GA70383@bhelgaas>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250228164519.3453927-1-pratap.nirujogi@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdelkeektdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkjghfohfogggtgfesthekredtredtjeenucfhrhhomhepjfgvrhhvvgcuvehoughinhgruceohhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeeviefffeegiedtleelieeghfejleeuueevkeevteegffehledtkeegudeigffgvdenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehhvghrvhgvrdgtohguihhnrgessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudehpdhrtghpthhtohephhgvlhhgrggrsheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepghhrvghgkhhhsehlihhnuhigfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthhtoheprhgrfhgrvghlsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegurghkrheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehsrghrrghvrghnrghksehgohhog
+ hhlvgdrtghomhdprhgtphhtthhopegshhgvlhhgrggrshesghhoohhglhgvrdgtohhmpdhrtghpthhtoheplhhiiihhihdrhhhouhesrghmugdrtghomh
+X-GND-Sasl: herve.codina@bootlin.com
 
-Hi Pratap,
+Hi Bjorn,
 
-kernel test robot noticed the following build errors:
+On Fri, 28 Feb 2025 15:21:57 -0600
+Bjorn Helgaas <helgaas@kernel.org> wrote:
 
-[auto build test ERROR on andi-shyti/i2c/i2c-host]
-[also build test ERROR on linus/master v6.14-rc5 next-20250228]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> On Mon, Feb 24, 2025 at 03:13:55PM +0100, Herve Codina wrote:
+> > PCI devices device-tree nodes can be already created. This was
+> > introduced by commit 407d1a51921e ("PCI: Create device tree node for
+> > bridge").
+> > 
+> > In order to have device-tree nodes related to PCI devices attached on
+> > their PCI root bus (the PCI bus handled by the PCI host bridge), a PCI
+> > root bus device-tree node is needed. This root bus node will be used as
+> > the parent node of the first level devices scanned on the bus. On
+> > device-tree based systems, this PCI root bus device tree node is set to
+> > the node of the related PCI host bridge. The PCI host bridge node is
+> > available in the device-tree used to describe the hardware passed at
+> > boot.
+> > 
+> > On non device-tree based system (such as ACPI), a device-tree node for
+> > the PCI host bridge or for the root bus does not exist. Indeed, the PCI
+> > host bridge is not described in a device-tree used at boot simply
+> > because no device-tree are passed at boot.
+> > 
+> > The device-tree PCI host bridge node creation needs to be done at
+> > runtime. This is done in the same way as for the creation of the PCI
+> > device nodes. I.e. node and properties are created based on computed
+> > information done by the PCI core. Also, as is done on device-tree based
+> > systems, this PCI host bridge node is used for the PCI root bus.
+> > 
+> > With this done, hardware available in a PCI device that doesn't follow
+> > the PCI model consisting in one PCI function handled by one driver can
+> > be described by a device-tree overlay loaded by the PCI device driver on
+> > non device-tree based systems. Those PCI devices provide a single PCI
+> > function that includes several functionalities that require different
+> > driver. The device-tree overlay describes in that case the internal
+> > devices and their relationships. It allows to load drivers needed by
+> > those different devices in order to have functionalities handled.  
+> 
+> Since this adds host bridge nodes, does this patch specifically enable
+> device tree overlays for devices on the root bus?
+> 
+> Were we able to load DT overlays for devices deeper in the hierarchy
+> already, even without this patch?
+> 
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Pratap-Nirujogi/i2c-amd-isp-Add-ISP-i2c-designware-driver/20250301-005001
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/andi.shyti/linux.git i2c/i2c-host
-patch link:    https://lore.kernel.org/r/20250228164519.3453927-1-pratap.nirujogi%40amd.com
-patch subject: [PATCH] i2c: amd-isp: Add ISP i2c-designware driver
-config: x86_64-randconfig-005-20250303 (https://download.01.org/0day-ci/archive/20250303/202503031743.THpYJdQE-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250303/202503031743.THpYJdQE-lkp@intel.com/reproduce)
+This patch itself doesn't need any support for overlay.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202503031743.THpYJdQE-lkp@intel.com/
+Yes, without this patch we can load overlay but only on a device-tree based
+system. This is done by the driver that needs an overlay to handle the PCI
+device. This patch is needed to load overlays in the same way on non
+device-tree based system i.e. on ACPI systems.
 
-All errors (new ones prefixed by >>, old ones prefixed by <<):
-
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/fpga/tests/fpga-mgr-test.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/fpga/tests/fpga-bridge-test.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/fpga/tests/fpga-region-test.o
->> ERROR: modpost: "isp_power_set" [drivers/i2c/busses/i2c-designware-amdisp.ko] undefined!
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Best regards,
+Hervé
