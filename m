@@ -1,110 +1,128 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 231BB213220;
-	Mon,  3 Mar 2025 13:20:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED65120D4E9;
+	Mon,  3 Mar 2025 13:22:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741008020; cv=none; b=vDv6nNzbbZ26lJKQ+/qn72ylyt0il9h9TPOLhYfmxg1aexvOucU5BpV1LxI4xInXXVpH91Zn5xvERqVApvotKi7GAWIKXcuiyOf0rX/M52sJ+SzsjU1QRjHr+8QQjXCg3dTNlhdiBdCnsWmAJRbVmK/kiMCiEY8dkr/V3E5lpAk=
+	t=1741008131; cv=none; b=ol7rqZUFTCC46B78RIjRH0jvOaXgk857K5xDY4w5mdmcXtNtIRNfcAo33dgxCybqBosF7u/CbbaEowxF6wI3AUaHPW2LJpgCTRHs78syQdhU/U9bKAc0Dj49AGPpFf9wrzFncc3A3jMmx0+booMex/hEL8jg8u5t4n9wm52F7No=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741008020; c=relaxed/simple;
-	bh=DoHtbly6OqQpPsXYB7Yz7N/tBKfbuLKIyWpcMK4CwFo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nSk7kpZ0s53tasylnwqJ9ocNjMlgHgKzLMtsCtCERzYQbZrIk5/b8ck8FPOhWN3OP4yMy1ZZOWY7DJBDUU0xR2AgG9g+/ye6EmmPWmNQqhlDSTxlZcjVHFEjRN8R6S7tiHdQ0kL5iLmG8UA/kuy/28/U8jClxPjbohTSUpEle84=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=oCd9nPEh; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1741008131; c=relaxed/simple;
+	bh=cyAIDvH42HlK42zH1AZZ7W0u8yvqehARnSYevut+Mvw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qkHl/q+t3xNiM9e03RQ5mO5PSKAraOfaWxM3dS8vUiGvJvYTQbCnWqeeIoVtEwc3DpCkbXFaWQYTbstRWpu+RqTh2p1cu2DFHB6adVuUI/PR3JRwRvLZxUBHjE0X4zjVNLyNRQMrSJQ0zXVq787n6O4r8P23D7zDE2Qsgdv3uwM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c/AhB5qE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="oCd9nPEh"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741008019; x=1772544019;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=DoHtbly6OqQpPsXYB7Yz7N/tBKfbuLKIyWpcMK4CwFo=;
-  b=oCd9nPEhRJCFv5OXapMNZhByEkD7968XXBw7VnHVDJz5zdPqqwcTKYll
-   R6gze13L8+LeAd8LNVH32gSUZ32RfozbY670k4zHqmXG1JopKPvHmB7j0
-   9GjFRBMkc9s51ZXPYEJbC3fygIVrlwyxLHLgrOLlyP287uPcuGUiuavst
-   NN07rC8Fj2Bz4qX9pQs3I4ISacw8XMFsZHzCKk+0JautrO4o6jeQ3qERR
-   djogBd1Z2Sb9temkks7XsDsvlxq6RiX6LUTo+IbUx4EP9fEA2elmjJaAS
-   EAPkquicDDqnvboy9ux7LzfwksWFIkgiCToX9i3NzR4mSaDOeB291BpKz
-   g==;
-X-CSE-ConnectionGUID: MF+WoguvRo+mqOLfMH5E7Q==
-X-CSE-MsgGUID: f9dNsUKsQxuKwYGvlezqsw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11362"; a="59429830"
-X-IronPort-AV: E=Sophos;i="6.13,329,1732608000"; 
-   d="scan'208";a="59429830"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Mar 2025 05:20:18 -0800
-X-CSE-ConnectionGUID: mt11TYzNRPW/agOzS/uISg==
-X-CSE-MsgGUID: uWzCGyk3RKCPxmAOHfa1zg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="118545925"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by orviesa007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Mar 2025 05:20:15 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1tp5iO-0000000Gp3l-1pxj;
-	Mon, 03 Mar 2025 15:20:12 +0200
-Date: Mon, 3 Mar 2025 15:20:12 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Raag Jadav <raag.jadav@intel.com>
-Cc: lee@kernel.org, giometti@enneenne.com, gregkh@linuxfoundation.org,
-	raymond.tan@intel.com, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/5] mfd: intel_ehl_pse_gpio: Introduce Intel Elkhart
- Lake PSE GPIO and TIO
-Message-ID: <Z8WsjP-cuE2CAbjg@smile.fi.intel.com>
-References: <20250303044745.268964-1-raag.jadav@intel.com>
- <20250303044745.268964-2-raag.jadav@intel.com>
- <Z8VnSyH_DBuJpW2o@smile.fi.intel.com>
- <Z8WU5NiIsu34Gz-Z@black.fi.intel.com>
- <Z8WWXxTrd1e5V3qb@smile.fi.intel.com>
- <Z8WdK7wkNnAerkCO@black.fi.intel.com>
- <Z8WfESNmu4MjEbcx@smile.fi.intel.com>
- <Z8Wk4dj7MvrW1-Ou@black.fi.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c/AhB5qE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58DA6C4CEEC;
+	Mon,  3 Mar 2025 13:22:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741008130;
+	bh=cyAIDvH42HlK42zH1AZZ7W0u8yvqehARnSYevut+Mvw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=c/AhB5qEabaK+aGFMVK/mFIuucVYjGzZAk7HdUEOEz2mZCuWZRzB9TmVLCrERWDN5
+	 OC3uJ8TorONGnXWfIFQmcnQmo1J+tPz7jKCiWTOrHgzEzM6TjKgawRn5EjTjpfa+Vd
+	 hQbJAAo8DaI/V4nFvyoBVzOlg2VyPBFMczw0uHOJF4cvkb3FC2jgJWI9k3gCwACoBT
+	 QyXng99JRn6+4oOBzcoxgc+0yF81Wre66HialtHEmysgApJfX9TYc/pCrPFm0+nEWV
+	 YlKl7U1UpJaE6vvS5QoHCrEsqQCKCMysMl4JglksrOiXPPCibfyukuN5ukmr78zUnS
+	 SCd6ppVo7A+6g==
+Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-2feb9076a1cso6824201a91.0;
+        Mon, 03 Mar 2025 05:22:10 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCX1Igr/TanK2soVcvesdVKYXrB4JqCExqU5/Faky6KF9LAynw5xt43eq+kkVKFjUQwcfRaI+VMZXJdv@vger.kernel.org, AJvYcCXl9brJFjfH1J6lEweohgkUOW7gBLrW9dXEGdBuBZB8Zb1XGrMibFyJvxVhbwE/fg8qofmgm19obkXjVNCv@vger.kernel.org
+X-Gm-Message-State: AOJu0YwpYcyE0gpnZXOGnBIMwkbcSj1haZn5bjQ7Q1NsE5QK/0yTY4qD
+	8VByGPY2MqftkYq51dD7+LGDbNvTUkq8XHm6VxlvnFURhnC44voO6KzQwoyzV58RBDt8ArjsM/Z
+	GtXErXVzSARgsru7qrR2Vx4opVA==
+X-Google-Smtp-Source: AGHT+IHQLK7la/7RxxVx5xQub2rrCyzIXTBwqCYNHPZA1L5Z+HvrKvHgKF1EVP50ng2pCoNbxnqwqT1ThMWF+DeLMfM=
+X-Received: by 2002:a17:90b:1cc6:b0:2fc:3264:3657 with SMTP id
+ 98e67ed59e1d1-2febaa92594mr25361600a91.0.1741008129875; Mon, 03 Mar 2025
+ 05:22:09 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z8Wk4dj7MvrW1-Ou@black.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20231023-display-support-v7-0-6703f3e26831@baylibre.com> <20231023-display-support-v7-1-6703f3e26831@baylibre.com>
+In-Reply-To: <20231023-display-support-v7-1-6703f3e26831@baylibre.com>
+From: Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Date: Mon, 3 Mar 2025 21:22:55 +0800
+X-Gmail-Original-Message-ID: <CAAOTY_8c4xeE=c4MTGopenORaP-PL66exLG+erKSV1fpoGJU+g@mail.gmail.com>
+X-Gm-Features: AQ5f1JrckMOh9P4yJQbwlfuWcX_03D8O22eeIcknRD2YAlMiCLxngtVQQLy-TeY
+Message-ID: <CAAOTY_8c4xeE=c4MTGopenORaP-PL66exLG+erKSV1fpoGJU+g@mail.gmail.com>
+Subject: Re: [PATCH v7 1/6] dt-bindings: display: mediatek: dpi: add
+ power-domains example
+To: amergnat@baylibre.com
+Cc: Chun-Kuang Hu <chunkuang.hu@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+	Jitao Shi <jitao.shi@mediatek.com>, CK Hu <ck.hu@mediatek.com>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Simona Vetter <simona@ffwll.ch>, Simona Vetter <simona.vetter@ffwll.ch>, 
+	dri-devel@lists.freedesktop.org, linux-mediatek@lists.infradead.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, Fabien Parent <fparent@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Mar 03, 2025 at 02:47:29PM +0200, Raag Jadav wrote:
-> On Mon, Mar 03, 2025 at 02:22:41PM +0200, Andy Shevchenko wrote:
-> > On Mon, Mar 03, 2025 at 02:14:35PM +0200, Raag Jadav wrote:
-> > > On Mon, Mar 03, 2025 at 01:45:35PM +0200, Andy Shevchenko wrote:
-> > > > On Mon, Mar 03, 2025 at 01:39:16PM +0200, Raag Jadav wrote:
-> > > > > On Mon, Mar 03, 2025 at 10:24:43AM +0200, Andy Shevchenko wrote:
-> > > > > > On Mon, Mar 03, 2025 at 10:17:41AM +0530, Raag Jadav wrote:
+Hi, Amergnat:
 
-...
+<amergnat@baylibre.com> =E6=96=BC 2025=E5=B9=B41=E6=9C=8810=E6=97=A5 =E9=80=
+=B1=E4=BA=94 =E4=B8=8B=E5=8D=889:31=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+> From: Fabien Parent <fparent@baylibre.com>
+>
+> DPI is part of the display / multimedia block in MediaTek SoCs, and
+> always have a power-domain (at least in the upstream device-trees).
+> Add the power-domains property to the binding example.
 
-> > > > > > > +INTEL GPIO MFD DRIVER
-> > > > > > 
-> > > > > > This also needs to be more precise and follow the name. We have more Intel GPIO
-> > > > > > drivers, and MFD doesn't ring any bell about the platform or so. Are you going
-> > > > > > to support all of them (existing and comining)?
-> > > > > 
-> > > > > Not that it is planned as of now but I wouldn't mind :)
-> > > > 
-> > > > It sounds like solving the problem that even might never appear :-)
-> > > 
-> > > Right, somehow that sounds familiar :D
-> > 
-> > So, can we rename the MAINTAINERS record as the result of our discussion?
-> 
-> Yep, but perhaps wait a few days for review comments.
+Applied to mediatek-drm-next [1], thanks.
 
-Sure.
+[1] https://web.git.kernel.org/pub/scm/linux/kernel/git/chunkuang.hu/linux.=
+git/log/?h=3Dmediatek-drm-next
 
--- 
-With Best Regards,
-Andy Shevchenko
+Regards,
+Chun-Kuang.
 
-
+>
+> Fixes: 9273cf7d3942 ("dt-bindings: display: mediatek: convert the dpi bin=
+dings to yaml")
+> Signed-off-by: Fabien Parent <fparent@baylibre.com>
+> Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collab=
+ora.com>
+> Acked-by: Rob Herring (Arm) <robh@kernel.org>
+> Reviewed-by: CK Hu <ck.hu@mediatek.com>
+> Signed-off-by: Alexandre Mergnat <amergnat@baylibre.com>
+> ---
+>  Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.yaml | 2=
+ ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,=
+dpi.yaml b/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.=
+yaml
+> index 0f1e556dc8ef..d5ee52ea479b 100644
+> --- a/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.yam=
+l
+> +++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.yam=
+l
+> @@ -116,11 +116,13 @@ examples:
+>    - |
+>      #include <dt-bindings/interrupt-controller/arm-gic.h>
+>      #include <dt-bindings/clock/mt8173-clk.h>
+> +    #include <dt-bindings/power/mt8173-power.h>
+>
+>      dpi: dpi@1401d000 {
+>          compatible =3D "mediatek,mt8173-dpi";
+>          reg =3D <0x1401d000 0x1000>;
+>          interrupts =3D <GIC_SPI 194 IRQ_TYPE_LEVEL_LOW>;
+> +        power-domains =3D <&spm MT8173_POWER_DOMAIN_MM>;
+>          clocks =3D <&mmsys CLK_MM_DPI_PIXEL>,
+>               <&mmsys CLK_MM_DPI_ENGINE>,
+>               <&apmixedsys CLK_APMIXED_TVDPLL>;
+>
+> --
+> 2.25.1
+>
