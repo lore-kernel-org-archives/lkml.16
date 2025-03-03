@@ -1,137 +1,134 @@
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FE6711CA9;
-	Mon,  3 Mar 2025 20:50:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDA671F099D
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 20:53:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741035047; cv=none; b=uClUfcaltGVy77w9kzaIDTVrEyqufbhf+A6L33mt6531IeT+/W44Dy1dWmJn7LwOSefvdxpIdB5wCsEhssJsESkUNoGrA4yTVD5dDDIKJYs6yDnqmpxs7R0X6JYqBPTLZ98YAW3SN200hfzi2vBACFa3OKzYQPI/wzuwoBs4ips=
+	t=1741035194; cv=none; b=hPUsnK4ToHU30WA087Y48NHt+KR2VL3dP5+InmRXlDdicRbXXkjIfI4aSsJFA5/tuw4dRTTqJ5yPNcgFYuTzjM4wLWQMCjSge3UltmMXWVn8mzpA+HaVFE+VctItpw4wLvw2mkeorBtJHGJiB0cCzA3qRoIiGyQ20ivtEBMWg70=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741035047; c=relaxed/simple;
-	bh=RKvL1Q2g46VN5bp/cUMDFTi+QQZE6l5UR/9YqkN1B50=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hCgrQzbphZiHBmrUfXqvRyKduJjrZ5oWZ8APeqhrOV+jC6e1FJFF3xFyW7c+JF7gzlvKKVD8oegIES6RuSMaCeuB8oATZRrr1McHPbrhpsK5bauo7PdRsufI1m237iiv+lS0wmqW0RpPhiw6Ks6b7fNimJtykZnVHjcReFbiCO8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UUKLuSTz; arc=none smtp.client-ip=209.85.216.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741035194; c=relaxed/simple;
+	bh=lYiwGGpy+jObEGmZeK6fiOPc7idRqjoFD+d0OH5vfY8=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=Kp5bRbKxH/bHjjzCRZrjHO2vh98SHAtmubzYoZOgEugt7Wdjhri3ucNGEx9nr3+aClFTR79wPEiGsOSmIaRiF2JVu48ciTIqeGBwi8lCahhN7AATj9jjhiJLXTr+8GeXjztUp5GwGZ1pmp0M6nmoZdMuPh5mHIPlGGSoVJ8eQPY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=RgCUYbV9; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UUKLuSTz"
-Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-2fea795bafeso7532274a91.1;
-        Mon, 03 Mar 2025 12:50:46 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RgCUYbV9"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2feb8d29740so7299461a91.1
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Mar 2025 12:53:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741035045; x=1741639845; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=DeBNmmMi2sz0NauGtZCPku7As8wMc8IwVYWILITKobE=;
-        b=UUKLuSTzB+yQXVDASBAezzb7Nbxsslxhp2XhuWiT6wIsTVrQ001m3bdVvt0mydJ7m8
-         RbMKSINGdWTSE1WhD7Lb6nTQEIs+J62oDTt7skaG14gJaQwF1ucSyZyaJ/dvympJNjI8
-         v6vQK9zMmbI2m6w9l3CC4V6p+s6jImVlmqRD2e7UCl1imPe5NfvZlvE8BDTovvfmh7Nw
-         Rn/6Rhi42nrLhy+w1UAs14ykxxTX9ACXMwJj8O+N5jZ2XwB5VLoH1AP+CAgussx0wpvZ
-         LC+FT9Jo6zpGgT+dQ0nV2n5e5jXuxgqk3PLZDsas8A9Ld0R3Due4lB7nqwwj6sRsTpEh
-         sWFg==
+        d=google.com; s=20230601; t=1741035192; x=1741639992; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=sN1tRRXOdkRuhSE1RMnqdPqM5oFgXi6jywzgZSSDWUM=;
+        b=RgCUYbV9OffG1ydptORCJghVqfw2MmEWRIbPuf3/58MNCg10LnBXkIPaBaLuCPRTFA
+         fxfzX8n5SeONuaW2qp4N6RaJHZ8I1RcJAh7TKIoHNN4YQIyC4aey3ZZJDe2qrtr6Bwzz
+         sRdruAipZudcQZw88Cp7BJhTNn/H9Rxb+9qdL6a2awMYIoohmtFQ+R0+v3r/hs9EDXNv
+         KNqo4GzAbwZChm9Fzu8WQZw129U21yODQPr6SHPdz268w7t98djLi4hBt8/Ch9tT/tr/
+         EoQhqSzwG1lFsnLunTscfniD83fds479XHNidhDPjt/LaNHvZn/4/+HyLFndtwVjstYa
+         A+PA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741035045; x=1741639845;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=DeBNmmMi2sz0NauGtZCPku7As8wMc8IwVYWILITKobE=;
-        b=tRdPB1ScwY4dypDWWu+HWGZqbsrV6LneXA+67Id2Hk9h9+Eq/A3KO7DZyqp64ImZVh
-         GnW0uzOEHDI5Fc5AsyI/DsMxNtQjwUFoLqYADLmSovMF0W3RAhUF0GiaoqxHMkS/FIg7
-         mwfthfO7TdtjMi4VRUMnm9hlpwl+s4DcCSaRJIOjJzthn/jmPTHIJg7Ke1eIzdj+pJYe
-         AFaWHiy5IXSih5oOXYeok9Sbvqe1p4bScOnrD3HII5LvPJUPKQEyR4nHkTqntUlkU7HS
-         9p9JMil++9Ds2L/PFygyZ7eB2blzNY2pPN8Wk/nYWsBHLP6JO8ckxwKNPxL0cFqEqWoJ
-         jPsQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU0qIFpA7id/mUB52wAesH04IYqI4AmBDtyjIqbZcqdZYCBjfigl9F5U10+oUrjvFu5JpPeXaIP9IkW@vger.kernel.org, AJvYcCVy8WLRN69i5sksGHpk/ER/SZykfrAuCBHNHtg8H0cqTArjt1fAubmMG8bGVMD5pKPPt30NLoqNzAbsdYveoa2XPg==@vger.kernel.org, AJvYcCW1uBRW76YX0erlyb6dEdg4cJ7hrp0aMhuX7l4ZqkRYLZWalFITHu2vV20Scnp79UDLzCmBJcszZxf9BlI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzXHrfd9ypfQKcrdFiXzRK6YnXvHIc/2Twtlfy/nYfSJ9M2Wook
-	1/bbQWCTCHiYzjwNLtprZF/QZucs12C3nJ//pWN/yb+AjSw93eoe
-X-Gm-Gg: ASbGncs4pJGLhBbVWgJz+UUuW+b56HApoFEvVLO04wesSwIXD+Pn99OW33bobmDwhuB
-	D3wFNedaBgokHbnEg/1PnyuQRxGDF7i+cPo5ghXMOUAi33sc/4b+TY0RBdCt023DhvB/dppuawI
-	7aLFWgto3EZrcJUzuYimNRZrE9lRvSPQIqoNPLIP4Q8fiEUaWl54W3dFreQhCQA92My4uwimSXQ
-	uTmmghDJ7XPOrsFKX6850TLHCFO5uHg0wU0kt72b3zYIcTAsLE6NYT22xSeQnu+7dgO7QAme3+m
-	wLYtSxjSrjm8ig6n6MBp5WmvmPKH7dwSTR3d6nEy
-X-Google-Smtp-Source: AGHT+IGh1THqn567WjqVqxs2mA94q92PxAVet1ueAXS1LUHZPvR/E7EsrK6tGQWCWBCacVWMkBiPLw==
-X-Received: by 2002:a17:90b:2e0f:b0:2fa:2252:f436 with SMTP id 98e67ed59e1d1-2ff33b88525mr982923a91.3.1741035045487;
-        Mon, 03 Mar 2025 12:50:45 -0800 (PST)
-Received: from debian ([2607:fb90:37e1:4bed:f057:b35a:e3e2:4c5f])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-223504c603bsm82393025ad.121.2025.03.03.12.50.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Mar 2025 12:50:44 -0800 (PST)
-From: Fan Ni <nifan.cxl@gmail.com>
-X-Google-Original-From: Fan Ni <fan.ni@samsung.com>
-Date: Mon, 3 Mar 2025 12:50:40 -0800
-To: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-Cc: Fan Ni <nifan.cxl@gmail.com>, Shradha Todi <shradha.t@samsung.com>,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org, manivannan.sadhasivam@linaro.org,
-	lpieralisi@kernel.org, robh@kernel.org, bhelgaas@google.com,
-	jingoohan1@gmail.com, Jonathan.Cameron@huawei.com,
-	a.manzanares@samsung.com, pankaj.dubey@samsung.com,
-	cassel@kernel.org, 18255117159@163.com, xueshuai@linux.alibaba.com,
-	renyu.zj@linux.alibaba.com, will@kernel.org, mark.rutland@arm.com
-Subject: Re: [PATCH v7 3/5] Add debugfs based silicon debug support in DWC
-Message-ID: <Z8YWILtSbQnvVqbF@debian>
-References: <20250221131548.59616-1-shradha.t@samsung.com>
- <CGME20250221132035epcas5p47221a5198df9bf86020abcefdfded789@epcas5p4.samsung.com>
- <20250221131548.59616-4-shradha.t@samsung.com>
- <Z8XrYxP_pZr6tFU8@debian>
- <20250303194647.GC1552306@rocinante>
+        d=1e100.net; s=20230601; t=1741035192; x=1741639992;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=sN1tRRXOdkRuhSE1RMnqdPqM5oFgXi6jywzgZSSDWUM=;
+        b=UPZBrgBdt3ykKImQw508vjyyKDcB9YXqYjPo0rA14rnL7PeVDaMq0qrCf0dBESqD2w
+         TuXQR9+i4mRcQTyfBnC1x9OlP3LSWGnQP4AFJW9fRA/fa1v8vLreAMleQNhzqnmVgcbJ
+         XjJifnWYn2dsK/jKYEhNSfgBjTd5RLIy6SZkWZmD2kG84LimFm18wAj54M0NQOA2qYHP
+         yacunRvIx7lxOC7PAp54ukMDOqKfF2Aep28Hp4SZRfB6GY/0gHtOhre3GjTs8oTIAnNT
+         xP5tbiOImYELVp9OqLgE9ma0BaEC3Hklv+3qztCbxVNQo/erJWdrcdzln+4C1nxb57PE
+         5NRw==
+X-Forwarded-Encrypted: i=1; AJvYcCURxW3T8bgpYjxKJY4gA6SuY4jG5Ztb+jVQsomM0NJqUqu+m74MzgesANAsfMaIpxf4WLOGAw+LodsiwE4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxd1OMMjHrO5MRJ9fezenSTEdBiAQ/iOuLpDOaXOsnjaE9CKaVP
+	IGZIuNn9c+xicslB72/fKpPNv26aPnGHWDJ9+WAJXikVQoqo/PgXihmi4N6kB2d4VrYOpa1OfVW
+	6dQ==
+X-Google-Smtp-Source: AGHT+IGvAbM1SbEAkwQZlxQS7zV3KYE59+INXt1p2VCN8UPIm/E/EWQNfbPJi6CZOYL8GIUxW/fPR5QROP8=
+X-Received: from pjn11.prod.google.com ([2002:a17:90b:570b:b0:2f5:4762:e778])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:1a86:b0:2ee:ab29:1a63
+ with SMTP id 98e67ed59e1d1-2febab30c7amr20186639a91.3.1741035192190; Mon, 03
+ Mar 2025 12:53:12 -0800 (PST)
+Date: Mon, 3 Mar 2025 12:53:10 -0800
+In-Reply-To: <5bdb92ab83269b49ad8fbbe8f54df01f6b98ea8f.camel@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250303194647.GC1552306@rocinante>
+Mime-Version: 1.0
+References: <20250227021855.3257188-1-seanjc@google.com> <5bdb92ab83269b49ad8fbbe8f54df01f6b98ea8f.camel@infradead.org>
+Message-ID: <Z8YWttWDtvkyCtdJ@google.com>
+Subject: Re: [PATCH v2 00/38] x86: Try to wrangle PV clocks vs. TSC
+From: Sean Christopherson <seanjc@google.com>
+To: David Woodhouse <dwmw2@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, Paolo Bonzini <pbonzini@redhat.com>, 
+	Juergen Gross <jgross@suse.com>, "K. Y. Srinivasan" <kys@microsoft.com>, 
+	Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
+	Dexuan Cui <decui@microsoft.com>, Ajay Kaher <ajay.kaher@broadcom.com>, 
+	Jan Kiszka <jan.kiszka@siemens.com>, Andy Lutomirski <luto@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, 
+	John Stultz <jstultz@google.com>, linux-kernel@vger.kernel.org, 
+	linux-coco@lists.linux.dev, kvm@vger.kernel.org, 
+	virtualization@lists.linux.dev, linux-hyperv@vger.kernel.org, 
+	xen-devel@lists.xenproject.org, Tom Lendacky <thomas.lendacky@amd.com>, 
+	Nikunj A Dadhania <nikunj@amd.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Mar 04, 2025 at 04:46:47AM +0900, Krzysztof Wilczyński wrote:
-> Hello,
-> 
-> [...]
-> > > +int dwc_pcie_debugfs_init(struct dw_pcie *pci)
-> > > +{
-> > > +	char dirname[DWC_DEBUGFS_BUF_MAX];
-> > > +	struct device *dev = pci->dev;
-> > > +	struct debugfs_info *debugfs;
-> > > +	struct dentry *dir;
-> > > +	int ret;
-> > > +
-> > > +	/* Create main directory for each platform driver */
-> > > +	snprintf(dirname, DWC_DEBUGFS_BUF_MAX, "dwc_pcie_%s", dev_name(dev));
-> > > +	dir = debugfs_create_dir(dirname, NULL);
-> > > +	debugfs = devm_kzalloc(dev, sizeof(*debugfs), GFP_KERNEL);
-> > > +	if (!debugfs)
-> > > +		return -ENOMEM;
-> > > +
-> > > +	debugfs->debug_dir = dir;
-> > > +	pci->debugfs = debugfs;
-> > > +	ret = dwc_pcie_rasdes_debugfs_init(pci, dir);
-> > > +	if (ret)
-> > > +		dev_dbg(dev, "RASDES debugfs init failed\n");
-> > 
-> > What will happen if ret != 0? still return 0? 
-> 
-> Given that callers of dwc_pcie_debugfs_init() check for errors,
-> this probably should correctly bubble up any failure coming from
-> dwc_pcie_rasdes_debugfs_init().
-> 
-> I made updates to the code directly on the current branch, have a look:
-> 
->   https://web.git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/commit/?h=controller/dwc&id=1ff54f4cbaed9ec6994844967c36cf7ada4cbe5e
-> 
-> Let me know if this is OK with you.
+On Fri, Feb 28, 2025, David Woodhouse wrote:
+> On Wed, 2025-02-26 at 18:18 -0800, Sean Christopherson wrote:
+> > This... snowballed a bit.
+> >=20
+> > The bulk of the changes are in kvmclock and TSC, but pretty much every
+> > hypervisor's guest-side code gets touched at some point.=C2=A0 I am rea=
+onsably
+> > confident in the correctness of the KVM changes.=C2=A0 For all other hy=
+pervisors,
+> > assume it's completely broken until proven otherwise.
+> >
+> > Note, I deliberately omitted:
+> >=20
+> > =C2=A0 Alexey Makhalov <alexey.amakhalov@broadcom.com>
+> > =C2=A0 jailhouse-dev@googlegroups.com
+> >=20
+> > from the To/Cc, as those emails bounced on the last version, and I have=
+ zero
+> > desire to get 38*2 emails telling me an email couldn't be delivered.
+> >=20
+> > The primary goal of this series is (or at least was, when I started) to
+> > fix flaws with SNP and TDX guests where a PV clock provided by the untr=
+usted
+> > hypervisor is used instead of the secure/trusted TSC that is controlled=
+ by
+> > trusted firmware.
+> >=20
+> > The secondary goal is to draft off of the SNP and TDX changes to slight=
+ly
+> > modernize running under KVM.=C2=A0 Currently, KVM guests will use TSC f=
+or
+> > clocksource, but not sched_clock.=C2=A0 And they ignore Intel's CPUID-b=
+ased TSC
+> > and CPU frequency enumeration, even when using the TSC instead of kvmcl=
+ock.
+> > And if the host provides the core crystal frequency in CPUID.0x15, then=
+ KVM
+> > guests can use that for the APIC timer period instead of manually calib=
+rating
+> > the frequency.
+> >=20
+> > Lots more background on the SNP/TDX motiviation:
+> > https://lore.kernel.org/all/20250106124633.1418972-13-nikunj@amd.com
+>=20
+> Looks good; thanks for tackling this.
+>=20
+> I think there are still some things from my older series at
+> https://lore.kernel.org/all/20240522001817.619072-1-dwmw2@infradead.org/
+> which this doesn't address.
 
-It looks good to me.
-
-Feel free to add,
-Reviewed-by: Fan Ni <fan.ni@samsung.com>
-
-Fan
-> 
-> Good catch, thank you!
-> 
-> 	Krzysztof
+Most definitely.  I was/am assuming you're going to send a v4 at some point=
+?
