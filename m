@@ -1,128 +1,119 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED65120D4E9;
-	Mon,  3 Mar 2025 13:22:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5842920D4E9
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 13:22:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741008131; cv=none; b=ol7rqZUFTCC46B78RIjRH0jvOaXgk857K5xDY4w5mdmcXtNtIRNfcAo33dgxCybqBosF7u/CbbaEowxF6wI3AUaHPW2LJpgCTRHs78syQdhU/U9bKAc0Dj49AGPpFf9wrzFncc3A3jMmx0+booMex/hEL8jg8u5t4n9wm52F7No=
+	t=1741008167; cv=none; b=rIsMwx+0hsc6odoMmdb7qotGmqJEcPVT74Krg+lkrcew93yFYko0qFXRLq0KYTCQMg4/XmNu9V8cDwCe3ba2vTyAf1biULL6vC96nox+CQ2y55rkFQnvTatb0f5pZTp+VUztv7yJdlUSdvMjIEsj4uWDdLkxZ3e2MbZYituPtBg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741008131; c=relaxed/simple;
-	bh=cyAIDvH42HlK42zH1AZZ7W0u8yvqehARnSYevut+Mvw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qkHl/q+t3xNiM9e03RQ5mO5PSKAraOfaWxM3dS8vUiGvJvYTQbCnWqeeIoVtEwc3DpCkbXFaWQYTbstRWpu+RqTh2p1cu2DFHB6adVuUI/PR3JRwRvLZxUBHjE0X4zjVNLyNRQMrSJQ0zXVq787n6O4r8P23D7zDE2Qsgdv3uwM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c/AhB5qE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741008167; c=relaxed/simple;
+	bh=5i9uP2Ze50hwz43llaF1f86tTfk7p6fywziSf77roYY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jgaeOvATE1a8dFrC7UoDMTPUGVhaLAzXaQTUz/KEpN7dCR+6S7jGT4kmiPB0oLYf5/amPiKY/7uc+DK7MUve8bfaKuiTKkm+VOPSCpwAzqgIFYcEbf72ypTITAjARTas4ER/qSIe9gGDhrd8HYP9E14x49PEiMeVmY6DCTmMiLI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=4sigma.it; spf=pass smtp.mailfrom=4sigma.it; dkim=pass (1024-bit key) header.d=4sigma.it header.i=@4sigma.it header.b=nDt6q4/K; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=4sigma.it
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=4sigma.it
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c/AhB5qE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58DA6C4CEEC;
-	Mon,  3 Mar 2025 13:22:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741008130;
-	bh=cyAIDvH42HlK42zH1AZZ7W0u8yvqehARnSYevut+Mvw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=c/AhB5qEabaK+aGFMVK/mFIuucVYjGzZAk7HdUEOEz2mZCuWZRzB9TmVLCrERWDN5
-	 OC3uJ8TorONGnXWfIFQmcnQmo1J+tPz7jKCiWTOrHgzEzM6TjKgawRn5EjTjpfa+Vd
-	 hQbJAAo8DaI/V4nFvyoBVzOlg2VyPBFMczw0uHOJF4cvkb3FC2jgJWI9k3gCwACoBT
-	 QyXng99JRn6+4oOBzcoxgc+0yF81Wre66HialtHEmysgApJfX9TYc/pCrPFm0+nEWV
-	 YlKl7U1UpJaE6vvS5QoHCrEsqQCKCMysMl4JglksrOiXPPCibfyukuN5ukmr78zUnS
-	 SCd6ppVo7A+6g==
-Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-2feb9076a1cso6824201a91.0;
-        Mon, 03 Mar 2025 05:22:10 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCX1Igr/TanK2soVcvesdVKYXrB4JqCExqU5/Faky6KF9LAynw5xt43eq+kkVKFjUQwcfRaI+VMZXJdv@vger.kernel.org, AJvYcCXl9brJFjfH1J6lEweohgkUOW7gBLrW9dXEGdBuBZB8Zb1XGrMibFyJvxVhbwE/fg8qofmgm19obkXjVNCv@vger.kernel.org
-X-Gm-Message-State: AOJu0YwpYcyE0gpnZXOGnBIMwkbcSj1haZn5bjQ7Q1NsE5QK/0yTY4qD
-	8VByGPY2MqftkYq51dD7+LGDbNvTUkq8XHm6VxlvnFURhnC44voO6KzQwoyzV58RBDt8ArjsM/Z
-	GtXErXVzSARgsru7qrR2Vx4opVA==
-X-Google-Smtp-Source: AGHT+IHQLK7la/7RxxVx5xQub2rrCyzIXTBwqCYNHPZA1L5Z+HvrKvHgKF1EVP50ng2pCoNbxnqwqT1ThMWF+DeLMfM=
-X-Received: by 2002:a17:90b:1cc6:b0:2fc:3264:3657 with SMTP id
- 98e67ed59e1d1-2febaa92594mr25361600a91.0.1741008129875; Mon, 03 Mar 2025
- 05:22:09 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=4sigma.it header.i=@4sigma.it header.b="nDt6q4/K"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-4399d14334aso40859525e9.0
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Mar 2025 05:22:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=4sigma.it; s=google; t=1741008162; x=1741612962; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ECd7n/EGUmOy5J+E/dKH2tzC4YWX/xlVp74bjlxoPQg=;
+        b=nDt6q4/K0N8xzRqLxFMqd6p1ibGHiV7xxPWXT+usVbOPibIx5bWm7/n/dn9DYCj9hj
+         c2H4VCsB/m13egqj5b5paRRnZK9yUobXj1xIDb7HDEuTJ6Dx51+xV7isuyfBODiDWnli
+         NeDXt2m+BisCAEvycr6XqxaD/0VQu9tuMYZFI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741008162; x=1741612962;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ECd7n/EGUmOy5J+E/dKH2tzC4YWX/xlVp74bjlxoPQg=;
+        b=D15uM038hP5FfZqIUs7XQsfOQZLBDRJ2ro3sIjax1rQZ+x/djzW2byP7mvSJJJO6o2
+         f+1UpFGoHpV3MqaO0bRmvGvd+bgfokby//oVdZaJOMStyKWQ/ot5Y+8Ngo54SYP5e7il
+         y/QxThZAL8Wt/f3akBWVET+w73HQuKbAH3+HmeC645GgfHX6Bu9S4cGoBeicSmmBHKzB
+         67pjXqTctilRBOPZGr1JSdHIxRunrOz6gvkD6sPdbt7EIsO6qfSO2nkkkbuyHz9HvPBL
+         wk9OR2B4QSAwxaaLiyEHyHdBm/Amaody+UqlJquSqBa9R7YS1DBxuNKd1cVi7QhXA8qj
+         jBgA==
+X-Forwarded-Encrypted: i=1; AJvYcCVu+8jGGKMHVoHc/y5Jb1HdXaxLWCpnqqPKTJVOS7tYlqGBzRzVlwXZvL49vnRfUcXLmNqLMv55U3vKQiE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzVuJe6nVrDEC67+UMawctI1f2O+dsl9XG8OZN7dw3YcV0djyNv
+	L1dyQHaX4LWcQJkO3u13KVv+OyJOLhJXLudgh49L4DfRQ73Qkh/Z52tfeKZ2BA==
+X-Gm-Gg: ASbGnct8bhUiV/5RWEf3RODVaaeaLiHuWxE9b02E1HGwc/SfJwjQ1/v8LHoEmVkFI1F
+	1Jz8AS65+yuoaJlNEvkiyXZ+v32BlRi1pK7bCGHd1gKz0U2Yb9j3ppg+XM22O7eRty+JjAJJrBL
+	Y9VLdI7vs9iZIm3xN2YroB4GiwT3pZ7L+fz6b3lWpPP702//Qk9RzvOyULJo2anyip2purCX3f1
+	hRM8Q+pnVBQGV6xt32ASw2xHKqJta5HEMUJ3zfzI0vvDLo3lePbSnqARmb5Y7DoChWvrsuXU1rH
+	U546NTPCwtrSgbySfW3gs+HoInL7KTe1JYG7Klg+P9H1C0jmBhy2HeglJgOyfGhzLZ7n9vQyQo9
+	kl8Z5rCs=
+X-Google-Smtp-Source: AGHT+IGakxsdP7cssVmEZsfodi7ojWu3CfAaSJKH4e/l+/9KTp9+UWQBz14kFBtrP7h34XIaqmym6w==
+X-Received: by 2002:a05:6000:2a3:b0:390:f9d0:5ed with SMTP id ffacd0b85a97d-390f9d007fdmr4858802f8f.1.1741008161601;
+        Mon, 03 Mar 2025 05:22:41 -0800 (PST)
+Received: from marvin.localdomain (94-35-64-90.client-mvno.tiscali.it. [94.35.64.90])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43b736f770asm166769265e9.6.2025.03.03.05.22.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Mar 2025 05:22:41 -0800 (PST)
+From: Silvano Seva <s.seva@4sigma.it>
+To: lorenzo@kernel.org
+Cc: a.greco@4sigma.it,
+	Silvano Seva <s.seva@4sigma.it>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	linux-iio@vger.kernel.org (open list:ST LSM6DSx IMU IIO DRIVER),
+	linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] iio: imu: st_lsm6dsx: fix possible lockup during FIFO read
+Date: Mon,  3 Mar 2025 14:21:25 +0100
+Message-ID: <20250303132124.52811-2-s.seva@4sigma.it>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231023-display-support-v7-0-6703f3e26831@baylibre.com> <20231023-display-support-v7-1-6703f3e26831@baylibre.com>
-In-Reply-To: <20231023-display-support-v7-1-6703f3e26831@baylibre.com>
-From: Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Date: Mon, 3 Mar 2025 21:22:55 +0800
-X-Gmail-Original-Message-ID: <CAAOTY_8c4xeE=c4MTGopenORaP-PL66exLG+erKSV1fpoGJU+g@mail.gmail.com>
-X-Gm-Features: AQ5f1JrckMOh9P4yJQbwlfuWcX_03D8O22eeIcknRD2YAlMiCLxngtVQQLy-TeY
-Message-ID: <CAAOTY_8c4xeE=c4MTGopenORaP-PL66exLG+erKSV1fpoGJU+g@mail.gmail.com>
-Subject: Re: [PATCH v7 1/6] dt-bindings: display: mediatek: dpi: add
- power-domains example
-To: amergnat@baylibre.com
-Cc: Chun-Kuang Hu <chunkuang.hu@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
-	Jitao Shi <jitao.shi@mediatek.com>, CK Hu <ck.hu@mediatek.com>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Simona Vetter <simona@ffwll.ch>, Simona Vetter <simona.vetter@ffwll.ch>, 
-	dri-devel@lists.freedesktop.org, linux-mediatek@lists.infradead.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, Fabien Parent <fparent@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi, Amergnat:
+Prevent st_lsm6dsx_read_fifo and st_lsm6dsx_read_tagged_fifo functions
+from falling in an infinite loop in case pattern_len is equal to zero and
+the device FIFO is not empty.
 
-<amergnat@baylibre.com> =E6=96=BC 2025=E5=B9=B41=E6=9C=8810=E6=97=A5 =E9=80=
-=B1=E4=BA=94 =E4=B8=8B=E5=8D=889:31=E5=AF=AB=E9=81=93=EF=BC=9A
->
-> From: Fabien Parent <fparent@baylibre.com>
->
-> DPI is part of the display / multimedia block in MediaTek SoCs, and
-> always have a power-domain (at least in the upstream device-trees).
-> Add the power-domains property to the binding example.
+Signed-off-by: Silvano Seva <s.seva@4sigma.it>
+---
+ drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-Applied to mediatek-drm-next [1], thanks.
+diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c
+index 0a7cd8c1aa33..7f343614f8a5 100644
+--- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c
++++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c
+@@ -395,12 +395,17 @@ int st_lsm6dsx_read_fifo(struct st_lsm6dsx_hw *hw)
+ 	fifo_len = (le16_to_cpu(fifo_status) & fifo_diff_mask) *
+ 		   ST_LSM6DSX_CHAN_SIZE;
+ 	fifo_len = (fifo_len / pattern_len) * pattern_len;
++	if (!fifo_len)
++		return 0;
+ 
+ 	acc_sensor = iio_priv(hw->iio_devs[ST_LSM6DSX_ID_ACC]);
+ 	gyro_sensor = iio_priv(hw->iio_devs[ST_LSM6DSX_ID_GYRO]);
+ 	if (hw->iio_devs[ST_LSM6DSX_ID_EXT0])
+ 		ext_sensor = iio_priv(hw->iio_devs[ST_LSM6DSX_ID_EXT0]);
+ 
++	if (!pattern_len)
++		pattern_len = ST_LSM6DSX_SAMPLE_SIZE;
++
+ 	for (read_len = 0; read_len < fifo_len; read_len += pattern_len) {
+ 		err = st_lsm6dsx_read_block(hw, ST_LSM6DSX_REG_FIFO_OUTL_ADDR,
+ 					    hw->buff, pattern_len,
+@@ -623,6 +628,9 @@ int st_lsm6dsx_read_tagged_fifo(struct st_lsm6dsx_hw *hw)
+ 	if (!fifo_len)
+ 		return 0;
+ 
++	if (!pattern_len)
++		pattern_len = ST_LSM6DSX_TAGGED_SAMPLE_SIZE;
++
+ 	for (read_len = 0; read_len < fifo_len; read_len += pattern_len) {
+ 		err = st_lsm6dsx_read_block(hw,
+ 					    ST_LSM6DSX_REG_FIFO_OUT_TAG_ADDR,
+-- 
+2.48.1
 
-[1] https://web.git.kernel.org/pub/scm/linux/kernel/git/chunkuang.hu/linux.=
-git/log/?h=3Dmediatek-drm-next
-
-Regards,
-Chun-Kuang.
-
->
-> Fixes: 9273cf7d3942 ("dt-bindings: display: mediatek: convert the dpi bin=
-dings to yaml")
-> Signed-off-by: Fabien Parent <fparent@baylibre.com>
-> Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collab=
-ora.com>
-> Acked-by: Rob Herring (Arm) <robh@kernel.org>
-> Reviewed-by: CK Hu <ck.hu@mediatek.com>
-> Signed-off-by: Alexandre Mergnat <amergnat@baylibre.com>
-> ---
->  Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.yaml | 2=
- ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,=
-dpi.yaml b/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.=
-yaml
-> index 0f1e556dc8ef..d5ee52ea479b 100644
-> --- a/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.yam=
-l
-> +++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.yam=
-l
-> @@ -116,11 +116,13 @@ examples:
->    - |
->      #include <dt-bindings/interrupt-controller/arm-gic.h>
->      #include <dt-bindings/clock/mt8173-clk.h>
-> +    #include <dt-bindings/power/mt8173-power.h>
->
->      dpi: dpi@1401d000 {
->          compatible =3D "mediatek,mt8173-dpi";
->          reg =3D <0x1401d000 0x1000>;
->          interrupts =3D <GIC_SPI 194 IRQ_TYPE_LEVEL_LOW>;
-> +        power-domains =3D <&spm MT8173_POWER_DOMAIN_MM>;
->          clocks =3D <&mmsys CLK_MM_DPI_PIXEL>,
->               <&mmsys CLK_MM_DPI_ENGINE>,
->               <&apmixedsys CLK_APMIXED_TVDPLL>;
->
-> --
-> 2.25.1
->
