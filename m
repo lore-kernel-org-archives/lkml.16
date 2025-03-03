@@ -1,137 +1,100 @@
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD2C622F178;
-	Mon,  3 Mar 2025 16:30:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 502C7230BDB;
+	Mon,  3 Mar 2025 16:30:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741019414; cv=none; b=j12Wb7G69lGcTioXXgR8do5DtcN8iTGUtZ6gG7R8W1OKj81zS7702qewarf7mM/DAbkEs34Xpt12kx/XWSfqfEkRq5DX9pQ6reCsskqCQKoLPwmIaArS0p19ZKX58SdjO8m8oYcosEjAoIYB8OVuUJlOUKGvVRUmSJDnX1isl50=
+	t=1741019416; cv=none; b=Vrr7gxeFcRVGLlpgsa8fiKfLBJemfNSzYiwAZxy2mV0O2W8ChY3OPAS38o1UOuu+Do3me3BpgWF6b8sWNEBgvlrs8X3rzqgNi4XYnkzQ/FXO0fsMsBMI3Sd+OHTGIdEsABsyXDGWjwJcfbhSFh5S7NcR2aZoyQ6O4lQPpNfLWLU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741019414; c=relaxed/simple;
-	bh=gCpLZGk6d2LraPzUQfSO75O3BCaKN/MWPVFymzkjVUY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NuknalVI4/uUmGGswvy9LWUeUnlm+vJaWxAqGNjSHlaoNkqtY8EWieXTNuVk135ZxTLnvJr83FTHQEFpiPAkaNMU0sucC+ZTFp0c/nfnRwQn5zAKBUBQ7IRHxPpL7st0k10p76KIIos/zuqeveHuf/AKc4P85OJ9RXdfo0Ll2nc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SKHyETmQ; arc=none smtp.client-ip=209.85.208.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741019416; c=relaxed/simple;
+	bh=Ay/35eyEnivoB/7i3ruOhodKTg7omOLifwrB/+6vLd4=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=tSO17V7gTvadz8BAjyldO1b3ISyJtjxR/tPGVivK/vZHhGMVZAosLAf5va+cnVpJyinfDt9uHuM/1OUUf9PRwsS/OoTyRqMTzSuoLjBBnCfHw0vzFteBzc8X/74LmUUbPr+LZGS1LYzFBf3lgAlnA2me4vSqQbnLxu1Jmfa2j5c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fmm3vb0K; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SKHyETmQ"
-Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-30930b0b420so38848271fa.2;
-        Mon, 03 Mar 2025 08:30:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741019411; x=1741624211; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3JF0xMBR+WwT2sVa6zJeyjN1XH4wIWbrdBRs8wTzL5c=;
-        b=SKHyETmQ9tkuzUkgaHyh3FGTwcgrN/dfrXWjWnhoWROgNMduWZ2aao06jHiaLN5XEj
-         pVLdItQw95UjRAQuU+MWrK2uo42gRQmhWn35xrSqLVLeEORZK0u15DMQqmqKDLIDx+un
-         ilSZVscWKrTUl9+Tauk3GK4FzX/usKWXVoSyEH2H8BevsdVQ32KvIrLQL9Wb2PlK6WNK
-         kyy+Qa8tFhjX5inF+tw15Ppk3Xcelq3uVctFSaMkBAYZoG+AnJINPDNz6bblSZBYLfWk
-         PqMU30jyCH04BOlEp1YEzB9pTt1nCMSdWIxHsP8ytODuqoTKvp1sWJSWatfZJRYIVSyP
-         qiiA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741019411; x=1741624211;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3JF0xMBR+WwT2sVa6zJeyjN1XH4wIWbrdBRs8wTzL5c=;
-        b=VqoEBV/iOnMEiQE7oQbignHaJcs8E3U9wDjI1RhjYnYEM/0kNwmHEPQOna9nAw1LzW
-         /A6ed+cdTemaC1UpOXLFvVpYTeGMAX041x4i13tAE/iLeJ/Z3KOOzsqR8NUSVmbp46SE
-         pS0Jt9dYxpAVLP7ivXlt9sLhnpUaw+SG1DQTW7sSofk+doTlcJ3sZJCaMKKKy5gOd/nI
-         R5Td7PirkVBsbBDeqsnSZtUeFj0V23TR+rDzY+DHcsU+8D2nrcFBXJJW8frl9Lz9yDKw
-         RTGjHk9xsYB+xUqGod8ycOMuJtwY0DRWs+jLTBWSG0a/Jpix1l7sTzxTBRpMLvf8VOMs
-         VmgA==
-X-Forwarded-Encrypted: i=1; AJvYcCW2L8VBaPgXeVpBDoDo89eKcTUDvzpMJuPdvqhJFE4cwW+lY2iStz+ktYj+hEPUz11VUbOM9EXRwyRCTB7UGWg=@vger.kernel.org, AJvYcCX0LsU5EFJ80BEUpC0aFZRGBBIs81OY6O9tR0dl+z4Oyn1ofbouj6DtG3O59c1A1RRWBEqHz9uOcvEht2ID@vger.kernel.org
-X-Gm-Message-State: AOJu0YwZ7gxw8XZc0Gm4qZmjsKqzR+z54RoRGQIagNx2Vqx5uvJyYaeh
-	UNceDwBYo7+AnQp3CXsxZjcE9/gS04n5sLLdxYiduH32UUfYt1jOjwHYh/H6Ev276eFmC0jrM9m
-	W/tAeeIn7enWMBb24sMpoCcqCl8w=
-X-Gm-Gg: ASbGncthLdBuh3WjMi3EJ9qlZvpKeGbeYeIYYWG6LT5I2/O483AWSu7P36PdPnsOHnN
-	dlvbckE1+IHO7K2eCiJH7S8zxRPOsjZDs41YgSe+taymWwPvV18sAoRw+G4aYxHedGAhJGnE6ul
-	+mIdHtolfm2FzX/vy7pG3F2Sop
-X-Google-Smtp-Source: AGHT+IFfpy/TVn7HOAEXHu6LlZnjUDcGf9rgeYdMySN3cvFDulhxN8Y25ukrxktnaSf1XOKr2/QdU+DTlBtrWHu+9FI=
-X-Received: by 2002:a2e:96c2:0:b0:308:e0bd:a091 with SMTP id
- 38308e7fff4ca-30b934623e4mr38116531fa.36.1741019410599; Mon, 03 Mar 2025
- 08:30:10 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fmm3vb0K"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5DA0C4CEE6;
+	Mon,  3 Mar 2025 16:30:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741019416;
+	bh=Ay/35eyEnivoB/7i3ruOhodKTg7omOLifwrB/+6vLd4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=Fmm3vb0K39fOllcdmrH0jHeAmd5OKgh7jhxSdqqYsJ+bZ374Iu+cOXcxmxKO05bRm
+	 R8Hi+OT+ybnBbUVeYRttlbPbFzRTHTi0HToj7JkUT+wPBpOisrYWOgxaueatD/O4XW
+	 29PYc3FszhpIc5UtO3UnKoBkIQCqVZcnY31ZXlewAp0cPbwXpxZswKJegA+ZAujWt8
+	 bsCDgtBu8q+I222ySU497SLsGNkt6R43kTO7Kwgk+EB/SSJC+VbPTVcNaui3N9gCTk
+	 HVaRxe2KnRlUhzzb9SUqZ8toX3Fq58spZ1zXP8sk8XWg9ohHKcVLxiYphYs2SOVhga
+	 kKxE5v7fChWSA==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	Ingo Molnar <mingo@kernel.org>,
+	Sasha Levin <sashal@kernel.org>,
+	tglx@linutronix.de,
+	mingo@redhat.com,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	x86@kernel.org,
+	jacob.jun.pan@linux.intel.com
+Subject: [PATCH AUTOSEL 6.13 11/17] x86/irq: Define trace events conditionally
+Date: Mon,  3 Mar 2025 11:29:43 -0500
+Message-Id: <20250303162951.3763346-11-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250303162951.3763346-1-sashal@kernel.org>
+References: <20250303162951.3763346-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <87a5a3ah2y.wl-tiwai@suse.de> <CABBYNZJOW-YSOLS0tBdUQmxqbOmgT2n2jVheyxbvWbYmBicqyg@mail.gmail.com>
- <877c56dub7.wl-tiwai@suse.de> <CABBYNZJ6Gfmpur2by01B9+XxBX+VBzBY95v+9f5-VpiantunfQ@mail.gmail.com>
- <87y0xmcdl4.wl-tiwai@suse.de>
-In-Reply-To: <87y0xmcdl4.wl-tiwai@suse.de>
-From: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
-Date: Mon, 3 Mar 2025 11:29:58 -0500
-X-Gm-Features: AQ5f1JoJWfI57iUJDIvknxt8WH2nhxh_U_EwNLKLgRIt7x4HN_2Y-fusx9Ou3c4
-Message-ID: <CABBYNZJsqXLRuY6ZMPujio7-tx82SHRZyZh=tChonVs-XiWMjw@mail.gmail.com>
-Subject: Re: Is commit 4d94f0555827 safe?
-To: Takashi Iwai <tiwai@suse.de>
-Cc: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>, linux-bluetooth@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.13.5
+Content-Transfer-Encoding: 8bit
 
-Hi,
+From: Arnd Bergmann <arnd@arndb.de>
 
-On Mon, Mar 3, 2025 at 10:56=E2=80=AFAM Takashi Iwai <tiwai@suse.de> wrote:
->
-> On Mon, 03 Mar 2025 16:50:37 +0100,
-> Luiz Augusto von Dentz wrote:
-> >
-> > Hi Takashi,
-> >
-> > On Mon, Mar 3, 2025 at 10:10=E2=80=AFAM Takashi Iwai <tiwai@suse.de> wr=
-ote:
-> > >
-> > > On Mon, 03 Mar 2025 15:57:16 +0100,
-> > > Luiz Augusto von Dentz wrote:
-> > > >
-> > > > Hi Takashi,
-> > > >
-> > > > Well the assumption was that because we are doing a copy of the str=
-uct
-> > > > being unregistered/freed would never cause any errors, so to trigge=
-r
-> > > > something like UAF like the comment was suggesting the function
-> > > > callback would need to be unmapped so even if the likes of iso_exit=
- is
-> > > > called it function (e.g. iso_connect_cfm) remains in memory.
-> > >
-> > > But it doesn't guarantee that the callback function would really
-> > > work.  e.g. if the callback accesses some memory that was immediately
-> > > freed after the unregister call, it will lead to a UAF, even though
-> > > the function itself is still present on the memory.
-> > >
-> > > That said, the current situation makes hard to judge the object life
-> > > time.
-> > >
-> > > > You can find the previous version here:
-> > > >
-> > > > https://syzkaller.appspot.com/text?tag=3DPatch&x=3D100c0de8580000
-> > > >
-> > > > Problem with it was that it is invalid to unlock and relock like th=
-at.
-> > >
-> > > Thanks for the pointer!
-> > >
-> > >
-> > > BTW, I saw another patch posted to replace the mutex with spinlock
-> > > (and you replied later on that it's been already fixed).
-> > > Is it an acceptable approach at all?
-> >
-> > I don't remember if I saw that, but yeah anything that makes the issue
-> > go away, and doesn't create new problems, would probably be
-> > acceptable.
->
-> I saw this one:
->   https://lore.kernel.org/all/20230907122234.146449-1-william.xuanziyang@=
-huawei.com/
+[ Upstream commit 9de7695925d5d2d2085681ba935857246eb2817d ]
 
-Ive might have missed it, we will probably need to rebase it but other
-than that it should be acceptable.
+When both of X86_LOCAL_APIC and X86_THERMAL_VECTOR are disabled,
+the irq tracing produces a W=1 build warning for the tracing
+definitions:
 
---=20
-Luiz Augusto von Dentz
+  In file included from include/trace/trace_events.h:27,
+                 from include/trace/define_trace.h:113,
+                 from arch/x86/include/asm/trace/irq_vectors.h:383,
+                 from arch/x86/kernel/irq.c:29:
+  include/trace/stages/init.h:2:23: error: 'str__irq_vectors__trace_system_name' defined but not used [-Werror=unused-const-variable=]
+
+Make the tracepoints conditional on the same symbosl that guard
+their usage.
+
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Link: https://lore.kernel.org/r/20250225213236.3141752-1-arnd@kernel.org
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/x86/kernel/irq.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/arch/x86/kernel/irq.c b/arch/x86/kernel/irq.c
+index 385e3a5fc3045..feca4f20b06aa 100644
+--- a/arch/x86/kernel/irq.c
++++ b/arch/x86/kernel/irq.c
+@@ -25,8 +25,10 @@
+ #include <asm/posted_intr.h>
+ #include <asm/irq_remapping.h>
+ 
++#if defined(CONFIG_X86_LOCAL_APIC) || defined(CONFIG_X86_THERMAL_VECTOR)
+ #define CREATE_TRACE_POINTS
+ #include <asm/trace/irq_vectors.h>
++#endif
+ 
+ DEFINE_PER_CPU_SHARED_ALIGNED(irq_cpustat_t, irq_stat);
+ EXPORT_PER_CPU_SYMBOL(irq_stat);
+-- 
+2.39.5
+
