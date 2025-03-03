@@ -1,127 +1,97 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A5F02343AB;
-	Mon,  3 Mar 2025 22:37:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AC59239068;
+	Mon,  3 Mar 2025 22:37:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741041424; cv=none; b=TALTsYLrGqbtkYvwuqKj7M4j1zChMomZAdMeua/DZOaZE5xmeYqTk7QR4CbtaxPGSSXt13sgQpWVNBnN8joppWaIkHvcki83VW+0GpMDpzJptz7AlN34/R5s4CCOuA9w3qD4r9wmWmjNDmcaK/JLPHZg2Aw0ufgO70/3DwJubIw=
+	t=1741041435; cv=none; b=HxojshOTc9V1ik1bHZ4AeH70LGB4w8k6//eVWn8AY9soU8y+t8gm8cN2TYWFC8pou237PYglFvGBp8IbGw4npSL+psXsNnBE+hrbwNo1cDTFNpiLtV+fnu8e5z9c0zMuGDRaEPn01ya7U9+7WVILPurD6Q4k0/jVy7VBCn8OUq4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741041424; c=relaxed/simple;
-	bh=AAwL5uoOTe6wCwpJpDywIRpKXFmiHBgm7TpEJavHXSQ=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=IiQamMuX8lp5UB+hX39rDl0zKPf6hB9hy7HvNHBmmP6Ctdg9bXIkn7Fd82EzPNyYjzTDnzOLSoSL4o+wYd+RKRKgd4MOSpjYydoFjMTePThDW8Gg8e9BJt9zB4oJ1BWIG9vFDpZKp5IFaxNhcF3ulTB5St9lO0l+loSB+zpixls=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PioO9/WV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741041435; c=relaxed/simple;
+	bh=jBGCgCTIh94cQxq7MrDORBhD2ez9Ci8x7u/4/UL66og=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XGb7qO2y0BVPCQ3Ib7LbrH4JmNojIkyNK7pNXsulYv2+L1qM0JG2hFZeoCNFmr22sRymmRRrJumcrZ5M8GLE+BaysLIESKLijljbYCHzNbNuVOTkpYdGXKw/5UnB7CurYDtqutTV0PE3Z8LPZLuIBG5JKou533/zLAZQL/bqHsI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ohr9tIpW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PioO9/WV"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id A8463C4CED6;
-	Mon,  3 Mar 2025 22:37:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ohr9tIpW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9DBE5C4CED6;
+	Mon,  3 Mar 2025 22:37:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741041423;
-	bh=AAwL5uoOTe6wCwpJpDywIRpKXFmiHBgm7TpEJavHXSQ=;
-	h=From:Subject:Date:To:Cc:Reply-To:From;
-	b=PioO9/WVs4P4H3kkPurA8Vv7zCUThGkYiQ7u1KbDRPHAq3xeJMhyvswGrYgAk1WYB
-	 44/xgXM28ekWTMpUPcecYzzK1rVuqEshuSyFA59LDF/mN57ovSOEhPlNmzZ7A+2m0E
-	 AVvXpcrlNOqcIVm9Sl15KwUTrDjHDGWGbcg33yjZGUmE+84qaHUnATzVvlOXGZjqHM
-	 Ic1UB3Et7C3yEzo2iDrqJjCD62rhmNksFaFfw9ZZHoyUA2y074tYFasHF6isj4PVtD
-	 z76W+qkysJV1JToKDNUKSACNwxeGfZB3ND9NKcLF8Nm22Jf4hHo+sFdaaBZQV2huQT
-	 eXiSeoXHJBXsQ==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EC0CC282D0;
-	Mon,  3 Mar 2025 22:37:03 +0000 (UTC)
-From: Joel Selvaraj via B4 Relay <devnull+foss.joelselvaraj.com@kernel.org>
-Subject: [PATCH v4 0/4] Add Xiaomi Poco F1 touchscreen support
-Date: Mon, 03 Mar 2025 16:36:54 -0600
-Message-Id: <20250303-pocof1-touchscreen-support-v4-0-cdc3bebc3942@joelselvaraj.com>
+	s=k20201202; t=1741041435;
+	bh=jBGCgCTIh94cQxq7MrDORBhD2ez9Ci8x7u/4/UL66og=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ohr9tIpWhmji5apc2/UIlYMwRXdsV1zzNdeI6TpxogTieVML8yyOkGLZdpzZc6ilD
+	 iyOxFCDbRgSbi3pmHSzDPJXbRAC6hf1x88314iYRoREx6CKiAYvj6V5a1uGP2zM2Ju
+	 swuUuU2IueRiaeoViSwtI9zNS3BFBaWelN0g0/9k1FjoeU6laK7EhlX++xvOkzuIbj
+	 Qo9wO8Xtb57kaCTVaxdtw4n1DvocNVl9u8Kyvb6ToIq8m44DrKdMb8ppxfGLaYQWIb
+	 ziJEO04/gc8Xkff6+R85CVHv4YT8CN5n6sWswvJY936uqqCtWQlCVqaz2P7qPrOjIY
+	 6kwRn/8KQYtog==
+Date: Mon, 3 Mar 2025 14:37:13 -0800
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, linux-tip-commits@vger.kernel.org,
+	Ingo Molnar <mingo@kernel.org>,
+	"Peter Zijlstra (Intel)" <peterz@infradead.org>,
+	Brian Gerst <brgerst@gmail.com>, "H. Peter Anvin" <hpa@zytor.com>,
+	x86@kernel.org
+Subject: Re: [tip: x86/asm] x86/asm: Make ASM_CALL_CONSTRAINT conditional on
+ frame pointers
+Message-ID: <20250303223713.jkatipgfmlik3b2t@jpoimboe>
+References: <174099976188.10177.7153571701278544000.tip-bot2@tip-bot2>
+ <CAHk-=wjSwqJhvzAT-=AY88+7QmN=U0A121cGr286ZpuNdC+yaw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAAYvxmcC/43QTU7DMBAF4KtEXmPk8U8cd8U9EAt7MqGu2ji1k
- whU9e44rRAbqNjNm5G+kd6FFcqRCts1F5ZpjSWmsQb91DDc+/GdeOxrZlJIDUJYPiVMA/A5Lbg
- vmIlGXpZpSnnmaI300ErsUbIKTJmG+HHDX99q3scyp/x5+7XCtv0XuwIXvA8KgoQOOjQvh0THQ
- sfVZ394xnRim77KH1GK7qEoq2h8S9YqR4P+S1TfohFKwENRVdEPAlAFJYL5TbzeK8l0XmrN870
- XFnwhXu+nOO8aFBRao50m43rXKe0Hi8FvYysdOQE2SOOhYtcvdPVsB7sBAAA=
-To: Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, 
- Joel Selvaraj <foss@joelselvaraj.com>, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
- Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-X-Mailer: b4 0.14-dev
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1741041422; l=2842;
- i=foss@joelselvaraj.com; s=20241007; h=from:subject:message-id;
- bh=AAwL5uoOTe6wCwpJpDywIRpKXFmiHBgm7TpEJavHXSQ=;
- b=ZETUobULmmXhyhIGzHqdwoGOGOnpjPs32JZM3DQR8vuUwgI8D/VvKYwj+oxKlCx5C2iXlL90Z
- CL4KpMOKJXWAOcF5NglFXw9lc/krCFjR5hbvNpZZCOjiTA+o8ZhlNA2
-X-Developer-Key: i=foss@joelselvaraj.com; a=ed25519;
- pk=pqYvzJftxCPloaoUbVsfQE7Gwv8bynZPy8mjYohwMCc=
-X-Endpoint-Received: by B4 Relay for foss@joelselvaraj.com/20241007 with
- auth_id=238
-X-Original-From: Joel Selvaraj <foss@joelselvaraj.com>
-Reply-To: foss@joelselvaraj.com
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wjSwqJhvzAT-=AY88+7QmN=U0A121cGr286ZpuNdC+yaw@mail.gmail.com>
 
-In the first patch, I have updated the edt-ft5x06 touchscreen binding 
-documentation. In Xiaomi Poco F1(qcom/sdm845-xiaomi-beryllium-ebbg.dts),
-the FocalTech FT8719 touchscreen is integrally connected to the display 
-panel (EBBG FT8719) and thus should be power sequenced together with 
-display panel for proper functioning using the panel property. Since the
-edt-ft5x06 touchscreen binding uses almost all the properties present in 
-touchscreen.yaml, let's remove additionalProperties: false and use 
-unevaluatedProperties to include all the properties, including the needed
-panel property.
+On Mon, Mar 03, 2025 at 08:28:10AM -1000, Linus Torvalds wrote:
+> On Mon, 3 Mar 2025 at 01:02, tip-bot2 for Josh Poimboeuf
+> <tip-bot2@linutronix.de> wrote:
+> >
+> > x86/asm: Make ASM_CALL_CONSTRAINT conditional on frame pointers
+> >
+> > With frame pointers enabled, ASM_CALL_CONSTRAINT is used in an inline
+> > asm statement with a call instruction to force the compiler to set up
+> > the frame pointer before doing the call.
+> >
+> > Without frame pointers, no such constraint is needed.  Make it
+> > conditional on frame pointers.
+> 
+> Can we please explain *why* this is done?
+> 
+> It may not be required, but it makes the source code uglier and adds a
+> conditional. What's the advantage of adding this extra logic?
+> 
+> I'm sure there is some reason for this change, but that reason should
+> be explained.
+> 
+> Because "we don't need it" cuts both ways. Maybe we don't need the
+> ASM_CALL_CONSTRAINT, but it also didn't use to hurt us.
+> 
+> The problems seems entirely caused by the change to use a strictly
+> inferior version of ASM_CALL_CONSTRAINT.
+> 
+> Is there really no better option? Because the new ASM_CALL_CONSTRAINT
+> seems actively horrendous.
 
-In the second patch, I have enabled the qupv3_id_1 and gpi_dma1 as they
-are required for configuring touchscreen. Also added the pinctrl
-configurations. These are common for both the Poco F1 Tianma and EBBG
-panel variant.
+The original ASM_CALL_CONSTRAINT was already pretty horrendous, can you
+clarify why you think the new one is even worse?
 
-In the subsequent patches, I have enabled support for the Novatek NT36672a
-touchscreen and FocalTech FT8719 touchscreen that are used in the Poco F1
-Tianma and EBBG panel variant respectively.
+On thing that's nicer, now that it's an input constraint, it can be
+appended to other constraints without affecting the constraint ordering.
 
-Signed-off-by: Joel Selvaraj <foss@joelselvaraj.com>
----
-Changes in v4:
-- Update the dt-binding patch's commit message to be more accurate
-- Link to v3: https://lore.kernel.org/r/20250301-pocof1-touchscreen-support-v3-0-af01c3b30b55@joelselvaraj.com
+As far as making it conditional, the code generation seems better.
+Before, it was forcing some functions to set up the frame pointer even
+with ORC.
 
-Changes in v3:
-- Fix SoB email id mismatch (suggested by Krzysztof Kozlowski)
-- Use unevaluatedProperties instead additionalProperties in dt-binding (suggested by Krzysztof Kozlowski)
-- Link to v2: https://lore.kernel.org/r/20241208-pocof1-touchscreen-support-v2-0-5a6e7739ef45@joelselvaraj.com
+Also it nicely confines the hack to a little CONFIG_FRAME_POINTER
+corner.  Frame pointers are very much deprecated on x86-64 anyway, maybe
+we can just eventually get rid of that option.
 
-Changes in v2:
-- Fixed the missing "panel" property dt-binding error reported by Rob Herring's bot.
-- Change the "input-enable" property to "output-disable" in qcom/sdm845-xiaomi-beryllium-common.dtsi
-  (Based on a patch suggested by Konrad Dybcio).
-- Link to v1: https://lore.kernel.org/r/20241007-pocof1-touchscreen-support-v1-0-db31b21818c5@joelselvaraj.com
-
----
-Joel Selvaraj (4):
-      dt-bindings: input: touchscreen: edt-ft5x06: use unevaluatedProperties
-      arm64: dts: qcom: sdm845-xiaomi-beryllium-common: add touchscreen related nodes
-      arm64: dts: qcom: sdm845-xiaomi-beryllium-tianma: introduce touchscreen support
-      arm64: dts: qcom: sdm845-xiaomi-beryllium-ebbg: introduce touchscreen support
-
- .../bindings/input/touchscreen/edt-ft5x06.yaml     |  9 +----
- .../dts/qcom/sdm845-xiaomi-beryllium-common.dtsi   | 39 ++++++++++++++++++++++
- .../boot/dts/qcom/sdm845-xiaomi-beryllium-ebbg.dts | 23 +++++++++++++
- .../dts/qcom/sdm845-xiaomi-beryllium-tianma.dts    | 23 +++++++++++++
- 4 files changed, 86 insertions(+), 8 deletions(-)
----
-base-commit: c0eb65494e59d9834af7cbad983629e9017b25a1
-change-id: 20241007-pocof1-touchscreen-support-c752a162cdc2
-
-Best regards,
 -- 
-Joel Selvaraj <foss@joelselvaraj.com>
-
-
+Josh
