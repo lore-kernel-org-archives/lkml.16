@@ -1,63 +1,63 @@
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C7CB20CCFF
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 11:47:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB6DF20DD63
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 11:47:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741002471; cv=none; b=RcpWyyAFcu3ODaHNV9/qCLjruwMfEYd9A77FAUr10NdtUXuiZjKfh0YnBb+v3MEEculK1ru22AnXKQq5XtJ6OMUAccIWmWd7S8CuJuS5/8dxO/ArmiVtu2IUZr8mgDS6hxeqGFmzvy8QvGmSl7UFVuwvHhCSOG5Jsrt4bPWEKlc=
+	t=1741002474; cv=none; b=kS25eVMmaBMYKeGh1vW4XCfl4FBnhI0+tYD1r2nLkARjnFsqN5mkx529j3HO5/AyEIh/Ld0UeKGeimW5RSzDSHWnNfbRgaPsohwVHw+nTJTcnsEgHRoVyfKK6PC+7uI4DoFdRuLGFR2+OV4Jk1BTFS4+QeGaNAb0nCWA1EO3b1g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741002471; c=relaxed/simple;
-	bh=y10CLHrz5q1cvvW/6hCv3R5E5E/v+RGlhugIUuM3XuU=;
+	s=arc-20240116; t=1741002474; c=relaxed/simple;
+	bh=+v+ir1+IglYL05L7kQ/+NcMJ+uc5Mh8VNYIDLO2zj4c=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=tOej00hAfgEtEMnU6xlfQZBOP2DNfaR6ZPURrQcq1U+uQKTq6q0paqA0H/7aw6w+nHS1rdMOd/eaUD1mO5lI53ilNnqFMNn3KvVK9+a/2vpIHzSU1PN/qukH9fUzdjg49cQ3UwHkMZ6kOslOg8Utr+Zi0WKGJ8hBzm6BGD+1V9o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=TgmgKYi9; arc=none smtp.client-ip=209.85.221.48
+	 MIME-Version:Content-Type; b=As3l1vOkEngnlTYeO49s9FtKFpZI9ZzsEjTso3ooGdGPyrvRh5VW6kCedTUVKMqGQsgew5M4apOeaqEnidfsCN0E5kvpareFXPQYMcMVcSXyM+RS3q4Cw610tvGSZ8ioaEvi2ekeR8ykVGYeJ8bfZiNFrGznAeOJOQbI+jM6Uvw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=CCyBrL8e; arc=none smtp.client-ip=209.85.221.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="TgmgKYi9"
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-390e3b3d432so2944403f8f.2
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Mar 2025 03:47:48 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="CCyBrL8e"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-390fdaf2897so1538939f8f.0
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Mar 2025 03:47:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1741002467; x=1741607267; darn=vger.kernel.org;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1741002471; x=1741607271; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=wZWcsKY7qzjNS1Wm2Xh8944/cSh1cBOdNgKC7R7IPMQ=;
-        b=TgmgKYi9Ci33UhWc8RR0ukMzU9CMr39R1kvq85RsZ2GpPJaz0eTVezEj4bh7ys5MPR
-         pbW0NwwzlrsisGI6mqExgyFaDV2xcgG5FmYUxFSW2wVcVL+fTSBPT5P40Ph/ViQ2Yee2
-         8IJzIdgCsC4ndouDLDGkZoscs2SJD0W9VV80SHrH9UXnwCpMVaTfHkpc8HuSgi97NVuz
-         enkG3a53FFPOVTkhttbBvE7PZf6+jpvQGcLTUI2quanOm2wjAAI1dy0R5iUvHm/A+Cg7
-         kXFP6VMo6iT2EvCiGgQreVFBG9T4RpOPh2DzXnuO3HUne7zyi0kJm7b5hM6XlH8UTDIS
-         79CQ==
+        bh=iKR8mmc7je6VNvAt7e6XfCwJ0Xm9s9LiP8WsU315nXs=;
+        b=CCyBrL8eeJVwtW/vo7tWcTm446qekFDbvRoK1W3Pmqxv3iA5H/UdB3hF6EQit9gGwh
+         v9qV1HvcIGe8093vqFQZ7pe583JvPwx1uBhHLNigNoJdRAoZDVUoYG7aZ7u1Hs4HqGcL
+         5KMOMD169w3jkX45AIUarv/Z/j4Lun0gybflb1G7OxCePmO48nc9dt7fLfp5XdYwTIJA
+         MXtf5CM/XmKlwWEyjWaiRv6vNOh/HCsOXMJcLy2Alf1tj2mzV6icIEU+DOimXJLm9RD9
+         yRn3lsSl39E6iPrwmGupqJ42Xe18sRgiK682EedLV/HOp1w2sZuVaCNbQbXUvTnXjOSc
+         X0mA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741002467; x=1741607267;
+        d=1e100.net; s=20230601; t=1741002471; x=1741607271;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=wZWcsKY7qzjNS1Wm2Xh8944/cSh1cBOdNgKC7R7IPMQ=;
-        b=Qw5vOrE2XsvysrievqbdwkndyrFpb6prBCwl/cMNSb++DEYams03eCFgHVUsX0QtaE
-         PZ/NYSuVNAL9XOvSsBOK+ddkgLY3qsVftbk+3ZRwKhRB8eDaz/7IdEVgFKm9w3aLhLdT
-         LmaxK4plpPVHymeS/yUjU6EkKZSF3lAosyY5OB9S0SSrB6eLOUp0JqrJwhby5iY09K0e
-         o49qDi7R1j0xdsUbebfsv+muwfYqxBe1ALHoMoeyb517eVSUfFjE3hXhi7FthF6jac5e
-         0pBCKRk8Dkl46720ad13CotBRSGHQrBOIrmHn2zjphlQhGM9uOcyvTE0J0yhl5kmXjW2
-         /OZg==
-X-Forwarded-Encrypted: i=1; AJvYcCUGymIACt4MVjguFloxG3hte0Xiiw7fNJ2UE/ypNbrmO9Dalsjj4sSmRRBis3kUwmxHDjodRKeZFjVuOJM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxdxfj3n2LA1cZnz1MckMD/gJ6c2CDBj3Hlns8R23IC2nsF0xuF
-	pccxwbZZWWOCkCaHDbEkK29xeWldUH7AMTe0bssnnmMouoDJwtZxPwTjiKUM88s=
-X-Gm-Gg: ASbGncuI8ZW5XsyLIygq9yfdF7EF8CROtQr8ocxuwAWV0zZ5WGToLgAtErtUvvDicWP
-	IkVxZj/OUZO0B31YLiyTKILynKhDPIz/h1u/2deXfoeamuQmnZ++WriwWLE7r3UWHE+APEBjPvT
-	lofFtxVXydjcVZL2/KoGqp5fEwicFFEy3NCrRfc6/f8ssyPD7l2XHdre86CB3+X2h8NV0Sppnfk
-	Lz9lW6zlRMzNs2cGXh7ramLVNZlTXjsGQ0gv+40j68/UzHercctL4871+BgDvOr41+4Id7hM0ER
-	Drh+LH0/GMPbadqaz9UoQELJUMt9uN9E92fco1ahhjLHM+SRmAcgTWfqma+eUAHA7EhSiekiMWr
-	ReLacu/t9qee5ghbCCjHjt5QpXg==
-X-Google-Smtp-Source: AGHT+IGcoDodgmWp5+Ijtads7PMkR9LPBMeEvPtHwX7hSfwU3B7pWXGiyRfLkGUcWCvwHE+j4WYS+w==
-X-Received: by 2002:a05:6000:2b04:b0:390:df7f:c20a with SMTP id ffacd0b85a97d-390ec9c19a2mr8181322f8f.33.1741002467084;
-        Mon, 03 Mar 2025 03:47:47 -0800 (PST)
+        bh=iKR8mmc7je6VNvAt7e6XfCwJ0Xm9s9LiP8WsU315nXs=;
+        b=R25MZOSm+8kUEndqQmnlkq74wjBH0ELak0OWVn+VWqb7CBnOpx9PdG8Hx4JJ/ZrYFl
+         plOAHPIJKiVm7G24WKWlVRD2zH+902ngspyz9bzgprrqosiu4624o0DhKYrdNLGBLfyu
+         LCxtVGSbclEVnHaDUwKzJ1OvLEmiYTM/qrd3PER/Fc+fPRaFj6KsNIYz0j3C3zIPPzIG
+         Lk0ahv6VPBdmF1EKj+HmJ+10gqAruyq8jONE9hjqdbuedWFYYruGLnWAqcbYIwBflfM3
+         RjWRjWy/BX4X6nemjh0LJD1BkmEsE9WR6JwybQ01IbS4nyEoDINSTpeh1NcHNPa0DBOL
+         GwPQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVl2+60caxzH79b6FXCUKJfn9ClSAm5RY2JEZ8pmsZ/YTsazrWzBXuXlDTmOmp3ALKSFaHSN1mS983VBCM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyKNsiqWUOezvqgclhoObNkA9nUPpsdey3yzg55at9IxLlWD10l
+	sG+Y819kRl7Vv99irERwO7ETkABTYJsqP3uJ2/FdAs/vmqE7MkG56k5ti2oHag8=
+X-Gm-Gg: ASbGncunt4sLw1WuaXrqF+flmLi2XjQYseX/uGvQgttau+YqgW2smmuHP0hK79czQOU
+	9Zn+0LDxG0KuN7vsVhI1zz6evyD+ouctNCT3YPkM3iN83/v68hnoGVELzWeHmdEVdAlddxHBEUZ
+	S0Igvh4oMRfWMRZqlx21a/WK4rfC6w5sU+DMbAGMPPgQRip2pDb72o08jPkNVXDYRLteGvBGNgB
+	M/6vnSvHkEVyGcfAd25o5i9ptok/Pzun+PsDYXLNAtc3f5IRiYPzYCbIJEo8J9tMXKKpzkKWJtL
+	M6ao8vxLuTEEVhXsPnE2T94/5s1ZrcXAvp7tFisYZWeVYlb+sJ3XankXVahT3XpdurWwZhSPSZ9
+	BbP23HE4zRBRGknriHcUtEWZfaA==
+X-Google-Smtp-Source: AGHT+IH5Z6btw41ZKAgQDipPHeM1p1kYa1+Z7ciGYHSk4HbVAIZ7A2f2vv2fwdCwPPHx3p4Q1j+Vww==
+X-Received: by 2002:a5d:424b:0:b0:390:e46f:4454 with SMTP id ffacd0b85a97d-390ec9cbfbfmr10067180f8f.32.1741002471263;
+        Mon, 03 Mar 2025 03:47:51 -0800 (PST)
 Received: from localhost (amontpellier-556-1-148-206.w109-210.abo.wanadoo.fr. [109.210.4.206])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43aba5870e7sm191186775e9.35.2025.03.03.03.47.46
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-390e47a66adsm14110736f8f.25.2025.03.03.03.47.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Mar 2025 03:47:46 -0800 (PST)
+        Mon, 03 Mar 2025 03:47:50 -0800 (PST)
 From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
 To: Jonathan Cameron <jic23@kernel.org>
 Cc: Andy Shevchenko <andy.shevchenko@gmail.com>,
@@ -70,9 +70,9 @@ Cc: Andy Shevchenko <andy.shevchenko@gmail.com>,
 	Nuno Sa <nuno.sa@analog.com>,
 	linux-iio@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v4 4/8] iio: adc: ad7173: Fix comparison of channel configs
-Date: Mon,  3 Mar 2025 12:47:02 +0100
-Message-ID: <20250303114659.1672695-14-u.kleine-koenig@baylibre.com>
+Subject: [PATCH v4 6/8] iio: adc: ad_sigma_delta: Add error checking for ad_sigma_delta_set_channel()
+Date: Mon,  3 Mar 2025 12:47:04 +0100
+Message-ID: <20250303114659.1672695-16-u.kleine-koenig@baylibre.com>
 X-Mailer: git-send-email 2.47.1
 In-Reply-To: <20250303114659.1672695-10-u.kleine-koenig@baylibre.com>
 References: <20250303114659.1672695-10-u.kleine-koenig@baylibre.com>
@@ -83,85 +83,41 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2867; i=u.kleine-koenig@baylibre.com; h=from:subject; bh=y10CLHrz5q1cvvW/6hCv3R5E5E/v+RGlhugIUuM3XuU=; b=kA0DAAoBj4D7WH0S/k4ByyZiAGfFlsKjoB/9Enx0XBp7O5uj/4SpG8Eo5mO3qMUnhEvhZcpxs IkBMwQAAQoAHRYhBD+BrGk6eh5Zia3+04+A+1h9Ev5OBQJnxZbCAAoJEI+A+1h9Ev5OeFoIAKNt I0HVB0FGhl6WXRj+K+a+jWQubV3oqNtlhol6jL3swaA1Yb+W8f1OsxHLqw3xmL3qnu3F7Zmnuvu 9cWdxMCHqU4cqoUdfzPw2Jg0MvJBSZ4QDLhWtkvrt0KGO2t4TcxrSmZ7XngGVFoh33KNhHo2alF gfRSoPv9iC/zgLS+JPalhzfB0VODl9U2UvcOqwUtRLW4eVeBynbngZXUAsQi87AO7qxJMOpVf77 U5fArLQ0XafUWhNs4Y3EugyOOrNqUrGHABVm0jvyPqvc0+CvQOjpP6HYL+3rLnmOvCXDE5EXxSK r5vjeptYied6fbL17oTgb2Hrx+F+f7tAcyGxGs8=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1187; i=u.kleine-koenig@baylibre.com; h=from:subject; bh=+v+ir1+IglYL05L7kQ/+NcMJ+uc5Mh8VNYIDLO2zj4c=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBnxZbLpSyJJZQrMNOYSBT3O10ZES5srubfMKd/z Hdc8npRu1aJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZ8WWywAKCRCPgPtYfRL+ TlsjB/wOYCnOMHsdZ0Q3jdrrQBdxHsZXk7f919eqxPaLXjMVofd/123J4vpuLOwaXwaC9W2fjs/ qEW9uVGxoJPU2pXSI/NOnW/tSiqvlVvvF0nKn8Vs8PGs4fACQy+R5WifPK8o/JDCKXnVex6BTOQ NOLo01eR/oiOROTYDKSkx1PKWUW1/efx/ARiHTLKT8bXBKRp0AGXj4nrn1ia98dXJj28h3t7D00 hkX1dnHsPcX5OjWBizSl7SxPa5dXzMQAe11k+Hsa8iu2l58v0J2FCYjmCuCXnxL75xv57fvrK1b 3mRa4JdY9akWMDP7YnNdyNbQyCL286ODl8Ga9ub/dpnFZRT8
 X-Developer-Key: i=u.kleine-koenig@baylibre.com; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
 Content-Transfer-Encoding: 8bit
 
-Checking the binary representation of two structs (of the same type)
-for equality doesn't have the same semantic as comparing all members for
-equality. The former might find a difference where the latter doesn't in
-the presence of padding or when ambiguous types like float or bool are
-involved. (Floats typically have different representations for single
-values, like -0.0 vs +0.0, or 0.5 * 2² vs 0.25 * 2³. The type bool has
-at least 8 bits and the raw values 1 and 2 (probably) both evaluate to
-true, but memcmp finds a difference.)
+All other calls to ad_sigma_delta_set_channel() in ad_sigma_delta.c
+check the return value afterwards. Do it for all calls.
 
-When searching for a channel that already has the configuration we need,
-the comparison by member is the one that is needed.
-
-Convert the comparison accordingly to compare the members one after
-another. Also add a static_assert guard to (somewhat) ensure that when
-struct ad7173_channel_config::config_props is expanded, the comparison
-is adapted, too.
-
-This issue is somewhat theoretic, but using memcmp() on a struct is a
-bad pattern that is worth fixing.
-
-Fixes: 76a1e6a42802 ("iio: adc: ad7173: add AD7173 driver")
 Signed-off-by: Uwe Kleine-König <u.kleine-koenig@baylibre.com>
 ---
- drivers/iio/adc/ad7173.c | 25 +++++++++++++++++++++----
- 1 file changed, 21 insertions(+), 4 deletions(-)
+ drivers/iio/adc/ad_sigma_delta.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/iio/adc/ad7173.c b/drivers/iio/adc/ad7173.c
-index ca2b41b16cc9..2d90487c7f31 100644
---- a/drivers/iio/adc/ad7173.c
-+++ b/drivers/iio/adc/ad7173.c
-@@ -197,7 +197,11 @@ struct ad7173_channel_config {
- 	u8 cfg_slot;
- 	bool live;
+diff --git a/drivers/iio/adc/ad_sigma_delta.c b/drivers/iio/adc/ad_sigma_delta.c
+index d91a3ba127e3..6c37f8e21120 100644
+--- a/drivers/iio/adc/ad_sigma_delta.c
++++ b/drivers/iio/adc/ad_sigma_delta.c
+@@ -390,7 +390,9 @@ int ad_sigma_delta_single_conversion(struct iio_dev *indio_dev,
+ 	if (!iio_device_claim_direct(indio_dev))
+ 		return -EBUSY;
  
--	/* Following fields are used to compare equality. */
-+	/*
-+	 * Following fields are used to compare equality. If you
-+	 * make adaptations in it, you most likely also have to adapt
-+	 * ad7173_find_live_config(), too.
-+	 */
- 	struct_group(config_props,
- 		bool bipolar;
- 		bool input_buf;
-@@ -568,15 +572,28 @@ static struct ad7173_channel_config *
- ad7173_find_live_config(struct ad7173_state *st, struct ad7173_channel_config *cfg)
- {
- 	struct ad7173_channel_config *cfg_aux;
--	ptrdiff_t cmp_size;
- 	int i;
+-	ad_sigma_delta_set_channel(sigma_delta, chan->address);
++	ret = ad_sigma_delta_set_channel(sigma_delta, chan->address);
++	if (ret)
++		goto out_release;
  
--	cmp_size = sizeof_field(struct ad7173_channel_config, config_props);
-+	/*
-+	 * This is just to make sure that the comparison is adapted after
-+	 * struct ad7173_channel_config was changed.
-+	 */
-+	static_assert(sizeof_field(struct ad7173_channel_config, config_props) ==
-+		      sizeof(struct {
-+				     bool bipolar;
-+				     bool input_buf;
-+				     u8 odr;
-+				     u8 ref_sel;
-+			     }));
-+
- 	for (i = 0; i < st->num_channels; i++) {
- 		cfg_aux = &st->channels[i].cfg;
+ 	spi_bus_lock(sigma_delta->spi->controller);
+ 	sigma_delta->bus_locked = true;
+@@ -431,6 +433,7 @@ int ad_sigma_delta_single_conversion(struct iio_dev *indio_dev,
+ 	sigma_delta->keep_cs_asserted = false;
+ 	sigma_delta->bus_locked = false;
+ 	spi_bus_unlock(sigma_delta->spi->controller);
++out_release:
+ 	iio_device_release_direct(indio_dev);
  
- 		if (cfg_aux->live &&
--		    !memcmp(&cfg->config_props, &cfg_aux->config_props, cmp_size))
-+		    cfg->bipolar == cfg_aux->bipolar &&
-+		    cfg->input_buf == cfg_aux->input_buf &&
-+		    cfg->odr == cfg_aux->odr &&
-+		    cfg->ref_sel == cfg_aux->ref_sel)
- 			return cfg_aux;
- 	}
- 	return NULL;
+ 	if (ret)
 -- 
 2.47.1
 
