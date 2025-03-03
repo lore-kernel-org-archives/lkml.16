@@ -1,134 +1,234 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CCFC21578D
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 16:57:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47A53212B14;
+	Mon,  3 Mar 2025 16:58:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741021034; cv=none; b=DdKQr4Udrx8Ryov3qmYrg8Bz6Ob3Vg9Bo06bhvMBHGKrzlw5oKNjKDE7NsmtwS9wJzIaMh0+23Wqe9Zi5RFO0nPsTLhLJoQ2DKT1yq3ejW4L8JG8ku2wOR8ON0okHrNjsvdHMw8SfU8VFCoA8y/oMrxJZ+OEyCpRAZcVVkI4h6Q=
+	t=1741021112; cv=none; b=kYj9lrQtE6TAmzbfDSJm6pf4SVD9q/g+9VKY0ENS6Jeyr6Pii69lMrWb3gQlYZy+7Ypb4jF7W7i1pTfR64Iulk6q/GXKBGnJ7/2vhceiEYhMn3uPBhspnSreR2m9zDmZ417UM1pCnPArQGV3XOUnzsILhNKUfXvABMeB8mir/sc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741021034; c=relaxed/simple;
-	bh=m6fUzgBOSYI+fGh8QMIaAwQeaobQrX0g/0L9iYjGmK8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LYOcRQPn5Bd2o4azwoOmqsNQcdeHCAOlB4/OLnSIaOPOQD1HljCeHLG7wRAJNWI45e9wnfaEcy/Lz2PHLTROxLPBYMB2ZF6JoFbjA+8FiKjzdi5jjTO8jUmAbKLAyO5Ye37uu3vc7htjouqd/NJwUYILRtrHgm6xMx1FkIDMCcM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ZGlXgtgn; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1741021112; c=relaxed/simple;
+	bh=vtkoHJ3gFGrir8hCO0gq2+nOrDMda467qqK7Y/SOhuY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oBIuZ5V8SWoTKo3NkueSN8mGgTd4/rkclUD6VUmzTPpvoNORqlrhiUGA1az6CTkiwK4lN1juVBdAyx9Cjo6ge0f6FPKg+NFWEh3kuFTHiuvVBagc5NyyeQIf3WhrXMIEqKpqGPvwsCbUsqnL+kBNf3hCiz8o+1vglJAgezfycqU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k91CO6+P; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZGlXgtgn"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-2237a32c03aso304675ad.1
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Mar 2025 08:57:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1741021032; x=1741625832; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6qW1Nf8vyw1Q2PuqtIij4cH7ngvXGYVEQckqGs7r7yU=;
-        b=ZGlXgtgnwqphkjuZTxqBSSVBA+Op8+lAXRPDVDPuIrEs65Oux/cenNlYSbUFRtfhaZ
-         WBpCXyv98vRhNe2IGs/x/h9TpybDEir02T4HTuTnbT+9BADXgiFLXcIHJ1lXKFH3Ydnb
-         sHGNsvJaiLa/PlK4RUfj0spJN6qeTbSXtaLXC32K4/OZMw5wrPT1KBHyLNZ3Kugaw0Fw
-         EXBfzrKesYLDR+lbl9/orZpaCi9JNSiBdZCD69vDUfOQZ9Np8RbtxDCV86yI+ltoc3Eu
-         LXYf+16i38lR8QtOdnIkujJhGjZ9h57hj6jupC9mg5Q9MzueUmpE6Vvkw2CnChgujAlG
-         SVOw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741021032; x=1741625832;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6qW1Nf8vyw1Q2PuqtIij4cH7ngvXGYVEQckqGs7r7yU=;
-        b=wTOfKm5MzbSk/dYvqQqGlbqEoi9FqLE0Z1a7KajwjdYUiR1hSV8SGM6zp+hSrxVhKI
-         kNoUuazNleqXlEuSkB8KtfQq5JyyEjepY/mfDrjgV3/U/wHEguNgzLbVwUZQm46bP1Qj
-         wWgt4XeAlSL8m1zvhJ5FmRibjV3Vd1LBtOMb9/874eau/9tDlzzyS5/ENHct/7z84X+d
-         PPwWJrPNQCpSp50MA/BxyhkBG7mEPSzYyQSUUWqrICN7sJiuPUWqN+M4yG/R6hcbWq2o
-         NyZY+CXX/0Zwm7WMWoRqBtbbQrs2t5+D8gUjHjTqqaKJi5YXSEdmr8Kr769iJjlrwkVR
-         q9vw==
-X-Forwarded-Encrypted: i=1; AJvYcCXkK6pEHmgQ61+w3s3qzbu+krA9dwSBH8NKoOXaZ724vXmEuSeOlb3S7bz1HzPRi9XtdGwyUC5KqKa2YTc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy2E2Og1PDHf4igSGAOf0ZYDpBUU0mjkcjya9orErKBfiz5PFMk
-	yILK+Ha1nVm3/BgHv/lHOd3yBK2vxCr8lJqGuRq8pnGUWM8xJFz85ijVrBp/x44Iyy1pxnt2cs9
-	GSliVagy+EabxU5/QPKMITuozZ897WKV4tyubb1cYdEHitVirenNL
-X-Gm-Gg: ASbGncucHTBlUP9ptgtR7+mJQp1XBKHt0LSSzwRfFtOFNAZCy5NzOLHagH4tVfk2eAh
-	2ezD4GbTcQ9egthtXuDBQThdkHHuGCAk7wO/A5ttQ9zlImgjMLjrpVnCV5rPSp1RnE3yZ8EfS2d
-	O8ugTggxdiWx3/3jfNZjMIbOeaYFR9NqseSqdgAcQ2Gd8iroP0pV4=
-X-Google-Smtp-Source: AGHT+IFt/KQhUWp/Hhr2+QiGaV0zuzG7HlI9Hd4D1SNZXjdSOzw9RCONCtYfELcuUjqzUigB4yp++nhlgDa5v3LCVIY=
-X-Received: by 2002:a17:903:32c8:b0:216:5e53:d055 with SMTP id
- d9443c01a7336-22385a1a1ffmr3934335ad.9.1741021032216; Mon, 03 Mar 2025
- 08:57:12 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k91CO6+P"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17EE3C4CED6;
+	Mon,  3 Mar 2025 16:58:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741021111;
+	bh=vtkoHJ3gFGrir8hCO0gq2+nOrDMda467qqK7Y/SOhuY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=k91CO6+Pqty8oVF+U32HsX9iLmlu7s8wcKO1z8ACLrxTAYAPPC7c2asxfXVcIa0od
+	 1dJwiAa7iJW/kjG9WN88+F9nm2DbU3V3+kOqfcxkdKyALTWHpE/YURL2u6/Wgd6aVj
+	 ocOf9vo85msUco7AwjOEHhdBKVgZrAhqLmoBqe7vLlgZ8kFIWGKibLAdhoKNx3F8bS
+	 ciVvGy+fuHKltu3uuuawm7L6CAlInsAj3f5yOba0VPUINb3mm0n7X4RK2ZYGSRTVWV
+	 9A5KARmQMqVGXjfBmSd9EWzZOqEQoVXxeAXS5T7WmZzRxrXC6zzz/61rdIAoLD2ynW
+	 sYAlcjAxL+vLQ==
+Date: Mon, 3 Mar 2025 16:58:26 +0000
+From: Conor Dooley <conor@kernel.org>
+To: "Vankar, Chintan" <c-vankar@ti.com>
+Cc: Andrew Davis <afd@ti.com>, Conor Dooley <conor+dt@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Rob Herring <robh@kernel.org>, Peter Rosin <peda@axentia.se>,
+	tglx@linutronix.de, gregkh@linuxfoundation.org, vigneshr@ti.com,
+	nm@ti.com, s-vadapalli@ti.com, danishanwar@ti.com,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [RFC PATCH 1/2] devicetree: bindings: mux: reg-mux: Update
+ bindings for reg-mux for new property
+Message-ID: <20250303-mummify-mutation-67595b7ceba5@spud>
+References: <20250227202206.2551305-1-c-vankar@ti.com>
+ <20250227202206.2551305-2-c-vankar@ti.com>
+ <f3e69904-92f0-4de8-bfef-a315a6554a1c@ti.com>
+ <20250228-recipient-unlinked-271fe63d7335@spud>
+ <acde31c5-fe23-4c7b-a823-61ea0958504b@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250303092451.1862862-1-skb99@linux.ibm.com>
-In-Reply-To: <20250303092451.1862862-1-skb99@linux.ibm.com>
-From: Ian Rogers <irogers@google.com>
-Date: Mon, 3 Mar 2025 08:56:59 -0800
-X-Gm-Features: AQ5f1Jrb9HWfgPlxW--MQZMpi50Q5zGWsUn-FeWGkwkjPk2WShOPYuioINvUVlQ
-Message-ID: <CAP-5=fXKDPBZkXa=uBEQHM2AFYE2mP7_pA6qKAAHyXkk2OCoHA@mail.gmail.com>
-Subject: Re: [PATCH] perf/hw_breakpoint: Return EOPNOTSUPP for unsupported
- breakpoint type
-To: Saket Kumar Bhaskar <skb99@linux.ibm.com>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	peterz@infradead.org, mingo@redhat.com, namhyung@kernel.org, 
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
-	adrian.hunter@intel.com, kan.liang@linux.intel.com, hbathini@linux.ibm.com, 
-	atrajeev@linux.vnet.ibm.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="F7cMXlJo73Y+j5qV"
+Content-Disposition: inline
+In-Reply-To: <acde31c5-fe23-4c7b-a823-61ea0958504b@ti.com>
+
+
+--F7cMXlJo73Y+j5qV
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Mar 3, 2025 at 1:25=E2=80=AFAM Saket Kumar Bhaskar <skb99@linux.ibm=
-.com> wrote:
->
-> Currently, __reserve_bp_slot() returns -ENOSPC for unsupported
-> breakpoint types on the architecture. For example, powerpc
-> does not support hardware instruction breakpoints. This causes
-> the perf_skip BPF selftest to fail, as neither ENOENT nor
-> EOPNOTSUPP is returned by perf_event_open for unsupported
-> breakpoint types. As a result, the test that should be skipped
-> for this arch is not correctly identified.
->
-> To resolve this, hw_breakpoint_event_init() should exit early by
-> checking for unsupported breakpoint types using
-> hw_breakpoint_slots_cached() and return the appropriate error
-> (-EOPNOTSUPP).
+On Sat, Mar 01, 2025 at 03:08:40AM +0530, Vankar, Chintan wrote:
+> Hello Conor, Andrew,
+>=20
+> On 3/1/2025 12:22 AM, Conor Dooley wrote:
+> > On Thu, Feb 27, 2025 at 03:26:31PM -0600, Andrew Davis wrote:
+> > > On 2/27/25 2:22 PM, Chintan Vankar wrote:
+> > > > DT-binding of reg-mux is defined in such a way that one need to pro=
+vide
+> > > > register offset and mask in a "mux-reg-masks" property and correspo=
+nding
+> > > > register value in "idle-states" property. This constraint forces to=
+ define
+> > > > these values in such a way that "mux-reg-masks" and "idle-states" m=
+ust be
+> > > > in sync with each other. This implementation would be more complex =
+if
+> > > > specific register or set of registers need to be configured which h=
+as
+> > > > large memory space. Introduce a new property "mux-reg-masks-state" =
+which
+> > > > allow to specify offset, mask and value as a tuple in a single prop=
+erty.
+> > > >=20
+> > > > Signed-off-by: Chintan Vankar <c-vankar@ti.com>
+> > > > ---
+> > > >    .../devicetree/bindings/mux/reg-mux.yaml      | 29 +++++++++++++=
+++++--
+> > > >    1 file changed, 27 insertions(+), 2 deletions(-)
+> > > >=20
+> > > > diff --git a/Documentation/devicetree/bindings/mux/reg-mux.yaml b/D=
+ocumentation/devicetree/bindings/mux/reg-mux.yaml
+> > > > index dc4be092fc2f..a73c5efcf860 100644
+> > > > --- a/Documentation/devicetree/bindings/mux/reg-mux.yaml
+> > > > +++ b/Documentation/devicetree/bindings/mux/reg-mux.yaml
+> > > > @@ -32,11 +32,36 @@ properties:
+> > > >            - description: pre-shifted bitfield mask
+> > > >        description: Each entry pair describes a single mux control.
+> > > > -  idle-states: true
+> > > > +  idle-states:
+> > > > +    description: Each entry describes mux register state.
+> > > > +
+> > > > +  mux-reg-masks-state:
+> > > > +    $ref: /schemas/types.yaml#/definitions/uint32-matrix
+> > > > +    items:
+> > > > +      items:
+> > > > +        - description: register offset
+> > > > +        - description: pre-shifted bitfield mask
+> > > > +        - description: register value to be set
+> > > > +    description: This property is an extension of mux-reg-masks wh=
+ich
+> > > > +                 allows specifying register offset, mask and regis=
+ter
+> > > > +                 value to be set in a single property.
+> > > > +
+> > > > +allOf:
+> > > > +  - if:
+> > > > +      properties:
+> > > > +        compatible:
+> > > > +          contains:
+> > > > +            enum:
+> > > > +              - reg-mux
+> > > > +              - mmio-mux
+> > >=20
+> > > These are the only two possible compatibles, is this "if" check neede=
+d?
+> >=20
+> > Aye.
+> >=20
+> > > > +    then:
+> > > > +      properties:
+> > > > +        mux-reg-masks: true
+> > > > +        mux-reg-masks-state: true
+> > >=20
+> > > You need one, but cannot have both, right? There should be some
+> > > way to describe that.
+> > >=20
+> > > Also an example added below would be good.
+> >=20
+> >  From the example schema:
+> > # if/then schema can be used to handle conditions on a property affecti=
+ng
+> > # another property. A typical case is a specific 'compatible' value cha=
+nges the
+> > # constraints on other properties.
+> > #
+> > # For multiple 'if' schema, group them under an 'allOf'.
+> > #
+> > # If the conditionals become too unweldy, then it may be better to just=
+ split
+> > # the binding into separate schema documents.
+> > allOf:
+> >    - if:
+> >        properties:
+> >          compatible:
+> >            contains:
+> >              const: vendor,soc2-ip
+> >      then:
+> >        required:
+> >          - foo-supply
+> >      else:
+> >        # If otherwise the property is not allowed:
+> >        properties:
+> >          foo-supply: false
+> >=20
+> > What's missing from here is making one of the properties required,
+> > so
+> > oneOf:
+> >    - required:
+> >        - masks
+> >    - required:
+> >        - masks-state
+> >=20
+> > >=20
+> > > Andrew
+>=20
+> Thanks for reviewing this patch.
+>=20
+> For the use-case we have following three rules to be followed:
+> 1. "mux-reg-masks" and "mux-reg-masks-state" should be mutually
+>    exclusive.
+> 2. "mux-reg-masks-state" and "idle-states" should also be mutually
+>    exclusive.
+> 3. If "mux-reg-masks" is present then "idle-states" might or might not
+>    be there.
+>=20
+> For the above conditions I have tried to write a binding as:
+>=20
+> allOf:
+>   - not:
+>       required: [mux-reg-masks, mux-reg-masks-state]
+>=20
+>   - if:
+>       required: [mux-reg-masks-state]
+>     then:
+>       not:
+>         required: [idle-states]
 
-Hi Saket,
+Why'd you pick two different syntax here?
+The normal syntax for mutual exclusion is:
+if:
+  required:
+    - foo
+then:
+  properties:
+    foobar: false
 
-This looks good to me! Did you happen to run "perf test" as there are
-a couple of tests there covering breakpoint behavior and I wonder if
-we may need to update them? Particularly there are some comments about
-PowerPC just not working:
-https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree=
-/tools/perf/tests/bp_account.c#n24
 
-Thanks,
-Ian
+>=20
 
-> Signed-off-by: Saket Kumar Bhaskar <skb99@linux.ibm.com>
-> ---
->  kernel/events/hw_breakpoint.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
->
-> diff --git a/kernel/events/hw_breakpoint.c b/kernel/events/hw_breakpoint.=
-c
-> index bc4a61029b6d..8ec2cb688903 100644
-> --- a/kernel/events/hw_breakpoint.c
-> +++ b/kernel/events/hw_breakpoint.c
-> @@ -950,9 +950,10 @@ static int hw_breakpoint_event_init(struct perf_even=
-t *bp)
->                 return -ENOENT;
->
->         /*
-> -        * no branch sampling for breakpoint events
-> +        * Check if breakpoint type is supported before proceeding.
-> +        * Also, no branch sampling for breakpoint events.
->          */
-> -       if (has_branch_stack(bp))
-> +       if (!hw_breakpoint_slots_cached(find_slot_idx(bp->attr.bp_type)) =
-|| has_branch_stack(bp))
->                 return -EOPNOTSUPP;
->
->         err =3D register_perf_hw_breakpoint(bp);
-> --
-> 2.43.5
->
+>   - if:
+>       required: [mux-reg-masks]
+>     then:
+>       properties:
+>         idle-states:
+>           description: It can be present with mux-reg-masks, but not
+> required
+
+This one here is the default, I don't think it needs an if/else.
+
+
+--F7cMXlJo73Y+j5qV
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZ8XfsgAKCRB4tDGHoIJi
+0o2LAQCMq4HpZu9jiaoJxc850JX+/MKfFHGz/sa7MSTRB+4e1gEA8Gz6xK4LVwXO
+zTxykzZs4br3042xroq9jAGVObGABQA=
+=bvpH
+-----END PGP SIGNATURE-----
+
+--F7cMXlJo73Y+j5qV--
