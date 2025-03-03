@@ -1,170 +1,141 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A1632397AA;
-	Mon,  3 Mar 2025 17:38:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 170A113CA97
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 17:40:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741023492; cv=none; b=dI+HQkx/vycmTOJTHZGdQ27FMZfwTDKLswxtTPyn4nUtbp2LkoLicCV0SajTM9D6OShS2ZAY9YZazjyo19G2OU5zRKJ7NdaCUgY93tLNODtTfl/PcVkVmzcdclkjSUEK1sz3EjoZ7V+efOrt+UuJDMgWdSMUQSB0R+5DnmmNqZw=
+	t=1741023609; cv=none; b=C+jDSYCGZudb2SLGT2LBWqS+s2mJWG4RAj86VjRnqwswtkRGrb7FhbJi0ia/AMOcRGtYyHSqJbjQfu2Udk/dCQBjtSsNG9AKQFWiefOmcpv+X1/5tmd9mRCH9obV7+eNINY4jFn/w3iNiEoJYHZ45yy8GyHzRV/orkTultjTTgM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741023492; c=relaxed/simple;
-	bh=zvJuD9IQBZxuLiwJIKQJHoFj6naa/SXfsleK9VlqYZo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=e1aWL7UAcLhikFdEB1j9L8+ToLr8JsHgqGaSdSLy74cWEzL5Ffi4dM7bB+KkWrxe4su8wnxm6GyxIb4bSE4Tzw22abZxSQ10PHgs3+G7O9twOnNLGui7ZEb545PC78DQFOLFKc4XoKt/5wF3LSYBCbFgQhuUpHEdMahbCVeCwrk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m3imuJU5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741023609; c=relaxed/simple;
+	bh=OZ/+BibrPbvcJjAgUEG3HZQiC7vhM2PDww3ixfWrmOc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Hj1fYBAUOd6WMWa0Nv1iITSI8bCxmbPe9W60wc4czQm9mOCUQSj6yMXEhrOi6MnmqVeH+g6yrvzvx8iEqI4/56H7r97deuE0r+m5mMzd6R8avJ8cM8uqCMvW2O/1B8DA1n3TW2rbvGvbvFwzL7Fx/leZpf8YEW49lz3l8JNVj48=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=S3P/E8i9; arc=none smtp.client-ip=209.85.218.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m3imuJU5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B017C4CEEA;
-	Mon,  3 Mar 2025 17:38:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741023491;
-	bh=zvJuD9IQBZxuLiwJIKQJHoFj6naa/SXfsleK9VlqYZo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=m3imuJU5lltIyd6z0maI7yQaoD2/qW0nDgyRmPIz7tHsWA/gaXxtZsmnC4fHWNqKg
-	 Sg9D3QOZ0kDpMxV1ZbMJMqw2lwUAwaOasxhcOXwJdThL0Gt0BF+Jg+3g/Z2v9+9sHM
-	 kjQLq8D0CmTBTnc4r9ftUhchr+hDJZiUmFvWXs10h23WRlpobdY/2uX1ldCoFlZwrT
-	 dekCO96Cd2BYjteMWb5N/jVLynEt16DdmiFS4UVV1fyPape2900tPUevIgRYWz+wsD
-	 zHRMk3vtwrvqMZSPJGGmwoybewCbpehe2beNuF+dL3RUNUrN00pVOdRDGDQaT0TqRi
-	 8sw45kFaC4ovw==
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Subject: [PATCH 7/7] perf annotate: Add --code-with-type option.
-Date: Mon,  3 Mar 2025 09:38:07 -0800
-Message-ID: <20250303173807.1765098-8-namhyung@kernel.org>
-X-Mailer: git-send-email 2.48.1.711.g2feabab25a-goog
-In-Reply-To: <20250303173807.1765098-1-namhyung@kernel.org>
-References: <20250303173807.1765098-1-namhyung@kernel.org>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="S3P/E8i9"
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-abf71e554c2so39899266b.2
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Mar 2025 09:40:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1741023606; x=1741628406; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=bY1INkJRTc/2R9FJOEVsQP3Q/BCm79THUKLzwVYzR+w=;
+        b=S3P/E8i9jtJ4cyzuMM6chI1BpxI+7xYm7m6dmKpHukFHPVsSFP8YbZ2q5vmNlGc3Mk
+         XehAOPXqcGgSX91B6ohoE1yj8Sy0WQQIomwE5x/e02/MUZsMWJ/kF790d308pTKjZTry
+         ud5ATKbXv9JIfM9+ZnZFlY8X2WKHeJLL5N9EiNCenIwyrMFMiFrM1qRRfU1sEJmDWKRb
+         ToHq+Zs2ufj6lZj36P3pFJSejqS+/6xqIed2mWJmhQOvo98SqbkCmVaaavlbpdFwleS8
+         Px3W06D086V5DSKMVIonrqnPHaXo8H8hpkVUd9UaPLk5U4/8LbsFss/uRiQxhrB30kLt
+         izAA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741023606; x=1741628406;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=bY1INkJRTc/2R9FJOEVsQP3Q/BCm79THUKLzwVYzR+w=;
+        b=sfoK7GchqP1TYtGPVPGiD3qekL9ij7oZsB+/GGUWUhqsGo00DJH0tPI8i7udnJ6Bcq
+         uJ5WiRg7qMUiSxY8NDsiJfchiX3KvKcjcjNskKIhMrYHKQQ2fczJ2nVVolXrnXbsVEaB
+         6YUiKpgwxgDKfaPTI00oQ/B0AMxjlTsm6Idsd2LSABcqsMSTxOyTEqUjbRc3HZ0oGZQR
+         Dv4l39XvHAhdLphHA41xW1URW97L3LjONdN4yIKcgc8Xkp/NVUrkvIMmYDGYkX4HxKWz
+         q8gL56HChN4trD3GrloY+g7Nlx975LrTdlesYhQSGo5O781J4lfoi7ak5vSz6DjwhPNc
+         ex7A==
+X-Forwarded-Encrypted: i=1; AJvYcCXaB1nvmHV3wKlwwdxtNeY+0QsSj3HKWoDvP1rHnwLaOeyFLuTC8xoDc/Gi7BYKPjkC+w0IBifFVzROsQM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxUuXSqePPFVhOMLybmLEPy3X1h/AyTnEt5hFsJnWK9WU3rF11L
+	TGodjIz5hg1JfsM03PXV67F/nOwwmKpD4aieKYcjOPIVQZ30b3x64d4JsObnTmg=
+X-Gm-Gg: ASbGncvPE2t2W4Swvb0OozS8st+nqd/cjv5XnemTX6DN8m3W6JJ5SujM82v6eV8QuGq
+	qJ8bxsfvSHmUVXVRVOpDuoqfklurZ0BBdz5T2K9iWJuwdGGJJNLHk3sNNTw2IfWTIxdcjBcURJ0
+	0pzgk1Hpyy4EIeuoZgIskB+4nGx2F43j0am19AfGlIovmBPzg2bIi+uvYyv1oHkVqLRe6dqVlZ0
+	DtbfmsyyqPqAg2gM5Q65fpPVYsg6dYzkDhebH2t+5ECrL9PEJiQ0aYQpgBeD6gm9/EmGWHrTEkj
+	gGaC1qPf35S+GS82+1qsXIV2Bm6xoBInE8IxOY+6lnuWvY/NQ7RoAABYhAWb4Ruf
+X-Google-Smtp-Source: AGHT+IHpeVlrcUtVUth02suIUMzYsU56kNHf/LXRlk26c8Va4zNhV007iePhzArjqkydQYxfkehsqQ==
+X-Received: by 2002:a17:907:3d87:b0:abf:6f87:6730 with SMTP id a640c23a62f3a-abf6f876ab2mr246490166b.5.1741023606382;
+        Mon, 03 Mar 2025 09:40:06 -0800 (PST)
+Received: from [192.168.1.20] ([178.197.206.225])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abf0c0dc240sm839048766b.59.2025.03.03.09.40.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 03 Mar 2025 09:40:05 -0800 (PST)
+Message-ID: <e3ed8f9f-834c-4641-84ba-7cb729cc1b10@linaro.org>
+Date: Mon, 3 Mar 2025 18:40:04 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/2] dt-bindings: reset: Add T-HEAD TH1520 SoC Reset
+ Controller
+To: Michal Wilczynski <m.wilczynski@samsung.com>, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, drew@pdp7.com, guoren@kernel.org,
+ wefu@redhat.com, p.zabel@pengutronix.de, m.szyprowski@samsung.com
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250303152511.494405-1-m.wilczynski@samsung.com>
+ <CGME20250303152521eucas1p26c54c5b15c024d749cf004b66345d2e0@eucas1p2.samsung.com>
+ <20250303152511.494405-2-m.wilczynski@samsung.com>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Content-Language: en-US
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <20250303152511.494405-2-m.wilczynski@samsung.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-This option is to show data type info in the regular (code) annotation.
-It tries to find data type for each (memory) instruction in the
-function.  It'd be useful to see function-level memory access pattern
-and also to debug the data type profiling result.
+On 03/03/2025 16:25, Michal Wilczynski wrote:
+> Add a YAML schema for the T-HEAD TH1520 SoC reset controller. This
+> controller manages resets for subsystems such as the GPU within the
+> TH1520 SoC.
+> 
+> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-The output would be added at the end of the line and have "# data-type:"
-prefix.
+You cannot get my review on v1, I never give review tags out of lists.
 
-For now, it only works with --stdio mode for simplicity.  I can work on
-enabling it for TUI later.
+This is vN, like I suggested when I asked about splitting the patchset.
 
-  $ perf annotate --stdio --code-with-type
-   Percent |      Source code & Disassembly of vmlinux for cpu/mem-loads/ppk (253 samples, percent: local period)
-  ---------------------------------------------------------------------------------------------------------------
-           : 0                0xffffffff81baa000 <check_preemption_disabled>:
-      0.00 :   ffffffff81baa000:        pushq   %r12              # data-type: (stack operation)
-      0.00 :   ffffffff81baa002:        pushq   %rbp              # data-type: (stack operation)
-      0.00 :   ffffffff81baa003:        pushq   %rbx              # data-type: (stack operation)
-      0.00 :   ffffffff81baa004:        subq    $0x8, %rsp
-     18.00 :   ffffffff81baa008:        movl    %gs:0x7e48893d(%rip), %ebx  # 0x3294c <pcpu_hot+0xc>              # data-type: struct pcpu_hot +0xc (cpu_number)
-     12.58 :   ffffffff81baa00f:        movl    %gs:0x7e488932(%rip), %eax  # 0x32948 <pcpu_hot+0x8>              # data-type: struct pcpu_hot +0x8 (preempt_count)
-      0.00 :   ffffffff81baa016:        testl   $0x7fffffff, %eax
-      0.00 :   ffffffff81baa01b:        je      0xffffffff81baa02c <check_preemption_disabled+0x2c>
-      0.00 :   ffffffff81baa01d:        addq    $0x8, %rsp
-      0.00 :   ffffffff81baa021:        movl    %ebx, %eax
-     14.19 :   ffffffff81baa023:        popq    %rbx              # data-type: (stack operation)
-     18.86 :   ffffffff81baa024:        popq    %rbp              # data-type: (stack operation)
-     12.10 :   ffffffff81baa025:        popq    %r12              # data-type: (stack operation)
-     17.78 :   ffffffff81baa027:        jmp     0xffffffff81bc1170 <__x86_return_thunk>
-      6.49 :   ffffffff81baa02c:        callq   *0xc9139e(%rip)  # 0xffffffff8283b3d0 <pv_ops+0xf0>               # data-type: (stack operation)
-      0.00 :   ffffffff81baa032:        testb   $0x2, %ah
-      0.00 :   ffffffff81baa035:        je      0xffffffff81baa01d <check_preemption_disabled+0x1d>
-      0.00 :   ffffffff81baa037:        movq    %rdi, %rbp
-      0.00 :   ffffffff81baa03a:        movq    %gs:0x32940, %rax         # data-type: struct pcpu_hot +0 (current_task)
-      0.00 :   ffffffff81baa043:        testb   $0x4, 0x2f(%rax)          # data-type: struct task_struct +0x2f (flags)
-      0.00 :   ffffffff81baa047:        je      0xffffffff81baa052 <check_preemption_disabled+0x52>
-      0.00 :   ffffffff81baa049:        cmpl    $0x1, 0x3d0(%rax)         # data-type: struct task_struct +0x3d0 (nr_cpus_allowed)
-      0.00 :   ffffffff81baa050:        je      0xffffffff81baa01d <check_preemption_disabled+0x1d>
-      0.00 :   ffffffff81baa052:        movq    %gs:0x32940, %r12         # data-type: struct pcpu_hot +0 (current_task)
-      0.00 :   ffffffff81baa05b:        cmpw    $0x0, 0x7f0(%r12)         # data-type: struct task_struct +0x7f0 (migration_disabled)
-      0.00 :   ffffffff81baa065:        movq    %rsi, (%rsp)
-      0.00 :   ffffffff81baa069:        jne     0xffffffff81baa01d <check_preemption_disabled+0x1d>
-      0.00 :   ffffffff81baa06b:        movl    0xe8dd13(%rip), %eax  # 0xffffffff82a37d84 <system_state>         # data-type: enum system_states +0
-      0.00 :   ffffffff81baa071:        testl   %eax, %eax
-      0.00 :   ffffffff81baa073:        je      0xffffffff81baa01d <check_preemption_disabled+0x1d>
-      0.00 :   ffffffff81baa075:        incl    %gs:0x7e4888cc(%rip)  # 0x32948 <pcpu_hot+0x8>            # data-type: struct pcpu_hot +0x8 (preempt_count)
-      0.00 :   ffffffff81baa07c:        movq    $-0x7e14a100, %rdi
-      0.00 :   ffffffff81baa083:        callq   0xffffffff81148c40 <__printk_ratelimit>           # data-type: (stack operation)
-      0.00 :   ffffffff81baa088:        testl   %eax, %eax
-      0.00 :   ffffffff81baa08a:        je      0xffffffff81baa0d5 <check_preemption_disabled+0xd5>
-      0.00 :   ffffffff81baa08c:        movl    0x958(%r12), %r9d         # data-type: struct task_struct +0x958 (pid)
-      0.00 :   ffffffff81baa094:        movq    (%rsp), %rdx              # data-type: char* +0
-      0.00 :   ffffffff81baa098:        movq    %rbp, %rsi
-      0.00 :   ffffffff81baa09b:        leaq    0xb88(%r12), %r8          # data-type: struct task_struct +0xb88 (comm)
-      0.00 :   ffffffff81baa0a3:        movl    %gs:0x7e48889e(%rip), %ecx  # 0x32948 <pcpu_hot+0x8>              # data-type: struct pcpu_hot +0x8 (preempt_count)
-      0.00 :   ffffffff81baa0aa:        andl    $0x7fffffff, %ecx
-      0.00 :   ffffffff81baa0b0:        movq    $-0x7dd3cdf0, %rdi
-      0.00 :   ffffffff81baa0b7:        subl    $0x1, %ecx
-      0.00 :   ffffffff81baa0ba:        callq   0xffffffff81149340 <_printk>              # data-type: (stack operation)
-      0.00 :   ffffffff81baa0bf:        movq    0x20(%rsp), %rsi
-      0.00 :   ffffffff81baa0c4:        movq    $-0x7ddb8c7e, %rdi
-      0.00 :   ffffffff81baa0cb:        callq   0xffffffff81149340 <_printk>              # data-type: (stack operation)
-      0.00 :   ffffffff81baa0d0:        callq   0xffffffff81b7ab60 <dump_stack>           # data-type: (stack operation)
-      0.00 :   ffffffff81baa0d5:        decl    %gs:0x7e48886c(%rip)  # 0x32948 <pcpu_hot+0x8>            # data-type: struct pcpu_hot +0x8 (preempt_count)
-      0.00 :   ffffffff81baa0dc:        jmp     0xffffffff81baa01d <check_preemption_disabled+0x1d>
-
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/Documentation/perf-annotate.txt | 4 ++++
- tools/perf/builtin-annotate.c              | 9 +++++++++
- 2 files changed, 13 insertions(+)
-
-diff --git a/tools/perf/Documentation/perf-annotate.txt b/tools/perf/Documentation/perf-annotate.txt
-index 156c5f37b05141ca..46090c5b42b4762f 100644
---- a/tools/perf/Documentation/perf-annotate.txt
-+++ b/tools/perf/Documentation/perf-annotate.txt
-@@ -168,6 +168,10 @@ include::itrace.txt[]
- --skip-empty::
- 	Do not display empty (or dummy) events.
- 
-+--code-with-type::
-+	Show data type info in code annotation (for memory instructions only).
-+	Currently it only works with --stdio option.
-+
- 
- SEE ALSO
- --------
-diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
-index 966950c38306d6ea..9833c2c82a2fee46 100644
---- a/tools/perf/builtin-annotate.c
-+++ b/tools/perf/builtin-annotate.c
-@@ -788,6 +788,8 @@ int cmd_annotate(int argc, const char **argv)
- 		    "Show instruction stats for the data type annotation"),
- 	OPT_BOOLEAN(0, "skip-empty", &symbol_conf.skip_empty,
- 		    "Do not display empty (or dummy) events in the output"),
-+	OPT_BOOLEAN(0, "code-with-type", &annotate_opts.code_with_type,
-+		    "Show data type info in code annotation (memory instructions only)"),
- 	OPT_END()
- 	};
- 	int ret;
-@@ -913,6 +915,13 @@ int cmd_annotate(int argc, const char **argv)
- 		annotate_opts.annotate_src = false;
- 		symbol_conf.annotate_data_member = true;
- 		symbol_conf.annotate_data_sample = true;
-+	} else if (annotate_opts.code_with_type) {
-+		symbol_conf.annotate_data_member = true;
-+
-+		if (!annotate.use_stdio) {
-+			pr_err("--code-with-type only works with --stdio.\n");
-+			goto out_delete;
-+		}
- 	}
- 
- 	setup_browser(true);
--- 
-2.48.1.711.g2feabab25a-goog
-
+Best regards,
+Krzysztof
