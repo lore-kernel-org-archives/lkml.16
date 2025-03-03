@@ -1,97 +1,75 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD1EE1F4171;
-	Mon,  3 Mar 2025 10:53:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from SHSQR01.spreadtrum.com (mx1.unisoc.com [222.66.158.135])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC0B51F2C5B
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 10:53:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=222.66.158.135
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740999211; cv=none; b=JtyUrvuOSn2y1jwCuZDVGLeMchvB75nCV6rmP3ko/0vlbMzYIcc3dB0Ga1ohAZo72RlYVBPTR5nN2lPGL34zar4mNj1TnNNpS+e6D3yJsfYNqN9iJwRKl6xcm6lzioGo+3Qpfrw+XZruwN/F7NFTJxuAw5x5CrvFtKNHDBlrSe0=
+	t=1740999211; cv=none; b=ABlruTjvfhNB1cau7Zo80wHogBJp6VuzLQSZE3p2xt+ZldMGQ3wak6BvriXm7vvm1ixYqNdJvyy9WnZG8PtJ+L1hv1MXWj6hTjl7lLMe1K2X0lE97NmyHQHMPM0JqawjSAKn3RrEqc3rXgSZ8zrStKh84LRPgjHlEGDWaRx+zLc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1740999211; c=relaxed/simple;
-	bh=200nn/4JF4ubELss3QLL7p1PASyuP4e2PWPIQkroDkE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Oylh+Zs1xJ6BRP5NozjqgBYjSks6IjeQ5q3BnERTy0bGbs1QutYNQPAlDoB0utAm3HdAWIbms19XMKPqIxgV2/vb3fLRjbSLBahXXjLrBU43yN8R5WgjQbBEa6/jdce6FpjDOLUB9q6Kw/Tay8NmLGgJi4tImYLr5sOQmtLSTco=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 264082008;
-	Mon,  3 Mar 2025 02:53:43 -0800 (PST)
-Received: from e133711.arm.com (e133711.arm.com [10.1.196.55])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0A3FA3F673;
-	Mon,  3 Mar 2025 02:53:27 -0800 (PST)
-From: Sudeep Holla <sudeep.holla@arm.com>
-Date: Mon, 03 Mar 2025 10:51:38 +0000
-Subject: [PATCH 03/14] mailbox: pcc: Drop unnecessary endianness conversion
- of pcc_hdr.flags
+	bh=LXUxz1eAYTX+ZE8k6XJtrXpRg0wE05yu4Q6GBSQSvRI=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=gdKydN7ho4Mv6WpMg47A0tDaguL4Qd4psqs9jFhoXjzwWxtH56ye1QW6UFB2bxiqZSwkjm69+cPNDA2eqFCjCpHUE+acrVTmES9oiVFc4dy3EbpSSb1cB5lTVmD9sPnRCCsMdbZ6dwuRwkQb4zq911U0IHtwEMI2/0eZI4D6d60=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com; spf=pass smtp.mailfrom=unisoc.com; arc=none smtp.client-ip=222.66.158.135
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=unisoc.com
+Received: from dlp.unisoc.com ([10.29.3.86])
+	by SHSQR01.spreadtrum.com with ESMTP id 523ArAGR091702;
+	Mon, 3 Mar 2025 18:53:10 +0800 (+08)
+	(envelope-from Xuewen.Yan@unisoc.com)
+Received: from SHDLP.spreadtrum.com (bjmbx01.spreadtrum.com [10.0.64.7])
+	by dlp.unisoc.com (SkyGuard) with ESMTPS id 4Z5wX917hZz2K8nM6;
+	Mon,  3 Mar 2025 18:48:25 +0800 (CST)
+Received: from BJ10918NBW01.spreadtrum.com (10.0.73.73) by
+ BJMBX01.spreadtrum.com (10.0.64.7) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.23; Mon, 3 Mar 2025 18:53:08 +0800
+From: Xuewen Yan <xuewen.yan@unisoc.com>
+To: <vincent.guittot@linaro.org>, <peterz@infradead.org>, <mingo@redhat.com>,
+        <juri.lelli@redhat.com>, <dietmar.eggemann@arm.com>,
+        <rostedt@goodmis.org>, <bsegall@google.com>, <mgorman@suse.de>,
+        <vschneid@redhat.com>
+CC: <linux-kernel@vger.kernel.org>, <ke.wang@unisoc.com>, <di.shen@unisoc.com>,
+        <xuewen.yan94@gmail.com>
+Subject: [RFC PATCH V2 0/3] sched/fair: Fix nr-running vs delayed-dequeue
+Date: Mon, 3 Mar 2025 18:52:38 +0800
+Message-ID: <20250303105241.17251-1-xuewen.yan@unisoc.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250303-pcc_fixes_updates-v1-3-3b44f3d134b1@arm.com>
-References: <20250303-pcc_fixes_updates-v1-0-3b44f3d134b1@arm.com>
-In-Reply-To: <20250303-pcc_fixes_updates-v1-0-3b44f3d134b1@arm.com>
-To: linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Sudeep Holla <sudeep.holla@arm.com>, 
- Jassi Brar <jassisinghbrar@gmail.com>, Huisong Li <lihuisong@huawei.com>, 
- Adam Young <admiyo@os.amperecomputing.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1458; i=sudeep.holla@arm.com;
- h=from:subject:message-id; bh=200nn/4JF4ubELss3QLL7p1PASyuP4e2PWPIQkroDkE=;
- b=owEBbQKS/ZANAwAIAQBBurwxfuKYAcsmYgBnxYohZmJ3X0WGWizJXAMHN4xUhfGZueR0Z07Dj
- q7KIRpPjESJAjMEAAEIAB0WIQS6ceUSBvMeskPdk+EAQbq8MX7imAUCZ8WKIQAKCRAAQbq8MX7i
- mJStD/4xFv05gSx16Q02HplCWvd9xj+wDUj8h5sm5XDXHkL47PmV6wfQGqVrrPdvQUbKgPFAT3u
- xQUmYrtSHKyjkh+cXL2545LmxLm6HUw4qVa+wMWMaIL2YWY5qZeIq3DabKRwTQkL1f0AtHSuLH8
- gD0vMKUkAAUdfyA/XtHTxkVfLJv9YIOwAFDh+yYLLPzWc2I0rdfay8w53362zAlYG3j6CYP6Bso
- g/L1ggHB33nm16pUpsNH/NFxZci1p6wtnhmTcPd/gimQqtTHlmcf/qmCP8p+6NC/qnkwkXLy+Vk
- du3mM5JUTuaD/WCxK334tmlxr8zY3Umm9jHPzgnqyRyQ1AiFA6zYQqq8gljiMrkhKcFV8EWae+u
- tbUv6BCvm/fMOCtZUXuG7M22/hzfjLlt7w+ge+lV9u8Awhzo4sWE90SlS1O7IitmKbns4C9fJk5
- iFjNmH4WdCFsTrBXsSUcvEwBFdfV8el4kamxeE/cB1ASzqqERqYlBNDbsiuJ/6UrRuniHLR1cWg
- oyOQSEtxRAEUVdbkGHuf8hS09nkXl5txSgkQ8BwSRusNbOb0GizkTy87xjyxz+7Opg/PPIn2Wtm
- NFJxScB3+X1PLuYMiPuHNPQz3Gl/5+Agn/8D/oOnTyHZ3/3B58gj6uMCb2braCN+YqaCvHn5+g5
- gueITME3C6hscpA==
-X-Developer-Key: i=sudeep.holla@arm.com; a=openpgp;
- fpr=7360A21742ADF5A11767C1C139CFD4755FE2D5B4
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SHCAS03.spreadtrum.com (10.0.1.207) To
+ BJMBX01.spreadtrum.com (10.0.64.7)
+X-MAIL:SHSQR01.spreadtrum.com 523ArAGR091702
 
-The Sparse static checker flags a type mismatch warning related to
-endianness conversion:
+Delayed dequeued feature keeps a sleeping sched_entitiy enqueued until its
+lag has elapsed. As a result, it stays also visible in rq->nr_running.
+However, sometimes when using nr-running, we should not consider
+sched-delayed tasks.
+This serie fixes those by adding a helper function which return the
+number of sched-delayed tasks. And when we should get the real runnable
+tasks, we sub the nr-delayed tasks.
 
-  |  warning: incorrect type in argument 1 (different base types)
-  |     expected restricted __le32 const [usertype] *p
-  |     got unsigned int *
+Changes sinc v1:
+- add cover-letter
+- add helper function;
+- add more fixes
 
-This is because an explicit endianness conversion (le32_to_cpu()) was
-applied unnecessarily to a pcc_hdr.flags field that is already in
-little-endian format.
+Xuewen Yan (3):
+  sched/fair: Fixup-wake_up_sync-vs-DELAYED_DEQUEUE
+  sched/fair: Do not consider the sched-delayed task when yield
+  sched: Do not consider the delayed task when cpu is about to enter
+    idle
 
-The PCC driver is only enabled on little-endian kernels due to its
-dependency on ACPI and EFI, making the explicit conversion unnecessary.
-
-The redundant conversion occurs in pcc_chan_check_and_ack() for the
-pcc_hdr.flags field. Drop this unnecessary endianness conversion of
-pcc_hdr.flags.
-
-Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
----
- drivers/mailbox/pcc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/mailbox/pcc.c b/drivers/mailbox/pcc.c
-index 4c582fa2b8bf4c9a9368dba8220f567555dba963..c87a5b7fa6eaf7bcabe0d55f844961c499376938 100644
---- a/drivers/mailbox/pcc.c
-+++ b/drivers/mailbox/pcc.c
-@@ -292,7 +292,7 @@ static void check_and_ack(struct pcc_chan_info *pchan, struct mbox_chan *chan)
- 	 *
- 	 * The PCC master subspace channel clears chan_in_use to free channel.
- 	 */
--	if (le32_to_cpup(&pcc_hdr.flags) & PCC_ACK_FLAG_MASK)
-+	if (pcc_hdr.flags & PCC_ACK_FLAG_MASK)
- 		pcc_send_data(chan, NULL);
- 	else
- 		pcc_chan_reg_read_modify_write(&pchan->cmd_update);
+ kernel/sched/core.c  |  2 +-
+ kernel/sched/fair.c  | 10 +++++++---
+ kernel/sched/sched.h |  5 +++++
+ 3 files changed, 13 insertions(+), 4 deletions(-)
 
 -- 
-2.34.1
+2.25.1
 
