@@ -1,91 +1,136 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+Received: from out-188.mta1.migadu.com (out-188.mta1.migadu.com [95.215.58.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA51911CA9;
-	Mon,  3 Mar 2025 22:34:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B5F02343AB
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 22:34:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741041293; cv=none; b=BjuWzi+GbD3w+ziRqn2qZILWyNNvq5d7O3F06z061T+Tk9IM8dUkwPqoYRnSzCjLWFEsElT/G+CQ0k8HJ60gl0M1y8REr+SgtOoXo1ckGsaw87kIpYW5n4jz5CdWl8eNxTiXMK04f/bFUs00zqTPhL+z5fsgXiAJzmdyAdOt6Is=
+	t=1741041296; cv=none; b=jVkpYkUUfSbj+bKbAFQoByFVEn1jN1z2ZCUMhrZ70ErLdh2Mr5rwfv9p5IG6bHbjIyGYDgojzr6HcpNTrpx3HndjY1OcfatKavSryJ1SgFX/nu3C/zpg6YZ/Exb7hLCNGVtRLSU59D2vzogLFwL+h/zZjlrDHCQfWEBLMpqmC+U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741041293; c=relaxed/simple;
-	bh=F30QHXKrlOqCuPBKSY4pSSMBNSfxTebs969Cd+lS1F0=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=UpcE0xnYC7XQh7TttVFT7bshLgIOuhKjRHe5jg3hnSimkWlvpLzL13f2gB6vxZSZ3f0MH9LBkdVKcRD4p1WmScoTV+6zZs1m9vZr952h+gUDaOxqUEHKI8FPWMquF0leG9NpL3siQ9MCurWlEvt0RxppO2mCIePTXksf3toHdkM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=LdTRf7fr; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1741041296; c=relaxed/simple;
+	bh=zhieft+nHqE44cRpoGTo7Wgldf9DHgUQm7cs2zZ74M0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QKzyUjNyl0sJyy+kEDrPhK3agy/4EC6wxJOVnzic8ph3K6RHXYNa6En1Tgb3kVpFu+8bplEuaVCCEmnqRV7J3FFmd7gYMXnrU+kK95l5sbj2TYtSdB7g+7SqGNNTa/c2eRu76gRK39I4Z4mDHAfLneqGMPmCR1Q/JeGz8cSIDjI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=vgvMHXNW; arc=none smtp.client-ip=95.215.58.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="LdTRf7fr"
-Received: from [IPv6:::1] ([172.59.161.144])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 523MYBht1781244
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Mon, 3 Mar 2025 14:34:13 -0800
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 523MYBht1781244
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025021701; t=1741041254;
-	bh=yQK8hVfe3l9Z3etcB2YNPrMft+SViGKW39OaDCOwqHk=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=LdTRf7fr5G4o2XMAm778Q9TDcI6UDgmRTS+1xsfKDq0AhhVcfrmxIoETJZ+nPi8Ow
-	 edcZkGzlKutQJ5cFT2ml5SyYb5Fq2kVyAOFEklcGwPMTjM/FMQy9CAmENYlWQiN9lg
-	 /cp3c1IeXGhDCziFrWBT2XkQcD2zky0Q+Vebz7YytR0WOPvJIXSqa8ZnKcWuz1LTpD
-	 PhX0gcxQ8dt0M3Wm619z42LKad4skAy/WGuUohHsQ2N+T2xDmFQp7EuBwpBWVOvRof
-	 7G61JI0nQmiSEtugXCPHh6lagMiOA87W5D5f85uDSprD0cIrjvqjxhl6wnbK7CaipQ
-	 Kfa0GN0s0epIw==
-Date: Mon, 03 Mar 2025 14:34:05 -0800
-From: "H. Peter Anvin" <hpa@zytor.com>
-To: Borislav Petkov <bp@alien8.de>
-CC: "Aithal, Srikanth" <sraithal@amd.com>, "Xin Li (Intel)" <xin@zytor.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com,
-        x86@kernel.org, will@kernel.org, peterz@infradead.org,
-        yury.norov@gmail.com, akpm@linux-foundation.org, acme@kernel.org,
-        namhyung@kernel.org, brgerst@gmail.com, andrew.cooper3@citrix.com,
-        nik.borisov@suse.com
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v6_3/5=5D_x86/cpufeatures=3A_Generate?=
- =?US-ASCII?Q?_a_feature_mask_header_based_on_build_config?=
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20250303132505.GEZ8WtsXqFpuMOpDjT@fat_crate.local>
-References: <20250228082338.73859-1-xin@zytor.com> <20250228082338.73859-4-xin@zytor.com> <7c3b4623-45ea-4340-ac47-334071c1d15f@amd.com> <D03DAFD2-5EC9-4D16-BA66-FDA4B51F45DD@zytor.com> <20250303132505.GEZ8WtsXqFpuMOpDjT@fat_crate.local>
-Message-ID: <BCD39CA4-97F7-4B33-88BF-98BF17775DCA@zytor.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="vgvMHXNW"
+Date: Mon, 3 Mar 2025 22:34:46 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1741041292;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9L92r6X7Eg96asDUmcRcp3aZhjsIld49Y1+1SOSF1iI=;
+	b=vgvMHXNWl6+D+INZwx3XRAEmwDjUiLF96Tki7+GGtO+iZdEVhR3zEiGmnJSNK+l4wkyKoL
+	zTSIOOqFLAVLmfX2x8xaPjJc33u5yHxfZV3sdXMK0eDE8Uy46pqoHYA995Q0DGH6/M3acb
+	MKVG781br9YG2v0vjVEyPDMbq+os+ik=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Yosry Ahmed <yosry.ahmed@linux.dev>
+To: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Nhat Pham <nphamcs@gmail.com>, akpm@linux-foundation.org,
+	chengming.zhou@linux.dev, linux-mm@kvack.org, kernel-team@meta.com,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] page_io: zswap: do not crash the kernel on
+ decompression failure
+Message-ID: <Z8YuhvMZkE7CoYRN@google.com>
+References: <20250303200627.2102890-1-nphamcs@gmail.com>
+ <Z8YdV4Vqju2w7hqI@google.com>
+ <20250303215524.GD120597@cmpxchg.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250303215524.GD120597@cmpxchg.org>
+X-Migadu-Flow: FLOW_OUT
 
-On March 3, 2025 5:25:05 AM PST, Borislav Petkov <bp@alien8=2Ede> wrote:
->On Mon, Mar 03, 2025 at 04:05:54AM -0800, H=2E Peter Anvin wrote:
->> "make headers" on an unconfigured tree should presumably only produce t=
-he uapi headers, not kernel-internal ones, one could surmise?
->
->Well, that's kinda a question for you guys:
->
->cfc7686900a87   (H=2E Peter Anvin (Intel) 2025-02-28 00:23:36 -0800      =
- 281)archheaders: $(out)/$(featuremasks_hdr)
->1f57d5d85ba7f   (Ingo Molnar    2015-06-03 18:36:41 +0200       282)    $=
-(Q)$(MAKE) $(build)=3Darch/x86/entry/syscalls all
->
->and the headers target has
->
->headers: $(version_h) scripts_unifdef uapi-asm-generic archheaders archsc=
-ripts
->
->as its prereq=2E
->
->Judging by
->
->59b2bd05f5f4 ("kbuild: add 'headers' target to build up uapi headers in u=
-sr/include")
->
->it sure looks like "make headers" should be for uapi headers only=2E
->
->Oh, and it should be documented in "make help" output btw=2E
->
+On Mon, Mar 03, 2025 at 04:55:24PM -0500, Johannes Weiner wrote:
+> On Mon, Mar 03, 2025 at 09:21:27PM +0000, Yosry Ahmed wrote:
+> > On Mon, Mar 03, 2025 at 12:06:27PM -0800, Nhat Pham wrote:
+> > > @@ -635,13 +652,11 @@ void swap_read_folio(struct folio *folio, struct swap_iocb **plug)
+> > >  	}
+> > >  	delayacct_swapin_start();
+> > >  
+> > > -	if (swap_read_folio_zeromap(folio)) {
+> > > -		folio_unlock(folio);
+> > > +	if (swap_read_folio_zeromap(folio) != -ENOENT)
+> > >  		goto finish;
+> > 
+> > I would split the zeromap change into a separate patch, but it's
+> > probably fine either way.
+> 
+> +1
+> 
+> > > @@ -1025,12 +1028,31 @@ static void zswap_decompress(struct zswap_entry *entry, struct folio *folio)
+> > >  	sg_init_table(&output, 1);
+> > >  	sg_set_folio(&output, folio, PAGE_SIZE, 0);
+> > >  	acomp_request_set_params(acomp_ctx->req, &input, &output, entry->length, PAGE_SIZE);
+> > > -	BUG_ON(crypto_wait_req(crypto_acomp_decompress(acomp_ctx->req), &acomp_ctx->wait));
+> > > -	BUG_ON(acomp_ctx->req->dlen != PAGE_SIZE);
+> > > +	decomp_ret = crypto_wait_req(crypto_acomp_decompress(acomp_ctx->req), &acomp_ctx->wait);
+> > > +	dlen = acomp_ctx->req->dlen;
+> > >  
+> > >  	if (src != acomp_ctx->buffer)
+> > >  		zpool_unmap_handle(zpool, entry->handle);
+> > >  	acomp_ctx_put_unlock(acomp_ctx);
+> > > +
+> > > +	if (decomp_ret || dlen != PAGE_SIZE) {
+> > > +		zswap_decompress_fail++;
+> > > +		pr_alert_ratelimited(
+> > > +			"decompression failed with returned value %d on zswap entry with "
+> > 
+> > nit: Decompression*
+> > 
+> > I am also wondering how this looks like in dmesg? Is the line too long
+> > to be read? Should we add some line breaks (e.g. like
+> > warn_sysctl_write()), we could probably also put this in a helper to
+> > keep this function visually easy to follow.
+> 
+> If it were more interwoven, I would agree. But it's only followed by
+> the return true, false. Moving it out of line would need another name
+> in the zswap namespace and also take an awkward amount of parameters,
+> so IMO more taxing on the reader.
 
-Yes, it was more of a statement=2E Generating internal headers sans config=
- is utterly bogus=2E
+My rationale was that no one reading zswap_decompress() will feel the need
+to read a function called zswap_warn_decompress_failure() in the error
+path, so it will save people parsing this huge thing.
+
+FWIW it would only need to take 3 parameters: decomp_ret, dlen, entry.
+
+> 
+> But maybe do if (!decomp_ret && dlen == PAGE_SIZE) return true, and
+> then save an indentation for the error part?
+> 
+> > > +			"swap entry value %08lx, swap type %d, and swap offset %lu. "
+> > > +			"compression algorithm is %s. compressed size is %u bytes, and "
+> > > +			"decompressed size is %u bytes.\n",
+> 
+> Any objections to shortening it and avoiding the line length issue?
+> Even with \n's, this is still a lot of characters to dump 10x/5s. And
+> it's not like the debug info is super useful to anyone but kernel
+> developers, who in turn wouldn't have an issue interpreting this:
+> 
+> pr_alert_ratelimited("Decompression error from zswap (%d:%lu %s %u->%d)\n",
+> 		     swptype, swpoffset, name, clen, dlen);
+
+Yeah this looks much more concise. It's a bit harder to parser the dmesg
+as you have to cross check the code, but hopefully this is something
+that people rarely have to do.
+
+I don't feel strongly about adding a helper in this case, unless we want
+to add local variables (like Johannes did above), in which case a helper
+would be a good way to hide them.
+
+> 
+> > > +			decomp_ret,
+> > > +			entry->swpentry.val,
+> > > +			swp_type(entry->swpentry),
+> > > +			swp_offset(entry->swpentry),
+> > > +			entry->pool->tfm_name,
+> > > +			entry->length,
+> > > +			acomp_ctx->req->dlen);
