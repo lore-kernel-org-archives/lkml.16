@@ -1,196 +1,138 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97F441E5B76;
-	Mon,  3 Mar 2025 07:34:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E11121EB192
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 07:40:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740987292; cv=none; b=EWuLO11zSW+glRwqZVrPpX0V3O/sv3DxKWRnuiOf2JLtRvOSl2qiMZIDSo5apC9l3LjRNUdRWzQ8b2LA6qOblS2erSW3h6dR7ri3Bp3Ohts9ZV08+0g1baacSQto1PRm4OpSB2HbMVKbM9NQjXDfvMZmmRLO/HuvVQy+6TEksmA=
+	t=1740987629; cv=none; b=IeM/8wcHCvdNaqWvXRDhLmg9LHyExyo/IpUy4xr9hH7mJxbUMQ6Iz2S3I2yIikCx08wTmC93FNVgb/LTvSiHOMXo+H9uBbqY0pqGRN2EnN8XZw/QnumnB9d1WljFt5/O+OUC6iSyWDYsJI3rxAVf5zs8feEScjxlveUsPLTarH0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740987292; c=relaxed/simple;
-	bh=OdVpAxmtfoalSXyqc+DLAkGnZF5iDT2lNU6C/joqxOA=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=TfCjdrrRcMu6o6snqI3+kC3FzSUvML6g+CuXSfTC5S0P9c3EPRKlil1lE9n18GxJ3PWuSAU3BGsIKyZ7mp1NJEqsBsgcUyP07sIYt4pQDKSayjjd4hPkH9oClqworMmZ21qU7CppFMnmjFiihyIHD5y0lFFtRrvtTSI5CbtGRZ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ae/eu6wz; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740987629; c=relaxed/simple;
+	bh=IzeGHhNg9guS+bb6Xf/SXPSItFc/WQddL0VKXCsN+eU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=b/qPClxHVnm3CqYqZSW8VvVu6rDzryysna0X/JGsnYSiPS/vbbEgYpFYH+8DZcnVtmSiiZ8Yg7Z/HblzBY4YHkJwx/nSZsVRzhJThmuY2ZU3SRAZAQPr9H8SjNW0Bf/vNKp4PqBvhD0O5jq11ZCGkH/EOzoE2jJbY57+Uut91XU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=bZMpYrYq; arc=none smtp.client-ip=209.85.218.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ae/eu6wz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94412C4CED6;
-	Mon,  3 Mar 2025 07:34:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740987292;
-	bh=OdVpAxmtfoalSXyqc+DLAkGnZF5iDT2lNU6C/joqxOA=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=Ae/eu6wzFC+50YktcQuMsFoMEsSip8iy+UoejH9l6iTL+foo31bCfLjUFZFn5COBq
-	 9+SwxdDtT9v2e3n0Rz4tJR4QnZGh7pGvpaga+HBQ5P0t3nsh9z1e9r0WTjYitRScB3
-	 MckHDxDMuCXVtr3pYNcEzCnoRXGoyHuymYWYdqTcRisJbJfffQauC/cp3nWit3Iryl
-	 9nmzPDRdg5Ttnka1VH/LnFW1ar2oS12afA/YFdsnihR2R4J2J5vq19bmQ5Clixcut2
-	 g8NcYKA5YyZOAgXg9naN7yF0/vgJ/A8zIt19AcGTEvrpA5+7k/fe5VVjr7w92ytu5j
-	 HGzLXy+OyWquA==
-Message-ID: <7c720780-03ad-43a1-b89c-8cedd00dd129@kernel.org>
-Date: Mon, 3 Mar 2025 08:34:45 +0100
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bZMpYrYq"
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-abf52666efdso210998366b.1
+        for <linux-kernel@vger.kernel.org>; Sun, 02 Mar 2025 23:40:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1740987626; x=1741592426; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=YKqqIyx+LvtkYRdOlEQ7AImwUDeztG0/r/38CZ0Vg4Q=;
+        b=bZMpYrYq8SmU+1WmTx/80imEvMa0yB74Vr6xlejw6sFZAlnT1Bl/W4GCPt63wwLOO1
+         +5UJD9ENZawuRtTCHXsNJi6TL3GHu4uy71jMDTqN2S8BIc1TEfX5KVQ7+qKEiij44G3b
+         osYyOTUC5h18vArHUU1ehxOIX6RYAw/hUIbFUCVzLi+c7L5tHmmq1Cyls2nczEyBcbqm
+         sBrLx88Yf0w8hVri1pLA+duitT81weW+fAQBmgXGL+i7/m8fRHYEp56nY0CZZub39JXc
+         r/Bbi4PfiV4YpxN4jFHBTKx/UrWqF8gMeLo2P0FwwW4Y5f6OfbsnLr1rn+/FurtpbDQj
+         d5Ew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740987626; x=1741592426;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YKqqIyx+LvtkYRdOlEQ7AImwUDeztG0/r/38CZ0Vg4Q=;
+        b=VlxZTRYoIxiJASoiLjAE52M4TYUStdo4uFvHe+yXcRiZ4Ry+tQoaLi89QU8wMPBFSb
+         PoounXLIohy+tnbb9tYNnVkWuCsMDwpUcuUh+9IFlivUgZ1pfUaVdXj+yZCgMilv/CaC
+         SM5qa0PhT/j/fWzYQfaE2ZE1Mg4H+oCtPy+2o05sDrtVstC/N2O8tmF58qC+iyCRqodU
+         PCKorfYq+IrM2q3pcLrYgKlU/BjR1I3OdCxFhvAm67mDVyb+mnQJYPoY8GwiSMv0cBKc
+         8wkAvHrK5WkbRKFDZgpgP2T7WrtkGSwkLvXgdlyfu77C1+CfVs/VgMYamq2yVlTfxKDb
+         Q5JQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX8sIu98snGedlNzg7LZPwyZLP4nkHmKSrQlwsVJkSjQ/G/0A5yIF23I4tNS+6BO/PgGZqdunGmyzdXzMs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyKTW7gLlyz1DVK0J3CKS8X55rY0IvctCvn4l021BBkMFSZYuSi
+	42eG0wTNCL1qJUrIAzujiuS05q5BeI3U3hDOpHoRfTMYXLMN9vbZp5PAfEX5Hbg=
+X-Gm-Gg: ASbGncvLnaVoX82j1b9ktTKAw6GcM/kLu9XmuO808wrPeAvMJcWAsFCMgIwaLmuXt/h
+	hjyux4aiRCE3EXiA00ZmI2xZj2kj7EgXQ6YzBaJmFYgQsdiV5xrpTwZp77Bj0MHNkj2qv0z2a2O
+	p5btfmAqNaNezKlUm7HumopV4tsvbwkH9/99HaMj0aPx2CIsSCunGl8tEeMZUw2GwE+VMznjran
+	6GPG9GzOJHxJsTJ5n/GHAyHnYo49zxnbq5HV6GZO6wONOsnwCDNsPlxhxf+6jX1Jn0x9PT5W0xV
+	HAx7hgCCqovDRo2YkaUXwNnK61nd6Ktd3dX8jyFrosq+GeUw7Q==
+X-Google-Smtp-Source: AGHT+IENHB++EW6cxUTVldIAQkOiV9MmVqFnw5XQy2hy0OzVOdph9rtPPbQGZ/IPOrVxn3HuLojH1Q==
+X-Received: by 2002:a17:907:7f27:b0:abf:7406:d375 with SMTP id a640c23a62f3a-abf7406d6aamr378845466b.0.1740987626156;
+        Sun, 02 Mar 2025 23:40:26 -0800 (PST)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with UTF8SMTPSA id a640c23a62f3a-abf0c75bfe2sm758421366b.151.2025.03.02.23.40.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 02 Mar 2025 23:40:25 -0800 (PST)
+Date: Mon, 3 Mar 2025 10:40:22 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
+Cc: Markus Elfring <Markus.Elfring@web.de>, kernel-janitors@vger.kernel.org,
+	netdev@vger.kernel.org, Andrew Lunn <andrew+netdev@lunn.ch>,
+	Ariel Elior <aelior@marvell.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Manish Chopra <manishc@marvell.com>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Ram Amrani <Ram.Amrani@caviumnetworks.com>,
+	Yuval Mintz <Yuval.Mintz@caviumnetworks.com>, cocci@inria.fr,
+	LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH RESEND] qed: Move a variable assignment behind a null
+ pointer check in two functions
+Message-ID: <325e67fc-48df-4571-a87e-5660a3d3968f@stanley.mountain>
+References: <40c60719-4bfe-b1a4-ead7-724b84637f55@web.de>
+ <1a11455f-ab57-dce0-1677-6beb8492a257@web.de>
+ <f7967bee-f3f1-54c4-7352-40c39dd7fead@web.de>
+ <6958583a-77c0-41ca-8f80-7ff647b385bb@web.de>
+ <Z8VKaGm1YqkxK4GM@mev-dev.igk.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] media: dt-bindings: Add dt bindings for
- m2m-deinterlace device
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Matthew Majewski <mattwmajewski@gmail.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring
- <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>,
- "Dr. David Alan Gilbert" <linux@treblig.org>,
- Neil Armstrong <neil.armstrong@linaro.org>,
- Uwe Kleine-Konig <u.kleine-koenig@baylibre.com>,
- Andrzej Pietrasiewicz <andrzejtp2010@gmail.com>, devicetree@vger.kernel.org,
- linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250214231759.119481-1-mattwmajewski@gmail.com>
- <20250214231759.119481-2-mattwmajewski@gmail.com>
- <20250218-eggplant-skylark-of-swiftness-dcf6ba@krzk-bin>
- <69cb2e95c291f17cff42b45e7c871f30a85c060d.camel@gmail.com>
- <3d729159-4d13-4a61-88c7-3be992b23728@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <3d729159-4d13-4a61-88c7-3be992b23728@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z8VKaGm1YqkxK4GM@mev-dev.igk.intel.com>
 
-On 03/03/2025 08:31, Krzysztof Kozlowski wrote:
-> On 26/02/2025 23:41, Matthew Majewski wrote:
->> Hi Krzysztof,
->>
->> On Tue, 2025-02-18 at 09:30 +0100, Krzysztof Kozlowski wrote:
->>> On Fri, Feb 14, 2025 at 06:17:58PM -0500, Matthew Majewski wrote:
->>>> Create a new yaml schema file to describe the device tree bindings
->>>> for
->>>> generic m2m-deinterlace device.
->>>>
->>>> This device is supported on any hardware that provides a MEM_TO_MEM
->>>
->>> Which device? I don't see here any device name/model.
->>
->> By "device" I am referring to the m2m-deinterlace device, which I
->> explained is a quasi-virtual device. If this is confusing wording I can
->> change. 
->>
->>> I asked to provide here some examples of devices.
->>
->> As I wrote, supported devices/hardware is anything that provides a
->> MEM_TO_MEM capable dma-controller with interleaved transfer support. I
->> did not list specific devices because the bindings are supposed to be
->> generic, as they are not describing actual silicon. But if you want me
+On Mon, Mar 03, 2025 at 07:21:28AM +0100, Michal Swiatkowski wrote:
+> > @@ -523,7 +524,7 @@ qed_ll2_rxq_handle_completion(struct qed_hwfn *p_hwfn,
+> >  static int qed_ll2_rxq_completion(struct qed_hwfn *p_hwfn, void *cookie)
+> >  {
+> >  	struct qed_ll2_info *p_ll2_conn = (struct qed_ll2_info *)cookie;
+> > -	struct qed_ll2_rx_queue *p_rx = &p_ll2_conn->rx_queue;
+> > +	struct qed_ll2_rx_queue *p_rx;
+> >  	union core_rx_cqe_union *cqe = NULL;
+> >  	u16 cq_new_idx = 0, cq_old_idx = 0;
+> >  	unsigned long flags = 0;
+> > @@ -532,6 +533,7 @@ static int qed_ll2_rxq_completion(struct qed_hwfn *p_hwfn, void *cookie)
+> >  	if (!p_ll2_conn)
+> >  		return rc;
+> > 
+> > +	p_rx = &p_ll2_conn->rx_queue;
+> >  	spin_lock_irqsave(&p_rx->lock, flags);
+> > 
+> >  	if (!QED_LL2_RX_REGISTERED(p_ll2_conn)) {
 > 
-> I already told you that no. Bindings are not supposed to be generic.
+> For future submission plase specify the target kernel
+> [PATCH net] for fixes, [PATCH net-next] for other.
 > 
-> From where did you get such information?
-> 
->> to list some devices which provide a compatible dma-controller, here
->> are devices I found in the current mainline kernel:
->>
->> - TI OMAP Soc Family
->> - TI Davinci Soc Family
->> - TI Keystone Processor Family
->> - IMX27 Processor and variants
->> - Several Microchip Processors (sama5, sam9x7, sam9x60)
-> 
-> That's too generic - you just listed SoCs, which consist of dozen or
-> hundred of devices. Which hardware piece is here?
-> 
-> Maybe this is not for a real device, but then this should be marked clearly.
-> 
->>
->> As I mentioned in my original email, I have personally tested on a
->> BeagleBone Black with an AM335X OMAP processor. There are likely many
->> more devices with compatible dma-controllers that could be supported
->> with additional dmaengine driver support. 
->>
->>
->>>> capable dma channel with interleaved trasfer support. Device tree
->>>> bindings are for providing appropriate dma channel to device.
->>>
->>> Don't describe what DT is, but the hardware.
->>>
->>
->> Ok, will remove reference to DT.
->>
->>>> +description: |-
->>>> +  A generic memory2memory device for deinterlacing video using
->>>> dmaengine. It can
->>>> +  convert between interlaced buffer formats and can convert
->>>> interlaced to
->>>> +  progressive using a simple line-doubling algorithm. This device
->>>> can be used on
->>>> +  any hardware that provides a MEM_TO_MEM capable dma controller
->>>> that supports
->>>> +  interleaved transfers.
->>>
->>> And how do you program that device to deinterlace? How do you signal
->>> end
->>> of frame/data when writing to the memory?
->>>
->>> It still looks all this is for driver :/
->>>
->>
->> All of the deinterlacing is handled by the dma channel. To simplify a
->> bit, m2m-deinterlace basically just translates video format information
->> into appropriate interleaved dma transfers. Everything else (and
->> everything hardware specific) is handled by the dma engine, such as
->> initiation and signaling completion of transfers. 
-> 
-> 
-> So the device is the dma controller and maybe all this should be folded
-> into that controller bindings.
+> Looking at the code callback is always set together with cookie (which
+> is pointing to p_ll2_conn. I am not sure if this is fixing real issue,
+> but maybe there are a cases when callback is still connected and cookie
+> is NULL.
 
-Answering myself: obviously no, because interleaved DMA is not relevant
-to this device, so again: there is no device in SoC doing that. You just
-add bindings for specific Linux driver without saying that this is that
-driver and calling it "generic device". There is no device here.
+The assignment:
+
+	p_rx = &p_ll2_conn->rx_queue;
+
+does not dereference "p_ll2_conn".  It just does pointer math.  So the
+original code works fine.
+
+The question is, did the original author write it that way intentionally?
+I've had this conversation with people before and they eventually are
+convinced that "Okay, the code works, but only by sheer chance."  In my
+experiences, most of the time, the authors of this type of code are so
+used to weirdnesses of C that they write code like this without even
+thinking about it.  It never even occurs to them how it could be
+confusing.
+
+This commit message is misleading and there should not be a Fixes tag.
+
+regards,
+dan carpenter
 
 
-Best regards,
-Krzysztof
