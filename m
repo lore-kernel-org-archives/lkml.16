@@ -1,97 +1,95 @@
-Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67503EC4;
-	Mon,  3 Mar 2025 09:31:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D29D1EC4;
+	Mon,  3 Mar 2025 09:33:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740994288; cv=none; b=NauoGjQwNunFwtpOdIOYCyJ0NsXVqqh4KeS4dZZk6XB3Ccj08p6TEJsPHj4pVLXU+BFcRhQULYhfGihbGyQoa1lybU6esIvvvMUGWyAFNvpbPwBx2fQ4fHlJgHTPkEUdWAfVVsbHRMWDcAYFf88MAbNAAIdrQDqLa5PmU4oRAdk=
+	t=1740994391; cv=none; b=NiPv1PwMB8LpO+QkLoMMgUM1clrRNYC677k2+6Ru9ESBDOZFIJ67FX2LJveO/m64vGhc15hXltOhFT/gzXoqDwcC4tTgFNUf3k+rBxEFQzAmVxcbDNGOKFiwRJuLyhRQwry/BBFBJebHbLro99Fey6JagYHRtQEfdO+YM+BAGK4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740994288; c=relaxed/simple;
-	bh=PRazXW/kbPHtowtTsKIzPmtMu8CfBctVKjuE3JfV5iU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=ljoNaCvtaddpnH3Y7Sb0zrnmebePO1gVzPvo3QJnOJVvbARdUGiCKQd1NOFPygNFiDqkpjtsK9FxAlRWzJwscQv1g/onltV4OxKW5mbbCiQljL4RGbY3Epbua3E2uiZEV1ExamW6S5VkdjKogyfJPZyaMHlgLvUoFIvumoP1W+E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=e357nYO5; arc=none smtp.client-ip=217.70.183.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1740994391; c=relaxed/simple;
+	bh=uxWb5weZnx4w75c+cNd9geof+3mOOtF83ztdgamkHZc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Bw8nVXWp3rynnNr5wgMScj+rpi0MXrSNlRY6bK6POlCnqDt0iwMlosR4r0uF9O8o3pISRLaP0zNU8wjjVLAlhvV1nnZQ6Qla7gGvpS8Juy0fQeY4lKZWzEErtXZfp5wdlx8lE6U8bUf5EkzWffj8GLaKseVMlNWSFofb2xktZko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zot24OU+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="e357nYO5"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id EB87E44188;
-	Mon,  3 Mar 2025 09:31:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1740994284;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=QbJppxNHduGQ+2DYZU3v7Z2KhYNzPxsOebdIfv4nVEc=;
-	b=e357nYO5dtFfQG7Vc42IzmG9v6q4eS3fB5R79wwAjnafvXc+ejmJN6Pi7ccq0hMp6+AYpA
-	Fe/YzVsng1md+nJBXjOi6dbfut2nTUbdhM8L1J+QmkFhsGmlUVkolug7YGEUO3bwcoYaqd
-	cKrJ17lFXpZTcuxeNTtrIle/zYiAIuWgJT7wrDVQTtBStCnCbQFslUJh1wPE9YJ03YOeSD
-	6KfbX7MTDwMU7EuceFctLzR8Q1zpZmyeWG0CBZCUimDLqhjNJGtXMsT1SZ6oVCY+GcqiRQ
-	IjN9jOg/nxxjRmiM894LPrJcyXkUS+3QRf4hGZ6atNdKm6lc+9rURXZcekYKqA==
-From: Luca Ceresoli <luca.ceresoli@bootlin.com>
-Date: Mon, 03 Mar 2025 10:30:51 +0100
-Subject: [PATCH RESEND v2] drivers: core: fix device leak in
- __fw_devlink_relax_cycles()
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zot24OU+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7E6CC4CED6;
+	Mon,  3 Mar 2025 09:33:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740994391;
+	bh=uxWb5weZnx4w75c+cNd9geof+3mOOtF83ztdgamkHZc=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Zot24OU+Kr3IVKlNxS8Ms3Pi6PvMwu9DHSIsqRFgjxP7aaO6HBF+zxguPxwkhaO2a
+	 xrdRh9uBrtzK+Ykgl393iwGLK8grS93jXMrw/M0Jj0oWxBTRY58YtHO+mmTaRseX2I
+	 bwx01tB5PVV+suC6VLbWhT09Tqr1VNPpdd3/9dK4QlGfahn05Hh3Kp5xbqtzv3xwhm
+	 O65rL/CJBPtzWDzv1AOWI5Q5YPz+w3dHiYps7UNc3zVcLGycvh5U026fbDNLbGuWdj
+	 Bnj8SfZx8IFw+vKyH2xq2DVorZGK5IOZDXsua4NUVPxKkq4g9T8Y1Rw4H+/nn9pxqK
+	 tcLnUaY4LNqEQ==
+From: Miguel Ojeda <ojeda@kernel.org>
+To: Jocelyn Falempe <jfalempe@redhat.com>,
+	=?UTF-8?q?Thomas=20B=C3=B6hler?= <witcher@wiredspace.de>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>
+Cc: dri-devel@lists.freedesktop.org,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Trevor Gross <tmgross@umich.edu>,
+	rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	patches@lists.linux.dev
+Subject: [PATCH] drm/panic: clean Clippy warning
+Date: Mon,  3 Mar 2025 10:32:42 +0100
+Message-ID: <20250303093242.1011790-1-ojeda@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250303-fix__fw_devlink_relax_cycles_missing_device_put-v2-1-3854d249d54e@bootlin.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, 
- Saravana Kannan <saravanak@google.com>
-Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
- =?utf-8?q?Herv=C3=A9_Codina?= <herve.codina@bootlin.com>, 
- linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, 
- stable@vger.kernel.org, Luca Ceresoli <luca.ceresoli@bootlin.com>
-X-Mailer: b4 0.14.2
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdelkeejiecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephfffufggtgfgkffvvefosehtjeertdertdejnecuhfhrohhmpefnuhgtrgcuvegvrhgvshholhhiuceolhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepvdeuleetffeutdfhvedvjeffuddtteejtdfhffdvhedvleevteekjeejgfejgfehnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepvdgrtddvmeeijedtmedvtddvtdemvggrtddumegsvgegudemleehvgejmeefgeefmeeludefvgenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtvdemieejtdemvddtvddtmegvrgdtudemsggvgedumeelhegvjeemfeegfeemledufegvpdhhvghloheplgduledvrdduieekrddujeekrdejhegnpdhmrghilhhfrhhomheplhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepuddtpdhrtghpthhtohephhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmpdhrtghpthhtoheprghkphhmsehlihhnuhigqdhfohhunhgurghtihhonhdrohhrghdprhgtphhtthhopehluhgtrgdrt
- ggvrhgvshholhhisegsohhothhlihhnrdgtohhmpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepuggrkhhrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehrrghfrggvlheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepghhrvghgkhhhsehlihhnuhigfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthhtohepthhhohhmrghsrdhpvghtrgiiiihonhhisegsohhothhlihhnrdgtohhm
-X-GND-Sasl: luca.ceresoli@bootlin.com
+Content-Transfer-Encoding: 8bit
 
-Commit bac3b10b78e5 ("driver core: fw_devlink: Stop trying to optimize
-cycle detection logic") introduced a new struct device *con_dev and a
-get_dev_from_fwnode() call to get it, but without adding a corresponding
-put_device().
+Clippy warns:
 
-Closes: https://lore.kernel.org/all/20241204124826.2e055091@booty/
-Fixes: bac3b10b78e5 ("driver core: fw_devlink: Stop trying to optimize cycle detection logic")
-Cc: stable@vger.kernel.org
-Reviewed-by: Saravana Kannan <saravanak@google.com>
-Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
+    error: manual implementation of an assign operation
+       --> drivers/gpu/drm/drm_panic_qr.rs:418:25
+        |
+    418 |                         self.carry = self.carry % pow;
+        |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ help: replace it with: `self.carry %= pow`
+        |
+        = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#assign_op_pattern
+
+Thus clean it up.
+
+Fixes: dbed4a797e00 ("drm/panic: Better binary encoding in QR code")
+Signed-off-by: Miguel Ojeda <ojeda@kernel.org>
 ---
-Changes in v2:
-- add 'Cc: stable@vger.kernel.org'
-- use Closes: tag, not Link:
-- Link to v1: https://lore.kernel.org/r/20250212-fix__fw_devlink_relax_cycles_missing_device_put-v1-1-41818c7d7722@bootlin.com
----
- drivers/base/core.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/gpu/drm/drm_panic_qr.rs | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/base/core.c b/drivers/base/core.c
-index 5a1f051981149dc5b5eee4fb69c0ab748a85956d..2fde698430dff98b5e30f7be7d43d310289c4217 100644
---- a/drivers/base/core.c
-+++ b/drivers/base/core.c
-@@ -2079,6 +2079,7 @@ static bool __fw_devlink_relax_cycles(struct fwnode_handle *con_handle,
- out:
- 	sup_handle->flags &= ~FWNODE_FLAG_VISITED;
- 	put_device(sup_dev);
-+	put_device(con_dev);
- 	put_device(par_dev);
- 	return ret;
- }
+diff --git a/drivers/gpu/drm/drm_panic_qr.rs b/drivers/gpu/drm/drm_panic_qr.rs
+index 62cb8a162483..3b0dd59781d4 100644
+--- a/drivers/gpu/drm/drm_panic_qr.rs
++++ b/drivers/gpu/drm/drm_panic_qr.rs
+@@ -415,7 +415,7 @@ fn next(&mut self) -> Option<Self::Item> {
+                         self.carry_len -= out_len;
+                         let pow = u64::pow(10, self.carry_len as u32);
+                         let out = (self.carry / pow) as u16;
+-                        self.carry = self.carry % pow;
++                        self.carry %= pow;
+                         Some((out, NUM_CHARS_BITS[out_len]))
+                     }
+                 }
 
----
-base-commit: 09fbf3d502050282bf47ab3babe1d4ed54dd1fd8
-change-id: 20250212-fix__fw_devlink_relax_cycles_missing_device_put-37cae5f4aac0
-
-Best regards,
+base-commit: c0eb65494e59d9834af7cbad983629e9017b25a1
 -- 
-Luca Ceresoli <luca.ceresoli@bootlin.com>
+2.48.1
 
