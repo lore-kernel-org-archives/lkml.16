@@ -1,188 +1,167 @@
-Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADDCB212B14
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 16:58:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D7C3212B14
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 16:58:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741021121; cv=none; b=aV+eCv1fIU4C+NvWYX0552rhieFSj54OQg80NphFfCwT82Xy9/THySJj1NcDsdUsKtA/0onarqjEWzJwD3/cOYRDmXl8ciMkhbo4VSg4xWs0IlOJJCOMBwnJYFUvD4LxOhughkQnktTTGLWc9JfAxJWdqFwPm0U21j7yjGuSIEw=
+	t=1741021127; cv=none; b=l0R8g8l2HQ2rriKZBSAFZRpRNWOBrvP/rdS7tKubY/adglJZqkKIcX3hm/twKI31WxRAgowhuYlDoxXeiBtyJj7rSw0dV0ePI4R5m5Fmrok8k3RxuPC5W5lrPR8rYBWOXlhXN/RiBtg3agZ430/44CxvHNgV7+dO6aRyYtPK1OA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741021121; c=relaxed/simple;
-	bh=YHj9TlkwI8DIOSvKJXZ1duOgH7lPVfw3fAoCLxsCQKQ=;
+	s=arc-20240116; t=1741021127; c=relaxed/simple;
+	bh=A5UlDzl5nbUR4tlKbNSxmhc1+oiZSLIGlJ0yzJ7GSYw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MFI2XklyKHnEBoJJXFC/W5/NcwaSJdd0Gqm3V2oGL0BO53i3R6+MsZV/f9+hZOEmE7XVj1+Ywljt2iBovvJ2cAEm2T1pGLTc3hyA/msaZRWqA0R82e6w2S+ULWqglDMw/A4WU/q3aI9viQylmR3XWwhXRlWLCjRhPDpN4IIoz3Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=HhOkGXS9; arc=none smtp.client-ip=46.235.229.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=OeHxozAPa7vwD6N4D84VKLjR1JtO1aZ6WGVsx6XjfElm0HIuLf2idDJ4cYMrlQm6KFl5LWmD9Nlg+OLldmR4JWS+Cr8tHh2D+tkBMdDCR0B2IncTcPKwRLhv0iP2odPMH/1gk2X7CeiwgLRzUtGL5Tzj/LisryaSH5XxsHHBSGw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PV+NSoqX; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="HhOkGXS9"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
-	; s=bytemarkmx; h=Content-Type:MIME-Version:Message-ID:Subject:From:Date:From
-	:Subject; bh=eify1ppexQzLZIydQf1js6wBEcaTPRspfLPDS+j4sgM=; b=HhOkGXS9hzrPnBgG
-	js0R3iDuM827LR2ODfImua1CO958uEBMOAST+8q+d2jCg+JA9Dn/4xk52j8Yt8imzwo40/QDKTvIm
-	/9Qiw9DrKkmvN32vYK0M7qmcYQnFVtZ2Ja1qsp+ZXtrfBKwqfA0TGgHsCr+fZPPoWgAeVhyFVoi69
-	q4yhC8y3nXluzbdXXjEmFUJP1Wt97s1RTIYNZ/NkrO2R53mfR65TGeacKpZe/OQr5zKkR0bsEkx6u
-	2pJbxV5a3xOBLihnQNicSxMWvuhhB1NlfvlSx6aZnqQuevwJOeBE8LxoYvyh2vQ0ioeKzyv30ozRk
-	K5+iA/7THNCyJW28aQ==;
-Received: from dg by mx.treblig.org with local (Exim 4.96)
-	(envelope-from <dg@treblig.org>)
-	id 1tp97a-002BjV-2Q;
-	Mon, 03 Mar 2025 16:58:26 +0000
-Date: Mon, 3 Mar 2025 16:58:26 +0000
-From: "Dr. David Alan Gilbert" <linux@treblig.org>
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, tzimmermann@suse.de,
-	airlied@gmail.com, simona@ffwll.ch
-Cc: ville.syrjala@linux.intel.com, jfalempe@redhat.com,
-	tomi.valkeinen@ideasonboard.com, maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org, dri-devel@lists.freedesktop.org,
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PV+NSoqX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1741021123;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=wTRDB4UFZjsCv4E5dv3rGEUaI4YH49DqaGlGq3dSoiU=;
+	b=PV+NSoqXUKHtGDEB7TRA5pqnb7YfSkKFgp8SkOet8VPcVxS923HbkURpOjxvnhhQVGz7Fr
+	/x7/2DH+elmVSFlE0WX45WVuWvRD+ZzJEZwjsDiSoses/pc5fn9XK0nvnEHIkeMFq31zNI
+	5YQ7UOWJbTEOTjLjt5m5t0Xr1Z++1i8=
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
+ [209.85.222.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-22-gnwJz7u-MmGgTTlh4eD_aw-1; Mon, 03 Mar 2025 11:58:36 -0500
+X-MC-Unique: gnwJz7u-MmGgTTlh4eD_aw-1
+X-Mimecast-MFC-AGG-ID: gnwJz7u-MmGgTTlh4eD_aw_1741021116
+Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-7c3b88ff443so246270585a.1
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Mar 2025 08:58:36 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741021116; x=1741625916;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wTRDB4UFZjsCv4E5dv3rGEUaI4YH49DqaGlGq3dSoiU=;
+        b=VIVwXel/PE+Fe4V3RbPhFgcQZb5xVr6lSZsbJ+bo5QQ/ZuCCWKYQQVN84lR+t5w0hB
+         Q+2ZhZQLTB7qNcN2f8S8MCeL8o13EQ4PvvPvocV/rY9LLczkpVIw5vBz/XbOc2QmK0oV
+         F4S5/9Z74kQ9yT7rcch51qgt7E78JR+6hF+5gOKlH6eT+m/0sw1rqXcRKm9EKkMze940
+         pMJMxyJflADhvRLPFJMTvaC4G5ArwXp+8OunV6kknmYHNYz6WlO4/AOUIDeWbKKv6RQP
+         GyuM81p0bxXxr6OYXc2nN/QwspXIpktbCESHEj1c6wjF6hqDjW6hiF0xKDo3kkkLCEkX
+         YlQA==
+X-Forwarded-Encrypted: i=1; AJvYcCXC2yW0SRsETj8v4vqNEjBbnBVAAEZFYtmMMbzXzDNl9dXPivuNz5z7P/JpMQyzDd3XQMSbF6QhJal8RG4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx6F2by5uqcJB8snvMCQqTlwN7HDF7GqqkLWXBpmjWDIZIY6Vgu
+	o8Nh0TqCsxOs5fllLSQ791e2zhpJbPAbynMf7RZcM8ijNQRKlNzYcSJRMGE9Mi13IWHhW/rUsFO
+	1kD8fVs9P41PQ37KLZvUmXfTTU8+hlbnLmDVROHkyVfoDfldOvt9pMHu9hIhIlQ==
+X-Gm-Gg: ASbGnctqvUBrOZD/2XHBgdxbuI37BjoudeKXyMNPIdJF5356ULuPmCppFWbm7/t3VJV
+	4710cS21sNCEWndo6dk1c3SndYVaVZkaD9lTi1x5OOqkxWLU2Tv97RrUZfAwwmWVLH0FBOT6it5
+	p+AJtPJVcZySiyvZgBt4soSUJWg+9FE832w3zzGkQ9S1eYQlsGh/DueXkV7IwdD9wn2pgkB3WEZ
+	b0Vpo81YdYpRjfMc6Fe/rTwtmGoipkx1foonszIx/1j3UyVJJLj+N7ljbs5MV8c3MESv3SKyXL0
+	3bi/DXU=
+X-Received: by 2002:a05:620a:191f:b0:7c0:ab46:396c with SMTP id af79cd13be357-7c39c4b0068mr2096235485a.21.1741021116483;
+        Mon, 03 Mar 2025 08:58:36 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFyqb/M8x75akTxj3nvEdRZoMP6dagwsz5JQRmS5VKUbc7hPZabKUoTMmDqPfLiz9tdHjVsMQ==
+X-Received: by 2002:a05:620a:191f:b0:7c0:ab46:396c with SMTP id af79cd13be357-7c39c4b0068mr2096232685a.21.1741021116192;
+        Mon, 03 Mar 2025 08:58:36 -0800 (PST)
+Received: from x1.local ([85.131.185.92])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c3c5c38f8bsm62446385a.101.2025.03.03.08.58.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Mar 2025 08:58:35 -0800 (PST)
+Date: Mon, 3 Mar 2025 11:58:31 -0500
+From: Peter Xu <peterx@redhat.com>
+To: Liu Shixin <liushixin2@huawei.com>
+Cc: Muchun Song <muchun.song@linux.dev>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	David Hildenbrand <david@redhat.com>,
+	Barry Song <song.bao.hua@hisilicon.com>,
+	Kefeng Wang <wangkefeng.wang@huawei.com>, linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 3/3] Revert "drm/client: Add
- drm_client_modeset_check()"
-Message-ID: <Z8Xfst88r_M_RZ3v@gallifrey>
-References: <20241029234706.285087-1-linux@treblig.org>
- <20241029234706.285087-4-linux@treblig.org>
- <4ysvn7vcynvmjc53frgj2nwuctf6kd6xdphgfjm3ulgfaxwngm@mod6oqvfmxav>
+Subject: Re: [PATCH] mm/hugetlb: update nr_huge_pages and surplus_huge_pages
+ together
+Message-ID: <Z8Xft6TDTa51mShZ@x1.local>
+References: <20250303024105.990297-1-liushixin2@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <4ysvn7vcynvmjc53frgj2nwuctf6kd6xdphgfjm3ulgfaxwngm@mod6oqvfmxav>
-X-Chocolate: 70 percent or better cocoa solids preferably
-X-Operating-System: Linux/6.1.0-21-amd64 (x86_64)
-X-Uptime: 16:57:31 up 299 days,  4:11,  1 user,  load average: 0.06, 0.05,
- 0.00
-User-Agent: Mutt/2.2.12 (2023-09-09)
+In-Reply-To: <20250303024105.990297-1-liushixin2@huawei.com>
 
-* Dmitry Baryshkov (dmitry.baryshkov@linaro.org) wrote:
-> On Tue, Oct 29, 2024 at 11:47:05PM +0000, linux@treblig.org wrote:
-> > From: "Dr. David Alan Gilbert" <linux@treblig.org>
-> > 
-> > drm_client_modeset_check() was explicitly added in 2020 by
-> > commit 64593f2a6fc9 ("drm/client: Add drm_client_modeset_check()")
-> > but has never been used.
-> > 
-> > This reverts commit 64593f2a6fc933bb9a410bc3f8c261f3e57a9601.
+On Mon, Mar 03, 2025 at 10:41:05AM +0800, Liu Shixin wrote:
+> In alloc_surplus_hugetlb_folio(), we increase nr_huge_pages and
+> surplus_huge_pages separately. In the middle window, if we set
+> nr_hugepages to smaller and satisfy count < persistent_huge_pages(h),
+> the surplus_huge_pages will be increased by adjust_pool_surplus().
 > 
-> Nit: Usually this comes before the commit message.  No need for repost
-> though.
+> After adding delay in the middle window, we can reproduce the problem
+> easily by following step:
 > 
-> 
-> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+>  1. echo 3 > /proc/sys/vm/nr_overcommit_hugepages
+>  2. mmap two hugepages. When nr_huge_pages=2 and surplus_huge_pages=1,
+>     goto step 3.
+>  3. echo 0 > /proc/sys/vm/nr_huge_pages
 
-Hi,
-  Can drm pick this up please?
+Looks reasonable to me.  However I'm not sure whether this may cause
+regression on concurrent allocations of surplus pages.
 
-Thanks,
+Would it be possible to stick with hugetlb_lock?  IIUC only the allocation
+part of alloc_fresh_hugetlb_folio() needs the lock to be released, then
+we could also update the two counters together with hugetlb_lock by open
+code alloc_fresh_hugetlb_folio(), and move __prep_account_new_huge_page()
+out to be after lock taken.
 
-Dave
 > 
-> > 
-> > Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
-> > ---
-> >  drivers/gpu/drm/drm_client_modeset.c | 35 ++++------------------------
-> >  include/drm/drm_client.h             |  1 -
-> >  2 files changed, 4 insertions(+), 32 deletions(-)
-> > 
-> > diff --git a/drivers/gpu/drm/drm_client_modeset.c b/drivers/gpu/drm/drm_client_modeset.c
-> > index cee5eafbfb81..39201c11eaac 100644
-> > --- a/drivers/gpu/drm/drm_client_modeset.c
-> > +++ b/drivers/gpu/drm/drm_client_modeset.c
-> > @@ -995,7 +995,7 @@ bool drm_client_rotation(struct drm_mode_set *modeset, unsigned int *rotation)
-> >  }
-> >  EXPORT_SYMBOL(drm_client_rotation);
-> >  
-> > -static int drm_client_modeset_commit_atomic(struct drm_client_dev *client, bool active, bool check)
-> > +static int drm_client_modeset_commit_atomic(struct drm_client_dev *client, bool active)
-> >  {
-> >  	struct drm_device *dev = client->dev;
-> >  	struct drm_plane *plane;
-> > @@ -1062,10 +1062,7 @@ static int drm_client_modeset_commit_atomic(struct drm_client_dev *client, bool
-> >  		}
-> >  	}
-> >  
-> > -	if (check)
-> > -		ret = drm_atomic_check_only(state);
-> > -	else
-> > -		ret = drm_atomic_commit(state);
-> > +	ret = drm_atomic_commit(state);
-> >  
-> >  out_state:
-> >  	if (ret == -EDEADLK)
-> > @@ -1126,30 +1123,6 @@ static int drm_client_modeset_commit_legacy(struct drm_client_dev *client)
-> >  	return ret;
-> >  }
-> >  
-> > -/**
-> > - * drm_client_modeset_check() - Check modeset configuration
-> > - * @client: DRM client
-> > - *
-> > - * Check modeset configuration.
-> > - *
-> > - * Returns:
-> > - * Zero on success or negative error code on failure.
-> > - */
-> > -int drm_client_modeset_check(struct drm_client_dev *client)
-> > -{
-> > -	int ret;
-> > -
-> > -	if (!drm_drv_uses_atomic_modeset(client->dev))
-> > -		return 0;
-> > -
-> > -	mutex_lock(&client->modeset_mutex);
-> > -	ret = drm_client_modeset_commit_atomic(client, true, true);
-> > -	mutex_unlock(&client->modeset_mutex);
-> > -
-> > -	return ret;
-> > -}
-> > -EXPORT_SYMBOL(drm_client_modeset_check);
-> > -
-> >  /**
-> >   * drm_client_modeset_commit_locked() - Force commit CRTC configuration
-> >   * @client: DRM client
-> > @@ -1168,7 +1141,7 @@ int drm_client_modeset_commit_locked(struct drm_client_dev *client)
-> >  
-> >  	mutex_lock(&client->modeset_mutex);
-> >  	if (drm_drv_uses_atomic_modeset(dev))
-> > -		ret = drm_client_modeset_commit_atomic(client, true, false);
-> > +		ret = drm_client_modeset_commit_atomic(client, true);
-> >  	else
-> >  		ret = drm_client_modeset_commit_legacy(client);
-> >  	mutex_unlock(&client->modeset_mutex);
-> > @@ -1246,7 +1219,7 @@ int drm_client_modeset_dpms(struct drm_client_dev *client, int mode)
-> >  
-> >  	mutex_lock(&client->modeset_mutex);
-> >  	if (drm_drv_uses_atomic_modeset(dev))
-> > -		ret = drm_client_modeset_commit_atomic(client, mode == DRM_MODE_DPMS_ON, false);
-> > +		ret = drm_client_modeset_commit_atomic(client, mode == DRM_MODE_DPMS_ON);
-> >  	else
-> >  		drm_client_modeset_dpms_legacy(client, mode);
-> >  	mutex_unlock(&client->modeset_mutex);
-> > diff --git a/include/drm/drm_client.h b/include/drm/drm_client.h
-> > index bc0e66f9c425..ead3c3526ee3 100644
-> > --- a/include/drm/drm_client.h
-> > +++ b/include/drm/drm_client.h
-> > @@ -177,7 +177,6 @@ int drm_client_modeset_create(struct drm_client_dev *client);
-> >  void drm_client_modeset_free(struct drm_client_dev *client);
-> >  int drm_client_modeset_probe(struct drm_client_dev *client, unsigned int width, unsigned int height);
-> >  bool drm_client_rotation(struct drm_mode_set *modeset, unsigned int *rotation);
-> > -int drm_client_modeset_check(struct drm_client_dev *client);
-> >  int drm_client_modeset_commit_locked(struct drm_client_dev *client);
-> >  int drm_client_modeset_commit(struct drm_client_dev *client);
-> >  int drm_client_modeset_dpms(struct drm_client_dev *client, int mode);
-> > -- 
-> > 2.47.0
-> > 
+> Finally, nr_huge_pages is less than surplus_huge_pages.
 > 
+> Fixes: 0c397daea1d4 ("mm, hugetlb: further simplify hugetlb allocation API")
+> Signed-off-by: Liu Shixin <liushixin2@huawei.com>
+> ---
+>  mm/hugetlb.c | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
+> 
+> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+> index 9faa1034704ff..a900562ea7679 100644
+> --- a/mm/hugetlb.c
+> +++ b/mm/hugetlb.c
+> @@ -2248,14 +2248,17 @@ static struct folio *alloc_surplus_hugetlb_folio(struct hstate *h,
+>  	if (hstate_is_gigantic(h))
+>  		return NULL;
+>  
+> +	mutex_lock(&h->resize_lock);
+>  	spin_lock_irq(&hugetlb_lock);
+>  	if (h->surplus_huge_pages >= h->nr_overcommit_huge_pages)
+>  		goto out_unlock;
+>  	spin_unlock_irq(&hugetlb_lock);
+>  
+>  	folio = alloc_fresh_hugetlb_folio(h, gfp_mask, nid, nmask);
+> -	if (!folio)
+> +	if (!folio) {
+> +		mutex_unlock(&h->resize_lock);
+>  		return NULL;
+> +	}
+>  
+>  	spin_lock_irq(&hugetlb_lock);
+>  	/*
+> @@ -2268,6 +2271,7 @@ static struct folio *alloc_surplus_hugetlb_folio(struct hstate *h,
+>  	if (h->surplus_huge_pages >= h->nr_overcommit_huge_pages) {
+>  		folio_set_hugetlb_temporary(folio);
+>  		spin_unlock_irq(&hugetlb_lock);
+> +		mutex_unlock(&h->resize_lock);
+>  		free_huge_folio(folio);
+>  		return NULL;
+>  	}
+> @@ -2277,6 +2281,7 @@ static struct folio *alloc_surplus_hugetlb_folio(struct hstate *h,
+>  
+>  out_unlock:
+>  	spin_unlock_irq(&hugetlb_lock);
+> +	mutex_unlock(&h->resize_lock);
+>  
+>  	return folio;
+>  }
 > -- 
-> With best wishes
-> Dmitry
+> 2.34.1
 > 
+> 
+
 -- 
- -----Open up your eyes, open up your mind, open up your code -------   
-/ Dr. David Alan Gilbert    |       Running GNU/Linux       | Happy  \ 
-\        dave @ treblig.org |                               | In Hex /
- \ _________________________|_____ http://www.treblig.org   |_______/
+Peter Xu
+
