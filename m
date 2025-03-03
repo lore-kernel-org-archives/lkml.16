@@ -1,294 +1,352 @@
-Received: from TYVP286CU001.outbound.protection.outlook.com (mail-japaneastazon11011010.outbound.protection.outlook.com [52.101.125.10])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AB441DA31D;
-	Mon,  3 Mar 2025 16:11:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.125.10
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741018276; cv=fail; b=qedfikaAZcz6gPIykQWTD4//winKvw/YHhTgotWPjN4kDwQbDf+5ziqc4dbuKL/wmrxiwdUDazczbLp8qA+6c3GNRBHqBHreeQO8LcJ3wJ/rynHAb/iboXlmZIBX2lTnVP552+3CwkdHcBuxOUhUXPGYYmXkJOqj9dI4NyhNf3g=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741018276; c=relaxed/simple;
-	bh=UKg1zHxKodbLnM5Z092xPJYbiyi9RVS9v5F4Nm3UE9s=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=H2IM5sKpu7kAwrVvEnrG7NljmFSGnBtat+l2ZhSkmnAktTovyVR+hzwVZNbrkwuziCNZHwwZPacgtwOQ7LYv4ry0yowxEMNU3sE+M5IVd/2ZiUjrKAOUkkGq6Y0AEIxeXz7BI1zdRqqss6AGo2YTW2F7SW5ySPQk4TTi10Ikbj4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; dkim=pass (1024-bit key) header.d=bp.renesas.com header.i=@bp.renesas.com header.b=E5F4Pbg5; arc=fail smtp.client-ip=52.101.125.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23CB523AE67;
+	Mon,  3 Mar 2025 16:11:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741018284; cv=none; b=OhBs4u+Joftz3EPv9tmTJ7hRNCahdkVVm/8BchFCGSIjIntzyWTZfndD3SF6e0Em6qd5HdjVJPx8GIJ9NtKtz4QA9vmgLIua2i/OlazLU/lLDSzm+8uAJF8nmkfhfJBjaxsA/hb+xv7ylm6yZZO7z3DEVGS34DUmpb1xm5Al8iI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741018284; c=relaxed/simple;
+	bh=PSFPs/IBq/TYvlszx6zOuUWtMjLdsbK2xz5G1UOnhFU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QaQuA2j0payDNnYOqLG/XYuHy3jiLxq+wylmUuyB1dfbNSW5xzjLe1fZSTkKgbLWcKwlQOpxYW6H2cEk1xxQzy5JtGRiOZ9fhIC1nl99yDQWiNnBXBKmggefN4nUB1XM7PrbEGnYmo0guvnzr2+KE5BtWXPFLanLiq/pZy+aPD4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=A4wqvR9H; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=bp.renesas.com header.i=@bp.renesas.com header.b="E5F4Pbg5"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=bnvmrNzFXwhacQRCaG94Tf9WzZ/9LDeGu/P4zt52HOJWFNX+LtUwSqk3MvzYJ8WCShd4DiKbkqOCOwwiG+oN3HPNCIKYZB8NEAM9eGAoqJG9kH14XRL6I1aHDstf/gXtjlJRZgyOzvxkSdB8op+7bzavCUzLLpj1uJaFQTv4/rYqaulhrQS0exLk4cx1Yti+r/4wogJnNy8ie9hpzAIxvg9yAynhR2VojtHQZp5ZHI6hqksfazbO5ex0C/85Sww+8JLyt4WiJkyF0uj73ApcjmgUGkltu70QY1wEs+yqSThQ6wo9WNiS/LWmm1dWHxjcnmvvGI0u/1hWs6NQqjkMQg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Q1pltHDZfhSIrend9oly11YbV+aY6f95m/p4zfVuq1c=;
- b=JygZsew6N8PnCdt8bG1mEWqUFeuwoQvHFc/k+WU9slZ9CcKdSunXOQ3qbZ2BiqMVy63QI2rbPi0FJgxOcHzDuOWT49ZPlKYYz0BOLqG0keZbMesAICVu8oh9kgAmzcwk7g6D658k0VCnwk2JNlIU2g/wPkS36B3bhc4MaQDQHJBPcSXz8Aef7lsYoAFxg/wBzlMRVQarHqROjthK0NWZdjphyACo19SjEL7glVeNNqy6n1A6HzfHEMisD6ch7B1yTqVKwkP/F3wi9Y2n/avBf3Bt1s1pG+gBxcQV5F9Pl91Xrw10cEeQkeazWrgB+M8/tnprMfiH+VFkdbkS052n1Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=bp.renesas.com; dmarc=pass action=none
- header.from=bp.renesas.com; dkim=pass header.d=bp.renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bp.renesas.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Q1pltHDZfhSIrend9oly11YbV+aY6f95m/p4zfVuq1c=;
- b=E5F4Pbg5urNEES/ClpuIzKvktd/0muHcekN5glNrciNaqrHbsChJUCrwdDgUpWFtqXnOpCYKBMvW8fB261Zahkxd5IN8lSCGGu6xxXEJ1X4w4OkcDYmQvIWrmZTgATUijGe3fbgQeEvYhj/pjHBYZwIK9WMJbiHFrKbIqUp+cM4=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=bp.renesas.com;
-Received: from OS9PR01MB13950.jpnprd01.prod.outlook.com (2603:1096:604:35e::5)
- by TY1PR01MB10752.jpnprd01.prod.outlook.com (2603:1096:400:321::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.28; Mon, 3 Mar
- 2025 16:11:11 +0000
-Received: from OS9PR01MB13950.jpnprd01.prod.outlook.com
- ([fe80::244d:8815:7064:a9f3]) by OS9PR01MB13950.jpnprd01.prod.outlook.com
- ([fe80::244d:8815:7064:a9f3%5]) with mapi id 15.20.8489.025; Mon, 3 Mar 2025
- 16:11:11 +0000
-From: Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>
-To: tomm.merciai@gmail.com
-Cc: linux-renesas-soc@vger.kernel.org,
-	linux-media@vger.kernel.org,
-	biju.das.jz@bp.renesas.com,
-	prabhakar.mahadev-lad.rj@bp.renesas.com,
-	Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-	Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>,
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="A4wqvR9H"
+Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 0BB1022A;
+	Mon,  3 Mar 2025 17:09:48 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1741018189;
+	bh=PSFPs/IBq/TYvlszx6zOuUWtMjLdsbK2xz5G1UOnhFU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=A4wqvR9HiVAtXkFdUgZe5BIOFf1UoU4lPo3nBKQEPK96XSid93ZQpCY31G42y6cLC
+	 xvDm+BdtLhklXtKnREfetEXzGi3Bv5VfF1MctTwUgfDOfBJllBJDxzZIUCGlNBoLVh
+	 D0Q9cLyffCT3YSk3q+jr2kfazKdd9dYB4b6kB2dM=
+Date: Mon, 3 Mar 2025 18:10:59 +0200
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Ricardo Ribalda <ribalda@chromium.org>,
 	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	Hans Verkuil <hverkuil@xs4all.nl>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v4 14/17] media: rzg2l-cru: Add IRQ handler to OF data
-Date: Mon,  3 Mar 2025 17:07:54 +0100
-Message-ID: <20250303160834.3493507-15-tommaso.merciai.xr@bp.renesas.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250303160834.3493507-1-tommaso.merciai.xr@bp.renesas.com>
-References: <20250303160834.3493507-1-tommaso.merciai.xr@bp.renesas.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: FR5P281CA0032.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:f3::6) To OS9PR01MB13950.jpnprd01.prod.outlook.com
- (2603:1096:604:35e::5)
+	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] media: uvcvideo: Enable full UVC metadata for all devices
+Message-ID: <20250303161059.GA23684@pendragon.ideasonboard.com>
+References: <20250226-uvc-metadata-v1-1-6cd6fe5ec2cb@chromium.org>
+ <c6ab8640-d96c-4a71-929a-a4ad6bb2647d@redhat.com>
+ <20250303151346.GC32048@pendragon.ideasonboard.com>
+ <1436dc95-68a6-456d-ab5d-117c7791ec48@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: OS9PR01MB13950:EE_|TY1PR01MB10752:EE_
-X-MS-Office365-Filtering-Correlation-Id: 78642434-beea-41d9-7d27-08dd5a6e03a9
-X-LD-Processed: 53d82571-da19-47e4-9cb4-625a166a4a2a,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|7416014|376014|52116014|1800799024|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?YGqiBjc1WX3RJHsbM9jTqdDQQWgJEL7qhXDR2qae0bi1gMZwyEUoiSRnWWpN?=
- =?us-ascii?Q?2lz7illIaT7eQonTszyVnXu5l26rBhZpslyYqvP2WeqADkVFngJGuNKQr1zw?=
- =?us-ascii?Q?jNUuN4xH/9HX9Yz6gm8nM4seDQqog9IplI92joeOOWufK8VDDVu7nD48D6Yh?=
- =?us-ascii?Q?3UVjy3IAL9/WgHuTSLpd8biwV0C0lJA4jCMYR+jhvZoohJ9HSdPe6E4Hlny7?=
- =?us-ascii?Q?npBleiELs+YywFTglf1r/h3I73Oln2nuaoREMhGbpH+h4ST7bAMuGQi0wURQ?=
- =?us-ascii?Q?UEcnFTM/EUi8oVCQ3TL6SnDrCL7WPXh/gpNS4vj5sWeE5mdmKsA0lPd036WL?=
- =?us-ascii?Q?wf/xeSIDHiA2b6IM0+sGapbhCuntL4N+0Tj+bqqT2ep2MaCaSkyQPJ+GEKDx?=
- =?us-ascii?Q?xH61xYpbtGOjMVuh6ZxNd/ZqOxeq15XNInmuM1Ou++WhkGY3yCX7NY0fpvKJ?=
- =?us-ascii?Q?9u/6IHc4i3FVrDDF/bRmpKX18cqxXWD1Y4miq8LRgbPLekUUy7r/yrS3C1wt?=
- =?us-ascii?Q?pX/7jM1e1Y3YnDOW8MKG+ZGW7bezjOfwZbCizCfbqdI8urHR5Vq5pBA7SDH1?=
- =?us-ascii?Q?1Y/j463mFZdI5o/pJ5ZMWFPIFmGLnvn1CAU+eEujOOgRxdA0hwHqeZu14wN5?=
- =?us-ascii?Q?NLOFJNHCbyCQRwN5m1tolcp/yrjrc8d3wLe+neBepGfAGOae9TMYIU/d6fdu?=
- =?us-ascii?Q?MjAAIid9SP3YjzbACf5NinK/mCwO/eAt9AdKiD4i3rPJF8V5vBLiJxCzYOcS?=
- =?us-ascii?Q?bmDvdS0kraVHvVYkhLRW4T6TCLntsPSmorJ74qmPHt96ZI1G9tBkUSEGw7wT?=
- =?us-ascii?Q?xVS5gHShkoIm5eyx4IQOq88PjQIRqjeeinMqtzfYTaLZMIWZ7Gl5CuTPwtk0?=
- =?us-ascii?Q?BxK3zQmh7TLpx08hYRYmWBvgfywzY7ZlYpcmQk6GMULSo6jdU1DjFkG4vc+a?=
- =?us-ascii?Q?UV2qDqv6MDNKba14+7jYKzhPOz43MsdgOWf6XL11q9/1giKgmgQiYo4xzhLn?=
- =?us-ascii?Q?IDUXSF/wxdQHoEZRWgpfu2rslwgRmkISSSDDGO1BMa7veUHAMoVHV4YC/FQn?=
- =?us-ascii?Q?65LY/HfHcbt5kDuD8tSa6wt3bzro+oyOujp3cNkwMaMLM78V72rTtBsdppPU?=
- =?us-ascii?Q?4rFful1c5NM06XJn9Zrz1nzC4ZsvLLEuXkImOTYk0wrGTXkchtN9Yt0I2IxQ?=
- =?us-ascii?Q?Irkdq2lqZ/M2G2SU3H7mrzXZ4HAfqGVm23WhbnjeQYVz5luM9I5u+vAXZi46?=
- =?us-ascii?Q?WXYbafVcJbrEalIyFKr7GrAUmWXq/UjcRqmQ2NoNu0DWzgqajzG7mf5OpuO9?=
- =?us-ascii?Q?NHs2yHb+DWk87eAW8bftM446LEHHgfcdfr3gENGv9/PY3caIEnJMJ6xKXRK0?=
- =?us-ascii?Q?R6vA7sKwf83MvwqEugzh3i2GrCautxbsWokfUVxIMPD8qEaCGqCgzgphP4+N?=
- =?us-ascii?Q?pxs6Cef8TkuePkX2OCqZDGaOmDFevNq1?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:OS9PR01MB13950.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(52116014)(1800799024)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?qAX3BqI3OqcX1gY/SPZwpVtHw3UqhSzROcSQHR5cr6K4dYZm8hB0giSQyOh3?=
- =?us-ascii?Q?JMD6w0iXmIOurZ0BIytbkJAgI3qpcnaZ517+S76adELDZRZdHqZZjJxmykDt?=
- =?us-ascii?Q?U3U4Co7p8q8aYoIN5H/pglKaEhJ9ePZETSkOqC/AlNs+XXW/b906oeC7BuHM?=
- =?us-ascii?Q?H8f3N37KDNGHF2fb4pqAidF8Eq/0nCsVYwYhSROv+pz7zFPZPhEVJ79VUv0D?=
- =?us-ascii?Q?70MN7RMhgw88Br3WiDLUCqpfp4ZhTxL11Pv0FzZrWmyi0e2CINOuPKYGtcHW?=
- =?us-ascii?Q?bI9URaS4mV+sw1KM4AsBJSURA0HkNdi54d0eMinznhOybh6UllCKf+yu7DLy?=
- =?us-ascii?Q?8jgouzCOjjQD3pSF/hU3Ay7zeTbH2+d7/1EhzxUt8Qo2fXDJQvSKzY2aavDC?=
- =?us-ascii?Q?01e9RCM/dmwhiub5Yyye/YbLvS+WuVh4TCX7z6GV6Nw7mb+3Dmt/b/suytPM?=
- =?us-ascii?Q?FNj3eInFwnuQPkyFLKR0QXDJC9TxuZQEW7gCk/08hboaMFhm3DwiUB9Y6912?=
- =?us-ascii?Q?jnc3WW2R4KKvptx3Ye8i+MpoMkdE7KMPlLzsZZ6E/NbtW+BXUlXqOrvKzNki?=
- =?us-ascii?Q?5gqW+h2Hl4NGoFrfpekKuGdqoJCeJ8iSqRCHVOUQbeCC8ottvGNSqCY2sf6S?=
- =?us-ascii?Q?/z8UB5vZ18CRU1+4bYKd4+ZHMca/92hH4wKvMcBFanv17OvtVpzLDNAWO92y?=
- =?us-ascii?Q?z4TEG7J3Q2HNO4JyYY5HFjnmVdYZU/j9wd8y9A61Qf9jqW+oi1ngn9bBkO74?=
- =?us-ascii?Q?QvPkh+BwuGMBFolFqXhdZLo33yDSkZQNTWWYXZaPrufNGGbEYQtqmdGyqwDJ?=
- =?us-ascii?Q?PvhK0/8vButa950BvQtnMROrEGbs/2GAkzxZZRh39rqmf3454zlhBpJewOcs?=
- =?us-ascii?Q?zNAv2/BPUYxrrWcW21xPo66YAfyHT6noo8/+bNNf+aM4q+nOQSja2j104G8+?=
- =?us-ascii?Q?yklSQLnniPjPwG1L1Mi5aIYbb03Reqx8OJjz7PlvwKSKQbdh7u0U/jXPgDS/?=
- =?us-ascii?Q?5OdxsfN2W2Fc2dJ/Dhgi5Oh9e6BGS0hTbgOnD2bFqbbnfvXGKdtkLR5evUgJ?=
- =?us-ascii?Q?Tssjf+t6rHmpmFwVhmKwmaeXd+18vBKKMOBoPHa8ZDcCqs23zivPd69FuGf7?=
- =?us-ascii?Q?c6eaX+88TP0CDW0D+a8oJwZUTayQfyaNaKfKGS9Y4TE5HENxBVuTOKsHwo7j?=
- =?us-ascii?Q?3deM9cfm7IczRPQUIokbcelRNG3EJligLCVGgYWJs8ycRcoO/Wj4IzjVwxHi?=
- =?us-ascii?Q?fRM9EGu1SAfQSLCwL2oOD5LvD36mQvZvYptd0EU5mvoByxneE8TSqZerE9wX?=
- =?us-ascii?Q?O1ZLu8q5xUKUE/wwcK5QF1ajtfAbKO3Szlalr1WmHa34/06PLiInxGdTrLVB?=
- =?us-ascii?Q?odFKLv8WTsJZ3tlZ+L46ecD9LVsbwvLkOuTWdAnsBqeVknSrNEJvMfmJhG/+?=
- =?us-ascii?Q?RAISJhmbQpvz1V7qTayHwAD38ulDmHzLJeBVBkXa9mqMyjDaYFUcBfyTP5e4?=
- =?us-ascii?Q?tR4aGfdjM6I9JmjfsqPbiI41nPWzb9K7J4PfXoOZgFvAVkH/UwnHJbFgIYfQ?=
- =?us-ascii?Q?IDXoHtMcRmxI+5YJx6DgOrWhg8lHsmNLgnUwieEo978LMaEelUF+grT7kHgG?=
- =?us-ascii?Q?k4oaueeg+1PlpHMRUlKF2uQ=3D?=
-X-OriginatorOrg: bp.renesas.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 78642434-beea-41d9-7d27-08dd5a6e03a9
-X-MS-Exchange-CrossTenant-AuthSource: OS9PR01MB13950.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Mar 2025 16:11:11.1803
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: xDIiZASgxaE6il4YH3FfAIFLMuuVeG5Gvo6af/EuCxqEEMDJOLoBkASOmWgwm+CQWyzwrg2aV0vySK2qlzfSPHG7G5qqjkW7NnUlymg3XA+dCEZfgjsJgzNeXWIcjejz
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY1PR01MB10752
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <1436dc95-68a6-456d-ab5d-117c7791ec48@redhat.com>
 
-From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+On Mon, Mar 03, 2025 at 04:43:50PM +0100, Hans de Goede wrote:
+> On 3-Mar-25 16:13, Laurent Pinchart wrote:
+> > On Mon, Mar 03, 2025 at 03:47:51PM +0100, Hans de Goede wrote:
+> >> On 26-Feb-25 14:00, Ricardo Ribalda wrote:
+> >>> The UVC driver provides two metadata types V4L2_META_FMT_UVC, and
+> >>> V4L2_META_FMT_D4XX. The only difference between the two of them is that
+> >>> V4L2_META_FMT_UVC only copies PTS, SCR, size and flags, and
+> >>> V4L2_META_FMT_D4XX copies the whole metadata section.
+> >>>
+> >>> Now we only enable V4L2_META_FMT_D4XX for the Intel D4xx family of
+> >>> devices, but it is useful for any device where vendors include other
+> >>> metadata, such as the one described by Microsoft:
+> >>> - https://learn.microsoft.com/en-us/windows-hardware/drivers/stream/mf-capture-metadata
+> >>>
+> >>> This patch removes the UVC_INFO_META macro and enables
+> >>> V4L2_META_FMT_D4XX for every device. It also updates the documentation
+> >>> to reflect the change.
+> >>>
+> >>> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
+> >>
+> >> Thanks, patch looks good to me:
+> >>
+> >> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+> > 
+> > I don't quite agree, sorry.
+> > 
+> > The reason why the current mechanism has been implemented this way is to
+> > ensure we have documentation for the metadata format of devices that
+> > expose metadata to userspace.
+> > 
+> > If you want to expose the MS metadata, you can create a new metadata
+> > format for that, and enable it on devices that implement it.
+> 
+> Looking at the long list of quirks this removes just for the D4xx
+> cameras I do not believe that having quirked based relaying of
+> which metadata fmt is used to userspace is something which scales
+> on the long term. Given the large amount of different UVC cameras
+> I really think we should move the USB VID:PID -> metadata format
+> mapping out of the kernel.
 
-Add `irq_handler` to the `rzg2l_cru_info` structure and pass it as part of
-the OF data. This prepares for supporting RZ/G3E and RZ/V2H(P) SoCs, which
-require a different IRQ handler. Update the IRQ request code to use the
-handler from the OF data.
+If we can find a solution to ensure the metadata format gets documented,
+sure.
 
-Add `enable_interrupts` and `disable_interrupts` function pointers to the
-`rzg2l_cru_info` structure and pass them as part of the OF data. This
-prepares for supporting RZ/G3E and RZ/V2H(P) SoCs, which require different
-interrupt configurations.
+When it comes to the MS metadata format, if I recall correctly, Ricardo
+said there's an XU with a known GUID to detect the metadata format. We
+therefore wouldn't need quirks.
 
-Implement `rzg2l_cru_enable_interrupts()` and
-`rzg2l_cru_disable_interrupts()` functions and update the code to use them
-instead of directly writing to interrupt registers.
+> I do agree that using V4L2_META_FMT_D4XX for every device is
+> probably not the best idea. So my suggestion would be to add
+> a new V4L2_META_FMT_CUSTOM metadata fmt and for index 1
+> metadata fmt use V4L2_META_FMT_D4XX for the currently quirked
+> cams and use V4L2_META_FMT_CUSTOM for other cameras.
+> 
+> This can then be combined with a udev-rule + hwdb to provide
+> info of what V4L2_META_FMT_CUSTOM should be mapped to in userspace,
+> moving further VID:PID -> extended-metadata fmt mappings out of
+> the kernel.
+> 
+> >>> ---
+> >>>  .../userspace-api/media/v4l/metafmt-d4xx.rst       | 19 +++--
+> >>>  .../userspace-api/media/v4l/metafmt-uvc.rst        |  6 +-
+> >>>  drivers/media/usb/uvc/uvc_driver.c                 | 83 ----------------------
+> >>>  drivers/media/usb/uvc/uvc_metadata.c               | 15 ++--
+> >>>  drivers/media/usb/uvc/uvcvideo.h                   |  1 -
+> >>>  5 files changed, 23 insertions(+), 101 deletions(-)
+> >>>
+> >>> diff --git a/Documentation/userspace-api/media/v4l/metafmt-d4xx.rst b/Documentation/userspace-api/media/v4l/metafmt-d4xx.rst
+> >>> index 0686413b16b2..1b18ef056934 100644
+> >>> --- a/Documentation/userspace-api/media/v4l/metafmt-d4xx.rst
+> >>> +++ b/Documentation/userspace-api/media/v4l/metafmt-d4xx.rst
+> >>> @@ -6,12 +6,23 @@
+> >>>  V4L2_META_FMT_D4XX ('D4XX')
+> >>>  *******************************
+> >>>  
+> >>> -Intel D4xx UVC Cameras Metadata
+> >>> +UVC Full Payload Header Data (formerly known as Intel D4xx UVC Cameras
+> >>> +Metadata).
+> >>>  
+> >>>  
+> >>>  Description
+> >>>  ===========
+> >>>  
+> >>> +V4L2_META_FMT_D4XX buffers follow the metadata buffer layout of
+> >>> +V4L2_META_FMT_UVC with the only difference, that it also includes proprietary
+> >>> +payload header data. It was originally implemented for Intel D4xx cameras, and
+> >>> +thus the name, but now it can be used by any UVC device, when userspace wants
+> >>> +full access to the UVC Metadata.
+> >>> +
+> >>> +
+> >>> +Intel D4xx Metadata
+> >>> +===================
+> >>> +
+> >>>  Intel D4xx (D435, D455 and others) cameras include per-frame metadata in their UVC
+> >>>  payload headers, following the Microsoft(R) UVC extension proposal [1_]. That
+> >>>  means, that the private D4XX metadata, following the standard UVC header, is
+> >>> @@ -21,10 +32,8 @@ types are MetadataId_CaptureStats (ID 3), MetadataId_CameraExtrinsics (ID 4),
+> >>>  and MetadataId_CameraIntrinsics (ID 5). For their description see [1_]. This
+> >>>  document describes proprietary metadata types, used by D4xx cameras.
+> >>>  
+> >>> -V4L2_META_FMT_D4XX buffers follow the metadata buffer layout of
+> >>> -V4L2_META_FMT_UVC with the only difference, that it also includes proprietary
+> >>> -payload header data. D4xx cameras use bulk transfers and only send one payload
+> >>> -per frame, therefore their headers cannot be larger than 255 bytes.
+> >>> +D4xx cameras use bulk transfers and only send one payload per frame, therefore
+> >>> +their headers cannot be larger than 255 bytes.
+> >>>  
+> >>>  This document implements Intel Configuration version 3 [9_].
+> >>>  
+> >>> diff --git a/Documentation/userspace-api/media/v4l/metafmt-uvc.rst b/Documentation/userspace-api/media/v4l/metafmt-uvc.rst
+> >>> index 784346d14bbd..a3aae580e89e 100644
+> >>> --- a/Documentation/userspace-api/media/v4l/metafmt-uvc.rst
+> >>> +++ b/Documentation/userspace-api/media/v4l/metafmt-uvc.rst
+> >>> @@ -6,7 +6,7 @@
+> >>>  V4L2_META_FMT_UVC ('UVCH')
+> >>>  *******************************
+> >>>  
+> >>> -UVC Payload Header Data
+> >>> +UVC Partial Payload Header Data (formerly known as UVC Payload Header Data).
+> >>>  
+> >>>  
+> >>>  Description
+> >>> @@ -44,7 +44,9 @@ Each individual block contains the following fields:
+> >>>          them
+> >>>      * - :cspan:`1` *The rest is an exact copy of the UVC payload header:*
+> >>>      * - __u8 length;
+> >>> -      - length of the rest of the block, including this field
+> >>> +      - length of the rest of the block, including this field (please note that
+> >>> +        regardless of this value, the driver will never copy more than 12
+> >>> +        bytes).
+> >>>      * - __u8 flags;
+> >>>        - Flags, indicating presence of other standard UVC fields
+> >>>      * - __u8 buf[];
+> >>> diff --git a/drivers/media/usb/uvc/uvc_driver.c b/drivers/media/usb/uvc/uvc_driver.c
+> >>> index deadbcea5e22..f19dcd4a7ac6 100644
+> >>> --- a/drivers/media/usb/uvc/uvc_driver.c
+> >>> +++ b/drivers/media/usb/uvc/uvc_driver.c
+> >>> @@ -2488,8 +2488,6 @@ static const struct uvc_device_info uvc_quirk_force_y8 = {
+> >>>  };
+> >>>  
+> >>>  #define UVC_INFO_QUIRK(q) (kernel_ulong_t)&(struct uvc_device_info){.quirks = q}
+> >>> -#define UVC_INFO_META(m) (kernel_ulong_t)&(struct uvc_device_info) \
+> >>> -	{.meta_format = m}
+> >>>  
+> >>>  /*
+> >>>   * The Logitech cameras listed below have their interface class set to
+> >>> @@ -3107,87 +3105,6 @@ static const struct usb_device_id uvc_ids[] = {
+> >>>  	  .bInterfaceSubClass	= 1,
+> >>>  	  .bInterfaceProtocol	= 0,
+> >>>  	  .driver_info		= UVC_INFO_QUIRK(UVC_QUIRK_DISABLE_AUTOSUSPEND) },
+> >>> -	/* Intel D410/ASR depth camera */
+> >>> -	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
+> >>> -				| USB_DEVICE_ID_MATCH_INT_INFO,
+> >>> -	  .idVendor		= 0x8086,
+> >>> -	  .idProduct		= 0x0ad2,
+> >>> -	  .bInterfaceClass	= USB_CLASS_VIDEO,
+> >>> -	  .bInterfaceSubClass	= 1,
+> >>> -	  .bInterfaceProtocol	= 0,
+> >>> -	  .driver_info		= UVC_INFO_META(V4L2_META_FMT_D4XX) },
+> >>> -	/* Intel D415/ASRC depth camera */
+> >>> -	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
+> >>> -				| USB_DEVICE_ID_MATCH_INT_INFO,
+> >>> -	  .idVendor		= 0x8086,
+> >>> -	  .idProduct		= 0x0ad3,
+> >>> -	  .bInterfaceClass	= USB_CLASS_VIDEO,
+> >>> -	  .bInterfaceSubClass	= 1,
+> >>> -	  .bInterfaceProtocol	= 0,
+> >>> -	  .driver_info		= UVC_INFO_META(V4L2_META_FMT_D4XX) },
+> >>> -	/* Intel D430/AWG depth camera */
+> >>> -	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
+> >>> -				| USB_DEVICE_ID_MATCH_INT_INFO,
+> >>> -	  .idVendor		= 0x8086,
+> >>> -	  .idProduct		= 0x0ad4,
+> >>> -	  .bInterfaceClass	= USB_CLASS_VIDEO,
+> >>> -	  .bInterfaceSubClass	= 1,
+> >>> -	  .bInterfaceProtocol	= 0,
+> >>> -	  .driver_info		= UVC_INFO_META(V4L2_META_FMT_D4XX) },
+> >>> -	/* Intel RealSense D4M */
+> >>> -	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
+> >>> -				| USB_DEVICE_ID_MATCH_INT_INFO,
+> >>> -	  .idVendor		= 0x8086,
+> >>> -	  .idProduct		= 0x0b03,
+> >>> -	  .bInterfaceClass	= USB_CLASS_VIDEO,
+> >>> -	  .bInterfaceSubClass	= 1,
+> >>> -	  .bInterfaceProtocol	= 0,
+> >>> -	  .driver_info		= UVC_INFO_META(V4L2_META_FMT_D4XX) },
+> >>> -	/* Intel D435/AWGC depth camera */
+> >>> -	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
+> >>> -				| USB_DEVICE_ID_MATCH_INT_INFO,
+> >>> -	  .idVendor		= 0x8086,
+> >>> -	  .idProduct		= 0x0b07,
+> >>> -	  .bInterfaceClass	= USB_CLASS_VIDEO,
+> >>> -	  .bInterfaceSubClass	= 1,
+> >>> -	  .bInterfaceProtocol	= 0,
+> >>> -	  .driver_info		= UVC_INFO_META(V4L2_META_FMT_D4XX) },
+> >>> -	/* Intel D435i depth camera */
+> >>> -	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
+> >>> -				| USB_DEVICE_ID_MATCH_INT_INFO,
+> >>> -	  .idVendor		= 0x8086,
+> >>> -	  .idProduct		= 0x0b3a,
+> >>> -	  .bInterfaceClass	= USB_CLASS_VIDEO,
+> >>> -	  .bInterfaceSubClass	= 1,
+> >>> -	  .bInterfaceProtocol	= 0,
+> >>> -	  .driver_info		= UVC_INFO_META(V4L2_META_FMT_D4XX) },
+> >>> -	/* Intel D405 Depth Camera */
+> >>> -	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
+> >>> -				| USB_DEVICE_ID_MATCH_INT_INFO,
+> >>> -	  .idVendor		= 0x8086,
+> >>> -	  .idProduct		= 0x0b5b,
+> >>> -	  .bInterfaceClass	= USB_CLASS_VIDEO,
+> >>> -	  .bInterfaceSubClass	= 1,
+> >>> -	  .bInterfaceProtocol	= 0,
+> >>> -	  .driver_info		= UVC_INFO_META(V4L2_META_FMT_D4XX) },
+> >>> -	/* Intel D455 Depth Camera */
+> >>> -	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
+> >>> -				| USB_DEVICE_ID_MATCH_INT_INFO,
+> >>> -	  .idVendor		= 0x8086,
+> >>> -	  .idProduct		= 0x0b5c,
+> >>> -	  .bInterfaceClass	= USB_CLASS_VIDEO,
+> >>> -	  .bInterfaceSubClass	= 1,
+> >>> -	  .bInterfaceProtocol	= 0,
+> >>> -	  .driver_info		= UVC_INFO_META(V4L2_META_FMT_D4XX) },
+> >>> -	/* Intel D421 Depth Module */
+> >>> -	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
+> >>> -				| USB_DEVICE_ID_MATCH_INT_INFO,
+> >>> -	  .idVendor		= 0x8086,
+> >>> -	  .idProduct		= 0x1155,
+> >>> -	  .bInterfaceClass	= USB_CLASS_VIDEO,
+> >>> -	  .bInterfaceSubClass	= 1,
+> >>> -	  .bInterfaceProtocol	= 0,
+> >>> -	  .driver_info		= UVC_INFO_META(V4L2_META_FMT_D4XX) },
+> >>>  	/* Generic USB Video Class */
+> >>>  	{ USB_INTERFACE_INFO(USB_CLASS_VIDEO, 1, UVC_PC_PROTOCOL_UNDEFINED) },
+> >>>  	{ USB_INTERFACE_INFO(USB_CLASS_VIDEO, 1, UVC_PC_PROTOCOL_15) },
+> >>> diff --git a/drivers/media/usb/uvc/uvc_metadata.c b/drivers/media/usb/uvc/uvc_metadata.c
+> >>> index 82de7781f5b6..5c44e6cdb83c 100644
+> >>> --- a/drivers/media/usb/uvc/uvc_metadata.c
+> >>> +++ b/drivers/media/usb/uvc/uvc_metadata.c
+> >>> @@ -60,18 +60,16 @@ static int uvc_meta_v4l2_try_format(struct file *file, void *fh,
+> >>>  				    struct v4l2_format *format)
+> >>>  {
+> >>>  	struct v4l2_fh *vfh = file->private_data;
+> >>> -	struct uvc_streaming *stream = video_get_drvdata(vfh->vdev);
+> >>> -	struct uvc_device *dev = stream->dev;
+> >>>  	struct v4l2_meta_format *fmt = &format->fmt.meta;
+> >>> -	u32 fmeta = fmt->dataformat;
+> >>> +	u32 fmeta = fmt->dataformat == V4L2_META_FMT_D4XX ?
+> >>> +		    V4L2_META_FMT_D4XX : V4L2_META_FMT_UVC;
+> >>>  
+> >>>  	if (format->type != vfh->vdev->queue->type)
+> >>>  		return -EINVAL;
+> >>>  
+> >>>  	memset(fmt, 0, sizeof(*fmt));
+> >>>  
+> >>> -	fmt->dataformat = fmeta == dev->info->meta_format
+> >>> -			? fmeta : V4L2_META_FMT_UVC;
+> >>> +	fmt->dataformat = fmeta;
+> >>>  	fmt->buffersize = UVC_METADATA_BUF_SIZE;
+> >>>  
+> >>>  	return 0;
+> >>> @@ -110,19 +108,16 @@ static int uvc_meta_v4l2_enum_formats(struct file *file, void *fh,
+> >>>  				      struct v4l2_fmtdesc *fdesc)
+> >>>  {
+> >>>  	struct v4l2_fh *vfh = file->private_data;
+> >>> -	struct uvc_streaming *stream = video_get_drvdata(vfh->vdev);
+> >>> -	struct uvc_device *dev = stream->dev;
+> >>>  	u32 index = fdesc->index;
+> >>>  
+> >>> -	if (fdesc->type != vfh->vdev->queue->type ||
+> >>> -	    index > 1U || (index && !dev->info->meta_format))
+> >>> +	if (fdesc->type != vfh->vdev->queue->type || index > 1U)
+> >>>  		return -EINVAL;
+> >>>  
+> >>>  	memset(fdesc, 0, sizeof(*fdesc));
+> >>>  
+> >>>  	fdesc->type = vfh->vdev->queue->type;
+> >>>  	fdesc->index = index;
+> >>> -	fdesc->pixelformat = index ? dev->info->meta_format : V4L2_META_FMT_UVC;
+> >>> +	fdesc->pixelformat = index ? V4L2_META_FMT_D4XX : V4L2_META_FMT_UVC;
+> >>>  
+> >>>  	return 0;
+> >>>  }
+> >>> diff --git a/drivers/media/usb/uvc/uvcvideo.h b/drivers/media/usb/uvc/uvcvideo.h
+> >>> index 5e388f05f3fc..cc2092ae9987 100644
+> >>> --- a/drivers/media/usb/uvc/uvcvideo.h
+> >>> +++ b/drivers/media/usb/uvc/uvcvideo.h
+> >>> @@ -534,7 +534,6 @@ static inline u32 uvc_urb_index(const struct uvc_urb *uvc_urb)
+> >>>  
+> >>>  struct uvc_device_info {
+> >>>  	u32	quirks;
+> >>> -	u32	meta_format;
+> >>>  	u16	uvc_version;
+> >>>  };
+> >>>  
+> >>>
+> >>> ---
+> >>> base-commit: d98e9213a768a3cc3a99f5e1abe09ad3baff2104
+> >>> change-id: 20250226-uvc-metadata-2e7e445966de
 
-Reviewed-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Signed-off-by: Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>
----
-Changes since v2:
- - Squashed patch 15 and 14
- - Collected tag
-
- .../platform/renesas/rzg2l-cru/rzg2l-core.c   |  5 ++++-
- .../platform/renesas/rzg2l-cru/rzg2l-cru.h    |  8 ++++++++
- .../platform/renesas/rzg2l-cru/rzg2l-video.c  | 19 ++++++++++++++-----
- 3 files changed, 26 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/media/platform/renesas/rzg2l-cru/rzg2l-core.c b/drivers/media/platform/renesas/rzg2l-cru/rzg2l-core.c
-index 7e94ae803967..302f792cb415 100644
---- a/drivers/media/platform/renesas/rzg2l-cru/rzg2l-core.c
-+++ b/drivers/media/platform/renesas/rzg2l-cru/rzg2l-core.c
-@@ -278,7 +278,7 @@ static int rzg2l_cru_probe(struct platform_device *pdev)
- 	if (irq < 0)
- 		return irq;
- 
--	ret = devm_request_irq(dev, irq, rzg2l_cru_irq, 0,
-+	ret = devm_request_irq(dev, irq, cru->info->irq_handler, 0,
- 			       KBUILD_MODNAME, cru);
- 	if (ret)
- 		return dev_err_probe(dev, ret, "failed to request irq\n");
-@@ -359,6 +359,9 @@ static const struct rzg2l_cru_info rzgl2_cru_info = {
- 	.max_height = 4095,
- 	.image_conv = ICnMC,
- 	.regs = rzg2l_cru_regs,
-+	.irq_handler = rzg2l_cru_irq,
-+	.enable_interrupts = rzg2l_cru_enable_interrupts,
-+	.disable_interrupts = rzg2l_cru_disable_interrupts,
- };
- 
- static const struct of_device_id rzg2l_cru_of_id_table[] = {
-diff --git a/drivers/media/platform/renesas/rzg2l-cru/rzg2l-cru.h b/drivers/media/platform/renesas/rzg2l-cru/rzg2l-cru.h
-index ca156772b949..3f694044d8cd 100644
---- a/drivers/media/platform/renesas/rzg2l-cru/rzg2l-cru.h
-+++ b/drivers/media/platform/renesas/rzg2l-cru/rzg2l-cru.h
-@@ -34,6 +34,8 @@ enum rzg2l_csi2_pads {
- 	RZG2L_CRU_IP_SOURCE,
- };
- 
-+struct rzg2l_cru_dev;
-+
- /**
-  * enum rzg2l_cru_dma_state - DMA states
-  * @RZG2L_CRU_DMA_STOPPED:   No operation in progress
-@@ -83,6 +85,9 @@ struct rzg2l_cru_info {
- 	unsigned int max_height;
- 	u16 image_conv;
- 	const u16 *regs;
-+	irqreturn_t (*irq_handler)(int irq, void *data);
-+	void (*enable_interrupts)(struct rzg2l_cru_dev *cru);
-+	void (*disable_interrupts)(struct rzg2l_cru_dev *cru);
- };
- 
- /**
-@@ -177,4 +182,7 @@ const struct rzg2l_cru_ip_format *rzg2l_cru_ip_code_to_fmt(unsigned int code);
- const struct rzg2l_cru_ip_format *rzg2l_cru_ip_format_to_fmt(u32 format);
- const struct rzg2l_cru_ip_format *rzg2l_cru_ip_index_to_fmt(u32 index);
- 
-+void rzg2l_cru_enable_interrupts(struct rzg2l_cru_dev *cru);
-+void rzg2l_cru_disable_interrupts(struct rzg2l_cru_dev *cru);
-+
- #endif
-diff --git a/drivers/media/platform/renesas/rzg2l-cru/rzg2l-video.c b/drivers/media/platform/renesas/rzg2l-cru/rzg2l-video.c
-index 5033c8d98639..8995aa254c17 100644
---- a/drivers/media/platform/renesas/rzg2l-cru/rzg2l-video.c
-+++ b/drivers/media/platform/renesas/rzg2l-cru/rzg2l-video.c
-@@ -300,8 +300,7 @@ void rzg2l_cru_stop_image_processing(struct rzg2l_cru_dev *cru)
- 	spin_lock_irqsave(&cru->qlock, flags);
- 
- 	/* Disable and clear the interrupt */
--	rzg2l_cru_write(cru, CRUnIE, 0);
--	rzg2l_cru_write(cru, CRUnINTS, 0x001F0F0F);
-+	cru->info->disable_interrupts(cru);
- 
- 	/* Stop the operation of image conversion */
- 	rzg2l_cru_write(cru, ICnEN, 0);
-@@ -393,6 +392,17 @@ static int rzg2l_cru_get_virtual_channel(struct rzg2l_cru_dev *cru)
- 	return fd.entry[0].bus.csi2.vc;
- }
- 
-+void rzg2l_cru_enable_interrupts(struct rzg2l_cru_dev *cru)
-+{
-+	rzg2l_cru_write(cru, CRUnIE, CRUnIE_EFE);
-+}
-+
-+void rzg2l_cru_disable_interrupts(struct rzg2l_cru_dev *cru)
-+{
-+	rzg2l_cru_write(cru, CRUnIE, 0);
-+	rzg2l_cru_write(cru, CRUnINTS, 0x001f000f);
-+}
-+
- int rzg2l_cru_start_image_processing(struct rzg2l_cru_dev *cru)
- {
- 	struct v4l2_mbus_framefmt *fmt = rzg2l_cru_ip_get_src_fmt(cru);
-@@ -414,8 +424,7 @@ int rzg2l_cru_start_image_processing(struct rzg2l_cru_dev *cru)
- 	rzg2l_cru_write(cru, CRUnRST, CRUnRST_VRESETN);
- 
- 	/* Disable and clear the interrupt before using */
--	rzg2l_cru_write(cru, CRUnIE, 0);
--	rzg2l_cru_write(cru, CRUnINTS, 0x001f000f);
-+	cru->info->disable_interrupts(cru);
- 
- 	/* Initialize the AXI master */
- 	rzg2l_cru_initialize_axi(cru);
-@@ -428,7 +437,7 @@ int rzg2l_cru_start_image_processing(struct rzg2l_cru_dev *cru)
- 	}
- 
- 	/* Enable interrupt */
--	rzg2l_cru_write(cru, CRUnIE, CRUnIE_EFE);
-+	cru->info->enable_interrupts(cru);
- 
- 	/* Enable image processing reception */
- 	rzg2l_cru_write(cru, ICnEN, ICnEN_ICEN);
 -- 
-2.43.0
+Regards,
 
+Laurent Pinchart
