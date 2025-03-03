@@ -1,47 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2D2AA94A;
-	Mon,  3 Mar 2025 10:27:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FBC61F37B8;
+	Mon,  3 Mar 2025 10:27:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740997653; cv=none; b=n8QZnJssI+2+DzUnU7om0iR+m8ZQ8skfdVM/cRTn2msm/CSVv9xcnyWBFdxHDisp5X5Oy6CHkobkf9hB5xhnQGfAxryjeH6/WoWoYGQpGSuEnChJ1rokTpe6II9FbwnBhT3Ki4JzD1cyoi/TAIP+aq/RMTHAmdJnK0Qg8L/zbFI=
+	t=1740997667; cv=none; b=oa75ebtTJc+n8UV14ltC7MKfikGRdZjdSsvcLDV17hapbQjicSx4dytaUmXq7xsi+RaQd19elX3xwuMu39y2JA+GAB3wj2rNxEBQTFbJJrpux0TdYiyXu8IpxK4p3kJ52uvMv6a7bfcx++LOZ/KnpapSsOsUCLIiTo4sUewCXKU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740997653; c=relaxed/simple;
-	bh=FDz6ptuo+7Aft80tGDKuObfSvghbYDAnsgP6ShdB+h8=;
-	h=From:To:Subject:Date:Message-Id:MIME-Version:Content-Type; b=Ebs9VfiwtDMGFcukclqcafh6kNVnjsmqDURab94tyD8agoaML8cMC3CXOGXv2irjUf2c4A2em+IxMaFnHTG3V1JQ5umuVNCKH6qJdaPHaobfXC19uOVbF3Mbn7jWuaVrNxpOP7sHB5J8/GF/DAbuOZQFDkdfxDdHE9kIvfNSMU0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PaliZTMc; arc=none smtp.client-ip=198.175.65.9
+	s=arc-20240116; t=1740997667; c=relaxed/simple;
+	bh=T8A6HBID+bnKK/poo4ku3s8z+sc9q3eeNC3dnooWZpk=;
+	h=From:To:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=jdsfjpnt5dbDS6gVzr69eDmKYqLX77Q6r4bMg+hRnmW0ypmdw3Cn6+mfztWpPi+kqjzeuVEIqvV52Emy+gIAXDCzOjYtMc3in00+19FGkoskLLfgZ/3m9K8Vngg7MbgYA9Hg6DWGoXNeHc6yb7J/C1f+GtZRrM2j5dvGl6pyqZA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iReqcxLu; arc=none smtp.client-ip=198.175.65.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PaliZTMc"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iReqcxLu"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740997652; x=1772533652;
-  h=from:to:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=FDz6ptuo+7Aft80tGDKuObfSvghbYDAnsgP6ShdB+h8=;
-  b=PaliZTMcgQvn8FZFOuSvoAKMkreEtbxYU5D3I7tCHDoIpKjk1bNX0qVW
-   ez4BStApzgjlWBlR+52WSHdL0BvgDtNrtdLNdTuHwMMa8b+vht0ghzrJz
-   E3+PL731aNaYUKMz0NVTn0E4BN2a7JL31gnvkQ4Q/Pjt+Kz2GrjL6BuPX
-   gLeXFYCrezUFwQNsDjlQMICAM9PFndzPUhoqq0z46EANvXcwH8wOCOOkI
-   zILuxVQRDsGDLXdNk/pZEG7UgJfvSH7vBcU66LQzS45LPGhu+UvAyZibH
-   etWdHfKLFsrdnmnMB1HsTNWtJBFp2mfxufh8sI7CNGeOokU/pECDce5Bs
+  t=1740997666; x=1772533666;
+  h=from:to:subject:date:message-id:in-reply-to:references:
+   mime-version:content-transfer-encoding;
+  bh=T8A6HBID+bnKK/poo4ku3s8z+sc9q3eeNC3dnooWZpk=;
+  b=iReqcxLuRU80gMw8lw28m5GEr1qSIFjqzU5Baln3QoXRoz4jor8Gvihr
+   e5Br2XoFc6u2qfho9t3d2j68IKaqoZlJb4w13muoxQ4EVuK9A48t3EXYf
+   lGia0KwkqR9oyyNKwWYUqriq2ALYO+7MWlpNLdGzjZatcib3WalE4NTDo
+   J1c5MN/oeBmxAw4ReVjk46s8KESjJM3EKq1P1eZoOP7T903zdi1PcaX2A
+   wLIVyLLrcAWr7CE+UTIcbl25N9xrAgcGLnhJVZ57gmBCDbUXZYY9AiITw
+   aQZWIQAXYv+ep5wxLDEfJIyGLOlW7oVQLoqLEdADSF7nVUi7Zmo2cxB6g
    Q==;
-X-CSE-ConnectionGUID: wd5osdPuRSSkjta9anY1Og==
-X-CSE-MsgGUID: Ru7dRF1lS7WRnF+88/ff7A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11361"; a="64310033"
+X-CSE-ConnectionGUID: B6F8jgGCSGCPWE5+kliRcA==
+X-CSE-MsgGUID: NjkMqJkSTPStGPnhRxGchg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11361"; a="64310091"
 X-IronPort-AV: E=Sophos;i="6.13,329,1732608000"; 
-   d="scan'208";a="64310033"
+   d="scan'208";a="64310091"
 Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Mar 2025 02:27:31 -0800
-X-CSE-ConnectionGUID: hMmtywriTWO7zIp6xwLCmg==
-X-CSE-MsgGUID: 3pHgk5o+Sj624jh43tBMjQ==
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Mar 2025 02:27:46 -0800
+X-CSE-ConnectionGUID: 7fVOKAx7RNGtC9ocqJZKPQ==
+X-CSE-MsgGUID: +q4WOX2zRPufK0R4n6qxcA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.13,329,1732608000"; 
-   d="scan'208";a="122569850"
+   d="scan'208";a="122569867"
 Received: from mohdfai2-ilbpg12-1.png.intel.com ([10.88.227.73])
-  by fmviesa005.fm.intel.com with ESMTP; 03 Mar 2025 02:27:22 -0800
+  by fmviesa005.fm.intel.com with ESMTP; 03 Mar 2025 02:27:38 -0800
 From: Faizal Rahim <faizal.abdul.rahim@linux.intel.com>
 To: Tony Nguyen <anthony.l.nguyen@intel.com>,
 	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
@@ -78,139 +79,83 @@ To: Tony Nguyen <anthony.l.nguyen@intel.com>,
 	linux-stm32@st-md-mailman.stormreply.com,
 	linux-arm-kernel@lists.infradead.org,
 	bpf@vger.kernel.org
-Subject: [PATCH iwl-next v7 0/9] igc: Add support for Frame Preemption feature in IGC
-Date: Mon,  3 Mar 2025 05:26:49 -0500
-Message-Id: <20250303102658.3580232-1-faizal.abdul.rahim@linux.intel.com>
+Subject: [PATCH iwl-next v7 2/9] igc: Rename xdp_get_tx_ring() for non-xdp usage
+Date: Mon,  3 Mar 2025 05:26:51 -0500
+Message-Id: <20250303102658.3580232-3-faizal.abdul.rahim@linux.intel.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250303102658.3580232-1-faizal.abdul.rahim@linux.intel.com>
+References: <20250303102658.3580232-1-faizal.abdul.rahim@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Introduces support for the FPE feature in the IGC driver.
+Renamed xdp_get_tx_ring() function to a more generic name for use in
+upcoming frame preemption patches.
 
-The patches aligns with the upstream FPE API:
-https://patchwork.kernel.org/project/netdevbpf/cover/20230220122343.1156614-1-vladimir.oltean@nxp.com/
-https://patchwork.kernel.org/project/netdevbpf/cover/20230119122705.73054-1-vladimir.oltean@nxp.com/
+Signed-off-by: Faizal Rahim <faizal.abdul.rahim@linux.intel.com>
+---
+ drivers/net/ethernet/intel/igc/igc.h      | 2 +-
+ drivers/net/ethernet/intel/igc/igc_main.c | 9 ++++-----
+ 2 files changed, 5 insertions(+), 6 deletions(-)
 
-It builds upon earlier work:
-https://patchwork.kernel.org/project/netdevbpf/cover/20220520011538.1098888-1-vinicius.gomes@intel.com/
-
-The patch series adds the following functionalities to the IGC driver:
-a) Configure FPE using `ethtool --set-mm`.
-b) Display FPE settings via `ethtool --show-mm`.
-c) View FPE statistics using `ethtool --include-statistics --show-mm'.
-e) Block setting preemptible tc in taprio since it is not supported yet.
-   Existing code already blocks it in mqprio.
-
-Tested:
-Enabled CONFIG_PROVE_LOCKING, CONFIG_DEBUG_ATOMIC_SLEEP, CONFIG_DMA_API_DEBUG, and CONFIG_KASAN
-1) selftests
-2) netdev down/up cycles
-3) suspend/resume cycles
-4) fpe verification
-
-No bugs or unusual dmesg logs were observed.
-Ran 1), 2) and 3) with and without the patch series, compared dmesg and selftest logs — no differences found.
-
-Change Log:
-v6 -> v7:
-- Squash the cpu param to the prev line (Przemek Kitszel)
-- Use igc_ prefix for fpe_t (Przemek Kitszel)
-- Move new ops to different line in igc_ethtool_ops (Przemek Kitszel)
-- Documentation for igc_enable_empty_addr_recv (): rx -> Rx (Przemek Kitszel)
-- Documentation for igc_enable_empty_addr_recv (): s/IGC/the driver/ (Przemek Kitszel)
-- Change preferred style of init, from { }, to {} (Przemek Kitszel)
-- Remove inclusion of umbrella header <linux/kernel.h> in igc_tsn.c (Przemek Kitszel)
-- End enum with "," in igc_txd_popts_type (Przemek Kitszel)
-- Remove unnecessary braces in igc_fpe_is_verify_or_response() (Przemek Kitszel)
-
-v5 -> v6:
-- Added Tested-by: Furong Xu for patch 1/9 (Vladimir, Furong Xu)
-- Updated logic in ethtool_mmsv_link_state_handle() (Vladimir, Furong Xu)
-- Swap sequence of function call in stmmac_set_mm() (Furong Xu)
-- Log an error if igc_enable_empty_addr_recv() fails (Vladimir)
-- Move the patch ".. Block setting preemptible traffic .." before ".. Add support to get MAC Merge data .." (Vladimir)
-- Move mmsv function kernel-doc from .h to .c file (Vladimir)
-
-v4 -> v5:
-- Remove "igc: Add support for preemptible traffic class in taprio" patch (Vladimir)
-- Add a new patch "igc: Block setting preemptible traffic classes in taprio" (Vladimir)
-- Add kernel-doc for mmsv api (Vladimir)
-- olininfo_status to use host byte order (Simon)
-- status_error should host byte type (Simon)
-- Some code was misplaced in the wrong patch (Vladimir)
-- Mix of tabs and spaces in patch description (Vladimir)
-- Created igc_is_pmac_enabled() to reduce code repetition (Vladimir)
-
-v3 -> v4:
-- Fix compilation warnings introduced by this patch series
-
-v2 -> v3:
-- Implement configure_tx() mmsv callback (Vladimir)
-- Use static_branch_inc() and static_branch_dec() (Vladimir)
-- Add adapter->fpe.mmsv.pmac_enabled as extra check (Vladimir)
-- Remove unnecessary error check in igc_fpe_init_tx_descriptor() (Vladimir)
-- Additional places to use FIELD_PREP() instead of manual bit manipulation (Vladimir)
-- IGC_TXD_POPTS_SMD_V and IGC_TXD_POPTS_SMD_R type change to enum (Vladimir)
-- Remove unnecessary netif_running() check in igc_fpe_xmit_frame (Vladimir)
-- Rate limit print in igc_fpe_send_mpacket (Vladimir)
-
-v1 -> v2:
-- Extract the stmmac verification logic into a common library (Vladimir)
-- igc to use common library for verification (Vladimir)
-- Fix syntax for kernel-doc to use "Return:" (Vladimir)
-- Use FIELD_GET instead of manual bit masking (Vladimir)
-- Don't assign 0 to statistics counter in igc_ethtool_get_mm_stats() (Vladimir)
-- Use pmac-enabled as a condition to allow MAC address value 0 (Vladimir)
-- Define macro register value in increasing value order (Vladimir)
-- Fix tx-min-frag-size handling for igc (Vladimir)
-- Handle link state changes with verification in igc (Vladimir)
-- Add static key for fast path code (Vladimir)
-- rx_min_frag_size get from constant (Vladimir)
-
-v1: https://patchwork.kernel.org/project/netdevbpf/cover/20241216064720.931522-1-faizal.abdul.rahim@linux.intel.com/
-v2: https://patchwork.kernel.org/project/netdevbpf/cover/20250205100524.1138523-1-faizal.abdul.rahim@linux.intel.com/
-v3: https://patchwork.kernel.org/project/netdevbpf/cover/20250207165649.2245320-1-faizal.abdul.rahim@linux.intel.com/
-v4: https://patchwork.kernel.org/project/netdevbpf/cover/20250210070207.2615418-1-faizal.abdul.rahim@linux.intel.com/
-v5: https://patchwork.kernel.org/project/netdevbpf/cover/20250220025349.3007793-1-faizal.abdul.rahim@linux.intel.com/
-v6: https://patchwork.kernel.org/project/netdevbpf/cover/20250227140158.2129988-1-faizal.abdul.rahim@linux.intel.com/
-
-Faizal Rahim (8):
-  igc: Rename xdp_get_tx_ring() for non-xdp usage
-  igc: Optimize the TX packet buffer utilization
-  igc: Set the RX packet buffer size for TSN mode
-  igc: Add support for frame preemption verification
-  igc: Add support to set tx-min-frag-size
-  igc: Block setting preemptible traffic class in taprio
-  igc: Add support to get MAC Merge data via ethtool
-  igc: Add support to get frame preemption statistics via ethtool
-
-Vladimir Oltean (1):
-  net: ethtool: mm: extract stmmac verification logic into common
-    library
-
- drivers/net/ethernet/intel/igc/igc.h          |  15 +-
- drivers/net/ethernet/intel/igc/igc_base.h     |   1 +
- drivers/net/ethernet/intel/igc/igc_defines.h  |  15 +-
- drivers/net/ethernet/intel/igc/igc_ethtool.c  |  76 +++++
- drivers/net/ethernet/intel/igc/igc_main.c     |  66 +++-
- drivers/net/ethernet/intel/igc/igc_regs.h     |  16 +
- drivers/net/ethernet/intel/igc/igc_tsn.c      | 192 +++++++++++-
- drivers/net/ethernet/intel/igc/igc_tsn.h      |  52 ++++
- drivers/net/ethernet/stmicro/stmmac/stmmac.h  |  16 +-
- .../ethernet/stmicro/stmmac/stmmac_ethtool.c  |  41 +--
- .../net/ethernet/stmicro/stmmac/stmmac_fpe.c  | 174 +++--------
- .../net/ethernet/stmicro/stmmac/stmmac_fpe.h  |   5 -
- .../net/ethernet/stmicro/stmmac/stmmac_main.c |   8 +-
- include/linux/ethtool.h                       |  73 +++++
- net/ethtool/mm.c                              | 281 +++++++++++++++++-
- 15 files changed, 814 insertions(+), 217 deletions(-)
-
---
+diff --git a/drivers/net/ethernet/intel/igc/igc.h b/drivers/net/ethernet/intel/igc/igc.h
+index b8111ad9a9a8..22ecdac26cf4 100644
+--- a/drivers/net/ethernet/intel/igc/igc.h
++++ b/drivers/net/ethernet/intel/igc/igc.h
+@@ -736,7 +736,7 @@ struct igc_nfc_rule *igc_get_nfc_rule(struct igc_adapter *adapter,
+ 				      u32 location);
+ int igc_add_nfc_rule(struct igc_adapter *adapter, struct igc_nfc_rule *rule);
+ void igc_del_nfc_rule(struct igc_adapter *adapter, struct igc_nfc_rule *rule);
+-
++struct igc_ring *igc_get_tx_ring(struct igc_adapter *adapter, int cpu);
+ void igc_ptp_init(struct igc_adapter *adapter);
+ void igc_ptp_reset(struct igc_adapter *adapter);
+ void igc_ptp_suspend(struct igc_adapter *adapter);
+diff --git a/drivers/net/ethernet/intel/igc/igc_main.c b/drivers/net/ethernet/intel/igc/igc_main.c
+index 56a35d58e7a6..db4a36afcec6 100644
+--- a/drivers/net/ethernet/intel/igc/igc_main.c
++++ b/drivers/net/ethernet/intel/igc/igc_main.c
+@@ -2444,8 +2444,7 @@ static int igc_xdp_init_tx_descriptor(struct igc_ring *ring,
+ 	return -ENOMEM;
+ }
+ 
+-static struct igc_ring *igc_xdp_get_tx_ring(struct igc_adapter *adapter,
+-					    int cpu)
++struct igc_ring *igc_get_tx_ring(struct igc_adapter *adapter, int cpu)
+ {
+ 	int index = cpu;
+ 
+@@ -2469,7 +2468,7 @@ static int igc_xdp_xmit_back(struct igc_adapter *adapter, struct xdp_buff *xdp)
+ 	if (unlikely(!xdpf))
+ 		return -EFAULT;
+ 
+-	ring = igc_xdp_get_tx_ring(adapter, cpu);
++	ring = igc_get_tx_ring(adapter, cpu);
+ 	nq = txring_txq(ring);
+ 
+ 	__netif_tx_lock(nq, cpu);
+@@ -2546,7 +2545,7 @@ static void igc_finalize_xdp(struct igc_adapter *adapter, int status)
+ 	struct igc_ring *ring;
+ 
+ 	if (status & IGC_XDP_TX) {
+-		ring = igc_xdp_get_tx_ring(adapter, cpu);
++		ring = igc_get_tx_ring(adapter, cpu);
+ 		nq = txring_txq(ring);
+ 
+ 		__netif_tx_lock(nq, cpu);
+@@ -6699,7 +6698,7 @@ static int igc_xdp_xmit(struct net_device *dev, int num_frames,
+ 	if (unlikely(flags & ~XDP_XMIT_FLAGS_MASK))
+ 		return -EINVAL;
+ 
+-	ring = igc_xdp_get_tx_ring(adapter, cpu);
++	ring = igc_get_tx_ring(adapter, cpu);
+ 	nq = txring_txq(ring);
+ 
+ 	__netif_tx_lock(nq, cpu);
+-- 
 2.34.1
 
