@@ -1,682 +1,204 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2045.outbound.protection.outlook.com [40.107.95.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5CA71F3BB0;
-	Mon,  3 Mar 2025 11:02:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740999767; cv=none; b=C6n5UCCyk1mwOhD55H/PTwxv8Vig0PGX+mf+grCD97wyTf7q3NIelvDrbE/UmW6KdrWhLSRUiuQQgU3xqNKdGHhjT54+Tsb7HAwhhtQiUD75K5ulteClzqExGAXLTtTGLwiG65zXvUTq+x4SeXdj32Z6xBhBcV5+PKkBErVzeWc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740999767; c=relaxed/simple;
-	bh=vRlPg42NUHLEzfv6xt/c183uqX0j5ZCSUAiZAhlZBK8=;
-	h=Date:From:To:Subject:Cc:MIME-Version:Message-ID:Content-Type; b=hfizdakRT0FLuD8hEPBTwUYY7EnRiriMPcCmXP1azsP6WV56jhVEkfFkM2bs6Nv3wksQKfz4noZKptAR307uOqKqCKdAxyt4HSB+BixXgnKn9ne00sdg93EyuA4CZyRqqpK+VIluEenrd3ITOoEtW8lH7AiCMujHUSOAwFB3RDg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=sfUQWzmU; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=45tXxb2R; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF51E1DFD95;
+	Mon,  3 Mar 2025 11:03:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.95.45
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740999812; cv=fail; b=KeF0iDwVa1y5zz+rFuyUCTRQVzqu6I6XVVv5bKkBU47EsAgbf2nyteaQZuRvTkjH9ofThl3UCqp35a3ZnOEt/lmgxoGB74xysUWF1VMiXTtIbGyE/JnWDBrIKloGqQ0MaLILwh2yTCXeGKZHzWPITG5jWEjLJn0WUHnucGAGrro=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740999812; c=relaxed/simple;
+	bh=7A0EDs3Ha6pvos5JYw1iBnWcQ+U0oA9ExDTXDjcbz0o=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=D+jSlN/sLzVXNsQuJthm+66jIx+eQRtgqpCST1y/Yx43O7j49vXvtKH/QnPrz9PIE4WjWbqc5/++YrNAJJGSayAuWF92cRr0dYhXvIccyJyuiajzE9RFkzpkNPhBFqOUBFdOEBMt9OL0qauyo/4Y8um2mhgW2E80TQNrDaKZ9iw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=asHTr+0J; arc=fail smtp.client-ip=40.107.95.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="sfUQWzmU";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="45tXxb2R"
-Date: Mon, 03 Mar 2025 11:02:42 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1740999763;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
-	bh=60SfZH/67dLU24esMRoRmfrA9D/dwjOfLTOE7V+QVZM=;
-	b=sfUQWzmUzh4FcGmXdGeGxSwjopR6qThQaWWhzdYQQAT3h02vsBczRNO/9xyt2URcVvp2xf
-	9a+FVuSbNGsZVvTlRHHEwiTWMvByYZSVwqGnzuYpSWHYmuWRMcIa830VZHirORKaQ0zvov
-	MZLiCPyCHVNfqL/nHXHePuTVzuacITyNeO0ZwOsAPFYPKFx00qOwUgJ12VhddfFdLtXirF
-	2MLQx2at9YqT6iFBvIGOo3G2xdAG3wNwCNvi1FHAyiHQwmhAU4YsiGSXT8Yxa4lQQUPeGO
-	AjDJLPvhPf7Ws/aelT4e4QHOuArXNNRjYqRcbRSk72CY1KZD1KEYnlmxibUq7g==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1740999763;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
-	bh=60SfZH/67dLU24esMRoRmfrA9D/dwjOfLTOE7V+QVZM=;
-	b=45tXxb2Rtg8Iv1qZC1MGyTgZCtsffAMCLk/ra1XPvEmv+8m9tXfzODARuGWBcc9d0puvV7
-	9YN3QHzGl5AHPjCQ==
-From: "tip-bot2 for Josh Poimboeuf" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject:
- [tip: x86/asm] x86/asm: Fix ASM_CALL_CONSTRAINT for Clang 19 + KCOV + KMSAN
-Cc: kernel test robot <lkp@intel.com>, Josh Poimboeuf <jpoimboe@kernel.org>,
- Ingo Molnar <mingo@kernel.org>,
- "Peter Zijlstra (Intel)" <peterz@infradead.org>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- Brian Gerst <brgerst@gmail.com>, "H. Peter Anvin" <hpa@zytor.com>,
- linux-kernel@vger.kernel.org, x86@kernel.org
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="asHTr+0J"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=s8DxQSBVI4FaPF+Jz42LLRMe4Dk+2TjZLA9yIVTr0w79SSO5JTVgiY5YKVImmeeC1j6suxnj+L4oBWhIMuWHWQ7hDkRnCViaFR0c/2Pc6MknGEY9Tl3KOZBWWJlV7BCZbDevmrKOZFQ2eBSZ/+JyD1Uw2kEwf5wUQKG+RygEoHD6W935DN82zW1GxXPw4UpfVyfxV5dOdnWPSbYBkGTF96pXXzpgJopMyeiH+EiRuCcMHaO6M0kZv0gA8vf12USi31XLClpsspNI5rOm52lBh/0ZRUBsZg7vl/IyzAKApOFe6DjDwvb3oetUOmvIm8puKoXhlckSXFR/GGnODBzG5A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=RAodrB1ax04/aad+OCYHJCK4vGEqFRXyEznCz0Jwx/c=;
+ b=eX5HEfun99ScU0N2ZXvYFcFztw8H1ZSFlJwzPbz0mKU7tg0677o08AICS6dR6/Si5Ubr2XJ87wmInp3HWxjvy5sUW2fAS6mZMbbjVlYX35EqCCWrqpSMJMKlKbnYL0NyWNjyzXOSsDg72j6fD3JHCpBsvG5dXTeoafMbjWTRaaymVPuk+k22B+HqEH3w755qzq22KnmPKy0op4qWVUNJEUgoygPxm8d7pwLr0FCjSKH+fERWA1+9da8Lk87awD4JM+HQ8NmiUoOEEg/iZS+zNF9iUzYbAfilFEZLnICLV/WRem/VDBMP3b+Rc2yXfmogqsl8nHODXFztFdgMt7MR1A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RAodrB1ax04/aad+OCYHJCK4vGEqFRXyEznCz0Jwx/c=;
+ b=asHTr+0JQAFcYf0nk/eNMBQfNvn8GUxDnCtAhC9/ogU2FxH+1h8Mc9DX4GmS6xpBTzxTkk2WnYzWdP0alzSnZKF46lmjUs/Xj+fCU0oK7AV0v8AvD14pm4jsAHRT6Qk5DNluPKsLRMSGPws0ruo+vlH1dnMz2g7pQB/efd4t5lQ=
+Received: from SN7PR12MB7201.namprd12.prod.outlook.com (2603:10b6:806:2a8::22)
+ by IA0PR12MB7506.namprd12.prod.outlook.com (2603:10b6:208:442::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.25; Mon, 3 Mar
+ 2025 11:03:27 +0000
+Received: from SN7PR12MB7201.namprd12.prod.outlook.com
+ ([fe80::b25:4657:e9:cbc3]) by SN7PR12MB7201.namprd12.prod.outlook.com
+ ([fe80::b25:4657:e9:cbc3%3]) with mapi id 15.20.8466.024; Mon, 3 Mar 2025
+ 11:03:27 +0000
+From: "Havalige, Thippeswamy" <thippeswamy.havalige@amd.com>
+To: =?iso-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>
+CC: "bhelgaas@google.com" <bhelgaas@google.com>, "lpieralisi@kernel.org"
+	<lpieralisi@kernel.org>, "manivannan.sadhasivam@linaro.org"
+	<manivannan.sadhasivam@linaro.org>, "robh@kernel.org" <robh@kernel.org>,
+	"krzk+dt@kernel.org" <krzk+dt@kernel.org>, "conor+dt@kernel.org"
+	<conor+dt@kernel.org>, "linux-pci@vger.kernel.org"
+	<linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org"
+	<devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "Simek, Michal" <michal.simek@amd.com>,
+	"Gogada, Bharat Kumar" <bharat.kumar.gogada@amd.com>, "jingoohan1@gmail.com"
+	<jingoohan1@gmail.com>
+Subject: RE: [PATCH v15 3/3] PCI: amd-mdb: Add AMD MDB Root Port driver
+Thread-Topic: [PATCH v15 3/3] PCI: amd-mdb: Add AMD MDB Root Port driver
+Thread-Index: AQHbicP5GBKeL5PhOk2mHqOVUrF9IrNhMfYAgAAQyWA=
+Date: Mon, 3 Mar 2025 11:03:27 +0000
+Message-ID:
+ <SN7PR12MB7201C0E60127BE7743E0C80F8BC92@SN7PR12MB7201.namprd12.prod.outlook.com>
+References: <20250228093351.923615-1-thippeswamy.havalige@amd.com>
+ <20250228093351.923615-4-thippeswamy.havalige@amd.com>
+ <20250303095800.GC1065658@rocinante>
+In-Reply-To: <20250303095800.GC1065658@rocinante>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+ MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_ActionId=01774df2-9daa-4a63-8c18-e00206bfc8b1;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_ContentBits=0;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Enabled=true;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Method=Standard;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Name=AMD
+ Internal Distribution
+ Only;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_SetDate=2025-03-03T10:58:05Z;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_SiteId=3dd8961f-e488-4e60-8e11-a82d994e183d;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Tag=10,
+ 3, 0, 1;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SN7PR12MB7201:EE_|IA0PR12MB7506:EE_
+x-ms-office365-filtering-correlation-id: ddf4e604-dbec-4495-751a-08dd5a4306a3
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|1800799024|366016|7416014|376014|38070700018;
+x-microsoft-antispam-message-info:
+ =?iso-8859-2?Q?63eKmxRX7Bgc+xL34S79/nzdQEeD1hnamMLRVGCGo/ADPOMySyi3g5kTnq?=
+ =?iso-8859-2?Q?5Fgfpt9nGLskGNE3hZ6ijcGtjwYWF6WvgLc3R6ZNDHfWrJ4EsEeKN5f79U?=
+ =?iso-8859-2?Q?d/+Fg4f8eHyvulnVK1dwd7l6h+sS+mZOoZGFSq3TKmagftDAjzO+aThOBi?=
+ =?iso-8859-2?Q?daYlzBEncL10TkdQXIVrTHeKFBAkhMZToTRGMKCB0O9Vp7EunElDE9TvxG?=
+ =?iso-8859-2?Q?OmkD3X55BBEWgD3CPqx3ss2YKdP0hakKXwxMfujMTfPhXVuYc0SRxLccen?=
+ =?iso-8859-2?Q?fVVM1493FPIM9LxTAmMC0+JZJeAv4J64MZSQM3CzrWkZcXSBbr6JgCUnsK?=
+ =?iso-8859-2?Q?yWb9qYnLV+b5FCaEKO96Y9MbCZ1+7CSL7kvzOzuyyA9O5JjAXxqOCRw2A/?=
+ =?iso-8859-2?Q?uJdkOMXFCnqDsXRr5BlmXbDIACYsGXr85XVmc9A3sqP2plyqnthL2CV2kE?=
+ =?iso-8859-2?Q?bWnrzWA3nNMTobhCT8W9T32/EtetjkPYlfmSM2pfBNST5EhOL+yS1ol/Tc?=
+ =?iso-8859-2?Q?DzyaNPceOAoYBmqzZ/DbU7VSoQI5VUOpJTqUr3WhfpExocEYRN2K/Ckhty?=
+ =?iso-8859-2?Q?oiqZYrgiyWrf8nH4ZV4WvmmArczlC8NoouV3dEWyReAEozgsVkPKORJQcO?=
+ =?iso-8859-2?Q?vjr6YB4QAtI6KZbnY5oDJrcc9h4s6Kt15gTKOlHx+ynIq2uXrJ+BFMpuwk?=
+ =?iso-8859-2?Q?908e4Zagx4AfcwSleoIQfW8iq10saog/z6rsiIADZ1wymd2LarCBJIW29Q?=
+ =?iso-8859-2?Q?1J+hDAl7jGxq2bXeTlhY+mvdxvQivpMO78hDs+Moq0yZ3jjnCeYs0PxisK?=
+ =?iso-8859-2?Q?8jW4ndJ/Bte8lg1jTvclllhhJG3v922RXbaI/eVBDDwCcsem1TcASogfPb?=
+ =?iso-8859-2?Q?7EWxKeNZVRyqVTm8KrGRoiWuoU9oPZ2gVLB+7qiyQTD0upPPYDZ6H6XjKN?=
+ =?iso-8859-2?Q?IJHNkESdGLteHtco6g29u10PAMFqqtBCi8xm4QDsWlzKBuyBpoFWncyj8f?=
+ =?iso-8859-2?Q?IBS2BlCOO4tPmETBfvpRzqFIJuPVCuPMSnKtqtc5ZXRtJuG0FCu4tAJNh8?=
+ =?iso-8859-2?Q?0WRoTLngij1J3/MzqXjwAV7jU/0jvYOL2vFR+UdsHFKi//s7mgsA/fu7X/?=
+ =?iso-8859-2?Q?xVkVtlJztR6yI/kEJpByABeZ7Gsfxmu25OdTeF3W7Muilj5neHRy/8HqSt?=
+ =?iso-8859-2?Q?QTAq4rlMAZ+Mov5d2WqwTcWp9d9rlR5bozCaGndGacfKYlAtIIN4y7Cb+U?=
+ =?iso-8859-2?Q?3pAGo8RikqQkRr5ssyimK4Wf7fcEFOXVG43bWLSL87dDGRSVvfh061W5HZ?=
+ =?iso-8859-2?Q?2gLD/I0ABvIy6t3lXN/cqNgzORnTV4BRHEUr6Xja9XZs6VUoLpDuoNmcj/?=
+ =?iso-8859-2?Q?FOGCwcm80r3XyCI9w1v28nYaGEuP4CF+tfg3O+40ZNZRZvzusvj8b0za/5?=
+ =?iso-8859-2?Q?ysL2qoMLQFLCpWZCLHGTNE6lv+r0nYJAzd00KqAU/0y/mPTsyCUNKCPnBP?=
+ =?iso-8859-2?Q?UAYo/xfIeCFGAxcUbbW2+V?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN7PR12MB7201.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?iso-8859-2?Q?YfLqbFQS//N/YIjI79DyFAWhMiktzXAVvlzY7LvycWvmbS4foSjQctb7AY?=
+ =?iso-8859-2?Q?P7re2bIfjMwdVap1xQTPxsk0D7YHi4t/xaQ7akISuNFCfr3bQ2X+NAqHkQ?=
+ =?iso-8859-2?Q?KU6lKK6jJzz48TZFm64HUP/MTOt3IEVcVx+/dFkSwumOWSB8pfR1aZ7nQj?=
+ =?iso-8859-2?Q?wfn5svQvHKeJu//hKibyjLkPt7CaDSysYMo+Ku9VlHiQYGXVpoxzR3g3Kb?=
+ =?iso-8859-2?Q?wNimaiKAMXo7UdRrdXhXvWJUcmjsBGYVC0kTPfGDbIXcZ4/5kJfW1736m5?=
+ =?iso-8859-2?Q?6orZ0Df9ikokBe7v3B9NRiuEpj2sJmprKjvZ0wX/P9rRfuH92ALGQky9gJ?=
+ =?iso-8859-2?Q?+2NakMlcHFOyURHvu3YZppklPU16ujAXjO7ybIOBNYBVORsV4B3HL08zoC?=
+ =?iso-8859-2?Q?KC1g9hetDX5p7kGspKhNqz6ZzWTHtZT9JMx57vxdGmOQqrtnAZlA0Ij1uc?=
+ =?iso-8859-2?Q?BLTURk2kgISlAR6WXg+fJtDamUeIhH/1Rf1nhtoUdS/lhpcA6tO3K3gkkh?=
+ =?iso-8859-2?Q?qr4CitGEjA2d+TWsnje2OvRcT4JgKcgafzWZDCd01m/cK+VTQ/ll3AtQes?=
+ =?iso-8859-2?Q?vGdBblGOk8FCqStHckrsLArq+hMOSdVgBPth6WTA5hMwZxMOYXChFjX9U/?=
+ =?iso-8859-2?Q?HWheqVJ25SAnJ8GeseR+/JVFlJ9mlu+eHFjDM1JKHdYh/TyhKIozLtLEFa?=
+ =?iso-8859-2?Q?yJJ3zO4njzNNf6wujUJV7aQM5+rS/wwVyWY60JXt0SD1MtsEQx53VDlfeu?=
+ =?iso-8859-2?Q?tyhFOjJLRwQhLRHXZ4rRrzK8q9GcePJ9+JRmtsXZQ+O+6s7pRCIZAMCDII?=
+ =?iso-8859-2?Q?5hXSHgZXo5GuKWhXIIHEeYQOykCJVWsB377+IvgFsR7vsStfmCeBg3jj0t?=
+ =?iso-8859-2?Q?OYvkmfFxcU+RAsQOygsu7kkwID3rut8gwZ4hsv53ZuSR+e6YS39hC2idbu?=
+ =?iso-8859-2?Q?SivxaVlNcq+qaJhxcklS/Je8pZUYgHBFkrqBuDSmjOds07OpbytKQTzR06?=
+ =?iso-8859-2?Q?1iJVUm4Is1FOLBlO/KBm0tJlqR7YOKY1/c6vGY3uG/PDIqEjWtwHEytlsU?=
+ =?iso-8859-2?Q?YYXjbAxdSfm7OSFzjTAwkLnOPYNT3f6Ws80RydNm9Hfbcr4L6yubbbd7DN?=
+ =?iso-8859-2?Q?Gh21iHIsdnwifH8u/UNaS8PnEFpru0pzc/sSF53Y0e3laBS6g3lflalDT8?=
+ =?iso-8859-2?Q?qm/l9IU8XmvJUmY/5chGdo/g1NEB6hOq+MiuqVvzpGyOFplC6dy/ErqhDX?=
+ =?iso-8859-2?Q?FehBjuLkLk2zu/HsTI9BfuAmsvos+pyOl/Oz4C+LI8C7gjRaHZizDN5SGC?=
+ =?iso-8859-2?Q?DUDewXNEUGuj8TdOu/fCFYjAslEkkaU/JcDfn3wCKGEv/ImqXhQc44ZdEg?=
+ =?iso-8859-2?Q?Gdj6Vkkq+b/30KtqI6LGeUj/YE971nOyOytDby4HikA/dfAGxth/MUTEei?=
+ =?iso-8859-2?Q?xxZHGLoZG4CEeFzMGwbpRJgxUDggapBJUWXWv7zMk77zNQv8X5cuBd4ZLf?=
+ =?iso-8859-2?Q?kHzGrYm4ouVkcpyJ381b3/LjKH0UZfsqXVmauQO3KWKspPPiF9g17MS0Ga?=
+ =?iso-8859-2?Q?r1AfrLcECWGkSqsY4BNVbKtwYDZUjjJ5JYhyoH/dUq4GxbIeD0OXoCi01r?=
+ =?iso-8859-2?Q?7utbsn0LGlxmU=3D?=
+Content-Type: text/plain; charset="iso-8859-2"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174099976253.10177.12542657892256193630.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SN7PR12MB7201.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ddf4e604-dbec-4495-751a-08dd5a4306a3
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Mar 2025 11:03:27.6723
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: a0sQRX2BKj1jNkEkWv9GV2kh3pUtk1OCryTmqrzp9Iz4lAB3lkAzIPm9pTx6+vgJlGLff8QJd5iBBIsR0sxDOA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB7506
 
-The following commit has been merged into the x86/asm branch of tip:
+[AMD Official Use Only - AMD Internal Distribution Only]
 
-Commit-ID:     96092b7552d96f841c94265920c922da72ab46e3
-Gitweb:        https://git.kernel.org/tip/96092b7552d96f841c94265920c922da72ab46e3
-Author:        Josh Poimboeuf <jpoimboe@kernel.org>
-AuthorDate:    Sun, 02 Mar 2025 17:21:02 -08:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Mon, 03 Mar 2025 11:39:54 +01:00
+Hi Krzysztof,
 
-x86/asm: Fix ASM_CALL_CONSTRAINT for Clang 19 + KCOV + KMSAN
-
-With CONFIG_KCOV and CONFIG_KMSAN enabled, a case was found with Clang
-19 where it takes the ASM_CALL_CONSTRAINT output constraint quite
-literally by saving and restoring %rsp around the inline asm.  Not only
-is that completely unecessary, it confuses objtool and results in the
-following warning on Clang 19:
-
-  arch/x86/kvm/cpuid.o: warning: objtool: do_cpuid_func+0x2428: undefined stack state
-
-After some experimentation it was discovered that an input constraint of
-__builtin_frame_address(0) generates better code for such cases and
-still achieves the desired result of forcing the frame pointer to get
-set up for both compilers.  Change ASM_CALL_CONSTRAINT to do that.
-
-Fixes: f5caf621ee35 ("x86/asm: Fix inline asm call constraints for Clang")
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Brian Gerst <brgerst@gmail.com>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: linux-kernel@vger.kernel.org
-Closes: https://lore.kernel.org/oe-kbuild-all/202502150634.qjxwSeJR-lkp@intel.com/
----
- arch/x86/include/asm/alternative.h    |  8 ++--
- arch/x86/include/asm/asm.h            |  8 ++--
- arch/x86/include/asm/atomic64_32.h    |  3 +-
- arch/x86/include/asm/cmpxchg_32.h     | 13 ++----
- arch/x86/include/asm/irq_stack.h      |  3 +-
- arch/x86/include/asm/mshyperv.h       | 55 +++++++++++++-------------
- arch/x86/include/asm/paravirt_types.h |  6 ++-
- arch/x86/include/asm/percpu.h         | 34 +++++++---------
- arch/x86/include/asm/preempt.h        | 22 +++++-----
- arch/x86/include/asm/sync_core.h      |  6 ++-
- arch/x86/include/asm/uaccess.h        | 12 +++---
- arch/x86/include/asm/uaccess_64.h     | 10 +++--
- arch/x86/include/asm/xen/hypercall.h  |  4 +-
- arch/x86/kernel/alternative.c         |  8 ++--
- arch/x86/kvm/emulate.c                | 11 +++--
- arch/x86/kvm/vmx/vmx_ops.h            |  3 +-
- 16 files changed, 111 insertions(+), 95 deletions(-)
-
-diff --git a/arch/x86/include/asm/alternative.h b/arch/x86/include/asm/alternative.h
-index 52626a7..5fcfe96 100644
---- a/arch/x86/include/asm/alternative.h
-+++ b/arch/x86/include/asm/alternative.h
-@@ -239,9 +239,10 @@ static inline int alternatives_text_reserved(void *start, void *end)
-  */
- #define alternative_call(oldfunc, newfunc, ft_flags, output, input, clobbers...)	\
- 	asm_inline volatile(ALTERNATIVE("call %c[old]", "call %c[new]", ft_flags)	\
--		: ALT_OUTPUT_SP(output)							\
-+		: output								\
- 		: [old] "i" (oldfunc), [new] "i" (newfunc)				\
- 		  COMMA(input)								\
-+		  COMMA(ASM_CALL_CONSTRAINT)						\
- 		: clobbers)
- 
- /*
-@@ -254,14 +255,13 @@ static inline int alternatives_text_reserved(void *start, void *end)
- 			   output, input, clobbers...)					\
- 	asm_inline volatile(ALTERNATIVE_2("call %c[old]", "call %c[new1]", ft_flags1,	\
- 		"call %c[new2]", ft_flags2)						\
--		: ALT_OUTPUT_SP(output)							\
-+		: output								\
- 		: [old] "i" (oldfunc), [new1] "i" (newfunc1),				\
- 		  [new2] "i" (newfunc2)							\
- 		  COMMA(input)								\
-+		  COMMA(ASM_CALL_CONSTRAINT)						\
- 		: clobbers)
- 
--#define ALT_OUTPUT_SP(...) ASM_CALL_CONSTRAINT, ## __VA_ARGS__
--
- /* Macro for creating assembler functions avoiding any C magic. */
- #define DEFINE_ASM_FUNC(func, instr, sec)		\
- 	asm (".pushsection " #sec ", \"ax\"\n"		\
-diff --git a/arch/x86/include/asm/asm.h b/arch/x86/include/asm/asm.h
-index 975ae7a..0d268e6 100644
---- a/arch/x86/include/asm/asm.h
-+++ b/arch/x86/include/asm/asm.h
-@@ -213,6 +213,8 @@ static __always_inline __pure void *rip_rel_ptr(void *p)
- 
- /* For C file, we already have NOKPROBE_SYMBOL macro */
- 
-+register unsigned long current_stack_pointer asm(_ASM_SP);
-+
- /* Insert a comma if args are non-empty */
- #define COMMA(x...)		__COMMA(x)
- #define __COMMA(...)		, ##__VA_ARGS__
-@@ -225,13 +227,13 @@ static __always_inline __pure void *rip_rel_ptr(void *p)
- #define ASM_INPUT(x...)		x
- 
- /*
-- * This output constraint should be used for any inline asm which has a "call"
-+ * This input constraint should be used for any inline asm which has a "call"
-  * instruction.  Otherwise the asm may be inserted before the frame pointer
-  * gets set up by the containing function.  If you forget to do this, objtool
-  * may print a "call without frame pointer save/setup" warning.
-  */
--register unsigned long current_stack_pointer asm(_ASM_SP);
--#define ASM_CALL_CONSTRAINT "+r" (current_stack_pointer)
-+#define ASM_CALL_CONSTRAINT "r" (__builtin_frame_address(0))
-+
- #endif /* __ASSEMBLY__ */
- 
- #define _ASM_EXTABLE(from, to)					\
-diff --git a/arch/x86/include/asm/atomic64_32.h b/arch/x86/include/asm/atomic64_32.h
-index ab83820..8efb4f2 100644
---- a/arch/x86/include/asm/atomic64_32.h
-+++ b/arch/x86/include/asm/atomic64_32.h
-@@ -51,9 +51,10 @@ static __always_inline s64 arch_atomic64_read_nonatomic(const atomic64_t *v)
- #ifdef CONFIG_X86_CX8
- #define __alternative_atomic64(f, g, out, in, clobbers...)		\
- 	asm volatile("call %c[func]"					\
--		     : ALT_OUTPUT_SP(out) \
-+		     : out						\
- 		     : [func] "i" (atomic64_##g##_cx8)			\
- 		       COMMA(in)					\
-+		       COMMA(ASM_CALL_CONSTRAINT)			\
- 		     : clobbers)
- 
- #define ATOMIC64_DECL(sym) ATOMIC64_DECL_ONE(sym##_cx8)
-diff --git a/arch/x86/include/asm/cmpxchg_32.h b/arch/x86/include/asm/cmpxchg_32.h
-index ee89fbc..3ae0352 100644
---- a/arch/x86/include/asm/cmpxchg_32.h
-+++ b/arch/x86/include/asm/cmpxchg_32.h
-@@ -95,9 +95,9 @@ static __always_inline bool __try_cmpxchg64_local(volatile u64 *ptr, u64 *oldp, 
- 		ALTERNATIVE(_lock_loc					\
- 			    "call cmpxchg8b_emu",			\
- 			    _lock "cmpxchg8b %a[ptr]", X86_FEATURE_CX8)	\
--		: ALT_OUTPUT_SP("+a" (o.low), "+d" (o.high))		\
--		: "b" (n.low), "c" (n.high),				\
--		  [ptr] "S" (_ptr)					\
-+		: "+a" (o.low), "+d" (o.high)				\
-+		: "b" (n.low), "c" (n.high), [ptr] "S" (_ptr)		\
-+		  COMMA(ASM_CALL_CONSTRAINT)				\
- 		: "memory");						\
- 									\
- 	o.full;								\
-@@ -126,10 +126,9 @@ static __always_inline u64 arch_cmpxchg64_local(volatile u64 *ptr, u64 old, u64 
- 			    "call cmpxchg8b_emu",			\
- 			    _lock "cmpxchg8b %a[ptr]", X86_FEATURE_CX8) \
- 		CC_SET(e)						\
--		: ALT_OUTPUT_SP(CC_OUT(e) (ret),			\
--				"+a" (o.low), "+d" (o.high))		\
--		: "b" (n.low), "c" (n.high),				\
--		  [ptr] "S" (_ptr)					\
-+		: CC_OUT(e) (ret), "+a" (o.low), "+d" (o.high)		\
-+		: "b" (n.low), "c" (n.high), [ptr] "S" (_ptr)		\
-+		  COMMA(ASM_CALL_CONSTRAINT)				\
- 		: "memory");						\
- 									\
- 	if (unlikely(!ret))						\
-diff --git a/arch/x86/include/asm/irq_stack.h b/arch/x86/include/asm/irq_stack.h
-index 562a547..8e56a07 100644
---- a/arch/x86/include/asm/irq_stack.h
-+++ b/arch/x86/include/asm/irq_stack.h
-@@ -92,8 +92,9 @@
- 									\
- 	"popq	%%rsp					\n"		\
- 									\
--	: "+r" (tos), ASM_CALL_CONSTRAINT				\
-+	: "+r" (tos)							\
- 	: [__func] "i" (func), [tos] "r" (tos) argconstr		\
-+	  COMMA(ASM_CALL_CONSTRAINT)					\
- 	: "cc", "rax", "rcx", "rdx", "rsi", "rdi", "r8", "r9", "r10",	\
- 	  "memory"							\
- 	);								\
-diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/mshyperv.h
-index 5e6193d..791a9b2 100644
---- a/arch/x86/include/asm/mshyperv.h
-+++ b/arch/x86/include/asm/mshyperv.h
-@@ -79,9 +79,10 @@ static inline u64 hv_do_hypercall(u64 control, void *input, void *output)
- 	if (hv_isolation_type_snp() && !hyperv_paravisor_present) {
- 		__asm__ __volatile__("mov %[output_address], %%r8\n"
- 				     "vmmcall"
--				     : "=a" (hv_status), ASM_CALL_CONSTRAINT,
--				       "+c" (control), "+d" (input_address)
-+				     : "=a" (hv_status), "+c" (control),
-+				       "+d" (input_address)
- 				     : [output_address] "r" (output_address)
-+				       COMMA(ASM_CALL_CONSTRAINT)
- 				     : "cc", "memory", "r8", "r9", "r10", "r11");
- 		return hv_status;
- 	}
-@@ -91,10 +92,11 @@ static inline u64 hv_do_hypercall(u64 control, void *input, void *output)
- 
- 	__asm__ __volatile__("mov %[output_address], %%r8\n"
- 			     CALL_NOSPEC
--			     : "=a" (hv_status), ASM_CALL_CONSTRAINT,
--			       "+c" (control), "+d" (input_address)
-+			     : "=a" (hv_status), "+c" (control),
-+			       "+d" (input_address)
- 			     : [output_address] "r" (output_address),
- 			       THUNK_TARGET(hv_hypercall_pg)
-+			       COMMA(ASM_CALL_CONSTRAINT)
- 			     : "cc", "memory", "r8", "r9", "r10", "r11");
- #else
- 	u32 input_address_hi = upper_32_bits(input_address);
-@@ -106,12 +108,11 @@ static inline u64 hv_do_hypercall(u64 control, void *input, void *output)
- 		return U64_MAX;
- 
- 	__asm__ __volatile__(CALL_NOSPEC
--			     : "=A" (hv_status),
--			       "+c" (input_address_lo), ASM_CALL_CONSTRAINT
--			     : "A" (control),
--			       "b" (input_address_hi),
--			       "D"(output_address_hi), "S"(output_address_lo),
-+			     : "=A" (hv_status), "+c" (input_address_lo)
-+			     : "A" (control), "b" (input_address_hi),
-+			       "D" (output_address_hi), "S"(output_address_lo),
- 			       THUNK_TARGET(hv_hypercall_pg)
-+			       COMMA(ASM_CALL_CONSTRAINT)
- 			     : "cc", "memory");
- #endif /* !x86_64 */
- 	return hv_status;
-@@ -135,14 +136,16 @@ static inline u64 _hv_do_fast_hypercall8(u64 control, u64 input1)
- 	if (hv_isolation_type_snp() && !hyperv_paravisor_present) {
- 		__asm__ __volatile__(
- 				"vmmcall"
--				: "=a" (hv_status), ASM_CALL_CONSTRAINT,
--				"+c" (control), "+d" (input1)
--				:: "cc", "r8", "r9", "r10", "r11");
-+				: "=a" (hv_status), "+c" (control),
-+				  "+d" (input1)
-+				: ASM_CALL_CONSTRAINT
-+				: "cc", "r8", "r9", "r10", "r11");
- 	} else {
- 		__asm__ __volatile__(CALL_NOSPEC
--				     : "=a" (hv_status), ASM_CALL_CONSTRAINT,
--				       "+c" (control), "+d" (input1)
-+				     : "=a" (hv_status), "+c" (control),
-+				       "+d" (input1)
- 				     : THUNK_TARGET(hv_hypercall_pg)
-+				       COMMA(ASM_CALL_CONSTRAINT)
- 				     : "cc", "r8", "r9", "r10", "r11");
- 	}
- #else
-@@ -151,12 +154,10 @@ static inline u64 _hv_do_fast_hypercall8(u64 control, u64 input1)
- 		u32 input1_lo = lower_32_bits(input1);
- 
- 		__asm__ __volatile__ (CALL_NOSPEC
--				      : "=A"(hv_status),
--					"+c"(input1_lo),
--					ASM_CALL_CONSTRAINT
--				      :	"A" (control),
--					"b" (input1_hi),
-+				      : "=A"(hv_status), "+c"(input1_lo)
-+				      :	"A" (control), "b" (input1_hi),
- 					THUNK_TARGET(hv_hypercall_pg)
-+					COMMA(ASM_CALL_CONSTRAINT)
- 				      : "cc", "edi", "esi");
- 	}
- #endif
-@@ -189,17 +190,19 @@ static inline u64 _hv_do_fast_hypercall16(u64 control, u64 input1, u64 input2)
- 	if (hv_isolation_type_snp() && !hyperv_paravisor_present) {
- 		__asm__ __volatile__("mov %[input2], %%r8\n"
- 				     "vmmcall"
--				     : "=a" (hv_status), ASM_CALL_CONSTRAINT,
--				       "+c" (control), "+d" (input1)
-+				     : "=a" (hv_status), "+c" (control),
-+				       "+d" (input1)
- 				     : [input2] "r" (input2)
-+				       COMMA(ASM_CALL_CONSTRAINT)
- 				     : "cc", "r8", "r9", "r10", "r11");
- 	} else {
- 		__asm__ __volatile__("mov %[input2], %%r8\n"
- 				     CALL_NOSPEC
--				     : "=a" (hv_status), ASM_CALL_CONSTRAINT,
--				       "+c" (control), "+d" (input1)
-+				     : "=a" (hv_status), "+c" (control),
-+				       "+d" (input1)
- 				     : [input2] "r" (input2),
- 				       THUNK_TARGET(hv_hypercall_pg)
-+				       COMMA(ASM_CALL_CONSTRAINT)
- 				     : "cc", "r8", "r9", "r10", "r11");
- 	}
- #else
-@@ -210,11 +213,11 @@ static inline u64 _hv_do_fast_hypercall16(u64 control, u64 input1, u64 input2)
- 		u32 input2_lo = lower_32_bits(input2);
- 
- 		__asm__ __volatile__ (CALL_NOSPEC
--				      : "=A"(hv_status),
--					"+c"(input1_lo), ASM_CALL_CONSTRAINT
-+				      : "=A"(hv_status), "+c" (input1_lo)
- 				      :	"A" (control), "b" (input1_hi),
--					"D"(input2_hi), "S"(input2_lo),
-+					"D" (input2_hi), "S" (input2_lo),
- 					THUNK_TARGET(hv_hypercall_pg)
-+					COMMA(ASM_CALL_CONSTRAINT)
- 				      : "cc");
- 	}
- #endif
-diff --git a/arch/x86/include/asm/paravirt_types.h b/arch/x86/include/asm/paravirt_types.h
-index e26633c..68bdce6 100644
---- a/arch/x86/include/asm/paravirt_types.h
-+++ b/arch/x86/include/asm/paravirt_types.h
-@@ -392,9 +392,10 @@ int paravirt_disable_iospace(void);
- 		PVOP_TEST_NULL(op);					\
- 		asm volatile(ALTERNATIVE(PARAVIRT_CALL, ALT_CALL_INSTR,	\
- 				ALT_CALL_ALWAYS)			\
--			     : call_clbr, ASM_CALL_CONSTRAINT		\
-+			     : call_clbr				\
- 			     : paravirt_ptr(op),			\
- 			       ##__VA_ARGS__				\
-+			       COMMA(ASM_CALL_CONSTRAINT)		\
- 			     : "memory", "cc" extra_clbr);		\
- 		ret;							\
- 	})
-@@ -407,9 +408,10 @@ int paravirt_disable_iospace(void);
- 		asm volatile(ALTERNATIVE_2(PARAVIRT_CALL,		\
- 				 ALT_CALL_INSTR, ALT_CALL_ALWAYS,	\
- 				 alt, cond)				\
--			     : call_clbr, ASM_CALL_CONSTRAINT		\
-+			     : call_clbr				\
- 			     : paravirt_ptr(op),			\
- 			       ##__VA_ARGS__				\
-+			       COMMA(ASM_CALL_CONSTRAINT)		\
- 			     : "memory", "cc" extra_clbr);		\
- 		ret;							\
- 	})
-diff --git a/arch/x86/include/asm/percpu.h b/arch/x86/include/asm/percpu.h
-index 8a8cf86..60390a0 100644
---- a/arch/x86/include/asm/percpu.h
-+++ b/arch/x86/include/asm/percpu.h
-@@ -323,10 +323,10 @@ do {									\
- 	asm_inline qual (						\
- 		ALTERNATIVE("call this_cpu_cmpxchg8b_emu",		\
- 			    "cmpxchg8b " __percpu_arg([var]), X86_FEATURE_CX8) \
--		: ALT_OUTPUT_SP([var] "+m" (__my_cpu_var(_var)),	\
--				"+a" (old__.low), "+d" (old__.high))	\
--		: "b" (new__.low), "c" (new__.high),			\
--		  "S" (&(_var))						\
-+		: [var] "+m" (__my_cpu_var(_var)), "+a" (old__.low),	\
-+		   "+d" (old__.high)					\
-+		: "b" (new__.low), "c" (new__.high), "S" (&(_var))	\
-+		  COMMA(ASM_CALL_CONSTRAINT)				\
- 		: "memory");						\
- 									\
- 	old__.var;							\
-@@ -353,11 +353,10 @@ do {									\
- 		ALTERNATIVE("call this_cpu_cmpxchg8b_emu",		\
- 			    "cmpxchg8b " __percpu_arg([var]), X86_FEATURE_CX8) \
- 		CC_SET(z)						\
--		: ALT_OUTPUT_SP(CC_OUT(z) (success),			\
--				[var] "+m" (__my_cpu_var(_var)),	\
--				"+a" (old__.low), "+d" (old__.high))	\
--		: "b" (new__.low), "c" (new__.high),			\
--		  "S" (&(_var))						\
-+		: CC_OUT(z) (success), [var] "+m" (__my_cpu_var(_var)),	\
-+		  "+a" (old__.low), "+d" (old__.high)			\
-+		: "b" (new__.low), "c" (new__.high), "S" (&(_var))	\
-+		  COMMA(ASM_CALL_CONSTRAINT)				\
- 		: "memory");						\
- 	if (unlikely(!success))						\
- 		*_oval = old__.var;					\
-@@ -392,10 +391,10 @@ do {									\
- 	asm_inline qual (						\
- 		ALTERNATIVE("call this_cpu_cmpxchg16b_emu",		\
- 			    "cmpxchg16b " __percpu_arg([var]), X86_FEATURE_CX16) \
--		: ALT_OUTPUT_SP([var] "+m" (__my_cpu_var(_var)),	\
--				"+a" (old__.low), "+d" (old__.high))	\
--		: "b" (new__.low), "c" (new__.high),			\
--		  "S" (&(_var))						\
-+		: [var] "+m" (__my_cpu_var(_var)), "+a" (old__.low),	\
-+		   "+d" (old__.high)					\
-+		: "b" (new__.low), "c" (new__.high), "S" (&(_var))	\
-+		  COMMA(ASM_CALL_CONSTRAINT)				\
- 		: "memory");						\
- 									\
- 	old__.var;							\
-@@ -422,11 +421,10 @@ do {									\
- 		ALTERNATIVE("call this_cpu_cmpxchg16b_emu",		\
- 			    "cmpxchg16b " __percpu_arg([var]), X86_FEATURE_CX16) \
- 		CC_SET(z)						\
--		: ALT_OUTPUT_SP(CC_OUT(z) (success),			\
--				[var] "+m" (__my_cpu_var(_var)),	\
--				"+a" (old__.low), "+d" (old__.high))	\
--		: "b" (new__.low), "c" (new__.high),			\
--		  "S" (&(_var))						\
-+		: CC_OUT(z) (success), [var] "+m" (__my_cpu_var(_var)),	\
-+		  "+a" (old__.low), "+d" (old__.high)			\
-+		: "b" (new__.low), "c" (new__.high), "S" (&(_var))	\
-+		  COMMA(ASM_CALL_CONSTRAINT)				\
- 		: "memory");						\
- 	if (unlikely(!success))						\
- 		*_oval = old__.var;					\
-diff --git a/arch/x86/include/asm/preempt.h b/arch/x86/include/asm/preempt.h
-index 919909d..7e83482 100644
---- a/arch/x86/include/asm/preempt.h
-+++ b/arch/x86/include/asm/preempt.h
-@@ -121,27 +121,29 @@ extern asmlinkage void preempt_schedule_notrace_thunk(void);
- 
- DECLARE_STATIC_CALL(preempt_schedule, preempt_schedule_dynamic_enabled);
- 
--#define __preempt_schedule() \
--do { \
--	__STATIC_CALL_MOD_ADDRESSABLE(preempt_schedule); \
--	asm volatile ("call " STATIC_CALL_TRAMP_STR(preempt_schedule) : ASM_CALL_CONSTRAINT); \
-+#define __preempt_schedule()						\
-+do {									\
-+	__STATIC_CALL_MOD_ADDRESSABLE(preempt_schedule);		\
-+	asm volatile ("call " STATIC_CALL_TRAMP_STR(preempt_schedule)	\
-+		      : : ASM_CALL_CONSTRAINT);				\
- } while (0)
- 
- DECLARE_STATIC_CALL(preempt_schedule_notrace, preempt_schedule_notrace_dynamic_enabled);
- 
--#define __preempt_schedule_notrace() \
--do { \
--	__STATIC_CALL_MOD_ADDRESSABLE(preempt_schedule_notrace); \
--	asm volatile ("call " STATIC_CALL_TRAMP_STR(preempt_schedule_notrace) : ASM_CALL_CONSTRAINT); \
-+#define __preempt_schedule_notrace()					\
-+do {									\
-+	__STATIC_CALL_MOD_ADDRESSABLE(preempt_schedule_notrace);	\
-+	asm volatile ("call " STATIC_CALL_TRAMP_STR(preempt_schedule_notrace) \
-+		      : : ASM_CALL_CONSTRAINT);				\
- } while (0)
- 
- #else /* PREEMPT_DYNAMIC */
- 
- #define __preempt_schedule() \
--	asm volatile ("call preempt_schedule_thunk" : ASM_CALL_CONSTRAINT);
-+	asm volatile ("call preempt_schedule_thunk" : : ASM_CALL_CONSTRAINT);
- 
- #define __preempt_schedule_notrace() \
--	asm volatile ("call preempt_schedule_notrace_thunk" : ASM_CALL_CONSTRAINT);
-+	asm volatile ("call preempt_schedule_notrace_thunk" : : ASM_CALL_CONSTRAINT);
- 
- #endif /* PREEMPT_DYNAMIC */
- 
-diff --git a/arch/x86/include/asm/sync_core.h b/arch/x86/include/asm/sync_core.h
-index 96bda43..c88e354 100644
---- a/arch/x86/include/asm/sync_core.h
-+++ b/arch/x86/include/asm/sync_core.h
-@@ -16,7 +16,7 @@ static __always_inline void iret_to_self(void)
- 		"pushl $1f\n\t"
- 		"iret\n\t"
- 		"1:"
--		: ASM_CALL_CONSTRAINT : : "memory");
-+		: : ASM_CALL_CONSTRAINT : "memory");
- }
- #else
- static __always_inline void iret_to_self(void)
-@@ -34,7 +34,9 @@ static __always_inline void iret_to_self(void)
- 		"pushq $1f\n\t"
- 		"iretq\n\t"
- 		"1:"
--		: "=&r" (tmp), ASM_CALL_CONSTRAINT : : "cc", "memory");
-+		: "=&r" (tmp)
-+		: ASM_CALL_CONSTRAINT
-+		: "cc", "memory");
- }
- #endif /* CONFIG_X86_32 */
- 
-diff --git a/arch/x86/include/asm/uaccess.h b/arch/x86/include/asm/uaccess.h
-index 3a7755c..4a5f0c1 100644
---- a/arch/x86/include/asm/uaccess.h
-+++ b/arch/x86/include/asm/uaccess.h
-@@ -79,9 +79,9 @@ extern int __get_user_bad(void);
- 	register __inttype(*(ptr)) __val_gu asm("%"_ASM_DX);		\
- 	__chk_user_ptr(ptr);						\
- 	asm volatile("call __" #fn "_%c[size]"				\
--		     : "=a" (__ret_gu), "=r" (__val_gu),		\
--			ASM_CALL_CONSTRAINT				\
--		     : "0" (ptr), [size] "i" (sizeof(*(ptr))));		\
-+		     : "=a" (__ret_gu), "=r" (__val_gu)			\
-+		     : "0" (ptr), [size] "i" (sizeof(*(ptr)))		\
-+		       COMMA(ASM_CALL_CONSTRAINT));			\
- 	instrument_get_user(__val_gu);					\
- 	(x) = (__force __typeof__(*(ptr))) __val_gu;			\
- 	__builtin_expect(__ret_gu, 0);					\
-@@ -178,12 +178,12 @@ extern void __put_user_nocheck_8(void);
- 	__ptr_pu = __ptr;						\
- 	__val_pu = __x;							\
- 	asm volatile("call __" #fn "_%c[size]"				\
--		     : "=c" (__ret_pu),					\
--			ASM_CALL_CONSTRAINT				\
-+		     : "=c" (__ret_pu)					\
- 		     : "0" (__ptr_pu),					\
- 		       "r" (__val_pu),					\
- 		       [size] "i" (sizeof(*(ptr)))			\
--		     :"ebx");						\
-+		       COMMA(ASM_CALL_CONSTRAINT)			\
-+		     : "ebx");						\
- 	instrument_put_user(__x, __ptr, sizeof(*(ptr)));		\
- 	__builtin_expect(__ret_pu, 0);					\
- })
-diff --git a/arch/x86/include/asm/uaccess_64.h b/arch/x86/include/asm/uaccess_64.h
-index c52f013..87a1b9e 100644
---- a/arch/x86/include/asm/uaccess_64.h
-+++ b/arch/x86/include/asm/uaccess_64.h
-@@ -129,8 +129,9 @@ copy_user_generic(void *to, const void *from, unsigned long len)
- 			    "call rep_movs_alternative", ALT_NOT(X86_FEATURE_FSRM))
- 		"2:\n"
- 		_ASM_EXTABLE_UA(1b, 2b)
--		:"+c" (len), "+D" (to), "+S" (from), ASM_CALL_CONSTRAINT
--		: : "memory", "rax");
-+		: "+c" (len), "+D" (to), "+S" (from)
-+		: ASM_CALL_CONSTRAINT
-+		: "memory", "rax");
- 	clac();
- 	return len;
- }
-@@ -191,8 +192,9 @@ static __always_inline __must_check unsigned long __clear_user(void __user *addr
- 			    "call rep_stos_alternative", ALT_NOT(X86_FEATURE_FSRS))
- 		"2:\n"
- 	       _ASM_EXTABLE_UA(1b, 2b)
--	       : "+c" (size), "+D" (addr), ASM_CALL_CONSTRAINT
--	       : "a" (0));
-+	       : "+c" (size), "+D" (addr)
-+	       : "a" (0)
-+	         COMMA(ASM_CALL_CONSTRAINT));
- 
- 	clac();
- 
-diff --git a/arch/x86/include/asm/xen/hypercall.h b/arch/x86/include/asm/xen/hypercall.h
-index 97771b9..683772a 100644
---- a/arch/x86/include/asm/xen/hypercall.h
-+++ b/arch/x86/include/asm/xen/hypercall.h
-@@ -101,7 +101,7 @@ DECLARE_STATIC_CALL(xen_hypercall, xen_hypercall_func);
- 	__ADDRESSABLE_xen_hypercall			\
- 	"call __SCT__xen_hypercall"
- 
--#define __HYPERCALL_ENTRY(x)	"a" (x)
-+#define __HYPERCALL_ENTRY(x)	"a" (x) COMMA(ASM_CALL_CONSTRAINT)
- 
- #ifdef CONFIG_X86_32
- #define __HYPERCALL_RETREG	"eax"
-@@ -127,7 +127,7 @@ DECLARE_STATIC_CALL(xen_hypercall, xen_hypercall_func);
- 	register unsigned long __arg4 asm(__HYPERCALL_ARG4REG) = __arg4; \
- 	register unsigned long __arg5 asm(__HYPERCALL_ARG5REG) = __arg5;
- 
--#define __HYPERCALL_0PARAM	"=r" (__res), ASM_CALL_CONSTRAINT
-+#define __HYPERCALL_0PARAM	"=r" (__res)
- #define __HYPERCALL_1PARAM	__HYPERCALL_0PARAM, "+r" (__arg1)
- #define __HYPERCALL_2PARAM	__HYPERCALL_1PARAM, "+r" (__arg2)
- #define __HYPERCALL_3PARAM	__HYPERCALL_2PARAM, "+r" (__arg3)
-diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
-index 8b66a55..6a7eb06 100644
---- a/arch/x86/kernel/alternative.c
-+++ b/arch/x86/kernel/alternative.c
-@@ -1624,8 +1624,8 @@ static noinline void __init int3_selftest(void)
- 	asm volatile ("int3_selftest_ip:\n\t"
- 		      ANNOTATE_NOENDBR
- 		      "    int3; nop; nop; nop; nop\n\t"
--		      : ASM_CALL_CONSTRAINT
--		      : __ASM_SEL_RAW(a, D) (&val)
-+		      : : __ASM_SEL_RAW(a, D) (&val)
-+			  COMMA(ASM_CALL_CONSTRAINT)
- 		      : "memory");
- 
- 	BUG_ON(val != 1);
-@@ -1657,8 +1657,8 @@ static noinline void __init alt_reloc_selftest(void)
- 	 */
- 	asm_inline volatile (
- 		ALTERNATIVE("", "lea %[mem], %%" _ASM_ARG1 "; call __alt_reloc_selftest;", X86_FEATURE_ALWAYS)
--		: ASM_CALL_CONSTRAINT
--		: [mem] "m" (__alt_reloc_selftest_addr)
-+		: : [mem] "m" (__alt_reloc_selftest_addr)
-+		    COMMA(ASM_CALL_CONSTRAINT)
- 		: _ASM_ARG1
- 	);
- }
-diff --git a/arch/x86/kvm/emulate.c b/arch/x86/kvm/emulate.c
-index 60986f6..40e12a1 100644
---- a/arch/x86/kvm/emulate.c
-+++ b/arch/x86/kvm/emulate.c
-@@ -1070,7 +1070,9 @@ static __always_inline u8 test_cc(unsigned int condition, unsigned long flags)
- 
- 	flags = (flags & EFLAGS_MASK) | X86_EFLAGS_IF;
- 	asm("push %[flags]; popf; " CALL_NOSPEC
--	    : "=a"(rc), ASM_CALL_CONSTRAINT : [thunk_target]"r"(fop), [flags]"r"(flags));
-+	    : "=a" (rc)
-+	    : [thunk_target] "r" (fop), [flags] "r" (flags)
-+	      COMMA(ASM_CALL_CONSTRAINT));
- 	return rc;
- }
- 
-@@ -5079,9 +5081,10 @@ static int fastop(struct x86_emulate_ctxt *ctxt, fastop_t fop)
- 		fop += __ffs(ctxt->dst.bytes) * FASTOP_SIZE;
- 
- 	asm("push %[flags]; popf; " CALL_NOSPEC " ; pushf; pop %[flags]\n"
--	    : "+a"(ctxt->dst.val), "+d"(ctxt->src.val), [flags]"+D"(flags),
--	      [thunk_target]"+S"(fop), ASM_CALL_CONSTRAINT
--	    : "c"(ctxt->src2.val));
-+	    : "+a" (ctxt->dst.val), "+d" (ctxt->src.val), [flags] "+D" (flags),
-+	      [thunk_target] "+S" (fop)
-+	    : "c" (ctxt->src2.val)
-+	      COMMA(ASM_CALL_CONSTRAINT));
- 
- 	ctxt->eflags = (ctxt->eflags & ~EFLAGS_MASK) | (flags & EFLAGS_MASK);
- 	if (!fop) /* exception is returned in fop variable */
-diff --git a/arch/x86/kvm/vmx/vmx_ops.h b/arch/x86/kvm/vmx/vmx_ops.h
-index 9667757..a614add 100644
---- a/arch/x86/kvm/vmx/vmx_ops.h
-+++ b/arch/x86/kvm/vmx/vmx_ops.h
-@@ -144,8 +144,9 @@ do_exception:
- 		     /* VMREAD faulted.  As above, except push '1' for @fault. */
- 		     _ASM_EXTABLE_TYPE_REG(1b, 2b, EX_TYPE_ONE_REG, %[output])
- 
--		     : ASM_CALL_CONSTRAINT, [output] "=&r" (value)
-+		     : [output] "=&r" (value)
- 		     : [field] "r" (field)
-+		       COMMA(ASM_CALL_CONSTRAINT)
- 		     : "cc");
- 	return value;
- 
+> -----Original Message-----
+> From: Krzysztof Wilczy=F1ski <kw@linux.com>
+> Sent: Monday, March 3, 2025 3:28 PM
+> To: Havalige, Thippeswamy <thippeswamy.havalige@amd.com>
+> Cc: bhelgaas@google.com; lpieralisi@kernel.org;
+> manivannan.sadhasivam@linaro.org; robh@kernel.org; krzk+dt@kernel.org;
+> conor+dt@kernel.org; linux-pci@vger.kernel.org; devicetree@vger.kernel.or=
+g;
+> linux-kernel@vger.kernel.org; Simek, Michal <michal.simek@amd.com>;
+> Gogada, Bharat Kumar <bharat.kumar.gogada@amd.com>;
+> jingoohan1@gmail.com
+> Subject: Re: [PATCH v15 3/3] PCI: amd-mdb: Add AMD MDB Root Port driver
+>
+> Hello,
+>
+> [...]
+> > +           err =3D devm_request_irq(dev, irq,
+> amd_mdb_pcie_intr_handler,
+> > +                                  IRQF_NO_THREAD, intr_cause[i].sym,
+> pcie);
+> > +           if (err) {
+> > +                   dev_err(dev, "Failed to request IRQ %d\n", irq);
+> > +                   return err;
+> > +           }
+> > +   }
+>
+> Out of curiosity: would exposing error values be of any benefit to the us=
+ers of
+> the driver?  So, perhaps:
+>
+>   if (err) {
+>       dev_err(dev, "Failed to request IRQ %d, err=3D%d\n", irq, err);
+>       return err;
+>   }
+Thanks for reviewing. Yes, this would help to understand the error details =
+here.
+>
+> Thoughts?
+>
+>       Krzysztof
