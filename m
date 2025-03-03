@@ -1,45 +1,46 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2075.outbound.protection.outlook.com [40.107.237.75])
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2041.outbound.protection.outlook.com [40.107.244.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B80E01F4630;
-	Mon,  3 Mar 2025 10:59:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.75
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EF1E1F4E2F;
+	Mon,  3 Mar 2025 10:59:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.41
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740999592; cv=fail; b=nlkV+7zGLnk3SrZYEk3QI7cffg5Q5eQleG2FC59cZR8f0M/9zJ34YBK4hA5v64vDVv4DHiqPmJKNnZCxC5DbZb0qYRan01G233i/R9m1+7qXnNAXudgWogWLhM9Z+cMhRcuCCc9r7mDf2V+o5aajPMoeuyWy95ZGdL2AeYUxN1s=
+	t=1740999596; cv=fail; b=HRSIDtFUg2gJOmoZa04wdzTfusY3CR4CnTs709Z5V3OGsgV/X3VfCgUhCTvnDsJgCufT/7vq6MOfoLjMLlKR5KbTFqBJnTZRgXANVW3d0cPHKwApLO/dyEZcOuO4nvoFQL+d8gistoJlGKff74pnb4YJUZv7TtrSl1UfknoNwwk=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740999592; c=relaxed/simple;
-	bh=5GtngUwv/pFLVs/5jP4e1YTBT+QZloysFbMq2j+bxzk=;
+	s=arc-20240116; t=1740999596; c=relaxed/simple;
+	bh=6czvyvz/aVtniO/PdwmvZ4uROFYXiuR7U6rd+M+6+6g=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=gUmN6niLJ0kgzUhHZyy63CwNrH4c5T8DDnteY/RoCXQM9DXQ2YdJQRpA3Vxc2fba4zd9fy7DP28Xv+Ta5k7iM24iH5IYuiy9JKbbJkMr4n0TgmmLcW+mmCGuEOppcDilE1NK9gnen6vm63kPjSagNM8vhWpSLvITdZm76bG49lQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=b0cz2tci; arc=fail smtp.client-ip=40.107.237.75
+	 MIME-Version:Content-Type; b=XEIh2wWP4q5deXhKhgn5J9Xem1RUcUn56NaXgx6Gl1+OnpHHcJ2qAjs+hIEncGyjHE91FngaEKIq89SaXvd42x3jj+7zwWONpy0fppZkxqOqjxf+NM9/nf2M905+nySp3ZO00JMOD7uTS7rx+7j6SsQCwxNRq7GFY/bYERrdcqA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=VZrF0NCD; arc=fail smtp.client-ip=40.107.244.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="b0cz2tci"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="VZrF0NCD"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=A3yeuh7s/6HvT9hx02xjskBrNhajO8Jy16RIpwrjJywGPEiRi7a971C2STFvSzsGPADXEsS23QtmIGoOiZxsZtd85KEp//sTxQBrmVCxHvPfIrDEtjvNBmo+u5m1gp6nyNsoNRr1nQmEZuIFGWkupKSuDYQEwl+0MimeC1aoPm79QNYLZ+njcaHIEfmW2Cl3mpnxbttUz6MuPzDWRxdy1q3Tc4eRFCLQwkuTFljoEX/9a4REJdy05BlB5m08odbUzG67/8fB/GeRGLgwn61RISqOmpznpZfQ/9lwcQcjDXFX+hgPeAlouHRhFL65J0VMzQwgzUacg+ghrXxWbLcp3w==
+ b=fWVlDLdl8xsgArS85jwh3uKSQxsxhGtwtQB6rgiilOO5kmU5AB8VE1tR2CslWZsudOqd7s8YJNcXRCvPCAxDlnB0KJ0wvz8Ce5CZXRWPHp43LF3ba/WNXjTpeAOBy52EnovO+3b6xLMnyS1V/D2qlts/sBKdger9w2jeXZstoUon5lx0hNRyH0GFLJmlvKvMDxcMflFPIrMI8aC96XXFU399job2A0G1Br8o+9E/LO9QeGP8zH5AZzWiM4s1Skkp3IVfKwzShFb7O/HPzOs7JP8jdA4FIVJy0iLohkWoM1t3wToSlGO6HRXGIijCrSRg7rCJvxCIEkFDDtWjtOUELQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=g1pRsfusff5dmd7COF46Efmf3bQtvGWyrIdbo/pp59w=;
- b=QfkJaUefh+eHXqtpfrHq8YewN58O77R9UzgqCWvc6/tKmIW7aDAtLFs11ryfZAUCm/Z9PgSuqZvF4kiz9GBQok22l5yvjZ593kZNuk8g6hTPuPm4iom3FgtSQQdC2RdObEeEKjjE7nyd5VwwfD4TRUC/WLWBkClxfZzypVI33/9bLVZHiE92tiNlFIZQGpQDOj8WHeZTEjX1LP1WbJ7ebMOrMkpm2esTmh6RxtV7hFje1r8Wgpnzt0ungsnMkn4zl+ogRSCAl6DKU01+FYRvm1/8mjN0RTgE47N16oA8KZBcAHEmpJXOHe95vNzGPQ3XFJsiyPnJphFzkHIuiDRVGQ==
+ bh=si6ylr3W9qfOCdGH6B1BkjXMtHC1yKl6Atu7JYBfS+M=;
+ b=b1a/BHvJaaXZU8rs9yi/U51EYId1j0v/g+6o+huwk3jwq/yueC1ucOyBLFIBAG5f2NxHOYG97S1H9WADfXvmJCfj+1qy6/FuEvX/Mabh5Dhg7elPfvrXZjY8HWfYr8JNwB5dhZZ2p7nQ3JU6BH3MOy8RsRT8FDnFITV1cyThL9huuklYhy1Hpm5fQNLbcfCxLP14Rvy7AIBLSZ7G9TeLVP7YsmViJrEByKi318XZ3Oj0IJS0o+1pUF6TYgpUF4m/E2WEQAcS+Ut6dKCh5LEq1we6ZPhF3vbonZeCdCLyA2vLCVziTMr26ROhROz3JxLlJ8iRZ/BQ4HmUpZ33gTeEig==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
  dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
  header.from=amd.com; dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=g1pRsfusff5dmd7COF46Efmf3bQtvGWyrIdbo/pp59w=;
- b=b0cz2tci3c6oUr0wbuUjWlefFvn7R9nnzIVZz7406Wu9I3ztRTtGJYLMVkaBEZ5NveYm1P31vWM8RxdKckPDAgibFCsBHeJsR2gVVwuuu6bqmtIM1B+7Qqo0+Xh4lXIFxA3EkTetpOJfQ+DFDALv2dbV7DmJd4gIZwkiKtCjwHA=
-Received: from PH8PR07CA0030.namprd07.prod.outlook.com (2603:10b6:510:2cf::16)
- by DS0PR12MB6389.namprd12.prod.outlook.com (2603:10b6:8:cf::9) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8466.20; Mon, 3 Mar 2025 10:59:44 +0000
-Received: from SN1PEPF00036F3D.namprd05.prod.outlook.com
- (2603:10b6:510:2cf:cafe::30) by PH8PR07CA0030.outlook.office365.com
- (2603:10b6:510:2cf::16) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8489.29 via Frontend Transport; Mon,
- 3 Mar 2025 10:59:44 +0000
+ bh=si6ylr3W9qfOCdGH6B1BkjXMtHC1yKl6Atu7JYBfS+M=;
+ b=VZrF0NCDWRFhyW90EuFiXzM5qxYcX7Cy+xudB3wXFHAyIggBZDu+f38NuwbFkbCjHnrXQvIRCGCrCukyGdMeFiVGm5PTiNxj4zszWLdRzBVUnJr/zNoZCZnkPQOGuvsz9CHJMm4BPYts7JdmBC4bTfYr7UlqcIndtPL1biN7jyY=
+Received: from PH7P220CA0015.NAMP220.PROD.OUTLOOK.COM (2603:10b6:510:326::20)
+ by MN2PR12MB4095.namprd12.prod.outlook.com (2603:10b6:208:1d1::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.25; Mon, 3 Mar
+ 2025 10:59:52 +0000
+Received: from SN1PEPF00036F3E.namprd05.prod.outlook.com
+ (2603:10b6:510:326:cafe::43) by PH7P220CA0015.outlook.office365.com
+ (2603:10b6:510:326::20) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8489.26 via Frontend Transport; Mon,
+ 3 Mar 2025 10:59:52 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -47,22 +48,22 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SN1PEPF00036F3D.mail.protection.outlook.com (10.167.248.21) with Microsoft
+ SN1PEPF00036F3E.mail.protection.outlook.com (10.167.248.22) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8511.15 via Frontend Transport; Mon, 3 Mar 2025 10:59:44 +0000
+ 15.20.8511.15 via Frontend Transport; Mon, 3 Mar 2025 10:59:51 +0000
 Received: from amd.amd.com (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 3 Mar
- 2025 04:59:40 -0600
+ 2025 04:59:48 -0600
 From: Akshay Gupta <akshay.gupta@amd.com>
 To: <linux-hwmon@vger.kernel.org>, <linux-kernel@vger.kernel.org>
 CC: <linux@roeck-us.net>, <gregkh@linuxfoundation.org>, <arnd@arndb.de>,
 	<shyam-sundar.s-k@amd.com>, <gautham.shenoy@amd.com>,
 	<mario.limonciello@amd.com>, <naveenkrishna.chatradhi@amd.com>, Akshay Gupta
 	<akshay.gupta@amd.com>
-Subject: [PATCH v5 05/11] misc: amd-sbi: Optimize the wait condition for mailbox command completion
-Date: Mon, 3 Mar 2025 10:58:56 +0000
-Message-ID: <20250303105902.215009-6-akshay.gupta@amd.com>
+Subject: [PATCH v5 07/11] misc: amd-sbi: Add support for mailbox error codes
+Date: Mon, 3 Mar 2025 10:58:58 +0000
+Message-ID: <20250303105902.215009-8-akshay.gupta@amd.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20250303105902.215009-1-akshay.gupta@amd.com>
 References: <20250303105902.215009-1-akshay.gupta@amd.com>
@@ -78,107 +79,148 @@ X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
  (10.181.40.145)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN1PEPF00036F3D:EE_|DS0PR12MB6389:EE_
-X-MS-Office365-Filtering-Correlation-Id: f3916f5f-6a91-4d1e-8df3-08dd5a428185
+X-MS-TrafficTypeDiagnostic: SN1PEPF00036F3E:EE_|MN2PR12MB4095:EE_
+X-MS-Office365-Filtering-Correlation-Id: de1b99d7-bb6a-4bcb-aecc-08dd5a4285f8
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|1800799024|376014|36860700013;
+	BCL:0;ARA:13230040|82310400026|36860700013|1800799024|376014;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?Kk4LudVBAwxksmWvydYZ7HZdT4PuWaaDKfGTdntyRhIO8qR2+EVWoFIM51fA?=
- =?us-ascii?Q?fsSJ7XGlCxLA8A6WXlQgSh1V2UsZrS/oeWbY/7B93uGK/C1nuOWkFozOUcWE?=
- =?us-ascii?Q?oROBnp4uYNt0PpzjhV6IsCFD+ZCQPs6N9U3tRf8p0dsgW0uIH+kxvD3m9D0u?=
- =?us-ascii?Q?IxXCOE/+/xSHmGWLVKsuhJKBhwGO+sssu7l0XuDedDseiGXFM22cEPdHYjC8?=
- =?us-ascii?Q?MGTGjApzEsiCcZlM6sV63HP3fOJB3Hg9naTrB757qQEoOI91Jnqc+2/mALvy?=
- =?us-ascii?Q?DyiGXCjlnQkpuz/2KCUOOCiNeJ9mftkox1ziiwISgnwtU9r+jKnYMkg4PvOr?=
- =?us-ascii?Q?n2zoBsmWJHC66eMJ9kIDuvL1OmatcsAjTRMDALsPXWGTOEjjN+9Z/ZIzNtX3?=
- =?us-ascii?Q?51i4PxKsGqCBbKxa/SrjXMfOVTq36HOeZ3bA5LvunST8wkrLZsqsl1mXNrd5?=
- =?us-ascii?Q?ZrH8V9nsgc2BuGexFP1UyEXZGswdu6VaoFnxtReiFCpDOleW3NwvKpfh7SOA?=
- =?us-ascii?Q?r/xdOOah5HzAqMAEYLOXV/Qkr803jcV0+9f16ZtXXgY6JP6ODDMwf6tNszjZ?=
- =?us-ascii?Q?eH9afO6HSQnqKOy//lSnBCIrLviAXZKAmB823MDfnK0xRpRaZvcz2DBbnqAl?=
- =?us-ascii?Q?5RW8JMxbq8v1Gqf2LVJYqAbocUjxOlX5tHr8rj+Grm+1gV+WXoOTZP8IsTw7?=
- =?us-ascii?Q?oY/f8PioYsQ7bNhrEqunItgA5cgUiOXvWlGrs0gdRcXEstCJ0JBgN6WlbNLo?=
- =?us-ascii?Q?g0J+4kNPkdb6OHDrZYGTD1QcBZo0YySoH3Pox8X2//pk0iU/MyCk2pZZG4sp?=
- =?us-ascii?Q?OxF4m+RVGrEyDc89mo9WBcH47kATiqWerc/aD9+tBZ4Y+lLU8vjCx/1+uByM?=
- =?us-ascii?Q?hAtxCUgY03aT58uKQxYFyvykfdBXwCYfxj0sHDUOeH6UqzB/rM0yIbDAA4xJ?=
- =?us-ascii?Q?8W7U0hIb8TMF7B12A9NL1D6aAaQ9Bdiq7F2GvZrVY3dmFeGT34tXv1aPsvCE?=
- =?us-ascii?Q?ifXaC7G8sDXHBsvFRoz/SOyjPiAggQ70+UIV0UvIeR0Rhpn6NvxSD3ApMQ2s?=
- =?us-ascii?Q?zBfxDKlkaB+iBKCL/eCzhGy2mH1/2VMhXbE+MwrC55TeLwYkac6NOb9pSu4V?=
- =?us-ascii?Q?/FNOLRj9hYReRHrDdmmNBwCB3kUaQjeYIJytvPQ/8CJ+uvOtbzO7TYY+2LYj?=
- =?us-ascii?Q?vMH/acQbNSvsEnyLAo71OUwTJy6d3LcZD+KPkMQWXffM/pCWE9ftmubrQz7B?=
- =?us-ascii?Q?ioENV8UCi0blliuGf0cMM/i27aih497acOjg3bx2AkxOPt/I5xHpx230lWTc?=
- =?us-ascii?Q?wcNOoH4FrmDla2ml2TwDv4FacSLa5iSjRjANfI5tcfApV46YVBWOYfS13+Eb?=
- =?us-ascii?Q?/5G7H15Xo9NHokc84GD6s9D6/kL5fzDmgIdkvgPeAPTAlTJ3zWs09VQqQsLN?=
- =?us-ascii?Q?t6rXKZHcNLO9xRdBGazogtAxyMniASZ+3hqJeN5+iKKwG5mIEMTv7e6b3MsD?=
- =?us-ascii?Q?6TnA6hSAsh/zuKY=3D?=
+	=?us-ascii?Q?4YhP6Q15/YSc7G/CTMJNK6Avy6HRkoEDZX+1AalEKwvFXddDb7TShPfxK1tF?=
+ =?us-ascii?Q?XSIgqx9mOXIg2vAWdBPMssEyf5xiwRsRlW2KRhRxNBdncItEBdyZRunat3su?=
+ =?us-ascii?Q?BO6apK5+RBooY5c/4Q3fMXomYfphxzYr86IT3+jaFv7yjdN/qyym3Xfvbzu0?=
+ =?us-ascii?Q?/993PmZzkImklE/yj9hHZHQuMoJ+XtKUj6Wq3rWUwxVDgndoQ6Zc7DM0EJs7?=
+ =?us-ascii?Q?jrzu9dlJ8EhgFdEe/zyj1/LwXxpDdg5ccoaH6pNZRfj8xNRzq24hQdKDC2nH?=
+ =?us-ascii?Q?4dQ/dBXqvhQV2na9u83RMo2jZxiPHGrl8WqoL58ggfIr64oSbpiYb6cMG1wd?=
+ =?us-ascii?Q?AiX/WjSkbCzK0g5ItP6vLYA5bw0E98iuQNTvmudCu+5m2REuY+MSyFrV+fKd?=
+ =?us-ascii?Q?z+gjDna/rB5u7+QEe3M738u0XcjH9LszXKiNWbsBUBLYjKKX1VAjhBDKbnXV?=
+ =?us-ascii?Q?y++AUeRXVToi9a1/01CEdcuR638ZCieeP4YA0868VGF36xXgVK9iL1CK48q+?=
+ =?us-ascii?Q?7Ag1/NYEut/MqKw6afiWkD4RL5q+tKbg1nXjc+WKEHAI5ABwKnree4Sxxk19?=
+ =?us-ascii?Q?+CocI92izUb45R5ZcZZcnzuDCwfleAdzjihNj+MQhMqLpoO1vQf4RZ7MS3b5?=
+ =?us-ascii?Q?h6ahAI4t0Rk54q/8dp2+DLm1q8QbWTJS57ETZa3GxxGKTPseWXIjConuWwRt?=
+ =?us-ascii?Q?Z6/gv7ER8IZ6BLSV+U7KypNY6qlE9Ta7oQBYNDkTh3QczrCH1VEESABtf8jY?=
+ =?us-ascii?Q?AGD7MR2Lz7RvX6bKHSx7BvyNnCF7O8gpREa913iNGJz8p+syqP5jb5q41gMw?=
+ =?us-ascii?Q?59z6SEHO7msMiEhwK7sRQsRuhu9ciVr4psn2lfPSy43uvXJlfgxyvCkjMwhA?=
+ =?us-ascii?Q?oFRBm9yyiViP1GZdLCDf3Ki87GRkQ127rsCCi90nPxdZ1Xfup8ZTB95Yy2vB?=
+ =?us-ascii?Q?ds9FTKgAr+Z71H7l1YnivZGXNYUfto3OMdMOR1z6Cq/8EfuuBbDVIZ+sUue7?=
+ =?us-ascii?Q?qoBo/TjGSW6EoahTPbRJthTETaU3mDsgzRdvO1/+rsEpbYDmFLDNFGGexhGj?=
+ =?us-ascii?Q?wzMp6KgPAjB62sS/qZNCgejttDMn+/dY5SrUo2pzj7UxMVkmrjjWJesppGtw?=
+ =?us-ascii?Q?qrsIInh03OIOeP7Zz/BDJSvu/fjPHzu7I4rVKiZU9sWxlcRMLCThU3bKl2t9?=
+ =?us-ascii?Q?4X+5SpOsoKnrsJYgRbQpYJnICWlvC09P46+gtQumQcjiPb+d8bUsybPbCtim?=
+ =?us-ascii?Q?27mYZ+4szNz0vNZBTGZsaffAdGpPzBj48YcRZEK0m5lXQdGLs/YnEPqSfohB?=
+ =?us-ascii?Q?zqhGGwPyoCcGils2iqZgQIfeFMrLwBMR9o+dGsrmKv9lmVUxefolOIrERBeE?=
+ =?us-ascii?Q?CvMRlLMWiOVw5gv1H7lCzYas5vWrI5inhPRLy5MK0rQAK7gaXWQjbNmOLujO?=
+ =?us-ascii?Q?q5uF2qq+bDZrpot48Owd3ryryFzRz2bQ/IBkrffaNQwCIaj2y81Pppf/q+Hv?=
+ =?us-ascii?Q?xqWx5H/iZAtNXnA=3D?=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(376014)(36860700013);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(36860700013)(1800799024)(376014);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Mar 2025 10:59:44.3052
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Mar 2025 10:59:51.7705
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: f3916f5f-6a91-4d1e-8df3-08dd5a428185
+X-MS-Exchange-CrossTenant-Network-Message-Id: de1b99d7-bb6a-4bcb-aecc-08dd5a4285f8
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	SN1PEPF00036F3D.namprd05.prod.outlook.com
+	SN1PEPF00036F3E.namprd05.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB6389
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4095
 
-- optimize the wait condition to indicate command completion
-  by replacing the do while loop with regmap subsystem API
-  regmap_read_poll_timeout()
+APML mailbox protocol returns additional error codes written by
+SMU firmware in the out-bound register 0x37. These errors include,
+invalid core, message not supported over platform and
+others. This additional error codes can be used to provide more
+details to user space.
 
 Reviewed-by: Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>
 Signed-off-by: Akshay Gupta <akshay.gupta@amd.com>
 ---
 Changes since v4:
-- Previously patch 3
+- Previously patch 5
+- Fix Documentation warning
 
 Changes since v3:
-- New patch as per suggestion from Arnd
+- update ioctl comment description
+ 
+Changes since v1:
+- bifurcated from previous patch 5
 
- drivers/misc/amd-sbi/rmi-core.c | 19 ++++---------------
- 1 file changed, 4 insertions(+), 15 deletions(-)
+ drivers/misc/amd-sbi/rmi-core.c | 12 +++++++++++-
+ include/uapi/misc/amd-apml.h    |  5 +++++
+ 2 files changed, 16 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/misc/amd-sbi/rmi-core.c b/drivers/misc/amd-sbi/rmi-core.c
-index 663ab9176d95..1d5e2556ab88 100644
+index c39a29d90c27..642fe762cf6f 100644
 --- a/drivers/misc/amd-sbi/rmi-core.c
 +++ b/drivers/misc/amd-sbi/rmi-core.c
-@@ -23,7 +23,7 @@ int rmi_mailbox_xfer(struct sbrmi_data *data,
- 		     struct sbrmi_mailbox_msg *msg)
+@@ -25,13 +25,15 @@
+ int rmi_mailbox_xfer(struct sbrmi_data *data,
+ 		     struct apml_message *msg)
  {
- 	unsigned int bytes;
--	int i, ret, retry = 10;
-+	int i, ret;
+-	unsigned int bytes;
++	unsigned int bytes, ec;
+ 	int i, ret;
  	int sw_status;
  	u8 byte;
  
-@@ -64,21 +64,10 @@ int rmi_mailbox_xfer(struct sbrmi_data *data,
- 	 * an ALERT (if enabled) to initiator (BMC) to indicate completion
- 	 * of the requested command
- 	 */
--	do {
--		ret = regmap_read(data->regmap, SBRMI_STATUS, &sw_status);
--		if (sw_status < 0) {
--			ret = sw_status;
--			goto exit_unlock;
--		}
--		if (sw_status & SW_ALERT_MASK)
--			break;
--		usleep_range(50, 100);
--	} while (retry--);
--
--	if (retry < 0) {
--		ret = -EIO;
-+	ret = regmap_read_poll_timeout(data->regmap, SBRMI_STATUS, sw_status,
-+				       sw_status & SW_ALERT_MASK, 500, 2000000);
-+	if (ret)
- 		goto exit_unlock;
--	}
+ 	mutex_lock(&data->lock);
  
++	msg->fw_ret_code = 0;
++
+ 	/* Indicate firmware a command is to be serviced */
+ 	ret = regmap_write(data->regmap, SBRMI_INBNDMSG7, START_CMD);
+ 	if (ret < 0)
+@@ -72,6 +74,9 @@ int rmi_mailbox_xfer(struct sbrmi_data *data,
+ 	if (ret)
+ 		goto exit_unlock;
+ 
++	ret = regmap_read(data->regmap, SBRMI_OUTBNDMSG7, &ec);
++	if (ret || ec)
++		goto exit_clear_alert;
  	/*
  	 * For a read operation, the initiator (BMC) reads the firmware
+ 	 * response Command Data Out[31:0] from SBRMI::OutBndMsg_inst[4:1]
+@@ -87,12 +92,17 @@ int rmi_mailbox_xfer(struct sbrmi_data *data,
+ 		}
+ 	}
+ 
++exit_clear_alert:
+ 	/*
+ 	 * BMC must write 1'b1 to SBRMI::Status[SwAlertSts] to clear the
+ 	 * ALERT to initiator
+ 	 */
+ 	ret = regmap_write(data->regmap, SBRMI_STATUS,
+ 			   sw_status | SW_ALERT_MASK);
++	if (ec) {
++		ret = -EPROTOTYPE;
++		msg->fw_ret_code = ec;
++	}
+ exit_unlock:
+ 	mutex_unlock(&data->lock);
+ 	return ret;
+diff --git a/include/uapi/misc/amd-apml.h b/include/uapi/misc/amd-apml.h
+index 5721aaa0c6bd..47a057226300 100644
+--- a/include/uapi/misc/amd-apml.h
++++ b/include/uapi/misc/amd-apml.h
+@@ -38,6 +38,10 @@ struct apml_message {
+ 		__u32 mb_in[2];
+ 		__u8 reg_in[8];
+ 	} data_in;
++	/*
++	 * Error code is returned in case of soft mailbox
++	 */
++	__u32 fw_ret_code;
+ } __attribute__((packed));
+ 
+ /*
+@@ -60,6 +64,7 @@ struct apml_message {
+  * The APML RMI module checks whether the cmd is
+  * - Mailbox message read/write(0x0~0x999)
+  * - returning "-EFAULT" if none of the above
++ * "-EPROTOTYPE" error is returned to provide additional error details
+  */
+ #define SBRMI_IOCTL_CMD		_IOWR(SB_BASE_IOCTL_NR, 0, struct apml_message)
+ 
 -- 
 2.25.1
 
