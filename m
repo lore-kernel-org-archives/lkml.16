@@ -1,109 +1,91 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBA3E214A64;
-	Mon,  3 Mar 2025 19:08:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9626033F6;
+	Mon,  3 Mar 2025 19:09:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741028931; cv=none; b=qYO3Gc/8bmvXXD0Mnv/X+XOwvb0UeOnBfCYFHEySwPFxNS9BZlQ0lr+2eTT/ziTrIkzk/Ys6HxRI3mFHbCCffCKeYRTpS/Uoj0jjd1fva8UeqOL24AzOq8/Uzu8xelNEtywVnCoy+e4uKxAwJbkA3Q/CWCOuYzWFqx7xnCxHj24=
+	t=1741028993; cv=none; b=aewLHxbFl4GHWJYZGzov6U/Y7E2n4vNzq2UGdQs0bVqdApQ8o3bjG6f8+mqnWHTVa+KyIu5WW9ba2qQoIoqcu0+v77Ohi7OqB/ykWNWB7xstDLWJmkC6pX2hgeuVrZhytLmKQLGk3/cz9qPHNWgkESK2RAITwnwXKUCph4+cgOs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741028931; c=relaxed/simple;
-	bh=Yje3DuWMISvZSa3Mbxv9NiyZ3ok+2hfDkATqnad69wY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=daj/bgdtCMU8JcfRNoVZuKuYCw2byI0FOTMDdDgm2af7/8hp4g0BnrH3EH+M+DV1WlziCNor57SyYNV5U1OX8L2b2b57aaRuF6H5hgmABf2XRz5mdMOxEz2JYHKqQTNPvoM73KMoc9jXKiKcxE6n+FCMTsURA+D1wk97ZtfrYJA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ad5mzEHl; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741028993; c=relaxed/simple;
+	bh=GRkTGlXTl9EsGkbV++PQV+IY4wEzGFdbTYXI3amD37Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hxyueTBl0/r1lQAyEXSt4TwGDviKwslbPxYm+AsN7131Sb6QI1rej8v+o5ES0RO6Yr74mVxD6tBBo0H+LxPKsv27e19XKOmRs6fTKNHxDgoaP1mpPd+QK1y0p/KUGup0SJv2Akai7UTklEGMaEXGG+p7GRy8prrKqJ5uf/MLVsQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LHYR8bWA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ad5mzEHl"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-43bc0b8520cso8833395e9.1;
-        Mon, 03 Mar 2025 11:08:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741028928; x=1741633728; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=cF/23zUstDppzkURu8wJfdQbb4zZ6KV4RiUE3G1K/pk=;
-        b=Ad5mzEHlYCwkE3bkEFQy8+MPtKaU2N549pSZfqMQpVToPKnOlIRLDH2mZH7BGCavSU
-         bqlYIVHPAZvIllnCZb1kSx/aNRxl3djy/2sWKJaymJuSSlzut6xrgOrFZPp9lE8yFl0L
-         X2QY2jSwzcPAxzFaedH0TrGmnFCVO/j6aB8gky147D4XWtRuCyBhJgkhdOIhKzmhUrgi
-         fjfj1B+BvLTlNUlZGS020jXpxeD0cKhpKZyMtFkjE54wM+GylN7T3zNKVSbc1MFCl7+h
-         dUs729VgxmIfUPZcyctx4zS/VZPaKU2bI1yQO0WtJ6YAcC7SEipXSc8tFSiON3foPwFb
-         PFoA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741028928; x=1741633728;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=cF/23zUstDppzkURu8wJfdQbb4zZ6KV4RiUE3G1K/pk=;
-        b=TxZbeHalht5TW/7F3+zRtnACklrNImEwjwDv060KOtR0FD3NhqW5pmamUUE4amNzo1
-         b2qpyO+M57dZmPs20SHuMd5Cjzcql1xOgkORpIYSWKCmHVQxnuzfoTNFsgL4ygqdHjTn
-         tzZprj3DGUbwexHYo20He+LrqGYJn8WeJ2a20qybOpfX4sLKdII+tWnhVxlq6DWqraRV
-         E4s4wpeyCv/4pNsXTRFCMF7NSapM4MfVonP+a0ondrt1pU9aDhjk0nVsKb9ZVwyB3t4T
-         fO4ZtrxCi6HqNuSk7hS6FwxSnFFXm89JtgzHZ9veaxkJ3lxu89zaPLcfQnbo5bSdk87K
-         xL7Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVAy5lqEYHpMmrpXLBlWy/zgYBLDu5sIYZoeD8a/3+TAKBLip3DxqY0+N+3cA1+JbAnhriAphuMfBii7gDniwVvDQ==@vger.kernel.org, AJvYcCWQ5a1wv4ZV1SVGeMDRS6hr1qCs/m3gKCdanJwx4WE5gBVpN5XvnaMhd1nMAzWnut7cO1j1VEgY@vger.kernel.org
-X-Gm-Message-State: AOJu0YyLPDcUVqmw3PCG0LUYOrydTsBhMz7fJco9Zj3P1E66gifhbrQS
-	73USvXWM7x80/fXFxjeoatp98DVut/fXGxePamcWWIkd13SJrbKV2Qrd0O8Y
-X-Gm-Gg: ASbGncuPyRUEn+7R+818UCmUyo83qxjcswhHB/NQM1WXg/DBni7hytetrSSUNgDdllF
-	hb9wTmAjEoCfxUNuE5qnXONwLxUI6YOwIJL3IRsNBzfvrIiaTVk/HUvokbuygRrEWzCpQxJ4Nsj
-	Uo7I/56kn8LaNsDx9jVGQrCJU00nxKnLkNqtpPru+N6TUhcssBZm6k/xeKUdsG48UGafmiDQbWO
-	ApaOiv1PJNs+LHAMUSNOZAU7c46b02ITlGWg+qEFXMqio5m3qnbyHoPPbA0nYFWxifjnsUBK0Hg
-	1W84qA0wiOlAaKbJKnmNBG7f4JFFxUwXl3BYM6Ilsv0MIo5b5X3gMM6IORbMuD9vQlsqTvMX
-X-Google-Smtp-Source: AGHT+IEWVs4i0tbonkHc8HHsQJeB84ekhLGbjKn2nYHkiAn5v4AKZwYjR6d1OGmPPVC7xCrrPo0OcA==
-X-Received: by 2002:a05:600c:3ca8:b0:439:84d3:f7ee with SMTP id 5b1f17b1804b1-43ba675d56fmr98691015e9.24.1741028927840;
-        Mon, 03 Mar 2025 11:08:47 -0800 (PST)
-Received: from prasmi.Home ([2a06:5906:61b:2d00:5c8:2ec7:65d8:a3a5])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43bc18452c3sm47420455e9.25.2025.03.03.11.08.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Mar 2025 11:08:46 -0800 (PST)
-From: Prabhakar <prabhakar.csengg@gmail.com>
-X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: linux-kernel@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org,
-	Prabhakar <prabhakar.csengg@gmail.com>,
-	Biju Das <biju.das.jz@bp.renesas.com>,
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-	stable@vger.kernel.org
-Subject: [PATCH] reset: rzg2l-usbphy-ctrl: Correct reset status check
-Date: Mon,  3 Mar 2025 19:08:41 +0000
-Message-ID: <20250303190841.179890-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LHYR8bWA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0BBF9C4CED6;
+	Mon,  3 Mar 2025 19:09:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741028993;
+	bh=GRkTGlXTl9EsGkbV++PQV+IY4wEzGFdbTYXI3amD37Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=LHYR8bWAZC6eLKSKGjUIFCeSYu41CF6ijSSVCVrBbVcAkFUXrrBDvkiVmjD02ThS7
+	 taahy85hooUcalCU7bDTOnnwKEyERYxdiYYlPOWteD/lNpBPQpZvPP+62eQfZlLO7B
+	 XChINU6Mq8XGH0AYC62OF0NtA6frGRPph9mqOWEBC/F1OSOyBx84JhgVOjJqNyhx0W
+	 5FHC9VXAAIzzwdUdUTxnOpUB2zV9YOa2I+SBf/7Aau2hT6/EE/0f/gJY7n4HQxLYT8
+	 2wrDYsUrk2IwUwEtKE+tl0z7HUkvNR+MRXOZK+12f9c3lFcZP6u6MWQ7KepR3I+Opo
+	 e+2lOtZgf4rqQ==
+Date: Mon, 3 Mar 2025 11:09:50 -0800
+From: Kees Cook <kees@kernel.org>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: kernel test robot <lkp@intel.com>, llvm@lists.linux.dev,
+	oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	x86@kernel.org, Ingo Molnar <mingo@kernel.org>
+Subject: Re: [tip:x86/core 16/17] vmlinux.o: warning: objtool: do_jit+0x276:
+ relocation to !ENDBR: .noinstr.text+0x6a60
+Message-ID: <202503031109.2D9F1CD@keescook>
+References: <202503030704.H9KFysNS-lkp@intel.com>
+ <20250303092459.GI5880@noisy.programming.kicks-ass.net>
+ <202503030910.55EBC9A76@keescook>
+ <20250303185748.GC15322@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250303185748.GC15322@noisy.programming.kicks-ass.net>
 
-From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+On Mon, Mar 03, 2025 at 07:57:48PM +0100, Peter Zijlstra wrote:
+> On Mon, Mar 03, 2025 at 09:11:54AM -0800, Kees Cook wrote:
+> > On Mon, Mar 03, 2025 at 10:24:59AM +0100, Peter Zijlstra wrote:
+> 
+> > > > >> vmlinux.o: warning: objtool: do_jit+0x276: relocation to !ENDBR: .noinstr.text+0x6a60
+> 
+> > Just for my own curiosity, how did you track this down? (The
+> > relationship between cfi_bhi and do_jit is not immediately obvious to
+> > me. Or rather, what was needing DCE?)
+> 
+> If you build dfebe7362f6f461d771cdb9ac2c5172a4721f064 (tip/x86/core^2 so
+> as to not have the fix) and build a FINEIBT=y kernel with clang-19 (so
+> as not to have support for kcfi-ariry) then:
+> 
+> $ ./scripts/objdump-func tmp-build/vmlinux.o do_jit
+> ...
+> 0267    6a2a7:  48 c1 e9 20             shr    $0x20,%rcx
+> 026b    6a2ab:  0f 85 16 39 00 00       jne    6dbc7 <do_jit+0x3b87>
+> 0271    6a2b1:  48 8b 44 24 20          mov    0x20(%rsp),%rax
+> 0276    6a2b6:  48 c7 c1 00 00 00 00    mov    $0x0,%rcx        6a2b9: R_X86_64_32S     __bhi_args+0x20
+> 027d    6a2bd:  c6 43 0b e8             movb   $0xe8,0xb(%rbx)
+> 0281    6a2c1:  48 83 c0 10             add    $0x10,%rax
+> 0285    6a2c5:  29 c1                   sub    %eax,%ecx
+> 0287    6a2c7:  89 4b 0c                mov    %ecx,0xc(%rbx)
+> ...
+> 
+> 
+> So the reference is to __bhi_args[1], this is the result of
+> emit_fineibt(.arity=1).
+> 
+> Anyway, the point is that for FINEIBT_BHI=n the __bhi_args[]
+> array is 'empty' and the +0x20 thing points into random.
+> 
+> What needs DCE is the whole if (cfi_bhi) branch in emit_fineibt(),
+> making that whole __bhi_args[] reference go away.
 
-Ensure the reset status check explicitly evaluates whether all bits in
-`port_mask` are set. Replace the double negation (`!!`) with an equality
-check to prevent incorrect interpretation of partial bit matches as an
-asserted reset.
+AH! Yes, that does stand out. :) Thanks!
 
-Fixes: bee08559701f ("reset: renesas: Add RZ/G2L usbphy control driver")
-Cc: stable@vger.kernel.org
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
----
- drivers/reset/reset-rzg2l-usbphy-ctrl.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/reset/reset-rzg2l-usbphy-ctrl.c b/drivers/reset/reset-rzg2l-usbphy-ctrl.c
-index 8a7f167e405e..6451f621e862 100644
---- a/drivers/reset/reset-rzg2l-usbphy-ctrl.c
-+++ b/drivers/reset/reset-rzg2l-usbphy-ctrl.c
-@@ -88,7 +88,7 @@ static int rzg2l_usbphy_ctrl_status(struct reset_controller_dev *rcdev,
- 
- 	port_mask = id ? PHY_RESET_PORT2 : PHY_RESET_PORT1;
- 
--	return !!(readl(priv->base + RESET) & port_mask);
-+	return (readl(priv->base + RESET) & port_mask) == port_mask;
- }
- 
- static const struct of_device_id rzg2l_usbphy_ctrl_match_table[] = {
 -- 
-2.43.0
-
+Kees Cook
