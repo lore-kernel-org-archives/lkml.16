@@ -1,104 +1,88 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6240B12B93;
-	Mon,  3 Mar 2025 07:18:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 556F512B93;
+	Mon,  3 Mar 2025 07:20:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740986332; cv=none; b=r/PWTnJKFg5sLpWJpiKAGKEhWZsxcAa05So7/OvrRZFWTVMPY9S+QwJmneMn2W4/1HTOiZrzplitiMzzfkqvnAVKtrq8yejurm8SsNMSou9856KXeVbkokCBzY+zn8zKSVAsEc825c0eX5yRHUo/Rr/BqlpmLZ6lKHzO0GlALTE=
+	t=1740986458; cv=none; b=upUs85v3Yqwa4h8Pb270klm+aX+Fp2wQ/PQZIpyHDUV39EXdfiUvbsv37rtGVOLXvYTfiUa8RxUT/KT5wlesKUW4DqQOXoRBsJLanWfPhs+VpURAU03cxmG2mpxZe6o34ZUIIjUqMsql2lmuvY8d9TRaBSHrIKZaKeHdygcZs3E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740986332; c=relaxed/simple;
-	bh=nxHbGfjDB0gEZ2Ngw7+tp2kHbTqIW5Z158k3FWhtCxI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nI33457buNJNCujkDL9sN9pF/cPM4oXRSMNTHLFTqPbdqcRqKp5BD15F3+DZwwtm01KJh2QRe+qYOK5Dscj+AbxFyYGv+PNuuICZY9RHRBPxgzPiWRcwd2PV7DYbQyFh9Rs1IEFrij+5qlBeyA3acrCiy5NJL/f8oH/c+qcPnqA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Y+Yt282H; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Y+Yt282H"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740986332; x=1772522332;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=nxHbGfjDB0gEZ2Ngw7+tp2kHbTqIW5Z158k3FWhtCxI=;
-  b=Y+Yt282HgRasC0nBdWvAoHffyX37x2nJ+RQXYjtOkx976iz/taMK1Ndo
-   Pmqkmb0tQyEO6RB7s0kFkz8v1gHR4jscxkGVWKneZSVkfPXZx5OrcT/Ds
-   7JcEQIj5CYmGi3N3PzYtPukHQykKg6/25RYG3Ex9baA39KEeI61j7rP0d
-   ZehsAFW+WnzBEK5DeJCn2jJJ02F2BlHlpOjtQVq+Bo6rKBROQL9endnLU
-   4OSIfnaJJMbL+H5lWy6Iu2wOYzaoU3gEIsqM4sPSGPGKr5PFz5kEHU5Ey
-   +nCr5Gma5B902BsgUVJkynbu1ttzBgO1G5p4ZSBctp0y5whJRfHvihj6H
-   w==;
-X-CSE-ConnectionGUID: rQ+z3eFLTCSDrZEmyo070Q==
-X-CSE-MsgGUID: lVqHqLXeQDuuK2Add6olpA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11361"; a="41701288"
-X-IronPort-AV: E=Sophos;i="6.13,329,1732608000"; 
-   d="scan'208";a="41701288"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Mar 2025 23:18:51 -0800
-X-CSE-ConnectionGUID: x6YAPINcRtGFTkXKbfgDTQ==
-X-CSE-MsgGUID: a8W1VWB0Ro+pmlo0JWsHXA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,329,1732608000"; 
-   d="scan'208";a="123073693"
-Received: from mev-dev.igk.intel.com ([10.237.112.144])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Mar 2025 23:18:48 -0800
-Date: Mon, 3 Mar 2025 08:15:00 +0100
-From: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
-To: Markus Elfring <Markus.Elfring@web.de>
-Cc: netdev@vger.kernel.org, Andrew Lunn <andrew+netdev@lunn.ch>,
-	Brett Creeley <brett.creeley@amd.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jacob Keller <jacob.e.keller@intel.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Shannon Nelson <shannon.nelson@amd.com>,
-	LKML <linux-kernel@vger.kernel.org>,
-	kernel-janitors@vger.kernel.org, Qasim Ijaz <qasdev00@gmail.com>,
-	Natalie Vock <natalie.vock@gmx.de>
-Subject: Re: [PATCH net-next] ionic: Simplify maximum determination in
- ionic_adminq_napi()
-Message-ID: <Z8VW9IXnN+M8KVtZ@mev-dev.igk.intel.com>
-References: <cbbc2dbd-2028-4623-8cb3-9d01be341daa@web.de>
+	s=arc-20240116; t=1740986458; c=relaxed/simple;
+	bh=AffzCFirDGYzwyBd4MxRuDnpq9s/aYmXt5gKnvmD54I=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=P6mWwbUL/8zG+M8HCNa8hdVnZ/Zo9PGfPAiWs8Mv+ZAYhYl4Y8x1hzeROiXoWmK2AUN0DMpOg4LdiCb/8XP/VoRwH06xjSrvMZYa8qLpXCC8vahAX8f+VnS15APOIgOLQFQQlshcEiC5LmI7Lj76uZsb0DCqkEOnEqvD/2sn6c8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.174])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4Z5qrf0lSLzCs7T;
+	Mon,  3 Mar 2025 15:17:22 +0800 (CST)
+Received: from kwepemd100010.china.huawei.com (unknown [7.221.188.107])
+	by mail.maildlp.com (Postfix) with ESMTPS id DCD501402C8;
+	Mon,  3 Mar 2025 15:20:50 +0800 (CST)
+Received: from kwepemd500012.china.huawei.com (7.221.188.25) by
+ kwepemd100010.china.huawei.com (7.221.188.107) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.34; Mon, 3 Mar 2025 15:20:50 +0800
+Received: from kwepemd500012.china.huawei.com ([7.221.188.25]) by
+ kwepemd500012.china.huawei.com ([7.221.188.25]) with mapi id 15.02.1258.034;
+ Mon, 3 Mar 2025 15:20:50 +0800
+From: lizetao <lizetao1@huawei.com>
+To: Caleb Sander Mateos <csander@purestorage.com>
+CC: "io-uring@vger.kernel.org" <io-uring@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jens Axboe
+	<axboe@kernel.dk>, Pavel Begunkov <asml.silence@gmail.com>
+Subject: RE: [PATCH 1/5] io_uring/rsrc: split out io_free_node() helper
+Thread-Topic: [PATCH 1/5] io_uring/rsrc: split out io_free_node() helper
+Thread-Index: AQHbijzkEG092hh2Z0Cp4En6e2dDUbNhAimg
+Date: Mon, 3 Mar 2025 07:20:50 +0000
+Message-ID: <18e5b97243724652998257c52be8cc49@huawei.com>
+References: <20250228235916.670437-1-csander@purestorage.com>
+In-Reply-To: <20250228235916.670437-1-csander@purestorage.com>
+Accept-Language: en-US
+Content-Language: zh-CN
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cbbc2dbd-2028-4623-8cb3-9d01be341daa@web.de>
 
-On Sat, Mar 01, 2025 at 11:12:31AM +0100, Markus Elfring wrote:
-> From: Markus Elfring <elfring@users.sourceforge.net>
-> Date: Sat, 1 Mar 2025 11:01:28 +0100
-> 
-> Reduce nested max() calls by a single max3() call in this
-> function implementation.
-> 
-> The source code was transformed by using the Coccinelle software.
-> 
-> Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-> ---
->  drivers/net/ethernet/pensando/ionic/ionic_lif.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/net/ethernet/pensando/ionic/ionic_lif.c b/drivers/net/ethernet/pensando/ionic/ionic_lif.c
-> index 7707a9e53c43..85c4b02bd054 100644
-> --- a/drivers/net/ethernet/pensando/ionic/ionic_lif.c
-> +++ b/drivers/net/ethernet/pensando/ionic/ionic_lif.c
-> @@ -1242,7 +1242,7 @@ static int ionic_adminq_napi(struct napi_struct *napi, int budget)
->  	if (lif->hwstamp_txq)
->  		tx_work = ionic_tx_cq_service(&lif->hwstamp_txq->cq, budget, !!budget);
-> 
-> -	work_done = max(max(n_work, a_work), max(rx_work, tx_work));
-> +	work_done = max3(n_work, a_work, max(rx_work, tx_work));
->  	if (work_done < budget && napi_complete_done(napi, work_done)) {
->  		flags |= IONIC_INTR_CRED_UNMASK;
->  		intr->rearm_count++;
-
-Reviewed-by: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
-
-> --
-> 2.48.1
+SGksDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogQ2FsZWIgU2FuZGVy
+IE1hdGVvcyA8Y3NhbmRlckBwdXJlc3RvcmFnZS5jb20+DQo+IFNlbnQ6IFNhdHVyZGF5LCBNYXJj
+aCAxLCAyMDI1IDc6NTkgQU0NCj4gVG86IEplbnMgQXhib2UgPGF4Ym9lQGtlcm5lbC5kaz47IFBh
+dmVsIEJlZ3Vua292IDxhc21sLnNpbGVuY2VAZ21haWwuY29tPg0KPiBDYzogQ2FsZWIgU2FuZGVy
+IE1hdGVvcyA8Y3NhbmRlckBwdXJlc3RvcmFnZS5jb20+OyBpby0NCj4gdXJpbmdAdmdlci5rZXJu
+ZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnDQo+IFN1YmplY3Q6IFtQQVRDSCAx
+LzVdIGlvX3VyaW5nL3JzcmM6IHNwbGl0IG91dCBpb19mcmVlX25vZGUoKSBoZWxwZXINCj4gDQo+
+IFNwbGl0IHRoZSBmcmVlaW5nIG9mIHRoZSBpb19yc3JjX25vZGUgZnJvbSBpb19mcmVlX3JzcmNf
+bm9kZSgpLCBmb3IgdXNlIHdpdGgNCj4gbm9kZXMgdGhhdCBoYXZlbid0IGJlZW4gZnVsbHkgaW5p
+dGlhbGl6ZWQuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBDYWxlYiBTYW5kZXIgTWF0ZW9zIDxjc2Fu
+ZGVyQHB1cmVzdG9yYWdlLmNvbT4NCj4gLS0tDQo+ICBpb191cmluZy9yc3JjLmMgfCA5ICsrKysr
+KystLQ0KPiAgMSBmaWxlIGNoYW5nZWQsIDcgaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkN
+Cj4gDQo+IGRpZmYgLS1naXQgYS9pb191cmluZy9yc3JjLmMgYi9pb191cmluZy9yc3JjLmMgaW5k
+ZXggNDViZmIzN2JjYTFlLi5kOTQxMjU2ZjBkOGMNCj4gMTAwNjQ0DQo+IC0tLSBhL2lvX3VyaW5n
+L3JzcmMuYw0KPiArKysgYi9pb191cmluZy9yc3JjLmMNCj4gQEAgLTQ4NSwxMCArNDg1LDE2IEBA
+IGludCBpb19maWxlc191cGRhdGUoc3RydWN0IGlvX2tpb2NiICpyZXEsIHVuc2lnbmVkIGludA0K
+PiBpc3N1ZV9mbGFncykNCj4gIAkJcmVxX3NldF9mYWlsKHJlcSk7DQo+ICAJaW9fcmVxX3NldF9y
+ZXMocmVxLCByZXQsIDApOw0KPiAgCXJldHVybiBJT1VfT0s7DQo+ICB9DQo+IA0KPiArc3RhdGlj
+IHZvaWQgaW9fZnJlZV9ub2RlKHN0cnVjdCBpb19yaW5nX2N0eCAqY3R4LCBzdHJ1Y3QgaW9fcnNy
+Y19ub2RlDQo+ICsqbm9kZSkgew0KDQpXb3VsZCBpdCBiZSBiZXR0ZXIgdG8gdGFrZSBhIGlvX2Fs
+bG9jX2NhY2hlIGFzIHBhcmFtZXRlciBhbmQgcHV0IGl0IGludG8gYWxsb2NfY2FjaGUuaCANCmFz
+IGEgZ2VuZXJhbCBmdW5jdGlvbiwgc28gb3RoZXIgbW9kdWxlcyBjYW4gdXNlIGl0IHRvbywganVz
+dCBsaWtlIGlvX3VyaW5nL2Z1dGV4Lg0KDQo+ICsJaWYgKCFpb19hbGxvY19jYWNoZV9wdXQoJmN0
+eC0+bm9kZV9jYWNoZSwgbm9kZSkpDQo+ICsJCWt2ZnJlZShub2RlKTsNCj4gK30NCj4gKw0KPiAg
+dm9pZCBpb19mcmVlX3JzcmNfbm9kZShzdHJ1Y3QgaW9fcmluZ19jdHggKmN0eCwgc3RydWN0IGlv
+X3JzcmNfbm9kZSAqbm9kZSkgIHsNCj4gIAlpZiAobm9kZS0+dGFnKQ0KPiAgCQlpb19wb3N0X2F1
+eF9jcWUoY3R4LCBub2RlLT50YWcsIDAsIDApOw0KPiANCj4gQEAgLTUwNCwxMiArNTEwLDExIEBA
+IHZvaWQgaW9fZnJlZV9yc3JjX25vZGUoc3RydWN0IGlvX3JpbmdfY3R4ICpjdHgsDQo+IHN0cnVj
+dCBpb19yc3JjX25vZGUgKm5vZGUpDQo+ICAJZGVmYXVsdDoNCj4gIAkJV0FSTl9PTl9PTkNFKDEp
+Ow0KPiAgCQlicmVhazsNCj4gIAl9DQo+IA0KPiAtCWlmICghaW9fYWxsb2NfY2FjaGVfcHV0KCZj
+dHgtPm5vZGVfY2FjaGUsIG5vZGUpKQ0KPiAtCQlrdmZyZWUobm9kZSk7DQo+ICsJaW9fZnJlZV9u
+b2RlKGN0eCwgbm9kZSk7DQo+ICB9DQo+IA0KPiAgaW50IGlvX3NxZV9maWxlc191bnJlZ2lzdGVy
+KHN0cnVjdCBpb19yaW5nX2N0eCAqY3R4KSAgew0KPiAgCWlmICghY3R4LT5maWxlX3RhYmxlLmRh
+dGEubnIpDQo+IC0tDQo+IDIuNDUuMg0KPiANCg0KLS0tDQpMaSBaZXRhbw0KDQo=
