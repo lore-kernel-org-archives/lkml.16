@@ -1,39 +1,74 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E36811C3314
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 03:25:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 142B919D084;
+	Mon,  3 Mar 2025 03:27:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740972349; cv=none; b=BEANl+6kk08SBoJyIZXbjf9P3rYTMNYUfAlzorAPIY9HkaQb7/m/U95TA72oupeAA56d607nqPDOomUZZ1M1i9BWNX0fksEd/05AQmhBzyuUW9BbkstG1lcJC/B0+puEaSxisEwyhM09tqfYHo7o0D/14FGO1XwHIOkxgmNOAEs=
+	t=1740972431; cv=none; b=AKa/oGSTq4yengYFO562zduwB8w11c0yyYMRLwoOxCV6OxlaNkTLUiYNtracsapszWDMk1R+24W0V6Emmh3pEgafpgvPU9z3V9nQMd1Ab2RcfZYs9cAxjGs4ANCtQ9RL2uxkJMaEfSLauvWqQb+NgK8FQpYVr2xsDHiyEnZVr2k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740972349; c=relaxed/simple;
-	bh=7fBJ+9SkI851aRpJLiCAVAcdqfXjwH5g0lFDk3gGWVs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=t3Ugp1yuwg1hr0U8Koz72L79nYEu/bSbzoCMUP0Bg9fBREP7GmP/Ar0G/0mOlD87DGDRb16oQ4SlxNJmwe3siVi+OuQkilXl/IMkbA2nE/u97vROgPpbTXGB3fabEjzW4AYpj33Jb6fNTd8XU2d1k7ieXIDsakeqRotM46Sr1mk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OM4rpPP4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740972431; c=relaxed/simple;
+	bh=9ZAXy6AUqP921WUMDzjxlfgaSS6IuoPpOF8lbu80TOE=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=hiioxCeR6sYbLTgWEZKnR9c+RhX9Xl8kY5A+tLKdk8K9e5QHyUKL5PCcFIakNmJ66wyNvGD2RPUZzpTUy1V6ZGmdSd26uDrHSmX4AzY8lWUCIpBxfvMrE14woQIjU98D/8unk+Kyw8Fr2uobj58q7lyAcY4fqw3NPMnb6Vazohg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gLzbaJZn; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OM4rpPP4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 281E5C4CED6;
-	Mon,  3 Mar 2025 03:25:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740972348;
-	bh=7fBJ+9SkI851aRpJLiCAVAcdqfXjwH5g0lFDk3gGWVs=;
-	h=From:To:Cc:Subject:Date:From;
-	b=OM4rpPP4GFlRA/XDbjnPWZe1YXGy5r5ZL6IbUFzaPpMMzsh2NrLb39V2Wb24gdl4A
-	 tits4FnyopTerfSpURwHWpTH5/heyR3erk/9cxz2Lo6L8Y5mCDQZj47AptfyyuP4bj
-	 DjiXPTO6KeQP59rvPJdPVf6LQq82DrlvzSN4Db4YOutDi+0e91P9uD4c0KVKRG+fDY
-	 eycw+nwpLdhJhbeU3pVz9ByHzl1xbXquzib91HVfx5SEqn+Mlf4TGqPlGbWjaXxuN5
-	 xZBCalowRpKnRUQygOELr2EYj1txyLFPKIreiyi94g1T4V5VG15oI8MJ0tbfVZwNbv
-	 IKVayumeCjylg==
-From: Chao Yu <chao@kernel.org>
-To: jaegeuk@kernel.org
-Cc: linux-f2fs-devel@lists.sourceforge.net,
-	linux-kernel@vger.kernel.org,
-	Chao Yu <chao@kernel.org>
-Subject: [PATCH] f2fs: fix to call f2fs_recover_quota_end() correctly
-Date: Mon,  3 Mar 2025 11:25:00 +0800
-Message-ID: <20250303032500.1310215-1-chao@kernel.org>
-X-Mailer: git-send-email 2.48.1.711.g2feabab25a-goog
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gLzbaJZn"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-223a7065ff8so16206035ad.0;
+        Sun, 02 Mar 2025 19:27:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740972429; x=1741577229; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=iLl+VFTECyB9okUESCJcsmH0bg8HduocbulJuY9eevk=;
+        b=gLzbaJZnfCrtVklXE5WSB8lggm5ky4QELKSHCDGEXzOnMGTajxYPUo0mOYiJPuDej/
+         rrVOqUJowhVkxrfJXcCtiMDo3BxBCX4cII54+2dwWh31y6mz1alaxvdjOkpqPpAfiYlx
+         vrNnlaSrRQH9RMzjLC/sRHIp4GnUJeJLxt3RBfFJVQh9XcCaz1mlDHyKWpCGO9mgFYT5
+         z16qOWqrQJOD5EErKathuSbnpl0NSCIPPFRYRUo1oO6PphABGwcWFJdaaXBL0lgky6Xg
+         25rNNuWlPW4+IaUtWOQYL8mPKb/5OelwHR1x6Ap3/bCzojxlHvPjYb21HqXV9uZIBPMY
+         UgKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740972429; x=1741577229;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=iLl+VFTECyB9okUESCJcsmH0bg8HduocbulJuY9eevk=;
+        b=ea9/cPzAxUnmzg3gpIiBggxTikke697qkKnwEW/TkTdcXp8X+CLKvktggz9EH9jl25
+         doS5N3ynUFbC2b3W/C1qG54Bxz5sqt7QpFByslpT49DNn8/663gKkaV+YUl17FwM28CO
+         o4SX8SkmSWxty9Vy+v23B79P7cLcERysQxbFt7WzdotjKMrSrhzM/ZvostacbAwBs/kp
+         r2YnbtGqk7c4iJK8iV8r8vx+e3XIRBysEt0RUcz6joW/HUDp5AzEvQXCygtCkxWgEFWu
+         GCz5x0TXEiJwTRQA54eQzdYTa+mj8xdfx9uCu08YSV9TyHXieE9wSr2+E3P1zRw/+JOl
+         pB5Q==
+X-Forwarded-Encrypted: i=1; AJvYcCU9fGFIIia+OMcAxhQwMaxgWvmofdWoSWFm83wZqlH03sVaK20U7Cbmvyh7TvWyGcLscV8wta+P@vger.kernel.org, AJvYcCVMGo1Yvqk13ye+d0jakjtK06B94zPPwCgQqiOevAiO5qFB+D1xvVoYTwMZBb1Vw8odsRjRd4tOIUh7@vger.kernel.org, AJvYcCXjVD0sV1bO4Ux0UcqCDJW+nitlVb7cnEdFPARzPlwx0kohWlqyr7i03Zzq/pSaisuNgTmtYzMnD2jiZms=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwOqPejJZR5anL9iqXIPwb9ur65QAny4icAeWsRP6x2aznYjv1g
+	xoNDiWU+D7UZy54cSRocE7SRoTinJEQJKoKF/ePx17sHUmtJBkcc
+X-Gm-Gg: ASbGncuODZ2tStthC7K2sDoFxqnaOI82frwvN6ufk3zVkBSah6/L5reAIali59AdnIL
+	YMlIfCQMAwbzlNY/tEmjiOxssgu1uaFGLMrPFqN28m9WCi3mYRayLqxb9IFIdx5RyGIF2EUfiLp
+	YcfOD/DmczKjQW60g8BN2B5JNXPTGh5Bq0GXoTmxXfg2HbccRCEkws92KL8BM6yZ/lUmV+qTOR1
+	9DgDNWDlzscTM7Ck0xg/1IcgwPudr2JJx/3Hvr0Jn6a6cTdNUFQAzQkKiI+u5HvPG6G0qncjrky
+	tQBud7elQYZxL6uqUm92r3qLUSjK6XfoPCWrSg==
+X-Google-Smtp-Source: AGHT+IFG8Kg6cBX3r+CuPKUwiMLw5nuGIBQIuJOUDHB/YSC+ivGfUfyyIum8E0KDjDN86+UtXPI1oQ==
+X-Received: by 2002:aa7:88c1:0:b0:736:46b4:bef2 with SMTP id d2e1a72fcca58-73646b56f99mr4672802b3a.6.1740972429220;
+        Sun, 02 Mar 2025 19:27:09 -0800 (PST)
+Received: from gmail.com ([116.237.135.88])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73632e76e1dsm3768873b3a.89.2025.03.02.19.27.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 02 Mar 2025 19:27:08 -0800 (PST)
+From: Qingfang Deng <dqfext@gmail.com>
+To: =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Michal Ostrowski <mostrows@earthlink.net>,
+	linux-ppp@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [RFC PATCH net-next 1/3] ppp: convert ppp->rlock to rwlock to improve RX
+Date: Mon,  3 Mar 2025 11:27:00 +0800
+Message-ID: <20250303032704.2299737-1-dqfext@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,32 +77,70 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-f2fs_recover_quota_begin() and f2fs_recover_quota_end() should be called
-in pair, there is some cases we may skip calling f2fs_recover_quota_end(),
-fix it.
+The rlock spinlock in struct ppp protects the receive path, but it is
+frequently used in a read-mostly manner. Converting it to an rwlock_t
+allows multiple CPU to enter the receive path and improve its
+performance.
 
-Fixes: e1bb7d3d9cbf ("f2fs: fix to recover quota data correctly")
-Signed-off-by: Chao Yu <chao@kernel.org>
+Signed-off-by: Qingfang Deng <dqfext@gmail.com>
 ---
- fs/f2fs/super.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ppp/ppp_generic.c | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
-diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-index 7a8fcc1e278c..3c875dc07266 100644
---- a/fs/f2fs/super.c
-+++ b/fs/f2fs/super.c
-@@ -4805,10 +4805,10 @@ static int f2fs_fill_super(struct super_block *sb, void *data, int silent)
- 		}
- 	}
+diff --git a/drivers/net/ppp/ppp_generic.c b/drivers/net/ppp/ppp_generic.c
+index 6220866258fc..15e270e9bf36 100644
+--- a/drivers/net/ppp/ppp_generic.c
++++ b/drivers/net/ppp/ppp_generic.c
+@@ -118,7 +118,7 @@ struct ppp {
+ 	struct file	*owner;		/* file that owns this unit 48 */
+ 	struct list_head channels;	/* list of attached channels 4c */
+ 	int		n_channels;	/* how many channels are attached 54 */
+-	spinlock_t	rlock;		/* lock for receive side 58 */
++	rwlock_t	rlock;		/* lock for receive side 58 */
+ 	spinlock_t	wlock;		/* lock for transmit side 5c */
+ 	int __percpu	*xmit_recursion; /* xmit recursion detect */
+ 	int		mru;		/* max receive unit 60 */
+@@ -372,12 +372,14 @@ static const int npindex_to_ethertype[NUM_NP] = {
+  */
+ #define ppp_xmit_lock(ppp)	spin_lock_bh(&(ppp)->wlock)
+ #define ppp_xmit_unlock(ppp)	spin_unlock_bh(&(ppp)->wlock)
+-#define ppp_recv_lock(ppp)	spin_lock_bh(&(ppp)->rlock)
+-#define ppp_recv_unlock(ppp)	spin_unlock_bh(&(ppp)->rlock)
++#define ppp_recv_lock(ppp)	write_lock_bh(&(ppp)->rlock)
++#define ppp_recv_unlock(ppp)	write_unlock_bh(&(ppp)->rlock)
+ #define ppp_lock(ppp)		do { ppp_xmit_lock(ppp); \
+ 				     ppp_recv_lock(ppp); } while (0)
+ #define ppp_unlock(ppp)		do { ppp_recv_unlock(ppp); \
+ 				     ppp_xmit_unlock(ppp); } while (0)
++#define ppp_recv_read_lock(ppp)		read_lock_bh(&(ppp)->rlock)
++#define ppp_recv_read_unlock(ppp)	read_unlock_bh(&(ppp)->rlock)
  
-+reset_checkpoint:
- #ifdef CONFIG_QUOTA
- 	f2fs_recover_quota_end(sbi, quota_enabled);
- #endif
--reset_checkpoint:
- 	/*
- 	 * If the f2fs is not readonly and fsync data recovery succeeds,
- 	 * write pointer consistency of cursegs and other zones are already
+ /*
+  * /dev/ppp device routines.
+@@ -1252,7 +1254,7 @@ static int ppp_dev_configure(struct net *src_net, struct net_device *dev,
+ 	for (indx = 0; indx < NUM_NP; ++indx)
+ 		ppp->npmode[indx] = NPMODE_PASS;
+ 	INIT_LIST_HEAD(&ppp->channels);
+-	spin_lock_init(&ppp->rlock);
++	rwlock_init(&ppp->rlock);
+ 	spin_lock_init(&ppp->wlock);
+ 
+ 	ppp->xmit_recursion = alloc_percpu(int);
+@@ -2210,12 +2212,12 @@ struct ppp_mp_skb_parm {
+ static inline void
+ ppp_do_recv(struct ppp *ppp, struct sk_buff *skb, struct channel *pch)
+ {
+-	ppp_recv_lock(ppp);
++	ppp_recv_read_lock(ppp);
+ 	if (!ppp->closing)
+ 		ppp_receive_frame(ppp, skb, pch);
+ 	else
+ 		kfree_skb(skb);
+-	ppp_recv_unlock(ppp);
++	ppp_recv_read_unlock(ppp);
+ }
+ 
+ /**
 -- 
-2.48.1
+2.43.0
 
