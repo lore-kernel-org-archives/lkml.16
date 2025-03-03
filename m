@@ -1,74 +1,48 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5185C1F1313
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 09:47:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85DD81F131C;
+	Mon,  3 Mar 2025 09:49:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740995279; cv=none; b=Ge1ygggGcfbPWm2gShglo/aOvJFwEgKMcGPRQNT9VoFefpyXMgymHfLSdcD9eNwqlWYPdR70axBKp9c59ALwKxZrhwK7zLX+u/yNjXm/Un3QtVjwQpyabHPzCMzmkkq6JhNg/js4KtZUmeUgLZGneQT+XMu235TBTvQc4Ca+InM=
+	t=1740995355; cv=none; b=tYafWlFc0StdoWurTmcTK8E/RSRDPtKHi2dEfgXykPXMp/ijYAIJP00Z51cqbD34IuXarejZ6gvdQOXKXcWQj/dphye6yWp+/MGyswPHAxV+0t+fjqAeciebwgAzYq5rssP+9Omjx4qPZMOfCCq9IbgDorJ0qrJArnlqpdBCQ54=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740995279; c=relaxed/simple;
-	bh=oGUOj05rbDaMdTXzu4kbEqsK4Jpmf3wR1xuqACOFY5A=;
+	s=arc-20240116; t=1740995355; c=relaxed/simple;
+	bh=bKBTyhky71uYBsaxCFXi3vy/CYFmpwehRG1HobK2WLA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=S+BBmpnzRL7KHqojzz2RAwNwUyTsYMg6bOoB3nX8jfEu3qEAOQDGkohfC8UmYQM3ZiEDWivxgV3CBHLJv0nJd8E1M9zOW/lnO2M/b9bOlC/1sQ0POiOdAVJAgJNjyzvI0OxOEUyeD8SVAnI0uMy/otj0D94N51+87VLM1Hqu58o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=RgiLBA6V; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=ptMl2TyNvNcxZ2QAfuKa9LVYHsBBk8beDR8oM5eSJ9iTiiTbMwCkBQGJCHJya4e6z4ED2DY6KN0MF5ER5o6vIkgwazK4nAKOhm9PowpQ9KG4a5wJ/o48hbwxIQSh+rDf3zOM8QefRD4Z18FIghhA/o9qd5cOH7SxEvMDI/EHp1w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=uYdUwo3N; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RgiLBA6V"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-43a9e6cd0b4so67735e9.1
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Mar 2025 01:47:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1740995275; x=1741600075; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=oGUOj05rbDaMdTXzu4kbEqsK4Jpmf3wR1xuqACOFY5A=;
-        b=RgiLBA6VqA1r/rTZL53gs0kfR6RUEaqQDh9RaY1qKZjeOunf26kirb6BD0I2qGWOFU
-         yaxxzXs5YwFnooGBfWq3+wbFk/wCAG4el8F39wUkIcIj7DhW5WmYrAo8mop/6TZVYrc2
-         LXjF1vCgECoOPUJdR4TrNL73Ky2id1q1c7ysIkbfCuzPz89nJhES7XjqWjmd3zvh8o6H
-         HnoVQGzesXYQAfqbv5NHe7zIZf/fJD/8pJp8yZ4nobqxdE5xw4q8Ew+mEDouXGwzuBQH
-         mYhLOJo35AfRH5y28lGBrtIxjk4rKRsFchMwl7eF8CD9EYUQ0OCoC94E3OWEroYFOvhc
-         IzAQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740995275; x=1741600075;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oGUOj05rbDaMdTXzu4kbEqsK4Jpmf3wR1xuqACOFY5A=;
-        b=tO6pv2ih/8Kbv6dlPbxQo2uL6AoXYFOLKeWQZwJQK5HkhdN9tKI9U0ZRsVeyIc2Zus
-         cL3qUT3AqnirlX7eWlS9mkLIkla/YdgDlSEtmTILgqCgDFpvNbWVPbGYhOR7TFYqiv/w
-         kgH5aLi+2WGKI4JxScPMaJ5K8ckpkZbK+z+QedJlrDK4UcXt4FBY7XbIWgyfITVZWn5x
-         wDtXh4I0a25fONRie6o+LVx26nR8+ERQ4Y5N4yPhy+M7Nj2MCl6HyCEJUzeduiIJrbXx
-         3KpZRHgAqO2I7mOaJje/EWzAj4pzbXebLmqa/8Ls/Ph/cGwIRFvk+ly+XWiWC7GZvglJ
-         uZFQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXvVwAvofMpga4azWuQxtBaUFNSb3MD19IDbwNghlqaLMCKvQCGNii3I+vv+4fX4XApXAS8tbqtJguzP9w=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzVb6igssb8dEnu1QUKeE0ZkpM0VhCCE3T8Sol+vmYP5oMM/AGm
-	4rmqz+XWqK0w0t2dq3CtTId3JUHlFHSk+EKX1Y6IqjB2NFFTtuyVlO3cXPy64A==
-X-Gm-Gg: ASbGncuEXhcNxqvL1hjpzZTy8el19djN8RB3gF/YnLBtaKSBQUholZLah09X28QZnoq
-	mFCpVsrk2h5F2x0x3QThRr2thyVAkq2M4YFLZQElJCy3wSZko4T+3YneN8ZP64tffbmRnFzN0ES
-	D+QxO7EqSYrhEqNTXutFwodIDd5HflJbmUQsW8gm1YdcaWHZeWrWXCXt/6yqzXoUEcMZvgQVue5
-	Pf9PBtomXY5MrF9Yal8PBT+RRShH+fYRaPw2ebn/lNHhCr4vsOzgVU1D9da3wCFoyCOznekAbqc
-	733zxvEuObRIbWINWet+lxIsevwPJtF2b7sFhCHOKW8AJ4c3S0BVKSTw2kDnbPkHhoEX2ugS6UO
-	Ju5Lq
-X-Google-Smtp-Source: AGHT+IGuRRTpZx51thwL2b5hSvmhDVaJN8ebU23ciUC+XksIIzRnxpwUI7JqUrlrpyq52tUWkeY7xg==
-X-Received: by 2002:a05:600c:3c90:b0:439:9434:1b66 with SMTP id 5b1f17b1804b1-43baff09304mr2232035e9.1.1740995275531;
-        Mon, 03 Mar 2025 01:47:55 -0800 (PST)
-Received: from google.com (44.232.78.34.bc.googleusercontent.com. [34.78.232.44])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-390e4844a16sm13935378f8f.79.2025.03.03.01.47.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Mar 2025 01:47:54 -0800 (PST)
-Date: Mon, 3 Mar 2025 09:47:49 +0000
-From: Brendan Jackman <jackmanb@google.com>
-To: Dev Jain <dev.jain@arm.com>
-Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Shuah Khan <shuah@kernel.org>, linux-mm@kvack.org,
-	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 04/10] selftests/mm/uffd: Rename nr_cpus -> nr_threads
-Message-ID: <Z8V6xYvqqkPxULgN@google.com>
-References: <20250228-mm-selftests-v3-0-958e3b6f0203@google.com>
- <20250228-mm-selftests-v3-4-958e3b6f0203@google.com>
- <b5b1e43d-0298-4772-ba0d-acec63a05149@arm.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="uYdUwo3N"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=ex6mL5N3y2HnLj8Bam/c+5++LbL+FQRGmaE08QtykjE=; b=uYdUwo3NP446bW5DtXGr+gLlKm
+	3q7P896CCaZPM1ZlewJ1QitoJ9p6puv6V5u85QQRjyB/RAYgFaem1YgOR+N2vYxG4/1oEwXpK/Vny
+	ul9+2nxCC1iY8BgAyIrDrFROXKRBmOzdN1fT3S6ksMhlhXZNtPunLTL9N1IAengf8LG6244P4r8FA
+	UXItZ73N7cP93YsjsXyVp7+cTd9w1IHFr0ijBc2A0BKK3iClchg0AWicyraF7CcIO8Kpy/PS660Nu
+	RGW8hb8Mf5MfdgsuFloZXWHVC7xaApcE5Jlt0ebteSJlT/ekBi1KZCtm2bzaZjWr17u5Z1McimXsN
+	cqatSMmA==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1tp2QB-0000000BQR2-2UJu;
+	Mon, 03 Mar 2025 09:49:11 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 2EB2230049D; Mon,  3 Mar 2025 10:49:11 +0100 (CET)
+Date: Mon, 3 Mar 2025 10:49:11 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: kernel test robot <lkp@intel.com>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	linux-kernel@vger.kernel.org, x86@kernel.org,
+	Ingo Molnar <mingo@kernel.org>, Kees Cook <kees@kernel.org>
+Subject: Re: [tip:x86/core 16/17] vmlinux.o: warning: objtool: do_jit+0x276:
+ relocation to !ENDBR: .noinstr.text+0x6a60
+Message-ID: <20250303094911.GL5880@noisy.programming.kicks-ass.net>
+References: <202503030704.H9KFysNS-lkp@intel.com>
+ <20250303092459.GI5880@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -77,20 +51,91 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <b5b1e43d-0298-4772-ba0d-acec63a05149@arm.com>
+In-Reply-To: <20250303092459.GI5880@noisy.programming.kicks-ass.net>
 
-On Fri, Feb 28, 2025 at 11:06:35PM +0530, Dev Jain wrote:
-> Taking a cursory look at the test, it creates three threads for each cpu.
-> The bounding of the variable is fine but that being the reason to rename the
-> variable is not making sense to me.
+On Mon, Mar 03, 2025 at 10:24:59AM +0100, Peter Zijlstra wrote:
+> On Mon, Mar 03, 2025 at 07:47:57AM +0800, kernel test robot wrote:
+> > tree:   https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/core
+> > head:   dfebe7362f6f461d771cdb9ac2c5172a4721f064
+> > commit: 0c92385dc05ee9637c04372ea95a11bbf6e010ff [16/17] x86/ibt: Implement FineIBT-BHI mitigation
+> > config: x86_64-randconfig-071-20250303 (https://download.01.org/0day-ci/archive/20250303/202503030704.H9KFysNS-lkp@intel.com/config)
+> > compiler: clang version 19.1.7 (https://github.com/llvm/llvm-project cd708029e0b2869e80abe31ddb175f7c35361f90)
+> > reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250303/202503030704.H9KFysNS-lkp@intel.com/reproduce)
+> > 
+> > If you fix the issue in a separate patch/commit (i.e. not just a new version of
+> > the same patch/commit), kindly add following tags
+> > | Reported-by: kernel test robot <lkp@intel.com>
+> > | Closes: https://lore.kernel.org/oe-kbuild-all/202503030704.H9KFysNS-lkp@intel.com/
+> > 
+> > All warnings (new ones prefixed by >>):
+> > 
+> > >> vmlinux.o: warning: objtool: do_jit+0x276: relocation to !ENDBR: .noinstr.text+0x6a60
+> 
+> Thanks, below seems to cure it for me.
+> 
+> ---
+> Subject: x86/ibt: Make cfi_bhi a constant for FINEIBT_BHI=n
+> From: Peter Zijlstra <peterz@infradead.org>
+> Date: Mon Mar 3 10:21:47 CET 2025
+> 
+> Robot yielded a .config that tripped:
+> 
+>   vmlinux.o: warning: objtool: do_jit+0x276: relocation to !ENDBR: .noinstr.text+0x6a60
+> 
+> This is the result of using __bhi_args[1] in unreachable code; make
+> sure the compiler is able to determine this is unreachable and trigger
+> DCE.
+> 
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202503030704.H9KFysNS-lkp@intel.com/
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> ---
 
-Hmm yeah the name needs to be more abstract. Do you think nr_workers
-would be confusing? Or even just "parallelism" or nr_parallel? Or any
-other ideas?
-
-FWIW I briefly looked at just cleaning this up to remove the global
-variable but that's a bigger time investment than I can afford here I
-think. (The local variable in stress() would still need a better name
-anyway).
-
-Thanks for the review BTW!
+diff --git a/arch/x86/include/asm/cfi.h b/arch/x86/include/asm/cfi.h
+index 2f6a01f098b5..3e51ba459154 100644
+--- a/arch/x86/include/asm/cfi.h
++++ b/arch/x86/include/asm/cfi.h
+@@ -100,7 +100,12 @@ enum cfi_mode {
+ };
+ 
+ extern enum cfi_mode cfi_mode;
++
++#ifdef CONFIG_FINEIBT_BHI
+ extern bool cfi_bhi;
++#else
++#define cfi_bhi (0)
++#endif
+ 
+ typedef u8 bhi_thunk[32];
+ extern bhi_thunk __bhi_args[];
+diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
+index 32e4b801db99..bf82c6f7d690 100644
+--- a/arch/x86/kernel/alternative.c
++++ b/arch/x86/kernel/alternative.c
+@@ -936,7 +936,10 @@ void __init_or_module apply_seal_endbr(s32 *start, s32 *end) { }
+ #endif
+ 
+ enum cfi_mode cfi_mode __ro_after_init = __CFI_DEFAULT;
++
++#ifdef CONFIG_FINEIBT_BHI
+ bool cfi_bhi __ro_after_init = false;
++#endif
+ 
+ #ifdef CONFIG_CFI_CLANG
+ struct bpf_insn;
+@@ -1070,11 +1073,15 @@ static __init int cfi_parse_cmdline(char *str)
+ 				pr_err("Ignoring paranoid; depends on fineibt.\n");
+ 			}
+ 		} else if (!strcmp(str, "bhi")) {
++#ifdef CONFIG_FINEIBT_BHI
+ 			if (cfi_mode == CFI_FINEIBT) {
+ 				cfi_bhi = true;
+ 			} else {
+ 				pr_err("Ignoring bhi; depends on fineibt.\n");
+ 			}
++#else
++			pr_err("Ignoring bhi; depends on FINEIBT_BHI=y.\n");
++#endif
+ 		} else {
+ 			pr_err("Ignoring unknown cfi option (%s).", str);
+ 		}
