@@ -1,105 +1,137 @@
-Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE5021C9EB1;
-	Mon,  3 Mar 2025 19:42:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EA11231CB9;
+	Mon,  3 Mar 2025 19:42:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741030952; cv=none; b=S7FKTi3TX3qZ/zMJL+dD/HU6BdVnCIbhi2nTsjGYvD+LDXgH7oMdssvJ/iBI2y+Itjf69zP1hyAsPm7Z1l2fNhBvDOljNBisFjQjB4wzb0y8y0vrLLVb46RkmYHw0cRR8WqLkX+Ixy1LQWUFXMfcfrhIgDAKqoC2WqrJclSD1iI=
+	t=1741030967; cv=none; b=io5wqXZdHawMskhUpwCIl2luiS4CqSK8or8fu976C1annskLVnm62Ysu/SKVHSIJ+MnUbNI+Zf52HyL5pHwVdjJ7UpSFVezOF9hC18tbTATilMUhPr5b5EQYmu8nwP1PerderxXzwkRPIaTyPW65AgubRqEdr5jON9sp5NV9jP0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741030952; c=relaxed/simple;
-	bh=E166rXmV2gKxDo6lvtPbk6l4dZeaRFuu0JgC4cRRb6E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eLyIZ8RLUSoDBx5SmXtG+ykUQIhtbuECCqAu6fAe2EN4QDrWb18Z5nQ/0kAXASV2hCMz4Z4XJHZ/Oi4TgT9RvvSmiKtvbi/oGD3KLxbFa9D2VIaSLCnmGnzrgPz6A7w+gN+XVexRCqts2UDvEWN83pgG3GBwo0j5fgHduGvowek=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-2fef5c978ccso2557636a91.1;
-        Mon, 03 Mar 2025 11:42:30 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741030950; x=1741635750;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jr7DtT+cBeW7vunNHQDeXWMsjvqkgvHyclExXYfY/bw=;
-        b=IrFa5DMr9jb5fy4OZIJBbqabybWiL9SqAB8iGghE9Ca4sKEmSDxF0VNAx8bCU38TV3
-         QuXaTQbHfSuaZteYbiz54/xKkUjCmdK8iHtekqGHw/TH1NXWfxBE9jRImUn1wVMVnANd
-         EufkZeCL74x/hVAupWzVkya3MCuuWwfl3bVWCjPqPO9yn9yIx+Z5gP6LEw2I+ZYz6GGh
-         BbWkfvhtlOnep0D1n3dS1ehRkBpqz4IiOiH74wWbOB80/1qTWhoB2zaOPh9b6MCYP4Nt
-         QVtMcsfBIdTjAEs7scFSa8wO3LWNJ56DXj+p9YX+uUcW3hxcj671f/CrKjRYmBvY98FZ
-         D2Aw==
-X-Forwarded-Encrypted: i=1; AJvYcCVFG2OXTRAxVSWrD7+n77RY7hkNNaAFU+8eBCse+i272Gyon6PIchlnUphwbgEinH7IJ9lEy+mNWsGLaQyYo8IAfQ==@vger.kernel.org, AJvYcCVgm8VG2g7oDbhtWpct8K6iiT+wb3BY1NOkMMWObWRxD9dj5hvZbwqmukB8juP7rn1t2YpexzoL0eWX@vger.kernel.org, AJvYcCXG0MAhwJUFHkfbK6VR7HFjPV9lOMcpH/CLkeQVugyin7zi53MN4HAzqtFrzfUAZjNiVdOFxD/bzX1Ab20=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxVUJo4plKAjzE1XDH8GAKaiLsLM/zauToFVKpqlREqDiukkgAd
-	F0APBNuhyoHtfjlt87Gu0USLoed22wVXO/VXACoZvJBW+YrYjPFr
-X-Gm-Gg: ASbGncvpU6yzInTifvlnAfAhB3HEVbn1VV30U2qX96k3Rl53x85XoCes6dX8NDp5jTJ
-	NVzGz4SK0aoTNxd3tSVekuIQ7/URc5/RS9oMgYvRLWVWOFG52OTpPsgNPndf5ZZxgZKgeTcNr6n
-	BhfuqUBZAc+17W+L0zInDCdz699eGw1LlvutBj8EkJbbt2GM71X/UGwTag95L368PHVvCmdR8fS
-	qWDLEYJXZBfSuJM9kKWh7QtrdKl5Grg/XQghmNQTxlrdilZtqFvP2uOXEXKsQl6zvWRTZKSajVH
-	GzVAmp+RGAavFYpzG3HLoKE6121xd36V4T9jRABSx0ILRN8137D+hVUnD5aWM5Yj5eOG32bD0gN
-	BCLg=
-X-Google-Smtp-Source: AGHT+IHYCQVs+/iE6vvKrmK1B/IMxzVg0/4kX5VfDcWNz3937RP9zksebTa9YiaF4RmT8h+1QZFM1w==
-X-Received: by 2002:a17:90b:1b47:b0:2fa:e9b:33b3 with SMTP id 98e67ed59e1d1-2febab2bdecmr20911899a91.6.1741030950198;
-        Mon, 03 Mar 2025 11:42:30 -0800 (PST)
-Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
-        by smtp.gmail.com with UTF8SMTPSA id 98e67ed59e1d1-2fea67a7ddesm9360259a91.27.2025.03.03.11.42.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Mar 2025 11:42:29 -0800 (PST)
-Date: Tue, 4 Mar 2025 04:42:28 +0900
-From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To: Fan Ni <nifan.cxl@gmail.com>
-Cc: Shradha Todi <shradha.t@samsung.com>, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org, manivannan.sadhasivam@linaro.org,
-	lpieralisi@kernel.org, robh@kernel.org, bhelgaas@google.com,
-	jingoohan1@gmail.com, Jonathan.Cameron@huawei.com,
-	a.manzanares@samsung.com, pankaj.dubey@samsung.com,
-	cassel@kernel.org, 18255117159@163.com, xueshuai@linux.alibaba.com,
-	renyu.zj@linux.alibaba.com, will@kernel.org, mark.rutland@arm.com
-Subject: Re: [PATCH v7 5/5] Add debugfs based statistical counter support in
- DWC
-Message-ID: <20250303194228.GB1552306@rocinante>
-References: <20250221131548.59616-1-shradha.t@samsung.com>
- <CGME20250221132043epcas5p27fde98558b13b3311cdc467e8f246380@epcas5p2.samsung.com>
- <20250221131548.59616-6-shradha.t@samsung.com>
- <Z8XuuNb6TRevUlHH@debian>
+	s=arc-20240116; t=1741030967; c=relaxed/simple;
+	bh=6fbjw0aMtiL14PfgwbOJ+aw6ZPLLU/ILpn50EtGX7oc=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=Hx9H9Pn+OU5SYiM+MexhzNyxTWnGi7EWac1lF2nxW6uYSXt4Ekeu06lj9uYzY4MAkJNRBDH2ElMf570o9Rq7jqXTSWmenZHpn4FZcLsoWiGwYeoVXeE1pFGygasDyZ74y0HxJdqk3aI52LPVIyThwX4LL7EkcJYUhBk9Zqm9G64=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=YmEenOZh; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=vpbWXZ7m; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="YmEenOZh";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="vpbWXZ7m"
+Date: Mon, 03 Mar 2025 19:42:43 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1741030963;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=p0fL0ilny4vy5vqssCaZJw3atibky6KBCpiUkMzgHhY=;
+	b=YmEenOZhJhOgr/xqE1qbcv8FD8dEEQe2Xrj0AgyD8142UgsYECCiyy/1n2F+ArXZwqoaGo
+	o4IoNs1FHIC1Kd+YCYdPtXrAjwZGeRdE8DLgpnDUF6jxBBCeKYIWq/apiDJuF4OMWRUDZm
+	d0X/qfn87ra3yFY8hW5CantUrVD4Ea3sfEDagQjIeLoYj5EPEzNkfKKdF7fE9poDN3xpjc
+	ouzQCcm7d7JC32vx9q7/EPxQb3vdb4lZAPyeiLiWY4+YSNcje+mf6ISeTCrNSNkcndbhwT
+	5i69Uy21rcHNklox11Z0Vs5ZwhsQmDlodMOIv0P44Jv84dm/yZNFhXlIhVpozQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1741030963;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=p0fL0ilny4vy5vqssCaZJw3atibky6KBCpiUkMzgHhY=;
+	b=vpbWXZ7m9vAXuPko1BkIg489hP72dGTZ5wxcbvnhF6bPxhN5FctXhaOtiXBg4E42pq50nj
+	TfrHJC/ukZbwCyAA==
+From: "tip-bot2 for Brian Gerst" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/core] x86/asm: Merge KSTK_ESP() implementations
+Cc: Brian Gerst <brgerst@gmail.com>, Ingo Molnar <mingo@kernel.org>,
+ x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250303183111.2245129-1-brgerst@gmail.com>
+References: <20250303183111.2245129-1-brgerst@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z8XuuNb6TRevUlHH@debian>
+Message-ID: <174103096320.14745.8983611865949775771.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-Hello,
+The following commit has been merged into the x86/core branch of tip:
 
-[...]
-> > +static ssize_t counter_value_read(struct file *file, char __user *buf, size_t count, loff_t *ppos)
-> > +{
-> > +	struct dwc_pcie_rasdes_priv *pdata = file->private_data;
-> > +	struct dw_pcie *pci = pdata->pci;
-> > +	struct dwc_pcie_rasdes_info *rinfo = pci->debugfs->rasdes_info;
-> > +	char debugfs_buf[DWC_DEBUGFS_BUF_MAX];
-> > +	ssize_t pos;
-> > +	u32 val;
-> > +
-> > +	mutex_lock(&rinfo->reg_event_lock);
-> > +	set_event_number(pdata, pci, rinfo);
-> > +	val = dw_pcie_readl_dbi(pci, rinfo->ras_cap_offset + RAS_DES_EVENT_COUNTER_DATA_REG);
-> > +	mutex_unlock(&rinfo->reg_event_lock);
-> > +	pos = scnprintf(debugfs_buf, DWC_DEBUGFS_BUF_MAX, "Counter value: %d\n", val);
-> > +
-> > +	return simple_read_from_buffer(buf, count, ppos, debugfs_buf, pos);
-> > +}
-> 
-> Do we need to check whether the counter is enabled or not for the event
-> before retrieving the counter value?
+Commit-ID:     399fd7a26441586021ca3722f6a98ff33ed32caf
+Gitweb:        https://git.kernel.org/tip/399fd7a26441586021ca3722f6a98ff33ed32caf
+Author:        Brian Gerst <brgerst@gmail.com>
+AuthorDate:    Mon, 03 Mar 2025 13:31:11 -05:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Mon, 03 Mar 2025 20:28:33 +01:00
 
-I believe, we have a patch that aims to address, have a look at:
+x86/asm: Merge KSTK_ESP() implementations
 
-  https://lore.kernel.org/linux-pci/20250225171239.19574-1-manivannan.sadhasivam@linaro.org
+Commit:
 
-Thank you!
+  263042e4630a ("Save user RSP in pt_regs->sp on SYSCALL64 fastpath")
 
-	Krzysztof
+simplified the 64-bit implementation of KSTK_ESP() which is
+now identical to 32-bit.  Merge them into a common definition.
+
+No functional change.
+
+Signed-off-by: Brian Gerst <brgerst@gmail.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Link: https://lore.kernel.org/r/20250303183111.2245129-1-brgerst@gmail.com
+---
+ arch/x86/include/asm/processor.h | 5 +----
+ arch/x86/kernel/process_64.c     | 5 -----
+ 2 files changed, 1 insertion(+), 9 deletions(-)
+
+diff --git a/arch/x86/include/asm/processor.h b/arch/x86/include/asm/processor.h
+index c0cd101..0c91108 100644
+--- a/arch/x86/include/asm/processor.h
++++ b/arch/x86/include/asm/processor.h
+@@ -668,8 +668,6 @@ static __always_inline void prefetchw(const void *x)
+ 	.sysenter_cs		= __KERNEL_CS,				  \
+ }
+ 
+-#define KSTK_ESP(task)		(task_pt_regs(task)->sp)
+-
+ #else
+ extern unsigned long __top_init_kernel_stack[];
+ 
+@@ -677,8 +675,6 @@ extern unsigned long __top_init_kernel_stack[];
+ 	.sp	= (unsigned long)&__top_init_kernel_stack,		\
+ }
+ 
+-extern unsigned long KSTK_ESP(struct task_struct *task);
+-
+ #endif /* CONFIG_X86_64 */
+ 
+ extern void start_thread(struct pt_regs *regs, unsigned long new_ip,
+@@ -692,6 +688,7 @@ extern void start_thread(struct pt_regs *regs, unsigned long new_ip,
+ #define TASK_UNMAPPED_BASE		__TASK_UNMAPPED_BASE(TASK_SIZE_LOW)
+ 
+ #define KSTK_EIP(task)		(task_pt_regs(task)->ip)
++#define KSTK_ESP(task)		(task_pt_regs(task)->sp)
+ 
+ /* Get/set a process' ability to use the timestamp counter instruction */
+ #define GET_TSC_CTL(adr)	get_tsc_mode((adr))
+diff --git a/arch/x86/kernel/process_64.c b/arch/x86/kernel/process_64.c
+index 4ca73dd..f983d2a 100644
+--- a/arch/x86/kernel/process_64.c
++++ b/arch/x86/kernel/process_64.c
+@@ -979,8 +979,3 @@ long do_arch_prctl_64(struct task_struct *task, int option, unsigned long arg2)
+ 
+ 	return ret;
+ }
+-
+-unsigned long KSTK_ESP(struct task_struct *task)
+-{
+-	return task_pt_regs(task)->sp;
+-}
