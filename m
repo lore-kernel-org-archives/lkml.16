@@ -1,69 +1,83 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54FF42E630;
-	Mon,  3 Mar 2025 09:45:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D58221F12F4;
+	Mon,  3 Mar 2025 09:46:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740995121; cv=none; b=vBuSwhMTpzAbQMZixM/wG/MCOl9vBabGal976PwGB8uMAzP2z/9pphu0w6vj9Br2BHinL9TD0GDFUmFggTH3n10Xm46x1ArRWV4a7HopJVyRDO/9U+pcozgq/LnDBeVPkoG7oftoyjnphzNxV0bi1fZ7EmxyewakOxT+b2qf1u8=
+	t=1740995169; cv=none; b=a4XWVjJehmQzajQn6FMdNFLxlJljdaE1eifimdOCf8wcfOf9SZr+wQPUcjB8Cz0p2aWK730AOJ0xuiKzzgZ2vMAegCZrreLp5E9E0TTEDz1/OyAer893aLnPXusRWXFuDN79Lplz5VSJZ/PGvM+CJdyGXj/Ee8su7a2cZjTW470=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740995121; c=relaxed/simple;
-	bh=9MjpxNDWc0Mel493RuZtnmix9eO5EL7yH9UaB35eo6U=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=BN2Fyj6KHbyZ5v+oM2uIjxpFkDWKw/Syd7FxLvtlQ624hQAtxBcH+FVPC6DrmyL0cSiBSWbaFYXI3+iY9fb487MwOzdn9dr4Q9NsQu2vS+dV+v7rzMHBri8ucyAKFy9ychlM+K4Hec9uBaV5nToEseqMCD7VivcBhKlIDnRIHSI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ek491Sbc; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ek491Sbc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8AF0DC4CEE4;
-	Mon,  3 Mar 2025 09:45:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740995120;
-	bh=9MjpxNDWc0Mel493RuZtnmix9eO5EL7yH9UaB35eo6U=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=ek491SbccVRRWyc8CFtPBbXGQDRHNVeEKQGU+vU/YAllzteV4QCXiCuFX2oLI91eW
-	 gFmqsNGV7QAvZt0Fl89wFkfbTJv3Y4xZEp/0kH7647YQAAvLbRbkT5JJFjqA0DLtO2
-	 xGeVIwvdwCPJYQrKcBHnxBT/xHcUjpEjLnbO9UbFee56Vix/Z/T6Ya7y+pkk14bTug
-	 H9fB/UctibrjtLPyHi3NLrDVduTApQfN8vyFqMzB2bFlJVfsYG0tniXvEBh5/mEj6B
-	 YxKhhnOtE6sOca3bxkl4lz0pizRkrN6UuQC1NZh30mC04Jb+DExm4jL2j0fms+hyor
-	 C4F57XtYRhw0g==
-From: Robert Foss <rfoss@kernel.org>
-To: Andrzej Hajda <andrzej.hajda@intel.com>, 
- Neil Armstrong <neil.armstrong@linaro.org>, 
- Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
- Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
- dri-devel@lists.freedesktop.org, Colin Ian King <colin.i.king@gmail.com>
-Cc: kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250228083248.676473-1-colin.i.king@gmail.com>
-References: <20250228083248.676473-1-colin.i.king@gmail.com>
-Subject: Re: [PATCH][next] drm/bridge: Fix spelling mistake "gettin" ->
- "getting"
-Message-Id: <174099511726.139840.6705775137322314261.b4-ty@kernel.org>
-Date: Mon, 03 Mar 2025 10:45:17 +0100
+	s=arc-20240116; t=1740995169; c=relaxed/simple;
+	bh=qRFySgLxKhY09jGIh6AHVnc/LV4R144Fqvz+okmsay8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RQCgj3NiO/W2poFh14ocO2l4BsDfQBrNYG3P5MEoIM5MegKR8ouMyO725u/bpisTgWhhu7CaQbcnyKPto/+3Ar+jPzTgtJw0wpJjUnkGtVMLFrAGkv3C1NPKljUqRyi9OWvss+kdyaMBqqDF4XQAjGJ24Fw0LS47F1X+jtUlTU4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-2fe82414cf7so8224442a91.0;
+        Mon, 03 Mar 2025 01:46:07 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740995167; x=1741599967;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xerpIyc82MG6KvHsqBUiiJzLJy4hP6RzDKtr/CeFuq4=;
+        b=Ai9RgHowmYjpg07TnhN9dhLhj26L9EMSU2D7qdW6mnemz5Ieb55HL/+C9cKZNvsL2e
+         nSwQpASolQ89BMIKlZdvvww6/xkmlGTdxLQm5XG7NhqoFDv/LxMdeOvz/TmiD2OwwjWm
+         /EhVRQxekA49jN2v7fmxse5Ka8wLLg6WO+XuDswuUkAskur0xlAO6jUF4VWLkh2frv9q
+         nwlEIOMpUbzabjoeNZJDR60KyaFgzcpz2DwrZGcNqP6rc8tpzazaVd5X3V68sGUj8v6o
+         jmWmLJ2cC8UPCDsdQlUVTQu9q5RV8fhgSHC5xYU8g04T61x828EU0VIrZ0R05bRMSqwd
+         Ppbg==
+X-Forwarded-Encrypted: i=1; AJvYcCWQgYEJdVb0XBnXWgTDb1KB0vlex8Fewae1VWicyg0Z7MYgehtjqP6KWHmiMfnyt4t4G1wScVR1YhCZ70s=@vger.kernel.org, AJvYcCX0mjBnrW6rQt9BFekqFUpUkt6uttRyreflN5F90faKAvcR4RtozMIfqPXZCD1Bp3Q76lk7VkCl3IbZJA==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxqqtlj6+XSwrZZC6BzDiK4b+v//fNu2w+Dqhj1R6/kEg5q5YZ/
+	B12czt4ntMTmv5ErxwIJRvc1Cc4sHyEEl+LYRAGJZRGTNZm6PGwo
+X-Gm-Gg: ASbGnctCoi2MPryfca5wVKqd/eDU/3f87rB3J//N8wft0ISqyTKA3DCxZl61KoUCGNC
+	cUoSEj+ca3T4+M/4sPDBhxpMYT1fct7S4oKf7kX8+a+jKjGrt9hAC+1/jPdT/RNy451nUPqor+5
+	qjJVjI2lxSlg2H3CPTf70WgO1cZHehLSMWIWytDF6JBkLLzpPLDXXLTCjrNDZjwpT1Tk2stEZtS
+	bUDxMfXKMo6MZMz6vSDZYZFNAPU2D8W2mRByr0lt12wyevR142RjrBw029V7nRuNkdjLcM5EEA9
+	ES5wKcKud6NBH36InTs2zvhLnmJygaMRrsXVOvY5/dSnZBaPTgSMQYqdR661Y10hKVnX/RTBhPc
+	iV2A=
+X-Google-Smtp-Source: AGHT+IHELCHlJeL98RkfpUln7YkAY9rOB6Z387rUchChjvJfXfuMUBqbuPtRfO6CRAxTwwlwMlMU1Q==
+X-Received: by 2002:a17:90b:2252:b0:2fa:ba3:5457 with SMTP id 98e67ed59e1d1-2febab78780mr22387538a91.17.1740995166995;
+        Mon, 03 Mar 2025 01:46:06 -0800 (PST)
+Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
+        by smtp.gmail.com with UTF8SMTPSA id 98e67ed59e1d1-2fe8283c9d2sm10587214a91.35.2025.03.03.01.46.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Mar 2025 01:46:06 -0800 (PST)
+Date: Mon, 3 Mar 2025 18:46:04 +0900
+From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Shradha Todi <shradha.t@samsung.com>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Next Mailing List <linux-next@vger.kernel.org>
+Subject: Re: linux-next: build warning after merge of the pci tree
+Message-ID: <20250303094604.GA1065658@rocinante>
+References: <20250303182639.5e920622@canb.auug.org.au>
+ <20250303075002.GB138071@rocinante>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250303075002.GB138071@rocinante>
 
-On Fri, 28 Feb 2025 08:32:47 +0000, Colin Ian King wrote:
-> There is a spelling mistake in a dev_err message. Fix it.
+> > After merging the pci tree, today's linux-next build (htmldocs) produced
+> > this warning:
+> > 
+> > Documentation/ABI/testing/debugfs-dwc-pcie:15: WARNING: Block quote ends without a blank line; unexpected unindent. [docutils]
+> > 
+> > Introduced by commit
+> > 
+> >   8562ae832769 ("PCI: dwc: Add debugfs based Error Injection support for DWC")
 > 
-> 
+> Thank you Stephen!  Having a look...
 
-Applied, thanks!
+Fixed and pushed updates to our branch.  Will update our next in due
+course.  Thank you!
 
-[1/1] drm/bridge: Fix spelling mistake "gettin" -> "getting"
-      https://gitlab.freedesktop.org/drm/misc/kernel/-/commit/db505ff68c12
-
-
-
-Rob
-
-
+	Krzysztof
