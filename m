@@ -1,94 +1,77 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 733A223498F;
-	Mon,  3 Mar 2025 20:42:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0945237705;
+	Mon,  3 Mar 2025 20:45:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741034543; cv=none; b=hNr06zuo163D9aIFXI0tHYku97O54CK4TQVKglDCKzz6onJN/qp5fs2qI/9WlJG2bOaPfqGmiYy6PcK+f3iJFToAIXIh0eGb++m6Hpuj+EXS6yULDcXUBTN0O5OlEvjSmUJyNywOml3utTt3cM6VmGXDYM6JYG/3T1HDYwi4OfI=
+	t=1741034723; cv=none; b=NxlVnc3GHkiErz4DXvLh0032HeHx8Tmu7I0PV0R2HpdVbb2HoM/kCLv81tyhoA3RMjHsphQj4jPwXsmm1/uyNkPLnbfc8IQp9sqV5MXc4yhn5G/74jWwsFToqbziQ6J4jXppqtHKzX4ucDAGGB4LoKe01MoHGuMWniwaaKEGPvk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741034543; c=relaxed/simple;
-	bh=a8NqEGH4Go2X33QSyJUSV4V00gL0zvouKu13WLgAJUA=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=RVE+sAagOxvkrtNUMNmhcH566rGdfgRGV/E76ocATvCyZhXAjdjEYViC/vmR/huuKUJ8+6q5IuHjyacQ4DYFhJEsZ4SyOYvKbTd1MRe3jqRH5P77q+LTloMBOkSXibQIA2Pv2FBgs/2yDPKZtpeN5k7D3CoR3ABuY3rpLtaRVYo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DpvY6BhD; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741034723; c=relaxed/simple;
+	bh=zLprHZq5avyt9DJrNuzSzQVWZHBCh3vTz5OEK52Y8+o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=O9k4SSO7f5z3RWLVG/AgatpLCvHCnUD/29hvnHwFQRAR56vTEfYBa8WUPhoBuHMDjgWsL5WYCR6VroXDnpp+8EPCqpHNt/YG/F2DC3duJx0NxhSsqwyE6tpBaF+9Re9lCx4xYw/Qsl/5iN8OIejm5OCaUXK2wd+gPfpStsETmCs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NI2VeT3O; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DpvY6BhD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0CFB0C4CED6;
-	Mon,  3 Mar 2025 20:42:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NI2VeT3O"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91FAEC4CED6;
+	Mon,  3 Mar 2025 20:45:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741034543;
-	bh=a8NqEGH4Go2X33QSyJUSV4V00gL0zvouKu13WLgAJUA=;
-	h=From:To:Cc:Subject:Date:From;
-	b=DpvY6BhDDPOHSP8AmH6eHpBK2rAPsdpXgUVsZXFssR/i8e0q+1/ABRDMU9M6eR+Hs
-	 E1ljDCS5yS1wgK/P//nMhUPLc5IhCGlZQX7VPUHyMcjJghgSabl8RQKGvr0OLo034u
-	 nLiGiR13jUY6d7NO5xOVMQQ3dG6qFj+YDu30xHWgRYcmFETO3z9Ixytos8l4IObluP
-	 rcsewjVrqgl+xEgq3A7fFBxuzhxrVaBj6JJ4Ml23+f9stp/M1VdBvEdIltmToio5wR
-	 5BG76uJOOU3W7RMjIUqJOdSSZ77gPRKtQivNR6PV9vmtjyTdIo/3W4PfQSbK+sp2LA
-	 LWYS7X6gBf5YQ==
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: linux-pci@vger.kernel.org
-Cc: Alex Williamson <alex.williamson@redhat.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Keith Busch <kbusch@kernel.org>,
-	Todd Kjos <tkjos@google.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	linux-kernel@vger.kernel.org,
-	Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH] PCI: Log debug messages about reset method
-Date: Mon,  3 Mar 2025 14:42:20 -0600
-Message-Id: <20250303204220.197172-1-helgaas@kernel.org>
-X-Mailer: git-send-email 2.34.1
+	s=k20201202; t=1741034723;
+	bh=zLprHZq5avyt9DJrNuzSzQVWZHBCh3vTz5OEK52Y8+o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=NI2VeT3OALm/vkngxe0+KlC+z7YHkyz9iAHigcV8C+CztwECIGVt1lRxRRXYJDSZ5
+	 38Osgu9fVNZc19F7kx1kQRz89dFfp+A7BtADVV8pe+3LwBusAlACbMB5oDkBXB93uT
+	 SzzvpwQLr9Le867OQjUWJvzEwKNabMGDyQYbsyT0XGkaHL7rDXHmGYf/l7cIz36bi5
+	 6p0oQHLTb78qeIfQzvFE80eivGnY4/rRjr4RlC0wpKXSlEvv8CJ0qXQl0DaViWtywv
+	 UE0LUoHbhalNG6hZB/7efrq4w9G5mRA7/LDNC3/aqcr5uToxjRojaytS//R8TbafDb
+	 peThm3rYa/7kQ==
+Date: Mon, 3 Mar 2025 12:45:21 -0800
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>
+Cc: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Arnaldo Carvalho de Melo <acme@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH 0/6 v2] Fixups for kernel maps insertion
+Message-ID: <Z8YU4egMWtSi_lPQ@google.com>
+References: <20250228211734.33781-1-acme@kernel.org>
+ <Z8JO5Jp2b4OyHImx@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <Z8JO5Jp2b4OyHImx@google.com>
 
-From: Bjorn Helgaas <bhelgaas@google.com>
+On Fri, Feb 28, 2025 at 04:03:48PM -0800, Namhyung Kim wrote:
+> On Fri, Feb 28, 2025 at 06:17:28PM -0300, Arnaldo Carvalho de Melo wrote:
+> > From: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > 
+> > Hi Namhyung,
+> > 
+> >         Here are the patches from the recent session on fixing the build
+> > when DEBUG=1 is used, please take a look.
+> 
+> Looks good.  It's more fine-grained than I expected. :)
+> 
+> > 
+> >         I think that since there are no reported problems and ended up
+> > being a sizeable series, we better apply it to perf-tools-next,
+> 
+> Sure, will add there.
 
-Log pci_dbg() messages about the reset methods we attempt and any errors
-(-ENOTTY means "try the next method").
+Ian, are you ok with this now?
 
-Set CONFIG_DYNAMIC_DEBUG=y and enable by booting with
-dyndbg="file drivers/pci/* +p" or enable at runtime:
-
-  # echo "file drivers/pci/* +p" > /sys/kernel/debug/dynamic_debug/control
-
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
----
- drivers/pci/pci.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 869d204a70a3..3d13bb8e5c53 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -5230,6 +5230,7 @@ const struct pci_reset_fn_method pci_reset_fn_methods[] = {
- int __pci_reset_function_locked(struct pci_dev *dev)
- {
- 	int i, m, rc;
-+	const struct pci_reset_fn_method *method;
- 
- 	might_sleep();
- 
-@@ -5246,9 +5247,13 @@ int __pci_reset_function_locked(struct pci_dev *dev)
- 		if (!m)
- 			return -ENOTTY;
- 
--		rc = pci_reset_fn_methods[m].reset_fn(dev, PCI_RESET_DO_RESET);
-+		method = &pci_reset_fn_methods[m];
-+		pci_dbg(dev, "reset via %s\n", method->name);
-+		rc = method->reset_fn(dev, PCI_RESET_DO_RESET);
- 		if (!rc)
- 			return 0;
-+
-+		pci_dbg(dev, "%s failed with %d\n", method->name, rc);
- 		if (rc != -ENOTTY)
- 			return rc;
- 	}
--- 
-2.34.1
+Thanks,
+Namhyung
 
