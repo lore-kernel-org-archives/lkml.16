@@ -1,89 +1,111 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2F3F215193;
-	Mon,  3 Mar 2025 16:29:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90B02215789;
+	Mon,  3 Mar 2025 16:29:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741019397; cv=none; b=spiArnfIjOAkICTxr++MZI7p+fuC5GkE/YkgpZ3tXl22YmETnBgRMDND4m/3kuVYLwm2KfJaK/YLKgxXoacVeMQwYzI9V6F4BRFuJQz6XkxB3JPv7P1NFH5hDcXQwH0jwcpdZcXFeepSYhl8PRdT3lUWI6wReoxgD/aKRQv6qLU=
+	t=1741019398; cv=none; b=qHyMat+lx0MlNru8Zf0BYgTJrvy7V6Oa1PUmShnpW8W69wLetk8q9YM0wb3pr++UlX/bkwKck9iOba6XCNrqRRbAaEKrqERZNfSQm0icqvYYwqz4nBFtTPkOf7jpIYhqc4eDEdFAmxjI4jwbFJBT4k8Y4pMwBl2f4KMcgS5U5Vc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741019397; c=relaxed/simple;
-	bh=4M7qw2BCNap/yj1lp7E2M6gYvaxv2EvIQCTCMGBcr1g=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=kHOCPMsj4LX1DggPh3MmvEJYRgBLMWy+iOWe7yYoKH5559iJN6BjhreVxN2woOFM0RBaEQz0SqP3bBDD1H0L/gna0RL3uLs2EUTuI7qwJtHCYaIbaghxXhZ3wg5If+76zoJsE9/8xqZOjLHOuc0FuXPD5ERPXCrGuorUFpax/Pg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HDyeuGs/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741019398; c=relaxed/simple;
+	bh=hfkj99KGappDMmEncM9OKBX88k+6ubsMEvtGHpVAh24=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kJfnfJZK001sOr04KSfu73xHpcK0YK2pmz9FPx/zfO4kSeYevUKfQi5hCc8E4t0FNzsX5KXHFEqhKpeLVHfVcMzHBeGL5uPiC8WLBTMbtH4LQV1DPSAIet3KX5b6Lb4Xv4yC/dFBllpn4lzs4NLqFSOjnC8VWMcTIP/q1/ntNCQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AsBcs+Yv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HDyeuGs/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6163C4CEE4;
-	Mon,  3 Mar 2025 16:29:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AsBcs+Yv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1AAEC4CEE6;
+	Mon,  3 Mar 2025 16:29:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741019396;
-	bh=4M7qw2BCNap/yj1lp7E2M6gYvaxv2EvIQCTCMGBcr1g=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=HDyeuGs/lYdy9CEYKCM/ru1OX9ND1XpgOwioW8WGgWWi8arNr8kamubWshaSLhRI7
-	 Wa8N0nuKMAvSiwzYzfZBdJN6BOoi9YYIsG3eIknET8wOdeLCO6i2caFkiZwExTgvBB
-	 2fZbORAnQN2ChgWBmy2ZKKfxPb4PKPogBV7Wchst6pg4J9q4KSlsDcn2iOxS6ylUE0
-	 QxQ/O+SPOcqVjj/SeoE4OwiCqUDkpM21R8dtPKKpTYt+pqq7KhEkxra2r7pPjYKZ6Z
-	 lvASnPNtrCq11vA5K8sLl3y7Ko1gRa5tPmE573cRL2SwxxTuotQXsC7/sgLAv7SgvI
-	 k6kQhApGHPHEA==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Hector Martin <marcan@marcan.st>,
-	Mark Brown <broonie@kernel.org>,
-	Sasha Levin <sashal@kernel.org>,
-	shenghao-ding@ti.com,
-	kevin-lu@ti.com,
-	baojun.xu@ti.com,
-	lgirdwood@gmail.com,
-	perex@perex.cz,
-	tiwai@suse.com,
-	linux-sound@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.13 02/17] ASoC: tas2770: Fix volume scale
-Date: Mon,  3 Mar 2025 11:29:34 -0500
-Message-Id: <20250303162951.3763346-2-sashal@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250303162951.3763346-1-sashal@kernel.org>
-References: <20250303162951.3763346-1-sashal@kernel.org>
+	s=k20201202; t=1741019398;
+	bh=hfkj99KGappDMmEncM9OKBX88k+6ubsMEvtGHpVAh24=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=AsBcs+Yv8Y4r2VZqv8lwPXuIXX05s/8lkVJXoxuPK8suCAdv5KMF+VdQ/I7KmsWm3
+	 72Gf63UKosyabd2JR0srkyUv0gw14z7wdBmSERT3VGUb/3PvdGmfSNrjBZIr3bLypg
+	 d2G96kCukO4DfrttUHG97qDFjAZmrkGbk5lmQOsGpJmaiU56SYjE7fJYlqfuBmGUWY
+	 Tr3mojmhrX0wgyW1eoJ1wVKiar7GzjDZG0R3U3Z5ULnavJRR8GnKh0NV2vbq0I5ufm
+	 fwgpX9B3N3wVeAcRiywoYBKDeAcw0N/eRCDsw/SDaqqV70vl2hSrupQ8aIfXIQynD6
+	 H5NaKIIxdqVJw==
+Date: Mon, 3 Mar 2025 16:29:53 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Inochi Amaoto <inochiama@gmail.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Chen Wang <unicorn_wang@outlook.com>, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org, sophgo@lists.linux.dev,
+	Yixun Lan <dlan@gentoo.org>, Longbin Li <looong.bin@gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: interrupt-controller: Add Sophgo SG2044
+ MSI controller
+Message-ID: <20250303-woozy-pluck-c04b13342401@spud>
+References: <20250303111648.1337543-1-inochiama@gmail.com>
+ <20250303111648.1337543-2-inochiama@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.13.5
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="dO6efuNDhgDYYCLt"
+Content-Disposition: inline
+In-Reply-To: <20250303111648.1337543-2-inochiama@gmail.com>
 
-From: Hector Martin <marcan@marcan.st>
 
-[ Upstream commit 579cd64b9df8a60284ec3422be919c362de40e41 ]
+--dO6efuNDhgDYYCLt
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-The scale starts at -100dB, not -128dB.
+On Mon, Mar 03, 2025 at 07:16:46PM +0800, Inochi Amaoto wrote:
+> Like SG2042, SG2044 uses a similar msi controller to provide MSI
+> interrupt for PCIe controllers.
 
-Signed-off-by: Hector Martin <marcan@marcan.st>
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Link: https://patch.msgid.link/20250208-asoc-tas2770-v1-1-cf50ff1d59a3@kernel.org
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- sound/soc/codecs/tas2770.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+In the future, could you mention the way in which they differ?
+"similar" could mean 99% the same but incompatible, or 90% the same but
+capable of using a fallback?
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
 
-diff --git a/sound/soc/codecs/tas2770.c b/sound/soc/codecs/tas2770.c
-index 9f93b230652a5..863c3f672ba98 100644
---- a/sound/soc/codecs/tas2770.c
-+++ b/sound/soc/codecs/tas2770.c
-@@ -506,7 +506,7 @@ static int tas2770_codec_probe(struct snd_soc_component *component)
- }
- 
- static DECLARE_TLV_DB_SCALE(tas2770_digital_tlv, 1100, 50, 0);
--static DECLARE_TLV_DB_SCALE(tas2770_playback_volume, -12750, 50, 0);
-+static DECLARE_TLV_DB_SCALE(tas2770_playback_volume, -10050, 50, 0);
- 
- static const struct snd_kcontrol_new tas2770_snd_controls[] = {
- 	SOC_SINGLE_TLV("Speaker Playback Volume", TAS2770_PLAY_CFG_REG2,
--- 
-2.39.5
+>=20
+> Add support for the SG2044 msi controller
+>=20
+> Signed-off-by: Inochi Amaoto <inochiama@gmail.com>
+> ---
+>  .../bindings/interrupt-controller/sophgo,sg2042-msi.yaml      | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/sophg=
+o,sg2042-msi.yaml b/Documentation/devicetree/bindings/interrupt-controller/=
+sophgo,sg2042-msi.yaml
+> index e1ffd55fa7bf..f6b8b1d92f79 100644
+> --- a/Documentation/devicetree/bindings/interrupt-controller/sophgo,sg204=
+2-msi.yaml
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/sophgo,sg204=
+2-msi.yaml
+> @@ -18,7 +18,9 @@ allOf:
+> =20
+>  properties:
+>    compatible:
+> -    const: sophgo,sg2042-msi
+> +    enum:
+> +      - sophgo,sg2042-msi
+> +      - sophgo,sg2044-msi
+> =20
+>    reg:
+>      items:
+> --=20
+> 2.48.1
+>=20
 
+--dO6efuNDhgDYYCLt
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZ8XZAQAKCRB4tDGHoIJi
+0u8AAPwIgZNbZPvjU5OIngWO0eEFHEluL1AAnaKVQ0LYpdwwfAEA+5Ax4/LF2luS
++Z0b0hXAU2eo0WQlC2NjayPbAt3ndQs=
+=U5Rv
+-----END PGP SIGNATURE-----
+
+--dO6efuNDhgDYYCLt--
