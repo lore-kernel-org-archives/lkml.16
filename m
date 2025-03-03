@@ -1,125 +1,181 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFD9122DFAF;
-	Mon,  3 Mar 2025 18:53:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DE461DE2BF
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 18:53:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741027994; cv=none; b=lDK2Z7clJl3P4FTHnuZbuuegpqxdi+rqX+fUBfhJf4/3oejKJFj1CfyrwyedoruWDCCC47eD1QBTN+MDlQXJ4+Jz9jTodYzWfPFbSPdOVDn8E2Z6eHAKyVm1SqXFtWUHXR6k//i6RTlS2zFGr+o/slxwX3IgR9899Bul98ekwGc=
+	t=1741028017; cv=none; b=qrSOM2qinv9Zxe3K04LFmpkMhFIU1E0zrmyqt62V+cY6P2Uz+oY0Ds34xkaJYWssHYVzsJJX+IUqFQhJfNvRllu3NEYQW7TqknpU3y19HXz6PxPZl4JiYZeH3DAjBGeN/A1+K+7vtC5uQj7p6ha2icytczQ7b62brDZEd9fDMCs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741027994; c=relaxed/simple;
-	bh=IRUrqYES5ms9Cr5LIhAodbV0k1pLuaPq0zg09WrGVpM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=D237hRkV8iWHujD5pgxPeG322LgfuSPp/y9dkO1uBJHpiBGryfdiaVRZWK59ARx+BOx4/9ZcmKFjSCxCG/Gq4rT8VDWJ78UYV0r+I7VKxoJdovqMv6knAJWwyMS/vjnknyPjIl5BhMDRm0rKvbe0xvlNx/3ZPDawU60Q7oDE1VM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YKAfFSsj; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741028017; c=relaxed/simple;
+	bh=eyW4uvAiKZw6iNEDEnhVcsa7Mr/hVjNJlE3N7IMkQe0=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=lL86F8P8IrWVkAAF1nGO3naUDYPYlgGcAdyCK++a1n2v3V/0f0/3mUBuO0JajNIBxMmT0n1bv1jDDV/C3FyKnejyH40HGQsA/RiI4dqvyL8fxhRFa2cX6CYgQ7W56lo61OWW4ThNSdjnzYlhHDw9kLboiuAqwwoqBIrn7K75HyE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=1sDF35VW; arc=none smtp.client-ip=209.85.214.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YKAfFSsj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8BAFFC4CED6;
-	Mon,  3 Mar 2025 18:53:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741027994;
-	bh=IRUrqYES5ms9Cr5LIhAodbV0k1pLuaPq0zg09WrGVpM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YKAfFSsj1dPKBv9Wl8L1l4fnPGjQ36VWBRrLBoLufN1L9Se2ZRfYUt0pr27UFS+dt
-	 OvMRhTymH3gEf0NAAcMYeww44k/o4EMHdaNkMBV5lUL6r8YqFpMUjkZ1p3dqpXssCB
-	 QTV7Q0BvsivRw0AdRHkAg0yIzEr3ehrE2KHzHyO53WJV53FZUVPaQHJikzwd6w8IwM
-	 8NWaM8nc5yYLGqfVg+JJze/uN3AqOpLXvx92/VvdnkETMfiURwEKk4PTBBaSLk+hkG
-	 wegLw9194/ry4dVPnVn+00GvAnW8f/VpDhDK6iVWYta6i7iX4OLXhG8guvo45nTwrb
-	 x7gbF5Vq60kjw==
-Date: Mon, 3 Mar 2025 18:53:08 +0000
-From: Mark Brown <broonie@kernel.org>
-To: Charles Keepax <ckeepax@opensource.cirrus.com>
-Cc: lgirdwood@gmail.com, peda@axentia.se, andrei.simion@microchip.com,
-	nuno.sa@analog.com, paul@crapouillou.net, oder_chiou@realtek.com,
-	kiseok.jo@irondevice.com, shenghao-ding@ti.com, kevin-lu@ti.com,
-	baojun.xu@ti.com, srinivas.kandagatla@linaro.org,
-	linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org,
-	patches@opensource.cirrus.com
-Subject: Re: [PATCH v2 13/13] ASoC: Tidy up SOC_DOUBLE_* and SOC_SINGLE_*
- helpers
-Message-ID: <4db99187-63f9-41cc-966b-0c77ba86e390@sirena.org.uk>
-References: <20250303171424.444556-1-ckeepax@opensource.cirrus.com>
- <20250303171424.444556-14-ckeepax@opensource.cirrus.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="1sDF35VW"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-22356964533so67309275ad.3
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Mar 2025 10:53:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1741028015; x=1741632815; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=6r9/NFesFUoIvHadBrGFJSc8h4PL3K25ceD37Tn3zwo=;
+        b=1sDF35VWjjOhCMn2db6tJGNhJLGAQj+teW4yazDnHpTs27dntJvakz9FqtqvV/P/jH
+         ArzCl6osFI7YbiIn0nAtjNwj60a44yvQY2ep9XnCUvMf6uyitQubo3SrkURljaE/o0z3
+         UFgItotiQUXkzUgpfF0tQu7hAwwP4silF6+xCZV+Rv2PC+MeRiz4zvYIorV5vmpe+ckg
+         2cYT63RfM0aM7M9cScI9Rj+j9+aej5j1n+aTkdlxOal0AZhVDzFi5ipymk24enej07NG
+         j6VFW2pHykeF4tDAfdpVGTMXtkWFL0S5/w9soqkhDi+AHbei21m13wPGpaLlPQGla5mv
+         0YCg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741028015; x=1741632815;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=6r9/NFesFUoIvHadBrGFJSc8h4PL3K25ceD37Tn3zwo=;
+        b=UqcRu3hA5q8XVuItAsGKU4Un+r3VTA/DDdOx1jq/FH2bP4GkqDCb/fTIGXqHRSAQiY
+         egqxm6wrKW0t/qY5Ebly8fO+7WZ+PPiyMkJ4JKSqLyIpvQpjJt9jfCFQ5/knABIOlYIc
+         GMm95kNtlMxjYuTdKW+JQkXtugxmo9xZVggQBEgQKBPIDnh6S3IAKYIQib2E3aJkSDqV
+         VLzInmVfB3gPzRSJamYFgZ+2Yb/q1owoQI83OesoqkE9OiHpMYXZJTV4faSekaeO2J0i
+         Em47agwdpoWUomcH0jXNSPTljn6RTssnBLusF4wb+rNGgi7E9NFQXhYs3WbhI80W8gCm
+         hhLQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWvz+Qd4PsIEcIh9OV9o0LEUtfIcp+P5lGYAwcY5ho7Hlp7P8XspUMBaotwigHw5HARAW1IaAT+Vrkfxww=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyO0Hd2TXv+bX2+UEkdOjSd3KGNKDAsM3oBNoOzLVT6QDAMhQ1x
+	T9EYxznvt2qCSZQWbSkyn3n0Mz7sFV2qYdBjI/VmMg4PYYMyYHJfaeBWbTus0kbJkYSfYQRq/Ok
+	BrA==
+X-Google-Smtp-Source: AGHT+IGWjx3WHsPRnBz65sq3hR/Pz6bpJVGezrEQ1CdrZWFRxr60xiXoBSKFm6ZFcrNN6JHU7+cWkAXveL8=
+X-Received: from pfbhm10.prod.google.com ([2002:a05:6a00:670a:b0:736:38eb:5869])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:b95:b0:736:53ef:a04e
+ with SMTP id d2e1a72fcca58-73653efa732mr6458527b3a.22.1741028015671; Mon, 03
+ Mar 2025 10:53:35 -0800 (PST)
+Date: Mon, 3 Mar 2025 10:53:34 -0800
+In-Reply-To: <CALMp9eSGRLMj-a_ZrzzeLx_jgAea13-to=ZPHu3F+trQq28YjA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="k9kOVSMwFlCTJ6hn"
-Content-Disposition: inline
-In-Reply-To: <20250303171424.444556-14-ckeepax@opensource.cirrus.com>
-X-Cookie: This sentence no verb.
-
-
---k9kOVSMwFlCTJ6hn
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Mime-Version: 1.0
+References: <20250205182402.2147495-1-yosry.ahmed@linux.dev>
+ <20250205182402.2147495-2-yosry.ahmed@linux.dev> <Z8JOvMx6iLexT3pK@google.com>
+ <CALMp9eSGRLMj-a_ZrzzeLx_jgAea13-to=ZPHu3F+trQq28YjA@mail.gmail.com>
+Message-ID: <Z8X6rtIwlTtu5rHx@google.com>
+Subject: Re: [RFC PATCH 01/13] KVM: nSVM: Track the ASID per-VMCB
+From: Sean Christopherson <seanjc@google.com>
+To: Jim Mattson <jmattson@google.com>
+Cc: Yosry Ahmed <yosry.ahmed@linux.dev>, Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Mar 03, 2025 at 05:14:24PM +0000, Charles Keepax wrote:
-> Re-implement SOC_DOUBLE_VALUE() in terms of SOC_DOUBLE_S_VALUE().
-> SOC_DOUBLE_S_VALUE() already had a minimum value so add this to
-> SOC_DOUBLE_VALUE as well, this allows replacement of several hard coded
-> value entries. Likewise update SOC_SINGLE_VALUE to match, which allows
-> replacement of even more hard coded values.
+On Mon, Mar 03, 2025, Jim Mattson wrote:
+> On Fri, Feb 28, 2025 at 4:03=E2=80=AFPM Sean Christopherson <seanjc@googl=
+e.com> wrote:
+> >
+> > +Jim, for his input on VPIDs.
+> >
+> > On Wed, Feb 05, 2025, Yosry Ahmed wrote:
+> > > The ASID is currently tracked per-vCPU, because the same ASID is used=
+ by
+> > > L1 and L2. That ASID is flushed on every transition between L1 and L2=
+.
+> > >
+> > > Track the ASID separately for each VMCB (similar to the
+> > > asid_generation), giving L2 a separate ASID. This is in preparation f=
+or
+> > > doing fine-grained TLB flushes on nested transitions instead of
+> > > unconditional full flushes.
+> >
+> > After having some time to think about this, rather than track ASIDs per=
+ VMCB, I
+> > think we should converge on a single approach for nVMX (VPID) and nSVM =
+(ASID).
+> >
+> > Per **VM**, one VPID/ASID for L1, and one VPID/ASID for L2.
+>=20
+> When using EPT on VMX, there is probably no advantage to using one
+> VPID per VM. The physical ASID is determined by <EPTRTA, VPID, PCID>.
+> Two different VMs are not going to share an EPTRTA, so they already
+> have different ASIDs, even if they have the same VPID.
 
-This breaks an arm64 defconfig build:
+For posterity, which the SDM says this:
 
-In file included from /build/stage/linux/sound/soc/codecs/rk3308_codec.c:24:
-/build/stage/linux/include/sound/soc.h:150:49: error: =E2=80=98shift_left=
-=E2=80=99 undeclared here (not in a function)
-  150 |         .private_value =3D SOC_DOUBLE_VALUE(xreg, shift_left, shift=
-_right, \
-      |                                                 ^~~~~~~~~~
-/build/stage/linux/include/sound/soc.h:45:46: note: in definition of macro =
-=E2=80=98SOC_DOUBLE_S_VALUE=E2=80=99
-   45 |         {.reg =3D xreg, .rreg =3D xreg, .shift =3D shift_left, \
-      |                                              ^~~~~~~~~~
-/build/stage/linux/include/sound/soc.h:150:26: note: in expansion of macro =
-=E2=80=98SOC_DOUBLE_VALUE=E2=80=99
-  150 |         .private_value =3D SOC_DOUBLE_VALUE(xreg, shift_left, shift=
-_right, \
-      |                          ^~~~~~~~~~~~~~~~
-/build/stage/linux/sound/soc/codecs/rk3308_codec.c:171:9: note: in expansio=
-n of macro =E2=80=98SOC_DOUBLE_RANGE_TLV=E2=80=99
-  171 |         SOC_DOUBLE_RANGE_TLV("DAC HPMIX Playback Volume",
-      |         ^~~~~~~~~~~~~~~~~~~~
-/build/stage/linux/include/sound/soc.h:150:61: error: =E2=80=98shift_right=
-=E2=80=99 undeclared here (not in a function)
-  150 |         .private_value =3D SOC_DOUBLE_VALUE(xreg, shift_left, shift=
-_right, \
-      |                                                             ^~~~~~~=
-~~~~
-/build/stage/linux/include/sound/soc.h:46:19: note: in definition of macro =
-=E2=80=98SOC_DOUBLE_S_VALUE=E2=80=99
-   46 |         .rshift =3D shift_right, .min =3D xmin, .max =3D xmax, \
-      |                   ^~~~~~~~~~~
-/build/stage/linux/include/sound/soc.h:150:26: note: in expansion of macro =
-=E2=80=98SOC_DOUBLE_VALUE=E2=80=99
-  150 |         .private_value =3D SOC_DOUBLE_VALUE(xreg, shift_left, shift=
-_right, \
-      |                          ^~~~~~~~~~~~~~~~
-/build/stage/linux/sound/soc/codecs/rk3308_codec.c:171:9: note: in expansio=
-n of macro =E2=80=98SOC_DOUBLE_RANGE_TLV=E2=80=99
-  171 |         SOC_DOUBLE_RANGE_TLV("DAC HPMIX Playback Volume",
-      |         ^~~~~~~~~~~~~~~~~~~~
+  Linear mappings may be created. They are derived from the paging structur=
+es
+  referenced (directly or indirectly) by the current value of CR3 and are a=
+ssociated
+  with the current VPID and the current PCID.
 
+it explicitly disallows creating or using linear mappings when EPT is enabl=
+ed:
 
---k9kOVSMwFlCTJ6hn
-Content-Type: application/pgp-signature; name="signature.asc"
+  No linear mappings are created while EPT is in use.
 
------BEGIN PGP SIGNATURE-----
+  no linear mappings are used while EPT is in use.
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmfF+pMACgkQJNaLcl1U
-h9BfjAf/VhGRXAkHhjPMizv7+M6PJyOtCjOUuOlkAOaPf+ha+fy53xFTQ4fh9WET
-8isHEvh7SaagFICqNG1yfmYBw4jVZo+4Z3LDEqoGy6hrw40HGzKQ0MdWN8jQxCSL
-s+M8w3fDlsPFpUimX42v86UaAKqEBxLj8ADKB+EhuH8AFdm0mynT9T0kBeglnvL/
-h7B7t+t3/J0DhECzY2hACiKqy98rOw5nOxekvBcFj8jUx2l+wsdm/lP9Wt/HZvXm
-9GZdFDBSqLKGdux9Q+uFiGqzTb3ISY4RliFGpOV2GGbhqVHW8wuf5zKk30LvTMK6
-hre4yIDbOySUnPo8fnYVSZgYNT2uiA==
-=YDnD
------END PGP SIGNATURE-----
+I think it's still worth assigning a unique VPID though, e.g. it would prov=
+ide
+some amount of defense in depth.  I.e. two different VMs *shouldn't* share =
+an
+EPTRTA :-)
 
---k9kOVSMwFlCTJ6hn--
+> > For SVM, the dynamic ASID crud is a holdover from KVM's support for CPU=
+s that
+> > don't support FLUSHBYASID, i.e. needed to purge the entire TLB in order=
+ to flush
+> > guest mappings.  FLUSHBYASID was added in 2010, and AFAIK has been supp=
+orted by
+> > all AMD CPUs since.
+>=20
+> > KVM already mostly keeps the same ASID, except for when a vCPU is migra=
+ted, in
+> > which case KVM assigns a new ASID.  I suspect that following VMX's lead=
+ and
+> > simply doing a TLB flush in this situation would be an improvement for =
+modern
+> > CPUs, as it would flush the entries that need to be flushed, and not po=
+llute the
+> > TLBs with stale, unused entries.
+> >
+> > Using a static per-VM ASID would also allow using broadcast invalidatio=
+ns[*],
+> > would simplify the SVM code base, and I think/hope would allow us to mo=
+ve much
+> > of the TLB flushing logic, e.g. for task migration, to common code.
+> >
+> > For VPIDs, maybe it's because it's Friday afternoon, but for the life o=
+f me I
+> > can't think of any reason why KVM needs to assign VPIDs per vCPU.  Espe=
+cially
+> > since KVM is ridiculously conservative and flushes _all_ EPT/VPID conte=
+xts when
+> > running a different vCPU on a pCPU (which I suspect we can trim down?).
+> >
+> > Am I forgetting something?
+>=20
+> TDX? IIRC, TDX requires a unique VPID for each vCPU in a VM.
+
+Ha!  Nope, the TDX module actually does what I'm suggesting, and uses a per=
+-VM
+VPID.  So if I'm forgetting some TLB edge case, TDX is already hosed.
+
+FWIW, the hypervisor, i.e. KVM, has no control over the VPID used by the TD=
+X
+module.  Intel incorporated SEAM mode into the ASID tag to prevent TLB coll=
+isions
+between the hypervisor and the TDX module, and that also conveniently provi=
+des
+separation between VPIDs for non-TDX VMs and TDX VMs (and now I'm curious i=
+f TDX
+enabling does the "right" thing and skips VPID allocation).
+
+FWIW, TDX's scheme would match what I'm proposing almost exactly.  TDX "com=
+poses"
+the VPID using the HKID (guaranteed unique per VM) and then a "VM identifie=
+r",
+which at a glance differentiates L1 from L2.
+
+> > [*] https://lore.kernel.org/all/Z8HdBg3wj8M7a4ts@google.com
