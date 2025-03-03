@@ -1,265 +1,229 @@
-Received: from AS8PR03CU001.outbound.protection.outlook.com (mail-westeuropeazon11012038.outbound.protection.outlook.com [52.101.71.38])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f49.google.com (mail-oa1-f49.google.com [209.85.160.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C9E87083C;
-	Mon,  3 Mar 2025 02:54:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.71.38
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740970469; cv=fail; b=HiqyzZ4xnsCk+yLb6pWmb63jxYJUEzhpgSMhrCIRJhQN7hxqoBQrwURCEBPYV/0tchr5TCfkRKzU8huTb7/pnsrOJwdEp4h+wAvcPVb+UiSR1puOvRnz2/kJ0bOEcsCMoipIwrgJKLHQsY5C/vjZscabf9raCAbEDCpONehBoRw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740970469; c=relaxed/simple;
-	bh=syg4LCLn97gLVqoUKEYXaFNrxkosnkgaOQz3yIhjy34=;
-	h=From:Subject:Date:Message-Id:Content-Type:To:Cc:MIME-Version; b=VQPJ7eH0g7lZvW33plDdOD8xTa8y6+fKdb/DDyhbTWW+tOFWzIclg5IxltRshzB0HV1TFsXI7WEHcZl3lN4zG7qLxzdbYotgZCgPBQa5K8g1ZknSh/kXgSNGx/fXVU8HlZ8aJPaIP8nDLNBF76s6bg8V0xRkEfEnBMYE2Q/AwNI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=oYG2dans; arc=fail smtp.client-ip=52.101.71.38
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 960571C5F37;
+	Mon,  3 Mar 2025 02:54:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.49
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740970476; cv=none; b=uK40NeuC1WYX91iosJ5ISE+DC+apRjgDE0peCpWq08sC747Oyy5lY2oFimaGJomUZunEr0FyjtTC4WYOUHQVzTrJfxC43OJ2NSgRRofIgyDzvpiczDa8qYPLeFqmfVeiOVl1W0uuyKRUFzEGm0nvcOAf2wTs8SYO9AkF2AFYeoM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740970476; c=relaxed/simple;
+	bh=PyCetO3EHw/3dFJwl5n7SBBWq4UFc0+uUm5jN0DoxvM=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=cHgySjsYK0CMrgqLHWG98+71Dm2ZTjqHU2/qWo0nBdhnw7w9Aotq/tP83e3XacvbtAU1X97uR7l1uCTK7gyj+nnf2Xlc0oAhqSTv5iHBNr7FMFTK754p+Y1Gqe1wNGMYXW8NyrC/g3lhOfLSYM8BZ0bTAoic3BquoyNcOkZlxzM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UbeUBuOJ; arc=none smtp.client-ip=209.85.160.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="oYG2dans"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=bX2OYuNxF8xJcQVqC7IR29htyjIMzqrJvC4RHgPYGNKvB8dBeaUQp5uc1CalB4rEnfRqTCMWTxmk7fI+gSPhuPIwWyXOnh6V1LcD1F7pu8wiaLgyKtpE1RNVO3Ugf/ktnzTzBG2HIgq5w6oxaXg5QtBZbfEQ407TAzH4iVh2sg/nTQ0HK8rnAHu11SOSuPPIDmyKP0P/VlxCLt63fs0B5Eb9/wBrPfHOZpHY3GaOwJuQFKYtplnruu8DYM9oUvFJYpC6oVy/HtOyktiUWND7K+QSfJkowG+3wbcpxsakT5+cSzUxqINuYU/C6C/iosc462+ZEsK01KLdUVr4+ABrdA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=PSyhIi5RlXWAa6cIScIHZ+ZMrHgmxSf7xK3hGL+OJbs=;
- b=qCNoYFA9uC/izVy9HIBmT5d3l4fGZoM93KC0vKISfk1Af+f1wFlaOwSflnx9cnhPl2Zm0xk5wcwX4lC1aWiCpubf2BnM6TAylJhVnViJf/9Es3cVNAZQ912vkWCLjF3ZC0Ir+EY0YKcPOR9L35sW8npI8az1OieZl2iKA2RYTObojrfIkF1orT1c/XZJePqy6uTRuVP0C6J7TNm8OH6PCgrB/upuYL/aAAiBoqng1Qq8QbtoNzYS3FvfV7a1Jw7Qe2m9pEhdS1W3PsQ2Q3AgxW4tfmvFBzYgx78G0rA+9GFffQaxDVd2SeLATOzqZnk+Mp3e9d02jqQbeQH4e33v/A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector1-NXP1-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PSyhIi5RlXWAa6cIScIHZ+ZMrHgmxSf7xK3hGL+OJbs=;
- b=oYG2dansP2Pw5rSR20drVE/bJeS1stBdGQzFIRXpCj1HsVaWg7zGYkf0jGzsISvI3ampoyclUkBcrloZE0p3PXtctjLOWPCaSA/Wp4HsuPvaH/k7TZxumkJHvX3qYNF9z0HCFGs9pLf7wVMI89Ga7qgF8W9/HqcnfeEabxprdMqrtAhZj1VrOWfyKYQyp3ryN3f3gs4rC50ajRVsUt1rI4kprqgy3HmHfc9jbikPLYGqcBb5Fg/gtVbkcYvJ2+V3B/tzb1zSYIzGW/fJoiUEwj67GpYXsr+3asu1ipek2LJGdTEMeLRJxBmEQxAsG6/qN0yq3szsXjUeXHuA1+ScTw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=oss.nxp.com;
-Received: from PAXPR04MB8459.eurprd04.prod.outlook.com (2603:10a6:102:1da::15)
- by GVXPR04MB10850.eurprd04.prod.outlook.com (2603:10a6:150:216::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.27; Mon, 3 Mar
- 2025 02:54:23 +0000
-Received: from PAXPR04MB8459.eurprd04.prod.outlook.com
- ([fe80::165a:30a2:5835:9630]) by PAXPR04MB8459.eurprd04.prod.outlook.com
- ([fe80::165a:30a2:5835:9630%4]) with mapi id 15.20.8489.025; Mon, 3 Mar 2025
- 02:54:23 +0000
-From: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
-Subject: [PATCH v3 0/7] firmware: scmi/imx: Add i.MX95 LMM/CPU Protocol
-Date: Mon, 03 Mar 2025 10:53:21 +0800
-Message-Id: <20250303-imx-lmm-cpu-v3-0-7695f6f61cfc@nxp.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAKEZxWcC/1XMQQ6CMBCF4auYrh0zHUDQlfcwLmoZZRILpNUGQ
- 7i7hcQQlu8l/zeqwF44qPNuVJ6jBOnaNLL9TtnGtE8GqdNWhFSgJgRxA7ycA9t/INdVbYyhomR
- Sqeg9P2RYtOst7UbCu/PfBY96fv+O3jhRAwKyuZeMZcY5X9qhP9jOqVmJtJakaVtSKjPDjFicj
- pXVazlN0w+J8vMU3gAAAA==
-X-Change-ID: 20250120-imx-lmm-cpu-418daaa257e2
-To: Sudeep Holla <sudeep.holla@arm.com>, 
- Cristian Marussi <cristian.marussi@arm.com>, 
- Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
- Pengutronix Kernel Team <kernel@pengutronix.de>, 
- Fabio Estevam <festevam@gmail.com>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: Dan Carpenter <dan.carpenter@linaro.org>, linux-kernel@vger.kernel.org, 
- arm-scmi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- imx@lists.linux.dev, devicetree@vger.kernel.org, 
- Peng Fan <peng.fan@nxp.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1740970413; l=3817;
- i=peng.fan@nxp.com; s=20230812; h=from:subject:message-id;
- bh=syg4LCLn97gLVqoUKEYXaFNrxkosnkgaOQz3yIhjy34=;
- b=iKSb25vWxq02PbDZ7O95wV7WbEOFYls6CahoQNI1NQmLAYpHW2VxjDCY19NHNl0XiCxGx8yjj
- M/quNET85Y4BoQvEpuZei1rZIL9TiCR7D7Q8EFm7Ld18EN94GKkESLz
-X-Developer-Key: i=peng.fan@nxp.com; a=ed25519;
- pk=I4sJg7atIT1g63H7bb5lDRGR2gJW14RKDD0wFL8TT1g=
-X-ClientProxiedBy: SI2P153CA0014.APCP153.PROD.OUTLOOK.COM (2603:1096:4:140::6)
- To PAXPR04MB8459.eurprd04.prod.outlook.com (2603:10a6:102:1da::15)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UbeUBuOJ"
+Received: by mail-oa1-f49.google.com with SMTP id 586e51a60fabf-2bd2218ba4fso1024468fac.1;
+        Sun, 02 Mar 2025 18:54:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740970473; x=1741575273; darn=vger.kernel.org;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=r7Y8ANM7bjvUQEgoZS4HLxWYZ32I+TT4YbK4g45/Wuc=;
+        b=UbeUBuOJYdBwx3wtjI/SqTE5Eb/TB9wsxaMBKzpmEM9qqVdx4yzbFY4okKiOMhcLUP
+         Hq1Lit9U85HqkimTaZMIi37hT4TeMpuqiHjb9CgkBe9mk5lSKiE696+HBCYA2BmP6vOC
+         ztKdu5LnZLe7FRe6mBElwKtd1Y0wo2GkIwTjKoyUxiPkb5zuaV6U9LvEmFMSUnlEloz3
+         PKEyI4rsK/LII3ta27vBH/jnDgZd5+Tl1+KfZlOgTIUs29uEgDVaZJtS37Ol2bVr5iBz
+         9Q5k4mVhfUDcXuUHXicp29MA1nQpY4zsnBRCEoPQn4mhRlmex6t6v5p+ciZegxsKtFZS
+         dDkg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740970473; x=1741575273;
+        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=r7Y8ANM7bjvUQEgoZS4HLxWYZ32I+TT4YbK4g45/Wuc=;
+        b=XYMl8eh0T80iA0sPKKkCJd79R0v+LMSYUeNbzw5gjKRsybnz9MwMI8Tv2Ll/g9tJaY
+         xHub752ZfyOj+lrPayf4OtdBZ3CbyNpcJF9gC+kvV6yiisCvlhXGI9gcOni5wcxeCOeo
+         YUSESpRNFeM7BEmhAEIC8rdhSLB/SHDEvfCmvur85Qr3F/8nlQKb8Lv2anOnzv0m21Px
+         3XADk4bh2MjAGSCnoWV3kk7BG54EM1f8UgviZRy1Tsk2+9RK1yVE8Iq1EvZKPSX5Cnsf
+         Jee0FwuK30nX4v4PUr2dZcJQcpvQGkTku8BL9FIpqqO1GGO5LgbTW4IZknylbHbIXTNq
+         8gOw==
+X-Forwarded-Encrypted: i=1; AJvYcCUNTlLbqpCD0NotzbADFtNAx1Tfq0koIdTH0vYu+SKRpRI7SA/xM2FZcCK11GhCDmPty+0e5JlCrgIcimw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwaiTF7sbm9KEHGjNb+VuurZ3Yv7QJDSldN3J4sna4Ya+DACeDt
+	u63qn7ZIwgOlVsD1oWzRPT1SVEltMxcwSSy1Ts5LqCR6xW0aMpf0bC7D8ZCWPAMcJhKXW9Y8YPx
+	zByoIFqkfQJ19p/m21atLkkh9HsqnjLjaSPU9a6cm
+X-Gm-Gg: ASbGncsttqRTy891NXrv8JzCtkhUq3YH0hUCgoSlp/maoEZSNkiQTZqd+P//7DyP3Lu
+	9SGu6ebzjo0RnBvxlWuSL+9hrsHKTpyYhIYZmhcdvnE7Nx03E2I9V2rkDeWOfUYs581vdLiBlIo
+	0fBY4wJaVXwAzo3auUS/TLgmz5OQ==
+X-Google-Smtp-Source: AGHT+IHt4QX+U3W09fOKLCq2O594dVXwOzl0bzEuIYfRvIYV5wxIFCWRBumPY5rHwsEvMnqxt38PkkgTgZiLZZTXPW4=
+X-Received: by 2002:a05:6870:5b81:b0:2bc:9116:8856 with SMTP id
+ 586e51a60fabf-2c1787be53cmr7159117fac.36.1740970473239; Sun, 02 Mar 2025
+ 18:54:33 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB8459:EE_|GVXPR04MB10850:EE_
-X-MS-Office365-Filtering-Correlation-Id: a6d61255-7cbe-41af-052f-08dd59feb3d4
-X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|52116014|1800799024|7416014|366016|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?emVDcHJBaXkrUHI0VDQrVmUwckM4V3lIK09rLytXQUd5UFpmQWh2czJNcmVl?=
- =?utf-8?B?QWx2c2tNNUFOVFdndHR5SjVPYXNZTHdxSElTVHEwZnlkSWVybnNxM3NkcXJ2?=
- =?utf-8?B?eWVFSDhwTTQwRUFHeUxISm1hemF6K00zc0tJN1dJVzFjWDAyNUVyMm1LNCtI?=
- =?utf-8?B?bnFDR3loUFRCRE5PSXUrSE1rNzdEUHdubldURHh6SnBPMU5tb3dhcnlCWGIy?=
- =?utf-8?B?cVhTUXBlYis0UEYrSHh3YlZISm92VzFYaGtDak4yQ08wMHlwNGFGOWVweWtw?=
- =?utf-8?B?bkJza0lTalRvM1dUbHhEenFWdFc0U0VKVWJYLzV0dUFsV2swUVE2bUVSa1NU?=
- =?utf-8?B?NFJTWjlaa0hzcXB2WHBvSDJvNXN4bVl5ZVBMQzcwTHd6TUlqSHZxTEQyYlFy?=
- =?utf-8?B?TUMvT21wbnpzOTZWRit6aGJIaXpVS1JpVWxTdlR5aU9UTzdab3IrUW5YeC9X?=
- =?utf-8?B?aGxUTnYvNHNVb0R6Uzk5aWVzT1JnRWh5V095dW5NWTBlR2lwRG9hN3M5MHZx?=
- =?utf-8?B?M1pEa2NtU1FuWGFiaERER2VqQzZMSTdsRFBnRyttTFVMTEQrSmZMdXN1NTZs?=
- =?utf-8?B?TklhVE1rZlUyRDlsbE5qUnBDcTUzNFN5RDJKcWIyUGxTeGMydkRORTJGSWU4?=
- =?utf-8?B?VWJQUmxPNGNycnErQ2xqaUdZd21JSWZFRnQxRjh4OVZDKzFYNG1uOGcwYXJ0?=
- =?utf-8?B?ZVVxUXV6NkVFbDdNY01RUmcyU2QrV1hrdVFJNWh3WGRnNG8vbGZHNU1lMUJQ?=
- =?utf-8?B?SFc0OTFzLzZGOFNxZEhxcXlGaCtZSzErcFZRL2pxTzlaclZKRlkvZlloWUI4?=
- =?utf-8?B?dFcrcHZJeDZNVE9rRzRJNlRDRWlyeGdPQVA0QzdtT2tDV1JBeTd1cEpEaVM3?=
- =?utf-8?B?T1pDdFdmTDQ5aXFrTmZwN0xaaHFSbEc2VjFZYlppa3hSSkdQOWFxQlY2SFI1?=
- =?utf-8?B?TjB3ai8wMFNTYVZhakg0SDY0RDhtMTVwZHUwQm00Zm5kY3dhQ29DK09RME5F?=
- =?utf-8?B?UnZ5ZWN2UkJ0UE1ETkF0UXF5Q20zcnhaY1BDYkxqTUx4cE9SWnVwdzBQNG1I?=
- =?utf-8?B?Y25Td3R4WWtUODRiVjE5K1RpYURxYm9DajZQQWJyY1pFdzdjMUhldDk4Ry9t?=
- =?utf-8?B?ak1WWGNPeW9lU0VLZ2J0UXlucjFpQ0FBYjJNY1dYcElzMkxMU0U5aVVUWmxP?=
- =?utf-8?B?cm5JdVVNL1N2aEhOSHp2Rzc2bUQyQVVCOWJvNXd5ZXNkeWFuM2s0T0Z2TFA1?=
- =?utf-8?B?SmxVSlozMVhDZWIzSkliV2FsbTdOSjJZWUdoRnphaFhFdzVQUHo2OUEyeWVH?=
- =?utf-8?B?bTl5SzdIaWw5bDExTnN1MmhpU2VEY3NEY2hWeEI4Nno0YXdEcGNWYit2UFFv?=
- =?utf-8?B?My8vcVQ0L24rS215ZE5nWkMxKzFmZWZ6QzNCZ3RYNmx6R1ZWMTFhRkZzMVd4?=
- =?utf-8?B?aVpBWTVPNk9wcjJPdytUYUNFeC9YODNuWFc1eEdWTUoyOFBpd2owYytZbmIv?=
- =?utf-8?B?dzN3MHdtNEl1SGlLSHBFYWFqeEVWSTBrWDEzcVQyWTNBb1pXRDdNK3p1MWZ5?=
- =?utf-8?B?Z09yY0JvYmdHL0ZZQlRFNWU3R0tjWkJIaDJrUW9Scmp6bEN2djZXcTFuTmI3?=
- =?utf-8?B?YzZiOXpSemxtSmt2VTBYdEc1Q3QwSEFKWEVTclp5dHVzM2ZwVE0wWmlHTWdE?=
- =?utf-8?B?NUNuUitFUy93K21jaHIvZFVlYjk4U3cxbDZHZ1J5bDE4ZWF6R3UveUJ5Nmtu?=
- =?utf-8?B?WkQ1dXhGb1MvT0pkcFlqUnVzQUgyT0FrVitvODhKRVJMNW1ZRENveCtGZVFS?=
- =?utf-8?B?cVNHZW1LenMrSEFuM2pNWmhzQWdKaC9keGE2bUdmblhReHhPQlliQVpDdTRF?=
- =?utf-8?B?NkhUd05xRDE5bER4V3FuNmI4ZE5zRjkzUWQ3blhmMW5XZ0JzTHdsckpReG9u?=
- =?utf-8?Q?letJQ6mclMrYMYTWRfLlAKI1JyF0qjaJ?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB8459.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(52116014)(1800799024)(7416014)(366016)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?WmsxOEgwQ3AreDJNSXBFWW5KMHNvc1pmTjZ1UThVWExaSEIyOTdDMkZBdDNJ?=
- =?utf-8?B?cGF5RkNCZldwQXowTkdJZ0xRZjlxWmNFTkNBb0crUUdva3craDNBOU1nM3Nq?=
- =?utf-8?B?RjVvbHE0bnRJNm9sQWkrSUtNMm5RYUluYnM2K0p2VkZrRFRHU2V1Z0NNdUYx?=
- =?utf-8?B?NVdSTkhvNW4yeDZ0TXlaT3VuZ2lJZlhSMFRRZjlzYUx3c21GU3plVG8xSHdH?=
- =?utf-8?B?cU9UM0lDeVQzaC9uV3h4SnVkVWMwL3RwYk40YjBRRGlKTXUrTFVHcW1JeFpi?=
- =?utf-8?B?Z3VTYnNBbGZoSTlyL1F1STNrM1ZQOWdoNm1vNTJCNkE2Z1greWFUemtUMlZT?=
- =?utf-8?B?NXUyKy9JSGNIbXd5YjExRlBRdHMxR00xZzc5NGxzWnJMazNFTWFRc2dwRUxa?=
- =?utf-8?B?TURad2dHU3J0SEU5bFF0SVpxVXd0eEYwUGNyNWZQcnZuM0pWWTQrY2QraG1S?=
- =?utf-8?B?UHAzSkpPeVhFOVNSZlppc2hIQmw5Mlp1NnJxc215SHZ1eFVqTnlsWGJYSmpH?=
- =?utf-8?B?OWdDWHZvRlRqbHNXMDdNODNCUzg2N0FVcG8vTHlBNWdLeExPNUc3aEhrVzdN?=
- =?utf-8?B?d0JMWWJMVmxJN3gxSXoydGU5bEhMUnBUUy9OWnNaMDJpbzJTVUJDMHpia3Vk?=
- =?utf-8?B?NDd4VkdXT0hsMmFUN0dJbTRIUDhKSFpCLzJ4M3pCT3RlaG9MT1JISHFWSkdO?=
- =?utf-8?B?TktxTWZJSTMzZ3djTkM0VHRVN1YrWlFTcm9RYnQyWllESEZ1Zjh6K2NOK0M2?=
- =?utf-8?B?QTlHTzgwbXNHYitBMzI2UHpIZ04yb01wWnU4aXFXOUJyUS91WE10NzRwL1VJ?=
- =?utf-8?B?Mi9ZaFRKYTUzTy9EcHU0c0lXa3R1ZWJSOWFtK2ZoZnRXbFBldFI2QU1BYVcy?=
- =?utf-8?B?VDdDTEh0Y3h0c05ieUQrNU4zbG0veU13SlVzcmVLTHU3QmpoNG83dWMvV0xa?=
- =?utf-8?B?L0ZzZnJtbnJRT21nSVM2YVNic0Jac3dnWXJodTZMNnF5bFUwU3kvdVVNNnJu?=
- =?utf-8?B?c3dFcUZUdTFEMldpTTU5alZpekVXOGdIajM3WVdkTkRwOVZKd1ZmUVV5ZVBN?=
- =?utf-8?B?cUJxTzl3bWJrVnVadnZtOWVDQkQwSmV1NXp3T09WeHNFVm5MNHBnRjhmeU5E?=
- =?utf-8?B?bjhJM0ZMbjN1RUx0NU1MMWZCdjlkTVExc2phQzJKUmFudDdobExtamZOd0JD?=
- =?utf-8?B?TjcxUkRoZ250Q2ZFazNZbFdBQWhhYlNjV0JMUDRvRnlXMjNSbGovSktGQTRG?=
- =?utf-8?B?OWVEaGc4WlBVajNPb0Z4Qm5MMUMzVDhlOHE3QzRKVEdZbHB3M2N2MStJblBF?=
- =?utf-8?B?ZVo1aVA5YWZBRUhGU0ZQc0Z4RStqME05RUZsTjlkSGVKVmRzQ1Y3aDJjaTUx?=
- =?utf-8?B?Y1hOdGE3eXg4Q0Jua0ZlQ2NDdEJrdldhcFd3YkVMUGFOUHM0Qk0rTGxnbGd4?=
- =?utf-8?B?MFRNd29LQ2UxUlpMRVlUR0RFMW1Ma2pLdjhtU0VWTUgwZDhlSkxFemphZVA4?=
- =?utf-8?B?MmdxbDZwZkt3Z2lxSzRHSlpZUE9PT0ZzRzZ2S1U2bzhBbGQxWC9wNW5TTStB?=
- =?utf-8?B?bEI5QjJ5VWh3dFJCVUF3WTBsY00zR0M5MlprZ2tJaGN0c1pIR0V6YTM4cFlT?=
- =?utf-8?B?c3JKTGlMZ3FlNzU4Q3d1VXJ5N0FtNE9CR1R5akYxbWpCc1p6Ly82d1BhaFBQ?=
- =?utf-8?B?OHlxWWNVaUVoSHVFVk8xaXlGMVhPNEVCSzhqRmF2Z051OXgyeW51QWxkZ2Ns?=
- =?utf-8?B?Vnd0ZkU1a0NPR01VUE9mWHNqQ2l3eThPeUorRkN0RlRFK250eTUxSEk1RDJs?=
- =?utf-8?B?T01Lb1AwMnNjOUNLcitNSGdNdytLOEx2M0c1MDN4dXJFb1JMSU1UR1BnWFVM?=
- =?utf-8?B?RmNXNVhoUzhzYzMyVkhUamJNaW1VME5rREZVTGU5OXl5c0ZhVlUxekZmQXZ0?=
- =?utf-8?B?R3M4a2F2Q3A4Tm9nMllzT0ZVVUpFVVRxT3lHNnMrMkU0V0I0MUJqR2JDQzhk?=
- =?utf-8?B?Rkw5RnVxcW81ZUJnZERadHZqRDNwWUkzZ3FRaStUZ3NzalI5djNFT2NJVnFt?=
- =?utf-8?B?VFp1QTZXYmhzRE1TaFUzWnFRZnIyT0pHSFRndnZyTE5mMEJ5akRSODFFNGRH?=
- =?utf-8?Q?AYQtMDhzOdakEffvZsLzwlHc/?=
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a6d61255-7cbe-41af-052f-08dd59feb3d4
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB8459.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Mar 2025 02:54:23.2176
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: tXOlpwYIEZZRs6Zam2bh6BLPlhfHf0R1Zqk2WgUd9/VaKR2zMav4nDoC2NxMfxWmOCuLvL1+tJuuzPb0nQcfVg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: GVXPR04MB10850
+From: Strforexc yn <strforexc@gmail.com>
+Date: Mon, 3 Mar 2025 10:54:22 +0800
+X-Gm-Features: AQ5f1Jo5Cbm62tUkcpRh91P4lTA7nPMBDcawpHX8QiMCv6S6ymvc0BI6xtjo_-8
+Message-ID: <CA+HokZp0ZrvS_Xcue0wx48jmgmfXodEk6Qy2SeN3Bz6XPvQW=Q@mail.gmail.com>
+Subject: KASAN: slab-out-of-bounds Write in hfs_bnode_read
+To: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-i.MX95 System Manager(SM) implements Logical Machine Management(LMM) and
-CPU protocol to manage Logical Machine(LM) and CPUs(eg, M7).
+Kernel commit: v6.14-rc4 (Commits on Feb 24, 2025)
+Kernel Config : https://github.com/Strforexc/LinuxKernelbug/blob/main/.config
+Kernel Log:  https://github.com/Strforexc/LinuxKernelbug/blob/main/KASAN_slab-out-of-bounds_Write_in_hfs_bnode_read/log0
+Reproduce:  https://github.com/Strforexc/LinuxKernelbug/blob/main/KASAN_slab-out-of-bounds_Write_in_hfs_bnode_read/repro.cprog
 
-To manage M7 in a separate LM or in same LM as Linux itself. LMM APIs
-and CPU APIs are needed.
+This bug seems to have been reported and fixed in the old kernel,
+which seems to be a regression issue? If you fix this issue, please
+add the following tag to the commit:
+Reported-by: Zhizhuo Tang strforexctzzchange@foxmail.com, Jianzhou
+Zhao xnxc22xnxc22@qq.com, Haoran Liu <cherest_san@163.com>
 
-When M7 is in LM 'lm-m7', and this LM is managable by 'linux-lm',
-linux could use LMM_BOOT, LMM_SHUTDOWN and etc to manage 'lm-m7'.
+==================================================================
+BUG: KASAN: slab-out-of-bounds in memcpy_from_page
+include/linux/highmem.h:423 [inline]
+BUG: KASAN: slab-out-of-bounds in hfs_bnode_read+0xc5/0x230 fs/hfs/bnode.c:35
+Write of size 256 at addr ffff8880512bab80 by task syz.3.4/11486
 
-If in same LM, use CPU_START, CPU_STOP, CPU_RESET_VECTOR_SET and etc to
-manage M7.
+CPU: 1 UID: 0 PID: 11486 Comm: syz.3.4 Not tainted 6.14.0-rc4 #1
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.15.0-1 04/01/2014
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:94 [inline]
+ dump_stack_lvl+0x116/0x1b0 lib/dump_stack.c:120
+ print_address_description.constprop.0+0x2c/0x420 mm/kasan/report.c:408
+ print_report+0xaa/0x270 mm/kasan/report.c:521
+ kasan_report+0xbd/0x100 mm/kasan/report.c:634
+ check_region_inline mm/kasan/generic.c:183 [inline]
+ kasan_check_range+0x108/0x1e0 mm/kasan/generic.c:189
+ __asan_memcpy+0x3d/0x70 mm/kasan/shadow.c:106
+ memcpy_from_page include/linux/highmem.h:423 [inline]
+ hfs_bnode_read+0xc5/0x230 fs/hfs/bnode.c:35
+ hfs_bnode_read_key+0x149/0x1f0 fs/hfs/bnode.c:70
+ hfs_brec_insert+0x822/0xbd0 fs/hfs/brec.c:141
+ hfs_cat_create+0x6a5/0x840 fs/hfs/catalog.c:131
+ hfs_create+0x6b/0x100 fs/hfs/dir.c:202
+ lookup_open.isra.0+0x1145/0x1540 fs/namei.c:3651
+ open_last_lookups+0x82c/0x13b0 fs/namei.c:3750
+ path_openat+0x182/0x6b0 fs/namei.c:3986
+ do_filp_open+0x1f8/0x460 fs/namei.c:4016
+ do_sys_openat2+0x16a/0x1d0 fs/open.c:1428
+ do_sys_open fs/open.c:1443 [inline]
+ __do_sys_openat fs/open.c:1459 [inline]
+ __se_sys_openat fs/open.c:1454 [inline]
+ __x64_sys_openat+0x140/0x200 fs/open.c:1454
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xcb/0x260 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f651abb85ad
+Code: 02 b8 ff ff ff ff c3 66 0f 1f 44 00 00 f3 0f 1e fa 48 89 f8 48
+89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d
+01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f651b9acf98 EFLAGS: 00000246 ORIG_RAX: 0000000000000101
+RAX: ffffffffffffffda RBX: 00007f651ae45fa0 RCX: 00007f651abb85ad
+RDX: 0000000000141842 RSI: 0000400000000380 RDI: ffffffffffffff9c
+RBP: 00007f651ac6a8d6 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 0000000000000000 R14: 00007f651ae45fa0 R15: 00007f651b98d000
+ </TASK>
 
-Both LMM/CPU APIs will be used by remoteproc driver. The remoteproc
-patchset will be posted out after this patchset gets reviewed or in
-good shape per Maitainer's view.
+Allocated by task 11486:
+ kasan_save_stack+0x24/0x50 mm/kasan/common.c:47
+ kasan_save_track+0x14/0x40 mm/kasan/common.c:68
+ poison_kmalloc_redzone mm/kasan/common.c:377 [inline]
+ __kasan_kmalloc+0xba/0xc0 mm/kasan/common.c:394
+ kasan_kmalloc include/linux/kasan.h:260 [inline]
+ __do_kmalloc_node mm/slub.c:4294 [inline]
+ __kmalloc_noprof+0x212/0x580 mm/slub.c:4306
+ kmalloc_noprof include/linux/slab.h:905 [inline]
+ hfs_find_init+0x95/0x260 fs/hfs/bfind.c:21
+ hfs_cat_create+0x155/0x840 fs/hfs/catalog.c:96
+ hfs_create+0x6b/0x100 fs/hfs/dir.c:202
+ lookup_open.isra.0+0x1145/0x1540 fs/namei.c:3651
+ open_last_lookups+0x82c/0x13b0 fs/namei.c:3750
+ path_openat+0x182/0x6b0 fs/namei.c:3986
+ do_filp_open+0x1f8/0x460 fs/namei.c:4016
+ do_sys_openat2+0x16a/0x1d0 fs/open.c:1428
+ do_sys_open fs/open.c:1443 [inline]
+ __do_sys_openat fs/open.c:1459 [inline]
+ __se_sys_openat fs/open.c:1454 [inline]
+ __x64_sys_openat+0x140/0x200 fs/open.c:1454
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xcb/0x260 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
 
-Build pass with COMPILE_TEST
-Tested with remoteproc on i.MX95
+The buggy address belongs to the object at ffff8880512bab80
+ which belongs to the cache kmalloc-96 of size 96
+The buggy address is located 0 bytes inside of
+ allocated 78-byte region [ffff8880512bab80, ffff8880512babce)
 
-Signed-off-by: Peng Fan <peng.fan@nxp.com>
----
-Changes in v3:
-Patch 1: Correct LMM_ATTRIBUTE return values
-        Update the return status of LM_BOOT/RESET/SHUTDOWN/WAKE
-        clarify sync/async in the Introduction chapter of LMM
-        Update the Origin entry in LMM_RESET_REASON
-        Clarify CPU run/sleep mode
-        Add note for CPU protocol to indicate AP using PSCI, non-AP use OS.
-        Specify mandatory for each command in LMM/CPU per firmware owner.
-        For BBM/MISC which have optional command, I will update doc in separate patch later
-Patch 2: Add description in binding doc
-Patch 3: Unify scmi_imx_lmm_[boot,power_on], Use le32_get_bits
-Patch 4: Unify scmi_imx_cpu_[start,stop], Use le32_encode_bits
-	 Add pointer check in scmi_imx_cpu_started
-	 correct nr_cpus calculation
-Patch 5: Unify lmm shutdown,boot/power_on, update kconfig to avoid build bot issue
-         Add R-b
-Patch 6: Unity cpu start/stop, update Kconfig to avoid build bot issue.
-         Add R-b
+The buggy address belongs to the physical page:
+page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x512ba
+ksm flags: 0x4fff00000000000(node=1|zone=1|lastcpupid=0x7ff)
+page_type: f5(slab)
+raw: 04fff00000000000 ffff88801b441280 ffffea000136d8c0 dead000000000003
+raw: 0000000000000000 0000000080200020 00000000f5000000 0000000000000000
+page dumped because: kasan: bad access detected
+page_owner tracks the page as allocated
+page last allocated via order 0, migratetype Unmovable, gfp_mask
+0x52820(GFP_ATOMIC|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP), pid 9758,
+tgid 9758 (kworker/u8:3), ts 68385688828, free_ts 68344511646
+ set_page_owner include/linux/page_owner.h:32 [inline]
+ post_alloc_hook+0x1a3/0x1d0 mm/page_alloc.c:1551
+ prep_new_page mm/page_alloc.c:1559 [inline]
+ get_page_from_freelist+0x8a5/0xfa0 mm/page_alloc.c:3477
+ __alloc_frozen_pages_noprof+0x1d8/0x3b0 mm/page_alloc.c:4739
+ alloc_pages_mpol+0x1f2/0x550 mm/mempolicy.c:2270
+ alloc_slab_page mm/slub.c:2423 [inline]
+ allocate_slab+0x229/0x310 mm/slub.c:2587
+ ___slab_alloc+0x7f3/0x12b0 mm/slub.c:3826
+ __slab_alloc.constprop.0+0x56/0xc0 mm/slub.c:3916
+ __slab_alloc_node mm/slub.c:3991 [inline]
+ slab_alloc_node mm/slub.c:4152 [inline]
+ __kmalloc_cache_noprof+0x280/0x450 mm/slub.c:4320
+ kmalloc_noprof include/linux/slab.h:901 [inline]
+ kzalloc_noprof include/linux/slab.h:1037 [inline]
+ nsim_fib_event_schedule_work+0xb3/0x8d0 drivers/net/netdevsim/fib.c:990
+ nsim_fib_event_nb+0x14e/0x190 drivers/net/netdevsim/fib.c:1043
+ notifier_call_chain+0xd7/0x250 kernel/notifier.c:85
+ atomic_notifier_call_chain+0x71/0x1d0 kernel/notifier.c:223
+ call_fib_notifiers+0x34/0x70 net/core/fib_notifier.c:35
+ call_fib6_entry_notifiers net/ipv6/ip6_fib.c:397 [inline]
+ fib6_add_rt2node+0x19fa/0x3160 net/ipv6/ip6_fib.c:1231
+ fib6_add+0x4b2/0x1720 net/ipv6/ip6_fib.c:1488
+ __ip6_ins_rt net/ipv6/route.c:1317 [inline]
+ ip6_ins_rt+0xb6/0x120 net/ipv6/route.c:1327
+page last free pid 9550 tgid 9550 stack trace:
+ reset_page_owner include/linux/page_owner.h:25 [inline]
+ free_pages_prepare mm/page_alloc.c:1127 [inline]
+ free_frozen_pages+0x71f/0xff0 mm/page_alloc.c:2660
+ __put_partials+0x13b/0x190 mm/slub.c:3153
+ qlink_free mm/kasan/quarantine.c:163 [inline]
+ qlist_free_all+0x50/0x130 mm/kasan/quarantine.c:179
+ kasan_quarantine_reduce+0x1a5/0x1f0 mm/kasan/quarantine.c:286
+ __kasan_slab_alloc+0x6f/0xa0 mm/kasan/common.c:329
+ kasan_slab_alloc include/linux/kasan.h:250 [inline]
+ slab_post_alloc_hook mm/slub.c:4115 [inline]
+ slab_alloc_node mm/slub.c:4164 [inline]
+ __do_kmalloc_node mm/slub.c:4293 [inline]
+ __kmalloc_noprof+0x1c3/0x580 mm/slub.c:4306
+ kmalloc_noprof include/linux/slab.h:905 [inline]
+ kzalloc_noprof include/linux/slab.h:1037 [inline]
+ fib6_info_alloc+0x40/0x170 net/ipv6/ip6_fib.c:155
+ ip6_route_info_create+0x341/0x1930 net/ipv6/route.c:3766
+ ip6_route_add+0x28/0x180 net/ipv6/route.c:3858
+ addrconf_add_mroute+0x1de/0x360 net/ipv6/addrconf.c:2549
+ addrconf_add_dev+0x154/0x1d0 net/ipv6/addrconf.c:2567
+ inet6_addr_add+0x100/0x980 net/ipv6/addrconf.c:3029
+ inet6_rtm_newaddr+0x93c/0xaa0 net/ipv6/addrconf.c:5054
+ rtnetlink_rcv_msg+0x9f4/0xfc0 net/core/rtnetlink.c:6912
+ netlink_rcv_skb+0x168/0x450 net/netlink/af_netlink.c:2543
+ netlink_unicast_kernel net/netlink/af_netlink.c:1322 [inline]
+ netlink_unicast+0x552/0x800 net/netlink/af_netlink.c:1348
 
-Ran smatch as below, no issue found.
-~/smatch/smatch_scripts/kchecker drivers/firmware/arm_scmi/vendors/imx/
-~/smatch/smatch_scripts/kchecker drivers/firmware/imx/
-
-- Link to v2: https://lore.kernel.org/r/20250212-imx-lmm-cpu-v2-0-3aee005968c1@nxp.com
-
-Changes in v2:
-- Add dt-bindings patch 2
-- Add a maintainer entry with patch 7
-- Update doc to address various questions and make it clear
-- Use strscpy to use scmi server returned string
-- Drop extra blank line
-- Shrink scmi_imx_cpu_attributes_get function args.
-- Typo fixes
-- Add LMM_RESET_VECTOR_SET
-- Link to v1: https://lore.kernel.org/r/20250121-imx-lmm-cpu-v1-0-0eab7e073e4e@nxp.com
-
----
-Peng Fan (7):
-      firmware: arm_scmi: imx: Add LMM and CPU documentation
-      dt-bindings: firmware: Add i.MX95 SCMI LMM and CPU protocol
-      firmware: arm_scmi: imx: Add i.MX95 LMM protocol
-      firmware: arm_scmi: imx: Add i.MX95 CPU Protocol
-      firmware: imx: Add i.MX95 SCMI LMM driver
-      firmware: imx: Add i.MX95 SCMI CPU driver
-      MAINTAINERS: add entry for i.MX SCMI extensions
-
- .../bindings/firmware/nxp,imx95-scmi.yaml          |  23 +
- MAINTAINERS                                        |   9 +
- drivers/firmware/arm_scmi/vendors/imx/Kconfig      |  24 +
- drivers/firmware/arm_scmi/vendors/imx/Makefile     |   2 +
- drivers/firmware/arm_scmi/vendors/imx/imx-sm-cpu.c | 276 +++++++
- drivers/firmware/arm_scmi/vendors/imx/imx-sm-lmm.c | 257 +++++++
- drivers/firmware/arm_scmi/vendors/imx/imx95.rst    | 801 +++++++++++++++++++++
- drivers/firmware/imx/Kconfig                       |  22 +
- drivers/firmware/imx/Makefile                      |   2 +
- drivers/firmware/imx/sm-cpu.c                      |  85 +++
- drivers/firmware/imx/sm-lmm.c                      |  91 +++
- include/linux/firmware/imx/sm.h                    |  19 +
- include/linux/scmi_imx_protocol.h                  |  42 ++
- 13 files changed, 1653 insertions(+)
----
-base-commit: fb2b3e3bd74b8a3f742eaade06f6565323cf4bdf
-change-id: 20250120-imx-lmm-cpu-418daaa257e2
-
-Best regards,
--- 
-Peng Fan <peng.fan@nxp.com>
-
+Memory state around the buggy address:
+ ffff8880512baa80: 00 00 00 00 00 00 00 00 00 fc fc fc fc fc fc fc
+ ffff8880512bab00: 00 00 00 00 00 00 00 00 00 fc fc fc fc fc fc fc
+>ffff8880512bab80: 00 00 00 00 00 00 00 00 00 06 fc fc fc fc fc fc
+                                              ^
+ ffff8880512bac00: fa fb fb fb fb fb fb fb fb fb fb fb fc fc fc fc
+ ffff8880512bac80: fa fb fb fb fb fb fb fb fb fb fb fb fc fc fc fc
+==================================================================
+Thanks,
+Zhizhuo Tang
