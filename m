@@ -1,189 +1,125 @@
-Received: from fw2.prolan.hu (fw2.prolan.hu [193.68.50.107])
+Received: from beeline1.cc.itu.edu.tr (beeline1.cc.itu.edu.tr [160.75.25.115])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AAAB283C92;
-	Tue,  4 Mar 2025 15:52:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.68.50.107
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741103551; cv=none; b=aPUVVAxmD4Uvm/qYoBEWZC688l41ANCjEfNMFD6z2FhRcCV5wceejAWbyezc6SyBH/CfRiGND8z0TiL5drLMs5ScdX0xegTs+zItmxazgdnT3e1OUn6mP3QL5JYPlQ8IpGMkYYi6hJ19djr5ibsLvyiXmneAQRs2CCZ56g9Lh6k=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741103551; c=relaxed/simple;
-	bh=iRWDcUtRmxfRKcGy3wuAz3smpd9AKV7GoZAwArM4x/Y=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=o+oyzo2K4du5wXgEysqqdJ4+mNumfmc5d3ZMXQV53BoT+OlVVAyjgOgQDgOTIi3BE1V1EGIE9RCtXKO6fv+lLsSbFcAZ1YORcS9G/ACnL2eKQefFHknnBYkexhHL+8KW6TaGysyLzyP0oEGv8fHUKWZb4+dswxZCXmLKR7gZ6IE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu; spf=pass smtp.mailfrom=prolan.hu; dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b=TfQlwImW; arc=none smtp.client-ip=193.68.50.107
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=prolan.hu
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17246285405
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 15:52:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=160.75.25.115
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741103556; cv=fail; b=UZ6o31uwYymwgGSS0Z6VXkSdEkLLJEJCKHmhzhESkUz3gnvBenRO/a6viDLkYkwKcfY14XvYOhM6ZoqG1HuZvfoJP6S9XTo4z9zpXiWayU+QqqghlykojydHVFtQxCyLKZNjig7YxjHoVHRNnL6AFQkdaknx8BYOfvD4XGRGTWE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741103556; c=relaxed/simple;
+	bh=R+rL1rMSl+Mj5hgNZeOvm1ty1+wrolZBgvMtTJv71Ok=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=WkqVJEPCb5m2F/o6eLc1wd0WAZBzmf5U4JfHamQ7irdXi57hfftIoKms6RdJZKqD4Y9QRYO48FVbzfDpAs+7PkNk6+f8G/sm4rP0esmm+oPKIHntYGJ0KIL9eHmVjkni1xMtELCDwnF5FnZcq31zqQUwoGZ2NE2itJ0jmIZqnZU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=163.com; spf=none smtp.mailfrom=cc.itu.edu.tr; dkim=fail (1024-bit key) header.d=163.com header.i=@163.com header.b=BiUE35rv reason="signature verification failed"; arc=none smtp.client-ip=117.135.210.5; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; arc=fail smtp.client-ip=160.75.25.115
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=cc.itu.edu.tr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b="TfQlwImW"
-Received: from proxmox-mailgw.intranet.prolan.hu (localhost.localdomain [127.0.0.1])
-	by proxmox-mailgw.intranet.prolan.hu (Proxmox) with ESMTP id 0B499A06C2;
-	Tue,  4 Mar 2025 16:52:27 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prolan.hu; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:from:from:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=mail; bh=WmIWZfNW61AlqLDV5lti
-	3V+Y+HfZggvgwmSk+uB30ww=; b=TfQlwImWIiuaBo5goUiawgvODWdiEZys0s/J
-	UP7u+kDMExYT1dg29p5kwD9L7QYXSI/DYZnoUTj9zwDgQpvX9DQnowO2poArfGWn
-	YG+ivLwHug0ceL13BWlOT58HgxueSstrCd7/qcup8ibCsi2jDh43EY83udMSOhA0
-	lXffaBb4OGxFFxiKgdL3r1t/NNPjAYP8SVU43B6sO1inVHbqM2FyBXu1gURb2Xql
-	ZzbZrLWwlT5MzRTTvP53EsEiOvtXGhhFaFDX1IE/Hpx48yeVUkQp9XAR1dAxx//X
-	DZ+n0G4Y8+vobgyjhdkaBtT5B9DcSUn2HprQ0oGhJooCqnXLyh7gr50jr344Ww2P
-	9DnMaydN6w5ajIVeRHzjkBrzP925/mL9wV7UyKjtnoiDOcqYEYBV11WUHPwFo+A8
-	oYHCUSa+24U6qat3eWF4mSy6I5c5SMPdX8sGSHmGnsxoemv6zajz0fjJRPIvADNT
-	tJ3/DV15ufes0h63eh23rirBMy2rNtUkyMY8ULX8wlden+COSXzdWsSmIO/zrssU
-	nu6Sts9MhWS4SzxOUupp6grwrgE5QLl9lqAMxN1iGNj47bZIl/1YAWB8o3AsdnR0
-	h6ztpfXpn7ospQR0DBcGhqjBftji8dRV/orAEJ/4Z7s0YBWKnqwamuEzBb9aX4q6
-	T0bPt6s=
-From: =?UTF-8?q?Bence=20Cs=C3=B3k=C3=A1s?= <csokas.bence@prolan.hu>
-To: <linux-arm-kernel@lists.infradead.org>, <linux-iio@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-CC: =?UTF-8?q?Bence=20Cs=C3=B3k=C3=A1s?= <csokas.bence@prolan.hu>, "Kamel
- Bouhara" <kamel.bouhara@bootlin.com>, William Breathitt Gray <wbg@kernel.org>
-Subject: [PATCH v7 2/2] counter: microchip-tcb-capture: Add capture extensions for registers RA/RB
-Date: Tue, 4 Mar 2025 16:51:52 +0100
-Message-ID: <20250304155156.374150-3-csokas.bence@prolan.hu>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250304155156.374150-1-csokas.bence@prolan.hu>
-References: <20250304155156.374150-1-csokas.bence@prolan.hu>
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="BiUE35rv"
+Received: from lesvatest1.cc.itu.edu.tr (unknown [10.146.128.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits))
+	(No client certificate requested)
+	by beeline1.cc.itu.edu.tr (Postfix) with ESMTPS id 88D6540CF67F
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 18:52:33 +0300 (+03)
+X-Envelope-From: <root@cc.itu.edu.tr>
+Received: from lesva1.cc.itu.edu.tr (unknown [160.75.70.79])
+	by lesvatest1.cc.itu.edu.tr (Postfix) with ESMTP id 4Z6gCM6swTzG1Qv
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 18:51:27 +0300 (+03)
+Received: by le1 (Postfix, from userid 0)
+	id 4D28542722; Tue,  4 Mar 2025 18:51:21 +0300 (+03)
+Authentication-Results: lesva1.cc.itu.edu.tr;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b=BiUE35rv
+X-Envelope-From: <linux-kernel+bounces-541676-bozkiru=itu.edu.tr@vger.kernel.org>
+Authentication-Results: lesva2.cc.itu.edu.tr;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b=BiUE35rv
+Received: from fgw1.itu.edu.tr (fgw1.itu.edu.tr [160.75.25.103])
+	by le2 (Postfix) with ESMTP id 998C6423C8
+	for <bozkiru@itu.edu.tr>; Mon,  3 Mar 2025 15:11:18 +0300 (+03)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by fgw1.itu.edu.tr (Postfix) with SMTP id 4E2F0305F789
+	for <bozkiru@itu.edu.tr>; Mon,  3 Mar 2025 15:11:18 +0300 (+03)
+Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7853116CF97
+	for <bozkiru@itu.edu.tr>; Mon,  3 Mar 2025 12:11:17 +0000 (UTC)
+Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4D0DB20E704;
+	Mon,  3 Mar 2025 12:11:06 +0000 (UTC)
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.5])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D6C041F542A;
+	Mon,  3 Mar 2025 12:10:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.5
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741003863; cv=none; b=jJNJECSQlKAsksUGVSpbKByD61CC+0fV0Y3K3YACwoVuPJkDu9sqlYlIAdmfdQ9e9eai37yp1DUvk43VQZZn6/DB+DZ7UBbhOYjYBJrSD4U6UEhgN75mKzvJRyhEIFCTZa2AsH7NL1eUU05RCQu/pDSg0Crd8f5SrTyGrFe9am0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741003863; c=relaxed/simple;
+	bh=b7aImQFO+vv4AEKqKZKWMgzQwLwslHy4AIvR8oe7et8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=oGROunNhUDgVHUXnHm1GpMJvMlweXNxzweyTB/iMTjlY0A5IT7FV5yhZooSXZ1oXqN65iFt5bRsnA9lDlUu+lJKuBclt2PQxBsazahNzIOsYvRCrumMEmhopXV9Cy5t9dvdCCQjYhsbiSkoKKJdlWBnmowEg+8/fGoOrVyQ2d0Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=BiUE35rv; arc=none smtp.client-ip=117.135.210.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=xGRwi
+	//d5mFSgNiOHp/4i7d4yZJCrVYLvCULn3+cKsg=; b=BiUE35rvVON2Dk1gnLPCS
+	Kfr3GJYbaGs4bh4Hk2QuuSdzwq7QOt8kwhzX1x9G1TfK5utYuyo5DRcoeGb+iJrA
+	Ox/4SjEK6woFve2fGRhNkzUS62ypj1aqoWaYWe+044LS4Kc6Q1mQZI+t8NYj2VoJ
+	Gwdh+kt+aUVORXHDAOlSrc=
+Received: from localhost.localdomain (unknown [])
+	by gzga-smtp-mtada-g0-3 (Coremail) with SMTP id _____wAH3eEinMVni5QpPQ--.16783S2;
+	Mon, 03 Mar 2025 20:10:12 +0800 (CST)
+From: Hans Zhang <18255117159@163.com>
+To: tglx@linutronix.de
+Cc: manivannan.sadhasivam@linaro.org,
+	kw@linux.com,
+	kwilczynski@kernel.org,
+	bhelgaas@google.com,
+	Frank.Li@nxp.com,
+	cassel@kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Hans Zhang <18255117159@163.com>
+Subject: [v4] genirq/msi: Add the address and data that show MSI/MSIX
+Date: Mon,  3 Mar 2025 20:10:08 +0800
+Message-ID: <20250303121008.309265-1-18255117159@163.com>
+X-Mailer: git-send-email 2.25.1
+Precedence: bulk
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ESET-AS: R=OK;S=0;OP=CALC;TIME=1741103546;VERSION=7985;MC=2493638075;ID=1544448;TRN=0;CRV=0;IPC=;SP=0;SIPS=0;PI=3;F=0
-X-ESET-Antispam: OK
-X-EsetResult: clean, is OK
-X-EsetId: 37303A2980D94852637264
+X-CM-TRANSID:_____wAH3eEinMVni5QpPQ--.16783S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxJF45Ww1fKrWDtryDZF43ZFb_yoW5KrWkpF
+	Z0kF47Wr43Jr1UWa1xC3W7u345Ka95tF4Uu3s3uw1fArWDKryvyF1vgFW29FyayFyUKw1U
+	A3ZFgF1DuFyDAaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0zE1CJDUUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/xtbBDwwFo2fFm0wbuQAAsy
+Content-Transfer-Encoding: quoted-printable
+X-ITU-Libra-ESVA-Information: Please contact Istanbul Teknik Universitesi for more information
+X-ITU-Libra-ESVA-ID: 4Z6gCM6swTzG1Qv
+X-ITU-Libra-ESVA: No virus found
+X-ITU-Libra-ESVA-From: root@cc.itu.edu.tr
+X-ITU-Libra-ESVA-Watermark: 1741708304.31762@U5vaX/uKbgLVYhwPw6TQ2A
+X-ITU-MailScanner-SpamCheck: not spam
+Message-ID: <20250303121008.AiXNMpWBdOecW32t6V1YlMYWoiKC6p0E63oJ-B8Hn5M@z>
 
-TCB hardware is capable of capturing the timer value to registers RA and
-RB. Add these registers as capture extensions.
+The debug_show() callback function is implemented in the MSI core code.
+And assign it to the domain ops::debug_show() creation.
 
-Signed-off-by: Bence Csókás <csokas.bence@prolan.hu>
----
+When debugging MSI-related hardware issues (e.g., interrupt delivery
+failures), developers currently need to either:
+1. Recompile kernel with dynamic debug for tracing msi_desc.
+2. Manually read device registers through low-level tools.
 
-Notes:
-    Changes in v2:
-    * Add IRQs
-    Changes in v3:
-    * Move IRQs to previous patch
-    Changes in v4:
-    * Return the status of the regmap_*() operations
-    * Add names for the extension numbers
-    Changes in v6:
-    * Remove RC, as it is not a capture register
-    Changes in v7:
-    * Change enums to #define's in UAPI header
-    * Return early on error in `mchp_tc_count_cap_read()`
+Both approaches become challenging in production environments where
+dynamic debugging is often disabled.
 
- drivers/counter/microchip-tcb-capture.c       | 58 +++++++++++++++++++
- .../linux/counter/microchip-tcb-capture.h     |  6 ++
- 2 files changed, 64 insertions(+)
+This patch proposes to expose MSI address_hi/address_lo and msg_data in
+`/sys/kernel/debug/irq/irqs/<msi_irq_num>`. These fields are critical to:
+- Verify if MSI configuration matches hardware programming
+- Diagnose interrupt routing errors (e.g., mismatched destination ID)
+- Validate remapping behavior in virtualized environments
 
-diff --git a/drivers/counter/microchip-tcb-capture.c b/drivers/counter/microchip-tcb-capture.c
-index cc12c2e2113a..52493f7e8b57 100644
---- a/drivers/counter/microchip-tcb-capture.c
-+++ b/drivers/counter/microchip-tcb-capture.c
-@@ -254,6 +254,62 @@ static int mchp_tc_count_read(struct counter_device *counter,
- 	return 0;
- }
- 
-+static int mchp_tc_count_cap_read(struct counter_device *counter,
-+				  struct counter_count *count, size_t idx, u64 *val)
-+{
-+	struct mchp_tc_data *const priv = counter_priv(counter);
-+	u32 cnt;
-+	int ret;
-+
-+	switch (idx) {
-+	case COUNTER_MCHP_EXCAP_RA:
-+		ret = regmap_read(priv->regmap, ATMEL_TC_REG(priv->channel[0], RA), &cnt);
-+		break;
-+	case COUNTER_MCHP_EXCAP_RB:
-+		ret = regmap_read(priv->regmap, ATMEL_TC_REG(priv->channel[0], RB), &cnt);
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	if (ret < 0)
-+		return ret;
-+
-+	*val = cnt;
-+
-+	return 0;
-+}
-+
-+static int mchp_tc_count_cap_write(struct counter_device *counter,
-+				   struct counter_count *count, size_t idx, u64 val)
-+{
-+	struct mchp_tc_data *const priv = counter_priv(counter);
-+	int ret;
-+
-+	if (val > U32_MAX)
-+		return -ERANGE;
-+
-+	switch (idx) {
-+	case COUNTER_MCHP_EXCAP_RA:
-+		ret = regmap_write(priv->regmap, ATMEL_TC_REG(priv->channel[0], RA), val);
-+		break;
-+	case COUNTER_MCHP_EXCAP_RB:
-+		ret = regmap_write(priv->regmap, ATMEL_TC_REG(priv->channel[0], RB), val);
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	return ret;
-+}
-+
-+static DEFINE_COUNTER_ARRAY_CAPTURE(mchp_tc_cnt_cap_array, 2);
-+
-+static struct counter_comp mchp_tc_count_ext[] = {
-+	COUNTER_COMP_ARRAY_CAPTURE(mchp_tc_count_cap_read, mchp_tc_count_cap_write,
-+				   mchp_tc_cnt_cap_array),
-+};
-+
- static struct counter_count mchp_tc_counts[] = {
- 	{
- 		.id = 0,
-@@ -262,6 +318,8 @@ static struct counter_count mchp_tc_counts[] = {
- 		.num_functions = ARRAY_SIZE(mchp_tc_count_functions),
- 		.synapses = mchp_tc_count_synapses,
- 		.num_synapses = ARRAY_SIZE(mchp_tc_count_synapses),
-+		.ext = mchp_tc_count_ext,
-+		.num_ext = ARRAY_SIZE(mchp_tc_count_ext),
- 	},
- };
- 
-diff --git a/include/uapi/linux/counter/microchip-tcb-capture.h b/include/uapi/linux/counter/microchip-tcb-capture.h
-index f3ef315fe9f6..136e2faa7730 100644
---- a/include/uapi/linux/counter/microchip-tcb-capture.h
-+++ b/include/uapi/linux/counter/microchip-tcb-capture.h
-@@ -12,6 +12,8 @@
-  * Count 0
-  * \__  Synapse 0 -- Signal 0 (Channel A, i.e. TIOA)
-  * \__  Synapse 1 -- Signal 1 (Channel B, i.e. TIOB)
-+ * \__  Extension capture0    (RA register)
-+ * \__  Extension capture1    (RB register)
-  *
-  * It also supports the following events:
-  *
-@@ -25,6 +27,10 @@
-  * - RC compare triggered
-  */
- 
-+/* Capture extensions */
-+#define COUNTER_MCHP_EXCAP_RA 0
-+#define COUNTER_MCHP_EXCAP_RB 1
-+
- /* Event channels */
- #define COUNTER_MCHP_EVCHN_CV 0
- #define COUNTER_MCHP_EVCHN_RA 0
--- 
-2.48.1
-
-
+The information is already maintained in msi_desc and irq_data structures=
