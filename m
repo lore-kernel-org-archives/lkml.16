@@ -1,161 +1,97 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67C3F237705
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 20:45:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 216371C8FB5
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 20:45:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741034730; cv=none; b=qYwu0D6puZOmvDtROShkNYWBoA3NYBwsXa3ZKDTBzYDKOHITH5xEVRqxJHjAE+rjjowy7G3vA4gspn3EhPAmHkomtBuWWydP1JaixiKIw0IYD1MlKSmRNgiyUTviD/QQu5pvVz4bHkrAp8RTyKB++0clWfGSUKAWG4kq6DJM1IU=
+	t=1741034749; cv=none; b=BeRVSShhSuNXvwFX4r6ze+8Ob4LbYLIN9e2kRJj7YpJlzwR6AR6YbkS2kd5vgf3gC3XsoloQG3fNByCpVOhevfzURbTofjmZHdWjRt09pxz7ze5Z0nfWw9sqZS952va/W2H+GOC+96tups9YFogu/VgbGFIJqyAn2UbsxZmBr08=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741034730; c=relaxed/simple;
-	bh=Ywyb+MQz1/EE6FEVNPJfsfJnKicxgUp5/DhitTQODek=;
+	s=arc-20240116; t=1741034749; c=relaxed/simple;
+	bh=KtRtIkf+tI8CYP8SpRXKM3DIxX2i9Sg9C47rtalN4zw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qcz2OI0u//w1ANmHhkEfpAIhajGyAZBcYoRCHErNVoBJPb4XCDbTwQartrr8NhJfo82r0c0yb77gCUzjzOBGZW5NXC0udLYy5XUOvQdIE3BoRy8eoBtpopPLBDZ7jDG9v/jE45AvGg7rB8Rltt5oh7OiE/zD5xyvnqUgwfXxSag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hUmgsx9j; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=cK3tuLZibtezDsiSQ2ElJ/gzGaUNGi5gTJeeYRjWyrnFXqzojJ1UHELDTlx86ykV+iHOAvB1nc4S1EOJh1Bi8G883W6qDCKAgLwp2UMlZqi2+oBc3Bfd4hrcYJLxYQqw+C3uR6zUubEBUKWFGEMe3qL8QvaM6fnSusk8khq0NuY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=vpn8FO5E; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hUmgsx9j"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1741034727;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=yOa8kLE6/JcsUiXWrc6BUEi3i8IaVFrG4gnUMbJudMc=;
-	b=hUmgsx9jxTFGJzLU5B5QlrJnhlfDGzlWa1z8aB+sS66bAjF0faqyCx4qjsokFet4DYgqcn
-	zpPyGSYjWJJhp/dk+gjQOcRZct8yIKNkWk/jSBDfze93qGfcQbD/cQuntLh9Svz9BzqJL4
-	liDjaNkq7s88J/En09tbmUlnRA5NvhU=
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
- [209.85.219.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-639-7xQE8-TyOwe72U7j65kFeA-1; Mon, 03 Mar 2025 15:45:21 -0500
-X-MC-Unique: 7xQE8-TyOwe72U7j65kFeA-1
-X-Mimecast-MFC-AGG-ID: 7xQE8-TyOwe72U7j65kFeA_1741034721
-Received: by mail-qv1-f69.google.com with SMTP id 6a1803df08f44-6e8c58184e9so30440766d6.0
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Mar 2025 12:45:21 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="vpn8FO5E"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2234e4b079cso89178945ad.1
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Mar 2025 12:45:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1741034747; x=1741639547; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=7XGk7Og2gqDlm9MRY3vaFJ22GyXfdVp9nEi+0rQBKok=;
+        b=vpn8FO5EoejUR6TRVk0cgM4FEi1K4yRllPB8zzvpzsXEktNslkdGlTxVcxZpZDKLmR
+         5vJw4EQPyw6ZxfBOV/na8IZRiuvJltS5KmYjrF26d6Q+cQim0BFCJhryhbl/8+zOJZ42
+         B2iDsZ+SdsxwC8z44HHUQE/fc3GTOhF9+vEj2IBA2R8lCPNt28HrTfcuqkEfYjgSaaVp
+         HV3PRMb6dqhRv2upDYZFA5NHlEfxd0zvBDxW0bwcp1aV7d8bTtgjMuZsF06uN1Wm7TCZ
+         2J9B8kQiHxP6OIm62fBkji7FjN0ioPFtt33Pf7iZaP7/jcsx15jFcWn37Lao05DufcPV
+         Xsuw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741034720; x=1741639520;
+        d=1e100.net; s=20230601; t=1741034747; x=1741639547;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=yOa8kLE6/JcsUiXWrc6BUEi3i8IaVFrG4gnUMbJudMc=;
-        b=aOeiQqCfhhfwBdZQ+VVi8U/RIs/O67CsS3H9FNImNhdugywKcoMMuq0DbXSPRPde63
-         dJ+uio7uYNkVeEcrKzcekr7z+peKQ+q9R2TEAE4eZ2lohcoI54ErdAP1qkqZzfvPYNrf
-         CZBHvu4gOKLtSTh+rW/xTgNrxederQVYiQN5y7D3zt0ExXY2RElRgR28CryHxC3bI2r3
-         X50+VpZ7qZB9gKObWUDKOG2M6U6KfHvooSxbp7mdiL2ToIBCKdi5lftcL2hEwXRO8w1A
-         oTMoZO0E5a1oQj15NWfkX3TQFQrZhmZqHQr0KpUVNrpuh8Y5xrAwO+vaSMDkE9Gwi9PM
-         CHKg==
-X-Forwarded-Encrypted: i=1; AJvYcCXkxRLpVe8fwmtR1go3G7gaYpj31zHiWszVvt1iMbGKcDV41pUd4shj35lAtFDu/s1ggcPMJZb1erCfj+Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx6Hfsy86n0gOZFljajs0OqoFCGExP1JXZKQ615bFJPvT899w1/
-	tKk9MKCepoBgNwZxa7mP0pj30Y30jyYr74lUVET2gS4nFVl5ZOJKo+b3AB5+iWxKPgl2m54L/E0
-	jOs+KbA5x9vrEVaHAE5Uo59Fxg79mrfIZlW+/+G1AI12j2Yseagzy71Xlmj811B/n1OmSpg==
-X-Gm-Gg: ASbGnct/D2ocrB2j2w6iGKpmO0ufWQj9wZfreK7MCzvpbM1MjppC+Vn2Xhu5GUG1vga
-	Ryvzby+lfLfi0OV39x1EVpi0FdyJEeDQnQGjhCAunm3wNceAagCFs2UkNF2NBTC1F5BT9MCZDvC
-	vnJS7oxQ6hLV92B3+qGQ2376EH3tzn6/Ejb3BCi0FcjySHj102Ck/V2wcC7nRE+fgXpj9mrGyBX
-	AsIdMPnfpOw5N7XUVM81+BnJH8jkruJBsuzxPwwJjHX81uiNKweZ7RSBy7x1juyK6CEZQ1sGkp6
-	jRYiwx8=
-X-Received: by 2002:a05:6214:1d28:b0:6e4:8774:3743 with SMTP id 6a1803df08f44-6e8a0d9f2a0mr219107966d6.41.1741034720287;
-        Mon, 03 Mar 2025 12:45:20 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHS7c+Jcth0ymjCrBovitR0r7qO6DrrfMff/miVtt7KtbKo7B0dh6BtjcpnebNZHWabydFfTg==
-X-Received: by 2002:a05:6214:1d28:b0:6e4:8774:3743 with SMTP id 6a1803df08f44-6e8a0d9f2a0mr219107646d6.41.1741034719930;
-        Mon, 03 Mar 2025 12:45:19 -0800 (PST)
-Received: from x1.local ([85.131.185.92])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e897634d8dsm57205356d6.10.2025.03.03.12.45.17
+        bh=7XGk7Og2gqDlm9MRY3vaFJ22GyXfdVp9nEi+0rQBKok=;
+        b=mGOZcLmIgzqEyWyzfh37QU5G84mcVqpVtVhBPtc35ZyHV1yKZDzafRRZiwMzLPr6X1
+         jW2NeC3PEZNcaCow2FL02m+ZpAWmZllQ9FeRukpbjUNHD29OluFuZilz1zZO5ULUDOVC
+         AoDoZ6xC+OXTgrYht3dQb0iJcSuMRvlfPNl5FUqh030WIThCbd/jLldRvc6MS5rPUZs5
+         t2rfJ5DnoUkHm8rUCLMRLkhH7JjdM5wh5/o78QbDMuNuv2EJ+P7eqfFa2qSB8zMkV055
+         Y7eMCO+KglNNUEdOfnNftOjdV6s18ErNBhVNgXIdNj2jOE5Wp8C/0WZBz9fGcZMx9lTT
+         FXVw==
+X-Forwarded-Encrypted: i=1; AJvYcCW8IYE+bNsjozvWrLgjx/7T+k8h8z4fpw2hLefqWvGw54W+SSrPwGfJvDfjA8Z0BwA9KR8w3hhMTiWyFj8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzZc4nYYrkX5Shd0XkuqCvhmuJ7vtwrDQFt5WSUfeadqiDG4Z/R
+	DCqFlManvdoB0VLF+AbyYKv99EdpzMB+pQpY2jNDX2clYvxjvf/yqWQi5s6dcEE=
+X-Gm-Gg: ASbGncvQpJ7E5k+hAw6ISP750h0zl0l7X1u1DYAk7O/Lx4c6tCcHLjwnYBPj2bYmK/g
+	fuK0xFkd8JrSF6rtSEzPTZCrN8trF2+uhRk2ywdzGsdrijiVuwCMmb9zmvHp/rDEREvCSu9A6sE
+	jB8xJpGXPAjlpyJRDnNNAZRwhmZS9s/0CGUPNs08SvtdNBfjZXUnQGRc8RTXPrLS1ASNMJ55mrd
+	NUFzsGdDIrv9XBgTSzu26cSa10NxAS3MpjM+2XhvV7luGLF4bjxR3OxkRQdepADg+LuaRSlRVnk
+	qa40+Qodh36y0guzzR8dhoREmR9wJo5seK5Li0swGBFhsqcuA9MiS5OtaYg84FTevV3xBAMsp7a
+	bygBNchOssVd8eSHjQffM
+X-Google-Smtp-Source: AGHT+IH/B18pydy8Pnt7mD3QKhmW6vpxyYQaJWgWpx4izblpWCTAeLTww3Zr6v1OCs7KiIQFew0hqg==
+X-Received: by 2002:a17:903:18a:b0:216:5448:22a4 with SMTP id d9443c01a7336-22368f6dc74mr259198795ad.10.1741034747418;
+        Mon, 03 Mar 2025 12:45:47 -0800 (PST)
+Received: from dread.disaster.area (pa49-186-89-135.pa.vic.optusnet.com.au. [49.186.89.135])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-223d4b94c25sm5167435ad.49.2025.03.03.12.45.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Mar 2025 12:45:18 -0800 (PST)
-Date: Mon, 3 Mar 2025 15:45:15 -0500
-From: Peter Xu <peterx@redhat.com>
-To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-kernel@vger.kernel.org, Matthew Wilcox <willy@infradead.org>,
-	Olivier Dion <odion@efficios.com>, linux-mm@kvack.org
-Subject: Re: [RFC PATCH 0/2] SKSM: Synchronous Kernel Samepage Merging
-Message-ID: <Z8YU2_FwTzO-gU81@x1.local>
-References: <20250228023043.83726-1-mathieu.desnoyers@efficios.com>
- <CAHk-=wgedRzDqOLhbOnvziVHZm9jtGOrT4GJEqA9etJDwTQ5Mg@mail.gmail.com>
- <8524caa9-e1f6-4411-b86b-d9457ddb8007@efficios.com>
- <CAHk-=wi5-+P49c3NPeZB_qrNyOtAJS3YadHB0q7J3eZ3UUwrjw@mail.gmail.com>
- <cc1dec8c-8323-4c67-913f-5d8fb55ce715@efficios.com>
- <Z8HlL4FopVjeveaJ@x1.local>
- <60f148db-7586-4154-a909-d433bad39794@efficios.com>
- <Z8I5iU6y_nVmCZk6@x1.local>
- <72810548-b917-49b7-b7ef-043c6b395d31@efficios.com>
+        Mon, 03 Mar 2025 12:45:46 -0800 (PST)
+Received: from dave by dread.disaster.area with local (Exim 4.98)
+	(envelope-from <david@fromorbit.com>)
+	id 1tpCfY-00000008Spz-0vWy;
+	Tue, 04 Mar 2025 07:45:44 +1100
+Date: Tue, 4 Mar 2025 07:45:44 +1100
+From: Dave Chinner <david@fromorbit.com>
+To: Jinliang Zheng <alexjlzheng@gmail.com>
+Cc: cem@kernel.org, djwong@kernel.org, dchinner@redhat.com,
+	alexjlzheng@tencent.com, linux-xfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] xfs: don't allow log recover IO to be throttled
+Message-ID: <Z8YU-BYfB2SCwtW6@dread.disaster.area>
+References: <20250303112301.766938-1-alexjlzheng@tencent.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <72810548-b917-49b7-b7ef-043c6b395d31@efficios.com>
+In-Reply-To: <20250303112301.766938-1-alexjlzheng@tencent.com>
 
-On Mon, Mar 03, 2025 at 03:01:38PM -0500, Mathieu Desnoyers wrote:
-> On 2025-02-28 17:32, Peter Xu wrote:
-> > On Fri, Feb 28, 2025 at 12:53:02PM -0500, Mathieu Desnoyers wrote:
-> > > On 2025-02-28 11:32, Peter Xu wrote:
-> > > > On Fri, Feb 28, 2025 at 09:59:00AM -0500, Mathieu Desnoyers wrote:
-> > > > > For the VM use-case, I wonder if we could just add a userfaultfd
-> > > > > "COW" event that would notify userspace when a COW happens ?
-> > > > 
-> > > > I don't know what's the best for KSM and how well this will work, but we
-> > > > have such event for years..  See UFFDIO_REGISTER_MODE_WP:
-> > > > 
-> > > > https://man7.org/linux/man-pages/man2/userfaultfd.2.html
-> > > 
-> > > userfaultfd UFFDIO_REGISTER only seems to work if I pass an address
-> > > resulting from a mmap mapping, but returns EINVAL if I pass a
-> > > page-aligned address which sits within a private file mapping
-> > > (e.g. executable data).
-> > 
-> > Yes, so far sync traps only supports RAM-based file systems, or anonymous.
-> > Generic private file mappings (that stores executables and libraries) are
-> > not yet supported.
-> > 
-> > > 
-> > > Also, I notice that do_wp_page() only calls handle_userfault
-> > > VM_UFFD_WP when vm_fault flags does not have FAULT_FLAG_UNSHARE
-> > > set.
-> > 
-> > AFAICT that's expected, unshare should only be set on reads, never writes.
-> > So uffd-wp shouldn't trap any of those.
-> > 
-> > > 
-> > > AFAIU, as it stands now userfaultfd would not help tracking COW faults
-> > > caused by stores to private file mappings. Am I missing something ?
-> > 
-> > I think you're right.  So we have UFFD_FEATURE_WP_ASYNC that should work on
-> > most mappings.  That one is async, though, so more like soft-dirty.  It
-> > might be doable to try making it sync too without a lot of changes based on
-> > how async tracking works.
-> 
-> I'm looking more closely at admin-guide/mm/pagemap.rst and it appears to
-> be a good fit. Here is what I have in mind to replace the ksmd scanning
-> thread for the VM use-case by a purely user-space driven scanning:
-> 
-> Within qemu or similar user-space process:
-> 
-> 1) Track guest memory with the userfaultfd UFFD_FEATURE_WP_ASYNC feature and
->    UFFDIO_REGISTER_MODE_WP mode.
-> 
-> 2) Protect user-space memory with the PAGEMAP_SCAN ioctl PM_SCAN_WP_MATCHING flag
->    to detect memory which stays invariant for a long time.
-> 
-> 3) Use the PAGEMAP_SCAN ioctl with PAGE_IS_WRITTEN to detect which pages are written to.
->    Keep track of memory which is frequently modified, so it can be left alone and
->    not write-protected nor merged anymore.
-> 
-> 4) Whenever pages stay invariant for a given lapse of time, merge them with the new
->    madvise(2) KSM_MERGE behavior.
-> 
-> Let me know if that makes sense.
+On Mon, Mar 03, 2025 at 07:23:01PM +0800, Jinliang Zheng wrote:
+> When recovering a large filesystem, avoid log recover IO being
+> throttled by rq_qos_throttle().
 
-I can't speak of how KSM should go from there, but from userfault tracking
-POV, that makes sense to me.
+Why?
 
-Thanks,
+The only writes to the journal during recovery are to clear stale
+blocks - it's only a very small part of the IO that journal recovery
+typically does. What problem happens when these writes are
+throttled?
 
+-Dave.
 -- 
-Peter Xu
-
+Dave Chinner
+david@fromorbit.com
