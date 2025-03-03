@@ -1,159 +1,161 @@
-Received: from sonic311-30.consmr.mail.ne1.yahoo.com (sonic311-30.consmr.mail.ne1.yahoo.com [66.163.188.211])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 522B933F6
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 19:11:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=66.163.188.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D467D33F6;
+	Mon,  3 Mar 2025 19:12:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741029117; cv=none; b=WOukm45+QaAYeWPk7ait+fk6PdKXo/plyUspZGc3Ium+3ZKPDIE+C1BvXkEzhvZQ8C8sI14fBkwsZN1GMXVTE0LS4T4JRIv09wqYnKH5l7xqvoF1dOySQzicmVNUT+ShfGXxX5xJGNsv3VRFmICzBC2sjEnmCgfa6OBV7ZOycfc=
+	t=1741029125; cv=none; b=LNjqQ3yRczVQSPL5Tt6Y69jfeCJZijeR9VILJErPkeSmgJKg+aOixR5H7X7wjq/oELTNLbCfoxib9wNrvYqVYKRQggq+VDGxJ7tr78pOalIxGWG3o15Xo4viEDBGJ/qEIhHoXKHVjtodZyhIc0EYojTifw+HF11OTwSeBLiXQb0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741029117; c=relaxed/simple;
-	bh=zttb/KBNS8YrkZTTRzEXOV2zM8d85NRFoEcHxhNsqPI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TFkcKhV8XllwlkH1EmljUBQMZ6BX2hq0w9+TkOOfIuUsNh9hC2XyEKf15l41NmjLvkZ6mV+NsK2XU1imyRHSSusACRLfTb+2RiXbwEy3EmCqf1x82hukpokc8B/eKMaISOU1UtcKRlIKL7+k39nffmZKOqj7N4ezN/pASAPBDSU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=schaufler-ca.com; spf=none smtp.mailfrom=schaufler-ca.com; dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b=h2M6cWJ+; arc=none smtp.client-ip=66.163.188.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=schaufler-ca.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=schaufler-ca.com
+	s=arc-20240116; t=1741029125; c=relaxed/simple;
+	bh=HRBDb/01Aoz/Xbn/HWrMNCNs4hJQ+oaS+r2C1Bxu8ag=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gzACzu4bttGroADCgUlrS+B/F1xBxNvkqzR9jZ6muhTTnXmfFs95Aiy/J7l1xPjqlnZZRXWJlEvZreGEnPH1KnJZNmjhGNwAOWD/FAx2mE2Q6ZR46vrA1ue/cS5GQPZrh/qU4ATGA8kL901JSYZ5GwDfr2Z8T8HOoz0sLwE6DiI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=BCFVJpif; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="h2M6cWJ+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1741029115; bh=kxho3F4dy7xLzbeT4DOIL9QCojHaIl0A5BraM7FirZA=; h=Date:Subject:To:Cc:References:From:In-Reply-To:From:Subject:Reply-To; b=h2M6cWJ+Ycf2gc5mTu66HIEZwIwKqUR4LTa++oLXcviuHFfqYZ8a3yqumtRL4d1X+paMRw9or9zWjIvldOBgPbzyD18mLlEQkLB71f5od96GBH4y6BWh3Sj2Ym5lwZR2I6UMBAU+hpdJeQfsIkOU+WvJqs0Of/y7MeMPVnZWJvVhL2BBiyZ2ixqgH3ONBQ49VFaWtHFzcT202BHkcE93elOgcdEmmnxIU1zu6t/vhTjMH8MtU134jg1YYsvq0/9BZHnk7/7u7GCu9GuNPSGKFuNlTvpFK2CqklCdZrZUhbi4OlmQ29mXZUdCJpYmhT2xlIBMj2yDiNwcPRL4MwXPbg==
-X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1741029115; bh=Wn44DOLii1NmZiaSBp/MUYjBeOyLAEMtNrNRT0Wh+ZC=; h=X-Sonic-MF:Date:Subject:To:From:From:Subject; b=blzLX2MwCLpMIlYn0YpWf/PUZVVNijpLe3RdQovvMJ98FSEh5SV+uMpF+lF1rQQqNS8jAk8hs1nROpBlVq5jtcmYTWepCoC1AalxFa1FTyBh8st2K8Sfz2sHKivqhG6oKShqLcFxTNQWOPdYOTHZgd/k8+EFQrUqulIJ7WQnLMmOgLMOROL9CRQHMfnxoBETILra7VSIWvnYuo3kQX01i3nybF9stQm3zUbvC6aeh4q+GU42AKzJ9UT0pbMeRYzU6T/byjaJodgX2HYim2nJ/w6YJPieV806ya5MEtouISRvt0tJ0VqTJpAORKwOQcsyDnJ5Vv95eHl5ecC/iUuXDg==
-X-YMail-OSG: jxQi5PYVM1kjCffxcWEXtBaaD8eOjDPHNKGLO2go4aEn_ycpi6E.Y0dfQ.S.YMc
- q6pdyCDwv0K_8wef_nByeNMVwM5pD_sN3CSMc3qRrIULnZitvm3vaUadnWPu6bVr2ylsXEcsKr.c
- kPwT3x7Lr0N438.MiiQAVH160Hi6J7tb5M_YlYrkx9vamBwaK8Sjp3DidLkga2U77V8.fQNW8u4n
- zbY27gYWrvMpq_O6W8ocJ0dr2b0gWLt_TsHNw4h0JkQYUfFd8FBjiiJWem.qOE5123NBUA9LlRNr
- csIZtRl8lCPdpX6cTowG.LwX.ZsZyKMA0b5u4LKSTho.uefunP0yzd4K..wF3.ZRhOm8VrT4U4Ea
- rM8ZcO.nk9alqipQt4QQlBRIlLYRzE_CnKjspf7i60FvsLZpcMZUdiJLv5DNtxWlf4SugOGznBbb
- CuSRSjAPkQ.7.g6gaqidjtq6.WnpCyz8H7SmqClPiTJ9laTpvyHdWCmTJfIvXg4LTt658CiIaW3k
- 7glKvyyKDLLP7nNVrndcnI1MfYkiNW_5jV4DcKKTmYVVx661SvWgueDHSLGkYhAFFB0QCstQvTzh
- SdBsG07Obuf2EETA_.KgwDpSdnOvZgnkGciCDrEXNA8f1iekrdWB1xlyzAylytOz8hNFj1gmaWbn
- T7oWPOzEPd__cl8HikekBiYKjiO6A6DWu2nxeaUPg2dbKZeiPa59NLIBE04TTfC7iTV_2pnPOmqy
- bjJ6AFabBCtFWkfWvD1YFKJduagIUR_m55F_rF1BmoHMx3NWMyhQcBRUgxeWATtH4TZ0CqS9tY3j
- i8wIv_zqg.sjUm9bKTc3BF5oTDjoLo3AROmd13sGdO0v8xEG1tAgewkbC5maE2MW5AE11.3cNkVN
- lSxua5yWsKERUhH87Mgp_65Mt1pFQQtptHz2s9GTHCai_3mX.iTKgS7Ri6Xm9Sw0rr8dLdfXw9VZ
- TJh5HgYw_FRQotOHF9q.FNnPyNTOOoSw2y2GTVhyeS2nQP4DXbaRmRjG2oZeEJnqrrMlgu2jGZmv
- zBjKuqA47HegMRKfM0BnsB.ug00ATF.wA2iYfUbNAkJJJYJObO8jEJ8Nwl0H3.ck4Og5ZjjDXrnP
- m4__Zvgy1GVu2_iTrIVsxVehMFFF2jNbzdfy5upaXuQV3HYkthvz2JcbEBkTKKDI9WOhIUARif1h
- 1BxAD31zL.kClhGIqVB9rYhmUYevTU92KHrtHkqPmcqgeaeYtfm2wAlabWF46ICzUHcdO2eVsCyo
- K5LVgDsjA5fUvRVTVSNOoAR.dPlVwMXUo5jbEG6K6SXxLgLZvIiGvbnbLdbfIsdTcLYXRZd41rB8
- tnz.dECl31x7CvA1PO_ZW62rsw88kEaC7K3bFxqwKJi_VWuqF.4QCFuSoUBzhNx5E.neXMW6oBvZ
- Ylsu8g4Uw87PavLmxhmYFeJbegExm0rVHOpbQSHHcw1yVGYqLyp93VibYkErHzBOqiFHGpZU6twZ
- PryMK46tQp2HCY7vAX72tV_d_AcddTOzsSjV4WxoBm9FtQAfGVyTBmmhTi4Y.rNbIPg3KuEdqLOG
- uhWdpcp7323PikTR5IKx.d.BslA6A0Vxh_PkKZy6q7F0GVynqCDq6cmmAMyQ2LsPUe5a1NvIn7.B
- jEsKm5qJa14eLQ1ZlDUXr0CJo9Y_X.HHB_fgt4kvH6.QMsRRRdzNledkkQ1E0jTgJbxKX0jQtZNo
- _BrVm3KehfqDt2kxqAJ5p1uPN6ALJ_Kor9ayh8Sk9ngCXSMUPuRv5f0FSU9Y3mGvP95BIJFR84HC
- HffW9KLRatVWPmwOwO.zcap9rgUzxd8ppdKFe18wRloPjtTUTW4.YFwlJ7tqNKDPG6TTNmNtOOEo
- fiBGJKPKKTtBAa4QzZ91EcL7U1gUBm5J.KrUb1O6icWvzCujCsctwDg8FXKBOQ7lx9vGZoxpbd0I
- MW8cqKjWo6Nd7I_y9tlg.g9pe1P.Ujv_r6JhDRMtBFy46zb96VopS4q14Wy6o8zY6fxS3N3rmu.B
- 0yWtVHs9TinPKjn9Vma9ix_VI9dElJD0JQMruCNVINtixeyLr2t0ANBpmEILpJPpD0.b9PQVfeut
- 9XFxqrbU.l7ehL61q8Asjxqv0h9rfnxWejzRPJtWPt7Sd.zkMtSE9s8pGDfjOpME00twdSMp47F5
- UL008WKHvbBK3uvE81JUQLvdVBX9WQMf6wbdNsle3uwqg9sqU9KzdT8LKAXAegMg_e3GzyyVHiZU
- x6NEyjNYjZAYdnxanLrWhgvd1izkLscoMQv8pwd3SDX2BJf3uD6xvhHLMKwnsJRQ53zoABXrV3xj
- tr1hkGOnaygVe7gvnlq.5gw2j6Q--
-X-Sonic-MF: <casey@schaufler-ca.com>
-X-Sonic-ID: 96345618-f8ec-442e-82bc-261f2ecd13a2
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic311.consmr.mail.ne1.yahoo.com with HTTP; Mon, 3 Mar 2025 19:11:55 +0000
-Received: by hermes--production-gq1-75cc957d6c-bs9kb (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID a55dafe6a07e9ebe5219b5cb6e8d4ed1;
-          Mon, 03 Mar 2025 18:51:38 +0000 (UTC)
-Message-ID: <cf588a4e-cfc2-45b1-8ed2-1a7587a2a0f0@schaufler-ca.com>
-Date: Mon, 3 Mar 2025 10:51:38 -0800
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="BCFVJpif"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 523F53EF002272;
+	Mon, 3 Mar 2025 19:12:01 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=KkerPnmZLypqnbkqHWCG8ODSVofP4Dm6qZuF15VXw
+	wM=; b=BCFVJpif0WlvB3nW+oj9FIMUJYaC9bRP1TSJsrlGw8VqnZ1P2FAQEeEgs
+	+Nu+NRXs4pheNsTyQ9fVIr37FRtJvpHejtncuS5XDNY91XHSAZ2tcy7m9Bp9AupJ
+	X8DTd/RQGklxA3KaG1NPaE/PKjiybsmEkXHU1CbouP8uW+W+wU9RcQaimvJHTETJ
+	nLVMo5L9jtuwv6e+Bre7C+Goi8aXiLadJjSECbsLDTkPTa2Kq2I+btYUlDY60BKS
+	awWWaw6xFFsIZJ3qk3gV4aD9RvgmDii5Rupp1bbtUdBDpAr/S4wn8Qd2fiFkHEuX
+	OXb46BSJt9EYRqaCVZsQ/bOiLw06w==
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 454xr4x6eh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 03 Mar 2025 19:12:01 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 523G8lsD020845;
+	Mon, 3 Mar 2025 19:12:00 GMT
+Received: from smtprelay05.dal12v.mail.ibm.com ([172.16.1.7])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 454djn9k6g-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 03 Mar 2025 19:12:00 +0000
+Received: from smtpav05.dal12v.mail.ibm.com (smtpav05.dal12v.mail.ibm.com [10.241.53.104])
+	by smtprelay05.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 523JBxi931326774
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 3 Mar 2025 19:11:59 GMT
+Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 95B3758052;
+	Mon,  3 Mar 2025 19:11:59 +0000 (GMT)
+Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id C9B195805D;
+	Mon,  3 Mar 2025 19:11:58 +0000 (GMT)
+Received: from MacBookPro.ibm.com (unknown [9.61.240.87])
+	by smtpav05.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Mon,  3 Mar 2025 19:11:58 +0000 (GMT)
+From: Rorie Reyes <rreyes@linux.ibm.com>
+To: linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+Cc: hca@linux.ibm.com, borntraeger@de.ibm.com, agordeev@linux.ibm.com,
+        gor@linux.ibm.com, pasic@linux.ibm.com, jjherne@linux.ibm.com,
+        alex.williamson@redhat.com, akrowiak@linux.ibm.com,
+        rreyes@linux.ibm.com
+Subject: [RFC PATCH v1] fixup! s390/vfio-ap: Notify userspace that guest's AP config changed when mdev removed
+Date: Mon,  3 Mar 2025 14:11:58 -0500
+Message-ID: <20250303191158.49317-1-rreyes@linux.ibm.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] lsm: rust: mark SecurityCtx methods inline
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
- "Serge E. Hallyn" <serge@hallyn.com>, Miguel Ojeda <ojeda@kernel.org>,
- Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
- =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
- Benno Lossin <benno.lossin@proton.me>,
- Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>,
- rust-for-linux@vger.kernel.org, linux-security-module@vger.kernel.org,
- linux-kernel@vger.kernel.org, Casey Schaufler <casey@schaufler-ca.com>
-References: <20250303-inline-securityctx-v1-1-fb7b9b641fdf@google.com>
- <a5262d73-2b11-4868-9c6b-1c6161808979@schaufler-ca.com>
- <CAH5fLggNnOv2rhtUeK38GVQ7EuuZkZMwOSVKSsMLFG5eS2i9Ng@mail.gmail.com>
-Content-Language: en-US
-From: Casey Schaufler <casey@schaufler-ca.com>
-In-Reply-To: <CAH5fLggNnOv2rhtUeK38GVQ7EuuZkZMwOSVKSsMLFG5eS2i9Ng@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Mailer: WebService/1.1.23040 mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.yahoo
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: mtees-123PRKTcihCHVDAVpovJQdXesc
+X-Proofpoint-ORIG-GUID: mtees-123PRKTcihCHVDAVpovJQdXesc
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-03_09,2025-03-03_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
+ priorityscore=1501 lowpriorityscore=0 clxscore=1015 bulkscore=0
+ adultscore=0 suspectscore=0 phishscore=0 spamscore=0 impostorscore=0
+ malwarescore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502100000 definitions=main-2503030144
 
-On 3/3/2025 10:40 AM, Alice Ryhl wrote:
-> On Mon, Mar 3, 2025 at 6:07 PM Casey Schaufler <casey@schaufler-ca.com> wrote:
->> On 3/3/2025 7:29 AM, Alice Ryhl wrote:
->>> I'm seeing Binder generating calls to methods on SecurityCtx such as
->>> from_secid and drop without inlining. Since these methods are really
->>> simple wrappers around C functions, mark the methods to inline to avoid
->>> generating these useless small functions.
->>>
->>> Signed-off-by: Alice Ryhl <aliceryhl@google.com>
->>> ---
->>>  rust/kernel/security.rs | 5 +++++
->>>  1 file changed, 5 insertions(+)
->>>
->>> diff --git a/rust/kernel/security.rs b/rust/kernel/security.rs
->>> index 25d2b1ac3833..243211050526 100644
->>> --- a/rust/kernel/security.rs
->>> +++ b/rust/kernel/security.rs
->>> @@ -23,6 +23,7 @@ pub struct SecurityCtx {
->>>
->>>  impl SecurityCtx {
->>>      /// Get the security context given its id.
->>> +    #[inline]
->>>      pub fn from_secid(secid: u32) -> Result<Self> {
->>>          // SAFETY: `struct lsm_context` can be initialized to all zeros.
->>>          let mut ctx: bindings::lsm_context = unsafe { core::mem::zeroed() };
->>> @@ -35,16 +36,19 @@ pub fn from_secid(secid: u32) -> Result<Self> {
->>>      }
->>>
->>>      /// Returns whether the security context is empty.
->>> +    #[inline]
->>>      pub fn is_empty(&self) -> bool {
->>>          self.ctx.len == 0
->>>      }
->>>
->>>      /// Returns the length of this security context.
->>> +    #[inline]
->>>      pub fn len(&self) -> usize {
->>>          self.ctx.len as usize
->>>      }
->>>
->>>      /// Returns the bytes for this security context.
->>> +    #[inline]
->>>      pub fn as_bytes(&self) -> &[u8] {
->>>          let ptr = self.ctx.context;
->>>          if ptr.is_null() {
->>> @@ -61,6 +65,7 @@ pub fn as_bytes(&self) -> &[u8] {
->>>  }
->>>
->>>  impl Drop for SecurityCtx {
->>> +    #[inline]
->>>      fn drop(&mut self) {
->>>          // SAFETY: By the invariant of `Self`, this frees a context that came from a successful
->>>          // call to `security_secid_to_secctx` and has not yet been destroyed by
->> I don't speak rust (well, yet?) so I can't talk about that, but this comment
->> has me concerned. Security contexts (secctx) are not destroyed, they are released.
->> While SELinux allocates and frees them, Smack maintains a list of contexts that
->> is never freed. A call to security_release_secctx() on SELinux "destroys" the
->> secctx, but for Smack does not.
-> It's just a comment on a call to security_release_secctx, I can reword
-> from "destroy" to "release".
+This patch is based on the s390/features branch
 
-That would do nicely. Thank you.
+The guest's AP configuration is cleared when the mdev is removed, so
+userspace must be notified that the AP configuration has changed. To this
+end, this patch:
 
->
-> Here's the full context:
->
-> // SAFETY: By the invariant of `Self`, this frees a context that came from a
-> // successful call to `security_secid_to_secctx` and has not yet been destroyed
-> // by `security_release_secctx`.
-> unsafe { bindings::security_release_secctx(&mut self.ctx) };
->
-> Alice
->
+* Removes call to 'signal_guest_ap_cfg_changed()' function from the
+  'vfio_ap_mdev_unset_kvm()' function because it has no affect given it is
+  called after the mdev fd is closed.
+
+* Adds call to 'signal_guest_ap_cfg_changed()' function to the
+  'vfio_ap_mdev_request()' function to notify userspace that the guest's
+  AP configuration has changed before signaling the request to remove the
+  mdev.
+
+Minor change - Fixed an indentation issue in function
+'signal_guest_ap_cfg_changed()'
+
+Fixes: 2ba4410dd477 ("s390/vfio-ap: Signal eventfd when guest AP configuration is changed")
+Signed-off-by: Rorie Reyes <rreyes@linux.ibm.com>
+---
+ drivers/s390/crypto/vfio_ap_ops.c | 19 ++++++++++++++++---
+ 1 file changed, 16 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
+index 571f5dcb49c5..c1afac5ac555 100644
+--- a/drivers/s390/crypto/vfio_ap_ops.c
++++ b/drivers/s390/crypto/vfio_ap_ops.c
+@@ -652,8 +652,8 @@ static void vfio_ap_matrix_init(struct ap_config_info *info,
+ 
+ static void signal_guest_ap_cfg_changed(struct ap_matrix_mdev *matrix_mdev)
+ {
+-		if (matrix_mdev->cfg_chg_trigger)
+-			eventfd_signal(matrix_mdev->cfg_chg_trigger);
++	if (matrix_mdev->cfg_chg_trigger)
++		eventfd_signal(matrix_mdev->cfg_chg_trigger);
+ }
+ 
+ static void vfio_ap_mdev_update_guest_apcb(struct ap_matrix_mdev *matrix_mdev)
+@@ -1870,7 +1870,6 @@ static void vfio_ap_mdev_unset_kvm(struct ap_matrix_mdev *matrix_mdev)
+ 		get_update_locks_for_kvm(kvm);
+ 
+ 		kvm_arch_crypto_clear_masks(kvm);
+-		signal_guest_ap_cfg_changed(matrix_mdev);
+ 		vfio_ap_mdev_reset_queues(matrix_mdev);
+ 		kvm_put_kvm(kvm);
+ 		matrix_mdev->kvm = NULL;
+@@ -2057,6 +2056,14 @@ static void vfio_ap_mdev_request(struct vfio_device *vdev, unsigned int count)
+ 
+ 	matrix_mdev = container_of(vdev, struct ap_matrix_mdev, vdev);
+ 
++	if (matrix_mdev->kvm) {
++		get_update_locks_for_kvm(matrix_mdev->kvm);
++		kvm_arch_crypto_clear_masks(matrix_mdev->kvm);
++		signal_guest_ap_cfg_changed(matrix_mdev);
++	} else {
++		mutex_lock(&matrix_dev->mdevs_lock);
++	}
++
+ 	if (matrix_mdev->req_trigger) {
+ 		if (!(count % 10))
+ 			dev_notice_ratelimited(dev,
+@@ -2068,6 +2075,12 @@ static void vfio_ap_mdev_request(struct vfio_device *vdev, unsigned int count)
+ 		dev_notice(dev,
+ 			   "No device request registered, blocked until released by user\n");
+ 	}
++
++	if (matrix_mdev->kvm)
++		release_update_locks_for_kvm(matrix_mdev->kvm);
++	else
++		mutex_unlock(&matrix_dev->mdevs_lock);
++
+ }
+ 
+ static int vfio_ap_mdev_get_device_info(unsigned long arg)
+-- 
+2.48.1
+
