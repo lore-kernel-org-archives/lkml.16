@@ -1,215 +1,157 @@
-Received: from mout.web.de (mout.web.de [217.72.192.78])
+Received: from beeline3.cc.itu.edu.tr (beeline3.cc.itu.edu.tr [160.75.25.117])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 277C3298CC1;
-	Tue,  4 Mar 2025 17:38:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.78
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741109938; cv=none; b=VEke9novfsu5CjWmI0IT3JvgJFWuD/HJKJxpsZ5Jr4zcUWde9oVvVb2BkjTaAgAnda4BQcqu62BKd3BSaMUUnlwVzTR3d8F0UOEKb1cdf+qODM2yVwBfTOFe8CTil7jx/nism2UPgfD0WYf3jrajPd9IZQIITfnz5yG3p7s9c5I=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741109938; c=relaxed/simple;
-	bh=JcIEw6KHcvbGFWY/0MJdcq8fBRZHDsPWigmoQd9FeNI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tW8w+Y27hwnqzFBjwgFnmPYPhF4MK/nlTbkZK97xtqb2DYBqHjrnrsIaQilrTDV69H0oIB/lLg5w6joJ1iUEAKnRUok1hmT/UOBIN/xG64VkVW55eaO3cnax0y1M3tqywELR34YijFN7COYaiMUZUQP9EhFaUM33bG4FoZwNeO0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=XOx6Yb7+; arc=none smtp.client-ip=217.72.192.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA2AE23956C
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 17:39:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=160.75.25.117
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741109954; cv=fail; b=ezv1V46+gZ7qW6cilDmFG5eUl/7IJFE0bTzQGCLlAYTQM0c5VUSh3A+f48F5G3b+g7c+f9uVvCvXNO5Ua9a4CQmvr7xwEb0SxFvNmXHqyFNDh1nxLOMBK7KWb3q2n4SIq0hwHjnLdLFeDlLLHdIudUGWEdpQ9HKbASjN4NcYGvI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741109954; c=relaxed/simple;
+	bh=pk0BhyrbjxzeeYa8pfD8mJWEmL8oH9b522f9CcBK5Y4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=dCyyL2AFaAe4LVzhZFqPhC62YGSteLkpniRXQkXBJv1PlFfArSF1j9+zRMxX040yUiLpsnQrErP0+zownMPcY3hO2P/hjNfIbUChcVS9L0WzvX2IdzbUg0L4MiAiOmf7ZA7XbRGLybkKd/tmbtmAG6hCQCFz6FF+slTdBnL49LA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=fail (p=reject dis=none) header.from=bootlin.com; spf=none smtp.mailfrom=cc.itu.edu.tr; dkim=fail (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=B3z90Gpe reason="signature verification failed"; arc=none smtp.client-ip=217.70.183.194; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; arc=fail smtp.client-ip=160.75.25.117
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=cc.itu.edu.tr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="XOx6Yb7+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1741109922; x=1741714722; i=markus.elfring@web.de;
-	bh=Hd9f8ED3HYtNlKnYfy25W10wkR5BfmeLn5PDLRGCvhI=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=XOx6Yb7+IjmoN5q4fcTKsJB+3gujW96dnAJ5aO8w/VuhhfToF6Yyj3OAjexSOV1z
-	 /1Y56MEQqGhbvmO6qGspVIHmG/N+bKTKCu6/uSunZGZSosyU18KCKt8nRNM8rjmBd
-	 NEr6FAOCB/ZUHA/StjNB8ZJbsHKGWDmvuJkzeSec/Binljzwqg9DBeEOV/UYygfQ7
-	 G/hYlJM4ALSxq+FZxR4IMvGYYgWHRTZTDjXisYlL+Mmx29JxLjJ3EWR22GlWe2124
-	 ekn5/GeOG8nIyLyzjJTzJfBXFbaZhdkiUA4RF0EKl27yyjd82g6ixf6y2mckMuzMU
-	 IYvzksEVziE/kjlPCQ==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.70.64]) by smtp.web.de (mrweb106
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1N3oz4-1t7h213Slc-00tCqt; Tue, 04
- Mar 2025 18:38:41 +0100
-Message-ID: <df3ce733-955b-45f3-98bd-04ddb2200eca@web.de>
-Date: Tue, 4 Mar 2025 18:38:40 +0100
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="B3z90Gpe"
+Received: from lesvatest1.cc.itu.edu.tr (lesvatest1.cc.itu.edu.tr [10.146.128.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits))
+	(No client certificate requested)
+	by beeline3.cc.itu.edu.tr (Postfix) with ESMTPS id 109B040D1F47
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 20:39:11 +0300 (+03)
+X-Envelope-From: <root@cc.itu.edu.tr>
+Received: from lesva1.cc.itu.edu.tr (unknown [160.75.70.79])
+	by lesvatest1.cc.itu.edu.tr (Postfix) with ESMTP id 4Z6dF95swMzFw7F
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 17:22:53 +0300 (+03)
+Received: by le1 (Postfix, from userid 0)
+	id 952E142726; Tue,  4 Mar 2025 17:22:39 +0300 (+03)
+Authentication-Results: lesva1.cc.itu.edu.tr;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=B3z90Gpe
+X-Envelope-From: <linux-kernel+bounces-541826-bozkiru=itu.edu.tr@vger.kernel.org>
+Authentication-Results: lesva2.cc.itu.edu.tr;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=B3z90Gpe
+Received: from fgw2.itu.edu.tr (fgw2.itu.edu.tr [160.75.25.104])
+	by le2 (Postfix) with ESMTP id 0BF4441B42
+	for <bozkiru@itu.edu.tr>; Mon,  3 Mar 2025 16:37:54 +0300 (+03)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by fgw2.itu.edu.tr (Postfix) with SMTP id 6B1F92DCDE
+	for <bozkiru@itu.edu.tr>; Mon,  3 Mar 2025 16:37:54 +0300 (+03)
+Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 33AAD3B0AA2
+	for <bozkiru@itu.edu.tr>; Mon,  3 Mar 2025 13:34:29 +0000 (UTC)
+Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 83A34212FB3;
+	Mon,  3 Mar 2025 13:34:16 +0000 (UTC)
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63C6153365
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 13:34:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741008851; cv=none; b=rUBBLo5Sjz/SaZTlfH6UbHWbcHCbJznrsWUyrT7mDmGmVRyUnmMvkez56rhP+81acTqnIDes5y/PBecKmOqqJl2naCAAIdIUEWDYoFH5NthjpxZ7t+Fl9v47DhKUELdivipbzbc7d+iMXaH+zliucqwjhCl9beSMhux6S1RQch8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741008851; c=relaxed/simple;
+	bh=W+QMMzgRl2N3x+jUtrD3SA8SBTq4tV+7/dQW5Cm6/L4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=eoPuDV9br+h9U9UclI4yBAWXXeR1lCdmmjqUTQsSWq6H6zodcUsNPKJV7EIFk530DDcQFMp3A2as2pdTaI3Aw8mJEY+GLYBi114kAKE0psLsLATeWnAekK78F74csx7gBVVMVwnWtQDmY44M+qVE7rB3U/K8x1rteTd7hzUHmdE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=B3z90Gpe; arc=none smtp.client-ip=217.70.183.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id C203A440F4;
+	Mon,  3 Mar 2025 13:34:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1741008846;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=bKf+PNKr2lnJDC6ElPe+zilWw9FIi18fnsrAyj9a2eA=;
+	b=B3z90GpeKzPBUeLDwTRwmqRuasDR/yfj0PdpJHnyTczCb8+O9pOIwVHeqzIVUqaDX81HY4
+	6WtSCoTLA+DzZOMCujZqi7DK6qXfLmeTt4Hun9TgCw1M3ZkQvkKn2wxnNzQV7JAD+i288q
+	3ZITZEaJIZMH8vXO8POOf3cfZbK2/St2s6b/raxGOZafJiQioBcsSiJ2D/K4XLZDO4fKz6
+	ihP8DLZIgoDhzF/vNmP5wLnEqRIGaJKDWETgopmDxe1V7KsmfYaUuFJz1DwEjmGBEI209S
+	XJH0uy90wuLQsmpe4OXoggyIbb3Ghm/LRtq6eSkTEleadre+YByh+/+ivVekTQ==
+Date: Mon, 3 Mar 2025 14:34:04 +0100
+From: Herve Codina <herve.codina@bootlin.com>
+To: Maxime Ripard <mripard@kernel.org>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann
+ <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter
+ <simona@ffwll.ch>, Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong
+ <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, Laurent
+ Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman
+ <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, Douglas
+ Anderson <dianders@chromium.org>, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org, Dmitry Baryshkov
+ <dmitry.baryshkov@linaro.org>, Simona Vetter <simona.vetter@ffwll.ch>
+Subject: Re: [PATCH v4 00/15] drm/bridge: Various quality of life
+ improvements
+Message-ID: <20250303143404.623a3178@bootlin.com>
+In-Reply-To: <20250303-urban-trout-of-vastness-f8d0e7@houat>
+References: <20250225-bridge-connector-v4-0-7ecb07b09cad@kernel.org>
+	<20250227120004.77814e09@bootlin.com>
+	<20250303-urban-trout-of-vastness-f8d0e7@houat>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+Precedence: bulk
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: [PATCH v2] mei: Improve exception handling in mei_cl_irq_read_msg()
-To: kernel-janitors@vger.kernel.org,
- Alexander Usyskin <alexander.usyskin@intel.com>,
- Arnd Bergmann <arnd@arndb.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Tomas Winkler <tomas.winkler@intel.com>
-Cc: cocci@inria.fr, LKML <linux-kernel@vger.kernel.org>
-References: <f9303bdc-b1a7-be5e-56c6-dfa8232b8b55@web.de>
- <00589154-00ac-4ed5-2a37-60b3c6f6c523@web.de>
- <b7b6db19-055e-ace8-da37-24b4335e93b2@web.de>
- <MN2PR11MB40930A824DF68F96A93E1B7FE5859@MN2PR11MB4093.namprd11.prod.outlook.com>
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <MN2PR11MB40930A824DF68F96A93E1B7FE5859@MN2PR11MB4093.namprd11.prod.outlook.com>
 Content-Type: text/plain; charset=UTF-8
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdelledviecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkjghfohfogggtgfesthekredtredtjeenucfhrhhomhepjfgvrhhvvgcuvehoughinhgruceohhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeeviefffeegiedtleelieeghfejleeuueevkeevteegffehledtkeegudeigffgvdenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehhvghrvhgvrdgtohguihhnrgessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudeipdhrtghpthhtohepmhhrihhprghrugeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepmhgrrghrthgvnhdrlhgrnhhkhhhorhhstheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehtiihimhhmvghrmhgrnhhnsehsuhhsvgdruggvpdhrtghpthhtoheprghirhhlihgvugesghhmrghilhdrtghomhdprhgtphhtthhopehsihhmohhnrgesfhhffihllhdrtghhpdhrtghpthhtoheprghnu
+ ghriigvjhdrhhgrjhgurgesihhnthgvlhdrtghomhdprhgtphhtthhopehnvghilhdrrghrmhhsthhrohhngheslhhinhgrrhhordhorhhgpdhrtghpthhtoheprhhfohhssheskhgvrhhnvghlrdhorhhg
+X-GND-Sasl: herve.codina@bootlin.com
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:J8W2iKNW1YOzbAMnhs59UwrQGwR1Hh6yGO7inTnU14zkOAupzCK
- d9+IIn2FAt4eO1oHC3z0rvCCtO76XilZNUr1lBfotSduoQwvEqx38iZzNgjRdkkhSCCTMxv
- /iCGdqvvWQaq/fp7ERjtHjiJxLxvtaIvmJyGO2Dw3iOMpzV5Vfi+jtTOFfzzhzJYbb1d6gs
- B8iVPlkbih15zmTVSCN3g==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:9YBNIMP3MJY=;n42+oDqLo6wQnlInoPCWZ53JWo5
- vPe0g1v1iPVJVBX3lQZCBBo4GdaNfkkvbyNuW7p4HKVKEHhtsg5uUwbyt/Q34o1KYLvAOM1H9
- Qs0XMuEYA2IOs92Ki8qAi6MaYVo1RZpyoZ2MGNLZex+fFPatCaCne8GEdEkwFyUkhZa84lozW
- kDCIIZdyunnQcONNQKEbIHQEU/t68T0at36ufZKM2TLG6tvw1hNm7VdLpIt3w870yB+A6fucR
- 0Ql4a3Tc9QBOK4C2poBvuJtWV4zdOm6atgfQWV4Srn8tVubzf6hbgJiMWFbJdqUqw2tBmUsSI
- 0xq9uM21sbD0ZBsThh2rXqZAd9BJKHzwIO+7T8LTeOyjwu1xyy1BN4iQrLijIg/aHC4t3HhIy
- loT5cQSrxTLpBWGlZ5fXBMZvfzbLHRGpgosv/2OZb6bJGDtFJwYGzTV3tYsG6vDiHS8q43OBz
- e61SWjNma9oWJB5hjLvDJprWHuGUdet2S2I+jYZ/g8iWCE6xOBONbbY9J5AUgRzYawIsvn1Sa
- 9NmuoW2bDkCQknfp0wXVtGG4tSnJVTbzJ47sZQulpNs3EeHhfHd8kJpUEx7P2M7UcxlmOSraE
- q0BXphasgMPkrQRtb1wAc/qMDCmLGo8NnUYccIpiopb3WeICO/4Uwqd1nzXtiMYMpkgI4zJrR
- uTgLP9R79sZE1oGNu4S3GsLEQIwIkNeqjz9kWInZnoM+jIP51lMVuZUy3HVDIEWHIBRhDIs2C
- gUJWovKziPfY0zBttTcEErKPN0SIbOYie0VHIZCXU0dNPUM2Usrmf33Dfmb3Ys3qTr5f2sIvK
- Fnu47GsMyn66L2jA8uK49OVNXBE4q+KjHzwApPyGKIG0bK5grn4YZa0SdHqKXC0Rkg+a2/XQo
- dLR29QShm9g6wc4GLFsoNB6glL3+gAHei6RtWjPdFKvwJpsCETPQthDHCKSwurzXeTE9d2gfV
- skCtC0LLA3tBC20bDzN09FXfqSBVkmbZ+Ki/YOuXfW1QqyE8jtK6aZLNw0oIG+YDUsld6/9AN
- kZNr1K8giDfPH/GlcY/+Kabdcf1zn+Xw03gkAPD2vY2NVZJwxTr/WlnHBPKZxssl9oWdzHDrr
- nTXFMV1MygKQ3eB/9OqixtP/5d8YH6NUZKuSqfpIIWq+Eu40HJs1rGKnO7jXY4DmCIlJrJTGu
- RsaLoLPZjLTrnerPNNta0NOhF9KoAJYMHiPho2N114oTn5YAvrTPYt4A8dAjBckWlxHZmjT1e
- JjfSvH4Ni69m+i7AXJncxOF+E52bJi2fsJa00f1ra/wxoFa1dKAtCbb8P5F4YfxZH3F8EF3mK
- NlgGXkoILh07ipFN7p/A4ClS90MbeTm9JEzDryOuAIbO3fdDcacov46zCiD9Vbcpxg5z9PBSh
- vjpxyzEAimIMFbZmHkBmSOj+HR2dbusYfCkLyIyELEzt2eKUWZRcBB+6OxV0QDGGa2Bzq9lJm
- zM8e/nA==
+X-ITU-Libra-ESVA-Information: Please contact Istanbul Teknik Universitesi for more information
+X-ITU-Libra-ESVA-ID: 4Z6dF95swMzFw7F
+X-ITU-Libra-ESVA: No virus found
+X-ITU-Libra-ESVA-From: root@cc.itu.edu.tr
+X-ITU-Libra-ESVA-Watermark: 1741714618.33073@xlhM47y1Cc+My57vT6T6Pg
+X-ITU-MailScanner-SpamCheck: not spam
+Message-ID: <20250303133404.4Isv82JHYldwZDlXoHUOZ6c8ZdV2hQClAvV6uHxSGNI@z>
 
-From: Markus Elfring <elfring@users.sourceforge.net>
-Date: Tue, 4 Mar 2025 18:11:05 +0100
+Hi Maxime,
 
-The label =E2=80=9Cdiscard=E2=80=9D was used to jump to another pointer ch=
-eck despite of
-the detail in the implementation of the function =E2=80=9Cmei_cl_irq_read_=
-msg=E2=80=9D
-that it was determined already that a corresponding variable contained
-a null pointer.
+On Mon, 3 Mar 2025 14:11:05 +0100
+Maxime Ripard <mripard@kernel.org> wrote:
 
-* Thus use an additional label instead.
-
-* Delete a redundant check.
-
-
-This issue was detected by using the Coccinelle software.
-
-Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-=2D--
-
-V2:
-* The summary phrase was adjusted a bit.
-
-* The Fixes tags were omitted.
-
-* The change suggestion was rebased on source files of
-  the software =E2=80=9CLinux next-20250228=E2=80=9D.
-
-
- drivers/misc/mei/interrupt.c | 22 +++++++++++-----------
- 1 file changed, 11 insertions(+), 11 deletions(-)
-
-diff --git a/drivers/misc/mei/interrupt.c b/drivers/misc/mei/interrupt.c
-index b09b79fedaba..af5f01eefea4 100644
-=2D-- a/drivers/misc/mei/interrupt.c
-+++ b/drivers/misc/mei/interrupt.c
-@@ -136,7 +136,7 @@ static int mei_cl_irq_read_msg(struct mei_cl *cl,
- 				cb->ext_hdr =3D kzalloc(sizeof(*gsc_f2h), GFP_KERNEL);
- 				if (!cb->ext_hdr) {
- 					cb->status =3D -ENOMEM;
--					goto discard;
-+					goto move_tail;
- 				}
- 				break;
- 			case MEI_EXT_HDR_NONE:
-@@ -153,7 +153,7 @@ static int mei_cl_irq_read_msg(struct mei_cl *cl,
- 		if (!vtag_hdr && !gsc_f2h) {
- 			cl_dbg(dev, cl, "no vtag or gsc found in extended header.\n");
- 			cb->status =3D -EPROTO;
--			goto discard;
-+			goto move_tail;
- 		}
- 	}
-
-@@ -163,7 +163,7 @@ static int mei_cl_irq_read_msg(struct mei_cl *cl,
- 			cl_err(dev, cl, "mismatched tag: %d !=3D %d\n",
- 			       cb->vtag, vtag_hdr->vtag);
- 			cb->status =3D -EPROTO;
--			goto discard;
-+			goto move_tail;
- 		}
- 		cb->vtag =3D vtag_hdr->vtag;
- 	}
-@@ -174,18 +174,18 @@ static int mei_cl_irq_read_msg(struct mei_cl *cl,
- 		if (!dev->hbm_f_gsc_supported) {
- 			cl_err(dev, cl, "gsc extended header is not supported\n");
- 			cb->status =3D -EPROTO;
--			goto discard;
-+			goto move_tail;
- 		}
-
- 		if (length) {
- 			cl_err(dev, cl, "no data allowed in cb with gsc\n");
- 			cb->status =3D -EPROTO;
--			goto discard;
-+			goto move_tail;
- 		}
- 		if (ext_hdr_len > sizeof(*gsc_f2h)) {
- 			cl_err(dev, cl, "gsc extended header is too big %u\n", ext_hdr_len);
- 			cb->status =3D -EPROTO;
--			goto discard;
-+			goto move_tail;
- 		}
- 		memcpy(cb->ext_hdr, gsc_f2h, ext_hdr_len);
- 	}
-@@ -193,7 +193,7 @@ static int mei_cl_irq_read_msg(struct mei_cl *cl,
- 	if (!mei_cl_is_connected(cl)) {
- 		cl_dbg(dev, cl, "not connected\n");
- 		cb->status =3D -ENODEV;
--		goto discard;
-+		goto move_tail;
- 	}
-
- 	if (mei_hdr->dma_ring)
-@@ -205,14 +205,14 @@ static int mei_cl_irq_read_msg(struct mei_cl *cl,
- 		cl_err(dev, cl, "message is too big len %d idx %zu\n",
- 		       length, cb->buf_idx);
- 		cb->status =3D -EMSGSIZE;
--		goto discard;
-+		goto move_tail;
- 	}
-
- 	if (cb->buf.size < buf_sz) {
- 		cl_dbg(dev, cl, "message overflow. size %zu len %d idx %zu\n",
- 			cb->buf.size, length, cb->buf_idx);
- 		cb->status =3D -EMSGSIZE;
--		goto discard;
-+		goto move_tail;
- 	}
-
- 	if (mei_hdr->dma_ring) {
-@@ -235,9 +235,9 @@ static int mei_cl_irq_read_msg(struct mei_cl *cl,
-
- 	return 0;
-
-+move_tail:
-+	list_move_tail(&cb->list, cmpl_list);
- discard:
--	if (cb)
--		list_move_tail(&cb->list, cmpl_list);
- 	mei_irq_discard_msg(dev, mei_hdr, length);
- 	return 0;
- }
-=2D-
-2.48.1
-
+> On Thu, Feb 27, 2025 at 12:00:04PM +0100, Herve Codina wrote:
+> > Hi Maxime,
+> >=20
+> > On Tue, 25 Feb 2025 17:43:48 +0100
+> > Maxime Ripard <mripard@kernel.org> wrote:
+> >  =20
+> > > Hi,
+> > >=20
+> > > Here's a series of changes after to the KMS helpers and bridge API
+> > > following a bunch of reviews I did.
+> > >=20
+> > > It's mostly centered across providing an easier time to deal with b=
+ridge
+> > > states, and a somewhat consistent with the other entities API.
+> > >=20
+> > > It's build tested only, with arm64 allmodconfig.
+> > >=20
+> > > Maxime
+> > >=20
+> > > Signed-off-by: Maxime Ripard <mripard@kernel.org>
+> > > --- =20
+> >=20
+> > I Tried to test this series on my system but I've got a compilation i=
+ssue.
+> >      depmod: ERROR: Cycle detected: drm -> drm_kms_helper -> drm
+> >      depmod: ERROR: Found 2 modules in dependency cycles!
+> >=20
+> > CONFIG_DRM=3Dm in my configuration. =20
+>=20
+> Could you share your configuration? it doesn't happen with allmodconfig=
