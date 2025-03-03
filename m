@@ -1,153 +1,158 @@
-Received: from mout.web.de (mout.web.de [212.227.15.3])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D1691E521B;
-	Mon,  3 Mar 2025 13:04:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2873220D4EA
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 13:04:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741007089; cv=none; b=cpMyCf+gUDsC6WBIGjZgyDZfN7UE7fdYAkATO83fODmPtbw0r43gUnPcwA3g7BsZZG4YpkXctPHmumkEp6IwfxH/a8y9XDOAlFwbZcSzeUaWilZZsmCfu33s2rdsM8XAcFxfkP+DA6kc+mh3poLYcd3J3yZA8FmsoqCoRHFj1lA=
+	t=1741007094; cv=none; b=QLlMoln3nehPn9qmZVXyB2rHeQbVn2PNJa4oSRZfMPJkQUnriG0DHI66mc3sNpBkPeOCDfjjuk23sh8R3Mcw9/06iFpdQXA031tEQ9kusZmRXq3B+XulMGjxPAxJBYMWdApMNPLYnCWjiE7K8/f5ajrRLo9nZHwYDH6NzfYLAkM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741007089; c=relaxed/simple;
-	bh=bK2QYxfhL69EA5hm+p1hxMIpBV4AYdVsRtMU8Btuowc=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=dG1fwNcCz69IlVFD6gjYVU4A70DR9UEhlrKHVC4iNgWq54We9QdhddqVZazhr8MhEpa7Ncy6bfS31h1oWYgnXlWyWjGO7g1ndfLytl+MvUzBWakz6hHezOMyGfDz1lM+uWeJlsW9Zn1+JzXFBe4WjTWOO/JOJr4H7U01+9089ys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=VUOQXwyk; arc=none smtp.client-ip=212.227.15.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1741007094; c=relaxed/simple;
+	bh=Kc67sUpClxemt8Xxy2aFwoflyMsGfUhh3kfftx68WzA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=I7U9wGEQplT0RheslENRC4ip0Towe6tDsGrAFPfS/0Dzgi0kG7oiApfyI2ZMQAihLNcIABlpN7nMofH9nT6f9BOCWDQPzkA/A87BB7xH2ZIpQhwxph0dpF0hPgN8gg2xVPdPrjHG1TzW1g/x7j0WMRKPQD78a9/vlBjpK65Rja8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YDRHU65A; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="VUOQXwyk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1741007051; x=1741611851; i=markus.elfring@web.de;
-	bh=ZefGaaDikQnjs1LGtmcyi6zUvqK48gTikrVFialZuG8=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:From:To:
-	 Cc:References:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=VUOQXwykHDmRACVU8X33Rt1uW0UUPZiZAC3Wcg0Y4VnTpWz4BJHox8LC2q2aKGj3
-	 /mteEDNZVtYMlJSp50eLAIXVzEQLyajTwhoQZ8gMklF1Fbplz20+4rl9bh8voktCh
-	 7cEYgDwORv85DsKoYhyMiLyQD9/mtqoDk/a6zvi5VYslE9kHUVMJn5N9HurQ4F4tP
-	 5oVv4t8BOx3GfzzP/nkB85IB/UxtjUUx2/CoLb1UzVdyetd4DHwEikdRx3/L0wiJj
-	 21HPZDsF/vGDINJjIVvDtdhH8IrYJpCcLChljjeT/Ck9u+8UwVzVNcTsPuCaLYiBV
-	 I9OSbhrL7JEIcdruKw==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.93.19]) by smtp.web.de (mrweb006
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1Mpl0r-1tTkt42vvR-00eFMs; Mon, 03
- Mar 2025 14:04:11 +0100
-Message-ID: <535ce5e9-9ad0-4a8e-9fc2-0e759417d1b5@web.de>
-Date: Mon, 3 Mar 2025 14:04:08 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YDRHU65A"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C8D5C4CED6
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 13:04:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741007093;
+	bh=Kc67sUpClxemt8Xxy2aFwoflyMsGfUhh3kfftx68WzA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=YDRHU65A1Zoh3hw1p3HsOJsSkqBvhXSHfah9Wlq5+a88AV942SLRoCzZy0pmV6NXf
+	 Qu7+Iac3vuoEI7P/cuKNYGcVIEqg3Rp1KpCKtdDnkDqhwdisDWSRtAeIa468AbqBT2
+	 48epWenhmUO9x3U1IjuiI1eJxV5x5CKAWo8hqcux0/VFCdgciN9DY6QMcsZEfsOGB9
+	 Wx7NYPSdS/UDjgCcdsw4fwQPDfEbbBRCe7Nr5BZH0o2AbckyTQhxBeIJHSNVHgGFE0
+	 k94UiVDiMOmX2TLm5hsXZnk4OsBX5zV21tYr6zL2Mlbx6AdB/GrQsAwMqj3FbxSUgm
+	 0/MeS2k4ccSgQ==
+Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-2f9b9c0088fso7353159a91.0
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Mar 2025 05:04:53 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVPAs9FJKy/RUqJJY3x42Xo/Ip3+GmuBD+snG3lpWVts9rncrZo0tkreHU7t9cKh86S8URELI+liFDcCb0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxHMGVF3l1OKinvfZFNGFIr5bd0DynXnhIioQi5QceuTZV8wJTO
+	7ENozX0bRFdwIN+ztXIHui9PUOU8MkVK1vvWNKH+HfuojBvzZSUGCmdnCPfHIPr5uY/aUunFkid
+	sQAasmVd1gILs0Aab2qgaq8ULUg==
+X-Google-Smtp-Source: AGHT+IH02/n0X6E1gCWCCjIwiDiMBCCog908/wSy8glvpxrUWG7zl9UbjAuOmobw7eTHtsiFGSu1wTms11iI4ft0D/Q=
+X-Received: by 2002:a17:90a:d408:b0:2fa:603e:905c with SMTP id
+ 98e67ed59e1d1-2fea12683b9mr27834691a91.2.1741007093217; Mon, 03 Mar 2025
+ 05:04:53 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: [PATCH RESEND] iwlegacy: Adjust input parameter validation in
- il_set_ht_add_station()
-From: Markus Elfring <Markus.Elfring@web.de>
-To: kernel-janitors@vger.kernel.org, linux-wireless@vger.kernel.org,
- netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Johannes Berg <johannes.berg@intel.com>, Kalle Valo <kvalo@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Sriram R <quic_srirrama@quicinc.com>,
- Stanislaw Gruszka <stf_xl@wp.pl>
-Cc: cocci@inria.fr, LKML <linux-kernel@vger.kernel.org>,
- Simon Horman <horms@kernel.org>
-References: <40c60719-4bfe-b1a4-ead7-724b84637f55@web.de>
- <1a11455f-ab57-dce0-1677-6beb8492a257@web.de>
- <d90b8c11-7a40-eec4-007d-3640c0725a56@web.de>
-Content-Language: en-GB
-In-Reply-To: <d90b8c11-7a40-eec4-007d-3640c0725a56@web.de>
-Content-Type: text/plain; charset=UTF-8
+References: <20250116094249.1.I29b0b621abb613ddc70ab4996426a3909e1aa75f@changeid>
+In-Reply-To: <20250116094249.1.I29b0b621abb613ddc70ab4996426a3909e1aa75f@changeid>
+From: Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Date: Mon, 3 Mar 2025 21:05:40 +0800
+X-Gmail-Original-Message-ID: <CAAOTY__Ka-RD1=XmaAuEjrhkQMQQ7Mg+rgXaNe8ka-VGeRZ4JQ@mail.gmail.com>
+X-Gm-Features: AQ5f1JoCI49gG24ADeeYR9aiQBSlqnUG9YwDaVyfJzTrVZzFPkF3TWLMSnf3T2w
+Message-ID: <CAAOTY__Ka-RD1=XmaAuEjrhkQMQQ7Mg+rgXaNe8ka-VGeRZ4JQ@mail.gmail.com>
+Subject: Re: [PATCH] drm/mediatek: dp: drm_err => dev_err in HPD path to avoid
+ NULL ptr
+To: Douglas Anderson <dianders@chromium.org>
+Cc: Chun-Kuang Hu <chunkuang.hu@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
+	Alexandre Mergnat <amergnat@baylibre.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, CK Hu <ck.hu@mediatek.com>, 
+	David Airlie <airlied@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, dri-devel@lists.freedesktop.org, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-mediatek@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:jymu+Pr/1TM+UE1JmuPUEORIpf2+qiF1lVGAScvypt9vYK8bt5v
- idl/iM8PTR6GeLd8dQ/PV/NBe0QVMImhaGA/no3YROXP3+O/ZMOy4OehC8kK1NC2wLPrUvt
- mJEk30C10DOjyID6CK8aBMgsaNMkOjtScGq/Ry79uPBtaLQhcIZOOcMSxwHv5KgFjxKOoBL
- v2j/MsWi3yyovatcuxhRQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:uVOiMT9twh4=;NMDytpay6lIFj3dsqdE/Z4Yl4c/
- t592kNeaCLxQJXeAmgukVFmcI623zCrOqNmZIWtsJOfMWfm+KPzGUaD+bukKKNt9QupSsprUS
- eryIqHbO+P/CgFsCs1cljKSTsUodBNmNHfg77J9K9QBRh1hdQXs5hXrrQgcECr0ih/FdOLxp9
- 2fDlGbiCR7yzXHW+wCiZk3bhQRf5T4E3x+UwpNZ2rsn+jtnlk9EEAKZpv7gtmJjOtKZt1dB1p
- yQ8kYbxeBgbcZLAFMz6ospRvWCf2B3lWMZcCRiWipObsYtnM50kFRxxFFeEXih2S2+HWHG69w
- hnd0HWQW5MbxO96aDIAvpIFGWFcPGDY9DGArE8VvtUuOeRH/jk7A/AkqBpJ5CymTc22IvTRH9
- 8zdrwBZMhC4SDK8KWAbiALVy6j7y1nOQrNX89TgvE3oTACLW1/uAkP1+A2N3jPMtRyF9CZKtA
- jbLt6Fvk+0inAjpbIzXZyA05rNpP2SnBvm9cXlQGWe+/D5xoNx6cmX2vi3QNLxndGhhTWWIUO
- G2yu6Gp7Y5vZAllrjWB104TQ754TBOIZPJi7LmnCAJ3j9ej471RsuyRpHiI81YYff01NJva9d
- rsSTkuTeucTVezfTplviL/cLvGGGqIYzTqDWPhYaMPElMWJAyJEmFtpvfxceZYMA3t6nvDdEZ
- l+qWL5NbV0cdTRnnXXMCzpQztkXihe/fnS+sKq8DwJORqkMr18CUKj5t52cu4114jpS9E0d4r
- IhdFDt6gq9jRO7dADQtmHKsBAnMnjLcDK3VsJxUlaDYefXnQCGNdSrQmAEtUupKnKL0ESYJSM
- W+xqVwjbpQqGdyKGwi9xfI+wCpAxx5Sg/McPGYwVFJjKNhsv1TyDqwIZqt1JNvHQKvuTxAk5x
- FQ1LdHN7h+4+K31L9Uv/D0bjGxvNzAzkC9nXad5AZ8VZWc2+OS47kOkSeRbY9auS4jZfQCi9B
- 0K5eXCYA6BCFP+JwYOWe7B2dWfhx7rFft289lQFW2cuhThgcSJk/aD7KGMORPxbRqhMem2iNE
- /Aqj2uDhNAZvQOlK/zulc6hWf0Q4ckiBnN96Q704GV988t+wFWn54jXGUbHODCfM17hBs2Suv
- wrfLBztoieDegRtA6YBhegRCL/EG1WhaB1AkEbA4y+r07nC2JkJWBVvll11IyjtLdfIn7jCSz
- pvCsN5ZljvPq3QXxY9wQTCArITqU8afvoGTFGXQbgFDG4zTO9MKk7iauXDiMQXn9IXv3Aju3u
- etaLLjGHpdY1L6t7AvuuDo9XbPTuJy3wYJXWsYI1EZqrtwrWZnJZaIsGkuojCz88m4mGL9tJ6
- WTviBm2dVQrszANHsNdjCfWLuRyhDTiMmRiD5s9tvYImRQs87/tkZQ0E2XCfA3FcPoZ2JVx0Z
- Jzxe5c4toDudXb1oe93JEGuRP3EMfJjmXDLdg3e/p7uwvAOIwB5PwuInPuBnhLLYC2XgNNixo
- iVdIJYNXq3AFU7mVU129qBvfhyk4=
 
-From: Markus Elfring <elfring@users.sourceforge.net>
-Date: Wed, 19 Apr 2023 18:35:55 +0200
+Hi, Douglas:
 
-The address of a data structure member was determined before
-a corresponding null pointer check in the implementation of
-the function =E2=80=9Cil_set_ht_add_station=E2=80=9D.
+Douglas Anderson <dianders@chromium.org> =E6=96=BC 2025=E5=B9=B41=E6=9C=881=
+7=E6=97=A5 =E9=80=B1=E4=BA=94 =E4=B8=8A=E5=8D=881:43=E5=AF=AB=E9=81=93=EF=
+=BC=9A
+>
+> The function mtk_dp_wait_hpd_asserted() may be called before the
+> `mtk_dp->drm_dev` pointer is assigned in mtk_dp_bridge_attach().
+> Specifically it can be called via this callpath:
+>  - mtk_edp_wait_hpd_asserted
+>  - [panel probe]
+>  - dp_aux_ep_probe
+>
+> Using "drm" level prints anywhere in this callpath causes a NULL
+> pointer dereference. Change the error message directly in
+> mtk_dp_wait_hpd_asserted() to dev_err() to avoid this. Also change the
+> error messages in mtk_dp_parse_capabilities(), which is called by
+> mtk_dp_wait_hpd_asserted().
+>
+> While touching these prints, also add the error code to them to make
+> future debugging easier.
 
-Thus avoid the risk for undefined behaviour by moving the assignment
-for the variable =E2=80=9Csta_ht_inf=E2=80=9D behind the null pointer chec=
-k.
+Applied to mediatek-drm-next [1], thanks.
 
-This issue was detected by using the Coccinelle software.
+[1] https://web.git.kernel.org/pub/scm/linux/kernel/git/chunkuang.hu/linux.=
+git/log/?h=3Dmediatek-drm-next
 
+Regards,
+Chun-Kuang.
 
-Delete also the jump target =E2=80=9Cdone=E2=80=9D by using return stateme=
-nts directly
-for two if branches.
-
-Fixes: 046d2e7c50e3 ("mac80211: prepare sta handling for MLO support")
-Fixes: e7392364fcd1 ("iwlegacy: indentions and whitespaces")
-Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-=2D--
- drivers/net/wireless/intel/iwlegacy/common.c | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/net/wireless/intel/iwlegacy/common.c b/drivers/net/wi=
-reless/intel/iwlegacy/common.c
-index 96002121bb8b..8f6fd17b02a8 100644
-=2D-- a/drivers/net/wireless/intel/iwlegacy/common.c
-+++ b/drivers/net/wireless/intel/iwlegacy/common.c
-@@ -1863,11 +1863,15 @@ EXPORT_SYMBOL(il_send_add_sta);
- static void
- il_set_ht_add_station(struct il_priv *il, u8 idx, struct ieee80211_sta *s=
-ta)
- {
--	struct ieee80211_sta_ht_cap *sta_ht_inf =3D &sta->deflink.ht_cap;
-+	struct ieee80211_sta_ht_cap *sta_ht_inf;
- 	__le32 sta_flags;
-
--	if (!sta || !sta_ht_inf->ht_supported)
--		goto done;
-+	if (!sta)
-+		return;
-+
-+	sta_ht_inf =3D &sta->deflink.ht_cap;
-+	if (!sta_ht_inf->ht_supported)
-+		return;
-
- 	D_ASSOC("spatial multiplexing power save mode: %s\n",
- 		(sta->deflink.smps_mode =3D=3D IEEE80211_SMPS_STATIC) ? "static" :
-@@ -1906,8 +1910,6 @@ il_set_ht_add_station(struct il_priv *il, u8 idx, st=
-ruct ieee80211_sta *sta)
- 		sta_flags &=3D ~STA_FLG_HT40_EN_MSK;
-
- 	il->stations[idx].sta.station_flags =3D sta_flags;
--done:
--	return;
- }
-
- /*
-=2D-
-2.40.0
-
+>
+> Fixes: 7eacba9a083b ("drm/mediatek: dp: Add .wait_hpd_asserted() for AUX =
+bus")
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> ---
+> Unfortunately, I have only been able to compile-time test this code. I
+> hit the NULL pointer dereference on a device that's nowhere near
+> upstream and it was running (sigh) a heavily modified copy of this
+> code where the eDP stuff has been forked out of DP. Specifically, you
+> can see <https://crrev.com/c/6073744>. It's pretty easy to understand
+> that the same problem affects both codebases though, so I'm posting
+> this "blind" in the hopes to at least fix upstream.
+>
+> I'll also note that the fact that mtk_edp_wait_hpd_asserted() calls
+> mtk_dp_parse_capabilities() feels weird/wrong to me based on other eDP
+> code I've worked on, but I've only barely looked at the Mediatek
+> driver and perhaps others have already debated this. In any case,
+> that's not directly related to this patch.
+>
+>  drivers/gpu/drm/mediatek/mtk_dp.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/mediatek/mtk_dp.c b/drivers/gpu/drm/mediatek=
+/mtk_dp.c
+> index 0687672f0e52..ccd104d8851f 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_dp.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_dp.c
+> @@ -1763,7 +1763,7 @@ static int mtk_dp_parse_capabilities(struct mtk_dp =
+*mtk_dp)
+>
+>         ret =3D drm_dp_dpcd_readb(&mtk_dp->aux, DP_MSTM_CAP, &val);
+>         if (ret < 1) {
+> -               drm_err(mtk_dp->drm_dev, "Read mstm cap failed\n");
+> +               dev_err(mtk_dp->dev, "Read mstm cap failed: %zd\n", ret);
+>                 return ret =3D=3D 0 ? -EIO : ret;
+>         }
+>
+> @@ -1773,7 +1773,7 @@ static int mtk_dp_parse_capabilities(struct mtk_dp =
+*mtk_dp)
+>                                         DP_DEVICE_SERVICE_IRQ_VECTOR_ESI0=
+,
+>                                         &val);
+>                 if (ret < 1) {
+> -                       drm_err(mtk_dp->drm_dev, "Read irq vector failed\=
+n");
+> +                       dev_err(mtk_dp->dev, "Read irq vector failed: %zd=
+\n", ret);
+>                         return ret =3D=3D 0 ? -EIO : ret;
+>                 }
+>
+> @@ -2056,7 +2056,7 @@ static int mtk_dp_wait_hpd_asserted(struct drm_dp_a=
+ux *mtk_aux, unsigned long wa
+>
+>         ret =3D mtk_dp_parse_capabilities(mtk_dp);
+>         if (ret) {
+> -               drm_err(mtk_dp->drm_dev, "Can't parse capabilities\n");
+> +               dev_err(mtk_dp->dev, "Can't parse capabilities: %d\n", re=
+t);
+>                 return ret;
+>         }
+>
+> --
+> 2.48.0.rc2.279.g1de40edade-goog
+>
