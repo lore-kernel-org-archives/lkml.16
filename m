@@ -1,46 +1,46 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B95702356DC
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 23:34:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B46323719E
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 23:34:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741044890; cv=none; b=shGHiu9NcuGt6/P673ZWe9oMbfR8oXADzFc3LjFapdDyXI4qOEHkYi+FZEOc3nMCXmdNDYo8ldYzgqxbFd3wJ6yraALEosuXFqsxfXhqlCcQ9mJ58MUphbGjX1tYellZm3VhwV82pWn8b5xVIxKJSiZQX51YuSy/PiRiNbbinHE=
+	t=1741044891; cv=none; b=qsBaZ/JeNLa65fy48dVaT/SAqQOelcrCBQ/6z/671swWW3MILcdBMSzU76PrhKGyZhsrHY1TUOGmnUrRvGQZPKe8v0LcqMrxE6OTl2dvWTR91Yqv9cGvfneQBMfLGCkCvUMhdElonEUL5uqOlBbneRt986hwwqF7HTWFEkFK7a4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741044890; c=relaxed/simple;
-	bh=uvN0CFicBAuI2wa5AZA2m8GAenZkKcAknc7QVhdTpqM=;
+	s=arc-20240116; t=1741044891; c=relaxed/simple;
+	bh=yy0dlVhKmEuufnCmp400TE9M9AV853wWbPKFkEusswM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=R4WiyT0+sDppA8E922HG4NDxKtKTDNW5pOHR9uwi49/hjqx3EyJsV0D59ygVkaWqRKsnI/epT8W/bQdWHFdAAuwh+GGZQVLCGvnqH28/Uc3J7izvLzruMGifwwDtTjpjCyBgrBoMK9HID9I4zMaR2jg1vS5LaAk1ozb8iHHRxI4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=c+vH40u2; arc=none smtp.client-ip=192.198.163.17
+	 MIME-Version; b=Kx4PgHgr6QRl/OXKjOMWr5d9FGZGQRkofhKMJXfafJ4v42WxGP5oVm8obWjlACxrMi8OWb4a1dRxvicjot+bIqYAWrpnwgOtmLap5ZqiHIVzf18Y/yg+oquQ+7/JDD6Up9ua/8IFqZYIaCiRNOkqe/jLC7NRz/0le/DSJGfaIgM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IkK/Bk1c; arc=none smtp.client-ip=192.198.163.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="c+vH40u2"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IkK/Bk1c"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
   t=1741044889; x=1772580889;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=uvN0CFicBAuI2wa5AZA2m8GAenZkKcAknc7QVhdTpqM=;
-  b=c+vH40u2JN7C4avGGbXLNkx6Ezb3Fk5oBUC4BxF6rsOxZcuuCITGXayH
-   lvyQ+qtpEBaSbc9lcq6oIHMfIOfvR6GgTuguBVfWcFPPxyTmpLmZblpIa
-   jA2CyUAh5m7oevJ6pFbxGOaI2vIlrgfsk8M1W+j0Lvs7UJ5cbGOS9tTpl
-   c6Sp03u+0b+Iyl/HvFtEulLZt6jD6EplGjnMCKZ4LGK80tu2j544wIuZd
-   s1L45hT2XTW8isUCq4r3h86pYHkJKWi2xnSaNMeutFaW+iK2am/6nVacH
-   Zz1FLLKJwYmFuiq3tUQ9Mi3bTSCtI+9C2gbzgtF0LyR8khRuNjx5MShq0
-   g==;
-X-CSE-ConnectionGUID: o0lQHTZOQZaE3QLEJN5n2Q==
-X-CSE-MsgGUID: yoxbT22JScW31C01hulZzw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11362"; a="41835907"
+  bh=yy0dlVhKmEuufnCmp400TE9M9AV853wWbPKFkEusswM=;
+  b=IkK/Bk1cGfXdzvpcec1dJid8a9AEpiaQlpQ/weXE94ZHPT8iESUJ7K1N
+   aBe2vPZCqchyPUFpGspR2COqjIS2D0GuWI+APhuI8E2upuyC2DmiIMsCi
+   MH6HR7+PQPIjXIkzp4LHMw6o7KYgYQknvn1hOsNJzKCuh2psVwVwBMaGJ
+   Tp7J9cbDcdpIzC3jSDX+A+gn34BpV64BjGMbXsWiMBpfR2Q8NjkpBSglR
+   8USszJup4skOhWXjJ5+Hx73R4WGwRxUdgdX9jM90jN8B5iQ21HCqWO2VF
+   QkqhU0hvsL1UuuUcTpcG/H6cT9bBfGd002FXJNozrA7IJ/ygjoXGbMTQN
+   Q==;
+X-CSE-ConnectionGUID: 7/SXYnMoSCaAkU91a1plpQ==
+X-CSE-MsgGUID: 3Nn4IBLmSYuhaVSUYPHtyQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11362"; a="41835922"
 X-IronPort-AV: E=Sophos;i="6.13,330,1732608000"; 
-   d="scan'208";a="41835907"
+   d="scan'208";a="41835922"
 Received: from fmviesa006.fm.intel.com ([10.60.135.146])
   by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Mar 2025 15:34:46 -0800
-X-CSE-ConnectionGUID: WxlDdYqrTIucBT13ZhgrkQ==
-X-CSE-MsgGUID: 1S8qf5VrSWqc6TIvt7YUZw==
+X-CSE-ConnectionGUID: ZsKdpOW4SA6xeb013sQObw==
+X-CSE-MsgGUID: vynoUKVTS3iMt5Uohz5NGw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.13,330,1732608000"; 
-   d="scan'208";a="117982280"
+   d="scan'208";a="117982286"
 Received: from agluck-desk3.sc.intel.com ([172.25.222.70])
   by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Mar 2025 15:33:50 -0800
 From: Tony Luck <tony.luck@intel.com>
@@ -55,9 +55,9 @@ To: Fenghua Yu <fenghuay@nvidia.com>,
 Cc: linux-kernel@vger.kernel.org,
 	patches@lists.linux.dev,
 	Tony Luck <tony.luck@intel.com>
-Subject: [RFC PATCH 01/17] x86/rectrl: Fake OOBMSM interface
-Date: Mon,  3 Mar 2025 15:33:21 -0800
-Message-ID: <20250303233340.333743-2-tony.luck@intel.com>
+Subject: [RFC PATCH 04/17] x86/resctrl: Split L3 specific code out of rdtgroup_mondata_show()
+Date: Mon,  3 Mar 2025 15:33:24 -0800
+Message-ID: <20250303233340.333743-5-tony.luck@intel.com>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250303233340.333743-1-tony.luck@intel.com>
 References: <20250303233340.333743-1-tony.luck@intel.com>
@@ -69,209 +69,135 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Real version is coming soon ... this is here so the remaining parts
-will build (and run ... assuming a 2 socket system that supports RDT
-monitoring ... only missing part is that the event counters just
-report fixed values).
+New monitor resources require different operations to read counters.
 
-Real version of this would just add the INTEL_PMT_RESCTRL Kconfig
-option with dependency checks on
-  INTEL_VSEC=y && INTEL_PMT_TELEMETRY=y && INTEL_PMT_DISCOVERY=y
-
-Just for RFC discussion.
+Move the L3 specific code to a helper function.
 
 Signed-off-by: Tony Luck <tony.luck@intel.com>
 ---
- .../cpu/resctrl/fake_intel_pmt_features.h     | 72 +++++++++++++++++++
- .../cpu/resctrl/fake_intel_pmt_features.c     | 64 +++++++++++++++++
- arch/x86/Kconfig                              |  1 +
- arch/x86/kernel/cpu/resctrl/Makefile          |  1 +
- drivers/platform/x86/intel/pmt/Kconfig        |  3 +
- 5 files changed, 141 insertions(+)
- create mode 100644 arch/x86/kernel/cpu/resctrl/fake_intel_pmt_features.h
- create mode 100644 arch/x86/kernel/cpu/resctrl/fake_intel_pmt_features.c
+ arch/x86/kernel/cpu/resctrl/ctrlmondata.c | 79 +++++++++++++----------
+ 1 file changed, 46 insertions(+), 33 deletions(-)
 
-diff --git a/arch/x86/kernel/cpu/resctrl/fake_intel_pmt_features.h b/arch/x86/kernel/cpu/resctrl/fake_intel_pmt_features.h
-new file mode 100644
-index 000000000000..52fdd04e5094
---- /dev/null
-+++ b/arch/x86/kernel/cpu/resctrl/fake_intel_pmt_features.h
-@@ -0,0 +1,72 @@
-+
-+/* Bits stolen from OOBMSM VSEC discovery code */
-+
-+enum pmt_feature_id {
-+	FEATURE_INVALID			= 0x0,
-+	FEATURE_PER_CORE_PERF_TELEM	= 0x1,
-+	FEATURE_PER_CORE_ENV_TELEM	= 0x2,
-+	FEATURE_PER_RMID_PERF_TELEM	= 0x3,
-+	FEATURE_ACCEL_TELEM		= 0x4,
-+	FEATURE_UNCORE_TELEM		= 0x5,
-+	FEATURE_CRASH_LOG		= 0x6,
-+	FEATURE_PETE_LOG		= 0x7,
-+	FEATURE_TPMI_CTRL		= 0x8,
-+	FEATURE_RESERVED		= 0x9,
-+	FEATURE_TRACING			= 0xA,
-+	FEATURE_PER_RMID_ENERGY_TELEM	= 0xB,
-+	FEATURE_MAX			= 0xB,
-+};
-+
-+/**
-+ * struct oobmsm_plat_info - Platform information for a device instance
-+ * @cdie_mask:       Mask of all compute dies in the partition
-+ * @package_id:      CPU Package id
-+ * @partition:       Package partition id when multiple VSEC PCI devices per package
-+ * @segment:         PCI segment ID
-+ * @bus_number:      PCI bus number
-+ * @device_number:   PCI device number
-+ * @function_number: PCI function number
-+ *
-+ * Structure to store platform data for a OOBMSM device instance.
-+ */
-+struct oobmsm_plat_info {
-+	u16 cdie_mask;
-+	u8 package_id;
-+	u8 partition;
-+	u8 segment;
-+	u8 bus_number;
-+	u8 device_number;
-+	u8 function_number;
-+};
-+
-+enum oobmsm_supplier_type {
-+	OOBMSM_SUP_PLAT_INFO,
-+	OOBMSM_SUP_DISC_INFO,
-+	OOBMSM_SUP_S3M_SIMICS,
-+	OOBMSM_SUP_TYPE_MAX
-+};
-+
-+struct oobmsm_mapping_supplier {
-+	struct device *supplier_dev[OOBMSM_SUP_TYPE_MAX];
-+	struct oobmsm_plat_info plat_info;
-+	unsigned long features;
-+};
-+
-+struct telemetry_region {
-+	struct oobmsm_plat_info	plat_info;
-+	void __iomem		*addr;
-+	size_t			size;
-+	u32			guid;
-+	u32			num_rmids;
-+};
-+
-+struct pmt_feature_group {
-+	enum pmt_feature_id	id;
-+	int			count;
-+	struct kref		kref;
-+	struct telemetry_region	regions[];
-+};
-+
-+struct pmt_feature_group *intel_pmt_get_regions_by_feature(enum pmt_feature_id id);
-+
-+void intel_pmt_put_feature_group(struct pmt_feature_group *feature_group);
-diff --git a/arch/x86/kernel/cpu/resctrl/fake_intel_pmt_features.c b/arch/x86/kernel/cpu/resctrl/fake_intel_pmt_features.c
-new file mode 100644
-index 000000000000..6d27cf1a151b
---- /dev/null
-+++ b/arch/x86/kernel/cpu/resctrl/fake_intel_pmt_features.c
-@@ -0,0 +1,64 @@
-+#include <linux/cleanup.h>
-+#include <linux/minmax.h>
-+#include <linux/slab.h>
-+#include "fake_intel_pmt_features.h"
-+#include <linux/intel_vsec.h>
-+#include <asm/resctrl.h>
-+
-+#include "internal.h"
-+
-+#define ENERGY_QWORDS	((576 * 2) + 3)
-+#define PERF_QWORDS	((576 * 7) + 3)
-+
-+static long pg[4 * ENERGY_QWORDS + 2 * PERF_QWORDS];
-+
-+static int __init fill(void)
-+{
-+	u64 val = 0;
-+
-+	for (int i = 0; i < sizeof(pg); i += sizeof(val)) {
-+		pg[i / sizeof(val)] = BIT_ULL(63) + val;
-+		val++;
-+	}
+diff --git a/arch/x86/kernel/cpu/resctrl/ctrlmondata.c b/arch/x86/kernel/cpu/resctrl/ctrlmondata.c
+index 536351159cc2..515a9bec05cd 100644
+--- a/arch/x86/kernel/cpu/resctrl/ctrlmondata.c
++++ b/arch/x86/kernel/cpu/resctrl/ctrlmondata.c
+@@ -627,31 +627,14 @@ void mon_event_read(struct rmid_read *rr, struct rdt_resource *r,
+ 	resctrl_arch_mon_ctx_free(r, evtid, rr->arch_mon_ctx);
+ }
+ 
+-int rdtgroup_mondata_show(struct seq_file *m, void *arg)
++static int rdtgroup_l3_data_show(struct seq_file *m, struct rdt_resource *r,
++				 int domid, struct rdtgroup *rdtgrp, u32 evtid,
++				 bool sum, struct rmid_read *rr)
+ {
+-	struct kernfs_open_file *of = m->private;
+ 	struct rdt_domain_hdr *hdr;
+-	struct rmid_read rr = {0};
+ 	struct rdt_mon_domain *d;
+-	u32 resid, evtid, domid;
+-	struct rdtgroup *rdtgrp;
+-	struct rdt_resource *r;
+-	union mon_data_bits md;
+-	int ret = 0;
+-
+-	rdtgrp = rdtgroup_kn_lock_live(of->kn);
+-	if (!rdtgrp) {
+-		ret = -ENOENT;
+-		goto out;
+-	}
+ 
+-	md.priv = of->kn->priv;
+-	resid = md.u.rid;
+-	domid = md.u.domid;
+-	evtid = md.u.evtid;
+-	r = &rdt_resources_all[resid].r_resctrl;
+-
+-	if (md.u.sum) {
++	if (sum) {
+ 		/*
+ 		 * This file requires summing across all domains that share
+ 		 * the L3 cache id that was provided in the "domid" field of the
+@@ -660,37 +643,67 @@ int rdtgroup_mondata_show(struct seq_file *m, void *arg)
+ 		 */
+ 		list_for_each_entry(d, &r->mon_domains, hdr.list) {
+ 			if (d->ci->id == domid) {
+-				rr.ci = d->ci;
+-				mon_event_read(&rr, r, NULL, rdtgrp,
++				rr->ci = d->ci;
++				mon_event_read(rr, r, NULL, rdtgrp,
+ 					       &d->ci->shared_cpu_map, evtid, false);
+ 				goto checkresult;
+ 			}
+ 		}
+-		ret = -ENOENT;
+-		goto out;
++		return -ENOENT;
+ 	} else {
+ 		/*
+ 		 * This file provides data from a single domain. Search
+ 		 * the resource to find the domain with "domid".
+ 		 */
+ 		hdr = rdt_find_domain(&r->mon_domains, domid, NULL);
+-		if (!hdr || WARN_ON_ONCE(hdr->type != RESCTRL_MON_DOMAIN)) {
+-			ret = -ENOENT;
+-			goto out;
+-		}
++		if (!hdr || WARN_ON_ONCE(hdr->type != RESCTRL_MON_DOMAIN))
++			return -ENOENT;
+ 		d = container_of(hdr, struct rdt_mon_domain, hdr);
+-		mon_event_read(&rr, r, d, rdtgrp, &d->hdr.cpu_mask, evtid, false);
++		mon_event_read(rr, r, d, rdtgrp, &d->hdr.cpu_mask, evtid, false);
+ 	}
+ 
+ checkresult:
+ 
+-	if (rr.err == -EIO)
++	if (rr->err == -EIO)
+ 		seq_puts(m, "Error\n");
+-	else if (rr.err == -EINVAL)
++	else if (rr->err == -EINVAL)
+ 		seq_puts(m, "Unavailable\n");
+ 	else
+-		seq_printf(m, "%llu\n", rr.val);
++		seq_printf(m, "%llu\n", rr->val);
+ 
 +	return 0;
 +}
-+device_initcall(fill);
 +
-+#define PKG_REGION(_entry, _guid, _addr, _pkg)	\
-+	[_entry] = { .guid = _guid, .addr = _addr, .plat_info = { .package_id = _pkg }}
-+
-+static struct pmt_feature_group fake_energy = {
-+	.count = 4,
-+	.regions = {
-+		PKG_REGION(0, 0x26696143, &pg[0 * ENERGY_QWORDS], 0),
-+		PKG_REGION(1, 0x26696143, &pg[1 * ENERGY_QWORDS], 0),
-+		PKG_REGION(2, 0x26696143, &pg[2 * ENERGY_QWORDS], 1),
-+		PKG_REGION(3, 0x26696143, &pg[3 * ENERGY_QWORDS], 1)
-+	}
-+};
-+
-+static struct pmt_feature_group fake_perf = {
-+	.count = 2,
-+	.regions = {
-+		PKG_REGION(0, 0x26557651, &pg[4 * ENERGY_QWORDS + 0 * PERF_QWORDS], 0),
-+		PKG_REGION(1, 0x26557651, &pg[4 * ENERGY_QWORDS + 1 * PERF_QWORDS], 1)
-+	}
-+};
-+
-+struct pmt_feature_group *
-+intel_pmt_get_regions_by_feature(enum pmt_feature_id id)
++int rdtgroup_mondata_show(struct seq_file *m, void *arg)
 +{
-+	switch (id) {
-+	case FEATURE_PER_RMID_ENERGY_TELEM:
-+		return &fake_energy;
-+	case FEATURE_PER_RMID_PERF_TELEM:
-+		return &fake_perf;
++	struct kernfs_open_file *of = m->private;
++	struct rmid_read rr = {0};
++	u32 resid, evtid, domid;
++	struct rdtgroup *rdtgrp;
++	struct rdt_resource *r;
++	union mon_data_bits md;
++	int ret = 0;
++
++	rdtgrp = rdtgroup_kn_lock_live(of->kn);
++	if (!rdtgrp) {
++		ret = -ENOENT;
++		goto out;
++	}
++
++	md.priv = of->kn->priv;
++	resid = md.u.rid;
++	domid = md.u.domid;
++	evtid = md.u.evtid;
++	r = &rdt_resources_all[resid].r_resctrl;
++
++	switch (r->rid) {
++	case RDT_RESOURCE_L3:
++		ret = rdtgroup_l3_data_show(m, r, domid, rdtgrp, evtid, md.u.sum, &rr);
++		break;
 +	default:
-+		return ERR_PTR(-ENOENT);
++		ret = -EINVAL;
++		break;
 +	}
-+	return ERR_PTR(-ENOENT);
-+}
-+
-+void intel_pmt_put_feature_group(struct pmt_feature_group *feature_group)
-+{
-+}
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index be2c311f5118..ec6a7b996e09 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -505,6 +505,7 @@ config X86_CPU_RESCTRL
- 	depends on X86 && (CPU_SUP_INTEL || CPU_SUP_AMD)
- 	select KERNFS
- 	select PROC_CPU_RESCTRL		if PROC_FS
-+	select INTEL_PMT_RESCTRL
- 	help
- 	  Enable x86 CPU resource control support.
- 
-diff --git a/arch/x86/kernel/cpu/resctrl/Makefile b/arch/x86/kernel/cpu/resctrl/Makefile
-index 4a06c37b9cf1..72621ea6cd6a 100644
---- a/arch/x86/kernel/cpu/resctrl/Makefile
-+++ b/arch/x86/kernel/cpu/resctrl/Makefile
-@@ -1,4 +1,5 @@
- # SPDX-License-Identifier: GPL-2.0
- obj-$(CONFIG_X86_CPU_RESCTRL)	+= core.o rdtgroup.o monitor.o
- obj-$(CONFIG_X86_CPU_RESCTRL)	+= ctrlmondata.o pseudo_lock.o
-+obj-$(CONFIG_INTEL_PMT_RESCTRL)	+= fake_intel_pmt_features.o
- CFLAGS_pseudo_lock.o = -I$(src)
-diff --git a/drivers/platform/x86/intel/pmt/Kconfig b/drivers/platform/x86/intel/pmt/Kconfig
-index e916fc966221..4cbfd8a42252 100644
---- a/drivers/platform/x86/intel/pmt/Kconfig
-+++ b/drivers/platform/x86/intel/pmt/Kconfig
-@@ -38,3 +38,6 @@ config INTEL_PMT_CRASHLOG
- 
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called intel_pmt_crashlog.
-+
-+config INTEL_PMT_RESCTRL
-+	bool
+ out:
+ 	rdtgroup_kn_unlock(of->kn);
+ 	return ret;
 -- 
 2.48.1
 
