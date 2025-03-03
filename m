@@ -1,83 +1,181 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6D626ADD
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 15:55:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A37D26ADD
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 15:56:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741017334; cv=none; b=ehQV/eZsWwc9kR20dGzjZnucKS0Pua+WO6T5IfsPO7p/n4jMl6rqYlC8xoMl8mx22X/xzQZwGjr80mG2efMw103GIOdxOKG3Cz0ewtdAvlLQvrTljOAk9n/aykMy9h7eGx84obhOFcHIQMr3G7rZAZaL4QikL/hN1npCq2Nvn88=
+	t=1741017404; cv=none; b=LfFHhrf+GArmD7n1uDllpzjRZr6EB9kJ5F8pqT90v/DrTgIol064xPSf6Tgf9/hvw1TT25Q6qMFdGDsXfBBEEQ+Xiy33pYX6EKjLKUQkjQ4QlZWOs3BqEqTRpfPXGpqQGBMNmo/lXNdOadRWZgflpiP3CUcBKlHtVjqD2ytQDc8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741017334; c=relaxed/simple;
-	bh=uEsznxX/xMb286UGCWYy8SkfkN538iRw91fvaeob1J8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qV/lqa4AZOLOwXDI9QE552qBQFYa6/Av2yZ317gkTpqinWsN21kiHNAKAjc11xbH3qDC8te209vd0Mw95EAvpQHQ3DAE1dvZPL9WXaY8yPBBt5/CmD6Rr1k5hqoHSzpkGyVHRbxKNfCECl+j8/423Qi+c6rjBEiXVwmG3O9gQ/0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=aTiJSvLV; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1741017404; c=relaxed/simple;
+	bh=G7BSdB03LBAtyahtt4BVZIxg8odkNnUmGaooKqtAa7I=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=GF+UpE/mnEnALkwjcjJmvUGHjIk4MkAlnu6291YmIpMcceJQomN8144fa7vt2+oAz45Z/vrGIbzM/HYRbG00i41diGi89fw2VddPx9HWk6bj/MiAnYvL2BW8LyYbVbHMlrpVjQOFT8aVP1+e1M2TeLSd5s98c4eFhvsAYi/gPx0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=YzVTJcJB; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=I2PXYwUf; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=YzVTJcJB; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=I2PXYwUf; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aTiJSvLV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1741017331;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="YzVTJcJB";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="I2PXYwUf";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="YzVTJcJB";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="I2PXYwUf"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id ACDA41F444;
+	Mon,  3 Mar 2025 15:56:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1741017400; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=uEsznxX/xMb286UGCWYy8SkfkN538iRw91fvaeob1J8=;
-	b=aTiJSvLVId/YLHA+qglJvrVrfeYqV+0wShT/B4mH0sSVstIImF2Q4d5lsSdhM09Mn9VjeL
-	QZGS8/8mDZ+Z5SA3ArBGsohPob0siLMkg4yL0ibCEpG73XEzzMQuiUl7Ujtza6yWtNrejy
-	9Q2vI1v3/CHYpVP/c/Fiq+rsq7V+iBQ=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-604-Vx-BSXj3M-OPZ-anoaffTA-1; Mon, 03 Mar 2025 10:55:25 -0500
-X-MC-Unique: Vx-BSXj3M-OPZ-anoaffTA-1
-X-Mimecast-MFC-AGG-ID: Vx-BSXj3M-OPZ-anoaffTA_1741017324
-Received: by mail-ed1-f70.google.com with SMTP id 4fb4d7f45d1cf-5e4c2618332so1059080a12.2
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Mar 2025 07:55:25 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741017324; x=1741622124;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=uEsznxX/xMb286UGCWYy8SkfkN538iRw91fvaeob1J8=;
-        b=QGIfRSNfFJxvYTx+sN2qOVr0MdXRu+Skc5FBx23xeDMV9VlSJeCYnUEroXdDvHyxCC
-         rEZts0yQNvXtj+X+BGhJBDoxbdQtYTxXk+XycHie56jJ4zEvEgsJ7On8/2a+xL/ilXwK
-         nygr8r4TQe37BS3QQiynPsfz3b96LkYOEEoB8kcmzplGTXJTI+ZX4P9OXreWEUamweTL
-         nCVfUdyVlPLJ+VfdSUt2v0D8sBCsSVrqHY8Rg9PhAvqgs2O+Dz/2e/ztCIwwkqCpdnh7
-         VSqICFcVH/3uJhC2LVleS1FniDu2DBxcbNOQLQQmj6JuGmbfGO9nD0B9cXiGSbJriqst
-         rzdw==
-X-Forwarded-Encrypted: i=1; AJvYcCWio5yXe5c44WbpiZXD24v0hn5wIeM/j+a0xNiBsxQcIjcvzgLzaFf+rMyjEp/fSXzfBpNKlbKTdeiQBtg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwrZNmVM8rpZwKlnVgrMOHjj4iYeAYaXEPkqsIVk3lTrJ3oK7Fi
-	6xs7tZwFayOM76uBGG9hkJcux9zveGa8i+7Cog2bagKfgN7sKWdXIWr0prMhsOK1VKfyhzG1qhd
-	5aS6X8FTOTqHfKj14QFW5s5I3Mv8cWYMEV2pIfTOhstfGwGXtZ9aqd4bv+L84N/ryPFEyT8SGeU
-	D7tWia4QApKiR7dUtFRGbU7RBgbRQY9S7ZN+/5
-X-Gm-Gg: ASbGncunRZIh61ZbNQRKSMuhMwQ35Ww9bZCQV4cjv6IeOrtEKsiNH6CZG74OOFQw5/y
-	v6kHduW0/zSGh75COTijjuKrBKz9a646nl1FM/QS2tkNs7Dvc5PlKYUZ02AXFZRfEiBCMB7cu0n
-	V7sJMzhfXwtb371OaRhuVAswtdGz3yfzM=
-X-Received: by 2002:a05:6402:518a:b0:5e0:b542:fb32 with SMTP id 4fb4d7f45d1cf-5e4d6af38c4mr16733486a12.19.1741017324402;
-        Mon, 03 Mar 2025 07:55:24 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHPGTxc1snuBJBdKHqlXGLWSFEPR9nWpoVGKyGNemsQOjxXhG6YU68Dfkwsg9V552o9TegQovJJ4ZO+UZQdfbY=
-X-Received: by 2002:a05:6402:518a:b0:5e0:b542:fb32 with SMTP id
- 4fb4d7f45d1cf-5e4d6af38c4mr16733456a12.19.1741017324012; Mon, 03 Mar 2025
- 07:55:24 -0800 (PST)
+	bh=i+P/qw8gmAcXFBrMnwLW4tw4mI2VNNvkWn7a0bjF3VU=;
+	b=YzVTJcJBV/lreixXs5LveQ3tzcF5/V7RgszTImCBGDN1QMprEVrdjSDp3DpDX6V22TVfx7
+	hcMye9GNKYsbudFuuxVfSzNqf867jKNqNXfxblatc6aLGlO+iLQUgPH7vthfwuhEe8K7Vq
+	DPzmp0lmSSemULDtHKqOyCpsYQHUikM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1741017400;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=i+P/qw8gmAcXFBrMnwLW4tw4mI2VNNvkWn7a0bjF3VU=;
+	b=I2PXYwUfHKVhRd04ZpplziNuij+mxN7EwKy1IMNwb5e+9HDQViAc4JYy+wdvPFEQtW86nA
+	E/V4y5vudMbReaDg==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=YzVTJcJB;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=I2PXYwUf
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1741017400; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=i+P/qw8gmAcXFBrMnwLW4tw4mI2VNNvkWn7a0bjF3VU=;
+	b=YzVTJcJBV/lreixXs5LveQ3tzcF5/V7RgszTImCBGDN1QMprEVrdjSDp3DpDX6V22TVfx7
+	hcMye9GNKYsbudFuuxVfSzNqf867jKNqNXfxblatc6aLGlO+iLQUgPH7vthfwuhEe8K7Vq
+	DPzmp0lmSSemULDtHKqOyCpsYQHUikM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1741017400;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=i+P/qw8gmAcXFBrMnwLW4tw4mI2VNNvkWn7a0bjF3VU=;
+	b=I2PXYwUfHKVhRd04ZpplziNuij+mxN7EwKy1IMNwb5e+9HDQViAc4JYy+wdvPFEQtW86nA
+	E/V4y5vudMbReaDg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 689DD13A23;
+	Mon,  3 Mar 2025 15:56:40 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id nrbhFzjRxWccGAAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Mon, 03 Mar 2025 15:56:40 +0000
+Date: Mon, 03 Mar 2025 16:56:39 +0100
+Message-ID: <87y0xmcdl4.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
+Cc: Takashi Iwai <tiwai@suse.de>,
+	Luiz Augusto von Dentz <luiz.von.dentz@intel.com>,
+	linux-bluetooth@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: Is commit 4d94f0555827 safe?
+In-Reply-To: <CABBYNZJ6Gfmpur2by01B9+XxBX+VBzBY95v+9f5-VpiantunfQ@mail.gmail.com>
+References: <87a5a3ah2y.wl-tiwai@suse.de>
+	<CABBYNZJOW-YSOLS0tBdUQmxqbOmgT2n2jVheyxbvWbYmBicqyg@mail.gmail.com>
+	<877c56dub7.wl-tiwai@suse.de>
+	<CABBYNZJ6Gfmpur2by01B9+XxBX+VBzBY95v+9f5-VpiantunfQ@mail.gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250127170251.744751-1-costa.shul@redhat.com>
- <20250227200623.60f20571@gandalf.local.home> <CAP4=nvQXaFmemBeW8U3U9zTMK0gVYvp23gfq_6ALsBJPTXt9Uw@mail.gmail.com>
-In-Reply-To: <CAP4=nvQXaFmemBeW8U3U9zTMK0gVYvp23gfq_6ALsBJPTXt9Uw@mail.gmail.com>
-From: Costa Shulyupin <costa.shul@redhat.com>
-Date: Mon, 3 Mar 2025 17:54:47 +0200
-X-Gm-Features: AQ5f1JoWt4ZxpLw4IoDK9sZzUvGLABknJjfBY2g9Ho-HNZIyoFep9paWlRxouPc
-Message-ID: <CADDUTFwyMt5zFqWeKXXiECOeqeyZ46fJcc4-ff=rjccsMDHKSQ@mail.gmail.com>
-Subject: Re: [PATCH v1] rtla: Save trace when option `--trace` is specified
-To: Tomas Glozar <tglozar@redhat.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, linux-trace-kernel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: ACDA41F444
+X-Spam-Level: 
+X-Spamd-Result: default: False [-1.01 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_CONTAINS_FROM(1.00)[];
+	SUBJECT_ENDS_QUESTION(1.00)[];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FREEMAIL_TO(0.00)[gmail.com];
+	ARC_NA(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	RCVD_TLS_ALL(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[5];
+	RCVD_COUNT_TWO(0.00)[2];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[];
+	DKIM_TRACE(0.00)[suse.de:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,suse.de:dkim,suse.de:mid,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,syzkaller.appspot.com:url]
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Spam-Score: -1.01
+X-Spam-Flag: NO
 
-Actually trace collection can be performed using just trace-cmd start,
-trace-cmd stop, and trace-cmd extract.
+On Mon, 03 Mar 2025 16:50:37 +0100,
+Luiz Augusto von Dentz wrote:
+> 
+> Hi Takashi,
+> 
+> On Mon, Mar 3, 2025 at 10:10 AM Takashi Iwai <tiwai@suse.de> wrote:
+> >
+> > On Mon, 03 Mar 2025 15:57:16 +0100,
+> > Luiz Augusto von Dentz wrote:
+> > >
+> > > Hi Takashi,
+> > >
+> > > Well the assumption was that because we are doing a copy of the struct
+> > > being unregistered/freed would never cause any errors, so to trigger
+> > > something like UAF like the comment was suggesting the function
+> > > callback would need to be unmapped so even if the likes of iso_exit is
+> > > called it function (e.g. iso_connect_cfm) remains in memory.
+> >
+> > But it doesn't guarantee that the callback function would really
+> > work.  e.g. if the callback accesses some memory that was immediately
+> > freed after the unregister call, it will lead to a UAF, even though
+> > the function itself is still present on the memory.
+> >
+> > That said, the current situation makes hard to judge the object life
+> > time.
+> >
+> > > You can find the previous version here:
+> > >
+> > > https://syzkaller.appspot.com/text?tag=Patch&x=100c0de8580000
+> > >
+> > > Problem with it was that it is invalid to unlock and relock like that.
+> >
+> > Thanks for the pointer!
+> >
+> >
+> > BTW, I saw another patch posted to replace the mutex with spinlock
+> > (and you replied later on that it's been already fixed).
+> > Is it an acceptable approach at all?
+> 
+> I don't remember if I saw that, but yeah anything that makes the issue
+> go away, and doesn't create new problems, would probably be
+> acceptable.
 
+I saw this one:
+  https://lore.kernel.org/all/20230907122234.146449-1-william.xuanziyang@huawei.com/
+
+
+Takashi
