@@ -1,166 +1,134 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from flow-b6-smtp.messagingengine.com (flow-b6-smtp.messagingengine.com [202.12.124.141])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B35A9215065;
-	Mon,  3 Mar 2025 20:03:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A149215065;
+	Mon,  3 Mar 2025 20:04:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741032236; cv=none; b=rGx6R4XXo0Pr2HR+rIgpTW0oLeBduC/iIIhAPEEnqkevS5gc/yfJVYrYo+CV2QS/o7ccXgHYFX8opVyUil77XMFH2e6H33vYVzilWYO63EYoaTqBPCUX95hOQK+/t9QeYD7TbEZa5DsyR3lv2uoQwbaPd1e3yB+yQjEDliQ3Cec=
+	t=1741032252; cv=none; b=ZDW/ghArfZu1N74ahr2Ado5krR3KCqE30TZD5WnmE2QJcl3BMp+1Fj3nSp1FBr2s6HSiWWWymPXMoMqMaLgMzNwt6MvPsEwPCXl5p9lqpv0WwvR+wbT57NrlwwSyNpzIgnj1aDmCyG12Z74xojPH9cxaFaEJi+5FUd6Pm5R17oE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741032236; c=relaxed/simple;
-	bh=UAbB4w7E4m1mLCo3yn77rgKxnrpnomzpIaADSNtpcM0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=MjZbVNR8ws/pKi7GA3h5xT8zDR0UYXnt7YobkGlDgejRsE3nrMZPenNSurQiyxcjGWyFOEajDpCtQwQHHEKs536jgTNEpdSeMhA3hb5aqtdN2wc/fEAcRGuHgjMaFNdo+FeVpHN5RP6PVCC+yzFj0gm/EMbtC84KC1Bwavww5/k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JHYMXSg+; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741032252; c=relaxed/simple;
+	bh=WmwwteaKVSEELRkso5aFwtcgNpCVXuic6iStoQWMryE=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Je9nNoJVFh8WuZ5yatPhx8geCn8WO9SN29h3fMCJXbv5OjIdt50Kk8qMvki2dedt5xjSEMDz2Vj5OlHnXdzZRb2/QS7XtJyxStdkUHLVjOjE4+LHG5+dxkChFQLlJJO/9zBvn1Jx8NzdqXr+KoGQJ8Vdau7NseQgeoZFOBAppmQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=svenpeter.dev; spf=pass smtp.mailfrom=svenpeter.dev; dkim=pass (2048-bit key) header.d=svenpeter.dev header.i=@svenpeter.dev header.b=WXjVaEnB; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=PmI0BGAp; arc=none smtp.client-ip=202.12.124.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=svenpeter.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=svenpeter.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JHYMXSg+"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-22339936bbfso71433605ad.1;
-        Mon, 03 Mar 2025 12:03:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741032234; x=1741637034; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=QrbUEFY/lf1OjHUcnLJiKmmiRtzC2NeD0FfZjZlPltM=;
-        b=JHYMXSg+kZCPXQS+sy3Alaaj3RCipEOvIOD6ptP7YNTnwBZTPGcDyOfXQMsocJUXrA
-         tphGbyGiYKyUOjMWXrYiRQYzQR6Mh+iTdHEUDVWX+RTHrmDHxpUbnvUmlKU6G5eeWoNN
-         yxtPdf+bTXhBc4VYWdhAoLvbPdWoBz1+711u5McGeRsqX85WDeYE3H3UBGE5ll+WvDuQ
-         FnPlw9OnTaNbXCNpPfVO7UZ6EDzjBZlZH5+exYn8u6H0TevAMOFmsWoSYr1u4ccRPZNo
-         QFCRGqFaDxuLyOnnVVrV5c19L36BAFF2UY5JJzqOo0WLJxltC6lkS+AFP7RzrGJ+nz4A
-         /7/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741032234; x=1741637034;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=QrbUEFY/lf1OjHUcnLJiKmmiRtzC2NeD0FfZjZlPltM=;
-        b=RFhCiWOS/UAY0gOKU31T3EL1HfUVJXarpyBmw1DVc22in9MfcgTgHmAVt4v6H8BSF8
-         tynaiND4DCLdUnkNX5TP2BMY3DFHcJdFmHcY5vt4QsRuLnQBiuv+wC58F1zAprBRSRby
-         UugDzsu5rJwMz0RWX428NRIRblX2nRCKEqKfqqfO4SHP9Az2ICuZKNnD5CSvzZWcJMbJ
-         3bX5S3gRrRz7D5QI8gUXsOj8/Er6caN+wdTzReVA3HIs1jOB/2VSXdZTrBdXzF/QByVM
-         55vq5pMNVs9Jngzm8GB+sJVamOuTBbxLAl6A6XFCTX+GTmHiKiM9zJTO4Qmh2BM9Hdg1
-         VbAg==
-X-Forwarded-Encrypted: i=1; AJvYcCUbwHhkxw20ai517F4+rFAoL2zz5nPWeAOQY8alKc3yPLmf5YE/sb/mCYQLXegnFhLGob/kbC+KRwufGxJn@vger.kernel.org, AJvYcCWjB9oddvO6ewUhV96pbBgMh3L+X1Ib0qanchiveeYJinXfmhAv3EnAHHcwqeZydKgTiu+EkIvsuzg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyCgg8sH6M+uvbSRwf/QFPsjUDAybYjRjljzB8MakZbK94LKqbX
-	DoU2Iosry7LqYEqWtFdVOGco6SRRJqhcxk4Y/2L+l22D0MUWBCYe
-X-Gm-Gg: ASbGncuXBUk0b9np+opgIBjCuXkSRnKRmrxfA4mYoNeec/yAz+XmuSiW6j3+w/N/nNg
-	TZAgFpzFitYM27bty+mAkH4TJR7JMgVZABTYNyymkdvygm+Tnd/Zq3+1bNooK7+kdCXs6oJT4Y+
-	nDiu5O8DyGbYummIv9qoGiLddFbM+bKrFc2QjX7zfNXoVdn70V6NJshB4AjbdhA38xZTkGHTs3N
-	DLnQoSeyMVQsI5+P+CyRlKR5xVoo9lgkjoC0d4Lnp5qyQNzJQ41Kos3R6AmOkyNPa5lxdmlCamn
-	5oq6Op/dN8IVVyZP+mDUaegzI5AEXSJHiWJywj0gyYYsKSmhUyCw5VH7txSV3hTYphNF
-X-Google-Smtp-Source: AGHT+IGBy0TApsj/0F8MuCfPPS47j68Bagj1kWLrrh4wS/ICtMfKU9/DC6Sypb+Zn2+4m3XFwPu+Kg==
-X-Received: by 2002:a05:6a00:b90:b0:736:61c9:f9a6 with SMTP id d2e1a72fcca58-73661ca04c0mr4127339b3a.5.1741032233820;
-        Mon, 03 Mar 2025 12:03:53 -0800 (PST)
-Received: from danascape.tail34aafc.ts.net ([2402:e280:218d:2e5:7b03:1e42:d492:fb71])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-734d444a9fasm7266779b3a.60.2025.03.03.12.03.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Mar 2025 12:03:53 -0800 (PST)
-From: Saalim Quadri <danascape@gmail.com>
-To: jic23@kernel.org
-Cc: lars@metafoo.de,
-	Michael.Hennerich@analog.com,
-	gregkh@linuxfoundation.org,
-	linux-iio@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=svenpeter.dev header.i=@svenpeter.dev header.b="WXjVaEnB";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="PmI0BGAp"
+Received: from phl-compute-04.internal (phl-compute-04.phl.internal [10.202.2.44])
+	by mailflow.stl.internal (Postfix) with ESMTP id D2E521D411E3;
+	Mon,  3 Mar 2025 15:04:08 -0500 (EST)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-04.internal (MEProxy); Mon, 03 Mar 2025 15:04:09 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=svenpeter.dev;
+	 h=cc:cc:content-transfer-encoding:content-type:content-type
+	:date:date:from:from:in-reply-to:in-reply-to:message-id
+	:mime-version:references:reply-to:subject:subject:to:to; s=fm2;
+	 t=1741032248; x=1741039448; bh=pD70oFS3M4Bnr8rEfLIbi5W0ZWGc/ux+
+	HB8INioexGU=; b=WXjVaEnBX6IOGqXQHJ2m4dPzu0BGbHs8jAYcklH1EsVXpUXA
+	pqUGVJJnJcqmW2tTkd4SDwFl+vvxlTF/9Ex485SAzkL1LsuEbavHI51bhrSvn8Eb
+	RDcHwgX5RV+Kt9bkX3l/3hjBzOluvkVazeqmK+JI7ZSJD3DRSUDjlA+r0ksurTS0
+	3656EgNb/UC60rxKFY+ixNTfUc2J/5WFwFsJqRRJrNmzj3u1iAE74pZt9hRbNjh0
+	7nxYSB9jXXbu6lOrkqSr8ybvaNgCXvvEbIiLrE3IIgieadqaHJ0EHPHQlkvYtDg/
+	5HEfzNx4Ez0bZFuB4GbprEUpWLPiLgDs2tWYLw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1741032248; x=
+	1741039448; bh=pD70oFS3M4Bnr8rEfLIbi5W0ZWGc/ux+HB8INioexGU=; b=P
+	mI0BGApw4lGroXEvS3GMBBbu5wz/SwprNLdFIrFs0JrYT28a9rwrj93ED2MJ6rXZ
+	tlnb+yZ1spjol6GrqGnYmBBlUXo0O7kmxnnnNFAxX3aU31zCHckx9w+H2IGdOWPr
+	HA6r/VQjvIB0qFk8RtYr+tFgl4hUKkoppEd9lcGyE5PWGWZTLscqW1ZfP/4GdMAV
+	52QnrFhcfj6GpanBBMdXN3ZSGS+3CwifkzIJrDWo8DMji//3+0Zy0yCqvn6q+dgx
+	n2fGiHGWxbYkjOJYa0CwC9m5r5bQXgmINdLrl9Pqc093V9e53oeClFjOZyhvTLv1
+	a/7JSQ5SMgSbAui/6En/g==
+X-ME-Sender: <xms:NQvGZ_VMM3RtP1DKODTRwtlwJzNkwcbcmPn1s-O22DbPhk3WmR7GpA>
+    <xme:NQvGZ3n-zUADSrIYQbPCxcyd8SqQa4YWv9dAYP3FcuTmo2XJtGXQw5z1hJwUfI4V8
+    rigKHwTmTvjJQIJSuo>
+X-ME-Received: <xmr:NQvGZ7ZnQiedxDTR5CEajnguSPyYFsheJa4MtuRHvJ-RqCiqbUarzWHEAtzZxiH6XIqs3UmrI3X1k47UsDdmQcLdSbAzyKliGlVA24Hk3WCOkEfRux8vCJvExEkI8SU>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddutddttdegucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhephffvvefufffkofgjfhggtgfgsehtkeertder
+    tdejnecuhfhrohhmpefuvhgvnhcurfgvthgvrhcuoehsvhgvnhesshhvvghnphgvthgvrh
+    druggvvheqnecuggftrfgrthhtvghrnhepgeeihefftefhhffffefhheekveelveeiteef
+    geekhefhieffgfehheeijeehiefhnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
+    hmpehmrghilhhfrhhomhepshhvvghnsehsvhgvnhhpvghtvghrrdguvghvpdhnsggprhgt
+    phhtthhopedvhedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepfhhnkhhlrdhkvg
+    hrnhgvlhesghhmrghilhdrtghomhdprhgtphhtthhopehsvhgvnhesshhvvghnphgvthgv
+    rhdruggvvhdprhgtphhtthhopehmrghrtggrnhesmhgrrhgtrghnrdhsthdprhgtphhtth
+    hopegrlhihshhsrgesrhhoshgvnhiifigvihhgrdhiohdprhgtphhtthhopehmrggrrhht
+    vghnrdhlrghnkhhhohhrshhtsehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtoh
+    epmhhrihhprghrugeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepthiiihhmmhgvrhhm
+    rghnnhesshhushgvrdguvgdprhgtphhtthhopegrihhrlhhivggusehgmhgrihhlrdgtoh
+    hmpdhrtghpthhtohepshhimhhonhgrsehffhiflhhlrdgthh
+X-ME-Proxy: <xmx:NQvGZ6UYHxVWkZf7UtPX9TwDArprBk0BWSBdpveHMJd4CkkzrHt6kw>
+    <xmx:NQvGZ5mAwfjIDz1C18jwijwve-ADRksOJRo2PDpzeZQ6xiOeQaWbDA>
+    <xmx:NQvGZ3fT339mfLcSW5qQfav0c8o47LLgQ5fG1WVOxCQQ8dkF_dD1EA>
+    <xmx:NQvGZzGFmyC2hu3N7Vq5zjNkUx1dHg92NTiwpEThN4TPfcGOgk03-Q>
+    <xmx:OAvGZ7UFo6yl2jRQYv7xu9S__Twf17INMbiJr6VmJP1Hhx5oxAy2M1kN>
+Feedback-ID: i51094778:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 3 Mar 2025 15:04:02 -0500 (EST)
+From: Sven Peter <sven@svenpeter.dev>
+To: Sasha Finkelstein <fnkl.kernel@gmail.com>
+Cc: Sven Peter <sven@svenpeter.dev>,
+	Hector Martin <marcan@marcan.st>,
+	Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Jessica Zhang <quic_jesszhan@quicinc.com>,
+	asahi@lists.linux.dev,
+	Janne Grunau <j@jannau.net>,
+	linux-arm-kernel@lists.infradead.org,
+	dri-devel@lists.freedesktop.org,
+	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	linux-staging@lists.linux.dev,
-	Saalim Quadri <danascape@gmail.com>
-Subject: [RFC] staging: iio: ad9832: Use devm_regulator_get_enable_read_voltage()
-Date: Tue,  4 Mar 2025 01:33:47 +0530
-Message-Id: <20250303200347.23354-1-danascape@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	Alyssa Ross <hi@alyssa.is>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Neal Gompa <neal@gompa.dev>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	Nick Chan <towinchenmi@gmail.com>
+Subject: Re: (subset) [PATCH v7 0/5] Driver for pre-DCP apple display controller.
+Date: Mon,  3 Mar 2025 21:03:58 +0100
+Message-Id: <174103187680.75921.8965235926191911132.b4-ty@svenpeter.dev>
+X-Mailer: git-send-email 2.39.3 (Apple Git-146)
+In-Reply-To: <20250217-adpdrm-v7-0-ca2e44b3c7d8@gmail.com>
+References: <20250217-adpdrm-v7-0-ca2e44b3c7d8@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-Use devm_regulator_get_enable_read_voltage() to reduce boiler plate
-code.
 
-* Here I am particularly confused about regulator_enable(), part where I should
-  use devm_regulator_get_enable() to enable avdd supply?
-* I can resend this as a patch if everything is alright, specifically with
-  devm_regulator_get_enable() for dvdd
+On Mon, 17 Feb 2025 12:39:30 +0100, Sasha Finkelstein wrote:
+> This patch series adds support for a secondary display controller
+> present on Apple M1/M2 chips and used to drive the display of the
+> "touchbar" touch panel present on those.
+> 
+> 
 
-Signed-off-by: Saalim Quadri <danascape@gmail.com>
----
- drivers/staging/iio/frequency/ad9832.c | 37 +++-----------------------
- 1 file changed, 4 insertions(+), 33 deletions(-)
+Since the dt-bindings are now part of drm-misc-next I've also applied
+the dts change, thanks!
 
-diff --git a/drivers/staging/iio/frequency/ad9832.c b/drivers/staging/iio/frequency/ad9832.c
-index 140ee4f9c137..9e7975265454 100644
---- a/drivers/staging/iio/frequency/ad9832.c
-+++ b/drivers/staging/iio/frequency/ad9832.c
-@@ -74,8 +74,6 @@
- /**
-  * struct ad9832_state - driver instance specific data
-  * @spi:		spi_device
-- * @avdd:		supply regulator for the analog section
-- * @dvdd:		supply regulator for the digital section
-  * @mclk:		external master clock
-  * @ctrl_fp:		cached frequency/phase control word
-  * @ctrl_ss:		cached sync/selsrc control word
-@@ -94,8 +92,6 @@
- 
- struct ad9832_state {
- 	struct spi_device		*spi;
--	struct regulator		*avdd;
--	struct regulator		*dvdd;
- 	struct clk			*mclk;
- 	unsigned short			ctrl_fp;
- 	unsigned short			ctrl_ss;
-@@ -297,11 +293,6 @@ static const struct iio_info ad9832_info = {
- 	.attrs = &ad9832_attribute_group,
- };
- 
--static void ad9832_reg_disable(void *reg)
--{
--	regulator_disable(reg);
--}
--
- static int ad9832_probe(struct spi_device *spi)
- {
- 	struct ad9832_platform_data *pdata = dev_get_platdata(&spi->dev);
-@@ -320,33 +311,13 @@ static int ad9832_probe(struct spi_device *spi)
- 
- 	st = iio_priv(indio_dev);
- 
--	st->avdd = devm_regulator_get(&spi->dev, "avdd");
--	if (IS_ERR(st->avdd))
--		return PTR_ERR(st->avdd);
--
--	ret = regulator_enable(st->avdd);
--	if (ret) {
--		dev_err(&spi->dev, "Failed to enable specified AVDD supply\n");
--		return ret;
--	}
--
--	ret = devm_add_action_or_reset(&spi->dev, ad9832_reg_disable, st->avdd);
-+	ret = devm_regulator_get_enable_read_voltage(&spi->dev, "avdd");
- 	if (ret)
--		return ret;
--
--	st->dvdd = devm_regulator_get(&spi->dev, "dvdd");
--	if (IS_ERR(st->dvdd))
--		return PTR_ERR(st->dvdd);
-+			return dev_err_probe(&spi->dev, ret, "failed to get AVDD voltage\n");
- 
--	ret = regulator_enable(st->dvdd);
--	if (ret) {
--		dev_err(&spi->dev, "Failed to enable specified DVDD supply\n");
--		return ret;
--	}
--
--	ret = devm_add_action_or_reset(&spi->dev, ad9832_reg_disable, st->dvdd);
-+	ret = devm_regulator_get_enable(&spi->dev, "dvdd");
- 	if (ret)
--		return ret;
-+			return dev_err_probe(&spi->dev, ret, "Failed to enable specified DVDD supply\n");
- 
- 	st->mclk = devm_clk_get_enabled(&spi->dev, "mclk");
- 	if (IS_ERR(st->mclk))
+[4/5] arm64: dts: apple: Add touchbar screen nodes
+      commit: 7275e795e520c7064af52ba67c74d7bac27eea4f
+
+Best regards,
 -- 
-2.34.1
-
+Sven Peter <sven@svenpeter.dev>
