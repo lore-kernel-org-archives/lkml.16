@@ -1,135 +1,203 @@
-Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com [209.85.219.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B07861EB1BF
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 16:02:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2101521D00D;
+	Mon,  3 Mar 2025 16:02:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741017757; cv=none; b=GPvWu3PcPgYlYsRLsN8kHpTKMGeWdEANNDrDO0xVtb480U/1qTVInSS2YthXVS8hLzSaSfkj/puzZOM0B2+r25JxQSNyKaXV5586KH+IVEbV4LD6xkZxWzA3Ow7jclJm3A8jVbInMWFUMJKM4CmffwbpOGQyS6yElFUMXi22mp0=
+	t=1741017771; cv=none; b=F1lCBxcx6IWYtvINon+IIy0kCmfcyVdmLS9faGBgY8wVjY4LN17eb/3tL2GZGAxcSMePaLJmAPT2SGoXF+wzPlUqzwYPHpFCHbJCtESxkwU0AgK+mijoWwHAfiOcsjKn01rVYiBP8J6cxt7dtBWZ/CcSWyq9si26K8UTFJHC7H0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741017757; c=relaxed/simple;
-	bh=f3z1YJDae+7qKzu1a/ULS1y8fv2jKayJhoYaJjgj1Lw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sClxK62uTnkgLKP1P9phCGCX+QxejgzxTxmxX0yeKl7Rt+PbEDjHq/E+IR9gkyHzZDPrEmfkBoL/jMMfs4vzn+YRD5cv9wCuqyr1MZemiKfrxRRHCknNH5NlEXJ2nE9pgXDx7ko4HicYM/DumPTJ65QzYVqU1CzIdWJvYwFFwHg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rowland.harvard.edu; spf=fail smtp.mailfrom=g.harvard.edu; dkim=pass (2048-bit key) header.d=rowland.harvard.edu header.i=@rowland.harvard.edu header.b=G6zQRxWr; arc=none smtp.client-ip=209.85.219.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rowland.harvard.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=g.harvard.edu
+	s=arc-20240116; t=1741017771; c=relaxed/simple;
+	bh=lwQcPFmb2dq2hmAi8n62qWMLz3ktzs7x1sphfUEvTdk=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=hUT8UES4oSCJDYJQswaCsNNJR+c05ncZ6MyLkl2LCIk141Az6vAFpw5uK1Dl5Ll6ecy7oNOTpP5BbiDceFFitvQ+QOzSty0XRf0KgGg9XUMvuS108L7cwm6iClW1mw4T5cOXvt/hNMXjavxh4i1rhmigXfSR/6Msa2XYkPgCdb4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=dR+6F9li; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rowland.harvard.edu header.i=@rowland.harvard.edu header.b="G6zQRxWr"
-Received: by mail-qv1-f52.google.com with SMTP id 6a1803df08f44-6e88f3159e3so37869056d6.2
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Mar 2025 08:02:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rowland.harvard.edu; s=google; t=1741017754; x=1741622554; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=j0kf09Xt7w2q49Ub1BV7dNTILamWt8grEXO5Ja6in+c=;
-        b=G6zQRxWrNMhTkxwZBqgMdPht5fUcUaayMq50TzI7kuwgCrW5voPoi9QHBl+fojC0xP
-         ceiDEiw3v/wVl31JD9/6Sv8WYjJOapEJ7uVw3yCj5RaCHkXDHAqVdQOlPqOKZVvk/+3N
-         vXjaQPFQ1/tchjgTBvNkxE8IJRVa7a8YLpi2L0HM03nk76aF1bag13c/+f/SjIuzFAx4
-         OWHdVWr3mIchCDbvFpU/Q3tiAITjYTlkcvQGkJwJxEyNYufZ5mWUBfjSHEJBFI3xJgur
-         6+zP5M9mUR27gfq9BF4ncYUKI4sUVuIkhPKh00Zi5RdDyOUdvQb/kBtoYSBlGpsiREgH
-         2WrA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741017754; x=1741622554;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=j0kf09Xt7w2q49Ub1BV7dNTILamWt8grEXO5Ja6in+c=;
-        b=e0bBUoVOU0jdHG2+tV2sUUHvUjjQtVxeUdZ2vE1/d45Ww6WM8nEpGDXHszrubFECmI
-         obVQWYK8vTri5PZl3brU5u4YmTXPFI+AA/9bKfX+uadfahDWoHii+KCbACtFnwGpp6qx
-         SB/brp7y616zyFmCFqMVIEpue/dUuGECTw7BuhfSB6aAnK8XBl1gubEnCoNJbzpQvVdj
-         Qn7ktRP0+DtD9fosASm76C5+5boRteGNyAHdD1oSMB3HyeACtwi0Yr1lfhJfkH6ze3Pb
-         6EKuU88H965WHhp5e7xJlN4UDuzMC22ZFITFZ65L8mmsHrsVzX05bcze5WX/zVrlTz9W
-         5Xlg==
-X-Forwarded-Encrypted: i=1; AJvYcCVnMYDnrFD3duj7Tl2y7qQpiC+DS38PAE7xTn6Lq2+FFpkrVupQEhDRu55wf7SUC1VHVpw+xGQdw+h0hmw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywjc9ChMB5fpvLlR5SozNzVWBr4VcVy2w+1pj8DSlUJT3T/U6Jx
-	hwgUkJ+0gbVmYsCVXcHMC5WRQqwYqoMrxc41lCF39gPyNtIKEBcK7zTDUcZ8bA==
-X-Gm-Gg: ASbGncsdHO/DTE1rtXc3Bl/Pk4MykPFdxEAqQ2Mbdaj1t1KWImoEdCOEyDMavB+IxED
-	P7W3Q2ZeqegOWvkeTUVGymj/DZTd9mG0m3WvbmehV1hS092NRhquxBSe8NrNGvJOkVoo+Xunf2l
-	lnXKWMifGUXr1P1vvFgXlVYWkD8U1rL9Gog4Qr68Sn5LTPEcFhMY7fFb4huZwEP4TSqRu9y7e4i
-	0l484XxnXO1PQG03OzmdDJ8nWk86qEcvStfZyEZqsIxFrgO77XcL+wHZJJiJ5+En6LA3Hs/LVYP
-	95FuhnWXhSrf1RyFDDYi1cfZ3kHZWQhkTLb4pIJMpeNPaWaWSRY2/95FpqTe4Nw=
-X-Google-Smtp-Source: AGHT+IGftmtJ1H46cLxhxWAbdbWJGM0W0W4u3xExTd+O5te0WpEQdDeILfCXfX/nJATaCR1Ljm0czw==
-X-Received: by 2002:a05:6214:da8:b0:6e8:96f4:73a with SMTP id 6a1803df08f44-6e8a0d3901dmr235750906d6.19.1741017754321;
-        Mon, 03 Mar 2025 08:02:34 -0800 (PST)
-Received: from rowland.harvard.edu ([140.247.181.15])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e8976ccba1sm54361766d6.90.2025.03.03.08.02.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Mar 2025 08:02:33 -0800 (PST)
-Date: Mon, 3 Mar 2025 11:02:31 -0500
-From: Alan Stern <stern@rowland.harvard.edu>
-To: Strforexc yn <strforexc@gmail.com>
-Cc: Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>,
-	Nikita Zhandarovich <n.zhandarovich@fintech.ru>,
-	linux-usb@vger.kernel.org, linux-input@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [BUG] UBSAN: Array-Index-Out-of-Bounds in usbhid_parse (HID) on
- 6.14.0-rc4
-Message-ID: <21b63d7e-5141-426b-af06-9465609e2ca2@rowland.harvard.edu>
-References: <CA+HokZreT4LYLbru4cc0iU4jKkdf40YnVunaGX0hFV2GAnnuEg@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="dR+6F9li"
+Received: from mail.ideasonboard.com (unknown [IPv6:2401:4900:1c69:8872:6fe4:6987:313:70cc])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id E7CB11189;
+	Mon,  3 Mar 2025 17:01:16 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1741017677;
+	bh=lwQcPFmb2dq2hmAi8n62qWMLz3ktzs7x1sphfUEvTdk=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=dR+6F9li+KkeMK+n//eyMWIpUsNVM2SCwe+w+vak7KsS4SVBUPCDql4rSNsQln6/P
+	 1KaHtx0CE41s2PsI9YfZLc9k/ajor/uSHk6JrtPBqkwDL6/SV85bn8T+GitTOMPKQw
+	 wQnUYeNn9obHTfN1rZYN8XvcizN8rdEkGS6ZITgY=
+From: Jai Luthra <jai.luthra@ideasonboard.com>
+Date: Mon, 03 Mar 2025 21:32:09 +0530
+Subject: [PATCH v3 06/19] media: i2c: ds90ub953: Add error handling to
+ ub953_log_status()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CA+HokZreT4LYLbru4cc0iU4jKkdf40YnVunaGX0hFV2GAnnuEg@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250303-b4-ub9xx-err-handling-v3-6-7d178796a2b9@ideasonboard.com>
+References: <20250303-b4-ub9xx-err-handling-v3-0-7d178796a2b9@ideasonboard.com>
+In-Reply-To: <20250303-b4-ub9xx-err-handling-v3-0-7d178796a2b9@ideasonboard.com>
+To: Mauro Carvalho Chehab <mchehab@kernel.org>, 
+ Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, 
+ Devarsh Thakkar <devarsht@ti.com>, linux-media@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
+ Jai Luthra <jai.luthra@ideasonboard.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4286;
+ i=jai.luthra@ideasonboard.com; h=from:subject:message-id;
+ bh=t0xF7Xgcnsn89th/lDheR6Oc6gbB12SJ1Pi/G226hAo=;
+ b=owEBbQKS/ZANAwAIAUPekfkkmnFFAcsmYgBnxdJ/T4oI8qyGXVOYqozHKPpzm5jaU2o9fdfGe
+ yfB/ROSMeqJAjMEAAEIAB0WIQRN4NgY5dV16NRar8VD3pH5JJpxRQUCZ8XSfwAKCRBD3pH5JJpx
+ RfN1EAC/uReYJluFgc/6PKJxVDYmrYuZoGhD4RsuP3B9UtxsDphRLqB8rSn3SuirrkYORasoqD8
+ NloK+6OIGLXXZpRKmXiOXK71BLbdkaeJsC0v8iZR49eOYkBVXmxgEzagnxLIWdioM+kQVUEUp77
+ 4wZ8A7Xb7RhJr3NC6Jj6Ue5lhEOeBgeH4PngO1HKZy+qWH1FcR8dprDvRB2wSMqUpLhMdn9HSmB
+ IgJM75T5pPaXN2Yj5ghiHKdIEO3J+CLiWhE+BeJhr+qvGLFytUzPvAqF/elR00xI4srBW8VUgeG
+ yIEIpJucsVs37ewVC/XATnAl7AGeRca9wCc5h/X3IXVh7CvVWyZFxgJEP3LswCECE4KSp5SMnbq
+ PqhXKGtGnAP/01puou3mhhzHClHqPRU/IyGg8ZO3b/oWDUVGh/0On5oDs48Lm39mNhHgOzE4shC
+ h4vWTiHPwth4wMRHnTD5S1ICBs7r0M8P1RfxlINPvA9Msa3jgB+tTD8B5O8QUNNOkAJmRSdvGGX
+ 8TagZrm10+cY/K9Mh4I7hhU0SuqRdPwJ+1OHcj82282X0oAEqE+fX3ADzlsZyGtYjgkZuuHG+OL
+ wr80cmjtH7tV/s4po0j4EqMQY26g/bnNqJhCQs55KGDDRDsClSOU6y9GN7YrWXgLK03/NNdx/Vw
+ n5ddIzcPhbhq+tQ==
+X-Developer-Key: i=jai.luthra@ideasonboard.com; a=openpgp;
+ fpr=4DE0D818E5D575E8D45AAFC543DE91F9249A7145
 
-On Mon, Mar 03, 2025 at 04:52:33PM +0800, Strforexc yn wrote:
-> Dear Maintainers, When using our customized Syzkaller to fuzz the
-> latest Linux kernel, the following crash was triggered.
-> 
-> Kernel commit: v6.14-rc4 (Commits on Feb 24, 2025)
-> Kernel Config : https://github.com/Strforexc/LinuxKernelbug/blob/main/.config
-> Kernel Log:  https://github.com/Strforexc/LinuxKernelbug/blob/main/array-index-out-of-bounds_usbhid_parse/log0
-> Reproduce C: https://github.com/Strforexc/LinuxKernelbug/blob/main/array-index-out-of-bounds_usbhid_parse/repro.cprog
-> 
-> I’ve encountered a UBSAN-reported array-index-out-of-bounds issue in
-> the USB HID driver on Linux 6.14.0-rc4 during device probing, likely
-> triggered by a malformed USB descriptor. Here are the details:
-> 
-> UBSAN detects an out-of-bounds access at
-> drivers/hid/usbhid/hid-core.c:1025:18 in usbhid_parse, where index 1
-> exceeds the bounds of hid_class_descriptor [1] in struct
-> hid_descriptor. This occurs when parsing a HID device descriptor
-> during USB probing.
-> 
-> Location: The fault occurs in a loop: for (n = 0; n < num_descriptors;
-> n++) if (hdesc->desc[n].bDescriptorType == HID_DT_REPORT), accessing
-> hdesc->desc[n].
-> 
-> Cause: struct hid_descriptor defines desc as a fixed-size array [1],
-> but the loop iterates up to num_descriptors (based on
-> hdesc->bNumDescriptors). UBSAN flags n=1 as out-of-bounds, though the
-> underlying descriptor buffer may be larger.
-> 
-> Context: Preceded by a USB descriptor error (-22), suggesting a
-> malformed HID device (likely Syzkaller-crafted), triggering the loop
-> with bNumDescriptors > 1.
-> 
-> Impact: No immediate crash, but a code hygiene issue flagged by UBSAN.
-> Runtime safety depends on descriptor buffer allocation, but it’s a
-> potential source of confusion or future bugs.
-> 
-> Could HID maintainers investigate? Suggested fixes:
-> 1. Use a flexible array member (desc[]) in struct hid_descriptor and
-> adjust parsing to rely on runtime buffer size.
-> 2. Add stricter validation of hdesc->bNumDescriptors against bLength
-> to reject malformed descriptors earlier.
-> 
-> Our knowledge of the kernel is somewhat limited, and we'd appreciate
-> it if you could determine if there is such an issue. If this issue
-> doesn't have an impact, please ignore it ☺.
-> If you fix this issue, please add the following tag to the commit:
-> Reported-by: Zhizhuo Tang <strforexctzzchange@foxmail.com>, Jianzhou
-> Zhao <xnxc22xnxc22@qq.com>, Haoran Liu <cherest_san@163.com>
+From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
 
-Have you seen this patch or tried to test it?
+Add error handling to ub953_log_status().
 
-https://lore.kernel.org/linux-usb/20250131151600.410242-1-n.zhandarovich@fintech.ru/
+Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+Signed-off-by: Jai Luthra <jai.luthra@ideasonboard.com>
+---
+ drivers/media/i2c/ds90ub953.c | 80 +++++++++++++++++++++++++++++++------------
+ 1 file changed, 58 insertions(+), 22 deletions(-)
 
-Alan Stern
+diff --git a/drivers/media/i2c/ds90ub953.c b/drivers/media/i2c/ds90ub953.c
+index fbd977760c6b1ccdec90b90bced4dc29932f3893..a08aad3f7fe09f7b396da9c720ed9993d392410c 100644
+--- a/drivers/media/i2c/ds90ub953.c
++++ b/drivers/media/i2c/ds90ub953.c
+@@ -633,23 +633,33 @@ static int ub953_log_status(struct v4l2_subdev *sd)
+ {
+ 	struct ub953_data *priv = sd_to_ub953(sd);
+ 	struct device *dev = &priv->client->dev;
+-	u8 v = 0, v1 = 0, v2 = 0;
+-	unsigned int i;
+ 	char id[UB953_REG_FPD3_RX_ID_LEN];
+-	u8 gpio_local_data = 0;
+-	u8 gpio_input_ctrl = 0;
+-	u8 gpio_pin_sts = 0;
++	u8 gpio_local_data;
++	u8 gpio_input_ctrl;
++	u8 gpio_pin_sts;
++	unsigned int i;
++	u8 v, v1, v2;
++	int ret;
+ 
+-	for (i = 0; i < sizeof(id); i++)
+-		ub953_read(priv, UB953_REG_FPD3_RX_ID(i), &id[i], NULL);
++	for (i = 0; i < sizeof(id); i++) {
++		ret = ub953_read(priv, UB953_REG_FPD3_RX_ID(i), &id[i], NULL);
++		if (ret)
++			return ret;
++	}
+ 
+ 	dev_info(dev, "ID '%.*s'\n", (int)sizeof(id), id);
+ 
+-	ub953_read(priv, UB953_REG_GENERAL_STATUS, &v, NULL);
++	ret = ub953_read(priv, UB953_REG_GENERAL_STATUS, &v, NULL);
++	if (ret)
++		return ret;
++
+ 	dev_info(dev, "GENERAL_STATUS %#02x\n", v);
+ 
+-	ub953_read(priv, UB953_REG_CRC_ERR_CNT1, &v1, NULL);
+-	ub953_read(priv, UB953_REG_CRC_ERR_CNT2, &v2, NULL);
++	ub953_read(priv, UB953_REG_CRC_ERR_CNT1, &v1, &ret);
++	ub953_read(priv, UB953_REG_CRC_ERR_CNT2, &v2, &ret);
++	if (ret)
++		return ret;
++
+ 	dev_info(dev, "CRC error count %u\n", v1 | (v2 << 8));
+ 
+ 	/* Clear CRC error counter */
+@@ -658,34 +668,60 @@ static int ub953_log_status(struct v4l2_subdev *sd)
+ 				   UB953_REG_BC_CTRL_CRC_ERR_CLR,
+ 				   UB953_REG_BC_CTRL_CRC_ERR_CLR);
+ 
+-	ub953_read(priv, UB953_REG_CSI_ERR_CNT, &v, NULL);
++	ret = ub953_read(priv, UB953_REG_CSI_ERR_CNT, &v, NULL);
++	if (ret)
++		return ret;
++
+ 	dev_info(dev, "CSI error count %u\n", v);
+ 
+-	ub953_read(priv, UB953_REG_CSI_ERR_STATUS, &v, NULL);
++	ret = ub953_read(priv, UB953_REG_CSI_ERR_STATUS, &v, NULL);
++	if (ret)
++		return ret;
++
+ 	dev_info(dev, "CSI_ERR_STATUS %#02x\n", v);
+ 
+-	ub953_read(priv, UB953_REG_CSI_ERR_DLANE01, &v, NULL);
++	ret = ub953_read(priv, UB953_REG_CSI_ERR_DLANE01, &v, NULL);
++	if (ret)
++		return ret;
++
+ 	dev_info(dev, "CSI_ERR_DLANE01 %#02x\n", v);
+ 
+-	ub953_read(priv, UB953_REG_CSI_ERR_DLANE23, &v, NULL);
++	ret = ub953_read(priv, UB953_REG_CSI_ERR_DLANE23, &v, NULL);
++	if (ret)
++		return ret;
++
+ 	dev_info(dev, "CSI_ERR_DLANE23 %#02x\n", v);
+ 
+-	ub953_read(priv, UB953_REG_CSI_ERR_CLK_LANE, &v, NULL);
++	ret = ub953_read(priv, UB953_REG_CSI_ERR_CLK_LANE, &v, NULL);
++	if (ret)
++		return ret;
++
+ 	dev_info(dev, "CSI_ERR_CLK_LANE %#02x\n", v);
+ 
+-	ub953_read(priv, UB953_REG_CSI_PKT_HDR_VC_ID, &v, NULL);
++	ret = ub953_read(priv, UB953_REG_CSI_PKT_HDR_VC_ID, &v, NULL);
++	if (ret)
++		return ret;
++
+ 	dev_info(dev, "CSI packet header VC %u ID %u\n", v >> 6, v & 0x3f);
+ 
+-	ub953_read(priv, UB953_REG_PKT_HDR_WC_LSB, &v1, NULL);
+-	ub953_read(priv, UB953_REG_PKT_HDR_WC_MSB, &v2, NULL);
++	ub953_read(priv, UB953_REG_PKT_HDR_WC_LSB, &v1, &ret);
++	ub953_read(priv, UB953_REG_PKT_HDR_WC_MSB, &v2, &ret);
++	if (ret)
++		return ret;
++
+ 	dev_info(dev, "CSI packet header WC %u\n", (v2 << 8) | v1);
+ 
+-	ub953_read(priv, UB953_REG_CSI_ECC, &v, NULL);
++	ret = ub953_read(priv, UB953_REG_CSI_ECC, &v, NULL);
++	if (ret)
++		return ret;
++
+ 	dev_info(dev, "CSI ECC %#02x\n", v);
+ 
+-	ub953_read(priv, UB953_REG_LOCAL_GPIO_DATA, &gpio_local_data, NULL);
+-	ub953_read(priv, UB953_REG_GPIO_INPUT_CTRL, &gpio_input_ctrl, NULL);
+-	ub953_read(priv, UB953_REG_GPIO_PIN_STS, &gpio_pin_sts, NULL);
++	ub953_read(priv, UB953_REG_LOCAL_GPIO_DATA, &gpio_local_data, &ret);
++	ub953_read(priv, UB953_REG_GPIO_INPUT_CTRL, &gpio_input_ctrl, &ret);
++	ub953_read(priv, UB953_REG_GPIO_PIN_STS, &gpio_pin_sts, &ret);
++	if (ret)
++		return ret;
+ 
+ 	for (i = 0; i < UB953_NUM_GPIOS; i++) {
+ 		dev_info(dev,
+
+-- 
+2.48.1
+
