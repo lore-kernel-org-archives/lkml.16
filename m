@@ -1,149 +1,119 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC2B8225D6;
-	Mon,  3 Mar 2025 03:32:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 361AE4A05
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 03:32:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740972752; cv=none; b=oLdr6o2vZ16s+hAoo95y60RogJrSHDJB9WjLW8fMTWm7g5XMkHTzKGEobK+/EY2nZJw3Eebmidrn41M73Ljgq/M0WSTodsK2Tnft0/kTQsixhOMuvLAKU7m3Ny6fZ+UG/i+u/RMB/g/Q1sktwKc7z3YD2orD06xtBzdADh3N1sU=
+	t=1740972753; cv=none; b=T1/Qi5V6ZdnDuwRx+x24+EBu0ZEe6dV3SDMh0Ty15WkX/tBW4AdLyy5ynJWyXhAN3gF6VLbdHQWSqpQuXOYChoerqVtp/GrmAQwMKT8yiGsfZgRfjhn5d4SkcSIw/MryyRY1HesWxGnQR9Ip4D18dDt3nQ+I5KBt/3YqxVjVg0c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740972752; c=relaxed/simple;
-	bh=SgfwcNAGtGysz8w5ImfVW71Vm+58S1DAXlJz7MZp4Vc=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=dMMPgjmczfrIh3CCPrDDOl3tIqHDHdNlu5JU2w7Ep2VHDeFsOXM6kdKKzPBGav/90ihUi+YxF6BJxPavsd8NCAlxLDkhuyUAq6QaIw32jpLFtVJkPyJfKCYkJOWKrDBAzdsHWuRMS+01UuIub1zI+sVkW5vg82/2DEdHuN84/B0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=R8yL0XJH; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1740972753; c=relaxed/simple;
+	bh=9HpN8YNbM1g+5HMgusPSZ6T6i/R2IPLHgnjcpfni1kI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=r2y8UhW7OKU9NiVAyUkPf7oLzDpvRPvQWd5TJzD18tJYEqmayrLZroXK9hmSmP2sEMEAK9/HD/f6ECg4nyqXrKGFAY263mEdHmSf4VjFf78et2md1A25gNt0kB0KilPe7595b6put6gIbdqH3+vDwX/Sc+Ic3b7pplkFnxvksM4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=G33aCWbA; arc=none smtp.client-ip=209.85.216.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="R8yL0XJH"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 522NAN14010050;
-	Mon, 3 Mar 2025 03:30:15 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	9cyWBbkGS49vwWOjICuYMJBNYDFOfeu+z9/asngCMic=; b=R8yL0XJH91q+mUb7
-	HYH/p4mH5DAb5ZzZjW+iQx2vv/NOcblX1+QdACl9Hy0i1a85V+QqHrUIqU0OKC4i
-	ec4yVbsWCwVl3qHtVOX8DaVk64qmaqFf6QxgOLYsM7t0G8x4LxoCr1QgT/slW7z0
-	2wyKu06zixeXGW0A+WAoJEyp/xEDsNdW36GC33ACHe+rMdslt92ZNQ7ulIakSZkF
-	dhGpMt1TcJ0S6cE3fW2QAcjDOkMqWqcqUxMZG3pVKMDrGv9CvdV4mxhNM8KQxYcd
-	6Ofuj/vEBBc9BZXMI5BOcdeYyPnnfyD1+5/iwyPutoqdeGNg9EjgbLN9NnWGiWji
-	pcV8FA==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 453t993cdn-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 03 Mar 2025 03:30:14 +0000 (GMT)
-Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5233UEta013393
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 3 Mar 2025 03:30:14 GMT
-Received: from jiegan-gv.qualcomm.com (10.80.80.8) by
- nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Sun, 2 Mar 2025 19:30:08 -0800
-From: Jie Gan <quic_jiegan@quicinc.com>
-To: Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach
-	<mike.leach@linaro.org>,
-        James Clark <james.clark@linaro.org>,
-        "Alexander
- Shishkin" <alexander.shishkin@linux.intel.com>,
-        Maxime Coquelin
-	<mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>
-CC: Tingwei Zhang <quic_tingweiz@quicinc.com>,
-        Jinlong Mao
-	<quic_jinlmao@quicinc.com>, <coresight@lists.linaro.org>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>
-Subject: [PATCH v15 03/10] Coresight: Use coresight_etm_get_trace_id() in traceid_show()
-Date: Mon, 3 Mar 2025 11:29:24 +0800
-Message-ID: <20250303032931.2500935-4-quic_jiegan@quicinc.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250303032931.2500935-1-quic_jiegan@quicinc.com>
-References: <20250303032931.2500935-1-quic_jiegan@quicinc.com>
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="G33aCWbA"
+Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-2fee688b474so203360a91.3
+        for <linux-kernel@vger.kernel.org>; Sun, 02 Mar 2025 19:32:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1740972751; x=1741577551; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=sKGzbVXfgyG8sHy3CMwzPi1s2SgLFm/W4scE3baWvx4=;
+        b=G33aCWbASN6gexBfPNxv9/xJXx/oR+iI9I4cVJVuRaamiLh9FPh939JZk259AGlkaA
+         qEF4t+7/HVPWTYVRbgZKN0Y7EPjpThUtwTgKHqPVcouHJ54GSCcSR22ml9Ir5/OHALXw
+         CxTV4Mb9a7zdhfPJzsWAnco5s0v1G6YyjKI6zhE6bonpkg41CHV5ZhpsulvOcq5QLgCu
+         oOS1fTrJPiDAq/UDbBrwExeqQgmGGiRL+yAc/QB2WCl2D5jIuyFBHnFKLNTtR14adzn/
+         A9gKnQFeYfS2o4XGH97Fu6W06VCuQavq61Ji02mf2CEIsQn8/4R229W8CY4yYaHOwl18
+         M2Rw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740972751; x=1741577551;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=sKGzbVXfgyG8sHy3CMwzPi1s2SgLFm/W4scE3baWvx4=;
+        b=b/gels/aaJcHiC/pdBqpXsMzPuU9Q4zFRQUit1dREEjeQF1GIcvqQMfKrtFc5dRuq1
+         S1unjiuQN+f3SkbS7Brcw08lHU54cIkIJ/v8LXUMXuJO3sHK4/UdNG0/wnvs72kvOA3B
+         Mpehp4Xi+hO8hHtUagmDt7s9C15aTET4J/QkykqeuaUN9SFPlkjbdUzQW8SHIiKOv+gE
+         lqedZciENEI7TGraxF/VCftjWKWGxDL7Ip3ibsQ6SkymQDBdjx6zllmhjNZF6ZfvnAOQ
+         Ac6LwumS3sDBUASlHdqWn251AOcLqvBxkZlpTRSOH8WJpVXG2DDnj+vinsKTtf/9nb2h
+         IDaQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUGUKlYZF9Jtv3XI4hqedeOYGdabrzosbZFG0ATVyKUlHwWmyV0U18i/NjY27Pmaaib5YECACZreCuRxP4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyZYWlm6lbvir1rm+MNN+jmS3Cr5qsXQKIvy59IYC7f2oXAvt99
+	GLbYzh01mjojlqaVzN8nycMLrj5ohDBYxIXb8U1xgsmzJex/Qvv+r9gb0q2Fv98=
+X-Gm-Gg: ASbGnctmExQhibAZdqk8HTW59o/UkNdeZFYin8qUo/2GgGCS87o1k74eNv8nkyA1HvW
+	HxS8b7IgUPxEyQM0trXSnR+ON0gPeqGhcmyliZmvsBzvzZT5MKJ7zU3+4NLJ8Z+JcXpB55qt3SO
+	U/9SEWtdJJUqIS4a5cZ3825Ob1u5PGxUSo76B/599QqiKstC2wufC3n/SQ/t6Dk54Nk4v6NkV3C
+	Dpi7yH2vkr9ei7O7xYw6BgcqRijKS3ZWRK0h+E+PG1cPhW9o4FpdjxxT7LCtneNn1C23kjveuEd
+	ax0VzWVcfTN0x+ZvbcE2Gv12fToG0esTBgHyxDoT9s1PzWsRKafTPQXZCkgp1whIHQWH
+X-Google-Smtp-Source: AGHT+IFhoizGvM4lmwrFXDN5Y7DrMhPmLwqsNJT83KNbuYz0kwllV3EY1WYYzS71FHhg28mFSmBh9g==
+X-Received: by 2002:a05:6a00:429b:b0:736:442d:6310 with SMTP id d2e1a72fcca58-736442d6578mr2294328b3a.6.1740972751390;
+        Sun, 02 Mar 2025 19:32:31 -0800 (PST)
+Received: from [10.254.225.63] ([139.177.225.243])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73634ed9d05sm3713682b3a.178.2025.03.02.19.32.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 02 Mar 2025 19:32:30 -0800 (PST)
+Message-ID: <3cc57824-4a99-4bdc-9283-ca73bdc2fa50@bytedance.com>
+Date: Mon, 3 Mar 2025 11:32:23 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01c.na.qualcomm.com (10.47.97.35)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: UtRuN8YuFSK0OyCiCYLPqIcTQgz1DlPb
-X-Proofpoint-GUID: UtRuN8YuFSK0OyCiCYLPqIcTQgz1DlPb
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-03_01,2025-02-28_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxlogscore=765
- mlxscore=0 lowpriorityscore=0 suspectscore=0 priorityscore=1501
- clxscore=1015 spamscore=0 adultscore=0 impostorscore=0 malwarescore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502100000 definitions=main-2503030024
+User-Agent: Mozilla Thunderbird
+Subject: Re: Re: [PATCH v2 2/2] sched/fair: Fix premature check of
+ WAKEUP_PREEMPTION
+Content-Language: en-US
+To: Vincent Guittot <vincent.guittot@linaro.org>
+Cc: Madadi Vineeth Reddy <vineethr@linux.ibm.com>,
+ Phil Auld <pauld@redhat.com>, Ingo Molnar <mingo@redhat.com>,
+ Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>,
+ Dietmar Eggemann <dietmar.eggemann@arm.com>,
+ Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>,
+ Mel Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>,
+ Josh Don <joshdon@google.com>, Tianchen Ding <dtcccc@linux.alibaba.com>,
+ "open list:SCHEDULER" <linux-kernel@vger.kernel.org>
+References: <20250227085815.18131-1-wuyun.abel@bytedance.com>
+ <20250227085815.18131-3-wuyun.abel@bytedance.com>
+ <CAKfTPtBj2xhVg1BA5q6cC57TFGVBtgz6bbKrWGkjStSUKdxpgg@mail.gmail.com>
+From: Abel Wu <wuyun.abel@bytedance.com>
+In-Reply-To: <CAKfTPtBj2xhVg1BA5q6cC57TFGVBtgz6bbKrWGkjStSUKdxpgg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: James Clark <james.clark@linaro.org>
+On 2/28/25 10:26 PM, Vincent Guittot wrote:
+> On Thu, 27 Feb 2025 at 09:58, Abel Wu <wuyun.abel@bytedance.com> wrote:
+>>
+>> The commit 6bc912b71b6f ("sched: SCHED_OTHER vs SCHED_IDLE isolation")
+>> defines the behavior of SCHED_IDLE as following:
+>>
+>>   - no SCHED_IDLE buddies
+>>   - never let SCHED_IDLE preempt on wakeup
+>>   - always preempt SCHED_IDLE on wakeup
+>>   - limit SLEEPER fairness for SCHED_IDLE
+>>
+>> and the 3rd rule is broken if !WAKEUP_PREEMPTION due to recently merged
+>> commit faa42d29419d ("sched/fair: Make SCHED_IDLE entity be preempted in strict hierarchy")
+>>
+>> Although WAKEUP_PREEMPTION is mainly there for debug purpose to provide
+>> a way to check whether a performance degrade of certain workload is due
+>> to overscheduling or not, it is still kind of weird that we treat sched-
+>> idle cpus as idle but don't let the non-idle tasks preempt the sched-idle
+>> cpus in debug mode (!WAKEUP_PREEMPTION).
+>>
+>> Fix it by strictly following the aforementioned rules.
+>>
+>> Fixes: faa42d29419d ("sched/fair: Make SCHED_IDLE entity be preempted in strict hierarchy")
+>> Signed-off-by: Abel Wu <wuyun.abel@bytedance.com>
+> 
+> WAKEUP_PREEMPTION seems to be still used so
+> 
+> Acked-by: Vincent Guittot <vincent.guittot@linaro.org>
 
-Use the new API, coresight_etm_get_trace_id, to read the traceid of the ETM
-device when call traceid_show via sysfs node.
-
-Signed-off-by: James Clark <james.clark@linaro.org>
-Reviewed-by: James Clark <james.clark@linaro.org>
-Signed-off-by: Jie Gan <quic_jiegan@quicinc.com>
----
- drivers/hwtracing/coresight/coresight-etm3x-sysfs.c | 3 +--
- drivers/hwtracing/coresight/coresight-etm4x-sysfs.c | 4 ++--
- 2 files changed, 3 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/hwtracing/coresight/coresight-etm3x-sysfs.c b/drivers/hwtracing/coresight/coresight-etm3x-sysfs.c
-index 68c644be9813..b9006451f515 100644
---- a/drivers/hwtracing/coresight/coresight-etm3x-sysfs.c
-+++ b/drivers/hwtracing/coresight/coresight-etm3x-sysfs.c
-@@ -1190,10 +1190,9 @@ static DEVICE_ATTR_RO(cpu);
- static ssize_t traceid_show(struct device *dev,
- 			    struct device_attribute *attr, char *buf)
- {
--	int trace_id;
- 	struct etm_drvdata *drvdata = dev_get_drvdata(dev->parent);
-+	int trace_id = coresight_etm_get_trace_id(drvdata->csdev, CS_MODE_SYSFS, NULL);
- 
--	trace_id = etm_read_alloc_trace_id(drvdata);
- 	if (trace_id < 0)
- 		return trace_id;
- 
-diff --git a/drivers/hwtracing/coresight/coresight-etm4x-sysfs.c b/drivers/hwtracing/coresight/coresight-etm4x-sysfs.c
-index c767f8ae4cf1..e5216c0f60da 100644
---- a/drivers/hwtracing/coresight/coresight-etm4x-sysfs.c
-+++ b/drivers/hwtracing/coresight/coresight-etm4x-sysfs.c
-@@ -4,6 +4,7 @@
-  * Author: Mathieu Poirier <mathieu.poirier@linaro.org>
-  */
- 
-+#include <linux/coresight.h>
- #include <linux/pid_namespace.h>
- #include <linux/pm_runtime.h>
- #include <linux/sysfs.h>
-@@ -2402,10 +2403,9 @@ static ssize_t trctraceid_show(struct device *dev,
- 			       struct device_attribute *attr,
- 			       char *buf)
- {
--	int trace_id;
- 	struct etmv4_drvdata *drvdata = dev_get_drvdata(dev->parent);
-+	int trace_id = coresight_etm_get_trace_id(drvdata->csdev, CS_MODE_SYSFS, NULL);
- 
--	trace_id = etm4_read_alloc_trace_id(drvdata);
- 	if (trace_id < 0)
- 		return trace_id;
- 
--- 
-2.34.1
+Thanks!
 
