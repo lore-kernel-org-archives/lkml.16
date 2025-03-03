@@ -1,108 +1,84 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 914A41E9907
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 10:06:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 18F5A1F2B8B
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 10:06:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740996385; cv=none; b=bHA7HxYrDrXm2en2MCVQ1ZAG8SZTYwUSzlNsuI7IXsWF+Z++T65pz2eOESZyKmVR3Ipi2dFl3MpvVuc6y0wp+tvFAwyP5QDoAcWMEaD2xht72aVS0yyEomBo4MLvUoeswX2qACtzV5DHDNYq3BZ7oH1uSK9lk0Cy2ZlhHnmfG9M=
+	t=1740996391; cv=none; b=e+yHaqjq2Cqy2zwOziw+9DS9MeuJkZ7NLhrTH5ejPJ17ZQi7h+aK+nwbDX1lsdHhUKij8EeJunq81Nk5gBfatbvbxBFHPuv3kXjXI01+vwg9bcCgc0fPBvb0lzCVoQ1qGa3oM0oZxDbmMMgQlqD2FvdFoe8O+GCEmo3N3UO6OOI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740996385; c=relaxed/simple;
-	bh=ryNGzalrzD3yX/2mks/XBFD5n9Vg95McjnPEOR5SisE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=dl7Qm2PQpwy+bbvHW8BXQx7hPP2wLX2qimz5xkpVBBwc1OoutoPk6BcrTiTrJBaSfK8Aj9t4122uLG3JnCLN0uaJLY9ssGO6uI8LrSHOo7ZP8XNnhLyog0o+OnArtstb/LbVqtqm2QY1WYJACP/D7rvOB4RJNmadHbUS7L/BW1g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=shopee.com; spf=pass smtp.mailfrom=shopee.com; dkim=pass (2048-bit key) header.d=shopee.com header.i=@shopee.com header.b=isXIj482; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=shopee.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shopee.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=shopee.com header.i=@shopee.com header.b="isXIj482"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-22385253e2bso37862615ad.1
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Mar 2025 02:06:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shopee.com; s=shopee.com; t=1740996384; x=1741601184; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=c2xvnbw0JuGYZ3kMUPAj9qebO9ot86k6LgdKqU+QHZM=;
-        b=isXIj482IUNa3GnhIwZTd95MvDzCI0mSIjaXet8n36kTNkUp7DCuv7i0T7Js9p4F9x
-         r7vNnVx95BAmNWQ28tY5Uhw1PtdUJfJT+375bENLF9TaCVj/AmfNbpSrwD6gvCQzpbqV
-         nHeliuOyzA3VcZUHFBUccRjuLhdqz6AMT9qQwzo4j0oV6p1+HqsOSx/RdIDLBIM0sV3r
-         bQ/JmZD/zyeiC0NEOln+eQ/QG9hK2EqL78z6k3YqIAW3arkrL8ML4GhtWY10trZfgBEG
-         Zul27zfcFx/TZYpmQOVasePvoT8BX2VvefyBCfVMAAJwAwr0GTrrKrVhbUCuQQHPLRed
-         AYyg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740996384; x=1741601184;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=c2xvnbw0JuGYZ3kMUPAj9qebO9ot86k6LgdKqU+QHZM=;
-        b=gmktKeL1oM9Z32ZmRttFRH9wsaaVXoRei2Y0s8zqaM09AzTASn/gWo8GGTz8GvMdsU
-         Fx1iGyLzB1EiV80lx6zUs6KlRRJkFZz3puMXgjLOcxqXMLyUScRI4eZGoaD7LK25km00
-         ZMhJzIvFnJssxKi3OEuOsNvnS5Xxz4NKOGJCc/ITEqYRe8dY36jJRoWH+7zmCNx2HJHN
-         GUaRVGqXv2/vt0TR1L5Lf4Oo55Ue8v6r5LwUEYbRCSnG9yBunn200ZRXAXySOgJ12P3t
-         XjYsdE70zTa5mLIt1Sq9gikZ/ZCfXgU/dTaD3BpUJfK//WEfO0yVycBztejkqAGBib4L
-         hcNA==
-X-Forwarded-Encrypted: i=1; AJvYcCW3itx+psLLtSsM/aFSJPX8KeS5jn7HsebCo364FtI308wia0LDAuV/JM80LiC8Rz/5khthvd/NISM4v2w=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxhC6W86B1UCO05UCu8DIzQT4jq/J2TltQLUbqYXv9buEwDZZ8u
-	lYuy7ak0wUUJ7Do7j1QYedSUicaT9GVFuwv1aMTCnnyRAD9yCaR6ERnWncMz/1k=
-X-Gm-Gg: ASbGnctXdm0riw+B7Ur28Rx5S30HnuqxZEUbR/9Tl89B5JV4JEZkF8wfYQBHXoZpAZX
-	azIogMJVYAvN1TzHF7fzJ1EnzeTYY+BAoU26wP8iwe2Fx77Q1hHW5P/GrlSavCX0vRkRZ3cOBsj
-	Oocs9X2uAhB8pN3RlnYug90M2HI2ovsIkSHLrYnWJ/xDJHZwrFC/eTjG4N8egkpNaKhF4FUgUoz
-	Upu0W2Wukr40cu+81QgB+HXY+t/Bx1OgJEU9kl2c7NjFco7xvPRhLNn9SLQqeR4IJCPkvDG28WV
-	iOmmlWJrEuC+gqw98oStA+lLRL63ZA==
-X-Google-Smtp-Source: AGHT+IHEynmWuf/VC/tNMisellPQ0994Vlxa4c8xxDyclOEyECs3a2rUWIXx0layqxHXPQw7tF9mhw==
-X-Received: by 2002:a17:903:2ca:b0:216:725c:a12c with SMTP id d9443c01a7336-22368f612dbmr196639065ad.9.1740996383883;
-        Mon, 03 Mar 2025 02:06:23 -0800 (PST)
-Received: from localhost.localdomain ([143.92.64.20])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22350537b47sm74397275ad.251.2025.03.03.02.06.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Mar 2025 02:06:22 -0800 (PST)
-From: Tang Yizhou <yizhou.tang@shopee.com>
-X-Google-Original-From: Tang Yizhou
-To: tj@kernel.org,
-	jack@suse.cz,
-	brauner@kernel.org,
-	willy@infradead.org,
-	akpm@linux-foundation.org
-Cc: rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	ast@kernel.org,
-	linux-mm@kvack.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Tang Yizhou <yizhou.tang@shopee.com>
-Subject: [PATCH RESEND 0/2] Fix calculations in trace_balance_dirty_pages() for cgwb
-Date: Mon,  3 Mar 2025 18:06:15 +0800
-Message-Id: <20250303100617.223677-1-yizhou.tang@shopee.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1740996391; c=relaxed/simple;
+	bh=ZJEojTWuFXiKxPY412FY66l7Kl1r/YJf053Gi49maqU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=NFXXaixcseZQ8LcC5PPAGhq9DlWc6SXidTEz8lC9oL/g3ujBnmMP/Gmd9u4/Hf4HRhr2Y0nrlXU5EcdRBLgUiGuoDDxWxaYGMuiMqTxUKFvk/R0i3oKdEFJJr/xei9mzHPJdwGafzHaPVU3xtnt39ncp6U61wBCDieI+eFKceTg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AE140113E;
+	Mon,  3 Mar 2025 02:06:43 -0800 (PST)
+Received: from [192.168.178.6] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E59D03F66E;
+	Mon,  3 Mar 2025 02:06:28 -0800 (PST)
+Message-ID: <c8a9710a-e62e-4a8f-826f-f3092824e94e@arm.com>
+Date: Mon, 3 Mar 2025 11:06:27 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: BUG Report: Fork benchmark drop by 30% on aarch64
+To: Hagar Hemdan <hagarhem@amazon.com>
+Cc: abuehaze@amazon.com, linux-kernel@vger.kernel.org, wuchi.zero@gmail.com
+References: <20250205151026.13061-1-hagarhem@amazon.com>
+ <4a9cc5ab-c538-4427-8a7c-99cb317a283f@arm.com>
+ <20250207110754.GA10452@amazon.com>
+ <1ca758c7-b6ab-4880-9cc7-217093a30bbb@arm.com>
+ <20250210213155.GA649@amazon.com>
+ <4b48fd24-6cd5-474c-bed8-3faac096fd58@arm.com>
+ <20250211214019.GA15530@amazon.com>
+ <75503128-c898-4da7-ab99-55f4ef6e2add@arm.com>
+ <5f92761b-c7d4-4b96-9398-183a5bf7556a@arm.com>
+ <20250228193945.GA13237@amazon.com>
+From: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Content-Language: en-US
+In-Reply-To: <20250228193945.GA13237@amazon.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Tang Yizhou <yizhou.tang@shopee.com>
+On 28/02/2025 20:39, Hagar Hemdan wrote:
+> On Mon, Feb 17, 2025 at 11:51:45PM +0100, Dietmar Eggemann wrote:
+>> On 13/02/2025 19:55, Dietmar Eggemann wrote:
+>>> On 11/02/2025 22:40, Hagar Hemdan wrote:
+>>>> On Tue, Feb 11, 2025 at 05:27:47PM +0100, Dietmar Eggemann wrote:
+>>>>> On 10/02/2025 22:31, Hagar Hemdan wrote:
+>>>>>> On Mon, Feb 10, 2025 at 11:38:51AM +0100, Dietmar Eggemann wrote:
+>>>>>>> On 07/02/2025 12:07, Hagar Hemdan wrote:
+>>>>>>>> On Fri, Feb 07, 2025 at 10:14:54AM +0100, Dietmar Eggemann wrote:
 
-In my experiment, I found that the output of trace_balance_dirty_pages()
-in the cgroup writeback scenario was strange because
-trace_balance_dirty_pages() always uses global_wb_domain.dirty_limit for
-related calculations instead of the dirty_limit of the corresponding
-memcg's wb_domain.
+[...]
 
-The basic idea of the fix is to store the hard dirty limit value computed
-in wb_position_ratio() into struct dirty_throttle_control and use it for
-calculations in trace_balance_dirty_pages().
+>> './Run -c 4 spawn' on AWS instance (m7gd.16xlarge) with v6.13, 'mem=16G
+>> maxcpus=4 nr_cpus=4' and Ubuntu '22.04.5 LTS':
+>>
+>> CFG_SCHED_AUTOGROUP | sched_ag_enabled | eff6c8ce8d4d | Fork (lps)
+>>
+>>    	y	             1		   y            21005 (27120 **)
+>> 	y		     0		   y            21059 (27012 **)
+>> 	n		     -		   y            21299
+>> 	y		     1		   n	        27745 *
+>> 	y		     0		   n	        27493 *
+>> 	n		     -		   n	        20928
+>>
+>> (*) So here the higher numbers are only achieved when
+>> 'sched_autogroup_exit_task() -> sched_move_task() ->
+>> sched_change_group() is called for the 'spawn' tasks.
+>>
+>> (**) When I apply the fix from
+>> https://lkml.kernel.org/r/4a9cc5ab-c538-4427-8a7c-99cb317a283f@arm.com.
+> 
+> This is currently impacting our kernel, do you
+> have any concerns to submit this fix upstream?
 
-Tang Yizhou (2):
-  writeback: Let trace_balance_dirty_pages() take struct dtc as
-    parameter
-  writeback: Fix calculations in trace_balance_dirty_pages() for cgwb
-
- include/linux/writeback.h        | 24 +++++++++++++++++++++
- include/trace/events/writeback.h | 33 ++++++++++++----------------
- mm/page-writeback.c              | 37 +++-----------------------------
- 3 files changed, 41 insertions(+), 53 deletions(-)
-
--- 
-2.25.1
-
+Will send it out after the analysis now done. See the other email from
+today.
