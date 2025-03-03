@@ -1,48 +1,48 @@
 Received: from mx0b-001ae601.pphosted.com (mx0b-001ae601.pphosted.com [67.231.152.168])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB0F425F985;
-	Mon,  3 Mar 2025 17:14:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B350A260A33;
+	Mon,  3 Mar 2025 17:14:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.152.168
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741022098; cv=none; b=RyZJi14ZAC/Q4w79ezU7QvMw+vrIMia36Q5XS7vSOQXKMjaDfYaC6v9Ay00/lNYZhHYbDzPSucxeD8t53seJ2vmOdyqopqRGSI14FbhF1cDKKXUCvUT5JtmI56nE16HD+aMoTUlc2981gz8lq9CmOJ53WHBFbAOrgAcrgKrDUXg=
+	t=1741022101; cv=none; b=SeKkEha0t0EPkhfp8CtVTjImoa0HBZPsjFJcZBOil856fDSPVyriaqn1HPumuiEFl8GdQYkbdUbJ/pVetXmkJFVF6bu4QOpR0piKAi7JEbYcNfcOK2tjvdqJiE6WDvypYj6iAQLm/yBOJmYdXM5fphKfELWTYadzN/BIKmYE4nk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741022098; c=relaxed/simple;
-	bh=Xk1OBXkIHLpbbPSfwjhvKH3PK9w0DUE+ocdkungS8ik=;
+	s=arc-20240116; t=1741022101; c=relaxed/simple;
+	bh=nrZKa8skzu4qrfyoMxw6FknpRn/PRrcZmd0qjvM+db4=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=rpHNhegChnrDprmpVYiTUtM9Ts2IkzI/23Gl9GdmUi5ehaOr80rC9p7YcBYlKeUTXONCMgY6XaiWgPB+HpPo/oxOAoqH3MJHVq3gRDLkz4GeaJw/zfXEKz04SntpaW4QudH90geom622cqh9jZE/dEDBgqYwE99kuxu0i8N4QYk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=RbdGFyMX; arc=none smtp.client-ip=67.231.152.168
+	 MIME-Version:Content-Type; b=t38bNIlIesBR4BRkts2ipAnCL5b9TadW8mf3Z2/dFr3bFMwmtUTucTMfB3GWKv2dBqCfeaBSUOYPXhnEF07gBaFn7+aGCZ5cisOyRScBZWRevKn7PQXI0tHmRmbGS7aotI4DTWnZph7SsB0YSUkNJCUe2Jl0bhWKAtNoeQlPwMY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=mWebvZui; arc=none smtp.client-ip=67.231.152.168
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="RbdGFyMX"
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="mWebvZui"
 Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
-	by mx0b-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5236w7Xf006077;
-	Mon, 3 Mar 2025 11:14:40 -0600
+	by mx0b-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5236w7Xg006077;
+	Mon, 3 Mar 2025 11:14:41 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=cc
 	:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=
-	PODMain02222019; bh=YVyGSkjFpxieFo5keKrEaRHe+nU2oQRXqlGjwdjVK54=; b=
-	RbdGFyMXXBIgSjl/xqiVp2CK2RN58V/v3DTFJSTzqYvKF3QBrNdHFMCnX6CAUV92
-	DdN5+nYJxW6I8879A1RWfqj0TQEl7KPHRWl8TXwK8V2/RmeW4XEHIZdw+kzIy+La
-	IrGeqSKyeXs7YxdIjwL89NuXsM9KGS/vz2EhRhv0U2VXJH2OneLFxxEsec+a4piN
-	gKEdDBn4IFFhzityMH6JBarTsU21UqPmG2gWLhCllcDiW+K9JM5GM6yYw/dtRDRv
-	oq5XUmOKHqfBS1K1ntM8Xv4dBFzIzXqSpcxcYf0XHJZZEe0ccLuJ/lk8w5TIj3pL
-	J2E1jONh9nfoSdnLMs7xIg==
+	PODMain02222019; bh=VcSsa/ypvmmdhn2EwY1KGE9ErICbUeffcr39c4DTHDg=; b=
+	mWebvZuibkMh86FhMiWWScvgmnkSZX+fs1bMnIPm/7TzYuVz/W42IwTZ8PTstBk4
+	dwvxQh//38Egt0NjnmZgRvuFYvSdYsLdnPVmDJDC+1sg+f1Ujxf0olkerYRMtlJB
+	vhlsfdMKdMgb821POUEhN54WNAOobqpi+zNUppTMEjiWNx18c2cZFutW6kBl+iXs
+	D9fjAkNYttUZeUFFkSE0zH7yzSTT5RtoWyHeviiOhlQHoVty1IDLv/bOBN+nf2EY
+	QYHKM66DoygUinAHKCsjPwXH/w4IV8XbJZ7E1Lw4X7lMVl0RAs1RWz8vot3gOJxe
+	/uBZ5R8UQaclRMzOcVLUEg==
 Received: from ediex02.ad.cirrus.com ([84.19.233.68])
-	by mx0b-001ae601.pphosted.com (PPS) with ESMTPS id 453yhmdame-9
+	by mx0b-001ae601.pphosted.com (PPS) with ESMTPS id 453yhmdame-10
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 03 Mar 2025 11:14:37 -0600 (CST)
-Received: from ediex02.ad.cirrus.com (198.61.84.81) by ediex02.ad.cirrus.com
+	Mon, 03 Mar 2025 11:14:40 -0600 (CST)
+Received: from ediex01.ad.cirrus.com (198.61.84.80) by ediex02.ad.cirrus.com
  (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Mon, 3 Mar
- 2025 17:14:24 +0000
+ 2025 17:14:25 +0000
 Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
- anon-ediex02.ad.cirrus.com (198.61.84.81) with Microsoft SMTP Server id
- 15.2.1544.14 via Frontend Transport; Mon, 3 Mar 2025 17:14:24 +0000
+ anon-ediex01.ad.cirrus.com (198.61.84.80) with Microsoft SMTP Server id
+ 15.2.1544.14 via Frontend Transport; Mon, 3 Mar 2025 17:14:25 +0000
 Received: from ediswws07.ad.cirrus.com (ediswws07.ad.cirrus.com [198.90.208.14])
-	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id D635E820270;
-	Mon,  3 Mar 2025 17:14:24 +0000 (UTC)
+	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id 09E3C82255D;
+	Mon,  3 Mar 2025 17:14:25 +0000 (UTC)
 From: Charles Keepax <ckeepax@opensource.cirrus.com>
 To: <broonie@kernel.org>
 CC: <lgirdwood@gmail.com>, <peda@axentia.se>, <andrei.simion@microchip.com>,
@@ -51,9 +51,9 @@ CC: <lgirdwood@gmail.com>, <peda@axentia.se>, <andrei.simion@microchip.com>,
         <baojun.xu@ti.com>, <srinivas.kandagatla@linaro.org>,
         <linux-sound@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <patches@opensource.cirrus.com>
-Subject: [PATCH v2 10/13] ASoC: dapm: Add missing SOC_DAPM_DOUBLE_R_TLV() helper
-Date: Mon, 3 Mar 2025 17:14:21 +0000
-Message-ID: <20250303171424.444556-11-ckeepax@opensource.cirrus.com>
+Subject: [PATCH v2 13/13] ASoC: Tidy up SOC_DOUBLE_* and SOC_SINGLE_* helpers
+Date: Mon, 3 Mar 2025 17:14:24 +0000
+Message-ID: <20250303171424.444556-14-ckeepax@opensource.cirrus.com>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250303171424.444556-1-ckeepax@opensource.cirrus.com>
 References: <20250303171424.444556-1-ckeepax@opensource.cirrus.com>
@@ -65,142 +65,226 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-Proofpoint-ORIG-GUID: q4-4oYbIvs42TRjJ1wrtsw3vHBUOx3RZ
-X-Authority-Analysis: v=2.4 cv=UeirSLSN c=1 sm=1 tr=0 ts=67c5e37d cx=c_pps a=uGhh+3tQvKmCLpEUO+DX4w==:117 a=uGhh+3tQvKmCLpEUO+DX4w==:17 a=Vs1iUdzkB0EA:10 a=w1d2syhTAAAA:8 a=eHhbDft_Fg0bQzyGKX0A:9 a=YXXWInSmI4Sqt1AkVdoW:22
-X-Proofpoint-GUID: q4-4oYbIvs42TRjJ1wrtsw3vHBUOx3RZ
+X-Proofpoint-ORIG-GUID: NK3RmTzxG0WHghELV7Zc84MrrZ7rCef4
+X-Authority-Analysis: v=2.4 cv=UeirSLSN c=1 sm=1 tr=0 ts=67c5e381 cx=c_pps a=uGhh+3tQvKmCLpEUO+DX4w==:117 a=uGhh+3tQvKmCLpEUO+DX4w==:17 a=Vs1iUdzkB0EA:10 a=w1d2syhTAAAA:8 a=LuYPZTa0VuMH1JCmcYwA:9 a=YXXWInSmI4Sqt1AkVdoW:22
+X-Proofpoint-GUID: NK3RmTzxG0WHghELV7Zc84MrrZ7rCef4
 X-Proofpoint-Spam-Reason: safe
 
-A few drivers are open coding SOC_DAPM_DOUBLE_R_TLV() add a core
-helper and use that instead.
+Re-implement SOC_DOUBLE_VALUE() in terms of SOC_DOUBLE_S_VALUE().
+SOC_DOUBLE_S_VALUE() already had a minimum value so add this to
+SOC_DOUBLE_VALUE as well, this allows replacement of several hard coded
+value entries. Likewise update SOC_SINGLE_VALUE to match, which allows
+replacement of even more hard coded values.
 
 Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
 ---
 
 No changes since v1.
 
- include/sound/soc-dapm.h  |  7 +++++++
- sound/soc/codecs/jz4760.c | 32 ++++---------------------------
- sound/soc/codecs/jz4770.c | 40 ++++++---------------------------------
- 3 files changed, 17 insertions(+), 62 deletions(-)
+ include/sound/soc-dapm.h |  4 +--
+ include/sound/soc.h      | 65 +++++++++++++++-------------------------
+ 2 files changed, 26 insertions(+), 43 deletions(-)
 
 diff --git a/include/sound/soc-dapm.h b/include/sound/soc-dapm.h
-index 7cf52c8c9cf32..bed1c37529aca 100644
+index 4b8ef5b8a391e..af802ef536e73 100644
 --- a/include/sound/soc-dapm.h
 +++ b/include/sound/soc-dapm.h
-@@ -347,6 +347,13 @@ struct soc_enum;
- 	.private_value = SOC_SINGLE_VALUE(reg, shift, max, invert, 1) }
- #define SOC_DAPM_SINGLE_VIRT(xname, max) \
- 	SOC_DAPM_SINGLE(xname, SND_SOC_NOPM, 0, max, 0)
-+#define SOC_DAPM_DOUBLE_R_TLV(xname, lreg, rreg, shift, max, invert, tlv_array) \
-+{	.iface = SNDRV_CTL_ELEM_IFACE_MIXER, .name = xname, \
-+	.info = snd_soc_info_volsw, \
-+	.access = SNDRV_CTL_ELEM_ACCESS_TLV_READ | SNDRV_CTL_ELEM_ACCESS_READWRITE,\
-+	.tlv.p = (tlv_array), \
-+	.get = snd_soc_dapm_get_volsw, .put = snd_soc_dapm_put_volsw, \
-+	.private_value = SOC_DOUBLE_R_VALUE(lreg, rreg, shift, max, invert) }
- #define SOC_DAPM_SINGLE_TLV(xname, reg, shift, max, invert, tlv_array) \
+@@ -356,14 +356,14 @@ struct soc_enum;
  {	.iface = SNDRV_CTL_ELEM_IFACE_MIXER, .name = xname, \
  	.info = snd_soc_info_volsw, \
-diff --git a/sound/soc/codecs/jz4760.c b/sound/soc/codecs/jz4760.c
-index 6217e611259fe..e04af1b9ace86 100644
---- a/sound/soc/codecs/jz4760.c
-+++ b/sound/soc/codecs/jz4760.c
-@@ -314,37 +314,13 @@ static const struct snd_kcontrol_new jz4760_codec_snd_controls[] = {
- };
- 
- static const struct snd_kcontrol_new jz4760_codec_pcm_playback_controls[] = {
--	{
--		.iface = SNDRV_CTL_ELEM_IFACE_MIXER,
--		.name = "Volume",
--		.info = snd_soc_info_volsw,
--		.access = SNDRV_CTL_ELEM_ACCESS_TLV_READ
--			| SNDRV_CTL_ELEM_ACCESS_READWRITE,
--		.tlv.p = dac_tlv,
--		.get = snd_soc_dapm_get_volsw,
--		.put = snd_soc_dapm_put_volsw,
--		.private_value = SOC_DOUBLE_R_VALUE(JZ4760_CODEC_REG_GCR6,
--						    JZ4760_CODEC_REG_GCR5,
--						    REG_GCR_GAIN_OFFSET,
--						    REG_GCR_GAIN_MAX, 1),
--	},
-+	SOC_DAPM_DOUBLE_R_TLV("Volume", JZ4760_CODEC_REG_GCR6, JZ4760_CODEC_REG_GCR5,
-+			      REG_GCR_GAIN_OFFSET, REG_GCR_GAIN_MAX, 1, dac_tlv),
- };
- 
- static const struct snd_kcontrol_new jz4760_codec_hp_playback_controls[] = {
--	{
--		.iface = SNDRV_CTL_ELEM_IFACE_MIXER,
--		.name = "Volume",
--		.info = snd_soc_info_volsw,
--		.access = SNDRV_CTL_ELEM_ACCESS_TLV_READ
--			| SNDRV_CTL_ELEM_ACCESS_READWRITE,
--		.tlv.p = out_tlv,
--		.get = snd_soc_dapm_get_volsw,
--		.put = snd_soc_dapm_put_volsw,
--		.private_value = SOC_DOUBLE_R_VALUE(JZ4760_CODEC_REG_GCR2,
--						    JZ4760_CODEC_REG_GCR1,
--						    REG_GCR_GAIN_OFFSET,
--						    REG_GCR_GAIN_MAX, 1),
--	},
-+	SOC_DAPM_DOUBLE_R_TLV("Volume", JZ4760_CODEC_REG_GCR2, JZ4760_CODEC_REG_GCR1,
-+			      REG_GCR_GAIN_OFFSET, REG_GCR_GAIN_MAX, 1, out_tlv),
- };
- 
- static int hpout_event(struct snd_soc_dapm_widget *w,
-diff --git a/sound/soc/codecs/jz4770.c b/sound/soc/codecs/jz4770.c
-index acb9eaa7ea1c5..312202ab5ceae 100644
---- a/sound/soc/codecs/jz4770.c
-+++ b/sound/soc/codecs/jz4770.c
-@@ -331,43 +331,15 @@ static const struct snd_kcontrol_new jz4770_codec_snd_controls[] = {
- };
- 
- static const struct snd_kcontrol_new jz4770_codec_pcm_playback_controls[] = {
--	{
--		.iface = SNDRV_CTL_ELEM_IFACE_MIXER,
--		.name = "Volume",
--		.info = snd_soc_info_volsw,
--		.access = SNDRV_CTL_ELEM_ACCESS_TLV_READ
--			| SNDRV_CTL_ELEM_ACCESS_READWRITE,
--		.tlv.p = dac_tlv,
--		.get = snd_soc_dapm_get_volsw,
--		.put = snd_soc_dapm_put_volsw,
--		/*
--		 * NOTE: DACR/DACL are inversed; the gain value written to DACR
--		 * seems to affect the left channel, and the gain value written
--		 * to DACL seems to affect the right channel.
--		 */
--		.private_value = SOC_DOUBLE_R_VALUE(JZ4770_CODEC_REG_GCR_DACR,
--						    JZ4770_CODEC_REG_GCR_DACL,
--						    REG_GCR_GAIN_OFFSET,
--						    REG_GCR_GAIN_MAX, 1),
--	},
-+	SOC_DAPM_DOUBLE_R_TLV("Volume", JZ4770_CODEC_REG_GCR_DACR,
-+			      JZ4770_CODEC_REG_GCR_DACL, REG_GCR_GAIN_OFFSET,
-+			      REG_GCR_GAIN_MAX, 1, dac_tlv),
- };
- 
- static const struct snd_kcontrol_new jz4770_codec_hp_playback_controls[] = {
--	{
--		.iface = SNDRV_CTL_ELEM_IFACE_MIXER,
--		.name = "Volume",
--		.info = snd_soc_info_volsw,
--		.access = SNDRV_CTL_ELEM_ACCESS_TLV_READ
--			| SNDRV_CTL_ELEM_ACCESS_READWRITE,
--		.tlv.p = out_tlv,
--		.get = snd_soc_dapm_get_volsw,
--		.put = snd_soc_dapm_put_volsw,
--		/* HPR/HPL inversed for the same reason as above */
--		.private_value = SOC_DOUBLE_R_VALUE(JZ4770_CODEC_REG_GCR_HPR,
--						    JZ4770_CODEC_REG_GCR_HPL,
--						    REG_GCR_GAIN_OFFSET,
--						    REG_GCR_GAIN_MAX, 1),
--	},
-+	SOC_DAPM_DOUBLE_R_TLV("Volume", JZ4770_CODEC_REG_GCR_HPR,
-+			      JZ4770_CODEC_REG_GCR_HPL, REG_GCR_GAIN_OFFSET,
-+			      REG_GCR_GAIN_MAX, 1, out_tlv),
- };
- 
- static int hpout_event(struct snd_soc_dapm_widget *w,
+ 	.get = snd_soc_dapm_get_volsw, .put = snd_soc_dapm_put_volsw, \
+-	.private_value = SOC_SINGLE_VALUE(reg, shift, max, invert, 1) }
++	.private_value = SOC_SINGLE_VALUE(reg, shift, 0, max, invert, 1) }
+ #define SOC_DAPM_SINGLE_TLV_AUTODISABLE(xname, reg, shift, max, invert, tlv_array) \
+ {	.iface = SNDRV_CTL_ELEM_IFACE_MIXER, .name = xname, \
+ 	.info = snd_soc_info_volsw, \
+ 	.access = SNDRV_CTL_ELEM_ACCESS_TLV_READ | SNDRV_CTL_ELEM_ACCESS_READWRITE,\
+ 	.tlv.p = (tlv_array), \
+ 	.get = snd_soc_dapm_get_volsw, .put = snd_soc_dapm_put_volsw, \
+-	.private_value = SOC_SINGLE_VALUE(reg, shift, max, invert, 1) }
++	.private_value = SOC_SINGLE_VALUE(reg, shift, 0, max, invert, 1) }
+ #define SOC_DAPM_PIN_SWITCH(xname) \
+ {	.iface = SNDRV_CTL_ELEM_IFACE_MIXER, .name = xname " Switch", \
+ 	.info = snd_soc_dapm_info_pin_switch, \
+diff --git a/include/sound/soc.h b/include/sound/soc.h
+index 390e08ba4dd45..a42d8d865eb12 100644
+--- a/include/sound/soc.h
++++ b/include/sound/soc.h
+@@ -39,18 +39,17 @@ struct platform_device;
+ /*
+  * Convenience kcontrol builders
+  */
+-#define SOC_DOUBLE_VALUE(xreg, shift_left, shift_right, xmax, xinvert, xautodisable) \
+-	((unsigned long)&(struct soc_mixer_control) \
+-	{.reg = xreg, .rreg = xreg, .shift = shift_left, \
+-	.rshift = shift_right, .max = xmax, \
+-	.invert = xinvert, .autodisable = xautodisable})
+-#define SOC_DOUBLE_S_VALUE(xreg, shift_left, shift_right, xmin, xmax, xsign_bit, xinvert, xautodisable) \
++#define SOC_DOUBLE_S_VALUE(xreg, shift_left, shift_right, xmin, xmax, xsign_bit, \
++			   xinvert, xautodisable) \
+ 	((unsigned long)&(struct soc_mixer_control) \
+ 	{.reg = xreg, .rreg = xreg, .shift = shift_left, \
+ 	.rshift = shift_right, .min = xmin, .max = xmax, \
+ 	.sign_bit = xsign_bit, .invert = xinvert, .autodisable = xautodisable})
+-#define SOC_SINGLE_VALUE(xreg, xshift, xmax, xinvert, xautodisable) \
+-	SOC_DOUBLE_VALUE(xreg, xshift, xshift, xmax, xinvert, xautodisable)
++#define SOC_DOUBLE_VALUE(xreg, shift_left, shift_right, xmin, xmax, xinvert, xautodisable) \
++	SOC_DOUBLE_S_VALUE(xreg, shift_left, shift_right, xmin, xmax, 0, xinvert, \
++			   xautodisable)
++#define SOC_SINGLE_VALUE(xreg, xshift, xmin, xmax, xinvert, xautodisable) \
++	SOC_DOUBLE_VALUE(xreg, xshift, xshift, xmin, xmax, xinvert, xautodisable)
+ #define SOC_DOUBLE_R_S_VALUE(xlreg, xrreg, xshift, xmin, xmax, xsign_bit, xinvert) \
+ 	((unsigned long)&(struct soc_mixer_control) \
+ 	{.reg = xlreg, .rreg = xrreg, .shift = xshift, .rshift = xshift, \
+@@ -63,15 +62,12 @@ struct platform_device;
+ {	.iface = SNDRV_CTL_ELEM_IFACE_MIXER, .name = xname, \
+ 	.info = snd_soc_info_volsw, .get = snd_soc_get_volsw,\
+ 	.put = snd_soc_put_volsw, \
+-	.private_value = SOC_SINGLE_VALUE(reg, shift, max, invert, 0) }
++	.private_value = SOC_SINGLE_VALUE(reg, shift, 0, max, invert, 0) }
+ #define SOC_SINGLE_RANGE(xname, xreg, xshift, xmin, xmax, xinvert) \
+ {	.iface = SNDRV_CTL_ELEM_IFACE_MIXER, .name = (xname),\
+ 	.info = snd_soc_info_volsw_range, .get = snd_soc_get_volsw_range, \
+ 	.put = snd_soc_put_volsw_range, \
+-	.private_value = (unsigned long)&(struct soc_mixer_control) \
+-		{.reg = xreg, .rreg = xreg, .shift = xshift, \
+-		 .rshift = xshift,  .min = xmin, .max = xmax, \
+-		 .invert = xinvert} }
++	.private_value = SOC_SINGLE_VALUE(xreg, xshift, xmin, xmax, xinvert, 0) }
+ #define SOC_SINGLE_TLV(xname, reg, shift, max, invert, tlv_array) \
+ {	.iface = SNDRV_CTL_ELEM_IFACE_MIXER, .name = xname, \
+ 	.access = SNDRV_CTL_ELEM_ACCESS_TLV_READ |\
+@@ -79,7 +75,7 @@ struct platform_device;
+ 	.tlv.p = (tlv_array), \
+ 	.info = snd_soc_info_volsw, .get = snd_soc_get_volsw,\
+ 	.put = snd_soc_put_volsw, \
+-	.private_value = SOC_SINGLE_VALUE(reg, shift, max, invert, 0) }
++	.private_value = SOC_SINGLE_VALUE(reg, shift, 0, max, invert, 0) }
+ #define SOC_SINGLE_SX_TLV(xname, xreg, xshift, xmin, xmax, tlv_array) \
+ {       .iface = SNDRV_CTL_ELEM_IFACE_MIXER, .name = xname, \
+ 	.access = SNDRV_CTL_ELEM_ACCESS_TLV_READ | \
+@@ -88,10 +84,7 @@ struct platform_device;
+ 	.info = snd_soc_info_volsw_sx, \
+ 	.get = snd_soc_get_volsw_sx,\
+ 	.put = snd_soc_put_volsw_sx, \
+-	.private_value = (unsigned long)&(struct soc_mixer_control) \
+-		{.reg = xreg, .rreg = xreg, \
+-		.shift = xshift, .rshift = xshift, \
+-		.max = xmax, .min = xmin} }
++	.private_value = SOC_SINGLE_VALUE(xreg, xshift, xmin, xmax, 0, 0) }
+ #define SOC_SINGLE_RANGE_TLV(xname, xreg, xshift, xmin, xmax, xinvert, tlv_array) \
+ {	.iface = SNDRV_CTL_ELEM_IFACE_MIXER, .name = (xname),\
+ 	.access = SNDRV_CTL_ELEM_ACCESS_TLV_READ |\
+@@ -99,16 +92,13 @@ struct platform_device;
+ 	.tlv.p = (tlv_array), \
+ 	.info = snd_soc_info_volsw_range, \
+ 	.get = snd_soc_get_volsw_range, .put = snd_soc_put_volsw_range, \
+-	.private_value = (unsigned long)&(struct soc_mixer_control) \
+-		{.reg = xreg, .rreg = xreg, .shift = xshift, \
+-		 .rshift = xshift, .min = xmin, .max = xmax, \
+-		 .invert = xinvert} }
++	.private_value = SOC_SINGLE_VALUE(xreg, xshift, xmin, xmax, xinvert, 0) }
+ #define SOC_DOUBLE(xname, reg, shift_left, shift_right, max, invert) \
+ {	.iface = SNDRV_CTL_ELEM_IFACE_MIXER, .name = (xname),\
+ 	.info = snd_soc_info_volsw, .get = snd_soc_get_volsw, \
+ 	.put = snd_soc_put_volsw, \
+ 	.private_value = SOC_DOUBLE_VALUE(reg, shift_left, shift_right, \
+-					  max, invert, 0) }
++					  0, max, invert, 0) }
+ #define SOC_DOUBLE_STS(xname, reg, shift_left, shift_right, max, invert) \
+ {									\
+ 	.iface = SNDRV_CTL_ELEM_IFACE_MIXER, .name = (xname),		\
+@@ -116,7 +106,7 @@ struct platform_device;
+ 	.access = SNDRV_CTL_ELEM_ACCESS_READ |				\
+ 		SNDRV_CTL_ELEM_ACCESS_VOLATILE,				\
+ 	.private_value = SOC_DOUBLE_VALUE(reg, shift_left, shift_right,	\
+-					  max, invert, 0) }
++					  0, max, invert, 0) }
+ #define SOC_DOUBLE_R(xname, reg_left, reg_right, xshift, xmax, xinvert) \
+ {	.iface = SNDRV_CTL_ELEM_IFACE_MIXER, .name = (xname), \
+ 	.info = snd_soc_info_volsw, \
+@@ -138,7 +128,7 @@ struct platform_device;
+ 	.info = snd_soc_info_volsw, .get = snd_soc_get_volsw, \
+ 	.put = snd_soc_put_volsw, \
+ 	.private_value = SOC_DOUBLE_VALUE(reg, shift_left, shift_right, \
+-					  max, invert, 0) }
++					  0, max, invert, 0) }
+ #define SOC_DOUBLE_SX_TLV(xname, xreg, shift_left, shift_right, xmin, xmax, tlv_array) \
+ {       .iface = SNDRV_CTL_ELEM_IFACE_MIXER, .name = (xname), \
+ 	.access = SNDRV_CTL_ELEM_ACCESS_TLV_READ | \
+@@ -147,10 +137,8 @@ struct platform_device;
+ 	.info = snd_soc_info_volsw_sx, \
+ 	.get = snd_soc_get_volsw_sx, \
+ 	.put = snd_soc_put_volsw_sx, \
+-	.private_value = (unsigned long)&(struct soc_mixer_control) \
+-		{.reg = xreg, .rreg = xreg, \
+-		.shift = shift_left, .rshift = shift_right, \
+-		.max = xmax, .min = xmin} }
++	.private_value = SOC_DOUBLE_VALUE(xreg, shift_left, shift_right, \
++					  xmin, xmax, 0, 0) }
+ #define SOC_DOUBLE_RANGE_TLV(xname, xreg, xshift_left, xshift_right, xmin, xmax, \
+ 			     xinvert, tlv_array) \
+ {	.iface = SNDRV_CTL_ELEM_IFACE_MIXER, .name = (xname),\
+@@ -159,10 +147,8 @@ struct platform_device;
+ 	.tlv.p = (tlv_array), \
+ 	.info = snd_soc_info_volsw, \
+ 	.get = snd_soc_get_volsw, .put = snd_soc_put_volsw, \
+-	.private_value = (unsigned long)&(struct soc_mixer_control) \
+-		{.reg = xreg, .rreg = xreg, \
+-		 .shift = xshift_left, .rshift = xshift_right, \
+-		 .min = xmin, .max = xmax, .invert = xinvert} }
++	.private_value = SOC_DOUBLE_VALUE(xreg, shift_left, shift_right, \
++					  xmin, xmax, xinvert, 0) }
+ #define SOC_DOUBLE_R_TLV(xname, reg_left, reg_right, xshift, xmax, xinvert, tlv_array) \
+ {	.iface = SNDRV_CTL_ELEM_IFACE_MIXER, .name = (xname),\
+ 	.access = SNDRV_CTL_ELEM_ACCESS_TLV_READ |\
+@@ -250,14 +236,14 @@ struct platform_device;
+ {	.iface = SNDRV_CTL_ELEM_IFACE_MIXER, .name = xname, \
+ 	.info = snd_soc_info_volsw, \
+ 	.get = xhandler_get, .put = xhandler_put, \
+-	.private_value = SOC_SINGLE_VALUE(xreg, xshift, xmax, xinvert, 0) }
++	.private_value = SOC_SINGLE_VALUE(xreg, xshift, 0, xmax, xinvert, 0) }
+ #define SOC_DOUBLE_EXT(xname, reg, shift_left, shift_right, max, invert,\
+ 	 xhandler_get, xhandler_put) \
+ {	.iface = SNDRV_CTL_ELEM_IFACE_MIXER, .name = (xname),\
+ 	.info = snd_soc_info_volsw, \
+ 	.get = xhandler_get, .put = xhandler_put, \
+ 	.private_value = \
+-		SOC_DOUBLE_VALUE(reg, shift_left, shift_right, max, invert, 0) }
++		SOC_DOUBLE_VALUE(reg, shift_left, shift_right, 0, max, invert, 0) }
+ #define SOC_DOUBLE_R_EXT(xname, reg_left, reg_right, xshift, xmax, xinvert,\
+ 	 xhandler_get, xhandler_put) \
+ {	.iface = SNDRV_CTL_ELEM_IFACE_MIXER, .name = (xname), \
+@@ -273,7 +259,7 @@ struct platform_device;
+ 	.tlv.p = (tlv_array), \
+ 	.info = snd_soc_info_volsw, \
+ 	.get = xhandler_get, .put = xhandler_put, \
+-	.private_value = SOC_SINGLE_VALUE(xreg, xshift, xmax, xinvert, 0) }
++	.private_value = SOC_SINGLE_VALUE(xreg, xshift, 0, xmax, xinvert, 0) }
+ #define SOC_SINGLE_RANGE_EXT_TLV(xname, xreg, xshift, xmin, xmax, xinvert, \
+ 				 xhandler_get, xhandler_put, tlv_array) \
+ {	.iface = SNDRV_CTL_ELEM_IFACE_MIXER, .name = (xname),\
+@@ -282,10 +268,7 @@ struct platform_device;
+ 	.tlv.p = (tlv_array), \
+ 	.info = snd_soc_info_volsw_range, \
+ 	.get = xhandler_get, .put = xhandler_put, \
+-	.private_value = (unsigned long)&(struct soc_mixer_control) \
+-		{.reg = xreg, .rreg = xreg, .shift = xshift, \
+-		 .rshift = xshift, .min = xmin, .max = xmax, \
+-		 .invert = xinvert} }
++	.private_value = SOC_SINGLE_VALUE(xreg, xshift, xmin, xmax, xinvert, 0) }
+ #define SOC_DOUBLE_EXT_TLV(xname, xreg, shift_left, shift_right, xmax, xinvert,\
+ 	 xhandler_get, xhandler_put, tlv_array) \
+ {	.iface = SNDRV_CTL_ELEM_IFACE_MIXER, .name = (xname), \
+@@ -295,7 +278,7 @@ struct platform_device;
+ 	.info = snd_soc_info_volsw, \
+ 	.get = xhandler_get, .put = xhandler_put, \
+ 	.private_value = SOC_DOUBLE_VALUE(xreg, shift_left, shift_right, \
+-					  xmax, xinvert, 0) }
++					  0, xmax, xinvert, 0) }
+ #define SOC_DOUBLE_R_EXT_TLV(xname, reg_left, reg_right, xshift, xmax, xinvert,\
+ 	 xhandler_get, xhandler_put, tlv_array) \
+ {	.iface = SNDRV_CTL_ELEM_IFACE_MIXER, .name = (xname), \
 -- 
 2.39.5
 
