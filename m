@@ -1,135 +1,123 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BEA911F3D3E;
-	Mon,  3 Mar 2025 10:53:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from SHSQR01.spreadtrum.com (unknown [222.66.158.135])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 754FD1F8AE2
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 10:53:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=222.66.158.135
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740999226; cv=none; b=IirKDGzTjljvRQ+RvebVNzGPd8huXbM5bpcYfGDj9EMniwOp1pOt9/riWLJArvCVEDClU/Jaoogzm2N+wQ1pDIXDQ+fMUHOgGRaxIYDNMe03feTmvokNBn01f+ipz/tT4Y5+u9XDiC3vq7RkpFQiuLX+zDsRPC/rX48M+rdxGgo=
+	t=1740999227; cv=none; b=Q6oKQ6SqtxmbSPnXAuU9CS26Of00ogxwWturH9VDXBlMeMI3dO/bqhP/1sbhlA6J5op4vAskqj3s1OVlc3mCM0s4aCI2dU2iwcr335d2XnTmAbJLd/d1JXNV/rjZlKJ+kDN7kQP9pHgShY6KeoGCJWPphnswVsAjtLZ3zCaxP2Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740999226; c=relaxed/simple;
-	bh=iFUeJHey5yoWOaCDwHA/+dkaY+Qb1DUk7Ye5n0Pdfn4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=gycejg/2vrx/5M7kBSzhDdGXZGO3iHaDEv2q5RGFy8aV5/EbiJQGxLrIbNmKZzS7t1zGjI2rF0v8FoFQnodY629zwHv3Dc6HTf5EWnqWUgATy+a2PQN/RonouSdCu+K+s3mbAeUTdoWNRFRxKTCUcHalE+t5cKh9XeeGfBp+YY4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A562B2008;
-	Mon,  3 Mar 2025 02:53:58 -0800 (PST)
-Received: from e133711.arm.com (e133711.arm.com [10.1.196.55])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 656AA3F673;
-	Mon,  3 Mar 2025 02:53:43 -0800 (PST)
-From: Sudeep Holla <sudeep.holla@arm.com>
-Date: Mon, 03 Mar 2025 10:51:49 +0000
-Subject: [PATCH 14/14] ACPI: CPPC: Simplify PCC shared memory region
- handling
+	s=arc-20240116; t=1740999227; c=relaxed/simple;
+	bh=ajaYSo1Ace+j6quvrpngCRHOZEge52pf4Olu9YPWJIQ=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=oa/x5V+ESZAFdFrj5kB2BSlqztSc0F8ecr3XYrhzt5qTUQWJUoNOkEDDQ99UriTFLlP9EYeHYAOw9ybmiB2qavQan738+Eg/V2fhdBUJs4/d6ny/b0OpKj5hrtREupPi+cfnREYQYo7dN/pEWAc3atqEMsL+SoWiCV3IqxBkDyg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com; spf=pass smtp.mailfrom=unisoc.com; arc=none smtp.client-ip=222.66.158.135
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=unisoc.com
+Received: from dlp.unisoc.com ([10.29.3.86])
+	by SHSQR01.spreadtrum.com with ESMTP id 523ArVvd092780;
+	Mon, 3 Mar 2025 18:53:31 +0800 (+08)
+	(envelope-from Xuewen.Yan@unisoc.com)
+Received: from SHDLP.spreadtrum.com (bjmbx01.spreadtrum.com [10.0.64.7])
+	by dlp.unisoc.com (SkyGuard) with ESMTPS id 4Z5wXZ23DHz2K8nM6;
+	Mon,  3 Mar 2025 18:48:46 +0800 (CST)
+Received: from BJ10918NBW01.spreadtrum.com (10.0.73.73) by
+ BJMBX01.spreadtrum.com (10.0.64.7) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.23; Mon, 3 Mar 2025 18:53:29 +0800
+From: Xuewen Yan <xuewen.yan@unisoc.com>
+To: <vincent.guittot@linaro.org>, <peterz@infradead.org>, <mingo@redhat.com>,
+        <juri.lelli@redhat.com>, <dietmar.eggemann@arm.com>,
+        <rostedt@goodmis.org>, <bsegall@google.com>, <mgorman@suse.de>,
+        <vschneid@redhat.com>
+CC: <linux-kernel@vger.kernel.org>, <ke.wang@unisoc.com>, <di.shen@unisoc.com>,
+        <xuewen.yan94@gmail.com>
+Subject: [RFC PATCH V2 3/3] sched: Do not consider the delayed task when cpu is about to enter idle
+Date: Mon, 3 Mar 2025 18:52:41 +0800
+Message-ID: <20250303105241.17251-4-xuewen.yan@unisoc.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20250303105241.17251-1-xuewen.yan@unisoc.com>
+References: <20250303105241.17251-1-xuewen.yan@unisoc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250303-pcc_fixes_updates-v1-14-3b44f3d134b1@arm.com>
-References: <20250303-pcc_fixes_updates-v1-0-3b44f3d134b1@arm.com>
-In-Reply-To: <20250303-pcc_fixes_updates-v1-0-3b44f3d134b1@arm.com>
-To: linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Sudeep Holla <sudeep.holla@arm.com>, 
- Jassi Brar <jassisinghbrar@gmail.com>, Huisong Li <lihuisong@huawei.com>, 
- Adam Young <admiyo@os.amperecomputing.com>, 
- "Rafael J. Wysocki" <rafael@kernel.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2873; i=sudeep.holla@arm.com;
- h=from:subject:message-id; bh=iFUeJHey5yoWOaCDwHA/+dkaY+Qb1DUk7Ye5n0Pdfn4=;
- b=owEBbQKS/ZANAwAIAQBBurwxfuKYAcsmYgBnxYoi9kDd5Yg50QoICLz/87VFVMCqajuK2k4tJ
- ee/kfospo6JAjMEAAEIAB0WIQS6ceUSBvMeskPdk+EAQbq8MX7imAUCZ8WKIgAKCRAAQbq8MX7i
- mNPlD/wKs0oZNESqFnya6yAPNwWVMvlz3wPn6ZiOKWmC3VxPb41oPR1y68g5ncSeExZdRDrhrdh
- QtevZRzzRb1uQXWRXJzs1ICTZwL15hnTW9NVPH3quCAyuuY5azDIShgaz0LpKFrcamRtm73Vlwv
- dFhRy71zXvY8qBUeB/6j6LzAIKpaAwKeJUmBsGxoQh6kZDIF+gvmQtsC82Bxzwr9muvlfYr6N3V
- MsF6cQsDC6tWfZBRDtFXk/skwFfUl0cxiNkAeSvUEfAE9+BuAtyqMs4fwf3yIJkgCQvF4R9+fY8
- tGkqpnwXbZKE6BTN0AW+b/wp1DzaHCVOME7CHU9eJjydv8+2QGCmDBEnMuyrG6XMqNRvGcze8F+
- rn90+zknT2u5NToFaT2u3wIEGwKO1lSEwlquXceyT/w7zB5NaE81zo5x0bRhFsp7OCvDWe1ZIoa
- 7ALoQ4DcsUipXjI0gJ0myKhPuoQYdN0GEalSiu8Qc6UBA212ieACoH/JJJP4XtnbrRyIh4v/dXw
- ATuNcrPUuMqnW+CmLa+Dl4CPrdwSvSz5KXsfKHOjGAXpxN0HKKPo4OzLdKBWX/Qw/lzSJ29BYrU
- CQqNrwUumAgzHrphmxDk+Qb62b/OMc/eXqi6l5IKbQlRLyl7wLgh+Lhbb8j09ksjzx2yF2RUq7U
- FyFH4ZS2lU5XZYg==
-X-Developer-Key: i=sudeep.holla@arm.com; a=openpgp;
- fpr=7360A21742ADF5A11767C1C139CFD4755FE2D5B4
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SHCAS03.spreadtrum.com (10.0.1.207) To
+ BJMBX01.spreadtrum.com (10.0.64.7)
+X-MAIL:SHSQR01.spreadtrum.com 523ArVvd092780
 
-The PCC driver now handles mapping and unmapping of shared memory
-areas as part of pcc_mbox_{request,free}_channel(). Without these before,
-this ACPI CPPC driver did handling of those mappings like several
-other PCC mailbox client drivers.
+When there are one task with sched-delayed and one task
+which is descheduling, Using nr-running to determine
+CPU idle may be incorrect.
+For example:
+task-A is sched_delayed, task-B is descheduling:
+1. before schedule():
+   rq-nr-running=2, task-A->on_rq=1; task-B->on_rq=1;
+2. after block_task(B):
+   rq-nr-running=1, task-A->on_rq=1; task-B->on_rq=0;
+3. after pick_next_task(), because the task-A would be dequeued:
+   rq-nr-running=0, task-A->on_rq=0; task-B->on_rq=0;
 
-There were redundant operations, leading to unnecessary code. Maintaining
-the consistency across these driver was harder due to scattered handling
-of shmem.
+In ttwu_queue_cond, it hope the nr-running to be 0 after
+the step 2, however, now the nr-running is not 0.
+So sub the nr-delayed-task when checking the rq-nr-running.
 
-Just use the mapped shmem and remove all redundant operations from this
-driver.
-
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+Fixes: 152e11f6df29 ("sched/fair: Implement delayed dequeue")
+Signed-off-by: Xuewen Yan <xuewen.yan@unisoc.com>
 ---
- drivers/acpi/cppc_acpi.c | 16 +++-------------
- 1 file changed, 3 insertions(+), 13 deletions(-)
+ kernel/sched/core.c  | 2 +-
+ kernel/sched/fair.c  | 5 -----
+ kernel/sched/sched.h | 5 +++++
+ 3 files changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/acpi/cppc_acpi.c b/drivers/acpi/cppc_acpi.c
-index f193e713825ac24203ece5f94d6cf99dd4724ce4..d972157a79b6ade2f3738c90128e8692141b3ee5 100644
---- a/drivers/acpi/cppc_acpi.c
-+++ b/drivers/acpi/cppc_acpi.c
-@@ -47,7 +47,6 @@
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 67189907214d..6569f220c2fb 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -3963,7 +3963,7 @@ static inline bool ttwu_queue_cond(struct task_struct *p, int cpu)
+ 	 * p->on_cpu can be whatever, we've done the dequeue, so
+ 	 * the wakee has been accounted out of ->nr_running.
+ 	 */
+-	if (!cpu_rq(cpu)->nr_running)
++	if (!(cpu_rq(cpu)->nr_running - cfs_h_nr_delayed(cpu_rq(cpu))))
+ 		return true;
  
- struct cppc_pcc_data {
- 	struct pcc_mbox_chan *pcc_channel;
--	void __iomem *pcc_comm_addr;
- 	bool pcc_channel_acquired;
- 	unsigned int deadline_us;
- 	unsigned int pcc_mpar, pcc_mrtt, pcc_nominal;
-@@ -95,7 +94,7 @@ static DEFINE_PER_CPU(int, cpu_pcc_subspace_idx);
- static DEFINE_PER_CPU(struct cpc_desc *, cpc_desc_ptr);
+ 	return false;
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 8797f6872155..29ee1ce17036 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -7181,11 +7181,6 @@ static bool dequeue_task_fair(struct rq *rq, struct task_struct *p, int flags)
+ 	return true;
+ }
  
- /* pcc mapped address + header size + offset within PCC subspace */
--#define GET_PCC_VADDR(offs, pcc_ss_id) (pcc_data[pcc_ss_id]->pcc_comm_addr + \
-+#define GET_PCC_VADDR(offs, pcc_ss_id) (pcc_data[pcc_ss_id]->pcc_channel->shmem + \
- 						0x8 + (offs))
- 
- /* Check if a CPC register is in PCC */
-@@ -223,7 +222,7 @@ static int check_pcc_chan(int pcc_ss_id, bool chk_err_bit)
- 	int ret, status;
- 	struct cppc_pcc_data *pcc_ss_data = pcc_data[pcc_ss_id];
- 	struct acpi_pcct_shared_memory __iomem *generic_comm_base =
--		pcc_ss_data->pcc_comm_addr;
-+					pcc_ss_data->pcc_channel->shmem;
- 
- 	if (!pcc_ss_data->platform_owns_pcc)
- 		return 0;
-@@ -258,7 +257,7 @@ static int send_pcc_cmd(int pcc_ss_id, u16 cmd)
- 	int ret = -EIO, i;
- 	struct cppc_pcc_data *pcc_ss_data = pcc_data[pcc_ss_id];
- 	struct acpi_pcct_shared_memory __iomem *generic_comm_base =
--		pcc_ss_data->pcc_comm_addr;
-+					pcc_ss_data->pcc_channel->shmem;
- 	unsigned int time_delta;
- 
- 	/*
-@@ -571,15 +570,6 @@ static int register_pcc_channel(int pcc_ss_idx)
- 		pcc_data[pcc_ss_idx]->pcc_mpar = pcc_chan->max_access_rate;
- 		pcc_data[pcc_ss_idx]->pcc_nominal = pcc_chan->latency;
- 
--		pcc_data[pcc_ss_idx]->pcc_comm_addr =
--			acpi_os_ioremap(pcc_chan->shmem_base_addr,
--					pcc_chan->shmem_size);
--		if (!pcc_data[pcc_ss_idx]->pcc_comm_addr) {
--			pr_err("Failed to ioremap PCC comm region mem for %d\n",
--			       pcc_ss_idx);
--			return -ENOMEM;
--		}
+-static inline unsigned int cfs_h_nr_delayed(struct rq *rq)
+-{
+-	return (rq->cfs.h_nr_queued - rq->cfs.h_nr_runnable);
+-}
 -
- 		/* Set flag so that we don't come here for each CPU. */
- 		pcc_data[pcc_ss_idx]->pcc_channel_acquired = true;
- 	}
-
+ #ifdef CONFIG_SMP
+ 
+ /* Working cpumask for: sched_balance_rq(), sched_balance_newidle(). */
+diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+index c8512a9fb022..3996b0c5c332 100644
+--- a/kernel/sched/sched.h
++++ b/kernel/sched/sched.h
+@@ -3609,6 +3609,11 @@ static inline bool is_per_cpu_kthread(struct task_struct *p)
+ }
+ #endif
+ 
++static inline unsigned int cfs_h_nr_delayed(struct rq *rq)
++{
++	return (rq->cfs.h_nr_queued - rq->cfs.h_nr_runnable);
++}
++
+ extern void swake_up_all_locked(struct swait_queue_head *q);
+ extern void __prepare_to_swait(struct swait_queue_head *q, struct swait_queue *wait);
+ 
 -- 
-2.34.1
+2.25.1
 
