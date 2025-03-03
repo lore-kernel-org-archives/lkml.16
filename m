@@ -1,111 +1,117 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF7551D89E3
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 18:37:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B2BA1F4C83
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 18:38:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741027063; cv=none; b=EMreJWAoiUrCTAQCJd+PdEvcJ1wZCmkdSM1J9cH+5d4KRa2mG4enN5s48H1cZEMVvWsq/g9nMBzBlCkY+ADqsFEmG2RHw3dFwRAwFeVoJuFp4KpGCGtJByCr7uNUyCh4TyNMjQ/oAI4WoUINwmA8iwRPKfXYTlAWMfE8t+0wmoI=
+	t=1741027090; cv=none; b=UEqBW6YRymTTlD612kIHnFav1phUoKVO5mBNv3XuriCNEr6SBMBb9kB/cvWEJNN+J+LFsQ3YjBomj0T12IXq0MmqVQjQAXltRAkBAfN6dn9djoha+DqM3Zi08SYByWxSnScp0rGhwPEpgNWHAwD8BfduH5czorXRkvRRPIWnrF4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741027063; c=relaxed/simple;
-	bh=4wJnUn6bLZwdXITOKhU51m+BdwQm4p7YtPDTnXGun5k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=O0h8otQaJhiJQtOFqhYwg0aUyXuo8SZTPH+GxcLbMFJ+KJsE4oCQQKteuFWj5FEfwqKsBQ+74ckYtuXC1VvaF9hfRgu9RTuBIwZuDfOvGlc5ZQsDygy4y9INQCIzzQ1SadaaMrW/fUU355XwY5FXfs9kV9y57fdwH/z2Z5CbmQ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CkvFLEnA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741027090; c=relaxed/simple;
+	bh=Fz4BS/Vg+ztFmKoB5uFHKm4U972UGyjePv1Mi5IOyEU=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=LpEwIWlCLbewsil4/gH8Pe6eJ5T++qL89fYgWPLAehijVjHLAqNDQsH8xiFsVbwuBJTSiT/ifTr8f8nnwrBPapK0q7ZJ7cqcxkm17E24ErfCZ7xjTfq29LkPvZq7tSkGcaNXXaETnwn6wpsGNYqlkE3yLJn5uKKBwjPzZwW7jLc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=lzCGItWC; arc=none smtp.client-ip=209.85.214.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CkvFLEnA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 304E0C4CED6;
-	Mon,  3 Mar 2025 18:37:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741027062;
-	bh=4wJnUn6bLZwdXITOKhU51m+BdwQm4p7YtPDTnXGun5k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=CkvFLEnAl7lRgKKUK0kS0vdIg+01ByGjOLqfaJUGUnsc/7FyVFWGybB9CGzN1bYeB
-	 n4vgYPzia1PXh20+M0Fy2SGDDS5XGrAVBSMHJcwXUwWcRTGuZ5PWHrUY9raqYUERn8
-	 mDhjXJZZ5mK0DVWhftg2Ai+ok+Jb2QmtbNkMCKe41smz5Pgi9IKtoEVFXM66MoHie/
-	 94ETebv26NMp8LLiV3X4x/6/AemS3hrOceM3HVett5G9T69MnJg+Y1zVcWSn+Dh0PC
-	 GKZAwJ94IAANn/CWturujOG0QfSvQSpOqBv0U6Bbzd19HvUix/AI2YaigW3OgVsHSG
-	 cHu7sGomQ7oZQ==
-Date: Mon, 3 Mar 2025 10:37:39 -0800
-From: Kees Cook <kees@kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org
-Subject: Re: lkdtm: Annotate do_nothing()
-Message-ID: <202503031036.079F90AD8@keescook>
-References: <20250303093817.GJ5880@noisy.programming.kicks-ass.net>
- <202503030921.2CD851B31D@keescook>
- <20250303183525.GA15322@noisy.programming.kicks-ass.net>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lzCGItWC"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-2236b6fb4a6so114428415ad.2
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Mar 2025 10:38:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1741027088; x=1741631888; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=0n5Ij/GC54RvDvnK6g7/btcCTWJl8RBy1WWJKX7RCoA=;
+        b=lzCGItWCNcHdNoE0Bd+Ch+v4Cd+InUnFyNDoCkmQCAGxofsktBbhL9vlsaVsfUWjwS
+         OaMqDfWaClqDRtlbgabI+LUCCb+wbNjBIejJslHBis3yenFAq84rktJe+IRFmjvO9IG/
+         MlAvs4xS913aSvbiEO8BphUZm7lIaJJM1Y4QOruusD5dpjxKZsQkPjnGKD/bXOyX5FOt
+         fC23SrmNZ1GPwoHaxReRJXXnnKqkKVe9qL1SyBtqKB7jjDFyeq5K3QtVBaM6JK7vbXCL
+         hcamZ2s3tAwLJ7t64l+RkVNqyc7rbSLy3eyHjsYJlr6w1hFw5qZqBwLJixFyPtx8b4j4
+         7dYA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741027088; x=1741631888;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=0n5Ij/GC54RvDvnK6g7/btcCTWJl8RBy1WWJKX7RCoA=;
+        b=PZ73SNUN9gUGH/zD10BIFOW3S7L56s3k1N0NEvpME0glqpyRngwfzroIJdgzeR6oTJ
+         AP0SgVEAX3PFFFXn5l83KDrv8fUCHl+GYh7DMiVNs448vsHXJhGzM5YT0U/5b2k2aSh9
+         KPjT8ZIR1wqEiFhmYpbzEBZcz3FayyP0REgID4Tj/5XHh2J8fm3j/3oF8GCT6EnvBWvN
+         Srp9rzoMZhjUtTYwJGlOc3nqwhj/SjN6J66uJZ11y5Un3gBLw2HMcIpVnbud3ERvxgV9
+         tz8Ka1Fm3zzBlb4I4RWgxdkgvGptSBH1lgIch1+PRZNcVYW26kq+P3wS44Xitvn833nZ
+         dj/A==
+X-Gm-Message-State: AOJu0Yyawoeeck0HPzB90mn0hNEh3g5XVcj7LwrEaiKG35GpfhE2Zhj8
+	qrDlu2hEygX2c6zL34Y3chKjDwb3LS9gS6P/GNPiRUlH8gH6pRV9a2zuEntb3Xj2eYL6E+BIcLn
+	TbHvR0kTjUH+EmhjGSWYLANWjf2fOAtXcjcYSqueSw+gOqWUGmi90weg6I35hp5HqzvVS/Hxw2N
+	qnQAa+/ltsJLiTtf2Sbvxj8qoW52uqwjZRdZ+68T8/
+X-Google-Smtp-Source: AGHT+IF7N99nVKtpgNAPCqgRLWq6Q93oywmTub2nLDo3/44ngoJtqGwWcHAxjZlq8BLd4a1gYBKFiylLqpc=
+X-Received: from pfbfb32.prod.google.com ([2002:a05:6a00:2da0:b0:736:6fb6:804])
+ (user=ctshao job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:1252:b0:223:6254:b4ba
+ with SMTP id d9443c01a7336-22368f74884mr210678055ad.13.1741027088588; Mon, 03
+ Mar 2025 10:38:08 -0800 (PST)
+Date: Mon,  3 Mar 2025 10:32:41 -0800
+In-Reply-To: <20250303183646.327510-1-ctshao@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250303183525.GA15322@noisy.programming.kicks-ass.net>
+Mime-Version: 1.0
+References: <20250303183646.327510-1-ctshao@google.com>
+X-Mailer: git-send-email 2.48.1.711.g2feabab25a-goog
+Message-ID: <20250303183646.327510-2-ctshao@google.com>
+Subject: [PATCH v2 2/2] perf record: Fix a asan runtime error in util/maps.c
+From: Chun-Tse Shao <ctshao@google.com>
+To: linux-kernel@vger.kernel.org
+Cc: Chun-Tse Shao <ctshao@google.com>, peterz@infradead.org, mingo@redhat.com, 
+	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com, 
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com, 
+	adrian.hunter@intel.com, kan.liang@linux.intel.com, terrelln@fb.com, 
+	leo.yan@arm.com, james.clark@linaro.org, christophe.leroy@csgroup.eu, 
+	ben.gainey@arm.com, linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Mar 03, 2025 at 07:35:25PM +0100, Peter Zijlstra wrote:
-> On Mon, Mar 03, 2025 at 09:26:57AM -0800, Kees Cook wrote:
-> > On Mon, Mar 03, 2025 at 10:38:17AM +0100, Peter Zijlstra wrote:
-> > > Hi Kees,
-> > > 
-> > > During my FineIBT testing the other week I stumbled upon the following
-> > > complaint:
-> > > 
-> > >   vmlinux.o: warning: objtool: execute_location+0x4f: relocation to !ENDBR: .text+0x1032008
-> > > 
-> > > I finally got around to looking at it and realized we have means of
-> > > annotating that since 93f16a1ab78c ("x86/boot: Mark start_secondary() with __noendbr")
-> > > (which might still be in tip only).
-> > 
-> > Er, doesn't that mean do_nothing() will lack an ENDBR? Wait, no, that's
-> > __noendbr. What does this annotation mean if the function _does_ have
-> > ENDBR?
-> > 
-> > Note that these tests are explicitly using __nocfi (via the
-> > execute_location() function) since they're testing the Execute bit in
-> > different memory regions. But I would expect BTI to still work (and not
-> > block execution).
-> > 
-> 
-> Argh, I had a definite wake-up juice deficit this morning, and the BTF
-> noise made me miss that the warning wasn't fixed.
-> 
-> For some reason I thought do_nothing() didn't have ENDBR. Looking at the
-> build now, I see it does have, and the actual location pointed to is
-> do_nothing+0x18, which is weird.
-> 
-> Ooh, I see, the thing looks to have unrolled and inlined that memcpy()
-> like:
-> 
->    156a3:       48 8b 05 00 00 00 00    mov    0x0(%rip),%rax        # 156aa <execute_location+0x2a>    156a6: R_X86_64_PC32    .text+0x1032024
->    156aa:       48 89 43 38             mov    %rax,0x38(%rbx)
->    156ae:       48 8b 05 00 00 00 00    mov    0x0(%rip),%rax        # 156b5 <execute_location+0x35>    156b1: R_X86_64_PC32    .text+0x103201c
->    156b5:       48 89 43 30             mov    %rax,0x30(%rbx)
->    156b9:       48 8b 05 00 00 00 00    mov    0x0(%rip),%rax        # 156c0 <execute_location+0x40>    156bc: R_X86_64_PC32    .text+0x1032014
->    156c0:       48 89 43 28             mov    %rax,0x28(%rbx)
->    156c4:       48 8b 05 00 00 00 00    mov    0x0(%rip),%rax        # 156cb <execute_location+0x4b>    156c7: R_X86_64_PC32    .text+0x103200c
->    156cb:       48 89 43 20             mov    %rax,0x20(%rbx)
->    156cf:       48 8b 05 00 00 00 00    mov    0x0(%rip),%rax        # 156d6 <execute_location+0x56>    156d2: R_X86_64_PC32    .text+0x1032004
->    156d6:       48 89 43 18             mov    %rax,0x18(%rbx)
->    156da:       48 8b 05 00 00 00 00    mov    0x0(%rip),%rax        # 156e1 <execute_location+0x61>    156dd: R_X86_64_PC32    .text+0x1031ffc
->    156e1:       48 89 43 10             mov    %rax,0x10(%rbx)
->    156e5:       48 8b 05 00 00 00 00    mov    0x0(%rip),%rax        # 156ec <execute_location+0x6c>    156e8: R_X86_64_PC32    .text+0x1031ff4
->    156ec:       48 89 43 08             mov    %rax,0x8(%rbx)
->    156f0:       48 8b 05 00 00 00 00    mov    0x0(%rip),%rax        # 156f7 <execute_location+0x77>    156f3: R_X86_64_PC32    .text+0x1031fec
->    156f7:       48 89 03                mov    %rax,(%rbx)
-> 
-> And objtool figures those .text references are an address-taken-of like
-> thing and expects ENDBR at them.
+If I build perf with asan and run Zstd test:
 
-Ah! It's (quite reasonably) not expecting text reference in memcpy. ;)
+  $ make -C tools/perf O=/tmp/perf DEBUG=1 EXTRA_CFLAGS="-O0 -g -fno-omit-frame-pointer -fsanitize=undefined"
+  $ /tmp/perf/perf test "Zstd perf.data compression/decompression" -vv
+   83: Zstd perf.data compression/decompression:
+  ...
+  util/maps.c:1046:5: runtime error: null pointer passed as argument 2, which is declared to never be null
+  ...
 
-> Lovely stuff...
-> 
-> Anyway, ignore this patch.
+The issue was caused by `bsearch`. The patch adds a check to ensure
+argument 2 and 3 are not NULL and 0.
 
-Okay! :)
+Testing with the commands above confirms that the runtime error is
+resolved.
 
+Signed-off-by: Chun-Tse Shao <ctshao@google.com>
+---
+ tools/perf/util/maps.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/tools/perf/util/maps.c b/tools/perf/util/maps.c
+index 09c9cc326c08..41a99e1f4b50 100644
+--- a/tools/perf/util/maps.c
++++ b/tools/perf/util/maps.c
+@@ -1042,10 +1042,13 @@ struct map *maps__find(struct maps *maps, u64 ip)
+ 	while (!done) {
+ 		down_read(maps__lock(maps));
+ 		if (maps__maps_by_address_sorted(maps)) {
+-			struct map **mapp =
+-				bsearch(&ip, maps__maps_by_address(maps), maps__nr_maps(maps),
+-					sizeof(*mapp), map__addr_cmp);
++			struct map **mapp = NULL;
++			struct map **maps_by_address = maps__maps_by_address(maps);
++			unsigned int nr_maps = maps__nr_maps(maps);
+ 
++			if (maps_by_address && nr_maps)
++				mapp = bsearch(&ip, maps_by_address, nr_maps, sizeof(*mapp),
++					       map__addr_cmp);
+ 			if (mapp)
+ 				result = map__get(*mapp);
+ 			done = true;
 -- 
-Kees Cook
+2.48.1.711.g2feabab25a-goog
+
