@@ -1,105 +1,194 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF19F215065
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 16:13:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE98222F3AB
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 16:14:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741018396; cv=none; b=mM9M/r8HoeVUfh33b3TGd9/VL3Asn0dNB6f7r42at45YXROD7W4MLyBtE0V0sLoIv8zOBe+dmWl+3CfYTDmyB3TogPmmFoaW8d9m7OEAiQUtcRmMLueva7c31lkG3IGqtsBKaFKvDicBpLRC11JAcxNqUxAxrD6/a64D0dY2SqU=
+	t=1741018492; cv=none; b=qUfEkhyetQXr486Z5wipmJdOzjaLVj+3zUVjJBfEos85DlYerb87qUhbv3uxgQvFFgzGyBo1xHznGsK9py+psLmI49aCz1hjlaTdwwek/2PR3ebqcCHm64v/Iyhieyqn5549PWJ9OWorviwxp4bYgTEcSedR8YOheM4LznO+XUw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741018396; c=relaxed/simple;
-	bh=k7qdz5Qv7WS7LsolcJ7m5YgxU3ZRSOvH64UYTQvki20=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=czjCNJpcAepxFD8gfugLfdNkIlz1KN2pmOsSPIadiczdnK61SdbvWADTXl1famTSZp967sVa5Jy+7n19leZ7OCZXfrJj/Qrs498dFOeFS4HJwOs3ZrAM2+JFdyCtDaCFIz/5f7UKzMsUWBzpBi4lLzKzsr+XZao5nUSTnHPILW8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=f0Vmiue8; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1741018492; c=relaxed/simple;
+	bh=SW851bh5XjUCfDzmObPjOBzVvFjoWLDdCSaH8tLiKzo=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=o5Y87atdnyyJOABjTTY7e40u5STwAZz6otKm8EKicSTFXaONiKgEIc8CP1PrDtWly6KizdRleWwTRTi5tRPk5i5ZGGgUbdxSG7Ukln5+4ryUGml6w0QlRxYNAAafBwCmINYPh4pd924jEwPGM79ZHAoCIORa8fd6EurLLSPnA5U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=B68uI8ij; arc=none smtp.client-ip=209.85.208.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="f0Vmiue8"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id CD8CE40E0216;
-	Mon,  3 Mar 2025 16:13:11 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id IsZcfeCl6fyz; Mon,  3 Mar 2025 16:13:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1741018387; bh=a7d3OQWLlYtIW0Sa9YO6WXK8u1xaFpZbNw5AxsoA188=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=f0Vmiue8VOK/s5vvq1xnKXZaphj2JV1kNdAUdnMehcMmXKLQXC6xz59IqwNwmq4/Y
-	 fuAlUJOjGFj4GD0GWADa2kex0oQPXDPQe/9Bi4Wv+a9mRM573Ou0y5VG+loTAWFDe5
-	 gVSV3ls+pwj2sRe2ZPE+77Anxv3tziyu0nBR2llbsBpGkICq1QvezWEzw0qaKihpK5
-	 4bU1GUS8gBnuTXC3E81ih9KUYAnLjI6F0fc4A9aFJd0vUB53KG/M5tQPwdu7nUoxw5
-	 8wwn5FZJviPvvSgcA3OMaSPjqrPPtpj4JZ+vUg3tpoJw4hNJOGFyUg2OMlDS+UKfev
-	 2DGYJTTVgEeVkUhfYty+OLoc0D8ah0sweWMB/UlfU/kanwGEv3f29zA+Av6HhHL2qh
-	 VxdpcuIq6NNTq2z3un8PK/+NXJmJy3TDfJvuATszxUASAht2xcRLDP0sTZGJ/qoGcE
-	 no8jNudICOLMeEIAFCz/eIoffo1k7JL9Bp4heBAxH1eCmWZM63BniEOG56PTmkq9qn
-	 CWjIJVG73feKBmaYK0qlPUYse+jl91sf2VoYDSescReux2iz3gkF/5RKn1KSjk8CiZ
-	 6tTFp2IW0LPUqkVQTJB0hO/7skh4VYSRqBPNtfEtKZhsv14oKEIZR8HJr/Yyw/8hNf
-	 XO7NGaxpOBktUAp3fztgkcg4=
-Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id E56D740E0214;
-	Mon,  3 Mar 2025 16:12:58 +0000 (UTC)
-Date: Mon, 3 Mar 2025 17:12:53 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Brendan Jackman <jackmanb@google.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
-	Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH 0/3] x86/cpu: Followups to adding setcpuid=
-Message-ID: <20250303161253.GLZ8XVBbWhTG36m3vH@fat_crate.local>
-References: <20250303-setcpuid-taint-louder-v1-0-8d255032cb4c@google.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="B68uI8ij"
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5e52c1c3599so2891587a12.2
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Mar 2025 08:14:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1741018488; x=1741623288; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=4EjMp3BG+6HPrPb4bltHW8Z8/x5Nsu7f8FnE3Hkd78M=;
+        b=B68uI8ijz3hT6UjrkrDttzLkjHyjYW1OHyBrxZLnuecTYEMSnrImxJXRadeaC7NHwq
+         t16BHqOJyNOy9KRAPmSwBGxnjnfX7dk4Ib4E3FGXGuHuA+qxbxA0+1JTbYNbQgfCKDM8
+         1sulTnr3T8uHBA4iFdRgZfLeQIZaiIDoxlM+ZVu2U1MZY8r5txHdyVMmPSpbtmvKlwn2
+         K38iO4ph3DUeq8KTyKTr3nRKBX6bIvwOEnOr/XIkCJ0qmXZjcFtg5rtWkH8GDRg07JSQ
+         CCBXgMb1gJAiziA/FQgk5Pygp/A1GkoRv/oHulMfX9fYI7xDRRkHjvxwovNkdwaEvRln
+         e5/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741018488; x=1741623288;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=4EjMp3BG+6HPrPb4bltHW8Z8/x5Nsu7f8FnE3Hkd78M=;
+        b=vjzvLFbjb5stdAuCe0Kms1Xn/+tq3Isp0ymB/AD3LJqRO48jooJ/HS4KLHCWWg8wpD
+         kELHzqP4zx7G2/U0CZufAnFLBc5quHrKPVnMGUaRr6kg0hSoWY8zCjy/XBQzw/Vz81Kc
+         OOu9tgC6/U68Yy/G8/O1YEsaS5bUdZALxV4W12xFYTJ+ejcqqyZ/lEaTAvVa2PRZ78Ip
+         Vhlu9V1XdOxCZ2GzprwmSD9OTozbfQUSM1sZ3NrDUeo3wl4iapLwz9Lizy8PGdZ1AAYg
+         jz7tu8d+4nB/9rYL7LVEjxU1bjPGIBWp9aiXkwAhz2zaFhbG06js8h5bMkf1C0rQgkMi
+         jwRg==
+X-Forwarded-Encrypted: i=1; AJvYcCWZtrtacI95EroMaYLHocKEOcDc5MFBFUpYH0a2+3gTN82MmeMNHCgkxQgsmegy4w3eE7RmVOkDs6ZykYM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxaf6T2Q6S16ad9YwCOJQvRDT4M14IGDbaJqDa66UoAprtD44dN
+	nq8/pNXxo3SjLH7Z5TrvET9+Biy+/+1MeQ/FFg3GXMsD5GBmi+CiLY5urPk3W/E=
+X-Gm-Gg: ASbGnctu6EGyNDfE7GZumAyusJjrQ0SAye5JHzY50Q0nifB5Z4oshZFlgdotXvIuCij
+	NagbMBMYMqMZro/HDmZ6U5MXYT9N551N7RyXSfTnacPtbgXpLjThIu1HQIHUzUv/nmyekYSf1F9
+	rGaqLglIevq9RW6uFn++hvi9TPgzHMeZhjU8D4yqIScyS7HB8TBfYrVlvaf8nhmOdNX8ZJylech
+	gAVFUe7NXEuZClzfi7YbyU2Q8COKc62VXg6l9tE60mTi/sxIXm7vwnxfTcvB1id4OWcs1BB7slY
+	+qv4hq4PcFrfy/TjLxXum2KiOXx/q10UklEE78BDehE=
+X-Google-Smtp-Source: AGHT+IELDSZLaGVUnWYgfmAu11bd705GWNzFB2vaWGLLDScnt9ixXKpiFk9Vfs/66mFlQOr1fmaO2Q==
+X-Received: by 2002:a05:6402:27d4:b0:5e4:c522:51cd with SMTP id 4fb4d7f45d1cf-5e4d6b691cbmr14687640a12.20.1741018487804;
+        Mon, 03 Mar 2025 08:14:47 -0800 (PST)
+Received: from [127.0.1.1] ([62.231.96.41])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5e4c3bb7560sm7161971a12.41.2025.03.03.08.14.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Mar 2025 08:14:47 -0800 (PST)
+From: Abel Vesa <abel.vesa@linaro.org>
+Date: Mon, 03 Mar 2025 18:14:36 +0200
+Subject: [PATCH RFC] leds: rgb: leds-qcom-lpg: Compute PWM value based on
+ period instead
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250303-setcpuid-taint-louder-v1-0-8d255032cb4c@google.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250303-leds-qcom-lpg-compute-pwm-value-using-period-v1-1-833e729e3da2@linaro.org>
+X-B4-Tracking: v=1; b=H4sIAGvVxWcC/x2NwQoCIRBAf2WZcwOmLUXXoA/oGh1MJxtw1Zzcg
+ mX/Pen0eJf3FhCqTALHYYFKMwvn1GW7GcA9bQqE7LuDVnpURhmM5AVfLk8YS8DO0t6E5TPhbGM
+ jbMIpYOnV7FEdtHF03487baEnS6UHf/+7K1zOJ7it6w84+WIbgwAAAA==
+X-Change-ID: 20250303-leds-qcom-lpg-compute-pwm-value-using-period-0823ceb7542a
+To: Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>, 
+ Anjelique Melendez <anjelique.melendez@oss.qualcomm.com>
+Cc: =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
+ Kamal Wadhwa <quic_kamalw@quicinc.com>, 
+ Jishnu Prakash <jishnu.prakash@oss.qualcomm.com>, 
+ Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>, Johan Hovold <johan@kernel.org>, 
+ Sebastian Reichel <sre@kernel.org>, Pavel Machek <pavel@ucw.cz>, 
+ linux-leds@vger.kernel.org, linux-pwm@vger.kernel.org, 
+ linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Abel Vesa <abel.vesa@linaro.org>
+X-Mailer: b4 0.15-dev-dedf8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3533; i=abel.vesa@linaro.org;
+ h=from:subject:message-id; bh=SW851bh5XjUCfDzmObPjOBzVvFjoWLDdCSaH8tLiKzo=;
+ b=owEBbQKS/ZANAwAKARtfRMkAlRVWAcsmYgBnxdVyTyNKYJNvHbQzz3p4W82eyaA9JJO/Jv3KV
+ xsi6cDFabOJAjMEAAEKAB0WIQRO8+4RTnqPKsqn0bgbX0TJAJUVVgUCZ8XVcgAKCRAbX0TJAJUV
+ Vm0XD/9ieCUXuxrAtsGiQz9dCETGuzxsUW3/Lo2wSkvSX2x1oQxAI6BJFEtrQIbwZMEx4oUMwFF
+ zyKwWWc4Vsr21BPzuKBjZnt0qM0RysrKcLPRYM+0gZJWhVLChEMrm1tgg7hHsIOFNkKUcSnsAH7
+ W1K29AEs2CRYm488pnF/k/wbFeviaPZ6HX4L/qp8U/dDSCvIcEHZQAj8mvz5Ik2icugTtbdlykI
+ 1gQCij08r9CMOeEd8vBWZDkuTQF1KhaFnmpUNNdpU2I2vbqqQ7KbMJ9emDnixw+2388uWgZv95e
+ Ga6Lfx/mADNjBE0Lex6gMoR5A7ENTsyVTHd2excKLWq3CAq6ENfM7v9AO0N3eOykKZVLBXbC5Wo
+ WXRoyXClpidstj3uFf1FGZr4o/PjrsmrJCBl7N3dPUFoa578W4hFtHFIoo2k747bKv6M/CqF9zy
+ UlTIS6i+qTRxR/rAuM2RdSB3Q1fqRb4S3b7EAIqINe5vkz0rkrv4XnxAU7ufbFh6ldlcxhvpe3W
+ z7z3oCPbsDclyqR+EnpFij9xZDAkrgDNERNyLVAdreNUflevw2SX6Q03gopF6DSmTFgx4j9n/Ng
+ TWKgqSis/gezuOGYuMXXPTmkKBsKGR5IdMraUR2bbPxtf8yRGzxGKkAa/BsBY7yQhuOZHmUvmgt
+ 7zhBY5f0D5ouXPQ==
+X-Developer-Key: i=abel.vesa@linaro.org; a=openpgp;
+ fpr=6AFF162D57F4223A8770EF5AF7BF214136F41FAE
 
-On Mon, Mar 03, 2025 at 03:45:36PM +0000, Brendan Jackman wrote:
-> To: Thomas Gleixner <tglx@linutronix.de>
-> To: Ingo Molnar <mingo@redhat.com>
-> To: Borislav Petkov <bp@alien8.de>
-> To: Dave Hansen <dave.hansen@linux.intel.com>
-> To: x86@kernel.org
-> To: H. Peter Anvin <hpa@zytor.com>
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Brendan Jackman <jackmanb@google.com>
-> 
-> Followup to this patchset:
-> 
-> https://lore.kernel.org/linux-kernel/20250218-force-cpu-bug-v3-0-da3df43d1936@google.com/
-> 
-> Note that some of these changes were actually a part of that patchset
-> originally, but got lost as the v2 was merged, apparently due to
-> confusion stemming from Lore losing data.
-> 
-> ---
-> Brendan Jackman (3):
->       x86/cpu: Remove some macros about feature names
->       x86/cpu: Warn louder about {set,clear}cpuid
->       x86/cpu: Log CPU flag cmdline hacks more verbosely
-> 
->  arch/x86/include/asm/cpufeature.h |  5 ----
->  arch/x86/kernel/cpu/common.c      | 62 +++++++++++++++++++++++----------------
->  2 files changed, 37 insertions(+), 30 deletions(-)
-> ---
+Currently, the implementation computes the best matched period based
+on the requested one, by looping through all possible register
+configurations. The best matched period is below the requested period.
+This means the PWM consumer could request duty cycle values between
+the best matched period and the requested period, which with the current
+implementation for computing the PWM value, it will result in values out
+of range with respect to the selected resolution.
 
-LGTM.
+So change the way the PWM value is determined as a ratio between the
+requested period and duty cycle, mapped on the resolution interval.
+Do this in contrast to using the register configuration selected when
+the best matching period was determined.
 
-Acked-by: Borislav Petkov (AMD) <bp@alien8.de>
+Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
+---
+This patch is based on the following patchset:
+https://lore.kernel.org/all/20250303-leds-qcom-lpg-fix-max-pwm-on-hi-res-v3-0-62703c0ab76a@linaro.org/
+---
+ drivers/leds/rgb/leds-qcom-lpg.c | 16 ++++++++++------
+ 1 file changed, 10 insertions(+), 6 deletions(-)
 
+diff --git a/drivers/leds/rgb/leds-qcom-lpg.c b/drivers/leds/rgb/leds-qcom-lpg.c
+index 4f2a178e3d265a2cc88e651d3e2ca6ae3dfac2e2..80130c205dce7c6ae1c356b7a7c5f6460a2b0bb0 100644
+--- a/drivers/leds/rgb/leds-qcom-lpg.c
++++ b/drivers/leds/rgb/leds-qcom-lpg.c
+@@ -523,8 +523,10 @@ static int lpg_calc_freq(struct lpg_channel *chan, uint64_t period)
+ 	return 0;
+ }
+ 
+-static void lpg_calc_duty(struct lpg_channel *chan, uint64_t duty)
++static void lpg_calc_duty(struct lpg_channel *chan, uint64_t duty, uint64_t period)
+ {
++	const unsigned int *pwm_resolution_arr;
++	unsigned int step;
+ 	unsigned int max;
+ 	unsigned int val;
+ 	unsigned int clk_rate;
+@@ -532,13 +534,15 @@ static void lpg_calc_duty(struct lpg_channel *chan, uint64_t duty)
+ 	if (chan->subtype == LPG_SUBTYPE_HI_RES_PWM) {
+ 		max = BIT(lpg_pwm_resolution_hi_res[chan->pwm_resolution_sel]) - 1;
+ 		clk_rate = lpg_clk_rates_hi_res[chan->clk_sel];
++		pwm_resolution_arr = lpg_pwm_resolution_hi_res;
+ 	} else {
+ 		max = BIT(lpg_pwm_resolution[chan->pwm_resolution_sel]) - 1;
+ 		clk_rate = lpg_clk_rates[chan->clk_sel];
++		pwm_resolution_arr = lpg_pwm_resolution;
+ 	}
+ 
+-	val = div64_u64(duty * clk_rate,
+-			(u64)NSEC_PER_SEC * lpg_pre_divs[chan->pre_div_sel] * (1 << chan->pre_div_exp));
++	step = div64_u64(period, max);
++	val = div64_u64(duty, step);
+ 
+ 	chan->pwm_value = min(val, max);
+ }
+@@ -829,7 +833,7 @@ static void lpg_brightness_set(struct lpg_led *led, struct led_classdev *cdev,
+ 			lpg_calc_freq(chan, NSEC_PER_MSEC);
+ 
+ 			duty = div_u64(brightness * chan->period, cdev->max_brightness);
+-			lpg_calc_duty(chan, duty);
++			lpg_calc_duty(chan, duty, NSEC_PER_MSEC);
+ 			chan->enabled = true;
+ 			chan->ramp_enabled = false;
+ 
+@@ -906,7 +910,7 @@ static int lpg_blink_set(struct lpg_led *led,
+ 		chan = led->channels[i];
+ 
+ 		lpg_calc_freq(chan, period);
+-		lpg_calc_duty(chan, duty);
++		lpg_calc_duty(chan, duty, period);
+ 
+ 		chan->enabled = true;
+ 		chan->ramp_enabled = false;
+@@ -1241,7 +1245,7 @@ static int lpg_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 		if (ret < 0)
+ 			goto out_unlock;
+ 
+-		lpg_calc_duty(chan, state->duty_cycle);
++		lpg_calc_duty(chan, state->duty_cycle, state->period);
+ 	}
+ 	chan->enabled = state->enabled;
+ 
+
+---
+base-commit: 0067a4b21c9ab441bbe6bf3635b3ddd21f6ca7c3
+change-id: 20250303-leds-qcom-lpg-compute-pwm-value-using-period-0823ceb7542a
+
+Best regards,
 -- 
-Regards/Gruss,
-    Boris.
+Abel Vesa <abel.vesa@linaro.org>
 
-https://people.kernel.org/tglx/notes-about-netiquette
