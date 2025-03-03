@@ -1,98 +1,170 @@
-Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from beeline1.cc.itu.edu.tr (beeline1.cc.itu.edu.tr [160.75.25.115])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8620E234994
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 15:14:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 055B827935F
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 15:15:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=160.75.25.115
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741101306; cv=fail; b=RJRoQB6Kb1XtuHbotAq8WQSMZlOmR1FCBq2Hlhr5ZRjKk5BiExON8x+kq22x6rH3XxuExhNkAlIUNVeMDdRLCbP6+WKE0j6iXkxrGQSCal4sPBvMhqUpQsZAFmjCW2cU8Kg1SBXHSBFAQtIAPOLp1b1Ny2fOVxWmFL+fiGV752U=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741101306; c=relaxed/simple;
+	bh=Q140J512fl+FeFdkGEjwsUDtH0BF9JSpJtTf4QOgqro=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=tvTs2KrNFDSz97MJ6VtzVE3juk3mAKAK/5OYvzLvmhLKcPgQASnZL1G2BRZPhPkWN6sVHIP8Rx9kQaRtbYaz3bzvW4LHH3sGO4XighYMcJd8DvrBFQxuUqTI5SWAbdnben9TQ+S/7i9IvzZa6ounp9YSUsFKZOnQU2sRCdyddc8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=huawei.com; spf=none smtp.mailfrom=cc.itu.edu.tr; arc=none smtp.client-ip=185.176.79.56; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=fail smtp.client-ip=160.75.25.115
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=cc.itu.edu.tr
+Received: from lesvatest1.cc.itu.edu.tr (lesvatest1.cc.itu.edu.tr [10.146.128.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits))
+	(No client certificate requested)
+	by beeline1.cc.itu.edu.tr (Postfix) with ESMTPS id 376A940CF4C6
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 18:15:03 +0300 (+03)
+X-Envelope-From: <root@cc.itu.edu.tr>
+Received: from lesva1.cc.itu.edu.tr (unknown [160.75.70.79])
+	by lesvatest1.cc.itu.edu.tr (Postfix) with ESMTP id 4Z6fMq34fQzFyfp
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 18:13:43 +0300 (+03)
+Received: by le1 (Postfix, from userid 0)
+	id C80E742722; Tue,  4 Mar 2025 18:13:33 +0300 (+03)
+X-Envelope-From: <linux-kernel+bounces-541356-bozkiru=itu.edu.tr@vger.kernel.org>
+Received: from fgw2.itu.edu.tr (fgw2.itu.edu.tr [160.75.25.104])
+	by le2 (Postfix) with ESMTP id 5D07142F1B
+	for <bozkiru@itu.edu.tr>; Mon,  3 Mar 2025 13:21:54 +0300 (+03)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by fgw2.itu.edu.tr (Postfix) with SMTP id 347A72DCEB
+	for <bozkiru@itu.edu.tr>; Mon,  3 Mar 2025 13:21:54 +0300 (+03)
+Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 06A8D1891482
+	for <bozkiru@itu.edu.tr>; Mon,  3 Mar 2025 10:22:01 +0000 (UTC)
+Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D39E51F236E;
+	Mon,  3 Mar 2025 10:21:38 +0000 (UTC)
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABB531EDA04;
+	Mon,  3 Mar 2025 10:21:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741101290; cv=none; b=g3+QkT6yUF5DSlm0zANoTtrOaLBTsKmYAO3x/gDxpYtQcARrhcbe48wSxrViTupn4KIIetfQYyGjbPbb2u1P0NYSYlOZvZiYvyANIzIRsNh8C69ROaiBNfyT8wIA0Mk1KWjr3f/ex7jmG+a6zeAM6vK5fzy6mgOU2mrzSzb6cPw=
+	t=1740997297; cv=none; b=tdR5lQNGrdVWS5SAWs5gQ4Z2b2aHEQL5QS/uLFmAdbQsRpPbJU+667KIzEz2mAEmA31HywegkJ1LfIMUKNi3SNnbFOnGEE1e/Q3xKCpPw+Rp8YFo+jCDY4NVBXP3p9dKF5IFNh5Fi8mX/u5YF2yvRq+OKlmx0mok/PnDt6Y4ruA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741101290; c=relaxed/simple;
-	bh=QH8RRorezmdTYMTKoXYMzC5x5d/VIpIsLclidWF7lHM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TckzMqhwcli9jQkfNJE3r1dIl/1TfWPhPYTwHIt0YunFdOyRq/9ExfSfgzaB9oJYVv4vSZgCrNn5i5bZfGQCrno/COzQZpkro+GYkghwskTfBLo9gG2E2PP2FUBsKoqBZay7nrJ6K4FtFXUnmpWR72qW2Fi9mw8aaijwaXTS6i8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rowland.harvard.edu; spf=fail smtp.mailfrom=g.harvard.edu; dkim=pass (2048-bit key) header.d=rowland.harvard.edu header.i=@rowland.harvard.edu header.b=ehemMKSj; arc=none smtp.client-ip=209.85.219.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rowland.harvard.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=g.harvard.edu
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rowland.harvard.edu header.i=@rowland.harvard.edu header.b="ehemMKSj"
-Received: by mail-qv1-f46.google.com with SMTP id 6a1803df08f44-6dd15d03eacso53570216d6.0
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Mar 2025 07:14:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rowland.harvard.edu; s=google; t=1741101287; x=1741706087; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=cyQirIPuiOHyfjBKhYIIUlziBd1n3c1DfU9q1Z/Hmv0=;
-        b=ehemMKSj41lB74q2y2T+bO/dqefUBaJ+uq6Cu1c9YUU5xgkPCyaGOOIEF+ppUA3GT1
-         5NvD+bkIsLHJVvTlCzzlgU1Z3L93w1V5A5qRsTCylYR4yLTDciBXEVO60YXJIDRZMhY5
-         3EtVV6rPlA7GBPEIH8opL3miv69ZNZUcK9buLovZPivDMV5IHViJPYpac1YSta8ZNoQn
-         ZbEW6VU3BZIkUjfeFEHGGIiXyL2w+rS1hDqZfIj5tVQ4PQh2+igoBWY30ZwU2xYJ9Uym
-         pI3rrNEBDYZKv8gE8htBJmzDKxxgbOIihwqv9MpG4RaeqQXsKBlWrMVWVgkdty26HxR5
-         fP6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741101287; x=1741706087;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=cyQirIPuiOHyfjBKhYIIUlziBd1n3c1DfU9q1Z/Hmv0=;
-        b=uVGdhDp5qJxGFahU90NnWqblN4B70tsZK57JWNTtdfqbW08uiSROuiq9jKbZmkKeiy
-         XRnR40D3wyC75IDP8w2Tz/DI5mFM/v0SookV2dTeiwVc1d58yt772WIppsn+bUJ8n4Rs
-         L2d6IABY9tyxF1CH4xr3WuN+T51KfAun88FLxaA3Ts6lMjUihFJnpbDUe8MC1zCv6J0+
-         0v0SGeUzj6bYzF4LalqTc212mCVU67UjueExsJJ0p1FLR1xxj+VwJgzgXhOvyvF6N1fu
-         Zbzhdu7n8WYxgcBEEy3g2CsYikqVJJNTCcLW8EDZUrP2dD38ChTdqcm+v6dndtkneOAz
-         lLPg==
-X-Forwarded-Encrypted: i=1; AJvYcCU24CMGDWqoRnNJplQ5SvNcnYeShwjlcUIuwx8fZSnQjjQlRNKLfpKkq8M3FmeRXfdr4+7n1OJ/fVztuXU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz59ncsB66aHtpzByA2ozIvLfZIVdhBGWHDJD6ST8BG33ueAxjc
-	h/xDLIqv7LqlWe2zRIpQQZj0EKyYXA3Nnsu+Jmie2O/16ywutNrtVGpgPFD+NQ==
-X-Gm-Gg: ASbGnctGClZSoA4J4daevm1a/jv1BXppJfpJF/6lFjgU56eoWBtb4WxLiu9TmKYbbph
-	dlJqBuvSjA8uaVbk4LIOWIAZD1GH7bRZwoAyaAj2f0RJr/UfT0gdL5MQLqAdruAJNEdfj5rdcVq
-	WGyhpO3Hufs9IlgXWGNoNizNpNF1xH9qF8/PWqzSlnMIxjnWXT/AAeNlmLoF/u9DzzuWRtm+pfJ
-	hu02Z9/xHdJMm9QG6J6DJJBlXKEbOwmZcok55isAcEGpmaIMdfsB0iOTJTYVGpMmDcv6xXFJsc1
-	QW7nA7mc2oUIo7VAP4CansAI+UV1y50JcU+ksP0xMPgf5LPBjd6yGTM7g0DKINw=
-X-Google-Smtp-Source: AGHT+IEyx03NM4dZ8P1UssU/O7Qhz/2mWAebMTS1jkXSxn0YW6FPbHj3UrA4hvHJYCwiNwk0300rVA==
-X-Received: by 2002:a05:6214:f2f:b0:6e8:9053:825e with SMTP id 6a1803df08f44-6e8da8c1a48mr44604226d6.17.1741101287431;
-        Tue, 04 Mar 2025 07:14:47 -0800 (PST)
-Received: from rowland.harvard.edu ([140.247.181.15])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e8976da32esm67315626d6.110.2025.03.04.07.14.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Mar 2025 07:14:46 -0800 (PST)
-Date: Tue, 4 Mar 2025 10:14:44 -0500
-From: Alan Stern <stern@rowland.harvard.edu>
-To: Strforexc yn <strforexc@gmail.com>
-Cc: Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>,
-	Nikita Zhandarovich <n.zhandarovich@fintech.ru>,
-	linux-usb@vger.kernel.org, linux-input@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [BUG] UBSAN: Array-Index-Out-of-Bounds in usbhid_parse (HID) on
- 6.14.0-rc4
-Message-ID: <765270fa-dfca-46cb-9d4a-7f4a61c19663@rowland.harvard.edu>
-References: <CA+HokZreT4LYLbru4cc0iU4jKkdf40YnVunaGX0hFV2GAnnuEg@mail.gmail.com>
- <21b63d7e-5141-426b-af06-9465609e2ca2@rowland.harvard.edu>
- <CA+HokZrYvNhfGQ7Kf+smO1EzrX2Fvtqm92cEnE0M534kXZKHjA@mail.gmail.com>
+	s=arc-20240116; t=1740997297; c=relaxed/simple;
+	bh=a2xSJ3T1g8IXcDpYxc901qp4tAn/pEbOH9ZKAL1qU7U=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=Z447CwWm+yrqV3ZWc6vrIR8ru6Fb3td3ZKi0NGqXFJ+BIdXk4j8scitc9HTAZUhjU8UvSBMiCYKgLYyKTttgDxahUQoNz0PAh9z+IvwaNo2JgJGCx1VNb9OYMdj1mzbI/+H7e2Jha/R8+TiWx/nGZk7RSKZJkhKpUKrIdJGidH0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Z5vtd4j18z6K9SC;
+	Mon,  3 Mar 2025 18:19:21 +0800 (CST)
+Received: from frapeml100006.china.huawei.com (unknown [7.182.85.201])
+	by mail.maildlp.com (Postfix) with ESMTPS id 01139140A70;
+	Mon,  3 Mar 2025 18:21:31 +0800 (CST)
+Received: from frapeml500007.china.huawei.com (7.182.85.172) by
+ frapeml100006.china.huawei.com (7.182.85.201) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Mon, 3 Mar 2025 11:21:30 +0100
+Received: from frapeml500007.china.huawei.com ([7.182.85.172]) by
+ frapeml500007.china.huawei.com ([7.182.85.172]) with mapi id 15.01.2507.039;
+ Mon, 3 Mar 2025 11:21:30 +0100
+From: Shiju Jose <shiju.jose@huawei.com>
+To: Jonathan Cameron <jonathan.cameron@huawei.com>
+CC: "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+	"rafael@kernel.org" <rafael@kernel.org>, "bp@alien8.de" <bp@alien8.de>,
+	"tony.luck@intel.com" <tony.luck@intel.com>, "lenb@kernel.org"
+	<lenb@kernel.org>, "mchehab@kernel.org" <mchehab@kernel.org>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-cxl@vger.kernel.org"
+	<linux-cxl@vger.kernel.org>, "j.williams@intel.com" <j.williams@intel.com>,
+	"dave@stgolabs.net" <dave@stgolabs.net>, "dave.jiang@intel.com"
+	<dave.jiang@intel.com>, "alison.schofield@intel.com"
+	<alison.schofield@intel.com>, "vishal.l.verma@intel.com"
+	<vishal.l.verma@intel.com>, "ira.weiny@intel.com" <ira.weiny@intel.com>,
+	"david@redhat.com" <david@redhat.com>, "Vilas.Sridharan@amd.com"
+	<Vilas.Sridharan@amd.com>, "leo.duran@amd.com" <leo.duran@amd.com>,
+	"Yazen.Ghannam@amd.com" <Yazen.Ghannam@amd.com>, "rientjes@google.com"
+	<rientjes@google.com>, "jiaqiyan@google.com" <jiaqiyan@google.com>,
+	"Jon.Grimm@amd.com" <Jon.Grimm@amd.com>, "dave.hansen@linux.intel.com"
+	<dave.hansen@linux.intel.com>, "naoya.horiguchi@nec.com"
+	<naoya.horiguchi@nec.com>, "james.morse@arm.com" <james.morse@arm.com>,
+	"jthoughton@google.com" <jthoughton@google.com>, "somasundaram.a@hpe.com"
+	<somasundaram.a@hpe.com>, "erdemaktas@google.com" <erdemaktas@google.com>,
+	"pgonda@google.com" <pgonda@google.com>, "duenwen@google.com"
+	<duenwen@google.com>, "gthelen@google.com" <gthelen@google.com>,
+	"wschwartz@amperecomputing.com" <wschwartz@amperecomputing.com>,
+	"dferguson@amperecomputing.com" <dferguson@amperecomputing.com>,
+	"wbs@os.amperecomputing.com" <wbs@os.amperecomputing.com>,
+	"nifan.cxl@gmail.com" <nifan.cxl@gmail.com>, tanxiaofei
+	<tanxiaofei@huawei.com>, "Zengtao (B)" <prime.zeng@hisilicon.com>, "Roberto
+ Sassu" <roberto.sassu@huawei.com>, "kangkang.shen@futurewei.com"
+	<kangkang.shen@futurewei.com>, wanghuiqiang <wanghuiqiang@huawei.com>,
+	Linuxarm <linuxarm@huawei.com>
+Subject: RE: [PATCH linux-next 0/2] ACPI: Add support for ACPI RAS2 feature
+ table
+Thread-Topic: [PATCH linux-next 0/2] ACPI: Add support for ACPI RAS2 feature
+ table
+Thread-Index: AQHbidw989DsJKt5skazfuISb8i7/7NhGsIAgAAbu7A=
+Date: Mon, 3 Mar 2025 10:21:30 +0000
+Message-ID: <ed550760111d4061869949c90598ff5b@huawei.com>
+References: <20250228122752.2062-1-shiju.jose@huawei.com>
+ <20250303173538.000007cd@huawei.com>
+In-Reply-To: <20250303173538.000007cd@huawei.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Precedence: bulk
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CA+HokZrYvNhfGQ7Kf+smO1EzrX2Fvtqm92cEnE0M534kXZKHjA@mail.gmail.com>
+X-ITU-Libra-ESVA-Information: Please contact Istanbul Teknik Universitesi for more information
+X-ITU-Libra-ESVA-ID: 4Z6fMq34fQzFyfp
+X-ITU-Libra-ESVA: No virus found
+X-ITU-Libra-ESVA-From: root@cc.itu.edu.tr
+X-ITU-Libra-ESVA-Watermark: 1741706042.78005@CgbuDHu2Zz8mGwv6bdeGVg
+X-ITU-MailScanner-SpamCheck: not spam
+Message-ID: <20250303102130.qPjYsZsKkoYp25-b-lk_mCExCY0FZuB9exZBteoCxHw@z>
 
-On Tue, Mar 04, 2025 at 10:21:03AM +0800, Strforexc yn wrote:
-> I hadn’t come across this patch earlier—thanks for sharing it! After
-> reviewing it, I can see that it addresses the UBSAN
-> array-index-out-of-bounds issue
-> 
-> Alan Stern <stern@rowland.harvard.edu> 于2025年3月4日周二 00:02写道：
-> > Have you seen this patch or tried to test it?
-> >
-> > https://lore.kernel.org/linux-usb/20250131151600.410242-1-n.zhandarovich@fintech.ru/
-
-You might want to work with Nikita on testing, improving, or 
-resubmitting the patch, because it hasn't been merged into the kernel 
-yet (as far as I know).
-
-Alan Stern
+>-----Original Message-----
+>From: Jonathan Cameron <jonathan.cameron@huawei.com>
+>Sent: 03 March 2025 09:36
+>To: Shiju Jose <shiju.jose@huawei.com>
+>Cc: linux-edac@vger.kernel.org; linux-acpi@vger.kernel.org; rafael@kernel.=
+org;
+>bp@alien8.de; tony.luck@intel.com; lenb@kernel.org; mchehab@kernel.org;
+>linux-mm@kvack.org; linux-kernel@vger.kernel.org; linux-cxl@vger.kernel.or=
+g;
+>j.williams@intel.com; dave@stgolabs.net; dave.jiang@intel.com;
+>alison.schofield@intel.com; vishal.l.verma@intel.com; ira.weiny@intel.com;
+>david@redhat.com; Vilas.Sridharan@amd.com; leo.duran@amd.com;
+>Yazen.Ghannam@amd.com; rientjes@google.com; jiaqiyan@google.com;
+>Jon.Grimm@amd.com; dave.hansen@linux.intel.com;
+>naoya.horiguchi@nec.com; james.morse@arm.com; jthoughton@google.com;
+>somasundaram.a@hpe.com; erdemaktas@google.com; pgonda@google.com;
+>duenwen@google.com; gthelen@google.com;
+>wschwartz@amperecomputing.com; dferguson@amperecomputing.com;
+>wbs@os.amperecomputing.com; nifan.cxl@gmail.com; tanxiaofei
+><tanxiaofei@huawei.com>; Zengtao (B) <prime.zeng@hisilicon.com>; Roberto
+>Sassu <roberto.sassu@huawei.com>; kangkang.shen@futurewei.com;
+>wanghuiqiang <wanghuiqiang@huawei.com>; Linuxarm
+><linuxarm@huawei.com>
+>Subject: Re: [PATCH linux-next 0/2] ACPI: Add support for ACPI RAS2 featur=
+e
+>table
+>
+>On Fri, 28 Feb 2025 12:27:48 +0000
+><shiju.jose@huawei.com> wrote:
+>
+>> From: Shiju Jose <shiju.jose@huawei.com>
+>>
+>> Add support for ACPI RAS2 feature table (RAS2) defined in the ACPI 6.5
+>> specification, section 5.2.21 and RAS2 HW based memory scrubbing feature=
