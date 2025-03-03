@@ -1,112 +1,104 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6AB61F12E0
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 10:31:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7C4A41E7C32
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 10:32:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740997911; cv=none; b=a4dLj+KTY66+DLafa3OV2FOKNqGsPrJXZ8J03AHwPI+L3nrixSIK9NPcxd3vJULpitfcyv8gCVkf72Eix6BGp5UHSN8S0mUEtpZumplIxROCwXzD5vFmIS+TBycw2Rle/S63/gsBixzfpE0DtNI3N60s+JtGLmTNdfgf403b4Ts=
+	t=1740997933; cv=none; b=mRslhluF18N7rF6Iqkj9PywEIz/f3Rw5mw7GgYV0WpMrWo0i8gcS2SqHtLdqR2VWWuGGhcrr0KVrtPvjtWZcX5BLhbPfW5fxcLgrWFX11rlu7T+m2rEaH0+at3ZgltO12k/k6avcdO+ftUBIJoaSoW2YVMH/KR6KdGh+e3jvtTM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740997911; c=relaxed/simple;
-	bh=x7bNnIH0N9XXrP4dc2Yr5ges+LomEyPKmnx/zRPInOM=;
+	s=arc-20240116; t=1740997933; c=relaxed/simple;
+	bh=cfjZTAA3wFI4kmuYmgNO61aNSEGKpej4JaJFeqP9wPU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=t6TD2HzTHw50d8rQTnnD6U/NpWDxDYrDtn12x9UIvvji4UocCc7ZbtECd4cojGUqw51HXccf+pChu7jM6Pv6ARIFIcGSPFRI5lG2PjHA/L3MMCwcYYyQHTF5TEmelhGUWDrs0otbl93Yne72fSRVQS/lsJ/WWiWA8TZMDfEABZc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dWDWe0Bq; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dWDWe0Bq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740997910; x=1772533910;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=x7bNnIH0N9XXrP4dc2Yr5ges+LomEyPKmnx/zRPInOM=;
-  b=dWDWe0BqhC7J30MfEgB4VPN3v31B9pKXoPqdo9CEzgfBGUAf+iUHgz2r
-   I0SxnR6QRSpqPuFpC0icRJ54H76yUWqJaqf9b7qy0y9XMuA8jCGeFBs9t
-   ow2LBJ/r2bdU3PiHMKUithU7QHLcfHGyVhloN3saTDJtul14XmYx0R8rp
-   KD5IJ2sGe1r0jUXx+B1Sx81VRVoq04XKFm3Nflsf29nfY8IymTJOfRIdb
-   VPCUjZ9qv7UvbZIpILk/N8FYOsFdjvxCO4/vcK761176z50B5rzqCQ+sI
-   To2wo+o+CsmzVh7rIoCXaOAUTguRzGcOpQZKOUcF5DQbYkK0s8DrH2ty8
-   A==;
-X-CSE-ConnectionGUID: 7RNzfFomRhy1oal3MmZUaQ==
-X-CSE-MsgGUID: 9VTX1XfLRkC61k0UTTWVew==
-X-IronPort-AV: E=McAfee;i="6700,10204,11361"; a="53256758"
-X-IronPort-AV: E=Sophos;i="6.13,329,1732608000"; 
-   d="scan'208";a="53256758"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Mar 2025 02:31:49 -0800
-X-CSE-ConnectionGUID: kwoRTYPBSy+dkMbhO+ys1w==
-X-CSE-MsgGUID: 6doOexc1T6KsNEMMhJQJ9g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,329,1732608000"; 
-   d="scan'208";a="117996022"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Mar 2025 02:31:48 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1tp35M-0000000GmSA-1Q73;
-	Mon, 03 Mar 2025 12:31:44 +0200
-Date: Mon, 3 Mar 2025 12:31:44 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Raag Jadav <raag.jadav@intel.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Dave Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/2] Cleanup io.h
-Message-ID: <Z8WFEC2-kBwSYFDX@smile.fi.intel.com>
-References: <20250221050804.2764553-1-raag.jadav@intel.com>
- <2342b516-2c6e-42e5-b4f4-579b280823ba@app.fastmail.com>
- <Z7iuulG0Ltoltl8F@smile.fi.intel.com>
- <f6eb011b-40fb-409a-b2b2-a09d0e770bbd@app.fastmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=nXr1lvISF0TyFeYDeX6gdcefVab/U3WS0qaO+ST5+MwSKfPuZWJlbLO9CL3S6LyTt1J/1aqPUNVQ94eka8MRGSdPyBs54KyfFk4N0TdjmQ0DU6zO9BkFvq18Q66Xe/dVHN6P+pIvQshkTIwBjNujYpfHCs6sBaxMXcJWD61twhE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 092C1113E;
+	Mon,  3 Mar 2025 02:32:25 -0800 (PST)
+Received: from e133081.arm.com (unknown [10.57.37.136])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9AC8F3F66E;
+	Mon,  3 Mar 2025 02:32:03 -0800 (PST)
+Date: Mon, 3 Mar 2025 10:32:01 +0000
+From: =?utf-8?Q?Miko=C5=82aj?= Lenczewski <miko.lenczewski@arm.com>
+To: Ryan Roberts <ryan.roberts@arm.com>
+Cc: Yang Shi <yang@os.amperecomputing.com>, suzuki.poulose@arm.com,
+	catalin.marinas@arm.com, will@kernel.org, joro@8bytes.org,
+	jean-philippe@linaro.org, mark.rutland@arm.com, joey.gouly@arm.com,
+	oliver.upton@linux.dev, james.morse@arm.com, broonie@kernel.org,
+	maz@kernel.org, david@redhat.com, akpm@linux-foundation.org,
+	jgg@ziepe.ca, nicolinc@nvidia.com, mshavit@google.com,
+	jsnitsel@redhat.com, smostafa@google.com,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	iommu@lists.linux.dev
+Subject: Re: [PATCH v2 4/4] iommu/arm: Add BBM Level 2 smmu feature
+Message-ID: <20250303103201.GD13345@e133081.arm.com>
+References: <20250228182403.6269-2-miko.lenczewski@arm.com>
+ <20250228182403.6269-6-miko.lenczewski@arm.com>
+ <b46dc626-edc9-4d20-99d2-6cd08a01346c@os.amperecomputing.com>
+ <43732270-8fd0-4a18-abec-096e383a6a4d@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <f6eb011b-40fb-409a-b2b2-a09d0e770bbd@app.fastmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <43732270-8fd0-4a18-abec-096e383a6a4d@arm.com>
 
-On Fri, Feb 21, 2025 at 06:15:30PM +0100, Arnd Bergmann wrote:
-> On Fri, Feb 21, 2025, at 17:50, Andy Shevchenko wrote:
-> > On Fri, Feb 21, 2025 at 11:15:47AM +0100, Arnd Bergmann wrote:
-> >> As you already found, removing an old indirect #include that is
-> >> no longer needed usually leads to some files breaking. The more
-> >> impactful your change is in terms of build speed, the more
-> >> things break! I think in this case, removing linux/err.h and
-> >> linux/bug.h made very little difference because they are very
-> >> small files in terms of what else they include.
-> >
-> > While this is all true, removing unneeded inclusions rarely can lead to the
-> > "extra work with a little gain". When there is a replacement to the low
-> > level ones, it's also an improvement in my opinion and won't be harmful in
-> > the future. But I agree, that the stuff is way too tangled already and requires
-> > an enormous work to untangle it, even if doing it structurally.
+On Mon, Mar 03, 2025 at 10:17:28AM +0000, Ryan Roberts wrote:
+> On 01/03/2025 01:32, Yang Shi wrote:
+> > 
+> > 
+> > 
+> > On 2/28/25 10:24 AM, Mikołaj Lenczewski wrote:
+> >> For supporting BBM Level 2 for userspace mappings, we want to ensure
+> >> that the smmu also supports its own version of BBM Level 2. Luckily, the
+> >> smmu spec (IHI 0070G 3.21.1.3) is stricter than the aarch64 spec (DDI
+> >> 0487K.a D8.16.2), so already guarantees that no aborts are raised when
+> >> BBM level 2 is claimed.
+> >>
+> >> Add the feature and testing for it under arm_smmu_sva_supported().
+> >>
+> >> Signed-off-by: Mikołaj Lenczewski <miko.lenczewski@arm.com>
+> >> ---
+> >>   arch/arm64/kernel/cpufeature.c                  | 7 +++----
+> >>   drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-sva.c | 3 +++
+> >>   drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c     | 3 +++
+> >>   drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h     | 4 ++++
+> >>   4 files changed, 13 insertions(+), 4 deletions(-)
+> >>
+> >> diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
+> >> index 63f6d356dc77..1022c63f81b2 100644
+> >> --- a/arch/arm64/kernel/cpufeature.c
+> >> +++ b/arch/arm64/kernel/cpufeature.c
+> >> @@ -2223,8 +2223,6 @@ static bool has_bbml2_noabort(const struct
+> >> arm64_cpu_capabilities *caps, int sco
+> >>               if (!cpu_has_bbml2_noabort(__cpu_read_midr(cpu)))
+> >>                   return false;
+> >>           }
+> >> -
+> >> -        return true;
+> >>       } else if (scope & SCOPE_LOCAL_CPU) {
+> >>           /* We are a hot-plugged CPU, so only need to check our MIDR.
+> >>            * If we have the correct MIDR, but the kernel booted on an
+> >> @@ -2232,10 +2230,11 @@ static bool has_bbml2_noabort(const struct
+> >> arm64_cpu_capabilities *caps, int sco
+> >>            * we have an incorrect MIDR, but the kernel booted on a
+> >>            * sufficient CPU, we will not bring up this CPU.
+> >>            */
+> >> -        return cpu_has_bbml2_noabort(read_cpuid_id());
+> >> +        if (!cpu_has_bbml2_noabort(read_cpuid_id()))
+> >> +            return false;
+> >>       }
+> >>   -    return false;
+> >> +    return has_cpuid_feature(caps, scope);
+> > 
+> > Do we really need this? IIRC, it means the MIDR has to be in the allow list
+> > *AND* MMFR2 register has to be set too. AmpereOne doesn't have MMFR2 register set.
 > 
-> The problem I see with prematurely applying small improvements like this
-> one is that they always cause build regressions, at least if the change
-> is any good. If we can find some more impactful changes like this one,
-> we can group them together in a branch and test them a lot better before
-> they even reach linux-next.
-> 
-> I mainly want to avoid people getting angry at Raag for repeatedly
-> breaking their subsystems by pushing small patches one at a time.
-> 
-> > Do you have your scripts for the showed statistics being published somewhere?
-> 
-> I had a good set of scripts on an older machine and might still
-> have some backups of that somewhere, but just hacked up something
-> ad-hoc today beased on what I remembered from that time. Here
-> are the snippets that you might find useful.
+> Miko, I think this should have been squashed into patch #1? It doesn't belong in
+> this patch.
 
-Thank you!
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Yes, 100%. Missed this, will put into patch #1.
