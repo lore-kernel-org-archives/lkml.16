@@ -1,108 +1,135 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com [209.85.219.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E6A3215057;
-	Mon,  3 Mar 2025 16:02:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B07861EB1BF
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 16:02:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741017753; cv=none; b=VqxydaNqPtKiEnNHxAkEHT4fwTvzeaGV5H7dgTujWV5cAqaTT29G7EeyhA3OxvfUImlAt5Onl6Oy0KfkFYiux6iHdljEmgs9KAZzgzhDJeCzAWVpAQxyXHLnlIK1iVZJOJ3JvGsIQdXDMe3SsxH0EWkezE0jgV3VV4m2ubv6q+c=
+	t=1741017757; cv=none; b=GPvWu3PcPgYlYsRLsN8kHpTKMGeWdEANNDrDO0xVtb480U/1qTVInSS2YthXVS8hLzSaSfkj/puzZOM0B2+r25JxQSNyKaXV5586KH+IVEbV4LD6xkZxWzA3Ow7jclJm3A8jVbInMWFUMJKM4CmffwbpOGQyS6yElFUMXi22mp0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741017753; c=relaxed/simple;
-	bh=otnwcbFWhDhUPF+LRNkVnBE7tXry7h29uKAVmJYC7Kc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=B0W0cINcdDtsJGStRgVUd4wMEYHwJcs260OrG2UUzVtLqtqgWUsDzVjSNN0KCHslaT0GIdcj6u08w6rkSoAoZ+0nAXgI90HjRmcRNMZ0LgLEi/+EsMeCY+yEQPJrcK5eJ/gRc+wY36RWTcmBUFgCk/z19slVjapJoCoIg0hbsQE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=Xd+sj9f9; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1741017757; c=relaxed/simple;
+	bh=f3z1YJDae+7qKzu1a/ULS1y8fv2jKayJhoYaJjgj1Lw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sClxK62uTnkgLKP1P9phCGCX+QxejgzxTxmxX0yeKl7Rt+PbEDjHq/E+IR9gkyHzZDPrEmfkBoL/jMMfs4vzn+YRD5cv9wCuqyr1MZemiKfrxRRHCknNH5NlEXJ2nE9pgXDx7ko4HicYM/DumPTJ65QzYVqU1CzIdWJvYwFFwHg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rowland.harvard.edu; spf=fail smtp.mailfrom=g.harvard.edu; dkim=pass (2048-bit key) header.d=rowland.harvard.edu header.i=@rowland.harvard.edu header.b=G6zQRxWr; arc=none smtp.client-ip=209.85.219.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rowland.harvard.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=g.harvard.edu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="Xd+sj9f9"
-Received: from mail.ideasonboard.com (unknown [IPv6:2401:4900:1c69:8872:6fe4:6987:313:70cc])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 4B9F21189;
-	Mon,  3 Mar 2025 17:00:58 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1741017658;
-	bh=otnwcbFWhDhUPF+LRNkVnBE7tXry7h29uKAVmJYC7Kc=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=Xd+sj9f9IgFiZT60oLkXRE0fbiQE/H1qPKOFBJTnT/JZN3rPK+2WGqmc7mSK7qemT
-	 3jQ80Yl1K+PZNKIuk4dLGvYHLCiR5mkhXWB04EbQbPZvPmFiYpu5hRIBxV+xgs3vcx
-	 klrETb19jw6GeqOG7FJn+07eos5Y9Wd8HhyZm8wg=
-From: Jai Luthra <jai.luthra@ideasonboard.com>
-Date: Mon, 03 Mar 2025 21:32:06 +0530
-Subject: [PATCH v3 03/19] media: i2c: ds90ub913: Align ub913_read() with
- other similar functions
+	dkim=pass (2048-bit key) header.d=rowland.harvard.edu header.i=@rowland.harvard.edu header.b="G6zQRxWr"
+Received: by mail-qv1-f52.google.com with SMTP id 6a1803df08f44-6e88f3159e3so37869056d6.2
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Mar 2025 08:02:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rowland.harvard.edu; s=google; t=1741017754; x=1741622554; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=j0kf09Xt7w2q49Ub1BV7dNTILamWt8grEXO5Ja6in+c=;
+        b=G6zQRxWrNMhTkxwZBqgMdPht5fUcUaayMq50TzI7kuwgCrW5voPoi9QHBl+fojC0xP
+         ceiDEiw3v/wVl31JD9/6Sv8WYjJOapEJ7uVw3yCj5RaCHkXDHAqVdQOlPqOKZVvk/+3N
+         vXjaQPFQ1/tchjgTBvNkxE8IJRVa7a8YLpi2L0HM03nk76aF1bag13c/+f/SjIuzFAx4
+         OWHdVWr3mIchCDbvFpU/Q3tiAITjYTlkcvQGkJwJxEyNYufZ5mWUBfjSHEJBFI3xJgur
+         6+zP5M9mUR27gfq9BF4ncYUKI4sUVuIkhPKh00Zi5RdDyOUdvQb/kBtoYSBlGpsiREgH
+         2WrA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741017754; x=1741622554;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=j0kf09Xt7w2q49Ub1BV7dNTILamWt8grEXO5Ja6in+c=;
+        b=e0bBUoVOU0jdHG2+tV2sUUHvUjjQtVxeUdZ2vE1/d45Ww6WM8nEpGDXHszrubFECmI
+         obVQWYK8vTri5PZl3brU5u4YmTXPFI+AA/9bKfX+uadfahDWoHii+KCbACtFnwGpp6qx
+         SB/brp7y616zyFmCFqMVIEpue/dUuGECTw7BuhfSB6aAnK8XBl1gubEnCoNJbzpQvVdj
+         Qn7ktRP0+DtD9fosASm76C5+5boRteGNyAHdD1oSMB3HyeACtwi0Yr1lfhJfkH6ze3Pb
+         6EKuU88H965WHhp5e7xJlN4UDuzMC22ZFITFZ65L8mmsHrsVzX05bcze5WX/zVrlTz9W
+         5Xlg==
+X-Forwarded-Encrypted: i=1; AJvYcCVnMYDnrFD3duj7Tl2y7qQpiC+DS38PAE7xTn6Lq2+FFpkrVupQEhDRu55wf7SUC1VHVpw+xGQdw+h0hmw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywjc9ChMB5fpvLlR5SozNzVWBr4VcVy2w+1pj8DSlUJT3T/U6Jx
+	hwgUkJ+0gbVmYsCVXcHMC5WRQqwYqoMrxc41lCF39gPyNtIKEBcK7zTDUcZ8bA==
+X-Gm-Gg: ASbGncsdHO/DTE1rtXc3Bl/Pk4MykPFdxEAqQ2Mbdaj1t1KWImoEdCOEyDMavB+IxED
+	P7W3Q2ZeqegOWvkeTUVGymj/DZTd9mG0m3WvbmehV1hS092NRhquxBSe8NrNGvJOkVoo+Xunf2l
+	lnXKWMifGUXr1P1vvFgXlVYWkD8U1rL9Gog4Qr68Sn5LTPEcFhMY7fFb4huZwEP4TSqRu9y7e4i
+	0l484XxnXO1PQG03OzmdDJ8nWk86qEcvStfZyEZqsIxFrgO77XcL+wHZJJiJ5+En6LA3Hs/LVYP
+	95FuhnWXhSrf1RyFDDYi1cfZ3kHZWQhkTLb4pIJMpeNPaWaWSRY2/95FpqTe4Nw=
+X-Google-Smtp-Source: AGHT+IGftmtJ1H46cLxhxWAbdbWJGM0W0W4u3xExTd+O5te0WpEQdDeILfCXfX/nJATaCR1Ljm0czw==
+X-Received: by 2002:a05:6214:da8:b0:6e8:96f4:73a with SMTP id 6a1803df08f44-6e8a0d3901dmr235750906d6.19.1741017754321;
+        Mon, 03 Mar 2025 08:02:34 -0800 (PST)
+Received: from rowland.harvard.edu ([140.247.181.15])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e8976ccba1sm54361766d6.90.2025.03.03.08.02.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Mar 2025 08:02:33 -0800 (PST)
+Date: Mon, 3 Mar 2025 11:02:31 -0500
+From: Alan Stern <stern@rowland.harvard.edu>
+To: Strforexc yn <strforexc@gmail.com>
+Cc: Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>,
+	Nikita Zhandarovich <n.zhandarovich@fintech.ru>,
+	linux-usb@vger.kernel.org, linux-input@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [BUG] UBSAN: Array-Index-Out-of-Bounds in usbhid_parse (HID) on
+ 6.14.0-rc4
+Message-ID: <21b63d7e-5141-426b-af06-9465609e2ca2@rowland.harvard.edu>
+References: <CA+HokZreT4LYLbru4cc0iU4jKkdf40YnVunaGX0hFV2GAnnuEg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250303-b4-ub9xx-err-handling-v3-3-7d178796a2b9@ideasonboard.com>
-References: <20250303-b4-ub9xx-err-handling-v3-0-7d178796a2b9@ideasonboard.com>
-In-Reply-To: <20250303-b4-ub9xx-err-handling-v3-0-7d178796a2b9@ideasonboard.com>
-To: Mauro Carvalho Chehab <mchehab@kernel.org>, 
- Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, 
- Devarsh Thakkar <devarsht@ti.com>, linux-media@vger.kernel.org, 
- linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
- Jai Luthra <jai.luthra@ideasonboard.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1112;
- i=jai.luthra@ideasonboard.com; h=from:subject:message-id;
- bh=ehwui8SOAsIre7y53CJZ4hsVlIUThE2tbEdDQO3AyJ4=;
- b=owEBbQKS/ZANAwAIAUPekfkkmnFFAcsmYgBnxdJ+C4Bc2KWXRt2eyOq94jurDzVxGOVl2I92i
- cjyP7ruIW+JAjMEAAEIAB0WIQRN4NgY5dV16NRar8VD3pH5JJpxRQUCZ8XSfgAKCRBD3pH5JJpx
- RUX4D/0dDZettXt2L5oJhm3XOB/sOmH+Zeq312Ef72q/01I7uVMK8fG72D0klSeUSDhDhjkQj6L
- 4CmcBGMlCHObHFAsDM/nvbIXfFvkDA+VfwRSGDdWfcRSrK1Xb6TKP+EelI/+YcKdfL0meD0Uun2
- +Sfg4771MkryWkw6Lw6N5r+NTjd8JtWsKJPKvGlHuId57wgahTjvBs20wlGHPHz4tPpcVZrLl/w
- wLB4ACPWefbm49xIBNQr8AQ4gfJIwYF92vktBrWXZ3HTGQizwNBaLGuXFXLZuhio5kcf3nqIXkE
- jgJZA/Ke1I34pbxkmu5oUN/kbvKudK8gFPN0s+yCTUfHMTRJ9KXusRujVccJxysOYHL0r3w7P83
- 04+p65KIxnuqMaSRYA9oVWgt0s9kXkXMxldVOb7KhUz01R9YrYNn4L+P3FzUXOwbhsvbs/LSfwU
- Zf4ohEjo3Kc/pP4UpoluHhbPEAuoh97+lDbbgAg7W6IB92K7ytIlOK/X/GeOkDK5hmk5KIKJSk1
- QCFVocBSaFzBn6bdj8y0rWnScO7k9kDUexMoXhHZpcIAPQg6yleJ7v5PfGzF1n4dxlZRtJ5iAoE
- xqXIjmnZcnS4xxX6hfiz9kk0brHkPhPIkaZS5GbBx6VcRydDMHqT/KzTdrNQKXUiMO+j5+ACa+O
- EglY+luuNT0+L1g==
-X-Developer-Key: i=jai.luthra@ideasonboard.com; a=openpgp;
- fpr=4DE0D818E5D575E8D45AAFC543DE91F9249A7145
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CA+HokZreT4LYLbru4cc0iU4jKkdf40YnVunaGX0hFV2GAnnuEg@mail.gmail.com>
 
-From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+On Mon, Mar 03, 2025 at 04:52:33PM +0800, Strforexc yn wrote:
+> Dear Maintainers, When using our customized Syzkaller to fuzz the
+> latest Linux kernel, the following crash was triggered.
+> 
+> Kernel commit: v6.14-rc4 (Commits on Feb 24, 2025)
+> Kernel Config : https://github.com/Strforexc/LinuxKernelbug/blob/main/.config
+> Kernel Log:  https://github.com/Strforexc/LinuxKernelbug/blob/main/array-index-out-of-bounds_usbhid_parse/log0
+> Reproduce C: https://github.com/Strforexc/LinuxKernelbug/blob/main/array-index-out-of-bounds_usbhid_parse/repro.cprog
+> 
+> I’ve encountered a UBSAN-reported array-index-out-of-bounds issue in
+> the USB HID driver on Linux 6.14.0-rc4 during device probing, likely
+> triggered by a malformed USB descriptor. Here are the details:
+> 
+> UBSAN detects an out-of-bounds access at
+> drivers/hid/usbhid/hid-core.c:1025:18 in usbhid_parse, where index 1
+> exceeds the bounds of hid_class_descriptor [1] in struct
+> hid_descriptor. This occurs when parsing a HID device descriptor
+> during USB probing.
+> 
+> Location: The fault occurs in a loop: for (n = 0; n < num_descriptors;
+> n++) if (hdesc->desc[n].bDescriptorType == HID_DT_REPORT), accessing
+> hdesc->desc[n].
+> 
+> Cause: struct hid_descriptor defines desc as a fixed-size array [1],
+> but the loop iterates up to num_descriptors (based on
+> hdesc->bNumDescriptors). UBSAN flags n=1 as out-of-bounds, though the
+> underlying descriptor buffer may be larger.
+> 
+> Context: Preceded by a USB descriptor error (-22), suggesting a
+> malformed HID device (likely Syzkaller-crafted), triggering the loop
+> with bNumDescriptors > 1.
+> 
+> Impact: No immediate crash, but a code hygiene issue flagged by UBSAN.
+> Runtime safety depends on descriptor buffer allocation, but it’s a
+> potential source of confusion or future bugs.
+> 
+> Could HID maintainers investigate? Suggested fixes:
+> 1. Use a flexible array member (desc[]) in struct hid_descriptor and
+> adjust parsing to rely on runtime buffer size.
+> 2. Add stricter validation of hdesc->bNumDescriptors against bLength
+> to reject malformed descriptors earlier.
+> 
+> Our knowledge of the kernel is somewhat limited, and we'd appreciate
+> it if you could determine if there is such an issue. If this issue
+> doesn't have an impact, please ignore it ☺.
+> If you fix this issue, please add the following tag to the commit:
+> Reported-by: Zhizhuo Tang <strforexctzzchange@foxmail.com>, Jianzhou
+> Zhao <xnxc22xnxc22@qq.com>, Haoran Liu <cherest_san@163.com>
 
-Adjust the ub913_read() to have similar form than the other similar
-functions in ub9xx drivers. This makes it easier to deal with all the
-read/write functions with a semantic patch.
+Have you seen this patch or tried to test it?
 
-Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Signed-off-by: Jai Luthra <jai.luthra@ideasonboard.com>
----
- drivers/media/i2c/ds90ub913.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+https://lore.kernel.org/linux-usb/20250131151600.410242-1-n.zhandarovich@fintech.ru/
 
-diff --git a/drivers/media/i2c/ds90ub913.c b/drivers/media/i2c/ds90ub913.c
-index 1445ebbcc9cabb3ab43a670aa165deea52db5f35..facbee79164eec1fbccaea2c1d4d62cf439e49b6 100644
---- a/drivers/media/i2c/ds90ub913.c
-+++ b/drivers/media/i2c/ds90ub913.c
-@@ -125,14 +125,16 @@ static int ub913_read(const struct ub913_data *priv, u8 reg, u8 *val)
- 	int ret;
- 
- 	ret = regmap_read(priv->regmap, reg, &v);
--	if (ret < 0) {
-+	if (ret) {
- 		dev_err(&priv->client->dev,
- 			"Cannot read register 0x%02x: %d!\n", reg, ret);
--		return ret;
-+		goto out;
- 	}
- 
- 	*val = v;
--	return 0;
-+
-+out:
-+	return ret;
- }
- 
- static int ub913_write(const struct ub913_data *priv, u8 reg, u8 val)
-
--- 
-2.48.1
-
+Alan Stern
