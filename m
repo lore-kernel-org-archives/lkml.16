@@ -1,55 +1,55 @@
-Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
+Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B9E2213E6F
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 14:59:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CA562144C8
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 14:59:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741013964; cv=none; b=GP+sovtkR5XyvM6ysJ2PSu0UQsYDrt5TnyqaE59TbWzbp/fQ5Gqo8pzqiG1OloICjMeMzKir+gpi6Tcr9mSrqMP1o53PdPdnXU7c5m+gJjLhBw8zVvq9PJaJDM5DIGGxuo/iorJdpguYXRhgwdSG4E4V7TOLmjYK0XLHzF8I+Rk=
+	t=1741013967; cv=none; b=ax4dDtc4vcSXAibKdffLwApkTAewXnkYfadqjRjL4fD2HS2mkrHSIVAjnlleWd5rR/cWPVYlbHmTfj4SxCR/309vLySGnKFGOuOiVg6QFSEp7XJ9GxxSvd1UgoN3vM36YAUo+Ppf1dmoHDBiJwZ6v2u9z0I/J6OQsNlTjtcpWwQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741013964; c=relaxed/simple;
-	bh=uCfVFb/txRCfmFxJ4+6SlRUWu2HOr0nXb+a0S6WwnRk=;
+	s=arc-20240116; t=1741013967; c=relaxed/simple;
+	bh=yE/XfBNd7QLJwppkjnidARlRa53ewoZYsSCTtQtXRbM=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:MIME-Version:
-	 Content-Type:References; b=UtDLky9Tx2YejvdlAvaAVcGANPZCdAFxl5UsOKI/jh/zK2ngBnj6CBWb+9POZ3XdVbDoBuni+yCZ4HgkqYtxeFNv1jFtnAPE7zZrGeCmU+A5ksIBIl8hrx9S7q2CjKnM7LLUUxbcqr/xB5SuUqZNXWe0ZxYtVmXY6iXPqbAPsdA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=GJ2Ei2mg; arc=none smtp.client-ip=210.118.77.12
+	 Content-Type:References; b=N1a+fKq0CLRXH9UMaFrkV8dRao7D6fyZQoYYfF12fes6I7oGLCmIlBu2ofPhw9aFvnE4M+kigm5yf+5CCQ+WPTjZNY+bOf3up0mPmE5POq799YJYR2xbXXQ01h0+J7DQMxhyDUdkL0O4KQeTYjt0vT4ZSiVDAe927DxJFgTGehk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=BUU2JvH3; arc=none smtp.client-ip=210.118.77.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="GJ2Ei2mg"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="BUU2JvH3"
 Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20250303145920euoutp02a875d54b294a602d72611b7922807d6b~pUvkIFvoC1991619916euoutp02F
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 14:59:20 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20250303145920euoutp02a875d54b294a602d72611b7922807d6b~pUvkIFvoC1991619916euoutp02F
+	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20250303145922euoutp01c77c50fd6e7b4c264b25b530f763529f~pUvl5Ymm_0188901889euoutp01O
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 14:59:22 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20250303145922euoutp01c77c50fd6e7b4c264b25b530f763529f~pUvl5Ymm_0188901889euoutp01O
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1741013960;
-	bh=ycx89frYJE0l6BOMe49Vmtw2QSwzJUtNGydH2vz5J0M=;
+	s=mail20170921; t=1741013962;
+	bh=8JUe+9f2FdzBBZ5T2K3wL+ckB8t5mydCklEUnxSUWbw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=GJ2Ei2mgAdV5uUjtTqJxbqEATFn1izyRFe0jCCLteaRr76D5YddjYecXJh2YWpVmq
-	 tIl1O+gX05Bb75d648wz7UdlAlhETBEw8LOdXctoaxPItKTYqI3ryiTeB/YlkkNTLm
-	 9XSDiU14JXEJYFAsDc4BqB9yZOl1t3FJzyzHTnuI=
+	b=BUU2JvH31OTBmQhX2pwCI6H1nZ2YjdDwxuuVdnF0zmslG9XHqr54o1kVtoCA/SgyI
+	 cbRAkmcVioRpOT0hLFn0HSB/E63XLoQovObvRLSxfkZvAUSWlZ5XTXh4Z3BqSC/Twq
+	 hfNImgH41apJtGFIg3nQHkXA3bj9Ah1boIbhcWtA=
 Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
 	eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-	20250303145919eucas1p2c395444b01f97fb1f2908e3f23f9b7fc~pUvjluP2B3212832128eucas1p2b;
-	Mon,  3 Mar 2025 14:59:19 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-	eusmges3new.samsung.com (EUCPMTA) with SMTP id EC.D3.20397.7C3C5C76; Mon,  3
-	Mar 2025 14:59:19 +0000 (GMT)
+	20250303145921eucas1p224b00481a29c23a46ba19ccd7d0ae214~pUvlSQg_g1706417064eucas1p2e;
+	Mon,  3 Mar 2025 14:59:21 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+	eusmges3new.samsung.com (EUCPMTA) with SMTP id D3.E3.20397.9C3C5C76; Mon,  3
+	Mar 2025 14:59:21 +0000 (GMT)
 Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
 	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-	20250303145919eucas1p123e4b3ab94c67b7538a088be350372b4~pUvjJL0n_2501125011eucas1p1O;
-	Mon,  3 Mar 2025 14:59:19 +0000 (GMT)
+	20250303145921eucas1p122376fdd6195916372cb13e66091b820~pUvk0agX02501125011eucas1p1Q;
+	Mon,  3 Mar 2025 14:59:21 +0000 (GMT)
 Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
 	eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20250303145919eusmtrp1828ee6d918558e3e65c768cc0d68bd3e~pUvjIWUFS2312323123eusmtrp1b;
-	Mon,  3 Mar 2025 14:59:19 +0000 (GMT)
-X-AuditID: cbfec7f5-e59c770000004fad-c6-67c5c3c7654f
+	20250303145921eusmtrp1138df0aa7d88db2f37eaf6ad5f8d220d~pUvkzsGhE2312323123eusmtrp1f;
+	Mon,  3 Mar 2025 14:59:21 +0000 (GMT)
+X-AuditID: cbfec7f5-e59c770000004fad-cc-67c5c3c93cdf
 Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-	eusmgms2.samsung.com (EUCPMTA) with SMTP id 62.2D.19654.7C3C5C76; Mon,  3
-	Mar 2025 14:59:19 +0000 (GMT)
+	eusmgms2.samsung.com (EUCPMTA) with SMTP id 95.2D.19654.9C3C5C76; Mon,  3
+	Mar 2025 14:59:21 +0000 (GMT)
 Received: from AMDC4942.home (unknown [106.210.136.40]) by
 	eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20250303145918eusmtip2fd020107a70bec49772d66fa7923dfba~pUviWhsAD0239102391eusmtip2H;
-	Mon,  3 Mar 2025 14:59:18 +0000 (GMT)
+	20250303145920eusmtip20047c6ed356f659ed8d58ba75d62a37f~pUvj4RzFb0239102391eusmtip2I;
+	Mon,  3 Mar 2025 14:59:20 +0000 (GMT)
 From: Michal Wilczynski <m.wilczynski@samsung.com>
 To: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, drew@pdp7.com,
 	guoren@kernel.org, wefu@redhat.com, paul.walmsley@sifive.com,
@@ -58,9 +58,9 @@ To: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, drew@pdp7.com,
 Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, Michal
 	Wilczynski <m.wilczynski@samsung.com>
-Subject: [PATCH v1 2/5] firmware: thead: Add AON firmware protocol driver
-Date: Mon,  3 Mar 2025 15:58:58 +0100
-Message-Id: <20250303145901.446791-3-m.wilczynski@samsung.com>
+Subject: [PATCH v1 4/5] pmdomain: thead: Add power-domain driver for TH1520
+Date: Mon,  3 Mar 2025 15:59:00 +0100
+Message-Id: <20250303145901.446791-5-m.wilczynski@samsung.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250303145901.446791-1-m.wilczynski@samsung.com>
 Precedence: bulk
@@ -70,126 +70,147 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrMKsWRmVeSWpSXmKPExsWy7djP87rHDx9NN5gwydji2Z2vrBZbf89i
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrMKsWRmVeSWpSXmKPExsWy7djPc7onDx9NNzhxVMPi2Z2vrBZbf89i
 	t1iz9xyTxfwj51gt7l3awmTxYm8ji0XzsfVsFi9n3WOzuLxrDpvF594jjBbbPrewWaw9cpfd
 	Yv3X+UwWLy/3MFu0zeK3+L9nB7vF8bXhFi37p7A4CHm8efmSxeNwxxd2j3snprF6bFrVyeZx
-	59oeNo/NS+o9WtYeY/J4v+8qm0ffllWMHpear7N7fN4kF8AdxWWTkpqTWZZapG+XwJWx64B/
-	wfnpjBVzL51ja2A8XdbFyMkhIWAi8ad9PTOILSSwglGi6Ux1FyMXkP2FUeLY3JvsEM5nRomF
-	ex8zw3S8OLWSDSKxnFFi8rQ9jBDOG0aJVdd/s4JUsQkYSTxYPp8VJCEi0M8k0XfkP5jDLLCS
-	UeL+hbNgs4QFPCXutf0Fs1kEVCW2fbsDZvMK2EncODKHCWKfvMT+gyD1HBycAvYSnxo0IUoE
-	JU7OfMICYjMDlTRvnc0MMl9CYDOnRMu+CYwQvS4SF/rns0HYwhKvjm9hh7BlJE5P7mGBsPMl
-	Hmz9BPVbjcTOnuNQtrXEnXO/2ED2MgtoSqzfpQ8RdpR482QNWFhCgE/ixltBiBP4JCZtm84M
-	EeaV6GgTgqhWk5ja0wu39NyKbVBPeUi8bNrLPIFRcRaSZ2YheWYWwt4FjMyrGMVTS4tz01OL
-	jfNSy/WKE3OLS/PS9ZLzczcxAtPh6X/Hv+5gXPHqo94hRiYOxkOMEhzMSiK8t9qPpgvxpiRW
-	VqUW5ccXleakFh9ilOZgURLnXbS/NV1IID2xJDU7NbUgtQgmy8TBKdXA1HphTVH7B9tPsY+P
-	HE20PP1rrvobC4G7P20k0lhuXpSdKyggc+nUKj+364HKHBsafT7pTt/CJ7OQ66f7/x/VS4N/
-	xzWUe5jwVpVfDN6l9Cc657+kmaL2WR1jWcvPMSeuPeLdq+v6KSRK66hg50x24ZjbM/4bH2j+
-	bKj+Jm7x3IJ5Zw7x9cs85Xyh6bWsuCDqR83yFA5xpaipNY3x2Q1/wqfsexyiVHHngrFbz8nt
-	//xtPCy+HTrkOflS1RkOB1PXfWtT5kp+EjgDTJ4JryV4klf8Z/6wMTOYb9PEayb9U//O+NG1
-	7MO7vb4hR3a9mvZmTmel65+DLW+C+uew2WmxTRWb0Nb+UIwlzEWyJWSREktxRqKhFnNRcSIA
-	u+23sPYDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrEIsWRmVeSWpSXmKPExsVy+t/xe7rHDx9NN1i8TdTi2Z2vrBZbf89i
+	59oeNo/NS+o9WtYeY/J4v+8qm0ffllWMHpear7N7fN4kF8AdxWWTkpqTWZZapG+XwJVxZMJb
+	loIZfhUtZ16xNDB+cuhi5OSQEDCRaPv1ibmLkYtDSGAFo8SSzklsEM4XRomGdbMYIZzPjBLf
+	/i9lhWm5+uMRO0RiOaPEkU9XoFreMEqsf/ueCaSKTcBI4sHy+awgCRGBfiaJviP/wRxmgZWM
+	EvcvnGUGqRIW8JZ4vP8MkM3BwSKgKrHuQQlImFfATqL12x4WiHXyEvsPngUr4RSwl/jUoAlR
+	IihxcuYTsBJmoJLmrbPBnpAQ2Mwp0fD1NTtEr4vEns1XoOYIS7w6vgUqLiNxenIPVDxf4sHW
+	T8wQdo3Ezp7jULa1xJ1zv9hA9jILaEqs36UPEXaUWH3sFDtIWEKAT+LGW0GIE/gkJm2bzgwR
+	5pXoaBOCqFaTmNrTC7f03IptTBC2h8Sc1f9YJzAqzkLyzCwkz8xC2LuAkXkVo3hqaXFuemqx
+	cV5quV5xYm5xaV66XnJ+7iZGYDo8/e/41x2MK1591DvEyMTBeIhRgoNZSYT3VvvRdCHelMTK
+	qtSi/Pii0pzU4kOM0hwsSuK8i/a3pgsJpCeWpGanphakFsFkmTg4pRqYStbbvT2p+rtxmrSv
+	8Lt3i7nMRNXndS3b4zB1ia/+/z2lLZm1i6q7nt3vUhJc1qy11dYqiVna4fla1aTdzBEd8yN+
+	TfswSfP/uxOFYTaxBY9khBfZ+M06f5T/m0hD1PTbWsemZTXd2Bep+vy7yrPfx7b4Weg7f5fe
+	2Oh5JGJng+WVR+aPmHOsvD+v2qAoHb2xrVB5+QamCwoph9y1ROvO3Ovhv1SbGLDBI+qAaGlL
+	Cs+Da+skxQ+c2tewwm/fw1DdZp/Kq0/TSqOu8muUNihqSD8K1D2afpbJZ2KsUDNrxsoSFRbz
+	lBOyza7lj9zuBT+bf13jyYobxYEMPZEVES9dp1cHZy+quRMa1phfoaHEUpyRaKjFXFScCADZ
+	jRgp9gMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrIIsWRmVeSWpSXmKPExsVy+t/xe7onDx9NN5j6gNni2Z2vrBZbf89i
 	t1iz9xyTxfwj51gt7l3awmTxYm8ji0XzsfVsFi9n3WOzuLxrDpvF594jjBbbPrewWaw9cpfd
 	Yv3X+UwWLy/3MFu0zeK3+L9nB7vF8bXhFi37p7A4CHm8efmSxeNwxxd2j3snprF6bFrVyeZx
 	59oeNo/NS+o9WtYeY/J4v+8qm0ffllWMHpear7N7fN4kF8AdpWdTlF9akqqQkV9cYqsUbWhh
-	pGdoaaFnZGKpZ2hsHmtlZKqkb2eTkpqTWZZapG+XoJex64B/wfnpjBVzL51ja2A8XdbFyMkh
-	IWAi8eLUSrYuRi4OIYGljBIzXvxhhUjISFzrfskCYQtL/LnWBVX0ilGi++YGsCI2ASOJB8vn
-	s4IkRAQWMklcnbKBGcRhFljLKHH46iV2kCphAU+Je21/mUFsFgFViW3f7oDZvAJ2EjeOzGGC
-	WCEvsf/gWaA4BwengL3EpwZNEFMIqOTVJw6IakGJkzOfgB3EDFTdvHU28wRGgVlIUrOQpBYw
-	Mq1iFEktLc5Nzy020itOzC0uzUvXS87P3cQIjNxtx35u2cG48tVHvUOMTByMhxglOJiVRHhv
-	tR9NF+JNSaysSi3Kjy8qzUktPsRoCnT1RGYp0eR8YOrIK4k3NDMwNTQxszQwtTQzVhLnZbty
-	Pk1IID2xJDU7NbUgtQimj4mDU6qBSXS7b6bRpEsn/8RMevv5TFOf0ftv1r4NR66Wl1xPl29s
-	rTpi+Vf347WNoVNmTRQ+nJ4ns0syokW013bbjRoWRQ4u4eSUu1IWE813fdluc0GYMaT88rz+
-	TRfDPNYGH1ip+nla0MMTRxVb21szrQ5/dHjz11BqxqQoj5qi96LmoZv/vVpnrfKsLzEq9YXP
-	ta0HztxTXXh5Fdsmjmez5VoV54bvDtXwPeXfIDLD3Nxifcb1PPsZUwWPv3wRbhV4nidvz+/S
-	aWZ2B2/qqchNZt0Twsb3U3VFbniSctQD1ltuFmua2fda9Pua6JQ3T3W+kvX93X+98xeSfzg9
-	uvSvK0AroUT8js/uxd8CVE8nH+8wVGIpzkg01GIuKk4EAIUDvpllAwAA
-X-CMS-MailID: 20250303145919eucas1p123e4b3ab94c67b7538a088be350372b4
+	pGdoaaFnZGKpZ2hsHmtlZKqkb2eTkpqTWZZapG+XoJdxZMJbloIZfhUtZ16xNDB+cuhi5OSQ
+	EDCRuPrjEXsXIxeHkMBSRolrXYtYIRIyEte6X7JA2MISf651sUEUvWKU2NveyAiSYBMwkniw
+	fD4rSEJEYCGTxNUpG5hBHGaBtYwSh69eYgepEhbwlni8/wxQgoODRUBVYt2DEpAwr4CdROu3
+	PVAb5CX2HzwLVsIpYC/xqUETxBQCKnn1iQOiWlDi5MwnYNXMQNXNW2czT2AUmIUkNQtJagEj
+	0ypGkdTS4tz03GIjveLE3OLSvHS95PzcTYzAuN127OeWHYwrX33UO8TIxMF4iFGCg1lJhPdW
+	+9F0Id6UxMqq1KL8+KLSnNTiQ4ymQEdPZJYSTc4HJo68knhDMwNTQxMzSwNTSzNjJXFetivn
+	04QE0hNLUrNTUwtSi2D6mDg4pRqYOlTzU3zy15eFxL5M3Rp1d/KUJZeOHoycopJ9/fLdM5rz
+	Yg6GTdM6a+JvMkHupfffNUxL9d9fl7F7KfC7mKkyN0ahwqL470/XxX+vTUx5tZuF+Xpb9f4V
+	xqd+/9/4l/Mq9zTZ2T6uzqqHFxpnbH59kP3cDaPOrZ9rty56kC5idlYx8Xhm1bYXui9Y7VLM
+	t4lf1X/I8+7tiveSfWGz7HRNlhyrf2HG6bZ3jUqb3s2kL0e7H18s9cra5fqr9MOPPRG2Cfz5
+	jecsTG0jvhnsmnr6vaNSW/pzDr8thy6knzF6zG2etPB3quIOrkiJXB/d6mPz35u8k7r5cI78
+	3664NOGOyBt/u6Y/+WlS3fHyyuSp75VYijMSDbWYi4oTAQ8OO3JkAwAA
+X-CMS-MailID: 20250303145921eucas1p122376fdd6195916372cb13e66091b820
 X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20250303145919eucas1p123e4b3ab94c67b7538a088be350372b4
+X-RootMTR: 20250303145921eucas1p122376fdd6195916372cb13e66091b820
 X-EPHeader: CA
 CMS-TYPE: 201P
-X-CMS-RootMailID: 20250303145919eucas1p123e4b3ab94c67b7538a088be350372b4
+X-CMS-RootMailID: 20250303145921eucas1p122376fdd6195916372cb13e66091b820
 References: <20250303145901.446791-1-m.wilczynski@samsung.com>
-	<CGME20250303145919eucas1p123e4b3ab94c67b7538a088be350372b4@eucas1p1.samsung.com>
+	<CGME20250303145921eucas1p122376fdd6195916372cb13e66091b820@eucas1p1.samsung.com>
 
-The T-Head TH1520 SoC uses an E902 co-processor running Always-On (AON)
-firmware to manage power, clock, and other system resources [1]. This
-patch introduces a driver implementing the AON firmware protocol,
-allowing the Linux kernel to communicate with the firmware via mailbox
-channels.  Through an RPC-based interface, the kernel can initiate power
-state transitions, update resource configurations, and perform other
-AON-related tasks.
+The T-Head TH1520 SoC contains multiple power islands that can be
+programmatically turned on and off using the AON (Always-On) protocol
+and a hardware mailbox [1]. The relevant mailbox driver has already been
+merged into the mainline kernel in commit 5d4d263e1c6b ("mailbox:
+Introduce support for T-head TH1520 Mailbox driver");
+
+Introduce a power-domain driver for the TH1520 SoC, which is using AON
+firmware protocol to communicate with E902 core through the hardware
+mailbox. This way it can send power on/off commands to the E902 core.
+
+The interaction with AUDIO power island e.g trying to turn it OFF proved
+to crash the firmware running on the E902 core. Introduce the workaround
+to disable interacting with the power island.
 
 Link: https://openbeagle.org/beaglev-ahead/beaglev-ahead/-/blob/main/docs/TH1520%20System%20User%20Manual.pdf [1]
 
 Signed-off-by: Michal Wilczynski <m.wilczynski@samsung.com>
 ---
- MAINTAINERS                                   |   2 +
- drivers/firmware/Kconfig                      |   9 +
- drivers/firmware/Makefile                     |   1 +
- drivers/firmware/thead,th1520-aon.c           | 247 ++++++++++++++++++
- .../linux/firmware/thead/thead,th1520-aon.h   | 200 ++++++++++++++
- 5 files changed, 459 insertions(+)
- create mode 100644 drivers/firmware/thead,th1520-aon.c
- create mode 100644 include/linux/firmware/thead/thead,th1520-aon.h
+ MAINTAINERS                                |   1 +
+ drivers/pmdomain/Kconfig                   |   1 +
+ drivers/pmdomain/Makefile                  |   1 +
+ drivers/pmdomain/thead/Kconfig             |  12 ++
+ drivers/pmdomain/thead/Makefile            |   2 +
+ drivers/pmdomain/thead/th1520-pm-domains.c | 209 +++++++++++++++++++++
+ 6 files changed, 226 insertions(+)
+ create mode 100644 drivers/pmdomain/thead/Kconfig
+ create mode 100644 drivers/pmdomain/thead/Makefile
+ create mode 100644 drivers/pmdomain/thead/th1520-pm-domains.c
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index 46745cfe9d1f..c446fed8ff96 100644
+index b2b32e431f35..e240602f0931 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -20433,10 +20433,12 @@ F:	Documentation/devicetree/bindings/net/thead,th1520-gmac.yaml
- F:	Documentation/devicetree/bindings/pinctrl/thead,th1520-pinctrl.yaml
- F:	arch/riscv/boot/dts/thead/
- F:	drivers/clk/thead/clk-th1520-ap.c
-+F:	drivers/firmware/thead,th1520-aon.c
+@@ -20437,6 +20437,7 @@ F:	drivers/firmware/thead,th1520-aon.c
  F:	drivers/mailbox/mailbox-th1520.c
  F:	drivers/net/ethernet/stmicro/stmmac/dwmac-thead.c
  F:	drivers/pinctrl/pinctrl-th1520.c
++F:	drivers/pmdomain/thead/
  F:	include/dt-bindings/clock/thead,th1520-clk-ap.h
-+F:	include/linux/firmware/thead/thead,th1520-aon.h
+ F:	include/dt-bindings/power/thead,th1520-power.h
+ F:	include/linux/firmware/thead/thead,th1520-aon.h
+diff --git a/drivers/pmdomain/Kconfig b/drivers/pmdomain/Kconfig
+index 23c64851a5b0..91f04ace35d4 100644
+--- a/drivers/pmdomain/Kconfig
++++ b/drivers/pmdomain/Kconfig
+@@ -16,6 +16,7 @@ source "drivers/pmdomain/st/Kconfig"
+ source "drivers/pmdomain/starfive/Kconfig"
+ source "drivers/pmdomain/sunxi/Kconfig"
+ source "drivers/pmdomain/tegra/Kconfig"
++source "drivers/pmdomain/thead/Kconfig"
+ source "drivers/pmdomain/ti/Kconfig"
+ source "drivers/pmdomain/xilinx/Kconfig"
  
- RNBD BLOCK DRIVERS
- M:	Md. Haris Iqbal <haris.iqbal@ionos.com>
-diff --git a/drivers/firmware/Kconfig b/drivers/firmware/Kconfig
-index 9f35f69e0f9e..52c145097770 100644
---- a/drivers/firmware/Kconfig
-+++ b/drivers/firmware/Kconfig
-@@ -212,6 +212,15 @@ config SYSFB_SIMPLEFB
- 
- 	  If unsure, say Y.
- 
-+config TH1520_AON_PROTOCOL
-+	tristate "Always-On firmware protocol"
-+	depends on ARCH_THEAD || COMPILE_TEST
-+	help
-+	  Power, clock, and resource management capabilities on the TH1520 SoC are
-+	  managed by the E902 core. Firmware running on this core communicates with
-+	  the kernel through the Always-On protocol, using hardware mailbox as a medium.
-+	  Say yes if you need such capabilities.
-+
- config TI_SCI_PROTOCOL
- 	tristate "TI System Control Interface (TISCI) Message Protocol"
- 	depends on TI_MESSAGE_MANAGER
-diff --git a/drivers/firmware/Makefile b/drivers/firmware/Makefile
-index 7a8d486e718f..5db9c042430c 100644
---- a/drivers/firmware/Makefile
-+++ b/drivers/firmware/Makefile
-@@ -18,6 +18,7 @@ obj-$(CONFIG_RASPBERRYPI_FIRMWARE) += raspberrypi.o
- obj-$(CONFIG_FW_CFG_SYSFS)	+= qemu_fw_cfg.o
- obj-$(CONFIG_SYSFB)		+= sysfb.o
- obj-$(CONFIG_SYSFB_SIMPLEFB)	+= sysfb_simplefb.o
-+obj-$(CONFIG_TH1520_AON_PROTOCOL) += thead,th1520-aon.o
- obj-$(CONFIG_TI_SCI_PROTOCOL)	+= ti_sci.o
- obj-$(CONFIG_TRUSTED_FOUNDATIONS) += trusted_foundations.o
- obj-$(CONFIG_TURRIS_MOX_RWTM)	+= turris-mox-rwtm.o
-diff --git a/drivers/firmware/thead,th1520-aon.c b/drivers/firmware/thead,th1520-aon.c
+diff --git a/drivers/pmdomain/Makefile b/drivers/pmdomain/Makefile
+index a68ece2f4c68..7030f44a49df 100644
+--- a/drivers/pmdomain/Makefile
++++ b/drivers/pmdomain/Makefile
+@@ -14,6 +14,7 @@ obj-y					+= st/
+ obj-y					+= starfive/
+ obj-y					+= sunxi/
+ obj-y					+= tegra/
++obj-y					+= thead/
+ obj-y					+= ti/
+ obj-y					+= xilinx/
+ obj-y					+= core.o governor.o
+diff --git a/drivers/pmdomain/thead/Kconfig b/drivers/pmdomain/thead/Kconfig
 new file mode 100644
-index 000000000000..48e1bd986768
+index 000000000000..c7a1ac0c61dc
 --- /dev/null
-+++ b/drivers/firmware/thead,th1520-aon.c
-@@ -0,0 +1,247 @@
++++ b/drivers/pmdomain/thead/Kconfig
+@@ -0,0 +1,12 @@
++# SPDX-License-Identifier: GPL-2.0-only
++
++config TH1520_PM_DOMAINS
++	tristate "Support TH1520 Power Domains"
++	depends on TH1520_AON_PROTOCOL || !TH1520_AON_PROTOCOL
++	select REGMAP_MMIO
++	help
++	  This driver enables power domain management for the T-HEAD
++	  TH-1520 SoC. On this SoC there are number of power domains,
++	  which can be managed independently. For example GPU, NPU,
++	  and DPU reside in their own power domains which can be
++	  turned on/off.
+diff --git a/drivers/pmdomain/thead/Makefile b/drivers/pmdomain/thead/Makefile
+new file mode 100644
+index 000000000000..adfdf5479c68
+--- /dev/null
++++ b/drivers/pmdomain/thead/Makefile
+@@ -0,0 +1,2 @@
++# SPDX-License-Identifier: GPL-2.0-only
++obj-$(CONFIG_TH1520_PM_DOMAINS)		+= th1520-pm-domains.o
+diff --git a/drivers/pmdomain/thead/th1520-pm-domains.c b/drivers/pmdomain/thead/th1520-pm-domains.c
+new file mode 100644
+index 000000000000..7c78cf3955d2
+--- /dev/null
++++ b/drivers/pmdomain/thead/th1520-pm-domains.c
+@@ -0,0 +1,209 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
 + * Copyright (C) 2021 Alibaba Group Holding Limited.
@@ -197,452 +218,208 @@ index 000000000000..48e1bd986768
 + * Author: Michal Wilczynski <m.wilczynski@samsung.com>
 + */
 +
-+#include <linux/device.h>
 +#include <linux/firmware/thead/thead,th1520-aon.h>
-+#include <linux/mailbox_client.h>
-+#include <linux/mailbox_controller.h>
++#include <linux/slab.h>
++#include <linux/platform_device.h>
++#include <linux/pm_domain.h>
 +
-+#define MAX_RX_TIMEOUT (msecs_to_jiffies(3000))
-+#define MAX_TX_TIMEOUT 500
++#include <dt-bindings/power/thead,th1520-power.h>
 +
-+struct th1520_aon_chan {
-+	struct mbox_chan *ch;
-+	struct th1520_aon_rpc_ack_common ack_msg;
-+	struct mbox_client cl;
-+	struct completion done;
-+
-+	/* make sure only one RPC is performed at a time */
-+	struct mutex transaction_lock;
++struct th1520_power_domain {
++	struct th1520_aon_chan *aon_chan;
++	struct generic_pm_domain genpd;
++	u32 rsrc;
 +};
 +
-+struct th1520_aon_msg_req_set_resource_power_mode {
-+	struct th1520_aon_rpc_msg_hdr hdr;
-+	u16 resource;
-+	u16 mode;
-+	u16 reserved[10];
-+} __packed __aligned(1);
++struct th1520_power_info {
++	const char *name;
++	u32 rsrc;
++	bool disabled;
++};
 +
 +/*
-+ * This type is used to indicate error response for most functions.
++ * The AUDIO power domain is marked as disabled to prevent the driver from
++ * managing its power state. Direct AON firmware calls to control this power
++ * island trigger a firmware bug causing system instability. Until this
++ * firmware issue is resolved, the AUDIO power domain must remain disabled
++ * to avoid crashes.
 + */
-+enum th1520_aon_error_codes {
-+	LIGHT_AON_ERR_NONE = 0, /* Success */
-+	LIGHT_AON_ERR_VERSION = 1, /* Incompatible API version */
-+	LIGHT_AON_ERR_CONFIG = 2, /* Configuration error */
-+	LIGHT_AON_ERR_PARM = 3, /* Bad parameter */
-+	LIGHT_AON_ERR_NOACCESS = 4, /* Permission error (no access) */
-+	LIGHT_AON_ERR_LOCKED = 5, /* Permission error (locked) */
-+	LIGHT_AON_ERR_UNAVAILABLE = 6, /* Unavailable (out of resources) */
-+	LIGHT_AON_ERR_NOTFOUND = 7, /* Not found */
-+	LIGHT_AON_ERR_NOPOWER = 8, /* No power */
-+	LIGHT_AON_ERR_IPC = 9, /* Generic IPC error */
-+	LIGHT_AON_ERR_BUSY = 10, /* Resource is currently busy/active */
-+	LIGHT_AON_ERR_FAIL = 11, /* General I/O failure */
-+	LIGHT_AON_ERR_LAST
++static const struct th1520_power_info th1520_pd_ranges[] = {
++	[TH1520_AUDIO_PD] = {"audio", TH1520_AON_AUDIO_PD, true },
++	[TH1520_VDEC_PD] = { "vdec", TH1520_AON_VDEC_PD, false },
++	[TH1520_NPU_PD] = { "npu", TH1520_AON_NPU_PD, false },
++	[TH1520_VENC_PD] = { "venc", TH1520_AON_VENC_PD, false },
++	[TH1520_GPU_PD] = { "gpu", TH1520_AON_GPU_PD, false },
++	[TH1520_DSP0_PD] = { "dsp0", TH1520_AON_DSP0_PD, false },
++	[TH1520_DSP1_PD] = { "dsp1", TH1520_AON_DSP1_PD, false }
 +};
 +
-+static int th1520_aon_linux_errmap[LIGHT_AON_ERR_LAST] = {
-+	0, /* LIGHT_AON_ERR_NONE */
-+	-EINVAL, /* LIGHT_AON_ERR_VERSION */
-+	-EINVAL, /* LIGHT_AON_ERR_CONFIG */
-+	-EINVAL, /* LIGHT_AON_ERR_PARM */
-+	-EACCES, /* LIGHT_AON_ERR_NOACCESS */
-+	-EACCES, /* LIGHT_AON_ERR_LOCKED */
-+	-ERANGE, /* LIGHT_AON_ERR_UNAVAILABLE */
-+	-EEXIST, /* LIGHT_AON_ERR_NOTFOUND */
-+	-EPERM, /* LIGHT_AON_ERR_NOPOWER */
-+	-EPIPE, /* LIGHT_AON_ERR_IPC */
-+	-EBUSY, /* LIGHT_AON_ERR_BUSY */
-+	-EIO, /* LIGHT_AON_ERR_FAIL */
-+};
-+
-+static inline int th1520_aon_to_linux_errno(int errno)
++static inline struct th1520_power_domain *
++to_th1520_power_domain(struct generic_pm_domain *genpd)
 +{
-+	if (errno >= LIGHT_AON_ERR_NONE && errno < LIGHT_AON_ERR_LAST)
-+		return th1520_aon_linux_errmap[errno];
-+
-+	return -EIO;
++	return container_of(genpd, struct th1520_power_domain, genpd);
 +}
 +
-+static void th1520_aon_rx_callback(struct mbox_client *c, void *rx_msg)
++static int th1520_pd_power_on(struct generic_pm_domain *domain)
 +{
-+	struct th1520_aon_chan *aon_chan =
-+		container_of(c, struct th1520_aon_chan, cl);
-+	struct th1520_aon_rpc_msg_hdr *hdr =
-+		(struct th1520_aon_rpc_msg_hdr *)rx_msg;
-+	u8 recv_size = sizeof(struct th1520_aon_rpc_msg_hdr) + hdr->size;
++	struct th1520_power_domain *pd = to_th1520_power_domain(domain);
 +
-+	if (recv_size != sizeof(struct th1520_aon_rpc_ack_common)) {
-+		dev_err(c->dev, "Invalid ack size, not completing\n");
-+		return;
++	return th1520_aon_power_update(pd->aon_chan, pd->rsrc, true);
++}
++
++static int th1520_pd_power_off(struct generic_pm_domain *domain)
++{
++	struct th1520_power_domain *pd = to_th1520_power_domain(domain);
++
++	return th1520_aon_power_update(pd->aon_chan, pd->rsrc, false);
++}
++
++static struct generic_pm_domain *th1520_pd_xlate(const struct of_phandle_args *spec,
++						 void *data)
++{
++	struct generic_pm_domain *domain = ERR_PTR(-ENOENT);
++	struct genpd_onecell_data *pd_data = data;
++	unsigned int i;
++
++	for (i = 0; i < ARRAY_SIZE(th1520_pd_ranges); i++) {
++		struct th1520_power_domain *pd;
++
++		if (th1520_pd_ranges[i].disabled)
++			continue;
++
++		pd = to_th1520_power_domain(pd_data->domains[i]);
++		if (pd->rsrc == spec->args[0]) {
++			domain = &pd->genpd;
++			break;
++		}
 +	}
 +
-+	memcpy(&aon_chan->ack_msg, rx_msg, recv_size);
-+	complete(&aon_chan->done);
++	return domain;
 +}
 +
-+/**
-+ * th1520_aon_call_rpc() - Send an RPC request to the TH1520 AON subsystem
-+ * @aon_chan: Pointer to the AON channel structure
-+ * @msg: Pointer to the message (RPC payload) that will be sent
-+ *
-+ * This function sends an RPC message to the TH1520 AON subsystem via mailbox.
-+ * It takes the provided @msg buffer, formats it with version and service flags,
-+ * then blocks until the RPC completes or times out. The completion is signaled
-+ * by the `aon_chan->done` completion, which is waited upon for a duration
-+ * defined by `MAX_RX_TIMEOUT`.
-+ *
-+ * Return:
-+ * * 0 on success
-+ * * -ETIMEDOUT if the RPC call times out
-+ * * A negative error code if the mailbox send fails or if AON responds with
-+ *   a non-zero error code (converted via th1520_aon_to_linux_errno()).
-+ */
-+int th1520_aon_call_rpc(struct th1520_aon_chan *aon_chan, void *msg)
++static struct th1520_power_domain *
++th1520_add_pm_domain(struct device *dev, const struct th1520_power_info *pi)
 +{
-+	struct th1520_aon_rpc_msg_hdr *hdr = msg;
++	struct th1520_power_domain *pd;
 +	int ret;
 +
-+	mutex_lock(&aon_chan->transaction_lock);
-+	reinit_completion(&aon_chan->done);
-+
-+	RPC_SET_VER(hdr, TH1520_AON_RPC_VERSION);
-+	RPC_SET_SVC_ID(hdr, hdr->svc);
-+	RPC_SET_SVC_FLAG_MSG_TYPE(hdr, RPC_SVC_MSG_TYPE_DATA);
-+	RPC_SET_SVC_FLAG_ACK_TYPE(hdr, RPC_SVC_MSG_NEED_ACK);
-+
-+	ret = mbox_send_message(aon_chan->ch, msg);
-+	if (ret < 0) {
-+		dev_err(aon_chan->cl.dev, "RPC send msg failed: %d\n", ret);
-+		goto out;
-+	}
-+
-+	if (!wait_for_completion_timeout(&aon_chan->done, MAX_RX_TIMEOUT)) {
-+		dev_err(aon_chan->cl.dev, "RPC send msg timeout\n");
-+		mutex_unlock(&aon_chan->transaction_lock);
-+		return -ETIMEDOUT;
-+	}
-+
-+	ret = aon_chan->ack_msg.err_code;
-+
-+out:
-+	mutex_unlock(&aon_chan->transaction_lock);
-+
-+	return th1520_aon_to_linux_errno(ret);
-+}
-+EXPORT_SYMBOL_GPL(th1520_aon_call_rpc);
-+
-+/**
-+ * th1520_aon_power_update() - Change power state of a resource via TH1520 AON
-+ * @aon_chan: Pointer to the AON channel structure
-+ * @rsrc: Resource ID whose power state needs to be updated
-+ * @power_on: Boolean indicating whether the resource should be powered on (true)
-+ *            or powered off (false)
-+ *
-+ * This function requests the TH1520 AON subsystem to set the power mode of the
-+ * given resource (@rsrc) to either on or off. It constructs the message in
-+ * `struct th1520_aon_msg_req_set_resource_power_mode` and then invokes
-+ * th1520_aon_call_rpc() to make the request. If the AON call fails, an error
-+ * message is logged along with the specific return code.
-+ *
-+ * Return:
-+ * * 0 on success
-+ * * A negative error code in case of failures (propagated from
-+ *   th1520_aon_call_rpc()).
-+ */
-+int th1520_aon_power_update(struct th1520_aon_chan *aon_chan, u16 rsrc,
-+			    bool power_on)
-+{
-+	struct th1520_aon_msg_req_set_resource_power_mode msg = {};
-+	struct th1520_aon_rpc_msg_hdr *hdr = &msg.hdr;
-+	int ret;
-+
-+	hdr->svc = TH1520_AON_RPC_SVC_PM;
-+	hdr->func = TH1520_AON_PM_FUNC_SET_RESOURCE_POWER_MODE;
-+	hdr->size = TH1520_AON_RPC_MSG_NUM;
-+
-+	RPC_SET_BE16(&msg.resource, 0, rsrc);
-+	RPC_SET_BE16(&msg.resource, 2,
-+		     (power_on ? TH1520_AON_PM_PW_MODE_ON :
-+				 TH1520_AON_PM_PW_MODE_OFF));
-+
-+	ret = th1520_aon_call_rpc(aon_chan, &msg);
-+	if (ret)
-+		dev_err(aon_chan->cl.dev, "failed to power %s resource %d ret %d\n",
-+			power_on ? "up" : "off", rsrc, ret);
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(th1520_aon_power_update);
-+
-+/**
-+ * th1520_aon_init() - Initialize TH1520 AON firmware protocol interface
-+ * @dev: Device pointer for the AON subsystem
-+ *
-+ * This function initializes the TH1520 AON firmware protocol interface by:
-+ * - Allocating and initializing the AON channel structure
-+ * - Setting up the mailbox client
-+ * - Requesting the AON mailbox channel
-+ * - Initializing synchronization primitives
-+ *
-+ * Return:
-+ * * Valid pointer to th1520_aon_chan structure on success
-+ * * ERR_PTR(-ENOMEM) if memory allocation fails
-+ * * ERR_PTR() with other negative error codes from mailbox operations
-+ */
-+struct th1520_aon_chan *th1520_aon_init(struct device *dev)
-+{
-+	struct th1520_aon_chan *aon_chan;
-+	struct mbox_client *cl;
-+
-+	aon_chan = kzalloc(sizeof(*aon_chan), GFP_KERNEL);
-+	if (!aon_chan)
++	pd = devm_kzalloc(dev, sizeof(*pd), GFP_KERNEL);
++	if (!pd)
 +		return ERR_PTR(-ENOMEM);
 +
-+	cl = &aon_chan->cl;
-+	cl->dev = dev;
-+	cl->tx_block = true;
-+	cl->tx_tout = MAX_TX_TIMEOUT;
-+	cl->rx_callback = th1520_aon_rx_callback;
++	pd->rsrc = pi->rsrc;
++	pd->genpd.power_on = th1520_pd_power_on;
++	pd->genpd.power_off = th1520_pd_power_off;
++	pd->genpd.name = pi->name;
 +
-+	aon_chan->ch = mbox_request_channel_byname(cl, "aon");
-+	if (IS_ERR(aon_chan->ch)) {
-+		dev_err(dev, "Failed to request aon mbox chan\n");
-+		kfree(aon_chan);
-+		return ERR_CAST(aon_chan->ch);
++	ret = pm_genpd_init(&pd->genpd, NULL, true);
++	if (ret)
++		return ERR_PTR(ret);
++
++	return pd;
++}
++
++static void th1520_pd_init_all_off(struct generic_pm_domain **domains,
++				   struct device *dev)
++{
++	int ret;
++	int i;
++
++	for (i = 0; i < ARRAY_SIZE(th1520_pd_ranges); i++) {
++		struct th1520_power_domain *pd;
++
++		if (th1520_pd_ranges[i].disabled)
++			continue;
++
++		pd = to_th1520_power_domain(domains[i]);
++
++		ret = th1520_aon_power_update(pd->aon_chan, pd->rsrc, false);
++		if (ret)
++			dev_err(dev,
++				"Failed to initially power down power domain %s\n",
++				pd->genpd.name);
++	}
++}
++
++static int th1520_pd_probe(struct platform_device *pdev)
++{
++	struct generic_pm_domain **domains;
++	struct genpd_onecell_data *pd_data;
++	struct th1520_aon_chan *aon_chan;
++	struct device *dev = &pdev->dev;
++	int i;
++
++	aon_chan = th1520_aon_init(dev);
++	if (IS_ERR(aon_chan))
++		return dev_err_probe(dev, PTR_ERR(aon_chan),
++				     "Failed to get AON channel\n");
++
++	platform_set_drvdata(pdev, aon_chan);
++
++	domains = devm_kcalloc(dev, ARRAY_SIZE(th1520_pd_ranges),
++			       sizeof(*domains), GFP_KERNEL);
++	if (!domains)
++		return -ENOMEM;
++
++	pd_data = devm_kzalloc(dev, sizeof(*pd_data), GFP_KERNEL);
++	if (!pd_data)
++		return -ENOMEM;
++
++	for (i = 0; i < ARRAY_SIZE(th1520_pd_ranges); i++) {
++		struct th1520_power_domain *pd;
++
++		if (th1520_pd_ranges[i].disabled)
++			continue;
++
++		pd = th1520_add_pm_domain(dev, &th1520_pd_ranges[i]);
++		if (IS_ERR(pd))
++			return PTR_ERR(pd);
++
++		pd->aon_chan = aon_chan;
++		domains[i] = &pd->genpd;
++		dev_dbg(dev, "added power domain %s\n", pd->genpd.name);
 +	}
 +
-+	mutex_init(&aon_chan->transaction_lock);
-+	init_completion(&aon_chan->done);
++	pd_data->domains = domains;
++	pd_data->num_domains = ARRAY_SIZE(th1520_pd_ranges);
++	pd_data->xlate = th1520_pd_xlate;
 +
-+	return aon_chan;
++	/*
++	 * Initialize all power domains to off to ensure they start in a
++	 * low-power state. This allows device drivers to manage power
++	 * domains by turning them on or off as needed.
++	 */
++	th1520_pd_init_all_off(domains, dev);
++
++	return of_genpd_add_provider_onecell(dev->of_node, pd_data);
 +}
-+EXPORT_SYMBOL_GPL(th1520_aon_init);
 +
-+/**
-+ * th1520_aon_deinit() - Clean up TH1520 AON firmware protocol interface
-+ * @aon_chan: Pointer to the AON channel structure to clean up
-+ *
-+ * This function cleans up resources allocated by th1520_aon_init():
-+ * - Frees the mailbox channel
-+ * - Frees the AON channel
-+ */
-+void th1520_aon_deinit(struct th1520_aon_chan *aon_chan)
++static void th1520_pd_remove(struct platform_device *pdev)
 +{
-+	mbox_free_channel(aon_chan->ch);
-+	kfree(aon_chan);
++	struct th1520_aon_chan *aon_chan = platform_get_drvdata(pdev);
++
++	th1520_aon_deinit(aon_chan);
 +}
-+EXPORT_SYMBOL_GPL(th1520_aon_deinit);
++
++static const struct of_device_id th1520_pd_match[] = {
++	{ .compatible = "thead,th1520-aon" },
++	{ /* Sentinel */ }
++};
++MODULE_DEVICE_TABLE(of, th1520_pd_match);
++
++static struct platform_driver th1520_pd_driver = {
++	.driver = {
++		.name = "th1520-pd",
++		.of_match_table = th1520_pd_match,
++	},
++	.probe = th1520_pd_probe,
++	.remove = th1520_pd_remove,
++};
++module_platform_driver(th1520_pd_driver);
 +
 +MODULE_AUTHOR("Michal Wilczynski <m.wilczynski@samsung.com>");
-+MODULE_DESCRIPTION("T-HEAD TH1520 Always-On firmware protocol library");
++MODULE_DESCRIPTION("T-HEAD TH1520 SoC power domain controller");
 +MODULE_LICENSE("GPL");
-diff --git a/include/linux/firmware/thead/thead,th1520-aon.h b/include/linux/firmware/thead/thead,th1520-aon.h
-new file mode 100644
-index 000000000000..dae132b66873
---- /dev/null
-+++ b/include/linux/firmware/thead/thead,th1520-aon.h
-@@ -0,0 +1,200 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Copyright (C) 2021 Alibaba Group Holding Limited.
-+ */
-+
-+#ifndef _THEAD_AON_H
-+#define _THEAD_AON_H
-+
-+#include <linux/device.h>
-+#include <linux/types.h>
-+
-+#define AON_RPC_MSG_MAGIC (0xef)
-+#define TH1520_AON_RPC_VERSION 2
-+#define TH1520_AON_RPC_MSG_NUM 7
-+
-+struct th1520_aon_chan;
-+
-+enum th1520_aon_rpc_svc {
-+	TH1520_AON_RPC_SVC_UNKNOWN = 0,
-+	TH1520_AON_RPC_SVC_PM = 1,
-+	TH1520_AON_RPC_SVC_MISC = 2,
-+	TH1520_AON_RPC_SVC_AVFS = 3,
-+	TH1520_AON_RPC_SVC_SYS = 4,
-+	TH1520_AON_RPC_SVC_WDG = 5,
-+	TH1520_AON_RPC_SVC_LPM = 6,
-+	TH1520_AON_RPC_SVC_MAX = 0x3F,
-+};
-+
-+enum th1520_aon_misc_func {
-+	TH1520_AON_MISC_FUNC_UNKNOWN = 0,
-+	TH1520_AON_MISC_FUNC_SET_CONTROL = 1,
-+	TH1520_AON_MISC_FUNC_GET_CONTROL = 2,
-+	TH1520_AON_MISC_FUNC_REGDUMP_CFG = 3,
-+};
-+
-+enum th1520_aon_wdg_func {
-+	TH1520_AON_WDG_FUNC_UNKNOWN = 0,
-+	TH1520_AON_WDG_FUNC_START = 1,
-+	TH1520_AON_WDG_FUNC_STOP = 2,
-+	TH1520_AON_WDG_FUNC_PING = 3,
-+	TH1520_AON_WDG_FUNC_TIMEOUTSET = 4,
-+	TH1520_AON_WDG_FUNC_RESTART = 5,
-+	TH1520_AON_WDG_FUNC_GET_STATE = 6,
-+	TH1520_AON_WDG_FUNC_POWER_OFF = 7,
-+	TH1520_AON_WDG_FUNC_AON_WDT_ON = 8,
-+	TH1520_AON_WDG_FUNC_AON_WDT_OFF = 9,
-+};
-+
-+enum th1520_aon_sys_func {
-+	TH1520_AON_SYS_FUNC_UNKNOWN = 0,
-+	TH1520_AON_SYS_FUNC_AON_RESERVE_MEM = 1,
-+};
-+
-+enum th1520_aon_lpm_func {
-+	TH1520_AON_LPM_FUNC_UNKNOWN = 0,
-+	TH1520_AON_LPM_FUNC_REQUIRE_STR = 1,
-+	TH1520_AON_LPM_FUNC_RESUME_STR = 2,
-+	TH1520_AON_LPM_FUNC_REQUIRE_STD = 3,
-+	TH1520_AON_LPM_FUNC_CPUHP = 4,
-+	TH1520_AON_LPM_FUNC_REGDUMP_CFG = 5,
-+};
-+
-+enum th1520_aon_pm_func {
-+	TH1520_AON_PM_FUNC_UNKNOWN = 0,
-+	TH1520_AON_PM_FUNC_SET_RESOURCE_REGULATOR = 1,
-+	TH1520_AON_PM_FUNC_GET_RESOURCE_REGULATOR = 2,
-+	TH1520_AON_PM_FUNC_SET_RESOURCE_POWER_MODE = 3,
-+	TH1520_AON_PM_FUNC_PWR_SET = 4,
-+	TH1520_AON_PM_FUNC_PWR_GET = 5,
-+	TH1520_AON_PM_FUNC_CHECK_FAULT = 6,
-+	TH1520_AON_PM_FUNC_GET_TEMPERATURE = 7,
-+};
-+
-+struct th1520_aon_rpc_msg_hdr {
-+	u8 ver; /* version of msg hdr */
-+	u8 size; /*  msg size ,uinit in bytes,the size includes rpc msg header self */
-+	u8 svc; /* rpc main service id */
-+	u8 func; /* rpc sub func id of specific service, sent by caller */
-+} __packed __aligned(1);
-+
-+struct th1520_aon_rpc_ack_common {
-+	struct th1520_aon_rpc_msg_hdr hdr;
-+	u8 err_code;
-+} __packed __aligned(1);
-+
-+#define RPC_SVC_MSG_TYPE_DATA 0
-+#define RPC_SVC_MSG_TYPE_ACK 1
-+#define RPC_SVC_MSG_NEED_ACK 0
-+#define RPC_SVC_MSG_NO_NEED_ACK 1
-+
-+#define RPC_GET_VER(MESG) ((MESG)->ver)
-+#define RPC_SET_VER(MESG, VER) ((MESG)->ver = (VER))
-+#define RPC_GET_SVC_ID(MESG) ((MESG)->svc & 0x3F)
-+#define RPC_SET_SVC_ID(MESG, ID) ((MESG)->svc |= 0x3F & (ID))
-+#define RPC_GET_SVC_FLAG_MSG_TYPE(MESG) (((MESG)->svc & 0x80) >> 7)
-+#define RPC_SET_SVC_FLAG_MSG_TYPE(MESG, TYPE) ((MESG)->svc |= (TYPE) << 7)
-+#define RPC_GET_SVC_FLAG_ACK_TYPE(MESG) (((MESG)->svc & 0x40) >> 6)
-+#define RPC_SET_SVC_FLAG_ACK_TYPE(MESG, ACK) ((MESG)->svc |= (ACK) << 6)
-+
-+#define RPC_SET_BE64(MESG, OFFSET, SET_DATA)                                \
-+	do {                                                                \
-+		u8 *data = (u8 *)(MESG);                                    \
-+		u64 _offset = (OFFSET);                                     \
-+		u64 _set_data = (SET_DATA);                                 \
-+		data[_offset + 7] = _set_data & 0xFF;                       \
-+		data[_offset + 6] = (_set_data & 0xFF00) >> 8;              \
-+		data[_offset + 5] = (_set_data & 0xFF0000) >> 16;           \
-+		data[_offset + 4] = (_set_data & 0xFF000000) >> 24;         \
-+		data[_offset + 3] = (_set_data & 0xFF00000000) >> 32;       \
-+		data[_offset + 2] = (_set_data & 0xFF0000000000) >> 40;     \
-+		data[_offset + 1] = (_set_data & 0xFF000000000000) >> 48;   \
-+		data[_offset + 0] = (_set_data & 0xFF00000000000000) >> 56; \
-+	} while (0)
-+
-+#define RPC_SET_BE32(MESG, OFFSET, SET_DATA)			    \
-+	do {							    \
-+		u8 *data = (u8 *)(MESG);			    \
-+		u64 _offset = (OFFSET);				    \
-+		u64 _set_data = (SET_DATA);			    \
-+		data[_offset + 3] = (_set_data) & 0xFF;		    \
-+		data[_offset + 2] = (_set_data & 0xFF00) >> 8;	    \
-+		data[_offset + 1] = (_set_data & 0xFF0000) >> 16;   \
-+		data[_offset + 0] = (_set_data & 0xFF000000) >> 24; \
-+	} while (0)
-+
-+#define RPC_SET_BE16(MESG, OFFSET, SET_DATA)		       \
-+	do {						       \
-+		u8 *data = (u8 *)(MESG);		       \
-+		u64 _offset = (OFFSET);			       \
-+		u64 _set_data = (SET_DATA);		       \
-+		data[_offset + 1] = (_set_data) & 0xFF;	       \
-+		data[_offset + 0] = (_set_data & 0xFF00) >> 8; \
-+	} while (0)
-+
-+#define RPC_SET_U8(MESG, OFFSET, SET_DATA)	  \
-+	do {					  \
-+		u8 *data = (u8 *)(MESG);	  \
-+		data[OFFSET] = (SET_DATA) & 0xFF; \
-+	} while (0)
-+
-+#define RPC_GET_BE64(MESG, OFFSET, PTR)                                      \
-+	do {                                                                 \
-+		u8 *data = (u8 *)(MESG);                                     \
-+		u64 _offset = (OFFSET);                                      \
-+		*(u32 *)(PTR) =                                              \
-+			(data[_offset + 7] | data[_offset + 6] << 8 |        \
-+			 data[_offset + 5] << 16 | data[_offset + 4] << 24 | \
-+			 data[_offset + 3] << 32 | data[_offset + 2] << 40 | \
-+			 data[_offset + 1] << 48 | data[_offset + 0] << 56); \
-+	} while (0)
-+
-+#define RPC_GET_BE32(MESG, OFFSET, PTR)                                      \
-+	do {                                                                 \
-+		u8 *data = (u8 *)(MESG);                                     \
-+		u64 _offset = (OFFSET);                                      \
-+		*(u32 *)(PTR) =                                              \
-+			(data[_offset + 3] | data[_offset + 2] << 8 |        \
-+			 data[_offset + 1] << 16 | data[_offset + 0] << 24); \
-+	} while (0)
-+
-+#define RPC_GET_BE16(MESG, OFFSET, PTR)                                       \
-+	do {                                                                  \
-+		u8 *data = (u8 *)(MESG);                                      \
-+		u64 _offset = (OFFSET);                                       \
-+		*(u16 *)(PTR) = (data[_offset + 1] | data[_offset + 0] << 8); \
-+	} while (0)
-+
-+#define RPC_GET_U8(MESG, OFFSET, PTR)          \
-+	do {                                   \
-+		u8 *data = (u8 *)(MESG);       \
-+		*(u8 *)(PTR) = (data[OFFSET]); \
-+	} while (0)
-+
-+/*
-+ * Defines for SC PM Power Mode
-+ */
-+#define TH1520_AON_PM_PW_MODE_OFF 0 /* Power off */
-+#define TH1520_AON_PM_PW_MODE_STBY 1 /* Power in standby */
-+#define TH1520_AON_PM_PW_MODE_LP 2 /* Power in low-power */
-+#define TH1520_AON_PM_PW_MODE_ON 3 /* Power on */
-+
-+/*
-+ * Defines for AON power islands
-+ */
-+#define TH1520_AON_AUDIO_PD 0
-+#define TH1520_AON_VDEC_PD 1
-+#define TH1520_AON_NPU_PD 2
-+#define TH1520_AON_VENC_PD 3
-+#define TH1520_AON_GPU_PD 4
-+#define TH1520_AON_DSP0_PD 5
-+#define TH1520_AON_DSP1_PD 6
-+
-+struct th1520_aon_chan *th1520_aon_init(struct device *dev);
-+void th1520_aon_deinit(struct th1520_aon_chan *aon_chan);
-+
-+int th1520_aon_call_rpc(struct th1520_aon_chan *aon_chan, void *msg);
-+int th1520_aon_power_update(struct th1520_aon_chan *aon_chan, u16 rsrc,
-+			    bool power_on);
-+
-+#endif /* _THEAD_AON_H */
 -- 
 2.34.1
 
