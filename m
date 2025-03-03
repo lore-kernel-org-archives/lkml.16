@@ -1,219 +1,327 @@
-Received: from bayard.4d2.org (bayard.4d2.org [155.254.16.17])
+Received: from smtpbgsg2.qq.com (smtpbgsg2.qq.com [54.254.200.128])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E193D1F12E8;
-	Mon,  3 Mar 2025 09:58:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=155.254.16.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C060D1EEA27;
+	Mon,  3 Mar 2025 09:59:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.254.200.128
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740995924; cv=none; b=dd1ii7eiz+FHerUW1/kwh9bBXNQFw7tdppEgYpZf6g/YfHbDHoiuPQwT6xdVNReGa42WO7oABf88Kq3vLnqrbG9vQR1Y7CM8YJkBUHcqQ2VCxuFRtyODFUHmW/vNfi4xXYvZWOib96rMyUOJL1RmafFfPHwTrEBeWqa2LNJsofU=
+	t=1740995952; cv=none; b=EGAClFiqdXyeZMXlYQAwJ8ORXf5eVihsjs0JpurRJ1QiPuN1QKHZgalU6tubqwu5pEfVhKGBoGp1Kyl0VaF5AI/9CA0DfOcYeJOWUmauePByz7KyYzFGoVaZtgL5H9e94/0ICrVOjmQjBkUZH53Ki0I9Gikcy0yiBLb2dK5329Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740995924; c=relaxed/simple;
-	bh=XsOhRhGgIDJZEEWgUUzXOzwpJUSE7vf/DDvuB57+LP0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qN3eS+nWQGcF5BRXSQBC9jAM4EoUIjlvTWPtH6wV1R7fWCXZ/PnqnvbuXt7hmoiAb5VAlvYZt0TB8xo9Cg5rcQ1ig5eMaxCgRdt+JGj1erxZ1dp/v2F1MhRe86cK9OlCDd2+UhOpjhVSi4kM9zAc+FFN01cDElL5dCLExGOiW88=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=4d2.org; spf=pass smtp.mailfrom=4d2.org; dkim=pass (2048-bit key) header.d=4d2.org header.i=@4d2.org header.b=yFMzXf6x; dkim=pass (2048-bit key) header.d=4d2.org header.i=@4d2.org header.b=d/tG6KbQ; arc=none smtp.client-ip=155.254.16.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=4d2.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=4d2.org
+	s=arc-20240116; t=1740995952; c=relaxed/simple;
+	bh=Dgx0WmiWWJVJFOYXROEjC9QhshtwPpwi2bA+QbGxJUk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ogOqapcEaVGKlY/UWUPPvIZvsi+/5lrt5wzEm4p143PEcQDDUXiaL1SdIFYMvKwDYdxqiW++2clcVQeByfMPhUcQDfVpkbc04crpaZHhgvHfyOxqegLSPB5rEYbCkM7Yex/IsrISQuiFKrgGN9TCUKXx7106xjbUsKPXolSJXqw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=n9cqp1MP; arc=none smtp.client-ip=54.254.200.128
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=4d2.org header.i=@4d2.org header.b="yFMzXf6x";
-	dkim=pass (2048-bit key) header.d=4d2.org header.i=@4d2.org header.b="d/tG6KbQ"
-Received: from bayard.4d2.org (bayard.4d2.org [127.0.0.1])
-	by bayard.4d2.org (Postfix) with ESMTP id 3AC39EC59F4;
-	Mon, 03 Mar 2025 01:41:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=4d2.org; s=mail;
-	t=1740994897; bh=XsOhRhGgIDJZEEWgUUzXOzwpJUSE7vf/DDvuB57+LP0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=yFMzXf6x+euNhqYdyFc2mk88iMskDnSIVOTDXSspYDwR61/P5TtT40yJaGze14i99
-	 tQuWMrU1/jJkEUPl7lMg/y62pOd3WbyclC+UBtUVcdognCJTCkQXU9pcukBFwMGfdO
-	 MFpPPwV4YtsO8RLngunqoBnjFw2PjlOGEq1upPxN7sWbuLb/p1Mz8b4YSLQ7IEFcXn
-	 S/loUzkMUg8yqRGlah9v2CZD0xvadgb7TtV05K8J9eDW0F734GoseYmsG/PyH/X0lu
-	 0zwNLde4wN4SCC7DmrfK228b5/g3biZSihXiQnDYecKy1nY0B4wijv2IJM0cPiepT1
-	 IRQB0sWDRg4Hw==
-X-Virus-Scanned: amavisd-new at 4d2.org
-Received: from bayard.4d2.org ([127.0.0.1])
- by bayard.4d2.org (bayard.4d2.org [127.0.0.1]) (amavisd-new, port 10024)
- with ESMTP id hd0nTS58Kd8d; Mon,  3 Mar 2025 01:41:29 -0800 (PST)
-Received: from ketchup (unknown [183.217.83.155])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature ECDSA (prime256v1) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: heylenay@4d2.org)
-	by bayard.4d2.org (Postfix) with ESMTPSA id A2B54EC59F2;
-	Mon, 03 Mar 2025 01:41:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=4d2.org; s=mail;
-	t=1740994889; bh=XsOhRhGgIDJZEEWgUUzXOzwpJUSE7vf/DDvuB57+LP0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=d/tG6KbQJ4zHh11BSoOdeU+HJBzVDLNbNySGcG3MspSkwmzZQsHkPzJwYts033mig
-	 yVsZyD230U/1mJDn+eTLyke8iQT0H6X+2iM9iFn4C0UiAS6ZN28fC/f4+XYoU7vGK2
-	 Me5seqNlkGmH4/KibAMv2yg1VI4j0uPK7IugBcqMiWJ5DJJsx+Q7Fu5y0n/zsC2ESE
-	 4D/nzftIbi2cDyklPBDP9LXJTe2/g1oOMGsMfM1Upohi9pHUGbeCY5LHK4ju91QokZ
-	 /P/GUY2tK/YeM1sGisZi0ZPo5b8166LDKRjgeINFNixcYoWhDz0Oh7kRQ5Z+KWE3/n
-	 +cWz0VMMjQo3A==
-Date: Mon, 3 Mar 2025 09:41:14 +0000
-From: Haylen Chu <heylenay@4d2.org>
-To: Alex Elder <elder@riscstar.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Haylen Chu <heylenay@outlook.com>, Yixun Lan <dlan@gentoo.org>
-Cc: linux-riscv@lists.infradead.org, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Inochi Amaoto <inochiama@outlook.com>,
-	Chen Wang <unicornxdotw@foxmail.com>,
-	Guodong Xu <guodong@riscstar.com>
-Subject: Re: [PATCH v4 3/4] clk: spacemit: Add clock support for Spacemit K1
- SoC
-Message-ID: <Z8V5OjQTxVeRLAOU@ketchup>
-References: <20250103215636.19967-2-heylenay@4d2.org>
- <20250103215636.19967-5-heylenay@4d2.org>
- <f8b30551-25e7-4626-8c03-6d8807041d8a@riscstar.com>
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="n9cqp1MP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1740995930;
+	bh=K/zA0N8M3Fo/mbM8RcyqXqLjJSa3rFqpG7w6gFb91fI=;
+	h=From:To:Subject:Date:Message-Id:MIME-Version;
+	b=n9cqp1MP7doGEOtAP3WnWF0PYRuTEodYVpDiB67uy0MA84th6NqSPsUhwEpR76aYu
+	 r6rwkHoFJZ8oHrjR8Bq7ZE//z46oYHmD52+0WT8kM0+QpWT/G6IWeiN8ytOwTXVRxd
+	 UlKW8sG4pPv5IsCzeGxAk6oOpS/JD58GMiMtof7o=
+X-QQ-mid: bizesmtpip3t1740995922t7z61pl
+X-QQ-Originating-IP: LIg0Yy8e5VUzBgFCyAYWG60yUtxBWS+LuXYa5nhA61Y=
+Received: from localhost.localdomain ( [localhost])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Mon, 03 Mar 2025 17:58:40 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 1883138028751320756
+From: raoxu <raoxu@uniontech.com>
+To: mathias.nyman@intel.com,
+	gregkh@linuxfoundation.org
+Cc: linux-usb@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	wangyuli@uniontech.com,
+	zhanjun@uniontech.com,
+	Xu Rao <raoxu@uniontech.com>
+Subject: [PATCH] From: Xu Rao <raoxu@uniontech.com> Subject: [PATCH] usb: xhci: Add debugfs support for xHCI port bandwidth
+Date: Mon,  3 Mar 2025 17:58:37 +0800
+Message-Id: <20250303095837.16332-1-raoxu@uniontech.com>
+X-Mailer: git-send-email 2.20.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f8b30551-25e7-4626-8c03-6d8807041d8a@riscstar.com>
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz7a-0
+X-QQ-XMAILINFO: My+Y/kkztEN1lslsfqyxyrJQ7+gHxHLHtisbPtmvYATJzRQxZmsLagno
+	SIgJb1OKrwBLaU0R1UV3AHUo3YlmN+cWC3t9sLoPW2J8uCMgwL9/qxQ6Q+WjUaYz8W1NZT7
+	NXBvxCpo3yB/gypxdap220dUyoS5KlIUV9TMrLYrb0RnPPcOEKAptQ0N0p0ZsE7pzamlUbr
+	usyF5QqbJJlTXIhwaVHqdoNLBSNnBDbOWKRJi1B62+3lLksrqlAfqKKuMgdXpfzU6GYs3z2
+	K7cMPQV7BbMu4hssTlzV7nZOeFvzMSDYum8+Aro/n+ICif0hRghmN5ZrdOr0NqCzPJstXSx
+	3oE4EdRzRUcObgd9aFeiDXTTwSvKlSjhA2TTCu2UBRY8u4kFePH9QnUELGGfR8u4rJzsZhY
+	fV6dsLweTFYmHTw1u2wycrGdN+FQhJZAYmGfb1BjxL8Y8UyhVAC7U2Ez9G/Et2OjrfwNoyR
+	3gEqqjUyEPgZlVwcOxE7rMdvAfKtcThSQrR9AhlakXQ4VLLgm85RhLmxkVGkBCRTjf5Upzk
+	+m4dlbLAu4Hni5w5dQfuoO6h5VowEz0Etf/NHGdUATKrJKzEbZ+cfgqO8WUHjDd18uFe/Xr
+	xYunNk+LrCntbOi3WpKzMefsWmtlQcsvFFqEzDMh+UgxIb4wkVp5oC6rdhMu17ZPpfWu0Kx
+	KU3AHH2qkZhzr2eYvFhT70MXIfIH46exjJIR3ptEZA7dfsYGtH+KQT8xwoUh3HCPfeTK6oh
+	NDY91D6z6c3WgY3h/mWU3NOrfJE7WsgP/fc5kQmcesKuaFgZrJszaX0EKnaJB1K2QJFNn7+
+	6kz4fBMMBQhl9lpSxZJZbN4p/bFx5wMPmWpeLwzyuvzGOeLRXvZX/vrH6+HAll3JCiL4hPC
+	8+akPPLJYVm9axQrcJ5MofWN/giRz3aG59Vhe2pxC0zXIMkLhb0KEROsJLcH8uSb0Kvtawl
+	2FkpDCMURLfIRNq5puVLwxiX09bt4wIzK+wrFe1m9gQ/Wtx8Gfj4RmjEeBR7R8Y0F8025k2
+	hjxpp9ELj2UIhz/FEWMYM9+pB+KfM=
+X-QQ-XMRINFO: MSVp+SPm3vtS1Vd6Y4Mggwc=
+X-QQ-RECHKSPAM: 0
 
-On Thu, Feb 13, 2025 at 10:04:10PM -0600, Alex Elder wrote:
-> On 1/3/25 3:56 PM, Haylen Chu wrote:
-> > The clock tree of K1 SoC contains three main types of clock hardware
-> > (PLL/DDN/MIX) and is managed by several independent controllers in
-> > different SoC parts (APBC, APBS and etc.), thus different compatible
-> > strings are added to distinguish them.
-> > 
-> > Some controllers may share IO region with reset controller and other low
-> > speed peripherals like watchdog, so all register operations are done
-> > through regmap to avoid competition.
-> > 
-> > Signed-off-by: Haylen Chu <heylenay@4d2.org>
-> 
-> This is a really big patch (over 3000 lines), and a fairly large
-> amount of code to review.  But I've given it a really thorough
-> read and I have a *lot* of review comments for you to consider.
-> 
-> First, a few top-level comments.
-> - This driver is very comprehensive.  It represents essentially
->   *all* of the clocks in the tree diagram shown here:
-> https://developer.spacemit.com/resource/file/images?fileName=DkWGb4ed7oAziVxE6PIcbjTLnpd.png
->   (I can tell you what's missing but I don't think it matters.)
-> - In almost all cases, the names of the clocks match the names
->   shown in that diagram, which is very helpful.
-> - All of the clocks are implemented using "custom" clock
->   implementations.  I'm fairly certain that almost all of
->   them can use standard clock framework types instead
->   (fixed-rate, fixed-factor, fractional-divider, mux, and
->   composite).  But for now I think there are other things
->   more important to improve.
-> - A great deal of my commentary below is simply saying that the
->   code is more complex than necessary.  Some simple (though
->   widespread) refactoring would improve things a lot.  And
->   some of the definitions can be done without having to
->   specify nearly so many values.
-> - Much of what might be considered generality in the
->   implementation actually isn't needed, because it isn't used.
->   This is especially true given that there are essentially no
->   clocks left unspecified for the K1 SoC.
-> - Once the refactoring I suggest has been done, I expect
->   that more opportunities for simplification and cleanup will
->   become obvious; we'll see.
-> - I suggest these changes because the resulting simplicity
->   will make the code much more understandable and maintainable
->   in the long term.  And if it's simpler to understand, it
->   should be easier for a maintainer to accept.
-> 
-> I'm not going to comment on the things related to Device Tree
-> that have already been mentioned, nor on the Makefile or Kconfig,
-> etc.  I'm focusing just on the code.
-> 
-> > ---
-> >   drivers/clk/Kconfig               |    1 +
-> >   drivers/clk/Makefile              |    1 +
-> >   drivers/clk/spacemit/Kconfig      |   20 +
-> >   drivers/clk/spacemit/Makefile     |    5 +
-> >   drivers/clk/spacemit/ccu-k1.c     | 1747 +++++++++++++++++++++++++++++
-> >   drivers/clk/spacemit/ccu_common.h |   51 +
-> >   drivers/clk/spacemit/ccu_ddn.c    |  140 +++
-> >   drivers/clk/spacemit/ccu_ddn.h    |   84 ++
-> >   drivers/clk/spacemit/ccu_mix.c    |  304 +++++
-> >   drivers/clk/spacemit/ccu_mix.h    |  309 +++++
-> >   drivers/clk/spacemit/ccu_pll.c    |  189 ++++
-> >   drivers/clk/spacemit/ccu_pll.h    |   80 ++
-> >   12 files changed, 2931 insertions(+)
-> >   create mode 100644 drivers/clk/spacemit/Kconfig
-> >   create mode 100644 drivers/clk/spacemit/Makefile
-> >   create mode 100644 drivers/clk/spacemit/ccu-k1.c
-> >   create mode 100644 drivers/clk/spacemit/ccu_common.h
-> >   create mode 100644 drivers/clk/spacemit/ccu_ddn.c
-> >   create mode 100644 drivers/clk/spacemit/ccu_ddn.h
-> >   create mode 100644 drivers/clk/spacemit/ccu_mix.c
-> >   create mode 100644 drivers/clk/spacemit/ccu_mix.h
-> >   create mode 100644 drivers/clk/spacemit/ccu_pll.c
-> >   create mode 100644 drivers/clk/spacemit/ccu_pll.h
-> > 
+From: Xu Rao <raoxu@uniontech.com>
 
-...
+In many projects, you need to obtain the available bandwidth of the
+xhci roothub port. Refer to xhci rev1_2 and use the TRB_GET_BW
+command to obtain it.
 
-> > diff --git a/drivers/clk/spacemit/ccu-k1.c b/drivers/clk/spacemit/ccu-k1.c
-> > new file mode 100644
-> > index 000000000000..6fb0a12ec261
-> > --- /dev/null
-> > +++ b/drivers/clk/spacemit/ccu-k1.c
+hardware tested:
+03:00.3 USB controller: Advanced Micro Devices, Inc. [AMD] Raven USB 3.1
+(prog-if 30 [XHCI])
+Subsystem: Huawei Technologies Co., Ltd. Raven USB 3.1
+Flags: bus master, fast devsel, latency 0, IRQ 30
+Memory at c0300000 (64-bit, non-prefetchable) [size=1M]
+Capabilities: [48] Vendor Specific Information: Len=08 <?>
+Capabilities: [50] Power Management version 3
+Capabilities: [64] Express Endpoint, MSI 00
+Capabilities: [a0] MSI: Enable- Count=1/8 Maskable- 64bit+
+Capabilities: [c0] MSI-X: Enable+ Count=8 Masked-
+Kernel driver in use: xhci_hcd
 
-...
+test progress:
+1.cd /sys/kernel/debug/usb/xhci/0000:03:00.3
+cat port_bandwidth
+/sys/kernel/debug/usb/xhci/0000:03:00.3# cat port_bandwidth
+port[1] available bw: 79%.
+port[2] available bw: 79%.
+port[3] available bw: 79%.
+port[4] available bw: 79%.
+port[5] available bw: 90%.
+port[6] available bw: 90%.
+port[7] available bw: 90%.
+port[8] available bw: 90%.
+2.plug in usb video cammer open it
+cat port_bandwidth
+port[1] available bw: 39%.
+port[2] available bw: 39%.
+port[3] available bw: 39%.
+port[4] available bw: 39%.
+port[5] available bw: 90%.
+port[6] available bw: 90%.
+port[7] available bw: 90%.
+port[8] available bw: 90%.
 
-> The next set of clocks differ from essentially all others, in that
-> they don't encode their frequency in the name.  I.e., I would expect
-> the first one to be named pll1_d2_1228p8.
+Signed-off-by: Xu Rao <raoxu@uniontech.com>
+---
+ drivers/usb/host/xhci-debugfs.c | 42 +++++++++++++++++++
+ drivers/usb/host/xhci-ring.c    | 14 +++++++
+ drivers/usb/host/xhci.c         | 74 +++++++++++++++++++++++++++++++++
+ drivers/usb/host/xhci.h         |  7 ++++
+ 4 files changed, 137 insertions(+)
 
-I found this change may not be possible: with the frequency appended,
-their names conflict with another set of MPMU gates.
+diff --git a/drivers/usb/host/xhci-debugfs.c b/drivers/usb/host/xhci-debugfs.c
+index 1f5ef174abea..573b6c25f3af 100644
+--- a/drivers/usb/host/xhci-debugfs.c
++++ b/drivers/usb/host/xhci-debugfs.c
+@@ -631,6 +631,46 @@ static void xhci_debugfs_create_ports(struct xhci_hcd *xhci,
+ 	}
+ }
 
-> 
-> > +static CCU_GATE_FACTOR_DEFINE(pll1_d2, "pll1_d2", CCU_PARENT_HW(pll1),
-> > +			      APB_SPARE2_REG,
-> > +			      BIT(1), BIT(1), 0, 2, 1, 0);
-> > +static CCU_GATE_FACTOR_DEFINE(pll1_d3, "pll1_d3", CCU_PARENT_HW(pll1),
-> > +			      APB_SPARE2_REG,
-> > +			      BIT(2), BIT(2), 0, 3, 1, 0);
-> > +static CCU_GATE_FACTOR_DEFINE(pll1_d4, "pll1_d4", CCU_PARENT_HW(pll1),
-> > +			      APB_SPARE2_REG,
-> > +			      BIT(3), BIT(3), 0, 4, 1, 0);
-> > +static CCU_GATE_FACTOR_DEFINE(pll1_d5, "pll1_d5", CCU_PARENT_HW(pll1),
-> > +			      APB_SPARE2_REG,
-> > +			      BIT(4), BIT(4), 0, 5, 1, 0);
-> > +static CCU_GATE_FACTOR_DEFINE(pll1_d6, "pll1_d6", CCU_PARENT_HW(pll1),
-> > +			      APB_SPARE2_REG,
-> > +			      BIT(5), BIT(5), 0, 6, 1, 0);
-> > +static CCU_GATE_FACTOR_DEFINE(pll1_d7, "pll1_d7", CCU_PARENT_HW(pll1),
-> > +			      APB_SPARE2_REG,
-> > +			      BIT(6), BIT(6), 0, 7, 1, 0);
-> > +static CCU_GATE_FACTOR_DEFINE(pll1_d8, "pll1_d8", CCU_PARENT_HW(pll1),
-> > +			      APB_SPARE2_REG,
-> > +			      BIT(7), BIT(7), 0, 8, 1, 0);
-> > +
++static int xhci_port_bw_show(struct seq_file *s, void *unused)
++{
++	struct xhci_hcd		*xhci = (struct xhci_hcd *)s->private;
++	unsigned int		num_ports;
++	unsigned int		i;
++	int			ret;
++	u8			bw_table[MAX_HC_PORTS] = {0};
++
++	num_ports = HCS_MAX_PORTS(xhci->hcs_params1);
++
++	/* get roothub port bandwidth */
++	ret = xhci_get_port_bandwidth(xhci, bw_table);
++	if (ret)
++		return ret;
++
++	/* print all roothub ports available bandwidth */
++	for (i = 1; i < num_ports+1; i++)
++		seq_printf(s, "port[%d] available bw: %d%%.\n", i, bw_table[i]);
++
++	return ret;
++}
++
++static int bw_open(struct inode *inode, struct file *file)
++{
++	return single_open(file, xhci_port_bw_show, inode->i_private);
++}
++
++static const struct file_operations bw_fops = {
++	.open			= bw_open,
++	.read			= seq_read,
++	.llseek			= seq_lseek,
++	.release		= single_release,
++};
++
++static void xhci_debugfs_create_bandwidth(struct xhci_hcd *xhci,
++					struct dentry *parent)
++{
++	debugfs_create_file("port_bandwidth", 0644, parent, xhci, &bw_fops);
++}
++
+ void xhci_debugfs_init(struct xhci_hcd *xhci)
+ {
+ 	struct device		*dev = xhci_to_hcd(xhci)->self.controller;
+@@ -681,6 +721,8 @@ void xhci_debugfs_init(struct xhci_hcd *xhci)
+ 	xhci->debugfs_slots = debugfs_create_dir("devices", xhci->debugfs_root);
 
-...
+ 	xhci_debugfs_create_ports(xhci, xhci->debugfs_root);
++
++	xhci_debugfs_create_bandwidth(xhci, xhci->debugfs_root);
+ }
 
-> > +/*	MPMU clocks start	*/
+ void xhci_debugfs_exit(struct xhci_hcd *xhci)
+diff --git a/drivers/usb/host/xhci-ring.c b/drivers/usb/host/xhci-ring.c
+index 965bffce301e..af1cd4f8ace9 100644
+--- a/drivers/usb/host/xhci-ring.c
++++ b/drivers/usb/host/xhci-ring.c
+@@ -1867,6 +1867,8 @@ static void handle_cmd_completion(struct xhci_hcd *xhci,
+ 	case TRB_NEC_GET_FW:
+ 		xhci_handle_cmd_nec_get_fw(xhci, event);
+ 		break;
++	case TRB_GET_BW:
++		break;
+ 	default:
+ 		/* Skip over unknown commands on the event ring */
+ 		xhci_info(xhci, "INFO unknown command type %d\n", cmd_type);
+@@ -4414,6 +4416,18 @@ int xhci_queue_configure_endpoint(struct xhci_hcd *xhci,
+ 			command_must_succeed);
+ }
 
-...
++/* Queue a get root hub port bandwidth command TRB */
++int xhci_queue_get_rh_port_bw(struct xhci_hcd *xhci,
++		struct xhci_command *cmd, dma_addr_t in_ctx_ptr,
++		u8 dev_speed, u32 slot_id, bool command_must_succeed)
++{
++	return queue_command(xhci, cmd, lower_32_bits(in_ctx_ptr),
++		upper_32_bits(in_ctx_ptr), 0,
++		TRB_TYPE(TRB_GET_BW) | DEV_SPEED_FOR_TRB(dev_speed) |
++		SLOT_ID_FOR_TRB(slot_id),
++		command_must_succeed);
++}
++
+ /* Queue an evaluate context command TRB */
+ int xhci_queue_evaluate_context(struct xhci_hcd *xhci, struct xhci_command *cmd,
+ 		dma_addr_t in_ctx_ptr, u32 slot_id, bool command_must_succeed)
+diff --git a/drivers/usb/host/xhci.c b/drivers/usb/host/xhci.c
+index 45653114ccd7..84092fe981e8 100644
+--- a/drivers/usb/host/xhci.c
++++ b/drivers/usb/host/xhci.c
+@@ -3088,6 +3088,80 @@ void xhci_reset_bandwidth(struct usb_hcd *hcd, struct usb_device *udev)
+ }
+ EXPORT_SYMBOL_GPL(xhci_reset_bandwidth);
 
-> > +static CCU_GATE_DEFINE(pll1_d3_819p2, "pll1_d3_819p2", CCU_PARENT_HW(pll1_d3),
-> > +		       MPMU_ACGR,
-> > +		       BIT(14), BIT(14), 0, 0);
-> > +
-> > +static CCU_GATE_DEFINE(pll1_d2_1228p8, "pll1_d2_1228p8", CCU_PARENT_HW(pll1_d2),
-> > +		       MPMU_ACGR,
-> > +		       BIT(16), BIT(16), 0, 0);
++/* Get the available bandwidth of the ports under the xhci roothub,
++ * including USB 2.0 port and USB 3.0 port.
++ */
++int xhci_get_port_bandwidth(struct xhci_hcd *xhci, u8 *bw_table)
++{
++	unsigned int		num_ports;
++	unsigned int		i;
++	struct xhci_command	*cmd;
++	dma_addr_t		dma_handle;
++	void			*dma_buf;
++	int			ret;
++	unsigned long		flags;
++	struct device		*dev  = xhci_to_hcd(xhci)->self.sysdev;
++
++	num_ports = HCS_MAX_PORTS(xhci->hcs_params1);
++
++	cmd = xhci_alloc_command(xhci, true, GFP_KERNEL);
++	if (!cmd)
++		return -ENOMEM;
++
++	dma_buf = dma_alloc_coherent(dev, xhci->page_size, &dma_handle,
++					GFP_KERNEL);
++	if (!dma_buf) {
++		xhci_free_command(xhci, cmd);
++		return -ENOMEM;
++	}
++
++	/* get xhci hub usb3 port bandwidth */
++	/* refer to xhci rev1_2 protocol 4.6.15*/
++	spin_unlock_irqrestore(&xhci->lock, flags);
++	ret = xhci_queue_get_rh_port_bw(xhci, cmd, dma_handle, USB_SPEED_SUPER,
++					0, false);
++	if (ret < 0) {
++		spin_unlock_irqrestore(&xhci->lock, flags);
++		goto out;
++	}
++	xhci_ring_cmd_db(xhci);
++	spin_unlock_irqrestore(&xhci->lock, flags);
++
++	wait_for_completion(cmd->completion);
++
++	/* refer to xhci rev1_2 protocol 6.2.6 , byte 0 is reserved */
++	for (i = 1; i < num_ports+1; i++) {
++		if (((u8 *)dma_buf)[i])
++			bw_table[i] = ((u8 *)dma_buf)[i];
++	}
++
++	/* get xhci hub usb2 port bandwidth */
++	/* refer to xhci rev1_2 protocol 4.6.15*/
++	spin_unlock_irqrestore(&xhci->lock, flags);
++	ret = xhci_queue_get_rh_port_bw(xhci, cmd, dma_handle, USB_SPEED_HIGH,
++					0, false);
++	if (ret < 0) {
++		spin_unlock_irqrestore(&xhci->lock, flags);
++		goto out;
++	}
++	xhci_ring_cmd_db(xhci);
++	spin_unlock_irqrestore(&xhci->lock, flags);
++
++	wait_for_completion(cmd->completion);
++
++	/* refer to xhci rev1_2 protocol 6.2.6 , byte 0 is reserved */
++	for (i = 1; i < num_ports+1; i++) {
++		if (((u8 *)dma_buf)[i])
++			bw_table[i] = ((u8 *)dma_buf)[i];
++	}
++
++out:
++	dma_free_coherent(dev, xhci->page_size, dma_buf, dma_handle);
++	xhci_free_command(xhci, cmd);
++
++	return ret;
++}
++
+ static void xhci_setup_input_ctx_for_config_ep(struct xhci_hcd *xhci,
+ 		struct xhci_container_ctx *in_ctx,
+ 		struct xhci_container_ctx *out_ctx,
+diff --git a/drivers/usb/host/xhci.h b/drivers/usb/host/xhci.h
+index 8c164340a2c3..a137097b0404 100644
+--- a/drivers/usb/host/xhci.h
++++ b/drivers/usb/host/xhci.h
+@@ -999,6 +999,9 @@ enum xhci_setup_dev {
+ /* bits 16:23 are the virtual function ID */
+ /* bits 24:31 are the slot ID */
 
-Here're the conflicts.
++/* bits 19:16 are the dev speed */
++#define DEV_SPEED_FOR_TRB(p)    ((p) << 16)
++
+ /* Stop Endpoint TRB - ep_index to endpoint ID for this TRB */
+ #define SUSPEND_PORT_FOR_TRB(p)		(((p) & 1) << 23)
+ #define TRB_TO_SUSPEND_PORT(p)		(((p) & (1 << 23)) >> 23)
+@@ -1907,6 +1910,10 @@ int xhci_queue_isoc_tx_prepare(struct xhci_hcd *xhci, gfp_t mem_flags,
+ int xhci_queue_configure_endpoint(struct xhci_hcd *xhci,
+ 		struct xhci_command *cmd, dma_addr_t in_ctx_ptr, u32 slot_id,
+ 		bool command_must_succeed);
++int xhci_queue_get_rh_port_bw(struct xhci_hcd *xhci,
++		struct xhci_command *cmd, dma_addr_t in_ctx_ptr,
++		u8 dev_speed, u32 slot_id, bool command_must_succeed);
++int xhci_get_port_bandwidth(struct xhci_hcd *xhci, u8 *bw_table);
+ int xhci_queue_evaluate_context(struct xhci_hcd *xhci, struct xhci_command *cmd,
+ 		dma_addr_t in_ctx_ptr, u32 slot_id, bool command_must_succeed);
+ int xhci_queue_reset_ep(struct xhci_hcd *xhci, struct xhci_command *cmd,
+--
+2.43.4
 
-Although they don't happen on all the clocks, I prefer to keep the clock
-names as is for now to keep the consistency.
-
-Thanks,
-Haylen Chu
