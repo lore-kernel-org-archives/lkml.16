@@ -1,210 +1,132 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C58E2253F38;
-	Mon,  3 Mar 2025 16:49:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4653222CBE9
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 16:50:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741020578; cv=none; b=tNBN08suWEMg8msEJKWw1LtC8y6lOCUbx6I9gpbBVkm+u/AjHOnD1R3uQFyuBcv791dzZ4ejOyeAcZw+79J0WRf6TXWDUY4UIs+FdjWiieKW/lvFZ9lLjPhw2W2xNxhlPHRZ0bHdWCVUhfnG/CR1UMGt0aC0WbH8Z0zIrrxnKKs=
+	t=1741020603; cv=none; b=KmlXs0YdThgXfe6jWhpfrOtR0XAvDk6syGGN8zJaTLNvyFdMDwon1584KE4TtT7bK9NwIQ9hyJbht32xLLWFv+sbYeeWDxEWzw9w9FxH7E7jxZF/syX4JAEqtubPEyjaKW8McT2qllYogfg2QRKWXmMpgZ7Y1C/vXEV/+cjFGFk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741020578; c=relaxed/simple;
-	bh=QxMI96pUH6DNsqjiw2kEM8KCz4+ZICG+5dYAmxd/380=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fb+tl1eehUd4iKx+dxd0Mr/vAEDPhgc44aHoU2jP0/6FWo7oBRHcZPnWDH4cFpG+vZg0yZh17qjyvmLRYa+rjc30myyyFpiWZGytnIGzHS12I+BH8Tp8NF1Ql6h3VTBNZZBc/lOzxQsh91CA/7NhjafG3rSFsY4SqUgRN+qGPL4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eAGyMiWx; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1741020603; c=relaxed/simple;
+	bh=d8/WZ74KpxSBBuf8SBqXQmQCVS+FqdR4GegQqBBnNVc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cunTBQ2jXacigrZLAmkvuOJba5HBiHK7MTSm6cTGoqcDKxuHE1X+NsmabVk/9/AxBjTw11aG3USkI68xnBR1d8RXA98IXbFcmhIYLW+19y9buQF0uPmVrGsyfiLYrCvG+e7R3plEN+MQI1xtkVjYnhBfTsvHmcD7QJUsg7olc0U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BJgZhaWc; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eAGyMiWx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741020577; x=1772556577;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=QxMI96pUH6DNsqjiw2kEM8KCz4+ZICG+5dYAmxd/380=;
-  b=eAGyMiWxRk2fuRd1dnfGlkrvFlvQ/lDPiEq4LAfeya4QrVKH9Zh4sDS5
-   bUsKpf3vSQkeyq568F1DREl3F8Gj7pb5Nf3aARgX3nkt6Z1PeKWHQRK4P
-   J4pCRUyLFScd9zE9aUgePowiDLv4Cp6FZjkqN6LhOy0H9RIwxOtbChfZb
-   FB6J6iGvzSTZaok0ZKVgWJlCVtDEUDU9n/COz2kG6hlY+V2bJb3Q5EKHk
-   cPJRcDdd6i3BLlgkie5EteXYE3dEtbYEqtCLwxj8Iy/X5DGTXvnJ5p+46
-   M1yTpqkahQRwycxu9MAoDll3qTUY8vHGSnXTn4C3PWVV+HVgBKyJ4nrZS
-   g==;
-X-CSE-ConnectionGUID: CpEFYVGGQoG0Xslk7rnq1Q==
-X-CSE-MsgGUID: Vh/r83EmQhmIOlb9oePvPw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11362"; a="41761409"
-X-IronPort-AV: E=Sophos;i="6.13,330,1732608000"; 
-   d="scan'208";a="41761409"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Mar 2025 08:49:34 -0800
-X-CSE-ConnectionGUID: kYMzaWX1S2++c4ZMe1Brmw==
-X-CSE-MsgGUID: /PwV6x5QQmCoUuLOgySURw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,330,1732608000"; 
-   d="scan'208";a="123212198"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa004.fm.intel.com with ESMTP; 03 Mar 2025 08:49:30 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id BC5BE1FF; Mon, 03 Mar 2025 18:49:29 +0200 (EET)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	linux-wpan@vger.kernel.org,
-	netdev@vger.kernel.org,
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BJgZhaWc"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1741020601;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=CRFDMhYCdzohXSQPdHzmNODZ58R1W+2Bk5NhU9gOXmU=;
+	b=BJgZhaWc9kmE6LNUolbX2WMY6f/MBfqV0eu7kLdUb+30Kwxlsoj469H5Mh5DNPLIrP9YeU
+	AMRT/13Ux18kjzDr249U4T+8gOEFl4TBIzn0jfYrZyNtgjaKh6hZHo23JAJ7fcpn4GrnSD
+	3h0wR3I+YDcyhTxt5dT8/uRQqeZHpVQ=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-131-c6G75LhJOnyN0hUAVZFQOg-1; Mon,
+ 03 Mar 2025 11:49:58 -0500
+X-MC-Unique: c6G75LhJOnyN0hUAVZFQOg-1
+X-Mimecast-MFC-AGG-ID: c6G75LhJOnyN0hUAVZFQOg_1741020596
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E33781800877;
+	Mon,  3 Mar 2025 16:49:55 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.44.32.16])
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 06A651955F0F;
+	Mon,  3 Mar 2025 16:49:50 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Mon,  3 Mar 2025 17:49:25 +0100 (CET)
+Date: Mon, 3 Mar 2025 17:49:19 +0100
+From: Oleg Nesterov <oleg@redhat.com>
+To: "Sapkal, Swapnil" <swapnil.sapkal@amd.com>
+Cc: K Prateek Nayak <kprateek.nayak@amd.com>,
+	Mateusz Guzik <mjguzik@gmail.com>,
+	Manfred Spraul <manfred@colorfullife.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Christian Brauner <brauner@kernel.org>,
+	David Howells <dhowells@redhat.com>,
+	WangYuli <wangyuli@uniontech.com>, linux-fsdevel@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org
-Cc: Alexander Aring <alex.aring@gmail.com>,
-	Stefan Schmidt <stefan@datenfreihafen.org>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [PATCH net-next v2 3/3] ieee802154: ca8210: Switch to using gpiod API
-Date: Mon,  3 Mar 2025 18:49:10 +0200
-Message-ID: <20250303164928.1466246-4-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250303164928.1466246-1-andriy.shevchenko@linux.intel.com>
-References: <20250303164928.1466246-1-andriy.shevchenko@linux.intel.com>
+	"Shenoy, Gautham Ranjal" <gautham.shenoy@amd.com>,
+	Neeraj.Upadhyay@amd.com, Ananth.narayan@amd.com,
+	Alexey Gladkov <legion@kernel.org>
+Subject: Re: [PATCH] pipe_read: don't wake up the writer if the pipe is still
+ full
+Message-ID: <20250303164918.GA9870@redhat.com>
+References: <20250102140715.GA7091@redhat.com>
+ <e813814e-7094-4673-bc69-731af065a0eb@amd.com>
+ <20250224142329.GA19016@redhat.com>
+ <qsehsgqnti4csvsg2xrrsof4qm4smhdhv6s4v4twspf76bp3jo@2mpz5xtqhmgt>
+ <c63cc8e8-424f-43e2-834f-fc449b24787e@amd.com>
+ <20250227211229.GD25639@redhat.com>
+ <06ae9c0e-ba5c-4f25-a9b9-a34f3290f3fe@amd.com>
+ <20250228143049.GA17761@redhat.com>
+ <20250228163347.GB17761@redhat.com>
+ <03a1f4af-47e0-459d-b2bf-9f65536fc2ab@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <03a1f4af-47e0-459d-b2bf-9f65536fc2ab@amd.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-This updates the driver to gpiod API, and removes yet another use of
-of_get_named_gpio().
+Hi!
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/net/ieee802154/ca8210.c | 57 +++++++++++----------------------
- 1 file changed, 19 insertions(+), 38 deletions(-)
+On 03/03, Sapkal, Swapnil wrote:
+>
+> >but if you have time, could you check if this patch (with or without the
+> >previous debugging patch) makes any difference? Just to be sure.
+>
+> Sure, I will give this a try.
 
-diff --git a/drivers/net/ieee802154/ca8210.c b/drivers/net/ieee802154/ca8210.c
-index 65f042c8734b..d4c1f00d29fe 100644
---- a/drivers/net/ieee802154/ca8210.c
-+++ b/drivers/net/ieee802154/ca8210.c
-@@ -52,12 +52,10 @@
- #include <linux/debugfs.h>
- #include <linux/delay.h>
- #include <linux/gpio/consumer.h>
--#include <linux/gpio.h>
- #include <linux/ieee802154.h>
- #include <linux/io.h>
- #include <linux/kfifo.h>
- #include <linux/of.h>
--#include <linux/of_gpio.h>
- #include <linux/module.h>
- #include <linux/mutex.h>
- #include <linux/poll.h>
-@@ -350,8 +348,8 @@ struct work_priv_container {
-  * @extclockenable: true if the external clock is to be enabled
-  * @extclockfreq:   frequency of the external clock
-  * @extclockgpio:   ca8210 output gpio of the external clock
-- * @gpio_reset:     gpio number of ca8210 reset line
-- * @gpio_irq:       gpio number of ca8210 interrupt line
-+ * @reset_gpio:     ca8210 reset GPIO descriptor
-+ * @irq_gpio:       ca8210 interrupt GPIO descriptor
-  * @irq_id:         identifier for the ca8210 irq
-  *
-  */
-@@ -359,8 +357,8 @@ struct ca8210_platform_data {
- 	bool extclockenable;
- 	unsigned int extclockfreq;
- 	unsigned int extclockgpio;
--	int gpio_reset;
--	int gpio_irq;
-+	struct gpio_desc *reset_gpio;
-+	struct gpio_desc *irq_gpio;
- 	int irq_id;
- };
- 
-@@ -632,10 +630,10 @@ static void ca8210_reset_send(struct spi_device *spi, unsigned int ms)
- 	struct ca8210_priv *priv = spi_get_drvdata(spi);
- 	long status;
- 
--	gpio_set_value(pdata->gpio_reset, 0);
-+	gpiod_set_value(pdata->reset_gpio, 0);
- 	reinit_completion(&priv->ca8210_is_awake);
- 	msleep(ms);
--	gpio_set_value(pdata->gpio_reset, 1);
-+	gpiod_set_value(pdata->reset_gpio, 1);
- 	priv->promiscuous = false;
- 
- 	/* Wait until wakeup indication seen */
-@@ -2788,24 +2786,14 @@ static int ca8210_reset_init(struct spi_device *spi)
- {
- 	struct device *dev = &spi->dev;
- 	struct ca8210_platform_data *pdata = dev_get_platdata(dev);
--	int ret;
- 
--	pdata->gpio_reset = of_get_named_gpio(
--		spi->dev.of_node,
--		"reset-gpio",
--		0
--	);
--
--	ret = gpio_direction_output(pdata->gpio_reset, 1);
--	if (ret < 0) {
--		dev_crit(
--			&spi->dev,
--			"Reset GPIO %d did not set to output mode\n",
--			pdata->gpio_reset
--		);
-+	pdata->reset_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_HIGH);
-+	if (IS_ERR(pdata->reset_gpio)) {
-+		dev_crit(dev, "Reset GPIO did not set to output mode\n");
-+		return PTR_ERR(pdata->reset_gpio);
- 	}
- 
--	return ret;
-+	return 0;
- }
- 
- /**
-@@ -2820,20 +2808,15 @@ static int ca8210_interrupt_init(struct spi_device *spi)
- 	struct ca8210_platform_data *pdata = dev_get_platdata(dev);
- 	int ret;
- 
--	pdata->gpio_irq = of_get_named_gpio(
--		spi->dev.of_node,
--		"irq-gpio",
--		0
--	);
-+	pdata->irq_gpio = devm_gpiod_get(dev, "irq", GPIOD_IN);
-+	if (IS_ERR(pdata->irq_gpio)) {
-+		dev_crit(dev, "Could not retrieve IRQ GPIO\n");
-+		return PTR_ERR(pdata->irq_gpio);
-+	}
- 
--	pdata->irq_id = gpio_to_irq(pdata->gpio_irq);
-+	pdata->irq_id = gpiod_to_irq(pdata->irq_gpio);
- 	if (pdata->irq_id < 0) {
--		dev_crit(
--			&spi->dev,
--			"Could not get irq for gpio pin %d\n",
--			pdata->gpio_irq
--		);
--		gpio_free(pdata->gpio_irq);
-+		dev_crit(dev, "Could not get irq for IRQ GPIO\n");
- 		return pdata->irq_id;
- 	}
- 
-@@ -2844,10 +2827,8 @@ static int ca8210_interrupt_init(struct spi_device *spi)
- 		"ca8210-irq",
- 		spi_get_drvdata(spi)
- 	);
--	if (ret) {
-+	if (ret)
- 		dev_crit(&spi->dev, "request_irq %d failed\n", pdata->irq_id);
--		gpio_free(pdata->gpio_irq);
--	}
- 
- 	return ret;
- }
--- 
-2.47.2
+Forget ;)
+
+[...snip...]
+
+> --- a/fs/pipe.c
+> +++ b/fs/pipe.c
+> @@ -417,9 +417,19 @@ static inline int is_packetized(struct file *file)
+>  /* Done while waiting without holding the pipe lock - thus the READ_ONCE() */
+>  static inline bool pipe_writable(const struct pipe_inode_info *pipe)
+>  {
+> -	unsigned int head = READ_ONCE(pipe->head);
+> -	unsigned int tail = READ_ONCE(pipe->tail);
+>  	unsigned int max_usage = READ_ONCE(pipe->max_usage);
+> +	unsigned int head, tail;
+> +
+> +	tail = READ_ONCE(pipe->tail);
+> +	/*
+> +	 * Since the unsigned arithmetic in this lockless preemptible context
+> +	 * relies on the fact that the tail can never be ahead of head, read
+> +	 * the head after the tail to ensure we've not missed any updates to
+> +	 * the head. Reordering the reads can cause wraparounds and give the
+> +	 * illusion that the pipe is full.
+> +	 */
+> +	smp_rmb();
+> +	head = READ_ONCE(pipe->head);
+>  	return !pipe_full(head, tail, max_usage) ||
+>  		!READ_ONCE(pipe->readers);
+
+Ooh, thanks!!!
+
+And sorry, can't work today. To be honest, I have some concerns, but probably
+I am wrong... I'll return tomorrow.
+
+In any case, finally we have a hint. Thank you both!
+
+(btw, please look at pipe_poll).
+
+Oleg.
 
