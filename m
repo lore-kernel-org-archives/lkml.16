@@ -1,81 +1,92 @@
-Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA8E0215782;
-	Mon,  3 Mar 2025 22:36:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CDAD22DFB6;
+	Mon,  3 Mar 2025 22:36:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741041371; cv=none; b=PTxLlqHwufRvX83CQYAvo+mzb4X9VPnv62LpgZZPLoTMu5MSN4amB2bbsHFCFgbQvlS5uYKevB2/lZE710l3D7UH1/37WoWCOEXw4SwW36p43OqLNlrJ2Mr+y8QhVdKUiw9v/hISnLpkU4eTYNT5knNrkQOBdLFSfVShPyuIrYE=
+	t=1741041386; cv=none; b=Vs+gJ23IreEps6hB/Wb18FxrVrfHNFGV7tS97WNP5+m6dBflSX/sPze48w/1qmaVH6+0v2KpdKwc8sqrcqR5rGPw6v6pgnZcYwfBtegu8IGC+xoOYRINeaGDa+tKazPJnpOrgEOhPiRZ6we563b6n+Aw+gqjBYoq+iPV6gCY+LE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741041371; c=relaxed/simple;
-	bh=4JDVuWmNJV1srQzegb6Y5jsfqjahhK6FUQT2t3X5vLA=;
+	s=arc-20240116; t=1741041386; c=relaxed/simple;
+	bh=1bRhjZsL2z2GZrqZLcbmsx0EFYTgtSq9PfISuQOdCnM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Y8ljuN0NwzJ6Uf1S+dyG6T1qMCIlryM9wsGVAs8rNTI1N+2bAVfTBLuh9+yNoi2Tyr2r/hzapzci7POee3xc8kZE9ptlloiHz5JDDgtXq/PFPsaIfuHFGndnBDsyBOGanLYKIwY1rRpRPRHnwp2YjfEBzB9H3kpA1nx/n0ZR5oA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=luLGlBoN; arc=none smtp.client-ip=217.70.183.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	 MIME-Version:Content-Type; b=qlGXgoqffi6MYSbVTf57S3L7gUWlzJ9nsPvMliSqCK6AJv1S7aFLtt4c7PYG8ONdrDGN/xngWbcbSihHYVRhXDDpcuHtBAh4gU10PNjiI2WGCQahKhPkRmfshWbZY3+QOJVtsgHVAb9u29iXvy3Bi050IywN2E5k0tOM+WTMAd4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=JNfuVWDF; arc=none smtp.client-ip=185.11.138.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="luLGlBoN"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 584B1431F3;
-	Mon,  3 Mar 2025 22:36:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1741041366;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SbQAcrA+owb5cOvlTDq6qP+RrM9u4aqNiTwvXrGnUuc=;
-	b=luLGlBoNRMI6mfmgg8N5OrhTTXYbUFlqzFaupZsTDjsVjQVyyHKlughN/lY3uUCUAlMy+o
-	ytsaUTO7ffrXyNwYal1XbmSBDiA5SE8aHiB44MNkg7KiXv9T3LHvffPA7KBqD1nHjeFB5n
-	tn+Fq817cKVsVrPqcQg9ioyAt4+zcNzRjgxg4OEzlcJljbGV5MZl1pJDXjhyr6UpI4UrF7
-	poLCRA8E5AuJ0gonLNUMqvteGkA7yKVm/tgpTxdvN3CtmRCCyJheGZNmOEzYAwijN4Cfn9
-	ycEkS1ta3BzurA58z/V4/4VuSzEUhJBjnBllfhl8kTDkcbscDrAoofCaKZS5EQ==
-From: alexandre.belloni@bootlin.com
-To: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: linux-arm-msm@vger.kernel.org,
-	linux-rtc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 3/3] rtc: pm8xxx: switch to devm_device_init_wakeup
-Date: Mon,  3 Mar 2025 23:35:58 +0100
-Message-ID: <20250303223600.1135142-3-alexandre.belloni@bootlin.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250303223600.1135142-1-alexandre.belloni@bootlin.com>
-References: <20250303223600.1135142-1-alexandre.belloni@bootlin.com>
+	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="JNfuVWDF"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
+	s=gloria202408; h=Content-Transfer-Encoding:Content-Type:MIME-Version:
+	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=5EOXFMVC6+7oiTirA0ot5v+5pSqEybCdk9aXbZ9tQ+0=; b=JNfuVWDFIye54QW5L2Yg44pbby
+	+ehzxUfqV3vdBNYpO2rmcVeZ6SiaSvoJHG8/uemnPHagfcxEat8dO9RPml2Ku8RyM6w2oaY512unK
+	zCQBrHyPSzT7BakWFT5j67mA6afkF4APHp8VSw3L0UcNVLSuqi8nigmyjL0nW3bG3E9WTjRhU4Vhx
+	AhilD1kh9ztYP5FIRQqanbfm0XcunNe8LtskZ/el5U+DbvKADL2i4GDAFaY8cQWdaqI4FjAh512gt
+	FLZOd36yxWaosHknsnz/rY0FT4JknB6OkBXD4g/WuieP/m+xKu3LKkMNi7BThx7X9FmFgd6FW6+ne
+	8aYZT8Bg==;
+Received: from i53875a38.versanet.de ([83.135.90.56] helo=phil.fritz.box)
+	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <heiko@sntech.de>)
+	id 1tpEOT-0005wL-Ig; Mon, 03 Mar 2025 23:36:13 +0100
+From: Heiko Stuebner <heiko@sntech.de>
+To: linux-rockchip@lists.infradead.org,
+	Dragan Simic <dsimic@manjaro.org>
+Cc: Heiko Stuebner <heiko@sntech.de>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	didi.debian@cknow.org,
+	chris@z9.de
+Subject: Re: [PATCH v2 0/2] Slightly improve hardware description of Pine64 RockPro64
+Date: Mon,  3 Mar 2025 23:36:10 +0100
+Message-ID: <174104113599.8946.16805724674396090918.b4-ty@sntech.de>
+X-Mailer: git-send-email 2.47.2
+In-Reply-To: <cover.1740941097.git.dsimic@manjaro.org>
+References: <cover.1740941097.git.dsimic@manjaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-GND-State: clean
-X-GND-Score: -85
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddutddtfeegucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenogetfedtuddqtdduucdludehmdenucfjughrpefhvfevufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpegrlhgvgigrnhgurhgvrdgsvghllhhonhhisegsohhothhlihhnrdgtohhmnecuggftrfgrthhtvghrnhepgeevhfefteejieehkeeigeegtdefffekfeejgeeujeeiudfgieejheegieeuieehnecukfhppeejjedrudehtddrvdegiedrvdduheenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeejjedrudehtddrvdegiedrvdduhedphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomheprghlvgigrghnughrvgdrsggvlhhlohhnihessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepgedprhgtphhtthhopegrlhgvgigrnhgurhgvrdgsvghllhhonhhisegsohhothhlihhnrdgtohhmpdhrtghpthhtoheplhhinhhugidqrghrmhdqmhhsmhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhrthgtsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-GND-Sasl: alexandre.belloni@bootlin.com
 
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
 
-Switch to devm_device_init_wakeup to avoid a possible memory leak as wakeup
-is never disabled.
+On Sun, 02 Mar 2025 19:48:02 +0100, Dragan Simic wrote:
+> This is a small series that introduces small improvements to the way
+> Pine64 RockPro64 [1] single-board-computer is described in the DT files.
+> This applies to both production-run revisions of the RockPro64.
+> 
+> The introduced improvements boil down to eliminating some warnings from
+> the kernel log, by adding a previously undefined regulator and by adding
+> some previously missing references to the regulators.
+> 
+> [...]
 
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
----
- drivers/rtc/rtc-pm8xxx.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Applied, thanks!
 
-diff --git a/drivers/rtc/rtc-pm8xxx.c b/drivers/rtc/rtc-pm8xxx.c
-index 3b9709214a08..a88073efffb3 100644
---- a/drivers/rtc/rtc-pm8xxx.c
-+++ b/drivers/rtc/rtc-pm8xxx.c
-@@ -503,7 +503,7 @@ static int pm8xxx_rtc_probe(struct platform_device *pdev)
- 
- 	platform_set_drvdata(pdev, rtc_dd);
- 
--	device_init_wakeup(&pdev->dev, true);
-+	devm_device_init_wakeup(&pdev->dev);
- 
- 	rtc_dd->rtc = devm_rtc_allocate_device(&pdev->dev);
- 	if (IS_ERR(rtc_dd->rtc))
+[1/2] arm64: dts: rockchip: Add avdd HDMI supplies to RockPro64 board dtsi
+      commit: bd1c959f37f384b477f51572331b0dc828bd009a
+[2/2] arm64: dts: rockchip: Add missing PCIe supplies to RockPro64 board dtsi
+      commit: 64ef4a4320e7aa3f0f267e01f170f52b90bf0b1b
+
+I've moved the pcie12v supply up one line.
+While in a mathematical sense it's true 12 > 3.3, we're sorting
+alphabetical, so it's 1?? < 3?? .
+
+And yes I sympathize with 3.3 < 12, but also have come to appreciate not
+having overly many special cases :-)
+
+
+Best regards,
 -- 
-2.48.1
-
+Heiko Stuebner <heiko@sntech.de>
