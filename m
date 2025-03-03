@@ -1,34 +1,34 @@
 Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF1731FAC4D
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 14:39:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D745C212D66
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 14:39:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741012772; cv=none; b=ss0yK/wys7cgYlgZQmGF5fwa2n80lVrx3+GXPmSEdhra6oekuKdGO3GMUDOZcxiQCNWqePBca6XX2Mlqpj/vpHC+5gfSPFTVl+fN79cxEkiEmaZVXwyPdIPFxPo1kCkKHRXwzkWK6Qtc6F1pBBht7+FR8KUyZVF56sTfuARn09U=
+	t=1741012772; cv=none; b=NzD4D3nGFQZcmW0ij3RVqnuh/JzbN/x//gdVKw5z6NAOPpOo0kcE25IsHJQs+gyXKMuFDi7hJcNBOkc/tKAW6YPzZgbXVuBQS3tT4uPxbf68TaZnCUepq8QJK2lwboP0eAJeMPsdyW8ILfflP4tsDCw/zqSMBql41iF8vu5MicI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1741012772; c=relaxed/simple;
-	bh=lAs3NA0uKrcszg6+DqY96fPmkb6rDQ24C4lgsIDav1M=;
+	bh=5mpCI9pZ8PWgc2rvH58GV05R+qnTGASobuPPyYIZp/M=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=oFVtUt4mjfDI96TPGrR2zE9A5RSYGavhXh6yG4RxrtWrfDlosTp8/OXxKWla7A1yn1amLnBclaBQW6ArnEuwxNXJQ9wHM61gcuVZphj9LmWy3o+rwtMCj0uMQvgTcdqouljbOavrXcnRviT4Jbp4H+xeBka9I2tEZHK02d+qaM8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=rlZZuBnk; arc=none smtp.client-ip=46.235.229.95
+	 MIME-Version; b=R2bIp9PpDNnde/aGkdw101xPXHsiJOYV5JWkv/CtVNrQA9wBWoiTm2mvf43Xree1Bofuambsxa4H5wdWt4uVSwPbpCuA3KxJuxpiPTJuoPvHsCs0Wn6u2cHQlXyH7DzpGLdw4FcY4mUZtVY+EsJr/h4e0U39qu110wF8aBA3cA4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=DXWP884M; arc=none smtp.client-ip=46.235.229.95
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="rlZZuBnk"
+	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="DXWP884M"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
 	; s=bytemarkmx; h=MIME-Version:Message-ID:Date:Subject:From:Content-Type:From
-	:Subject; bh=txe/FCPWRDijIRM2J14dylswI3oOXHv8ky3SGbNbIgE=; b=rlZZuBnkzyt7ZRBK
-	UJhcYmaIGcN34uExHJWZiEVDTy9IHDpVje+oEdAM8PhH79alsdHMRT+fVVpuaIE6DLYc5Sfjvm1kF
-	4KnE766bfqoojTDSnSvfGxO3PvF9m81LqFUhnC0MzyJ5Nr4Jvz1zLkpDqlQD8siA2+MQ6GDv7t7gF
-	weVDLqeVVmJ81AHpd+7B6nWuCReFEqgHK3VMuqtya3eXvRUmQojn2mqc8NNe8lg+SpBc1WsYkdL35
-	ZnJLQcs8xYs9yYmVpxqj2tGOl5axCuxNh78fHJc5OEw4nyaZBpVGMEjNkOghGporvJ5NTH9uxq5VD
-	O6QuHGamPTtU2PirEg==;
+	:Subject; bh=qbdK8IAgZW0guOrlqWaSI9e2yk+YFc7AzO9kJtOtkKA=; b=DXWP884ME7zSWaQT
+	ibmvA8hYDJxaTuupNJ+p4U6szKySOsv8IY/tLkUC4NNAfnnlS4DUfv0kUo5/57G6BKSF9h27c+6Ba
+	zALa8HLisBxxoUUCVHJiOr4Wn9q6kOBqXvVdYfL1vUXOjSk7cRPm8vHN08kc10v9trS5EK+O7H8pA
+	VrquZOAwMigcKYPosfSojg1jOiEboldREKyzyg0kxRvFZh/boRUhmyxtjP5Iu8XyxLCqm1xhKShKh
+	tMVZX66rSSjbu2I0tYbIiHFsmsknRGJPsWeuWpn3GHEyrkuh7+uqB2td31hxiQwnVrGRWVx31rUHZ
+	KKV2UOusAKJJWobVEw==;
 Received: from localhost ([127.0.0.1] helo=dalek.home.treblig.org)
 	by mx.treblig.org with esmtp (Exim 4.96)
 	(envelope-from <linux@treblig.org>)
-	id 1tp6x5-0028PG-1c;
-	Mon, 03 Mar 2025 14:39:27 +0000
+	id 1tp6x3-0028PG-3C;
+	Mon, 03 Mar 2025 14:39:26 +0000
 From: linux@treblig.org
 To: alexander.deucher@amd.com,
 	Felix.Kuehling@amd.com,
@@ -45,9 +45,9 @@ Cc: airlied@gmail.com,
 	amd-gfx@lists.freedesktop.org,
 	dri-devel@lists.freedesktop.org,
 	"Dr. David Alan Gilbert" <linux@treblig.org>
-Subject: [PATCH 5/6] drm/amdgpu: Remove unused print__rq_dlg_params_st
-Date: Mon,  3 Mar 2025 14:39:21 +0000
-Message-ID: <20250303143922.36342-6-linux@treblig.org>
+Subject: [PATCH 3/6] drm/amdgpu: Remove powerdown_uvd member
+Date: Mon,  3 Mar 2025 14:39:19 +0000
+Message-ID: <20250303143922.36342-4-linux@treblig.org>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250303143922.36342-1-linux@treblig.org>
 References: <20250303143922.36342-1-linux@treblig.org>
@@ -61,52 +61,102 @@ Content-Transfer-Encoding: 8bit
 
 From: "Dr. David Alan Gilbert" <linux@treblig.org>
 
-print__rq_dlg_params_st() was added in 2017 by
-commit 061bfa06a42a ("drm/amdgpu/display: Add dml support for DCN")
-but has remained unused.
+With phm_powerdown_uvd() gone in the previous patch, there's
+now no longer anything that reads the powerdown_uvd member of the
+pp_hwmgr_func.
 
 Remove it.
 
+There are a few assignments to it; a boring NULL which can just go,
+and two functions, but those functions are called explicitly anyway
+so the assignments to the member go.
+
+One of those (smu7_powerdown_uvd) wasn't static previously;
+make it static.
+
 Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
 ---
- .../drm/amd/display/dc/dml/display_rq_dlg_helpers.c   | 11 -----------
- .../drm/amd/display/dc/dml/display_rq_dlg_helpers.h   |  1 -
- 2 files changed, 12 deletions(-)
+ drivers/gpu/drm/amd/pm/powerplay/hwmgr/smu10_hwmgr.c           | 1 -
+ drivers/gpu/drm/amd/pm/powerplay/hwmgr/smu7_clockpowergating.c | 2 +-
+ drivers/gpu/drm/amd/pm/powerplay/hwmgr/smu7_clockpowergating.h | 1 -
+ drivers/gpu/drm/amd/pm/powerplay/hwmgr/smu7_hwmgr.c            | 1 -
+ drivers/gpu/drm/amd/pm/powerplay/hwmgr/smu8_hwmgr.c            | 1 -
+ drivers/gpu/drm/amd/pm/powerplay/inc/hwmgr.h                   | 1 -
+ 6 files changed, 1 insertion(+), 6 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/dml/display_rq_dlg_helpers.c b/drivers/gpu/drm/amd/display/dc/dml/display_rq_dlg_helpers.c
-index 412e75eb4704..12ff65b6a7e5 100644
---- a/drivers/gpu/drm/amd/display/dc/dml/display_rq_dlg_helpers.c
-+++ b/drivers/gpu/drm/amd/display/dc/dml/display_rq_dlg_helpers.c
-@@ -122,17 +122,6 @@ void print__data_rq_misc_params_st(struct display_mode_lib *mode_lib, const stru
- 	dml_print("DML_RQ_DLG_CALC: =====================================\n");
+diff --git a/drivers/gpu/drm/amd/pm/powerplay/hwmgr/smu10_hwmgr.c b/drivers/gpu/drm/amd/pm/powerplay/hwmgr/smu10_hwmgr.c
+index a8c732e07006..9a821563bc8e 100644
+--- a/drivers/gpu/drm/amd/pm/powerplay/hwmgr/smu10_hwmgr.c
++++ b/drivers/gpu/drm/amd/pm/powerplay/hwmgr/smu10_hwmgr.c
+@@ -1642,7 +1642,6 @@ static const struct pp_hwmgr_func smu10_hwmgr_funcs = {
+ 	.apply_state_adjust_rules = smu10_apply_state_adjust_rules,
+ 	.force_dpm_level = smu10_dpm_force_dpm_level,
+ 	.get_power_state_size = smu10_get_power_state_size,
+-	.powerdown_uvd = NULL,
+ 	.powergate_uvd = smu10_powergate_vcn,
+ 	.powergate_vce = NULL,
+ 	.get_mclk = smu10_dpm_get_mclk,
+diff --git a/drivers/gpu/drm/amd/pm/powerplay/hwmgr/smu7_clockpowergating.c b/drivers/gpu/drm/amd/pm/powerplay/hwmgr/smu7_clockpowergating.c
+index f2bda3bcbbde..5e4c80f7b20a 100644
+--- a/drivers/gpu/drm/amd/pm/powerplay/hwmgr/smu7_clockpowergating.c
++++ b/drivers/gpu/drm/amd/pm/powerplay/hwmgr/smu7_clockpowergating.c
+@@ -55,7 +55,7 @@ static int smu7_update_vce_dpm(struct pp_hwmgr *hwmgr, bool bgate)
+ 	return smu7_enable_disable_vce_dpm(hwmgr, !bgate);
  }
  
--void print__rq_dlg_params_st(struct display_mode_lib *mode_lib, const struct _vcs_dpi_display_rq_dlg_params_st *rq_dlg_param)
--{
--	dml_print("DML_RQ_DLG_CALC: =====================================\n");
--	dml_print("DML_RQ_DLG_CALC: DISPLAY_RQ_DLG_PARAM_ST\n");
--	dml_print("DML_RQ_DLG_CALC:  <LUMA>\n");
--	print__data_rq_dlg_params_st(mode_lib, &rq_dlg_param->rq_l);
--	dml_print("DML_RQ_DLG_CALC:  <CHROMA>\n");
--	print__data_rq_dlg_params_st(mode_lib, &rq_dlg_param->rq_c);
--	dml_print("DML_RQ_DLG_CALC: =====================================\n");
--}
--
- void print__dlg_sys_params_st(struct display_mode_lib *mode_lib, const struct _vcs_dpi_display_dlg_sys_params_st *dlg_sys_param)
+-int smu7_powerdown_uvd(struct pp_hwmgr *hwmgr)
++static int smu7_powerdown_uvd(struct pp_hwmgr *hwmgr)
  {
- 	dml_print("DML_RQ_DLG_CALC: =====================================\n");
-diff --git a/drivers/gpu/drm/amd/display/dc/dml/display_rq_dlg_helpers.h b/drivers/gpu/drm/amd/display/dc/dml/display_rq_dlg_helpers.h
-index ebcd717744e5..2bc64c4081dc 100644
---- a/drivers/gpu/drm/amd/display/dc/dml/display_rq_dlg_helpers.h
-+++ b/drivers/gpu/drm/amd/display/dc/dml/display_rq_dlg_helpers.h
-@@ -35,7 +35,6 @@ void print__rq_params_st(struct display_mode_lib *mode_lib, const struct _vcs_dp
- void print__data_rq_sizing_params_st(struct display_mode_lib *mode_lib, const struct _vcs_dpi_display_data_rq_sizing_params_st *rq_sizing);
- void print__data_rq_dlg_params_st(struct display_mode_lib *mode_lib, const struct _vcs_dpi_display_data_rq_dlg_params_st *rq_dlg_param);
- void print__data_rq_misc_params_st(struct display_mode_lib *mode_lib, const struct _vcs_dpi_display_data_rq_misc_params_st *rq_misc_param);
--void print__rq_dlg_params_st(struct display_mode_lib *mode_lib, const struct _vcs_dpi_display_rq_dlg_params_st *rq_dlg_param);
- void print__dlg_sys_params_st(struct display_mode_lib *mode_lib, const struct _vcs_dpi_display_dlg_sys_params_st *dlg_sys_param);
+ 	if (phm_cf_want_uvd_power_gating(hwmgr))
+ 		return smum_send_msg_to_smc(hwmgr,
+diff --git a/drivers/gpu/drm/amd/pm/powerplay/hwmgr/smu7_clockpowergating.h b/drivers/gpu/drm/amd/pm/powerplay/hwmgr/smu7_clockpowergating.h
+index fc8f8a6acc72..e56abbadc78b 100644
+--- a/drivers/gpu/drm/amd/pm/powerplay/hwmgr/smu7_clockpowergating.h
++++ b/drivers/gpu/drm/amd/pm/powerplay/hwmgr/smu7_clockpowergating.h
+@@ -28,7 +28,6 @@
  
- void print__data_rq_regs_st(struct display_mode_lib *mode_lib, const struct _vcs_dpi_display_data_rq_regs_st *rq_regs);
+ void smu7_powergate_vce(struct pp_hwmgr *hwmgr, bool bgate);
+ void smu7_powergate_uvd(struct pp_hwmgr *hwmgr, bool bgate);
+-int smu7_powerdown_uvd(struct pp_hwmgr *hwmgr);
+ int smu7_powergate_acp(struct pp_hwmgr *hwmgr, bool bgate);
+ int smu7_disable_clock_power_gating(struct pp_hwmgr *hwmgr);
+ int smu7_update_clock_gatings(struct pp_hwmgr *hwmgr,
+diff --git a/drivers/gpu/drm/amd/pm/powerplay/hwmgr/smu7_hwmgr.c b/drivers/gpu/drm/amd/pm/powerplay/hwmgr/smu7_hwmgr.c
+index 632a25957477..8da882c51856 100644
+--- a/drivers/gpu/drm/amd/pm/powerplay/hwmgr/smu7_hwmgr.c
++++ b/drivers/gpu/drm/amd/pm/powerplay/hwmgr/smu7_hwmgr.c
+@@ -5754,7 +5754,6 @@ static const struct pp_hwmgr_func smu7_hwmgr_funcs = {
+ 	.patch_boot_state = smu7_dpm_patch_boot_state,
+ 	.get_pp_table_entry = smu7_get_pp_table_entry,
+ 	.get_num_of_pp_table_entries = smu7_get_number_of_powerplay_table_entries,
+-	.powerdown_uvd = smu7_powerdown_uvd,
+ 	.powergate_uvd = smu7_powergate_uvd,
+ 	.powergate_vce = smu7_powergate_vce,
+ 	.disable_clock_power_gating = smu7_disable_clock_power_gating,
+diff --git a/drivers/gpu/drm/amd/pm/powerplay/hwmgr/smu8_hwmgr.c b/drivers/gpu/drm/amd/pm/powerplay/hwmgr/smu8_hwmgr.c
+index 7e1197420873..9d3b33446adc 100644
+--- a/drivers/gpu/drm/amd/pm/powerplay/hwmgr/smu8_hwmgr.c
++++ b/drivers/gpu/drm/amd/pm/powerplay/hwmgr/smu8_hwmgr.c
+@@ -2044,7 +2044,6 @@ static const struct pp_hwmgr_func smu8_hwmgr_funcs = {
+ 	.apply_state_adjust_rules = smu8_apply_state_adjust_rules,
+ 	.force_dpm_level = smu8_dpm_force_dpm_level,
+ 	.get_power_state_size = smu8_get_power_state_size,
+-	.powerdown_uvd = smu8_dpm_powerdown_uvd,
+ 	.powergate_uvd = smu8_dpm_powergate_uvd,
+ 	.powergate_vce = smu8_dpm_powergate_vce,
+ 	.powergate_acp = smu8_dpm_powergate_acp,
+diff --git a/drivers/gpu/drm/amd/pm/powerplay/inc/hwmgr.h b/drivers/gpu/drm/amd/pm/powerplay/inc/hwmgr.h
+index 227bf0e84a13..c661185753b4 100644
+--- a/drivers/gpu/drm/amd/pm/powerplay/inc/hwmgr.h
++++ b/drivers/gpu/drm/amd/pm/powerplay/inc/hwmgr.h
+@@ -257,7 +257,6 @@ struct pp_hwmgr_func {
+ 	int (*get_pp_table_entry)(struct pp_hwmgr *hwmgr,
+ 			    unsigned long, struct pp_power_state *);
+ 	int (*get_num_of_pp_table_entries)(struct pp_hwmgr *hwmgr);
+-	int (*powerdown_uvd)(struct pp_hwmgr *hwmgr);
+ 	void (*powergate_vce)(struct pp_hwmgr *hwmgr, bool bgate);
+ 	void (*powergate_uvd)(struct pp_hwmgr *hwmgr, bool bgate);
+ 	void (*powergate_acp)(struct pp_hwmgr *hwmgr, bool bgate);
 -- 
 2.48.1
 
