@@ -1,132 +1,148 @@
-Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com [209.85.128.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E656620D516
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 12:06:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D9E220E714;
+	Mon,  3 Mar 2025 12:07:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741003621; cv=none; b=ETLkmiXSPmFZFe3U5BB9tfj20dAgMCEUKiVmZwpcUVs8sh8Y/t03SopILDU6hVySZcCTiRcNXhgSVBzfEB8uprW9HTq4uVXi8n/3zAcRE1gNVkxggfEHIFpn6k9VW9SARMGnoJ1g+AUOfsvQotZ8lThK2sbda9Y4/C0oKIoiqKo=
+	t=1741003623; cv=none; b=gNvGd94vX/XYDtw1YR25fsXfVIKbkp5b2/rt36WbFVjH41FoJ0hHRLvYjUPvZHw3qWYv8uOHQhXYXpUysaKEOeLl8VnmFlC19NMdr3fWdQ+wQawJK6OLKF9JF3Lw2zZRiPotiD8YVs0+9rU4mqHYQSh3YLC0oai6HWQKp7yFCrA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741003621; c=relaxed/simple;
-	bh=O9DZsoG7K/toKcDvfTgr90tTBVWhN5v0i0S8g2m2A7Q=;
+	s=arc-20240116; t=1741003623; c=relaxed/simple;
+	bh=GGhPuAF/+Ro/cKx+hXHR3wcMXAcPr1+p3afDdwS8nRA=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TH6iNU3UcuPNRf3SMdRcUT5CIEayfmNqAPHaESi2Tafvq671OdxlVA5anWvLPuGaM4OvUiGa5LPXRzLYdg4Tdhot7THkl8p6hl3cMabxQfB4jN7OKKVQPDK2t8OCo2gyyvwqSNBEcL5pRji41BMOBk4k/yhSvQePEXephx1hBzc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=nU4LNlrO; arc=none smtp.client-ip=209.85.128.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 To:Cc:Content-Type; b=JY1Ryy6pbaoMexfU38Sh0NbwEin2uacM+IU54NModm2MJxDjs9W/+VGQgz0kzlsuhz1x3l4Qxsj2t2UdpmBgesM/Pr6WKE5CZuXc8LneFzylociMdLRFxzia0mrGX/Cjdqbgft1MPENbk6+lWpRTb0olrLAHVaRn+24gVR4tINE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kzHF4bu3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nU4LNlrO"
-Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-6f47ed1f40dso32592167b3.1
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Mar 2025 04:06:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741003619; x=1741608419; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=B4ahxN8eq6WXL1rpKPL4dtpg5+dhmj045yIT8c+PiBc=;
-        b=nU4LNlrObyeSUskO33GdSG+9Rmy0+G2g0FShkx69zevcsVhtz0KQGHiekCaAFEXIII
-         Zp3nlmMu9t3O6yyX53JShdd4FIpGREoX3AxGIbpYqHIEj4Bq35Pi9B6evugqZ252WOxc
-         SgchtVAywHM5/H5RecX1KAnCVwrGlZjQXIs7GMNuRugY3MPhik60hUTFTMlx4rndInWo
-         tCVsv5TuL/er5luOpM0dF+1uPjoFcgHcDK9lXbDceOFc/nZaBSRvznIcxvSe/erewF28
-         1HEYWTRzggZ0ubnM8qkhz1W74aQ36+ibdCbYlFjQ1sxS1nEOuR/u7wvNw8A0LdBHrSwc
-         yKAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741003619; x=1741608419;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=B4ahxN8eq6WXL1rpKPL4dtpg5+dhmj045yIT8c+PiBc=;
-        b=qLVci+RJA/BzjZFGpMehMeEhcFQV64oqJRixctX+TwxZ3YBb7pTcJ6z4GSOqvdmdjI
-         zHDuz0Iozi3f2LRPR5dgVsYBWjUuRvNKQu83GCWwaJ1GLAEX1R3VzG8U2B4IaBV63XoB
-         HqPNe4SWQloDOIGRIj3HmcczhEE3tf3urYYSeBCakKTWiF2l8YA2Jrt1fBGzlC4tItWv
-         Ccr+BejyuNK8U9ru8SdhIciekJ7hA//zau/xfclnf13tDWDmOoXIDZbcosC8e3YMW416
-         sTnlVECW4ftSbrHyU6Kfs3RdCsVaL3SV0Eskay6lFBu5Q8eqFzgTEepP5EyMkl5pgAkf
-         lLeg==
-X-Forwarded-Encrypted: i=1; AJvYcCV1wRLds9lRQfj1T9ZkDUixHDntokfdg8eg7XBfirpu31hwbDERfYkgE8b51Jjw7oSDD/0dY6ScKkE0TVE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxuFr8kzQXeSI/qSW5aZPvjld9EA5RSjRJpg48oTinKMv0NBB22
-	licjD7dw+LaZ818k4MLSh5/yK+Go4Sk/Wd/GmNpratysni1iti6hnkgEfkvsNaBYZARt4JpQOfP
-	QWD7x8v8lSnFxJQkZkBoOwYaULq1E4+LYurQWfg==
-X-Gm-Gg: ASbGncvPZG8EXNqyhJVPACmNmlfYtZmOUpFmKSPVPLZddT708Bptvh4ZYVHAcNjYThx
-	dmZ6PX40hMzN7th3WVvga+lcUy2+5jZlRzAvCORDErj+4jxvJI9KE2klixN6MuEBNhBpXKIClK6
-	QYn6FYNZZCG2Hm4HeVfYJ5T0mLXpY=
-X-Google-Smtp-Source: AGHT+IGsfLIlro46n48+LBTnO/N8JCstZtmfa+6qqdaLZ/mIIXy/ByieG0J8/rLqrWxa1gKNjy+h/CO4aYpxCvigVSY=
-X-Received: by 2002:a05:690c:7305:b0:6f9:7fe6:9d44 with SMTP id
- 00721157ae682-6fd4a020593mr155311317b3.4.1741003618774; Mon, 03 Mar 2025
- 04:06:58 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kzHF4bu3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8EB5EC4CEEA;
+	Mon,  3 Mar 2025 12:07:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741003622;
+	bh=GGhPuAF/+Ro/cKx+hXHR3wcMXAcPr1+p3afDdwS8nRA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=kzHF4bu32yq9bd4utkgKjHfGOk3N2WHVpKJyJ+gKl1UeRVgzpZtiSJFVwQH1guoNa
+	 8ZyPgTy8Bv8aBn1shZrHUWknvJLRU4ZYAQci13+MVHXLZuw0xbSEqm5uHV9ZkQycn/
+	 LNKWtqq9s0KqhBP8EbkOnGcPBgjAKPdjxxXEg0izgufOOHG7LJ1j3j7sx4RM92qJUR
+	 s+Ts4kIdE9wotmqpTtbbuswcFby94OSUQogQDLejlkd54Rb+iOJo9BXc7wVVpUhCFX
+	 RUdDW42ZbA4ZRkJiwf6DkkiqTGnv3Kk3FRQmLW9NLwb3ybTCQ8Jvsa25eJWo8n0QZJ
+	 8NdaCfxHojlxg==
+Received: by mail-oo1-f52.google.com with SMTP id 006d021491bc7-5f4d935084aso3323673eaf.2;
+        Mon, 03 Mar 2025 04:07:02 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCU45rqgWSaPrjAfMge9MI0Y9fAjQsBOFj0KcL9JwxHR1bbsgIO1M+l8XdAO52UxnXyoA6pr9sni0O85UPE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwtiKNjIIC2AfKL1SlPnsUUIsWi29EiS9lNyuQz4kUoqiOxLxDk
+	Aos9aq+JcKy16wpGmdA4cGGtLHrEqPacwYPJw5/GfLRo1u4jXiBTwMmrXXmFn67lBsrawTVoNb9
+	kZcTYFCw4lm4Wi7qKSR2tPkILJLw=
+X-Google-Smtp-Source: AGHT+IF3nuslyD1cM4oIcy7W1U/tBThh6i0pBYhkyve1Uv7EJul0hcBY1imYUYYWkaDY1TtyrEveFps+Jof9uI1yWjQ=
+X-Received: by 2002:a05:6820:a08:b0:600:17b0:ab04 with SMTP id
+ 006d021491bc7-60017b0ada8mr1174782eaf.0.1741003621834; Mon, 03 Mar 2025
+ 04:07:01 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <13709135.uLZWGnKmhe@rjwysocki.net>
-In-Reply-To: <13709135.uLZWGnKmhe@rjwysocki.net>
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Mon, 3 Mar 2025 13:06:23 +0100
-X-Gm-Features: AQ5f1JrmlyWShQB4700csC-8hVyGyFUfHKFXi397g_iO-b7Ha4Ktk1dAB8l1pf0
-Message-ID: <CAPDyKFoWeZNqODb5VdXfTEhxRJ0azSQPWhM3WCJ+iUeJ3rYQHw@mail.gmail.com>
-Subject: Re: [PATCH v1 0/5] PM: sleep: Improvements of async suspend and
- resume of devices
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Linux PM <linux-pm@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	Alan Stern <stern@rowland.harvard.edu>, Johan Hovold <johan@kernel.org>, 
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Saravana Kannan <saravanak@google.com>
+References: <20250303-pcc_fixes_updates-v1-0-3b44f3d134b1@arm.com> <20250303-pcc_fixes_updates-v1-14-3b44f3d134b1@arm.com>
+In-Reply-To: <20250303-pcc_fixes_updates-v1-14-3b44f3d134b1@arm.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Mon, 3 Mar 2025 13:06:49 +0100
+X-Gmail-Original-Message-ID: <CAJZ5v0hpdhG8Ejj=ErQP3sNc4YwW_WDjmPR4A32=nFdoRtf0Ng@mail.gmail.com>
+X-Gm-Features: AQ5f1Jq7sbWmZ9IUWEpPInfWVH74pfYGyd-GBpkQJTUIwc9DGM6UAhvZFh4yYh8
+Message-ID: <CAJZ5v0hpdhG8Ejj=ErQP3sNc4YwW_WDjmPR4A32=nFdoRtf0Ng@mail.gmail.com>
+Subject: Re: [PATCH 14/14] ACPI: CPPC: Simplify PCC shared memory region handling
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Jassi Brar <jassisinghbrar@gmail.com>, Huisong Li <lihuisong@huawei.com>, 
+	Adam Young <admiyo@os.amperecomputing.com>, "Rafael J. Wysocki" <rafael@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 25 Feb 2025 at 17:46, Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
+On Mon, Mar 3, 2025 at 11:53=E2=80=AFAM Sudeep Holla <sudeep.holla@arm.com>=
+ wrote:
 >
-> Hi Everyone,
+> The PCC driver now handles mapping and unmapping of shared memory
+> areas as part of pcc_mbox_{request,free}_channel(). Without these before,
+> this ACPI CPPC driver did handling of those mappings like several
+> other PCC mailbox client drivers.
 >
-> Initially, this was an attempt to address the problems described by
-> Saravana related to spawning async work for any async device upfront
-> in the resume path:
+> There were redundant operations, leading to unnecessary code. Maintaining
+> the consistency across these driver was harder due to scattered handling
+> of shmem.
 >
-> https://lore.kernel.org/linux-pm/20241114220921.2529905-1-saravanak@google.com/
+> Just use the mapped shmem and remove all redundant operations from this
+> driver.
 >
-> but then I realized that it could be extended to the suspend path and
-> used for speeding it up, which it really does.
->
-> Overall, the idea is that instead of starting an async work item for every
-> async device upfront, which is not very efficient because the majority of
-> those devices will not be able to make progress due to dependencies anyway,
-> the async handling is only started upfront for the devices that are likely
-> to be able to make progress.  That is, devices without parents in the resume
-> path and leaf devices (ie. devices without children or consumers) in the
-> suspend path (the underlying observation here is that devices without parents
-> are likely to have no suppliers too whereas devices without children that
-> have consumers are not unheard of).  This allows to reduce the amount of
-> processing that needs to be done to start with.
->
-> Then, after processing every device ("async" or "sync"), "async" processing
-> is started for some devices that have been "unblocked" by it, which are its
-> children in the resume path or its parent and its suppliers in the suspend
-> path.  This allows asynchronous handling to start as soon as it makes sense
-> without delaying the "async" devices unnecessarily.
->
-> Fortunately, the additional plumbing needed to implement this is not
-> particularly complicated.
+> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
 
-Thanks for the detailed description! Overall, the approach makes
-perfect sense to me too!
+Acked-by: "Rafael J. Wysocki" <rafael@kernel.org>
 
-I am certainly interested to hear Saravana's thoughts around this too.
-
+> ---
+>  drivers/acpi/cppc_acpi.c | 16 +++-------------
+>  1 file changed, 3 insertions(+), 13 deletions(-)
 >
-> The first two patches in the series are preparatory.
-
-For these two, feel free to add:
-
-Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
-
+> diff --git a/drivers/acpi/cppc_acpi.c b/drivers/acpi/cppc_acpi.c
+> index f193e713825ac24203ece5f94d6cf99dd4724ce4..d972157a79b6ade2f3738c901=
+28e8692141b3ee5 100644
+> --- a/drivers/acpi/cppc_acpi.c
+> +++ b/drivers/acpi/cppc_acpi.c
+> @@ -47,7 +47,6 @@
 >
-> Patch [3/5] deals with the resume path for all device resume phases.
+>  struct cppc_pcc_data {
+>         struct pcc_mbox_chan *pcc_channel;
+> -       void __iomem *pcc_comm_addr;
+>         bool pcc_channel_acquired;
+>         unsigned int deadline_us;
+>         unsigned int pcc_mpar, pcc_mrtt, pcc_nominal;
+> @@ -95,7 +94,7 @@ static DEFINE_PER_CPU(int, cpu_pcc_subspace_idx);
+>  static DEFINE_PER_CPU(struct cpc_desc *, cpc_desc_ptr);
 >
-> Patch [4/5] optimizes the "suspend" phase which has the most visible effect (on
-> the systems in my office the speedup is in the 100 ms range which is around 20%
-> of the total device resume time).
+>  /* pcc mapped address + header size + offset within PCC subspace */
+> -#define GET_PCC_VADDR(offs, pcc_ss_id) (pcc_data[pcc_ss_id]->pcc_comm_ad=
+dr + \
+> +#define GET_PCC_VADDR(offs, pcc_ss_id) (pcc_data[pcc_ss_id]->pcc_channel=
+->shmem + \
+>                                                 0x8 + (offs))
 >
-> Patch [5/5] extend this to the "suspend late" and "suspend noirq" phases.
-
-I will try to have a closer look at patch 3->5 later in the week.
-
-Kind regards
-Uffe
+>  /* Check if a CPC register is in PCC */
+> @@ -223,7 +222,7 @@ static int check_pcc_chan(int pcc_ss_id, bool chk_err=
+_bit)
+>         int ret, status;
+>         struct cppc_pcc_data *pcc_ss_data =3D pcc_data[pcc_ss_id];
+>         struct acpi_pcct_shared_memory __iomem *generic_comm_base =3D
+> -               pcc_ss_data->pcc_comm_addr;
+> +                                       pcc_ss_data->pcc_channel->shmem;
+>
+>         if (!pcc_ss_data->platform_owns_pcc)
+>                 return 0;
+> @@ -258,7 +257,7 @@ static int send_pcc_cmd(int pcc_ss_id, u16 cmd)
+>         int ret =3D -EIO, i;
+>         struct cppc_pcc_data *pcc_ss_data =3D pcc_data[pcc_ss_id];
+>         struct acpi_pcct_shared_memory __iomem *generic_comm_base =3D
+> -               pcc_ss_data->pcc_comm_addr;
+> +                                       pcc_ss_data->pcc_channel->shmem;
+>         unsigned int time_delta;
+>
+>         /*
+> @@ -571,15 +570,6 @@ static int register_pcc_channel(int pcc_ss_idx)
+>                 pcc_data[pcc_ss_idx]->pcc_mpar =3D pcc_chan->max_access_r=
+ate;
+>                 pcc_data[pcc_ss_idx]->pcc_nominal =3D pcc_chan->latency;
+>
+> -               pcc_data[pcc_ss_idx]->pcc_comm_addr =3D
+> -                       acpi_os_ioremap(pcc_chan->shmem_base_addr,
+> -                                       pcc_chan->shmem_size);
+> -               if (!pcc_data[pcc_ss_idx]->pcc_comm_addr) {
+> -                       pr_err("Failed to ioremap PCC comm region mem for=
+ %d\n",
+> -                              pcc_ss_idx);
+> -                       return -ENOMEM;
+> -               }
+> -
+>                 /* Set flag so that we don't come here for each CPU. */
+>                 pcc_data[pcc_ss_idx]->pcc_channel_acquired =3D true;
+>         }
+>
+> --
+> 2.34.1
+>
