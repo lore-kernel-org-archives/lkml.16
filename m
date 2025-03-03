@@ -1,67 +1,66 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDCE3236435;
-	Mon,  3 Mar 2025 20:54:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7534A23959E;
+	Mon,  3 Mar 2025 20:54:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741035298; cv=none; b=pgE3FCivZsNuNpNP5ozXqvy9AjOQG7oKJKDf7nTVTAgJweITVAGYVTl3ICq0nCw0J3ZrMQ0xZtZ6kX3Q6+/dukiCayal+JowqwPFXmAOfsJaTXyTLr6R5KpkRWDhTOeHnTF4mKAyPnR6Zg00AV2mfdQZHgXxkV6jsn9as1LN2bA=
+	t=1741035301; cv=none; b=Prwt+VwRxH8u1YAEbSxHPF82gdMjcivm+r8pQA+/9vEnh6fE1Wpa78fAbl3/Oz3AFADD5a9Fv6S0L8lwgOdsC67BKBoauKA7Az0ejTpbiMr/CSW1bgnyHqhen0V4DHFndWWSzD8QfkfHNk51RjL0m69wI1L7rLLJ2OobDwPIxr4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741035298; c=relaxed/simple;
-	bh=hBqTyx3cRXjMO8YcrUQl3T9HLfXnpEZnzEJ9oJSb1Dc=;
+	s=arc-20240116; t=1741035301; c=relaxed/simple;
+	bh=PoeeTQAJjZ5RdKFBcSwIbKAekpRiUcC0+f84D/Pj5vE=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=IDRIYcxnsZcn2acWuUzFu1gjjLVFhOBLd/+A2tZbadtLyoYhDnh/i3/ZlgG4cKNZeg3QH5sRvwHWHM1WEHg7+usZ+pEOwEZZynNifHzuupp08Cpt3sWI7LIp0QGDu2oouOkwwElJCDXu2C4bs0avQGyHz/f5s+CLZqlnfS+DYSQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ph1aEosZ; arc=none smtp.client-ip=209.85.218.48
+	 In-Reply-To:To:Cc; b=TBgg/r3ddu/9GPoKfebnr4BNJ/swwDJEJKp1/pR9fuvZd45ecZN2tTjn2Bvq3Z/3VQhphwtJQIqjFs/dwGPMfX5aIi0yE0mIhYjTPe9anOEHdUYZDolNt7B8fgQzvegTpH44CRZKOHNVvInJh1T28Y/kQShvDjwlwQr8YqTwWLI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hKItLc4q; arc=none smtp.client-ip=209.85.218.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ph1aEosZ"
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-abbd96bef64so779361866b.3;
-        Mon, 03 Mar 2025 12:54:55 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hKItLc4q"
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-aaedd529ba1so562773866b.1;
+        Mon, 03 Mar 2025 12:54:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741035294; x=1741640094; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1741035298; x=1741640098; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=QaYFxN/ihbyHEozZR8rg46OlgPGpXgAil1GgQ0yQw30=;
-        b=Ph1aEosZ3jWRNpSlQhKyYzdG5IyTBGWfYvfadZaMvYhg1O3rGf67DPa+ABTaeLxTuu
-         DX+JFZHoMLValHnow0NcPgxU85lqO0oqXehl7lEoKc5mcocAdJW01NAH0/KNPWPzn8xi
-         zbEo16mp1W+WYyWhH2JnXkE0hWrK9rpmY1HB/QFEYgZLXv3Y4D+xkA/mDUD+LsEmtNUA
-         PxY0xFi+lVa7HmCdeJtFu3TxjwjbAmKlW2gY0NUCEnZIiV1Q0kbQYOcIC97We+fjWs8q
-         2jGc7JZz4T802chFcgsZYvn3IgJQsAubGoSmpbiMaH3LqoCbYq1RihhUDFNv4AqGJTJP
-         9Mmw==
+        bh=1pvaaqiA/SmRoJNAwsNTHeXGNX/6oeYrcqiqLNPnA9o=;
+        b=hKItLc4qhzDRvNIdWmi6+l/zj5GzZWpf+j+ViPXl5syOgtHW6zzqclB5kkgpvM+vJ/
+         9RGPs46moMF8Uf0fD4E2Ys+vs7lNc6XZa80pXcnZpnPqU5Gl6qwW0pQlpsxwcP3PHWi0
+         wTytKpKBGw9kVacjGgVHFMZlq++JPG3DqGbNzvJ6iF0QD54NtQsck2M9VrzmnMozwRWq
+         XzCJXH0tidTAGEtPaLwUM7iq+5TFbqBf7s6Nau54sEgr0Jdsj7CgpM4fF81pVPjVBX04
+         CiSANPYWru4GvS67hDt5WRwCgtroiYczkR/dGg85F3RhF3AzGr9dA0Uv88sHlS/+MMuA
+         rQew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741035294; x=1741640094;
+        d=1e100.net; s=20230601; t=1741035298; x=1741640098;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=QaYFxN/ihbyHEozZR8rg46OlgPGpXgAil1GgQ0yQw30=;
-        b=NW4J+qX0CCaT7GozdNAgiaycRBZM7KI47bS5hpRPoG8JkyIcyZqSwo//pkCWmk8dp0
-         dVBunw+BbaueTNTpuPuDZCYQHl8ZJ9CHGitDzStYIbx/eFd7DwWCL3zGBsEyRht3+9c7
-         AabAxKKWU3A8aOkCStHUSFDb6LeLpr2WJbo48BG/KlQn+uUwcSd6FP8qpn7Iz7svslDz
-         jY0dsPFs4REbhHqlfp8omNyxRP8/5vgc8/ihX+aMgn2cNjLR2mIT0Z84YujhSUFPmCox
-         lZdaPrgpIJ23LndSf58rVwPrLRElIKyYcFfCmdUCYmeeJFUxfQI+rGgXqwSAniEDaTZo
-         FyCg==
-X-Forwarded-Encrypted: i=1; AJvYcCWx+8YBeDp/k/pNLxipqAGPB9zHDn8epmC+YuC+7fOclaM/0AL4t9auPZIpGNsEnArUZlxDzyg70VT9vfN3@vger.kernel.org, AJvYcCXjP58TgKny5V1yKpQmHWFRtj+opRKApqkgwnDtf5iUeZD+vEeJps18yvVTrZYR6JFvydZnCj4AJXat@vger.kernel.org
-X-Gm-Message-State: AOJu0YxMC/xZ7EClpG0WlHAhy0kXrl1xYLTZxNOjcvsJyLRaFL33DkCm
-	k7tHYWJebPvhcp9WzzOYYXmW0fr1793nzDNIgc8N48mrK7Mz7y3K
-X-Gm-Gg: ASbGncvuXPovCnJOFCdKyn6TqAUVrT9L5eXSq+KS0jfOpyINy2biq7sWkHaQIizxbmy
-	3ehSnBfEmGv/GGNIrbYm6azTYUyMnsNvI2I/NC1i5KnPdcjfcXwcxHMgkwdiZVYRTZJWw1hC9kf
-	ZeUhFHxwdIujNR567SLOTHb3guyU6ykPtdg7py4qxyosmtDzS9cJwBjLcq5zp506qSU4Pzk2o8m
-	K0/tfwqzZN0A4wUL1qhRImmCkDCCdp//bCR/bdJMzK5eysuTuzkqxEWwnmV0+C1QrDI00cYzYqe
-	5c/gdkH9vhk3C70kY8WmIoBtXN/xd0m/fncE0R/Ab7gO47iTysIIPNI2hMBmJKAuB3Rh3Ry7MRY
-	dNCc6eNscuZFb2Kc=
-X-Google-Smtp-Source: AGHT+IH64gS0ZDjXt8GPsgr6bpd2RQzzCfhLZJtwkTBbFu3DAOZQTE2TKFa+FvPIHCOCApQHKaRMxA==
-X-Received: by 2002:a17:907:86a1:b0:ac1:def4:ce20 with SMTP id a640c23a62f3a-ac1def4d088mr387883466b.18.1741035293951;
-        Mon, 03 Mar 2025 12:54:53 -0800 (PST)
+        bh=1pvaaqiA/SmRoJNAwsNTHeXGNX/6oeYrcqiqLNPnA9o=;
+        b=b9M6z8F+fy3+CppHxD1vCzOD+voVyT0FFiGjTrydTUiShS6McHWALQEtL/TLNDYhNx
+         N2w1HigOeJxcwni4RX5KsvXW5FYXc4DmFEG6Q28GPEANZrvUJZOazWnCd/wuNr7uDlPz
+         D/jSD0nEd4xElwslkhQyrIaNLHG8fJhqu5XgsuMN523p9PK5jaNwxrFXyz8ZG2zJUwjf
+         et3RgK3LfSlggKnNUc9CWDObzFuqfnLlC7rsalH12rJgHLyvjdbiI2AmY1Fh9NbtZzwU
+         RMD353fSR1e7D4g/bnQe8ILLMWiSJhZ3NVK8INygyamJhmHRWZfABZhuyzQuI4TP8rzj
+         4XiQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU8tSfweYJ1GHKZ4QVWHnuAdP4wIR6BepoKfQr8fk04pTRiBg1JfR1kyxfK0hjxBKgdPfD9GgdBFhAq@vger.kernel.org, AJvYcCXv4xvveJCQiDkrcupd9oZ5vwqJkfvKpoTq003QMwygP61dx24irRMh2Szdg79U++MSqjlpudh36Z8OCBjc@vger.kernel.org
+X-Gm-Message-State: AOJu0YzuoLb6HyjDGVsuoHx+93ocvF2gdD8yx7+Ph+4gumLSzlPkePoT
+	FosSifuKrkHyASy52VjUezcS4tfA+CJT7o7Yt1Q/AZh7/Hi6jfDe/gCGnQ==
+X-Gm-Gg: ASbGncsyAIRA6ZfC1S6U8J2ltU5ybCY/J1BYbyfpAH1F5oGAHO/vBKTrweX7yf00Ofl
+	v0AJiW6C8wqKG0PpXWFENp6GnTZVPY/4cFzf/0hE03MVg3+iNBozufxNy5XWcdPcrp1bWSb3PH0
+	f0+Q/F99WXGVPWXk9ZxJjc6nk0me+L4eCmBDz8ASjnmF8WhERkacPP7G+PjS+KXfTlc7130dAIP
+	H0CW6UdxQTiUy2cQnVMja/9l3uQqTWi7l1f2RPTQy/9DgVKoADymYe7YvDbH44OBBjXVrCS5IiT
+	WI5vg97P88iirBzpqEfnVkX8gbdGQ2/ebYPcWvYgFvzn5az5zOMS45y9qRqP83TSNy06V3B4WBa
+	oxAAHRXNy7JwTJ6Y=
+X-Google-Smtp-Source: AGHT+IGL2YA/WqHKHuyosoZ0FTICgI26SVWArz7fch8CvYRnNoLDjfA4RUT/Cs6K1TVfnuAovJQnFQ==
+X-Received: by 2002:a05:6402:274b:b0:5e4:d2c9:456c with SMTP id 4fb4d7f45d1cf-5e4d6b4c7c3mr40715184a12.22.1741035297448;
+        Mon, 03 Mar 2025 12:54:57 -0800 (PST)
 Received: from hex.my.domain (83.8.122.142.ipv4.supernova.orange.pl. [83.8.122.142])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abf76063ab8sm266955566b.73.2025.03.03.12.54.52
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abf76063ab8sm266955566b.73.2025.03.03.12.54.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Mar 2025 12:54:53 -0800 (PST)
+        Mon, 03 Mar 2025 12:54:57 -0800 (PST)
 From: Artur Weber <aweber.kernel@gmail.com>
-Date: Mon, 03 Mar 2025 21:54:48 +0100
-Subject: [PATCH v3 3/6] pinctrl: bcm281xx: Provide pinctrl device info as
- OF platform data
+Date: Mon, 03 Mar 2025 21:54:51 +0100
+Subject: [PATCH v3 6/6] ARM: dts: bcm2166x: Add bcm2166x-pinctrl DTSI
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -70,7 +69,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250303-bcm21664-pinctrl-v3-3-5f8b80e4ab51@gmail.com>
+Message-Id: <20250303-bcm21664-pinctrl-v3-6-5f8b80e4ab51@gmail.com>
 References: <20250303-bcm21664-pinctrl-v3-0-5f8b80e4ab51@gmail.com>
 In-Reply-To: <20250303-bcm21664-pinctrl-v3-0-5f8b80e4ab51@gmail.com>
 To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
@@ -85,338 +84,341 @@ Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
  ~postmarketos/upstreaming@lists.sr.ht, 
  Artur Weber <aweber.kernel@gmail.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1741035289; l=11471;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1741035289; l=7006;
  i=aweber.kernel@gmail.com; s=20231030; h=from:subject:message-id;
- bh=hBqTyx3cRXjMO8YcrUQl3T9HLfXnpEZnzEJ9oJSb1Dc=;
- b=jOaiXLIDUNXeZr/+d2T1x01Lk3CRbh8KvL29bv2KVPDVyogU5RpsGUSd5JC5uvxTaKijI10B1
- 7KlrD5CdqMWCNgVUo0yq2DfCYRrc5AUxyV7r445vKLMVXUOjlkREHQK
+ bh=PoeeTQAJjZ5RdKFBcSwIbKAekpRiUcC0+f84D/Pj5vE=;
+ b=lHUpV2T1pqdq8Pcb9K+DP254BYkt0/S/jSk0n0VTwrRBdmPVBfNHMbAxri/uC1tu3CHQI2caz
+ c6viWOIlAi+BMpIX9XMVgs0a/SDMcc0/RT4lgaP9vMu3qC8toLDnBLR
 X-Developer-Key: i=aweber.kernel@gmail.com; a=ed25519;
  pk=RhDBfWbJEHqDibXbhNEBAnc9FMkyznGxX/hwfhL8bv8=
 
-Introduce a new struct type, "bcm281xx_pinctrl_info", that holds
-information about the pins, pin functions and regmap config for a pin
-control chip. Create such a struct for the BCM218xx and pass it as
-device data for the OF compatible match.
+Add common DTSI with common pin control configs for BCM21664/BCM23550
+and include it in bcm2166x-common.dtsi. The configs are kept in a
+separate DTSI to keep things cleaner (pin config definitions take up
+quite a lot of space).
 
-This is done in preparation for introducing additional chip types
-to the driver.
+Currently contains pins for BSC buses and SD/MMC; more pins can be
+added in the future.
 
 Signed-off-by: Artur Weber <aweber.kernel@gmail.com>
 ---
-Changes in v2:
-- Make regmap_config pointer member of bcm281xx_pinctrl_info a pointer
-  (fixes "initializer element is not a compile-time constant" error)
----
- drivers/pinctrl/bcm/pinctrl-bcm281xx.c | 119 +++++++++++++++++++++------------
- 1 file changed, 78 insertions(+), 41 deletions(-)
+ arch/arm/boot/dts/broadcom/bcm2166x-common.dtsi  |   2 +
+ arch/arm/boot/dts/broadcom/bcm2166x-pinctrl.dtsi | 297 +++++++++++++++++++++++
+ 2 files changed, 299 insertions(+)
 
-diff --git a/drivers/pinctrl/bcm/pinctrl-bcm281xx.c b/drivers/pinctrl/bcm/pinctrl-bcm281xx.c
-index a039b490cdb8e6c41169bfd48abb371447c150a0..f5aeb8a56e6ffa1204423ddc22204a4f0f4e8f84 100644
---- a/drivers/pinctrl/bcm/pinctrl-bcm281xx.c
-+++ b/drivers/pinctrl/bcm/pinctrl-bcm281xx.c
-@@ -76,20 +76,40 @@ struct bcm281xx_pin_function {
+diff --git a/arch/arm/boot/dts/broadcom/bcm2166x-common.dtsi b/arch/arm/boot/dts/broadcom/bcm2166x-common.dtsi
+index d4b412ac8b0343bd3773f50c59a20fa00a3923f8..f535212cb52fec0668abfc06e7268bead70d958a 100644
+--- a/arch/arm/boot/dts/broadcom/bcm2166x-common.dtsi
++++ b/arch/arm/boot/dts/broadcom/bcm2166x-common.dtsi
+@@ -337,3 +337,5 @@ master_ccu: master_ccu@3f001000 {
+ 		};
+ 	};
  };
- 
- /*
-- * bcm281xx_pinctrl_data - Broadcom-specific pinctrl data
-- * @reg_base - base of pinctrl registers
-+ * Device types (used in bcm281xx_pinctrl_desc to differentiate
-+ * the two device types from each other)
-  */
--struct bcm281xx_pinctrl_data {
--	void __iomem *reg_base;
-+enum bcm281xx_pinctrl_type {
-+	BCM281XX_PINCTRL_TYPE,
-+};
 +
++#include "bcm2166x-pinctrl.dtsi"
+diff --git a/arch/arm/boot/dts/broadcom/bcm2166x-pinctrl.dtsi b/arch/arm/boot/dts/broadcom/bcm2166x-pinctrl.dtsi
+new file mode 100644
+index 0000000000000000000000000000000000000000..51b8730c8feea501f2c5ca6a7bad8233ed708c82
+--- /dev/null
++++ b/arch/arm/boot/dts/broadcom/bcm2166x-pinctrl.dtsi
+@@ -0,0 +1,297 @@
++// SPDX-License-Identifier: BSD-3-Clause
 +/*
-+ * bcm281xx_pinctrl_info - description of a pinctrl device supported
-+ * by this driver, intended to be used as a provider of OF match data.
++ * Common pinmux configrations for BCM2166x (BCM21664/BCM23550).
++ *
++ * Copyright (C) 2025 Artur Weber <aweber.kernel@gmail.com>
 + */
-+struct bcm281xx_pinctrl_info {
-+	enum bcm281xx_pinctrl_type device_type;
- 
- 	/* List of all pins */
- 	const struct pinctrl_pin_desc *pins;
--	const unsigned int npins;
-+	unsigned int npins;
- 
- 	const struct bcm281xx_pin_function *functions;
--	const unsigned int nfunctions;
-+	unsigned int nfunctions;
 +
-+	const struct regmap_config *regmap_config;
++&pinctrl {
++	/* BSC1 */
++	bsc1_pins: bsc1-pins {
++		bsc1clk-grp0 {
++			pins = "bsc1clk";
++			function = "alt1"; /* BSC1CLK */
++		};
++
++		bsc1dat-grp0 {
++			pins = "bsc1dat";
++			function = "alt1"; /* BSC1DAT */
++		};
++	};
++
++	/* BSC2 */
++	bsc2_pins: bsc2-pins {
++		bsc2clk-grp0 {
++			pins = "gpio16";
++			function = "alt2"; /* BSC2CLK */
++		};
++
++		bsc2dat-grp0 {
++			pins = "gpio17";
++			function = "alt2"; /* BSC2DAT */
++		};
++	};
++
++	/* BSC3 */
++	bsc3_pins: bsc3-pins {
++		bsc3clk-grp0 {
++			pins = "lcdscl";
++			function = "alt1"; /* BSC3_CLK */
++		};
++
++		bsc3dat-grp0 {
++			pins = "lcdsda";
++			function = "alt1"; /* BSC3_SDA */
++		};
++	};
++
++	/* BSC4 */
++	bsc4_pins: bsc4-pins {
++		bsc4clk-grp0 {
++			pins = "lcdres";
++			function = "alt1"; /* BSC4_CLK */
++		};
++
++		bsc4dat-grp0 {
++			pins = "lcdte";
++			function = "alt1"; /* BSC4_SDA */
++		};
++	};
++
++	/* PMBSC */
++	pmbsc_pins: pmbsc-pins {
++		pmbscclk-grp0 {
++			pins = "pmbscclk";
++			function = "alt1"; /* PMBSCCLK */
++		};
++
++		pmbscdat-grp0 {
++			pins = "pmbscdat";
++			function = "alt1"; /* PMBSCDAT */
++		};
++	};
++
++	/* SD */
++	sd_width1_pins: sd-width1-pins {
++		sdck-grp0 {
++			pins = "sdck";
++			function = "alt1"; /* SDCK */
++			bias-disable;
++		};
++
++		sdcmd-grp0 {
++			pins = "sdcmd";
++			function = "alt1"; /* SDCMD */
++			bias-pull-up;
++		};
++
++		sddat-grp0 {
++			pins = "sddat0";
++			function = "alt1"; /* SDDATx */
++			bias-pull-up;
++		};
++	};
++
++	sd_width4_pins: sd-width4-pins {
++		sdck-grp0 {
++			pins = "sdck";
++			function = "alt1"; /* SDCK */
++			bias-disable;
++		};
++
++		sdcmd-grp0 {
++			pins = "sdcmd";
++			function = "alt1"; /* SDCMD */
++			bias-pull-up;
++		};
++
++		sddat-grp0 {
++			pins = "sddat0", "sddat1", "sddat2", "sddat3";
++			function = "alt1"; /* SDDATx */
++			bias-pull-up;
++		};
++	};
++
++	/* SD1 */
++	sd1_width1_pins: sd1-width1-pins {
++		sd1ck-grp0 {
++			pins = "mmc1dat7";
++			function = "alt6"; /* SD1CK */
++			bias-disable;
++		};
++
++		sd1cmd-grp0 {
++			pins = "spi0txd";
++			function = "alt2"; /* SD1CMD */
++			bias-pull-up;
++		};
++
++		sd1dat0-grp0 {
++			pins = "mmc1dat5";
++			function = "alt6"; /* SD1DAT0 */
++			bias-pull-up;
++		};
++	};
++
++	sd1_width4_pins: sd1-width4-pins {
++		sd1ck-grp0 {
++			pins = "mmc1dat7";
++			function = "alt6"; /* SD1CK */
++			bias-disable;
++		};
++
++		sd1cmd-grp0 {
++			pins = "spi0txd";
++			function = "alt2"; /* SD1CMD */
++			bias-pull-up;
++		};
++
++		sd1dat0-grp0 {
++			pins = "mmc1dat5";
++			function = "alt6"; /* SD1DAT0 */
++			bias-pull-up;
++		};
++
++		sd1dat1-grp0 {
++			pins = "gpio93";
++			function = "alt1"; /* SD1DAT1 */
++			bias-pull-up;
++		};
++
++		sd1dat2-grp0 {
++			pins = "gpio94";
++			function = "alt1"; /* SD1DAT2 */
++			bias-pull-up;
++		};
++
++		sd1dat3-grp0 {
++			pins = "mmc1dat3";
++			function = "alt6"; /* SD1DAT3 */
++			bias-pull-up;
++		};
++	};
++
++	/* MMC0 */
++	mmc0_width1_pins: mmc0-width1-pins {
++		mmc0ck-grp0 {
++			pins = "mmc0ck";
++			function = "alt1"; /* MMC0CK */
++			bias-disable;
++		};
++
++		mmc0cmd-grp0 {
++			pins = "mmc0cmd";
++			function = "alt1"; /* MMC0CMD */
++			bias-pull-up;
++		};
++
++		mmc0dat-grp0 {
++			pins = "mmc0dat0";
++			function = "alt1"; /* MMC0DATx */
++			bias-pull-up;
++		};
++	};
++
++	mmc0_width4_pins: mmc0-width4-pins {
++		mmc0ck-grp0 {
++			pins = "mmc0ck";
++			function = "alt1"; /* MMC0CK */
++			bias-disable;
++		};
++
++		mmc0cmd-grp0 {
++			pins = "mmc0cmd";
++			function = "alt1"; /* MMC0CMD */
++			bias-pull-up;
++		};
++
++		mmc0dat-grp0 {
++			pins = "mmc0dat0", "mmc0dat1", "mmc0dat2", "mmc0dat3";
++			function = "alt1"; /* MMC0DATx */
++			bias-pull-up;
++		};
++	};
++
++	mmc0_width8_pins: mmc0-width8-pins {
++		mmc0ck-grp0 {
++			pins = "mmc0ck";
++			function = "alt1"; /* MMC0CK */
++			bias-disable;
++		};
++
++		mmc0cmd-grp0 {
++			pins = "mmc0cmd";
++			function = "alt1"; /* MMC0CMD */
++			bias-pull-up;
++		};
++
++		mmc0dat-grp0 {
++			pins = "mmc0dat0", "mmc0dat1", "mmc0dat2", "mmc0dat3",
++			       "mmc0dat4", "mmc0dat5", "mmc0dat6", "mmc0dat7";
++			function = "alt1"; /* MMC0DATx */
++			bias-pull-up;
++		};
++	};
++
++	/* MMC1 */
++	mmc1_width1_pins: mmc1-width1-pins {
++		mmc1ck-grp0 {
++			pins = "mmc1ck";
++			function = "alt1"; /* MMC1CK */
++			bias-disable;
++		};
++
++		mmc1cmd-grp0 {
++			pins = "mmc1cmd";
++			function = "alt1"; /* MMC1CMD */
++			bias-pull-up;
++		};
++
++		mmc1dat-grp0 {
++			pins = "mmc1dat0";
++			function = "alt1"; /* MMC1DATx */
++			bias-pull-up;
++		};
++	};
++
++	mmc1_width4_pins: mmc1-width4-pins {
++		mmc1ck-grp0 {
++			pins = "mmc1ck";
++			function = "alt1"; /* MMC1CK */
++			bias-disable;
++		};
++
++		mmc1cmd-grp0 {
++			pins = "mmc1cmd";
++			function = "alt1"; /* MMC1CMD */
++			bias-pull-up;
++		};
++
++		mmc1dat-grp0 {
++			pins = "mmc1dat0", "mmc1dat1", "mmc1dat2", "mmc1dat3";
++			function = "alt1"; /* MMC1DATx */
++			bias-pull-up;
++		};
++	};
++
++	mmc1_width8_pins: mmc1-width8-pins {
++		mmc1ck-grp0 {
++			pins = "mmc1ck";
++			function = "alt1"; /* MMC1CK */
++			bias-disable;
++		};
++
++		mmc1cmd-grp0 {
++			pins = "mmc1cmd";
++			function = "alt1"; /* MMC1CMD */
++			bias-pull-up;
++		};
++
++		mmc1dat-grp0 {
++			pins = "mmc1dat0", "mmc1dat1", "mmc1dat2", "mmc1dat3",
++			       "mmc1dat4", "mmc1dat5", "mmc1dat6", "mmc1dat7";
++			function = "alt1"; /* MMC1DATx */
++			bias-pull-up;
++		};
++	};
 +};
-+
-+/*
-+ * bcm281xx_pinctrl_data - Broadcom-specific pinctrl data
-+ * @reg_base - base of pinctrl registers
-+ */
-+struct bcm281xx_pinctrl_data {
-+	struct device *dev;
-+	void __iomem *reg_base;
- 
- 	struct regmap *regmap;
-+	const struct bcm281xx_pinctrl_info *info;
- };
- 
- /*
-@@ -933,11 +953,22 @@ static const struct bcm281xx_pin_function bcm281xx_functions[] = {
- 	BCM281XX_PIN_FUNCTION(alt4),
- };
- 
--static struct bcm281xx_pinctrl_data bcm281xx_pinctrl = {
-+static const struct regmap_config bcm281xx_pinctrl_regmap_config = {
-+	.reg_bits = 32,
-+	.reg_stride = 4,
-+	.val_bits = 32,
-+	.max_register = BCM281XX_PIN_VC_CAM3_SDA * 4,
-+};
-+
-+static const struct bcm281xx_pinctrl_info bcm281xx_pinctrl = {
-+	.device_type = BCM281XX_PINCTRL_TYPE,
-+
- 	.pins = bcm281xx_pinctrl_pins,
- 	.npins = ARRAY_SIZE(bcm281xx_pinctrl_pins),
- 	.functions = bcm281xx_functions,
- 	.nfunctions = ARRAY_SIZE(bcm281xx_functions),
-+
-+	.regmap_config = &bcm281xx_pinctrl_regmap_config,
- };
- 
- static inline enum bcm281xx_pin_type pin_type_get(struct pinctrl_dev *pctldev,
-@@ -945,10 +976,10 @@ static inline enum bcm281xx_pin_type pin_type_get(struct pinctrl_dev *pctldev,
- {
- 	struct bcm281xx_pinctrl_data *pdata = pinctrl_dev_get_drvdata(pctldev);
- 
--	if (pin >= pdata->npins)
-+	if (pin >= pdata->info->npins)
- 		return BCM281XX_PIN_TYPE_UNKNOWN;
- 
--	return *(enum bcm281xx_pin_type *)(pdata->pins[pin].drv_data);
-+	return *(enum bcm281xx_pin_type *)(pdata->info->pins[pin].drv_data);
- }
- 
- #define BCM281XX_PIN_SHIFT(type, param) \
-@@ -970,18 +1001,11 @@ static inline void bcm281xx_pin_update(u32 *reg_val, u32 *reg_mask,
- 	*reg_mask |= param_mask;
- }
- 
--static const struct regmap_config bcm281xx_pinctrl_regmap_config = {
--	.reg_bits = 32,
--	.reg_stride = 4,
--	.val_bits = 32,
--	.max_register = BCM281XX_PIN_VC_CAM3_SDA * 4,
--};
--
- static int bcm281xx_pinctrl_get_groups_count(struct pinctrl_dev *pctldev)
- {
- 	struct bcm281xx_pinctrl_data *pdata = pinctrl_dev_get_drvdata(pctldev);
- 
--	return pdata->npins;
-+	return pdata->info->npins;
- }
- 
- static const char *bcm281xx_pinctrl_get_group_name(struct pinctrl_dev *pctldev,
-@@ -989,7 +1013,7 @@ static const char *bcm281xx_pinctrl_get_group_name(struct pinctrl_dev *pctldev,
- {
- 	struct bcm281xx_pinctrl_data *pdata = pinctrl_dev_get_drvdata(pctldev);
- 
--	return pdata->pins[group].name;
-+	return pdata->info->pins[group].name;
- }
- 
- static int bcm281xx_pinctrl_get_group_pins(struct pinctrl_dev *pctldev,
-@@ -999,7 +1023,7 @@ static int bcm281xx_pinctrl_get_group_pins(struct pinctrl_dev *pctldev,
- {
- 	struct bcm281xx_pinctrl_data *pdata = pinctrl_dev_get_drvdata(pctldev);
- 
--	*pins = &pdata->pins[group].number;
-+	*pins = &pdata->info->pins[group].number;
- 	*num_pins = 1;
- 
- 	return 0;
-@@ -1025,7 +1049,7 @@ static int bcm281xx_pinctrl_get_fcns_count(struct pinctrl_dev *pctldev)
- {
- 	struct bcm281xx_pinctrl_data *pdata = pinctrl_dev_get_drvdata(pctldev);
- 
--	return pdata->nfunctions;
-+	return pdata->info->nfunctions;
- }
- 
- static const char *bcm281xx_pinctrl_get_fcn_name(struct pinctrl_dev *pctldev,
-@@ -1033,7 +1057,7 @@ static const char *bcm281xx_pinctrl_get_fcn_name(struct pinctrl_dev *pctldev,
- {
- 	struct bcm281xx_pinctrl_data *pdata = pinctrl_dev_get_drvdata(pctldev);
- 
--	return pdata->functions[function].name;
-+	return pdata->info->functions[function].name;
- }
- 
- static int bcm281xx_pinctrl_get_fcn_groups(struct pinctrl_dev *pctldev,
-@@ -1043,8 +1067,8 @@ static int bcm281xx_pinctrl_get_fcn_groups(struct pinctrl_dev *pctldev,
- {
- 	struct bcm281xx_pinctrl_data *pdata = pinctrl_dev_get_drvdata(pctldev);
- 
--	*groups = pdata->functions[function].groups;
--	*num_groups = pdata->functions[function].ngroups;
-+	*groups = pdata->info->functions[function].groups;
-+	*num_groups = pdata->info->functions[function].ngroups;
- 
- 	return 0;
- }
-@@ -1054,14 +1078,15 @@ static int bcm281xx_pinmux_set(struct pinctrl_dev *pctldev,
- 			       unsigned int group)
- {
- 	struct bcm281xx_pinctrl_data *pdata = pinctrl_dev_get_drvdata(pctldev);
--	const struct bcm281xx_pin_function *f = &pdata->functions[function];
--	u32 offset = 4 * pdata->pins[group].number;
-+	const struct bcm281xx_pin_function *f = &pdata->info->functions[function];
-+	unsigned int pin = pdata->info->pins[group].number;
-+	u32 offset = 4 * pin;
- 	int rc = 0;
- 
- 	dev_dbg(pctldev->dev,
- 		"%s(): Enable function %s (%d) of pin %s (%d) @offset 0x%x.\n",
--		__func__, f->name, function, pdata->pins[group].name,
--		pdata->pins[group].number, offset);
-+		__func__, f->name, function, pdata->info->pins[group].name,
-+		pin, offset);
- 
- 	rc = regmap_update_bits(pdata->regmap, offset,
- 		BCM281XX_PIN_REG_F_SEL_MASK,
-@@ -1069,7 +1094,7 @@ static int bcm281xx_pinmux_set(struct pinctrl_dev *pctldev,
- 	if (rc)
- 		dev_err(pctldev->dev,
- 			"Error updating register for pin %s (%d).\n",
--			pdata->pins[group].name, pdata->pins[group].number);
-+			pdata->info->pins[group].name, pin);
- 
- 	return rc;
- }
-@@ -1168,7 +1193,7 @@ static int bcm281xx_std_pin_update(struct pinctrl_dev *pctldev,
- 					"Invalid Drive Strength value (%d) for "
- 					"pin %s (%d). Valid values are "
- 					"(2..16) mA, even numbers only.\n",
--					arg, pdata->pins[pin].name, pin);
-+					arg, pdata->info->pins[pin].name, pin);
- 				return -EINVAL;
- 			}
- 			bcm281xx_pin_update(val, mask, (arg/2)-1,
-@@ -1179,7 +1204,7 @@ static int bcm281xx_std_pin_update(struct pinctrl_dev *pctldev,
- 		default:
- 			dev_err(pctldev->dev,
- 				"Unrecognized pin config %d for pin %s (%d).\n",
--				param, pdata->pins[pin].name, pin);
-+				param, pdata->info->pins[pin].name, pin);
- 			return -EINVAL;
- 
- 		} /* switch config */
-@@ -1233,7 +1258,7 @@ static int bcm281xx_i2c_pin_update(struct pinctrl_dev *pctldev,
- 					"Invalid pull-up value (%d) for pin %s "
- 					"(%d). Valid values are 568, 720, 831, "
- 					"1080, 1200, 1800, 2700 Ohms.\n",
--					arg, pdata->pins[pin].name, pin);
-+					arg, pdata->info->pins[pin].name, pin);
- 				return -EINVAL;
- 			}
- 
-@@ -1266,7 +1291,7 @@ static int bcm281xx_i2c_pin_update(struct pinctrl_dev *pctldev,
- 		default:
- 			dev_err(pctldev->dev,
- 				"Unrecognized pin config %d for pin %s (%d).\n",
--				param, pdata->pins[pin].name, pin);
-+				param, pdata->info->pins[pin].name, pin);
- 			return -EINVAL;
- 
- 		} /* switch config */
-@@ -1311,7 +1336,7 @@ static int bcm281xx_hdmi_pin_update(struct pinctrl_dev *pctldev,
- 		default:
- 			dev_err(pctldev->dev,
- 				"Unrecognized pin config %d for pin %s (%d).\n",
--				param, pdata->pins[pin].name, pin);
-+				param, pdata->info->pins[pin].name, pin);
- 			return -EINVAL;
- 
- 		} /* switch config */
-@@ -1354,7 +1379,7 @@ static int bcm281xx_pinctrl_pin_config_set(struct pinctrl_dev *pctldev,
- 
- 	default:
- 		dev_err(pctldev->dev, "Unknown pin type for pin %s (%d).\n",
--			pdata->pins[pin].name, pin);
-+			pdata->info->pins[pin].name, pin);
- 		return -EINVAL;
- 
- 	} /* switch pin type */
-@@ -1364,13 +1389,13 @@ static int bcm281xx_pinctrl_pin_config_set(struct pinctrl_dev *pctldev,
- 
- 	dev_dbg(pctldev->dev,
- 		"%s(): Set pin %s (%d) with config 0x%x, mask 0x%x\n",
--		__func__, pdata->pins[pin].name, pin, cfg_val, cfg_mask);
-+		__func__, pdata->info->pins[pin].name, pin, cfg_val, cfg_mask);
- 
- 	rc = regmap_update_bits(pdata->regmap, offset, cfg_mask, cfg_val);
- 	if (rc) {
- 		dev_err(pctldev->dev,
- 			"Error updating register for pin %s (%d).\n",
--			pdata->pins[pin].name, pin);
-+			pdata->info->pins[pin].name, pin);
- 		return rc;
- 	}
- 
-@@ -1390,11 +1415,23 @@ static struct pinctrl_desc bcm281xx_pinctrl_desc = {
- 	.owner = THIS_MODULE,
- };
- 
-+static struct bcm281xx_pinctrl_data bcm281xx_pinctrl_pdata;
-+
- static int __init bcm281xx_pinctrl_probe(struct platform_device *pdev)
- {
--	struct bcm281xx_pinctrl_data *pdata = &bcm281xx_pinctrl;
-+	struct bcm281xx_pinctrl_data *pdata = &bcm281xx_pinctrl_pdata;
- 	struct pinctrl_dev *pctl;
- 
-+	/* Set device pointer in platform data */
-+	pdata->dev = &pdev->dev;
-+
-+	/* Get the data to use from OF match */
-+	pdata->info = of_device_get_match_data(&pdev->dev);
-+	if (!pdata->info) {
-+		dev_err(&pdev->dev, "Failed to get data from OF match\n");
-+		return -ENODEV;
-+	}
-+
- 	/* So far We can assume there is only 1 bank of registers */
- 	pdata->reg_base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(pdata->reg_base)) {
-@@ -1404,15 +1441,15 @@ static int __init bcm281xx_pinctrl_probe(struct platform_device *pdev)
- 
- 	/* Initialize the dynamic part of pinctrl_desc */
- 	pdata->regmap = devm_regmap_init_mmio(&pdev->dev, pdata->reg_base,
--		&bcm281xx_pinctrl_regmap_config);
-+		pdata->info->regmap_config);
- 	if (IS_ERR(pdata->regmap)) {
- 		dev_err(&pdev->dev, "Regmap MMIO init failed.\n");
- 		return -ENODEV;
- 	}
- 
- 	bcm281xx_pinctrl_desc.name = dev_name(&pdev->dev);
--	bcm281xx_pinctrl_desc.pins = bcm281xx_pinctrl.pins;
--	bcm281xx_pinctrl_desc.npins = bcm281xx_pinctrl.npins;
-+	bcm281xx_pinctrl_desc.pins = pdata->info->pins;
-+	bcm281xx_pinctrl_desc.npins = pdata->info->npins;
- 
- 	pctl = devm_pinctrl_register(&pdev->dev, &bcm281xx_pinctrl_desc, pdata);
- 	if (IS_ERR(pctl)) {
-@@ -1426,7 +1463,7 @@ static int __init bcm281xx_pinctrl_probe(struct platform_device *pdev)
- }
- 
- static const struct of_device_id bcm281xx_pinctrl_of_match[] = {
--	{ .compatible = "brcm,bcm11351-pinctrl", },
-+	{ .compatible = "brcm,bcm11351-pinctrl", .data = &bcm281xx_pinctrl },
- 	{ },
- };
- 
 
 -- 
 2.48.1
