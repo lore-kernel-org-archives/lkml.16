@@ -1,96 +1,144 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 675F11E5732
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 06:29:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C762A15853B;
+	Mon,  3 Mar 2025 06:36:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740983355; cv=none; b=uggwOL55OeAgDD6SedK3j7iosytJ0afvai5sLvQUHYTL4QvXnIfgFSZc+J9YG/LbfgIH8Kj6Plqd7Vuywh1qhAU3ach+uRFfnNPEJouKEqnuvDfEYEbY9sa0dExhd63Z3kKcn1DZpz6SK3DKlLlFbpQZ3JO7KxogkpNc9zgC5mA=
+	t=1740983771; cv=none; b=L+8/4X5Lua77SF/9kmJLUbbwKsgzOsk1os8VIgDwWpEBmnKSiGWfTJ/a0YiOOqL3i+Z8xHFXdbSwNw+V+CpPkINEBVh5VVqhxgfT5WNJ+sZeJeR0NfkR+itBgik3TBhc4Z0aienNQR8yF9XqemLOOFPIpuzEA/xyYnZqIP40hms=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740983355; c=relaxed/simple;
-	bh=zjUGrTwaUn5LEO0HOCEY0bCWk0oa59RpPixuOMkUiv0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tkyQ9vexplP33Z+sYqo6k23IM/RVa+k9Xu4cNaazZFdMLhBdk2ZiUUB0e2eCe3ZZDMlw+TNXGcXHELktpopTjVK1aY667hjMr3+KWim64m2gu5NYz5Fdz+3QEwcUs07e2re+eK6/Kmpt0DT7DCHLktakf8/AsQj8CP50dOMVVuU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dfkBTR6k; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1740983771; c=relaxed/simple;
+	bh=HqvhAMtCZRjUm1Q7HW15Lf7hRzeADdKMZCORIoQCpHc=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=YtrFJWFq8EwmEXMbmTy6UOOIEtsIXC2FJ1KdlXax4kM2DhdTPcj5dEcn8i8+MX7rwYIzt1rRpzL0abZPfS0EW/P53TfLbd3oLjTkHpc2X0jWNNRCTh8fMPa0aOqG2vC9++GOhGreJZxB6vewfQ1t7iMlXmI/5xnhMYPlq3RRZs0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PDg5OUbF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dfkBTR6k"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1740983353;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Cd8L5wa/M3S5qOwn29qdcGEa3r9OYcaXV/GNXOZPOCs=;
-	b=dfkBTR6kSTCyjMP3h3UGQRiftDHWoPLeZF1DQN+YLYt1JRmV4DOuLE2PFVPLBQovc5lTNR
-	Ds5UTa5uZAHctpwHqih8c7h1ptWTi4FK0ODEMbzyAFpIAMjB8ji3lCc/g0m71o7FFIUmP0
-	YbVadmdAh/9BYauLQW6YInMbzKmno0Y=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-507-bFodggW4M7OAwnOgOuZSnw-1; Mon,
- 03 Mar 2025 01:28:56 -0500
-X-MC-Unique: bFodggW4M7OAwnOgOuZSnw-1
-X-Mimecast-MFC-AGG-ID: bFodggW4M7OAwnOgOuZSnw_1740983331
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 599301801A10;
-	Mon,  3 Mar 2025 06:28:49 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.44.32.92])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 7596F1956048;
-	Mon,  3 Mar 2025 06:28:32 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Mon,  3 Mar 2025 07:28:19 +0100 (CET)
-Date: Mon, 3 Mar 2025 07:28:01 +0100
-From: Oleg Nesterov <oleg@redhat.com>
-To: jeffxu@chromium.org
-Cc: akpm@linux-foundation.org, keescook@chromium.org, jannh@google.com,
-	torvalds@linux-foundation.org, vbabka@suse.cz,
-	lorenzo.stoakes@oracle.com, Liam.Howlett@Oracle.com,
-	adhemerval.zanella@linaro.org, avagin@gmail.com,
-	benjamin@sipsolutions.net, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org, linux-mm@kvack.org,
-	linux-kselftest@vger.kernel.org, jorgelo@chromium.org,
-	sroettger@google.com, hch@lst.de, ojeda@kernel.org,
-	thomas.weissschuh@linutronix.de, adobriyan@gmail.com,
-	johannes@sipsolutions.net, pedro.falcato@gmail.com,
-	hca@linux.ibm.com, willy@infradead.org, anna-maria@linutronix.de,
-	mark.rutland@arm.com, linus.walleij@linaro.org, Jason@zx2c4.com,
-	deller@gmx.de, rdunlap@infradead.org, davem@davemloft.net,
-	peterx@redhat.com, f.fainelli@gmail.com, gerg@kernel.org,
-	dave.hansen@linux.intel.com, mingo@kernel.org, ardb@kernel.org,
-	mhocko@suse.com, 42.hyeyoo@gmail.com, peterz@infradead.org,
-	ardb@google.com, enh@google.com, rientjes@google.com,
-	groeck@chromium.org, mpe@ellerman.id.au,
-	aleksandr.mikhalitsyn@canonical.com, mike.rapoport@gmail.com
-Subject: Re: [PATCH v8 5/7] mseal sysmap: uprobe mapping
-Message-ID: <20250303062800.GA1694@redhat.com>
-References: <20250303050921.3033083-1-jeffxu@google.com>
- <20250303050921.3033083-6-jeffxu@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PDg5OUbF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E43E7C4CED6;
+	Mon,  3 Mar 2025 06:36:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740983771;
+	bh=HqvhAMtCZRjUm1Q7HW15Lf7hRzeADdKMZCORIoQCpHc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=PDg5OUbFhLhIGRt0iZtKwAJGKJARFmkHwRTABE4PQcFkz5oGSu5M52IvQNaRtAmN9
+	 9D8ML9Arf8xYZcttdA+TcgpUSiwWEBA71Es+MUw0TRzeTcHaFJaj8N8yoqqkzoxK9T
+	 E27WJt4Av62moJ5tKzK5osfeQeiXVeH0HR4dGHBPPTGz3waD4Aa0vfcKi0Adh9QV1n
+	 Fm34uaEje9EpzyCQIkwUpH0P3//aJNP6ih0Wa2bZKfcqFmUyZ5M5PF08PHTWT7pZGg
+	 QEAGzW6j361Kp81iqkXpLccnQjn4Zu/r08c4QhurVA1/9/YLEMYr4N1T6AN+l1v9lC
+	 +fwUB6WtfhtaA==
+Date: Mon, 3 Mar 2025 15:36:07 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] tracing: probe-events: Add comments about entry data
+ storing code
+Message-Id: <20250303153607.da48fad3e90a28bc8c7f50e6@kernel.org>
+In-Reply-To: <20250228174712.44e03694@gandalf.local.home>
+References: <174061715004.501424.333819546601401102.stgit@devnote2>
+	<20250228174712.44e03694@gandalf.local.home>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250303050921.3033083-6-jeffxu@google.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On 03/03, jeffxu@chromium.org wrote:
->
-> @@ -1683,7 +1683,8 @@ static int xol_add_vma(struct mm_struct *mm, struct xol_area *area)
->  	}
->  
->  	vma = _install_special_mapping(mm, area->vaddr, PAGE_SIZE,
-> -				VM_EXEC|VM_MAYEXEC|VM_DONTCOPY|VM_IO,
-> +				VM_EXEC|VM_MAYEXEC|VM_DONTCOPY|VM_IO|
-> +				VM_SEALED_SYSMAP,
->  				&xol_mapping);
+On Fri, 28 Feb 2025 17:47:12 -0500
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-Reviewed-by: Oleg Nesterov <oleg@redhat.com>
+> On Thu, 27 Feb 2025 09:45:50 +0900
+> "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+> 
+> > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> > 
+> > Add comments about entry data storing code to __store_entry_arg() and
+> > traceprobe_get_entry_data_size(). These are a bit complicated because of
+> > building the entry data storing code and scanning it.
+> > 
+> > This just add comments, no behavior change.
+> > 
+> > Reported-by: Steven Rostedt <rostedt@goodmis.org>
+> > Closes: https://lore.kernel.org/all/20250226102223.586d7119@gandalf.local.home/
+> > Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> > ---
+> >  kernel/trace/trace_probe.c |   28 ++++++++++++++++++++++++++++
+> >  1 file changed, 28 insertions(+)
+> > 
+> > diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
+> > index 8f58ee1e8858..2eeecb6c95ee 100644
+> > --- a/kernel/trace/trace_probe.c
+> > +++ b/kernel/trace/trace_probe.c
+> > @@ -770,6 +770,10 @@ static int check_prepare_btf_string_fetch(char *typename,
+> >  
+> >  #ifdef CONFIG_HAVE_FUNCTION_ARG_ACCESS_API
+> >  
+> > +/*
+> > + * Add the entry code to store the 'argnum'th parameter and return the offset
+> > + * in the entry data buffer where the data will be stored.
+> > + */
+> >  static int __store_entry_arg(struct trace_probe *tp, int argnum)
+> >  {
+> >  	struct probe_entry_arg *earg = tp->entry_arg;
+> > @@ -793,6 +797,20 @@ static int __store_entry_arg(struct trace_probe *tp, int argnum)
+> >  		tp->entry_arg = earg;
+> >  	}
+> >  
+> > +	/*
+> > +	 * The entry code array is repeating the pair of
+> > +	 * [FETCH_OP_ARG(argnum)][FETCH_OP_ST_EDATA(offset of entry data buffer)]
+> > +	 * and the rest of entries are filled with [FETCH_OP_END].
+> > +	 *
+> > +	 * To reduce the redundant function parameter fetching, we scan the entry
+> > +	 * code array to find the FETCH_OP_ARG which already fetches the 'argnum'
+> > +	 * parameter. If it doesn't match, update 'offset' to find the last
+> > +	 * offset.
+> > +	 * If we find the FETCH_OP_END without matching FETCH_OP_ARG entry, we
+> > +	 * will save the entry with FETCH_OP_ARG and FETCH_OP_ST_EDATA, and
+> > +	 * return data offset so that caller can find the data offset in the entry
+> > +	 * data buffer.
+> > +	 */
+> 
+> So I'm still not 100% sure what is happening here, but at least these
+> comments can help me figure it out if I spend some time gawking at the code
+> a bit more ;-)
 
+I think the code is a bit complicated too. I will rewrite it a bit.
+
+> 
+> Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+
+Thanks you!
+
+> 
+> -- Steve
+> 
+> 
+> >  	offset = 0;
+> >  	for (i = 0; i < earg->size - 1; i++) {
+> >  		switch (earg->code[i].op) {
+> > @@ -826,6 +844,16 @@ int traceprobe_get_entry_data_size(struct trace_probe *tp)
+> >  	if (!earg)
+> >  		return 0;
+> >  
+> > +	/*
+> > +	 * earg->code[] array has an operation sequence which is run in
+> > +	 * the entry handler.
+> > +	 * The sequence stopped by FETCH_OP_END and each data stored in
+> > +	 * the entry data buffer by FETCH_OP_ST_EDATA. The FETCH_OP_ST_EDATA
+> > +	 * stores the data at the data buffer + its offset, and all data are
+> > +	 * "unsigned long" size. The offset must be increased when a data is
+> > +	 * stored. Thus we need to find the last FETCH_OP_ST_EDATA in the
+> > +	 * code array.
+> > +	 */
+> >  	for (i = 0; i < earg->size; i++) {
+> >  		switch (earg->code[i].op) {
+> >  		case FETCH_OP_END:
+> 
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
