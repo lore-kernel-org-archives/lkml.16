@@ -1,38 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79FAB1DDA3C
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 22:17:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8387C22C325;
+	Mon,  3 Mar 2025 22:17:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741040252; cv=none; b=AhnGuEE4BQDoYFfCfpwgixGWEyNPNGLwg70nfmNavWy5D8QQ+Pf+Q3vqz0qfGk7F7r3KjP/qlRAwfczn0E7ds/V6VxsvD9QZn1QVailGRtgvrhzxmuH+TjmT82qC7VBPW1mgOjxxJIjZ+j+vyjpbMpdVfYCG7sTbuRBZ8reIrgE=
+	t=1741040253; cv=none; b=s/BbyPyCquEEfjOu5dEE4lKVBvmQyJWbCGiPUXVZ5mrhBvVfNVQ39RQk/W9yHENRAK0UK4jvUgGB87reiMgVQ9utanuAE6QHDdCIjiLwWR6JWquObhqsg8KL8DVVDAKKVL59BxbmWYs+ZyPx6XYCti3921OIkLUtRF1ndZG1Kvk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741040252; c=relaxed/simple;
-	bh=3Dhep88DZZmRiLR4JWC42gaVSxkJVdFR1Myn7cDYqJ8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=N8dvueDOZcuPIfOGBp91RLADABHuOHOlBZRIDOQGZmjjGOs4faSjAnfx2ECtcOKN31tvA7Ti/9wKV+Vice2HTQWshFlM2rVsq6op35qr6vguj63FwzqydfzfYFqWQwifm30wYX8PmxWTuZ9dEFQZDsdIsa2zHAnhbzmzFfdCZLU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k8IkKKnS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741040253; c=relaxed/simple;
+	bh=iSBVb6PukRtPBydpg/2aD8QyTDEBPd4vfWzy9ndeL3Y=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=oTKMI78Ts+uLrNgM89sWmImBKCqemn0IGII+956Im3km2pVGF4S79trcwQzugfBZbE5ZuIXJz56YaM55fi/uWgjFFxcqFrIAy1pUOFYr4rgiXaihrDBqUkpHpipzNKJKCBJTCges0DUuN3XsW1GIIbhrWd1c6aBF5LsPBV6q7b0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=orStVIpc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k8IkKKnS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 476DCC4CEE5;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="orStVIpc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D34F0C4CED6;
 	Mon,  3 Mar 2025 22:17:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741040252;
-	bh=3Dhep88DZZmRiLR4JWC42gaVSxkJVdFR1Myn7cDYqJ8=;
-	h=From:To:Cc:Subject:Date:From;
-	b=k8IkKKnSuXX9oOfKUomPgZ7LlFvIL5SR4515wYm59tc2uZ5PIjBjagYViP42eluJ1
-	 +i7vI38FZeb29Q8uumRm08MMoc1Kajy5RCIP7K2JO52x88tntP2CaAwbA5MVEKuQb2
-	 JhUUTkLVMy3NrcbivsDlUWkT4pHB0KR+V4GFvuz89SVaK9ByRzRCDcQ9kOzmTJbCz4
-	 U4cUsOP62FGX/N2k1fT8b9RaKLwBV0uHXtoPFZcbD2j0obA9jcHquAuXz/Ys5iiv86
-	 NIpr4u8rRjLmZsEt9imeuvcnNe0rmQhvYnq3P/SHKO6PQQWsWIKtGFnLywyjjQOZwM
-	 anBGgrZjSx+hQ==
-From: Jaegeuk Kim <jaegeuk@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	linux-f2fs-devel@lists.sourceforge.net
-Cc: Jaegeuk Kim <jaegeuk@kernel.org>
-Subject: [PATCH] f2fs: set highest IO priority for checkpoint thread
-Date: Mon,  3 Mar 2025 22:17:30 +0000
-Message-ID: <20250303221730.1284822-1-jaegeuk@kernel.org>
-X-Mailer: git-send-email 2.48.1.711.g2feabab25a-goog
+	s=k20201202; t=1741040253;
+	bh=iSBVb6PukRtPBydpg/2aD8QyTDEBPd4vfWzy9ndeL3Y=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=orStVIpcjoJT1F6q/41W0z31q4TLWCnp1EuAFrsPs+gh9TtHFH/XXTbQx2bhxl8ql
+	 4tcYU6baJ/m1Eh/86PgFc44ZT6xqCDUqcKWp73qgpz1lW47mOqJ1ssHY7MzjgSP5hl
+	 cKEmNtyT5XCs8Ex54DEOpsE4J/KuAwfqlXfzldCEYOGyxcoRX138EpkuXOnrdkWhqh
+	 MLVE6+9Sx1jWwBaF8zhMiVxjSszYhKBawGweYEHRvTPy+pRhlsa678qLsyr0bduuQE
+	 e1ZBmlvS+Zw+NpnMPuQEheCovxLF129gH1ra6fGo5Jum7LER4LhNFfw5C/oq1CED8q
+	 YLt5O+Ce5GMLw==
+From: SeongJae Park <sj@kernel.org>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: SeongJae Park <sj@kernel.org>,
+	damon@lists.linux.dev,
+	kernel-team@meta.com,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org
+Subject: [PATCH 1/8] mm/damon: add data structure for monitoring intervals auto-tuning
+Date: Mon,  3 Mar 2025 14:17:19 -0800
+Message-Id: <20250303221726.484227-2-sj@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250303221726.484227-1-sj@kernel.org>
+References: <20250303221726.484227-1-sj@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,27 +47,109 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The checkpoint is the top priority thread which can stop all the filesystem
-operations. Let's make it RT priority.
+Add data structures for DAMON sampling and aggregation intervals
+automatic tuning that aims specific amount of DAMON-observed access
+events per snapshot.  In more detail, define the data structure for the
+tuning goal, link it to the monitoring attributes data structure so that
+DAMON kernel API callers can make the request, and update parameters
+setup DAMON function to respect the new parameter.
 
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Signed-off-by: SeongJae Park <sj@kernel.org>
 ---
- fs/f2fs/checkpoint.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/linux/damon.h | 27 +++++++++++++++++++++++++++
+ mm/damon/core.c       | 22 ++++++++++++++++++++++
+ 2 files changed, 49 insertions(+)
 
-diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
-index bd890738b94d..8dbb815a35c0 100644
---- a/fs/f2fs/checkpoint.c
-+++ b/fs/f2fs/checkpoint.c
-@@ -21,7 +21,7 @@
- #include "iostat.h"
- #include <trace/events/f2fs.h>
+diff --git a/include/linux/damon.h b/include/linux/damon.h
+index 242910b190c9..5f2609f24761 100644
+--- a/include/linux/damon.h
++++ b/include/linux/damon.h
+@@ -659,12 +659,38 @@ struct damon_call_control {
+ 	bool canceled;
+ };
  
--#define DEFAULT_CHECKPOINT_IOPRIO (IOPRIO_PRIO_VALUE(IOPRIO_CLASS_BE, 3))
-+#define DEFAULT_CHECKPOINT_IOPRIO (IOPRIO_PRIO_VALUE(IOPRIO_CLASS_RT, 3))
++/**
++ * struct damon_intervals_goal - Monitoring intervals auto-tuning goal.
++ *
++ * @access_bp:		Access events observation ratio to achieve in bp.
++ * @aggrs:		Number of aggregations to acheive @access_bp within.
++ * @min_sample_us:	Minimum resulting sampling interval in microseconds.
++ * @max_sample_us:	Maximum resulting sampling interval in microseconds.
++ *
++ * DAMON automatically tunes &damon_attrs->sample_interval and
++ * &damon_attrs->aggr_interval aiming the ratio in bp (1/10,000) of
++ * DAMON-observed access events to theoretical maximum amount within @aggrs
++ * aggregations be same to @access_bp.  The logic increases
++ * &damon_attrs->aggr_interval and &damon_attrs->sampling_interval in same
++ * ratio if the current access events observation ratio is lower than the
++ * target for each @aggrs aggregations, and vice versa.
++ *
++ * If @aggrs is zero, the tuning is disabled and hence this struct is ignored.
++ */
++struct damon_intervals_goal {
++	unsigned long access_bp;
++	unsigned long aggrs;
++	unsigned long min_sample_us;
++	unsigned long max_sample_us;
++};
++
+ /**
+  * struct damon_attrs - Monitoring attributes for accuracy/overhead control.
+  *
+  * @sample_interval:		The time between access samplings.
+  * @aggr_interval:		The time between monitor results aggregations.
+  * @ops_update_interval:	The time between monitoring operations updates.
++ * @intervals_goal:		Intervals auto-tuning goal.
+  * @min_nr_regions:		The minimum number of adaptive monitoring
+  *				regions.
+  * @max_nr_regions:		The maximum number of adaptive monitoring
+@@ -684,6 +710,7 @@ struct damon_attrs {
+ 	unsigned long sample_interval;
+ 	unsigned long aggr_interval;
+ 	unsigned long ops_update_interval;
++	struct damon_intervals_goal intervals_goal;
+ 	unsigned long min_nr_regions;
+ 	unsigned long max_nr_regions;
+ };
+diff --git a/mm/damon/core.c b/mm/damon/core.c
+index b1ce072b56f2..ad3b5c065cb8 100644
+--- a/mm/damon/core.c
++++ b/mm/damon/core.c
+@@ -615,6 +615,25 @@ static void damon_update_monitoring_results(struct damon_ctx *ctx,
+ 					r, old_attrs, new_attrs);
+ }
  
- static struct kmem_cache *ino_entry_slab;
- struct kmem_cache *f2fs_inode_entry_slab;
++/*
++ * damon_valid_intervals_goal() - return if the intervals goal of @attrs is
++ * valid.
++ */
++static bool damon_valid_intervals_goal(struct damon_attrs *attrs)
++{
++	struct damon_intervals_goal *goal = &attrs->intervals_goal;
++
++	/* tuning is disabled */
++	if (!goal->aggrs)
++		return true;
++	if (goal->min_sample_us > goal->max_sample_us)
++		return false;
++	if (attrs->sample_interval < goal->min_sample_us ||
++			goal->max_sample_us < attrs->sample_interval)
++		return false;
++	return true;
++}
++
+ /**
+  * damon_set_attrs() - Set attributes for the monitoring.
+  * @ctx:		monitoring context
+@@ -635,6 +654,9 @@ int damon_set_attrs(struct damon_ctx *ctx, struct damon_attrs *attrs)
+ 		attrs->sample_interval : 1;
+ 	struct damos *s;
+ 
++	if (!damon_valid_intervals_goal(attrs))
++		return -EINVAL;
++
+ 	if (attrs->min_nr_regions < 3)
+ 		return -EINVAL;
+ 	if (attrs->min_nr_regions > attrs->max_nr_regions)
 -- 
-2.48.1.711.g2feabab25a-goog
-
+2.39.5
