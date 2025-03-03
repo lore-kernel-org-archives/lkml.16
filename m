@@ -1,281 +1,268 @@
-Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B043214219
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 14:36:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F34602144D7
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 14:36:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741012603; cv=none; b=PyFkPJtjkW56YlO5xD8hkhFyYzEAIQuCLVDrfAtP7RlpgoM+YjlMaj4VWWLhxKCjXtPm3c+5y97JZXXDQ0OQixPp2Wrwpbcmfp626xN2ZRyD1ifOgGz2FnrOjKEGpHRJjN2wTJKzNLyaFPGkLgiXzYPb8oLBOWnNsvO06i1GiTo=
+	t=1741012606; cv=none; b=Gj3kd/e+j9PZx2PW+4tgZ+zxHc/F0UqeQc2SxNxHWU378dYssFCBa53AQEFXv/ibzNSYPWGs15Wu2Cv3op5VNborNGTmIS5NEBpR2XGS8UOz7tYhmrWcltTlwWI5pHUsWat7F2Hz/MRHUVileZghxltz957fYu1xAqDEvGEAaVw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741012603; c=relaxed/simple;
-	bh=Ua215Hd9PYMD2vvrDycgehoLktDThGS6vrG2nqSqBJA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:MIME-Version:
-	 Content-Type:References; b=S4uXsoTJjeSyFHqnfoz0a9bMkrRCIfU4hdsxV+vtYztawxzCsIGumXK6r42lo0T7qkf6+9smtY4ppriK1B/XZ3VqkoiXqupQ9bdc+8FRcUejeLyWUXGfk4KHZI95oateLyfMdkT5FrIw7O9ZDnwENcU2YUZySqwdUw4Fed5IDG0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=VK84/EVo; arc=none smtp.client-ip=210.118.77.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1741012606; c=relaxed/simple;
+	bh=R2KPH7xolSgRpERAbrimyPF/uYhIF+d26nYUpS/9Nl4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=X5B67Zc6zSYVA962aEwXK7E7ZfDldZ9BCRTj0c4ur3SpHk6ZR1sMj2MhDY3uYnJC66pnGVRe/AXip6+wU+Qt4+j1irGpUz9Ai3nEXf8SRHcZv0qmnIpZKr9ZxXLihBHhB17+xsLVOFEXBy9u780N7f3Tepr8F+X58UKLTayZLwU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=f44yA+AG; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="VK84/EVo"
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20250303143638euoutp02a533a8ea9e9dfd4685f7b72fa743bfa8~pUbv9Z7jj2792727927euoutp028
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 14:36:38 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20250303143638euoutp02a533a8ea9e9dfd4685f7b72fa743bfa8~pUbv9Z7jj2792727927euoutp028
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1741012598;
-	bh=2RTzJ2qIW6QHJ1xVf28+dD25ff+FzN3lcglLvG7tFCY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=VK84/EVod75fecIGAtEH7MRU9tsIkWKC2Sa5zBDVnDrfCZce+tyJlPZMIv4eL3RgA
-	 NtBkxZ87Z2z7w4SeoFiCSO0mYBiA+KLH0MwMN5IsR4kULPWx0wBGs4D4VBDeQSq+2o
-	 sqNXUvquopdmAayA/9lN44JiAIklhTbjBqqRALeo=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-	eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-	20250303143638eucas1p1aecf386f4a92e85fcc97b3060875645f~pUbvdQSiU2631826318eucas1p1p;
-	Mon,  3 Mar 2025 14:36:38 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-	eusmges1new.samsung.com (EUCPMTA) with SMTP id DA.3C.20821.67EB5C76; Mon,  3
-	Mar 2025 14:36:38 +0000 (GMT)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-	20250303143637eucas1p1a3abdea520ab88688de1263a5f07bba0~pUbvDLdwk0504205042eucas1p1P;
-	Mon,  3 Mar 2025 14:36:37 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-	eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20250303143637eusmtrp2a9001e7e4370175b5446fad2aa8949e6~pUbvCc2Y01887518875eusmtrp2r;
-	Mon,  3 Mar 2025 14:36:37 +0000 (GMT)
-X-AuditID: cbfec7f2-b11c470000005155-60-67c5be769d64
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-	eusmgms1.samsung.com (EUCPMTA) with SMTP id 03.C0.19920.57EB5C76; Mon,  3
-	Mar 2025 14:36:37 +0000 (GMT)
-Received: from AMDC4942.home (unknown [106.210.136.40]) by
-	eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20250303143636eusmtip26d8b366318502581e33c26828353764e~pUbuKTvar2028620286eusmtip2V;
-	Mon,  3 Mar 2025 14:36:36 +0000 (GMT)
-From: Michal Wilczynski <m.wilczynski@samsung.com>
-To: mturquette@baylibre.com, sboyd@kernel.org, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org, drew@pdp7.com, guoren@kernel.org,
-	wefu@redhat.com, paul.walmsley@sifive.com, palmer@dabbelt.com,
-	aou@eecs.berkeley.edu, alex@ghiti.fr, jszhang@kernel.org,
-	p.zabel@pengutronix.de, m.szyprowski@samsung.com
-Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, Michal
-	Wilczynski <m.wilczynski@samsung.com>
-Subject: [PATCH v1 4/4] clk: thead: Add GPU clock gate control with CLKGEN
- reset support
-Date: Mon,  3 Mar 2025 15:36:29 +0100
-Message-Id: <20250303143629.400583-5-m.wilczynski@samsung.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250303143629.400583-1-m.wilczynski@samsung.com>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="f44yA+AG"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4393dc02b78so28687695e9.3
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Mar 2025 06:36:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1741012602; x=1741617402; darn=vger.kernel.org;
+        h=in-reply-to:autocrypt:from:content-language:references:cc:to
+         :subject:user-agent:mime-version:date:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=R2KPH7xolSgRpERAbrimyPF/uYhIF+d26nYUpS/9Nl4=;
+        b=f44yA+AGU7DqWekRgCDSo4te4mmUqu74eT88t9Nn8l9zHLH7L/iv//FLbWwrY5Zf2d
+         0KoIcncBspmV/DRpaM7yKLBOJThwPIdglmcHhAkME59IxEEU895wMOOcIGxkcTjdP7jU
+         h+3oZOICiZf2s2xBG+7pbdzF0DRqYeaip7w2ks+Rck3jCE+Tqje1m4qCuahwmu3wOB1J
+         F+nyoA4bizRfObw/U/NwyVVGfROF8OkiBR0+P+eYCEQSdN0lQFTgd0N5284ywkbhlNQn
+         JrlIRrZn88CSMh6LQGwLWkZ+fSD2ROWhPUatnurqV0OLf48gT9rzYconIXM++VjKpatn
+         h4wA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741012602; x=1741617402;
+        h=in-reply-to:autocrypt:from:content-language:references:cc:to
+         :subject:user-agent:mime-version:date:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=R2KPH7xolSgRpERAbrimyPF/uYhIF+d26nYUpS/9Nl4=;
+        b=gbvJlP6nrXprHhcnNA/HonK1vbJZWxJ6GUzGnfIIa9TdlMGTssMoiU8kNR1z7QqJ9r
+         DHeBvjY8cKbaRxT8qfONzKV1TzHR/RlMG1hKqhTP0Jd3lneElza2evZ1v+1vEiWeFBHw
+         /xqE1wAMmvVes7bE/3PBJeSUfc+jrTljT1zs//NA/1YzXzvqxfnL/7Vz8vqI42lkP1QQ
+         TVF137699JKW8+cu9bn0k6cJiGili5voqOR0gJkT0PeoZgPhpwrkwMFra0Xo8YrHPwm5
+         ut7rQGSOEbCFlZNTFDh0B44ZGTxNxjrrT7GkzXJQIYIE4bJhZseFnh5sCFNlOMWZRK4F
+         U1fA==
+X-Forwarded-Encrypted: i=1; AJvYcCUfEFiCWGgPA6G3tkfF3xszQH+L3gikx6dqLDMfHX+7Zi0cI1pbp/ThW26KvyCMK+StXZGNjBe8mrTbND8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwIZ9yig1RRIBBqUyEREzIXIlYcfV3ua9KTHKI9FVB6smnemxU3
+	PmPUCSvLgnp0ASi1WdPyxhHVIjH58HeQj5xVlREIxwtzwp1/AJ51i6V1tjcag1A=
+X-Gm-Gg: ASbGncuSQlqrre6tCWpZiL1tx3tAEOe90mBPyTrRyG44nk4vu2alZAOfM4BSekjz0dE
+	/PY7ES2gab43SPdJYf2HKZuFdxena5JNEcbWOg0rtgOfPEEpoa0D+KJbcphGhjsu2nI8Wws1R6w
+	PDbufW6/9xLi/NJ5B0bzRRKl/X6Z6RLHRYjQU89BZIp/Hyyv5cB5tbv+FWT7Bo4B+ZltDTXEkns
+	Et19ewQpmOqTmTpJJ7HEPMaZuP3x3fgJ+clzIP52tTO15csH2mptExX00/InrZxqutjXk/a9vCH
+	y0CLjUEx5qiVUODN9WRNSCG+2r/YHDcviV9DRBfHWlbYadkWfum3+ZrjhGZcFkvwUU3coRpJ3j9
+	IV5u9FltndjroNvov016v4TsJ2v/d85WLpk4zpbSDNHZSlFHilu3VIWqHwA5LwGZE8vA=
+X-Google-Smtp-Source: AGHT+IHZG5boLzUXRaTet0jfOprLTQ+TmhwTynTWXlvVPZA4H0j5TEeDpiAF4xDj5sFXrKtG7EyUTQ==
+X-Received: by 2002:a05:6000:23c7:b0:38f:218c:f672 with SMTP id ffacd0b85a97d-390eca41904mr7634141f8f.41.1741012602186;
+        Mon, 03 Mar 2025 06:36:42 -0800 (PST)
+Received: from ?IPV6:2003:e5:8714:500:2aea:6ec9:1d88:c1ef? (p200300e5871405002aea6ec91d88c1ef.dip0.t-ipconnect.de. [2003:e5:8714:500:2aea:6ec9:1d88:c1ef])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-390e4844abbsm14539737f8f.70.2025.03.03.06.36.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 03 Mar 2025 06:36:41 -0800 (PST)
+Message-ID: <d0de16ad-33d5-4878-8e7f-8e8cd1d44585@suse.com>
+Date: Mon, 3 Mar 2025 15:36:40 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Sf0wTZxjHfe+ud1ek7qwsvEPjpMYSHaIYt7wZC2xjLDczE+f2F7pIJ5dC
-	RgvrAcMfkXal2GnnFpmUVUyN02gqjNnRWgjSrZSWUSyROiEEOpgyBHEMEZ1jwGgPN//7PN/n
-	+zzf90leGpdOiRLofHUxp1ErCmRkDOH0PQluLm1tV26t+0eMfh+YESHHrIVCddeCGLJ6gyIU
-	7mnE0N1rOgLpfQ0kGrOESTRlCotQqLmWRM7pChLVewcp1DBjxdCNziw0GO4g0FjIhKNKy3No
-	ocVFoflbVwhU4f6aeD2OnewzUOzE2BjBthkfUmy4o1rE2m2fk+wP58vZinofxn45t5WdbP2F
-	ZE802gDbo++l2Gn72l2x2TGv5XIF+aWcZkt6TkxeW1e9qGh2c9m8cQZoQYf8GBDTkNkOx8+Y
-	qWMghpYylwD0VJ0gheIhgFVtrbhQTAN4y+sSPR1x+S4TEZYyFwEcdEkF0wSA3lFftEEy2+DQ
-	Raso0ohjWjD4+PGT6CqcsQF459EUFXGtYrLhpO776ATBbIBzxqGoLmHS4W/6m6QQ9yJ0/3Qd
-	j7CYyYCeXi0heFbCn7+5E2V80aN3nI4GQKZTDKs7+5eG34ILwz2UwKvguL9xidfAhSYrJnAh
-	HHI8wAU+DJtM/iVOgwPBvxf30IsBG2FD8xZBfgPevucGERkyK2Df/ZXCE1bAk04zLsgSaKyU
-	Cm45PGX64r/Q4CUnJlhYaJ/48CuQaHnmFsszt1j+jz0LcBuI50p4lZLjU9Xcpym8QsWXqJUp
-	+wtVdrD4KwPz/gcucGZ8KsUDMBp4AKRxWZyk/2i7UirJVRw4yGkK92lKCjjeA1bThCxecs5t
-	UEoZpaKY+5jjijjN0y5GixO0mNmUVZd8dPl78eeTdeWOP9fXjNhUf2R0WZN0Ly/LD2mP/AUN
-	V+RXd3y27Mi5rsoRS/zBV/O/myUPyZyxLWeTZkX7c606fy2oURef1L4Dwi+lkbsKuwZv+mJP
-	9fWPZhdX/bop8Ahfe2+HynDBpwmllZV2H17Y9rwxIfCBu7v3dirzyh5jDtcsKUNXzc3l9fI1
-	iQFvQlZB4gtv80UjmddzRq3rku9Cazqao93mH9O19/u3v79OPlztP+6afxPb03PakalXZNqS
-	Wx0f9Y7M7ZW7WtprvlXxNxRJjbtrNzje1a8OHBqQXN7pY9uXj5qP7zVaTd0hxtBkV+TVGYcP
-	ZHzCygg+T5G6Cdfwin8B+GQTcgQEAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrEIsWRmVeSWpSXmKPExsVy+t/xe7ql+46mG2z8p2Px7M5XVoutv2ex
-	W6zZe47JYv6Rc6wW9y5tYbJ4sbeRxaL52Ho2i5ez7rFZfOy5x2pxedccNottn1vYLNYeuctu
-	sf7rfCaLi6dcLe7eO8Fi8fJyD7NF2yx+i/97drBb/Lu2kcWiZf8UFgcRj/c3Wtk93rx8yeJx
-	uOMLu8e9E9NYPTat6mTz2Lyk3qNl7TEmj/6/Bh7v911l8+jbsorR41LzdXaPz5vkAnii9GyK
-	8ktLUhUy8otLbJWiDS2M9AwtLfSMTCz1DI3NY62MTJX07WxSUnMyy1KL9O0S9DIOn1nLWvBb
-	t+Jfx1fGBsYTal2MnBwSAiYSO46tZuli5OIQEljKKHFr5w1miISMxLXulywQtrDEn2tdbBBF
-	rxgl5j74wgiSYBMwkniwfD4rSEJE4AKTxK51q5lAHGaBdYwSU7bvYAKpEhaIkHi3oA1sLIuA
-	qsTfjgfsIDavgJ3Eo+YrbBAr5CX2HzwLVsMpYC9x6HoD2GohoJo9a3dC1QtKnJz5BCzODFTf
-	vHU28wRGgVlIUrOQpBYwMq1iFEktLc5Nzy021CtOzC0uzUvXS87P3cQIjOxtx35u3sE479VH
-	vUOMTByMhxglOJiVRHhvtR9NF+JNSaysSi3Kjy8qzUktPsRoCnT3RGYp0eR8YGrJK4k3NDMw
-	NTQxszQwtTQzVhLndbt8Pk1IID2xJDU7NbUgtQimj4mDU6qBiXlJysKLziEzG2MenlIKElzq
-	OOXAX8bJp20+JXKf4VbcspfvZ4HafwaravVFfY8uBdv3KlwLPGKy5VdeEmtD0NKSc3sSLuZw
-	1uQffzrpzTW/zllzZyXolyz+/DNvV9qWzZaOJ+f+N4r0SlR5ZjWTbeVWj2clNx2ChdTKq2ov
-	tP90Y/34oJKp9rn67Jq8RYkhJ5dZPC/k+7nlIOuKn7p7ts5YINf37uneWa5HI68+CAv0n/R0
-	p3x/KlON44knX34ni1zxe6lyWSJDN2NCc0yCaaSHe3h+fB3vdocrR1g6s46mdFrYyP/c++Pg
-	q7ri779vvjLNqnxVqxMfbPpCPIf3qH6d0DObaxVNZfX7/oQYKrEUZyQaajEXFScCACXhFKN1
-	AwAA
-X-CMS-MailID: 20250303143637eucas1p1a3abdea520ab88688de1263a5f07bba0
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20250303143637eucas1p1a3abdea520ab88688de1263a5f07bba0
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20250303143637eucas1p1a3abdea520ab88688de1263a5f07bba0
-References: <20250303143629.400583-1-m.wilczynski@samsung.com>
-	<CGME20250303143637eucas1p1a3abdea520ab88688de1263a5f07bba0@eucas1p1.samsung.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 0/5] Fix lazy mmu mode
+To: Ryan Roberts <ryan.roberts@arm.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ "David S. Miller" <davem@davemloft.net>,
+ Andreas Larsson <andreas@gaisler.com>,
+ Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "H. Peter Anvin" <hpa@zytor.com>,
+ "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+ Catalin Marinas <catalin.marinas@arm.com>
+Cc: linux-mm@kvack.org, sparclinux@vger.kernel.org,
+ xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org
+References: <20250303141542.3371656-1-ryan.roberts@arm.com>
+Content-Language: en-US
+From: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
+Autocrypt: addr=jgross@suse.com; keydata=
+ xsBNBFOMcBYBCACgGjqjoGvbEouQZw/ToiBg9W98AlM2QHV+iNHsEs7kxWhKMjrioyspZKOB
+ ycWxw3ie3j9uvg9EOB3aN4xiTv4qbnGiTr3oJhkB1gsb6ToJQZ8uxGq2kaV2KL9650I1SJve
+ dYm8Of8Zd621lSmoKOwlNClALZNew72NjJLEzTalU1OdT7/i1TXkH09XSSI8mEQ/ouNcMvIJ
+ NwQpd369y9bfIhWUiVXEK7MlRgUG6MvIj6Y3Am/BBLUVbDa4+gmzDC9ezlZkTZG2t14zWPvx
+ XP3FAp2pkW0xqG7/377qptDmrk42GlSKN4z76ELnLxussxc7I2hx18NUcbP8+uty4bMxABEB
+ AAHNH0p1ZXJnZW4gR3Jvc3MgPGpncm9zc0BzdXNlLmNvbT7CwHkEEwECACMFAlOMcK8CGwMH
+ CwkIBwMCAQYVCAIJCgsEFgIDAQIeAQIXgAAKCRCw3p3WKL8TL8eZB/9G0juS/kDY9LhEXseh
+ mE9U+iA1VsLhgDqVbsOtZ/S14LRFHczNd/Lqkn7souCSoyWsBs3/wO+OjPvxf7m+Ef+sMtr0
+ G5lCWEWa9wa0IXx5HRPW/ScL+e4AVUbL7rurYMfwCzco+7TfjhMEOkC+va5gzi1KrErgNRHH
+ kg3PhlnRY0Udyqx++UYkAsN4TQuEhNN32MvN0Np3WlBJOgKcuXpIElmMM5f1BBzJSKBkW0Jc
+ Wy3h2Wy912vHKpPV/Xv7ZwVJ27v7KcuZcErtptDevAljxJtE7aJG6WiBzm+v9EswyWxwMCIO
+ RoVBYuiocc51872tRGywc03xaQydB+9R7BHPzsBNBFOMcBYBCADLMfoA44MwGOB9YT1V4KCy
+ vAfd7E0BTfaAurbG+Olacciz3yd09QOmejFZC6AnoykydyvTFLAWYcSCdISMr88COmmCbJzn
+ sHAogjexXiif6ANUUlHpjxlHCCcELmZUzomNDnEOTxZFeWMTFF9Rf2k2F0Tl4E5kmsNGgtSa
+ aMO0rNZoOEiD/7UfPP3dfh8JCQ1VtUUsQtT1sxos8Eb/HmriJhnaTZ7Hp3jtgTVkV0ybpgFg
+ w6WMaRkrBh17mV0z2ajjmabB7SJxcouSkR0hcpNl4oM74d2/VqoW4BxxxOD1FcNCObCELfIS
+ auZx+XT6s+CE7Qi/c44ibBMR7hyjdzWbABEBAAHCwF8EGAECAAkFAlOMcBYCGwwACgkQsN6d
+ 1ii/Ey9D+Af/WFr3q+bg/8v5tCknCtn92d5lyYTBNt7xgWzDZX8G6/pngzKyWfedArllp0Pn
+ fgIXtMNV+3t8Li1Tg843EXkP7+2+CQ98MB8XvvPLYAfW8nNDV85TyVgWlldNcgdv7nn1Sq8g
+ HwB2BHdIAkYce3hEoDQXt/mKlgEGsLpzJcnLKimtPXQQy9TxUaLBe9PInPd+Ohix0XOlY+Uk
+ QFEx50Ki3rSDl2Zt2tnkNYKUCvTJq7jvOlaPd6d/W0tZqpyy7KVay+K4aMobDsodB3dvEAs6
+ ScCnh03dDAFgIq5nsB11j3KPKdVoPlfucX2c7kGNH+LUMbzqV6beIENfNexkOfxHfw==
+In-Reply-To: <20250303141542.3371656-1-ryan.roberts@arm.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="------------j1JkPn85K8wsyuAVtwcVFZfT"
 
-The T-HEAD TH1520 has three GPU clocks: core, cfg, and mem. The mem
-clock gate is marked as "Reserved" in hardware, while core and cfg are
-configurable. In order for these clock gates to work properly, the
-CLKGEN reset must be managed in a specific sequence.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--------------j1JkPn85K8wsyuAVtwcVFZfT
+Content-Type: multipart/mixed; boundary="------------MxUlsgon821Y6J0ncZkjxNaY";
+ protected-headers="v1"
+From: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
+To: Ryan Roberts <ryan.roberts@arm.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ "David S. Miller" <davem@davemloft.net>,
+ Andreas Larsson <andreas@gaisler.com>,
+ Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "H. Peter Anvin" <hpa@zytor.com>,
+ "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+ Catalin Marinas <catalin.marinas@arm.com>
+Cc: linux-mm@kvack.org, sparclinux@vger.kernel.org,
+ xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org
+Message-ID: <d0de16ad-33d5-4878-8e7f-8e8cd1d44585@suse.com>
+Subject: Re: [PATCH v2 0/5] Fix lazy mmu mode
+References: <20250303141542.3371656-1-ryan.roberts@arm.com>
+In-Reply-To: <20250303141542.3371656-1-ryan.roberts@arm.com>
 
-Move the CLKGEN reset handling to the clock driver since it's
-fundamentally a clock-related workaround [1]. This ensures that clk_enabled
-GPU clocks stay physically enabled without external interference from
-the reset driver.  The reset is now deasserted only when both core and
-cfg clocks are enabled, and asserted when either of them is disabled.
+--------------MxUlsgon821Y6J0ncZkjxNaY
+Content-Type: multipart/mixed; boundary="------------Dy08AUytJDFuCzLfWwyhli8T"
 
-The mem clock is configured to use nop operations since it cannot be
-controlled.
+--------------Dy08AUytJDFuCzLfWwyhli8T
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: base64
 
-Link: https://lore.kernel.org/all/945fb7e913a9c3dcb40697328b7e9842b75fea5c.camel@pengutronix.de [1]
+T24gMDMuMDMuMjUgMTU6MTUsIFJ5YW4gUm9iZXJ0cyB3cm90ZToNCj4gSGkgQWxsLA0KPiAN
+Cj4gSSdtIHBsYW5uaW5nIHRvIGltcGxlbWVudCBsYXp5IG1tdSBtb2RlIGZvciBhcm02NCB0
+byBvcHRpbWl6ZSB2bWFsbG9jLiBBcyBwYXJ0DQo+IG9mIHRoYXQsIEkgd2lsbCBleHRlbmQg
+bGF6eSBtbXUgbW9kZSB0byBjb3ZlciBrZXJuZWwgbWFwcGluZ3MgaW4gdm1hbGxvYyB0YWJs
+ZQ0KPiB3YWxrZXJzLiBXaGlsZSBsYXp5IG1tdSBtb2RlIGlzIGFscmVhZHkgdXNlZCBmb3Ig
+a2VybmVsIG1hcHBpbmdzIGluIGEgZmV3DQo+IHBsYWNlcywgdGhpcyB3aWxsIGV4dGVuZCBp
+dCdzIHVzZSBzaWduaWZpY2FudGx5Lg0KPiANCj4gSGF2aW5nIHJldmlld2VkIHRoZSBleGlz
+dGluZyBsYXp5IG1tdSBpbXBsZW1lbnRhdGlvbnMgaW4gcG93ZXJwYywgc3BhcmMgYW5kIHg4
+NiwNCj4gaXQgbG9va3MgbGlrZSB0aGVyZSBhcmUgYSBidW5jaCBvZiBidWdzLCBzb21lIG9m
+IHdoaWNoIG1heSBiZSBtb3JlIGxpa2VseSB0bw0KPiB0cmlnZ2VyIG9uY2UgSSBleHRlbmQg
+dGhlIHVzZSBvZiBsYXp5IG1tdS4gU28gdGhpcyBzZXJpZXMgYXR0ZW1wdHMgdG8gY2xhcmlm
+eQ0KPiB0aGUgcmVxdWlyZW1lbnRzIGFuZCBmaXggYWxsIHRoZSBidWdzIGluIGFkdmFuY2Ug
+b2YgdGhhdCBzZXJpZXMuIFNlZSBwYXRjaCAjMQ0KPiBjb21taXQgbG9nIGZvciBhbGwgdGhl
+IGRldGFpbHMuDQo+IA0KPiBOb3RlIHRoYXQgSSBoYXZlIG9ubHkgYmVlbiBhYmxlIHRvIGNv
+bXBpbGUgdGVzdCB0aGVzZSBjaGFuZ2VzIGJ1dCBJIHRoaW5rIHRoZXkNCj4gYXJlIGluIGdv
+b2QgZW5vdWdoIHNoYXBlIGZvciBzb21lIGxpbnV4LW5leHQgdGVzdGluZy4NCj4gDQo+IEFw
+cGxpZXMgb24gRnJpZGF5J3MgbW0tdW5zdGFibGUgKDVmMDg5YTlhYTk4NyksIGFzIEkgYXNz
+dW1lIHRoaXMgd291bGQgYmUNCj4gcHJlZmVycmVkIHZpYSB0aGF0IHRyZWUuDQo+IA0KPiBD
+aGFuZ2VzIHNpbmNlIHYxDQo+ID09PT09PT09PT09PT09PT0NCj4gICAgLSBzcGxpdCB2MSBw
+YXRjaCAjMSBpbnRvIHYyIHBhdGNoICMxIGFuZCAjMjsgcGVyIERhdmlkDQo+ICAgIC0gQWRk
+ZWQgQWNrZWQtYnkgdGFncyBmcm9tIERhdmlkIGFuZCBBbmRyZWFzOyBUaGFua3MhDQo+ICAg
+IC0gUmVmaW5lZCB0aGUgcGF0Y2hlcyB3aGljaCBhcmUgdHJ1ZWx5IGZpeGVzIGFuZCBhZGRl
+ZCB0byBzdGFibGUgdG8gY2MNCj4gDQo+IFRoYW5rcywNCj4gUnlhbg0KPiANCj4gUnlhbiBS
+b2JlcnRzICg1KToNCj4gICAgbW06IEZpeCBsYXp5IG1tdSBkb2NzIGFuZCB1c2FnZQ0KPiAg
+ICBmcy9wcm9jL3Rhc2tfbW11OiBSZWR1Y2Ugc2NvcGUgb2YgbGF6eSBtbXUgcmVnaW9uDQo+
+ICAgIHNwYXJjL21tOiBEaXNhYmxlIHByZWVtcHRpb24gaW4gbGF6eSBtbXUgbW9kZQ0KPiAg
+ICBzcGFyYy9tbTogQXZvaWQgY2FsbGluZyBhcmNoX2VudGVyL2xlYXZlX2xhenlfbW11KCkg
+aW4gc2V0X3B0ZXMNCj4gICAgUmV2ZXJ0ICJ4ODYveGVuOiBhbGxvdyBuZXN0aW5nIG9mIHNh
+bWUgbGF6eSBtb2RlIg0KPiANCj4gICBhcmNoL3NwYXJjL2luY2x1ZGUvYXNtL3BndGFibGVf
+NjQuaCAgIHwgIDIgLS0NCj4gICBhcmNoL3NwYXJjL21tL3RsYi5jICAgICAgICAgICAgICAg
+ICAgIHwgIDUgKysrKy0NCj4gICBhcmNoL3g4Ni9pbmNsdWRlL2FzbS94ZW4vaHlwZXJ2aXNv
+ci5oIHwgMTUgKystLS0tLS0tLS0tLS0tDQo+ICAgYXJjaC94ODYveGVuL2VubGlnaHRlbl9w
+di5jICAgICAgICAgICB8ICAxIC0NCj4gICBmcy9wcm9jL3Rhc2tfbW11LmMgICAgICAgICAg
+ICAgICAgICAgIHwgMTEgKysrKy0tLS0tLS0NCj4gICBpbmNsdWRlL2xpbnV4L3BndGFibGUu
+aCAgICAgICAgICAgICAgIHwgMTQgKysrKysrKystLS0tLS0NCj4gICA2IGZpbGVzIGNoYW5n
+ZWQsIDE4IGluc2VydGlvbnMoKyksIDMwIGRlbGV0aW9ucygtKQ0KDQpGb3IgdGhlIHNlcmll
+czoNCg0KQWNrZWQtYnk6IEp1ZXJnZW4gR3Jvc3MgPGpncm9zc0BzdXNlLmNvbT4NCg0KDQpK
+dWVyZ2VuDQo=
+--------------Dy08AUytJDFuCzLfWwyhli8T
+Content-Type: application/pgp-keys; name="OpenPGP_0xB0DE9DD628BF132F.asc"
+Content-Disposition: attachment; filename="OpenPGP_0xB0DE9DD628BF132F.asc"
+Content-Description: OpenPGP public key
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Michal Wilczynski <m.wilczynski@samsung.com>
----
- drivers/clk/thead/clk-th1520-ap.c | 87 ++++++++++++++++++++++++++++---
- 1 file changed, 81 insertions(+), 6 deletions(-)
+-----BEGIN PGP PUBLIC KEY BLOCK-----
 
-diff --git a/drivers/clk/thead/clk-th1520-ap.c b/drivers/clk/thead/clk-th1520-ap.c
-index ea96d007aecd..1dfcde867233 100644
---- a/drivers/clk/thead/clk-th1520-ap.c
-+++ b/drivers/clk/thead/clk-th1520-ap.c
-@@ -12,6 +12,7 @@
- #include <linux/module.h>
- #include <linux/platform_device.h>
- #include <linux/regmap.h>
-+#include <linux/reset.h>
- 
- #define TH1520_PLL_POSTDIV2	GENMASK(26, 24)
- #define TH1520_PLL_POSTDIV1	GENMASK(22, 20)
-@@ -862,17 +863,70 @@ static CCU_GATE(CLK_SRAM1, sram1_clk, "sram1", axi_aclk_pd, 0x20c, BIT(3), 0);
- static CCU_GATE(CLK_SRAM2, sram2_clk, "sram2", axi_aclk_pd, 0x20c, BIT(2), 0);
- static CCU_GATE(CLK_SRAM3, sram3_clk, "sram3", axi_aclk_pd, 0x20c, BIT(1), 0);
- 
-+static struct reset_control *gpu_reset;
-+static DEFINE_SPINLOCK(gpu_reset_lock); /* protect GPU reset sequence */
-+
-+static void ccu_gpu_clk_disable(struct clk_hw *hw);
-+static int ccu_gpu_clk_enable(struct clk_hw *hw);
-+
-+static const struct clk_ops ccu_gate_gpu_ops = {
-+	.disable	= ccu_gpu_clk_disable,
-+	.enable		= ccu_gpu_clk_enable
-+};
-+
- static const struct clk_ops clk_nop_ops = {};
- 
- static CCU_GATE_CLK_OPS(CLK_GPU_MEM, gpu_mem_clk, "gpu-mem-clk",
- 			video_pll_clk_pd, 0x0, BIT(2), 0, clk_nop_ops);
-+static CCU_GATE_CLK_OPS(CLK_GPU_CORE, gpu_core_clk, "gpu-core-clk",
-+			video_pll_clk_pd, 0x0, BIT(3), 0, ccu_gate_gpu_ops);
-+static CCU_GATE_CLK_OPS(CLK_GPU_CFG_ACLK, gpu_cfg_aclk, "gpu-cfg-aclk",
-+			video_pll_clk_pd, 0x0, BIT(4), 0, ccu_gate_gpu_ops);
-+
-+static void ccu_gpu_clk_disable(struct clk_hw *hw)
-+{
-+	struct ccu_gate *cg = hw_to_ccu_gate(hw);
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&gpu_reset_lock, flags);
-+
-+	ccu_disable_helper(&cg->common, cg->enable);
-+
-+	if ((cg == &gpu_core_clk &&
-+	     !clk_hw_is_enabled(&gpu_cfg_aclk.common.hw)) ||
-+	    (cg == &gpu_cfg_aclk &&
-+	     !clk_hw_is_enabled(&gpu_core_clk.common.hw)))
-+		reset_control_assert(gpu_reset);
-+
-+	spin_unlock_irqrestore(&gpu_reset_lock, flags);
-+}
-+
-+static int ccu_gpu_clk_enable(struct clk_hw *hw)
-+{
-+	struct ccu_gate *cg = hw_to_ccu_gate(hw);
-+	unsigned long flags;
-+	int ret;
-+
-+	spin_lock_irqsave(&gpu_reset_lock, flags);
-+
-+	ret = ccu_enable_helper(&cg->common, cg->enable);
-+	if (ret) {
-+		spin_unlock_irqrestore(&gpu_reset_lock, flags);
-+		return ret;
-+	}
-+
-+	if ((cg == &gpu_core_clk &&
-+	     clk_hw_is_enabled(&gpu_cfg_aclk.common.hw)) ||
-+	    (cg == &gpu_cfg_aclk && clk_hw_is_enabled(&gpu_core_clk.common.hw)))
-+		ret = reset_control_deassert(gpu_reset);
-+
-+	spin_unlock_irqrestore(&gpu_reset_lock, flags);
-+
-+	return ret;
-+}
- 
- static CCU_GATE(CLK_AXI4_VO_ACLK, axi4_vo_aclk, "axi4-vo-aclk",
- 		video_pll_clk_pd, 0x0, BIT(0), 0);
--static CCU_GATE(CLK_GPU_CORE, gpu_core_clk, "gpu-core-clk", video_pll_clk_pd,
--		0x0, BIT(3), 0);
--static CCU_GATE(CLK_GPU_CFG_ACLK, gpu_cfg_aclk, "gpu-cfg-aclk",
--		video_pll_clk_pd, 0x0, BIT(4), 0);
- static CCU_GATE(CLK_DPU_PIXELCLK0, dpu0_pixelclk, "dpu0-pixelclk",
- 		video_pll_clk_pd, 0x0, BIT(5), 0);
- static CCU_GATE(CLK_DPU_PIXELCLK1, dpu1_pixelclk, "dpu1-pixelclk",
-@@ -1046,8 +1100,6 @@ static struct ccu_common *th1520_gate_clks[] = {
- 
- static struct ccu_common *th1520_vo_gate_clks[] = {
- 	&axi4_vo_aclk.common,
--	&gpu_core_clk.common,
--	&gpu_cfg_aclk.common,
- 	&dpu0_pixelclk.common,
- 	&dpu1_pixelclk.common,
- 	&dpu_hclk.common,
-@@ -1150,6 +1202,13 @@ static int th1520_clk_probe(struct platform_device *pdev)
- 	if (IS_ERR(map))
- 		return PTR_ERR(map);
- 
-+	if (plat_data == &th1520_vo_platdata) {
-+		gpu_reset = devm_reset_control_get_exclusive(dev, NULL);
-+		if (IS_ERR(gpu_reset))
-+			return dev_err_probe(dev, PTR_ERR(gpu_reset),
-+					     "GPU reset is required for VO clock controller\n");
-+	}
-+
- 	for (i = 0; i < plat_data->nr_pll_clks; i++) {
- 		struct ccu_pll *cp = hw_to_ccu_pll(&plat_data->th1520_pll_clks[i]->hw);
- 
-@@ -1226,11 +1285,27 @@ static int th1520_clk_probe(struct platform_device *pdev)
- 		if (ret)
- 			return ret;
- 	} else if (plat_data == &th1520_vo_platdata) {
-+		/* GPU clocks need to be treated differently, as MEM clock
-+		 * is non-configurable, and the reset needs to be de-asserted
-+		 * after enabling CORE and CFG clocks.
-+		 */
- 		ret = devm_clk_hw_register(dev, &gpu_mem_clk.common.hw);
- 		if (ret)
- 			return ret;
- 		gpu_mem_clk.common.map = map;
- 		priv->hws[CLK_GPU_MEM] = &gpu_mem_clk.common.hw;
-+
-+		ret = devm_clk_hw_register(dev, &gpu_core_clk.common.hw);
-+		if (ret)
-+			return ret;
-+		gpu_core_clk.common.map = map;
-+		priv->hws[CLK_GPU_CORE] = &gpu_core_clk.common.hw;
-+
-+		ret = devm_clk_hw_register(dev, &gpu_cfg_aclk.common.hw);
-+		if (ret)
-+			return ret;
-+		gpu_cfg_aclk.common.map = map;
-+		priv->hws[CLK_GPU_CFG_ACLK] = &gpu_cfg_aclk.common.hw;
- 	}
- 
- 	ret = devm_of_clk_add_hw_provider(dev, of_clk_hw_onecell_get, priv);
--- 
-2.34.1
+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
+kt+z4drzFUyEjLM1vVvIMjkUoJs=3D
+=3DeeAB
+-----END PGP PUBLIC KEY BLOCK-----
 
+--------------Dy08AUytJDFuCzLfWwyhli8T--
+
+--------------MxUlsgon821Y6J0ncZkjxNaY--
+
+--------------j1JkPn85K8wsyuAVtwcVFZfT
+Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="OpenPGP_signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+wsB5BAABCAAjFiEEhRJncuj2BJSl0Jf3sN6d1ii/Ey8FAmfFvngFAwAAAAAACgkQsN6d1ii/Ey9N
+HQf8CVGYvY31u+jZWErxqTSyDA7QQHaTw7tURzlm5l8yYeEnRGQwVGiLei6T5Ntjuj7NBN343O9f
+09ZUt85SNGt0VcBYWrF2C3sTml+jsOUTF2kxZwRfVLyUQ8vpnPIcyC9XEicHLZTph7aCJ7rur1is
+cJ4bCWKtarW+365ICzD5fLVso4JENnqDneUbtMJ2cibbsYPCSnq8VzLZjWLhPAxkybsCaBPc8e6A
+jwWftIwIiqbJOuPprrf8QQ568TWkkm0cRoZqOorrwBbYbeOxDUXMVFH0xS8sMkWAXVYEMB0gOhoz
+kGXdGm/0HeROKlLNMNPDmJCQ+cPKAHGHuqxdtCQM2A==
+=6C3p
+-----END PGP SIGNATURE-----
+
+--------------j1JkPn85K8wsyuAVtwcVFZfT--
