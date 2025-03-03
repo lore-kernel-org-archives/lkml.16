@@ -1,240 +1,254 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E83E2144C7;
-	Mon,  3 Mar 2025 15:00:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741014034; cv=fail; b=YS3nEyhpDtT6qqirk478lmuqNb9anWI2lwRE4gYHNlP5IU4lW4CCZZjnru54JUH17fCobFBfZNWsAU0I1OdhLJHuFNcI5WMROLuLZdlwAPekrBSwpS7RY5oBOzNnklsSMY0T0XHgKYXJupRWOhoW/+HlgsCgCtnCZs4fCgFWRSE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741014034; c=relaxed/simple;
-	bh=vZHCU7VcuzKyAwprob4Au5btNeagvWV4vrqsXKVVyt8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=T8FioKHitkoAMntI+uByOd/22bAKbEMF15iZ+z8MhDvHM+2ugvOanxP2+Mjgw5M1gmCdV/G4NKJWzL/yDJWzNHCXzn38az1V2NGY6q6C+RqbK++jxFjOK3OSVgWq3QYi+s34euEneU3baJAmaWFMwx75fmZWzvdW1ZSui/m8ACM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=iijgPNHt; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=bYXkz3Lk; arc=fail smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6B3D15689A;
+	Mon,  3 Mar 2025 15:01:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741014083; cv=none; b=M1Xhq7gyDF5bzpAsN3i+fGfFnApnAZ+5ig+YIHG5Fg+XbszxBk1Ap6jT5p1qiYE9aiZcgm/tElEhU0VuSd+BCUTDFuVBVUel7ZNM59cdw8iQRALKpAtM7PHov08cQ9MYz4lqnGgMJdIGQY1xFTryADMGaLYn2ZZjiLAtRdZxYvQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741014083; c=relaxed/simple;
+	bh=mnjeVl2mN4jHuBcMO5JFqG50fhPaMs1NaBTfoT42oUY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=sYKpwt8KAlRl2cLPi40sEUk3Qv4+ekHXMBlrJNiPXVAbzwunlS1W31CME6ixk5t1ob3OB9fLXkF0VRcMnlH207XC3d2x/IChq0/gcCHPQOjvg1whTtpuhypPHV/9osDDepGSw8luMgI1SOtFrLeCtEa7O5mNFb4+EYNRsB4yhTM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=jW59Z29H; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="iijgPNHt";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="bYXkz3Lk"
-Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5237u5Q6016225;
-	Mon, 3 Mar 2025 14:59:25 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=corp-2023-11-20; bh=kBeOtjvhLqFjAWMBro
-	x46c0RL3wcD+LQgs7hKSgkRJM=; b=iijgPNHtqj+fnusMnZ8bocX8Jmp5cNg7Ku
-	Wn3iIUffBRsJd0XMYLMYIga46mA6D0OQLliCrap/OngJCjHElHGiE/qcjXdAkSud
-	NYV0OdVQyiKqkiHzq3T8HRyYKbuawE5vqLbqtck1PsHmKdawe2+lA9taqZVyjfsT
-	o3ytHBvypdtd0FInSc4gEApMhuFk7uW9mC7wyska/aZpXMaeRZ50wwGG8cI9VEFl
-	IF+KJ3iF2mGdWe9VjqbzD0mdAWOEjr8h34J+LHkI//wdUynAMmtlnLAH0rI6aHLd
-	oShzIicXYuhF1YV0pewxLLC8Tz55nAuf/o5u9XUs8v6R+FAv9Tbg==
-Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 453uavtteg-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 03 Mar 2025 14:59:24 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 523EuCoL039757;
-	Mon, 3 Mar 2025 14:59:24 GMT
-Received: from nam10-dm6-obe.outbound.protection.outlook.com (mail-dm6nam10lp2043.outbound.protection.outlook.com [104.47.58.43])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 453rp8ajv2-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 03 Mar 2025 14:59:24 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=kWghsDgR9XusxqyjtARD/aZoFa+RLxTh37ihmRwQZAmUYxuwjndfndDEYtNdMI7sEUYKqKJ0f9eJht7ZwNxnIyF1r9hTIZDo6F/pU++aQnGtDT9MijdMGi7j149W5vPo0YQ8nhOhc/hUyIs9EQhQp5IvEom1DFd9u4MIIysMrWzxUkEzNDkqV8mYzXed5uAaZhq9a+9+Bcp/4wddvWdm9MkT+jPb6AvHbIUta6jXfGgXW+wP8b1C4GTHukEdMZml+8AuHNHnySsBmTVE0uSAiJ2MVRN/FdWAHznOsiTJIH9E/ywtUKYUhn7JxDcApXQp9mfQBPWgc+T7cGBGlzdgyA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=kBeOtjvhLqFjAWMBrox46c0RL3wcD+LQgs7hKSgkRJM=;
- b=kuKg5/UMwX2lmmf+pOmOAa/Et77Rvo3dw/unYJ3ATeCIAtfXBIM8W0LDRX4oyEV3Tmsbj5qKf97v+WBNtxoMa7qsm7wxd5f8ZhJh/SD+90p6Rc7UocwLO6gAgbN8/2pF0Eq5b8qvjKoepfRQszRxGpHUtHJXMZD72HtNInzv6s7w0LvaPS1Y0YiMLIvEwrGzqMDFKDZvkPJeuJU02whsJAy72L75czFI52Xxg5V7biMNpXgkRILjHNlYW8+717waqoAkHoUkTSmlcxEtmHDG1hzMvf5SN+UbTXbzshudltJ8LbfCTDV/S0clT/SpT/A7qlYmQQ5fADyP209xXSk6kQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kBeOtjvhLqFjAWMBrox46c0RL3wcD+LQgs7hKSgkRJM=;
- b=bYXkz3LkhWRVPtfMpoATy6+aCpt2iI8DSJ4QryZVUyNoO4zvMvN5RzFu9zAXIP73W+eFoKwhbpHONfa2BkL4SxOOYbthZyMzZjCOzCpV5Os3DGN1DPVlx1P32zfWHKHIgvqM0mVyTFQ0gbsvZXmjbSRwEfZelGFrxhdVs0f68bU=
-Received: from PH0PR10MB5777.namprd10.prod.outlook.com (2603:10b6:510:128::16)
- by IA1PR10MB6196.namprd10.prod.outlook.com (2603:10b6:208:3a4::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.25; Mon, 3 Mar
- 2025 14:59:19 +0000
-Received: from PH0PR10MB5777.namprd10.prod.outlook.com
- ([fe80::75a8:21cc:f343:f68c]) by PH0PR10MB5777.namprd10.prod.outlook.com
- ([fe80::75a8:21cc:f343:f68c%4]) with mapi id 15.20.8489.025; Mon, 3 Mar 2025
- 14:59:19 +0000
-Date: Mon, 3 Mar 2025 09:59:13 -0500
-From: "Liam R. Howlett" <Liam.Howlett@oracle.com>
-To: jeffxu@chromium.org
-Cc: akpm@linux-foundation.org, keescook@chromium.org, jannh@google.com,
-        torvalds@linux-foundation.org, vbabka@suse.cz,
-        lorenzo.stoakes@oracle.com, adhemerval.zanella@linaro.org,
-        oleg@redhat.com, avagin@gmail.com, benjamin@sipsolutions.net,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-        linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
-        jorgelo@chromium.org, sroettger@google.com, hch@lst.de,
-        ojeda@kernel.org, thomas.weissschuh@linutronix.de, adobriyan@gmail.com,
-        johannes@sipsolutions.net, pedro.falcato@gmail.com, hca@linux.ibm.com,
-        willy@infradead.org, anna-maria@linutronix.de, mark.rutland@arm.com,
-        linus.walleij@linaro.org, Jason@zx2c4.com, deller@gmx.de,
-        rdunlap@infradead.org, davem@davemloft.net, peterx@redhat.com,
-        f.fainelli@gmail.com, gerg@kernel.org, dave.hansen@linux.intel.com,
-        mingo@kernel.org, ardb@kernel.org, mhocko@suse.com,
-        42.hyeyoo@gmail.com, peterz@infradead.org, ardb@google.com,
-        enh@google.com, rientjes@google.com, groeck@chromium.org,
-        mpe@ellerman.id.au, aleksandr.mikhalitsyn@canonical.com,
-        mike.rapoport@gmail.com, Jeff Xu <jeffxu@google.com>
-Subject: Re: [PATCH v8 0/7] mseal system mappings
-Message-ID: <o2ynggupddg2iscald76q5niaipssy3gkmsvdkvobopc5whvah@ealwojbiwsrn>
-Mail-Followup-To: "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
-	jeffxu@chromium.org, akpm@linux-foundation.org, keescook@chromium.org, 
-	jannh@google.com, torvalds@linux-foundation.org, vbabka@suse.cz, 
-	lorenzo.stoakes@oracle.com, adhemerval.zanella@linaro.org, oleg@redhat.com, avagin@gmail.com, 
-	benjamin@sipsolutions.net, linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	linux-mm@kvack.org, linux-kselftest@vger.kernel.org, jorgelo@chromium.org, 
-	sroettger@google.com, hch@lst.de, ojeda@kernel.org, thomas.weissschuh@linutronix.de, 
-	adobriyan@gmail.com, johannes@sipsolutions.net, pedro.falcato@gmail.com, 
-	hca@linux.ibm.com, willy@infradead.org, anna-maria@linutronix.de, 
-	mark.rutland@arm.com, linus.walleij@linaro.org, Jason@zx2c4.com, deller@gmx.de, 
-	rdunlap@infradead.org, davem@davemloft.net, peterx@redhat.com, f.fainelli@gmail.com, 
-	gerg@kernel.org, dave.hansen@linux.intel.com, mingo@kernel.org, ardb@kernel.org, 
-	mhocko@suse.com, 42.hyeyoo@gmail.com, peterz@infradead.org, ardb@google.com, 
-	enh@google.com, rientjes@google.com, groeck@chromium.org, mpe@ellerman.id.au, 
-	aleksandr.mikhalitsyn@canonical.com, mike.rapoport@gmail.com, Jeff Xu <jeffxu@google.com>
-References: <20250303050921.3033083-1-jeffxu@google.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250303050921.3033083-1-jeffxu@google.com>
-User-Agent: NeoMutt/20240425
-X-ClientProxiedBy: YT3PR01CA0141.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b01:83::34) To PH0PR10MB5777.namprd10.prod.outlook.com
- (2603:10b6:510:128::16)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="jW59Z29H"
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 523AxZ9U000604;
+	Mon, 3 Mar 2025 15:01:13 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	OISDrqdIVcBCSCzx/5dL+42792OcKY+XGwEX8jSBKL4=; b=jW59Z29HLk5R1nyz
+	XNIQtCMTNboVB/v8KtuNwMWIMDygPqy7gjyQY/y9B2zHNNFoo1Xlk5DdYzozni2v
+	AeAsUEz06vrM3czJag2B8LCMZhk8kPZ/grAZRsImtz3OprZI5aSbio11InTWq9/1
+	0FHmJLwWGz2Z9dRxjal5AGZQ1cLLEY2uOYRa8J6nDR9E7Tqq/XP3SlPfYhZ+g+pW
+	XvYjTNeBNznhPfOE+KW7OOHh2fo4glsxYJlEmosf9uwbgWumOA/2xTlXj9A8Awko
+	pADDM7u7NnhX2hh+KtoC9nJBQbOYSdwfAngvtHy3QQH9z2/nkz+jU1NkJB6GeheU
+	b+iJWA==
+Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 453t88w96r-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 03 Mar 2025 15:01:12 +0000 (GMT)
+Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
+	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 523F1BPQ025287
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 3 Mar 2025 15:01:12 GMT
+Received: from [10.216.10.45] (10.80.80.8) by nasanex01a.na.qualcomm.com
+ (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 3 Mar 2025
+ 07:01:09 -0800
+Message-ID: <e64ff5f0-8dc5-fec6-ae9b-98076016365f@quicinc.com>
+Date: Mon, 3 Mar 2025 20:31:06 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH0PR10MB5777:EE_|IA1PR10MB6196:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5edc1020-3b2d-45ed-7676-08dd5a63f9d5
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|366016|376014|7416014|7053199007|27256017;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?9y1C2hFetacUVEa1A7vbkIUzFi39X0/w2Jdcr/ZepM9DNVr12XaoksmtNWE5?=
- =?us-ascii?Q?lBVWAgUobmtkV4aUFnGyw4MLCNgA17rbxdcN7TKIelUDQHKf6zRo1pa6dsKv?=
- =?us-ascii?Q?Q3kH+HcXzc/Bc0w51UJURRk4N/ExkxiuNei7RfbFF5Ap21apqA7KuQB+3W6/?=
- =?us-ascii?Q?wfUGiHSTFfPydEXn5kr3zK/wug+yQ4upzWiKFOrjVof5MzGjYOPSa2VTQ2u/?=
- =?us-ascii?Q?LoA0H+gCxuDPWXPhe8kfUS4BUQ8MLiH634NjvScO8UwaZRCRASba/Hfw62B8?=
- =?us-ascii?Q?NxH5Ic5LzSh2KBUbQG+/Vk9S113hzb4rRPyHeLsqQxS7CsambG8UMyr5EF9p?=
- =?us-ascii?Q?o+9zH1b/vuAXX601JPHa5fAp+qLmUyN0H+MkbzW0WPlsrOmaaXx1c1OnaG+0?=
- =?us-ascii?Q?uoziI8pTibt7MJBlW2I1JSRrr/2NF3K0PalhAJPRay8DMokEbTwD1BvM+uzu?=
- =?us-ascii?Q?xAwa67ifr5PKHtAVZy5k/4vXuetRyVk9/b510f2M315R5j1IRTh0YRrljul3?=
- =?us-ascii?Q?1aBIdcsf2KkgftQ/W4IBBWHj59H+5yVkdkpXhIuTtaS3D66oFNwJDZbe+PsJ?=
- =?us-ascii?Q?bTxIyJQZWis5s8UPsdwZSOar1tZbkj3Yy9M0i5pBbHt0JADznhaXZH5AYhFK?=
- =?us-ascii?Q?FXTr3gLZ4s/un6uH93zE0Uw8B35kC6hu9kHxwX+aWHTd043hs8CWHmw/ax6z?=
- =?us-ascii?Q?3iWc0wwlK0/MVFZwNTHBotscYglodFs441To1UIhdvC+txKY1VCX66Wh38np?=
- =?us-ascii?Q?A0Zz5lgcJHyQqqXAZ7MBqm8l52mS9zRKWbHzwYw6l0/pqkPP/hxaeShG0lmP?=
- =?us-ascii?Q?xAlPfgUGkvLVUyE7YwAhm+G0n9KiTU25T+UmEBrDKCDJDpgB0wV29jbOjlt8?=
- =?us-ascii?Q?coXUScABK1eTdGRNjmONN8L3Jdz7lK78mkqzjYIeGPTEjGuDqviip3y20QTy?=
- =?us-ascii?Q?nKMGmRgRpqSfs8A83DJE/FYwAnhFhyjEWcnEri8ZA9UF3e+9yZNlVcw2yye/?=
- =?us-ascii?Q?h8un3yLcN1APcmkbQc3317ZFBXV4F7BVQigd/SsYacMATV/630Sy8zopK74W?=
- =?us-ascii?Q?Xh0DzYwQsuxCNhxfJ++pGesz9mfROvtcv1KzKl8yaeGFtjXEI49Z0pjQqWRg?=
- =?us-ascii?Q?nveNxTQ1T/HA1vCEWAyqXvgSxAL9WammcEWhmELpjvyDOx2kTEzE9k9U/pDj?=
- =?us-ascii?Q?5zXKXUfVGZVPDQ7F1Gied85ZHQ51uZUebdLa5v2Cq4s0by0r+31iZ3w6oHOE?=
- =?us-ascii?Q?dx2lI7xkkA4JEQ6Ay6Q/w1GA9jCMFWh/KgdvgE1IE6wGPvPE5OD8RQHeF/lJ?=
- =?us-ascii?Q?jHgcvaZ8gWJTzYPF5Aj5RM6XwFlfpR3/uZ2QOD1AuduOvfHrC7f/fTqBi4bp?=
- =?us-ascii?Q?aEAFt1JvNzdhTLH63oDnnZIcfvbEC/T/W4vyOplbvgJbILoBIDB54NshHB79?=
- =?us-ascii?Q?WrMaGO8/rvt2kaTZzlj65mCGosznCBUM?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR10MB5777.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014)(7053199007)(27256017);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?VLOYRiTChBRmPmoqw7k7QhJzBAbOpWixlNgf9ROXz18OZVKRGfUdpNVAJTH2?=
- =?us-ascii?Q?0aYSoR1G5Z+r6fdaVkABJNDsJ4xKuPbNBq/v3eNdUeWZYQ+e1Tib4JW7TbK5?=
- =?us-ascii?Q?7uY55fQ4fTbeT4RE23kDE/1yZtk9LFu/AectdP61nQ010w8ryzG8n+g/MlAY?=
- =?us-ascii?Q?5pUWFxd7NoJBdQ0uisYzfvMcOij0fLXTvPrEOuANbD8V6yh3YsMLd4daYxMx?=
- =?us-ascii?Q?XosTV5xczz50DZ+f1rxfMxATyhT8HNHiogzt7xo1Wr0+ZlqzA+ZuM2BFrwre?=
- =?us-ascii?Q?WmVSFtjXH6JJhkgHZY79hIHdmdUYcaUoJKGE+DmJzYTCvIkui0SUxgcIDKpF?=
- =?us-ascii?Q?510Px9/htEOvIFJO2mk9i0OE2VDWK45rHcsZ6bATjniWiI/tnIrv5mcNkqEg?=
- =?us-ascii?Q?7bKjx7VH5kDnUnSy4cL68N7ucGtSfndSYmFGoK/5bse9+EUfXIVDp2GLltfI?=
- =?us-ascii?Q?Qd7zJjYbcfolTkmCsFM8iWokMxy598XhMzD6yMn1efK8XiJjPyNQOYHaOBin?=
- =?us-ascii?Q?U3I3QxVS9Ro5sklM8w56c/bpa+8YJn0lIbyNfXy4IPR07mnP2o5Gv4jWxFxt?=
- =?us-ascii?Q?7MY+AlrBzQuW3/7PwnM4c8wD8tkDmSNoq9RWZ/kJdUQDpNacCGowUqIlGwu8?=
- =?us-ascii?Q?ephFh2qHoFFYNYe4+FtXDTsudOe7gI5WJv1lf8rntM8kUUFjP2n50+mAodeF?=
- =?us-ascii?Q?D405dd7l7u8bDssxsdvODo5nrZTgiR7SqL342LwuXQjVTo1TpPRqi9vXQfDr?=
- =?us-ascii?Q?kqgc6uCaGS/0m5UDDiyCSa66hp9xYpv//gMcl433EedNtS1wflG5y/MJ+PHO?=
- =?us-ascii?Q?HG/1rDx/U/i5Lvd/OduELLbnOB/HVpieF2SM5QrZB1iY8L0Dz6U4Up9N0g25?=
- =?us-ascii?Q?WM7EuLF2KIgdW6lIJJtKoUNhMzYVhkdj0uxLKC+o6/BnS7CJDJzUX/z9Oly2?=
- =?us-ascii?Q?toU0EmCQjKKa79xeOIqZAhi2VFdqdCgKbV94wAw1+UPa1tEPpYMlwpSDJgzk?=
- =?us-ascii?Q?aETYaA/BbfkfG449xuQzzX94rsb4LrCN1gHh6CPDTTyLxgOscMTmVKvPaQ+c?=
- =?us-ascii?Q?VEgg5wIL6ttsTVmJOd6Ezod+CAcwnLz/bpX4vJOPXzLjHHt96JlKNN3uSSIV?=
- =?us-ascii?Q?uk878Ok19fTR2VpRi5BOct3yxATf4I0pwF37FTFJCCjXGenFGLR4Eeo2sgb7?=
- =?us-ascii?Q?yhF5eeRE8dsfp1CLUvRtcsJISBbLAhiKQk78W/BDbsGMQ8x2opbZoT7Mj2iT?=
- =?us-ascii?Q?1bZsw+6f45fKWJj2hPSDhuAYLxSyeUMrBCAE8HkKYGfhhptbmyHfX1McQZKF?=
- =?us-ascii?Q?g/5zpBkotGzq8w/FyBOX1Veq5KpodsCWd2wtJ4NsfULn4BJ6QieaiRzFbaXA?=
- =?us-ascii?Q?r4nn1GTfASRaChiFKtn0ewce9IOWNuW1wssty+1pwRr80CFEb8Y0zpZIpT5K?=
- =?us-ascii?Q?gVVkZ2xd6lw10g5BoXz/QOM0vzfYGmLByNghdJPMK+0maP9wXPZAGmSin5UL?=
- =?us-ascii?Q?H9WXW8UQW2TrzxHRtfyHyWtpf/z/oFs3mqB69M4xfVes52bAvv0thgMy+0lP?=
- =?us-ascii?Q?LfgN6UFpEBCJ6y5Yb5RkSrpr+T24elh55ViyDF0x?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	v7ABL2LURMpowI47dzA902YJ0YJ14L2bfasTUM1usGm2vW1oy7re7Yhb+0XV7iKaLRSVppRzbXTVlS6Tq0VdiqswzEJXkjnf+9fbmHZIaUxZFxeio8UAD+n+S8P/ewnR8pjl+5jVMc1Vm7fw6ZQbUqyMLPYdRtL5+8GJtpVFue3MbMj7a+UNUnBD3EBR70lCqe1jZt+ISg+d2Y82aX6wZslWFGMFYATlthIquUYHB6oPdTzg+/7IJ09EZNsNlnY2xjuv6Gc1WMl33rOTlZaF1ZEI9w/h4k/QnDCHMCgtD6gBus4m70aR/SV9m9u58D4KFmkz5avFxtRmDDKrsrVBmLoF7jj/KVB/Q17o8I/1TbnHS3fGvcWV4xP9Avk3JGQ2Ta37HICWwhO5O1EnQq4aoYFrelTXoNGebhJDS/qqQK8bsVzEcHUCR6yAMtnHtJXLhiCChVk7o67cD3/KkT5fMLTAXkF3FGU8Pp1PNGMW1SbWRSZFESztgDHofO/okS7XTyOWlk8kS8hRgaX5zMSO0AWf9nCyVD7Gz5qKzxbtolylT4W/XZlPFfkK/K/sYbxNAvPvAvalRks1iOu402ErHnMli9XChWqNIhyhSYLv/g8=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5edc1020-3b2d-45ed-7676-08dd5a63f9d5
-X-MS-Exchange-CrossTenant-AuthSource: PH0PR10MB5777.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Mar 2025 14:59:19.8305
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: do4OIAPVMqNomHik3shC4hZTElckY0jY/DiPZbqZLRKLT9eElb1uSUHk5CGcmwOS+8i54f9brKOUST/yELeQxw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR10MB6196
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH v2 0/2] venus driver fixes to avoid possible OOB read
+ access
+Content-Language: en-US
+To: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+        Vedang Nagar
+	<quic_vnagar@quicinc.com>,
+        Stanimir Varbanov <stanimir.k.varbanov@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+CC: <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20250215-venus-security-fixes-v2-0-cfc7e4b87168@quicinc.com>
+ <c3b27e55-f627-417c-bb62-3189f248fb99@linaro.org>
+ <7bf1aeaa-e1bd-412b-90fc-eda30b5f5b37@quicinc.com>
+ <19109672-2856-457f-b1f6-305abc6c4434@linaro.org>
+ <ba1e7a20-2f68-15e0-bc4a-fe52bc4036cc@quicinc.com>
+ <2ac68f21-cea8-400c-8a61-3638e545bac8@linaro.org>
+From: Vikash Garodia <quic_vgarodia@quicinc.com>
+In-Reply-To: <2ac68f21-cea8-400c-8a61-3638e545bac8@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01a.na.qualcomm.com (10.52.223.231)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: hmy3jk05t9wLn4qdxbkL5l5BlKPGvinL
+X-Proofpoint-GUID: hmy3jk05t9wLn4qdxbkL5l5BlKPGvinL
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-03-03_07,2025-03-03_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 suspectscore=0 spamscore=0
- mlxscore=0 mlxlogscore=498 adultscore=0 malwarescore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2502100000
- definitions=main-2503030114
-X-Proofpoint-GUID: zHvbXoXT4BlMMqMZ5U5VrZlv0p-WUAHL
-X-Proofpoint-ORIG-GUID: zHvbXoXT4BlMMqMZ5U5VrZlv0p-WUAHL
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 suspectscore=0
+ impostorscore=0 spamscore=0 phishscore=0 lowpriorityscore=0 malwarescore=0
+ priorityscore=1501 mlxlogscore=999 mlxscore=0 clxscore=1015 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2502100000
+ definitions=main-2503030115
 
-* jeffxu@chromium.org <jeffxu@chromium.org> [250303 00:09]:
 
-...
-
+On 3/3/2025 8:26 PM, Bryan O'Donoghue wrote:
+> On 03/03/2025 13:12, Vikash Garodia wrote:
+>>
+>> On 3/2/2025 9:26 PM, Bryan O'Donoghue wrote:
+>>> On 02/03/2025 11:58, Vedang Nagar wrote:
+>>>>>
+>>>>> The basic question : what is the lifetime of the data from RX interrupt to
+>>>>> consumption by another system agent, DSP, userspace, whatever ?
+>>>> As mentioned in [1], With the regular firmware, after RX interrupt the data
+>>>> can be considered as valid until next interrupt is raised, but with the rouge
+>>>> firmware, data can get invalid during the second read and our intention is to
+>>>> avoid out of bound access read because of such issues.
+>>>
+>>> This is definitely the part I don't compute.
+>>>
+>>> 1. RX interrupt
+>>> 2. Frame#0 Some amount of time data is always valid
+>> This is not correct. Its not the amount of time which determines the validity of
+>> the data, its the possibility of rogue firmware which, if incase, puts up the
+>> date in shared queue, would always be invalid, irrespective of time.
+>>
+>>> 3. RX interrupt - new data
+>>> 4. Frame#1 new data delivered into a buffer
+>>>
+>>> Are you describing a case between RX interrupts 1-3 or a case after 1-4?
+>>>
+>>> Why do we need to write code for rouge firmware anyway ?
+>> It is a way to prevent any possibility of OOB, similar to how any API does check
+>> for validity of any arguments passed to it, prior to processing.
+>>>
+>>> And the real question - if the data can be invalidated in the 1-3 window above
+>>> when is the safe time to snapshot that data ?
+>>>
+>>> We seem to have alot of submissions to deal with 'rouge' firmware without I
+>>> think properly describing the problem of the _expected_ data lifetime.
+>>>
+>>> So
+>>>
+>>> a) What is the expected data lifetime of an RX buffer between one
+>>>     RX IRQ and the next ?
+>>>     I hope the answer to this is - APSS owns the buffer.
+>>>     This is BTW usually the case in these types of asymmetric setups
+>>>     with a flag or some other kind of semaphore that indicates which
+>>>     side of the data-exchange owns the buffer.
+>>>
+>>> b) In this rouge - buggy - firmware case what is the scope of the
+>>>     potential race condition ?
+>>>
+>>>     What I'd really like to know here is why we have to seemingly
+>>>     memcpy() again and again in seemingly incongrous and not
+>>>     immediately obvious places in the code.
+>>>
+>>>     Would we not be better advised to do a memcpy() of the entire
+>>>     RX frame in the RX IRQ handler path if as you appear to me
+>>>     suggesting - the firmware can "race" with the APSS
+>>>     i.e. the data-buffer ownership flag either doesn't work
+>>>     or isn't respected by one side in the data-exchange.
+>>>
+>>> Can we please have a detailed description of the race condition here ?
+>> Below is the report which the reporter reported leading to OOB, let me know if
+>> you are unable to deduce the trail leading to OOB here.
+>>
+>> OOB read issue is in function event_seq_changed, please reference below code
+>> snippet:
+>>
+>> Buggy code snippet:
+>>
+>> static void event_seq_changed(struct venus_core *core, struct venus_inst *inst,
+>>          struct hfi_msg_event_notify_pkt *pkt)
+>> ...
+>> num_properties_changed = pkt->event_data2; //num_properties_changed is from
+>> message and is not validated.
+>> ...
+>> data_ptr = (u8 *)&pkt->ext_event_data[0];
+>> do {
+>>   ptype = *((u32 *)data_ptr);
+>>   switch (ptype) {
+>>   case HFI_PROPERTY_PARAM_FRAME_SIZE:
+>>    data_ptr += sizeof(u32);
+>>    frame_sz = (struct hfi_framesize *)data_ptr;
+>>    event.width = frame_sz->width;
+>> ...
+>>   }
+>>   num_properties_changed--;
+>> } while (num_properties_changed > 0);
+>> ```
+>> There is no validation against `num_properties_changed = pkt->event_data2`, so
+>> OOB read occurs.
+>>>
+>>> I don't doubt the new memcpy() makes sense to you but without this detailed
+>>> understanding of the underlying problem its virtually impossible to debate the
+>>> appropriate remediation - perhaps this patch you've submitted - or some other
+>>> solution.
+>>>
+>>> Sorry to dig into my trench here but, way more detail is needed.
+>>>
+>>>> [1]: https://lore.kernel.org/lkml/4cfc1fe1-2fab-4256-9ce2-
+>>>> b4a0aad1069e@linaro.org/T/#m5f1737b16e68f8b8fc1d75517356b6566d0ec619
+>>>>>
+>>>>> Why is it in this small specific window that the data can change but not
+>>>>> later ? What is the mechanism the data can change and how do the changes you
+>>>>> propose here address the data lifetime problem ?
+>>>> Currently this issue has been discovered by external researchers at this
+>>>> point, but if any such OOB issue is discovered at later point as well then we
+>>>> shall fix them as well.
+>>>
+>>> Right but, I'm looking for a detailed description of the problem.
+>>>
+>>> Can you describe from RX interrupt again what the expected data lifetime of the
+>>> RX frame is, which I hope we agree is until the next RX interrupt associated
+>>> with a given buffer with an ownership flag shared between firmware and APSS -
+>>> and then under what circumstances that "software contract" is being violated.
+>>>
+>>>> Also, with rougue firmware we cannot fix the data lifetime problem in my
+>>>> opinion, but atleast we can fix the out of bound issues.
+>>>>>
+>>>>> Without that context, I don't believe it is really possible to validate an
+>>>>> additional memcpy() here and there in the code as fixing anything.
+>>>> There is no additional memcpy() now in the v2 patch, but as part of the fix,
+>>>> we are just trying to retain the length of the packet which was being read in
+>>>> the first memcpy() to avoid the OOB read access.
+>>>
+>>> I can't make a suggestion because - personally speaking I still don't quite
+>>> understand the data-race you are describing.
+>> Go through the reports from the reporter, it was quite evident in leading upto
+>> OOB case.
+>> Putting up the sequence for you to go over the interrupt handling and message
+>> queue parsing of the packets from firmware
+>> 1.
+>> https://elixir.bootlin.com/linux/v6.14-rc4/source/drivers/media/platform/qcom/venus/hfi_venus.c#L1082
+>> 2.
+>> https://elixir.bootlin.com/linux/v6.14-rc4/source/drivers/media/platform/qcom/venus/hfi_msgs.c#L816
+>> 3. event handling (this particular case)
+>> https://elixir.bootlin.com/linux/v6.14-rc4/source/drivers/media/platform/qcom/venus/hfi_msgs.c#L658
+>> 4.
+>> https://elixir.bootlin.com/linux/v6.14-rc4/source/drivers/media/platform/qcom/venus/hfi_msgs.c#L22
+>>
+>> the "struct hfi_msg_event_notify_pkt *pkt" pkt here is having the data read from
+>> shared queue.
+>>
+>>>
+>>> I get that you say the firmware is breaking the contract but, without more
+>>> detail on _how_ it breaks that contract I don't think it's really possible to
+>>> validate your fix here, fixes anything.
+>>>
+>>> ---
+>>> bod
+>>
+>> Regards,
+>> Vikash
 > 
-> Link: https://lore.kernel.org/all/20240415163527.626541-1-jeffxu@chromium.org/ [1]
-> Link: Documentation/userspace-api/mseal.rst [2]
-> Link: https://lore.kernel.org/all/CABi2SkU9BRUnqf70-nksuMCQ+yyiWjo3fM4XkRkL-NrCZxYAyg@mail.gmail.com/ [3]
-> Link: https://lore.kernel.org/all/CABi2SkV6JJwJeviDLsq9N4ONvQ=EFANsiWkgiEOjyT9TQSt+HA@mail.gmail.com/ [4]
-> Link: https://lore.kernel.org/all/202502251035.239B85A93@keescook/ [5]
+> I'll go through all of these links given here, thanks.
+I would request you to go through the description putup by the reporter of this
+OOB as well, i added in my earlier response. It provided a good background of
+how the firmware response can led to this particular OOB, atleast that was the
+source of OOB info for us.
+Regards,
+Vikash
 > 
-> -------------------------------------------
-> History:
+> Whatever the result of the review, this detail needs to go into the commit log
+> so that a reviewer can reasonably read the problem description and evaluate
+> against submitted code as a fix.
 > 
-> V8:
->   - Change ARCH_SUPPORTS_MSEAL_X to ARCH_SUPPORTS_MSEAL_X (Liam R. Howlett)
-
-It looks like this was captured wrong in just this update. Change
-ARCH_HAS => ARCH_SUPPORTS.  Code looks correct.
-
-Kees also ran down the meaning of the two more than I did, so thanks
-again Kees!
-
->   - Update comments in Kconfig and mseal.rst (Lorenzo Stoakes, Liam R. Howlett)
->   - Change patch header perfix to "mseal sysmap" (Lorenzo Stoakes)
->   - Remove "vm_flags =" (Kees Cook, Liam R. Howlett,  Oleg Nesterov)
->   - Drop uml architecture (Lorenzo Stoakes, Kees Cook)
->   - Add a selftest to verify system mappings are sealed (Lorenzo Stoakes)
-> 
-> V7:
-...
-
-Thanks,
-Liam
+> ---
+> bod
