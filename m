@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5D9F23717F
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 23:34:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AEDE23F28D
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 23:34:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741044895; cv=none; b=oipbpG9s9bwyCJECsxSYKnaO1qS8oNLxJQfAUVaWsPkE+0DkP4FscGLxhv2+ABnVdqsclNfAkOQ7S6RqXP8kkhoIbrh6SELDnQlfvS/aeGvjFR9NAkwKAOVdSis52tpW7xL5HjnJKiDu0sCvtgL9tmk3HxSZW4nEygtr+0xwt5o=
+	t=1741044896; cv=none; b=Z7U/5Rdxhxg0oDMy+/qa2j60OadufF94fNKaFDBQQQI461z5SCiC88da0fo3AfYuEcvQOh7ut2YFN45rnfbcdYpEp+1moubTpIEeJY33x2gZo/V13ooz+tWmaqNRNx7sJSknxaj8jyzOiaruIS4/yqZD6V1mnwCXF0mqeJaOz0w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741044895; c=relaxed/simple;
-	bh=dUOelVMIQQD73F+GAf+V+9g1dvlZdazGdQL8u6euTHI=;
+	s=arc-20240116; t=1741044896; c=relaxed/simple;
+	bh=4MoQg5m1EvWqC4eUPuuvU9SN1nimbFf5mvHqPzoqqSs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=YOo/ENZRHTnkgailM1r6vkdHH+9AmZZMtALqUAlWuzXvdtn5R2AO9Xj1ubPHpwG6XxtvdeSKPtdiribAnbBRP7jU9KmSE6YQx87JnMN/n8Cs22rznVsEsOPglfG60/ahjRFi8QKa5MlGKXv5pYgPz+c70OglEDibR4k5AFeMcBM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bEdljwJ0; arc=none smtp.client-ip=192.198.163.17
+	 MIME-Version; b=bTXsucN9qobpIf/nOhLp5KCgNaxBWSPF67rVO+W7YbZ9Gc7BYl/u53Ku4RswjjjGfrqtOsJEotNsQ8T4TefITul92GT0z1TOMDYHZRE/fVvyZPQnAZNy2ON//kp+JNsyZzQ6fxmtdOLkCnJdoQUy94AeXa/Nr9Ze5KLxoqTTaxs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=L8fRAQZz; arc=none smtp.client-ip=192.198.163.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bEdljwJ0"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="L8fRAQZz"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741044894; x=1772580894;
+  t=1741044895; x=1772580895;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=dUOelVMIQQD73F+GAf+V+9g1dvlZdazGdQL8u6euTHI=;
-  b=bEdljwJ0qDL8x4aT2tgJo320I4Hq6eUQfNbzRvJxcSpRn1W+6bmw/J2K
-   hHFf4hZ1WinUj3SoieYbr7ZrL+547yj04jOS4mwqVQFSET8p0CfofetPX
-   NEenD7na9jd/parBdeA7gSY2Szjqi9rcp3ES6M1olgCtN5XVepdu1etfH
-   IxizwksYWyZgNVhnuVYGrXZjhkGhUPFebjfPF0B3OvBwTNuQb1iqRMjnP
-   Bai6tLZWap7U9yPUO/+IUYPm672SB8jZrk3p/wZra3uPoC+4Xl6FDj9nq
-   sdPv8li4qiOoM96IjFByFZijGMU8YF7GQXVmOO8cPYknJFyc/kPE+4Zz6
-   g==;
-X-CSE-ConnectionGUID: q7RZJiqDTVeSF/l1VfL+1w==
-X-CSE-MsgGUID: 6kMDZgrARYuSsWqclfbfvA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11362"; a="41835962"
+  bh=4MoQg5m1EvWqC4eUPuuvU9SN1nimbFf5mvHqPzoqqSs=;
+  b=L8fRAQZzmdWeShR2ruzqxp/W/zkR24bMDE0ZjvP+yCC0+t2ZsGtHYQij
+   DxFJ/5v1JiLNJNPZUQdHDAn2D23+thMQZgsmajEJlkrNBYfYqJsGmtSxy
+   ae/vx9zVZ8C/kGAola5EeEhjhkTjSs8i2guMFI3CSQdRfId+rxHzXM/X3
+   kSXhDRA3s2ro3pacmYMqcAQLbj1lv1Ee+63x9boDCogZzHQdDgeXdIURD
+   1hZUy5yxF0T7JI2ep7tkvZj5MyBva6NNNaP7H/Qoqcf7j6xbCRXYv5pJx
+   cc+Sx8ou6VymIy3QMVfnnwWfoponAZ6DbPKH76hS6HCA9CKm4E49ES4Yp
+   w==;
+X-CSE-ConnectionGUID: 6QBGma1GT62mb0O7jRmy3Q==
+X-CSE-MsgGUID: AeYlrbuLQqW6fSNLvbkqyQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11362"; a="41835976"
 X-IronPort-AV: E=Sophos;i="6.13,330,1732608000"; 
-   d="scan'208";a="41835962"
+   d="scan'208";a="41835976"
 Received: from fmviesa006.fm.intel.com ([10.60.135.146])
   by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Mar 2025 15:34:47 -0800
-X-CSE-ConnectionGUID: 0g3CZYF7QdqyW55C6dFfFQ==
-X-CSE-MsgGUID: Vjr083SeSjC+Ly+ovxcDjw==
+X-CSE-ConnectionGUID: QNCp+lAXSwKixeh97KdsSw==
+X-CSE-MsgGUID: I+AbBn3jRhKXI4y+W11s4Q==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.13,330,1732608000"; 
-   d="scan'208";a="117982298"
+   d="scan'208";a="117982302"
 Received: from agluck-desk3.sc.intel.com ([172.25.222.70])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Mar 2025 15:33:52 -0800
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Mar 2025 15:33:53 -0800
 From: Tony Luck <tony.luck@intel.com>
 To: Fenghua Yu <fenghuay@nvidia.com>,
 	Reinette Chatre <reinette.chatre@intel.com>,
@@ -55,9 +55,9 @@ To: Fenghua Yu <fenghuay@nvidia.com>,
 Cc: linux-kernel@vger.kernel.org,
 	patches@lists.linux.dev,
 	Tony Luck <tony.luck@intel.com>
-Subject: [RFC PATCH 10/17] x86/resctrl: Add detailed descriptions for Clearwater Forest events
-Date: Mon,  3 Mar 2025 15:33:30 -0800
-Message-ID: <20250303233340.333743-11-tony.luck@intel.com>
+Subject: [RFC PATCH 12/17] x86/resctrl: Add list of known events to RDT_RESOURCE_INTEL_PMT
+Date: Mon,  3 Mar 2025 15:33:32 -0800
+Message-ID: <20250303233340.333743-13-tony.luck@intel.com>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250303233340.333743-1-tony.luck@intel.com>
 References: <20250303233340.333743-1-tony.luck@intel.com>
@@ -69,73 +69,62 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-There are two event groups one for energy reporting and another
-for "perf" events.
-
-See the XML description files in https://github.com/intel/Intel-PMT
-in the xml/CWF/OOBMSM/{RMID-ENERGY,RMID-PERF}/ for the detailed
-descriptions that were used to derive these descriptions.
+Core code uses this list to populate "mon_data" directories.
 
 Signed-off-by: Tony Luck <tony.luck@intel.com>
 ---
- arch/x86/kernel/cpu/resctrl/intel_pmt.c | 43 +++++++++++++++++++++++++
- 1 file changed, 43 insertions(+)
+ arch/x86/kernel/cpu/resctrl/intel_pmt.c | 24 +++++++++++++++++++++++-
+ 1 file changed, 23 insertions(+), 1 deletion(-)
 
 diff --git a/arch/x86/kernel/cpu/resctrl/intel_pmt.c b/arch/x86/kernel/cpu/resctrl/intel_pmt.c
-index 76ec42a67c48..78ab6d899ee2 100644
+index 754748d858c6..05640e85d303 100644
 --- a/arch/x86/kernel/cpu/resctrl/intel_pmt.c
 +++ b/arch/x86/kernel/cpu/resctrl/intel_pmt.c
-@@ -70,7 +70,50 @@ struct telem_entry {
- 	struct pmt_event evts[];
- };
+@@ -13,6 +13,7 @@
  
-+#define CWF_NUM_RMIDS	576
-+#define CWF_ENERGY_GUID	0x26696143
-+#define CWF_PERF_GUID	0x26557651
-+#define	CWF_ENERGY_STRIDE	0x10
-+#define CWF_PERF_STRIDE	0x38
-+
-+static struct telem_entry cwf_energy = {
-+	.name				= "energy",
-+	.guid				= CWF_ENERGY_GUID,
-+	.num_rmids			= CWF_NUM_RMIDS,
-+	.stride				= CWF_ENERGY_STRIDE,
-+	.overflow_counter_off		= CWF_NUM_RMIDS * CWF_ENERGY_STRIDE,
-+	.last_overflow_tstamp_off	= CWF_NUM_RMIDS * CWF_ENERGY_STRIDE + 8,
-+	.last_update_tstamp_off		= CWF_NUM_RMIDS * CWF_ENERGY_STRIDE + 16,
-+	.evts				= {
-+		EVT(PMT_EVENT_ENERGY, "core_energy", 0x0, EVT_U46_18),
-+		EVT(PMT_EVENT_ACTIVITY, "activity", 0x8, EVT_U46_18),
-+		{ }
-+	}
-+};
-+
-+static struct telem_entry cwf_perf = {
-+	.name				= "perf",
-+	.guid				= CWF_PERF_GUID,
-+	.num_rmids			= CWF_NUM_RMIDS,
-+	.stride				= CWF_PERF_STRIDE,
-+	.overflow_counter_off		= CWF_NUM_RMIDS * CWF_PERF_STRIDE,
-+	.last_overflow_tstamp_off	= CWF_NUM_RMIDS * CWF_PERF_STRIDE + 8,
-+	.last_update_tstamp_off		= CWF_NUM_RMIDS * CWF_PERF_STRIDE + 16,
-+	.evts				= {
-+		EVT(PMT_EVENT_STALLS_LLC_HIT, "stalls_llc_hit", 0x0, EVT_U64),
-+		EVT(PMT_EVENT_C1_RES, "c1_res", 0x8, EVT_U64),
-+		EVT(PMT_EVENT_UNHALTED_CORE_CYCLES, "unhalted_core_cycles", 0x10, EVT_U64),
-+		EVT(PMT_EVENT_STALLS_LLC_MISS, "stalls_llc_miss", 0x18, EVT_U64),
-+		EVT(PMT_EVENT_AUTO_C6_RES, "c6_res", 0x20, EVT_U64),
-+		EVT(PMT_EVENT_UNHALTED_REF_CYCLES, "unhalted_ref_cycles", 0x28, EVT_U64),
-+		EVT(PMT_EVENT_UOPS_RETIRED, "uops_retired", 0x30, EVT_U64),
-+		{ }
-+	}
-+};
-+
- static struct telem_entry *telem_entry[] = {
-+	&cwf_energy,
-+	&cwf_perf,
- 	NULL
- };
+ #include <linux/cpu.h>
+ #include <linux/cleanup.h>
++#include <linux/minmax.h>
+ #include <linux/slab.h>
+ #include "fake_intel_pmt_features.h"
+ #include <linux/intel_vsec.h>
+@@ -254,14 +255,35 @@ void rdt_get_intel_pmt_mount(void)
+ {
+ 	struct rdt_resource *r = &rdt_resources_all[RDT_RESOURCE_INTEL_PMT].r_resctrl;
+ 	struct rdt_core_mon_domain *d, *tmp;
++	struct telem_entry **tentry;
+ 	static int do_one_time;
++	struct mon_evt *evt;
++	bool ret = false;
  
+ 	if (do_one_time)
+ 		return;
+ 
+ 	do_one_time = 1;
+ 
+-	if (!get_events()) {
++	if (!get_events())
++		goto done;
++
++	for (tentry = telem_entry; *tentry; tentry++) {
++		if (!(*tentry)->active)
++			continue;
++		for (int i = 0; (*tentry)->evts[i].evt.name; i++) {
++			evt = &(*tentry)->evts[i].evt;
++			list_add_tail(&evt->list, &r->evt_list);
++			ret = true;
++		}
++		if (!r->num_rmid)
++			r->num_rmid = (*tentry)->num_rmids;
++		else
++			r->num_rmid = min(r->num_rmid, (*tentry)->num_rmids);
++	}
++done:
++	if (!ret) {
++		r->mon_capable = false;
+ 		list_for_each_entry_safe(d, tmp, &r->mon_domains, hdr.list)
+ 			kfree(d);
+ 		r->mon_capable = false;
 -- 
 2.48.1
 
