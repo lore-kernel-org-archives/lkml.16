@@ -1,185 +1,153 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FC6822FAC3
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 20:27:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F4A51EDA3E;
+	Mon,  3 Mar 2025 20:27:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741033661; cv=none; b=AnfYrQXjC4wcAKhpfbGCOKGf92X2ZiB9uDEG8rZgbQw3VfAKp3wr/sFdTau9VSId5MBFXSLomkctKdmtQfbcHcob+5rO8rYB6tQwh4IDC8kJXROilEblbfkRviFUu0M8kXp46wGNIptE1k1Uyczr3dpLIiH5c5KcOexl7+Ywqsw=
+	t=1741033675; cv=none; b=gGV7DmTijVBcCBJXgDTaqaDikVwCmcH2XuYHWOWzV/OE3zTxOMoziC0RA+pkwx60hlQ7SybNVUDbRKDkuYIe4z4HrBvQlwd3NUu6Zwf5byI5O660twBHJ8H5lUt+6ESy0+M3dSHJM3zJgiO+mb1CKuNnkoGGAYmgoxS61Ai9u6c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741033661; c=relaxed/simple;
-	bh=tyjhOZCLXblk/lWGiyqb0yg43eEGfRrZFxaVqWUtMx4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hXTvirim2OunWf4r9g2IYmrR7Gw2uPIxgdpkyMsJvIe7mqakAWgp8Ymj/oNBopNexff349oI2odRBQdIRLFAz3KUkzgdeMn4PiSbkg6GllCKgkiw6ajZev62xF/My6iuBx1yEl8VWtjSmtEmYFHuHk6n05opuUZdNVYil5KpPyY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=IzVqXes/; arc=none smtp.client-ip=209.85.218.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1741033675; c=relaxed/simple;
+	bh=gMD9k1Qgdbybv2uBOP8stTocBsHxADMCNCVyb3oQlDk=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=okrwKvnHlkoK6m5WDyFjFGT6o9vesj08PBn1pBM4Au3oMKpMuHreSrT/Yih8HSp7FbOpR2u0C55dsAdnOGYk5KYJxh9aVBf68iWSMcEY3kuFaDsirP7OWNrS0bzhHVjye90CC3ASatsRUA6W9mth6kjnRHEqn4C5tR/HzixkkGE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=S53b1Hmf; arc=none smtp.client-ip=209.85.218.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IzVqXes/"
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-ab7430e27b2so813319466b.3
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Mar 2025 12:27:39 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S53b1Hmf"
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-abf4b376f2fso424623366b.3;
+        Mon, 03 Mar 2025 12:27:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1741033657; x=1741638457; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yp6ZHHcUlv3BN2Sxx60Ds1olIBUSnA0r2BR96nqq1mo=;
-        b=IzVqXes/CxzmJ/O1KsWUxNFrZTkFuDyQq+1vs2SLy5lmZEBdDt7Of1KlGgGG1zxWCY
-         jUSqfgzLACmHCavTseP5iFWpJRJaNIx7JstIIRtYUejCjqstp4UC63BfTc1tOFJD1wsj
-         TqABQhGRoZiQ5+ek3yoSBdMiqHGOrh/1OZubxGG/U8m7S/HJgCmP1+cTw01kJ9UK0Mik
-         qP5KJjOcmM6HcEw2336vK1cdhA4woGL/lVwJyIOILf6+Aw+72KBlXY/Ph73AMMdy5vP7
-         nxuTbaY4HBI+fq5uJEl2lERSqNtxG4J+CRGVkc6uZVU57t+0rP6yuKHwjEoBZanVv/YF
-         Xotw==
+        d=gmail.com; s=20230601; t=1741033672; x=1741638472; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=5b60CN6bgvsucEwRWCH6wo9YbTIOsAqIH7mkhNo9S0Q=;
+        b=S53b1HmfY7/LkXz4xqy/3IHCbp2NDaZ/TwmTi7F1Bf+pkCwkUgLNeGWxXTWJDZqks2
+         xNpOEApyTYh38h6pZC7GHNkNM8eizrZk9JR7dUaV49NucXMwauhBk4YR3XyqSGlRypCa
+         lTT9FxRzT8KJ38DH2CgoBjUDh0mgbBMp/JM27iKeoa+6IJ/S2I5DF/S27Lq2M3hgqqhM
+         g6OzoyRaFN7QS/0bjOfkyVenBNIxL6a09jWFS2COA3LnJv8AT+NTFnx2JNj+jB+LwrRd
+         siMW5wO11wBeqy8vo76lUwDL3aMFYrGd3HSuTBcje2sYpTcwhLj8drhrf0D0POyUKCom
+         BAng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741033657; x=1741638457;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=yp6ZHHcUlv3BN2Sxx60Ds1olIBUSnA0r2BR96nqq1mo=;
-        b=J4eK2YWdyXzebR4cTdSrgn0v0d7FXyxXIC+dScVPCPa65OUZ2yTtHNKOfIoqgeNvUP
-         gvpGL84Sm3LsxV6mEBr4HT3AlunT1y6gYRVPCREjr2U34p9WrOk4wfUy0JdfUbHyyTYm
-         /K8Tj9hNiXOTnKJKIz0PrOyvKOcqJIEFMfbHH60kpfTbJX51gqAKlundjpIJnhQd4vh3
-         MM7BRdC2r7Z3t/mU5yUwQAJv0gV2Ptc3dXhXzwC1V6IR7Y0RQDnqo2Kv3i3wyGJDRrkn
-         EOtDba1MPtL0c4mm5jVzP0tstRtTFo9q2psS+LFLjhj9nzq5gmU1GbgC33ZgTvke0HbR
-         P0eg==
-X-Forwarded-Encrypted: i=1; AJvYcCUGQ4Tlhu91hPLaFLssoIbgVDBAicbAzLjWOtzCNuUQ5jBVcunoaptlUOcsfZ6xbLBdPnNQgzTswWBOTKE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw7GFoye1G5y4AAuzg6RMYAby+yjYRLOG6R0xSUFQRzY+Cqy70a
-	ELWxzBD2XKPBvSGucNZ5EhBZmi9BBVXMd76le4hmV88Si1SD0srkGFAgHLbJEYqH0NX5WlOPTTQ
-	nynHoEXvtwN9djJcvw8hg2tr5d2u8qIc2PQM=
-X-Gm-Gg: ASbGncvGqTEHhpRHPWsHcrkkdbhC0hflXMXICXL4XImKmQM8NE7KM24U8j7p2LIzjmM
-	w2xqIcfA195qZI8jD09KWuAbTAQ8hjfCArk5atSwFS7MK50jttR2Cikwom7nlytXEPk3VV/Wkwr
-	po0YHjcZG1aKmt3Nn6v3/7Pak=
-X-Google-Smtp-Source: AGHT+IHI0fHcpRxOMEO7nP/Kg/pdqqFRVzlmne6oJqNMvLeXcAHaJcnaYg8dJwxhgGdthWyXCwkDPcWhYDYce4Gahp0=
-X-Received: by 2002:a17:906:c10a:b0:abf:5d4a:56e5 with SMTP id
- a640c23a62f3a-abf5d4a6eb4mr974355566b.26.1741033657432; Mon, 03 Mar 2025
- 12:27:37 -0800 (PST)
+        d=1e100.net; s=20230601; t=1741033672; x=1741638472;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=5b60CN6bgvsucEwRWCH6wo9YbTIOsAqIH7mkhNo9S0Q=;
+        b=tk+8BmGcjzBCjDvRii1FhTkRy5nIJzZP6DZMr015WCC98CrN+lo76iRCqudIIcM1V8
+         hKi850FzyYRzCPjBDYQ5vnKGvUGjqo0AnSsE9rmUm+FOQKVeV0qvV2xrbv233kzn3/GW
+         RHMQh+Y/+nfyb/eHfFh3r8MhSI/eX54iRxBAmnrlXYLuLoITRep36OSE3bNHtbKIirLs
+         vL/xwBrDD3vUqlukn7UrdyYpmt/9ZvLxj/K8RRdh2exyJlc9G7y0gRfgeYhzSFKBS3Di
+         p7IAyvJzMH4iczLqYb5Mr35wvOTquJcaAzlMiWy4VwOA0zegR+tJR3un0DFYggJUOWsK
+         MqkA==
+X-Forwarded-Encrypted: i=1; AJvYcCVU9ihqk8BAtCR0uq6fvaH81ng8UYxuc0C+SR5OITjSfqcm0bMKwesYHfdZKPWNMe+VfiHk0yDjnUyxGyDW@vger.kernel.org, AJvYcCVUned7Fy3fHntXdXwf8LnPSGchVxfBSAOB6zTvccOwOKSW6kLZaXjJuoeCEgQWvEOhIQxYOLTTxw4J@vger.kernel.org, AJvYcCVpLEpVtULO3fOYft5OX3UU5K0hcUcmel8yISMTmQR+tQ8Mo08tkPR/DES659dFqSE688r1wgeoH0GO@vger.kernel.org
+X-Gm-Message-State: AOJu0YwcUbDMbJCpgiq9mtd+fNuJLblGXrBexvN2XVLvVQ9NlhsgEmGm
+	LVdeBENQyOdjaHQq9t9oIb5HUX4e6uWj7h2NUOASt9XV6AnBIfsbz86CNw==
+X-Gm-Gg: ASbGncvIaoRcXPftY3naV8h0mmA2mv0PBRf+5b3YwjSQW6qDBlhcQyfOieqDlom/Z50
+	R8JUAaw9rvHHetHhhjhqi4AnoXyizHdEJ/AtTAC0XHcGnwufLZZklfW5JA+biQTB964Wvk8LBBO
+	bBNPdARvEGpTVVICtqNDECd+rzLIa2cuM33gzrfOJKGJ2z2htjg15A4YDguFA1VtDzCdXq2jBky
+	oyqy8I4tvUni9CGTKl6xiMSNc/T9szqR4LrNgnANWZ/nodw3TALzygdbA2l1DCjE7sn53AE3X49
+	Zftd4SenYkNiciu6vitKl1GlUqg+udgCB36J7USa2sBsqo6f8Fky7Ys0VwQP0fEleJ30nuYnWzY
+	DtedNq9DMcaFLZII=
+X-Google-Smtp-Source: AGHT+IF77BedJBseCcnU1IQQMJBf/RtmIsVemRMwmoWoDaynloyfr0FemI6jF/O3BZRfQsaxHPJFsA==
+X-Received: by 2002:a17:906:478b:b0:abf:5759:7aa9 with SMTP id a640c23a62f3a-abf57597d07mr1137099866b.7.1741033672158;
+        Mon, 03 Mar 2025 12:27:52 -0800 (PST)
+Received: from hex.my.domain (83.8.122.142.ipv4.supernova.orange.pl. [83.8.122.142])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abf64dd565dsm389222166b.101.2025.03.03.12.27.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Mar 2025 12:27:51 -0800 (PST)
+From: Artur Weber <aweber.kernel@gmail.com>
+Subject: [PATCH v2 0/7] clk: bcm: kona: Add bus clock support, bus clocks
+ for BCM21664/BCM281xx
+Date: Mon, 03 Mar 2025 21:27:48 +0100
+Message-Id: <20250303-kona-bus-clock-v2-0-a363c6a6b798@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAGG=3QVi27WRYVxmsk9+HLpJw9ZJrpfLjU8G4exuXm-vUA-KqQ@mail.gmail.com>
- <CAGG=3QVkd9Vb9a=pQ=KwhKzGJXaS+6Mk5K+JtBqamj15MzT9mQ@mail.gmail.com> <20250303201509.32f6f062@pumpkin>
-In-Reply-To: <20250303201509.32f6f062@pumpkin>
-From: Bill Wendling <morbo@google.com>
-Date: Mon, 3 Mar 2025 12:27:21 -0800
-X-Gm-Features: AQ5f1JrEzddvs-Wv-Crhgn4hy8yEJ4TPM_rlAZtbpq3z6xnwhM66zprDjy3Rcmo
-Message-ID: <CAGG=3QV1iDn2r39v5eroO+kCvpbmJNtSeqJS+fpwb4vBG67z=w@mail.gmail.com>
-Subject: Re: [PATCH v2] x86/crc32: use builtins to improve code generation
-To: David Laight <david.laight.linux@gmail.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, 
-	"maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, Eric Biggers <ebiggers@kernel.org>, 
-	Ard Biesheuvel <ardb@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Justin Stitt <justinstitt@google.com>, 
-	LKML <linux-kernel@vger.kernel.org>, linux-crypto@vger.kernel.org, 
-	clang-built-linux <llvm@lists.linux.dev>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAMQQxmcC/13Myw6CMBCF4Vchs3ZMmSAVV76HYVHLABMuJa02G
+ sK7W0ncuPxPcr4VAnvhAJdsBc9Rgrg5BR0ysL2ZO0ZpUgMpOinKCQc3G7w/A9rR2QELqjRza7g
+ qFKTT4rmV1w7e6tS9hIfz792P+Xf9UeU/FXNUyGetq0ZrU7Z07SYj49G6Cept2z6gCxEnrAAAA
+ A==
+X-Change-ID: 20250212-kona-bus-clock-4297eefae940
+To: Michael Turquette <mturquette@baylibre.com>, 
+ Stephen Boyd <sboyd@kernel.org>, 
+ Florian Fainelli <florian.fainelli@broadcom.com>, 
+ Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, 
+ Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: Alex Elder <elder@kernel.org>, 
+ Stanislav Jakubek <stano.jakubek@gmail.com>, linux-clk@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+ ~postmarketos/upstreaming@lists.sr.ht, 
+ Artur Weber <aweber.kernel@gmail.com>, Alex Elder <elder@riscstar.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1741033670; l=2598;
+ i=aweber.kernel@gmail.com; s=20231030; h=from:subject:message-id;
+ bh=gMD9k1Qgdbybv2uBOP8stTocBsHxADMCNCVyb3oQlDk=;
+ b=iddqj2tp02CUcqIe1ypdcz2ln1fnPo0OdRmkCTcLdVbLQVr65P2WusLP+sB093wH/9T4CLFdN
+ xdg0hUi+SkWASH8zxVD1Aqutu4j/CPhtOtOzhK9Vjr2pZqORCH7ge++
+X-Developer-Key: i=aweber.kernel@gmail.com; a=ed25519;
+ pk=RhDBfWbJEHqDibXbhNEBAnc9FMkyznGxX/hwfhL8bv8=
 
-On Mon, Mar 3, 2025 at 12:15=E2=80=AFPM David Laight
-<david.laight.linux@gmail.com> wrote:
-> On Thu, 27 Feb 2025 15:47:03 -0800
-> Bill Wendling <morbo@google.com> wrote:
->
-> > For both gcc and clang, crc32 builtins generate better code than the
-> > inline asm. GCC improves, removing unneeded "mov" instructions. Clang
-> > does the same and unrolls the loops. GCC has no changes on i386, but
-> > Clang's code generation is vastly improved, due to Clang's "rm"
-> > constraint issue.
-> >
-> > The number of cycles improved by ~0.1% for GCC and ~1% for Clang, which
-> > is expected because of the "rm" issue. However, Clang's performance is
-> > better than GCC's by ~1.5%, most likely due to loop unrolling.
->
-> How much does it unroll?
-> How much you need depends on the latency of the crc32 instruction.
-> The copy of Agner's tables I have gives it a latency of 3 on
-> pretty much everything.
-> If you can only do one chained crc instruction every three clocks
-> it is hard to see how unrolling the loop will help.
-> Intel cpu (since sandy bridge) will run a two clock loop.
-> With three clocks to play with it should be easy (even for a compiler)
-> to generate a loop with no extra clock stalls.
->
-> Clearly if Clang decides to copy arguments to the stack an extra time
-> that will kill things. But in this case you want the "m" constraint
-> to directly read from the buffer (with a (reg,reg,8) addressing mode).
->
-Below is what Clang generates with the builtins. From what Eric said,
-this code is only run for sizes <=3D 512 bytes? So maybe it's not super
-important to micro-optimize this. I apologize, but my ability to
-measure clock loops for x86 code isn't great. (I'm sure I lack the
-requisite benchmarks, etc.)
+This patchset does the following:
 
--bw
+- Introduce support for bus clocks. These are fairly similar to
+  peripheral clocks, but only implement policy, gate and hyst.
 
-.LBB1_9:                                # =3D>This Inner Loop Header: Depth=
-=3D1
-        movl    %ebx, %ebx
-        crc32q  (%rcx), %rbx
-        addq    $8, %rcx
-        incq    %rdi
-        cmpq    %rdi, %rsi
-        jne     .LBB1_9
-# %bb.10:
-        subq    %rdi, %rax
-        jmp     .LBB1_11
-.LBB1_7:
-        movq    %r14, %rcx
-.LBB1_11:
-        movq    %r15, %rsi
-        andq    $-8, %rsi
-        cmpq    $7, %rdx
-        jb      .LBB1_14
-# %bb.12:
-        xorl    %edx, %edx
-.LBB1_13:                               # =3D>This Inner Loop Header: Depth=
-=3D1
-        movl    %ebx, %ebx
-        crc32q  (%rcx,%rdx,8), %rbx
-        crc32q  8(%rcx,%rdx,8), %rbx
-        crc32q  16(%rcx,%rdx,8), %rbx
-        crc32q  24(%rcx,%rdx,8), %rbx
-        crc32q  32(%rcx,%rdx,8), %rbx
-        crc32q  40(%rcx,%rdx,8), %rbx
-        crc32q  48(%rcx,%rdx,8), %rbx
-        crc32q  56(%rcx,%rdx,8), %rbx
-        addq    $8, %rdx
-        cmpq    %rdx, %rax
-        jne     .LBB1_13
-.LBB1_14:
-        addq    %rsi, %r14
-.LBB1_15:
-        andq    $7, %r15
-        je      .LBB1_23
-# %bb.16:
-        crc32b  (%r14), %ebx
-        cmpl    $1, %r15d
-        je      .LBB1_23
-# %bb.17:
-        crc32b  1(%r14), %ebx
-        cmpl    $2, %r15d
-        je      .LBB1_23
-# %bb.18:
-        crc32b  2(%r14), %ebx
-        cmpl    $3, %r15d
-        je      .LBB1_23
-# %bb.19:
-        crc32b  3(%r14), %ebx
-        cmpl    $4, %r15d
-        je      .LBB1_23
-# %bb.20:
-        crc32b  4(%r14), %ebx
-        cmpl    $5, %r15d
-        je      .LBB1_23
-# %bb.21:
-        crc32b  5(%r14), %ebx
-        cmpl    $6, %r15d
-        je      .LBB1_23
-# %bb.22:
-        crc32b  6(%r14), %ebx
-.LBB1_23:
-        movl    %ebx, %eax
-.LBB1_24:
+- Add matching bus clocks for BCM21664 and BCM281xx peripheral clocks
+  and update device tree bindings to match.
+
+The previous (RFC) version of this patchset also introduced a
+prerequisite clock mechanism to enable bus clocks before their
+corresponding peripheral clocks. It seems that this is unnecessary - 
+the way these clocks are initialized leaves them enabled by default.
+Thus, the prerequisite mechanism has been dropped from this version.
+
+This is fine for now, and more accurate to hardware (bus clocks are
+a prerequisite for the bus, not the peripheral clock). I had an idea
+to connect bus clocks to buses using "simple-pm-bus" in DT, but
+this is a task for another patchset.
+
+Signed-off-by: Artur Weber <aweber.kernel@gmail.com>
+---
+Changes in v2:
+- Drop prerequisite clock patch
+- Move clock/bcm21664.h dt-bindings header change to dt-bindings patch
+- Add BCM281xx bus clocks
+- Link to v1: https://lore.kernel.org/r/20250216-kona-bus-clock-v1-0-e8779d77a6f2@gmail.com
+
+---
+Artur Weber (7):
+      dt-bindings: clock: brcm,kona-ccu: Add BCM21664 bus clocks
+      dt-bindings: clock: brcm,kona-ccu: Add BCM281xx bus clocks
+      clk: bcm: kona: Add support for bus clocks
+      clk: bcm21664: Add matching bus clocks for peripheral clocks
+      clk: bcm281xx: Add corresponding bus clocks for peripheral clocks
+      ARM: dts: bcm2166x-common: Add matching bus clocks for peripheral clocks
+      ARM: dts: bcm11351: Add corresponding bus clocks for peripheral clocks
+
+ .../devicetree/bindings/clock/brcm,kona-ccu.yaml   |  37 ++++++-
+ arch/arm/boot/dts/broadcom/bcm11351.dtsi           |  33 ++++--
+ arch/arm/boot/dts/broadcom/bcm2166x-common.dtsi    |  28 +++--
+ drivers/clk/bcm/clk-bcm21664.c                     |  83 ++++++++++++++
+ drivers/clk/bcm/clk-bcm281xx.c                     | 121 +++++++++++++++++++++
+ drivers/clk/bcm/clk-kona-setup.c                   | 116 ++++++++++++++++++++
+ drivers/clk/bcm/clk-kona.c                         |  62 ++++++++++-
+ drivers/clk/bcm/clk-kona.h                         |  10 ++
+ include/dt-bindings/clock/bcm21664.h               |  19 +++-
+ include/dt-bindings/clock/bcm281xx.h               |  25 ++++-
+ 10 files changed, 505 insertions(+), 29 deletions(-)
+---
+base-commit: ffd294d346d185b70e28b1a28abe367bbfe53c04
+change-id: 20250212-kona-bus-clock-4297eefae940
+
+Best regards,
+-- 
+Artur Weber <aweber.kernel@gmail.com>
+
