@@ -1,112 +1,106 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69F8320F083;
-	Mon,  3 Mar 2025 12:22:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5ECA20F091;
+	Mon,  3 Mar 2025 12:22:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741004521; cv=none; b=QyKWhJZgSD/0TTP0Kc10GXWFYuoR1R7xtlulFihBhwWTVaIMT2l4V1oZSOpih34dqlYBLXUJKLhQpas6dc/fA6BOzkRPfZTrxJhFYolUJL/goKWEu8NLIOA6tQWzMQQb7yurE0FLiByKb39veadoV0LD2E8lhq/TlRY4kHrK4uI=
+	t=1741004529; cv=none; b=R1utBVoEgd+oVV21icNrP6j8HhX1Hvi8rH6k2pG+rIrUe8tkTXgIz+W87ELfbNIZPHGceaOhZRuq1cNOLKYwyOYw8okoI0TyPvNb7GesC4nhQSVgFuFhN4LdjyQcMIDw9ved2ddJulvaIlIz5mFTK+Pyhv8LINttuRUvYFT6m+Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741004521; c=relaxed/simple;
-	bh=G+PRDV5mfNwcg2FIzmfIzN2GOCgKDORUlKjOVJveauU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rF2BTkNNf1O4z/EW/iwSv3n8THgr1cRGb4J/1EZIFaHuyOc6PtDpojo3iSxQP/0uaPXsPgmAEzLtEC6wvgvwWriVN7xz5x10Pw61ihzHww6deC9vQb5x5oKddWfktCr52BEs4bh7A7RWNIYTnR8XXWeYkvzmGFF9Qj6+eANoOSg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=A116qQxc; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1741004529; c=relaxed/simple;
+	bh=5XGSBkroT3NyH15c6J98n/wt9cwzqENYoyXtkNF++dU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=eeONe0NcGjeMb8208NLNidfYMxke8IreKMQnbVxl3MFmtP8shMeMeOg6mRmFZlKjvPy2BlrPdU6ZV7ahdbOgtNHQbbjNBIByT+fDIPxTA1mAcmFJZBIu76nfDmAjG4TRWbGjEj9HTAX840iLIXZXwkVQ/vftEKYlv1KZfF4TGzA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Hu07RUWZ; arc=none smtp.client-ip=209.85.167.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="A116qQxc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741004520; x=1772540520;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=G+PRDV5mfNwcg2FIzmfIzN2GOCgKDORUlKjOVJveauU=;
-  b=A116qQxcSolLScuk5T7Hqqv+jfnbrRJEQoNR22Si5f8Bb6v56yoPQqj3
-   cN3mWbTSH18Mfj+gQHJCc/MAg2QuM0emgtK1r3YHBEthebOKsWWXJeeCw
-   ianGF6lY/F5/k3HgwBBcjeZmBagThwLuNEuc+zF8JnqPmnECaIj0m2Mfu
-   4haETE6OhynGhX3CTp6+JwaSgjDhGlfpA2mR122OOpobNsrJXUCIvsFDg
-   SQVU/+68KIERlJLKtGTAszjIdNdgCUCYe/uN3PjpEGVCktGVDM21qVa4p
-   sRZj0Y7KmahsvY+wpMC9VIFgtSAKIhTbQvoOjuc/mw+3w2KzWpBIjRFAN
-   g==;
-X-CSE-ConnectionGUID: YoCtPTivRlOv6U5IEg8XyA==
-X-CSE-MsgGUID: QI9cS949TkyykwzVtcfSGw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11362"; a="41764148"
-X-IronPort-AV: E=Sophos;i="6.13,329,1732608000"; 
-   d="scan'208";a="41764148"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Mar 2025 04:22:00 -0800
-X-CSE-ConnectionGUID: OkgzZWZfRvG7oho8rGf9/A==
-X-CSE-MsgGUID: tJWSFf8xQbGxJ7yS/srYmQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,329,1732608000"; 
-   d="scan'208";a="118690136"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by fmviesa009.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Mar 2025 04:21:58 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1tp4nz-0000000GoJJ-2Ykv;
-	Mon, 03 Mar 2025 14:21:55 +0200
-Date: Mon, 3 Mar 2025 14:21:55 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Raag Jadav <raag.jadav@intel.com>
-Cc: lee@kernel.org, giometti@enneenne.com, gregkh@linuxfoundation.org,
-	raymond.tan@intel.com, linux-gpio@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hu07RUWZ"
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-5493b5bc6e8so5087178e87.2;
+        Mon, 03 Mar 2025 04:22:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741004526; x=1741609326; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=mZmg489r6L6pRhlkbZ4niT48F2MsWO7ApxopBhoezJw=;
+        b=Hu07RUWZtAqkdAQSl4keRFYy0vjkj9XPifAsfXKIY/Kp5SdGXeS+uk7RldvKyOgJIf
+         CpPg6xGCL2o5V2hJcjRDP93eyxmJ6LYMUkDXt25220Jip6rcjIWW/tRsMsP+RY2c0sop
+         a8k0/AxgITPPKh8WODv0e4pB6L3ndCN3T3fTIps/G+oHLfqEzo588CA6dlJWoFZ/j9NU
+         56MRXRlGjEtgEQFvJf3YlP3wd5vWS4FvosI7OZ3u/Gwh+emAlo3HIQyS2YVv9b5yFuUh
+         Yj96iGFk24XJK7ymdLievxpZ7kazmJ3PPTWOlYvoJQc3VgFipKRv7C+zKvEwiPFoWjUo
+         RFUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741004526; x=1741609326;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=mZmg489r6L6pRhlkbZ4niT48F2MsWO7ApxopBhoezJw=;
+        b=L3SZWyBEoePzMRtbz+xV980HD2ortnO73DakmWrGxgs6One6zHm5+C4tDrt0pPVp41
+         4U4MBN2Fd1JFJ8ZddnMjnJczLwWJbkrS4RmZL9FZM7C+ejpGMhM7whW5E8EXRjocZpx0
+         PkhVRXaVoZRjHLgtRVjIwHHIZxxBhW8ZeK0D8EBbpfZaI4NlhARIocDzjYuPCY5vLWLf
+         f0YslVPRxi1PKhABJZ2FNnMXeeW6NRkINBv8S6DUMutEV0Xb8KT9kfiFBrje1c0bVsBR
+         9IGDUh4P5AcSJ1hfDQOCayguD8xvwCkQWTl7zTVItbnx6YzwcmGRau0PDMk8NixOT6F3
+         xsgA==
+X-Forwarded-Encrypted: i=1; AJvYcCU0S8LVAtVIL2mOeOEIRJjpVHG4YynR/rJly0/UOfEtAlE2ckttde5neEVbkCr3xdb2v9NAmCB0KLN5HSmB@vger.kernel.org, AJvYcCVvDlwr44JLJgiwRp9Lx0weIjOl5/dBG7nF3qpFog1RNjbd/XOSxQDbBQbHuX7JzxrX7VIQ6/f651T8@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx8Abtysd/qgsBvp2JDOhRaO9oR0i3cijmK9LLGVx6oEcXgi+rK
+	Lv0N2ZkGzh6daUlZebUROgD5Q7/lcwP2lkKzAs9Qgl5SWkW7ei9j
+X-Gm-Gg: ASbGncsxo+030cKcDLKUTbNUsv6l4FgOfY0QYJ2ksmNhEoqaFTvsAtl4QJc/Z1a0rHj
+	9HI3mbyK8Mz4XfLfHUfx1+TCA1qo1dK7zm8OjavFbXhBOm40byY9ks0dZEpFawWDMcINhQmS0UV
+	TOg370L5eNEHLCFxk5g3JOit5CBEZlGC/0CrHUYQ4hJDyZRTlT0MJujMgCYgOs38U94j8XMvRo/
+	T4mTYNT9mHHoRmGUe06WEGHOZozr1J3TYQXLGcXA/iIMpQad16YbZv3mZzxSswBSiiKHnI/G/iB
+	MAzC5bssiAE6mbgyfQgKOikX6rSqCfTysVc=
+X-Google-Smtp-Source: AGHT+IGTBGYosGRDbEuVZA2KP4Ij2fiTOu2dMftCCG5C+UQWTRH5Drf67iHW/KYjICrPNIIWKVuJhg==
+X-Received: by 2002:a05:6512:398e:b0:545:d70:1d1c with SMTP id 2adb3069b0e04-5494c129ce8mr5205004e87.11.1741004525723;
+        Mon, 03 Mar 2025 04:22:05 -0800 (PST)
+Received: from xeon.. ([188.163.112.51])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30b868766desm13486611fa.100.2025.03.03.04.22.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Mar 2025 04:22:05 -0800 (PST)
+From: Svyatoslav Ryhel <clamor95@gmail.com>
+To: "Rafael J. Wysocki" <rafael@kernel.org>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Zhang Rui <rui.zhang@intel.com>,
+	Lukasz Luba <lukasz.luba@arm.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Laxman Dewangan <ldewangan@nvidia.com>
+Cc: linux-pm@vger.kernel.org,
+	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/5] gpio: elkhartlake: depend on
- MFD_INTEL_EHL_PSE_GPIO
-Message-ID: <Z8We4_FJvxTxegpN@smile.fi.intel.com>
-References: <20250303044745.268964-1-raag.jadav@intel.com>
- <20250303044745.268964-3-raag.jadav@intel.com>
- <Z8VmebNcrH6CjHp6@smile.fi.intel.com>
- <Z8WUpzDHbhp0aMoN@black.fi.intel.com>
- <Z8WWNHL1rZKV4c4o@smile.fi.intel.com>
- <Z8Wc73OytMx3khP_@black.fi.intel.com>
+Subject: [PATCH v3 0/2] thermal: thermal-generic-adc: add temp sensor function
+Date: Mon,  3 Mar 2025 14:21:49 +0200
+Message-ID: <20250303122151.91557-1-clamor95@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z8Wc73OytMx3khP_@black.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
 
-On Mon, Mar 03, 2025 at 02:13:35PM +0200, Raag Jadav wrote:
-> On Mon, Mar 03, 2025 at 01:44:52PM +0200, Andy Shevchenko wrote:
-> > On Mon, Mar 03, 2025 at 01:38:15PM +0200, Raag Jadav wrote:
-> > > On Mon, Mar 03, 2025 at 10:21:13AM +0200, Andy Shevchenko wrote:
-> > > > On Mon, Mar 03, 2025 at 10:17:42AM +0530, Raag Jadav wrote:
+Add IIO sensor cell to thermal-generic-adc, which would benefit
+devices that use adc sensors to detect temperature and need a
+custom conversion table.
 
-...
+---
+Changes on switching from v2 to v3:
+- rephrased commit headers
 
-> > > > >  config GPIO_ELKHARTLAKE
-> > > > >  	tristate "Intel Elkhart Lake PSE GPIO support"
-> > > > > -	depends on X86 || COMPILE_TEST
-> > > > > +	depends on (X86 && MFD_INTEL_EHL_PSE_GPIO) || COMPILE_TEST
-> > > > >  	select GPIO_TANGIER
-> > > > 
-> > > > Looking on how GPIO PMIC drivers are written, I would redo this as
-> > > > 
-> > > > 	depends on (X86 || COMPILE_TEST) && MFD_INTEL_EHL_PSE_GPIO
-> > > 
-> > > True, but perhaps allow independent COMPILE_TEST where possible?
-> > 
-> > It will be tested in all-or-none way. Or you think it has to be tested
-> > individually? If so, why is it needed?
-> 
-> Better CI coverage?
+Changes on switching from v1 to v2:
+- documented #iio-channel-cells property
+- switched to IIO_CHAN_INFO_PROCESSED
+---
 
-How? I do not see the difference, can you elaborate?
-(Assuming that CIs are using the merge_config.sh approach or alike)
+Svyatoslav Ryhel (2):
+  dt-bindings: thermal: generic-adc: Add optional io-channel-cells
+    property
+  thermal: thermal-generic-adc: add temperature sensor channel
 
-> We also have it for Intel pinctrl drivers.
-
-This is unrelated to Intel pin control drivers.
+ .../bindings/thermal/generic-adc-thermal.yaml |  4 ++
+ drivers/thermal/thermal-generic-adc.c         | 54 ++++++++++++++++++-
+ 2 files changed, 57 insertions(+), 1 deletion(-)
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.43.0
 
