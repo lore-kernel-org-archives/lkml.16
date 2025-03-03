@@ -1,23 +1,23 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 578CB22D4C8;
-	Mon,  3 Mar 2025 18:52:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B359120E313;
+	Mon,  3 Mar 2025 18:52:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741027925; cv=none; b=UseKGjbmTF1PKxLMo/70NrOsrSbwmds9QvYExXCiZ6y4Z1qv54LeCsYvILTFyCCes5Vb9apJgrV7myDBLZF1MtxKEPKUty9YGT0b5m5KMfbdcn24xnBIb+shInUeR/5+V59vF8ESQaJYUoKK4HUS4PqdIjH8AtjYEe3cz7BqtWs=
+	t=1741027924; cv=none; b=D6WgAuDERO1eqv7cFw/z48fzC7paLI/rrwaL2jzwCM/BIUucpBGn6vbqSUq14zj7B+lY36cvx89C8IUHJ5v+37YkFwpD9woNsSe3IW8S/YoNUegIWctypwbcb8A/DsGP9/MqxHLV55O9w6sMbHoszTAtLc+RuvfoYoJmZ89yvO4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741027925; c=relaxed/simple;
-	bh=XKm1davLhTjrfgKJD7ZJVOfaLrQzZjIOvHnwYv5dVDo=;
+	s=arc-20240116; t=1741027924; c=relaxed/simple;
+	bh=o/qmX6hSgRoymOE1dWMcvLTwjwRGpOCvn8rPyegWrZM=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=VcZV9LdMiIsczUi359Gsz+kZZb60VfSeEVx9uGQo/7u9dxhfFRB084XskUy9oyMVZHka+0FF5NhgXv2AGkvXCgSAeas7iB351UFjaX378PIdMw2nWJLKuvFnFEPa6e/z9iqN+1z0KxTqmU3xEFpEGOQqJHUlQeg73ueYND4vXdo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=cX6vmXHz; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Lnnz8LTv; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=J0LIstR07ZgijCfqS+yq174KvDpuc8v9KJ469PsVgPh1Jh2WpOVHLQ3zogx9C5UsyrX6WrFy0X2b9RvbbHS+Sk7GeIe4BAo/TKMoezzHsdgaaeFq6oh1ryqafmc1XmSbUQ+F/gsD+HWF/w2xs5e4Ufdwq5xQNLNz0iy1RTK6du0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=gWcpkIGY; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=hA6GGIAv; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="cX6vmXHz";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Lnnz8LTv"
-Date: Mon, 03 Mar 2025 18:51:55 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="gWcpkIGY";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="hA6GGIAv"
+Date: Mon, 03 Mar 2025 18:51:52 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020; t=1741027915;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
@@ -25,12 +25,12 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=/h1GslIbyju+suPkhMvAD87el/WZtgWXerGF0Q3aAlU=;
-	b=cX6vmXHz9fX8Kv6S/H3MfZgoQVBOZoXUgfOXimK7OBbGnzkblbeadhakPb32P818xTIstK
-	qp6MHiInPIDd1iktfNQm9RlZJdMyYknd7PcPu3t5cue9nDkTnaGJQ50bn/Zl4h6XbMYR/j
-	TGugdpp2MXQjr51HZIWDoEbZwAgsGwsOvev6CpQBlhy0GjJSxCzCiv2Qh62GCezCL6FLo8
-	EOIxoAaPoMMDEJuVNL/T7gc77Jf/B+RSJNKFCD/aHK+Cv/VyBTMVoLvYY+/8xAhV1notTc
-	50ms8ygUOtAByVdsLsiwwRAH3ropMbORHkNdr65rkw0MXH/Y1FWCrSMuyJFKog==
+	bh=TGeQYAabFLDEOsh+5xx1WnuyM7t4dWXnTfPHS1MGtgo=;
+	b=gWcpkIGYiWQOQSuT1i3++lIzJZx9iq0yDSPSQxZXGey0AK2FB7VhcwMv1KjB+ycR0vN/0m
+	PcMSEgN9rUGzdOSIFijwhqowwHC0RrB+5KqPnbVFlQd53coYjMEgvRKIv0WQt0qbHYlxkb
+	Szf4zQVIQmf9mh6A2pnTqIVVZNSmr4/Jvly9BhpQjgfG/eY5VL13x5nxse9RLlNdm/yvqj
+	rYPvtaSYuCmPdB5K0lJohkv7PO7x/+0B2QFANluVzmjyAEpy2Xy5A12+OySr5BlQ++0VCx
+	12yMrnc3xIv24YpdDxLc5QysPFbOp8GXk0/LA3AnestT4TNXbtDdg2mBxYYASA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020e; t=1741027915;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
@@ -38,26 +38,27 @@ DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=/h1GslIbyju+suPkhMvAD87el/WZtgWXerGF0Q3aAlU=;
-	b=Lnnz8LTvL68X36RqumzS9ewl3Te0D72Hgwz9FpyIYjZIVBxM9iF8bFkF2LHUX58RAPNykJ
-	Pr55To3Wk2ahiqAw==
-From: "tip-bot2 for Alice Ryhl" <tip-bot2@linutronix.de>
+	bh=TGeQYAabFLDEOsh+5xx1WnuyM7t4dWXnTfPHS1MGtgo=;
+	b=hA6GGIAvYoxhoDMCJ8FGZzV7BMxFVRL2/MxVUcu+vRprAt7n+55hAI5dtrhWO9h4i2GS8M
+	42lunAcBBk8Ma6DA==
+From: "tip-bot2 for Mitchell Levy" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
 Subject:
- [tip: locking/core] rust: sync: condvar: Add wait_interruptible_freezable()
-Cc: Alice Ryhl <aliceryhl@google.com>, Boqun Feng <boqun.feng@gmail.com>,
- x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250204-condvar-freeze-v2-1-804483096260@google.com>
-References: <20250204-condvar-freeze-v2-1-804483096260@google.com>
+ [tip: locking/core] rust: lockdep: Use Pin for all LockClassKey usages
+Cc: Benno Lossin <benno.lossin@proton.me>, Boqun Feng <boqun.feng@gmail.com>,
+ Mitchell Levy <levymitchell0@gmail.com>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250207-rust-lockdep-v4-2-7a50a7e88656@gmail.com>
+References: <20250207-rust-lockdep-v4-2-7a50a7e88656@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174102791512.14745.11616490042606107721.tip-bot2@tip-bot2>
+Message-ID: <174102791234.14745.9352511071714022288.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -67,84 +68,261 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the locking/core branch of tip:
 
-Commit-ID:     49d72f48a8d9bff481c6f4be838117d07bfa4e4c
-Gitweb:        https://git.kernel.org/tip/49d72f48a8d9bff481c6f4be838117d07bfa4e4c
-Author:        Alice Ryhl <aliceryhl@google.com>
-AuthorDate:    Tue, 04 Feb 2025 13:43:25 
+Commit-ID:     3b5b307cf84ca3a73abe797df31e0efe897411a9
+Gitweb:        https://git.kernel.org/tip/3b5b307cf84ca3a73abe797df31e0efe897411a9
+Author:        Mitchell Levy <levymitchell0@gmail.com>
+AuthorDate:    Fri, 07 Feb 2025 16:39:09 -08:00
 Committer:     Boqun Feng <boqun.feng@gmail.com>
 CommitterDate: Tue, 25 Feb 2025 08:53:08 -08:00
 
-rust: sync: condvar: Add wait_interruptible_freezable()
+rust: lockdep: Use Pin for all LockClassKey usages
 
-To support waiting for a `CondVar` as a freezable process, add a
-wait_interruptible_freezable() function.
+Reintroduce dynamically-allocated LockClassKeys such that they are
+automatically (de)registered. Require that all usages of LockClassKeys
+ensure that they are Pin'd.
 
-Binder needs this function in the appropriate places to freeze a process
-where some of its threads are blocked on the Binder driver.
+Currently, only `'static` LockClassKeys are supported, so Pin is
+redundant. However, it is intended that dynamically-allocated
+LockClassKeys will eventually be supported, so using Pin from the outset
+will make that change simpler.
 
-[Boqun: Capitalize the title, reword the commit log and rephrase the
-function doc comment with the impersonal style to align with rest of the
-file]
-
-Signed-off-by: Alice Ryhl <aliceryhl@google.com>
+Closes: https://github.com/Rust-for-Linux/linux/issues/1102
+Suggested-by: Benno Lossin <benno.lossin@proton.me>
+Suggested-by: Boqun Feng <boqun.feng@gmail.com>
+Signed-off-by: Mitchell Levy <levymitchell0@gmail.com>
+Reviewed-by: Benno Lossin <benno.lossin@proton.me>
 Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
-Link: https://lore.kernel.org/r/20250204-condvar-freeze-v2-1-804483096260@google.com
+Link: https://lore.kernel.org/r/20250207-rust-lockdep-v4-2-7a50a7e88656@gmail.com
 ---
- rust/kernel/sync/condvar.rs | 23 ++++++++++++++++++++++-
- rust/kernel/task.rs         |  2 ++
- 2 files changed, 24 insertions(+), 1 deletion(-)
+ rust/helpers/helpers.c          |  1 +-
+ rust/helpers/sync.c             | 13 +++++++-
+ rust/kernel/sync.rs             | 57 ++++++++++++++++++++++++++++++--
+ rust/kernel/sync/condvar.rs     |  5 +--
+ rust/kernel/sync/lock.rs        |  4 +-
+ rust/kernel/sync/lock/global.rs |  5 +--
+ rust/kernel/sync/poll.rs        |  2 +-
+ rust/kernel/workqueue.rs        |  2 +-
+ 8 files changed, 77 insertions(+), 12 deletions(-)
+ create mode 100644 rust/helpers/sync.c
 
+diff --git a/rust/helpers/helpers.c b/rust/helpers/helpers.c
+index 0640b7e..4c1a10a 100644
+--- a/rust/helpers/helpers.c
++++ b/rust/helpers/helpers.c
+@@ -30,6 +30,7 @@
+ #include "signal.c"
+ #include "slab.c"
+ #include "spinlock.c"
++#include "sync.c"
+ #include "task.c"
+ #include "uaccess.c"
+ #include "vmalloc.c"
+diff --git a/rust/helpers/sync.c b/rust/helpers/sync.c
+new file mode 100644
+index 0000000..ff7e68b
+--- /dev/null
++++ b/rust/helpers/sync.c
+@@ -0,0 +1,13 @@
++// SPDX-License-Identifier: GPL-2.0
++
++#include <linux/lockdep.h>
++
++void rust_helper_lockdep_register_key(struct lock_class_key *k)
++{
++	lockdep_register_key(k);
++}
++
++void rust_helper_lockdep_unregister_key(struct lock_class_key *k)
++{
++	lockdep_unregister_key(k);
++}
+diff --git a/rust/kernel/sync.rs b/rust/kernel/sync.rs
+index 16eab91..4104bc2 100644
+--- a/rust/kernel/sync.rs
++++ b/rust/kernel/sync.rs
+@@ -5,6 +5,8 @@
+ //! This module contains the kernel APIs related to synchronisation that have been ported or
+ //! wrapped for usage by Rust code in the kernel.
+ 
++use crate::pin_init;
++use crate::prelude::*;
+ use crate::types::Opaque;
+ 
+ mod arc;
+@@ -23,15 +25,64 @@ pub use locked_by::LockedBy;
+ 
+ /// Represents a lockdep class. It's a wrapper around C's `lock_class_key`.
+ #[repr(transparent)]
+-pub struct LockClassKey(Opaque<bindings::lock_class_key>);
++#[pin_data(PinnedDrop)]
++pub struct LockClassKey {
++    #[pin]
++    inner: Opaque<bindings::lock_class_key>,
++}
+ 
+ // SAFETY: `bindings::lock_class_key` is designed to be used concurrently from multiple threads and
+ // provides its own synchronization.
+ unsafe impl Sync for LockClassKey {}
+ 
+ impl LockClassKey {
++    /// Initializes a dynamically allocated lock class key. In the common case of using a
++    /// statically allocated lock class key, the static_lock_class! macro should be used instead.
++    ///
++    /// # Example
++    /// ```
++    /// # use kernel::{c_str, stack_pin_init};
++    /// # use kernel::alloc::KBox;
++    /// # use kernel::types::ForeignOwnable;
++    /// # use kernel::sync::{LockClassKey, SpinLock};
++    ///
++    /// let key = KBox::pin_init(LockClassKey::new_dynamic(), GFP_KERNEL)?;
++    /// let key_ptr = key.into_foreign();
++    ///
++    /// {
++    ///     stack_pin_init!(let num: SpinLock<u32> = SpinLock::new(
++    ///         0,
++    ///         c_str!("my_spinlock"),
++    ///         // SAFETY: `key_ptr` is returned by the above `into_foreign()`, whose
++    ///         // `from_foreign()` has not yet been called.
++    ///         unsafe { <Pin<KBox<LockClassKey>> as ForeignOwnable>::borrow(key_ptr) }
++    ///     ));
++    /// }
++    ///
++    /// // SAFETY: We dropped `num`, the only use of the key, so the result of the previous
++    /// // `borrow` has also been dropped. Thus, it's safe to use from_foreign.
++    /// unsafe { drop(<Pin<KBox<LockClassKey>> as ForeignOwnable>::from_foreign(key_ptr)) };
++    ///
++    /// # Ok::<(), Error>(())
++    /// ```
++    pub fn new_dynamic() -> impl PinInit<Self> {
++        pin_init!(Self {
++            // SAFETY: lockdep_register_key expects an uninitialized block of memory
++            inner <- Opaque::ffi_init(|slot| unsafe { bindings::lockdep_register_key(slot) })
++        })
++    }
++
+     pub(crate) fn as_ptr(&self) -> *mut bindings::lock_class_key {
+-        self.0.get()
++        self.inner.get()
++    }
++}
++
++#[pinned_drop]
++impl PinnedDrop for LockClassKey {
++    fn drop(self: Pin<&mut Self>) {
++        // SAFETY: self.as_ptr was registered with lockdep and self is pinned, so the address
++        // hasn't changed. Thus, it's safe to pass to unregister.
++        unsafe { bindings::lockdep_unregister_key(self.as_ptr()) }
+     }
+ }
+ 
+@@ -44,7 +95,7 @@ macro_rules! static_lock_class {
+             // SAFETY: lockdep expects uninitialized memory when it's handed a statically allocated
+             // lock_class_key
+             unsafe { ::core::mem::MaybeUninit::uninit().assume_init() };
+-        &CLASS
++        $crate::prelude::Pin::static_ref(&CLASS)
+     }};
+ }
+ 
 diff --git a/rust/kernel/sync/condvar.rs b/rust/kernel/sync/condvar.rs
-index 7df5650..5c1e546 100644
+index 5c1e546..fbf68ad 100644
 --- a/rust/kernel/sync/condvar.rs
 +++ b/rust/kernel/sync/condvar.rs
-@@ -11,7 +11,9 @@ use crate::{
-     init::PinInit,
-     pin_init,
-     str::CStr,
--    task::{MAX_SCHEDULE_TIMEOUT, TASK_INTERRUPTIBLE, TASK_NORMAL, TASK_UNINTERRUPTIBLE},
-+    task::{
-+        MAX_SCHEDULE_TIMEOUT, TASK_FREEZABLE, TASK_INTERRUPTIBLE, TASK_NORMAL, TASK_UNINTERRUPTIBLE,
-+    },
+@@ -17,8 +17,7 @@ use crate::{
      time::Jiffies,
      types::Opaque,
  };
-@@ -159,6 +161,25 @@ impl CondVar {
-         crate::current!().signal_pending()
-     }
+-use core::marker::PhantomPinned;
+-use core::ptr;
++use core::{marker::PhantomPinned, pin::Pin, ptr};
+ use macros::pin_data;
  
-+    /// Releases the lock and waits for a notification in interruptible and freezable mode.
-+    ///
-+    /// The process is allowed to be frozen during this sleep. No lock should be held when calling
-+    /// this function, and there is a lockdep assertion for this. Freezing a task that holds a lock
-+    /// can trivially deadlock vs another task that needs that lock to complete before it too can
-+    /// hit freezable.
-+    #[must_use = "wait_interruptible_freezable returns if a signal is pending, so the caller must check the return value"]
-+    pub fn wait_interruptible_freezable<T: ?Sized, B: Backend>(
-+        &self,
-+        guard: &mut Guard<'_, T, B>,
-+    ) -> bool {
-+        self.wait_internal(
-+            TASK_INTERRUPTIBLE | TASK_FREEZABLE,
-+            guard,
-+            MAX_SCHEDULE_TIMEOUT,
-+        );
-+        crate::current!().signal_pending()
-+    }
-+
-     /// Releases the lock and waits for a notification in interruptible mode.
-     ///
-     /// Atomically releases the given lock (whose ownership is proven by the guard) and puts the
-diff --git a/rust/kernel/task.rs b/rust/kernel/task.rs
-index 07bc22a..ea43a3b 100644
---- a/rust/kernel/task.rs
-+++ b/rust/kernel/task.rs
-@@ -23,6 +23,8 @@ pub const MAX_SCHEDULE_TIMEOUT: c_long = c_long::MAX;
- pub const TASK_INTERRUPTIBLE: c_int = bindings::TASK_INTERRUPTIBLE as c_int;
- /// Bitmask for tasks that are sleeping in an uninterruptible state.
- pub const TASK_UNINTERRUPTIBLE: c_int = bindings::TASK_UNINTERRUPTIBLE as c_int;
-+/// Bitmask for tasks that are sleeping in a freezable state.
-+pub const TASK_FREEZABLE: c_int = bindings::TASK_FREEZABLE as c_int;
- /// Convenience constant for waking up tasks regardless of whether they are in interruptible or
- /// uninterruptible sleep.
- pub const TASK_NORMAL: c_uint = bindings::TASK_NORMAL as c_uint;
+ /// Creates a [`CondVar`] initialiser with the given name and a newly-created lock class.
+@@ -103,7 +102,7 @@ unsafe impl Sync for CondVar {}
+ 
+ impl CondVar {
+     /// Constructs a new condvar initialiser.
+-    pub fn new(name: &'static CStr, key: &'static LockClassKey) -> impl PinInit<Self> {
++    pub fn new(name: &'static CStr, key: Pin<&'static LockClassKey>) -> impl PinInit<Self> {
+         pin_init!(Self {
+             _pin: PhantomPinned,
+             // SAFETY: `slot` is valid while the closure is called and both `name` and `key` have
+diff --git a/rust/kernel/sync/lock.rs b/rust/kernel/sync/lock.rs
+index f53e87d..360a10a 100644
+--- a/rust/kernel/sync/lock.rs
++++ b/rust/kernel/sync/lock.rs
+@@ -12,7 +12,7 @@ use crate::{
+     str::CStr,
+     types::{NotThreadSafe, Opaque, ScopeGuard},
+ };
+-use core::{cell::UnsafeCell, marker::PhantomPinned};
++use core::{cell::UnsafeCell, marker::PhantomPinned, pin::Pin};
+ use macros::pin_data;
+ 
+ pub mod mutex;
+@@ -129,7 +129,7 @@ unsafe impl<T: ?Sized + Send, B: Backend> Sync for Lock<T, B> {}
+ 
+ impl<T, B: Backend> Lock<T, B> {
+     /// Constructs a new lock initialiser.
+-    pub fn new(t: T, name: &'static CStr, key: &'static LockClassKey) -> impl PinInit<Self> {
++    pub fn new(t: T, name: &'static CStr, key: Pin<&'static LockClassKey>) -> impl PinInit<Self> {
+         pin_init!(Self {
+             data: UnsafeCell::new(t),
+             _pin: PhantomPinned,
+diff --git a/rust/kernel/sync/lock/global.rs b/rust/kernel/sync/lock/global.rs
+index 480ee72..d65f94b 100644
+--- a/rust/kernel/sync/lock/global.rs
++++ b/rust/kernel/sync/lock/global.rs
+@@ -13,6 +13,7 @@ use crate::{
+ use core::{
+     cell::UnsafeCell,
+     marker::{PhantomData, PhantomPinned},
++    pin::Pin,
+ };
+ 
+ /// Trait implemented for marker types for global locks.
+@@ -26,7 +27,7 @@ pub trait GlobalLockBackend {
+     /// The backend used for this global lock.
+     type Backend: Backend + 'static;
+     /// The class for this global lock.
+-    fn get_lock_class() -> &'static LockClassKey;
++    fn get_lock_class() -> Pin<&'static LockClassKey>;
+ }
+ 
+ /// Type used for global locks.
+@@ -270,7 +271,7 @@ macro_rules! global_lock {
+             type Item = $valuety;
+             type Backend = $crate::global_lock_inner!(backend $kind);
+ 
+-            fn get_lock_class() -> &'static $crate::sync::LockClassKey {
++            fn get_lock_class() -> Pin<&'static $crate::sync::LockClassKey> {
+                 $crate::static_lock_class!()
+             }
+         }
+diff --git a/rust/kernel/sync/poll.rs b/rust/kernel/sync/poll.rs
+index d5f1715..c4934f8 100644
+--- a/rust/kernel/sync/poll.rs
++++ b/rust/kernel/sync/poll.rs
+@@ -89,7 +89,7 @@ pub struct PollCondVar {
+ 
+ impl PollCondVar {
+     /// Constructs a new condvar initialiser.
+-    pub fn new(name: &'static CStr, key: &'static LockClassKey) -> impl PinInit<Self> {
++    pub fn new(name: &'static CStr, key: Pin<&'static LockClassKey>) -> impl PinInit<Self> {
+         pin_init!(Self {
+             inner <- CondVar::new(name, key),
+         })
+diff --git a/rust/kernel/workqueue.rs b/rust/kernel/workqueue.rs
+index 0cd100d..6b6f3ad 100644
+--- a/rust/kernel/workqueue.rs
++++ b/rust/kernel/workqueue.rs
+@@ -369,7 +369,7 @@ unsafe impl<T: ?Sized, const ID: u64> Sync for Work<T, ID> {}
+ impl<T: ?Sized, const ID: u64> Work<T, ID> {
+     /// Creates a new instance of [`Work`].
+     #[inline]
+-    pub fn new(name: &'static CStr, key: &'static LockClassKey) -> impl PinInit<Self>
++    pub fn new(name: &'static CStr, key: Pin<&'static LockClassKey>) -> impl PinInit<Self>
+     where
+         T: WorkItem<ID>,
+     {
