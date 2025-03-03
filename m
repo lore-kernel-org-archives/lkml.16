@@ -1,132 +1,144 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4653222CBE9
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 16:50:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 839FB22CBE9
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 16:50:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741020603; cv=none; b=KmlXs0YdThgXfe6jWhpfrOtR0XAvDk6syGGN8zJaTLNvyFdMDwon1584KE4TtT7bK9NwIQ9hyJbht32xLLWFv+sbYeeWDxEWzw9w9FxH7E7jxZF/syX4JAEqtubPEyjaKW8McT2qllYogfg2QRKWXmMpgZ7Y1C/vXEV/+cjFGFk=
+	t=1741020623; cv=none; b=Qm7E4KP5m53Ms/G7zMxnMp64lUHBwo/drxDuTY2tJ/EA2Xs4a7xTt6ivnMbR4OQImOaakpNlNggIw0BsY6A5990HlJSu2JElzDxx03zVjksARsrprmRhV2qKNAuwAM2oQmvfRdnR0M86xeEyHHBYOLh4mSWIXuF9pojdX7JlsoM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741020603; c=relaxed/simple;
-	bh=d8/WZ74KpxSBBuf8SBqXQmQCVS+FqdR4GegQqBBnNVc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cunTBQ2jXacigrZLAmkvuOJba5HBiHK7MTSm6cTGoqcDKxuHE1X+NsmabVk/9/AxBjTw11aG3USkI68xnBR1d8RXA98IXbFcmhIYLW+19y9buQF0uPmVrGsyfiLYrCvG+e7R3plEN+MQI1xtkVjYnhBfTsvHmcD7QJUsg7olc0U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BJgZhaWc; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1741020623; c=relaxed/simple;
+	bh=3olsaads0hJRXoLcXDm6bQjRDab5p8IKCJQ2rzmNJlQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=llk5Fi3uN2I2x2RSEzutkp5tp+Iou5AnmVV52kzfOf52VMAyg9yWNNq1ekv0sy38ojnns4ov7N8Sai/HB2oipuNslsERq1hR36orFpjbRViLenqJUfI/FsxYqOHb0eEmP4N5dKEgAlL16HP4OYWfPQSG8YzYdXFw5BZgT5TUDO8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=jBcHt+hu; arc=none smtp.client-ip=217.70.183.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BJgZhaWc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1741020601;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="jBcHt+hu"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 1927444309;
+	Mon,  3 Mar 2025 16:50:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1741020614;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=CRFDMhYCdzohXSQPdHzmNODZ58R1W+2Bk5NhU9gOXmU=;
-	b=BJgZhaWc9kmE6LNUolbX2WMY6f/MBfqV0eu7kLdUb+30Kwxlsoj469H5Mh5DNPLIrP9YeU
-	AMRT/13Ux18kjzDr249U4T+8gOEFl4TBIzn0jfYrZyNtgjaKh6hZHo23JAJ7fcpn4GrnSD
-	3h0wR3I+YDcyhTxt5dT8/uRQqeZHpVQ=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-131-c6G75LhJOnyN0hUAVZFQOg-1; Mon,
- 03 Mar 2025 11:49:58 -0500
-X-MC-Unique: c6G75LhJOnyN0hUAVZFQOg-1
-X-Mimecast-MFC-AGG-ID: c6G75LhJOnyN0hUAVZFQOg_1741020596
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E33781800877;
-	Mon,  3 Mar 2025 16:49:55 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.44.32.16])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 06A651955F0F;
-	Mon,  3 Mar 2025 16:49:50 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Mon,  3 Mar 2025 17:49:25 +0100 (CET)
-Date: Mon, 3 Mar 2025 17:49:19 +0100
-From: Oleg Nesterov <oleg@redhat.com>
-To: "Sapkal, Swapnil" <swapnil.sapkal@amd.com>
-Cc: K Prateek Nayak <kprateek.nayak@amd.com>,
-	Mateusz Guzik <mjguzik@gmail.com>,
-	Manfred Spraul <manfred@colorfullife.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Christian Brauner <brauner@kernel.org>,
-	David Howells <dhowells@redhat.com>,
-	WangYuli <wangyuli@uniontech.com>, linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	"Shenoy, Gautham Ranjal" <gautham.shenoy@amd.com>,
-	Neeraj.Upadhyay@amd.com, Ananth.narayan@amd.com,
-	Alexey Gladkov <legion@kernel.org>
-Subject: Re: [PATCH] pipe_read: don't wake up the writer if the pipe is still
- full
-Message-ID: <20250303164918.GA9870@redhat.com>
-References: <20250102140715.GA7091@redhat.com>
- <e813814e-7094-4673-bc69-731af065a0eb@amd.com>
- <20250224142329.GA19016@redhat.com>
- <qsehsgqnti4csvsg2xrrsof4qm4smhdhv6s4v4twspf76bp3jo@2mpz5xtqhmgt>
- <c63cc8e8-424f-43e2-834f-fc449b24787e@amd.com>
- <20250227211229.GD25639@redhat.com>
- <06ae9c0e-ba5c-4f25-a9b9-a34f3290f3fe@amd.com>
- <20250228143049.GA17761@redhat.com>
- <20250228163347.GB17761@redhat.com>
- <03a1f4af-47e0-459d-b2bf-9f65536fc2ab@amd.com>
+	bh=s/VKy7RNZe04O3Ukil/E1YnYwXSSFhvFI8FQ/Orueu8=;
+	b=jBcHt+hurhYQWG8MXM+6Q18iiRl00Kb8LtZaruiTkOJxYoRg6Tsu7WQ3EZJr9iTLlUQ1vG
+	nv7evnIrAsOAYK3a99Ni9hxflAOy6GxeAqgOFFPgO+JPFAmSdc2RG6HfHK9CrOZBIeRhU2
+	m3lt5bhjmtFhn6/zbY90dUpd1Ho6i7yazVoBVkWF43pZpXbdIVte8bcpStAVY1GCXPAzIc
+	8JG+X8LStqmqMDH7m8bA/a8BiEHTH/L4KHdT8Q8Ukv2HyJd58nAbJbjtT4P7sQVsGPO5yc
+	Mx7gpuh+lh/N46j4ABfHJO/biPY3j6RPqmMl13tR9HpgoPKE/gdhIxfL7DG3eA==
+Date: Mon, 3 Mar 2025 17:50:11 +0100
+From: Herve Codina <herve.codina@bootlin.com>
+To: Maxime Ripard <mripard@kernel.org>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann
+ <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter
+ <simona@ffwll.ch>, Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong
+ <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, Laurent
+ Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman
+ <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, Douglas
+ Anderson <dianders@chromium.org>, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org, Dmitry Baryshkov
+ <dmitry.baryshkov@linaro.org>, Simona Vetter <simona.vetter@ffwll.ch>
+Subject: Re: [PATCH v4 00/15] drm/bridge: Various quality of life
+ improvements
+Message-ID: <20250303175011.3f79a8c0@bootlin.com>
+In-Reply-To: <20250303-idealistic-camouflaged-mandrill-4fb5f8@houat>
+References: <20250225-bridge-connector-v4-0-7ecb07b09cad@kernel.org>
+	<20250227120004.77814e09@bootlin.com>
+	<20250303-urban-trout-of-vastness-f8d0e7@houat>
+	<20250303143404.623a3178@bootlin.com>
+	<20250303-idealistic-camouflaged-mandrill-4fb5f8@houat>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <03a1f4af-47e0-459d-b2bf-9f65536fc2ab@amd.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdelleeigecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkjghfohfogggtgfesthekredtredtjeenucfhrhhomhepjfgvrhhvvgcuvehoughinhgruceohhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeejffelhfeiudetgeffieefgefgffdvuedvuedtvdefudduueekffelheehffekteenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehhvghrvhgvrdgtohguihhnrgessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudeipdhrtghpthhtohepmhhrihhprghrugeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepmhgrrghrthgvnhdrlhgrnhhkhhhorhhstheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehtiihimhhmvghrmhgrnhhnsehsuhhsvgdruggvpdhrtghpthhtoheprghirhhlihgvugesghhmrghilhdrtghomhdprhgtphhtthhopehsihhmohhnr
+ gesfhhffihllhdrtghhpdhrtghpthhtoheprghnughriigvjhdrhhgrjhgurgesihhnthgvlhdrtghomhdprhgtphhtthhopehnvghilhdrrghrmhhsthhrohhngheslhhinhgrrhhordhorhhgpdhrtghpthhtoheprhhfohhssheskhgvrhhnvghlrdhorhhg
+X-GND-Sasl: herve.codina@bootlin.com
 
-Hi!
+On Mon, 3 Mar 2025 16:00:33 +0100
+Maxime Ripard <mripard@kernel.org> wrote:
 
-On 03/03, Sapkal, Swapnil wrote:
->
-> >but if you have time, could you check if this patch (with or without the
-> >previous debugging patch) makes any difference? Just to be sure.
->
-> Sure, I will give this a try.
+> On Mon, Mar 03, 2025 at 02:34:04PM +0100, Herve Codina wrote:
+> > Hi Maxime,
+> > 
+> > On Mon, 3 Mar 2025 14:11:05 +0100
+> > Maxime Ripard <mripard@kernel.org> wrote:
+> >   
+> > > On Thu, Feb 27, 2025 at 12:00:04PM +0100, Herve Codina wrote:  
+> > > > Hi Maxime,
+> > > > 
+> > > > On Tue, 25 Feb 2025 17:43:48 +0100
+> > > > Maxime Ripard <mripard@kernel.org> wrote:
+> > > >     
+> > > > > Hi,
+> > > > > 
+> > > > > Here's a series of changes after to the KMS helpers and bridge API
+> > > > > following a bunch of reviews I did.
+> > > > > 
+> > > > > It's mostly centered across providing an easier time to deal with bridge
+> > > > > states, and a somewhat consistent with the other entities API.
+> > > > > 
+> > > > > It's build tested only, with arm64 allmodconfig.
+> > > > > 
+> > > > > Maxime
+> > > > > 
+> > > > > Signed-off-by: Maxime Ripard <mripard@kernel.org>
+> > > > > ---    
+> > > > 
+> > > > I Tried to test this series on my system but I've got a compilation issue.
+> > > >      depmod: ERROR: Cycle detected: drm -> drm_kms_helper -> drm
+> > > >      depmod: ERROR: Found 2 modules in dependency cycles!
+> > > > 
+> > > > CONFIG_DRM=m in my configuration.    
+> > > 
+> > > Could you share your configuration? it doesn't happen with allmodconfig.
+> > >   
+> > 
+> > Here is a defconfig that leads to the issue on my side:  
+> 
+> I still can't reproduce it, sorry. Is this based on linux-next /
+> drm-misc-next, or a private branch?
+> 
+> Maxime
 
-Forget ;)
+Got it with this git history (based on 72d0af4accd9 available in
+drm-misc-next):
 
-[...snip...]
+f86431f9d3fc (HEAD -> test_maxime_series_drm_next_clean_v4) drm/bridge: ti-sn65dsi86: Use bridge_state crtc pointer
+27b49a4a713f drm/bridge: tc358768: Convert to atomic helpers
+f3f203c823e3 drm/bridge: tc358768: Stop disabling when failing to enable
+89f4b115b1ca drm/bridge: tc358775: Switch to atomic commit
+142be5c7910a drm/bridge: cdns-csi: Switch to atomic helpers
+e6db675d871a drm/bridge: Introduce drm_bridge_is_atomic() helper
+1745511b7394 drm/bridge: ti-sn65dsi83: Switch to drm_bridge_reset_crtc
+e44654d4c9bd drm/tests: bridge: Provide tests for drm_bridge_reset_crtc
+671a94f57f99 drm/bridge: Add helper to reset bridge pipeline
+bcf02dc7fb61 drm/tests: Create tests for drm_atomic
+f7b479b6f283 drm/atomic: Introduce helper to lookup connector by encoder
+56d9fa19b833 drm/tests: Add kunit tests for bridges
+9c86d5205422 drm/bridge: Provide a helper to retrieve current bridge state
+3e0010915240 drm/bridge: Add encoder parameter to drm_bridge_funcs.attach
+72d0af4accd9 (upstream_drm/for-linux-next, upstream_drm/drm-misc-next) drm/msm/dp: Add support for LTTPR handling
+6dcc3c5121b7 drm/i915/dp: Use the generic helper to control LTTPR transparent mode
+226a0baf9098 drm/nouveau/dp: Use the generic helper to control LTTPR transparent mode
+...
 
-> --- a/fs/pipe.c
-> +++ b/fs/pipe.c
-> @@ -417,9 +417,19 @@ static inline int is_packetized(struct file *file)
->  /* Done while waiting without holding the pipe lock - thus the READ_ONCE() */
->  static inline bool pipe_writable(const struct pipe_inode_info *pipe)
->  {
-> -	unsigned int head = READ_ONCE(pipe->head);
-> -	unsigned int tail = READ_ONCE(pipe->tail);
->  	unsigned int max_usage = READ_ONCE(pipe->max_usage);
-> +	unsigned int head, tail;
-> +
-> +	tail = READ_ONCE(pipe->tail);
-> +	/*
-> +	 * Since the unsigned arithmetic in this lockless preemptible context
-> +	 * relies on the fact that the tail can never be ahead of head, read
-> +	 * the head after the tail to ensure we've not missed any updates to
-> +	 * the head. Reordering the reads can cause wraparounds and give the
-> +	 * illusion that the pipe is full.
-> +	 */
-> +	smp_rmb();
-> +	head = READ_ONCE(pipe->head);
->  	return !pipe_full(head, tail, max_usage) ||
->  		!READ_ONCE(pipe->readers);
+Best regards
+Hervé
 
-Ooh, thanks!!!
-
-And sorry, can't work today. To be honest, I have some concerns, but probably
-I am wrong... I'll return tomorrow.
-
-In any case, finally we have a hint. Thank you both!
-
-(btw, please look at pipe_poll).
-
-Oleg.
-
+-- 
+Hervé Codina, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
