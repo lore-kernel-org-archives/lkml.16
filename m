@@ -1,81 +1,90 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9C1823C8A7;
-	Mon,  3 Mar 2025 23:35:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56DA71487F4;
+	Mon,  3 Mar 2025 23:43:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741044935; cv=none; b=bkED4EMefg3JM4tN0j9hizWXrdOXwGhXxZU0Efy9bxH1B3wGhJ79XH1NLOwAkKgR1zOmtrgHPlLb4Lq5kuqlLgXCoRFps3AVBl8kdsEoLuxzQaM1UzTBIOcktIT3PIGXLfH7LKUtlhJhLLq2czzEBQIt1NFYE8yk7wlQ9oNIipY=
+	t=1741045390; cv=none; b=jxw92QghWk+T2VLvE8Okm57KGyhp4zgSHjGTuOwhaAnZCdto6IN4OcG6LzEsVZ1NCFbCn7KYEy+gti4BlW2Nh/IythHfx+PBLd2a2rUIIIQ+i7G9bU41FCQva+vY+tPkL7BQJLsKLqLuQgKt8Ravl/gtcp8m1yyoVGJU1gaSA7I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741044935; c=relaxed/simple;
-	bh=MTmdEmC2+ZdM+IJliZV8YI/e9ZZJr5Z5GvKKUbvgs60=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=QNGekilWbA6cbBiXakzkiNpkysnp211BsnZE8zFldzQm5n5JgahVuVo25z2I8jtBP+6ou7luLN1LjTwS2lj8bPcGyT6BEm71c1qtuF2vzJ1K1cLF0OUnVzJRM2OMckYisPf/lIZf8180SAlTVT3MQ3aJB8wdBMGUtXhuDH4fm8k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G0u23X7R; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741045390; c=relaxed/simple;
+	bh=a8a9IK/kNpa34r9G10IOTtk/N5+iTd8OkmB8cSTMxgY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=odTaqBs47yrND1Chg+PSgopGunSAZ+yaKYTvXlsPJAr2nX+GG5rwSPxAag5p7sAQpY7DvvzIONwKMmFlmyuxLJLKWydBwcZVrtdxjiA+H7p/SiB3a7EUKDCumFBuUj+VyhjResz0vOxfDH3UICQ1K35r4hfGdw+3oV4fFcdvfMc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U18h4J6e; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G0u23X7R"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6BE13C4CEF1;
-	Mon,  3 Mar 2025 23:35:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U18h4J6e"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41B5BC4CEE8;
+	Mon,  3 Mar 2025 23:43:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741044934;
-	bh=MTmdEmC2+ZdM+IJliZV8YI/e9ZZJr5Z5GvKKUbvgs60=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=G0u23X7RywBCMWPmzl/9T6PQM4Idad3rEnrNMzlviKJ63ZNCfkqIjKkfmEof7MIjR
-	 DgPrXWjRUQDMJCiIoC4wB0bqqcRFGajJICH402uv0mmoLl/pvh+4dzWn3syOqUJ2be
-	 KzKEpXtmXHuEsYK5gDZc6+QvQhc35XuRbZ94puOxiMK9fR4FYxZ7L6fl6GMAoQD7zV
-	 K8R+aebVBWM0FQjAimNVopODNH+2+/HGZOvyw7DKk+lHDlaj2z5Fi3Zwg1Uf5EwLRt
-	 oIrwVYJIvp2u+e2TdDzY2P33MeWVl92cV5HPu7oh3u0ggowSiG5mFtpJGjAJYTeXQr
-	 lB+i2qvHVmq5w==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70CE93809A8F;
-	Mon,  3 Mar 2025 23:36:08 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1741045389;
+	bh=a8a9IK/kNpa34r9G10IOTtk/N5+iTd8OkmB8cSTMxgY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=U18h4J6eHzdpV/lQruFiVfI0FCi9kpiJl21LupatW+d1VqZD4BijRx2feSVu4Pdg3
+	 I1k6dRx8/BbjL8eOwBQkWbzkNdxB+nwD3qHtRNjhiTI1mS6wzdzppN5KN8CUXcWV5U
+	 45xubGB5Zm0UtnScNszufU1Qn96OKzP8XYzPQVXopp+JVl1/+2iDJRL+g6Lzn8Dmc/
+	 TnuQzfkJrNW/FuufAKgebUxjOol8dvfjv7U55kvM7WK3e8WI3QpQ8e5ZJGDMD8eq/K
+	 2O7iDJ4TlE7KLPoZi7RPcuQtg/QjuJQ2d3ljc2+f/dqjwqDWxkR4iqLqm7T0SjINVq
+	 imaYnUzij4rMw==
+Date: Mon, 3 Mar 2025 23:43:03 +0000
+From: Will Deacon <will@kernel.org>
+To: Sebastian Ene <sebastianene@google.com>
+Cc: catalin.marinas@arm.com, joey.gouly@arm.com, maz@kernel.org,
+	oliver.upton@linux.dev, snehalreddy@google.com,
+	sudeep.holla@arm.com, suzuki.poulose@arm.com, vdonnefort@google.com,
+	yuzenghui@huawei.com, kvmarm@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	kernel-team@android.com
+Subject: Re: [PATCH v2 3/4] KVM: arm64: Map the hypervisor FF-A buffers on
+ ffa init
+Message-ID: <20250303234259.GA30749@willie-the-truck>
+References: <20250227181750.3606372-1-sebastianene@google.com>
+ <20250227181750.3606372-4-sebastianene@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next] net: filter: Avoid shadowing variable in
- bpf_convert_ctx_access()
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <174104496699.3745415.15179484349437262281.git-patchwork-notify@kernel.org>
-Date: Mon, 03 Mar 2025 23:36:06 +0000
-References: <20250228-fix_filter-v1-1-ce13eae66fe9@debian.org>
-In-Reply-To: <20250228-fix_filter-v1-1-ce13eae66fe9@debian.org>
-To: Breno Leitao <leitao@debian.org>
-Cc: martin.lau@linux.dev, daniel@iogearbox.net, john.fastabend@gmail.com,
- ast@kernel.org, andrii@kernel.org, eddyz87@gmail.com, song@kernel.org,
- yonghong.song@linux.dev, kpsingh@kernel.org, sdf@fomichev.me,
- haoluo@google.com, jolsa@kernel.org, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
- bpf@vger.kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250227181750.3606372-4-sebastianene@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-Hello:
-
-This patch was applied to bpf/bpf-next.git (master)
-by Martin KaFai Lau <martin.lau@kernel.org>:
-
-On Fri, 28 Feb 2025 10:43:34 -0800 you wrote:
-> Rename the local variable 'off' to 'offset' to avoid shadowing the existing
-> 'off' variable that is declared as an `int` in the outer scope of
-> bpf_convert_ctx_access().
+On Thu, Feb 27, 2025 at 06:17:48PM +0000, Sebastian Ene wrote:
+> Map the hypervisor's buffers irrespective to the host and return
+> a linux error code from the FF-A error code on failure. Remove
+> the unmap ff-a buffers calls from the hypervisor as it will
+> never be called.
+> Prevent the host from using FF-A directly with Trustzone
+> if the hypervisor could not map its own buffers.
 > 
-> This fixes a compiler warning:
-> 
->  net/core/filter.c:9679:8: warning: declaration shadows a local variable [-Wshadow]
-> 
-> [...]
+> Signed-off-by: Sebastian Ene <sebastianene@google.com>
+> ---
+>  arch/arm64/kvm/hyp/nvhe/ffa.c | 46 +++++++++++++----------------------
+>  1 file changed, 17 insertions(+), 29 deletions(-)
 
-Here is the summary with links:
-  - [net-next] net: filter: Avoid shadowing variable in bpf_convert_ctx_access()
-    https://git.kernel.org/bpf/bpf-next/c/122f1fd14f44
+[...]
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+> @@ -861,6 +842,7 @@ int hyp_ffa_init(void *pages)
+>  {
+>  	struct arm_smccc_res res;
+>  	void *tx, *rx;
+> +	int ret;
+>  
+>  	if (kvm_host_psci_config.smccc_version < ARM_SMCCC_VERSION_1_2)
+>  		return 0;
+> @@ -911,5 +893,11 @@ int hyp_ffa_init(void *pages)
+>  		.lock	= __HYP_SPIN_LOCK_UNLOCKED,
+>  	};
+>  
+> +	/* Map our hypervisor buffers into the SPMD */
+> +	ret = ffa_map_hyp_buffers();
+> +	if (ret)
+> +		return ret;
 
+Doesn't calling RXTX_MAP here undo the fix from c9c012625e12 ("KVM:
+arm64: Trap FFA_VERSION host call in pKVM") where we want to allow for
+the host to negotiate the version lazily?
 
+Will
