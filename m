@@ -1,163 +1,159 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from sonic311-30.consmr.mail.ne1.yahoo.com (sonic311-30.consmr.mail.ne1.yahoo.com [66.163.188.211])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7A5B22CBE2
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 19:10:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741029024; cv=pass; b=leQYonzyaMkhFlXVGcMPe/sgdSPh+sXQaBX0aA2GoPxJk3kPm7tTvYmTECQteoMLA++kdxtXArT5iYaiwVS1NFwkygN7CbU2tGes+KNNh2hhDnl4IS0vwASHwLOqpncIGzB78D6sPbJ4WKRhM/TisbN0iVW3yD/M12o81Ne/TyI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741029024; c=relaxed/simple;
-	bh=HUNHnaHz0tyCHVNGgH4xZtZVIOlvzizlAX/nJ5SaLww=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ufN9fCDWBLtaQeTJwltrleUV7oNd8VQmePD2v9YKxK2cV3JalKDeTgT7J+BViaGzHi8Bv+3W1PYaU8NeQUVFDqjpjsrkZbKfUGln+xF2JyWXtm7gseI9S1OhMpGnIeOUyN3mXb1UfXBenPZqscCKCa33DW90iMM5IT9RN+WHlv0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=adrian.larumbe@collabora.com header.b=d1mmUFuY; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 522B933F6
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 19:11:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=66.163.188.211
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741029117; cv=none; b=WOukm45+QaAYeWPk7ait+fk6PdKXo/plyUspZGc3Ium+3ZKPDIE+C1BvXkEzhvZQ8C8sI14fBkwsZN1GMXVTE0LS4T4JRIv09wqYnKH5l7xqvoF1dOySQzicmVNUT+ShfGXxX5xJGNsv3VRFmICzBC2sjEnmCgfa6OBV7ZOycfc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741029117; c=relaxed/simple;
+	bh=zttb/KBNS8YrkZTTRzEXOV2zM8d85NRFoEcHxhNsqPI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TFkcKhV8XllwlkH1EmljUBQMZ6BX2hq0w9+TkOOfIuUsNh9hC2XyEKf15l41NmjLvkZ6mV+NsK2XU1imyRHSSusACRLfTb+2RiXbwEy3EmCqf1x82hukpokc8B/eKMaISOU1UtcKRlIKL7+k39nffmZKOqj7N4ezN/pASAPBDSU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=schaufler-ca.com; spf=none smtp.mailfrom=schaufler-ca.com; dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b=h2M6cWJ+; arc=none smtp.client-ip=66.163.188.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=schaufler-ca.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=schaufler-ca.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=adrian.larumbe@collabora.com header.b="d1mmUFuY"
-ARC-Seal: i=1; a=rsa-sha256; t=1741028997; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=enqQTsUYQQxPkqjyvGXFaXPyKtm3bW2Vw9YwAFtXIM7bV/+zQD9qclR4nryMtqfCWVEUfppTOqixbfXNohNRV5ERI9/OOwQSSXbD4vYlKW59xxqSKZetkdgzmLREXmP5p6FUElDg+zH1PhDKh7h4vM8G1Mw8nDtlp2E3CdJ+xFI=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1741028997; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=79EEq7MORaFKGZQS0e0YLJcDbCdzpAcNRQ48gbyQtz0=; 
-	b=dQkPQnkVqkY9cy+D3H7VkA/uELGBuR1kKksxWMG6D5ejF58V9TGMYT9Biue+3myJNZpoOqSiLsOj4eHQCtuscRIqtVOmJTXUW6Hgd0fA2t8vdzIR4HNyZb3WWuw7MXCyA6SBjlqeiH6SqWMB2xRidxRCi9evTQziKRXQ7ELh1TA=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=adrian.larumbe@collabora.com;
-	dmarc=pass header.from=<adrian.larumbe@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1741028997;
-	s=zohomail; d=collabora.com; i=adrian.larumbe@collabora.com;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=79EEq7MORaFKGZQS0e0YLJcDbCdzpAcNRQ48gbyQtz0=;
-	b=d1mmUFuYH+G3X4MbNOHcxlSCq5+THv3xRXcEkHVB/GrGweEgMsUcui5kS9vpP90R
-	9fU+seUWCTsDAP0fpRc78XAmr7p0Pcfh3j9DGm3nugWPbeTGozSxIJosZj3yHZvsuum
-	8NEb+IaasptSQckzRFptdh+upY/dI4sJfvlmOXQk=
-Received: by mx.zohomail.com with SMTPS id 1741028995020517.922490709406;
-	Mon, 3 Mar 2025 11:09:55 -0800 (PST)
-From: =?UTF-8?q?Adri=C3=A1n=20Larumbe?= <adrian.larumbe@collabora.com>
-To: Boris Brezillon <boris.brezillon@collabora.com>,
-	Steven Price <steven.price@arm.com>,
-	Liviu Dudau <liviu.dudau@arm.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	=?UTF-8?q?Adri=C3=A1n=20Larumbe?= <adrian.larumbe@collabora.com>
-Cc: kernel@collabora.com,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v4 1/2] drm/panthor: Replace sleep locks with spinlocks in fdinfo path
-Date: Mon,  3 Mar 2025 19:08:45 +0000
-Message-ID: <20250303190923.1639985-1-adrian.larumbe@collabora.com>
-X-Mailer: git-send-email 2.47.1
+	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="h2M6cWJ+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1741029115; bh=kxho3F4dy7xLzbeT4DOIL9QCojHaIl0A5BraM7FirZA=; h=Date:Subject:To:Cc:References:From:In-Reply-To:From:Subject:Reply-To; b=h2M6cWJ+Ycf2gc5mTu66HIEZwIwKqUR4LTa++oLXcviuHFfqYZ8a3yqumtRL4d1X+paMRw9or9zWjIvldOBgPbzyD18mLlEQkLB71f5od96GBH4y6BWh3Sj2Ym5lwZR2I6UMBAU+hpdJeQfsIkOU+WvJqs0Of/y7MeMPVnZWJvVhL2BBiyZ2ixqgH3ONBQ49VFaWtHFzcT202BHkcE93elOgcdEmmnxIU1zu6t/vhTjMH8MtU134jg1YYsvq0/9BZHnk7/7u7GCu9GuNPSGKFuNlTvpFK2CqklCdZrZUhbi4OlmQ29mXZUdCJpYmhT2xlIBMj2yDiNwcPRL4MwXPbg==
+X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1741029115; bh=Wn44DOLii1NmZiaSBp/MUYjBeOyLAEMtNrNRT0Wh+ZC=; h=X-Sonic-MF:Date:Subject:To:From:From:Subject; b=blzLX2MwCLpMIlYn0YpWf/PUZVVNijpLe3RdQovvMJ98FSEh5SV+uMpF+lF1rQQqNS8jAk8hs1nROpBlVq5jtcmYTWepCoC1AalxFa1FTyBh8st2K8Sfz2sHKivqhG6oKShqLcFxTNQWOPdYOTHZgd/k8+EFQrUqulIJ7WQnLMmOgLMOROL9CRQHMfnxoBETILra7VSIWvnYuo3kQX01i3nybF9stQm3zUbvC6aeh4q+GU42AKzJ9UT0pbMeRYzU6T/byjaJodgX2HYim2nJ/w6YJPieV806ya5MEtouISRvt0tJ0VqTJpAORKwOQcsyDnJ5Vv95eHl5ecC/iUuXDg==
+X-YMail-OSG: jxQi5PYVM1kjCffxcWEXtBaaD8eOjDPHNKGLO2go4aEn_ycpi6E.Y0dfQ.S.YMc
+ q6pdyCDwv0K_8wef_nByeNMVwM5pD_sN3CSMc3qRrIULnZitvm3vaUadnWPu6bVr2ylsXEcsKr.c
+ kPwT3x7Lr0N438.MiiQAVH160Hi6J7tb5M_YlYrkx9vamBwaK8Sjp3DidLkga2U77V8.fQNW8u4n
+ zbY27gYWrvMpq_O6W8ocJ0dr2b0gWLt_TsHNw4h0JkQYUfFd8FBjiiJWem.qOE5123NBUA9LlRNr
+ csIZtRl8lCPdpX6cTowG.LwX.ZsZyKMA0b5u4LKSTho.uefunP0yzd4K..wF3.ZRhOm8VrT4U4Ea
+ rM8ZcO.nk9alqipQt4QQlBRIlLYRzE_CnKjspf7i60FvsLZpcMZUdiJLv5DNtxWlf4SugOGznBbb
+ CuSRSjAPkQ.7.g6gaqidjtq6.WnpCyz8H7SmqClPiTJ9laTpvyHdWCmTJfIvXg4LTt658CiIaW3k
+ 7glKvyyKDLLP7nNVrndcnI1MfYkiNW_5jV4DcKKTmYVVx661SvWgueDHSLGkYhAFFB0QCstQvTzh
+ SdBsG07Obuf2EETA_.KgwDpSdnOvZgnkGciCDrEXNA8f1iekrdWB1xlyzAylytOz8hNFj1gmaWbn
+ T7oWPOzEPd__cl8HikekBiYKjiO6A6DWu2nxeaUPg2dbKZeiPa59NLIBE04TTfC7iTV_2pnPOmqy
+ bjJ6AFabBCtFWkfWvD1YFKJduagIUR_m55F_rF1BmoHMx3NWMyhQcBRUgxeWATtH4TZ0CqS9tY3j
+ i8wIv_zqg.sjUm9bKTc3BF5oTDjoLo3AROmd13sGdO0v8xEG1tAgewkbC5maE2MW5AE11.3cNkVN
+ lSxua5yWsKERUhH87Mgp_65Mt1pFQQtptHz2s9GTHCai_3mX.iTKgS7Ri6Xm9Sw0rr8dLdfXw9VZ
+ TJh5HgYw_FRQotOHF9q.FNnPyNTOOoSw2y2GTVhyeS2nQP4DXbaRmRjG2oZeEJnqrrMlgu2jGZmv
+ zBjKuqA47HegMRKfM0BnsB.ug00ATF.wA2iYfUbNAkJJJYJObO8jEJ8Nwl0H3.ck4Og5ZjjDXrnP
+ m4__Zvgy1GVu2_iTrIVsxVehMFFF2jNbzdfy5upaXuQV3HYkthvz2JcbEBkTKKDI9WOhIUARif1h
+ 1BxAD31zL.kClhGIqVB9rYhmUYevTU92KHrtHkqPmcqgeaeYtfm2wAlabWF46ICzUHcdO2eVsCyo
+ K5LVgDsjA5fUvRVTVSNOoAR.dPlVwMXUo5jbEG6K6SXxLgLZvIiGvbnbLdbfIsdTcLYXRZd41rB8
+ tnz.dECl31x7CvA1PO_ZW62rsw88kEaC7K3bFxqwKJi_VWuqF.4QCFuSoUBzhNx5E.neXMW6oBvZ
+ Ylsu8g4Uw87PavLmxhmYFeJbegExm0rVHOpbQSHHcw1yVGYqLyp93VibYkErHzBOqiFHGpZU6twZ
+ PryMK46tQp2HCY7vAX72tV_d_AcddTOzsSjV4WxoBm9FtQAfGVyTBmmhTi4Y.rNbIPg3KuEdqLOG
+ uhWdpcp7323PikTR5IKx.d.BslA6A0Vxh_PkKZy6q7F0GVynqCDq6cmmAMyQ2LsPUe5a1NvIn7.B
+ jEsKm5qJa14eLQ1ZlDUXr0CJo9Y_X.HHB_fgt4kvH6.QMsRRRdzNledkkQ1E0jTgJbxKX0jQtZNo
+ _BrVm3KehfqDt2kxqAJ5p1uPN6ALJ_Kor9ayh8Sk9ngCXSMUPuRv5f0FSU9Y3mGvP95BIJFR84HC
+ HffW9KLRatVWPmwOwO.zcap9rgUzxd8ppdKFe18wRloPjtTUTW4.YFwlJ7tqNKDPG6TTNmNtOOEo
+ fiBGJKPKKTtBAa4QzZ91EcL7U1gUBm5J.KrUb1O6icWvzCujCsctwDg8FXKBOQ7lx9vGZoxpbd0I
+ MW8cqKjWo6Nd7I_y9tlg.g9pe1P.Ujv_r6JhDRMtBFy46zb96VopS4q14Wy6o8zY6fxS3N3rmu.B
+ 0yWtVHs9TinPKjn9Vma9ix_VI9dElJD0JQMruCNVINtixeyLr2t0ANBpmEILpJPpD0.b9PQVfeut
+ 9XFxqrbU.l7ehL61q8Asjxqv0h9rfnxWejzRPJtWPt7Sd.zkMtSE9s8pGDfjOpME00twdSMp47F5
+ UL008WKHvbBK3uvE81JUQLvdVBX9WQMf6wbdNsle3uwqg9sqU9KzdT8LKAXAegMg_e3GzyyVHiZU
+ x6NEyjNYjZAYdnxanLrWhgvd1izkLscoMQv8pwd3SDX2BJf3uD6xvhHLMKwnsJRQ53zoABXrV3xj
+ tr1hkGOnaygVe7gvnlq.5gw2j6Q--
+X-Sonic-MF: <casey@schaufler-ca.com>
+X-Sonic-ID: 96345618-f8ec-442e-82bc-261f2ecd13a2
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic311.consmr.mail.ne1.yahoo.com with HTTP; Mon, 3 Mar 2025 19:11:55 +0000
+Received: by hermes--production-gq1-75cc957d6c-bs9kb (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID a55dafe6a07e9ebe5219b5cb6e8d4ed1;
+          Mon, 03 Mar 2025 18:51:38 +0000 (UTC)
+Message-ID: <cf588a4e-cfc2-45b1-8ed2-1a7587a2a0f0@schaufler-ca.com>
+Date: Mon, 3 Mar 2025 10:51:38 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] lsm: rust: mark SecurityCtx methods inline
+To: Alice Ryhl <aliceryhl@google.com>
+Cc: Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
+ "Serge E. Hallyn" <serge@hallyn.com>, Miguel Ojeda <ojeda@kernel.org>,
+ Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+ =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
+ Benno Lossin <benno.lossin@proton.me>,
+ Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>,
+ rust-for-linux@vger.kernel.org, linux-security-module@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Casey Schaufler <casey@schaufler-ca.com>
+References: <20250303-inline-securityctx-v1-1-fb7b9b641fdf@google.com>
+ <a5262d73-2b11-4868-9c6b-1c6161808979@schaufler-ca.com>
+ <CAH5fLggNnOv2rhtUeK38GVQ7EuuZkZMwOSVKSsMLFG5eS2i9Ng@mail.gmail.com>
+Content-Language: en-US
+From: Casey Schaufler <casey@schaufler-ca.com>
+In-Reply-To: <CAH5fLggNnOv2rhtUeK38GVQ7EuuZkZMwOSVKSsMLFG5eS2i9Ng@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-Mailer: WebService/1.1.23040 mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.yahoo
 
-Commit 0590c94c3596 ("drm/panthor: Fix race condition when gathering fdinfo
-group samples") introduced an xarray lock to deal with potential
-use-after-free errors when accessing groups fdinfo figures. However, this
-toggles the kernel's atomic context status, so the next nested mutex lock
-will raise a warning when the kernel is compiled with mutex debug options:
+On 3/3/2025 10:40 AM, Alice Ryhl wrote:
+> On Mon, Mar 3, 2025 at 6:07 PM Casey Schaufler <casey@schaufler-ca.com> wrote:
+>> On 3/3/2025 7:29 AM, Alice Ryhl wrote:
+>>> I'm seeing Binder generating calls to methods on SecurityCtx such as
+>>> from_secid and drop without inlining. Since these methods are really
+>>> simple wrappers around C functions, mark the methods to inline to avoid
+>>> generating these useless small functions.
+>>>
+>>> Signed-off-by: Alice Ryhl <aliceryhl@google.com>
+>>> ---
+>>>  rust/kernel/security.rs | 5 +++++
+>>>  1 file changed, 5 insertions(+)
+>>>
+>>> diff --git a/rust/kernel/security.rs b/rust/kernel/security.rs
+>>> index 25d2b1ac3833..243211050526 100644
+>>> --- a/rust/kernel/security.rs
+>>> +++ b/rust/kernel/security.rs
+>>> @@ -23,6 +23,7 @@ pub struct SecurityCtx {
+>>>
+>>>  impl SecurityCtx {
+>>>      /// Get the security context given its id.
+>>> +    #[inline]
+>>>      pub fn from_secid(secid: u32) -> Result<Self> {
+>>>          // SAFETY: `struct lsm_context` can be initialized to all zeros.
+>>>          let mut ctx: bindings::lsm_context = unsafe { core::mem::zeroed() };
+>>> @@ -35,16 +36,19 @@ pub fn from_secid(secid: u32) -> Result<Self> {
+>>>      }
+>>>
+>>>      /// Returns whether the security context is empty.
+>>> +    #[inline]
+>>>      pub fn is_empty(&self) -> bool {
+>>>          self.ctx.len == 0
+>>>      }
+>>>
+>>>      /// Returns the length of this security context.
+>>> +    #[inline]
+>>>      pub fn len(&self) -> usize {
+>>>          self.ctx.len as usize
+>>>      }
+>>>
+>>>      /// Returns the bytes for this security context.
+>>> +    #[inline]
+>>>      pub fn as_bytes(&self) -> &[u8] {
+>>>          let ptr = self.ctx.context;
+>>>          if ptr.is_null() {
+>>> @@ -61,6 +65,7 @@ pub fn as_bytes(&self) -> &[u8] {
+>>>  }
+>>>
+>>>  impl Drop for SecurityCtx {
+>>> +    #[inline]
+>>>      fn drop(&mut self) {
+>>>          // SAFETY: By the invariant of `Self`, this frees a context that came from a successful
+>>>          // call to `security_secid_to_secctx` and has not yet been destroyed by
+>> I don't speak rust (well, yet?) so I can't talk about that, but this comment
+>> has me concerned. Security contexts (secctx) are not destroyed, they are released.
+>> While SELinux allocates and frees them, Smack maintains a list of contexts that
+>> is never freed. A call to security_release_secctx() on SELinux "destroys" the
+>> secctx, but for Smack does not.
+> It's just a comment on a call to security_release_secctx, I can reword
+> from "destroy" to "release".
 
-CONFIG_DEBUG_RT_MUTEXES=y
-CONFIG_DEBUG_MUTEXES=y
+That would do nicely. Thank you.
 
-Replace Panthor's group fdinfo data mutex with a guarded spinlock.
-
-Signed-off-by: Adrián Larumbe <adrian.larumbe@collabora.com>
-Fixes: 0590c94c3596 ("drm/panthor: Fix race condition when gathering fdinfo group samples")
-Reviewed-by: Liviu Dudau <liviu.dudau@arm.com>
-Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
-Reviewed-by: Steven Price <steven.price@arm.com>
----
- drivers/gpu/drm/panthor/panthor_sched.c | 26 ++++++++++++-------------
- 1 file changed, 12 insertions(+), 14 deletions(-)
-
-diff --git a/drivers/gpu/drm/panthor/panthor_sched.c b/drivers/gpu/drm/panthor/panthor_sched.c
-index 1a276db095ff..4d31d1967716 100644
---- a/drivers/gpu/drm/panthor/panthor_sched.c
-+++ b/drivers/gpu/drm/panthor/panthor_sched.c
-@@ -9,6 +9,7 @@
- #include <drm/panthor_drm.h>
- 
- #include <linux/build_bug.h>
-+#include <linux/cleanup.h>
- #include <linux/clk.h>
- #include <linux/delay.h>
- #include <linux/dma-mapping.h>
-@@ -631,10 +632,10 @@ struct panthor_group {
- 		struct panthor_gpu_usage data;
- 
- 		/**
--		 * @lock: Mutex to govern concurrent access from drm file's fdinfo callback
--		 * and job post-completion processing function
-+		 * @fdinfo.lock: Spinlock to govern concurrent access from drm file's fdinfo
-+		 * callback and job post-completion processing function
- 		 */
--		struct mutex lock;
-+		spinlock_t lock;
- 
- 		/** @fdinfo.kbo_sizes: Aggregate size of private kernel BO's held by the group. */
- 		size_t kbo_sizes;
-@@ -910,8 +911,6 @@ static void group_release_work(struct work_struct *work)
- 						   release_work);
- 	u32 i;
- 
--	mutex_destroy(&group->fdinfo.lock);
--
- 	for (i = 0; i < group->queue_count; i++)
- 		group_free_queue(group, group->queues[i]);
- 
-@@ -2861,12 +2860,12 @@ static void update_fdinfo_stats(struct panthor_job *job)
- 	struct panthor_job_profiling_data *slots = queue->profiling.slots->kmap;
- 	struct panthor_job_profiling_data *data = &slots[job->profiling.slot];
- 
--	mutex_lock(&group->fdinfo.lock);
--	if (job->profiling.mask & PANTHOR_DEVICE_PROFILING_CYCLES)
--		fdinfo->cycles += data->cycles.after - data->cycles.before;
--	if (job->profiling.mask & PANTHOR_DEVICE_PROFILING_TIMESTAMP)
--		fdinfo->time += data->time.after - data->time.before;
--	mutex_unlock(&group->fdinfo.lock);
-+	scoped_guard(spinlock, &group->fdinfo.lock) {
-+		if (job->profiling.mask & PANTHOR_DEVICE_PROFILING_CYCLES)
-+			fdinfo->cycles += data->cycles.after - data->cycles.before;
-+		if (job->profiling.mask & PANTHOR_DEVICE_PROFILING_TIMESTAMP)
-+			fdinfo->time += data->time.after - data->time.before;
-+	}
- }
- 
- void panthor_fdinfo_gather_group_samples(struct panthor_file *pfile)
-@@ -2880,12 +2879,11 @@ void panthor_fdinfo_gather_group_samples(struct panthor_file *pfile)
- 
- 	xa_lock(&gpool->xa);
- 	xa_for_each(&gpool->xa, i, group) {
--		mutex_lock(&group->fdinfo.lock);
-+		guard(spinlock)(&group->fdinfo.lock);
- 		pfile->stats.cycles += group->fdinfo.data.cycles;
- 		pfile->stats.time += group->fdinfo.data.time;
- 		group->fdinfo.data.cycles = 0;
- 		group->fdinfo.data.time = 0;
--		mutex_unlock(&group->fdinfo.lock);
- 	}
- 	xa_unlock(&gpool->xa);
- }
-@@ -3537,7 +3535,7 @@ int panthor_group_create(struct panthor_file *pfile,
- 	mutex_unlock(&sched->reset.lock);
- 
- 	add_group_kbo_sizes(group->ptdev, group);
--	mutex_init(&group->fdinfo.lock);
-+	spin_lock_init(&group->fdinfo.lock);
- 
- 	return gid;
- 
--- 
-2.47.1
-
+>
+> Here's the full context:
+>
+> // SAFETY: By the invariant of `Self`, this frees a context that came from a
+> // successful call to `security_secid_to_secctx` and has not yet been destroyed
+> // by `security_release_secctx`.
+> unsafe { bindings::security_release_secctx(&mut self.ctx) };
+>
+> Alice
+>
