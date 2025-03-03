@@ -1,28 +1,28 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E688B1DB124;
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.5])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E22AA15854A;
 	Mon,  3 Mar 2025 03:45:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740973517; cv=none; b=rB+YilYUPJNvUfT8j1EVFJxJU/5PxeThA4SL0NMal/CcpnorP7INNw/z6ep2tDaooM7ABa9y6FGxEsKoIzwLSRN8BJd9GSa/HWKrXl4Cdhg5LU11XbcxwensZMgVuYB4WdavZmpA9ZShiNbNHEMDSkLg6UGxAnhJrnOzJigDPno=
+	t=1740973517; cv=none; b=Ds/T29tebX9v1CWyBwfSYCJmBnH5PRRXS+wephhr+tlerB33JNl9ZILUAI1cD/uw4gedGTfM8RyPAxOQWzde8AijaRkK5obd4xsRwDLwRLsBkVhgHFHrYn7dNETW5VdmrBvqBmvbTtmyxjGOIZ4ZIxzeo+98bvse840UrCbynAg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1740973517; c=relaxed/simple;
-	bh=BQB4o5upyiHwOrq1ELkOKKwsTrjMz8B0lfGnMRuyQ1Q=;
+	bh=LrYGCKh57d9ToV4G4iNBuOZ7uh23Q5BQcEZIlJ+8d/0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=uf9vkG6NREVy7D3ICYSFKOQCb8RxrOiyYYyQsKcb5DKztbcO5Dj9FjWPlx1coSmHIpeTwqds4IOH2HxC/LNQXgAWakhWOn5p2c9OLSEuVVBdKOHcteblxZdYzDMlsH0Vbfo8n7twjNK7P9V8nv+HiCcIf8E2rxb/U30EVyau5v8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=i2wqGaTI; arc=none smtp.client-ip=220.197.31.5
+	 MIME-Version; b=pkMATVSWA7FIlN2bw1jBFu0/DF1euTEPv6syXkzKsDZxaG/C9p/+py3z4CAp4nNghy+c5bD8Dfl6A1QpgPDrDfrskOunbboifXQvWAk4TxEM26fNT4GzO+N+nKVL5bnXs2KWhvu8no/CGZ/jPefyKq6P8ajeB4Jduooz3QzBcfg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=pidSWbK7; arc=none smtp.client-ip=117.135.210.5
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="i2wqGaTI"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="pidSWbK7"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-ID:MIME-Version; bh=hqUIo
-	3mPnUIyqguQPvXUfr2S5iboamQqTtFzA4Iiu08=; b=i2wqGaTITJc8AO41uGbZ4
-	GYIhYfAbVS357WCjX0pGTnlcDDeMviUgCn6GtHGO4lma1p5kO/5loJpOU1fx6YZH
-	qwdz+HTQbrxJBw5UXbGiJ8S+PkbhYIZwJdHtSaHYk14DmTakYSBKKXX/5tWlJ8Fc
-	n6xMwpZw/3EwFrLvMfoLAY=
+	s=s110527; h=From:Subject:Date:Message-ID:MIME-Version; bh=LkQ1a
+	AL1P4ABH22TgENVOEmAY1eSBA6yYtYueeGr5cg=; b=pidSWbK7xU2SfDiJmpZES
+	udjAJqYSV4xyXS98MlkcUlecVEojmfdsmRu5q1U35xooPz6mr7eOZtUUfeYagB4T
+	zshy5HBMFaDoHaZhWPGSEy7XFhL+Kc2w6mVcd7BbIeTvHnDR4Qf4dhmUl1S+LgHJ
+	GhpSoskhORv+4ZRs/yGD1w=
 Received: from ProDesk.. (unknown [])
-	by gzsmtp2 (Coremail) with SMTP id PSgvCgC3Oc2lJcVnaJliJg--.43523S6;
-	Mon, 03 Mar 2025 11:44:46 +0800 (CST)
+	by gzsmtp2 (Coremail) with SMTP id PSgvCgC3Oc2lJcVnaJliJg--.43523S3;
+	Mon, 03 Mar 2025 11:44:43 +0800 (CST)
 From: Andy Yan <andyshrk@163.com>
 To: heiko@sntech.de
 Cc: hjc@rock-chips.com,
@@ -37,10 +37,10 @@ Cc: hjc@rock-chips.com,
 	robh@kernel.org,
 	sebastian.reichel@collabora.com,
 	Andy Yan <andy.yan@rock-chips.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH v16 4/7] dt-bindings: display: vop2: describe constraint SoC by SoC
-Date: Mon,  3 Mar 2025 11:44:18 +0800
-Message-ID: <20250303034436.192400-5-andyshrk@163.com>
+	Michael Riesch <michael.riesch@wolfvision.net>
+Subject: [PATCH v16 1/7] drm/rockchip: vop2: Register the primary plane and overlay plane separately
+Date: Mon,  3 Mar 2025 11:44:15 +0800
+Message-ID: <20250303034436.192400-2-andyshrk@163.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250303034436.192400-1-andyshrk@163.com>
 References: <20250303034436.192400-1-andyshrk@163.com>
@@ -51,154 +51,172 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:PSgvCgC3Oc2lJcVnaJliJg--.43523S6
-X-Coremail-Antispam: 1Uf129KBjvJXoWxZF4UWFyDtryDuw43JFyftFb_yoW5uryfpa
-	97Cas8X3ykGr1UWw4ktF1fAw4SqF9xJw4UJrn7t3W7Ga1DKF4UGw4agw1DAr9xWFsFvaya
-	9F45Cr15Jw42vr7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UN0edUUUUU=
-X-CM-SenderInfo: 5dqg52xkunqiywtou0bp/xtbBkAcFXmfFIcOAVgAAsa
+X-CM-TRANSID:PSgvCgC3Oc2lJcVnaJliJg--.43523S3
+X-Coremail-Antispam: 1Uf129KBjvJXoWxGFWxtw4ktw4rAr1Uur13CFg_yoWrZFWkpa
+	13ta98tr47WrsFgry8JF4UCFWSkan7CF47Crs8tw1ag34fKr93Wr4rKFn8AF48WFnFgFya
+	kay3K39Y9FsFgr7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jzLvtUUUUU=
+X-CM-SenderInfo: 5dqg52xkunqiywtou0bp/1tbiqBwFXmfFJasAIgAAsh
 
 From: Andy Yan <andy.yan@rock-chips.com>
 
-As more SoCs variants are introduced, each SoC brings its own
-unique set of constraints, describe this constraints SoC by
-SoC will make things easier.
+In the upcoming VOP of rk3576, a Window cannot attach to all Video Ports,
+so make sure all VP find it's suitable primary plane, then register the
+remain windows as overlay plane will make code easier.
 
 Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Tested-by: Michael Riesch <michael.riesch@wolfvision.net> # on RK3568
+Tested-by: Detlev Casanova <detlev.casanova@collabora.com>
 
 ---
 
-(no changes since v14)
-
-Changes in v14:
-- Set maxItems constraint of clocks for rk3588 to 9 as a recently
-  merged patch added two optional clocks[0]:
-  [0]https://patchwork.freedesktop.org/patch/msgid/20250204-vop2-hdmi0-disp-modes-v3-1-d71c6a196e58@collabora.com
-
-Changes in v13:
-- Add maxItems constraint for clocks
-- Remove constraint for interrupts in allOf block, as the current
-  maxItems is already 1.
-
-Changes in v12:
-- Only change the description method for existing SoC.
-
-Changes in v11:
-- Remove redundant min/maxItems constraint
-
-Changes in v10:
-- Move interrupt-names back to top level
-- Add constraint of interrupts for all platform
-- Add constraint for all grf phandles
-- Reorder some properties
-
-Changes in v9:
-- Drop 'vop-' prefix of interrupt-names.
-- Add blank line between DT properties
-- Remove list interrupt-names in top level
-
-Changes in v8:
-- Fix dt_binding_check errors
-- ordered by soc name
-- Link to the previous version:
-  https://lore.kernel.org/linux-rockchip/6pn3qjxotdtpzucpul24yro7ppddezwuizneovqvmgdwyv2j7p@ztg4mqyiqmjf/T/#u
-
-Changes in v4:
-- describe constraint SOC by SOC, as interrupts of rk3576 is very
-  different from others
-- Drop Krzysztof's Reviewed-by, as this version changed a lot.
+Changes in v16:
+- Rebase on drm-misc-next
+- Switch to dev_err_probe
 
 Changes in v3:
-- ordered by soc name
-- Add description for newly added interrupt
+- Add comments for why we should treat rk3566 with special care.
 
-Changes in v2:
-- Add dt bindings
+ drivers/gpu/drm/rockchip/rockchip_drm_vop2.c | 99 ++++++++++++--------
+ 1 file changed, 60 insertions(+), 39 deletions(-)
 
- .../display/rockchip/rockchip-vop2.yaml       | 40 ++++++++++++-------
- 1 file changed, 26 insertions(+), 14 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/display/rockchip/rockchip-vop2.yaml b/Documentation/devicetree/bindings/display/rockchip/rockchip-vop2.yaml
-index 46d956e63338..a5771edd83b5 100644
---- a/Documentation/devicetree/bindings/display/rockchip/rockchip-vop2.yaml
-+++ b/Documentation/devicetree/bindings/display/rockchip/rockchip-vop2.yaml
-@@ -14,6 +14,7 @@ description:
- maintainers:
-   - Sandy Huang <hjc@rock-chips.com>
-   - Heiko Stuebner <heiko@sntech.de>
-+  - Andy Yan <andyshrk@163.com>
+diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_vop2.c b/drivers/gpu/drm/rockchip/rockchip_drm_vop2.c
+index bebe5bd70b90..0af5059ff7d8 100644
+--- a/drivers/gpu/drm/rockchip/rockchip_drm_vop2.c
++++ b/drivers/gpu/drm/rockchip/rockchip_drm_vop2.c
+@@ -2264,22 +2264,29 @@ static int vop2_plane_init(struct vop2 *vop2, struct vop2_win *win,
+ 	return 0;
+ }
  
- properties:
-   compatible:
-@@ -124,43 +125,54 @@ allOf:
-       properties:
-         compatible:
-           contains:
--            const: rockchip,rk3588-vop
-+            enum:
-+              - rockchip,rk3566-vop
-+              - rockchip,rk3568-vop
-     then:
-       properties:
-         clocks:
--          minItems: 7
-+          maxItems: 5
-+
-         clock-names:
--          minItems: 7
-+          maxItems: 5
- 
-         ports:
-           required:
-             - port@0
-             - port@1
-             - port@2
--            - port@3
- 
--      required:
--        - rockchip,grf
--        - rockchip,vo1-grf
--        - rockchip,vop-grf
--        - rockchip,pmu
+-static struct vop2_video_port *find_vp_without_primary(struct vop2 *vop2)
++/*
++ * On RK3566 these windows don't have an independent
++ * framebuffer. They can only share/mirror the framebuffer
++ * with smart0, esmart0 and cluster0 respectively.
++ * And RK3566 share the same vop version with Rk3568, so we
++ * need to use soc_id for identification here.
++ */
++static bool vop2_is_mirror_win(struct vop2_win *win)
+ {
+-	int i;
 -
--    else:
--      properties:
-         rockchip,vo1-grf: false
-         rockchip,vop-grf: false
-         rockchip,pmu: false
+-	for (i = 0; i < vop2->data->nr_vps; i++) {
+-		struct vop2_video_port *vp = &vop2->vps[i];
+-
+-		if (!vp->crtc.port)
+-			continue;
+-		if (vp->primary_plane)
+-			continue;
++	struct vop2 *vop2 = win->vop2;
  
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: rockchip,rk3588-vop
-+    then:
-+      properties:
-         clocks:
--          maxItems: 5
-+          minItems: 7
-+          maxItems: 9
+-		return vp;
++	if (vop2->data->soc_id == 3566) {
++		switch (win->data->phys_id) {
++		case ROCKCHIP_VOP2_SMART1:
++		case ROCKCHIP_VOP2_ESMART1:
++		case ROCKCHIP_VOP2_CLUSTER1:
++			return true;
++		default:
++			return false;
++		}
++	} else {
++		return false;
+ 	}
+-
+-	return NULL;
+ }
+ 
+ static int vop2_create_crtcs(struct vop2 *vop2)
+@@ -2290,7 +2297,9 @@ static int vop2_create_crtcs(struct vop2 *vop2)
+ 	struct drm_plane *plane;
+ 	struct device_node *port;
+ 	struct vop2_video_port *vp;
+-	int i, nvp, nvps = 0;
++	struct vop2_win *win;
++	u32 possible_crtcs;
++	int i, j, nvp, nvps = 0;
+ 	int ret;
+ 
+ 	for (i = 0; i < vop2_data->nr_vps; i++) {
+@@ -2326,42 +2335,54 @@ static int vop2_create_crtcs(struct vop2 *vop2)
+ 	}
+ 
+ 	nvp = 0;
+-	for (i = 0; i < vop2->registered_num_wins; i++) {
+-		struct vop2_win *win = &vop2->win[i];
+-		u32 possible_crtcs = 0;
+-
+-		if (vop2->data->soc_id == 3566) {
+-			/*
+-			 * On RK3566 these windows don't have an independent
+-			 * framebuffer. They share the framebuffer with smart0,
+-			 * esmart0 and cluster0 respectively.
+-			 */
+-			switch (win->data->phys_id) {
+-			case ROCKCHIP_VOP2_SMART1:
+-			case ROCKCHIP_VOP2_ESMART1:
+-			case ROCKCHIP_VOP2_CLUSTER1:
++	/* Register a primary plane for every crtc */
++	for (i = 0; i < vop2_data->nr_vps; i++) {
++		vp = &vop2->vps[i];
 +
-         clock-names:
--          maxItems: 5
-+          minItems: 7
-+          maxItems: 9
- 
-         ports:
-           required:
-             - port@0
-             - port@1
-             - port@2
-+            - port@3
++		if (!vp->crtc.port)
++			continue;
 +
-+      required:
-+        - rockchip,grf
-+        - rockchip,vo1-grf
-+        - rockchip,vop-grf
-+        - rockchip,pmu
++		for (j = 0; j < vop2->registered_num_wins; j++) {
++			win = &vop2->win[j];
++
++			/* Aready registered as primary plane */
++			if (win->base.type == DRM_PLANE_TYPE_PRIMARY)
++				continue;
++
++			if (vop2_is_mirror_win(win))
+ 				continue;
+-			}
+-		}
  
- additionalProperties: false
+-		if (win->type == DRM_PLANE_TYPE_PRIMARY) {
+-			vp = find_vp_without_primary(vop2);
+-			if (vp) {
++			if (win->type == DRM_PLANE_TYPE_PRIMARY) {
+ 				possible_crtcs = BIT(nvp);
+ 				vp->primary_plane = win;
++				ret = vop2_plane_init(vop2, win, possible_crtcs);
++				if (ret)
++					return dev_err_probe(drm->dev, ret,
++							     "failed to init primary plane %s\n",
++							     win->data->name);
+ 				nvp++;
+-			} else {
+-				/* change the unused primary window to overlay window */
+-				win->type = DRM_PLANE_TYPE_OVERLAY;
++				break;
+ 			}
+ 		}
++	}
++
++	/* Register all unused window as overlay plane */
++	for (i = 0; i < vop2->registered_num_wins; i++) {
++		win = &vop2->win[i];
++
++		/* Aready registered as primary plane */
++		if (win->base.type == DRM_PLANE_TYPE_PRIMARY)
++			continue;
++
++		if (vop2_is_mirror_win(win))
++			continue;
+ 
+-		if (win->type == DRM_PLANE_TYPE_OVERLAY)
+-			possible_crtcs = (1 << nvps) - 1;
++		win->type = DRM_PLANE_TYPE_OVERLAY;
+ 
++		possible_crtcs = (1 << nvps) - 1;
+ 		ret = vop2_plane_init(vop2, win, possible_crtcs);
+ 		if (ret)
+-			return dev_err_probe(drm->dev, ret, "failed to init plane %s\n",
++			return dev_err_probe(drm->dev, ret, "failed to init overlay plane %s\n",
+ 					     win->data->name);
+ 	}
  
 -- 
 2.34.1
