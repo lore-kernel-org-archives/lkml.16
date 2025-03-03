@@ -1,59 +1,59 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E6151F3BAC;
-	Mon,  3 Mar 2025 11:02:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B44F91F3BB2;
+	Mon,  3 Mar 2025 11:02:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740999766; cv=none; b=RJzUHXH089W1VeUnk8eKcJTQfP0tw64h5/ABrPnVuahtEtFHwki4gEEZpprLPZYvOzuFi/yxVUfA4JPmxKY/KQW+EFjdtT2cw/4MpqdXCMDuYv8Zax44BpJt5I8G2aSJYn+ovFDoTbxmKqIZMrYwDKxX/g5omq7ARrUIO67KMwA=
+	t=1740999767; cv=none; b=jp1IWsK+wm047tOBfKbe0zDt4hRrWI3/z/4HNIFwgxYjkAW/MiIRPuWEUwUt7dCK2UQF8DS00+Nh6BrpKPW7wQf40BAmBbDPeByHnSQ94Yr4ywnUf/oBymShPDM+jcsHWR5euOlyJSqH7IXZuTKVMO/YHLriUJK69HRDr3t9pbA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740999766; c=relaxed/simple;
-	bh=6BmY9HloQWmrIWcWlHrC1eQA/4eP0yEIEpkSTTKuxd0=;
-	h=Date:From:To:Subject:Cc:MIME-Version:Message-ID:Content-Type; b=RQEqmcurbAq3MMz3jfhxCeMhLF9EuEfxnS8uvKqKM+m02qWVi2Rbgou261u16jl8Tp/TLrCON53yfqTlTcVWLG7LDul+FzL+bV4Nhxb3VZ0tzM7n3uJewV/Hq35jSFbA5NR0KVmdCTpMBQLht91LQiI3oUP8hPx5q41ERNki4yQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=VuuPQ+fM; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=5NZl5nNc; arc=none smtp.client-ip=193.142.43.55
+	s=arc-20240116; t=1740999767; c=relaxed/simple;
+	bh=abJXjbt0QNdzHR1CaggoycF4Eu2X+o/tIXvg+vtuf1E=;
+	h=Date:From:To:Subject:Cc:MIME-Version:Message-ID:Content-Type; b=JcW8qx3MvTprQLjDIfl+DF8TN4Fwr9Iy59ZfsFoP24fuQL9ajWi8A5LSF+UzeMyiyPwbsMoFabUaAx2fE/CsndqC4CJx0V4kaqr1T9nYudxMiD+2v55lRIhYSVzCFAJWhU6Xq3uqCY4uDX9xJlxo91+d7WyoCohlQcmKYc0ztYs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=uux8NV77; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=FOi/iE3l; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="VuuPQ+fM";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="5NZl5nNc"
-Date: Mon, 03 Mar 2025 11:02:41 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="uux8NV77";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="FOi/iE3l"
+Date: Mon, 03 Mar 2025 11:02:43 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1740999762;
+	s=2020; t=1740999764;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
-	bh=k00XNAJvAe2C6KjqVMcLSHnjJgrkU8rXHH4c4JwqzGQ=;
-	b=VuuPQ+fMX4u/5tMZeBAp1d26H40t+byCaCFgJUvtg0HW8QguqZG80XiBgauFp5KQF/j65D
-	hUg70kyM+BZqyjioWy5KKril+HS7pJTrm9NtJjrcR9YaKktKZJuFxho91KV5qprxh8YPaw
-	GN7exZXoexlYsy03aa7VWcmliPc+ELmk6XKCIJW5mmRpB6gkxACdvHh/SP6p3eWn08cBOY
-	Qp8KIQVEuo1rx7K/c23PYeHlyCaCTaZ4hjf57HqWXxtMNXl19OUtl0EqD5hitVnIDR3JQw
-	vKkV81dhzfKTrt8ZJWLKD5ztddO3jIvy3OxmM729xzsVJM9nE0nJJ7eddNTl/A==
+	bh=cOWBUmZ+W30ERdUzKWprcZa86+fY9MVo6XhRucTIH/A=;
+	b=uux8NV77MPBZsLMFmxDqLTVO875gJTffI8kBXk7r1gTVvL6daPZms6IRBkyGYUT0YnLUCa
+	uZx10ZCE6nAzLePBxV56tFm10URnVlDeFNa0/T3SK6NFFLPuGV0T3dfSu43yw/4XFY1Tjp
+	dQYhJES4eyD0/sTR0D5qHgGkxbLSLFNTVicibSZhqGgVC4W51S3HB3Thn5icW32Rv1Yaz8
+	30NEW4UK1+oI39AF3i1M3x1tORrh2l+iTpTgM0yx4dtKjFfB7IMxzYy1iYr5MRJM6q5szZ
+	+JCRhNPqePGs2SXKVr99A/AkVIbWvayn+vwyNpteIk7FN/6iemulP5qWTiA4RQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1740999762;
+	s=2020e; t=1740999764;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
-	bh=k00XNAJvAe2C6KjqVMcLSHnjJgrkU8rXHH4c4JwqzGQ=;
-	b=5NZl5nNc6azhHUVy8/SSMOwdttI648gV7CNRcNJEl4x+p59kPWgRR306biK8g+/V/DLfU8
-	Rn6UVcilh6MJVaDQ==
+	bh=cOWBUmZ+W30ERdUzKWprcZa86+fY9MVo6XhRucTIH/A=;
+	b=FOi/iE3llT0NRJwR+6WEKeOPfqwrLESwJaiaagDLpaApJqxGfrPgjqZpXqU1zzsBJM1Otu
+	KaeE7irFWDTllADA==
 From: "tip-bot2 for Josh Poimboeuf" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/asm] x86/asm: Make ASM_CALL_CONSTRAINT conditional on frame
- pointers
+Subject: [tip: x86/asm] x86/hyperv: Use named operands in inline asm
 Cc: Josh Poimboeuf <jpoimboe@kernel.org>, Ingo Molnar <mingo@kernel.org>,
  "Peter Zijlstra (Intel)" <peterz@infradead.org>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- Brian Gerst <brgerst@gmail.com>, "H. Peter Anvin" <hpa@zytor.com>,
- linux-kernel@vger.kernel.org, x86@kernel.org
+ "K. Y. Srinivasan" <kys@microsoft.com>,
+ Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
+ Dexuan Cui <decui@microsoft.com>, linux-kernel@vger.kernel.org,
+ x86@kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174099976188.10177.7153571701278544000.tip-bot2@tip-bot2>
+Message-ID: <174099976350.10177.10962388060201277125.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -63,46 +63,86 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the x86/asm branch of tip:
 
-Commit-ID:     e5ff90b179d45df71373cf79f99d20c9abe229cb
-Gitweb:        https://git.kernel.org/tip/e5ff90b179d45df71373cf79f99d20c9abe229cb
+Commit-ID:     2668d7b4aff83a7999cdafa984927f87a6e51922
+Gitweb:        https://git.kernel.org/tip/2668d7b4aff83a7999cdafa984927f87a6e51922
 Author:        Josh Poimboeuf <jpoimboe@kernel.org>
-AuthorDate:    Sun, 02 Mar 2025 17:21:03 -08:00
+AuthorDate:    Sun, 02 Mar 2025 17:21:00 -08:00
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Mon, 03 Mar 2025 11:39:54 +01:00
+CommitterDate: Mon, 03 Mar 2025 11:39:53 +01:00
 
-x86/asm: Make ASM_CALL_CONSTRAINT conditional on frame pointers
+x86/hyperv: Use named operands in inline asm
 
-With frame pointers enabled, ASM_CALL_CONSTRAINT is used in an inline
-asm statement with a call instruction to force the compiler to set up
-the frame pointer before doing the call.
+Use named operands in inline asm to make it easier to change the
+constraint order.
 
-Without frame pointers, no such constraint is needed.  Make it
-conditional on frame pointers.
+Do this in preparation of changing the ASM_CALL_CONSTRAINT primitive.
 
 Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Brian Gerst <brgerst@gmail.com>
-Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: "K. Y. Srinivasan" <kys@microsoft.com>
+Cc: Haiyang Zhang <haiyangz@microsoft.com>
+Cc: Wei Liu <wei.liu@kernel.org>
+Cc: Dexuan Cui <decui@microsoft.com>
 Cc: linux-kernel@vger.kernel.org
 ---
- arch/x86/include/asm/asm.h | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/x86/include/asm/mshyperv.h | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/arch/x86/include/asm/asm.h b/arch/x86/include/asm/asm.h
-index 0d268e6..f1db9e8 100644
---- a/arch/x86/include/asm/asm.h
-+++ b/arch/x86/include/asm/asm.h
-@@ -232,7 +232,11 @@ register unsigned long current_stack_pointer asm(_ASM_SP);
-  * gets set up by the containing function.  If you forget to do this, objtool
-  * may print a "call without frame pointer save/setup" warning.
-  */
-+#ifdef CONFIG_UNWINDER_FRAME_POINTER
- #define ASM_CALL_CONSTRAINT "r" (__builtin_frame_address(0))
-+#else
-+#define ASM_CALL_CONSTRAINT
-+#endif
+diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/mshyperv.h
+index f91ab1e..5e6193d 100644
+--- a/arch/x86/include/asm/mshyperv.h
++++ b/arch/x86/include/asm/mshyperv.h
+@@ -77,11 +77,11 @@ static inline u64 hv_do_hypercall(u64 control, void *input, void *output)
+ 		return hv_tdx_hypercall(control, input_address, output_address);
  
- #endif /* __ASSEMBLY__ */
+ 	if (hv_isolation_type_snp() && !hyperv_paravisor_present) {
+-		__asm__ __volatile__("mov %4, %%r8\n"
++		__asm__ __volatile__("mov %[output_address], %%r8\n"
+ 				     "vmmcall"
+ 				     : "=a" (hv_status), ASM_CALL_CONSTRAINT,
+ 				       "+c" (control), "+d" (input_address)
+-				     :  "r" (output_address)
++				     : [output_address] "r" (output_address)
+ 				     : "cc", "memory", "r8", "r9", "r10", "r11");
+ 		return hv_status;
+ 	}
+@@ -89,12 +89,12 @@ static inline u64 hv_do_hypercall(u64 control, void *input, void *output)
+ 	if (!hv_hypercall_pg)
+ 		return U64_MAX;
  
+-	__asm__ __volatile__("mov %4, %%r8\n"
++	__asm__ __volatile__("mov %[output_address], %%r8\n"
+ 			     CALL_NOSPEC
+ 			     : "=a" (hv_status), ASM_CALL_CONSTRAINT,
+ 			       "+c" (control), "+d" (input_address)
+-			     :  "r" (output_address),
+-				THUNK_TARGET(hv_hypercall_pg)
++			     : [output_address] "r" (output_address),
++			       THUNK_TARGET(hv_hypercall_pg)
+ 			     : "cc", "memory", "r8", "r9", "r10", "r11");
+ #else
+ 	u32 input_address_hi = upper_32_bits(input_address);
+@@ -187,18 +187,18 @@ static inline u64 _hv_do_fast_hypercall16(u64 control, u64 input1, u64 input2)
+ 		return hv_tdx_hypercall(control, input1, input2);
+ 
+ 	if (hv_isolation_type_snp() && !hyperv_paravisor_present) {
+-		__asm__ __volatile__("mov %4, %%r8\n"
++		__asm__ __volatile__("mov %[input2], %%r8\n"
+ 				     "vmmcall"
+ 				     : "=a" (hv_status), ASM_CALL_CONSTRAINT,
+ 				       "+c" (control), "+d" (input1)
+-				     : "r" (input2)
++				     : [input2] "r" (input2)
+ 				     : "cc", "r8", "r9", "r10", "r11");
+ 	} else {
+-		__asm__ __volatile__("mov %4, %%r8\n"
++		__asm__ __volatile__("mov %[input2], %%r8\n"
+ 				     CALL_NOSPEC
+ 				     : "=a" (hv_status), ASM_CALL_CONSTRAINT,
+ 				       "+c" (control), "+d" (input1)
+-				     : "r" (input2),
++				     : [input2] "r" (input2),
+ 				       THUNK_TARGET(hv_hypercall_pg)
+ 				     : "cc", "r8", "r9", "r10", "r11");
+ 	}
