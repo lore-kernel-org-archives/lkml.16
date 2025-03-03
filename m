@@ -1,238 +1,239 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+Received: from beeline3.cc.itu.edu.tr (beeline3.cc.itu.edu.tr [160.75.25.117])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8195128152D;
-	Tue,  4 Mar 2025 15:29:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4546293B4F
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 15:29:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=160.75.25.117
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741102168; cv=fail; b=Z0e7KBZo0lktw1lKk4UIFdWKvYBX5cy6WZy1L1uzJm5j8r+3o2RIRAV/Sgtj9aX7yP4u1uA4o8fegB9vcdNZTGCt9RZKHONeAvDf6s++0hvKgwKDCrjn8cLeZNGEj/Y6k3UdLzz+EFGRrXGyIiBTSbTO3Sj16MaEn3c6Hhe0tWc=
+	t=1741102175; cv=fail; b=Y2TFCCw1Xew+/XFCllOb8H17mcVpEJtGULYBzYehmw6fm0mWN2XVrH6ZGv8qX8p0+YgmWTV0AUsm/4uajZpyh+S60RNIF5e8pq2cfCy4b4CduBKbWLvY0oHrdPebN/ew4n2jIZi8ZMeXqJsd54UH3SCyIctGsMDQdndEz/R6f18=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741102168; c=relaxed/simple;
-	bh=Pi45Mr1XAjRjtvcUYupasw5+gR9WufEf9faWuHit9OA=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=sdMk2JQH68wp98CxNWpGyjWI8malXND05h5YkmaKsG3yHjIVJzURgvP9v++aJI/5VT1i6JahqinFEs9iOiH4D6NWcgFSlqftyEqNSnaMxaMFnxCV4xZ9ZUgW9BK3YaygepfWSpnmf/ypQnl5V42eMBEU8/8I/xqiYdKEQA0Pa7c=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=iQ6muCsa; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=rpo3KIva; arc=fail smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	s=arc-20240116; t=1741102175; c=relaxed/simple;
+	bh=0y/CfcYi47gQKN+tpq2VD9WQ6AZYhW1MTCSmqxvxRIU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=DKq5Fq1a0q1Q9j2phFTsTXEd/2OS2maFHFb3gidGYkGjVBE9YTIuyA8z+nU+sm+KGuaq3qqf2nkg0gupDzBtJqI2s6yh0w6Omr9tEXt1jGYQKY+hYRumeNka8jFzOaUfqWhGp53fM4jLb/Fsoh8St7vGaRtLetQURHKk7zyUEN8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=rock-chips.com; spf=none smtp.mailfrom=cc.itu.edu.tr; dkim=fail (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=ijZGrXL/ reason="signature verification failed"; arc=none smtp.client-ip=220.197.31.113; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; arc=fail smtp.client-ip=160.75.25.117
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=cc.itu.edu.tr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="iQ6muCsa";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="rpo3KIva"
-Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 524CauXK013683;
-	Tue, 4 Mar 2025 15:29:16 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=
-	corp-2023-11-20; bh=dLMMswp41cW9Bzpwte9zDBIjK0OYSGDOp2JO7mexJWA=; b=
-	iQ6muCsarL7uwFozzVWZMFMUbbnD1lC8Z9xhB7yRMWaZ2bYPV0Oh7nc5uWXQJujp
-	/FlozXSuU2xgbe25RrPn0UVwOpAXwYpXrdC4U7FaHn334tg0S+Y45dZ2LCrsgwn5
-	+3pzX71bSPWnxwtu60TlTX0FYZXCVSldEmMCyhdi9IMiALN/GlTyEW8vbbWEjh8c
-	QH/HkRwdCJgP9lftF2t55nojPmTW+KOmx1xY6iEDoPXglNLTCNVsbKz65YcIFjGB
-	4++o7NqjZvAkvgR5oUuV4Hbir3IPj77Et5wihitew8grAc2F/V8QW3Q2gmhEi0Z3
-	U8tEU+dHWvpxBr84KTk7pw==
-Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 453u8wnckj-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 04 Mar 2025 15:29:15 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 524EqFXu011048;
-	Tue, 4 Mar 2025 15:29:15 GMT
-Received: from nam10-mw2-obe.outbound.protection.outlook.com (mail-mw2nam10lp2040.outbound.protection.outlook.com [104.47.55.40])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 453rpamrx3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 04 Mar 2025 15:29:15 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=lgSXaUjMRLmrvBlBPRhNglTCpEovtaNHg63DxVMZKyy12JXsQuBWDhhgSh6OESuQEJx4ZeuDtosk0gLD2IEM1WXXG244NnN9n+GPTK0H9FSY2eyubj13MwanXDLuTzJ/XCXhTiBLpZDt3Op6BQUELLc+c6d+o0sOnDQ51jpPB/12GRulDVHzi/+Suo4TgPQ9vRCVTs4JY7XaTpcNMpsx4a2tVCtjSDOvUOmNbz0YH8sCK8e9aEepXq22LkUyJkoFSK9RlecaAVQwghyoy6fZm/ObPCKrVGha1Ta6uRxUiWH/e1W48qqA6TKy6edAntKcCGstNINcFg1DJ2zLOgr61Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=dLMMswp41cW9Bzpwte9zDBIjK0OYSGDOp2JO7mexJWA=;
- b=trKCFoS4hMz0TZCP5ktDNdMaxY9AdCKHcdL22ZnFErMreAgxokjQxkfltqALWbi11rDiqD8Eee6v1mwfxmVbjzBGH5OZ7clKBJmNvR8FA2jge1vUf2bUkRsKIomsjdWmRs/a5E5wrNb272NtZyRRiXLAk9Fqy/UVNmHsSQ4b8xCPEuYWvTP4yloH8ojbAvk43WwkRxQdmbp0TEMOZHvNTxReCaYNmXpMDP9KR3DTsWphrqD4SalRDw/b+TxOKA7EjhPANm8doO3sbKoN6b67LRFTXDB/yoZU6enIudBgfrmU0q/FzRiRR0QevsBEF4NTUjJlzQc6q8c7HEprvNtuZQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dLMMswp41cW9Bzpwte9zDBIjK0OYSGDOp2JO7mexJWA=;
- b=rpo3KIvaK9KDgwcR8xNpwl6Y8iZkr0lNasVnfcP/wsP57An/7rkEzrsEmfizG69osc44Ad1ORbjC9nMhZrAeSyx7PUCSh+BEgIRuC90vxSCpHycva1dDL12LtVeg1uZ80pN3yrG4BdLfI4sVuF72Ek7ogZ0Z5FUZtBFxrmBtlaQ=
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
- by PH7PR10MB6226.namprd10.prod.outlook.com (2603:10b6:510:1f1::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.28; Tue, 4 Mar
- 2025 15:29:11 +0000
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::743a:3154:40da:cf90]) by BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::743a:3154:40da:cf90%4]) with mapi id 15.20.8489.025; Tue, 4 Mar 2025
- 15:29:10 +0000
-Message-ID: <4bb862cd-473f-4c38-91cb-d988314735ef@oracle.com>
-Date: Tue, 4 Mar 2025 10:29:09 -0500
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 4/5] nfsd: clean up if statement in
- nfsd4_close_open_stateid()
-To: Jeff Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>,
-        Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>,
-        Tom Talpey <tom@talpey.com>
-Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250303-nfsd-cleanup-v1-0-14068e8f59c5@kernel.org>
- <20250303-nfsd-cleanup-v1-4-14068e8f59c5@kernel.org>
- <ebbd3d0faa939d498eb3bc67c7ba9c2ae72f3e60.camel@kernel.org>
-Content-Language: en-US
-From: Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <ebbd3d0faa939d498eb3bc67c7ba9c2ae72f3e60.camel@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: CH0PR13CA0024.namprd13.prod.outlook.com
- (2603:10b6:610:b1::29) To BN0PR10MB5128.namprd10.prod.outlook.com
- (2603:10b6:408:117::24)
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="ijZGrXL/"
+Received: from lesvatest1.cc.itu.edu.tr (unknown [10.146.128.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits))
+	(No client certificate requested)
+	by beeline3.cc.itu.edu.tr (Postfix) with ESMTPS id 0F34C40CEC8D
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 18:29:30 +0300 (+03)
+X-Envelope-From: <root@cc.itu.edu.tr>
+Authentication-Results: lesvatest1.cc.itu.edu.tr;
+	dkim=fail reason="signature verification failed" (1024-bit key, unprotected) header.d=rock-chips.com header.i=@rock-chips.com header.a=rsa-sha256 header.s=default header.b=ijZGrXL/
+Received: from lesva1.cc.itu.edu.tr (unknown [160.75.70.79])
+	by lesvatest1.cc.itu.edu.tr (Postfix) with ESMTP id 4Z6ffS0vYDzG0My
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 18:26:24 +0300 (+03)
+Received: by le1 (Postfix, from userid 0)
+	id 8EE8042733; Tue,  4 Mar 2025 18:26:01 +0300 (+03)
+Authentication-Results: lesva1.cc.itu.edu.tr;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=ijZGrXL/
+X-Envelope-From: <linux-kernel+bounces-541217-bozkiru=itu.edu.tr@vger.kernel.org>
+Authentication-Results: lesva2.cc.itu.edu.tr;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=ijZGrXL/
+Received: from fgw1.itu.edu.tr (fgw1.itu.edu.tr [160.75.25.103])
+	by le2 (Postfix) with ESMTP id 7146642D2A
+	for <bozkiru@itu.edu.tr>; Mon,  3 Mar 2025 12:01:11 +0300 (+03)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by fgw1.itu.edu.tr (Postfix) with SMTP id BED653064C0B
+	for <bozkiru@itu.edu.tr>; Mon,  3 Mar 2025 12:01:10 +0300 (+03)
+Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5D7587A4079
+	for <bozkiru@itu.edu.tr>; Mon,  3 Mar 2025 08:59:28 +0000 (UTC)
+Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 857381F0996;
+	Mon,  3 Mar 2025 09:00:14 +0000 (UTC)
+Received: from mail-m19731113.qiye.163.com (mail-m19731113.qiye.163.com [220.197.31.113])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 812E71EFFAF;
+	Mon,  3 Mar 2025 09:00:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.113
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740992410; cv=none; b=JjjprnLfwcLgPDINJGdj/9SBCv1xx7BO9wXPmLxIckKix0VR9mueQWLlnR7FeC142Gsjp1XdDFjk15q7bTuGR8v96r/phO1YRUPRhXFb2uRlq8069N7FYKcGlRDvD9CuMW1eAn2zc+ZaEMZMuxy7H5ISbEBFFeBAUF5xJ6QKbLQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740992410; c=relaxed/simple;
+	bh=wq4qPjLOP/xCwisKyEVhGFxzfmUqOyAQHZDDXjSFup8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rU6s3+tqGs/mIdD5TkDc/niCs5ve+izR7t+ckftRU6O+/eEEKHoiBbsL3ThgSqcjjBStsJ7wTvmuPlOZ+4Bgxae7Tw603xXQGEW0NESrxl/ErPr9eiqNLSfQGybfBZUcoU7ggIROagWVLNrAdLCTvzniBFoRlvreJrRsd+HZLpA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=ijZGrXL/; arc=none smtp.client-ip=220.197.31.113
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
+Received: from [172.16.12.12] (gy-adaptive-ssl-proxy-3-entmail-virt135.gy.ntes [58.22.7.114])
+	by smtp.qiye.163.com (Hmail) with ESMTP id cbdcb25f;
+	Mon, 3 Mar 2025 16:59:50 +0800 (GMT+08:00)
+Message-ID: <65706d63-18aa-41e0-81c4-4eab3d186250@rock-chips.com>
+Date: Mon, 3 Mar 2025 16:59:50 +0800
+Precedence: bulk
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN0PR10MB5128:EE_|PH7PR10MB6226:EE_
-X-MS-Office365-Filtering-Correlation-Id: b5e14e2d-9085-421c-e885-08dd5b314fd8
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?QU1YOU5ackVnRWx4cXVrWEZoaFJ4S28wTnVpVGRLVWZ5dFBOUWNUSUF6T29Z?=
- =?utf-8?B?MUdLRnJEbWFOSGhqbmNQaFNQY01yQVBBQVhCdm1UUFU2azVJOEd3ZjR0eXVG?=
- =?utf-8?B?UnpKYWdzb0h2VmNpMTFud3FxL0VUeENzMGIxbFBFdk05S1JKeHIrUjdhalB4?=
- =?utf-8?B?WVliWmpwMlgxbGd1b3Fhd1VaVXkvY2R3anBxOHk1emZMRzB6VGt1RmdnQlpm?=
- =?utf-8?B?dUFVL3EvblcrOVk5OWVaUzVGK2lKR0g0VGh0ZzE3ODB3ejZNbmh0T3dSbDNG?=
- =?utf-8?B?QWg5TStpQVhtMSttMG9pTU1PYlhXbFZUZFN5ZGNLak8rV1NmUG9xZk1LU0hr?=
- =?utf-8?B?WWd3MVFDbnVhOHd1S2hycG5IaEo3YVlQTHEvdTRBQnBQVFBxUGMxd1FpOWNR?=
- =?utf-8?B?NDdMWHVnTFBsUGF2eC9HZWxMUkJzeURSQXNNZSs1UjczaFA5bFJYa0VuK2sw?=
- =?utf-8?B?V0dKbXJSWENzdDJDNmNhSHcrZUhubm5Wbmo0dmMwMHdiNllaTWFwRXhHVktv?=
- =?utf-8?B?dUs0NklRL3V2ZkZzUXRuRjJzTldMVmFNOC9jbjdxQ2Uyak9jR0NFb0xTT1pZ?=
- =?utf-8?B?Tkd2dzkvdk4vZjhWMlRiT3lmWDNONk9rSDlpZDJmd3dHVlZnSGN0SGxtSmgv?=
- =?utf-8?B?bHFIajJYWkliRzdRdkd4M1NrN2dXcFdrT05ia3JRUlc5L1Y0UEowd21oY3pW?=
- =?utf-8?B?bHlGcW9ndzFUZDVzZTJtazJmYjU3bTh0YUNZZVJLRXgyWWhjQVNzWGxvbFlF?=
- =?utf-8?B?YUNnaWtEOU1rMFFJY3ZiVzlaOTljTzZSMzhCRGRTQTNFTkhHL1MwWWRPd1Nk?=
- =?utf-8?B?UUNjdVhKM0VrS3BvQ0FtL3IwTTBzU1hsQURSSEovbytVVFJDNmtvcDNEdDNI?=
- =?utf-8?B?RkRXbUZBeVVFOHBGRlo4bE9MWFlrNFNJV3RyZ2RyMGdVWEY5VEN4NHF0YWdS?=
- =?utf-8?B?elR1WjJySHVyT3dwQkdldmorc29wVzZTUXQyaXN2ZlZUZUpTWFBQV3RqeGZn?=
- =?utf-8?B?UzdGWWZDdlFKRFNmL3dJSERFbDhacktMcTY1YWlWOFVYdmM0WWVkZ2QvY2VH?=
- =?utf-8?B?Qk9xS292ZVlEOUlOeU1VaXEyK1ArQ21HYlpMa1puN1I3NjRMVEFQMmhQVlBV?=
- =?utf-8?B?Y1Fwb3pOVldGcFZWNUovc3B3YTZlRnp3bGs0VWsvckhsMThuUjVVOVVHcEtl?=
- =?utf-8?B?bEQ5NWpOSmZnQTVtdURVbFhJR3U3K2NxWmJHSTNNZzErczRqS0lkQlpkditk?=
- =?utf-8?B?MVAwYXEvVHlMeEJ3WlY4dFVrTDFnUFZOaGhuR212N0lEQThGaUFEZnpORWxU?=
- =?utf-8?B?WXkwOGN6VUh5TlFIdTlaVnc2VnpMOGE2eVNGdldXWmNwTjlTelE1Q1FFdzJR?=
- =?utf-8?B?ejhWL1FiQlhtcEtYeGZYSUM4cCtGdEZHSU9weWRpaDc5SGlvWDV6TG5OOHpv?=
- =?utf-8?B?a1o0bENkdDFjT0xqdUFCeDJBUCttd3NudVh3MTE4bFNValBQTWVJcG9JNCtC?=
- =?utf-8?B?ZWVrZ0JkRHFnOWdEdlU4VTR6WmQ5ZXc5QkJhSVJmamQ5RWhXK0pUV0daUDRB?=
- =?utf-8?B?dzlzMmVJOHYzUzc5QTUyS1FzYU01c1FCSGF6UFRnWkRGQmdqMWQ2dFQ0QnV0?=
- =?utf-8?B?MDlSdVBadzdmdVhEYzV5dUVqMWg1SitEbmhqUlYyZk4rQ2UrN1hiaE91c2d6?=
- =?utf-8?B?V3l5TEpub0VVbkora3N0SExBcFBIQ0xRMldUM2o3a2ZmZHpsb3NVNnhYblZ1?=
- =?utf-8?B?OVRzbk4vK0RYTExWVHdYNExIUnlsN21GMEhtVWhveGxyNEFVajdmS2tiR3Fn?=
- =?utf-8?B?eGZLSkQ3YW94c3dWb29HRDdOM2dxS1NGR0xGMS9lMmYwOENiM3pEZCtjbDR3?=
- =?utf-8?Q?r9sFdD0YANPSE?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?QWRkZGtCcTlRbjJ0eVBUeVQ4OU1sUlU3ZWo0Q1N0VzJpTG1weFZpcVhBVWt4?=
- =?utf-8?B?SUFOU1ZuMzNaS0dKdGRzT21UWUI2OUtUR3Q5b2VrM3NrdXJ6aDFLbHF4TG9r?=
- =?utf-8?B?Vk9CcENHTzNLTzdSQnRLUW92V2I0Z29rcmtzeEltUGowOTlIRkliU05MdHBT?=
- =?utf-8?B?SlBpNmdXc2pwc29EaFhBOVV4WnFuaHU2UVNLMFlzbEgzR3RzUUdzbmJHajd5?=
- =?utf-8?B?RnZveDR5bnIyOTA1eEVoNTVUdmk2UFpuUGZsQklsM2dQVnpyTVFiNzFMTzZm?=
- =?utf-8?B?QWdqV3NoVE9FeUlESm94S2NjbVVlYlNtU3FyY3hxSnphNlVOK0FQV0xzTGJw?=
- =?utf-8?B?YVZDTTN4cUhJNHVtQVZzaVdBdUVEN21XNXErazlEMm04Qkg2S1ZQL096SHpH?=
- =?utf-8?B?aW9TRVgxc01vRktXRU9UMXJnZWlSUVIxUVFVb0dvbGlHZXcxTmNrQTZWOFhF?=
- =?utf-8?B?R2RTWjdadndJWCtvZDdiWWtNMytERmRUMlB3OEM4Z05ldkdZcHhnT01sK1hi?=
- =?utf-8?B?VEdzTHJ2OElWNHpqWWc1cG5nZXJ0RzNPai9Zb3dPWCsrQWtrdXc5eEM5RmdG?=
- =?utf-8?B?dUVUL2YraEcvUnllK3JGdnRZNVNHMGNHVmtHdDJ5R205Y0ZzTEFCYmpWZWVN?=
- =?utf-8?B?N3diZ2pDMitrSU9YYTcxQ1VlK3pHdUh1QTRtTUxvbnFvQTR2OGtyZHo3TzR5?=
- =?utf-8?B?Tk54ZkpYK1FRV29OR0Z1aFNoUVYwRXFtcDdYdUpsVEpLSzdCVUpabjY0a0Va?=
- =?utf-8?B?Q1pnTkl6U1F4alBPOWZ6K0FkWmVMS0F0andWN1FYbGRYeUx0QTMxRnlweXFY?=
- =?utf-8?B?NWtYd3FvUVE3NTNxaVIvNjdTeElXSHQvSWF3YVVraENxT1kybDU1aU8yeWQz?=
- =?utf-8?B?bW8rVnBwbUNHSTFoa3ZJM3ZsL2dzSi9rSUxDS0dJZE9KS2dzOGlxR1kzU2o5?=
- =?utf-8?B?bmVXdHhSeUZQcTFXVG5pR0hwTytjYnY1L281bFNsa0xaK2pTM0QrRmFFTDly?=
- =?utf-8?B?L0V0ckhyYVgzNTZ2VElBUTdZOE1rNENSYW1vemFXNmU4Tng4R2FncmZSdnlw?=
- =?utf-8?B?aDl4YUJuNXE1NWZMOEorcVY5bkpwOHgrQ0V5a294bEk0dnBwYXVSeit2L1Nq?=
- =?utf-8?B?QmlJVmZ2T01EU0RLdWdPVW56WkVNRUFmMy9xUW1kOEZKK01PSU56WjRmTmRO?=
- =?utf-8?B?RlJQbGk4WGJyK2FBcGd2OW45VWN5REpGWmZQM3BhaHZxTFVpSWU5cmpOQTlJ?=
- =?utf-8?B?RE9DSkplQkZpeVcvTUlRUVJHSWZzbHovK3hrQUR5Zm9JMlRyR1p4bmJaV1do?=
- =?utf-8?B?OVhpV2RPQVdJOVVXV2MwQWFMdlFhVDFEeHdjdnVYRzRqWHE4dHYwYWpJTFJh?=
- =?utf-8?B?LzZyaGt0OWlDVzk1YkJsOXVHRUhvWE8rSVY0Z2pWckl0SFZ1dndQUmZlakFB?=
- =?utf-8?B?Zjh3Z0d6dHdnTzFxYiswdGF3TDhCc0RYTndZZ05ZSGxkTER2SmxHMEp0UGRD?=
- =?utf-8?B?Lys2TVhzdUcvMzdsakdPaS8zTnlseFl4akZWYTdWUHZDVjRxVjRvR200Z2du?=
- =?utf-8?B?SkV4eG8yOGh1aUFJR1lhVG1KMzlXcUZYcXA0Z3NMWGlBckdOR3hIMFVZSUFp?=
- =?utf-8?B?REFkMkpaT0NNdXZjRU5XdTgxYjVsVStYV0pPNUtWamtlQkh2ejIzOTA3ZFR4?=
- =?utf-8?B?YitacFdLR01zY251QUk4MGhCTWxaUkJsdXVjVzVyckFWWE80ZFpxOEhnUlRa?=
- =?utf-8?B?WTNzVk1TWm56UDNvMzc5TVZhZmJrdVIzTzJteU4vOG03UUoybkNaYzMreTRa?=
- =?utf-8?B?TWZwcTFzcjNrME5SOVhOQWR0ekVvSkdMNG5McFVQNHp4TlBycERxZ3Izcmtt?=
- =?utf-8?B?OXRMY3VjRTFHWHRsWjh1emtRUldxZEd1NmkvMHZ6Z3d1U2pVTVpvM0huZ29I?=
- =?utf-8?B?Z0pkdWZuYVFxUklXK0l4M2VGOUxYRkFUSVc0V2dOaGNDRXRLaTI4QUNyWC9u?=
- =?utf-8?B?U2VhaG9VZlF3ZDdGY0dtczd1dkhkQVhhQ2NCMXlpby9ORjZZcjBEU0wycDBX?=
- =?utf-8?B?RVVyeGQyYUJnWVUzNzBYandYc1RVYjlHejRxcmkrT3pTdE92eE9RNjdCd3Fr?=
- =?utf-8?B?WTVYWHo4WEZGZnpTOUFYRTNwV1NoK2hNREFXb2ZwckpwYTcyWlQ2T3pvMGs1?=
- =?utf-8?B?MGc9PQ==?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	1hGIIFnEXtT9UHvtPOz9DYQkk26w06lmiNbKiLgkFbqqjxptVmA95S9R62ZT0+EKws5PWeRV7Y0Oq9RU2ePIfQCgyfunDujiiHuOWTaOX7gqIN8nr6jHo+sUTOPSkkB7A7J/wDioyzW8EvCut9m/ju6g10CqjOD8o1wa3TvzbwYA2Y4kKPhEVnPHBVoOtV4MwDPuEfGGWP/6DI3jh12Iy5ZuCkKoV2gj6ioeat8D0OzRqUqvO1CQ6lsWXvjTyDVEZB9qplhv9A52ihRhQSUOL6onSXx9BwQLH8KrCxaZRwwanXt6ExeTHADRu3sDp5cSeLKvb/q5owaUJ9uz2ZEBGn4QmMNRRKc8jcJMBA/2hX00Cr34XSPcotAGqxAjQzECJ5heLuubmVFiAwDDwLdKpc57p7jqxSK1+3FbFNr6tAqQ3xTMkJLnyuZdCXJ7ljsDnsPnlLuCRu+SesOc8FVjp8rH8wlFGmJsVXZW3yyJye1FtY5uW+W17qxweOemNhl3gltswJ6ywofmdaa1MKbhMH6BQs/CFRB2/d849dAt9UBRQkHsNOJq+sdh8SBrDUsKnsw31EdeJAjvK5jjye0eT7MLGAf78abT1d2clMCaObQ=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b5e14e2d-9085-421c-e885-08dd5b314fd8
-X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Mar 2025 15:29:10.9129
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: q62bGtjAclrirqRpAuf+Ox5SaXygGyYvf1Pf4z2RLCFyMbVn+gjYgi/rXOAyHMy3r6kRi4gLtNiDiTpx+zOKuQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR10MB6226
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-04_06,2025-03-03_04,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 adultscore=0 mlxscore=0
- spamscore=0 bulkscore=0 suspectscore=0 malwarescore=0 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2502100000
- definitions=main-2503040125
-X-Proofpoint-ORIG-GUID: DCtf5-btEGmZ3mP1X22GOu9NERGMH1td
-X-Proofpoint-GUID: DCtf5-btEGmZ3mP1X22GOu9NERGMH1td
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/6] drm/bridge: synopsys: Add DW DPTX Controller support
+ library
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+ Andy Yan <andyshrk@163.com>
+Cc: neil.armstrong@linaro.org, sebastian.reichel@collabora.com,
+ heiko@sntech.de, devicetree@vger.kernel.org, hjc@rock-chips.com,
+ mripard@kernel.org, linux-kernel@vger.kernel.org,
+ linux-rockchip@lists.infradead.org, dri-devel@lists.freedesktop.org,
+ Andy Yan <andy.yan@rock-chips.com>, krzk+dt@kernel.org, robh@kernel.org,
+ linux-arm-kernel@lists.infradead.org
+References: <20250223113036.74252-1-andyshrk@163.com>
+ <20250223113036.74252-3-andyshrk@163.com>
+ <563i7xcbbsxfezkgs4txsa6lar5tb5folp7zk7dc7sbvf54n6y@vqbtuwvj3fcw>
+Content-Language: en-US
+From: Yubing Zhang <yubing.zhang@rock-chips.com>
+In-Reply-To: <563i7xcbbsxfezkgs4txsa6lar5tb5folp7zk7dc7sbvf54n6y@vqbtuwvj3fcw>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZGRofTlZNS00YSUJLTx1MHhhWFRQJFh
+	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0
+	hVSktLVUpCS0tZBg++
+X-HM-Tid: 0a955b3ba5bf03a8kunmcbdcb25f
+X-HM-MType: 1
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6PlE6Cio6GjIWQk9IAwE4Ky8Y
+	HSMKCT5VSlVKTE9LQkJJSEJPT0JCVTMWGhIXVQIOGRIVHFUBExoVHDsJFBgQVhgTEgsIVRgUFkVZ
+	V1kSC1lBWU5DVUlJVUxVSkpPWVdZCAFZQUxITUo3Bg++
+DKIM-Signature:a=rsa-sha256;
+	b=ijZGrXL/GvtK7VjoWcpULII9nLZ6QYjVvCmSpKIkUJkKkO8KzrlppNmqdiGJa+pTNWIIcvzWHnEv2CM9W4xfzy/uQ4PCH7aL4BdeeauyHwuh0UKdZypiAec+BclL7A2Au52C9+01H1U6dN+o0lq9WqyGZ6Kue/kGZttFRObq5QE=; s=default; c=relaxed/relaxed; d=rock-chips.com; v=1;
+	bh=2kGVvLoAJaOp26dQa+STctZZP/D+ei2d2VwEfnWjBwo=;
+	h=date:mime-version:subject:message-id:from;
+Content-Transfer-Encoding: quoted-printable
+X-ITU-Libra-ESVA-Information: Please contact Istanbul Teknik Universitesi for more information
+X-ITU-Libra-ESVA-ID: 4Z6ffS0vYDzG0My
+X-ITU-Libra-ESVA: No virus found
+X-ITU-Libra-ESVA-From: root@cc.itu.edu.tr
+X-ITU-Libra-ESVA-Watermark: 1741706865.83862@cywsschICj0GJtNS9E2vPQ
+X-ITU-MailScanner-SpamCheck: not spam
+Message-ID: <20250303085950.S0PNy98N-smoOdANqbUDxOUwmrvP3s5vKc5YgvwWEuQ@z>
 
-On 3/4/25 10:24 AM, Jeff Layton wrote:
-> On Mon, 2025-03-03 at 12:26 -0500, Jeff Layton wrote:
->> Just set unhashed to false in the one case where we return that
->> explicitly, and drop the else.
+Hi Dmitry,
+
+On 2025/3/2 2:14, Dmitry Baryshkov wrote:
+> On Sun, Feb 23, 2025 at 07:30:25PM +0800, Andy Yan wrote:
+>> From: Andy Yan <andy.yan@rock-chips.com>
 >>
->> Signed-off-by: Jeff Layton <jlayton@kernel.org>
+>> The DW DP TX Controller is compliant with the DisplayPort Specificatio=
+n
+>> Version 1.4 with the following features:
+>>
+>> * DisplayPort 1.4a
+>> * Main Link: 1/2/4 lanes
+>> * Main Link Support 1.62Gbps, 2.7Gbps, 5.4Gbps and 8.1Gbps
+>> * AUX channel 1Mbps
+>> * Single Stream Transport(SST)
+>> * Multistream Transport (MST)
+>> *=EF=81=AEType-C support (alternate mode)
+>> * HDCP 2.2, HDCP 1.3
+>> * Supports up to 8/10 bits per color component
+>> * Supports RBG, YCbCr4:4:4, YCbCr4:2:2, YCbCr4:2:0
+>> * Pixel clock up to 594MHz
+>> * I2S, SPDIF audio interface
+>>
+>> Add library with common helpers to make it can be shared with
+>> other SoC.
+>>
+>> Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
+>>
+>> drm/bridge: cleanup
+>=20
+> Stray line?
+>=20
+>>
 >> ---
->>  fs/nfsd/nfs4state.c | 9 ++++-----
->>  1 file changed, 4 insertions(+), 5 deletions(-)
 >>
->> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
->> index a7bac93445e2fdbe743b77e66238d652094907cb..1f3e9d42fcd784ea8d101ad3549702a30dfe9058 100644
->> --- a/fs/nfsd/nfs4state.c
->> +++ b/fs/nfsd/nfs4state.c
->> @@ -7644,12 +7644,11 @@ static bool nfsd4_close_open_stateid(struct nfs4_ol_stateid *s)
->>  		list_for_each_entry(stp, &reaplist, st_locks)
->>  			nfs4_free_cpntf_statelist(clp->net, &stp->st_stid);
->>  		free_ol_stateid_reaplist(&reaplist);
->> -		return false;
->> -	} else {
->> -		spin_unlock(&clp->cl_lock);
->> -		free_ol_stateid_reaplist(&reaplist);
->> -		return unhashed;
->> +		unhashed = false;
->>  	}
->> +	spin_unlock(&clp->cl_lock);
->> +	free_ol_stateid_reaplist(&reaplist);
->> +	return unhashed;
->>  }
->>  
->>  /*
->>
-> 
-> My apologies, Chuck. This patch has a bug in it. Can you drop it from
-> nfsd-testing? I may or may not send a replacement.
+>>   drivers/gpu/drm/bridge/synopsys/Kconfig  |    7 +
+>>   drivers/gpu/drm/bridge/synopsys/Makefile |    1 +
+>>   drivers/gpu/drm/bridge/synopsys/dw-dp.c  | 2155 ++++++++++++++++++++=
+++
+>>   include/drm/bridge/dw_dp.h               |   19 +
+>>   4 files changed, 2182 insertions(+)
+>>   create mode 100644 drivers/gpu/drm/bridge/synopsys/dw-dp.c
 
-Done.
+......
 
-
--- 
-Chuck Lever
+>> +
+>> +static u8 dw_dp_voltage_max(u8 preemph)
+>> +{
+>> +	switch (preemph & DP_TRAIN_PRE_EMPHASIS_MASK) {
+>> +	case DP_TRAIN_PRE_EMPH_LEVEL_0:
+>> +		return DP_TRAIN_VOLTAGE_SWING_LEVEL_3;
+>> +	case DP_TRAIN_PRE_EMPH_LEVEL_1:
+>> +		return DP_TRAIN_VOLTAGE_SWING_LEVEL_2;
+>> +	case DP_TRAIN_PRE_EMPH_LEVEL_2:
+>> +		return DP_TRAIN_VOLTAGE_SWING_LEVEL_1;
+>> +	case DP_TRAIN_PRE_EMPH_LEVEL_3:
+>> +	default:
+>> +		return DP_TRAIN_VOLTAGE_SWING_LEVEL_0;
+>> +	}
+>> +}
+>> +
+>> +static void dw_dp_link_get_adjustments(struct dw_dp_link *link,
+>> +				       u8 status[DP_LINK_STATUS_SIZE])
+>> +{
+>> +	struct dw_dp_link_train_set *adjust =3D &link->train.adjust;
+>> +	u8 v =3D 0;
+>> +	u8 p =3D 0;
+>> +	unsigned int i;
+>> +
+>> +	for (i =3D 0; i < link->lanes; i++) {
+>> +		v =3D drm_dp_get_adjust_request_voltage(status, i);
+>> +		p =3D drm_dp_get_adjust_request_pre_emphasis(status, i);
+>> +		if (p >=3D  DP_TRAIN_PRE_EMPH_LEVEL_3) {
+>> +			adjust->pre_emphasis[i] =3D DP_TRAIN_PRE_EMPH_LEVEL_3 >>
+>> +						  DP_TRAIN_PRE_EMPHASIS_SHIFT;
+>> +			adjust->pre_max_reached[i] =3D true;
+>> +		} else {
+>> +			adjust->pre_emphasis[i] =3D p >> DP_TRAIN_PRE_EMPHASIS_SHIFT;
+>> +			adjust->pre_max_reached[i] =3D false;
+>> +		}
+>> +		v =3D min(v, dw_dp_voltage_max(p));
+>> +		if (v >=3D DP_TRAIN_VOLTAGE_SWING_LEVEL_3) {
+>> +			adjust->voltage_swing[i] =3D DP_TRAIN_VOLTAGE_SWING_LEVEL_3 >>
+>> +						   DP_TRAIN_VOLTAGE_SWING_SHIFT;
+>> +			adjust->voltage_max_reached[i] =3D true;
+>> +		} else {
+>> +			adjust->voltage_swing[i] =3D v >> DP_TRAIN_VOLTAGE_SWING_SHIFT;
+>> +			adjust->voltage_max_reached[i] =3D false;
+>> +		}
+>> +	}
+>> +}
+>> +
+>> +static void dw_dp_link_train_adjust(struct dw_dp_link_train *train)
+>> +{
+>> +	struct dw_dp_link_train_set *request =3D &train->request;
+>> +	struct dw_dp_link_train_set *adjust =3D &train->adjust;
+>> +	unsigned int i;
+>> +
+>> +	for (i =3D 0; i < 4; i++) {
+>=20
+> Shouldn't it be a loop up to link->lanes?
+>=20
+>> +		if (request->voltage_swing[i] !=3D adjust->voltage_swing[i])
+>> +			request->voltage_swing[i] =3D adjust->voltage_swing[i];
+>> +		if (request->voltage_max_reached[i] !=3D adjust->voltage_max_reache=
+d[i])
+>> +			request->voltage_max_reached[i] =3D adjust->voltage_max_reached[i]=
+;
+>> +	}
+>> +
+>> +	for (i =3D 0; i < 4; i++) {
+>> +		if (request->pre_emphasis[i] !=3D adjust->pre_emphasis[i])
+>> +			request->pre_emphasis[i] =3D adjust->pre_emphasis[i];
+>> +		if (request->pre_max_reached[i] !=3D adjust->pre_max_reached[i])
+>> +			request->pre_max_reached[i] =3D adjust->pre_max_reached[i];
+>=20
+> Why do you need separate request and adjustment structs?
+During link training cr sequence, if dprx keep the LANEx_CR_DONE bit(s)=20
+cleared, the request and adjustment structs are used to check the
+old and new valud of ADJUST_REQUEST_LANEx_y register(s) is changed or not=
