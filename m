@@ -1,150 +1,111 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3196E24CEDF
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 16:30:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE4F12500BE;
+	Mon,  3 Mar 2025 16:30:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741019450; cv=none; b=tYJm/sGPDuTMmFLptvdSF6mHghHR8vhlrnQ2C6Od2LuVsXjEgxJlvpV+7BHWZd6ThxUUnWOAeJQK5KjJSs20SbnWwsgSyVI8yzxGLEvjitGbUxSoJ4u1PBl0cEZN3ltT0FESdybF4jwJ4iJGZJLrYhIYzqNwwkrlWFTkaIkKj30=
+	t=1741019453; cv=none; b=joeN5eGwap2QMU/iH6mHN+Ti+q5dMqRI7UH8kw7ClpIs2t874jc616xDfDZTZpA4leYa21M+ohBjXe0VsEwRnE1PyO+68y8/eZNs+LbYjkNaLFXkNkOzC7EAXpyab75lG2lhoACvDgnDpDVjcE3sSklUi5AeQPn5VKNR0DTtOJA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741019450; c=relaxed/simple;
-	bh=jBMc/6KfiUuhsqx8U3JCMjpv5FKb+tGdfD4lU0RajKI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=J8xt9pdCtooWn57NS2BMJmdC+fofLe8573U2MvSNmonVI8byi7RWC5eo1rgVLNurAj4/NepYloFXe40J7vLds7kC5DRVjpJe+L0SKmCqcURHIi5/x9kemGZyfdxEP+YYoJAqCRPWdXBGORChlCP/LVdnRd3aIJWyfPxf9K6+OQs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fTZ06RUb; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1741019453; c=relaxed/simple;
+	bh=2x2c56vUaSgQ5YrhLH2S+NjGLifAOf+kx0rtKNh6/N4=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=kiIB1A1BvkZKpsBG9SkeM5ql5h1xYw4tCDJ3hOHNuDy2hMS5nFEhFFgmq3JuH4vFZU7hFRl5W5bRoAZnyy0kapQ44eV7dHUqIm6YIwVtWhbz1WgGSm/WNI61cm0ltZnK0P+KfnHu67wf2Zc8i3wHvxkF1Lr04egdlPhSL+aLqXU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BN3FPjAa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fTZ06RUb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1741019448;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lWnUBbJbNal4OtQP6KylSC1HMhJkWgV+LTGJMK3tR3E=;
-	b=fTZ06RUb6fwTRp6oS5vFzEB52lvEgMxR0hsHNw9TTtPWWPzT3QYDsAmuFB8wGFsxO6VOrg
-	EusBotGzWg75iGxJgTNXjogKB0b+YXva5J7FcjQwqmXOLZlc5bc2EALpEIlWiq0cF3M4ac
-	HA1upbr7Hma/pE56lEFQM4wMv+aUW3s=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-244-2VjpIvTKMiKvFF2ep8vnfA-1; Mon, 03 Mar 2025 11:30:36 -0500
-X-MC-Unique: 2VjpIvTKMiKvFF2ep8vnfA-1
-X-Mimecast-MFC-AGG-ID: 2VjpIvTKMiKvFF2ep8vnfA_1741019435
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-43942e82719so33183815e9.2
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Mar 2025 08:30:36 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741019435; x=1741624235;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=lWnUBbJbNal4OtQP6KylSC1HMhJkWgV+LTGJMK3tR3E=;
-        b=ao23ThyGJPFvtu/RZkUlQHAQdVfCNKi9tRRgTTIBUhDrSRCaCtWYmWQVvMwjaTtnje
-         WxyYRMUa2x6wFAnEscXMLGdG0cqHSzj+3+yIe5DAo4Kvep05MwD4IxVgqY4qZye5gyBe
-         +GAYd8rndnOQCKnIUdQrIDV4Z7ogDqn2JLfw+ELZxXs8RaJzA+oTa0GDyosWHEusF4H0
-         nfhWRxMzXQMVJKKiE64Xg8kDguemW4tRcbHooVkrZEIBwitI4MXfbRmbhQO4qIITSEOm
-         pZOjD8R3oa1LVkXy3pgX9qPqrXKB/NzdUuPskNa4Xwga1Y/cLkGZeypI4TTcOXsFrmjd
-         VNvQ==
-X-Gm-Message-State: AOJu0Yx5WYAGZudF0JvTgfEoSHTiJqyK1C/AfvabbRWOKbtRjAVWCs0E
-	SO2t6JVq8vPxdT7cW53PeM8mN3J787OLQHOIy1Xm47esh819Sy67RkBwBR8ZAJTwLZca0Vvm+6U
-	Q46wFQPq136Ii1IzExFDeIujH9HQpdXbFTtUPuKvOUw7hbcJQAQmxe+wbGWELveYAM+EeiQiFyZ
-	D1cCfitlQ2hjyOwb6iLV/RZ+eNvN76nPo58Wocr1PF4DLi
-X-Gm-Gg: ASbGnctkab1LpdiHprP1pOkTJMl+p+CUaEflBwZ2aIfXdbCM5lgxGlQxnbGnd5qZ6Br
-	bvZYTIG0n19ODyPFlzp+xzQPVHepVlKFh+Xd7b6pvLiTQ4mZyZyoAiJwhUWMPSASKeadoo7/rBc
-	245mCDEp3OjeD79LXKivGYNRtjpenQKJkUciWvRL1f5OhzmUKcXmS0Wv3INl77Pu5ItilW5l9Ip
-	qTThL4JnuVKvYXgfL1gah+Mj2h6bKa1aessgSPJQ+T+z3nw2DHOwhrXhwVBDjjpWCBbskAF6a03
-	0DW6Fzvlf6uZbqH/fevH/0zLeOR0JWAjQKlshGF1RkmVJTcgixRwr3+EHHTKWTV4W67nnmHoGzD
-	a
-X-Received: by 2002:a05:600c:19c7:b0:439:6b57:c68 with SMTP id 5b1f17b1804b1-43ba6710a51mr128366455e9.17.1741019435481;
-        Mon, 03 Mar 2025 08:30:35 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEHH2uqcGG6+HqLvILt026VDKtCx0hMTXydneDmvGOTb2RHDZET1RLo/ABtW5TIvoZEd6mWJw==
-X-Received: by 2002:a05:600c:19c7:b0:439:6b57:c68 with SMTP id 5b1f17b1804b1-43ba6710a51mr128365725e9.17.1741019434989;
-        Mon, 03 Mar 2025 08:30:34 -0800 (PST)
-Received: from localhost (p200300cbc7349600af274326a2162bfb.dip0.t-ipconnect.de. [2003:cb:c734:9600:af27:4326:a216:2bfb])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-43bc63877desm18077035e9.1.2025.03.03.08.30.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 03 Mar 2025 08:30:33 -0800 (PST)
-From: David Hildenbrand <david@redhat.com>
-To: linux-kernel@vger.kernel.org
-Cc: linux-doc@vger.kernel.org,
-	cgroups@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-api@vger.kernel.org,
-	David Hildenbrand <david@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
-	Tejun Heo <tj@kernel.org>,
-	Zefan Li <lizefan.x@bytedance.com>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	=?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Andy Lutomirski <luto@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Muchun Song <muchun.song@linux.dev>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Jann Horn <jannh@google.com>
-Subject: [PATCH v3 08/20] mm/rmap: pass vma to __folio_add_rmap()
-Date: Mon,  3 Mar 2025 17:30:01 +0100
-Message-ID: <20250303163014.1128035-9-david@redhat.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250303163014.1128035-1-david@redhat.com>
-References: <20250303163014.1128035-1-david@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BN3FPjAa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A4B9C4CED6;
+	Mon,  3 Mar 2025 16:30:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741019453;
+	bh=2x2c56vUaSgQ5YrhLH2S+NjGLifAOf+kx0rtKNh6/N4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=BN3FPjAaiAmowBKKtQwWkJYtfNKfpqRV2uMBEAG0SB0HbARcFvAC1U612vWmRgUfP
+	 564JxL0nNGb0oQGSi9GVe/JW+6CPjBKbsNKHlAFqQCcFeyOqzlTA0csuUvxeqk+MkV
+	 JQG1Gr7JW2MtC3d+0ion0ZObzEBCPa1BIvtjmoE/hEi2eaPI+VtSOGxkErU54cDNeQ
+	 +dBO6/dQhTJOkMu4fco2AYXnjjQ5QKhxifeqldghd9AW1nHUxLjbf3mZ+58WFKAvb9
+	 +KbP0qtudk9KA0OGEDlVOyy/hj1rfXTrADFk8fX8KjLY6vZOVmybFwnImTKiTX73SP
+	 Jr+bwto2DHHcg==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Dmytro Maluka <dmaluka@chromium.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	Sasha Levin <sashal@kernel.org>,
+	tglx@linutronix.de,
+	mingo@redhat.com,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	x86@kernel.org,
+	ssengar@linux.microsoft.com,
+	robh@kernel.org,
+	sboyd@kernel.org,
+	ilpo.jarvinen@linux.intel.com,
+	usamaarif642@gmail.com
+Subject: [PATCH AUTOSEL 6.12 10/17] x86/of: Don't use DTB for SMP setup if ACPI is enabled
+Date: Mon,  3 Mar 2025 11:30:22 -0500
+Message-Id: <20250303163031.3763651-10-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250303163031.3763651-1-sashal@kernel.org>
+References: <20250303163031.3763651-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.12.17
 Content-Transfer-Encoding: 8bit
 
-We'll need access to the destination MM when modifying the mapcount
-large folios next. So pass in the VMA.
+From: Dmytro Maluka <dmaluka@chromium.org>
 
-Signed-off-by: David Hildenbrand <david@redhat.com>
+[ Upstream commit 96f41f644c4885761b0d117fc36dc5dcf92e15ec ]
+
+There are cases when it is useful to use both ACPI and DTB provided by
+the bootloader, however in such cases we should make sure to prevent
+conflicts between the two. Namely, don't try to use DTB for SMP setup
+if ACPI is enabled.
+
+Precisely, this prevents at least:
+
+- incorrectly calling register_lapic_address(APIC_DEFAULT_PHYS_BASE)
+  after the LAPIC was already successfully enumerated via ACPI, causing
+  noisy kernel warnings and probably potential real issues as well
+
+- failed IOAPIC setup in the case when IOAPIC is enumerated via mptable
+  instead of ACPI (e.g. with acpi=noirq), due to
+  mpparse_parse_smp_config() overridden by x86_dtb_parse_smp_config()
+
+Signed-off-by: Dmytro Maluka <dmaluka@chromium.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Link: https://lore.kernel.org/r/20250105172741.3476758-2-dmaluka@chromium.org
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/rmap.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ arch/x86/kernel/devicetree.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/mm/rmap.c b/mm/rmap.c
-index bcec8677f68df..8a7d023b02e0c 100644
---- a/mm/rmap.c
-+++ b/mm/rmap.c
-@@ -1242,8 +1242,8 @@ int pfn_mkclean_range(unsigned long pfn, unsigned long nr_pages, pgoff_t pgoff,
+diff --git a/arch/x86/kernel/devicetree.c b/arch/x86/kernel/devicetree.c
+index 59d23cdf4ed0f..dd8748c45529a 100644
+--- a/arch/x86/kernel/devicetree.c
++++ b/arch/x86/kernel/devicetree.c
+@@ -2,6 +2,7 @@
+ /*
+  * Architecture specific OF callbacks.
+  */
++#include <linux/acpi.h>
+ #include <linux/export.h>
+ #include <linux/io.h>
+ #include <linux/interrupt.h>
+@@ -313,6 +314,6 @@ void __init x86_flattree_get_config(void)
+ 	if (initial_dtb)
+ 		early_memunmap(dt, map_len);
+ #endif
+-	if (of_have_populated_dt())
++	if (acpi_disabled && of_have_populated_dt())
+ 		x86_init.mpparse.parse_smp_cfg = x86_dtb_parse_smp_config;
  }
- 
- static __always_inline unsigned int __folio_add_rmap(struct folio *folio,
--		struct page *page, int nr_pages, enum rmap_level level,
--		int *nr_pmdmapped)
-+		struct page *page, int nr_pages, struct vm_area_struct *vma,
-+		enum rmap_level level, int *nr_pmdmapped)
- {
- 	atomic_t *mapped = &folio->_nr_pages_mapped;
- 	const int orig_nr_pages = nr_pages;
-@@ -1411,7 +1411,7 @@ static __always_inline void __folio_add_anon_rmap(struct folio *folio,
- 
- 	VM_WARN_ON_FOLIO(!folio_test_anon(folio), folio);
- 
--	nr = __folio_add_rmap(folio, page, nr_pages, level, &nr_pmdmapped);
-+	nr = __folio_add_rmap(folio, page, nr_pages, vma, level, &nr_pmdmapped);
- 
- 	if (likely(!folio_test_ksm(folio)))
- 		__page_check_anon_rmap(folio, page, vma, address);
-@@ -1582,7 +1582,7 @@ static __always_inline void __folio_add_file_rmap(struct folio *folio,
- 
- 	VM_WARN_ON_FOLIO(folio_test_anon(folio), folio);
- 
--	nr = __folio_add_rmap(folio, page, nr_pages, level, &nr_pmdmapped);
-+	nr = __folio_add_rmap(folio, page, nr_pages, vma, level, &nr_pmdmapped);
- 	__folio_mod_stat(folio, nr, nr_pmdmapped);
- 
- 	/* See comments in folio_add_anon_rmap_*() */
 -- 
-2.48.1
+2.39.5
 
