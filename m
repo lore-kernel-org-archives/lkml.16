@@ -1,117 +1,102 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 311D31FF1A2;
-	Tue,  4 Mar 2025 11:34:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D0DD1F150D;
+	Tue,  4 Mar 2025 11:35:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741088076; cv=none; b=f5xlQRbPh3Th2ICrAGJkuuzJWZcs+y34H3FOZIQjLlgigKka1LjF+lNrnALTtDUpvZLqjfm1n+KVAiDkPJpj7y0EZ3eLT4arLzIOJAIeTMUg/gJYwLn27MuFMY74pIvSmz7uwuDHYtEKJkYhwdrqlV9w1M7MN1YOm9RYRaHXfCY=
+	t=1741088112; cv=none; b=rYQWtJmq6AXllTdK5A9igeZ40strM1J8ra0oolQZuKhKRK5Sqlj3jsl9d6V+d7pKAAKKKdalLIgXw0JBXW1Mz/olluYQRfnr1A+cRJylxhvaN9RuRdwGR3IcDYZyjmvIjClKsGUtd6T7819XpirbXV5P1JXIy1SBYw9pXp9Pmaw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741088076; c=relaxed/simple;
-	bh=R64CIkbkrQHoFYgAir+ioRO3gvXvRZJhc66qUon5SCc=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=SEIj26GGelS+lnUrx/eYk6E2oWNJcqOUNN9W+1HmbFgcYPew3lypcQ4d6GZvsDs9/1giCHP4D2BE0EzM/zw38tCEz1Strdak0oAVKSyGxeinGk5BUUFXp90pAPgUqxWhLfnZ8NS5Y7sGaWpyZ3dun8Ao91U4Mxqs0ygjejDjBMQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=hUCUwvVz; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1741088112; c=relaxed/simple;
+	bh=zacHG8fP3D/hmNJCwvqEbGptVGdfYUkGYzxjtuIKA6g=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=gTzekS+nWjvGdappSmo3I6LLM4o04xqoQ+5Te/atsGIEDdU9w848OHU/jAixnfS0WiIMtc8UHfk677JaVkHJz8E5I+kJKHJD1KuIfQXxXeUeEWF4k+GERPug3zTG0SsoU/rpK1LtJlBnhqLPrtfGvPkmoFId4fiu94fRPz5SdVc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G23jRXAJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="hUCUwvVz"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 524AErHk015625;
-	Tue, 4 Mar 2025 11:34:30 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=+UnQnZYjyK2lQCr84l8QYn
-	yvb0Yl6lj690T6CEqty98=; b=hUCUwvVzV09MdPOOmVrzOsP6cGba477jwROyJl
-	vH7CLeFkh/jDou/aSATxXC0SEI708hPFvldmOq1F45chgn4ee2/+uSZrkqUAMxiG
-	5ownD1dgIvB+1MGkUXBWyfJpFwQiFidEyDYrPVgNPNrhDvx3VczGFW+CQ8n+c/yz
-	L5K+9/jwWSHPv4y+7jkMsunj0W9DEr+dqYvUDFoXYHTO7FfmJYB7M6n99K0RD3iW
-	Ido4Gwhpsd2jcEq+9+GJjjxawVybQN8rj8RptnW+sFXAtiFiHJX6TVaKWdS32OhT
-	3Z57KBDct1hgfy1P2E5RDsU2x/7bs1QTfEryjw8JDe27aFPA==
-Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 455p6v1pfn-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 04 Mar 2025 11:34:30 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 524BYTBY015651
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 4 Mar 2025 11:34:29 GMT
-Received: from hu-varada-blr.qualcomm.com (10.80.80.8) by
- nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Tue, 4 Mar 2025 03:34:26 -0800
-From: Varadarajan Narayanan <quic_varada@quicinc.com>
-To: <andersson@kernel.org>, <konradybcio@kernel.org>, <robh@kernel.org>,
-        <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC: Varadarajan Narayanan <quic_varada@quicinc.com>
-Subject: [PATCH v2] arm64: dts: qcom: ipq5424: Enable MMC
-Date: Tue, 4 Mar 2025 17:04:00 +0530
-Message-ID: <20250304113400.2806670-1-quic_varada@quicinc.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G23jRXAJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2BE08C4CEE5;
+	Tue,  4 Mar 2025 11:35:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741088111;
+	bh=zacHG8fP3D/hmNJCwvqEbGptVGdfYUkGYzxjtuIKA6g=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=G23jRXAJseMjDMk7gCnjGQphqADBG0QsFBko1uNacx2aL5PeuaH69LRwemrGugyrU
+	 PN1AkfUmF8PEQ0pxx7wAs6TW2nxCkW/KCV2f2xTqs2O7CSLSoCuS22lIU4EdxTTWQ1
+	 A3jQnJJ/pN6w2FLTdkrQiaW8Ne48HO2C7w/h0jNsciL5FFYe4IVNRLwLesOy6+3BoV
+	 uVNw4VPUCvOFLyFiKrCIPgtC76EB0mRcwAz7i4oR7J0Zf36P9YKPUyPCVnnKaqwuFw
+	 hUkb9qzBy980bHPzexDGjD/55hSav6orbCdvxJeDtsfCPa7Zj2b4AyERCj+3wL7BjN
+	 XY1F+25xsIMEg==
+From: Andreas Hindborg <a.hindborg@kernel.org>
+To: "Lorenzo Stoakes" <lorenzo.stoakes@oracle.com>
+Cc: "Alice Ryhl" <aliceryhl@google.com>,  "Liam R. Howlett"
+ <Liam.Howlett@oracle.com>,  "Miguel Ojeda"
+ <miguel.ojeda.sandonis@gmail.com>,  "Miguel Ojeda" <ojeda@kernel.org>,
+  "Matthew Wilcox" <willy@infradead.org>,  "Vlastimil Babka"
+ <vbabka@suse.cz>,  "John Hubbard" <jhubbard@nvidia.com>,  "Andrew Morton"
+ <akpm@linux-foundation.org>,  "Greg Kroah-Hartman"
+ <gregkh@linuxfoundation.org>,  "Arnd Bergmann" <arnd@arndb.de>,  "Jann
+ Horn" <jannh@google.com>,  "Suren Baghdasaryan" <surenb@google.com>,
+  "Alex Gaynor" <alex.gaynor@gmail.com>,  "Boqun Feng"
+ <boqun.feng@gmail.com>,  "Gary Guo" <gary@garyguo.net>,  =?utf-8?Q?Bj?=
+ =?utf-8?Q?=C3=B6rn?= Roy Baron
+ <bjorn3_gh@protonmail.com>,  "Benno Lossin" <benno.lossin@proton.me>,
+  "Trevor Gross" <tmgross@umich.edu>,  <linux-kernel@vger.kernel.org>,
+  <linux-mm@kvack.org>,  <rust-for-linux@vger.kernel.org>,  "Balbir Singh"
+ <balbirs@nvidia.com>,  "Linus Torvalds" <torvalds@linux-foundation.org>
+Subject: Re: [PATCH v14 0/8] Rust support for mm_struct, vm_area_struct, and
+ mmap
+In-Reply-To: <33e64b12-aa07-4e78-933a-b07c37ff1d84@lucifer.local> (Lorenzo
+	Stoakes's message of "Fri, 28 Feb 2025 09:49:02 +0000")
+References: <20250213-vma-v14-0-b29c47ab21f5@google.com>
+	<8130a6d5-a7e5-402b-b05c-2d0703ac1ed2@lucifer.local>
+	<CANiq72nBx3cRTUC9HWVR8K64Jbq3GCVMss5wuABzra3OLhRUQw@mail.gmail.com>
+	<c8e78762-1429-4ab6-9398-ce52370eec08@lucifer.local>
+	<CANiq72mKyvoyk_tgbMKUdzs-sJOoyEH7f1M9ipiET+XYgwCqRw@mail.gmail.com>
+	<2d132129-fdf7-404d-b1f1-8ee87b838dcf@lucifer.local>
+	<b6b5tnaw6vnuib7nzcm7ajszxiptqz3i2hex5yengzbsirztks@l3coijkqwtpb>
+	<CAH5fLgjMC2Q1tjuVtbhMvU-pmEsn1Ai4=AAB3Tm8HTWi7PFHfg@mail.gmail.com>
+	<30ffd737-d0aa-44aa-a647-686e536ac548@lucifer.local>
+	<r3iEw6cWkz3wBoUc9l7we40uuvdTVbQBJU3rWXKQspv1GfvviY_0pYLyFtTJPBP0VeofvKHx8-l0WHFT-OQfcA==@protonmail.internalid>
+	<33e64b12-aa07-4e78-933a-b07c37ff1d84@lucifer.local>
+User-Agent: mu4e 1.12.7; emacs 29.4
+Date: Mon, 03 Mar 2025 20:04:19 +0100
+Message-ID: <87h64ahr64.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: QEMQtOws_iOHshqrV4HWq5HY8FJIE0Ot
-X-Proofpoint-ORIG-GUID: QEMQtOws_iOHshqrV4HWq5HY8FJIE0Ot
-X-Authority-Analysis: v=2.4 cv=fatXy1QF c=1 sm=1 tr=0 ts=67c6e546 cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=Vs1iUdzkB0EA:10 a=COk6AnOGAAAA:8 a=IAiaYzwUq23lniLHEFAA:9 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-04_05,2025-03-03_04,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 bulkscore=0
- spamscore=0 priorityscore=1501 malwarescore=0 impostorscore=0
- lowpriorityscore=0 mlxlogscore=755 mlxscore=0 adultscore=0 suspectscore=0
- phishscore=0 classifier=spam authscore=0 adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502100000 definitions=main-2503040097
 
-Enable MMC and relevant pinctrl entries.
+"Lorenzo Stoakes" <lorenzo.stoakes@oracle.com> writes:
 
-Signed-off-by: Varadarajan Narayanan <quic_varada@quicinc.com>
----
- arch/arm64/boot/dts/qcom/ipq5424-rdp466.dts | 7 +++++++
- arch/arm64/boot/dts/qcom/ipq5424.dtsi       | 2 ++
- 2 files changed, 9 insertions(+)
+> +cc Linus
+>
+> OK since Andrew seems caught up with other things, let's go ahead and propose
+> the entire thing to make life easy.
+>
+> Could you send a v15 with any fixes (don't think any are necessary now?) and
+> add a patch to add this to MAINTAINERS in the alphabetical location:
+>
+> MEMORY MANAGEMENT [RUST]
+> M:	Alice Ryhl <aliceryhl@google.com>
+> R:	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+> R:	Liam R. Howlett <Liam.Howlett@oracle.com>
+> L:	linux-mm@kvack.org
+> L:	rust-for-linux@vger.kernel.org
+> S:	Maintained
+> W:	http://www.linux-mm.org
+> T:	git git://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm
+> S:	Maintained
+> F:	rust/helpers/mm.c
+> F:	rust/kernel/mm.rs
+> F:	rust/kernel/mm/
 
-diff --git a/arch/arm64/boot/dts/qcom/ipq5424-rdp466.dts b/arch/arm64/boot/dts/qcom/ipq5424-rdp466.dts
-index b6e4bb3328b3..b9752e8d579e 100644
---- a/arch/arm64/boot/dts/qcom/ipq5424-rdp466.dts
-+++ b/arch/arm64/boot/dts/qcom/ipq5424-rdp466.dts
-@@ -69,6 +69,13 @@ &qusb_phy_1 {
- 	status = "okay";
- };
- 
-+&sdhc {
-+	pinctrl-0 = <&sdc_default_state>;
-+	pinctrl-names = "default";
-+
-+	status = "okay";
-+};
-+
- &sleep_clk {
- 	clock-frequency = <32000>;
- };
-diff --git a/arch/arm64/boot/dts/qcom/ipq5424.dtsi b/arch/arm64/boot/dts/qcom/ipq5424.dtsi
-index 7034d378b1ef..e41f619121ff 100644
---- a/arch/arm64/boot/dts/qcom/ipq5424.dtsi
-+++ b/arch/arm64/boot/dts/qcom/ipq5424.dtsi
-@@ -265,6 +265,8 @@ sdhc: mmc@7804000 {
- 				 <&xo_board>;
- 			clock-names = "iface", "core", "xo";
- 
-+			supports-cqe;
-+
- 			status = "disabled";
- 		};
- 
--- 
-2.34.1
+Probably a single `S: ` entry would be enough?
+
+
+Best regards,
+Andreas Hindborg
+
 
