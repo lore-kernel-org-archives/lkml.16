@@ -1,50 +1,69 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D04EB13C8E8;
-	Mon,  3 Mar 2025 02:39:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2814713C8E8
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 02:42:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740969561; cv=none; b=FhAPEeDEl1m1so5tAT8litOWA8mWaGtYi5QZDqNWdqLSwM03Dxcu0zUb6gASKlAgV6cAOkdxDzxOTnn8t1//gS3/WAmMj+pPF1RKNLKImZGYLtDiBL0jtTeUcVuku3TmjKgnWG1pga23Zms+tzPoLqIB7wwi4nq1N0xu49CXnFM=
+	t=1740969756; cv=none; b=PzREj7l1qofF86iO1IS8tExaMCJJpmP488hM1CSA6P3ZxiqJtoVrhFdN5OrpwSrcqEw1b7frwSYNwIlBRnBly4UYVSMA9XyDCh5gGNUpAVcdjDkDIO5BEBgpmjVwBB+60XyKlCXcbCU9H1jbUazdA0L+h+KburrasEahb2LKJog=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740969561; c=relaxed/simple;
-	bh=wXCJ9pzAAN/yHLcuR8PLUK5ctILCaZ25ayb1zfLjWCU=;
+	s=arc-20240116; t=1740969756; c=relaxed/simple;
+	bh=r6Z4B7+/X7jtyEHpY0gy9jXJoCrvWdOYHCQHgq4RQTk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=duMZ50TP34oVYuYciFzenpduyirmI/0xB3EKXSGCgKwZ7FYToupwt5IIWdY5WIGAeKxqfadsiNL4ilvw2QjgLtcFKk/R0EluJ0wzKOAjH8bVrgjUo85QL3gR6MBWLhO/kEGQUlb/qIwkmuMtzYEQ5cXG/yn9kKPGvtX7t1f/tHM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=CMFht8Yr; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+	 Content-Type:Content-Disposition:In-Reply-To; b=SgeU/rwA9fGDAqAhCet89sy5SeSMC865L3xlTzTbk8vq8T9W6huWdD4M0PlHB4Had3otOsEP/mS6v4sXoSv10gdEHzd/zc7oiNoTsliQuhsLWlAy/hxUmhRL+weYASpD+MaEtu17LvFsnupeQoeb+jPZSr2YFMG8b6SoxeGNuOI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=GTpOSCuZ; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="CMFht8Yr"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
-	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=Snrx+cINrau65cn7FkKhCpJj0e1jfkudOs8sJTS6A7g=; b=CMFht8YrNvtWYml78DBb64zqe0
-	+OZEgWBbZgNLdSO/rLxlqJqUGMq+J2wpnJOZEXZ9okZe8dTXGDcQukj0+IIujceq9QmKIzb2b+3re
-	MhmQdurNQp/p4eu2oxsNRDY8SggGofQIv6nBf67ZArRap0LbSkyXeph2C/4Gw/LWcNLxBSCmSvIsl
-	iGBFH0X2JZi19mDW3I3x232XHb9382Ngy2/E1r4AFSTyHhkmjzo4cJHSZgO7Ygjsyw2wFy3qJk1eh
-	ka7bYuGiWMybKKRm3AlhYDGfX2TG0i5xAPVSRTjqbWhtXpyP5QpId0DasBtmYGbEo2x7ZyIs8ohv6
-	fd7O+/wQ==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1tovi6-003AN5-2K;
-	Mon, 03 Mar 2025 10:39:15 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Mon, 03 Mar 2025 10:39:14 +0800
-Date: Mon, 3 Mar 2025 10:39:14 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Eric Biggers <ebiggers@kernel.org>
-Cc: linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org, David Howells <dhowells@redhat.com>,
-	Akinobu Mita <akinobu.mita@gmail.com>, Tejun Heo <htejun@gmail.com>
-Subject: Re: [PATCH v3 04/19] crypto: scatterwalk - add new functions for
- copying data
-Message-ID: <Z8UWUnpcvh6eoX6h@gondor.apana.org.au>
-References: <20250219182341.43961-5-ebiggers@kernel.org>
- <Z8P9eIGDlT3fs1gS@gondor.apana.org.au>
- <20250302213742.GB2079@quark.localdomain>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GTpOSCuZ"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-2232b12cd36so51412245ad.0
+        for <linux-kernel@vger.kernel.org>; Sun, 02 Mar 2025 18:42:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1740969754; x=1741574554; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=2Eq1Jm9nTipKyg498okiimxlJb53FXR4hBqUwQ5lbqc=;
+        b=GTpOSCuZvxKQxn6oedcdWjBfVD9Dm7rPwjRPfrMggYRv+RcDzMGSM45b6i1VQ9MoKP
+         /v/UQtWTeGfkUbuSZIWb3k0tQfLQFYYIsTA1T5akuvq1UtWOOg9PmEtbvf4JiU8A251u
+         rO6YanH0rYFATScz30HTxwQIjryMv7o/3Vfkw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740969754; x=1741574554;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2Eq1Jm9nTipKyg498okiimxlJb53FXR4hBqUwQ5lbqc=;
+        b=l5FsB3cyc+QZxpu/4HyYcOA7pm7oZf3DcPc1FzPHAdZaE2MtsYSfA4Js4gas2IJYxq
+         YyOIaQflI94IDLTISkCj2g4f0BN1qkfzK7IlCrqaF190KZTPfJDyFuY61lcshts/u1JV
+         lEDs1vjfpN/fpjVoWaTw8PbZwFQk6oZWpH3vVl+6IhOad/xCM3w9BSD6xDSLuco8T4gu
+         DYVl+aI0OecGiLE4rthBBOWOM4uUM0YkzOEtYr04CEie+LLcHZsWU5U0U5vT8aegAHJi
+         5EtZek6WCu7sIx/Ek85LyY3WrXoPr5MGOyLcuBsldklJYEuYpqrh6my9lik8opki0xik
+         i54g==
+X-Forwarded-Encrypted: i=1; AJvYcCVGDlKUnnwxgNjsEH/da7+TVooyYw0xcT0WzDZYlcltAekzZ0oQPDpRywwbCVy6o6bzByd9doxOIKahFE8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwrzlKL7177Tlo+QYalNGLAvBChozyp39GjyrIpgWpsQ1dS5AJW
+	o6T22J6gBVV1LwqDr5hFxaTV2+OEd9jHCkB1//ZpbR5/W7XjIm9+60ht87Bl6A==
+X-Gm-Gg: ASbGnctrG/KvyEti9fW7vQ7pgE45fTMt88PUiFVYQXW6DXn5+N9lg3AQjV5o1P64/w5
+	4d0h7B0KYHbU8IftC06iEgBfglIMOdd+1FQlssWiWESuCWa0cNBP7vcOIzb8PTLBcSf0Wnj72je
+	m01mYfuYEmB5tkvDrZTscJnnDqTlUF49lZILZRrxycmTmR9Dixkrchj7CeSu/Cst2L5vKmIEq4R
+	oJPb1vJZntNLH1uorhMgMlbnjk1RCqEiXi4UcClZvzY8mJi63RtTu3r7cxFjbxzRTso2Bhe0Hac
+	osV5dyYs1Px8GMsA3YJfp3fSW5Qdhgau3D8ClSg2dAeLJMyj
+X-Google-Smtp-Source: AGHT+IHFCx5QItcKe2emKdnH2UqMC291YHcrn2qE7hpTfsgRWGbkJ+HqoI5r36ycsN1pfGu0e3g0KQ==
+X-Received: by 2002:a17:903:1988:b0:223:47b4:aaf8 with SMTP id d9443c01a7336-2236921ed16mr153813725ad.52.1740969754329;
+        Sun, 02 Mar 2025 18:42:34 -0800 (PST)
+Received: from google.com ([2401:fa00:8f:203:1513:4f61:a4d3:b418])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7365478bc85sm871929b3a.160.2025.03.02.18.42.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 02 Mar 2025 18:42:33 -0800 (PST)
+Date: Mon, 3 Mar 2025 11:42:28 +0900
+From: Sergey Senozhatsky <senozhatsky@chromium.org>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Sergey Senozhatsky <senozhatsky@chromium.org>, yosry.ahmed@linux.dev, 
+	hdanton@sina.com, ryncsn@gmail.com, bigeasy@linutronix.de, minchan@kernel.org, 
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+	Herbert Xu <herbert@gondor.apana.org.au>
+Subject: Re: [PATCH v9 14/19] zsmalloc: introduce new object mapping API
+Message-ID: <jupqosjamzyft2vqknquppeozs57xkgfy5pnr6v2qrh4duf5ik@6mwtww5yl6tu>
+References: <20250227043618.88380-15-senozhatsky@chromium.org>
+ <Z8K10w-6fIpDhYc6@gondor.apana.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -53,37 +72,33 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250302213742.GB2079@quark.localdomain>
+In-Reply-To: <Z8K10w-6fIpDhYc6@gondor.apana.org.au>
 
-On Sun, Mar 02, 2025 at 01:37:42PM -0800, Eric Biggers wrote:
->
-> The new functions are much better than the lib/scatterlist.c ones: they have a
-> much better implementation that is faster and doesn't use atomic kmaps, and
-> (like scatterwalk_map_and_copy() which they are replacing first) they don't
-> require the unhelpful 'nents' parameter.  My tentative plan is to move them into
-> lib/scatterlist.c, reimplement sg_copy_buffer() et al on top of them, then
-> eventually update the callers to use the new functions directly.
+On (25/03/01 15:22), Herbert Xu wrote:
+> Sergey Senozhatsky <senozhatsky@chromium.org> wrote:
+> >
+> > New API splits functions by access mode:
+> > - zs_obj_read_begin(handle, local_copy)
+> >  Returns a pointer to handle memory.  For objects that span two
+> >  physical pages a local_copy buffer is used to store object's
+> >  data before the address is returned to the caller.  Otherwise
+> >  the object's page is kmap_local mapped directly.
+> 
+> I presume this buffer is always given to the compression algorithm
+> to decompress? In that case there should be no need to linearise
+> them at all.
+> 
+> Just return a two-entry SG list, and give it to the Crypto API
+> to deal with.  Both software and hardware algorithms can handle
+> non-linear input.  Yes software decompression is currently
+> linearising all input with a copy, but that is no different
+> to the copy that you're making in zsmalloc.
+> 
+> So please change this API to create an SG list instead of copying.
+> That way we can then optimise the software decompression to read
+> non-linear input directly and skip the copying altogether.
 
-Sounds good.
+A heads up:
 
-> However, the 'nents' parameter that sg_copy_buffer() et al take will make the
-> unification a bit difficult.  Currently those functions copy the minimum of
-> 'buflen' bytes and the first 'nents' scatterlist elements.  I'd like to remove
-> the 'nents' parameter and just have 'buflen' (or rather 'nbytes'), like the
-> crypto/scatterwalk.c functions.  I suspect that nearly all callers are passing
-> in enough 'nents' to cover their 'buflen'.  But there may be some exceptions,
-> which we'll need to check for.
-
-Yes this duality of sg_nents vs. total length was always annoying
-even within the Crypto API as the driver authors would often get
-mixed up.
-
-If we could settle on one of the two it would be great.  Of course
-I don't know how much work that's going to be and it could be
-prohibitive.
-
-Thanks,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Discussed with Herbert privately, we will look into SG-list API
+later (future dev cycles).
