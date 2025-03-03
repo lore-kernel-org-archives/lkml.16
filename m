@@ -1,89 +1,176 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFAFE27C15A;
-	Mon,  3 Mar 2025 16:32:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741019556; cv=none; b=LA7ScH1fidjJpfkY1Rh4qj6JzTRItdbtxKlg2yQN295TVhq5U+BW3yLodmlnJ0pMcx15YPj6Xc89Id5rEbxmoZ+ePWej+xl+lW2ATThkh8xWFZKwKQBt0r5Ma6VsrCdzdJvz9eedjlVguOhu9OUmEN5b+GPoQOcMZluN7N9t54I=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741019556; c=relaxed/simple;
-	bh=BjovHo68oZYSOarCRlTU07vBmWsubBFMlJwRwXudCBw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=k0X0jxj2fxSnsaaZCjce88eKnQvzNO6hgJW1nErGGPWLcUmVfclcYn9zEgcRvSgQVwE0UwcM6p3Xj823Sye6mws8qtw46tVgQhK4QDHwmQXsKzz3QPgRpeYZrvPOj8Dvrxg/nqBwF1bF8DP5RVhemWxl2hE/z8UcggN27K5j30E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jQ444xxJ; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jQ444xxJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB74EC4CEE4;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D17327935F;
 	Mon,  3 Mar 2025 16:32:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741019556;
-	bh=BjovHo68oZYSOarCRlTU07vBmWsubBFMlJwRwXudCBw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=jQ444xxJ6/gSE93dA042mF786W6Qvu9hi3Gz8TOR/lgPLL6Tks/vAgiqf0nZE+U+Y
-	 OZ6vSvjK+ovXCi140mmlldh8TVqP216ULl3N3e8+ySc7Gn/LfWNgk2PaixLGA9v9YD
-	 V4n3xvmrZYHKRd9ifut0b8LhJcTdSajtifQ6RN4ab+cSJy4KeZlMV+DJS98kbOtN7O
-	 sN/718DRYnAFpF4p2d69EswmMVN/uI0WQ6BHZrXcFxwanSpGDNavP0lMC5cWy8Gz9j
-	 I0Orsw45hGMqSfq3Gwm74SSXG9tMoy0VsswWsHpTbak/ddO5kzn5yoLzVS7wJDi96H
-	 hdQlOak0ystIw==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Ming Lei <ming.lei@redhat.com>,
-	Guangwu Zhang <guazhang@redhat.com>,
-	Jens Axboe <axboe@kernel.dk>,
-	Sasha Levin <sashal@kernel.org>,
-	linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 4/4] block: fix 'kmem_cache of name 'bio-108' already exists'
-Date: Mon,  3 Mar 2025 11:32:27 -0500
-Message-Id: <20250303163228.3764394-4-sashal@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250303163228.3764394-1-sashal@kernel.org>
-References: <20250303163228.3764394-1-sashal@kernel.org>
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741019557; cv=none; b=aIZr6o5DWfHgiR4sICvpBIORPDB0BLl2m6FBqrf9mWaJkKL2aLgqAtFwk8iqAmBKKyxATQ8fZnH0n29XPXL7TiH+WxdqayJEAk+dFSDOoJU42DQMY2c0LT+5oY0eZgrnmUHSeV3S5EdtoSAulOdoaYeFtUS+DODjhxt5Q5rt+rc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741019557; c=relaxed/simple;
+	bh=snXp1UXHksrHhFqNr0vuVdyNgGZ/phdEKQ35WjSqjXE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UDTMkT2wFr8299JXOP9vY7e1x2MQRuFwj1INNACuXa6PnDX5AaWUK6zzm2d8jWMcid9cSEv1fnQ2sIiYBBGhoZ6f/zkvvD/6IKRDdBB84iMb7/wbSxqjwZTxPRQiFrFJd4oDBLO71KZ7LNEQrSb2AFUz9zZv5d5dbXjZo5koM3E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=XZEn/CZj; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="XZEn/CZj"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=3Pe2TbaadeDhFFasbw3K7/pNGf7n/9+lcTGSnwml38Y=; b=XZEn/CZjYZdVqREnnUFRkiQdiV
+	BdxI+LCU7Fy9Jt2uq0AKCeTRLLRCVB7QFUIebZ6vYN9BusEovBHoXf4DlDHlGY6JS/cuQ6CnWObx3
+	TtwePWUJvTfrARjiP9F2zGnhulh0H/P0x63lsQD1jnUzhexrYYuV4sZb8Lty9BcR7ske83nQ53/sL
+	GWm7Sm3295JLe4zOyykWPXorII9HnwZGDieQY3F7mtjkVFWmBlpFKPiH4jyECiikHg8hKG5Xf9P2Y
+	YI96vYcSA/r2ExjpS/LMlXQjSt7ZGXCzoAB4JAmkMH60Il+zAV2iR2c3VLEnq4RZpu7xRs7s98Nq3
+	8DpQNOGg==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:54482)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1tp8iC-0000xq-1W;
+	Mon, 03 Mar 2025 16:32:12 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1tp8i7-0003vP-1f;
+	Mon, 03 Mar 2025 16:32:07 +0000
+Date: Mon, 3 Mar 2025 16:32:07 +0000
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+	Jose Abreu <joabreu@synopsys.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	netdev@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+	Biju Das <biju.das.jz@bp.renesas.com>,
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: Re: [PATCH 3/3] net: stmmac: Add DWMAC glue layer for Renesas GBETH
+Message-ID: <Z8XZh9nvX3yrE6wB@shell.armlinux.org.uk>
+References: <20250302181808.728734-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20250302181808.728734-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <Z8SydsdDsZfdrdbE@shell.armlinux.org.uk>
+ <CA+V-a8vCB7nP=tsv4UkOwODSs-9hiG-PxN6cpihfvwjq2itAHg@mail.gmail.com>
+ <Z8TRQX2eaNzXOzV0@shell.armlinux.org.uk>
+ <CA+V-a8vykhxqP30iTwN6yrqDgT8YRVE_MadjiTFp653rHVqMNg@mail.gmail.com>
+ <Z8WQJQo5kW9QV-wV@shell.armlinux.org.uk>
+ <CA+V-a8vCqxCaB_UEf-Ysg3biu5VoQ2_0OxWnN97Mdee9Op3YDA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 5.4.290
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CA+V-a8vCqxCaB_UEf-Ysg3biu5VoQ2_0OxWnN97Mdee9Op3YDA@mail.gmail.com>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-From: Ming Lei <ming.lei@redhat.com>
+On Mon, Mar 03, 2025 at 04:04:55PM +0000, Lad, Prabhakar wrote:
+> Hi Russell,
+> 
+> On Mon, Mar 3, 2025 at 11:19 AM Russell King (Oracle)
+> <linux@armlinux.org.uk> wrote:
+> > I would like to get to the bottom of why this fails for module removal/
+> > insertion, but not for admistratively down/upping the interface.
+> >
+> > Removal of your module will unregister the netdev, and part of that
+> > work will bring the netdev administratively down. When re-inserting
+> > the module, that will trigger various userspace events, and it will
+> > be userspace bringing the network interface(s) back up. This should
+> > be no different from administratively down/upping the interface but
+> > it seems you get different behaviour.
+> >
+> > I'd like to understand why that is, because at the moment I'm wondering
+> > whether my patches that address the suspend/resume need further work
+> > before I send them - but in order to assess that, I need to work out
+> > why your issue only seems to occur in the module removal/insertion
+> > and not down/up as well as I'd expect.
+> >
+> > Please could you investigate this?
+> >
+> Sure I will look into this. Just wanted to check on your platform does
+> unload/load work OK? Also do you know any specific reason why DMA
+> reset could be failing so that I can look at it closer.
 
-[ Upstream commit b654f7a51ffb386131de42aa98ed831f8c126546 ]
+It may be surprising, but I do not have stmmac hardware (although
+there is some I might be able to use, it's rather complicated so I
+haven't investigated that.) However, there's a lot of past history
+here, because stmmac has been painful for me as phylink maintainer.
+Consequently, I'm now taking a more active role in this driver,
+cleaning it up and fixing some of the stuff it's got wrong.
 
-Device mapper bioset often has big bio_slab size, which can be more than
-1000, then 8byte can't hold the slab name any more, cause the kmem_cache
-allocation warning of 'kmem_cache of name 'bio-108' already exists'.
+That said, NVidia are in the process of arranging hardware for me.
 
-Fix the warning by extending bio_slab->name to 12 bytes, but fix output
-of /proc/slabinfo
+You are not the first to encounter reset failures, and this has always
+come down to clocks that aren't running.
 
-Reported-by: Guangwu Zhang <guazhang@redhat.com>
-Signed-off-by: Ming Lei <ming.lei@redhat.com>
-Link: https://lore.kernel.org/r/20250228132656.2838008-1-ming.lei@redhat.com
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- block/bio.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+The DWMAC core is documented as requiring *all* clocks for each part of
+the core to be running in order for software reset to complete. If any
+clock is stopped, then reset will fail. That includes the clk_rx_i /
+clk_rx_180_i signals that come from the ethernet PHY's receive clock.
 
-diff --git a/block/bio.c b/block/bio.c
-index e3d3e75c97e03..239f6bd421a80 100644
---- a/block/bio.c
-+++ b/block/bio.c
-@@ -53,7 +53,7 @@ struct bio_slab {
- 	struct kmem_cache *slab;
- 	unsigned int slab_ref;
- 	unsigned int slab_size;
--	char name[8];
-+	char name[12];
- };
- static DEFINE_MUTEX(bio_slab_lock);
- static struct bio_slab *bio_slabs;
+However, PHYs that have negotiated EEE are permitted to stop their
+receive clock, which can be enabled by an appropriate control bit.
+phy_eee_rx_clock_stop() manipulates that bit. stmmac has in most
+cases permitted the PHY to stop its receive clock.
+
+NVidia have been a recent victim of this - it is desirable to allow
+receive clock stop, but there hasn't been the APIs in the kernel
+to allow MAC drivers to re-enable the clock when they need it.
+
+Up until now, I had thought this was just a suspend/resume issue
+(which is NVidia's reported case). Your testing suggests that it is
+more widespread than that.
+
+While I've been waiting to hear from you, I've prepared some patches
+that change the solution that I proposed for NVidia (currently on top
+of that patch set).
+
+However, before I proceed with them, I need you to get to the bottom
+of why:
+
+# ip li set dev $if down
+# ip li set dev $if up
+
+doesn't trigger it, but removing and re-inserting the module does.
+
+I'd suggest looking at things such as:
+- does the media link actually go down in one case but not the other
+  (I don't mean does the kernel report the link went down - I mean
+  did the remote end see the link go down, or is it still up, and
+  thus *may* be in EEE low-power idle mode.)
+
+- printing the statis from stmmac_host_irq_status() so we can see
+  when the DWMAC tx/rx paths enters and exits LPI mode while the
+  driver is active. (could be quite noisy).
+
+- verify that .ndo_stop does get called when removing your module
+  (it should, it's a core net function.)
+
+- print the value of the LPI control/status register at various
+  points that may be relevant (e.g. before the reset function is
+  called.) bits 9 and 8 indicate receive and transmit LPI status.
+
+I'm sure there's other things, but the above is just off the top of my
+head.
+
+Thanks for anything you can do to locate this.
+
 -- 
-2.39.5
-
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
