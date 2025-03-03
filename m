@@ -1,179 +1,163 @@
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61C59211261;
-	Mon,  3 Mar 2025 12:22:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741004532; cv=none; b=Gpm8trc6eiEvy0axRoVfGXvPQb+6bwDNyvT1pZ7I9jMo9KmdjXZHG7BgE77inKoaHwaVSQe6wJy/YGsOzjW4+G/P4NHxA1SJLpzhzxufmCzxvcf5B2AA3fUsUzui8XZkB5yckzLEyVqD/Je7f6JtzC8rzi2PYKFG+Njjt3BBkl4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741004532; c=relaxed/simple;
-	bh=/RoB+O5ZCm4Jt93NVDs+1xICxKfZ4DLQGNO3TjWMPtU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WFU4PeDdnuTyOEoDy2C3ToJGpKOQlLQonjKOa8irfM/DuJKaADpQhJY/QFY4Slrb88+hNc7ZZT6orpR/hhQTynmVG6zQkKeJhaxOAxrXZSDMNLniAskV2El316oswmfMmaKjhLT9j7r/zPhZ1cSqyGV34zGV8RJsMUi4QYn3YYo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=W7TV8fFC; arc=none smtp.client-ip=209.85.208.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 054B2212B02;
+	Mon,  3 Mar 2025 12:22:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741004535; cv=pass; b=JClR+cplaTw6XeeNS4xY0hkiwNrHfDU/4aRId67wsV8xIdrlEDdk0DHFPE00jgypA7wmdEzIvmwncttTDXcsVyJ49jnGjCCTZpO4kDqku2YtvJPjIT+nf6ZQEzr92kqcyrtrKDhWPHoAEFrcGZt1td25870mltZcCVKFag6yTQA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741004535; c=relaxed/simple;
+	bh=IudflqImdm+ZwbpvNjpoNoGi2CoQwHJjQFVz8r3/Sj8=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=IGnfdL2+L8hlhUkhEaMFleHGfKDhKhWGXshAOrtaC5i8hKwphG0aV3CLYCNSHZHECc3q8HoolooZzq+sT0Q5MsrdbZ+jOwZvZK8RhgIYLtYhoIE6snzfwVJneJ5Q0GLvBsdRMPHFrRV0ir/uzaYadTq9Da4I2kYE/KBl4REFpxY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=kingxukai@zohomail.com header.b=DuYMaTJs; arc=pass smtp.client-ip=136.143.188.94
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W7TV8fFC"
-Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-30b9f7c4165so20927941fa.3;
-        Mon, 03 Mar 2025 04:22:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741004528; x=1741609328; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kOGpGJnVdsS2eqbkL2yrs0irjDblflxlQ891CwEclog=;
-        b=W7TV8fFC+6O9TCz9jLCPIZSfz4gejQRNrN+h2rtLMqI6dWClZR6Jxaqi1n+GGtJEnZ
-         u6wgA9jgLQMMuGn1EBOu4Yx6gQ2vtNT7v5BAjklfKSQEnZpB4gm1wekA+1zjiDJh3uOc
-         9ByiCqyyxOf7vEFtlzqEYXCzNQ4QM0wNnX9Yv/Evu+6hVYBTll5mLsnw9YaySNrEqiB7
-         IKXlO2NUouBOIv+j3xekTBYS4BeS+mF+PTL+A61P5OWhVkI5MtZyZ4rwaZmUL+vRuwM6
-         3+rwnu32QLxoYFLXNgE1hN83YI5Zk4d6zOFpwsGysf9Asec/3DDf3S6Ey2b2eKRqubDr
-         0lEA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741004528; x=1741609328;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=kOGpGJnVdsS2eqbkL2yrs0irjDblflxlQ891CwEclog=;
-        b=T+zeo7NLX1PXsFiSod9JToJJhWk+IOThnzQ7Rj1T+rZJNnjFYPIDXFW5NbceJb3s2/
-         BhxWmc8qF5rKb9MRpLdix2G1UU4TVSUhafqe/DBpbja4m94oj8jWQqc5bzpoXTt1/YQ8
-         7ddEPGmQl9o7GP1J2zF/MOtqlRwZbaB4PNu6Vfjo7m++sj868/+EtteQomkneaE37zr7
-         tmS5rTxZI3jlUgjUfoGqOFTl9qRveyupE795OIvCxaKaN5HEQPtLdHl5NBxE0l6C3Ov2
-         P1KhDOVr8rOHwtztNMjDjhheY/6WzIB9ecFL/jv5DChe5oP3TltZM5oOYroNMNeStX06
-         i0Fg==
-X-Forwarded-Encrypted: i=1; AJvYcCXnUiT3DcpVS07PK7jFSenuJ+u8XB1Pq04SVipRNRZXXq5R2a4dBENYL9Nbd3P9ZOAAi1EaxUTOd6OU@vger.kernel.org, AJvYcCXyKvoAfhqmT78e1PCX4TelrF9CE/0IqJoXV8AuyiGfkIE2WBdofSKKalrO3PkjDDQ1bj27W8VUz4HA5zam@vger.kernel.org
-X-Gm-Message-State: AOJu0YzcBdjp3L/jJEbtocF37SwtiAGk84cak2XJH5SoE9T4y0hyrGy4
-	w2zetoc3Gyy8Y1k5G2jf4HRuQogGR0Vrymi2Prg+9urI/pJFTaCxQcrK5A==
-X-Gm-Gg: ASbGncvQlT6fQax3jgR5kkuw/x6WNU+kFVRvGN8gLForEzNPtuhlCH3O+ypyvTQaHIp
-	Y/Sgc8tXfefZFpEGgYzH2WMeGXpeEqXz4NjEescoxJ5ZakmR4bMBDc2TJ4vD2vjgk2owZlKiFQD
-	8XGd5LGrHTMv9e9tF8gvRr1me7SQGMyZ/RKrpFmsJ5pEKrOGsJ5ulsUJllVTuMYaAO1hj/EFtsU
-	Qi6NHZEsfktmEJv9fxJfS2+dHH5/cmtdzkBj3dI9W3Tv32C8UDOpFAk2uwJ3ow/uE6lLEsW08ks
-	Qm0A+/y4TUbUCn8+Kup8lxHag5qOjmu31hs=
-X-Google-Smtp-Source: AGHT+IGI1Gd+yOAoF2e2IdT9/R4jZ9Lr6thS4xPZWq9Os6HxY5dMlAcS7PgHy1ECByIHbtsiXkFQgQ==
-X-Received: by 2002:a2e:bc14:0:b0:308:ee65:7f4d with SMTP id 38308e7fff4ca-30b93454590mr44700661fa.32.1741004528273;
-        Mon, 03 Mar 2025 04:22:08 -0800 (PST)
-Received: from xeon.. ([188.163.112.51])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30b868766desm13486611fa.100.2025.03.03.04.22.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Mar 2025 04:22:07 -0800 (PST)
-From: Svyatoslav Ryhel <clamor95@gmail.com>
-To: "Rafael J. Wysocki" <rafael@kernel.org>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Zhang Rui <rui.zhang@intel.com>,
-	Lukasz Luba <lukasz.luba@arm.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Laxman Dewangan <ldewangan@nvidia.com>
-Cc: linux-pm@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 2/2] thermal: thermal-generic-adc: add temperature sensor channel
-Date: Mon,  3 Mar 2025 14:21:51 +0200
-Message-ID: <20250303122151.91557-3-clamor95@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250303122151.91557-1-clamor95@gmail.com>
-References: <20250303122151.91557-1-clamor95@gmail.com>
+	dkim=pass (1024-bit key) header.d=zohomail.com header.i=kingxukai@zohomail.com header.b="DuYMaTJs"
+ARC-Seal: i=1; a=rsa-sha256; t=1741004505; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=VU/H2PZZzU95D3j8gNHRHKj0WtOBpiPI98KgbepbzlvJIKbnDU3qfSgYD1p0gWmeZgDMa95zh5hi5nge8mDwJB2UyPZHH5Ivrj9x8XgLexDX39BmLW5lRHKZFxmDCC57KXyq58fBx75bxer1GqWhSJwFvlVIdGgqdCRi+/xCyGY=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1741004505; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=EPlebBCWRgSBAYpdwC7xAZIbyevkA4TQGmd5kkCqttQ=; 
+	b=Ji/wcOeQ3aoSY0tnUXO6IZqOki1B7LB/jN46tQ9ZP4mPTT+PwoS6AuyxU6I5DhMSYk5YpuetT8OdGwlTbyxb+CkYD1Ycre0auVkJEiR9m5zUGQz+i0pu6ETEDWamq1OBKEuGWR1LnEoKajN9wOk4PH1/DxLfrCvw51Z5DdPEKZI=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=zohomail.com;
+	spf=pass  smtp.mailfrom=kingxukai@zohomail.com;
+	dmarc=pass header.from=<kingxukai@zohomail.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1741004505;
+	s=zm2022; d=zohomail.com; i=kingxukai@zohomail.com;
+	h=From:From:Date:Date:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Message-Id:References:In-Reply-To:To:To:Cc:Cc:Feedback-ID:Reply-To;
+	bh=EPlebBCWRgSBAYpdwC7xAZIbyevkA4TQGmd5kkCqttQ=;
+	b=DuYMaTJsOHfjiX9+2+C7LGiuI22AFbdTzNCjhb44sxpcGTYuaZcY36v/guV1dCdt
+	ZKDsHCdxqDO2Ec8s1Ord0BxzVHnQWBS1wb2oYQ6XZ/9G3aJMCjCggF1S1tpH+hl5XXp
+	PHBvdYtn8oDUyor5o2rMEdSx0JPDse7gA3QUA6qo=
+Received: by mx.zohomail.com with SMTPS id 1741004501200414.4200697404116;
+	Mon, 3 Mar 2025 04:21:41 -0800 (PST)
+From: Xukai Wang <kingxukai@zohomail.com>
+Date: Mon, 03 Mar 2025 20:20:39 +0800
+Subject: [PATCH v5 3/3] riscv: dts: canaan: Add clock definition for K230
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250303-b4-k230-clk-v5-3-748d121283e3@zohomail.com>
+References: <20250303-b4-k230-clk-v5-0-748d121283e3@zohomail.com>
+In-Reply-To: <20250303-b4-k230-clk-v5-0-748d121283e3@zohomail.com>
+To: Michael Turquette <mturquette@baylibre.com>, 
+ Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Xukai Wang <kingxukai@zohomail.com>, 
+ Paul Walmsley <paul.walmsley@sifive.com>, 
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+ Conor Dooley <conor@kernel.org>
+Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
+ Samuel Holland <samuel.holland@sifive.com>, 
+ Troy Mitchell <TroyMitchell988@gmail.com>
+X-Mailer: b4 0.14.2
+Feedback-ID: rr08011227e2147aa24874712226dc26760000586f8874787f4a6d72561c1308b8421776f82c43f9d82fc0af:zu080112270093cfddc4763c54b4577d2900007b6bb1e3fb3d534e2083681ede70111f5b98537885daf9054d:rf0801122c3ebd15007b09d8c36c868581000091f3a48bbb219b948ec20d7df113f5ee97e31ac3b1a866027a26bb0bee98:ZohoMail
+X-ZohoMailClient: External
 
-To avoid duplicating sensor functionality and conversion tables, this design
-allows converting an ADC IIO channel's output directly into a temperature IIO
-channel. This is particularly useful for devices where hwmon isn't suitable
-or where temperature data must be accessible through IIO.
+This patch describes the clock controller integrated in K230 SoC
+and replace dummy clocks with the real ones for UARTs.
 
-One such device is, for example, the MAX17040 fuel gauge.
-
-Signed-off-by: Svyatoslav Ryhel <clamor95@gmail.com>
+Co-developed-by: Troy Mitchell <TroyMitchell988@gmail.com>
+Signed-off-by: Troy Mitchell <TroyMitchell988@gmail.com>
+Signed-off-by: Xukai Wang <kingxukai@zohomail.com>
 ---
- drivers/thermal/thermal-generic-adc.c | 54 ++++++++++++++++++++++++++-
- 1 file changed, 53 insertions(+), 1 deletion(-)
+ arch/riscv/boot/dts/canaan/k230.dtsi | 25 +++++++++++++++++--------
+ 1 file changed, 17 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/thermal/thermal-generic-adc.c b/drivers/thermal/thermal-generic-adc.c
-index ee3d0aa31406..a8f3b965b39b 100644
---- a/drivers/thermal/thermal-generic-adc.c
-+++ b/drivers/thermal/thermal-generic-adc.c
-@@ -7,6 +7,7 @@
-  * Author: Laxman Dewangan <ldewangan@nvidia.com>
+diff --git a/arch/riscv/boot/dts/canaan/k230.dtsi b/arch/riscv/boot/dts/canaan/k230.dtsi
+index 95c1a3d8fb1192e30113d96d3e96329545bc6ae7..e688633acbbf2cee36354220c557252111f56ff5 100644
+--- a/arch/riscv/boot/dts/canaan/k230.dtsi
++++ b/arch/riscv/boot/dts/canaan/k230.dtsi
+@@ -3,6 +3,7 @@
+  * Copyright (C) 2024 Yangyu Chen <cyy@cyyself.name>
   */
- #include <linux/iio/consumer.h>
-+#include <linux/iio/iio.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
- #include <linux/platform_device.h>
-@@ -73,6 +74,57 @@ static const struct thermal_zone_device_ops gadc_thermal_ops = {
- 	.get_temp = gadc_thermal_get_temp,
- };
  
-+static const struct iio_chan_spec gadc_thermal_iio_channel[] = {
-+	{
-+		.type = IIO_TEMP,
-+		.info_mask_separate = BIT(IIO_CHAN_INFO_PROCESSED),
-+	}
-+};
-+
-+static int gadc_thermal_read_raw(struct iio_dev *indio_dev,
-+				 struct iio_chan_spec const *chan,
-+				 int *temp, int *val2, long mask)
-+{
-+	struct gadc_thermal_info *gtinfo = iio_priv(indio_dev);
-+	int ret;
-+
-+	if (mask != IIO_CHAN_INFO_PROCESSED)
-+		return -EINVAL;
-+
-+	ret = gadc_thermal_get_temp(gtinfo->tz_dev, temp);
-+	if (ret < 0)
-+		return ret;
-+
-+	*temp /= 1000;
-+
-+	return IIO_VAL_INT;
-+}
-+
-+static const struct iio_info gadc_thermal_iio_info = {
-+	.read_raw = gadc_thermal_read_raw,
-+};
-+
-+static int gadc_iio_register(struct device *dev, struct gadc_thermal_info *gti)
-+{
-+	struct gadc_thermal_info *gtinfo;
-+	struct iio_dev *indio_dev;
-+
-+	indio_dev = devm_iio_device_alloc(dev, sizeof(struct gadc_thermal_info));
-+	if (!indio_dev)
-+		return -ENOMEM;
-+
-+	gtinfo = iio_priv(indio_dev);
-+	memcpy(gtinfo, gti, sizeof(struct gadc_thermal_info));
-+
-+	indio_dev->name = dev_name(dev);
-+	indio_dev->info = &gadc_thermal_iio_info;
-+	indio_dev->modes = INDIO_DIRECT_MODE;
-+	indio_dev->channels = gadc_thermal_iio_channel;
-+	indio_dev->num_channels = ARRAY_SIZE(gadc_thermal_iio_channel);
-+
-+	return devm_iio_device_register(dev, indio_dev);
-+}
-+
- static int gadc_thermal_read_linear_lookup_table(struct device *dev,
- 						 struct gadc_thermal_info *gti)
- {
-@@ -153,7 +205,7 @@ static int gadc_thermal_probe(struct platform_device *pdev)
++#include <dt-bindings/clock/canaan,k230-clk.h>
+ #include <dt-bindings/interrupt-controller/irq.h>
  
- 	devm_thermal_add_hwmon_sysfs(dev, gti->tz_dev);
+ /dts-v1/;
+@@ -58,10 +59,10 @@ l2_cache: l2-cache {
+ 		};
+ 	};
  
--	return 0;
-+	return gadc_iio_register(&pdev->dev, gti);
- }
+-	apb_clk: apb-clk-clock {
++	osc24m: clock-24m {
+ 		compatible = "fixed-clock";
+-		clock-frequency = <50000000>;
+-		clock-output-names = "apb_clk";
++		clock-frequency = <24000000>;
++		clock-output-names = "osc24m";
+ 		#clock-cells = <0>;
+ 	};
  
- static const struct of_device_id of_adc_thermal_match[] = {
+@@ -89,10 +90,18 @@ clint: timer@f04000000 {
+ 			interrupts-extended = <&cpu0_intc 3>, <&cpu0_intc 7>;
+ 		};
+ 
++		sysclk: clock-controller@91102000 {
++			compatible = "canaan,k230-clk";
++			reg = <0x0 0x91102000 0x0 0x1000>,
++			      <0x0 0x91100000 0x0 0x1000>;
++			clocks = <&osc24m>;
++			#clock-cells = <1>;
++		};
++
+ 		uart0: serial@91400000 {
+ 			compatible = "snps,dw-apb-uart";
+ 			reg = <0x0 0x91400000 0x0 0x1000>;
+-			clocks = <&apb_clk>;
++			clocks = <&sysclk K230_LS_UART0>;
+ 			interrupts = <16 IRQ_TYPE_LEVEL_HIGH>;
+ 			reg-io-width = <4>;
+ 			reg-shift = <2>;
+@@ -102,7 +111,7 @@ uart0: serial@91400000 {
+ 		uart1: serial@91401000 {
+ 			compatible = "snps,dw-apb-uart";
+ 			reg = <0x0 0x91401000 0x0 0x1000>;
+-			clocks = <&apb_clk>;
++			clocks = <&sysclk K230_LS_UART1>;
+ 			interrupts = <17 IRQ_TYPE_LEVEL_HIGH>;
+ 			reg-io-width = <4>;
+ 			reg-shift = <2>;
+@@ -112,7 +121,7 @@ uart1: serial@91401000 {
+ 		uart2: serial@91402000 {
+ 			compatible = "snps,dw-apb-uart";
+ 			reg = <0x0 0x91402000 0x0 0x1000>;
+-			clocks = <&apb_clk>;
++			clocks = <&sysclk K230_LS_UART2>;
+ 			interrupts = <18 IRQ_TYPE_LEVEL_HIGH>;
+ 			reg-io-width = <4>;
+ 			reg-shift = <2>;
+@@ -122,7 +131,7 @@ uart2: serial@91402000 {
+ 		uart3: serial@91403000 {
+ 			compatible = "snps,dw-apb-uart";
+ 			reg = <0x0 0x91403000 0x0 0x1000>;
+-			clocks = <&apb_clk>;
++			clocks = <&sysclk K230_LS_UART3>;
+ 			interrupts = <19 IRQ_TYPE_LEVEL_HIGH>;
+ 			reg-io-width = <4>;
+ 			reg-shift = <2>;
+@@ -132,7 +141,7 @@ uart3: serial@91403000 {
+ 		uart4: serial@91404000 {
+ 			compatible = "snps,dw-apb-uart";
+ 			reg = <0x0 0x91404000 0x0 0x1000>;
+-			clocks = <&apb_clk>;
++			clocks = <&sysclk K230_LS_UART4>;
+ 			interrupts = <20 IRQ_TYPE_LEVEL_HIGH>;
+ 			reg-io-width = <4>;
+ 			reg-shift = <2>;
+
 -- 
-2.43.0
+2.34.1
 
