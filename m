@@ -1,190 +1,82 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4F9F1F4264;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 053F81F4281;
 	Mon,  3 Mar 2025 10:43:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740998588; cv=none; b=UpExr3PxTAqOYMxFJcMjT6/qFEADXeFrIQkOpBvdmu4g+Wm8+ASG1Wmajy0socLQ0qdNoTfreVXXgxqaIlMM7mIy1cAn74RPe2rJ4pKP944Tejg+SU7MeYBONjHtKT6AJ2JDwVVF1blnZxy6teh3IyEBqn6AcxlKlRhOlf/TvUg=
+	t=1740998589; cv=none; b=KFwbEY+kQtzSuYt3sKY11Q05n+O7roDheEOOZPslfWvDV10N/D6yqgUyAA8swN7RW5BprNStu9e0rP6wX65W13bELjXdU8mjGzeWIHC0EDd4P1qN9PdpnTaVYLy+QXtsLqYW9MD3q4OHe8YQKqBsziBl0VbuTHQOnuNV7h+u/Pg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740998588; c=relaxed/simple;
-	bh=Brmesdp1JcXzT/zKILE7AQTtRkqqEJwB8gd2NFzlDRg=;
-	h=Date:From:To:Subject:Cc:MIME-Version:Message-ID:Content-Type; b=BFvUosyIvt1PlzSTjaxNPsLd1OI0OiAhUfvgwRz6aPGIvi+tWxxqostAHwARNX3laZENlTiMzhQ8y91gRgPtKfoZxlr1oEqQfR+RZ+c7pgWfOQXbmUKne3fvjaUd4IUbte+WsADBguYqXqjG9JfoBa9R9Mj04/LsZO9nPLtGaZQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=J9ApFLcw; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=YiBT29Ix; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1740998589; c=relaxed/simple;
+	bh=jowEScGafDqHehCuuxXQ5RRiB4vq3Q0DU122NO345r8=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=vE4h9ZV6a/LfCwug9mW8hWzK9ep21CAMenwzbgSn1JrquIme1UoU7N33iXQOnIiaqK1wWGgYKnUkRrEFUIoutQQLvCKeDNdTF9wFKMplMPGiVRTYgR4/TrA4wldKvotr+hxQ3D91lW0PYCdg/Zs7lZtbm94rTBo05JjhWtkzbaY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=ZTbOFcm1; arc=none smtp.client-ip=217.70.183.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="J9ApFLcw";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="YiBT29Ix"
-Date: Mon, 03 Mar 2025 10:43:04 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1740998585;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
-	bh=BLQB319dNGv+EvnMZKjTMkdO18suZgbN1cdq6nxXESY=;
-	b=J9ApFLcw9RkJUUw6K0JTQZlk72b87Qv+daSmjNIwrb0Mn5tZJlxTK7PS1EbCsXYOS15raX
-	yLkIoRlRrSpoMkiX9MUhgJGUwMTN9xQkoPulazBzw6xovGXWqTgTGP1b5istMEIVFxEJlT
-	yyJrGa8McjugAJFNI/KYeQk0GqcAJEjmQiynxRl0fFpCP9k9sEsfTuN3GZGMxR7BXjdqEn
-	F+FELfRE8T98aEIaPa+o88CHdALv4RJgq9LpRZUL59+8y8xCQ06Rw5CIsSJ5opnZzXIuj/
-	/zpdom0aR/cokmZAFLis3fq6pSkwylc6E5IPPjljB6qpGPYYpaPLxIKNm3aEyw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1740998585;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
-	bh=BLQB319dNGv+EvnMZKjTMkdO18suZgbN1cdq6nxXESY=;
-	b=YiBT29Ixjn4F2gBhq1XYqhNM9mXhsnaPCa7twQPvlC7lCQ/cluIfY4L2EcWQbRsDALwy4x
-	iXsA6la2qWkm/sCw==
-From: "tip-bot2 for Anna-Maria Behnsen" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/vdso] vdso/gettimeofday: Prepare introduction of struct
- vdso_clock
-Cc: "Anna-Maria Behnsen" <anna-maria@linutronix.de>,
- Nam Cao <namcao@linutronix.de>, thomas.weissschuh@linutronix.de,
- Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
- linux-kernel@vger.kernel.org
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="ZTbOFcm1"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 85D9F4419B;
+	Mon,  3 Mar 2025 10:43:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1740998585;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jowEScGafDqHehCuuxXQ5RRiB4vq3Q0DU122NO345r8=;
+	b=ZTbOFcm1NXHdDGcFApkbQVn+GvCtY6pHznZmCM/8Fpoza1+dDfDUmHpHWoXfXcn73CYtNz
+	AHMEa1NG0lWQlgUao5wKITGBs/mTFO6CSGThHPHwXSzF2tFHcG90iptSiEYE15hoNhcTQg
+	ZmDz3AEcStB4ZIBqxO41pPZQ8Hvc8EtEeryqPnl6gYMmOZN8sGND4gQv3IX9M8cK7OdmJ5
+	Yip2F0tgDeWDZwtY1/jYiRsym2VbJhJgGholjkEeLmP1L/8orwNOfD1Ures6wK8eIzP1MZ
+	B2H3omjy5L8SC7aL3rquCzr8n2clDF2oeOgcb89rFgnEs5EVck2SApYr7xdcyg==
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+To: Markus Elfring <Markus.Elfring@web.de>
+Cc: linux-tegra@vger.kernel.org,  linux-mtd@lists.infradead.org,  Jonathan
+ Hunter <jonathanh@nvidia.com>,  Lucas Stach <dev@lynxeye.de>,  Richard
+ Weinberger <richard@nod.at>,  Stefan Agner <stefan@agner.ch>,  Thierry
+ Reding <thierry.reding@gmail.com>,  Vignesh Raghavendra <vigneshr@ti.com>,
+  LKML <linux-kernel@vger.kernel.org>,  kernel-janitors@vger.kernel.org,
+  Qasim Ijaz <qasdev00@gmail.com>,  Natalie Vock <natalie.vock@gmx.de>
+Subject: Re: [PATCH] mtd: rawnand: tegra: Simplify maximum determination in
+ tegra_nand_setup_timing()
+In-Reply-To: <d564cafe-d45a-40b5-9a91-a2e2b97c80d6@web.de> (Markus Elfring's
+	message of "Fri, 28 Feb 2025 19:33:10 +0100")
+References: <d564cafe-d45a-40b5-9a91-a2e2b97c80d6@web.de>
+User-Agent: mu4e 1.12.7; emacs 29.4
+Date: Mon, 03 Mar 2025 11:43:04 +0100
+Message-ID: <87pliy9yyv.fsf@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174099858479.10177.10417809084450070892.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdelkeeludcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefujghffgffkfggtgfgsehtqhertddtreejnecuhfhrohhmpefoihhquhgvlhcutfgrhihnrghluceomhhiqhhuvghlrdhrrgihnhgrlhessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepffeghfejtdefieeguddukedujeektdeihfelleeuieeuveehkedvleduheeivdefnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhepmhhiqhhuvghlrdhrrgihnhgrlhessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudefpdhrtghpthhtohepofgrrhhkuhhsrdfglhhfrhhinhhgseifvggsrdguvgdprhgtphhtthhopehlihhnuhigqdhtvghgrhgrsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqmhhtugeslhhishhtshdrihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhopehjohhnrghthhgrnhhhsehnvhhiughirgdrtghomhdprhgtphhtthhopeguvghvsehlhihngigvhigvrdguv
+ gdprhgtphhtthhopehrihgthhgrrhgusehnohgurdgrthdprhgtphhtthhopehsthgvfhgrnhesrghgnhgvrhdrtghhpdhrtghpthhtohepthhhihgvrhhrhidrrhgvughinhhgsehgmhgrihhlrdgtohhm
+X-GND-Sasl: miquel.raynal@bootlin.com
 
-The following commit has been merged into the timers/vdso branch of tip:
+Hi,
 
-Commit-ID:     765afc515c2bf298226b5ef5b7a231b077091050
-Gitweb:        https://git.kernel.org/tip/765afc515c2bf298226b5ef5b7a231b0770=
-91050
-Author:        Anna-Maria Behnsen <anna-maria@linutronix.de>
-AuthorDate:    Tue, 25 Feb 2025 13:36:38 +01:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Mon, 03 Mar 2025 10:24:34 +01:00
+On 28/02/2025 at 19:33:10 +01, Markus Elfring <Markus.Elfring@web.de> wrote:
 
-vdso/gettimeofday: Prepare introduction of struct vdso_clock
+> From: Markus Elfring <elfring@users.sourceforge.net>
+> Date: Fri, 28 Feb 2025 19:19:45 +0100
+>
+> Reduce nested max() calls by a single max3() call in this
+> function implementation.
+>
+> The source code was transformed by using the Coccinelle software.
+>
+> Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
 
-To support multiple PTP clocks, the VDSO data structure needs to be
-reworked. All clock specific data will end up in struct vdso_clock and in
-struct vdso_time_data there will be array of it. At the moment, vdso_clock
-is simply a define which maps vdso_clock to vdso_time_data.
+I am sorry, I do not see what gets simplified. max(max(a,b),max(c,d))
+looks simpler than max3(a,b,max(c,d)). Does it bring something in terms
+of optimization?
 
-Prepare all functions which need the pointer to the vdso_clock array to
-work well after introducing the new struct. Whenever applicable, struct
-vdso_time_data pointer is replaced by struct vdso_clock pointer.
-
-No functional change.
-
-Signed-off-by: Anna-Maria Behnsen <anna-maria@linutronix.de>
-Signed-off-by: Nam Cao <namcao@linutronix.de>
-Signed-off-by: Thomas Wei=C3=9Fschuh <thomas.weissschuh@linutronix.de>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-
----
- lib/vdso/gettimeofday.c | 24 +++++++++++++++---------
- 1 file changed, 15 insertions(+), 9 deletions(-)
-
-diff --git a/lib/vdso/gettimeofday.c b/lib/vdso/gettimeofday.c
-index 299f027..59369a4 100644
---- a/lib/vdso/gettimeofday.c
-+++ b/lib/vdso/gettimeofday.c
-@@ -257,6 +257,7 @@ static __always_inline int
- __cvdso_clock_gettime_common(const struct vdso_time_data *vd, clockid_t cloc=
-k,
- 			     struct __kernel_timespec *ts)
- {
-+	const struct vdso_clock *vc =3D vd;
- 	u32 msk;
-=20
- 	/* Check for negative values or invalid clocks */
-@@ -269,15 +270,15 @@ __cvdso_clock_gettime_common(const struct vdso_time_dat=
-a *vd, clockid_t clock,
- 	 */
- 	msk =3D 1U << clock;
- 	if (likely(msk & VDSO_HRES))
--		vd =3D &vd[CS_HRES_COARSE];
-+		vc =3D &vc[CS_HRES_COARSE];
- 	else if (msk & VDSO_COARSE)
--		return do_coarse(&vd[CS_HRES_COARSE], clock, ts);
-+		return do_coarse(&vc[CS_HRES_COARSE], clock, ts);
- 	else if (msk & VDSO_RAW)
--		vd =3D &vd[CS_RAW];
-+		vc =3D &vc[CS_RAW];
- 	else
- 		return -1;
-=20
--	return do_hres(vd, clock, ts);
-+	return do_hres(vc, clock, ts);
- }
-=20
- static __maybe_unused int
-@@ -328,11 +329,12 @@ static __maybe_unused int
- __cvdso_gettimeofday_data(const struct vdso_time_data *vd,
- 			  struct __kernel_old_timeval *tv, struct timezone *tz)
- {
-+	const struct vdso_clock *vc =3D vd;
-=20
- 	if (likely(tv !=3D NULL)) {
- 		struct __kernel_timespec ts;
-=20
--		if (do_hres(&vd[CS_HRES_COARSE], CLOCK_REALTIME, &ts))
-+		if (do_hres(&vc[CS_HRES_COARSE], CLOCK_REALTIME, &ts))
- 			return gettimeofday_fallback(tv, tz);
-=20
- 		tv->tv_sec =3D ts.tv_sec;
-@@ -341,7 +343,7 @@ __cvdso_gettimeofday_data(const struct vdso_time_data *vd,
-=20
- 	if (unlikely(tz !=3D NULL)) {
- 		if (IS_ENABLED(CONFIG_TIME_NS) &&
--		    vd->clock_mode =3D=3D VDSO_CLOCKMODE_TIMENS)
-+		    vc->clock_mode =3D=3D VDSO_CLOCKMODE_TIMENS)
- 			vd =3D __arch_get_vdso_u_timens_data(vd);
-=20
- 		tz->tz_minuteswest =3D vd[CS_HRES_COARSE].tz_minuteswest;
-@@ -361,13 +363,16 @@ __cvdso_gettimeofday(struct __kernel_old_timeval *tv, s=
-truct timezone *tz)
- static __maybe_unused __kernel_old_time_t
- __cvdso_time_data(const struct vdso_time_data *vd, __kernel_old_time_t *time)
- {
-+	const struct vdso_clock *vc =3D vd;
- 	__kernel_old_time_t t;
-=20
- 	if (IS_ENABLED(CONFIG_TIME_NS) &&
--	    vd->clock_mode =3D=3D VDSO_CLOCKMODE_TIMENS)
-+	    vc->clock_mode =3D=3D VDSO_CLOCKMODE_TIMENS) {
- 		vd =3D __arch_get_vdso_u_timens_data(vd);
-+		vc =3D vd;
-+	}
-=20
--	t =3D READ_ONCE(vd[CS_HRES_COARSE].basetime[CLOCK_REALTIME].sec);
-+	t =3D READ_ONCE(vc[CS_HRES_COARSE].basetime[CLOCK_REALTIME].sec);
-=20
- 	if (time)
- 		*time =3D t;
-@@ -386,6 +391,7 @@ static __maybe_unused
- int __cvdso_clock_getres_common(const struct vdso_time_data *vd, clockid_t c=
-lock,
- 				struct __kernel_timespec *res)
- {
-+	const struct vdso_clock *vc =3D vd;
- 	u32 msk;
- 	u64 ns;
-=20
-@@ -394,7 +400,7 @@ int __cvdso_clock_getres_common(const struct vdso_time_da=
-ta *vd, clockid_t clock
- 		return -1;
-=20
- 	if (IS_ENABLED(CONFIG_TIME_NS) &&
--	    vd->clock_mode =3D=3D VDSO_CLOCKMODE_TIMENS)
-+	    vc->clock_mode =3D=3D VDSO_CLOCKMODE_TIMENS)
- 		vd =3D __arch_get_vdso_u_timens_data(vd);
-=20
- 	/*
+Thanks,
+Miqu=C3=A8l
