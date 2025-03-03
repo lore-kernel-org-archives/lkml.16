@@ -1,145 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 803CE23A9BA;
-	Mon,  3 Mar 2025 22:59:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4D241EEA2A;
+	Mon,  3 Mar 2025 23:04:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741042744; cv=none; b=gHYY4L/SB0Cl6/g2B47c/Bqkj+aZHo+HWGYlXBw5jGii2X4QYRqthq91eRWHDnSJj/nNP3SRSwBKCTi2zOKsKhMfUpHBjw+JCkezQyWbhvcMiuSsnIjO6iYRey48gG0DdlG+wztAp0oI2uXcNGcNH8upg4ZwulyQ3Qh8k8FL+6o=
+	t=1741043067; cv=none; b=XOdueCCgFVacnN4rzVHclYZRm9QHwpo3ahvXKyV0AQtKQWA/Okj3NPCRQ2l/AE3VoPGMwZ7mycrXbjDK4LCjThX+S62o+BSzyUtcyJW7MSRxNt3hTxg+VN6eh6DxC46AXplq0o4GMfv7e01yygWjLdkZz+JOxInoFLjP+1T9b5Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741042744; c=relaxed/simple;
-	bh=ynf1rL1Z7qhjQlA4BOwr3bmt/GjH86WcpFJlKbCIiM8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=FkKDQdeSc+ray5/nZPEEIcVzU/xNbLwog2dAEke9jwZcuIrCBTuel4ii2HaX4wGLA5HgTSPMrYDUqPW36fh8MRYbxaAG+V+fB7Q2DJkASW9syKtTE2B/+tdxDCMzvnuI4VfJJcUqvV1VbxeQ83H+G2sgnp2p8wtIIwsm2BvefjI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=uorGpzqi; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741043067; c=relaxed/simple;
+	bh=1dga3ZyGa56Srd27YrzgJM4YBMG+svOtEN9xbmvulUM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TzCz50quY2Vd4HQzbiaggnjz4Yr0qu69N/dWstx2EXqsjhZQxyaOl1WSUiu8z4or9TnJ1ZnBtiu4RHng8YlX5MEK3IVBUDirp8aBMYmxX+aD/BEWIRIEbGX2laR+lR/HjlsusjIgU1aLbRQmibSfZXZZRm9bHaBw3MwfAie1Lj8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WWAefU4H; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="uorGpzqi"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id D09E7C4CEEC;
-	Mon,  3 Mar 2025 22:59:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux.dev; s=korg;
-	t=1741042743; bh=ynf1rL1Z7qhjQlA4BOwr3bmt/GjH86WcpFJlKbCIiM8=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=uorGpzqiFinOi9rHV5hHv29VN/UfHep+DuttZ5ouZDYPWqT59/6REOyxTdW79+Xx4
-	 ClJnXnlfDxb7MoKM1oTMbtrzvycZELlkKtRG1DN60oKTDq3sxokUcOk3pw9PpayeI8
-	 Kk9jb5cV0nX5yUpEnQwnqCXezLl7p49g9l3o5E3E=
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF17EC282C6;
-	Mon,  3 Mar 2025 22:59:03 +0000 (UTC)
-From: Richard Leitner <richard.leitner@linux.dev>
-Date: Mon, 03 Mar 2025 23:58:58 +0100
-Subject: [PATCH 2/3] media: i2c: ov9282: add led_mode v4l2 control
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WWAefU4H"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-4399ee18a57so31498985e9.1;
+        Mon, 03 Mar 2025 15:04:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741043064; x=1741647864; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=sPrC46dARN0LjaxKxSWkkaHdPArQam0Dkp/wu01ntBs=;
+        b=WWAefU4HxUUndEwiNbpaT2jiZF+jY/j+hcn3uUbflte/eRQPmI5/ZV5FHIs2pr0iH1
+         6aF4iM2HHydvT0Bz2VNbWdR8jIEKbT4wdzh99FTIRmfQZJK+BSsPMwuBd+EJRa/9mQLI
+         Q7VnC6tSyFJFp5NUUWtGwyI7ha5GmGXRmnq/iUYX5mtM60Reoyc5PxFNZ+4xL2VuhelT
+         W7lqIZcrj3w3i+AVzRU0rWq5vUfpadGexyklfJE1mMBaWyJ+T2Vf8l0KRdgmSQdf5dnG
+         mdhkkcDEb3lyFMDc/a65by8dcYGVQGUtGr5wEC9EN4sK0LA9cp2VtLXRNcczcnsD9bKk
+         y/fw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741043064; x=1741647864;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=sPrC46dARN0LjaxKxSWkkaHdPArQam0Dkp/wu01ntBs=;
+        b=O6oq2vjlz9h5LxhrrMFElTeqUwqZW7bDSjxlk0/uDnuWKrKq9J6vmgbBhN+3EOGQum
+         DKEaHr1KRTDyXGi7tW4h+A4Ze2jFptL5mkQdlqnpe1YeYxHeSmC56IP00FCcCduO/CEu
+         aoHBA6KSDPbbZ57UCiouHbzVOFQUctkRxaxINHWr1sZIWZ1gFuBUTSsCHKjB+CmEk72u
+         scyva41gmPlg+tItJsKiA8AY1fxkKz0bMjTbAoGUJ3/pDfXOUMjd6guUoiCrwuoxv7Jc
+         Vlyz5ea6gHeuT/4jlo53PZejLE9n816AeAWes/gdA1z4SqndkTpHdcfZAa1Dfi6Jo/FU
+         0TYA==
+X-Forwarded-Encrypted: i=1; AJvYcCUiRHInI4gzax0byXNHUEWOpO3tAaoCSZEX0rvEv2S/jnrc4mWUNQOLVd/G4RJNVyYxCLPOo4obWt1YCDD3@vger.kernel.org, AJvYcCXimrRYyf4P+JI9XHtQ2aSPwRSQLVuugEdyWkn29NF2+c9UCHylgsedco8FsYZ0bDMKurj2vLmppA33N3Pt@vger.kernel.org
+X-Gm-Message-State: AOJu0YzI7Cfu6WDy34jizTwOXGmyMoEHG5YRv+wY7ExTpMp5jVrhj71M
+	TA+r2OIn6sQaZLU0ysVry7lWo5PMzUmtkYNmJIXgFLMc25ai6cx4
+X-Gm-Gg: ASbGncuFH7ZoYH/rMkEBEQZlLmli0JrWQvYkDjesGPClhsjJIyXgEMWjWvjzQOa8jPA
+	4I2yewDqLNTYQlHeDHj6NWdzfm9JsgHeF15Ud42KBcXwmwxOd+3i8v1NSOkEqPB89XtrDWjxBcc
+	v9paxVIBUEj7Pr3fhXnhCWhJQpx3cI/44RXnxDL1+TuvVXowKHhLStGLKSb7gaTkVnjvdGwIXMy
+	zwPykobjAPdgF/A/PZwlbNwdi3gzjqBIBpOSkz5L/JsCtHH6KHTsJmViCYJro4jBExUvusj2NY9
+	sP2M4cqrzEhKRH1yL9lfIanhPLLiqDh4bLgXBFMiwfxcDJJYHRd9e49xz5Eu
+X-Google-Smtp-Source: AGHT+IGOBC6hxzmLOdi3PDf1ZBbud9og/t0k9D2kRRsbPqkFlx3ttchAE9Qq0/Z35uubnFaAHwXeMA==
+X-Received: by 2002:a05:600c:5252:b0:439:5f04:4f8d with SMTP id 5b1f17b1804b1-43bcb03c512mr7222235e9.12.1741043063825;
+        Mon, 03 Mar 2025 15:04:23 -0800 (PST)
+Received: from f.. (cst-prg-71-44.cust.vodafone.cz. [46.135.71.44])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43bc57529fasm37679255e9.31.2025.03.03.15.04.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Mar 2025 15:04:22 -0800 (PST)
+From: Mateusz Guzik <mjguzik@gmail.com>
+To: torvalds@linux-foundation.org
+Cc: oleg@redhat.com,
+	brauner@kernel.org,
+	mingo@redhat.com,
+	peterz@infradead.org,
+	rostedt@goodmis.org,
+	linux-kernel@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	Mateusz Guzik <mjguzik@gmail.com>
+Subject: [PATCH 0/3] some pipe + wait stuff
+Date: Tue,  4 Mar 2025 00:04:06 +0100
+Message-ID: <20250303230409.452687-1-mjguzik@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250303-ov9282-flash-strobe-v1-2-0fd57a1564ba@linux.dev>
-References: <20250303-ov9282-flash-strobe-v1-0-0fd57a1564ba@linux.dev>
-In-Reply-To: <20250303-ov9282-flash-strobe-v1-0-0fd57a1564ba@linux.dev>
-To: Sakari Ailus <sakari.ailus@linux.intel.com>, 
- Dave Stevenson <dave.stevenson@raspberrypi.com>, 
- Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
- linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Richard Leitner <richard.leitner@linux.dev>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1741042742; l=3064;
- i=richard.leitner@linux.dev; s=20250225; h=from:subject:message-id;
- bh=ynf1rL1Z7qhjQlA4BOwr3bmt/GjH86WcpFJlKbCIiM8=;
- b=PjiFIB/iECjcZdDzTZSyCqUFxMc/SIfwtkPj0A54hSgIe71p1U8gKUV9jb03YpY1v2clbP6WZ
- FvnzHodHwOGARn6/4KIfqkaFXJt88GM98susWYSb9ObIohdCWUWfdnZ
-X-Developer-Key: i=richard.leitner@linux.dev; a=ed25519;
- pk=8hZNyyyQFqZ5ruVJsSGBSPIrmJpfDm5HwHU4QVOP1Pk=
-X-Endpoint-Received: by B4 Relay for richard.leitner@linux.dev/20250225
- with auth_id=350
+Content-Transfer-Encoding: 8bit
 
-Add V4L2_CID_FLASH_LED_MODE support using the "strobe output enable"
-feature of the sensor. This implements following modes:
+As a side effect of looking at the pipe hang I came up with 3 changes to
+consider for -next.
 
- - V4L2_FLASH_LED_MODE_NONE, which disables the strobe output
- - V4L2_FLASH_LED_MODE_FLASH, which enables the strobe output
+The first one is a trivial clean up which I wont mind if it merely gets
+folded into someone else's change for pipes.
 
-All values are based on the OV9281 datasheet v1.53 (january 2019) and
-tested using an ov9281 VisionComponents module.
+The second one reduces page alloc/free calls for the backing area (60%
+less during a kernel build in my testing). I already posted this, but
+the cc list was not proper.
 
-Signed-off-by: Richard Leitner <richard.leitner@linux.dev>
----
- drivers/media/i2c/ov9282.c | 29 +++++++++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
+The last one concerns the wait/wakeup mechanism and drops one lock trip
+in the common case after waking up. That too was posted some days ago,
+but nobody was biting. Perhaps you will be interested (but again, maybe
+I got the wrong people from get_maintainer.pl).
 
-diff --git a/drivers/media/i2c/ov9282.c b/drivers/media/i2c/ov9282.c
-index f42e0d439753e74d14e3a3592029e48f49234927..c98ba466e9aea29baff0b13578d760bf69c958c5 100644
---- a/drivers/media/i2c/ov9282.c
-+++ b/drivers/media/i2c/ov9282.c
-@@ -192,6 +192,7 @@ struct ov9282_mode {
-  * @exp_ctrl: Pointer to exposure control
-  * @again_ctrl: Pointer to analog gain control
-  * @pixel_rate: Pointer to pixel rate control
-+ * @flash_led_mode: Pointer to flash led mode control
-  * @vblank: Vertical blanking in lines
-  * @noncontinuous_clock: Selection of CSI2 noncontinuous clock mode
-  * @cur_mode: Pointer to current selected sensor mode
-@@ -214,6 +215,7 @@ struct ov9282 {
- 		struct v4l2_ctrl *again_ctrl;
- 	};
- 	struct v4l2_ctrl *pixel_rate;
-+	struct v4l2_ctrl *flash_led_mode;
- 	u32 vblank;
- 	bool noncontinuous_clock;
- 	const struct ov9282_mode *cur_mode;
-@@ -670,6 +672,23 @@ static int ov9282_set_ctrl_vflip(struct ov9282 *ov9282, int value)
- 				current_val);
- }
- 
-+static int ov9282_set_ctrl_flash_led_mode(struct ov9282 *ov9282, int mode)
-+{
-+	u32 current_val;
-+	int ret = ov9282_read_reg(ov9282, OV9282_REG_OUTPUT_ENABLE6, 1,
-+				  &current_val);
-+	if (ret)
-+		return ret;
-+
-+	if (mode == V4L2_FLASH_LED_MODE_FLASH)
-+		current_val |= OV9282_OUTPUT_ENABLE6_STROBE;
-+	else
-+		current_val &= ~OV9282_OUTPUT_ENABLE6_STROBE;
-+
-+	return ov9282_write_reg(ov9282, OV9282_REG_OUTPUT_ENABLE6, 1,
-+				current_val);
-+}
-+
- /**
-  * ov9282_set_ctrl() - Set subdevice control
-  * @ctrl: pointer to v4l2_ctrl structure
-@@ -736,6 +755,9 @@ static int ov9282_set_ctrl(struct v4l2_ctrl *ctrl)
- 		ret = ov9282_write_reg(ov9282, OV9282_REG_TIMING_HTS, 2,
- 				       (ctrl->val + ov9282->cur_mode->width) >> 1);
- 		break;
-+	case V4L2_CID_FLASH_LED_MODE:
-+		ret = ov9282_set_ctrl_flash_led_mode(ov9282, ctrl->val);
-+		break;
- 	default:
- 		dev_err(ov9282->dev, "Invalid control %d", ctrl->id);
- 		ret = -EINVAL;
-@@ -1391,6 +1413,13 @@ static int ov9282_init_controls(struct ov9282 *ov9282)
- 						OV9282_TIMING_HTS_MAX - mode->width,
- 						1, hblank_min);
- 
-+	/* Flash/Strobe controls */
-+	ov9282->flash_led_mode = v4l2_ctrl_new_std_menu(ctrl_hdlr, &ov9282_ctrl_ops,
-+							V4L2_CID_FLASH_LED_MODE,
-+							V4L2_FLASH_LED_MODE_TORCH,
-+							(1 << V4L2_FLASH_LED_MODE_TORCH),
-+							V4L2_FLASH_LED_MODE_NONE);
-+
- 	ret = v4l2_fwnode_device_parse(ov9282->dev, &props);
- 	if (!ret) {
- 		/* Failure sets ctrl_hdlr->error, which we check afterwards anyway */
+Mateusz Guzik (3):
+  pipe: drop an always true check in anon_pipe_write()
+  pipe: cache 2 pages instead of 1
+  wait: avoid spurious calls to prepare_to_wait_event() in
+    ___wait_event()
+
+ fs/pipe.c                 | 63 +++++++++++++++++++++++++--------------
+ include/linux/pipe_fs_i.h |  2 +-
+ include/linux/wait.h      |  3 ++
+ 3 files changed, 45 insertions(+), 23 deletions(-)
 
 -- 
-2.47.2
-
+2.43.0
 
