@@ -1,101 +1,128 @@
-Received: from SHSQR01.spreadtrum.com (unknown [222.66.158.135])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C28961F460B
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 10:53:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=222.66.158.135
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 85F9A1F5831;
+	Mon,  3 Mar 2025 10:53:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740999215; cv=none; b=UPQsPw1spyF2MxEepMMJOuSYX/MMlowsHbayJkvc62pLo+TiPVtPPCwXr2TOcDq2rSVkUqfRYwkel6gt65DI4oNHdHFsIOADhl8gBQKFd4d5xqBp7srWxfFCDASwySVwgkWlIzdtRozLV1xRnBfeKfN+wCwztQsO/OhjVSxzxxw=
+	t=1740999216; cv=none; b=Z1WYI3qIJXLz0BuD+CBvdnULX7dNM3cliSAc9HMlCx/cqWf6C6sNzM8193QdMWPn2mO2r56cNVi2UII/peLiNNRHo8uZpke2HCVdkcX3HvSnKD9K1VFdS7GliULwsu9qUJKxq3Go03gm7M4JPqGJMTt3/9qdpldwT/6XqBV96Ew=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740999215; c=relaxed/simple;
-	bh=NA0aZjnv29CzK7eDSeZL4KPyo9JgFZx3N5dSEtDTILA=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=n9JmqXZrJICxO+VppqxpyHnpmxtY699KBcemcRpLeZ7sKfN6nLxz9BrNmPPmAh+AXr2lzTiVs95rK1ztwa281M/3Z9Q7XQVMDG0CDgCIlCrkAEib5d3n577zMFweMw0libghBLk6NJOgyoXhiQxakPGKFZqa/DzAGMTUjOAFHMM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com; spf=pass smtp.mailfrom=unisoc.com; arc=none smtp.client-ip=222.66.158.135
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=unisoc.com
-Received: from dlp.unisoc.com ([10.29.3.86])
-	by SHSQR01.spreadtrum.com with ESMTP id 523ArJRx092018;
-	Mon, 3 Mar 2025 18:53:19 +0800 (+08)
-	(envelope-from Xuewen.Yan@unisoc.com)
-Received: from SHDLP.spreadtrum.com (bjmbx01.spreadtrum.com [10.0.64.7])
-	by dlp.unisoc.com (SkyGuard) with ESMTPS id 4Z5wXL58vBz2K8nM6;
-	Mon,  3 Mar 2025 18:48:34 +0800 (CST)
-Received: from BJ10918NBW01.spreadtrum.com (10.0.73.73) by
- BJMBX01.spreadtrum.com (10.0.64.7) with Microsoft SMTP Server (TLS) id
- 15.0.1497.23; Mon, 3 Mar 2025 18:53:17 +0800
-From: Xuewen Yan <xuewen.yan@unisoc.com>
-To: <vincent.guittot@linaro.org>, <peterz@infradead.org>, <mingo@redhat.com>,
-        <juri.lelli@redhat.com>, <dietmar.eggemann@arm.com>,
-        <rostedt@goodmis.org>, <bsegall@google.com>, <mgorman@suse.de>,
-        <vschneid@redhat.com>
-CC: <linux-kernel@vger.kernel.org>, <ke.wang@unisoc.com>, <di.shen@unisoc.com>,
-        <xuewen.yan94@gmail.com>
-Subject: [RFC PATCH V2 1/3] sched/fair: Fixup-wake_up_sync-vs-DELAYED_DEQUEUE
-Date: Mon, 3 Mar 2025 18:52:39 +0800
-Message-ID: <20250303105241.17251-2-xuewen.yan@unisoc.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250303105241.17251-1-xuewen.yan@unisoc.com>
-References: <20250303105241.17251-1-xuewen.yan@unisoc.com>
+	s=arc-20240116; t=1740999216; c=relaxed/simple;
+	bh=u3wVE/ZfoE0JWVqpIaNDPrdp1FRUoL1ftJi5ZNONaTk=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=Z4Y39QhYXFQ31Q7GPbpOTDaGIoxiFakklpUC75e5zAlRsNRiO1QTeQ/x5FzIQXC5xh7DO0wXxgKEHjMYQ1eH3K3KSbTUL/ra7cZE6uGz3XCLwGQT+QWeMYAELf5WU6qK/b/5VW16n/j+CUkg4TADTDPjuO2pdfAcZmHm2urWGkw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6976E204C;
+	Mon,  3 Mar 2025 02:53:48 -0800 (PST)
+Received: from e133711.arm.com (e133711.arm.com [10.1.196.55])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4C27D3F673;
+	Mon,  3 Mar 2025 02:53:33 -0800 (PST)
+From: Sudeep Holla <sudeep.holla@arm.com>
+Date: Mon, 03 Mar 2025 10:51:42 +0000
+Subject: [PATCH 07/14] mailbox: pcc: Move pcc_mbox_ioremap() before
+ pcc_mbox_request_channel()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SHCAS03.spreadtrum.com (10.0.1.207) To
- BJMBX01.spreadtrum.com (10.0.64.7)
-X-MAIL:SHSQR01.spreadtrum.com 523ArJRx092018
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250303-pcc_fixes_updates-v1-7-3b44f3d134b1@arm.com>
+References: <20250303-pcc_fixes_updates-v1-0-3b44f3d134b1@arm.com>
+In-Reply-To: <20250303-pcc_fixes_updates-v1-0-3b44f3d134b1@arm.com>
+To: linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Sudeep Holla <sudeep.holla@arm.com>, 
+ Jassi Brar <jassisinghbrar@gmail.com>, Huisong Li <lihuisong@huawei.com>, 
+ Adam Young <admiyo@os.amperecomputing.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2094; i=sudeep.holla@arm.com;
+ h=from:subject:message-id; bh=u3wVE/ZfoE0JWVqpIaNDPrdp1FRUoL1ftJi5ZNONaTk=;
+ b=owEBbQKS/ZANAwAIAQBBurwxfuKYAcsmYgBnxYoh25UXY+l7xb9TXLNxAznPkKfBn4zemN8E8
+ acTboQdllaJAjMEAAEIAB0WIQS6ceUSBvMeskPdk+EAQbq8MX7imAUCZ8WKIQAKCRAAQbq8MX7i
+ mJgnD/95AZ0+SFqGInKhDg71UUdviLxFz0go4EkfWDZ+L0XOJfU+TvLZPpWZoQ4Sz2ThyRudlSW
+ o+3taV1QdQ9wHd+bs2ILbELpm/ybpxaPlVB5hbirgQgmx4njkhJNbhNyiec8Z+HnjXewVwmbZan
+ KKIU/cjuEdj3sreZecwlGdW9jW5njnfSqMzWu5G2GHOlIf3jtYL+VuxPI8Sg/SjsvJNv7a/cJVN
+ ABQAkGgbUWmB7gF7PJJrDoXGHLWAcAizzVJlWXPtXRG6Q3Gig8lgjqpbg5nRW5OVL+obP0Zlhbi
+ uu4RsCLimRGfyCxAaohkg0h3E+Zdf2NXwIRO0BtwntdGWzgdX/Jwt651xQFhyEwaIDmC0iAPiD9
+ YX357Qyko3JaNk3VuvgFiHpkZQaZ88taDkBYrSzEahFKsAZos23fBsRvQ07vU+KMowIeUag/QYB
+ pPIXt7jghmRThAp7Fadcm+xZaKyVo+gI5URS/BDYaGKE47z0Fo7Earu4rtAU9im91zXII7PAcsM
+ 7k2SLQGhZQdxZYh0Cx8/IM+NFRoJm3eWHBStUA1r04H49kU9oUG0OpsdV2KnrOo/+dlgSgpmIAi
+ qUTC/bk7Q1g5SCyw8ikgRJ9rCNEpWBWS9QgerEeYolAyLnLrdPwrGu45dh2y/tzZ2QRmMTTHTsA
+ XA2tPhwdrJeFSlw==
+X-Developer-Key: i=sudeep.holla@arm.com; a=openpgp;
+ fpr=7360A21742ADF5A11767C1C139CFD4755FE2D5B4
 
-Delayed dequeued feature keeps a sleeping task enqueued until its
-lag has elapsed. As a result, it stays also visible in rq->nr_running.
-So when in wake_affine_idle(), we should use the real running-tasks
-in rq to check whether we should place the wake-up task to
-current cpu.
-On the other hand, add a helper function to return the nr-delayed.
+In order to add support of mapping the generic communication shared
+memory region in the PCC mailbox driver when the PCC channel is requested,
+we need to move pcc_mbox_ioremap() before pcc_mbox_request_channel().
 
-Fixes: 152e11f6df29 ("sched/fair: Implement delayed dequeue")
-Signed-off-by: Xuewen Yan <xuewen.yan@unisoc.com>
+No functional change.
+
+Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
 ---
-V2:
-- add helper function (Vincent)
----
- kernel/sched/fair.c | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+ drivers/mailbox/pcc.c | 38 +++++++++++++++++++-------------------
+ 1 file changed, 19 insertions(+), 19 deletions(-)
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 1c0ef435a7aa..a354f29c4f6f 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -7181,6 +7181,11 @@ static bool dequeue_task_fair(struct rq *rq, struct task_struct *p, int flags)
- 	return true;
+diff --git a/drivers/mailbox/pcc.c b/drivers/mailbox/pcc.c
+index e693675ce1fbd8d01d0640b3053a5c1882bdbce7..f230e512c29b79fc03e429145180ff049a250d2d 100644
+--- a/drivers/mailbox/pcc.c
++++ b/drivers/mailbox/pcc.c
+@@ -357,6 +357,25 @@ static irqreturn_t pcc_mbox_irq(int irq, void *p)
+ 	return IRQ_HANDLED;
  }
  
-+static inline unsigned int cfs_h_nr_delayed(struct rq *rq)
++int pcc_mbox_ioremap(struct mbox_chan *chan)
 +{
-+	return (rq->cfs.h_nr_queued - rq->cfs.h_nr_runnable);
++	struct pcc_chan_info *pchan_info;
++	struct pcc_mbox_chan *pcc_mbox_chan;
++
++	if (!chan || !chan->cl)
++		return -1;
++	pchan_info = chan->con_priv;
++	pcc_mbox_chan = &pchan_info->chan;
++
++	pcc_mbox_chan->shmem = acpi_os_ioremap(pcc_mbox_chan->shmem_base_addr,
++					       pcc_mbox_chan->shmem_size);
++	if (!pcc_mbox_chan->shmem)
++		return -ENXIO;
++
++	return 0;
 +}
++EXPORT_SYMBOL_GPL(pcc_mbox_ioremap);
 +
- #ifdef CONFIG_SMP
+ /**
+  * pcc_mbox_request_channel - PCC clients call this function to
+  *		request a pointer to their PCC subspace, from which they
+@@ -419,25 +438,6 @@ void pcc_mbox_free_channel(struct pcc_mbox_chan *pchan)
+ }
+ EXPORT_SYMBOL_GPL(pcc_mbox_free_channel);
  
- /* Working cpumask for: sched_balance_rq(), sched_balance_newidle(). */
-@@ -7342,8 +7347,12 @@ wake_affine_idle(int this_cpu, int prev_cpu, int sync)
- 	if (available_idle_cpu(this_cpu) && cpus_share_cache(this_cpu, prev_cpu))
- 		return available_idle_cpu(prev_cpu) ? prev_cpu : this_cpu;
- 
--	if (sync && cpu_rq(this_cpu)->nr_running == 1)
--		return this_cpu;
-+	if (sync) {
-+		struct rq *rq = cpu_rq(this_cpu);
-+
-+		if ((rq->nr_running - cfs_h_nr_delayed(rq)) == 1)
-+			return this_cpu;
-+	}
- 
- 	if (available_idle_cpu(prev_cpu))
- 		return prev_cpu;
+-int pcc_mbox_ioremap(struct mbox_chan *chan)
+-{
+-	struct pcc_chan_info *pchan_info;
+-	struct pcc_mbox_chan *pcc_mbox_chan;
+-
+-	if (!chan || !chan->cl)
+-		return -1;
+-	pchan_info = chan->con_priv;
+-	pcc_mbox_chan = &pchan_info->chan;
+-
+-	pcc_mbox_chan->shmem = acpi_os_ioremap(pcc_mbox_chan->shmem_base_addr,
+-					       pcc_mbox_chan->shmem_size);
+-	if (!pcc_mbox_chan->shmem)
+-		return -ENXIO;
+-
+-	return 0;
+-}
+-EXPORT_SYMBOL_GPL(pcc_mbox_ioremap);
+-
+ /**
+  * pcc_send_data - Called from Mailbox Controller code. Used
+  *		here only to ring the channel doorbell. The PCC client
+
 -- 
-2.25.1
+2.34.1
 
