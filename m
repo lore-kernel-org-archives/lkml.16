@@ -1,133 +1,209 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC4EC238D3A;
-	Mon,  3 Mar 2025 16:30:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7231239797
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 16:30:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741019429; cv=none; b=D8kjkv0iYvWRB7+hx/0l8zMGfWpK0xhRTGD3soYNjqN6qDpkFxW2sYrxBquiliAF6DAO14ll/STIs0HDEuOwd98ByCwbkj/+w9x889VoLm4anUN5KsDD+2p9/6K2RChX/gHgxFNN7hyXEpObl5rQvMzrlf6AlX4FKCae1YDKEjw=
+	t=1741019432; cv=none; b=nYgSCgEbCS/IP+MWZ4DlPMpTnyZzGzIT7wKXKeh1Y4uF0xveVcHQlVkdlrbsxlhSHzbQkyD1rTgpg7xACQ5KgEP+PmF3udE7tyOeJcs8yoQcvglnqYVwUml3Q+Z9Udj9P2V5yzPnMwjXBM7VsLtRh0IDLyZevJJ3f6OHrQ5KqK8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741019429; c=relaxed/simple;
-	bh=VO4PNxXKaKhQhc8WyvjllaRN4o+RXV2Z6WojniXYwY4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=HFMI9NtFAOuGYCckRrrUkZatuvhGOcW5GELSTtHaEhdZzVNQjnUr4detUpCKHyVRSLZSq86kje8PxoXQauP3bMZ+NsolZYUnHr1vMdATAzpJCrD7i5u+P9rYsQ7bLPoaITSwbSfSNxx0ZqPBY6JVu4kbos4sOCRAv1yuD4Gu73c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jMxruLLA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741019432; c=relaxed/simple;
+	bh=ixANMC3lPCVB+QxhgoNOds44O6e5NynuKFD7IIp9IVE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=ZCs16/2OGDtmGdWe5mvNKtXsdc7qrPpInulMFqaW40PCdgY2/DkmvlBL2SfQMuo5eGPf4KhGMOpb2vVhGFcEZ+C+McVb8EZGQ0f8/bKMZDeryzufPCdysb+XVD2XpQRaK7QNepDAhOrKW4ZC+gZR82ELsBHOInL5tmjWXrsjaO8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=h+I8Wi11; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jMxruLLA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43FD8C4CEE6;
-	Mon,  3 Mar 2025 16:30:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741019429;
-	bh=VO4PNxXKaKhQhc8WyvjllaRN4o+RXV2Z6WojniXYwY4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=jMxruLLAzDKnwWuDlNzB5pcWPrmqSqhUBWFIKEDrnrtzMa2CpB7QstjVzp7jckw8I
-	 /tbIrLRYFeX1JtjGfh+OCDTmrhrYsn/ZV3Wvlkt7iDxHl2iKIRQrmfDTf69MbysbQS
-	 ZL619hGx/QjHPIRgBGerct529D39hPNILU/mUW+Siw7GHhs9YAwuH0KCXGMif51BRm
-	 nR8V4/BmVrPVbSlUGqwmH5ULf9BRiYV/qWN/noDe0ZtUibrm8/rSKN/A+z8kGqzBwF
-	 rc48C6H35xdOKpf17+wo/hCB0R5jsUU+xLKaR8yzS7HCd8CdMYKg+F4DWovaL/wx3U
-	 UYH4eYWDO3+jg==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Keith Busch <kbusch@kernel.org>,
-	Mike Christie <michael.christie@oracle.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Sasha Levin <sashal@kernel.org>,
-	seanjc@google.com,
-	tglx@linutronix.de,
-	mingo@redhat.com,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	x86@kernel.org,
-	mst@redhat.com,
-	jasowang@redhat.com,
-	kvm@vger.kernel.org,
-	virtualization@lists.linux.dev,
-	netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.13 17/17] vhost: return task creation error instead of NULL
-Date: Mon,  3 Mar 2025 11:29:49 -0500
-Message-Id: <20250303162951.3763346-17-sashal@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250303162951.3763346-1-sashal@kernel.org>
-References: <20250303162951.3763346-1-sashal@kernel.org>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="h+I8Wi11"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1741019429;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=XXsaZOoTqmrj90mJbBg0yoAKUyLdOWV9hsabR6NX2f0=;
+	b=h+I8Wi11ZH0PoizL9/74JBOvUKRPFb5Gw4W9NAMNP4WlgnoEokqdLt8Hn8ClWAFkIyvU0p
+	an+TqrmHzobv9nqHnogMQSXQvOs8wpP3SIIMf1RmA+qoeWEy9vDw4sggCNT2X+bk5pUafu
+	5ZJ8ehsQv26xFOIbyY+0xQcRyYRGGLg=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-210-b-WPaD66OvigeHtuRqD2JQ-1; Mon, 03 Mar 2025 11:30:27 -0500
+X-MC-Unique: b-WPaD66OvigeHtuRqD2JQ-1
+X-Mimecast-MFC-AGG-ID: b-WPaD66OvigeHtuRqD2JQ_1741019426
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-39104a3b8e3so944337f8f.0
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Mar 2025 08:30:26 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741019426; x=1741624226;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=XXsaZOoTqmrj90mJbBg0yoAKUyLdOWV9hsabR6NX2f0=;
+        b=hmNytwVhSaq2iyUmLVQUdpPIq0FMruhZd6b0eBKS1i6WUaVSTdqirFK3Fsf7rcejym
+         PNI19wlBu/jIutaSuGxJMBxXBMcJZ+ipWMz4Jv8hf4dq9mFCRZoV6S8VIFqF3xfgEhGi
+         lVY4t8DKEj1BUB2yi7qnhj0GRZLUZ0DFA1Fvp6ctgUOaVH2p1b3PF/jaHEKbSNl9PUMw
+         aK5vYyOlJkIczSFy5llvrWtF0BMpfY3/4L8fJodrW6rF7sjFhrBfX+qSGTtXZMX1KaUb
+         6OZvfatibGYTjGtIDq9EfjeFm05f3z9Na6qcYb8LSIOzFxZVr5s86qK171rmzKC+sr7Y
+         vQQA==
+X-Gm-Message-State: AOJu0YzqquV3ond4M9nQCrmYBsPPToP0WQq/eSO87vxmip7ZgcMzj/5T
+	gqTi/Puq2dJbNknMa+UdTMEs4oVqL3mY+0svoOL4CdVllOnVJ9Fzzdd/kzn/vFDDx7J+P7TV1Wu
+	2FgfWbeppIDbLIkOH/6oEx8O4YqAkpdShCyUw3VOJ7hA5TqnNhidQw92QvmvzBr/QMYKTYMRdu6
+	59+EB0fiKfZNZDys+CQOuAglxLZ6Wxdy5N4gvk3f/JvCEG
+X-Gm-Gg: ASbGncvTGNNZ9dHrsopWZ6GBEHvWGVdu8mKw8DGXdlzrKVxqvmVmpJZF7SWMYbUlS6X
+	GIc37n2eZ2oyyvEBXW4y+HFCD6RLUfmfBe7LlWRQ0S1f1FCh2/AukLoEIvVIF4bJhY88geMU9lR
+	c/nXn97T/gpAEp6xpOvMlF2w/6BuJhQNa2m2Fe0b1GTd1TFfdyxur1jxEDMCQBMj1Wlhc+dXpuS
+	TpK4o4sB/zdbKlqMo0TZNtm/FQj8y5mz1rtV2Q0P2IcwGIe1i7gV+J4QTwRGep/1uoEbm6JDkur
+	2CHddrkUfwDW2j0oUwjf56R+LTI90gJKs7LdM2UeoPktaD+vB5NcrUZUAwb2S+yWvUZfH4bRB5A
+	i
+X-Received: by 2002:a05:6000:1565:b0:391:9b2:f49a with SMTP id ffacd0b85a97d-39109b2f905mr4268680f8f.55.1741019425919;
+        Mon, 03 Mar 2025 08:30:25 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHyH4J1EAqaHR0tUbY9OuS6FmG3s0lngE2eSOblLtE+C7Z78Ry//BFuo4023zOsYhDT+DJ8lw==
+X-Received: by 2002:a05:6000:1565:b0:391:9b2:f49a with SMTP id ffacd0b85a97d-39109b2f905mr4268630f8f.55.1741019425450;
+        Mon, 03 Mar 2025 08:30:25 -0800 (PST)
+Received: from localhost (p200300cbc7349600af274326a2162bfb.dip0.t-ipconnect.de. [2003:cb:c734:9600:af27:4326:a216:2bfb])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-390e47a7b88sm14820945f8f.40.2025.03.03.08.30.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 03 Mar 2025 08:30:25 -0800 (PST)
+From: David Hildenbrand <david@redhat.com>
+To: linux-kernel@vger.kernel.org
+Cc: linux-doc@vger.kernel.org,
+	cgroups@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-api@vger.kernel.org,
+	David Hildenbrand <david@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	Tejun Heo <tj@kernel.org>,
+	Zefan Li <lizefan.x@bytedance.com>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	=?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Andy Lutomirski <luto@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Muchun Song <muchun.song@linux.dev>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Jann Horn <jannh@google.com>
+Subject: [PATCH v3 04/20] mm: move hugetlb specific things in folio to page[3]
+Date: Mon,  3 Mar 2025 17:29:57 +0100
+Message-ID: <20250303163014.1128035-5-david@redhat.com>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250303163014.1128035-1-david@redhat.com>
+References: <20250303163014.1128035-1-david@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.13.5
 Content-Transfer-Encoding: 8bit
 
-From: Keith Busch <kbusch@kernel.org>
+Let's just move the hugetlb specific stuff to a separate page, and stop
+letting it overlay other fields for now.
 
-[ Upstream commit cb380909ae3b1ebf14d6a455a4f92d7916d790cb ]
+This frees up some space in page[2], which we will use on 32bit to free
+up some space in page[1]. While we could move these things to page[3]
+instead, it's cleaner to just move the hugetlb specific things out of
+the way and pack the core-folio stuff as tight as possible. ... and we
+can minimize the work required in dump_folio.
 
-Lets callers distinguish why the vhost task creation failed. No one
-currently cares why it failed, so no real runtime change from this
-patch, but that will not be the case for long.
+We can now avoid re-initializing &folio->_deferred_list in hugetlb code.
 
-Signed-off-by: Keith Busch <kbusch@kernel.org>
-Message-ID: <20250227230631.303431-2-kbusch@meta.com>
-Reviewed-by: Mike Christie <michael.christie@oracle.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Hopefully dynamically allocating "strut folio" in the future will further
+clean this up.
+
+Signed-off-by: David Hildenbrand <david@redhat.com>
 ---
- arch/x86/kvm/mmu/mmu.c | 2 +-
- drivers/vhost/vhost.c  | 2 +-
- kernel/vhost_task.c    | 4 ++--
- 3 files changed, 4 insertions(+), 4 deletions(-)
+ include/linux/mm_types.h | 27 +++++++++++++++++----------
+ mm/hugetlb.c             |  1 -
+ mm/page_alloc.c          |  5 +++++
+ 3 files changed, 22 insertions(+), 11 deletions(-)
 
-diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-index e102505735a7b..0e6bf24093f75 100644
---- a/arch/x86/kvm/mmu/mmu.c
-+++ b/arch/x86/kvm/mmu/mmu.c
-@@ -7435,7 +7435,7 @@ static void kvm_mmu_start_lpage_recovery(struct once *once)
- 				      kvm_nx_huge_page_recovery_worker_kill,
- 				      kvm, "kvm-nx-lpage-recovery");
+diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
+index e81be20bbabc6..1d9c68c551d42 100644
+--- a/include/linux/mm_types.h
++++ b/include/linux/mm_types.h
+@@ -405,20 +405,23 @@ struct folio {
+ 			unsigned long _flags_2;
+ 			unsigned long _head_2;
+ 	/* public: */
+-			void *_hugetlb_subpool;
+-			void *_hugetlb_cgroup;
+-			void *_hugetlb_cgroup_rsvd;
+-			void *_hugetlb_hwpoison;
++			struct list_head _deferred_list;
+ 	/* private: the union with struct page is transitional */
+ 		};
++		struct page __page_2;
++	};
++	union {
+ 		struct {
+-			unsigned long _flags_2a;
+-			unsigned long _head_2a;
++			unsigned long _flags_3;
++			unsigned long _head_3;
+ 	/* public: */
+-			struct list_head _deferred_list;
++			void *_hugetlb_subpool;
++			void *_hugetlb_cgroup;
++			void *_hugetlb_cgroup_rsvd;
++			void *_hugetlb_hwpoison;
+ 	/* private: the union with struct page is transitional */
+ 		};
+-		struct page __page_2;
++		struct page __page_3;
+ 	};
+ };
  
--	if (!nx_thread)
-+	if (IS_ERR(nx_thread))
- 		return;
+@@ -455,8 +458,12 @@ FOLIO_MATCH(_refcount, _refcount_1);
+ 			offsetof(struct page, pg) + 2 * sizeof(struct page))
+ FOLIO_MATCH(flags, _flags_2);
+ FOLIO_MATCH(compound_head, _head_2);
+-FOLIO_MATCH(flags, _flags_2a);
+-FOLIO_MATCH(compound_head, _head_2a);
++#undef FOLIO_MATCH
++#define FOLIO_MATCH(pg, fl)						\
++	static_assert(offsetof(struct folio, fl) ==			\
++			offsetof(struct page, pg) + 3 * sizeof(struct page))
++FOLIO_MATCH(flags, _flags_3);
++FOLIO_MATCH(compound_head, _head_3);
+ #undef FOLIO_MATCH
  
- 	vhost_task_start(nx_thread);
-diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
-index 9ac25d08f473e..63612faeab727 100644
---- a/drivers/vhost/vhost.c
-+++ b/drivers/vhost/vhost.c
-@@ -666,7 +666,7 @@ static struct vhost_worker *vhost_worker_create(struct vhost_dev *dev)
+ /**
+diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+index 70a012af4a8d2..c15723c8d5e7f 100644
+--- a/mm/hugetlb.c
++++ b/mm/hugetlb.c
+@@ -1634,7 +1634,6 @@ static void __update_and_free_hugetlb_folio(struct hstate *h,
  
- 	vtsk = vhost_task_create(vhost_run_work_list, vhost_worker_killed,
- 				 worker, name);
--	if (!vtsk)
-+	if (IS_ERR(vtsk))
- 		goto free_worker;
+ 	folio_ref_unfreeze(folio, 1);
  
- 	mutex_init(&worker->mutex);
-diff --git a/kernel/vhost_task.c b/kernel/vhost_task.c
-index 8800f5acc0071..2ef2e1b800916 100644
---- a/kernel/vhost_task.c
-+++ b/kernel/vhost_task.c
-@@ -133,7 +133,7 @@ struct vhost_task *vhost_task_create(bool (*fn)(void *),
+-	INIT_LIST_HEAD(&folio->_deferred_list);
+ 	hugetlb_free_folio(folio);
+ }
  
- 	vtsk = kzalloc(sizeof(*vtsk), GFP_KERNEL);
- 	if (!vtsk)
--		return NULL;
-+		return ERR_PTR(-ENOMEM);
- 	init_completion(&vtsk->exited);
- 	mutex_init(&vtsk->exit_mutex);
- 	vtsk->data = arg;
-@@ -145,7 +145,7 @@ struct vhost_task *vhost_task_create(bool (*fn)(void *),
- 	tsk = copy_process(NULL, 0, NUMA_NO_NODE, &args);
- 	if (IS_ERR(tsk)) {
- 		kfree(vtsk);
--		return NULL;
-+		return ERR_PTR(PTR_ERR(tsk));
- 	}
- 
- 	vtsk->task = tsk;
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index ae0f2a2e87369..2fc03cb13e49d 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -975,6 +975,11 @@ static int free_tail_page_prepare(struct page *head_page, struct page *page)
+ 			goto out;
+ 		}
+ 		break;
++	case 3:
++		/* the third tail page: hugetlb specifics overlap ->mappings */
++		if (IS_ENABLED(CONFIG_HUGETLB_PAGE))
++			break;
++		fallthrough;
+ 	default:
+ 		if (page->mapping != TAIL_MAPPING) {
+ 			bad_page(page, "corrupted mapping in tail page");
 -- 
-2.39.5
+2.48.1
 
