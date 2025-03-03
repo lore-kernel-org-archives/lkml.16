@@ -1,165 +1,176 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DF5F22611;
-	Mon,  3 Mar 2025 02:17:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A34B8635E
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 02:24:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740968247; cv=none; b=CwJtj+qXKFQNg1RkTe+pJetqXMetwCXJMc20sngFdeXj+bGRvqY/p8PqvCFZjjfdfXfUxYL8YF0I2yRxuXW0CWagzmW0xa7mIAHDdRU18Qvx5q8lZ4d4caTFvfoi2vVDPaCuc9Q9xeMZQn4WogTqrDvZY6TmWJCO79eLPvyGgLE=
+	t=1740968678; cv=none; b=Emnf2z8vDfXRolqiwupHnvrBW00kUXPE1SRDbmltAk2ijp8F+UuWO9f2l+fpJ5aB95+C6Cid71q6Fwa6JLgf6uq7ueFMXZqHYD+zcY2PDfATtnQVJHVlsXiovvZD1jFj+uF8jZzhBI7svhFQUa/24vS8zYKCxlAQmTet9sucDvg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740968247; c=relaxed/simple;
-	bh=GbrPH0tIFyJAiYao72KxIdzmQ/EXoIRpJp9qNrvdixI=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=ZDNtJX7hEC00L8YpiJShsUtIl/ol8SxJGxsHvld/NcuhBq7Cb/vAsPHg50cfqxrKEbuGq55iwNQLarXF1BDLJExPAIkEu0GwxAU3F6bYcEFx0znniIO2YpjOAFIgHrESf5harhIhuDUAr5olQ9g/3itAO15dK58Z1XUBkjERciU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EQtCIWiL; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740968678; c=relaxed/simple;
+	bh=cHtSpwsJWrAvoVo1+dTLRwSY4Op9xcfDdYE2kDIyX/c=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UMcFaoooD6hV2l5VFq6J0Vk/XaH9SIezdAqyBa68zZKLyyFRbCICQy95lgDGu3THMxrTrxZWAaeuetzRYeHAgY51AZ2gpXJwar1EtOVU8yDRafEYpfAQMtWoQiXhkfHsgvw+G6NcvwocR0ASEoA6jf7Bp3UV1+hgWaJ/PE5tgBo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=bg3r9T+w; arc=none smtp.client-ip=209.85.216.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EQtCIWiL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5FD73C4CED6;
-	Mon,  3 Mar 2025 02:17:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740968246;
-	bh=GbrPH0tIFyJAiYao72KxIdzmQ/EXoIRpJp9qNrvdixI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=EQtCIWiL5MabiXwGCiheE9uWuAMeWnsJnos9pCI1omGhXQhXG36kdqDF0lm9+R4Dq
-	 1y4pNiEQjZOi1aw/xM5tSF3sYaBXK4P4e/ZjL0JZ2uVq1+HKK/cFU0RJCPeharENer
-	 AU2l90DCSlY3L/eb69SXgksK2UzxEM0f32azaWiyJl6bWlOJ8MmG4IZ+AsODqX8Xft
-	 xa7eNxq//lCXvKhviI0OIPYJRv+NUQlWCPEeCqMpFTNCgUBPP+KN18eiWDHYagiHOb
-	 /Rvz8gd9nPc8YqEkwbwWSJkriepf446cl32r9KTVzmCfsTbWt22IfSz50AZJ/rExil
-	 x3Y68xgt/XWJA==
-Date: Mon, 3 Mar 2025 11:17:21 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Shuah Khan <shuah@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Hari Bathini
- <hbathini@linux.ibm.com>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH 4/8] tracing: probe-events: Log errro for exceeding the
- number of arguments
-Message-Id: <20250303111721.87cd676bacaa29326a575452@kernel.org>
-In-Reply-To: <174055075075.4079315.10916648136898316476.stgit@mhiramat.tok.corp.google.com>
-References: <174055071644.4079315.12468865615828925878.stgit@mhiramat.tok.corp.google.com>
-	<174055075075.4079315.10916648136898316476.stgit@mhiramat.tok.corp.google.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bg3r9T+w"
+Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-2fe821570e4so5569908a91.0
+        for <linux-kernel@vger.kernel.org>; Sun, 02 Mar 2025 18:24:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1740968676; x=1741573476; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=sznfA2l8NibSE6qcuM2Jb9P/DtwF9Yp5f99HQpgSZqY=;
+        b=bg3r9T+wOL58tCthFzDf9lBwIn2QRL/QjCEJP+FjhVGYgTW5IOf4PPCW5iF0sgTb9z
+         CQiPTh10dwpBn5gWMI5rX7otdM+9H0GYuzo9E0X7NTIP/LH4DDaf6V+aL+d2x6hgwluB
+         5bsvdIQnw8VEPCSjgalS8f82v31L2hmI2JT0o=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740968676; x=1741573476;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=sznfA2l8NibSE6qcuM2Jb9P/DtwF9Yp5f99HQpgSZqY=;
+        b=tGKLX4MOdn4Xs3aN5rzueO77DHsgjZtLoB0+rz9vcl/qgb7EGlmSTqdEFX4xDxtGa9
+         NpkUuagJvy+omybR3TvbjiTDUBjOtqmknCMENPWQEjnEMVIn0LckENuqUFtpONQJ1P/Z
+         XDMxD1sRWlKQaJILhPuEVYTyf8jIRRlmhmpA2R3G0s5Xzqigo5HgslMz2TD5/BSIpnj8
+         oAtSv+woo7pP1Z4Lmcri05sA4ZN4jk+UQrAGOXVBV4K1IdPNB75bud1zk3O+hEuPP6MV
+         2yVQ/uOzZaMcf5bZ2hUSIyN8a2BIJ5nTOUfXHrhb32Tg6mp6+1xdUyI7tXckZjbfWgo8
+         1xrQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXgyejJMvsejyU0Xo7gWyEtMekbD1UJFAP6ztJOFGsYXyEBG5u68GrrUIauFkwDY9xD/ZnehDFrNvBZyYU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyz9b4nHJtelMG5Mb1nE27pn0rhWkVCIvOGbzEkw9enF9YcVEgF
+	8a6Rq1+c6vzVb0s3OvQqvyd9I/OyCdwI92tbNt7jYXm8jb6izDwouWsFjG3CtQ==
+X-Gm-Gg: ASbGnctVOn8FU7oqTOeQgJvfA5xZBxxGTF2Qwtj3eO44Is2pb182CroWk4Hdr7eEFsE
+	TV6uvqqQawSwqhdv2pmec/gLjlfWw4ApiWcMJ8igPLHMCr9+6YM65VirUez3RTtnTSIOeSmExSr
+	4sRfbvQ+tGgcVOc0GfBnJpvvOYlU2XBzz13Vf45VMbwlnt0SumzxFxlEKhheJhEOhmKthBJmV2v
+	M26JLI75XggNJKoY/gdQW3JppIUrb4A1BGEHrkf4h8+0dx3mmd0gpBBYWpnU+nlvyzIGIaAZjCB
+	8pFkelEFMawMKBlA85ZPtaLPONXiKcMhTPPpOnE5htNcBZ0=
+X-Google-Smtp-Source: AGHT+IGv6hQiKqkOLC37uSZSWuOIbz10ORF2+JrYswdrfALyUuBndhlzbODDhgkgtSYwTOU6BN3POA==
+X-Received: by 2002:a17:90b:2fc8:b0:2fe:8282:cb9d with SMTP id 98e67ed59e1d1-2febac0466fmr16781267a91.28.1740968676360;
+        Sun, 02 Mar 2025 18:24:36 -0800 (PST)
+Received: from localhost ([2401:fa00:8f:203:1513:4f61:a4d3:b418])
+        by smtp.gmail.com with UTF8SMTPSA id 98e67ed59e1d1-2fe8284f116sm10902322a91.49.2025.03.02.18.24.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 02 Mar 2025 18:24:35 -0800 (PST)
+From: Sergey Senozhatsky <senozhatsky@chromium.org>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Yosry Ahmed <yosry.ahmed@linux.dev>,
+	Hillf Danton <hdanton@sina.com>,
+	Kairui Song <ryncsn@gmail.com>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Minchan Kim <minchan@kernel.org>,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	Sergey Senozhatsky <senozhatsky@chromium.org>
+Subject: [PATCH v10 00/19] zsmalloc/zram: there be preemption
+Date: Mon,  3 Mar 2025 11:03:09 +0900
+Message-ID: <20250303022425.285971-1-senozhatsky@chromium.org>
+X-Mailer: git-send-email 2.48.1.711.g2feabab25a-goog
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Wed, 26 Feb 2025 15:19:10 +0900
-"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+Currently zram runs compression and decompression in non-preemptible
+sections, e.g.
 
-> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> 
-> Add error message when the number of arguments exceeeds the limitation.
-> 
+    zcomp_stream_get()     // grabs CPU local lock
+    zcomp_compress()
 
-Hmm, this is not a fix patch so this should be handled as enhancement.
-I'll drop this from probes/fixes.
+or
 
-Thanks,
+    zram_slot_lock()       // grabs entry spin-lock
+    zcomp_stream_get()     // grabs CPU local lock
+    zs_map_object()        // grabs rwlock and CPU local lock
+    zcomp_decompress()
 
-> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> ---
->  kernel/trace/trace_eprobe.c |    2 ++
->  kernel/trace/trace_fprobe.c |    5 ++++-
->  kernel/trace/trace_kprobe.c |    5 ++++-
->  kernel/trace/trace_probe.h  |    1 +
->  kernel/trace/trace_uprobe.c |    9 +++++++--
->  5 files changed, 18 insertions(+), 4 deletions(-)
-> 
-> diff --git a/kernel/trace/trace_eprobe.c b/kernel/trace/trace_eprobe.c
-> index 82fd637cfc19..af9fa0632b57 100644
-> --- a/kernel/trace/trace_eprobe.c
-> +++ b/kernel/trace/trace_eprobe.c
-> @@ -913,6 +913,8 @@ static int __trace_eprobe_create(int argc, const char *argv[])
->  	}
->  
->  	if (argc - 2 > MAX_TRACE_ARGS) {
-> +		trace_probe_log_set_index(2);
-> +		trace_probe_log_err(0, TOO_MANY_ARGS);
->  		ret = -E2BIG;
->  		goto error;
->  	}
-> diff --git a/kernel/trace/trace_fprobe.c b/kernel/trace/trace_fprobe.c
-> index e27305d31fc5..372936163c21 100644
-> --- a/kernel/trace/trace_fprobe.c
-> +++ b/kernel/trace/trace_fprobe.c
-> @@ -1201,8 +1201,11 @@ static int trace_fprobe_create_internal(int argc, const char *argv[],
->  		argc = new_argc;
->  		argv = new_argv;
->  	}
-> -	if (argc > MAX_TRACE_ARGS)
-> +	if (argc > MAX_TRACE_ARGS) {
-> +		trace_probe_log_set_index(2);
-> +		trace_probe_log_err(0, TOO_MANY_ARGS);
->  		return -E2BIG;
-> +	}
->  
->  	ret = traceprobe_expand_dentry_args(argc, argv, &dbuf);
->  	if (ret)
-> diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
-> index d8d5f18a141a..8287b175667f 100644
-> --- a/kernel/trace/trace_kprobe.c
-> +++ b/kernel/trace/trace_kprobe.c
-> @@ -1007,8 +1007,11 @@ static int trace_kprobe_create_internal(int argc, const char *argv[],
->  		argc = new_argc;
->  		argv = new_argv;
->  	}
-> -	if (argc > MAX_TRACE_ARGS)
-> +	if (argc > MAX_TRACE_ARGS) {
-> +		trace_probe_log_set_index(2);
-> +		trace_probe_log_err(0, TOO_MANY_ARGS);
->  		return -E2BIG;
-> +	}
->  
->  	ret = traceprobe_expand_dentry_args(argc, argv, &dbuf);
->  	if (ret)
-> diff --git a/kernel/trace/trace_probe.h b/kernel/trace/trace_probe.h
-> index c47ca002347a..6075afc8ea67 100644
-> --- a/kernel/trace/trace_probe.h
-> +++ b/kernel/trace/trace_probe.h
-> @@ -546,6 +546,7 @@ extern int traceprobe_define_arg_fields(struct trace_event_call *event_call,
->  	C(BAD_BTF_TID,		"Failed to get BTF type info."),\
->  	C(BAD_TYPE4STR,		"This type does not fit for string."),\
->  	C(NEED_STRING_TYPE,	"$comm and immediate-string only accepts string type"),\
-> +	C(TOO_MANY_ARGS,	"Too many arguments are specified"),	\
->  	C(TOO_MANY_EARGS,	"Too many entry arguments specified"),
->  
->  #undef C
-> diff --git a/kernel/trace/trace_uprobe.c b/kernel/trace/trace_uprobe.c
-> index ccc762fbb69c..3386439ec9f6 100644
-> --- a/kernel/trace/trace_uprobe.c
-> +++ b/kernel/trace/trace_uprobe.c
-> @@ -562,8 +562,14 @@ static int __trace_uprobe_create(int argc, const char **argv)
->  
->  	if (argc < 2)
->  		return -ECANCELED;
-> -	if (argc - 2 > MAX_TRACE_ARGS)
-> +
-> +	trace_probe_log_init("trace_uprobe", argc, argv);
-> +
-> +	if (argc - 2 > MAX_TRACE_ARGS) {
-> +		trace_probe_log_set_index(2);
-> +		trace_probe_log_err(0, TOO_MANY_ARGS);
->  		return -E2BIG;
-> +	}
->  
->  	if (argv[0][1] == ':')
->  		event = &argv[0][2];
-> @@ -582,7 +588,6 @@ static int __trace_uprobe_create(int argc, const char **argv)
->  		return -ECANCELED;
->  	}
->  
-> -	trace_probe_log_init("trace_uprobe", argc, argv);
->  	trace_probe_log_set_index(1);	/* filename is the 2nd argument */
->  
->  	*arg++ = '\0';
-> 
+Potentially a little troublesome for a number of reasons.
 
+For instance, this makes it impossible to use async compression
+algorithms or/and H/W compression algorithms, which can wait for OP
+completion or resource availability.  This also restricts what
+compression algorithms can do internally, for example, zstd can
+allocate internal state memory for C/D dictionaries:
+
+do_fsync()
+ do_writepages()
+  zram_bio_write()
+   zram_write_page()                          // become non-preemptible
+    zcomp_compress()
+     zstd_compress()
+      ZSTD_compress_usingCDict()
+       ZSTD_compressBegin_usingCDict_internal()
+        ZSTD_resetCCtx_usingCDict()
+         ZSTD_resetCCtx_internal()
+          zstd_custom_alloc()                 // memory allocation
+
+Not to mention that the system can be configured to maximize
+compression ratio at a cost of CPU/HW time (e.g. lz4hc or deflate
+with very high compression level) so zram can stay in non-preemptible
+section (even under spin-lock or/and rwlock) for an extended period
+of time.  Aside from compression algorithms, this also restricts what
+zram can do.  One particular example is zram_write_page() zsmalloc
+handle allocation, which has an optimistic allocation (disallowing
+direct reclaim) and a pessimistic fallback path, which then forces
+zram to compress the page one more time.
+
+This series changes zram to not directly impose atomicity restrictions
+on compression algorithms (and on itself), which makes zram write()
+fully preemptible; zram read(), sadly, is not always preemptible yet.
+There are still indirect atomicity restrictions imposed by zsmalloc().
+One notable example is object mapping API, which returns with:
+a) local CPU lock held
+b) zspage rwlock held
+
+First, zsmalloc's zspage lock is converted from rwlock to a special
+type of RW-lookalike look with some extra guarantees/features.  Second,
+a new handle mapping is introduced which doesn't use per-CPU buffers
+(and hence no local CPU lock), does fewer memcpy() calls, but requires
+users to provide a pointer to temp buffer for object copy-in (when
+needed).  Third, zram is converted to the new zsmalloc mapping API
+and thus zram read() becomes preemptible.
+
+v9 -> v10
+- moved to statically allocated lockdep lock classes in zram and
+  zsmalloc (Sebastian)
+- dropped lock_contended() because we only can call it under
+  lock_acquire() and thta's not the case for zram and zsmalloc trylock
+
+Sergey Senozhatsky (19):
+  zram: sleepable entry locking
+  zram: permit preemption with active compression stream
+  zram: remove unused crypto include
+  zram: remove max_comp_streams device attr
+  zram: remove second stage of handle allocation
+  zram: add GFP_NOWARN to incompressible zsmalloc handle allocation
+  zram: remove writestall zram_stats member
+  zram: limit max recompress prio to num_active_comps
+  zram: filter out recomp targets based on priority
+  zram: rework recompression loop
+  zram: move post-processing target allocation
+  zsmalloc: rename pool lock
+  zsmalloc: sleepable zspage reader-lock
+  zsmalloc: introduce new object mapping API
+  zram: switch to new zsmalloc object mapping API
+  zram: permit reclaim in zstd custom allocator
+  zram: do not leak page on recompress_store error path
+  zram: do not leak page on writeback_store error path
+  zram: add might_sleep to zcomp API
+
+ Documentation/ABI/testing/sysfs-block-zram  |   8 -
+ Documentation/admin-guide/blockdev/zram.rst |  36 +--
+ drivers/block/zram/backend_zstd.c           |  11 +-
+ drivers/block/zram/zcomp.c                  |  48 ++-
+ drivers/block/zram/zcomp.h                  |   8 +-
+ drivers/block/zram/zram_drv.c               | 330 +++++++++-----------
+ drivers/block/zram/zram_drv.h               |  17 +-
+ include/linux/zsmalloc.h                    |   8 +
+ mm/zsmalloc.c                               | 329 ++++++++++++++-----
+ 9 files changed, 478 insertions(+), 317 deletions(-)
 
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+2.48.1.711.g2feabab25a-goog
+
