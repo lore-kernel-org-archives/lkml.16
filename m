@@ -1,126 +1,100 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0224E1F03C0;
-	Mon,  3 Mar 2025 22:27:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B60C1DFE1;
+	Mon,  3 Mar 2025 22:29:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741040823; cv=none; b=Hk0Wfetma++yBa8TuQKGCxodpo6YrVhsv9mWVpJPIpN2hufehMylO/nufq2IB7p0RfI/z6XoCRSvPU7BAqbR9zxCj8FnONSltKdWzom8xJQcsFynUoEHlcb3AIIPM2e74+ZJQWMkOR3HiD3I/lR2+YtN/ehuH+D1ILYP2pgc8+M=
+	t=1741040999; cv=none; b=gtaNRKCVW/YSIgd69sfvv3HvvobdMnwfzxrzAaYEVRUZGynKj+UbfAWh13vEhtaLRdxI8PHjOksL5OmsTJ9ATAPDVwiMtg4/HguM5eZCumvVaEIU37xqwmAOcMyorBZiSzThrU+czr8Nt8KMV7dCB0kYzburGj5FZ3NT1nPdWQs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741040823; c=relaxed/simple;
-	bh=nbQ+GTtR9+WtDAUfLtWWJMdNyA5rS1jCv0pKqdQLtDs=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=aLYXyk/l2I0Ly5I4ZOsEFJMdsVimsh8ejpMU4EdmEglTpKMt9OjLdcXskMTLUTx25SKQiJCkQXuj8+kknOZCzKapWzzc/1ca3jskE2O7/baEbLGHDEDyWdqLN/PqfjCR8CKuyENzDBd7EzUIH313BVv7knA2W2P8gHSyeEGPqYU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X08N3H77; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741040999; c=relaxed/simple;
+	bh=bkKPQ1+aiG1teab/DAAAQme9s+I+A36ytQ7sln9PR8o=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=lfv+MoshvUA9/XYYZDtAQiAfP0wu5N/45B0fOSB5F1GVFSzjaIXhj1HTOZ+qF95wm508t62/w0D6cWkuHOLlXD0/Jjm5CkrR/H89SYY+4x/N8L6GxKmFuk1GZYN46wvMWUgpF3M2aCOPlHv75wx05bk8Ht07qoDLvv7pClvBbNg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uSYAPZZ2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X08N3H77"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A465C4CED6;
-	Mon,  3 Mar 2025 22:27:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uSYAPZZ2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB408C4CED6;
+	Mon,  3 Mar 2025 22:29:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741040822;
-	bh=nbQ+GTtR9+WtDAUfLtWWJMdNyA5rS1jCv0pKqdQLtDs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=X08N3H77tknBP9x4lqnFGW4CaHWFeDKNKP1igDYF204C7pKJbY+xitfSAIR5knMmQ
-	 y6nIab/jmsU3gdNNJYmBFqSez5VRrlMDN0IHf+yI2T6H062HjW9SUS+Vsp07d0Zv76
-	 m4RW12dy3UqpiR8bQqXzRmAPJVxq7Z6CBWlXqQtB603JZOHyoddCUdtVr2zMMdRqI1
-	 /3vavvzTFGdXes5n2c11rxW83tJmnG+SDXz8ENdzslFMXUt2agFxP27U793nOq1bSf
-	 tT2P89sqQVnlWBV+kHt4XXvdFmyyWa6RtoH8mpaHRtpGZ221ai/8PxxsBzs8i1VAPg
-	 HkTFERsTkyrcA==
-Date: Mon, 3 Mar 2025 16:27:00 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Mukesh Sisodiya <mukesh.sisodiya@intel.com>,
-	Miri Korenblit <miriam.rachel.korenblit@intel.com>,
-	Matti Gottlieb <matti.gottlieb@intel.com>,
-	Luca Coelho <luciano.coelho@intel.com>
-Cc: Johannes Berg <johannes.berg@intel.com>, Kalle Valo <kvalo@kernel.org>,
-	"linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [regression] Significant WiFi Speed Reduction with Kernel
- Versions > 6.8.12 on Intel Wi-Fi 6 AX203
-Message-ID: <20250303222700.GA202089@bhelgaas>
+	s=k20201202; t=1741040998;
+	bh=bkKPQ1+aiG1teab/DAAAQme9s+I+A36ytQ7sln9PR8o=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=uSYAPZZ28oBsjc2EOl6zT8rCHAt7gxktN7etVU93yhYRI4+QrdXVUfw1RnNINiYNo
+	 Yk1BTdAiEOH2t/XDNlApeKeIPq7Na6ak08AcR0C//+q6S1uRDgNCNyHsS4kfT4Fk6b
+	 4mGQ+HOBNZdvhvPh4H6OsvN2IGRfeCS5lMnGXYU+jYlAkXfnhqJIoxGr0xTfaU3+CT
+	 SrzZC2q94rIbg07HMIbB50MgL5lBA24HrvtMKHi13vDfn0WU6E712rMhsRKnF6F1ns
+	 K2/TZz2FCE0wyPZTu6B6g8FycHXVcp0T0Jg5EYRNhdsePLqwP01K52I+FITZtpOZuq
+	 FSMljipK3/aGg==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ADE2B3809A8F;
+	Mon,  3 Mar 2025 22:30:32 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250225182514.GA512422@bhelgaas>
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH bpf-next v2 00/10] selftests/bpf: Migrate test_tunnel.sh to
+ test_progs
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174104103150.3737563.4806214679115746999.git-patchwork-notify@kernel.org>
+Date: Mon, 03 Mar 2025 22:30:31 +0000
+References: <20250303-tunnels-v2-0-8329f38f0678@bootlin.com>
+In-Reply-To: <20250303-tunnels-v2-0-8329f38f0678@bootlin.com>
+To: Bastien Curutchet (eBPF Foundation) <bastien.curutchet@bootlin.com>
+Cc: ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
+ martin.lau@linux.dev, eddyz87@gmail.com, song@kernel.org,
+ yonghong.song@linux.dev, john.fastabend@gmail.com, kpsingh@kernel.org,
+ sdf@fomichev.me, haoluo@google.com, jolsa@kernel.org, mykolal@fb.com,
+ shuah@kernel.org, thomas.petazzoni@bootlin.com, alexis.lothore@bootlin.com,
+ bpf@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ linux-kernel@vger.kernel.org
 
-On Tue, Feb 25, 2025 at 12:25:16PM -0600, Bjorn Helgaas wrote:
-> On Thu, Aug 08, 2024 at 08:43:53AM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
-> > On 07.08.24 11:12, Linux regression tracking (Thorsten Leemhuis) wrote:
-> > > 
-> > > Mukesh Sisodiya, I noticed a report about a regression in
-> > > bugzilla.kernel.org that appears to be caused by a change of yours:
-> > > 
-> > > 099a47dbe71b75 ("wifi: iwlwifi: Add support for new 802.11be device")
-> > > [v6.9-rc1]
-> > 
-> > For the record, turns out the bisection went a bit sideways and the
-> > problems apparently is caused by 84ec2d2e960f33 ("wifi: iwlwifi: disable
-> > 160 MHz based on subsystem device ID") [v6.9-rc1]. For details, see
-> > https://bugzilla.kernel.org/show_bug.cgi?id=219114#c8
+Hello:
+
+This series was applied to bpf/bpf-next.git (master)
+by Martin KaFai Lau <martin.lau@kernel.org>:
+
+On Mon, 03 Mar 2025 09:22:48 +0100 you wrote:
+> Hi all,
 > 
-> Browsing the regression tracker, this seems stalled with no responses
-> even though the submitter (bcc'd) has bisected it.
+> This patch series continues the work to migrate the *.sh tests into
+> prog_tests framework.
+> 
+> The test_tunnel.sh script has already been partly migrated to
+> test_progs in prog_tests/test_tunnel.c so I add my work to it.
+> 
+> [...]
 
-FWIW, it looks like the following commits are relevant:
+Here is the summary with links:
+  - [bpf-next,v2,01/10] selftests/bpf: test_tunnel: Add generic_attach* helpers
+    https://git.kernel.org/bpf/bpf-next/c/6829f3c51baf
+  - [bpf-next,v2,02/10] selftests/bpf: test_tunnel: Add ping helpers
+    https://git.kernel.org/bpf/bpf-next/c/7289e59a7667
+  - [bpf-next,v2,03/10] selftests/bpf: test_tunnel: Move gre tunnel test to test_progs
+    https://git.kernel.org/bpf/bpf-next/c/08d20eaa0727
+  - [bpf-next,v2,04/10] selftests/bpf: test_tunnel: Move ip6gre tunnel test to test_progs
+    https://git.kernel.org/bpf/bpf-next/c/1ea01a806e4c
+  - [bpf-next,v2,05/10] selftests/bpf: test_tunnel: Move erspan tunnel tests to test_progs
+    https://git.kernel.org/bpf/bpf-next/c/0ecd1e9d3237
+  - [bpf-next,v2,06/10] selftests/bpf: test_tunnel: Move ip6erspan tunnel test to test_progs
+    https://git.kernel.org/bpf/bpf-next/c/cae41f74b778
+  - [bpf-next,v2,07/10] selftests/bpf: test_tunnel: Move geneve tunnel test to test_progs
+    https://git.kernel.org/bpf/bpf-next/c/d89542d2534f
+  - [bpf-next,v2,08/10] selftests/bpf: test_tunnel: Move ip6geneve tunnel test to test_progs
+    https://git.kernel.org/bpf/bpf-next/c/8d8609430576
+  - [bpf-next,v2,09/10] selftests/bpf: test_tunnel: Move ip6tnl tunnel tests to test_progs
+    https://git.kernel.org/bpf/bpf-next/c/680a75248df7
+  - [bpf-next,v2,10/10] selftests/bpf: test_tunnel: Remove test_tunnel.sh
+    https://git.kernel.org/bpf/bpf-next/c/c8d6d78cea6e
 
-  https://git.kernel.org/linus/d6f2134a3831 ("iwlwifi: add mac/rf types and 160MHz to the device tables")
-  https://git.kernel.org/linus/568d3434178b ("iwlwifi: pcie: invert values of NO_160 device config entries")
-  https://git.kernel.org/linus/4886460c4d15 ("iwlwifi: Fix IWL_SUBDEVICE_NO_160 macro to use the correct bit.")
-  https://git.kernel.org/linus/84ec2d2e960f ("wifi: iwlwifi: disable 160 MHz based on subsystem device ID")
-
-4886460c4d15 ("iwlwifi: Fix IWL_SUBDEVICE_NO_160 macro to use the
-correct bit.") updated IWL_SUBDEVICE_NO_160() to identify devices that
-should not support 160MHz:
-
-  -#define IWL_SUBDEVICE_NO_160(subdevice)        ((u16)((subdevice) & 0x0100) >> 9)
-  +#define IWL_SUBDEVICE_NO_160(subdevice)        ((u16)((subdevice) & 0x0200) >> 9)
-
-The submitter's device has Subdevice ID 0x1652.  Prior to
-4886460c4d15, that did not match IWL_SUBDEVICE_NO_160(), but
-afterwards it does:
-
-  0000:00:14.3 Network controller [0280]: Intel Corporation Alder Lake-P PCH CNVi WiFi [8086:51f0] (rev 01)
-    Subsystem: Rivet Networks Dual Band Wi-Fi 6(802.11ax) Killer AX1650i 160MHz 2x2 [Cyclone Peak] [1a56:1652]
-
-But apparently it wasn't until 84ec2d2e960f ("wifi: iwlwifi: disable
-160 MHz based on subsystem device ID"), that 160MHz support actually
-got disabled for devices that match IWL_SUBDEVICE_NO_160():
-
-  @@ -1061,6 +1061,10 @@ iwl_nvm_fixup_sband_iftd(struct iwl_trans *trans,
-
-  +       if (trans->no_160)
-  +               iftype_data->he_cap.he_cap_elem.phy_cap_info[0] &=
-  +                       ~IEEE80211_HE_PHY_CAP0_CHANNEL_WIDTH_SET_160MHZ_IN_5G;
-  +
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
 
-  @@ -1394,6 +1394,7 @@ static int iwl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
-
-          dev_info = iwl_pci_find_dev_info(pdev->device, pdev->subsystem_device,
-                                           ...
-                                           IWL_SUBDEVICE_NO_160(pdev->subsystem_device),
-                                           ...);
-
-          if (dev_info) {
-                  iwl_trans->cfg = dev_info->cfg;
-                  iwl_trans->name = dev_info->name;
-  +               iwl_trans->no_160 = dev_info->no_160 == IWL_CFG_NO_160;
-          }
-
-84ec2d2e960f appeared in v6.9.  Per the submitter, the speed reduction
-appeared in v6.8.12.  Maybe it was backported?  I dunno.
-
-If 160MHz is disabled on that device because of regulatory
-restrictions, and it worked when it should not have prior to
-84ec2d2e960f, I guess the submitter is out of luck.
-
-If that's the case, maybe we could at least update the bugzilla with
-the status to close this out?  The submitter has done a LOT of work to
-isolate this, and I think we owe them the courtesy of resolving it.
-
-Bjorn
