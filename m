@@ -1,123 +1,172 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47F861DB551
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 10:17:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E02421EC01D
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 10:17:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740997036; cv=none; b=CZQjEPrnQoYG2SkqcpKVr43BivRxMp5xkiFJtHpPHGW1J6/XM86Q7ec2TSly0tokQ4kwIX2P3A8FyPqze+SYQ35b1QK8diOmxOnYXOyGyHT4b9XvFSqALit1A2cG60lLDWPoDYabLyKqj4CjqaFuWsIrd/INrCGLmatDMBEXUfM=
+	t=1740997056; cv=none; b=SHxdQ0uoI+uIvnGngEM2FJQz//aHjUF0Yv9sEbC6bUwDkJJNkglmVMkIJASd96CM1/D37O8jwZptp1OCX9/rHGyxWbsXTKjO+idOVgJfsY979U9ByOa1GmVZlKQovbz5/GjuJtRt4q1ncBrzaPFKyB+ZJe4WHozgwDHD9PDu84M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740997036; c=relaxed/simple;
-	bh=IPcmz/Ophfu4H2fHVFRaf/4NO1aPTZiB1jFWbsY4VJg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Nexe7GrY7DoxIG9N2uk2XPkywFByamX92eYf0ShU7tDUderhLE3OpO+GtJzCDU+3gPg9bJflPH8RUMOxOV9pZ4XalSXCGvwLLxB4kWR0DGJznms2bEKxjiGcSb4I3WgF91dFpA5bo5kHHWDKdeN4u1+kY2Gm0bH8CFk4nGFwpeY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=UXAvkE01; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="UXAvkE01"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 8D28640E0202;
-	Mon,  3 Mar 2025 10:17:08 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id bKFAI4kJqnOJ; Mon,  3 Mar 2025 10:17:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1740997024; bh=/T0jAtQw2ziyIRYjhPBximB345bKPYtbcsbnKNs9H3U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=UXAvkE01IkdKwazAXwV/pp3KJw9vaBpwc+EZbw3VpkFbVdFcOhfIsKbIPbqheUm87
-	 BJLVKwKluj+oWUVUNisfoSb/L8UPi2ranJcIWn5FqETo4hoqCvI7+/yEWxeXS2l7Fh
-	 c56nm5ovL7PzHgOZSyKoUw2dmH2SHQVZVRosdOWunSziqmBF9krMH7WZLl3uXKSSbV
-	 wf2kkHo9s0Rq/u+0x5j8HNMY6Y3daCdoASNNOYCInoOnet4aBzuR1x3eoH1omwB6ke
-	 cmhHN32AahpGV0bBd0pX/rITM6zvC+WjMy9tnuuaIsKERDBCtiEv+P3TtC5p3QaHEk
-	 p4RlgVQ41Yvq+IQ8/ei7Xz/FSausGb4CxblDsNUwbW5JDgOQxjZ764clOpof9OZLeb
-	 aB68XJqRKYXuIstJQhs4+S75C9mPViLQYU/s95/gSkrqH5rFqGebU8HP6WPDB4BnbD
-	 JbQawXEd2ewT9aj5JyJBBPDxMFXsoUfgC4ve5p3sv1fohqrdJ095yYcY/ZWQ11UouX
-	 9GYldv6T/vQui+sbJ+gKWGgw8Qnq1aztr5QqvyzcXmfdltwqXbj6PbY7PUsq49G2Sr
-	 wc9ei7jcN/5D2L8c2nuwt9vomNqVvYDbfn4g1UGJ7xkm153mt8XB9S6Dpc0tne1vnh
-	 j6DlnEd0FcKQsZt781YnDr4g=
-Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 489BB40E0214;
-	Mon,  3 Mar 2025 10:16:47 +0000 (UTC)
-Date: Mon, 3 Mar 2025 11:16:40 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Rik van Riel <riel@surriel.com>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org, peterz@infradead.org,
-	dave.hansen@linux.intel.com, zhengqi.arch@bytedance.com,
-	nadav.amit@gmail.com, thomas.lendacky@amd.com, kernel-team@meta.com,
-	linux-mm@kvack.org, akpm@linux-foundation.org, jackmanb@google.com,
-	jannh@google.com, mhklinux@outlook.com, andrew.cooper3@citrix.com,
-	Manali.Shukla@amd.com, mingo@kernel.org
-Subject: Re: [PATCH v14 09/13] x86/mm: global ASID process exit helpers
-Message-ID: <20250303101640.GAZ8WBiPNKG_4wkVDv@fat_crate.local>
-References: <20250226030129.530345-1-riel@surriel.com>
- <20250226030129.530345-10-riel@surriel.com>
- <20250302123838.GKZ8RRTgRxvBSry6mk@fat_crate.local>
- <683d34253e2bdef9f74d8c44b2eff7ae9cfea5f9.camel@surriel.com>
+	s=arc-20240116; t=1740997056; c=relaxed/simple;
+	bh=tD7KmWzNrrhlb8AecHmy9QUshQYB3sQ/X/8bHcRCAqo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=YQPXb+qmh+L8b2DWsWevjCojdpKfySMsWcEYoYLpT/+ZpMRrXtZOtmq0Hc81yAX7bKs3NYSpkiaG9+oBn29lFl8YMxDnKf6hZmhu78gXO79XOAV5OFDsl4ignPeJdafwwRljHk76W68aQjpjSqsEb8FSJhV32XvX5ZhCaon55+c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4DA02113E;
+	Mon,  3 Mar 2025 02:17:47 -0800 (PST)
+Received: from [10.1.26.155] (XHFQ2J9959.cambridge.arm.com [10.1.26.155])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 110033F66E;
+	Mon,  3 Mar 2025 02:17:29 -0800 (PST)
+Message-ID: <43732270-8fd0-4a18-abec-096e383a6a4d@arm.com>
+Date: Mon, 3 Mar 2025 10:17:28 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <683d34253e2bdef9f74d8c44b2eff7ae9cfea5f9.camel@surriel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 4/4] iommu/arm: Add BBM Level 2 smmu feature
+Content-Language: en-GB
+To: Yang Shi <yang@os.amperecomputing.com>,
+ =?UTF-8?Q?Miko=C5=82aj_Lenczewski?= <miko.lenczewski@arm.com>,
+ suzuki.poulose@arm.com, catalin.marinas@arm.com, will@kernel.org,
+ joro@8bytes.org, jean-philippe@linaro.org, mark.rutland@arm.com,
+ joey.gouly@arm.com, oliver.upton@linux.dev, james.morse@arm.com,
+ broonie@kernel.org, maz@kernel.org, david@redhat.com,
+ akpm@linux-foundation.org, jgg@ziepe.ca, nicolinc@nvidia.com,
+ mshavit@google.com, jsnitsel@redhat.com, smostafa@google.com,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ iommu@lists.linux.dev
+References: <20250228182403.6269-2-miko.lenczewski@arm.com>
+ <20250228182403.6269-6-miko.lenczewski@arm.com>
+ <b46dc626-edc9-4d20-99d2-6cd08a01346c@os.amperecomputing.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <b46dc626-edc9-4d20-99d2-6cd08a01346c@os.amperecomputing.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Sun, Mar 02, 2025 at 08:53:10AM -0500, Rik van Riel wrote:
-> I've been there. Repeatedly :)
+On 01/03/2025 01:32, Yang Shi wrote:
+> 
+> 
+> 
+> On 2/28/25 10:24 AM, Mikołaj Lenczewski wrote:
+>> For supporting BBM Level 2 for userspace mappings, we want to ensure
+>> that the smmu also supports its own version of BBM Level 2. Luckily, the
+>> smmu spec (IHI 0070G 3.21.1.3) is stricter than the aarch64 spec (DDI
+>> 0487K.a D8.16.2), so already guarantees that no aborts are raised when
+>> BBM level 2 is claimed.
+>>
+>> Add the feature and testing for it under arm_smmu_sva_supported().
+>>
+>> Signed-off-by: Mikołaj Lenczewski <miko.lenczewski@arm.com>
+>> ---
+>>   arch/arm64/kernel/cpufeature.c                  | 7 +++----
+>>   drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-sva.c | 3 +++
+>>   drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c     | 3 +++
+>>   drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h     | 4 ++++
+>>   4 files changed, 13 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
+>> index 63f6d356dc77..1022c63f81b2 100644
+>> --- a/arch/arm64/kernel/cpufeature.c
+>> +++ b/arch/arm64/kernel/cpufeature.c
+>> @@ -2223,8 +2223,6 @@ static bool has_bbml2_noabort(const struct
+>> arm64_cpu_capabilities *caps, int sco
+>>               if (!cpu_has_bbml2_noabort(__cpu_read_midr(cpu)))
+>>                   return false;
+>>           }
+>> -
+>> -        return true;
+>>       } else if (scope & SCOPE_LOCAL_CPU) {
+>>           /* We are a hot-plugged CPU, so only need to check our MIDR.
+>>            * If we have the correct MIDR, but the kernel booted on an
+>> @@ -2232,10 +2230,11 @@ static bool has_bbml2_noabort(const struct
+>> arm64_cpu_capabilities *caps, int sco
+>>            * we have an incorrect MIDR, but the kernel booted on a
+>>            * sufficient CPU, we will not bring up this CPU.
+>>            */
+>> -        return cpu_has_bbml2_noabort(read_cpuid_id());
+>> +        if (!cpu_has_bbml2_noabort(read_cpuid_id()))
+>> +            return false;
+>>       }
+>>   -    return false;
+>> +    return has_cpuid_feature(caps, scope);
+> 
+> Do we really need this? IIRC, it means the MIDR has to be in the allow list
+> *AND* MMFR2 register has to be set too. AmpereOne doesn't have MMFR2 register set.
 
-Yap, it is. And despite all the compile-time disabling fun, clang still can't
-do proper DCE and complains about the inline asm in __invlpgb() using a u64 on
-32-bit builds.
+Miko, I think this should have been squashed into patch #1? It doesn't belong in
+this patch.
 
-So I did the fix below, ontop and with that randconfig builds all pass fine.
+Yang, we discussed this internally and decided that we thought it was best to
+still require BBML2 being advertised in the feature register. That way if trying
+to use KVM to emulate a CPU that is in the allow list but doesn't really support
+BBML2, we won't try to use it.
 
-What I have so far is here:
+But we still end up with the same problem if running on a physical CPU that
+supports BBML2 with conflict aborts, but emulating a CPU in the allow list. So
+given AmpereOne doesn't advertise BBML2 but does support it, I'd be happy to
+remove this check.
 
-https://web.git.kernel.org/pub/scm/linux/kernel/git/bp/bp.git/log/?h=tip-x86-cpu-tlbi
-
-Lemme go through the rest of your patches now.
-
-Thx.
-
-diff --git a/arch/x86/include/asm/tlb.h b/arch/x86/include/asm/tlb.h
-index 5375145eb959..04f2c6f4cee3 100644
---- a/arch/x86/include/asm/tlb.h
-+++ b/arch/x86/include/asm/tlb.h
-@@ -29,6 +29,7 @@ static inline void invlpg(unsigned long addr)
- }
- 
- 
-+#ifdef CONFIG_BROADCAST_TLB_FLUSH
- /*
-  * INVLPGB does broadcast TLB invalidation across all the CPUs in the system.
-  *
-@@ -74,6 +75,14 @@ static inline void __tlbsync(void)
- 	/* TLBSYNC: supported in binutils >= 0.36. */
- 	asm volatile(".byte 0x0f, 0x01, 0xff" ::: "memory");
- }
-+#else
-+/* Some compilers simply can't do DCE */
-+static inline void __invlpgb(unsigned long asid, unsigned long pcid,
-+			     unsigned long addr, u16 nr_pages,
-+			     bool pmd_stride, u8 flags) { }
-+
-+static inline void __tlbsync(void) { }
-+#endif
- 
- /*
-  * INVLPGB can be targeted by virtual address, PCID, ASID, or any combination
+Thanks,
+Ryan
 
 
--- 
-Regards/Gruss,
-    Boris.
+> 
+> Thanks,
+> Yang
+> 
+>>   }
+>>     #ifdef CONFIG_ARM64_PAN
+>> diff --git a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-sva.c b/drivers/iommu/
+>> arm/arm-smmu-v3/arm-smmu-v3-sva.c
+>> index 9ba596430e7c..6ba182572788 100644
+>> --- a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-sva.c
+>> +++ b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-sva.c
+>> @@ -222,6 +222,9 @@ bool arm_smmu_sva_supported(struct arm_smmu_device *smmu)
+>>           feat_mask |= ARM_SMMU_FEAT_VAX;
+>>       }
+>>   +    if (system_supports_bbml2_noabort())
+>> +        feat_mask |= ARM_SMMU_FEAT_BBML2;
+>> +
+>>       if ((smmu->features & feat_mask) != feat_mask)
+>>           return false;
+>>   diff --git a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c b/drivers/iommu/
+>> arm/arm-smmu-v3/arm-smmu-v3.c
+>> index 358072b4e293..dcee0bdec924 100644
+>> --- a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
+>> +++ b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
+>> @@ -4406,6 +4406,9 @@ static int arm_smmu_device_hw_probe(struct
+>> arm_smmu_device *smmu)
+>>       if (FIELD_GET(IDR3_RIL, reg))
+>>           smmu->features |= ARM_SMMU_FEAT_RANGE_INV;
+>>   +    if (FIELD_GET(IDR3_BBML, reg) == IDR3_BBML2)
+>> +        smmu->features |= ARM_SMMU_FEAT_BBML2;
+>> +
+>>       /* IDR5 */
+>>       reg = readl_relaxed(smmu->base + ARM_SMMU_IDR5);
+>>   diff --git a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h b/drivers/iommu/
+>> arm/arm-smmu-v3/arm-smmu-v3.h
+>> index bd9d7c85576a..85eaf3ab88c2 100644
+>> --- a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h
+>> +++ b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h
+>> @@ -60,6 +60,9 @@ struct arm_smmu_device;
+>>   #define ARM_SMMU_IDR3            0xc
+>>   #define IDR3_FWB            (1 << 8)
+>>   #define IDR3_RIL            (1 << 10)
+>> +#define IDR3_BBML            GENMASK(12, 11)
+>> +#define IDR3_BBML1            (1 << 11)
+>> +#define IDR3_BBML2            (2 << 11)
+>>     #define ARM_SMMU_IDR5            0x14
+>>   #define IDR5_STALL_MAX            GENMASK(31, 16)
+>> @@ -754,6 +757,7 @@ struct arm_smmu_device {
+>>   #define ARM_SMMU_FEAT_HA        (1 << 21)
+>>   #define ARM_SMMU_FEAT_HD        (1 << 22)
+>>   #define ARM_SMMU_FEAT_S2FWB        (1 << 23)
+>> +#define ARM_SMMU_FEAT_BBML2        (1 << 24)
+>>       u32                features;
+>>     #define ARM_SMMU_OPT_SKIP_PREFETCH    (1 << 0)
+> 
 
-https://people.kernel.org/tglx/notes-about-netiquette
