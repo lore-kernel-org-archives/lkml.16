@@ -1,215 +1,191 @@
-Received: from mail-wr1-f66.google.com (mail-wr1-f66.google.com [209.85.221.66])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFE7921B9F1;
-	Mon,  3 Mar 2025 15:23:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47E1E22ACDF;
+	Mon,  3 Mar 2025 15:23:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741015406; cv=none; b=rmSQlQJXrwjXacTui/LH/LCN0JCRk+6aQEi+5c/lhMvN3I5aCeBQvPkwKjQ+onRqqlGKmpKfaBygVdVV16r3o99yC/+eHSXhlaEpFgwjqIbubmn1cH1Cxl9dQcCUko69rWuWocjroXn1CCsWpAP8dnRqNVQi6pto9BfHcDR7ZB8=
+	t=1741015408; cv=none; b=ZWTKm25nRUtuufW8W/awbcgdsQouQ9U3IaWQcZDIN/gRqogJ3u6Qr/1bT5ahLt9GpNVhYCeFd6s6jDRcWyd7dJqrYHkZLrEzg3Zq8PAq+MpE3mIljyUdEvuPJT60ikqvgDFgzxYtvxDeWK9gTfSiPULQOGJ3Rsc+/njhmzRZmQQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741015406; c=relaxed/simple;
-	bh=1XvWGmZCOVeyUxqvFf8Y0s6SXxKLnF+WaHRbErsWH/c=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=IfJoSx7GfLR4KWXL9xnFnra6pSaeM/6XxFZzdp3jLy7gWiLxYWFg0rKNB7CSMo7jalQEtz9kyqtuLKDhRBHd0aKXFy5PmQVmSVvEclMezz87m/9Adk7vsOljY+2l3eSHAwC0Zso+/6Y6RhZZSH/l7ZBBIHUajgcRfzU3Sq/Ge4E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=coviwiKf; arc=none smtp.client-ip=209.85.221.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="coviwiKf"
-Received: by mail-wr1-f66.google.com with SMTP id ffacd0b85a97d-390df0138beso2442175f8f.0;
-        Mon, 03 Mar 2025 07:23:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741015402; x=1741620202; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GSHeNmV46kRt/dp4H0+hnJsEV9KJXQ8UwiwQeMlZ2+c=;
-        b=coviwiKf8BvG3pKRk5I2UH0LUS0JqEWF6Q4VO+H0uI4xlrLbBElW8choyUqoBdPXmV
-         8/OGXf+KGJ094ukTLMTNcDqRhZzYfMFlEUwfF8lByAa9WBfiJbPu5w5sRmcaYTQJqewS
-         HX8FrkB0TlETmUGX5lXYTGDPmp0DEPiVOTIcxf84zDBMDDrfb3vcu/oa3BSxJ0rySoi2
-         TBlgv4NTr3kqNgnL8VCOgTX2gj7XRNz0EgM0vyyl1pX98LwJzz0QhME+J4ESJgJdWPJE
-         gwbUCG5FYr0n1u91JnvmUkRdZaokRu8ZEz9CG4s+/X5/xKbAXX5I/DpTElPGFe+WLL1Y
-         REdQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741015402; x=1741620202;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=GSHeNmV46kRt/dp4H0+hnJsEV9KJXQ8UwiwQeMlZ2+c=;
-        b=UPMCCawzgLN1u73Y6FDenfFra4eeSHd3kSzMX5wyKS3Bo4ETj1CV30rXVYrEDfJiJ1
-         CWRE5Se8dSw+zI34oGgYG9WeanJfYMBNotbjzY1YkbzF9Y5i/Q1yrZkGkGRkJQ3vQCVf
-         s4UaCogyLbStSOFY2ClPJTrtMGVh4L3XtCHxIqCilueJomfz6DWKK9/GkcFcdIZ/wtDb
-         kSbgMPc9B+qq+LEK/z1aC6FLQbD8IWamrM1+eIZE0ZmQmRTWkecehBR2Lc+hdo0zGliG
-         2ki82wrvsryYoF2pbnr4kxCbHXHtkXgFRXxaai3fP3QAg+OLD+4r1Z0pBp9avRDZTeKj
-         O8+Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWFttPu1WrSjd4TIa2dKsNTZKeuLWMzveAs7+yW0kxSlt4ObtFSIsx0RGb0DiG5K4gQTJrijvx9PiyAsyY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxyxTuFBYOUzI5U8vKCsQoB2MoITcm4FwJJQ+wbVUlSgw04vV/x
-	q5VslEudZyDI2KK1b4ogmvC124jsbHyc+Tt63L/yMX5bLFqaab2jG+8gJXvPvTo=
-X-Gm-Gg: ASbGncvOVHKb3YhT5JnofNHlqmIBPPHnCK6dQkxyds64Qe68Rj1r3gzvsNvga9JiYnZ
-	krLfUmWrb/r+ZdB64+6XIJHd8Ve3amPZe15BzSAJfkgF4FI6V/TzN0px4GCelGDX2jsLZrvdkVH
-	jclWzF/GFmannOMRGxSS8QwbuuedAY/wsVGnDTVp9w/oQvYtb5gzJQOkyZDehthDDCvP9e1A65l
-	97rvNyaFmb2qS7fh293j3KWrkqRASEVCHXzOPQugV+euZR8vcSBS3TaHTKq+Tjaf5lc6ArH1cUL
-	GYNwy2W+p1DO7ha4gezGV1xE0NnSvmUIKxI=
-X-Google-Smtp-Source: AGHT+IEnT4A+TUqzNaTrtLXu5OtEH4QH2hmaxPGiGwoQEqitjFfl0aXZCCxloD3CNgY+V4T+aWGquw==
-X-Received: by 2002:a05:6000:2c4:b0:390:fbba:e65e with SMTP id ffacd0b85a97d-390fbbb1ce1mr6065042f8f.32.1741015401792;
-        Mon, 03 Mar 2025 07:23:21 -0800 (PST)
-Received: from localhost ([2a03:2880:31ff:51::])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-390e485dcc1sm14484132f8f.87.2025.03.03.07.23.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Mar 2025 07:23:21 -0800 (PST)
-From: Kumar Kartikeya Dwivedi <memxor@gmail.com>
-To: bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Barret Rhoden <brho@google.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Will Deacon <will@kernel.org>,
-	Waiman Long <llong@redhat.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Martin KaFai Lau <martin.lau@kernel.org>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Tejun Heo <tj@kernel.org>,
-	Josh Don <joshdon@google.com>,
-	Dohyun Kim <dohyunkim@google.com>,
-	linux-arm-kernel@lists.infradead.org,
-	kkd@meta.com,
-	kernel-team@meta.com
-Subject: [PATCH bpf-next v3 09/25] rqspinlock: Protect pending bit owners from stalls
-Date: Mon,  3 Mar 2025 07:22:49 -0800
-Message-ID: <20250303152305.3195648-10-memxor@gmail.com>
-X-Mailer: git-send-email 2.43.5
-In-Reply-To: <20250303152305.3195648-1-memxor@gmail.com>
-References: <20250303152305.3195648-1-memxor@gmail.com>
+	s=arc-20240116; t=1741015408; c=relaxed/simple;
+	bh=x5ZHe8cKEP3sixIJgobVE8Ykce9dwCRJsbW2wPTTBm8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pZ0kV7OfnKQ7sYlo0/z0kl54QFrlFgpBep8gTftaMWZAKxvdXaIne8D/+oh/L7VSy77fK6FQj/lNSgT37oWUl+A8IgiwA67kztfp05xUC7Ui1aJtLHekU3x4I3Sf9nbEEtv7OBylMAPZTxYbVUVEX8XRLAnOMt3UA4J7S3tIw+8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A7B6C4CEEB;
+	Mon,  3 Mar 2025 15:23:24 +0000 (UTC)
+Date: Mon, 3 Mar 2025 20:53:19 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Anand Moon <linux.amoon@gmail.com>
+Cc: Manivannan Sadhasivam <mani@kernel.org>,
+	Kevin Xie <kevin.xie@starfivetech.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Minda Chen <minda.chen@starfivetech.com>,
+	"open list:PCIE DRIVER FOR STARFIVE JH71x0" <linux-pci@vger.kernel.org>,
+	open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1] PCI: starfive: Fix kmemleak in StarFive PCIe driver's
+ IRQ handling
+Message-ID: <20250303152319.ejtt4vhlxkkzfx7h@thinkpad>
+References: <CANAwSgQ20ANRh9wJ3E-T9yNi=g1g129mXq3cZYvPnK1bMx+w7g@mail.gmail.com>
+ <20250214060935.cgnc436upawnfzn6@thinkpad>
+ <CANAwSgTWa9gwpPhVCYzJM5BL5wUkpB4eyDtX+Vs3SX3a9541wA@mail.gmail.com>
+ <CANAwSgRvT-Mqj3XPrME6oKhYmnCUZLnwHfFHmSL=PK+xVLHAqw@mail.gmail.com>
+ <20250224080129.zm7fvxermgeyycav@thinkpad>
+ <CANAwSgTsp19ri5SYYtD+VOYgBLYg5UqvGRrtNTXOWw7umxGCQg@mail.gmail.com>
+ <20250224115452.micfqctwjkt6gwrs@thinkpad>
+ <CANAwSgSdEr0X0F1AFAUfJoEjT1a63nj5Ar-ZfmehfhnE0=v+CA@mail.gmail.com>
+ <20250224144155.omzrmls7hpjqw6yl@thinkpad>
+ <CANAwSgQFET-vWoOSSMFWs3LZeQMaP+VgU6o2_1Rro6NmGXQbVQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4562; h=from:subject; bh=1XvWGmZCOVeyUxqvFf8Y0s6SXxKLnF+WaHRbErsWH/c=; b=owEBbQKS/ZANAwAIAUzgyIZIvxHKAcsmYgBnxcWW53FYHDbQPTx2MaF10QE+C9S9CqxKdZN1xCD5 5EH85qGJAjMEAAEIAB0WIQRLvip+Buz51YI8YRFM4MiGSL8RygUCZ8XFlgAKCRBM4MiGSL8RygSbD/ 9QtT69Fbx2ynZFLU/vCOAn9155npdoPHm32pPMjxG7qV6+Th71XhvC5I9p08WQrwACm1JzGxkepYjm pDnmwck8jRMUBZWjdXi29dJEj7At072EjdZOXCp/Pzn/DxG1hBXTY/ZH9GJo3q8nxLqI/8mzOGpvR2 b9bpAUy1mnqdSz0AULDNnLik1YTh5mj/YEE1p2drByM6bXTGqqEfUlBQDrhOqf8KdBxa4dxNRcWKlB 0tNMmc0lPHuNsFGhIa98RSTjnkXRl2GzOutIcnXs93hpXKn8yL6/Un1t4hb0mHzlLTyxwVwY/g2PPn 0AA/IDGt1/cVQydezHH65YVA5Teh+546Vhq2IbW4nmbmef5EAMQ84COS1A81yPDyV5q0JTKBMjPvx1 p9XYSN4yy8hzTmwMquOoMa64dIFJQHMW0aXviAnk5fYkdWxSk5Gv34nqs96z8x2Eo7/RrZBWNCXpxA iRgBViTStzOx2G/rqo/jRde/IWmULIVwPeiAlMApDAYkehjUopupyV601mAfuY2y35Aiv6QNqYtJWc T6+pG9F4lzVDFo4lc2g8miE5ZrRBaoNA8GI9PRcWFMSNQAd8K0mEFPFYcYwWm/d8UaoZIqpQnY8Z2P uxJ+hkyt/kL3Vl61gkgHMJVOdMx+RocUAFG+5xXN2fv9S6IKl87+y7Q5xRlQ==
-X-Developer-Key: i=memxor@gmail.com; a=openpgp; fpr=4BBE2A7E06ECF9D5823C61114CE0C88648BF11CA
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CANAwSgQFET-vWoOSSMFWs3LZeQMaP+VgU6o2_1Rro6NmGXQbVQ@mail.gmail.com>
 
-The pending bit is used to avoid queueing in case the lock is
-uncontended, and has demonstrated benefits for the 2 contender scenario,
-esp. on x86. In case the pending bit is acquired and we wait for the
-locked bit to disappear, we may get stuck due to the lock owner not
-making progress. Hence, this waiting loop must be protected with a
-timeout check.
+On Mon, Feb 24, 2025 at 09:37:14PM +0530, Anand Moon wrote:
+> Hi Manivannan,
+> 
+> On Mon, 24 Feb 2025 at 20:12, Manivannan Sadhasivam <mani@kernel.org> wrote:
+> >
+> > On Mon, Feb 24, 2025 at 07:33:37PM +0530, Anand Moon wrote:
+> > > Hi Manivannan
+> > >
+> > > On Mon, 24 Feb 2025 at 17:24, Manivannan Sadhasivam
+> > > <manivannan.sadhasivam@linaro.org> wrote:
+> > > >
+> > > > On Mon, Feb 24, 2025 at 03:38:29PM +0530, Anand Moon wrote:
+> > > > > Hi Manivannan
+> > > > >
+> > > > > On Mon, 24 Feb 2025 at 13:31, Manivannan Sadhasivam
+> > > > > <manivannan.sadhasivam@linaro.org> wrote:
+> > > > > >
+> > > > > > On Thu, Feb 20, 2025 at 03:53:31PM +0530, Anand Moon wrote:
+> > > > > >
+> > > > > > [...]
+> > > > > >
+> > > > > > > Following the change fix this warning in a kernel memory leak.
+> > > > > > > Would you happen to have any comments on these changes?
+> > > > > > >
+> > > > > > > diff --git a/drivers/pci/controller/plda/pcie-plda-host.c
+> > > > > > > b/drivers/pci/controller/plda/pcie-plda-host.c
+> > > > > > > index 4153214ca410..5a72a5a33074 100644
+> > > > > > > --- a/drivers/pci/controller/plda/pcie-plda-host.c
+> > > > > > > +++ b/drivers/pci/controller/plda/pcie-plda-host.c
+> > > > > > > @@ -280,11 +280,6 @@ static u32 plda_get_events(struct plda_pcie_rp *port)
+> > > > > > >         return events;
+> > > > > > >  }
+> > > > > > >
+> > > > > > > -static irqreturn_t plda_event_handler(int irq, void *dev_id)
+> > > > > > > -{
+> > > > > > > -       return IRQ_HANDLED;
+> > > > > > > -}
+> > > > > > > -
+> > > > > > >  static void plda_handle_event(struct irq_desc *desc)
+> > > > > > >  {
+> > > > > > >         struct plda_pcie_rp *port = irq_desc_get_handler_data(desc);
+> > > > > > > @@ -454,13 +449,10 @@ int plda_init_interrupts(struct platform_device *pdev,
+> > > > > > >
+> > > > > > >                 if (event->request_event_irq)
+> > > > > > >                         ret = event->request_event_irq(port, event_irq, i);
+> > > > > > > -               else
+> > > > > > > -                       ret = devm_request_irq(dev, event_irq,
+> > > > > > > -                                              plda_event_handler,
+> > > > > > > -                                              0, NULL, port);
+> > > > > >
+> > > > > > This change is not related to the memleak. But I'd like to have it in a separate
+> > > > > > patch since this code is absolutely not required, rather pointless.
+> > > > > >
+> > > > > Yes, remove these changes to fix the memory leak issue I observed.
+> > > > >
+> > > >
+> > > > Sorry, I don't get you. This specific code change of removing 'devm_request_irq'
+> > > > is not supposed to fix memleak.
+> > > >
+> > > > If you are seeing the memleak getting fixed because of it, then something is
+> > > > wrong with the irq implementation. You need to figure it out.
+> > >
+> > > Declaring request_event_irq in the host controller facilitates the
+> > > creation of a dedicated IRQ event handler.
+> > > In its absence, a dummy devm_request_irq was employed, but this
+> > > resulted in unhandled IRQs and subsequent memory leaks.
+> >
+> > What do you mean by 'unhandled IRQs'? There is a dummy IRQ handler invoked to
+> > handle these IRQs. Even your starfive_event_handler() that you proposed was
+> > doing the same thing.
+> >
+> Yes, but my solution was to work around
+> 
 
-To perform a graceful recovery once we decide to abort our lock
-acquisition attempt in this case, we must unset the pending bit since we
-own it. All waiters undoing their changes and exiting gracefully allows
-the lock word to be restored to the unlocked state once all participants
-(owner, waiters) have been recovered, and the lock remains usable.
-Hence, set the pending bit back to zero before returning to the caller.
+Which is what I'm trying to avoid....
 
-Introduce a lockevent (rqspinlock_lock_timeout) to capture timeout
-event statistics.
+> > > Eliminating the dummy code eliminated the memory leak logs.
+> >
+> From the code, we are creating a mapping of the IRQ event
+> 
+>      for_each_set_bit(i, &port->events_bitmap, port->num_events) {
+>                 event_irq = irq_create_mapping(port->event_domain, i);
+>                 if (!event_irq) {
+>                         dev_err(dev, "failed to map hwirq %d\n", i);
+>                         return -ENXIO;
+>                 }
+> 
+>                 if (event->request_event_irq)
+>                         ret = event->request_event_irq(port,
+> event_irq, i);   <---
+>                 else
+>                         ret = devm_request_irq(dev, event_irq,
+>                                                plda_event_handler,
+>                                                0, NULL, port);
+> 
+>                 if (ret) {
+>                         dev_err(dev, "failed to request IRQ %d\n", event_irq);
+>                         return ret;
+>                 }
+>         }
+> 
+> in the microchip PCIe host we are requesting those IRQ events mapping.
+> 
+> static int mc_request_event_irq(struct plda_pcie_rp *plda, int event_irq,
+>                                 int event)
+> {
+>         return devm_request_irq(plda->dev, event_irq, mc_event_handler,
+>                                 0, event_cause[event].sym, plda);
+> }
+> 
+> static const struct plda_event_ops mc_event_ops = {
+>         .get_events = mc_get_events,
+> };
+> 
+> static const struct plda_event mc_event = {
+>         .request_event_irq = mc_request_event_irq,
+>         .intx_event        = EVENT_LOCAL_PM_MSI_INT_INTX,
+>         .msi_event         = EVENT_LOCAL_PM_MSI_INT_MSI,
+> };
+> 
+> > Sorry, this is not a valid justification. But as I said before, the change
+> > itself (removing the dummy irq handler and related code) looks good to me as I
+> > see no need for that. But I cannot accept it as a fix for the memleak.
+> 
+> The StarFive PCIe host lacks the necessary hardware event mapping.
+> Consequently, the system attempts to handle dummy events, resulting
+> in observed log messages.
+> 
+> The issue is likely due to devm_request_irq being called with a NULL devname,
+> preventing proper IRQ mapping.
+> 
 
-Reviewed-by: Barret Rhoden <brho@google.com>
-Signed-off-by: Kumar Kartikeya Dwivedi <memxor@gmail.com>
----
- include/asm-generic/rqspinlock.h  |  2 +-
- kernel/locking/lock_events_list.h |  5 +++++
- kernel/locking/rqspinlock.c       | 28 +++++++++++++++++++++++-----
- 3 files changed, 29 insertions(+), 6 deletions(-)
+Then please fix the offending devm_request_irq() call. Do not workaround the
+issue.
 
-diff --git a/include/asm-generic/rqspinlock.h b/include/asm-generic/rqspinlock.h
-index 96cea871fdd2..d23793d8e64d 100644
---- a/include/asm-generic/rqspinlock.h
-+++ b/include/asm-generic/rqspinlock.h
-@@ -15,7 +15,7 @@
- struct qspinlock;
- typedef struct qspinlock rqspinlock_t;
- 
--extern void resilient_queued_spin_lock_slowpath(rqspinlock_t *lock, u32 val);
-+extern int resilient_queued_spin_lock_slowpath(rqspinlock_t *lock, u32 val);
- 
- /*
-  * Default timeout for waiting loops is 0.25 seconds
-diff --git a/kernel/locking/lock_events_list.h b/kernel/locking/lock_events_list.h
-index 97fb6f3f840a..c5286249994d 100644
---- a/kernel/locking/lock_events_list.h
-+++ b/kernel/locking/lock_events_list.h
-@@ -49,6 +49,11 @@ LOCK_EVENT(lock_use_node4)	/* # of locking ops that use 4th percpu node */
- LOCK_EVENT(lock_no_node)	/* # of locking ops w/o using percpu node    */
- #endif /* CONFIG_QUEUED_SPINLOCKS */
- 
-+/*
-+ * Locking events for Resilient Queued Spin Lock
-+ */
-+LOCK_EVENT(rqspinlock_lock_timeout)	/* # of locking ops that timeout	*/
-+
- /*
-  * Locking events for rwsem
-  */
-diff --git a/kernel/locking/rqspinlock.c b/kernel/locking/rqspinlock.c
-index efa937ea80d9..6be36798ded9 100644
---- a/kernel/locking/rqspinlock.c
-+++ b/kernel/locking/rqspinlock.c
-@@ -154,12 +154,12 @@ static DEFINE_PER_CPU_ALIGNED(struct qnode, rqnodes[_Q_MAX_NODES]);
-  * contended             :    (*,x,y) +--> (*,0,0) ---> (*,0,1) -'  :
-  *   queue               :         ^--'                             :
-  */
--void __lockfunc resilient_queued_spin_lock_slowpath(rqspinlock_t *lock, u32 val)
-+int __lockfunc resilient_queued_spin_lock_slowpath(rqspinlock_t *lock, u32 val)
- {
- 	struct mcs_spinlock *prev, *next, *node;
- 	struct rqspinlock_timeout ts;
-+	int idx, ret = 0;
- 	u32 old, tail;
--	int idx;
- 
- 	BUILD_BUG_ON(CONFIG_NR_CPUS >= (1U << _Q_TAIL_CPU_BITS));
- 
-@@ -217,8 +217,25 @@ void __lockfunc resilient_queued_spin_lock_slowpath(rqspinlock_t *lock, u32 val)
- 	 * clear_pending_set_locked() implementations imply full
- 	 * barriers.
- 	 */
--	if (val & _Q_LOCKED_MASK)
--		smp_cond_load_acquire(&lock->locked, !VAL);
-+	if (val & _Q_LOCKED_MASK) {
-+		RES_RESET_TIMEOUT(ts, RES_DEF_TIMEOUT);
-+		res_smp_cond_load_acquire(&lock->locked, !VAL || RES_CHECK_TIMEOUT(ts, ret));
-+	}
-+
-+	if (ret) {
-+		/*
-+		 * We waited for the locked bit to go back to 0, as the pending
-+		 * waiter, but timed out. We need to clear the pending bit since
-+		 * we own it. Once a stuck owner has been recovered, the lock
-+		 * must be restored to a valid state, hence removing the pending
-+		 * bit is necessary.
-+		 *
-+		 * *,1,* -> *,0,*
-+		 */
-+		clear_pending(lock);
-+		lockevent_inc(rqspinlock_lock_timeout);
-+		return ret;
-+	}
- 
- 	/*
- 	 * take ownership and clear the pending bit.
-@@ -227,7 +244,7 @@ void __lockfunc resilient_queued_spin_lock_slowpath(rqspinlock_t *lock, u32 val)
- 	 */
- 	clear_pending_set_locked(lock);
- 	lockevent_inc(lock_pending);
--	return;
-+	return 0;
- 
- 	/*
- 	 * End of pending bit optimistic spinning and beginning of MCS
-@@ -378,5 +395,6 @@ void __lockfunc resilient_queued_spin_lock_slowpath(rqspinlock_t *lock, u32 val)
- 	 * release the node
- 	 */
- 	__this_cpu_dec(rqnodes[0].mcs.count);
-+	return 0;
- }
- EXPORT_SYMBOL(resilient_queued_spin_lock_slowpath);
+- Mani
+
 -- 
-2.43.5
-
+மணிவண்ணன் சதாசிவம்
