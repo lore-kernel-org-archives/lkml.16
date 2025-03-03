@@ -1,309 +1,140 @@
-Received: from smtp15.bhosted.nl (smtp15.bhosted.nl [94.124.121.26])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E4F120F093
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 13:18:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=94.124.121.26
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D860F21148C
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 13:18:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741007923; cv=none; b=fKuBsotT/r/oTKUFj/dRXPtxU+rpDz1sXecsgbthSSum4WnvtaweEnsiRiNBKsJ7MT4jTCi9LGYyxnKRLhoj3halOojX/8Qnk+hopDxobi+qd6rJeim4gsdbOxOP8Pkb/nQ1obZe0V200wcs+TTJB+6P5L1xEXI/imZXnNzY2GA=
+	t=1741007924; cv=none; b=Dur/6zmuPxpJTQJY7s5QZ8IQD4QhKV4hZrVjEs24Pl56zoW1CgWnGwZWP70vM1n1BH+CeJ6a79lKH/9TKastBqPHOy1D2zYsgwunJTDVj//rDxkS+2BXbgqI18EF4nCfPe6iS/MOsQBWDxMyin4moRtguIBOcyqg/yC+VNwOHrc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741007923; c=relaxed/simple;
-	bh=AMDQ9eFx0aMl37aNjAdud2rQll+8S9hW7w2yT459u9w=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Q7ywlUY++JYkYwDOiJ6lnVZaFRwVQK5h6Mr/TGzRn0DBWxwKy3EBYMmQiYtcQBfyEgANCtFB/ZfJ7SQOJZ0mG6+WkiQ1C1BOiS7uMsOLYAWKIW/t+sfjbkOULDLcVxXSjWkFd+l4D85juZwALB3+IfKbDBCyNQLXKVRqqWczII4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=protonic.nl; spf=pass smtp.mailfrom=protonic.nl; dkim=pass (2048-bit key) header.d=protonic.nl header.i=@protonic.nl header.b=V2VWHjdH; arc=none smtp.client-ip=94.124.121.26
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=protonic.nl
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protonic.nl
+	s=arc-20240116; t=1741007924; c=relaxed/simple;
+	bh=C2FD3r9G96fNyZ/7mG5NtCcGXXprvCDkvpsW+gGA0d8=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=UAbE92/r3Q9IwQtfQrPy9ZTmmU4Q7tnw0khDVTdsNiXFJbX8p7izknE0nl4Ei1AT4qUJu8Z6MWeF7KwInSGr7YHShU91QwTviE48Ek5sQpk8seuHTxbZEzat0H12npMuoTGYkwL18pn0Qa4+5/9DgoavPQy7NCdIGSG/o1JaD7A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=0L5A1N6g; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=protonic.nl header.i=@protonic.nl header.b="V2VWHjdH"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="0L5A1N6g"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-43bc0b8520cso5914765e9.1
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Mar 2025 05:18:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=protonic.nl; s=202111;
-	h=content-transfer-encoding:content-type:mime-version:references:in-reply-to:
-	 message-id:subject:cc:to:from:date:from;
-	bh=07jHBQ0Ocr20eMkBHU7wCv3Kb+u8M2gSl1jHl4Krjyw=;
-	b=V2VWHjdH50wFOAzqiqTCz4ucfQSAqCESzCrmKnlGDokUdrXyVCjY95wGlKxQEqab88IbyapJ8HitR
-	 HhPCkTVbdTVmITlaPVwF3DF45rsjZ8KKS9QR1QgL9Z9ZJ5PpeqMyb4Z4Br1b1QGHaU9XuSjwQA5XjL
-	 A9EK9KrVHqZcBBGpkCbhwHNy2zuIXnCvY+Yqh6IJUonUEaNniEQT+LOJaiv8qIBYHv/lxzT4aRN+2w
-	 0Ycn1oeGVIj2B/QPxKjK8H50uESCFnozuiYgwKdA25We/6ZDtA7Zez1CmVi/IbJCfJ/OrJ8aJ40Ipn
-	 ZWeXSYlWcX+QRqZW16a2zXBCEZZ+o4g==
-X-MSG-ID: 04a26b70-f832-11ef-a39b-00505681446f
-Date: Mon, 3 Mar 2025 14:18:37 +0100
-From: David Jander <david@protonic.nl>
-To: David Lechner <dlechner@baylibre.com>
-Cc: linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, Jonathan Corbet
- <corbet@lwn.net>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
- <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
- devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Nuno Sa
- <nuno.sa@analog.com>, Jonathan Cameron <jic23@kernel.org>, Oleksij Rempel
- <o.rempel@pengutronix.de>
-Subject: Re: [RFC PATCH 6/7] dt-bindings: motion: Add adi,tmc5240 bindings
-Message-ID: <20250303141837.782e57f7@erd003.prtnl>
-In-Reply-To: <CAMknhBFoRoaXWBL-vDnDrepqw_KJ-VrYeOoGJfjz8q=wDNM6xA@mail.gmail.com>
-References: <20250227162823.3585810-1-david@protonic.nl>
-	<20250227162823.3585810-7-david@protonic.nl>
-	<7b2a8d71-9d83-4d40-903b-ba7ef1c686f3@baylibre.com>
-	<20250303122253.26fec335@erd003.prtnl>
-	<CAMknhBFoRoaXWBL-vDnDrepqw_KJ-VrYeOoGJfjz8q=wDNM6xA@mail.gmail.com>
-Organization: Protonic Holland
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1741007921; x=1741612721; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=X8hAv7noimuIZZQmeIe3WLO3rZ6iIEPRpuvmg5XIUhY=;
+        b=0L5A1N6g/4nIQQvv2TLNEKO9+X3Pm7PaMyhWiSIlWyUZ3nlZgwdpDILlZSALB2mxc5
+         Qo96OnHtS5mK8a0YiNozilrvR1O7pMYSuqTg6m5a1hqgys7ButrWYsjJfgmle5KWfuNR
+         YLdlzwsWyIl/HfcSb/YP9yhAF/Q1oh2VzZRNV3oootC+OzY6c/ObdpBV1GvPz95tnroK
+         kJjbzRUUulzCwRBmmWTQe/WAFEeHkdvGI8XZhvcqiEQR3upVYdXndlhpMOcMybAgxkVG
+         m8i7hvkuTmp6dlwRcWjpRFJZfw6W/4OCWy4sQse27ZctW0AmRwK9hACXc78AINdynSg6
+         bL2Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741007921; x=1741612721;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=X8hAv7noimuIZZQmeIe3WLO3rZ6iIEPRpuvmg5XIUhY=;
+        b=UYW1vtlOlddnApQbYbUVrCtZyk60cZtGowXPVTLV70GYonOuAruBgJq3xrBcMoEz6C
+         UlK57D+Skih+RWE44rF6uYwDY3u9lLri4KB7KlexzyT9V0X3O+t8tigA1IAxvECSwMF+
+         TWgDLhJjAxC0sAXbdfHzsds375nalqo/OM2YNhiwILLK/TVXRpmscOmHjRbzJwxWvipy
+         HjvuzomymvjxqzztHI+znen9K6zwowMZovNa6prOVlejjN5DLRUxjFKcY8sS4KmH+Wn+
+         aRT6FrCIVD0u4od4wvKwg48KAh2xRIIj+JtWmzxcgNpnhvMzu9SRs3F7j7BiOT5IlrkE
+         F32Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWMvACppqabLj0DQUJrDETQUWFnVaBkrdb4EqRJusNRBVp4adoBP7j4721F/Uv/5d1gyhLqh3Y6OPu1mho=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzjtTkb1a61YfraulDYakvHYJIV5pD3rVE/IX23waadQfNq8PkK
+	RLiGMUpk58rY9LhiOuvWzjq3Eeyw4fFlVtm3dR8pIYZlN9vri5LuA51H7u7+OoU=
+X-Gm-Gg: ASbGncs6lNI7W9D/tOK8T9vZJ9zj3hf9xN3VEjzlyVEnyisxC9KfJD2KcXHX1L/9xVk
+	9nBVVThf8DZadpJvZSni4MCht/euw7gb7aBLD/lbo6tZQ/XM7B/WxBiEIqa1i1WiV68OaLHwCb2
+	Vo1Vq8X/Ug3aKU5TC30kFRdJvZ0yYImvPX5pdMlphcDowx/aultbZTSEqUUSEpH8YeFWP8FoHK9
+	EOCzENp4lYPSHQoRGA6Szf0RNx0g/kUY0F+ay2o94Ed9ftH4VZPwEnEb2laCA52vocV+N3ZJwfS
+	fSj6NcakxDDrTc9h8+9Mahhg15Y1jbdtPA5EcA==
+X-Google-Smtp-Source: AGHT+IENjU5auSW6uBydmqpRlN4cRim5e7ftx75e07xHAIh+YvS9KyaVM39ESiF/66tXbphMfz7i4g==
+X-Received: by 2002:a05:600c:3112:b0:439:99d1:d4a4 with SMTP id 5b1f17b1804b1-43ba670a870mr109103405e9.18.1741007921076;
+        Mon, 03 Mar 2025 05:18:41 -0800 (PST)
+Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:664a:9e92:6aa8:6007])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43aba538b9fsm194821915e9.17.2025.03.03.05.18.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Mar 2025 05:18:40 -0800 (PST)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Mon, 03 Mar 2025 14:18:28 +0100
+Subject: [PATCH 03/15] gpio: adnp: use devm_mutex_init()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250303-gpiochip-set-conversion-v1-3-1d5cceeebf8b@linaro.org>
+References: <20250303-gpiochip-set-conversion-v1-0-1d5cceeebf8b@linaro.org>
+In-Reply-To: <20250303-gpiochip-set-conversion-v1-0-1d5cceeebf8b@linaro.org>
+To: Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, 
+ Michael Hennerich <michael.hennerich@analog.com>, 
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
+ Mun Yew Tham <mun.yew.tham@intel.com>, Joel Stanley <joel@jms.id.au>, 
+ Andrew Jeffery <andrew@codeconstruct.com.au>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-pwm@vger.kernel.org, patches@opensource.cirrus.com, 
+ linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, 
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+X-Mailer: b4 0.14.1
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1039;
+ i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
+ bh=rVvnRkyDf21RjdggCKIxDxEyQFvc1fgcMj5lcOy+gbw=;
+ b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBnxawp7Yvsyrv6sI169Lp9L4rRvfe6m5SnbOO8v
+ UqoONS7cQOJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCZ8WsKQAKCRARpy6gFHHX
+ ctf9EACVXYJIoLFFThB1bopDzr4Y6565Nv71gHd7ciywfLXPYQ6yTBNpZh/2RSmBQB+e+ja86PH
+ CUip+9SBF9kzpxZiGkp6FhfuDN54tAmirDRWrtRODLUV3iHyzK9uH0jo1tXljQOt1NYRquUBhgN
+ bGB/C2ihy4oE6qHKnMakBSbtacDEQp6fbBYxfNGH84kysXmJQV43Mv1NUjNnf/aHFKvNkgWDtin
+ vHcT2e6jtYK1G5qPaEchHbyTOloRaGL4KXF+r87jQrAvoJFh5Qt7IswZ/Fmv1p+Er+tsRg1Dn4Y
+ yYvnyN2mVheduT8LzO4AzsbzrjhkjYvz+vNbkfnZ450m15iY9yEiaCFyFc9WzGuR4PWA4+Vqbtb
+ 79F2tyV/LUQcR35Okda9wZAqhOGnH1EsdPjzfoAjV9UaqS3Dl7KloSMDvc1a5nEL4sX4JzhZgHf
+ 9ZF2kvH0tk3HMIpOQQR/ZbQ1CTCAxX6av1Qdbniwf08+kv/DyzDulxnlVG/qXDQ5LhC5fF3iUpM
+ hdZiVTFUbzMvEXFScb9AF/4l3uK9w2PgNEZjDZ7aIzESl4APeYcOLcMK+vKAIPJUlaOYbOwMBZo
+ lfhFveb81B6cBFCYG0aoXsPcfnT2rUfb4+52AfSHbC6d5HEiyQpdiT+5q5UoentxBKekBIrFEPc
+ Y0M8FNdhHVNmC2g==
+X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
+ fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
 
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Dear David,
+The mutex initialized in probe() is never cleaned up. Use
+devm_mutex_init() to do it automatically.
 
-On Mon, 3 Mar 2025 13:28:35 +0100
-David Lechner <dlechner@baylibre.com> wrote:
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+ drivers/gpio/gpio-adnp.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-> (Sorry if you get this twice. I don't have my regular computer today
-> and didn't realize I was sending HTML the first time. Resending in
-> plain text so the lists pick it up.)
->=20
-> On Mon, Mar 3, 2025 at 12:22=E2=80=AFPM David Jander <david@protonic.nl> =
-wrote:
-> >
-> >
-> > Dear David,
-> >
-> > On Fri, 28 Feb 2025 16:38:51 -0600
-> > David Lechner <dlechner@baylibre.com> wrote:
-> > =20
-> > > On 2/27/25 10:28 AM, David Jander wrote: =20
-> > > > Add device-tree bindings for Analog Devices TMC5240 stepper control=
-lers.
-> > > >
-> > > > Signed-off-by: David Jander <david@protonic.nl>
-> > > > ---
-> > > >  .../bindings/motion/adi,tmc5240.yaml          | 60 +++++++++++++++=
-++++
-> > > >  1 file changed, 60 insertions(+)
-> > > >  create mode 100644 Documentation/devicetree/bindings/motion/adi,tm=
-c5240.yaml
-> > > >
-> > > > diff --git a/Documentation/devicetree/bindings/motion/adi,tmc5240.y=
-aml b/Documentation/devicetree/bindings/motion/adi,tmc5240.yaml
-> > > > new file mode 100644
-> > > > index 000000000000..3364f9dfccb1
-> > > > --- /dev/null
-> > > > +++ b/Documentation/devicetree/bindings/motion/adi,tmc5240.yaml
-> > > > @@ -0,0 +1,60 @@
-> > > > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> > > > +%YAML 1.2
-> > > > +---
-> > > > +$id: http://devicetree.org/schemas/motion/adi,tmc5240.yaml#
-> > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > > +
-> > > > +title: Analog Devices TMC5240 Stepper Motor controller
-> > > > +
-> > > > +maintainers:
-> > > > +  - David Jander <david@protonic>
-> > > > +
-> > > > +description: |
-> > > > +   Stepper motor controller with motion engine and SPI interface. =
-=20
-> > >
-> > > Please include a link to the datasheet. =20
-> >
-> > Will do.
-> > =20
-> > > > +
-> > > > +properties:
-> > > > +  compatible:
-> > > > +    enum:
-> > > > +      - adi,tmc5240
-> > > > +
-> > > > +  reg:
-> > > > +    maxItems: 1
-> > > > +
-> > > > +  interrupts:
-> > > > +    maxItems: 1 =20
-> > >
-> > > I assume that this is the overvoltage output (OV pin). Would be nice =
-to have
-> > > a description here saying that. There are also NAO and DIAG0/1 output=
- pins, so
-> > > it's a bit ambiguous otherwise. =20
-> >
-> > This is the DIAG0 output pin which on this chip has a dual function as =
-either
-> > a STEP output or an interrupt output. The pin name is a bit misleading,=
- but it
-> > is the "interrupt" function that is meant here. The datasheet documents=
- all
-> > the different events that can trigger this interrupt.
-> > I will add a description to clarify this.
-> > =20
->=20
-> If it makes sense that other pins could possibly ever be connected to
-> interrupts then we can add those and also add interrupt-names (but
-> only if there is more than one possible interrupt).
+diff --git a/drivers/gpio/gpio-adnp.c b/drivers/gpio/gpio-adnp.c
+index dc87768276ec..d6ae9cf1eb54 100644
+--- a/drivers/gpio/gpio-adnp.c
++++ b/drivers/gpio/gpio-adnp.c
+@@ -9,6 +9,7 @@
+ #include <linux/interrupt.h>
+ #include <linux/mod_devicetable.h>
+ #include <linux/module.h>
++#include <linux/mutex.h>
+ #include <linux/property.h>
+ #include <linux/seq_file.h>
+ #include <linux/slab.h>
+@@ -482,7 +483,10 @@ static int adnp_i2c_probe(struct i2c_client *client)
+ 	if (!adnp)
+ 		return -ENOMEM;
+ 
+-	mutex_init(&adnp->i2c_lock);
++	err = devm_mutex_init(&client->dev, &adnp->i2c_lock);
++	if (err)
++		return err;
++
+ 	adnp->client = client;
+ 
+ 	err = adnp_gpio_setup(adnp, num_gpios, device_property_read_bool(dev, "interrupt-controller"));
 
-AFAIK, only DIAG1 would potentially make sense to be connected to an
-interrupt. It can be programmed to go low when the motor position matches t=
-he
-contents of the X_COMPARE/X_COMPARE_REPEAT register setting.
+-- 
+2.45.2
 
-I will add that one if you agree. It will not be mandatory of course.
-
-In any case, if that pin was connected to an interrupt pin right now, it co=
-uld
-already be used as an IIO trigger for example. Just not (yet) via this driv=
-er.
-
->[...]
-> > The resistor connected to the IREF pin (Rref) OTOH does have an implica=
-tion to
-> > the software, as it sets the full-range current of the output stage.
-> >
-> > How should we specify that? Is it adequate to add an optional DT proper=
-ty
-> > "rref" or "rref-ohm" with an int32 value in Ohm? The default value if
-> > unspecified is 12000 Ohm. =20
->=20
-> It looks like there are a few standardized properties, like
-> sense-resistor-ohms if that fits the use case. Otherwise, an
-> vendor-specific ti,rref-ohms would work. FYI, you can find the
-> preferred units at [1].
->=20
-> [1]: https://github.com/devicetree-org/dt-schema/blob/main/dtschema/schem=
-as/property-units.yaml
-
-Ah, thanks! This is helpful.
-
-Will use this for ti,rref-ohms. I guess in this case that would be easier to
-understand than "sense-resistor-ohms", which is also okay, but would require
-reading the description to know what exactly is meant in this context.
-
-> > > And if there are any pins would make sense to connect to a gpio, we c=
-an add
-> > > those even if the driver doesn't use it currently.
-> > > =20
-> > > > +  clocks:
-> > > > +    maxItems: 1
-> > > > +
-> > > > +required:
-> > > > +  - compatible
-> > > > +  - reg
-> > > > +  - interrupts
-> > > > +  - clocks
-> > > > +
-> > > > +allOf:
-> > > > +  - $ref: /schemas/spi/spi-peripheral-props.yaml#
-> > > > +  - $ref: /schemas/motion/common.yaml# =20
-> > >
-> > > If we need to know about what is connected to the output of a motor c=
-ontroller
-> > > I would expect it to be done with child node for each output. That wa=
-y each
-> > > output can be unique, if needed. Basically, similar to iio/adc.yaml i=
-s used to
-> > > provide common properties for channel@ child nodes on iio devices. =20
-> >
-> > This controller chip only has one single output for one stepper motor (4
-> > wires). While technically you could connect something else to those 4 w=
-ires, I
-> > don't think it is the scope of LMC to support that. The chip itself isn=
-'t
-> > designed for that purpose and it would clearly go far beyond the intend=
-ed
-> > purpose of this device.
-> >
-> > That being said, your suggestion of supporting child nodes may actually=
- be a
-> > good idea. Right now, we specify the type of motor (basically nominal- =
-and hold
-> > current settings) in user-space and set the IRUN/IHOLD parameters from
-> > user-space via the sysfs attributes interface. It might make sense to h=
-ave a DT
-> > child node to specify this, although in our current application this is=
- not
-> > very practical, since there are many motor controllers on one board, an=
-d it is
-> > configurable in software (runtime) which motor is connected to which ou=
-tput.
-> >
-> > But I can imagine a situation where it may be fixed and thus can be des=
-cribed
-> > in the DT of a board.
-> >
-> > Then again I don't know if it would be over-complicating things with so=
-mething
-> > like this:
-> >
-> >         motor-controller@0 {
-> >                 ...
-> >                 motor@0 {
-> >                         compatible =3D "nanotec,st4118s1006";
-> >                         irun-ma =3D <1800>;
-> >                         ihold-ma =3D <270>;
-> >                 };
-> >         };
-> >
-> > where we'd possibly have a stepper-motors.c file with a lot of structs =
-and
-> > matching tables for the different motor types.... sounds like overkill =
-to me,
-> > but maybe not? =20
->=20
-> A compatible for motors seems too much. I was just thinking along the
-> lines that 1) if we need to so some scaling or something that depends
-> on a motor constant, then it would make sense to put those constants
-> in the DT and 2) if there is a motor controller with more than one
-> output that could be connected to two or more different sizes of
-> motors with different constants, then we either need child nodes or an
-> array to be able to enter the different constants. Either one would
-> work. So maybe simpler to just use an array instead of child nodes now
-> that I'm thinking about it more.
-
-Well, in the case of the TMC5240 there isn't much more than a single motor
-with possibly some fixed setting of irun/ihold in some cases, but like I sa=
-id,
-in our case it is run-time configurable, so not something fixed to the
-hardware-description. Apart from that, there are the speed- and acceleratio=
-n-
-conversion constants, which per default are the constants stated in the
-datasheet. In some rare cases one might want to overrule them, but that can
-already be done.
-
-LMC does als support multi-channel controllers, and in that case I intend to
-make use of child nodes for the different channels, to be able to specify
-those parameters per motor.
-
-So maybe just leave it as it currently is for the tmc5240?
-
-> > > > +
-> > > > +unevaluatedProperties: false
-> > > > +
-> > > > +examples:
-> > > > +  - |
-> > > > +    spi {
-> > > > +        #address-cells =3D <1>;
-> > > > +        #size-cells =3D <0>;
-> > > > +
-> > > > +        motor@0 { =20
-> > >
-> > > motor-controller@ or actuator-controller@
-> > >
-> > > The chip is the controller/driver, it is not a motor. =20
-> >
-> > Make sense. Will change this.
-> > =20
-> > > > +            compatible =3D "adi,tmc5240";
-> > > > +            reg =3D <0>;
-> > > > +            interrupts-extended =3D <&gpiok 7 0>;
-> > > > +            clocks =3D <&clock_tmc5240>;
-> > > > +            enable-supply =3D <&stpsleepn>;
-> > > > +            spi-max-frequency =3D <1000000>;
-> > > > +        };
-> > > > +    }; =20
-
-Best regards,
-
---=20
-David Jander
