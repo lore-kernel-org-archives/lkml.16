@@ -1,137 +1,163 @@
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0427D22AE59
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 18:12:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F4961EF0B7;
+	Mon,  3 Mar 2025 18:13:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741025524; cv=none; b=pXEqj4Oz2qTqujhI995uxh5y2wi+Y3M6YoWklqd/l943xxuuRapyaGSVP1cVZLt1618wwC8QkvqKwVowth2fiFVNZLiod7mJ5xR9urvzf+YCLflfrEd9hjlQxo4aUYyhp74Rrs0dVZGu3J9t/XSHqwc6PFFhv0CcW81OrcwEgvg=
+	t=1741025617; cv=none; b=ayE/PVxUnmKfWaSDd9t1hxN0yOf8HNvCED7SlP4aDNrwmK6WZdZchCKozivgaxRAOWD0p893cEAmXKb9cMmUMzYiYA8+W4TuWePPYpW3g6+sW4v8LJLn9QNPnpKqwjPaF+cikqUdZjpvtbPD8hrvhAjfkZMBzDoRF3IsL0oKwxI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741025524; c=relaxed/simple;
-	bh=TnxBPfGniWDH996lZir1svgM+Ifn3JDhQPzo3qayJiM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BrVaBL9joj3wHRtozri1p6rIgnjJSXqATTBvqcDIl5Ulv+YwZjv0KkswzvzrBkMDDXnBQK9oXHjAvPpamAZ7ZIuXam/0DtLbCLroDFcu/+i6PCmCWWD0P6oeNctJxd+XyfgUd26EPpRzfPCIZ/TItME/7wn9IybzTxdD06a6Rm8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=TwMcwcWu; arc=none smtp.client-ip=209.85.208.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1741025617; c=relaxed/simple;
+	bh=F6Z0BN+3hKZPN/y08u5s9KL0bARPiF2rGzp+BqQm9pw=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=os2jI4h4q6zZCbMjYDgmLSwQh8GQ8j1NgwkauwRCVFC873u54Mef1+v6H5hzLXphYLpIXDuqkF+gcArW0nXVdHUvwxVy02vhh+LT5d3UE09SBJG+Nh/HAH4KPvLdqLOOn1SIM+EWKWeLY8EATsaZLiuPyjJ1JwMvyt1Mg8S8zOY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=E9elgDOP; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="TwMcwcWu"
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5dccaaca646so1174343a12.0
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Mar 2025 10:12:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1741025520; x=1741630320; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=C3MNxRS6G3spvOqXxyEtEnmq/idBtxgbtnljLuGuoq0=;
-        b=TwMcwcWulXN4r0N57cXPfeqbx+fitZ4mBF7+/x7D376XWs8LlpHzPKiM0dbMPxwKvi
-         WF2hhtfaJRf2BvH3TA/FYCMIDfkS125we6IiaIieQG+PZgxFdi9HSCq/kgydrrDWG1PE
-         JoaR0GTTmAA+umvhuc1dSAmJJUfQYQ1f+qAxs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741025520; x=1741630320;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=C3MNxRS6G3spvOqXxyEtEnmq/idBtxgbtnljLuGuoq0=;
-        b=qtoBlH27bK40qpC7KL6t3HGuUTiOXnooku2crlsaGsCre59leXbZmSTmbqBpuzpntS
-         gz5C0e4a4pdGyg4xmgiCDSEdX/ioAcB41yQKl4sHlYuIq/ohw90+Ynut4tZ55LgLTD2d
-         izrh+4u3p9+0skheVm17L/CBzpH2FbQt3cFcyIEtEAUvUl3VVTu1PGrTr9BF36pY1zFo
-         hDr4MwJgoGohtx1GrjxMsqOcRYFB7bDg8l7YC2eI490YjPaimPwpLqQ4PUZEp/Mfsane
-         czTyBT+U6Bd77xBDO1O2WbHRdeETjdH0r5DrRewpcbjlyH6kOcT3YGEiVQUZEwrhU1Sj
-         kM6g==
-X-Forwarded-Encrypted: i=1; AJvYcCX6W7uEMucdSh+24dEY6EcogvuJAk9TVYO9kHO5Tetf4D7bmIaiNNI+cJjtACJjObeK3wwtmbtiv+dsOrY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyzFzF+EZ+5s/ePII9mApnBnqtnaVyS9VE1ykukpWr5QhXh6bqT
-	udXB8aow4u8L0ncKE9CaKgvWa/wqLHwOOwEjgggt57yg5pVHLUZTHMQD0L/djMNVBwpo1tSh9v4
-	scBE=
-X-Gm-Gg: ASbGncsYqyVBv54LbP1Uf9VZGNFOKQcxVsKicbeQ6d5ppfmk2tGKGui0XelYG6NMU4G
-	qbe1R9AYgVJr/bFlDSQbFN3ozXFQgdi1Cr22ojPc4LYBWrmXJewbeFqa9b6vzV8yKvwtTIGAplf
-	4hR3navsNmEWGVnkXrSazjwtw0sw5R1TaEvf23eAaQaK6dkvwMx2XW6RwgfCkkmwg8JAxzK7lCY
-	/iUtymOZGx4vT+ENKvh4USZH+fdlKtSuc1LSSgNjnsPnYiamnlBmDjWUrl8+xliiXNHL+WzcO6u
-	4q8deF5PvfrQeMMRAJzj45sGmnscwQgkblYWGWybOLXRmZoCU6oSb/M573n3xrop71TNDJIkQhF
-	IXqRY6FTOcjjUbmEO88w=
-X-Google-Smtp-Source: AGHT+IGKqSH0J7fSrwQOr4janBQCNgDG3zGMIjx+hoKNXWhfthnA0W7d5Ws9z6NxYGc/U03cNJbL7w==
-X-Received: by 2002:a05:6402:5113:b0:5db:68bd:ab78 with SMTP id 4fb4d7f45d1cf-5e584ecb45bmr250232a12.10.1741025520098;
-        Mon, 03 Mar 2025 10:12:00 -0800 (PST)
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com. [209.85.208.45])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5e4c3fb4818sm7038978a12.64.2025.03.03.10.11.56
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 03 Mar 2025 10:11:57 -0800 (PST)
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5e56b229d60so1583084a12.0
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Mar 2025 10:11:56 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCW+0lIC+ZzUxxMtd4zsG8umH3TuYbBkUYhXpnk4KilOPUKszZRf4POQL/UKGFEpquL0KAjxeiVl+5ggZ0I=@vger.kernel.org
-X-Received: by 2002:a17:907:8701:b0:ac1:f247:69f5 with SMTP id
- a640c23a62f3a-ac1f24773b1mr1536466b.28.1741025516145; Mon, 03 Mar 2025
- 10:11:56 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="E9elgDOP"
+Received: from [100.65.97.24] (unknown [20.236.11.185])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 01FD42110480;
+	Mon,  3 Mar 2025 10:13:29 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 01FD42110480
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1741025610;
+	bh=vjIVrkAKe+QXU3xO1k+YnRel/IS8P/2bHL0s5aUiBxY=;
+	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
+	b=E9elgDOPj8Ox/9Gsvyd7W/Zp9zOI0KKL5YZvCjgV3HlH6J2C9fc1dhIeRK+rgUGjz
+	 PKAS5/wQ4IPVLJ8hOYD+lbQVO4rWClH18aV+ljO4Mys1DuLjSTFNxpMnmnhU47qGMd
+	 HLNe9Pr2WNTiFJHXqXiCL26hr5bk9V6SW9AVWob4=
+Message-ID: <d5035d88-f714-47c2-ace6-8bd609d84633@linux.microsoft.com>
+Date: Mon, 3 Mar 2025 10:13:34 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <qsehsgqnti4csvsg2xrrsof4qm4smhdhv6s4v4twspf76bp3jo@2mpz5xtqhmgt>
- <c63cc8e8-424f-43e2-834f-fc449b24787e@amd.com> <20250227211229.GD25639@redhat.com>
- <06ae9c0e-ba5c-4f25-a9b9-a34f3290f3fe@amd.com> <20250228143049.GA17761@redhat.com>
- <20250228163347.GB17761@redhat.com> <03a1f4af-47e0-459d-b2bf-9f65536fc2ab@amd.com>
- <CAGudoHHA7uAVUmBWMy4L50DXb4uhi72iU+nHad=Soy17Xvf8yw@mail.gmail.com>
- <CAGudoHE_M2MUOpqhYXHtGvvWAL4Z7=u36dcs0jh3PxCDwqMf+w@mail.gmail.com>
- <741fe214-d534-4484-9cf3-122aabe6281e@amd.com> <3jnnhipk2at3f7r23qb7fvznqg6dqw4rfrhajc7h6j2nu7twi2@wc3g5sdlfewt>
-In-Reply-To: <3jnnhipk2at3f7r23qb7fvznqg6dqw4rfrhajc7h6j2nu7twi2@wc3g5sdlfewt>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Mon, 3 Mar 2025 08:11:39 -1000
-X-Gmail-Original-Message-ID: <CAHk-=whuLzj37umjCN9CEgOrZkOL=bQPFWA36cpb24Mnm3mgBw@mail.gmail.com>
-X-Gm-Features: AQ5f1Jo-KDGS5FfxZY52-hiw6AvppvhzrcZgtVg7pKdUaM30hFo6-N9SADGkoog
-Message-ID: <CAHk-=whuLzj37umjCN9CEgOrZkOL=bQPFWA36cpb24Mnm3mgBw@mail.gmail.com>
-Subject: Re: [PATCH] pipe_read: don't wake up the writer if the pipe is still full
-To: Mateusz Guzik <mjguzik@gmail.com>
-Cc: K Prateek Nayak <kprateek.nayak@amd.com>, "Sapkal, Swapnil" <swapnil.sapkal@amd.com>, 
-	Oleg Nesterov <oleg@redhat.com>, Manfred Spraul <manfred@colorfullife.com>, 
-	Christian Brauner <brauner@kernel.org>, David Howells <dhowells@redhat.com>, 
-	WangYuli <wangyuli@uniontech.com>, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, 
-	"Shenoy, Gautham Ranjal" <gautham.shenoy@amd.com>, Neeraj.Upadhyay@amd.com, Ananth.narayan@amd.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+ Daniel Vacek <neelx@suse.com>, Ilya Dryomov <idryomov@gmail.com>,
+ Dongsheng Yang <dongsheng.yang@easystack.cn>, Xiubo Li <xiubli@redhat.com>,
+ eahariha@linux.microsoft.com, ceph-devel@vger.kernel.org,
+ linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 1/2] rbd: convert timeouts to secs_to_jiffies()
+To: Alex Elder <elder@ieee.org>, Andrew Morton <akpm@linux-foundation.org>,
+ Jens Axboe <axboe@kernel.dk>
+References: <20250301-converge-secs-to-jiffies-part-two-v4-0-c9226df9e4ed@linux.microsoft.com>
+ <20250301-converge-secs-to-jiffies-part-two-v4-1-c9226df9e4ed@linux.microsoft.com>
+ <4c4b3d6f-64b7-4ba3-8d2e-d8b1f1a03a53@ieee.org>
+From: Easwar Hariharan <eahariha@linux.microsoft.com>
+Content-Language: en-US
+In-Reply-To: <4c4b3d6f-64b7-4ba3-8d2e-d8b1f1a03a53@ieee.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Mon, 3 Mar 2025 at 07:55, Mateusz Guzik <mjguzik@gmail.com> wrote:
->
-> Can you guys try out the patch below?
->
-> It changes things up so that there is no need to read 2 different vars.
+On 3/2/2025 9:05 AM, Alex Elder wrote:
+> On 2/28/25 10:22 PM, Easwar Hariharan wrote:
+>> Commit b35108a51cf7 ("jiffies: Define secs_to_jiffies()") introduced
+>> secs_to_jiffies().  As the value here is a multiple of 1000, use
+>> secs_to_jiffies() instead of msecs_to_jiffies() to avoid the multiplication
+>>
+>> This is converted using scripts/coccinelle/misc/secs_to_jiffies.cocci with
+>> the following Coccinelle rules:
+>>
+>> @depends on patch@ expression E; @@
+>>
+>> -msecs_to_jiffies(E * 1000)
+>> +secs_to_jiffies(E)
+>>
+>> @depends on patch@ expression E; @@
+>>
+>> -msecs_to_jiffies(E * MSEC_PER_SEC)
+>> +secs_to_jiffies(E)
+>>
+>> Change the check for range to check against HZ.
+>>
+>> Acked-by: Ilya Dryomov <idryomov@gmail.com>
+>> Signed-off-by: Easwar Hariharan <eahariha@linux.microsoft.com>
+> 
+> I think what you've done in the last hunk below should not be
+> done that way.  I also suggest something to the (related, but
+> not part of this series) secs_to_jiffies() implementation.
+> 
+>> ---
+>>   drivers/block/rbd.c | 8 ++++----
+>>   1 file changed, 4 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/drivers/block/rbd.c b/drivers/block/rbd.c
+>> index faafd7ff43d6ef53110ab3663cc7ac322214cc8c..1c406b17f3cee741b7bdd9f742958b3f1d5b1bbe 100644
+>> --- a/drivers/block/rbd.c
+>> +++ b/drivers/block/rbd.c
+>> @@ -108,7 +108,7 @@ static int atomic_dec_return_safe(atomic_t *v)
+>>   #define RBD_OBJ_PREFIX_LEN_MAX    64
+>>     #define RBD_NOTIFY_TIMEOUT    5    /* seconds */
+>> -#define RBD_RETRY_DELAY        msecs_to_jiffies(1000)
+>> +#define RBD_RETRY_DELAY        secs_to_jiffies(1)
+>>     /* Feature bits */
+>>   @@ -4162,7 +4162,7 @@ static void rbd_acquire_lock(struct work_struct *work)
+>>           dout("%s rbd_dev %p requeuing lock_dwork\n", __func__,
+>>                rbd_dev);
+>>           mod_delayed_work(rbd_dev->task_wq, &rbd_dev->lock_dwork,
+>> -            msecs_to_jiffies(2 * RBD_NOTIFY_TIMEOUT * MSEC_PER_SEC));
+>> +            secs_to_jiffies(2 * RBD_NOTIFY_TIMEOUT));
+>>       }
+>>   }
+>>   @@ -6283,9 +6283,9 @@ static int rbd_parse_param(struct fs_parameter *param,
+>>           break;
+>>       case Opt_lock_timeout:
+>>           /* 0 is "wait forever" (i.e. infinite timeout) */
+>> -        if (result.uint_32 > INT_MAX / 1000)
+> 
+> Previously, the above line was verifying that the multiplication
+> done below would not overflow.  It was unrelated to whatever
+> msecs_to_jiffies() did.
+> 
+>> +        if (result.uint32 > INT_MAX / HZ)
+> 
+> Here you are assuming something about what secs_to_jiffies()
+> does.  It's a very reasonable assumption, but you are encoding
+> this in unrelated code, which you shouldn't do.
+> 
+> Just do the direct conversion as you've done above:
+> 
+>         if (result.uint32 > INT_MAX)
+> 
+>>               goto out_of_range;
+>> -        opt->lock_timeout = msecs_to_jiffies(result.uint_32 * 1000);
+>> +        opt->lock_timeout = secs_to_jiffies(result.uint_32);
+> 
+> Unfortunately, secs_to_jiffies() does not implement the clamp
+> operation that msecs_to_jiffies() does.  If you look at
+> __msecs_to_jiffies() you see that the unsigned value provided
+> is limited to MAX_JIFFY_OFFSET if it's negative when interpreted
+> as a signed int (i.e., if its high bit is set).
+> 
+> I think the secs_to_jiffies() implementation could benefit
+> from the use of an overflow check.  This might not be
+> exactly right, but it gives the idea:
 
-No, please don't do it this way.
+Fair enough, let me explore this.
 
-I think the memory ordering is interesting, and we ignored it -
-incorrectly - because all the "normal" cases are done either under the
-pipe lock (safe), or are done with "wait_event()" that will retry on
-wakeups.
+@Jens, @Andrew, can you drop the rbd and libceph patches from your respective
+trees while I work this out?
 
-And then we got the subtle issues with "was woken, but raced with
-order of operations" case got missed. This has probably been around
-forever (possibly since we got rid of the BKL).
+Thanks,
+Easwar (he/him)
 
-But I don't like the "add separate full/empty fields that duplicate
-things", just to have those written always under the lock, and then
-loaded as one op.
+> 
+> #define secs_to_jiffies(_secs)                    \
+>     ({                            \
+>         unsigned long _result;                \
+>                                 \
+>         if (check_mul_overflow(_secs, HZ, &_result))    \
+>             _result = MAX_JIFFY_OFFSET;        \
+>         (_result);                    \
+>     })
+> 
+>                     -Alex
+> 
+> 
+>>           break;
+>>       case Opt_pool_ns:
+>>           kfree(pctx->spec->pool_ns);
+>>
 
-I think there are better models.
-
-So I think I'd prefer the "add the barrier" model.
-
-We could also possibly just make head/tail be 16-bit fields, and then
-read things atomically by reading them as a single 32-bit word. That
-would expose the (existing) alpha issues more, since alpha doesn't
-have atomic 16-bit writes, but I can't find it in myself to care. I
-guess we could make it be two aligned 32-bit fields on alpha, and just
-use 64-bit reads.
-
-We already treat those fields specially with the whole READ_ONCE()
-dance, so treating them even more specially would not be a noticeably
-different situation.
-
-Hmm?
-
-I just generally dislike redundant information in data structures.
-Then you get into nasty cases where some path forgets to update the
-redundant fields correctly. So I'd really just prefer the existing
-model, just with being careful about this case.
-
-                    Linus
