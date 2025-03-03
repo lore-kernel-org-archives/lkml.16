@@ -1,70 +1,70 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B22EB257431
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 16:31:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3D8425BAB0
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 16:31:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741019472; cv=none; b=NhmX/6y+pwLDQP8MfndGf/egQLRNpE2pStH/2UZgrjsPZ41QtWQBZLqzAqzbOOu4azuvzT9WIw3SFXIfTN2JIUVWs2KkwTJO7iAuykddq4RevC2J1SlabW/h3NIhfL/dLDiJniST8fBexvi+8aRapmbYgJIsyZaoVTBHbvErAjw=
+	t=1741019471; cv=none; b=KKyLZqZu55q2UxAGejAr00kikFYi1Fx4ZbfsiLiZWBcbrbpuVFQkrKliR4TXKS3jlyzYN4o0dbjL/lOlWhBgT7DtFjoBQ525xjtfoaLrDxJkuHkutx5aHWRJ2G1HM65xZnrBpPyW+J4hvfuGhZwoBOKGFS0rFig7Bw2acU0ZHnY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741019472; c=relaxed/simple;
-	bh=OBXpWDsR7o4dKf8NkhRON4PwL/H6iQiwplPc25GckEo=;
+	s=arc-20240116; t=1741019471; c=relaxed/simple;
+	bh=cTe4VsxVSEBfasQmvi03CXqpkl+gzCOnVs4Cfv//8Bo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=NcWF9ZFyQB5RtW6tOdnXfc9FjaBhqfZao5ulGM0aHaaoI/710o6fvTww0RQl7Ya4RIGUUmIQnFvXd/oWr0Z0MZ+dC5L6BzK5XeVaULlCUt4aT8RUZlzPEyMqE0te4sz3iutH9Nff8swzhhZUk3b6Rs/C3CNclCYVXQKYRlOlcYU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cKP4i4qZ; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version; b=SqdHL1fdxACk77+MKOgsvML3OTn86f4nesq5xoDLvPhAU7m10t7OLUVqPqGeGjAyDzOiU8jvJKVsnv8+9GNgK+CCiXY709XBBwC9VGdHq3sWQxX34s2Zv9x5uEZH8AqujIxMHSfF+Slx/580g1fuYT22Ai6S+/xlbHOJ17LLO7E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ORyz+yp5; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cKP4i4qZ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ORyz+yp5"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1741019466;
+	s=mimecast20190719; t=1741019468;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=VusPlBbKEOGpL4wS1BqoWY6CYb2f4HQ+/wIDh8p+vAo=;
-	b=cKP4i4qZAaPbMsxQZ1wf4q2xZu5qQz+V8Bjc8frHlO3r4raPPg0p56omcLgCjdfuW1fVGD
-	CptUMqf689LiyhMuZPDK/t6bq8rnuU+4OK6SfMRhE63JJxJ+rcwgY1oRpxF8B4KEadF/1C
-	iXZeXzoPKfZjm4/y6UKPYP+y4HI8tOk=
+	bh=d6h5undxasqJ0N3FiNJqqgjSewvjkbEXc2mo8LWFs/U=;
+	b=ORyz+yp51Z7zN39tmBkUL3vtlhDc6sYCCQEbyLnWBCN8RV37b5t3WHjvIvNMmkA8kvvQzw
+	xq6SG7z4WqKnXv5+tX173w7WieczVfJIVgnWnKHnN70YflEdUuHNneiHPdyugJMQOBPmEc
+	722iCEzQ99hrGMMVJGjMuw9mbiNsO4k=
 Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
  [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-374-2ijQkRzXNHWsiHE96RqzLg-1; Mon, 03 Mar 2025 11:30:42 -0500
-X-MC-Unique: 2ijQkRzXNHWsiHE96RqzLg-1
-X-Mimecast-MFC-AGG-ID: 2ijQkRzXNHWsiHE96RqzLg_1741019441
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-4399d2a1331so22758185e9.1
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Mar 2025 08:30:42 -0800 (PST)
+ us-mta-204-zFliXpzlMJiHyEpXhkn47Q-1; Mon, 03 Mar 2025 11:31:01 -0500
+X-MC-Unique: zFliXpzlMJiHyEpXhkn47Q-1
+X-Mimecast-MFC-AGG-ID: zFliXpzlMJiHyEpXhkn47Q_1741019460
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-43bbfc1681eso6630505e9.0
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Mar 2025 08:31:01 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741019441; x=1741624241;
+        d=1e100.net; s=20230601; t=1741019460; x=1741624260;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=VusPlBbKEOGpL4wS1BqoWY6CYb2f4HQ+/wIDh8p+vAo=;
-        b=oZRuG2Mi6Y37J0EVdffi62U492806Mp7rkZo/01h+Ux3gXGy5lrZF5GYzmHw6R1Ut+
-         Io46stNLQy+Jmh7F0/4H3CAhtZy1iZVmEcGLKSqYIFTWUTiWPdy2NlFOBsw79U9nrL1S
-         gCFU1bulMep0HAa0a3qpCLY6sNUj0vgxuqAQ8Nu34Oc0wEJYDyMhelOLLDugAZZxv2D4
-         6HrIbgJwZ/iMfzLdmDiR/QFILamVqlaYAL0/Lw1ifWsRdhK4T+c3GkI/trIdjUygRpp8
-         yCa0eRd1BrrfgqNjS0YwW9PR3wtyNp8zUCkiiCTxjmw0QdzYPmNnK+yknxre9adaJdgK
-         2XCA==
-X-Gm-Message-State: AOJu0YwkmJiIB8RnXsDHjC8RX1RXecGYuR/zrE8k7qHE5ldOsXlqqdkL
-	Emm/LK9wIyLT6yvkPkdLC4fP2hCY2s6wTGNJ2rqF2U3FTKbT61UoQ1NJEZ3WFXlihjNgG46nFrr
-	m1t//JSdNOshexFSTMHIVCOsKap7fBlsVBvE+ufyzQd3s0rXOQP+qNZeGVwCB6Zo9Q13OXQDJOo
-	gwyxE2/6I8w3nh6YPdEBjMm0L9JGOh3GyxA2SPl5DY2Vlt
-X-Gm-Gg: ASbGncu2Jl1JNheOQWR49qPOSuhoVjClw4Rcp60WDEQ3XLbexEaG112oW66C0zzG+3+
-	wnTcDKswz7cYc0sBfQ1xhD52qXdO2sWRtSaqUdCvoDd8h5O11/Q/YSuNME0Kjk6MfcylIxFNehz
-	tZhrd98qioDkSr02g1V4ektAWmYc3J6A/8F7Fr0ui3uSmbvc2D1iTSPhnjYgnVnJRiy020UebkI
-	PP+fjDDSsTJJXTRgGoGFzEsnWUG0TRRUGzYUAAo/t5aFkXDuDkC7n/ldO71c8NGN6Z/CQJei8Vn
-	NQV8eKrMHtJJsEWX+joWpfYLzpuksb56WyKas/1mGw2MfUgt/1b5AwcExXSKYnIZG8L42ByEs9P
-	b
-X-Received: by 2002:a05:600c:26c6:b0:43b:bb72:1dce with SMTP id 5b1f17b1804b1-43bbb721f8fmr44417515e9.5.1741019441249;
-        Mon, 03 Mar 2025 08:30:41 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IF6XV9dtRCnC9UYnKtk79gh146334CB5ZefECKJp7wi6xxTybGeqstnFZTU3vfWQysm8+TPqw==
-X-Received: by 2002:a05:600c:26c6:b0:43b:bb72:1dce with SMTP id 5b1f17b1804b1-43bbb721f8fmr44417035e9.5.1741019440886;
-        Mon, 03 Mar 2025 08:30:40 -0800 (PST)
+        bh=d6h5undxasqJ0N3FiNJqqgjSewvjkbEXc2mo8LWFs/U=;
+        b=TJ8VuUaTkxYPLa0vQzxnAXWnjcJGsbAneOGkn4wv6iwCNazjDzte7WTbWAYQpRh23a
+         ZLwWPcrHjMXwGNipKKl709eiof6d9aOiwIvhTQP46Tfy585HTG9UIyAymg0oD+ghNVsF
+         ayh3ue8MlQx0wYLZEZNc+A4r8iLy7arrX8xldXApkXuhia8b5vOOMmOJep6wK6vVaJRT
+         4rYPklwyHJM0C5h9AYSYw3LfUp9xPWr5BUFgWUrSYazJ1gIMMKVkzWVpQXnxxXPQ7LHa
+         p6NgEivrfbdXtYnjlb6xMFQMrYiDRcUW0OHE/jMin61FT5xKdPc1xGs3LPZKazf2Y96w
+         3vKQ==
+X-Gm-Message-State: AOJu0Yw/Mji7/EOZPktasoMWgueYtF+sTEbdqXF/7ZJ1kOxY8QZe3CSW
+	bn2NuoQIOHoh5HlUPam2B1xukxYwem68Z+P6vGH0724z5vI8v1MuMNI/N3JTZSavbEaGLgZWCXl
+	398/Q4Im3YLQSWBTlcHFSsp1/D7VPfmZD3RDmy8XY5E1IQj+WeWu03YoR47PO+4lLhwV3x3wxb7
+	EsLx0uJ3HF/wFMrJA2dsdK7AQpUP+OcHN8VQ9J605Rbr5z
+X-Gm-Gg: ASbGncvGBjY6dDml6WL7gaLtN6+40R9r6IZxVZh4xwZPWSWFIC9xKuaWbfa6rVgiTn/
+	WQLPsvHJuFciKwF8BDyZR/1J0JEvMtp/Fo8QaE+lvtWDj4j6Muat3nsXXU5CHPidQqWQjHocaFH
+	PY+GdFDehlnr5D4+GF+4ej8TGD4S3yhIfxuFtYGbY6o+A5Vn+kOvc02ewROA8Tjz1rzLlHHzfVj
+	PIfUFnzJtN0GaTrkynD4x/oMPfL3QJfU57xDnwSgCQbEd/h86rLkxVRiWXq1+IrThIJUim59O7S
+	NgcoUhJKj+23C8HrgHXtUmYeYK1XvdC4iUBHiqdDEQ9S6Dl0U2KGbUaSvwHdR/IssIDfcKbQYsu
+	S
+X-Received: by 2002:a05:600c:1387:b0:439:a138:20 with SMTP id 5b1f17b1804b1-43ba675d737mr104551865e9.20.1741019460243;
+        Mon, 03 Mar 2025 08:31:00 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IF077jzHsKl488EfYl1BqdHJTJ6b3kDjSKQKMSwBjouvZD2J29Qu4rXpeiVOA7Tvc80mUiuyg==
+X-Received: by 2002:a05:600c:1387:b0:439:a138:20 with SMTP id 5b1f17b1804b1-43ba675d737mr104551065e9.20.1741019459654;
+        Mon, 03 Mar 2025 08:30:59 -0800 (PST)
 Received: from localhost (p200300cbc7349600af274326a2162bfb.dip0.t-ipconnect.de. [2003:cb:c734:9600:af27:4326:a216:2bfb])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-43bc1b5db02sm42954325e9.19.2025.03.03.08.30.38
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-43bca3df658sm4293845e9.9.2025.03.03.08.30.58
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 03 Mar 2025 08:30:40 -0800 (PST)
+        Mon, 03 Mar 2025 08:30:59 -0800 (PST)
 From: David Hildenbrand <david@redhat.com>
 To: linux-kernel@vger.kernel.org
 Cc: linux-doc@vger.kernel.org,
@@ -90,9 +90,9 @@ Cc: linux-doc@vger.kernel.org,
 	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
 	Vlastimil Babka <vbabka@suse.cz>,
 	Jann Horn <jannh@google.com>
-Subject: [PATCH v3 10/20] bit_spinlock: __always_inline (un)lock functions
-Date: Mon,  3 Mar 2025 17:30:03 +0100
-Message-ID: <20250303163014.1128035-11-david@redhat.com>
+Subject: [PATCH v3 19/20] fs/proc/task_mmu: remove per-page mapcount dependency for smaps/smaps_rollup (CONFIG_NO_PAGE_MAPCOUNT)
+Date: Mon,  3 Mar 2025 17:30:12 +0100
+Message-ID: <20250303163014.1128035-20-david@redhat.com>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250303163014.1128035-1-david@redhat.com>
 References: <20250303163014.1128035-1-david@redhat.com>
@@ -104,65 +104,140 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The compiler might decide that it is a smart idea to not inline
-bit_spin_lock(), primarily when a couple of functions in the same file end
-up calling it. Especially when used in RMAP map/unmap code next, the
-compiler sometimes decides to not inline, which is then observable in
-some micro-benchmarks.
+Let's implement an alternative when per-page mapcounts in large folios are
+no longer maintained -- soon with CONFIG_NO_PAGE_MAPCOUNT.
 
-Let's simply flag all lock/unlock functions as __always_inline;
-arch_test_and_set_bit_lock() and friends are already tagged like that
-(but not test_and_set_bit_lock() for some reason).
+When computing the output for smaps / smaps_rollups, in particular when
+calculating the USS (Unique Set Size) and the PSS (Proportional Set Size),
+we still rely on per-page mapcounts.
 
-If ever a problem, we could split it into a fast and a slow path, and
-only force the fast path to be inlined. But there is nothing
-particularly "big" here.
+To determine private vs. shared, we'll use folio_likely_mapped_shared(),
+similar to how we handle PM_MMAP_EXCLUSIVE. Similarly, we might now
+under-estimate the USS and count pages towards "shared" that are
+actually "private" ("exclusively mapped").
+
+When calculating the PSS, we'll now also use the average per-page
+mapcount for large folios: this can result in both, an over-estimation
+and an under-estimation of the PSS. The difference is not expected to
+matter much in practice, but we'll have to learn as we go.
+
+We can now provide folio_precise_page_mapcount() only with
+CONFIG_PAGE_MAPCOUNT, and remove one of the last users of per-page
+mapcounts when CONFIG_NO_PAGE_MAPCOUNT is enabled.
+
+Document the new behavior.
 
 Signed-off-by: David Hildenbrand <david@redhat.com>
 ---
- include/linux/bit_spinlock.h | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ Documentation/filesystems/proc.rst | 22 +++++++++++++++++++---
+ fs/proc/internal.h                 |  8 ++++++++
+ fs/proc/task_mmu.c                 | 17 +++++++++++++++--
+ 3 files changed, 42 insertions(+), 5 deletions(-)
 
-diff --git a/include/linux/bit_spinlock.h b/include/linux/bit_spinlock.h
-index bbc4730a6505c..c0989b5b0407f 100644
---- a/include/linux/bit_spinlock.h
-+++ b/include/linux/bit_spinlock.h
-@@ -13,7 +13,7 @@
-  * Don't use this unless you really need to: spin_lock() and spin_unlock()
-  * are significantly faster.
-  */
--static inline void bit_spin_lock(int bitnum, unsigned long *addr)
-+static __always_inline void bit_spin_lock(int bitnum, unsigned long *addr)
- {
+diff --git a/Documentation/filesystems/proc.rst b/Documentation/filesystems/proc.rst
+index 1aa190017f796..c9e62e8e0685e 100644
+--- a/Documentation/filesystems/proc.rst
++++ b/Documentation/filesystems/proc.rst
+@@ -502,9 +502,25 @@ process, its PSS will be 1500.  "Pss_Dirty" is the portion of PSS which
+ consists of dirty pages.  ("Pss_Clean" is not included, but it can be
+ calculated by subtracting "Pss_Dirty" from "Pss".)
+ 
+-Note that even a page which is part of a MAP_SHARED mapping, but has only
+-a single pte mapped, i.e.  is currently used by only one process, is accounted
+-as private and not as shared.
++Traditionally, a page is accounted as "private" if it is mapped exactly once,
++and a page is accounted as "shared" when mapped multiple times, even when
++mapped in the same process multiple times. Note that this accounting is
++independent of MAP_SHARED.
++
++In some kernel configurations, the semantics of pages part of a larger
++allocation (e.g., THP) can differ: a page is accounted as "private" if all
++pages part of the corresponding large allocation are *certainly* mapped in the
++same process, even if the page is mapped multiple times in that process. A
++page is accounted as "shared" if any page page of the larger allocation
++is *maybe* mapped in a different process. In some cases, a large allocation
++might be treated as "maybe mapped by multiple processes" even though this
++is no longer the case.
++
++Some kernel configurations do not track the precise number of times a page part
++of a larger allocation is mapped. In this case, when calculating the PSS, the
++average number of mappings per page in this larger allocation might be used
++as an approximation for the number of mappings of a page. The PSS calculation
++will be imprecise in this case.
+ 
+ "Referenced" indicates the amount of memory currently marked as referenced or
+ accessed.
+diff --git a/fs/proc/internal.h b/fs/proc/internal.h
+index 96ea58e843114..8c921bc8652d9 100644
+--- a/fs/proc/internal.h
++++ b/fs/proc/internal.h
+@@ -143,6 +143,7 @@ unsigned name_to_int(const struct qstr *qstr);
+ /* Worst case buffer size needed for holding an integer. */
+ #define PROC_NUMBUF 13
+ 
++#ifdef CONFIG_PAGE_MAPCOUNT
+ /**
+  * folio_precise_page_mapcount() - Number of mappings of this folio page.
+  * @folio: The folio.
+@@ -173,6 +174,13 @@ static inline int folio_precise_page_mapcount(struct folio *folio,
+ 
+ 	return mapcount;
+ }
++#else /* !CONFIG_PAGE_MAPCOUNT */
++static inline int folio_precise_page_mapcount(struct folio *folio,
++		struct page *page)
++{
++	BUILD_BUG();
++}
++#endif /* CONFIG_PAGE_MAPCOUNT */
+ 
+ /**
+  * folio_average_page_mapcount() - Average number of mappings per page in this
+diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
+index 5043376ebd476..061f16b767118 100644
+--- a/fs/proc/task_mmu.c
++++ b/fs/proc/task_mmu.c
+@@ -707,6 +707,8 @@ static void smaps_account(struct mem_size_stats *mss, struct page *page,
+ 	struct folio *folio = page_folio(page);
+ 	int i, nr = compound ? compound_nr(page) : 1;
+ 	unsigned long size = nr * PAGE_SIZE;
++	bool exclusive;
++	int mapcount;
+ 
  	/*
- 	 * Assuming the lock is uncontended, this never enters
-@@ -38,7 +38,7 @@ static inline void bit_spin_lock(int bitnum, unsigned long *addr)
- /*
-  * Return true if it was acquired
-  */
--static inline int bit_spin_trylock(int bitnum, unsigned long *addr)
-+static __always_inline int bit_spin_trylock(int bitnum, unsigned long *addr)
- {
- 	preempt_disable();
- #if defined(CONFIG_SMP) || defined(CONFIG_DEBUG_SPINLOCK)
-@@ -54,7 +54,7 @@ static inline int bit_spin_trylock(int bitnum, unsigned long *addr)
- /*
-  *  bit-based spin_unlock()
-  */
--static inline void bit_spin_unlock(int bitnum, unsigned long *addr)
-+static __always_inline void bit_spin_unlock(int bitnum, unsigned long *addr)
- {
- #ifdef CONFIG_DEBUG_SPINLOCK
- 	BUG_ON(!test_bit(bitnum, addr));
-@@ -71,7 +71,7 @@ static inline void bit_spin_unlock(int bitnum, unsigned long *addr)
-  *  non-atomic version, which can be used eg. if the bit lock itself is
-  *  protecting the rest of the flags in the word.
-  */
--static inline void __bit_spin_unlock(int bitnum, unsigned long *addr)
-+static __always_inline void __bit_spin_unlock(int bitnum, unsigned long *addr)
- {
- #ifdef CONFIG_DEBUG_SPINLOCK
- 	BUG_ON(!test_bit(bitnum, addr));
+ 	 * First accumulate quantities that depend only on |size| and the type
+@@ -747,18 +749,29 @@ static void smaps_account(struct mem_size_stats *mss, struct page *page,
+ 				      dirty, locked, present);
+ 		return;
+ 	}
++
++	if (IS_ENABLED(CONFIG_NO_PAGE_MAPCOUNT)) {
++		mapcount = folio_average_page_mapcount(folio);
++		exclusive = !folio_maybe_mapped_shared(folio);
++	}
++
+ 	/*
+ 	 * We obtain a snapshot of the mapcount. Without holding the folio lock
+ 	 * this snapshot can be slightly wrong as we cannot always read the
+ 	 * mapcount atomically.
+ 	 */
+ 	for (i = 0; i < nr; i++, page++) {
+-		int mapcount = folio_precise_page_mapcount(folio, page);
+ 		unsigned long pss = PAGE_SIZE << PSS_SHIFT;
++
++		if (IS_ENABLED(CONFIG_PAGE_MAPCOUNT)) {
++			mapcount = folio_precise_page_mapcount(folio, page);
++			exclusive = mapcount < 2;
++		}
++
+ 		if (mapcount >= 2)
+ 			pss /= mapcount;
+ 		smaps_page_accumulate(mss, folio, PAGE_SIZE, pss,
+-				dirty, locked, mapcount < 2);
++				dirty, locked, exclusive);
+ 	}
+ }
+ 
 -- 
 2.48.1
 
