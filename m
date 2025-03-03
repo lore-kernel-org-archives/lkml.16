@@ -1,189 +1,174 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2045.outbound.protection.outlook.com [40.107.223.45])
+Received: from beeline2.cc.itu.edu.tr (beeline2.cc.itu.edu.tr [160.75.25.116])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E67A202F8C;
-	Tue,  4 Mar 2025 17:22:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 322D311CAF
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 17:23:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=160.75.25.116
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741108934; cv=fail; b=gCGTd2KlpA061hP9Tp2gUY6Xaq3U0wcntp3kzVBi9+EQe8H4JKxSXYp9EwW3x5YW38u/9tXaGURprM5DD3ElE/A7p+LWS4cZLnWHSjo5h4QML1OFq/n9F9sQHWXE4flz4Cq6Rob6bOStSSx0OXPdCWyzOiY1WuVuSKFu9btNkLU=
+	t=1741109003; cv=fail; b=YAVmJRoN3OLsFkzzAg5xkX7I8ogcgwl2+SWFKLmUrhNRZClB9zem+o4s2M+c0U7IvME+B0AoxzLUJMza+6ph+pUGXAOl7o3+VeSlw6xrdmEGxhsuHkNBCqAJPMr+Evk0CXXMy5RJN0JoR2bvIjeWS+VDMehWZMg8ZOmOyW1EiTQ=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741108934; c=relaxed/simple;
-	bh=4hvXPzSnbD+Bz9CTq3hS0fJQeHyMOVwigAWmi/Ba2qo=;
-	h=Message-ID:Date:Subject:To:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=hgF/NHqSDNu6d2ZIpUCwcSIk76SLBGe7Odgt+lzpkwY29v+Tv0SA83OdxTpSDtpBI3VD143xtGPhvJ/HKGYk0QP+hhEWW//3Hurr+j6WOWPQ7B9tLTYl0FHAngeuP63QBpAauDPCQ4RqHryksKB+IieB0pE+lnwMxXoDsV51zkQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=iN2dI3iM; arc=fail smtp.client-ip=40.107.223.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	s=arc-20240116; t=1741109003; c=relaxed/simple;
+	bh=7FLVy+mHazqBRLUwwxAKIUKPJl1FViNyB85b6akzRXM=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=LJaWcjWUT8GVwht6XPu7qog9ezF4WiF0L0i8A07QBob+uMH4V/+gYMYykwe3kou32JlEfkWKgixMvLNs2oxi/bzZ4pZ6eA6I+TS46oedSskty8jHsPKpJ/M52+EvRj3dGnyGzI9M945PVlkQSoi/Tf8oYEVbzUB5fWwKFDSA4+E=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=intel.com; spf=none smtp.mailfrom=cc.itu.edu.tr; dkim=fail (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Gt1dw67V reason="signature verification failed"; arc=none smtp.client-ip=192.198.163.14; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; arc=fail smtp.client-ip=160.75.25.116
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=cc.itu.edu.tr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="iN2dI3iM"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ygXZpO0ClDABQ9x6ux1v04peiqHHvD1N8yZacV6+bMfbXxsfsuw8V74+mAEgEsRi6hkF9ZytREv60KlJCQGLqtZZeR/oGClLLKVz0ZNz8ZxQ4OHy54Mc8HKhD/P5hAu8zZBb/T064calQ6VZfTS8BqMinTEbU2Tk9Fc5J2CslPsdr2fbVhjMPCCQEx6bQ0kJK+yHfa26zavbn8C+4AXVJn6DEjGpRjG9DvLwLC9ynhTno3eKXbot1EWXxItaLG/BVMOhwMLRZHAOeZbWzqYBdGIIpQ561ZY4ZhBxWy1Mz+caeo0LYxdxKK947WBzXD5DPQKr6jXFHlKZxgOw39+ZHw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=7s7XglUzE5AHA626ZHOr/D3C+uhWjkfBhSmZR5j28NM=;
- b=xjMLsv5ihjE+lvmD2UmUBwSW2iW6ZB+/0UnNjiXcNkfGgmXqnQaOZnKbVS6+k1ldIKmYh6FJQLu1dh2bFp4nfUTR0VxrPE1ICozV9p0QInYAgjWgMCbb2VssGrnPUxR1QmDwYbWuidQP5xTregEo0umidHzHG2X8xz7gAKZm7JYV/RGTYMi1k/z2iJK6JbXqUkzoefT2BZxScvH/lgtoWuadqDFwU2TRR6h5UzxXBiKRQabJoPP5hd6EIR9FGyHoCDUKEekeKN3JaVEJ7B1AeHQ1eWC6kzF4e9Z3obzX36UQp5UlXjHOTzYXbk6AqN6bdjJG5JKQoN9drf7pA7YyTg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7s7XglUzE5AHA626ZHOr/D3C+uhWjkfBhSmZR5j28NM=;
- b=iN2dI3iMYx0JpJPflf2meaR/6yb4jijCjaJAJTJOpKFwvPd8WIWg6eo14rMfugX0pvFuNoTZNT51blvMsevdFXPyyagDa7wiQ99LGzEmH+qhn7vgokxKx32ZY9vgNtDNe1Dz3lDeuecaPRJ9ziBuXZOQzJ5stmpOxkdDbLCrOSU=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
- by DS7PR12MB8417.namprd12.prod.outlook.com (2603:10b6:8:eb::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.29; Tue, 4 Mar
- 2025 17:22:10 +0000
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::37ee:a763:6d04:81ca]) by MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::37ee:a763:6d04:81ca%4]) with mapi id 15.20.8489.025; Tue, 4 Mar 2025
- 17:22:09 +0000
-Message-ID: <39360526-f56e-4fdc-b631-2381f10a58d2@amd.com>
-Date: Tue, 4 Mar 2025 11:22:07 -0600
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] platform/x86: dell-uart-backlight: Make
- dell_uart_bl_serdev_driver static
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250304160639.4295-1-ilpo.jarvinen@linux.intel.com>
- <20250304160639.4295-2-ilpo.jarvinen@linux.intel.com>
-Content-Language: en-US
-From: Mario Limonciello <mario.limonciello@amd.com>
-In-Reply-To: <20250304160639.4295-2-ilpo.jarvinen@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SN4PR0501CA0027.namprd05.prod.outlook.com
- (2603:10b6:803:40::40) To MN0PR12MB6101.namprd12.prod.outlook.com
- (2603:10b6:208:3cb::10)
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Gt1dw67V"
+Received: from lesvatest1.cc.itu.edu.tr (lesvatest1.cc.itu.edu.tr [10.146.128.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits))
+	(No client certificate requested)
+	by beeline2.cc.itu.edu.tr (Postfix) with ESMTPS id 4F8BE40F1CE6
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 20:23:20 +0300 (+03)
+X-Envelope-From: <root@cc.itu.edu.tr>
+Authentication-Results: lesvatest1.cc.itu.edu.tr;
+	dkim=fail reason="signature verification failed" (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=Gt1dw67V
+Received: from lesva1.cc.itu.edu.tr (unknown [160.75.70.79])
+	by lesvatest1.cc.itu.edu.tr (Postfix) with ESMTP id 4Z6gNB47nwzG1r7
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 18:59:06 +0300 (+03)
+Received: by le1 (Postfix, from userid 0)
+	id B112541898; Tue,  4 Mar 2025 18:58:44 +0300 (+03)
+Authentication-Results: lesva1.cc.itu.edu.tr;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Gt1dw67V
+X-Envelope-From: <linux-kernel+bounces-541185-bozkiru=itu.edu.tr@vger.kernel.org>
+Authentication-Results: lesva2.cc.itu.edu.tr;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Gt1dw67V
+Received: from fgw1.itu.edu.tr (fgw1.itu.edu.tr [160.75.25.103])
+	by le2 (Postfix) with ESMTP id A5FA341E61
+	for <bozkiru@itu.edu.tr>; Mon,  3 Mar 2025 11:49:06 +0300 (+03)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by fgw1.itu.edu.tr (Postfix) with SMTP id 42F723064C07
+	for <bozkiru@itu.edu.tr>; Mon,  3 Mar 2025 11:49:06 +0300 (+03)
+Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0AF933A94CF
+	for <bozkiru@itu.edu.tr>; Mon,  3 Mar 2025 08:48:55 +0000 (UTC)
+Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B6F51F12F4;
+	Mon,  3 Mar 2025 08:47:37 +0000 (UTC)
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 747231EE014;
+	Mon,  3 Mar 2025 08:47:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740991653; cv=none; b=Mew+Bz+5CcBzzPfCcKuSKG22Vn4YTxmGZ15l7J52G5LgtBG50rJJeXqh4AoMaqi7MFi5nat6heR2DAdzEEI9kxkQdYb8EW0cO7oaJqApWRHraAcwSKfm2DvmnuxoA5V/xi5NURSBI+uENo8qavBzWUzPChDtlI/wsRabvNUsokc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740991653; c=relaxed/simple;
+	bh=LJoG0hwzy11IwSS0GA7f2KkCoIWMhfdeKs7bZI/C2Jg=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=M5TnE/OvlApkDBfIpnZhDBQL6N/jVoJQW6cCDGnxZ/VGUznWIHLeYMDL8NdnN1F1C9Eu1IJqV5EAYfnzzmZGqbOAzCGtJsYjXSFVKQA/oJCkxo28K0M49rSHCmhN/nit+Gylur1DQpyCpygGJgkp7XctYQImVX2K6NqzrQWpWkw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Gt1dw67V; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740991652; x=1772527652;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=LJoG0hwzy11IwSS0GA7f2KkCoIWMhfdeKs7bZI/C2Jg=;
+  b=Gt1dw67VHBl2jicCy4GNgKflZmGKwdh2AK22+0oGcmxWeAzBAUD+aoc9
+   HFrVu1k8bXmTMvX5Jo//HZ3WPopJJTb1/U2TuvU1C14T84eUZOTusSoso
+   4GNJVIJyyyZa+qOr7IyfXsaEQwi70zyHkcW7/iWsIBsuRNpM3v/P4OrF0
+   9C2CH/E58A2Dn5Q0dXegFX0ePqS0O4Uas2GScumwxLW3IBEFAQ3gy8z5f
+   g+XUYMXyfkoJ4EaEwOu+2EF73V9mCGgXWMMxpfCaEykZ4F98WxnNp5JHs
+   B2QuhAqg+t63fi7KQvMvRsUXvuA2Go5wOhKyLifuBttJONVlvCmi42/jg
+   A==;
+X-CSE-ConnectionGUID: dMwp9FegRd2dXB1nZxp7pQ==
+X-CSE-MsgGUID: nVk5gWsbRN+neeYt63zuaw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11361"; a="42111867"
+X-IronPort-AV: E=Sophos;i="6.13,329,1732608000"; 
+   d="scan'208";a="42111867"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Mar 2025 00:47:28 -0800
+X-CSE-ConnectionGUID: BqnvijDaScOzKITX7vs36w==
+X-CSE-MsgGUID: yCwbwk1qQtu2vMCztNB7sg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,329,1732608000"; 
+   d="scan'208";a="118426765"
+Received: from jf5300-b11a338t.jf.intel.com ([10.242.51.115])
+  by fmviesa010.fm.intel.com with ESMTP; 03 Mar 2025 00:47:26 -0800
+From: Kanchana P Sridhar <kanchana.p.sridhar@intel.com>
+To: linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	hannes@cmpxchg.org,
+	yosry.ahmed@linux.dev,
+	nphamcs@gmail.com,
+	chengming.zhou@linux.dev,
+	usamaarif642@gmail.com,
+	ryan.roberts@arm.com,
+	21cnbao@gmail.com,
+	ying.huang@linux.alibaba.com,
+	akpm@linux-foundation.org,
+	linux-crypto@vger.kernel.org,
+	herbert@gondor.apana.org.au,
+	davem@davemloft.net,
+	clabbe@baylibre.com,
+	ardb@kernel.org,
+	ebiggers@google.com,
+	surenb@google.com,
+	kristen.c.accardi@intel.com
+Cc: wajdi.k.feghali@intel.com,
+	vinodh.gopal@intel.com,
+	kanchana.p.sridhar@intel.com
+Subject: [PATCH v8 02/14] crypto: acomp - New interfaces to facilitate batching support in acomp & drivers.
+Date: Mon,  3 Mar 2025 00:47:12 -0800
+Message-ID: <20250303084724.6490-3-kanchana.p.sridhar@intel.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20250303084724.6490-1-kanchana.p.sridhar@intel.com>
+References: <20250303084724.6490-1-kanchana.p.sridhar@intel.com>
+Precedence: bulk
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|DS7PR12MB8417:EE_
-X-MS-Office365-Filtering-Correlation-Id: cc23d4dc-16b6-4b9c-5652-08dd5b4117f6
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?aTlZK0ZMVHRsZHZLcDlCeUl4TDJnRVVIMERLeTVOOFcvS3JaSnNVcjI2T3No?=
- =?utf-8?B?TkZFZDI5d0IyYUFwSUJkWDVMbzV1YlBjSmVXWjNGbFRqK3pFaW9wbkMzMmpr?=
- =?utf-8?B?WkU3WE1hVlNuc05BTDR3djlNL21abnNPenNUWFg4Njl5TVh5cys3cUdwWUFP?=
- =?utf-8?B?N0NPbU5ON0MwbDlCVDNvTGtBRHhJY01RWVpUUmdwclF3M3BENlQ5cFVlMzZo?=
- =?utf-8?B?VVBnVDlnUS9VRWNVdUpHTkJpcEl1Z0RJY0NVU0tlYURiOHh2OThnUDY2azdi?=
- =?utf-8?B?ekRNLzl0aGpWTW5rUzE2MFhKYUJNcWVyYWdxWnkybnFDdG1kT1NCamQxWjB2?=
- =?utf-8?B?Z0Z3bW5SNzhjZmFBK084MjJia3c0MWhCWXFGZ2lLYlBlazhaYzZJMFZaelVj?=
- =?utf-8?B?cjNudE5obExqdTZUWnVueWF1WlhGT1p2dUVWUmNXZ2NERi9Ta3RZWFNrSHFS?=
- =?utf-8?B?emhHR05kRUs3QU1sS1pMOUVIREw0NlBUem1ZV2ExZ1ArV0F0WmhQdTRGb25i?=
- =?utf-8?B?S25JaUJya01uL3M4SEpZYVdUZDJVMldFY21nRnpTUUZFNVAvY1NBUkJ4YWpk?=
- =?utf-8?B?emVMMitwVm1IcnlFUUdzN05Kbk5ZOXZwTE1WUkowazB6RFQyUlRDNG45Z0xC?=
- =?utf-8?B?SDVUYTIxblhSQXVCbGZZYmpLakJYL0dTYzFIclJ2V09MdUppaXRJV0tNNjJl?=
- =?utf-8?B?T1hYRnV3SGV0V3dOWTNHbURUR0I0T05CTTVWdnFlbmdYb2FYQ3hCZlNVamVk?=
- =?utf-8?B?d3VCVllUUkRVdkkyeVY0NXFlbnpCWTZHQ3M2Z0ZSQ1NqeFdjZW5KZXVMYU9O?=
- =?utf-8?B?ZHFHcnlnK1ZCMTJwSlBWVTdub1Y4amRxbEsycXU0VGordmtjbzQ1d1VhZnNC?=
- =?utf-8?B?TnUvcTd3NVIxQ2YyZTV3N0ptZXhNMTJndUtFeFZvaVdvbEhHdU1uREZwWEcr?=
- =?utf-8?B?YWRsWWhMblJYS3h4TE1ONUs4MElwNFJiWGxsSVRWQ29yWEJVZ1NHWTNkamls?=
- =?utf-8?B?Uk5LSEFkdEZQTDhmY3V4aWhBRkhPQlhpc3IvVm5SS3ZDTGN6MjgrQlV3ZW1B?=
- =?utf-8?B?QTJIZTkyZlBiWU1ST1FDVTZSMHlyaHl4SFVIa3k2NS90RVM4NSsrbStBc1JJ?=
- =?utf-8?B?NTdTMWc1dkhSd2tJMDBMU3ErcnR1OUU0WTk1aG0yMzhoTytQNU1QcXo3VzRN?=
- =?utf-8?B?M25FQ3RhNjV1YUp0QlVpUnh5NzNiZ2pweHZWMnFCcTNNelMrcnRiMng4QStt?=
- =?utf-8?B?Q1FXWlV0TzI4N2FyTmxnNXBibmZWeXdPSjAxRjZOa0ZxUjRCbHQzS2ZFTVpn?=
- =?utf-8?B?aU5nM3dVZW80VnRidFp6NHN2YTlHajhaVWxrVlE3c25kenBzZ3dBYjUzV1Ex?=
- =?utf-8?B?YmlUTXE5aXVMVWxNaWpvWDhtUDRQaUdDZW0vbGx2Y2k4RTl1bUZiYVp6UkNh?=
- =?utf-8?B?N1lQWXZ2SHJ2dlFWV00wNXVQRDhZSXE0UkNLdmsrcXZOU0VVcFZENXYrdFU3?=
- =?utf-8?B?Zjd5OXhuRFk5TlFHUEZUNnNDZFM3U0g4YXZJQjJDUHJpVTc1Mjg5a3FvWlFy?=
- =?utf-8?B?TFRLTmdpYVNnOGQwNUpiU3RNU1JLQ0pydm5sWVlydlRLMm5LWFlWdit0ZkNM?=
- =?utf-8?B?SkN1Z251RXdFQVE2bjE3a0xpbzhVc25XdFhPYnRJcXhHZmNkK2xWS0hQcEJw?=
- =?utf-8?B?YW8xNjRBeGNPNmM2OHBabGljc0x1OThWTTlLZ2dhYWZ1cVdXNHdqdTNSVTlU?=
- =?utf-8?B?c0gwTnh2YVV2OU1qYjB0dFY4WVhtaXNMWThHRnJjR1F5bWh3YlI4M05VZHR1?=
- =?utf-8?B?RU4rY3BYTDFSMFhSQytiSGhtWFpwaHh6bXB5eFVndFNwZ1kwTXNodWtneTcz?=
- =?utf-8?Q?hO6mX/onepidC?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?RGtlemhJSzdPQUFNd3YyUmRzT0lmTkZTMmgrS2dFZ3pLSkdIWUFzTmpxRXhJ?=
- =?utf-8?B?UHlMWUNJUytERUhuZUtydWJ6alhFV0ZmMkFlRU1vS0RwOG9pd2hHQmJLcUJ0?=
- =?utf-8?B?V3dnSkRacDVCZHFIRTJZTGZ2b2VQYllGd3kvZGlCekMwMUsvUG4yQ2swZUFs?=
- =?utf-8?B?S3RseEdzZDJ2ekEwKzE2YlhxeWRjakxiVXo5TC9SYW1kOTc1ZFVVZFhEL04y?=
- =?utf-8?B?NWIwT1o0YTJsUm1wSXVDcUFEcHo1RWwyaGdlR3VyQ01RbnhnYlh2Wm1SbVd4?=
- =?utf-8?B?WVlOdVlmRjBoeERDZHR3TDcwR24ydVRVNXY1cVNyWHlxWjRpMzd5VG5HVW1y?=
- =?utf-8?B?bnlJbUNXa3dUL2FCaWpReEdGMmp3elVIYkVoR1Juak5lWG9SajFUVmhUcjFu?=
- =?utf-8?B?TFY4aTdZcjZHekJFZmM0M3krTS9MdWdEWEw3N3hOVGpCME1KVVhmRnhsV0kv?=
- =?utf-8?B?V1dQWUh1czV2RnNPTHRNMlhvK3V6OGczdnp3K1FBQi9XaTJzcE5pajF4ckFx?=
- =?utf-8?B?ZE03YmxMTlNMTFhyOVF4SzJiVEx5WldVSDcwOWx2bGFMVHZDaVcraVhwbVBY?=
- =?utf-8?B?eHhYTDZDRGlUa25NK0wxaVVJMTVwOEpRSmVrSWxqeFU0WUQzYXFINGprQlhH?=
- =?utf-8?B?enJDYktielJ3VVhob1duU3RCNzNicEdYd1RWZ3NZb0k4ZkpSZE4xY2NkVWZ4?=
- =?utf-8?B?ekQ1QlVybEt5azZGM09WRDNGU2dLOGRmVjh1cEFzalA4ZTBPVXVacU12azNH?=
- =?utf-8?B?Nnh1UHVWSndROVJrYkczRVBDcW15WjNTWDgvTnM4SDRSWmNuSDBJS3doVzQ5?=
- =?utf-8?B?ZkRHMzhRc0tNVytWcVNqdlU0N2RmR0tKSTR6cVIxSGlhY0JLTzFvQkZ1Y1Vk?=
- =?utf-8?B?UnFwalI4ZksvczBCQ04wMFc4QktINjdQcVU2VTN4YXI2RHJkaFJGWnliNlIw?=
- =?utf-8?B?UGRPVkNldlBYcVg2aHVUWGl2NTNwTDhXaXJiOWlUUHRrZWVNdkw3Z1ZmUk5k?=
- =?utf-8?B?RlRDL2NYbVBtSnpWTUU3clZkOGZocStVN0ZaUXhCM3FLMWZjdncvV3FlbUxX?=
- =?utf-8?B?VVlYbXEyV2FIQTh4ZXhlMWZ2aVU4NXREUWZnRUo4anJqNUxwWFZFZk1BYzBw?=
- =?utf-8?B?NmR5UmY1MytTREErTlBxZmloTHpwOTd1Z3pVcGsyUFo3ZFNmSjVDNmNadDNF?=
- =?utf-8?B?ZlFRVlFjc3B1Rm82K04veDJ5M0IzZlRRZXl5eW1VRGFyazh2bzJTaVBoMGpF?=
- =?utf-8?B?Y2VtclUzNVg2aEVrLzIzOW4vR2JEdjAyM1R6NmJ3Vzk5d2M2d20vWkNoZTZy?=
- =?utf-8?B?RTE0S2dLRmw1TktnWmNWekxnNjVwWVFGbUxFZGxjUHFpYVcrTnh5NzYxUzFl?=
- =?utf-8?B?S0hsOGJPeTRyWWZleUpKWHJQdnI3LzlMVHl4d2FwcUowOUFwOGRFWnQzMWFF?=
- =?utf-8?B?d1MxN0FIbk1zbTFja0pHWjJRQTQ1cW9RWVk4Z2RQU2JaSnBTMVYyV1Rxam5v?=
- =?utf-8?B?R3lLLzJKMTRtcVg0ZStQYnlSdWllT1Rpa04vM0Z1MDFDRTJoM3FyVVlyK0JJ?=
- =?utf-8?B?ak13cU9vUFRzR2FadDVhT3ZaTERtK2F4czBnSVRsbXBIOUU4cG5DSFdCQnZi?=
- =?utf-8?B?MCtQeFVMWE1zczFYNHUwYU1xM1pJMm55UytpRTBId0IrNGFaclZybXd5Qm5m?=
- =?utf-8?B?WVdwQVIxeEJPYzkwTnUrNDRVazVVTXNFd0YwRUQ1ckw1bFJxc2JlWVZJNWRk?=
- =?utf-8?B?b3lib2g2a0JoaWlDdUVMQVNLdE4zeXJodjdFbXpPQ0F0akZoSUw0UDlaY2ty?=
- =?utf-8?B?VDBDc2JCVm4vSFR4M05JY3dzSDlsRGF4ZXdiaktnU1ViczZZVFZjaVlFNUtZ?=
- =?utf-8?B?K2NYZHBPalR6UFZRdEtEVVkxMENnMjRNRlRtZHNYQ1BscC9ORzZYQ0ZHZTFM?=
- =?utf-8?B?NEZBenZTUjN1bDJTZys1WHdBa3lBaERKZFBDQVBBV0owanBIME8vMjFKWG1V?=
- =?utf-8?B?RVpmSy9rRyt3Q0xwd3Rva3NFLzB6RVBEMmRseUFUV1pBQlVUTE43OE0wdTNj?=
- =?utf-8?B?cVhOMEdrRm52Y0M0RlBaOVpORG9laXFPZ0NqcWxYZzEwWUt6eVBPYXZYQkZQ?=
- =?utf-8?Q?NpdjaLrvNrwKMd7aE+WpZs7P8?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cc23d4dc-16b6-4b9c-5652-08dd5b4117f6
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Mar 2025 17:22:09.0663
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: G8sHgkJt+moDzKtBUUoF+tvqGYcMZdpEjA6TQD13T6pq9zqxlfMhAc7HJle+Vu2cD4tKLsbZl4nsCF9P1DgdLg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB8417
+Content-Transfer-Encoding: quoted-printable
+X-ITU-Libra-ESVA-Information: Please contact Istanbul Teknik Universitesi for more information
+X-ITU-Libra-ESVA-ID: 4Z6gNB47nwzG1r7
+X-ITU-Libra-ESVA: No virus found
+X-ITU-Libra-ESVA-From: root@cc.itu.edu.tr
+X-ITU-Libra-ESVA-Watermark: 1741708753.5894@7oLlfLMGYdN/P3TdBpZAOA
+X-ITU-MailScanner-SpamCheck: not spam
+Message-ID: <20250303084712.KEW_jACUMRP6SvSWswXI1zr5mrcxAO0gV_66zRyIwZI@z>
 
-On 3/4/2025 10:06, Ilpo Järvinen wrote:
-> Sparse reports:
-> 
-> dell-uart-backlight.c:328:29: warning: symbol
-> 'dell_uart_bl_serdev_driver' was not declared. Should it be static?
-> 
-> Fix it by making the symbol static.
-> 
-> Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+This commit adds a get_batch_size() interface to:
 
-Fixes: 484bae9e4d6ac ("platform/x86: Add new Dell UART backlight driver")
-Reviewed-by: Mario Limonciello <maroi.limonciello@amd.com>
+  struct acomp_alg
+  struct crypto_acomp
 
-> ---
->   drivers/platform/x86/dell/dell-uart-backlight.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/platform/x86/dell/dell-uart-backlight.c b/drivers/platform/x86/dell/dell-uart-backlight.c
-> index 50002ef13d5d..8f868f845350 100644
-> --- a/drivers/platform/x86/dell/dell-uart-backlight.c
-> +++ b/drivers/platform/x86/dell/dell-uart-backlight.c
-> @@ -325,7 +325,7 @@ static int dell_uart_bl_serdev_probe(struct serdev_device *serdev)
->   	return PTR_ERR_OR_ZERO(dell_bl->bl);
->   }
->   
-> -struct serdev_device_driver dell_uart_bl_serdev_driver = {
-> +static struct serdev_device_driver dell_uart_bl_serdev_driver = {
->   	.probe = dell_uart_bl_serdev_probe,
->   	.driver = {
->   		.name = KBUILD_MODNAME,
+A crypto_acomp compression algorithm that supports batching of compressio=
+ns
+and decompressions must register and provide an implementation for this
+API, so that higher level modules such as zswap and zram can allocate
+resources for submitting multiple compress/decompress jobs that can be
+batched. In addition, the compression algorithm must register itself
+to use request chaining (cra_flags |=3D CRYPTO_ALG_REQ_CHAIN).
 
+A new helper function acomp_has_async_batching() can be invoked to query =
+if
+a crypto_acomp has registered this API. Further, the newly added
+crypto_acomp API "crypto_acomp_batch_size()" is provided for use by highe=
+r
+level modules like zswap and zram. crypto_acomp_batch_size() returns 1 if
+the acomp has not provided an implementation for get_batch_size().
+
+For instance, zswap can call crypto_acomp_batch_size() to get the maximum
+batch-size supported by the compressor. Based on this, zswap can use the
+minimum of any zswap-specific upper limits for batch-size and the
+compressor's max batch-size, to allocate batching resources. Further,
+the way that zswap can avail of the compressor's batching capability is b=
+y
+using request chaining to create a list requests chained to a head reques=
+t.
+zswap can call crypto_acomp_compress() or crypto_acomp_decompress() with
+the head request in the chain for processing the chain as a batch. The ca=
+ll
+into crypto for compress/decompress will thus remain the same from zswap'=
+s
+perspective for both, batching and sequential compressions/decompressions=
