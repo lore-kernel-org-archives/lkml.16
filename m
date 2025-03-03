@@ -1,205 +1,150 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4753C24E007;
-	Mon,  3 Mar 2025 16:30:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3196E24CEDF
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 16:30:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741019450; cv=none; b=Pmmr1q6YQMmexFlr8YqtuXQhlFal25QCiY2HYYFOyfuDBWu8bTcDOVnXi4XQXr11RdOSECSzKJulPnfWYuU6qGOCJOu+gbmb5iaxDOpNceZ5Bp2u1KuE86vlMV7+ouMWFNZNjbwwlsbgqPkezGqGU0htSrgzKOKmQxkkeqBY2x4=
+	t=1741019450; cv=none; b=tYJm/sGPDuTMmFLptvdSF6mHghHR8vhlrnQ2C6Od2LuVsXjEgxJlvpV+7BHWZd6ThxUUnWOAeJQK5KjJSs20SbnWwsgSyVI8yzxGLEvjitGbUxSoJ4u1PBl0cEZN3ltT0FESdybF4jwJ4iJGZJLrYhIYzqNwwkrlWFTkaIkKj30=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1741019450; c=relaxed/simple;
-	bh=y89dCZxQU2PjVV+6aEdXLg48dzsiOrghg+ThVnYvqxM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=BstdbQn00TCT/EF1NvzkBHRHBvxU3b/fHOf8bp2+NQXPOhk1s4hswIJfoIUk98JxUDKkuX/IJlFZvoW9eTsDVLxN+LaJdTLpR0AKEVWH4LY4tsnkQ9sWoCUfu7BXdcWulZO4+PJbHHO8bXA22N/Ko+HdSqEp+n5Gtayj+/1s0Aw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GYvMYILF; arc=none smtp.client-ip=10.30.226.201
+	bh=jBMc/6KfiUuhsqx8U3JCMjpv5FKb+tGdfD4lU0RajKI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=J8xt9pdCtooWn57NS2BMJmdC+fofLe8573U2MvSNmonVI8byi7RWC5eo1rgVLNurAj4/NepYloFXe40J7vLds7kC5DRVjpJe+L0SKmCqcURHIi5/x9kemGZyfdxEP+YYoJAqCRPWdXBGORChlCP/LVdnRd3aIJWyfPxf9K6+OQs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fTZ06RUb; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GYvMYILF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C066C4CEE6;
-	Mon,  3 Mar 2025 16:30:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741019450;
-	bh=y89dCZxQU2PjVV+6aEdXLg48dzsiOrghg+ThVnYvqxM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=GYvMYILFN5dq58LX8Y8rWNw18yreJHPnuCoMDOvr0hCAsgQARPZNQ0UwFH464dESo
-	 aSTVWU+tK8gSMZAUjGCczUW+rjP5/p5vrrWelyOoNXraT+XOEBHtWH8LSmfHw32jwp
-	 Zkwbh5NhugwF08kYrAyqwq7oUhXpQl5GryD5BvlmM/DEPe3JTozpiW3+J9yWXM/ewq
-	 diNhENLeS595v27CGnLWaBzrikmofpaLYofK/AYbWHy6zixITd4JFhXFU8Z8iWcJ1a
-	 F1ZcKrLgsQGmAi1foDRZS3C4dCSNyKp+baXwvO3J/L4X7wVy56D5HClk0F/Ga2Nsq8
-	 2MGFFAf2qauIA==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Kan Liang <kan.liang@linux.intel.com>,
-	Ingo Molnar <mingo@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Sasha Levin <sashal@kernel.org>,
-	mingo@redhat.com,
-	acme@kernel.org,
-	namhyung@kernel.org,
-	tglx@linutronix.de,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	x86@kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.12 09/17] perf/x86/intel: Use better start period for frequency mode
-Date: Mon,  3 Mar 2025 11:30:21 -0500
-Message-Id: <20250303163031.3763651-9-sashal@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250303163031.3763651-1-sashal@kernel.org>
-References: <20250303163031.3763651-1-sashal@kernel.org>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fTZ06RUb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1741019448;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=lWnUBbJbNal4OtQP6KylSC1HMhJkWgV+LTGJMK3tR3E=;
+	b=fTZ06RUb6fwTRp6oS5vFzEB52lvEgMxR0hsHNw9TTtPWWPzT3QYDsAmuFB8wGFsxO6VOrg
+	EusBotGzWg75iGxJgTNXjogKB0b+YXva5J7FcjQwqmXOLZlc5bc2EALpEIlWiq0cF3M4ac
+	HA1upbr7Hma/pE56lEFQM4wMv+aUW3s=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-244-2VjpIvTKMiKvFF2ep8vnfA-1; Mon, 03 Mar 2025 11:30:36 -0500
+X-MC-Unique: 2VjpIvTKMiKvFF2ep8vnfA-1
+X-Mimecast-MFC-AGG-ID: 2VjpIvTKMiKvFF2ep8vnfA_1741019435
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-43942e82719so33183815e9.2
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Mar 2025 08:30:36 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741019435; x=1741624235;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=lWnUBbJbNal4OtQP6KylSC1HMhJkWgV+LTGJMK3tR3E=;
+        b=ao23ThyGJPFvtu/RZkUlQHAQdVfCNKi9tRRgTTIBUhDrSRCaCtWYmWQVvMwjaTtnje
+         WxyYRMUa2x6wFAnEscXMLGdG0cqHSzj+3+yIe5DAo4Kvep05MwD4IxVgqY4qZye5gyBe
+         +GAYd8rndnOQCKnIUdQrIDV4Z7ogDqn2JLfw+ELZxXs8RaJzA+oTa0GDyosWHEusF4H0
+         nfhWRxMzXQMVJKKiE64Xg8kDguemW4tRcbHooVkrZEIBwitI4MXfbRmbhQO4qIITSEOm
+         pZOjD8R3oa1LVkXy3pgX9qPqrXKB/NzdUuPskNa4Xwga1Y/cLkGZeypI4TTcOXsFrmjd
+         VNvQ==
+X-Gm-Message-State: AOJu0Yx5WYAGZudF0JvTgfEoSHTiJqyK1C/AfvabbRWOKbtRjAVWCs0E
+	SO2t6JVq8vPxdT7cW53PeM8mN3J787OLQHOIy1Xm47esh819Sy67RkBwBR8ZAJTwLZca0Vvm+6U
+	Q46wFQPq136Ii1IzExFDeIujH9HQpdXbFTtUPuKvOUw7hbcJQAQmxe+wbGWELveYAM+EeiQiFyZ
+	D1cCfitlQ2hjyOwb6iLV/RZ+eNvN76nPo58Wocr1PF4DLi
+X-Gm-Gg: ASbGnctkab1LpdiHprP1pOkTJMl+p+CUaEflBwZ2aIfXdbCM5lgxGlQxnbGnd5qZ6Br
+	bvZYTIG0n19ODyPFlzp+xzQPVHepVlKFh+Xd7b6pvLiTQ4mZyZyoAiJwhUWMPSASKeadoo7/rBc
+	245mCDEp3OjeD79LXKivGYNRtjpenQKJkUciWvRL1f5OhzmUKcXmS0Wv3INl77Pu5ItilW5l9Ip
+	qTThL4JnuVKvYXgfL1gah+Mj2h6bKa1aessgSPJQ+T+z3nw2DHOwhrXhwVBDjjpWCBbskAF6a03
+	0DW6Fzvlf6uZbqH/fevH/0zLeOR0JWAjQKlshGF1RkmVJTcgixRwr3+EHHTKWTV4W67nnmHoGzD
+	a
+X-Received: by 2002:a05:600c:19c7:b0:439:6b57:c68 with SMTP id 5b1f17b1804b1-43ba6710a51mr128366455e9.17.1741019435481;
+        Mon, 03 Mar 2025 08:30:35 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEHH2uqcGG6+HqLvILt026VDKtCx0hMTXydneDmvGOTb2RHDZET1RLo/ABtW5TIvoZEd6mWJw==
+X-Received: by 2002:a05:600c:19c7:b0:439:6b57:c68 with SMTP id 5b1f17b1804b1-43ba6710a51mr128365725e9.17.1741019434989;
+        Mon, 03 Mar 2025 08:30:34 -0800 (PST)
+Received: from localhost (p200300cbc7349600af274326a2162bfb.dip0.t-ipconnect.de. [2003:cb:c734:9600:af27:4326:a216:2bfb])
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-43bc63877desm18077035e9.1.2025.03.03.08.30.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 03 Mar 2025 08:30:33 -0800 (PST)
+From: David Hildenbrand <david@redhat.com>
+To: linux-kernel@vger.kernel.org
+Cc: linux-doc@vger.kernel.org,
+	cgroups@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-api@vger.kernel.org,
+	David Hildenbrand <david@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	Tejun Heo <tj@kernel.org>,
+	Zefan Li <lizefan.x@bytedance.com>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	=?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Andy Lutomirski <luto@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Muchun Song <muchun.song@linux.dev>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Jann Horn <jannh@google.com>
+Subject: [PATCH v3 08/20] mm/rmap: pass vma to __folio_add_rmap()
+Date: Mon,  3 Mar 2025 17:30:01 +0100
+Message-ID: <20250303163014.1128035-9-david@redhat.com>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250303163014.1128035-1-david@redhat.com>
+References: <20250303163014.1128035-1-david@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.12.17
 Content-Transfer-Encoding: 8bit
 
-From: Kan Liang <kan.liang@linux.intel.com>
+We'll need access to the destination MM when modifying the mapcount
+large folios next. So pass in the VMA.
 
-[ Upstream commit a26b24b2e21f6222635a95426b9ef9eec63d69b1 ]
-
-Freqency mode is the current default mode of Linux perf. A period of 1 is
-used as a starting period. The period is auto-adjusted on each tick or an
-overflow, to meet the frequency target.
-
-The start period of 1 is too low and may trigger some issues:
-
-- Many HWs do not support period 1 well.
-  https://lore.kernel.org/lkml/875xs2oh69.ffs@tglx/
-
-- For an event that occurs frequently, period 1 is too far away from the
-  real period. Lots of samples are generated at the beginning.
-  The distribution of samples may not be even.
-
-- A low starting period for frequently occurring events also challenges
-  virtualization, which has a longer path to handle a PMI.
-
-The limit_period value only checks the minimum acceptable value for HW.
-It cannot be used to set the start period, because some events may
-need a very low period. The limit_period cannot be set too high. It
-doesn't help with the events that occur frequently.
-
-It's hard to find a universal starting period for all events. The idea
-implemented by this patch is to only give an estimate for the popular
-HW and HW cache events. For the rest of the events, start from the lowest
-possible recommended value.
-
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: https://lore.kernel.org/r/20250117151913.3043942-3-kan.liang@linux.intel.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: David Hildenbrand <david@redhat.com>
 ---
- arch/x86/events/intel/core.c | 85 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 85 insertions(+)
+ mm/rmap.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index 9ec3170c18f92..3a68b3e0b7a35 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -3949,6 +3949,85 @@ static inline bool intel_pmu_has_cap(struct perf_event *event, int idx)
- 	return test_bit(idx, (unsigned long *)&intel_cap->capabilities);
+diff --git a/mm/rmap.c b/mm/rmap.c
+index bcec8677f68df..8a7d023b02e0c 100644
+--- a/mm/rmap.c
++++ b/mm/rmap.c
+@@ -1242,8 +1242,8 @@ int pfn_mkclean_range(unsigned long pfn, unsigned long nr_pages, pgoff_t pgoff,
  }
  
-+static u64 intel_pmu_freq_start_period(struct perf_event *event)
-+{
-+	int type = event->attr.type;
-+	u64 config, factor;
-+	s64 start;
-+
-+	/*
-+	 * The 127 is the lowest possible recommended SAV (sample after value)
-+	 * for a 4000 freq (default freq), according to the event list JSON file.
-+	 * Also, assume the workload is idle 50% time.
-+	 */
-+	factor = 64 * 4000;
-+	if (type != PERF_TYPE_HARDWARE && type != PERF_TYPE_HW_CACHE)
-+		goto end;
-+
-+	/*
-+	 * The estimation of the start period in the freq mode is
-+	 * based on the below assumption.
-+	 *
-+	 * For a cycles or an instructions event, 1GHZ of the
-+	 * underlying platform, 1 IPC. The workload is idle 50% time.
-+	 * The start period = 1,000,000,000 * 1 / freq / 2.
-+	 *		    = 500,000,000 / freq
-+	 *
-+	 * Usually, the branch-related events occur less than the
-+	 * instructions event. According to the Intel event list JSON
-+	 * file, the SAV (sample after value) of a branch-related event
-+	 * is usually 1/4 of an instruction event.
-+	 * The start period of branch-related events = 125,000,000 / freq.
-+	 *
-+	 * The cache-related events occurs even less. The SAV is usually
-+	 * 1/20 of an instruction event.
-+	 * The start period of cache-related events = 25,000,000 / freq.
-+	 */
-+	config = event->attr.config & PERF_HW_EVENT_MASK;
-+	if (type == PERF_TYPE_HARDWARE) {
-+		switch (config) {
-+		case PERF_COUNT_HW_CPU_CYCLES:
-+		case PERF_COUNT_HW_INSTRUCTIONS:
-+		case PERF_COUNT_HW_BUS_CYCLES:
-+		case PERF_COUNT_HW_STALLED_CYCLES_FRONTEND:
-+		case PERF_COUNT_HW_STALLED_CYCLES_BACKEND:
-+		case PERF_COUNT_HW_REF_CPU_CYCLES:
-+			factor = 500000000;
-+			break;
-+		case PERF_COUNT_HW_BRANCH_INSTRUCTIONS:
-+		case PERF_COUNT_HW_BRANCH_MISSES:
-+			factor = 125000000;
-+			break;
-+		case PERF_COUNT_HW_CACHE_REFERENCES:
-+		case PERF_COUNT_HW_CACHE_MISSES:
-+			factor = 25000000;
-+			break;
-+		default:
-+			goto end;
-+		}
-+	}
-+
-+	if (type == PERF_TYPE_HW_CACHE)
-+		factor = 25000000;
-+end:
-+	/*
-+	 * Usually, a prime or a number with less factors (close to prime)
-+	 * is chosen as an SAV, which makes it less likely that the sampling
-+	 * period synchronizes with some periodic event in the workload.
-+	 * Minus 1 to make it at least avoiding values near power of twos
-+	 * for the default freq.
-+	 */
-+	start = DIV_ROUND_UP_ULL(factor, event->attr.sample_freq) - 1;
-+
-+	if (start > x86_pmu.max_period)
-+		start = x86_pmu.max_period;
-+
-+	if (x86_pmu.limit_period)
-+		x86_pmu.limit_period(event, &start);
-+
-+	return start;
-+}
-+
- static int intel_pmu_hw_config(struct perf_event *event)
+ static __always_inline unsigned int __folio_add_rmap(struct folio *folio,
+-		struct page *page, int nr_pages, enum rmap_level level,
+-		int *nr_pmdmapped)
++		struct page *page, int nr_pages, struct vm_area_struct *vma,
++		enum rmap_level level, int *nr_pmdmapped)
  {
- 	int ret = x86_pmu_hw_config(event);
-@@ -3960,6 +4039,12 @@ static int intel_pmu_hw_config(struct perf_event *event)
- 	if (ret)
- 		return ret;
+ 	atomic_t *mapped = &folio->_nr_pages_mapped;
+ 	const int orig_nr_pages = nr_pages;
+@@ -1411,7 +1411,7 @@ static __always_inline void __folio_add_anon_rmap(struct folio *folio,
  
-+	if (event->attr.freq && event->attr.sample_freq) {
-+		event->hw.sample_period = intel_pmu_freq_start_period(event);
-+		event->hw.last_period = event->hw.sample_period;
-+		local64_set(&event->hw.period_left, event->hw.sample_period);
-+	}
-+
- 	if (event->attr.precise_ip) {
- 		if ((event->attr.config & INTEL_ARCH_EVENT_MASK) == INTEL_FIXED_VLBR_EVENT)
- 			return -EINVAL;
+ 	VM_WARN_ON_FOLIO(!folio_test_anon(folio), folio);
+ 
+-	nr = __folio_add_rmap(folio, page, nr_pages, level, &nr_pmdmapped);
++	nr = __folio_add_rmap(folio, page, nr_pages, vma, level, &nr_pmdmapped);
+ 
+ 	if (likely(!folio_test_ksm(folio)))
+ 		__page_check_anon_rmap(folio, page, vma, address);
+@@ -1582,7 +1582,7 @@ static __always_inline void __folio_add_file_rmap(struct folio *folio,
+ 
+ 	VM_WARN_ON_FOLIO(folio_test_anon(folio), folio);
+ 
+-	nr = __folio_add_rmap(folio, page, nr_pages, level, &nr_pmdmapped);
++	nr = __folio_add_rmap(folio, page, nr_pages, vma, level, &nr_pmdmapped);
+ 	__folio_mod_stat(folio, nr, nr_pmdmapped);
+ 
+ 	/* See comments in folio_add_anon_rmap_*() */
 -- 
-2.39.5
+2.48.1
 
