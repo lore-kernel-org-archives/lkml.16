@@ -1,143 +1,206 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AE141F37C3
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 11:08:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B02F71F3BA8;
+	Mon,  3 Mar 2025 11:08:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741000098; cv=none; b=VmYMIk7c/cISAhXuVXZuM5+Z+xE76T7s+BwKGTKCNQBfuAjB1WmZFyFWXrZVlZNUyZIA1KGEcoI03ftfPH6x4JyMlVdmPFf9pTsWMtprPKmfQDuvARPDQJGRF2qexS7FC8WIYyDCsyYnrAuiJcZfLcFWd5oiM4lF4zVK0W9Cr48=
+	t=1741000127; cv=none; b=lh1V76t1xfuvfvqg/pIhOTFHzcpLnadotWJwlwhqalv1F3Qfm+yA7T/z880/mxuSn6QBcMv+JNvcdBeC3W9tlwJ1Y+U7AXDcC0CbixWWj8u9UFzlqyIPNwC0af+Q6nPvKRdFYo/0TxuORblbIJhVKylTrTGLJzAia7Fdmai0E1k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741000098; c=relaxed/simple;
-	bh=sB62K8wzOoMq7iYIPZzQzh73bdFdBfG2WSbcYg3oeVw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Nc/h0fBJOzm2gxz+9+g4uclDyPYWHq+T1PetUWofsfiPeRrCuGJoFp7i4oxHqORkiA/z2Bn06xOsOyeR9VpfCAlrs8e0M0sxibkb3Skc9xqJhAPO1NG1dZsAICcwT9fGs1sBBbcyuaF9ZYr/txFMYKnY9EmzoVGulHbWZxjQt88=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=WY3Bcvwq; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=weIS7mWu; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1741000127; c=relaxed/simple;
+	bh=4HmOj/3Wlib3zncsg3O073eer/GxckvTC0ktgz3VV5A=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hMiknJ93857oEdPw1HWS2F+to64GAXl86eB7QT6VpNVMp+AC3EIBieEEVqy3fw6lWBoOohGGZi/qbHb6UEP6tALq2juZljULDLl8XA/hBimqUCxngtcUhn+dEMGEWPdIs1JbQuTyhDUaTvC4TX/t6l59trDaamKuRuoSHOiqCOU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ndTOULP8; arc=none smtp.client-ip=209.85.221.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="WY3Bcvwq";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="weIS7mWu"
-Date: Mon, 3 Mar 2025 12:08:11 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1741000095;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=L1D+CnraKUZCvWBX2D//PKQHKSwg0AKuuuoMcb0rgws=;
-	b=WY3BcvwqJfY3+izuTEss/XpsgEDHLEaBomUNon3BENJfcWrR9vFNFyQh+HE0Ng0LU3VJOV
-	cLOhtw/pgT7QEX5+3fnLR+WZEgEEcg3m057qcuRhitc8b9EcjiVXxSGEPipOy8QaGULV1n
-	FMbP+++SB7bbOd7OkE0/sSp4nfRb0wC4D7ObJZEGhDxnn4HFPIo8zIjBr/GQxQbrg2xuvt
-	5WE3Frj635yzpVKORmTTpXTuUOjDnfpWeDu2kxbXbUTDFlKe+gziyLP4TogcUvzKudOl5W
-	3x7WOYHzmQj0qAjeL1jcBmDr20VHXPT/KIhn4zIP8CiDsVlxRfYPzTlnFhKPRA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1741000095;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=L1D+CnraKUZCvWBX2D//PKQHKSwg0AKuuuoMcb0rgws=;
-	b=weIS7mWuYbNKbYzEpacOGd7w6cmMf55sMrM4/Mj2I5nQ/q7V+crriNXkCP2mUClA/2cbkK
-	328REvnkCOCCwFDQ==
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-To: "Maciej W. Rozycki" <macro@orcam.me.uk>
-Cc: Christophe Leroy <christophe.leroy@csgroup.eu>, 
-	Mahesh J Salgaonkar <mahesh@linux.ibm.com>, Oliver O'Halloran <oohall@gmail.com>, 
-	Madhavan Srinivasan <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, 
-	Nicholas Piggin <npiggin@gmail.com>, Naveen N Rao <naveen@kernel.org>, linuxppc-dev@lists.ozlabs.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] powerpc: Don't use %pK through printk
-Message-ID: <20250303115007-beb39d5b-71f5-458a-82fe-9e82c9ab720e@linutronix.de>
-References: <20250217-restricted-pointers-powerpc-v1-1-32c6bff63c9a@linutronix.de>
- <ffd5dd44-babc-480a-b1bc-61bd7ff1e920@csgroup.eu>
- <alpine.DEB.2.21.2502241840360.65342@angie.orcam.me.uk>
- <20250225091250-eac544ad-4e5b-47f7-83fc-5212c720483a@linutronix.de>
- <alpine.DEB.2.21.2502251654370.65342@angie.orcam.me.uk>
- <20250226105757-e935ee3e-f70d-4e0e-83bb-61307722a186@linutronix.de>
- <alpine.DEB.2.21.2502281957310.12637@angie.orcam.me.uk>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ndTOULP8"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-390eebcc331so1521883f8f.1;
+        Mon, 03 Mar 2025 03:08:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741000123; x=1741604923; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ULoMgnoXr8L1C6JD7W1nPWWFd3ANujjbWRiciG0YDU8=;
+        b=ndTOULP8W22qD5RY4DAgnWarP07Q03XeU01X86+aF7XFnB2O1LDV/JgpugI3HSe5E1
+         g0jpot9nlbzfxRC9VVEIl4jt7eyemjq2iIO6ZnNDUF3OKACGgA1OeppWEz6mAdsqwyRV
+         Sa8ajUF1MCQHJS4aST/Y/LTzWHpKpTsyZZq54JNgjv+jvcZyNPrqw9mCpqaH7hKBJpuy
+         ckPCX5SlTn5ca+w92yV4ucWhcwfG0IVOQ5mLu/PzUfGm0v9bOTr/zpzozhQChEA9X4jY
+         G+XJF21P2L9h4RdHqqgscZcqjUfVjnpAI1YhO2vOjnVX6OtclY3BeVB9gzOfs0jSupKq
+         B0yQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741000123; x=1741604923;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ULoMgnoXr8L1C6JD7W1nPWWFd3ANujjbWRiciG0YDU8=;
+        b=Mfk2bJXFFFCUdZNSEnsjcm0VnOl+SZUmm+aGnkqQccWZhqyzDCSuceAjieWASg+Ov1
+         fyE6lKR/nNYbHpTgLBTb0hTsAqn/RWAdAxLhxySSZlWuRTsGWWTsMfsVTv0MrwtkABgs
+         nkJ6EBYqFI+erIkp2IqU40f4BNlFeaf29zCTSYDGCu10Rcq7zitEv7P5/HhN6BfA3htA
+         utAhKKmOabFx7OX2Ak0Gh1h9GorgXmzyy1zRjz/Upo08YXCrZwX7sJog0n0Y4zwr2yP1
+         iX+EGX9KMHoFjbJtHB776mrOWeCrGwAx6jX6L/A34amiwQt6hJYppl7J0wB0ayajNswE
+         FjWQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWX36TWtPzwQ0jcc5QHZDXkmKXBf+RkGTlZHz3XAuDNsfg37BrRYjTHOECQijUNgQM2FYBiIKn2zbv7S2bn@vger.kernel.org, AJvYcCWxarpmwoTSBeL0+N0Me2VXykm/Fcx1lFqPrNU3qo0t79MIDzOUkgoovbO+h7Hj61bU/EO+6KV3FXhp@vger.kernel.org
+X-Gm-Message-State: AOJu0YxNDs1n4RXbVXZ+5sEGakqY6FvnqCB4WdxAFhfnFNnxaOKWFMdL
+	HkaLm3q+WQr2tiNFgGjN+iX6YJ7+bQwRg+BhSNa3MhGb9eidDphe5edrS8E9zIWrtaa376fdVF8
+	GvghKa9n33rXrO40MCVmC4tOy4Js=
+X-Gm-Gg: ASbGncuN3LHcduGcCDEaQJLBmtgBW+qgsNhmTqlHpJppmYreZEOm4h7qzIhp7P7hV54
+	8l1PLJfeyFB3vUGTv80m/B6v3dwYFmMIJ6lZ7Ul8FDGb6Rv2VPMxT6XGbdvRLvHNn+jZz4sdHwy
+	pj4WDNcodOqmmFL+1fwrEAkMsaRW8=
+X-Google-Smtp-Source: AGHT+IFhL1VGqvu6/L+/q7Zc25Yy9RI3MXyS9jJwyfSvB1TiiTDcgln3OoeI7ZBVrGV2krySaBS+BuYN1CjRA1ZLN0I=
+X-Received: by 2002:a05:6000:4594:b0:390:e535:8740 with SMTP id
+ ffacd0b85a97d-390e535884fmr10020468f8f.14.1741000122764; Mon, 03 Mar 2025
+ 03:08:42 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <alpine.DEB.2.21.2502281957310.12637@angie.orcam.me.uk>
+References: <20250219082817.56339-1-clamor95@gmail.com> <20250219082817.56339-3-clamor95@gmail.com>
+ <99ee61dc-abd5-45d9-8d26-a8f0ae94c8eb@arm.com> <CAPVz0n0uWEY+-evrfpci9-1c3icGyHfTHMbXi=P9Sv=Uh3AUaA@mail.gmail.com>
+ <93ddb2d9-ce3d-4e6d-bf5f-0b30b2d04d84@arm.com>
+In-Reply-To: <93ddb2d9-ce3d-4e6d-bf5f-0b30b2d04d84@arm.com>
+From: Svyatoslav Ryhel <clamor95@gmail.com>
+Date: Mon, 3 Mar 2025 13:08:31 +0200
+X-Gm-Features: AQ5f1JpD5JFPA8iwOxoXnJ1YeK0i3dfIhf5qwB6Sws_ueobcubuvER9wMFqnBIk
+Message-ID: <CAPVz0n3gs_1wUncJ8w5kpSLiDpJEzPUQ_qaaR2TAhHJHtTR5EA@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] thermal: thermal-generic-adc: add temperature
+ sensor channel
+To: Lukasz Luba <lukasz.luba@arm.com>
+Cc: linux-pm@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, 
+	Zhang Rui <rui.zhang@intel.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Laxman Dewangan <ldewangan@nvidia.com>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Feb 28, 2025 at 08:15:02PM +0000, Maciej W. Rozycki wrote:
-> On Wed, 26 Feb 2025, Thomas Weißschuh wrote:
-> 
-> > > > By default, when kptr_restrict is set to 0, %pK behaves the same as %p.
-> > > > The same happened for a bunch of other architectures and nobody seems
-> > > > to have noticed in the past.
-> > > > The symbol-relative pointers or pointer formats designed for backtraces,
-> > > > as notes by Christophe, seem to be enough.
-> > > 
-> > >  I do hope so.
-> > 
-> > As mentioned before, personally I am fine with using %px here.
-> 
->  Glad to hear!
-> 
-> > The values are in the register dumps anyways and security sensitive deployments
-> > will panic on WARN(), making the information disclosure useless.
-> 
->  And even more so, I wasn't aware of this feature.  But this code doesn't 
-> make use of the WARN() facility, it just prints at the heightened KERN_ERR 
-> priority.
+=D0=BF=D0=BD, 3 =D0=B1=D0=B5=D1=80. 2025=E2=80=AF=D1=80. =D0=BE 12:53 Lukas=
+z Luba <lukasz.luba@arm.com> =D0=BF=D0=B8=D1=88=D0=B5:
+>
+>
+>
+> On 2/28/25 13:22, Svyatoslav Ryhel wrote:
+> > =D0=BF=D1=82, 28 =D0=BB=D1=8E=D1=82. 2025=E2=80=AF=D1=80. =D0=BE 15:11 =
+Lukasz Luba <lukasz.luba@arm.com> =D0=BF=D0=B8=D1=88=D0=B5:
+> >>
+> >> Hi Svyatoslav,
+> >>
+> >> On 2/19/25 08:28, Svyatoslav Ryhel wrote:
+> >>> Add IIO sensor channel along with existing thermal sensor cell. This
+> >>> would benefit devices that use adc sensors to detect temperature and
+> >>> need a custom conversion table.
+> >>>
+> >>> Signed-off-by: Svyatoslav Ryhel <clamor95@gmail.com>
+> >>> ---
+> >>>    drivers/thermal/thermal-generic-adc.c | 54 +++++++++++++++++++++++=
++++-
+> >>>    1 file changed, 53 insertions(+), 1 deletion(-)
+> >>>
+> >>> diff --git a/drivers/thermal/thermal-generic-adc.c b/drivers/thermal/=
+thermal-generic-adc.c
+> >>> index ee3d0aa31406..a8f3b965b39b 100644
+> >>> --- a/drivers/thermal/thermal-generic-adc.c
+> >>> +++ b/drivers/thermal/thermal-generic-adc.c
+> >>> @@ -7,6 +7,7 @@
+> >>>     * Author: Laxman Dewangan <ldewangan@nvidia.com>
+> >>>     */
+> >>>    #include <linux/iio/consumer.h>
+> >>> +#include <linux/iio/iio.h>
+> >>>    #include <linux/kernel.h>
+> >>>    #include <linux/module.h>
+> >>>    #include <linux/platform_device.h>
+> >>> @@ -73,6 +74,57 @@ static const struct thermal_zone_device_ops gadc_t=
+hermal_ops =3D {
+> >>>        .get_temp =3D gadc_thermal_get_temp,
+> >>>    };
+> >>>
+> >>> +static const struct iio_chan_spec gadc_thermal_iio_channel[] =3D {
+> >>> +     {
+> >>> +             .type =3D IIO_TEMP,
+> >>> +             .info_mask_separate =3D BIT(IIO_CHAN_INFO_PROCESSED),
+> >>> +     }
+> >>> +};
+> >>> +
+> >>> +static int gadc_thermal_read_raw(struct iio_dev *indio_dev,
+> >>> +                              struct iio_chan_spec const *chan,
+> >>> +                              int *temp, int *val2, long mask)
+> >>> +{
+> >>> +     struct gadc_thermal_info *gtinfo =3D iio_priv(indio_dev);
+> >>> +     int ret;
+> >>> +
+> >>> +     if (mask !=3D IIO_CHAN_INFO_PROCESSED)
+> >>> +             return -EINVAL;
+> >>> +
+> >>> +     ret =3D gadc_thermal_get_temp(gtinfo->tz_dev, temp);
+> >>> +     if (ret < 0)
+> >>> +             return ret;
+> >>> +
+> >>> +     *temp /=3D 1000;
+> >>> +
+> >>> +     return IIO_VAL_INT;
+> >>> +}
+> >>> +
+> >>> +static const struct iio_info gadc_thermal_iio_info =3D {
+> >>> +     .read_raw =3D gadc_thermal_read_raw,
+> >>> +};
+> >>> +
+> >>> +static int gadc_iio_register(struct device *dev, struct gadc_thermal=
+_info *gti)
+> >>> +{
+> >>> +     struct gadc_thermal_info *gtinfo;
+> >>> +     struct iio_dev *indio_dev;
+> >>> +
+> >>> +     indio_dev =3D devm_iio_device_alloc(dev, sizeof(struct gadc_the=
+rmal_info));
+> >>> +     if (!indio_dev)
+> >>> +             return -ENOMEM;
+> >>> +
+> >>> +     gtinfo =3D iio_priv(indio_dev);
+> >>> +     memcpy(gtinfo, gti, sizeof(struct gadc_thermal_info));
+> >>> +
+> >>> +     indio_dev->name =3D dev_name(dev);
+> >>> +     indio_dev->info =3D &gadc_thermal_iio_info;
+> >>> +     indio_dev->modes =3D INDIO_DIRECT_MODE;
+> >>> +     indio_dev->channels =3D gadc_thermal_iio_channel;
+> >>> +     indio_dev->num_channels =3D ARRAY_SIZE(gadc_thermal_iio_channel=
+);
+> >>> +
+> >>> +     return devm_iio_device_register(dev, indio_dev);
+> >>
+> >> I don't get the idea why we need iio device, while we already have the
+> >> hwmon.
+> >>
+> >
+> > Idea behind this is to be able to convert adc iio channel into temp
+> > iio channel without introducing a new sensor which will duplicate
+> > behavior of existing one (by this I mean conversion table use). Not
+> > all devices can or have to use hwmon and some may require iio channel
+> > hooked up.
+> >
+> > Real life example. I own a device (LG P985) which has a fuel gauge
+> > that does not support battery thermal readings. Vendor provided a
+> > dedicated adc sensor and one of its channels is used as thermal sensor
+> > with device specific conversion table. Fuel gauge on the other hand
+> > supports linking in a dedicated temp iio channel to get thermal
+> > readings.
+>
+> Thanks. IMO you can add these two sentences into the patch header.
+> It's telling more about the need of this change.
+>
 
-Indeed, I got confused with some other patches where WARN() is used mostly.
-This makes it a bit murkier.
+Sure, will do
 
-> > > > But personally I'm also fine with using %px, as my goal is to remove the
-> > > > error-prone and confusing %pK.
-> > > 
-> > >  It's clear that `%pK' was meant to restrict access to /proc files and the 
-> > > like that may be accessible by unprivileged users:
-> > 
-> > Then let's stop abusing it. For something that is clear, it is
-> > misunderstood very often.
-> 
->  Absolutely, I haven't questioned the removal of `%pK', but the switch to 
-> `%p' rather than `%px' specifically for this single hunk of your patch.
+> BTW, I would like to see later how you use it in your battery driver
+> (please add me on CC, because I'm curious).
+>
 
-Sure. It would be great if one of the maintainers could confirm this preference.
+It is already present in the kernel. Here is the schema
+https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree=
+/Documentation/devicetree/bindings/power/supply/maxim,max17040.yaml?h=3Dv6.=
+14-rc5
 
-> > > "
-> > > kptr_restrict
-> > > =============
-> > > 
-> > > This toggle indicates whether restrictions are placed on
-> > > exposing kernel addresses via ``/proc`` and other interfaces.
-> > > "
-> > > 
-> > > and not the kernel log, the information in which may come from rare events 
-> > > that are difficult to trigger and hard to recover via other means.  Sigh. 
-> > > Once you've got access to the kernel log, you may as well wipe the system 
-> > > or do any other harm you might like.
-> > 
-> > As I understand it, both the security and printk maintainers don't want the
-> > kernel log in general to be security sensitive and restricted.
-> > My goal here is not to push site-specific policy into the kernel but make life
-> > easier for kernel developers by removing the confusing and error-prone %pK
-> > altogether.
-> 
->  Let me ask a different question then: is your approach to bulk-switch all 
-> instances of `%pK' to `%p' as the safe default and let other people figure 
-> out afterwards whether a different conversion specifier ought to be used 
-> instead on a case-by-case basis and then follow up with another patch, or 
-> will you consider these alternatives right away?
-
-I am considering on a case-by-case basis. But mostly the decision is that %p is
-enough, because by default %pK has been the same as %p anyways.
-Also the current wave of replacements does not touch valid users of %pK.
-They will stay and later be replaced with a new and better API.
-
-> > Security is only one aspect.
-> 
->  I think it's important enough though for us to ensure we don't compromise 
-> it by chance.
-
-Agreed.
+> The code looks good, so please resend with better patch header
+> and I'll review the whole patch
