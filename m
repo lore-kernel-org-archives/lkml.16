@@ -1,131 +1,196 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+Received: from mail-yb1-f173.google.com (mail-yb1-f173.google.com [209.85.219.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D2512135BB;
-	Mon,  3 Mar 2025 15:43:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 605842139AF;
+	Mon,  3 Mar 2025 15:43:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741016596; cv=none; b=H/bIGANSO2JYunReu6XyM85sBL4T032VOn6qRpy1ax3WBP4TRNUgAaDYBa+y2rc4WbcGBc/Xv0B0Csw4ZBMRj5XJqIoNz0hQQi+finKzpqKqtA58+T++ZNXOUSN6Y1kS0nsycNjUqBqw/hMtQ9fYfiBKmeGnp801lY+Iw8z17BY=
+	t=1741016612; cv=none; b=dkwE+/hO3qoN2tnhMdZbHk6ZBABzyH1FzRGiPG/mnJQZtO9YbVBJZVTimuw8aLDItw67YYQh77y/TtT63FTpL/4at0Fi5OLN34uFEAPJBDZPvESGnNgLqXyrTJ8UaNvcjUmwJVVq8OPs4V3RTEeOAHuBbSvQGUFNLbcEmVuXf+s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741016596; c=relaxed/simple;
-	bh=ghfaZbIiUJzse2shN7QuXoFlGxnLXRzYB7t3m0+2OGE=;
+	s=arc-20240116; t=1741016612; c=relaxed/simple;
+	bh=e7sJsPxftEmqUF7aflD0iSt9xRNb7hVvNLp83A2uWUU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Y/IIqP7OzibPeihqzt18eI8wLN6eFLKfGRO0czw+QzbuLU4u2LFaLwkgWVf8ebAcP1wtpghcSf+aKibghejdOGWJK/EpkAySmgk7hLQ33jUtAYpn5pda73PFz5Ij618dXA/2AYVeV2/f2w1z91HRwJ7lDb8kwQ5E9fg7g70oSw0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PZ6IM/I1; arc=none smtp.client-ip=209.85.128.54
+	 Content-Type:Content-Disposition:In-Reply-To; b=ExVFCEk3QObOG23CBGVE9CQ+dIXpODx875OUJ69brDh88WtbHsDemGJT3JscIT4YgPGcT7i33IzCNzVeG2LXl38mXx48IHgkpBkS4ZmE2bS5EqIlAUOVGyyFnCX+pw3J6e30mguxNf5xAWaXekArCQ4YKcb3HDHlSBQXcP60ihw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MSW77dWK; arc=none smtp.client-ip=209.85.219.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PZ6IM/I1"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-43bc31227ecso6916995e9.1;
-        Mon, 03 Mar 2025 07:43:12 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MSW77dWK"
+Received: by mail-yb1-f173.google.com with SMTP id 3f1490d57ef6-e573136107bso3977622276.3;
+        Mon, 03 Mar 2025 07:43:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741016591; x=1741621391; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1741016610; x=1741621410; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=gX/3lsZgxbQ9Eu8icrnCZRTD736z7Ychh8myylxpAg0=;
-        b=PZ6IM/I1LAAWOMENoC1M5umG/lqE5PyRxHSG2SgwFt8Q89EyPZ4TgKkOVYV5+ZF+Rh
-         p1TxMldCjmCcVhDCLyUhgPgmPXn7aLCoNcQVWfbkwQn8Mka/hQUAMV8ZaHrRwr9nUcPd
-         BkdbkZvP/Q07kCIFBzbZ5fhI0lO277k+UTmBIpqiI+y52OpKPEUbiN57kcGc/KZWxPX1
-         M4mbaLTqhBt3kcR+JhLS24Kyb2PQ+mkLUK5kjTXgMr6E2M/rihYA2BTXF/rbzR7qnlVg
-         ziPtSplNlM31bpsXo7BLTY6z2fo43LNn6qU4EtCmbIa3T7y2NTvxp4dkssPt+BmW8+7u
-         dRAQ==
+        bh=1bze7IhHFHWNKOAl2fnuzVpo5poDDbwUFQZHYPw6zzY=;
+        b=MSW77dWKKqQYBCIuYbBldZvCWQBURrH6RSVrIpNFTXQSNAP7HH5YYJrPx+oEZsrdal
+         AJJ/Dp6pSCBg5xQAmfjt8AbIB/Ru2EHASncEWqc+mDp2tBsoZEsvdspUoiXTr6dbLQw3
+         Zx/BWpGkWqYOyn5zaSBTQPmh5p6QHYu38ngl7XR5DplVvGJ59jjKjx5DLqH1FEhvtpAY
+         C64s2i6WEX0OwGpDMoRa1IdwAY6m11d+l0BvuO37W5Zh/1Azd4BaV0xD+BHwh7gAEySw
+         unppoE5n41e4q8VzquI4rsEbHpLcALTV8QSy6fPgQYrvY8VL4EMhaS0OsYu6qicd9998
+         PKFQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741016591; x=1741621391;
+        d=1e100.net; s=20230601; t=1741016610; x=1741621410;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=gX/3lsZgxbQ9Eu8icrnCZRTD736z7Ychh8myylxpAg0=;
-        b=KUvayw+yZf99wSoSSD4Xq3BnurFegHVNGyV+Ly3Fln+EnQXZtlJezcR8qpZR7gFzJl
-         KoZwDl8jaohrWKt+WWWRfD7LhFCiz2rpgMNZu5kGso/Z8wSKTAPq1L6Ve8+y/voTHG4A
-         Ouc1btrwksGqbKDul2+wmBnk423I5aYu2FxH0xmzAM75mifYn4nqjOm8PdMmv6603v14
-         O6ciY1vl5aHZLtmjj8kHaTfwWS91FKduok7ldiBc45vQD2ynXIZNy9Xn4/1nofq/Y8B4
-         8S9sFEnGKdIJopL1s7YOdE+B9RPjChaJjkb8zhZOHLqiVXWYRX125Xvh/WGx2dzc5QP/
-         2ZBQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVWrAJQHIbBIANX9LHSWSUUJj8RPWgk1TfSJ9+ah13SWZgtOJ/2TsyPolBKiN6gXsF13g1IEgLZS3P1BiA=@vger.kernel.org, AJvYcCWLF1OnsAWebbcYZ3PpJnprCIATEaMYTpJNdhaWFIn0X12+vJP5qtyBSVQk9pz+XTGvXITCCwugRZwKai8=@vger.kernel.org, AJvYcCWsdhoBqA0hFibD3eoPQhxBS6WzzIxfonQglIgyaD7gs+9lXbQOjp8HpgCbndO/fucQi/ZDh8roibnTpLE=@vger.kernel.org, AJvYcCWxEs2tCGf+gney1PU03wOMF5RE1wNZjnWtUDHkX4/k74ptI1SuSSCPf9fsQj9ozXhfEPbdZFdu@vger.kernel.org
-X-Gm-Message-State: AOJu0YwDogHWLRFzrZZxCGCLwo+RF74RZ55kqdc5cbupfPZn0ApgKfnd
-	lvpVL5gUE0rSOGmfmhUl4J02mIaHOIzQ0b9UE/BpNDySfDEmM2LEcQoRfw==
-X-Gm-Gg: ASbGncs2y3bISiFRkYP01lcXxm27ujPE6xJnVDwnSMX6P4LzPdtJI+GzCFpQ/mrFSMv
-	dvMrBva3f7ZdHQPxFenu7oY9JOjLY3xQYbRsEQAQzl+ElS/FGrmm7zzxnJz4diKZlJmiahtfVLA
-	UAsVoEEHkF4s2JTQ98D5fKAvRSl3eiwb80Umi8Jjm3ZVipACelRCgpdl9qJts9FQxLeXGZz+QKo
-	SVH5xYXbWvN/pJrZLyEDvSREXPqAY9aVMmis0Bt7R8qgBLtAXNuLRNmOWEMmULoTvRxMu/MFOnf
-	O2YDsp0Kgj6Ua0GdJIAKi+I9UOZEQCkU07EJrhCcMZRi8wx4ep3xrnVeG2TqlLPsd332BFVvWEE
-	4VgWf0WYP5nlQhBm2HJ9NMhstQXMKdX8=
-X-Google-Smtp-Source: AGHT+IHMe/5gEMg5r0++v4ePAUtdrMnkeRZYRGazD6vR/8Czngk/4bbcLGPo6dtarHyEH+gQAJht3g==
-X-Received: by 2002:a05:600c:3505:b0:439:8cbf:3e26 with SMTP id 5b1f17b1804b1-43ba66d5659mr108280575e9.4.1741016590931;
-        Mon, 03 Mar 2025 07:43:10 -0800 (PST)
-Received: from orome (p200300e41f187700f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f18:7700:f22f:74ff:fe1f:3a53])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-390e47b792asm14768152f8f.53.2025.03.03.07.43.09
+        bh=1bze7IhHFHWNKOAl2fnuzVpo5poDDbwUFQZHYPw6zzY=;
+        b=EiUtULyDpYRQ+yfdIBJfNTeqnI0bBvc5V1w0ZgIowNt9JGpHwusoFifqDDQJ/XiQBN
+         43brz++vRCbEklJMo0K02zsqg93YNfD3aLkCvTzr65rHTzUVwlq4nNPYQiGTR9g+oY6Q
+         J06V5D4elFSTqLoCRiqk70miDfX6gPL6TiCDU0UpPyc6PChH4G1sLBjWa76TQQwEyvgQ
+         sB9QEvv25Ds2xm0w6QiXq/AOm7erpa/e/LASrmPwGCO3mIflD3rB7NGUI+sVX5hPXer0
+         XMAzMLyXlfUTGUnprzVzc760duAh3P0ezANQwlNAIHds7p+d0WbZns2lFG3CibumdWXx
+         CDSg==
+X-Forwarded-Encrypted: i=1; AJvYcCUk0EY4SyY+CBSnHkpMue+TW7MR6YurwPNARyZPugnTJ703/lk+qdlXeoRDi9b154cN4NTb9fKBBfvSxaev@vger.kernel.org, AJvYcCUufWErN3Gf00htD+wfNx9QI9cawDBSnrSoCjxOcqvxWh6ktM+UxaqYV7HY/9Jn0cihRWj0SYbejtQ1AQI=@vger.kernel.org, AJvYcCV/+iOOOuu0W9J+kT3Cs3tvrtFo47/1e5iFESbpxTcrHJPKr6XWA78G25EWs91vxFfK6VpwrKZJFVot92VF@vger.kernel.org, AJvYcCVwXglx0EYn6ych4MDvm+FVjj+GP6U7yr5Gczp3p9dOe59l24rXIazxaFl4ZccKVqaLMEE=@vger.kernel.org, AJvYcCVzsCt6v/AmeVJEFvrZ8np9z9XTKcM6tIbiiHxhTPvkWNoEna9kjiAqmzJVsa7VxV0C8KgS7iQq@vger.kernel.org, AJvYcCWf2jjqoAAp6NwYStaHivhIRe9Wf/N5wJgTgM8/iMUgTkZK9D07Oeh4AdC8dGMSv/t1n33CCD+DaUqKl/w=@vger.kernel.org, AJvYcCWp9r2FNMe/rI1ykDlUp1KmUrHGzr0Yc47cUQ46MEROr0H588FWgOnw7DOL3vSZk3wyvwrhRfBku7AZxmzO54c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxUn2XbWOJQXhaNQCWR4qFUNUmpoVGpbUCPlMPEO9/HVTOzoszU
+	ScZmqg9yFDIeuAoctMssqO9YeU+FgJo/ewPtAMp1YyYGbuZsCxbS
+X-Gm-Gg: ASbGnctxP0Saxc6TV060unwXbNIKhKfp5hTYXxNYSphjEFdWzW0L5wjh1WJ7/dkhFal
+	y8hUSXoh7LtRD2uHgVn/YGKaakCZBAv9UMrwkjz07A1pU/JLgSrwzR0FKqMW+NS+s4bz8zmgI4s
+	DpJ/6rR9Rt0XN3pkXWrqye7wo4rCuUyCB8IWBFP+eCdEfz9rQY9/7xPpgbm8yitJ/l4G3nq9eW+
+	Mnd+n5IAliOCRz3nu8J92//c6myisor7K8umsunF0BNYBcg7xSfVCrofIAqUkxHNIMeWtdZKKdd
+	YK2vOa8Hu7aOO3qLeDLYtnnP7Ji6oetnuDQYCk/SQROBOLhOUvaWGESjX3AgBVSQ167r9MstDwA
+	JT/Ep
+X-Google-Smtp-Source: AGHT+IG89LZIvDJlj/3HacLk9/vOGUR8YR6jlY63nvw+Gy77ela/IFHbq/QbvXbn9Hpv7+y9TBQguw==
+X-Received: by 2002:a05:6902:2748:b0:e5d:dda6:d25 with SMTP id 3f1490d57ef6-e60b2f5f1d5mr16067385276.45.1741016609877;
+        Mon, 03 Mar 2025 07:43:29 -0800 (PST)
+Received: from localhost (c-73-224-175-84.hsd1.fl.comcast.net. [73.224.175.84])
+        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e60a3a20448sm3017480276.3.2025.03.03.07.43.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Mar 2025 07:43:09 -0800 (PST)
-Date: Mon, 3 Mar 2025 16:43:08 +0100
-From: Thierry Reding <thierry.reding@gmail.com>
-To: Thorsten Blum <thorsten.blum@linux.dev>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
-	Jonathan Hunter <jonathanh@nvidia.com>, Sameer Pujar <spujar@nvidia.com>, 
-	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>, Sheetal <sheetal@nvidia.com>, Ritu Chaudhary <rituc@nvidia.com>, 
-	stable@vger.kernel.org, linux-sound@vger.kernel.org, linux-tegra@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [RESEND PATCH] ASoC: tegra: Fix ADX S24_LE audio format
-Message-ID: <mhqpjehmhw57nljlq2e6ip3qisar7knxku5in3q4grnf3wfwj7@tj3ahtatgjv3>
-References: <20250302225927.245457-2-thorsten.blum@linux.dev>
+        Mon, 03 Mar 2025 07:43:29 -0800 (PST)
+Date: Mon, 3 Mar 2025 10:43:28 -0500
+From: Yury Norov <yury.norov@gmail.com>
+To: Kuan-Wei Chiu <visitorckw@gmail.com>
+Cc: David Laight <david.laight.linux@gmail.com>, tglx@linutronix.de,
+	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
+	x86@kernel.org, jk@ozlabs.org, joel@jms.id.au,
+	eajames@linux.ibm.com, andrzej.hajda@intel.com,
+	neil.armstrong@linaro.org, rfoss@kernel.org,
+	maarten.lankhorst@linux.intel.com, mripard@kernel.org,
+	tzimmermann@suse.de, airlied@gmail.com, simona@ffwll.ch,
+	dmitry.torokhov@gmail.com, mchehab@kernel.org,
+	awalls@md.metrocast.net, hverkuil@xs4all.nl,
+	miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
+	louis.peens@corigine.com, andrew+netdev@lunn.ch,
+	davem@davemloft.net, edumazet@google.com, pabeni@redhat.com,
+	parthiban.veerasooran@microchip.com, arend.vanspriel@broadcom.com,
+	johannes@sipsolutions.net, gregkh@linuxfoundation.org,
+	jirislaby@kernel.org, akpm@linux-foundation.org, hpa@zytor.com,
+	alistair@popple.id.au, linux@rasmusvillemoes.dk,
+	Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se,
+	jernej.skrabec@gmail.com, kuba@kernel.org,
+	linux-kernel@vger.kernel.org, linux-fsi@lists.ozlabs.org,
+	dri-devel@lists.freedesktop.org, linux-input@vger.kernel.org,
+	linux-media@vger.kernel.org, linux-mtd@lists.infradead.org,
+	oss-drivers@corigine.com, netdev@vger.kernel.org,
+	linux-wireless@vger.kernel.org, brcm80211@lists.linux.dev,
+	brcm80211-dev-list.pdl@broadcom.com, linux-serial@vger.kernel.org,
+	bpf@vger.kernel.org, jserv@ccns.ncku.edu.tw,
+	andrew.cooper3@citrix.com, Yu-Chun Lin <eleanor15x@gmail.com>
+Subject: Re: [PATCH v2 01/18] lib/parity: Add __builtin_parity() fallback
+ implementations
+Message-ID: <Z8XOF2DMMRKqam6R@thinkpad>
+References: <20250301142409.2513835-1-visitorckw@gmail.com>
+ <20250301142409.2513835-2-visitorckw@gmail.com>
+ <Z8PMHLYHOkCZJpOh@thinkpad>
+ <Z8QUsgpCB0m2qKJR@visitorckw-System-Product-Name>
+ <Z8SBBM_81wyHfvC0@thinkpad>
+ <Z8SVb4xD4tTiMEpL@visitorckw-System-Product-Name>
+ <20250302190954.2d7e068f@pumpkin>
+ <Z8UYOD2tyjS25gIc@visitorckw-System-Product-Name>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="xjbbdfvz2jer6yos"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250302225927.245457-2-thorsten.blum@linux.dev>
+In-Reply-To: <Z8UYOD2tyjS25gIc@visitorckw-System-Product-Name>
 
+On Mon, Mar 03, 2025 at 10:47:20AM +0800, Kuan-Wei Chiu wrote:
+> > > #define parity(val)					\
+> > > ({							\
+> > > 	__auto_type __v = (val);			\
+> > > 	bool __ret;					\
+> > > 	switch (BITS_PER_TYPE(val)) {			\
+> > > 	case 64:					\
+> > > 		__v ^= __v >> 16 >> 16;			\
+> > > 		fallthrough;				\
+> > > 	case 32:					\
+> > > 		__v ^= __v >> 16;			\
+> > > 		fallthrough;				\
+> > > 	case 16:					\
+> > > 		__v ^= __v >> 8;			\
+> > > 		fallthrough;				\
+> > > 	case 8:						\
+> > > 		__v ^= __v >> 4;			\
+> > > 		__ret =  (0x6996 >> (__v & 0xf)) & 1;	\
+> > > 		break;					\
+> > > 	default:					\
+> > > 		BUILD_BUG();				\
+> > > 	}						\
+> > > 	__ret;						\
+> > > })
+> > 
+> > I'm seeing double-register shifts for 64bit values on 32bit systems.
+> > And gcc is doing 64bit double-register maths all the way down.
+> > 
+> > That is fixed by changing the top of the define to
+> > #define parity(val)					\
+> > ({							\
+> > 	unsigned int __v = (val);			\
+> > 	bool __ret;					\
+> > 	switch (BITS_PER_TYPE(val)) {			\
+> > 	case 64:					\
+> > 		__v ^= val >> 16 >> 16;			\
+> > 		fallthrough;				\
+> > 
+> > But it's need changing to only expand 'val' once.
+> > Perhaps:
+> > 	auto_type _val = (val);
+> > 	u32 __ret = val;
+> > and (mostly) s/__v/__ret/g
+> >
+> I'm happy to make this change, though I'm a bit confused about how much
+> we care about the code generated by gcc. So this is the macro expected
+> in v3:
 
---xjbbdfvz2jer6yos
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [RESEND PATCH] ASoC: tegra: Fix ADX S24_LE audio format
-MIME-Version: 1.0
+We do care about code generated by any compiler. But we don't spread
+hacks here and there just to make GCC happy. This is entirely broken
+strategy. Things should work the other way: compiler people should
+collect real-life examples and learn from them.
 
-On Sun, Mar 02, 2025 at 11:59:25PM +0100, Thorsten Blum wrote:
-> Commit 4204eccc7b2a ("ASoC: tegra: Add support for S24_LE audio format")
-> added support for the S24_LE audio format, but duplicated S16_LE in
-> OUT_DAI() for ADX instead.
->=20
-> Fix this by adding support for the S24_LE audio format.
->=20
-> Compile-tested only.
->=20
-> Cc: stable@vger.kernel.org
-> Fixes: 4204eccc7b2a ("ASoC: tegra: Add support for S24_LE audio format")
-> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
-> ---
->  sound/soc/tegra/tegra210_adx.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+I'm not happy even with this 'v >> 16 >> 16' hack, I just think that
+disabling Wshift-count-overflow is the worse option. Hacking the macro
+to optimize parity64() on 32-bit arch case doesn't worth it entirely.
 
-Good catch!
-
-Acked-by: Thierry Reding <treding@nvidia.com>
-
---xjbbdfvz2jer6yos
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmfFzgsACgkQ3SOs138+
-s6FhkxAArQUlJi/PQPfUex/iHG7bwTxOAGpHP770c8QqjhekGFUQWErLQwNPqh3V
-3Zv7+PUyqW2UlMuo7PyrUwPj+gl/uER8blYrm1JvDCHTFDU4d7L2EuxyFD6mHeCS
-MYaAeCbmFtGV0BuGBDvUnLV1BXwNftTNaTXOwVuIdUFPlcJ0qpxC+yywv8giuO+q
-Xm2wznbWHhBJXSBUtxvJ1AMOlIEqZdt3Lkb4fh57HCQ3KxgevTuyxy9V9gJLiRv0
-L1pSleqGBNrCSmHEmiP0MGWebp1Q7zHueATkdZc6y9UvzoTjM2CEePq4xfaHvm63
-IIsFXkTtTltzKjeLQDs2lWtG1V+ee+VH/oRYNgol37q/+gO05WhB8ZJmdRrBKjcI
-rjj9WwLt2o4IPkNvR2scU6kWcjmvVwd52HtFU7wKd4C2HT49VyXn7rJenq8M11+l
-ZV3a92+3X982h6vCbWNHcFk8RdOh7GDpJzYPqWXuHkzHfW0T32WqJhMbxhmBWcoU
-eQ8nsz40ty3Hu5x/1ZH9q+6pSQSTD/UQM4lyOefMhc2+S3g5+eToTy8evwY2nbw3
-oIFfZvoG5lIOloC+s/ZWlF8WSdN8itWMN9DvEC0sgcYHgYEImw8C+PR1zQz2uBRD
-qDZXtvIMaFOepuc5z31E58rSx3s0HygoCGgslkqlOTkiR93ABdU=
-=cRoZ
------END PGP SIGNATURE-----
-
---xjbbdfvz2jer6yos--
+In your patchset, you have only 3 drivers using parity64(). For each
+of them, please in the commit message refer that calling generic
+parity() with 64-bit argument may lead to sub-optimal code generation
+with a certain compiler against 32-bit arches. If you'll get a
+feedback that it's a real problem for somebody, we'll think about
+mitigating it. 
+ 
+> #define parity(val)					\
+> ({							\
+> 	__auto_type __v = (val);			\
+> 	u32 __ret = val;				\
+> 	switch (BITS_PER_TYPE(val)) {			\
+> 	case 64:					\
+>                 __ret ^= __v >> 16 >> 16;		\
+> 		fallthrough;				\
+> 	case 32:					\
+> 		__ret ^= __ret >> 16;			\
+> 		fallthrough;				\
+> 	case 16:					\
+> 		__ret ^= __ret >> 8;			\
+> 		fallthrough;				\
+> 	case 8:						\
+> 		__ret ^= __ret >> 4;			\
+> 		__ret = (0x6996 >> (__ret & 0xf)) & 1;	\
+> 		break;					\
+> 	default:					\
+> 		BUILD_BUG();				\
+> 	}						\
+> 	__ret;						\
+> })
