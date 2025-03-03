@@ -1,116 +1,112 @@
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A04C0238D32;
-	Mon,  3 Mar 2025 22:30:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 267D8215058;
+	Mon,  3 Mar 2025 22:32:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741041012; cv=none; b=Bno62PZKcQqsdodt3NAlVpgkSV88JO4GS8g7iGFlLvIf1Yt2vAwXmonkUT1K4GhthZ6frPykh6PoeafIjqUVvLGus16BKNte6ykQ50wgHsGwxkSyc+58MXcH85/do/agGyWow/yjZciNnBlL537dMJRsdIttVWvsjKStSeHyKGE=
+	t=1741041139; cv=none; b=YShDc98AapWHNfsP/sqeJMw6T2lbQ/3Lo2GREAICMEqqTgRm0HfHSl4VfKqXmC100znHuvI6dHviRJJOOQ/34ptlhvsp+CP0oCw+HblsDmemHqzbgtj7kzdSrSvVBEjaFWbtGpbcuzfR53ghPpy8uoH88rWcDJ1LDHQjmkjFy14=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741041012; c=relaxed/simple;
-	bh=/mpM4N1kNDhZtm4ABQXD/3qB+8qtSGSXUnHC8BYYl6E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DvaFpw4R4K6sAFk7wLQn1PMv0MBE9rTkKpkUSd7ZrzukPSF2c8nKY+mebxUvFuQ0Cgebjcy4L9CCQ4uGKRSaQlL9sKc1Nm79z0YW+gZh9HDdqspoabVhZ/9ewChiCbMHzTktpL6Q0MQK6DDRvk4nBcvEZzsFWCjiCJA77/XLfAQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=fLR7UpeP; arc=none smtp.client-ip=159.69.126.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
+	s=arc-20240116; t=1741041139; c=relaxed/simple;
+	bh=pb1s+9OYVPB6sc2/2o17aL4a3XOc0VX9RjEiNSpL+xg=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=Hl3Nh286DyajnlS4iv4TCGMmRsjjjmwxgdMDMPGKxucKybprTQvkousKVveDPNyW38W3WbGOIaR09SvtrySluJdzHCDuiiF0uLXVck8OhTUwr27gP4k6OOk2hm3kngHwUeJfat+L8yT8WeUChEPba9NJVG7ebHjG2y6udTlLJng=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=e7eFvsEO; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="fLR7UpeP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-	s=mail; t=1741040998;
-	bh=/mpM4N1kNDhZtm4ABQXD/3qB+8qtSGSXUnHC8BYYl6E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fLR7UpeP9xNPJwSceytvWKqQcTq5p6NeGGoTvLGKWIxJtVcrxpGbqjdwwF5chj1R3
-	 jM08LGDSxfPApKI9Rtr8L5T5s6iqVMNEoPc4KzmIQ+v1+ZB614qYp6jgqcyBsOlQFX
-	 VQF8q0mfoa6PkQNAnfigxU0A/pDDo5v1GslYX8cs=
-Date: Mon, 3 Mar 2025 23:29:58 +0100
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
-To: Kees Cook <kees@kernel.org>
-Cc: Nathan Chancellor <nathan@kernel.org>, 
-	Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, Masahiro Yamada <masahiroy@kernel.org>, 
-	Nicolas Schier <nicolas@fjasle.eu>, llvm@lists.linux.dev, linux-kbuild@vger.kernel.org, 
-	David Gow <davidgow@google.com>, linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] kbuild: clang: Support building UM with SUBARCH=i386
-Message-ID: <05a25510-ab44-4eb1-a878-71e84c8aff0d@t-8ch.de>
-References: <20250303215240.work.379-kees@kernel.org>
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="e7eFvsEO"
+Received: from [IPv6:::1] ([172.59.160.22])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 523MVuQt1780740
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Mon, 3 Mar 2025 14:31:58 -0800
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 523MVuQt1780740
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025021701; t=1741041119;
+	bh=bWeBICZ90Qg1XSFb/a1DDKl3aM977PtC32QKPZgjedA=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=e7eFvsEOBDxbNpNPdl71VcvG7YHrjyCPYUsLSCv9CU56IZ0YyP01I3DUx7sF2gpSY
+	 39dsNkW0urqnXh4mUHkLvbXToWUS5MFfVVlyQjGy7rrVIvPZW/8P0Q8lI2+2O0Q7I/
+	 pA20KVMh9BfJMbcX5lAsVMMJlbzUWnakahN1h4eh/J4IzZinC4zIybW1w/N7jF2dBl
+	 84Nz5+uTpOmzW3mnLh3HRxzF1FLg7Mos4V6O/g6VHJe8g254H5NTa6fGrEY7qMIrli
+	 L/vAdXrsq5IDzBjC4WrQN12wP1RbQO7UdetnAoTASar2qjNh/2geOW2xGmUB1xqAia
+	 Mvf56SYjZOFeg==
+Date: Mon, 03 Mar 2025 14:31:50 -0800
+From: "H. Peter Anvin" <hpa@zytor.com>
+To: linux-kernel@vger.kernel.org,
+        tip-bot2 for Josh Poimboeuf <tip-bot2@linutronix.de>,
+        linux-tip-commits@vger.kernel.org
+CC: Josh Poimboeuf <jpoimboe@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Brian Gerst <brgerst@gmail.com>, x86@kernel.org
+Subject: =?US-ASCII?Q?Re=3A_=5Btip=3A_x86/asm=5D_x86/asm=3A_Make_ASM=5FCALL?=
+ =?US-ASCII?Q?=5FCONSTRAINT_conditional_on_frame_pointers?=
+User-Agent: K-9 Mail for Android
+In-Reply-To: <174099976188.10177.7153571701278544000.tip-bot2@tip-bot2>
+References: <174099976188.10177.7153571701278544000.tip-bot2@tip-bot2>
+Message-ID: <C77024F6-3087-40A3-8AFB-A642EECAFF4E@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250303215240.work.379-kees@kernel.org>
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On 2025-03-03 13:52:41-0800, Kees Cook wrote:
-> The UM builds distinguish i386 from x86_64 via SUBARCH, but we don't
-> support building i386 directly with Clang. To make SUBARCH work for
-> i386 UM, we need to explicitly test for it.
-> 
-> This lets me run i386 KUnit tests with Clang:
-> 
-> $ ./tools/testing/kunit/kunit.py run \
-> 	--make_options LLVM=1 \
-> 	--make_options SUBARCH=i386
-> ...
-> 
-> Fixes: c7500c1b53bf ("um: Allow builds with Clang")
-> Signed-off-by: Kees Cook <kees@kernel.org>
-> ---
-> I could not find a cleaner way to do this without hardcoding a test
-> for i386 UM. Does anyone see a more sane way to accomplish this? The
-> comment above the CLANG_TARGET_FLAGS seems like it can't be done with
-> UM's Makefile...
+On March 3, 2025 3:02:41 AM PST, tip-bot2 for Josh Poimboeuf <tip-bot2@linu=
+tronix=2Ede> wrote:
+>The following commit has been merged into the x86/asm branch of tip:
+>
+>Commit-ID:     e5ff90b179d45df71373cf79f99d20c9abe229cb
+>Gitweb:        https://git=2Ekernel=2Eorg/tip/e5ff90b179d45df71373cf79f99=
+d20c9abe229cb
+>Author:        Josh Poimboeuf <jpoimboe@kernel=2Eorg>
+>AuthorDate:    Sun, 02 Mar 2025 17:21:03 -08:00
+>Committer:     Ingo Molnar <mingo@kernel=2Eorg>
+>CommitterDate: Mon, 03 Mar 2025 11:39:54 +01:00
+>
+>x86/asm: Make ASM_CALL_CONSTRAINT conditional on frame pointers
+>
+>With frame pointers enabled, ASM_CALL_CONSTRAINT is used in an inline
+>asm statement with a call instruction to force the compiler to set up
+>the frame pointer before doing the call=2E
+>
+>Without frame pointers, no such constraint is needed=2E  Make it
+>conditional on frame pointers=2E
+>
+>Signed-off-by: Josh Poimboeuf <jpoimboe@kernel=2Eorg>
+>Signed-off-by: Ingo Molnar <mingo@kernel=2Eorg>
+>Acked-by: Peter Zijlstra (Intel) <peterz@infradead=2Eorg>
+>Cc: Linus Torvalds <torvalds@linux-foundation=2Eorg>
+>Cc: Brian Gerst <brgerst@gmail=2Ecom>
+>Cc: H=2E Peter Anvin <hpa@zytor=2Ecom>
+>Cc: linux-kernel@vger=2Ekernel=2Eorg
+>---
+> arch/x86/include/asm/asm=2Eh | 4 ++++
+> 1 file changed, 4 insertions(+)
+>
+>diff --git a/arch/x86/include/asm/asm=2Eh b/arch/x86/include/asm/asm=2Eh
+>index 0d268e6=2E=2Ef1db9e8 100644
+>--- a/arch/x86/include/asm/asm=2Eh
+>+++ b/arch/x86/include/asm/asm=2Eh
+>@@ -232,7 +232,11 @@ register unsigned long current_stack_pointer asm(_AS=
+M_SP);
+>  * gets set up by the containing function=2E  If you forget to do this, =
+objtool
+>  * may print a "call without frame pointer save/setup" warning=2E
+>  */
+>+#ifdef CONFIG_UNWINDER_FRAME_POINTER
+> #define ASM_CALL_CONSTRAINT "r" (__builtin_frame_address(0))
+>+#else
+>+#define ASM_CALL_CONSTRAINT
+>+#endif
+>=20
+> #endif /* __ASSEMBLY__ */
+>=20
 
-This seems to work for me:
-
-diff --git a/scripts/Makefile.clang b/scripts/Makefile.clang
-index 2435efae67f5..8e349bf30fa8 100644
---- a/scripts/Makefile.clang
-+++ b/scripts/Makefile.clang
-@@ -12,6 +12,7 @@ CLANG_TARGET_FLAGS_riscv      := riscv64-linux-gnu
- CLANG_TARGET_FLAGS_s390                := s390x-linux-gnu
- CLANG_TARGET_FLAGS_sparc       := sparc64-linux-gnu
- CLANG_TARGET_FLAGS_x86         := x86_64-linux-gnu
-+CLANG_TARGET_FLAGS_i386                := i386-linux-gnu
- CLANG_TARGET_FLAGS_um          := $(CLANG_TARGET_FLAGS_$(SUBARCH))
- CLANG_TARGET_FLAGS             := $(CLANG_TARGET_FLAGS_$(SRCARCH))
-
-This is also what exists in tools/testing/selftests/lib.mk.
-Minus the missing CONFIG_FORTIFY_SOURCE on clang x86_32
-and a failure of overflow.DEFINE_FLEX_test (clang 19.1.7).
-
-> Cc: Nathan Chancellor <nathan@kernel.org>
-> Cc: Nick Desaulniers <ndesaulniers@google.com>
-> Cc: Bill Wendling <morbo@google.com>
-> Cc: Justin Stitt <justinstitt@google.com>
-> Cc: Masahiro Yamada <masahiroy@kernel.org>
-> Cc: Nicolas Schier <nicolas@fjasle.eu>
-> Cc: llvm@lists.linux.dev
-> Cc: linux-kbuild@vger.kernel.org
-> ---
->  scripts/Makefile.clang | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/scripts/Makefile.clang b/scripts/Makefile.clang
-> index 2435efae67f5..fa6f9a9be4ac 100644
-> --- a/scripts/Makefile.clang
-> +++ b/scripts/Makefile.clang
-> @@ -12,8 +12,12 @@ CLANG_TARGET_FLAGS_riscv	:= riscv64-linux-gnu
->  CLANG_TARGET_FLAGS_s390		:= s390x-linux-gnu
->  CLANG_TARGET_FLAGS_sparc	:= sparc64-linux-gnu
->  CLANG_TARGET_FLAGS_x86		:= x86_64-linux-gnu
-> +ifeq ($(SRCARCH):$(SUBARCH),um:i386)
-> +CLANG_TARGET_FLAGS		:= i386-linux-gnu
-> +else
->  CLANG_TARGET_FLAGS_um		:= $(CLANG_TARGET_FLAGS_$(SUBARCH))
->  CLANG_TARGET_FLAGS		:= $(CLANG_TARGET_FLAGS_$(SRCARCH))
-> +endif
->  
->  ifeq ($(CLANG_TARGET_FLAGS),)
->  $(error add '--target=' option to scripts/Makefile.clang)
-> -- 
-> 2.34.1
-> 
+Wait, why was this changed? I actually tested this form at least once and =
+found that it didn't work under all circumstances=2E=2E=2E
