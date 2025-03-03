@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A6D0243955
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 23:34:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C46C823FC54
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 23:34:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741044901; cv=none; b=DSm09pz+fshC9FKKigKVJVHvb2uYAvQP2Ne5nD7uGZKqmj1zHowy8WckvCLH7zqHAmKdm7ZAD/7a3UP9BiTeuGZMAjieDiQAs6/gp2n403SSkHqbhdq6UuKRCHWi3WhWKs2GqMIbqQIktCpyIZA0Cc/TmYzCNTT3LFvzkjn+EKo=
+	t=1741044899; cv=none; b=doc1jcmoyRDzKSAjN8uG+wevmKGr6RIzEzqTOPDS5odXnBbYra48s+khCof680C3PnJ6Y98gW7KeDR2aRPThgBxbXpWJh3T287I2osMDEKhr3V6ufl+vq2pxU2pmB2C1xtpLbmZDMfKozpzeRCrzwyJQc7qu+CYtIGirCro+6Ws=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741044901; c=relaxed/simple;
-	bh=aUA08AFTrU4Oj+k0TfMPmLNrgGY6OrG+i+m/giJeBT0=;
+	s=arc-20240116; t=1741044899; c=relaxed/simple;
+	bh=nEsNTILO+oJDYQMdfU/3EJz/B3Q6iXwLDlSx6wG2pIA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BjhaOodqDZuu86bVEfwFqlsT1edj1MVgoMLZccnEEXPgbB2lAmmhr6THBnSDRPHG1supsDjhiiTt2KhLwQAigOVVXvkUP7k1ELxUlIY4LTqBtkkyPNCettUUbD+AihmhfAVxV/pbDcYsgpZDsxrrvtMPE9AASIqfd3j4/K22Ayg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=C37+j5m2; arc=none smtp.client-ip=192.198.163.17
+	 MIME-Version; b=agmhQO74JYgyypXSlm76QQrZCsgc8JNgsI/5qZ+EPvOVVdBwnw4XnwnE4J+oXk2JL8Ibr00EavAYERPmb9cyXd4ct6rInQkjsHoSrkTEyXtElx9uRzSVszAT5FlKqt2ryNoqBfNmaP38ddhNgv/EOArRZQ8ciVyenLrrmVvGVs0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RKePqprz; arc=none smtp.client-ip=192.198.163.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="C37+j5m2"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RKePqprz"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741044899; x=1772580899;
+  t=1741044898; x=1772580898;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=aUA08AFTrU4Oj+k0TfMPmLNrgGY6OrG+i+m/giJeBT0=;
-  b=C37+j5m27gIcwCrQUsM0C9PQFuKIgytUd8+fKbbyCgVQJrrKh5ODngtL
-   2vDmT5XcILwHqjvy4KE0v+wXNMkpZ8q+R8ISDaU1OnziN2yd/QHhFX1vH
-   5CvPHxn1AR22NopgfK6IKBHKu8sk/lRrJsQdbniF/jFea6Xs0Vi99D1hv
-   l4hG+vQcYLqkcT/0Qt0b2RE5z7CUSKZLSHLd/9zxfo3LdX6wINIWC8j+n
-   XFgKVuKwzEzmu0t7oYYpkZySTsfHz2koxA8NYrss6kVi3+1UnmaayhDjb
-   JndspnQCidOHjN3vKYc1MRV9wif9bAn/AhuXyDMVs/6oACov/HuXNt4qh
+  bh=nEsNTILO+oJDYQMdfU/3EJz/B3Q6iXwLDlSx6wG2pIA=;
+  b=RKePqprz/Z9I+L0aYPE1iQ/HXuDKIVOCQ8/c7h4WOi9n0/fL0NtOAJLr
+   qzito1y2oz4WkXwMPvFE1HdTj7NjyeCTFkG5qlq3aB5GS6U1ow6EWFfFD
+   j+LDX9IE/G8B/aLGmdso5ZhtUJMVBA0W2JlqqisMcLcsWt+GoJyNELYhu
+   X/fwwRZfJG3n2rdYsztjgnOSMM3da86KPFyKOvat8lTgH5SDvmXDvDIME
+   +/uank75aeK/XDXGfo9gJUUubf3DzKivKdoy/HDGQJWdYPTYfLwBDKXDP
+   e2zgLoCpZL2XZtPE2ZYBu5PnZfJKuy5SWJMv8Ly4+3vRQptUkWPP/CUIU
    w==;
-X-CSE-ConnectionGUID: uJEWOQmvTv26MmtY/fYbBA==
-X-CSE-MsgGUID: m8lYlGQZSEC6u5iEOmYUDQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11362"; a="41836014"
+X-CSE-ConnectionGUID: busgVuTQRMWglpBIHdI37w==
+X-CSE-MsgGUID: 0B6Bu56pTWSzDAixgVXgYQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11362"; a="41836001"
 X-IronPort-AV: E=Sophos;i="6.13,330,1732608000"; 
-   d="scan'208";a="41836014"
+   d="scan'208";a="41836001"
 Received: from fmviesa006.fm.intel.com ([10.60.135.146])
   by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Mar 2025 15:34:48 -0800
-X-CSE-ConnectionGUID: DuAGdh4QQpyklPPlgWYW1g==
-X-CSE-MsgGUID: nbPf924GTMKWtzKv6p7lKw==
+X-CSE-ConnectionGUID: sD+Nu1xHR0aY9Xs5JtfndA==
+X-CSE-MsgGUID: aGS+uZrnS8u66wL7QIVUqg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.13,330,1732608000"; 
-   d="scan'208";a="117982312"
+   d="scan'208";a="117982308"
 Received: from agluck-desk3.sc.intel.com ([172.25.222.70])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Mar 2025 15:33:54 -0800
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Mar 2025 15:33:53 -0800
 From: Tony Luck <tony.luck@intel.com>
 To: Fenghua Yu <fenghuay@nvidia.com>,
 	Reinette Chatre <reinette.chatre@intel.com>,
@@ -55,9 +55,9 @@ To: Fenghua Yu <fenghuay@nvidia.com>,
 Cc: linux-kernel@vger.kernel.org,
 	patches@lists.linux.dev,
 	Tony Luck <tony.luck@intel.com>
-Subject: [RFC PATCH 17/17] x86/resctrl: Update Documentation for package events
-Date: Mon,  3 Mar 2025 15:33:37 -0800
-Message-ID: <20250303233340.333743-18-tony.luck@intel.com>
+Subject: [RFC PATCH 15/17] x86/resctrl: Add status files to info/PKG_MON
+Date: Mon,  3 Mar 2025 15:33:35 -0800
+Message-ID: <20250303233340.333743-16-tony.luck@intel.com>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250303233340.333743-1-tony.luck@intel.com>
 References: <20250303233340.333743-1-tony.luck@intel.com>
@@ -69,50 +69,224 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Each "mon_data" directory is now divided between L3 events and package
-events.
+Each of the package event groups includes status about the number
+of missed events and timestamps (from a 25 MHz clock) on last time
+an update was missed and last time an update was processed.
+
+Add a three info files to report per-aggregator values of these
+status values.
 
 Signed-off-by: Tony Luck <tony.luck@intel.com>
 ---
- Documentation/arch/x86/resctrl.rst | 25 ++++++++++++++++---------
- 1 file changed, 16 insertions(+), 9 deletions(-)
+ arch/x86/kernel/cpu/resctrl/internal.h  | 13 ++++
+ arch/x86/kernel/cpu/resctrl/intel_pmt.c | 92 ++++++++++++++++++++++---
+ arch/x86/kernel/cpu/resctrl/rdtgroup.c  | 22 +++++-
+ 3 files changed, 117 insertions(+), 10 deletions(-)
 
-diff --git a/Documentation/arch/x86/resctrl.rst b/Documentation/arch/x86/resctrl.rst
-index 6768fc1fad16..0e915b7c55aa 100644
---- a/Documentation/arch/x86/resctrl.rst
-+++ b/Documentation/arch/x86/resctrl.rst
-@@ -366,15 +366,22 @@ When control is enabled all CTRL_MON groups will also contain:
- When monitoring is enabled all MON groups will also contain:
+diff --git a/arch/x86/kernel/cpu/resctrl/internal.h b/arch/x86/kernel/cpu/resctrl/internal.h
+index 068a47b015e7..5f3656e938ed 100644
+--- a/arch/x86/kernel/cpu/resctrl/internal.h
++++ b/arch/x86/kernel/cpu/resctrl/internal.h
+@@ -321,6 +321,7 @@ struct rdtgroup {
+ #define RFTYPE_CTRL_INFO		(RFTYPE_INFO | RFTYPE_CTRL)
+ #define RFTYPE_MON_INFO			(RFTYPE_INFO | RFTYPE_MON)
+ #define RFTYPE_TOP_INFO			(RFTYPE_INFO | RFTYPE_TOP)
++#define RFTYPE_PKG_INFO			(RFTYPE_INFO | RFTYPE_RES_PKG)
+ #define RFTYPE_CTRL_BASE		(RFTYPE_BASE | RFTYPE_CTRL)
+ #define RFTYPE_MON_BASE			(RFTYPE_BASE | RFTYPE_MON)
  
- "mon_data":
--	This contains a set of files organized by L3 domain and by
--	RDT event. E.g. on a system with two L3 domains there will
--	be subdirectories "mon_L3_00" and "mon_L3_01".	Each of these
--	directories have one file per event (e.g. "llc_occupancy",
--	"mbm_total_bytes", and "mbm_local_bytes"). In a MON group these
--	files provide a read out of the current value of the event for
--	all tasks in the group. In CTRL_MON groups these files provide
--	the sum for all tasks in the CTRL_MON group and all tasks in
--	MON groups. Please see example section for more details on usage.
-+	This contains a set of directories, one for each instance
-+	of an L3 cache, or of a processor package. The L3 cache
-+	directories are named "mon_L3_00", "mon_L3_01" etc. The
-+	package directories "mon_PKG_00", "mon_PKG_01" etc.
+@@ -642,6 +643,12 @@ int rdt_get_intel_pmt_mon_config(void);
+ int rdtgroup_intel_pmt_data_show(struct seq_file *m, struct rdt_resource *r,
+ 				 int domid, struct rdtgroup *rdtgrp, u32 evtid,
+ 				 struct rmid_read *rr);
++int rdtgroup_last_update_show(struct kernfs_open_file *of,
++			      struct seq_file *seq, void *v);
++int rdtgroup_overflows_show(struct kernfs_open_file *of,
++			    struct seq_file *seq, void *v);
++int rdtgroup_overflow_timestamp_show(struct kernfs_open_file *of,
++				     struct seq_file *seq, void *v);
+ void rdt_get_intel_pmt_mount(void);
+ void setup_intel_pmt_mon_domain(int cpu, int id, struct rdt_resource *r, struct list_head *add_pos);
+ void rdt_intel_pmt_exit(void);
+@@ -650,6 +657,12 @@ static inline int rdt_get_intel_pmt_mon_config(void) { return 0; }
+ static inline int rdtgroup_intel_pmt_data_show(struct seq_file *m, struct rdt_resource *r,
+ 					       int domid, struct rdtgroup *rdtgrp, u32 evtid,
+ 					       struct rmid_read *rr) { return 0; }
++static inline int rdtgroup_last_update_show(struct kernfs_open_file *of,
++					    struct seq_file *seq, void *v) { return 0; };
++static inline int rdtgroup_overflows_show(struct kernfs_open_file *of,
++					  struct seq_file *seq, void *v) { return 0; };
++static inline int rdtgroup_overflow_timestamp_show(struct kernfs_open_file *of,
++						   struct seq_file *seq, void *v) { return 0; };
+ static inline void rdt_get_intel_pmt_mount(void) { }
+ static inline void setup_intel_pmt_mon_domain(int cpu, int id, struct rdt_resource *r,
+ 					      struct list_head *add_pos) { }
+diff --git a/arch/x86/kernel/cpu/resctrl/intel_pmt.c b/arch/x86/kernel/cpu/resctrl/intel_pmt.c
+index 4067aacd9d80..e89130387387 100644
+--- a/arch/x86/kernel/cpu/resctrl/intel_pmt.c
++++ b/arch/x86/kernel/cpu/resctrl/intel_pmt.c
+@@ -321,25 +321,37 @@ void setup_intel_pmt_mon_domain(int cpu, int id, struct rdt_resource *r, struct
+ 		mkdir_mondata_subdir_allrdtgrp(r, &hw_dom->hdr);
+ }
+ 
++enum ops {
++	DO_SUM_EVENT,
++	DO_PRINTVALS
++};
 +
-+	Within each directory there is one file per event. In
-+	the L3 directories: "llc_occupancy", "mbm_total_bytes",
-+	and "mbm_local_bytes".	In the PKG directories: "core_energy",
-+	"activity", etc.
+ #define VALID_BIT	BIT_ULL(63)
+ #define DATA_BITS	GENMASK_ULL(62, 0)
+ 
+-static u64 scan_pmt_devs(int package, int guid, int offset)
++static u64 scan_pmt_devs(struct seq_file *m, int package, int guid, int offset, enum ops op)
+ {
+-	u64 rval, val;
++	u64 rval = 0, val;
++	char *sep = "";
+ 	int ndev = 0;
+ 
+-	rval = 0;
+-
+ 	for (int i = 0; i < pkg_info[package].count; i++) {
+ 		if (pkg_info[package].regions[i].guid != guid)
+ 			continue;
+ 		ndev++;
+ 		val = readq(pkg_info[package].regions[i].addr + offset);
+ 
+-		if (!(val & VALID_BIT))
+-			return ~0ull;
+-		rval += val & DATA_BITS;
++		switch (op) {
++		case DO_SUM_EVENT:
++			if (!(val & VALID_BIT))
++				return ~0ull;
++			rval += val & DATA_BITS;
++			break;
++		case DO_PRINTVALS:
++			seq_printf(m, "%s0x%llx", sep, val);
++			sep = ",";
++			break;
++		}
+ 	}
+ 
+ 	return ndev ? rval : ~0ull;
+@@ -377,7 +389,7 @@ int rdtgroup_intel_pmt_data_show(struct seq_file *m, struct rdt_resource *r,
+ 	offset = rdtgrp->mon.rmid * EVT_STRIDE(evtid);
+ 	offset += EVT_OFFSET(evtid);
+ 
+-	val = scan_pmt_devs(domid, EVT_GUID(evtid), offset);
++	val = scan_pmt_devs(m, domid, EVT_GUID(evtid), offset, DO_SUM_EVENT);
+ 	if (val == ~0ull) {
+ 		seq_puts(m, "unavailable\n");
+ 		return 0;
+@@ -388,7 +400,7 @@ int rdtgroup_intel_pmt_data_show(struct seq_file *m, struct rdt_resource *r,
+ 		list_for_each_entry(entry, head, mon.crdtgrp_list) {
+ 			offset = entry->mon.rmid * EVT_STRIDE(evtid);
+ 			offset += EVT_OFFSET(evtid);
+-			cval = scan_pmt_devs(domid, EVT_GUID(evtid), offset);
++			cval = scan_pmt_devs(m, domid, EVT_GUID(evtid), offset, DO_SUM_EVENT);
+ 			if (cval == ~0ull) {
+ 				seq_puts(m, "unavailable\n");
+ 				return 0;
+@@ -408,3 +420,65 @@ int rdtgroup_intel_pmt_data_show(struct seq_file *m, struct rdt_resource *r,
+ 
+ 	return 0;
+ }
 +
-+	In a MON group these files provide a read out of the current
-+	value of the event for all tasks in the group. In CTRL_MON groups
-+	these files provide the sum for all tasks in the CTRL_MON group
-+	and all tasks in MON groups. Please see example section for more
-+	details on usage.
++static void status_show(struct seq_file *seq, char *name, int guid, int offset)
++{
++	struct rdt_resource *r = &rdt_resources_all[RDT_RESOURCE_INTEL_PMT].r_resctrl;
++	struct rdt_mon_domain *d;
++	char *sep = "";
 +
- 	On systems with Sub-NUMA Cluster (SNC) enabled there are extra
- 	directories for each node (located within the "mon_L3_XX" directory
- 	for the L3 cache they occupy). These are named "mon_sub_L3_YY"
++	seq_printf(seq, "%s: ", name);
++
++	cpus_read_lock();
++	list_for_each_entry(d, &r->mon_domains, hdr.list) {
++		seq_printf(seq, "%s%d=[", sep, d->hdr.id);
++		scan_pmt_devs(seq, d->hdr.id, guid, offset, DO_PRINTVALS);
++		seq_puts(seq, "]");
++		sep = ";";
++	}
++	cpus_read_unlock();
++
++	seq_puts(seq, "\n");
++}
++
++int rdtgroup_last_update_show(struct kernfs_open_file *of,
++			      struct seq_file *seq, void *v)
++{
++	struct telem_entry **t;
++
++	for (t = telem_entry; *t; t++) {
++		if (!(*t)->active)
++			continue;
++		status_show(seq, (*t)->name, (*t)->guid, (*t)->last_update_tstamp_off);
++	}
++
++	return 0;
++}
++
++int rdtgroup_overflows_show(struct kernfs_open_file *of,
++			    struct seq_file *seq, void *v)
++{
++	struct telem_entry **t;
++
++	for (t = telem_entry; *t; t++) {
++		if (!(*t)->active)
++			continue;
++		status_show(seq, (*t)->name, (*t)->guid, (*t)->overflow_counter_off);
++	}
++
++	return 0;
++}
++
++int rdtgroup_overflow_timestamp_show(struct kernfs_open_file *of,
++				     struct seq_file *seq, void *v)
++{
++	struct telem_entry **t;
++
++	for (t = telem_entry; *t; t++) {
++		if (!(*t)->active)
++			continue;
++		status_show(seq, (*t)->name, (*t)->guid, (*t)->last_overflow_tstamp_off);
++	}
++
++	return 0;
++}
+diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+index 93da2e4f7fec..635c17042f7a 100644
+--- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
++++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+@@ -1986,7 +1986,27 @@ static struct rftype res_common_files[] = {
+ 		.seq_show	= rdtgroup_closid_show,
+ 		.fflags		= RFTYPE_CTRL_BASE | RFTYPE_DEBUG,
+ 	},
+-
++	{
++		.name		= "last_update",
++		.mode		= 0444,
++		.kf_ops		= &rdtgroup_kf_single_ops,
++		.seq_show	= rdtgroup_last_update_show,
++		.fflags		= RFTYPE_PKG_INFO,
++	},
++	{
++		.name		= "overflows",
++		.mode		= 0444,
++		.kf_ops		= &rdtgroup_kf_single_ops,
++		.seq_show	= rdtgroup_overflows_show,
++		.fflags		= RFTYPE_PKG_INFO,
++	},
++	{
++		.name		= "overflow_timestamp",
++		.mode		= 0444,
++		.kf_ops		= &rdtgroup_kf_single_ops,
++		.seq_show	= rdtgroup_overflow_timestamp_show,
++		.fflags		= RFTYPE_PKG_INFO,
++	},
+ };
+ 
+ static int rdtgroup_add_files(struct kernfs_node *kn, unsigned long fflags)
 -- 
 2.48.1
 
