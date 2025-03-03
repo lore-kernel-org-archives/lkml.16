@@ -1,167 +1,190 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B1FA1EFFA5
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 08:45:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC4921EFFBA
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 08:45:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740991553; cv=none; b=I1jan27Y6QkH6OokSadd46hUduBdp8CXbugXnFKJ78acC0d5zbj4W7mCaeMfUxS/ssLz/2PnR7iSE59++PVhSiD91hcnErfwOCrKeWPvgl9rdnzEAmsFcbozlQsDUm+J0v6SHFf4+AGz1lsdMFwMR+1y/it/p52bcFlPRDzbxCY=
+	t=1740991554; cv=none; b=ArYxpPKS2PkK/9ow2YtcfkYttFIk6RYxBpixZa0oqdCfOkSZtq55Jlkw3+oS2B0Q0Q2Vrm+d3JHBLDaENOo5+0T+ofnNUj/Ul9mUgI9Y3bLjnpxHoGorEGMF/LU2JMlnobRej6R15PWtSw+5wAmIRfc6elK9bDDd+sr5M8RjbsA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740991553; c=relaxed/simple;
-	bh=fg7ScFrpAhGYL1bOoOF2peNB6lfD3/GoDR0u+tz557k=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=FTzXIE56wGLwF9w/cmeV+9/ShGKM4Yd8E0SX1lW/5oyHP5U5Z2AFMoC5Ere+f0Bw0g/Vii+jQBJ7LoPwbeTOX7HLgobRnX4wUBa4J3+na8Q2J+2AjU71Sid3dPHzLqaAuWkqIAhV7l9ivAMgKfV3TsU4PLTYgX1BwT3JpsQPg0M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=n9G/kfvZ; arc=none smtp.client-ip=209.85.128.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1740991554; c=relaxed/simple;
+	bh=GN9iRw4vP0biBC3qh1br1TYeqEjFY0JaW5FPcfgG69g=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=Dd5l8XQUbCmPWMHdqrruwLXlU9ZHqFoXNhbP0OE23p28DbIE7+ivTGKizNPsyH9ygWyG+cXJ8fNSegeWlRfX8fm+4Ky3VfOEwU4Iz1sidEerbJYPOquALXqjJVvc+CzoOLnWCNuYrr1T4zPpyBSvmp/eHGGUcyDAFka4C8LlcE0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=UQjX45Bb; arc=none smtp.client-ip=209.85.128.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="n9G/kfvZ"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-4399d14334aso38207005e9.0
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Mar 2025 00:45:50 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UQjX45Bb"
+Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-43947a0919aso36022885e9.0
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Mar 2025 00:45:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1740991549; x=1741596349; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=fg7ScFrpAhGYL1bOoOF2peNB6lfD3/GoDR0u+tz557k=;
-        b=n9G/kfvZUuKXK3EZX64mpWhqdmN1j1OYK7oiCsE7ihLQRsDnyozQ04T9ROLlGD9gDp
-         9gOcM4O7GEvACnhyhEmPDjaSQqtoXIb/tC5+QuLCwAgCnv/OuBrtNScqjQ4SfmDJNK26
-         p4Gxgchd8L1bznzd/tG74wBYnUYvsKsCOVpajZu7vJ3IQSP68JOf25yzIQqnqCTZBn+A
-         Sh0yQKtxZpeRsbC5sLI2WXBwc8EN3RNM9O01Azh7yv3/Z8vqu0HnQ0yh5/GF8JisQOcK
-         4vte0r9AUXsHvAMeZksLp3eKByPYT2Xjq/pZ2jKCX/fANxSVdPTmh+p2OMwkEBRRqZfc
-         7pSA==
+        d=google.com; s=20230601; t=1740991551; x=1741596351; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Yl6OXiLxc2DNrX6mWydkEen+W3a+U6q5HOC8/Fd7HQw=;
+        b=UQjX45BbmOuzFCwAXHzsrAeP+DcZZ94uw3I8CFSpzW6Nq/RXU0H9rUrG91zqqtos93
+         K6wRZisMj36oWysO7sKlB8iGU6AWoOCfkymZy0TgN9cqbEIzSFCw0nqMxMlFKn8Av7PU
+         3K+mbF4uMs2+RmYnmx0WqrZ+slJbxrlX2hB5u8tM5QQ7XbFD3hh0IjxJaOFzdvzEBF4l
+         BvRfB51Cf+2l0zXZmpibI6qTSw31zMigq+9ir1oO2/egoqS0pmqwrqGB6G4nwXhTWZy8
+         AGxtSRnlUUa8iGgmEuvCDArUYdyhW/TzHMzI11vZcL/geEMWRdPBWAQUsFpiKv12rmwu
+         bgsQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740991549; x=1741596349;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=fg7ScFrpAhGYL1bOoOF2peNB6lfD3/GoDR0u+tz557k=;
-        b=PBKkdm06vGaR1H0cOgm+4yeGX9FxGBev1mq1CtZE7LYvRjHWIIco9uNz8erK9oCl4s
-         fm8Y397Mdb1e5wnS6WIIlr9IsvoFjKuQs7wDaUgByKrBPyNcvYHMleuQ1PAyQZgRbP1V
-         lkyrtTWO1SBmVUcy/5XjfDsK6WdXbYxbWiTdQPV2qBwSaBgxjl26K3DCGntTOtpwuM1k
-         3cCoY+UzhBsE8eCv+80qgUnczbOZiaH5t5DIS11oVj8cMKrn8T3cDK5IlVASawuDLHWm
-         +te81JVqbp/BXD+cL0sGsyu1IVmYXlTaGwlU3qZ2ASNVCHHq61A2KxNHz+cTl+Wf0yv5
-         EMZQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWMJQ3nxC2213LTNHYD1wyX70OHoZp0l8y1JZCRBFVkXMHhoxIoqbOCmRU1DpijSBFzWLKUvsg2zxlK3SA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyMPCrxFfjJ/YXDsV63z1qDWySU5BsEtbwxTP77vjmoCH8T/dwW
-	LiHrUU6ddOsS2+WDtWWG3kkb3FB1EB4MHdkXwMgr3wvPaJU/gJcWa4G1yOmq3UM=
-X-Gm-Gg: ASbGncu3xwAI4SMQ98q1gjfoJL81Ky/niIarZgftj9f9AyjoR+TVu03RXpuuIgSy3gJ
-	h4cF+mp8X+Tfh8JoeiR6VhLuJXonYOGh+juZ9JzacYH/Foz9iAPUp63wYzZrWE1MpVtc7yBs+o4
-	snXjp6/jNJ5T0cVJZpKJUr8VfFhvwXzEP/ehhtpx4zkiF1Ey6Spz+MJpOmI1IzE8Mp70YWyIqaP
-	sRTFvdebMHB2YT3zFA1RDuMBHSgqigSq5DHlSVWksYgyqADRDO78jR9WARP/JYTwMCSqDkvxuXp
-	rx4zU8Q9OX7VmLv4saQ8kHRrLGZUNI6JyO9YfDiPQoSKFu9i
-X-Google-Smtp-Source: AGHT+IEQ5gIerplrLBCNz9iWi2EjC22riC6x2aUD9LPOL3RMv31foO6V/nmZEr2WkFVBKnwbDjXW6Q==
-X-Received: by 2002:a05:600c:4e8b:b0:43a:b8ef:4dce with SMTP id 5b1f17b1804b1-43ba67041bamr112726745e9.11.1740991549553;
-        Mon, 03 Mar 2025 00:45:49 -0800 (PST)
-Received: from draszik.lan ([80.111.64.44])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43b736f75ebsm153130965e9.3.2025.03.03.00.45.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Mar 2025 00:45:49 -0800 (PST)
-Message-ID: <4d0042850eb4d9898559b56505291c4e849d44c5.camel@linaro.org>
-Subject: Re: [PATCH 00/18] a few rtc driver cleanups
-From: =?ISO-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>
-To: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: Chanwoo Choi <cw00.choi@samsung.com>, Krzysztof Kozlowski
- <krzk@kernel.org>,  Joel Stanley <joel@jms.id.au>, Andrew Jeffery
- <andrew@codeconstruct.com.au>, Hans Ulli Kroll	
- <ulli.kroll@googlemail.com>, Linus Walleij <linus.walleij@linaro.org>, Neil
- Armstrong <neil.armstrong@linaro.org>, Kevin Hilman <khilman@baylibre.com>,
- Jerome Brunet	 <jbrunet@baylibre.com>, Martin Blumenstingl
- <martin.blumenstingl@googlemail.com>,  =?ISO-8859-1?Q?T=F3th_J=E1nos?=	
- <gomba007@gmail.com>, Dianlong Li <long17.cool@163.com>, 
-	linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org, 
-	linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-aspeed@lists.ozlabs.org, linux-amlogic@lists.infradead.org
-Date: Mon, 03 Mar 2025 08:45:47 +0000
-In-Reply-To: <20250301203658839d5482@mail.local>
-References: <20250228-rtc-cleanups-v1-0-b44cec078481@linaro.org>
-	 <20250301203658839d5482@mail.local>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.53.2-1 
+        d=1e100.net; s=20230601; t=1740991551; x=1741596351;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Yl6OXiLxc2DNrX6mWydkEen+W3a+U6q5HOC8/Fd7HQw=;
+        b=lI0VrdnzRGECMeBPSqqZPL+ZHzlfP00NWXEsQG7/6NAMQ0nhzyFK+95QI2tYLWk33A
+         7TCMBbBtOAosz1+GWDZVDO4GYdc4oT3SqWRdq8KiGkon1ZPyhSo1jRf7psvJ93/fFiZH
+         JZeR18lcb0/LI+bP1LCrCVEYH9jOq7JkjF/OSxySPAswzn+8QUoegO3DazhWjNB2kOQv
+         w9X+VguEt3HS/XYxZ96DHVPvy/IlDHCT+FJCqYKGx7dft6YasfpJUAfQzaKgJoADBzCh
+         +N+U75uD0RhKpwwvkj+wlBzUPG29J1DPAPtoFWb2GgP1BinIYk0jUSVLTHdnFHONMy4y
+         UYAQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX+qutougMaYxlc3/4yETXW7Buxv8k3sv/sYR5UDg+Jayc0Yf21Cz+3WZjCHhA4pvZMLGqSo+BJN2ypH/0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzlEm2rwH3nZVGRebLuAqtIQHCWD4dCaqN6PAMi5eERJstJf5a7
+	Y78IQXxUhQdfn4MUAkW41UKtm/QGXpHxzOXCtVFagN5Fw9H44wlMyx0qTnAqzU5PSsbFRUndPz0
+	0gsKLDKE1+WHijQ==
+X-Google-Smtp-Source: AGHT+IHTziRho0PdDiqY+w7INFWExFlSE+JgzgeyQW5xfAW6NBxpwCji0bm/eXLdqeaM8WMzyupzDJI8C6vUsII=
+X-Received: from wmqe20.prod.google.com ([2002:a05:600c:4e54:b0:43b:c7e5:66e0])
+ (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:600c:1990:b0:439:9b80:ca6f with SMTP id 5b1f17b1804b1-43bad205987mr103494675e9.5.1740991551369;
+ Mon, 03 Mar 2025 00:45:51 -0800 (PST)
+Date: Mon, 03 Mar 2025 08:45:13 +0000
+In-Reply-To: <20250303-export-macro-v3-0-41fbad85a27f@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
+References: <20250303-export-macro-v3-0-41fbad85a27f@google.com>
+X-Developer-Key: i=aliceryhl@google.com; a=openpgp; fpr=49F6C1FAA74960F43A5B86A1EE7A392FDE96209F
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3689; i=aliceryhl@google.com;
+ h=from:subject:message-id; bh=GN9iRw4vP0biBC3qh1br1TYeqEjFY0JaW5FPcfgG69g=;
+ b=owEBbQKS/ZANAwAKAQRYvu5YxjlGAcsmYgBnxWw1V7qzGAYepkGLB5056taWAfpA48W2E+6j7
+ 36pkLuCplKJAjMEAAEKAB0WIQSDkqKUTWQHCvFIvbIEWL7uWMY5RgUCZ8VsNQAKCRAEWL7uWMY5
+ Rp0OD/0YxQOPsE7P9lwb5wr1WtaICm79Mv5E1VBseN+IJVPkRaMtI9PZOPMYl2nkkxIthFrBfB5
+ VA9z7R/Ayu59wN8WJG0KaAP+4b6+Hf/7NK4Qja/DBtDxkgk7NBz4suJ1OIfC++krRwnTX1Sja+m
+ W3tz69mVlP+mq3G4KB/KJ2krJ4m7nmpcQLxjnmyKbjhR4J6FQaYv6HOmelCuvKdkWJGFar4mhe4
+ 6JPThxK3D45Jmy5k5LnfYQaRNn1xB6IdprUAVEt85bp4HvqgSjMof/Cvv/+ygRmAHijGM6ikJnG
+ eCQGzRajiTA5q6rWl1HC0EmbVELa4Wl8ytL5rj+N4RJBCCV9+n5SJeXFy0V3D/6VoY6qDbObxj7
+ /y1pjasux7b8tEe3ffOrYqDKK3j+rx6rmzOuYs/Yuv2EnMMCIttl6GuxwQfkKfGXGJrYWrGRTRs
+ iyFHvwo4C8MJEvQaG4P/wGwxyM2aSRD7MJoIh8neJFojUpASlc7g/zA+MfArJlfmeuP6ktX2SKv
+ xSeAIu6RAEVXp2hC7SQJ2jKkt2GQw3RGvWKosp9L1Jl6kjxUUXV8F1wUTtYAcKB5/ovsh9tqORV
+ opNlnGdFoiM4XyttGOBynM7Eq8Aci+A/UPofTC7lxRjHejSQjL98l136YwRA1Mi1eOOV9Bppl5d pjkjLpnriIPhq5Q==
+X-Mailer: b4 0.14.1
+Message-ID: <20250303-export-macro-v3-2-41fbad85a27f@google.com>
+Subject: [PATCH v3 2/5] rust: macros: support additional tokens in quote!
+From: Alice Ryhl <aliceryhl@google.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Miguel Ojeda <ojeda@kernel.org>
+Cc: Petr Mladek <pmladek@suse.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>, Sergey Senozhatsky <senozhatsky@chromium.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, 
+	"=?utf-8?q?Bj=C3=B6rn_Roy_Baron?=" <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Tamir Duberstein <tamird@gmail.com>, linux-kernel@vger.kernel.org, 
+	rust-for-linux@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+	Alice Ryhl <aliceryhl@google.com>
+Content-Type: text/plain; charset="utf-8"
 
-Hi Alexandre,
+This gives the quote! macro support for the following additional tokens:
 
-On Sat, 2025-03-01 at 21:36 +0100, Alexandre Belloni wrote:
-> On 28/02/2025 14:07:13+0000, Andr=C3=A9 Draszik wrote:
-> > Hi,
-> >=20
-> > While looking at RTC, I noticed that various drivers are keeping
-> > pointers to data that they're not using themselves throughout their
-> > lifetime.
-> >=20
-> > So I took the liberty to drop these pointers and this series is the
-> > result.
-> >=20
-> > The last two patches also convert two drivers to using dev_err_probe(),
-> > as I looked slightly closer into those two. They don't exactly fit the
-> > general subject of removal of unneeded pointers, but I wanted to share
-> > them anyway, since they're ready.
-> >=20
-> > All of this was compile-tested only.
-> >=20
-> > Cheers,
-> > Andre'
-> >=20
-> > Signed-off-by: Andr=C3=A9 Draszik <andre.draszik@linaro.org>
-> > ---
-> > Andr=C3=A9 Draszik (18):
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 rtc: max77686: drop needless struct max7=
-7686_rtc_info::rtc member
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 rtc: s5m: drop needless struct s5m_rtc_i=
-nfo::i2c member
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 rtc: aspeed: drop needless struct aspeed=
-_rtc::rtc_dev member
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 rtc: ds2404: drop needless struct ds2404=
-::rtc member
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 rtc: ep93xx: drop needless struct ep93xx=
-_rtc::rtc member
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 rtc: ftrtc010: drop needless struct ftrt=
-c010_rtc::rtc_dev member
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 rtc: m48t86: drop needless struct m48t86=
-_rtc_info::rtc member
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 rtc: meson: drop needless struct meson_r=
-tc::rtc member
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 rtc: meson-vrtc: drop needless struct me=
-son_vrtc_data::rtc member
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 rtc: pl030: drop needless struct pl030_r=
-tc::rtc member
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 rtc: rx8581: drop needless struct rx8581=
-::rtc member
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 rtc: s35390a: drop needless struct s3539=
-0a::rtc member
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 rtc: sd2405al: drop needless struct sd24=
-05al::rtc member
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 rtc: sd3078: drop needless struct sd3078=
-::rtc member
->=20
-> My main concern with this is that as soon as we introduce irq support,
-> we are going to need the rtc pointer back in the struct. But I guess
-> that most of them are old enough to say that nobody is interested in irq
-> support.
+* The = token.
+* The _ token.
+* The # token. (when not followed by an identifier)
+* Using #my_var with variables of type Ident.
 
-Thanks for your thoughts Alexandre - I don't know the history of
-these drivers and don't mind either way. I can drop those patches
-that would require reintroducing if irq support is added in the
-future. I think overall you're OK with keeping them, but please
-let me know if I'm misunderstanding :-)
+Additionally, some type annotations are added to allow cases where
+groups are empty. For example, quote! does support () in the input, but
+only when it is *not* empty. When it is empty, there are zero `.push`
+calls, so the compiler can't infer the item type and also emits a
+warning about it not needing to be mutable.
 
->=20
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 rtc: rx8581: drop needless struct rx8581
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 rtc: sd3078: drop needless struct sd3078
->=20
-> I guess you could squash those two with the previous ones touching the
-> respective drivers because you are the one removing the last remaining
-> struct member.
+These additional quote! features are used by a new proc macro that
+generates code looking like this:
 
-Will do.
+	const _: () = {
+	    if true {
+	        ::kernel::bindings::#name
+	    } else {
+	        #name
+	    };
+	};
 
-Cheers,
-Andre'
+where #name has type Ident.
+
+Reviewed-by: Andreas Hindborg <a.hindborg@kernel.org>
+Reviewed-by: Tamir Duberstein <tamird@gmail.com>
+Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Alice Ryhl <aliceryhl@google.com>
+---
+ rust/macros/quote.rs | 27 +++++++++++++++++++++++++--
+ 1 file changed, 25 insertions(+), 2 deletions(-)
+
+diff --git a/rust/macros/quote.rs b/rust/macros/quote.rs
+index 33a199e4f176..31b7ebe504f4 100644
+--- a/rust/macros/quote.rs
++++ b/rust/macros/quote.rs
+@@ -20,6 +20,12 @@ fn to_tokens(&self, tokens: &mut TokenStream) {
+     }
+ }
+ 
++impl ToTokens for proc_macro::Ident {
++    fn to_tokens(&self, tokens: &mut TokenStream) {
++        tokens.extend([TokenTree::from(self.clone())]);
++    }
++}
++
+ impl ToTokens for TokenTree {
+     fn to_tokens(&self, tokens: &mut TokenStream) {
+         tokens.extend([self.clone()]);
+@@ -40,7 +46,7 @@ fn to_tokens(&self, tokens: &mut TokenStream) {
+ /// `quote` crate but provides only just enough functionality needed by the current `macros` crate.
+ macro_rules! quote_spanned {
+     ($span:expr => $($tt:tt)*) => {{
+-        let mut tokens;
++        let mut tokens: ::std::vec::Vec<::proc_macro::TokenTree>;
+         #[allow(clippy::vec_init_then_push)]
+         {
+             tokens = ::std::vec::Vec::new();
+@@ -65,7 +71,8 @@ macro_rules! quote_spanned {
+         quote_spanned!(@proc $v $span $($tt)*);
+     };
+     (@proc $v:ident $span:ident ( $($inner:tt)* ) $($tt:tt)*) => {
+-        let mut tokens = ::std::vec::Vec::new();
++        #[allow(unused_mut)]
++        let mut tokens = ::std::vec::Vec::<::proc_macro::TokenTree>::new();
+         quote_spanned!(@proc tokens $span $($inner)*);
+         $v.push(::proc_macro::TokenTree::Group(::proc_macro::Group::new(
+             ::proc_macro::Delimiter::Parenthesis,
+@@ -136,6 +143,22 @@ macro_rules! quote_spanned {
+         ));
+         quote_spanned!(@proc $v $span $($tt)*);
+     };
++    (@proc $v:ident $span:ident = $($tt:tt)*) => {
++        $v.push(::proc_macro::TokenTree::Punct(
++                ::proc_macro::Punct::new('=', ::proc_macro::Spacing::Alone)
++        ));
++        quote_spanned!(@proc $v $span $($tt)*);
++    };
++    (@proc $v:ident $span:ident # $($tt:tt)*) => {
++        $v.push(::proc_macro::TokenTree::Punct(
++                ::proc_macro::Punct::new('#', ::proc_macro::Spacing::Alone)
++        ));
++        quote_spanned!(@proc $v $span $($tt)*);
++    };
++    (@proc $v:ident $span:ident _ $($tt:tt)*) => {
++        $v.push(::proc_macro::TokenTree::Ident(::proc_macro::Ident::new("_", $span)));
++        quote_spanned!(@proc $v $span $($tt)*);
++    };
+     (@proc $v:ident $span:ident $id:ident $($tt:tt)*) => {
+         $v.push(::proc_macro::TokenTree::Ident(::proc_macro::Ident::new(stringify!($id), $span)));
+         quote_spanned!(@proc $v $span $($tt)*);
+
+-- 
+2.48.1.711.g2feabab25a-goog
 
