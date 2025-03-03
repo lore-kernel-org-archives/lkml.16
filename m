@@ -1,108 +1,331 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8846C84A3E
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 18:35:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 927211D89E3
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 18:37:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741026932; cv=none; b=OC4d+B59OLz+turK9/swRNgtIzTojUhAW5YbRPn7wE8Kol3GjBIvrxqwiNSzUbi6eN/z8sva0pXxpVuGX+BZfEXV8J2cs8v5o+ypTDMssMafOBEhdYQMkPFIeJYR6rCx0npm7UVv25iLaz/Ysxgm8X0+AU+OLHRDZ4AoLWxeVEU=
+	t=1741027022; cv=none; b=W77ZSzJyZYtbEKK06Fopg7UzGgNS90kMeDIcaUegFmBJC4DQAwX8vslg2+JdELsm6WzWU/Wa8bR8vKrMFQUd76IZPfQQAP3LNDJ6zQtStHPb4Fq1OvWPUsAtKgphuCz54baYiIb8AQtn8VfYh5XVqcgCHF3WoKjseSWtR7flPaw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741026932; c=relaxed/simple;
-	bh=rU5k13T2Ac3+v0BbPnnLOmB9rtNCiy3ce+lMSrf1jNA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=W6GMZJNnXmYNU/gdeyYlCDLEBdejBuNmphuCiCmUR5mmqtMotX+loGmgynsU2a99/C2hkd+jMI+rmErDXTjFgntG8BpP+c0hHZyRjZl94HJwuTaFqgnMuJcrwoG+i2Hww7jYlbN3pU14uu9iJ5U+w79BG+I5I5obcfMUWTtt3jU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=SJnzwU7Z; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1741027022; c=relaxed/simple;
+	bh=AiW+DTPcnhyBSCgRnqgPg8u/ghgUAH9ao0pYg17lCBQ=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=sVyJN/UQgVifRD/2hl+vMLWCqWyaQ1HTZ9gvjjHLFXGWMo94xiLmzK5qlj6q9RkEjcJctVuUadg26MSkFnlyFdJfkF2EB91Ow18tz2oiLBP/QiFQ98mT6p+eWcU6tA3rmtHnTtXiX4s2kiO52bj8dyU+ajMPjQDvBZTQdBpttik=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=zdw+Sf29; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SJnzwU7Z"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=IG0+ynVNm0jAcQmWmjGgFRxTrHWQSqojbT/C1B/7cF0=; b=SJnzwU7Z1WEzXQT/sfEc8ueRkP
-	jRE+YxDr6EmAE+iQnTy1jd3AT9XYE7IqYDvD4jSENN6oK08sZLVoiThExVgrNQ8CAKXNc++MPFdwJ
-	2feL8s4a1W5m2/I7hublWCghow3LAqPU508siW2Vp0S9xjT+J2vWuw64PyETA6K3QlAIRpJwPQBzN
-	9H+1fBpGW5hZR7/wmav5TbchOYuQB3tZQ95bA9oAqQGD7nV8Dv1Kl4kBAImslE8v6Tz16Mz5tdJMj
-	KU0ql+3qJXvIxZtyWbsVotyGO98xcIqep7c8G/I1vqOPTV5CS0G9nXIRMMwg68MBkjAiuK7Em1lm1
-	Che+W0Cg==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tpAdT-0000000E7JD-0IFM;
-	Mon, 03 Mar 2025 18:35:27 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 0CA0A30049D; Mon,  3 Mar 2025 19:35:26 +0100 (CET)
-Date: Mon, 3 Mar 2025 19:35:25 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Kees Cook <kees@kernel.org>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org
-Subject: Re: lkdtm: Annotate do_nothing()
-Message-ID: <20250303183525.GA15322@noisy.programming.kicks-ass.net>
-References: <20250303093817.GJ5880@noisy.programming.kicks-ass.net>
- <202503030921.2CD851B31D@keescook>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="zdw+Sf29"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2fee4c7ef4dso6338737a91.0
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Mar 2025 10:37:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1741027020; x=1741631820; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=G++k4W7n+duBWzePELDvk0hBNSPbp+/yi/W/D3fZOT8=;
+        b=zdw+Sf290tnMO3esoJmRn8tNVpMfE3T9Tm4Mt4+GAUQl1eUFFrEkojEOngoxsKV93z
+         vgzSscO6joQwopp+7fo0wYKf/l9LffoJpKgPvhCxD5jl8GTAOXJsFyEACcDH4FyqJjN4
+         PsrqX1q5ukKvJs0SPp6g9DnT7JqHcYn9JN1Btc1trBcCKciBc+jtJzYH7kkT7ntU9yG1
+         73Ntl3lxU6Y270dynSC1eX8ADoLcyk5xiIA83mFeXLG/w0+QymB9McSl1Nle3UAAvM6C
+         zHDCYLEkKVtDxSmJnOsYcG18hHzcUjKvWHDJmYvMOa+e9tmSqOeqwBqo3p3Y8JrHQahn
+         ZaqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741027020; x=1741631820;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=G++k4W7n+duBWzePELDvk0hBNSPbp+/yi/W/D3fZOT8=;
+        b=eE6839prwWTSo7eQj0GxTzSCVWszwODEF3OUsLWUpaHBDQnMpLL+Fd+2fFKQUDlQak
+         YxzNblSnOkgHfyfQYkhSyorOLHEhecyBnYFLG2JOePCkpCl8xxwOSORzdNA7/Yse3pYB
+         4hHfJzXDJ7apVHtYZ5UJUjouw/KluuPelcHtWNa/tXZNBLBy4Rumvd8w0ne7ycWxTP2V
+         2UvKFhXbCuuYJNtzTjE1MMohOslK18l0q7XtMlpxJ/LWf7QOkn6ZgU1vw/yedA4lhucD
+         yK5llZcy+w+e+ggJJquFjmo8HPgVqZntpYAJKXRIi1ff53zQBwAiU5yt8Ike93zxhgZB
+         thxg==
+X-Gm-Message-State: AOJu0YxTlcs7Y12BxSQodTAgLl+qbtWjyxJRYafnWNNYzRDZbaUuyGAO
+	NBj1XAibSvWpgfKQ3OZIGTgQzGe76GRdDVa3u5+/1H4GMZ7TdbVWk6z0otviUmBfUzqI/jDjmzX
+	VP27jqij8g3SIz34NXLo+dQEttQAT9Q8utLCluRL7OpQWkv6rqclvz71VoFHKdGG3oruueAE67/
+	aroquJHDa88Tje1Zf382rX1UDJDENsIgcdaCTLlXk0
+X-Google-Smtp-Source: AGHT+IEb9dzTwTTSzzri/IFr9sj0tYmEtHIiN4Tk2J9uYgPzzdlQFIjtCirLTNbMcwBigQI0UK/vmpadPZw=
+X-Received: from pgc18.prod.google.com ([2002:a05:6a02:2f92:b0:ad5:45a5:645a])
+ (user=ctshao job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:1592:b0:1f2:f1a9:b2d1
+ with SMTP id adf61e73a8af0-1f2f4ccb3bbmr22442550637.13.1741027019767; Mon, 03
+ Mar 2025 10:36:59 -0800 (PST)
+Date: Mon,  3 Mar 2025 10:32:40 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202503030921.2CD851B31D@keescook>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.48.1.711.g2feabab25a-goog
+Message-ID: <20250303183646.327510-1-ctshao@google.com>
+Subject: [PATCH v2 1/2] perf record: Add 8-byte aligned event type PERF_RECORD_COMPRESSED2
+From: Chun-Tse Shao <ctshao@google.com>
+To: linux-kernel@vger.kernel.org
+Cc: Chun-Tse Shao <ctshao@google.com>, peterz@infradead.org, mingo@redhat.com, 
+	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com, 
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com, 
+	adrian.hunter@intel.com, kan.liang@linux.intel.com, terrelln@fb.com, 
+	leo.yan@arm.com, james.clark@linaro.org, christophe.leroy@csgroup.eu, 
+	ben.gainey@arm.com, linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Mar 03, 2025 at 09:26:57AM -0800, Kees Cook wrote:
-> On Mon, Mar 03, 2025 at 10:38:17AM +0100, Peter Zijlstra wrote:
-> > Hi Kees,
-> > 
-> > During my FineIBT testing the other week I stumbled upon the following
-> > complaint:
-> > 
-> >   vmlinux.o: warning: objtool: execute_location+0x4f: relocation to !ENDBR: .text+0x1032008
-> > 
-> > I finally got around to looking at it and realized we have means of
-> > annotating that since 93f16a1ab78c ("x86/boot: Mark start_secondary() with __noendbr")
-> > (which might still be in tip only).
-> 
-> Er, doesn't that mean do_nothing() will lack an ENDBR? Wait, no, that's
-> __noendbr. What does this annotation mean if the function _does_ have
-> ENDBR?
-> 
-> Note that these tests are explicitly using __nocfi (via the
-> execute_location() function) since they're testing the Execute bit in
-> different memory regions. But I would expect BTI to still work (and not
-> block execution).
-> 
+The original PERF_RECORD_COMPRESS is not 8-byte aligned, which can cause
+asan runtime error:
 
-Argh, I had a definite wake-up juice deficit this morning, and the BTF
-noise made me miss that the warning wasn't fixed.
+  # Build with asan
+  $ make -C tools/perf O=/tmp/perf DEBUG=1 EXTRA_CFLAGS="-O0 -g -fno-omit-frame-pointer -fsanitize=undefined"
+  # Test success with many asan runtime errors:
+  $ /tmp/perf/perf test "Zstd perf.data compression/decompression" -vv
+   83: Zstd perf.data compression/decompression:
+  ...
+  util/session.c:1959:13: runtime error: member access within misaligned address 0x7f69e3f99653 for type 'union perf_event', which requires 13 byte alignment
+  0x7f69e3f99653: note: pointer points here
+   d0  3a 50 69 44 00 00 00 00  00 08 00 bb 07 00 00 00  00 00 00 44 00 00 00 00  00 00 00 ff 07 00 00
+                ^
+  util/session.c:2163:22: runtime error: member access within misaligned address 0x7f69e3f99653 for type 'union perf_event', which requires 8 byte alignment
+  0x7f69e3f99653: note: pointer points here
+   d0  3a 50 69 44 00 00 00 00  00 08 00 bb 07 00 00 00  00 00 00 44 00 00 00 00  00 00 00 ff 07 00 00
+                ^
+  ...
 
-For some reason I thought do_nothing() didn't have ENDBR. Looking at the
-build now, I see it does have, and the actual location pointed to is
-do_nothing+0x18, which is weird.
+Since there is no way to align compressed data in zstd compression, this
+patch add a new event type `PERF_RECORD_COMPRESSED2`, which adds a field
+`data_size` to specify the actual compressed data size. The
+`header.size` contains the total record size, including the padding at
+the end to make it 8-byte aligned.
 
-Ooh, I see, the thing looks to have unrolled and inlined that memcpy()
-like:
+Tested with `Zstd perf.data compression/decompression`
 
-   156a3:       48 8b 05 00 00 00 00    mov    0x0(%rip),%rax        # 156aa <execute_location+0x2a>    156a6: R_X86_64_PC32    .text+0x1032024
-   156aa:       48 89 43 38             mov    %rax,0x38(%rbx)
-   156ae:       48 8b 05 00 00 00 00    mov    0x0(%rip),%rax        # 156b5 <execute_location+0x35>    156b1: R_X86_64_PC32    .text+0x103201c
-   156b5:       48 89 43 30             mov    %rax,0x30(%rbx)
-   156b9:       48 8b 05 00 00 00 00    mov    0x0(%rip),%rax        # 156c0 <execute_location+0x40>    156bc: R_X86_64_PC32    .text+0x1032014
-   156c0:       48 89 43 28             mov    %rax,0x28(%rbx)
-   156c4:       48 8b 05 00 00 00 00    mov    0x0(%rip),%rax        # 156cb <execute_location+0x4b>    156c7: R_X86_64_PC32    .text+0x103200c
-   156cb:       48 89 43 20             mov    %rax,0x20(%rbx)
-   156cf:       48 8b 05 00 00 00 00    mov    0x0(%rip),%rax        # 156d6 <execute_location+0x56>    156d2: R_X86_64_PC32    .text+0x1032004
-   156d6:       48 89 43 18             mov    %rax,0x18(%rbx)
-   156da:       48 8b 05 00 00 00 00    mov    0x0(%rip),%rax        # 156e1 <execute_location+0x61>    156dd: R_X86_64_PC32    .text+0x1031ffc
-   156e1:       48 89 43 10             mov    %rax,0x10(%rbx)
-   156e5:       48 8b 05 00 00 00 00    mov    0x0(%rip),%rax        # 156ec <execute_location+0x6c>    156e8: R_X86_64_PC32    .text+0x1031ff4
-   156ec:       48 89 43 08             mov    %rax,0x8(%rbx)
-   156f0:       48 8b 05 00 00 00 00    mov    0x0(%rip),%rax        # 156f7 <execute_location+0x77>    156f3: R_X86_64_PC32    .text+0x1031fec
-   156f7:       48 89 03                mov    %rax,(%rbx)
+Signed-off-by: Chun-Tse Shao <ctshao@google.com>
+---
+v2:
+  Add deprecated comment for `PERF_RECORD_COMPRESSED`.
 
-And objtool figures those .text references are an address-taken-of like
-thing and expects ENDBR at them.
+ tools/lib/perf/Documentation/libperf.txt      |  1 +
+ tools/lib/perf/include/perf/event.h           | 12 ++++++++++
+ .../Documentation/perf.data-file-format.txt   | 24 +++++++++++++++----
+ tools/perf/builtin-record.c                   | 23 ++++++++++++++----
+ tools/perf/util/event.c                       |  1 +
+ tools/perf/util/session.c                     |  5 +++-
+ tools/perf/util/tool.c                        | 11 +++++++--
+ 7 files changed, 64 insertions(+), 13 deletions(-)
 
-Lovely stuff...
+diff --git a/tools/lib/perf/Documentation/libperf.txt b/tools/lib/perf/Documentation/libperf.txt
+index 59aabdd3cabf..4072bc9b7670 100644
+--- a/tools/lib/perf/Documentation/libperf.txt
++++ b/tools/lib/perf/Documentation/libperf.txt
+@@ -210,6 +210,7 @@ SYNOPSIS
+   struct perf_record_time_conv;
+   struct perf_record_header_feature;
+   struct perf_record_compressed;
++  struct perf_record_compressed2;
+ --
 
-Anyway, ignore this patch.
+ DESCRIPTION
+diff --git a/tools/lib/perf/include/perf/event.h b/tools/lib/perf/include/perf/event.h
+index 37bb7771d914..09b7c643ddac 100644
+--- a/tools/lib/perf/include/perf/event.h
++++ b/tools/lib/perf/include/perf/event.h
+@@ -457,6 +457,16 @@ struct perf_record_compressed {
+ 	char			 data[];
+ };
+
++/*
++ * `header.size` includes the padding we are going to add while writing the record.
++ * `data_size` only includes the size of `data[]` itself.
++ */
++struct perf_record_compressed2 {
++	struct perf_event_header header;
++	__u64			 data_size;
++	char			 data[];
++};
++
+ enum perf_user_event_type { /* above any possible kernel type */
+ 	PERF_RECORD_USER_TYPE_START		= 64,
+ 	PERF_RECORD_HEADER_ATTR			= 64,
+@@ -478,6 +488,7 @@ enum perf_user_event_type { /* above any possible kernel type */
+ 	PERF_RECORD_HEADER_FEATURE		= 80,
+ 	PERF_RECORD_COMPRESSED			= 81,
+ 	PERF_RECORD_FINISHED_INIT		= 82,
++	PERF_RECORD_COMPRESSED2			= 83,
+ 	PERF_RECORD_HEADER_MAX
+ };
+
+@@ -518,6 +529,7 @@ union perf_event {
+ 	struct perf_record_time_conv		time_conv;
+ 	struct perf_record_header_feature	feat;
+ 	struct perf_record_compressed		pack;
++	struct perf_record_compressed2		pack2;
+ };
+
+ #endif /* __LIBPERF_EVENT_H */
+diff --git a/tools/perf/Documentation/perf.data-file-format.txt b/tools/perf/Documentation/perf.data-file-format.txt
+index 010a4edcd384..cd95ba09f727 100644
+--- a/tools/perf/Documentation/perf.data-file-format.txt
++++ b/tools/perf/Documentation/perf.data-file-format.txt
+@@ -370,7 +370,7 @@ struct {
+ 	u32	mmap_len;
+ };
+
+-Indicates that trace contains records of PERF_RECORD_COMPRESSED type
++Indicates that trace contains records of PERF_RECORD_COMPRESSED2 type
+ that have perf_events records in compressed form.
+
+ 	HEADER_CPU_PMU_CAPS = 28,
+@@ -602,7 +602,14 @@ struct auxtrace_error_event {
+ Describes a header feature. These are records used in pipe-mode that
+ contain information that otherwise would be in perf.data file's header.
+
+-	PERF_RECORD_COMPRESSED 			= 81,
++	PERF_RECORD_COMPRESSED 			= 81, /* deprecated */
++
++The header is followed by compressed data frame that can be decompressed
++into array of perf trace records. The size of the entire compressed event
++record including the header is limited by the max value of header.size.
++
++It is deprecated and new files should use PERF_RECORD_COMPRESSED2 to gurantee
++8-byte alignment.
+
+ struct compressed_event {
+ 	struct perf_event_header	header;
+@@ -618,10 +625,17 @@ This is used, for instance, to 'perf inject' events after init and before
+ regular events, those emitted by the kernel, to support combining guest and
+ host records.
+
++	PERF_RECORD_COMPRESSED2			= 83,
+
+-The header is followed by compressed data frame that can be decompressed
+-into array of perf trace records. The size of the entire compressed event
+-record including the header is limited by the max value of header.size.
++8-byte aligned version of `PERF_RECORD_COMPRESSED`. `header.size` indicates the
++total record size, including padding for 8-byte alignment, and `data_size`
++specifies the actual size of the compressed data.
++
++struct perf_record_compressed2 {
++	struct perf_event_header	header;
++	__u64				data_size;
++	char				data[];
++};
+
+ Event types
+
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index 9af3f21fd015..d07ad670daa7 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -648,14 +648,27 @@ static int record__pushfn(struct mmap *map, void *to, void *bf, size_t size)
+ 	struct record *rec = to;
+
+ 	if (record__comp_enabled(rec)) {
++		struct perf_record_compressed2 *event = map->data;
++		size_t padding = 0;
++		u8 pad[8] = {0};
+ 		ssize_t compressed = zstd_compress(rec->session, map, map->data,
+ 						   mmap__mmap_len(map), bf, size);
+
+ 		if (compressed < 0)
+ 			return (int)compressed;
+
+-		size = compressed;
+-		bf   = map->data;
++		bf = event;
++		thread->samples++;
++
++		/*
++		 * The record from `zstd_compress` is not 8 bytes aligned, which would cause asan
++		 * error. We make it aligned here.
++		 */
++		event->data_size = compressed - sizeof(struct perf_record_compressed2);
++		event->header.size = PERF_ALIGN(compressed, sizeof(u64));
++		padding = event->header.size - compressed;
++		return record__write(rec, map, bf, compressed) ||
++		       record__write(rec, map, &pad, padding);
+ 	}
+
+ 	thread->samples++;
+@@ -1534,7 +1547,7 @@ static void record__adjust_affinity(struct record *rec, struct mmap *map)
+
+ static size_t process_comp_header(void *record, size_t increment)
+ {
+-	struct perf_record_compressed *event = record;
++	struct perf_record_compressed2 *event = record;
+ 	size_t size = sizeof(*event);
+
+ 	if (increment) {
+@@ -1542,7 +1555,7 @@ static size_t process_comp_header(void *record, size_t increment)
+ 		return increment;
+ 	}
+
+-	event->header.type = PERF_RECORD_COMPRESSED;
++	event->header.type = PERF_RECORD_COMPRESSED2;
+ 	event->header.size = size;
+
+ 	return size;
+@@ -1552,7 +1565,7 @@ static ssize_t zstd_compress(struct perf_session *session, struct mmap *map,
+ 			    void *dst, size_t dst_size, void *src, size_t src_size)
+ {
+ 	ssize_t compressed;
+-	size_t max_record_size = PERF_SAMPLE_MAX_SIZE - sizeof(struct perf_record_compressed) - 1;
++	size_t max_record_size = PERF_SAMPLE_MAX_SIZE - sizeof(struct perf_record_compressed2) - 1;
+ 	struct zstd_data *zstd_data = &session->zstd_data;
+
+ 	if (map && map->file)
+diff --git a/tools/perf/util/event.c b/tools/perf/util/event.c
+index c23b77f8f854..80c9ea682413 100644
+--- a/tools/perf/util/event.c
++++ b/tools/perf/util/event.c
+@@ -77,6 +77,7 @@ static const char *perf_event__names[] = {
+ 	[PERF_RECORD_HEADER_FEATURE]		= "FEATURE",
+ 	[PERF_RECORD_COMPRESSED]		= "COMPRESSED",
+ 	[PERF_RECORD_FINISHED_INIT]		= "FINISHED_INIT",
++	[PERF_RECORD_COMPRESSED2]		= "COMPRESSED2",
+ };
+
+ const char *perf_event__name(unsigned int id)
+diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+index 60fb9997ea0d..db2653322f9f 100644
+--- a/tools/perf/util/session.c
++++ b/tools/perf/util/session.c
+@@ -1400,7 +1400,9 @@ static s64 perf_session__process_user_event(struct perf_session *session,
+ 	int err;
+
+ 	perf_sample__init(&sample, /*all=*/true);
+-	if (event->header.type != PERF_RECORD_COMPRESSED || perf_tool__compressed_is_stub(tool))
++	if ((event->header.type != PERF_RECORD_COMPRESSED &&
++	     event->header.type != PERF_RECORD_COMPRESSED2) ||
++	    perf_tool__compressed_is_stub(tool))
+ 		dump_event(session->evlist, event, file_offset, &sample, file_path);
+
+ 	/* These events are processed right away */
+@@ -1481,6 +1483,7 @@ static s64 perf_session__process_user_event(struct perf_session *session,
+ 		err = tool->feature(session, event);
+ 		break;
+ 	case PERF_RECORD_COMPRESSED:
++	case PERF_RECORD_COMPRESSED2:
+ 		err = tool->compressed(session, event, file_offset, file_path);
+ 		if (err)
+ 			dump_event(session->evlist, event, file_offset, &sample, file_path);
+diff --git a/tools/perf/util/tool.c b/tools/perf/util/tool.c
+index 3b7f390f26eb..37bd8ac63b01 100644
+--- a/tools/perf/util/tool.c
++++ b/tools/perf/util/tool.c
+@@ -43,8 +43,15 @@ static int perf_session__process_compressed_event(struct perf_session *session,
+ 		decomp->size = decomp_last_rem;
+ 	}
+
+-	src = (void *)event + sizeof(struct perf_record_compressed);
+-	src_size = event->pack.header.size - sizeof(struct perf_record_compressed);
++	if (event->header.type == PERF_RECORD_COMPRESSED) {
++		src = (void *)event + sizeof(struct perf_record_compressed);
++		src_size = event->pack.header.size - sizeof(struct perf_record_compressed);
++	} else if (event->header.type == PERF_RECORD_COMPRESSED2) {
++		src = (void *)event + sizeof(struct perf_record_compressed2);
++		src_size = event->pack2.data_size;
++	} else {
++		return -1;
++	}
+
+ 	decomp_size = zstd_decompress_stream(session->active_decomp->zstd_decomp, src, src_size,
+ 				&(decomp->data[decomp_last_rem]), decomp_len - decomp_last_rem);
+--
+2.48.1.711.g2feabab25a-goog
+
