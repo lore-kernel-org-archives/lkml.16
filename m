@@ -1,143 +1,151 @@
-Received: from mail.hugovil.com (mail.hugovil.com [162.243.120.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f174.google.com (mail-vk1-f174.google.com [209.85.221.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E948723F36F;
-	Mon,  3 Mar 2025 15:41:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.243.120.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55318142900;
+	Mon,  3 Mar 2025 15:42:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741016515; cv=none; b=cSEdH2r3gRAs/28kfsRdVGEKF2qQTZL2hmYitwVTANKPAQrJCMoAxzRZj2w1Jw1S7XVMafj3FZgEWDwVnsZ3qoRNiH2mBjgfrDFQOce0pkVb4EhuLUZkVQ0R5+1jl8LAIMz+hcGMGGrF9BrSiO3z3PRsuNlKt/86iCh8Z7Y9/AQ=
+	t=1741016541; cv=none; b=M3hfir0XABXC++pOmvOUCIENEJn4bblJaGuElPmL8dgGh9tnX85S483qbHTwZYd22L5XJxUyOR1wxb2/w6/M9FyysE+alQYe26PJxkuNyt8neifSDpPlrt/94Qi+6+kFoMCnilKq+RI2KsaLbOVWztM5Gl/2/ALDL96KxNMry5A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741016515; c=relaxed/simple;
-	bh=m25FjPrgYwk7MjQZxfJGTGjcn2SPVYgupnmoKPBo3ug=;
-	h=Date:From:To:Cc:Message-Id:In-Reply-To:References:Mime-Version:
-	 Content-Type:Subject; b=LgRkwj4zJS9V28slU9SGVzkirA/QBJBKNIEg+BsHhXcAWdw1K/QIjTBMz71ApSyh3JpeV0bPAWmH9WQwJwz7tR2PJeNDD6r/Bmzla9b1k78WPtm5UxCeseQQAk71027j6CeHUIk1QS/z8iw0Flhhu2AW2Dwk7suz0ZSPGw9uAT4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hugovil.com; spf=pass smtp.mailfrom=hugovil.com; dkim=pass (1024-bit key) header.d=hugovil.com header.i=@hugovil.com header.b=cFgkZnKI; arc=none smtp.client-ip=162.243.120.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hugovil.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hugovil.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=hugovil.com header.i=@hugovil.com header.b="cFgkZnKI"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hugovil.com
-	; s=x; h=Subject:Content-Transfer-Encoding:Mime-Version:Message-Id:Cc:To:From
-	:Date:subject:date:message-id:reply-to;
-	bh=C/mjUrCDUh8TvGQ0TNP99UWlQJSkPZIBxxqCtz4GkI0=; b=cFgkZnKIv0/ZHT36d/Zwl7IRW1
-	fW9cvHeQLM8AeK7zGY/zPOWZy9w7wMXgJkCSy5z05SlMk8da27MCzCKt29/I0lhlBw2CscACezTh4
-	2mG4q/f/ES1WSSFlTCdeu0TFqSsnFwe8mN+Gu37FBSbil4W7sh78YpEv424PPHAysC1w=;
-Received: from modemcable168.174-80-70.mc.videotron.ca ([70.80.174.168]:56514 helo=pettiford.lan)
-	by mail.hugovil.com with esmtpa (Exim 4.92)
-	(envelope-from <hugo@hugovil.com>)
-	id 1tp7EM-0000V2-1t; Mon, 03 Mar 2025 09:57:18 -0500
-Date: Mon, 3 Mar 2025 09:57:17 -0500
-From: Hugo Villeneuve <hugo@hugovil.com>
-To: Matti Vaittinen <mazziesaccount@gmail.com>
-Cc: Jonathan Cameron <jic23@kernel.org>, David Lechner
- <dlechner@baylibre.com>, Matti Vaittinen
- <matti.vaittinen@fi.rohmeurope.com>, Hugo Villeneuve
- <hvilleneuve@dimonoff.com>, Lars-Peter Clausen <lars@metafoo.de>, Rob
- Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor
- Dooley <conor+dt@kernel.org>, Andy Shevchenko
- <andriy.shevchenko@linux.intel.com>, Daniel Scally <djrscally@gmail.com>,
- Heikki Krogerus <heikki.krogerus@linux.intel.com>, Sakari Ailus
- <sakari.ailus@linux.intel.com>, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
- Danilo Krummrich <dakr@kernel.org>, Lad Prabhakar
- <prabhakar.mahadev-lad.rj@bp.renesas.com>, Chen-Yu Tsai <wens@csie.org>,
- Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland
- <samuel@sholland.org>, Nuno Sa <nuno.sa@analog.com>, Javier Carrasco
- <javier.carrasco.cruz@gmail.com>, Guillaume Stols <gstols@baylibre.com>,
- Olivier Moysan <olivier.moysan@foss.st.com>, Dumitru Ceclan
- <mitrutzceclan@gmail.com>, Trevor Gamblin <tgamblin@baylibre.com>, Matteo
- Martelli <matteomartelli3@gmail.com>, Alisa-Dariana Roman
- <alisadariana@gmail.com>, Ramona Alexandra Nechita
- <ramona.nechita@analog.com>, AngeloGioacchino Del Regno
- <angelogioacchino.delregno@collabora.com>, linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-acpi@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev
-Message-Id: <20250303095717.56ef5ac016b99911fc34e198@hugovil.com>
-In-Reply-To: <7c79ce3a-0dc4-4aa4-941a-e05be9a34fb8@gmail.com>
-References: <cover.1740421248.git.mazziesaccount@gmail.com>
-	<20dd0e4ea72fe39b90b611f9c08dbd4bc1d5217f.1740421248.git.mazziesaccount@gmail.com>
-	<f0d0f114-3953-46b5-b9f6-9b35537e6f8e@baylibre.com>
-	<d391b012-0a8e-40ca-af56-ca73b3fd853b@gmail.com>
-	<20250302032713.1c834448@jic23-huawei>
-	<7c79ce3a-0dc4-4aa4-941a-e05be9a34fb8@gmail.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1741016541; c=relaxed/simple;
+	bh=c0rbulC+YHbb5daw/fx8ZNMv/ZzxDGYND2fLyrNaARk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Wc/BvZDaPUvUOPXcm6vTQKpxbcY38AS5ar1xk5+tJynb2zJ2hg7nCcXNYJGdm/iVh88VRgBvuVoJ8ycrmvZ56Hkn4UumpfWsLXZ71mo1rGFhZiQu7HkAiRmyQgO9XkHfPNvyfBfmL/HEop/Bg3v+xIk4tFS7OvtWsKbjqrJwTIY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vk1-f174.google.com with SMTP id 71dfb90a1353d-51f22008544so1831345e0c.1;
+        Mon, 03 Mar 2025 07:42:18 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741016537; x=1741621337;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=PEmVeCz4Uzs+jWGBRQohRmwcfz59z4FOg768eOIxkzI=;
+        b=LZKkJf+NLf/tCAzzIU6Ue4Zl6mCftNbAwQX0/5lSQiRGZ9HqUEeLo7arL0eHoRk7KO
+         /NTDS0M61VJk+sqa2uJ+Ni8aFmT5NWEaeH/BU38d7Cz/Z/85J1L3YljWozAGcoUy5OB2
+         d/3r02KEukPgyrWETBXqT20ck36bOrl26BYsfASXQ377ihVzKfDVAOm0hVYhu5pC/ITu
+         gK5RlO33Sn0SYV3rDknhurfaiG2FPspEM4hz3bnpGo9LyUlWkvjHAGfb0ON+NFn/FAc9
+         u7OhovW7vyWstodHeSS76qqgkseqh2qwD0DVA0Af+YoGAenAUvzGZmjm8Zb/Kshy3W3U
+         igUQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUoTRIvMalkwkxv0gv5mK+e9mrs/mKS/XN9xkD5+TJSu/+tQA0wYEl4AiiQnY9t7Gc/ZKz+p6sabaXJ0h+0@vger.kernel.org, AJvYcCVE7WO+xXs8DKssAUShQeXlsHwMN+TNuxtc/n6TArG/6Ng8wW267pyuq6xKnQAqb9SPeZvYUKgF2RWs@vger.kernel.org, AJvYcCWpRLeuvqquudC+VDbdzTtLdAAHaxo49nWYi9M/XSqPjEWAluNqTrMvr4OVTJV2VN5/sw806jztIWfusLkR@vger.kernel.org, AJvYcCXTSl+RDowaLTB0nndzGiIZnWPVzyS+EiZTvzmWAUsb/oe92cv7WjmKeosUds4NOOyJxPGUdyvHeSNpQIF2uPb2YOo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw6LhIiWVRODNM7MV0DNHe1TVLSAqHfb0Gwgn65rVnLnsDIrser
+	DFcg3Kb1TyiQXEicEgJAodc/qso4GOA5OsuwZeE9ZHgPhNb/gBd3vQCLIB08
+X-Gm-Gg: ASbGncsL5uVW4KvtHymQANQ509j1LOOX2RqzpsmSPOZwLKxtvKatOwv29SpAm5k9Pt7
+	eFwcqZhfmJKSO8lrSraBBOOCGM7iI1cIBgLHbB54f7vCwCcjnpRjqJeHLBVFBJMmpmouCUxBvMr
+	UXMNS+bOhe/Gkv4+JlVKHiyDLVeGHUQBFSBn2qijws/K9EbgQPJPzTCbOwLrQcsv5hlyMbj3hsF
+	PizWHPaabWoYmUmcWpE627h/CLD+YwGBGsI7Gax64MyqTWV/1YBvSENTV6cqp9LwtTjY/w0utr+
+	rsmRQgRyhR4dumDA5sIrLuBn8Pmp6CGQhdQN2wSAlyo0tM4X9d99mIvpyWNLYWHFB2US95M4YG1
+	1hFwcPUL+qO8=
+X-Google-Smtp-Source: AGHT+IFN8Ax3GZXDB2gNFK+7EvOvj5OalczQ2YcALagsFj9Dcvyyy/URUcct3XyM2U+Jw0thh+U9NA==
+X-Received: by 2002:a05:6122:8d3:b0:51b:b750:8303 with SMTP id 71dfb90a1353d-5235b8cccffmr7484558e0c.11.1741016536644;
+        Mon, 03 Mar 2025 07:42:16 -0800 (PST)
+Received: from mail-vk1-f173.google.com (mail-vk1-f173.google.com. [209.85.221.173])
+        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-86b3da71bd4sm1897940241.0.2025.03.03.07.42.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 03 Mar 2025 07:42:16 -0800 (PST)
+Received: by mail-vk1-f173.google.com with SMTP id 71dfb90a1353d-51eb181331bso2156588e0c.0;
+        Mon, 03 Mar 2025 07:42:16 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCU1esdBp3qSbUfDSQXiQWhTlunCA5fqkRdOim8v01d3HSe2SYzo/uXMVrtNLQWii+9xF3Cszv2qIS+2@vger.kernel.org, AJvYcCUtuFjlbCfyaBoje4tuBmZct49RLuI53EYyAhBSPp+DCsupT2u/eaVk4Kvha6ndx2spQ2AQ3jlFSJYGXFuf@vger.kernel.org, AJvYcCVeevKLnNvsRTMylFzY8RQoOTloHf+/ftPDJbtXTLsui56WTdIOesE8FlOpAWOlZWpka56F5Om/CXuNCd0N@vger.kernel.org, AJvYcCWR9s9yAv4J7h133c1Rz2xOghfDu6VeTfEJuPo6p3WHOf/BZr0Zax/8XaXguODTelZvEG7MUJcbK5kdBVwwmkLMLmI=@vger.kernel.org
+X-Received: by 2002:a05:6102:6c1:b0:4bb:b809:36c6 with SMTP id
+ ada2fe7eead31-4c04495290fmr9157605137.11.1741016536000; Mon, 03 Mar 2025
+ 07:42:16 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 70.80.174.168
-X-SA-Exim-Mail-From: hugo@hugovil.com
-X-Spam-Level: 
-X-Spam-Report: 
-	* -1.0 ALL_TRUSTED Passed through trusted hosts only via SMTP
-	* -2.6 NICE_REPLY_A Looks like a legit reply (A)
-Subject: Re: [PATCH v4 07/10] iio: adc: ti-ads7924: Respect device tree
- config
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on mail.hugovil.com)
+MIME-Version: 1.0
+References: <20250226130935.3029927-1-thierry.bultel.yh@bp.renesas.com>
+ <20250226130935.3029927-4-thierry.bultel.yh@bp.renesas.com>
+ <20250303133540.GA1681980-robh@kernel.org> <TYCPR01MB1149261DFCD83872B2F94435F8AC92@TYCPR01MB11492.jpnprd01.prod.outlook.com>
+In-Reply-To: <TYCPR01MB1149261DFCD83872B2F94435F8AC92@TYCPR01MB11492.jpnprd01.prod.outlook.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 3 Mar 2025 16:42:04 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdVj9=TysOOMc6pg-Yy2XRA4MCUw2e+5GwEKzMTcpnLbXw@mail.gmail.com>
+X-Gm-Features: AQ5f1Jp1wUchYyU3RiyC7BHY0Mt9sgg6vrImyJ3xNHKGwXzepnM3aITEspelp3g
+Message-ID: <CAMuHMdVj9=TysOOMc6pg-Yy2XRA4MCUw2e+5GwEKzMTcpnLbXw@mail.gmail.com>
+Subject: Re: [PATCH v3 03/13] dt-bindings: serial: Add compatible for Renesas
+ RZ/T2H SoC in sci
+To: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
+Cc: Rob Herring <robh@kernel.org>, 
+	"thierry.bultel@linatsea.fr" <thierry.bultel@linatsea.fr>, 
+	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, 
+	Paul Barker <paul.barker.ct@bp.renesas.com>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, 
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On Sun, 2 Mar 2025 15:10:12 +0200
-Matti Vaittinen <mazziesaccount@gmail.com> wrote:
+Hi Thierry,
 
-> On 02/03/2025 05:27, Jonathan Cameron wrote:
-> > On Wed, 26 Feb 2025 08:39:11 +0200
-> > Matti Vaittinen <mazziesaccount@gmail.com> wrote:
-> > 
-> >> On 26/02/2025 02:09, David Lechner wrote:
-> >>> On 2/24/25 12:34 PM, Matti Vaittinen wrote:
-> >>>> The ti-ads7924 driver ignores the device-tree ADC channel specification
-> >>>> and always exposes all 4 channels to users whether they are present in
-> >>>> the device-tree or not. Additionally, the "reg" values in the channel
-> >>>> nodes are ignored, although an error is printed if they are out of range.
-> >>>>
-> >>>> Register only the channels described in the device-tree, and use the reg
-> >>>> property as a channel ID.
-> >>>>
-> >>>> Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
-> >>>>
-> >>>> ---
-> >>>> Revision history:
-> >>>> v3 => v4:
-> >>>>    - Adapt to 'drop diff-channel support' changes to ADC-helpers
-> >>>>    - select ADC helpers in the Kconfig
-> >>>> v2 => v3: New patch
-> >>>>
-> >>>> Please note that this is potentially breaking existing users if they
-> >>>> have wrong values in the device-tree. I believe the device-tree should
-> >>>> ideally be respected, and if it says device X has only one channel, then
-> >>>> we should believe it and not register 4. Well, we don't live in the
-> >>>> ideal world, so even though I believe this is TheRightThingToDo - it may
-> >>>> cause havoc because correct device-tree has not been required from the
-> >>>> day 1. So, please review and test and apply at your own risk :)
-> >>>
-> >>> The DT bindings on this one are a little weird. Usually, if we don't
-> >>> use any extra properties from adc.yaml, we leave out the channels. In
-> >>> this case it does seem kind of like the original intention was to work
-> >>> like you are suggesting, but hard to say since the driver wasn't actually
-> >>> implemented that way. I would be more inclined to actually not make the
-> >>> breaking change here and instead relax the bindings to make channel nodes
-> >>> optional and just have the driver ignore the channel nodes by dropping
-> >>> the ads7924_get_channels_config() function completely. This would make
-> >>> the driver simpler instead of more complex like this patch does.
-> >>
-> >> I have no strong opinion on this. I see this driver says 'Supported' in
-> >> MAINTAINERS. Maybe Hugo is able to provide some insight?
-> >>
-> > This seems to be ABI breakage.  Never something we can take if there is
-> > a significant chance of anyone noticing.  Here it looks like risk
-> > is too high.
-> 
-> Ok. I'll just drop this patch then. Thanks David & Jonathan :)
+On Mon, 3 Mar 2025 at 16:10, Thierry Bultel
+<thierry.bultel.yh@bp.renesas.com> wrote:
+> > -----Original Message-----
+> > From: Rob Herring <robh@kernel.org>
+> > Sent: lundi 3 mars 2025 14:36
+> > To: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
+> > Cc: thierry.bultel@linatsea.fr; linux-renesas-soc@vger.kernel.org;
+> > geert@linux-m68k.org; Paul Barker <paul.barker.ct@bp.renesas.com>; Geert
+> > Uytterhoeven <geert+renesas@glider.be>; linux-kernel@vger.kernel.org;
+> > linux-serial@vger.kernel.org; devicetree@vger.kernel.org
+> > Subject: Re: [PATCH v3 03/13] dt-bindings: serial: Add compatible for
+> > Renesas RZ/T2H SoC in sci
+> >
+> > On Wed, Feb 26, 2025 at 02:09:22PM +0100, Thierry Bultel wrote:
+> > > Document RZ/T2H (a.k.a r9a09g077) in SCI binding.
+> > >
+> > > Signed-off-by: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
+> > > Reviewed-by: Paul Barker <paul.barker.ct@bp.renesas.com>
+> > > ---
+> > >  .../bindings/serial/renesas,sci.yaml          | 64 ++++++++++++-------
+> > >  1 file changed, 40 insertions(+), 24 deletions(-)
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/serial/renesas,sci.yaml
+> > > b/Documentation/devicetree/bindings/serial/renesas,sci.yaml
+> > > index 64d3db6e54e5..2c4080283963 100644
+> > > --- a/Documentation/devicetree/bindings/serial/renesas,sci.yaml
+> > > +++ b/Documentation/devicetree/bindings/serial/renesas,sci.yaml
+> > > @@ -9,9 +9,6 @@ title: Renesas Serial Communication Interface
+> > >  maintainers:
+> > >    - Geert Uytterhoeven <geert+renesas@glider.be>
+> > >
+> > > -allOf:
+> > > -  - $ref: serial.yaml#
+> > > -
+> > >  properties:
+> > >    compatible:
+> > >      oneOf:
+> > > @@ -22,6 +19,8 @@ properties:
+> > >                - renesas,r9a07g054-sci     # RZ/V2L
+> > >            - const: renesas,sci            # generic SCI compatible UART
+> > >
+> > > +      - const: renesas,r9a09g077-sci      # RZ/T2H
+> > > +
+> >
+> > Perhaps explain in the commit msg why the 'renesas,sci' is not applicable
+> > for this chip.
+>
+> Would something like that be explicit enough ?
+>
+> "The SCI of RZ/T2H SoC (a.k.a r9a09g077), as a lot
+> of similarities with other Renesas SoCs like G2L, G3S and V2L,
+> but a different set of registers, that moreover are 32 bits instead
+> of 16 bits.
+> This is why the 'renesas,sci' fallback does not apply for it".
 
-Hi Matti,
-I haven't really been able to follow all discussions, but as an
-historic note I developped this driver for a prototype that never
-materialized. So any changes would not have an impact, as far as I am
-concerned.
+FTR, the registers being 32-bit instead of 8/16-bit wide is the least of
+your problems... If it was just a SCI with 32-bit registers, you could
+use "reg-io-width = <4>;" and "reg-shift = <2>;", and add support for
+the latter to the driver (it already uses regshift on non-DT SuperH).
 
-Hugo.
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
