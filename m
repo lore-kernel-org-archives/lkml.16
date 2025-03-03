@@ -1,31 +1,71 @@
-Received: from out30-98.freemail.mail.aliyun.com (out30-98.freemail.mail.aliyun.com [115.124.30.98])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74D3413D8B1;
-	Mon,  3 Mar 2025 04:34:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.98
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 075BB13C82E
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 04:42:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740976454; cv=none; b=sgw5hIugkrvqkAN2FOKNIQJaPD/U1PuuSPPWt3GQhM7J2KNo0w7Z4K0z2tAV5DJG82RF8uiovntZepkhvbBdJFSpqWEmJNde7M6fXWKlHAuheZNHqdn4MAAoKXgrD49uSU56BHO20D8+foUvPduRvOoZIaRrmO3iP6l7GRHUAkU=
+	t=1740976954; cv=none; b=qZZzjHVhGUmVxslbqvZcOwxyFHStnvAiT1WruhO+zuGX6Qt9s40gidRA5JYRZhFNDxBRDp50SQp8qHczhXDzGd1p4qpHsq3Q/F67fu+HRQ3ewuDqPdHMwPPgCs8OOOYPSQjfbBtmZgp6Ss9SferqOJNcpYfDSqh+lS/6lqRKoro=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740976454; c=relaxed/simple;
-	bh=Cfhu4+EFgL7/rbjrHwPakoXx6h9aDrjyMs+AGTtg7rk=;
+	s=arc-20240116; t=1740976954; c=relaxed/simple;
+	bh=d9xG4OwrGjzvhEjvrP19eENQGSWBx98WpPyZysjrJ10=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ABkcUzQMakjsKQKS866FhqbboPB8DIwTtt+Y9Re6DG8+cRi1OFzU6NEm7HGygGRm6SOn+YZfcez97t4J/jYcaXwEYHwSlJrifKgUN63Puo+AkHKngV3QxWSvhq3ykv9fmxrNLXOrVA/FkmqPV30Za919B3P7oIRdxYyqV23o4i4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=nCnBb+Q6; arc=none smtp.client-ip=115.124.30.98
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	 In-Reply-To:Content-Type; b=CvbNNH888aUaG/y3Srw8V4hpep+8rREngGab+jb0aQDBtj9lQDoN8mbFs8qQJYhsFvQQOyRB4o+2It8YpzPNdxVIzWGI2jxDjT68UrAw3SaocvTaQ214bAyvp9RboD2yer80LLbNrshaG/3y9poKzizNV6N/GNfaH/S2zgjNKbU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GN6VxoCm; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="nCnBb+Q6"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1740976441; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=gFgZL4SK+vTz1A6HMCuB3ry9mqMa97WAbrHPo05jn3k=;
-	b=nCnBb+Q6xDb+yp4wPYQ5L8ZxhbS9og1BDlaCJiuaZotQAPIVGEpgVMhZ9XO2TP18TmRxmdsGT23InevpB3J7fqph0eMHxuoPp+jF7Nz0yPFXWiM1BDrf5zn4kKDY77dPIotYhEfBF1dZzy76rF7NPEMS1MFes1f8E0mtDUSceXE=
-Received: from 30.246.161.128(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WQYHNkC_1740976439 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Mon, 03 Mar 2025 12:34:00 +0800
-Message-ID: <1dea64ef-3c9f-4bff-820f-34d8f3a6a1d4@linux.alibaba.com>
-Date: Mon, 3 Mar 2025 12:33:59 +0800
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GN6VxoCm"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1740976951;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=uZWlrNkWyyIdXT2p4tYOkQhHrguS4IQ3yj366dONwt0=;
+	b=GN6VxoCml4HOL+t9DfK8hbKqSlrVV7yUa+DsvO+8XQw1M+EJxoD0SIhrUqP2aByBciuhRx
+	4SGa60e0psN8RquOKedOvB22IHYKCTKjxmMlPfvgb/Z2mYwuiKj7g9rv+OigAOK6qZl7V9
+	ZpARXnqS1k3sRBLnG10iUuUopWnqy0Q=
+Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com
+ [209.85.216.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-348-HrZokwpgOAahtKgrNqltsQ-1; Sun, 02 Mar 2025 23:42:15 -0500
+X-MC-Unique: HrZokwpgOAahtKgrNqltsQ-1
+X-Mimecast-MFC-AGG-ID: HrZokwpgOAahtKgrNqltsQ_1740976934
+Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-2ff0875e92bso1918417a91.2
+        for <linux-kernel@vger.kernel.org>; Sun, 02 Mar 2025 20:42:15 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740976934; x=1741581734;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=uZWlrNkWyyIdXT2p4tYOkQhHrguS4IQ3yj366dONwt0=;
+        b=KigQj6N+CWRbmtKS9h0kTZruqKC6nIDJf8bpohx6mBGHqRiqEkx4Zc6gRTOhDEzS8+
+         7q89vB82YX2lgYV6e7/oIkK76YGUntWzWvd9aP2c7BCsp3besn7KbdrchP1nOH+PUu8r
+         ZGi31SluPs9p9PUAjJ8Ck60hA8VgcGvF4BpbbNKbOKgVS2LOnb8pDsae5aH+VRS/Jh+b
+         Js23pMq1hG03M0gKuWEp4urE2hlZuTjFWaOpfeOHPZBCVkXNI7gFP0bNL3+Vp62yEH6g
+         9siRa15VMM/trGbtdL/r6hkdhYUuoBuEBennWczR8d+EjfnGHp6itkWE6lVxNxbDFAfh
+         LMkw==
+X-Forwarded-Encrypted: i=1; AJvYcCWkUKrpB3fsrVCd5o/UJtAiwQpy0IgcJP7yUREel93HQzDvrl9xAiTuaOsIVXTh53DBXCOYgO1u29IJko8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxFpemeWIyTZLjpl8NsAw/76BOeK34+y7BlVV2bwZelYPWSMoeq
+	sbCRy0kAalDVEOoxQL1fCYcIZHVr9Wrxq0WPeCxHXBegRu43RYPCjCFTL4cjsvrQGUbgCgVgQw3
+	koDcTOtbgY6FVF62UHWKjj4PedNN1/MLGQyLLe8aNFTcYYN3Eo/lniHPky4iLTw==
+X-Gm-Gg: ASbGncubKkXyC5GhC1NlsZIAgusQHFlIdYSAaGvd6wZCl20lzBcb8Iao/q03IeQAfQV
+	rrIZEj7ZKIfAqYt5IKr5p6016ivNhJkhN7TvvTk3wyQc8Qi2o+Zur4RhgBF3Ob70IQkrliCNVv6
+	Ww2B0h1eGYe2r6FogyBt8vDDxiLiHDG2teqj30zkh21Kc73LOW21IuwTaDgdddmkUoNdWuYbCBw
+	sgRlThVGYCGvML0rGS0nfTOidXpdFSJRRiCqVaqeY7CgONpp56K9DOGFLcZzjINoypLQQmDr2+9
+	U2RCeGq7B5pT+MjcPQ==
+X-Received: by 2002:a05:6a20:7347:b0:1f0:e7e2:b295 with SMTP id adf61e73a8af0-1f2f4c9c884mr15086801637.5.1740976934440;
+        Sun, 02 Mar 2025 20:42:14 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFMQAnjp3aPLIp+JkScadGYw1k0nhzSpzFpRULDgvvNejMSWpiBemFKZIbJFmyuqZgvHibZmA==
+X-Received: by 2002:a05:6a20:7347:b0:1f0:e7e2:b295 with SMTP id adf61e73a8af0-1f2f4c9c884mr15086777637.5.1740976934109;
+        Sun, 02 Mar 2025 20:42:14 -0800 (PST)
+Received: from [192.168.68.55] ([180.233.125.164])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-af221346042sm3304724a12.28.2025.03.02.20.42.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 02 Mar 2025 20:42:13 -0800 (PST)
+Message-ID: <3413f278-2507-4bb5-8904-550abe93e459@redhat.com>
+Date: Mon, 3 Mar 2025 14:42:04 +1000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -33,178 +73,226 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 3/3] PCI/AER: Report fatal errors of RCiEP and EP if
- link recoverd
-To: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>,
- linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, bhelgaas@google.com, kbusch@kernel.org
-Cc: mahesh@linux.ibm.com, oohall@gmail.com, Jonathan.Cameron@huawei.com,
- terry.bowman@amd.com, tianruidong@linux.alibaba.com
-References: <20250217024218.1681-1-xueshuai@linux.alibaba.com>
- <20250217024218.1681-4-xueshuai@linux.alibaba.com>
- <8a833aaf-53aa-4e56-a560-2b84a6e9c28c@linux.intel.com>
-From: Shuai Xue <xueshuai@linux.alibaba.com>
-In-Reply-To: <8a833aaf-53aa-4e56-a560-2b84a6e9c28c@linux.intel.com>
+Subject: Re: [PATCH v7 08/45] arm64: RME: ioctls to create and configure
+ realms
+To: Steven Price <steven.price@arm.com>, kvm@vger.kernel.org,
+ kvmarm@lists.linux.dev
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Marc Zyngier <maz@kernel.org>,
+ Will Deacon <will@kernel.org>, James Morse <james.morse@arm.com>,
+ Oliver Upton <oliver.upton@linux.dev>,
+ Suzuki K Poulose <suzuki.poulose@arm.com>, Zenghui Yu
+ <yuzenghui@huawei.com>, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, Joey Gouly <joey.gouly@arm.com>,
+ Alexandru Elisei <alexandru.elisei@arm.com>,
+ Christoffer Dall <christoffer.dall@arm.com>, Fuad Tabba <tabba@google.com>,
+ linux-coco@lists.linux.dev,
+ Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>,
+ Shanker Donthineni <sdonthineni@nvidia.com>, Alper Gun
+ <alpergun@google.com>, "Aneesh Kumar K . V" <aneesh.kumar@kernel.org>
+References: <20250213161426.102987-1-steven.price@arm.com>
+ <20250213161426.102987-9-steven.price@arm.com>
+Content-Language: en-US
+From: Gavin Shan <gshan@redhat.com>
+In-Reply-To: <20250213161426.102987-9-steven.price@arm.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
+On 2/14/25 2:13 AM, Steven Price wrote:
+> Add the KVM_CAP_ARM_RME_CREATE_RD ioctl to create a realm. This involves
+> delegating pages to the RMM to hold the Realm Descriptor (RD) and for
+> the base level of the Realm Translation Tables (RTT). A VMID also need
+> to be picked, since the RMM has a separate VMID address space a
+> dedicated allocator is added for this purpose.
+> 
+> KVM_CAP_ARM_RME_CONFIG_REALM is provided to allow configuring the realm
+> before it is created. Configuration options can be classified as:
+> 
+>   1. Parameters specific to the Realm stage2 (e.g. IPA Size, vmid, stage2
+>      entry level, entry level RTTs, number of RTTs in start level, LPA2)
+>      Most of these are not measured by RMM and comes from KVM book
+>      keeping.
+> 
+>   2. Parameters controlling "Arm Architecture features for the VM". (e.g.
+>      SVE VL, PMU counters, number of HW BRPs/WPs), configured by the VMM
+>      using the "user ID register write" mechanism. These will be
+>      supported in the later patches.
+> 
+>   3. Parameters are not part of the core Arm architecture but defined
+>      by the RMM spec (e.g. Hash algorithm for measurement,
+>      Personalisation value). These are programmed via
+>      KVM_CAP_ARM_RME_CONFIG_REALM.
+> 
+> For the IPA size there is the possibility that the RMM supports a
+> different size to the IPA size supported by KVM for normal guests. At
+> the moment the 'normal limit' is exposed by KVM_CAP_ARM_VM_IPA_SIZE and
+> the IPA size is configured by the bottom bits of vm_type in
+> KVM_CREATE_VM. This means that it isn't easy for the VMM to discover
+> what IPA sizes are supported for Realm guests. Since the IPA is part of
+> the measurement of the realm guest the current expectation is that the
+> VMM will be required to pick the IPA size demanded by attestation and
+> therefore simply failing if this isn't available is fine. An option
+> would be to expose a new capability ioctl to obtain the RMM's maximum
+> IPA size if this is needed in the future.
+> 
+> Co-developed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> Signed-off-by: Steven Price <steven.price@arm.com>
+> ---
+> Changes since v6:
+>   * Separate RMM RTT calculations from host PAGE_SIZE. This allows the
+>     host page size to be larger than 4k while still communicating with an
+>     RMM which uses 4k granules.
+> Changes since v5:
+>   * Introduce free_delegated_granule() to replace many
+>     undelegate/free_page() instances and centralise the comment on
+>     leaking when the undelegate fails.
+>   * Several other minor improvements suggested by reviews - thanks for
+>     the feedback!
+> Changes since v2:
+>   * Improved commit description.
+>   * Improved return failures for rmi_check_version().
+>   * Clear contents of PGD after it has been undelegated in case the RMM
+>     left stale data.
+>   * Minor changes to reflect changes in previous patches.
+> ---
+>   arch/arm64/include/asm/kvm_emulate.h |   5 +
+>   arch/arm64/include/asm/kvm_rme.h     |  19 ++
+>   arch/arm64/kvm/arm.c                 |  16 ++
+>   arch/arm64/kvm/mmu.c                 |  22 +-
+>   arch/arm64/kvm/rme.c                 | 322 +++++++++++++++++++++++++++
+>   5 files changed, 382 insertions(+), 2 deletions(-)
+> 
 
+With below comments addressed:
 
-在 2025/3/3 11:43, Sathyanarayanan Kuppuswamy 写道:
-> 
-> On 2/16/25 6:42 PM, Shuai Xue wrote:
->> The AER driver has historically avoided reading the configuration space of
->> an endpoint or RCiEP that reported a fatal error, considering the link to
->> that device unreliable. Consequently, when a fatal error occurs, the AER
->> and DPC drivers do not report specific error types, resulting in logs like:
->>
->>    pcieport 0000:30:03.0: EDR: EDR event received
->>    pcieport 0000:30:03.0: DPC: containment event, status:0x0005 source:0x3400
->>    pcieport 0000:30:03.0: DPC: ERR_FATAL detected
->>    pcieport 0000:30:03.0: AER: broadcast error_detected message
->>    nvme nvme0: frozen state error detected, reset controller
->>    nvme 0000:34:00.0: ready 0ms after DPC
->>    pcieport 0000:30:03.0: AER: broadcast slot_reset message
->>
->> AER status registers are sticky and Write-1-to-clear. If the link recovered
->> after hot reset, we can still safely access AER status of the error device.
->> In such case, report fatal errors which helps to figure out the error root
->> case.
->>
->> After this patch, the logs like:
->>
->>    pcieport 0000:30:03.0: EDR: EDR event received
->>    pcieport 0000:30:03.0: DPC: containment event, status:0x0005 source:0x3400
->>    pcieport 0000:30:03.0: DPC: ERR_FATAL detected
->>    pcieport 0000:30:03.0: AER: broadcast error_detected message
->>    nvme nvme0: frozen state error detected, reset controller
->>    pcieport 0000:30:03.0: waiting 100 ms for downstream link, after activation
->>    nvme 0000:34:00.0: ready 0ms after DPC
->>    nvme 0000:34:00.0: PCIe Bus Error: severity=Uncorrectable (Fatal), type=Data Link Layer, (Receiver ID)
->>    nvme 0000:34:00.0:   device [144d:a804] error status/mask=00000010/00504000
->>    nvme 0000:34:00.0:    [ 4] DLP                    (First)
->>    pcieport 0000:30:03.0: AER: broadcast slot_reset message
-> 
-> IMO, above info about device error details is more of a debug info. Since the
-> main use of this info use to understand more details about the recovered
-> DPC error. So I think is better to print with debug tag. Lets see what others
-> think.
-> 
-> Code wise, looks fine to me.
+Reviewed-by: Gavin Shan <gshan@redhat.com>
 
-thanks, looking forward to more feedback.
-> 
-> 
-> 
->> Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
->> ---
->>   drivers/pci/pci.h      |  3 ++-
->>   drivers/pci/pcie/aer.c | 11 +++++++----
->>   drivers/pci/pcie/dpc.c |  2 +-
->>   drivers/pci/pcie/err.c |  9 +++++++++
->>   4 files changed, 19 insertions(+), 6 deletions(-)
->>
->> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
->> index 870d2fbd6ff2..e852fa58b250 100644
->> --- a/drivers/pci/pci.h
->> +++ b/drivers/pci/pci.h
->> @@ -549,7 +549,8 @@ struct aer_err_info {
->>       struct pcie_tlp_log tlp;    /* TLP Header */
->>   };
->> -int aer_get_device_error_info(struct pci_dev *dev, struct aer_err_info *info);
->> +int aer_get_device_error_info(struct pci_dev *dev, struct aer_err_info *info,
->> +                  bool link_healthy);
->>   void aer_print_error(struct pci_dev *dev, struct aer_err_info *info);
->>   int pcie_read_tlp_log(struct pci_dev *dev, int where, int where2,
->> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
->> index 508474e17183..bfb67db074f0 100644
->> --- a/drivers/pci/pcie/aer.c
->> +++ b/drivers/pci/pcie/aer.c
->> @@ -1197,12 +1197,14 @@ EXPORT_SYMBOL_GPL(aer_recover_queue);
->>    * aer_get_device_error_info - read error status from dev and store it to info
->>    * @dev: pointer to the device expected to have a error record
->>    * @info: pointer to structure to store the error record
->> + * @link_healthy: link is healthy or not
->>    *
->>    * Return 1 on success, 0 on error.
->>    *
->>    * Note that @info is reused among all error devices. Clear fields properly.
->>    */
->> -int aer_get_device_error_info(struct pci_dev *dev, struct aer_err_info *info)
->> +int aer_get_device_error_info(struct pci_dev *dev, struct aer_err_info *info,
->> +                  bool link_healthy)
->>   {
->>       int type = pci_pcie_type(dev);
->>       int aer = dev->aer_cap;
->> @@ -1226,7 +1228,8 @@ int aer_get_device_error_info(struct pci_dev *dev, struct aer_err_info *info)
->>       } else if (type == PCI_EXP_TYPE_ROOT_PORT ||
->>              type == PCI_EXP_TYPE_RC_EC ||
->>              type == PCI_EXP_TYPE_DOWNSTREAM ||
->> -           info->severity == AER_NONFATAL) {
->> +           info->severity == AER_NONFATAL ||
->> +           (info->severity == AER_FATAL && link_healthy)) {
->>           /* Link is still healthy for IO reads */
->>           pci_read_config_dword(dev, aer + PCI_ERR_UNCOR_STATUS,
->> @@ -1258,11 +1261,11 @@ static inline void aer_process_err_devices(struct aer_err_info *e_info)
->>       /* Report all before handle them, not to lost records by reset etc. */
->>       for (i = 0; i < e_info->error_dev_num && e_info->dev[i]; i++) {
->> -        if (aer_get_device_error_info(e_info->dev[i], e_info))
->> +        if (aer_get_device_error_info(e_info->dev[i], e_info, false))
->>               aer_print_error(e_info->dev[i], e_info);
->>       }
->>       for (i = 0; i < e_info->error_dev_num && e_info->dev[i]; i++) {
->> -        if (aer_get_device_error_info(e_info->dev[i], e_info))
->> +        if (aer_get_device_error_info(e_info->dev[i], e_info, false))
->>               handle_error_source(e_info->dev[i], e_info);
->>       }
->>   }
->> diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
->> index ea3ea989afa7..2d3dd831b755 100644
->> --- a/drivers/pci/pcie/dpc.c
->> +++ b/drivers/pci/pcie/dpc.c
->> @@ -303,7 +303,7 @@ struct pci_dev *dpc_process_error(struct pci_dev *pdev)
->>           dpc_process_rp_pio_error(pdev);
->>       else if (reason == PCI_EXP_DPC_STATUS_TRIGGER_RSN_UNCOR &&
->>            dpc_get_aer_uncorrect_severity(pdev, &info) &&
->> -         aer_get_device_error_info(pdev, &info)) {
->> +         aer_get_device_error_info(pdev, &info, false)) {
->>           aer_print_error(pdev, &info);
->>           pci_aer_clear_nonfatal_status(pdev);
->>           pci_aer_clear_fatal_status(pdev);
->> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
->> index 31090770fffc..462577b8d75a 100644
->> --- a/drivers/pci/pcie/err.c
->> +++ b/drivers/pci/pcie/err.c
->> @@ -196,6 +196,7 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
->>       struct pci_dev *bridge;
->>       pci_ers_result_t status = PCI_ERS_RESULT_CAN_RECOVER;
->>       struct pci_host_bridge *host = pci_find_host_bridge(dev->bus);
->> +    struct aer_err_info info;
->>       /*
->>        * If the error was detected by a Root Port, Downstream Port, RCEC,
->> @@ -223,6 +224,13 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
->>               pci_warn(bridge, "subordinate device reset failed\n");
->>               goto failed;
->>           }
->> +
->> +        info.severity = AER_FATAL;
->> +        /* Link recovered, report fatal errors of RCiEP or EP */
->> +        if ((type == PCI_EXP_TYPE_ENDPOINT ||
->> +             type == PCI_EXP_TYPE_RC_END) &&
->> +            aer_get_device_error_info(dev, &info, true))
->> +            aer_print_error(dev, &info);
->>       } else {
->>           pci_walk_bridge(bridge, report_normal_detected, &status);
->>       }
->> @@ -259,6 +267,7 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
->>       if (host->native_aer || pcie_ports_native) {
->>           pcie_clear_device_status(dev);
->>           pci_aer_clear_nonfatal_status(dev);
->> +        pci_aer_clear_fatal_status(dev);
-> 
-> Add some info about above change in the commit log.
+[...]
 
-Will do.
+> +
+> +static int realm_create_rd(struct kvm *kvm)
+> +{
+> +	struct realm *realm = &kvm->arch.realm;
+> +	struct realm_params *params = realm->params;
+> +	void *rd = NULL;
+> +	phys_addr_t rd_phys, params_phys;
+> +	size_t pgd_size = kvm_pgtable_stage2_pgd_size(kvm->arch.mmu.vtcr);
+> +	int i, r;
+> +	int rtt_num_start;
+> +
+> +	realm->ia_bits = VTCR_EL2_IPA(kvm->arch.mmu.vtcr);
+> +	rtt_num_start = realm_num_root_rtts(realm);
+> +
+> +	if (WARN_ON(realm->rd) || WARN_ON(!realm->params))
+> +		return -EEXIST;
+> +
 
-Thanks.
-Shuai
+Two WARN_ON() can be combined into one.
+
+	if (WARN_ON(realm->rd || !realm->param))
+
+> +	if (pgd_size / RMM_PAGE_SIZE < rtt_num_start)
+> +		return -EINVAL;
+> +
+> +	rd = (void *)__get_free_page(GFP_KERNEL);
+> +	if (!rd)
+> +		return -ENOMEM;
+> +
+> +	rd_phys = virt_to_phys(rd);
+> +	if (rmi_granule_delegate(rd_phys)) {
+> +		r = -ENXIO;
+> +		goto free_rd;
+> +	}
+> +
+> +	for (i = 0; i < pgd_size; i += RMM_PAGE_SIZE) {
+> +		phys_addr_t pgd_phys = kvm->arch.mmu.pgd_phys + i;
+> +
+> +		if (rmi_granule_delegate(pgd_phys)) {
+> +			r = -ENXIO;
+> +			goto out_undelegate_tables;
+> +		}
+> +	}
+> +
+> +	params->s2sz = VTCR_EL2_IPA(kvm->arch.mmu.vtcr);
+> +	params->rtt_level_start = get_start_level(realm);
+> +	params->rtt_num_start = rtt_num_start;
+> +	params->rtt_base = kvm->arch.mmu.pgd_phys;
+> +	params->vmid = realm->vmid;
+> +
+> +	params_phys = virt_to_phys(params);
+> +
+> +	if (rmi_realm_create(rd_phys, params_phys)) {
+> +		r = -ENXIO;
+> +		goto out_undelegate_tables;
+> +	}
+> +
+> +	if (WARN_ON(rmi_rec_aux_count(rd_phys, &realm->num_aux))) {
+> +		WARN_ON(rmi_realm_destroy(rd_phys));
+> +		goto out_undelegate_tables;
+> +	}
+> +
+> +	realm->rd = rd;
+> +
+> +	return 0;
+> +
+> +out_undelegate_tables:
+> +	while (i > 0) {
+> +		i -= RMM_PAGE_SIZE;
+> +
+> +		phys_addr_t pgd_phys = kvm->arch.mmu.pgd_phys + i;
+> +
+> +		if (WARN_ON(rmi_granule_undelegate(pgd_phys))) {
+> +			/* Leak the pages if they cannot be returned */
+> +			kvm->arch.mmu.pgt = NULL;
+> +			break;
+> +		}
+> +	}
+> +	if (WARN_ON(rmi_granule_undelegate(rd_phys))) {
+> +		/* Leak the page if it isn't returned */
+> +		return r;
+> +	}
+> +free_rd:
+> +	free_page((unsigned long)rd);
+> +	return r;
+> +}
+> +
+
+[...]
+
+> +
+> +int kvm_init_realm_vm(struct kvm *kvm)
+> +{
+> +	struct realm_params *params;
+> +
+> +	params = (struct realm_params *)get_zeroed_page(GFP_KERNEL);
+> +	if (!params)
+> +		return -ENOMEM;
+> +
+> +	kvm->arch.realm.params = params;
+> +	return 0;
+> +}
+> +
+
+The local variable @params is unnecessary, something like below.
+
+	kvm->arch.realm.params = (struct realm_parms *)get_zeroed_page(GFP_KERNEL);
+
+>   void kvm_init_rme(void)
+>   {
+>   	if (PAGE_SIZE != SZ_4K)
+> @@ -52,5 +368,11 @@ void kvm_init_rme(void)
+>   		/* Continue without realm support */
+>   		return;
+>   
+> +	if (WARN_ON(rmi_features(0, &rmm_feat_reg0)))
+> +		return;
+> +
+> +	if (rme_vmid_init())
+> +		return;
+> +
+>   	/* Future patch will enable static branch kvm_rme_is_available */
+>   }
+
+Thanks,
+Gavin
+
