@@ -1,128 +1,201 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAD991F0E38;
-	Mon,  3 Mar 2025 09:25:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9BD113C8E8;
+	Mon,  3 Mar 2025 09:26:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740993912; cv=none; b=jdBbsXEYiOdBCE2zkC2oQt8pu4sQI2WLseRfrj/0rzAc175eWkvoVKE0AegfvmNiO2FivYlz0wlJ2VfHOidHmeriGvxqcLFZNpwbucQXVWc+Ig0PczLoR+sxa5vHEhlYCSpL4075j8Ns05137nNzeby58EekQEaaRzejslWTTHg=
+	t=1740993980; cv=none; b=Y+n/rFqiCJmfSFtBfb4mjdkDd3TFNR0AB/kJOkPAK9iHVXRyngmPaJrlKuf0P+b8NSmHo71OY+mdWBN6m5Nz6Z74GYfR40gYgaX31NfRMXcQZjiito4PdrVXxn1/6vmWVeRg/1LIHb2mFt3pH/C+Uiq/rnmeugDayFOTw9XIDTw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740993912; c=relaxed/simple;
-	bh=g2u4KWHAbEr61K3IGP6F6Dzv/QjB4YrY/gbIp2B/7eE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=pURWHTvJj53nfJPW2rI4o8VEL4UOxyqogTFzIlEvpLFM3WdFZq0gxKfNlO/QnrXI3kDHxsJ4NyX6iVr2mBuB4w8KAS8UrzQQeDbc2x/iubEAMDrUoYH1aUOHDzvpFmOMP+6FLtoLcRZQNiGEQbqLkDSZOIR5LIVSRBlrQIxcw0c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=AZS5c8pK; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1740993980; c=relaxed/simple;
+	bh=m7pLdPXQWCNRenKWCOj9QGklukAUggqeQTZ/jePvJ+k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JjAB3lxBM7hdDwt/YBr6Uk8UdEuyIYFOI0Q9tg6QJF/S9uZYSTfHVQndo2SrloC5E8S1YOQ0rm/TVjcKwF1maUr7RNqp7MY/64yAhvRqS8P5qtozNaZBKl7SbNgHLy+KAamEiMz55O3TGx/HvYJK2B4OYJcVwgM2j4aLM3D/FMA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tHtGDha5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="AZS5c8pK"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5239DJnF006969;
-	Mon, 3 Mar 2025 09:24:59 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=pp1; bh=kjOu7pwLW51iYtAOgoncP2baULu3m3yha+h5Jk0Py
-	M0=; b=AZS5c8pKGQ+NDgRkHfBJ3uMDzJyH3/0hWTV6htap0uD1wCu9sLomUi2su
-	/DFS0MtPP+6VL6kmt/86gyPyAPxLucoty+8emDOw6tIgS4gv9abx/yUEOkSLso5M
-	9R6LSVo4/n/vxin3SsFbFskMbqM/cvSoMlyQBweyXU5EajPLVjk0lZ1q118LU5PS
-	4DnZlny/U3fcJbrvy3D8mKLNCSaaa2MBzow11AaIlmVInhttQj2yluTmkylbl63n
-	I0mr7cwiVWDW22uO0yYbp8KW3wYA+yzv7khlyRIiLg04RCFe4YK3Jmq/vZic5a0a
-	taJSuL6tapJElGmpXYJUxbWzBnZew==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 454rrnks1g-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 03 Mar 2025 09:24:58 +0000 (GMT)
-Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 5239DUO7007324;
-	Mon, 3 Mar 2025 09:24:58 GMT
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 454rrnks1e-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 03 Mar 2025 09:24:58 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5238U1cG013720;
-	Mon, 3 Mar 2025 09:24:57 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 454e2kecef-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 03 Mar 2025 09:24:57 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5239OsQ618219458
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 3 Mar 2025 09:24:54 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 6AC612004B;
-	Mon,  3 Mar 2025 09:24:54 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 0A6CF20040;
-	Mon,  3 Mar 2025 09:24:52 +0000 (GMT)
-Received: from li-621bac4c-27c7-11b2-a85c-c2bf7c4b3c07.in.ibm.com (unknown [9.109.219.153])
-	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Mon,  3 Mar 2025 09:24:51 +0000 (GMT)
-From: Saket Kumar Bhaskar <skb99@linux.ibm.com>
-To: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: peterz@infradead.org, mingo@redhat.com, namhyung@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
-        kan.liang@linux.intel.com, hbathini@linux.ibm.com,
-        atrajeev@linux.vnet.ibm.com
-Subject: [PATCH] perf/hw_breakpoint: Return EOPNOTSUPP for unsupported breakpoint type
-Date: Mon,  3 Mar 2025 14:54:51 +0530
-Message-ID: <20250303092451.1862862-1-skb99@linux.ibm.com>
-X-Mailer: git-send-email 2.43.5
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tHtGDha5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44854C4CEE4;
+	Mon,  3 Mar 2025 09:26:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740993980;
+	bh=m7pLdPXQWCNRenKWCOj9QGklukAUggqeQTZ/jePvJ+k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=tHtGDha5Zbwwl8eFABfT3/lOyOAPQyA941Oy3/pisGsByfKaNroKCJJdkeYMkYRYQ
+	 08Qx51MIsWAIJEg5b0dI0v/VNC6bwSHJgSpV8iAVRtz6NX0FC9lVxFsAwjPs6Rs12b
+	 CYVS/Gj4opkVuplXo+M1sERIWKz6zjFTEu1CVpLcPtG//Xe5YBinZT+cxoVoTQKVnR
+	 JS/EMs3BKH9rVbmhQXJbsJB0sEaem/VFFFx8l6aGpF/yIUpsNpERSW301+HeqOxBAf
+	 sWC3gL3o+kWCdqssPE3PvHzhy0x+SuEBE72LkIWKwx9nR0rWtZ35ZCENGkXOQOTq1w
+	 MExLrwKSJzUag==
+Date: Mon, 3 Mar 2025 10:26:16 +0100
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Hironori KIKUCHI <kikuchan98@gmail.com>
+Cc: linux-kernel@vger.kernel.org, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Jessica Zhang <quic_jesszhan@quicinc.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Jakub Kicinski <kuba@kernel.org>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 3/3] drm: panel: Add a driver for Generic
+ MIPI-DSI/DPI(+SPI) panels
+Message-ID: <20250303-massive-beagle-of-authority-40bbb5@krzk-bin>
+References: <20250226112552.52494-1-kikuchan98@gmail.com>
+ <20250226112552.52494-4-kikuchan98@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: z-Zl_pgDd762yZl9RWOFN818MhGm5ZpY
-X-Proofpoint-ORIG-GUID: enF0SJJ43EYkPngJh6ffURjuLsPJNpbv
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-03_03,2025-03-03_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 clxscore=1011
- mlxscore=0 suspectscore=0 adultscore=0 bulkscore=0 spamscore=0
- impostorscore=0 priorityscore=1501 phishscore=0 malwarescore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502100000 definitions=main-2503030068
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250226112552.52494-4-kikuchan98@gmail.com>
 
-Currently, __reserve_bp_slot() returns -ENOSPC for unsupported
-breakpoint types on the architecture. For example, powerpc
-does not support hardware instruction breakpoints. This causes
-the perf_skip BPF selftest to fail, as neither ENOENT nor
-EOPNOTSUPP is returned by perf_event_open for unsupported
-breakpoint types. As a result, the test that should be skipped
-for this arch is not correctly identified.
+On Wed, Feb 26, 2025 at 08:25:50PM +0900, Hironori KIKUCHI wrote:
+> +
+> +struct panel_firmware_header {
+> +	u8 magic[15];
+> +	u8 file_format_version; /* must be 1 */
+> +} __packed;
+> +
+> +struct panel_firmware_config {
+> +	u16 width_mm, height_mm;
+> +	u16 rotation;
+> +	u8 _reserved_1[2];
+> +	u8 _reserved_2[8];
+> +
+> +	u16 reset_delay; /* delay after the reset command, in ms */
+> +	u16 init_delay; /* delay for sending the initial command sequence, in ms */
+> +	u16 sleep_delay; /* delay after the sleep command, in ms */
+> +	u16 backlight_delay; /* delay for enabling the backlight, in ms */
 
-To resolve this, hw_breakpoint_event_init() should exit early by
-checking for unsupported breakpoint types using
-hw_breakpoint_slots_cached() and return the appropriate error
-(-EOPNOTSUPP).
+These should be implied by compatible.
 
-Signed-off-by: Saket Kumar Bhaskar <skb99@linux.ibm.com>
----
- kernel/events/hw_breakpoint.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+> +	u16 _reserved_3[4];
+> +
+> +	u16 dsi_lanes; /* unsigned int */
+> +	u16 dsi_format; /* enum mipi_dsi_pixel_format */
+> +	u32 dsi_mode_flags; /* unsigned long */
+> +	u32 bus_flags; /* struct drm_bus_flags */
+> +	u8 _reserved_4[2];
+> +	u8 preferred_timing;
+> +	u8 num_timings;
+> +} __packed;
+> +
 
-diff --git a/kernel/events/hw_breakpoint.c b/kernel/events/hw_breakpoint.c
-index bc4a61029b6d..8ec2cb688903 100644
---- a/kernel/events/hw_breakpoint.c
-+++ b/kernel/events/hw_breakpoint.c
-@@ -950,9 +950,10 @@ static int hw_breakpoint_event_init(struct perf_event *bp)
- 		return -ENOENT;
- 
- 	/*
--	 * no branch sampling for breakpoint events
-+	 * Check if breakpoint type is supported before proceeding.
-+	 * Also, no branch sampling for breakpoint events.
- 	 */
--	if (has_branch_stack(bp))
-+	if (!hw_breakpoint_slots_cached(find_slot_idx(bp->attr.bp_type)) || has_branch_stack(bp))
- 		return -EOPNOTSUPP;
- 
- 	err = register_perf_hw_breakpoint(bp);
--- 
-2.43.5
+...
+
+> +
+> +static int panel_mipi_probe(struct device *dev, int connector_type)
+> +{
+> +	struct panel_mipi *mipi;
+> +	int err;
+> +
+> +	mipi = devm_kzalloc(dev, sizeof(*mipi), GFP_KERNEL);
+> +	if (!mipi)
+> +		return -ENOMEM;
+> +
+> +	mutex_init(&mipi->lock);
+> +
+> +	mipi->display_id = -1;
+> +
+> +	/* Get `power-supply` and `io-supply` (if any) */
+> +	mipi->supplies[0].supply = "power";
+> +	mipi->supplies[1].supply = "io";
+> +	err = devm_regulator_bulk_get(dev, ARRAY_SIZE(mipi->supplies),
+> +				      mipi->supplies);
+> +	if (err < 0) {
+> +		return dev_err_probe(dev, err,
+> +				     "%pOF: Failed to get regulators\n",
+> +				     dev->of_node);
+
+Drop pOF. Device name already tells this.
+
+> +	}
+> +
+> +	/* GPIO for /RESET */
+> +	mipi->reset = devm_gpiod_get_optional(dev, "reset", GPIOD_OUT_HIGH);
+> +	if (IS_ERR(mipi->reset))
+> +		return dev_err_probe(dev, PTR_ERR(mipi->reset),
+> +				     "%pOF: Failed to get GPIO for RESET\n",
+
+Drop pOF. Device name already tells this.
+
+> +				     dev->of_node);
+> +
+> +	/* Load the firmware */
+> +	mipi->firmware = panel_mipi_load_firmware(dev);
+> +	if (IS_ERR(mipi->firmware))
+> +		return dev_err_probe(dev, PTR_ERR(mipi->firmware),
+> +				     "Failed to load firmware\n");
+> +
+> +	err = panel_mipi_read_firmware(dev, mipi, mipi->firmware);
+> +	if (err)
+> +		return err;
+> +
+> +	err = panel_mipi_probe_modes(dev, mipi);
+> +	if (err)
+> +		return err;
+> +
+> +	/* DRM panel setup */
+> +	drm_panel_init(&mipi->panel, dev, &panel_mipi_funcs, connector_type);
+> +
+> +	err = panel_mipi_set_backlight(&mipi->panel, dev, mipi);
+> +	if (err)
+> +		return dev_err_probe(dev, err, "Failed to set backlight\n");
+> +
+> +	drm_panel_add(&mipi->panel);
+> +
+> +	dev_set_drvdata(dev, mipi);
+> +
+> +	panel_mipi_debugfs_init(dev, mipi);
+> +
+> +	return devm_add_action_or_reset(dev, panel_mipi_cleanup, mipi);
+> +}
+> +
+> +static int panel_mipi_dsi_probe(struct mipi_dsi_device *dsi)
+> +{
+> +	struct panel_mipi *mipi;
+> +	int err;
+> +
+> +	err = panel_mipi_probe(&dsi->dev, DRM_MODE_CONNECTOR_DSI);
+> +	if (err)
+> +		return err;
+> +
+> +	mipi = dev_get_drvdata(&dsi->dev);
+> +	mipi->dsi = dsi;
+> +	mipi->write_command = panel_mipi_dsi_write;
+> +	mipi->read_command = panel_mipi_dsi_read;
+> +
+> +	/* Read from the firmware */
+> +	dsi->lanes = be16_to_cpu(mipi->firmware->config->dsi_lanes);
+
+lanes are from DT, because they are depending on how panel is wired. At
+least usually.
+
+> +	dsi->format = be16_to_cpu(mipi->firmware->config->dsi_format);
+> +	dsi->mode_flags = be32_to_cpu(mipi->firmware->config->dsi_mode_flags);
+> +
+> +	if (!dsi->lanes)
+> +		return dev_err_probe(&dsi->dev, -EINVAL,
+> +				     "dsi-lanes == 0 for DSI panel\n");
+> +
+> +	/* Adjust bus_format */
+> +	switch (dsi->format) {
+> +	case MIPI_DSI_FMT_RGB888:
+> +		mipi->bus_format = MEDIA_BUS_FMT_RGB888_1X24;
+> +		break;
+> +	case MIPI_DSI_FMT_RGB666:
+> +		mipi->bus_format = MEDIA_BUS_FMT_RGB666_1X24_CPADHI;
+> +		break;
+> +	case MIPI_DSI_FMT_RGB666_PACKED:
+> +		mipi->bus_format = MEDIA_BUS_FMT_RGB666_1X18;
+> +		break;
+> +	case MIPI_DSI_FMT_RGB565:
+> +		mipi->bus_format = MEDIA_BUS_FMT_RGB565_1X16;
+> +		break;
+> +	}
+
+Best regards,
+Krzysztof
 
