@@ -1,140 +1,181 @@
-Received: from dediextern.your-server.de (dediextern.your-server.de [85.10.215.232])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5D8C215186;
-	Mon,  3 Mar 2025 16:37:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.10.215.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75AE723C8D4;
+	Mon,  3 Mar 2025 16:37:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741019858; cv=none; b=gsuWFcJ7oxlFK8ag7XUenFe3w+8b1VocJf8tvFf+YLsMd2ttA85TaT9Flzx2STe6DyjfDlKfdS3ugfCIJLHxEwFFLc1BOXbZ3rqjWRAPYapZLxpKt4Rlja1omJM2ZZUXO7uOIc8xxKJN7aKhi90R8hC01XYrlN6Ppzqsv5gm81g=
+	t=1741019862; cv=none; b=Q/3kPL8NWDzpetPlXLlMoKqvums3oA8RvNXhjg/E2pIrPGKLLwUJDFRrpcw899YdsVDnVPom6AOvK20VEA56EkOy2kJpcshG5EHX6SggiiAWG4YClKbHWVAAcvH1QHelKJVlZcOtEhggQFGJbOA9tV5HHNQcDwd2te1SRTqcUAo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741019858; c=relaxed/simple;
-	bh=7cLK0c6/NN6Y78XzvU0YKuImm5q5qadvNye1FRGgIJE=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:From:Subject:
-	 In-Reply-To:Content-Type; b=jGpNVziW2T2pyC6I4qlEm3pGTSMP0al+aI+4qJq0oiZtOXQFK37blJ7UKLrDf4JwWjtw3I0oSK/VFzZ+R1tS8MijeBzw8LYHTwojMfKhFMrjsrFyQ5xcM4Y/zMRuuw8oGqoTjnvJ7hs9YR2nDplcdwGRR4oXiSLDzuTsquYSYI8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hetzner-cloud.de; spf=pass smtp.mailfrom=hetzner-cloud.de; arc=none smtp.client-ip=85.10.215.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hetzner-cloud.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hetzner-cloud.de
-Received: from sslproxy06.your-server.de ([78.46.172.3])
-	by dediextern.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <marcus.wichelmann@hetzner-cloud.de>)
-	id 1tp8QD-000A7N-9R; Mon, 03 Mar 2025 17:13:37 +0100
-Received: from [2a01:599:740:99a0:dca3:a01b:3e4a:389f]
-	by sslproxy06.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <marcus.wichelmann@hetzner-cloud.de>)
-	id 1tp8QC-000ICz-06;
-	Mon, 03 Mar 2025 17:13:37 +0100
-Message-ID: <4b69bd2b-a0ad-44f6-9f43-070241bd8089@hetzner-cloud.de>
-Date: Mon, 3 Mar 2025 17:13:34 +0100
+	s=arc-20240116; t=1741019862; c=relaxed/simple;
+	bh=wDHTqD18VJeK7bkhgbzWlBYq/asXp0P6f/1nzXKv+78=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BuIdwpDdKw5LsaKA96kE7KDTL6cWGuavibBeEosWLHJZj/dDSdBhq5Fnrw+S5iNPyRhTXTI6aHRXb+qUYUrLw+KDr28bi0W8Q8vSJbjcUoEkQ+te7V0xWPVPriP2M20MPtDchwOHBKiScqHE4zAVjPonrnCH1OjG2Mp4tKRPMHg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ijvmFAyU; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ijvmFAyU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5788C4CED6;
+	Mon,  3 Mar 2025 16:37:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741019861;
+	bh=wDHTqD18VJeK7bkhgbzWlBYq/asXp0P6f/1nzXKv+78=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ijvmFAyUUslcjV1ax8ZG8N6P7LJ5qri2oVMmR5muyymSwPK4OyFCR7mSJ+zrONlCf
+	 8rW/XEGBGQD49Dsw8L0+xKH+TrmjecLu3C2Gp3VNDFwvThsbyJiYNUJt2RfyMWh172
+	 VIbgILO8pHCB4f3jPUjTV4nXJvRWR9+EJs9rqzfbmMDp+HZH7yx2R4RNCUMXZ0W1rx
+	 HvlhXj0maYz22CmjSyjpjgqmaYAdxco+6hZHgrxa0UAAUjOseBbJwSWx9e/uN3pdIB
+	 aV4xp8D8/HiUswm4DP0uuCtc37ibLrtzAJ8Ksp5ddrMfksUVkiG0iWu8DayWyCymKG
+	 iPPYlZr00/Rxw==
+Date: Mon, 3 Mar 2025 08:37:37 -0800
+From: Kees Cook <kees@kernel.org>
+To: jeffxu@chromium.org
+Cc: akpm@linux-foundation.org, jannh@google.com,
+	torvalds@linux-foundation.org, vbabka@suse.cz,
+	lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com,
+	adhemerval.zanella@linaro.org, oleg@redhat.com, avagin@gmail.com,
+	benjamin@sipsolutions.net, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org, linux-mm@kvack.org,
+	linux-kselftest@vger.kernel.org, jorgelo@chromium.org,
+	sroettger@google.com, hch@lst.de, ojeda@kernel.org,
+	thomas.weissschuh@linutronix.de, adobriyan@gmail.com,
+	johannes@sipsolutions.net, pedro.falcato@gmail.com,
+	hca@linux.ibm.com, willy@infradead.org, anna-maria@linutronix.de,
+	mark.rutland@arm.com, linus.walleij@linaro.org, Jason@zx2c4.com,
+	deller@gmx.de, rdunlap@infradead.org, davem@davemloft.net,
+	peterx@redhat.com, f.fainelli@gmail.com, gerg@kernel.org,
+	dave.hansen@linux.intel.com, mingo@kernel.org, ardb@kernel.org,
+	mhocko@suse.com, 42.hyeyoo@gmail.com, peterz@infradead.org,
+	ardb@google.com, enh@google.com, rientjes@google.com,
+	groeck@chromium.org, mpe@ellerman.id.au,
+	aleksandr.mikhalitsyn@canonical.com, mike.rapoport@gmail.com
+Subject: Re: [PATCH v8 1/7] mseal sysmap: kernel config and header change
+Message-ID: <202503030834.C4ED5911A@keescook>
+References: <20250303050921.3033083-1-jeffxu@google.com>
+ <20250303050921.3033083-2-jeffxu@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Martin KaFai Lau <martin.lau@linux.dev>
-Cc: willemdebruijn.kernel@gmail.com, jasowang@redhat.com,
- andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, ast@kernel.org, daniel@iogearbox.net,
- andrii@kernel.org, eddyz87@gmail.com, song@kernel.org,
- yonghong.song@linux.dev, john.fastabend@gmail.com, kpsingh@kernel.org,
- sdf@fomichev.me, haoluo@google.com, jolsa@kernel.org, mykolal@fb.com,
- shuah@kernel.org, hawk@kernel.org, Willem de Bruijn <willemb@google.com>,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
- linux-kselftest@vger.kernel.org
-References: <20250227142330.1605996-1-marcus.wichelmann@hetzner-cloud.de>
- <20250227142330.1605996-3-marcus.wichelmann@hetzner-cloud.de>
- <090ede76-0c9f-4297-9d5a-7b75aa20ca27@linux.dev>
-Content-Language: en-US
-From: Marcus Wichelmann <marcus.wichelmann@hetzner-cloud.de>
-Autocrypt: addr=marcus.wichelmann@hetzner-cloud.de; keydata=
- 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
- wySmewx3h/yfMh0aFxHhvLPxrO2IEQ==
-Subject: Re: [PATCH bpf-next v4 2/6] net: tun: enable transfer of XDP metadata
- to skb
-In-Reply-To: <090ede76-0c9f-4297-9d5a-7b75aa20ca27@linux.dev>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Authenticated-Sender: marcus.wichelmann@hetzner-cloud.de
-X-Virus-Scanned: Clear (ClamAV 1.0.7/27566/Mon Mar  3 11:10:09 2025)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250303050921.3033083-2-jeffxu@google.com>
 
-Am 28.02.25 um 20:49 schrieb Martin KaFai Lau:
-> On 2/27/25 6:23 AM, Marcus Wichelmann wrote:
->> When the XDP metadata area was used, it is expected that the same
->> metadata can also be accessed from TC, as can be read in the description
->> of the bpf_xdp_adjust_meta helper function. In the tun driver, this was
->> not yet implemented.
->>
->> To make this work, the skb that is being built on XDP_PASS should know
->> of the current size of the metadata area. This is ensured by adding
->> calls to skb_metadata_set. For the tun_xdp_one code path, an additional
->> check is necessary to handle the case where the externally initialized
->> xdp_buff has no metadata support (xdp->data_meta == xdp->data + 1).
->>
->> More information about this feature can be found in the commit message
->> of commit de8f3a83b0a0 ("bpf: add meta pointer for direct access").
->> > Signed-off-by: Marcus Wichelmann <marcus.wichelmann@hetzner-cloud.de>
->> Reviewed-by: Willem de Bruijn <willemb@google.com>
->> Acked-by: Jason Wang <jasowang@redhat.com>
->> ---
->>   drivers/net/tun.c | 25 ++++++++++++++++++++++---
->>   1 file changed, 22 insertions(+), 3 deletions(-)
->>
->> diff --git a/drivers/net/tun.c b/drivers/net/tun.c
->> index 4ec8fbd93c8d..70208b3a2e93 100644
->> --- a/drivers/net/tun.c
->> +++ b/drivers/net/tun.c
+On Mon, Mar 03, 2025 at 05:09:15AM +0000, jeffxu@chromium.org wrote:
+> From: Jeff Xu <jeffxu@chromium.org>
 > 
-> The changes have conflicts with the commit 2506251e81d1 ("tun: Decouple vnet handling").
+> Provide infrastructure to mseal system mappings. Establish
+> two kernel configs (CONFIG_MSEAL_SYSTEM_MAPPINGS,
+> ARCH_SUPPORTS_MSEAL_SYSTEM_MAPPINGS) and VM_SEALED_SYSMAP
+> macro for future patches.
 > 
-> It is better to rebase the works onto the bpf-next/net,
-> i.e. the "net" branch instead of the "master" branch.
+> Signed-off-by: Jeff Xu <jeffxu@chromium.org>
+> ---
+>  include/linux/mm.h | 10 ++++++++++
+>  init/Kconfig       | 22 ++++++++++++++++++++++
+>  security/Kconfig   | 21 +++++++++++++++++++++
+>  3 files changed, 53 insertions(+)
+> 
+> diff --git a/include/linux/mm.h b/include/linux/mm.h
+> index 7b1068ddcbb7..8b800941678d 100644
+> --- a/include/linux/mm.h
+> +++ b/include/linux/mm.h
+> @@ -4155,4 +4155,14 @@ int arch_get_shadow_stack_status(struct task_struct *t, unsigned long __user *st
+>  int arch_set_shadow_stack_status(struct task_struct *t, unsigned long status);
+>  int arch_lock_shadow_stack_status(struct task_struct *t, unsigned long status);
+>  
+> +
+> +/*
+> + * mseal of userspace process's system mappings.
+> + */
+> +#ifdef CONFIG_MSEAL_SYSTEM_MAPPINGS
+> +#define VM_SEALED_SYSMAP	VM_SEALED
+> +#else
+> +#define VM_SEALED_SYSMAP	VM_NONE
+> +#endif
+> +
+>  #endif /* _LINUX_MM_H */
+> diff --git a/init/Kconfig b/init/Kconfig
+> index d0d021b3fa3b..c90dd8778993 100644
+> --- a/init/Kconfig
+> +++ b/init/Kconfig
+> @@ -1882,6 +1882,28 @@ config ARCH_HAS_MEMBARRIER_CALLBACKS
+>  config ARCH_HAS_MEMBARRIER_SYNC_CORE
+>  	bool
+>  
+> +config ARCH_SUPPORTS_MSEAL_SYSTEM_MAPPINGS
+> +	bool
+> +	help
+> +	  Control MSEAL_SYSTEM_MAPPINGS access based on architecture.
+> +
+> +	  A 64-bit kernel is required for the memory sealing feature.
+> +	  No specific hardware features from the CPU are needed.
+> +
+> +	  To enable this feature, the architecture needs to update their
+> +	  special mappings calls to include the sealing flag and confirm
+> +	  that it doesn't unmap/remap system mappings during the life
+> +	  time of the process. The existence of this flag for an architecture
+> +	  implies that it does not require the remapping of thest system
 
-Alright, will do that. Should I send it as a v5 and still with "PATCH bpf-next"
-in the header or something else?
+typo nit: "the" instead of "thest"
 
-Thanks!
-Marcus
+> +	  mappings during process lifetime, so sealing these mappings is safe
+> +	  from a kernel perspective.
+> +
+> +	  After the architecture enables this, a distribution can set
+> +	  CONFIG_MSEAL_SYSTEM_MAPPING to manage access to the feature.
+> +
+> +	  For complete descriptions of memory sealing, please see
+> +	  Documentation/userspace-api/mseal.rst
+> +
+>  config HAVE_PERF_EVENTS
+>  	bool
+>  	help
+> diff --git a/security/Kconfig b/security/Kconfig
+> index f10dbf15c294..5311f4a6786c 100644
+> --- a/security/Kconfig
+> +++ b/security/Kconfig
+> @@ -51,6 +51,27 @@ config PROC_MEM_NO_FORCE
+>  
+>  endchoice
+>  
+> +config MSEAL_SYSTEM_MAPPINGS
+> +	bool "mseal system mappings"
+> +	depends on 64BIT
+> +	depends on ARCH_SUPPORTS_MSEAL_SYSTEM_MAPPINGS
+> +	depends on !CHECKPOINT_RESTORE
+> +	help
+> +	  Apply mseal on system mappings.
+> +	  The system mappings includes vdso, vvar, vvar_vclock,
+> +	  vectors (arm compact-mode), sigpage (arm compact-mode), uprobes.
+
+typo nits: "compat" instead of "compact".
+
+> +
+> +	  A 64-bit kernel is required for the memory sealing feature.
+> +	  No specific hardware features from the CPU are needed.
+> +
+> +	  WARNING: This feature breaks programs which rely on relocating
+> +	  or unmapping system mappings. Known broken software at the time
+> +	  of writing includes CHECKPOINT_RESTORE, UML, gVisor, rr. Therefore
+> +	  this config can't be enabled universally.
+> +
+> +	  For complete descriptions of memory sealing, please see
+> +	  Documentation/userspace-api/mseal.rst
+> +
+>  config SECURITY
+>  	bool "Enable different security models"
+>  	depends on SYSFS
+> -- 
+> 2.48.1.711.g2feabab25a-goog
+> 
+
+Perhaps akpm can fix these up directly instead of a v9 spin?
+
+But otherwise, yes, reads well to me:
+
+Reviewed-by: Kees Cook <kees@kernel.org>
+
+-- 
+Kees Cook
