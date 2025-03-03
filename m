@@ -1,137 +1,179 @@
-Received: from smtp-fw-9102.amazon.com (smtp-fw-9102.amazon.com [207.171.184.29])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f196.google.com (mail-pl1-f196.google.com [209.85.214.196])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85A8B53365;
-	Mon,  3 Mar 2025 13:30:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.171.184.29
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD65D212B15;
+	Mon,  3 Mar 2025 13:30:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741008626; cv=none; b=INAlfBJFFfapxVocY3KodjtLHgjepk5o1oyOjZApsQX4Dwd/1xv3GZN1jlPWG9Grd53zoQKbPhB19/r7+Xa/6jlSVivLvIDbP21Y7c4vvYDT3p3tEqpjYC0RiS8W3/iiaKu/Kg+AOHsxl+jUQ1tTr9gCfYHCwbSSpPz22/kiESU=
+	t=1741008631; cv=none; b=hnCw1DRHlIluVcfqY0dMSjrvWjFzAzQUHyjYcmGb8xEK+X+FtNMB05fzcAzBpyKzo+5VwxE+GdEueRnfpnscmXBZy5OV/AW+xp6I0lv2WJ937Kp24BNRtfYa2wslj1k5n5zDtewb3OV5TQwCDwOF8HCh4uz/v4bbYwDRzz0Df/s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741008626; c=relaxed/simple;
-	bh=MyaeKqfVcMrkKZ9YXltjW2dOr6aOi7EKVIuukUVWLRg=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=JtsfifJpDh51QTkYxcHff2I6vVrnZ8hEuLXMCjes86IhYFZbUOFF62VM9Tcr3Mx0P3sd8hmrwen/jjwL6g47QOr5xt9thjahf8DBO//e80WHzl35zVrzOsWWskp0gjPoEhJwVohy9YpFbFddy1dtB6JYxXZlgWTsnDe0fe1/jE8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.uk; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=ITTKtL4D; arc=none smtp.client-ip=207.171.184.29
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.uk
+	s=arc-20240116; t=1741008631; c=relaxed/simple;
+	bh=bWdVzLVWRtavYw5+TVc3lHNfvzogIph6bEYfLtcnLfk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=rLxlE0FKI0UZCVe4rSz/zBWC85ETV6C+cG92ObCN9i+A1lPPTh6nc6rxw7e1V2ptWKr6E79XUKCeUPCYfwkQrcC0A7pgjGGDpGD4G15Jy+tOSvBMylHLqJjPmelMFYpSplHx/YjS87XVGKYvBn4FDoZ3cqIh+l/DSlYKNtYkCU8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=d6YGDhyn; arc=none smtp.client-ip=209.85.214.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="ITTKtL4D"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d6YGDhyn"
+Received: by mail-pl1-f196.google.com with SMTP id d9443c01a7336-22349dc31bcso75967265ad.3;
+        Mon, 03 Mar 2025 05:30:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1741008624; x=1772544624;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=2L3Lyb/8WcMt5Xzo+0pszQ2qfPvOzityflFvXPF/tvA=;
-  b=ITTKtL4DflFJzaMt/1iqJ6tvidMkgcLJb5gCKMhVftiv/eUt1Zy2Ay+s
-   N4q4qv5FU/c4Gc9IpGoyP6hs3bSD3scCWYiQ/q8DPVhIcW3lBk+bfvirg
-   8bU95t7Ejp4D9TsVtyMLnLsXRhDXwcOcrWLjCyGSbUzSNJrYJMk/WTgff
-   4=;
-X-IronPort-AV: E=Sophos;i="6.13,329,1732579200"; 
-   d="scan'208";a="498891611"
-Received: from pdx4-co-svc-p1-lb2-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.214])
-  by smtp-border-fw-9102.sea19.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Mar 2025 13:30:18 +0000
-Received: from EX19MTAUWA002.ant.amazon.com [10.0.7.35:4349]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.53.36:2525] with esmtp (Farcaster)
- id 30b52795-a314-42f7-b716-d33823c57578; Mon, 3 Mar 2025 13:30:18 +0000 (UTC)
-X-Farcaster-Flow-ID: 30b52795-a314-42f7-b716-d33823c57578
-Received: from EX19D020UWA001.ant.amazon.com (10.13.138.249) by
- EX19MTAUWA002.ant.amazon.com (10.250.64.202) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Mon, 3 Mar 2025 13:30:15 +0000
-Received: from EX19MTAUWC002.ant.amazon.com (10.250.64.143) by
- EX19D020UWA001.ant.amazon.com (10.13.138.249) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Mon, 3 Mar 2025 13:30:15 +0000
-Received: from email-imr-corp-prod-pdx-all-2c-8a67eb17.us-west-2.amazon.com
- (10.25.36.210) by mail-relay.amazon.com (10.250.64.149) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id
- 15.2.1544.14 via Frontend Transport; Mon, 3 Mar 2025 13:30:15 +0000
-Received: from dev-dsk-kalyazin-1a-a12e27e2.eu-west-1.amazon.com (dev-dsk-kalyazin-1a-a12e27e2.eu-west-1.amazon.com [172.19.103.116])
-	by email-imr-corp-prod-pdx-all-2c-8a67eb17.us-west-2.amazon.com (Postfix) with ESMTPS id 014DD40434;
-	Mon,  3 Mar 2025 13:30:12 +0000 (UTC)
-From: Nikita Kalyazin <kalyazin@amazon.com>
-To: <akpm@linux-foundation.org>, <pbonzini@redhat.com>, <shuah@kernel.org>
-CC: <kvm@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
-	<lorenzo.stoakes@oracle.com>, <david@redhat.com>, <ryan.roberts@arm.com>,
-	<quic_eberman@quicinc.com>, <jthoughton@google.com>, <peterx@redhat.com>,
-	<graf@amazon.de>, <jgowans@amazon.com>, <roypat@amazon.co.uk>,
-	<derekmn@amazon.com>, <nsaenz@amazon.es>, <xmarcalx@amazon.com>,
-	<kalyazin@amazon.com>
-Subject: [RFC PATCH 0/5] KVM: guest_memfd: support for uffd missing
-Date: Mon, 3 Mar 2025 13:30:06 +0000
-Message-ID: <20250303133011.44095-1-kalyazin@amazon.com>
-X-Mailer: git-send-email 2.47.1
+        d=gmail.com; s=20230601; t=1741008629; x=1741613429; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=gNjkZXsFxPWFMyK2OgocbrFn2IS3HWHLODQTFVqVxX4=;
+        b=d6YGDhynFBYCicMoJndNUn2iixQPihBeBsSdb/DJN1CNomZ2FH99sTpeP+iEHBMTA8
+         A728yazUhWaMq+ZhxgG893WPHcJNdwOEL2ovzCD+T7WLI+mw+2xp8PX5k+MmNbK7R9fH
+         BJuiY/8AL76Q/pYvU1XpLqNkm4flQDMox/LFT+lJTXd5ZOSAoFRAekdPif1pbq21ZVBq
+         KVymGAETuXMP3dJhQ3aMpwR4RB7tPS+69KoFMOxlALpspheu47zl8HmoO/YgMeI6ALuA
+         Q2/QbsDMEjExw/+mzOCywZg45WfBtgBofoNx/pPqOZe174wiJ9rSkEox7Z8sKuLzNGBh
+         4JXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741008629; x=1741613429;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=gNjkZXsFxPWFMyK2OgocbrFn2IS3HWHLODQTFVqVxX4=;
+        b=BR5oil1o6p3zHVOpWcn3VI4JqV2+CjszXRFAN9kJ7yomvj5GBrGp807ZG6R+dHgObj
+         c25gOX9XWKAHirpm/nyoQtPXB4KtxZpBf9BzmfxEmim07mlbiRnZpFQJEoKt1srcmyyn
+         0l9QaTcLS7n3slVzsL5H5upsuP6cu9MyJvSNIWg8pPA88D5tPFz1R1VAgyYkA643TPGJ
+         WXRhr+IG0AUrNCtoETvIlIBpYdVW69Kw3RGlpZETmAfIB08MQMnkF5rPBOzzEAvqj5ZU
+         eYK2NhdejFAb1XIG0uJMxlTDJcIzURbFmOWiDgOHHyk4Ci869wDHMkEoVDRW5OUuh6MV
+         +CqQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUVm8V8DUDEFQjHzlaV290r+8RFaaZVL7m8Ar6AHoeH/qX+5WHh+kms7EBFLfThwcEQoBkwNQTr@vger.kernel.org, AJvYcCUk52hOLiQJB4Fz38zVW4feBblOUzBQ70VcvCdmwhfOGM9T4dRj798dwL4BJrsROg44frY=@vger.kernel.org, AJvYcCVD9byp5ywtSQd63k099HP+ZFihNqGAolk8xLy+4CeOe/6uCf64HKuEgj+Ih28EsZ3hqDpkomM7F+V9h34L@vger.kernel.org, AJvYcCVX3xjOOPtde6JaM9bpSzZP/hk3sKVgkr6KXJ39o0eVJDx+UpkmgXpHtTtoFGpwNiikllsOlTxf0YdTm3BTwFQk5umm@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx9BA9XQx4s/Wa+96WArzM109k7opCqOkgRJbmbwvEhh5xLujWj
+	9fWvEI2sp1C78u6jJw/KesQK6rtZsqBzafxR9F32YN3rR3k/hKtD
+X-Gm-Gg: ASbGnctv1w4XHYBz92amDn3fs6NpK4eNaumxU3SUCxibAWbTT3EOT7Hl4D3j83CU4XS
+	nWZ2Zbb7yL8iLSJu6ZzeCxMDahqzgDlDYDDqK3QyD3+SPSkO2kXWq6MWDTVMn7+yhrGRwDPud0w
+	ildBKy2UBKfz+McXjUJYMkPkN2C08sdp1QpbCRZSWuWjii1Iq+2xd00poBTGLVPyFY/MTuM4JlJ
+	KTlanD8TXPVgZfcp+0WFhRlY+iXdheRZUNqr46pvDiCO77C8LFVdY9PE8e9I6u+vd9FDrtR82c1
+	g1N+IicJJZ1w3aG21Pc3C0ShN4BrKdsK3k9Pl7WVl1u3AvgP3jJAlZA4Jqefdw==
+X-Google-Smtp-Source: AGHT+IGzwQpz8i9IoNIFYRlZqYmQzdkErFQv2wnbEGpUy1JVrV1T6QdikCneYnb/qYuevmlNGOS4BA==
+X-Received: by 2002:a17:903:244d:b0:210:fce4:11ec with SMTP id d9443c01a7336-22368f6a5f1mr188695035ad.1.1741008628736;
+        Mon, 03 Mar 2025 05:30:28 -0800 (PST)
+Received: from localhost.localdomain ([43.129.244.20])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-223505359b8sm77297035ad.253.2025.03.03.05.30.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Mar 2025 05:30:28 -0800 (PST)
+From: Menglong Dong <menglong8.dong@gmail.com>
+X-Google-Original-From: Menglong Dong <dongml2@chinatelecom.cn>
+To: peterz@infradead.org,
+	rostedt@goodmis.org,
+	mark.rutland@arm.com,
+	alexei.starovoitov@gmail.com
+Cc: catalin.marinas@arm.com,
+	will@kernel.org,
+	mhiramat@kernel.org,
+	tglx@linutronix.de,
+	mingo@redhat.com,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	x86@kernel.org,
+	hpa@zytor.com,
+	ast@kernel.org,
+	daniel@iogearbox.net,
+	andrii@kernel.org,
+	martin.lau@linux.dev,
+	eddyz87@gmail.com,
+	yonghong.song@linux.dev,
+	john.fastabend@gmail.com,
+	kpsingh@kernel.org,
+	sdf@fomichev.me,
+	jolsa@kernel.org,
+	davem@davemloft.net,
+	dsahern@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	nathan@kernel.org,
+	nick.desaulniers+lkml@gmail.com,
+	morbo@google.com,
+	samitolvanen@google.com,
+	kees@kernel.org,
+	dongml2@chinatelecom.cn,
+	akpm@linux-foundation.org,
+	riel@surriel.com,
+	rppt@kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	bpf@vger.kernel.org,
+	netdev@vger.kernel.org,
+	llvm@lists.linux.dev
+Subject: [PATCH v4 0/4] per-function storage support
+Date: Mon,  3 Mar 2025 21:28:33 +0800
+Message-Id: <20250303132837.498938-1-dongml2@chinatelecom.cn>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 
-This series is built on top of the v3 write syscall support [1].
+For now, there isn't a way to set and get per-function metadata with
+a low overhead, which is not convenient for some situations. Take
+BPF trampoline for example, we need to create a trampoline for each
+kernel function, as we have to store some information of the function
+to the trampoline, such as BPF progs, function arg count, etc. The
+performance overhead and memory consumption can be higher to create
+these trampolines. With the supporting of per-function metadata storage,
+we can store these information to the metadata, and create a global BPF
+trampoline for all the kernel functions. In the global trampoline, we
+get the information that we need from the function metadata through the
+ip (function address) with almost no overhead.
 
-With James's KVM userfault [2], it is possible to handle stage-2 faults
-in guest_memfd in userspace.  However, KVM itself also triggers faults
-in guest_memfd in some cases, for example: PV interfaces like kvmclock,
-PV EOI and page table walking code when fetching the MMIO instruction on
-x86.  It was agreed in the guest_memfd upstream call on 23 Jan 2025 [3]
-that KVM would be accessing those pages via userspace page tables.  In
-order for such faults to be handled in userspace, guest_memfd needs to
-support userfaultfd.
+Another beneficiary can be ftrace. For now, all the kernel functions that
+are enabled by dynamic ftrace will be added to a filter hash if there are
+more than one callbacks. And hash lookup will happen when the traced
+functions are called, which has an impact on the performance, see
+__ftrace_ops_list_func() -> ftrace_ops_test(). With the per-function
+metadata supporting, we can store the information that if the callback is
+enabled on the kernel function to the metadata.
 
-This series proposes a limited support for userfaultfd in guest_memfd:
- - userfaultfd support is conditional to `CONFIG_KVM_GMEM_SHARED_MEM`
-   (as is fault support in general)
- - Only `page missing` event is currently supported
- - Userspace is supposed to respond to the event with the `write`
-   syscall followed by `UFFDIO_CONTINUE` ioctl to unblock the faulting
-   process.   Note that we can't use `UFFDIO_COPY` here because
-   userfaulfd code does not know how to prepare guest_memfd pages, eg
-   remove them from direct map [4].
+In the 1st patch, we factor out FINEIBT_INSN_OFFSET and CFI_INSN_OFFSET to
+make fineibt works when the kernel function is 32-bytes aligned.
 
-Not included in this series:
- - Proper interface for userfaultfd to recognise guest_memfd mappings
- - Proper handling of truncation cases after locking the page
+In the 2nd patch, we implement the per-function metadata storage by
+storing the index of the metadata to the function padding space.
 
-Request for comments:
- - Is it a sensible workflow for guest_memfd to resolve a userfault
-   `page missing` event with `write` syscall + `UFFDIO_CONTINUE`?  One
-   of the alternatives is teaching `UFFDIO_COPY` how to deal with
-   guest_memfd pages.
- - What is a way forward to make userfaultfd code aware of guest_memfd?
-   I saw that Patrick hit a somewhat similar problem in [5] when trying
-   to use direct map manipulation functions in KVM and was pointed by
-   David at Elliot's guestmem library [6] that might include a shim for that.
-   Would the library be the right place to expose required interfaces like
-   `vma_is_gmem`?
+In the 3rd and 4th patch, we implement the per-function metadata storage
+for x86 and arm64. And in the feature, we can support more arch.
 
-Nikita
+Changes since V3:
+- rebase to the newest tip/x86/core, the fineibt has some updating
 
-[1] https://lore.kernel.org/kvm/20250303130838.28812-1-kalyazin@amazon.com/T/
-[2] https://lore.kernel.org/kvm/20250109204929.1106563-1-jthoughton@google.com/T/
-[3] https://docs.google.com/document/d/1M6766BzdY1Lhk7LiR5IqVR8B8mG3cr-cxTxOrAosPOk/edit?tab=t.0#heading=h.w1126rgli5e3
-[4] https://lore.kernel.org/kvm/20250221160728.1584559-1-roypat@amazon.co.uk/T/
-[4] https://lore.kernel.org/kvm/20250221160728.1584559-1-roypat@amazon.co.uk/T/#ma130b29c130dbdc894aa08d8d56c16ec383f36dd
-[5] https://lore.kernel.org/kvm/20241122-guestmem-library-v5-2-450e92951a15@quicinc.com/T/
+Changes since V2:
+- split the patch into a series.
+- considering the effect to cfi and fineibt and introduce the 1st patch.
 
-Nikita Kalyazin (5):
-  KVM: guest_memfd: add kvm_gmem_vma_is_gmem
-  KVM: guest_memfd: add support for uffd missing
-  mm: userfaultfd: allow to register userfaultfd for guest_memfd
-  mm: userfaultfd: support continue for guest_memfd
-  KVM: selftests: add uffd missing test for guest_memfd
+Changes since V1:
+- add supporting for arm64
+- split out arch relevant code
+- refactor the commit log
 
- include/linux/userfaultfd_k.h                 |  9 ++
- mm/userfaultfd.c                              | 23 ++++-
- .../testing/selftests/kvm/guest_memfd_test.c  | 88 +++++++++++++++++++
- virt/kvm/guest_memfd.c                        | 17 +++-
- virt/kvm/kvm_mm.h                             |  1 +
- 5 files changed, 136 insertions(+), 2 deletions(-)
+Menglong Dong (4):
+  x86/ibt: factor out cfi and fineibt offset
+  add per-function metadata storage support
+  x86: implement per-function metadata storage for x86
+  arm64: implement per-function metadata storage for arm64
 
+ arch/arm64/Kconfig              |  15 ++
+ arch/arm64/Makefile             |  23 ++-
+ arch/arm64/include/asm/ftrace.h |  34 +++++
+ arch/arm64/kernel/ftrace.c      |  13 +-
+ arch/x86/Kconfig                |  18 +++
+ arch/x86/include/asm/cfi.h      |  13 +-
+ arch/x86/include/asm/ftrace.h   |  54 ++++++++
+ arch/x86/kernel/alternative.c   |  18 ++-
+ arch/x86/net/bpf_jit_comp.c     |  22 +--
+ include/linux/kfunc_md.h        |  25 ++++
+ kernel/Makefile                 |   1 +
+ kernel/trace/Makefile           |   1 +
+ kernel/trace/kfunc_md.c         | 239 ++++++++++++++++++++++++++++++++
+ 13 files changed, 450 insertions(+), 26 deletions(-)
+ create mode 100644 include/linux/kfunc_md.h
+ create mode 100644 kernel/trace/kfunc_md.c
 
-base-commit: 592e7531753dc4b711f96cd1daf808fd493d3223
 -- 
-2.47.1
+2.39.5
 
