@@ -1,156 +1,148 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AF63E1D86DC;
-	Mon,  3 Mar 2025 10:53:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 874B91F37C3;
+	Mon,  3 Mar 2025 10:53:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740999209; cv=none; b=Hfe5RD4LKxqvlI7fnjIh7gC7QS4GIjETAS3UDTJeuULZXMDxLYAt9e2TcE0QQH9pDhk516ZAC5ngGfLnEqSAiIscQg04WcUcDxKjNiUh9b3IVbPlKr5/3QFRAmuXSMvMr2ZdkenMnx9ezTdUHtQK569eHO6jp5mF5vjlerzNkp8=
+	t=1740999210; cv=none; b=Gd6M8mEkMe78rr51JFmg0YLP773KvBhDnErhsW5tM5FFA3XAVjur2r2cqZBalzx/T3hIXEFhMLgACGxFuUIC34Byln7IV+m7z7myRvPGYui8tupXN7Ta536SzFqvCakdcqlgiKUaVVZZn1xAts+o22vaa/FAeW+b1ZeMHch9LJg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740999209; c=relaxed/simple;
-	bh=D/JJYc7CC4L1PwjxPEAjthi7kwvPmgsbn4RERhgQtLc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=t+UMx2DQ/RkcIvGNQ7TVK03HE5P1zx9zwVQrYVCWa/aDN05x1bZbVq0hEViBC6J3BkzXdJusI0EAA0Jpysb3vB1tt2IoxN0g0sVxhmxf0BW0jQsW5YWKom36z4qWkQ77AfCk54YokHeigCPT+0bg56COmLm5hxWTlpjd6fKmv2g=
+	s=arc-20240116; t=1740999210; c=relaxed/simple;
+	bh=ya1Jrm60aOw5PBdsWiepbv15t4GIYWfri5Jp+tE1yVE=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=UJtAlIcXgCqayj4jWi1zlplWKwcMsVd5bwlyONajEg5Vz87BaL8GMg3CC+GjziX0dfKHslMVKI7y7iMyQadZuISPe1qdl/woPLrXDRvFXqbDQr4s6h9SutSiC9fqmkt9X30BKpULK0vOX10srv4VUGa5DkYW+cXwGBMa4Ra5RW0=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 29C9E1FC7;
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CC83B1FCD;
 	Mon,  3 Mar 2025 02:53:41 -0800 (PST)
-Received: from [10.57.66.216] (unknown [10.57.66.216])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 491443F778;
-	Mon,  3 Mar 2025 02:53:25 -0800 (PST)
-Message-ID: <93ddb2d9-ce3d-4e6d-bf5f-0b30b2d04d84@arm.com>
-Date: Mon, 3 Mar 2025 10:53:23 +0000
+Received: from e133711.arm.com (e133711.arm.com [10.1.196.55])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8CB103F673;
+	Mon,  3 Mar 2025 02:53:26 -0800 (PST)
+From: Sudeep Holla <sudeep.holla@arm.com>
+Date: Mon, 03 Mar 2025 10:51:37 +0000
+Subject: [PATCH 02/14] mailbox: pcc: Always clear the platform ack
+ interrupt first
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] thermal: thermal-generic-adc: add temperature
- sensor channel
-To: Svyatoslav Ryhel <clamor95@gmail.com>
-Cc: linux-pm@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Rob Herring <robh@kernel.org>,
- devicetree@vger.kernel.org, Zhang Rui <rui.zhang@intel.com>,
- Daniel Lezcano <daniel.lezcano@linaro.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>,
- Laxman Dewangan <ldewangan@nvidia.com>, linux-kernel@vger.kernel.org
-References: <20250219082817.56339-1-clamor95@gmail.com>
- <20250219082817.56339-3-clamor95@gmail.com>
- <99ee61dc-abd5-45d9-8d26-a8f0ae94c8eb@arm.com>
- <CAPVz0n0uWEY+-evrfpci9-1c3icGyHfTHMbXi=P9Sv=Uh3AUaA@mail.gmail.com>
-Content-Language: en-US
-From: Lukasz Luba <lukasz.luba@arm.com>
-In-Reply-To: <CAPVz0n0uWEY+-evrfpci9-1c3icGyHfTHMbXi=P9Sv=Uh3AUaA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250303-pcc_fixes_updates-v1-2-3b44f3d134b1@arm.com>
+References: <20250303-pcc_fixes_updates-v1-0-3b44f3d134b1@arm.com>
+In-Reply-To: <20250303-pcc_fixes_updates-v1-0-3b44f3d134b1@arm.com>
+To: linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Sudeep Holla <sudeep.holla@arm.com>, 
+ Jassi Brar <jassisinghbrar@gmail.com>, Huisong Li <lihuisong@huawei.com>, 
+ Adam Young <admiyo@os.amperecomputing.com>, 
+ Robbie King <robbiek@xsightlabs.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3887; i=sudeep.holla@arm.com;
+ h=from:subject:message-id; bh=ya1Jrm60aOw5PBdsWiepbv15t4GIYWfri5Jp+tE1yVE=;
+ b=owEBbQKS/ZANAwAIAQBBurwxfuKYAcsmYgBnxYohPuaxjsJrjuOasFqvT0SAC+ARa0woaE+BG
+ a4mOM2fsSyJAjMEAAEIAB0WIQS6ceUSBvMeskPdk+EAQbq8MX7imAUCZ8WKIQAKCRAAQbq8MX7i
+ mNaJD/wJbb2JBJ0hwZzY9nejOrjiXz2YuNZ/CKbx5JlK20WUwgaNVKxawpc90uGXtkIDfBdiXRB
+ MzALhafutliezmH+l+OATG6g4HCCKGK1nUXWFkE6jOYTTLiwDDL8nOcB4iDXk48DFavpm/LbcPP
+ rL5xw7wIQ+2XqNC5RKr0sj2kcwMn3gCS8CsI1lYXFUpFUxJkRXDNqv1VBjemyPSWGjFqfnx30od
+ Iiob+ui1z2pLfUtES9Kbs1mOBw1oe0Xf6RK250RT9XIeBi+H53N7QzSOuUpuPa7NxCanThdrphC
+ TsTC/V73nbhRkY/2Q15xo4462fj56BnsLOexbpP0uDafX2rM3hIBb6hUShWNC3e9yGmV0JTiDQT
+ K4lRI6J8yaXUAfiiE+BW97I7plht5loUhzNan/3ie2jkQOwsbDLgmApCtBWEatLoZhd9pmPwC48
+ zwyWFQRsCvmRkSnNgDeWGA6kmte1EFWO3NysGkDUN8zevUt0ws6dqfg5Mg7FGV05hhowetZhIn0
+ ZMc+Ika9t0Tbr4inLFL6XmLTwZvniQT1kQYeCUFZYzweqnzO4ROpeRcPD4wDMzL27Y+XgbT0++o
+ P+xW5V4o7Uic1P0TW/oQgLAmU3qjGHkuIUCV4y0DlscLzYD9jV8qAr2aOCU59KP1UWX0WNYOSj7
+ OGl3VUotqBe51sw==
+X-Developer-Key: i=sudeep.holla@arm.com; a=openpgp;
+ fpr=7360A21742ADF5A11767C1C139CFD4755FE2D5B4
 
+The PCC mailbox interrupt handler (pcc_mbox_irq()) currently checks
+for command completion flags and any error status before clearing the
+interrupt.
 
+The below sequence highlights an issue in the handling of PCC mailbox
+interrupts, specifically when dealing with doorbell notifications and
+acknowledgment between the OSPM and the platform where type3 and type4
+channels are sharing the interrupt.
 
-On 2/28/25 13:22, Svyatoslav Ryhel wrote:
-> пт, 28 лют. 2025 р. о 15:11 Lukasz Luba <lukasz.luba@arm.com> пише:
->>
->> Hi Svyatoslav,
->>
->> On 2/19/25 08:28, Svyatoslav Ryhel wrote:
->>> Add IIO sensor channel along with existing thermal sensor cell. This
->>> would benefit devices that use adc sensors to detect temperature and
->>> need a custom conversion table.
->>>
->>> Signed-off-by: Svyatoslav Ryhel <clamor95@gmail.com>
->>> ---
->>>    drivers/thermal/thermal-generic-adc.c | 54 ++++++++++++++++++++++++++-
->>>    1 file changed, 53 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/drivers/thermal/thermal-generic-adc.c b/drivers/thermal/thermal-generic-adc.c
->>> index ee3d0aa31406..a8f3b965b39b 100644
->>> --- a/drivers/thermal/thermal-generic-adc.c
->>> +++ b/drivers/thermal/thermal-generic-adc.c
->>> @@ -7,6 +7,7 @@
->>>     * Author: Laxman Dewangan <ldewangan@nvidia.com>
->>>     */
->>>    #include <linux/iio/consumer.h>
->>> +#include <linux/iio/iio.h>
->>>    #include <linux/kernel.h>
->>>    #include <linux/module.h>
->>>    #include <linux/platform_device.h>
->>> @@ -73,6 +74,57 @@ static const struct thermal_zone_device_ops gadc_thermal_ops = {
->>>        .get_temp = gadc_thermal_get_temp,
->>>    };
->>>
->>> +static const struct iio_chan_spec gadc_thermal_iio_channel[] = {
->>> +     {
->>> +             .type = IIO_TEMP,
->>> +             .info_mask_separate = BIT(IIO_CHAN_INFO_PROCESSED),
->>> +     }
->>> +};
->>> +
->>> +static int gadc_thermal_read_raw(struct iio_dev *indio_dev,
->>> +                              struct iio_chan_spec const *chan,
->>> +                              int *temp, int *val2, long mask)
->>> +{
->>> +     struct gadc_thermal_info *gtinfo = iio_priv(indio_dev);
->>> +     int ret;
->>> +
->>> +     if (mask != IIO_CHAN_INFO_PROCESSED)
->>> +             return -EINVAL;
->>> +
->>> +     ret = gadc_thermal_get_temp(gtinfo->tz_dev, temp);
->>> +     if (ret < 0)
->>> +             return ret;
->>> +
->>> +     *temp /= 1000;
->>> +
->>> +     return IIO_VAL_INT;
->>> +}
->>> +
->>> +static const struct iio_info gadc_thermal_iio_info = {
->>> +     .read_raw = gadc_thermal_read_raw,
->>> +};
->>> +
->>> +static int gadc_iio_register(struct device *dev, struct gadc_thermal_info *gti)
->>> +{
->>> +     struct gadc_thermal_info *gtinfo;
->>> +     struct iio_dev *indio_dev;
->>> +
->>> +     indio_dev = devm_iio_device_alloc(dev, sizeof(struct gadc_thermal_info));
->>> +     if (!indio_dev)
->>> +             return -ENOMEM;
->>> +
->>> +     gtinfo = iio_priv(indio_dev);
->>> +     memcpy(gtinfo, gti, sizeof(struct gadc_thermal_info));
->>> +
->>> +     indio_dev->name = dev_name(dev);
->>> +     indio_dev->info = &gadc_thermal_iio_info;
->>> +     indio_dev->modes = INDIO_DIRECT_MODE;
->>> +     indio_dev->channels = gadc_thermal_iio_channel;
->>> +     indio_dev->num_channels = ARRAY_SIZE(gadc_thermal_iio_channel);
->>> +
->>> +     return devm_iio_device_register(dev, indio_dev);
->>
->> I don't get the idea why we need iio device, while we already have the
->> hwmon.
->>
-> 
-> Idea behind this is to be able to convert adc iio channel into temp
-> iio channel without introducing a new sensor which will duplicate
-> behavior of existing one (by this I mean conversion table use). Not
-> all devices can or have to use hwmon and some may require iio channel
-> hooked up.
-> 
-> Real life example. I own a device (LG P985) which has a fuel gauge
-> that does not support battery thermal readings. Vendor provided a
-> dedicated adc sensor and one of its channels is used as thermal sensor
-> with device specific conversion table. Fuel gauge on the other hand
-> supports linking in a dedicated temp iio channel to get thermal
-> readings.
+        Platform Firmware              OSPM/Linux PCC driver
+------------------------------------------------------------------------
+                                     build message in shmem
+                                     ring type3 channel doorbell
+receives the doorbell interrupt
+  process the message from OSPM
+  build response for the message
+ring the platform ack interrupt to OSPM
+				--->
+build notification in type4 channel
+                                     start processing in pcc_mbox_irq()
+                                      enter pcc handler for type4 chan
+                                         command complete cleared
+			        	 read the notification
+                                <---     clear platform ack irq
+  		* no effect from above as platform ack irq *
+		* not yet triggered on this channel *
+ring the platform ack irq on type4 channel
+				--->
+                                      leave pcc handler for type4 chan
+                                      enter pcc handler for type3 chan
+                                         command complete set
+					 read the response
+                                <---     clear platform ack irq
+                                      leave pcc handler for type3 chan
+                                     leave pcc_mbox_irq() handler
+                                     start processing in pcc_mbox_irq()
+                                      enter pcc handler for type4 chan
+                                      leave pcc handler for type4 chan
+                                      enter pcc handler for type3 chan
+                                      leave pcc handler for type3 chan
+                                     leave pcc_mbox_irq() handler
 
-Thanks. IMO you can add these two sentences into the patch header.
-It's telling more about the need of this change.
+The key issue occurs when OSPM tries to acknowledge platform ack
+interrupt for a notification which is ready to be read and processed
+but the interrupt itself is not yet triggered by the platform.
 
-BTW, I would like to see later how you use it in your battery driver
-(please add me on CC, because I'm curious).
+This ineffective acknowledgment leads to an issue later in time where
+the interrupt remains pending as we exit the interrupt handler without
+clearing the platform ack interrupt as there is no pending response or
+notification. The interrupt acknowledgment order is incorrect.
 
-The code looks good, so please resend with better patch header
-and I'll review the whole patch
+To resolve this issue, the platform acknowledgment interrupt should
+always be cleared before processing the interrupt for any notifications
+or response.
+
+Reported-by: Robbie King <robbiek@xsightlabs.com>
+Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+---
+ drivers/mailbox/pcc.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/mailbox/pcc.c b/drivers/mailbox/pcc.c
+index f2e4087281c70eeb5b9b33371596613a371dff4f..4c582fa2b8bf4c9a9368dba8220f567555dba963 100644
+--- a/drivers/mailbox/pcc.c
++++ b/drivers/mailbox/pcc.c
+@@ -313,6 +313,10 @@ static irqreturn_t pcc_mbox_irq(int irq, void *p)
+ 	int ret;
+ 
+ 	pchan = chan->con_priv;
++
++	if (pcc_chan_reg_read_modify_write(&pchan->plat_irq_ack))
++		return IRQ_NONE;
++
+ 	if (pchan->type == ACPI_PCCT_TYPE_EXT_PCC_MASTER_SUBSPACE &&
+ 	    !pchan->chan_in_use)
+ 		return IRQ_NONE;
+@@ -330,9 +334,6 @@ static irqreturn_t pcc_mbox_irq(int irq, void *p)
+ 		return IRQ_NONE;
+ 	}
+ 
+-	if (pcc_chan_reg_read_modify_write(&pchan->plat_irq_ack))
+-		return IRQ_NONE;
+-
+ 	/*
+ 	 * Clear this flag immediately after updating interrupt ack register
+ 	 * to avoid possible race in updatation of the flag from
+
+-- 
+2.34.1
+
