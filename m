@@ -1,178 +1,89 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1F1823BF88
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 16:30:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1396823C8DE;
+	Mon,  3 Mar 2025 16:30:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741019435; cv=none; b=sESba6hK6d79Hj/2OS2fla8Y2edm8Dz98ONGxMud7N5AAdRGRCgn30VFHBGYaWj1h9ixyQ/oDAMawB+lO01rkatO9fgn2oAIksn/S+N5sufjx2gWV4qKGMONQITj9f8wEfWzRNFICTP5WKFlyjilUyhOVAZFWP5lcXOwsdxqWgU=
+	t=1741019436; cv=none; b=bWSka9482Li5yEFC2ElbMj15z61Jf89EF9bnUQpoNX3mXQ+YhfZANWXeUfKnCbYnwJo/D2z0w9Xx1tZwjt5jz8NDLeLR4XCh8YtwhLYOxtlPHQSu+vX3/iyZoxfw7dSdoQ1IPWqgViKtsr4Vypuhc/08CQX4pR+Yk6y1pulsLHs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741019435; c=relaxed/simple;
-	bh=3SmHXztWFIDnuQM+XInecxapotD7TtFOOmhMRtX7whw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=A9aWg27dOk72/iT1yvZ3n4V5Mv3M6KMS6jCU1JJAyZZnLz9cQiWaE5GVncoh5E6xRLNkguy8YTg7Io4rLDg9seXwJ8gPXawVjACYAvkMjEdI6OVBDscsH9maQNbcIMUHyA2Q+1ARIwTFw1lqr+/oA90jdEW+BAEtOMKr42noHAg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UkEcHXnI; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1741019436; c=relaxed/simple;
+	bh=4M7qw2BCNap/yj1lp7E2M6gYvaxv2EvIQCTCMGBcr1g=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=noNb9qpJ0gx91lqye8ry2PxOAmfQGBgJa4ZEq6MWtw3PPm5l1XMSKfUT7ShX72aNemiPKfMD4pNckPBeQ09zgtRlSLsQMqrWPCTtuKjw5ronV3rddMH1XxJAbioYSkr9VvsMy/NBCVvFf3vd/4XhtaEE5TvHl3Ax53M5CYaMFh8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PBnZRU0r; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UkEcHXnI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1741019432;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8IqquS7ke+4+XOv5L24m6qSx7K0PzdfhIUdS/cnqyVA=;
-	b=UkEcHXnI3GLF8ReZDaoyS0YCTDlM4iKUqNgir6Zga/hCyQZHPEahy5rg/7BiDe+3GfwyhN
-	4TXK9mmgQh3sIWTg5Xf41pHviu+1LfvO7uMmGL8zzV5BSYkYODEPlhbHg/ayyethG7m6ep
-	DFgjkvr4KCrIPAq/1CSjnu3weqgfnZc=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-361-lvltfKQNPbyJGdnSiMcbBg-1; Mon, 03 Mar 2025 11:30:20 -0500
-X-MC-Unique: lvltfKQNPbyJGdnSiMcbBg-1
-X-Mimecast-MFC-AGG-ID: lvltfKQNPbyJGdnSiMcbBg_1741019419
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-39101511442so704078f8f.1
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Mar 2025 08:30:20 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741019419; x=1741624219;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8IqquS7ke+4+XOv5L24m6qSx7K0PzdfhIUdS/cnqyVA=;
-        b=UqJwbp9bQy03YXeL3f6h8p6WYy3cOXN6HmAYsqJREL6khhBYJtFZQwR3IU39WOiA7X
-         /PAFcXP/Ma99EzozN0zAxbGdkSTueXI841MUwzS2rIwFBkxwI8mSl2dXadC4BCTIMJ4e
-         +j9fnbwvoOe2xCVDwATrQ+CkqBItgvSgWNhVSisAtSaUWWdRl8NWueZ5vwLpUivyLS4D
-         Ifu0D0xUElBnCf6ZlXpZrRzQymTzJkmYUUDXIRZrPT+IDHaR0KrVxyQ00esqHybU7igo
-         P1JRguxtU/lf7nH8uO9/eUyvs8YjvGpvViU6DoF8fCkjovefADCwIi0RaUZ3hgcC7Pt7
-         oauw==
-X-Gm-Message-State: AOJu0Yy+94Jl8r6jqY/1d64N+4GVEhTdtu5s22M/XyZml0oT3/kFGaA9
-	O492C7vrG4QMIftMpLpQ+dx5+APj4UykVvJSFBuq3u2hGCn+y4bzWzPikiY+k4bDdKf7o9izlRh
-	nqLf1sOKX1b2esnMmVT7UbYRVmEYqaY+Vjajttvjvzq5jqCi1L+x9ElLOBLqjqI8L880g1zj9YH
-	RLzv0WPfsRBDn0bj3rz76mXyYBGJIAsj56fFr1KZGyuzdh
-X-Gm-Gg: ASbGncuudJE4WX0DfaASppkJBE6qX7iJ6bKJMs3kTUxv0rtG0d8lwi6WS6UvM8ke9f7
-	vQ5mKF7f48Kj1eu9gn1qDx8jUC6grphUfnIDkEYIb7tfai522JiGTcmI1bPnoofFMNhX2DfSY69
-	orUnRwTUVS4y1lllB3o0be6AGVTqytvmrhAFKuYSsRf9qI0h9s6xAFTY9693ghKbyULdrVl0cXA
-	NIYGOBidYn3WK41Lqi4F91dY5D50VRljN1giIUzf5YZycCm5Zg7o08xr/0NRqsILrTs9iDKe/5l
-	TUdTzw9JFfpNDFrJNtUVssRzdnmNdusRjiFb+OaqLC67FG4WflF1xw5fuKYj6abzTEto0RnTGtJ
-	j
-X-Received: by 2002:a05:6000:156e:b0:390:f9d0:5e7 with SMTP id ffacd0b85a97d-390f9d00782mr6547302f8f.13.1741019419323;
-        Mon, 03 Mar 2025 08:30:19 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGXzBd/+KVXhEWpKLy7bok4As8+LKdGdnCV2QCwLiXkX4QDGRFFrxDGOYHa7Hz+LJLKECZ5dQ==
-X-Received: by 2002:a05:6000:156e:b0:390:f9d0:5e7 with SMTP id ffacd0b85a97d-390f9d00782mr6547256f8f.13.1741019418889;
-        Mon, 03 Mar 2025 08:30:18 -0800 (PST)
-Received: from localhost (p200300cbc7349600af274326a2162bfb.dip0.t-ipconnect.de. [2003:cb:c734:9600:af27:4326:a216:2bfb])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-390e47a6a5esm15196816f8f.35.2025.03.03.08.30.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 03 Mar 2025 08:30:18 -0800 (PST)
-From: David Hildenbrand <david@redhat.com>
-To: linux-kernel@vger.kernel.org
-Cc: linux-doc@vger.kernel.org,
-	cgroups@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-api@vger.kernel.org,
-	David Hildenbrand <david@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
-	Tejun Heo <tj@kernel.org>,
-	Zefan Li <lizefan.x@bytedance.com>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	=?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Andy Lutomirski <luto@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Muchun Song <muchun.song@linux.dev>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Jann Horn <jannh@google.com>,
-	Lance Yang <ioworker0@gmail.com>,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: [PATCH v3 01/20] mm: factor out large folio handling from folio_order() into folio_large_order()
-Date: Mon,  3 Mar 2025 17:29:54 +0100
-Message-ID: <20250303163014.1128035-2-david@redhat.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250303163014.1128035-1-david@redhat.com>
-References: <20250303163014.1128035-1-david@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PBnZRU0r"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3954AC4CEEF;
+	Mon,  3 Mar 2025 16:30:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741019435;
+	bh=4M7qw2BCNap/yj1lp7E2M6gYvaxv2EvIQCTCMGBcr1g=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=PBnZRU0relCv6+ExKWA83h6t4qBCnbettrKZCKoETcE1EBNtV5FA7LvhaTHA8PgQi
+	 rqN0kWxEDPRYu46RhqfLBUPVq69osNf6SnItBMRNZGiYEVU9HfzTCf8HHkJFO9eOHW
+	 +y1VwKtwsSRdCrSPexgEF85z/10xpwZ4X4Q7yQhwSBOifPmcis9QkPwT7XW/vHDMhN
+	 OQrFpE3m2GyfyASrNtxryAxAZPjuirpOc1SSXduzpJy7devl2ukvqFN4UaKgUo0hUc
+	 3bivlyygXoaKFr1TVS4EYpgJ3yxNsL5Hu2UN7K+zq8C+do18eohyrvm9VyUVppSsLv
+	 I1+/5/3dAlr7g==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Hector Martin <marcan@marcan.st>,
+	Mark Brown <broonie@kernel.org>,
+	Sasha Levin <sashal@kernel.org>,
+	shenghao-ding@ti.com,
+	kevin-lu@ti.com,
+	baojun.xu@ti.com,
+	lgirdwood@gmail.com,
+	perex@perex.cz,
+	tiwai@suse.com,
+	linux-sound@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.12 02/17] ASoC: tas2770: Fix volume scale
+Date: Mon,  3 Mar 2025 11:30:14 -0500
+Message-Id: <20250303163031.3763651-2-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250303163031.3763651-1-sashal@kernel.org>
+References: <20250303163031.3763651-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.12.17
 Content-Transfer-Encoding: 8bit
 
-Let's factor it out into a simple helper function. This helper will
-also come in handy when working with code where we know that our
-folio is large.
+From: Hector Martin <marcan@marcan.st>
 
-Maybe in the future we'll have the order readily available for small and
-large folios; in that case, folio_large_order() would simply translate to
-folio_order().
+[ Upstream commit 579cd64b9df8a60284ec3422be919c362de40e41 ]
 
-Reviewed-by: Lance Yang <ioworker0@gmail.com>
-Reviewed-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Signed-off-by: David Hildenbrand <david@redhat.com>
+The scale starts at -100dB, not -128dB.
+
+Signed-off-by: Hector Martin <marcan@marcan.st>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Link: https://patch.msgid.link/20250208-asoc-tas2770-v1-1-cf50ff1d59a3@kernel.org
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/mm.h | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ sound/soc/codecs/tas2770.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 7b21b48627b05..b2903bc705997 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -1194,6 +1194,11 @@ struct inode;
- 
- extern void prep_compound_page(struct page *page, unsigned int order);
- 
-+static inline unsigned int folio_large_order(const struct folio *folio)
-+{
-+	return folio->_flags_1 & 0xff;
-+}
-+
- /*
-  * compound_order() can be called without holding a reference, which means
-  * that niceties like page_folio() don't work.  These callers should be
-@@ -1207,7 +1212,7 @@ static inline unsigned int compound_order(struct page *page)
- 
- 	if (!test_bit(PG_head, &folio->flags))
- 		return 0;
--	return folio->_flags_1 & 0xff;
-+	return folio_large_order(folio);
+diff --git a/sound/soc/codecs/tas2770.c b/sound/soc/codecs/tas2770.c
+index 9f93b230652a5..863c3f672ba98 100644
+--- a/sound/soc/codecs/tas2770.c
++++ b/sound/soc/codecs/tas2770.c
+@@ -506,7 +506,7 @@ static int tas2770_codec_probe(struct snd_soc_component *component)
  }
  
- /**
-@@ -1223,7 +1228,7 @@ static inline unsigned int folio_order(const struct folio *folio)
- {
- 	if (!folio_test_large(folio))
- 		return 0;
--	return folio->_flags_1 & 0xff;
-+	return folio_large_order(folio);
- }
+ static DECLARE_TLV_DB_SCALE(tas2770_digital_tlv, 1100, 50, 0);
+-static DECLARE_TLV_DB_SCALE(tas2770_playback_volume, -12750, 50, 0);
++static DECLARE_TLV_DB_SCALE(tas2770_playback_volume, -10050, 50, 0);
  
- #include <linux/huge_mm.h>
-@@ -2139,7 +2144,7 @@ static inline long folio_nr_pages(const struct folio *folio)
- #ifdef CONFIG_64BIT
- 	return folio->_folio_nr_pages;
- #else
--	return 1L << (folio->_flags_1 & 0xff);
-+	return 1L << folio_large_order(folio);
- #endif
- }
- 
-@@ -2164,7 +2169,7 @@ static inline unsigned long compound_nr(struct page *page)
- #ifdef CONFIG_64BIT
- 	return folio->_folio_nr_pages;
- #else
--	return 1L << (folio->_flags_1 & 0xff);
-+	return 1L << folio_large_order(folio);
- #endif
- }
- 
+ static const struct snd_kcontrol_new tas2770_snd_controls[] = {
+ 	SOC_SINGLE_TLV("Speaker Playback Volume", TAS2770_PLAY_CFG_REG2,
 -- 
-2.48.1
+2.39.5
 
