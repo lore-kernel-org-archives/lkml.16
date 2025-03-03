@@ -1,161 +1,188 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F389A94A
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 10:48:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC7D61E376C;
+	Mon,  3 Mar 2025 10:49:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740998939; cv=none; b=qUQ6KNd/nGzkoX7AL+jXJMqz+pqBWT6kCHr1hjmhBT2RhwBCUbPffdzRbOHF2t5zFQFzSkwxO3ezTP823j53gjXdLTyfCfSeIJEItpDA6oCHM/c8q8DpZEzPvhtpDjrzmquSEHgPAucqwPZIMXSl8ULmanTQujIU4bAyXX5UkBU=
+	t=1740998970; cv=none; b=gfg4ACCnLc2S+wfAof8ZZ3C7IrGfdyJjNEL0QcViJbZQ7ntmKMRCM2ZIhvAzd5HZa1a9luwCuZmldWpTyjlcBfJajcNGaLsQMzrjhPBwCovurFIdKNttkC+cF/9JPPjLs59ainUDbkprMMZswPemKGtSGAThRDwGGW4AJFrjoAw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740998939; c=relaxed/simple;
-	bh=K14HMsxkEGr+s2VxJ3l11dPaq+7OvburkPgTNLMuo0Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hgVCtyG1Y+QJakFuNWIknsTUa67CfGWWbRlRKVFoEmherEHXGIYt0fNK5+/xSVajseR8+RXbRWaf1Z+A5qNrB8Jo0Thqo91Sw6H44fM5hcn5VJyQeLwUmEBPwxtf2OvwBlDM39r+QxM2fniRQZ42NcpPyblJwefTq+5WbUysq40=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jwPRPmxx; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1740998970; c=relaxed/simple;
+	bh=FxTyFdldQ/Rg6PXUyOvwskxzWGQOyp4Jrbq8b9VUONU=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=PEWz2YR6Jr9tYsLewlvdyGUdZaZt9psvGaI6Nevcg9eTuQvj2Sj8fMc5fvKaWs3z7EHmIfIPCd8H3Ouv0PZMVQT/9Zv3HGB23BDDRl/JZeb6sruywcOFhHGO65fGXrqwodPZJRC899hl/kW2HfdGwUr49Ux9ghwDoezFhbMljCQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=EABLV7M0; arc=none smtp.client-ip=68.232.154.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jwPRPmxx"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43a9e6cd0b4so71085e9.1
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Mar 2025 02:48:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1740998936; x=1741603736; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=K+Ima0DPstNEgvXjJlluQ15dydqJt2/LyuMAnXcoK4Q=;
-        b=jwPRPmxxa/kP6HhMneKmqIsw55u2VXh6GXEEKmemqyZxmnEIhnCvDSykKZ7eolcOzQ
-         BON05rMyww8exL6F3TiF+kKRYWxaakNXLTPfRMlhZAfJ9C3N9W5TvoDDvW3yrTmcH4mc
-         e0XH/O1rya3j1DzOVvu/ul0C8iRaIZfFNglGLtxq8iAhBSoiNCM5t/8jX+LEbTyZg8v/
-         rIat1wA/A5xvtPJa7//XlVGzY0i/zHBLhUupu/XwOhaXCqVXyAkBABZQceoCG2vnldFP
-         KYXAXioJH7RYE4zLc6fvK7nyynTl7E793THycya28W7Oho9W/7zDCxY3LHYxbp2aWV/0
-         XlMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740998936; x=1741603736;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=K+Ima0DPstNEgvXjJlluQ15dydqJt2/LyuMAnXcoK4Q=;
-        b=Y2D6rk5fWMdgquIMDeC2Q6oJzEBHdz3oxywKfeZCB5JO+NuPExwJ9GP83btw84BJEF
-         rvnrwORthL0DHYvjqiQe9ch3sqpLN+4VS95egT7NzX4LYjy4dYJqHIaiEiVKU+orCaIW
-         cX7es/TKqRz2FWi3MsQXwSCLZWFmb0aZm9P4g7RV11sTg1gFF7CcURPRNQh/EJtiqJeX
-         jTF8Eu+X0cHVhNCL151pxGxx29mK8zkgCIjNSSEQSVmtV//zzQqYbagkY34jiUKB8Q0Y
-         Dpo/wertfXZFt4WBHSYnrup4ijs8iVTjo8UTpDtiT1tP631Sx7PiSRnscuQx6bXDdkYM
-         JJZQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVYGfrzdkQmQ1Sx/dkwSVnKHyJJ3OfJBV44D6WpUXJ1ehgPCDDEnXJ0ke1sT1WAZgiavYSSoq03jLNbv+E=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzd3sBI0nTevbOP0RA78XHvcj2mNMB6EjFVZbNYe6LVM0PmPIBY
-	8RHfYt7Sxf+RpiSRdaV5s4/mAzjdG+Fui1nLT7qkFBuRQFOoshv1lrrYlOAC5w==
-X-Gm-Gg: ASbGncv4Udg5jndTnbtivRG6yDSvTWDwT4Bf7j7LZ9sKqN/IygVQa8A+OTJihLVtQjR
-	R4SiumztO5eMXThF/wtzXZdwDE8QYUmGZQcMGwwCJzAlhUzqgUQmc+LTjQtfZIxNWQ8GLgbF84S
-	HBeSsLHMvTofCstY9iWeuW2WCReY5RTmRSqedFg+xr5zAj2L8zZW6SWRTmOQtHwytErudmEmHSs
-	rA8WocbnQUf3z2b9qzDH+4O0SLHjWQs6JfxUb7to/lGFIaiAYERR/ET66f1aEOGCBi1Hyrmyh/e
-	UOLfVHWJPW9iYloW4hsrXOE5D53FIhTdV4i9mn1wrwuBH0yBvdzaqsQIEHHe6vsEqlI1fYO1G7l
-	XJB2p
-X-Google-Smtp-Source: AGHT+IHd8ZHKAZRkwCUv3CySl6Z5lqyKm8ohs6rgo4oSk5bfdq+8pAFaHNZHO3YC+e9UOzwjLKFEUA==
-X-Received: by 2002:a05:600c:3c90:b0:439:9434:1b66 with SMTP id 5b1f17b1804b1-43baff09304mr2313315e9.1.1740998935672;
-        Mon, 03 Mar 2025 02:48:55 -0800 (PST)
-Received: from google.com (44.232.78.34.bc.googleusercontent.com. [34.78.232.44])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43b694524c6sm160673665e9.0.2025.03.03.02.48.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Mar 2025 02:48:54 -0800 (PST)
-Date: Mon, 3 Mar 2025 10:48:50 +0000
-From: Brendan Jackman <jackmanb@google.com>
-To: Dev Jain <dev.jain@arm.com>
-Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Shuah Khan <shuah@kernel.org>, linux-mm@kvack.org,
-	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 03/10] selftests/mm: Skip uffd-wp-mremap if
- userfaultfd not available
-Message-ID: <Z8WJEsEAwUPeMkqy@google.com>
-References: <20250228-mm-selftests-v3-0-958e3b6f0203@google.com>
- <20250228-mm-selftests-v3-3-958e3b6f0203@google.com>
- <99739a23-9843-4c96-a614-ce2d48431a5c@arm.com>
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="EABLV7M0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1740998969; x=1772534969;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=FxTyFdldQ/Rg6PXUyOvwskxzWGQOyp4Jrbq8b9VUONU=;
+  b=EABLV7M0S4zxmAJV4JIEzkZhziFIkiS1AI3I9DHLV6z826RyiaGTVMAI
+   jMwtKPnN0h/xn6jJOKwMQ6BfWB3+oKJuaXVXNVBRQW7EV6lyeH2xREb3G
+   fF/B15RHqRIE9lQEEBZo8rSpiBJCBEicmEVyaL8bG0lXlqJc9O+JEyKNO
+   GJOjlsgmcxiJfvxVkX0n02Gs4SyaJhoDpG9QCZ/Ccg5DSVsVBKP+g97pc
+   D1Z4/T1rplsy1NPgIpNV34XIfBfo6IomolOroP1kuKhVRlvObpUrsOL8y
+   otHKuaK4vjfRn5ouRZ3auUshbt17b1cG24Lg602R7xOmcjEJtRnlOI1kK
+   Q==;
+X-CSE-ConnectionGUID: BikYLFOYSh2j96/3XZqldw==
+X-CSE-MsgGUID: eIVd+EFRTYWJnQbd7HU8Qg==
+X-IronPort-AV: E=Sophos;i="6.13,329,1732604400"; 
+   d="scan'208";a="38768207"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa2.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 03 Mar 2025 03:49:28 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Mon, 3 Mar 2025 03:48:32 -0700
+Received: from wendy.microchip.com (10.10.85.11) by chn-vm-ex01.mchp-main.com
+ (10.10.85.143) with Microsoft SMTP Server id 15.1.2507.35 via Frontend
+ Transport; Mon, 3 Mar 2025 03:48:31 -0700
+From: Conor Dooley <conor.dooley@microchip.com>
+To: <linux-spi@vger.kernel.org>
+CC: Conor Dooley <conor.dooley@microchip.com>, <stable@vger.kernel.org>,
+	"Daire McNamara" <daire.mcnamara@microchip.com>, Mark Brown
+	<broonie@kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2] spi: microchip-core: prevent RX overflows when transmit size > FIFO size
+Date: Mon, 3 Mar 2025 10:47:40 +0000
+Message-ID: <20250303-veal-snooper-712c1dfad336@wendy>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <99739a23-9843-4c96-a614-ce2d48431a5c@arm.com>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4430; i=conor.dooley@microchip.com; h=from:subject:message-id; bh=FxTyFdldQ/Rg6PXUyOvwskxzWGQOyp4Jrbq8b9VUONU=; b=owGbwMvMwCFWscWwfUFT0iXG02pJDOlHO85KdGQ0fHr+8KSfXzH7n6m/Je2v/ju5m/9u/llPpozP H/zLO0pZGMQ4GGTFFFkSb/e1SK3/47LDuectzBxWJpAhDFycAjCRk8IM/ytqOt/+tbZ5fmjmnfAcXf G8t41L2VTfdNotn50cnhF0SIfhv8eGv2yppW3Whk79jGpT3XKuN+16IspsVXnh2+dYE/80XgA=
+X-Developer-Key: i=conor.dooley@microchip.com; a=openpgp; fpr=F9ECA03CF54F12CD01F1655722E2C55B37CF380C
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-On Fri, Feb 28, 2025 at 10:55:00PM +0530, Dev Jain wrote:
-> 
-> 
-> On 28/02/25 10:24 pm, Brendan Jackman wrote:
-> > It's obvious that this should fail in that case, but still, save the
-> > reader the effort of figuring out that they've run into this by just
-> > SKIPping
-> > 
-> > Signed-off-by: Brendan Jackman <jackmanb@google.com>
-> > ---
-> >   tools/testing/selftests/mm/uffd-wp-mremap.c | 5 ++++-
-> >   1 file changed, 4 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/tools/testing/selftests/mm/uffd-wp-mremap.c b/tools/testing/selftests/mm/uffd-wp-mremap.c
-> > index 2c4f984bd73caa17e12b9f4a5bb71e7fdf5d8554..c2ba7d46c7b4581a3c32a6b6acd148e3e89c2172 100644
-> > --- a/tools/testing/selftests/mm/uffd-wp-mremap.c
-> > +++ b/tools/testing/selftests/mm/uffd-wp-mremap.c
-> > @@ -182,7 +182,10 @@ static void test_one_folio(size_t size, bool private, bool swapout, bool hugetlb
-> >   	/* Register range for uffd-wp. */
-> >   	if (userfaultfd_open(&features)) {
-> > -		ksft_test_result_fail("userfaultfd_open() failed\n");
-> > +		if (errno == ENOENT)
-> > +			ksft_test_result_skip("userfaultfd not available\n");
-> > +		else
-> > +			ksft_test_result_fail("userfaultfd_open() failed\n");
-> >   		goto out;
-> >   	}
-> >   	if (uffd_register(uffd, mem, size, false, true, false)) {
-> > 
-> 
-> I think you are correct, just want to confirm whether "uffd not available"
-> if and only if "errno == ENOENT" is true. That is,
-> is it possible that errno can be something else and uffd is still not
-> available, 
+When the size of a transfer exceeds the size of the FIFO (32 bytes), RX
+overflows will be generated and receive data will be corrupted and
+warnings will be produced. For example, here's an error generated by a
+transfer of 36 bytes:
 
-Yeah, I strongly suspect this can happen. This is an attempt to
-improve things but I don't think it's a full solution.
+  spi_master spi0: mchp_corespi_interrupt: RX OVERFLOW: rxlen: 4, txlen: 0
 
-I've been pondering this a bit and I think it's impractical to solve
-problems like this in the code of individual testst. I think the right
-thing to do is either:
+The driver is currently split between handling receiving in the
+interrupt handler, and sending outside of it. Move all handling out of
+the interrupt handling, and explicitly link the number of bytes read of
+of the RX FIFO to the number written into the TX one. This both resolves
+the overflow problems as well as simplifying the flow of the driver.
 
-1. Have a centralised facility for detecting conditions like
-   "userfaultfd not available" that tests can just query it, so they
-   say something like:
+CC: stable@vger.kernel.org
+Fixes: 9ac8d17694b6 ("spi: add support for microchip fpga spi controllers")
+Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
+---
 
-   ksft_test_requires("userfaultfd");
+Contrary to last time, the reporter did actually manage to this this
+version, and it resolved their probably apparently.
 
-   Which would do some sort of actual principled check for presence
-   and then skip the test with an informative message when it's not
-   there. There would be a list of these "system requirements" in the
-   code so you can easily see in one place what things might be needed
-   to successfully run all the tests.
+Changes in v2:
+- Move all FIFO interactions out of the interrupt handler
+- Disable the non-error interrupts since they're dealt with out of the
+  isr now
 
-or
+v1: https://lore.kernel.org/all/20250114-easiness-pregame-d1d2d4b57e7b@spud/
 
-2. Specify out of band that there's a fixed set of requirements for
-   running the tests and document that you shouldn't run them without
-   satisfying them. Then just don't bother with SKIPs and call it user
-   error.
+CC: Conor Dooley <conor.dooley@microchip.com>
+CC: Daire McNamara <daire.mcnamara@microchip.com>
+CC: Mark Brown <broonie@kernel.org>
+CC: linux-spi@vger.kernel.org
+CC: linux-kernel@vger.kernel.org
+---
+ drivers/spi/spi-microchip-core.c | 41 ++++++++++++++------------------
+ 1 file changed, 18 insertions(+), 23 deletions(-)
 
-   This would require some reasonably usable tooling for actually
-   getting a system that satisfies the requirements.
+diff --git a/drivers/spi/spi-microchip-core.c b/drivers/spi/spi-microchip-core.c
+index 5b6af55855efc..62ba0bd9cbb7e 100644
+--- a/drivers/spi/spi-microchip-core.c
++++ b/drivers/spi/spi-microchip-core.c
+@@ -70,8 +70,7 @@
+ #define INT_RX_CHANNEL_OVERFLOW		BIT(2)
+ #define INT_TX_CHANNEL_UNDERRUN		BIT(3)
+ 
+-#define INT_ENABLE_MASK (CONTROL_RX_DATA_INT | CONTROL_TX_DATA_INT | \
+-			 CONTROL_RX_OVER_INT | CONTROL_TX_UNDER_INT)
++#define INT_ENABLE_MASK (CONTROL_RX_OVER_INT | CONTROL_TX_UNDER_INT)
+ 
+ #define REG_CONTROL		(0x00)
+ #define REG_FRAME_SIZE		(0x04)
+@@ -133,10 +132,15 @@ static inline void mchp_corespi_disable(struct mchp_corespi *spi)
+ 	mchp_corespi_write(spi, REG_CONTROL, control);
+ }
+ 
+-static inline void mchp_corespi_read_fifo(struct mchp_corespi *spi)
++static inline void mchp_corespi_read_fifo(struct mchp_corespi *spi, int fifo_max)
+ {
+-	while (spi->rx_len >= spi->n_bytes && !(mchp_corespi_read(spi, REG_STATUS) & STATUS_RXFIFO_EMPTY)) {
+-		u32 data = mchp_corespi_read(spi, REG_RX_DATA);
++	for (int i = 0; i < fifo_max; i++) {
++		u32 data;
++
++		while (mchp_corespi_read(spi, REG_STATUS) & STATUS_RXFIFO_EMPTY)
++			;
++
++		data = mchp_corespi_read(spi, REG_RX_DATA);
+ 
+ 		spi->rx_len -= spi->n_bytes;
+ 
+@@ -211,11 +215,10 @@ static inline void mchp_corespi_set_xfer_size(struct mchp_corespi *spi, int len)
+ 	mchp_corespi_write(spi, REG_FRAMESUP, len);
+ }
+ 
+-static inline void mchp_corespi_write_fifo(struct mchp_corespi *spi)
++static inline void mchp_corespi_write_fifo(struct mchp_corespi *spi, int fifo_max)
+ {
+-	int fifo_max, i = 0;
++	int i = 0;
+ 
+-	fifo_max = DIV_ROUND_UP(min(spi->tx_len, FIFO_DEPTH), spi->n_bytes);
+ 	mchp_corespi_set_xfer_size(spi, fifo_max);
+ 
+ 	while ((i < fifo_max) && !(mchp_corespi_read(spi, REG_STATUS) & STATUS_TXFIFO_FULL)) {
+@@ -413,19 +416,6 @@ static irqreturn_t mchp_corespi_interrupt(int irq, void *dev_id)
+ 	if (intfield == 0)
+ 		return IRQ_NONE;
+ 
+-	if (intfield & INT_TXDONE)
+-		mchp_corespi_write(spi, REG_INT_CLEAR, INT_TXDONE);
+-
+-	if (intfield & INT_RXRDY) {
+-		mchp_corespi_write(spi, REG_INT_CLEAR, INT_RXRDY);
+-
+-		if (spi->rx_len)
+-			mchp_corespi_read_fifo(spi);
+-	}
+-
+-	if (!spi->rx_len && !spi->tx_len)
+-		finalise = true;
+-
+ 	if (intfield & INT_RX_CHANNEL_OVERFLOW) {
+ 		mchp_corespi_write(spi, REG_INT_CLEAR, INT_RX_CHANNEL_OVERFLOW);
+ 		finalise = true;
+@@ -512,9 +502,14 @@ static int mchp_corespi_transfer_one(struct spi_controller *host,
+ 
+ 	mchp_corespi_write(spi, REG_SLAVE_SELECT, spi->pending_slave_select);
+ 
+-	while (spi->tx_len)
+-		mchp_corespi_write_fifo(spi);
++	while (spi->tx_len) {
++		int fifo_max = DIV_ROUND_UP(min(spi->tx_len, FIFO_DEPTH), spi->n_bytes);
+ 
++		mchp_corespi_write_fifo(spi, fifo_max);
++		mchp_corespi_read_fifo(spi, fifo_max);
++	}
++
++	spi_finalize_current_transfer(host);
+ 	return 1;
+ }
+ 
+-- 
+2.48.1
 
-But both of them require a deeper investment. I would quite like to
-explore option 1 a bit but that's for a future Brendan. 
-
-In the meantime I'm just trying to get these tests running on
-virtme-ng. (I'm not even gonna add all of them, because e.g. once I
-noticed this one I added a `scripts/config -e USERFAULTFD` to my
-script, so I won't notice if anything else is missing the check).
-
-> or errno can be ENOENT even if uffd is available.
-
-I think it's probably posible for this to happen too, e.g. if the
-system has a perverted /dev or something. But again I think that can
-only be solved with the kinda stuff I mentioned above.
-
-Sorry for the essay :D
