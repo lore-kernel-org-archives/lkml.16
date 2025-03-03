@@ -1,49 +1,47 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D695E25E470;
-	Mon,  3 Mar 2025 16:31:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F11822A81E;
+	Mon,  3 Mar 2025 16:31:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741019477; cv=none; b=WxKiZ+k0D83bMB/Dt9X2oETirfAZKujjEqJiJK5kckc9RT+Vq3vvaDnhP+rD5E44xdxsf7T4uVtzhZ760ASHqbZ/VCHCVBJNMmGnrRygCm4oE/iXy1oGoiSVJ2HnsZaGFKpGFjeXXw3kqF2xy6Xr4aX5aUSWsd6kml6goH212to=
+	t=1741019480; cv=none; b=SNHM1XDSq2k7LzIhR+pc+cbw/BNWz1vZa1xVu4s4ugfXy16pAx4RxpUPfc84BKbjPv85Lhf9jlmXFF66Nxq8N2sAL0b+KzJRaTog0vdUSgdp9Ctom83Ej7pnXTpHnyalfrP9zHc0kWZxBnVoA1REX0mThGugmD2eZP15C/a+pt4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741019477; c=relaxed/simple;
-	bh=GJgPGRE9pDnHvPmxAHFHzTLTrNPsxNr62otSflZ099A=;
+	s=arc-20240116; t=1741019480; c=relaxed/simple;
+	bh=kWMnwqFbpjLz79Bq1d2W52AJjEPoXPjTiAxNA0FiBOc=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=rFjeTZXMFbzJo403tclWetplsZr7C2MJ6V1/g1WQGEzc2A8RVN/4jSBk/3pwvZQ9bBl7DWrTJI7vlzliUypnDZCpbfDpZ0ceMUX64bOi8fsG3bn6of0hDR8cjByjiZF9BjNl5Ni5bHoLesrtJe/Rypdh9uR8NgLXIQN/GeEjZNs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kxmaF+QH; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=FYvURacq+TsHJGVkrgHEOPJjGbDKgBl52mdWN1D9DokRgNzA+4SEGGoW9D8PqUre9NQunLPTvGSEeuV9EH5Cx0ISFaJi99MVwSe9AxOeK4OLXMiCMZhF1iH+I9NJa8nR1jVO+JyJIgNsaiAIXhUKlnN7hfWE2/i53SrpNYWWelw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uhp1lLru; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kxmaF+QH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0D13C4CED6;
-	Mon,  3 Mar 2025 16:31:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uhp1lLru"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B916CC4CEEB;
+	Mon,  3 Mar 2025 16:31:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741019476;
-	bh=GJgPGRE9pDnHvPmxAHFHzTLTrNPsxNr62otSflZ099A=;
+	s=k20201202; t=1741019480;
+	bh=kWMnwqFbpjLz79Bq1d2W52AJjEPoXPjTiAxNA0FiBOc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=kxmaF+QHVaZERaS2VWXi6kD+tpVx9wLlbzoC/HqiIeliOExCkBUT+rvAyxmYGv8pR
-	 I9v2cDi5GWISVek5Z38fCgwKfZLjk/EOhM9U+vxbCtEz69ILiO97dazzFvzF2uKBtm
-	 i+ka6VbGGXj1cp6ooRkK4cFjlNi1DjTCyKUeGYoyApj7NxZnlaHob4+HLq5R2yER2E
-	 ge3GRweLWmmg1dRGuoMkzy5tlgcVxZHuiP+v9aGv3INAcXCpN3XYoQnPBHbyvcE+y9
-	 Mzjb/4SsdSxqRlqUiZtdpAeBY7ro5nPmjS5KZdcH9zoFL5W5ltze2oVzEXNRv+RYD8
-	 0CC3mov651xGA==
+	b=uhp1lLruMVfR/btPCM3zIEPxwrVWQUVP2QcCfO7uKBM8tgqU4GepoLALrA2G17eg6
+	 acvFIAMjWanarh7WrcsRprm/TpSTDC+szPlsouxVEG0ypZ/e2PnMyTPyS08F3ugSMk
+	 gkmCD/GYe7al6sXoUIxHLL4xIB8S5Q7B0UZDIplmldiLEwtk7C2iZYMaOGFTeGgQM4
+	 mzdmABlHnykAUSyCf5bLlNVpjbWctvgF7fTTjLxPuSg5EmcpPux8kqrI36D8yBMKSx
+	 NoHFxredZxAqalKvJqRUyr5wqIGvEZgc2SZqRPB/xa+IOoVFcCgnoLNBoEnkGpa0b2
+	 9+ALBM7aV7lgw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Hector Martin <marcan@marcan.st>,
-	Neal Gompa <neal@gompa.dev>,
-	James Calligeros <jcalligeros99@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
+Cc: Harry Wentland <harry.wentland@amd.com>,
+	Alex Hung <alex.hung@amd.com>,
+	Louis Chauvet <louis.chauvet@bootlin.com>,
 	Sasha Levin <sashal@kernel.org>,
-	shenghao-ding@ti.com,
-	kevin-lu@ti.com,
-	baojun.xu@ti.com,
-	lgirdwood@gmail.com,
-	perex@perex.cz,
-	tiwai@suse.com,
-	linux-sound@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.6 03/11] ASoC: tas2764: Set the SDOUT polarity correctly
-Date: Mon,  3 Mar 2025 11:31:01 -0500
-Message-Id: <20250303163109.3763880-3-sashal@kernel.org>
+	maarten.lankhorst@linux.intel.com,
+	mripard@kernel.org,
+	tzimmermann@suse.de,
+	airlied@gmail.com,
+	simona@ffwll.ch,
+	dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 6.6 05/11] drm/vkms: Round fixp2int conversion in lerp_u16
+Date: Mon,  3 Mar 2025 11:31:03 -0500
+Message-Id: <20250303163109.3763880-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250303163109.3763880-1-sashal@kernel.org>
 References: <20250303163109.3763880-1-sashal@kernel.org>
@@ -58,82 +56,36 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.6.80
 Content-Transfer-Encoding: 8bit
 
-From: Hector Martin <marcan@marcan.st>
+From: Harry Wentland <harry.wentland@amd.com>
 
-[ Upstream commit f5468beeab1b1adfc63c2717b1f29ef3f49a5fab ]
+[ Upstream commit 8ec43c58d3be615a71548bc09148212013fb7e5f ]
 
-TX launch polarity needs to be the opposite of RX capture polarity, to
-generate the right bit slot alignment.
+fixp2int always rounds down, fixp2int_ceil rounds up. We need
+the new fixp2int_round.
 
-Reviewed-by: Neal Gompa <neal@gompa.dev>
-Signed-off-by: Hector Martin <marcan@marcan.st>
-Signed-off-by: James Calligeros <jcalligeros99@gmail.com>
-Link: https://patch.msgid.link/20250218-apple-codec-changes-v2-28-932760fd7e07@gmail.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Alex Hung <alex.hung@amd.com>
+Signed-off-by: Harry Wentland <harry.wentland@amd.com>
+Reviewed-by: Louis Chauvet <louis.chauvet@bootlin.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20241220043410.416867-3-alex.hung@amd.com
+Signed-off-by: Louis Chauvet <louis.chauvet@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/tas2764.c | 10 +++++++++-
- sound/soc/codecs/tas2764.h |  6 ++++++
- 2 files changed, 15 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/vkms/vkms_composer.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/soc/codecs/tas2764.c b/sound/soc/codecs/tas2764.c
-index a9838e0738cc1..e87a07eee9737 100644
---- a/sound/soc/codecs/tas2764.c
-+++ b/sound/soc/codecs/tas2764.c
-@@ -367,7 +367,7 @@ static int tas2764_set_fmt(struct snd_soc_dai *dai, unsigned int fmt)
- {
- 	struct snd_soc_component *component = dai->component;
- 	struct tas2764_priv *tas2764 = snd_soc_component_get_drvdata(component);
--	u8 tdm_rx_start_slot = 0, asi_cfg_0 = 0, asi_cfg_1 = 0;
-+	u8 tdm_rx_start_slot = 0, asi_cfg_0 = 0, asi_cfg_1 = 0, asi_cfg_4 = 0;
- 	int ret;
+diff --git a/drivers/gpu/drm/vkms/vkms_composer.c b/drivers/gpu/drm/vkms/vkms_composer.c
+index e7441b227b3ce..3d6785d081f2c 100644
+--- a/drivers/gpu/drm/vkms/vkms_composer.c
++++ b/drivers/gpu/drm/vkms/vkms_composer.c
+@@ -98,7 +98,7 @@ static u16 lerp_u16(u16 a, u16 b, s64 t)
  
- 	switch (fmt & SND_SOC_DAIFMT_INV_MASK) {
-@@ -376,12 +376,14 @@ static int tas2764_set_fmt(struct snd_soc_dai *dai, unsigned int fmt)
- 		fallthrough;
- 	case SND_SOC_DAIFMT_NB_NF:
- 		asi_cfg_1 = TAS2764_TDM_CFG1_RX_RISING;
-+		asi_cfg_4 = TAS2764_TDM_CFG4_TX_FALLING;
- 		break;
- 	case SND_SOC_DAIFMT_IB_IF:
- 		asi_cfg_0 ^= TAS2764_TDM_CFG0_FRAME_START;
- 		fallthrough;
- 	case SND_SOC_DAIFMT_IB_NF:
- 		asi_cfg_1 = TAS2764_TDM_CFG1_RX_FALLING;
-+		asi_cfg_4 = TAS2764_TDM_CFG4_TX_RISING;
- 		break;
- 	}
+ 	s64 delta = drm_fixp_mul(b_fp - a_fp,  t);
  
-@@ -391,6 +393,12 @@ static int tas2764_set_fmt(struct snd_soc_dai *dai, unsigned int fmt)
- 	if (ret < 0)
- 		return ret;
+-	return drm_fixp2int(a_fp + delta);
++	return drm_fixp2int_round(a_fp + delta);
+ }
  
-+	ret = snd_soc_component_update_bits(component, TAS2764_TDM_CFG4,
-+					    TAS2764_TDM_CFG4_TX_MASK,
-+					    asi_cfg_4);
-+	if (ret < 0)
-+		return ret;
-+
- 	switch (fmt & SND_SOC_DAIFMT_FORMAT_MASK) {
- 	case SND_SOC_DAIFMT_I2S:
- 		asi_cfg_0 ^= TAS2764_TDM_CFG0_FRAME_START;
-diff --git a/sound/soc/codecs/tas2764.h b/sound/soc/codecs/tas2764.h
-index d13ecae9c9c2f..9490f2686e389 100644
---- a/sound/soc/codecs/tas2764.h
-+++ b/sound/soc/codecs/tas2764.h
-@@ -79,6 +79,12 @@
- #define TAS2764_TDM_CFG3_RXS_SHIFT	0x4
- #define TAS2764_TDM_CFG3_MASK		GENMASK(3, 0)
- 
-+/* TDM Configuration Reg4 */
-+#define TAS2764_TDM_CFG4		TAS2764_REG(0X0, 0x0d)
-+#define TAS2764_TDM_CFG4_TX_MASK	BIT(0)
-+#define TAS2764_TDM_CFG4_TX_RISING	0x0
-+#define TAS2764_TDM_CFG4_TX_FALLING	BIT(0)
-+
- /* TDM Configuration Reg5 */
- #define TAS2764_TDM_CFG5		TAS2764_REG(0X0, 0x0e)
- #define TAS2764_TDM_CFG5_VSNS_MASK	BIT(6)
+ static s64 get_lut_index(const struct vkms_color_lut *lut, u16 channel_value)
 -- 
 2.39.5
 
