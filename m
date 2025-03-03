@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 637A41EE021;
-	Mon,  3 Mar 2025 08:47:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8300F1F03C9;
+	Mon,  3 Mar 2025 08:47:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740991653; cv=none; b=NL+SzHKy56ut+2ibhB9p3vk824+GIN/JEvduK13fhubiJQY9DKPLIH4kCI2j2u69r9biXBbWRr7jV/9XgfOI++XZ94/D9jHeXW0sBqX47Nck6kzGSZHPmJSkf/FLP5nM79LFdnplgvIXUJdnMmjo7QtV4iGYqqU7U34oJGmnf2g=
+	t=1740991655; cv=none; b=gHNLQ8m/tG2mqNmXsBFI+mnIk47cjcOBQgm+Q0Whu5R0l2JuvyNCsX4QohbHI/e27dbNCgyirGgJFl580ULjsf4pUdSAlrXBEECOaC0RJeMA2sukZSXt/MxF34viK3lGcPP16iNSJo1m8ZaXJ+sdRy6/RO+E34EzbIoUFSm8XJY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740991653; c=relaxed/simple;
-	bh=5xvVgcGbsVS3XOQngdpBodjWDsRWeoD2A/h2JxKzioc=;
+	s=arc-20240116; t=1740991655; c=relaxed/simple;
+	bh=yAxiyAJkmOi+qCLJ6YIryDvvFkW0bqE3LR6f2KKFmuI=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=dlz4OJmbV3chztt1MVoMxMEtPeBovJRQvFS8w2salc1pqAG7CL9mZrZMQ8+PF7nTkv408p+tuMsHYQd+kBkUP0BT4bt4/tstqKASNRdBmMDI89YP117W1wvoHbl1YRMQ5U2NYyeg4xqiPOnjx+UqrvcAvIpEhO/AkaLPhNz6Dgk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eOhHjgNR; arc=none smtp.client-ip=192.198.163.14
+	 MIME-Version; b=hzEISQ7JYoBDLFFwwiflND0jjLEl7Ejgp+Pe2FYczkPHUU/4TMTLi/kHqXxclNhsotXKeZ+DIcIgRgm8IqDkMFHHFeKcVecEQbnRIrBMlMM/DWHW/VZmIOrz5FSYOdEjYUVLXlG4lcJhptg5yvn25VvGvDvFgyxnSi2ezJ1wwUE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Q5Jo9FVH; arc=none smtp.client-ip=192.198.163.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eOhHjgNR"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Q5Jo9FVH"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740991651; x=1772527651;
+  t=1740991654; x=1772527654;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=5xvVgcGbsVS3XOQngdpBodjWDsRWeoD2A/h2JxKzioc=;
-  b=eOhHjgNRFATjH9g2UbCF6wrmLZrT+4OSCo00cK5CF0RO0Cc6X+g6FyIS
-   lz5dqCDQi1i5fI5pNrsrkqkkWKuGFfkXJdcNFUSz/uJrNd2/rKOBTqr8g
-   TeAxLLrNSi6Sok9FsmhWlh1r9MJQS8/2bGMEsISqVTikNdvvMUyk7fuB9
-   dV2NlMVddKRJbyMCsn2oadGiDRNkMcDXBinhjEBiYIOc/G+rJwdpMRc34
-   Ak/9i63GQLsXquZwIh1EeSdQ7BWAXypkbBVCu3eYvGJOsugG9GrvlGmCa
-   OWhExjyrqGmmowephx53WpmhUkCxPa1YK/dGub1je2tvU2cW01gd9G129
-   w==;
-X-CSE-ConnectionGUID: X3BVB9NBTUKzgqvx2f5ENg==
-X-CSE-MsgGUID: Il6tbKQcS26Yaz/usXiIPg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11361"; a="42111853"
+  bh=yAxiyAJkmOi+qCLJ6YIryDvvFkW0bqE3LR6f2KKFmuI=;
+  b=Q5Jo9FVH4DINRiUBVDZfUge+i/MDwZedto2nJEqznbsy3K0Pp5wQlQ9g
+   SoZ27z4jPKSUGaDeArAlLrBDRj/WcxOsb7GC5RYZ8Mw5LDteSZZEg5bhB
+   MOKE4DXidpketSk+K8MVF+ElCbMPEXhPlz+5hVYcOT8lxdeQJjQuXEesu
+   7dIoJkXUqWB+5FoyO5YTqA/IxUQ7uTJoLXW8y5wEiAKiRkZmYtutRzAzA
+   VGYtAarFVSVCYlG/QSE5Y34Ahk8k1sOk7E7CQaSQ8SL8e1r5q/i0Hi7ta
+   yausb0H2vbFdoqXmMN6k9MQNGSE8CfcPBmyu4XMBbLBYbNmoeOs4w0Quq
+   g==;
+X-CSE-ConnectionGUID: 0y2kQFlqTvG9vuo1sdENdw==
+X-CSE-MsgGUID: xzFcGJDbSDWYH2hqXLkoBA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11361"; a="42111894"
 X-IronPort-AV: E=Sophos;i="6.13,329,1732608000"; 
-   d="scan'208";a="42111853"
+   d="scan'208";a="42111894"
 Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Mar 2025 00:47:27 -0800
-X-CSE-ConnectionGUID: pHHvrbHVTj2dg6QDahNk4Q==
-X-CSE-MsgGUID: aRS85qAtQeeozA4A+kzF9w==
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Mar 2025 00:47:31 -0800
+X-CSE-ConnectionGUID: fvBsJymEQP6lwEgEmf6goA==
+X-CSE-MsgGUID: RpkS3VTXRlGfrTvv0qcbqg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.13,329,1732608000"; 
-   d="scan'208";a="118426761"
+   d="scan'208";a="118426786"
 Received: from jf5300-b11a338t.jf.intel.com ([10.242.51.115])
-  by fmviesa010.fm.intel.com with ESMTP; 03 Mar 2025 00:47:25 -0800
+  by fmviesa010.fm.intel.com with ESMTP; 03 Mar 2025 00:47:28 -0800
 From: Kanchana P Sridhar <kanchana.p.sridhar@intel.com>
 To: linux-kernel@vger.kernel.org,
 	linux-mm@kvack.org,
@@ -66,9 +66,9 @@ To: linux-kernel@vger.kernel.org,
 Cc: wajdi.k.feghali@intel.com,
 	vinodh.gopal@intel.com,
 	kanchana.p.sridhar@intel.com
-Subject: [PATCH v8 01/14] crypto: acomp - Add synchronous/asynchronous acomp request chaining.
-Date: Mon,  3 Mar 2025 00:47:11 -0800
-Message-Id: <20250303084724.6490-2-kanchana.p.sridhar@intel.com>
+Subject: [PATCH v8 04/14] crypto: iaa - Implement batch compression/decompression with request chaining.
+Date: Mon,  3 Mar 2025 00:47:14 -0800
+Message-Id: <20250303084724.6490-5-kanchana.p.sridhar@intel.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20250303084724.6490-1-kanchana.p.sridhar@intel.com>
 References: <20250303084724.6490-1-kanchana.p.sridhar@intel.com>
@@ -80,571 +80,267 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This patch is based on Herbert Xu's request chaining for ahash
-("[PATCH 2/6] crypto: hash - Add request chaining API") [1]. The generic
-framework for request chaining that's provided in the ahash implementation
-has been used as reference to develop a similar synchronous request
-chaining framework for crypto_acomp.
+This patch provides the iaa_crypto driver implementation for the newly added
+crypto_acomp "get_batch_size()" interface which will be called when swap
+modules invoke crypto_acomp_batch_size() to query for the maximum batch size.
+This will return an iaa_driver specific constant, IAA_CRYPTO_MAX_BATCH_SIZE
+(set to 8U currently).
 
-Furthermore, this commit develops an asynchronous request chaining
-framework and API that iaa_crypto can use for request chaining with
-parallelism, in order to fully benefit from Intel IAA's multiple
-compress/decompress engines in hardware. This allows us to gain significant
-latency improvements with IAA batching as compared to synchronous request
-chaining.
+This allows swap modules such as zswap/zram to allocate required batching
+resources and then invoke fully asynchronous batch parallel
+compression/decompression of pages on systems with Intel IAA, by setting up
+a request chain, and calling crypto_acomp_compress() or
+crypto_acomp_decompress() with the head request in the chain.
 
- Usage of acomp request chaining API:
- ====================================
+This enables zswap compress batching code to be developed in
+a manner similar to the current single-page synchronous calls to
+crypto_acomp_compress() and crypto_acomp_decompress(), thereby,
+facilitating encapsulated and modular hand-off between the kernel
+zswap/zram code and the crypto_acomp layer.
 
- Any crypto_acomp compressor can avail of request chaining as follows:
+This patch also provides implementations of IAA batching with request
+chaining for both iaa_crypto sync modes: asynchronous/no-irq and fully
+synchronous.
 
- Step 1: Create request chain:
-
-  Request 0 (the first req in the chain):
-
-  void acomp_reqchain_init(struct acomp_req *req,
-                           u32 flags, crypto_completion_t compl,
-                           void *data);
-
-  Subsequent requests:
-
-  void acomp_request_chain(struct acomp_req *req,
-                           struct acomp_req *head);
-
- Step 2: Process the request chain using the specified compress/decompress
-         "op":
-
-  2.a) Synchronous: the chain of requests is processed in series:
-
-       int acomp_do_req_chain(struct acomp_req *req,
-                              int (*op)(struct acomp_req *req));
-
-  2.b) Asynchronous: the chain of requests is processed in parallel using a
-       submit-poll paradigm:
-
-       int acomp_do_async_req_chain(struct acomp_req *req,
-                                    int (*op_submit)(struct acomp_req *req),
-                                    int (*op_poll)(struct acomp_req *req));
-
-Request chaining will be used in subsequent patches to implement
-compress/decompress batching in the iaa_crypto driver for the two supported
-IAA driver sync_modes:
-
-  sync_mode = 'sync' will use (2.a),
-  sync_mode = 'async' will use (2.b).
-
-These files are directly re-used from [1] which is not yet merged:
-
-include/crypto/algapi.h
-include/linux/crypto.h
-
-Hence, I am adding Herbert as the co-developer of this acomp request
-chaining patch.
-
-[1]: https://lore.kernel.org/linux-crypto/677614fbdc70b31df2e26483c8d2cd1510c8af91.1730021644.git.herbert@gondor.apana.org.au/
+Since iaa_crypto supports the use of acomp request chaining, this patch
+also adds CRYPTO_ALG_REQ_CHAIN to the iaa_acomp_fixed_deflate algorithm's
+cra_flags.
 
 Suggested-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Kanchana P Sridhar <kanchana.p.sridhar@intel.com>
-Co-developed-by: Herbert Xu <herbert@gondor.apana.org.au>
-Signed-off-by:
 ---
- crypto/acompress.c                  | 284 ++++++++++++++++++++++++++++
- include/crypto/acompress.h          |  46 +++++
- include/crypto/algapi.h             |  10 +
- include/crypto/internal/acompress.h |  10 +
- include/linux/crypto.h              |  39 ++++
- 5 files changed, 389 insertions(+)
+ drivers/crypto/intel/iaa/iaa_crypto.h      |   9 +
+ drivers/crypto/intel/iaa/iaa_crypto_main.c | 186 ++++++++++++++++++++-
+ 2 files changed, 192 insertions(+), 3 deletions(-)
 
-diff --git a/crypto/acompress.c b/crypto/acompress.c
-index 6fdf0ff9f3c0..cb6444d09dd7 100644
---- a/crypto/acompress.c
-+++ b/crypto/acompress.c
-@@ -23,6 +23,19 @@ struct crypto_scomp;
+diff --git a/drivers/crypto/intel/iaa/iaa_crypto.h b/drivers/crypto/intel/iaa/iaa_crypto.h
+index 56985e395263..45d94a646636 100644
+--- a/drivers/crypto/intel/iaa/iaa_crypto.h
++++ b/drivers/crypto/intel/iaa/iaa_crypto.h
+@@ -39,6 +39,15 @@
+ 					 IAA_DECOMP_CHECK_FOR_EOB | \
+ 					 IAA_DECOMP_STOP_ON_EOB)
  
- static const struct crypto_type crypto_acomp_type;
- 
-+struct acomp_save_req_state {
-+	struct list_head head;
-+	struct acomp_req *req0;
-+	struct acomp_req *cur;
-+	int (*op)(struct acomp_req *req);
-+	crypto_completion_t compl;
-+	void *data;
-+};
++/*
++ * The maximum compress/decompress batch size for IAA's implementation of
++ * batched compressions/decompressions.
++ * The IAA compression algorithms should provide the crypto_acomp
++ * get_batch_size() interface through a function that returns this
++ * constant.
++ */
++#define IAA_CRYPTO_MAX_BATCH_SIZE 8U
 +
-+static void acomp_reqchain_done(void *data, int err);
-+static int acomp_save_req(struct acomp_req *req, crypto_completion_t cplt);
-+static void acomp_restore_req(struct acomp_req *req);
-+
- static inline struct acomp_alg *__crypto_acomp_alg(struct crypto_alg *alg)
- {
- 	return container_of(alg, struct acomp_alg, calg.base);
-@@ -123,6 +136,277 @@ struct crypto_acomp *crypto_alloc_acomp_node(const char *alg_name, u32 type,
+ /* Representation of IAA workqueue */
+ struct iaa_wq {
+ 	struct list_head	list;
+diff --git a/drivers/crypto/intel/iaa/iaa_crypto_main.c b/drivers/crypto/intel/iaa/iaa_crypto_main.c
+index d7983ab3c34a..a9800b8f3575 100644
+--- a/drivers/crypto/intel/iaa/iaa_crypto_main.c
++++ b/drivers/crypto/intel/iaa/iaa_crypto_main.c
+@@ -1807,6 +1807,185 @@ static void compression_ctx_init(struct iaa_compression_ctx *ctx)
+ 	ctx->use_irq = use_irq;
  }
- EXPORT_SYMBOL_GPL(crypto_alloc_acomp_node);
  
-+static int acomp_save_req(struct acomp_req *req, crypto_completion_t cplt)
++static int iaa_comp_poll(struct acomp_req *req)
 +{
-+	struct crypto_acomp *tfm = crypto_acomp_reqtfm(req);
-+	struct acomp_save_req_state *state;
-+	gfp_t gfp;
-+	u32 flags;
++	struct idxd_desc *idxd_desc;
++	struct idxd_device *idxd;
++	struct iaa_wq *iaa_wq;
++	struct pci_dev *pdev;
++	struct device *dev;
++	struct idxd_wq *wq;
++	bool compress_op;
++	int ret;
 +
-+	if (!acomp_is_async(tfm))
-+		return 0;
++	idxd_desc = req->base.data;
++	if (!idxd_desc)
++		return -EAGAIN;
 +
-+	flags = acomp_request_flags(req);
-+	gfp = (flags & CRYPTO_TFM_REQ_MAY_SLEEP) ?  GFP_KERNEL : GFP_ATOMIC;
-+	state = kmalloc(sizeof(*state), gfp);
-+	if (!state)
-+		return -ENOMEM;
++	compress_op = (idxd_desc->iax_hw->opcode == IAX_OPCODE_COMPRESS);
++	wq = idxd_desc->wq;
++	iaa_wq = idxd_wq_get_private(wq);
++	idxd = iaa_wq->iaa_device->idxd;
++	pdev = idxd->pdev;
++	dev = &pdev->dev;
 +
-+	state->compl = req->base.complete;
-+	state->data = req->base.data;
-+	state->req0 = req;
++	ret = check_completion(dev, idxd_desc->iax_completion, true, true);
++	if (ret == -EAGAIN)
++		return ret;
++	if (ret)
++		goto out;
 +
-+	req->base.complete = cplt;
-+	req->base.data = state;
++	req->dlen = idxd_desc->iax_completion->output_size;
 +
-+	return 0;
-+}
-+
-+static void acomp_restore_req(struct acomp_req *req)
-+{
-+	struct crypto_acomp *tfm = crypto_acomp_reqtfm(req);
-+	struct acomp_save_req_state *state;
-+
-+	if (!acomp_is_async(tfm))
-+		return;
-+
-+	state = req->base.data;
-+
-+	req->base.complete = state->compl;
-+	req->base.data = state->data;
-+	kfree(state);
-+}
-+
-+static int acomp_reqchain_finish(struct acomp_save_req_state *state,
-+				 int err, u32 mask)
-+{
-+	struct acomp_req *req0 = state->req0;
-+	struct acomp_req *req = state->cur;
-+	struct acomp_req *n;
-+
-+	req->base.err = err;
-+
-+	if (req == req0)
-+		INIT_LIST_HEAD(&req->base.list);
-+	else
-+		list_add_tail(&req->base.list, &req0->base.list);
-+
-+	list_for_each_entry_safe(req, n, &state->head, base.list) {
-+		list_del_init(&req->base.list);
-+
-+		req->base.flags &= mask;
-+		req->base.complete = acomp_reqchain_done;
-+		req->base.data = state;
-+		state->cur = req;
-+		err = state->op(req);
-+
-+		if (err == -EINPROGRESS) {
-+			if (!list_empty(&state->head))
-+				err = -EBUSY;
-+			goto out;
-+		}
-+
-+		if (err == -EBUSY)
-+			goto out;
-+
-+		req->base.err = err;
-+		list_add_tail(&req->base.list, &req0->base.list);
++	/* Update stats */
++	if (compress_op) {
++		update_total_comp_bytes_out(req->dlen);
++		update_wq_comp_bytes(wq, req->dlen);
++	} else {
++		update_total_decomp_bytes_in(req->slen);
++		update_wq_decomp_bytes(wq, req->slen);
 +	}
 +
-+	acomp_restore_req(req0);
++	if (iaa_verify_compress && (idxd_desc->iax_hw->opcode == IAX_OPCODE_COMPRESS)) {
++		struct crypto_tfm *tfm = req->base.tfm;
++		dma_addr_t src_addr, dst_addr;
++		u32 compression_crc;
 +
++		compression_crc = idxd_desc->iax_completion->crc;
++
++		dma_sync_sg_for_device(dev, req->dst, 1, DMA_FROM_DEVICE);
++		dma_sync_sg_for_device(dev, req->src, 1, DMA_TO_DEVICE);
++
++		src_addr = sg_dma_address(req->src);
++		dst_addr = sg_dma_address(req->dst);
++
++		ret = iaa_compress_verify(tfm, req, wq, src_addr, req->slen,
++					  dst_addr, &req->dlen, compression_crc);
++	}
 +out:
++	/* caller doesn't call crypto_wait_req, so no acomp_request_complete() */
++
++	dma_unmap_sg(dev, req->dst, sg_nents(req->dst), DMA_FROM_DEVICE);
++	dma_unmap_sg(dev, req->src, sg_nents(req->src), DMA_TO_DEVICE);
++
++	idxd_free_desc(idxd_desc->wq, idxd_desc);
++
++	dev_dbg(dev, "%s: returning ret=%d\n", __func__, ret);
++
++	return ret;
++}
++
++static unsigned int iaa_comp_get_batch_size(void)
++{
++	return IAA_CRYPTO_MAX_BATCH_SIZE;
++}
++
++static void iaa_set_reqchain_poll(
++	struct acomp_req *req0,
++	bool set_flag)
++{
++	struct acomp_req *req;
++
++	set_flag ? (req0->flags |= CRYPTO_ACOMP_REQ_POLL) :
++		   (req0->flags &= ~CRYPTO_ACOMP_REQ_POLL);
++
++	list_for_each_entry(req, &req0->base.list, base.list)
++		set_flag ? (req->flags |= CRYPTO_ACOMP_REQ_POLL) :
++			   (req->flags &= ~CRYPTO_ACOMP_REQ_POLL);
++}
++
++/**
++ * This API provides IAA compress batching functionality for use by swap
++ * modules. Batching is implemented using request chaining.
++ *
++ * @req:  The head asynchronous compress request in the chain.
++ *
++ * Returns the compression error status (0 or -errno) of the last
++ * request that finishes. Caller should call acomp_request_err()
++ * for each request in the chain, to get its error status.
++ */
++static int iaa_comp_acompress_batch(struct acomp_req *req)
++{
++	bool async = (async_mode && !use_irq);
++	int err = 0;
++
++	if (likely(async))
++		iaa_set_reqchain_poll(req, true);
++	else
++		iaa_set_reqchain_poll(req, false);
++
++
++	if (likely(async))
++		/* Process the request chain in parallel. */
++		err = acomp_do_async_req_chain(req, iaa_comp_acompress, iaa_comp_poll);
++	else
++		/* Process the request chain in series. */
++		err = acomp_do_req_chain(req, iaa_comp_acompress);
++
++	/*
++	 * For the same request chain to be usable by
++	 * iaa_comp_acompress()/iaa_comp_adecompress() in synchronous mode,
++	 * clear the CRYPTO_ACOMP_REQ_POLL bit on all acomp_reqs.
++	 */
++	iaa_set_reqchain_poll(req, false);
++
 +	return err;
 +}
 +
-+static void acomp_reqchain_done(void *data, int err)
++/**
++ * This API provides IAA decompress batching functionality for use by swap
++ * modules. Batching is implemented using request chaining.
++ *
++ * @req:  The head asynchronous decompress request in the chain.
++ *
++ * Returns the decompression error status (0 or -errno) of the last
++ * request that finishes. Caller should call acomp_request_err()
++ * for each request in the chain, to get its error status.
++ */
++static int iaa_comp_adecompress_batch(struct acomp_req *req)
 +{
-+	struct acomp_save_req_state *state = data;
-+	crypto_completion_t compl = state->compl;
-+
-+	data = state->data;
-+
-+	if (err == -EINPROGRESS) {
-+		if (!list_empty(&state->head))
-+			return;
-+		goto notify;
-+	}
-+
-+	err = acomp_reqchain_finish(state, err, CRYPTO_TFM_REQ_MAY_BACKLOG);
-+	if (err == -EBUSY)
-+		return;
-+
-+notify:
-+	compl(data, err);
-+}
-+
-+int acomp_do_req_chain(struct acomp_req *req,
-+		       int (*op)(struct acomp_req *req))
-+{
-+	struct crypto_acomp *tfm = crypto_acomp_reqtfm(req);
-+	struct acomp_save_req_state *state;
-+	struct acomp_save_req_state state0;
++	bool async = (async_mode && !use_irq);
 +	int err = 0;
 +
-+	if (!acomp_request_chained(req) || list_empty(&req->base.list) ||
-+	    !crypto_acomp_req_chain(tfm))
-+		return op(req);
++	if (likely(async))
++		iaa_set_reqchain_poll(req, true);
++	else
++		iaa_set_reqchain_poll(req, false);
 +
-+	state = &state0;
 +
-+	if (acomp_is_async(tfm)) {
-+		err = acomp_save_req(req, acomp_reqchain_done);
-+		if (err) {
-+			struct acomp_req *r2;
++	if (likely(async))
++		/* Process the request chain in parallel. */
++		err = acomp_do_async_req_chain(req, iaa_comp_adecompress, iaa_comp_poll);
++	else
++		/* Process the request chain in series. */
++		err = acomp_do_req_chain(req, iaa_comp_adecompress);
 +
-+			req->base.err = err;
-+			list_for_each_entry(r2, &req->base.list, base.list)
-+				r2->base.err = err;
-+
-+			return err;
-+		}
-+
-+		state = req->base.data;
-+	}
-+
-+	state->op = op;
-+	state->cur = req;
-+	INIT_LIST_HEAD(&state->head);
-+	list_splice(&req->base.list, &state->head);
-+
-+	err = op(req);
-+	if (err == -EBUSY || err == -EINPROGRESS)
-+		return -EBUSY;
-+
-+	return acomp_reqchain_finish(state, err, ~0);
-+}
-+EXPORT_SYMBOL_GPL(acomp_do_req_chain);
-+
-+static void acomp_async_reqchain_done(struct acomp_req *req0,
-+				      struct list_head *state,
-+				      int (*op_poll)(struct acomp_req *req))
-+{
-+	struct acomp_req *req, *n;
-+	bool req0_done = false;
-+	int err;
-+
-+	while (!list_empty(state)) {
-+
-+		if (!req0_done) {
-+			err = op_poll(req0);
-+			if (!(err == -EAGAIN || err == -EINPROGRESS || err == -EBUSY)) {
-+				req0->base.err = err;
-+				req0_done = true;
-+			}
-+		}
-+
-+		list_for_each_entry_safe(req, n, state, base.list) {
-+			err = op_poll(req);
-+
-+			if (err == -EAGAIN || err == -EINPROGRESS || err == -EBUSY)
-+				continue;
-+
-+			req->base.err = err;
-+			list_del_init(&req->base.list);
-+			list_add_tail(&req->base.list, &req0->base.list);
-+		}
-+	}
-+
-+	while (!req0_done) {
-+		err = op_poll(req0);
-+		if (!(err == -EAGAIN || err == -EINPROGRESS || err == -EBUSY)) {
-+			req0->base.err = err;
-+			break;
-+		}
-+	}
-+}
-+
-+static int acomp_async_reqchain_finish(struct acomp_req *req0,
-+				       struct list_head *state,
-+				       int (*op_submit)(struct acomp_req *req),
-+				       int (*op_poll)(struct acomp_req *req))
-+{
-+	struct acomp_req *req, *n;
-+	int err = 0;
-+
-+	INIT_LIST_HEAD(&req0->base.list);
-+
-+	list_for_each_entry_safe(req, n, state, base.list) {
-+		BUG_ON(req == req0);
-+
-+		err = op_submit(req);
-+
-+		if (!(err == -EINPROGRESS || err == -EBUSY)) {
-+			req->base.err = err;
-+			list_del_init(&req->base.list);
-+			list_add_tail(&req->base.list, &req0->base.list);
-+		}
-+	}
-+
-+	acomp_async_reqchain_done(req0, state, op_poll);
-+
-+	return req0->base.err;
-+}
-+
-+int acomp_do_async_req_chain(struct acomp_req *req,
-+			     int (*op_submit)(struct acomp_req *req),
-+			     int (*op_poll)(struct acomp_req *req))
-+{
-+	struct crypto_acomp *tfm = crypto_acomp_reqtfm(req);
-+	struct list_head state;
-+	struct acomp_req *r2;
-+	int err = 0;
-+	void *req0_data = req->base.data;
-+
-+	if (!acomp_request_chained(req) || list_empty(&req->base.list) ||
-+		!acomp_is_async(tfm) || !crypto_acomp_req_chain(tfm)) {
-+
-+		err = op_submit(req);
-+
-+		if (err == -EINPROGRESS || err == -EBUSY) {
-+			bool req0_done = false;
-+
-+			while (!req0_done) {
-+				err = op_poll(req);
-+				if (!(err == -EAGAIN || err == -EINPROGRESS || err == -EBUSY)) {
-+					req->base.err = err;
-+					break;
-+				}
-+			}
-+		} else {
-+			req->base.err = err;
-+		}
-+
-+		req->base.data = req0_data;
-+		if (acomp_is_async(tfm))
-+			req->base.complete(req->base.data, req->base.err);
-+
-+		return err;
-+	}
-+
-+	err = op_submit(req);
-+	req->base.err = err;
-+
-+	if (err && !(err == -EINPROGRESS || err == -EBUSY))
-+		goto err_prop;
-+
-+	INIT_LIST_HEAD(&state);
-+	list_splice(&req->base.list, &state);
-+
-+	err = acomp_async_reqchain_finish(req, &state, op_submit, op_poll);
-+	req->base.data = req0_data;
-+	req->base.complete(req->base.data, req->base.err);
-+
-+	return err;
-+
-+err_prop:
-+	list_for_each_entry(r2, &req->base.list, base.list)
-+		r2->base.err = err;
++	/*
++	 * For the same request chain to be usable by
++	 * iaa_comp_acompress()/iaa_comp_adecompress() in synchronous mode,
++	 * clear the CRYPTO_ACOMP_REQ_POLL bit on all acomp_reqs.
++	 */
++	iaa_set_reqchain_poll(req, false);
 +
 +	return err;
 +}
-+EXPORT_SYMBOL_GPL(acomp_do_async_req_chain);
 +
- struct acomp_req *acomp_request_alloc(struct crypto_acomp *acomp)
++static int iaa_compress_main(struct acomp_req *req)
++{
++	if (acomp_is_reqchain(req))
++		return iaa_comp_acompress_batch(req);
++
++	return iaa_comp_acompress(req);
++}
++
++static int iaa_decompress_main(struct acomp_req *req)
++{
++	if (acomp_is_reqchain(req))
++		return iaa_comp_adecompress_batch(req);
++
++	return iaa_comp_adecompress(req);
++}
++
+ static int iaa_comp_init_fixed(struct crypto_acomp *acomp_tfm)
  {
- 	struct crypto_tfm *tfm = crypto_acomp_tfm(acomp);
-diff --git a/include/crypto/acompress.h b/include/crypto/acompress.h
-index 54937b615239..e6783deba3ac 100644
---- a/include/crypto/acompress.h
-+++ b/include/crypto/acompress.h
-@@ -206,6 +206,7 @@ static inline void acomp_request_set_callback(struct acomp_req *req,
- 	req->base.data = data;
- 	req->base.flags &= CRYPTO_ACOMP_ALLOC_OUTPUT;
- 	req->base.flags |= flgs & ~CRYPTO_ACOMP_ALLOC_OUTPUT;
-+	req->base.flags &= ~CRYPTO_TFM_REQ_CHAIN;
- }
+ 	struct crypto_tfm *tfm = crypto_acomp_tfm(acomp_tfm);
+@@ -1829,13 +2008,14 @@ static void dst_free(struct scatterlist *sgl)
  
- /**
-@@ -237,6 +238,51 @@ static inline void acomp_request_set_params(struct acomp_req *req,
- 		req->flags |= CRYPTO_ACOMP_ALLOC_OUTPUT;
- }
- 
-+static inline u32 acomp_request_flags(struct acomp_req *req)
-+{
-+	return req->base.flags;
-+}
-+
-+static inline void acomp_reqchain_init(struct acomp_req *req,
-+				       u32 flags, crypto_completion_t compl,
-+				       void *data)
-+{
-+	acomp_request_set_callback(req, flags, compl, data);
-+	crypto_reqchain_init(&req->base);
-+}
-+
-+static inline bool acomp_is_reqchain(struct acomp_req *req)
-+{
-+	return crypto_is_reqchain(&req->base);
-+}
-+
-+static inline void acomp_reqchain_clear(struct acomp_req *req, void *data)
-+{
-+	struct crypto_wait *wait = (struct crypto_wait *)data;
-+	reinit_completion(&wait->completion);
-+	crypto_reqchain_clear(&req->base);
-+	acomp_request_set_callback(req, CRYPTO_TFM_REQ_MAY_BACKLOG,
-+				   crypto_req_done, data);
-+}
-+
-+static inline void acomp_request_chain(struct acomp_req *req,
-+				       struct acomp_req *head)
-+{
-+	crypto_request_chain(&req->base, &head->base);
-+}
-+
-+int acomp_do_req_chain(struct acomp_req *req,
-+		       int (*op)(struct acomp_req *req));
-+
-+int acomp_do_async_req_chain(struct acomp_req *req,
-+			     int (*op_submit)(struct acomp_req *req),
-+			     int (*op_poll)(struct acomp_req *req));
-+
-+static inline int acomp_request_err(struct acomp_req *req)
-+{
-+	return req->base.err;
-+}
-+
- /**
-  * crypto_acomp_compress() -- Invoke asynchronous compress operation
-  *
-diff --git a/include/crypto/algapi.h b/include/crypto/algapi.h
-index 156de41ca760..c5df380c7d08 100644
---- a/include/crypto/algapi.h
-+++ b/include/crypto/algapi.h
-@@ -271,4 +271,14 @@ static inline u32 crypto_tfm_alg_type(struct crypto_tfm *tfm)
- 	return tfm->__crt_alg->cra_flags & CRYPTO_ALG_TYPE_MASK;
- }
- 
-+static inline bool crypto_request_chained(struct crypto_async_request *req)
-+{
-+	return req->flags & CRYPTO_TFM_REQ_CHAIN;
-+}
-+
-+static inline bool crypto_tfm_req_chain(struct crypto_tfm *tfm)
-+{
-+	return tfm->__crt_alg->cra_flags & CRYPTO_ALG_REQ_CHAIN;
-+}
-+
- #endif	/* _CRYPTO_ALGAPI_H */
-diff --git a/include/crypto/internal/acompress.h b/include/crypto/internal/acompress.h
-index 8831edaafc05..53b4ef59b48c 100644
---- a/include/crypto/internal/acompress.h
-+++ b/include/crypto/internal/acompress.h
-@@ -84,6 +84,16 @@ static inline void __acomp_request_free(struct acomp_req *req)
- 	kfree_sensitive(req);
- }
- 
-+static inline bool acomp_request_chained(struct acomp_req *req)
-+{
-+	return crypto_request_chained(&req->base);
-+}
-+
-+static inline bool crypto_acomp_req_chain(struct crypto_acomp *tfm)
-+{
-+	return crypto_tfm_req_chain(&tfm->base);
-+}
-+
- /**
-  * crypto_register_acomp() -- Register asynchronous compression algorithm
-  *
-diff --git a/include/linux/crypto.h b/include/linux/crypto.h
-index b164da5e129e..f1bc282e1ed6 100644
---- a/include/linux/crypto.h
-+++ b/include/linux/crypto.h
-@@ -13,6 +13,8 @@
- #define _LINUX_CRYPTO_H
- 
- #include <linux/completion.h>
-+#include <linux/errno.h>
-+#include <linux/list.h>
- #include <linux/refcount.h>
- #include <linux/slab.h>
- #include <linux/types.h>
-@@ -124,6 +126,9 @@
-  */
- #define CRYPTO_ALG_FIPS_INTERNAL	0x00020000
- 
-+/* Set if the algorithm supports request chains. */
-+#define CRYPTO_ALG_REQ_CHAIN		0x00040000
-+
- /*
-  * Transform masks and values (for crt_flags).
-  */
-@@ -133,6 +138,7 @@
- #define CRYPTO_TFM_REQ_FORBID_WEAK_KEYS	0x00000100
- #define CRYPTO_TFM_REQ_MAY_SLEEP	0x00000200
- #define CRYPTO_TFM_REQ_MAY_BACKLOG	0x00000400
-+#define CRYPTO_TFM_REQ_CHAIN		0x00000800
- 
- /*
-  * Miscellaneous stuff.
-@@ -174,6 +180,7 @@ struct crypto_async_request {
- 	struct crypto_tfm *tfm;
- 
- 	u32 flags;
-+	int err;
- };
- 
- /**
-@@ -391,6 +398,9 @@ void crypto_req_done(void *req, int err);
- 
- static inline int crypto_wait_req(int err, struct crypto_wait *wait)
- {
-+	if (!wait)
-+		return err;
-+
- 	switch (err) {
- 	case -EINPROGRESS:
- 	case -EBUSY:
-@@ -540,5 +550,34 @@ int crypto_comp_decompress(struct crypto_comp *tfm,
- 			   const u8 *src, unsigned int slen,
- 			   u8 *dst, unsigned int *dlen);
- 
-+static inline void crypto_reqchain_init(struct crypto_async_request *req)
-+{
-+	req->err = -EINPROGRESS;
-+	req->flags |= CRYPTO_TFM_REQ_CHAIN;
-+	INIT_LIST_HEAD(&req->list);
-+}
-+
-+static inline bool crypto_is_reqchain(struct crypto_async_request *req)
-+{
-+	return req->flags & CRYPTO_TFM_REQ_CHAIN;
-+}
-+
-+static inline void crypto_reqchain_clear(struct crypto_async_request *req)
-+{
-+	req->flags &= ~CRYPTO_TFM_REQ_CHAIN;
-+}
-+
-+static inline void crypto_request_chain(struct crypto_async_request *req,
-+					struct crypto_async_request *head)
-+{
-+	req->err = -EINPROGRESS;
-+	list_add_tail(&req->list, &head->list);
-+}
-+
-+static inline bool crypto_tfm_is_async(struct crypto_tfm *tfm)
-+{
-+	return tfm->__crt_alg->cra_flags & CRYPTO_ALG_ASYNC;
-+}
-+
- #endif	/* _LINUX_CRYPTO_H */
- 
+ static struct acomp_alg iaa_acomp_fixed_deflate = {
+ 	.init			= iaa_comp_init_fixed,
+-	.compress		= iaa_comp_acompress,
+-	.decompress		= iaa_comp_adecompress,
++	.compress		= iaa_compress_main,
++	.decompress		= iaa_decompress_main,
+ 	.dst_free               = dst_free,
++	.get_batch_size		= iaa_comp_get_batch_size,
+ 	.base			= {
+ 		.cra_name		= "deflate",
+ 		.cra_driver_name	= "deflate-iaa",
+-		.cra_flags		= CRYPTO_ALG_ASYNC,
++		.cra_flags		= CRYPTO_ALG_ASYNC | CRYPTO_ALG_REQ_CHAIN,
+ 		.cra_ctxsize		= sizeof(struct iaa_compression_ctx),
+ 		.cra_module		= THIS_MODULE,
+ 		.cra_priority		= IAA_ALG_PRIORITY,
 -- 
 2.27.0
 
