@@ -1,106 +1,149 @@
-Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 705561D2F53
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 03:31:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC2B8225D6;
+	Mon,  3 Mar 2025 03:32:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740972697; cv=none; b=Cpoq+y/A++oLmCD/QybS9sgliQ6j9uddX+61QV5+A96Da58lVlU4tEXNZ76NV93fps0RMz+q/8TX4Y8CToxr7uxVKN0TfEXV+XVtx/upI+sYMm7Gl7JZRKP04aIBU15EI0+XbGOf/LV3WCFAH4s5hL0I7HXQ6E61ldYRpsZVlK4=
+	t=1740972752; cv=none; b=oLdr6o2vZ16s+hAoo95y60RogJrSHDJB9WjLW8fMTWm7g5XMkHTzKGEobK+/EY2nZJw3Eebmidrn41M73Ljgq/M0WSTodsK2Tnft0/kTQsixhOMuvLAKU7m3Ny6fZ+UG/i+u/RMB/g/Q1sktwKc7z3YD2orD06xtBzdADh3N1sU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740972697; c=relaxed/simple;
-	bh=3uhLCSmvvv7VkNMELhSDXmUJnOZ/IQEAZmCHPCOiFD4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UbVS9xTJZabDiIqNgmQJ2WiSUQIRCdPBYoCk4iIo7lbuav1ElNR4vnDj1F+XNGAVNszM4+HVV6Ni9zN5CaliYdT3bmdVNmPOhJhY/q7O6nS5cfyDOAgHm2o97yj7nuYjGtK/LeDMsi3EzYjUvbhpA/Bc4+HVRac0AH/MX67AwDc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=jbqGZAZw; arc=none smtp.client-ip=209.85.216.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1740972752; c=relaxed/simple;
+	bh=SgfwcNAGtGysz8w5ImfVW71Vm+58S1DAXlJz7MZp4Vc=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=dMMPgjmczfrIh3CCPrDDOl3tIqHDHdNlu5JU2w7Ep2VHDeFsOXM6kdKKzPBGav/90ihUi+YxF6BJxPavsd8NCAlxLDkhuyUAq6QaIw32jpLFtVJkPyJfKCYkJOWKrDBAzdsHWuRMS+01UuIub1zI+sVkW5vg82/2DEdHuN84/B0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=R8yL0XJH; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="jbqGZAZw"
-Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-2fea8d8c2f1so972812a91.3
-        for <linux-kernel@vger.kernel.org>; Sun, 02 Mar 2025 19:31:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1740972695; x=1741577495; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=xBNDP/P3k6ybBa7xjmDIf+Y6ZzGtfCp6fqST1oagGvI=;
-        b=jbqGZAZwrEhU/BinhHQcp1+OjTqKrVjm1sQnszkHjqTvaYuB2iCEKPbkDnXS3Cx+rr
-         dHit6TNzgyJa2LkjPR2wZKvZkUb9vvUSZQCXTP/tkTIkHJP8E/XXShq1Faif2qugWmzg
-         suGx4WKygeL996j3q2s5eOL/cGXBDvsHlPLD8kH5rrRoO/dWAZ6D6DFretK5b3zwUz4m
-         +Tnmd0y8aElaGf0wX+YxCJo7ihAJZob+mXv2RVsJ2HtQxeJCexdDCYdTMql300kY1v2T
-         2o6jXP8ts7cC2d5g5oKEfqDCaIc8GX0Y8A3IbNmo6/faDkdS8DNdUo2IwEqpJVkA5+W+
-         Pbkw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740972695; x=1741577495;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xBNDP/P3k6ybBa7xjmDIf+Y6ZzGtfCp6fqST1oagGvI=;
-        b=uwxkpXbIOTGPRyGEt6xx5noTBI70uq97OU0MzvwrPKdcVEjmU7EaPcuaxBWYWHHGOo
-         HOrKzJE1v2J/uPbN82KOOMMqRFgLInlAsm7ykbaOVCvOMBdLdaMv/PXtvo2yGRzWyhjS
-         OCehH8vQ/M4Y2kaNs3RrELeUQU8gfRDOPo+RkdxbQfPkJh4ellR7K8LaGxWw8zKF50M3
-         BeCX8m0eWIwI64/N9BjSQtAc9EY8ExH5P2IX39FtFWpMR/FNN4aa6dkl9vDv5FjP1w+7
-         ybY4KtH9lrirJVYFYc6JxR1H/ab4uliQrhCzCcphAK7hkembY042+s/HCxXAbHKmuR4B
-         PtoQ==
-X-Gm-Message-State: AOJu0Yw9HBDQ6ahagfpMGknD0mTEpwZDTdCN9FCPtqeb9hqTKxPqs2pI
-	04V+/C5WMvHu9Jv/0dXSLnYCx3UWqeZrgn6BxnoZXuKM51hFYKOSnnIT/8ZQ13Q=
-X-Gm-Gg: ASbGnctBbcAvjvHYuLl8q6nMVw3DJZGun7DNJJJxc81fwmVndXu4eLPWdisFvYJQxkh
-	Ftfmu6fzA5HmF8uSh/ypQyDNr+rbX6h/1iyDPeHqYsFoYX5hpItn1iJr3bzmN1uaSUlrnEhASo1
-	9+s5N84ANHcpqS6rVJjLnnsCwpr5K78I8qL9PdIuuxlOeX16LWdHKL46VPzkszB0CRH2PFHwRrc
-	7ZZOFKCJaV0jx68o2QoPLQFCKET9me8OMt9EKbT+IQL6WYgbcYkjpFviDGUepZeM+fN3KZOhgOY
-	nj7uMQOZ2/zMSApD6MEeUFOdFYixK8H5lVifRJbgj4Ys1hD7ibqCZs3k8Rlk4k0iBoRk
-X-Google-Smtp-Source: AGHT+IFT7HPm+Oc+5ur6a5DTN9AUjLi4VFmqkdaUHeG+iwbpjhZS9aj+KI58zSiVa7EVPjadRMIGOQ==
-X-Received: by 2002:a17:90b:1d02:b0:2fc:25b3:6a7b with SMTP id 98e67ed59e1d1-2febabf856bmr7166540a91.6.1740972694622;
-        Sun, 02 Mar 2025 19:31:34 -0800 (PST)
-Received: from [10.254.225.63] ([139.177.225.243])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-223501fd28dsm67664885ad.94.2025.03.02.19.31.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 02 Mar 2025 19:31:33 -0800 (PST)
-Message-ID: <033b4ec3-cbbd-4aa8-b25b-3bb4bdbaced9@bytedance.com>
-Date: Mon, 3 Mar 2025 11:30:07 +0800
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="R8yL0XJH"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 522NAN14010050;
+	Mon, 3 Mar 2025 03:30:15 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	9cyWBbkGS49vwWOjICuYMJBNYDFOfeu+z9/asngCMic=; b=R8yL0XJH91q+mUb7
+	HYH/p4mH5DAb5ZzZjW+iQx2vv/NOcblX1+QdACl9Hy0i1a85V+QqHrUIqU0OKC4i
+	ec4yVbsWCwVl3qHtVOX8DaVk64qmaqFf6QxgOLYsM7t0G8x4LxoCr1QgT/slW7z0
+	2wyKu06zixeXGW0A+WAoJEyp/xEDsNdW36GC33ACHe+rMdslt92ZNQ7ulIakSZkF
+	dhGpMt1TcJ0S6cE3fW2QAcjDOkMqWqcqUxMZG3pVKMDrGv9CvdV4mxhNM8KQxYcd
+	6Ofuj/vEBBc9BZXMI5BOcdeYyPnnfyD1+5/iwyPutoqdeGNg9EjgbLN9NnWGiWji
+	pcV8FA==
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 453t993cdn-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 03 Mar 2025 03:30:14 +0000 (GMT)
+Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
+	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5233UEta013393
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 3 Mar 2025 03:30:14 GMT
+Received: from jiegan-gv.qualcomm.com (10.80.80.8) by
+ nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Sun, 2 Mar 2025 19:30:08 -0800
+From: Jie Gan <quic_jiegan@quicinc.com>
+To: Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach
+	<mike.leach@linaro.org>,
+        James Clark <james.clark@linaro.org>,
+        "Alexander
+ Shishkin" <alexander.shishkin@linux.intel.com>,
+        Maxime Coquelin
+	<mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>
+CC: Tingwei Zhang <quic_tingweiz@quicinc.com>,
+        Jinlong Mao
+	<quic_jinlmao@quicinc.com>, <coresight@lists.linaro.org>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>
+Subject: [PATCH v15 03/10] Coresight: Use coresight_etm_get_trace_id() in traceid_show()
+Date: Mon, 3 Mar 2025 11:29:24 +0800
+Message-ID: <20250303032931.2500935-4-quic_jiegan@quicinc.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250303032931.2500935-1-quic_jiegan@quicinc.com>
+References: <20250303032931.2500935-1-quic_jiegan@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Re: [PATCH v2 0/2] Fix SCHED_IDLE behavior on wakeup preemption
-To: K Prateek Nayak <kprateek.nayak@amd.com>,
- Madadi Vineeth Reddy <vineethr@linux.ibm.com>, Phil Auld <pauld@redhat.com>,
- Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
- Juri Lelli <juri.lelli@redhat.com>,
- Vincent Guittot <vincent.guittot@linaro.org>,
- Dietmar Eggemann <dietmar.eggemann@arm.com>,
- Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>,
- Mel Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>,
- Josh Don <joshdon@google.com>, Tianchen Ding <dtcccc@linux.alibaba.com>
-Cc: "open list:SCHEDULER" <linux-kernel@vger.kernel.org>
-References: <20250227085815.18131-1-wuyun.abel@bytedance.com>
- <3ce5065e-8b9b-46a8-b7c1-5f9b8f118b06@amd.com>
-Content-Language: en-US
-From: Abel Wu <wuyun.abel@bytedance.com>
-In-Reply-To: <3ce5065e-8b9b-46a8-b7c1-5f9b8f118b06@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01c.na.qualcomm.com (10.47.97.35)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: UtRuN8YuFSK0OyCiCYLPqIcTQgz1DlPb
+X-Proofpoint-GUID: UtRuN8YuFSK0OyCiCYLPqIcTQgz1DlPb
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-03_01,2025-02-28_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxlogscore=765
+ mlxscore=0 lowpriorityscore=0 suspectscore=0 priorityscore=1501
+ clxscore=1015 spamscore=0 adultscore=0 impostorscore=0 malwarescore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502100000 definitions=main-2503030024
 
-On 2/28/25 4:05 PM, K Prateek Nayak wrote:
-> Hello Abel,
-> 
-> On 2/27/2025 2:28 PM, Abel Wu wrote:
->> The commit 6bc912b71b6f ("sched: SCHED_OTHER vs SCHED_IDLE isolation")
->> defines the behavior of SCHED_IDLE as following:
->>
->>   - no SCHED_IDLE buddies
->>   - never let SCHED_IDLE preempt on wakeup
->>   - always preempt SCHED_IDLE on wakeup
->>   - limit SLEEPER fairness for SCHED_IDLE
->>
->> and the middle two of them are broken now.
-> 
-> Feel free to include:
-> 
-> Tested-by: K Prateek Nayak <kprateek.nayak@amd.com>
+From: James Clark <james.clark@linaro.org>
 
-Thanks!
+Use the new API, coresight_etm_get_trace_id, to read the traceid of the ETM
+device when call traceid_show via sysfs node.
+
+Signed-off-by: James Clark <james.clark@linaro.org>
+Reviewed-by: James Clark <james.clark@linaro.org>
+Signed-off-by: Jie Gan <quic_jiegan@quicinc.com>
+---
+ drivers/hwtracing/coresight/coresight-etm3x-sysfs.c | 3 +--
+ drivers/hwtracing/coresight/coresight-etm4x-sysfs.c | 4 ++--
+ 2 files changed, 3 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/hwtracing/coresight/coresight-etm3x-sysfs.c b/drivers/hwtracing/coresight/coresight-etm3x-sysfs.c
+index 68c644be9813..b9006451f515 100644
+--- a/drivers/hwtracing/coresight/coresight-etm3x-sysfs.c
++++ b/drivers/hwtracing/coresight/coresight-etm3x-sysfs.c
+@@ -1190,10 +1190,9 @@ static DEVICE_ATTR_RO(cpu);
+ static ssize_t traceid_show(struct device *dev,
+ 			    struct device_attribute *attr, char *buf)
+ {
+-	int trace_id;
+ 	struct etm_drvdata *drvdata = dev_get_drvdata(dev->parent);
++	int trace_id = coresight_etm_get_trace_id(drvdata->csdev, CS_MODE_SYSFS, NULL);
+ 
+-	trace_id = etm_read_alloc_trace_id(drvdata);
+ 	if (trace_id < 0)
+ 		return trace_id;
+ 
+diff --git a/drivers/hwtracing/coresight/coresight-etm4x-sysfs.c b/drivers/hwtracing/coresight/coresight-etm4x-sysfs.c
+index c767f8ae4cf1..e5216c0f60da 100644
+--- a/drivers/hwtracing/coresight/coresight-etm4x-sysfs.c
++++ b/drivers/hwtracing/coresight/coresight-etm4x-sysfs.c
+@@ -4,6 +4,7 @@
+  * Author: Mathieu Poirier <mathieu.poirier@linaro.org>
+  */
+ 
++#include <linux/coresight.h>
+ #include <linux/pid_namespace.h>
+ #include <linux/pm_runtime.h>
+ #include <linux/sysfs.h>
+@@ -2402,10 +2403,9 @@ static ssize_t trctraceid_show(struct device *dev,
+ 			       struct device_attribute *attr,
+ 			       char *buf)
+ {
+-	int trace_id;
+ 	struct etmv4_drvdata *drvdata = dev_get_drvdata(dev->parent);
++	int trace_id = coresight_etm_get_trace_id(drvdata->csdev, CS_MODE_SYSFS, NULL);
+ 
+-	trace_id = etm4_read_alloc_trace_id(drvdata);
+ 	if (trace_id < 0)
+ 		return trace_id;
+ 
+-- 
+2.34.1
 
