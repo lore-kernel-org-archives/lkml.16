@@ -1,197 +1,124 @@
-Received: from ksmg02.maxima.ru (ksmg02.maxima.ru [81.200.124.39])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE2E91F1931;
-	Mon,  3 Mar 2025 10:06:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=81.200.124.39
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 172D61E9907
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 10:08:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740996403; cv=none; b=jrpi400FLhF6F95U/Ac9AqWm8HejuPuwViXV2QNVsW93RozGBR7FwTtowwjf825Yy939KuGcxcAYsqH7DRR8HSRQAbqVSnf6A7R4JHuJcim+K4J0Kkpt2iGbxxTZSLNrK/RrKs0dTjrDzBahXOqMbXgXypdV0rLlrAbwbS9CtIA=
+	t=1740996517; cv=none; b=hRMEqsxlyeyGn4b7RcZ0tGA4k8TUVVdcZ2WMalKj/a64t8uo2eJJg0fRFBuUCZcvZWf1q49n1oDsb8aZbEylqmKzkECmZ+ML4znzUDydmM3LXdYnXwlbb/e6aTDoRSYE7YVNB+2mPtv1hekgbSEi4B1Xxa41cDPPQf2X/I5dRLc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740996403; c=relaxed/simple;
-	bh=UksR+68HAdjeStzHE7XAOZItJDznLBL+IQcACLjegYE=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=dCypaKQOcp7lzPmxqZk/zV3K6amZwbbbPl9PsBnoPClUhQXfS2KOs4fErAXosBpT4iaRvMw21rTby5rv0T9WkTwVdWC9PI3oLbfTVbS2vNua76DLwH5tt+Ik5s7SUOlxyI1ABxxVm3guLxhQFoS+k3aRr0NsV9Rm3ynIzBbyZmQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mt-integration.ru; spf=pass smtp.mailfrom=mt-integration.ru; dkim=pass (2048-bit key) header.d=mt-integration.ru header.i=@mt-integration.ru header.b=rVhbfMYp; arc=none smtp.client-ip=81.200.124.39
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mt-integration.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mt-integration.ru
+	s=arc-20240116; t=1740996517; c=relaxed/simple;
+	bh=Fg0PMUf71HrKqLcTdAMEOyWnPDpROLGy0gLEnbMjfIU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jE68A+dSrZFvdNon7RALCblYlPsmyzPt9UPWHo4XfwY+Zh1Z6bJYse0ZAUebvuaZBdPOZae0MmkLVomkcy3/LJ2hwC4ffoEXyKiQpOvKWplKqPEaIzFKxyN5oj1H11w/3LLtmOwrOT7m0TdwyQk/WSnWroWTDFlx56K4S/EjpE4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=KFB/Uj9f; arc=none smtp.client-ip=209.85.208.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mt-integration.ru header.i=@mt-integration.ru header.b="rVhbfMYp"
-Received: from ksmg02.maxima.ru (localhost [127.0.0.1])
-	by ksmg02.maxima.ru (Postfix) with ESMTP id 2543A1E0006;
-	Mon,  3 Mar 2025 13:06:29 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 ksmg02.maxima.ru 2543A1E0006
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mt-integration.ru;
-	s=sl; t=1740996389; bh=pubGMWC3AYU//KJal6eJdXbxFq+MH1hIugCEheoMsK4=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
-	b=rVhbfMYpZcqh1ztEzOk28jkuGvlIHWRkwxv9KfqeGSjNyyI1U8G6Ta6dqlYFzPslF
-	 n0krdZhqVdMIzSXUM2mzn2n5Jun83CFk9kpVK02L7MQ61JJWpCiBIJlitPULAn1jKP
-	 TH2HY1659ih+cx1ZBn9c5P5yPhzhs+W3xooR1GRTNN4ZzAPmNw9z/R0ka7XhwjehXm
-	 6LoWwCmObuKPqL5Iw12VL5fAMLdKa3sxq3JF2a3GYtDRCt5m3dBfqJSUD1DjnL6cFI
-	 2XAjhW4ZCKc5UnkyiWLwDnJop3atXepBVeHKaPVnbYdz+ySmZwB2GgAvagRiOUa0ie
-	 0Yt6x9oa3pdgA==
-Received: from ksmg02.maxima.ru (autodiscover.maxima.ru [81.200.124.62])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(Client CN "*.maxima.ru", Issuer "GlobalSign GCC R3 DV TLS CA 2020" (verified OK))
-	by ksmg02.maxima.ru (Postfix) with ESMTPS;
-	Mon,  3 Mar 2025 13:06:28 +0300 (MSK)
-Received: from GS-NOTE-190.mt.ru (10.0.247.89) by mmail-p-exch02.mt.ru
- (81.200.124.62) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.2.1544.4; Mon, 3 Mar 2025
- 13:06:26 +0300
-From: Murad Masimov <m.masimov@mt-integration.ru>
-To: Jaroslav Kysela <perex@perex.cz>
-CC: Takashi Iwai <tiwai@suse.com>, Murad Masimov
-	<m.masimov@mt-integration.ru>, <linux-sound@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <lvc-project@linuxtesting.org>
-Subject: [PATCH] ALSA: usx2y: validate nrpacks module parameter on probe
-Date: Mon, 3 Mar 2025 13:04:13 +0300
-Message-ID: <20250303100413.835-1-m.masimov@mt-integration.ru>
-X-Mailer: git-send-email 2.46.0.windows.1
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KFB/Uj9f"
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5e4ad1d67bdso6653693a12.2
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Mar 2025 02:08:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1740996514; x=1741601314; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=GjBFcA67rMS7ZHAwLBuRWTDfKIm2qOaBa66RMYQiiBE=;
+        b=KFB/Uj9fe1HQqhfh294N7SmosO9Bl0Uyrom98f3vxF/vx2yjJcd49hG6tdxfHMWVU5
+         avqx5k1KEL+cioBmDPZDYBcY3fHa4pqfLHTqesF5N+tRzDEN5JX+DTE19/F0dIaWX1Bg
+         1apLKX1lxhh4vsZJ0nPSIE7BeSuddlTJevQ76g6uIZJSyTMov+O6lVpC5TOQ75pNhhaa
+         Q5BrDlFuC64Tq1NRm66fkV5+HdF26K0hz8dvDIT/caMUDpQy0afbpNHjndM8L3T7ttob
+         BP1kSbL4dqIG2CddQ94zMRKZ4LMkHJEZhsTWBAkJtm4atZJbn2yU9iM3UwEiDXaGiUn9
+         MwIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740996514; x=1741601314;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=GjBFcA67rMS7ZHAwLBuRWTDfKIm2qOaBa66RMYQiiBE=;
+        b=D1ADz/XifIHYXS+QLQvWOjrB2tPSHf2/svdZsjpHecdn2vCJcC1Yy8vB/OtH9qXEj2
+         WvIFUXAHN8E8Io0IY5l06qfTDKXoqujulDKV5greRlMC+jy2NpuGrTVyJ5PdVQDvqJkY
+         3kJEXXNqDB9yOEXVhkh+oXiSqydm7sm/uIF1/Okpe5SH9gwe8WRWYSW5wP36TCdqhA3H
+         QNQ9Z9nPvLBPQrUOFTrUYxhiYlucaO9pBzX2r8rIz4TCkD7KKq2iJ+l87l4GCnvjzIPA
+         uZoB91rAq3tUNVnsPsLMR5AT8p21cNxVKIj0Vf0C6989AGtidGtSlTVbmJFq/Kz/0gbx
+         GQJQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVVXboMVG7Slv71+FvTvkwwvV+/twRTn4oYhErqDvCS/16c+h/gKZzmayM0esDRuOKK+3M7pQK7U2QzwGA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwGtd9i4FdWL6h4z4cp++FKvV1UbEekOdhxpIcIXPfbOGOBvPAA
+	m9Mp0Mlu1/nhE4K7ooKfrY4or0el5YrkVpFKnrtiuGFX1wKX0zAB5fQ5tCqX9h0=
+X-Gm-Gg: ASbGncvAdOccs27mx67eZ7DO3UVvSmIJDw5b67YLwpRgbNfUWd2qlw6kCZe1yNz6xlE
+	MSvW/VgsRmyLC96mZvcl6QKo3dAp5sYaSWm47qdBXNb6+HjKVZwgr1wuA7JFJrFWyp+lQ4D04xN
+	e9D+6pqubexWIqYAwbzNIzYtNhDArmTdoeHYnTUCliO6Fd1stUio90lBqViqCxWVn0xrSnbvp1s
+	Uu9Up4y70I6+YdxOaWXigcUR8+IufmgciiGoeq2Hiu/BkbH5150CZtmrx6rlMzWGtzg5nROexFp
+	bQU+PGhcZijs1ZrVl2QIDtSQ+XWnisGwkX9BmugOcjJySxKmCg==
+X-Google-Smtp-Source: AGHT+IEPxlHoiKz/rey+mSNj9p6SHZuD3oFGIyaUPKEFRRWxafVAlE/vcmhJEnz4DfJOlevycDZ6wA==
+X-Received: by 2002:a05:6402:274a:b0:5e4:c235:de10 with SMTP id 4fb4d7f45d1cf-5e4d6b7b21fmr11376850a12.32.1740996514382;
+        Mon, 03 Mar 2025 02:08:34 -0800 (PST)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with UTF8SMTPSA id 4fb4d7f45d1cf-5e4c3b6cfd0sm6648394a12.28.2025.03.03.02.08.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Mar 2025 02:08:34 -0800 (PST)
+Date: Mon, 3 Mar 2025 13:08:29 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@baylibre.com>
+Cc: Markus Elfring <Markus.Elfring@web.de>, kernel-janitors@vger.kernel.org,
+	linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
+	Antonino Daplas <adaplas@pol.net>, Helge Deller <deller@gmx.de>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Yihao Han <hanyihao@vivo.com>, cocci@inria.fr,
+	LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH RESEND] video: au1100fb: Move a variable assignment
+ behind a null pointer check in au1100fb_setmode()
+Message-ID: <eebf8c0c-7a6a-405f-aaab-2a8a8c2bd91f@stanley.mountain>
+References: <40c60719-4bfe-b1a4-ead7-724b84637f55@web.de>
+ <1a11455f-ab57-dce0-1677-6beb8492a257@web.de>
+ <86551e6f-d529-1ff6-6ce6-b9669d10e6cb@web.de>
+ <3f1e7aaa-501a-44f1-8122-28e9efa0a33c@web.de>
+ <ugymllbkcsg22ffgyofvkquh5afbvoyv2nna5udmy3xfhv2rjz@jhgghzldzm4u>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: mt-exch-01.mt.ru (91.220.120.210) To mmail-p-exch02.mt.ru
- (81.200.124.62)
-X-KSMG-AntiPhishing: NotDetected, bases: 2025/03/03 07:22:00
-X-KSMG-AntiSpam-Auth: dmarc=none header.from=mt-integration.ru;spf=none smtp.mailfrom=mt-integration.ru;dkim=none
-X-KSMG-AntiSpam-Envelope-From: m.masimov@mt-integration.ru
-X-KSMG-AntiSpam-Info: LuaCore: 51 0.3.51 68896fb0083a027476849bf400a331a2d5d94398, {rep_avail}, {Tracking_uf_ne_domains}, {Tracking_from_domain_doesnt_match_to}, mt-integration.ru:7.1.1;bugtrack.alsa-project.org:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;127.0.0.199:7.1.2;ksmg02.maxima.ru:7.1.1;81.200.124.62:7.1.2, FromAlignment: s, ApMailHostAddress: 81.200.124.62
-X-KSMG-AntiSpam-Interceptor-Info: scan successful
-X-KSMG-AntiSpam-Lua-Profiles: 191421 [Mar 03 2025]
-X-KSMG-AntiSpam-Method: none
-X-KSMG-AntiSpam-Rate: 0
-X-KSMG-AntiSpam-Status: not_detected
-X-KSMG-AntiSpam-Version: 6.1.1.11
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.1.1.8310, bases: 2025/03/03 06:47:00 #27558135
-X-KSMG-AntiVirus-Status: NotDetected, skipped
-X-KSMG-LinksScanning: NotDetected, bases: 2025/03/03 07:22:00
-X-KSMG-Message-Action: skipped
-X-KSMG-Rule-ID: 7
+In-Reply-To: <ugymllbkcsg22ffgyofvkquh5afbvoyv2nna5udmy3xfhv2rjz@jhgghzldzm4u>
 
-The module parameter defines number of iso packets per one URB. User is
-allowed to set any value to the parameter of type int, which can lead to
-various kinds of weird and incorrect behavior like integer overflows,
-truncations, etc. Number of packets should be a small non-negative number.
+On Mon, Mar 03, 2025 at 10:19:06AM +0100, Uwe Kleine-König wrote:
+> Hello,
+> 
+> On Sun, Mar 02, 2025 at 07:02:12PM +0100, Markus Elfring wrote:
+> > From: Markus Elfring <elfring@users.sourceforge.net>
+> > Date: Thu, 13 Apr 2023 21:35:36 +0200
+> > 
+> > The address of a data structure member was determined before
+> > a corresponding null pointer check in the implementation of
+> > the function “au1100fb_setmode”.
+> > 
+> > Thus avoid the risk for undefined behaviour by moving the assignment
+> > for the variable “info” behind the null pointer check.
+> > 
+> > This issue was detected by using the Coccinelle software.
+> > 
+> > Fixes: 3b495f2bb749 ("Au1100 FB driver uplift for 2.6.")
+> > Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+> 
+> Acked-by: Uwe Kleine-König <u.kleine-koenig@baylibre.com>
+> 
+> Should also get
+> 
+> Cc: stable@vger.kernel.org
+> 
+> to ensure this is backported to stable.
 
-Since this parameter is read-only, its value can be validated on driver
-probe.
+It's not a bugfix, it's a cleanup.  That's not a dereference, it's
+just pointer math.  It shouldn't have a Fixes tag.
 
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Signed-off-by: Murad Masimov <m.masimov@mt-integration.ru>
----
- sound/usb/usx2y/usbusx2y.c      | 11 +++++++++++
- sound/usb/usx2y/usbusx2y.h      | 26 ++++++++++++++++++++++++++
- sound/usb/usx2y/usbusx2yaudio.c | 27 ---------------------------
- 3 files changed, 37 insertions(+), 27 deletions(-)
+Real bugs where we dereference a pointer and then check for NULL don't
+last long in the kernel.  Most of the stuff Markus is sending is false
+positives like this.
 
-diff --git a/sound/usb/usx2y/usbusx2y.c b/sound/usb/usx2y/usbusx2y.c
-index 5f81c68fd42b..5756ff3528a2 100644
---- a/sound/usb/usx2y/usbusx2y.c
-+++ b/sound/usb/usx2y/usbusx2y.c
-@@ -151,6 +151,12 @@ static int snd_usx2y_card_used[SNDRV_CARDS];
- static void snd_usx2y_card_private_free(struct snd_card *card);
- static void usx2y_unlinkseq(struct snd_usx2y_async_seq *s);
-
-+#ifdef USX2Y_NRPACKS_VARIABLE
-+int nrpacks = USX2Y_NRPACKS; /* number of packets per urb */
-+module_param(nrpacks, int, 0444);
-+MODULE_PARM_DESC(nrpacks, "Number of packets per URB.");
-+#endif
-+
- /*
-  * pipe 4 is used for switching the lamps, setting samplerate, volumes ....
-  */
-@@ -432,6 +438,11 @@ static int snd_usx2y_probe(struct usb_interface *intf,
- 	struct snd_card *card;
- 	int err;
-
-+#ifdef USX2Y_NRPACKS_VARIABLE
-+	if (nrpacks < 0 || nrpacks > USX2Y_NRPACKS_MAX)
-+		return -EINVAL;
-+#endif
-+
- 	if (le16_to_cpu(device->descriptor.idVendor) != 0x1604 ||
- 	    (le16_to_cpu(device->descriptor.idProduct) != USB_ID_US122 &&
- 	     le16_to_cpu(device->descriptor.idProduct) != USB_ID_US224 &&
-diff --git a/sound/usb/usx2y/usbusx2y.h b/sound/usb/usx2y/usbusx2y.h
-index 391fd7b4ed5e..6a76d04bf1c7 100644
---- a/sound/usb/usx2y/usbusx2y.h
-+++ b/sound/usb/usx2y/usbusx2y.h
-@@ -7,6 +7,32 @@
-
- #define NRURBS	        2
-
-+/* Default value used for nr of packs per urb.
-+ * 1 to 4 have been tested ok on uhci.
-+ * To use 3 on ohci, you'd need a patch:
-+ * look for "0000425-linux-2.6.9-rc4-mm1_ohci-hcd.patch.gz" on
-+ * "https://bugtrack.alsa-project.org/alsa-bug/bug_view_page.php?bug_id=0000425"
-+ *
-+ * 1, 2 and 4 work out of the box on ohci, if I recall correctly.
-+ * Bigger is safer operation, smaller gives lower latencies.
-+ */
-+#define USX2Y_NRPACKS 4
-+
-+#define USX2Y_NRPACKS_MAX 1024
-+
-+/* If your system works ok with this module's parameter
-+ * nrpacks set to 1, you might as well comment
-+ * this define out, and thereby produce smaller, faster code.
-+ * You'd also set USX2Y_NRPACKS to 1 then.
-+ */
-+#define USX2Y_NRPACKS_VARIABLE 1
-+
-+#ifdef USX2Y_NRPACKS_VARIABLE
-+extern int nrpacks;
-+#define nr_of_packs() nrpacks
-+#else
-+#define nr_of_packs() USX2Y_NRPACKS
-+#endif
-
- #define URBS_ASYNC_SEQ 10
- #define URB_DATA_LEN_ASYNC_SEQ 32
-diff --git a/sound/usb/usx2y/usbusx2yaudio.c b/sound/usb/usx2y/usbusx2yaudio.c
-index f540f46a0b14..acca8bead82e 100644
---- a/sound/usb/usx2y/usbusx2yaudio.c
-+++ b/sound/usb/usx2y/usbusx2yaudio.c
-@@ -28,33 +28,6 @@
- #include "usx2y.h"
- #include "usbusx2y.h"
-
--/* Default value used for nr of packs per urb.
-- * 1 to 4 have been tested ok on uhci.
-- * To use 3 on ohci, you'd need a patch:
-- * look for "0000425-linux-2.6.9-rc4-mm1_ohci-hcd.patch.gz" on
-- * "https://bugtrack.alsa-project.org/alsa-bug/bug_view_page.php?bug_id=0000425"
-- *
-- * 1, 2 and 4 work out of the box on ohci, if I recall correctly.
-- * Bigger is safer operation, smaller gives lower latencies.
-- */
--#define USX2Y_NRPACKS 4
--
--/* If your system works ok with this module's parameter
-- * nrpacks set to 1, you might as well comment
-- * this define out, and thereby produce smaller, faster code.
-- * You'd also set USX2Y_NRPACKS to 1 then.
-- */
--#define USX2Y_NRPACKS_VARIABLE 1
--
--#ifdef USX2Y_NRPACKS_VARIABLE
--static int nrpacks = USX2Y_NRPACKS; /* number of packets per urb */
--#define  nr_of_packs() nrpacks
--module_param(nrpacks, int, 0444);
--MODULE_PARM_DESC(nrpacks, "Number of packets per URB.");
--#else
--#define nr_of_packs() USX2Y_NRPACKS
--#endif
--
- static int usx2y_urb_capt_retire(struct snd_usx2y_substream *subs)
- {
- 	struct urb	*urb = subs->completed_urb;
---
-2.39.2
+regards,
+dan carpenter
 
