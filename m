@@ -1,139 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52F6520D4E9;
-	Mon,  3 Mar 2025 13:28:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 142CB78F32
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 13:29:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741008538; cv=none; b=lACIjILmPK4ltEX3S075WZVSbQKTrawnSDDQ/n4YSbqiTb0dPVjFtFzNhOZhugZqpmzfjSeYqwMh7nk3B7g6+qmqimHgAhPO9n8L+XRnO3gBtxjgypaUyvVfHhM3stdKsTjbtF0fraA1H0cvOSxx7DG2KI/bu4ekEde6c20b/tE=
+	t=1741008593; cv=none; b=H+Qe+97Eem8gPGQ/YyZy4pg/2+9XxdzbG/wbrUpqH4+dOyWO9CJNt09BRkPwf1U41T47R7knh1NZTq6lA3loTinHUqaECC+bM9sPTeRg/iNY0C13t7AebTkfbK7lE4fTk0NquEol362aoPgvw3lgrtCzVQy1kdp9AKcaRV7FksA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741008538; c=relaxed/simple;
-	bh=pU75ZWR55ytSqTfFyBXoZ15CdXjjZybmf3hZAq7hNZA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NYFbzmjhJQorDYQHPrWJQFT2i9XyqLQJq3Ebggy726LWg0c2G+gBimdUskbhQmjkwfRTxvn9CJgTmfRRCtpVonNPjFFjSzrOFYOBrpKqMluNt3JxASKhlxizfia5xQA8G81m9Asp+47yc6zlY8Kdj0hXIM/ihpz9k5Bkc8tgsrQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fvovLgDu; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741008593; c=relaxed/simple;
+	bh=wEzFHzy1glZBw2Z/RrNH8Ihb0OTydiGM9PFVnr1OsS0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Sn0fLt1N5YVGBwwJMGw+O93mVeVXlZG5ExG5L/jUQKac4NPrLZdR6tZs42vE4sUDZ+o4T34NpbR/Uq0SVB9E1q+g85N4p7hpWueR+Ta8DS5z6JE4UFEG+s7bT43eGRaXmQCNi+30gJkMY5pcHI/PKQnnCnyKOc+f9mlR+l8KBOI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=fjNHbC55; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fvovLgDu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD3CBC4CEE9;
-	Mon,  3 Mar 2025 13:28:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741008536;
-	bh=pU75ZWR55ytSqTfFyBXoZ15CdXjjZybmf3hZAq7hNZA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=fvovLgDuT8SSv3WCPvLaVtJ0pBNwyRk6mFp31yKWnf+m8GRu7OhSOpELYlOpzrLNN
-	 sqdAotELtlVNYxz7k6QnZtcBAlyXprLJPPsSicGaETkDSeNYREsV4LGPuE+zQwUzJU
-	 vJeo0lTRXJn33MqW9GSE1LA10t2CBcSeWWF/JJxdzVejirlmdmXYvnfYsJ3fudmtQ9
-	 7K9jdg92q+5e6jsT3P3a5357wIHHlB6QY+ZKso/Q1+ndSWBnoPz83uRD/qG8ERufGH
-	 tPdnoGpo5d5sWXgFI4mByp/QiN7oufWU1SvpUPzn8zcBQhD/Ssc50B2bSIWu3/5php
-	 wpKCziGZrfnaw==
-Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-2ff04f36fd2so1544616a91.1;
-        Mon, 03 Mar 2025 05:28:56 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCW/eoIwD3AV0Au9x9/jvyRF2bi5goMQB1iXQYsfZmhYGX80JyTmYYMPRRjr0zUtCv8bBukEpNmpofLRjngcQw8=@vger.kernel.org, AJvYcCXfXOGJ3Dpo6WLE7ZuT95Gwrkqo3G0uYnEgofjJHM1mUgZ+wNLId4m6UiExepu1xKkXvmFX4TJHFyIUDmeX@vger.kernel.org
-X-Gm-Message-State: AOJu0YyRUty2VSDjPBpoR6zyi4mUIgUo+Ohx9MQ5Iiwa09HxxtJP85EX
-	7o05HiXumopNeuYMcww8qfOxcyjTYyQKqAMmk7gGwTy+sNUbDpFGrTmK6xwfSRmZ4DQN08OnCOi
-	vmdUFEEE5fcG7amDvgRZaBP1+bA==
-X-Google-Smtp-Source: AGHT+IHEdNW1OchHMbLS1cCfwrEs+3MwI78VEpSMNYRCH8bFSj4YHOZdW6AmaLLo8nvW04MvVqNc2fV4NRzXAOPbwh8=
-X-Received: by 2002:a17:90b:3d4e:b0:2fe:b9a2:fd3b with SMTP id
- 98e67ed59e1d1-2febabf8336mr20713936a91.30.1741008536294; Mon, 03 Mar 2025
- 05:28:56 -0800 (PST)
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="fjNHbC55"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id AB96040E01D1;
+	Mon,  3 Mar 2025 13:29:48 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id YfO9NUWfSbnz; Mon,  3 Mar 2025 13:29:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1741008584; bh=5ZM1dOgoW1JHSGK4Mmwvg8eKmcKpPSwvQ1JwXK6NGeg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=fjNHbC55QcEkE65WxVH4jKBYF1ehLhXCXxAfYjv67JcZ6lKjxjVwQRdnpK9YtJCvI
+	 y8vTM0ittBdvtCQEHVtFDxNpay7NtkTaMW1E2SWka79aiIrUkboA0WKGYUtYam6xWy
+	 piTmQ2Aw0OSfwSKDMqvHkDeM/FRsTcHX6TSTZqhET67k7EMLnyRp3XFuJCLZmj4b2s
+	 +VHpNExGz3MCg2YSQx/GNoqI7lcav3zmqkZ3eI8vWLiV7ps3qqK/2Ey7dLkrDgxZYa
+	 l3wvawb9iASawnnlpMal5LR6dh6KjBTSecMVCQqlEp1Mq8PJywDDnSNZcLqSdIkRvg
+	 1MYBCjzEpbDzSIUYu59GEX+II8TDTG1QNb4Twh+qqWziacdljtYX6n6oSBjLyj9eVY
+	 un7InXbJneMSQY1x7THa6PI6AyytiLvQcJBv0fGPS1MigqHfASVJOx6UKvBxvBukK3
+	 Xq3GahxU0y3BGF9DOttNB+py++4S1Hhe4xsoajJfyFBacuS6G/PKJ6sKNCBbkg+sEh
+	 k9QW7NntpFfcPDFqIHc6L2rOzwwdah+jJq12EXAZs6GW9/6p9kcMSPzYaagYPxNmmT
+	 Z9CuRaVW44JRtyHtYPyJyRdtF9koijGRnRxl+PHTxYW3cDKsCOfbn2/1UuYZwesup9
+	 YfOEfKe0AVzr88XDLiOxW2k4=
+Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 757AC40E0214;
+	Mon,  3 Mar 2025 13:29:27 +0000 (UTC)
+Date: Mon, 3 Mar 2025 14:29:26 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: Rik van Riel <riel@surriel.com>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org, peterz@infradead.org,
+	dave.hansen@linux.intel.com, zhengqi.arch@bytedance.com,
+	nadav.amit@gmail.com, thomas.lendacky@amd.com, kernel-team@meta.com,
+	linux-mm@kvack.org, akpm@linux-foundation.org, jackmanb@google.com,
+	jannh@google.com, mhklinux@outlook.com, andrew.cooper3@citrix.com,
+	Manali.Shukla@amd.com, mingo@kernel.org
+Subject: Re: [PATCH v14 00/13] AMD broadcast TLB invalidation
+Message-ID: <20250303132926.GFZ8WutnF7GXcUjPoB@fat_crate.local>
+References: <20250226030129.530345-1-riel@surriel.com>
+ <20250303124214.GDZ8Wjpn7l4bOy8LYI@fat_crate.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <b754a408-4f39-4e37-b52d-7706c132e27f@stanley.mountain>
-In-Reply-To: <b754a408-4f39-4e37-b52d-7706c132e27f@stanley.mountain>
-From: Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Date: Mon, 3 Mar 2025 21:29:43 +0800
-X-Gmail-Original-Message-ID: <CAAOTY__KF=9Pp=3PAnXG5WCPX4Hxkfd391eBu0dfhO-wz9dWqw@mail.gmail.com>
-X-Gm-Features: AQ5f1JoEyaQUFZqrdcQEIsbOBWMKKKZ_mrsKmQyi0xWBpqur_M_EISNLxHKjU88
-Message-ID: <CAAOTY__KF=9Pp=3PAnXG5WCPX4Hxkfd391eBu0dfhO-wz9dWqw@mail.gmail.com>
-Subject: Re: [PATCH RESEND] drm/mediatek: dsi: fix error codes in mtk_dsi_host_transfer()
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Julien STEPHAN <jstephan@baylibre.com>, Chun-Kuang Hu <chunkuang.hu@kernel.org>, 
-	Philipp Zabel <p.zabel@pengutronix.de>, David Airlie <airlied@gmail.com>, 
-	Daniel Vetter <daniel@ffwll.ch>, Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
-	Mattijs Korpershoek <mkorpershoek@baylibre.com>, dri-devel@lists.freedesktop.org, 
-	linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250303124214.GDZ8Wjpn7l4bOy8LYI@fat_crate.local>
 
-Hi, Dan:
+On Mon, Mar 03, 2025 at 01:42:14PM +0100, Borislav Petkov wrote:
+> On Tue, Feb 25, 2025 at 10:00:35PM -0500, Rik van Riel wrote:
+> > Add support for broadcast TLB invalidation using AMD's INVLPGB instruction.
+> 
+> Ok, I've got the whole thing here now:
+> 
+> https://web.git.kernel.org/pub/scm/linux/kernel/git/bp/bp.git/log/?h=tip-x86-cpu-tlbi
+> 
+> Lemme take it for a spin on my machines, see whether the cat catches fire...
 
-Dan Carpenter <dan.carpenter@linaro.org> =E6=96=BC 2025=E5=B9=B41=E6=9C=888=
-=E6=97=A5 =E9=80=B1=E4=B8=89 =E4=B8=8B=E5=8D=885:36=E5=AF=AB=E9=81=93=EF=BC=
-=9A
->
-> There is a type bug because the return statement:
->
->         return ret < 0 ? ret : recv_cnt;
->
-> The issue is that ret is an int, recv_cnt is a u32 and the function
-> returns ssize_t, which is a signed long.  The way that the type promotion
-> works is that the negative error codes are first cast to u32 and then
-> to signed long.  The error codes end up being positive instead of
-> negative and the callers treat them as success.
+Well, it boots on Zen3 and 4, laptops and servers - although only server has
+the broadcast thing - but all look good.
 
-Applied to mediatek-drm-next [1], thanks.
+I guess ship it!
 
-[1] https://web.git.kernel.org/pub/scm/linux/kernel/git/chunkuang.hu/linux.=
-git/log/?h=3Dmediatek-drm-next
+:-)
 
-Regards,
-Chun-Kuang.
+Srsly, I'll send out the whole set tomorrow to have it on the ML and see
+whether people have more opinions.
 
->
-> Fixes: 81cc7e51c4f1 ("drm/mediatek: Allow commands to be sent during vide=
-o mode")
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/r/202412210801.iADw0oIH-lkp@intel.com/
-> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
-> Reviewed-by: Mattijs Korpershoek <mkorpershoek@baylibre.com>
-> Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collab=
-ora.com>
-> ---
-> I sent this patch earlier:
-> https://lore.kernel.org/all/Y%2FyBC4yxTs+Po0TG@kili/
-> but it wasn't applied.  I've changed the commit message a bit and added
-> new tags.
->
->  drivers/gpu/drm/mediatek/mtk_dsi.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediate=
-k/mtk_dsi.c
-> index d871b1dba083..0acfda47f002 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_dsi.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
-> @@ -1015,12 +1015,12 @@ static ssize_t mtk_dsi_host_transfer(struct mipi_=
-dsi_host *host,
->                                      const struct mipi_dsi_msg *msg)
->  {
->         struct mtk_dsi *dsi =3D host_to_dsi(host);
-> -       u32 recv_cnt, i;
-> +       ssize_t recv_cnt;
->         u8 read_data[16];
->         void *src_addr;
->         u8 irq_flag =3D CMD_DONE_INT_FLAG;
->         u32 dsi_mode;
-> -       int ret;
-> +       int ret, i;
->
->         dsi_mode =3D readl(dsi->regs + DSI_MODE_CTRL);
->         if (dsi_mode & MODE) {
-> @@ -1069,7 +1069,7 @@ static ssize_t mtk_dsi_host_transfer(struct mipi_ds=
-i_host *host,
->         if (recv_cnt)
->                 memcpy(msg->rx_buf, src_addr, recv_cnt);
->
-> -       DRM_INFO("dsi get %d byte data from the panel address(0x%x)\n",
-> +       DRM_INFO("dsi get %zd byte data from the panel address(0x%x)\n",
->                  recv_cnt, *((u8 *)(msg->tx_buf)));
->
->  restore_dsi_mode:
-> --
-> 2.45.2
->
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
