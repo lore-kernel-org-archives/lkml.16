@@ -1,90 +1,102 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D16FA22ACE7
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 18:56:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CC81222ACE7
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 18:56:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741028213; cv=none; b=kmsLKTVzwWCOFW5n0PRg5Q2y3YjFaUecVkRQRwXtn6oFsysvtQwB5FO/iMOQv+TVKTZd6J1JTmsRZS5lSNZQbBrGTB5+WRTmRlrz5akTujHKK6NmFfPSLaj6V5D2F4xu9X/n+kcHglgetUwxDz+4SfM6oH/dRE0UHBzcRJtpy0E=
+	t=1741028218; cv=none; b=Y8u/XubMiCFbC0dkEF0RklovUIe9ahihizeY5iYI6KIpu5+hvxtfIjLrliQYZhXILWQ71WutwTUtUREC/jNXN17FJxSlaV//kbBJYJvAPiPfje+4z531XuoUS3U6BcY29syoq0DhYRn8jomSbT+sOnCSCLAlzyk1l505MtIwGs8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741028213; c=relaxed/simple;
-	bh=I+YMifaWTe/KtcKWykwnguS02DQwUt/9Nd7ZBZTaipM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=emVD+1IwQV5y4iyckTE2Pg3o0Evj33Nx/Nay3soXULmWyRfUhYKCLPsCoBaeZdzgxvAeHqFHIWtWmuPl26vGxRz05dI/NGoY/Kp85AVLY53NK48H+mrkrvQUF0nm483tKHQ4eL4meF0WnQFaiYgjWdZ4gLzJ3J75JKCIL5b39mg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=aGVYKuGy; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="aGVYKuGy"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-43bbb440520so16872725e9.2
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Mar 2025 10:56:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1741028210; x=1741633010; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ByURWW4/51grEFFoJ5cNbGWq84mjT1dgOMDzzVdymTY=;
-        b=aGVYKuGyOfyU9UcQavzr01XQNPAZs5kAe6gKMjYHl4T7XQjPiPHek5YgM1iqH/1oDM
-         M0xI8p3Ty1nK0IPEGz9ZQi0Ti2fi764sF/BZDfJRzJncCTkfG/BV4xA7z4hwkmtdzjLI
-         BspErz0GpDg707j8UFSbl1drZaCkibpsQkcmK2/+F4wB8YW+ednOV946QvKqE1UxUMYL
-         uahffyCxut23erQrfWsI577jiTlvec0IJqDVFYy29BKWM5xvEgAdxqXmM1yboAzK/geS
-         YhgO5eOFtBbhSGu7L54G/fhZfS116c/uvGPtEOEtEQR/7yKFHqyulGPuVWupTgeZ9s2S
-         7XqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741028210; x=1741633010;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ByURWW4/51grEFFoJ5cNbGWq84mjT1dgOMDzzVdymTY=;
-        b=g2I/J1yf6EAhd61Uh2+ymDVKFGurPYybY/BRM/DK3nBJiyCfcG/Pc0tHI3d+nUR+rT
-         gr7bowRQQQUATc4ckUX1LQegd34+b4vY/STdsCKmTw/R/2bYRLb6ZvzXhz3m09kxh2Bk
-         c6Q6EZihmtHgS+PXRCTsYbbWFyvWH89t9YrFNqZmKN/aToBLIwiknV8hZVgZBRmD4jyc
-         J/1iTmZF/THSd9EnEozitze/sazRhCDSjOUlr5UVBmriihq0U3pbKEsnLwzaznySv01h
-         tBLGCkHksTAysJi4VjiDt11GYjL3HhAnMfm/wBHkkg02jpX5wa7S5RcSjEozUa5ioZYH
-         uGRQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUqu2FlrDp57F//McT55MtzXjcBEGqELcteWF0dKwMIjfXKIEV/cfT8nmdzHO6UOW/uO7yHsbezuWGWrp0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw8td07asB4Ma/Am1NAaiPh2w/dcKflpbo5lU6P+yhs6V2blQ3R
-	6+ezT5mlxZ9dLeGQjJAYTNejMb3z8qt5sO2+OCySr/K+9M5nXm/rtjRY/3hodt/djq3BiGjIaow
-	7Q4k=
-X-Gm-Gg: ASbGncsz0RuIogiMa9dRgTMdE9UmpUtCmp9yI+yPQZfWOh35itxs6T0vrqqeAmDnwxk
-	nOJromRpciC4QNXubVED1DloKDl+K/IGaQxmoWqLUgNZQ9SJKwaFBR6oRBH8cOBv118GtdX6f7T
-	UHfGv1wy/EEO6RM9mKFOOgGAW3zM7KuI+bLMG5APuT+9lSjQY+6a1iXxLRKVxZd6silBGYFw2sH
-	bYrrH6eB9hOdOeWOQx3T09M9TuFUMMkkGW6Z47+P8P11lesr3CJBXrTfJg09HrRyGrsDV1sqUoX
-	FMMcED1VKctPf+CsV+6jpvegeT8iw0AwvbYincYZphSeQADuIEtDGw==
-X-Google-Smtp-Source: AGHT+IGVUE0CQu4ReThqwR4ny9E8a1exZ2jLsRFt7w170BeB8vADyu6EQUUGy2xTMtQFYKiXpDs9Pg==
-X-Received: by 2002:a05:600c:4fd3:b0:439:a255:b2ed with SMTP id 5b1f17b1804b1-43ba66e5f09mr144551665e9.9.1741028209871;
-        Mon, 03 Mar 2025 10:56:49 -0800 (PST)
-Received: from [192.168.50.4] ([82.78.167.138])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43bc9c0fb1esm12229025e9.20.2025.03.03.10.56.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 03 Mar 2025 10:56:49 -0800 (PST)
-Message-ID: <39213e99-3041-4602-9dd2-536e9b09ad11@tuxon.dev>
-Date: Mon, 3 Mar 2025 20:56:47 +0200
+	s=arc-20240116; t=1741028218; c=relaxed/simple;
+	bh=sEMiL2Ho1IsSlIAIVCi/1/FvINg8wZ7ckVGyJC49j1M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oMAJZSI23cZJOyDBwa0XWibpulp4GyP0jCT+E43a19KYSiv3+7MyINKFoErotnYvSw+5VnW/VQveToNG88NlMPd6oExYw97dcVqPKPgYkUXSSlIEmSS5ZRUPaAK5bqWoSgySMkGYd/AEu5L8wsdJZfDCBa8d2lrZXFZZ9YXAt9Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3C766113E
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 10:57:10 -0800 (PST)
+Received: from e110455-lin.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 050BC3F5A1
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 10:56:55 -0800 (PST)
+Date: Mon, 3 Mar 2025 18:56:42 +0000
+From: Liviu Dudau <liviu.dudau@arm.com>
+To: Ashley Smith <ashley.smith@collabora.com>
+Cc: Boris Brezillon <boris.brezillon@collabora.com>,
+	Steven Price <steven.price@arm.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Heiko Stuebner <heiko@sntech.de>, kernel@collabora.com,
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] drm/panthor: Update CS_STATUS_ defines to correct
+ values
+Message-ID: <Z8X7aj3VmL10TQx7@e110455-lin.cambridge.arm.com>
+References: <20250303180444.3768993-1-ashley.smith@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/2] Add System Components for Microchip SAMA7D65 SoC
-To: Ryan.Wanner@microchip.com, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, nicolas.ferre@microchip.com,
- alexandre.belloni@bootlin.com, wim@linux-watchdog.org, linux@roeck-us.net
-Cc: vkoul@kernel.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- dmaengine@vger.kernel.org, linux-watchdog@vger.kernel.org
-References: <cover.1740675317.git.Ryan.Wanner@microchip.com>
-From: Claudiu Beznea <claudiu.beznea@tuxon.dev>
-Content-Language: en-US
-In-Reply-To: <cover.1740675317.git.Ryan.Wanner@microchip.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250303180444.3768993-1-ashley.smith@collabora.com>
 
+On Mon, Mar 03, 2025 at 06:04:32PM +0000, Ashley Smith wrote:
+> Values for SC_STATUS_BLOCKED_REASON_ are documented in the G610 "Odin"
+> GPU specification (CS_STATUS_BLOCKED_REASON register).
+> 
+> This change updates the defines to the correct values.
+> 
+> Fixes: 2718d91816ee ("drm/panthor: Add the FW logical block")
+> Signed-off-by: Ashley Smith <ashley.smith@collabora.com>
 
+Reviewed-by: Liviu Dudau <liviu.dudau@arm.com>
 
-On 28.02.2025 17:24, Ryan.Wanner@microchip.com wrote:
-> Ryan Wanner (2):
->   ARM: dts: microchip: sama7d65: Add watchdog for sama7d65
+You could also add Steven's r-b, as per his email if you send another version,
+otherwise it will need to be edited by whomever merges it.
 
-Applied to at91-dt, thanks!
+Best regards,
+Liviu
+
+> ---
+> Changes in v2:
+>   - Rename _RES to _RESOURCE
+> ---
+>  drivers/gpu/drm/panthor/panthor_fw.h | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/panthor/panthor_fw.h b/drivers/gpu/drm/panthor/panthor_fw.h
+> index 22448abde992..6598d96c6d2a 100644
+> --- a/drivers/gpu/drm/panthor/panthor_fw.h
+> +++ b/drivers/gpu/drm/panthor/panthor_fw.h
+> @@ -102,9 +102,9 @@ struct panthor_fw_cs_output_iface {
+>  #define CS_STATUS_BLOCKED_REASON_SB_WAIT	1
+>  #define CS_STATUS_BLOCKED_REASON_PROGRESS_WAIT	2
+>  #define CS_STATUS_BLOCKED_REASON_SYNC_WAIT	3
+> -#define CS_STATUS_BLOCKED_REASON_DEFERRED	5
+> -#define CS_STATUS_BLOCKED_REASON_RES		6
+> -#define CS_STATUS_BLOCKED_REASON_FLUSH		7
+> +#define CS_STATUS_BLOCKED_REASON_DEFERRED	4
+> +#define CS_STATUS_BLOCKED_REASON_RESOURCE	5
+> +#define CS_STATUS_BLOCKED_REASON_FLUSH		6
+>  #define CS_STATUS_BLOCKED_REASON_MASK		GENMASK(3, 0)
+>  	u32 status_blocked_reason;
+>  	u32 status_wait_sync_value_hi;
+> 
+> base-commit: 16e57a72780931c3c70dbc928aeee4a0518075de
+> -- 
+> 2.43.0
+> 
+
+-- 
+====================
+| I would like to |
+| fix the world,  |
+| but they're not |
+| giving me the   |
+ \ source code!  /
+  ---------------
+    ¯\_(ツ)_/¯
