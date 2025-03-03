@@ -1,198 +1,112 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E9B0231CB0;
-	Mon,  3 Mar 2025 19:42:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6088F1E7C25;
+	Mon,  3 Mar 2025 19:46:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741030967; cv=none; b=c5CRGKiJnqqlvbmYiGbG8RyHaDEz9yIitUPnTZI7tmxiAWHapIESUEpsKQBQLzIjfCiVi1na9pB4zxyyQJFLe7poEiI/k3B0pNt2juq7xReHq4faeUrywnwI55loAeIVxZ/r4kjQ9Ak5FI9M1KQRqA5uJzyOGxs9dvjz2h0WHA0=
+	t=1741031211; cv=none; b=Z2yuTEZ5YVzQhfMR3mgMFokKR9lLQl6DuFIK1jgP3aDKX1FHuz7UZF7Deu86xsz6UcFWxCZmALPiyrnjqGLUyEtuQe4OUWz6mDvxr3we7buK6AIuLTUruOovTgVjiPx82RTXxHp360Hn71EBZ0z2ri6smyTvJHdLOgj7upNLBzw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741030967; c=relaxed/simple;
-	bh=H+gR3PQ/Dx77ugktUrmlqnLP+dzHy9b5ULJAAHrRYYQ=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=Y262aqrmYoTRAG3DQq45t9BG+e9H+al1rqI4YIciSg7vZyF5xfv1uyJlUemZEn8/zYskNf7vdTsL98s+AuiPuJuObeW60iWlGMWloLqCBjZnfA7h24Y9W+6ZTQYQaEoNGcGZzEAfYgEpOJwLkInxz7jocUpZgbW4x//uHGPLrZA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=JCBwR/sS; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=89eYe2Hx; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="JCBwR/sS";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="89eYe2Hx"
-Date: Mon, 03 Mar 2025 19:42:41 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1741030963;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8GTzabpC7n36RDcyJGC0/dNMq1h9TWvPKpFpVF7s6V4=;
-	b=JCBwR/sSIYWmKw+Bvjp6KmIMOJqCQFfXoFicpfdWLHoG7E9b78F2WBjoZ/gUpykqOcFGdK
-	J4X3hiv3TJJxRufoLcgGJCdDN3zUCJBI64C80PTD9XktZhULi3MW+J46LWbvncAFCes2l2
-	2QJrhwfWP+ddmxURo+xO4ifo1QyJdN6P9HnToEAUsliTx43NX9+Jj+8kqTBIo1SrkFXSKC
-	TAzas7H4uvVl72GKsOlOGftGhHAF489PQ4Iq+awCU3Uj7GyzhVD34aYpFXMrwH7Ab7eI4Z
-	ybQBSAmT2XBxVACaapoQIy5VpWYvp4tD5ygw0LwfaH9g/GLM4QBt8+1SZOW4hw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1741030963;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8GTzabpC7n36RDcyJGC0/dNMq1h9TWvPKpFpVF7s6V4=;
-	b=89eYe2Hxgk6kC9vmJPiQD9MTxj6RLmjklVnL7OGZHlWzVnEfKtRJ1yZMrAm6y8v4xflUfV
-	eXdm7u92DQDcKUDA==
-From: "tip-bot2 for Brian Gerst" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/core] x86/smp/32: Remove safe_smp_processor_id()
-Cc: Brian Gerst <brgerst@gmail.com>, Ingo Molnar <mingo@kernel.org>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- Uros Bizjak <ubizjak@gmail.com>, "H. Peter Anvin" <hpa@zytor.com>,
- x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250303170115.2176553-1-brgerst@gmail.com>
-References: <20250303170115.2176553-1-brgerst@gmail.com>
+	s=arc-20240116; t=1741031211; c=relaxed/simple;
+	bh=Ao8ukNGyO5FRpxXAyl7CTfc4UjJiCkXhlRi57KBMtQM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=smVAgGEanUASMcjB7nuShvVowgyhwoznBcUDB+Pc7ydu9kf1pQjyAn5Ft1E0IN8EY+oKrO24+VXQH9713bC3JhaejEsJt4g+6y7dJlOolZPs2OMPO7VBvwbkWxaxR8LWTVN8CPIoBokqgJI5xTecdwHkg2zSPBzhJhXMhXvvmUM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-22398e09e39so33204795ad.3;
+        Mon, 03 Mar 2025 11:46:50 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741031210; x=1741636010;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8Dek+FDPeZjeeIpsF2E44gvfK0e/oZIfm/67LelXRus=;
+        b=nmB9gQU+OgeyqFTMadVuu+Y5SO0GNM/QnglWh01pg0eCurB1PL4/YRLCRfKg5kh8A5
+         4yuS98HzJ/YrGoML7Bafcitb3acm0ZD+6JUD+1f6Zs5+77xdN2AQvwcx296ugOo0IOEK
+         xZi5biSabIfXe6S0BIuAa5XzDh0zddU1DW+qFBiu4TBi6bTkpNGZz5itluYh94/D98vE
+         YfkyguCzjJAQGNIBkO9xVuYfZevA1ay16l2Idy70xzFR1tmo6YcBnoUvNqRj3A4jV/9B
+         B50r/Erw8AQtvlJt+eAgzc3izh6bZmPMcgxmSErcNTKy52PLfDPxJwNijPoJTp7GyIs3
+         /muQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUubeZg5K75Io7D2NtiuB6wR/39bPPIHWyuGkaAvis4D0zUsYluVAqzDDzh9ev/6ugZjKc9OtkRR6+a@vger.kernel.org, AJvYcCXFpFpxR/JjkWX8WM8JqrPf8NiE52Iwdx95ydWj4NPEVMr5BX1J6YWez6lBBi+PcoxDTsJj9toM4yT+Y7bh96r4hA==@vger.kernel.org, AJvYcCXLIyWCszDshqMMlumnl2mdwA3/EYjKBkTFSxoo5kiAWJeF4RjX8sQJczcrLFWohVTYcW7FEVSN6+Cb/X8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxaR//r2RkGZbIYb/tLHnUbmikRT7y/31yxQwCwUzJS1CC3dO4L
+	qrjMIoL9QSQR4n6OLMZCqo76CicmmqKGjKvD19FJiPXHSM9X8Rbv
+X-Gm-Gg: ASbGncuCQELgoE3ndmT6joMfBFrdt3WUa8o+7Pxc9wiUomvQN1FNswtSD6nxEiaNxnQ
+	fw2vYEb+3RbN5ncwv6d1CE3kwGG2V5IIOXld1Yw7n6z0tqrk2Bo9OUNudTbhPSEGlY7ROnE+D4N
+	3ULiEhnrgR73XFWaX2IrpJJJYC4dwj13SIYBfrC7URK1BiU6LFY4BT3/q1P9XYV9P14XPSVmAy9
+	ccakm34g/CLfFWlGUyA4u1ged1GtMBh9oGBoC5W6snHTXMVZUX5ZY4CX31UbdB0KOrUj4O7Wnvt
+	evcHaBgKdmNNGdLwFmjMGkpBkqzTjKp3yQF3nyKFSHB2ycahabz3rOI4aNTb50AgKLJWbY/96m2
+	oZmk=
+X-Google-Smtp-Source: AGHT+IFb6LGLr6n2gvyZ7SSG3EPL8TvaZlZ1WJzOGXC85Bkw4k+sVACmwEySy6Gx9cQRP604zBwk+w==
+X-Received: by 2002:aa7:98cf:0:b0:736:339b:8290 with SMTP id d2e1a72fcca58-736339b83admr10650834b3a.17.1741031209589;
+        Mon, 03 Mar 2025 11:46:49 -0800 (PST)
+Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
+        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-734a004026dsm9251122b3a.155.2025.03.03.11.46.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Mar 2025 11:46:48 -0800 (PST)
+Date: Tue, 4 Mar 2025 04:46:47 +0900
+From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To: Fan Ni <nifan.cxl@gmail.com>
+Cc: Shradha Todi <shradha.t@samsung.com>, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org, manivannan.sadhasivam@linaro.org,
+	lpieralisi@kernel.org, robh@kernel.org, bhelgaas@google.com,
+	jingoohan1@gmail.com, Jonathan.Cameron@huawei.com,
+	a.manzanares@samsung.com, pankaj.dubey@samsung.com,
+	cassel@kernel.org, 18255117159@163.com, xueshuai@linux.alibaba.com,
+	renyu.zj@linux.alibaba.com, will@kernel.org, mark.rutland@arm.com
+Subject: Re: [PATCH v7 3/5] Add debugfs based silicon debug support in DWC
+Message-ID: <20250303194647.GC1552306@rocinante>
+References: <20250221131548.59616-1-shradha.t@samsung.com>
+ <CGME20250221132035epcas5p47221a5198df9bf86020abcefdfded789@epcas5p4.samsung.com>
+ <20250221131548.59616-4-shradha.t@samsung.com>
+ <Z8XrYxP_pZr6tFU8@debian>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174103096111.14745.14730277832097676622.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z8XrYxP_pZr6tFU8@debian>
 
-The following commit has been merged into the x86/core branch of tip:
+Hello,
 
-Commit-ID:     604ea3e90b17f27928a64d86259c57710c254438
-Gitweb:        https://git.kernel.org/tip/604ea3e90b17f27928a64d86259c57710c254438
-Author:        Brian Gerst <brgerst@gmail.com>
-AuthorDate:    Mon, 03 Mar 2025 12:01:15 -05:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Mon, 03 Mar 2025 20:30:09 +01:00
+[...]
+> > +int dwc_pcie_debugfs_init(struct dw_pcie *pci)
+> > +{
+> > +	char dirname[DWC_DEBUGFS_BUF_MAX];
+> > +	struct device *dev = pci->dev;
+> > +	struct debugfs_info *debugfs;
+> > +	struct dentry *dir;
+> > +	int ret;
+> > +
+> > +	/* Create main directory for each platform driver */
+> > +	snprintf(dirname, DWC_DEBUGFS_BUF_MAX, "dwc_pcie_%s", dev_name(dev));
+> > +	dir = debugfs_create_dir(dirname, NULL);
+> > +	debugfs = devm_kzalloc(dev, sizeof(*debugfs), GFP_KERNEL);
+> > +	if (!debugfs)
+> > +		return -ENOMEM;
+> > +
+> > +	debugfs->debug_dir = dir;
+> > +	pci->debugfs = debugfs;
+> > +	ret = dwc_pcie_rasdes_debugfs_init(pci, dir);
+> > +	if (ret)
+> > +		dev_dbg(dev, "RASDES debugfs init failed\n");
+> 
+> What will happen if ret != 0? still return 0? 
 
-x86/smp/32: Remove safe_smp_processor_id()
+Given that callers of dwc_pcie_debugfs_init() check for errors,
+this probably should correctly bubble up any failure coming from
+dwc_pcie_rasdes_debugfs_init().
 
-The safe_smp_processor_id() function was originally implemented in:
+I made updates to the code directly on the current branch, have a look:
 
-  dc2bc768a009 ("stack overflow safe kdump: safe_smp_processor_id()")
+  https://web.git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/commit/?h=controller/dwc&id=1ff54f4cbaed9ec6994844967c36cf7ada4cbe5e
 
-to mitigate the CPU number corruption on a stack overflow.  At the time,
-x86-32 stored the CPU number in thread_struct, which was located at the
-bottom of the task stack and thus vulnerable to an overflow.
+Let me know if this is OK with you.
 
-The CPU number is now located in percpu memory, so this workaround
-is no longer needed.
+Good catch, thank you!
 
-Signed-off-by: Brian Gerst <brgerst@gmail.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Uros Bizjak <ubizjak@gmail.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Link: https://lore.kernel.org/r/20250303170115.2176553-1-brgerst@gmail.com
----
- arch/x86/include/asm/cpu.h |  1 -
- arch/x86/include/asm/smp.h |  6 ------
- arch/x86/kernel/apic/ipi.c | 30 ------------------------------
- arch/x86/kernel/crash.c    |  2 +-
- arch/x86/kernel/reboot.c   |  2 +-
- 5 files changed, 2 insertions(+), 39 deletions(-)
-
-diff --git a/arch/x86/include/asm/cpu.h b/arch/x86/include/asm/cpu.h
-index 98eced5..f44bbce 100644
---- a/arch/x86/include/asm/cpu.h
-+++ b/arch/x86/include/asm/cpu.h
-@@ -12,7 +12,6 @@
- #ifndef CONFIG_SMP
- #define cpu_physical_id(cpu)			boot_cpu_physical_apicid
- #define cpu_acpi_id(cpu)			0
--#define safe_smp_processor_id()			0
- #endif /* CONFIG_SMP */
- 
- #ifdef CONFIG_HOTPLUG_CPU
-diff --git a/arch/x86/include/asm/smp.h b/arch/x86/include/asm/smp.h
-index ca073f4..2419e50 100644
---- a/arch/x86/include/asm/smp.h
-+++ b/arch/x86/include/asm/smp.h
-@@ -136,12 +136,6 @@ __visible void smp_call_function_single_interrupt(struct pt_regs *r);
- #define raw_smp_processor_id()  this_cpu_read(pcpu_hot.cpu_number)
- #define __smp_processor_id() __this_cpu_read(pcpu_hot.cpu_number)
- 
--#ifdef CONFIG_X86_32
--extern int safe_smp_processor_id(void);
--#else
--# define safe_smp_processor_id()	smp_processor_id()
--#endif
--
- static inline struct cpumask *cpu_llc_shared_mask(int cpu)
- {
- 	return per_cpu(cpu_llc_shared_map, cpu);
-diff --git a/arch/x86/kernel/apic/ipi.c b/arch/x86/kernel/apic/ipi.c
-index 5da693d..23025a3 100644
---- a/arch/x86/kernel/apic/ipi.c
-+++ b/arch/x86/kernel/apic/ipi.c
-@@ -287,34 +287,4 @@ void default_send_IPI_mask_logical(const struct cpumask *cpumask, int vector)
- 	__default_send_IPI_dest_field(mask, vector, APIC_DEST_LOGICAL);
- 	local_irq_restore(flags);
- }
--
--#ifdef CONFIG_SMP
--static int convert_apicid_to_cpu(u32 apic_id)
--{
--	int i;
--
--	for_each_possible_cpu(i) {
--		if (per_cpu(x86_cpu_to_apicid, i) == apic_id)
--			return i;
--	}
--	return -1;
--}
--
--int safe_smp_processor_id(void)
--{
--	u32 apicid;
--	int cpuid;
--
--	if (!boot_cpu_has(X86_FEATURE_APIC))
--		return 0;
--
--	apicid = read_apic_id();
--	if (apicid == BAD_APICID)
--		return 0;
--
--	cpuid = convert_apicid_to_cpu(apicid);
--
--	return cpuid >= 0 ? cpuid : 0;
--}
--#endif
- #endif
-diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
-index 340af81..0be61c4 100644
---- a/arch/x86/kernel/crash.c
-+++ b/arch/x86/kernel/crash.c
-@@ -140,7 +140,7 @@ void native_machine_crash_shutdown(struct pt_regs *regs)
- 	x86_platform.guest.enc_kexec_begin();
- 	x86_platform.guest.enc_kexec_finish();
- 
--	crash_save_cpu(regs, safe_smp_processor_id());
-+	crash_save_cpu(regs, smp_processor_id());
- }
- 
- #if defined(CONFIG_KEXEC_FILE) || defined(CONFIG_CRASH_HOTPLUG)
-diff --git a/arch/x86/kernel/reboot.c b/arch/x86/kernel/reboot.c
-index 9aaac1f..964f6b0 100644
---- a/arch/x86/kernel/reboot.c
-+++ b/arch/x86/kernel/reboot.c
-@@ -921,7 +921,7 @@ void nmi_shootdown_cpus(nmi_shootdown_cb callback)
- 		return;
- 
- 	/* Make a note of crashing cpu. Will be used in NMI callback. */
--	crashing_cpu = safe_smp_processor_id();
-+	crashing_cpu = smp_processor_id();
- 
- 	shootdown_callback = callback;
- 
+	Krzysztof
