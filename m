@@ -1,357 +1,159 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mx0b-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C17178F3E
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 14:48:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE04F7DA93;
+	Mon,  3 Mar 2025 14:48:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741013289; cv=none; b=ZkdnC9MHQ/FkBqxLLwtGAbdohchLFF/CBS0ipm6muQw3a9OeWhdBN4n4pht4nSUH0qcx6wbhkViuIKTjt7HUlVbFZLZoLZdXOBhSmUp0+6Kaekv6ednVLbDvsw5INYpCzXcnkXwfiMx20xDtI6zIaKutPeM1fCS4W+4blEIu6T4=
+	t=1741013299; cv=none; b=GpRSGs34tcRyQvK0asQE+fwmUwR3RCQbExvz3p7s8N9jD3ymq6vGB422D8wdeo5aunLpGKyLDVOEQpwqIX9PMgmnZzyyC+2fmUgLPBTJ9JHtOoEYsqyan9hAM+DTncWvZPe/EBh18LAoWtfh7cZAjGq+O30qSnxEn+T2DfKwOHk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741013289; c=relaxed/simple;
-	bh=FVRD4iX3p9k8gSH9i17b/bed7/npTuICPWhmTSWXw5s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mKhGCxo5IJ7RHnmi2cbuPe9KG3d48UMBSyzuuNhdPQmw3lfT0vJ007z9PujG2Ktnxj7MSgMAvJ5dcaJoHYeR0zGWvsLwUBwF9iWM1Eiirjh5Zm5KgaPe/0Qq3QcIH4DhbQvrD5GWRbPtNc/KnbhXBvsygPrKbODBbffoU1WYg8o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Th9M9mvu; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1741013299; c=relaxed/simple;
+	bh=l+kX2MTcfcF4+A6ZDDJW3gOUltnc5ogqGlhahThBv6s=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=ZO/BwQgzHNV/1fnI9JC5so49EpxchLwvqIvYQAp4J9qF6RdVaoiSgI21Gtlq71PweAdoGj3iOsvPX3dnWefB/haWsly+NKEwH+f9zjI6KQIAppyVhBDyL0ncInNpf1GtcR2Cg5R4NWpsiWhBKn4SS152C+zJ6krwcugvYzmZv4M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=x4nTk59A; arc=none smtp.client-ip=148.163.135.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Th9M9mvu"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1741013285;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=JeW7ILK4BHwph4vdjZBYJRZp3BpM7DGYuP2lQy/HDSs=;
-	b=Th9M9mvuu96jjcoAqhERvfjZwhJcX6E8rj4u28NoO1/cWSaAUHeGmAV8HH5mvMSyfy5yUp
-	LxQGzJGpycbrnx0QQEfLglqO7AidwPPsplgsxkxRtvSjg92jyt4qdGZg59nZxwz8nq+9TT
-	zvPOlUPdjPYBhPDSibdqt3ksLnqkX+I=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-421-Arf2lOKvMdqSjXNRDRbD1A-1; Mon, 03 Mar 2025 09:47:54 -0500
-X-MC-Unique: Arf2lOKvMdqSjXNRDRbD1A-1
-X-Mimecast-MFC-AGG-ID: Arf2lOKvMdqSjXNRDRbD1A_1741013273
-Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-ab39f65dc10so572100266b.1
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Mar 2025 06:47:53 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741013273; x=1741618073;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=JeW7ILK4BHwph4vdjZBYJRZp3BpM7DGYuP2lQy/HDSs=;
-        b=Cgz9Tad0rJBEMBIUORwGp22dk4s69IP5e0xzI+phFSpyrFlAVDGh9qyy0u4eaczePw
-         N6FFP5YEdNjjoImN6gtk5Q6PfZ1/ILpUxpuUx2+kJ4igwNihFkXLLz2EMmBayhasL48N
-         u6j6JcBQjUglDtnmn0CSm2WF4jLZhupWnB5q01mfEjLjMxEZ4FmXuxlPZSayO/cd91rC
-         h7AYdq3b6GJyKwL4hJjmz/Ex+3GJ1/8Zom/xVJeQpLlYMSyHecLq/dEr50P68rzPXJyr
-         yZc5rIjfIdT0dFhWPjIsFtW36sbI9ng3fQ5zfWIl1lWrfRhji32kZqxiIAL0fyKrg/I3
-         I0nQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW2BxZOOwBFdzcF6sx9ctB75Je1pg2T3aaLgMbJ/r6YtgIA7VLJ55GpHz4phiqNpzbLjQ9ftAsLM9eUTtE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxCZw9ryateKyQbB76btv09vRGPDj8ft6MfZ6g2brcH36i7b+DQ
-	QNlNkUr7aDcXkO6/ANrMKx2x94XE3NI5iYfC+O1MuU+V5ct1rZDLWd63LOOtb9PLsJCLjWigxrZ
-	mkais2rDYso1SOsQ+nT0KaIxNUkKH+oogV+blpECaT6kSmUhGiDhIColmKQUElw==
-X-Gm-Gg: ASbGncs2PYT8unxThCyO8dhfdtdc/hWItXYbUHLnFRea/MVCXf5pBiMZY+edGLs3ZWt
-	k+IRnSp6QwWfwUcD0WT8FO+F8Xvfd5G4V2HovfGdMKCUcx/siZoeWORkl1X+dZbge7FUL2SCDTw
-	COmLOuCI1HHibEZZW7Hk8ZH3AmtwxduMioEn8x7yQfoX0Ew3w67OgwRBEM0IH2RWu+na9X4EZCp
-	oh8jEKp6l0nuclNZaZkQLvDRiOQL8GPnepRAOQDS3Br+QgSePWvt7QBUPPb+uvqJaHOB3/5XrD1
-	9F3y4ybxaQH+wBGlzXw=
-X-Received: by 2002:a17:907:d90:b0:ac1:e332:b1ef with SMTP id a640c23a62f3a-ac1e332b45bmr212465666b.48.1741013272751;
-        Mon, 03 Mar 2025 06:47:52 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFxkGtJFlxPNSNyID6fMe+Mm/hHvV0XaEzpcB6ATKLdIpZJ9r5qZolbpF2E4TnEHvKU9ctYww==
-X-Received: by 2002:a17:907:d90:b0:ac1:e332:b1ef with SMTP id a640c23a62f3a-ac1e332b45bmr212462066b.48.1741013272258;
-        Mon, 03 Mar 2025 06:47:52 -0800 (PST)
-Received: from [10.40.98.122] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abf0c6ee491sm822229966b.103.2025.03.03.06.47.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 03 Mar 2025 06:47:51 -0800 (PST)
-Message-ID: <c6ab8640-d96c-4a71-929a-a4ad6bb2647d@redhat.com>
-Date: Mon, 3 Mar 2025 15:47:51 +0100
+	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="x4nTk59A"
+Received: from pps.filterd (m0375855.ppops.net [127.0.0.1])
+	by mx0b-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 523BqxeT032403;
+	Mon, 3 Mar 2025 09:47:49 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=DKIM; bh=eAq+InRFatcB8I+upMd0/I2BuDO
+	dtHZMZkmyJfVMurI=; b=x4nTk59AMQ4QrZ7is5pktJdEdiClwovAq3erKdxrooy
+	AmFNpPPuWN3/eIYApWf2/T3NiUhzqDAe2B5U9vgUMZkWfaUHzFSrjK5klzB3FtzP
+	HVjmOTc6vPKmtHHRvEFDVQflUeelYobIenDZ4geGDxhYzapD/nc4nzl5h+562Sqb
+	qiyBZEfX3g3mYr221WN++lsXwVso2qQF7HaV3NdO6QBWdOkMo1MAUQ05l2VyTTCN
+	bOQ9ydL6s3y9S6RXKtXbRpPrad4+U1x5kEzVhLi8EBM268s0FP7jWaFCME2dZJ0Q
+	pDBGZDJawMm91B+F8XAsBCzYz55KYx4TM7qHpwcPcCg==
+Received: from nwd2mta3.analog.com ([137.71.173.56])
+	by mx0b-00128a01.pphosted.com (PPS) with ESMTPS id 455bxnrs3y-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 03 Mar 2025 09:47:49 -0500 (EST)
+Received: from ASHBMBX9.ad.analog.com (ASHBMBX9.ad.analog.com [10.64.17.10])
+	by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 523EllMu009991
+	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 3 Mar 2025 09:47:48 -0500
+Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by ASHBMBX9.ad.analog.com
+ (10.64.17.10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.14; Mon, 3 Mar 2025
+ 09:47:47 -0500
+Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx8.ad.analog.com
+ (10.64.17.5) with Microsoft SMTP Server id 15.2.986.14 via Frontend
+ Transport; Mon, 3 Mar 2025 09:47:47 -0500
+Received: from HYB-DlYm71t3hSl.ad.analog.com (HYB-DlYm71t3hSl.ad.analog.com [10.44.3.50])
+	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 523Ela3p021465;
+	Mon, 3 Mar 2025 09:47:38 -0500
+From: Jorge Marques <jorge.marques@analog.com>
+Date: Mon, 3 Mar 2025 15:46:25 +0100
+Subject: [PATCH] iio: Mark iio_dev as const in getter methods
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] media: uvcvideo: Enable full UVC metadata for all devices
-To: Ricardo Ribalda <ribalda@chromium.org>,
- Mauro Carvalho Chehab <mchehab@kernel.org>,
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250226-uvc-metadata-v1-1-6cd6fe5ec2cb@chromium.org>
-Content-Language: en-US, nl
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20250226-uvc-metadata-v1-1-6cd6fe5ec2cb@chromium.org>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-ID: <20250303-b4-iio-dev-const-v1-1-c2d9d5fe5ac1@analog.com>
+X-B4-Tracking: v=1; b=H4sIAMDAxWcC/x3MMQqAMAxA0atIZgM1VUGvIg41Rs3SSisiFO9uc
+ XzD/xmSRJUEY5Uhyq1Jgy9o6gr4cH4X1LUYyFBnrLG4tKgacJUbOfh0ITP1i+PW0EBQsjPKps+
+ /nOb3/QAnfsPPYgAAAA==
+X-Change-ID: 20250303-b4-iio-dev-const-cc26bac40292
+To: Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>
+CC: <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Jorge Marques
+	<jorge.marques@analog.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1741013256; l=2674;
+ i=jorge.marques@analog.com; s=20250303; h=from:subject:message-id;
+ bh=l+kX2MTcfcF4+A6ZDDJW3gOUltnc5ogqGlhahThBv6s=;
+ b=Mk5PYJ/Lw7WTo7fbs0GnzymiuJQbUz2rtjhSeOnzV87AnVF2YqKcSrqjyofleXvgofrYvB0+S
+ PEKSFajKNWUAw9rMR/63vEk23Aqbne4ikDXD+x0LM9qNtzWtY6hGVT1
+X-Developer-Key: i=jorge.marques@analog.com; a=ed25519;
+ pk=NUR1IZZMH0Da3QbJ2tBSznSPVfRpuoWdhBzKGSpAdbg=
+X-ADIRuleOP-NewSCL: Rule Triggered
+X-Proofpoint-GUID: 5NphpABY9T-8umLWhdcUhUF86nlycp8F
+X-Proofpoint-ORIG-GUID: 5NphpABY9T-8umLWhdcUhUF86nlycp8F
+X-Authority-Analysis: v=2.4 cv=Y/ICsgeN c=1 sm=1 tr=0 ts=67c5c115 cx=c_pps a=PpDZqlmH/M8setHirZLBMw==:117 a=PpDZqlmH/M8setHirZLBMw==:17 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=gAnH3GRIAAAA:8 a=QG0Klee38qREIk_fXF8A:9 a=QEXdDO2ut3YA:10
+ a=oVHKYsEdi7-vN-J5QA_j:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-03_07,2025-03-03_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ spamscore=0 impostorscore=0 phishscore=0 suspectscore=0 adultscore=0
+ bulkscore=0 priorityscore=1501 mlxscore=0 malwarescore=0 mlxlogscore=999
+ clxscore=1011 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502100000
+ definitions=main-2503030113
 
-Hi,
+get_current_scan_type read-only method allows to support multiple
+scan types per channel, which may also depend on a buffer enabled state.
+Mark iio_dev as const in iio_device_id, iio_device_get_current_mode,
+iio_buffer_enabled read-only methods so they can be used from other
+read-only methods.
 
-On 26-Feb-25 14:00, Ricardo Ribalda wrote:
-> The UVC driver provides two metadata types V4L2_META_FMT_UVC, and
-> V4L2_META_FMT_D4XX. The only difference between the two of them is that
-> V4L2_META_FMT_UVC only copies PTS, SCR, size and flags, and
-> V4L2_META_FMT_D4XX copies the whole metadata section.
-> 
-> Now we only enable V4L2_META_FMT_D4XX for the Intel D4xx family of
-> devices, but it is useful for any device where vendors include other
-> metadata, such as the one described by Microsoft:
-> - https://learn.microsoft.com/en-us/windows-hardware/drivers/stream/mf-capture-metadata
-> 
-> This patch removes the UVC_INFO_META macro and enables
-> V4L2_META_FMT_D4XX for every device. It also updates the documentation
-> to reflect the change.
-> 
-> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
+Signed-off-by: Jorge Marques <jorge.marques@analog.com>
+---
+ drivers/iio/industrialio-core.c | 6 +++---
+ include/linux/iio/iio.h         | 6 +++---
+ 2 files changed, 6 insertions(+), 6 deletions(-)
 
-Thanks, patch looks good to me:
+diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
+index a2117ad1337d55468c0f21c274fcbedd352c97ff..3b743cc1af6a15c5b9828e2c54d89ab8abb5524d 100644
+--- a/drivers/iio/industrialio-core.c
++++ b/drivers/iio/industrialio-core.c
+@@ -197,7 +197,7 @@ static const char * const iio_chan_info_postfix[] = {
+  *
+  * Returns: Unique ID for the device.
+  */
+-int iio_device_id(struct iio_dev *indio_dev)
++int iio_device_id(const struct iio_dev *indio_dev)
+ {
+ 	struct iio_dev_opaque *iio_dev_opaque = to_iio_dev_opaque(indio_dev);
+ 
+@@ -211,7 +211,7 @@ EXPORT_SYMBOL_GPL(iio_device_id);
+  *
+  * Returns: True, if the buffer is enabled.
+  */
+-bool iio_buffer_enabled(struct iio_dev *indio_dev)
++bool iio_buffer_enabled(const struct iio_dev *indio_dev)
+ {
+ 	struct iio_dev_opaque *iio_dev_opaque = to_iio_dev_opaque(indio_dev);
+ 
+@@ -2227,7 +2227,7 @@ EXPORT_SYMBOL_GPL(iio_device_release_buffer_mode);
+  *				   the opaque @currentmode variable
+  * @indio_dev:			   IIO device structure for device
+  */
+-int iio_device_get_current_mode(struct iio_dev *indio_dev)
++int iio_device_get_current_mode(const struct iio_dev *indio_dev)
+ {
+ 	struct iio_dev_opaque *iio_dev_opaque = to_iio_dev_opaque(indio_dev);
+ 
+diff --git a/include/linux/iio/iio.h b/include/linux/iio/iio.h
+index 56161e02f002cbe3a835cefce0e702c0f9776c81..b9ddfdeaef64dc5df687eac44d3f968bed2fde8e 100644
+--- a/include/linux/iio/iio.h
++++ b/include/linux/iio/iio.h
+@@ -627,9 +627,9 @@ struct iio_dev {
+ 	void				*__private priv;
+ };
+ 
+-int iio_device_id(struct iio_dev *indio_dev);
+-int iio_device_get_current_mode(struct iio_dev *indio_dev);
+-bool iio_buffer_enabled(struct iio_dev *indio_dev);
++int iio_device_id(const struct iio_dev *indio_dev);
++int iio_device_get_current_mode(const struct iio_dev *indio_dev);
++bool iio_buffer_enabled(const struct iio_dev *indio_dev);
+ 
+ const struct iio_chan_spec
+ *iio_find_channel_from_si(struct iio_dev *indio_dev, int si);
 
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+---
+base-commit: 7eb172143d5508b4da468ed59ee857c6e5e01da6
+change-id: 20250303-b4-iio-dev-const-cc26bac40292
 
-Regards,
-
-Hans
-
-
-> ---
->  .../userspace-api/media/v4l/metafmt-d4xx.rst       | 19 +++--
->  .../userspace-api/media/v4l/metafmt-uvc.rst        |  6 +-
->  drivers/media/usb/uvc/uvc_driver.c                 | 83 ----------------------
->  drivers/media/usb/uvc/uvc_metadata.c               | 15 ++--
->  drivers/media/usb/uvc/uvcvideo.h                   |  1 -
->  5 files changed, 23 insertions(+), 101 deletions(-)
-> 
-> diff --git a/Documentation/userspace-api/media/v4l/metafmt-d4xx.rst b/Documentation/userspace-api/media/v4l/metafmt-d4xx.rst
-> index 0686413b16b2..1b18ef056934 100644
-> --- a/Documentation/userspace-api/media/v4l/metafmt-d4xx.rst
-> +++ b/Documentation/userspace-api/media/v4l/metafmt-d4xx.rst
-> @@ -6,12 +6,23 @@
->  V4L2_META_FMT_D4XX ('D4XX')
->  *******************************
->  
-> -Intel D4xx UVC Cameras Metadata
-> +UVC Full Payload Header Data (formerly known as Intel D4xx UVC Cameras
-> +Metadata).
->  
->  
->  Description
->  ===========
->  
-> +V4L2_META_FMT_D4XX buffers follow the metadata buffer layout of
-> +V4L2_META_FMT_UVC with the only difference, that it also includes proprietary
-> +payload header data. It was originally implemented for Intel D4xx cameras, and
-> +thus the name, but now it can be used by any UVC device, when userspace wants
-> +full access to the UVC Metadata.
-> +
-> +
-> +Intel D4xx Metadata
-> +===================
-> +
->  Intel D4xx (D435, D455 and others) cameras include per-frame metadata in their UVC
->  payload headers, following the Microsoft(R) UVC extension proposal [1_]. That
->  means, that the private D4XX metadata, following the standard UVC header, is
-> @@ -21,10 +32,8 @@ types are MetadataId_CaptureStats (ID 3), MetadataId_CameraExtrinsics (ID 4),
->  and MetadataId_CameraIntrinsics (ID 5). For their description see [1_]. This
->  document describes proprietary metadata types, used by D4xx cameras.
->  
-> -V4L2_META_FMT_D4XX buffers follow the metadata buffer layout of
-> -V4L2_META_FMT_UVC with the only difference, that it also includes proprietary
-> -payload header data. D4xx cameras use bulk transfers and only send one payload
-> -per frame, therefore their headers cannot be larger than 255 bytes.
-> +D4xx cameras use bulk transfers and only send one payload per frame, therefore
-> +their headers cannot be larger than 255 bytes.
->  
->  This document implements Intel Configuration version 3 [9_].
->  
-> diff --git a/Documentation/userspace-api/media/v4l/metafmt-uvc.rst b/Documentation/userspace-api/media/v4l/metafmt-uvc.rst
-> index 784346d14bbd..a3aae580e89e 100644
-> --- a/Documentation/userspace-api/media/v4l/metafmt-uvc.rst
-> +++ b/Documentation/userspace-api/media/v4l/metafmt-uvc.rst
-> @@ -6,7 +6,7 @@
->  V4L2_META_FMT_UVC ('UVCH')
->  *******************************
->  
-> -UVC Payload Header Data
-> +UVC Partial Payload Header Data (formerly known as UVC Payload Header Data).
->  
->  
->  Description
-> @@ -44,7 +44,9 @@ Each individual block contains the following fields:
->          them
->      * - :cspan:`1` *The rest is an exact copy of the UVC payload header:*
->      * - __u8 length;
-> -      - length of the rest of the block, including this field
-> +      - length of the rest of the block, including this field (please note that
-> +        regardless of this value, the driver will never copy more than 12
-> +        bytes).
->      * - __u8 flags;
->        - Flags, indicating presence of other standard UVC fields
->      * - __u8 buf[];
-> diff --git a/drivers/media/usb/uvc/uvc_driver.c b/drivers/media/usb/uvc/uvc_driver.c
-> index deadbcea5e22..f19dcd4a7ac6 100644
-> --- a/drivers/media/usb/uvc/uvc_driver.c
-> +++ b/drivers/media/usb/uvc/uvc_driver.c
-> @@ -2488,8 +2488,6 @@ static const struct uvc_device_info uvc_quirk_force_y8 = {
->  };
->  
->  #define UVC_INFO_QUIRK(q) (kernel_ulong_t)&(struct uvc_device_info){.quirks = q}
-> -#define UVC_INFO_META(m) (kernel_ulong_t)&(struct uvc_device_info) \
-> -	{.meta_format = m}
->  
->  /*
->   * The Logitech cameras listed below have their interface class set to
-> @@ -3107,87 +3105,6 @@ static const struct usb_device_id uvc_ids[] = {
->  	  .bInterfaceSubClass	= 1,
->  	  .bInterfaceProtocol	= 0,
->  	  .driver_info		= UVC_INFO_QUIRK(UVC_QUIRK_DISABLE_AUTOSUSPEND) },
-> -	/* Intel D410/ASR depth camera */
-> -	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
-> -				| USB_DEVICE_ID_MATCH_INT_INFO,
-> -	  .idVendor		= 0x8086,
-> -	  .idProduct		= 0x0ad2,
-> -	  .bInterfaceClass	= USB_CLASS_VIDEO,
-> -	  .bInterfaceSubClass	= 1,
-> -	  .bInterfaceProtocol	= 0,
-> -	  .driver_info		= UVC_INFO_META(V4L2_META_FMT_D4XX) },
-> -	/* Intel D415/ASRC depth camera */
-> -	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
-> -				| USB_DEVICE_ID_MATCH_INT_INFO,
-> -	  .idVendor		= 0x8086,
-> -	  .idProduct		= 0x0ad3,
-> -	  .bInterfaceClass	= USB_CLASS_VIDEO,
-> -	  .bInterfaceSubClass	= 1,
-> -	  .bInterfaceProtocol	= 0,
-> -	  .driver_info		= UVC_INFO_META(V4L2_META_FMT_D4XX) },
-> -	/* Intel D430/AWG depth camera */
-> -	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
-> -				| USB_DEVICE_ID_MATCH_INT_INFO,
-> -	  .idVendor		= 0x8086,
-> -	  .idProduct		= 0x0ad4,
-> -	  .bInterfaceClass	= USB_CLASS_VIDEO,
-> -	  .bInterfaceSubClass	= 1,
-> -	  .bInterfaceProtocol	= 0,
-> -	  .driver_info		= UVC_INFO_META(V4L2_META_FMT_D4XX) },
-> -	/* Intel RealSense D4M */
-> -	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
-> -				| USB_DEVICE_ID_MATCH_INT_INFO,
-> -	  .idVendor		= 0x8086,
-> -	  .idProduct		= 0x0b03,
-> -	  .bInterfaceClass	= USB_CLASS_VIDEO,
-> -	  .bInterfaceSubClass	= 1,
-> -	  .bInterfaceProtocol	= 0,
-> -	  .driver_info		= UVC_INFO_META(V4L2_META_FMT_D4XX) },
-> -	/* Intel D435/AWGC depth camera */
-> -	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
-> -				| USB_DEVICE_ID_MATCH_INT_INFO,
-> -	  .idVendor		= 0x8086,
-> -	  .idProduct		= 0x0b07,
-> -	  .bInterfaceClass	= USB_CLASS_VIDEO,
-> -	  .bInterfaceSubClass	= 1,
-> -	  .bInterfaceProtocol	= 0,
-> -	  .driver_info		= UVC_INFO_META(V4L2_META_FMT_D4XX) },
-> -	/* Intel D435i depth camera */
-> -	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
-> -				| USB_DEVICE_ID_MATCH_INT_INFO,
-> -	  .idVendor		= 0x8086,
-> -	  .idProduct		= 0x0b3a,
-> -	  .bInterfaceClass	= USB_CLASS_VIDEO,
-> -	  .bInterfaceSubClass	= 1,
-> -	  .bInterfaceProtocol	= 0,
-> -	  .driver_info		= UVC_INFO_META(V4L2_META_FMT_D4XX) },
-> -	/* Intel D405 Depth Camera */
-> -	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
-> -				| USB_DEVICE_ID_MATCH_INT_INFO,
-> -	  .idVendor		= 0x8086,
-> -	  .idProduct		= 0x0b5b,
-> -	  .bInterfaceClass	= USB_CLASS_VIDEO,
-> -	  .bInterfaceSubClass	= 1,
-> -	  .bInterfaceProtocol	= 0,
-> -	  .driver_info		= UVC_INFO_META(V4L2_META_FMT_D4XX) },
-> -	/* Intel D455 Depth Camera */
-> -	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
-> -				| USB_DEVICE_ID_MATCH_INT_INFO,
-> -	  .idVendor		= 0x8086,
-> -	  .idProduct		= 0x0b5c,
-> -	  .bInterfaceClass	= USB_CLASS_VIDEO,
-> -	  .bInterfaceSubClass	= 1,
-> -	  .bInterfaceProtocol	= 0,
-> -	  .driver_info		= UVC_INFO_META(V4L2_META_FMT_D4XX) },
-> -	/* Intel D421 Depth Module */
-> -	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
-> -				| USB_DEVICE_ID_MATCH_INT_INFO,
-> -	  .idVendor		= 0x8086,
-> -	  .idProduct		= 0x1155,
-> -	  .bInterfaceClass	= USB_CLASS_VIDEO,
-> -	  .bInterfaceSubClass	= 1,
-> -	  .bInterfaceProtocol	= 0,
-> -	  .driver_info		= UVC_INFO_META(V4L2_META_FMT_D4XX) },
->  	/* Generic USB Video Class */
->  	{ USB_INTERFACE_INFO(USB_CLASS_VIDEO, 1, UVC_PC_PROTOCOL_UNDEFINED) },
->  	{ USB_INTERFACE_INFO(USB_CLASS_VIDEO, 1, UVC_PC_PROTOCOL_15) },
-> diff --git a/drivers/media/usb/uvc/uvc_metadata.c b/drivers/media/usb/uvc/uvc_metadata.c
-> index 82de7781f5b6..5c44e6cdb83c 100644
-> --- a/drivers/media/usb/uvc/uvc_metadata.c
-> +++ b/drivers/media/usb/uvc/uvc_metadata.c
-> @@ -60,18 +60,16 @@ static int uvc_meta_v4l2_try_format(struct file *file, void *fh,
->  				    struct v4l2_format *format)
->  {
->  	struct v4l2_fh *vfh = file->private_data;
-> -	struct uvc_streaming *stream = video_get_drvdata(vfh->vdev);
-> -	struct uvc_device *dev = stream->dev;
->  	struct v4l2_meta_format *fmt = &format->fmt.meta;
-> -	u32 fmeta = fmt->dataformat;
-> +	u32 fmeta = fmt->dataformat == V4L2_META_FMT_D4XX ?
-> +		    V4L2_META_FMT_D4XX : V4L2_META_FMT_UVC;
->  
->  	if (format->type != vfh->vdev->queue->type)
->  		return -EINVAL;
->  
->  	memset(fmt, 0, sizeof(*fmt));
->  
-> -	fmt->dataformat = fmeta == dev->info->meta_format
-> -			? fmeta : V4L2_META_FMT_UVC;
-> +	fmt->dataformat = fmeta;
->  	fmt->buffersize = UVC_METADATA_BUF_SIZE;
->  
->  	return 0;
-> @@ -110,19 +108,16 @@ static int uvc_meta_v4l2_enum_formats(struct file *file, void *fh,
->  				      struct v4l2_fmtdesc *fdesc)
->  {
->  	struct v4l2_fh *vfh = file->private_data;
-> -	struct uvc_streaming *stream = video_get_drvdata(vfh->vdev);
-> -	struct uvc_device *dev = stream->dev;
->  	u32 index = fdesc->index;
->  
-> -	if (fdesc->type != vfh->vdev->queue->type ||
-> -	    index > 1U || (index && !dev->info->meta_format))
-> +	if (fdesc->type != vfh->vdev->queue->type || index > 1U)
->  		return -EINVAL;
->  
->  	memset(fdesc, 0, sizeof(*fdesc));
->  
->  	fdesc->type = vfh->vdev->queue->type;
->  	fdesc->index = index;
-> -	fdesc->pixelformat = index ? dev->info->meta_format : V4L2_META_FMT_UVC;
-> +	fdesc->pixelformat = index ? V4L2_META_FMT_D4XX : V4L2_META_FMT_UVC;
->  
->  	return 0;
->  }
-> diff --git a/drivers/media/usb/uvc/uvcvideo.h b/drivers/media/usb/uvc/uvcvideo.h
-> index 5e388f05f3fc..cc2092ae9987 100644
-> --- a/drivers/media/usb/uvc/uvcvideo.h
-> +++ b/drivers/media/usb/uvc/uvcvideo.h
-> @@ -534,7 +534,6 @@ static inline u32 uvc_urb_index(const struct uvc_urb *uvc_urb)
->  
->  struct uvc_device_info {
->  	u32	quirks;
-> -	u32	meta_format;
->  	u16	uvc_version;
->  };
->  
-> 
-> ---
-> base-commit: d98e9213a768a3cc3a99f5e1abe09ad3baff2104
-> change-id: 20250226-uvc-metadata-2e7e445966de
-> 
-> Best regards,
+Best regards,
+-- 
+Jorge Marques <jorge.marques@analog.com>
 
