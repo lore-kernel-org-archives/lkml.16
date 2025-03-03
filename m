@@ -1,36 +1,83 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F5681EB1B3;
-	Mon,  3 Mar 2025 09:06:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF6351DF721
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 09:08:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740992768; cv=none; b=uAVVfOOyDbtVC1XXGsYnxAbRH9DJEuZ8Np4H5PToalIgknf/UUqzg3vUPJuqOdxkiUa//8d4JNHkPd3oL+3X2L8+hdNriB916pzzuF99ruL4hQbN1AZO3+NMtuag0yefNdbrcJt7+oS/p7MD4oiene1s9pvXS8b84C54wi2DT7Q=
+	t=1740992936; cv=none; b=sDoAWOrBuMJN6HG1ryZWqORIYheFlGI3jWDyWy3ZILyPF1pxWfkR8LW3GwFcvgod3/hDj3t68yWCzCYgocnojFZBclzd8HOHbPWrKDtm6PTeDWIGcN/7Vjxg6GieIZMBnqNKjqwBXyR2kXGLVYcNTUtTRYBv5I+ce3gs20HjtlU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740992768; c=relaxed/simple;
-	bh=+9m8RepECu3KdDR/xyA11+0D+ttRfCLVaFx8rNaHNQI=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=WYpLDZ/5m6ATSx3KYODICIKvXKikgKJVx+kRExW4YA8AHf3uyU3XvOf9anFP9jgi+eaEzVC7vTq0RUiH6qWXC5qPEtBWYXmKwctqOxpWJyAPluO0z6Cmt5YY/F3g6JE8YILrRsRNyaDNGxPAF8cWDLehIRiNMUIOvJ3oKkiSrZM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jOpYp0VY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740992936; c=relaxed/simple;
+	bh=KwdK1hh0pwYXDznk8CbHQleQFb+lcYppkzN3ytWbS68=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=YixwE+8hpw0worPe4ZT1E5czzYkcWvFUdd/oC8ia/0GiGS2n8t8WGBI0m+hAJIMpMIhssUuVfa3SMYTXkIuC8HDOQIOG5xxIEu6xjhVPQX1uYWKVoqsQZ22W9hnCx92wxp5XU5hkkU2hUetndApX8h3N4xJ+xvvcTOGxZMdwnUE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=HHNc38pM; arc=none smtp.client-ip=209.85.221.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jOpYp0VY"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 7EA61C4CED6;
-	Mon,  3 Mar 2025 09:06:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740992767;
-	bh=+9m8RepECu3KdDR/xyA11+0D+ttRfCLVaFx8rNaHNQI=;
-	h=From:Date:Subject:To:Cc:Reply-To:From;
-	b=jOpYp0VYLTlOkN/XKt+X6OhLpSnc9AFrJt/Or1YazKO2uvQImYmQ7PCg6F2rZqI+Q
-	 yFDFcLOcrC0FGn+lO2YyynLp8HnXZElVc8olj2FwV8mijSbiSkEM15cqpaPzknooNO
-	 66NSHK10jhj0hfAEIed8Joeurtu3UxTRFN5Z8wV4Vx679qy/5FblwoU2ABLrEpl3YY
-	 lKGYO04tr4tTgQ+/g7On71CfTbYU2j2YEOX12R5O3nRAlY+a6mKK7ZfvwwdqV3r65C
-	 8BVQQcIgf2DNGWoi5sytV/TNiZDcSl9QJyZQoiASh1rRIh4X1k8ry2+z8z/grVhLG2
-	 FFNG6B1xtwfmg==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67E38C282C5;
-	Mon,  3 Mar 2025 09:06:07 +0000 (UTC)
-From: Xianwei Zhao via B4 Relay <devnull+xianwei.zhao.amlogic.com@kernel.org>
-Date: Mon, 03 Mar 2025 17:06:05 +0800
-Subject: [PATCH] pmdomain: amlogic: fix T7 ISP secpower
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HHNc38pM"
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-390ef13838cso241655f8f.1
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Mar 2025 01:08:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1740992932; x=1741597732; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3NArLzMGeHWTWmPFGPl0UFGh/ozAvnT/Ug9Z5Z8/7zE=;
+        b=HHNc38pMimubHaZpr+UKZS3T0okpzMFBJmnCIQ2bmWOS69L+TMJ9xt8WLw1gmzvQaI
+         kXuEhoZFN4kX9728RUxJ5b0ycwNDWYvayEvCKqenQJzBTXpka+1lk6/Njlc3r3Svvb/h
+         ayVJ+XbPC9T9OBg8yXa0tQtLCntt5scikVg+xwrVENXGEzshooBRhCCeJ7KNYNozrRre
+         9AOzvlgYLL1p8SJ7eZkNlXVHnb3jQ7joY0KDhIfhoXWz9v7FTebmEDPzkCjuIAzS1DmF
+         8Gk9Dd7MwgPMKSJZOFwT0DwCyIycwtmV8S2MLi+rU/mF/UCJu1wy/KDW2ArVcBVKj2xw
+         vUPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740992932; x=1741597732;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=3NArLzMGeHWTWmPFGPl0UFGh/ozAvnT/Ug9Z5Z8/7zE=;
+        b=VZW8i4YMIJoL0fnC12XrWK7lfbmJ9rWKE2AXR22b/RZOaOCPPyhzbC2UhCIA1U7OLY
+         CD2Zq7GpOljZk/lSLO92f9Gcf4SX53am9JZzYr6JD52amzeRldlPaz09IIjQ/q0m1QRD
+         dd6ptvPbIQOwfa+szxi1HCuRo5RZf71eabw0aQhYmtCpwDzeTmFY7I0zUElrS/6TxOba
+         LDqX+XfBQIe2ORY2EWKRR4TWNeWKSC7YPF0Ain8iAoZy2FaOS4Zj5qZ734Irao6H9BU1
+         e0pazb37EMEpAW1zFK+i9BCZCdwrgpWwiC2KEkxrTkxr+XirmYlt6RqB3fH0C2Mb+Yis
+         ExtA==
+X-Forwarded-Encrypted: i=1; AJvYcCXifxk2eKe6RrH4lgn6mXf0AocemOXMvutAtZ5XZlM1GbOyv9IhIxmArYaQ/LPyG9GtcuTafR2X0JO1U/E=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx/i4rQFHghdIPy1mjCldaXRFsvSYQyslujQ7+XAG05LlbpQ7Kl
+	hjS7MMejBsPd66eklrmHpFLFm2op4XpriBa6+2uFVc5qvt/M7MsX2nEgCpP0dak=
+X-Gm-Gg: ASbGncuECDG7ajd8XGDYwyNL2kBiR3PsmD/IVi79LIyyGuzsrqAHg4W8MPexxUrSGiu
+	eCnQWfsYV9ezRgReps6k+qZ9nbAOVtdZqwcYuc/dY2pkyLLaKpvseWvHoSf6KLqvsYXB27jAYA7
+	Huy8EpGKGkSvHY82sHNqm2g1AbEth5+5n+jBF8L38652dKZOf+U0K3boVeyo7LiQNNiNM6o9cM2
+	QD4KRudeGVVe9o78FRp32/Mgnk6zjKNphBgUdaMZd7cBc/5abzANu1Kq/tuQ7FqIL7gySfKAQzf
+	dTpnAhdMax0u7WbwCavglqkqtVc7z2LRQkuJb2m9VZlsmEpV7/HVM6D68s8=
+X-Google-Smtp-Source: AGHT+IEFwQNruNu5mTaT+/YMJCqOub6ua/xucOR8SE1iPMFTevfv7HuPeLZAAmqrMseXFFEcLiiaaQ==
+X-Received: by 2002:a05:6000:1f82:b0:38a:8784:9137 with SMTP id ffacd0b85a97d-390eca88f78mr4072087f8f.9.1740992932006;
+        Mon, 03 Mar 2025 01:08:52 -0800 (PST)
+Received: from krzk-bin.. ([178.197.206.225])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-390e4796051sm14058418f8f.12.2025.03.03.01.08.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Mar 2025 01:08:51 -0800 (PST)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>,
+	Sylwester Nawrocki <s.nawrocki@samsung.com>,
+	Alim Akhtar <alim.akhtar@samsung.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Tomasz Figa <tomasz.figa@gmail.com>,
+	Kaustabh Chakraborty <kauschluss@disroot.org>
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-samsung-soc@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 0/3] Introduce pin controller support for Exynos7870
+Date: Mon,  3 Mar 2025 10:08:47 +0100
+Message-ID: <174099291728.28792.4499836839323841404.b4-ty@linaro.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250301-exynos7870-pinctrl-v3-0-ba1da9d3cd2f@disroot.org>
+References: <20250301-exynos7870-pinctrl-v3-0-ba1da9d3cd2f@disroot.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -38,62 +85,26 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250303-fix-t7-pwrc-v1-1-b563612bcd86@amlogic.com>
-X-B4-Tracking: v=1; b=H4sIAPxwxWcC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1MDYwNj3bTMCt0Sc92C8qJk3TRjYzNTgyRDS4PUNCWgjoKiVKA02LTo2Np
- aAPHs9UBdAAAA
-To: Ulf Hansson <ulf.hansson@linaro.org>, 
- Neil Armstrong <neil.armstrong@linaro.org>, 
- Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, 
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, 
- Xianwei Zhao <xianwei.zhao@amlogic.com>
-X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1740992766; l=1171;
- i=xianwei.zhao@amlogic.com; s=20231208; h=from:subject:message-id;
- bh=rJx19Mccy9v03r4IPzrydNTt9cu21guWRk4PdtQnj/s=;
- b=uqesClxVofnbW/ynh5d/bm2c3Kt2QwEI3r8qy7137qIkThIhcwEJ5t8Lm7peBNEKl3AhmZ73V
- TB14yRL8lI1C2wcDWE5UOeddEEODPuhesytoihG1QQQjHR9llVP55r3
-X-Developer-Key: i=xianwei.zhao@amlogic.com; a=ed25519;
- pk=o4fDH8ZXL6xQg5h17eNzRljf6pwZHWWjqcOSsj3dW24=
-X-Endpoint-Received: by B4 Relay for xianwei.zhao@amlogic.com/20231208 with
- auth_id=107
-X-Original-From: Xianwei Zhao <xianwei.zhao@amlogic.com>
-Reply-To: xianwei.zhao@amlogic.com
+Content-Transfer-Encoding: 8bit
 
-From: Xianwei Zhao <xianwei.zhao@amlogic.com>
 
-ISP and MIPI_ISP, these two have a parent-child relationship,
-ISP depends on MIPI_ISP.
+On Sat, 01 Mar 2025 01:05:16 +0530, Kaustabh Chakraborty wrote:
+> Add support for exynos7870 in the pinctrl driver. Also, document the
+> ALIVE pin controller's wakeup interrupt compatible.
+> 
+> This patch series is a part of Exynos7870 upstreaming.
+> 
+> 
 
-Fixes: ca75e4b214c6 ("pmdomain: amlogic: Add support for T7 power domains controller")
-Signed-off-by: Xianwei Zhao <xianwei.zhao@amlogic.com>
----
- drivers/pmdomain/amlogic/meson-secure-pwrc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Applied, thanks!
 
-diff --git a/drivers/pmdomain/amlogic/meson-secure-pwrc.c b/drivers/pmdomain/amlogic/meson-secure-pwrc.c
-index 42ce41a2fe3a..ff76ea36835e 100644
---- a/drivers/pmdomain/amlogic/meson-secure-pwrc.c
-+++ b/drivers/pmdomain/amlogic/meson-secure-pwrc.c
-@@ -221,7 +221,7 @@ static const struct meson_secure_pwrc_domain_desc t7_pwrc_domains[] = {
- 	SEC_PD(T7_VI_CLK2,	0),
- 	/* ETH is for ethernet online wakeup, and should be always on */
- 	SEC_PD(T7_ETH,		GENPD_FLAG_ALWAYS_ON),
--	SEC_PD(T7_ISP,		0),
-+	TOP_PD(T7_ISP,		0, PWRC_T7_MIPI_ISP_ID),
- 	SEC_PD(T7_MIPI_ISP,	0),
- 	TOP_PD(T7_GDC,		0, PWRC_T7_NIC3_ID),
- 	TOP_PD(T7_DEWARP,	0, PWRC_T7_NIC3_ID),
-
----
-base-commit: 73e4ffb27bb8a093d557bb2dac1a271474cca99c
-change-id: 20250303-fix-t7-pwrc-f33650b190ef
+[1/3] dt-bindings: pinctrl: samsung: add exynos7870-pinctrl compatible
+      https://git.kernel.org/pinctrl/samsung/c/129bdbd05650f4c11fb8995f8b6e63589ce4cb33
+[2/3] dt-bindings: pinctrl: samsung: add exynos7870-wakeup-eint compatible
+      https://git.kernel.org/pinctrl/samsung/c/c1ab2297bc746b07b96205dddc45979feac22f4d
+[3/3] pinctrl: samsung: add support for exynos7870 pinctrl
+      https://git.kernel.org/pinctrl/samsung/c/eb76dc973cef741f74ce17d3bba8a7c9f2cc6113
 
 Best regards,
 -- 
-Xianwei Zhao <xianwei.zhao@amlogic.com>
-
-
+Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
