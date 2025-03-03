@@ -1,211 +1,290 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E565C22B5AD;
-	Mon,  3 Mar 2025 15:16:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0C5422B59B
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 15:16:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741014987; cv=none; b=QFR+PQ0K3DH74nE3PRHUGZ5fynZPJHSc5+9grnP3lfGb3PBHp3dMGqOlHKrrdy1dEtAVW4ZuzvT4sR0hi34UVKkexIAQkS4bdtUYmmqpqcNfPzfODtoJ7yyZKD3zKtM/Zc+v18Rx5uhU2zsarmxpqIlvCVL4PfgZLKxx3ulmJac=
+	t=1741014989; cv=none; b=g0GEnBS0wJ3ra2uc5pT0KIY5qp/yV3iKJjK2Qy4FbEnqLOI8SYjH7d+SpCXFy7zf0LIjJJ4PcN1FP4gtPk+ijQOR2j3zgvvZp/bYDt9f0pP9fyszBxBzZtYB7g/NPlIp+pBMycqBzX36WeuY4U7F/HFLf27SVaGmIB3uCIZheCk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741014987; c=relaxed/simple;
-	bh=O/YF5X5u5uMmMg05zHrKBBDn+gI7OJ675dRwzaGO8HA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qS9zt6H2zaIY6yxdHXBQ0KnAVgF6Mn3UXxplk+Eekb9afTVug8mAGOByQSqB0CYXbZJtSBJJM/QdKAZDtDpp0+KtnjAT7RFDd7/qhGEnBhJhERSsPzU+i7XRn8Nh0jarkFLU8IQn5AAnMV3r6tw7/b7EZS6QLDRFNJo4kYkmCYg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=QolA1Ejx; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1741014989; c=relaxed/simple;
+	bh=LlIwaPbf+HH4PxIPS5YpJQVYFDplXAqOUs0Fqhpinbc=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=VOuNLfW8ZaO1feKjebyp6H02nNIUnBiJBdnHEdqsRjz84cXTkXmH5c3uPpyf5zfjYeLxiUD+WjRkmwOoRjuJWZUs4QV+5QYk18FznSMF5ROZUdQ5WMu3kjq8Q5oPVYwvmE1quVe7xwXvdWRwVcYyKXPfST3lMjNO2n29K5QicbE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=jYFHKKk3; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="QolA1Ejx"
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 9CD562D5;
-	Mon,  3 Mar 2025 16:14:52 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1741014892;
-	bh=O/YF5X5u5uMmMg05zHrKBBDn+gI7OJ675dRwzaGO8HA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=QolA1EjxDOAtWk2X7abWPnS2eEdJg+WICrDUq9vSg+jLU4nZSto2SPaj4JSbHcnBF
-	 k1A8sjiKQwxj2HUiKDOPtchU4r+Ef6OT7HgIU9/yFhTTj/1ockSLvBVkodh8O88VWX
-	 OONPk8AVvsgmidc2SrKsNlvYZHDI9WJEh+knolcc=
-Date: Mon, 3 Mar 2025 17:16:03 +0200
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Ricardo Ribalda <ribalda@chromium.org>
-Cc: Hans Verkuil <hverkuil@xs4all.nl>, Hans de Goede <hdegoede@redhat.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4] media: uvcvideo: Set V4L2_CTRL_FLAG_DISABLED during
- queryctrl errors
-Message-ID: <20250303151603.GD32048@pendragon.ideasonboard.com>
-References: <20250111-uvc-eaccess-v4-1-c7759bfd1bd4@chromium.org>
- <20250223170319.GA2821@pendragon.ideasonboard.com>
- <CANiDSCv1HVu82D=PoJFu=XCQ97k_MM1dmYpufkUCiKpSgGRT9w@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jYFHKKk3"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2233622fdffso87255785ad.2
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Mar 2025 07:16:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1741014987; x=1741619787; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Oc++QhoQONQQQCVNdB+FMhEMF6g1pjddZJUkAMQAE8Q=;
+        b=jYFHKKk30RhlAnZoAr1FM/+325rc39RvS+bJ4wqshWy8FpEFn26z3PaXpr1UIBJQNC
+         G/tasjbbbqqP/VWl80PwLWp6ihGV1CkowdjAqrTGy1wadSfFTF+MicJwYvXgebXwtDKR
+         GQKHT67hPa+fGOcC2gJzAWRHguQ+xY4X5V3gydfVwhz1uPewTwBV/M+gEe7eqsWBmYI6
+         Pn+outNw53um5My8oU5P03tJiDpx3H+6Sv2DeW5ZfJZGSpGHo5/toZ4BBnlbM0Gk41sn
+         NwcuJNddSi/A9bLx5mbdm4qnKduiQldPYzU8Rc2p+uwOuVDeV/dr15asl5Y20GwlQ65y
+         F4Ig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741014987; x=1741619787;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Oc++QhoQONQQQCVNdB+FMhEMF6g1pjddZJUkAMQAE8Q=;
+        b=d05tC8GaYcc1P4XK3AVhPQY80Qj8oCxNafUZUbRH14+DH6c5nmYYjkxwn+9jcXIG1+
+         Dthk7r6UU3HYRh8u8x34svDMB9c81sEyVSWEwISx4zq7fMFMhHx02MISnjeFxLzOyPyM
+         B/4ZAm6DE4gN+l+Hn3uVJPAwDbwDaXw60t7gvyxDI0bmxm+M95XG1Xps+drhTaE20Wv7
+         vw/57sb3TJ9nNJ9VA1o53FlkUYdCtzt8LA1etTIOoVKGJmQ0KHYbbI8XrQhOtUlWPISj
+         LtlT71O7oauUHd+n6m2kErVME3LNeQDnfqS/NWaEMt05jU6Gly/J1Q+4DNBpcVxqIjV4
+         kLvg==
+X-Forwarded-Encrypted: i=1; AJvYcCXeEF5w3rxI6tDdnMOorWNg47lP45aBMIPzQEQPL9RJiQVHamFukJmq8a1ZgQSL88N+DHjMg8ttB1UixM4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyGZvsb2IkluMccKqhA8Fzry8ZxhJIFgATFnZ4zIRBwHkNIheW8
+	FRMVJmvilCPO31tnf3ruuBHXxIhtjN48H/7ve3qlCSfshyvSc9/dMUcUB9Se7NyH6J0sOkAIqeL
+	dSx6PuQ==
+X-Gm-Gg: ASbGncvnvtmYXYrCyQud9/v8E7mxNeGkeLfLa8YUUpqitHD5Oe2D5b34D4yKyJw/0uy
+	f9rF8z6rjo5ViHi1g50nkEahUdeDmPJTQevHIbjG5XtBMfDbWf0z0v1rs80XyXwIz6hEUSd7t70
+	E25GLNEKQdmn2c/QtH0wmJxgzNI+eMevRy2TCckuPy7CnY0ZO34oFK9YobkSMCgnl1lVo2HBVHa
+	qaxaEF6ObMBlV/gvN0aVinSgSpNgSzpPKezT+QSYGQJCeah3h0dps397+UBZQ8DIysPdCMoSAxk
+	EmCciZK8QgoeZZ7IiU1M2+sbwBa8FTNlDx47Ui5vtg==
+X-Google-Smtp-Source: AGHT+IEQ1Nt1JrCf0bwlq18Plfv2BqciVq5ZCffMRG6l18kBCkJrsK8W6/j7WRECwgn7DzJ5aCF0og==
+X-Received: by 2002:a17:903:2b04:b0:21f:564:80a4 with SMTP id d9443c01a7336-22369258510mr206358145ad.33.1741014987121;
+        Mon, 03 Mar 2025 07:16:27 -0800 (PST)
+Received: from [127.0.1.1] ([112.64.60.252])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-736584b3cffsm1851984b3a.4.2025.03.03.07.16.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Mar 2025 07:16:26 -0800 (PST)
+From: Jun Nie <jun.nie@linaro.org>
+Date: Mon, 03 Mar 2025 23:14:43 +0800
+Subject: [PATCH v8 14/15] drm/msm/dpu: support plane splitting in quad-pipe
+ case
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CANiDSCv1HVu82D=PoJFu=XCQ97k_MM1dmYpufkUCiKpSgGRT9w@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250303-sm8650-v6-14-hmd-deckard-mdss-quad-upstream-oldbootwrapper-36-prep-v8-14-eb5df105c807@linaro.org>
+References: <20250303-sm8650-v6-14-hmd-deckard-mdss-quad-upstream-oldbootwrapper-36-prep-v8-0-eb5df105c807@linaro.org>
+In-Reply-To: <20250303-sm8650-v6-14-hmd-deckard-mdss-quad-upstream-oldbootwrapper-36-prep-v8-0-eb5df105c807@linaro.org>
+To: Rob Clark <robdclark@gmail.com>, 
+ Abhinav Kumar <quic_abhinavk@quicinc.com>, 
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Sean Paul <sean@poorly.run>, 
+ Marijn Suijten <marijn.suijten@somainline.org>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+ Jessica Zhang <quic_jesszhan@quicinc.com>
+Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+ freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+ Jun Nie <jun.nie@linaro.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1741014878; l=8117;
+ i=jun.nie@linaro.org; s=20240403; h=from:subject:message-id;
+ bh=LlIwaPbf+HH4PxIPS5YpJQVYFDplXAqOUs0Fqhpinbc=;
+ b=65k4ibLc2eCRC7auWYBTqrfiZpe0w4E5Vyt+kuqg8k4OoqoFZEImy8xPHhV01T4M2plezRqgJ
+ 7wx7dmAHRZWDFPhet31ew/Mp4ivBxFkt/SYVTfTrFwrVCGzAbcnefcr
+X-Developer-Key: i=jun.nie@linaro.org; a=ed25519;
+ pk=MNiBt/faLPvo+iJoP1hodyY2x6ozVXL8QMptmsKg3cc=
 
-On Mon, Feb 24, 2025 at 10:26:34AM +0100, Ricardo Ribalda wrote:
-> On Sun, 23 Feb 2025 at 18:03, Laurent Pinchart wrote:
-> > On Sat, Jan 11, 2025 at 09:57:21AM +0000, Ricardo Ribalda wrote:
-> > > To implement VIDIOC_QUERYCTRL, we need to know the minimum, maximum,
-> > > step and flags of the control. For some of the controls, this involves
-> > > querying the actual hardware.
-> > >
-> > > Some non-compliant cameras produce errors when we query them. Right now,
-> > > we populate that error to userspace. When an error happens, the v4l2
-> > > framework does not copy the v4l2_queryctrl struct to userspace. Also,
-> > > userspace apps are not ready to handle any other error than -EINVAL.
-> > >
-> > > One of the main usecases of VIDIOC_QUERYCTRL is enumerating the controls
-> > > of a device. This is done using the V4L2_CTRL_FLAG_NEXT_CTRL flag. In
-> > > that usecase, a non-compliant control will make it almost impossible to
-> > > enumerate all controls of the device.
-> > >
-> > > A control with an invalid max/min/step/flags is better than non being
-> > > able to enumerate the rest of the controls.
-> > >
-> > > This patch makes VIDIOC_QUERYCTRL return 0 in all the error cases
-> > > different than -EINVAL, introduces a warning in dmesg so we can
-> > > have a trace of what has happened and sets the V4L2_CTRL_FLAG_DISABLED.
-> > >
-> > > Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
-> > > ---
-> > > Hi 2*Hans and Laurent!
-> > >
-> > > I came around a device that was listing just a couple of controls when
-> > > it should be listing much more.
-> > >
-> > > Some debugging latter I found that the device was returning -EIO when
-> > > all the focal controls were read.
-> > >
-> > > Lots of good arguments in favor/against this patch in the v1. Please
-> > > check!
-> > >
-> > > Without this patch:
-> > > $ v4l2-ctl --list-ctrls
-> > >                   auto_exposure 0x009a0901 (menu)   : min=0 max=3 default=3 value=3 (Aperture Priority Mode)
-> > >          exposure_time_absolute 0x009a0902 (int)    : min=50 max=10000 step=1 default=166 value=166 flags=inactive
-> > >      exposure_dynamic_framerate 0x009a0903 (bool)   : default=0 value=0
-> > > region_of_interest_auto_control 0x009a1902 (bitmask): max=0x00000001 default=0x00000001 value=1
-> > >
-> > > With this patch:
-> > > $ v4l2-ctl --list-ctrls
-> > >                   auto_exposure 0x009a0901 (menu)   : min=0 max=3 default=3 value=3 (Aperture Priority Mode)
-> > >          exposure_time_absolute 0x009a0902 (int)    : min=50 max=10000 step=1 default=166 value=166 flags=inactive
-> > >      exposure_dynamic_framerate 0x009a0903 (bool)   : default=0 value=0
-> > > error 5 getting ext_ctrl Focus, Absolute
-> > > error 5 getting ext_ctrl Focus, Automatic Continuous
-> > >    region_of_interest_rectangle 0x009a1901 (unknown): type=107 value=unsupported payload type flags=has-payload
-> > > region_of_interest_auto_control 0x009a1902 (bitmask): max=0x00000001 default=0x00000001 value=1
-> > > --
-> > > ---
-> > > Changes in v4:
-> > > - Display control name (Thanks Hans)
-> > > - Link to v3: https://lore.kernel.org/r/20250107-uvc-eaccess-v3-1-99f3335d5133@chromium.org
-> > >
-> > > Changes in v3:
-> > > - Add a retry mechanism during error.
-> >
-> > This needs to be explained in the commit message, including when/why it
-> > helps, and why the retry count is 2.
-> >
-> > > - Set V4L2_CTRL_FLAG_DISABLED flag.
-> > > - Link to v2: https://lore.kernel.org/r/20241219-uvc-eaccess-v2-1-bf6520c8b86d@chromium.org
-> > >
-> > > Changes in v2:
-> > > - Never return error, even if we are not enumerating the controls
-> > > - Improve commit message.
-> > > - Link to v1: https://lore.kernel.org/r/20241213-uvc-eaccess-v1-1-62e0b4fcc634@chromium.org
-> > > ---
-> > >  drivers/media/usb/uvc/uvc_ctrl.c | 43 ++++++++++++++++++++++++++++++++--------
-> > >  1 file changed, 35 insertions(+), 8 deletions(-)
-> > >
-> > > diff --git a/drivers/media/usb/uvc/uvc_ctrl.c b/drivers/media/usb/uvc/uvc_ctrl.c
-> > > index 4e58476d305e..9d7812e8572d 100644
-> > > --- a/drivers/media/usb/uvc/uvc_ctrl.c
-> > > +++ b/drivers/media/usb/uvc/uvc_ctrl.c
-> > > @@ -1280,6 +1280,8 @@ static u32 uvc_get_ctrl_bitmap(struct uvc_control *ctrl,
-> > >       return ~0;
-> > >  }
-> > >
-> > > +#define MAX_QUERY_RETRIES 2
-> > > +
-> > >  static int __uvc_query_v4l2_ctrl(struct uvc_video_chain *chain,
-> > >       struct uvc_control *ctrl,
-> > >       struct uvc_control_mapping *mapping,
-> > > @@ -1305,19 +1307,44 @@ static int __uvc_query_v4l2_ctrl(struct uvc_video_chain *chain,
-> > >               __uvc_find_control(ctrl->entity, mapping->master_id,
-> > >                                  &master_map, &master_ctrl, 0);
-> > >       if (master_ctrl && (master_ctrl->info.flags & UVC_CTRL_FLAG_GET_CUR)) {
-> > > +             unsigned int retries;
-> > >               s32 val;
-> > > -             int ret = __uvc_ctrl_get(chain, master_ctrl, master_map, &val);
-> > > -             if (ret < 0)
-> > > -                     return ret;
-> > > +             int ret;
-> > >
-> > > -             if (val != mapping->master_manual)
-> > > -                             v4l2_ctrl->flags |= V4L2_CTRL_FLAG_INACTIVE;
-> > > +             for (retries = 0; retries < MAX_QUERY_RETRIES; retries++) {
-> > > +                     ret = __uvc_ctrl_get(chain, master_ctrl, master_map,
-> > > +                                          &val);
-> > > +                     if (ret >= 0)
-> > > +                             break;
-> > > +             }
-> > > +
-> > > +             if (ret < 0) {
-> > > +                     dev_warn_ratelimited(&chain->dev->udev->dev,
-> > > +                                          "UVC non compliance: Error %d querying master control %x (%s)\n",
-> > > +                                           ret, master_map->id,
-> > > +                                           uvc_map_get_name(master_map));
-> > > +             } else if (val != mapping->master_manual) {
-> > > +                     v4l2_ctrl->flags |= V4L2_CTRL_FLAG_INACTIVE;
-> > > +             }
-> > >       }
-> > >
-> > >       if (!ctrl->cached) {
-> > > -             int ret = uvc_ctrl_populate_cache(chain, ctrl);
-> > > -             if (ret < 0)
-> > > -                     return ret;
-> > > +             unsigned int retries;
-> > > +             int ret;
-> > > +
-> > > +             for (retries = 0; retries < MAX_QUERY_RETRIES; retries++) {
-> > > +                     ret = uvc_ctrl_populate_cache(chain, ctrl);
-> > > +                     if (ret >= 0)
-> > > +                             break;
-> > > +             }
-> > > +
-> > > +             if (ret < 0) {
-> > > +                     dev_warn_ratelimited(&chain->dev->udev->dev,
-> > > +                                          "UVC non compliance: Error %d populating cache of control %x (%s)\n",
-> > > +                                          ret, mapping->id,
-> > > +                                          uvc_map_get_name(mapping));
-> > > +                     v4l2_ctrl->flags |= V4L2_CTRL_FLAG_DISABLED;
-> >
-> > Can we make the control permanently disabled ?
-> 
-> I'd rather not. In funky hardware the control might work with the
-> right combination of other controls.
+The content of every half of screen is sent out via one interface in
+dual-DSI case. The content for every interface is blended by a LM
+pair in quad-pipe case, thus a LM pair should not blend any content
+that cross the half of screen in this case. Clip plane into pipes per
+left and right half screen ROI if topology is quad pipe case.
 
-That makes the behaviour random and therefore very confusing for
-userspace. All of a sudden a control will start being available, even if
-it was marked as disabled during enumeration.
+The clipped rectangle on every half of screen is futher handled by two
+pipes if its width exceeds a limit for a single pipe.
 
-> > > +             }
-> > >       }
-> > >
-> > >       if (ctrl->info.flags & UVC_CTRL_FLAG_GET_DEF) {
-> > >
-> > > ---
-> > > base-commit: c5aa327e10b194884a9c9001a751f6e4703bc3e3
-> > > change-id: 20241213-uvc-eaccess-755cc061a360
+Signed-off-by: Jun Nie <jun.nie@linaro.org>
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+---
+ drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c | 134 +++++++++++++++++++++---------
+ 1 file changed, 94 insertions(+), 40 deletions(-)
+
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
+index 0245f158881b5c37fffb75d78c75310ba446a0b7..850ce3a59f4dad0d1a6d6fcc3dc95a5ae00afd45 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
+@@ -831,8 +831,12 @@ static int dpu_plane_atomic_check_nosspp(struct drm_plane *plane,
+ 	struct dpu_plane_state *pstate = to_dpu_plane_state(new_plane_state);
+ 	struct dpu_sw_pipe_cfg *pipe_cfg;
+ 	struct dpu_sw_pipe_cfg *r_pipe_cfg;
++	struct dpu_sw_pipe_cfg init_pipe_cfg;
+ 	struct drm_rect fb_rect = { 0 };
++	const struct drm_display_mode *mode = &crtc_state->adjusted_mode;
+ 	uint32_t max_linewidth;
++	u32 num_lm;
++	int stage_id, num_stages;
+ 
+ 	min_scale = FRAC_16_16(1, MAX_UPSCALE_RATIO);
+ 	max_scale = MAX_DOWNSCALE_RATIO << 16;
+@@ -855,13 +859,10 @@ static int dpu_plane_atomic_check_nosspp(struct drm_plane *plane,
+ 		return -EINVAL;
+ 	}
+ 
+-	/* move the assignment here, to ease handling to another pairs later */
+-	pipe_cfg = &pstate->pipe_cfg[0];
+-	r_pipe_cfg = &pstate->pipe_cfg[1];
+-	/* state->src is 16.16, src_rect is not */
+-	drm_rect_fp_to_int(&pipe_cfg->src_rect, &new_plane_state->src);
++	num_lm = dpu_crtc_get_num_lm(crtc_state);
+ 
+-	pipe_cfg->dst_rect = new_plane_state->dst;
++	/* state->src is 16.16, src_rect is not */
++	drm_rect_fp_to_int(&init_pipe_cfg.src_rect, &new_plane_state->src);
+ 
+ 	fb_rect.x2 = new_plane_state->fb->width;
+ 	fb_rect.y2 = new_plane_state->fb->height;
+@@ -886,35 +887,91 @@ static int dpu_plane_atomic_check_nosspp(struct drm_plane *plane,
+ 
+ 	max_linewidth = pdpu->catalog->caps->max_linewidth;
+ 
+-	drm_rect_rotate(&pipe_cfg->src_rect,
++	drm_rect_rotate(&init_pipe_cfg.src_rect,
+ 			new_plane_state->fb->width, new_plane_state->fb->height,
+ 			new_plane_state->rotation);
+ 
+-	if ((drm_rect_width(&pipe_cfg->src_rect) > max_linewidth) ||
+-	     _dpu_plane_calc_clk(&crtc_state->adjusted_mode, pipe_cfg) > max_mdp_clk_rate) {
+-		if (drm_rect_width(&pipe_cfg->src_rect) > 2 * max_linewidth) {
+-			DPU_DEBUG_PLANE(pdpu, "invalid src " DRM_RECT_FMT " line:%u\n",
+-					DRM_RECT_ARG(&pipe_cfg->src_rect), max_linewidth);
+-			return -E2BIG;
++	/*
++	 * We have 1 mixer pair cfg for 1:1:1 and 2:2:1 topology, 2 mixer pair
++	 * configs for left and right half screen in case of 4:4:2 topology.
++	 * But we may have 2 rect to split wide plane that exceeds limit with 1
++	 * config for 2:2:1. So need to handle both wide plane splitting, and
++	 * two halves of screen splitting for quad-pipe case. Check dest
++	 * rectangle left/right clipping first, then check wide rectangle
++	 * splitting in every half next.
++	 */
++	num_stages = (num_lm + 1) / 2;
++	/* iterate mixer configs for this plane, to separate left/right with the id */
++	for (stage_id = 0; stage_id < num_stages; stage_id++) {
++		struct drm_rect mixer_rect = {stage_id * mode->hdisplay / num_stages, 0,
++					(stage_id + 1) * mode->hdisplay / num_stages,
++					mode->vdisplay};
++		int cfg_idx = stage_id * PIPES_PER_STAGE;
++
++		pipe_cfg = &pstate->pipe_cfg[cfg_idx];
++		r_pipe_cfg = &pstate->pipe_cfg[cfg_idx + 1];
++
++		drm_rect_fp_to_int(&pipe_cfg->src_rect, &new_plane_state->src);
++		pipe_cfg->dst_rect = new_plane_state->dst;
++
++		DPU_DEBUG_PLANE(pdpu, "checking src " DRM_RECT_FMT
++				" vs clip window " DRM_RECT_FMT "\n",
++				DRM_RECT_ARG(&pipe_cfg->src_rect),
++				DRM_RECT_ARG(&mixer_rect));
++
++		/*
++		 * If this plane does not fall into mixer rect, check next
++		 * mixer rect.
++		 */
++		if (!drm_rect_clip_scaled(&pipe_cfg->src_rect,
++					  &pipe_cfg->dst_rect,
++					  &mixer_rect)) {
++			memset(pipe_cfg, 0, 2 * sizeof(struct dpu_sw_pipe_cfg));
++
++			continue;
+ 		}
+ 
+-		*r_pipe_cfg = *pipe_cfg;
+-		pipe_cfg->src_rect.x2 = (pipe_cfg->src_rect.x1 + pipe_cfg->src_rect.x2) >> 1;
+-		pipe_cfg->dst_rect.x2 = (pipe_cfg->dst_rect.x1 + pipe_cfg->dst_rect.x2) >> 1;
+-		r_pipe_cfg->src_rect.x1 = pipe_cfg->src_rect.x2;
+-		r_pipe_cfg->dst_rect.x1 = pipe_cfg->dst_rect.x2;
+-	} else {
+-		memset(r_pipe_cfg, 0, sizeof(*r_pipe_cfg));
+-	}
++		pipe_cfg->dst_rect.x1 -= mixer_rect.x1;
++		pipe_cfg->dst_rect.x2 -= mixer_rect.x1;
++
++		DPU_DEBUG_PLANE(pdpu, "Got clip src:" DRM_RECT_FMT " dst: " DRM_RECT_FMT "\n",
++				DRM_RECT_ARG(&pipe_cfg->src_rect), DRM_RECT_ARG(&pipe_cfg->dst_rect));
++
++		/* Split wide rect into 2 rect */
++		if ((drm_rect_width(&pipe_cfg->src_rect) > max_linewidth) ||
++		     _dpu_plane_calc_clk(mode, pipe_cfg) > max_mdp_clk_rate) {
++
++			if (drm_rect_width(&pipe_cfg->src_rect) > 2 * max_linewidth) {
++				DPU_DEBUG_PLANE(pdpu, "invalid src " DRM_RECT_FMT " line:%u\n",
++						DRM_RECT_ARG(&pipe_cfg->src_rect), max_linewidth);
++				return -E2BIG;
++			}
++
++			memcpy(r_pipe_cfg, pipe_cfg, sizeof(struct dpu_sw_pipe_cfg));
++			pipe_cfg->src_rect.x2 = (pipe_cfg->src_rect.x1 + pipe_cfg->src_rect.x2) >> 1;
++			pipe_cfg->dst_rect.x2 = (pipe_cfg->dst_rect.x1 + pipe_cfg->dst_rect.x2) >> 1;
++			r_pipe_cfg->src_rect.x1 = pipe_cfg->src_rect.x2;
++			r_pipe_cfg->dst_rect.x1 = pipe_cfg->dst_rect.x2;
++			DPU_DEBUG_PLANE(pdpu, "Split wide plane into:"
++					DRM_RECT_FMT " and " DRM_RECT_FMT "\n",
++					DRM_RECT_ARG(&pipe_cfg->src_rect),
++					DRM_RECT_ARG(&r_pipe_cfg->src_rect));
++		} else {
++			memset(r_pipe_cfg, 0, sizeof(struct dpu_sw_pipe_cfg));
++		}
+ 
+-	drm_rect_rotate_inv(&pipe_cfg->src_rect,
+-			    new_plane_state->fb->width, new_plane_state->fb->height,
+-			    new_plane_state->rotation);
+-	if (drm_rect_width(&r_pipe_cfg->src_rect) != 0)
+-		drm_rect_rotate_inv(&r_pipe_cfg->src_rect,
+-				    new_plane_state->fb->width, new_plane_state->fb->height,
++		drm_rect_rotate_inv(&pipe_cfg->src_rect,
++				    new_plane_state->fb->width,
++				    new_plane_state->fb->height,
+ 				    new_plane_state->rotation);
+ 
++		if (drm_rect_width(&r_pipe_cfg->src_rect) != 0)
++			drm_rect_rotate_inv(&r_pipe_cfg->src_rect,
++					    new_plane_state->fb->width,
++					    new_plane_state->fb->height,
++					    new_plane_state->rotation);
++	}
++
+ 	pstate->needs_qos_remap = drm_atomic_crtc_needs_modeset(crtc_state);
+ 
+ 	return 0;
+@@ -954,20 +1011,17 @@ static int dpu_plane_atomic_check_sspp(struct drm_plane *plane,
+ 		drm_atomic_get_new_plane_state(state, plane);
+ 	struct dpu_plane *pdpu = to_dpu_plane(plane);
+ 	struct dpu_plane_state *pstate = to_dpu_plane_state(new_plane_state);
+-	struct dpu_sw_pipe *pipe = &pstate->pipe[0];
+-	struct dpu_sw_pipe *r_pipe = &pstate->pipe[1];
+-	struct dpu_sw_pipe_cfg *pipe_cfg = &pstate->pipe_cfg[0];
+-	struct dpu_sw_pipe_cfg *r_pipe_cfg = &pstate->pipe_cfg[1];
+-	int ret = 0;
+-
+-	ret = dpu_plane_atomic_check_pipe(pdpu, pipe, pipe_cfg,
+-					  &crtc_state->adjusted_mode,
+-					  new_plane_state);
+-	if (ret)
+-		return ret;
++	struct dpu_sw_pipe *pipe;
++	struct dpu_sw_pipe_cfg *pipe_cfg;
++	int ret = 0, i;
+ 
+-	if (drm_rect_width(&r_pipe_cfg->src_rect) != 0) {
+-		ret = dpu_plane_atomic_check_pipe(pdpu, r_pipe, r_pipe_cfg,
++	for (i = 0; i < PIPES_PER_PLANE; i++) {
++		pipe = &pstate->pipe[i];
++		pipe_cfg = &pstate->pipe_cfg[i];
++		if (!pipe->sspp)
++			continue;
++		DPU_DEBUG_PLANE(pdpu, "pipe %d is in use, validate it\n", i);
++		ret = dpu_plane_atomic_check_pipe(pdpu, pipe, pipe_cfg,
+ 						  &crtc_state->adjusted_mode,
+ 						  new_plane_state);
+ 		if (ret)
 
 -- 
-Regards,
+2.34.1
 
-Laurent Pinchart
