@@ -1,44 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CB1221147C;
-	Mon,  3 Mar 2025 13:03:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9653213FEE;
+	Mon,  3 Mar 2025 13:04:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741006996; cv=none; b=K/QaASpNXOTWIRK6Ep+tpSbsuP41HivLzX7RhSTBKzFf8bRfFakDJSxsdMFUWDWPW3kobw4mib5Ifdx732ZgD60Pki892u4HgwL4NQEb277mVzTANF2PQRRnOiERhsfPlXIsH8H1LrjSAUvQhLYFIwcd8ZmmRgJ+belWIyZQ9Ck=
+	t=1741007047; cv=none; b=Fl1GJyO+UDx93l6UVIhuGYn0pZQUXKOY2D1Sop/UAFXyXbQg1M1jB+trmRcCZcWkxSApkljGjgCQEqhmg3wYqn4jCWEzWKCn6yLOxxT6Ne+9bdBBV87XS5DI0+lHqaBQ6VXzmrqmamSZ5MvQnlXBXA4Roi8U6Gl2oUyLtD6wu30=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741006996; c=relaxed/simple;
-	bh=oSR/KHjI9MSt0N2w8+L2Fx68vorquw7bUIpd7Zjxu6I=;
+	s=arc-20240116; t=1741007047; c=relaxed/simple;
+	bh=iyUoLSPXMiRrDuj1QjSG3Se/xMam/JZHpS5wjuiJGpo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=T8G3B1a7YJS+hSvq9fYsYx4yVN4aIWPyVvekBBvlO9YSfR2nPQ62/dN8lWLI6Egod8v0fffryEIJTmrZQgIV1SjC+ixSS9DrCUEOv3gQYlYeMRDNLVa9AFnS3Og4BpAp9/xgxjXZjh63wSvpTz1QwUDLMugDcCk7DK7dqzPmlnU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z/sEm5fC; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=KnbY1yDDbi7TgiXg8Y1CWfqNcJNSq/PI9Kgyd23qiu6zfevTR76m0k4fmxY2sU3lBhSGLD5ksSIs4UnuyQ7QYX8eJHiwXQGbjXrYPdId1Jkl+PBFEBizsGVwpEW7BAn94P+Yt6H3pTBg1i6ei7XxRdITViJ4/k3SQuTI/NNarrE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z12p8awD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z/sEm5fC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B335BC4CED6;
-	Mon,  3 Mar 2025 13:03:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z12p8awD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C800CC4CED6;
+	Mon,  3 Mar 2025 13:04:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741006994;
-	bh=oSR/KHjI9MSt0N2w8+L2Fx68vorquw7bUIpd7Zjxu6I=;
+	s=k20201202; t=1741007047;
+	bh=iyUoLSPXMiRrDuj1QjSG3Se/xMam/JZHpS5wjuiJGpo=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Z/sEm5fCwsRHugQtLNJsfW5yPPUlDiCwJa4NkvnByLNoMfQhw0BvsRfgKtIHNQGHc
-	 tSMD0zD8Tdo3b5qweXFYRAXreJXTW9+Bb1QDiAyJCI+MpFf5cJohYXBIG+SWY3GXTd
-	 ENnE8u+b9iRvuUHp0A9+nivyYUvvsLZq5MEpfDBWPxJtn/UnUSW5ZPv/LLJ/Q/4L2f
-	 QoTG+DCpcqSm1R4BGUCN+8sYyqIu/xTZPM5oMZrT63m1DylnVlsjxoPDDwVscE3Sff
-	 q7Ouknnsio+E4OUH092C60Zd8t8cUPssNpCMvX3ZHMsEMj1ZBvQTgdd63IHRXM7e64
-	 sLBUOcBgvb3iw==
-Date: Mon, 3 Mar 2025 07:03:13 -0600
+	b=Z12p8awDHjQe/xOPfCA3gI1tAXP8mLksekgMbbmPdzcdtitUwiV7Yyq2jcz4gS2V+
+	 4BvijIr4YBpjkW6eWZIkZDi/d3r2DGNMfKyB953LdUDfV9qnjhoOeNMsTiEpIv83rX
+	 XPeVzEL+WOCUtd1k6U4+U7Gm3bBr4KeEEcm90UZHK+WaKtxI7rG99ASlrWEUkI9gmE
+	 CLEC/Jl8RBr6uMIwCmYGPk/MGoUcHP3Sh21gIlMXISziRl1H3xZtxvRmZokhKJwaqv
+	 nZeGLy69SDMhNPdTjws2M6WROHYK4VCLfaEMmlw86KA7AJ7nR2/CSMOQLWIzSP0WkF
+	 1a+l8nvRzV+Qg==
+Date: Mon, 3 Mar 2025 07:04:05 -0600
 From: "Rob Herring (Arm)" <robh@kernel.org>
 To: Shengjiu Wang <shengjiu.wang@nxp.com>
-Cc: shengjiu.wang@gmail.com, Xiubo.Lee@gmail.com, broonie@kernel.org,
-	nicoleotsuka@gmail.com, krzk+dt@kernel.org, festevam@gmail.com,
-	linux-sound@vger.kernel.org, lgirdwood@gmail.com,
-	devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	linux-kernel@vger.kernel.org, perex@perex.cz, conor+dt@kernel.org,
-	tiwai@suse.com
-Subject: Re: [PATCH 1/4] ASoC: dt-bindings: fsl,sai: Document audio graph port
-Message-ID: <174100699235.1416596.7740734064527505113.robh@kernel.org>
+Cc: linux-kernel@vger.kernel.org, conor+dt@kernel.org, broonie@kernel.org,
+	nicoleotsuka@gmail.com, tiwai@suse.com, linux-sound@vger.kernel.org,
+	krzk+dt@kernel.org, linuxppc-dev@lists.ozlabs.org,
+	shengjiu.wang@gmail.com, festevam@gmail.com, perex@perex.cz,
+	devicetree@vger.kernel.org, Xiubo.Lee@gmail.com,
+	lgirdwood@gmail.com
+Subject: Re: [PATCH 2/4] ASoC: dt-bindings: fsl,audmix: Document audio graph
+ port
+Message-ID: <174100704415.1424041.5644377914048631835.robh@kernel.org>
 References: <20250226100508.2352568-1-shengjiu.wang@nxp.com>
- <20250226100508.2352568-2-shengjiu.wang@nxp.com>
+ <20250226100508.2352568-3-shengjiu.wang@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,17 +48,17 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250226100508.2352568-2-shengjiu.wang@nxp.com>
+In-Reply-To: <20250226100508.2352568-3-shengjiu.wang@nxp.com>
 
 
-On Wed, 26 Feb 2025 18:05:05 +0800, Shengjiu Wang wrote:
+On Wed, 26 Feb 2025 18:05:06 +0800, Shengjiu Wang wrote:
 > This device can be used in conjunction with audio-graph-card to provide
 > an endpoint for binding with the other side of the audio link.
 > 
 > Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
 > ---
->  .../devicetree/bindings/sound/fsl,sai.yaml    | 51 +++++++++++++++++++
->  1 file changed, 51 insertions(+)
+>  .../devicetree/bindings/sound/fsl,audmix.yaml | 60 +++++++++++++++++++
+>  1 file changed, 60 insertions(+)
 > 
 
 Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
