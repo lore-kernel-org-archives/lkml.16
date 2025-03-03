@@ -1,105 +1,99 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0DA72187550
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 11:16:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 512031F3BA7
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 11:17:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741000594; cv=none; b=EYHmzW7oUOfWHtE8opK0wjrBjinI7/x5u03RuyPjBqBufaAsZK/4HPF7VNMof3eMPie4U1PVINT1lf7iZXhN9LlX9+THBDJFxtvj6jF7oNlUoNCoFuEds+3VO2TvBtQWAJ5ZrDcXWzayhRTZv3zsN+jzIPVGFhsSSSoR9JjJDIQ=
+	t=1741000638; cv=none; b=SycqatKLOSLPtu9YSA09IjURaOn+YmJ/oSM1LkYxNXCgEx+d42U6ngg9dYp7L08KYg/QQrRCQLY/nhbJW5/7t6vWRC86UGCZ91RZf7aFL0tHC1xqFZGGKlUHmMysbR7V0/8KQh4gMTSfs1w1oJYyqBUDlDog3qXa6ndQq27LWeI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741000594; c=relaxed/simple;
-	bh=0QHtPaQ98QlNVRE7GqZcnxV1R2pOH0/NOPZdOvOZ7Wo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=J6grjwYgQmSNB9wRiAmaFjcrZ/En/W2cxIwodrVdzV0F79IwOUjfsSIqyq6RFikaTbXk3Ugd37VBfkqhIjIUMsuxVfEwi3/5rST9cw3cPkEpO2ggpE718rATNM2AAS9cXlRo1G75i6Ii61c7hEFSIavy164wOJinTGtA5K3SszU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5FC8E113E;
-	Mon,  3 Mar 2025 03:16:45 -0800 (PST)
-Received: from bogus (e133711.arm.com [10.1.196.55])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0CDCF3F673;
-	Mon,  3 Mar 2025 03:16:26 -0800 (PST)
-Date: Mon, 3 Mar 2025 11:16:24 +0000
-From: Sudeep Holla <sudeep.holla@arm.com>
-To: Pierre Gondois <pierre.gondois@arm.com>
-Cc: Yicong Yang <yangyicong@huawei.com>, <catalin.marinas@arm.com>,
-	Sudeep Holla <sudeep.holla@arm.com>, <will@kernel.org>,
-	<tglx@linutronix.de>, <peterz@infradead.org>, <mpe@ellerman.id.au>,
-	<linux-arm-kernel@lists.infradead.org>, <mingo@redhat.com>,
-	<bp@alien8.de>, <dave.hansen@linux.intel.com>,
-	<dietmar.eggemann@arm.com>, <linuxppc-dev@lists.ozlabs.org>,
-	<x86@kernel.org>, <linux-kernel@vger.kernel.org>,
-	<morten.rasmussen@arm.com>, <msuchanek@suse.de>,
-	<gregkh@linuxfoundation.org>, <rafael@kernel.org>,
-	<jonathan.cameron@huawei.com>, <prime.zeng@hisilicon.com>,
-	<linuxarm@huawei.com>, <yangyicong@hisilicon.com>,
-	<xuwei5@huawei.com>, <guohanjun@huawei.com>,
-	<sshegde@linux.ibm.com>
-Subject: Re: [PATCH v11 3/4] arm64: topology: Support SMT control on ACPI
- based system
-Message-ID: <Z8WPiOweOjFZqTwN@bogus>
-References: <20250218141018.18082-1-yangyicong@huawei.com>
- <20250218141018.18082-4-yangyicong@huawei.com>
- <Z8HAkZiHYRjj97M7@bogus>
- <336e9c4e-cd9c-4449-ba7b-60ee8774115d@arm.com>
- <20250228190641.q23vd53aaw42tcdi@bogus>
- <a52972c7-aadd-4a77-a292-057fa5f8372d@arm.com>
+	s=arc-20240116; t=1741000638; c=relaxed/simple;
+	bh=cYRg/UtQ+QTjULJEROcLmWlBc1Hr8j1abFv9RUnzzAg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kqLYrM/sj+bTgo4V0rrHu7XcG1goPX8E/bfAG/NpLLXiyryD4gLfSY8UsPqaMa4igJ2JxDWFOk//aN8ZLvAYfHC6VjMpxV77ogwsqLZq3QoaQVUTrOa30eEk27Q83hJdbjMygVZ8jZfL66mu2rs3zMOyOrRe5jAVymUH0Qr5xaU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RgEZDKtG; arc=none smtp.client-ip=209.85.222.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RgEZDKtG"
+Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-7c0ade6036aso506082385a.0
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Mar 2025 03:17:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741000636; x=1741605436; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=eB+LhY6NNcyLq6FCMk8O4Y073ty4L6CdzDqfsuEgpeY=;
+        b=RgEZDKtGv55CzjYH9SocgKALn6h0ZBO2NOMq3Kb1kE6w9iEyM5Q0DxWnM0jGcuZJ9M
+         JG9ZcyNvKKU9Ry/e4KTyxtF1eGDM3ZDy3ekm0rOCHPocccG/F2FkVGxfYWDdhbMrrsoM
+         YVWJ59jlDc/dHqiDP31ZZIhuV01LLazalVguiHvoV+IgSRIww6LxNtuDWJs1zynfT8oY
+         QEnD6G5x65kZwQ3pqZDJk79LB7/sxb0C37aqqbxay3skHFJtE0IoT0EY7Bwv7tQI9acC
+         pSqfmHdrkUKes/3IYvF8KaJxP9aOfIQTLv5cmbx4l3ZtBdRtIFAyOINdc+2MEyOLcjFr
+         RJRw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741000636; x=1741605436;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=eB+LhY6NNcyLq6FCMk8O4Y073ty4L6CdzDqfsuEgpeY=;
+        b=SpvZR/baTOh6ZgFB+GtttuWLaokR3sOZTBcYU9ku5cSWrphOrnOXB7+RzD0aw8fsJp
+         rVnzgDR9t4QVwC+jAB3dk4FA3gGB+g901kqi3JnhB8+GtMwbNL3qLG+JYJ4MnqIWOF8C
+         RQT0xeznTDZEEmMu8PUQq4wyW90/wzeDh4G/1AL9ee4jJtvNXimtypDQHcLb2ctVfY9t
+         0k0ldzGyJsXr+vQSol2V4MqRPodoGAJPzEFmIAV0ezxrCxscMbUiVQbo4N1WsQhZUJKn
+         WQI2ox/MgD/jM4XjM5Z/ff0Lwjb8JJOjUhuIatM7qZMVS2HBu1rv+BHXKPzMa3GfMSap
+         MkQw==
+X-Gm-Message-State: AOJu0YymyiC/X///tbRRbWrzyt+TE71pFRV+5ziYUc6ENt10BXSAloPC
+	SqinerDgTiagnlje1oMA5qlIldTEuAOThgti93Kjgc5jB04VEoMHYEhEJg==
+X-Gm-Gg: ASbGncs0Itx51Su0GYFaYOlv8jiBRdzClJLZWGJl/nBPR9e1cr9EyPx7XsVYj8auVqi
+	BMRhEFpWobEH8M36b7Z+xgBFBNPF19dPYCSOat4amKwfbeRYjGmQvSlP4/EBCGMCIOOyHMdKdTD
+	GR0tfvf7Edm0qrCslfYRqZETDNyK/6mFMn1L6eJCUhqtRM9CiAFfaVPdD5peiDMaf88yf1A9Oky
+	KgtCJSBiyQrgZ30ZjGX8dMzkygEhPxGWiPngoggnx4y0FwzfXEjJxYyrkxE4ChBjWL1g4RXCrfk
+	oQsHW+Y41jj3GpJ2WQVJ
+X-Google-Smtp-Source: AGHT+IExxBgO8Ucotj8ysaakDRBJ+gx6CiwxNw3F8tva7qbBLpnfOcN6RBjW/nocidB/DXegCw9ccA==
+X-Received: by 2002:ad4:5002:0:b0:6e8:af23:b6f1 with SMTP id 6a1803df08f44-6e8af23b74emr84913546d6.10.1741000636169;
+        Mon, 03 Mar 2025 03:17:16 -0800 (PST)
+Received: from localhost ([2001:da8:7001:11::cb])
+        by smtp.gmail.com with UTF8SMTPSA id 6a1803df08f44-6e8972b9aa8sm52127166d6.0.2025.03.03.03.17.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Mar 2025 03:17:15 -0800 (PST)
+From: Inochi Amaoto <inochiama@gmail.com>
+To: Thomas Gleixner <tglx@linutronix.de>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Chen Wang <unicorn_wang@outlook.com>,
+	Inochi Amaoto <inochiama@gmail.com>
+Cc: linux-kernel@vger.kernel.org,
+	sophgo@lists.linux.dev,
+	Yixun Lan <dlan@gentoo.org>,
+	Longbin Li <looong.bin@gmail.com>
+Subject: [PATCH 0/2] irqchip/sg2042-msi: Add the Sophgo SG2044 MSI interrupt controller
+Date: Mon,  3 Mar 2025 19:16:45 +0800
+Message-ID: <20250303111648.1337543-1-inochiama@gmail.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a52972c7-aadd-4a77-a292-057fa5f8372d@arm.com>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Mar 03, 2025 at 10:56:12AM +0100, Pierre Gondois wrote:
-> On 2/28/25 20:06, Sudeep Holla wrote:
-> > > >
-> > > > Ditto as previous patch, can get rid if it is default 1.
-> > > >
-> > >
-> > > On non-SMT platforms, not calling cpu_smt_set_num_threads() leaves
-> > > cpu_smt_num_threads uninitialized to UINT_MAX:
-> > >
-> > > smt/active:0
-> > > smt/control:-1
-> > >
-> > > If cpu_smt_set_num_threads() is called:
-> > > active:0
-> > > control:notsupported
-> > >
-> > > So it might be slightly better to still initialize max_smt_thread_num.
-> > >
-> >
-> > Sure, what I meant is to have max_smt_thread_num set to 1 by default is
-> > that is what needed anyways and the above code does that now.
-> >
-> > Why not start with initialised to 1 instead ?
-> > Of course some current logic needs to change around testing it for zero.
-> >
->
-> I think there would still be a way to check against the default value.
-> If we have:
-> unsigned int max_smt_thread_num = 1;
->
-> then on a platform with 2 threads, the detection condition would trigger:
-> xa_for_each(&hetero_cpu, hetero_id, entry) {
->     if (entry->thread_num != max_smt_thread_num && max_smt_thread_num)     <---- (entry->thread_num=2) and (max_smt_thread_num=1)
->         pr_warn_once("Heterogeneous SMT topology is partly
->                       supported by SMT control\n");
->
-> so we would need an additional variable:
-> bool is_initialized = false;
+Like Sophgo SG2042, SG2044 also uses an external interrupt controller
+to handle MSI/MSI-X. It supports more interrupt and has a different
+msi message address mapping.
 
-Sure, we could do that or skip the check if max_smt_thread_num == 1 ?
+The patch follows Chen Wang's patch for SG2042 MSI controller [1],
+which is already merged into for-next.
 
-I mean
-	if (entry->thread_num != max_smt_thread_num && max_smt_thread_num != 1)
+[1]: https://lore.kernel.org/all/cover.1740535748.git.unicorn_wang@outlook.com/
 
-I assume entry->thread_num must be set to 1 on single threaded cores
-Won't that work ? Am I missing something still ?
+Inochi Amaoto (2):
+  dt-bindings: interrupt-controller: Add Sophgo SG2044 MSI controller
+  irqchip/sg2042-msi: Add the Sophgo SG2044 MSI interrupt controller
+
+ .../sophgo,sg2042-msi.yaml                    |  4 +-
+ drivers/irqchip/irq-sg2042-msi.c              | 86 ++++++++++++++++++-
+ 2 files changed, 85 insertions(+), 5 deletions(-)
 
 --
-Regards,
-Sudeep
+2.48.1
+
