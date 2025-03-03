@@ -1,156 +1,161 @@
-Received: from fhigh-b8-smtp.messagingengine.com (fhigh-b8-smtp.messagingengine.com [202.12.124.159])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D02D190468;
-	Mon,  3 Mar 2025 15:38:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.159
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F69123F36F;
+	Mon,  3 Mar 2025 15:40:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741016321; cv=none; b=V3H7VVAn+CGSb0IAMgtGle3ufWuSCQrOjiwLuyJ2RrepatL6kD7vBF1bCzhBiIFnvvGgQN4aos49lsfkK9TQW7D4aF34ruu1OoPeV0lnFVp0V+UBLe8fTx12FG/VYZFXbTinIyVMuA1NEDrsMxVvX9t3w2SjCh+Qin1xD6zUyyk=
+	t=1741016446; cv=none; b=tiVeOqGN4rDIWP3zKcMhhyys3GHgxuKXFb0YstqhzJFn+1iRO6aa/SywCPhGBIFZUIjHQj6rTd3vfotSFX2W3auSA3wcgKnu9kmHbNDRdV0vwvXZ4UQ39PvFBbEgKS3shAJl/gkSMj18RjyaJVfpWJ4lfwgjvGN6LJ61qpfS+Lk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741016321; c=relaxed/simple;
-	bh=zwcRo8Jb1qRhXHfePb8v1xljWs0mJ5UAz4GPWrIhfuA=;
+	s=arc-20240116; t=1741016446; c=relaxed/simple;
+	bh=PCzFztrWosUeWk6L97jFw2j8+FmPuQhKLe8itmVKSyo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Pgb4OywEkK3ceO1GptVJ/D7cHo9NrCjPeYD9rKduFJ+eRL0DEq70y9+ywcCtSoUpiYvGuoNmr8nsntOTGF2CTsAS5hxvMo2q9kCnDVKsJA0p3H7vR0t9mbNZgXcIg6oHr9ysv7ZzF0mMQmhzarjyj0Z6td2/qnzSUYjC80J8tQA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=queasysnail.net; spf=pass smtp.mailfrom=queasysnail.net; dkim=pass (2048-bit key) header.d=queasysnail.net header.i=@queasysnail.net header.b=gfyVgLKw; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=A1oiCjgT; arc=none smtp.client-ip=202.12.124.159
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=queasysnail.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=queasysnail.net
+	 Content-Type:Content-Disposition:In-Reply-To; b=cebRu4xrL7mdV5QR9DjdjhuO0YBaj9CZGnfkgER4TTzoPhRHUHI60zk0SCls7BBXoTxRm2lFJ50Ug4nDF3sOWskU7uClHNhfiwJavjkL/hvJQsJA7hGc9iicpKlN/gE+qiZCFPgXF+Owa4HGuVt6vcZkRDS9BV0Q+kpVqTMqIJg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=C8sDQjiq; arc=none smtp.client-ip=209.85.221.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=queasysnail.net header.i=@queasysnail.net header.b="gfyVgLKw";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="A1oiCjgT"
-Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id 1EEE425401FA;
-	Mon,  3 Mar 2025 10:38:37 -0500 (EST)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-05.internal (MEProxy); Mon, 03 Mar 2025 10:38:37 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=queasysnail.net;
-	 h=cc:cc:content-type:content-type:date:date:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=fm2; t=1741016316; x=
-	1741102716; bh=O1f/uHg0aPjtGKCT9KiWQYEt0A1Zdgh12YD7b9SeJK0=; b=g
-	fyVgLKwmlgD+q/LWPncJcwJh0nZRMkPlUWXzrvf/QX/rFbUDkZuV/XAG7OP39sdR
-	1e0kJXlFvgE/n1DQf9hjs0DKG9ZnYKXZ35suwBXQ4A+a52Oo2S/qiUnPwhwgA65p
-	xNORG1MwBQkS/oXZI4KKXY764i3FtcvJ5E4OzdCIM7vskIb0egvIGHJ38J8Dgs4G
-	W2j8CVXCUA0e2NI7wQ4ICFIIiakvGGfii1gSTx+9gL5CEYn15G2VfEUXXKYggZHe
-	nlzAuI0BAH/ZhxEO1ZX9PrnFGK2CE1qYEj4esJoipdqW5LJnia0ywyfakfn9Fk7U
-	/kqFK0LZPH+MebWUtAWjw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
-	1741016316; x=1741102716; bh=O1f/uHg0aPjtGKCT9KiWQYEt0A1Zdgh12YD
-	7b9SeJK0=; b=A1oiCjgTowaGp+i2BJteKXRqRJ1xjsnSoME3lqE9hoqCuUG5PZk
-	1vRF5y1RwoB5WI6dLVby8nIZM+Nej7Norkf3zzKNphrJqKvtehLESbqSdj2VdDQ8
-	KK5Dj5Nml73aVakpEnJjb2Q9g1GoWUAsQxTfWuGW0pWlruDqUq+GLVDp1RwtPqft
-	YqRbiazom928cNST79mLrlIpRbh9Kqt4V4SPenJ7KzU/I22G/R/ji/1RpMDZlZAq
-	VJWnxT3SsNkNT+kXf4mtBMhDwHc14FroJ6PjZoI4iiV/DrUpN4ar2of+w3DUOt1k
-	prDy9YUqDbDJ5Kt7ptHl/h0ziT57tmshRJw==
-X-ME-Sender: <xms:_MzFZ7CBzETl4XS4mg9Zb0Q9LsUlMrA4vUY4w3aJuhtkQOSUu7gnMQ>
-    <xme:_MzFZxh0zX37Uac9085qE7D2AAzJDvxXXCdskkd1B7OxEi4VbNMmgaNK8LZlRpqRt
-    tPjb68XYx_GotX3AfU>
-X-ME-Received: <xmr:_MzFZ2lWSPTJyr7PXHTAk0XT8Bu3CF-yeqTeMFS3hyfp-bAX1tcUiwaU60SY>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdelleehudcutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtuggjsehttdertddttdej
-    necuhfhrohhmpefurggsrhhinhgrucffuhgsrhhotggruceoshgusehquhgvrghshihsnh
-    grihhlrdhnvghtqeenucggtffrrghtthgvrhhnpeeghffftdevudfgkeffjedvieeilefh
-    tefffeefgfehvdevhfejjedvkeefleeggfenucffohhmrghinhepkhgvrhhnvghlrdhorh
-    hgnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepshgu
-    sehquhgvrghshihsnhgrihhlrdhnvghtpdhnsggprhgtphhtthhopedufedpmhhouggvpe
-    hsmhhtphhouhhtpdhrtghpthhtoheprghnthhonhhiohesohhpvghnvhhpnhdrnhgvthdp
-    rhgtphhtthhopehnvghtuggvvhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtth
-    hopegvughumhgriigvthesghhoohhglhgvrdgtohhmpdhrtghpthhtohepkhhusggrsehk
-    vghrnhgvlhdrohhrghdprhgtphhtthhopehprggsvghnihesrhgvughhrghtrdgtohhmpd
-    hrtghpthhtohepughonhgrlhgurdhhuhhnthgvrhesghhmrghilhdrtghomhdprhgtphht
-    thhopehshhhurghhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehrhigriigrnhhovh
-    drshdrrgesghhmrghilhdrtghomhdprhgtphhtthhopegrnhgurhgvfidonhgvthguvghv
-    sehluhhnnhdrtghh
-X-ME-Proxy: <xmx:_MzFZ9yMHvyXfXiX_OqQfHQsmGC-muLeLJJqdWYlnePg3B9HZB24bg>
-    <xmx:_MzFZwRmo6r_Twm2u976IvcrptgmPadn2fBcN6dsGWF4NYFdJ-KL7w>
-    <xmx:_MzFZwak0HnaYdR6BEcQ10bftjc-COx8ESLw6D0OAvzxrO-cP5DRmg>
-    <xmx:_MzFZxTMWC3A9yA6vWxWt9hTfkoNThPWCbyNzzODUK7gSlcjd8u-iw>
-    <xmx:_MzFZyAd8xjTBdGSaZlbYlP6apyWu0GKk1M1auvtRfkuJtuOkZMbhLEV>
-Feedback-ID: i934648bf:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 3 Mar 2025 10:38:36 -0500 (EST)
-Date: Mon, 3 Mar 2025 16:38:34 +0100
-From: Sabrina Dubroca <sd@queasysnail.net>
-To: Antonio Quartulli <antonio@openvpn.net>
-Cc: netdev@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Donald Hunter <donald.hunter@gmail.com>,
-	Shuah Khan <shuah@kernel.org>, ryazanov.s.a@gmail.com,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	Simon Horman <horms@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, Xiao Liang <shaw.leon@gmail.com>
-Subject: Re: [PATCH net-next v20 15/25] ovpn: implement multi-peer support
-Message-ID: <Z8XM-g0LUz4djxvL@hog>
-References: <20250227-b4-ovpn-v20-0-93f363310834@openvpn.net>
- <20250227-b4-ovpn-v20-15-93f363310834@openvpn.net>
- <Z8WpxDpHYzG9pXNl@hog>
- <2682e274-6be1-4366-a2f6-c870aa9e1252@openvpn.net>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C8sDQjiq"
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-390df942558so3641227f8f.2;
+        Mon, 03 Mar 2025 07:40:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741016443; x=1741621243; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=cHWcGb6/82XLxoaKsbI43KUguE9A6MTYe37LiujrCmE=;
+        b=C8sDQjiq04q3ncudxGzwFjxZ2AWHhObRLmqlpzKwOyvYxvbMPP0d3cjOE3opkKYIBv
+         wkw05S2fqyo6EgIaLJ7EA/KNX/TcVdkyxGbvkdcU37cxOSla+iNhoDN07uAOqWtdwKko
+         WDuXq/WN1rQt0+3O0conGB3cP9tzaI0xx+wX2RqzCbUgCGVjxhASRpUl1jRjSQRFIA6l
+         x9aR4WSA2P0y7EWuG1bRBIPeVnZcKNxutbhsBjtPK3yHPbsl8LDVh1bCFvT6cZIwMAeu
+         6uYsercee5dvNFsYfe3cC2CUE/FKPgdqfuClsJ7DCcxFLPqsTlqpo3EGb7iY3WjFaM5z
+         LiOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741016443; x=1741621243;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cHWcGb6/82XLxoaKsbI43KUguE9A6MTYe37LiujrCmE=;
+        b=PsECOlA+JwrQsV1iNYgtB7c4n9KezNqBFlPKoowjOP7ubcxqw/1MGxaPz2uxoB62m4
+         r8g1Mshwc8NgYAW9uNMX6BW49RPYFUMMQNaMBhzEPhcZnzEouikYXPcOy61JO0T8DeuW
+         NYoJKOFG7Y113KqfBU6/0GiT7kusZmOqhjptA2OEH5bEndOf+4BRITypdsp/QEH5V0ai
+         sf752lM/xpGsOZOIsnkNchqnuJxVK6zWuTSnDjBqMGRJQLCgWtg3MDAQqEhelfIWSkw6
+         N3rg0Vbwj3fhu2V53Dn8DCLQXicOmGWM3rgveJkyN6e0If79PEBr40iIHzG3giZJD/1A
+         1Okw==
+X-Forwarded-Encrypted: i=1; AJvYcCUR4jhhkIWwV8vsbh9zK64QE7TAlw5wmyGJEONaj38bvrgOPB8MFq2mlflSzLqspjfq6VXKV8n9nKJykm4=@vger.kernel.org, AJvYcCVRFDcqKXi3LpmunYKJEWoe/hTPVnEk7ZUesyjZz4aKB8buO0XahBtKB4SLMoX669xJoki1HyXm@vger.kernel.org, AJvYcCXkQlMmErihTybqnHcE5aWDb0PIsNSylWA5OT/dREy2Tjzuo2I13VW45W5OYnBNELN0WhwFGm88yBj1nAQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzIcj2nkT74P1CtfGhD8FxKctY5sUAazseSmk/F+4fhSclLyE6q
+	Y5dkKW8xC4DH80B2dsAZyhvNRfJOE9nL/S40cRflH6/U7sjwsZQH
+X-Gm-Gg: ASbGncsi6T7PoRdIOWXZtLYmNwUy8wMXu24ewYafetd4WvnKMWYOPXyeTzfscBi8t54
+	bUZcT3hE6tGbmjhwyjqJqvpmVzlh+E8FMhhXzW++yppOSg1nbovPX3DR6epMgOjMLdD6+72aXU5
+	nGOx4VZw5/HLMwo8bpeCyEUfftN6xoTCtRSqAXohRAwvlzZPzYBfqkMFvb0S+AUv1216H1ccrE6
+	nzpMTN3wn9pYFtLBoDXqOFYiD/GaiN5vwrvlvgWlHQkyC5+jQPihXrfFL2eQxe/WNtIqBjn/XwC
+	U+lW9x8XSHD0JokULsjoIqYJtFhTeC+pSBCWHsQf7E1svM2Jc0P6l77n0s7uMemcQ1EV+wVsJV8
+	ub00akVN8MxC1gGDYEs/F6GvKAxQvKDI=
+X-Google-Smtp-Source: AGHT+IEug+nKAS46phdWGXkvHURzvBIKWZnJxIArYvwyXJ9Wglql1zESb8pxgHZWephLZBnuQc7+2Q==
+X-Received: by 2002:a05:6000:1547:b0:390:f55b:ba91 with SMTP id ffacd0b85a97d-390f55bbc10mr8267313f8f.14.1741016443268;
+        Mon, 03 Mar 2025 07:40:43 -0800 (PST)
+Received: from orome (p200300e41f187700f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f18:7700:f22f:74ff:fe1f:3a53])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-390e479652dsm15109184f8f.16.2025.03.03.07.40.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Mar 2025 07:40:41 -0800 (PST)
+Date: Mon, 3 Mar 2025 16:40:39 +0100
+From: Thierry Reding <thierry.reding@gmail.com>
+To: Jassi Brar <jassisinghbrar@gmail.com>
+Cc: Haoxiang Li <haoxiang_li2024@163.com>, jonathanh@nvidia.com, 
+	brgl@bgdev.pl, linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org, 
+	stable@vger.kernel.org
+Subject: Re: [PATCH] mailbox: tegra-hsp: Add check for devm_kstrdup_const()
+Message-ID: <q6zovgtjvvzoessyaudn7i76ptoopnfnmaeviry7jbqcms3gxq@r3nwd3fsgs7i>
+References: <20250219022753.2589753-1-haoxiang_li2024@163.com>
+ <CABb+yY3wC5Rp4DJFL=61uyYyGtJ-kPTWks8JMG7jQpp=V3P-Zg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="e7yhcb4e6crfwy3w"
 Content-Disposition: inline
-In-Reply-To: <2682e274-6be1-4366-a2f6-c870aa9e1252@openvpn.net>
+In-Reply-To: <CABb+yY3wC5Rp4DJFL=61uyYyGtJ-kPTWks8JMG7jQpp=V3P-Zg@mail.gmail.com>
 
-2025-03-03, 15:45:23 +0100, Antonio Quartulli wrote:
-> On 03/03/2025 14:08, Sabrina Dubroca wrote:
-> > > +			if (ovpn_sock && ovpn_sock->sock->sk == sk)
-> > > +				skip = false;
-> > > +			rcu_read_unlock();
-> > > +
-> > > +			if (skip)
-> > > +				continue;
-> > 
-> > 
-> > The skip/continue logic looks a tiny bit strange to me, maybe this:
-> 
-> Hehe, it's like a double negation. I agree it can be improved.
-> 
-> > 
-> > 	hash_for_each_safe(ovpn->peers->by_id, bkt, tmp, peer, hash_entry_id) {
-> > 		bool remove = true;
-> 
-> does the netdev coding style allow to use locally scoped variables?
-> Or should I declare everything at the beginning of the function?
-> 
-> I had this rule in mind, but it may have been eliminated by now.
 
-Based on a few samples from net/core/dev.c, I'd say it's allowed:
-https://web.git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next.git/tree/net/core/dev.c?id=357660d7596b#n4634
-https://web.git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next.git/tree/net/core/dev.c?id=357660d7596b#n11404
-https://web.git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next.git/tree/net/core/dev.c?id=357660d7596b#n12319
-https://web.git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next.git/tree/net/core/dev.c?id=357660d7596b#n12531
+--e7yhcb4e6crfwy3w
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH] mailbox: tegra-hsp: Add check for devm_kstrdup_const()
+MIME-Version: 1.0
 
-> > 
-> > 		/* if a socket was passed as argument, skip all peers except
-> > 		 * those using it
-> > 		 */
-> > 		if (sk) {
-> > 			rcu_read_lock();
-> > 			ovpn_sock = rcu_dereference(peer->sock);
-> > 			remove = ovpn_sock && ovpn_sock->sock->sk == sk;
-> > 			rcu_read_unlock();
-> > 		}
-> > 
-> > 		if (remove)
-> > 			ovpn_peer_remove(peer, reason, &release_list);
-> > 	}
-> > 
-> > 
-> > (only if you agree it looks better - if it's my opinion against yours,
-> > ignore me since it's really just coding style/taste)
-> 
-> Yours look simpler/cleaner. I'll go with it.
+On Sat, Mar 01, 2025 at 10:29:29AM -0600, Jassi Brar wrote:
+> On Tue, Feb 18, 2025 at 8:28=E2=80=AFPM Haoxiang Li <haoxiang_li2024@163.=
+com> wrote:
+> >
+> > Add check for the return value of devm_kstrdup_const() in
+> > tegra_hsp_doorbell_create() to catch potential exception.
+> >
+> > Fixes: a54d03ed01b4 ("mailbox: tegra-hsp: use devm_kstrdup_const()")
+> > Cc: stable@vger.kernel.org
+> > Signed-off-by: Haoxiang Li <haoxiang_li2024@163.com>
+> > ---
+> >  drivers/mailbox/tegra-hsp.c | 2 ++
+> >  1 file changed, 2 insertions(+)
+> >
+> > diff --git a/drivers/mailbox/tegra-hsp.c b/drivers/mailbox/tegra-hsp.c
+> > index c1981f091bd1..773a1cf6d93d 100644
+> > --- a/drivers/mailbox/tegra-hsp.c
+> > +++ b/drivers/mailbox/tegra-hsp.c
+> > @@ -285,6 +285,8 @@ tegra_hsp_doorbell_create(struct tegra_hsp *hsp, co=
+nst char *name,
+> >         db->channel.hsp =3D hsp;
+> >
+> >         db->name =3D devm_kstrdup_const(hsp->dev, name, GFP_KERNEL);
+> > +       if (!db->name)
+> > +               return ERR_PTR(-ENOMEM);
+>=20
+>  tegra_hsp_doorbell.name seems unused, so maybe just get rid of it...  Th=
+ierry ?
 
-ok :)
+I think I had at one point used the name in error messages and had ideas
+about maybe exposing some information via debugfs. In both cases the
+name would've been an easy way to make this more human readable. As it
+turns out these errors are very rare (I don't think I've ever seen any)
+and I'm not sure there's a need for debugfs.
 
--- 
-Sabrina
+So yeah, I think one could make a case for removing the name. The amount
+of memory it "wastes" is tiny and it's quite probable that it will end
+up in some area that would be padding otherwise. Furthermore there's no
+way this memory will ever be *not* read-only kernel data, so this is
+always going to be a no-op anyway (well, not exactly, but it'll simply
+be an assignment of name to db->name, so no actual copying will be done)
+and hence this will never actually fail.
+
+So I don't think this patch makes sense. If somebody really wants to
+remove the name, that'd be fine with me, but I don't see a strong need.
+
+I suppose not doing anything would increase the chances of a similar
+patch being posted again and again over the next few years, so maybe we
+should just get rid of it.
+
+Thierry
+
+--e7yhcb4e6crfwy3w
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmfFzXQACgkQ3SOs138+
+s6GKWg//Sp3RbObS1Gi45lMzWojAPKio/JQYlJ7iVSZ10NQ12z3OF9+xCMtnHzI1
+NZv157gxUYceA6VWVCCoW/KFpq8to7WIi1pM7JlkVO/RiuNS9YGeisdmu83uhtbh
+3ozmQlBL5svevbPDGR2oFzqjDSBM/rKKg9X5bdKNb3c3UHU5sURZRRGw3psmNzbO
+N8Y21HXi23YlSGGYFmjQl0VCvqHZVYs2pnMSrUt7sT2rhg2OSpxkUT2HUDl7Nw+J
+l+5/PvAim2nJisFldBl1IKKtW23X4G+ZmeicnEgXnPrfCmPYUi7kKHattzLXsZbg
+fmbu6LY+51SohNBePq9H2EAG+DjyxIRJtH7GIR6mejW6/Ta3aWNh9wACXQkk4xFB
+P4MwU6cJlhixEAKZgAUFlGfu1WrTlozD3i7DDaP2tp2mT0h0OSCeE7K4JA20qFgO
+HKRyWBvUG7Xhx/nSai/QiIhSlQ+vxsr1JdvUkayF3GVEXToJfsBrwCkjIGU+FLoR
+pdnwY2oYsZvtL+4Fx1BHO6PC6XtDpmfrj1AO7lT7/AdqfxjZDHGl5O+r2MwhXJTa
+ox86Z8v2wNOrzK/eY+9LNzfjE/1D1HGOBmUhZawxVccsvYjwePaiay/frW+BHOdA
+GFAvwjY4fNl6ntfKvKznxBgtejEEsk/ZwJv6hlHO2xmIn9KVWkw=
+=4oVP
+-----END PGP SIGNATURE-----
+
+--e7yhcb4e6crfwy3w--
