@@ -1,104 +1,227 @@
-Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
+Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E97051D6DDC;
-	Mon,  3 Mar 2025 04:55:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E13820EB;
+	Mon,  3 Mar 2025 05:01:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740977743; cv=none; b=MZZZEmltHUtpZmmmgCGsCoHaydOzgAjEwvxHieiF4BymEmHjt0kRj3pqTNJuRrdANMwPC2yNFH4DkVaWkM6O1kYp7D5GsrtXC21k8F1N0SC16/h84jO+1XXrb8M8USSf1qmzmaMOn0jtcgfzdxkwXHEX5Z4/nMvNQWcAb8Lg/MA=
+	t=1740978079; cv=none; b=EbHr/JEKKcuqSSEWcdsODNYd30gMhBT0ZPSgTalvJzp6RZXkgBlQcww+cSBg4ARUpcAsPIdM+eYmWbCzadbPgzAg2dz/urGTPbKuClrFy5FX/XXWIUepRDCTSTGDE0g06QLs8BdWxW7yFlL7x9EdqFL3j/kY+aoWOJu6qvZZXl8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740977743; c=relaxed/simple;
-	bh=ypcOWtyf+HfQuyVp+UfGbc31+EN4Qh29nRpPInN+scs=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ixItTsYQtXXDx9uDTBAgi9buw63mVycOLahPJoBLvmVsbG95zoSSv+vK61WyVdR8PNLJT0yvDXHBK8c+WNKq2SapDXXvgAGFmv3L6YDBLrczL3YBRk6SIfAFA86+/ueLJsGDJtnZLTGeSKKMQaSi9MwGGb/V6xGIyBCAYF0+1g0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=ODHfIIRl; arc=none smtp.client-ip=198.47.23.235
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1740978079; c=relaxed/simple;
+	bh=noenWBf4V+zIvOYXaoUlTjEtmvuStjOeGst1Yh1cfQE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=NF4Yz+TL/3EuKTkAp3fA8gXp2kOZD7pYt0nCa6eACHTLG25AuPTe7T5jN3DNT1S+VMEIL3BolIf6Yql6udoFCH9dTT8eB+oiZkNmtTdnWqepCLKv7z6oz+HEXo30X9JWv4E5klgIO+4gddsog3pLKtjyUPNPamdmmN6QTrfwZso=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=PPcjleDA; arc=none smtp.client-ip=115.124.30.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ODHfIIRl"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 5234tba33209336
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sun, 2 Mar 2025 22:55:37 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1740977737;
-	bh=x0aYExE+fmXOum0ucByrnNGU4z/laft84m3pfF3bsHQ=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=ODHfIIRlmJKJDqBLvdc6azxzq3o5WiP4VSaliChWdDsdaVqORqShW9IkL2Kjq5JyS
-	 CqGsa7AZ5rlStw91uZhZK/EX1bfFshGd13AKI5W1H5q/lVT1QdP7BNfIy1UoBibRAG
-	 vEvF68mnNuo53rnk40KETjrzXX6yhJPfndvjbReA=
-Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 5234tbHb129160
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Sun, 2 Mar 2025 22:55:37 -0600
-Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Sun, 2
- Mar 2025 22:55:36 -0600
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Sun, 2 Mar 2025 22:55:36 -0600
-Received: from uda0132425.dhcp.ti.com (dhcp-10-24-69-250.dhcp.ti.com [10.24.69.250])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 5234tSoT063226;
-	Sun, 2 Mar 2025 22:55:33 -0600
-From: Vignesh Raghavendra <vigneshr@ti.com>
-To: <nm@ti.com>, <kristo@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-        <conor+dt@kernel.org>, Siddharth Vadapalli <s-vadapalli@ti.com>
-CC: Vignesh Raghavendra <vigneshr@ti.com>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <srk@ti.com>
-Subject: Re: [PATCH] arm64: dts: ti: k3-am62p5-sk: Support SoC wakeup using USB1 wakeup
-Date: Mon, 3 Mar 2025 10:25:22 +0530
-Message-ID: <174092143358.3272913.4362724493070822448.b4-ty@ti.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250130062550.1554651-1-s-vadapalli@ti.com>
-References: <20250130062550.1554651-1-s-vadapalli@ti.com>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="PPcjleDA"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1740978072; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=MgRAOZ7IC/MEKf4HOLHXDkLJJ1k9VrHnAWAy3ZEbw0A=;
+	b=PPcjleDAkK29kvphTMZc+vsxycXEFMm0/QAW73wtuXy41kcuORssYdmYz7L5ZXcFc8aHsSXbBH5D2s/aGbGPsGvA6YvpDiWDAHoEmXNW6+UXBGHitNNILzdXYRFMuqjH1/EluFXzgnKy6zoa7bJQ6KmP5t89tD1VQSQUmiR0IsY=
+Received: from 192.168.117.78(mailfrom:zijie.wei@linux.alibaba.com fp:SMTPD_---0WQYeI1X_1740978070 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Mon, 03 Mar 2025 13:01:11 +0800
+Message-ID: <f7636788-4fa2-4fa6-afe6-a8fa2edb72ab@linux.alibaba.com>
+Date: Mon, 3 Mar 2025 13:01:10 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] KVM: x86: ioapic: Optimize EOI handling to reduce
+ unnecessary VM exits
+To: "Huang, Kai" <kai.huang@intel.com>, seanjc@google.com, bp@alien8.de,
+ dave.hansen@linux.intel.com, hpa@zytor.com, kvm@vger.kernel.org,
+ linux-kernel@vger.kernel.org, mingo@redhat.com, pbonzini@redhat.com,
+ tglx@linutronix.de, x86@kernel.org, xuyun_xy.xy@linux.alibaba.com,
+ zijie.wei@linux.alibaba.com
+References: <20241121065039.183716-1-zijie.wei@linux.alibaba.com>
+ <20250228021500.516834-1-zijie.wei@linux.alibaba.com>
+ <9553f84e3a4533278e06938a4693991cf23cdfc3.camel@intel.com>
+From: wzj <zijie.wei@linux.alibaba.com>
+Reply-To: 9553f84e3a4533278e06938a4693991cf23cdfc3.camel@intel.com
+In-Reply-To: <9553f84e3a4533278e06938a4693991cf23cdfc3.camel@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-Hi Siddharth Vadapalli,
 
-On Thu, 30 Jan 2025 11:55:47 +0530, Siddharth Vadapalli wrote:
-> After the SoC has entered the Deep Sleep mode, USB1 can be used to wakeup
-> the SoC based on USB events triggered by USB devices. This requires that
-> the pin corresponding to the Type-A connector remains pulled up even after
-> the SoC has entered the Deep Sleep mode. Hence, enable Deep Sleep pullup /
-> pulldown selection for the USB1_DRVBUS pin and set its Deep Sleep state to
-> PULL_UP.
+
+On 2025/2/28 20:25, Huang, Kai wrote:
+> On Fri, 2025-02-28 at 10:15 +0800, weizijie wrote:
+>> Address performance issues caused by a vector being reused by a
+>> non-IOAPIC source.
 > 
-> [...]
+> I saw your reply in v2.  Thanks.
+> 
+> Some minor comments below, which may be just nits for Sean/Paolo, so feel free
+> to add:
+> 
+> Reviewed-by: Kai Huang <kai.huang@intel.com>
+> 
+>>
+>> Commit 0fc5a36dd6b3
+>> ("KVM: x86: ioapic: Fix level-triggered EOI and IOAPIC reconfigure race")
+>> addressed the issues related to EOI and IOAPIC reconfiguration races.
+>> However, it has introduced some performance concerns:
+>>
+>> Configuring IOAPIC interrupts while an interrupt request (IRQ) is
+>> already in service can unintentionally trigger a VM exit for other
+>> interrupts that normally do not require one, due to the settings of
+>> `ioapic_handled_vectors`. If the IOAPIC is not reconfigured during
+>> runtime, this issue persists, continuing to adversely affect
+>> performance.
+> 
+> 
+> So in short:
+> 
+>    The "rare case" mentioned in db2bdcbbbd32 and 0fc5a36dd6b3 is actually
+>    not that rare and can actually happen in the good behaved guest.
+> 
+> The above commit message isn't very clear to me, though.  How about below?
+> 
+> Configuring IOAPIC routed interrupts triggers KVM to rescan all vCPU's
+> ioapic_handled_vectors which is used to control which vectors need to trigger
+> EOI-induced VMEXITs.  If any interrupt is already in service on some vCPU using
+> some vector when the IOAPIC is being rescanned, the vector is set to vCPU's
+> ioapic_handled_vectors.  If the vector is then reused by other interrupts, each
+> of them will cause a VMEXIT even it is unnecessary.  W/o further IOAPIC rescan,
+> the vector remains set, and this issue persists, impacting guest's interrupt
+> performance.
+> 
+> Both commit
+> 
+>    db2bdcbbbd32 (KVM: x86: fix edge EOI and IOAPIC reconfig race)
+> 
+> and commit
+> 
+>    0fc5a36dd6b3 (KVM: x86: ioapic: Fix level-triggered EOI and IOAPIC reconfigure
+> race)
+> 
+> mentioned this issue, but it was considered as "rare" thus was not addressed.
+> However in real environment this issue can actually happen in a well-behaved
+> guest.
+> 
 
-I have applied the following to branch ti-next on [1].
-Thank you!
+Thank you very much for your suggestions on the comment modifications.
+I will apply it to this patch.
 
-[1/1] arm64: dts: ti: k3-am62p5-sk: Support SoC wakeup using USB1 wakeup
-      commit: 115290c112952db27009668aa7ae2f29920704f0
+>>
+>> Simple Fix Proposal:
+>> A straightforward solution is to record highest in-service IRQ that
+>> is pending at the time of the last scan. Then, upon the next guest
+>> exit, do a full KVM_REQ_SCAN_IOAPIC. This ensures that a re-scan of
+>> the ioapic occurs only when the recorded vector is EOI'd, and
+>> subsequently, the extra bit in the eoi_exit_bitmap are cleared,
+> 			  ^
+> 			  bits
+> 
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent up the chain during
-the next merge window (or sooner if it is a relevant bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
+Thank you for the correction.
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+>> avoiding unnecessary VM exits.
+>>
+>> Co-developed-by: xuyun <xuyun_xy.xy@linux.alibaba.com>
+>> Signed-off-by: xuyun <xuyun_xy.xy@linux.alibaba.com>
+>> Signed-off-by: weizijie <zijie.wei@linux.alibaba.com>
+>> ---
+>>   arch/x86/include/asm/kvm_host.h |  1 +
+>>   arch/x86/kvm/ioapic.c           | 10 ++++++++--
+>>   arch/x86/kvm/irq_comm.c         |  9 +++++++--
+>>   arch/x86/kvm/lapic.c            | 10 ++++++++++
+>>   4 files changed, 26 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+>> index 0b7af5902ff7..8c50e7b4a96f 100644
+>> --- a/arch/x86/include/asm/kvm_host.h
+>> +++ b/arch/x86/include/asm/kvm_host.h
+>> @@ -1062,6 +1062,7 @@ struct kvm_vcpu_arch {
+>>   #if IS_ENABLED(CONFIG_HYPERV)
+>>   	hpa_t hv_root_tdp;
+>>   #endif
+>> +	u8 last_pending_vector;
+>>   };
+>>   
+>>   struct kvm_lpage_info {
+>> diff --git a/arch/x86/kvm/ioapic.c b/arch/x86/kvm/ioapic.c
+>> index 995eb5054360..40252a800897 100644
+>> --- a/arch/x86/kvm/ioapic.c
+>> +++ b/arch/x86/kvm/ioapic.c
+>> @@ -297,10 +297,16 @@ void kvm_ioapic_scan_entry(struct kvm_vcpu *vcpu, ulong *ioapic_handled_vectors)
+>>   			u16 dm = kvm_lapic_irq_dest_mode(!!e->fields.dest_mode);
+>>   
+>>   			if (kvm_apic_match_dest(vcpu, NULL, APIC_DEST_NOSHORT,
+>> -						e->fields.dest_id, dm) ||
+>> -			    kvm_apic_pending_eoi(vcpu, e->fields.vector))
+>> +						e->fields.dest_id, dm))
+>>   				__set_bit(e->fields.vector,
+>>   					  ioapic_handled_vectors);
+>> +			else if (kvm_apic_pending_eoi(vcpu, e->fields.vector)) {
+>> +				__set_bit(e->fields.vector,
+>> +					  ioapic_handled_vectors);
+>> +				vcpu->arch.last_pending_vector = e->fields.vector >
+>> +					vcpu->arch.last_pending_vector ? e->fields.vector :
+>> +					vcpu->arch.last_pending_vector;
+>> +			}
+>>   		}
+>>   	}
+>>   	spin_unlock(&ioapic->lock);
+>> diff --git a/arch/x86/kvm/irq_comm.c b/arch/x86/kvm/irq_comm.c
+>> index 8136695f7b96..1d23c52576e1 100644
+>> --- a/arch/x86/kvm/irq_comm.c
+>> +++ b/arch/x86/kvm/irq_comm.c
+>> @@ -426,9 +426,14 @@ void kvm_scan_ioapic_routes(struct kvm_vcpu *vcpu,
+>>   
+>>   			if (irq.trig_mode &&
+>>   			    (kvm_apic_match_dest(vcpu, NULL, APIC_DEST_NOSHORT,
+>> -						 irq.dest_id, irq.dest_mode) ||
+>> -			     kvm_apic_pending_eoi(vcpu, irq.vector)))
+>> +						 irq.dest_id, irq.dest_mode)))
+>>   				__set_bit(irq.vector, ioapic_handled_vectors);
+>> +			else if (kvm_apic_pending_eoi(vcpu, irq.vector)) {
+>> +				__set_bit(irq.vector, ioapic_handled_vectors);
+>> +				vcpu->arch.last_pending_vector = irq.vector >
+>> +					vcpu->arch.last_pending_vector ? irq.vector :
+>> +					vcpu->arch.last_pending_vector;
+>> +			}
+>>   		}
+>>   	}
+>>   	srcu_read_unlock(&kvm->irq_srcu, idx);
+>> diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
+>> index a009c94c26c2..5d62ea5f1503 100644
+>> --- a/arch/x86/kvm/lapic.c
+>> +++ b/arch/x86/kvm/lapic.c
+>> @@ -1466,6 +1466,16 @@ static void kvm_ioapic_send_eoi(struct kvm_lapic *apic, int vector)
+>>   	if (!kvm_ioapic_handles_vector(apic, vector))
+>>   		return;
+>>   
+>> +	/*
+>> +	 * When there are instances where ioapic_handled_vectors is
+>> +	 * set due to pending interrupts, clean up the record and do
+>> +	 * a full KVM_REQ_SCAN_IOAPIC.
+>> +	 */
+> 
+> How about also add below to the comment?
+> 
+> 	This ensures the vector is cleared in the vCPU's ioapic_handled_vectors
+> 	if the vector is reused by non-IOAPIC interrupts,  avoiding unnecessary
+> 	EOI-induced VMEXITs for that vector.
+> 
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+This additional information seems to make it easier to understand. Thank 
+you very much.
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/ti/linux.git
---
-Vignesh
+>> +	if (apic->vcpu->arch.last_pending_vector == vector) {
+>> +		apic->vcpu->arch.last_pending_vector = 0;
+>> +		kvm_make_request(KVM_REQ_SCAN_IOAPIC, apic->vcpu);
+>> +	}
+>> +
+>>   	/* Request a KVM exit to inform the userspace IOAPIC. */
+>>   	if (irqchip_split(apic->vcpu->kvm)) {
+>>   		apic->vcpu->arch.pending_ioapic_eoi = vector;
+> 
 
