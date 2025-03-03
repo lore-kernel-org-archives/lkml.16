@@ -1,78 +1,169 @@
-Received: from SHSQR01.spreadtrum.com (unknown [222.66.158.135])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82B8E1F30B3
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 10:53:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=222.66.158.135
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C80FC1F8AE2;
+	Mon,  3 Mar 2025 10:53:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740999222; cv=none; b=uT5ze9QnTU2Nx5MjN/wXjImae68JhvNlVx/8+TK4Uf0tMFvIl2tKZOpehGUQWe36dsc9HcoV4dQPDXXqK3QLDKudbta9sscL34CegTQvxNfeL93BPLrfgmL8gPeJU0wpqVJGRp2TuxR/b9wR05ScdJiJNha7HQ5aUJ4NpQq4tNs=
+	t=1740999223; cv=none; b=AChXIWWbSGvoKjtkDj36sZe1V6IVHEXjDCU06bRvarqzxI7jMptQvjk6RkpOUPX/PUIJLp/XVYqU+vDQf2mWm/Fg5OTo5YPYzbxTURBlVDZUSJzSQ+17sIRE93zfRAQvIHf659gbBk9P6cWftLdGlvtBcV6gilgJql8bh7BCoF8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740999222; c=relaxed/simple;
-	bh=IxLafNvvFttrmOiNrSQRs+lSseO4cQaIwe4/IL5N2Gk=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LcOSPehZwhWR92LWY0r5QH4TOv1V2GALCEwERVL5cOz+MLcuqeqmS/sC5J3DCfxuUeOr5uu2PYwB0YDjjvwBZ4KXnbtDJ4piTd04zogqEmsozbpnacPQnox02rVs0ffztay3T3VvkESKN7olBwsgPYXU+ZaSvOm1R/lwvAbTxJU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com; spf=pass smtp.mailfrom=unisoc.com; arc=none smtp.client-ip=222.66.158.135
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=unisoc.com
-Received: from dlp.unisoc.com ([10.29.3.86])
-	by SHSQR01.spreadtrum.com with ESMTP id 523ArPdi092378;
-	Mon, 3 Mar 2025 18:53:25 +0800 (+08)
-	(envelope-from Xuewen.Yan@unisoc.com)
-Received: from SHDLP.spreadtrum.com (bjmbx01.spreadtrum.com [10.0.64.7])
-	by dlp.unisoc.com (SkyGuard) with ESMTPS id 4Z5wXR4r0zz2K8nM6;
-	Mon,  3 Mar 2025 18:48:39 +0800 (CST)
-Received: from BJ10918NBW01.spreadtrum.com (10.0.73.73) by
- BJMBX01.spreadtrum.com (10.0.64.7) with Microsoft SMTP Server (TLS) id
- 15.0.1497.23; Mon, 3 Mar 2025 18:53:22 +0800
-From: Xuewen Yan <xuewen.yan@unisoc.com>
-To: <vincent.guittot@linaro.org>, <peterz@infradead.org>, <mingo@redhat.com>,
-        <juri.lelli@redhat.com>, <dietmar.eggemann@arm.com>,
-        <rostedt@goodmis.org>, <bsegall@google.com>, <mgorman@suse.de>,
-        <vschneid@redhat.com>
-CC: <linux-kernel@vger.kernel.org>, <ke.wang@unisoc.com>, <di.shen@unisoc.com>,
-        <xuewen.yan94@gmail.com>
-Subject: [RFC PATCH V2 2/3] sched/fair: Do not consider the sched-delayed task when yield
-Date: Mon, 3 Mar 2025 18:52:40 +0800
-Message-ID: <20250303105241.17251-3-xuewen.yan@unisoc.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250303105241.17251-1-xuewen.yan@unisoc.com>
-References: <20250303105241.17251-1-xuewen.yan@unisoc.com>
+	s=arc-20240116; t=1740999223; c=relaxed/simple;
+	bh=qKYQ/RpHnPPi0xz+U1dihMeF/+HcwhhzvfPtYWgkvCg=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=H+ivxV4DBbdDdINjB7PqEYgBjbfdqKGRJdq6+Ok/g2ok+c28Sv+aNk6wy2/ZOtFwIuHj0YaCjZKOa9VeT7Nmj7VGFtGEZ5ZxIIa82LHMTm+gdEChnYAu5ObPCYDM1aO+O95wtT1vO1W+qqA2LwIJHYz7HqeIRYNI9bO+EPzaqcI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B6B6C113E;
+	Mon,  3 Mar 2025 02:53:55 -0800 (PST)
+Received: from e133711.arm.com (e133711.arm.com [10.1.196.55])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2FC6A3F673;
+	Mon,  3 Mar 2025 02:53:40 -0800 (PST)
+From: Sudeep Holla <sudeep.holla@arm.com>
+Date: Mon, 03 Mar 2025 10:51:47 +0000
+Subject: [PATCH 12/14] hwmon: (xgene-hwmon) Simplify PCC shared memory
+ region handling
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SHCAS03.spreadtrum.com (10.0.1.207) To
- BJMBX01.spreadtrum.com (10.0.64.7)
-X-MAIL:SHSQR01.spreadtrum.com 523ArPdi092378
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250303-pcc_fixes_updates-v1-12-3b44f3d134b1@arm.com>
+References: <20250303-pcc_fixes_updates-v1-0-3b44f3d134b1@arm.com>
+In-Reply-To: <20250303-pcc_fixes_updates-v1-0-3b44f3d134b1@arm.com>
+To: linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Sudeep Holla <sudeep.holla@arm.com>, 
+ Jassi Brar <jassisinghbrar@gmail.com>, Huisong Li <lihuisong@huawei.com>, 
+ Adam Young <admiyo@os.amperecomputing.com>, 
+ Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, 
+ linux-hwmon@vger.kernel.org
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3678; i=sudeep.holla@arm.com;
+ h=from:subject:message-id; bh=qKYQ/RpHnPPi0xz+U1dihMeF/+HcwhhzvfPtYWgkvCg=;
+ b=owEBbQKS/ZANAwAIAQBBurwxfuKYAcsmYgBnxYoiJfyJ15B7dZMCKbfDh7KWMxlk1zX1nXbFZ
+ DSDENvulASJAjMEAAEIAB0WIQS6ceUSBvMeskPdk+EAQbq8MX7imAUCZ8WKIgAKCRAAQbq8MX7i
+ mOOJEACk8HwhoV/kf4yQTtXA0+Bt6TAgAQcmvhIbnJbmQo6uNeuyvNtO6AJ4hp2bBhQshaQw/O5
+ EJ/zNcpbsEojllwwlLTXEySe3nChK24CyD5Hz/DbGKOrZNTE6ZPI2nN7d7ids2MfY3gnpJRe+EY
+ JSuME2353lxcPdMkxQD0SU5auKiZJzQJXZNsmwCII+ibzjmokrbjDIdDnmi5gG9SZ/3Z3MYOAb+
+ UjqklBafICGSMLwE+zmaIYwtt1v0RZ7swQHGkNMHAc/Q6HyQCR9tM8DMeGq9ezKkV7S7cU3eApR
+ bVJmjqNa7Tz2U9z59MMvtfCS5uYcSY5hNk5s0asxqgQA/sW32EdUvI1AUj9jo6jEzjqBYzSLTm7
+ UbnG/UCJYSDSZqThECQuw3zhvwCdiSwC4593JGU4SIDWuZ3KxGAybmi2T4YsBgKg7FoI5YuDs7F
+ 0x5PH5nD26+wtjhRIfYcvHDjZzFQJrUFcee3epOIiPYflGlKgS6Gdx8ymxUhcfIc+LXV0e0fjrv
+ iFrgf7J3PAs2slBNxdLJ+VCtUxx6s147rt9O1XarZ4TDmRDTh751OhsGFsqJeF5cEK6H3Yqs7br
+ PrEnT+KfL563qBk10DtcNPuQ9fTiK9gLXm1SrbF6MDC9ZdpbqwFGVtUVNzlPm0iYt1S4wgdnR0j
+ Wb96Xqm4w4wZD3g==
+X-Developer-Key: i=sudeep.holla@arm.com; a=openpgp;
+ fpr=7360A21742ADF5A11767C1C139CFD4755FE2D5B4
 
-When task call sched_yield, if there is only one task in rq,
-it is no need to yield, however now, the rq->nr_running include
-the sched-delayed tasks which are indeed not runnable tasks.
-So sub the sched-delayed tasks when check the nr-running.
+The PCC driver now handles mapping and unmapping of shared memory
+areas as part of pcc_mbox_{request,free}_channel(). Without these before,
+this xgene hwmon driver did handling of those mappings like several
+other PCC mailbox client drivers.
 
-Fixes: 152e11f6df29 ("sched/fair: Implement delayed dequeue")
-Signed-off-by: Xuewen Yan <xuewen.yan@unisoc.com>
+There were redundant operations, leading to unnecessary code. Maintaining
+the consistency across these driver was harder due to scattered handling
+of shmem.
+
+Just use the mapped shmem and remove all redundant operations from this
+driver.
+
+Cc: Jean Delvare <jdelvare@suse.com>
+Cc: Guenter Roeck <linux@roeck-us.net>
+Cc: linux-hwmon@vger.kernel.org
+Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
 ---
- kernel/sched/fair.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/hwmon/xgene-hwmon.c | 40 ++++------------------------------------
+ 1 file changed, 4 insertions(+), 36 deletions(-)
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index a354f29c4f6f..8797f6872155 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -8992,7 +8992,7 @@ static void yield_task_fair(struct rq *rq)
- 	/*
- 	 * Are we the only task in the tree?
- 	 */
--	if (unlikely(rq->nr_running == 1))
-+	if (unlikely((rq->nr_running - cfs_h_nr_delayed(rq)) == 1))
- 		return;
+diff --git a/drivers/hwmon/xgene-hwmon.c b/drivers/hwmon/xgene-hwmon.c
+index 1e3bd129a922d25ff25142d864503377773304a8..ea350d4de902c4e6fc4de1cd54a8b75edfad1119 100644
+--- a/drivers/hwmon/xgene-hwmon.c
++++ b/drivers/hwmon/xgene-hwmon.c
+@@ -102,9 +102,6 @@ struct xgene_hwmon_dev {
  
- 	clear_buddies(cfs_rq, se);
+ 	struct device		*hwmon_dev;
+ 	bool			temp_critical_alarm;
+-
+-	phys_addr_t		comm_base_addr;
+-	void			*pcc_comm_addr;
+ 	u64			usecs_lat;
+ };
+ 
+@@ -125,7 +122,8 @@ static u16 xgene_word_tst_and_clr(u16 *addr, u16 mask)
+ 
+ static int xgene_hwmon_pcc_rd(struct xgene_hwmon_dev *ctx, u32 *msg)
+ {
+-	struct acpi_pcct_shared_memory *generic_comm_base = ctx->pcc_comm_addr;
++	struct acpi_pcct_shared_memory __iomem *generic_comm_base =
++							ctx->pcc_chan->shmem;
+ 	u32 *ptr = (void *)(generic_comm_base + 1);
+ 	int rc, i;
+ 	u16 val;
+@@ -523,7 +521,8 @@ static void xgene_hwmon_rx_cb(struct mbox_client *cl, void *msg)
+ static void xgene_hwmon_pcc_rx_cb(struct mbox_client *cl, void *msg)
+ {
+ 	struct xgene_hwmon_dev *ctx = to_xgene_hwmon_dev(cl);
+-	struct acpi_pcct_shared_memory *generic_comm_base = ctx->pcc_comm_addr;
++	struct acpi_pcct_shared_memory __iomem *generic_comm_base =
++							ctx->pcc_chan->shmem;
+ 	struct slimpro_resp_msg amsg;
+ 
+ 	/*
+@@ -649,7 +648,6 @@ static int xgene_hwmon_probe(struct platform_device *pdev)
+ 	} else {
+ 		struct pcc_mbox_chan *pcc_chan;
+ 		const struct acpi_device_id *acpi_id;
+-		int version;
+ 
+ 		acpi_id = acpi_match_device(pdev->dev.driver->acpi_match_table,
+ 					    &pdev->dev);
+@@ -658,8 +656,6 @@ static int xgene_hwmon_probe(struct platform_device *pdev)
+ 			goto out_mbox_free;
+ 		}
+ 
+-		version = (int)acpi_id->driver_data;
+-
+ 		if (device_property_read_u32(&pdev->dev, "pcc-channel",
+ 					     &ctx->mbox_idx)) {
+ 			dev_err(&pdev->dev, "no pcc-channel property\n");
+@@ -685,34 +681,6 @@ static int xgene_hwmon_probe(struct platform_device *pdev)
+ 			goto out;
+ 		}
+ 
+-		/*
+-		 * This is the shared communication region
+-		 * for the OS and Platform to communicate over.
+-		 */
+-		ctx->comm_base_addr = pcc_chan->shmem_base_addr;
+-		if (ctx->comm_base_addr) {
+-			if (version == XGENE_HWMON_V2)
+-				ctx->pcc_comm_addr = (void __force *)devm_ioremap(&pdev->dev,
+-								  ctx->comm_base_addr,
+-								  pcc_chan->shmem_size);
+-			else
+-				ctx->pcc_comm_addr = devm_memremap(&pdev->dev,
+-								   ctx->comm_base_addr,
+-								   pcc_chan->shmem_size,
+-								   MEMREMAP_WB);
+-		} else {
+-			dev_err(&pdev->dev, "Failed to get PCC comm region\n");
+-			rc = -ENODEV;
+-			goto out;
+-		}
+-
+-		if (!ctx->pcc_comm_addr) {
+-			dev_err(&pdev->dev,
+-				"Failed to ioremap PCC comm region\n");
+-			rc = -ENOMEM;
+-			goto out;
+-		}
+-
+ 		/*
+ 		 * pcc_chan->latency is just a Nominal value. In reality
+ 		 * the remote processor could be much slower to reply.
+
 -- 
-2.25.1
+2.34.1
 
