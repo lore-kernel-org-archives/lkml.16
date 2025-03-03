@@ -1,64 +1,67 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2046.outbound.protection.outlook.com [40.107.94.46])
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2070.outbound.protection.outlook.com [40.107.94.70])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEFA0250C00;
-	Mon,  3 Mar 2025 16:46:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBFC0229B07;
+	Mon,  3 Mar 2025 16:46:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.70
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741020398; cv=fail; b=d/QKNQASoIiOiC+0m2bP/akCdXRAgQEGUTY5aJG5ISlLUSvKsr8m+cUv1Cx6m5ozpQt6N6I79ealFX4dLGviBNZo0RznEd5E6XugOfPlga1WGbuabVQ+zLiTGp/F+bbImez4Rl72IKsEZePOnapE0mlWgU0I9OIkdULPjASjoeI=
+	t=1741020412; cv=fail; b=AIw0OoUWB/JjGpkEMjNU9LcV9486LQRnuisIfAT9WNpdmw72D8G+HjAUqkOQkCZNCplcqSRZpGtcP0XEipw9CheUsg1sbqEVCH7lT29J1LETMPIgQUDPO4tKHIC1TCNiFXdlbfptzuikPFzC6JTIvvyfxhT468xO+iy1j15Ir2s=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741020398; c=relaxed/simple;
-	bh=nrcs9wJJmGWQq+mDqL7cZD/IPzovpZXp2/m8tcnUgeY=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=MJXu3jKBLW4fnz0ByD/zmoCgbP4WdaDV9E1hftovV3bOZNiL56qMw7FqDzZCra2E7Xjjk6E8kkYTeZtrbD09TBMTjP1UdG6hNeu4u67V5dNPmwCs6j7IsaLWfgV0pBnhHgbqqBhLdSf+l1FEQxqnitiJCRUcNGZ7XjwJTc5EYCc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Ai17qirI; arc=fail smtp.client-ip=40.107.94.46
+	s=arc-20240116; t=1741020412; c=relaxed/simple;
+	bh=HBP+bxSQNUVXAyjHaxCdL5qBJ1OgkNNDRzB6Lif00ns=;
+	h=Message-ID:Date:To:Cc:References:From:Subject:In-Reply-To:
+	 Content-Type:MIME-Version; b=X76osy+YGovU5aPmeuVX5EPknsdH/M3IBT+nAAdSiSR1QnJO2d2SYxmLpphqQJE9iH5KMeQWg7pyyzlVTsLHGLal74gbkLXkSw83Yx7nQTzSobgiCtWKot1RQdi0lqUKn2FeGgkBLsyQEsJctD5l4w2oI95IWmLpwDvar0gJq+w=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=HAsACQSp; arc=fail smtp.client-ip=40.107.94.70
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Ai17qirI"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="HAsACQSp"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=LpZoPPu0R6hbuv1zv9o+eRzqJOxoHhjdUnp8p9RoFzI307nuD+tfFMxKjiLcpXibHlQpaiVL7dzgc/foRENNp3VizjP0k/4QRZMsKqYWPIufRpUxSbIQEKVVWZXC+Tb8oLPfACMomdlkB5dC7YK9LK+8dirIeudU6vPfHKuuYRuw8BUiOgD41ULDfjd7IPVok0LGMUh3DAyF5LK6f5ZtzP3v7pUIVIZxQQCPonEofIYeEek7GGz9chhubHLLygUJfC7oggjZ24SryMQDppoB0m8aJSsTBV1kMoHn71JRsRgos0y1a5MgKOtu+L8fsZM9z5ckU606CsPdruNffWguHw==
+ b=iJGeW2tsVJ19lMzuV6x4RKHopEbjcx7TD5EuwX1WQNcjh9EcL2XK1RQmQfE6ndRTdILHo9IkGef8rhcMuPUNVD4S2vPcdao3zC8iZ+jnzj4p2NcFYWwcXjv+42dK1YY/RyWmSQOZEIqxjfIR/EDhR9j1hBToMUAGyRdF4oQQu2tBnvJ/cnc+UuNQtkM5rqiTjua5g9UxSD4/HtsA1pNB9bEugf77ZFv/uepX9b/zuWIV0i3dDCcBhAWt5wiTDIyRMOw5heRuZec9Go1lmv4/EPX1C+RYo6I+rsw+DDS9mGp9mSvY9IuvlF6UZzDhyX1EVwGWzewQqEAKVjNeC9Z2dg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=73aZoLwisempMCQYIACR1TJtUp8gKeJF1zT0A/kDC/8=;
- b=ml2VwfKDiP0DiS1cuGe+rp3ftKfJ/l3V/viunRC07xc3UlZnRhxeycq7uoePIWBpjIuaObSymmSNZ9aoSRk82epV+sw2Qp/lhYUy7ENL6o41QT/ayd8J3+7QtSJmO+51/7F5pdPjLVvlE4BWwFbw47i6qr62LzqzmIoB3x8D4RDRMCQvGbL4NvC6WYbvrwvBVmuy7yBjOmf8yw4eUqIgUYCIgr29QQKDNuwzvMp1CtZBrTh0uL/Myw2/5oOga/voL1N4Nk7D3H/AtIRWzJrfSNyf/uc+kAapNEkbL0Juimzzt70LqxJfn9XNaHVAvCLVrBTRr3KhuKu4UaAoBPJ0og==
+ bh=uVg/eUkobGFyTOYbqkWcNLybV+YN8xWTbwzE3JQGrfo=;
+ b=BYmD5sgp8vnZRhKjI1cJ3LFLYqWxYIq263blpIZ9tmZkTW8mjHAPsoQd9J/AKP1rh7UkYCPE6lqf7oX3pMsLxQuSsOncvAXywtZ32Mc6qRZmTgYRp0XUjkq20Dl2OTn82Og6aMXIF6lABaEHMcP46tJ3JV1oAtGMDl3vF2rFlwURpnX92OMDoTka3DPWWMuYvOerZ1xmrFybdti/f/k0dZaV7HLzwONltiF5nrYXnZgH9sH6DI9bX5/uHnfonKE1yuc8XmPV5AYYosj1lZZ32X2gl+3kKO114/KP6fqUD+R0rIFV4YSum+NHlX69TafT8fdw0tDFlSAlZvmWcFLKJQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=73aZoLwisempMCQYIACR1TJtUp8gKeJF1zT0A/kDC/8=;
- b=Ai17qirIzf18UG55V7Zdzyd8OZkowBkViVYhxf6gnI/64Jy2DVBO0bZLvYcbaT7kTu/0JTA/u0JN9Pwa8jGM4M9ErMHbqc8e7qwV22qRI7I8S9/38HUX6pB77KI5qXJoUVSfcLIx4tM28W1IK5OrEwGe7f0csHtkA62joisCuTI=
+ bh=uVg/eUkobGFyTOYbqkWcNLybV+YN8xWTbwzE3JQGrfo=;
+ b=HAsACQSpki4/xn/XsespugxFVQfUxMEsJaowGIgRnXkOOrHI7iVDC7yaR8vqMPghhzRniiuFsjT4w7BmGyvG/lEoKnkKMWmTBh8AtJ+pVensDweA6h3hUsnusREz89g1fehcVlCtbo5FVMH19a/6Q8ubA6tMqajBZVGf+lV5iCc=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
- by DM4PR12MB5964.namprd12.prod.outlook.com (2603:10b6:8:6b::6) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8489.25; Mon, 3 Mar 2025 16:46:29 +0000
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::37ee:a763:6d04:81ca]) by MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::37ee:a763:6d04:81ca%4]) with mapi id 15.20.8489.025; Mon, 3 Mar 2025
- 16:46:27 +0000
-Message-ID: <939e3b28-f11f-48ed-98b9-b5b5ef77eb0e@amd.com>
-Date: Mon, 3 Mar 2025 10:46:26 -0600
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] Input: atkbd - Fix TUXEDO NB02 notebook keyboards
- FN-keys
-To: Werner Sembach <wse@tuxedocomputers.com>,
- Hans de Goede <hdegoede@redhat.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
-References: <20250303161228.437604-1-wse@tuxedocomputers.com>
- <20250303161228.437604-2-wse@tuxedocomputers.com>
+Received: from DM4PR12MB5070.namprd12.prod.outlook.com (2603:10b6:5:389::22)
+ by CY8PR12MB8067.namprd12.prod.outlook.com (2603:10b6:930:74::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.25; Mon, 3 Mar
+ 2025 16:46:48 +0000
+Received: from DM4PR12MB5070.namprd12.prod.outlook.com
+ ([fe80::20a9:919e:fd6b:5a6e]) by DM4PR12MB5070.namprd12.prod.outlook.com
+ ([fe80::20a9:919e:fd6b:5a6e%7]) with mapi id 15.20.8489.025; Mon, 3 Mar 2025
+ 16:46:47 +0000
+Message-ID: <53ef3325-61b5-7fdc-0d03-a2c9212c0f6e@amd.com>
+Date: Mon, 3 Mar 2025 10:46:46 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
 Content-Language: en-US
-From: Mario Limonciello <mario.limonciello@amd.com>
-In-Reply-To: <20250303161228.437604-2-wse@tuxedocomputers.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+To: Sean Christopherson <seanjc@google.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org, Paolo Bonzini <pbonzini@redhat.com>
+Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+ Zheyun Shen <szy0127@sjtu.edu.cn>, Kevin Loughlin
+ <kevinloughlin@google.com>, Mingwei Zhang <mizhang@google.com>
+References: <20250227014858.3244505-1-seanjc@google.com>
+From: Tom Lendacky <thomas.lendacky@amd.com>
+Subject: Re: [PATCH 0/7] x86, KVM: Optimize SEV cache flushing
+In-Reply-To: <20250227014858.3244505-1-seanjc@google.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SA1P222CA0069.NAMP222.PROD.OUTLOOK.COM
- (2603:10b6:806:2c1::29) To MN0PR12MB6101.namprd12.prod.outlook.com
- (2603:10b6:208:3cb::10)
+X-ClientProxiedBy: SN4PR0501CA0028.namprd05.prod.outlook.com
+ (2603:10b6:803:40::41) To DM4PR12MB5070.namprd12.prod.outlook.com
+ (2603:10b6:5:389::22)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,334 +69,149 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|DM4PR12MB5964:EE_
-X-MS-Office365-Filtering-Correlation-Id: 555699cb-f239-4b36-80e4-08dd5a72f110
+X-MS-TrafficTypeDiagnostic: DM4PR12MB5070:EE_|CY8PR12MB8067:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0c383fa3-f18e-431c-87bd-08dd5a72fd2c
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7053199007;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|7416014|376014|1800799024;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?SWxJZ3JnSkthYkxhcDZzMmx3US84UFk5aTRGajFvTlJVRmY4VmhDTTk1NzRH?=
- =?utf-8?B?SnFCaFFud2FJdGdPMEVWb2J5TzBLWFh6YWNsdzJkRjVQREd3bWJ2SUY0cXhw?=
- =?utf-8?B?UDc2clNJMUhqRGg0UHZKSzdodU1CeldqRUVlRjFhcDhiUHpkTVYrZEVUS1pG?=
- =?utf-8?B?RDEzK29pOHNvSGRBbEplSE1rUkZZY01vQ20zRnpLWG9HYXNlNlFaUjIrNHdv?=
- =?utf-8?B?aHh5V1JocWxRcFVia2lmSy9TdG1RS3IveEdodW5LWTY3cWFDZ04rQzczYkRm?=
- =?utf-8?B?bVpQU0xKbG11dHhDMjhYYURCaVRGODRPZmdkSTJVMCtOeHJHK3JZVDVJRUZ0?=
- =?utf-8?B?TFlhaVYyVjY0cUpzN1RlNXJXWXVxZkg3OW84WVhJMy9uU2NRcDBkTk8wRnk3?=
- =?utf-8?B?akRwaWZyYnZ2eWpaZ1pFUGxhSnpOcDVmNTFvQjAzQmQ0cW9KRUlNV3JrcmQ5?=
- =?utf-8?B?UEM3S0JMVzJ0bVhyRHFSNlo1d3Joc0t3M2hFZUpwajluZWxUMEdWdUVYRENi?=
- =?utf-8?B?OUNzK2I5ZzVQdzJsdUdhTStCMEtYcjh1UllqVGkwRmQrSE1qb2lMaE90a0o0?=
- =?utf-8?B?T0U4aGpTTElGYjFqRG0zZUxnYVRmYVVMbXRieEQ1eWJZazVwVzcrK3U2aWlF?=
- =?utf-8?B?ZWJiSGFMazBPQU5iK04ybnBMajYwYlNGNlNIZ2RteERySFdmRkZBYWVHREMz?=
- =?utf-8?B?TUNha01xc3R4dkhKdWU5UlVob2tVV3hNcUh5eUZFSC93ZFRTaEE4d1lvdjV2?=
- =?utf-8?B?SDYvNzBuQVdEMjZEZG1RaFpRUXZiSytBUlk5SldmUEdWbmk4NUVuUkNldTNn?=
- =?utf-8?B?ZGFJSmpOWWYxblVpZ0RRdFNqVXk4TnFjb2IvSnhxMVdpZ1VzODlYZTRIVk1P?=
- =?utf-8?B?djdzZ2FjL0U4Ym9FZG44S05uUmMrMDZXMXg0ckh1UmNpbjR1UDd6SU1VWVE4?=
- =?utf-8?B?NzczbU1TeWhhMnRGa2dHQXo3Z1lNZU1iVTU0NmFVZ3c0SGdtalFBT0gyWFlB?=
- =?utf-8?B?aHpCZ0JvZFdTK3ZJTlVVNFRqUkoxK3BVdkE0SlVzV3VnMFdGN0d2TFVvVXFF?=
- =?utf-8?B?U3MxZ3FLbC9zcUpIVWxkR2hNYWptdTVyS3ZRN0NpZTU4L2Q4ZnlyOUFFM3N0?=
- =?utf-8?B?WXQ2YitIWkt2Z20vcHFFWXZibVh4M2JIZFArNEp4VlNMQWUyOW0rSVhPclA5?=
- =?utf-8?B?VnVsR09GdnpjcUhqZWI2WndGM053bUdYMHpIck1jWlBiZnliSzdycHNZd2F6?=
- =?utf-8?B?SUlsWWxYUkk3WXdqU3NOZWVTNHc5ajJka0NIZGo0Z0ZIN2VTN1RFNmRIZUhR?=
- =?utf-8?B?NHNyRGpUbHNXNFArSFROU0pRZlRDUys4emRabjllb2JJK2Nja3BFVTU3emhC?=
- =?utf-8?B?R2FrQTAwVk1jblV1R2cwRjY1WXR0OCtRbFlxbXJGYzI1bDI0WVN0Ky9SR3li?=
- =?utf-8?B?VDI0dklIVm55d3BaL3pUekJ5SStIcVJIVXE3NEJlMXhwd01aWXZucjVFNkNw?=
- =?utf-8?B?Um91L0RBcXViTVJoNVFjTGRoWU8rMUkrVUU4c2RzOVkxU3M3b1BDam5CQ256?=
- =?utf-8?B?QkZpZnpJNUkxdlNUUGR4S3NMbWN1R3F6OURyS2VZN0dsdllncHoyQTBJeExV?=
- =?utf-8?B?QmUzSkxLRnlyblhwdVJaUEdseVhySE8rTXVjdUxBdEZwOGpiWEJDcEs0cHRK?=
- =?utf-8?B?N3I1UEVUVmk2cWljVGU1VFU2U1R5WXAwb1FLSXZqVE9xRFl5d1VQdERiMHJa?=
- =?utf-8?B?R3kyNHYxSmJnUXUrRXVUck9tRUsrRGt0ZDJOK2ppWDJDTUtyK0pnNTlSNXJV?=
- =?utf-8?B?U1l2WVV2anlaQS9WQTJQYmtxWksyT0RvMm53eUp3UUF1WW1qNEE3OVpOY29o?=
- =?utf-8?Q?KqtSe5VOg4G23?=
+	=?utf-8?B?aVRtVXRaSVJPeWdJRXlBUXYzMkQ2Y3dXRStMSHZJTjBGd1dXcTRVWmpvOFNo?=
+ =?utf-8?B?Yi9ESEZ5WDdDMHRteTg1bmNSVXY4Nm1kWXBwSGJYN3FqdmoxU2tkM1Q3ZTNL?=
+ =?utf-8?B?Q1BobkRoVitEUldBY3lneEFrbDh6eUtsSGNTR1FpTDZJb2NvVnR6UFJQb2Ry?=
+ =?utf-8?B?cnVNVDlOU1FyQm9CS0xrdGNPaFp6VHlSZUFkWnNYK2hKMi9acUZRN01DanVz?=
+ =?utf-8?B?NDRqcWFGc2o5anpZKzdJSURHRFM0ajU2N09aM1AvU0FGZFR6a2ZQZm5pVGQ2?=
+ =?utf-8?B?ejdLcGNVWkNrUWJQWmpaYm42RVZCbEtrMmNpYU9YbGpJMFJ0eExHenNOeTYv?=
+ =?utf-8?B?S1BuOU5nM1VMOTFKdlRsSFgwcmFhb2g2dHRmOXR6a3dWS2FqdUt2aStlS3Zy?=
+ =?utf-8?B?elcrVnBRdVZzbFJma0xhNzFGUXZwSDBydWhCcUFYTGNkeEhiQ3kxV21Bd2Nw?=
+ =?utf-8?B?djJKUlNlVEJHMG5pWkgwbE1XUlFheThlVGV0R2w1aHQ4L1JmZWxReG9NMERF?=
+ =?utf-8?B?OHZBSmsxUFc3RFloT0dDRmttR1JXUDlMYzRQNDJKcHVEOTBDUENGU25XWjdp?=
+ =?utf-8?B?d3RHUG1GY2hVNWt4OXhYQ3gvQitlMnNQVXBoSStkc0VnWlU4Vk1Dc2s3LzRx?=
+ =?utf-8?B?L2NPNFg4WUh1UHlYU2poeGQvT1pjU3RuQ1pIN3hhQlNERUVOZTJ2TG43Ykxy?=
+ =?utf-8?B?d21IdzcxVG1HT2RHaXRXcTh3c2w5M09FSE9Dc2E5Rk41ZnV4dENKUWUwRk5j?=
+ =?utf-8?B?cFVlaFZNL0dJYUFIL3M2NEExQlpmWlBhOTFhOE00OVdTSE54SWppblUrN0w0?=
+ =?utf-8?B?c2ZIWFQvR0FJWm5sUVVKV0tGOWxQYjRkdHBITW5kMDNjS0hOQXBpeHlwcmNk?=
+ =?utf-8?B?Um1mVzJhWENOaGlROExwSWhFenF3U2o2aFFRNEZIdjhQQzdJem0ybE5XdXBZ?=
+ =?utf-8?B?WERxaGdKMnBNdjhEaExQMGNwcEFFWUFPaDYxbit3SW5jWnR5amhjSmNwUWJ0?=
+ =?utf-8?B?U1VySUdHOHhtQUxRY0hsWlZsWnpoZTgzZ0RFRGd2bTUyd2RXditrTFV2bk0v?=
+ =?utf-8?B?N2tTRFlUejgwSXY3Nm1mM0tEZHlsdXdrMzZYUVZTT1l5Qnk5cnhSQ1lyazZE?=
+ =?utf-8?B?cmx1U0xTeWlDWjlUVlRpOTJjdTdzQWFHVjRLSzg2Q3RmT1FieU9nNWxjTi9W?=
+ =?utf-8?B?Qlk3Q2ZjNkpIZS9DM1g0WTgzYkJpdnZtdXpTWXhhNkpKQnRjcUh2T2I4dWZT?=
+ =?utf-8?B?WEZvYlZkWnplQW1ySmd4WWNOeTN0VWtuWVZkdFUzazlnM0RRekhrZ0FVenJa?=
+ =?utf-8?B?N09Ed1FHc2ZLVi9kUGo1RDA2U28vaFd2T0dCdmpoSU1GMSsySklnb3M3Ukpj?=
+ =?utf-8?B?dXF4clQ5YjhDcEVIdVVBcFJIM0Z3aVhOZGJBcFZKaG1wd3NqT2VZUGpRYWNU?=
+ =?utf-8?B?Um5NS0hHTWx1R1BXSHpzMHY1TjNHd2VFdGp0OENPZEFwTG1iRkN2aGkyaFBC?=
+ =?utf-8?B?S2F5WGNCU09NL3RML2tweXQwdVBBNzhlZk1kYmlKN2wxRWtXdnFyajJ1YWNm?=
+ =?utf-8?B?M0pvRFFmVENOTTZyMGNjYnpxeXB0SVFJb1lIVXZVV3ZmcnhDR3pOdDM3ZlND?=
+ =?utf-8?B?dnRMTCt2dTk5U2tCQTdkakRHSDdDM251dlUwM2Y4QmZ3K2FYNWFCc1dmeGl5?=
+ =?utf-8?B?Z3VvYzRFcjEzSUVNYzczMlRnTkJBZjAxdHpFRkFwY1NNS1hHVFNYd1FwMGVI?=
+ =?utf-8?B?UDF4M1ovcURvOE9yZUJtbG50YW5hRy8rRmUwQnBNaUN5ZTdlbjdrWm5mOVA3?=
+ =?utf-8?B?R3c0N25WREpEMy9FQzE3UnU4Nk9kVEpOZ2xmdGt0cXJDckNrWTh1Qk1Xd2No?=
+ =?utf-8?B?MUkzdWR6MWdVNC9DMmVjaytXRGliMFNsemJoOEhrbTJWN3c9PQ==?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7053199007);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB5070.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?TTVQcU9QU2dZRFJJUjVKV2VkakJVcGtiR2xWT3dVYVVDVGYrOFU0a0Y4bVBy?=
- =?utf-8?B?V1dHaUNCNTYvbjNlQUNXQlR0VU8xUlA5U1REdU5JU0VnY01VOVUxbXhrWFVx?=
- =?utf-8?B?Q2FJM3VKN3hiWGpFY0xqbytGL2JWODNjWlQ0aFVhOENSNk5MQWVNS2ovWlN1?=
- =?utf-8?B?WGdMeVF5MU9RcHVvRTZxWTdKMDQ4OGU2Z25tVGJjZnZHS3VlbStvLzUrWW1P?=
- =?utf-8?B?QVJWWWNjQXVJRFFGY1lHZWJkSHlCYjlLRW9VeHpSdXNGVERMNVJscStieGEv?=
- =?utf-8?B?dk11dkxUN29iZWxONTN6UUg1K1JxS2hOeHNXckFiTGJ1dktlcDVZaDJmMDU3?=
- =?utf-8?B?MnJjTFNsUllkUHh6TlI4UDlNSSthMVVzdGR5aENzMllTODFSMWMyMlIvcXVr?=
- =?utf-8?B?Y25VN2tkR1NqbllHdHR3aTlxS0ZlQ3BNTVV3Q2xIM205cHBuQXgxUEF2Wmxh?=
- =?utf-8?B?V2doaENDT1NRTytUMlVjYXNIOVljUVpQNHlZL05PcUxuK2NldmIvWDJjTGlq?=
- =?utf-8?B?YnFacVBsQnFNM0FvYVNKQjdQNnVQSWhzYVF1QjV6NWhpSGlaNHFWMDFpV2JF?=
- =?utf-8?B?aGlCQ3UzT3ZEUlZQbG1KWjNIb3ZmV1BieEtPTVUvRHBWQXRVTlBxUmduTTVD?=
- =?utf-8?B?T3FwTi9aUGZuemtHdWlkV1h5cldyWWpVTXBST3dZODB3SnJBMWJneDhQRERt?=
- =?utf-8?B?YytFOUd1OTVGVk4yTENOS0JrMXhYOWJWWGdJRkthS25JOUVLTEhuZHNMcDND?=
- =?utf-8?B?VUFYblRKUGZ1NEl4YlMxYXZ6amhNK2dMOFBYOXFGcXJNRDdGd1Z6SnJkVG5j?=
- =?utf-8?B?QUd5UlYwZnlaTFVSdFV5eGhCeTNteDhKZTNtaldGSTRaRE9pdVNkcndzOW44?=
- =?utf-8?B?VnJLYkRPZldlVlFrbGRQZmx5cnNERnd1OStITG5wWmdNVmtZMTFjUm1iSVZk?=
- =?utf-8?B?MmJWN0FteENKUllkdURsQ2xZNXYyQlRIWThMaHZsTDhnUjk2ZmJSbzRiQS95?=
- =?utf-8?B?MTZLVEd4VnFDVXlyNTYwOXlNQnNoRlhEN25aRnoyVkk2M0JEcW9JNUtPems5?=
- =?utf-8?B?Sis2SEdvRUxXaTgzWGNpVXM1VXFwU1lvTTg5ZXZWdkFadlliNVBPSW1xckZx?=
- =?utf-8?B?bksxdURWWjg4U1JXcVdLaE1YSUcwNmRvaXl5R2NpMXR4QlVaRHlSRzU5cG9w?=
- =?utf-8?B?eGJqVGZjZGh6T3ptTWdzVGZJNjgwR3RZcXV3MTVLRDNkd1ErdVM5K0dTMHNL?=
- =?utf-8?B?eGlEV1Bic2hEUnc1ZUMyMThHV3o5T1d4RXlNbjdrQVl1OHdReVU2eDhTeGxK?=
- =?utf-8?B?dnh5Z0VyVWdOZVVtYSthNll6QUhLVXA2QU1jR3VjWjVmN0ZRUG5MVVZ6WWtG?=
- =?utf-8?B?Y0pqS2ZCY1NSb2MwSlRxK2hMNTRBSGUzUzJtQkhtVnM5UG1sOVhFUW9JNVNi?=
- =?utf-8?B?Mk56V050YzlJL1ovWnV6TjlqZXFySmJQU2FEay9EeDEvdEtNb05HakwxTHVP?=
- =?utf-8?B?TVk2S0hPaUNyaWhuRVI4NExoemxNQVRkRXFFK2FCUVYreWVJMjVMUUZLOHcv?=
- =?utf-8?B?aEZFQUcyYkRPM3dsdkRJOWtmVTdma3R3dTE4N2tsV1lKMlE2Tk85aWdBWGFV?=
- =?utf-8?B?Nkh6aXVhZFdXK1Brall4UDRjMWNyMC83ditmQVRkeU95N0JFc3NpVEZRdlpi?=
- =?utf-8?B?VmcyM0tCQWV3ai93ZHpVcm10VjJWTVAvQnpvd0Vlb2hzNW8ybWxRclBnNDN1?=
- =?utf-8?B?UjB0bmxGN2Q2U09tREF2bE1YSU9jRVIrcnBFN0VUZktHbTEyRUNyQk5ManNG?=
- =?utf-8?B?bkhOZ3czeUxoeEZSL1ZTYVl0TEsyaEh0WU12eDJ3UTBHakZDbWk4eFFEZWxm?=
- =?utf-8?B?T0hRR2ZjNWxOZnU5OVhSbm9ZVzdDR2xVb3N5b0pSZlZVVGlkY3ZXTHVUQzM5?=
- =?utf-8?B?cGdQNjRuREVBTzhZbUhnM2Y4c25FWXBuRmZjVjlFMWNLK0VCNnRDYW5ISDV1?=
- =?utf-8?B?TThQL2c2RFVCOFhGa1hTT2NGTzRvM05JMkUvVGowWkpCbWlrVWFkaDliTVRm?=
- =?utf-8?B?SDlMMkQ4Q3BzVHRnTWw5RVMrYTlGaTcrUTlLYnIxeG1weVJ2b2tKbWcweklQ?=
- =?utf-8?Q?hLSU7W5waI1kpiPAYKwyDP8GB?=
+	=?utf-8?B?ZHVLMmFhWCtVWmJTS2Uzb1diNmlqdERLRVZpaTF0MlhteGd2N2pnK2cwNkJ2?=
+ =?utf-8?B?dnd4NzAzdFBSSXB6UnM1bTR4bGRMMnViV3NRVmJoWFRVQzdhVFpPa1JHUzBp?=
+ =?utf-8?B?VUYxSzJTR0psZjNXeTBTRlZ6bDIxTUdTdHQzY1RTU1dXd0hBY3dKVUpvbnNV?=
+ =?utf-8?B?V09FdDRhTEtCYzZuMWdVMFA4MHFyMkd0ZFNPdHh4ckd2MGxqeDQ4V04zSkpy?=
+ =?utf-8?B?aE1vYVRoRVNIalFzeWtWQi9TM25ST1kxazJ0aDN5RDBKS2V3aXZUckMwNWJr?=
+ =?utf-8?B?NDE4MUd2OEFRa3pSRHFvRlRXL1NNa2ZFaWptdFJPS1BsaWNLTElPaEVBK2Nh?=
+ =?utf-8?B?eU5teEhOelpUQnBxbUtYa3NLL0t3Yk5JZzBWQkNmRGpGVWt2VWY4Rkl2WkNi?=
+ =?utf-8?B?NHNXdEc1emJBUW1MdFBIcjB1WEQvQnF1U0lxSnY5VXVweVVCdlRDVVdKa1ZR?=
+ =?utf-8?B?VlM1ZGlodlR3MDQ3WHk0S25DWGtUZklkWmRkZVlNbE5kUHkwZy9rVXB5ZVA1?=
+ =?utf-8?B?R3kvSHBNN0lDK25hRlhobVhPbmtDd1RaZHQvUlU0elBiZWNRbDdGdHFJQlBS?=
+ =?utf-8?B?OW5FSFZNb2w2MUNqVWRBeTE3SU1zY05SUjg1TDBxQkxGR1hzVEtzbXBKUTJI?=
+ =?utf-8?B?RTFPQmc0Ly9LZHczZVNqZlBCV2d6am12d2daQ0hkWWN4VHV3TmEyVkRKNit6?=
+ =?utf-8?B?V2I1dG1ha3haYnZUdFJ6dHlDNmtrMWd0U1g5WkRBRC80blBOS1c4R1QxWjNy?=
+ =?utf-8?B?MmRGSWtJRkxkVUpCSGpKMWZOZDhyaHZCNUVTVHk1QTAyMVpaOURDL3pmVjFJ?=
+ =?utf-8?B?Z0ZMUVJQOGIyaWpjdVRrTVEwd2tQM3lhWEtJamU2UExrazVobUJUbGdNUkNF?=
+ =?utf-8?B?TGIraWxMeFVZNUFlZkpUWEpVVXRtZXU4cFJoekdBblBXTlo0TWUrRG5LZGVG?=
+ =?utf-8?B?M0dEYnRkM1hxV094UkNIbFVoUXNkU1pLb3BNbDlMVFhUcGY3SSt1clA3SUhl?=
+ =?utf-8?B?aVlPbk5oUHF1Rko3QnpXVVhTMlVqTWNjaGtUM3k1bjJBdTMyeHdGc3NPNnpJ?=
+ =?utf-8?B?ZVhvRWlVcTY1Rnh2SFEwdk12SExkRG9uZ2JrY3dnVjN5bWh1WGIzWUMzb1RF?=
+ =?utf-8?B?L0FxTHJ0M2pWQm14ZDBra2VhSDkzNWtLZEEwMW5kUlU2bVFDNERkQURvWWp0?=
+ =?utf-8?B?eWM4U0p0WEFTNldiL211ZHh3UUVqWTRRM2l5dWpOeW42RVo4MnNIZHVUdFpN?=
+ =?utf-8?B?OTRMem1CNk03dkNndlZYaVZvYkthb1FZK0hINHdPczlFY0k5NDA5dmw1S21y?=
+ =?utf-8?B?eDBZQW5SaDJXamQvNnUxa0djV0kvemFKMi9maVVOdUJqWlZuUG51b053STVP?=
+ =?utf-8?B?Q0JsZXNSVXE3MnJJZWFDSUt6RzErTVd0ZlNnTmVxbkN0Q3YyemNKL1F5QkZQ?=
+ =?utf-8?B?cEFUdm9CZldzVnlIZUZjVGFlRG5WWWo3d2JIbG1xZVhGS1FxU01WcXFiQytj?=
+ =?utf-8?B?Nm9HbkF2L2d5eWVaOHRQSGpqWTZZN1FTVXBwems2d2ZhMXJzcXhLUU1McE1R?=
+ =?utf-8?B?OFFmRTh2NkVWbk9BKzByRW5KRW5ZTmJUN3JKM1dWek1CUHYzOS8rMHlhU3E5?=
+ =?utf-8?B?M3Bka3lJaDdqcytXaEpyK0QwSGgzZHVrREVrT3JLVFJLbUZWVkFnU1NpWHFn?=
+ =?utf-8?B?QWp6ZUM0alF4MXJteFJFdEJyOWtRbnJvcnVBamJDQmh5ZEVvaEFNTy9KYlRZ?=
+ =?utf-8?B?QzdZN1lyZzZHZnYzTmZIeFJnSnVVZ2hpSGk3Y2Nvb3dpaGVyOEFKc2xiY1d3?=
+ =?utf-8?B?VmN1WmVWamlpR1BPcnBQRFdsSmVRUWZZYWNXK3RNRzZZTkpvWVhjN2V3eHM3?=
+ =?utf-8?B?aXhScXE2azY3RFNhRWxUK0xLM0RsYW5leS92MlRhbXBlUVFEVkVSSlVNVlNk?=
+ =?utf-8?B?MWxBSVpZYW5Ed0hCSnBKMmhkdmFuQzlDY1ZrdmsraHBDbW9VeUk0R3RUZjBK?=
+ =?utf-8?B?eXFaS0RmTmQxS1l0NFp1b0NKOEIyUUVLNWZBUE96c2FEVTY0alJITEZ6aTBQ?=
+ =?utf-8?B?SnNFVTY0ZXNvOFRaS0piSDF5M2RYOTBScjF6MFE3WkxGSEpvTTNsQmVycFRP?=
+ =?utf-8?Q?zqnoKjWvM1/GNvtoqpSBbnmju?=
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 555699cb-f239-4b36-80e4-08dd5a72f110
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0c383fa3-f18e-431c-87bd-08dd5a72fd2c
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB5070.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Mar 2025 16:46:27.5251
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Mar 2025 16:46:47.8327
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 4v1Y+ucUzlS8JS/+rzBlpQicGsAI2CnnlytMIYN7ilYyxx+z3IvXZI0z/XMr5FPCW79BFVviyeHH0gnUce5mTQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB5964
+X-MS-Exchange-CrossTenant-UserPrincipalName: ++ScXLIMUZiXXJlUlK3xodQmJC3xAkVkA6NMlsVmWm6mMecyxZ9Xc88STHbcR0gHVYYzT4QKjwTN8evJQCojYQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB8067
 
-On 3/3/2025 10:11, Werner Sembach wrote:
-> This small driver does 2 things:
+On 2/26/25 19:48, Sean Christopherson wrote:
+> This is the combination of Kevin's WBNOINVD series[1] with Zheyun's targeted
+> flushing series[2].  This is very, very lightly tested (emphasis on "very").
+
+We ran this series through our SEV validation tests over the weekend on
+Rome, Milan and Genoa systems and didn't observe any issues.
+
+Thanks,
+Tom
+
 > 
-> It remaps the touchpad toggle key from Control + Super + Hangaku/Zenkaku to
-> F21 to conform with established userspace defaults. Note that the
-> Hangaku/Zenkaku scancode used here is usually unused, with real
-> Hangaku/Zenkaku keys using the tilde scancode.
+> Note, I dropped Reviewed-by tags for patches to which I made non-trivial
+> modifications.
 > 
-> It suppresses the reserved scancode produced by pressing the FN-key on its
-> own, which fixes a warning spamming the dmesg log otherwise.
+> [1] https://lore.kernel.org/all/20250201000259.3289143-1-kevinloughlin@google.com
+> [2] https://lore.kernel.org/all/20250128015345.7929-1-szy0127@sjtu.edu.cn
 > 
-> Signed-off-by: Werner Sembach <wse@tuxedocomputers.com>
-> ---
->   MAINTAINERS                                 |  6 ++
->   drivers/platform/x86/Kconfig                |  2 +
->   drivers/platform/x86/Makefile               |  3 +
->   drivers/platform/x86/tuxedo/Kbuild          |  6 ++
->   drivers/platform/x86/tuxedo/Kconfig         |  6 ++
->   drivers/platform/x86/tuxedo/nb02/Kbuild     |  7 ++
->   drivers/platform/x86/tuxedo/nb02/Kconfig    | 15 ++++
->   drivers/platform/x86/tuxedo/nb02/platform.c | 79 +++++++++++++++++++++
->   8 files changed, 124 insertions(+)
->   create mode 100644 drivers/platform/x86/tuxedo/Kbuild
->   create mode 100644 drivers/platform/x86/tuxedo/Kconfig
->   create mode 100644 drivers/platform/x86/tuxedo/nb02/Kbuild
->   create mode 100644 drivers/platform/x86/tuxedo/nb02/Kconfig
->   create mode 100644 drivers/platform/x86/tuxedo/nb02/platform.c
+> Relative to those series:
 > 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 4ff26fa94895d..d3fbbcef813b0 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -24178,6 +24178,12 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/lenb/linux.git turbostat
->   F:	tools/power/x86/turbostat/
->   F:	tools/testing/selftests/turbostat/
->   
-> +TUXEDO DRIVERS
-> +M:	Werner Sembach <wse@tuxedocomputers.com>
-> +L:	platform-driver-x86@vger.kernel.org
-> +S:	Supported
-> +F:	drivers/platform/x86/tuxedo/
-> +
->   TW5864 VIDEO4LINUX DRIVER
->   M:	Bluecherry Maintainers <maintainers@bluecherrydvr.com>
->   M:	Andrey Utkin <andrey.utkin@corp.bluecherry.net>
-> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-> index 0258dd879d64b..9b78a1255c08e 100644
-> --- a/drivers/platform/x86/Kconfig
-> +++ b/drivers/platform/x86/Kconfig
-> @@ -1199,3 +1199,5 @@ config P2SB
->   	  The main purpose of this library is to unhide P2SB device in case
->   	  firmware kept it hidden on some platforms in order to access devices
->   	  behind it.
-> +
-> +source "drivers/platform/x86/tuxedo/Kconfig"
-> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-> index e1b1429470674..1562dcd7ad9a5 100644
-> --- a/drivers/platform/x86/Makefile
-> +++ b/drivers/platform/x86/Makefile
-> @@ -153,3 +153,6 @@ obj-$(CONFIG_WINMATE_FM07_KEYS)		+= winmate-fm07-keys.o
->   
->   # SEL
->   obj-$(CONFIG_SEL3350_PLATFORM)		+= sel3350-platform.o
-> +
-> +# TUXEDO
-> +obj-y					+= tuxedo/
-> diff --git a/drivers/platform/x86/tuxedo/Kbuild b/drivers/platform/x86/tuxedo/Kbuild
-> new file mode 100644
-> index 0000000000000..e9c4243d438ba
-> --- /dev/null
-> +++ b/drivers/platform/x86/tuxedo/Kbuild
-> @@ -0,0 +1,6 @@
-> +# SPDX-License-Identifier: GPL-2.0-or-later
-> +#
-> +# TUXEDO X86 Platform Specific Drivers
-> +#
-> +
-> +obj-y	+= nb02/
-> diff --git a/drivers/platform/x86/tuxedo/Kconfig b/drivers/platform/x86/tuxedo/Kconfig
-> new file mode 100644
-> index 0000000000000..e463f92135780
-> --- /dev/null
-> +++ b/drivers/platform/x86/tuxedo/Kconfig
-> @@ -0,0 +1,6 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +#
-> +# TUXEDO X86 Platform Specific Drivers
-> +#
-> +
-> +source "drivers/platform/x86/tuxedo/nb02/Kconfig"
-> diff --git a/drivers/platform/x86/tuxedo/nb02/Kbuild b/drivers/platform/x86/tuxedo/nb02/Kbuild
-> new file mode 100644
-> index 0000000000000..8624a012cd683
-> --- /dev/null
-> +++ b/drivers/platform/x86/tuxedo/nb02/Kbuild
-> @@ -0,0 +1,7 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +#
-> +# TUXEDO X86 Platform Specific Drivers
-> +#
-> +
-> +tuxedo_nb02_platform-y			:= platform.o
-> +obj-$(CONFIG_TUXEDO_NB02_PLATFORM)	+= tuxedo_nb02_platform.o
-> diff --git a/drivers/platform/x86/tuxedo/nb02/Kconfig b/drivers/platform/x86/tuxedo/nb02/Kconfig
-> new file mode 100644
-> index 0000000000000..848ab61164404
-> --- /dev/null
-> +++ b/drivers/platform/x86/tuxedo/nb02/Kconfig
-> @@ -0,0 +1,15 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +#
-> +# TUXEDO X86 Platform Specific Drivers
-> +#
-> +
-> +menuconfig TUXEDO_NB02_PLATFORM
-> +	tristate "TUXEDO NB02 Platform Driver"
-> +	default m
-
-Don't most platform/x86 drivers default to 'n'?  It's up to distros and 
-users to turn on I thought.
-
-> +	help
-> +	  This driver implements miscellaneous things found on TUXEDO Notebooks
-> +	  with board vendor NB02. For the time being this is only remapping the
-> +	  touchpad toggle key to something supported by most Linux distros
-> +	  out-of-the-box and supressing an unsupported scancode from the FN-key.
-
-suppressing
-
-> +
-> +	  When compiled as a module it will be called tuxedo_nb02_platform.
-> diff --git a/drivers/platform/x86/tuxedo/nb02/platform.c b/drivers/platform/x86/tuxedo/nb02/platform.c
-> new file mode 100644
-> index 0000000000000..a6137c8b2d4aa
-> --- /dev/null
-> +++ b/drivers/platform/x86/tuxedo/nb02/platform.c
-> @@ -0,0 +1,79 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +/*
-> + * Copyright (C) 2025 Werner Sembach wse@tuxedocomputers.com
-> + */
-> +
-> +#include <linux/i8042.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/serio.h>
-> +
-> +static u8 tux_nb02_touchp_toggle_seq[] = {
-> +	0xe0, 0x5b, // Super down
-> +	0x1d,       // Control down
-> +	0x76,       // Zenkaku/Hankaku down
-> +	0xf6,       // Zenkaku/Hankaku up
-> +	0x9d,       // Control up
-> +	0xe0, 0xdb  // Super up
-> +};
-> +
-> +static bool tux_nb02_i8042_filter(unsigned char data,
-> +				  unsigned char str,
-> +				  struct serio *port,
-> +				  __always_unused void *context)
-> +{
-> +	static u8 seq_pos;
-> +
-> +	if (unlikely(str & I8042_STR_AUXDATA))
-> +		return false;
-> +
-> +	pr_info("%#04x\n", data);
-
-A bit too noisy for a filter, no?
-
-> +
-> +	// Replace touchpad toggle key sequence with a singular press of the
-> +	// F21-key.
-
-Multi-line comments are supposed to be /* */
-
-> +	if (unlikely(data == tux_nb02_touchp_toggle_seq[seq_pos])) {
-> +		++seq_pos;
-> +		if (seq_pos == ARRAY_SIZE(tux_nb02_touchp_toggle_seq)) {
-> +			seq_pos = 0;
-> +			serio_interrupt(port, 0x6c, 0); // F21 down
-> +			serio_interrupt(port, 0xec, 0); // F21 up
-> +		}
-> +		return true;
-> +	}
-> +
-> +	// Ignore bogus scancode produced by the FN-key. Reuse seq_pos as first
-> +	// byte of that is just the "extended"-byte.
-
-Multi-line comments are supposed to be /* */
-
-> +	if (unlikely(seq_pos == 1 && (data == 0x78 || data == 0xf8))) {
-> +		seq_pos = 0;
-> +		return true;
-> +	}
-> +
-> +	// Replay skipped sequence bytes if it did not finish and it was not a
-> +	// FN-key press.
-
-Multi-line comments are supposed to be /* */
-
-> +	if (unlikely(seq_pos)) {
-> +		for (u8 i; i < seq_pos; ++i)
-> +			serio_interrupt(port, tux_nb02_touchp_toggle_seq[i], 0);
-> +		seq_pos = 0;
-> +	}
-> +
-> +	return false;
-> +}
-> +
-> +static int __init tux_nb02_plat_init(void)
-> +{
-> +	return i8042_install_filter(tux_nb02_i8042_filter, NULL);
-
-The driver is tri-state.  If it was 'm' it wouldn't load on anything but 
-the matching hardware.
-
-But think about what happens if a user compiled a kernel with this 'y'.
-
-The tux_nb02_plat_init() would install a filter even though they didn't 
-have matching hardware.
-
-I think you need some sort of assertion this driver matches the hardware 
-and return -ENODEV if it doesn't.
-
-> +}
-> +
-> +static void __exit tux_nb02_plat_exit(void)
-> +{
-> +	i8042_remove_filter(tux_nb02_i8042_filter);
-> +}
-> +
-> +module_init(tux_nb02_plat_init);
-> +module_exit(tux_nb02_plat_exit);
-> +
-> +MODULE_ALIAS("dmi:*:svnTUXEDO:*:rvnNB02:*");
-> +
-> +MODULE_DESCRIPTION("TUXEDO NB02 Platform");
-> +MODULE_AUTHOR("Werner Sembach <wse@tuxedocomputers.com>");
-> +MODULE_LICENSE("GPL");
-
+>  - Name the WBNOINVD opcode macro ASM_WBNOINVD to avoid a conflict with
+>    KVM's CPUID stuff.
+>  - Fix issues with SMP=n.
+>  - Define all helpers in x86/lib.
+>  - Don't return 0 from the helpers.
+>  - Rename the CPU bitmap to avoid a naming collisions with KVM's existing
+>    pCPU bitmap for WBINVD, and to not have WBINVD (versus WBNOINVD) in the
+>    name.
+>  - Fix builds where CPU bitmaps are off-stack.
+>  - Massage comments.
+>  - Mark a CPU as having done VMRUN in pre_sev_run(), but test to see if
+>    the CPU already ran to avoid the locked RMW, i.e. to (hopefully) avoid
+>    bouncing the cache line.
+> 
+> Kevin Loughlin (2):
+>   x86, lib: Add WBNOINVD helper functions
+>   KVM: SEV: Prefer WBNOINVD over WBINVD for cache maintenance efficiency
+> 
+> Sean Christopherson (2):
+>   x86, lib: Drop the unused return value from wbinvd_on_all_cpus()
+>   KVM: x86: Use wbinvd_on_cpu() instead of an open-coded equivalent
+> 
+> Zheyun Shen (3):
+>   KVM: SVM: Remove wbinvd in sev_vm_destroy()
+>   x86, lib: Add wbinvd and wbnoinvd helpers to target multiple CPUs
+>   KVM: SVM: Flush cache only on CPUs running SEV guest
+> 
+>  arch/x86/include/asm/smp.h           | 23 ++++++--
+>  arch/x86/include/asm/special_insns.h | 19 ++++++-
+>  arch/x86/kvm/svm/sev.c               | 79 +++++++++++++++++++---------
+>  arch/x86/kvm/svm/svm.h               |  1 +
+>  arch/x86/kvm/x86.c                   | 11 +---
+>  arch/x86/lib/cache-smp.c             | 26 ++++++++-
+>  6 files changed, 119 insertions(+), 40 deletions(-)
+> 
+> 
+> base-commit: fed48e2967f402f561d80075a20c5c9e16866e53
