@@ -1,202 +1,133 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A874C200130
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 08:53:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BE581FCFFE;
+	Tue,  4 Mar 2025 08:53:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741078403; cv=none; b=Cb7B/+tMPArqcpWd4B8k8lXPb66Ug7EesaTWDgkZsAkPlDrDTTYPvN2vkh0giyfvtgzcO5Jaegy0i4ch+GfN1TLjwy8cgnRORdsOACUh+NgipIvah/yOB65HmLzu6bm+syHWKqy8h/nTR8k9vbLjV26AqXuLsRqXa4EFn59ogIY=
+	t=1741078406; cv=none; b=LThfFR+8qXE+4FucQd9fRmz8iNOwb2fPLhNw6tirWUX2Qwr9/bWu0Pedw+N1WsGDzBqdzLBbAE5ewQz7UXKNCxr2ajbmcuS6Q/XQzjLHPXz8Kk5+WDXaTRVS98P+CHfpYjbmmD23FkcOy72W20ezuXNBL4Nued8vSUEH3i14VaQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741078403; c=relaxed/simple;
-	bh=Ol/Et/TBYJWmcfag2qO/uanvP2pT7byOM/gEyvpusfw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Kcc/UFoXZlxmAr3cUf4tcu3Mz0UN6OWNaSPdCSSGqvIIJ6UVckfgUqGTjc7uD2LiNMXr27on7pbKpmC1ElKZW9usQr/INkgUXQeQ56ZjMRf5hk2CJ99B54Bjdq3In6cqLkPW7EAuIXczNaMH6odZisIGzDEBYJJw6ZFjtYQlZHM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=sHZPYetF; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=UPo8pp1Q; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1741078406; c=relaxed/simple;
+	bh=rcNEMBRj7Zs8wkKgz90Xq7Las4XsD7eKUE2I/Wq/kD4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=o2WF4zI/jzba2odwUXCsfVRAnOGhUtPdxjWPpB9/1VrCQtwT/tN/S0ESlgOKV5BETHfHDloX4ddbPG6JIHB1pbmlNd65bhm0qNK6thFplupUzyms7COTK2WXAQJena2X0uDvdT++4CUN1StCAONBs1PAU1u4rRMI026fPa94dp0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=XqUkLWDq; arc=none smtp.client-ip=217.70.183.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="sHZPYetF";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="UPo8pp1Q"
-From: "Ahmed S. Darwish" <darwi@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1741078399;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="XqUkLWDq"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 8DBD9443D9;
+	Tue,  4 Mar 2025 08:53:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1741078401;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=H36zecaZUTad0CS+C/0cOZo8dyDDwXF4r/drrx9Rm0E=;
-	b=sHZPYetFhk38K88PP50FRVZB2H9G8qt3lqtnV9PHjEMIIO7azdnXPz0eGTd9x29z8zRLDH
-	6Uc+zAwfixcfr4xBMbHmdtxOO0s69L32vOWiJWqiwmsm9TadkQkY3kSXnbPyEJbocPvuGe
-	w+jElJJ8MJ5qwy+Tjm/dnvkFfuXgdKAIjjUAzLjyLZ7VUG44Phr/GMyoPLXFmSyOioRKdN
-	jsgI50Qb2GKpvhhN/iADuRo0V2QNOvkYW69DnBON91QaDJuFENQquYz5KySDvkLZ1uwi1A
-	qnMyK//GXWTvUMPHkEEmorN9iVtVXtreBnwMr+iz+911CwmEI2LAyYA2tBsVJg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1741078399;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=H36zecaZUTad0CS+C/0cOZo8dyDDwXF4r/drrx9Rm0E=;
-	b=UPo8pp1Qwk3xOMlfhkIqW+s7oPGNGge9FdDm9uPeNGGoe3ieYpcLAr6jVyArVs4jx2R6BY
-	0Fe3hMs5QpRdqmDQ==
-To: Borislav Petkov <bp@alien8.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>,
-	John Ogness <john.ogness@linutronix.de>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Andrew Cooper <andrew.cooper3@citrix.com>,
-	x86@kernel.org,
-	x86-cpuid@lists.linux.dev,
-	LKML <linux-kernel@vger.kernel.org>,
-	"Ahmed S. Darwish" <darwi@linutronix.de>
-Subject: [PATCH v1 22/40] x86/cacheinfo: Separate amd_northbridge from _cpuid4_info_regs
-Date: Tue,  4 Mar 2025 09:51:33 +0100
-Message-ID: <20250304085152.51092-23-darwi@linutronix.de>
-In-Reply-To: <20250304085152.51092-1-darwi@linutronix.de>
-References: <20250304085152.51092-1-darwi@linutronix.de>
+	bh=m7OS0LOkCHZYOvTzYUlUPDCBu1mJHvnSntjZBz82JaU=;
+	b=XqUkLWDqe84uXl7cJWzGct2BwfVaESHXhXtPCBQJl84dwiPJA/bM785kb44C+jbPsnMWcw
+	Cw+IL7XbITW4xWvVgSobe+4dOCUpaC2cHzfHQT1y4bp0KCRglUPZA4t47OQMam5eqU4Uxg
+	y41tOs2ftiuCYXy6VcgobrVjVzP72cSxLLp5PXVyyQS+Ui4PeWL7tfe2FOV0FtsQn3yLkG
+	JGLuHgo30+38mC0yFcESR/ssloLzppVnosNbrtHjNn2P1VQvFMglV+qgOEEnYxZQzrcclp
+	cwwz7epKs+n7jlBKFwCRW4RJ1nx5Rp8emGPZBFL5LHLFh/N+9KU+usTezrPXew==
+Date: Tue, 4 Mar 2025 10:52:39 +0100
+From: Maxime Chevallier <maxime.chevallier@bootlin.com>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: davem@davemloft.net, Andrew Lunn <andrew@lunn.ch>, Eric Dumazet
+ <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Heiner Kallweit
+ <hkallweit1@gmail.com>, Parthiban Veerasooran
+ <parthiban.veerasooran@microchip.com>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com,
+ linux-arm-kernel@lists.infradead.org, Christophe Leroy
+ <christophe.leroy@csgroup.eu>, Herve Codina <herve.codina@bootlin.com>,
+ Florian Fainelli <f.fainelli@gmail.com>, Vladimir Oltean
+ <vladimir.oltean@nxp.com>, =?UTF-8?B?S8O2cnk=?= Maincent
+ <kory.maincent@bootlin.com>, Oleksij Rempel <o.rempel@pengutronix.de>,
+ Simon Horman <horms@kernel.org>, Romain Gantois
+ <romain.gantois@bootlin.com>, Piergiorgio Beruto
+ <piergiorgio.beruto@gmail.com>
+Subject: Re: [PATCH net v2] net: ethtool: netlink: Allow NULL nlattrs when
+ getting a phy_device
+Message-ID: <20250304105239.747500be@fedora.home>
+In-Reply-To: <20250303161024.43969294@kernel.org>
+References: <20250301141114.97204-1-maxime.chevallier@bootlin.com>
+	<20250303161024.43969294@kernel.org>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddutdduheelucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtjeertdertddvnecuhfhrohhmpeforgigihhmvgcuvehhvghvrghllhhivghruceomhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepgeevledtvdevueehhfevhfelhfekveeftdfgiedufeffieeltddtgfefuefhueeknecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopehfvgguohhrrgdrhhhomhgvpdhmrghilhhfrhhomhepmhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepvddtpdhrtghpthhtohepkhhusggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegurghvvghmsegurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtoheprghnughrvgifsehluhhnnhdrtghhpdhrtghpthhtohepvgguuhhmrgiivghtsehgohhoghhlvgdrtghomhdprhgtphhtthhopehprggsvghnihesrhgvughhrghtrdgtohhmpdhrtghpthhtohephhhkr
+ ghllhifvghithdusehgmhgrihhlrdgtohhmpdhrtghpthhtohepphgrrhhthhhisggrnhdrvhgvvghrrghsohhorhgrnhesmhhitghrohgthhhiphdrtghomhdprhgtphhtthhopehnvghtuggvvhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-GND-Sasl: maxime.chevallier@bootlin.com
 
-The _cpuid4_info_regs structure is meant to hold the cpuid leaf 0x4
-output registers (EAX, EBX, and ECX), as well as derived information
-such as the cache node ID and size.
+On Mon, 3 Mar 2025 16:10:24 -0800
+Jakub Kicinski <kuba@kernel.org> wrote:
 
-It also contains a reference to amd_northbridge, which is there only to
-be "parked" until ci_info_init() can store it in the priv pointer of the
-linux/cacheinfo.h API.  That priv pointer is then used by AMD-specific
-L3 cache_disable_0/1 sysfs attributes.
+> On Sat,  1 Mar 2025 15:11:13 +0100 Maxime Chevallier wrote:
+> > ethnl_req_get_phydev() is used to lookup a phy_device, in the case an
+> > ethtool netlink command targets a specific phydev within a netdev's
+> > topology.
+> > 
+> > It takes as a parameter a const struct nlattr *header that's used for
+> > error handling :
+> > 
+> >        if (!phydev) {
+> >                NL_SET_ERR_MSG_ATTR(extack, header,
+> >                                    "no phy matching phyindex");
+> >                return ERR_PTR(-ENODEV);
+> >        }
+> > 
+> > In the notify path after a ->set operation however, there's no request
+> > attributes available.
+> > 
+> > The typical callsite for the above function looks like:
+> > 
+> > 	phydev = ethnl_req_get_phydev(req_base, tb[ETHTOOL_A_XXX_HEADER],
+> > 				      info->extack);
+> > 
+> > So, when tb is NULL (such as in the ethnl notify path), we have a nice
+> > crash.
+> > 
+> > It turns out that there's only the PLCA command that is in that case, as
+> > the other phydev-specific commands don't have a notification.
+> > 
+> > This commit fixes the crash by passing the cmd index and the nlattr
+> > array separately, allowing NULL-checking it directly inside the helper.
+> > 
+> > Fixes: c15e065b46dc ("net: ethtool: Allow passing a phy index for some commands")
+> > Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>  
+> 
+> Well, this alone doesn't look too bad.. :) Hopefully we can address
+> adding more suitable handlers for phy ops in net-next.
 
-Decouple amd_northbridge from _cpuid4_info_regs and pass it explicitly
-through the functions at x86/cacheinfo.  Doing so clarifies when
-amd_northbridge is actually needed (AMD-only code) and when it is
-not (Intel-specific code).  It also prepares for moving the AMD-specific
-L3 cache_disable_0/1 sysfs code into its own file in next commit.
+Yeah I'm cooking something to improve on that, and I have also dusted
+off a netdevsim patch I had written back when working on the
+phy_link_topology that adds very very basic PHY support so that we can
+start covering all these commands with proper tests. I'll hopefully send
+something in the coming week or so.
 
-Signed-off-by: Ahmed S. Darwish <darwi@linutronix.de>
----
- arch/x86/kernel/cpu/cacheinfo.c | 45 +++++++++++++++++++++------------
- 1 file changed, 29 insertions(+), 16 deletions(-)
+> Didn't someone report this, tho? I vaguely remember seeing an email,
+> unless they said they don't want to be credited maybe we should add
+> a Reported-by tag? You can post it in reply, no need to repost 
+> the patch.
 
-diff --git a/arch/x86/kernel/cpu/cacheinfo.c b/arch/x86/kernel/cpu/cacheinfo.c
-index 6aeabbd94997..2a56c7cc3c2d 100644
---- a/arch/x86/kernel/cpu/cacheinfo.c
-+++ b/arch/x86/kernel/cpu/cacheinfo.c
-@@ -168,7 +168,6 @@ struct _cpuid4_info_regs {
- 	union _cpuid4_leaf_ecx ecx;
- 	unsigned int id;
- 	unsigned long size;
--	struct amd_northbridge *nb;
- };
- 
- /* AMD doesn't have CPUID4. Emulate it here to report the same
-@@ -573,25 +572,36 @@ cache_get_priv_group(struct cacheinfo *ci)
- 	return &cache_private_group;
- }
- 
--static void amd_init_l3_cache(struct _cpuid4_info_regs *id4, int index)
-+static struct amd_northbridge *amd_init_l3_cache(int index)
- {
-+	struct amd_northbridge *nb;
- 	int node;
- 
- 	/* only for L3, and not in virtualized environments */
- 	if (index < 3)
--		return;
-+		return NULL;
- 
- 	node = topology_amd_node_id(smp_processor_id());
--	id4->nb = node_to_amd_nb(node);
--	if (id4->nb && !id4->nb->l3_cache.indices)
--		amd_calc_l3_indices(id4->nb);
-+	nb = node_to_amd_nb(node);
-+	if (nb && !nb->l3_cache.indices)
-+		amd_calc_l3_indices(nb);
-+
-+	return nb;
- }
- #else
--#define amd_init_l3_cache(x, y)
-+static struct amd_northbridge *amd_init_l3_cache(int index)
-+{
-+	return NULL;
-+}
- #endif  /* CONFIG_AMD_NB && CONFIG_SYSFS */
- 
--static int
--cpuid4_cache_lookup_regs(int index, struct _cpuid4_info_regs *id4)
-+/*
-+ * Fill passed _cpuid4_info_regs structure.
-+ * Intel-only code paths should pass NULL for the amd_northbridge
-+ * return pointer.
-+ */
-+static int cpuid4_cache_lookup_regs(int index, struct _cpuid4_info_regs *id4,
-+				    struct amd_northbridge **nb)
- {
- 	union _cpuid4_leaf_eax	eax;
- 	union _cpuid4_leaf_ebx	ebx;
-@@ -608,7 +618,9 @@ cpuid4_cache_lookup_regs(int index, struct _cpuid4_info_regs *id4)
- 			/* Legacy AMD fallback */
- 			amd_cpuid4(index, &eax, &ebx, &ecx);
- 		}
--		amd_init_l3_cache(id4, index);
-+
-+		if (nb)
-+			*nb = amd_init_l3_cache(index);
- 	} else {
- 		/* Intel */
- 		cpuid_count(4, index, &eax.full, &ebx.full, &ecx.full, &edx);
-@@ -758,7 +770,7 @@ void init_intel_cacheinfo(struct cpuinfo_x86 *c)
- 			struct _cpuid4_info_regs id4 = {};
- 			int retval;
- 
--			retval = cpuid4_cache_lookup_regs(i, &id4);
-+			retval = cpuid4_cache_lookup_regs(i, &id4, NULL);
- 			if (retval < 0)
- 				continue;
- 
-@@ -932,8 +944,8 @@ static void __cache_cpumap_setup(unsigned int cpu, int index,
- 		}
- }
- 
--static void ci_info_init(struct cacheinfo *ci,
--			 const struct _cpuid4_info_regs *id4)
-+static void ci_info_init(struct cacheinfo *ci, const struct _cpuid4_info_regs *id4,
-+			 struct amd_northbridge *nb)
- {
- 	ci->id				= id4->id;
- 	ci->attributes			= CACHE_ID;
-@@ -944,7 +956,7 @@ static void ci_info_init(struct cacheinfo *ci,
- 	ci->size			= id4->size;
- 	ci->number_of_sets		= id4->ecx.split.number_of_sets + 1;
- 	ci->physical_line_partition	= id4->ebx.split.physical_line_partition + 1;
--	ci->priv			= id4->nb;
-+	ci->priv			= nb;
- }
- 
- int init_cache_level(unsigned int cpu)
-@@ -980,13 +992,14 @@ int populate_cache_leaves(unsigned int cpu)
- 	struct cpu_cacheinfo *this_cpu_ci = get_cpu_cacheinfo(cpu);
- 	struct cacheinfo *ci = this_cpu_ci->info_list;
- 	struct _cpuid4_info_regs id4 = {};
-+	struct amd_northbridge *nb;
- 
- 	for (idx = 0; idx < this_cpu_ci->num_leaves; idx++) {
--		ret = cpuid4_cache_lookup_regs(idx, &id4);
-+		ret = cpuid4_cache_lookup_regs(idx, &id4, &nb);
- 		if (ret)
- 			return ret;
- 		get_cache_id(cpu, &id4);
--		ci_info_init(ci++, &id4);
-+		ci_info_init(ci++, &id4, nb);
- 		__cache_cpumap_setup(cpu, idx, &id4);
- 	}
- 	this_cpu_ci->cpu_map_populated = true;
--- 
-2.48.1
+Parthiban reported this without CC: netdev, but I think it's fair to
+add :
 
+Reported-by: Parthiban Veerasooran <parthiban.veerasooran@microchip.com>
+
+I didn't include it in the first place because checkpatch complained
+about a reported-by tag without a "Closes:", which we don't have
+because of the private reporting :)
+
+Thanks Jakub,
+
+Maxime
