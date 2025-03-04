@@ -1,131 +1,108 @@
-Received: from r-passerv.ralfj.de (r-passerv.ralfj.de [109.230.236.95])
+Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E833F2E3398;
-	Tue,  4 Mar 2025 18:12:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.230.236.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 467A725F7A8;
+	Tue,  4 Mar 2025 18:13:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741111957; cv=none; b=rpO/cX5iDYWbYjvLFeIpngBfYcqPsJv8fHaZ+QGz2UrnHgj/umXBMQGrFJxp05/WSlcklmI0yj5pZTeGgoqnMyqzL5/oIrSVfAjxxBtvMuXugGmiEa89XPGX1Gd5FM5qpXNXsNBlU3nad6IQAkkeh1ScQH5rsUJE2A+0WCt8O40=
+	t=1741111996; cv=none; b=uQ1MyBFtnz7DTxCeC7n52T3svTzZManUkNWwOFLyBJKv/Br1hhudoWCT+jqgc13+IUws05rcVzgybCH+UB/QL97A+RpIsvkeUnQPO/SkBpDU+ijXcU/JDBtP2aZSHyKlkMInaq7H9i2Oy2CzNyuZfg8b2oJ/hkCpvD1E9+9GKhs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741111957; c=relaxed/simple;
-	bh=gaEfcjNd02VLKamKTdYI4yoLbx/SJYRinm1vvENmyuc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=F+jFuyBcNxRuMbRnW9xu8/Siy6We7Qdvf3JrXFD7AQK/OtCL5Xu65pjsxevFfPJzmYSRVXTynU2rvkJe6cgcbovRWi99Vw2nP5lVsJXV8S/FiFMq8u9QAHx4SiIe6xkFiN0MPaCriTPdIjlgd1DcxtxQ5HsHxZonALSRi8TJfIQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ralfj.de; spf=pass smtp.mailfrom=ralfj.de; dkim=pass (1024-bit key) header.d=ralfj.de header.i=@ralfj.de header.b=OAg29k7P; arc=none smtp.client-ip=109.230.236.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ralfj.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ralfj.de
+	s=arc-20240116; t=1741111996; c=relaxed/simple;
+	bh=k250k5iWybCa1wkP+YKQpFlJjVQ7GgntMVMffR/LSUA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=P0/lBezR9V0Q6pHNe7+Y0z5BAEXfAmxqXcarbEBV/VC0/bk2Ujn9A5H1rFD3uh6UXlkn803dYrgklWcheqXJZ0G6yEJuLRA47VbjydSJO+VFxp+psB4bvn0pcakn9/6EwRyth/KqXK+fCZ3Dk2kTBKKz00N1n3FPe5KyMKStpYY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=lak/FVUi; arc=none smtp.client-ip=178.60.130.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ralfj.de header.i=@ralfj.de header.b="OAg29k7P"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=ralfj.de; s=mail;
-	t=1741111947; bh=gaEfcjNd02VLKamKTdYI4yoLbx/SJYRinm1vvENmyuc=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=OAg29k7PJ0rLM9Ey8dTuOSv4q8U4Oy3jDAWREZhTVQcUSs1shR6Ea/9ZD8/IYbvg8
-	 znaT89MvfrLIUt4wpztvkpliMyJtjGEM3pac9lzDUnPZS0iuYqfv++dlzvB2Hy78vM
-	 u5E1QPXvz5D4oUKTLBi2jSaHK16sU/rS5GHWC1ow=
-Received: from [IPV6:2001:67c:10ec:5784:8000::12e7] (2001-67c-10ec-5784-8000--12e7.net6.ethz.ch [IPv6:2001:67c:10ec:5784:8000::12e7])
-	by r-passerv.ralfj.de (Postfix) with ESMTPSA id 52F292052D09;
-	Tue,  4 Mar 2025 19:12:27 +0100 (CET)
-Message-ID: <60c5acd2-df86-4eda-9479-17da7efe13fc@ralfj.de>
-Date: Tue, 4 Mar 2025 19:12:26 +0100
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="lak/FVUi"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=3Lx/8uaGq/ePxcQT7EdGKpzZUVOF43Fgxz10C6z4MHs=; b=lak/FVUiTYK7QAQbtJ+wELgdHo
+	ZHuWSqpysQFLxSTn+fuCmNVLZF3JCi6DH7usTnw7qdd1oOlk8EYXCmOy0ZDyvIZXr9VxBe3HceJAL
+	Ttc/ath5/wDzyZ+ohQuqGUHLW2NdIz1AK/15ysR6i/J8fTCcszFo5C4nY2MpRDV7vOx8N790zezHF
+	QH3I26pApal7zeAUprQkGVB7FvitbeVIkTuL4uGnbP2xl+dSbAy6hwqrlyzaV3mXjXBoRSpsZl9o2
+	IQWs/eejq+mf4Ks8V3ipHX3Y3lhDzNfj7F7hNqkTxt379XXn9L7njqkjBWm8xs8rKN7i16H+jr8bo
+	n+sfdnNQ==;
+Received: from d162-157-58-14.abhsia.telus.net ([162.157.58.14] helo=maloca.localdomain)
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
+	id 1tpWlA-003qIS-NE; Tue, 04 Mar 2025 19:12:58 +0100
+Date: Tue, 4 Mar 2025 11:12:52 -0700
+From: Rodrigo Siqueira <siqueira@igalia.com>
+To: Ethan Carter Edwards <ethan@ethancedwards.com>, 
+	Alex Hung <alex.hung@amd.com>, Aurabindo Pillai <aurabindo.pillai@amd.com>, 
+	Roman Li <Roman.Li@amd.com>
+Cc: Harry Wentland <harry.wentland@amd.com>, Leo Li <sunpeng.li@amd.com>, 
+	Alex Deucher <alexander.deucher@amd.com>, Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, amd-gfx@lists.freedesktop.org, 
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH 0/4] drm/amd/display: move from kzalloc(size * nr, ...)
+ to kcalloc(nr, size, ...)
+Message-ID: <rhmsb6pxlblxzaviawfuomm6vrvkenmskau63oxfdhdlsa7gbg@qbpznssr6al6>
+References: <20250227-amd-display-v1-0-52a060a78d08@ethancedwards.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: C aggregate passing (Rust kernel policy)
-To: Kent Overstreet <kent.overstreet@linux.dev>
-Cc: David Laight <david.laight.linux@gmail.com>,
- Steven Rostedt <rostedt@goodmis.org>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- Martin Uecker <uecker@tugraz.at>, "Paul E. McKenney" <paulmck@kernel.org>,
- Alice Ryhl <aliceryhl@google.com>, Ventura Jack <venturajack85@gmail.com>,
- Gary Guo <gary@garyguo.net>, airlied@gmail.com, boqun.feng@gmail.com,
- ej@inai.de, gregkh@linuxfoundation.org, hch@infradead.org, hpa@zytor.com,
- ksummit@lists.linux.dev, linux-kernel@vger.kernel.org,
- miguel.ojeda.sandonis@gmail.com, rust-for-linux@vger.kernel.org
-References: <ed7ef66dbde453035117c3f2acb1daefa5bd19eb.camel@tugraz.at>
- <CAHk-=whLSWX=-5-z4Q8x1f_NLrHd0e3afbEwYPkkVSXj=xT-JQ@mail.gmail.com>
- <20250226162655.65ba4b51@gandalf.local.home>
- <CAHk-=wjAcA4KrZ-47WiPd3haQU7rh+i315ApH82d=oZmgBUT_A@mail.gmail.com>
- <20250226165619.64998576@gandalf.local.home>
- <20250226171321.714f3b75@gandalf.local.home>
- <CAHk-=wj8Btsn0zN5jT1nBsUskF8DJoZbMiK81i_wPBk82Z0MGw@mail.gmail.com>
- <20250226173534.44b42190@gandalf.local.home>
- <20250227204722.653ce86b@pumpkin>
- <07acc636-75d9-4e4b-9e99-9a784d88e188@ralfj.de>
- <fbwwitktndx6vpkyhp5znkxmdfpforylvcmimyewel6mett2cw@i5yxaracpso2>
-Content-Language: en-US, de-DE
-From: Ralf Jung <post@ralfj.de>
-In-Reply-To: <fbwwitktndx6vpkyhp5znkxmdfpforylvcmimyewel6mett2cw@i5yxaracpso2>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250227-amd-display-v1-0-52a060a78d08@ethancedwards.com>
 
-Hi all,
-
->> Whether the compiler is permitted to do that depends heavily on what exactly
->> the code looks like, so it's hard to discuss this in the abstract.
->> If inside some function, *all* writes to a given location are atomic (I
->> think that's what you call WRITE_ONCE?), then the compiler is *not* allowed
->> to invent any new writes to that memory. The compiler has to assume that
->> there might be concurrent reads from other threads, whose behavior could
->> change from the extra compiler-introduced writes. The spec (in C, C++, and
->> Rust) already works like that.
->>
->> OTOH, the moment you do a single non-atomic write (i.e., a regular "*ptr =
->> val;" or memcpy or so), that is a signal to the compiler that there cannot
->> be any concurrent accesses happening at the moment, and therefore it can
->> (and likely will) introduce extra writes to that memory.
+On 02/27, Ethan Carter Edwards wrote:
+> We are trying to get rid of all multiplications from allocation
+> functions to prevent integer overflows. Here the multiplications are
+> probably safe, but using kcalloc() is more appropriate and improves
+> readability. It is also safer. This series contains a few patches
+> with these fixes.
 > 
-> Is that how it really works?
+> Part of the Kernel Self Protection Project efforts. Links below have
+> more details.
 > 
-> I'd expect the atomic writes to have what we call "compiler barriers"
-> before and after; IOW, the compiler can do whatever it wants with non
-> atomic writes, provided it doesn't cross those barriers.
+> Link: https://github.com/KSPP/linux/issues/162
+> Link: https://www.kernel.org/doc/html/next/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments
+> 
+> Signed-off-by: Ethan Carter Edwards <ethan@ethancedwards.com>
+> ---
+> Ethan Carter Edwards (4):
+>       drm/amd/display: change kzalloc to kcalloc in dcn30_validate_bandwidth()
+>       drm/amd/display: change kzalloc to kcalloc in dcn31_validate_bandwidth()
+>       drm/amd/display: change kzalloc to kcalloc in dcn314_validate_bandwidth()
+>       drm/amd/display: change kzalloc to kcalloc in dml1_validate()
+> 
+>  drivers/gpu/drm/amd/display/dc/resource/dcn30/dcn30_resource.c   | 3 ++-
+>  drivers/gpu/drm/amd/display/dc/resource/dcn31/dcn31_resource.c   | 3 ++-
+>  drivers/gpu/drm/amd/display/dc/resource/dcn314/dcn314_resource.c | 3 ++-
+>  drivers/gpu/drm/amd/display/dc/resource/dcn32/dcn32_resource.c   | 3 ++-
+>  4 files changed, 8 insertions(+), 4 deletions(-)
+> ---
+> base-commit: be5c7bbb3a64baf884481a1ba0c2f8fb2f93f7c3
+> change-id: 20250227-amd-display-a8342c55a9a0
+> 
+> Best regards,
+> -- 
+> Ethan Carter Edwards <ethan@ethancedwards.com>
+>
 
-If you do a non-atomic write, and then an atomic release write, that release 
-write marks communication with another thread. When I said "concurrent accesses 
-[...] at the moment" above, the details of what exactly that means matter a lot: 
-by doing an atomic release write, the "moment" has passed, as now other threads 
-could be observing what happened.
+Hi,
 
-One can get quite far thinking about these things in terms of "barriers" that 
-block the compiler from reordering operations, but that is not actually what 
-happens. The underlying model is based on describing the set of behaviors that a 
-program can have when using particular atomicity orderings (such as release, 
-acquire, relaxed); the compiler is responsible for ensuring that the resulting 
-program only exhibits those behaviors. An approach based on "barriers" is one, 
-but not the only, approach to achieve that: at least in special cases, compilers 
-can and do perform more optimizations. The only thing that matters is that the 
-resulting program still behaves as-if it was executed according to the rules of 
-the language, i.e., the program execution must be captured by the set of 
-behaviors that the atomicity memory model permits. This set of behaviors is, 
-btw, completely portable; this is truly an abstract semantics and not tied to 
-what any particular hardware does.
+This series LGTM,
 
-Now, that's the case for general C++ or Rust. The Linux kernel is special in 
-that its concurrency support predates the official model, so it is written in a 
-different style, commonly referred to as LKMM. I'm not aware of a formal study 
-of that model to the same level of rigor as the C++ model, so for me as a 
-theoretician it is much harder to properly understand what happens there, 
-unfortunately. My understanding is that many LKMM operations can be mapped to 
-equivalent C++ operations (i.e., WRITE_ONCE and READ_ONCE correspond to atomic 
-relaxed loads and stores). However, the LKMM also makes use of dependencies 
-(address and/or data dependencies? I am not sure), and unfortunately those 
-fundamentally clash with even basic compiler optimizations such as GVN/CSE or 
-algebraic simplifications, so it's not at all clear how they can even be used in 
-an optimizing compiler in a formally sound way (i.e., "we could, in principle, 
-mathematically prove that this is correct"). Finding a rigorous way to equip an 
-optimized language such as C, C++, or Rust with concurrency primitives that emit 
-the same efficient assembly code as what the LKMM can produce is, I think, an 
-open problem. Meanwhile, the LKMM seems to work in practice despite those 
-concerns, and that should apply to both C (when compiled with clang) and Rust in 
-the same way -- but when things go wrong, the lack of a rigorous contract will 
-make it harder to determine whether the bug is in the compiler or the kernel. 
-But again, Rust should behave exactly like clang here, so this should not be a 
-new concern. :)
+Reviewed-by: Rodrigo Siqueira <siqueira@igalia.com>
 
-Kind regards,
-Ralf
+To Display folks,
+(Cc some other devs)
 
+If possible, try to include this series in this week's promotion tests,
+or check the IGT test in the CI just to be safe.
+
+Thanks
+
+-- 
+Rodrigo Siqueira
