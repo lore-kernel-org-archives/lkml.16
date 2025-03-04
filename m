@@ -1,176 +1,61 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10E492641D2;
-	Tue,  4 Mar 2025 17:16:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741108567; cv=pass; b=qRGurCJXD/uO42N2n0MWYmcvpXH7DwtwZf9jeSw0DxVI6oie812jsAgzcg3siAxMBVOLkzBmVHmq26WOWoTUmAtRrJQJDfIYA3ohm1BgMdRBcfzPlHE4z02isJBsH4CldMa28laMgyYFKI2BNit8eoapCeW6RqwNqCmCwzkp6oo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741108567; c=relaxed/simple;
-	bh=o4ANY14hWRIwtKVWCXcGO/oB6Wh2/DmDCFxxX43F+rc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Z6CO558yYvBmp4ValBt/qPhgYICmpZX92r90bmpZmz+8md/DsM1UxR158aaPFWidEHKExsR0M1MJCJIIHQnYSlBS2omJWCKb7GzXrLyt6878gGJJhp5OwRFdIjfX/WUGz4Nq8Ovdz7lGx6TRlXbdI/6JPsBFQKAXqHN2LPAb/ZM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=detlev.casanova@collabora.com header.b=iZ92R1bm; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=detlev.casanova@collabora.com header.b="iZ92R1bm"
-ARC-Seal: i=1; a=rsa-sha256; t=1741108545; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=lctTwBqJFIARNjlmaiBoqnWTDuFL6WUoet0a2YxlKbWgWdDYPMn95/BTjQToLDf/abIelZwvV1uj3d89LIS1i1ltiEI+UKlRp3/8SyMyJ7SdOWzBsiLfXzXCHVJOtE+umfRg9KEpTKlsWiy4hamAxV09fugUxsO884hC4/nSmDE=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1741108545; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=OdTMORqBJYLjJhRhGFzMiRnquj3qLzmSjVu6QO5a5kk=; 
-	b=FylPp3MBGmDQMN/pBeGvf/nlfitPWrxtJuNFW1hElVBSKa9gwj9hvgXnC7n3hkYVsrXdJ9tOOOS6e7I9tH0jmq3LJnioHnPOOTHy5Eap+FaXnP6evnYXp7koRxcfjCdwhNnv0LmmqvOeFxqr1Z+xElwHIEHfdTiOXsx8jw5q2os=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=detlev.casanova@collabora.com;
-	dmarc=pass header.from=<detlev.casanova@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1741108545;
-	s=zohomail; d=collabora.com; i=detlev.casanova@collabora.com;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Content-Type:Message-Id:Reply-To;
-	bh=OdTMORqBJYLjJhRhGFzMiRnquj3qLzmSjVu6QO5a5kk=;
-	b=iZ92R1bmhXCY3JwYVZzfbnH2LfLmo7z7gtnUl330xU5kEcvEPqsbfFbIZJBzSwL/
-	TBPwwQK7BbTzEaNVpMyAgSYew4KU6JsfnNOHeBgs9Z8xZuymFdPapP8aic0NcqaVz2e
-	gySBtZSmtRTQa/8DJX0urb3IO4lphjRepIKzcVl8=
-Received: by mx.zohomail.com with SMTPS id 174110854289189.58519837207825;
-	Tue, 4 Mar 2025 09:15:42 -0800 (PST)
-From: Detlev Casanova <detlev.casanova@collabora.com>
-To: heiko@sntech.de, Andy Yan <andyshrk@163.com>
-Cc: krzk+dt@kernel.org, robh@kernel.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-rockchip@lists.infradead.org, Andy Yan <andy.yan@rock-chips.com>
-Subject: Re: [PATCH v3 1/3] arm64: dts: rockchip: Add vop for rk3576
-Date: Tue, 04 Mar 2025 12:15:41 -0500
-Message-ID: <12619358.O9o76ZdvQC@earth>
-In-Reply-To: <20241231095728.253943-2-andyshrk@163.com>
-References:
- <20241231095728.253943-1-andyshrk@163.com>
- <20241231095728.253943-2-andyshrk@163.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85C2F29DB7F;
+	Tue,  4 Mar 2025 17:17:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741108654; cv=none; b=OQyYn6DhqxXtJebPSl+zYDZN9gCV/kqjX58y52wmTEtEppeP71ofE/8Llo7IY5IjHSuwaG3nv+ACbIAvF6J6gGj+tYlD42YfuXpMUcrP3KrU+ShM1f8JejvgCwvlh09JLaFDXhr0qarpuYkS5Ki1eRg4Yaq7IYMvCxAiAeNgVFQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741108654; c=relaxed/simple;
+	bh=Cub2U67ysXpV9EHO8NacvujSGVQMPjHHYnRs/d2RJ2s=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=BdlDejynDT+/kIvHbhGfXYY7QZnx+DwnEObWEfdnd9VEygcm2UWd2vkPYkSD/6r9o5fSU6uBr9gqEMeWjRsmIIVDt+pLJpF7zA8OtyphIhWKvH5C4tG+GlETNtzhpkqmO+lcozlmFXhrL3fb8Pqt1OYw4XLQS39IPjmMDQeWbJw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92327C4CEED;
+	Tue,  4 Mar 2025 17:17:33 +0000 (UTC)
+Date: Tue, 4 Mar 2025 12:18:28 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Gabriele Monaco <gmonaco@redhat.com>
+Cc: linux-kernel@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
+ linux-trace-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, Peter
+ Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>
+Subject: Re: [PATCH v4 02/11] rv: Add license identifiers to monitor files
+Message-ID: <20250304121828.34006e00@gandalf.local.home>
+In-Reply-To: <20250218123121.253551-3-gmonaco@redhat.com>
+References: <20250218123121.253551-1-gmonaco@redhat.com>
+	<20250218123121.253551-3-gmonaco@redhat.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="utf-8"
-X-ZohoMailClient: External
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi andy,
+On Tue, 18 Feb 2025 13:31:07 +0100
+Gabriele Monaco <gmonaco@redhat.com> wrote:
 
-On Tuesday, 31 December 2024 04:57:18 EST Andy Yan wrote:
-> From: Andy Yan <andy.yan@rock-chips.com>
+> Some monitor files like the main header and the Kconfig are missing the
+> license identifier.
 > 
-> Add VOP and VOP_MMU found on rk3576.
+> Add it to those and make sure the automatic generation script includes
+> the line in newly created monitors.
 > 
-> Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
-> 
+> Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
 > ---
-> 
-> Changes in v3:
-> - Split from
-> https://lore.kernel.org/linux-rockchip/3330586.aeNJFYEL58@diego/T/#t
-> 
->  arch/arm64/boot/dts/rockchip/rk3576.dtsi | 68 ++++++++++++++++++++++++
->  1 file changed, 68 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3576.dtsi
-> b/arch/arm64/boot/dts/rockchip/rk3576.dtsi index 436232ffe4d1..130d11a2cc89
-> 100644
-> --- a/arch/arm64/boot/dts/rockchip/rk3576.dtsi
-> +++ b/arch/arm64/boot/dts/rockchip/rk3576.dtsi
-> @@ -393,6 +393,11 @@ opp-950000000 {
->  		};
->  	};
-> 
-> +	display_subsystem: display-subsystem {
-> +		compatible = "rockchip,display-subsystem";
-> +		ports = <&vop_out>;
-> +	};
-> +
->  	firmware {
->  		scmi: scmi {
->  			compatible = "arm,scmi-smc";
-> @@ -826,6 +831,69 @@ gpu: gpu@27800000 {
->  			status = "disabled";
->  		};
-> 
-> +		vop: vop@27d00000 {
-> +			compatible = "rockchip,rk3576-vop";
-> +			reg = <0x0 0x27d00000 0x0 0x3000>, <0x0 0x27d05000 
-0x0 0x1000>;
-> +			reg-names = "vop", "gamma-lut";
-> +			interrupts = <GIC_SPI 342 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 379 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 380 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 381 IRQ_TYPE_LEVEL_HIGH>;
-> +			interrupt-names = "vop-sys",
-> +					  "vop-vp0",
-> +					  "vop-vp1",
-> +					  "vop-vp2";
+>  kernel/trace/rv/monitors/wip/Kconfig            | 2 ++
+>  kernel/trace/rv/monitors/wip/wip.h              | 1 +
+>  kernel/trace/rv/monitors/wwnr/Kconfig           | 2 ++
+>  kernel/trace/rv/monitors/wwnr/wwnr.h            | 1 +
+>  tools/verification/dot2/dot2k.py                | 1 +
+>  tools/verification/dot2/dot2k_templates/Kconfig | 2 ++
+>  6 files changed, 9 insertions(+)
 
-These need to be renamed without the 'vop-' prefix.
+While I'm waiting for Peter's answer on the scheduler tracepoints, I'll
+take these first two patches now, as they are agnostic to the rest of the
+changes.
 
-> +			clocks = <&cru ACLK_VOP>,
-> +				 <&cru HCLK_VOP>,
-> +				 <&cru DCLK_VP0>,
-> +				 <&cru DCLK_VP1>,
-> +				 <&cru DCLK_VP2>;
-> +			clock-names = "aclk",
-> +				      "hclk",
-> +				      "dclk_vp0",
-> +				      "dclk_vp1",
-> +				      "dclk_vp2";
-> +			iommus = <&vop_mmu>;
-> +			power-domains = <&power RK3576_PD_VOP>;
-> +			rockchip,grf = <&sys_grf>;
-> +			rockchip,pmu = <&pmu>;
-> +			status = "disabled";
-> +
-> +			vop_out: ports {
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +
-> +				vp0: port@0 {
-> +					#address-cells = <1>;
-> +					#size-cells = <0>;
-> +					reg = <0>;
-> +				};
-> +
-> +				vp1: port@1 {
-> +					#address-cells = <1>;
-> +					#size-cells = <0>;
-> +					reg = <1>;
-> +				};
-> +
-> +				vp2: port@2 {
-> +					#address-cells = <1>;
-> +					#size-cells = <0>;
-> +					reg = <2>;
-> +				};
-> +			};
-> +		};
-> +
-> +		vop_mmu: iommu@27d07e00 {
-> +			compatible = "rockchip,rk3576-iommu", 
-"rockchip,rk3568-iommu";
-> +			reg = <0x0 0x27d07e00 0x0 0x100>, <0x0 0x27d07f00 
-0x0 0x100>;
-> +			interrupts = <GIC_SPI 342 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&cru ACLK_VOP>, <&cru HCLK_VOP>;
-> +			clock-names = "aclk", "iface";
-> +			#iommu-cells = <0>;
-> +			power-domains = <&power RK3576_PD_VOP>;
-> +			status = "disabled";
-> +		};
-> +
->  		qos_hdcp1: qos@27f02000 {
->  			compatible = "rockchip,rk3576-qos", "syscon";
->  			reg = <0x0 0x27f02000 0x0 0x20>;
-
-Regards,
-Detlev
-
-
+-- Steve
