@@ -1,94 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F32831FFC7E;
-	Tue,  4 Mar 2025 12:20:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18E701FF7B3;
+	Tue,  4 Mar 2025 12:21:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741090860; cv=none; b=iLTPjKuOWoplvnMdS3saHfRMSRy+PUXHNwsf3LcZF+QGwZTE/yyLaaIwCdCBebnP7XXMnbE+KPI/AsB5g65hCBFVdtUqn3PRNyY9g8F9rEjGFkFvMG0OYlU9cPXL6/JKU10FLm7atdX9HQUXXzOf4bifq0N2heQ8dqFK1X9MJa0=
+	t=1741090869; cv=none; b=cqw1+hz9jppkwox0UtqcW6tWG7FaHVlrXPp6VX89cmrCtT9Y0+2hfOnHZYG9IQ4cyEHwUamhLwVhXzr9Jakw7pste8bDzdyJW7bxJTzuyitL38WrV5ba8OO0R0LPBTGaqD43biJKsBdidYA6xvWE0IFOWA3+IWSlsWTxZGjhc8Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741090860; c=relaxed/simple;
-	bh=taClQ70iXUCxoBxQy+spoV3xp0cK5c2B/aMQ1g+Bskc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=B6Vue/xownHuV7xJAOzV7Mm8MeQcVPcnqGVjLCqfHaDrTJfIzhAYt373bIeogZJurdg9fo13WhMzc/IILU6VHNEYXsV1jcaVlSXGjDIu/ZJsA+pQ3qXREYu9XM2PQFP+eU76E8kOwAcRWh8t8Ir4WfVk98oBj3VChijDk0A/Xe0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dBZa+w2L; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741090869; c=relaxed/simple;
+	bh=uEprj7Yzgmgwe7aYrri3WNyQ6X7vA9xx5S0SDLtU1Eo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Ruvwm69AiCcRMZtIpgnoMLDpwWlCimQ8RNPITMVh16Yf92yj0SllsZDxtE4TfCq1LafCc68vhQv91Q3r5leEkZX5G0q4zOYlDgQBCJZmZt9bpKxNGSDY5zpLQKzQTunEbjYG5AxAmItMKY1LChczVpktmKl9BUbhAGJITc965U0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=jX2mLK6j; arc=none smtp.client-ip=157.90.84.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dBZa+w2L"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EDEAEC4CEE5;
-	Tue,  4 Mar 2025 12:20:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741090859;
-	bh=taClQ70iXUCxoBxQy+spoV3xp0cK5c2B/aMQ1g+Bskc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dBZa+w2LbNsESgBAPZX6UEPhovRhFX5Tc+R52ZiLfaEi5DmjRmhvH+GRRx9IB/rv6
-	 4YXeu3MiDZblvKq44oil0/bluQXnpATS37rslyPOfYiJHN+tdeOR1EScqyNH/A94G8
-	 H/qkSacFKTTpNKScquLNMilB6iDr0gbjVkSUOlP1unsyleeIebeR35+9tCK2JVMCNM
-	 Ld0FyKkcTIPSEXmDXYvMF+IY9GqsEVk07wg9QYS7jrGWNzuu+pmB833CgFA0irDmo0
-	 DzGSH0aySFcWtQ54uMjHf4iUAOzeTdcncPi8Bog/zcOSHwDdftIvJ3XlLeMhQRT7ef
-	 q54c0BN9Nxdhg==
-Date: Tue, 4 Mar 2025 12:20:54 +0000
-From: Mark Brown <broonie@kernel.org>
-To: Maud Spierings <maud_spierings@hotmail.com>
-Cc: Longbin Li <looong.bin@gmail.com>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Chen Wang <unicorn_wang@outlook.com>,
-	Inochi Amaoto <inochiama@gmail.com>, linux-spi@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org, sophgo@lists.linux.dev
-Subject: Re: [PATCH v2 2/2] spi: sophgo: add SG2044 SPI NOR controller driver
-Message-ID: <74a0cbdf-d303-459e-977a-2be1a6c9d274@sirena.org.uk>
-References: <20250304083548.10101-1-looong.bin@gmail.com>
- <20250304083548.10101-3-looong.bin@gmail.com>
- <AM7P189MB100970D57C974DD7CC5DB156E3C82@AM7P189MB1009.EURP189.PROD.OUTLOOK.COM>
+	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="jX2mLK6j"
+Received: from [192.168.42.116] (pd9e59f4f.dip0.t-ipconnect.de [217.229.159.79])
+	(Authenticated sender: wse@tuxedocomputers.com)
+	by mail.tuxedocomputers.com (Postfix) with ESMTPSA id 1DC5B2FC0048;
+	Tue,  4 Mar 2025 13:14:27 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
+	s=default; t=1741090467;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=sYDP12qxdvjjIqG0Hhy9mHxxVCe1CtZgL0i4zrmnYaw=;
+	b=jX2mLK6jtYJVeVvp7RO24O2Cr/suIAQ+rQWI1p3uM19B303WrXWG1qN8VsZjV69NW9G4k4
+	j+DL3D4t89bl1LDG2JpGjSGGxlf0+yP1U5DpMy16ysP48E+KEq2s3OSM7zB/DyA36IVAF7
+	4iKldeJ/szXA7W6Szr8+7MPi4ALDX48=
+Authentication-Results: mail.tuxedocomputers.com;
+	auth=pass smtp.auth=wse@tuxedocomputers.com smtp.mailfrom=wse@tuxedocomputers.com
+Message-ID: <df09a3f9-6131-435a-ad68-4cea71237e42@tuxedocomputers.com>
+Date: Tue, 4 Mar 2025 13:14:26 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="54Oj86wu4iRnfpKp"
-Content-Disposition: inline
-In-Reply-To: <AM7P189MB100970D57C974DD7CC5DB156E3C82@AM7P189MB1009.EURP189.PROD.OUTLOOK.COM>
-X-Cookie: Do not disturb.
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] Disable touchpad on firmware level while not in use
+To: Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>
+Cc: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250211133950.422232-1-wse@tuxedocomputers.com>
+ <20250211133950.422232-2-wse@tuxedocomputers.com>
+Content-Language: en-US
+From: Werner Sembach <wse@tuxedocomputers.com>
+In-Reply-To: <20250211133950.422232-2-wse@tuxedocomputers.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
+Hi,
 
---54Oj86wu4iRnfpKp
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Am 11.02.25 um 14:39 schrieb Werner Sembach:
+> Using the new on_hid_hw_open and on_hid_hw_close functions to disable the
+> touchpad on firmware level while not being in use.
+>
+> This safes some battery and triggers touchpad-disabled-leds hardwired to
+> the touchpads firmware, that exist for example on some TongFang barebones.
+>
+> For a lengthy discussion with all the details see
+> https://gitlab.freedesktop.org/libinput/libinput/-/issues/558
 
-On Tue, Mar 04, 2025 at 10:14:14AM +0100, Maud Spierings wrote:
-> On 3/4/25 9:35 AM, Longbin Li wrote:
-> > Add support for SG2044 SPI NOR controller in Sophgo SoC.
-> >=20
-> > Signed-off-by: Longbin Li<looong.bin@gmail.com>
-> > ---
-> >   drivers/spi/Kconfig          |   9 +
-> >   drivers/spi/Makefile         |   1 +
+Any comments if this is a good idea or not?
 
-Please delete unneeded context from mails when replying.  Doing this
-makes it much easier to find your reply in the message, helping ensure
-it won't be missed by people scrolling through the irrelevant quoted
-material.
+Best regards,
 
---54Oj86wu4iRnfpKp
-Content-Type: application/pgp-signature; name="signature.asc"
+Werner
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmfG8CUACgkQJNaLcl1U
-h9DOQgf+OsNrZsX/GHTkpQKuxufWPNRty1/mIYWBycNxDjbSbZiY+WW5d6Fk02kn
-hnr0S0ij9L2cHr5tPo1PuDuGHZlzaYgIpW9cUcN8jzH9dmMpUFN9i+idwW1Fs5Rh
-OM1AwzX4tTG8AwxRxXf4VvkMnErnIuNSbfmXX0zJJHFodbOPH8E8z6JaI6uCwdpG
-miC89wz3PNXKOs5Z9X1lVFP9sTuqgsVyFFOXxVjciqJmXkrPhB6d4p9lqC+k49UV
-ak64KOr+wKGgj8qaVCifbcZJFYp5naHizOSCa8pYgNzoNB9oqYsOqX9kODPgesC2
-a0NLs2CyfcbMKLXco2+SWo2461KDnA==
-=/APl
------END PGP SIGNATURE-----
-
---54Oj86wu4iRnfpKp--
+> Signed-off-by: Werner Sembach <wse@tuxedocomputers.com>
+> ---
+>   drivers/hid/hid-multitouch.c | 12 ++++++++++++
+>   1 file changed, 12 insertions(+)
+>
+> diff --git a/drivers/hid/hid-multitouch.c b/drivers/hid/hid-multitouch.c
+> index 82900857bfd87..7289c04f47f17 100644
+> --- a/drivers/hid/hid-multitouch.c
+> +++ b/drivers/hid/hid-multitouch.c
+> @@ -1884,6 +1884,16 @@ static void mt_remove(struct hid_device *hdev)
+>   	hid_hw_stop(hdev);
+>   }
+>   
+> +static void mt_on_hid_hw_open(struct hid_device *hdev)
+> +{
+> +	mt_set_modes(hdev, HID_LATENCY_NORMAL, TOUCHPAD_REPORT_ALL);
+> +}
+> +
+> +static void mt_on_hid_hw_close(struct hid_device *hdev)
+> +{
+> +	mt_set_modes(hdev, HID_LATENCY_HIGH, TOUCHPAD_REPORT_NONE);
+> +}
+> +
+>   /*
+>    * This list contains only:
+>    * - VID/PID of products not working with the default multitouch handling
+> @@ -2351,5 +2361,7 @@ static struct hid_driver mt_driver = {
+>   	.suspend = pm_ptr(mt_suspend),
+>   	.reset_resume = pm_ptr(mt_reset_resume),
+>   	.resume = pm_ptr(mt_resume),
+> +	.on_hid_hw_open = mt_on_hid_hw_open,
+> +	.on_hid_hw_close = mt_on_hid_hw_close,
+>   };
+>   module_hid_driver(mt_driver);
