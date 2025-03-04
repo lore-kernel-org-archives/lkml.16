@@ -1,92 +1,101 @@
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13A23190468
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 08:45:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15C4718A6A9;
+	Tue,  4 Mar 2025 08:46:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741077958; cv=none; b=Yffs5hGVO16qHz+NR4NoPonT3DjX+Mb7UZiK+ue3Q6JqThZGKYyhFVfdYSdx307+RqOHYFduzCx5XWMs7+eboeigPXgSsvrmME0dldMBRTmO4E51F/Yo766t8mkHJ/B+7B0vJru5mi4864WVSWsvrcjFgJlJAdtaaKfdYUWUTUE=
+	t=1741078015; cv=none; b=SIiYM0Z0VeUjAwHKpH+cjch8Lxhz6CU8/rFcPRnCxsx3YKIV8InHviQ6WkYBHrvy+KQJ6L8y4QkV55OvgkTJ51FSFMj/67v4XX/8rciVcng7q/aKUf6/+AS1T1YQwvgJH88ZghSliao0HPLM6ud5YAZhO7x0qdB2Cvx19hHk2jw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741077958; c=relaxed/simple;
-	bh=/0SJkcPrDcWFOUGtF0J/DGFOTXNav/MeYdDkxX2pjFM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EJWO4UeQeeYxmXtMrqkn17aJENdBNQ93+oPMgZG5eMqNpWvdUC1aAVhcK7tLMnZqO7qQs/+ZOQaNcoIdDG+yrfbYtm7xyLPeqHsEPE7FiPyk+sntJkKrre/8MSglZ7dP/fAdWKRMsgGvqxUSoq6FHnHt0fZ6wVdjpjvWpnQsd58=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=bKShz5m8; arc=none smtp.client-ip=209.85.167.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1741078015; c=relaxed/simple;
+	bh=ZwO27svF1RShsSUhC5wH3ukEpAbEurbNsY6GO0dgfsI=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=DXO9mghOIWzic5sFm9QfPUKZheTjUWgdfD5WlnlFnS/nW8EeEhtPRsapfhJSD/PLaGdobxhtUZqFv8qwKatmUo3qWykGxcyOeN59s5njh62m/uXukJDmHEVQYUz4wDyTigxo6Mmiujx0U9U+v2KLTVbykeJOOemubFSCvVqLnP0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=sC0FcztD; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=TNXQhhpb; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bKShz5m8"
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-5493b5bc6e8so6318507e87.2
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Mar 2025 00:45:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741077954; x=1741682754; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/0SJkcPrDcWFOUGtF0J/DGFOTXNav/MeYdDkxX2pjFM=;
-        b=bKShz5m81i3KkHbzcyXPBe4Pjl5YJrkLhMFFvQI8K7kmMdOzSC+uB/NOUN4WPEalua
-         ClFDTUB+RiGkXa9HHi8JsxvDDkzd0WLtderAUzCnFHXKqhouHp/KtIS2+fm/zhcGhTfl
-         iwNl3/h7T1ONhryTk3HEJrGOd+OcnSukGwHG7SMRcJe2Bcb1IQI+zDzECuwyepNMOxlU
-         YjiVIcJgmZuui+1vXa5wM1E4m8ZLd/z+ri5Z4ObakGdpK1+PtOg7FuKHuhoBmk47cg+h
-         lTnBQhxzbMLUzZ18DcKewvWMEv0z/O4iJjBxQ1KtG3dwbzBF4LTbr8o5pJFpJWLpedy4
-         MbNQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741077954; x=1741682754;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/0SJkcPrDcWFOUGtF0J/DGFOTXNav/MeYdDkxX2pjFM=;
-        b=iku6Y5oFSwDSirvNR/6JTW4chexGLAqV+07dvpwYPUOuG+juU1mFaJNYbXoDISY0lj
-         A/kj3+GNl183FBp8NgOizb5OuLrRgEpu6gFTd+I7OZFO/tyJZ5Z/F0z487lWXrexxrx7
-         m8MWlwqTxcKNs166BmrDjkzssuCi7x4braA8ilSyV6+gvtazbsoQvcUIG6abbHg6VJ7I
-         +RAYsOC96fVyf/O3kg8N4NVS2cHGU1kHIUuD6U4ie/zreAEgAxPhfO+12s6AXeRMmV+v
-         6FI5jtSi762zRWM7H1J5v5/oVO7gtrcRQ/hW54LaZXDvrQ7rzka0uJVe1KeBl5EAWnxI
-         ZqRg==
-X-Forwarded-Encrypted: i=1; AJvYcCUERufEqqYCVYrv1b8eX4NvqE20PKPCwf3WwQogqpXJBmpsbt+D+fSagya+3DuMIyu/nCPh9uUchs9Uvjk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxUEAoZ4myWKPp5L/EgMKHy8Crkx5BobJTBJuwTmbH9Pggxf5sp
-	K8cAe+YvvKiyIDLmYXoBYg1PHKGxMuGXV+vkAkWs0fg1LDOZab034QlwOt+XQgGzv7kGDh4g+HC
-	Lmc8KFp1bhz0f36yDlKVEp0D6YyNlkuSM+/D8oQ==
-X-Gm-Gg: ASbGnctArcNbAxcMJBTuev6WF6aU8i29RBED+x5pySU/8tYuZUud9GdmixIzkf9dlQ0
-	QeOCI5HKltZPGOjivhOsQTvqApQ22WyvaQcu429PEdFqqYQRtJ/N5clbCIYoMHMtyP+bo8MRey4
-	CalX3G5JqnHK5jj4nIgBS2tQC/CQ==
-X-Google-Smtp-Source: AGHT+IHsVxclGliNqaEX2rQGkMgJ98ubJoLnko5L4jIGDJ4jURzN0K+jt3I2W3bQVmw/PNLGXa3fvCQ+389PMRa318A=
-X-Received: by 2002:a05:6512:128e:b0:545:958:180d with SMTP id
- 2adb3069b0e04-5494c37d98cmr5919737e87.38.1741077954243; Tue, 04 Mar 2025
- 00:45:54 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="sC0FcztD";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="TNXQhhpb"
+Date: Tue, 04 Mar 2025 08:46:51 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1741078012;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=v6yNIkAFRt0FfGZbt5/GPn8n/W/hipKsdNZPPTsCILc=;
+	b=sC0FcztDwIkyoOeWDJilpuEgnlPfW1SetDk2HrhIAAfiOk1pFcoQfaGbqC8wTQaMvzQBqv
+	FTuamhKIc4KBscMGMgIxYVuV0fVTSPQFzhuUdMtguzRxTLg8IM80pBk8YdkCdU72jWKX52
+	XRUQbKl3BRlilIkg0f2S1BKijbbKbt2irAC4TCFsfVpVcTKXOqS95wkEJHYCEwZ+caCQqH
+	dTSLLoO3fXxcJNaUZhbgOTBMAF0SNvhbR346uIkHDFBpUMFGeLrwW102uhFDt/uBEYb6X+
+	dEptZHfSRefrjbo3KLlNamtJICf2EgIh7ji8K1EtsK6s+OE3Gde9asAMLyr2tw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1741078012;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=v6yNIkAFRt0FfGZbt5/GPn8n/W/hipKsdNZPPTsCILc=;
+	b=TNXQhhpbg7y4eBuJGi9Isp7ejI1opzCfmQS1NyI7umAZGlT83YLdt0cb6ETR7BnfhiVCE+
+	XxrOW0+GSConX4DA==
+From: "tip-bot2 for Peter Zijlstra" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: perf/core] perf/core: Fix perf_mmap() failure path
+Cc: "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+ Ingo Molnar <mingo@kernel.org>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20241104135519.248358497@infradead.org>
+References: <20241104135519.248358497@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250303160341.1322640-1-andriy.shevchenko@linux.intel.com>
- <20250303160341.1322640-4-andriy.shevchenko@linux.intel.com> <Z8XUMRAlR3H13zha@smile.fi.intel.com>
-In-Reply-To: <Z8XUMRAlR3H13zha@smile.fi.intel.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Tue, 4 Mar 2025 09:45:43 +0100
-X-Gm-Features: AQ5f1JrkaHhT1A9qOrQA_wrC0Y5xjg5i_-rTm_Muy8k7fJlbX2FpNCXPxucoweQ
-Message-ID: <CACRpkdaxnCK6arrYBi7j7qBQXqxYma8owb4kZj--y4BNQmfD=g@mail.gmail.com>
-Subject: Re: [PATCH v1 3/3] gpiolib: Rename gpio_do_set_config() --> gpiod_do_set_config()
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, linux-gpio@vger.kernel.org, 
-	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Mika Westerberg <westeri@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>, Kent Gibson <warthog618@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Message-ID: <174107801111.14745.4214008629412841178.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-On Mon, Mar 3, 2025 at 5:09=E2=80=AFPM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
-> On Mon, Mar 03, 2025 at 06:00:34PM +0200, Andy Shevchenko wrote:
-> > In order to reduce the 'gpio' namespace when operate over GPIO descript=
-or
-> > rename gpio_do_set_config() to gpiod_do_set_config().
->
-> This change was made against my custom tree and I forgot about that.
-> I will wait for the overall response to this series and if okay I
-> may issue the correct patch.
+The following commit has been merged into the perf/core branch of tip:
 
-For the correct patch, with the same idea:
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Commit-ID:     bfd33e88addda078a089657044945858a33c435e
+Gitweb:        https://git.kernel.org/tip/bfd33e88addda078a089657044945858a33c435e
+Author:        Peter Zijlstra <peterz@infradead.org>
+AuthorDate:    Mon, 04 Nov 2024 14:39:24 +01:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Tue, 04 Mar 2025 09:39:04 +01:00
 
-Yours,
-Linus Walleij
+perf/core: Fix perf_mmap() failure path
+
+When f_ops->mmap() returns failure, m_ops->close() is *not* called.
+
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Acked-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Link: https://lore.kernel.org/r/20241104135519.248358497@infradead.org
+---
+ kernel/events/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 8b2a8c3..b2334d2 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -6903,7 +6903,7 @@ aux_unlock:
+ 	if (!ret)
+ 		ret = map_range(rb, vma);
+ 
+-	if (event->pmu->event_mapped)
++	if (!ret && event->pmu->event_mapped)
+ 		event->pmu->event_mapped(event, vma->vm_mm);
+ 
+ 	return ret;
