@@ -1,106 +1,116 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44ADC1FF605;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79F481FF5EA;
 	Tue,  4 Mar 2025 09:37:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741081045; cv=none; b=MuLQxByTIElkHkWnZf+njz7c2WD0f1WjHB2ekTPbU8MMTW2sDhVR42HsP4+ynlPQjHbTBtXGntOEQVxHkSY9WB/BRZk1RXXRKHhQ07uWyzUK+S5CaqYh92ftMnjneCi9+WFdVdcHkWCmRF/6EieepBPWyTI+cMntHigCj+Z/s/8=
+	t=1741081045; cv=none; b=qi7F2sSRya0lTqIiyd527rWzJII8zoagE7oUAI7LiFmpmicJQYkZjjZ3JRoWa9VnseSTX1oYI5i325AJzPYiCyu4FG+XKSaMi682pI4Uerna05mhl2R3nTglqewQlVP0JHvazzpZzcEHAJr93i+hxHohp5ZFMvwZqSEdZkFu3CU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1741081045; c=relaxed/simple;
-	bh=yYHqbGlfj331PKZVuyDW+n7RB26jrczWpwf2kIPq6sQ=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=AfYZKsaQ/eHCN5CMfizEzxv4YSY4R216PcTTBc8KTYf0Pa2p7n+/D64O6/E4fa0nHXZnfHSpVXsyJJ15yfiOzSTlVCm4TrzaWOYkDCZ/C4JOk9tfKWPm+x8eeAMYmW8aw5InqW4g8JzOKVOBlkVrbIqlqneqdG/2Jql5ZpuEohs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=VjYjxXYs; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=n3hw6eGG; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	bh=O+9rlfF/uzRCAS1prhuz8xBGKDW0RRz/qKexdWg2yVs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gxKVMjcHE9j/KPeWq8TayLe6XdYDuBtMP8EEv38M0gxCNKfeKAFWxhiz/Rsr+aq0NMpFL/qqX8w2tGZsuu5/uokLHRc0RBH3VDzO9Q5vGDOLZgIfMCaM6USiysH8wbSl5cjx8Aaie++rziobjQfhTaaC1u2ZKyazy0xnwD8a1m4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=SYsFw1XT; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="VjYjxXYs";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="n3hw6eGG"
-Date: Tue, 04 Mar 2025 09:37:21 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1741081042;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=LB8EPbzDW8lT8I11GcgmwwusvK2aKBXuQBwm+3V24s8=;
-	b=VjYjxXYstSVrMwSXA01Z93T8/uR+HfozcLqc8kf7edF/Zf76+AY+fBbT4FkJvlWBEgKPfP
-	lTJXrOJuCvZKqt2wSrwW0z+hQgtZwujT9WiT4SgMP/b4EwtxT27SArgBGokr3/XtFqIrvr
-	3Jh+t2RyILaXBlOGCHYKvKJOYQtyQYrpK2T7aWAYr6N85lEThUApUO8NqITU9KzEOV5FxX
-	DJk+oX30Kz8Gtf/jyAz41jQE8sU99ahjOHUOo9widOE/sW4PCT7xSHTZGRb0Z3UArYetVp
-	gw9qCtfqQCaVhmHsqZxSIJBhgJ9O8cR5KkKgNRlbtJZtMKVsdSX2u3foTbqY6w==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1741081042;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=LB8EPbzDW8lT8I11GcgmwwusvK2aKBXuQBwm+3V24s8=;
-	b=n3hw6eGGBXDT5tZabKTq4moRamdwLoFkPNj2ptbqyAI8RKoadx0VbrdQLAjJTUk57eCaSn
-	g3aC0BjaACHUYXBw==
-From: "tip-bot2 for Ahmed S. Darwish" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject:
- [tip: x86/cpu] x86/cpuid: Include <linux/build_bug.h> in <asm/cpuid.h>
-Cc: "Ahmed S. Darwish" <darwi@linutronix.de>, Ingo Molnar <mingo@kernel.org>,
- x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250304085152.51092-5-darwi@linutronix.de>
-References: <20250304085152.51092-5-darwi@linutronix.de>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="SYsFw1XT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1741081041;
+	bh=O+9rlfF/uzRCAS1prhuz8xBGKDW0RRz/qKexdWg2yVs=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=SYsFw1XTKGn8nlc9yGX98hysdmfTLwmrKPyhJ5f/AOf3GEnpmEgtgOcuym/Lbywf2
+	 drGLXcgVkOWwW6a+o9VD1HK0PYaFKCSg5Uc9waeVycLHxL4djvQEMUGX5RT9qLE8j7
+	 VezMteK7KIQ03Chmgc+PQR3YGIb1yYrEFwWrf3utdxXvu1f2wT7E4pvetrKgsI6F8s
+	 pwgP4ERTLHmrKj6LersjzLz6NzjBjcPBBVBJprDynLV7kxbgbs70u76JMVE0RAS551
+	 Z8TBl46NuCVESgDiKXzaaD4c4/NwOvdSL3HuqlNsyfoFIJ7OrI/DzV3Lb5Z07D+cT0
+	 ADsdzhXOHYaHQ==
+Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 61DDC17E0630;
+	Tue,  4 Mar 2025 10:37:20 +0100 (CET)
+Message-ID: <c1395546-9cfe-4da9-b87a-e5cc392910f6@collabora.com>
+Date: Tue, 4 Mar 2025 10:37:19 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174108104168.14745.16455238640570622239.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 5/8] soc: mediatek: mtk-cmdq: Add mminfra_offset
+ compatibility for DRAM address
+To: Jason-JH Lin <jason-jh.lin@mediatek.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Jassi Brar <jassisinghbrar@gmail.com>,
+ Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>,
+ Nancy Lin <nancy.lin@mediatek.com>, Singo Chang <singo.chang@mediatek.com>,
+ Moudy Ho <moudy.ho@mediatek.com>, Xavier Chang <xavier.chang@mediatek.com>,
+ Xiandong Wang <xiandong.wang@mediatek.com>,
+ Sirius Wang <sirius.wang@mediatek.com>, Fei Shao <fshao@chromium.org>,
+ Pin-yen Lin <treapking@chromium.org>,
+ Project_Global_Chrome_Upstream_Group@mediatek.com,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, linux-mediatek@lists.infradead.org,
+ linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+References: <20250218054405.2017918-1-jason-jh.lin@mediatek.com>
+ <20250218054405.2017918-6-jason-jh.lin@mediatek.com>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Content-Language: en-US
+In-Reply-To: <20250218054405.2017918-6-jason-jh.lin@mediatek.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-The following commit has been merged into the x86/cpu branch of tip:
+Il 18/02/25 06:41, Jason-JH Lin ha scritto:
+> Since GCE has been moved to mminfra in MT8196, all transactions from
+> mminfra to DRAM will have their addresses adjusted by subtracting a
+> mminfra offset.
+> This information should be handled inside the CMDQ driver, allowing
+> CMDQ users to call CMDQ APIs as usual.
+> 
+> Therefore, CMDQ driver needs to use the mbox API to get the
+> mminfra_offset value of the SoC, and then add it to the DRAM address
+> when generating instructions to ensure GCE accesses the correct DRAM
+> address.
+> 
+> Signed-off-by: Jason-JH Lin <jason-jh.lin@mediatek.com>
+> ---
+>   drivers/soc/mediatek/mtk-cmdq-helper.c | 35 ++++++++++++++++++++++++--
+>   1 file changed, 33 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/soc/mediatek/mtk-cmdq-helper.c b/drivers/soc/mediatek/mtk-cmdq-helper.c
+> index aa9853100d78..f2853a74af01 100644
+> --- a/drivers/soc/mediatek/mtk-cmdq-helper.c
+> +++ b/drivers/soc/mediatek/mtk-cmdq-helper.c
+> @@ -314,10 +314,22 @@ EXPORT_SYMBOL(cmdq_pkt_write_s_mask_value);
+>   
+>   int cmdq_pkt_mem_move(struct cmdq_pkt *pkt, dma_addr_t src_addr, dma_addr_t dst_addr)
+>   {
+> +	struct cmdq_client *cl = (struct cmdq_client *)pkt->cl;
+>   	const u16 high_addr_reg_idx  = CMDQ_THR_SPR_IDX0;
+>   	const u16 value_reg_idx = CMDQ_THR_SPR_IDX1;
+>   	int ret;
+>   
+> +	if (!cl) {
+> +		pr_err("%s %d: pkt->cl is NULL!\n", __func__, __LINE__);
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (cmdq_addr_need_offset(cl->chan, src_addr))
+> +		src_addr += cmdq_get_offset_pa(cl->chan);
 
-Commit-ID:     025caf2ff96d4c605e96e495620383db518a45a3
-Gitweb:        https://git.kernel.org/tip/025caf2ff96d4c605e96e495620383db518a45a3
-Author:        Ahmed S. Darwish <darwi@linutronix.de>
-AuthorDate:    Tue, 04 Mar 2025 09:51:15 +01:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Tue, 04 Mar 2025 10:07:17 +01:00
+If the offset is just DRAM IOSTART, you could manage that differently in the cmdq
+helper as well as the cmdq mailbox... :-)
 
-x86/cpuid: Include <linux/build_bug.h> in <asm/cpuid.h>
-
-<asm/cpuid.h> uses static_assert() at multiple locations but it does not
-include the CPP macro's definition at linux/build_bug.h.
-
-Include the needed header to make <asm/cpuid.h> self-sufficient.
-
-This gets triggered when cpuid.h is included in new C files, which is to
-be done in further commits.
-
-Fixes: 43d86e3cd9a7 ("x86/cpu: Provide cpuid_read() et al.")
-Signed-off-by: Ahmed S. Darwish <darwi@linutronix.de>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Link: https://lore.kernel.org/r/20250304085152.51092-5-darwi@linutronix.de
----
- arch/x86/include/asm/cpuid.h | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/x86/include/asm/cpuid.h b/arch/x86/include/asm/cpuid.h
-index b2b9b4e..a92e4b0 100644
---- a/arch/x86/include/asm/cpuid.h
-+++ b/arch/x86/include/asm/cpuid.h
-@@ -6,6 +6,7 @@
- #ifndef _ASM_X86_CPUID_H
- #define _ASM_X86_CPUID_H
- 
-+#include <linux/build_bug.h>
- #include <linux/types.h>
- 
- #include <asm/string.h>
+> +
+> +	if (cmdq_addr_need_offset(cl->chan, dst_addr))
+> +		dst_addr += cmdq_get_offset_pa(cl->chan);
+> +
+Cheers,
+Angelo
