@@ -1,184 +1,178 @@
-Received: from smtp.forwardemail.net (smtp.forwardemail.net [121.127.44.59])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53EBB1EE7AD
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 19:55:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=121.127.44.59
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5566925F793
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 19:55:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741118147; cv=none; b=Tq1N4kpvHVuBnZ5IQsdCuSrfxsgM9z/++NZpBO5Trzqg/MDEDTI3XRAMC0HpBisXk54Hzd0UZleVfCSjdBEzsLsyWUvUzGkZJwRovRI41bLYRXF/ouzoKfOZYcXz+tiDwo5PQiztCJstYrfLDtpIcXh5xvdiIJGv4EfP0JYfpbU=
+	t=1741118148; cv=none; b=GZ8UkqLVShVUNcqJFI7bEzNny4reJLhD2L+pMSsToBAsF3c7fe9/gw91qEpSJJHFsQoQ6IWqwmDDfU1Vzpq34e5lbGvEyiLoJLKahw/eI3EFOVP0LqOCE/8vglvJaf0AxsTijasI9DZy0MrwHAVdI6usaEV3h9PuJ66V1QP/BAU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741118147; c=relaxed/simple;
-	bh=CeLR4mKb9WxrBvHDq2sz+cc4eUGHQ5l9Bx1L8sbel3U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Yx1E6oodCZ8dr908LCSm3+8bRheUlOoJgitVgFFOApIlYSf9BA1iG5/ZjuGltgJUrUVzVFBjdHdGL+iYxuffFJpdK8/KRjJLt7I67VnNiVzRExncHs3zcJKCTkPV10LfPJ9AXzrfMqziL1T0RMzi4G+NzQ7Q1c4nCczGzd68i2w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se; dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b=yNw1wm/l; arc=none smtp.client-ip=121.127.44.59
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se
+	s=arc-20240116; t=1741118148; c=relaxed/simple;
+	bh=7DDZL7LAromsNlnP26LRIbH95SSy/NcW7GywAci+0l8=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=EnB1231pP+DVpbJ/RXqmB15ry5Th8N1QqWOI/kGzz7GEiHccXksAruGG4OVJvQRg6+i4fV5wH5BZtBiWdghrmkMrZu6LV+slmnIwhYsPJkw6yIUDQ0EAxNMpcVjJ42jC9gM0w/ocabxYwV618t3Lg44M+czRKK2srQLVFWzxzCU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=isQeERTm; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="yNw1wm/l"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiboo.se;
- h=Content-Transfer-Encoding: Content-Type: In-Reply-To: From: References:
- Cc: To: Subject: MIME-Version: Date: Message-ID; q=dns/txt;
- s=fe-e1b5cab7be; t=1741118145;
- bh=eJwNGtEp4XbaHSJ4DCMpAhRX6Xx7TLv6dC2ug10rAwQ=;
- b=yNw1wm/l8hnDFp7zc/f8qrC8fhX1IvNphtQbUMyJ0hTFEYxQ5PupMLE9p158McdJUS3uOW279
- UmTygYYXsu5V6ODqsbeuzt2Mw2PDOPN1Db8zfsMU3HxZO6SD7ClHy5sNoZcmVp8aIOWjzB2x/Pp
- tr24ou1aEQ+95wtmwmoMpJakkqyqThvXMMhtO6nG2sp1Ya3YnpUS1DW2CjD6PpQcf5jMU5ClS7i
- x2L+JiidHDW9nrK8NClrazDXwurFrtv79to5A0IZMQJ8EWEQfe4D/FbV3nV+7xWJPOa8rTkgm+K
- tNP1v1N5rRwPsJLZEzTec5VZSQ6b/1f5chTovPWa2cSg==
-X-Forward-Email-ID: 67c75abd2e5baeec949f8de0
-X-Forward-Email-Sender: rfc822; jonas@kwiboo.se, smtp.forwardemail.net,
- 121.127.44.59
-X-Forward-Email-Version: 0.4.40
-X-Forward-Email-Website: https://forwardemail.net
-X-Complaints-To: abuse@forwardemail.net
-X-Report-Abuse: abuse@forwardemail.net
-X-Report-Abuse-To: abuse@forwardemail.net
-Message-ID: <5c429552-bdbb-43d9-8e07-bacda57c0fcf@kwiboo.se>
-Date: Tue, 4 Mar 2025 20:55:36 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="isQeERTm"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741118145; x=1772654145;
+  h=date:from:to:cc:subject:message-id;
+  bh=7DDZL7LAromsNlnP26LRIbH95SSy/NcW7GywAci+0l8=;
+  b=isQeERTmD43nfjTfvLIxDANFWXwkQiEL9ChgqTodplB/6qRKnaZnYiaN
+   oyZHIkkAoAa9kyeQCs2y5GtkhzqT4fSc3ROKPndaFfzDuF3Pifz9Oeo+6
+   +86Bg7c9yOVtyZ738+h2/saSUFE+Jaw7/ltd7i4Z80Eu1DMrRz2PfVH40
+   WTVnlD51mDJ+f7LKa4lfAiwoYV087j7Ds3e0MOSEgy2dheRSstxXCBuIr
+   J0NX78dMt4rc6uIaKq6ZmWiirkWiweYJs/d9XmVmxy3Te93GQ2vOxns3W
+   /PzF2YD0p/f91BetFWHtXDBaRVlxAHv/Z+B6Zulp8jsZJ0XLCBtTmjAnW
+   g==;
+X-CSE-ConnectionGUID: GObgKFlcQmK25750/BKnzA==
+X-CSE-MsgGUID: SBj4A1DJQ2a5/RFq8mYb/Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11363"; a="53456317"
+X-IronPort-AV: E=Sophos;i="6.14,220,1736841600"; 
+   d="scan'208";a="53456317"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2025 11:55:44 -0800
+X-CSE-ConnectionGUID: +WP0kluNTny/ayFJ4D8Lpg==
+X-CSE-MsgGUID: 6MAzRThCS0utyV24qbMWlQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="118369351"
+Received: from lkp-server02.sh.intel.com (HELO 76cde6cc1f07) ([10.239.97.151])
+  by orviesa010.jf.intel.com with ESMTP; 04 Mar 2025 11:55:43 -0800
+Received: from kbuild by 76cde6cc1f07 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tpYMe-000KDj-25;
+	Tue, 04 Mar 2025 19:55:40 +0000
+Date: Wed, 05 Mar 2025 03:55:09 +0800
+From: kernel test robot <lkp@intel.com>
+To: "x86-ml" <x86@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Subject: [tip:locking/core] BUILD SUCCESS
+ 21a889e8a41ebc45deca87e73b825064a7ccc3c5
+Message-ID: <202503050303.crvJp4va-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 8/8] arm64: dts: rockchip: Enable SD-card interface on
- Radxa E20C
-To: Yao Zi <ziyao@disroot.org>, Chukun Pan <amadeus@jmu.edu.cn>
-Cc: conor+dt@kernel.org, cristian.ciocaltea@collabora.com,
- detlev.casanova@collabora.com, devicetree@vger.kernel.org,
- frank.wang@rock-chips.com, heiko@sntech.de, krzk+dt@kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org,
- linux-rockchip@lists.infradead.org
-References: <20250301104835.36439-1-ziyao@disroot.org>
- <20250304121036.1453284-1-amadeus@jmu.edu.cn> <Z8dZWYpABghRHHge@pie.lan>
-Content-Language: en-US
-From: Jonas Karlman <jonas@kwiboo.se>
-In-Reply-To: <Z8dZWYpABghRHHge@pie.lan>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
-Hi Yao Zi,
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git locking/core
+branch HEAD: 21a889e8a41ebc45deca87e73b825064a7ccc3c5  Merge tag 'lockdep-for-tip.2025.02.25' of git://git.kernel.org/pub/scm/linux/kernel/git/boqun/linux into locking/core
 
-On 2025-03-04 20:49, Yao Zi wrote:
-> On Tue, Mar 04, 2025 at 08:10:36PM +0800, Chukun Pan wrote:
->> Hi,
->>
->>> +	aliases {
->>> +		mmc0 = &sdmmc;
->>
->> s/mmc0/mmc1
-> 
-> Will take it and add the missing pinctrl, as Jonas already pointed out.
-> 
->>> +&sdmmc {
->>> +	bus-width = <4>;
->>> +	cap-mmc-highspeed;
->>> +	cap-sd-highspeed;
->>
->> I think for sdcard, only cap-sd-highspeed
->> is needed, not cap-mmc-highspeed?
-> 
-> This makes sense, will remove it in the next version.
+elapsed time: 1451m
 
-Please do not remove the cap-mmc-highspeed prop, I tested the controller
-with a microSD to eMMC adapter and MMC HS speed is supported:
+configs tested: 101
+configs skipped: 4
 
-  mmc1: card 59b4 removed
-  mmc_host mmc1: Bus speed (slot 0) = 400000Hz (slot req 400000Hz, actual 400000HZ div = 0)
-  mmc_host mmc1: Bus speed (slot 0) = 49800000Hz (slot req 52000000Hz, actual 49800000HZ div = 0)
-  mmc1: new high speed MMC card at address 0001
-  mmcblk1: mmc1:0001 DG4008 7.28 GiB
-   mmcblk1: p1 p2
-  mmcblk1boot0: mmc1:0001 DG4008 4.00 MiB
-  mmcblk1boot1: mmc1:0001 DG4008 4.00 MiB
-  mmcblk1rpmb: mmc1:0001 DG4008 4.00 MiB, chardev (499:0)
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-  ~ # cat /sys/kernel/debug/mmc1/ios
-  clock:          52000000 Hz
-  vdd:            21 (3.3 ~ 3.4 V)
-  bus mode:       2 (push-pull)
-  chip select:    0 (don't care)
-  power mode:     2 (on)
-  bus width:      2 (4 bits)
-  timing spec:    1 (mmc high-speed)
-  signal voltage: 0 (3.30 V)
-  driver type:    0 (driver type B)
+tested configs:
+alpha                             allnoconfig    gcc-14.2.0
+alpha                            allyesconfig    gcc-14.2.0
+arc                              allmodconfig    gcc-13.2.0
+arc                               allnoconfig    gcc-13.2.0
+arc                              allyesconfig    gcc-13.2.0
+arc                   randconfig-001-20250304    gcc-13.2.0
+arc                   randconfig-002-20250304    gcc-13.2.0
+arm                              allmodconfig    gcc-14.2.0
+arm                               allnoconfig    clang-17
+arm                              allyesconfig    gcc-14.2.0
+arm                   randconfig-001-20250304    clang-21
+arm                   randconfig-002-20250304    gcc-14.2.0
+arm                   randconfig-003-20250304    clang-21
+arm                   randconfig-004-20250304    gcc-14.2.0
+arm64                            allmodconfig    clang-18
+arm64                             allnoconfig    gcc-14.2.0
+arm64                 randconfig-001-20250304    clang-21
+arm64                 randconfig-002-20250304    gcc-14.2.0
+arm64                 randconfig-003-20250304    gcc-14.2.0
+arm64                 randconfig-004-20250304    gcc-14.2.0
+csky                              allnoconfig    gcc-14.2.0
+csky                  randconfig-001-20250304    gcc-14.2.0
+csky                  randconfig-002-20250304    gcc-14.2.0
+hexagon                          allmodconfig    clang-21
+hexagon                           allnoconfig    clang-21
+hexagon                          allyesconfig    clang-18
+hexagon               randconfig-001-20250304    clang-21
+hexagon               randconfig-002-20250304    clang-21
+i386                             allmodconfig    gcc-12
+i386                              allnoconfig    gcc-12
+i386                             allyesconfig    gcc-12
+i386        buildonly-randconfig-001-20250304    clang-19
+i386        buildonly-randconfig-002-20250304    clang-19
+i386        buildonly-randconfig-003-20250304    gcc-12
+i386        buildonly-randconfig-004-20250304    gcc-11
+i386        buildonly-randconfig-005-20250304    gcc-11
+i386        buildonly-randconfig-006-20250304    gcc-12
+i386                                defconfig    clang-19
+loongarch                         allnoconfig    gcc-14.2.0
+loongarch             randconfig-001-20250304    gcc-14.2.0
+loongarch             randconfig-002-20250304    gcc-14.2.0
+m68k                             allmodconfig    gcc-14.2.0
+m68k                              allnoconfig    gcc-14.2.0
+m68k                             allyesconfig    gcc-14.2.0
+microblaze                        allnoconfig    gcc-14.2.0
+mips                              allnoconfig    gcc-14.2.0
+nios2                             allnoconfig    gcc-14.2.0
+nios2                 randconfig-001-20250304    gcc-14.2.0
+nios2                 randconfig-002-20250304    gcc-14.2.0
+openrisc                          allnoconfig    gcc-14.2.0
+openrisc                         allyesconfig    gcc-14.2.0
+openrisc                            defconfig    gcc-14.2.0
+parisc                           allmodconfig    gcc-14.2.0
+parisc                            allnoconfig    gcc-14.2.0
+parisc                           allyesconfig    gcc-14.2.0
+parisc                              defconfig    gcc-14.2.0
+parisc                randconfig-001-20250304    gcc-14.2.0
+parisc                randconfig-002-20250304    gcc-14.2.0
+powerpc                           allnoconfig    gcc-14.2.0
+powerpc               randconfig-001-20250304    gcc-14.2.0
+powerpc               randconfig-002-20250304    gcc-14.2.0
+powerpc               randconfig-003-20250304    clang-21
+powerpc64             randconfig-001-20250304    gcc-14.2.0
+powerpc64             randconfig-002-20250304    gcc-14.2.0
+powerpc64             randconfig-003-20250304    clang-21
+riscv                             allnoconfig    gcc-14.2.0
+riscv                 randconfig-001-20250304    gcc-14.2.0
+riscv                 randconfig-002-20250304    gcc-14.2.0
+s390                             allmodconfig    clang-19
+s390                              allnoconfig    clang-15
+s390                             allyesconfig    gcc-14.2.0
+s390                  randconfig-001-20250304    clang-15
+s390                  randconfig-002-20250304    clang-15
+sh                               allmodconfig    gcc-14.2.0
+sh                                allnoconfig    gcc-14.2.0
+sh                               allyesconfig    gcc-14.2.0
+sh                    randconfig-001-20250304    gcc-14.2.0
+sh                    randconfig-002-20250304    gcc-14.2.0
+sparc                            allmodconfig    gcc-14.2.0
+sparc                             allnoconfig    gcc-14.2.0
+sparc                 randconfig-001-20250304    gcc-14.2.0
+sparc                 randconfig-002-20250304    gcc-14.2.0
+sparc64               randconfig-001-20250304    gcc-14.2.0
+sparc64               randconfig-002-20250304    gcc-14.2.0
+um                               allmodconfig    clang-21
+um                                allnoconfig    clang-18
+um                               allyesconfig    gcc-12
+um                    randconfig-001-20250304    gcc-12
+um                    randconfig-002-20250304    gcc-12
+x86_64                            allnoconfig    clang-19
+x86_64                           allyesconfig    clang-19
+x86_64      buildonly-randconfig-001-20250304    clang-19
+x86_64      buildonly-randconfig-002-20250304    gcc-12
+x86_64      buildonly-randconfig-003-20250304    gcc-12
+x86_64      buildonly-randconfig-004-20250304    gcc-12
+x86_64      buildonly-randconfig-005-20250304    gcc-12
+x86_64      buildonly-randconfig-006-20250304    gcc-12
+x86_64                              defconfig    gcc-11
+xtensa                            allnoconfig    gcc-14.2.0
+xtensa                randconfig-001-20250304    gcc-14.2.0
+xtensa                randconfig-002-20250304    gcc-14.2.0
 
-Regards,
-Jonas
-
-> 
->>> +	disable-wp;
->>
->> Missing pinctrl.
->>
->>> +	rockchip,default-sample-phase = <90>;
->>
->> It seems that all rk3528 devices need to set this
->> default phase, so maybe this can be placed in dtsi?
-> 
-> Yes, since the tuned phase offset is a SoC-specific value, as pointed
-> out by comment in the driver,
-> 
-> 	this is _not_ a value that is dynamically tuned and is also
-> 	_not_ a value that will vary from board to board.  It is a value
-> 	that could vary between different SoC models.
-> 
-> Will take it in the next version, thanks for finding it!
-> 
->>> +	sd-uhs-sdr104;
->>
->> The rk3528 devices uses gpio to switch IO voltage, maybe
->> more modes should be added here like vendor kernel?
-> 
-> I cannot get the relationship between things you mentioned. For the
-> regulator, yes, here vqmmc-supply is missing, as already pointed out by
-> Jonas.
-> 
->> And these devices use 3.3V IO voltage by default.
->>
->> 	sd-uhs-sdr12;
->> 	sd-uhs-sdr25;
->> 	sd-uhs-sdr50;
->> 	sd-uhs-sdr104;
-> 
-> But I don't think it's necessary to lay out these slower modes
-> explicitly, since SDR104 seems to imply them, see
-> sd_update_bus_speed_mode() in drivers/mmc/core/sd.c[1],
-> 
->         if ((card->host->caps & MMC_CAP_UHS_SDR104) &&
->             (card->sw_caps.sd3_bus_mode & SD_MODE_UHS_SDR104)) {
->                         card->sd_bus_speed = UHS_SDR104_BUS_SPEED;
->         } else if ((card->host->caps & MMC_CAP_UHS_DDR50) &&
->                    (card->sw_caps.sd3_bus_mode & SD_MODE_UHS_DDR50)) {
->                         card->sd_bus_speed = UHS_DDR50_BUS_SPEED;
->         } else if ((card->host->caps & (MMC_CAP_UHS_SDR104 |
->                     MMC_CAP_UHS_SDR50)) && (card->sw_caps.sd3_bus_mode &
->                     SD_MODE_UHS_SDR50)) {
->                         card->sd_bus_speed = UHS_SDR50_BUS_SPEED;
->         } else if ((card->host->caps & (MMC_CAP_UHS_SDR104 |
->                     MMC_CAP_UHS_SDR50 | MMC_CAP_UHS_SDR25)) &&
->                    (card->sw_caps.sd3_bus_mode & SD_MODE_UHS_SDR25)) {
->                         card->sd_bus_speed = UHS_SDR25_BUS_SPEED;
->         } else if ((card->host->caps & (MMC_CAP_UHS_SDR104 |
->                     MMC_CAP_UHS_SDR50 | MMC_CAP_UHS_SDR25 |
->                     MMC_CAP_UHS_SDR12)) && (card->sw_caps.sd3_bus_mode &
->                     SD_MODE_UHS_SDR12)) {
->                         card->sd_bus_speed = UHS_SDR12_BUS_SPEED;
->         }
-> 
->> Thanks,
->> Chukun
->>
->> -- 
->> 2.25.1
->>
-> 
-> Regards,
-> Yao Zi
-> 
-> [1]: https://elixir.bootlin.com/linux/v6.13.5/source/drivers/mmc/core/sd.c#L448-L479
-
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
