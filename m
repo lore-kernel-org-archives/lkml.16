@@ -1,44 +1,44 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8683C201035
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 08:53:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EA2120298B
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 08:53:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741078415; cv=none; b=PvJgKjLTBcfVtoURJE4qtQ/9zlNXjKrmUCRkHqH+ngR3UQYCJ4FeGdZVHQhBhauEfMC+y7gME61z2SfmNSon6NAxA5W8gTwMMkT1zwilWYtJMxA++JHclHRtpZhh3dKMWvQ0wH7rUhQgtRlQ7vUAylGq7UGsks1/XatK0oMo+po=
+	t=1741078421; cv=none; b=fHYr+jjw7kaMDxbmT00zNG1PoahZL6DLB4Gns5iVOwUMNqQ31DQ/wE3G33tYmDF85ZpVed9zPRZLWtkOKX/CINZYmTtHtG/zBbXf8l7H9YxQfKI6L+BWanqbJF7GSWlW46QEW1eyR1gluN7pMI1MGWvSwRX/BC8Xc2zE+rd+spg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741078415; c=relaxed/simple;
-	bh=xfuli/6Bk10AYSMF8dE3nvNxHUUUcl16U1XYIU9Ak9k=;
+	s=arc-20240116; t=1741078421; c=relaxed/simple;
+	bh=lsxhQurcmM196BSH+oL0A4Qd/q/w2Y/kWtlldc1NdRQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=qFiOU4fwUE682jqMxILlRjmpsMSek3JDSI4p63kA2X42Q+lxwMcvFf1/iv8mHoWEJ61V3NyclowgzzNhJ39Te0r041U7xjdKn+JtN8SVhrdR2O+hVr5bVfl3fTj5x4dGD/l4w4sY7aqSFBg7fx09GuFFt8doEUo7mJ04f5fkeP0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=SKgQ6yWz; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=F/01IoSI; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=Lut/Y2xk93bwaa8jP2dtwhSnY0wAOpR5Fh7pV2exbiSeIX1ah1XI+/IjCjzVyLvyiSQciROPSt6yDDwSRYTOp9VvmTBBHwp+z6t3aE4C2DNO4Pon8TenGspRvmLAKhP9AwJl0o7FhXKV27GohTcHGT0/jMorlXAoI8a2nIVtPOw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=4BvT2ZQd; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ELXvKaq8; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="SKgQ6yWz";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="F/01IoSI"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="4BvT2ZQd";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ELXvKaq8"
 From: "Ahmed S. Darwish" <darwi@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1741078412;
+	s=2020; t=1741078418;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=ErUogKnyYbOrLN500X12sFjQxofXjma3yuw+5jvrHP8=;
-	b=SKgQ6yWzJnXAITRXZ5hkbQ1Kq745/NFuNAVmh/AGdVoWqYqlnDKNbn4R6uhO/zIaG1FtUH
-	G8AGV8q+gweSiAQhzTyyxWHm2NB9QFHOmElQu8XT5w9HES6cRCpuWdxD8eKacaYaZqB13n
-	qqQEgDxGwxv4WCooad3A4Xy+9S0L6REYzeOTetzITDeYDs8ZO03vwHS+yMCcROzCluMesG
-	INtCtCNrX2P8yTbJ1h5aQPWBgvDIH+80JTEjD8bZ++OmWpoqaUjDD173aaKwLNGTeYRlMa
-	WoaJM5Usmfn6nyymtA/UcR+W2WdGe9sZu7be7nrJNv+nwf/mIWtvkZuyUqdpcg==
+	bh=PyaqtxIU8m3/v0+B5MpQxFjLCTwaJUXCAgCjkjGIBQA=;
+	b=4BvT2ZQd2KaFEG7/j9csj17Alf0lhmx2odBQSwdFeK9hawBS6P5gjI9I9ShDY8OqgnSSY5
+	vWzk+CvQzRJPEKjXeLPBK8uGF5j3dW2tR6dUMXx/1SmE5i6RnOPgrwAiwrUdokohGhkruD
+	tfGSoe7+9YOpLxlRdnXqpruJAhWYyHdtuzh7a+ZC6T5tH06EtDBG44sGIATY5OhY5IeDyN
+	Jv0+/urrJLVk4MmVUGYxAlTXUGGKpNASGQGhNE5W3VrvDBaD3f3817uetXF7B/7WCZqr3Y
+	IURLNFeKzRJqS+jkUoe+Dafy7urnwlV+QIOSMwUXZz1C6hIx5P49fA6bNTE2oA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1741078412;
+	s=2020e; t=1741078418;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=ErUogKnyYbOrLN500X12sFjQxofXjma3yuw+5jvrHP8=;
-	b=F/01IoSIH1XiN02Rr7sqGN9XDD6blIlsTbIfWHKlC8NrVWVeRr9SedilrUOHyOmuLbtdKt
-	K5CAhWaq073u3/Aw==
+	bh=PyaqtxIU8m3/v0+B5MpQxFjLCTwaJUXCAgCjkjGIBQA=;
+	b=ELXvKaq8NQK7kDQF5xX5aub9QbzKZcGzVntck5qec7Q9LUVmDVT4NDshL729mCp5gHHJdB
+	NKDnjivtKPkLV7CQ==
 To: Borislav Petkov <bp@alien8.de>,
 	Ingo Molnar <mingo@redhat.com>,
 	Dave Hansen <dave.hansen@linux.intel.com>
@@ -50,9 +50,9 @@ Cc: Thomas Gleixner <tglx@linutronix.de>,
 	x86-cpuid@lists.linux.dev,
 	LKML <linux-kernel@vger.kernel.org>,
 	"Ahmed S. Darwish" <darwi@linutronix.de>
-Subject: [PATCH v1 26/40] x86/cacheinfo: Rename _cpuid4_info_regs to _cpuid4_info
-Date: Tue,  4 Mar 2025 09:51:37 +0100
-Message-ID: <20250304085152.51092-27-darwi@linutronix.de>
+Subject: [PATCH v1 28/40] x86/cacheinfo: Use enums for cache descriptor types
+Date: Tue,  4 Mar 2025 09:51:39 +0100
+Message-ID: <20250304085152.51092-29-darwi@linutronix.de>
 In-Reply-To: <20250304085152.51092-1-darwi@linutronix.de>
 References: <20250304085152.51092-1-darwi@linutronix.de>
 Precedence: bulk
@@ -63,130 +63,91 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Parent commits decoupled amd_northbridge from _cpuid4_info_regs, moved
-AMD L3 northbridge cache_disable_0/1 sysfs code to its own file, and
-splitted AMD vs. Intel leaf 0x4 handling into:
+The leaf 0x2 one-byte cache descriptor types:
 
-    amd_fill_cpuid4_info()
-    intel_fill_cpuid4_info()
-    fill_cpuid4_info()
+	CACHE_L1_INST
+	CACHE_L1_DATA
+	CACHE_L2
+	CACHE_L3
 
-After doing all that, the "_cpuid4_info_regs" name becomes a mouthful.
-It is also not totally accurate, as the structure holds cpuid4 derived
-information like cache node ID and size -- not just regs.
+are just discriminators to be used within the cache_table[] mapping.
+Their specific values are irrelevant.
 
-Rename struct _cpuid4_info_regs to _cpuid4_info.  That new name also
-better matches the AMD/Intel leaf 0x4 functions mentioned above.
+Use enums for such types.
+
+Make the enum packed and static assert that its values remain within a
+single byte so that the cache_table[] array size do not go out of hand.
 
 Signed-off-by: Ahmed S. Darwish <darwi@linutronix.de>
 ---
- arch/x86/kernel/cpu/cacheinfo.c | 22 +++++++++++-----------
- 1 file changed, 11 insertions(+), 11 deletions(-)
+ arch/x86/include/asm/cpuid/types.h | 14 ++++++++++++++
+ arch/x86/kernel/cpu/cacheinfo.c    |  9 ++-------
+ 2 files changed, 16 insertions(+), 7 deletions(-)
 
+diff --git a/arch/x86/include/asm/cpuid/types.h b/arch/x86/include/asm/cpuid/types.h
+index 50f6046a57b9..0051d8c2b9ee 100644
+--- a/arch/x86/include/asm/cpuid/types.h
++++ b/arch/x86/include/asm/cpuid/types.h
+@@ -2,6 +2,8 @@
+ #ifndef _ASM_X86_CPUID_TYPES_H
+ #define _ASM_X86_CPUID_TYPES_H
+ 
++#include <linux/build_bug.h>
++#include <linux/compiler_attributes.h>
+ #include <linux/types.h>
+ 
+ #include <asm/cpuid.h>
+@@ -76,4 +78,16 @@ static inline void get_leaf_0x2_regs(union leaf_0x2_regs *regs)
+ 	/* Skip the first byte as it is not a descriptor */		\
+ 	for (desc = &(regs).desc[1]; desc < &(regs).desc[16]; desc++)
+ 
++/*
++ * Leaf 0x2 1-byte descriptors' cache types
++ * To be used for their mappings at cache_table[]
++ */
++enum _cache_table_type {
++	CACHE_L1_INST,
++	CACHE_L1_DATA,
++	CACHE_L2,
++	CACHE_L3,
++} __packed;
++static_assert(sizeof(enum _cache_table_type) == 1);
++
+ #endif /* _ASM_X86_CPUID_TYPES_H */
 diff --git a/arch/x86/kernel/cpu/cacheinfo.c b/arch/x86/kernel/cpu/cacheinfo.c
-index cc320817cfc3..2d4180b961f4 100644
+index 9e87321466fe..a7fccbab268d 100644
 --- a/arch/x86/kernel/cpu/cacheinfo.c
 +++ b/arch/x86/kernel/cpu/cacheinfo.c
-@@ -159,7 +159,7 @@ union _cpuid4_leaf_ecx {
- 	u32 full;
+@@ -23,11 +23,6 @@
+ 
+ #include "cpu.h"
+ 
+-#define CACHE_L1_INST	1
+-#define CACHE_L1_DATA	2
+-#define CACHE_L2	3
+-#define CACHE_L3	4
+-
+ /* Shared last level cache maps */
+ DEFINE_PER_CPU_READ_MOSTLY(cpumask_var_t, cpu_llc_shared_map);
+ 
+@@ -41,7 +36,7 @@ unsigned int memory_caching_control __ro_after_init;
+ 
+ struct _cache_table {
+ 	unsigned char descriptor;
+-	char cache_type;
++	enum _cache_table_type type;
+ 	short size;
  };
  
--struct _cpuid4_info_regs {
-+struct _cpuid4_info {
- 	union _cpuid4_leaf_eax eax;
- 	union _cpuid4_leaf_ebx ebx;
- 	union _cpuid4_leaf_ecx ecx;
-@@ -295,7 +295,7 @@ static void legacy_amd_cpuid4(int index, union _cpuid4_leaf_eax *eax,
- 		(ebx->split.ways_of_associativity + 1) - 1;
- }
+@@ -517,7 +512,7 @@ void init_intel_cacheinfo(struct cpuinfo_x86 *c)
+ 			if (!entry)
+ 				continue;
  
--static int cpuid4_info_fill_done(struct _cpuid4_info_regs *id4, union _cpuid4_leaf_eax eax,
-+static int cpuid4_info_fill_done(struct _cpuid4_info *id4, union _cpuid4_leaf_eax eax,
- 				 union _cpuid4_leaf_ebx ebx, union _cpuid4_leaf_ecx ecx)
- {
- 	if (eax.split.type == CTYPE_NULL)
-@@ -312,7 +312,7 @@ static int cpuid4_info_fill_done(struct _cpuid4_info_regs *id4, union _cpuid4_le
- 	return 0;
- }
- 
--static int amd_fill_cpuid4_info(int index, struct _cpuid4_info_regs *id4)
-+static int amd_fill_cpuid4_info(int index, struct _cpuid4_info *id4)
- {
- 	union _cpuid4_leaf_eax eax;
- 	union _cpuid4_leaf_ebx ebx;
-@@ -327,7 +327,7 @@ static int amd_fill_cpuid4_info(int index, struct _cpuid4_info_regs *id4)
- 	return cpuid4_info_fill_done(id4, eax, ebx, ecx);
- }
- 
--static int intel_fill_cpuid4_info(int index, struct _cpuid4_info_regs *id4)
-+static int intel_fill_cpuid4_info(int index, struct _cpuid4_info *id4)
- {
- 	union _cpuid4_leaf_eax eax;
- 	union _cpuid4_leaf_ebx ebx;
-@@ -339,7 +339,7 @@ static int intel_fill_cpuid4_info(int index, struct _cpuid4_info_regs *id4)
- 	return cpuid4_info_fill_done(id4, eax, ebx, ecx);
- }
- 
--static int fill_cpuid4_info(int index, struct _cpuid4_info_regs *id4)
-+static int fill_cpuid4_info(int index, struct _cpuid4_info *id4)
- {
- 	return x86_vendor_amd_or_hygon(boot_cpu_data.x86_vendor) ?
- 		amd_fill_cpuid4_info(index, id4) :
-@@ -473,7 +473,7 @@ void init_intel_cacheinfo(struct cpuinfo_x86 *c)
- 		 * parameters cpuid leaf to find the cache details
- 		 */
- 		for (i = 0; i < ci->num_leaves; i++) {
--			struct _cpuid4_info_regs id4 = {};
-+			struct _cpuid4_info id4 = {};
- 			int retval;
- 
- 			retval = intel_fill_cpuid4_info(i, &id4);
-@@ -560,7 +560,7 @@ void init_intel_cacheinfo(struct cpuinfo_x86 *c)
- }
- 
- static int __cache_amd_cpumap_setup(unsigned int cpu, int index,
--				    const struct _cpuid4_info_regs *id4)
-+				    const struct _cpuid4_info *id4)
- {
- 	struct cpu_cacheinfo *this_cpu_ci;
- 	struct cacheinfo *ci;
-@@ -617,7 +617,7 @@ static int __cache_amd_cpumap_setup(unsigned int cpu, int index,
- }
- 
- static void __cache_cpumap_setup(unsigned int cpu, int index,
--				 const struct _cpuid4_info_regs *id4)
-+				 const struct _cpuid4_info *id4)
- {
- 	struct cpu_cacheinfo *this_cpu_ci = get_cpu_cacheinfo(cpu);
- 	struct cacheinfo *ci, *sibling_ci;
-@@ -650,7 +650,7 @@ static void __cache_cpumap_setup(unsigned int cpu, int index,
- 		}
- }
- 
--static void ci_info_init(struct cacheinfo *ci, const struct _cpuid4_info_regs *id4,
-+static void ci_info_init(struct cacheinfo *ci, const struct _cpuid4_info *id4,
- 			 struct amd_northbridge *nb)
- {
- 	ci->id				= id4->id;
-@@ -681,7 +681,7 @@ int init_cache_level(unsigned int cpu)
-  * ECX as cache index. Then right shift apicid by the number's order to get
-  * cache id for this cache node.
-  */
--static void get_cache_id(int cpu, struct _cpuid4_info_regs *id4)
-+static void get_cache_id(int cpu, struct _cpuid4_info *id4)
- {
- 	struct cpuinfo_x86 *c = &cpu_data(cpu);
- 	unsigned long num_threads_sharing;
-@@ -696,8 +696,8 @@ int populate_cache_leaves(unsigned int cpu)
- {
- 	struct cpu_cacheinfo *this_cpu_ci = get_cpu_cacheinfo(cpu);
- 	struct cacheinfo *ci = this_cpu_ci->info_list;
--	struct _cpuid4_info_regs id4 = {};
- 	struct amd_northbridge *nb = NULL;
-+	struct _cpuid4_info id4 = {};
- 	int idx, ret;
- 
- 	for (idx = 0; idx < this_cpu_ci->num_leaves; idx++) {
+-			switch (entry->cache_type) {
++			switch (entry->type) {
+ 			case CACHE_L1_INST:	l1i += entry->size; break;
+ 			case CACHE_L1_DATA:	l1d += entry->size; break;
+ 			case CACHE_L2:		l2  += entry->size; break;
 -- 
 2.48.1
 
