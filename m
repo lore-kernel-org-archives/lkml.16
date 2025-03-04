@@ -1,172 +1,86 @@
-Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EB9E1FCCF9;
-	Tue,  4 Mar 2025 09:38:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 052C91F4CB0;
+	Tue,  4 Mar 2025 09:38:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741081085; cv=none; b=ffU7H35Xxh4hLQ8miQ/qmKK7DOTj0eOund5ZoidXIzdjD2Xy7AJxtsntSsdJsNOeqVdH8d5NZIZFOpfYDHAop7HMMZzDNnvZwp3eSQLQ8UUpe4/JaEFdyO8zjsqojvbe0qdNuJKNkNxRilbNKuDkrU/SPlE1Y+nMoTru+LbpPH0=
+	t=1741081126; cv=none; b=ldAuKV6qXu0B+pFdjMQCdtuRnMTdI49xR7VyNU+i1yUIaYgp6j/cDbtiHCaUoQ/Dz3ZlEsIsu43l1Tcg7PIzBiYhimnx5BhuVuq4wzkhSTT3/l/YooQUUnhlZ1yVjLvYNVxYCtXMRZ/XUCIfhzXF0b2gHHZeZp82kIyNVHR3hh8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741081085; c=relaxed/simple;
-	bh=LZDM2xAdf8eJxQzX+hEwCpxB5UmW0nbXtrqKHsDEjI4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PLimxkvVMCGbQZMn2k3o2D563EjAUZ6cXoWfiw05pLDa8nrxlh2ktFgFWOfU2DfiUa1h2V3t0Hg2p1O/VC5pS2z3ok6WG2Pms2YGfMi90/+mQ5MMj7EQJIK+anPqMH0qGOkKRWkAEgGjsqKhGXO753hHQ2w7jyhFd719gTq8HhE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Mv2yid4H; arc=none smtp.client-ip=209.85.216.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741081126; c=relaxed/simple;
+	bh=DxC5NX0qWkhP9h80/Tv+PBiCLpLWGT+XhaKhTj0h8l4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VnmIEq8c0kfTX2/yqeW5N8bQmjbKLwdU0OIMcVQzBlTf92A5azDz07l1Uq4IqMzayFNPjCeQR1fi5+vrYW3buv3Oy+caSfMvLTAdA2nHfVEt3VFDKSbAIKdEvgWCcORpBvQDOHfRoqAo91SWjJcC7R6gQo5Ozt9pEvnRyZFQzLw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hqk66UaT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mv2yid4H"
-Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-2f74e6c6cbcso1570583a91.2;
-        Tue, 04 Mar 2025 01:38:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741081083; x=1741685883; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fw0u9DHNsaXRy0ckcD1EnqQyVRFqJOyZfyZRJh2W6bE=;
-        b=Mv2yid4HwoxYK2vC+6fcq4KMWlBai00eRgIqYrjOzmQZvdAVvDGC0A1viz/SpqTCIx
-         Zq78rNXS0nrzwkBYu61rJ9yaO8KC7BnVd83igWmR6tYxJgYGFr/cNLC66SHIGeWIEmUJ
-         Nc5IfRGZVUesEFH90L9/uOJ0gauIkJAG4XjJwrcw2LRYaKWngXr+Ul0oEL134vr+eqxP
-         /EN94OBHrZRLmgGZCFAALmSFBqoe6bXsgDgS++E5OfxOP2UWosTpF2O30nx+BdfZDApg
-         rDzXfWukPGk2gDxkVBzBJ5ldINeFyNTCKUOiC0Zt57meDA/Y79nSPSEhSsiEA4/sCc8J
-         Zh5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741081083; x=1741685883;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=fw0u9DHNsaXRy0ckcD1EnqQyVRFqJOyZfyZRJh2W6bE=;
-        b=vnQUBUB5B3oYJLCqVfSY+AzbxrVwPcciPTNm+7YYJ4rUSo2inIUk1zXo5BNlJQOAM7
-         fJiAY8w/155m/FB5NkyxDbWJVCZTbn+WnGp/hcrbY6cL+jQafmK/65U2gBbBu7oRE/GP
-         kTYfJgNlCe4206UnBOCUGxwCazmtkGtLlCc6D52uWDBAlFVplQogp6s0xZDWMTYjN4Ee
-         uxKmmx4l25t/RPCDTsgq2M4AikCHS6UfjOhKMS6j+z7aWK64JFhxFfGvnmSdNRrSMAZw
-         c2zxwOksUZ99gXLVUDetuTYR1CB9W606iFLOBM1H2gY59bYClsQ67gv3kP5yq3C33Pm0
-         MKFQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUuhItoBnlKbSa8nu2HqE7bAEa3t2bucx2Jev9hyEBAhoUaEAnLBNCrWduwXFJ6TaYyEwV7mzQ0F/cBnT7KCg8=@vger.kernel.org, AJvYcCWohkwoH7ONe9LnlAOWqmdVrXcY+kEaACfoo1wQVgAZy0Zr5rstmqf7RrjCV44fyX/mqfcb5hUcN4E=@vger.kernel.org, AJvYcCXKikmF2KOQRsHT90uicHhf7JEiUfjGRegmqWvgUPowzQmRq1WmQknrsl9kKWABdC5mmWlHbgm8UfBJ0ghj@vger.kernel.org
-X-Gm-Message-State: AOJu0YxDkDwifJYcojxUVPY5J3+CKbpTFJmrpknPyRodOC3eW8KJSJpt
-	7DdlN5wiCNjYOk6UCRTGfwqfVsvJEdflJLPIRnmwFSpLZx0QLwmqFO51Fkmexy9AQ90xlVDOIZk
-	C8WUWI4ozgKPdEb2BZbbA3ItEhOE=
-X-Gm-Gg: ASbGncuoXmiwUyp3R0L+YmODvgyjlzbU0F9dXdRWi71hqrY8+1NS+UlQBX3OMW1k4ul
-	9h2cuE2Zx6cPG+zr/ftjMJc2TkjTY3F7cZmdmeDaFCF8Pd8xWFA2Pr/rst4HW3gBye1MBq1GWxl
-	BF1EPMnw8MB/4YcSjSLCFkV3jsHQ==
-X-Google-Smtp-Source: AGHT+IH7Bt4TfFrukBmJaN9iZdzw8qUaCn0ZZrPGUaEOJ6zpYbPCR7KXCMN07QqTGVg/55EKEonT4z00pMvEFKFCBvI=
-X-Received: by 2002:a17:90b:2251:b0:2fb:f9de:9497 with SMTP id
- 98e67ed59e1d1-2febabf4096mr10283180a91.5.1741081083151; Tue, 04 Mar 2025
- 01:38:03 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hqk66UaT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C77CAC4CEE5;
+	Tue,  4 Mar 2025 09:38:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741081125;
+	bh=DxC5NX0qWkhP9h80/Tv+PBiCLpLWGT+XhaKhTj0h8l4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Hqk66UaTNES3O1K1u8NheKtEMELgpbdbSqTktxWl5WVd1MOcLOxp49iaGxv2DOs2Q
+	 rQ8TgasbILnevTrX+UN3YX+nNDy5OSERpRBtvU/x2nhwc+jBfWbXu3UYM7tLj08CIL
+	 tgjbDccILQ+3ZMTRlAOV4N4LdE4nrX8ORvcfJWWc+tDMcjRCBpXdZRJoQjf8QnLOr6
+	 Nykl6ixKY9WX/xQhWdkPuo7nGkRxlVz2ZF+9g4CSxozlwYujJvanJbWkxdqbSQ2uia
+	 C6uqmyY/qU25vfJqi5Pie05nYcug8YlkdR7qpf43mYvZyeMrKU7FCA6qy2VTZiqpVK
+	 fTBhlnEve09cQ==
+Date: Tue, 4 Mar 2025 10:38:25 +0100
+From: Ingo Molnar <mingo@kernel.org>
+To: "Ahmed S. Darwish" <darwi@linutronix.de>
+Cc: Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	John Ogness <john.ogness@linutronix.de>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Andrew Cooper <andrew.cooper3@citrix.com>, x86@kernel.org,
+	x86-cpuid@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1 00/40] x86: Leaf 0x2 and leaf 0x4 refactorings
+Message-ID: <Z8bKEaEWAbE4F1gk@gmail.com>
+References: <20250304085152.51092-1-darwi@linutronix.de>
+ <Z8bFnGSxmNSFQDSQ@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1740995194.git.viresh.kumar@linaro.org> <023e3061cc164087b9079a9f6cb7e9fbf286794e.1740995194.git.viresh.kumar@linaro.org>
- <CANiq72kdWzFOZ39EoFNxEAbk4KYgzLi1OAEc1zn8BM07VpXy3g@mail.gmail.com> <20250304085351.inrvjgixvxla4yn3@vireshk-i7>
-In-Reply-To: <20250304085351.inrvjgixvxla4yn3@vireshk-i7>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Tue, 4 Mar 2025 10:37:50 +0100
-X-Gm-Features: AQ5f1JophVTgEU33y5Gpj9LnEQeCoGu_PJHR12L4h3Bfq4OIOIBgLsVVTzFMGiA
-Message-ID: <CANiq72=sU1sHvamC5REFPEC1aOVdZw9EKdxOgkUYESTR2yh3iQ@mail.gmail.com>
-Subject: Re: [PATCH V3 2/2] rust: Add initial clk abstractions
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Russell King <linux@armlinux.org.uk>, linux-clk@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
-	Vincent Guittot <vincent.guittot@linaro.org>, Daniel Almeida <daniel.almeida@collabora.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z8bFnGSxmNSFQDSQ@gmail.com>
 
-On Tue, Mar 4, 2025 at 9:53=E2=80=AFAM Viresh Kumar <viresh.kumar@linaro.or=
-g> wrote:
->
-> I have tried some improvements based on your (and Alice's comments), plea=
-se see
-> if it looks any better now.
 
-That looks much, much better, thanks!
+* Ingo Molnar <mingo@kernel.org> wrote:
 
-> +/// Frequency unit.
-> +#[derive(Copy, Clone, PartialEq, Eq, Debug)]
-> +pub struct Hertz(c_ulong);
+> > Summary:
+> > 
+> > - Patches 1 to 3 are independent bugfixes that were discovered during
+> >   this refactoring work.
+> 
+> I've applied these three to tip:x86/urgent. I added Cc: stable to all 3 
+> commits, because while these are old bugs, the first one had Cc: stable 
+> and if we do it for one it's justified for all of them AFAICS. Arguably 
+> our cacheinfo output in procps was inaccurate at times, and possibly 
+> these bugs were part of the problem.
+> 
+> > - Patches 4 to 10 are x86/cpu refactorings for code size and
+> >   readability.
+> 
+> I've applied patches 4 to 9 to tip:x86/cpu (with x86/urgent merged in 
+> due to dependencies and to give a singular topical base branch in the 
+> x86 tree), they look good and obvious. (I added the build fix to 05/40)
+> 
+> I've left 10 to 40 for further review by others too.
 
-Please add a quick example for this one, e.g. constructing it and
-comparing the value with an `assert_eq!` and another line comparing
-two different `Hertz` objects for instance. After all, this one we can
-even run it easily!
+While going through the rest I also picked up these patches as easy 
+preparatory commits in tip:x86/cpu, there was no reason to have them 
+later in the series:
 
-> +/// This structure represents the Rust abstraction for a C [`struct clk`=
-].
+  29517791c478 x86/cacheinfo: Remove the P4 trace leftovers for real
+  d61b5118f719 x86/cacheinfo: Remove unnecessary headers and reorder the rest
+  0d22030c49bf <linux/sizes.h>: Cover all possible x86 CPU cache sizes
 
-Nit: the usual style is e.g.:
+Thanks,
 
-    /// An instance of a PHY device.
-    ///
-    /// Wraps the kernel's [`struct phy_device`].
-
-i.e. the first line does not need to say "This structure" ... "Rust
-abstraction" etc.
-
-> +/// Instances of this type are reference-counted. Calling `get` ensures =
-that the allocation remains
-
-Please use intra-doc links (also for `OptionalClk` etc.).
-
-> +/// ## Example
-
-Nit: plural (even if there is a single example).
-
-> +///     clk.disable_unprepare();
-
-Looking at the example, a question that one may have is: should we
-have something like a scope guard or a closure-passing API for this,
-or does it not make sense in general?
-
-> +    /// Enable the clock.
-> +    #[inline]
-> +    pub fn enable(&self) -> Result {
-
-Should the users of these methods consult the C API side for the
-comments/docs? e.g. should they read
-https://docs.kernel.org/driver-api/clk.html#locking?
-
-If so, please at least provide a link to the C API or the relevant
-docs. e.g. https://docs.kernel.org/core-api/kernel-api.html#c.clk_enable.
-Otherwise, if there is something there that should be mentioned here
-directly, please do so.
-
-In other words, in general, the goal is that you can find everything
-you need in the Rust docs, even if those docs may sometimes rely on a
-link there to the C side or a Doc/ document to avoid duplication. But
-the information or the way to find that information should be there,
-if that makes sense.
-
-> +        // SAFETY: It is safe to call clk APIs of the C code for a clock=
- pointer earlier returned
-> +        // by `clk_get()`.
-
-We should probably say why we know that, i.e. due to the invariant,
-unless I am missing something.
-
-By the way, in the constructor, you should add/use an `// INVARIANT:`
-comment (please grep to see how others do it).
-
-> +///     let expected_rate =3D Hertz::new(1_000_000_000);
-
-Would it be useful for users to have constructors for a few SI
-prefixes, e.g. `Hertz::from_giga`? I see some big constants used for
-e.g. `set_rate` in the C side, so I guess it could.
-
-On top of that, would any other kind of operation make sense? For
-instance, `.inverse()` to/from time or things like that -- we don't
-need to do any of this now, of course, but it may be worth taking a
-minute to investigate how we could improve the type now that we have
-it.
-
-Thanks!
-
-Cheers,
-Miguel
+	Ingo
