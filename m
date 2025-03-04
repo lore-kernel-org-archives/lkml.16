@@ -1,55 +1,55 @@
-Received: from mail-ej1-f73.google.com (mail-ej1-f73.google.com [209.85.218.73])
+Received: from mail-ej1-f74.google.com (mail-ej1-f74.google.com [209.85.218.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 308E9204C11
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 09:26:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54A04204F86
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 09:26:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741080376; cv=none; b=Ywr8qaHdX31QeibYB40U8VhOoVTYuRUQi+BFyQEYEThwM3jSbxuzCiTWQd+3BUgC7Lp5iuD/8Pg6DWXxgNRqx3elVhCwnpPHkxdtj4DZehM3UJBcEO2YaPk2OI6H+KUOAfK3IcQcr3s7l0sUAVkfmoDJpenZc9N47r2AGGXi6iY=
+	t=1741080384; cv=none; b=CmOyuufjIGStyAC5oP8O9In+Uh8fNFbBgXd7xvGs0KREROoRWhsfWivh0F/jdI1QeZlNdJWEGCiTQobx9bfFR5fw4wlAimVnoRMm51nbYhduwWBJ1lIVW8AcvTEDoY/7T+equldOI15RfGdx2Xy1fL4ocG/sT2+rI/3xd/67roY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741080376; c=relaxed/simple;
-	bh=YKRMcCwlVW+JHReTDDNlNbjIiZXrhQG3R+4ieOvF0KY=;
+	s=arc-20240116; t=1741080384; c=relaxed/simple;
+	bh=RHFHyf594SW/59vIAAifexB1oy6CG72gKKADr/HTL+M=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=T3NeJY2iCq9/K6Xxqu/VMIel5NtKPxz3BN/sLE7/vjSGk5DM+R8VPYF/1xGFfJtRtdt57qk3vrjW6xO8IrRBphGQvAuG0MFizy/oCQPgWddOPWyXlFkYq0U9eaD3CNCZtmaJN0cFL1j4yfuay7lICG5N8bdcf21hQzFn3c3EFZE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--elver.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=e69+yJMT; arc=none smtp.client-ip=209.85.218.73
+	 To:Cc:Content-Type; b=p8de9r0o2fRYF7t648cEE0DIXC2F/BzMtQpGejPhT8QZ4ik/bybst5T6PDsP4ADx20RAMJbNoQMsNHKaY7zKhMNLlfKWIpfKTHCcKDtDGvYi7cZO+2b6sdFkjPp0lZJI7Ug6+EhACkdpr+CjojyBKtxqQH1tEFENpSpcA8MmQc0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--elver.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ui23uomT; arc=none smtp.client-ip=209.85.218.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--elver.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="e69+yJMT"
-Received: by mail-ej1-f73.google.com with SMTP id a640c23a62f3a-ac1e442740cso150087066b.1
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Mar 2025 01:26:12 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ui23uomT"
+Received: by mail-ej1-f74.google.com with SMTP id a640c23a62f3a-abf597afe1fso324490866b.1
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Mar 2025 01:26:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1741080371; x=1741685171; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1741080380; x=1741685180; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=32n+Ex/JylKzHQ8GbWl/dZFCHmuz4KLt4uCNJiSuT2I=;
-        b=e69+yJMTsBftNyxq5NTkwldT+MukjqNNdZYLD5p1sS6G2sLxxJucl8hXkqZ1BVaYBW
-         UGHV9thnAlU+XstoW0ZPqL5eyQBh+w881qDD8xJ/w/GbZBrNUUllV5nsEwqw9xbpjhqT
-         moeriPQpJACDcjXbEVZ7w3QcEnfg4esQCeEFA4moSBHfdzI5JN5Q/GxtwFI7eaRaL5pW
-         tuWXYHp6Kz5VrkcRq2ZdPhASp9MyZG4zUUgTp7yEmnUmnhjiDbu3DVQ/DnxwFU+8Z+Tx
-         P0EHbDNXcgRHM8gJbH4ecKSn2+yG/JUbR6O4sj8NzURk5ZaMjrAYdrnzxjjlAbirC3fU
-         WvEw==
+        bh=3v8nr6j5ymgBv8KDTOp6L+lQpjYSKF+JE+VajMZf96I=;
+        b=ui23uomTQRH5Irn1upMTy28efjrWGu2blSVGPnYwbbAFgaKq37ur+vsb0CDXlRpIEX
+         WmcpsCaN7OdfPttvp8BEErBMOskMVdXS5TC5EmyuDICf9Fpp7GtB+jQdQMu5q4T9PSjV
+         N8zuZusY7PvKkhciQ9CppnCaO13R9ac6YMiuEPyi+9HZCVN1Vqcfa8HcKwBJ6nU/1zrG
+         7WKxGHPHRAvESx7xFv/YKokGyIIVNxz9i0uz8J9YDQeUal78Y29a+M0heTWo6OSSbsHW
+         FpRuKBND+P8Fm5KkkYazKgmPIUx8ETgEoGeZ8wqX84KNnOUXE4Gu6A4gD7C5migNtEXy
+         eivA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741080371; x=1741685171;
+        d=1e100.net; s=20230601; t=1741080380; x=1741685180;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=32n+Ex/JylKzHQ8GbWl/dZFCHmuz4KLt4uCNJiSuT2I=;
-        b=PEqeIWj+4c6kyUKOH5l0QuaeS7t22AWNjhD8NctFF9udy5sHaunSzALG/EMrwhsoj4
-         njaF3Z73EH3m/loY/817gfzJL6xfJKcwoq4vDFTQN0HvnWF6m/P9WXyIsIMe/UMYDCoO
-         frhkxZe8gkeST7soPE4XYdHp35i8HXPHws6OiiPDY4KvClYadPU3yRZveLu0QeB3Zduz
-         MK4TqES+OqPp9oFjZHFaspvDtt2AS8W/rVUi4JLfE/nZTRcFF14Ko23kSzQl7rqCSP9Z
-         4R1qqxa4gIzajz+Wbbk0EimZUSXOSyWsT+2aPyel181GRiAE6SaGE/Px7H6DRwCYNh9g
-         c3Mw==
-X-Forwarded-Encrypted: i=1; AJvYcCXQtBpaxepSt1KMpzl1bEE4Nnb7HijsNGpg9iQ3OiDiTPzjcm+RgjeDKZF35e19oB+n6fyuDxBA/jZnjSs=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw504eWtts1yUBKRZnudhEYkAiSsneRmGYLYzRd5e+whUZ66ypL
-	+P1iWSbTTujo31/1W0xo2hbuvwXZXurhO8QqJnVmL4jjxONMQtDjHqzMSGxtVB0qbsBQn12WqQ=
+        bh=3v8nr6j5ymgBv8KDTOp6L+lQpjYSKF+JE+VajMZf96I=;
+        b=VgkKnyQb7HQXTBGhL+R/YCIcRekLCB4XoyjCS/OMPF5YaRp6icgTZ/jG7Ibr4lcbXD
+         MzbgXvycJhtiZIaX2wzt0i11zacsfGNed2B51abDaFopKgBoNJitRKLb4ud7LxDum9iC
+         +ZJR5APKOxxr9b1PQD9AVu1UKQGw12R/0dfhanIxOCJJma5e1FKAEAagaAPA00ZTJEHe
+         KIK26Ri1yJec3QxvdAcefGup0TwgGPbYKCwZCXwDjZ/inelLDIfSMDFboJMdaCL5QtbQ
+         n0J73CIhA/fopbyv/uOIiWO09HRNJ3gwP2xaDWf7vx8HFpZDXFNddZDiCftoND8owLFA
+         Zsug==
+X-Forwarded-Encrypted: i=1; AJvYcCWaLmA7WP5bsjWFznkB4vWDj9JOZK99afoHALhKK4GEnhhpdmZjwcb89ERoRkPSDOmihs/cDy2J1opEQj4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxI6uNtnLlDivZjUk1WWlHQt34VAS9h6ELl+aBeQIJlakoyKss6
+	hQ5w+SOy3hJw0Sg/kKog05zLHTpYhDd1b2ri+wOVaEByJjcxlpnYCRIDlwgqH5mZ+ODqDtvBtw=
 	=
-X-Google-Smtp-Source: AGHT+IH7ajhBvj+N9zMLWn9yRIZ8xNtCdS5fHbofGVp+Rc2QgwPO+/i7HmH4t/LWU2ohwJ2AE+ttvPmAuA==
-X-Received: from ejctp7.prod.google.com ([2002:a17:907:c487:b0:ac2:219:94c3])
- (user=elver job=prod-delivery.src-stubby-dispatcher) by 2002:a17:906:794e:b0:abf:742e:1fca
- with SMTP id a640c23a62f3a-abf742e23d7mr756224866b.18.1741080371564; Tue, 04
- Mar 2025 01:26:11 -0800 (PST)
-Date: Tue,  4 Mar 2025 10:21:22 +0100
+X-Google-Smtp-Source: AGHT+IEfigeOF/k7z7vk9qyF+DXgOFknckOxzZ17yq3U/m1fakPgh4OhR4E4S4uofnC24B3oKSKzOpTECQ==
+X-Received: from ejctb24.prod.google.com ([2002:a17:907:8b98:b0:ac1:4149:808d])
+ (user=elver job=prod-delivery.src-stubby-dispatcher) by 2002:a17:907:1ca2:b0:abf:5d9b:8076
+ with SMTP id a640c23a62f3a-abf5d9b8a4fmr1339937166b.33.1741080379689; Tue, 04
+ Mar 2025 01:26:19 -0800 (PST)
+Date: Tue,  4 Mar 2025 10:21:25 +0100
 In-Reply-To: <20250304092417.2873893-1-elver@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,9 +59,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250304092417.2873893-1-elver@google.com>
 X-Mailer: git-send-email 2.48.1.711.g2feabab25a-goog
-Message-ID: <20250304092417.2873893-24-elver@google.com>
-Subject: [PATCH v2 23/34] compiler-capability-analysis: Remove __cond_lock()
- function-like helper
+Message-ID: <20250304092417.2873893-27-elver@google.com>
+Subject: [PATCH v2 26/34] kfence: Enable capability analysis
 From: Marco Elver <elver@google.com>
 To: elver@google.com
 Cc: "David S. Miller" <davem@davemloft.net>, Luc Van Oostenryck <luc.vanoostenryck@gmail.com>, 
@@ -84,837 +83,216 @@ Cc: "David S. Miller" <davem@davemloft.net>, Luc Van Oostenryck <luc.vanoostenry
 	linux-serial@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-As discussed in [1], removing __cond_lock() will improve the readability
-of trylock code. Now that Sparse context tracking support has been
-removed, we can also remove __cond_lock().
+Enable capability analysis for the KFENCE subsystem.
 
-Change existing APIs to either drop __cond_lock() completely, or make
-use of the __cond_acquires() function attribute instead.
+Notable, kfence_handle_page_fault() required minor restructure, which
+also fixed a subtle race; arguably that function is more readable now.
 
-In particular, spinlock and rwlock implementations required switching
-over to inline helpers rather than statement-expressions for their
-trylock_* variants.
-
-Link: https://lore.kernel.org/all/20250207082832.GU7145@noisy.programming.kicks-ass.net/ [1]
-Suggested-by: Peter Zijlstra <peterz@infradead.org>
 Signed-off-by: Marco Elver <elver@google.com>
 ---
 v2:
-* New patch.
+* Remove disable/enable_capability_analysis() around headers.
+* Use __capability_unsafe() instead of __no_capability_analysis.
 ---
- .../dev-tools/capability-analysis.rst         |  2 -
- Documentation/mm/process_addrs.rst            |  6 +-
- .../net/wireless/intel/iwlwifi/iwl-trans.c    |  4 +-
- .../net/wireless/intel/iwlwifi/iwl-trans.h    |  6 +-
- .../wireless/intel/iwlwifi/pcie/internal.h    |  5 +-
- .../net/wireless/intel/iwlwifi/pcie/trans.c   |  4 +-
- include/linux/compiler-capability-analysis.h  | 41 -------------
- include/linux/mm.h                            | 33 ++--------
- include/linux/rwlock.h                        | 11 +---
- include/linux/rwlock_api_smp.h                | 14 ++++-
- include/linux/rwlock_rt.h                     | 21 ++++---
- include/linux/sched/signal.h                  | 14 +----
- include/linux/spinlock.h                      | 45 +++++---------
- include/linux/spinlock_api_smp.h              | 20 ++++++
- include/linux/spinlock_api_up.h               | 61 ++++++++++++++++---
- include/linux/spinlock_rt.h                   | 26 ++++----
- kernel/signal.c                               |  4 +-
- kernel/time/posix-timers.c                    | 10 +--
- lib/dec_and_lock.c                            |  8 +--
- mm/memory.c                                   |  4 +-
- mm/pgtable-generic.c                          | 19 +++---
- tools/include/linux/compiler_types.h          |  2 -
- 22 files changed, 160 insertions(+), 200 deletions(-)
+ mm/kfence/Makefile |  2 ++
+ mm/kfence/core.c   | 20 +++++++++++++-------
+ mm/kfence/kfence.h | 14 ++++++++------
+ mm/kfence/report.c |  4 ++--
+ 4 files changed, 25 insertions(+), 15 deletions(-)
 
-diff --git a/Documentation/dev-tools/capability-analysis.rst b/Documentation/dev-tools/capability-analysis.rst
-index 51ea94b0f4cc..d11e88ab9882 100644
---- a/Documentation/dev-tools/capability-analysis.rst
-+++ b/Documentation/dev-tools/capability-analysis.rst
-@@ -113,10 +113,8 @@ Keywords
-                  __releases_shared
-                  __acquire
-                  __release
--                 __cond_lock
-                  __acquire_shared
-                  __release_shared
--                 __cond_lock_shared
-                  capability_unsafe
-                  __capability_unsafe
-                  disable_capability_analysis enable_capability_analysis
-diff --git a/Documentation/mm/process_addrs.rst b/Documentation/mm/process_addrs.rst
-index 81417fa2ed20..073480ba7585 100644
---- a/Documentation/mm/process_addrs.rst
-+++ b/Documentation/mm/process_addrs.rst
-@@ -540,7 +540,7 @@ To access PTE-level page tables, a helper like :c:func:`!pte_offset_map_lock` or
- :c:func:`!pte_offset_map` can be used depending on stability requirements.
- These map the page table into kernel memory if required, take the RCU lock, and
- depending on variant, may also look up or acquire the PTE lock.
--See the comment on :c:func:`!__pte_offset_map_lock`.
-+See the comment on :c:func:`!pte_offset_map_lock`.
+diff --git a/mm/kfence/Makefile b/mm/kfence/Makefile
+index 2de2a58d11a1..b3640bdc3c69 100644
+--- a/mm/kfence/Makefile
++++ b/mm/kfence/Makefile
+@@ -1,5 +1,7 @@
+ # SPDX-License-Identifier: GPL-2.0
  
- Atomicity
- ^^^^^^^^^
-@@ -624,7 +624,7 @@ must be released via :c:func:`!pte_unmap_unlock`.
- .. note:: There are some variants on this, such as
-    :c:func:`!pte_offset_map_rw_nolock` when we know we hold the PTE stable but
-    for brevity we do not explore this.  See the comment for
--   :c:func:`!__pte_offset_map_lock` for more details.
-+   :c:func:`!pte_offset_map_lock` for more details.
- 
- When modifying data in ranges we typically only wish to allocate higher page
- tables as necessary, using these locks to avoid races or overwriting anything,
-@@ -643,7 +643,7 @@ At the leaf page table, that is the PTE, we can't entirely rely on this pattern
- as we have separate PMD and PTE locks and a THP collapse for instance might have
- eliminated the PMD entry as well as the PTE from under us.
- 
--This is why :c:func:`!__pte_offset_map_lock` locklessly retrieves the PMD entry
-+This is why :c:func:`!pte_offset_map_lock` locklessly retrieves the PMD entry
- for the PTE, carefully checking it is as expected, before acquiring the
- PTE-specific lock, and then *again* checking that the PMD entry is as expected.
- 
-diff --git a/drivers/net/wireless/intel/iwlwifi/iwl-trans.c b/drivers/net/wireless/intel/iwlwifi/iwl-trans.c
-index 49c8507d1a6b..64394f6dc156 100644
---- a/drivers/net/wireless/intel/iwlwifi/iwl-trans.c
-+++ b/drivers/net/wireless/intel/iwlwifi/iwl-trans.c
-@@ -528,11 +528,11 @@ int iwl_trans_read_config32(struct iwl_trans *trans, u32 ofs,
- }
- IWL_EXPORT_SYMBOL(iwl_trans_read_config32);
- 
--bool _iwl_trans_grab_nic_access(struct iwl_trans *trans)
-+bool iwl_trans_grab_nic_access(struct iwl_trans *trans)
- {
- 	return iwl_trans_pcie_grab_nic_access(trans);
- }
--IWL_EXPORT_SYMBOL(_iwl_trans_grab_nic_access);
-+IWL_EXPORT_SYMBOL(iwl_trans_grab_nic_access);
- 
- void __releases(nic_access)
- iwl_trans_release_nic_access(struct iwl_trans *trans)
-diff --git a/drivers/net/wireless/intel/iwlwifi/iwl-trans.h b/drivers/net/wireless/intel/iwlwifi/iwl-trans.h
-index f6234065dbdd..8b37fd6c5221 100644
---- a/drivers/net/wireless/intel/iwlwifi/iwl-trans.h
-+++ b/drivers/net/wireless/intel/iwlwifi/iwl-trans.h
-@@ -1133,11 +1133,7 @@ int iwl_trans_sw_reset(struct iwl_trans *trans, bool retake_ownership);
- void iwl_trans_set_bits_mask(struct iwl_trans *trans, u32 reg,
- 			     u32 mask, u32 value);
- 
--bool _iwl_trans_grab_nic_access(struct iwl_trans *trans);
--
--#define iwl_trans_grab_nic_access(trans)		\
--	__cond_lock(nic_access,				\
--		    likely(_iwl_trans_grab_nic_access(trans)))
-+bool iwl_trans_grab_nic_access(struct iwl_trans *trans);
- 
- void __releases(nic_access)
- iwl_trans_release_nic_access(struct iwl_trans *trans);
-diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/internal.h b/drivers/net/wireless/intel/iwlwifi/pcie/internal.h
-index 856b7e9f717d..84ce40b2ec5e 100644
---- a/drivers/net/wireless/intel/iwlwifi/pcie/internal.h
-+++ b/drivers/net/wireless/intel/iwlwifi/pcie/internal.h
-@@ -558,10 +558,7 @@ void iwl_trans_pcie_free(struct iwl_trans *trans);
- void iwl_trans_pcie_free_pnvm_dram_regions(struct iwl_dram_regions *dram_regions,
- 					   struct device *dev);
- 
--bool __iwl_trans_pcie_grab_nic_access(struct iwl_trans *trans);
--#define _iwl_trans_pcie_grab_nic_access(trans)			\
--	__cond_lock(nic_access_nobh,				\
--		    likely(__iwl_trans_pcie_grab_nic_access(trans)))
-+bool _iwl_trans_pcie_grab_nic_access(struct iwl_trans *trans);
- 
- void iwl_trans_pcie_check_product_reset_status(struct pci_dev *pdev);
- void iwl_trans_pcie_check_product_reset_mode(struct pci_dev *pdev);
-diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/trans.c b/drivers/net/wireless/intel/iwlwifi/pcie/trans.c
-index c917ed4c19bc..caed7d7434f3 100644
---- a/drivers/net/wireless/intel/iwlwifi/pcie/trans.c
-+++ b/drivers/net/wireless/intel/iwlwifi/pcie/trans.c
-@@ -2405,7 +2405,7 @@ EXPORT_SYMBOL(iwl_trans_pcie_reset);
-  * This version doesn't disable BHs but rather assumes they're
-  * already disabled.
-  */
--bool __iwl_trans_pcie_grab_nic_access(struct iwl_trans *trans)
-+bool _iwl_trans_pcie_grab_nic_access(struct iwl_trans *trans)
- {
- 	int ret;
- 	struct iwl_trans_pcie *trans_pcie = IWL_TRANS_GET_PCIE_TRANS(trans);
-@@ -2488,7 +2488,7 @@ bool iwl_trans_pcie_grab_nic_access(struct iwl_trans *trans)
- 	bool ret;
- 
- 	local_bh_disable();
--	ret = __iwl_trans_pcie_grab_nic_access(trans);
-+	ret = _iwl_trans_pcie_grab_nic_access(trans);
- 	if (ret) {
- 		/* keep BHs disabled until iwl_trans_pcie_release_nic_access */
- 		return ret;
-diff --git a/include/linux/compiler-capability-analysis.h b/include/linux/compiler-capability-analysis.h
-index 741f88e1177f..c10938d2f102 100644
---- a/include/linux/compiler-capability-analysis.h
-+++ b/include/linux/compiler-capability-analysis.h
-@@ -93,12 +93,6 @@
- 		__attribute__((overloadable)) __no_capability_analysis __acquires_cap(var) { }		\
- 	static __always_inline void __acquire_shared_cap(const struct name *var)			\
- 		__attribute__((overloadable)) __no_capability_analysis __acquires_shared_cap(var) { }	\
--	static __always_inline bool __try_acquire_cap(const struct name *var, bool ret)			\
--		__attribute__((overloadable)) __no_capability_analysis __try_acquires_cap(1, var)	\
--	{ return ret; }											\
--	static __always_inline bool __try_acquire_shared_cap(const struct name *var, bool ret)		\
--		__attribute__((overloadable)) __no_capability_analysis __try_acquires_shared_cap(1, var) \
--	{ return ret; }											\
- 	static __always_inline void __release_cap(const struct name *var)				\
- 		__attribute__((overloadable)) __no_capability_analysis __releases_cap(var) { }		\
- 	static __always_inline void __release_shared_cap(const struct name *var)			\
-@@ -156,8 +150,6 @@
- # define __requires_shared_cap(var)
- # define __acquire_cap(var)			do { } while (0)
- # define __acquire_shared_cap(var)		do { } while (0)
--# define __try_acquire_cap(var, ret)		(ret)
--# define __try_acquire_shared_cap(var, ret)	(ret)
- # define __release_cap(var)			do { } while (0)
- # define __release_shared_cap(var)		do { } while (0)
- # define __assert_cap(var)			do { (void)(var); } while (0)
-@@ -313,25 +305,6 @@
-  */
- #define __release(x)		__release_cap(x)
- 
--/**
-- * __cond_lock() - function that conditionally acquires a capability
-- *                 exclusively
-- * @x: capability instance pinter
-- * @c: boolean expression
-- *
-- * Return: result of @c
-- *
-- * No-op function that conditionally acquires capability instance @x
-- * exclusively, if the boolean expression @c is true. The result of @c is the
-- * return value, to be able to create a capability-enabled interface; for
-- * example:
-- *
-- * .. code-block:: c
-- *
-- *	#define spin_trylock(l) __cond_lock(&lock, _spin_trylock(&lock))
-- */
--#define __cond_lock(x, c)	__try_acquire_cap(x, c)
--
- /**
-  * __must_hold_shared() - function attribute, caller must hold shared capability
-  * @x: capability instance pointer
-@@ -392,18 +365,4 @@
-  */
- #define __release_shared(x)	__release_shared_cap(x)
- 
--/**
-- * __cond_lock_shared() - function that conditionally acquires a capability
-- *                        shared
-- * @x: capability instance pinter
-- * @c: boolean expression
-- *
-- * Return: result of @c
-- *
-- * No-op function that conditionally acquires capability instance @x with shared
-- * access, if the boolean expression @c is true. The result of @c is the return
-- * value, to be able to create a capability-enabled interface.
-- */
--#define __cond_lock_shared(x, c) __try_acquire_shared_cap(x, c)
--
- #endif /* _LINUX_COMPILER_CAPABILITY_ANALYSIS_H */
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 7b1068ddcbb7..dbf4eb414bd1 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -2732,15 +2732,8 @@ static inline int pte_devmap(pte_t pte)
- }
- #endif
- 
--extern pte_t *__get_locked_pte(struct mm_struct *mm, unsigned long addr,
--			       spinlock_t **ptl);
--static inline pte_t *get_locked_pte(struct mm_struct *mm, unsigned long addr,
--				    spinlock_t **ptl)
--{
--	pte_t *ptep;
--	__cond_lock(*ptl, ptep = __get_locked_pte(mm, addr, ptl));
--	return ptep;
--}
-+extern pte_t *get_locked_pte(struct mm_struct *mm, unsigned long addr,
-+			     spinlock_t **ptl);
- 
- #ifdef __PAGETABLE_P4D_FOLDED
- static inline int __p4d_alloc(struct mm_struct *mm, pgd_t *pgd,
-@@ -3023,31 +3016,15 @@ static inline bool pagetable_pte_ctor(struct ptdesc *ptdesc)
- 	return true;
- }
- 
--pte_t *___pte_offset_map(pmd_t *pmd, unsigned long addr, pmd_t *pmdvalp);
--static inline pte_t *__pte_offset_map(pmd_t *pmd, unsigned long addr,
--			pmd_t *pmdvalp)
--{
--	pte_t *pte;
-+pte_t *__pte_offset_map(pmd_t *pmd, unsigned long addr, pmd_t *pmdvalp);
- 
--	__cond_lock(RCU, pte = ___pte_offset_map(pmd, addr, pmdvalp));
--	return pte;
--}
- static inline pte_t *pte_offset_map(pmd_t *pmd, unsigned long addr)
- {
- 	return __pte_offset_map(pmd, addr, NULL);
- }
- 
--pte_t *__pte_offset_map_lock(struct mm_struct *mm, pmd_t *pmd,
--			unsigned long addr, spinlock_t **ptlp);
--static inline pte_t *pte_offset_map_lock(struct mm_struct *mm, pmd_t *pmd,
--			unsigned long addr, spinlock_t **ptlp)
--{
--	pte_t *pte;
--
--	__cond_lock(RCU, __cond_lock(*ptlp,
--			pte = __pte_offset_map_lock(mm, pmd, addr, ptlp)));
--	return pte;
--}
-+pte_t *pte_offset_map_lock(struct mm_struct *mm, pmd_t *pmd,
-+			   unsigned long addr, spinlock_t **ptlp);
- 
- pte_t *pte_offset_map_ro_nolock(struct mm_struct *mm, pmd_t *pmd,
- 				unsigned long addr, spinlock_t **ptlp);
-diff --git a/include/linux/rwlock.h b/include/linux/rwlock.h
-index 3c8971201ec7..701de800c36e 100644
---- a/include/linux/rwlock.h
-+++ b/include/linux/rwlock.h
-@@ -50,8 +50,8 @@ do {								\
-  * regardless of whether CONFIG_SMP or CONFIG_PREEMPT are set. The various
-  * methods are defined as nops in the case they are not required.
-  */
--#define read_trylock(lock)	__cond_lock_shared(lock, _raw_read_trylock(lock))
--#define write_trylock(lock)	__cond_lock(lock, _raw_write_trylock(lock))
-+#define read_trylock(lock)	_raw_read_trylock(lock)
-+#define write_trylock(lock)	_raw_write_trylock(lock)
- 
- #define write_lock(lock)	_raw_write_lock(lock)
- #define read_lock(lock)		_raw_read_lock(lock)
-@@ -113,12 +113,7 @@ do {								\
- 	} while (0)
- #define write_unlock_bh(lock)		_raw_write_unlock_bh(lock)
- 
--#define write_trylock_irqsave(lock, flags)		\
--	__cond_lock(lock, ({				\
--		local_irq_save(flags);			\
--		_raw_write_trylock(lock) ?		\
--		1 : ({ local_irq_restore(flags); 0; });	\
--	}))
-+#define write_trylock_irqsave(lock, flags) _raw_write_trylock_irqsave(lock, &(flags))
- 
- #ifdef arch_rwlock_is_contended
- #define rwlock_is_contended(lock) \
-diff --git a/include/linux/rwlock_api_smp.h b/include/linux/rwlock_api_smp.h
-index 3e975105a606..b289c3089ab7 100644
---- a/include/linux/rwlock_api_smp.h
-+++ b/include/linux/rwlock_api_smp.h
-@@ -26,8 +26,8 @@ unsigned long __lockfunc _raw_read_lock_irqsave(rwlock_t *lock)
- 							__acquires(lock);
- unsigned long __lockfunc _raw_write_lock_irqsave(rwlock_t *lock)
- 							__acquires(lock);
--int __lockfunc _raw_read_trylock(rwlock_t *lock);
--int __lockfunc _raw_write_trylock(rwlock_t *lock);
-+int __lockfunc _raw_read_trylock(rwlock_t *lock)	__cond_acquires_shared(true, lock);
-+int __lockfunc _raw_write_trylock(rwlock_t *lock)	__cond_acquires(true, lock);
- void __lockfunc _raw_read_unlock(rwlock_t *lock)	__releases_shared(lock);
- void __lockfunc _raw_write_unlock(rwlock_t *lock)	__releases(lock);
- void __lockfunc _raw_read_unlock_bh(rwlock_t *lock)	__releases_shared(lock);
-@@ -41,6 +41,16 @@ void __lockfunc
- _raw_write_unlock_irqrestore(rwlock_t *lock, unsigned long flags)
- 							__releases(lock);
- 
-+static inline bool _raw_write_trylock_irqsave(rwlock_t *lock, unsigned long *flags)
-+	__cond_acquires(true, lock)
-+{
-+	local_irq_save(*flags);
-+	if (_raw_write_trylock(lock))
-+		return true;
-+	local_irq_restore(*flags);
-+	return false;
-+}
++CAPABILITY_ANALYSIS := y
 +
- #ifdef CONFIG_INLINE_READ_LOCK
- #define _raw_read_lock(lock) __raw_read_lock(lock)
- #endif
-diff --git a/include/linux/rwlock_rt.h b/include/linux/rwlock_rt.h
-index 742172a06702..dc34b48a6158 100644
---- a/include/linux/rwlock_rt.h
-+++ b/include/linux/rwlock_rt.h
-@@ -26,11 +26,11 @@ do {							\
- } while (0)
+ obj-y := core.o report.o
  
- extern void rt_read_lock(rwlock_t *rwlock)	__acquires_shared(rwlock);
--extern int rt_read_trylock(rwlock_t *rwlock);
-+extern int rt_read_trylock(rwlock_t *rwlock)	__cond_acquires_shared(true, rwlock);
- extern void rt_read_unlock(rwlock_t *rwlock)	__releases_shared(rwlock);
- extern void rt_write_lock(rwlock_t *rwlock)	__acquires(rwlock);
- extern void rt_write_lock_nested(rwlock_t *rwlock, int subclass)	__acquires(rwlock);
--extern int rt_write_trylock(rwlock_t *rwlock);
-+extern int rt_write_trylock(rwlock_t *rwlock)	__cond_acquires(true, rwlock);
- extern void rt_write_unlock(rwlock_t *rwlock)	__releases(rwlock);
+ CFLAGS_kfence_test.o := -fno-omit-frame-pointer -fno-optimize-sibling-calls
+diff --git a/mm/kfence/core.c b/mm/kfence/core.c
+index 102048821c22..f75c3c11c0be 100644
+--- a/mm/kfence/core.c
++++ b/mm/kfence/core.c
+@@ -132,8 +132,8 @@ struct kfence_metadata *kfence_metadata __read_mostly;
+ static struct kfence_metadata *kfence_metadata_init __read_mostly;
  
- static __always_inline void read_lock(rwlock_t *rwlock)
-@@ -59,7 +59,7 @@ static __always_inline void read_lock_irq(rwlock_t *rwlock)
- 		flags = 0;				\
- 	} while (0)
- 
--#define read_trylock(lock)	__cond_lock_shared(lock, rt_read_trylock(lock))
-+#define read_trylock(lock)	rt_read_trylock(lock)
- 
- static __always_inline void read_unlock(rwlock_t *rwlock)
- 	__releases_shared(rwlock)
-@@ -123,14 +123,15 @@ static __always_inline void write_lock_irq(rwlock_t *rwlock)
- 		flags = 0;				\
- 	} while (0)
- 
--#define write_trylock(lock)	__cond_lock(lock, rt_write_trylock(lock))
-+#define write_trylock(lock)	rt_write_trylock(lock)
- 
--#define write_trylock_irqsave(lock, flags)		\
--	__cond_lock(lock, ({				\
--		typecheck(unsigned long, flags);	\
--		flags = 0;				\
--		rt_write_trylock(lock);			\
--	}))
-+static __always_inline bool _write_trylock_irqsave(rwlock_t *rwlock, unsigned long *flags)
-+	__cond_acquires(true, rwlock)
-+{
-+	*flags = 0;
-+	return rt_write_trylock(rwlock);
-+}
-+#define write_trylock_irqsave(lock, flags) _write_trylock_irqsave(lock, &(flags))
- 
- static __always_inline void write_unlock(rwlock_t *rwlock)
- 	__releases(rwlock)
-diff --git a/include/linux/sched/signal.h b/include/linux/sched/signal.h
-index d5d03d919df8..82c486b67e92 100644
---- a/include/linux/sched/signal.h
-+++ b/include/linux/sched/signal.h
-@@ -732,18 +732,8 @@ static inline int thread_group_empty(struct task_struct *p)
- #define delay_group_leader(p) \
- 		(thread_group_leader(p) && !thread_group_empty(p))
- 
--extern struct sighand_struct *__lock_task_sighand(struct task_struct *task,
--							unsigned long *flags);
--
--static inline struct sighand_struct *lock_task_sighand(struct task_struct *task,
--						       unsigned long *flags)
--{
--	struct sighand_struct *ret;
--
--	ret = __lock_task_sighand(task, flags);
--	(void)__cond_lock(&task->sighand->siglock, ret);
--	return ret;
--}
-+extern struct sighand_struct *lock_task_sighand(struct task_struct *task,
-+						unsigned long *flags);
- 
- static inline void unlock_task_sighand(struct task_struct *task,
- 						unsigned long *flags)
-diff --git a/include/linux/spinlock.h b/include/linux/spinlock.h
-index 12369fa9e3bb..3cfd85b25648 100644
---- a/include/linux/spinlock.h
-+++ b/include/linux/spinlock.h
-@@ -213,7 +213,7 @@ static inline void do_raw_spin_unlock(raw_spinlock_t *lock) __releases(lock)
-  * various methods are defined as nops in the case they are not
-  * required.
-  */
--#define raw_spin_trylock(lock)	__cond_lock(lock, _raw_spin_trylock(lock))
-+#define raw_spin_trylock(lock)	_raw_spin_trylock(lock)
- 
- #define raw_spin_lock(lock)	_raw_spin_lock(lock)
- 
-@@ -284,22 +284,11 @@ static inline void do_raw_spin_unlock(raw_spinlock_t *lock) __releases(lock)
- 	} while (0)
- #define raw_spin_unlock_bh(lock)	_raw_spin_unlock_bh(lock)
- 
--#define raw_spin_trylock_bh(lock) \
--	__cond_lock(lock, _raw_spin_trylock_bh(lock))
-+#define raw_spin_trylock_bh(lock)	_raw_spin_trylock_bh(lock)
- 
--#define raw_spin_trylock_irq(lock)			\
--	__cond_lock(lock, ({				\
--		local_irq_disable();			\
--		_raw_spin_trylock(lock) ?		\
--		1 : ({ local_irq_enable(); 0;  });	\
--	}))
-+#define raw_spin_trylock_irq(lock)	_raw_spin_trylock_irq(lock)
- 
--#define raw_spin_trylock_irqsave(lock, flags)		\
--	__cond_lock(lock, ({				\
--		local_irq_save(flags);			\
--		_raw_spin_trylock(lock) ?		\
--		1 : ({ local_irq_restore(flags); 0; }); \
--	}))
-+#define raw_spin_trylock_irqsave(lock, flags) _raw_spin_trylock_irqsave(lock, &(flags))
- 
- #ifndef CONFIG_PREEMPT_RT
- /* Include rwlock functions for !RT */
-@@ -431,8 +420,12 @@ static __always_inline int spin_trylock_irq(spinlock_t *lock)
- 	return raw_spin_trylock_irq(&lock->rlock);
- }
- 
--#define spin_trylock_irqsave(lock, flags)			\
--	__cond_lock(lock, raw_spin_trylock_irqsave(spinlock_check(lock), flags))
-+static __always_inline bool _spin_trylock_irqsave(spinlock_t *lock, unsigned long *flags)
-+	__cond_acquires(true, lock) __no_capability_analysis
-+{
-+	return raw_spin_trylock_irqsave(spinlock_check(lock), *flags);
-+}
-+#define spin_trylock_irqsave(lock, flags) _spin_trylock_irqsave(lock, &(flags))
- 
- /**
-  * spin_is_locked() - Check whether a spinlock is locked.
-@@ -510,23 +503,17 @@ static inline int rwlock_needbreak(rwlock_t *lock)
-  * Decrements @atomic by 1.  If the result is 0, returns true and locks
-  * @lock.  Returns false for all other cases.
-  */
--extern int _atomic_dec_and_lock(atomic_t *atomic, spinlock_t *lock);
--#define atomic_dec_and_lock(atomic, lock) \
--		__cond_lock(lock, _atomic_dec_and_lock(atomic, lock))
-+extern int atomic_dec_and_lock(atomic_t *atomic, spinlock_t *lock) __cond_acquires(true, lock);
- 
- extern int _atomic_dec_and_lock_irqsave(atomic_t *atomic, spinlock_t *lock,
--					unsigned long *flags);
--#define atomic_dec_and_lock_irqsave(atomic, lock, flags) \
--		__cond_lock(lock, _atomic_dec_and_lock_irqsave(atomic, lock, &(flags)))
-+					unsigned long *flags) __cond_acquires(true, lock);
-+#define atomic_dec_and_lock_irqsave(atomic, lock, flags) _atomic_dec_and_lock_irqsave(atomic, lock, &(flags))
- 
--extern int _atomic_dec_and_raw_lock(atomic_t *atomic, raw_spinlock_t *lock);
--#define atomic_dec_and_raw_lock(atomic, lock) \
--		__cond_lock(lock, _atomic_dec_and_raw_lock(atomic, lock))
-+extern int atomic_dec_and_raw_lock(atomic_t *atomic, raw_spinlock_t *lock) __cond_acquires(true, lock);
- 
- extern int _atomic_dec_and_raw_lock_irqsave(atomic_t *atomic, raw_spinlock_t *lock,
--					unsigned long *flags);
--#define atomic_dec_and_raw_lock_irqsave(atomic, lock, flags) \
--		__cond_lock(lock, _atomic_dec_and_raw_lock_irqsave(atomic, lock, &(flags)))
-+					    unsigned long *flags) __cond_acquires(true, lock);
-+#define atomic_dec_and_raw_lock_irqsave(atomic, lock, flags) _atomic_dec_and_raw_lock_irqsave(atomic, lock, &(flags))
- 
- int __alloc_bucket_spinlocks(spinlock_t **locks, unsigned int *lock_mask,
- 			     size_t max_size, unsigned int cpu_mult,
-diff --git a/include/linux/spinlock_api_smp.h b/include/linux/spinlock_api_smp.h
-index a77b76003ebb..1b1896595cbc 100644
---- a/include/linux/spinlock_api_smp.h
-+++ b/include/linux/spinlock_api_smp.h
-@@ -95,6 +95,26 @@ static inline int __raw_spin_trylock(raw_spinlock_t *lock)
- 	return 0;
- }
- 
-+static __always_inline bool _raw_spin_trylock_irq(raw_spinlock_t *lock)
-+	__cond_acquires(true, lock)
-+{
-+	local_irq_disable();
-+	if (_raw_spin_trylock(lock))
-+		return true;
-+	local_irq_enable();
-+	return false;
-+}
-+
-+static __always_inline bool _raw_spin_trylock_irqsave(raw_spinlock_t *lock, unsigned long *flags)
-+	__cond_acquires(true, lock)
-+{
-+	local_irq_save(*flags);
-+	if (_raw_spin_trylock(lock))
-+		return true;
-+	local_irq_restore(*flags);
-+	return false;
-+}
-+
- /*
-  * If lockdep is enabled then we use the non-preemption spin-ops
-  * even on CONFIG_PREEMPTION, because lockdep assumes that interrupts are
-diff --git a/include/linux/spinlock_api_up.h b/include/linux/spinlock_api_up.h
-index 018f5aabc1be..a9d5c7c66e03 100644
---- a/include/linux/spinlock_api_up.h
-+++ b/include/linux/spinlock_api_up.h
-@@ -24,14 +24,11 @@
-  * flags straight, to suppress compiler warnings of unused lock
-  * variables, and to add the proper checker annotations:
-  */
--#define ___LOCK_void(lock) \
--  do { (void)(lock); } while (0)
--
- #define ___LOCK_(lock) \
--  do { __acquire(lock); ___LOCK_void(lock); } while (0)
-+  do { __acquire(lock); (void)(lock); } while (0)
- 
- #define ___LOCK_shared(lock) \
--  do { __acquire_shared(lock); ___LOCK_void(lock); } while (0)
-+  do { __acquire_shared(lock); (void)(lock); } while (0)
- 
- #define __LOCK(lock, ...) \
-   do { preempt_disable(); ___LOCK_##__VA_ARGS__(lock); } while (0)
-@@ -78,10 +75,56 @@
- #define _raw_spin_lock_irqsave(lock, flags)	__LOCK_IRQSAVE(lock, flags)
- #define _raw_read_lock_irqsave(lock, flags)	__LOCK_IRQSAVE(lock, flags, shared)
- #define _raw_write_lock_irqsave(lock, flags)	__LOCK_IRQSAVE(lock, flags)
--#define _raw_spin_trylock(lock)			({ __LOCK(lock, void); 1; })
--#define _raw_read_trylock(lock)			({ __LOCK(lock, void); 1; })
--#define _raw_write_trylock(lock)			({ __LOCK(lock, void); 1; })
--#define _raw_spin_trylock_bh(lock)		({ __LOCK_BH(lock, void); 1; })
-+
-+static __always_inline int _raw_spin_trylock(raw_spinlock_t *lock)
-+	__cond_acquires(true, lock)
-+{
-+	__LOCK(lock);
-+	return 1;
-+}
-+
-+static __always_inline int _raw_spin_trylock_bh(raw_spinlock_t *lock)
-+	__cond_acquires(true, lock)
-+{
-+	__LOCK_BH(lock);
-+	return 1;
-+}
-+
-+static __always_inline int _raw_spin_trylock_irq(raw_spinlock_t *lock)
-+	__cond_acquires(true, lock)
-+{
-+	__LOCK_IRQ(lock);
-+	return 1;
-+}
-+
-+static __always_inline int _raw_spin_trylock_irqsave(raw_spinlock_t *lock, unsigned long *flags)
-+	__cond_acquires(true, lock)
-+{
-+	__LOCK_IRQSAVE(lock, *(flags));
-+	return 1;
-+}
-+
-+static __always_inline int _raw_read_trylock(rwlock_t *lock)
-+	__cond_acquires_shared(true, lock)
-+{
-+	__LOCK(lock, shared);
-+	return 1;
-+}
-+
-+static __always_inline int _raw_write_trylock(rwlock_t *lock)
-+	__cond_acquires(true, lock)
-+{
-+	__LOCK(lock);
-+	return 1;
-+}
-+
-+static __always_inline int _raw_write_trylock_irqsave(rwlock_t *lock, unsigned long *flags)
-+	__cond_acquires(true, lock)
-+{
-+	__LOCK_IRQSAVE(lock, *(flags));
-+	return 1;
-+}
-+
- #define _raw_spin_unlock(lock)			__UNLOCK(lock)
- #define _raw_read_unlock(lock)			__UNLOCK(lock, shared)
- #define _raw_write_unlock(lock)			__UNLOCK(lock)
-diff --git a/include/linux/spinlock_rt.h b/include/linux/spinlock_rt.h
-index 1f55601e1321..d11ecb0ed571 100644
---- a/include/linux/spinlock_rt.h
-+++ b/include/linux/spinlock_rt.h
-@@ -37,8 +37,8 @@ extern void rt_spin_lock_nested(spinlock_t *lock, int subclass)	__acquires(lock)
- extern void rt_spin_lock_nest_lock(spinlock_t *lock, struct lockdep_map *nest_lock) __acquires(lock);
- extern void rt_spin_unlock(spinlock_t *lock)	__releases(lock);
- extern void rt_spin_lock_unlock(spinlock_t *lock);
--extern int rt_spin_trylock_bh(spinlock_t *lock);
--extern int rt_spin_trylock(spinlock_t *lock);
-+extern int rt_spin_trylock_bh(spinlock_t *lock) __cond_acquires(true, lock);
-+extern int rt_spin_trylock(spinlock_t *lock) __cond_acquires(true, lock);
- 
- static __always_inline void spin_lock(spinlock_t *lock)
- 	__acquires(lock)
-@@ -130,21 +130,19 @@ static __always_inline void spin_unlock_irqrestore(spinlock_t *lock,
- 	rt_spin_unlock(lock);
- }
- 
--#define spin_trylock(lock)				\
--	__cond_lock(lock, rt_spin_trylock(lock))
-+#define spin_trylock(lock)	rt_spin_trylock(lock)
- 
--#define spin_trylock_bh(lock)				\
--	__cond_lock(lock, rt_spin_trylock_bh(lock))
-+#define spin_trylock_bh(lock)	rt_spin_trylock_bh(lock)
- 
--#define spin_trylock_irq(lock)				\
--	__cond_lock(lock, rt_spin_trylock(lock))
-+#define spin_trylock_irq(lock)	rt_spin_trylock(lock)
- 
--#define spin_trylock_irqsave(lock, flags)		\
--	__cond_lock(lock, ({				\
--		typecheck(unsigned long, flags);	\
--		flags = 0;				\
--		rt_spin_trylock(lock);			\
--	}))
-+static __always_inline bool _spin_trylock_irqsave(spinlock_t *lock, unsigned long *flags)
-+	__cond_acquires(true, lock)
-+{
-+	*flags = 0;
-+	return rt_spin_trylock(lock);
-+}
-+#define spin_trylock_irqsave(lock, flags) _spin_trylock_irqsave(lock, &(flags))
- 
- #define spin_is_contended(lock)		(((void)(lock), 0))
- 
-diff --git a/kernel/signal.c b/kernel/signal.c
-index 875e97f6205a..8ae095eb1b78 100644
---- a/kernel/signal.c
-+++ b/kernel/signal.c
-@@ -1354,8 +1354,8 @@ int zap_other_threads(struct task_struct *p)
- 	return count;
- }
- 
--struct sighand_struct *__lock_task_sighand(struct task_struct *tsk,
--					   unsigned long *flags)
-+struct sighand_struct *lock_task_sighand(struct task_struct *tsk,
-+					 unsigned long *flags)
- {
- 	struct sighand_struct *sighand;
- 
-diff --git a/kernel/time/posix-timers.c b/kernel/time/posix-timers.c
-index 1b675aee99a9..8d84409fb3e6 100644
---- a/kernel/time/posix-timers.c
-+++ b/kernel/time/posix-timers.c
-@@ -59,14 +59,6 @@ static const struct k_clock clock_realtime, clock_monotonic;
- #error "SIGEV_THREAD_ID must not share bit with other SIGEV values!"
- #endif
- 
--static struct k_itimer *__lock_timer(timer_t timer_id, unsigned long *flags);
--
--#define lock_timer(tid, flags)						   \
--({	struct k_itimer *__timr;					   \
--	__cond_lock(&__timr->it_lock, __timr = __lock_timer(tid, flags));  \
--	__timr;								   \
--})
--
- static int hash(struct signal_struct *sig, unsigned int nr)
- {
- 	return hash_32(hash32_ptr(sig) ^ nr, HASH_BITS(posix_timers_hashtable));
-@@ -507,7 +499,7 @@ COMPAT_SYSCALL_DEFINE3(timer_create, clockid_t, which_clock,
- }
- #endif
- 
--static struct k_itimer *__lock_timer(timer_t timer_id, unsigned long *flags)
-+static struct k_itimer *lock_timer(timer_t timer_id, unsigned long *flags)
- {
- 	struct k_itimer *timr;
- 
-diff --git a/lib/dec_and_lock.c b/lib/dec_and_lock.c
-index 1dcca8f2e194..8c7c398fd770 100644
---- a/lib/dec_and_lock.c
-+++ b/lib/dec_and_lock.c
-@@ -18,7 +18,7 @@
-  * because the spin-lock and the decrement must be
-  * "atomic".
-  */
--int _atomic_dec_and_lock(atomic_t *atomic, spinlock_t *lock)
-+int atomic_dec_and_lock(atomic_t *atomic, spinlock_t *lock)
- {
- 	/* Subtract 1 from counter unless that drops it to 0 (ie. it was 1) */
- 	if (atomic_add_unless(atomic, -1, 1))
-@@ -32,7 +32,7 @@ int _atomic_dec_and_lock(atomic_t *atomic, spinlock_t *lock)
- 	return 0;
- }
- 
--EXPORT_SYMBOL(_atomic_dec_and_lock);
-+EXPORT_SYMBOL(atomic_dec_and_lock);
- 
- int _atomic_dec_and_lock_irqsave(atomic_t *atomic, spinlock_t *lock,
- 				 unsigned long *flags)
-@@ -50,7 +50,7 @@ int _atomic_dec_and_lock_irqsave(atomic_t *atomic, spinlock_t *lock,
- }
- EXPORT_SYMBOL(_atomic_dec_and_lock_irqsave);
- 
--int _atomic_dec_and_raw_lock(atomic_t *atomic, raw_spinlock_t *lock)
-+int atomic_dec_and_raw_lock(atomic_t *atomic, raw_spinlock_t *lock)
- {
- 	/* Subtract 1 from counter unless that drops it to 0 (ie. it was 1) */
- 	if (atomic_add_unless(atomic, -1, 1))
-@@ -63,7 +63,7 @@ int _atomic_dec_and_raw_lock(atomic_t *atomic, raw_spinlock_t *lock)
- 	raw_spin_unlock(lock);
- 	return 0;
- }
--EXPORT_SYMBOL(_atomic_dec_and_raw_lock);
-+EXPORT_SYMBOL(atomic_dec_and_raw_lock);
- 
- int _atomic_dec_and_raw_lock_irqsave(atomic_t *atomic, raw_spinlock_t *lock,
- 				     unsigned long *flags)
-diff --git a/mm/memory.c b/mm/memory.c
-index b4d3d4893267..3bbcdb2f3f34 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -2076,8 +2076,8 @@ static pmd_t *walk_to_pmd(struct mm_struct *mm, unsigned long addr)
- 	return pmd;
- }
- 
--pte_t *__get_locked_pte(struct mm_struct *mm, unsigned long addr,
--			spinlock_t **ptl)
-+pte_t *get_locked_pte(struct mm_struct *mm, unsigned long addr,
-+		      spinlock_t **ptl)
- {
- 	pmd_t *pmd = walk_to_pmd(mm, addr);
- 
-diff --git a/mm/pgtable-generic.c b/mm/pgtable-generic.c
-index 5a882f2b10f9..cc202648c8d8 100644
---- a/mm/pgtable-generic.c
-+++ b/mm/pgtable-generic.c
-@@ -279,7 +279,7 @@ static unsigned long pmdp_get_lockless_start(void) { return 0; }
- static void pmdp_get_lockless_end(unsigned long irqflags) { }
- #endif
- 
--pte_t *___pte_offset_map(pmd_t *pmd, unsigned long addr, pmd_t *pmdvalp)
-+pte_t *__pte_offset_map(pmd_t *pmd, unsigned long addr, pmd_t *pmdvalp)
- {
- 	unsigned long irqflags;
- 	pmd_t pmdval;
-@@ -331,13 +331,12 @@ pte_t *pte_offset_map_rw_nolock(struct mm_struct *mm, pmd_t *pmd,
- }
+ /* Freelist with available objects. */
+-static struct list_head kfence_freelist = LIST_HEAD_INIT(kfence_freelist);
+-static DEFINE_RAW_SPINLOCK(kfence_freelist_lock); /* Lock protecting freelist. */
++DEFINE_RAW_SPINLOCK(kfence_freelist_lock); /* Lock protecting freelist. */
++static struct list_head kfence_freelist __guarded_by(&kfence_freelist_lock) = LIST_HEAD_INIT(kfence_freelist);
  
  /*
-- * pte_offset_map_lock(mm, pmd, addr, ptlp), and its internal implementation
-- * __pte_offset_map_lock() below, is usually called with the pmd pointer for
-- * addr, reached by walking down the mm's pgd, p4d, pud for addr: either while
-- * holding mmap_lock or vma lock for read or for write; or in truncate or rmap
-- * context, while holding file's i_mmap_lock or anon_vma lock for read (or for
-- * write). In a few cases, it may be used with pmd pointing to a pmd_t already
-- * copied to or constructed on the stack.
-+ * pte_offset_map_lock(mm, pmd, addr, ptlp) is usually called with the pmd
-+ * pointer for addr, reached by walking down the mm's pgd, p4d, pud for addr:
-+ * either while holding mmap_lock or vma lock for read or for write; or in
-+ * truncate or rmap context, while holding file's i_mmap_lock or anon_vma lock
-+ * for read (or for write). In a few cases, it may be used with pmd pointing to
-+ * a pmd_t already copied to or constructed on the stack.
-  *
-  * When successful, it returns the pte pointer for addr, with its page table
-  * kmapped if necessary (when CONFIG_HIGHPTE), and locked against concurrent
-@@ -388,8 +387,8 @@ pte_t *pte_offset_map_rw_nolock(struct mm_struct *mm, pmd_t *pmd,
-  * table, and may not use RCU at all: "outsiders" like khugepaged should avoid
-  * pte_offset_map() and co once the vma is detached from mm or mm_users is zero.
-  */
--pte_t *__pte_offset_map_lock(struct mm_struct *mm, pmd_t *pmd,
--			     unsigned long addr, spinlock_t **ptlp)
-+pte_t *pte_offset_map_lock(struct mm_struct *mm, pmd_t *pmd,
-+			   unsigned long addr, spinlock_t **ptlp)
- {
- 	spinlock_t *ptl;
- 	pmd_t pmdval;
-diff --git a/tools/include/linux/compiler_types.h b/tools/include/linux/compiler_types.h
-index d09f9dc172a4..067a5b4e0f7b 100644
---- a/tools/include/linux/compiler_types.h
-+++ b/tools/include/linux/compiler_types.h
-@@ -20,7 +20,6 @@
- # define __releases(x)	__attribute__((context(x,1,0)))
- # define __acquire(x)	__context__(x,1)
- # define __release(x)	__context__(x,-1)
--# define __cond_lock(x,c)	((c) ? ({ __acquire(x); 1; }) : 0)
- #else /* __CHECKER__ */
- /* context/locking */
- # define __must_hold(x)
-@@ -28,7 +27,6 @@
- # define __releases(x)
- # define __acquire(x)	(void)0
- # define __release(x)	(void)0
--# define __cond_lock(x,c) (c)
- #endif /* __CHECKER__ */
+  * The static key to set up a KFENCE allocation; or if static keys are not used
+@@ -253,6 +253,7 @@ static bool kfence_unprotect(unsigned long addr)
+ }
  
- /* Compiler specific macros. */
+ static inline unsigned long metadata_to_pageaddr(const struct kfence_metadata *meta)
++	__must_hold(&meta->lock)
+ {
+ 	unsigned long offset = (meta - kfence_metadata + 1) * PAGE_SIZE * 2;
+ 	unsigned long pageaddr = (unsigned long)&__kfence_pool[offset];
+@@ -288,6 +289,7 @@ static inline bool kfence_obj_allocated(const struct kfence_metadata *meta)
+ static noinline void
+ metadata_update_state(struct kfence_metadata *meta, enum kfence_object_state next,
+ 		      unsigned long *stack_entries, size_t num_stack_entries)
++	__must_hold(&meta->lock)
+ {
+ 	struct kfence_track *track =
+ 		next == KFENCE_OBJECT_ALLOCATED ? &meta->alloc_track : &meta->free_track;
+@@ -485,7 +487,7 @@ static void *kfence_guarded_alloc(struct kmem_cache *cache, size_t size, gfp_t g
+ 	alloc_covered_add(alloc_stack_hash, 1);
+ 
+ 	/* Set required slab fields. */
+-	slab = virt_to_slab((void *)meta->addr);
++	slab = virt_to_slab(addr);
+ 	slab->slab_cache = cache;
+ 	slab->objects = 1;
+ 
+@@ -514,6 +516,7 @@ static void *kfence_guarded_alloc(struct kmem_cache *cache, size_t size, gfp_t g
+ static void kfence_guarded_free(void *addr, struct kfence_metadata *meta, bool zombie)
+ {
+ 	struct kcsan_scoped_access assert_page_exclusive;
++	u32 alloc_stack_hash;
+ 	unsigned long flags;
+ 	bool init;
+ 
+@@ -546,9 +549,10 @@ static void kfence_guarded_free(void *addr, struct kfence_metadata *meta, bool z
+ 	/* Mark the object as freed. */
+ 	metadata_update_state(meta, KFENCE_OBJECT_FREED, NULL, 0);
+ 	init = slab_want_init_on_free(meta->cache);
++	alloc_stack_hash = meta->alloc_stack_hash;
+ 	raw_spin_unlock_irqrestore(&meta->lock, flags);
+ 
+-	alloc_covered_add(meta->alloc_stack_hash, -1);
++	alloc_covered_add(alloc_stack_hash, -1);
+ 
+ 	/* Check canary bytes for memory corruption. */
+ 	check_canary(meta);
+@@ -593,6 +597,7 @@ static void rcu_guarded_free(struct rcu_head *h)
+  * which partial initialization succeeded.
+  */
+ static unsigned long kfence_init_pool(void)
++	__capability_unsafe(/* constructor */)
+ {
+ 	unsigned long addr;
+ 	struct page *pages;
+@@ -1192,6 +1197,7 @@ bool kfence_handle_page_fault(unsigned long addr, bool is_write, struct pt_regs
+ {
+ 	const int page_index = (addr - (unsigned long)__kfence_pool) / PAGE_SIZE;
+ 	struct kfence_metadata *to_report = NULL;
++	unsigned long unprotected_page = 0;
+ 	enum kfence_error_type error_type;
+ 	unsigned long flags;
+ 
+@@ -1225,9 +1231,8 @@ bool kfence_handle_page_fault(unsigned long addr, bool is_write, struct pt_regs
+ 		if (!to_report)
+ 			goto out;
+ 
+-		raw_spin_lock_irqsave(&to_report->lock, flags);
+-		to_report->unprotected_page = addr;
+ 		error_type = KFENCE_ERROR_OOB;
++		unprotected_page = addr;
+ 
+ 		/*
+ 		 * If the object was freed before we took the look we can still
+@@ -1239,7 +1244,6 @@ bool kfence_handle_page_fault(unsigned long addr, bool is_write, struct pt_regs
+ 		if (!to_report)
+ 			goto out;
+ 
+-		raw_spin_lock_irqsave(&to_report->lock, flags);
+ 		error_type = KFENCE_ERROR_UAF;
+ 		/*
+ 		 * We may race with __kfence_alloc(), and it is possible that a
+@@ -1251,6 +1255,8 @@ bool kfence_handle_page_fault(unsigned long addr, bool is_write, struct pt_regs
+ 
+ out:
+ 	if (to_report) {
++		raw_spin_lock_irqsave(&to_report->lock, flags);
++		to_report->unprotected_page = unprotected_page;
+ 		kfence_report_error(addr, is_write, regs, to_report, error_type);
+ 		raw_spin_unlock_irqrestore(&to_report->lock, flags);
+ 	} else {
+diff --git a/mm/kfence/kfence.h b/mm/kfence/kfence.h
+index dfba5ea06b01..f9caea007246 100644
+--- a/mm/kfence/kfence.h
++++ b/mm/kfence/kfence.h
+@@ -34,6 +34,8 @@
+ /* Maximum stack depth for reports. */
+ #define KFENCE_STACK_DEPTH 64
+ 
++extern raw_spinlock_t kfence_freelist_lock;
++
+ /* KFENCE object states. */
+ enum kfence_object_state {
+ 	KFENCE_OBJECT_UNUSED,		/* Object is unused. */
+@@ -53,7 +55,7 @@ struct kfence_track {
+ 
+ /* KFENCE metadata per guarded allocation. */
+ struct kfence_metadata {
+-	struct list_head list;		/* Freelist node; access under kfence_freelist_lock. */
++	struct list_head list __guarded_by(&kfence_freelist_lock);	/* Freelist node. */
+ 	struct rcu_head rcu_head;	/* For delayed freeing. */
+ 
+ 	/*
+@@ -91,13 +93,13 @@ struct kfence_metadata {
+ 	 * In case of an invalid access, the page that was unprotected; we
+ 	 * optimistically only store one address.
+ 	 */
+-	unsigned long unprotected_page;
++	unsigned long unprotected_page __guarded_by(&lock);
+ 
+ 	/* Allocation and free stack information. */
+-	struct kfence_track alloc_track;
+-	struct kfence_track free_track;
++	struct kfence_track alloc_track __guarded_by(&lock);
++	struct kfence_track free_track __guarded_by(&lock);
+ 	/* For updating alloc_covered on frees. */
+-	u32 alloc_stack_hash;
++	u32 alloc_stack_hash __guarded_by(&lock);
+ #ifdef CONFIG_MEMCG
+ 	struct slabobj_ext obj_exts;
+ #endif
+@@ -141,6 +143,6 @@ enum kfence_error_type {
+ void kfence_report_error(unsigned long address, bool is_write, struct pt_regs *regs,
+ 			 const struct kfence_metadata *meta, enum kfence_error_type type);
+ 
+-void kfence_print_object(struct seq_file *seq, const struct kfence_metadata *meta);
++void kfence_print_object(struct seq_file *seq, const struct kfence_metadata *meta) __must_hold(&meta->lock);
+ 
+ #endif /* MM_KFENCE_KFENCE_H */
+diff --git a/mm/kfence/report.c b/mm/kfence/report.c
+index 10e6802a2edf..787e87c26926 100644
+--- a/mm/kfence/report.c
++++ b/mm/kfence/report.c
+@@ -106,6 +106,7 @@ static int get_stack_skipnr(const unsigned long stack_entries[], int num_entries
+ 
+ static void kfence_print_stack(struct seq_file *seq, const struct kfence_metadata *meta,
+ 			       bool show_alloc)
++	__must_hold(&meta->lock)
+ {
+ 	const struct kfence_track *track = show_alloc ? &meta->alloc_track : &meta->free_track;
+ 	u64 ts_sec = track->ts_nsec;
+@@ -207,8 +208,6 @@ void kfence_report_error(unsigned long address, bool is_write, struct pt_regs *r
+ 	if (WARN_ON(type != KFENCE_ERROR_INVALID && !meta))
+ 		return;
+ 
+-	if (meta)
+-		lockdep_assert_held(&meta->lock);
+ 	/*
+ 	 * Because we may generate reports in printk-unfriendly parts of the
+ 	 * kernel, such as scheduler code, the use of printk() could deadlock.
+@@ -263,6 +262,7 @@ void kfence_report_error(unsigned long address, bool is_write, struct pt_regs *r
+ 	stack_trace_print(stack_entries + skipnr, num_stack_entries - skipnr, 0);
+ 
+ 	if (meta) {
++		lockdep_assert_held(&meta->lock);
+ 		pr_err("\n");
+ 		kfence_print_object(NULL, meta);
+ 	}
 -- 
 2.48.1.711.g2feabab25a-goog
 
