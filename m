@@ -1,33 +1,43 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98C42200BB8;
-	Tue,  4 Mar 2025 11:00:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741086000; cv=none; b=atCkCUYRw7k1fyNz4Hz05pAOuYNfDO0fWp+Q5N04DFNioW5mYacFetY4glKoufj6L9yviXrtd+2/wrRhIjtGz9UA9H2BLwPdPmfwuLg0/zVh1zD3FCFKqd6qn2BZA0Jk4Wh8WNbRNsKj6pjC+kaje0SLaIqeghrUh07r372eYBA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741086000; c=relaxed/simple;
-	bh=Rvoji/ul4LckOnAp09Lt55SBKXtQJ2Ab4yIHaebWm34=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=m7Fq73V3D+Mag4NeRcZI7wpQrbmqmS4S7IXJvNx/Rnns8NeNb8Yxg825tE2M2JAooLYu3b+olfiFsA5274T06iDw9jvzOK4ekclg3issaja0itQCkHj5ey0ZbQl1VrFR8fmlS/Qg/q2GExG+qJZWhpdc/o2utru3raf7HASxKOk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BFydNjxP; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BC232010E5
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 11:00:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741086010; cv=pass; b=Q/TqXZFih8o64OcJNyxYGXVUgLVWnS1O6+sOSpET4azR8KeUKIrNBljiOR7rOS5D2qJ+sDpPrxPHiqhPMQuisiBM3eNYfI98w1bqwAtl5WnS4KzaroQpTtf7QnOD1k3TSB3AaaF7Sf7xjR0tc4o7ZLyZxuTXHMdpOGTRuNA5VDw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741086010; c=relaxed/simple;
+	bh=mt7hEnVoH9ixJLgXuCnPk+QEtURpCqfN/VDQ8rFvN+o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Ul7mCQein/we6436nt8U+RhMwH7j+JAHZZKP4zLqxQKVJ48BF+Qi5TLkzVhJY10BFE/hZp015pA64FimC4fIQjx3H2qRR0ZbWf2ZMROwPuloXLa5AvFb/o6WKq9uoKYe7nbVfPVfGEegxF2yHaQT1ff6M2Hk9VbDCvqY9br9j8I=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b=AE6MV5R4; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BFydNjxP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F168C4CEE5;
-	Tue,  4 Mar 2025 10:59:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741086000;
-	bh=Rvoji/ul4LckOnAp09Lt55SBKXtQJ2Ab4yIHaebWm34=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=BFydNjxPHbOzP95YMBOPGJ5XQ2gM24xod5SulzFyWnDdBoDrdnGbI3CSJXYBwpI6y
-	 bi5kmNey5NKHSlGLoIMpXDpKX4+EYudvMfJX6wOxbwB+kBJhfqjNdHOI4GMnVukIkN
-	 TO6t7mVkwEz4ci4kiBRGYp8BQ+IizKUwEBNb6Hs/2w/1yemH32upCGwhftt4sNmSMy
-	 +EXkQABDOFzatHcDGi86mziJcuvNQN4FV8nWaAH+AC4OZzGHuxv0UncAEoWQujFUqo
-	 6ljiQXBhUDkbVo2TjuvHwBrk5lDvaGsauwY+sBTw+YgTMzu/dfVRPan/5OSvQEwAX1
-	 yEYIMmAv/gzHg==
-Message-ID: <142a2edc-a668-4a6a-a4e8-eff3e8bf9e91@kernel.org>
-Date: Tue, 4 Mar 2025 11:59:53 +0100
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b="AE6MV5R4"
+ARC-Seal: i=1; a=rsa-sha256; t=1741085958; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=JgfciHxqZYyFSSfuhuv5vjVyq//D99mHx5wTVSy9RmDJQHUdgiW35c7twCWqZwXHJg5n6De5YA97iavK7rHFe4ZhbZrbqOVRu/MIFqxTAl3i8Ek8/V8XpRONF2QR1vml1jp/0laKIYlgLGG3QbMSkM3f3s5kXuhHBZoeS38vm3E=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1741085958; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=Dbsr2DzMdYZQ4tGo8UWZqeyiKrIzRaj9gxDPB5xSI+M=; 
+	b=ctwWrTWsqBfu/EzXaZS6O/bRL5u2s6IExQLG1qbNHnvSx8k8iZ9bK0sE/9ULBOFKRSJTUDAon6fCTw/HUDAvSeHwoTkpAt7BNLXRQiubBqCUxdcGNrLUVG7DuzWQ8fUweLmWJVQDDXKwcBylXbhxF5UqpwIeqAY79vC5LK9HvtY=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=dmitry.osipenko@collabora.com;
+	dmarc=pass header.from=<dmitry.osipenko@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1741085958;
+	s=zohomail; d=collabora.com; i=dmitry.osipenko@collabora.com;
+	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=Dbsr2DzMdYZQ4tGo8UWZqeyiKrIzRaj9gxDPB5xSI+M=;
+	b=AE6MV5R4+ndvbYnirTlQbXoIphSwJhAjOCrPYHODCALnoq6TCaJFUpwnUQgu8B7B
+	GoVR7tT2Yh2PDT2PxyUJotLWTUnWda1TM2n6wQzgI2GQAy8Ml7LBrxMm159NK0pzL7j
+	Xn8UXuv45TdXfxx1lLGgOpgsOVxmEW8NByqxB3NI=
+Received: by mx.zohomail.com with SMTPS id 174108595555814.859596015899456;
+	Tue, 4 Mar 2025 02:59:15 -0800 (PST)
+Message-ID: <6b7d95b7-a9dd-43c9-b1db-8a636b85ad51@collabora.com>
+Date: Tue, 4 Mar 2025 13:59:09 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,87 +45,45 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/3] ARM: dts: aspeed-g6: Add AST2600 LPC PCC support
-To: Kevin Chen <kevin_chen@aspeedtech.com>, lee@kernel.org, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, joel@jms.id.au,
- andrew@codeconstruct.com.au, derek.kiernan@amd.com, dragan.cvetic@amd.com,
- arnd@arndb.de, gregkh@linuxfoundation.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org,
- linux-kernel@vger.kernel.org
-References: <20250304104434.481429-1-kevin_chen@aspeedtech.com>
- <20250304104434.481429-3-kevin_chen@aspeedtech.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v19 22/30] drm/shmem-helper: Add common memory shrinker
+To: Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
+ <airlied@gmail.com>, Gerd Hoffmann <kraxel@redhat.com>,
+ Gurchetan Singh <gurchetansingh@chromium.org>, Chia-I Wu
+ <olvaffe@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ Qiang Yu <yuq825@gmail.com>, Steven Price <steven.price@arm.com>,
+ Boris Brezillon <boris.brezillon@collabora.com>,
+ Emma Anholt <emma@anholt.net>, Melissa Wen <mwen@igalia.com>
+Cc: kernel@collabora.com, linux-kernel@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, virtualization@lists.linux-foundation.org
+References: <20240105184624.508603-1-dmitry.osipenko@collabora.com>
+ <20240105184624.508603-23-dmitry.osipenko@collabora.com>
+ <d1f856c7-47dd-4f1d-a124-973064dcd1f0@suse.de>
+From: Dmitry Osipenko <dmitry.osipenko@collabora.com>
 Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20250304104434.481429-3-kevin_chen@aspeedtech.com>
+In-Reply-To: <d1f856c7-47dd-4f1d-a124-973064dcd1f0@suse.de>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-ZohoMailClient: External
 
-On 04/03/2025 11:44, Kevin Chen wrote:
-> The AST2600 has PCC controller in LPC, placed in LPC node.
+On 3/4/25 13:29, Thomas Zimmermann wrote:
+> Hi
 > 
-> Signed-off-by: Kevin Chen <kevin_chen@aspeedtech.com>
-> ---
->  arch/arm/boot/dts/aspeed/aspeed-g6.dtsi | 7 +++++++
->  1 file changed, 7 insertions(+)
+> Am 05.01.24 um 19:46 schrieb Dmitry Osipenko:
+>> Introduce common drm-shmem shrinker for DRM drivers.
 > 
-> diff --git a/arch/arm/boot/dts/aspeed/aspeed-g6.dtsi b/arch/arm/boot/dts/aspeed/aspeed-g6.dtsi
-> index 8ed715bd53aa..87dcacb78692 100644
-> --- a/arch/arm/boot/dts/aspeed/aspeed-g6.dtsi
-> +++ b/arch/arm/boot/dts/aspeed/aspeed-g6.dtsi
-> @@ -626,6 +626,13 @@ lpc_snoop: lpc-snoop@80 {
->  					status = "disabled";
->  				};
->  
-> +				lpc_pcc: lpc-pcc@0 {
-> +					compatible = "aspeed,ast2600-lpc-pcc";
-> +					reg = <0x0 0x140>;
-> +					interrupts = <GIC_SPI 145 IRQ_TYPE_LEVEL_HIGH>;
-> +					status = "disabled";
+> What's the status of this patch?
 
-Incomplete. Your driver clearly bails on missing ports...
+It was de-prioritized on my list a year ago as I had to move to a higher
+priority problems. Rebasing and re-testing these patches takes much
+time, it either has to be split up in a smaller parts or applied in one go.
 
+The current status is that I started to work on v20 rather long time ago
+and the patches need to be rebased and re-tested again. Heard that
+Panthor driver may want shmem shrinker more than others today.
+
+-- 
 Best regards,
-Krzysztof
+Dmitry
