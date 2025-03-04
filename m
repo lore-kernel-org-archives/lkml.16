@@ -1,160 +1,167 @@
-Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
+Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0296227D79A
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 15:08:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DDA327D791
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 15:09:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741100941; cv=none; b=imhjjhcPrVg51sqZNSojslvZEvJn2qqNBVPjn2PK6En1EhNh3l4exHbCOZzLZRmGEEQLrsK75PFDTt3xOHP1ifp1sJG/GtFuQzfxUutxkbvqLGwvLt2X0UshRVtFV3sUV1FF0L7SmL6Fm0U6yfut7rHVglecuiibxFSVfAnMw/Q=
+	t=1741100947; cv=none; b=eDVXMWsDQta3QZdK9iMnoLvy6gbkIefxBDv/p/FzDGUblG77L4AbNZBttUnlGcWTnay3vmo5pS8WS0yVlYOZUDYhvXDICxnDNiKHKwb0gk23t/xzF03gm+3h3AXoNp5JqHXhWPltb+jbrfZEv8tWjAb8DP29XQpa0Rdf4cg2Onk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741100941; c=relaxed/simple;
-	bh=8PdHR+go0LZyaSvswv9QdAwopu5SDegpWFTZMMMm+JI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UJ55BdPTVD7R+qKctJSUnzxq1h5mxSFmjitFUELEwL+ZgQrGtHzlt3ZXAcx4s9WFuhDVw5nf6lJtef6UkxzGad7kARPNRhWnbK/csSavtg/dX9Fj7kyAvKmwhLKC5cxwyRKpEQf324u90f9Bixlyit7sxAFQ7/CjL0c7CqVF49Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com; spf=pass smtp.mailfrom=fastly.com; dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b=oOiusnYk; arc=none smtp.client-ip=209.85.160.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastly.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b="oOiusnYk"
-Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-474e0bd966dso21870231cf.0
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Mar 2025 07:08:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fastly.com; s=google; t=1741100939; x=1741705739; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=BAJF5oZvK4kDimU1hi8HyGe8Ni5obiEempBFfdSb2no=;
-        b=oOiusnYkJFatMYLUxEEfu7QYLKGgXcHIeicVtgcE1iF54yQBvdzLx658h06ePrcjee
-         ueonzdyDtbrpkCQncf/aMhXwAS2amZKJQ6S4zcSw35cc8Agz2AkFMzEaIfP6MNHsu7Ct
-         /pw7Zuj85EUvw2UfpQt4ct7rFWQ0aV66XawYc=
+	s=arc-20240116; t=1741100947; c=relaxed/simple;
+	bh=yxgJZ1WCtkDglJ+LjgRiE8IU2dc94GX/mwaVgTcbTVs=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=SahNdLF1nN/T2/LVobVjsKP14pcK+6U4Qgob9l7P82ZF/MQYl4DIuZyY72f/qt2LnpC5BZxIBRFI6qxWKOtLg8U2OQR0h4y6MhcoR90snufh0ex+hCag0CLEWdDBCIIjwXjJXvZ1H/H7af6iu+4kOpulCqYJ56PI+iLOkftZXLg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-85adc96a75fso175564239f.2
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Mar 2025 07:09:05 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741100939; x=1741705739;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date
+        d=1e100.net; s=20230601; t=1741100944; x=1741705744;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=BAJF5oZvK4kDimU1hi8HyGe8Ni5obiEempBFfdSb2no=;
-        b=GxNQQDQ8f72tx2v1mrqlguM6jhCIVR7hFC85mm4qfEfPRnkd1Ig4Luc/nquw8JS/kB
-         mATvabo3QS7xPuLaN48cnjDIKh5kSNj+8ioUUL/uYJ4zlGY/26OrgvA5kkLbVTjzf0rX
-         JQ1nZj93O8l7GjNXW2F4tEUUtzDBIcLGhoqkqBKmbi98gREW+/WUgd7LeeojIdKzn7iL
-         7nuITGCqFsc4Uwce5XTaPjW+PfPIuBEfJilCVg0OqOJxSKzYFbAOJM6sINR1hqOZc9rA
-         8Cj3V5DEZVhm660Niww2obglTCRPz4BA5RFZF3Yt/pVGgFLYQBSk+79gHm401v7t5p5Q
-         lwnw==
-X-Forwarded-Encrypted: i=1; AJvYcCUfK82Bsrrh4t82/5pC1ktTWuL6NdA2+GnFHJikOuWeVr6qKwrjC/IonGHevrhgGmhoG7Ys2JXvR0kgTDo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzbeEIrGnYAYP+Fz2XSwpenzyf/AyxIkTfBh9qHeZG5M0SsrYve
-	RXll0+IOwOVJIsMZic/tzPjqIvMKNydoMjAONGzKUKqdm3gKfEWg5ctEhTflurU=
-X-Gm-Gg: ASbGncu73rAhrNFMi5uwQgumumpeAGV4UkLvyIHb+raD9t0/qD1BmauRqyOPn7pv0Nm
-	2nueT5WWV7kjWDYpJ9zSdSsjqebjBog74AJtZkMXkKz5cTmqYYBKHCCZYDJUiX4mM7uMvB93Jti
-	nQl1iNhwqRQ46OXfd1I48jWYhINDq785ZjaY8BgbIqZpBM+vSd90cs8i49r7OwATAQUjAKh5BcP
-	Kk6t6D0/eH2pK/VnyyVcI/QT1ymyaLhGeAvi/6hJXFOKJWJu977tM1O+Mz6aWlvO4vQx/zks8im
-	iBK3zj3X4CLqwBLdmHIiNG4Iwu8uYmTsJjkivqcH00P0q+zd+wkTGxAcxPWzmLobzjhVdi0GBhZ
-	L71BBkrM=
-X-Google-Smtp-Source: AGHT+IFN7StRwj2Ft1J/Us75lrKPTPd2o+N24d4I6qj5+wKxsZNxpj1S/cF2hLsjZ4/ip/QBD/Wuaw==
-X-Received: by 2002:ac8:5a49:0:b0:471:bcb7:7897 with SMTP id d75a77b69052e-474bc066ee2mr231531011cf.1.1741100938725;
-        Tue, 04 Mar 2025 07:08:58 -0800 (PST)
-Received: from LQ3V64L9R2 (ool-44c5a22e.dyn.optonline.net. [68.197.162.46])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-474721bf582sm74153761cf.37.2025.03.04.07.08.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Mar 2025 07:08:58 -0800 (PST)
-Date: Tue, 4 Mar 2025 10:08:55 -0500
-From: Joe Damato <jdamato@fastly.com>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: netdev@vger.kernel.org, mkarsten@uwaterloo.ca,
-	gerhard@engleder-embedded.com, jasowang@redhat.com,
-	xuanzhuo@linux.alibaba.com, mst@redhat.com, leiyang@redhat.com,
-	Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-	"open list:VIRTIO CORE AND NET DRIVERS" <virtualization@lists.linux.dev>,
-	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net-next v5 3/4] virtio-net: Map NAPIs to queues
-Message-ID: <Z8cXh43GJq2lolxE@LQ3V64L9R2>
-Mail-Followup-To: Joe Damato <jdamato@fastly.com>,
-	Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-	mkarsten@uwaterloo.ca, gerhard@engleder-embedded.com,
-	jasowang@redhat.com, xuanzhuo@linux.alibaba.com, mst@redhat.com,
-	leiyang@redhat.com,
-	Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-	"open list:VIRTIO CORE AND NET DRIVERS" <virtualization@lists.linux.dev>,
-	open list <linux-kernel@vger.kernel.org>
-References: <20250227185017.206785-1-jdamato@fastly.com>
- <20250227185017.206785-4-jdamato@fastly.com>
- <20250228182759.74de5bec@kernel.org>
- <Z8Xc0muOV8jtHBkX@LQ3V64L9R2>
- <Z8XgGrToAD7Bak-I@LQ3V64L9R2>
- <Z8X15hxz8t-vXpPU@LQ3V64L9R2>
- <20250303160355.5f8d82d8@kernel.org>
+        bh=g0C9k5UtlIUzWolLK5AZ09SbJh9Of0qlLQYk1Kv1Qms=;
+        b=bH6SUIe56Q18n0BP6l0I/ypsZtFKcwsA6/ZPjpxd1fKDKNRJ/ir7zZ0b16p0rV94cI
+         szDjvk1JqLaxIPPl7RUcjbFmJcihSUUI1EcRK4Ca0TB/JVRojO4nmWfJK+TiG2qFBeMN
+         3RNv2JK3aGRAxpNASKUXHELXlk3HKFc4mHyxB9x7yX994S+5VJCrEAdbJGL+KupsVNrR
+         rVswzcwJ23GOyXJuieX31Dwv6RGdbNkslp9UQZ920Mz/vRICBuQD+8U/Z41TaCqpYvuo
+         svZbyfK1GkxonAv1Scn7FiEfurenQcwY4MpJnvqCXP7KfevdjC9C0N6TBihIxEfNWb5q
+         mnjw==
+X-Forwarded-Encrypted: i=1; AJvYcCW7WbPlT3gsG3UDFsyBvybZRxnGN/WL0GSijTLb377d44WE7tIyTUNYwrwU/3KiFPHbc3RoRbnHJ8lh+ag=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz22J/QwaRwNItBnyFms+jGUzWxwNHeccp4TExL4UZRuEzS2XH3
+	MBnA24HXW9JgzQR6rXgaoZApne579ozqkXpNCj0k9LTfYeRKcTsdG+keaQwC2QgqTNocTD5ev+k
+	QTKWlN+wrzWrWpYySV0bwTmem265v02yKe34wr+2qKGQS9FAaxMxfF5s=
+X-Google-Smtp-Source: AGHT+IHOthu7SnghHJVzCg9DXcNCmS8r63VCSIm+OEIjNf8VoYaIHdA146lKNfCwt9nWMGgBRuaCFe6NO3Fa7gduUcRNJw0J6t74
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250303160355.5f8d82d8@kernel.org>
+X-Received: by 2002:a05:6e02:19c8:b0:3d1:863e:5536 with SMTP id
+ e9e14a558f8ab-3d3e6f28e56mr181837725ab.18.1741100944719; Tue, 04 Mar 2025
+ 07:09:04 -0800 (PST)
+Date: Tue, 04 Mar 2025 07:09:04 -0800
+In-Reply-To: <tencent_46109430EBAEEFDACC98796A6F202EDD6C0A@qq.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67c71790.050a0220.15b4b9.000f.GAE@google.com>
+Subject: Re: [syzbot] [xfs?] [mm?] WARNING: bad unlock balance in __mm_populate
+From: syzbot <syzbot+8f9f411152c9539f4e59@syzkaller.appspotmail.com>
+To: eadavis@qq.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Mar 03, 2025 at 04:03:55PM -0800, Jakub Kicinski wrote:
-> On Mon, 3 Mar 2025 13:33:10 -0500 Joe Damato wrote:
-> > > > @@ -2880,6 +2880,13 @@ static void refill_work(struct work_struct *work)
-> > > >         bool still_empty;
-> > > >         int i;
-> > > > 
-> > > > +       spin_lock(&vi->refill_lock);
-> > > > +       if (!vi->refill_enabled) {
-> > > > +               spin_unlock(&vi->refill_lock);
-> > > > +               return;
-> > > > +       }
-> > > > +       spin_unlock(&vi->refill_lock);
-> > > > +
-> > > >         for (i = 0; i < vi->curr_queue_pairs; i++) {
-> > > >                 struct receive_queue *rq = &vi->rq[i];
-> > > >  
-> > > 
-> > > Err, I suppose this also doesn't work because:
-> > > 
-> > > CPU0                       CPU1
-> > > rtnl_lock                  (before CPU0 calls disable_delayed_refill) 
-> > >   virtnet_close            refill_work
-> > >                              rtnl_lock()
-> > >   cancel_sync <= deadlock
-> > > 
-> > > Need to give this a bit more thought.  
-> > 
-> > How about we don't use the API at all from refill_work?
-> > 
-> > Patch 4 adds consistent NAPI config state and refill_work isn't a
-> > queue resize maybe we don't need to call the netif_queue_set_napi at
-> > all since the NAPI IDs are persisted in the NAPI config state and
-> > refill_work shouldn't change that?
-> > 
-> > In which case, we could go back to what refill_work was doing
-> > before and avoid the problem entirely.
-> > 
-> > What do you think ?
-> 
-> Should work, I think. Tho, I suspect someone will want to add queue API
-> support to virtio sooner or later, and they will run into the same
-> problem with the netdev instance lock, as all of ndo_close() will then
-> be covered with netdev->lock.
-> 
-> More thorough and idiomatic way to solve the problem would be to cancel
-> the work non-sync in ndo_close, add cancel with _sync after netdev is
-> unregistered (in virtnet_remove()) when the lock is no longer held, then
-> wrap the entire work with a relevant lock and check if netif_running()
-> to return early in case of a race.
+Hello,
 
-Thanks for the guidance. I am happy to make an attempt at
-implementing this in a future, separate series that follows this
-one (probably after netdev conf in a few weeks :).
+syzbot has tested the proposed patch but the reproducer is still triggering an issue:
+WARNING: bad unlock balance in __mm_populate
 
-> Middle ground would be to do what you suggested above and just leave 
-> a well worded comment somewhere that will show up in diffs adding queue
-> API support?
+mm: 00000000b67e0d34, vma: 00000000f29ded2b, mmap lock held: 0, locked: 1, ret: -14, mm addr is valid: 1, __mm_populate
+=====================================
+WARNING: bad unlock balance detected!
+6.14.0-rc4-syzkaller-ge056da87c780-dirty #0 Not tainted
+-------------------------------------
+syz.0.16/7282 is trying to release lock (&mm->mmap_lock
+) at:
+[<ffff800080a62f10>] mmap_read_unlock include/linux/mmap_lock.h:217 [inline]
+[<ffff800080a62f10>] __mm_populate+0x5a0/0x670 mm/gup.c:2052
+but there are no more locks to release!
 
-Jason, Michael, et. al.:  what do you think ? I don't want to spin
-up a v6 if you are opposed to proceeding this way. Please let me
-know.
+other info that might help us debug this:
+no locks held by syz.0.16/7282.
+
+stack backtrace:
+CPU: 0 UID: 0 PID: 7282 Comm: syz.0.16 Not tainted 6.14.0-rc4-syzkaller-ge056da87c780-dirty #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 12/27/2024
+Call trace:
+ show_stack+0x2c/0x3c arch/arm64/kernel/stacktrace.c:466 (C)
+ __dump_stack lib/dump_stack.c:94 [inline]
+ dump_stack_lvl+0xe4/0x150 lib/dump_stack.c:120
+ dump_stack+0x1c/0x28 lib/dump_stack.c:129
+ print_unlock_imbalance_bug+0x254/0x2ac kernel/locking/lockdep.c:5289
+ __lock_release kernel/locking/lockdep.c:5518 [inline]
+ lock_release+0x410/0x9e4 kernel/locking/lockdep.c:5872
+ up_read+0x24/0x3c kernel/locking/rwsem.c:1619
+ mmap_read_unlock include/linux/mmap_lock.h:217 [inline]
+ __mm_populate+0x5a0/0x670 mm/gup.c:2052
+ mm_populate include/linux/mm.h:3386 [inline]
+ vm_mmap_pgoff+0x398/0x408 mm/util.c:581
+ ksys_mmap_pgoff+0x3a4/0x5c8 mm/mmap.c:607
+ __do_sys_mmap arch/arm64/kernel/sys.c:28 [inline]
+ __se_sys_mmap arch/arm64/kernel/sys.c:21 [inline]
+ __arm64_sys_mmap+0xf8/0x110 arch/arm64/kernel/sys.c:21
+ __invoke_syscall arch/arm64/kernel/syscall.c:35 [inline]
+ invoke_syscall+0x98/0x2b8 arch/arm64/kernel/syscall.c:49
+ el0_svc_common+0x130/0x23c arch/arm64/kernel/syscall.c:132
+ do_el0_svc+0x48/0x58 arch/arm64/kernel/syscall.c:151
+ el0_svc+0x54/0x168 arch/arm64/kernel/entry-common.c:744
+ el0t_64_sync_handler+0x84/0x108 arch/arm64/kernel/entry-common.c:762
+ el0t_64_sync+0x198/0x19c arch/arm64/kernel/entry.S:600
+------------[ cut here ]------------
+DEBUG_RWSEMS_WARN_ON(tmp < 0): count = 0xffffffffffffff00, magic = 0xffff0000d743e760, owner = 0x1, curr 0xffff0000c4563d00, list empty
+WARNING: CPU: 0 PID: 7282 at kernel/locking/rwsem.c:1346 __up_read+0x3bc/0x5f8 kernel/locking/rwsem.c:1346
+Modules linked in:
+CPU: 0 UID: 0 PID: 7282 Comm: syz.0.16 Not tainted 6.14.0-rc4-syzkaller-ge056da87c780-dirty #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 12/27/2024
+pstate: 60400005 (nZCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+pc : __up_read+0x3bc/0x5f8 kernel/locking/rwsem.c:1346
+lr : __up_read+0x3bc/0x5f8 kernel/locking/rwsem.c:1346
+sp : ffff8000a42a79a0
+x29: ffff8000a42a7a20
+ x28: 1ffff00011f760cb x27: ffff80008fbb0000
+x26: dfff800000000000 x25: ffffffffffffff00 x24: ffff0000d743e7b8
+x23: ffff0000d743e760 x22: ffffffffffffff00 x21: 0000000000000001
+x20: ffff0000c4563d00 x19: ffff0000d743e760
+ x18: ffff8000a42a7268
+x17: 0000000000000000
+ x16: ffff8000832b3460 x15: 0000000000000001
+x14: 1ffff00014854e8c x13: 0000000000000000
+ x12: 0000000000000000
+x11: 0000000000000003
+ x10: 0000000000ff0100 x9 : 5249a055953baa00
+x8 : 5249a055953baa00 x7 : 205b5d3236333836 x6 : ffff8000804a97f4
+x5 : 0000000000000000 x4 : 0000000000000001 x3 : ffff800083245474
+
+x2 : 0000000000000001
+ x1 : 0000000000000001 x0 : 0000000000000000
+Call trace:
+ __up_read+0x3bc/0x5f8 kernel/locking/rwsem.c:1346 (P)
+ up_read+0x2c/0x3c kernel/locking/rwsem.c:1620
+ mmap_read_unlock include/linux/mmap_lock.h:217 [inline]
+ __mm_populate+0x5a0/0x670 mm/gup.c:2052
+ mm_populate include/linux/mm.h:3386 [inline]
+ vm_mmap_pgoff+0x398/0x408 mm/util.c:581
+ ksys_mmap_pgoff+0x3a4/0x5c8 mm/mmap.c:607
+ __do_sys_mmap arch/arm64/kernel/sys.c:28 [inline]
+ __se_sys_mmap arch/arm64/kernel/sys.c:21 [inline]
+ __arm64_sys_mmap+0xf8/0x110 arch/arm64/kernel/sys.c:21
+ __invoke_syscall arch/arm64/kernel/syscall.c:35 [inline]
+ invoke_syscall+0x98/0x2b8 arch/arm64/kernel/syscall.c:49
+ el0_svc_common+0x130/0x23c arch/arm64/kernel/syscall.c:132
+ do_el0_svc+0x48/0x58 arch/arm64/kernel/syscall.c:151
+ el0_svc+0x54/0x168 arch/arm64/kernel/entry-common.c:744
+ el0t_64_sync_handler+0x84/0x108 arch/arm64/kernel/entry-common.c:762
+ el0t_64_sync+0x198/0x19c arch/arm64/kernel/entry.S:600
+irq event stamp: 76619
+hardirqs last  enabled at (76619): [<ffff8000804afb08>] console_emit_next_record kernel/printk/printk.c:3130 [inline]
+hardirqs last  enabled at (76619): [<ffff8000804afb08>] console_flush_all+0x678/0xb90 kernel/printk/printk.c:3210
+hardirqs last disabled at (76618): [<ffff8000804afa44>] console_emit_next_record kernel/printk/printk.c:3115 [inline]
+hardirqs last disabled at (76618): [<ffff8000804afa44>] console_flush_all+0x5b4/0xb90 kernel/printk/printk.c:3210
+softirqs last  enabled at (76520): [<ffff800080311b48>] softirq_handle_end kernel/softirq.c:407 [inline]
+softirqs last  enabled at (76520): [<ffff800080311b48>] handle_softirqs+0xb44/0xd34 kernel/softirq.c:589
+softirqs last disabled at (76395): [<ffff800080020dbc>] __do_softirq+0x14/0x20 kernel/softirq.c:595
+---[ end trace 0000000000000000 ]---
+
+
+Tested on:
+
+commit:         e056da87 Merge remote-tracking branch 'will/for-next/p..
+git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-kernelci
+console output: https://syzkaller.appspot.com/x/log.txt?x=14d2b5a8580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=d6b7e15dc5b5e776
+dashboard link: https://syzkaller.appspot.com/bug?extid=8f9f411152c9539f4e59
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+userspace arch: arm64
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=126b58b7980000
+
