@@ -1,40 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C70D32836A4
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 18:06:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27BC620E6E2
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 18:08:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741111560; cv=none; b=BWs8rfgD7lIVtZeKt20P0GKp5Me+PouWUCJwTqXUf8TDhaAx/S8h7klyop3hvhoToSgK3tsK9HwCXwNxATpTDjwSqfcf987eZn73dUwsHrqpjDU13PzkhKusw68zDsGWQqYRkvEvm3bH7uv+07B2fUf90qOqHv0GHsXwC6ZnxOw=
+	t=1741111711; cv=none; b=C+g/Kbc9WL8s1+AnsAQ4px7SVkAW/H4Gph+fecF6TsvhgjnZBLyWBz7UNrHLCSBb6EoTVTL0ytIe9OBiaMTWbKvXooi2vgnIKX5sU3QipaFc7iwektswzpiV+RM5D1sGY62u573GS2D83jQBSW2AgqhBRb2WktpxEF0OdlJCUNU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741111560; c=relaxed/simple;
-	bh=cFeXbRVRgvK9P2F2afV4D53G+9cqNa/+vBZ/bpIWHjs=;
+	s=arc-20240116; t=1741111711; c=relaxed/simple;
+	bh=7ODIMV7+9QMQYPRvfhJ2u7CgXVNgMDGv+gPG6zETx0U=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=s5N3esl4KhQSfTVu0XxXl7bJNFJm0WzkU7AGeJaNcbKT2shRUgVjCAkEvr/U+9E4IrqvF0yERabwJUzmB5sDNFg5Kdw2pRHC7PW2yYl2Nnm/WaEkpw3aOnQwU/J+86luBUpME7/MeYiPO9lJgj24fFZOKLHZH4RWccZuxN8k/8g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eDDzcUpM; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=N+gq+Gjh7NNJSA2e39PFk4frl4JIoqHR4BG9RsOri/aDe/qAp4fP0G8Cp3/03vK3j84Ut8h9GVEJj3fXEaJbyghp+MMCiF0AvJxaRwkfB4QuZJJiB+5049Sjf9AhiQbBUoO9KpfTnH+Qelp7PL9dx6m5bgxA0MD6XdDVXcsc7nI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oeqh3NTv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eDDzcUpM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31355C4CEE5;
-	Tue,  4 Mar 2025 18:06:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oeqh3NTv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C724C2BCFD;
+	Tue,  4 Mar 2025 18:08:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741111560;
-	bh=cFeXbRVRgvK9P2F2afV4D53G+9cqNa/+vBZ/bpIWHjs=;
+	s=k20201202; t=1741111710;
+	bh=7ODIMV7+9QMQYPRvfhJ2u7CgXVNgMDGv+gPG6zETx0U=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=eDDzcUpMVjhaziGZj4WGuoj0lRaItqiH45SZ29ALt16p505CzoDsRip4nwoQ+7kSt
-	 wVSB8w/ub0LXm4jXNvt8iCh+KYuZ876hhw7TsvyKn1H71/xjsAiaXIJRq+Ty96tDO6
-	 V37YnPV0Y+gZeAyKaVLNXFvTovi0CGQcjvQ98HaUMxepczd0jYyEOSHUSdhBGfn6o+
-	 GUIffsyk+fYJQlz3QL3v9bcczwJURVVVjQ6Dyr/8OqJaQabnmiK2cPNe2knN8XYjYm
-	 VwHiQIrwzzD2QBUFH4ZpaHxT5EA3j9/iczXsz50N1JqS1+/yz5YReXrGTwQWQZSz/V
-	 /JStCw/PlPj9w==
-Date: Tue, 4 Mar 2025 08:05:59 -1000
+	b=oeqh3NTvjJ2PUdEfikabXpCKVavSw7JQYtVtIfCL8e0hVeU6wOn9lo/0FNm5xbPBg
+	 StYMAAea2SbpHh5e4ZqOTjjzkX26l8l2HalH92Bkd8dgq0O9gnQ1n4FEgMZgS+vRnW
+	 rLUQmClbvhi5wHuA7J/kCM88JkBU+ZTA6Nxp4sGQ/8gK3Jb1q82JiXP/AzF71ysAmO
+	 X7Ph+Xo+16u/Mc1Vl0WupdFOdEC22mldJfxbERMHSTsNkn7e2tKRkU9r+ZtLkM5MF1
+	 eD4KjjoCOqdCw8umfkMi88anI8g99I8mw0KuqT+3y9aSgv4CvYvfXkEZYQ/MO6uY27
+	 ZcOcjEZQwsybQ==
+Date: Tue, 4 Mar 2025 08:08:29 -1000
 From: Tejun Heo <tj@kernel.org>
-To: Changwoo Min <changwoo@igalia.com>
-Cc: void@manifault.com, arighi@nvidia.com, kernel-dev@igalia.com,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 1/2] sched_ext: Change the event type from u64 to s64
-Message-ID: <Z8dBByVpoqeTZ5Ev@slm.duckdns.org>
+To: Andrea Righi <arighi@nvidia.com>
+Cc: Changwoo Min <changwoo@igalia.com>, void@manifault.com,
+	kernel-dev@igalia.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 2/2] sched_ext: Add trace point to track sched_ext
+ core events
+Message-ID: <Z8dBnf66Opy8IseT@slm.duckdns.org>
 References: <20250304104900.154618-1-changwoo@igalia.com>
- <20250304104900.154618-2-changwoo@igalia.com>
+ <20250304104900.154618-3-changwoo@igalia.com>
+ <Z8bwAdeAuNQgJCR2@gpd3>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,13 +45,70 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250304104900.154618-2-changwoo@igalia.com>
+In-Reply-To: <Z8bwAdeAuNQgJCR2@gpd3>
 
-On Tue, Mar 04, 2025 at 07:48:59PM +0900, Changwoo Min wrote:
-> The event count could be negative in the future,
-> so change the event type from u64 to s64.
+On Tue, Mar 04, 2025 at 01:20:17PM +0100, Andrea Righi wrote:
+> On Tue, Mar 04, 2025 at 07:49:00PM +0900, Changwoo Min wrote:
+> > Add tracing support to track sched_ext core events
+> > (/sched_ext/sched_ext_event). This may be useful for debugging sched_ext
+> > schedulers that trigger a particular event.
+> > 
+> > The trace point can be used as other trace points, so it can be used in,
+> > for example, `perf trace` and BPF programs, as follows:
+> > 
+> > ======
+> > $> sudo perf trace -e sched_ext:sched_ext_event --filter 'name == "SCX_EV_ENQ_SLICE_DFL"'
+> > ======
+> > 
+> > ======
+> > struct tp_sched_ext_event {
+> > 	struct trace_entry ent;
+> > 	u32 __data_loc_name;
+> > 	s64 delta;
+> > };
+> > 
+> > SEC("tracepoint/sched_ext/sched_ext_event")
+> > int rtp_add_event(struct tp_sched_ext_event *ctx)
+> > {
+> > 	char event_name[128];
+> > 	unsigned short offset = ctx->__data_loc_name & 0xFFFF;
+> >         bpf_probe_read_str((void *)event_name, 128, (char *)ctx + offset);
+> > 
+> > 	bpf_printk("name %s   delta %lld", event_name, ctx->delta);
+> > 	return 0;
+> > }
+> > ======
+> > 
+> > Signed-off-by: Changwoo Min <changwoo@igalia.com>
+> > ---
+> >  include/trace/events/sched_ext.h | 19 +++++++++++++++++++
+> >  kernel/sched/ext.c               |  2 ++
+> >  2 files changed, 21 insertions(+)
+> > 
+> > diff --git a/include/trace/events/sched_ext.h b/include/trace/events/sched_ext.h
+> > index fe19da7315a9..50e4b712735a 100644
+> > --- a/include/trace/events/sched_ext.h
+> > +++ b/include/trace/events/sched_ext.h
+> > @@ -26,6 +26,25 @@ TRACE_EVENT(sched_ext_dump,
+> >  	)
+> >  );
+> >  
+> > +TRACE_EVENT(sched_ext_event,
+> > +	    TP_PROTO(const char *name, __s64 delta),
+> > +	    TP_ARGS(name, delta),
+> > +
+> > +	TP_STRUCT__entry(
+> > +		__string(name, name)
+> > +		__field(	__s64,		delta		)
 > 
-> Signed-off-by: Changwoo Min <changwoo@igalia.com>
+> nit: there's an extra space/tab after delta.
+
+I think it's one of common formatting styles for tp definitions. If we don't
+like it, we can just them in the future.
+
+> But apart than that LGTM.
+> 
+> Acked-by: Andrea Righi <arighi@nvidia.com>
 
 Applied to sched_ext/for-6.15.
 
