@@ -1,119 +1,78 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBF371FF61E;
-	Tue,  4 Mar 2025 11:08:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBE621FF1C5;
+	Tue,  4 Mar 2025 11:09:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741086541; cv=none; b=PNgqvfYvvy7gywk83FJd8f/ETqESSCSRDxljz3584zSKBfyTQ3M6gaRE+KocEfVR3VaLt1IKwC4vbSn7/v0G6WF93KWm7BuEzt6M3RrI157vjdIRw/mgQaczcn6TtreXe2uGeSuGIac+mBhL3RxhRWJdt3V0onJ8PkPE9Hq3Ddw=
+	t=1741086544; cv=none; b=kLtyrexi+yQ+QoDBK05Fi2JJH/GO5sMVDTxg+UCXcK5K/6Hx5/EV8Y+12H5xzB1TfbfhNWLqtjPw9ireH4QFqUs59MvX5HkdzVbL0qDvBf1P9AJ6169dC59rEPtSzZ6eylGK6ooJGQ5HcvqihtpUrz0xICk5honuLdlFtQq2nBc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741086541; c=relaxed/simple;
-	bh=ysRu7kFtTN9qf41iuj6eo21vLISj48KUiMCBUemBsOE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lAixSuQjr1thNEhI1knA2L6DJKdAH1brO6KP18HiQxD5swI5NIgx/O+/pxbiijWoMr28fwDZSR1188VuveC5iEzFCIhSforWXOyA+tc1ygS3gyJEy1aFCcci6aw61bnL18qRv9GbyOmSCDO4kgljJfeUB+6FQ2wATKUoAdi9FfE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=2vJmZgVp; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=eliXuU4v; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="2vJmZgVp";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="eliXuU4v"
-Date: Tue, 4 Mar 2025 12:08:56 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1741086537;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ez1oyLFhdZRI9rrcMpyl3L441onYQPr1EXQhanRODC0=;
-	b=2vJmZgVpu9KlkhAUrMG1DBjyNMX4Bjyvr/f7jfoCGkWG3EAkw7L+ip2ccLVH6LBGz90z37
-	wc/jef3TS3ErbIpyS/LSGhukbll+u7IXo3Ty3MKno+MUFSxql3HW26aUBJEJiKL7IuQvmY
-	/pSbMjxqtbxLjScyX8KXMKX4Mu7Jzxyd/t9SbU5v27zkHEu6Ir8UZDRc/gUzmboEr1IshV
-	tXUqD8s85E0HTIYtyyZg5Ms2Ha0QsVah8hqfih9Zj8iUnETljv8WmGQ6QLvuN+CLZGlvFs
-	ElrBTs7yB1WKxXfsQIYvFW1e3MiMJ80EvNfNetb55Bna6pr/JiMTrrlDuYMAVw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1741086537;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ez1oyLFhdZRI9rrcMpyl3L441onYQPr1EXQhanRODC0=;
-	b=eliXuU4vRK4OOm3Z6jDReqRW+PTI/bUWfhwZkPMcVfAOrTqfQoGO7ur+5p1+E/QZ2D7iOt
-	7eke14g7GmiHRSCw==
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-To: Willy Tarreau <w@1wt.eu>
-Cc: Shuah Khan <shuah@kernel.org>, Shuah Khan <skhan@linuxfoundation.org>, 
-	Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>, linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH 15/32] tools/nolibc: use intmax definitions from compiler
-Message-ID: <20250304120124-78579418-a44c-47d6-acbb-41ce64fa355e@linutronix.de>
-References: <20250304-nolibc-kselftest-harness-v1-0-adca7cd231e2@linutronix.de>
- <20250304-nolibc-kselftest-harness-v1-15-adca7cd231e2@linutronix.de>
- <20250304073742.GA9911@1wt.eu>
+	s=arc-20240116; t=1741086544; c=relaxed/simple;
+	bh=iRL1xqpVHtKl17cWCTJwB5wPeu43QyomPaKN1qB2UTE=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=s3OkmfrPvxZLXQba02//RV737wYpZiFTvno1MBxg7ttTmXiUnBfVCtd3uNFHiUKLJlun/H8uFVFycCeAfJcz6n2rBAkKMQIKYQ6yYgIJWFOkF4hu3pbEHxAD0d7h2fAdsEX2aqdbq6f6qjWY5HCWMThKzXfqHp27inwzXi7fCEY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.17])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4Z6XvY4JQLz1R64Y;
+	Tue,  4 Mar 2025 19:07:21 +0800 (CST)
+Received: from dggemv706-chm.china.huawei.com (unknown [10.3.19.33])
+	by mail.maildlp.com (Postfix) with ESMTPS id 3CF8F1A0188;
+	Tue,  4 Mar 2025 19:08:59 +0800 (CST)
+Received: from kwepemn100009.china.huawei.com (7.202.194.112) by
+ dggemv706-chm.china.huawei.com (10.3.19.33) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Tue, 4 Mar 2025 19:08:58 +0800
+Received: from localhost.localdomain (10.90.30.45) by
+ kwepemn100009.china.huawei.com (7.202.194.112) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Tue, 4 Mar 2025 19:08:58 +0800
+From: Huisong Li <lihuisong@huawei.com>
+To: <linux@roeck-us.net>, <jdelvare@suse.com>
+CC: <linux-hwmon@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<zhanjie9@hisilicon.com>, <zhenglifeng1@huawei.com>,
+	<liuyonglong@huawei.com>, <lihuisong@huawei.com>
+Subject: [PATCH] hwmon: Fix the missing of 'average' word in hwmon_power_attr_templates
+Date: Tue, 4 Mar 2025 19:01:27 +0800
+Message-ID: <20250304110127.845408-1-lihuisong@huawei.com>
+X-Mailer: git-send-email 2.30.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250304073742.GA9911@1wt.eu>
+Content-Type: text/plain
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ kwepemn100009.china.huawei.com (7.202.194.112)
 
-On Tue, Mar 04, 2025 at 08:37:42AM +0100, Willy Tarreau wrote:
-> Hi Thomas,
-> 
-> On Tue, Mar 04, 2025 at 08:10:45AM +0100, Thomas Weiﬂschuh wrote:
-> > The printf format checking in the compiler uses the intmax types from
-> > the compiler, not libc. This can lead to compiler errors.
-> > 
-> > Instead use the types already provided by the compiler.
-> > 
-> > Example issue with clang 19 for arm64:
-> > 
-> > nolibc-test.c:30:2: error: format specifies type 'uintmax_t' (aka 'unsigned
-> > long') but the argument has type 'uintmax_t' (aka 'unsigned long long')
-> > [-Werror,-Wformat]
-> > 
-> > Signed-off-by: Thomas Weiﬂschuh <thomas.weissschuh@linutronix.de>
-> > ---
-> >  tools/include/nolibc/stdint.h | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/tools/include/nolibc/stdint.h b/tools/include/nolibc/stdint.h
-> > index cd79ddd6170e05b19945e66151bcbcf840028d32..b052ad6303c38f09685b645268dad1fa8848370d 100644
-> > --- a/tools/include/nolibc/stdint.h
-> > +++ b/tools/include/nolibc/stdint.h
-> > @@ -39,8 +39,8 @@ typedef   size_t      uint_fast32_t;
-> >  typedef  int64_t       int_fast64_t;
-> >  typedef uint64_t      uint_fast64_t;
-> >  
-> > -typedef  int64_t           intmax_t;
-> > -typedef uint64_t          uintmax_t;
-> > +typedef __INTMAX_TYPE__    intmax_t;
-> > +typedef __UINTMAX_TYPE__  uintmax_t;
-> 
-> Just thinking loud. While I understand the rationale behind this
-> change, it somewhat contradicts the one on printf where we explicitly
-> use it as an "unsigned long long" that's expected to be 64 bits:
-> 
->    CASE_TEST(uintmax_t);    EXPECT_VFPRINTF(20, "18446744073709551615", "%ju", 0xffffffffffffffffULL); break;
-> 
-> Do we really have guarantees that a compiler will always declare
-> it as a 64-bit or unsigned long long ?
+The string "power%d_interval_max" and "power%d_interval_min" in the
+hwmon_power_attr_templates[] are corresponding to the sysfs interface name
+of hwmon_power_average_interval_max and hwmon_power_average_interval_min.
+But the 'average' word is missing in two strings. Fortunately, there is
+no driver to use it yet.
 
-It should always be 64bit. But not necessarily unsigned long long.
-In the case from the commit message it is unsigned long.
+Signed-off-by: Huisong Li <lihuisong@huawei.com>
+---
+ drivers/hwmon/hwmon.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-> E.g. we could see new
-> compilers decide that uintmax_t becomes 128-bit. Well, maybe in
-> that case it will simply be a matter of updating the test case
-> after all...
+diff --git a/drivers/hwmon/hwmon.c b/drivers/hwmon/hwmon.c
+index 9703d60e9bbf..1688c210888a 100644
+--- a/drivers/hwmon/hwmon.c
++++ b/drivers/hwmon/hwmon.c
+@@ -646,8 +646,8 @@ static const char * const hwmon_power_attr_templates[] = {
+ 	[hwmon_power_enable] = "power%d_enable",
+ 	[hwmon_power_average] = "power%d_average",
+ 	[hwmon_power_average_interval] = "power%d_average_interval",
+-	[hwmon_power_average_interval_max] = "power%d_interval_max",
+-	[hwmon_power_average_interval_min] = "power%d_interval_min",
++	[hwmon_power_average_interval_max] = "power%d_average_interval_max",
++	[hwmon_power_average_interval_min] = "power%d_average_interval_min",
+ 	[hwmon_power_average_highest] = "power%d_average_highest",
+ 	[hwmon_power_average_lowest] = "power%d_average_lowest",
+ 	[hwmon_power_average_max] = "power%d_average_max",
+-- 
+2.33.0
 
-uintmax_t is only guaranteed to hold "any basic unsigned integer type supported
-by the implementation", while 128bit integers are not "basic" but "extended" and
-nolibc as implementation does not support them in the first place.
-Also uintmax_t is used in various ABIs which would get broken if its definition
-would change, one such example would be printf() itself.
-
-The "correct" definition of uintmax_t constants would use UINTMAX_C().
-I'm not sure if it's worth adding these macros.
