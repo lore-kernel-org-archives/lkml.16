@@ -1,194 +1,154 @@
-Received: from mail-ua1-f48.google.com (mail-ua1-f48.google.com [209.85.222.48])
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28701200BBD
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 11:56:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC2B93D561;
+	Tue,  4 Mar 2025 11:57:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741089419; cv=none; b=SzPhB6lPlj3g3D+EQXSRVFCWUbZdjiw1Q3dt0Q1zkCPcBsGUkR+L8r/Ev4YBx2HlHBDUNP1nZo7GV04O7u0blYo6fJMil6BRpZsLhPTSkZ9SLW8QN+IZhfdztRhPNSrGF/VvPNi/b1ao5agmyv+sOHuhJ+EfUvkFo9BFR73ZS2c=
+	t=1741089472; cv=none; b=H9LmrjhykNwZVlhn9wsy3/Ncxr2wZiXBJ4r5rOdau2x2hc7uiFoy4SYzmOzjkuPJsS8BJ3N4DkYUt7l9WoFtD7iHWQpH4R+Ylwd83Xzub0sJMcJlLZik/2PTGxaoiEv59alnRqjk25S8d5O0AlaEHT287gHvpZb8dQnkpSw6fv8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741089419; c=relaxed/simple;
-	bh=7CV/tglOXpwtd+ACTlnlPRuyKcTdqYGbOWgaAct7b60=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=Qn8K72zrsG2YQfxCnrYD7SU3Q96fFpnDVFv7oFp9k13XX+HMb60mCt8Dv5/IQBk/PJmCvpQ17RlKoupUSQc8nrCCqFGz5P2k/rs8+yr3cPxRMulRtbx2qlLz+TSItWVYEZtgK4pxwu6CvQPdBZE5KS76UV+ESuUBHLZYUhV5/uo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=iGxJYrI2; arc=none smtp.client-ip=209.85.222.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1741089472; c=relaxed/simple;
+	bh=7ypZWnjPrV7w6TeeTckAB6eHJ6/xsg2qkTe/LybKhEs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NcTxkiiS3kUsuCCTOqAK2UZOLK2WyZ27apyPE2Za+XEjVZW2eWLNMnYStNEovkaGcuRANxaufqjeWyhsUioYFkihUFJltrPvjv/7nop44x7G7+3f7zJcmXpqDrIVZztunfDSZmuKDrjeB2AEe5JqcZp4ktSuR1apwReFk/PrRis=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GYZ0d05B; arc=none smtp.client-ip=209.85.208.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iGxJYrI2"
-Received: by mail-ua1-f48.google.com with SMTP id a1e0cc1a2514c-867129fdb0aso4861504241.1
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Mar 2025 03:56:57 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GYZ0d05B"
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5e538388dd1so3094210a12.1;
+        Tue, 04 Mar 2025 03:57:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741089417; x=1741694217; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1741089469; x=1741694269; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=1niHqFMSHq72s1r9U6R1sN/sD6PMQLCGG4Ay/Tpacaw=;
-        b=iGxJYrI2zZ6cKETexOvcGt7aWTdfcvwIKcjUllUJVTNl1276qCRo2jmhGV7pBBo6VY
-         7xz8lDx01pPdRTEbbmziPE+ZrfFpumoi1LWx54ZF3uB+lmoK5XzdF07MATA+Bs+yIeW4
-         Yfci6o1TnA6vYoULl4ef2XGbeQCjaCKyxf7MB50g17zJEt/sYi51YWAPXQeWC7jeO41E
-         fKKawTHUS9B5fXF/GL9UGZGIPT/qP3RgBc2RDtPdG4E+7Xs7srvm8SrIYq4AtmrH5ZAs
-         GDBvyZ0C7nw52RDLAiSqrKrPAVw9AKi+vzl/QMES5fF5fE19gGeJ0l+CXHahm1Wl5feH
-         dG0w==
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=oFfYVSo4B+UXub+GZI2qGn4jwqa9bMIxNlJj7fXOijE=;
+        b=GYZ0d05BQ7Rbm6godUG0RiCglK0lqr2pH6CgfQB7n+pPKa44BD3SUo6pDDt/aLqdfE
+         BPkMqQfTOT2cqoyfMwBP4eelEEqhKX3LMQRL7oTR1ipjZrtJ2sY/m3dR1/qjoB8h+Eqv
+         hsqnZZ6VFLRw+SzbL/kDuAN/dIy+xeSjZ+R/4QPssPWU/5CcJeDJKk3N1p5/ygPFdCh+
+         5FgnVyY0z7zLuXxLRWNtXh8k03DT0R/C7o8VvZrCLnLB59hCYDBp69I871VWFzi2tpTj
+         AT214sOk005Tq+Zl0luOqOTnbrLUcy75m8k3EzwKVCLFNuBR43g3NPUureJ1fiH1q7pZ
+         5YFw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741089417; x=1741694217;
+        d=1e100.net; s=20230601; t=1741089469; x=1741694269;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=1niHqFMSHq72s1r9U6R1sN/sD6PMQLCGG4Ay/Tpacaw=;
-        b=VAarTxvNG1gcU+tFRNgrGh80JUj/+IybemFJatbd6LDydB+luufGVFsuuq+88N60YZ
-         0V442s1kji484qA1De5mPgz/eah07nx44uSGc11L752c22a9WC0H75zX3+/q2dQhJO5l
-         UmJm7DGWhixFH2xWyQqYeYRRGba8+EmRfkuCsWyk6qofpmoeVuDNrlgNxzWs0FP8t1Z2
-         CUfnBjjHzP4qEPiB4cCCsHVrouD0xozgjw0cD1P7pP6Maqh5nBpeUsFDmwRm5tWNH7fE
-         PqnhlcvApmt76DoEYRbzdF5vfGYZ6t9nCQ4u82rblQLINJxcAWseX15WIuO7dRFmqtGb
-         8IRg==
-X-Forwarded-Encrypted: i=1; AJvYcCXqznrz/5Vr4rCBAxVnFEBLZMJbKUYYmOjZWBypsFk0/rdxYIjbJMtMCr2P77Foy0+lVKBJE2p3HgQ6cnQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwmbUJplYWILqeyo55Ww/pRPWwrgU5Q7nJ51h4I76zrZcB+91Ti
-	18Hj1SrfiS6uWyXVlrlOnbQ96Fg5TAOefMt5vWgzTU6sn+UbpYvAixUd5F/aAlJ9nOSp4A40w5m
-	6T2w8wqSl9SXJpbVBhmhrlTPIeROZDxXxUiKtZg==
-X-Gm-Gg: ASbGncsqZqQuHS7YTbSH3G0Vi+9UYDq/86wH/5yBbyTUtt7/mIGKvnDeLsX77M2ntPo
-	JriRNta+kTaq+WFxoJ/W0TSzZ4ER+2GoNshWMhjDCqVeSQuLvsPUtws4yv33ioVQVaIaMUnHRIN
-	3T7qhV53n3IaqNltpO6rMqgukURXCgphVZ/EraN0BRxMy2wP6EncwZnnCiXAM=
-X-Google-Smtp-Source: AGHT+IEBpk86hUVQz5hrr3Y4izjaPl+V8gq8s8kHDbuezRtsg/3SFAe7YGJ7EmCDFYA+0y/Wv0n2i9DoVAZcUR3J4gk=
-X-Received: by 2002:a05:6102:330c:b0:4bb:e36f:6a35 with SMTP id
- ada2fe7eead31-4c044961241mr9235577137.14.1741089416962; Tue, 04 Mar 2025
- 03:56:56 -0800 (PST)
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=oFfYVSo4B+UXub+GZI2qGn4jwqa9bMIxNlJj7fXOijE=;
+        b=FDM6rszPoNsk95OQwtu6moaWDehM3s+pvEkakuRimy4OmpB+9f4Kky3vfOCQlLhgKa
+         Rx222q/kCPM7J3aD0/yBZ9h524JfSh0eRtkVWEjkDGaXMEYYX30cbVuTt92ceIE+y5Gp
+         tAFekGefj3pvFTqckC998yYHiAWj2SCOOqJWhQ1Kuba6rHRPBkCLivvwavwUXCYNImWK
+         EHyuy9nB8DqfcEKKt9VwUowUy2e5B/TWZhOGFkTlGMwW1D0izW1BuQzLqZDnxZxoGWbN
+         PIKoDAt03z6/TEb+SfhTkq8bf2lNvnQ7L30QgeJ5k11PJA2Ggqijhtklk/0nPMnIObd1
+         /eGA==
+X-Forwarded-Encrypted: i=1; AJvYcCUBldQktjgO8kLyCIjolGrazeeof9aCyoJUR1viBMYw5CLP2siAd54g5KfTBIhCfXS15uacg/dsQ3CpcFYh@vger.kernel.org, AJvYcCXXIZ44Un0U0+rSDvJenAW4qlq0qb5CC1odQXiefUzDF5cMs80IE+SrK6kt33P57iecOT0wBeLs8qH76+KU@vger.kernel.org
+X-Gm-Message-State: AOJu0YygcgT0bMUi4t17hu3zkG7mG93O8lKm25BFFGULI34dzUzFDcpF
+	ryc3q4zzL47dAW0yZidoRtQS3cXSu78OFVtRw3RjIN9acS/XFqNIZpDzpP76T4HThuppKyz/XUN
+	Se7I1N+Npqf1j0QhH7yjhh8BTJp8=
+X-Gm-Gg: ASbGncsLZNdQgy0bvXnAixFGwLEXQvAz8yQenIiA+UUQyHrQauOXrniQ311TlSQir0K
+	419lGL9B339iBI2axJY8h1q8L+UJPp8UV1/FqeMWXRzGXaHYvj1wQtGKVCKjca06KliU6KAX0cO
+	OJU5iIyXIzysR2eki6t84TnvpMsg==
+X-Google-Smtp-Source: AGHT+IG/gH8xF2QSpMAqKv1eZxLbdC2fhOMhNMkCv6JUkbQ36wboE4Ypr1n30rVoJmN+b7m089jSauZwbUd5xsRhN3g=
+X-Received: by 2002:a17:907:7fa6:b0:abf:615d:58c2 with SMTP id
+ a640c23a62f3a-abf615d6016mr1192362066b.34.1741089468592; Tue, 04 Mar 2025
+ 03:57:48 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Tue, 4 Mar 2025 17:26:45 +0530
-X-Gm-Features: AQ5f1JqTpjO7WcSglV7CxNDa8lwt4A83sT-2JklUF1keCdefKeaIxJcBGckLea8
-Message-ID: <CA+G9fYsrfM62=kr=q1nu_Nx9-sTHQw-6A-3OWkiqgs4JiKzvgA@mail.gmail.com>
-Subject: =?UTF-8?Q?selftests=3A_cgroup=3A_Failures_=E2=80=93_Timeouts_=26_OOM_Issue?=
-	=?UTF-8?Q?s_Analysis?=
-To: Cgroups <cgroups@vger.kernel.org>, linux-mm <linux-mm@kvack.org>, 
-	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
-Cc: Shuah Khan <shuah@kernel.org>, Dan Carpenter <dan.carpenter@linaro.org>, 
-	Arnd Bergmann <arnd@arndb.de>, Anders Roxell <anders.roxell@linaro.org>, Tejun Heo <tj@kernel.org>, 
-	Johannes Weiner <hannes@cmpxchg.org>, =?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>
+References: <20250304080044.7623-1-ImanDevel@gmail.com>
+In-Reply-To: <20250304080044.7623-1-ImanDevel@gmail.com>
+From: Amir Goldstein <amir73il@gmail.com>
+Date: Tue, 4 Mar 2025 12:57:36 +0100
+X-Gm-Features: AQ5f1JoU6Vvq5Hm7n116SaG8VrOOy_nKyTWmNXwcxfBElDzY3PzC1Sz2EnC7Mxc
+Message-ID: <CAOQ4uxiaY9cZFpj4m65SrAVXm7MqB2OFSfyH5D03hEwmdtiBVQ@mail.gmail.com>
+Subject: Re: [PATCH] inotify: disallow watches on unsupported filesystems
+To: Seyediman Seyedarab <imandevel@gmail.com>
+Cc: jack@suse.cz, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-kernel-mentees@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-As part of LKFT=E2=80=99s re-validation of known issues, we have observed t=
+On Tue, Mar 4, 2025 at 8:59=E2=80=AFAM Seyediman Seyedarab <imandevel@gmail=
+.com> wrote:
+>
+> currently, inotify_add_watch() allows adding watches on filesystems
+> where inotify does not work correctly, without returning an explicit
+> error. This behavior is misleading and can cause confusion for users
+> expecting inotify to work on a certain filesystem.
+
+That maybe so, but it's not that inotify does not work at all,
+in fact it probably works most of the time for those fs,
+so there may be users setting inotify watches on those fs,
+so it is not right to regress those users.
+
+>
+> This patch explicitly rejects inotify usage on filesystems where it
+> is known to be unreliable, such as sysfs, procfs, overlayfs, 9p, fuse,
+> and others.
+
+Where did you get this list of fs from?
+Why do you claim that inotify does not work on overlayfs?
+Specifically, there are two LTP tests inotify07 and inotify08
+that test inotify over overlayfs.
+
+This makes me question other fs on your list.
+
+>
+> By returning -EOPNOTSUPP, the limitation is made explicit, preventing
+> users from making incorrect assumptions about inotify behavior.
+>
+> Signed-off-by: Seyediman Seyedarab <ImanDevel@gmail.com>
+> ---
+>  fs/notify/inotify/inotify_user.c | 22 ++++++++++++++++++++++
+>  1 file changed, 22 insertions(+)
+>
+> diff --git a/fs/notify/inotify/inotify_user.c b/fs/notify/inotify/inotify=
+_user.c
+> index b372fb2c56bd..9b96438f4d46 100644
+> --- a/fs/notify/inotify/inotify_user.c
+> +++ b/fs/notify/inotify/inotify_user.c
+> @@ -87,6 +87,13 @@ static const struct ctl_table inotify_table[] =3D {
+>         },
+>  };
+>
+> +static const unsigned long unwatchable_fs[] =3D {
+> +       PROC_SUPER_MAGIC,      SYSFS_MAGIC,       TRACEFS_MAGIC,
+> +       DEBUGFS_MAGIC,        CGROUP_SUPER_MAGIC, SECURITYFS_MAGIC,
+> +       RAMFS_MAGIC,          DEVPTS_SUPER_MAGIC, BPF_FS_MAGIC,
+> +       OVERLAYFS_SUPER_MAGIC, FUSE_SUPER_MAGIC,   NFS_SUPER_MAGIC
+> +};
+> +
+>  static void __init inotify_sysctls_init(void)
+>  {
+>         register_sysctl("fs/inotify", inotify_table);
+> @@ -690,6 +697,14 @@ static struct fsnotify_group *inotify_new_group(unsi=
+gned int max_events)
+>  }
+>
+>
+> +static inline bool is_unwatchable_fs(struct inode *inode)
+> +{
+> +       for (int i =3D 0; i < ARRAY_SIZE(unwatchable_fs); i++)
+> +               if (inode->i_sb->s_magic =3D=3D unwatchable_fs[i])
+> +                       return true;
+> +       return false;
+> +}
+
+This is not a good practice for black listing fs.
+
+See commit 0b3b094ac9a7b ("fanotify: Disallow permission events
+for proc filesystem") for a better practice, but again, we cannot just
+stop supporting inotify on fs where it was supported.
+
+The assumption with the commit above was that setting permission
+events on procfs is possible, but nobody (except for fuzzers) really does t=
 hat
-the selftests: cgroup suite is consistently failing across almost all
-LKFT-supported devices due to:
- - Test timeouts (45 seconds limit reached)
- - OOM-killer invocation
+and if we have found out that there were actual users that do it, we
+would have needed to revert that commit.
 
-## Key Questions for Discussion:
- - Would it be beneficial to increase the test timeout to ~180 seconds
-   to allow sufficient execution time?
- - Should we enhance logging to explicitly print failure reasons when a
-   test fails?
- - Are there any missing dependencies that could be causing these failures?
-     Note: The required selftests/cgroup/config options were included in
-     LKFT's build and test plans.
-
-## Devices Affected:
-The following DUTs consistently experience these failures:
-  -  dragonboard-410c (arm64)
-  -  dragonboard-845c (arm64)
-  -  e850-96 (arm64)
-  -  juno-r2 (arm64)
-  -  qemu-arm64 (arm64)
-  -  qemu-armv7
-  -  qemu-x86_64
-  -  rk3399-rock-pi-4b (arm64)
-  -  x15 (arm)
-  -  x86_64
-
-Regression Analysis:
- - New regression? No (these failures have been observed for months/years).
- - Reproducibility? Yes, the failures occur consistently.
- - Test suite affected? selftests: cgroup (timeouts and OOM-related failure=
-s).
-
-Test regression: selftests cgroup fails timeout and oom-killer
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-
-## Test log:
-# selftests: cgroup: test_cpu
-# ok 1 test_cpucg_subtree_control
-# ok 2 test_cpucg_stats
-# ok 3 test_cpucg_nice
-# not ok 4 test_cpucg_weight_overprovisioned
-# ok 5 test_cpucg_weight_underprovisioned
-# ok 6 test_cpucg_nested_weight_overprovisioned
-# ok 7 test_cpucg_nested_weight_underprovisioned
-#
-not ok 2 selftests: cgroup: test_cpu # TIMEOUT 45 seconds
-
-<trim>
-# selftests: cgroup: test_freezer
-# ok 1 test_cgfreezer_simple
-# ok 2 test_cgfreezer_tree
-# ok 3 test_cgfreezer_forkbomb
-# ok 4 test_cgfreezer_mkdir
-# ok 5 test_cgfreezer_rmdir
-# ok 6 test_cgfreezer_migrate
-# Cgroup /sys/fs/cgroup/cg_test_ptrace isn't frozen
-# not ok 7 test_cgfreezer_ptrace
-# ok 8 test_cgfreezer_stopped
-# ok 9 test_cgfreezer_ptraced
-# ok 10 test_cgfreezer_vfork
-not ok 4 selftests: cgroup: test_freezer # exit=3D1
-<trim>
-
-selftests: cgroup: test_kmem
-#
-not ok 7 selftests: cgroup: test_kmem # TIMEOUT 45 seconds
-
-<trim>
-
-# selftests: cgroup: test_memcontrol
-# ok 1 test_memcg_subtree_control
-# not ok 2 test_memcg_current_peak
-# not ok 3 test_memcg_min
-# not ok 4 test_memcg_low
-# not ok 5 test_memcg_high
-# ok 6 test_memcg_high_sync
-[  270.699078] test_memcontrol invoked oom-killer:
-gfp_mask=3D0xcc0(GFP_KERNEL), order=3D0, oom_score_adj=3D0
-[  270.699921] CPU: 1 UID: 0 PID: 946 Comm: test_memcontrol Not
-tainted 6.14.0-rc5-next-20250303 #1
-[  270.699930] Hardware name: Radxa ROCK Pi 4B (DT)
-
-<trim>
-[ 270.729527] Memory cgroup out of memory: Killed process 946
-(test_memcontrol) total-vm:104840kB, anon-rss:30596kB,
-file-rss:1056kB, shmem-rss:0kB, UID:0 pgtables:104kB oom_score_adj:0
-# not ok 7 test_memcg_max
-# not ok 8 test_memcg_reclaim
-<trim>
-not ok 8 selftests: cgroup: test_memcontrol # exit=3D1
-
-## Source
-* Kernel version: 6.14.0-rc5-next-20250303
-* Git tree: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next=
-.git
-* Git sha: cd3215bbcb9d4321def93fea6cfad4d5b42b9d1d
-* Git describe: 6.14.0-rc5-next-20250303
-* Project details:
-https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250303/
-
-## Test data
-* Test log: https://qa-reports.linaro.org/lkft/linux-next-master/build/next=
--20250303/testrun/27482450/suite/kselftest-cgroup/test/cgroup_test_memcontr=
-ol/log
-* Test history:
-https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250303/te=
-strun/27482450/suite/kselftest-cgroup/test/cgroup_test_memcontrol/history/
-* Test details:
-https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250303/te=
-strun/27482450/suite/kselftest-cgroup/test/cgroup_test_memcontrol/
-* Test logs rock pi:
-https://lkft.validation.linaro.org/scheduler/job/8148789#L1774
-* Test logs x86:  https://lkft.validation.linaro.org/scheduler/job/8148731#=
-L1948
-
---
-Linaro LKFT
-https://lkft.linaro.org
+Thanks,
+Amir.
