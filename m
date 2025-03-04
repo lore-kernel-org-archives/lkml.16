@@ -1,93 +1,138 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from mail.mainlining.org (mail.mainlining.org [5.75.144.95])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49CE025524B;
-	Tue,  4 Mar 2025 15:26:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE52A280CEA;
+	Tue,  4 Mar 2025 15:26:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.75.144.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741101985; cv=none; b=s1mR/6V/ahjITVy4ZxU/ajnqeW/H0vFVLqPj2nezKaHd4xTVL9qLi4Krom+ieiVy2ah0ohFjJ+Zj+aJ3vHOvOkfk0YKqXKWdd+Sj/okNZ0Zbq8d95ZUL23qVEyMVgol/bJJ4F16BgD9Q6lYkXCyDvF+9amCzhFn1yywrApuy+2s=
+	t=1741101994; cv=none; b=XEmc2vniGpbXh7okfSJKRKBltrMfj1Fov+jBvz/bdisY/orLpqF5hGpxSoEkHso7r6dKhYoU9o0fGhoGsdpmAsby+VX1k/pj4VIvdhMuL/hbpma/3DWsfcOIe/UVQcplE8o4AY4BlVsGnrWG4ENQQz4QFgh+01KmKYJYPLcpYyo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741101985; c=relaxed/simple;
-	bh=qHj1+tZ7AVPwaYnRBeF2DCZKg/Jifaa1z4WGWC6sk/I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Awku0wKmw1GrVfiXGBuM/YwN//9KJHRBGor8Mo+lKiEBXlzc2SLvenClO+hRDI1S4k/Nlbpqwi5zZhePZ/V2AIrIGxhEsbTOrH42fGhVcrqYeqhV+l1BVb37b69rERD5GmKzPVts51a+/TlGHiEkCOv537Pb3g43FnPQdXwKL7s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Q9yCZpeq; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1741101994; c=relaxed/simple;
+	bh=WABG1DKmLchI0BBzGaf0qtGwYpFld1Izg8smCcuKDHQ=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=AYhzVHA4XIxO6V+zL9kwE2iSw4vBwczm+wA3IhjL0LAHY8PrfTQckzzgz9Yvr207RaBTj1mxbYfYfBgdxSMaQf//SAT5+Y2iCkkzinwoHtY4kTLhXINx78KI5FIPTsIVChf917kvtx03yK5kYXARkMBqeuD4Un3TiNhHVrtLRR8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mainlining.org; spf=pass smtp.mailfrom=mainlining.org; dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=smRLv6HK; arc=none smtp.client-ip=5.75.144.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mainlining.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mainlining.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Q9yCZpeq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741101984; x=1772637984;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=qHj1+tZ7AVPwaYnRBeF2DCZKg/Jifaa1z4WGWC6sk/I=;
-  b=Q9yCZpeqFO7n6zUfQO9ekaM0vezarWLHKMUUo/Vze3X9YuY3OjJolC1I
-   dSok8wIL+XClc8PepSbU5x4Bxo6ViQVRSiL2L9ndrdFb1sI3w+GNllz1E
-   dJP0PZsqFiGDNxmELYzCPGDAk2R5ktzCgvCMis5HsRzo0f+1tFG/NnCdL
-   E3NruApItSNeypg5Mh3Rhqs6DM8rt+x+sdqWfUxDW65goVevdpTGcnJvW
-   d0YU0XmD4Yeul398u6Ve7iZw/3Dqq0gndrs5xgRgH2lACn1OSETCHgjcW
-   m5FTELq3ZEpmoK3KgAvfDZF4wfPhS/VxxGV/lCJm5LcorfREXhnqhFc/1
-   A==;
-X-CSE-ConnectionGUID: sfkqGDDeSyGlImh24VtMiQ==
-X-CSE-MsgGUID: Yr3vhpqrSJ6wBp4uFhYXTg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11363"; a="44832429"
-X-IronPort-AV: E=Sophos;i="6.14,220,1736841600"; 
-   d="scan'208";a="44832429"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2025 07:26:23 -0800
-X-CSE-ConnectionGUID: HTYofgJ9R+qjcGiJzbIVxQ==
-X-CSE-MsgGUID: ltF0tb+1TSizLKQLCoNSOg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,220,1736841600"; 
-   d="scan'208";a="123405504"
-Received: from turnipsi.fi.intel.com (HELO kekkonen.fi.intel.com) ([10.237.72.44])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2025 07:26:22 -0800
-Received: from kekkonen.localdomain (localhost [127.0.0.1])
-	by kekkonen.fi.intel.com (Postfix) with SMTP id 2B98F11F855;
-	Tue,  4 Mar 2025 17:26:19 +0200 (EET)
-Date: Tue, 4 Mar 2025 15:26:19 +0000
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-To: Tarang Raval <tarang.raval@siliconsignals.io>
-Cc: Dave Stevenson <dave.stevenson@raspberrypi.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/2] media: i2c: imx219: Minor improvements for runtime
- PM and stream handling
-Message-ID: <Z8cbm64-uQOW1qon@kekkonen.localdomain>
-References: <20250304151134.105771-1-tarang.raval@siliconsignals.io>
+	dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="smRLv6HK"
+Received: from [192.168.1.78] (unknown [45.136.247.92])
+	by mail.mainlining.org (Postfix) with ESMTPSA id 85844BBEE8;
+	Tue,  4 Mar 2025 15:21:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mainlining.org;
+	s=psm; t=1741101675;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Y19NoGSgI7fek1PDbkc7PM0cpGgo7Tr3QqNQdR92ado=;
+	b=smRLv6HK7GG1R4jWbAy3ro8AQ106dYL4kzoD6X+curgnGuFRVfahXeTfISKsY2bCRXavMJ
+	m2hAQb/z9XhI5qpKPH4Gkf06T6SBJYNTVFFk+knwnzbOqrJle+Yh590NNw72mI05GhWs8U
+	i1y5IqPXNBE4LKvLuMM0x0iQqLVZ2yvVk/lPkUz9fhF/nv3Sh1wOV7QkRu+nz35CjPq2oY
+	FW6ykjc8jiroxgE6y/sFQYE4fDfLROdSUL5tUbIGEyw4sv8qPXyQQP3FV2Tah1yxDM/D81
+	CSFXiSqdJFm4aY7fV8yDX4HXhilG3G21dg3ykJLIdDZTdxMsiBFx3iMmHwPQdw==
+From: Vasiliy Doylov <nekocwd@mainlining.org>
+Date: Tue, 04 Mar 2025 18:21:03 +0300
+Subject: [PATCH 2/3] media: dt-bindings: media: i2c: Document LC898217XC
+ bindings
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250304151134.105771-1-tarang.raval@siliconsignals.io>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250304-media-i2c-lc898217xc-initial-driver-v1-2-e2ffd2b2fd5e@mainlining.org>
+References: <20250304-media-i2c-lc898217xc-initial-driver-v1-0-e2ffd2b2fd5e@mainlining.org>
+In-Reply-To: <20250304-media-i2c-lc898217xc-initial-driver-v1-0-e2ffd2b2fd5e@mainlining.org>
+To: Mauro Carvalho Chehab <mchehab@kernel.org>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
+ devicetree@vger.kernel.org, Vitalii Skorkin <nikroks@mainlining.org>, 
+ Antonio Rische <nt8r@protonmail.com>, 
+ Vasiliy Doylov <nekocwd@mainlining.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2000;
+ i=nekocwd@mainlining.org; h=from:subject:message-id;
+ bh=WABG1DKmLchI0BBzGaf0qtGwYpFld1Izg8smCcuKDHQ=;
+ b=owGbwMvMwCW2fZ/SFZeSpU2Mp9WSGNKPS6Wfy1a5JTXF/WH4p7b0O3f2uLsyfrBJCJlux/Xsl
+ 6nJpU27OkpZGMS4GGTFFFlsNnrMFssPl5w07akCzBxWJpAhDFycAjCRNTcYGa5Oqa5JPvD1i8iF
+ t5eZliXOm99eJtobEa33a0ttb6RdzkFGhsPx+tycGQpp+caPZl7b5lX20MROuj9q8c/Z+9dcU7w
+ eywQA
+X-Developer-Key: i=nekocwd@mainlining.org; a=openpgp;
+ fpr=3CB1489B166F57199296E520B7BE22D44474A582
 
-Hi Tarang,
+Add DeviceTree Binding Documentation for Onsemi LC898217XC
+voice coil actuator.
 
-On Tue, Mar 04, 2025 at 08:41:32PM +0530, Tarang Raval wrote:
-> tarang.raval (2):
->   media: i2c: imx219: Enable runtime PM before sub-device registration
->   media: i2c: imx219: Use enable/disable_streams callbacks
-> 
->  drivers/media/i2c/imx219.c | 62 ++++++++++++++++++--------------------
->  1 file changed, 30 insertions(+), 32 deletions(-)
+Signed-off-by: Vasiliy Doylov <nekocwd@mainlining.org>
+---
+ .../bindings/media/i2c/onnn,lc898217xc.yaml        | 54 ++++++++++++++++++++++
+ 1 file changed, 54 insertions(+)
 
-These no longer apply after commit 42eceae9793566d0df53d509be3e416465c347f5
-.
-
-Could you split the patches into 
-
-- use autosuspend and
-- switch to {enable,disable}_streams?
-
-Perhaps moving to {enable,disable}_streams first is easier actually.
+diff --git a/Documentation/devicetree/bindings/media/i2c/onnn,lc898217xc.yaml b/Documentation/devicetree/bindings/media/i2c/onnn,lc898217xc.yaml
+new file mode 100644
+index 0000000000000000000000000000000000000000..848e83c38638f702af3f50f34f1ee7256cdcdc04
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/i2c/onnn,lc898217xc.yaml
+@@ -0,0 +1,54 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++# Copyright 2025 Vasiliy Doylov <nekocwd@mainlining.org>
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/media/i2c/onnn,lc898217xc.yaml##
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: ON Semiconductor LC898217XC Voice Coil Motor (VCM) Lens
++
++maintainers:
++  - Vasiliy Doylov <nekocwd@mainlining.org>
++
++description:
++  The LC898217XC is a 11-bit digital-to-analog (DAC) converter.
++  VCM current is controlled with a linear mode driver.The DAC is controlled
++  via a 2-wire (I2C-compatible) serial interface that operates at clock
++  rates up to 1MHz. This chip integrates Advanced Actuator Control (AAC)
++  technology and is intended for driving voice coil lenses in camera modules.
++
++properties:
++  compatible:
++    enum:
++      - onnn,lc898217xc
++
++  reg:
++    maxItems: 1
++
++  vcc-supply:
++    description:
++      Definition of the regulator used as voltage supply.
++
++required:
++  - compatible
++  - reg
++  - vcc-supply
++
++additionalProperties: false
++
++examples:
++  - |
++
++    i2c {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        camera-lens@74 {
++            compatible = "onnn,lc898217xc";
++            reg = <0x74>;
++
++            vcc-supply = <&mt6358_vcamio_reg>;
++        };
++    };
++
++...
 
 -- 
-Regards,
+2.48.1
 
-Sakari Ailus
