@@ -1,97 +1,85 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EAFCC251784;
-	Tue,  4 Mar 2025 15:15:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B99225EFB7
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 15:15:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741101322; cv=none; b=owpEtCQvL+d1M+zSaj/hhViSJaA1FEQ7OZHgUxIxRA5eQJ5q361JnR6waJvd8JbNbT/bBoLWSF+w+2ye4/FspclmW7C6nWwxQI/r9eRGLZs85LZZlWBuWCVIrWghmvezlws1Ouv3hNZBTb/AE0kH29SFCrial8W3zHqFybCuHZk=
+	t=1741101323; cv=none; b=rkzm89+7+7JlQYNwlYCSz447CjifRp98PDGBxT/XrgL39pM2+uw/IEQkE98aOKsIHCibryICx/JfbLkPu8f46bEEqadEhjoHhElLSm9uo0ciYDa6j4uPBpk8/fUGd37J7Gkkzjf2rSdmP+9GSqNVtNnIf+EkaGjF0Nb2+T5Jvlw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741101322; c=relaxed/simple;
-	bh=zb4TEuxHQhDYk0nAldu9UM/9+rBUKEwwmacuoOlWE9U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LcHyqCpZfZZ/K0ARdHQCkbkH6PzIYCHvqg9uNGHZlCusU09uh+RSuyC7VwdED13AC4Avudr0yzX9CtXMiPthueE2CqM1kwpGg/bmbq9b+3Rkfswf9uJe2MK285dfOt+yWc6VizV7wPFp5IOs3+ilgghoyrXRR8SDipI3Igmkepc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E2B5DFEC;
-	Tue,  4 Mar 2025 07:15:33 -0800 (PST)
-Received: from localhost (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D23323F66E;
-	Tue,  4 Mar 2025 07:15:19 -0800 (PST)
-Date: Tue, 4 Mar 2025 15:15:18 +0000
-From: Leo Yan <leo.yan@arm.com>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Thomas Richter <tmricht@linux.ibm.com>
-Subject: Re: [PATCH v2 6/6] perf test: Simplify data symbol test
-Message-ID: <20250304151518.GA13418@e132581.arm.com>
-References: <20250304022837.1877845-1-namhyung@kernel.org>
- <20250304022837.1877845-7-namhyung@kernel.org>
+	s=arc-20240116; t=1741101323; c=relaxed/simple;
+	bh=mcLZWbvX4OASqJ6TP4DsOuccHhHsTxZE1ZtN7Iwta84=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=EIoKiAYAqJs1HhuVSiGLEl+Bf/n7DJuQ6htp31LdMqutGm7YnAcbRXRSfS5pVXfAUq4zIkF3RUiSyddvt3CUxA9EGULsNvNpTtBarhrY496s8+tFOx6qs1IRZRlnLUwy5/F6Pdp4HnNHzBrS/51yzBIsRZS6/MQp21hBaEG0syg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3d2b6d933baso134301755ab.3
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Mar 2025 07:15:21 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741101320; x=1741706120;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=xCSESAKsiqQ+IFJbEFJWlyCbShr8mBIqRgAxgCfBLE8=;
+        b=M0Z8OBRbzR8nJ7ngN/gsEYGULLky29NPwTfL3VoiUg6lftkwKC6UhYXyDVJrfmO+PE
+         HXcNW7K6KW1HFRVGiTxQEEPLczTpAxussWOfqbtwRyG7McS4pf+QAhJZTVfqXxCbNdFc
+         iaBVJ4LfPPUAV9iEB62ZLn4OW/iIB4rvQzqklnNKEJAxcYSHA0zQ9CbU2BqZIaU1atJx
+         ZD6cOvkt0q2iP0KOHffIUQgCIxC+bGOVJapsrpINKJUaCEKENXDAHQNyNn0zKwD4/5J0
+         8q6HCFe0UJNU0GQK1iXcQUILyeh9xRzsHVwCsddoUgUvuKHn01juXbzLgo0epuGNSxEp
+         8rbw==
+X-Forwarded-Encrypted: i=1; AJvYcCXflm+//WIqIH7t3ZfW9sw/PaOpPNhCOaKyNNsm3Yj990Tz+lN9Qb8K9fuIx9jqkhKanTHtucUtn5upLVg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwMgBS1YLc+9eofNBjN/hU1eyU1wVkCejFiiDDKoC0AcNuNq8sb
+	LGdJHWFs2avo04f2JgiL7yn8qeeitQYowlWQ5mwTHZFdtx36wh6Co3kIcx6GsIySO1+D9PzprXT
+	Z9bmPzMHK3YgfMMk67t78qUWuWPGOxhbfgp2gguH725II4bOl1iqNOVg=
+X-Google-Smtp-Source: AGHT+IFPSuVdOkDMWbPlHI6z489JojogoUgQt+6oFcvH+IjYcYZ03ZG8x9ZGyJ2qGUlEY8tpl46mn69MJBTzEUuNU9ZXyrhahC6B
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250304022837.1877845-7-namhyung@kernel.org>
+X-Received: by 2002:a92:ca06:0:b0:3d3:d8d2:2900 with SMTP id
+ e9e14a558f8ab-3d3e6d78964mr168396415ab.0.1741101320684; Tue, 04 Mar 2025
+ 07:15:20 -0800 (PST)
+Date: Tue, 04 Mar 2025 07:15:20 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67c71908.050a0220.15b4b9.0010.GAE@google.com>
+Subject: [syzbot] Monthly nfc report (Mar 2025)
+From: syzbot <syzbot+list1809e16a6bbc3c9e72b9@syzkaller.appspotmail.com>
+To: krzk@kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Mar 03, 2025 at 06:28:37PM -0800, Namhyung Kim wrote:
-> Now the workload will end after 1 second.  Just run it with perf instead
-> of waiting for the background process.
-> 
-> Cc: Thomas Richter <tmricht@linux.ibm.com>
-> Cc: Leo Yan <leo.yan@arm.com>
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+Hello nfc maintainers/developers,
 
-Reviewed-by: Leo Yan <leo.yan@arm.com>
+This is a 31-day syzbot report for the nfc subsystem.
+All related reports/information can be found at:
+https://syzkaller.appspot.com/upstream/s/nfc
 
-> ---
->  tools/perf/tests/shell/test_data_symbol.sh | 15 ++-------------
->  1 file changed, 2 insertions(+), 13 deletions(-)
-> 
-> diff --git a/tools/perf/tests/shell/test_data_symbol.sh b/tools/perf/tests/shell/test_data_symbol.sh
-> index c86da02350596b35..1792b7ad4066f8cd 100755
-> --- a/tools/perf/tests/shell/test_data_symbol.sh
-> +++ b/tools/perf/tests/shell/test_data_symbol.sh
-> @@ -5,8 +5,6 @@
->  # Leo Yan <leo.yan@linaro.org>, 2022
->  
->  shelldir=$(dirname "$0")
-> -# shellcheck source=lib/waiting.sh
-> -. "${shelldir}"/lib/waiting.sh
->  
->  # shellcheck source=lib/perf_has_symbol.sh
->  . "${shelldir}"/lib/perf_has_symbol.sh
-> @@ -60,19 +58,10 @@ echo "Recording workload..."
->  # specific CPU and test in per-CPU mode.
->  is_amd=$(grep -E -c 'vendor_id.*AuthenticAMD' /proc/cpuinfo)
->  if (($is_amd >= 1)); then
-> -	perf mem record -vvv -o ${PERF_DATA} -C 0 -- taskset -c 0 $TEST_PROGRAM 2>"${ERR_FILE}" &
-> +	perf mem record -vvv -o ${PERF_DATA} -C 0 -- taskset -c 0 $TEST_PROGRAM 2>"${ERR_FILE}"
->  else
-> -	perf mem record -vvv --all-user -o ${PERF_DATA} -- $TEST_PROGRAM 2>"${ERR_FILE}" &
-> +	perf mem record -vvv --all-user -o ${PERF_DATA} -- $TEST_PROGRAM 2>"${ERR_FILE}"
->  fi
->  
-> -PERFPID=$!
-> -
-> -wait_for_perf_to_start ${PERFPID} "${ERR_FILE}"
-> -
-> -sleep 1
-> -
-> -kill $PERFPID
-> -wait $PERFPID
-> -
->  check_result
->  exit $?
-> -- 
-> 2.48.1.711.g2feabab25a-goog
-> 
+During the period, 0 new issues were detected and 0 were fixed.
+In total, 6 issues are still open and 27 have already been fixed.
+
+Some of the still happening issues:
+
+Ref Crashes Repro Title
+<1> 340     Yes   INFO: task hung in nfc_rfkill_set_block
+                  https://syzkaller.appspot.com/bug?extid=3e3c2f8ca188e30b1427
+<2> 275     Yes   INFO: task hung in rfkill_unregister (3)
+                  https://syzkaller.appspot.com/bug?extid=bb540a4bbfb4ae3b425d
+<3> 45      Yes   KMSAN: uninit-value in nci_ntf_packet (3)
+                  https://syzkaller.appspot.com/bug?extid=3f8fa0edaa75710cd66e
+<4> 42      Yes   INFO: task hung in rfkill_sync_work
+                  https://syzkaller.appspot.com/bug?extid=9ef743bba3a17c756174
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+To disable reminders for individual bugs, reply with the following command:
+#syz set <Ref> no-reminders
+
+To change bug's subsystems, reply with:
+#syz set <Ref> subsystems: new-subsystem
+
+You may send multiple commands in a single email message.
