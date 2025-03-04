@@ -1,111 +1,139 @@
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF6D218CBF2
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 07:01:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C176618CBF2;
+	Tue,  4 Mar 2025 07:02:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741071671; cv=none; b=G7Uc65GQG5un9rCAJOUuTjZvaD21YakkX3jPut7+83l3yblNxWgntQkM3ia/m8dsZKmf/KXaBS/ByTC3o823FTLcFjn7zGm85mjsJdfvOOkGrD87cOz+DJmgwpAt/tQZhg86RbjrUzaEfnucyuc5rqRfWTHcG3lEe9iP/7f/PfE=
+	t=1741071724; cv=none; b=h1fm0l4rzxicWGXGSTRsuAlWoOfSKuHYYS77+GkCRbSVg4GnckP7cusxdX3+6MUoJiFjWmka6sILojHAkbnVFoexIMqjV6IfDlM92RCtwsWP+4MWHNcjgOO4i2jqn+UQvLW6NBMUGiQ62ujG7pixMeH+Bf4igSa7QcuSByxSEkQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741071671; c=relaxed/simple;
-	bh=WeoK4O4lNVf1jf3RL4kog/vPaezBLPVB+yX+IBUebZs=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=GZkRCkEnJRfO88qn6hofQteVK8oxCj5XzkU7raq0oUDkiRfVgpfbcvCSv29T1spSftSUCwYhZTeMtGmIXLzzXYtI9d3FdB2Xc8O1DVK/Mdcx7aFU5Ik4yBqJhp58hzTXM/DbGhPwr3D9nik6q/UK58lqS2bn76sH2d3CQNJbZ7o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=kFLca5Hb; arc=none smtp.client-ip=209.85.218.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1741071724; c=relaxed/simple;
+	bh=ZQ5PhUftJ57V/Y5zzJkozL4WSOs8vgmNZIByf0cbzq4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jLi0LPMdWTfLuWnm0vOrN4+6XEpf4nGJhfzlrg5t6/U+siVtMMmJjCzRcppMTBNLzW4VmuZUSGLKBnXh8wC7JQzefLq98XtkBceZBxvWGirR4tHENbUqtWYKXXJx7UeJZzpvu4Wg2s8oTLFCoQOcsTXA0Ye9W26AuUfMJTaWg1M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XIIKFhwK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kFLca5Hb"
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-abf42913e95so523499466b.2
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Mar 2025 23:01:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741071668; x=1741676468; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=YSdQFiVMCrS5O9/EkwHKFfamzvbURyk8m93xw+1w4DU=;
-        b=kFLca5Hb30n3UWwFIlGhDXf1JnSJVCgZRapyX4U4p6xFm5XzpGBl29g+frv7oCXOc7
-         ta2gpOe2KP5V1EPggK0a+7F6kmNbqFylwINo3CSM0bPka3+YDtOUO+/H7ASDh5Ybusva
-         DRkowRgqE58lU/5kZWOCYTUARzc/hnwuvLuAWNhZa2TQ0RbiaT7++XaR7u/yEIMih9py
-         rscFulH1qYeIpkY5Un8kYCytSCezAOBYT5W6m2l4pHgKAvG76nlSBLOOvsXoR5he7Cw5
-         TSut2iecizCnAQton7W/GtOT/Qz0RwdHps1q0CJ5IPjmsxc4YFn5EeOKdrGEvKVD6C3O
-         suvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741071668; x=1741676468;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=YSdQFiVMCrS5O9/EkwHKFfamzvbURyk8m93xw+1w4DU=;
-        b=wONQWiaQ3mFxUCm2Q/kGWtWn4n4csMrEzCfLjvf1PlTg7GBMxVyojoj2BcAcSIBVTc
-         K261aDPjJF/MX+YUyzZbiwPusPNkMuwba67geTH4ljvLqBdk8X56pWOatjWPlf4U1biJ
-         OAYf8XD68kXJ3/F69tnAVjYLUyYWUbpZ42xg5UzrSNZpWPkPurqpqXsCs+i12NlEjcpQ
-         fqWy+cc8yfRJqrQQBf1youOtpdQCriVw744BW8I9fvtE1Ixz42cNIa1qTinm/qoQ3wqK
-         Pdgh1N0XZW239zOq6uN2L/GoLrxDzmfXfe6KYv3lZToLjRe6E7gBSeQ8GwQa5NcCihu8
-         DPkA==
-X-Forwarded-Encrypted: i=1; AJvYcCXTnd3ThJv/ihENx5hn16jdrDeTTZnRJrw8kQL9LMzvqadLG7HlKb+ZCjDNU+bYqZ7/bmKrFrmgIy+3j2w=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw9MJRcZ7x8SGOgUzOsUByPT+M/o8c5jDppE0SRnk74hQplZ3U1
-	OhgAv2KaLYXrTgZiVLcc8Fz/Zm2KfGxJ5Wmw5TohwB5vr6DckuGEphyu7W/jKI8=
-X-Gm-Gg: ASbGnctjhr28D7HAjHaA3m+MXM0a9+0i8KA1Q8raEvOK1ckJ8EE4alh9chCYh/b+gRM
-	nouyPs88soHTtqikRYMGLgJgDX9QBrpR5NbweGDs3I45KSESd4nkIY4STMmof3Y/Mw9ZQB0WYkX
-	zU2aoyHT7YnRZWEUFr1zrJmpQRXyXSFEYlDUxJifIqLCKJ6OzVu7uV8VCGjms/uY+ioQdu1ewcH
-	VZQ94a2ekw4aa0OQnkAEePTiTdvDg6jfZ2kcvtukpGGiYgqw8HuO3lG3f2dyau3DqCTmYPGCK6T
-	wRY4XuJCD2qFW+Ks6v61z3c9p/8q+HPdWmmDKvo6kbI8JcaKzQ==
-X-Google-Smtp-Source: AGHT+IGxyBW63fSgEIDkdKmUigp27y49JS7UkTA+NZOY+d9+or8SnPNDX/CPFO1XI+oWKppLDaoD5Q==
-X-Received: by 2002:a17:907:86a9:b0:abf:6424:79fa with SMTP id a640c23a62f3a-abf6424d073mr1083370966b.28.1741071668220;
-        Mon, 03 Mar 2025 23:01:08 -0800 (PST)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id a640c23a62f3a-abf7981482csm286996066b.122.2025.03.03.23.01.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Mar 2025 23:01:07 -0800 (PST)
-Date: Tue, 4 Mar 2025 10:01:04 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Ahmed Zaki <ahmed.zaki@intel.com>
-Cc: "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Kuniyuki Iwashima <kuniyu@amazon.com>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Alexander Lobakin <aleksander.lobakin@intel.com>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org
-Subject: [PATCH v2 net-next] net: Silence use after free static checker
- warning
-Message-ID: <Z8alMHz89jH3uPJ9@stanley.mountain>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XIIKFhwK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C59CC4CEE9;
+	Tue,  4 Mar 2025 07:02:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741071724;
+	bh=ZQ5PhUftJ57V/Y5zzJkozL4WSOs8vgmNZIByf0cbzq4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=XIIKFhwKMX5MxV7LyUyuou3YED/sF9lUwEzbeR5T4NZAe6J8YFIEYE+TG55QLq7Af
+	 VoxWFYm/TplcbQwg1nQ8SWKS6b+ebpJks+yziXdxoKrQ2xmY+Kro2p9ojLsjIxEdiN
+	 E6iqEMq6jA2wL41fwv9kFfY5e8wtkK0JmN57j/bJfMWun48tODnvQtWZv4sl50sP9Y
+	 WQfgmKoyULF1N7nfhR0ZUTVyxLgHG8HamoXDerWkyz0yNXBB189TA9JjFC/wq7pJ6n
+	 PsjAjCpSK5fiD8cJiDNYnmzu0STcRcBFO92zc5emznyiNiQdBKKWNcb7oFTdLCneSw
+	 h5KpP00mUgQlw==
+Date: Tue, 4 Mar 2025 16:02:00 +0900
+From: William Breathitt Gray <wbg@kernel.org>
+To: Bence =?iso-8859-1?B?Q3Pza+Fz?= <csokas.bence@prolan.hu>
+Cc: linux-arm-kernel@lists.infradead.org, linux-iio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Kamel Bouhara <kamel.bouhara@bootlin.com>
+Subject: Re: [PATCH v6 2/3] counter: microchip-tcb-capture: Add IRQ handling
+Message-ID: <Z8alaOTjZeRuXnUI@ishi>
+References: <20250227144023.64530-1-csokas.bence@prolan.hu>
+ <20250227144023.64530-3-csokas.bence@prolan.hu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="BpBnxHRSyKeOs9ok"
 Content-Disposition: inline
+In-Reply-To: <20250227144023.64530-3-csokas.bence@prolan.hu>
 
-The cpu_rmap_put() will call kfree() when the last reference is dropped.
 
-Fortunately, this is not the the last reference so it won't free it
-here.  Unfortunately, static checkers are not clever enough and they
-still warn that this could lead to a use after free on the next line.
-Flip these two statements around to silence the static checker false
-positve.
+--BpBnxHRSyKeOs9ok
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
----
- net/core/dev.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On Thu, Feb 27, 2025 at 03:40:19PM +0100, Bence Cs=F3k=E1s wrote:
+> Add interrupt servicing to allow userspace to wait for the following even=
+ts:
 
-diff --git a/net/core/dev.c b/net/core/dev.c
-index 9189c4a048d7..c102349e04ee 100644
---- a/net/core/dev.c
-+++ b/net/core/dev.c
-@@ -7072,8 +7072,8 @@ void netif_napi_set_irq_locked(struct napi_struct *napi, int irq)
- put_rmap:
- #ifdef CONFIG_RFS_ACCEL
- 	if (napi->dev->rx_cpu_rmap_auto) {
--		cpu_rmap_put(napi->dev->rx_cpu_rmap);
- 		napi->dev->rx_cpu_rmap->obj[napi->napi_rmap_idx] = NULL;
-+		cpu_rmap_put(napi->dev->rx_cpu_rmap);
- 		napi->napi_rmap_idx = -1;
- 	}
- #endif
--- 
-2.47.2
+Hi Bence,
 
+This is a nitpick but keep the commit description with a maximum of 75
+characters per line so we don't have formatting issues with how they
+wrap.
+
+> @@ -378,6 +444,15 @@ static int mchp_tc_probe(struct platform_device *pde=
+v)
+>  	counter->num_signals =3D ARRAY_SIZE(mchp_tc_count_signals);
+>  	counter->signals =3D mchp_tc_count_signals;
+> =20
+> +	priv->irq =3D of_irq_get(np->parent, 0);
+> +	if (priv->irq =3D=3D -EPROBE_DEFER)
+> +		return -EPROBE_DEFER;
+
+In theory, the error code could be something else if of_irq_get() failed
+for any other reason. Handle all those error cases at once by checking
+IS_ERR(priv->irq) rather than just -EPROBE_DEFER. Then you can just
+return dev_err_probe() with priv->irq for the error code.
+
+> diff --git a/include/uapi/linux/counter/microchip-tcb-capture.h b/include=
+/uapi/linux/counter/microchip-tcb-capture.h
+> index 7bda5fdef19b..ee72f1463594 100644
+> --- a/include/uapi/linux/counter/microchip-tcb-capture.h
+> +++ b/include/uapi/linux/counter/microchip-tcb-capture.h
+> @@ -12,6 +12,17 @@
+>   * Count 0
+>   * \__  Synapse 0 -- Signal 0 (Channel A, i.e. TIOA)
+>   * \__  Synapse 1 -- Signal 1 (Channel B, i.e. TIOB)
+> + *
+> + * It also supports the following events:
+> + *
+> + * Channel 0:
+> + * - CV register changed
+> + * - CV overflowed
+> + * - RA captured
+> + * Channel 1:
+> + * - RB captured
+> + * Channel 2:
+> + * - RC compare triggered
+>   */
+> =20
+>  enum counter_mchp_signals {
+> @@ -19,4 +30,11 @@ enum counter_mchp_signals {
+>  	COUNTER_MCHP_SIG_TIOB,
+>  };
+> =20
+> +enum counter_mchp_event_channels {
+> +	COUNTER_MCHP_EVCHN_CV =3D 0,
+> +	COUNTER_MCHP_EVCHN_RA =3D 0,
+> +	COUNTER_MCHP_EVCHN_RB,
+> +	COUNTER_MCHP_EVCHN_RC,
+> +};
+
+These would be better as preprocessor defines in case we need to
+introduce new events to channel 1 or 2 in the future. That would allow
+us to insert new events easily to existing channels without having to
+worry about its actual position in an enum list.
+
+One additional benefit is if we do end up introducing more Counts for
+the module. In that situation we would have multiple CV and RA/RB/RC per
+Counter device, but we can easily define a preprocessor macro to
+calculate the channel offset given the Count index. However, with enum
+structure we would have to manually add and maintain redundant defines
+for each Count, which is far less ideal.
+
+William Breathitt Gray
+
+--BpBnxHRSyKeOs9ok
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEARYKAB0WIQSNN83d4NIlKPjon7a1SFbKvhIjKwUCZ8alaAAKCRC1SFbKvhIj
+KwgVAQC3uPc49wX760fObL8equIESUZ04H8MdACkUI4Mi1fhsAD9EpFDTNaLDOaL
+s4w9rvq5ikY9mEWoKsn3ojlscOGeHQ0=
+=nSNc
+-----END PGP SIGNATURE-----
+
+--BpBnxHRSyKeOs9ok--
