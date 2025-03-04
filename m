@@ -1,140 +1,184 @@
-Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
+Received: from mail-vk1-f201.google.com (mail-vk1-f201.google.com [209.85.221.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7600218D;
-	Tue,  4 Mar 2025 00:04:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB5C4610C
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 00:05:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741046650; cv=none; b=t+GzSeRtYL1IcTJoXr504AELztPKzXq0Fl0Rhgkdzw+eIvEc4HV0DocPhrU7xr9/+b/hTVtZDbSqcw+8NKu09PRXa2TkNThGGYm32tQFZPx5Y9hMCFHgsvcdmLw5TU+MxARTflobsgJeYdOisx3cljaGsrW2K17gXOhBop2Zev4=
+	t=1741046705; cv=none; b=g4rhpR6Jl5XXTFKpQs/2PrUlzUmNvGbyt/BpbJVKs0VnLarA6YsnMju1WDv8nCSDF09bMIrz19ft3odspABkAKwrmmH3CJRJ0BLDRTyO8c6TrUO7Lf7Vo4AUFR7DDe9KktLLHdb+cXZswFU3AaiXci3SZnVLH3TwH2u6QXSxJyA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741046650; c=relaxed/simple;
-	bh=HXAKX2N9TbcSqNkQkYRPQn7lcR9MtlSeezsuxXMMk7w=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=sD+KPvwkcZKckmeMzARsaVEhEzW1lDaK9rmPecugvlZGdLmuGXvIf5fAOZTQqEjm3G4qlsb/pV9k1zZ6CGY1TcHEjUZkgr/WWQYHb1vH930bsUfncYPKUZk40LYC+NuYnWveVe7WBbdobaSak/kp+AvwkxcprIhFUjLpPM2Amp8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ccMDZCAt; arc=none smtp.client-ip=209.85.216.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741046705; c=relaxed/simple;
+	bh=jrC10qjkH8DT2wANGDY+mEx4fm8/tfCpXVn/cKOLfGk=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=dPHW8LalqHGQO0L5Kxg1QdyDccBQ+cf5tUnjBNzHCIcoEv7omvmzESlW43vgr+t95va7JFnpxX0C4Q6PB4od4oGEka8AZvuOZ4H23FKWTy8K4KT7uOgi1m5xiCMRfJakORl+VKqAsA1tWETVedBdgX5Q64w0t1vO64jUZLazuSY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--royluo.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=z1X+5p5O; arc=none smtp.client-ip=209.85.221.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--royluo.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ccMDZCAt"
-Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-2fd02536660so1129855a91.2;
-        Mon, 03 Mar 2025 16:04:08 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="z1X+5p5O"
+Received: by mail-vk1-f201.google.com with SMTP id 71dfb90a1353d-523914bc6efso561329e0c.1
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Mar 2025 16:05:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741046648; x=1741651448; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ysR28s3u8CnmgoTuBfCN0R8kYhifvtml7/f8t3uhNZU=;
-        b=ccMDZCAtVOaZf2Hig1n5VKge7TMlx4dtkdZJOLTwmiV5JqtGcA7QZtmfdOgeb6pAf2
-         0i/yLHmNc64Kvm0E7v8w6snKq++tE6GFFhlmkjQpIwcgE+6n2N14ebE9gn8HyXw2ABhw
-         63YSUyigPGIE6oSviCLcb2PphyP/gNtulB6xDJJQQK5lRaHrUNB+l7y4gTlVxuiRYbmI
-         Pe7euiGNfyc7PVSZz26Fy63Bio0Y6nINb67OFlU/vrf6f0iGW5VWgWzj/18a5EqSDF4H
-         wiNHRqrGtI8EoyCz86s8Dyy/z90kGvSdAejCmcjnLb0v6Q/NBf7BOnmk3G8zXTlW7Add
-         tLxg==
+        d=google.com; s=20230601; t=1741046702; x=1741651502; darn=vger.kernel.org;
+        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=DjrHk4lexT8lBoN+vGHL5mmXE6TVHzh6JA5Gb5ioUpc=;
+        b=z1X+5p5O/bCa0UR3Sd4MN9L6eD3J+ZrbKc51Zm/doscHQ1TaBAaM+9X17mBgInmeaN
+         oIBFVcecj0AGfrtJOEFireVSYBHSGhk1iWg5bT9QizayLPZxzmYmVTmCnlBVaPksxAMO
+         2BDspxsbZyMdpYd7kc+sFZxcujZMwOyKh7aWoG7od1SRuWV7OBGk9ovPSvw7Sqnd8d3k
+         z/T8xurJNFvTui/SY1JGjk3uUSNsZZJPFHpHDnKz2fNceCnNd+Jxf03b+eL51VO3aA+N
+         USu4Ofz/1LsWDeRY8OGxtFJjmsrC23B9XWNmw8uLEvb5O4naNxShsFpZly8MrRpNRyZS
+         H5RQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741046648; x=1741651448;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ysR28s3u8CnmgoTuBfCN0R8kYhifvtml7/f8t3uhNZU=;
-        b=htbHOyg7TJxwsdhMchT5+N3XS+Oeoam89XzszEV3o+au7Nzp5sfiJgFnxZZh/QbXAg
-         d/kDyuClYpIdGmcv4eUlFCVN1OEoEGr8fj1nLS1ONIUaUNCaNQXOwc9eyRoRh7OW6Ehp
-         cs5v1UkQDWOgxixne723QPZNxIdM1KAf5PdWRO6BMrHf21TEzwrn36bZQm8tWHtZbOH9
-         IBxAXB7n9KI4KUicj7MioP+vJEfpC0uwIeMr+/a6gwqMPXxV0jedC0OkRq4Ys4f5Rv9Z
-         E5BAZpYdLtvTnx3x9WbDz+4m3glQgSvrzSceqQZIv7vuM7n4kfwi2lrajuail2fe9Xnz
-         dhZA==
-X-Forwarded-Encrypted: i=1; AJvYcCUWrtb2PmCrTMlgIx5ta6yUcC2gwErB90/5jfzSWrlx0D47gnXrZoAKnsP0K/YnYmLA7Jg10wMvWy6DuzDQPC6rQSrIR1OT@vger.kernel.org, AJvYcCUntojxTX5FhwH8x46h7mIjlpPoHlRkcUyoFa9ghtpMjdlvOrMh+kS0E60fOkvM4STHgQIYvRAbqCqTjt/6kZg=@vger.kernel.org, AJvYcCVQavgiTszOJuBD++sZ7LeTUejM8BV0KRuUkXesk1zeUZ4haXPrM1LQ1mY903uRpXG4uCfPvDbVe+rwyo0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw3ztj1WeNLMPjq4w/tLLlsnAfLPDQSZp3Pc9LKT18RNp5pMSil
-	omsIQpchGAqaHdKudYUHJRvPCbxu98xiBlGmHfAPWb4qTfyFH52fu94KNU72PJ7x2EgH0MOOKc6
-	TB4NQSQzmyDsbERW7EstQKruimXo=
-X-Gm-Gg: ASbGnctGrDAPRSWduKAgVclvUbdFVlKGcp6HILJxV9HwmklIKcE82uEOH6klj06DMzp
-	Rzn+V4MXB/clvzkW/u4ZKRrU2BJyrAVXaYQyvgsyQhkdYvPzWRI+nD5377klIhAx+5p6NNDWmJk
-	3Ztk6D8fbnB974lbv2dOGr9OOw1Q==
-X-Google-Smtp-Source: AGHT+IFN+xbOu5QfcgaBgtNPAK4UHIFhRFNtYHlPW6b79kAWFeZjWU+GDc72m/R3caqAAOD/IZViYriJF/YR/9zZ/iQ=
-X-Received: by 2002:a17:90b:3845:b0:2fe:8e19:bcd7 with SMTP id
- 98e67ed59e1d1-2ff3534a3c9mr422621a91.5.1741046647649; Mon, 03 Mar 2025
- 16:04:07 -0800 (PST)
+        d=1e100.net; s=20230601; t=1741046702; x=1741651502;
+        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=DjrHk4lexT8lBoN+vGHL5mmXE6TVHzh6JA5Gb5ioUpc=;
+        b=vdZ5G5CQuu7w+yxPWusOCd//x2+aMQhaZpMMI0xE+FZ4rXPZzRe7LvbvaDa1gYBu6w
+         f07WXhmqYF4vhSERUKmc3z6QspgL+hqaS+gpEwvIvTiPiX0/yZXp0tVcUiQzrGjT5aqs
+         hyg2W4fmtidPU4o82G2QU05ne6vTdN07oDZTvaIfifnDxlqkaczsxkjfMSxSxkDp/0P7
+         mWeIAejXaBU5oziDLGDaezllLX/y8IfJuby+YrRttQKECr3Ha54U5qwyqfGnl2V3gNCs
+         7rkuNkvb8yN8SQ5IDHnnA78+JsTWL8fnV9PEIeOQkTXTwH0R+QquecXVlYK7u4tKF0F5
+         ptRQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWe71ArTyEPEwvNbj3O9W+cDBk3yyo8ihaOxol2XNabtkK6711Fn0ehpvXnsn44sMNBP80SqVc9FVJMPT4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxM8hRk+DH3LdZl/I2jg0BxwfMh8ajmzvbtosbjGpp8MHSXWLR5
+	72rzNI3Fi99eJNfszpJNvi4lYBrgdkCLH6jUWqWizJki9Qoa3EPDINqztbIs6cyJSSR8Nc6B7jx
+	YhA==
+X-Google-Smtp-Source: AGHT+IESJh97E8EkLa4HZNA4JrJLSlx6Ihykb5XeprBWtV7RG+YRwiIvp26i2x9NXR+WLA7ztV1pN5pxW6M=
+X-Received: from vkbca27.prod.google.com ([2002:a05:6122:401b:b0:521:9cd4:caa1])
+ (user=royluo job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6122:4704:b0:520:3914:e6bb
+ with SMTP id 71dfb90a1353d-5235bd4ea28mr9018233e0c.7.1741046702573; Mon, 03
+ Mar 2025 16:05:02 -0800 (PST)
+Date: Tue,  4 Mar 2025 00:04:58 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250303-inline-securityctx-v1-1-fb7b9b641fdf@google.com> <CAHC9VhSo3aGsJVd=a3MTeakgU66oTN86oh5sZE8P4ghSk8Rx2g@mail.gmail.com>
-In-Reply-To: <CAHC9VhSo3aGsJVd=a3MTeakgU66oTN86oh5sZE8P4ghSk8Rx2g@mail.gmail.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Tue, 4 Mar 2025 01:03:54 +0100
-X-Gm-Features: AQ5f1JoZtQM3Oja3NDT-Obx7yZMvaxx2kZbpcAlTwOsQb2zyvabJdICtBU9x160
-Message-ID: <CANiq72=n_cGmrb6+6CH1AbGePy5dRMMFyzAFv6O1VEp8EgKR8w@mail.gmail.com>
-Subject: Re: [PATCH] lsm: rust: mark SecurityCtx methods inline
-To: Paul Moore <paul@paul-moore.com>
-Cc: Alice Ryhl <aliceryhl@google.com>, James Morris <jmorris@namei.org>, 
-	"Serge E. Hallyn" <serge@hallyn.com>, Miguel Ojeda <ojeda@kernel.org>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Trevor Gross <tmgross@umich.edu>, rust-for-linux@vger.kernel.org, 
-	linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.48.1.711.g2feabab25a-goog
+Message-ID: <20250304000458.1826450-1-royluo@google.com>
+Subject: [PATCH v1] usb: dwc3: core: Avoid redundant system suspend/resume callbacks
+From: Roy Luo <royluo@google.com>
+To: royluo@google.com, Thinh.Nguyen@synopsys.com, gregkh@linuxfoundation.org, 
+	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Hi Paul,
+dwc3 device suspend/resume callbacks were being triggered during system
+suspend and resume even if the device was already runtime-suspended.
+This is redundant for device mode because the suspend and resume routines
+are essentially identical for system PM and runtime PM. The minor
+difference in pinctrl state changes has been moved to the common section
+in this patch.
+To prevent these unnecessary callbacks, indicate to the PM core that it
+can safely leave the device in runtime suspend if it's already
+runtime-suspended in device mode by returning a positive value in
+prepare() callback.
 
-On Mon, Mar 3, 2025 at 11:55=E2=80=AFPM Paul Moore <paul@paul-moore.com> wr=
-ote:
->
-> Beyond those nitpicks, this looks okay to me based on my *extremely*
-> limited Rust knowledge.  With the minor requested changes in place,
-> would you prefer me to take this via the LSM tree, or would you prefer
-> it to go up to Linus via a more Rust-y tree?
+Signed-off-by: Roy Luo <royluo@google.com>
+---
+ drivers/usb/dwc3/core.c | 27 ++++++++++++++++++++++-----
+ 1 file changed, 22 insertions(+), 5 deletions(-)
 
-In general, if a subsystem is willing to take Rust-related patches
-through their tree, that is the ideal scenario! So please definitely
-feel free to pick it up on your side (and thanks!); otherwise, I can
-pick it up with your Acked-by.
+diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
+index dfa1b5fe48dc..b83f094ff1c5 100644
+--- a/drivers/usb/dwc3/core.c
++++ b/drivers/usb/dwc3/core.c
+@@ -2398,10 +2398,12 @@ static int dwc3_suspend_common(struct dwc3 *dwc, pm_message_t msg)
+ 		dwc3_gadget_suspend(dwc);
+ 		synchronize_irq(dwc->irq_gadget);
+ 		dwc3_core_exit(dwc);
++		pinctrl_pm_select_sleep_state(dwc->dev);
+ 		break;
+ 	case DWC3_GCTL_PRTCAP_HOST:
+ 		if (!PMSG_IS_AUTO(msg) && !device_may_wakeup(dwc->dev)) {
+ 			dwc3_core_exit(dwc);
++			pinctrl_pm_select_sleep_state(dwc->dev);
+ 			break;
+ 		}
+ 
+@@ -2436,6 +2438,7 @@ static int dwc3_suspend_common(struct dwc3 *dwc, pm_message_t msg)
+ 
+ 		dwc3_otg_exit(dwc);
+ 		dwc3_core_exit(dwc);
++		pinctrl_pm_select_sleep_state(dwc->dev);
+ 		break;
+ 	default:
+ 		/* do nothing */
+@@ -2453,6 +2456,7 @@ static int dwc3_resume_common(struct dwc3 *dwc, pm_message_t msg)
+ 
+ 	switch (dwc->current_dr_role) {
+ 	case DWC3_GCTL_PRTCAP_DEVICE:
++		pinctrl_pm_select_default_state(dwc->dev);
+ 		ret = dwc3_core_init_for_resume(dwc);
+ 		if (ret)
+ 			return ret;
+@@ -2462,6 +2466,7 @@ static int dwc3_resume_common(struct dwc3 *dwc, pm_message_t msg)
+ 		break;
+ 	case DWC3_GCTL_PRTCAP_HOST:
+ 		if (!PMSG_IS_AUTO(msg) && !device_may_wakeup(dwc->dev)) {
++			pinctrl_pm_select_default_state(dwc->dev);
+ 			ret = dwc3_core_init_for_resume(dwc);
+ 			if (ret)
+ 				return ret;
+@@ -2490,6 +2495,7 @@ static int dwc3_resume_common(struct dwc3 *dwc, pm_message_t msg)
+ 		if (PMSG_IS_AUTO(msg))
+ 			break;
+ 
++		pinctrl_pm_select_default_state(dwc->dev);
+ 		ret = dwc3_core_init_for_resume(dwc);
+ 		if (ret)
+ 			return ret;
+@@ -2608,8 +2614,6 @@ static int dwc3_suspend(struct device *dev)
+ 	if (ret)
+ 		return ret;
+ 
+-	pinctrl_pm_select_sleep_state(dev);
+-
+ 	return 0;
+ }
+ 
+@@ -2618,8 +2622,6 @@ static int dwc3_resume(struct device *dev)
+ 	struct dwc3	*dwc = dev_get_drvdata(dev);
+ 	int		ret = 0;
+ 
+-	pinctrl_pm_select_default_state(dev);
+-
+ 	pm_runtime_disable(dev);
+ 	ret = pm_runtime_set_active(dev);
+ 	if (ret)
+@@ -2647,14 +2649,29 @@ static void dwc3_complete(struct device *dev)
+ 		dwc3_writel(dwc->regs, DWC3_GUCTL3, reg);
+ 	}
+ }
++
++static int dwc3_prepare(struct device *dev)
++{
++	struct dwc3	*dwc = dev_get_drvdata(dev);
++
++	/*
++	 * Indicate to the PM core that it may safely leave the device in
++	 * runtime suspend if runtime-suspended already in device mode.
++	 */
++	if (dwc->current_dr_role == DWC3_GCTL_PRTCAP_DEVICE)
++		return 1;
++
++	return 0;
++}
+ #else
+ #define dwc3_complete NULL
++#define dwc3_prepare NULL
+ #endif /* CONFIG_PM_SLEEP */
+ 
+ static const struct dev_pm_ops dwc3_dev_pm_ops = {
+ 	SET_SYSTEM_SLEEP_PM_OPS(dwc3_suspend, dwc3_resume)
+ 	.complete = dwc3_complete,
+-
++	.prepare = dwc3_prepare,
+ 	/*
+ 	 * Runtime suspend halts the controller on disconnection. It relies on
+ 	 * platforms with custom connection notification to start the controller
 
-Some days ago I wrote a summary of the usual discussion we have around
-this (copy-pasting here for convenience):
+base-commit: 99fa936e8e4f117d62f229003c9799686f74cebc
+-- 
+2.48.1.711.g2feabab25a-goog
 
-    So far, what we have been doing is ask maintainers, first, if they
-    would be willing take the patches themselves -- they are the experts
-    of the subsystem, know what changes are incoming, etc. Some subsystems
-    have done this (e.g. KUnit). That is ideal, because the goal is to
-    scale and allows maintainers to be in full control.
-
-    Of course, sometimes maintainers are not fully comfortable doing that,
-    since they may not have the bandwidth, or the setup, or the Rust
-    knowledge. In those cases, we typically ask if they would be willing
-    to have a co-maintainer (i.e. in their entry, e.g. like locking did),
-    or a sub-maintainer (i.e. in a new entry, e.g. like block did), that
-    would take care of the bulk of the work from them.
-
-    I think that is a nice middle-ground -- the advantage of doing it like
-    that is that you get the benefits of knowing best what is going on
-    without too much work (hopefully), and it may allow you to get more
-    and more involved over time and confident on what is going on with the
-    Rust callers, typical issues that appear, etc. Plus the sub-maintainer
-    gets to learn more about the subsystem, its timelines, procedures,
-    etc., which you may welcome (if you are looking for new people to get
-    involved).
-
-    I think that would be a nice middle-ground. As far as I understand,
-    Andreas would be happy to commit to maintain the Rust side as a
-    sub-maintainer (for instance). He would also need to make sure the
-    tree builds properly with Rust enabled and so on. He already does
-    something similar for Jens. Would that work for you?
-
-    You could take the patches directly with his RoBs or Acked-bys, for
-    instance. Or perhaps it makes more sense to take PRs from him (on the
-    Rust code only, of course), to save you more work. Andreas does not
-    send PRs to anyone yet, but I think it would be a good time for him to
-    start learning how to apply patches himself etc.
-
-    If not, then the last fallback would be putting it in the Rust tree as
-    a sub-entry or similar.
-
-    I hope that clarifies (and thanks whatever you decide!).
-
-    https://lore.kernel.org/rust-for-linux/CANiq72mpYoig2Ro76K0E-sUtP31fW+0=
-403zYWd6MumCgFKfTDQ@mail.gmail.com/
-
-Cheers,
-Miguel
