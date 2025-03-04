@@ -1,264 +1,290 @@
-Received: from DUZPR83CU001.outbound.protection.outlook.com (mail-northeuropeazon11013043.outbound.protection.outlook.com [52.101.67.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 629B527CB0C;
-	Tue,  4 Mar 2025 16:10:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.67.43
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741104616; cv=fail; b=NSbJYaJ+S4pkBKRK8JU/wZa0WJShFyWriaAmcUQ82JagiKpJu/vuVJjlmnO6GatfgtMvV/J2aXMJAahntsvruGhTSq1sp3yBLmIK33fF9k2u3NDtw0r5XAT9Z+Umm5KjjOiEGnCKZpsq9HTE4hkQtJMzG87d3k2dUxZERDjWGNY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741104616; c=relaxed/simple;
-	bh=591ax5HgNUjMBPnjwqYbnvwHiwAkFKlf1efFl3ALsqA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=lnqrhSBs8J9N9TPC9SLBKqAvcRXlkSnMCptoqW8f9Yf9g8YrvHE6UKFsFKeFsNaoGlsi6mCHRrAVzZRXu6mikLCovU3UzZRSrjyevDgo8ufi0GSwXR6j3uI1IpPX9t+FB0SA4Ny/2FnqeR8bKAhaWvRN7E3Jmax5/8Gsksc7AOE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=Z7xNwILY; arc=fail smtp.client-ip=52.101.67.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D76926738D
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 16:10:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741104653; cv=none; b=tSpiivYlIGS1giwEQ7NK+QLh35HQn6wlLdWu0GFLghBCZW2p2V/db/5WpEIs0Y8Z/vcvIfNDX7e3y66+dIPCJCChIXQS5xwf7B3CSsDlaRweXWYqMp1dNwKmYZNX+mWH7SGuMtQ/FRPuJru44rfcLW1bfgphBnQJ5/EIeDWGRKI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741104653; c=relaxed/simple;
+	bh=f/c/msyx1e3vxoDPGJKe0SJqzT6HzDxhGA9qQONgqPY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uoLNBDXHc6IkxQoQgHnLr7arpniaOpSzTA5borkys8BQzqJAAS2c+sMlkVkx9JS619Pw0EWirPDFlIAok0TkxltAG1/WiEgQ94cS96G1LfUSIRmK9dXG7dO8XAq1C3HaccDgnAFi5L0wIlOXhbo0GixbMsjT26L+RK9cut/824w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch; spf=none smtp.mailfrom=ffwll.ch; dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b=h7VZO1a/; arc=none smtp.client-ip=209.85.221.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ffwll.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="Z7xNwILY"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=oYhopeAPOGRDii60jrrPn6Q741p6oDinqGv9pc7QTngQfYTFoITDLEaudr+PYJo31GQcKOwrtxsp/GC6CMzRl1JJmZMPByApzLwX4eeSj8HfAVPa45jnAEpylkkhVpG4RATLv4s2t4k1ipeoDDS+es7S22M9q7/TVTbiZ5cNTT2SY9QmzX3gU10QcdpcawBU2vadujHvJQ/G1ZjI0jAQKXOY2G7V+zrgSwKt2alxlyHyy41qZa7/pop755gjW/dPG/Qode+xHiDG+dy3yzB+ITJSkrfIS9VBt0LoQ0+2jMjmraGS93Yx3nA8AxFEGQoMMN+HWWEVJzOHuTNCyAyEOA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=MOTE2cHaeVEdvkl4fnHP4GWrQZqQ0FAgH5/D5Hck9Xs=;
- b=CfKOeRiUcOYRZIvgbZjlb4723anMK+k4DUYT4qYhbR0YL3v6KcUGupLRHZSUrLNTlX2XN2ye/LwVmYFWzspe/rfKHKT7Kq6ltRFqYTUMMLUGTF5wLHOgIz6wl9gMbXsvqx6Dms+vnmwrfTaq3GaKxPB7aM6CqmAKFkL5HCqC0koQat93T1SVVVziD6J7uXqnd1DNKa3utfrqCfdWvPQTQWQGTytzm7fRBT6m5r+3KjwgedU79zrokO2XZqx9lJ637iC6jJ1i0ejCkGBN0pFegdjsB07mmy6B8QZiIAlap2p4BF0PCo/1pRF1e4Wg/duZndA26YSDGEtf5XpstAqElg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=MOTE2cHaeVEdvkl4fnHP4GWrQZqQ0FAgH5/D5Hck9Xs=;
- b=Z7xNwILYhY2ZYtlCcxAyMkZaLaPreKnnVknEaJSdBfIXmfTR9fGe+RohPmg51teZpOO4TfGxJ3MtomH3KLx5fPxtzZJOXLsynxxci8Y/bNHbIfRzgNRKThlugBa3GV0oAMdU5NNCn9CmfzB8oweKJsQeoMMIk6mxBonV2c3pGMZ9woXCa3igtlB64236z2TVGGtksTcuG8tASl0WgDfyCE59YEnZtdTEKXxgPNcN9NuqLXV4wnzYWjUo2EL8hWlKKEL0ypOnrc8fyXtytnaI3HOjX9ufu+MwgkmhTr+/XfMZObkOQHe2CT3JuWwxvMheaZDtETHDVpOeTzUg51itzQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from DB9PR04MB9626.eurprd04.prod.outlook.com (2603:10a6:10:309::18)
- by DU0PR04MB9369.eurprd04.prod.outlook.com (2603:10a6:10:358::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.16; Tue, 4 Mar
- 2025 16:10:11 +0000
-Received: from DB9PR04MB9626.eurprd04.prod.outlook.com
- ([fe80::e81:b393:ebc5:bc3d]) by DB9PR04MB9626.eurprd04.prod.outlook.com
- ([fe80::e81:b393:ebc5:bc3d%4]) with mapi id 15.20.8489.025; Tue, 4 Mar 2025
- 16:10:11 +0000
-Date: Tue, 4 Mar 2025 11:10:01 -0500
-From: Frank Li <Frank.li@nxp.com>
-To: Alexander Stein <alexander.stein@ew.tq-group.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, Abel Vesa <abelvesa@kernel.org>,
-	Peng Fan <peng.fan@nxp.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Ulf Hansson <ulf.hansson@linaro.org>, devicetree@vger.kernel.org,
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux@ew.tq-group.com,
-	linux-clk@vger.kernel.org, linux-pm@vger.kernel.org
-Subject: Re: [PATCH v3 4/6] arm64: dts: imx93: Add LCDIF & LDB nodes
-Message-ID: <Z8cl2bwpYFiS2lnr@lizhi-Precision-Tower-5810>
-References: <20250304154929.1785200-1-alexander.stein@ew.tq-group.com>
- <20250304154929.1785200-5-alexander.stein@ew.tq-group.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250304154929.1785200-5-alexander.stein@ew.tq-group.com>
-X-ClientProxiedBy: SJ0PR13CA0049.namprd13.prod.outlook.com
- (2603:10b6:a03:2c2::24) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="h7VZO1a/"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-390eebcc331so2514442f8f.1
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Mar 2025 08:10:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google; t=1741104649; x=1741709449; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=iIy9PeTTsN4YAiA2ClJKxcubBrW079aT6S1+RxVahlY=;
+        b=h7VZO1a/xH/NrWcg39uqEMTPWcGttJPocZJUGcpS0MpqTeC1Sixu5X4RoqWggnfI32
+         i10x6bLCLVUmz0P2cyi9PrbpdkFz4imDleBeUUXWnw8oI5apER4yxw9/Nbt9dEOKSX4y
+         WGkY/lFE9+hUWSdIcRcFfHK8fjnOQjcHMwiDs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741104649; x=1741709449;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=iIy9PeTTsN4YAiA2ClJKxcubBrW079aT6S1+RxVahlY=;
+        b=Yzu5Nkz/uL/EUqG/oCMbs35KYgmvfSi6j2E0XQihZtptbx52WiNToyWZQ0IQ87/SNl
+         ObbTap08QtEvPowcLja6DC2KMbdKpWbM3Fjd2wrxSAIEe/ufJPrCr1+aLqTAu6gv9n31
+         wvvHgFNN7FEbm8epqEWb7x/v8F9N5GvS5H+rggJtyAlr3NCLkngdBWatBTW6dUaaMk58
+         1K/yO8KtMZOxAi1JB6CyoIeyTRe4hDT9dMrOVo5tBd6bp+QRlINixlCw/PDUS8aTEChK
+         4/XuK9Wi/c26kgp2MVdK37bLNkfWwVphRg+CBcAM9LEtvFazPgzfiURNMEC3HEb51mhJ
+         S4tw==
+X-Forwarded-Encrypted: i=1; AJvYcCUFzZdmHUKk2cOahEvypKY9Jnik2qbTfZ4Xy+ydPnq6EkIGhEXTMhJEMhJ7u3tOIgNMu0Yl3/2bGwbqoIA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzaW1X2/y/QpvqW0RISbQuMMBGWJGSX6UEU4NZ9UsYjDgaSOphv
+	1BVIE3wpV9L40spnk6qSQobcMyNelt7lGBqrWb8WvawUT/sZplNFD5LU52pUlTs=
+X-Gm-Gg: ASbGncvmoRxzyOJuxZi04suanOZxnhmcdDDHTYhPNHXQmlNOqsOJp+75/NkGX42MZo6
+	ALNFkz+/LUtpCMcJabubK/JLnqw4ooiGwGFomeSXKcf8KsfuKSshjZs9ddUQKK/w53blk/vKWzv
+	WO7o0ZeN5KNFar1kg1/p3kH15UkIBsA6KQqV4H39//fRleSHcLIIDrvAJjynb3zHN1MQqZy15W7
+	R864ccyRNchVXBzDCMYl1O99d2pCjpg7aSKA+Bn0g62btK9tY6jsyqUX4MoTCOzDZ9KVxEcTsmy
+	8wtCXqQ5vJB99ulWQdymZqMOqiyqwz7vkOIoWSPpl/QPg6kFCmevJYcd
+X-Google-Smtp-Source: AGHT+IGYstbykxSLckXcDtbIvHnaqvWhbPG4L7oRKtT9m1rH0Ss1kauZrIqVjxI5p2CBcuWK44nyyA==
+X-Received: by 2002:a05:6000:402b:b0:38f:3224:65e5 with SMTP id ffacd0b85a97d-39115605344mr3132563f8f.12.1741104649374;
+        Tue, 04 Mar 2025 08:10:49 -0800 (PST)
+Received: from phenom.ffwll.local ([2a02:168:57f4:0:5485:d4b2:c087:b497])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-390e485db82sm17762968f8f.88.2025.03.04.08.10.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Mar 2025 08:10:47 -0800 (PST)
+Date: Tue, 4 Mar 2025 17:10:45 +0100
+From: Simona Vetter <simona.vetter@ffwll.ch>
+To: Jason Gunthorpe <jgg@nvidia.com>
+Cc: John Hubbard <jhubbard@nvidia.com>,
+	Greg KH <gregkh@linuxfoundation.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Joel Fernandes <joelagnelf@nvidia.com>,
+	Alexandre Courbot <acourbot@nvidia.com>,
+	Dave Airlie <airlied@gmail.com>, Gary Guo <gary@garyguo.net>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Boqun Feng <boqun.feng@gmail.com>, Ben Skeggs <bskeggs@nvidia.com>,
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+	paulmck@kernel.org
+Subject: Re: [RFC PATCH 0/3] gpu: nova-core: add basic timer subdevice
+ implementation
+Message-ID: <Z8cmBWB8rl97-zSG@phenom.ffwll.local>
+Mail-Followup-To: Jason Gunthorpe <jgg@nvidia.com>,
+	John Hubbard <jhubbard@nvidia.com>,
+	Greg KH <gregkh@linuxfoundation.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Joel Fernandes <joelagnelf@nvidia.com>,
+	Alexandre Courbot <acourbot@nvidia.com>,
+	Dave Airlie <airlied@gmail.com>, Gary Guo <gary@garyguo.net>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Boqun Feng <boqun.feng@gmail.com>, Ben Skeggs <bskeggs@nvidia.com>,
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+	paulmck@kernel.org
+References: <Z75WKSRlUVEqpysJ@cassiopeiae>
+ <20250226004916.GB4959@nvidia.com>
+ <Z75riltJo0WvOsS5@cassiopeiae>
+ <20250226172120.GD28425@nvidia.com>
+ <Z7-IHgcVVS8XBurW@cassiopeiae>
+ <20250226234730.GC39591@nvidia.com>
+ <2025022644-fleshed-petite-a944@gregkh>
+ <D82UB3V6NZ55.3OEPPW2W8MFZV@nvidia.com>
+ <Z8GViQzZJVFPxfNd@phenom.ffwll.local>
+ <20250228184013.GF39591@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DB9PR04MB9626:EE_|DU0PR04MB9369:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2913b20d-d543-4898-ff06-08dd5b370a04
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|366016|7416014|376014|52116014|7053199007|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?ZbfvADZY+875wP5SqFFNqtx8wwxNfllrH3dKpzBI0m9rC6M8bFsm8mv4aZk3?=
- =?us-ascii?Q?vgFsFebO0HZPgHXddbOlbD99XIykkVaqMA+0qy6yAUY3C8P5LqqzkZrUZu8m?=
- =?us-ascii?Q?m8NGnulX6JU8f0GzoRMZ+1cUzeaEoaRe8mV8d5yY/jAhb3FCicAjSwNAUgWi?=
- =?us-ascii?Q?3aatapM7CJBD63GDVF7iXNOVzvhIpQ3lgXQU5HewwmxsKIAPb+coHVBKw352?=
- =?us-ascii?Q?ZSpMIKVBqR+PqqTSJn5HYMkJvj4/Nqgro39UsfyzzyPd2gcNkJH6GNjfeI4/?=
- =?us-ascii?Q?1V1NMyqjJnZfesTIRpcS/qfCL55ygHNrni730HIFESJAQ5yxGcDAkCQqdFSn?=
- =?us-ascii?Q?RcRFCLiKdEDYzfUXH/HmP4QDkZuf7wQYFD3P/ceB26ThX0rhAXewVUMUj+X8?=
- =?us-ascii?Q?gzQ3ZZ7AwvxB+hcCbH/8yQwYQTGv35tjWTv1OPhrdFua/r3c6ZjXYW7vEiQL?=
- =?us-ascii?Q?rk759NswEMGDTpUchDYSiIxS6O1TfxDepOasJ0ZlD9sFvB0sumZRrSNkl8K4?=
- =?us-ascii?Q?8TxMN+QsIb7GhhOzWTr+eqItPXjcRSlMRx0XSp5agTcICeAhKPuYlavaea/K?=
- =?us-ascii?Q?4ZTGgE6/q5P7H66fsZIpBsPlu8iQAYTSH9NrGKEueIMSZIPHzsGricjNz2m1?=
- =?us-ascii?Q?BrKiSYP8efC3W1nwg3GgSW2NHqV+e0I39FuSkSxeJLzazezx1/2KwiUqbhPx?=
- =?us-ascii?Q?92LWwF7zh0eHqoEr3jaEkQPq3YXNMMEjddwVhfPN0yNgbnSEAdbRIlb0bmLE?=
- =?us-ascii?Q?1ZzBBqhfEeXn9M0dUGt0CwIets+1ggYhQEKyHarr3qn32Ewa3TnkFYuTAfX6?=
- =?us-ascii?Q?10Uj+6DWvwkAPYtLzdTDLyFXn+INQttslOb1ercKN5iirukJFD19+oF/j3GH?=
- =?us-ascii?Q?hV4ZIv8MDDE4b1LdusZ2cLTcNFbW5i0330GDSu2033Z9jstkfOkUTFhAOl8y?=
- =?us-ascii?Q?6Bhj03lYuN77Jp78LrXYBcgyy49UScK7Hix+5N16cje8o6eRkN3WLRy+01nB?=
- =?us-ascii?Q?p1zPtn74tM+85QmaSF0U3coR28nByAgowi+Y09hlLaNxCsRpi5TSEt9ChH8I?=
- =?us-ascii?Q?/un1GLgX8i9qqc0uHjOtseaTnmhbHSmikw1gHszWUmi0t9FhRRZC484d9EP2?=
- =?us-ascii?Q?h+geC5OyKmh6A1Ak7qPkXH1nmSzki4aJMl1M4iFThtH9mK2k2kN1JM/+HvHL?=
- =?us-ascii?Q?BFbwtvIrbDYN9IK8WyasSHtZGfk8fmlZhbCnzMZDBGXb0CdyuE1YWjDswCP7?=
- =?us-ascii?Q?Cid9dDJddt4X5qUu3WF9alu07n9Ab8YU+wsurO1x+in4yf7GsP16Udxuucp9?=
- =?us-ascii?Q?ocZHqBa0fRKdRBLPo0e+MRMQOz+mSOgrPUqmXjKTEGiaSfPSUMVKlrLOpXHy?=
- =?us-ascii?Q?LDIotxhTRkoCHLHZTOhkhwAIVenp7epSvwePKkudccQW8sVLOJKiPclZwTpU?=
- =?us-ascii?Q?8ObA9AkCohIzTv0hRKU1tVT/Rn1HgiYu?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB9PR04MB9626.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014)(52116014)(7053199007)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?QCTGGoyQ+PlfmboB6jScsjT/XehKSzUyvcD8VfOn7vMTEHda+g2Q6iGZO/0F?=
- =?us-ascii?Q?UelNv+5RjvINGZtRwbHqdtViPgecHs92fTNk6+t7G3Bismh36Jxkmu6iszOT?=
- =?us-ascii?Q?673HHk/Yi4OwatmftukEMpkurIKZwp6VfjXcXQNmVlJGFefYXPN1T1AONtIF?=
- =?us-ascii?Q?FGjgEgy5lPuP4+KVmAFLIUY4CP/uAz2ZGBPqIn5vU44/qYaCFEwRrzIrjCBL?=
- =?us-ascii?Q?w12e9JPEZ97LVVQiTdLjshkmWh6jWdpnkZ5W5PjSiBP3BVoVWmoz4ZJ9THuF?=
- =?us-ascii?Q?YFANa1TQJ7jISVP8HV45OmrTcWE3b7Jmw+6lDYwG4O0ycM3QYA0zVN4s3/Fm?=
- =?us-ascii?Q?t/9a7EUgzR32+aEV1TxnQBQ1BCgi5aUwCGX/p3dW7K0dvSZVU9qHmHYMYXmA?=
- =?us-ascii?Q?W6CycMQa0uR6GNCnFhr/qXMgyImO6x1MoNcjDNnwox8ozsLDxy2gY4CO+GI+?=
- =?us-ascii?Q?BsfctUbNKt73irTZLF7RVButKx83uhh9SZOyLaxTR6jTygrEtmQIk/bc4/j3?=
- =?us-ascii?Q?+VlFmk2WIfzDAIA/GWX6YiwjZdeA/Ypn4nOZSB6FpdJNxU7wkgyfAEwQGVbQ?=
- =?us-ascii?Q?w6xeixzALDpo1kJWIrG1FA3BrNxHB1YZfDtSy3H0Tks0+N+42CMgOArFSqKW?=
- =?us-ascii?Q?pj7D4HZIQK69RuL/9j9H1t5N7Tyk+9lVpczoZt1eo3djrT13Jx3lTUl4Snu3?=
- =?us-ascii?Q?N5ESY/8sQTonil2U5xJUAKRyqsB6U+hw+fimuK3T6tK/jc30f80hjEqi9oRg?=
- =?us-ascii?Q?rAuZNJN4IERM3eUAiO23iYIe4oe7Jh2AAp/4iJudjBAZoKVh89V0l0M0t19f?=
- =?us-ascii?Q?C86FRiLYpVx/nYs1iXakHyLBVVYMBDWBRFFW8q7PPJfv5bjW3FlfeSSZ433h?=
- =?us-ascii?Q?ZSXJsHT8I+7vI498Ka10obUUKjTTXfA/8spI7Cek+U/Rnc740sGLsmnyF8GC?=
- =?us-ascii?Q?opxGbPSlgvhKJ61UUpHLY6hTzFXyM/XlaDpqhF7RE8h8tQFRO6DD1WBJTH1e?=
- =?us-ascii?Q?9ttFq9g7XgmXCqMzHA9G/lKgxmF2TxofOYsRgmwKXKQBdVwDPe6pGqmJCVHf?=
- =?us-ascii?Q?m9dTEBqW6FOpQUvboxWFSItjRE9HKy/kj7P/p+EP+Tryg6j4exCrHNevOqBi?=
- =?us-ascii?Q?fnKLgOQF9VXDu97mO1ravMg64bsQMj9ytuim5YAeKPl/NanLWh9i1PDQJNJD?=
- =?us-ascii?Q?MLdKjDxWcXCXyvvGqtQsd2irXVtXO3YBmEYKHkkMaCo4705IWfTRG6YGnMtQ?=
- =?us-ascii?Q?WQ2EabkfQbBPN1sk026G8HecAr38FpEQpaVEkSZ26Xpx10q+YInlg8b4E9Tj?=
- =?us-ascii?Q?HW0rc3HadlQ8IqKGH9yuHHwbMZsdqpijrg+8LJhhCrb89uyHH/J2vyU0kmXU?=
- =?us-ascii?Q?4a4rsZMwy2jTZ9YZX+K2sf8VBDubp0wnQmXg0gGnT0Wmz/VAgpZESXlh4EhM?=
- =?us-ascii?Q?X2qlW8M/UcFtIohYyPemwqVuWIklEWDc5iEoEz46i74JCaonegGL1zlnqBFg?=
- =?us-ascii?Q?loWg+65D59uqJULXKgZu9wuSSPqGwFU8N0jSU4rIMbAUoYON2mLe8qwlfd4X?=
- =?us-ascii?Q?0iLK/4bxqRuCYdiqXMgfuaLUEozZUALq5cOYK3Zr?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2913b20d-d543-4898-ff06-08dd5b370a04
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Mar 2025 16:10:11.1962
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: gBxgVtjXCR8ozgz6l4sOrVAh6AWlL0kVuUpYXz1CivcyWkSbldzbYCEy35qKdxa1BOKvaJN5qv4SuTU++zzH5g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU0PR04MB9369
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250228184013.GF39591@nvidia.com>
+X-Operating-System: Linux phenom 6.12.11-amd64 
 
-On Tue, Mar 04, 2025 at 04:49:23PM +0100, Alexander Stein wrote:
-> LCDIF port 1 is directly attached to the LVDS Display Bridge (LDB).
-> Both need the same clock source (VIDEO_PLL1).
->
-> Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
-> ---
->  arch/arm64/boot/dts/freescale/imx93.dtsi | 77 ++++++++++++++++++++++++
->  1 file changed, 77 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/freescale/imx93.dtsi b/arch/arm64/boot/dts/freescale/imx93.dtsi
-> index 56766fdb0b1e5..69a639a8c833f 100644
-> --- a/arch/arm64/boot/dts/freescale/imx93.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/imx93.dtsi
-> @@ -1273,6 +1273,9 @@ s4muap: mailbox@47520000 {
->  		media_blk_ctrl: system-controller@4ac10000 {
->  			compatible = "fsl,imx93-media-blk-ctrl", "syscon";
->  			reg = <0x4ac10000 0x10000>;
-> +			#address-cells = <1>;
-> +			#size-cells = <1>;
-> +			ranges = <0x0 0x4ac10000 0x10000>;
+On Fri, Feb 28, 2025 at 02:40:13PM -0400, Jason Gunthorpe wrote:
+> On Fri, Feb 28, 2025 at 11:52:57AM +0100, Simona Vetter wrote:
+> 
+> > - Nuke the driver binding manually through sysfs with the unbind files.
+> > - Nuke all userspace that might beholding files and other resources open.
+> > - At this point the module refcount should be zero and you can unload it.
+> > 
+> > Except developers really don't like the manual unbind step, and so we're
+> > missing try_module_get() in a bunch of places where it really should be.
+> 
+> IMHO they are not missing, we just have a general rule that if a
+> cleanup function, required to be called prior to module exit, revokes
+> any .text pointers then you don't need to hold the module refcount.
+> 
+> file_operations doesn't have such a cleanup function which is why it
+> takes the refcount.
+> 
+> hrtimer does have such a function which is why it doesn't take the
+> refcount.
 
-I remember ranges should be after reg.
+I was talking about a bunch of other places, where it works like
+file_operations, except we don't bother with the module reference count.
+I've seen patches fly by where people "fix" these things because module
+unload is "broken".
 
-Reviewed-by: Frank Li <Frank.Li@nxp.com>
+> > Now wrt why you can't just solve this all at the subsystem level and
+> > guarantee that after drm_dev_unplug no code is running in driver callbacks
+> > anymore:
+> > 
+> > In really, really simple subsystems like backlight this is doable. In drm
+> > with arbitrary ioctl this isn't, and you get to make a choice:
+> 
+> It is certainly doable, you list the right way to do it right below
+> and RDMA implements that successfully.
+> 
+> The subsytem owns all FDs and proxies all file_opertions to the driver
+> (after improving them :) and that is protected by a rwsem/SRCU that
+> is safe against the removal path setting all driver ops to NULL.
 
->  			power-domains = <&mediamix>;
->  			clocks = <&clk IMX93_CLK_MEDIA_APB>,
->  				 <&clk IMX93_CLK_MEDIA_AXI>,
-> @@ -1286,8 +1289,82 @@ media_blk_ctrl: system-controller@4ac10000 {
->  				 <&clk IMX93_CLK_MIPI_DSI_GATE>;
->  			clock-names = "apb", "axi", "nic", "disp", "cam",
->  				      "pxp", "lcdif", "isi", "csi", "dsi";
-> +			assigned-clocks = <&clk IMX93_CLK_MEDIA_AXI>,
-> +					  <&clk IMX93_CLK_MEDIA_APB>,
-> +					  <&clk IMX93_CLK_VIDEO_PLL>,
-> +					  <&clk IMX93_CLK_MEDIA_DISP_PIX>;
-> +			assigned-clock-parents = <&clk IMX93_CLK_SYS_PLL_PFD0>,
-> +						 <&clk IMX93_CLK_SYS_PLL_PFD1_DIV2>,
-> +						 <&clk IMX93_CLK_24M>,
-> +						 <&clk IMX93_CLK_VIDEO_PLL>;
-> +			assigned-clock-rates = <333333333>, <133333333>, <0>, <200000000>;
->  			#power-domain-cells = <1>;
->  			status = "disabled";
-> +
-> +			lvds_bridge: bridge@20 {
-> +				compatible = "fsl,imx93-ldb";
-> +				reg = <0x20 0x4>, <0x24 0x4>;
-> +				reg-names = "ldb", "lvds";
-> +				clocks = <&clk IMX93_CLK_LVDS_GATE>;
-> +				clock-names = "ldb";
-> +				assigned-clocks = <&clk IMX93_CLK_MEDIA_LDB>;
-> +				assigned-clock-parents = <&clk IMX93_CLK_VIDEO_PLL>;
-> +				status = "disabled";
-> +
-> +				ports {
-> +					#address-cells = <1>;
-> +					#size-cells = <0>;
-> +
-> +					port@0 {
-> +						reg = <0>;
-> +
-> +						ldb_from_lcdif: endpoint {
-> +							remote-endpoint = <&lcdif_to_ldb>;
-> +						};
-> +					};
-> +
-> +					port@1 {
-> +						reg = <1>;
-> +
-> +						ldb_lvds: endpoint {
-> +						};
-> +					};
-> +				};
-> +			};
-> +		};
-> +
-> +		lcdif: display-controller@4ae30000 {
-> +			compatible = "fsl,imx93-lcdif";
-> +			reg = <0x4ae30000 0x23c>;
-> +			interrupts = <GIC_SPI 176 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&clk IMX93_CLK_MEDIA_DISP_PIX>,
-> +				 <&clk IMX93_CLK_LCDIF_GATE>,
-> +				 <&clk IMX93_CLK_MEDIA_AXI>;
-> +			clock-names = "pix", "axi", "disp_axi";
-> +			assigned-clocks = <&clk IMX93_CLK_VIDEO_PLL>,
-> +					  <&clk IMX93_CLK_MEDIA_DISP_PIX>;
-> +			assigned-clock-parents = <&clk IMX93_CLK_24M>,
-> +						 <&clk IMX93_CLK_VIDEO_PLL>;
-> +			power-domains = <&media_blk_ctrl IMX93_MEDIABLK_PD_LCDIF>;
-> +			status = "disabled";
-> +
-> +			port {
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +
-> +				lcdif_to_dsi: endpoint@0 {
-> +					reg = <0>;
-> +				};
-> +
-> +				lcdif_to_ldb: endpoint@1 {
-> +					reg = <1>;
-> +					remote-endpoint = <&ldb_from_lcdif>;
-> +				};
-> +
-> +				lcdif_to_dpi: endpoint@2 {
-> +					reg = <2>;
-> +				};
-> +			};
->  		};
->
->  		usbotg1: usb@4c100000 {
-> --
-> 2.43.0
->
+I'm not saying that any of these approaches are bad. For some cases we
+plan to use them in gpu code too even. The above is pretty much the plan
+we have for dma_fence.
+
+> > - You wait until all driver code finishes, which could be never if there's
+> >   ioctl that wait for render to complete and don't handle hotunplug
+> >   correctly. This is a deadlock.
+> 
+> Meh. We waited for all FDs to close for along time. It isn't a
+> "deadlock" it is just a wait on userspace that extends to module
+> unload. Very undesirable yes, but not the end of the world, it can
+> resolve itself if userspace shutsdown.
+> 
+> But, IMHO, the subsystem and driver should shoot down the waits during
+> remove.
+> 
+> Your infinite waits are all interruptable right? :)
+
+So yeah userspace you can shoot down with SIGKILL, assuming really good
+programming. But there's also all the in-kernel operations between various
+work queues and other threads. This can be easily fixed by just rewriting
+the entire thing into a strict message passing paradigm. Unfortunately
+rust has to interop with the current existing mess.
+
+gpu drivers can hog console_lock (yes we're trying to get away from that
+as much as possible), at that point a cavalier attitude of "you can just
+wait" isn't very appreciated.
+
+And once you've made sure that really everything can bail out of you've
+gotten pretty close to reimplementing revocable resources.
+
+> >   In my experience this is theorically possible, practically no one gets
+> >   this right and defacto means that actual hotunplug under load has a good
+> >   chance of just hanging forever. Which is why drm doesn't do this.
+> 
+> See, we didn't have this problem as we don't have infinite waits in
+> driver as part of the API. The API toward the driver is event driven..
+
+Yeah rolling everything over to event passing and message queues would
+sort this out a lot. It's kinda not where we are though.
+
+> I can understand that adding the shootdown logic all over the place
+> would be hard and you'd get it wrong.
+> 
+> But so is half removing the driver while it is doing *anything* and
+> trying to mitigate that with a different kind of hard to do locking
+> fix. *shrug*
+
+The thing is that rust helps you enormously with implementing revocable
+resources and making sure you're not cheating with all the bail-out paths.
+
+It cannot help you with making sure you have interruptible/abortable
+sleeps in all the right places. Yes this is a bit a disappointment, but
+fundamentally rust cannot model negative contexts (unlike strictly
+functional languages like haskell) where certain operations are not
+allowed. But it is much, much better than C at "this could fail, you must
+handle it and not screw up".
+
+In some cases you can plug this gap with runtime validation, like fake
+lockdep contexts behind the might_alloc_gfp() checks and similar tricks
+we're using on the C side too. Given that I'm still struggling with
+weeding out design deadlocks at normal operations. For example runtime pm
+is an absolute disaster on this, and a lot of drivers fail real bad once
+you add lockdep annotations for runtime pm. I'll probably retire before I
+get to doing this for driver unload.
+
+> >   This is why I like the rust Revocable so much, because it's a normal rcu
+> >   section, so disallows all sleeping. You might still deadlock on a busy
+> >   loop waiting for hw without having a timeout. But that's generally
+> >   fairly easy to spot, and good drivers have macros/helpers for this so
+> >   that there is always a timeout.
+> 
+> The Recovable version narrows the critical sections to very small
+> regions, but having critical sections at all is still, IMHO, hacky.
+> 
+> What you should ask Rust to solve for you is the infinite waits! That
+> is the root cause of your problem. Compiler enforces no waits with out
+> a revocation option on DRM callbacks!
+> 
+> Wouldn't that be much better??
+
+It would indeed be nice. I haven't seen that rust unicorn yet though, and
+from my understanding it's just not something rust can give you. Rust
+isn't magic, it's just a tool that can do a few fairly specific things a
+lot better than C. But otherwise it's still the same mess.
+
+> >   drm_dev_unplug uses sleepable rcu for practicality reasons and so has a
+> >   much, much higher chance of deadlocks. Note that strictly speaking
+> >   drm_device should hold a module reference on the driver, but see above
+> >   for why we don't have that - developers prefer convenience over
+> >   correctness in this area.
+> 
+> Doesn't DRM have a module reference because the fops is in the driver
+> and the file core takes the driver module reference during
+> fops_get()/replace_fops() in drm_stub_open()? Or do I misunderstand
+> what that stub is for?
+> 
+> Like, I see a THIS_MODULE in driver->fops == amdgpu_driver_kms_fops ?
+
+Yeah it's there, except only for the userspace references and not for the
+kernel internal ones. Because developers get a bit prickle about adding
+those unfortunately due to "it breaks module unload". Maybe we just should
+add them, at least for rust.
+
+> > We can and should definitely try to make this much better. I think we can
+> > get to full correctness wrt the first 3 lifetime things in rust. I'm not
+> > sure whether handling module unload/.text lifetime is worth the bother,
+> > it's probably only going to upset developers if we try. 
+> 
+> It hurts to read a suggestion we should ignore .text lifetime rules :(
+> DRM can be be like this, but please don't push that mess onto the rest
+> of the world in the common rust bindings or common rust design
+> patterns. Especially after places have invested alot to properly and
+> fully fix these problems without EAF bugs, infinite wait problems or
+> otherwise.
+> 
+> My suggestion is that new DRM rust drivers should have the file
+> operations isolation like RDMA does and a design goal to have
+> revocable sleeps. No EAF issue. You don't have to fix the whole DRM
+> subsystem to get here, just some fairly small work that only new rust
+> drivers would use. Start off on a good foot. <shrug>
+
+You've missed the "it will upset developers part". I've seen people remove
+module references that are needed, to "fix" driver unloading.
+
+The other part is that rust isn't magic, the compiler cannot reasons
+through every possible correct api. Which means that sometimes it forces a
+failure path on you that you know cannot ever happen, but you cannot teach
+the compiler how to prove that. You can side-step that by runtime death in
+rust aka BUG_ON(). Which isn't popular really either.
+
+The third part is that I'm not aware of anything in rust that would
+guarantee that the function pointer and the module reference actually
+belong to each another. Which means another runtime check most likely, and
+hence another thing that shouldn't fail which kinda can now.
+
+Hence my conclusion that maybe it's just not the top priority to get this
+all perfect.
+
+Cheers, Sima
+
+-- 
+Simona Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
