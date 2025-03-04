@@ -1,977 +1,308 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 779F353AC
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 00:14:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0C5533C9
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 00:17:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741047279; cv=none; b=q89NM5SPMgyF7EfSQVenVsp9HpEW1lmbCU9qNZiiQEKZzooh10hVcnm0Nv0/N1w1UkTlOnLIwNfobmfMKn8AQFbeFzmoNc61e1HgDuGWnIiz/kP58O8cFi3qO2r1cmEOlJ6L6H2n5E4SqgOxsWLOc4lqkgzNnnD0Yc7jkiWmYSI=
+	t=1741047423; cv=none; b=hyp7Q+iQYwA7TFL63ngIxh3GaG2iPAYh+9M0lTrK0k32TXT8+Nl4fde3/AsAwOAho707M8DYHTNnBw5b1RIGMQ36vg4AjwNiItJIUDEgyB6sK/Lj23VvMTxp3osyFgfArlBL00619Ko4otSLS/b2y9tsjWovRcvAw/wbKHKHj3c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741047279; c=relaxed/simple;
-	bh=t/K08TLPm6hyScDzFo006MxAOGdDH0yOjERJQWDCblc=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=D2G0N7e8gRAxEXRsGh0eYyj2UUJZNE4i6PlGlnnLkVAZrjPyltmI/0zuCS/oSGIJlw0MAorl4qoiH3RhVL6z1VHVrxQY2ducCBhYBGfVdd7ICxHNqeKxqLCE/TLc2jnExtmtDbxzB3dsxbVO7uBlwK6OYKlUJ+TIM5mWRldSM30=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--yepeilin.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Dm8TuDqX; arc=none smtp.client-ip=209.85.216.73
+	s=arc-20240116; t=1741047423; c=relaxed/simple;
+	bh=rrW1qjeJ/QQIr7ggV8xAw6BBomUUhv0egDm20B+8KU4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=JnRuH9/3CIIQbBgvXPvErVycurpmrNgHuIcSiclQlAI1rXDSyJeCKHma8C4wHl7E34jEg94euBPsCpia3dXslvZmGKER37KspSEQwx56h5YPg8Sv721mhkhl003BnVCBXSlXLCyEXMcOzGVX1FFyAzERsKajr3+n+smChMspKnY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=m737CHbG; arc=none smtp.client-ip=209.85.208.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--yepeilin.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Dm8TuDqX"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2fee4c7ef4dso6988451a91.0
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Mar 2025 16:14:37 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="m737CHbG"
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5e033c2f106so5793651a12.3
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Mar 2025 16:17:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1741047277; x=1741652077; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=As2DPcESZJWowI4ZYutFcnaDQOl7DP+t093UG1sAE1A=;
-        b=Dm8TuDqXNfk6oBRiXH0uCnaCxigRDBl24f+iPCUeJc/1q1F/uBMyMHLM1U0TKE58DS
-         fD58d7mSXMNxHzc4DCtHd5KUmfwzH3lyXrKDGU2/sduKfz7avYQdzr9wYPjt3dXVtL9H
-         nusNecQCb/SYQPFhGyOhXXDeQkE1mWksyAAoOEBa7SaaunF7u49QD0TtiPN9JuaUXnx7
-         idUQSdX0BMH6L5YVfs0WH51adkXvZNR72aOkCpsz/5oB6MpfquGegM6bNVF/BmR0Qfz6
-         PR9QJ2EVP9yTekLGTcrSpGBoskwcqws5hRmSj9z9RkdJ/oJF7Jws4V/bVNzHz/67hpTR
-         LD7w==
+        d=google.com; s=20230601; t=1741047420; x=1741652220; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jMKIyNsG0NtyjtxG4pWMI2QT+uTV771bs3P2Kh65/aI=;
+        b=m737CHbGCeHrSGZKySkEASP0KI3c9eD5Cy6O+VYkk3Yh7T17+aZs+1lAE1CYFEzwve
+         EoPfGJcZ4c2QvMfCrx27kW0m+g0AW5+p699s+u2+ZlGgJGFCUXCAaiOllGpqAcDkVJ8B
+         5iljnx9EdBN1UbS93m7KkTvAfYyXvE4+Vqn/E6ccHA515gwnHDJ3gxMZw0UUloHl25zR
+         TpO02zXvR8Yk4KhDnLCSJpEFuGZLnZibrcmJbBAa/T/jQTYMBvLeKee7/K1bDVOOl4ve
+         9pb3J5S25XjFcLMoJS3r8UFUswD9kGccJEfHrcvXuJM22XiUl0mu59Ax6FohcoOL9PbL
+         dljQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741047277; x=1741652077;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=As2DPcESZJWowI4ZYutFcnaDQOl7DP+t093UG1sAE1A=;
-        b=dCO2z9qOmRq1Km2Z0lGI3PPm0Z9JmwLkwU5gVygyMmDxCDXmNDlL76GXgoiJq/5aBx
-         giB3eR51EoUf+mPIfdAWqj4RGuIgLjZ+YLdZVt1Z9YzZL74u0LrwPQXlD/ixywUl1LWG
-         2Jwmxx6eC1Jmo3C+80fKJkjoiUpYllMMIUzxnwZ6ZyCeL7DBkOa4ZtwmyBYNSBlWO3QN
-         7YJeIcazC1B3Hvbnn8RqupsznFTg8iKpFYPabhKqEonWHVKcUWZmPO6ClDq+Gle7+cZ9
-         pcr60VE6aygEaQaTYbh+mqRcFuyqqbbwMoJXxByOsBa3YPfFiXTro2LXpV83vFG7jV9s
-         5W2g==
-X-Forwarded-Encrypted: i=1; AJvYcCWm+XaMpWVf0MYAXvF+To2y6fMihoIzsIavJqQjSmztZQeIn5NEa7L1o0W16d5cRBVFXYZHL8Eyf6HlOV8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwSCv4wSTC1z+RznPAceMyjhNwUsoaVh8B0TyumnMR78jXMEYS7
-	a4VdVgm2ppEFTgTXGMfV5cnNFlhp6ttoz6tHU4KDBwhIHxzBmtUEuJLwiBh6cgw9vK1k76f556G
-	f3TSFgiCW8Q==
-X-Google-Smtp-Source: AGHT+IGumubskAf4fK3SEZyzjFDpbXymr9VP8j4Peu5UAMgw9WE4q+RViUd1DmJp240w0a/jH3E1LuhoewN+qw==
-X-Received: from pjbst12.prod.google.com ([2002:a17:90b:1fcc:b0:2ea:46ed:5d3b])
- (user=yepeilin job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:90b:1d91:b0:2f9:9ddd:689c with SMTP id 98e67ed59e1d1-2febabdee52mr22500814a91.25.1741047276779;
- Mon, 03 Mar 2025 16:14:36 -0800 (PST)
-Date: Tue,  4 Mar 2025 00:14:31 +0000
-In-Reply-To: <cover.1741046028.git.yepeilin@google.com>
+        d=1e100.net; s=20230601; t=1741047420; x=1741652220;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=jMKIyNsG0NtyjtxG4pWMI2QT+uTV771bs3P2Kh65/aI=;
+        b=SHkxFBjCdPoQ59A3KAdIGGtB5TMJjUWsJl+TQfCj+lJAHzVJ4hCN/oOcRXqj5eTRt6
+         +5y8lgArwhG2v3ZCIEsVXhPDeLcU95wW0NN2CVgi21ah0M34HMZOId9jf8cRaDdBqRy+
+         XW2EgR3JAdju+K/wHQTBJuXY4U1wJFFFukTEAPMFmjJHciULn8KEXOOPxgv2oMp48Lrf
+         WOjzV531hihBg2NtVVdof9hIAHpzXLm+w9tIst+ToKXrd6yzvV7iLE9FH1tcZnkJeQLu
+         ZzMudk/OqDKnsuAyiYggspkGk/EqhCuuJ5cFDjV75dAPzwXsMyT7822t/YHDvfUcBxam
+         Hs0A==
+X-Forwarded-Encrypted: i=1; AJvYcCXkmnPsNHXrpYLkwGpYPrJiO2Wawtt/c733+kvZODkIezb4T4xT2aw9/JmxYBnFOzuQVg205dVLv0Kt2uc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwqATc93bTFvZvcHzH4UrAvk3rwKefs7FzkbHWW+303I2wT++3s
+	ADziuIRMn0usOD+yG1pFp9g/QhK+uOw9uewxdGC1vtqJYpLiWQqM5zLwNIJ+y49WGWoxTNMAaOC
+	YMRxWbEAupRuyH1SbkK3pi0RiNL5+agJKlRE=
+X-Gm-Gg: ASbGncuHEuGvYm3Ckohqth6LsVD6L6K4cFwUL6szfpeOQOR3x/5H9aYdbe9LNySoQ3M
+	0JJI1CViA4qgyeuNUl+gK8Xkw0R5ZUUrxikWTibD98Ga4EDgqfkFu9FX1Mzf33/xEis76h+egZW
+	52/s4OenI5vSQ0iEDa21ZJTc0=
+X-Google-Smtp-Source: AGHT+IExrkPe2uEtMergGwL+KBk495Fd4lod8M4gAWfLy3ShXLjKMJZ8PsT9Bi/Phnh7dpEn1JARrX6tpxQCmjgQieg=
+X-Received: by 2002:a05:6402:51d4:b0:5dc:a44e:7644 with SMTP id
+ 4fb4d7f45d1cf-5e4d6ac58e5mr35957412a12.2.1741047419844; Mon, 03 Mar 2025
+ 16:16:59 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <cover.1741046028.git.yepeilin@google.com>
-X-Mailer: git-send-email 2.48.1.711.g2feabab25a-goog
-Message-ID: <cb63b671bb558eb2371bdf4d0c027d7d5ecd3999.1741046028.git.yepeilin@google.com>
-Subject: [PATCH bpf-next v5 6/6] selftests/bpf: Add selftests for load-acquire
- and store-release instructions
-From: Peilin Ye <yepeilin@google.com>
-To: bpf@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Peilin Ye <yepeilin@google.com>, bpf@ietf.org, Alexei Starovoitov <ast@kernel.org>, 
-	Xu Kuohai <xukuohai@huaweicloud.com>, Eduard Zingerman <eddyz87@gmail.com>, 
-	David Vernet <void@manifault.com>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
-	"Paul E. McKenney" <paulmck@kernel.org>, Puranjay Mohan <puranjay@kernel.org>, 
-	Ilya Leoshkevich <iii@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Quentin Monnet <qmo@kernel.org>, Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>, 
-	Ihor Solodrai <ihor.solodrai@linux.dev>, Yingchi Long <longyingchi24s@ict.ac.cn>, 
-	Josh Don <joshdon@google.com>, Barret Rhoden <brho@google.com>, Neel Natu <neelnatu@google.com>, 
-	Benjamin Segall <bsegall@google.com>, linux-kernel@vger.kernel.org
+MIME-Version: 1.0
+References: <CAGG=3QVi27WRYVxmsk9+HLpJw9ZJrpfLjU8G4exuXm-vUA-KqQ@mail.gmail.com>
+ <CAGG=3QVkd9Vb9a=pQ=KwhKzGJXaS+6Mk5K+JtBqamj15MzT9mQ@mail.gmail.com>
+ <20250303201509.32f6f062@pumpkin> <CAGG=3QV1iDn2r39v5eroO+kCvpbmJNtSeqJS+fpwb4vBG67z=w@mail.gmail.com>
+ <20250303224216.30431b1d@pumpkin> <7BC89461-A060-462A-9B42-7C0138AA0307@zytor.com>
+In-Reply-To: <7BC89461-A060-462A-9B42-7C0138AA0307@zytor.com>
+From: Bill Wendling <morbo@google.com>
+Date: Mon, 3 Mar 2025 16:16:43 -0800
+X-Gm-Features: AQ5f1Jp1rCZue6IqDgtc6XQUmsfbb7iZovfig0pjAWT2AtVPQ_9tNDnWhAAaCuk
+Message-ID: <CAGG=3QUnUQL2=YxN2ozwSba2A_x-S7sAEUP5oGhCWOzu4Q9SQA@mail.gmail.com>
+Subject: Re: [PATCH v2] x86/crc32: use builtins to improve code generation
+To: "H. Peter Anvin" <hpa@zytor.com>
+Cc: David Laight <david.laight.linux@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, 
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, 
+	"maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>, Eric Biggers <ebiggers@kernel.org>, Ard Biesheuvel <ardb@kernel.org>, 
+	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
+	Justin Stitt <justinstitt@google.com>, LKML <linux-kernel@vger.kernel.org>, 
+	linux-crypto@vger.kernel.org, clang-built-linux <llvm@lists.linux.dev>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add several ./test_progs tests:
+On Mon, Mar 3, 2025 at 3:58=E2=80=AFPM H. Peter Anvin <hpa@zytor.com> wrote=
+:
+> On March 3, 2025 2:42:16 PM PST, David Laight <david.laight.linux@gmail.c=
+om> wrote:
+> >On Mon, 3 Mar 2025 12:27:21 -0800
+> >Bill Wendling <morbo@google.com> wrote:
+> >
+> >> On Mon, Mar 3, 2025 at 12:15=E2=80=AFPM David Laight
+> >> <david.laight.linux@gmail.com> wrote:
+> >> > On Thu, 27 Feb 2025 15:47:03 -0800
+> >> > Bill Wendling <morbo@google.com> wrote:
+> >> >
+> >> > > For both gcc and clang, crc32 builtins generate better code than t=
+he
+> >> > > inline asm. GCC improves, removing unneeded "mov" instructions. Cl=
+ang
+> >> > > does the same and unrolls the loops. GCC has no changes on i386, b=
+ut
+> >> > > Clang's code generation is vastly improved, due to Clang's "rm"
+> >> > > constraint issue.
+> >> > >
+> >> > > The number of cycles improved by ~0.1% for GCC and ~1% for Clang, =
+which
+> >> > > is expected because of the "rm" issue. However, Clang's performanc=
+e is
+> >> > > better than GCC's by ~1.5%, most likely due to loop unrolling.
+> >> >
+> >> > How much does it unroll?
+> >> > How much you need depends on the latency of the crc32 instruction.
+> >> > The copy of Agner's tables I have gives it a latency of 3 on
+> >> > pretty much everything.
+> >> > If you can only do one chained crc instruction every three clocks
+> >> > it is hard to see how unrolling the loop will help.
+> >> > Intel cpu (since sandy bridge) will run a two clock loop.
+> >> > With three clocks to play with it should be easy (even for a compile=
+r)
+> >> > to generate a loop with no extra clock stalls.
+> >> >
+> >> > Clearly if Clang decides to copy arguments to the stack an extra tim=
+e
+> >> > that will kill things. But in this case you want the "m" constraint
+> >> > to directly read from the buffer (with a (reg,reg,8) addressing mode=
+).
+> >> >
+> >> Below is what Clang generates with the builtins. From what Eric said,
+> >> this code is only run for sizes <=3D 512 bytes? So maybe it's not supe=
+r
+> >> important to micro-optimize this. I apologize, but my ability to
+> >> measure clock loops for x86 code isn't great. (I'm sure I lack the
+> >> requisite benchmarks, etc.)
+> >
+> >Jeepers - that is trashing the I-cache.
+> >Not to mention all the conditional branches at the bottom.
+> >Consider the basic loop:
+> >1:     crc32q  (%rcx), %rbx
+> >       addq    $8, %rcx
+> >       cmp     %rcx, %rdx
+> >       jne     1b
+> >The crc32 has latency 3 so it must take at least 3 clocks.
+> >Even naively the addq can be issued in the same clock as the crc32
+> >and the cmp and jne in the following ones.
+> >Since the jne is predicted taken, the addq can be assumed to execute
+> >in the same clock as the jne.
+> >(The cmp+jne might also get merged into a single u-op)
+> >(I've done this with adc (for IP checksum), with two adc the loop takes
+> >two clocks even with the extra memory reads.)
+> >
+> >So that loop is likely to run limited by the three clock latency of crc3=
+2.
+> >Even the memory reads will happen with all the crc32 just waiting for th=
+e
+> >previous crc32 to finish.
+> >You can take an instruction out of the loop:
+> >1:     crc32q  (%rcx,%rdx), %rbx
+> >       addq    $8, %rdx
+> >       jne     1b
+> >but that may not be necessary, and (IIRC) gcc doesn't like letting you
+> >generate it.
+> >
+> >For buffers that aren't multiples of 8 bytes 'remember' that the crc of
+> >a byte depends on how far it is from the end of the buffer, and that ini=
+tial
+> >zero bytes have no effect.
+> >So (provided the buffer is 8+ bytes long) read the first 8 bytes, shift
+> >right by the number of bytes needed to make the rest of the buffer a mul=
+tiple
+> >or 8 bytes (the same as reading from across the start of the buffer and =
+masking
+> >the low bytes) then treat exactly the same as a buffer that is a multipl=
+e
+> >of 8 bytes long.
+> >Don't worry about misaligned reads, you lose less than one clock per cac=
+he
+> >line (that is with adc doing a read every clock).
+> >
+For reference, GCC does much better with code gen, but only with the builti=
+n:
 
-  - arena_atomics/load_acquire
-  - arena_atomics/store_release
-  - verifier_load_acquire/*
-  - verifier_store_release/*
-  - verifier_precision/bpf_load_acquire
-  - verifier_precision/bpf_store_release
+.L39:
+        crc32q  (%rax), %rbx    # MEM[(long unsigned int *)p_40], tmp120
+        addq    $8, %rax        #, p
+        cmpq    %rcx, %rax      # _37, p
+        jne     .L39    #,
+        leaq    (%rsi,%rdi,8), %rsi     #, p
+.L38:
+        andl    $7, %edx        #, len
+        je      .L41    #,
+        addq    %rsi, %rdx      # p, _11
+        movl    %ebx, %eax      # crc, <retval>
+        .p2align 4
+.L40:
+        crc32b  (%rsi), %eax    # MEM[(const u8 *)p_45], <retval>
+        addq    $1, %rsi        #, p
+        cmpq    %rsi, %rdx      # p, _11
+        jne     .L40    #,
 
-The last two tests are added to check if backtrack_insn() handles the
-new instructions correctly.
+> >Actually measuring the performance is hard.
+> >You can use rdtsc because the clock speed will change when the cpu gets =
+busy.
+> >There is a 'performance counter' that is actual clocks.
+> >While you can use the library functions to set it up, you need to just r=
+ead the
+> >register - the library overhead it too big.
+> >You also need the odd lfence.
+> >Having done that, and provided the buffer is in the L1 d-cache you can m=
+easure
+> >the loop time in clocks and compare against the expected value.
+> >Once you've got 3 clocks per crc32 instruction it won't get any better,
+> >which is why the 'fast' code for big buffers does crc of 3+ buffers sect=
+ions
+> >in parallel.
+> >
+Thanks for the info! It'll help a lot the next time I need to delve
+deeply into performance.
 
-Additionally, the last test also makes sure that the verifier
-"remembers" the value (in src_reg) we store-release into e.g. a stack
-slot.  For example, if we take a look at the test program:
+I tried using rdtsc and another programmatic way of measuring timing.
+Also tried making the task have high priority, restricting to one CPU,
+etc. But the numbers weren't as consistent as I wanted them to be. The
+times I reported were the based on the fastest times / clocks /
+whatever from several runs for each build.
 
-    #0:  r1 = 8;
-      /* store_release((u64 *)(r10 - 8), r1); */
-    #1:  .8byte %[store_release];
-    #2:  r1 = *(u64 *)(r10 - 8);
-    #3:  r2 = r10;
-    #4:  r2 += r1;
-    #5:  r0 = 0;
-    #6:  exit;
+> >       David
+> >
+> >>
+> >> -bw
+> >>
+> >> .LBB1_9:                                # =3D>This Inner Loop Header: =
+Depth=3D1
+> >>         movl    %ebx, %ebx
+> >>         crc32q  (%rcx), %rbx
+> >>         addq    $8, %rcx
+> >>         incq    %rdi
+> >>         cmpq    %rdi, %rsi
+> >>         jne     .LBB1_9
+> >> # %bb.10:
+> >>         subq    %rdi, %rax
+> >>         jmp     .LBB1_11
+> >> .LBB1_7:
+> >>         movq    %r14, %rcx
+> >> .LBB1_11:
+> >>         movq    %r15, %rsi
+> >>         andq    $-8, %rsi
+> >>         cmpq    $7, %rdx
+> >>         jb      .LBB1_14
+> >> # %bb.12:
+> >>         xorl    %edx, %edx
+> >> .LBB1_13:                               # =3D>This Inner Loop Header: =
+Depth=3D1
+> >>         movl    %ebx, %ebx
+> >>         crc32q  (%rcx,%rdx,8), %rbx
+> >>         crc32q  8(%rcx,%rdx,8), %rbx
+> >>         crc32q  16(%rcx,%rdx,8), %rbx
+> >>         crc32q  24(%rcx,%rdx,8), %rbx
+> >>         crc32q  32(%rcx,%rdx,8), %rbx
+> >>         crc32q  40(%rcx,%rdx,8), %rbx
+> >>         crc32q  48(%rcx,%rdx,8), %rbx
+> >>         crc32q  56(%rcx,%rdx,8), %rbx
+> >>         addq    $8, %rdx
+> >>         cmpq    %rdx, %rax
+> >>         jne     .LBB1_13
+> >> .LBB1_14:
+> >>         addq    %rsi, %r14
+> >> .LBB1_15:
+> >>         andq    $7, %r15
+> >>         je      .LBB1_23
+> >> # %bb.16:
+> >>         crc32b  (%r14), %ebx
+> >>         cmpl    $1, %r15d
+> >>         je      .LBB1_23
+> >> # %bb.17:
+> >>         crc32b  1(%r14), %ebx
+> >>         cmpl    $2, %r15d
+> >>         je      .LBB1_23
+> >> # %bb.18:
+> >>         crc32b  2(%r14), %ebx
+> >>         cmpl    $3, %r15d
+> >>         je      .LBB1_23
+> >> # %bb.19:
+> >>         crc32b  3(%r14), %ebx
+> >>         cmpl    $4, %r15d
+> >>         je      .LBB1_23
+> >> # %bb.20:
+> >>         crc32b  4(%r14), %ebx
+> >>         cmpl    $5, %r15d
+> >>         je      .LBB1_23
+> >> # %bb.21:
+> >>         crc32b  5(%r14), %ebx
+> >>         cmpl    $6, %r15d
+> >>         je      .LBB1_23
+> >> # %bb.22:
+> >>         crc32b  6(%r14), %ebx
+> >> .LBB1_23:
+> >>         movl    %ebx, %eax
+> >> .LBB1_24:
+> >
+> >
+>
+> The tail is *weird*. Wouldn't it be better to do a 4-2-1 stepdown?
 
-At #1, if the verifier doesn't remember that we wrote 8 to the stack,
-then later at #4 we would be adding an unbounded scalar value to the
-stack pointer, which would cause the program to be rejected:
+Definitely on the weird side! I considered hard-coding something like
+that, but thought it might be a bit convoluted, though certainly less
+convoluted than what we generate now. A simple loop is probably all
+that's needed, because it should only need to be done at most seven
+times.
 
-  VERIFIER LOG:
-  =============
-...
-  math between fp pointer and register with unbounded min value is not allowed
-
-For easier CI integration, instead of using built-ins like
-__atomic_{load,store}_n() which depend on the new
-__BPF_FEATURE_LOAD_ACQ_STORE_REL pre-defined macro, manually craft
-load-acquire/store-release instructions using __imm_insn(), as suggested
-by Eduard.
-
-All new tests depend on:
-
-  (1) Clang major version >= 18, and
-  (2) ENABLE_ATOMICS_TESTS is defined (currently implies -mcpu=v3 or
-      v4), and
-  (3) JIT supports load-acquire/store-release (currently arm64 and
-      x86-64)
-
-In .../progs/arena_atomics.c:
-
-  /* 8-byte-aligned */
-  __u8 __arena_global load_acquire8_value = 0x12;
-  /* 1-byte hole */
-  __u16 __arena_global load_acquire16_value = 0x1234;
-
-That 1-byte hole in the .addr_space.1 ELF section caused clang-17 to
-crash:
-
-  fatal error: error in backend: unable to write nop sequence of 1 bytes
-
-To work around such llvm-17 CI job failures, conditionally define
-__arena_global variables as 64-bit if __clang_major__ < 18, to make sure
-.addr_space.1 has no holes.  Ideally we should avoid compiling this file
-using clang-17 at all (arena tests depend on
-__BPF_FEATURE_ADDR_SPACE_CAST, and are skipped for llvm-17 anyway), but
-that is a separate topic.
-
-Acked-by: Eduard Zingerman <eddyz87@gmail.com>
-Signed-off-by: Peilin Ye <yepeilin@google.com>
----
- .../selftests/bpf/prog_tests/arena_atomics.c  |  66 ++++-
- .../selftests/bpf/prog_tests/verifier.c       |   4 +
- .../selftests/bpf/progs/arena_atomics.c       | 121 +++++++-
- .../bpf/progs/verifier_load_acquire.c         | 197 +++++++++++++
- .../selftests/bpf/progs/verifier_precision.c  |  49 ++++
- .../bpf/progs/verifier_store_release.c        | 264 ++++++++++++++++++
- 6 files changed, 698 insertions(+), 3 deletions(-)
- create mode 100644 tools/testing/selftests/bpf/progs/verifier_load_acquire.c
- create mode 100644 tools/testing/selftests/bpf/progs/verifier_store_release.c
-
-diff --git a/tools/testing/selftests/bpf/prog_tests/arena_atomics.c b/tools/testing/selftests/bpf/prog_tests/arena_atomics.c
-index 26e7c06c6cb4..d98577a6babc 100644
---- a/tools/testing/selftests/bpf/prog_tests/arena_atomics.c
-+++ b/tools/testing/selftests/bpf/prog_tests/arena_atomics.c
-@@ -162,6 +162,66 @@ static void test_uaf(struct arena_atomics *skel)
- 	ASSERT_EQ(skel->arena->uaf_recovery_fails, 0, "uaf_recovery_fails");
- }
- 
-+static void test_load_acquire(struct arena_atomics *skel)
-+{
-+	LIBBPF_OPTS(bpf_test_run_opts, topts);
-+	int err, prog_fd;
-+
-+	if (skel->data->skip_lacq_srel_tests) {
-+		printf("%s:SKIP: ENABLE_ATOMICS_TESTS not defined, Clang doesn't support addr_space_cast, and/or JIT doesn't support load-acquire\n",
-+		       __func__);
-+		test__skip();
-+		return;
-+	}
-+
-+	/* No need to attach it, just run it directly */
-+	prog_fd = bpf_program__fd(skel->progs.load_acquire);
-+	err = bpf_prog_test_run_opts(prog_fd, &topts);
-+	if (!ASSERT_OK(err, "test_run_opts err"))
-+		return;
-+	if (!ASSERT_OK(topts.retval, "test_run_opts retval"))
-+		return;
-+
-+	ASSERT_EQ(skel->arena->load_acquire8_result, 0x12,
-+		  "load_acquire8_result");
-+	ASSERT_EQ(skel->arena->load_acquire16_result, 0x1234,
-+		  "load_acquire16_result");
-+	ASSERT_EQ(skel->arena->load_acquire32_result, 0x12345678,
-+		  "load_acquire32_result");
-+	ASSERT_EQ(skel->arena->load_acquire64_result, 0x1234567890abcdef,
-+		  "load_acquire64_result");
-+}
-+
-+static void test_store_release(struct arena_atomics *skel)
-+{
-+	LIBBPF_OPTS(bpf_test_run_opts, topts);
-+	int err, prog_fd;
-+
-+	if (skel->data->skip_lacq_srel_tests) {
-+		printf("%s:SKIP: ENABLE_ATOMICS_TESTS not defined, Clang doesn't support addr_space_cast, and/or JIT doesn't support store-release\n",
-+		       __func__);
-+		test__skip();
-+		return;
-+	}
-+
-+	/* No need to attach it, just run it directly */
-+	prog_fd = bpf_program__fd(skel->progs.store_release);
-+	err = bpf_prog_test_run_opts(prog_fd, &topts);
-+	if (!ASSERT_OK(err, "test_run_opts err"))
-+		return;
-+	if (!ASSERT_OK(topts.retval, "test_run_opts retval"))
-+		return;
-+
-+	ASSERT_EQ(skel->arena->store_release8_result, 0x12,
-+		  "store_release8_result");
-+	ASSERT_EQ(skel->arena->store_release16_result, 0x1234,
-+		  "store_release16_result");
-+	ASSERT_EQ(skel->arena->store_release32_result, 0x12345678,
-+		  "store_release32_result");
-+	ASSERT_EQ(skel->arena->store_release64_result, 0x1234567890abcdef,
-+		  "store_release64_result");
-+}
-+
- void test_arena_atomics(void)
- {
- 	struct arena_atomics *skel;
-@@ -171,7 +231,7 @@ void test_arena_atomics(void)
- 	if (!ASSERT_OK_PTR(skel, "arena atomics skeleton open"))
- 		return;
- 
--	if (skel->data->skip_tests) {
-+	if (skel->data->skip_all_tests) {
- 		printf("%s:SKIP:no ENABLE_ATOMICS_TESTS or no addr_space_cast support in clang",
- 		       __func__);
- 		test__skip();
-@@ -198,6 +258,10 @@ void test_arena_atomics(void)
- 		test_xchg(skel);
- 	if (test__start_subtest("uaf"))
- 		test_uaf(skel);
-+	if (test__start_subtest("load_acquire"))
-+		test_load_acquire(skel);
-+	if (test__start_subtest("store_release"))
-+		test_store_release(skel);
- 
- cleanup:
- 	arena_atomics__destroy(skel);
-diff --git a/tools/testing/selftests/bpf/prog_tests/verifier.c b/tools/testing/selftests/bpf/prog_tests/verifier.c
-index 8a0e1ff8a2dc..cfe47b529e01 100644
---- a/tools/testing/selftests/bpf/prog_tests/verifier.c
-+++ b/tools/testing/selftests/bpf/prog_tests/verifier.c
-@@ -45,6 +45,7 @@
- #include "verifier_ldsx.skel.h"
- #include "verifier_leak_ptr.skel.h"
- #include "verifier_linked_scalars.skel.h"
-+#include "verifier_load_acquire.skel.h"
- #include "verifier_loops1.skel.h"
- #include "verifier_lwt.skel.h"
- #include "verifier_map_in_map.skel.h"
-@@ -80,6 +81,7 @@
- #include "verifier_spill_fill.skel.h"
- #include "verifier_spin_lock.skel.h"
- #include "verifier_stack_ptr.skel.h"
-+#include "verifier_store_release.skel.h"
- #include "verifier_subprog_precision.skel.h"
- #include "verifier_subreg.skel.h"
- #include "verifier_tailcall_jit.skel.h"
-@@ -173,6 +175,7 @@ void test_verifier_int_ptr(void)              { RUN(verifier_int_ptr); }
- void test_verifier_iterating_callbacks(void)  { RUN(verifier_iterating_callbacks); }
- void test_verifier_jeq_infer_not_null(void)   { RUN(verifier_jeq_infer_not_null); }
- void test_verifier_jit_convergence(void)      { RUN(verifier_jit_convergence); }
-+void test_verifier_load_acquire(void)         { RUN(verifier_load_acquire); }
- void test_verifier_ld_ind(void)               { RUN(verifier_ld_ind); }
- void test_verifier_ldsx(void)                  { RUN(verifier_ldsx); }
- void test_verifier_leak_ptr(void)             { RUN(verifier_leak_ptr); }
-@@ -211,6 +214,7 @@ void test_verifier_sockmap_mutate(void)       { RUN(verifier_sockmap_mutate); }
- void test_verifier_spill_fill(void)           { RUN(verifier_spill_fill); }
- void test_verifier_spin_lock(void)            { RUN(verifier_spin_lock); }
- void test_verifier_stack_ptr(void)            { RUN(verifier_stack_ptr); }
-+void test_verifier_store_release(void)        { RUN(verifier_store_release); }
- void test_verifier_subprog_precision(void)    { RUN(verifier_subprog_precision); }
- void test_verifier_subreg(void)               { RUN(verifier_subreg); }
- void test_verifier_tailcall_jit(void)         { RUN(verifier_tailcall_jit); }
-diff --git a/tools/testing/selftests/bpf/progs/arena_atomics.c b/tools/testing/selftests/bpf/progs/arena_atomics.c
-index 40dd57fca5cc..a52feff98112 100644
---- a/tools/testing/selftests/bpf/progs/arena_atomics.c
-+++ b/tools/testing/selftests/bpf/progs/arena_atomics.c
-@@ -6,6 +6,8 @@
- #include <stdbool.h>
- #include <stdatomic.h>
- #include "bpf_arena_common.h"
-+#include "../../../include/linux/filter.h"
-+#include "bpf_misc.h"
- 
- struct {
- 	__uint(type, BPF_MAP_TYPE_ARENA);
-@@ -19,9 +21,17 @@ struct {
- } arena SEC(".maps");
- 
- #if defined(ENABLE_ATOMICS_TESTS) && defined(__BPF_FEATURE_ADDR_SPACE_CAST)
--bool skip_tests __attribute((__section__(".data"))) = false;
-+bool skip_all_tests __attribute((__section__(".data"))) = false;
- #else
--bool skip_tests = true;
-+bool skip_all_tests = true;
-+#endif
-+
-+#if defined(ENABLE_ATOMICS_TESTS) &&		  \
-+	defined(__BPF_FEATURE_ADDR_SPACE_CAST) && \
-+	(defined(__TARGET_ARCH_arm64) || defined(__TARGET_ARCH_x86))
-+bool skip_lacq_srel_tests __attribute((__section__(".data"))) = false;
-+#else
-+bool skip_lacq_srel_tests = true;
- #endif
- 
- __u32 pid = 0;
-@@ -274,4 +284,111 @@ int uaf(const void *ctx)
- 	return 0;
- }
- 
-+#if __clang_major__ >= 18
-+__u8 __arena_global load_acquire8_value = 0x12;
-+__u16 __arena_global load_acquire16_value = 0x1234;
-+__u32 __arena_global load_acquire32_value = 0x12345678;
-+__u64 __arena_global load_acquire64_value = 0x1234567890abcdef;
-+
-+__u8 __arena_global load_acquire8_result = 0;
-+__u16 __arena_global load_acquire16_result = 0;
-+__u32 __arena_global load_acquire32_result = 0;
-+__u64 __arena_global load_acquire64_result = 0;
-+#else
-+/* clang-17 crashes if the .addr_space.1 ELF section has holes. Work around
-+ * this issue by defining the below variables as 64-bit.
-+ */
-+__u64 __arena_global load_acquire8_value;
-+__u64 __arena_global load_acquire16_value;
-+__u64 __arena_global load_acquire32_value;
-+__u64 __arena_global load_acquire64_value;
-+
-+__u64 __arena_global load_acquire8_result;
-+__u64 __arena_global load_acquire16_result;
-+__u64 __arena_global load_acquire32_result;
-+__u64 __arena_global load_acquire64_result;
-+#endif
-+
-+SEC("raw_tp/sys_enter")
-+int load_acquire(const void *ctx)
-+{
-+#if defined(ENABLE_ATOMICS_TESTS) &&		  \
-+	defined(__BPF_FEATURE_ADDR_SPACE_CAST) && \
-+	(defined(__TARGET_ARCH_arm64) || defined(__TARGET_ARCH_x86))
-+
-+#define LOAD_ACQUIRE_ARENA(SIZEOP, SIZE, SRC, DST)	\
-+	{ asm volatile (				\
-+	"r1 = %[" #SRC "] ll;"				\
-+	"r1 = addr_space_cast(r1, 0x0, 0x1);"		\
-+	".8byte %[load_acquire_insn];"			\
-+	"r3 = %[" #DST "] ll;"				\
-+	"r3 = addr_space_cast(r3, 0x0, 0x1);"		\
-+	"*(" #SIZE " *)(r3 + 0) = r2;"			\
-+	:						\
-+	: __imm_addr(SRC),				\
-+	  __imm_insn(load_acquire_insn,			\
-+		     BPF_ATOMIC_OP(BPF_##SIZEOP, BPF_LOAD_ACQ,	\
-+				   BPF_REG_2, BPF_REG_1, 0)),	\
-+	  __imm_addr(DST)				\
-+	: __clobber_all); }				\
-+
-+	LOAD_ACQUIRE_ARENA(B, u8, load_acquire8_value, load_acquire8_result)
-+	LOAD_ACQUIRE_ARENA(H, u16, load_acquire16_value,
-+			   load_acquire16_result)
-+	LOAD_ACQUIRE_ARENA(W, u32, load_acquire32_value,
-+			   load_acquire32_result)
-+	LOAD_ACQUIRE_ARENA(DW, u64, load_acquire64_value,
-+			   load_acquire64_result)
-+#undef LOAD_ACQUIRE_ARENA
-+
-+#endif
-+	return 0;
-+}
-+
-+#if __clang_major__ >= 18
-+__u8 __arena_global store_release8_result = 0;
-+__u16 __arena_global store_release16_result = 0;
-+__u32 __arena_global store_release32_result = 0;
-+__u64 __arena_global store_release64_result = 0;
-+#else
-+/* clang-17 crashes if the .addr_space.1 ELF section has holes. Work around
-+ * this issue by defining the below variables as 64-bit.
-+ */
-+__u64 __arena_global store_release8_result;
-+__u64 __arena_global store_release16_result;
-+__u64 __arena_global store_release32_result;
-+__u64 __arena_global store_release64_result;
-+#endif
-+
-+SEC("raw_tp/sys_enter")
-+int store_release(const void *ctx)
-+{
-+#if defined(ENABLE_ATOMICS_TESTS) &&		  \
-+	defined(__BPF_FEATURE_ADDR_SPACE_CAST) && \
-+	(defined(__TARGET_ARCH_arm64) || defined(__TARGET_ARCH_x86))
-+
-+#define STORE_RELEASE_ARENA(SIZEOP, DST, VAL)	\
-+	{ asm volatile (			\
-+	"r1 = " VAL ";"				\
-+	"r2 = %[" #DST "] ll;"			\
-+	"r2 = addr_space_cast(r2, 0x0, 0x1);"	\
-+	".8byte %[store_release_insn];"		\
-+	:					\
-+	: __imm_addr(DST),			\
-+	  __imm_insn(store_release_insn,	\
-+		     BPF_ATOMIC_OP(BPF_##SIZEOP, BPF_STORE_REL,	\
-+				   BPF_REG_2, BPF_REG_1, 0))	\
-+	: __clobber_all); }			\
-+
-+	STORE_RELEASE_ARENA(B, store_release8_result, "0x12")
-+	STORE_RELEASE_ARENA(H, store_release16_result, "0x1234")
-+	STORE_RELEASE_ARENA(W, store_release32_result, "0x12345678")
-+	STORE_RELEASE_ARENA(DW, store_release64_result,
-+			    "0x1234567890abcdef ll")
-+#undef STORE_RELEASE_ARENA
-+
-+#endif
-+	return 0;
-+}
-+
- char _license[] SEC("license") = "GPL";
-diff --git a/tools/testing/selftests/bpf/progs/verifier_load_acquire.c b/tools/testing/selftests/bpf/progs/verifier_load_acquire.c
-new file mode 100644
-index 000000000000..ff308f24d745
---- /dev/null
-+++ b/tools/testing/selftests/bpf/progs/verifier_load_acquire.c
-@@ -0,0 +1,197 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/* Copyright (c) 2025 Google LLC. */
-+
-+#include <linux/bpf.h>
-+#include <bpf/bpf_helpers.h>
-+#include "../../../include/linux/filter.h"
-+#include "bpf_misc.h"
-+
-+#if __clang_major__ >= 18 && defined(ENABLE_ATOMICS_TESTS) && \
-+	(defined(__TARGET_ARCH_arm64) || defined(__TARGET_ARCH_x86))
-+
-+SEC("socket")
-+__description("load-acquire, 8-bit")
-+__success __success_unpriv __retval(0x12)
-+__naked void load_acquire_8(void)
-+{
-+	asm volatile (
-+	"w1 = 0x12;"
-+	"*(u8 *)(r10 - 1) = w1;"
-+	".8byte %[load_acquire_insn];" // w0 = load_acquire((u8 *)(r10 - 1));
-+	"exit;"
-+	:
-+	: __imm_insn(load_acquire_insn,
-+		     BPF_ATOMIC_OP(BPF_B, BPF_LOAD_ACQ, BPF_REG_0, BPF_REG_10, -1))
-+	: __clobber_all);
-+}
-+
-+SEC("socket")
-+__description("load-acquire, 16-bit")
-+__success __success_unpriv __retval(0x1234)
-+__naked void load_acquire_16(void)
-+{
-+	asm volatile (
-+	"w1 = 0x1234;"
-+	"*(u16 *)(r10 - 2) = w1;"
-+	".8byte %[load_acquire_insn];" // w0 = load_acquire((u16 *)(r10 - 2));
-+	"exit;"
-+	:
-+	: __imm_insn(load_acquire_insn,
-+		     BPF_ATOMIC_OP(BPF_H, BPF_LOAD_ACQ, BPF_REG_0, BPF_REG_10, -2))
-+	: __clobber_all);
-+}
-+
-+SEC("socket")
-+__description("load-acquire, 32-bit")
-+__success __success_unpriv __retval(0x12345678)
-+__naked void load_acquire_32(void)
-+{
-+	asm volatile (
-+	"w1 = 0x12345678;"
-+	"*(u32 *)(r10 - 4) = w1;"
-+	".8byte %[load_acquire_insn];" // w0 = load_acquire((u32 *)(r10 - 4));
-+	"exit;"
-+	:
-+	: __imm_insn(load_acquire_insn,
-+		     BPF_ATOMIC_OP(BPF_W, BPF_LOAD_ACQ, BPF_REG_0, BPF_REG_10, -4))
-+	: __clobber_all);
-+}
-+
-+SEC("socket")
-+__description("load-acquire, 64-bit")
-+__success __success_unpriv __retval(0x1234567890abcdef)
-+__naked void load_acquire_64(void)
-+{
-+	asm volatile (
-+	"r1 = 0x1234567890abcdef ll;"
-+	"*(u64 *)(r10 - 8) = r1;"
-+	".8byte %[load_acquire_insn];" // r0 = load_acquire((u64 *)(r10 - 8));
-+	"exit;"
-+	:
-+	: __imm_insn(load_acquire_insn,
-+		     BPF_ATOMIC_OP(BPF_DW, BPF_LOAD_ACQ, BPF_REG_0, BPF_REG_10, -8))
-+	: __clobber_all);
-+}
-+
-+SEC("socket")
-+__description("load-acquire with uninitialized src_reg")
-+__failure __failure_unpriv __msg("R2 !read_ok")
-+__naked void load_acquire_with_uninitialized_src_reg(void)
-+{
-+	asm volatile (
-+	".8byte %[load_acquire_insn];" // r0 = load_acquire((u64 *)(r2 + 0));
-+	"exit;"
-+	:
-+	: __imm_insn(load_acquire_insn,
-+		     BPF_ATOMIC_OP(BPF_DW, BPF_LOAD_ACQ, BPF_REG_0, BPF_REG_2, 0))
-+	: __clobber_all);
-+}
-+
-+SEC("socket")
-+__description("load-acquire with non-pointer src_reg")
-+__failure __failure_unpriv __msg("R1 invalid mem access 'scalar'")
-+__naked void load_acquire_with_non_pointer_src_reg(void)
-+{
-+	asm volatile (
-+	"r1 = 0;"
-+	".8byte %[load_acquire_insn];" // r0 = load_acquire((u64 *)(r1 + 0));
-+	"exit;"
-+	:
-+	: __imm_insn(load_acquire_insn,
-+		     BPF_ATOMIC_OP(BPF_DW, BPF_LOAD_ACQ, BPF_REG_0, BPF_REG_1, 0))
-+	: __clobber_all);
-+}
-+
-+SEC("socket")
-+__description("misaligned load-acquire")
-+__failure __failure_unpriv __msg("misaligned stack access off")
-+__flag(BPF_F_ANY_ALIGNMENT)
-+__naked void load_acquire_misaligned(void)
-+{
-+	asm volatile (
-+	"r1 = 0;"
-+	"*(u64 *)(r10 - 8) = r1;"
-+	".8byte %[load_acquire_insn];" // w0 = load_acquire((u32 *)(r10 - 5));
-+	"exit;"
-+	:
-+	: __imm_insn(load_acquire_insn,
-+		     BPF_ATOMIC_OP(BPF_W, BPF_LOAD_ACQ, BPF_REG_0, BPF_REG_10, -5))
-+	: __clobber_all);
-+}
-+
-+SEC("socket")
-+__description("load-acquire from ctx pointer")
-+__failure __failure_unpriv __msg("BPF_ATOMIC loads from R1 ctx is not allowed")
-+__naked void load_acquire_from_ctx_pointer(void)
-+{
-+	asm volatile (
-+	".8byte %[load_acquire_insn];" // w0 = load_acquire((u8 *)(r1 + 0));
-+	"exit;"
-+	:
-+	: __imm_insn(load_acquire_insn,
-+		     BPF_ATOMIC_OP(BPF_B, BPF_LOAD_ACQ, BPF_REG_0, BPF_REG_1, 0))
-+	: __clobber_all);
-+}
-+
-+SEC("xdp")
-+__description("load-acquire from pkt pointer")
-+__failure __msg("BPF_ATOMIC loads from R2 pkt is not allowed")
-+__naked void load_acquire_from_pkt_pointer(void)
-+{
-+	asm volatile (
-+	"r2 = *(u32 *)(r1 + %[xdp_md_data]);"
-+	".8byte %[load_acquire_insn];" // w0 = load_acquire((u8 *)(r2 + 0));
-+	"exit;"
-+	:
-+	: __imm_const(xdp_md_data, offsetof(struct xdp_md, data)),
-+	  __imm_insn(load_acquire_insn,
-+		     BPF_ATOMIC_OP(BPF_B, BPF_LOAD_ACQ, BPF_REG_0, BPF_REG_2, 0))
-+	: __clobber_all);
-+}
-+
-+SEC("flow_dissector")
-+__description("load-acquire from flow_keys pointer")
-+__failure __msg("BPF_ATOMIC loads from R2 flow_keys is not allowed")
-+__naked void load_acquire_from_flow_keys_pointer(void)
-+{
-+	asm volatile (
-+	"r2 = *(u64 *)(r1 + %[__sk_buff_flow_keys]);"
-+	".8byte %[load_acquire_insn];" // w0 = load_acquire((u8 *)(r2 + 0));
-+	"exit;"
-+	:
-+	: __imm_const(__sk_buff_flow_keys,
-+		      offsetof(struct __sk_buff, flow_keys)),
-+	  __imm_insn(load_acquire_insn,
-+		     BPF_ATOMIC_OP(BPF_B, BPF_LOAD_ACQ, BPF_REG_0, BPF_REG_2, 0))
-+	: __clobber_all);
-+}
-+
-+SEC("sk_reuseport")
-+__description("load-acquire from sock pointer")
-+__failure __msg("BPF_ATOMIC loads from R2 sock is not allowed")
-+__naked void load_acquire_from_sock_pointer(void)
-+{
-+	asm volatile (
-+	"r2 = *(u64 *)(r1 + %[sk_reuseport_md_sk]);"
-+	".8byte %[load_acquire_insn];" // w0 = load_acquire((u8 *)(r2 + 0));
-+	"exit;"
-+	:
-+	: __imm_const(sk_reuseport_md_sk, offsetof(struct sk_reuseport_md, sk)),
-+	  __imm_insn(load_acquire_insn,
-+		     BPF_ATOMIC_OP(BPF_B, BPF_LOAD_ACQ, BPF_REG_0, BPF_REG_2, 0))
-+	: __clobber_all);
-+}
-+
-+#else
-+
-+SEC("socket")
-+__description("Clang version < 18, ENABLE_ATOMICS_TESTS not defined, and/or JIT doesn't support load-acquire, use a dummy test")
-+__success
-+int dummy_test(void)
-+{
-+	return 0;
-+}
-+
-+#endif
-+
-+char _license[] SEC("license") = "GPL";
-diff --git a/tools/testing/selftests/bpf/progs/verifier_precision.c b/tools/testing/selftests/bpf/progs/verifier_precision.c
-index 6b564d4c0986..6662d4b39969 100644
---- a/tools/testing/selftests/bpf/progs/verifier_precision.c
-+++ b/tools/testing/selftests/bpf/progs/verifier_precision.c
-@@ -2,6 +2,7 @@
- /* Copyright (C) 2023 SUSE LLC */
- #include <linux/bpf.h>
- #include <bpf/bpf_helpers.h>
-+#include "../../../include/linux/filter.h"
- #include "bpf_misc.h"
- 
- SEC("?raw_tp")
-@@ -90,6 +91,54 @@ __naked int bpf_end_bswap(void)
- 		::: __clobber_all);
- }
- 
-+#if defined(ENABLE_ATOMICS_TESTS) && \
-+	(defined(__TARGET_ARCH_arm64) || defined(__TARGET_ARCH_x86))
-+
-+SEC("?raw_tp")
-+__success __log_level(2)
-+__msg("mark_precise: frame0: regs=r2 stack= before 3: (bf) r3 = r10")
-+__msg("mark_precise: frame0: regs=r2 stack= before 2: (db) r2 = load_acquire((u64 *)(r10 -8))")
-+__msg("mark_precise: frame0: regs= stack=-8 before 1: (7b) *(u64 *)(r10 -8) = r1")
-+__msg("mark_precise: frame0: regs=r1 stack= before 0: (b7) r1 = 8")
-+__naked int bpf_load_acquire(void)
-+{
-+	asm volatile (
-+	"r1 = 8;"
-+	"*(u64 *)(r10 - 8) = r1;"
-+	".8byte %[load_acquire_insn];" /* r2 = load_acquire((u64 *)(r10 - 8)); */
-+	"r3 = r10;"
-+	"r3 += r2;" /* mark_precise */
-+	"r0 = 0;"
-+	"exit;"
-+	:
-+	: __imm_insn(load_acquire_insn,
-+		     BPF_ATOMIC_OP(BPF_DW, BPF_LOAD_ACQ, BPF_REG_2, BPF_REG_10, -8))
-+	: __clobber_all);
-+}
-+
-+SEC("?raw_tp")
-+__success __log_level(2)
-+__msg("mark_precise: frame0: regs=r1 stack= before 3: (bf) r2 = r10")
-+__msg("mark_precise: frame0: regs=r1 stack= before 2: (79) r1 = *(u64 *)(r10 -8)")
-+__msg("mark_precise: frame0: regs= stack=-8 before 1: (db) store_release((u64 *)(r10 -8), r1)")
-+__msg("mark_precise: frame0: regs=r1 stack= before 0: (b7) r1 = 8")
-+__naked int bpf_store_release(void)
-+{
-+	asm volatile (
-+	"r1 = 8;"
-+	".8byte %[store_release_insn];" /* store_release((u64 *)(r10 - 8), r1); */
-+	"r1 = *(u64 *)(r10 - 8);"
-+	"r2 = r10;"
-+	"r2 += r1;" /* mark_precise */
-+	"r0 = 0;"
-+	"exit;"
-+	:
-+	: __imm_insn(store_release_insn,
-+		     BPF_ATOMIC_OP(BPF_DW, BPF_STORE_REL, BPF_REG_10, BPF_REG_1, -8))
-+	: __clobber_all);
-+}
-+
-+#endif /* load-acquire, store-release */
- #endif /* v4 instruction */
- 
- SEC("?raw_tp")
-diff --git a/tools/testing/selftests/bpf/progs/verifier_store_release.c b/tools/testing/selftests/bpf/progs/verifier_store_release.c
-new file mode 100644
-index 000000000000..f1c64c08f25f
---- /dev/null
-+++ b/tools/testing/selftests/bpf/progs/verifier_store_release.c
-@@ -0,0 +1,264 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/* Copyright (c) 2025 Google LLC. */
-+
-+#include <linux/bpf.h>
-+#include <bpf/bpf_helpers.h>
-+#include "../../../include/linux/filter.h"
-+#include "bpf_misc.h"
-+
-+#if __clang_major__ >= 18 && defined(ENABLE_ATOMICS_TESTS) && \
-+	(defined(__TARGET_ARCH_arm64) || defined(__TARGET_ARCH_x86))
-+
-+SEC("socket")
-+__description("store-release, 8-bit")
-+__success __success_unpriv __retval(0x12)
-+__naked void store_release_8(void)
-+{
-+	asm volatile (
-+	"w1 = 0x12;"
-+	".8byte %[store_release_insn];" // store_release((u8 *)(r10 - 1), w1);
-+	"w0 = *(u8 *)(r10 - 1);"
-+	"exit;"
-+	:
-+	: __imm_insn(store_release_insn,
-+		     BPF_ATOMIC_OP(BPF_B, BPF_STORE_REL, BPF_REG_10, BPF_REG_1, -1))
-+	: __clobber_all);
-+}
-+
-+SEC("socket")
-+__description("store-release, 16-bit")
-+__success __success_unpriv __retval(0x1234)
-+__naked void store_release_16(void)
-+{
-+	asm volatile (
-+	"w1 = 0x1234;"
-+	".8byte %[store_release_insn];" // store_release((u16 *)(r10 - 2), w1);
-+	"w0 = *(u16 *)(r10 - 2);"
-+	"exit;"
-+	:
-+	: __imm_insn(store_release_insn,
-+		     BPF_ATOMIC_OP(BPF_H, BPF_STORE_REL, BPF_REG_10, BPF_REG_1, -2))
-+	: __clobber_all);
-+}
-+
-+SEC("socket")
-+__description("store-release, 32-bit")
-+__success __success_unpriv __retval(0x12345678)
-+__naked void store_release_32(void)
-+{
-+	asm volatile (
-+	"w1 = 0x12345678;"
-+	".8byte %[store_release_insn];" // store_release((u32 *)(r10 - 4), w1);
-+	"w0 = *(u32 *)(r10 - 4);"
-+	"exit;"
-+	:
-+	: __imm_insn(store_release_insn,
-+		     BPF_ATOMIC_OP(BPF_W, BPF_STORE_REL, BPF_REG_10, BPF_REG_1, -4))
-+	: __clobber_all);
-+}
-+
-+SEC("socket")
-+__description("store-release, 64-bit")
-+__success __success_unpriv __retval(0x1234567890abcdef)
-+__naked void store_release_64(void)
-+{
-+	asm volatile (
-+	"r1 = 0x1234567890abcdef ll;"
-+	".8byte %[store_release_insn];" // store_release((u64 *)(r10 - 8), r1);
-+	"r0 = *(u64 *)(r10 - 8);"
-+	"exit;"
-+	:
-+	: __imm_insn(store_release_insn,
-+		     BPF_ATOMIC_OP(BPF_DW, BPF_STORE_REL, BPF_REG_10, BPF_REG_1, -8))
-+	: __clobber_all);
-+}
-+
-+SEC("socket")
-+__description("store-release with uninitialized src_reg")
-+__failure __failure_unpriv __msg("R2 !read_ok")
-+__naked void store_release_with_uninitialized_src_reg(void)
-+{
-+	asm volatile (
-+	".8byte %[store_release_insn];" // store_release((u64 *)(r10 - 8), r2);
-+	"exit;"
-+	:
-+	: __imm_insn(store_release_insn,
-+		     BPF_ATOMIC_OP(BPF_DW, BPF_STORE_REL, BPF_REG_10, BPF_REG_2, -8))
-+	: __clobber_all);
-+}
-+
-+SEC("socket")
-+__description("store-release with uninitialized dst_reg")
-+__failure __failure_unpriv __msg("R2 !read_ok")
-+__naked void store_release_with_uninitialized_dst_reg(void)
-+{
-+	asm volatile (
-+	"r1 = 0;"
-+	".8byte %[store_release_insn];" // store_release((u64 *)(r2 - 8), r1);
-+	"exit;"
-+	:
-+	: __imm_insn(store_release_insn,
-+		     BPF_ATOMIC_OP(BPF_DW, BPF_STORE_REL, BPF_REG_2, BPF_REG_1, -8))
-+	: __clobber_all);
-+}
-+
-+SEC("socket")
-+__description("store-release with non-pointer dst_reg")
-+__failure __failure_unpriv __msg("R1 invalid mem access 'scalar'")
-+__naked void store_release_with_non_pointer_dst_reg(void)
-+{
-+	asm volatile (
-+	"r1 = 0;"
-+	".8byte %[store_release_insn];" // store_release((u64 *)(r1 + 0), r1);
-+	"exit;"
-+	:
-+	: __imm_insn(store_release_insn,
-+		     BPF_ATOMIC_OP(BPF_DW, BPF_STORE_REL, BPF_REG_1, BPF_REG_1, 0))
-+	: __clobber_all);
-+}
-+
-+SEC("socket")
-+__description("misaligned store-release")
-+__failure __failure_unpriv __msg("misaligned stack access off")
-+__flag(BPF_F_ANY_ALIGNMENT)
-+__naked void store_release_misaligned(void)
-+{
-+	asm volatile (
-+	"w0 = 0;"
-+	".8byte %[store_release_insn];" // store_release((u32 *)(r10 - 5), w0);
-+	"exit;"
-+	:
-+	: __imm_insn(store_release_insn,
-+		     BPF_ATOMIC_OP(BPF_W, BPF_STORE_REL, BPF_REG_10, BPF_REG_0, -5))
-+	: __clobber_all);
-+}
-+
-+SEC("socket")
-+__description("store-release to ctx pointer")
-+__failure __failure_unpriv __msg("BPF_ATOMIC stores into R1 ctx is not allowed")
-+__naked void store_release_to_ctx_pointer(void)
-+{
-+	asm volatile (
-+	"w0 = 0;"
-+	".8byte %[store_release_insn];" // store_release((u8 *)(r1 + 0), w0);
-+	"exit;"
-+	:
-+	: __imm_insn(store_release_insn,
-+		     BPF_ATOMIC_OP(BPF_B, BPF_STORE_REL, BPF_REG_1, BPF_REG_0, 0))
-+	: __clobber_all);
-+}
-+
-+SEC("xdp")
-+__description("store-release to pkt pointer")
-+__failure __msg("BPF_ATOMIC stores into R2 pkt is not allowed")
-+__naked void store_release_to_pkt_pointer(void)
-+{
-+	asm volatile (
-+	"w0 = 0;"
-+	"r2 = *(u32 *)(r1 + %[xdp_md_data]);"
-+	".8byte %[store_release_insn];" // store_release((u8 *)(r2 + 0), w0);
-+	"exit;"
-+	:
-+	: __imm_const(xdp_md_data, offsetof(struct xdp_md, data)),
-+	  __imm_insn(store_release_insn,
-+		     BPF_ATOMIC_OP(BPF_B, BPF_STORE_REL, BPF_REG_2, BPF_REG_0, 0))
-+	: __clobber_all);
-+}
-+
-+SEC("flow_dissector")
-+__description("store-release to flow_keys pointer")
-+__failure __msg("BPF_ATOMIC stores into R2 flow_keys is not allowed")
-+__naked void store_release_to_flow_keys_pointer(void)
-+{
-+	asm volatile (
-+	"w0 = 0;"
-+	"r2 = *(u64 *)(r1 + %[__sk_buff_flow_keys]);"
-+	".8byte %[store_release_insn];" // store_release((u8 *)(r2 + 0), w0);
-+	"exit;"
-+	:
-+	: __imm_const(__sk_buff_flow_keys,
-+		      offsetof(struct __sk_buff, flow_keys)),
-+	  __imm_insn(store_release_insn,
-+		     BPF_ATOMIC_OP(BPF_B, BPF_STORE_REL, BPF_REG_2, BPF_REG_0, 0))
-+	: __clobber_all);
-+}
-+
-+SEC("sk_reuseport")
-+__description("store-release to sock pointer")
-+__failure __msg("BPF_ATOMIC stores into R2 sock is not allowed")
-+__naked void store_release_to_sock_pointer(void)
-+{
-+	asm volatile (
-+	"w0 = 0;"
-+	"r2 = *(u64 *)(r1 + %[sk_reuseport_md_sk]);"
-+	".8byte %[store_release_insn];" // store_release((u8 *)(r2 + 0), w0);
-+	"exit;"
-+	:
-+	: __imm_const(sk_reuseport_md_sk, offsetof(struct sk_reuseport_md, sk)),
-+	  __imm_insn(store_release_insn,
-+		     BPF_ATOMIC_OP(BPF_B, BPF_STORE_REL, BPF_REG_2, BPF_REG_0, 0))
-+	: __clobber_all);
-+}
-+
-+SEC("socket")
-+__description("store-release, leak pointer to stack")
-+__success __success_unpriv __retval(0)
-+__naked void store_release_leak_pointer_to_stack(void)
-+{
-+	asm volatile (
-+	".8byte %[store_release_insn];" // store_release((u64 *)(r10 - 8), r1);
-+	"r0 = 0;"
-+	"exit;"
-+	:
-+	: __imm_insn(store_release_insn,
-+		     BPF_ATOMIC_OP(BPF_DW, BPF_STORE_REL, BPF_REG_10, BPF_REG_1, -8))
-+	: __clobber_all);
-+}
-+
-+struct {
-+	__uint(type, BPF_MAP_TYPE_HASH);
-+	__uint(max_entries, 1);
-+	__type(key, long long);
-+	__type(value, long long);
-+} map_hash_8b SEC(".maps");
-+
-+SEC("socket")
-+__description("store-release, leak pointer to map")
-+__success __retval(0)
-+__failure_unpriv __msg_unpriv("R6 leaks addr into map")
-+__naked void store_release_leak_pointer_to_map(void)
-+{
-+	asm volatile (
-+	"r6 = r1;"
-+	"r1 = %[map_hash_8b] ll;"
-+	"r2 = 0;"
-+	"*(u64 *)(r10 - 8) = r2;"
-+	"r2 = r10;"
-+	"r2 += -8;"
-+	"call %[bpf_map_lookup_elem];"
-+	"if r0 == 0 goto l0_%=;"
-+	".8byte %[store_release_insn];" // store_release((u64 *)(r0 + 0), r6);
-+"l0_%=:"
-+	"r0 = 0;"
-+	"exit;"
-+	:
-+	: __imm_addr(map_hash_8b),
-+	  __imm(bpf_map_lookup_elem),
-+	  __imm_insn(store_release_insn,
-+		     BPF_ATOMIC_OP(BPF_DW, BPF_STORE_REL, BPF_REG_0, BPF_REG_6, 0))
-+	: __clobber_all);
-+}
-+
-+#else
-+
-+SEC("socket")
-+__description("Clang version < 18, ENABLE_ATOMICS_TESTS not defined, and/or JIT doesn't support store-release, use a dummy test")
-+__success
-+int dummy_test(void)
-+{
-+	return 0;
-+}
-+
-+#endif
-+
-+char _license[] SEC("license") = "GPL";
--- 
-2.48.1.711.g2feabab25a-goog
-
+-bw
