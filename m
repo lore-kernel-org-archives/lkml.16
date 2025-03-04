@@ -1,109 +1,120 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8448D1F891D
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 08:25:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 890F81F940A;
+	Tue,  4 Mar 2025 08:27:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741076755; cv=none; b=J6JidSRAJmJrWkrI7HFsiXwhLsLqGCpZ+0o8aWCxPawPr/YL7lCVWchMUreVh+leBpDlMda1dy0FxhX22ixHysbgHWvxpbHS9fmq+uWB39esnoEyxQ795rMMgDpBPksg7/hg7ytMGEHIbsNONQqvnBYImud6RDc0dEuMFpDgVTc=
+	t=1741076869; cv=none; b=nrhYjp9dTKhLZyTq/Cq7FSWk1ovle3J9zB5gbBqD/0zUd4ZvzrzWSQFFko2/2IOuZvtp8znEgiuQ8KOJfAlR3AAKVwC8EXUIl2Il4jvxwHPP5qJkf3jwYTR/9+NTKxt6aDA0m/uVk6zOh7qrEBIt5G7gxFlSiXgIExGnW2dk9SA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741076755; c=relaxed/simple;
-	bh=LWaROX7SXgmCqlPc9buCPJ2DbnKs+5PqvizBKQBGnPE=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=aJf95hwE5434rGBCsNKTfUqUOu6sjzJsWGpnBNBa9448DtXKu5qzzDqcZO0eMn0odAgtzbYxG9l06pVBhO4qqtaVtJX2CwANhTCsSzjNwEdcmA0tg0/WnTZmObkfNFP2fL7gX6z4522+un8JSZwlAC66mngnzoGw75qOPMswlrU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LXDnjk7C; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1741076869; c=relaxed/simple;
+	bh=drHyst/nPYYsNLUbpwA1Tmqwh+lO4Vv+KCfAluJFnKw=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=oq1CJ/dJIx+NAYA/JdsJ2OpORgGhL6sMkTkjOdZ9xzqhGXmbA0GTiLycDNTGdBOkcQKJ98L5QQi2iBTrxxfccVhordr6G1xV7QD16LnQ0kUdLE7o9ALoCBFPTRLZIiQX1Zt1n++DoWW4on5M3zRcxvOzt03SRN/OiIDowqqR9Ic=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=SqyRqXkC; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=IMSsfE/P; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LXDnjk7C"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741076753; x=1772612753;
-  h=message-id:date:mime-version:cc:subject:to:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=LWaROX7SXgmCqlPc9buCPJ2DbnKs+5PqvizBKQBGnPE=;
-  b=LXDnjk7CVTmAZjor6j5h7l2OwHMLE/vNwQfSdKLVMtJcvxpUtQv2y/St
-   nAGEHuTM/opQcz6EURneqKG+p7d+386opAFLErj3k14rWa04GKhmASFup
-   mqKUo1gd9/TfNzy2gYOYy4ltVJ4zfGj2AWbDtU5YKtk//IgfOic5oihwr
-   B/oclotScPr/dIlEMMZcEFV1GLwxq5oYQcCFocMBqMc2wHFB6tYgM65Tj
-   TaMvhSDN+XElcpKqdDQWys7gsX+Rg+TtZ1Z2lTqoEQr/O0rVQton0SrNs
-   RC/gxC7lYLm40kGx6y80woVw+7BRFNMS/v7CQI8zr3PV7kIffP3TL+Kg4
-   w==;
-X-CSE-ConnectionGUID: 47fc/UoaQI2JhGpDA6GXrw==
-X-CSE-MsgGUID: R59xC69CQEKB1zOPiDtDIQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11362"; a="45909117"
-X-IronPort-AV: E=Sophos;i="6.13,331,1732608000"; 
-   d="scan'208";a="45909117"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2025 00:25:52 -0800
-X-CSE-ConnectionGUID: LYPIdh6bQe+dhpS+hpcqAg==
-X-CSE-MsgGUID: HxsuqgwDSTetz9/nVdtNJQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,331,1732608000"; 
-   d="scan'208";a="118036387"
-Received: from blu2-mobl.ccr.corp.intel.com (HELO [10.124.240.112]) ([10.124.240.112])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2025 00:25:49 -0800
-Message-ID: <3963b517-a609-4c53-b373-f0424cb84099@linux.intel.com>
-Date: Tue, 4 Mar 2025 16:25:47 +0800
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="SqyRqXkC";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="IMSsfE/P"
+Date: Tue, 04 Mar 2025 08:27:44 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1741076865;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=g6ieIhtv7bFx+0JGFNWIw6iKTTVbcLVbb/L92MJjB9o=;
+	b=SqyRqXkC28qfLko7Djmkbr10U69ffqsMZPTUWnroV75Vu2jsg5F8sK2pCUQXiS1T7ASUjC
+	Vw6BolTPgP/fJurQKCdWNhXzRq1TyMq4iatfxg0+1/xCFbEXME3SfOvleROnO8RX4ZMMha
+	iHkw8hLst1O7pANlMZo5qKPCn+4XZ90Kle2281as0tAK4zNiHnvXpfAa6eMPs+TAAf0Dq2
+	j30yl7xtDIVw5U5m+JwNtOsLeYTmQhZf6+Flg60p/zUEvSKeWbxqvyJeEXOa926YSI0Z0g
+	FzIBdSQfrGJI80soTIo7DL8lRdYKMSogE34Ir5DzIPGfttrCWhE0dEsG24JBTA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1741076865;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=g6ieIhtv7bFx+0JGFNWIw6iKTTVbcLVbb/L92MJjB9o=;
+	b=IMSsfE/P8oSIOSM0vqYoPpER1zl5vxVdB7YHVKiQMIB73E7QC9RLxo4YVISLtB891jnms3
+	qzTpL0R8wGik6fDg==
+From: "tip-bot2 for Brian Gerst" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/core] x86/stackprotector: Move __stack_chk_guard to percpu
+ hot section
+Cc: Brian Gerst <brgerst@gmail.com>, Ingo Molnar <mingo@kernel.org>,
+ Uros Bizjak <ubizjak@gmail.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250303165246.2175811-11-brgerst@gmail.com>
+References: <20250303165246.2175811-11-brgerst@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: baolu.lu@linux.intel.com, "Jiang, Dave" <dave.jiang@intel.com>,
- Vinod Koul <vkoul@kernel.org>, Fenghua Yu <fenghuay@nvidia.com>,
- Zhangfei Gao <zhangfei.gao@linaro.org>, Zhou Wang <wangzhou1@hisilicon.com>,
- "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 04/12] iommu/vt-d: Move scalable mode ATS enablement to
- probe path
-To: "Tian, Kevin" <kevin.tian@intel.com>, Joerg Roedel <joro@8bytes.org>,
- Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
- Jason Gunthorpe <jgg@ziepe.ca>
-References: <20250228092631.3425464-1-baolu.lu@linux.intel.com>
- <20250228092631.3425464-5-baolu.lu@linux.intel.com>
- <BN9PR11MB52768462B8DDFBAB1EDE02C28CC82@BN9PR11MB5276.namprd11.prod.outlook.com>
-Content-Language: en-US
-From: Baolu Lu <baolu.lu@linux.intel.com>
-In-Reply-To: <BN9PR11MB52768462B8DDFBAB1EDE02C28CC82@BN9PR11MB5276.namprd11.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Message-ID: <174107686495.14745.13008967273841312300.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 
-On 2025/3/4 16:15, Tian, Kevin wrote:
->> From: Lu Baolu<baolu.lu@linux.intel.com>
->> Sent: Friday, February 28, 2025 5:26 PM
->>
->> Device ATS is currently enabled when a domain is attached to the device
->> and disabled when the domain is detached. This creates a limitation:
->> when the IOMMU is operating in scalable mode and IOPF is enabled, the
->> device's domain cannot be changed.
-> could you extend it with your earlier reply?
-> 
-> https://lore.kernel.org/linux-iommu/6a418974-d06e-46e3-879f- 
-> ab4c84a95231@linux.intel.com/
-> 
->> -static void iommu_enable_pci_caps(struct device_domain_info *info)
->> +static void iommu_enable_pci_ats(struct device_domain_info *info)
->>   {
->>   	struct pci_dev *pdev;
->>
->> -	if (!dev_is_pci(info->dev))
->> +	if (!info->ats_supported)
->>   		return;
->>
->>   	pdev = to_pci_dev(info->dev);
->> -	if (info->ats_supported && pci_ats_page_aligned(pdev) &&
->> -	    !pci_enable_ats(pdev, VTD_PAGE_SHIFT))
->> +	if (!pci_ats_page_aligned(pdev))
->> +		return;
->> +
->> +	if (!pci_enable_ats(pdev, VTD_PAGE_SHIFT))
->>   		info->ats_enabled = 1;
->>   }
->>
-> still prefer to some comment above as you explained in above
-> reply. It's not obvious w/o knowing the tricky background.
+The following commit has been merged into the x86/core branch of tip:
 
-Okay, sure.
+Commit-ID:     0d3cd124b77ab546ba4284587fb6a72322a89daf
+Gitweb:        https://git.kernel.org/tip/0d3cd124b77ab546ba4284587fb6a72322a89daf
+Author:        Brian Gerst <brgerst@gmail.com>
+AuthorDate:    Mon, 03 Mar 2025 11:52:45 -05:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Mon, 03 Mar 2025 21:37:41 +01:00
+
+x86/stackprotector: Move __stack_chk_guard to percpu hot section
+
+No functional change.
+
+Signed-off-by: Brian Gerst <brgerst@gmail.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Acked-by: Uros Bizjak <ubizjak@gmail.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: https://lore.kernel.org/r/20250303165246.2175811-11-brgerst@gmail.com
+---
+ arch/x86/include/asm/stackprotector.h | 2 +-
+ arch/x86/kernel/cpu/common.c          | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/x86/include/asm/stackprotector.h b/arch/x86/include/asm/stackprotector.h
+index d43fb58..cd761b1 100644
+--- a/arch/x86/include/asm/stackprotector.h
++++ b/arch/x86/include/asm/stackprotector.h
+@@ -20,7 +20,7 @@
+ 
+ #include <linux/sched.h>
+ 
+-DECLARE_PER_CPU(unsigned long, __stack_chk_guard);
++DECLARE_PER_CPU_CACHE_HOT(unsigned long, __stack_chk_guard);
+ 
+ /*
+  * Initialize the stackprotector canary value.
+diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
+index 39782a2..a1c0efc 100644
+--- a/arch/x86/kernel/cpu/common.c
++++ b/arch/x86/kernel/cpu/common.c
+@@ -2130,7 +2130,7 @@ void syscall_init(void)
+ #endif /* CONFIG_X86_64 */
+ 
+ #ifdef CONFIG_STACKPROTECTOR
+-DEFINE_PER_CPU(unsigned long, __stack_chk_guard);
++DEFINE_PER_CPU_CACHE_HOT(unsigned long, __stack_chk_guard);
+ #ifndef CONFIG_SMP
+ EXPORT_PER_CPU_SYMBOL(__stack_chk_guard);
+ #endif
