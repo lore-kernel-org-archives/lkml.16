@@ -1,123 +1,96 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1CE61F8AE2
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 08:00:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D6581EDA0B
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 08:01:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741075258; cv=none; b=d/j2+ccehTLrUKNQCebLH9lRnelDH/hByoZdV31HuU0G1SVHxbxhX187852lMX/Fw3qKcpXr327B/q4z9dB0+AlFxMfpDN4da2bSA8NAs4IGI7CK2iqglZn/Wn3hRfewKCHSIzI+AZBb5CJazjcN0VA1XIqFQBusPVVCgN51nOg=
+	t=1741075286; cv=none; b=bNEPDG8zJj3i9JjcEwwFMawrZXaK8+gEin1TvlVKjkQsyndNJW+51Cf4W1bXJIF21xaW93aZ/Rbswlk7fGEpf+tI3U+XGbC9GGHQKgxtjEjQb7uL0nbI1+CbJQjykJmLULJE3WOgFYGuZ/HA3zd3bcxQewnsPXv4Ymm22aVdJIg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741075258; c=relaxed/simple;
-	bh=grlvUcq+n0ZHUeHH4YRjJJgBrlyFS1tT7OsIfZ6MtKI=;
+	s=arc-20240116; t=1741075286; c=relaxed/simple;
+	bh=yM6piAILnQk9xGq2GxzFHXReJiLNyLpTJqnfUjNN9hk=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SzYTEBgznc4xzpNXpnPF6APQO7YC0yAG9nb+IraoZjafZT2JgcKH4bdyoRzVe8ZjK1U6Cp8hA2Y6BkuKXwd6uLEZvI/phwxBQQwIBO2MXQ8uzsegCCssvfpxda0iXCK/V/1DfCuZEzVTsnc1tbuJahWFC/Ql/CqzRPDUbbzlH6Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HaH/ezKP; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 To:Cc:Content-Type; b=RCmV3Dn7DoSRAsv3wNOeVczVrSz3xVS94lr8a3WUWC80wI5bfgLIWI9Yv45ok/9zn+EH8zRpxqZEmLmPklgXEZOxHAYO/W7hHQoU8g/pyBqqu4zsKSMBeMX57xJILumZWlVlGuucO4bM6tMAu2tJ1kydlAukJgUX8oGpTWaEKNU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=DPSb3OYt; arc=none smtp.client-ip=209.85.128.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HaH/ezKP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1741075254;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=IFiLdPv0wJgydI+E9BMmh4MKMo+mTex0R96kXh25It4=;
-	b=HaH/ezKPCy4lSBpk5Cg2gpZU3IKZNyrs8+2ka2A6fLTw/z6i8DDnK51px969K2F2orS86n
-	sWc2GSnFv15HKPjAQFouQ/yoG9yau6x6mlQvWq6RJb1IMQ1AD5lPnPBvtuZjSC8VEDrAsF
-	NYb3AhFFKiL/vsfvA7Ld4Y3ntC2pPjM=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-542-wIEe4zmuMZqRksH1RFW_6w-1; Tue, 04 Mar 2025 03:00:53 -0500
-X-MC-Unique: wIEe4zmuMZqRksH1RFW_6w-1
-X-Mimecast-MFC-AGG-ID: wIEe4zmuMZqRksH1RFW_6w_1741075252
-Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-ac1e442740cso140405266b.1
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Mar 2025 00:00:53 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DPSb3OYt"
+Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-6efe4e3d698so47524497b3.0
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Mar 2025 00:01:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1741075283; x=1741680083; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yM6piAILnQk9xGq2GxzFHXReJiLNyLpTJqnfUjNN9hk=;
+        b=DPSb3OYtRAl9eJzUnDMymVpwekzT1bupKpE5lmtkv5Tk0bYTR75QwDtv4m0WJ0cQp1
+         kXDLEnVrv8qle3rCgGK2GvD3+TgqX60D8iaYc6dgbMHKLvj3V5S6Zas8sm+0XbXFsHgp
+         elMMgp57dpEPFjFrl7ky4G7jTQDLEANihg6IxRNkqohBl9ZbdYKy2qnPcf0IXpE42uwS
+         4b9n58WjZJtkXp9RHE1QBPAorVei4m/VJp41rJ20EzXruBtPtMeX8suL4v5uJM1mz/3j
+         CkBX7EU8vmnCceQAZm9jn8361NEcb+qm1psezma4hShPmoZt7VfenWXJGr75zgU+meR7
+         q1gA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741075252; x=1741680052;
+        d=1e100.net; s=20230601; t=1741075283; x=1741680083;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=IFiLdPv0wJgydI+E9BMmh4MKMo+mTex0R96kXh25It4=;
-        b=ZZyY6EN9DPeUKJw/Rpaofta8IMno7Ka3WEkTjZzGY+GHNSErdnQSkk4hCJTzjcnTgH
-         ewu6yroHJrZdf4iqF+HDTxP68P/90TUEI3hcp739lOTCXOLnOcov2XIvsU0s/GPfCFJR
-         WVKg3TczvjrS1JBV2wU8G4FnWIHQaBaHpVx1nYCB7Dp48XDGH0uAcVAjENOOHG7xHbd/
-         cN9WpJ/kGGGFuLfNsmNc+1lygxWXWuSyJyxeXB5cNuoy42Pm/6JVxm57sOdjsmkCwgKq
-         gNLbRDxdQDnM1qu6jF5bj9AolIXTso4Y7JhgRacH6SZ/Pyv8XMgeiulumoKs6Z0L/Ksk
-         eddQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWkZn3hods0s+IGFKhWK18teAxJEbpOXsVmWR3QLN5Jkjo8t4SUT4GYUuDG9GwRNnDO8bQ2thZmiwcmkv8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwICgn4qkyR+jg9UMXDHSPcny1p0nXgIg5ziyD0CyAPIQu2rBWC
-	97MQDsAvSrnhS9MohzLtrMD3Phyd6zSLXbKHYBcvE1TxSQ8coJfnzorDx2WumJ8ofhPa9gBQLqX
-	q2JN++zYIAAe721YBU3c8g6ECeYEiRW1lfUY3+tuGE0aSffnfKF2YiOeYQVPHRbAlwkMbJGhm6v
-	mDPC/zUF1LchApm+CmS28akJE/tfzNJZ5/7T2N
-X-Gm-Gg: ASbGncuEiZ9SOJJFR0CXPLd8eIbWPLiqkp42ODZmovXRWNq1oruG1WYJ379jNTnxoje
-	Umv2VvFseR3g79uWvxludaiYhTkGIaBwjBv3A9C+gm/CTorUSDgdpcrWxrm2PExwv07SjXTFS
-X-Received: by 2002:a17:907:97c9:b0:ac1:fa6f:4941 with SMTP id a640c23a62f3a-ac1fa6f56b3mr77297866b.13.1741075251961;
-        Tue, 04 Mar 2025 00:00:51 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IH6YcRUoE+PQsHcF94LU8vESBGW89cDx3MC01IA3KlNUw4Ta0bQ9PK+pMZlo0Tp04vd/FuLAgkki0nl8YikaVQ=
-X-Received: by 2002:a17:907:97c9:b0:ac1:fa6f:4941 with SMTP id
- a640c23a62f3a-ac1fa6f56b3mr77295666b.13.1741075251611; Tue, 04 Mar 2025
- 00:00:51 -0800 (PST)
+        bh=yM6piAILnQk9xGq2GxzFHXReJiLNyLpTJqnfUjNN9hk=;
+        b=DA7Sxx5baqOW5dcZzKNkOcM2Acx4ADuiE9FR/0iFWlh2qvfxjz9/PCWRRoEBbkOiPN
+         vA9fNwbrwIL+M3m3K3jaVSyMCVO5n4i2bkSZ8AEfKnVsl5x6YzjIjBCjuD4Svhnvlx6f
+         igChA6zOzRAjqlYzm7l08V0E4VyxZ+2u31NtxTWbezzgKp1hnZPdG4lYz1wVd1WXZ6GM
+         1JnKo4yp6EDjRFEUaD7XGUAI5Lo9KKb1WfUf1ifVlGFwCpcPOYouK4apolfzRNE3kZ5I
+         Uubs7cMoVccaj+aikNovZTTqPOKTlX1aZuiFxTpQl5q5JxXEY5BSUzhiR5uve7m+dFK4
+         1l4g==
+X-Forwarded-Encrypted: i=1; AJvYcCXGSBTXil2mMxZCHNagv6sjXd35BZiPwmykHSBQ3XI/bHX627pgDK17uu13O8MOdnY8sEz3vsdpTE17o1Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwRzY9nOtNYiLf8uSpAexaPBuOWa2GyxGQbBQWVvTeyKEIxd3/B
+	pjjBv4fQmVXvGsnK9V9BgfdJ92M3+wYGIf4aLJXp3H5pAWUVengvfF9mTRGUOtwceMy+a640aJk
+	NokIhw4r+AiD6HCTiMj/trNpOTqWx7JkjB8EADA==
+X-Gm-Gg: ASbGncv/p5KiRYR5hQB4FCvlrP3uqBM+j0hRRTA+Iu+jyiPIEdStdO5Ai7jYzu7QI0M
+	ZnJu9wizZcwHCaplDTXdn3tzHkvPV6Rtgkio3XTxZsqplSiWnPN/i3ONH5prckJBDqd8e1+2QvL
+	wr65OqOU0TxudWNR4SgyrM4Sfbdw==
+X-Google-Smtp-Source: AGHT+IGAv1QI6NxLx4aSutmM2eABQddCgvk11+0H2Td2ZN4KP/uMxodKgMJh5YrQ4faawCMRD4vowNlT+PD+ek3jkU4=
+X-Received: by 2002:a05:690c:b8e:b0:6f9:41e3:ea4b with SMTP id
+ 00721157ae682-6fd4a059726mr195363417b3.9.1741075283608; Tue, 04 Mar 2025
+ 00:01:23 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250127170251.744751-1-costa.shul@redhat.com>
- <20250227200623.60f20571@gandalf.local.home> <CAP4=nvQXaFmemBeW8U3U9zTMK0gVYvp23gfq_6ALsBJPTXt9Uw@mail.gmail.com>
- <20250303150351.28007ad1@gandalf.local.home>
-In-Reply-To: <20250303150351.28007ad1@gandalf.local.home>
-From: Tomas Glozar <tglozar@redhat.com>
-Date: Tue, 4 Mar 2025 09:00:40 +0100
-X-Gm-Features: AQ5f1JpjC5uI6iD9gjjgeuoX5GcZz2a7tfefoRMXBLfWQDJ3fcDoPMA4HZz7dWk
-Message-ID: <CAP4=nvQ9pXYtihL7HTTRK=EzUEubtWbxDr78JswksSo-wa7zYw@mail.gmail.com>
-Subject: Re: [PATCH v1] rtla: Save trace when option `--trace` is specified
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Costa Shulyupin <costa.shul@redhat.com>, John Kacur <jkacur@redhat.com>, 
-	"Luis Claudio R. Goncalves" <lgoncalv@redhat.com>, Eder Zulian <ezulian@redhat.com>, 
-	Dan Carpenter <dan.carpenter@linaro.org>, linux-trace-kernel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+References: <20250228-max77759-mfd-v3-0-0c3627d42526@linaro.org> <20250228-max77759-mfd-v3-5-0c3627d42526@linaro.org>
+In-Reply-To: <20250228-max77759-mfd-v3-5-0c3627d42526@linaro.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Tue, 4 Mar 2025 09:01:06 +0100
+X-Gm-Features: AQ5f1Jr4hfcQtwg_ZcA-Ydn_kIMJZb-DCuZHup-eBLnhS1CYHvK_yjDzqNv-Zg8
+Message-ID: <CACRpkdYYpT1ut0EeP03p-UK4NZfYGb_ykc2CE4yo7jx+sF+Xig@mail.gmail.com>
+Subject: Re: [PATCH v3 5/6] gpio: max77759: add Maxim MAX77759 gpio driver
+To: =?UTF-8?Q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
+Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, 
+	Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+	Peter Griffin <peter.griffin@linaro.org>, Tudor Ambarus <tudor.ambarus@linaro.org>, 
+	Will McVicker <willmcvicker@google.com>, kernel-team@android.com, 
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-hardening@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-po 3. 3. 2025 v 21:04 odes=C3=ADlatel Steven Rostedt <rostedt@goodmis.org> =
-napsal:
+On Fri, Feb 28, 2025 at 3:25=E2=80=AFPM Andr=C3=A9 Draszik <andre.draszik@l=
+inaro.org> wrote:
+
+> The Maxim MAX77759 is a companion PMIC for USB Type-C applications and
+> includes Battery Charger, Fuel Gauge, temperature sensors, USB Type-C
+> Port Controller (TCPC), NVMEM, and a GPIO expander.
 >
-> Not sure what you mean by "main instance"?
+> This driver supports the GPIO functions using the platform device
+> registered by the core MFD driver.
 >
+> Signed-off-by: Andr=C3=A9 Draszik <andre.draszik@linaro.org>
 
-By "main instance", I meant tool->trace.inst. My point was that
-record->trace.inst, which is a different instance, would be still on.
-But that's not the case, osnoise_stop_tracing() stops *all* osnoise
-instances, not just the first one - sorry, that was my mistake.
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
->
-> The code being changed is:
->
-> -       if (osnoise_trace_is_off(tool, record)) {
-> +       if (osnoise_trace_is_off(tool, record))
->                 printf("rtla osnoise hit stop tracing\n");
-> -               if (params->trace_output) {
-> -                       printf("  Saving trace to %s\n", params->trace_ou=
-tput);
-> -                       save_trace_to_file(record->trace.inst, params->tr=
-ace_output);
-> -               }
-> +       if (params->trace_output) {
-> +               printf("  Saving trace to %s\n", params->trace_output);
-> +               save_trace_to_file(record->trace.inst, params->trace_outp=
-ut);
->         }
->
-
-So we need to stop tracing here, before we save the trace, if we want
-to do that. Perhaps combining this with the cleanup patch [1] and
-doing the stopping in save_trace_to_file would make sense?
-
-[1] - https://lore.kernel.org/linux-trace-kernel/20250219115138.406075-1-co=
-sta.shul@redhat.com/
-
-Tomas
-
+Yours,
+Linus Walleij
