@@ -1,23 +1,23 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 026C01FC0FC;
-	Tue,  4 Mar 2025 08:27:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B8D51FC11A;
+	Tue,  4 Mar 2025 08:27:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741076872; cv=none; b=FBi4HdkpiDtYHykeoc4yRFtcqPwjJTDxBh8yOFRdHxNl35rWD7K5M8Xm9iortxe0wr6z6g1yN/JiL9stESzu5DSmS+TN80so7Q+IPujHe0qALXyYKXHoUNMhcQqHR0WjBXPlgWv75nl4OGjl8eCT8tFdtGSTCK8DAThaCC+CJbA=
+	t=1741076873; cv=none; b=rOiQnuLn4alb1yJh0gT3u9ukvkEtd1l9BtbgLhU9QyhnVWc9inLOttlHEWuSnqsSYVj9p4NEk5fOfpI4zWHg6trFmTn+d7vYzoFjXVIsCQqowXubHc06D3v4FihmAvBUMECONVy+DXTtHRHQ2Ly52YsmCB5k32ELxp+qztY0ChY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741076872; c=relaxed/simple;
-	bh=40dnRwFkElToBr3KaxSa3l1HJIBcpR2X9ZPrRlpgLL8=;
+	s=arc-20240116; t=1741076873; c=relaxed/simple;
+	bh=XTn45d3uSUhgVfLaEwcB92ck3kk80yHADl5WV4hXr3Q=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=MOukvehiHdOXBilplqSNUAPJRLi/C39yDbu56OgVLdySEsDlhP+jAmvWjO2XFTtbdcbyqp2Ug6xIrP5uCXnXBDcsxmDo7XJ8hA7isumwoBc1BTUQr0p2VDFK6SPAsYGbIw/SkV3bLYR9o/cKNUp7RtgMgbpk2gqgnQtjIS2AA10=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=H0CmkhCL; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=6Ua/h/p4; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=JPl4KSyFsfxWoNK86uRbROjnijukUun4IVgW+9NZ1cOcDEcnk1IjNjlbKgMAl/QYq9i1bHo0TKd1+Kmp5s62NUMnmxUniIqKvwQYuXgoDyXV17V0WregTWyGlVCWq45S6cRGUnkyxiemYTdD2jPw7vs7xSOwLdBQdCscllHAU+4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=GJc63spF; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=AHdLPLra; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="H0CmkhCL";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="6Ua/h/p4"
-Date: Tue, 04 Mar 2025 08:27:48 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="GJc63spF";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="AHdLPLra"
+Date: Tue, 04 Mar 2025 08:27:49 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020; t=1741076869;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
@@ -25,12 +25,12 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=boOuo6vup+Ua8N8rJmk7VGRjOZBd09VtnSJoxp+olyc=;
-	b=H0CmkhCLJSJK7YL6svwRJxPdLMvWrJxX7bbTkbq0cicLBAlDmSJEfveWvfIi/fhwySdcqU
-	s9eZIG5r5G0FjmJ5bPXD9FK3JjHmepzj8OjYe+12PsPGFOreNhE7GijahyfLj6yXvFfSi1
-	jVzkFMYzxcWr9VtYNifUl9WsyfzJ+J1U910oo0la+dV4UBQObjSv3TNKH1OslyYY+/FD8N
-	AHQPRy39/qViJhXIlYe6RDfHb6INspftF9BDWJHe4+EGRTsyvKOjM76miaH3XYg5YiTuHk
-	1pvTNz0nmxuLanFCFSoPdW0eVFGcccGnbPJU7ZThXmmOEmgSGgiGX5DJx3CU0A==
+	bh=zywy28gsiHdbWMOkuCimRsPefCrwML+KXFIPNT7zi1A=;
+	b=GJc63spFywEguxGKB65Tc84w1BcnPZsdh+sgJzg1ffqPktP1uvWcP+yelK74oJwE/cZ29e
+	k2KTikCy1b/uU1HGrGlhBbU2YUCg3FmCiDjyR8E6wFm4UO1qLJUU7pWk0q1Dr15TOk+I6s
+	1uc7JGWaOTs2f5jMNPcf5UsLmjbfbK+fwLJIxgABvVJNRj2w0VGG8hYu0iCQv3JNxtVCH3
+	ZTPWtzhwJ28nLAFvZltt8RaXS1W+K5211u0VqBpguznvEYMrjhvCgVmvAwSuh895CHyLlo
+	38wXCKKvI2QQPa7FLycSbt2CW83C+sQH03gpK85SqfZ7j4qr6IaGhiI2rwvdAA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020e; t=1741076869;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
@@ -38,28 +38,28 @@ DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=boOuo6vup+Ua8N8rJmk7VGRjOZBd09VtnSJoxp+olyc=;
-	b=6Ua/h/p4G2U97mRzW4R26qJLw06QvG8CtcTUv4vafLXBWJTC8yS58LAuSDn4y8G1WZ3LEf
-	RGtgleS9TT/SWHDg==
+	bh=zywy28gsiHdbWMOkuCimRsPefCrwML+KXFIPNT7zi1A=;
+	b=AHdLPLralU7fiJqf3+9BKgKwEFGy3O8ubPpARZQ7ULENRG9oehBF7XQAxQwI1RoKr7yx3c
+	bDZAc9dfiGoIqWAA==
 From: "tip-bot2 for Brian Gerst" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/core] x86/smp: Move cpu number to percpu hot section
+Subject: [tip: x86/core] x86/preempt: Move preempt count to percpu hot section
 Cc: Brian Gerst <brgerst@gmail.com>, Ingo Molnar <mingo@kernel.org>,
  Uros Bizjak <ubizjak@gmail.com>,
  Linus Torvalds <torvalds@linux-foundation.org>,
  Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
  linux-kernel@vger.kernel.org
-In-Reply-To: <20250303165246.2175811-5-brgerst@gmail.com>
-References: <20250303165246.2175811-5-brgerst@gmail.com>
+In-Reply-To: <20250303165246.2175811-4-brgerst@gmail.com>
+References: <20250303165246.2175811-4-brgerst@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174107686855.14745.14522514904877739770.tip-bot2@tip-bot2>
+Message-ID: <174107686913.14745.13117533696613764531.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -69,14 +69,14 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the x86/core branch of tip:
 
-Commit-ID:     d9d755ec42d0aca4796cdcbc2177ca6844867e99
-Gitweb:        https://git.kernel.org/tip/d9d755ec42d0aca4796cdcbc2177ca6844867e99
+Commit-ID:     4f2b419dd00eddd34952966a38c78892cd7c5715
+Gitweb:        https://git.kernel.org/tip/4f2b419dd00eddd34952966a38c78892cd7c5715
 Author:        Brian Gerst <brgerst@gmail.com>
-AuthorDate:    Mon, 03 Mar 2025 11:52:39 -05:00
+AuthorDate:    Mon, 03 Mar 2025 11:52:38 -05:00
 Committer:     Ingo Molnar <mingo@kernel.org>
 CommitterDate: Mon, 03 Mar 2025 21:37:41 +01:00
 
-x86/smp: Move cpu number to percpu hot section
+x86/preempt: Move preempt count to percpu hot section
 
 No functional change.
 
@@ -85,90 +85,157 @@ Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Acked-by: Uros Bizjak <ubizjak@gmail.com>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: https://lore.kernel.org/r/20250303165246.2175811-5-brgerst@gmail.com
+Link: https://lore.kernel.org/r/20250303165246.2175811-4-brgerst@gmail.com
 ---
- arch/x86/include/asm/current.h | 1 -
- arch/x86/include/asm/smp.h     | 7 ++++---
- arch/x86/kernel/setup_percpu.c | 5 ++++-
- kernel/bpf/verifier.c          | 4 ++--
- 4 files changed, 10 insertions(+), 7 deletions(-)
+ arch/x86/include/asm/current.h |  1 -
+ arch/x86/include/asm/preempt.h | 25 +++++++++++++------------
+ arch/x86/kernel/cpu/common.c   |  4 +++-
+ include/linux/preempt.h        |  1 +
+ 4 files changed, 17 insertions(+), 14 deletions(-)
 
 diff --git a/arch/x86/include/asm/current.h b/arch/x86/include/asm/current.h
-index 46a736d..f988462 100644
+index 60bc66e..46a736d 100644
 --- a/arch/x86/include/asm/current.h
 +++ b/arch/x86/include/asm/current.h
 @@ -14,7 +14,6 @@ struct task_struct;
  
  struct pcpu_hot {
  	struct task_struct	*current_task;
--	int			cpu_number;
+-	int			preempt_count;
+ 	int			cpu_number;
  #ifdef CONFIG_MITIGATION_CALL_DEPTH_TRACKING
  	u64			call_depth;
- #endif
-diff --git a/arch/x86/include/asm/smp.h b/arch/x86/include/asm/smp.h
-index 4da927e..d20a9cc 100644
---- a/arch/x86/include/asm/smp.h
-+++ b/arch/x86/include/asm/smp.h
-@@ -6,7 +6,8 @@
- #include <linux/thread_info.h>
+diff --git a/arch/x86/include/asm/preempt.h b/arch/x86/include/asm/preempt.h
+index 7e83482..a1748b4 100644
+--- a/arch/x86/include/asm/preempt.h
++++ b/arch/x86/include/asm/preempt.h
+@@ -4,10 +4,11 @@
  
- #include <asm/cpumask.h>
+ #include <asm/rmwcc.h>
+ #include <asm/percpu.h>
 -#include <asm/current.h>
-+
-+DECLARE_PER_CPU_CACHE_HOT(int, cpu_number);
  
- DECLARE_PER_CPU_READ_MOSTLY(cpumask_var_t, cpu_sibling_map);
- DECLARE_PER_CPU_READ_MOSTLY(cpumask_var_t, cpu_core_map);
-@@ -134,8 +135,8 @@ __visible void smp_call_function_single_interrupt(struct pt_regs *r);
-  * This function is needed by all SMP systems. It must _always_ be valid
-  * from the initial startup.
+ #include <linux/static_call_types.h>
+ 
++DECLARE_PER_CPU_CACHE_HOT(int, __preempt_count);
++
+ /* We use the MSB mostly because its available */
+ #define PREEMPT_NEED_RESCHED	0x80000000
+ 
+@@ -23,18 +24,18 @@
   */
--#define raw_smp_processor_id()  this_cpu_read(pcpu_hot.cpu_number)
--#define __smp_processor_id() __this_cpu_read(pcpu_hot.cpu_number)
-+#define raw_smp_processor_id()  this_cpu_read(cpu_number)
-+#define __smp_processor_id() __this_cpu_read(cpu_number)
- 
- static inline struct cpumask *cpu_llc_shared_mask(int cpu)
+ static __always_inline int preempt_count(void)
  {
-diff --git a/arch/x86/kernel/setup_percpu.c b/arch/x86/kernel/setup_percpu.c
-index 1e7be94..175afc3 100644
---- a/arch/x86/kernel/setup_percpu.c
-+++ b/arch/x86/kernel/setup_percpu.c
-@@ -23,6 +23,9 @@
- #include <asm/cpumask.h>
- #include <asm/cpu.h>
+-	return raw_cpu_read_4(pcpu_hot.preempt_count) & ~PREEMPT_NEED_RESCHED;
++	return raw_cpu_read_4(__preempt_count) & ~PREEMPT_NEED_RESCHED;
+ }
  
-+DEFINE_PER_CPU_CACHE_HOT(int, cpu_number);
-+EXPORT_PER_CPU_SYMBOL(cpu_number);
+ static __always_inline void preempt_count_set(int pc)
+ {
+ 	int old, new;
+ 
+-	old = raw_cpu_read_4(pcpu_hot.preempt_count);
++	old = raw_cpu_read_4(__preempt_count);
+ 	do {
+ 		new = (old & PREEMPT_NEED_RESCHED) |
+ 			(pc & ~PREEMPT_NEED_RESCHED);
+-	} while (!raw_cpu_try_cmpxchg_4(pcpu_hot.preempt_count, &old, new));
++	} while (!raw_cpu_try_cmpxchg_4(__preempt_count, &old, new));
+ }
+ 
+ /*
+@@ -43,7 +44,7 @@ static __always_inline void preempt_count_set(int pc)
+ #define init_task_preempt_count(p) do { } while (0)
+ 
+ #define init_idle_preempt_count(p, cpu) do { \
+-	per_cpu(pcpu_hot.preempt_count, (cpu)) = PREEMPT_DISABLED; \
++	per_cpu(__preempt_count, (cpu)) = PREEMPT_DISABLED; \
+ } while (0)
+ 
+ /*
+@@ -57,17 +58,17 @@ static __always_inline void preempt_count_set(int pc)
+ 
+ static __always_inline void set_preempt_need_resched(void)
+ {
+-	raw_cpu_and_4(pcpu_hot.preempt_count, ~PREEMPT_NEED_RESCHED);
++	raw_cpu_and_4(__preempt_count, ~PREEMPT_NEED_RESCHED);
+ }
+ 
+ static __always_inline void clear_preempt_need_resched(void)
+ {
+-	raw_cpu_or_4(pcpu_hot.preempt_count, PREEMPT_NEED_RESCHED);
++	raw_cpu_or_4(__preempt_count, PREEMPT_NEED_RESCHED);
+ }
+ 
+ static __always_inline bool test_preempt_need_resched(void)
+ {
+-	return !(raw_cpu_read_4(pcpu_hot.preempt_count) & PREEMPT_NEED_RESCHED);
++	return !(raw_cpu_read_4(__preempt_count) & PREEMPT_NEED_RESCHED);
+ }
+ 
+ /*
+@@ -76,12 +77,12 @@ static __always_inline bool test_preempt_need_resched(void)
+ 
+ static __always_inline void __preempt_count_add(int val)
+ {
+-	raw_cpu_add_4(pcpu_hot.preempt_count, val);
++	raw_cpu_add_4(__preempt_count, val);
+ }
+ 
+ static __always_inline void __preempt_count_sub(int val)
+ {
+-	raw_cpu_add_4(pcpu_hot.preempt_count, -val);
++	raw_cpu_add_4(__preempt_count, -val);
+ }
+ 
+ /*
+@@ -91,7 +92,7 @@ static __always_inline void __preempt_count_sub(int val)
+  */
+ static __always_inline bool __preempt_count_dec_and_test(void)
+ {
+-	return GEN_UNARY_RMWcc("decl", __my_cpu_var(pcpu_hot.preempt_count), e,
++	return GEN_UNARY_RMWcc("decl", __my_cpu_var(__preempt_count), e,
+ 			       __percpu_arg([var]));
+ }
+ 
+@@ -100,7 +101,7 @@ static __always_inline bool __preempt_count_dec_and_test(void)
+  */
+ static __always_inline bool should_resched(int preempt_offset)
+ {
+-	return unlikely(raw_cpu_read_4(pcpu_hot.preempt_count) == preempt_offset);
++	return unlikely(raw_cpu_read_4(__preempt_count) == preempt_offset);
+ }
+ 
+ #ifdef CONFIG_PREEMPTION
+diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
+index 24aa8d4..c479d3c 100644
+--- a/arch/x86/kernel/cpu/common.c
++++ b/arch/x86/kernel/cpu/common.c
+@@ -2049,12 +2049,14 @@ __setup("setcpuid=", setup_setcpuid);
+ 
+ DEFINE_PER_CPU_CACHE_HOT(struct pcpu_hot, pcpu_hot) = {
+ 	.current_task	= &init_task,
+-	.preempt_count	= INIT_PREEMPT_COUNT,
+ 	.top_of_stack	= TOP_OF_INIT_STACK,
+ };
+ EXPORT_PER_CPU_SYMBOL(pcpu_hot);
+ EXPORT_PER_CPU_SYMBOL(const_pcpu_hot);
+ 
++DEFINE_PER_CPU_CACHE_HOT(int, __preempt_count) = INIT_PREEMPT_COUNT;
++EXPORT_PER_CPU_SYMBOL(__preempt_count);
 +
- DEFINE_PER_CPU_READ_MOSTLY(unsigned long, this_cpu_off);
- EXPORT_PER_CPU_SYMBOL(this_cpu_off);
+ #ifdef CONFIG_X86_64
+ static void wrmsrl_cstar(unsigned long val)
+ {
+diff --git a/include/linux/preempt.h b/include/linux/preempt.h
+index ca86235..4c1af9b 100644
+--- a/include/linux/preempt.h
++++ b/include/linux/preempt.h
+@@ -319,6 +319,7 @@ do { \
+ #ifdef CONFIG_PREEMPT_NOTIFIERS
  
-@@ -161,7 +164,7 @@ void __init setup_per_cpu_areas(void)
- 	for_each_possible_cpu(cpu) {
- 		per_cpu_offset(cpu) = delta + pcpu_unit_offsets[cpu];
- 		per_cpu(this_cpu_off, cpu) = per_cpu_offset(cpu);
--		per_cpu(pcpu_hot.cpu_number, cpu) = cpu;
-+		per_cpu(cpu_number, cpu) = cpu;
- 		setup_percpu_segment(cpu);
- 		/*
- 		 * Copy data used in early init routines from the
-diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
-index f485951..6e604ca 100644
---- a/kernel/bpf/verifier.c
-+++ b/kernel/bpf/verifier.c
-@@ -21702,12 +21702,12 @@ patch_map_ops_generic:
- 		if (insn->imm == BPF_FUNC_get_smp_processor_id &&
- 		    verifier_inlines_helper_call(env, insn->imm)) {
- 			/* BPF_FUNC_get_smp_processor_id inlining is an
--			 * optimization, so if pcpu_hot.cpu_number is ever
-+			 * optimization, so if cpu_number is ever
- 			 * changed in some incompatible and hard to support
- 			 * way, it's fine to back out this inlining logic
- 			 */
- #ifdef CONFIG_SMP
--			insn_buf[0] = BPF_MOV64_IMM(BPF_REG_0, (u32)(unsigned long)&pcpu_hot.cpu_number);
-+			insn_buf[0] = BPF_MOV64_IMM(BPF_REG_0, (u32)(unsigned long)&cpu_number);
- 			insn_buf[1] = BPF_MOV64_PERCPU_REG(BPF_REG_0, BPF_REG_0);
- 			insn_buf[2] = BPF_LDX_MEM(BPF_W, BPF_REG_0, BPF_REG_0, 0);
- 			cnt = 3;
+ struct preempt_notifier;
++struct task_struct;
+ 
+ /**
+  * preempt_ops - notifiers called when a task is preempted and rescheduled
