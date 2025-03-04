@@ -1,95 +1,98 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B583E25F98D;
-	Tue,  4 Mar 2025 14:50:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E18526463F;
+	Tue,  4 Mar 2025 14:50:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741099800; cv=none; b=WAy4rAaCfMy1mBQTC5dFhM5cd1h1quYwIAlGqqkk8EjypyUr27mO1UNC2Y5T2gC/RFcZA7eqEpjFpcDZOUOrV9k0kphBHOKt1sbkGM71AqBt0UE83L1eaL/hnJv76+xdKF+n9lVXfM8V0XwxOhqDfc555nPCZuZlI9CG2eljwZg=
+	t=1741099802; cv=none; b=AINqu+SGYZQZBCqXmn8UfTu0oae2Nokx/fFW1Sx6Lhzww0Qq+mDirjRV/ULKt2ZL721BjKRIdThXuTiaTH61n6JJksdCNpOTNrzIVWt+m5tAv1PgTgUHaUOfVitJk5AjjAYIzKBTsJRNRwNHtmymmuHO3j7aqRHE0MBwCgfBYbQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741099800; c=relaxed/simple;
-	bh=iHjkyEOwAJNsi2EtZYCaCGQOASUoDIn5YqQ9oOR4Y/U=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=uqVBk9caYvpJYUr393NcWDS9uOi7Di+l9nqO3bJg4y0CRemWGJdPo2q+pwhieAygVbOkF+tl1N+9zW6bczwp+ZGVu030xU1N1pEsSucwRdqL1ayS0KH/LCOl4x6WciP2qC6MF07obWpCmq62/K1Cy+ERpR+LlBMIsfD6TSAxbYk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qZLWl/t3; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741099802; c=relaxed/simple;
+	bh=gvu0i166/31zSlrQGFJF0Kf6XaFopXDBRAjMx2RaV1g=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Tv+Mw89mdSUYppe9zYgNoIHjpCDNTya2JrYgyhJ2qN04manZTC/poWOah1nf+Fs3PlpBg3COR9tMj1Av5lxp4QzyBwvbldP8dCCDh/8cGYxKxSAMDgl+g9d5t9d66YNqg05zMDL9spwFtB3YaGupV9z/0UN7wFzlEFO7nR6f1r0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hEfwMRTz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qZLWl/t3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2095AC4CEE5;
-	Tue,  4 Mar 2025 14:50:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hEfwMRTz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 405C8C4CEE7;
+	Tue,  4 Mar 2025 14:49:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741099800;
-	bh=iHjkyEOwAJNsi2EtZYCaCGQOASUoDIn5YqQ9oOR4Y/U=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=qZLWl/t3sC0XsH8r7kXYJJPQzrVYn59BsW3dT+Jh8xz3AxJekxgByK1yF8AlThyNC
-	 aXZ6YZ9m8a8Xx6oJd+a64woIcZe354w1tGK0kePdOsIBwOm3CdrjSmuvg0djNZrVHs
-	 PVZTGWAOoZZznhfK121kU38QalZy99CRIZxkZIB56k3+syrgfswPpIELunW7wOD3e/
-	 imxOT/B4fDSMvK8llM76GIDF8RF8c/9wRyi2wbGS1PRP5AzGRnYOazb/dd0RtRWgZR
-	 YeVum9qo19qpbm5nBGJUoYVq+nMrWeJpHoSwv7cPZ7bXU8dc8mvdlf6bLLvVQLgj3d
-	 ShoSESDHynL4w==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33D89380AA7F;
-	Tue,  4 Mar 2025 14:50:34 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1741099801;
+	bh=gvu0i166/31zSlrQGFJF0Kf6XaFopXDBRAjMx2RaV1g=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=hEfwMRTzcS+9wfndkkQmnzngTQdkpZ81sOdrKTs9Ajgmw7HNDW9o5g8ttpxNahlmT
+	 PKVYnse4D6K9SJOgcRCqH7KtkEZlAW1iOEinxupk4HvCOKBUpGFqVZ0NVEYiXs4gwh
+	 3bjNeKqpCQPRE5IXDOLCJazbheCWCw9qKUGeYPbp+XRKJNbwEr30NaVpodlnMipyn3
+	 NK+ZUd1pNDgib08XvMNpAZ5EvoQd63kydctF0lTnU0q0CP0WA16E6jp0lGeBQJXvYN
+	 6NK4Sb+30272/DbmMhEg4vfuIGHgTcy9A50JPr03t/KNkt/XD9PrP/kOY/0jC+pLSJ
+	 HxBwuY85Rcf4g==
+Date: Tue, 4 Mar 2025 14:49:51 +0000
+From: Jonathan Cameron <jic23@kernel.org>
+To: Nuno =?UTF-8?B?U8Oh?= <noname.nuno@gmail.com>
+Cc: Folker Schwesinger <dev@folker-schwesinger.de>, Lars-Peter Clausen
+ <lars@metafoo.de>, Nuno Sa  <nuno.sa@analog.com>, Paul Cercueil
+ <paul@crapouillou.net>, Peter Zijlstra  <peterz@infradead.org>,
+ linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] iio: buffer-dma: Fix docstrings
+Message-ID: <20250304144951.73d152d3@jic23-huawei>
+In-Reply-To: <37a99292819c20e6da5227cd46e9f1250cb67804.camel@gmail.com>
+References: <D83IPSTKYWNB.1PUBV1530XI86@folker-schwesinger.de>
+	<37a99292819c20e6da5227cd46e9f1250cb67804.camel@gmail.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next v2 0/8] netconsole: Add taskname sysdata support
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <174109983302.170664.16431215519500952572.git-patchwork-notify@kernel.org>
-Date: Tue, 04 Mar 2025 14:50:33 +0000
-References: <20250228-netcons_current-v2-0-f53ff79a0db2@debian.org>
-In-Reply-To: <20250228-netcons_current-v2-0-f53ff79a0db2@debian.org>
-To: Breno Leitao <leitao@debian.org>
-Cc: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, horms@kernel.org, corbet@lwn.net,
- shuah@kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
- kernel-team@meta.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-Hello:
+On Fri, 28 Feb 2025 08:26:44 +0000
+Nuno S=C3=A1 <noname.nuno@gmail.com> wrote:
 
-This series was applied to netdev/net-next.git (main)
-by Paolo Abeni <pabeni@redhat.com>:
+> On Thu, 2025-02-27 at 20:27 +0100, Folker Schwesinger wrote:
+> > Fix a typo in the docstring of iio_dma_buffer_read() and fix what looks
+> > like a copy-and-paste error in the iio_dma_buffer_write() docstring.
+> >=20
+> > Signed-off-by: Folker Schwesinger <dev@folker-schwesinger.de>
+> > --- =20
+>=20
+> Reviewed-by: Nuno S=C3=A1 <nuno.sa@analog.com>
+Applied. Thanks.
 
-On Fri, 28 Feb 2025 04:50:16 -0800 you wrote:
-> This patchset introduces a new feature to the netconsole extradata
-> subsystem that enables the inclusion of the current task's name in the
-> sysdata output of netconsole messages.
-> 
-> This enhancement is particularly valuable for large-scale deployments,
-> such as Meta's, where netconsole collects messages from millions of
-> servers and stores them in a data warehouse for analysis. Engineers
-> often rely on these messages to investigate issues and assess kernel
-> health.
-> 
-> [...]
-
-Here is the summary with links:
-  - [net-next,v2,1/8] netconsole: prefix CPU_NR sysdata feature with SYSDATA_
-    https://git.kernel.org/netdev/net-next/c/8a683295c226
-  - [net-next,v2,2/8] netconsole: Make boolean comparison consistent
-    https://git.kernel.org/netdev/net-next/c/efb878fbe8d1
-  - [net-next,v2,3/8] netconsole: refactor CPU number formatting into separate function
-    https://git.kernel.org/netdev/net-next/c/4d989521a93b
-  - [net-next,v2,4/8] netconsole: add taskname to extradata entry count
-    https://git.kernel.org/netdev/net-next/c/33e4b29f2b3b
-  - [net-next,v2,5/8] netconsole: add configfs controls for taskname sysdata feature
-    https://git.kernel.org/netdev/net-next/c/09e877590bc2
-  - [net-next,v2,6/8] netconsole: add task name to extra data fields
-    https://git.kernel.org/netdev/net-next/c/dd30ae533242
-  - [net-next,v2,7/8] netconsole: docs: document the task name feature
-    https://git.kernel.org/netdev/net-next/c/7010b619830f
-  - [net-next,v2,8/8] netconsole: selftest: add task name append testing
-    https://git.kernel.org/netdev/net-next/c/d7a2522426e8
-
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+>=20
+> > =C2=A0drivers/iio/buffer/industrialio-buffer-dma.c | 4 ++--
+> > =C2=A01 file changed, 2 insertions(+), 2 deletions(-)
+> >=20
+> > diff --git a/drivers/iio/buffer/industrialio-buffer-dma.c
+> > b/drivers/iio/buffer/industrialio-buffer-dma.c
+> > index 7ea784304ffb..ee294a775e8a 100644
+> > --- a/drivers/iio/buffer/industrialio-buffer-dma.c
+> > +++ b/drivers/iio/buffer/industrialio-buffer-dma.c
+> > @@ -624,7 +624,7 @@ static int iio_dma_buffer_io(struct iio_buffer *buf=
+fer,
+> > size_t n,
+> > =C2=A0
+> > =C2=A0/**
+> > =C2=A0 * iio_dma_buffer_read() - DMA buffer read callback
+> > - * @buffer: Buffer to read form
+> > + * @buffer: Buffer to read from
+> > =C2=A0 * @n: Number of bytes to read
+> > =C2=A0 * @user_buffer: Userspace buffer to copy the data to
+> > =C2=A0 *
+> > @@ -640,7 +640,7 @@ EXPORT_SYMBOL_NS_GPL(iio_dma_buffer_read,
+> > "IIO_DMA_BUFFER");
+> > =C2=A0
+> > =C2=A0/**
+> > =C2=A0 * iio_dma_buffer_write() - DMA buffer write callback
+> > - * @buffer: Buffer to read form
+> > + * @buffer: Buffer to write to
+> > =C2=A0 * @n: Number of bytes to read
+> > =C2=A0 * @user_buffer: Userspace buffer to copy the data from
+> > =C2=A0 *
+> >=20
+> > base-commit: faeaa1ec6c63b6676679f321601471772f2a0c9b =20
+>=20
+>=20
 
