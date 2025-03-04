@@ -1,237 +1,176 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37EF829B22E
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 17:15:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741108535; cv=none; b=gnYUu6hoWnHcH4Xlb1nFHblRWwmLf+8wEb9hbA5PXoVQXEAwTCA07VXpEGJ/HP404nwnwNz2I2wiSrAY2iON5+V5etSdekr7ArvTVoCBQcS7dmI8qWSKSrQ8OMLEfhwSd/EwX+W0XCfOdkA3Lb15PKvEC85L/fYclpcKxodD8Js=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741108535; c=relaxed/simple;
-	bh=hW1SLqOd+1NDjRlqGdiw+vFxE/87tHWD+9J2QeAHR/8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=aXzdPP/pcQDmu8Ob0M9B8+sPvPOa7M4bhbOkTveqPH1GMI1Jwv8bpL7odEA+tb7PjXQkUAUVJB6h0rRf8nBRc65aqFMyxkq2N6WzOny99DU6XcBtdEqykTvVhLJ9VQ1R6acWHQFDfN5GPoh2pGygikxTg2CwaBBEQFRAFAxdiwQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=fBrecMJf; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=fBrecMJf; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10E492641D2;
+	Tue,  4 Mar 2025 17:16:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741108567; cv=pass; b=qRGurCJXD/uO42N2n0MWYmcvpXH7DwtwZf9jeSw0DxVI6oie812jsAgzcg3siAxMBVOLkzBmVHmq26WOWoTUmAtRrJQJDfIYA3ohm1BgMdRBcfzPlHE4z02isJBsH4CldMa28laMgyYFKI2BNit8eoapCeW6RqwNqCmCwzkp6oo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741108567; c=relaxed/simple;
+	bh=o4ANY14hWRIwtKVWCXcGO/oB6Wh2/DmDCFxxX43F+rc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Z6CO558yYvBmp4ValBt/qPhgYICmpZX92r90bmpZmz+8md/DsM1UxR158aaPFWidEHKExsR0M1MJCJIIHQnYSlBS2omJWCKb7GzXrLyt6878gGJJhp5OwRFdIjfX/WUGz4Nq8Ovdz7lGx6TRlXbdI/6JPsBFQKAXqHN2LPAb/ZM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=detlev.casanova@collabora.com header.b=iZ92R1bm; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="fBrecMJf";
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="fBrecMJf"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 4A00421199;
-	Tue,  4 Mar 2025 17:15:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1741108530; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=C7Fyus2sr8XupmFfh56BYZJnTAQEk5IuQrN1D4yR20U=;
-	b=fBrecMJfUcs+WOPcKajrxHgF7swk90fhDiR8XdJRjH5+y+D3wAWBgzIIttZE2vPjc+Bjki
-	Xe0US0jpSdnoEfW0qEogLVRuW+/kD7DzS7DyPHh8zC5whjSJjcBBaCnUAq6thUBT9ERzBk
-	FzfihUBNe56JTxLO25MbYZ/mifpq1Dw=
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1741108530; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=C7Fyus2sr8XupmFfh56BYZJnTAQEk5IuQrN1D4yR20U=;
-	b=fBrecMJfUcs+WOPcKajrxHgF7swk90fhDiR8XdJRjH5+y+D3wAWBgzIIttZE2vPjc+Bjki
-	Xe0US0jpSdnoEfW0qEogLVRuW+/kD7DzS7DyPHh8zC5whjSJjcBBaCnUAq6thUBT9ERzBk
-	FzfihUBNe56JTxLO25MbYZ/mifpq1Dw=
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 2D05113967;
-	Tue,  4 Mar 2025 17:15:30 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id Qq/eCTI1x2f6ZwAAD6G6ig
-	(envelope-from <neelx@suse.com>); Tue, 04 Mar 2025 17:15:30 +0000
-From: Daniel Vacek <neelx@suse.com>
-To: Chris Mason <clm@fb.com>,
-	Josef Bacik <josef@toxicpanda.com>,
-	David Sterba <dsterba@suse.com>
-Cc: Daniel Vacek <neelx@suse.com>,
-	linux-btrfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] btrfs/defrag: implement compression levels
-Date: Tue,  4 Mar 2025 18:14:00 +0100
-Message-ID: <20250304171403.571335-1-neelx@suse.com>
-X-Mailer: git-send-email 2.47.2
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=detlev.casanova@collabora.com header.b="iZ92R1bm"
+ARC-Seal: i=1; a=rsa-sha256; t=1741108545; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=lctTwBqJFIARNjlmaiBoqnWTDuFL6WUoet0a2YxlKbWgWdDYPMn95/BTjQToLDf/abIelZwvV1uj3d89LIS1i1ltiEI+UKlRp3/8SyMyJ7SdOWzBsiLfXzXCHVJOtE+umfRg9KEpTKlsWiy4hamAxV09fugUxsO884hC4/nSmDE=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1741108545; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=OdTMORqBJYLjJhRhGFzMiRnquj3qLzmSjVu6QO5a5kk=; 
+	b=FylPp3MBGmDQMN/pBeGvf/nlfitPWrxtJuNFW1hElVBSKa9gwj9hvgXnC7n3hkYVsrXdJ9tOOOS6e7I9tH0jmq3LJnioHnPOOTHy5Eap+FaXnP6evnYXp7koRxcfjCdwhNnv0LmmqvOeFxqr1Z+xElwHIEHfdTiOXsx8jw5q2os=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=detlev.casanova@collabora.com;
+	dmarc=pass header.from=<detlev.casanova@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1741108545;
+	s=zohomail; d=collabora.com; i=detlev.casanova@collabora.com;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Content-Type:Message-Id:Reply-To;
+	bh=OdTMORqBJYLjJhRhGFzMiRnquj3qLzmSjVu6QO5a5kk=;
+	b=iZ92R1bmhXCY3JwYVZzfbnH2LfLmo7z7gtnUl330xU5kEcvEPqsbfFbIZJBzSwL/
+	TBPwwQK7BbTzEaNVpMyAgSYew4KU6JsfnNOHeBgs9Z8xZuymFdPapP8aic0NcqaVz2e
+	gySBtZSmtRTQa/8DJX0urb3IO4lphjRepIKzcVl8=
+Received: by mx.zohomail.com with SMTPS id 174110854289189.58519837207825;
+	Tue, 4 Mar 2025 09:15:42 -0800 (PST)
+From: Detlev Casanova <detlev.casanova@collabora.com>
+To: heiko@sntech.de, Andy Yan <andyshrk@163.com>
+Cc: krzk+dt@kernel.org, robh@kernel.org, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-rockchip@lists.infradead.org, Andy Yan <andy.yan@rock-chips.com>
+Subject: Re: [PATCH v3 1/3] arm64: dts: rockchip: Add vop for rk3576
+Date: Tue, 04 Mar 2025 12:15:41 -0500
+Message-ID: <12619358.O9o76ZdvQC@earth>
+In-Reply-To: <20241231095728.253943-2-andyshrk@163.com>
+References:
+ <20241231095728.253943-1-andyshrk@163.com>
+ <20241231095728.253943-2-andyshrk@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Score: -2.80
-X-Spamd-Result: default: False [-2.80 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_MISSING_CHARSET(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MIME_TRACE(0.00)[0:+];
-	TO_DN_SOME(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	DKIM_SIGNED(0.00)[suse.com:s=susede1];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[6];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:mid,suse.com:email];
-	RCVD_TLS_ALL(0.00)[]
-X-Spam-Flag: NO
-X-Spam-Level: 
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="utf-8"
+X-ZohoMailClient: External
 
-Signed-off-by: Daniel Vacek <neelx@suse.com>
----
- fs/btrfs/btrfs_inode.h     |  2 ++
- fs/btrfs/defrag.c          | 22 +++++++++++++++++-----
- fs/btrfs/fs.h              |  2 +-
- fs/btrfs/inode.c           | 10 +++++++---
- include/uapi/linux/btrfs.h | 10 +++++++++-
- 5 files changed, 36 insertions(+), 10 deletions(-)
+Hi andy,
 
-diff --git a/fs/btrfs/btrfs_inode.h b/fs/btrfs/btrfs_inode.h
-index aa1f55cd81b79..5ee9da0054a74 100644
---- a/fs/btrfs/btrfs_inode.h
-+++ b/fs/btrfs/btrfs_inode.h
-@@ -145,6 +145,7 @@ struct btrfs_inode {
- 	 * different from prop_compress and takes precedence if set.
- 	 */
- 	u8 defrag_compress;
-+	s8 defrag_compress_level;
- 
- 	/*
- 	 * Lock for counters and all fields used to determine if the inode is in
-diff --git a/fs/btrfs/defrag.c b/fs/btrfs/defrag.c
-index 968dae9539482..03a0287a78ea0 100644
---- a/fs/btrfs/defrag.c
-+++ b/fs/btrfs/defrag.c
-@@ -1363,6 +1363,7 @@ int btrfs_defrag_file(struct inode *inode, struct file_ra_state *ra,
- 	u64 last_byte;
- 	bool do_compress = (range->flags & BTRFS_DEFRAG_RANGE_COMPRESS);
- 	int compress_type = BTRFS_COMPRESS_ZLIB;
-+	int compress_level = 0;
- 	int ret = 0;
- 	u32 extent_thresh = range->extent_thresh;
- 	pgoff_t start_index;
-@@ -1376,10 +1377,19 @@ int btrfs_defrag_file(struct inode *inode, struct file_ra_state *ra,
- 		return -EINVAL;
- 
- 	if (do_compress) {
--		if (range->compress_type >= BTRFS_NR_COMPRESS_TYPES)
--			return -EINVAL;
--		if (range->compress_type)
--			compress_type = range->compress_type;
-+		if (range->flags & BTRFS_DEFRAG_RANGE_COMPRESS_LEVEL) {
-+			if (range->compress.type >= BTRFS_NR_COMPRESS_TYPES)
-+				return -EINVAL;
-+			if (range->compress.type) {
-+				compress_type = range->compress.type;
-+				compress_level= range->compress.level;
-+			}
-+		} else {
-+			if (range->compress_type >= BTRFS_NR_COMPRESS_TYPES)
-+				return -EINVAL;
-+			if (range->compress_type)
-+				compress_type = range->compress_type;
-+		}
- 	}
- 
- 	if (extent_thresh == 0)
-@@ -1430,8 +1440,10 @@ int btrfs_defrag_file(struct inode *inode, struct file_ra_state *ra,
- 			btrfs_inode_unlock(BTRFS_I(inode), 0);
- 			break;
- 		}
--		if (do_compress)
-+		if (do_compress) {
- 			BTRFS_I(inode)->defrag_compress = compress_type;
-+			BTRFS_I(inode)->defrag_compress_level = compress_level;
-+		}
- 		ret = defrag_one_cluster(BTRFS_I(inode), ra, cur,
- 				cluster_end + 1 - cur, extent_thresh,
- 				newer_than, do_compress, &sectors_defragged,
-diff --git a/fs/btrfs/fs.h b/fs/btrfs/fs.h
-index be6d5a24bd4e6..2dae7ffd37133 100644
---- a/fs/btrfs/fs.h
-+++ b/fs/btrfs/fs.h
-@@ -485,7 +485,7 @@ struct btrfs_fs_info {
- 	u64 last_trans_log_full_commit;
- 	unsigned long long mount_opt;
- 
--	unsigned long compress_type:4;
-+	int compress_type;
- 	int compress_level;
- 	u32 commit_interval;
- 	/*
-diff --git a/fs/btrfs/inode.c b/fs/btrfs/inode.c
-index fa04b027d53ac..156a9d4603391 100644
---- a/fs/btrfs/inode.c
-+++ b/fs/btrfs/inode.c
-@@ -925,6 +925,7 @@ static void compress_file_range(struct btrfs_work *work)
- 	unsigned int poff;
- 	int i;
- 	int compress_type = fs_info->compress_type;
-+	int compress_level= fs_info->compress_level;
- 
- 	inode_should_defrag(inode, start, end, end - start + 1, SZ_16K);
- 
-@@ -1007,13 +1008,15 @@ static void compress_file_range(struct btrfs_work *work)
- 		goto cleanup_and_bail_uncompressed;
- 	}
- 
--	if (inode->defrag_compress)
-+	if (inode->defrag_compress) {
- 		compress_type = inode->defrag_compress;
--	else if (inode->prop_compress)
-+		compress_level= inode->defrag_compress_level;
-+	} else if (inode->prop_compress) {
- 		compress_type = inode->prop_compress;
-+	}
- 
- 	/* Compression level is applied here. */
--	ret = btrfs_compress_folios(compress_type, fs_info->compress_level,
-+	ret = btrfs_compress_folios(compress_type, compress_level,
- 				    mapping, start, folios, &nr_folios, &total_in,
- 				    &total_compressed);
- 	if (ret)
-diff --git a/include/uapi/linux/btrfs.h b/include/uapi/linux/btrfs.h
-index d3b222d7af240..3540d33d6f50c 100644
---- a/include/uapi/linux/btrfs.h
-+++ b/include/uapi/linux/btrfs.h
-@@ -615,7 +615,9 @@ struct btrfs_ioctl_clone_range_args {
-  */
- #define BTRFS_DEFRAG_RANGE_COMPRESS 1
- #define BTRFS_DEFRAG_RANGE_START_IO 2
-+#define BTRFS_DEFRAG_RANGE_COMPRESS_LEVEL 4
- #define BTRFS_DEFRAG_RANGE_FLAGS_SUPP	(BTRFS_DEFRAG_RANGE_COMPRESS |		\
-+					 BTRFS_DEFRAG_RANGE_COMPRESS_LEVEL |	\
- 					 BTRFS_DEFRAG_RANGE_START_IO)
- 
- struct btrfs_ioctl_defrag_range_args {
-@@ -643,7 +645,13 @@ struct btrfs_ioctl_defrag_range_args {
- 	 * for this defrag operation.  If unspecified, zlib will
- 	 * be used
- 	 */
--	__u32 compress_type;
-+	union {
-+		__u32 compress_type;
-+		struct {
-+			__u8 type;
-+			__s8 level;
-+		} compress;
-+	};
- 
- 	/* spare for later */
- 	__u32 unused[4];
--- 
-2.47.2
+On Tuesday, 31 December 2024 04:57:18 EST Andy Yan wrote:
+> From: Andy Yan <andy.yan@rock-chips.com>
+> 
+> Add VOP and VOP_MMU found on rk3576.
+> 
+> Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
+> 
+> ---
+> 
+> Changes in v3:
+> - Split from
+> https://lore.kernel.org/linux-rockchip/3330586.aeNJFYEL58@diego/T/#t
+> 
+>  arch/arm64/boot/dts/rockchip/rk3576.dtsi | 68 ++++++++++++++++++++++++
+>  1 file changed, 68 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3576.dtsi
+> b/arch/arm64/boot/dts/rockchip/rk3576.dtsi index 436232ffe4d1..130d11a2cc89
+> 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3576.dtsi
+> +++ b/arch/arm64/boot/dts/rockchip/rk3576.dtsi
+> @@ -393,6 +393,11 @@ opp-950000000 {
+>  		};
+>  	};
+> 
+> +	display_subsystem: display-subsystem {
+> +		compatible = "rockchip,display-subsystem";
+> +		ports = <&vop_out>;
+> +	};
+> +
+>  	firmware {
+>  		scmi: scmi {
+>  			compatible = "arm,scmi-smc";
+> @@ -826,6 +831,69 @@ gpu: gpu@27800000 {
+>  			status = "disabled";
+>  		};
+> 
+> +		vop: vop@27d00000 {
+> +			compatible = "rockchip,rk3576-vop";
+> +			reg = <0x0 0x27d00000 0x0 0x3000>, <0x0 0x27d05000 
+0x0 0x1000>;
+> +			reg-names = "vop", "gamma-lut";
+> +			interrupts = <GIC_SPI 342 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 379 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 380 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 381 IRQ_TYPE_LEVEL_HIGH>;
+> +			interrupt-names = "vop-sys",
+> +					  "vop-vp0",
+> +					  "vop-vp1",
+> +					  "vop-vp2";
+
+These need to be renamed without the 'vop-' prefix.
+
+> +			clocks = <&cru ACLK_VOP>,
+> +				 <&cru HCLK_VOP>,
+> +				 <&cru DCLK_VP0>,
+> +				 <&cru DCLK_VP1>,
+> +				 <&cru DCLK_VP2>;
+> +			clock-names = "aclk",
+> +				      "hclk",
+> +				      "dclk_vp0",
+> +				      "dclk_vp1",
+> +				      "dclk_vp2";
+> +			iommus = <&vop_mmu>;
+> +			power-domains = <&power RK3576_PD_VOP>;
+> +			rockchip,grf = <&sys_grf>;
+> +			rockchip,pmu = <&pmu>;
+> +			status = "disabled";
+> +
+> +			vop_out: ports {
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +
+> +				vp0: port@0 {
+> +					#address-cells = <1>;
+> +					#size-cells = <0>;
+> +					reg = <0>;
+> +				};
+> +
+> +				vp1: port@1 {
+> +					#address-cells = <1>;
+> +					#size-cells = <0>;
+> +					reg = <1>;
+> +				};
+> +
+> +				vp2: port@2 {
+> +					#address-cells = <1>;
+> +					#size-cells = <0>;
+> +					reg = <2>;
+> +				};
+> +			};
+> +		};
+> +
+> +		vop_mmu: iommu@27d07e00 {
+> +			compatible = "rockchip,rk3576-iommu", 
+"rockchip,rk3568-iommu";
+> +			reg = <0x0 0x27d07e00 0x0 0x100>, <0x0 0x27d07f00 
+0x0 0x100>;
+> +			interrupts = <GIC_SPI 342 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&cru ACLK_VOP>, <&cru HCLK_VOP>;
+> +			clock-names = "aclk", "iface";
+> +			#iommu-cells = <0>;
+> +			power-domains = <&power RK3576_PD_VOP>;
+> +			status = "disabled";
+> +		};
+> +
+>  		qos_hdcp1: qos@27f02000 {
+>  			compatible = "rockchip,rk3576-qos", "syscon";
+>  			reg = <0x0 0x27f02000 0x0 0x20>;
+
+Regards,
+Detlev
+
 
