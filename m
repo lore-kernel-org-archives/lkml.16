@@ -1,113 +1,84 @@
-Received: from out.smtpout.orange.fr (out-18.smtpout.orange.fr [193.252.22.18])
-	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCD84194080;
-	Tue,  4 Mar 2025 04:07:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.252.22.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B18DABA38;
+	Tue,  4 Mar 2025 04:08:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741061262; cv=none; b=JCNHNi1XMO4OtmmbhY/Akpcr1VuTrTqRP5PB0HqaO0D7r4pzSIdBNoPLv9NyTKgR3vmBMtoycpADZHUDG78p9UaJu0+riNhP/WmHCehGkwQahZ5kxoB6gr467fLuRv2rJ5UrdXjLZKgwpg4v2vULJ2OWxS7Zs2ylAC1ul1Kig9c=
+	t=1741061298; cv=none; b=Tm2urJ3lDTRE4EbuveCDXw/6kgOfz1gD4CN13FMSogBCx4S0Lfl1Wb6VPt2qQeT1uIyr5AzWXFExLfXxZjXHxR4A+STEPeHImbenk2OUNMmDI60i0jpnF8OFVi7yBgyiskxPoxebPWdjoEakSEx12sGH+L56s7BA/NaS/GHkFl4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741061262; c=relaxed/simple;
-	bh=pXR/xSSiQ8OiYsRs7VJVz+9ZV0Jrv/LolYlJReK4gWE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nEguEZt/UsWaIQvWvqPL+KXZVbN0+2Z+PoXaDmWTDvyuJq0596+0wGnSKskcL6D6BJWYNrSQ2giWjcydXWRrfidjkkAYg11BnUwlBtpizEuhv60iPj7Xx01FQL0DR7aqYqOVsKuMWIEct62Y7Czeof9lnjvoixZWdCfmOy9mvEA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=iz3+p/6n; arc=none smtp.client-ip=193.252.22.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1741061298; c=relaxed/simple;
+	bh=OJc+K+BY2l6V5qT9+IgOwiKvV4q44ADIwUlWFtnBRCQ=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=fN1ApumiYmH3mDw0BX1+psWwNCFigfVaiarrxArA3DuZRqHTrqRArBSu4I9GyICtdic1yR8EY8He8aIWq3jU6PKhloSnya6tr0G1v//KzvimnkrMza01qWacJLusYOIpGkjbzCY3QL/rNphv6a5Aa+/scFsofDvJ60RKK1eegGk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=SvBh6xKu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="iz3+p/6n"
-Received: from [172.16.82.72] ([124.33.176.97])
-	by smtp.orange.fr with ESMTPA
-	id pJXnt8bqn8w5DpJY0tmya7; Tue, 04 Mar 2025 05:06:27 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1741061187;
-	bh=TOrNS9M96b4fPYPb1Uv33nLtzervbH+UYQV21TIlvE0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From;
-	b=iz3+p/6nD5wKqf+HeU0+hpf4nzCj2SKEwOlqyV8SwbjQUTIywftj/PE+bQ18cmjFX
-	 CegF5EfbifclxCvkyuGrNjzmKpGugSjHCszZUbUz2Gz3ZS9x6jpf+7v6lFbvRxJIkj
-	 kgONH9o8c0R7+Efpxl9OeQsLzcHmKIfwjhC8FH4IVZynLffc+RRB164wvzpCLudSMF
-	 C+9uhrWLjxyW+aGPCX/LoQ3sba5D3MsALWYT0D8cRHZAMufjsOhiOiSI32UbgJ2hKD
-	 R8Rxn5j7LwI9qTkt5tU6X/NDpU2dKEN+zPv/Re4HRqk7QnOJc2lqDIUAhDKJ0MkHcT
-	 dKfmDa628AOTQ==
-X-ME-Helo: [172.16.82.72]
-X-ME-Auth: bWFpbGhvbC52aW5jZW50QHdhbmFkb28uZnI=
-X-ME-Date: Tue, 04 Mar 2025 05:06:27 +0100
-X-ME-IP: 124.33.176.97
-Message-ID: <01b6fbe7-6e49-4ac2-af2f-a512ae865eae@wanadoo.fr>
-Date: Tue, 4 Mar 2025 13:06:10 +0900
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="SvBh6xKu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 356E8C4CEE7;
+	Tue,  4 Mar 2025 04:08:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1741061297;
+	bh=OJc+K+BY2l6V5qT9+IgOwiKvV4q44ADIwUlWFtnBRCQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=SvBh6xKua0O4rbGl5Th2h893FxX7s75aMSK/CI6eO1DqDbPVeGxH+L5gTK/tJ4vje
+	 QLYaFB944eCWG2oj9FNuFYy6/4EahBL+GAxWOzP5wMTbXrh24P5KHR5JL+N97R06cN
+	 9W9X6UKdyRcG1D0ubqQLtWnF+VBx6UkJKFwVkdEY=
+Date: Mon, 3 Mar 2025 20:08:15 -0800
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Qi Zheng <zhengqi.arch@bytedance.com>
+Cc: peterz@infradead.org, kevin.brodsky@arm.com, riel@surriel.com,
+ vishal.moola@gmail.com, david@redhat.com, jannh@google.com,
+ hughd@google.com, willy@infradead.org, yuzhao@google.com,
+ muchun.song@linux.dev, will@kernel.org, aneesh.kumar@kernel.org,
+ npiggin@gmail.com, arnd@arndb.de, dave.hansen@linux.intel.com,
+ rppt@kernel.org, alexghiti@rivosinc.com, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, linux-csky@vger.kernel.org,
+ linux-hexagon@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+ linux-openrisc@vger.kernel.org, linux-sh@vger.kernel.org,
+ linux-um@lists.infradead.org, Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v2 3/6 update] mm: pgtable: convert some architectures
+ to use tlb_remove_ptdesc()
+Message-Id: <20250303200815.53007fb79e5049a99f24c999@linux-foundation.org>
+In-Reply-To: <c48715aa-8c1f-41bf-92a0-bacf401c2f7c@bytedance.com>
+References: <19db3e8673b67bad2f1df1ab37f1c89d99eacfea.1740454179.git.zhengqi.arch@bytedance.com>
+	<20250303072603.45423-1-zhengqi.arch@bytedance.com>
+	<20250303155331.de9b2fff9b04984a255a7bc2@linux-foundation.org>
+	<c48715aa-8c1f-41bf-92a0-bacf401c2f7c@bytedance.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] can: flexcan: disable transceiver during system PM
-To: haibo.chen@nxp.com, mkl@pengutronix.de
-Cc: ciprianmarian.costea@oss.nxp.com, u.kleine-koenig@baylibre.com,
- linux-can@vger.kernel.org, linux-kernel@vger.kernel.org, imx@lists.linux.dev
-References: <20250304033731.1762899-1-haibo.chen@nxp.com>
-Content-Language: en-US
-From: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
-Autocrypt: addr=mailhol.vincent@wanadoo.fr; keydata=
- xjMEZluomRYJKwYBBAHaRw8BAQdAf+/PnQvy9LCWNSJLbhc+AOUsR2cNVonvxhDk/KcW7FvN
- LFZpbmNlbnQgTWFpbGhvbCA8bWFpbGhvbC52aW5jZW50QHdhbmFkb28uZnI+wrIEExYKAFoC
- GwMFCQp/CJcFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AWIQTtj3AFdOZ/IOV06OKrX+uI
- bbuZwgUCZx41XhgYaGtwczovL2tleXMub3BlbnBncC5vcmcACgkQq1/riG27mcIYiwEAkgKK
- BJ+ANKwhTAAvL1XeApQ+2NNNEwFWzipVAGvTRigA+wUeyB3UQwZrwb7jsQuBXxhk3lL45HF5
- 8+y4bQCUCqYGzjgEZx4y8xIKKwYBBAGXVQEFAQEHQJrbYZzu0JG5w8gxE6EtQe6LmxKMqP6E
- yR33sA+BR9pLAwEIB8J+BBgWCgAmFiEE7Y9wBXTmfyDldOjiq1/riG27mcIFAmceMvMCGwwF
- CQPCZwAACgkQq1/riG27mcJU7QEA+LmpFhfQ1aij/L8VzsZwr/S44HCzcz5+jkxnVVQ5LZ4B
- ANOCpYEY+CYrld5XZvM8h2EntNnzxHHuhjfDOQ3MAkEK
-In-Reply-To: <20250304033731.1762899-1-haibo.chen@nxp.com>
-Content-Type: text/plain; charset=UTF-8
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On 04/03/2025 at 12:37, haibo.chen@nxp.com wrote:
-> From: Haibo Chen <haibo.chen@nxp.com>
+On Tue, 4 Mar 2025 10:31:07 +0800 Qi Zheng <zhengqi.arch@bytedance.com> wrote:
+
 > 
-> During system PM, if no wakeup requirement, disable transceiver to
-> save power.
 > 
-> Signed-off-by: Haibo Chen <haibo.chen@nxp.com>> ---
->  drivers/net/can/flexcan/flexcan-core.c | 5 +++++
->  1 file changed, 5 insertions(+)
+> On 3/4/25 7:53 AM, Andrew Morton wrote:
+> > On Mon,  3 Mar 2025 15:26:03 +0800 Qi Zheng <zhengqi.arch@bytedance.com> wrote:
+> > 
+> >> Now, the nine architectures of csky, hexagon, loongarch, m68k, mips,
+> >> nios2, openrisc, sh and um do not select CONFIG_MMU_GATHER_RCU_TABLE_FREE,
+> >> and just call pagetable_dtor() + tlb_remove_page_ptdesc() (the wrapper of
+> >> tlb_remove_page()). This is the same as the implementation of
+> >> tlb_remove_{ptdesc|table}() under !CONFIG_MMU_GATHER_TABLE_FREE, so
+> >> convert these architectures to use tlb_remove_ptdesc().
+> >>
+> > 
+> > checkpatch warns.
+> > 
+> > Do these things have to be macros?  Switching to static inline fixes
+> > the unused-arg warning in a nice fashion.
 > 
-> diff --git a/drivers/net/can/flexcan/flexcan-core.c b/drivers/net/can/flexcan/flexcan-core.c
-> index b347a1c93536..74f3137295fb 100644
-> --- a/drivers/net/can/flexcan/flexcan-core.c
-> +++ b/drivers/net/can/flexcan/flexcan-core.c
-> @@ -2292,6 +2292,7 @@ static int __maybe_unused flexcan_suspend(struct device *device)
->  				return err;
->  
->  			flexcan_chip_interrupts_disable(dev);
-> +			flexcan_transceiver_disable(priv);
+> This can be switched to static inline. In addition, I found that alpha,
+> arc, microblaze, parisc, sparc32 and xtensa also have the unused-arg
+> issue. Do I need to add a new patch to fix all of them, or just fix the
+> newly added 11 warnings?
 
-flexcan_transceiver_disable() may return an error. Can you check its
-return value?
-
->  			err = pinctrl_pm_select_sleep_state(device);
->  			if (err)
-> @@ -2325,6 +2326,10 @@ static int __maybe_unused flexcan_resume(struct device *device)
->  			if (err)
->  				return err;
->  
-> +			err = flexcan_transceiver_enable(priv);
-> +			if (err)
-> +				return err;
-> +
->  			err = flexcan_chip_start(dev);
->  			if (err)
->  				return err;
-
-If flexcan_chip_start() fails, shouldn't you have a clean-up branch that
-will flexcan_transceiver_disable()? Or do you consider that it is
-acceptable to keep the transceiver enabled if an error occurs?
-
-Speaking of which, if flexcan_resume() fails, priv->can.state would
-still be set to CAN_STATE_ERROR_ACTIVE.
-
-
-Yours sincerely,
-Vincent Mailhol
-
+I guess leave things as they are now.  Switching all these to C
+functions can be addressed at a later time?
