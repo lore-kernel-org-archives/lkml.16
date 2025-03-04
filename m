@@ -1,94 +1,99 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from mail-m155101.qiye.163.com (mail-m155101.qiye.163.com [101.71.155.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B8F478F4C
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 12:28:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 299FF8472;
+	Tue,  4 Mar 2025 12:30:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=101.71.155.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741091321; cv=none; b=aBFY676eNGQVvhsICMiUf3N+Xkc0bzTF8OUKAIS/0RvMTUaJct81FhwJUQUvXjcZgoGw5BZKjD0wXJmiCxTFpUbJoP5i7uL3G11XXPfkQp59eJpnONkcpYoCQJ9luwuJCOiqTPDrEFGEdsmdN+cDcUJCHeIpEYkWoZUuWGpf/ZU=
+	t=1741091462; cv=none; b=IhuHOvqBJa/GYuVicifJEY1yrslbjBRqZU8K68QHurTipGQj6LuPnJG13k2zw/aiz+GoqNA47d2AmjsisIiWX2ngMErR5E1yX6sFJ878hEp4HabzfJc8MrZGYPAbXPcAIfds9g/9dF2JtCW4GtoiI6fUESHZf7wgWb1flOKEE/k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741091321; c=relaxed/simple;
-	bh=hXQr2JDc6VwEA4oybx8Hdat3clPEU6hQMlM5Zb8perI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=spb5kE1gy8plvumHJwg4Qk6dyYcFjj+iOV7UsGzHOMbAW5wdLLGQ3U7QZ5KSombkj1YfPL3SjDyVtO72AH4mda2rE/oLnzjNnfBIeikF6nHu5M/5GFwV34ymd9C30Sv7T0xmqmMY+9hSVD65i3Xr0UjjJGszgjVB9wF2Q7Qrb+o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=bHuJpAX9; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="bHuJpAX9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1741091317;
-	bh=hXQr2JDc6VwEA4oybx8Hdat3clPEU6hQMlM5Zb8perI=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=bHuJpAX9EfysrAFIJ7eOaGldWtzuqJalISkcLY5g2SWE1mKHj9jqimeQs3+Jvcw4T
-	 ZV1mKQoV93K5Ht1KNnpsCHAoy0BU3MBHK5Nq+21BJ7GwQLXNlovFdBooRbUVYMJF0+
-	 Y8WMkrFaN+eEhGbUETuiDaEw5j2dwwhnbKQBw9ETrTf8vygNidVwR+NR/H0T5iSGEK
-	 QpeUzBshEZA3zEGQBTxkHzCP7SnRpW7guG6rGi+X9ovR1MpfN/wyQhkJMps8NJa2jo
-	 ngkL+2r1eGG0fnzr6ry9DMggnE9kDyyEt7ATTGggwWsvddy88+AcZ9FtBj+cftlAk2
-	 8+axtikx2WJYA==
-Received: from [192.168.1.90] (unknown [188.27.58.83])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
-	(No client certificate requested)
-	(Authenticated sender: cristicc)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 36ACC17E023F;
-	Tue,  4 Mar 2025 13:28:37 +0100 (CET)
-Message-ID: <71817739-7ecd-478d-ae57-d764e21c8dd9@collabora.com>
-Date: Tue, 4 Mar 2025 14:28:36 +0200
+	s=arc-20240116; t=1741091462; c=relaxed/simple;
+	bh=rYlHgkTpoEM6pxnQ8HCOUgXk8SpwcrCOoqmJPZDKZsU=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=NDdgPSJMyJsIt/6+Bxc3GKqhV2x8h/Pk9HQPjTvO4G3gzIiCwVfVTkrFXMasnFkBb2LW/68s5cAcC1BiXgzWn+kFm05lEDWEAPiM7KvblEwHIIsLclYifn8ZboagV7YZEp3vm8rbNt3F+Mqt0TJ7glnbSaroJRKLBLhtIU5uICM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jmu.edu.cn; spf=pass smtp.mailfrom=jmu.edu.cn; arc=none smtp.client-ip=101.71.155.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jmu.edu.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jmu.edu.cn
+Received: from amadeus-Vostro-3710.lan (unknown [IPV6:240e:3b3:2c02:1dd0:e9f1:cb9a:640c:3ba3])
+	by smtp.qiye.163.com (Hmail) with ESMTP id ce62fafc;
+	Tue, 4 Mar 2025 20:15:38 +0800 (GMT+08:00)
+From: Chukun Pan <amadeus@jmu.edu.cn>
+To: ziyao@disroot.org
+Cc: conor+dt@kernel.org,
+	cristian.ciocaltea@collabora.com,
+	detlev.casanova@collabora.com,
+	devicetree@vger.kernel.org,
+	frank.wang@rock-chips.com,
+	heiko@sntech.de,
+	jonas@kwiboo.se,
+	krzk+dt@kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-clk@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-mmc@vger.kernel.org,
+	linux-rockchip@lists.infradead.org,
+	Chukun Pan <amadeus@jmu.edu.cn>
+Subject: Re: [PATCH 8/8] arm64: dts: rockchip: Enable SD-card interface on Radxa E20C
+Date: Tue,  4 Mar 2025 20:10:36 +0800
+Message-Id: <20250304121036.1453284-1-amadeus@jmu.edu.cn>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20250301104835.36439-1-ziyao@disroot.org>
+References: <20250301104835.36439-1-ziyao@disroot.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 10/12] phy: rockchip: samsung-hdptx: Add high color
- depth management
-To: Maxime Ripard <mripard@kernel.org>
-Cc: Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I
- <kishon@kernel.org>, Heiko Stuebner <heiko@sntech.de>,
- Algea Cao <algea.cao@rock-chips.com>, Sandor Yu <Sandor.yu@nxp.com>,
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, kernel@collabora.com,
- linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org,
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org
-References: <20250304-phy-sam-hdptx-bpc-v4-0-8657847c13f7@collabora.com>
- <20250304-phy-sam-hdptx-bpc-v4-10-8657847c13f7@collabora.com>
- <20250304-delicate-crazy-tuatara-5ea4d3@houat>
-From: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
-Content-Language: en-US
-In-Reply-To: <20250304-delicate-crazy-tuatara-5ea4d3@houat>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVkZGkpJVh5CThgfT0lMTR4aSVYeHw5VEwETFhoSFy
+	QUDg9ZV1kYEgtZQVlJT0seQUgZSEFJGEtJQUofH0tBHkIdSkEYGUIaQU1PSxhBSBkaSFlXWRYaDx
+	IVHRRZQVlPS0hVSktISk5MTlVKS0tVSkJLS1kG
+X-HM-Tid: 0a95611544ad03a2kunmce62fafc
+X-HM-MType: 10
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6OE06KDo6SDIOI0IQAzEUDwxK
+	HEoKFCpVSlVKTE9KS0JLTkhCT05MVTMWGhIXVRoWGh8eDgg7ERYOVR4fDlUYFUVZV1kSC1lBWUlP
+	Sx5BSBlIQUkYS0lBSh8fS0EeQh1KQRgZQhpBTU9LGEFIGRpIWVdZCAFZQUxLSjcG
 
+Hi,
 
+> +	aliases {
+> +		mmc0 = &sdmmc;
 
-On 3/4/25 10:21 AM, Maxime Ripard wrote:
-> On Tue, Mar 04, 2025 at 03:44:09AM +0200, Cristian Ciocaltea wrote:
->> @@ -1480,12 +1484,12 @@ static int rk_hdptx_phy_power_off(struct phy *phy)
->>  static int rk_hdptx_phy_verify_hdmi_config(struct rk_hdptx_phy *hdptx,
->>  					   struct phy_configure_opts_hdmi *hdmi)
->>  {
->> -	if (!hdmi->tmds_char_rate || hdmi->tmds_char_rate > HDMI20_MAX_RATE)
->> -		return -EINVAL;
->> -
->>  	u32 bit_rate = hdmi->tmds_char_rate / 100;
->>  	int i;
->>  
->> +	if (!hdmi->tmds_char_rate || hdmi->tmds_char_rate > HDMI20_MAX_RATE)
->> +		return -EINVAL;
->> +
->>  	for (i = 0; i < ARRAY_SIZE(ropll_tmds_cfg); i++)
->>  		if (bit_rate == ropll_tmds_cfg[i].bit_rate)
->>  			break;
-> 
-> Why is that change needed?
+s/mmc0/mmc1
 
-Oh, that was supposed to be a fixup for "phy: rockchip: samsung-hdptx:
-Provide config params validation support" to keep variable declaration
-section on top.  Not sure how I missed it, probably I chose the wrong
-commit hash while focusing on some other changes during the rebase.
+> +&sdmmc {
+> +	bus-width = <4>;
+> +	cap-mmc-highspeed;
+> +	cap-sd-highspeed;
 
-Will sort this out in v5.
+I think for sdcard, only cap-sd-highspeed
+is needed, not cap-mmc-highspeed?
 
-Thanks for spotting it,
-Cristian
+> +	disable-wp;
+
+Missing pinctrl.
+
+> +	rockchip,default-sample-phase = <90>;
+
+It seems that all rk3528 devices need to set this
+default phase, so maybe this can be placed in dtsi?
+
+> +	sd-uhs-sdr104;
+
+The rk3528 devices uses gpio to switch IO voltage, maybe
+more modes should be added here like vendor kernel?
+And these devices use 3.3V IO voltage by default.
+
+	sd-uhs-sdr12;
+	sd-uhs-sdr25;
+	sd-uhs-sdr50;
+	sd-uhs-sdr104;
+
+Thanks,
+Chukun
+
+-- 
+2.25.1
+
