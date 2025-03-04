@@ -1,71 +1,237 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 866AD2980A7;
-	Tue,  4 Mar 2025 17:14:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37EF829B22E
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 17:15:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741108497; cv=none; b=rxOg0MdFGNQpo8AWDSgXt0d3+xzwedgVjIUoVhlzkf2swFviy9MDeYfH/R1pObJ6M3dS6SPJNmvDgATSyqwMu0YSijqTcuCgLQ2AuNVm5AFWtAYkVyJ9R/U3UcdFSVLicFuhrrNW3oZZpjFigjNMqJ2EUFOfwMEnHv3J7la9fgw=
+	t=1741108535; cv=none; b=gnYUu6hoWnHcH4Xlb1nFHblRWwmLf+8wEb9hbA5PXoVQXEAwTCA07VXpEGJ/HP404nwnwNz2I2wiSrAY2iON5+V5etSdekr7ArvTVoCBQcS7dmI8qWSKSrQ8OMLEfhwSd/EwX+W0XCfOdkA3Lb15PKvEC85L/fYclpcKxodD8Js=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741108497; c=relaxed/simple;
-	bh=RMqjiifsdaNCSsKNNjk7Yod7Whvmu0ULCvKNeUA77+w=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=L2kmdhkw2K3j69KQ6XhI8wdXYTpClZ8cjlli1Gq9Ptuz+WJhI1lBFKYWjrr9byKNcJlYKjUIcr7RVfji/d5Q+mN2ijLSUzeXJvpMLWddgrZuOyZK1jSlU4A4LWo7XXkw0/TohvlaC5qFYpGkCD8bu7JcQ/KFiiEP5xlEyIBC+1o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3AF68C4CEE5;
-	Tue,  4 Mar 2025 17:14:56 +0000 (UTC)
-Date: Tue, 4 Mar 2025 12:15:50 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Gabriele Monaco <gmonaco@redhat.com>, linux-kernel@vger.kernel.org, Ingo
- Molnar <mingo@redhat.com>, Masami Hiramatsu <mhiramat@kernel.org>,
- linux-trace-kernel@vger.kernel.org, Juri Lelli <juri.lelli@redhat.com>
-Subject: Re: [PATCH v4 03/11] sched: Add sched tracepoints for RV task model
-Message-ID: <20250304121550.097bffe2@gandalf.local.home>
-In-Reply-To: <20250227204623.5e29e101@gandalf.local.home>
-References: <20250218123121.253551-1-gmonaco@redhat.com>
-	<20250218123121.253551-4-gmonaco@redhat.com>
-	<20250227204623.5e29e101@gandalf.local.home>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1741108535; c=relaxed/simple;
+	bh=hW1SLqOd+1NDjRlqGdiw+vFxE/87tHWD+9J2QeAHR/8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=aXzdPP/pcQDmu8Ob0M9B8+sPvPOa7M4bhbOkTveqPH1GMI1Jwv8bpL7odEA+tb7PjXQkUAUVJB6h0rRf8nBRc65aqFMyxkq2N6WzOny99DU6XcBtdEqykTvVhLJ9VQ1R6acWHQFDfN5GPoh2pGygikxTg2CwaBBEQFRAFAxdiwQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=fBrecMJf; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=fBrecMJf; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="fBrecMJf";
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="fBrecMJf"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 4A00421199;
+	Tue,  4 Mar 2025 17:15:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1741108530; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=C7Fyus2sr8XupmFfh56BYZJnTAQEk5IuQrN1D4yR20U=;
+	b=fBrecMJfUcs+WOPcKajrxHgF7swk90fhDiR8XdJRjH5+y+D3wAWBgzIIttZE2vPjc+Bjki
+	Xe0US0jpSdnoEfW0qEogLVRuW+/kD7DzS7DyPHh8zC5whjSJjcBBaCnUAq6thUBT9ERzBk
+	FzfihUBNe56JTxLO25MbYZ/mifpq1Dw=
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1741108530; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=C7Fyus2sr8XupmFfh56BYZJnTAQEk5IuQrN1D4yR20U=;
+	b=fBrecMJfUcs+WOPcKajrxHgF7swk90fhDiR8XdJRjH5+y+D3wAWBgzIIttZE2vPjc+Bjki
+	Xe0US0jpSdnoEfW0qEogLVRuW+/kD7DzS7DyPHh8zC5whjSJjcBBaCnUAq6thUBT9ERzBk
+	FzfihUBNe56JTxLO25MbYZ/mifpq1Dw=
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 2D05113967;
+	Tue,  4 Mar 2025 17:15:30 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id Qq/eCTI1x2f6ZwAAD6G6ig
+	(envelope-from <neelx@suse.com>); Tue, 04 Mar 2025 17:15:30 +0000
+From: Daniel Vacek <neelx@suse.com>
+To: Chris Mason <clm@fb.com>,
+	Josef Bacik <josef@toxicpanda.com>,
+	David Sterba <dsterba@suse.com>
+Cc: Daniel Vacek <neelx@suse.com>,
+	linux-btrfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] btrfs/defrag: implement compression levels
+Date: Tue,  4 Mar 2025 18:14:00 +0100
+Message-ID: <20250304171403.571335-1-neelx@suse.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Spam-Score: -2.80
+X-Spamd-Result: default: False [-2.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_MISSING_CHARSET(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MIME_TRACE(0.00)[0:+];
+	TO_DN_SOME(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	DKIM_SIGNED(0.00)[suse.com:s=susede1];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[6];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:mid,suse.com:email];
+	RCVD_TLS_ALL(0.00)[]
+X-Spam-Flag: NO
+X-Spam-Level: 
 
+Signed-off-by: Daniel Vacek <neelx@suse.com>
+---
+ fs/btrfs/btrfs_inode.h     |  2 ++
+ fs/btrfs/defrag.c          | 22 +++++++++++++++++-----
+ fs/btrfs/fs.h              |  2 +-
+ fs/btrfs/inode.c           | 10 +++++++---
+ include/uapi/linux/btrfs.h | 10 +++++++++-
+ 5 files changed, 36 insertions(+), 10 deletions(-)
 
-Peter,
-
-Are you OK with adding these tracepoints? They are not trace events
-(doesn't show up in tracefs) but are required for the runtime verifier.
-
--- Steve
-
-
-On Thu, 27 Feb 2025 20:46:23 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
-
-> On Tue, 18 Feb 2025 13:31:08 +0100
-> Gabriele Monaco <gmonaco@redhat.com> wrote:
-> 
-> > Add the following tracepoints:
-> > * sched_entry(bool preempt, ip)
-> >     Called while entering __schedule
-> > * sched_exit(bool is_switch, ip)
-> >     Called while exiting __schedule
-> > * sched_set_state(task, curr_state, state)
-> >     Called when a task changes its state (to and from running)
-> > 
-> > These tracepoints are useful to describe the Linux task model and are
-> > adapted from the patches by Daniel Bristot de Oliveira
-> > (https://bristot.me/linux-task-model/).
-> > 
-> > Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>  
-> 
-> I'll need an Ack from the scheduler maintainer to take this series.
-> 
-> -- Steve
+diff --git a/fs/btrfs/btrfs_inode.h b/fs/btrfs/btrfs_inode.h
+index aa1f55cd81b79..5ee9da0054a74 100644
+--- a/fs/btrfs/btrfs_inode.h
++++ b/fs/btrfs/btrfs_inode.h
+@@ -145,6 +145,7 @@ struct btrfs_inode {
+ 	 * different from prop_compress and takes precedence if set.
+ 	 */
+ 	u8 defrag_compress;
++	s8 defrag_compress_level;
+ 
+ 	/*
+ 	 * Lock for counters and all fields used to determine if the inode is in
+diff --git a/fs/btrfs/defrag.c b/fs/btrfs/defrag.c
+index 968dae9539482..03a0287a78ea0 100644
+--- a/fs/btrfs/defrag.c
++++ b/fs/btrfs/defrag.c
+@@ -1363,6 +1363,7 @@ int btrfs_defrag_file(struct inode *inode, struct file_ra_state *ra,
+ 	u64 last_byte;
+ 	bool do_compress = (range->flags & BTRFS_DEFRAG_RANGE_COMPRESS);
+ 	int compress_type = BTRFS_COMPRESS_ZLIB;
++	int compress_level = 0;
+ 	int ret = 0;
+ 	u32 extent_thresh = range->extent_thresh;
+ 	pgoff_t start_index;
+@@ -1376,10 +1377,19 @@ int btrfs_defrag_file(struct inode *inode, struct file_ra_state *ra,
+ 		return -EINVAL;
+ 
+ 	if (do_compress) {
+-		if (range->compress_type >= BTRFS_NR_COMPRESS_TYPES)
+-			return -EINVAL;
+-		if (range->compress_type)
+-			compress_type = range->compress_type;
++		if (range->flags & BTRFS_DEFRAG_RANGE_COMPRESS_LEVEL) {
++			if (range->compress.type >= BTRFS_NR_COMPRESS_TYPES)
++				return -EINVAL;
++			if (range->compress.type) {
++				compress_type = range->compress.type;
++				compress_level= range->compress.level;
++			}
++		} else {
++			if (range->compress_type >= BTRFS_NR_COMPRESS_TYPES)
++				return -EINVAL;
++			if (range->compress_type)
++				compress_type = range->compress_type;
++		}
+ 	}
+ 
+ 	if (extent_thresh == 0)
+@@ -1430,8 +1440,10 @@ int btrfs_defrag_file(struct inode *inode, struct file_ra_state *ra,
+ 			btrfs_inode_unlock(BTRFS_I(inode), 0);
+ 			break;
+ 		}
+-		if (do_compress)
++		if (do_compress) {
+ 			BTRFS_I(inode)->defrag_compress = compress_type;
++			BTRFS_I(inode)->defrag_compress_level = compress_level;
++		}
+ 		ret = defrag_one_cluster(BTRFS_I(inode), ra, cur,
+ 				cluster_end + 1 - cur, extent_thresh,
+ 				newer_than, do_compress, &sectors_defragged,
+diff --git a/fs/btrfs/fs.h b/fs/btrfs/fs.h
+index be6d5a24bd4e6..2dae7ffd37133 100644
+--- a/fs/btrfs/fs.h
++++ b/fs/btrfs/fs.h
+@@ -485,7 +485,7 @@ struct btrfs_fs_info {
+ 	u64 last_trans_log_full_commit;
+ 	unsigned long long mount_opt;
+ 
+-	unsigned long compress_type:4;
++	int compress_type;
+ 	int compress_level;
+ 	u32 commit_interval;
+ 	/*
+diff --git a/fs/btrfs/inode.c b/fs/btrfs/inode.c
+index fa04b027d53ac..156a9d4603391 100644
+--- a/fs/btrfs/inode.c
++++ b/fs/btrfs/inode.c
+@@ -925,6 +925,7 @@ static void compress_file_range(struct btrfs_work *work)
+ 	unsigned int poff;
+ 	int i;
+ 	int compress_type = fs_info->compress_type;
++	int compress_level= fs_info->compress_level;
+ 
+ 	inode_should_defrag(inode, start, end, end - start + 1, SZ_16K);
+ 
+@@ -1007,13 +1008,15 @@ static void compress_file_range(struct btrfs_work *work)
+ 		goto cleanup_and_bail_uncompressed;
+ 	}
+ 
+-	if (inode->defrag_compress)
++	if (inode->defrag_compress) {
+ 		compress_type = inode->defrag_compress;
+-	else if (inode->prop_compress)
++		compress_level= inode->defrag_compress_level;
++	} else if (inode->prop_compress) {
+ 		compress_type = inode->prop_compress;
++	}
+ 
+ 	/* Compression level is applied here. */
+-	ret = btrfs_compress_folios(compress_type, fs_info->compress_level,
++	ret = btrfs_compress_folios(compress_type, compress_level,
+ 				    mapping, start, folios, &nr_folios, &total_in,
+ 				    &total_compressed);
+ 	if (ret)
+diff --git a/include/uapi/linux/btrfs.h b/include/uapi/linux/btrfs.h
+index d3b222d7af240..3540d33d6f50c 100644
+--- a/include/uapi/linux/btrfs.h
++++ b/include/uapi/linux/btrfs.h
+@@ -615,7 +615,9 @@ struct btrfs_ioctl_clone_range_args {
+  */
+ #define BTRFS_DEFRAG_RANGE_COMPRESS 1
+ #define BTRFS_DEFRAG_RANGE_START_IO 2
++#define BTRFS_DEFRAG_RANGE_COMPRESS_LEVEL 4
+ #define BTRFS_DEFRAG_RANGE_FLAGS_SUPP	(BTRFS_DEFRAG_RANGE_COMPRESS |		\
++					 BTRFS_DEFRAG_RANGE_COMPRESS_LEVEL |	\
+ 					 BTRFS_DEFRAG_RANGE_START_IO)
+ 
+ struct btrfs_ioctl_defrag_range_args {
+@@ -643,7 +645,13 @@ struct btrfs_ioctl_defrag_range_args {
+ 	 * for this defrag operation.  If unspecified, zlib will
+ 	 * be used
+ 	 */
+-	__u32 compress_type;
++	union {
++		__u32 compress_type;
++		struct {
++			__u8 type;
++			__s8 level;
++		} compress;
++	};
+ 
+ 	/* spare for later */
+ 	__u32 unused[4];
+-- 
+2.47.2
 
