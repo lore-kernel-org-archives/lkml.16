@@ -1,125 +1,171 @@
-Received: from mail-40134.protonmail.ch (mail-40134.protonmail.ch [185.70.40.134])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BDF3278143;
-	Tue,  4 Mar 2025 22:56:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.40.134
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0F8D27CB08;
+	Tue,  4 Mar 2025 22:56:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741128977; cv=none; b=GjuwtnQ0rJ75lCR00CTu7D2FJTw1o7RGBsQuu8UVQV4lyxvgn3jjTFxarlTBQa16sCxB0Gll+6ksk+YG+D+5FKK2DRwGoulBidhnTdgyjZZALudTn9Vqc/JKWDKgel2300U2HEYeCwP0v+tqDGvtYVtrplGwMPBe7mh+KBT4rYw=
+	t=1741128979; cv=none; b=XgoSVsIv5Az2SkmaMdMaNJCP5A2w7NVnf/sJSEedIlPKdsSuR3hU7XwqnDN9v16ARMB6h9ojTNHNRz4KVGldmSmYFzxd/s9CJquZxe0UC0x50Fif7BbVCy1k/s+bms98xJdV9vj0gISu+PGyBRedAMkCx35uDja8esZ8Ioa8PrU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741128977; c=relaxed/simple;
-	bh=yT3dB0vOv1hIkmDMci3xJqb3BI+6b/lLEQoZY3CHB/0=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=MIRiNC2m3NkC9zD6zI+UCQO3rWOY07evR/bXw6j8ePcEM1ZF2OrPt4RzTsSUH9r32YtPf484Y44fyEzt0ClZfMT/qHnvaDJTZszKOdxoPHIBoe1Inx4emcYXm1WCl2qNg2H1HMrAwAazBrgOZdW06mosiyIPF/fybjFNWHdEiic=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=lYk+Wo1J; arc=none smtp.client-ip=185.70.40.134
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+	s=arc-20240116; t=1741128979; c=relaxed/simple;
+	bh=n+/WSocsvdBPUsvMvUSOulmX88PqQT4UKt2KUc6G5RI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=e3UNSEfKU2WGuKTmJjByIUaB1y+SjeVCwqbjzM3PccjvpLn/HbVnPFlxrLcX53eAvaHQiDh9i4DZQMtuLR1ZLT9Elejp4FtH7Fya8RCS9HlD1iD2VTlQE4SLNFAynNqBYLmiF1LZCVdzuDx6B750N4K/n+nz2ldGGAY0j6LaSL4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y+wJw5rN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="lYk+Wo1J"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=protonmail; t=1741128967; x=1741388167;
-	bh=q+cADHWxiQCXDYk3TIb0Y++EiGkXzYSQZyQT6pMBwFA=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
-	b=lYk+Wo1JzuzYSFGm/7KlqwLpIcB9Xy0KXliG5skJuy88tujlndn5vQO/F56JiQEjV
-	 Zch9sn8K2oXfwRqfOF+6E4B7kkD/gxCpMakLj7iR+Ij36U48bTIiYIC1cv8yJtKR/F
-	 UooRU6jfCeUsjniSdHwWUAHoETz/njXNIGDSvi+mWqQKWjexRQCOyES/6c21N4LiNC
-	 io2jJgNiiQ4HaOXEaZ5+mlka9Cw1LgoqwxfBa5YWOl/Qvj9OA1t+RBamANsf5viWTY
-	 X20Dj1hxVv3KV8hjUZayIzNx2XII2htxOVBOYnNFxzbV8hGB4qM8tUCK3OyFdjP3S2
-	 J4L7xSHsQcmfg==
-Date: Tue, 04 Mar 2025 22:56:02 +0000
-To: Benno Lossin <benno.lossin@proton.me>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>
-From: Benno Lossin <benno.lossin@proton.me>
-Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 19/22] rust: pin-init: miscellaneous synchronization with the user-space version
-Message-ID: <20250304225245.2033120-20-benno.lossin@proton.me>
-In-Reply-To: <20250304225245.2033120-1-benno.lossin@proton.me>
-References: <20250304225245.2033120-1-benno.lossin@proton.me>
-Feedback-ID: 71780778:user:proton
-X-Pm-Message-ID: 160fbad2c5b57dbf5df29e17d2da712bca6e965d
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y+wJw5rN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01ACBC4CEE8;
+	Tue,  4 Mar 2025 22:56:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741128979;
+	bh=n+/WSocsvdBPUsvMvUSOulmX88PqQT4UKt2KUc6G5RI=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Y+wJw5rN7vp9GhuO2zWNZiwQ4YFK5ObJ+Df8sf+TUjJvvknpDpXUYYIvN/GB2gYlf
+	 ffGmHdh7Vzx/nqBZiUVQm6ZQ95RuYFmC6LxWwJn2WAPy3nJpKs07i4b5Fw6Lw3I/Ah
+	 ZIfO9TR1ntiGK9rAv7VwB79YrF9faoq5BkqBpFo8Kr07nqUg8hFx/wJmxhAm6SEXfh
+	 4ENoVeRk4oVuO3fvwjpQ36MzYPPX+NproebohxIpSoC6L1fWqbCZw/BTxc9Zi0pBVE
+	 kLwsIVlU9TaEcM//KNMIExTXXXiFECMAuAr3DJ7+DUWSIqKA9nQHBz5XW2UoAXCzW8
+	 HE3QesiiHqGNA==
+From: Kees Cook <kees@kernel.org>
+To: Nathan Chancellor <nathan@kernel.org>
+Cc: Kees Cook <kees@kernel.org>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	llvm@lists.linux.dev,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	David Gow <davidgow@google.com>,
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+	Jeff Johnson <quic_jjohnson@quicinc.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH] kunit/stackinit: Use fill byte different from Clang i386 pattern
+Date: Tue,  4 Mar 2025 14:56:11 -0800
+Message-Id: <20250304225606.work.030-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4717; i=kees@kernel.org; h=from:subject:message-id; bh=n+/WSocsvdBPUsvMvUSOulmX88PqQT4UKt2KUc6G5RI=; b=owGbwMvMwCVmps19z/KJym7G02pJDOnHW7kq5TO/i6ubCe/xdNLVttp55kGiAO/l94YPFLjOX p/50/5pRykLgxgXg6yYIkuQnXuci8fb9nD3uYowc1iZQIYwcHEKwESW+TD8r7vPedcpaXfBtft6 txPnfZPf9PqmpdWj9MNZ1o9doy/kqzAyXD3go1b3bHW4ourffzUth0VvVhlxK2Zd2po99dcv0ws unAA=
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-Last differences between the kernel version and the user-space version
-are removed here.
+The byte initialization values used with -ftrivial-auto-var-init=pattern
+(CONFIG_INIT_STACK_ALL_PATTERN=y) depends on the compiler, architecture,
+and byte position relative to struct member types. On i386 with Clang,
+this includes the 0xFF value, which means it looks like nothing changes
+between the leaf byte filling pass and the expected "stack wiping"
+pass of the stackinit test.
 
-Signed-off-by: Benno Lossin <benno.lossin@proton.me>
+Use the byte fill value of 0x99 instead, fixing the test for i386 Clang
+builds.
+
+Reported-by: ernsteiswuerfel
+Closes: https://github.com/ClangBuiltLinux/linux/issues/2071
+Fixes: 8c30d32b1a32 ("lib/test_stackinit: Handle Clang auto-initialization pattern")
+Signed-off-by: Kees Cook <kees@kernel.org>
 ---
- rust/pin-init/internal/src/lib.rs | 5 ++---
- rust/pin-init/src/__internal.rs   | 2 +-
- rust/pin-init/src/lib.rs          | 2 --
- 3 files changed, 3 insertions(+), 6 deletions(-)
+Cc: Nathan Chancellor <nathan@kernel.org>
+Cc: Bill Wendling <morbo@google.com>
+Cc: Justin Stitt <justinstitt@google.com>
+Cc: llvm@lists.linux.dev
+---
+ lib/tests/stackinit_kunit.c | 30 ++++++++++++++++++++----------
+ 1 file changed, 20 insertions(+), 10 deletions(-)
 
-diff --git a/rust/pin-init/internal/src/lib.rs b/rust/pin-init/internal/src=
-/lib.rs
-index 30e145f80bc0..babe5e878550 100644
---- a/rust/pin-init/internal/src/lib.rs
-+++ b/rust/pin-init/internal/src/lib.rs
-@@ -14,6 +14,8 @@
- //
- // Remove once we have `proc_macro2` in the kernel.
- #![allow(clippy::useless_conversion)]
-+// Documentation is done in the pin-init crate instead.
-+#![allow(missing_docs)]
-=20
- use proc_macro::TokenStream;
-=20
-@@ -30,19 +32,16 @@
- mod pinned_drop;
- mod zeroable;
-=20
--#[allow(missing_docs)]
- #[proc_macro_attribute]
- pub fn pin_data(inner: TokenStream, item: TokenStream) -> TokenStream {
-     pin_data::pin_data(inner.into(), item.into()).into()
- }
-=20
--#[allow(missing_docs)]
- #[proc_macro_attribute]
- pub fn pinned_drop(args: TokenStream, input: TokenStream) -> TokenStream {
-     pinned_drop::pinned_drop(args.into(), input.into()).into()
- }
-=20
--#[allow(missing_docs)]
- #[proc_macro_derive(Zeroable)]
- pub fn derive_zeroable(input: TokenStream) -> TokenStream {
-     zeroable::derive(input.into()).into()
-diff --git a/rust/pin-init/src/__internal.rs b/rust/pin-init/src/__internal=
-.rs
-index 5336d659685d..6b258502a9d7 100644
---- a/rust/pin-init/src/__internal.rs
-+++ b/rust/pin-init/src/__internal.rs
-@@ -11,7 +11,7 @@
- ///
- /// [nomicon]: https://doc.rust-lang.org/nomicon/subtyping.html
- /// [this table]: https://doc.rust-lang.org/nomicon/phantom-data.html#tabl=
-e-of-phantomdata-patterns
--pub(super) type Invariant<T> =3D PhantomData<fn(*mut T) -> *mut T>;
-+pub(crate) type Invariant<T> =3D PhantomData<fn(*mut T) -> *mut T>;
-=20
- /// Module-internal type implementing `PinInit` and `Init`.
- ///
-diff --git a/rust/pin-init/src/lib.rs b/rust/pin-init/src/lib.rs
-index fb64cddd1a72..3d57760a3cee 100644
---- a/rust/pin-init/src/lib.rs
-+++ b/rust/pin-init/src/lib.rs
-@@ -341,8 +341,6 @@
- ///     }
- /// }
- /// ```
--///
--/// [`pin_init!`]: crate::pin_init
- pub use ::pin_init_internal::pin_data;
-=20
- /// Used to implement `PinnedDrop` safely.
---=20
-2.47.2
-
+diff --git a/lib/tests/stackinit_kunit.c b/lib/tests/stackinit_kunit.c
+index 135322592faf..63aa78e6f5c1 100644
+--- a/lib/tests/stackinit_kunit.c
++++ b/lib/tests/stackinit_kunit.c
+@@ -184,6 +184,15 @@ static bool stackinit_range_contains(char *haystack_start, size_t haystack_size,
+ #define INIT_UNION_assigned_copy(var_type)		\
+ 	INIT_STRUCT_assigned_copy(var_type)
+ 
++/*
++ * The "did we actually fill the stack?" check value needs
++ * to be neither 0 nor any of the "pattern" bytes. The
++ * pattern bytes are compiler, architecture, and type based,
++ * so we have to pick a value that never appears for those
++ * combinations. Use 0x99 which is not 0xFF, 0xFE, nor 0xAA.
++ */
++#define FILL_BYTE	0x99
++
+ /*
+  * @name: unique string name for the test
+  * @var_type: type to be tested for zeroing initialization
+@@ -206,12 +215,12 @@ static noinline void test_ ## name (struct kunit *test)		\
+ 	ZERO_CLONE_ ## which(zero);				\
+ 	/* Clear entire check buffer for 0xFF overlap test. */	\
+ 	memset(check_buf, 0x00, sizeof(check_buf));		\
+-	/* Fill stack with 0xFF. */				\
++	/* Fill stack with FILL_BYTE. */			\
+ 	ignored = leaf_ ##name((unsigned long)&ignored, 1,	\
+ 				FETCH_ARG_ ## which(zero));	\
+-	/* Verify all bytes overwritten with 0xFF. */		\
++	/* Verify all bytes overwritten with FILL_BYTE. */	\
+ 	for (sum = 0, i = 0; i < target_size; i++)		\
+-		sum += (check_buf[i] != 0xFF);			\
++		sum += (check_buf[i] != FILL_BYTE);		\
+ 	/* Clear entire check buffer for later bit tests. */	\
+ 	memset(check_buf, 0x00, sizeof(check_buf));		\
+ 	/* Extract stack-defined variable contents. */		\
+@@ -222,7 +231,8 @@ static noinline void test_ ## name (struct kunit *test)		\
+ 	 * possible between the two leaf function calls.	\
+ 	 */							\
+ 	KUNIT_ASSERT_EQ_MSG(test, sum, 0,			\
+-			    "leaf fill was not 0xFF!?\n");	\
++			    "leaf fill was not 0x%02X!?\n",	\
++			    FILL_BYTE);				\
+ 								\
+ 	/* Validate that compiler lined up fill and target. */	\
+ 	KUNIT_ASSERT_TRUE_MSG(test,				\
+@@ -234,9 +244,9 @@ static noinline void test_ ## name (struct kunit *test)		\
+ 		(int)((ssize_t)(uintptr_t)fill_start -		\
+ 		      (ssize_t)(uintptr_t)target_start));	\
+ 								\
+-	/* Look for any bytes still 0xFF in check region. */	\
++	/* Validate check region has no FILL_BYTE bytes. */	\
+ 	for (sum = 0, i = 0; i < target_size; i++)		\
+-		sum += (check_buf[i] == 0xFF);			\
++		sum += (check_buf[i] == FILL_BYTE);		\
+ 								\
+ 	if (sum != 0 && xfail)					\
+ 		kunit_skip(test,				\
+@@ -271,12 +281,12 @@ static noinline int leaf_ ## name(unsigned long sp, bool fill,	\
+ 	 * stack frame of SOME kind...				\
+ 	 */							\
+ 	memset(buf, (char)(sp & 0xff), sizeof(buf));		\
+-	/* Fill variable with 0xFF. */				\
++	/* Fill variable with FILL_BYTE. */			\
+ 	if (fill) {						\
+ 		fill_start = &var;				\
+ 		fill_size = sizeof(var);			\
+ 		memset(fill_start,				\
+-		       (char)((sp & 0xff) | forced_mask),	\
++		       FILL_BYTE & forced_mask,			\
+ 		       fill_size);				\
+ 	}							\
+ 								\
+@@ -469,7 +479,7 @@ static int noinline __leaf_switch_none(int path, bool fill)
+ 			fill_start = &var;
+ 			fill_size = sizeof(var);
+ 
+-			memset(fill_start, forced_mask | 0x55, fill_size);
++			memset(fill_start, (forced_mask | 0x55) & FILL_BYTE, fill_size);
+ 		}
+ 		memcpy(check_buf, target_start, target_size);
+ 		break;
+@@ -480,7 +490,7 @@ static int noinline __leaf_switch_none(int path, bool fill)
+ 			fill_start = &var;
+ 			fill_size = sizeof(var);
+ 
+-			memset(fill_start, forced_mask | 0xaa, fill_size);
++			memset(fill_start, (forced_mask | 0xaa) & FILL_BYTE, fill_size);
+ 		}
+ 		memcpy(check_buf, target_start, target_size);
+ 		break;
+-- 
+2.34.1
 
