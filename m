@@ -1,74 +1,64 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 817411FC7F8;
-	Tue,  4 Mar 2025 11:21:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F27581F9F73;
+	Tue,  4 Mar 2025 11:23:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741087304; cv=none; b=lj6DnEhyhZ1VRJ1JdWdSlVfF9dw5pDrx3FWWCzP8iQYde88+dHaCSyPkOcJBNTfciMqs8GvR2xykoM4iTLFm5XTWDqs73zWyUsfU7YaOHIFW7IU52aiNunYfOYfo12Y6gs4ombQNk1s/Pa1aWW576RfO5lNSAxaYkkL8F5K0vY0=
+	t=1741087436; cv=none; b=XHFkMByKFRsPaYCWaX6Zog3R55zk6deF2aEk560lY4Y7j8a3CJO8wSLqeYcQZVhALAKdRllCt4khqgrZ8Mh8dYW3qX8BcYz+yxGKoKzTk+jgENPLT3ZFFswEGtwrpkJrxAFtdu7klvH9MAQAp+4E9MqEuzLpjisliyLgpyqWunE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741087304; c=relaxed/simple;
-	bh=G4rIjTvAN3MSAYInYwgzNgQTNoCcPC635BrmCLwJ9OI=;
+	s=arc-20240116; t=1741087436; c=relaxed/simple;
+	bh=JOYjasouVRO3o6RgMExrK3pQmulScXxTN9o2B86UVrQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Z3fv5s7QCjQX/4vby1nQoJW30fyz75HroLo6744m57uPRU958hTs0V5us0xyhWbo0vsCrR1212P1J8mZ/68IZkax7DEvowtErEZIBlMJJzlhL9v/VSj4ufAMHKxFrUeXoH6wB/8NUmJUcyi0wypnd1bd5xAFdis45iCtSf4nrbo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=NLhOclrZ; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NLhOclrZ"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=TnqWbk5+EzTofNzXNZf/lQYyzC/wnfe6I/8xtsT0bhY=; b=NLhOclrZC0zl92yrjEf3oFJWig
-	kr8Ss/TwDTcr86gvSMjVEKVQmk6rFv6TL88NINFYDRp3DYj73/4yoejRdIMDBYn3O6cBnWD5VjvuK
-	t5ZtFoYjSAW7g0zMwW0XfYD28WCsjHtUlFlIlpWp4mmrThbsVnSvY1UGwm1nG6fVNx+anNNlCiaLM
-	BwHn820XzhDRHyhtfXFvy8YKeJyR/angRWzevLLxwGIDgmN6AD3PavlhiVPfFPqc6XEUOd0It5am5
-	JPjv9ZOH0zGYKN+nN+2aq/dFxeLpeUZ3+ELTCyxbFrMeNn6a7DdP0V7qLCfqOLV1+E3UI+FadMsbt
-	xxD4prkg==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tpQKp-000000000gA-3GAm;
-	Tue, 04 Mar 2025 11:21:16 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id CCF5430049D; Tue,  4 Mar 2025 12:21:14 +0100 (CET)
-Date: Tue, 4 Mar 2025 12:21:14 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Marco Elver <elver@google.com>
-Cc: "David S. Miller" <davem@davemloft.net>,
-	Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Alexander Potapenko <glider@google.com>,
-	Arnd Bergmann <arnd@arndb.de>, Bart Van Assche <bvanassche@acm.org>,
-	Bill Wendling <morbo@google.com>, Boqun Feng <boqun.feng@gmail.com>,
-	Dmitry Vyukov <dvyukov@google.com>,
-	Eric Dumazet <edumazet@google.com>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	Ingo Molnar <mingo@kernel.org>, Jann Horn <jannh@google.com>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	Joel Fernandes <joel@joelfernandes.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Josh Triplett <josh@joshtriplett.org>,
-	Justin Stitt <justinstitt@google.com>, Kees Cook <kees@kernel.org>,
-	Kentaro Takeda <takedakn@nttdata.co.jp>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Waiman Long <longman@redhat.com>, Will Deacon <will@kernel.org>,
-	kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev, rcu@vger.kernel.org,
-	linux-crypto@vger.kernel.org, linux-serial@vger.kernel.org
-Subject: Re: [PATCH v2 00/34] Compiler-Based Capability- and Locking-Analysis
-Message-ID: <20250304112114.GE11590@noisy.programming.kicks-ass.net>
-References: <20250304092417.2873893-1-elver@google.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=t4PTi4azkNu/CKIXEISdpERf6qyOIEtxKtsgtZHA3WSIlGA/YVkY5vVeMqcBiViUhz8WyPMoMEKJLX7VgMzZ839hsAJH+ckIT9AcaNpW5TBnYmDeqN0DHXKL0IkssEnc4EjQZ2XLHI94sOvb9KCVSnJw+h+CyKeFkNXi+gOtVKM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-22185cddbffso108045395ad.1;
+        Tue, 04 Mar 2025 03:23:54 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741087434; x=1741692234;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ta+9BN55K6L6GjGyvObgWVr1yZ4SW90dTHxigz1cLy0=;
+        b=ZznE2dQGYJrempHSG5Dp1A9ZRTFYNSfmadltdGmku6c7i9J1hgAHl48PxZzOrHkXZL
+         e6Exqli/OkY15HsuO07tXZoq+eAKAt73t0KP6goyZ9HvJ9h6sURgMSystLFnjnk+vaZB
+         GYSPO8mnBLkEc5mJumwhKus/dV0aKSKDqegjY3zr7v9bJtpY7UTXOrkrgreWc0XlW1KS
+         bQFFLJ4W09BPX0RPjJupJ8uyL5ftWzmcyNJDxqE+aNtgxokqJpdfoHnxHF6BZd2+Vc+0
+         UaU6wHwgidqtXr8L7nP57TRfsAJaNbzZusJKuV3n/A2XvYSa+A+mX5YCw0fwJeQNn4KS
+         LfHQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVGlOVcw7Bc5/u225MoYVh0dPHbJD4/kOi4ww7wOHPFsDyd4uBL/BI+MjEdirgJzjbksNnK0zE8yXs1BQg=@vger.kernel.org, AJvYcCXOV3KD9jyqMm9Wd9atS3T0aRVc2raAL5vkPGgpyn4VwLt6ET2OiOBA1JPWQoVaN6vMTBcjo5oKe775@vger.kernel.org
+X-Gm-Message-State: AOJu0Yznen1R487JmD3bY+nUJE4da9nNIcneL2xHWFraMiT3MTcqB+kO
+	3tvsf5QG7iyOCE2Y8ZnTpCfR/vGVorrbq3r3gzYQxwbk+q7oXSUi
+X-Gm-Gg: ASbGncvS9EgeiT5FBNQYI6Mu5KxRXKq0oefyLdyUCsrB8SAS9iaLyKBXoWOCRvbfv78
+	8v4Mm85pdiUQ8EWQEDmsCn1tP+67FlWjpzyoLrIpNi78JTIX39PThIJ8Y5HInA10lFX+1DYW9ol
+	9cHjp8mK65VBjH6E2kF4LBRBxQcm4oWuxF2idpfrtflh7IOoKw6S+KG8lf5dMY4pcRt6KxPUVXf
+	AJpr8s3Ns+01H1mtDiGGEgtnHepXANgcWSxPMxaNQvT6MuSXyof3gIljrqFfIuEcn8xzLN9DgxE
+	t2OKQDYLvzZFHrePzCja8OeVmOcb8ZvpWIRfFHpAGWCzO6CTUTuulA0hEh6cFXfxsEGvGODTXCS
+	1s5I=
+X-Google-Smtp-Source: AGHT+IGn13wDvrhCbjxdWuP7Ai0Mmx1XcETMxA3SEyux2k86dVwD5n40nX57aEx3i5RAbD7djFsKGQ==
+X-Received: by 2002:a05:6a00:ccc:b0:728:f21b:ce4c with SMTP id d2e1a72fcca58-7366e5b53c2mr4923560b3a.5.1741087434158;
+        Tue, 04 Mar 2025 03:23:54 -0800 (PST)
+Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
+        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-7364d4fd2e0sm4423784b3a.120.2025.03.04.03.23.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Mar 2025 03:23:53 -0800 (PST)
+Date: Tue, 4 Mar 2025 20:23:51 +0900
+From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To: Hans Zhang <18255117159@163.com>
+Cc: lpieralisi@kernel.org, manivannan.sadhasivam@linaro.org,
+	robh@kernel.org, bhelgaas@google.com, bwawrzyn@cisco.com,
+	cassel@kernel.org, wojciech.jasko-EXT@continental-corporation.com,
+	a-verma1@ti.com, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, rockswang7@gmail.com
+Subject: Re: [v4] PCI: cadence-ep: Fix the driver to send MSG TLP for INTx
+ without data payload
+Message-ID: <20250304112351.GB4101682@rocinante>
+References: <20250214165724.184599-1-18255117159@163.com>
+ <20250303190602.GB1466882@rocinante>
+ <20250304110134.GA4101682@rocinante>
+ <f51a60de-65f9-459e-9c1f-dd4f10ed65c6@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -77,45 +67,39 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250304092417.2873893-1-elver@google.com>
+In-Reply-To: <f51a60de-65f9-459e-9c1f-dd4f10ed65c6@163.com>
 
-On Tue, Mar 04, 2025 at 10:20:59AM +0100, Marco Elver wrote:
+Hello,
 
-> === Initial Uses ===
+[...]
+> > > > Cadence reference manual cdn_pcie_gen4_hpa_axi_ips_ug_v1.04.pdf, section
+> > > > 9.1.7.1 'AXI Subordinate to PCIe Address Translation' mentions that
+> > > > axi_s_awaddr bits 16 when set, corresponds to MSG with data and when not
+> > > > set, MSG without data.
+> > > 
+> > > Would it be possible to get the full name of the reference manual mentioned
+> > > about?  I want to properly reference the full name, version, revision, etc.,
+> > > like we do for other documentation of this type where possible.
+> > 
+> > Hans, I came up with the following, have a look at:
+> > 
+> >    https://web.git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/commit/?h=controller/cadence&id=09f4343a59cc2678a3a5b731d16e55c697246a40
+> > 
+> > Let me know if this is OK with you.  Thank you.
+> > 
+> > 	Krzysztof
 > 
-> With this initial series, the following synchronization primitives are
-> supported: `raw_spinlock_t`, `spinlock_t`, `rwlock_t`, `mutex`,
-> `seqlock_t`, `bit_spinlock`, RCU, SRCU (`srcu_struct`), `rw_semaphore`,
-> `local_lock_t`, `ww_mutex`.
-
-Wasn't there a limitation wrt recursion -- specifically RCU is very much
-a recursive lock and TS didn't really fancy that?
-
-
->   - Rename __var_guarded_by to simply __guarded_by. Initially the idea
->     was to be explicit about if the variable itself or the pointed-to
->     data is guarded, but in the long-term, making this shorter might be
->     better.
+> It's OK with me.
 > 
->   - Likewise rename __ref_guarded_by to __pt_guarded_by.
+> Can you add an email address of our company as Signed-off-by? Because it
+> involves Cadence documentation.
+> 
+> My company email: Hans Zhang <hans.zhang@cixtech.com>
+> 
+> Like this:
+> Signed-off-by: Hans Zhang <18255117159@163.com>
+> Signed-off-by: Hans Zhang <hans.zhang@cixtech.com>
 
-Shorter is better :-)
+Done.  Thank you!
 
-Anyway; I think I would like to start talking about extensions for these
-asap.
-
-Notably I feel like we should have a means to annotate the rules for
-access/read vs modify/write to a variable.
-
-The obvious case is RCU; where holding RCU is sufficient to read, but
-modification requires a 'real' lock. This is not something that can be
-currently expressed.
-
-The other is the lock pattern I touched upon the other day, where
-reading is permitted when holding one of two locks, while writing
-requires holding both locks.
-
-Being able to explicitly write that in the __guarded_by() annotations is
-the cleanest way I think.
-
-Anyway, let me go stare at the actual patches :-)
+	Krzysztof
