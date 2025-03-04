@@ -1,85 +1,66 @@
-Received: from mail.manjaro.org (mail.manjaro.org [116.203.91.91])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1BBA1F76A8
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 20:30:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.91.91
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88DF51F76A8;
+	Tue,  4 Mar 2025 20:30:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741120227; cv=none; b=DsnuR+7rKWE09YnSI8xcRkbL0w/7QJVHhe32krQaXpe0z536yC5Fd6djL1rOe3HLloD6ey99YbFSrqgoTURHtwWKe/mupN/lGP0nKnompJ9U0wPNlMP/Fxfus0Egtqhnth9i8UGTrM3ocMMJ2eBvOY9w92QX9743PveRi6O9UQE=
+	t=1741120248; cv=none; b=bUdYpT2GyEU1C+kl5TEPZfRjDJclu6PZcBaLOtceteD95yREYlujxZXblvDz5KCKTqnOHAldOc359xxtWVw1qnx0XpwInBvxOyUv3GczWbWlJhBmDemCAZ6GZbZUfU8zsKRmmdHVp9HtO2PaNbdCOAcug7vhncjMaakgRTBhsgo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741120227; c=relaxed/simple;
-	bh=Z7qAp8BgePLwDRIQEm4ooNb8/sKXNc9d4KVJ+VMNhBA=;
-	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
-	 Message-ID:Content-Type; b=Z3MSJKQCGFuVA4BEhff62TNf5Vy0reFZSfqjWIa5lWPBANyi313ME+AwCqfWkixRKng0ny68n9+Wq+Ek1A1Eq67peXvkunIk4RADcC9Z3r63cf6otl4E3hlz0vCY6bLjCTOdyLbQ+CBdUV/R5qxB6Kl60OYcgHBUtmD7Oo5KB70=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org; spf=pass smtp.mailfrom=manjaro.org; dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b=jNP4ReSa; arc=none smtp.client-ip=116.203.91.91
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=manjaro.org
+	s=arc-20240116; t=1741120248; c=relaxed/simple;
+	bh=sxNbMdW/Iwem01aQj7BDy124mpTa0wLwsYtG42s4gFw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mFW0PoLqJDGp3Db4Ql4FVvn9OD/GlBm4lKr+mZil1t3w5Kd9iQNFwLwL/bHZ6C+rprW5UBIXpxtGm8kupp23n0YjAkqf3W8P7jG/JnEXMTIbr7GTnFaGF+O2nrhuBokuXf91IpCODbSGtfzPfmOY1tl6sYPQQre1i+ED/L10yuE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=5gTZG1K7; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b="jNP4ReSa"
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="5gTZG1K7"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=fDJUnsSxZUnWvgAeUJYgf3CYEraX7n7Xpw2M9p7RPCw=; b=5gTZG1K7DjvFhN2kFzi03FICr/
+	I0mRUDdV6TBh8AL+f8V3/JVzqKawTtCV2ipDnjvMCHHNVUsMqPmLu+t2xc0Vv6SAkwtn/cLohau7k
+	vLkg7wMW7i3TOA4RBd8/9+r/mCadLFwRCEdchoZLqEeSJ8duqz6TQB4cbGrKGZmrsEAk=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1tpYuP-002G8S-IC; Tue, 04 Mar 2025 21:30:33 +0100
+Date: Tue, 4 Mar 2025 21:30:33 +0100
+From: Andrew Lunn <andrew@lunn.ch>
+To: dimitri.fedrau@liebherr.com
+Cc: Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Dimitri Fedrau <dima.fedrau@gmail.com>, Marek Vasut <marex@denx.de>,
+	Oleksij Rempel <o.rempel@pengutronix.de>
+Subject: Re: [PATCH net-next v2 1/2] net: phy: tja11xx: add support for
+ TJA1102S
+Message-ID: <b7fce5eb-4d85-4ce8-ae78-6dbd942d5f2c@lunn.ch>
+References: <20250304-tja1102s-support-v2-0-cd3e61ab920f@liebherr.com>
+ <20250304-tja1102s-support-v2-1-cd3e61ab920f@liebherr.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manjaro.org; s=2021;
-	t=1741120223;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=a6WzCje76QLUKJGbmYoeUe7d9zKFda9oGc8+kEK4a04=;
-	b=jNP4ReSawiAxad9womJccr4tfSjzlhZUJA6DV3kWGJXSysytY4Z8oqIOu2KElbzgCtxThe
-	Hb6obA+e0Qo/eYo2+zpV+mtx40sUxmEqUnAw4mQxJbez7q10pXKoybJIO9Uu2fYNmla3cE
-	PDPzlUbH2X+2eWAHvki/b8nLITpLoAopv5K8ASny7u2n7w253EIR3hZZPTyz/t/zEY2hvK
-	1h4mrF8gHB7qXOgkGIyyPIFUWoBghSgDu13Y9Jz18RqL63V6sJvR3FyqOKdUZrOXV6xRnT
-	RG5VgCo8Voq1kDCl3iZs+gL4BxgzMADdzke5argxV/fGYQPeGQ58inZobpDDaQ==
-Date: Tue, 04 Mar 2025 21:30:22 +0100
-From: Dragan Simic <dsimic@manjaro.org>
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: andy.yan@rock-chips.com, maarten.lankhorst@linux.intel.com,
- mripard@kernel.org, tzimmermann@suse.de, dri-devel@lists.freedesktop.org,
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
- linux-kernel@vger.kernel.org, quentin.schulz@cherry.de, Heiko Stuebner
- <heiko.stuebner@cherry.de>
-Subject: Re: [PATCH v3 1/3] drm/rockchip: lvds: move pclk preparation in with
- clk_get
-In-Reply-To: <20250304124418.111061-2-heiko@sntech.de>
-References: <20250304124418.111061-1-heiko@sntech.de>
- <20250304124418.111061-2-heiko@sntech.de>
-Message-ID: <041c5f0e2371817a27577bd0989b9dca@manjaro.org>
-X-Sender: dsimic@manjaro.org
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Authentication-Results: ORIGINATING;
-	auth=pass smtp.auth=dsimic@manjaro.org smtp.mailfrom=dsimic@manjaro.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250304-tja1102s-support-v2-1-cd3e61ab920f@liebherr.com>
 
-Hello Heiko,
-
-On 2025-03-04 13:44, Heiko Stuebner wrote:
-> diff --git a/drivers/gpu/drm/rockchip/rockchip_lvds.c
-> b/drivers/gpu/drm/rockchip/rockchip_lvds.c
-> index 385cf6881504..ecfae8d5da89 100644
-> --- a/drivers/gpu/drm/rockchip/rockchip_lvds.c
-> +++ b/drivers/gpu/drm/rockchip/rockchip_lvds.c
-> @@ -448,15 +448,13 @@ struct drm_encoder_helper_funcs
-> px30_lvds_encoder_helper_funcs = {
->  static int rk3288_lvds_probe(struct platform_device *pdev,
->  			     struct rockchip_lvds *lvds)
->  {
-> -	int ret;
-> -
->  	lvds->regs = devm_platform_ioremap_resource(pdev, 0);
->  	if (IS_ERR(lvds->regs))
->  		return PTR_ERR(lvds->regs);
+On Tue, Mar 04, 2025 at 07:37:26PM +0100, Dimitri Fedrau via B4 Relay wrote:
+> From: Dimitri Fedrau <dimitri.fedrau@liebherr.com>
 > 
-> -	lvds->pclk = devm_clk_get(lvds->dev, "pclk_lvds");
-> +	lvds->pclk = devm_clk_get_prepared(lvds->dev, "pclk_lvds");
->  	if (IS_ERR(lvds->pclk)) {
-> -		DRM_DEV_ERROR(lvds->dev, "could not get pclk_lvds\n");
-> +		DRM_DEV_ERROR(lvds->dev, "could not get or prepare pclk_lvds\n");
+> NXPs TJA1102S is a single PHY version of the TJA1102 in which one of the
+> PHYs is disabled.
+> 
+> Signed-off-by: Dimitri Fedrau <dimitri.fedrau@liebherr.com>
 
-I'm wondering why this patch isn't replacing deprecated DRM
-logging macros with their preferred successors in a couple of
-places, just like what the patch 2/3 from this series does?
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+
+    Andrew
