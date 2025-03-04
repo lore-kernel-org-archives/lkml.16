@@ -1,64 +1,63 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BBF41FCCE1;
-	Tue,  4 Mar 2025 08:56:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA3D01FC108;
+	Tue,  4 Mar 2025 08:57:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741078621; cv=none; b=Y4cIA3+S/K7hrGar8fPPx6c9wvy8bofGVVA+ZkLYmYoBHPmWTJwP275Q9JrTMN3UUSWplUR/v+YXdho+zXKFsmYeVx0px4E/n8x8nZO3t4s1AjFXsVBiNi3twsaw/r6wS5j1fWQbmQhzrrXie1XKtKOI4/UFYVwkb0xBCI3HRZE=
+	t=1741078622; cv=none; b=Pf7jkbVre+h1KDEcf++bjzFVss5Wk7L3mJC4ketFWAD8PCHZMlQfDaCNeS0CCu4dvvmPqVKBqSinzxgLDcpALTjgo4fq3DeuBqGU71udqftQQe0dz0HexP7fPMvjXkvSlMXVhtqIwoO8zWrxwT+HiZgIquFDP1UeiWNmrZnOtq0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741078621; c=relaxed/simple;
-	bh=mfEU48Ho8CCoqkm1agbxvJm1b+wLadH9LxyWiVlbaYI=;
+	s=arc-20240116; t=1741078622; c=relaxed/simple;
+	bh=83YQIQf/AUHg8+iTwxggwWGdK77oE5zHDdXJKprZm38=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=MWd7LW+mYxIdy9ZX59SJg+JIt6wfTQ1lQn4EHj7be6uLAM2A7VjiU+MTSPs0FUmUgPmgS4pM1u18JR8UAw2yP6nbkkciFunO/4KIIORtKoqPzo6LUzWMr4JFRov6iOzsXwW0hmoqCDeb+jPVgPofFtixqoAJkaxmfQxQ6QuKbM4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=kmAaOv3y; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=/IbgQQDr; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=d5fnqOtVXfyOqt+yGBdKhcvUdTwpH0bkzayIP6ipTy0ZJ/8OU65HnhcRQzFCOiGhnzm+N7HuIX4cjd89QR+gdKyq81sp38z4J9b2Mm5kJiqk0C7rFmDJatfvPCk8QCBfyJKo8vkzo5kRz6kaU2v+QF3HMVMfTct+RfqjDT+/Cuo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ZIAeiSDx; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=oQLES6mt; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="kmAaOv3y";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="/IbgQQDr"
-Date: Tue, 04 Mar 2025 08:56:56 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ZIAeiSDx";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="oQLES6mt"
+Date: Tue, 04 Mar 2025 08:56:58 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1741078617;
+	s=2020; t=1741078619;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=gJVOJh39CZ/Nq9wRiK42xFGoQRs8sjebANYiEGfzpPY=;
-	b=kmAaOv3yXTuGgfbWkOtmRcK88dNPqrfPDouiRyyiy7ZRifPhoCobcnQWVnFxMT0Y3kprrc
-	COog27sAeJcfQE9z3koUSgE+2iaDlNjkgWClw/hXX7L+oK5O5KiklwDBQR7VNTb7m/+4Vf
-	sYFUb56nXeMhs1bJq5LU7gwGp5d2W6T+1XKG/khl8p/r4nBnGcGCyTpfWVOxvv60zt70Mn
-	wHSuAv8lN5kn90w3e/oBckaj6K9YF5LxoDPdL28Y76HwG6Ih6WhxsA8fKohg0A+QA7IpL8
-	ebwxSz/PsOIW3AKbOQhpxiVmyGw1KTK9A1Nr/v48XjVWqkspTWJDjd4m1DzJAg==
+	bh=OCe6oN2pR7yqOZE8HGCxS1JB4+pXQ9FRQKdngccvN2g=;
+	b=ZIAeiSDx2u3JzIid3wYRhguePELWG9LUup5Fy9PEa1gE6b1OxSChy+S0NqB9YqnQHg6Pum
+	/GbeWecdoJqAVEUvBmLoiBYnvSb+JsU/aKrCmZAMSFzHcZdJnXLjdt17412ap7RzDo97Ym
+	RixN9ukvhRMYw/5vnJNOj288kqtDc7QHL4NCppiwOyOV4N2Z7iCF+o/1Jv+2+GKoOLtH4C
+	eR8hzlTzvnZHk/fnSLlrySPOzMuDZgU+hKqbCLBJygj7fxoo9TJjcKXe3GdfiGDS8vZo6W
+	e8g+Vqi09TeSh6r8vfMM0m1kFJvAQoMy4F/24UVy6LTPNrVV2nCgbLvzKx8xNA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1741078617;
+	s=2020e; t=1741078619;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=gJVOJh39CZ/Nq9wRiK42xFGoQRs8sjebANYiEGfzpPY=;
-	b=/IbgQQDreB3MXpOkyBfwB4F+LnHv8Fvn/+a/giQxuczX66vB/zOM5jcwwHZQEFAWkp5iON
-	wS6LZGaj8olJ63BA==
+	bh=OCe6oN2pR7yqOZE8HGCxS1JB4+pXQ9FRQKdngccvN2g=;
+	b=oQLES6mtNFaB8GxNXQZB9n93qKa8fRN7di22Jd2X/kO0Dle3QEDfd5KZsj1H/bqzvksgYf
+	y76I7Sgt3WEPgoAw==
 From: "tip-bot2 for Peter Zijlstra" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf/core: Fix perf_mmap() failure path
+Subject: [tip: perf/core] perf/core: Lift event->mmap_mutex in perf_mmap()
 Cc: "Peter Zijlstra (Intel)" <peterz@infradead.org>,
- Ingo Molnar <mingo@kernel.org>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- Ravi Bangoria <ravi.bangoria@amd.com>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <20241104135519.248358497@infradead.org>
-References: <20241104135519.248358497@infradead.org>
+ Ingo Molnar <mingo@kernel.org>, Ravi Bangoria <ravi.bangoria@amd.com>,
+ x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20241104135519.582252957@infradead.org>
+References: <20241104135519.582252957@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174107861683.14745.5838289432878648455.tip-bot2@tip-bot2>
+Message-ID: <174107861864.14745.13235275220207492350.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -68,36 +67,86 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     66477c7230eb1f9b90deb8c0f4da2bac2053c329
-Gitweb:        https://git.kernel.org/tip/66477c7230eb1f9b90deb8c0f4da2bac2053c329
+Commit-ID:     0983593f32c4c94239e01e42e4a17664b64a3c63
+Gitweb:        https://git.kernel.org/tip/0983593f32c4c94239e01e42e4a17664b64a3c63
 Author:        Peter Zijlstra <peterz@infradead.org>
-AuthorDate:    Mon, 04 Nov 2024 14:39:24 +01:00
+AuthorDate:    Mon, 04 Nov 2024 14:39:27 +01:00
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Tue, 04 Mar 2025 09:43:26 +01:00
+CommitterDate: Tue, 04 Mar 2025 09:43:19 +01:00
 
-perf/core: Fix perf_mmap() failure path
+perf/core: Lift event->mmap_mutex in perf_mmap()
 
-When f_ops->mmap() returns failure, m_ops->close() is *not* called.
+This puts 'all' of perf_mmap() under single event->mmap_mutex.
 
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Acked-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
 Reviewed-by: Ravi Bangoria <ravi.bangoria@amd.com>
-Link: https://lore.kernel.org/r/20241104135519.248358497@infradead.org
+Link: https://lore.kernel.org/r/20241104135519.582252957@infradead.org
 ---
- kernel/events/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/events/core.c | 20 ++++++++------------
+ 1 file changed, 8 insertions(+), 12 deletions(-)
 
 diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 8b2a8c3..b2334d2 100644
+index ca4c124..773875a 100644
 --- a/kernel/events/core.c
 +++ b/kernel/events/core.c
-@@ -6903,7 +6903,7 @@ aux_unlock:
- 	if (!ret)
- 		ret = map_range(rb, vma);
+@@ -6680,7 +6680,7 @@ static int perf_mmap(struct file *file, struct vm_area_struct *vma)
+ 	unsigned long vma_size;
+ 	unsigned long nr_pages;
+ 	long user_extra = 0, extra = 0;
+-	int ret = 0, flags = 0;
++	int ret, flags = 0;
  
--	if (event->pmu->event_mapped)
-+	if (!ret && event->pmu->event_mapped)
- 		event->pmu->event_mapped(event, vma->vm_mm);
+ 	/*
+ 	 * Don't allow mmap() of inherited per-task counters. This would
+@@ -6708,6 +6708,9 @@ static int perf_mmap(struct file *file, struct vm_area_struct *vma)
  
- 	return ret;
+ 	user_extra = nr_pages;
+ 
++	mutex_lock(&event->mmap_mutex);
++	ret = -EINVAL;
++
+ 	if (vma->vm_pgoff == 0) {
+ 		nr_pages -= 1;
+ 
+@@ -6716,16 +6719,13 @@ static int perf_mmap(struct file *file, struct vm_area_struct *vma)
+ 		 * can do bitmasks instead of modulo.
+ 		 */
+ 		if (nr_pages != 0 && !is_power_of_2(nr_pages))
+-			return -EINVAL;
++			goto unlock;
+ 
+ 		WARN_ON_ONCE(event->ctx->parent_ctx);
+-		mutex_lock(&event->mmap_mutex);
+ 
+ 		if (event->rb) {
+-			if (data_page_nr(event->rb) != nr_pages) {
+-				ret = -EINVAL;
++			if (data_page_nr(event->rb) != nr_pages)
+ 				goto unlock;
+-			}
+ 
+ 			if (atomic_inc_not_zero(&event->rb->mmap_count)) {
+ 				/*
+@@ -6754,12 +6754,6 @@ static int perf_mmap(struct file *file, struct vm_area_struct *vma)
+ 		 */
+ 		u64 aux_offset, aux_size;
+ 
+-		if (!event->rb)
+-			return -EINVAL;
+-
+-		mutex_lock(&event->mmap_mutex);
+-		ret = -EINVAL;
+-
+ 		rb = event->rb;
+ 		if (!rb)
+ 			goto aux_unlock;
+@@ -6869,6 +6863,8 @@ static int perf_mmap(struct file *file, struct vm_area_struct *vma)
+ 			rb->aux_mmap_locked = extra;
+ 	}
+ 
++	ret = 0;
++
+ unlock:
+ 	if (!ret) {
+ 		atomic_long_add(user_extra, &user->locked_vm);
