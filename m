@@ -1,133 +1,114 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB81C8633F;
-	Tue,  4 Mar 2025 20:31:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E4B3E1F8BCC;
+	Tue,  4 Mar 2025 20:31:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741120286; cv=none; b=G0/01cU3MvsLX4y0TPYa3sLS8qpp69L7Rdx62daRMlOa3Oy4DTYDeWyxZ9Z5qriuQv02bMMTaTP6EdZrwLDdBdHhHmflz0h/+ZvG89OVosfUDYP9hwyR112q9MDMn+r4F/o+dPRz2XE+/naQpGK/uyJRx0XpqmrEH2BncFW8u3M=
+	t=1741120301; cv=none; b=MHnmmcxeBJSsGqfm42Kqeuq48WxjcDHUQgoSTcXFaE3LfeBXbAlKDB8rOwPbY7QJ5h4k4m0x1F50SMASbHecfVYNa/YaVU2a7LBVjR15o61RtLXhUAsbhpa8TpN8DbMQdD2KnEsVLHUJrW/yzmELzYm/aM4DVDso9WHg9N0CufU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741120286; c=relaxed/simple;
-	bh=JKKNW+RwGoZHZtO5aV5J7jh7Za+xK7f1V74u2fYud9A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ruhs+BZRlQ63PJ6MZSZGmm2cv3Hh0ZJwXjBoekXxsrGx+RkIGaOigblUjtpJYGb1sSVVIURMshFeq4YGw2ogRe5rn3DKKeDDs5u99HGKPedVXrK4MBzfBA8bWmdn877Ac0CDic+WP0OccE5D/YN6H6JcsXOnoECjfKO7GV6UD2E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=cTl4B5dA; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1741120301; c=relaxed/simple;
+	bh=tkxBDC72eU9MCONsFx4EJyrx8Yqu/GC847nibNDT1No=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=l57qzY2wd/otuZquMkThYoEJdCib8W+RqtG4BoDMgAQISV+HKsJnK6DAO/OcyeK5urD4PnBpvlNPd9H930dMP702saEKpYTkc8pV9B3qEq4hWniPRnMco+yKa5pMQiPQP9TukK76aLj7lf40NFBIH6mYMv5rAIMHKVHBcmnTDEI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=XPOvUKPQ; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="cTl4B5dA"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 5F51540E015E;
-	Tue,  4 Mar 2025 20:31:19 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id m5qk8LclUbkO; Tue,  4 Mar 2025 20:31:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1741120274; bh=QjUL2XTBMPOMONfEVC9hR8GGbNvASEYjnpKzPJNLH3U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=cTl4B5dAlChiXp50cOSMXm9Ac6TNweXDosPAU2wVWtPz2QDDVTYPemlIGIPLlObVt
-	 yLm4FNKxlexqfosdFx0fKrd/rnVR6fAEMaqhTlxH+MEwTHGIQV3EQDNjihTnCOrIU2
-	 b20qDDlAuWX5LBlNU6wZR5oI6k5s8BuDoEc+s/QZb5QpjJyp6J5LkOGYc30rzZkwOP
-	 uTb06lw3oaMCP3oBqti2fdgHjULhGuv6KiCmXTNX+AsuCULOTt/WykpoONYGTmhatm
-	 oBH9D1lgRgYMlheOJSICQBkWXDJ6ftFLRH84J56D+eRMmF0PiTHBgr3UyK7zcZsyTw
-	 0GjyeKRjfUcygnqhpDPqGzzi7KcQy43n8c7k3JhBhZWAFfHqhUG2SsR+fqlB/9RHdV
-	 TSFk2G8fFb0xkiFLd/vaUZ4AqZgjkX4YsOIHNztP7tyWy/0L+TiUlDpPaDunSXFUjc
-	 rSZkaSgucGn2/w9iuTBiRlr2m72h9qMQK2yQXTEZZyExuuOiz+LCYUi3F/E3Q/htcj
-	 PKQzHPIxzL1Dj66MqTLpQGuYRiy4S47CfcxMu9NbxQj0QAgPppWN5oZjo/FiQ+FlS3
-	 7/vvQl5OtAkdnv3TbbqZ32CtJD1ZV1d5GgE58jkeCiyGUK2mfFqYIDdgvEdzAEc0j/
-	 PmoVkzlatGwxwy67lghP6cHU=
-Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 4F4FE40E0176;
-	Tue,  4 Mar 2025 20:30:32 +0000 (UTC)
-Date: Tue, 4 Mar 2025 21:30:25 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Shiju Jose <shiju.jose@huawei.com>
-Cc: Jonathan Cameron <jonathan.cameron@huawei.com>,
-	"linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-	"rafael@kernel.org" <rafael@kernel.org>,
-	"tony.luck@intel.com" <tony.luck@intel.com>,
-	"lenb@kernel.org" <lenb@kernel.org>,
-	"mchehab@kernel.org" <mchehab@kernel.org>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-	"dave@stgolabs.net" <dave@stgolabs.net>,
-	"dave.jiang@intel.com" <dave.jiang@intel.com>,
-	"alison.schofield@intel.com" <alison.schofield@intel.com>,
-	"vishal.l.verma@intel.com" <vishal.l.verma@intel.com>,
-	"ira.weiny@intel.com" <ira.weiny@intel.com>,
-	"david@redhat.com" <david@redhat.com>,
-	"Vilas.Sridharan@amd.com" <Vilas.Sridharan@amd.com>,
-	"leo.duran@amd.com" <leo.duran@amd.com>,
-	"Yazen.Ghannam@amd.com" <Yazen.Ghannam@amd.com>,
-	"rientjes@google.com" <rientjes@google.com>,
-	"jiaqiyan@google.com" <jiaqiyan@google.com>,
-	"Jon.Grimm@amd.com" <Jon.Grimm@amd.com>,
-	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-	"naoya.horiguchi@nec.com" <naoya.horiguchi@nec.com>,
-	"james.morse@arm.com" <james.morse@arm.com>,
-	"jthoughton@google.com" <jthoughton@google.com>,
-	"somasundaram.a@hpe.com" <somasundaram.a@hpe.com>,
-	"erdemaktas@google.com" <erdemaktas@google.com>,
-	"pgonda@google.com" <pgonda@google.com>,
-	"duenwen@google.com" <duenwen@google.com>,
-	"gthelen@google.com" <gthelen@google.com>,
-	"wschwartz@amperecomputing.com" <wschwartz@amperecomputing.com>,
-	"dferguson@amperecomputing.com" <dferguson@amperecomputing.com>,
-	"wbs@os.amperecomputing.com" <wbs@os.amperecomputing.com>,
-	"nifan.cxl@gmail.com" <nifan.cxl@gmail.com>,
-	tanxiaofei <tanxiaofei@huawei.com>,
-	"Zengtao (B)" <prime.zeng@hisilicon.com>,
-	Roberto Sassu <roberto.sassu@huawei.com>,
-	"kangkang.shen@futurewei.com" <kangkang.shen@futurewei.com>,
-	wanghuiqiang <wanghuiqiang@huawei.com>,
-	Linuxarm <linuxarm@huawei.com>
-Subject: Re: [PATCH linux-next 0/2] ACPI: Add support for ACPI RAS2 feature
- table
-Message-ID: <20250304203025.GDZ8di4fTxb0QUo8h5@fat_crate.local>
-References: <20250228122752.2062-1-shiju.jose@huawei.com>
- <20250303173538.000007cd@huawei.com>
- <20250303103529.GBZ8WF8flezRahE-1h@fat_crate.local>
- <977a011b1ede4093a8e49d9cbcf49d19@huawei.com>
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="XPOvUKPQ"
+Received: from narnia.corp.microsoft.com (unknown [167.220.2.28])
+	by linux.microsoft.com (Postfix) with ESMTPSA id D577C210EAF0;
+	Tue,  4 Mar 2025 12:31:32 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D577C210EAF0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1741120299;
+	bh=+5dln2CDLel2QrL5bi52WY7oDDb4ZKz6Vy7qsxHDPVQ=;
+	h=From:To:Subject:Date:From;
+	b=XPOvUKPQzaFkhGBpmdtBZxuyP8g5ZnF5rEirhMBUB9x231bt6/MNtJSnUfe7DiasU
+	 ije1dsOtNENEybY1JejkjPmD6YbcQv3zui3YoZ74Wv8XaoDkKIefpPpAkmfN3BySjR
+	 st9RsPIGK2l4EkB8pMmzBf7dgKJ/JMeYg33zndAA=
+From: Blaise Boscaccy <bboscaccy@linux.microsoft.com>
+To: Paul Moore <paul@paul-moore.com>,
+	James Morris <jmorris@namei.org>,
+	"Serge E. Hallyn" <serge@hallyn.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	KP Singh <kpsingh@kernel.org>,
+	Stanislav Fomichev <sdf@fomichev.me>,
+	Hao Luo <haoluo@google.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Stephen Smalley <stephen.smalley.work@gmail.com>,
+	Ondrej Mosnacek <omosnace@redhat.com>,
+	linux-security-module@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org,
+	selinux@vger.kernel.org,
+	bboscaccy@linux.microsoft.com
+Subject: [PATCH v4 bpf-next 0/2] security: Propagate caller information in bpf hooks
+Date: Tue,  4 Mar 2025 12:30:48 -0800
+Message-ID: <20250304203123.3935371-1-bboscaccy@linux.microsoft.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <977a011b1ede4093a8e49d9cbcf49d19@huawei.com>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Mar 04, 2025 at 06:19:58PM +0000, Shiju Jose wrote:
-> Some of these variables, for e.g. requested_address_range are not defined 
-> in this patch, but in the 'include/acpi/actbl2.h'.
-> My understanding is that those changes required to upstream first via
-> https://github.com/acpica/acpica ?
+Hello,
 
-Are you sure?
+While trying to implement an eBPF gatekeeper program, we ran into an
+issue whereas the LSM hooks are missing some relevant data.
 
-...
- * Additional ACPI Tables (2)
- *
- * These tables are not consumed directly by the ACPICA subsystem, but are
- * included here to support device drivers and the AML disassembler.
- ...
+Certain subcommands passed to the bpf() syscall can be invoked from
+either the kernel or userspace. Additionally, some fields in the
+bpf_attr struct contain pointers, and depending on where the
+subcommand was invoked, they could point to either user or kernel
+memory. One example of this is the bpf_prog_load subcommand and its
+fd_array. This data is made available and used by the verifier but not
+made available to the LSM subsystem. This patchset simply exposes that
+information to applicable LSM hooks.
 
-In any case, if this goes through me, I will have to review it first as it
-looks funky.
+Change list:
+- v3 -> v4
+  - split out selftest changes into a separate patch
+- v2 -> v3
+  - reorder params so that the new boolean flag is the last param
+  - fixup function signatures in bpf selftests
+- v1 -> v2
+  - Pass a boolean flag in lieu of bpfptr_t
 
-Your call guys.
+Revisions:
+- v3
+  https://lore.kernel.org/bpf/20250303222416.3909228-1-bboscaccy@linux.microsoft.com/
+- v2
+  https://lore.kernel.org/bpf/20250228165322.3121535-1-bboscaccy@linux.microsoft.com/
+- v1
+  https://lore.kernel.org/bpf/20250226003055.1654837-1-bboscaccy@linux.microsoft.com/
+
+
+Blaise Boscaccy (2):
+  security: Propagate caller information in bpf hooks
+  selftests/bpf: Add is_kernel parameter to LSM/bpf test programs
+
+ include/linux/lsm_hook_defs.h                     |  6 +++---
+ include/linux/security.h                          | 12 ++++++------
+ kernel/bpf/syscall.c                              | 10 +++++-----
+ security/security.c                               | 15 +++++++++------
+ security/selinux/hooks.c                          |  6 +++---
+ tools/testing/selftests/bpf/progs/rcu_read_lock.c |  3 ++-
+ .../selftests/bpf/progs/test_cgroup1_hierarchy.c  |  4 ++--
+ .../selftests/bpf/progs/test_kfunc_dynptr_param.c |  6 +++---
+ .../testing/selftests/bpf/progs/test_lookup_key.c |  2 +-
+ .../selftests/bpf/progs/test_ptr_untrusted.c      |  2 +-
+ .../selftests/bpf/progs/test_task_under_cgroup.c  |  2 +-
+ .../selftests/bpf/progs/test_verify_pkcs7_sig.c   |  2 +-
+ 12 files changed, 37 insertions(+), 33 deletions(-)
 
 -- 
-Regards/Gruss,
-    Boris.
+2.48.1
 
-https://people.kernel.org/tglx/notes-about-netiquette
