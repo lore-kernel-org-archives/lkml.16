@@ -1,242 +1,122 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com [209.85.219.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97FAD255250;
-	Tue,  4 Mar 2025 21:56:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07A00260384
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 21:57:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741125404; cv=none; b=MY3n90G3CVXIwJXfsaTo8lg00qd+aW5yyGE4B6N59gdvqHDSnCG+2KCz7XmiV+mmVF3OR3979NRxOSrED94Q/y2QZVSogNSiR9SLHOjT4qcr3JvbI2PT16QE/Uc7lgjSxAw6TjWUBdd1AAPLPOxAuHQo75Ccat+sZZxhsyIhqmA=
+	t=1741125457; cv=none; b=aDoAr2Usx1FZ5P9P02+D9ORFpo6g4Hb8NpsbPwzuXkZJVqkdVVXV639lVjZqQ87cxf86vliE6Zc6CbFDWJy4OybhdWIzEDTsrBy3JXL2uuj1CHLHJ0UE+93RgaONmRQi2TVQXA625IDrGWSI6PbJ+cw53JDBhPZFYVadmp3sF24=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741125404; c=relaxed/simple;
-	bh=/oGeODIRdUS4Fzf6LQN7Q/WCCcukjJNndnD33pJYQVM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=t+e1Xip1KBTMuv/n+BfdlUhmQKJsqDxXrNQJQldC3Z49BrRDcmMokyaHZtDPEq71TjdeNtSX6/NyoDmpVTNPw+JAO+ImVoA6EASAu5TG6fNke1GJZx75zcefiF8OmuNDaCVHFgGoS5HQHA+C7PpNIIKJLqEG/qrlMCYOQPCZc7U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Gy+HAwGF; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1741125457; c=relaxed/simple;
+	bh=KzrIAcArmLOe3V1Ys+bs9y+LLe/XSWtbLOyhy2D+VqU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VyjI2U8azK8rpxcnPCsMi3YypoWAfHnt3nbjItni04Eb/8XFwWgR+6bKnajx/h4AfxIrIRYzwxNkMWhp80UMJYWWW/bkxMDner+CRLtpRMaT7ZvAgKeFtXZS6VNzu8DbM0oFuObF2mnomN4zJC3a0txseX9pF7my6jwXoHjWJMk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=bkaC8UBe; arc=none smtp.client-ip=209.85.219.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Gy+HAwGF"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 524KD6aY015969;
-	Tue, 4 Mar 2025 21:56:30 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	Qyp8m8Sh49PD9qumn7tFoylai5tKzYR7lV/vxRbdQTY=; b=Gy+HAwGFVG+sHqUu
-	5HWaAf7DzhaDWLrLy9rHCTQFu470a4lfzgjSvZscG8fPqjcMcERabEiDg8Ta3+A4
-	b9vTUeiewZ+rBCNZpQAgio1iqpziBUU2UBHteE+gekT5tHNfCh6JfhFeQAMx0Ue8
-	SwTTLM5Nrsx71cAw3fu8Z9zXdexygKpfrsYfKRqGDWY8W4cF+0JorZY+pdST+uWk
-	GSr2g+FCUcA98WksrbYG7uz5oVZaQkcSZ9KD5tOjkb0KH2nfWF4AgKGKok4zQeeO
-	8ymWm82eCGQzFzR8iW4WuENRwbslsP77UzuGH3BkufSznLPaFrDLj2hqMjjSiKgV
-	QgAh3Q==
-Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 455p6tkb2x-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 04 Mar 2025 21:56:30 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 524LuT5X013434
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 4 Mar 2025 21:56:29 GMT
-Received: from [10.134.70.212] (10.80.80.8) by nasanex01b.na.qualcomm.com
- (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 4 Mar 2025
- 13:56:29 -0800
-Message-ID: <942b9411-e170-47ac-8af5-9a26f06db0a3@quicinc.com>
-Date: Tue, 4 Mar 2025 13:56:11 -0800
+	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="bkaC8UBe"
+Received: by mail-yb1-f171.google.com with SMTP id 3f1490d57ef6-e549be93d5eso6648873276.1
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Mar 2025 13:57:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore.com; s=google; t=1741125455; x=1741730255; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fsnikvCe3hOdMVeN/xhtWmCodnyXPzUwaCFk12jXD3E=;
+        b=bkaC8UBeyV+6iTNhL7uDElTcS3201kHiMWEc1FMXzAdwMNkWYZLkHnogppVerOK81m
+         KLnoNDjYnE4rxQcyVsT/eXRXn/D9K9f2lviEodsQONjWgzj5v2JuxLYVVynRE4yEOEva
+         oiuRX7Wjl/dQ1+2v3UY7aNVL7emIikrFe161NQ5pDaD+LQ3geLqH1pJEQPmmk3nLa9i3
+         n3gS2N4e0zZr/hU1Z+dbHVEGxsPBoWusQCj0wHXIdcLVjtmmx4kDTdCQKYvUbhCYn9Gr
+         vi7ron7PpGnarKkLs+AQxaMLnckOV+Fey+ahHq0LqKistGoO46PMeaI8rT3IRG1tqE/G
+         lIow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741125455; x=1741730255;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=fsnikvCe3hOdMVeN/xhtWmCodnyXPzUwaCFk12jXD3E=;
+        b=jhAJBv4y6QjjqV+sxav/A38zIQUQTK6SnnNMpJ/aWzRPsI1ptnNzvR/+qMhkJprW9+
+         XBVoY3RWzta1VYrXhOEjsmG+TMJfpaFPKQlfjRTXIV8sDdTZk1YXnMxyLpLyV0/XWpr4
+         E5od5/GjfhKWSoj6+EIHcGlqhvo90Lz0Uj84hnQgKUTABVF1t7g+XYfn2JrbqyxW7R6m
+         JFIoceX0FSgr737CbqV6CI7+uJ8n/J03sW5yqAWOgUfYnhu1XxX5+o/ziK67eMlGft0U
+         cRWU1kY4rFXVIJIXPyV4gvoM8s15LaF14BtIC8Ozh/SHbYwScSPvESlWmwjqXg0Edqd2
+         t1Ew==
+X-Forwarded-Encrypted: i=1; AJvYcCWaDXL7kKp7u2k3wuwLlbmbnPEpIoq6sgmNThgDzrkKJ1MmL5Fx2k5VDl0H1PQLQbRonRXuEAd0/hjHIOU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyEoDbM3IFpgx7kzV3i1cLFxCj/CjdebarZjB7a9cBAPEX+Q18o
+	HBP5gXq3HS1E8JKPxRgpdQho0hSXsSQwDdL/xddJMiPM+4wnUeqsGq+PCmlp6vWZyU9Vv5/YFI9
+	G1Zq0s2viRz/bBxWjNJCQ+gEBv+YDSSJRpZOr
+X-Gm-Gg: ASbGncsk6uR11M1hlum4dfvoZqPGuFc9ZWzKeMJSPd0lRZWq/8N9aW35O4dcisWmt8/
+	UGUFfsexjU/dYBq0yF8rgXdWH9Y7eclUMsAABOyw0ltbxQz1pj7+OSXBB7zC/AsqWD2TwYIJHMx
+	5qVsIJZuxMVJjLCtcIXsORue4Omw==
+X-Google-Smtp-Source: AGHT+IHTuaql6CxX9+oW0vQt7zfON8FgK8oPO4Dgi10jT0f1C5KKKb1wciqXNbcYDDrBoPtRQrQnfcYSdkhYI8GxvnU=
+X-Received: by 2002:a05:6902:100f:b0:e5d:ae04:1e33 with SMTP id
+ 3f1490d57ef6-e611e18dd27mr1373344276.5.1741125454946; Tue, 04 Mar 2025
+ 13:57:34 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 11/15] drm/msm/dpu: split PIPES_PER_STAGE definition
- per plane and mixer
-To: Jun Nie <jun.nie@linaro.org>, Rob Clark <robdclark@gmail.com>,
-        "Abhinav
- Kumar" <quic_abhinavk@quicinc.com>,
-        Dmitry Baryshkov
-	<dmitry.baryshkov@linaro.org>,
-        Sean Paul <sean@poorly.run>,
-        Marijn Suijten
-	<marijn.suijten@somainline.org>,
-        David Airlie <airlied@gmail.com>, "Simona
- Vetter" <simona@ffwll.ch>
-CC: <linux-arm-msm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <freedreno@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
-References: <20250303-sm8650-v6-14-hmd-deckard-mdss-quad-upstream-oldbootwrapper-36-prep-v8-0-eb5df105c807@linaro.org>
- <20250303-sm8650-v6-14-hmd-deckard-mdss-quad-upstream-oldbootwrapper-36-prep-v8-11-eb5df105c807@linaro.org>
-Content-Language: en-US
-From: Jessica Zhang <quic_jesszhan@quicinc.com>
-In-Reply-To: <20250303-sm8650-v6-14-hmd-deckard-mdss-quad-upstream-oldbootwrapper-36-prep-v8-11-eb5df105c807@linaro.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=PMb1+eqC c=1 sm=1 tr=0 ts=67c7770e cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=KKAkSRfTAAAA:8 a=0uiON693c8ldkTsWMEsA:9 a=QEXdDO2ut3YA:10
- a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-ORIG-GUID: gkLFucouSjbiLnl0kPQGbnXC1jqo0jyk
-X-Proofpoint-GUID: gkLFucouSjbiLnl0kPQGbnXC1jqo0jyk
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-04_09,2025-03-04_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxlogscore=999
- phishscore=0 lowpriorityscore=0 malwarescore=0 priorityscore=1501
- mlxscore=0 adultscore=0 spamscore=0 suspectscore=0 impostorscore=0
- clxscore=1015 classifier=spam authscore=0 adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502100000 definitions=main-2503040175
+References: <20250303-inline-securityctx-v1-1-fb7b9b641fdf@google.com>
+ <CAHC9VhSo3aGsJVd=a3MTeakgU66oTN86oh5sZE8P4ghSk8Rx2g@mail.gmail.com> <CANiq72=n_cGmrb6+6CH1AbGePy5dRMMFyzAFv6O1VEp8EgKR8w@mail.gmail.com>
+In-Reply-To: <CANiq72=n_cGmrb6+6CH1AbGePy5dRMMFyzAFv6O1VEp8EgKR8w@mail.gmail.com>
+From: Paul Moore <paul@paul-moore.com>
+Date: Tue, 4 Mar 2025 16:57:24 -0500
+X-Gm-Features: AQ5f1JonifUOcpqfOyjEvG2iJEgbZmlcgciRANX9bY2EJ9_XOLCe5zh-YKF7hu8
+Message-ID: <CAHC9VhT3DqOeYbC+GCQRgH3NNUiOk6Sh=6fzsFaiHk2LEFbi2g@mail.gmail.com>
+Subject: Re: [PATCH] lsm: rust: mark SecurityCtx methods inline
+To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc: Alice Ryhl <aliceryhl@google.com>, James Morris <jmorris@namei.org>, 
+	"Serge E. Hallyn" <serge@hallyn.com>, Miguel Ojeda <ojeda@kernel.org>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Trevor Gross <tmgross@umich.edu>, rust-for-linux@vger.kernel.org, 
+	linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Mon, Mar 3, 2025 at 7:04=E2=80=AFPM Miguel Ojeda
+<miguel.ojeda.sandonis@gmail.com> wrote:
+> On Mon, Mar 3, 2025 at 11:55=E2=80=AFPM Paul Moore <paul@paul-moore.com> =
+wrote:
+> >
+> > Beyond those nitpicks, this looks okay to me based on my *extremely*
+> > limited Rust knowledge.  With the minor requested changes in place,
+> > would you prefer me to take this via the LSM tree, or would you prefer
+> > it to go up to Linus via a more Rust-y tree?
+>
+> In general, if a subsystem is willing to take Rust-related patches
+> through their tree, that is the ideal scenario! So please definitely
+> feel free to pick it up on your side (and thanks!); otherwise, I can
+> pick it up with your Acked-by.
+>
+> Some days ago I wrote a summary of the usual discussion we have around
+> this (copy-pasting here for convenience) ...
 
+Hi Miguel,
 
-On 3/3/2025 7:14 AM, Jun Nie wrote:
-> The stage contains configuration for a mixer pair. Currently the plane
-> supports just one stage and 2 pipes. Quad-pipe support will require
-> handling 2 stages and 4 pipes at the same time. In preparation for that
-> add a separate define, PIPES_PER_PLANE, to denote number of pipes that
-> can be used by the plane.
+Thanks.  Yes, I've seen the summary and the recent threads around Rust
+in the Linux kernel.  I don't want to drag all of that up here, but I
+will simply say that from the perspective of the LSM framework we're
+happy to work with the Rust devs to ensure that the LSM framework is
+well supported with Rust bindings.  However, I will add that my own
+Rust related efforts are going to be very limited as my understanding
+of Rust is still frustratingly low; until that improves I'll be
+reliant on others like Alice and you to submit patches for
+discussion/acceptance when there are issues.  Thankfully that has
+proven to work fairly well over the past few months and I would like
+to see that continue.
 
-Hi Jun,
+As far as the mechanics of which tree to merge code, I'll probably
+continue to ask in most cases simply so we are all clear on where the
+patches will land and how they get up to Linus.  From my perspective
+there is no harm in asking, and I *really* want to encourage
+cross-subsystem communication as much as I can; I've been seeing an
+increasing trend towards compartmentalization across subsystems and I
+believe the best way to push back against that is to talk a bit more,
+even if it is just a mundane "my tree or yours?".
 
-Sorry for missing this in the last revision, but it seems to me that the 
-looping of the pipes in `_dpu_debugfs_status_show()` should also be 
-using PIPES_PER_PLANE.
-
-Thanks,
-
-Jessica Zhang
-
-> 
-> Signed-off-by: Jun Nie <jun.nie@linaro.org>
-> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> ---
->   drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c    |  2 +-
->   drivers/gpu/drm/msm/disp/dpu1/dpu_hw_mdss.h |  2 ++
->   drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c   | 16 ++++++++--------
->   drivers/gpu/drm/msm/disp/dpu1/dpu_plane.h   |  4 ++--
->   4 files changed, 13 insertions(+), 11 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
-> index 193818b02197d0737c86de7765d98732fa914e8e..81474823e6799132db71c9712046d359e3535d90 100644
-> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
-> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
-> @@ -463,7 +463,7 @@ static void _dpu_crtc_blend_setup_mixer(struct drm_crtc *crtc,
->   		if (pstate->stage == DPU_STAGE_BASE && format->alpha_enable)
->   			bg_alpha_enable = true;
->   
-> -		for (i = 0; i < PIPES_PER_STAGE; i++) {
-> +		for (i = 0; i < PIPES_PER_PLANE; i++) {
->   			if (!pstate->pipe[i].sspp)
->   				continue;
->   			set_bit(pstate->pipe[i].sspp->idx, fetch_active);
-> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_mdss.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_mdss.h
-> index ba7bb05efe9b8cac01a908e53121117e130f91ec..74bf3ab9d6cfb8152b32d89a6c66e4d92d5cee1d 100644
-> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_mdss.h
-> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_mdss.h
-> @@ -34,7 +34,9 @@
->   #define DPU_MAX_PLANES			4
->   #endif
->   
-> +#define STAGES_PER_PLANE		1
->   #define PIPES_PER_STAGE			2
-> +#define PIPES_PER_PLANE			(PIPES_PER_STAGE * STAGES_PER_PLANE)
->   #ifndef DPU_MAX_DE_CURVES
->   #define DPU_MAX_DE_CURVES		3
->   #endif
-> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
-> index ef44af5ab681c8f526333fa92531a2225983aa09..1095727d1d9f17407f2b063039bf2efd8733ec70 100644
-> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
-> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
-> @@ -633,7 +633,7 @@ static void _dpu_plane_color_fill(struct dpu_plane *pdpu,
->   		return;
->   
->   	/* update sspp */
-> -	for (i = 0; i < PIPES_PER_STAGE; i++) {
-> +	for (i = 0; i < PIPES_PER_PLANE; i++) {
->   		if (!pstate->pipe[i].sspp)
->   			continue;
->   		_dpu_plane_color_fill_pipe(pstate, &pstate->pipe[i],
-> @@ -1078,7 +1078,7 @@ static int dpu_plane_virtual_atomic_check(struct drm_plane *plane,
->   		 * resources are freed by dpu_crtc_assign_plane_resources(),
->   		 * but clean them here.
->   		 */
-> -		for (i = 0; i < PIPES_PER_STAGE; i++)
-> +		for (i = 0; i < PIPES_PER_PLANE; i++)
->   			pstate->pipe[i].sspp = NULL;
->   
->   		return 0;
-> @@ -1129,7 +1129,7 @@ static int dpu_plane_virtual_assign_resources(struct drm_crtc *crtc,
->   	pipe_cfg = &pstate->pipe_cfg[0];
->   	r_pipe_cfg = &pstate->pipe_cfg[1];
->   
-> -	for (i = 0; i < PIPES_PER_STAGE; i++)
-> +	for (i = 0; i < PIPES_PER_PLANE; i++)
->   		pstate->pipe[i].sspp = NULL;
->   
->   	if (!plane_state->fb)
-> @@ -1241,7 +1241,7 @@ void dpu_plane_flush(struct drm_plane *plane)
->   		/* force 100% alpha */
->   		_dpu_plane_color_fill(pdpu, pdpu->color_fill, 0xFF);
->   	else {
-> -		for (i = 0; i < PIPES_PER_STAGE; i++)
-> +		for (i = 0; i < PIPES_PER_PLANE; i++)
->   			dpu_plane_flush_csc(pdpu, &pstate->pipe[i]);
->   	}
->   
-> @@ -1364,7 +1364,7 @@ static void dpu_plane_sspp_atomic_update(struct drm_plane *plane,
->   			&fmt->pixel_format, MSM_FORMAT_IS_UBWC(fmt));
->   
->   	/* move the assignment here, to ease handling to another pairs later */
-> -	for (i = 0; i < PIPES_PER_STAGE; i++) {
-> +	for (i = 0; i < PIPES_PER_PLANE; i++) {
->   		if (!pstate->pipe[i].sspp)
->   			continue;
->   		dpu_plane_sspp_update_pipe(plane, &pstate->pipe[i],
-> @@ -1378,7 +1378,7 @@ static void dpu_plane_sspp_atomic_update(struct drm_plane *plane,
->   
->   	pstate->plane_fetch_bw = 0;
->   	pstate->plane_clk = 0;
-> -	for (i = 0; i < PIPES_PER_STAGE; i++) {
-> +	for (i = 0; i < PIPES_PER_PLANE; i++) {
->   		if (!pstate->pipe[i].sspp)
->   			continue;
->   		pstate->plane_fetch_bw += _dpu_plane_calc_bw(pdpu->catalog, fmt,
-> @@ -1397,7 +1397,7 @@ static void _dpu_plane_atomic_disable(struct drm_plane *plane)
->   	struct dpu_sw_pipe *pipe;
->   	int i;
->   
-> -	for (i = 0; i < PIPES_PER_STAGE; i += 1) {
-> +	for (i = 0; i < PIPES_PER_PLANE; i += 1) {
->   		pipe = &pstate->pipe[i];
->   		if (!pipe->sspp)
->   			continue;
-> @@ -1519,7 +1519,7 @@ static void dpu_plane_atomic_print_state(struct drm_printer *p,
->   
->   	drm_printf(p, "\tstage=%d\n", pstate->stage);
->   
-> -	for (i = 0; i < PIPES_PER_STAGE; i++) {
-> +	for (i = 0; i < PIPES_PER_PLANE; i++) {
->   		pipe = &pstate->pipe[i];
->   		if (!pipe->sspp)
->   			continue;
-> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.h
-> index 052fd046e8463855b16b30389c2efc67c0c15281..18ff5ec2603ed63ce45f530ced3407d3b70c737b 100644
-> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.h
-> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.h
-> @@ -33,8 +33,8 @@
->   struct dpu_plane_state {
->   	struct drm_plane_state base;
->   	struct msm_gem_address_space *aspace;
-> -	struct dpu_sw_pipe pipe[PIPES_PER_STAGE];
-> -	struct dpu_sw_pipe_cfg pipe_cfg[PIPES_PER_STAGE];
-> +	struct dpu_sw_pipe pipe[PIPES_PER_PLANE];
-> +	struct dpu_sw_pipe_cfg pipe_cfg[PIPES_PER_PLANE];
->   	enum dpu_stage stage;
->   	bool needs_qos_remap;
->   	bool pending;
-> 
-> -- 
-> 2.34.1
-> 
-
+--=20
+paul-moore.com
