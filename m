@@ -1,184 +1,112 @@
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D15A1FE473;
-	Tue,  4 Mar 2025 11:47:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3CA91FE473;
+	Tue,  4 Mar 2025 11:47:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741088840; cv=none; b=ALB2cAuJH/dSwPsVhA5WL2KzMBigAttxRv0OiMHP2tVwxJAxZdLWE0Qs1T4vIaUfCrRWNbCASQ0TDtKr3U9McpXaLKg5bb9OFZbd3IB7R0RL5lndgjYuM4LdR9MWP/5j70a3tT9e6eWq/CONrOXjnVKt5pwshUwpL50O6ZBGjKI=
+	t=1741088853; cv=none; b=jUlUsvy8O/iRGAO3KgOMoQdlS/6g0rts1oeeEG69B7KNnleeXfww5JzqT1k3VQwF/fDv0JiGrNsUg2uH1aoUIr2RRunEkm0ot0fyG6Bjm+VF+DBr1223HK566S/oc2yprsZtB64a5+/DhyuzdlSzSnAOsO+MsfknMUlU4lwnfGo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741088840; c=relaxed/simple;
-	bh=0vNz5KI663r13YbDYRp/0zNc65hiKkRyDtaZBZqOEAc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mbdkJ8hX/roorqOwc97DnQwxKdJTAE7+k/rGL07Ub1dRBpNVM91M6aWH+Q3Hi7T6KXsFhIR6UhPbRQ+jK+VT+KDPjP0VE3+0XmFtIhmUGfNToYtPaBfzbpkHTb8yq5hI7yXZ7rodH/t53LgQOh9jhfOFpxDalu8y6Cn1s8taYNM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FabJJDm5; arc=none smtp.client-ip=209.85.208.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741088853; c=relaxed/simple;
+	bh=KjKvf+aAe0LbUJJ+AcFO0xtU+lwhK1JudqHmVMPFgrM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=F1CnjGUZKE0lHwRrRVfhE9hnECjN9WSa1MopxvWrpbUMdR7u3OiiVTuI4xJx30cKnEPbzDIcCZXmjNCfgv+62i0U1IYf+tzefGCPETl0Jr5TphsFEHgQO+KKI4N5YUD1gxpoAqKRJv44ahBeYMUULeh8LClMmHF4YsxBkH/HlZk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BYWqU3d1; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FabJJDm5"
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5e4f5cc3172so6437071a12.0;
-        Tue, 04 Mar 2025 03:47:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741088837; x=1741693637; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LdKvt+9tQm2qCrt7oFiiWlWL0il6DJKlMTh/YLfvuGQ=;
-        b=FabJJDm5h/kdO8JCmXoDf4c/irqyU4+IlbNaQEMfBiXpcaxF7cn0D3tu7vv9BOvgRa
-         n49qT/KaA4kznbS0mDiW2t7+LxGBWNYaGqpALSvspNrDoq2bnSKJD0/IDeimfsCXrUa1
-         b+7UqAL215eEHDUxHd/IjISj1vf8qlM7IEwVTkrV+sWhi8qqWv/T7oPvUf5A+0OXlh0A
-         1WGNdRKvg13udsY7BJqS9wKVoandK50WdVnLqnMwVMLDEBzllv7/D8r9e60j8m46EolP
-         p9x1qWbO2z4/SpXyXfQgX1pAFZwJ6ogloj5E20gdZff5T+p/HvndTc63AwJBDypeQ3Ui
-         m0Og==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741088837; x=1741693637;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=LdKvt+9tQm2qCrt7oFiiWlWL0il6DJKlMTh/YLfvuGQ=;
-        b=Z55G09tDOBI2yCI50eTEV9Q2TpbjcoiAmNbg084tkMHMcB8diCr1LCjA2tgmCuHyOI
-         zBrKy7JY22vI572ePfGBlAdaEZRUdBJjHQ+CMjPjqZVfjXxv5fmAaUdvSNhH7tmH0lzQ
-         Sa6C/l2gxaDQWuXGC1OHRUN/jGz1ze9Vg058XOIZZ49Xt/6COjR2M1idMDHEbuAeliPb
-         knR7/5f5vel7Yr0vUxosUmJJRKfTRSspt1XTtDM5SI92Dtu7+3AdUI8ANQY9HfBU6ZNp
-         mkhnZBgQ0Cqr+XJZ3O78cfNuvv/A5C0G37Hto2cnV0HWFJYd5//OFFphvO9HNbEpJA68
-         +t8w==
-X-Forwarded-Encrypted: i=1; AJvYcCViGPX2SdWBDPRiyZ5I5hHKkoMzq4xVkfnMAXOFwiiGiaCKapKqVhKOTBgecOJQNrRZAwedManIz0L/@vger.kernel.org, AJvYcCWAYkDnMAEBQle+RpK8UwJEZGZUBhvjxywv+KM+Oqtvl0UptQTsjuhumOZtmdUU4lldCtnig4Y7h1/yKm2l@vger.kernel.org, AJvYcCXO8tPJUfNEiN0x2TzsAPcmyT7Z1/X6k4wdQnr3ZdvEWg889R+ExBmUq1AzyBfNVc/YmcgOiguL6S9Uyaw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw3BWtkJFY4Zg4qhtHcnOHHFRnYDrhhJvFvqlxLq8ShUGQdLNzO
-	kD0FwgfZQjgzYkW0mMNvGpf71/s1cjT3dINRPDAfI0bX6eBjT879RdTxUe8etjLgV0rbc/btMTV
-	7ttYi1TeC7w9cSPzYpdsVLP0ZlbacfJi91pA=
-X-Gm-Gg: ASbGnctByFn1YqKvDP4IYSbF6CAQPN1M6wrESjxuvuSLNd+hAnFLOJ82s2IdSLHr/FN
-	2FwafVP89LJ+4/gXCrNgg94Bgl0/Q4fXfgqx4iQfejfhAw4eEOfbLpgkxizVh7U8cU1c4DL7exb
-	d6pLMyjqqyUX0WYJoTaSatXTushzk=
-X-Google-Smtp-Source: AGHT+IHeNVeHFv5jhJzVjg4LB/54QEae2d+Sjnh6QpxFmgh5nNZje3z8A3cZOjJzWmEkVq/tu0ZnH8vGN0maF/68lR0=
-X-Received: by 2002:a05:6402:348f:b0:5dc:94ce:42a6 with SMTP id
- 4fb4d7f45d1cf-5e4d6b4b980mr19108890a12.22.1741088836597; Tue, 04 Mar 2025
- 03:47:16 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BYWqU3d1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741088852; x=1772624852;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=KjKvf+aAe0LbUJJ+AcFO0xtU+lwhK1JudqHmVMPFgrM=;
+  b=BYWqU3d1qD74l0jmxPR3ZmqAUhd+mlx293Ai76Bwc2drWlMyaFydtueT
+   Ts173JJjeXHQQ8B4kGcXh5bsFVf+Y6jTPUofkZTShQrTx8aA+97l+5465
+   at6avYPiwV14aH/pKhC0qVz/8Ndep4S1+PqCMK+WgZBKDQOLE38DuTUpT
+   X/LUNjbZyvgBL0gWbWuNNILcLTMv9XJqeTJ0pOFc7IZm4+zAvj/AnRvK0
+   dKXbQ/Jat1nLTHlUhSIUJ8BGFuGgQlaTAqydtoagopHymGuBteNTsllSt
+   22wy4pCSmnzDJnL3bQgTqFc7P3m5nWsO1QGwqw4I3QGS9xaIGLotCjqi1
+   Q==;
+X-CSE-ConnectionGUID: bTYZ85R7ToO3EgTLLZDW6g==
+X-CSE-MsgGUID: C4cpSZqrQk2bp30PJAIZ+g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11362"; a="53396255"
+X-IronPort-AV: E=Sophos;i="6.13,331,1732608000"; 
+   d="scan'208";a="53396255"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2025 03:47:32 -0800
+X-CSE-ConnectionGUID: dxZIAq0zSOGd7OdBED1Zhw==
+X-CSE-MsgGUID: 0+Smm7iLQZuJ76r/kOgHaw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="149282035"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2025 03:47:29 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1tpQkA-0000000H6zR-292d;
+	Tue, 04 Mar 2025 13:47:26 +0200
+Date: Tue, 4 Mar 2025 13:47:26 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Inochi Amaoto <inochiama@gmail.com>
+Cc: Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Jan Dabros <jsd@semihalf.com>, Andi Shyti <andi.shyti@kernel.org>,
+	linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Yixun Lan <dlan@gentoo.org>, Longbin Li <looong.bin@gmail.com>
+Subject: Re: [PATCH] i2c: designware: Add ACPI HID for DWAPB I2C controller
+ on Sophgo SG2044
+Message-ID: <Z8boTsGU-o2MwNZ2@smile.fi.intel.com>
+References: <20250304070212.350155-3-inochiama@gmail.com>
+ <Z8bnX8zcY3yIxh9n@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250121-loongson1-nand-v12-0-53507999de39@gmail.com>
- <20250121-loongson1-nand-v12-2-53507999de39@gmail.com> <87tt972dt0.fsf@bootlin.com>
-In-Reply-To: <87tt972dt0.fsf@bootlin.com>
-From: Keguang Zhang <keguang.zhang@gmail.com>
-Date: Tue, 4 Mar 2025 19:46:39 +0800
-X-Gm-Features: AQ5f1JrHSph0iUHkN40CrLh0rv6H1WjLXzdy0jpcSWywGhbQqeTnmVuEIdx_gPs
-Message-ID: <CAJhJPsUw7YGKfBuFtUirOGuCA9hV6e-wjrL4L9b-5kmuVUW=ow@mail.gmail.com>
-Subject: Re: [PATCH v12 2/2] mtd: rawnand: Add Loongson-1 NAND Controller Driver
-To: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: Keguang Zhang via B4 Relay <devnull+keguang.zhang.gmail.com@kernel.org>, 
-	Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, linux-mtd@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-media@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z8bnX8zcY3yIxh9n@smile.fi.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Hello Miquel,
+On Tue, Mar 04, 2025 at 01:43:27PM +0200, Andy Shevchenko wrote:
+> On Tue, Mar 04, 2025 at 03:02:11PM +0800, Inochi Amaoto wrote:
+> > Add ACPI ID for DWAPB I2C controller on Sophgo SG2044 so
+> > the SoC can enumerated the device via ACPI.
+> 
+> Same as per UART:
+> 
+> ---8<---
+> 
+> This is fake ACPI ID. Please work with a vendor to issue the proper one.
+> Vendor ACPI ID registry has no records on Sophgo:
+> https://uefi.org/ACPI_ID_List?acpi_search=SophGo
+> 
+> NAK.
+> 
+> ---8<---
+> 
+> But, it might be that is already in the process of getting proper ACPI vendor
+> ID, please provide an evidence in such a case.
 
-On Fri, Feb 7, 2025 at 1:17=E2=80=AFAM Miquel Raynal <miquel.raynal@bootlin=
-.com> wrote:
->
-> Hello,
->
-> > +static inline int ls1x_nand_check_op(struct nand_chip *chip, const
-> >  struct nand_operation *op)
->
-> No inline function in a c file.
->
-> > +{
-> > +     struct ls1x_nand_host *host =3D nand_get_controller_data(chip);
-> > +     const struct nand_op_instr *instr1 =3D NULL, *instr2 =3D NULL;
-> > +     int op_id;
-> > +
-> > +     for (op_id =3D 0; op_id < op->ninstrs; op_id++) {
-> > +             const struct nand_op_instr *instr =3D &op->instrs[op_id];
-> > +
-> > +             if (instr->type =3D=3D NAND_OP_CMD_INSTR) {
-> > +                     if (!instr1)
-> > +                             instr1 =3D instr;
-> > +                     else if (!instr2)
-> > +                             instr2 =3D instr;
-> > +                     else
-> > +                             break;
-> > +             }
-> > +     }
-> > +
-> > +     if (!instr1 || !instr2)
-> > +             return 0;
->
-> Is this expected?
->
-> > +
-> > +     if (instr1->ctx.cmd.opcode =3D=3D NAND_CMD_RNDOUT &&
-> > +         instr2->ctx.cmd.opcode =3D=3D NAND_CMD_RNDOUTSTART)
-> > +             return 0;
-> > +
-> > +     if (instr1->ctx.cmd.opcode =3D=3D NAND_CMD_READ0 &&
-> > +         instr2->ctx.cmd.opcode =3D=3D NAND_CMD_READSTART)
-> > +             return 0;
-> > +
-> > +     if (instr1->ctx.cmd.opcode =3D=3D NAND_CMD_ERASE1 &&
-> > +         instr2->ctx.cmd.opcode =3D=3D NAND_CMD_ERASE2)
-> > +             return 0;
-> > +
-> > +     if (instr1->ctx.cmd.opcode =3D=3D NAND_CMD_SEQIN &&
-> > +         instr2->ctx.cmd.opcode =3D=3D NAND_CMD_PAGEPROG)
-> > +             return 0;
-> > +
-> > +     dev_err(host->dev, "unsupported opcode sequence: %x %x",
-> > +             instr1->ctx.cmd.opcode, instr2->ctx.cmd.opcode);
-> > +
-> > +     return -EOPNOTSUPP;
-> > +}
-> > +
-> > +static int ls1x_nand_exec_op(struct nand_chip *chip,
-> > +                          const struct nand_operation *op,
-> > +                          bool check_only)
-> > +{
-> > +     int ret;
-> > +
->
->         if (check_only) ?
+Looking even closer to the ID, it is completely bogus as it uses CAPITAL O
+instead of 0 in device ID part.
 
-Sorry, I'm not sure if I understand correctly.
-nand_op_parser_exec_op() only checks patterns and will skip
-pattern->exec() when check_only =3D true. Therefore,
-ls1x_nand_check_op() should handle all opcode checks in that case, and
-leave check_only =3D false to nand_op_parser_exec_op().
-Then the code will return to:
+> Otherwise drag the representative of the vendor to this email thread to answer
+> the question why the heck they abuse ACPI specification.
 
-if (check_only)
-        return ls1x_nand_check_op(chip, op);
+So, go and work with the vendor to fix their misunderstanding of ACPI and tell
+them that they are free to contact me for the details. I will glad to help them
+to make right things right.
 
-return nand_op_parser_exec_op(chip, &ls1x_nand_op_parser, op, check_only);
+Also read this success story of similar case:
+https://andy-shev.dreamwidth.org/151340.html
+and feel free to share with the vendor.
 
-Am I right?
-
-> > +     ret =3D ls1x_nand_check_op(chip, op);
-> > +     if (ret)
-> > +             return ret;
-> > +
-> > +     return nand_op_parser_exec_op(chip, &ls1x_nand_op_parser, op, che=
-ck_only);
-> > +}
-> > +
-> > +static const char * const nand_ecc_algos[] =3D {
-> > +     [NAND_ECC_ALGO_UNKNOWN] =3D "none",
-> > +     [NAND_ECC_ALGO_HAMMING] =3D "hamming",
-> > +     [NAND_ECC_ALGO_BCH] =3D "bch",
-> > +};
->
-> No way you need this in your driver :-)
->
-> Thanks,
-> Miqu=C3=A8l
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
-
---=20
-Best regards,
-
-Keguang Zhang
