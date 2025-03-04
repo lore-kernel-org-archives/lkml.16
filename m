@@ -1,66 +1,65 @@
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA9E76AAD
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 00:34:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 376E073176
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 00:34:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741048472; cv=none; b=CliaEzvDWy6cw5+zstZAN2c43GQmiHGvJXcSYbLPEn0PhEUprdaaxIjnmplkh0Z6qBHx27frOBpizAx0+x5fvdUtIra4gCLeVc+S1T5kfhbtXSMUyf4OoqhTdPTWn1w0FKjawoyegQVXNtAXCjo2vvpnhsD9E6sRNMdo01sz0fc=
+	t=1741048475; cv=none; b=AhyfzMQO16GvAcQrfHLAeJAAH2GBl6EGhwN1/zv2Zd/cVFcgSTzgcNW2pwZ8i61TXEKdEm5gwIl4SOJOsr2Z39FAagc/8E+j/QagBFpq61nbrz74OQENrir15atFt6iF9z/fUTSRwUlVEmp5oof3v4QhILJ7F4EUmBlCgRiBhFI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741048472; c=relaxed/simple;
-	bh=LpjOQ2tRzlOG8HNUiXbYbnRagyaMkmcP838UEU360XE=;
+	s=arc-20240116; t=1741048475; c=relaxed/simple;
+	bh=/xvou7dFKioksUHeuOvCiwiW+/ZP6NzsNB7blkKp/EA=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=JAsjqVUvE9ahVi73JP6+GZ/4KDKBCUu6uivHwtR624bpjWZqeLmDlrg0Gtkk7CCjIvoPmMR1rtbbkNzcnJMvxMTQkKXDBTNS/XXlMrB4JAsWFgQVmj7O8y/nDi5KDH5ai4cbtT4XWZZ+KaDaZ6KxoI3i+Wwss8xIk+9SALmT1SI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=openvpn.net; spf=pass smtp.mailfrom=openvpn.com; dkim=pass (2048-bit key) header.d=openvpn.net header.i=@openvpn.net header.b=NsmqHn0N; arc=none smtp.client-ip=209.85.221.44
+	 In-Reply-To:To:Cc; b=SYQcDLU+JOf4gtry/jMGxPX89cWgxgMWCyRgriXhuysJhGRLkH2pR1m49hhvPfSrHVg6Yu1CFTMqcte+dpHs/b6lGv3Ohys+KpiEVQi5a7oJSyaShBhHL0JcBejysvHPFHmJXtBPvmR5AJogWgCF7iy//eSEYMM0POJLWZEGAXQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=openvpn.net; spf=pass smtp.mailfrom=openvpn.com; dkim=pass (2048-bit key) header.d=openvpn.net header.i=@openvpn.net header.b=fHmWgz86; arc=none smtp.client-ip=209.85.221.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=openvpn.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=openvpn.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=openvpn.net header.i=@openvpn.net header.b="NsmqHn0N"
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-390fdaf2897so2244460f8f.0
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Mar 2025 16:34:29 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=openvpn.net header.i=@openvpn.net header.b="fHmWgz86"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-38f403edb4eso2917314f8f.3
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Mar 2025 16:34:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=openvpn.net; s=google; t=1741048468; x=1741653268; darn=vger.kernel.org;
+        d=openvpn.net; s=google; t=1741048471; x=1741653271; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=4ySEldS6Rwsy/mZlylLMkoOhEgTMlnQVDP1zMklqIeU=;
-        b=NsmqHn0NvahueBkCtmvGq6Ehb3PGpkZ77VuThJzu5a1Wd8HJrE7icb/qytZVysrhBk
-         zhb6zZR0TXw4pmoYCNlY1JTkpmtVXwhwnExBxxehFFdl1+nbv/qp8UhK02qY7LVQ/63f
-         EwEwFrRFrcb4z7kYBKGpNuUhMAQisOTQ0ZX6x1FNAy8RuTaSFnc+i9XxxaW+YDOdPJ77
-         nBQIK71DnNiNEVBHjS1/TGZz3BcK0W+Jv3Lu+6GLBAOv4jRUsAR5iJISlqvqBg2MjLtB
-         v10c+er/OGYlThCkCqZraXI1QUArajsY5KmBQtY8NWrfU7NlVXtCEl8K1LgraFQvLkfh
-         XEkw==
+        bh=u9I2Z6bR8zx1eteSpHnDKlkOmZth6MLuc4W0LAKMNv8=;
+        b=fHmWgz86WKdrACF8U+n4fOo286DFZ5kvnI5F4bQSURyNPk+c8oNf4OYHMOExGCXnzR
+         ypmp6zuV4L/FxY4ne/yT6Oc89jDvDuSjLlSBrK6pAwyAJRWklbm/9bL47njZka2qLxFA
+         XTJKvCDynygQejmCd5o0BmZC/z/gHjgtwc4taJqmSZKfnV8q4rF+pnZf/745fHwehPzF
+         684Hz1BH+7tAfjHzupzDGYNVglHh8Oc7CCDryvEqVI8qe64v7ggFO+53b2WLKckjQVm1
+         n5xyEqBvY/h/r/OHFjRDIRIHtOH/KKwgwxiirOCY4ii558N7dOf3izEJtWVQ+TQknsbp
+         DyLg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741048468; x=1741653268;
+        d=1e100.net; s=20230601; t=1741048471; x=1741653271;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=4ySEldS6Rwsy/mZlylLMkoOhEgTMlnQVDP1zMklqIeU=;
-        b=IRBKdfr/edA0KH28rDkKp9AB4Z9uHFhmLziIFoFAfo5Cl1Sgue0ft23lIEIptzvzie
-         WIpIf9zh2NqCTekmpK2U4w02opxrXl6FpSTbv2fD0hhkFiEecztoUi5EeJiHxNKPJSqi
-         8SP79IeIFanYcJFadD+/5xefNcGum3AeiVCQ0dxmjFnmLZ6Q0k+r7/6C0bAxj+TYlzeo
-         sFcXoSmPq5OydLPlfs2mayhF+k7Nv7g1HaR9MutG7HodnFUsv3bDBjR7RYQi7iFgP8FN
-         KsETHfFBYZRGIENlWwleubISH5ALxE2TictjeqU2slB5LUuX+E1R5A/GQsupM/DD0JLx
-         N3dg==
-X-Forwarded-Encrypted: i=1; AJvYcCUNGE0newoolAcZxxNANk1v7pcRJHswRdGgbi6+UcCnZVGAfn3T7lQ0jEWpi/KSy377IMHQld3hUiGbcI8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxcFVhOQCq5MQNuXcYMfUEhajyDkK+QXvRssFATZhSJTsZdTHK3
-	gKIp0VGcSkGvbRoBJjMiS1vajjXA7O8vGPWwgmw4uGtH4F4DgGY/ug5ws3Bq6wU=
-X-Gm-Gg: ASbGnct8PCFL2jcAPZEO0xU2k/U9MidOzH1WmJFGYJ/qpl2cbK5hxodVTcdB55ErQ4M
-	5B+Z7d5xbfO8x9ebWyIYX9fqbDVniYj1/MkaCusZAAkjJjjru9v+18bBivIzx3yXCrb2HYgJwhE
-	3LJUnJ/ncVsKuRSC59AJrnixPheN7cu9kPbadbpB04tKs9f3gE1J0uHJmAXB8nIVnByppvGFHEw
-	rehi94PA/95qQB9huooIjhhJFF6b+anDPlxcJ3ckCnkofen5xFGJqR5c6REHrm8/EEFFFVqtDlX
-	fJ0ajVFnbyoWbD/tNW546aFVjN/BrVE8ot1U8oEO+g==
-X-Google-Smtp-Source: AGHT+IHxTJC3JOXNUkwkqFK8GNViVsGWvJOLwoX0cWqU91lOp2zGoOA2iQbRhdSIuk98AItUrdLmWA==
-X-Received: by 2002:a05:6000:1543:b0:390:ef45:1a37 with SMTP id ffacd0b85a97d-390ef451caemr12408568f8f.55.1741048468084;
-        Mon, 03 Mar 2025 16:34:28 -0800 (PST)
+        bh=u9I2Z6bR8zx1eteSpHnDKlkOmZth6MLuc4W0LAKMNv8=;
+        b=gD8rzUcXIeg5vst5CTagDIqXRB2LAcS8+RDA6OciHKdCBpjUG+RW+Mf/mp9ZBjfknG
+         7b5DzorpDlV3d4Y/lGHuXO5qO7aTj8duLmvJk3QtzoENPMZ+fCo0+gzeN1BB0eBEWrZL
+         5TDqHzhFJB5q3b32rBZSBHTnKnqQMLfKBGyVgK82o1TrxbGEmLN7JafmpxhC8F/edcFo
+         jvWfwGwQe98r8UXMdKpo7uiFomQMroxIVnlxwPBpqBJweHCIkWBm3RRm2bpNlkBvLPnj
+         VIDBiCy1VbydMU6sO2CA5RTQ6+RgvPzGJ9rjItX1xEFjG00pjD0GN3beohMTKXV0jjX1
+         VxBg==
+X-Forwarded-Encrypted: i=1; AJvYcCVUPBeAVs4T6DChvhx4enGiZsYgjwAukhJ1uOltvrnur3pnmPie8Y/X1aCb11pCj3mbWdOViLX9IodTAt8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywp73kew9QxXbcA5hu8w4KluM6zo/1CmnpUs94cUIKS0sXkxl2T
+	X9+kFuEDLperTEX+Jpwy1sEJq/YpcjL+YFEPSfJNOgAgav5XbW1TmsH7zbh8BGk=
+X-Gm-Gg: ASbGncuTnJFod9MEcEh89XfDqZBVM8uRQMJAE6zSKng2AeMNcj2IH+PXxeQq9n5jpHu
+	lkSgeUDk246Pa0Dr5k2p5efGsfjj700w3SXBF/PnPKukJNjWYsrsMLIijYBI5CGwzpk54JYmW1c
+	sbYf8GI5+trickxlIy0oZvj60FJfa9g3yBtrORAl2Hj9lGn3vvf6tixdyjg3zHqR1Tw9dL7IbUv
+	QcBWtSe52kVNNTi9A2eVGdZ/YTJtS9lmYUeU3Sgcg/SbL2p1yQHQJn0OXsGzNkEo10werJ8im4A
+	6Mao1ASZq7WUIi/ip13rWVnpKJ7H3gbs6/D6/ZKvVQ==
+X-Google-Smtp-Source: AGHT+IEHKKAGAd1BjILOXEzGWz++BEzbTO6UvfRsSajZRH+vqZG7TH7Oj0Jq8rQNbGDjEUn1i/p1Zg==
+X-Received: by 2002:a05:6000:144d:b0:391:8a3:d964 with SMTP id ffacd0b85a97d-39108a3dcf4mr5634205f8f.41.1741048471577;
+        Mon, 03 Mar 2025 16:34:31 -0800 (PST)
 Received: from [127.0.0.1] ([2001:67c:2fbc:1:49fa:e07e:e2df:d3ba])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-390e47a6d0asm15709265f8f.27.2025.03.03.16.34.26
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-390e47a6d0asm15709265f8f.27.2025.03.03.16.34.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Mar 2025 16:34:27 -0800 (PST)
+        Mon, 03 Mar 2025 16:34:31 -0800 (PST)
 From: Antonio Quartulli <antonio@openvpn.net>
-Date: Tue, 04 Mar 2025 01:33:31 +0100
-Subject: [PATCH v21 01/24] net: introduce OpenVPN Data Channel Offload
- (ovpn)
+Date: Tue, 04 Mar 2025 01:33:34 +0100
+Subject: [PATCH v21 04/24] ovpn: keep carrier always on for MP interfaces
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,7 +68,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250304-b4-ovpn-tmp-v21-1-d3cbb74bb581@openvpn.net>
+Message-Id: <20250304-b4-ovpn-tmp-v21-4-d3cbb74bb581@openvpn.net>
 References: <20250304-b4-ovpn-tmp-v21-0-d3cbb74bb581@openvpn.net>
 In-Reply-To: <20250304-b4-ovpn-tmp-v21-0-d3cbb74bb581@openvpn.net>
 To: netdev@vger.kernel.org, Eric Dumazet <edumazet@google.com>, 
@@ -79,286 +78,52 @@ To: netdev@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
  sd@queasysnail.net, ryazanov.s.a@gmail.com, 
  Andrew Lunn <andrew+netdev@lunn.ch>
 Cc: Simon Horman <horms@kernel.org>, linux-kernel@vger.kernel.org, 
- linux-kselftest@vger.kernel.org, Xiao Liang <shaw.leon@gmail.com>, 
- steffen.klassert@secunet.com, antony.antony@secunet.com
+ linux-kselftest@vger.kernel.org, Xiao Liang <shaw.leon@gmail.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=8900; i=antonio@openvpn.net;
- h=from:subject:message-id; bh=LpjOQ2tRzlOG8HNUiXbYbnRagyaMkmcP838UEU360XE=;
- b=owEBbQGS/pANAwAIAQtw5TqgONWHAcsmYgBnxkqO4N82GoBRWeeWhkcCsEJ9cyLiYL7AsyCUR
- AdQStdwh9mJATMEAAEIAB0WIQSZq9xs+NQS5N5fwPwLcOU6oDjVhwUCZ8ZKjgAKCRALcOU6oDjV
- hxcUB/9Tld55AqcnOeqUhKTZAvyCdNgiw0rN1d/zKU/3qUuXMNUtVifulu87OOURE9hsb+62hgX
- EI4j5iUsapXohlXOBzU6Dv5WgjUhF9iCvJQVUJe3VFtm6gKcmcK50W4HV4kEa835yJAPbutzdc2
- hyChrsR2xZ2g9skGvp4dxKvNN9Y5CUmirhHwPSH2KEbbP4c74BENvzXLqljIaH5UsRGUDSPAT3e
- fW7FuDHlZ/7JoPpJGC0D4xG2f5fQkGJV6Cq8U0aYtFM4wAfuwFe5n/m8qf3HErsBWElpMezFd2Q
- VXwTOHWuAwVgwBPIztcUJ8CSRS0G0+8MI8sR9k+kM85aPU10
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1056; i=antonio@openvpn.net;
+ h=from:subject:message-id; bh=/xvou7dFKioksUHeuOvCiwiW+/ZP6NzsNB7blkKp/EA=;
+ b=owEBbQGS/pANAwAIAQtw5TqgONWHAcsmYgBnxkqOiqtup4/iW4MUmgJD/JzGESLgHkMMvlnBe
+ lZiJJs0QPCJATMEAAEIAB0WIQSZq9xs+NQS5N5fwPwLcOU6oDjVhwUCZ8ZKjgAKCRALcOU6oDjV
+ h9gDB/4saE7fWQx/F1lE8cYzb/KDXp1q0seba4+yMg6PT0W+V1ZYlx0HqgT06ZRO75IVNsRuALt
+ StrqVCU92RA+XYs3L3CxDoK3EC2qzPWrI0JOe/Xp+guzys7+lO1PtAQxpJ/J0zP4IblX/+p6Tnx
+ lKf9gai+bBO3+gUj3m+Adhs4j2tLyssocbxFoJcQap98f9szyztLIw1xgACdSp2kD15I3cyVGhi
+ 0g82Au5aAcVpc5ive9gdWndTmdZ2XZ1Mw/hAYErjupAVsBuAT4FfXXBeOH4NfihTKOEb1ET0Dc0
+ kmfa9++9FN46ekTuaen2mqPqMq+uWt0WFv+RWCC5ZGayfazV
 X-Developer-Key: i=antonio@openvpn.net; a=openpgp;
  fpr=CABDA1282017C267219885C748F0CCB68F59D14C
 
-OpenVPN is a userspace software existing since around 2005 that allows
-users to create secure tunnels.
+An ovpn interface configured in MP mode will keep carrier always
+on and let the user decide when to bring it administratively up and
+down.
 
-So far OpenVPN has implemented all operations in userspace, which
-implies several back and forth between kernel and user land in order to
-process packets (encapsulate/decapsulate, encrypt/decrypt, rerouting..).
+This way a MP node (i.e. a server) will keep its interface always
+up and running, even when no peer is connected.
 
-With `ovpn` we intend to move the fast path (data channel) entirely
-in kernel space and thus improve user measured throughput over the
-tunnel.
-
-`ovpn` is implemented as a simple virtual network device driver, that
-can be manipulated by means of the standard RTNL APIs. A device of kind
-`ovpn` allows only IPv4/6 traffic and can be of type:
-* P2P (peer-to-peer): any packet sent over the interface will be
-  encapsulated and transmitted to the other side (typical OpenVPN
-  client or peer-to-peer behaviour);
-* P2MP (point-to-multipoint): packets sent over the interface are
-  transmitted to peers based on existing routes (typical OpenVPN
-  server behaviour).
-
-After the interface has been created, OpenVPN in userspace can
-configure it using a new Netlink API. Specifically it is possible
-to manage peers and their keys.
-
-The OpenVPN control channel is multiplexed over the same transport
-socket by means of OP codes. Anything that is not DATA_V2 (OpenVPN
-OP code for data traffic) is sent to userspace and handled there.
-This way the `ovpn` codebase is kept as compact as possible while
-focusing on handling data traffic only (fast path).
-
-Any OpenVPN control feature (like cipher negotiation, TLS handshake,
-rekeying, etc.) is still fully handled by the userspace process.
-
-When userspace establishes a new connection with a peer, it first
-performs the handshake and then passes the socket to the `ovpn` kernel
-module, which takes ownership. From this moment on `ovpn` will handle
-data traffic for the new peer.
-When control packets are received on the link, they are forwarded to
-userspace through the same transport socket they were received on, as
-userspace is still listening to them.
-
-Some events (like peer deletion) are sent to a Netlink multicast group.
-
-Although it wasn't easy to convince the community, `ovpn` implements
-only a limited number of the data-channel features supported by the
-userspace program.
-
-Each feature that made it to `ovpn` was attentively vetted to
-avoid carrying too much legacy along with us (and to give a clear cut to
-old and probalby-not-so-useful features).
-
-Notably, only encryption using AEAD ciphers (specifically
-ChaCha20Poly1305 and AES-GCM) was implemented. Supporting any other
-cipher out there was not deemed useful.
-
-Both UDP and TCP sockets are supported.
-
-As explained above, in case of P2MP mode, OpenVPN will use the main system
-routing table to decide which packet goes to which peer. This implies
-that no routing table was re-implemented in the `ovpn` kernel module.
-
-This kernel module can be enabled by selecting the CONFIG_OVPN entry
-in the networking drivers section.
-
-NOTE: this first patch introduces the very basic framework only.
-Features are then added patch by patch, however, although each patch
-will compile and possibly not break at runtime, only after having
-applied the full set it is expected to see the ovpn module fully working.
-
-Cc: steffen.klassert@secunet.com
-Cc: antony.antony@secunet.com
 Signed-off-by: Antonio Quartulli <antonio@openvpn.net>
 ---
- MAINTAINERS               |   8 ++++
- drivers/net/Kconfig       |   8 ++++
- drivers/net/Makefile      |   1 +
- drivers/net/ovpn/Makefile |  10 +++++
- drivers/net/ovpn/main.c   | 112 ++++++++++++++++++++++++++++++++++++++++++++++
- 5 files changed, 139 insertions(+)
+ drivers/net/ovpn/main.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 7078199fcebf2d22bc722f0f7654e98f7b94fa6c..7a96fd7ac9bcf09a81542a69e7d8b9102a31c4e9 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -17749,6 +17749,14 @@ F:	arch/openrisc/
- F:	drivers/irqchip/irq-ompic.c
- F:	drivers/irqchip/irq-or1k-*
- 
-+OPENVPN DATA CHANNEL OFFLOAD
-+M:	Antonio Quartulli <antonio@openvpn.net>
-+L:	openvpn-devel@lists.sourceforge.net (subscribers-only)
-+L:	netdev@vger.kernel.org
-+S:	Supported
-+T:	git https://github.com/OpenVPN/linux-kernel-ovpn.git
-+F:	drivers/net/ovpn/
-+
- OPENVSWITCH
- M:	Pravin B Shelar <pshelar@ovn.org>
- L:	netdev@vger.kernel.org
-diff --git a/drivers/net/Kconfig b/drivers/net/Kconfig
-index 1fd5acdc73c6af0e1a861867039c3624fc618e25..2ace5e27c37ed3bad2e0000775cd172cb6de3225 100644
---- a/drivers/net/Kconfig
-+++ b/drivers/net/Kconfig
-@@ -115,6 +115,14 @@ config WIREGUARD_DEBUG
- 
- 	  Say N here unless you know what you're doing.
- 
-+config OVPN
-+	tristate "OpenVPN data channel offload"
-+	depends on NET && INET
-+	depends on IPV6 || !IPV6
-+	help
-+	  This module enhances the performance of the OpenVPN userspace software
-+	  by offloading the data channel processing to kernelspace.
-+
- config EQUALIZER
- 	tristate "EQL (serial line load balancing) support"
- 	help
-diff --git a/drivers/net/Makefile b/drivers/net/Makefile
-index 13743d0e83b5fde479e9b30ad736be402d880dee..5152b3330e28da7eaec821018a26c973bb33ce0c 100644
---- a/drivers/net/Makefile
-+++ b/drivers/net/Makefile
-@@ -11,6 +11,7 @@ obj-$(CONFIG_IPVLAN) += ipvlan/
- obj-$(CONFIG_IPVTAP) += ipvlan/
- obj-$(CONFIG_DUMMY) += dummy.o
- obj-$(CONFIG_WIREGUARD) += wireguard/
-+obj-$(CONFIG_OVPN) += ovpn/
- obj-$(CONFIG_EQUALIZER) += eql.o
- obj-$(CONFIG_IFB) += ifb.o
- obj-$(CONFIG_MACSEC) += macsec.o
-diff --git a/drivers/net/ovpn/Makefile b/drivers/net/ovpn/Makefile
-new file mode 100644
-index 0000000000000000000000000000000000000000..876800ebaa21a5f758ddf60f637801710437f70e
---- /dev/null
-+++ b/drivers/net/ovpn/Makefile
-@@ -0,0 +1,10 @@
-+# SPDX-License-Identifier: GPL-2.0
-+#
-+# ovpn -- OpenVPN data channel offload in kernel space
-+#
-+# Copyright (C) 2020-2025 OpenVPN, Inc.
-+#
-+# Author:	Antonio Quartulli <antonio@openvpn.net>
-+
-+obj-$(CONFIG_OVPN) := ovpn.o
-+ovpn-y += main.o
 diff --git a/drivers/net/ovpn/main.c b/drivers/net/ovpn/main.c
-new file mode 100644
-index 0000000000000000000000000000000000000000..e816e8fbbfeff1086a55c858b1941b7d82d7aba6
---- /dev/null
+index e71183e6f42cd801861caaec9eb0f6828b64cda9..c5e75108b8da5eabde25426c6d6668fb14491986 100644
+--- a/drivers/net/ovpn/main.c
 +++ b/drivers/net/ovpn/main.c
-@@ -0,0 +1,112 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*  OpenVPN data channel offload
-+ *
-+ *  Copyright (C) 2020-2025 OpenVPN, Inc.
-+ *
-+ *  Author:	Antonio Quartulli <antonio@openvpn.net>
-+ *		James Yonan <james@openvpn.net>
-+ */
+@@ -23,6 +23,15 @@
+ 
+ static int ovpn_net_open(struct net_device *dev)
+ {
++	struct ovpn_priv *ovpn = netdev_priv(dev);
 +
-+#include <linux/module.h>
-+#include <linux/netdevice.h>
-+#include <net/rtnetlink.h>
-+
-+static const struct net_device_ops ovpn_netdev_ops = {
-+};
-+
-+/**
-+ * ovpn_dev_is_valid - check if the netdevice is of type 'ovpn'
-+ * @dev: the interface to check
-+ *
-+ * Return: whether the netdevice is of type 'ovpn'
-+ */
-+static bool ovpn_dev_is_valid(const struct net_device *dev)
-+{
-+	return dev->netdev_ops == &ovpn_netdev_ops;
-+}
-+
-+static int ovpn_newlink(struct net_device *dev,
-+			struct rtnl_newlink_params *params,
-+			struct netlink_ext_ack *extack)
-+{
-+	return -EOPNOTSUPP;
-+}
-+
-+static struct rtnl_link_ops ovpn_link_ops = {
-+	.kind = "ovpn",
-+	.netns_refund = false,
-+	.newlink = ovpn_newlink,
-+	.dellink = unregister_netdevice_queue,
-+};
-+
-+static int ovpn_netdev_notifier_call(struct notifier_block *nb,
-+				     unsigned long state, void *ptr)
-+{
-+	struct net_device *dev = netdev_notifier_info_to_dev(ptr);
-+
-+	if (!ovpn_dev_is_valid(dev))
-+		return NOTIFY_DONE;
-+
-+	switch (state) {
-+	case NETDEV_REGISTER:
-+		/* add device to internal list for later destruction upon
-+		 * unregistration
-+		 */
-+		break;
-+	case NETDEV_UNREGISTER:
-+		/* can be delivered multiple times, so check registered flag,
-+		 * then destroy the interface
-+		 */
-+		break;
-+	case NETDEV_POST_INIT:
-+	case NETDEV_GOING_DOWN:
-+	case NETDEV_DOWN:
-+	case NETDEV_UP:
-+	case NETDEV_PRE_UP:
-+	default:
-+		return NOTIFY_DONE;
-+	}
-+
-+	return NOTIFY_OK;
-+}
-+
-+static struct notifier_block ovpn_netdev_notifier = {
-+	.notifier_call = ovpn_netdev_notifier_call,
-+};
-+
-+static int __init ovpn_init(void)
-+{
-+	int err = register_netdevice_notifier(&ovpn_netdev_notifier);
-+
-+	if (err) {
-+		pr_err("ovpn: can't register netdevice notifier: %d\n", err);
-+		return err;
-+	}
-+
-+	err = rtnl_link_register(&ovpn_link_ops);
-+	if (err) {
-+		pr_err("ovpn: can't register rtnl link ops: %d\n", err);
-+		goto unreg_netdev;
-+	}
-+
-+	return 0;
-+
-+unreg_netdev:
-+	unregister_netdevice_notifier(&ovpn_netdev_notifier);
-+	return err;
-+}
-+
-+static __exit void ovpn_cleanup(void)
-+{
-+	rtnl_link_unregister(&ovpn_link_ops);
-+	unregister_netdevice_notifier(&ovpn_netdev_notifier);
-+
-+	rcu_barrier();
-+}
-+
-+module_init(ovpn_init);
-+module_exit(ovpn_cleanup);
-+
-+MODULE_DESCRIPTION("OpenVPN data channel offload (ovpn)");
-+MODULE_AUTHOR("(C) 2020-2025 OpenVPN, Inc.");
-+MODULE_LICENSE("GPL");
++	/* carrier for P2P interfaces is switched on and off when
++	 * the peer is added or deleted.
++	 *
++	 * in case of P2MP interfaces we just keep the carrier always on
++	 */
++	if (ovpn->mode == OVPN_MODE_MP)
++		netif_carrier_on(dev);
+ 	netif_tx_start_all_queues(dev);
+ 	return 0;
+ }
 
 -- 
 2.45.3
