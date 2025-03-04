@@ -1,95 +1,47 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B459156C76;
-	Tue,  4 Mar 2025 20:51:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23B6C25FA14;
+	Tue,  4 Mar 2025 20:51:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741121469; cv=none; b=GVEOJEC8V8DvhviqgqHOaz28QD2yRMv5qSqnggadeWUdOyV+7H/2NrIdDXDegfQh77BIwryeIBTH3v2Bz5xFaoIp33VCl449ygs7cAcDOTbWR8Km0hl99IhJCA//v8p3sjZXmcisU39yrLdOszu2OrHTF/knmbMCkD4oKhDcqms=
+	t=1741121491; cv=none; b=lq7AO9FZNiUMMdY0SvZjI0cNpy7AfcgBCvtZwAA1Jz+crbA0eZAWfqck9cq9uv5RDGvDTOJbgbGjHycpxumdQ+XjghGlHgsa3T3mmORhnex+LySBB9bPKMfF96pnVaI+Fro9l/D49Mlhk2+7KKGMN8wo1kFc+7nyeyy7gRuwBBo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741121469; c=relaxed/simple;
-	bh=qwR0WM2Lj1dp8M7aE9SPNE8YyQfH/b4OowZFRPmK1Ls=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ZkGoCBa8kf0fJ7fSucLvvN8QmwetfngPF345nZ5RtPwlFwsykWwGUcZ3TiT1zzxA5spSbZg5cYvTGnaQ+YccHDwUhB2cDssZ2EiEOqHkc/ZSGt09+3nfqzCT4Q+HVDSy9WgBPPpPgIkrWLxBvT7c71Jg1ZuC3icVgo4FrVeZByA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YmLENvnF; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741121491; c=relaxed/simple;
+	bh=zEuJDSdpagweCAj4noxSIPPno5NwiCCQ7YIhPEIpUBQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Ht3Pl/kVQyb/ApGJ5hJubBmz3Wv7sFeo1NCl866Ut8ex6iMJXkqAYrPwKzXbMDaZVOJD3Wpq0bimucXctYG3hAOv3DsXpcEFUFcrm3/Qy8KZlGZhlkYOgLkxbm1ICy4GfFOgoueUiWSgI00hIHz0DejPvYn/cInVLWExYEUB7P4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U2gC63my; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YmLENvnF"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-219f8263ae0so114271675ad.0;
-        Tue, 04 Mar 2025 12:51:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741121467; x=1741726267; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tkB0vjNaxNWgx7N1eyQZ6caM4Aq/OnMYxZsyx2vyzm8=;
-        b=YmLENvnF7Mq1hMvjb78ZFQDxKA9ZaNIWdIe8jdJwYbj/56du5Mn/9HT36fItxN21AT
-         ZBBjzQYm/Xqb2IyzBDR2asnWVsDgJzgQEcdP7p06Ag0fjQ4oDIdqRU+OxeGJiuITO8vg
-         7q08tVyJ9eIe7IszEupAZ0sF2oCL3lEoX+aw3wDKTlgBQ7p4IPIeAMB/nZH8T2uAGEYP
-         ub2ictYa/7pnYR18pVC1HN3gMiRGB9jXNvRX6OqlJYmSXYnBuUhnonA/iFQbf116aeL+
-         E8ozEhLirRpu3VdI5fX8m+PqM0nPmo4U5L9j/HWxH3wjq5PibAnqhh1jz+eQb+rN+cq1
-         KzqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741121467; x=1741726267;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=tkB0vjNaxNWgx7N1eyQZ6caM4Aq/OnMYxZsyx2vyzm8=;
-        b=F4ZKk+HaUpXsiMnyDAD+prBYqebHLx+IhraC4fcBqAAc0IVIY/QaUyOzhOgGcz/V0n
-         GgFb/jbJkAGT1q9j37WKMQa49fcJVo9t8qRv7QjNQXb5Hkb374M5A7Gu9RXSIC2HMPh8
-         gpcw9IhGN1ltUkle4JidTGJJfgE3fKnkBMjLlPSRU2bpPzp/GQsMiV9fQKYEkmTI/H/R
-         qNHyvK58NrGAHtfrUPHL2XLnZnFlwrlntsC/SuyT6qMgF56mqP5LUHzNa26j9moihJ6v
-         IU/G3IYMx/rRx4KVjGrKNoSDL288h86rW3NdfCAMhZrDIUaM52lAHOxzrM9n14hUaOz9
-         QLww==
-X-Forwarded-Encrypted: i=1; AJvYcCVM/E7CC1QSqxuXPWPLPIlAbG3SfJsnw8PC03xyia41j0/pMrOIcsX7TTlycW36w+QW1cnURAaq9vlly3o71v0=@vger.kernel.org, AJvYcCXwALfaNiSAFXAWUsUE1iTGqOSSdKk9+aTB9YqT2/gav9enMBI4CiEo9WnaCzi68al5fjQiIfqSo2JlZc0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxPlMePHkB64hf4NoU1rH3w7e/dnbU3Z3CPIyjJcx17z8398NWf
-	bImKg3h96Yv2PKkPSvCJlhOw8SJaoV+xfDbaPNe3CWXbAYJzg8XX
-X-Gm-Gg: ASbGncsLIWdyGC48klUkhhb/tSHHzsfSt1hVJZ0gCnqxvrPh49aJdy+O0zN2/C0uqQQ
-	28T2qzQUFtU06m1W+h1O6p5LxkX9fLVqmKNyDf2OEb9xUlLPJMPzR36IMQxKXitIy83D6TOAElw
-	lIOu6kmO9SgiQYFEA0qy9+M/ghiUhJ/+F0sfvi0ewWwmq6VVbemE+1ttTuWUFVS+B3PkfQ7QK9J
-	81abwDRPfwLQs6fduVlaPp+wRuWhDeTWAY+uJN0DigpfM3Rfbb6GWIbTtL8mtlz6tWgSHPPR5Lm
-	TfvRaYCFFzZOkY70HRzJ2m/mzYoWmchoKB8TM7XvO0f15U+ky/Vx
-X-Google-Smtp-Source: AGHT+IFonFrcymViMosV0MVEu55WkaauxYs/oFVtTq2FLSiz1UNg0h2tfsPDvqw/CD+97zFlzHPOCw==
-X-Received: by 2002:a05:6a00:170c:b0:736:3184:7fe8 with SMTP id d2e1a72fcca58-73682b54a53mr500511b3a.2.1741121467243;
-        Tue, 04 Mar 2025 12:51:07 -0800 (PST)
-Received: from linuxsimoes.. ([187.120.156.44])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-aee7de1f7a6sm10474886a12.30.2025.03.04.12.51.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Mar 2025 12:51:06 -0800 (PST)
-From: Guilherme Giacomo Simoes <trintaeoitogc@gmail.com>
-To: a.hindborg@kernel.org
-Cc: alex.gaynor@gmail.com,
-	aliceryhl@google.com,
-	apw@canonical.com,
-	arnd@arndb.de,
-	aswinunni01@gmail.com,
-	axboe@kernel.dk,
-	benno.lossin@proton.me,
-	bhelgaas@google.com,
-	bjorn3_gh@protonmail.com,
-	boqun.feng@gmail.com,
-	dakr@kernel.org,
-	dwaipayanray1@gmail.com,
-	ethan.twardy@gmail.com,
-	fujita.tomonori@gmail.com,
-	gary@garyguo.net,
-	gregkh@linuxfoundation.org,
-	joe@perches.com,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U2gC63my"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A1FAC4CEE9;
+	Tue,  4 Mar 2025 20:51:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741121490;
+	bh=zEuJDSdpagweCAj4noxSIPPno5NwiCCQ7YIhPEIpUBQ=;
+	h=From:To:Cc:Subject:Date:From;
+	b=U2gC63myUGZYLS5xD7W1svkHmz81fCSW4LR5miX5cTLQp0UZIGQxSuDHxBRuXvkvT
+	 WoTJS+3CM3V3FmemOWYNyjbsZkqmqd8+a1LPUpuSWfkWIJUpQBLlpX3i643MzPdVka
+	 dHME1B3ULfngXsg0Cued2tq964veSWIMy6iJ4aXzLIrdkkJmrvJuXlD7fmaYUQa7of
+	 yOozumFrP2rNSYc9HO8YrNcF/vplYcyhaE8Ds+J6Rg6YfC/BNTLdxsFsa1LKrUC21U
+	 CFDc1o9Yh4SUrDVpdPb7x0UFBsais9a2IU0HgMGoYLE3zVDZx1nCkR3Jyy4rhLbOMG
+	 2gY/rCp3lZjLQ==
+From: Eric Biggers <ebiggers@kernel.org>
+To: x86@kernel.org
+Cc: linux-crypto@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	lukas.bulwahn@gmail.com,
-	ojeda@kernel.org,
-	pbonzini@redhat.com,
-	rust-for-linux@vger.kernel.org,
-	tmgross@umich.edu,
-	trintaeoitogc@gmail.com,
-	walmeida@microsoft.com
-Subject: Re: [PATCH V6 2/2] checkpatch: check format of Vec<String> in modules
-Date: Tue,  4 Mar 2025 17:50:54 -0300
-Message-Id: <20250304205054.207285-1-trintaeoitogc@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <87tt89gfe4.fsf@kernel.org>
-References: <87tt89gfe4.fsf@kernel.org>
+	Ard Biesheuvel <ardb@kernel.org>,
+	Ben Greear <greearb@candelatech.com>,
+	Xiao Liang <shaw.leon@gmail.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	"Jason A . Donenfeld" <Jason@zx2c4.com>
+Subject: [RFC PATCH v2] x86/fpu: make kernel-mode FPU reliably usable in softirqs
+Date: Tue,  4 Mar 2025 12:49:54 -0800
+Message-ID: <20250304204954.3901-1-ebiggers@kernel.org>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -98,35 +50,190 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Andreas Hindborg <a.hindborg@kernel.org> wrote:
-> Does what it says on the label. However, indentation is not checked and
-> the following is passing:
-> 
->     authors: [
->         "John Doe",
->               "Foo Bar"
->     ],
-> 
-You is right, maybe is good doing this?
+From: Eric Biggers <ebiggers@google.com>
 
-> Another thing: I'm wondering if we could have a rust hostprog to do
-> this check, rather than a perl script?
-hostprog like rustfmt?
-About this, Daniel Sedlak say:
-"I think we could fight with the code formatting, because when it comes 
-to the rust macros, rustfmt is often very confused and we could end up 
-with variations like:
+Currently kernel-mode FPU is not always usable in softirq context on
+x86, since softirqs can nest inside a kernel-mode FPU section in task
+context, and nested use of kernel-mode FPU is not supported.
 
-	authors: ["author1", "author2",
-			"author3"]
+Therefore, x86 SIMD-optimized code that can be called in softirq context
+has to sometimes fall back to non-SIMD code.  There are two options for
+the fallback, both of which are pretty terrible:
 
-or
+  (a) Use a scalar fallback.  This can be 10-100x slower than vectorized
+      code because it cannot use specialized instructions like AES, SHA,
+      or carryless multiplication.
 
-	authors: [
-		   "author1",
-		   "author2",
-		  ]
-"
+  (b) Execute the request asynchronously using a kworker.  In other
+      words, use the "crypto SIMD helper" in crypto/simd.c.
 
-Thanks,
-Guilherme
+Currently most of the x86 en/decryption code (skcipher and aead
+algorithms) uses option (b), since this avoids the slow scalar fallback
+and it is easier to wire up.  But option (b) is still really bad for its
+own reasons:
+
+  - Punting the request to a kworker is bad for performance too.
+
+  - It forces the algorithm to be marked as asynchronous
+    (CRYPTO_ALG_ASYNC), preventing it from being used by crypto API
+    users who request a synchronous algorithm.  That's another huge
+    performance problem, which is especially unfortunate for users who
+    don't even do en/decryption in softirq context.
+
+  - It makes all en/decryption operations take a detour through
+    crypto/simd.c.  That involves additional checks and an additional
+    indirect call, which slow down en/decryption for *everyone*.
+
+Fortunately, the skcipher and aead APIs are only usable in task and
+softirq context in the first place.  Thus, if kernel-mode FPU were to be
+reliably usable in softirq context, no fallback would be needed.
+Indeed, other architectures such as arm, arm64, and riscv have already
+done this.
+
+Therefore, this patch updates x86 accordingly to reliably support
+kernel-mode FPU in softirqs.
+
+This is done by just disabling softirq processing in kernel-mode FPU
+sections (when hardirqs are not already disabled), as that prevents the
+nesting that was problematic.
+
+This will delay some softirqs slightly, but only ones that would have
+otherwise been nested inside a task context kernel-mode FPU section.
+Any such softirqs would have taken the slow fallback path before if they
+tried to do any en/decryption.  Now these softirqs will just run at the
+end of the task context kernel-mode FPU section (since local_bh_enable()
+runs pending softirqs) and will no longer take the slow fallback path.
+
+Alternatives considered:
+
+- Make kernel-mode FPU sections fully preemptible.  This would require
+  growing task_struct by another struct fpstate which is more than 2K.
+
+- Make softirqs save/restore the kernel-mode FPU state to a per-CPU
+  struct fpstate when nested use is detected.  Somewhat interesting, but
+  seems unnecessary when a simpler solution exists.
+
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+---
+
+Changed in v2:
+    - Retain support for kernel-mode FPU when hardirqs are disabled
+      (needed for system suspend and resume)
+    - Send the x86 patch as a standalone patch.
+
+ arch/x86/include/asm/fpu/api.h | 17 +++++++----------
+ arch/x86/kernel/fpu/core.c     | 17 +++++++++++++----
+ 2 files changed, 20 insertions(+), 14 deletions(-)
+
+diff --git a/arch/x86/include/asm/fpu/api.h b/arch/x86/include/asm/fpu/api.h
+index f86ad3335529d..f42de5f05e7eb 100644
+--- a/arch/x86/include/asm/fpu/api.h
++++ b/arch/x86/include/asm/fpu/api.h
+@@ -14,14 +14,13 @@
+ 
+ #include <asm/fpu/types.h>
+ 
+ /*
+  * Use kernel_fpu_begin/end() if you intend to use FPU in kernel context. It
+- * disables preemption so be careful if you intend to use it for long periods
+- * of time.
+- * If you intend to use the FPU in irq/softirq you need to check first with
+- * irq_fpu_usable() if it is possible.
++ * disables preemption and softirq processing, so be careful if you intend to
++ * use it for long periods of time.  Kernel-mode FPU cannot be used in all
++ * contexts -- see irq_fpu_usable() for details.
+  */
+ 
+ /* Kernel FPU states to initialize in kernel_fpu_begin_mask() */
+ #define KFPU_387	_BITUL(0)	/* 387 state will be initialized */
+ #define KFPU_MXCSR	_BITUL(1)	/* MXCSR will be initialized */
+@@ -48,25 +47,23 @@ static inline void kernel_fpu_begin(void)
+ 	kernel_fpu_begin_mask(KFPU_387 | KFPU_MXCSR);
+ #endif
+ }
+ 
+ /*
+- * Use fpregs_lock() while editing CPU's FPU registers or fpu->fpstate.
+- * A context switch will (and softirq might) save CPU's FPU registers to
+- * fpu->fpstate.regs and set TIF_NEED_FPU_LOAD leaving CPU's FPU registers in
+- * a random state.
++ * Use fpregs_lock() while editing CPU's FPU registers or fpu->fpstate, or while
++ * using the FPU in kernel mode.  A context switch will (and softirq might) save
++ * CPU's FPU registers to fpu->fpstate.regs and set TIF_NEED_FPU_LOAD leaving
++ * CPU's FPU registers in a random state.
+  *
+  * local_bh_disable() protects against both preemption and soft interrupts
+  * on !RT kernels.
+  *
+  * On RT kernels local_bh_disable() is not sufficient because it only
+  * serializes soft interrupt related sections via a local lock, but stays
+  * preemptible. Disabling preemption is the right choice here as bottom
+  * half processing is always in thread context on RT kernels so it
+  * implicitly prevents bottom half processing as well.
+- *
+- * Disabling preemption also serializes against kernel_fpu_begin().
+  */
+ static inline void fpregs_lock(void)
+ {
+ 	if (!IS_ENABLED(CONFIG_PREEMPT_RT))
+ 		local_bh_disable();
+diff --git a/arch/x86/kernel/fpu/core.c b/arch/x86/kernel/fpu/core.c
+index 1209c7aebb211..f937329d1aa9c 100644
+--- a/arch/x86/kernel/fpu/core.c
++++ b/arch/x86/kernel/fpu/core.c
+@@ -58,13 +58,20 @@ DEFINE_PER_CPU(struct fpu *, fpu_fpregs_owner_ctx);
+ bool irq_fpu_usable(void)
+ {
+ 	if (WARN_ON_ONCE(in_nmi()))
+ 		return false;
+ 
+-	/* In kernel FPU usage already active? */
+-	if (this_cpu_read(in_kernel_fpu))
++	/*
++	 * In kernel FPU usage already active?  This detects any explicitly
++	 * nested usage in task or softirq context, which is unsupported.  It
++	 * also detects attempted usage in a hardirq that has interrupted a
++	 * kernel-mode FPU section.
++	 */
++	if (this_cpu_read(in_kernel_fpu)) {
++		WARN_ON_FPU(!in_hardirq());
+ 		return false;
++	}
+ 
+ 	/*
+ 	 * When not in NMI or hard interrupt context, FPU can be used in:
+ 	 *
+ 	 * - Task context except from within fpregs_lock()'ed critical
+@@ -418,11 +425,12 @@ int fpu_copy_uabi_to_guest_fpstate(struct fpu_guest *gfpu, const void *buf,
+ EXPORT_SYMBOL_GPL(fpu_copy_uabi_to_guest_fpstate);
+ #endif /* CONFIG_KVM */
+ 
+ void kernel_fpu_begin_mask(unsigned int kfpu_mask)
+ {
+-	preempt_disable();
++	if (!irqs_disabled())
++		fpregs_lock();
+ 
+ 	WARN_ON_FPU(!irq_fpu_usable());
+ 	WARN_ON_FPU(this_cpu_read(in_kernel_fpu));
+ 
+ 	this_cpu_write(in_kernel_fpu, true);
+@@ -446,11 +454,12 @@ EXPORT_SYMBOL_GPL(kernel_fpu_begin_mask);
+ void kernel_fpu_end(void)
+ {
+ 	WARN_ON_FPU(!this_cpu_read(in_kernel_fpu));
+ 
+ 	this_cpu_write(in_kernel_fpu, false);
+-	preempt_enable();
++	if (!irqs_disabled())
++		fpregs_unlock();
+ }
+ EXPORT_SYMBOL_GPL(kernel_fpu_end);
+ 
+ /*
+  * Sync the FPU register state to current's memory register state when the
+
+base-commit: 0ad2507d5d93f39619fc42372c347d6006b64319
+-- 
+2.48.1
+
