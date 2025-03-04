@@ -1,168 +1,189 @@
-Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com [209.85.128.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 035702E3369;
-	Tue,  4 Mar 2025 22:22:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7499B3597E;
+	Tue,  4 Mar 2025 22:23:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741126977; cv=none; b=e6Q1Be11dtckQuTIjM8VdRGsfdH4yALjzHCkAg3Up4l4DqftSOv50ILnQ/ZevIneOSIH04oNfX6emzS45mvSyhRarTUSCMlduPIXjmNqObRi/xxeODFcsaTM6EpoUq/uDS5bkdAp6+FSRDCiazCjIBqlRut5miJLtrU5FkOwtRo=
+	t=1741126987; cv=none; b=YvNnIoaI+gxJOECno4Axw3KNSqkLOgzgD3TsgL3hr4199tCiSYlx+pRF/CIHlUrWziDy/cj+6JFlJrwQ4aGRGE/4ExT8bWhZ7qrOKhVlHCXmOTAJZOhW1QUb47RZC/GWh1jP13VhQGXVFQ5/KDkygG/+k13/kW75/F1HSvtHpi8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741126977; c=relaxed/simple;
-	bh=xLQsRHJKKJbF7MCv+1vlUz+sgpip327+ecWrE/qhDbE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=STV/W4Mxea44f0mAi+PSmAEHoz396/sSsfWBaKtxqRJhWMtY8+8mdtRbxRTj1XYPcWf3bettn8AeNVKneCC9I8Q88S58zytB5J4s3Bds0/MsoiPTycRW9hYqXVohq+Hn8F6DqMRJTbVE6hfZr1Gq2GhYgbM7MXeD7XIyahHePek=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZDZiEpVY; arc=none smtp.client-ip=209.85.128.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741126987; c=relaxed/simple;
+	bh=EDaTlL8s7EFTKV867gVON4AEWAHqBXSc9SoE/eEN/qU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KKX0thEYP7kWKhiO+dL3bwuYzlsDmyWqtF/HEgBfhUz9TIxoRg7EiItteTfhDOD/GP2eReaBDb2x3QfmWILO9w+DtlEo00TQau/3Sacfk81fJ5pjfZxSjTyhUhSJC/jgXxjm+m8VkOjLi2aDduvONYpcYxlL8kUTvBkaXK9nxr4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QXlroVFN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZDZiEpVY"
-Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-6fd47dfe76cso46003457b3.3;
-        Tue, 04 Mar 2025 14:22:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741126975; x=1741731775; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=C/dqG0WQcNNVPDMrdPEeD/M/SnPUgM/AMQtXMXaVRVI=;
-        b=ZDZiEpVYcEArcYwGgrT2JrWgS8r/7bYUlwWjbsQ5AsF2hE8c4EIBPH8OUMgvNEfcyM
-         QSELRmkyaFUEcw9GuwhEjU1aJEWf4q426HxyQQg9tuhxZhEKyci7r0zbWFHh3CV2yZSb
-         tCAXtmUs+aUrafcl7mn/+of+eR3xvFWyMePQACDpSVFqMSutVDAarJJ4FOwhanxBG2yG
-         iyEQ1jkKWxvWnjnLPuWVHKGm5EMkRSWqX9Ql5VgVVceyJ46l0tnLL27YV2mF1MiZAwLQ
-         GuDkFTAtpfROoGcU2OEwHvJfPzpaYzBdCjboBmnUKhPKzjOxuFd/J8JRVIdmyXXsgbGv
-         SN2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741126975; x=1741731775;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=C/dqG0WQcNNVPDMrdPEeD/M/SnPUgM/AMQtXMXaVRVI=;
-        b=gblMDjmXwXXO3OUKPzLVQ36aws8uR54idNyfAIyzjoRRULRE+mmTTW1O/l1Qp+nr+e
-         bbosh9DvoIWp90uOAhivNMZsgab/6tqJTBRFBXbW8pXx9RmQshWAytJcmPQy+Rkdmaw2
-         e7ZuARxkgBoOokqfdujV5aBeqlnlo1RYUlcvwnlC9fq/WpO698D8vd4hFHtF4Lz+L7Wq
-         WdkZI43fWwNbGyrr/7yNKFFxypGDqGMsMB8NuHRVkpKytN1+q23JczhKKXS39TdUPHMX
-         uxxaNYcWsPLbDLfJnuiQd9tlb7kWOgrYumkyEzTIcLLJbJaOh+f64yLRAGVnydaA4rFt
-         PDKg==
-X-Forwarded-Encrypted: i=1; AJvYcCUJqotLecBJpUUAhoYSRkdUeKZfCIzBROgiHudedYFGh+JnDm6uY0UjB036kniMbr9UTKH3mAjzm1KP@vger.kernel.org, AJvYcCW7iPT16jBFZslG1Bp1cjCFYxSdwzbYl6EVFSSbV3oRbkVkNqx0WNsQXkj1b3YdZL8AGg3HxH1ECWY3+vU6@vger.kernel.org
-X-Gm-Message-State: AOJu0YyQMj6+ifqatMLNmFR/x5cI560Mx38eZgJp/4DfKF1C9LPFEkfD
-	yG5ur/mXvtlgMhVQlVpTAjgJa6X4YkHM/76x66p4/+UQda6hRgvA
-X-Gm-Gg: ASbGncu9ybGEaOsjmqk7VAd3QqL4K07eEfR3JY4mjzf5mW1BjJuBiQU8y3ejEEnWvl9
-	IMQ/ngj1EWiR3hgYh90Qb6R1+xCPGUi1negHaQhthTEYF9A+aJrb2nWAPtFtrNDc8zD6RviYoO4
-	MNG8cG8k3jAU1RKJcRurUAL2K+KfXH5NzZkwHYMZ9LAzD/0WDLFVLzJtSTOUprdFJDG+HLSRjgF
-	TI0DnkB//CEc36Z/A7A5zrnMURlOEVLfiTWwfonMZasFyMTc54LbkW1RvwRPI2mHDHxP7mh7YwT
-	Br9UweiCNC/35x86AwwTYbTbSRpuSYoepgVKsfsA6nxX
-X-Google-Smtp-Source: AGHT+IHbOkZ4mJr426bT+N9RXY/lw+J15pEjEGFgtsk0V0Mv3ydbsN22C3hyZ3WsuaYehFxZ8wZ/7Q==
-X-Received: by 2002:a05:690c:74c6:b0:6fd:a12f:2702 with SMTP id 00721157ae682-6fda3094e44mr15281367b3.25.1741126974853;
-        Tue, 04 Mar 2025 14:22:54 -0800 (PST)
-Received: from localhost ([2a03:2880:25ff:7c::])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-6fd6a1a1733sm16377917b3.48.2025.03.04.14.22.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Mar 2025 14:22:54 -0800 (PST)
-From: Joshua Hahn <joshua.hahnjy@gmail.com>
-To: Joshua Hahn <joshua.hahnjy@gmail.com>
-Cc: Yunjeong Mun <yunjeong.mun@sk.com>,
-	honggyu.kim@sk.com,
-	gregkh@linuxfoundation.org,
-	rakie.kim@sk.com,
-	akpm@linux-foundation.org,
-	rafael@kernel.org,
-	lenb@kernel.org,
-	dan.j.williams@intel.com,
-	Jonathan.Cameron@huawei.com,
-	dave.jiang@intel.com,
-	horen.chuang@linux.dev,
-	hannes@cmpxchg.org,
-	linux-kernel@vger.kernel.org,
-	linux-acpi@vger.kernel.org,
-	linux-mm@kvack.org,
-	kernel-team@meta.com,
-	kernel_team@skhynix.com
-Subject: Re: [PATCH 1/2 v6] mm/mempolicy: Weighted Interleave Auto-tuning
-Date: Tue,  4 Mar 2025 14:22:51 -0800
-Message-ID: <20250304222252.3805581-1-joshua.hahnjy@gmail.com>
-X-Mailer: git-send-email 2.43.5
-In-Reply-To: <20250304215612.3668139-1-joshua.hahnjy@gmail.com>
-References: 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QXlroVFN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B86B7C4CEE5;
+	Tue,  4 Mar 2025 22:23:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741126987;
+	bh=EDaTlL8s7EFTKV867gVON4AEWAHqBXSc9SoE/eEN/qU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=QXlroVFNmbNpIfl+8c8IoweltYy9n1VHi8GYmTF3jMAjnINtqhc/TBQwWJCOHwj5q
+	 TZb5JTA4lXEYIUO9bVrLimmEN7vbT0T5nfXxb9hQb9tEi0mAwBlgIUYs2yLXWvcmf7
+	 C65ZP+HV3CQCW/CZAyeopoFnAbk84kqgJKU+PU4IJFTYc06oOocfGSr1AounpZ6tlW
+	 eHROW6ZlbxDOhsPL7tV/PwSKu5Y13b+QNuDMBNzARuSXo6HrOCM8F0ZJ7VkIAkhk09
+	 2tj1exuNOTBxF6p6GDNwxPA2ShDRQfndbGom1nCDpSpPnYNjjvJWir37zXTXem/bG0
+	 SmGzVBGlTbQrw==
+Date: Wed, 5 Mar 2025 00:23:02 +0200
+From: Jarkko Sakkinen <jarkko@kernel.org>
+To: steven chen <chenste@linux.microsoft.com>
+Cc: zohar@linux.ibm.com, stefanb@linux.ibm.com,
+	roberto.sassu@huaweicloud.com, roberto.sassu@huawei.com,
+	eric.snowberg@oracle.com, ebiederm@xmission.com,
+	paul@paul-moore.com, code@tyhicks.com, bauermann@kolabnow.com,
+	linux-integrity@vger.kernel.org, kexec@lists.infradead.org,
+	linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org,
+	madvenka@linux.microsoft.com, nramas@linux.microsoft.com,
+	James.Bottomley@hansenpartnership.com, bhe@redhat.com,
+	vgoyal@redhat.com, dyoung@redhat.com
+Subject: Re: [PATCH v9 2/7] kexec: define functions to map and unmap segments
+Message-ID: <Z8d9RvRWPOADOgsx@kernel.org>
+References: <20250304190351.96975-1-chenste@linux.microsoft.com>
+ <20250304190351.96975-3-chenste@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250304190351.96975-3-chenste@linux.microsoft.com>
 
-Hi Yunjeong, sorry for the noise, but I have discovered another potential
-concern that your patch introduces, which I have explained below. 
+On Tue, Mar 04, 2025 at 11:03:46AM -0800, steven chen wrote:
+> The content of memory segments carried over to the new kernel during the 
+> kexec systemcall can be changed at kexec 'execute' stage, but the size of
+> the memory segments cannot be changed at kexec 'execute' stage.
+> 
+> To copy IMA measurement logs during the kexec operation, IMA needs to 
+> allocate memory at the kexec 'load' stage and map the segments to the 
+> kimage structure. The mapped address will then be used to copy IMA 
+> measurements during the kexec 'execute' stage.
+> 
+> Currently, the mechanism to map and unmap segments to the kimage 
+> structure is not available to subsystems outside of kexec.
 
-On Tue,  4 Mar 2025 13:56:11 -0800 Joshua Hahn <joshua.hahnjy@gmail.com> wrote:
+How does IMA work with kexec without having this? Just interested
+(and confused). 
 
-> On Fri, 28 Feb 2025 15:39:55 +0900 Yunjeong Mun <yunjeong.mun@sk.com> wrote:
 > 
-> Hi Yunjeong,
+> Implement kimage_map_segment() to enable IMA to map measurement log list to 
+> the kimage structure during kexec 'load' stage.  This function takes a kimage 
+> pointer, a memory address, and a size, then gathers the
+> source pages within the specified address range, creates an array of page
+> pointers, and maps these to a contiguous virtual address range.  The
+> function returns the start virtual address of this range if successful, or NULL on
+> failure.
 > 
-> While applying your patch, I realized that it re-introduces a build error
-> that was fixed in v6, which I am noting below. 
+> Implement kimage_unmap_segment() for unmapping segments
+> using vunmap().
 > 
-> > Hi, Joshua. 
+> From: Tushar Sugandhi <tusharsu@linux.microsoft.com>
+> Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
+> Cc: Eric Biederman <ebiederm@xmission.com>
+> Cc: Baoquan He <bhe@redhat.com> 
+> Cc: Vivek Goyal <vgoyal@redhat.com>
+> Cc: Dave Young <dyoung@redhat.com>
+> Signed-off-by: steven chen <chenste@linux.microsoft.com>
+> ---
+>  include/linux/kexec.h |  6 +++++
+>  kernel/kexec_core.c   | 54 +++++++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 60 insertions(+)
 > 
-> [...snip...]
+> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+> index f0e9f8eda7a3..7d6b12f8b8d0 100644
+> --- a/include/linux/kexec.h
+> +++ b/include/linux/kexec.h
+> @@ -467,13 +467,19 @@ extern bool kexec_file_dbg_print;
+>  #define kexec_dprintk(fmt, arg...) \
+>          do { if (kexec_file_dbg_print) pr_info(fmt, ##arg); } while (0)
 >  
-> > In my understanding, new_iw[nid] values are scaled twice, first to 100 and then to a 
-> > weightines value of 32. I think this scaling can be done just once, directly 
-> > to weightness value as follows:
-> > 
-> > diff --git a/mm/mempolicy.c b/mm/mempolicy.c
-> > index 50cbb7c047fa..65a7e2baf161 100644
-> > --- a/mm/mempolicy.c
-> > +++ b/mm/mempolicy.c
-> > @@ -176,47 +176,22 @@ static u8 get_il_weight(int node)
-> >  static void reduce_interleave_weights(unsigned int *bw, u8 *new_iw)
-> >  {
-> > 	u64 sum_bw = 0;
-> > -	unsigned int cast_sum_bw, sum_iw = 0;
-> > -	unsigned int scaling_factor = 1, iw_gcd = 1;
-> > +	unsigned int scaling_factor = 1, iw_gcd = 0;
-> > 	int nid;
-> > 
-> > 	/* Recalculate the bandwidth distribution given the new info */
-> > 	for_each_node_state(nid, N_MEMORY)
-> > 		sum_bw += bw[nid];
-> > 
-> > -       for (nid = 0; nid < nr_node_ids; nid++) {
-> >  			[...snip...]
-			^^^^^^^^^^^^
-When I was originally writing the response, I missed reviewing the contents
-inside this snipped section, which looks like this:
-		if (!node_state(nid, N_MEMORY)) {
-			new_iw[nid] = 1;
-			continue;
-		}
-I introduced this check in v6 because without this, we end up with the
-possibility of memoryless nodes having a 0 in the table, which can lead to some
-problems down the line (e.g. div by 0 in alloc_pages_bulk_weighted_interleave).
-
-Respectfully, I would prefer to write my own version that takes your
-suggestion, as opposed to applying this patch directly on top of mine so that
-we do not introduce the build error or the potential div0. However, v7 will
-include your suggestion, so it will go through only one loop as opposed to two.
-
-Thank you for your feedback again. I hope you have a great day!
-Joshua
-
-> > -		/*
-> > -		 * Try not to perform 64-bit division.
-> > -		 * If sum_bw < scaling_factor, then sum_bw < U32_MAX.
-> > -		 * If sum_bw > scaling_factor, then bw[nid] is less than
-> > -		 * 1% of the total bandwidth. Round up to 1%.
-> > -		 */
-> >  			[...snip...]
+> +extern void *kimage_map_segment(struct kimage *image, unsigned long addr, unsigned long size);
+> +extern void kimage_unmap_segment(void *buffer);
+>  #else /* !CONFIG_KEXEC_CORE */
+>  struct pt_regs;
+>  struct task_struct;
+> +struct kimage;
+>  static inline void __crash_kexec(struct pt_regs *regs) { }
+>  static inline void crash_kexec(struct pt_regs *regs) { }
+>  static inline int kexec_should_crash(struct task_struct *p) { return 0; }
+>  static inline int kexec_crash_loaded(void) { return 0; }
+> +static inline void *kimage_map_segment(struct kimage *image, unsigned long addr, unsigned long size)
+> +{ return NULL; }
+> +static inline void kimage_unmap_segment(void *buffer) { }
+>  #define kexec_in_progress false
+>  #endif /* CONFIG_KEXEC_CORE */
+>  
+> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+> index c0bdc1686154..63e4d16b6023 100644
+> --- a/kernel/kexec_core.c
+> +++ b/kernel/kexec_core.c
+> @@ -867,6 +867,60 @@ int kimage_load_segment(struct kimage *image,
+>  	return result;
+>  }
+>  
+> +void *kimage_map_segment(struct kimage *image,
+> +			 unsigned long addr, unsigned long size)
+> +{
+> +	unsigned long eaddr = addr + size;
+> +	unsigned long src_page_addr, dest_page_addr;
+> +	unsigned int npages;
+> +	struct page **src_pages;
+> +	int i;
+> +	kimage_entry_t *ptr, entry;
+> +	void *vaddr = NULL;
+> +
+> +	/*
+> +	 * Collect the source pages and map them in a contiguous VA range.
+> +	 */
+> +	npages = PFN_UP(eaddr) - PFN_DOWN(addr);
+> +	src_pages = kmalloc_array(npages, sizeof(*src_pages), GFP_KERNEL);
+> +	if (!src_pages) {
+> +		pr_err("Could not allocate ima pages array.\n");
+> +		return NULL;
+> +	}
+> +
+> +	i = 0;
+> +	for_each_kimage_entry(image, ptr, entry) {
+> +		if (entry & IND_DESTINATION) {
+> +			dest_page_addr = entry & PAGE_MASK;
+> +		} else if (entry & IND_SOURCE) {
+> +			if (dest_page_addr >= addr && dest_page_addr < eaddr) {
+> +				src_page_addr = entry & PAGE_MASK;
+> +				src_pages[i++] =
+> +					virt_to_page(__va(src_page_addr));
+> +				if (i == npages)
+> +					break;
+> +				dest_page_addr += PAGE_SIZE;
+> +			}
+> +		}
+> +	}
+> +
+> +	/* Sanity check. */
+> +	WARN_ON(i < npages);
+> +
+> +	vaddr = vmap(src_pages, npages, VM_MAP, PAGE_KERNEL);
+> +	kfree(src_pages);
+> +
+> +	if (!vaddr)
+> +		pr_err("Could not map ima buffer.\n");
+> +
+> +	return vaddr;
+> +}
+> +
+> +void kimage_unmap_segment(void *segment_buffer)
+> +{
+> +	vunmap(segment_buffer);
+> +}
+> +
+>  struct kexec_load_limit {
+>  	/* Mutex protects the limit count. */
+>  	struct mutex mutex;
+> -- 
+> 2.25.1
 > 
-> We cannot remove this part here, since this is what allows us to divide
-> in the next for loop below. sum_bw is a u64, so performing division
-> by this value will create a build error for 32-bit machines. I've gone and
-> re-added this comment and parts to the bottom part; the logic should not
-> change at all from the patch that you proposed (except for the build error).
+> 
 
-[...snip...]
-
-Sent using hkml (https://github.com/sjp38/hackermail)
-
+BR, Jarkko
