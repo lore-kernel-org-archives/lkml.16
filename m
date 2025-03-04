@@ -1,23 +1,23 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3C621FCCEA;
-	Tue,  4 Mar 2025 10:36:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D34381FE44D;
+	Tue,  4 Mar 2025 10:36:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741084586; cv=none; b=I579FwKxLrEc9cFgRtLlRvBIW2Gvfgy6DMt3ooq0riEUIEW+Lar10YCCdn/jIR5EbngRkgTnoD7jxX9aU0tn+4hv1JX14Jq4NN5lpdcazMveGW7tPHKIthCzKzYwXIa+Z5y8QnMeoEeBnkQ8uBRasdiX5ErAbIUzpv/dK5UQq/g=
+	t=1741084587; cv=none; b=VoUzyFfEE0CDVNCugo66VUisyv98GKmqWZ4MyuQYWEuSQ1wVT1Uwb+YvLgg0i+BvBpZQ2J2x0XV7Cpy7pgOmEMPbymJoNpkW87qSQPgueRN5vpEkjzRHiXBjl6yEe2kGlD22ZWSLDeA3ASY4g2/8JlI3tmVrjYwKvx9iJ5XxEKo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741084586; c=relaxed/simple;
-	bh=mxbdDeewCT6pQKs+EIFqwnBcSl984oxCPHdsLY7bFZ4=;
+	s=arc-20240116; t=1741084587; c=relaxed/simple;
+	bh=6PYCH9VmILr4x2bHoXYgSrMai4wuG2N7QnX80DYeFf4=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=Yw39V1v0pSSk4EwkJBcZYhaunxuTck1z8pSEhv+1RXPPhIIQW+vNN2IqhcTWmGYazGBBlRtI8Zvqr9aJ9peGxfaQxn/PVDVMlBn/Guu97TtFij3rgZCae40DoTnyLOHDjpQTujxNSOKYCXJlvIxWn1krV3axpc2tDKTKSp7VaDI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=C3LWQNA0; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=+Tc5zTzW; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=ryc4OXjBubY5oPsAmuJ93lk90xANVYXodHNS9EkgtJC8KVoSrGdF7NPUe0ds+g2h80rEVoBTCaIUfvwoOzzPtmB1KVdfUe4JRlqkBvyBx9Nv9HZTg/DqSvL4uPaM2MCyPv0/VRr3Vn/Ub8bC+TIRFwDZw8kCOFDYc4JbMJTe9+I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=YuYF3I3G; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=AGVSzqgm; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="C3LWQNA0";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="+Tc5zTzW"
-Date: Tue, 04 Mar 2025 10:36:22 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="YuYF3I3G";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="AGVSzqgm"
+Date: Tue, 04 Mar 2025 10:36:23 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020; t=1741084583;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
@@ -25,12 +25,12 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=7EIDNCoCt1pu4jEY1GwWKdSzRixAh5VsQb7UZMsaskg=;
-	b=C3LWQNA0Ppz+6WtlHsn4+KlobGLmU7mvoyFgB+U8PmgSzCSAVr+tnLKGN4E08yY2WBhIdm
-	9H6pru1aV+gFK45itusyQ7XjZ6tXx6dQ83ZrrHm8Hhe/vkc0CVEy8fx2sV2RRSigvzAOJu
-	++1Y02+4g/f/zSbYrG/6R8iiKPP4atUoEDzLTuduKWYyTc053i+ZSpTGGX/5DF0rrnwZO5
-	7qeiRADRuXK/Oi+ZWJ6WhujUcY9nVfUVy82tJNJq+KRsm4sGGL3lLaGGskNkcyLmFZrkIr
-	4gAcH4AsiyxjWvDGkGaTydDkJtFnBfYc1IluTC9YDvlYhRT0wyO1DhvQ42+r+A==
+	bh=R4n+rPMtmOJmPFJoJ71Tm7LI4YAS6d9A7F1SujUs2G4=;
+	b=YuYF3I3G7lW4eKP5QXzwZKFWWOujf4SBcfwxv9gUSNQ0ihyDrzWSJ7kUFHA/i73GBRKYgr
+	vggLnrL/XOwyBiVAYCJFmhd4cEX4Kw15By3CrN8ynizQcbzX9VKrx3TKoZh2CFc4+ba//N
+	G+dv9vxu+xqaEaIOkka6Mn30lK59bTaqb9n9gN05m/OwSn52lsz0SOdFr9v7kRTRAJr6ex
+	LlaUp6busLQe8ckcVwqR3kQtaubcAr4BjShlSNTkAE8ximNBCmujPPGEramxcrKy7Vxpgi
+	D5eb2dv1niEw9hc5cX81Q+76K74L/RYczh9dRSpmzZg38YimL00OdiiS478Tag==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020e; t=1741084583;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
@@ -38,30 +38,29 @@ DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=7EIDNCoCt1pu4jEY1GwWKdSzRixAh5VsQb7UZMsaskg=;
-	b=+Tc5zTzWDRGWvFPVg00KJ9oGe/l25NznrbH2ZxCXlvuvPRQGB8en/NZereO1SjsyZmap7B
-	RtiEV2pgRvNZdiCw==
+	bh=R4n+rPMtmOJmPFJoJ71Tm7LI4YAS6d9A7F1SujUs2G4=;
+	b=AGVSzqgmfvy+UfVxyFIoIdt/8X4s+xHKUMe1dVL17ozYKtFBKOQ+Wv16oktJ1Lxm0hi17m
+	c+fAyBok1uneA8Bg==
 From: "tip-bot2 for Uros Bizjak" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/asm] x86/irq/32: Add ASM_CALL_CONSTRAINT to inline asm
- using CALL_NOSPEC
+Subject: [tip: x86/asm] x86/irq/32: Add missing clobber to inline asm
 Cc: Uros Bizjak <ubizjak@gmail.com>, Ingo Molnar <mingo@kernel.org>,
  Andy Lutomirski <luto@kernel.org>, Brian Gerst <brgerst@gmail.com>,
  "H. Peter Anvin" <hpa@zytor.com>,
  Linus Torvalds <torvalds@linux-foundation.org>,
  Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
  linux-kernel@vger.kernel.org
-In-Reply-To: <20250303155446.112769-3-ubizjak@gmail.com>
-References: <20250303155446.112769-3-ubizjak@gmail.com>
+In-Reply-To: <20250303155446.112769-2-ubizjak@gmail.com>
+References: <20250303155446.112769-2-ubizjak@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174108458252.14745.11313160664473980337.tip-bot2@tip-bot2>
+Message-ID: <174108458303.14745.14098610716192022436.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -71,19 +70,16 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the x86/asm branch of tip:
 
-Commit-ID:     4d93ca6d7e92584c559d8687ac9eef15251bb97b
-Gitweb:        https://git.kernel.org/tip/4d93ca6d7e92584c559d8687ac9eef15251bb97b
+Commit-ID:     40d9cd9bb08cbe36900efd1600e2228698d52b4a
+Gitweb:        https://git.kernel.org/tip/40d9cd9bb08cbe36900efd1600e2228698d52b4a
 Author:        Uros Bizjak <ubizjak@gmail.com>
-AuthorDate:    Mon, 03 Mar 2025 16:54:23 +01:00
+AuthorDate:    Mon, 03 Mar 2025 16:54:22 +01:00
 Committer:     Ingo Molnar <mingo@kernel.org>
 CommitterDate: Tue, 04 Mar 2025 11:21:40 +01:00
 
-x86/irq/32: Add ASM_CALL_CONSTRAINT to inline asm using CALL_NOSPEC
+x86/irq/32: Add missing clobber to inline asm
 
-This constraint should be used for any inline asm which has a CALL
-instruction, otherwise the compiler may schedule the asm before the
-frame pointer gets set up by the containing function, causing objtool
-to print a "call without frame pointer save/setup" warning.
+i386 ABI declares %edx as a call-clobbered register.
 
 Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
@@ -92,28 +88,21 @@ Cc: Brian Gerst <brgerst@gmail.com>
 Cc: H. Peter Anvin <hpa@zytor.com>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: https://lore.kernel.org/r/20250303155446.112769-3-ubizjak@gmail.com
+Link: https://lore.kernel.org/r/20250303155446.112769-2-ubizjak@gmail.com
 ---
- arch/x86/kernel/irq_32.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/x86/kernel/irq_32.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/arch/x86/kernel/irq_32.c b/arch/x86/kernel/irq_32.c
-index eab4580..f351fa1 100644
+index c4719c4..eab4580 100644
 --- a/arch/x86/kernel/irq_32.c
 +++ b/arch/x86/kernel/irq_32.c
-@@ -59,6 +59,7 @@ static void call_on_stack(void *func, void *stack)
- 		     "movl %[sp], %%esp"
- 		     : [sp] "+b" (stack)
- 		     : [thunk_target] "D" (func)
-+		       COMMA(ASM_CALL_CONSTRAINT)
- 		     : "memory", "cc", "edx", "ecx", "eax");
- }
- 
-@@ -98,6 +99,7 @@ static inline int execute_on_irq_stack(int overflow, struct irq_desc *desc)
+@@ -98,7 +98,7 @@ static inline int execute_on_irq_stack(int overflow, struct irq_desc *desc)
  		     "movl %[sp], %%esp"
  		     : "+a" (desc), [sp] "+b" (isp)
  		     : [thunk_target] "D" (desc->handle_irq)
-+		       COMMA(ASM_CALL_CONSTRAINT)
- 		     : "memory", "cc", "edx", "ecx");
+-		     : "memory", "cc", "ecx");
++		     : "memory", "cc", "edx", "ecx");
  	return 1;
  }
+ 
