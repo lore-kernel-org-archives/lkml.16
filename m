@@ -1,168 +1,223 @@
-Received: from pidgin.makrotopia.org (pidgin.makrotopia.org [185.142.180.65])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com [209.85.128.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B54BB28152A;
-	Tue,  4 Mar 2025 17:30:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.142.180.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B56828D05E
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 17:30:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741109413; cv=none; b=UPjCx1bB01sPBB0UDhcnz31CdJ0APWCFnF7TjWtQbLrFoM9X8aSm0h0I2qTGZAw/DXspL0+YVNY4Dx1bEocRDsyClV2oj6W+/HqR9uGGilAcZ94OzJHrmzG07TgLPq1kcEa5SIHIWa2qqi1QiZjCVDLN7LuqMwHH6/RtHDvQmFQ=
+	t=1741109434; cv=none; b=QBvB32G/rRQo9rp2NFGAvmqeCD3TMNaVEYiQ7bLPGUHTn/oJ363k6dosi8PkzjACxy09uKjYOaCZbHyMkVvPJItmqdfgd9e5QD6oro9TV/vgcCmVFSQWtqykKj5NJdzc5TPFkvSznImTN+2D/qxghcX4YK5jCKlZn/3fUW0+tFQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741109413; c=relaxed/simple;
-	bh=OdPmI4U5vFoGTHKzd0tRe7tG0OV3RaqOyfZhfElBWDE=;
-	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=sWQiePKRFNizOmYYVZfbuLZ7wGIgvG2n6hXeTpXmXn3bX+xTIiidB96gSHhDO3l0zMd46kEucss5Rk3ggxaI33j7EQdur7AQrVcoO9aFfv1UU4rzmDe+zUPS1HL+L/7bQ8VbTIJhHkjhHOdlAvnrSjLLM0k7nMHZR0BfPi8Drtw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org; spf=pass smtp.mailfrom=makrotopia.org; arc=none smtp.client-ip=185.142.180.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=makrotopia.org
-Received: from local
-	by pidgin.makrotopia.org with esmtpsa (TLS1.3:TLS_AES_256_GCM_SHA384:256)
-	 (Exim 4.98)
-	(envelope-from <daniel@makrotopia.org>)
-	id 1tpViZ-000000000mW-0i6s;
-	Tue, 04 Mar 2025 17:06:07 +0000
-Date: Tue, 4 Mar 2025 17:06:01 +0000
-From: Daniel Golle <daniel@makrotopia.org>
-To: Jens Axboe <axboe@kernel.dk>, Daniel Golle <daniel@makrotopia.org>,
-	Christian Marangi <ansuelsmth@gmail.com>,
-	Al Viro <viro@zeniv.linux.org.uk>,
-	Douglas Anderson <dianders@google.com>,
-	Christian Brauner <brauner@kernel.org>,
-	Riyan Dhiman <riyandhiman14@gmail.com>,
-	Konstantin Khlebnikov <koct9i@gmail.com>,
-	Li Lingfeng <lilingfeng3@huawei.com>, linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] block: allow setting partition of_node
-Message-ID: <8cfbf225bcda906df0c89dd18ba07ecfa17123c2.1741107851.git.daniel@makrotopia.org>
+	s=arc-20240116; t=1741109434; c=relaxed/simple;
+	bh=/MimLgzOkeZVQ0qnudo2iBOLXLjkGfLE3C7RC7PzUhk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=LUCE3+1ttmSSI6MplJaVx4U3uRw0bCyDAs9lnoFAkCbUNa0GNuVI1Waq+iimMo2DSZoRxMjcwRqBWxyzjGkE9p/BnA52md2jTEg/lkEnK3YK+Zuu5Us3Iu0IE7SVB+NWO1L2oY/7vqXYwUC+lsLRmDwr4bPYX2IdZIdpHoK8XJM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=raspberrypi.com; spf=pass smtp.mailfrom=raspberrypi.com; dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b=E6EzY9Pq; arc=none smtp.client-ip=209.85.128.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=raspberrypi.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=raspberrypi.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b="E6EzY9Pq"
+Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-6fda018abc0so2479067b3.3
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Mar 2025 09:30:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=raspberrypi.com; s=google; t=1741109431; x=1741714231; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IDr1JU4rjrmAd29gHjYuJqa52Tp7Yy7VB8V6UtGIjM4=;
+        b=E6EzY9PqzOE/Gq4vruBivEH2EpizWRgLU3bPoMR5qCAAlZNyqEHJ/WC3iQvwjv+hU+
+         rxsNh1dWbAZoXr3GYzwpMH+wVYdigaOp1ZlQ1yRGXZEZLI87OvWV7paekkvQx/BhMTPL
+         ApNmP2j7LLWrrZ0V6AmPYZqLSB7pJI+HrJmQzw9fepgm8azmemgqW02NkiZOe3hpRRCT
+         rqh4OqQnTaAqLlRO9tPDzyl8MolCXnuO/nmB2P6qmkp3qfHFkHbM22vbpEIQmmGrDSWI
+         fgQeea8Be7GCoTlMfF80I9HYvY+Pd/xX+qEMabJR9jbnwbnSdfaXKo+NlJDH6fi2bA73
+         f4Sg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741109431; x=1741714231;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=IDr1JU4rjrmAd29gHjYuJqa52Tp7Yy7VB8V6UtGIjM4=;
+        b=Da3obG1sgEp3Hw6dX202KwboSeoVCIL6yo3vZg0rHPPCB7ZcZ5lX3oTWfAd5Q4NRWv
+         0Cy7Qp6l/Co4DeLAtbPsu39bsCLEs9Cqc0xcCZyc6hLSUToIz3yVUIB8+kHH7p8hxkkn
+         xbNizsqVqIexJI6tRYvGS6GqjieHQTsFg1mowypKwNnOXV+Rfw9HlGg+lQ+G1Sp0CLLL
+         SJk3LtAxGW7imLEvgRM6mjHb7Y1YcfPizsq6tRIZ3ZEZXnfXGTP8f+eVIqoH8iLbHNF/
+         ZXecGMcP603UB9WZLXxAHvZ9mJsMOhGroWXsV3Q2MwnvHlRnlR1iTbAYXBkGmyxZ8F8j
+         bSVg==
+X-Forwarded-Encrypted: i=1; AJvYcCVkXZxCl/ABOh4Ba6PWwDuWIqkAH7y5TC8t3GBZq/rm56ALXMrreUxsNXNGO3q7lCDzgTiI+xzzHrmMWo8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxi9g/YT737Tl7jfUpUSIDMybXh8yByZm8YK4wEJAmSghAX1mcn
+	EyrT64O+cnmv1BoHOFrHje4ajNiyJRME0YivVW/wGVLgI7vTWC7E0t9FMA6wr/EIaOuXpDGflwB
+	ngQMJmvIzDTjg2KU9j4s4g4syd6z5bLrW6rFINw==
+X-Gm-Gg: ASbGncvCO+f0xRIH6bAY0pP9AB6P+X7ssUnC3i5l71KlnXWpHKZYIka4liSokfyB9Mb
+	igwLdeUsAMypr2f1u3XLbyN8ZhRzGlprikwV/c55CxAPxCmdY93IgS35VsqQemwekylGQiMIS4V
+	OF6N8lwP7AoDnzKMw4L6v9tAm0RUPMdXYChLTO2h8njq5xvGRgHYc5PKgB9Q==
+X-Google-Smtp-Source: AGHT+IHoe8Pf800ippst3atd5UkKCeNJyQvx6Zqdxo7eA7WeSUeOn3+UZl/mrwDPrHD8eE4M5V0v5LKstwtThEyEVtY=
+X-Received: by 2002:a05:690c:8901:b0:6fb:9280:5bf4 with SMTP id
+ 00721157ae682-6fda303b75amr1321447b3.30.1741109430959; Tue, 04 Mar 2025
+ 09:30:30 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20250303-ov9282-flash-strobe-v1-0-0fd57a1564ba@linux.dev>
+ <20250303-ov9282-flash-strobe-v1-3-0fd57a1564ba@linux.dev> <CAPY8ntBBiuQtKErZ1+zDD5HBwjPRdBryduuB3XnhCZAdPC88GA@mail.gmail.com>
+In-Reply-To: <CAPY8ntBBiuQtKErZ1+zDD5HBwjPRdBryduuB3XnhCZAdPC88GA@mail.gmail.com>
+From: Dave Stevenson <dave.stevenson@raspberrypi.com>
+Date: Tue, 4 Mar 2025 17:30:13 +0000
+X-Gm-Features: AQ5f1Jr74Y28pnuf1UaDkJM9dIxyy3_cuYzTsQUh1Sng-6qjEkbmj_o66sqnxHA
+Message-ID: <CAPY8ntCiaTMdM_FRo3k9mYrzVnAuJYXrZU70Hf5=fLxButCOmg@mail.gmail.com>
+Subject: Re: [PATCH 3/3] media: i2c: ov9282: add strobe_timeout v4l2 control
+To: Richard Leitner <richard.leitner@linux.dev>
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, 
+	Mauro Carvalho Chehab <mchehab@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
+	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Allow partition parsers to set the Device Tree node for a partition by
-introducing of_put_partition() and extending struct parsed_partitions
-accordingly.
+On Tue, 4 Mar 2025 at 10:28, Dave Stevenson
+<dave.stevenson@raspberrypi.com> wrote:
+>
+> Hi Richard
+>
+> On Mon, 3 Mar 2025 at 22:59, Richard Leitner <richard.leitner@linux.dev> =
+wrote:
+> >
+> > Add V4L2_CID_FLASH_TIMEOUT support using the "strobe_frame_span"
+> > feature of the sensor. This is implemented by transforming the given =
+=C2=B5s
+> > value by an interpolated formula to a "span step width" value and
+> > writing it to register PWM_CTRL_25, PWM_CTRL_26, PWM_CTRL_27,
+> > PWM_CTRL_28 (0x3925, 0x3926, 0x3927, 0x3928).
+> >
+> > The maximum control value is set to the period of the current framerate=
+.
+> > This must be changed to a dynamic range as soon as this driver
+> > implements the set_frame_interval() pad operation.
 
-As the partition information is preallocated independently of the actual
-number of partitions the additional pointer takes about 2 kiB of allocated
-memory which is worth avoiding in case CONFIG_OF is not set. This is
-achieved by only adding the corresponding field to the struct in case
-CONFIG_OF is set using #ifdef'ery.
+Rereading the patch as I'm looking at the whole series.
 
-Signed-off-by: Daniel Golle <daniel@makrotopia.org>
----
- block/partitions/check.h | 16 +++++++++++++++-
- block/partitions/core.c  | 14 +++++++++++---
- 2 files changed, 26 insertions(+), 4 deletions(-)
+set_frame_interval() will never be implemented as it is the wrong API
+for raw sensors.
+See https://www.kernel.org/doc/html/latest/userspace-api/media/drivers/came=
+ra-sensor.html#raw-camera-sensors
+This driver already implements PIXEL_RATE, HBLANK, and VBLANK for
+frame interval configuration.
 
-diff --git a/block/partitions/check.h b/block/partitions/check.h
-index e5c1c61eb3532..0b326086b1b61 100644
---- a/block/partitions/check.h
-+++ b/block/partitions/check.h
-@@ -1,6 +1,7 @@
- /* SPDX-License-Identifier: GPL-2.0 */
- #include <linux/pagemap.h>
- #include <linux/blkdev.h>
-+#include <linux/of.h>
- #include "../blk.h"
- 
- /*
-@@ -16,6 +17,9 @@ struct parsed_partitions {
- 		int flags;
- 		bool has_info;
- 		struct partition_meta_info info;
-+#ifdef CONFIG_OF
-+		struct device_node *np;
-+#endif
- 	} *parts;
- 	int next;
- 	int limit;
-@@ -34,18 +38,28 @@ static inline void put_dev_sector(Sector p)
- }
- 
- static inline void
--put_partition(struct parsed_partitions *p, int n, sector_t from, sector_t size)
-+of_put_partition(struct parsed_partitions *p, int n, sector_t from, sector_t size,
-+		 struct device_node *np)
- {
- 	if (n < p->limit) {
- 		char tmp[1 + BDEVNAME_SIZE + 10 + 1];
- 
- 		p->parts[n].from = from;
- 		p->parts[n].size = size;
-+#ifdef CONFIG_OF
-+		p->parts[n].np = np;
-+#endif
- 		snprintf(tmp, sizeof(tmp), " %s%d", p->name, n);
- 		strlcat(p->pp_buf, tmp, PAGE_SIZE);
- 	}
- }
- 
-+static inline void
-+put_partition(struct parsed_partitions *p, int n, sector_t from, sector_t size)
-+{
-+	of_put_partition(p, n, from, size, NULL);
-+}
-+
- /* detection routines go here in alphabetical order: */
- int adfspart_check_ADFS(struct parsed_partitions *state);
- int adfspart_check_CUMANA(struct parsed_partitions *state);
-diff --git a/block/partitions/core.c b/block/partitions/core.c
-index 815ed33caa1b8..70d1ad8e37b93 100644
---- a/block/partitions/core.c
-+++ b/block/partitions/core.c
-@@ -9,6 +9,7 @@
- #include <linux/slab.h>
- #include <linux/ctype.h>
- #include <linux/vmalloc.h>
-+#include <linux/device.h>
- #include <linux/raid/detect.h>
- #include "check.h"
- 
-@@ -292,7 +293,8 @@ static const DEVICE_ATTR(whole_disk, 0444, whole_disk_show, NULL);
-  */
- static struct block_device *add_partition(struct gendisk *disk, int partno,
- 				sector_t start, sector_t len, int flags,
--				struct partition_meta_info *info)
-+				struct partition_meta_info *info,
-+				struct device_node *np)
- {
- 	dev_t devt = MKDEV(0, 0);
- 	struct device *ddev = disk_to_dev(disk);
-@@ -341,6 +343,7 @@ static struct block_device *add_partition(struct gendisk *disk, int partno,
- 	pdev->class = &block_class;
- 	pdev->type = &part_type;
- 	pdev->parent = ddev;
-+	device_set_node(pdev, of_fwnode_handle(np));
- 
- 	/* in consecutive minor range? */
- 	if (bdev_partno(bdev) < disk->minors) {
-@@ -447,7 +450,7 @@ int bdev_add_partition(struct gendisk *disk, int partno, sector_t start,
- 	}
- 
- 	part = add_partition(disk, partno, start, length,
--			ADDPART_FLAG_NONE, NULL);
-+			ADDPART_FLAG_NONE, NULL, NULL);
- 	ret = PTR_ERR_OR_ZERO(part);
- out:
- 	mutex_unlock(&disk->open_mutex);
-@@ -561,8 +564,13 @@ static bool blk_add_partition(struct gendisk *disk,
- 		size = get_capacity(disk) - from;
- 	}
- 
-+#ifdef CONFIG_OF
- 	part = add_partition(disk, p, from, size, state->parts[p].flags,
--			     &state->parts[p].info);
-+			     &state->parts[p].info, state->parts[p].np);
-+#else
-+	part = add_partition(disk, p, from, size, state->parts[p].flags,
-+			     &state->parts[p].info, NULL);
-+#endif
- 	if (IS_ERR(part)) {
- 		if (PTR_ERR(part) != -ENXIO) {
- 			printk(KERN_ERR " %s: p%d could not be added: %pe\n",
--- 
-2.48.1
+> >
+> > All register values are based on the OV9281 datasheet v1.53 (jan 2019)
+> > and tested using an ov9281 VisionComponents module.
+> >
+> > Signed-off-by: Richard Leitner <richard.leitner@linux.dev>
+> > ---
+> >  drivers/media/i2c/ov9282.c | 31 +++++++++++++++++++++++++++++++
+> >  1 file changed, 31 insertions(+)
+> >
+> > diff --git a/drivers/media/i2c/ov9282.c b/drivers/media/i2c/ov9282.c
+> > index c98ba466e9aea29baff0b13578d760bf69c958c5..f7dfe8987e524b73af7e16e=
+12567e96627b4f89a 100644
+> > --- a/drivers/media/i2c/ov9282.c
+> > +++ b/drivers/media/i2c/ov9282.c
+> > @@ -97,6 +97,10 @@
+> >  #define OV9282_REG_MIPI_CTRL00 0x4800
+> >  #define OV9282_GATED_CLOCK     BIT(5)
+> >
+> > +/* Flash/Strobe control registers */
+> > +#define OV9282_REG_FLASH_DURATION      0x3925
+> > +#define OV9282_FLASH_DURATION_DEFAULT  0x0000001A
+> > +
+> >  /* Input clock rate */
+> >  #define OV9282_INCLK_RATE      24000000
+> >
+> > @@ -193,6 +197,7 @@ struct ov9282_mode {
+> >   * @again_ctrl: Pointer to analog gain control
+> >   * @pixel_rate: Pointer to pixel rate control
+> >   * @flash_led_mode: Pointer to flash led mode control
+> > + * @flash_timeout: Pointer to flash timeout control
+> >   * @vblank: Vertical blanking in lines
+> >   * @noncontinuous_clock: Selection of CSI2 noncontinuous clock mode
+> >   * @cur_mode: Pointer to current selected sensor mode
+> > @@ -216,6 +221,7 @@ struct ov9282 {
+> >         };
+> >         struct v4l2_ctrl *pixel_rate;
+> >         struct v4l2_ctrl *flash_led_mode;
+> > +       struct v4l2_ctrl *flash_timeout;
+>
+> You only access this in ov9282_set_ctrl where you already have the
+> struct v4l2_ctrl, so there is no need to store this in the main device
+> state.
+>
+>   Dave
+>
+> >         u32 vblank;
+> >         bool noncontinuous_clock;
+> >         const struct ov9282_mode *cur_mode;
+> > @@ -689,6 +695,24 @@ static int ov9282_set_ctrl_flash_led_mode(struct o=
+v9282 *ov9282, int mode)
+> >                                 current_val);
+> >  }
+> >
+> > +static int ov9282_set_ctrl_flash_timeout(struct ov9282 *ov9282, int va=
+lue)
+> > +{
+> > +       /* Calculate "strobe_frame_span" increments from a given value =
+(=C2=B5s).
+> > +        * This is quite tricky as "The step width of shift and span is
+> > +        * programmable under system clock domain.", but it's not docum=
+ented
+> > +        * how to program this step width (at least in the datasheet av=
+ailable
+> > +        * to the author at time of writing).
+> > +        * The formula below is interpolated from different modes/frame=
+rates
+> > +        * and should work quite well for most settings.
+> > +        */
+> > +       u32 val =3D value * 192 / (ov9282->cur_mode->width + ov9282->hb=
+lank_ctrl->val);
+> > +
+> > +       ov9282_write_reg(ov9282, OV9282_REG_FLASH_DURATION, 1, (val >> =
+24) & 0xff);
+> > +       ov9282_write_reg(ov9282, OV9282_REG_FLASH_DURATION + 1, 1, (val=
+ >> 16) & 0xff);
+> > +       ov9282_write_reg(ov9282, OV9282_REG_FLASH_DURATION + 2, 1, (val=
+ >> 8) & 0xff);
+> > +       return ov9282_write_reg(ov9282, OV9282_REG_FLASH_DURATION + 3, =
+1, val & 0xff);
+> > +}
+> > +
+> >  /**
+> >   * ov9282_set_ctrl() - Set subdevice control
+> >   * @ctrl: pointer to v4l2_ctrl structure
+> > @@ -758,6 +782,9 @@ static int ov9282_set_ctrl(struct v4l2_ctrl *ctrl)
+> >         case V4L2_CID_FLASH_LED_MODE:
+> >                 ret =3D ov9282_set_ctrl_flash_led_mode(ov9282, ctrl->va=
+l);
+> >                 break;
+> > +       case V4L2_CID_FLASH_TIMEOUT:
+> > +               ret =3D ov9282_set_ctrl_flash_timeout(ov9282, ctrl->val=
+);
+> > +               break;
+> >         default:
+> >                 dev_err(ov9282->dev, "Invalid control %d", ctrl->id);
+> >                 ret =3D -EINVAL;
+> > @@ -1420,6 +1447,10 @@ static int ov9282_init_controls(struct ov9282 *o=
+v9282)
+> >                                                         (1 << V4L2_FLAS=
+H_LED_MODE_TORCH),
+> >                                                         V4L2_FLASH_LED_=
+MODE_NONE);
+> >
+> > +       ov9282->flash_timeout =3D v4l2_ctrl_new_std(ctrl_hdlr, &ov9282_=
+ctrl_ops,
+> > +                                                 V4L2_CID_FLASH_TIMEOU=
+T,
+> > +                                                 0, 13900, 1, 8);
+> > +
+> >         ret =3D v4l2_fwnode_device_parse(ov9282->dev, &props);
+> >         if (!ret) {
+> >                 /* Failure sets ctrl_hdlr->error, which we check afterw=
+ards anyway */
+> >
+> > --
+> > 2.47.2
+> >
+> >
