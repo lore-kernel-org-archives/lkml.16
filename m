@@ -1,495 +1,238 @@
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from PA4PR04CU001.outbound.protection.outlook.com (mail-francecentralazon11013020.outbound.protection.outlook.com [40.107.162.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A31751FECDB;
-	Tue,  4 Mar 2025 11:08:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741086528; cv=none; b=P12cDmLFgiHv+jfiUCkiJt1+KRFzvCvhMDp0MP7R5pcRVti4wq9z6fRAwqw+KYhUZpVHgCV5ukfkTkYEKUpDY6Eube82dVtJA1+qTciCATfXjD7WuH4tSX7AF3DFb9lwdTd/fKfEkvNVmEadB26NPrscY17/QPMPXc/pasR897s=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741086528; c=relaxed/simple;
-	bh=4xkw0yYacB0/6Q5LwI8fkd9jTNv0eZdwxdKwCFqlyEc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=PbTQ0ydw5M9bYKO/qpljP7lpnu1UIO0hAMiRfpO3XpNUtznVGJZQQvfCgAfFj3th0NM5isttUNKW4LVKNCrFjQernNZryGSMhU/cFAnBWfineQXSlv8FKpfpm7pWWRCop5yzC1Cm5qEuSygADbvdAggVBygQkyIS35kdidx26QY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Bde/3n0y; arc=none smtp.client-ip=209.85.208.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D590E1FF1C6;
+	Tue,  4 Mar 2025 11:08:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.162.20
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741086534; cv=fail; b=TJq31eQrWM/fE8FYpOLkRR0BV+byxGqnG6WlBDYxVvZwtd8nOPxqc0TPZCv6hrPZpMshliyJ1j+391rA4//S1gt6lJmCKRhQfo007gfVXEnCZZZs/NgboUX8/5qUSLvmVRcQsYAlEQQw9DwLDUausNjzbjzyowjL72ElhPh350Y=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741086534; c=relaxed/simple;
+	bh=+GSfnE+nJ5Ui88DWeNo0VGNo5CLoVDhS4qyHiQTRVHk=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=ckblbH62h1Ooc4g6hThXhLoJcawfWjO9b8CgsSC1khI6RV5THSo+jnF7gNDpKHijZfeTWAjBLmgqsPZmqbEHCCGLQaGSQdRJ22chNI0wM4D3Vx1jS9nptWXYpGjXWCngkLF9CZzWEdbPnBPRqFqrHvs1irQR9CwV/CUQW6lsLFM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=T+Tec2xQ; arc=fail smtp.client-ip=40.107.162.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bde/3n0y"
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5e4ebc78da5so7867731a12.2;
-        Tue, 04 Mar 2025 03:08:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741086525; x=1741691325; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=MRjbS74Nsh8/qZkVcV7Vot+3slTDRd+TY3FbkFl3aNo=;
-        b=Bde/3n0y9icKKRCtSLbOwqCszWjgEbxHM+whyGY2P/AGQ3DvQw1b3PXjBNZyUIVjhd
-         UKIsSk4SKd9/jSdCVhS0odliX2AtUrWy/LVpb4+n1HG72X3jJN9wppXTp2N2W18n+f39
-         6mtKO+G+ekxc/8T9+pwli6jdkAMFa30KNm/zqX+2ffa8yUtkPN6bJiNz5dOEeLIes+a5
-         1y4ALq0fflvUJ4QLH5l8kqZQo36A2gebloa658ah//PhCT70gumjdYtwotIQUW/DOiuY
-         2zInwphDr3IVfIa2wBsJNPLoYHgsyBvV3EcKhlUl7j3A9P8wE/xb/P3y+EP2MFrdG8WY
-         uvGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741086525; x=1741691325;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=MRjbS74Nsh8/qZkVcV7Vot+3slTDRd+TY3FbkFl3aNo=;
-        b=BpeW6QvQSk8Yv2L4bK90tQXNrNj3LvuB9gZ0aR6n2iD1sW7nJfT7za7xYGmDetas3i
-         ZWWN6MIcGiXNrHAAOmWfVFZJ83P+mieil2d796sKQfAP/nfO4P8gI0p9GvHyW4sln/QM
-         Xppn2HQR0nlhFefYSgpM3YwZQvZVYaYhCmEYTCxNwkt6BnJXf36mxUpRn+DOvGMkHIKm
-         0/g+ZCo7roe841noF/b+NFsJX5Eu+dW3V6t4ynh6CwoZK2YP53dA4TYtI/XmDhZ2Vptw
-         L2i2+q4T4w7B3XuHfnw+VHZBaJ3qR+L0NUcpHq6IcJYyw5Qqf5YTkeK4MP7IpL/g2TYJ
-         c5Cg==
-X-Forwarded-Encrypted: i=1; AJvYcCV5iROHbzIUENCz3FrHNstyrxwHLqRamNEQOaGs360YQOtISfdhXsQxXF+qE1CUCr2M7RvFNZTi4JM=@vger.kernel.org, AJvYcCW8oFhICIkDwG6mPNqJ+X7CJwuZ3TzARSLDjg5XAtBTflzWhaVNRmMiGSEFs1NDEzqrgYDLljyBZElp6FHf@vger.kernel.org
-X-Gm-Message-State: AOJu0YxY0hrQT+SkpdsSgnnOC3G53oJWFLmZKNslKa0W0pDHwxv24V5B
-	75QF7cn1Ln/0dSdo1Z7nxESptr4W0XrQwt2DMAbvnJ9dh/TX9y2L
-X-Gm-Gg: ASbGnct5xIJfWD18SvC6sjG4D7WwRUh0FIZN6xcDVp4SFCwcarM0iAU0PhUTCfNqB2E
-	xNTi1KxbrOcZMgcn/VG2iTWfOAkGvLsiq4BqlsYUsaRdhdFCXr1tLpC9+7ppk68mqe33WMXJ0/P
-	RNFcm+JmuGMMWK80q/0HC1TmD8ShnqD5rfVTm5ugu16ct3UgBN5xi4HatvC4PlaCHobqsTyc8Kk
-	gccDhZRXI0ppkS1tJKUSl/wX9j/zMMzPNONicrw05JRbxw2RFAVX53tl5iLmm5wPw4iy3L2Xx3U
-	B6W8JxOitSo1rzbMiZ4fZErqKE5+tQuQutNDkjRX9Gc=
-X-Google-Smtp-Source: AGHT+IE1Np6k0sfwEuo8edx8oMlGkUOpQl3WFhV3iKjRQEVe2y/wzupGuFLz92VZSFKAR8kjCHXWLQ==
-X-Received: by 2002:a05:6402:1d4a:b0:5e4:be64:b562 with SMTP id 4fb4d7f45d1cf-5e4d6adb99fmr14634828a12.1.1741086524560;
-        Tue, 04 Mar 2025 03:08:44 -0800 (PST)
-Received: from [127.0.1.1] ([46.53.242.22])
-        by smtp.googlemail.com with ESMTPSA id 4fb4d7f45d1cf-5e4c3fb51e1sm8262041a12.61.2025.03.04.03.08.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Mar 2025 03:08:43 -0800 (PST)
-From: Dzmitry Sankouski <dsankouski@gmail.com>
-Date: Tue, 04 Mar 2025 14:08:40 +0300
-Subject: [PATCH v2] hwmon: (max77705) add initial support
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="T+Tec2xQ"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=lJQM1q85K/iZYXoJN8YqLrWlk+DA893gNsyECJBJ4xaGmOQp2SpRefbgMGfmuwcWp6BXGIN++qlQ+vgj2UUORVFIukD3vrJUgPdCQCaRsEBgZk4DHYmK0MswT677jaGj8u1o2am56FG2wva4rsHW3LNEHIzhfCQfVK1e0kU0uUcuLVmafSE76D92rcSYTjXgZ1vqz361N0BOHsg+n5U2TYMZfPbUjaFiAFPfsrOwDfo1ADjEjsRvp0c/t59E6kkE3B8fz3TPjLeeb+rku6P7teEdDWBkXvDcQdvNrAZ1qHRco1lMwplpKD0MSOl9ynMlsalf0mvDSCHBeDR5Mp75kw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=exyVt/8Gfu/L/J6UCZVZdEHOqIfqxeBNqM8DQ3k10mE=;
+ b=kcmbsv8azTSLqoxDTX9UIQTp1UUA9ldJLRQnRyhTNhQ8R08z8pfeLj8zGo9y1lmUgz+0aEJ4ZsqbMsqmsnSArPdgT9+6yUyZk88cBOFp9gmLHkUmt2250/+yW2g9F34d+M66P3c+1+yKxJNx2kx1WyU4h+ZZso75q1QmYlKcEb6k4GoPNKtG+aptFS7ZDFFh7IJ6NofwC7TOrJduVaTnU5lJAhyZG7O1gxf3ymIG9IuaP+dEoOoK6dk09ry9IdGp9YiL/xd00u4gRrRdWroI7dzih7dO087Tf14x2/ElLmjR7VMmnK2iyeDGDCCro70brhoE3aq/W5tk9SG2afGqbw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=exyVt/8Gfu/L/J6UCZVZdEHOqIfqxeBNqM8DQ3k10mE=;
+ b=T+Tec2xQtu5SPEHrMf/uL9g5nY9UTggvJDdmpS0VllkXPti/bGqkqF7DCDHdtLZAfMb4tbto00z+AB2sl/+DM0jrlQ2p4ArXuEPkUXosA8YSQrl7vFSSKvDo5TrAeotGqPHfoiLUqS6MBIBM1He5d2qo6dBYgsXVdGgff0X9eC83aQ29+rmoYoVRl+H6Q3N6yqBPdA+gXqdRgdPVMaeJVHlBtQPyzL7F6z6bylQW+T6ZF6Oz+6u9KEakpjtfeZLBYwH4IEXc2aOfCKORJjnBe51z7aPLS6kU7EkH0M51vzxHVFqaNTai5UiX1NoIMLz+d2qn4/MMx57dYnjx0r4uzw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from DU2PR04MB8822.eurprd04.prod.outlook.com (2603:10a6:10:2e1::11)
+ by DB9PR04MB8233.eurprd04.prod.outlook.com (2603:10a6:10:24b::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.29; Tue, 4 Mar
+ 2025 11:08:49 +0000
+Received: from DU2PR04MB8822.eurprd04.prod.outlook.com
+ ([fe80::4e24:c2c7:bd58:c5c7]) by DU2PR04MB8822.eurprd04.prod.outlook.com
+ ([fe80::4e24:c2c7:bd58:c5c7%6]) with mapi id 15.20.8489.025; Tue, 4 Mar 2025
+ 11:08:48 +0000
+From: Xu Yang <xu.yang_2@nxp.com>
+To: rafael@kernel.org,
+	len.brown@intel.com,
+	pavel@kernel.org,
+	gregkh@linuxfoundation.org,
+	dakr@kernel.org
+Cc: linux-pm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	imx@lists.linux.dev
+Subject: [PATCH] PM: sleep: wakeirq: Introduce device-managed devm_pm_set_dedicated_wake_irq()
+Date: Tue,  4 Mar 2025 19:09:30 +0800
+Message-Id: <20250304110930.2034394-1-xu.yang_2@nxp.com>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SG2PR04CA0167.apcprd04.prod.outlook.com (2603:1096:4::29)
+ To DU2PR04MB8822.eurprd04.prod.outlook.com (2603:10a6:10:2e1::11)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250304-initial-support-for-max77705-sensors-v2-1-58d2207c732b@gmail.com>
-X-B4-Tracking: v=1; b=H4sIADffxmcC/42OsQ6CMBRFf4V09pm2Wmqc/A/DUMoDXgIttoVgC
- P8uwuDqeM5wz11YxEAY2T1bWMCJInm3gTxlzLbGNQhUbcwkl4oLeQFylMh0EMdh8CFB7QP0ZtZ
- acwURXfQhgqm40NxYgVaxbWoIWNO8Z57FwQFf41ZLP9lSTD689yuT+NqjKqX6rzoJECBLzK+5z
- uWt5I+mN9Sdre9Zsa7rBx9gDRDtAAAA
-To: Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, 
- Jonathan Corbet <corbet@lwn.net>
-Cc: linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Dzmitry Sankouski <dsankouski@gmail.com>
-X-Mailer: b4 0.14.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1741086522; l=11567;
- i=dsankouski@gmail.com; s=20240619; h=from:subject:message-id;
- bh=4xkw0yYacB0/6Q5LwI8fkd9jTNv0eZdwxdKwCFqlyEc=;
- b=8IF6/x0sJWHtuL5LtWUNiphXXL3SiISj+3oqxNmfvm5zmngkg9prKJfjO3lxnVNOWb3y14jHV
- hqVRyO5AWuTC5m0ts/ev3/2GUJYowpiowP7WA+pGwhShCjsuEHpgUqC
-X-Developer-Key: i=dsankouski@gmail.com; a=ed25519;
- pk=YJcXFcN1EWrzBYuiE2yi5Mn6WLn6L1H71J+f7X8fMag=
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DU2PR04MB8822:EE_|DB9PR04MB8233:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1e3af015-2046-4158-a375-08dd5b0cf00c
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|52116014|376014|1800799024|366016|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?sW4b0Wb+KxIj3WmFBSTKge/8DfuVMM6PHPFxFKsvB7LfG75ZhFWh8y6ETXYn?=
+ =?us-ascii?Q?i7oQb5BLbEDHNvLNuOzcjrhEZ2OB6FcqgHafYWBAvmZHAe1TlLOwB4HWttrb?=
+ =?us-ascii?Q?iVIBKHZyxOuMmFYykoe6JhhsgacuXm0VSvk/uuMqE47skZqyeLkMr9BTlJro?=
+ =?us-ascii?Q?8i7SFV72f7fYaB16qQ5VY4ED32uoCLKJ1Sm4SiJKgdKBj9HDk8OFlSw2A02i?=
+ =?us-ascii?Q?iZYveMCPnFmkWKmaf4LTO1EjJ/0hdzxe/N8TRrns2CotSMyAu+DwAbNOqNCQ?=
+ =?us-ascii?Q?9AGvnU9TSy65F/r5t+CHuUvcuJWGuKu5SD+cnSpMlowYQzbtm8YN8z2Wlbrn?=
+ =?us-ascii?Q?DWhWKbsdrSJaip8gYXem/NzMAnqnVgbd+1TATRiPDhdU6s6CeKRjoypMVNRE?=
+ =?us-ascii?Q?mpDI58AlfoMiV+UbHz6YwNDBfkOL9vGET1lrvC/lVqlCnwtgmIpH4uHANBLL?=
+ =?us-ascii?Q?JAsufPFXnWqotn/nJS6KSELKJPQfuj3nr6mXpgJPy10uikVGcp5EnY46cLKl?=
+ =?us-ascii?Q?CZ9KkyQxfyI8I/N3RO0cj5UJJm6lrqxZGxW1eHzW/gLaa6qEBzYdDSXa1iwv?=
+ =?us-ascii?Q?g2dx02mNtvLr8OJpE7Bn/RjvneWEcz2boCk77lykb1CHsfQQFOhVKpllwKeX?=
+ =?us-ascii?Q?KgJ84bvM+O3OcTvKFqtqd4ZyBqDgv5UJgRfgs8aeQ0PteZyb83O8+dIyg43R?=
+ =?us-ascii?Q?X3oXT97jX6lhmx/Frdc1UPukDOWjipFoiOt+58djkCVKkxa3WaIA9gj/Z9Uo?=
+ =?us-ascii?Q?o+Zwgml38uLisH5MehepJlJSdop5S2xNvGvZujNc7U3vK12ENAFH89ZqCOEb?=
+ =?us-ascii?Q?8Dy0oActRjWmqm0DHQ7fJprGaIMxCgPaRW0rWr03sZDbTtuMYfPHpVx+lKzQ?=
+ =?us-ascii?Q?w2Pxsr+b7dWXgO2uRJ7dns3rK9uoUMrbb5zz0xU3vOdX3+REDoSl0eCOyDup?=
+ =?us-ascii?Q?If+l51SiP3SLDycwnbBNIG8ElTZM8OvFI4I04VSjH88T1YxiYf5E9hs8zKrt?=
+ =?us-ascii?Q?vVbv/Il+9QGtGic73C/QQpld9Ra2Hma2VT+b1tD0TS7XEt4z+IIGRblllGcP?=
+ =?us-ascii?Q?niAtFzPPb4lQZECn6AhGwIn7LebxjywtvXfzct87rfyRkwzHMfne/zd+E8oF?=
+ =?us-ascii?Q?zDS4Wz58L8DblriiENud9pGDdFqBJf/dGpGEM98IQNCoZ7muNDSfmbUFYAqu?=
+ =?us-ascii?Q?0M4az6NMGG7vgUgglc89LNKKJu60nf86TCiuZ/AJvVXzxUg063WCO+pOW+az?=
+ =?us-ascii?Q?BIJk+3qLOlFs8yDfnu+uUVswzqol7GOx+ZLtHQiUuewkKbl88/vg4rhPS38h?=
+ =?us-ascii?Q?FNjIS3kM02orC3ZTfDXwqMxOAsYPiBpwA0QHLxQiczm1EeFv5LYXmhYEpolt?=
+ =?us-ascii?Q?a/Bcb7+dtNwl4zjZYWo/MCJWiaI8TGoDUgxfL30eIlV25H4T8/zZNEhg3eYJ?=
+ =?us-ascii?Q?tln8OU1vulF2/Gfg5tCNwan0784JI51t?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU2PR04MB8822.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(52116014)(376014)(1800799024)(366016)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?K6JXzFMu7gSs6Wb2o0BB6Nqmg4MYK0L8rf+OGt+za4Yz54RBudeJH42Zq0kN?=
+ =?us-ascii?Q?Fm7Exs1M5RrpEAtTNIQ13jmjnCqORHI4zh2MCBi6Z0FIUqUG9ZWx1AUCIC12?=
+ =?us-ascii?Q?cHYJaBnNyXTTOppXjG50S1V1tL+QEXPI4BNI2pO1PBQCHyJovBD/+/FF/rcU?=
+ =?us-ascii?Q?kV9vTyC7Ky2dk2Z2eEUCPfb73hNjq4juA+ZROrlZXAVixuZ7xQl3/tAzK/EC?=
+ =?us-ascii?Q?fXiUHWdlDpiSZryUcCNr9bNh+9mKDlFNo4qM5I0ZxCdSLwFaOKlH2xD6QAfi?=
+ =?us-ascii?Q?9K5eG+y3opyNTosdY3+SidbLMzdLWVvSEb1clC5Oh36vOPpydCCrYmtFRy9E?=
+ =?us-ascii?Q?GR7Z+F5l7L/q74BvO4DvY2mEWdS7xqOQP9DpGLInHgqHg3/ME8sR2rMzsGnp?=
+ =?us-ascii?Q?Sxn+JkAsPoDsHNkm9DqoJSQie00q9XfYczlGShxam2KbNabUHyoXUdifAuI/?=
+ =?us-ascii?Q?01uosyoqL5MloFqvLNQo6kszjFTkXSHCaZuX/FQes9CrnsM0j6lFl6H2ecUN?=
+ =?us-ascii?Q?WxVSQPaHIRDBmizYwSOLV6m43QhLGTOxD9yL1hRjTnCYs+BBftfs0Vi2Ee3h?=
+ =?us-ascii?Q?wDGNBduTvSSMmD/vK/nwLdvEiU36c0pxAcScti0GOuqnp58aQccl9sppE8L/?=
+ =?us-ascii?Q?EYVgH7nz8LEpI3EppnuUjiZpuH0+UTX2tob1w9CZ2zRDCbsUzujBilO23z0J?=
+ =?us-ascii?Q?ZweWGRBw4pH1kiqugkJAB43+8FiT8Fpv+VNq2Na2F/beLoQPWLLHkdjNeBbO?=
+ =?us-ascii?Q?7Uh1tyI0xv/fVM8SMMqD4LuvYIhSGN/n6XPyf1dMYDyhvx4NpO0shUSXIoZ6?=
+ =?us-ascii?Q?EZ7UlnSL/nsEDI/PXV9XLVl1B/rJ4QPys+67ED6Yb7tbEwdW0aIyJ5jVwvUI?=
+ =?us-ascii?Q?EWzYDS/lx/naurH/gjJ+Iasisi6vjfAVCbnQCu0J5TlkvC3lqV1zv60HdT2z?=
+ =?us-ascii?Q?V3/SGALijtvG3Eu3s4E6LnaOXjAy+ASWIzqjLsWo6eAa9H4gBl6EVsIsWd+a?=
+ =?us-ascii?Q?oADCYLp/KoFgOImbWctiS2kyOOod3b0xFu+iH1Nm5R+ohVazVcL0i1ylz3nF?=
+ =?us-ascii?Q?Voj99jxaroL/QAYxZUZiZHptwNFsH5aDYYF6csDcTgb2X8RF7IbXNH32BJL2?=
+ =?us-ascii?Q?zOeAOxSUtPxU8w+/BDc7vCashYT27B/JuxddSPDdcEsMne5sV/BF8Ezt772+?=
+ =?us-ascii?Q?G4pQXaR8cxZroqfraJqq4Oe2QhF3nE/171Lj4uv1x89ZJUhgeW/tOzjKM59V?=
+ =?us-ascii?Q?+fF3zvpsy6xO/M+mfkztrjdCglMS52RGrVRg0tpDl/Ga32ySokmJ45fgaD4z?=
+ =?us-ascii?Q?5j8kurWPoPLYypMagzYnocapmZ/IP9lpRzFU4Sfue7j+ImYp4u+hruOFa8Bb?=
+ =?us-ascii?Q?malaNaWIWIuZ/+WV91wYw2CDcRRQ6N5hSo47AwJl1IlphsdyKo6yN5xtT0Vz?=
+ =?us-ascii?Q?mnBkDuYmrNOaxdYS16EX7sYjj9uKOMAGAaaL/Vmb3gWDvVnei+NYNr8VVv8i?=
+ =?us-ascii?Q?wVXY+jzYPs5aa5TJtUiJMhvc14ymbT5IFKtDtmTWewJhbn/J4sLlbiAIlMPI?=
+ =?us-ascii?Q?W9aTmLPcGyTSah1ghDu668At8pw7G7Jo4nL3T6qI?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1e3af015-2046-4158-a375-08dd5b0cf00c
+X-MS-Exchange-CrossTenant-AuthSource: DU2PR04MB8822.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Mar 2025 11:08:48.3782
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: nKuYIewsrv8MoELq/a8XyCil3dmnQHDsh/XuXGld6W17nwRbSC5gpxYUh/4jekgd5p5cBWGIK+Zlg3ZW00Xxow==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR04MB8233
 
-Add support for max77705 hwmon. Includes charger input, system bus, and
-vbyp measurements.
+Add device-managed variant of dev_pm_set_dedicated_wake_irq() and
+dev_pm_set_dedicated_wake_irq_reverse() which automatically
+free and clear the wake irq on device destruction to simplify error
+handling.
 
-Signed-off-by: Dzmitry Sankouski <dsankouski@gmail.com>
+Signed-off-by: Xu Yang <xu.yang_2@nxp.com>
 ---
-Maxim MAX77705 is a Companion Power Management and Type-C interface IC.
-It includes charger and fuel gauge blocks, and is capable of measuring
-charger input current, system bus volatage and current, and bypass
-voltage.
+ drivers/base/power/wakeirq.c | 43 ++++++++++++++++++++++++++++++++++++
+ include/linux/pm_wakeirq.h   | 12 ++++++++++
+ 2 files changed, 55 insertions(+)
 
-Add support for mentioned measurements.
----
-Changes in v2:
-- EDITME: describe what is new in this series revision.
-- EDITME: use bulletpoints and terse descriptions.
-- Link to v1: https://lore.kernel.org/r/20250225-initial-support-for-max77705-sensors-v1-1-2be6467628b0@gmail.com
----
-Changes in v2:
-- sort headers alphabetically
-- swap curr channel info, to align indeces with channel_desc struct
-- reword coverletter
-- fix checkpatch --strict warnings
-- remove struct max77705_hwmon, use regmap directly
-- move register validation logic to is_visible function
-- move common register reading and converting logic to separate function
-- remove unnessesary {} in if statement
-- s/i2c->dev/pdev->dev in dev_err_probe
----
- Documentation/hwmon/index.rst    |   1 +
- Documentation/hwmon/max77705.rst |  39 +++++++++++++++++++++++++++++++++++++++
- MAINTAINERS                      |   7 +++++++
- drivers/hwmon/Kconfig            |  10 ++++++++++
- drivers/hwmon/Makefile           |   1 +
- drivers/hwmon/max77705-hwmon.c   | 250 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
- 6 files changed, 308 insertions(+)
-
-diff --git a/Documentation/hwmon/index.rst b/Documentation/hwmon/index.rst
-index 874f8fd26325..444c7865f74f 100644
---- a/Documentation/hwmon/index.rst
-+++ b/Documentation/hwmon/index.rst
-@@ -158,6 +158,7 @@ Hardware Monitoring Kernel Drivers
-    max6639
-    max6650
-    max6697
-+   max77705
-    max8688
-    mc13783-adc
-    mc34vr500
-diff --git a/Documentation/hwmon/max77705.rst b/Documentation/hwmon/max77705.rst
-new file mode 100644
-index 000000000000..9037226c50b9
---- /dev/null
-+++ b/Documentation/hwmon/max77705.rst
-@@ -0,0 +1,39 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+Kernel driver max77705
-+====================
-+
-+Supported chips:
-+
-+  * Maxim Integrated MAX77705
-+
-+    Prefix: 'max77705'
-+
-+    Addresses scanned: none
-+
-+    Datasheet: Not available
-+
-+Authors:
-+      - Dzmitry Sankouski <dsankouski@gmail.com>
-+
-+Description
-+-----------
-+
-+The MAX77705 PMIC provides current and voltage measurements besides fuelgauge:
-+- chip input current
-+- system bus current and voltage
-+- VBYP voltage
-+
-+Sysfs Attributes
-+----------------
-+
-+================= ========================================
-+in1_label         "vbyp"
-+in1_input         Measured chip vbyp voltage
-+in2_label         "vsys"
-+in2_input         Measured chip system bus voltage
-+curr1_label       "iin"
-+curr1_input       Measured chip input current.
-+curr2_label       "isys"
-+curr2_input       Measured chip system bus current.
-+================= ========================================
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 29e1a423eee5..0175f9f89325 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -18110,6 +18110,13 @@ S:	Maintained
- F:	Documentation/hwmon/pc87427.rst
- F:	drivers/hwmon/pc87427.c
+diff --git a/drivers/base/power/wakeirq.c b/drivers/base/power/wakeirq.c
+index 8aa28c08b289..dc2c9cbf40e9 100644
+--- a/drivers/base/power/wakeirq.c
++++ b/drivers/base/power/wakeirq.c
+@@ -129,6 +129,49 @@ int devm_pm_set_wake_irq(struct device *dev, int irq)
+ }
+ EXPORT_SYMBOL_GPL(devm_pm_set_wake_irq);
  
-+MAX77705 HARDWARE MONITORING DRIVER
-+M:	Dzmitry Sankouski <dsankouski@gmail.com>
-+L:	linux-hwmon@vger.kernel.org
-+S:	Maintained
-+F:	Documentation/hwmon/max77705.rst
-+F:	drivers/hwmon/max77705-hwmon.c
-+
- PCA9532 LED DRIVER
- M:	Riku Voipio <riku.voipio@iki.fi>
- S:	Maintained
-diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
-index 56494ab85b83..c86fe094a978 100644
---- a/drivers/hwmon/Kconfig
-+++ b/drivers/hwmon/Kconfig
-@@ -1287,6 +1287,16 @@ config SENSORS_MAX31790
- 	  This driver can also be built as a module. If so, the module
- 	  will be called max31790.
- 
-+config SENSORS_MAX77705
-+	tristate "MAX77705 current and voltage sensor"
-+	depends on I2C
-+	select REGMAP_I2C
-+	help
-+	  If you say yes here you get support for MAX77705 sensors connected with I2C.
-+
-+	  This driver can also be built as a module. If so, the module
-+	  will be called max77705-hwmon.
-+
- config SENSORS_MC34VR500
- 	tristate "NXP MC34VR500 hardware monitoring driver"
- 	depends on I2C
-diff --git a/drivers/hwmon/Makefile b/drivers/hwmon/Makefile
-index b7ef0f0562d3..ff69f45eca50 100644
---- a/drivers/hwmon/Makefile
-+++ b/drivers/hwmon/Makefile
-@@ -159,6 +159,7 @@ obj-$(CONFIG_SENSORS_MAX6650)	+= max6650.o
- obj-$(CONFIG_SENSORS_MAX6697)	+= max6697.o
- obj-$(CONFIG_SENSORS_MAX31790)	+= max31790.o
- obj-$(CONFIG_MAX31827) += max31827.o
-+obj-$(CONFIG_SENSORS_MAX77705) += max77705-hwmon.o
- obj-$(CONFIG_SENSORS_MC13783_ADC)+= mc13783-adc.o
- obj-$(CONFIG_SENSORS_MC34VR500)	+= mc34vr500.o
- obj-$(CONFIG_SENSORS_MCP3021)	+= mcp3021.o
-diff --git a/drivers/hwmon/max77705-hwmon.c b/drivers/hwmon/max77705-hwmon.c
-new file mode 100644
-index 000000000000..6d2161421ac7
---- /dev/null
-+++ b/drivers/hwmon/max77705-hwmon.c
-@@ -0,0 +1,250 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ *  MAX77705 voltage and current hwmon driver.
++/**
++ * devm_pm_set_dedicated_wake_irq - device-managed variant of
++ *                                  dev_pm_set_dedicated_wake_irq
++ * @dev: Device entry
++ * @irq: Device IO interrupt
 + *
-+ *  Copyright (C) 2025 Dzmitry Sankouski <dsankouski@gmail.com>
++ * Request a dedicated wake-up interrupt, same with dev_pm_set_dedicated_wake_irq,
++ * but the device will be auto clear wake capability on driver detach.
 + */
-+
-+#include <linux/err.h>
-+#include <linux/hwmon-sysfs.h>
-+#include <linux/hwmon.h>
-+#include <linux/i2c.h>
-+#include <linux/jiffies.h>
-+#include <linux/kernel.h>
-+#include <linux/mfd/max77705-private.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+#include <linux/slab.h>
-+
-+struct channel_desc {
-+	u8 reg;
-+	u8 avg_reg;
-+	const char *const label;
-+	// register resolution. nano Volts for voltage, nano Amperes for current
-+	u64 resolution;
-+};
-+
-+static const struct channel_desc current_channel_desc[] = {
-+	{
-+		.reg = IIN_REG,
-+		.label = "IIN_REG",
-+		.resolution = 125000
-+	},
-+	{
-+		.reg = ISYS_REG,
-+		.avg_reg = AVGISYS_REG,
-+		.label = "ISYS_REG",
-+		.resolution = 312500
-+	}
-+};
-+
-+static const struct channel_desc voltage_channel_desc[] = {
-+	{
-+		.reg = VBYP_REG,
-+		.label = "VBYP_REG",
-+		.resolution = 427246
-+	},
-+	{
-+		.reg = VSYS_REG,
-+		.label = "VSYS_REG",
-+		.resolution = 156250
-+	}
-+};
-+
-+static const struct regmap_range max77705_hwmon_readable_ranges[] = {
-+	regmap_reg_range(AVGISYS_REG,	AVGISYS_REG + 1),
-+	regmap_reg_range(IIN_REG,	IIN_REG + 1),
-+	regmap_reg_range(ISYS_REG,	ISYS_REG + 1),
-+	regmap_reg_range(VBYP_REG,	VBYP_REG + 1),
-+	regmap_reg_range(VSYS_REG,	VSYS_REG + 1),
-+};
-+
-+static const struct regmap_access_table max77705_hwmon_readable_table = {
-+	.yes_ranges = max77705_hwmon_readable_ranges,
-+	.n_yes_ranges = ARRAY_SIZE(max77705_hwmon_readable_ranges),
-+};
-+
-+static const struct regmap_config max77705_hwmon_regmap_config = {
-+	.name = "max77705_hwmon",
-+	.reg_bits = 8,
-+	.val_bits = 16,
-+	.rd_table = &max77705_hwmon_readable_table,
-+	.max_register = MAX77705_FG_END,
-+	.val_format_endian = REGMAP_ENDIAN_LITTLE
-+};
-+
-+static int max77705_read_and_convert(struct regmap *regmap, u8 reg, u64 res, long *val)
++int devm_pm_set_dedicated_wake_irq(struct device *dev, int irq)
 +{
 +	int ret;
-+	u32 regval;
 +
-+	ret = regmap_read(regmap, reg, &regval);
-+	if (ret < 0)
++	ret = dev_pm_set_dedicated_wake_irq(dev, irq);
++	if (ret)
 +		return ret;
-+	*val = mult_frac((long)regval, res, 1000000);
 +
++	return devm_add_action_or_reset(dev, devm_pm_clear_wake_irq, dev);
++}
++EXPORT_SYMBOL_GPL(devm_pm_set_dedicated_wake_irq);
++
++/**
++ * devm_pm_set_dedicated_wake_irq_reverse - device-managed variant of
++ *                                          dev_pm_set_dedicated_wake_irq_reverse
++ * @dev: Device entry
++ * @irq: Device IO interrupt
++ *
++ * Request a dedicated wake-up interrupt with reverse enable ordering, same with
++ * dev_pm_set_dedicated_wake_irq_reverse, but the device will be auto clear wake
++ * capability on driver detach.
++ */
++int devm_pm_set_dedicated_wake_irq_reverse(struct device *dev, int irq)
++{
++	int ret;
++
++	ret = dev_pm_set_dedicated_wake_irq_reverse(dev, irq);
++	if (ret)
++		return ret;
++
++	return devm_add_action_or_reset(dev, devm_pm_clear_wake_irq, dev);
++}
++EXPORT_SYMBOL_GPL(devm_pm_set_dedicated_wake_irq_reverse);
++
+ /**
+  * handle_threaded_wake_irq - Handler for dedicated wake-up interrupts
+  * @irq: Device specific dedicated wake-up interrupt
+diff --git a/include/linux/pm_wakeirq.h b/include/linux/pm_wakeirq.h
+index 25b63ed51b76..98a532cd92fe 100644
+--- a/include/linux/pm_wakeirq.h
++++ b/include/linux/pm_wakeirq.h
+@@ -11,6 +11,8 @@ extern int dev_pm_set_dedicated_wake_irq(struct device *dev, int irq);
+ extern int dev_pm_set_dedicated_wake_irq_reverse(struct device *dev, int irq);
+ extern void dev_pm_clear_wake_irq(struct device *dev);
+ extern int devm_pm_set_wake_irq(struct device *dev, int irq);
++extern int devm_pm_set_dedicated_wake_irq(struct device *dev, int irq);
++extern int devm_pm_set_dedicated_wake_irq_reverse(struct device *dev, int irq);
+ 
+ #else	/* !CONFIG_PM */
+ 
+@@ -38,5 +40,15 @@ static inline int devm_pm_set_wake_irq(struct device *dev, int irq)
+ 	return 0;
+ }
+ 
++static inline int devm_pm_set_dedicated_wake_irq(struct device *dev, int irq)
++{
 +	return 0;
 +}
 +
-+static umode_t max77705_is_visible(const void *data,
-+				   enum hwmon_sensor_types type,
-+				   u32 attr, int channel)
++static inline int devm_pm_set_dedicated_wake_irq_reverse(struct device *dev, int irq)
 +{
-+	switch (type) {
-+	case hwmon_in:
-+		if (channel >= ARRAY_SIZE(voltage_channel_desc))
-+			return 0;
-+
-+		switch (attr) {
-+		case hwmon_in_input:
-+		case hwmon_in_label:
-+			return 0444;
-+		default:
-+			break;
-+		}
-+		break;
-+	case hwmon_curr:
-+		if (channel >= ARRAY_SIZE(current_channel_desc))
-+			return 0;
-+
-+		switch (attr) {
-+		case hwmon_curr_input:
-+		case hwmon_in_label:
-+			return 0444;
-+		case hwmon_curr_average:
-+			if (current_channel_desc[channel].avg_reg)
-+				return 0444;
-+		default:
-+			break;
-+		}
-+		break;
-+	default:
-+		break;
-+	}
 +	return 0;
 +}
 +
-+static int max77705_read_string(struct device *dev, enum hwmon_sensor_types type, u32 attr,
-+				int channel, const char **buf)
-+{
-+	switch (type) {
-+	case hwmon_curr:
-+		switch (attr) {
-+		case hwmon_in_label:
-+			*buf = current_channel_desc[channel].label;
-+			return 0;
-+		default:
-+			return -EOPNOTSUPP;
-+		}
-+
-+	case hwmon_in:
-+		switch (attr) {
-+		case hwmon_in_label:
-+			*buf = voltage_channel_desc[channel].label;
-+			return 0;
-+		default:
-+			return -EOPNOTSUPP;
-+		}
-+	default:
-+		return -EOPNOTSUPP;
-+	}
-+}
-+
-+static int max77705_read(struct device *dev, enum hwmon_sensor_types type,
-+			 u32 attr, int channel, long *val)
-+{
-+	struct regmap *regmap = dev_get_drvdata(dev);
-+	u8 reg;
-+	u64 res;
-+
-+	switch (type) {
-+	case hwmon_curr:
-+		switch (attr) {
-+		case hwmon_curr_input:
-+			reg = current_channel_desc[channel].reg;
-+			res = current_channel_desc[channel].resolution;
-+
-+			return max77705_read_and_convert(regmap, reg, res, val);
-+		case hwmon_curr_average:
-+			reg = current_channel_desc[channel].avg_reg;
-+			res = current_channel_desc[channel].resolution;
-+
-+			return max77705_read_and_convert(regmap, reg, res, val);
-+		default:
-+			return -EOPNOTSUPP;
-+		}
-+
-+	case hwmon_in:
-+		switch (attr) {
-+		case hwmon_in_input:
-+			reg = voltage_channel_desc[channel].reg;
-+			res = voltage_channel_desc[channel].resolution;
-+
-+			return max77705_read_and_convert(regmap, reg, res, val);
-+		default:
-+			return -EOPNOTSUPP;
-+		}
-+	default:
-+		return -EOPNOTSUPP;
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct hwmon_ops max77705_hwmon_ops = {
-+	.is_visible = max77705_is_visible,
-+	.read = max77705_read,
-+	.read_string = max77705_read_string,
-+};
-+
-+static const struct hwmon_channel_info *max77705_info[] = {
-+	HWMON_CHANNEL_INFO(in,
-+			   HWMON_I_INPUT | HWMON_I_LABEL,
-+			   HWMON_I_INPUT | HWMON_I_LABEL
-+			),
-+	HWMON_CHANNEL_INFO(curr,
-+			   HWMON_C_INPUT | HWMON_C_LABEL,
-+			   HWMON_C_INPUT | HWMON_C_AVERAGE | HWMON_C_LABEL
-+			),
-+	NULL
-+};
-+
-+static const struct hwmon_chip_info max77705_chip_info = {
-+	.ops = &max77705_hwmon_ops,
-+	.info = max77705_info,
-+};
-+
-+static int max77705_hwmon_probe(struct platform_device *pdev)
-+{
-+	struct i2c_client *i2c;
-+	struct device *hwmon_dev;
-+	struct regmap *regmap;
-+
-+	i2c = to_i2c_client(pdev->dev.parent);
-+	regmap = devm_regmap_init_i2c(i2c, &max77705_hwmon_regmap_config);
-+	if (IS_ERR(regmap))
-+		return dev_err_probe(&pdev->dev, PTR_ERR(regmap),
-+				"Failed to register max77705 hwmon regmap\n");
-+
-+	hwmon_dev = devm_hwmon_device_register_with_info(&pdev->dev, "max77705", regmap,
-+							 &max77705_chip_info, NULL);
-+	if (IS_ERR(hwmon_dev))
-+		return dev_err_probe(&pdev->dev, PTR_ERR(hwmon_dev),
-+				"Unable to register hwmon device\n");
-+
-+	return 0;
-+};
-+
-+static struct platform_driver max77705_hwmon_driver = {
-+	.driver = {
-+		.name = "max77705-hwmon",
-+	},
-+	.probe = max77705_hwmon_probe,
-+};
-+
-+module_platform_driver(max77705_hwmon_driver);
-+
-+MODULE_AUTHOR("Dzmitry Sankouski <dsankouski@gmail.com>");
-+MODULE_DESCRIPTION("MAX77705 monitor driver");
-+MODULE_LICENSE("GPL");
-+
-
----
-base-commit: 20d5c66e1810e6e8805ec0d01373afb2dba9f51a
-change-id: 20250123-initial-support-for-max77705-sensors-ad0170ac1ec5
-
-Best regards,
+ #endif	/* CONFIG_PM */
+ #endif	/* _LINUX_PM_WAKEIRQ_H */
 -- 
-Dzmitry Sankouski <dsankouski@gmail.com>
+2.34.1
 
