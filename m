@@ -1,179 +1,78 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB4B61F0E44;
-	Tue,  4 Mar 2025 06:24:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EB8C1DC985;
+	Tue,  4 Mar 2025 06:26:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741069476; cv=none; b=R0PkY2TmUO2fq5jq5OYrafr063fyMTiHRIIHMnXmiq9Qc4IILWOj4KH5/Z+otsUxUO27F06ODyc7agp3Emkc4Pbwd6zqs5s/xT8FgCS4dAZkNT2RBD1CDYskEDLpXC1iRIInvRpvv35yumS1lzfNG2S4SShFkFAFedlxT9eDO3s=
+	t=1741069601; cv=none; b=ghkjM2oyaOyXBptXKqJHxyjiZpxGDlxFt+GU71Mwz/WZWiWJ0rAePg+HOfFTA6/AR0CdTOctX3lL70UJ/kwMCOHx9zdAWQPX4fUpRZ4mx4nlg/uWbAvksdn7dvdWM6GK+Q98ubvk++6W/9x2rifu5zHp8mrMWM9Ok8jz9U7AefQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741069476; c=relaxed/simple;
-	bh=Cw2QMKf7IVdFrql9kCVeyibfjjY320rrDvX0qGCRrOY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TAXEHcfMhZE6yStzKaAx512BJQrrT+0w+e5UoZlrhnIOnZ1T9w819hIjb0tSgjfU9qu3W6Mxn0xXRfdYgRBvtvFcM0fJ+WEwIWZ6NxeGnFwbXVwsCaSPBfjyy/LSLO+tr01SblcLZp6attMeqDH0byR54l6rN3CIw8A+U7/2moU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VoBWsxyS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741069601; c=relaxed/simple;
+	bh=Qytyx0Oyad4uFUbxPJxtPM+fVpsqV8+npLyXPgw3+o0=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=bBRpmXz/OJ46D1kU01HvyJjR/j2ItwUKMBvcCj7PZzxhTPVa1oqBTPkllX0ZBgJdKyQThAx3zNLzbPMVF+XPl32iVjtR8C4mSGudOwA9penmTX8czE+0AXZK7UQned2OS8vayFNQ5rDs+r0uW/Lw3Nmqw5fO04K52HSGyjBKGrg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b=nwhz3ddh; arc=none smtp.client-ip=211.75.126.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VoBWsxyS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AAB80C4CEE5;
-	Tue,  4 Mar 2025 06:24:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741069475;
-	bh=Cw2QMKf7IVdFrql9kCVeyibfjjY320rrDvX0qGCRrOY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=VoBWsxyS69IbVZjPON2snq5rAqVG5F02DqwMi5jtruO627eyqhQ8oswEoxraNywI5
-	 uE4GtFcQUktKV9nPU26LsbtHLRhzBoKEN0WnPh+Ru+rqIbU/BTVm9+dTXyCh+BZVHT
-	 Te7xzawilBlQGijRI7YasMQTM38x/8Ev6oS7NL/0ysfkXcbYTq3OPrb/L+jl3+HaLt
-	 p1iUEnGI6IomoeDFFupHeHqwjIkp3xITDtvE8RZsB+0qr2CfjepxvQVg287ZJ519nc
-	 1TYNRpz4Ri6Asx/AHDBj2Zao4AZMxrfafZFF1TOScfG7/jzTqxeuoVZRpR26z2ICpN
-	 aEg2nRwragKIg==
-Date: Tue, 4 Mar 2025 07:24:32 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: Abel Vesa <abel.vesa@linaro.org>
-Cc: Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>, 
-	Anjelique Melendez <anjelique.melendez@oss.qualcomm.com>, Kamal Wadhwa <quic_kamalw@quicinc.com>, 
-	Jishnu Prakash <jishnu.prakash@oss.qualcomm.com>, Bjorn Andersson <andersson@kernel.org>, 
-	Konrad Dybcio <konradybcio@kernel.org>, Johan Hovold <johan@kernel.org>, 
-	Sebastian Reichel <sre@kernel.org>, Pavel Machek <pavel@ucw.cz>, linux-leds@vger.kernel.org, 
-	linux-pwm@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC] leds: rgb: leds-qcom-lpg: Compute PWM value based on
- period instead
-Message-ID: <ylnkjxnukss7askv7ip5htrb4tyjzhpw7jim2se6rloleq5h6w@ngk7lbk26hxj>
-References: <20250303-leds-qcom-lpg-compute-pwm-value-using-period-v1-1-833e729e3da2@linaro.org>
+	dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b="nwhz3ddh"
+X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 5246QCRD03215721, This message is accepted by code: ctloc85258
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=realtek.com; s=dkim;
+	t=1741069572; bh=Qytyx0Oyad4uFUbxPJxtPM+fVpsqV8+npLyXPgw3+o0=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:Content-Transfer-Encoding:MIME-Version;
+	b=nwhz3ddh0oPIM62HStFEN+T2DlQn40opMBBWnIMJGTs2jDyFlYvRulcPpX1BaSjTR
+	 5IAiHOTN7X/IeTRf9GYk7xFuSGdSTCup8GWCRNrjEDintxpkMUrkViK26odxs7c6mI
+	 eK4jeFcK+qRMhkQ3K+QpCibC0smhHWe+/yK7A4+iezgRrFqYyMHY3gPzhJ1kR8kp3I
+	 +iwgmNlElPHMzCTdNqb0xlalo/4qn19wR3tnKu1ZYtOgNn0TFZryboTPTb67jLXtVc
+	 YXz3qmQ6jq2BC3QVeZMNFn/EDvBekU2JHQjEmrSpXFJilwTrkUHXlT4IfQBgshzre0
+	 7uUkwrXE2oiOw==
+Received: from mail.realtek.com (rtexh36505.realtek.com.tw[172.21.6.25])
+	by rtits2.realtek.com.tw (8.15.2/3.06/5.92) with ESMTPS id 5246QCRD03215721
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 4 Mar 2025 14:26:12 +0800
+Received: from RTEXMBS05.realtek.com.tw (172.21.6.98) by
+ RTEXH36505.realtek.com.tw (172.21.6.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Tue, 4 Mar 2025 14:26:13 +0800
+Received: from RTEXMBS01.realtek.com.tw (172.21.6.94) by
+ RTEXMBS05.realtek.com.tw (172.21.6.98) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Tue, 4 Mar 2025 14:26:13 +0800
+Received: from RTEXMBS01.realtek.com.tw ([fe80::f5bd:6ac9:46d:9547]) by
+ RTEXMBS01.realtek.com.tw ([fe80::f5bd:6ac9:46d:9547%5]) with mapi id
+ 15.01.2507.035; Tue, 4 Mar 2025 14:26:13 +0800
+From: Kailang <kailang@realtek.com>
+To: Takashi Iwai <tiwai@suse.de>,
+        "Maciej S. Szmigiero"
+	<mail@maciej.szmigiero.name>
+CC: "linux-sound@vger.kernel.org" <linux-sound@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v2] ALSA: hda/realtek: Enable PC beep passthrough for HP EliteBook 855 G7
+Thread-Topic: [PATCH v2] ALSA: hda/realtek: Enable PC beep passthrough for HP
+ EliteBook 855 G7
+Thread-Index: AQHbgSMJVrDFmK8Mp0CrjaEmJFua+rNLUekPgAL4rhCAAARNMIATIxStgAEn/FA=
+Date: Tue, 4 Mar 2025 06:26:13 +0000
+Message-ID: <31416b81a4f646239d8a17a0fbc71e79@realtek.com>
+References: <7461f695b4daed80f2fc4b1463ead47f04f9ad05.1739741254.git.mail@maciej.szmigiero.name>
+	<87jz9o99ef.wl-tiwai@suse.de>
+	<a02344f2-3b99-41ea-af64-8d2bcb01e435@maciej.szmigiero.name>
+	<87h64s972a.wl-tiwai@suse.de>	<6224620265674b09b5762f908b5158f9@realtek.com>
+	<2fea9fe8-312f-45a0-9bed-455c910fba43@maciej.szmigiero.name>
+ <87ldtme10m.wl-tiwai@suse.de>
+In-Reply-To: <87ldtme10m.wl-tiwai@suse.de>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="bbhjmniybhvgywki"
-Content-Disposition: inline
-In-Reply-To: <20250303-leds-qcom-lpg-compute-pwm-value-using-period-v1-1-833e729e3da2@linaro.org>
 
+Like below.
 
---bbhjmniybhvgywki
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH RFC] leds: rgb: leds-qcom-lpg: Compute PWM value based on
- period instead
-MIME-Version: 1.0
+Acked-by: kailang@realtek.com
 
-Hello Abel,
-
-On Mon, Mar 03, 2025 at 06:14:36PM +0200, Abel Vesa wrote:
-> Currently, the implementation computes the best matched period based
-> on the requested one, by looping through all possible register
-> configurations. The best matched period is below the requested period.
-
-The best matched period *isn't above* the requested one. An exact match
-is fine.
-
-> This means the PWM consumer could request duty cycle values between
-> the best matched period and the requested period, which with the current
-> implementation for computing the PWM value, it will result in values out
-> of range with respect to the selected resolution.
-
-I still don't understand what you mean with resolution here.
-
-I guess you spend some time understanding the workings of the driver and
-you also have an example request that results in a hardware
-configuration you don't like. Please share the latter to a) support your
-case and b) make it easier for your reviewers to judge if your change is
-indeed an improvement.
-
-> So change the way the PWM value is determined as a ratio between the
-> requested period and duty cycle, mapped on the resolution interval.
-
-Is the intention here that (for the picked period) a duty_cycle is
-selected that approximates the requested relative duty_cycle (i.e.
-=2Eduty_cycle / .period)?
-
-If it's that: Nack. This might be the right thing for your use case, but
-it's wrong for others, it complicates the driver because you have spend
-more effort in the calculation and (from my POV even worse) the driver's
-behaviour deviates from the usual one for pwm drivers. I admit there are
-some other lowlevel pwm drivers that are not aligned to the procedure I
-described that should be used to determine the register settings for a
-given request. But I target a common behaviour of all pwm drivers
-because that is the only way the pwm API functions can make a promise to
-its consumers about the resulting behaviour. Reaching this is difficult,
-because some consumers might depend on the "broken" behaviour of a given
-lowlevel driver (and also because analysing a driver to check and fix
-its behaviour is an effort). But "fixing" a driver to deviate from the
-declared right behaviour is wrong and includes all downsides that make
-me hesitate to align the old drivers to the common policy.
-
-The policy to pick a hardware setting is a compromise between consumer
-needs and what is straight forward to implement for (most) hardware
-drivers. Please stick to that. If you want more flexibility and
-precision in your consumer, please consider converting the pwm driver to
-the waveform API.
-
-> [...]
-> @@ -532,13 +534,15 @@ static void lpg_calc_duty(struct lpg_channel *chan,=
- uint64_t duty)
->  	if (chan->subtype =3D=3D LPG_SUBTYPE_HI_RES_PWM) {
->  		max =3D BIT(lpg_pwm_resolution_hi_res[chan->pwm_resolution_sel]) - 1;
->  		clk_rate =3D lpg_clk_rates_hi_res[chan->clk_sel];
-> +		pwm_resolution_arr =3D lpg_pwm_resolution_hi_res;
->  	} else {
->  		max =3D BIT(lpg_pwm_resolution[chan->pwm_resolution_sel]) - 1;
->  		clk_rate =3D lpg_clk_rates[chan->clk_sel];
-> +		pwm_resolution_arr =3D lpg_pwm_resolution;
->  	}
-> =20
-> -	val =3D div64_u64(duty * clk_rate,
-> -			(u64)NSEC_PER_SEC * lpg_pre_divs[chan->pre_div_sel] * (1 << chan->pre=
-_div_exp));
-> +	step =3D div64_u64(period, max);
-> +	val =3D div64_u64(duty, step);
-
-Such a pair of divisions is bound to loose precision. I didn't try to
-determine values that can happen in practise here, but consider:
-
-	period =3D  999996
-	max =3D     500000
-	duty =3D    499998
-
-The exact value for val is 250000. However with integer division you
-get 499998. What you can do about that is calculating
-
-	val =3D duty * max / period
-
-instead which gives you a more exact result. The challenge here however
-is that the multiplication might overflow. If you know that the result
-fits into a u64, mul_u64_u64_div_u64() is the function that gets this
-right for you.
-
->  	chan->pwm_value =3D min(val, max);
->  }
-> [...]
-> ---
-> base-commit: 0067a4b21c9ab441bbe6bf3635b3ddd21f6ca7c3
-
-My git repo doesn't know that commit. Given that you said your patch
-bases on that other series, this isn't surprising. Please use a publicly
-available commit as base parameter, otherwise you (and I) don't benefit
-=66rom the armada of build bots because they just silently fail to test in
-this case.
-
-Best regards
-Uwe
-
---bbhjmniybhvgywki
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmfGnJ0ACgkQj4D7WH0S
-/k5KZAf+IDkU8qVALy67hx3Bo7niiC7euPqxcaUR1ldvxfDzaz6Hzrs7M2nQZDJR
-fbSgqJZmAZipYMQ5hCh60TfNYzCC8TyDRuuyoyg1voI9IjPvP4LGua+j9UzybNfV
-qzBLgsDnH6h0H5TytGpo7nlS763cx4Z2BFZjZ/tWFnGFLZHs6dNycGU0nVke/KMZ
-czytn2zdyxSrdFbmjJWhHFVc7YVTyZWEXcs/LPrKgg2lwZSFtchmqPwI9cq9q5jC
-VbfrmOdW9fFtOADyLQw3t27IvwA/FCB3bbx6yWIEHcalnGZvxyhuk7WZtbsq6isT
-l2Qh4EzEq1jVCkLJb6sx7bM0sdBvwQ==
-=kD8J
------END PGP SIGNATURE-----
-
---bbhjmniybhvgywki--
