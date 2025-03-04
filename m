@@ -1,193 +1,88 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80B291F3B8B;
-	Tue,  4 Mar 2025 07:27:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2670B1F461E;
+	Tue,  4 Mar 2025 07:27:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741073222; cv=none; b=G1n95hwGL95bLgvo0G+7FbJp8ErRZUV7l9PPM2nHc+jAsUeZFOdUz4q0rlni9MTARR+/frpEb4c5KGojJ3481GtIa2yng/e6L/yqmNrQ4iUh4WtghhpVuDk/MnrF6mFyLCPJ7z2NNfvIjzjzko05Aft+mfVzYV90UBwbuG9sp4g=
+	t=1741073238; cv=none; b=f3J4r+ZCutZuBuWWmFchOu6h97nTaElhk4A5A843FhWEs+81VmH9w4Fii2ktufGDeR2/th5X/u1Ss8vwSaXNwvKXkTEKf8sMeqjpfn7FjlYlWYjgyMAepwEo0FKXXtD5WYlzvFW+CuzQilKKA7f4qGu1ZQlbG9E4zPLzuAWUz3k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741073222; c=relaxed/simple;
-	bh=HEWd7nz/d+PKsQ3jXyyDNOvORZbt4ng0L2I9siK7DsM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uI1OW46t3D9axfChP6lW6HGgPy+w+yN0dH57AFB5dNz5DftYrNXbI2BhdP96ivz3QvHlkTaxLgs6hqrLax4IvFJi7B08Z/PkSMECf/wCLEGpjtSAH4D9jW3/ltkssHgBtGJQ5eXWxf3Lymmc0IjMlpCCXWLvauS1lF3L6aMcmZs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OUG3K4Bp; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741073238; c=relaxed/simple;
+	bh=T77wGR7eXHCugm56bgRS+Cpw9HAasGubLIvjTvw6nLU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ho8wrx0ChXTxvUBKTizZ0KolvIz6VsnaHmHxCyzLWkerZ6iXu7P7CK2/0Iel4KNInhzrppU3YhAKJjhfFLvVfuHJvskwi1QdKg3hbugLB+NKIgnu81aBv78HkUcVUKCzBogf6ZzzbdP0X5VnLY5PxaFqTXYKt/0BT9z5RxgLqZs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=f/JdyAlq; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OUG3K4Bp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17146C4CEE5;
-	Tue,  4 Mar 2025 07:26:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741073222;
-	bh=HEWd7nz/d+PKsQ3jXyyDNOvORZbt4ng0L2I9siK7DsM=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=OUG3K4Bpf1vhgWiRM16+WBYZCS+jYVx9OC/AmhrNr+WmIPpsnNrLsxE2qV+cHBHlX
-	 +40WgmReWTOF4Tyq0tldq0hzJAgmFO4ZITZrnTmBgJukurE51IA8IldjRnNxCh9H8J
-	 /kQeeALLw0Sg4EDRvRqUQfybrzjmFmPCOVJLuswmyBgXot1Oo3wM2JDN0PHdRfN09X
-	 edYVYPamLz2cdaHeDd8w1cKp024K52dhf/+nd0BOabRuiiOkXGdjRx9ElTVLTOSrKf
-	 XNj+LpegaZnz+aGJks1tuItEZMZ0dPZpkv6RbVE+Dvw7xGPbNtTjXXxxaWCUUsNJci
-	 f+5Go/z8hbeHQ==
-Message-ID: <7856fdff-5dc5-44e2-afde-129233b930ab@kernel.org>
-Date: Tue, 4 Mar 2025 08:26:54 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="f/JdyAlq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741073237; x=1772609237;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=T77wGR7eXHCugm56bgRS+Cpw9HAasGubLIvjTvw6nLU=;
+  b=f/JdyAlqbx23CJ7whVV+P0BZBkdPo6UekTn9fTuuJzYTSj73nGEjzr2Z
+   TNY/Bj77RBDvd+T+PUQCWKnYHSoM1R/0PcFFmXK7Tx4RL5EC3ChTxXTnx
+   YD0OD0jaf1i/Ro833toq3WH23ll/HIfb/lBas9pjje3K+Vnl+P450D4HG
+   eQlSYmkRrjDkVIagD0ndMrPVg3bFDoPAxwpKLiSa1I86KE/kAPTKQZUIL
+   Sm2BNbrK3dRtADyKBZcmizsnfx61MbHsRUEsD7Q6UyZglThUI7IYjpsT3
+   XayE7VNA131lnCZcZR9lFILCEXkVPXj4awUSgq46uv3oSApnZiCB6/sxV
+   w==;
+X-CSE-ConnectionGUID: 10znjHcYSymKMzA8riAc5A==
+X-CSE-MsgGUID: ANim9a1ATUqOv4Ces5pXqw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11362"; a="53371433"
+X-IronPort-AV: E=Sophos;i="6.13,331,1732608000"; 
+   d="scan'208";a="53371433"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Mar 2025 23:27:17 -0800
+X-CSE-ConnectionGUID: 2+PVFWQcTvGczLGMIwtInA==
+X-CSE-MsgGUID: kC/4aWeMQPeHeJqp/B56JQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,331,1732608000"; 
+   d="scan'208";a="123307002"
+Received: from mev-dev.igk.intel.com ([10.237.112.144])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Mar 2025 23:27:14 -0800
+Date: Tue, 4 Mar 2025 08:23:26 +0100
+From: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
+To: Tariq Toukan <tariqt@nvidia.com>
+Cc: "David S. Miller" <davem@davemloft.net>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Eric Dumazet <edumazet@google.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	Saeed Mahameed <saeedm@nvidia.com>, Gal Pressman <gal@nvidia.com>,
+	Leon Romanovsky <leonro@nvidia.com>,
+	Leon Romanovsky <leon@kernel.org>, netdev@vger.kernel.org,
+	linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next 5/6] net/mlx5e: Separate address related
+ variables to be in struct
+Message-ID: <Z8aqbjHicSGBvtsG@mev-dev.igk.intel.com>
+References: <20250226114752.104838-1-tariqt@nvidia.com>
+ <20250226114752.104838-6-tariqt@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] media: dt-bindings: Add dt bindings for
- m2m-deinterlace device
-To: Matthew Majewski <mattwmajewski@gmail.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring
- <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>,
- "Dr. David Alan Gilbert" <linux@treblig.org>,
- Neil Armstrong <neil.armstrong@linaro.org>,
- Uwe Kleine-Konig <u.kleine-koenig@baylibre.com>,
- Andrzej Pietrasiewicz <andrzejtp2010@gmail.com>, devicetree@vger.kernel.org,
- linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250214231759.119481-1-mattwmajewski@gmail.com>
- <20250214231759.119481-2-mattwmajewski@gmail.com>
- <20250218-eggplant-skylark-of-swiftness-dcf6ba@krzk-bin>
- <69cb2e95c291f17cff42b45e7c871f30a85c060d.camel@gmail.com>
- <3d729159-4d13-4a61-88c7-3be992b23728@kernel.org>
- <c7141c6554b396d3ddaf7e0e540b80e5990b416b.camel@gmail.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <c7141c6554b396d3ddaf7e0e540b80e5990b416b.camel@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250226114752.104838-6-tariqt@nvidia.com>
 
-On 03/03/2025 16:21, Matthew Majewski wrote:
-> On Mon, 2025-03-03 at 08:31 +0100, Krzysztof Kozlowski wrote:
->> On 26/02/2025 23:41, Matthew Majewski wrote:
->>>
->>> As I wrote, supported devices/hardware is anything that provides a
->>> MEM_TO_MEM capable dma-controller with interleaved transfer
->>> support. I
->>> did not list specific devices because the bindings are supposed to
->>> be
->>> generic, as they are not describing actual silicon. But if you want
->>> me
->>
->> I already told you that no. Bindings are not supposed to be generic.
->>
->> From where did you get such information?
+On Wed, Feb 26, 2025 at 01:47:51PM +0200, Tariq Toukan wrote:
+> From: Leon Romanovsky <leonro@nvidia.com>
 > 
-> There are generic bindings in the kernel and I based my bindings off of
-> them. spi-gpio.yaml, i2c-gpio.yaml, video-mux.yaml, etc are all generic
-> bindings, no?
+> Prepare the code to addition of prefix handling logic which is needed
+> to support matching logic based on source and/or destination network
+> prefixes.
+> 
+> Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
+> Signed-off-by: Tariq Toukan <tariqt@nvidia.com>
+> ---
+>  .../mellanox/mlx5/core/en_accel/ipsec.c       | 32 ++++----
+>  .../mellanox/mlx5/core/en_accel/ipsec.h       | 26 +++----
+>  .../mellanox/mlx5/core/en_accel/ipsec_fs.c    | 75 +++++++++++--------
+>  3 files changed, 68 insertions(+), 65 deletions(-)
+> 
 
-They are generic, but you said "supposed to be generic" and I am asking
-about this.
-
-BTW, any "generic" or "simple" bindings often became non-generic and
-non-simple leading to mess.
-
-> 
->>
->>> to list some devices which provide a compatible dma-controller,
->>> here
->>> are devices I found in the current mainline kernel:
->>>
->>> - TI OMAP Soc Family
->>> - TI Davinci Soc Family
->>> - TI Keystone Processor Family
->>> - IMX27 Processor and variants
->>> - Several Microchip Processors (sama5, sam9x7, sam9x60)
->>
->> That's too generic - you just listed SoCs, which consist of dozen or
->> hundred of devices. Which hardware piece is here?
->>
->> Maybe this is not for a real device, but then this should be marked
->> clearly.
->>
-> 
-> I listed devices that have a compatible dma-controller, so the list is
-> a bit big, sorry. I also specifically mentioned the BeagleBone black
-> board which I have been testing on. 
-> 
-> "m2m-deinterlace" used to be a part of the mach-imx27_visstrim_m10.c
-> board file, but was removed with commit 879c0e5e0ac711 (ARM: imx:
-> Remove i.MX27 board files). So at least the Vistrim M10 device was
-> explicitly using the m2m-deinterlace device. 
-> 
-> When the move away from board files was made towards device-tree, m2m-
-> deinterlace support was never ported over to device-tree. This is what
-> I am doing now. 
-> 
-> And yes, m2m-deinterlace is not a "real device" if by "real device" you
-> mean an actual piece of silicon on a specific piece of hardware. I
-> think there is just some semantic confusion here. I will no longer
-> refer to it as a "device" then, please let me know what the more
-> appropriate term is and I will modify the description accordingly.
-> 
->>>
->>> I think an appropriate analogy for m2m-deinterlace would be spi-
->>> gpio.
->>> Since spi-gpio leverages gpio for bitbanging the spi protocol, the
->>> bindings do not need to describe any clocks, spi-controller
->>> registers,
->>
->> Sure, SPI GPIO is Linux driver, not a device and I am asking about it
->> all the time.
->>
-> 
-> My point was that spi-gpio has dt-bindings even though these bindings
-> do not describe a specific hardware device, hence it is "generic". 
-
-
-SPI GPIO is physical GPIO lines bit-banged in software. I don't think it
-is possible to achieve such SPI controller as part of some other Linux
-structure.
-Now your case - describe what you have here - SW for interlacing? But
-that is just memory operation. I really do not see why this is supposed
-to be separate device node in DTS. This is part of media pipeline, so
-easily can be part of some other device.
-
-
-Best regards,
-Krzysztof
+Reviewed-by: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
