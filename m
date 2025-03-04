@@ -1,99 +1,110 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F14A51EE7AD
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 19:53:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 016E8189F5C
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 19:55:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741118041; cv=none; b=K3mKHovbhxmZjgiCQhNAmj4kF1aXir2aFTpsPITgtQt7GsEqnfH7DCtiJPKTnLFDFHeYKKsQ45GDVwR0VJO2qxJpohXX9LHJobltirQggWi9VieTZdEes+Tz9pHxK9D+gbObAClgwyTMRfnIbnfIR1/WEq+JMrqg2Ervdx2LlIs=
+	t=1741118121; cv=none; b=Bzop+rGBoDBG5Eim4+/N6Q2nttIYYAHY9PVmPOKafMmdIgmJiS4z4krNBy0QGhaNOhHRVodQ7k6MpSNvVmKHy7DYC6vfPAQRsWJ15h3RMClnUARzbeG2TBqvPOmfUl4DqxYckIf8aA2qsWU/Ei9ZXkPOmEZEQTqbiSYzOyF0Jv8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741118041; c=relaxed/simple;
-	bh=h0QmsF5WjU8uUwJMDtkw5V/S9XuBsfrGQ8xVySEL8cg=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=gGGwkX1X8Y26KilKdRr2IePERzSY2HZuOgVKowFig0YtopF5mibN7yDyTA1slFiqpW7bLiZBIarDxUoEMp35T84iBqINpXfBYYqwLM1KCTrtuCyJzIL7VL9ZXu7BgS0bFaVs6orOltnFfBYQ1QPYRSAwQ1IkLkZtrnphOb7MbuA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=y3vm450d; arc=none smtp.client-ip=209.85.216.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1741118121; c=relaxed/simple;
+	bh=nRlQMQIfDvAI6b8+m0o68n9PK7KqytnFSAtRsiy6rkA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SA7TwLCMloy8JOX+k3BjepuQ7eywVNSQCus/4DAs3DZGM4Hcp9cKQd0x88LH1j/xCeGUlbLdLwDBdYzg8K/c3w4oOEHgpiL6fBDCZdVnkv32tbI/TYRj0cXjPbMS2hMXW5hQGwAzrXoQ99PO1Ej1lJVJYVjKvw4yRDZJLpGLMgw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jRf3wzU/; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="y3vm450d"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2fe86c01e2bso11476672a91.2
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Mar 2025 11:53:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1741118039; x=1741722839; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=FcX8s6TGQjn/ciNyOtVkHsyvdW8iKLLpE8U6tntEZos=;
-        b=y3vm450dWDHQJv0jDxz0YiC2xJ8SSdhIHBNjbGQlIn4Zf/G5k330KdRIARzT3kA+LO
-         DxwFErOXEltPNFjAttYipAKkA7d5kfEKFtU5fPxB8krnyUizvUv5wJF27toki3zJkz+b
-         NZifndeodY1TAQQqDTAYoZiq0quv2zgzmwbNvk8uxWT2IeGulK2l8NeQPvxOSeM85yX/
-         QFxMApcuvuY18/z5bRSTlJS50oDvjaZfdOYuxlv5GleEIFqfd72hyew/MX7P219yOkCO
-         tkiur2Mu0o9ILzUDqRco67769pvTcUnpOmT47gnyRacKyXOMZOusgpUcn6VAzuqVgcNp
-         Fgsw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741118039; x=1741722839;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=FcX8s6TGQjn/ciNyOtVkHsyvdW8iKLLpE8U6tntEZos=;
-        b=AOLNpf/u/T9xlighF0WiVYNBakVuAScKtRyiwSEe5/vVBcnvN7fBZiglpLdBtBYBye
-         wefZCZP7v+2QUIU2y7zphAnOpiRw6NPgNt6RhjnN91mpgU+XHzOF09TRrlTp0kfjGhcH
-         FJ7wVCDaqpHwiHevvwIkiwxtnpgU6aAUyXzppf55mChhglfR9a6fqKrZZddbNBkvE9Eq
-         S8OauSjAczLVMH8FCOHDJwVxchGnGUDxs+/NZzXhhmQeMZCecIlKZDR8uzxHQmjpM7k0
-         X9kH5Pvf1u5y6/7lpl0VXRduF2KmHKOdV6nLPSZZKepPqciUfGDzPT8jtLGT/CBzZNMV
-         QMlw==
-X-Forwarded-Encrypted: i=1; AJvYcCUt2RhRug5WSzmouHUOqYt4AEnpQgrSd/ePbrB+wrkXUsMyJYDdoQar6KbBmJbb0qvbLT6lPNqFQb1foEE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxB+q0M3tJv88/amBIX9rP8rMKPPMFvGsXkRZbPjWFoVvPpUNJR
-	hNcnI6dh4sph2bcHVS+iyFZfP1D6eRThB4oJ/6ppGjuubNFjr6b9G9lQf602s1zcpfP11hmLirf
-	x3g==
-X-Google-Smtp-Source: AGHT+IHOGmjXt5qX0JwYqHXuRcMAyZDKrDodX6geowjqs/tfeTheYOjqw3n3RYRUFrP2O9PpebVhmR1sgYI=
-X-Received: from pjbsi3.prod.google.com ([2002:a17:90b:5283:b0:2fc:2e92:6cf])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:3f06:b0:2f5:88bb:118
- with SMTP id 98e67ed59e1d1-2ff497eb7a6mr724027a91.22.1741118039359; Tue, 04
- Mar 2025 11:53:59 -0800 (PST)
-Date: Tue, 4 Mar 2025 11:53:57 -0800
-In-Reply-To: <42035a43-660c-4d38-9369-db824e271671@zytor.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jRf3wzU/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741118120; x=1772654120;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=nRlQMQIfDvAI6b8+m0o68n9PK7KqytnFSAtRsiy6rkA=;
+  b=jRf3wzU/QRtbXzxPm68V+vgpMrINwiUHURkWzvmsVKNz7iJesURUhAwy
+   CFvlHWGy5spRsBuzOaEYk5UrJ9Sdeo625RAWk8jxlX5q5//IBEurJj80B
+   IcscPvDHLuxoJaq2jflPqI5yOp3YPF+lYvpmaaY6+pdr5jRQCwGYO+Ac2
+   LENQtSrMEDLfpl+XTTcIoEyoEyUhbGLtQ8ANXrydaqfc1jLVicwv22Fpm
+   x9dnJgPTFLwYzRBH6kBxgBLyEE2Jf6IEq1HogGxFHE2pNztgzRiblNueh
+   ADMf7SF4SoP1U2U6wjZ/3n0bfVZEzlJY4BPu+XO9m9JzSuCVlCgWVHlHd
+   g==;
+X-CSE-ConnectionGUID: hDLlND3nSs6abHg+fdCO3Q==
+X-CSE-MsgGUID: khlG7BakTLOUyqjl/nv+cQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11363"; a="53043661"
+X-IronPort-AV: E=Sophos;i="6.14,220,1736841600"; 
+   d="scan'208";a="53043661"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2025 11:55:20 -0800
+X-CSE-ConnectionGUID: znH4F/z3RcmuXKXIsUSdXA==
+X-CSE-MsgGUID: fWNTE6UMQ4O1jkpUUXuOZw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,220,1736841600"; 
+   d="scan'208";a="123591139"
+Received: from ssimmeri-mobl2.amr.corp.intel.com (HELO [10.124.222.110]) ([10.124.222.110])
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2025 11:55:18 -0800
+Message-ID: <b4f7090b-3f16-4541-bd8d-d7a2f22ba164@linux.intel.com>
+Date: Tue, 4 Mar 2025 11:55:17 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20241126101710.62492-1-chao.gao@intel.com> <Z0WitW5iFdu6L5IV@intel.com>
- <Z4HI2EsPwezokhB0@google.com> <42035a43-660c-4d38-9369-db824e271671@zytor.com>
-Message-ID: <Z8daVRCZjNTxLATy@google.com>
-Subject: Re: [PATCH v2 0/6] Introduce CET supervisor state support
-From: Sean Christopherson <seanjc@google.com>
-To: Xin Li <xin@zytor.com>
-Cc: Chao Gao <chao.gao@intel.com>, Borislav Petkov <bp@alien8.de>, tglx@linutronix.de, 
-	dave.hansen@intel.com, x86@kernel.org, pbonzini@redhat.com, 
-	linux-kernel@vger.kernel.org, kvm@vger.kernel.org, peterz@infradead.org, 
-	rick.p.edgecombe@intel.com, mlevitsk@redhat.com, weijiang.yang@intel.com, 
-	john.allen@amd.com
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] x86: coco: mark cc_mask as __maybe_unused
+To: Arnd Bergmann <arnd@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+ Rick Edgecombe <rick.p.edgecombe@intel.com>,
+ "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+ Tom Lendacky <thomas.lendacky@amd.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, "H. Peter Anvin" <hpa@zytor.com>,
+ "Jason A. Donenfeld" <Jason@zx2c4.com>, linux-kernel@vger.kernel.org
+References: <20250304143340.928503-1-arnd@kernel.org>
+Content-Language: en-US
+From: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
+In-Reply-To: <20250304143340.928503-1-arnd@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Mar 04, 2025, Xin Li wrote:
-> On 1/10/2025 5:26 PM, Sean Christopherson wrote:
-> > On Tue, Nov 26, 2024, Chao Gao wrote:
-> > > On Tue, Nov 26, 2024 at 06:17:04PM +0800, Chao Gao wrote:
-> > > > This v2 is essentially a resend of the v1 series. I took over this work
-> > > >from Weijiang, so I added my Signed-off-by and incremented the version
-> > > > number. This repost is to seek more feedback on this work, which is a
-> > > > dependency for CET KVM support. In turn, CET KVM support is a dependency
-> > > > for both FRED KVM support and CET AMD support.
-> > > 
-> > > This series is primarily for the CET KVM series. Merging it through the tip
-> > > tree means this code will not have an actual user until the CET KVM series
-> > > is merged. A good proposal from Rick is that x86 maintainers can ack this
-> > > series, and then it can be picked up by the KVM maintainers along with the
-> > > CET KVM series. Dave, Paolo and Sean, are you okay with this approach?
-> > 
-> > Boris indicated off-list that he would prefer to take this through tip and give
-> > KVM an immutable branch.  I'm a-ok with either approach.
-> > 
-> 
-> Hi Sean and Boris,
-> 
-> At this point because KVM is the only user of this feature, would it
-> make more sense to take this patch set through KVM x86 tree?
 
-Which tree it goes through is largely irrelevant, it needs explicit acceptance
-from the tip tree folks no matter what.
+On 3/4/25 6:33 AM, Arnd Bergmann wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
+>
+> When extra warnings are enabled, the cc_mask definition in asm/coco.h
+> causes a build failure with gcc:
+>
+> arch/x86/include/asm/coco.h:28:18: error: 'cc_mask' defined but not used [-Werror=unused-const-variable=]
+>     28 | static const u64 cc_mask = 0;
+>
+> Mark this one as __maybe_unused.
+>
+> Fixes: a0a8d15a798b ("x86/tdx: Preserve shared bit on mprotect()")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+Looks good to me.
+
+Reviewed-by: Kuppuswamy Sathyanarayanan 
+<sathyanarayanan.kuppuswamy@linux.intel.com>
+>   arch/x86/include/asm/coco.h | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/arch/x86/include/asm/coco.h b/arch/x86/include/asm/coco.h
+> index aa6c8f8ca958..9e9204cfca6f 100644
+> --- a/arch/x86/include/asm/coco.h
+> +++ b/arch/x86/include/asm/coco.h
+> @@ -25,7 +25,7 @@ u64 cc_mkdec(u64 val);
+>   void cc_random_init(void);
+>   #else
+>   #define cc_vendor (CC_VENDOR_NONE)
+> -static const u64 cc_mask = 0;
+> +static const __maybe_unused u64 cc_mask = 0;
+>   
+>   static inline u64 cc_mkenc(u64 val)
+>   {
+
+-- 
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
+
