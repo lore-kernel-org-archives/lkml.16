@@ -1,38 +1,44 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DB5891FF7B3
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 12:23:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72FB7202989;
+	Tue,  4 Mar 2025 12:23:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741091015; cv=none; b=tew+jxoOwgyvExnLxiFvb7XKCV8V0ag1o5Y20sGOY0YsORvmHwSh4o12mz0QdVsXQTECZS1fMqrD7dTQzjaLjKVj8Oph6GqVUJ9vNt7V1nk9nSWYAIZYPovTPdVXEDV/xAXS/uHFT8T8koqevwp582a8j/TUSdqPItYZAYBBYOY=
+	t=1741091029; cv=none; b=p6g/Sx0ibzJHSp2aum0tSdKE7UYJ0f3bq/lvUfMFE5frcOiy9zHMiczztFlQcpL4QoOA1mxhz4fFPY2wrQZEO3+EodUE87WevoAqvQm7j0jj0hw+04ns394y9gjNMvvD1IZ/VWtTycbpQs+gLM9+9SxBH22wrhmvDxS6bryi4b0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741091015; c=relaxed/simple;
-	bh=frDtmP/hC81btrl3w85t3YHdB5mEcrLb6ZDC6l4z81g=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=F8xixTYPmTr8i5zuf4Yj6DAiPlzRtH7pQFd5DaQ6p85kq/o58dwGWwqkYyaMTiz2tFtJDIWfGw080cSDYZWj3DxWQUdTOMPDOBLai6dIoTY0kSI5WsRP32l4K7RC9hAsqJ+/DW+PbKad8ERhHNGl6ohR5V8YlOUVvVASgIWzHx0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=dK9k1H5v; arc=none smtp.client-ip=220.197.31.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="dK9k1H5v"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=ADKsc
-	ftrjVy9nyTMtam3wp4e2jrb1IzFx+TtrZ0E7pM=; b=dK9k1H5v3NUsCDoacXnvN
-	hYBhgP7H9TfJVt1GzYs0CH3VOV6xpNqVFi/P7Ls5WqdLukEjXdlZkARUAAXSHfON
-	kUSXdq7ruiTpsG43U/SjvaR2LTOZAjNj/gwguQN+a7s+xhtiugo8BrvLCHDLIMtn
-	8s11qGiEUHhfZl/hrM+8xI=
-Received: from zhuxin.hobot.cc (unknown [])
-	by gzga-smtp-mtada-g1-4 (Coremail) with SMTP id _____wAnTqaA8MZn5+LlPQ--.25259S2;
-	Tue, 04 Mar 2025 20:22:32 +0800 (CST)
-From: Zxyan Zhu <zxyan20@163.com>
-To: broonie@kernel.org
-Cc: gregkh@linuxfoundation.org,
-	rafael@kernel.org,
-	dakr@kernel.org,
+	s=arc-20240116; t=1741091029; c=relaxed/simple;
+	bh=pWshvVmBkQMHMkEWSSjIe2vFXhFvF8yhVtksQUs+I9I=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=WGgwECAUowkr+38EAawweeV+HHvqXf3hZmk5hF0vKa+bHp2E26fi7E0/seko/q7bvoK29EaWa/dbsrSvjPlZy04aCTRgLpLcDfZQ0dJDU1O9XEtAIJrmO/ipCtPLkjejfyvMnzGOqN4cw/ppnXn7NQ99eVI5hQf45/+4J0yMIfg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4Z6ZbF34q3z4f3jch;
+	Tue,  4 Mar 2025 20:23:21 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id 7DD7C1A0DEB;
+	Tue,  4 Mar 2025 20:23:43 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.104.67])
+	by APP4 (Coremail) with SMTP id gCh0CgB321_O8MZnFO8VFg--.52907S4;
+	Tue, 04 Mar 2025 20:23:43 +0800 (CST)
+From: linan666@huaweicloud.com
+To: axboe@kernel.dk,
+	song@kernel.org,
+	yukuai3@huawei.com,
+	hare@suse.de,
+	martin.petersen@oracle.com
+Cc: linux-block@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Zxyan Zhu <zxyan20@163.com>
-Subject: [PATCH] regmap: debugfs: Fix name collision without atomic operations
-Date: Tue,  4 Mar 2025 20:22:21 +0800
-Message-Id: <20250304122221.3317232-1-zxyan20@163.com>
-X-Mailer: git-send-email 2.34.1
+	linux-raid@vger.kernel.org,
+	linan666@huaweicloud.com,
+	yangerkun@huawei.com,
+	zhangxiaoxu5@huawei.com,
+	wanghai38@huawei.com
+Subject: [PATCH 0/4] bugfix of logical_block_size and make it configurable
+Date: Tue,  4 Mar 2025 20:19:14 +0800
+Message-Id: <20250304121918.3159388-1-linan666@huaweicloud.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,49 +46,47 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wAnTqaA8MZn5+LlPQ--.25259S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7CFWxXryfCF4fGr1kAF1fZwb_yoW8Jw1rpa
-	n8GF1Fkwn7Ar4rJryaka18AFySk392qasxA3y8uw1F9rnaqr43XFsaqFW5trWkWry8X3Wj
-	qF45A34UCr4UK3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0piYFAdUUUUU=
-X-CM-SenderInfo: p201t0isq6il2tof0z/xtbBhhYGXmfG7lAuhAAAs9
+X-CM-TRANSID:gCh0CgB321_O8MZnFO8VFg--.52907S4
+X-Coremail-Antispam: 1UD129KBjvdXoW7GrWftr4ktFyrWFy7tw18Krg_yoWxtwb_Ja
+	yxXFWftrn7WF17ZFy5Wr4fZry2kF4kurykZFnxKrWavr13Zr1UG3WjvrWUXw1DWFyjqF15
+	Jr18J34rAr4DWjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbDxFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j
+	6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+	Cq3wAac4AC62xK8xCEY4vEwIxC4wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC
+	0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr
+	1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IE
+	rcIFxwACI402YVCY1x02628vn2kIc2xKxwAKzVCY07xG64k0F24lc7CjxVAaw2AFwI0_Jw
+	0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AK
+	xVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrx
+	kI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v2
+	6r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8Jw
+	CI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUrwZ2DUUU
+	U
+X-CM-SenderInfo: polqt0awwwqx5xdzvxpfor3voofrz/
 
-A global variable caused debugfs name conflicts during re-entry,
-leading to creation failures. Use atomic operations to ensure safe
-and unique naming.
+From: Li Nan <linan122@huawei.com>
 
-Signed-off-by: Zxyan Zhu <zxyan20@163.com>
----
- drivers/base/regmap/regmap-debugfs.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Li Nan (4):
+  block: factor out a helper to set logical/physical block size
+  md: make raid logical_block_size configurable
+  md: prevent adding disks with larger logical_block_size to active
+    arrays
+  md: Fix the return value of mddev_stack_new_rdev
 
-diff --git a/drivers/base/regmap/regmap-debugfs.c b/drivers/base/regmap/regmap-debugfs.c
-index fb84cda92a75..914fc032861d 100644
---- a/drivers/base/regmap/regmap-debugfs.c
-+++ b/drivers/base/regmap/regmap-debugfs.c
-@@ -20,7 +20,7 @@ struct regmap_debugfs_node {
- 	struct list_head link;
- };
- 
--static unsigned int dummy_index;
-+static atomic_t dummy_index = ATOMIC_INIT(0);
- static struct dentry *regmap_debugfs_root;
- static LIST_HEAD(regmap_debugfs_early_list);
- static DEFINE_MUTEX(regmap_debugfs_early_lock);
-@@ -596,11 +596,11 @@ void regmap_debugfs_init(struct regmap *map)
- 	if (!strcmp(name, "dummy")) {
- 		kfree(map->debugfs_name);
- 		map->debugfs_name = kasprintf(GFP_KERNEL, "dummy%d",
--						dummy_index);
-+						atomic_read(&dummy_index));
- 		if (!map->debugfs_name)
- 			return;
- 		name = map->debugfs_name;
--		dummy_index++;
-+		atomic_inc(&dummy_index);
- 	}
- 
- 	map->debugfs = debugfs_create_dir(name, regmap_debugfs_root);
+ drivers/md/md.h                |  1 +
+ include/linux/blkdev.h         |  2 +
+ include/uapi/linux/raid/md_p.h |  6 ++-
+ block/blk-settings.c           | 85 +++++++++++++++++++---------------
+ drivers/md/md-linear.c         |  1 +
+ drivers/md/md.c                | 83 ++++++++++++++++++++++++++++++++-
+ drivers/md/raid0.c             |  1 +
+ drivers/md/raid1.c             |  1 +
+ drivers/md/raid10.c            |  1 +
+ drivers/md/raid5.c             |  1 +
+ 10 files changed, 142 insertions(+), 40 deletions(-)
+
 -- 
-2.34.1
+2.39.2
 
