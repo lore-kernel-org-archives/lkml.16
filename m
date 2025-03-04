@@ -1,71 +1,108 @@
-Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97DF014A4CC
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 01:54:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCB662AE8D;
+	Tue,  4 Mar 2025 01:56:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741053245; cv=none; b=V3BiuPHko1Q9n6tJkxhfrqlUSr/uzkRsCZjCH5E+2jqbOeTK30RyJtLxMcrjrURh3v+KIPwfmv1O03YHdYUox/4j+Ren2SrXOLLl4UOZ3dsCY/Yx1tsDkDLsJ3zl44USwTEQhUcCw/tg5Jn5njAy1Ihk+dXlhyID/Ux3erSb3BQ=
+	t=1741053401; cv=none; b=qhdFn0s0OeaWBFTWhdx/i8KDgpDTlkG9h6IeYczZ8rk7QYxpldulhtGWJXskne7Rnij/tIiwv6e3llzGcCUzjkmQZ7UPv61/9hldSLqC11MhX13zzjQuWydS1FzEa5z1lCm6+HLQgPcIl8yPWGM8Yc1Lr/UJTgftjzGO31ZnEf0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741053245; c=relaxed/simple;
-	bh=kV1cacJ/04Pidk6SZCQeZGQlO/O2wd/WL38ytI+8AZM=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=rnKsUf1k15UBvgoj+Ix71NepMLLY89rEqltXDNPFzkWKCv/sk7T5nJrBLHBDyEO7l2ShUkgvj6cRvAyrg3nSfQ7ZG8U5zr/QKMn+zfob1RO1Wt9n3XjC4rLnQobom65DyzXF+cU/82ah/NeQXD3w/iQeG7MYOGPP2UKiBMR6wC8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-3d060cfe752so48100375ab.2
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Mar 2025 17:54:03 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741053243; x=1741658043;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Gh6PrnckUXLUt2A85hFKQ3Y+zMDgWWBV7xrhf+AEGLM=;
-        b=Jm7A4K+mqcn5n48LJkODDAAivOEbfXV4bwAICRnN9dw/kTKrrD+8VzcUza9CtJ92PB
-         /oSPP4NaM/kFklBKv46fI1nXLzv+B/GGVuO4qcNeF3/2OVcUeJUzMURW0hr8PGGCd/Y5
-         d6uW5/NwrIl0hKTz+QBkUJO3SJymKpQw3pzs4OLKjrnKTDrRoicWh61/pbVcp1qY7ILS
-         ZTBEJTv8d/tqvXSqeBCk+idc5cgJLUGib6gtyYV4OqYUNHaGnj7UhJ1PllmO1qkjT3uj
-         DghFsVSdkmbOPNBu+97jrKYpnVwl6HeYqITacxD00Adb88EY56sfVo4dX/7GeW4xD3L4
-         Q8aA==
-X-Forwarded-Encrypted: i=1; AJvYcCW6ATDVe82xC0s9qt/RlblKDROspLgo487l+YR7fjytZw6c8vz4wx9kQjPYigzQ3ynFf/xqYPNhkN4+65o=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxQoB4LoiZ1hW2xiJ9QaCgY/f5fkQnJkk+/S1r4N1ADz9sNt5K9
-	AIzh5bJMfuAoOi+krRG31QjZAmkTXrXlZFfwpz5iqSbb9rjzN5tpTZlROF96G8MrX9q00PGYklA
-	a1jh2VRFlywWuJ6rDeOuz/HDYgzyJ1Sih3CiTOE5H7UteFmgAoB0ctDE=
-X-Google-Smtp-Source: AGHT+IHnoEPOJfLSBF0enm96ymBNohGQ2AAPNkrarDEHNpJnhdB8iAM7p9BmkXM1iDtaXU2FDdwTJ/r42xGDw9pUvTfoX/oQ2sYg
+	s=arc-20240116; t=1741053401; c=relaxed/simple;
+	bh=FUVChTxusLCMBLUVlti1YUL8LW7/tvUKTXZZlRvP6rI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kUjfbIvpoCRn2rFVI7+ceLshRAZLFCJ7mdQdieeHY9lK8Pvug6WDP88sufTJKuObJum7Tt5ZRquHpjOLVpL9+0LAxYQLW00b5g4S006AocNqTPICGnCv/iJETGHDRIAYK1Q+S8V60zk6hA0QSQzCH8ch6g4ayb9pwyg2PMINRdg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uNJEIl1/; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uNJEIl1/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BDA13C4CEE4;
+	Tue,  4 Mar 2025 01:56:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741053401;
+	bh=FUVChTxusLCMBLUVlti1YUL8LW7/tvUKTXZZlRvP6rI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=uNJEIl1/t95dU9GT2B34a8VuVRjvsPNcprE9PkVvHlHbKTTyXm5zK9o6p0m85fEgW
+	 n7mEtMyT6uP5e/QBv6B+2lzevvUwBWjfSVcsFiyFxnT8nFqpT7nLEAv0Ns65jzlGws
+	 MyPyha38P/a4MDUGjLtM2ckh809jCe1Ens/9DTIIWwEqCI4V5SfZGemgEFbijV7qpW
+	 XvgiN7sn7H4LYbGeKfqhdTbBOhLL3xXGl4QZ9IyNYVhnEakHqrBDE95LS6Ni29DYLi
+	 5xrOtEesB3mJ58Rjjalw24MyHMsXPGSdVGqne40sgY4qaEDOEgvBx4c6X5XGClGeAR
+	 +hvX72HSm51pw==
+Date: Tue, 4 Mar 2025 01:56:35 +0000
+From: Will Deacon <will@kernel.org>
+To: Sebastian Ene <sebastianene@google.com>
+Cc: catalin.marinas@arm.com, joey.gouly@arm.com, maz@kernel.org,
+	oliver.upton@linux.dev, snehalreddy@google.com,
+	sudeep.holla@arm.com, suzuki.poulose@arm.com, vdonnefort@google.com,
+	yuzenghui@huawei.com, kvmarm@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	kernel-team@android.com
+Subject: Re: [PATCH v2 3/4] KVM: arm64: Map the hypervisor FF-A buffers on
+ ffa init
+Message-ID: <20250304015633.GA30882@willie-the-truck>
+References: <20250227181750.3606372-1-sebastianene@google.com>
+ <20250227181750.3606372-4-sebastianene@google.com>
+ <20250303234259.GA30749@willie-the-truck>
+ <Z8ZPBZF7J-qKdb_i@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a92:cd88:0:b0:3d3:f30c:a104 with SMTP id
- e9e14a558f8ab-3d3f30ca1e4mr132397505ab.8.1741053242793; Mon, 03 Mar 2025
- 17:54:02 -0800 (PST)
-Date: Mon, 03 Mar 2025 17:54:02 -0800
-In-Reply-To: <tencent_2CD78CA727DD06C992F4C65189BE6ED72E06@qq.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67c65d3a.050a0220.1dee4d.01cf.GAE@google.com>
-Subject: Re: [syzbot] [xfs?] [mm?] WARNING: bad unlock balance in __mm_populate
-From: syzbot <syzbot+8f9f411152c9539f4e59@syzkaller.appspotmail.com>
-To: eadavis@qq.com, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z8ZPBZF7J-qKdb_i@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-Hello,
+On Tue, Mar 04, 2025 at 12:53:25AM +0000, Sebastian Ene wrote:
+> On Mon, Mar 03, 2025 at 11:43:03PM +0000, Will Deacon wrote:
+> > On Thu, Feb 27, 2025 at 06:17:48PM +0000, Sebastian Ene wrote:
+> > > Map the hypervisor's buffers irrespective to the host and return
+> > > a linux error code from the FF-A error code on failure. Remove
+> > > the unmap ff-a buffers calls from the hypervisor as it will
+> > > never be called.
+> > > Prevent the host from using FF-A directly with Trustzone
+> > > if the hypervisor could not map its own buffers.
+> > > 
+> > > Signed-off-by: Sebastian Ene <sebastianene@google.com>
+> > > ---
+> > >  arch/arm64/kvm/hyp/nvhe/ffa.c | 46 +++++++++++++----------------------
+> > >  1 file changed, 17 insertions(+), 29 deletions(-)
+> > 
+> > [...]
+> > 
+> > > @@ -861,6 +842,7 @@ int hyp_ffa_init(void *pages)
+> > >  {
+> > >  	struct arm_smccc_res res;
+> > >  	void *tx, *rx;
+> > > +	int ret;
+> > >  
+> > >  	if (kvm_host_psci_config.smccc_version < ARM_SMCCC_VERSION_1_2)
+> > >  		return 0;
+> > > @@ -911,5 +893,11 @@ int hyp_ffa_init(void *pages)
+> > >  		.lock	= __HYP_SPIN_LOCK_UNLOCKED,
+> > >  	};
+> > >  
+> > > +	/* Map our hypervisor buffers into the SPMD */
+> > > +	ret = ffa_map_hyp_buffers();
+> > > +	if (ret)
+> > > +		return ret;
+> > 
+> > Doesn't calling RXTX_MAP here undo the fix from c9c012625e12 ("KVM:
+> > arm64: Trap FFA_VERSION host call in pKVM") where we want to allow for
+> > the host to negotiate the version lazily?
+> 
+> We still have the same behaviour where we don't allow memory
+> sharing to happen until the version is negotiated but this
+> separates the hypervisor buffer mapping part from the host.
 
-syzbot tried to test the proposed patch but the build/boot failed:
+Sadly, the spec doesn't restrict this to the memory sharing calls:
 
-mm/gup.c:2001:9: error: type specifier missing, defaults to 'int'; ISO C99 and later do not support implicit int [-Werror,-Wimplicit-int]
+  | [...] negotiation of the version must happen before an invocation of
+  | any other FF-A ABI
 
+We're also probing the minimum rxtx size in hyp_ffa_post_init() so doing
+this here is doubly wrong.
 
-Tested on:
+So I think we should probably just drop this patch.
 
-commit:         e056da87 Merge remote-tracking branch 'will/for-next/p..
-git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-kernelci
-kernel config:  https://syzkaller.appspot.com/x/.config?x=d6b7e15dc5b5e776
-dashboard link: https://syzkaller.appspot.com/bug?extid=8f9f411152c9539f4e59
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-userspace arch: arm64
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=15f8e464580000
-
+Will
