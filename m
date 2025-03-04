@@ -1,266 +1,125 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A1151FCF6D
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 08:41:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 755AB1FCF63
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 08:41:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741077703; cv=none; b=ozGJ9kufyASX3L6+Wuo0eraTTx98xbXuEmXVQr8AYIbXcqWWDeeBn6NbBnRHzHlSr53kR33ma/tEDe081r1uKkOUxdGc6Iu4XHSXdhcxinCoNTD+ZK6dseq9xsWRvro8EImpm5+OpkxeXxIpS2ARbsK6lP4A++BC0MIEJRgWknA=
+	t=1741077705; cv=none; b=SMtKePXJrUGHJZwSeDD8rmBP9a6HrjysTyTjvS+iViuczuGMfwpvRgkdhqBj8v/CLs3kITvFyNfEfUATIqLIIMUZ8OjUvJGuNYwRHyAxKrNLTrzQ4UZrNlLFRHTYh8/0hdzUslj+TS0VYrLxnm19zbCLg4ClnpMPxFEA/yQXeUE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741077703; c=relaxed/simple;
-	bh=yOMmG4F+0IRyt05rEQipisgEioriUYETBt8L3slir/8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=E/aLDkPYgeQNKVC4bw/7eNgY/cvyvFrWY2be2FGtQcTGSo90tdCdnr95mdEFRxXYwDFE0Qxq68TVA9EmgbVA8sGHg+L9LZ6ww6QvaUVZlaVC9O9kjkc5ewmx/v1vObYURYWtmCgKtVBxp6Y1zio54JNGwVg65hOUC18Ylm/bMJc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MfQwYS2F; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1741077705; c=relaxed/simple;
+	bh=dQMWqa7bqGUsuYvK1/Ia2Th2yYYxZTfZ4zTTgbD3dM8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iXaqOhTd2LGr77k0i6inUUL2wtd64yk1WGxIvvbwiPt9p/iMBJyMjnwoZhVFgT+QmbGijdnJt4UxLsLoSnlklLWTDoaHoutjTQtGrQsRux4EFGsUkFp0YCHlBPdajyzXBrSel4qLjxotblY+862Pf7d7V6U6LeOTmS113z/EwcE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=mETPgI23; arc=none smtp.client-ip=209.85.218.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MfQwYS2F"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1741077700;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=f+Iw2z/BRuGJ7vkBn/7Z4Zbuxcza/Q4iTwJq/UC45V0=;
-	b=MfQwYS2FAeyrAqB5RXlelQwZTGORbL4VBHWoSduWEOaonwZ2wFkvXLy0tNkhVkRiwZKz33
-	RM6udGAbhPY/huKTum3HEiBZNrMPrIh6r47V1uqCHl49y7/prL32d52y1/o86rItJ/rF1N
-	CKSV0+7WiHVf/HO/hFQTvJfu6GkChVE=
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
- [209.85.222.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-235-fazlRea5M6CxW-Tb7iVlnA-1; Tue, 04 Mar 2025 03:41:27 -0500
-X-MC-Unique: fazlRea5M6CxW-Tb7iVlnA-1
-X-Mimecast-MFC-AGG-ID: fazlRea5M6CxW-Tb7iVlnA_1741077687
-Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7c0c1025adbso1345709985a.1
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Mar 2025 00:41:27 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mETPgI23"
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-abf4b376f2fso499682466b.3
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Mar 2025 00:41:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1741077701; x=1741682501; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=56LRZhimeVf0548v2DjrELpnYIUuGBcJG2m3Hu8yBtw=;
+        b=mETPgI23iMZxrX7GFlSZRwwi7jXMWbtYR4M3vRphfBCECl58WfB81Rx9vB6ka0K3t2
+         L/LFUswCMPP7zQsX2+qYYyvXJlIFe0+96ZuZB8QIMW20xuVvEn+22VTPPwE1ykFp8UET
+         QugvwKbKib9yg5nXJnasC8WWRhvPtotg0o5LLcT2L7QDr4n/HgpZlFourgonBQLEcyHz
+         41qc2oNbkw5hA/ZW/Afs2EeB6X3vq1X7y8SunsRQFmSsV8LSHWEd8ogu72H0yiamGsVk
+         8v6oVEFyYisedodPQ4g7etioVcdXT7oFxC3SNWy+UxjDNYvR6ytzHziVV9qqpUhDN4/i
+         ShJQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741077684; x=1741682484;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=f+Iw2z/BRuGJ7vkBn/7Z4Zbuxcza/Q4iTwJq/UC45V0=;
-        b=qyYI/rpgjNm97s58lgGpSFCYmveKANZ+MsGBVNHEcfUaQkYUL+D6vvHZffDefLtP0z
-         UKAMU4OYCKqKnfpL95opFhSrIpzQBtQLVdckJYYq4nNwthrz3QdpoLwk+5e2qChCNNh6
-         FLqCl/Srt2hXm4lOqOhuimwYjALxAImlH4XlGnKDC3yS8lmVyF34jdBQ8xCgx2WuVAJP
-         IvIgb2UND0qUTvwj9i3RalfVvvstpWyOG31DLhedSWtI0j8gPjuOJH5umi9Xp0abcPj5
-         0sSmmg7lzizaKz2ouBDBqN9dQ2sPKzsTQFrnKMRbQlW1k5xbjXj9k/vj6hHUj63OBOjz
-         lHEw==
-X-Gm-Message-State: AOJu0YwekrbzRmRonvBEXA1G3yjyEfZgJ9oB6B9zOANohqqyV/61s2sS
-	vmUw8U9k0CVlAIwIYQUZXn24Z0oUCPVrJQkLHbubyaMoYvZgo9Ns9GpEqt+T6Ujk4u2SuswBVOh
-	xF6I0QCudLCnbrzyPdmtbXcCJsgJKWK0ObWtOX3BxqIAZs06Rsz4J8QaSGH61vMkccR31sQplrK
-	bbCleoy9hX0pFwvqBuQwCYe3Rk79CMUQ45noeeRVXJGgtXsKuzSdML3g==
-X-Gm-Gg: ASbGncu9gwL3ToCu9A8h9VU6RTN87TsYL21evMbhJHWpYWzkWoXMKulzdqu1b/pJq8T
-	kCur/o7NoA1MmM0rx8Xf9MH0egk+lBVdriIJj2LWOFbfs5vUc6kADgaNFCyCxPPGW7morFOZSGG
-	TBQFjyRN0B2KJsS6yeexqKEolSYYvluB1dMw1o3W2jMM84KeabTlW7sfqXwfpzk262db3ZH1ePn
-	LStylAOEXsbda0bAdmj9gb2nWL9u2W6A1l2+SUIKNNZrkTGBdmL9jqin34WOxzlv2wXGPEfeU/f
-	rEq81Ar6LDfvztF7f8e1sLNhAslDWeP84Mifdh52wBLR+wUaHtAIi9wdjQEWP4rrHaCRFYs2B0F
-	pT53H
-X-Received: by 2002:a05:620a:31a8:b0:7c0:be25:96b2 with SMTP id af79cd13be357-7c39c4cf214mr1890138585a.29.1741077684225;
-        Tue, 04 Mar 2025 00:41:24 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IE2dv8oocEYlP7qNDy6OtgnQyJS5jsjJUGl9HCqO84LUslvKxlY2F6e312WErj0Wi6SerUOhw==
-X-Received: by 2002:a05:620a:31a8:b0:7c0:be25:96b2 with SMTP id af79cd13be357-7c39c4cf214mr1890134785a.29.1741077683762;
-        Tue, 04 Mar 2025 00:41:23 -0800 (PST)
-Received: from jlelli-thinkpadt14gen4.remote.csb (host-89-240-117-139.as13285.net. [89.240.117.139])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c3c0a94fbbsm218395285a.1.2025.03.04.00.41.17
+        d=1e100.net; s=20230601; t=1741077701; x=1741682501;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=56LRZhimeVf0548v2DjrELpnYIUuGBcJG2m3Hu8yBtw=;
+        b=EGM3blyguwXwzZiKUa8HjvEO/YT85KxCCez8oJsVMdO9FpU8Hpe2VuHCbDOypiCw4U
+         1J+4Nl48r3Vw3XN8P6V3GSTW0MfGHJcVa5MgMOfMBq2fC3U4PtPMYYpq2CQyguYBDa/P
+         CfYQbi8UjPGKySy6iHLucQgcufLVExGdrItOdyGTjV9NQnCfFFYNhNMUwkcn3M8TbMyK
+         XP5QKWDEaL9NEkeoZCUW7V9Hrt9FHIdouWvtUTeh5/kzydclMfIP0zKV0LQLJIE8fGVh
+         tw3LiOkP/8uWS1WMyC8Cy4XDPkX6uC+dm42TgP2/37KHNsMYHPIXxT6Y94tSW+6EZLBM
+         HJkQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUUn/tmJbBaPtI6o7bBNSZmHrRlyw2LayjTxqAoEoU72/ed84qILutk7wFzBcNweXJ6dEnfFsF4sPt0+hE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx+7iOA6pjcVA4nAePdE2rHGBeZzJ+3FhTT8Bvo8p7PF0+i/cIp
+	UCBHv1b+T2m/EYh2hTlsdfvPJhQCLpF8tJ+yKbJumugn+xzBQAEJa9wIhst2xsM=
+X-Gm-Gg: ASbGncsMauYXjaNJnPkBTn+iWPWYBSjYvYzETOpgsVcANNYj2uzcZZbYQpWJ5mc1AW/
+	hn+2E6plrxV9U8qKHfTN/50ZCCpC+Mm6MOpYqkjbOxeUKOdQ8oAR4ddDJNOQvWhSw83NyY16V8/
+	Xpg9a5SXkgARQpd700MY7WNex98KfVnMwulnFUnBDEwR4J+fgEGQ+QsWwAjRr7BCp2e1R+8m/WP
+	MKPJbHOkbMIkrwp5pHI4nNpW2o90yXiP/20GcQyI+nSgg+6fW03Fy5XM3u/xEn/7YhUOXK9h62X
+	ddeJm4hZCmwN7KoFUpvbBxcknutkknbjYeDBgiZnWQ==
+X-Google-Smtp-Source: AGHT+IFFHM/nljeEtmfpwAYQ5fCe3mzYlZ/kbhPchbUbj2wuqBNp/7U42a+daD7qurHBY27yA6v3Yg==
+X-Received: by 2002:a17:907:7d89:b0:abf:7832:bf5 with SMTP id a640c23a62f3a-abf783244f6mr732543466b.34.1741077700633;
+        Tue, 04 Mar 2025 00:41:40 -0800 (PST)
+Received: from linaro.org ([62.231.96.41])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abf529feacfsm557445466b.153.2025.03.04.00.41.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Mar 2025 00:41:20 -0800 (PST)
-From: Juri Lelli <juri.lelli@redhat.com>
-To: linux-kernel@vger.kernel.org,
-	cgroups@vger.kernel.org
-Cc: Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>,
-	Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Waiman Long <longman@redhat.com>,
-	Tejun Heo <tj@kernel.org>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	=?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>,
-	Qais Yousef <qyousef@layalina.io>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Swapnil Sapkal <swapnil.sapkal@amd.com>,
-	Shrikanth Hegde <sshegde@linux.ibm.com>,
-	Phil Auld <pauld@redhat.com>,
-	luca.abeni@santannapisa.it,
-	tommaso.cucinotta@santannapisa.it,
-	Jon Hunter <jonathanh@nvidia.com>
-Subject: [PATCH 3/5] sched/deadline: Generalize unique visiting of root domains
-Date: Tue,  4 Mar 2025 08:40:43 +0000
-Message-ID: <20250304084045.62554-4-juri.lelli@redhat.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250304084045.62554-1-juri.lelli@redhat.com>
-References: <20250304084045.62554-1-juri.lelli@redhat.com>
+        Tue, 04 Mar 2025 00:41:40 -0800 (PST)
+Date: Tue, 4 Mar 2025 10:41:38 +0200
+From: Abel Vesa <abel.vesa@linaro.org>
+To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>
+Cc: Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>,
+	Anjelique Melendez <anjelique.melendez@oss.qualcomm.com>,
+	Kamal Wadhwa <quic_kamalw@quicinc.com>,
+	Jishnu Prakash <jishnu.prakash@oss.qualcomm.com>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Johan Hovold <johan@kernel.org>, Sebastian Reichel <sre@kernel.org>,
+	Pavel Machek <pavel@ucw.cz>, linux-leds@vger.kernel.org,
+	linux-pwm@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH v3 0/3] leds: rgb: leds-qcom-lpg: PWM fixes
+Message-ID: <Z8a8wrEcBuZrGm2/@linaro.org>
+References: <20250303-leds-qcom-lpg-fix-max-pwm-on-hi-res-v3-0-62703c0ab76a@linaro.org>
+ <lvi75asit3ati7wwnyae6rowycr3veodswu7blbnzbrq646fgi@iksn4qas3dwt>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <lvi75asit3ati7wwnyae6rowycr3veodswu7blbnzbrq646fgi@iksn4qas3dwt>
 
-Bandwidth checks and updates that work on root domains currently employ
-a cookie mechanism for efficiency. This mechanism is very much tied to
-when root domains are first created and initialized.
+On 25-03-04 07:29:46, Uwe Kleine-König wrote:
+> Hello,
+> 
+> On Mon, Mar 03, 2025 at 01:52:49PM +0200, Abel Vesa wrote:
+> > The PWM allow configuring the PWM resolution from 8 bits PWM
+> > values up to 15 bits values, for the Hi-Res PWMs, and then either
+> > 6-bit or 9-bit for the normal PWMs. The current implementation loops
+> > through all possible resolutions (PWM sizes), for the PWM subtype, on top
+> > of the already existing process of determining the prediv, exponent and
+> > refclk.
+> > 
+> > The first and second issues are related to capping the computed PWM
+> > value.
+> 
+> I just took a very quick look. I'd say squash the first and second patch
+> into a single one. Splitting a change that fixes the same issue in the
+> two branches of an if condition has no benefit.
 
-Generalize the cookie mechanism so that it can be used also later at
-runtime while updating root domains. Also, additionally guard it with
-sched_domains_mutex, since domains need to be stable while updating them
-(and it will be required for further dynamic changes).
+Actually, the first two patches fix different commits.
+The first patch fixes a commit that is only in linux-next for now,
+while the second patch fixes a commit that has been merged in 6.4.
 
-Reported-by: Jon Hunter <jonathanh@nvidia.com>
-Fixes: 53916d5fd3c0 ("sched/deadline: Check bandwidth overflow earlier for hotplug")
-Signed-off-by: Juri Lelli <juri.lelli@redhat.com>
----
- include/linux/sched/deadline.h |  3 +++
- kernel/sched/deadline.c        | 23 +++++++++++++----------
- kernel/sched/rt.c              |  2 ++
- kernel/sched/sched.h           |  2 +-
- kernel/sched/topology.c        |  2 +-
- 5 files changed, 20 insertions(+), 12 deletions(-)
+So they need to be separate patches.
 
-diff --git a/include/linux/sched/deadline.h b/include/linux/sched/deadline.h
-index 3a912ab42bb5..6ec578600b24 100644
---- a/include/linux/sched/deadline.h
-+++ b/include/linux/sched/deadline.h
-@@ -37,4 +37,7 @@ extern void dl_clear_root_domain(struct root_domain *rd);
- 
- #endif /* CONFIG_SMP */
- 
-+extern u64 dl_cookie;
-+extern bool dl_bw_visited(int cpu, u64 cookie);
-+
- #endif /* _LINUX_SCHED_DEADLINE_H */
-diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
-index ab565a151355..339434271cba 100644
---- a/kernel/sched/deadline.c
-+++ b/kernel/sched/deadline.c
-@@ -166,14 +166,14 @@ static inline unsigned long dl_bw_capacity(int i)
- 	}
- }
- 
--static inline bool dl_bw_visited(int cpu, u64 gen)
-+static inline bool dl_bw_visited(int cpu, u64 cookie)
- {
- 	struct root_domain *rd = cpu_rq(cpu)->rd;
- 
--	if (rd->visit_gen == gen)
-+	if (rd->visit_cookie == cookie)
- 		return true;
- 
--	rd->visit_gen = gen;
-+	rd->visit_cookie = cookie;
- 	return false;
- }
- 
-@@ -207,7 +207,7 @@ static inline unsigned long dl_bw_capacity(int i)
- 	return SCHED_CAPACITY_SCALE;
- }
- 
--static inline bool dl_bw_visited(int cpu, u64 gen)
-+static inline bool dl_bw_visited(int cpu, u64 cookie)
- {
- 	return false;
- }
-@@ -3171,15 +3171,18 @@ DEFINE_SCHED_CLASS(dl) = {
- #endif
- };
- 
--/* Used for dl_bw check and update, used under sched_rt_handler()::mutex */
--static u64 dl_generation;
-+/*
-+ * Used for dl_bw check and update, used under sched_rt_handler()::mutex and
-+ * sched_domains_mutex.
-+ */
-+u64 dl_cookie;
- 
- int sched_dl_global_validate(void)
- {
- 	u64 runtime = global_rt_runtime();
- 	u64 period = global_rt_period();
- 	u64 new_bw = to_ratio(period, runtime);
--	u64 gen = ++dl_generation;
-+	u64 cookie = ++dl_cookie;
- 	struct dl_bw *dl_b;
- 	int cpu, cpus, ret = 0;
- 	unsigned long flags;
-@@ -3192,7 +3195,7 @@ int sched_dl_global_validate(void)
- 	for_each_possible_cpu(cpu) {
- 		rcu_read_lock_sched();
- 
--		if (dl_bw_visited(cpu, gen))
-+		if (dl_bw_visited(cpu, cookie))
- 			goto next;
- 
- 		dl_b = dl_bw_of(cpu);
-@@ -3229,7 +3232,7 @@ static void init_dl_rq_bw_ratio(struct dl_rq *dl_rq)
- void sched_dl_do_global(void)
- {
- 	u64 new_bw = -1;
--	u64 gen = ++dl_generation;
-+	u64 cookie = ++dl_cookie;
- 	struct dl_bw *dl_b;
- 	int cpu;
- 	unsigned long flags;
-@@ -3240,7 +3243,7 @@ void sched_dl_do_global(void)
- 	for_each_possible_cpu(cpu) {
- 		rcu_read_lock_sched();
- 
--		if (dl_bw_visited(cpu, gen)) {
-+		if (dl_bw_visited(cpu, cookie)) {
- 			rcu_read_unlock_sched();
- 			continue;
- 		}
-diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
-index 4b8e33c615b1..8cebe71d2bb1 100644
---- a/kernel/sched/rt.c
-+++ b/kernel/sched/rt.c
-@@ -2910,6 +2910,7 @@ static int sched_rt_handler(const struct ctl_table *table, int write, void *buff
- 	int ret;
- 
- 	mutex_lock(&mutex);
-+	sched_domains_mutex_lock();
- 	old_period = sysctl_sched_rt_period;
- 	old_runtime = sysctl_sched_rt_runtime;
- 
-@@ -2936,6 +2937,7 @@ static int sched_rt_handler(const struct ctl_table *table, int write, void *buff
- 		sysctl_sched_rt_period = old_period;
- 		sysctl_sched_rt_runtime = old_runtime;
- 	}
-+	sched_domains_mutex_unlock();
- 	mutex_unlock(&mutex);
- 
- 	return ret;
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index c8512a9fb022..c978abe38c07 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -998,7 +998,7 @@ struct root_domain {
- 	 * Also, some corner cases, like 'wrap around' is dangerous, but given
- 	 * that u64 is 'big enough'. So that shouldn't be a concern.
- 	 */
--	u64 visit_gen;
-+	u64 visit_cookie;
- 
- #ifdef HAVE_RT_PUSH_IPI
- 	/*
-diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
-index e2b879ec9458..b70d6002bb93 100644
---- a/kernel/sched/topology.c
-+++ b/kernel/sched/topology.c
-@@ -573,7 +573,7 @@ static int init_rootdomain(struct root_domain *rd)
- 	rd->rto_push_work = IRQ_WORK_INIT_HARD(rto_push_irq_work_func);
- #endif
- 
--	rd->visit_gen = 0;
-+	rd->visit_cookie = 0;
- 	init_dl_bw(&rd->dl_bw);
- 	if (cpudl_init(&rd->cpudl) != 0)
- 		goto free_rto_mask;
--- 
-2.48.1
+> 
+> Other than that this patch set would also benefit from what I wrote in
+> the review of the other patch you send: Please mention a request where
+> the result becomes wrong. This considerably simplifies understanding
+> your changes.
 
+Sure. Will describe the 5ms vs 4.26ms period scenario. Hope that's OK.
+
+> 
+> Thanks
+> Uwe
+
+Thanks for reviewing,
+Abel
