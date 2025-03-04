@@ -1,62 +1,62 @@
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFDB41F4196;
-	Tue,  4 Mar 2025 18:35:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFC7726036C;
+	Tue,  4 Mar 2025 18:35:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741113323; cv=none; b=aRtKPum0vrMf/AY6IP6VUZJvCuENMmj/bufFpi3oFmW+HWGpS6iLcRShG7X+GicWyifx2anT0IJBP30+vqbOBXH83XEqqdQnTnF9j8WWt4IpVESAy3Cx3ZzzgeoZTkDRFuX8jbN+tHVylDMQeh6D/vOQFZ5hRPw3b0hq3PPyu1A=
+	t=1741113326; cv=none; b=NBBUlmqVrJbZaUTW7zzTnydxNr489rZgvFTQq1y//VhTcla1+k6anm9nXTofHeoRs8Z5NwORfcxEsxxctoojHmk8HscLL/efBkltM0xuyKhuTacwuTP/O8bICP1I+VvgqXCZ19TPFGwlEULeBoyVNYHLEUHGypoarm0pMCasTCA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741113323; c=relaxed/simple;
-	bh=Lp4VXQGfoBUso5dKviW7w81LZOeoVklp8AokStkVwcA=;
+	s=arc-20240116; t=1741113326; c=relaxed/simple;
+	bh=Tj/MdgPZ5cCJuJyqipEsMQgzBXtGY6F6q4iEUHpndOo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=V8DCDM21unXL8EE1P2kKVTQCsVK11xnsJXzAO0p7nrlA2GxztMN3DLgVR6sKZq7TkpLMh8Oe5kY0ELW4mR4Q0RpZ9KR5b0bMgDedeN8WYLPb1xj0tZ1OBsvOTalok9NwQxBy6dzT+Q5aefmkiE2Dm8gFGe8uElD1ZWhPqEny8eA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WSPV15fP; arc=none smtp.client-ip=209.85.218.47
+	 MIME-Version; b=FGqI5ysmhr36adBOKxEum4StMAjEC0n1e0nSlM6DEL0DcT2MSTaplsJ03tpo5mL3lWOIgacoWMq38XPmzaYI5iJoEaCdoTnSvtCpARlrX4tmiSWq01oxBdOpOfIeDpzTihcVq23bLtfCVSDT9el7k5iGeRihEezF1glDQwWDkAU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Qr4gssoa; arc=none smtp.client-ip=209.85.208.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WSPV15fP"
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-abf3cf3d142so533602566b.2;
-        Tue, 04 Mar 2025 10:35:21 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qr4gssoa"
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5e04064af07so11116391a12.0;
+        Tue, 04 Mar 2025 10:35:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741113320; x=1741718120; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1741113323; x=1741718123; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=4nihpqcFG4iovnE+f5kR4Ra8aRkWB1EWCR4XgUiQDEE=;
-        b=WSPV15fP3ILW6MpPP6qQAMqgs1U2MiLSauzucPGxhKO1GTVg+2W4dez5fDc95yhr87
-         4qJjUhaIhlXO6nt1qIUoGzRYVUPrlpnMNAvt2wi30xnxmNZv1tjGYZOmgYUEMoudqB/v
-         q/B2O0JkE8iJXp6luFMWeVSumlqvgzADdxhnCus+WHIHswPGyeHpeHDLBpSbGuXzMljd
-         sGRUfaCguDN8ZxZF39lE49BHU4H/eusM/OfR9qtXpYglZNpPCyAKw4B3Yt+jMepE5Qev
-         HzeNFupfwRgzh0h4Gmi0AWatk7E9YCYjfQxVaaMqILCsAyIr9iLxADBbveLMfC3Dy0w4
-         b7Mw==
+        bh=EyDsNpX9HcSDC6V6t1dVpjf3NEtUKhWlmeySG+ENdu8=;
+        b=Qr4gssoazn91fkGY8RdhAuvgWyxQ/Ln19ABxayBzgErbDAvEQT8S6CPEwEGShakG4X
+         HCfO+Z1KWv+5CmG4Dp8ViNLMXcbt6g2I4NFPJfmnhrscjpBc1N+pd0gW89IdnXaT6umv
+         NSfqW8kyw5gX+B5x2w+BRaqUGy1cPWTdL49DFbt4wc3KAhfAVFaK/XxG4V2EBgo1NCb/
+         vaKsE1dw87GEtA2DvZK10fmgz8BuyCkY+8O1aYSbjAArnx8j1+aZ+o63dj2Ku03A1Anr
+         YiF8w2VwfI4BYMzv1UpHRObwvO5Gh7Wl3EdE+azcA8j4Ak36H4PnIe42rAtOuYscE4Tn
+         niCg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741113320; x=1741718120;
+        d=1e100.net; s=20230601; t=1741113323; x=1741718123;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=4nihpqcFG4iovnE+f5kR4Ra8aRkWB1EWCR4XgUiQDEE=;
-        b=bNHKhS+TmeBNh6NcShxJPTQlcahP8chdKk6dBo9Mm42AVcIhuKYmncJQ0KRBOgWC+l
-         Kc1r3SmWKwFwWdkmPDC61oZwjcSKOA79nQUuhUr5HL1VwoszyLrEW/hQLfhU6+P5oKwP
-         khteChZTp1xRV8/WFnqbrJwYVKFyAbVIyWMKh/W/Y6S6q31yMpV1QMODhGRc19PClD1W
-         7KsSayFSF9IHh7jqokd9COf64Knre8Q3LuqSJ6w5TRhotxjupwaV6tdms/lx/ygeGrcD
-         +UIqqUaFKrSEPW3IcfYsBup5YhhdKPjPMI9MfD7Ti35yVj2YLhGUtuq3YUybVaTg9vgr
-         zW1Q==
-X-Forwarded-Encrypted: i=1; AJvYcCW73rofBlK7OkuV62pYlSDInU+GU1Thfjc/wQckPI45lMRGhDKj1p9aOORz7gkobCUZlCq3vHW+Eg6khhVv@vger.kernel.org, AJvYcCXN9Z6l/Fzg5UCu7os7JbWZg7gyUHwBlABsL2N+QdTWKxeONHVwITLnF1rJ7VSMW9RJhHu0rkEfFP0Y4yXg@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzvu0Tuu/brxiZ+Ohxn5PewFVOdgxWF3nyUR11oJO7ANsKdt9b+
-	i9sbovyDA+h4yhuTOgnIsLe4fdwFMNI74UruWCRWfrKQ2KDTkkp4
-X-Gm-Gg: ASbGnctMwQBhwyJS5DEFi1IG36DoF/lWl/bTRWWCaki0VNwcZSIAqafQ/JdnaDGdASJ
-	nI/bp23VTn0P9myp9htjOuFDkdDbyTO7fe6fGxWcfMdxp7hkkAlGJPZpip2Wc1AJZJ+a/jnv3cP
-	ODdtCjd94nFmy2sNN91UDmw+LAV6j87aGXUHNxFSAnLycX197S6AzDREBZDt+2SaZuF1+jR4ak0
-	3oKwG3rEoGzc3zAUfpJc3xejOoDWPCToC61aT2a796lsswl+OPcZH7j65kZsUW4MxdI3E5x7J0X
-	bFPN/5LNFegZlkqmdEwjnwCGqXtwW4ZQn91DU1ykVA+3plQCaQqYhZ8Sjs7O
-X-Google-Smtp-Source: AGHT+IF4zRw0FRVDleT8LploK2usAg9P6iuZ1sytq0iXVwxaQIV/p3Ad2n4tPgTFudBQVPF+cEovBA==
-X-Received: by 2002:a05:6402:90e:b0:5e0:7510:5787 with SMTP id 4fb4d7f45d1cf-5e59f3f46e7mr171424a12.19.1741113319561;
-        Tue, 04 Mar 2025 10:35:19 -0800 (PST)
+        bh=EyDsNpX9HcSDC6V6t1dVpjf3NEtUKhWlmeySG+ENdu8=;
+        b=YLTrDP9rVYZDg6Uu3CXT3mNJ19OtKD6qteuoBukYu2F7E50fGE3yNnSDOz3sgotcV3
+         51SAFnKeUH5y4dJD6RtFVs3tSJ2+S+47cHvC02w6dpJO2lkkq35Ajzalf5bWHnmJMpai
+         9XhF1ePXxXb/3+rsyTV9RJwiBOS/n3ZzVjB6YfJVDsaSA1iDagiUaSS1rDaZtVoBQBw/
+         S6k2AAQeAjuqexu2GfjkbYZ6ho0ssVl0u7m1HgaM71NBVfeuPvcrvdA/kk4bUHzXP0qV
+         SX8Z45hIF2TQpovpJ5pn2FuBlsJng+FIt9Uik4TxnUGTJp0mUNO6IXA5VUnngh0FC3Kk
+         08jg==
+X-Forwarded-Encrypted: i=1; AJvYcCVNDSBN+MPOBy6Ve8rKeSos7PhCjGziNuRJTgmAWcE03DTXfKgvri7ipUlSjSFGDTRj242oqf9X1+sZAaC/@vger.kernel.org, AJvYcCWN+zxWBrjXH9aj2AE6JU4OP7ELqJc0v/5kM0PLqxmqxv/vVFRby23qZ04bKDthSIgVbkDCZKIBRTMnRH+r@vger.kernel.org
+X-Gm-Message-State: AOJu0YyYyH63spthe4jIcqIfzE5FXa1EjGscrVjw5Mw2sY0U4ysnUzaG
+	t6P51FGaG+50grULd/CAS/aVJq++5S7k0mu/GWKnflMi3feooY7C
+X-Gm-Gg: ASbGncscjxLUqtXORW/tDnsrcC/zO4EGEvXKRGyvc3azFa0nCJiIxAXMvPEMKZjQrxo
+	MbbUHX14a08QU47t99PZZ+mtZCsYKFd93ydrFm5h8xp59SmV+QiwcirmoNhN2lPu604+OYr6IGP
+	lcXGUblQhnZdPjbEn7h4fusFau34cgW/dgP9cdpnM2i91u6jNAm0RrMeaU60GB0V/Yb0q2krC+d
+	BYgKtFitQDPfWZJnWhMy5ARX10upSvZIVRzzvWoyeioECkMpBFQ7wM6l8VkQK7C/mT1ux4+fa2H
+	ozkQ8oHB/mb9uxNLEANtFPMc845jpncf4GKCwocLONmOmuGpVaH040NjiXXO
+X-Google-Smtp-Source: AGHT+IGABG5ux5DyBs31vWizjFg2g8zC/4PRf2kiX5akS7Vj2GWs4WMJ+xD9KZXiN3kx391JN33YOQ==
+X-Received: by 2002:a05:6402:274e:b0:5d9:a62:32b with SMTP id 4fb4d7f45d1cf-5e59f363d52mr148506a12.7.1741113322607;
+        Tue, 04 Mar 2025 10:35:22 -0800 (PST)
 Received: from f.. (cst-prg-71-44.cust.vodafone.cz. [46.135.71.44])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5e4c3bb747csm8691328a12.42.2025.03.04.10.35.17
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5e4c3bb747csm8691328a12.42.2025.03.04.10.35.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Mar 2025 10:35:18 -0800 (PST)
+        Tue, 04 Mar 2025 10:35:21 -0800 (PST)
 From: Mateusz Guzik <mjguzik@gmail.com>
 To: brauner@kernel.org,
 	viro@zeniv.linux.org.uk
@@ -64,9 +64,9 @@ Cc: jack@suse.cz,
 	linux-kernel@vger.kernel.org,
 	linux-fsdevel@vger.kernel.org,
 	Mateusz Guzik <mjguzik@gmail.com>
-Subject: [PATCH v2 1/4] file: add fput and file_ref_put routines optimized for use when closing a fd
-Date: Tue,  4 Mar 2025 19:35:03 +0100
-Message-ID: <20250304183506.498724-2-mjguzik@gmail.com>
+Subject: [PATCH v2 3/4] fs: use fput_close() in filp_close()
+Date: Tue,  4 Mar 2025 19:35:05 +0100
+Message-ID: <20250304183506.498724-4-mjguzik@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250304183506.498724-1-mjguzik@gmail.com>
 References: <20250304183506.498724-1-mjguzik@gmail.com>
@@ -78,239 +78,37 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Vast majority of the time closing a file descriptor also operates on the
-last reference, where a regular fput usage will result in 2 atomics.
-This can be changed to only suffer 1.
+When tracing a kernel build over refcounts seen this is a wash:
+@[kprobe:filp_close]:
+[0]                32195 |@@@@@@@@@@                                          |
+[1]               164567 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@|
 
-See commentary above file_ref_put_close() for more information.
+I verified vast majority of the skew comes from do_close_on_exec() which
+could be changed to use a different variant instead.
+
+Even without changing that, the 19.5% of calls which got here still can
+save the extra atomic. Calls here are borderline non-existent compared
+to fput (over 3.2 mln!), so they should not negatively affect
+scalability.
 
 Signed-off-by: Mateusz Guzik <mjguzik@gmail.com>
 ---
- fs/file.c                | 75 ++++++++++++++++++++++++++++++----------
- fs/file_table.c          | 72 +++++++++++++++++++++++++++-----------
- include/linux/file.h     |  2 ++
- include/linux/file_ref.h |  1 +
- 4 files changed, 111 insertions(+), 39 deletions(-)
+ fs/open.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/file.c b/fs/file.c
-index 44efdc8c1e27..ea753f9c8e08 100644
---- a/fs/file.c
-+++ b/fs/file.c
-@@ -26,6 +26,28 @@
+diff --git a/fs/open.c b/fs/open.c
+index fc1c6118eb30..ffb7e2e5e1ef 100644
+--- a/fs/open.c
++++ b/fs/open.c
+@@ -1589,7 +1589,7 @@ int filp_close(struct file *filp, fl_owner_t id)
+ 	int retval;
  
- #include "internal.h"
+ 	retval = filp_flush(filp, id);
+-	fput(filp);
++	fput_close(filp);
  
-+static bool __file_ref_put_badval(file_ref_t *ref, unsigned long cnt)
-+{
-+	/*
-+	 * If the reference count was already in the dead zone, then this
-+	 * put() operation is imbalanced. Warn, put the reference count back to
-+	 * DEAD and tell the caller to not deconstruct the object.
-+	 */
-+	if (WARN_ONCE(cnt >= FILE_REF_RELEASED, "imbalanced put on file reference count")) {
-+		atomic_long_set(&ref->refcnt, FILE_REF_DEAD);
-+		return false;
-+	}
-+
-+	/*
-+	 * This is a put() operation on a saturated refcount. Restore the
-+	 * mean saturation value and tell the caller to not deconstruct the
-+	 * object.
-+	 */
-+	if (cnt > FILE_REF_MAXREF)
-+		atomic_long_set(&ref->refcnt, FILE_REF_SATURATED);
-+	return false;
-+}
-+
- /**
-  * __file_ref_put - Slowpath of file_ref_put()
-  * @ref:	Pointer to the reference count
-@@ -67,27 +89,44 @@ bool __file_ref_put(file_ref_t *ref, unsigned long cnt)
- 		return true;
- 	}
- 
--	/*
--	 * If the reference count was already in the dead zone, then this
--	 * put() operation is imbalanced. Warn, put the reference count back to
--	 * DEAD and tell the caller to not deconstruct the object.
--	 */
--	if (WARN_ONCE(cnt >= FILE_REF_RELEASED, "imbalanced put on file reference count")) {
--		atomic_long_set(&ref->refcnt, FILE_REF_DEAD);
--		return false;
--	}
--
--	/*
--	 * This is a put() operation on a saturated refcount. Restore the
--	 * mean saturation value and tell the caller to not deconstruct the
--	 * object.
--	 */
--	if (cnt > FILE_REF_MAXREF)
--		atomic_long_set(&ref->refcnt, FILE_REF_SATURATED);
--	return false;
-+	return __file_ref_put_badval(ref, cnt);
+ 	return retval;
  }
- EXPORT_SYMBOL_GPL(__file_ref_put);
- 
-+/**
-+ * file_ref_put_close - drop a reference expecting it would transition to FILE_REF_NOREF
-+ * @ref:	Pointer to the reference count
-+ *
-+ * Semantically it is equivalent to calling file_ref_put(), but it trades lower
-+ * performance in face of other CPUs also modifying the refcount for higher
-+ * performance when this happens to be the last reference.
-+ *
-+ * For the last reference file_ref_put() issues 2 atomics. One to drop the
-+ * reference and another to transition it to FILE_REF_DEAD. This routine does
-+ * the work in one step, but in order to do it has to pre-read the variable which
-+ * decreases scalability.
-+ *
-+ * Use with close() et al, stick to file_ref_put() by default.
-+ */
-+bool file_ref_put_close(file_ref_t *ref)
-+{
-+	long old, new;
-+
-+	old = atomic_long_read(&ref->refcnt);
-+	do {
-+		if (unlikely(old < 0))
-+			return __file_ref_put_badval(ref, old);
-+
-+		if (old == FILE_REF_ONEREF)
-+			new = FILE_REF_DEAD;
-+		else
-+			new = old - 1;
-+	} while (!atomic_long_try_cmpxchg(&ref->refcnt, &old, new));
-+
-+	return new == FILE_REF_DEAD;
-+}
-+EXPORT_SYMBOL_GPL(file_ref_put_close);
-+
- unsigned int sysctl_nr_open __read_mostly = 1024*1024;
- unsigned int sysctl_nr_open_min = BITS_PER_LONG;
- /* our min() is unusable in constant expressions ;-/ */
-diff --git a/fs/file_table.c b/fs/file_table.c
-index 5c00dc38558d..4189c682eb06 100644
---- a/fs/file_table.c
-+++ b/fs/file_table.c
-@@ -511,31 +511,37 @@ void flush_delayed_fput(void)
- }
- EXPORT_SYMBOL_GPL(flush_delayed_fput);
- 
--void fput(struct file *file)
-+static void __fput_defer_free(struct file *file)
- {
--	if (file_ref_put(&file->f_ref)) {
--		struct task_struct *task = current;
-+	struct task_struct *task = current;
- 
--		if (unlikely(!(file->f_mode & (FMODE_BACKING | FMODE_OPENED)))) {
--			file_free(file);
-+	if (unlikely(!(file->f_mode & (FMODE_BACKING | FMODE_OPENED)))) {
-+		file_free(file);
-+		return;
-+	}
-+	if (likely(!in_interrupt() && !(task->flags & PF_KTHREAD))) {
-+		init_task_work(&file->f_task_work, ____fput);
-+		if (!task_work_add(task, &file->f_task_work, TWA_RESUME))
- 			return;
--		}
--		if (likely(!in_interrupt() && !(task->flags & PF_KTHREAD))) {
--			init_task_work(&file->f_task_work, ____fput);
--			if (!task_work_add(task, &file->f_task_work, TWA_RESUME))
--				return;
--			/*
--			 * After this task has run exit_task_work(),
--			 * task_work_add() will fail.  Fall through to delayed
--			 * fput to avoid leaking *file.
--			 */
--		}
--
--		if (llist_add(&file->f_llist, &delayed_fput_list))
--			schedule_delayed_work(&delayed_fput_work, 1);
-+		/*
-+		 * After this task has run exit_task_work(),
-+		 * task_work_add() will fail.  Fall through to delayed
-+		 * fput to avoid leaking *file.
-+		 */
- 	}
-+
-+	if (llist_add(&file->f_llist, &delayed_fput_list))
-+		schedule_delayed_work(&delayed_fput_work, 1);
- }
- 
-+void fput(struct file *file)
-+{
-+	if (unlikely(file_ref_put(&file->f_ref))) {
-+		__fput_defer_free(file);
-+	}
-+}
-+EXPORT_SYMBOL(fput);
-+
- /*
-  * synchronous analog of fput(); for kernel threads that might be needed
-  * in some umount() (and thus can't use flush_delayed_fput() without
-@@ -549,10 +555,34 @@ void __fput_sync(struct file *file)
- 	if (file_ref_put(&file->f_ref))
- 		__fput(file);
- }
--
--EXPORT_SYMBOL(fput);
- EXPORT_SYMBOL(__fput_sync);
- 
-+/*
-+ * Equivalent to __fput_sync(), but optimized for being called with the last
-+ * reference.
-+ *
-+ * See file_ref_put_close() for details.
-+ */
-+void fput_close_sync(struct file *file)
-+{
-+	if (unlikely(file_ref_put_close(&file->f_ref)))
-+		__fput(file);
-+}
-+EXPORT_SYMBOL(fput_close_sync);
-+
-+/*
-+ * Equivalent to fput(), but optimized for being called with the last
-+ * reference.
-+ *
-+ * See file_ref_put_close() for details.
-+ */
-+void fput_close(struct file *file)
-+{
-+	if (file_ref_put_close(&file->f_ref))
-+		__fput_defer_free(file);
-+}
-+EXPORT_SYMBOL(fput_close);
-+
- void __init files_init(void)
- {
- 	struct kmem_cache_args args = {
-diff --git a/include/linux/file.h b/include/linux/file.h
-index 302f11355b10..7b04e87cbde6 100644
---- a/include/linux/file.h
-+++ b/include/linux/file.h
-@@ -124,6 +124,8 @@ int receive_fd_replace(int new_fd, struct file *file, unsigned int o_flags);
- 
- extern void flush_delayed_fput(void);
- extern void __fput_sync(struct file *);
-+void fput_close_sync(struct file *);
-+void fput_close(struct file *);
- 
- extern unsigned int sysctl_nr_open_min, sysctl_nr_open_max;
- 
-diff --git a/include/linux/file_ref.h b/include/linux/file_ref.h
-index 9b3a8d9b17ab..f269299941aa 100644
---- a/include/linux/file_ref.h
-+++ b/include/linux/file_ref.h
-@@ -62,6 +62,7 @@ static inline void file_ref_init(file_ref_t *ref, unsigned long cnt)
- }
- 
- bool __file_ref_put(file_ref_t *ref, unsigned long cnt);
-+bool file_ref_put_close(file_ref_t *ref);
- 
- /**
-  * file_ref_get - Acquire one reference on a file
 -- 
 2.43.0
 
