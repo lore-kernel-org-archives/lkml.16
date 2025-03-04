@@ -1,97 +1,161 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E2081F55FA
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 08:21:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEE7543172
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 08:22:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741076506; cv=none; b=buTUQX93Z4dtn3HiJPkiTUgIQbZCyFw1ejlrouJMZLABa7p01VdIlftpsd1Z9CXqI9GyG4IBDN8AF8E/bH7KD16X+KrGTfXTJz5eidoqNOij/QbZRJHPm8OKsfRpRSBZEe2svSiWcH0WqMf7uHzKzsT89cZnLg93fKxol0sADG8=
+	t=1741076537; cv=none; b=Nb3tsImF+MUuC7GYhqmh4cmS+M+mxNitWxZMCVs5BWxhqpS2gxR+3g3Ks0NHHWG1kS0jVgbT25h0g8OA3sRpa0yLSYFSrydEMZGkO6mX3nZGWmWTolNtayVKaA5ySoGqXc29kirL1GRiXDKmahiNxVPS7GRBrh+GSaiv09U195A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741076506; c=relaxed/simple;
-	bh=r+QgXwspE9bOIsdXuaHX5Fy587ozsozyvyxqkM7KM7E=;
+	s=arc-20240116; t=1741076537; c=relaxed/simple;
+	bh=5oBHnXOs9QSSPIAw2gefjQYMDadCJZt5CyLNq3RF8iE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZGo9XxXF2j4jqHM+s9IIsW7TE+TPehSoSCKlUZ1RGHHMNPL2Bk9whkEp1EUN+ETtCtNPjI/o5/mdp8ES4PYsgNVGlW7XRESvCEUu/VwJs8frHnOoPUZYnwT0xeoxZNkfju+hj+c93Kg5rMZpPchNZ2ACR3Amk9MS0VW/YUd+UEU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dPwJ8SBD; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Y+P5Kc2bc9p7FV0GhHJe3Wqq13JwD2QJNxO/sb5qgYnCorGvIl7dEm4RE0RZXYN+VMPv008tNXAhB/BiTNQA3itET0Qkomkwq2wSvnXTDRUEEr8mQJHNrH7zPvRVjzRPi43Wg5uOsPdN+hxddO8IQaTrORzfUVT3H2j2V7qBsNI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=pTtO6DWO; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=RZjuCsUd; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=y3mrGdx/; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=AwW4QRns; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dPwJ8SBD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1451DC4CEE5;
-	Tue,  4 Mar 2025 08:21:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741076505;
-	bh=r+QgXwspE9bOIsdXuaHX5Fy587ozsozyvyxqkM7KM7E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dPwJ8SBDBr610xdCSiteMZ0vQQMEoAeLjKlooTDCQ6AwAtKnyEtTms8rhh+NQk+2V
-	 gnna6yYT/kZKR+jEI06+nYnt/NX5ajaJbppAJljDNvujnvQWIbyuFgqwcVs8L/SwlW
-	 Rw4CAmiKricAvytqpNEIH4Q179xKeZS/9+d+WaUtlnDhJqbT9/Q767NTYzymYdwCiY
-	 RLyR+NpMenpAYFEg2fK6n3cZnHP5fw7fkNGxr0+VQ3gWhk6n0VW5OaL2avNFU/mwIs
-	 S0FLt3/ZnmaYsgvTXh50/jYuTMrQeqXizLXm4WNuJYUZ5evnULGBgFb1vYvLeOmVWg
-	 vbaWroNd/HuQg==
-Date: Tue, 4 Mar 2025 09:21:43 +0100
-From: Maxime Ripard <mripard@kernel.org>
-To: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
-Cc: Vinod Koul <vkoul@kernel.org>, 
-	Kishon Vijay Abraham I <kishon@kernel.org>, Heiko Stuebner <heiko@sntech.de>, 
-	Algea Cao <algea.cao@rock-chips.com>, Sandor Yu <Sandor.yu@nxp.com>, 
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, kernel@collabora.com, linux-kernel@vger.kernel.org, 
-	linux-phy@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
-	linux-rockchip@lists.infradead.org
-Subject: Re: [PATCH v4 10/12] phy: rockchip: samsung-hdptx: Add high color
- depth management
-Message-ID: <20250304-delicate-crazy-tuatara-5ea4d3@houat>
-References: <20250304-phy-sam-hdptx-bpc-v4-0-8657847c13f7@collabora.com>
- <20250304-phy-sam-hdptx-bpc-v4-10-8657847c13f7@collabora.com>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="pTtO6DWO";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="RZjuCsUd";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="y3mrGdx/";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="AwW4QRns"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id E7F952116B;
+	Tue,  4 Mar 2025 08:22:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1741076533; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=A1iGbelaTALv5TJMxtK+qrnTKCCp2cmpTL/B5DdK1Vs=;
+	b=pTtO6DWOv7HVdk0DopBnr7FBs8lw+CeB94qhhMw2AzEQL9sxfuWr1xxuh2gI7tyg65XGmX
+	+c42tFVFn7IWwsRc8SVNt0n6BuwUOlQWF4/M1LWtK/L9xs+DOWi6dq/FVS480S5BGvJMpy
+	eHepKA2WZaFZfy9d3+PZat0r0eCGW6o=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1741076533;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=A1iGbelaTALv5TJMxtK+qrnTKCCp2cmpTL/B5DdK1Vs=;
+	b=RZjuCsUd4QbjDaC7142C8e/UHlSC76MGn1CSiUWw1dBFOm9j2W6ql1HL0oqVlHlbjAUNfi
+	98ackGqGs6RjQ5CA==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b="y3mrGdx/";
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=AwW4QRns
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1741076532; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=A1iGbelaTALv5TJMxtK+qrnTKCCp2cmpTL/B5DdK1Vs=;
+	b=y3mrGdx/kdMYr18Ca1TcbYYDL0goAAGV9UL34f4VsfPiCg1ZrWG8tMfXnCSZc6yw97BgqW
+	pJNuoF1opafT1K6XudP9sCdAAbsof70pwSmB1vHWdKF4Y2/KHPSKvup/sVnGsbS5NVOuhP
+	p/eBEihk36BtBbOJ4FCIKBNgEnopXOE=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1741076532;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=A1iGbelaTALv5TJMxtK+qrnTKCCp2cmpTL/B5DdK1Vs=;
+	b=AwW4QRnsWlUItyWFe4fUIeV27z/cVT8byjaRV6l7ZXGtlYgoLGAH4lxFqGYx4BA0GOJokC
+	WyMOnHCCirCzu+Aw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 635121393C;
+	Tue,  4 Mar 2025 08:22:11 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id dfxzFTO4xmfRNgAAD6G6ig
+	(envelope-from <osalvador@suse.de>); Tue, 04 Mar 2025 08:22:11 +0000
+Date: Tue, 4 Mar 2025 09:22:09 +0100
+From: Oscar Salvador <osalvador@suse.de>
+To: Zhenhua Huang <quic_zhenhuah@quicinc.com>
+Cc: anshuman.khandual@arm.com, catalin.marinas@arm.com, david@redhat.com,
+	will@kernel.org, ardb@kernel.org, ryan.roberts@arm.com,
+	mark.rutland@arm.com, joey.gouly@arm.com,
+	dave.hansen@linux.intel.com, akpm@linux-foundation.org,
+	chenfeiyang@loongson.cn, chenhuacai@kernel.org, linux-mm@kvack.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	quic_tingweiz@quicinc.com, stable@vger.kernel.org
+Subject: Re: [PATCH v9] arm64: mm: Populate vmemmap at the page level if not
+ section aligned
+Message-ID: <Z8a4MWPpTKm2FAce@localhost.localdomain>
+References: <20250304072700.3405036-1-quic_zhenhuah@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha384;
-	protocol="application/pgp-signature"; boundary="i3vrrx3psrj2lhwm"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250304-phy-sam-hdptx-bpc-v4-10-8657847c13f7@collabora.com>
+In-Reply-To: <20250304072700.3405036-1-quic_zhenhuah@quicinc.com>
+X-Rspamd-Queue-Id: E7F952116B
+X-Spam-Score: -4.51
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[18];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,suse.de:dkim];
+	DKIM_TRACE(0.00)[suse.de:+]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Level: 
+
+On Tue, Mar 04, 2025 at 03:27:00PM +0800, Zhenhua Huang wrote:
+> On the arm64 platform with 4K base page config, SECTION_SIZE_BITS is set
+> to 27, making one section 128M. The related page struct which vmemmap
+> points to is 2M then.
+> Commit c1cc1552616d ("arm64: MMU initialisation") optimizes the
+> vmemmap to populate at the PMD section level which was suitable
+> initially since hot plug granule is always one section(128M). However,
+> commit ba72b4c8cf60 ("mm/sparsemem: support sub-section hotplug")
+> introduced a 2M(SUBSECTION_SIZE) hot plug granule, which disrupted the
+> existing arm64 assumptions.
+> 
+> The first problem is that if start or end is not aligned to a section
+> boundary, such as when a subsection is hot added, populating the entire
+> section is wasteful.
+> 
+> The next problem is if we hotplug something that spans part of 128 MiB
+> section (subsections, let's call it memblock1), and then hotplug something
+> that spans another part of a 128 MiB section(subsections, let's call it
+> memblock2), and subsequently unplug memblock1, vmemmap_free() will clear
+> the entire PMD entry which also supports memblock2 even though memblock2
+> is still active.
+> 
+> Assuming hotplug/unplug sizes are guaranteed to be symmetric. Do the
+> fix similar to x86-64: populate to pages levels if start/end is not aligned
+> with section boundary.
+> 
+> Cc: <stable@vger.kernel.org> # v5.4+
+> Fixes: ba72b4c8cf60 ("mm/sparsemem: support sub-section hotplug")
+> Acked-by: David Hildenbrand <david@redhat.com>
+> Signed-off-by: Zhenhua Huang <quic_zhenhuah@quicinc.com>
+
+Reviewed-by: Oscar Salvador <osalvador@suse.de>
 
 
---i3vrrx3psrj2lhwm
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v4 10/12] phy: rockchip: samsung-hdptx: Add high color
- depth management
-MIME-Version: 1.0
-
-On Tue, Mar 04, 2025 at 03:44:09AM +0200, Cristian Ciocaltea wrote:
-> @@ -1480,12 +1484,12 @@ static int rk_hdptx_phy_power_off(struct phy *phy)
->  static int rk_hdptx_phy_verify_hdmi_config(struct rk_hdptx_phy *hdptx,
->  					   struct phy_configure_opts_hdmi *hdmi)
->  {
-> -	if (!hdmi->tmds_char_rate || hdmi->tmds_char_rate > HDMI20_MAX_RATE)
-> -		return -EINVAL;
-> -
->  	u32 bit_rate =3D hdmi->tmds_char_rate / 100;
->  	int i;
-> =20
-> +	if (!hdmi->tmds_char_rate || hdmi->tmds_char_rate > HDMI20_MAX_RATE)
-> +		return -EINVAL;
-> +
->  	for (i =3D 0; i < ARRAY_SIZE(ropll_tmds_cfg); i++)
->  		if (bit_rate =3D=3D ropll_tmds_cfg[i].bit_rate)
->  			break;
-
-Why is that change needed?
-
-Maxime
-
---i3vrrx3psrj2lhwm
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCZ8a4FgAKCRAnX84Zoj2+
-diuVAX4ozKl6gJOFIJUKtEjxOPipdOu9iB/HuKt1Vnl8PydF6Q+9rpNCmfTUHVLb
-yeBXM+8BfitH+H7qMyogVHRVuaRdMoO5CdfQvz8UPrcFG/RFymk53sbJ9HgyBuDq
-jqseFCQ4bg==
-=aIsW
------END PGP SIGNATURE-----
-
---i3vrrx3psrj2lhwm--
+-- 
+Oscar Salvador
+SUSE Labs
