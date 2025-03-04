@@ -1,147 +1,141 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED5D91F03EE
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 03:53:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D39C141987;
+	Tue,  4 Mar 2025 03:54:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741060439; cv=none; b=lTYl2w2TgrJtrULSL77MMHLjMATva6YLKRmLKRRouEZXyF/o956BGI/AXjlkTKpF4TeW2k6y3VuuzGKoykqxV5Kk5fD8V+btmD5Xrp1vFl2EQAnC8YM5oedVKq9Gy4NZWVMzNXCxmc6XvmUfkifTusOenXe/VPf5pz3C1t3A5jU=
+	t=1741060498; cv=none; b=eWXmayv2yxMK+BfnvdeFBzOsRy1u9T+U6MUIka1WXbS/Mr88vI8j3+TNxnitPMmCbxxj0lNYpEnnYFgojGCTB8F0SCjd/xoX0bGBCuwjS37LUPl56i+j/UjRngHVCZcsb5BWBVgTGmOB5YCKIQqm87DImzlxUTRVakyibtVmEUQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741060439; c=relaxed/simple;
-	bh=v4ZIW03tXTq33ylUh9Hi3kvpmNUOTXtibE59mai2iZ8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OdZTQN2kIdJ3Pfz68slzJegLijaC8xu4gFgB+l9BD8qg6T20QMiK05jXCUgO03MLrs94FreZkhHYxfXuv7BXiguETd7YeBSfXz33B+MERT5Tp8PtITwE/FwFOCrEsY0FeTy/NC0PhfMZutjyn7RIrybTv4pHZP8sOTP43NyhBYY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Zeha4UDL; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1741060498; c=relaxed/simple;
+	bh=qc8hg5FVp5/hApF+SpKM8LFfb9pXcXaTEgaWsibCqs4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=j5pGhc76B34vwSv0ZF1kBs7kn7GNYRaTtRNIgRk1siAbhChJknUIxCyXhnwbiO6IOjYq2bzixeZFKLzjNGXbI+mDOfQIG1itct+cLTAa9OW1HoUcDclXzJbNADNiJkmf/tqzMaGnlgVnj8WuN3AXi+Jcw8BqnF8nG3+jMKZnx6M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ldNP5Wy4; arc=none smtp.client-ip=209.85.160.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Zeha4UDL"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-223722270b7so63255ad.1
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Mar 2025 19:53:57 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ldNP5Wy4"
+Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-47210ab1283so78160381cf.1;
+        Mon, 03 Mar 2025 19:54:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1741060437; x=1741665237; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hSFEb6cmbj6TrSKHrJmKO1hlYsPUC+0FUI58pDz1vl8=;
-        b=Zeha4UDL+PUCz5e9lJQdQ12LAT7HMzDhQtuPE6EzaQxiOITpXFceZVvMq1+a2pKt0J
-         y7za/dpejvEOzlvhE5g4JKZlZiTf2yr2hlGqc7LT/WGncgsyCnfOvk/sucC927Rr4ddm
-         bUkywf/hRsJuweRVxy6NpyUhiY/0nyvBDrmiOEZ6IP4Mw2LUgvP6Cm/yxYbJAGyXIUX7
-         JZUByRUTGpZisw9jgUXQVUHCipDQonZKeoCX66hEDsV+OEwk67XglZbZ8Bsx4gIXtx46
-         wka3oEIwuZ1I8yNNu92/Oq7D9CxIeqXofDA3kyHn7TLGFqrYqQbZXiQQlcvBRE90saRt
-         6a4Q==
+        d=gmail.com; s=20230601; t=1741060495; x=1741665295; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=/d9zCbu/LYhy5rp6SGakOf1cMhZl+zNjAJhVyQeX4VY=;
+        b=ldNP5Wy48XJEidTkfACTmq1Gj/zCBtRAi4W2Dei5kSM84C+ETnoEd2W31UhjYADBGT
+         jlUQ69X5LfVJnXFLXrQQzHsfEM+FrH7NNK4CqXhQCW0t0MrKQeHUkQl4PRRVhJy8o+Ig
+         ABGczdVfKRCOc5me+ejEdBUdT7K4Metu8tbttzLcLeCSR6HragXTK8wXMAmxl0OVVayn
+         fmu0f/3Qw05V7CjuwJw9lLECQCb42mkl2ZXPitZWjfwc3Zyt/YKtbh5sCbIPuso0R6ih
+         uIt0dxuXO9t/Ck7tfUhGlkpqb7zGatlaOwHP1IyYzPImj/cSYfKpVzEQzmdcc11fi1aO
+         pONQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741060437; x=1741665237;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hSFEb6cmbj6TrSKHrJmKO1hlYsPUC+0FUI58pDz1vl8=;
-        b=wiYHxEqBf0Vr2bAlj4mMVLYhtQVy3+MdLX+V5ThX5WF+XQDQwRUb9xmgzbdp9UoDul
-         /vrcVolq2b9DLczDIGRYy+R29+TablAPkka6NQnO9kl/fTLPW/10PDUHpYwhuBqcYQ0J
-         6RIFYqMNCI9DuhIFd+ieJ421IRFocdj7vKNrm3P0px43s6vn/X6JosV1Fo8RH10Tnewx
-         FdyQIXOljMUe+aRNzLXTq/YVEFQPxNt4aZD3qcU8EWqvF0XYNHDz4RqNDw9SsARYEfGC
-         oir2TZGiJo3lIjWccUp+oHFwlRZlMZ1yg9iYKHq+6nVFfJH36+FBwM11gL/Ob6Lg45lo
-         GyOg==
-X-Forwarded-Encrypted: i=1; AJvYcCVe3gjIB7uP8QmJJ/I3Ykxfj8zORn+gkdfIwHwKFyA0iFfe7fyHrpyoWhfZ+KUAfvaL/rwo0F2GNkrgZ7Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxGbSpmcXmVRsS3GggWq+4T3lvqjPbHEIZrt2ljPWya/P9Q3Xnq
-	cvlo6BU+x0YEv9kO65qVK/ja1tSAt2hpFqcu+jC63zUiF/P4jPHgw9ThP7l2vrhSJhOBlihG9B1
-	iNyM1xfhWAsZHv3jiVbPY6ARpRuhkBY6T/dzp
-X-Gm-Gg: ASbGncvdLdT0aZnlxsvsKoPrKsztksvXh9f75r//jpP9F3xLPL14ozlJ5W/egyao3uB
-	VfU8GU3CdSX7q8t1BLxqxsS/rYFkVMe01oTMKup56ZJop6QnEAzQBTn9yxO4zdX9C4ZKTwsSTXx
-	sJjXDhos7prroomeHTeXUvkUKF2Q==
-X-Google-Smtp-Source: AGHT+IHSpmXymQz0Hg2Nfi/UMM95jLNI0Agz8LxyDxK7J1nuQGrVPSq5ZOQpmxKAyc8gv2/Tg1AhK763Ctub08I/iBk=
-X-Received: by 2002:a17:902:e892:b0:217:8612:b690 with SMTP id
- d9443c01a7336-223d9e008f0mr1582615ad.8.1741060436769; Mon, 03 Mar 2025
- 19:53:56 -0800 (PST)
+        d=1e100.net; s=20230601; t=1741060495; x=1741665295;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/d9zCbu/LYhy5rp6SGakOf1cMhZl+zNjAJhVyQeX4VY=;
+        b=rX+GVCsdly1C7Sy/ULLAAzR5l/rCdhswHaXiWKbOyC3DXOekf4RtRJBAagN62eMeyA
+         178LLTXY/izPH+/17PA6m3A2+yG0hBX0r1zLhW29043A7KG6ckj2O62lHa92WWgIDkmz
+         8Zyf2l6hOh8x0VTwrklew1XyXrNx1o48P0NNP5lSWeZeSE+gOxHU4MM0H7TKiWRNVwpF
+         I0OoAN4HBf5JwGoRokpVsh/7WUBhu4HKEz9Zrur83dDDsiioolPKF7XKmN+UsQektjrc
+         j6p5NcxrbQUCoJLGgI+VFk+HVgHj1OgOY16Hw2b/m1IGqpxqLFXR7jIUqhNVlAUcxaW0
+         lDQQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWmZa2pTuoCUJPLcSkxSenyd6HF3vrPXtNzNndAj5SozH5pnAwCiRhIfAMF7tNTXrrZwUMxJPWPxB6Ux+U=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxGk8ba1BcxHOuYiG9iKHUEeBIyS3fXGEzGr4JBUux3Mo1zFuYD
+	IhEzgmIrW8/XaRLuYmAxANrOWOlBGJ8XT2zdxWiJHhXCLyV+ug5A5Lk+Ggdc
+X-Gm-Gg: ASbGncsOrhUY00H4pOsbhHEIzgJY12f0WX5P5etyRVvm2OfXxIii+NKvAW4A/HcvYzn
+	zyk3/J9Hj0JYiH6MQm/CyPKbZEo3Qb+XrvGALggELLbTkdcgzNKwua9qHVUb/WCpo4yHSdZBD02
+	IhefP8JQ2ZYwUZEEyxAGggdIqvJWdNImYAo1WSaopCMJGlLbiawVzfI9IDjDIjzuRfoZnrzSb85
+	8L9Q1Cbt3MAXs/EDWgU1eARMpxhv+IIjZU23PnTLOyAqWdF2oYsTyNqKVjocQIokWQB+gW+dxmt
+	pUSrENdVjLUnYBSphN5gO4mNX+FCPb0hsQEaCg3TGTLk1RUn0SAtI882nGiizSjcJsezho5QJ16
+	J/TkUAK4=
+X-Google-Smtp-Source: AGHT+IFMmnHFglN249NZAz52n1oJHNWGnWYied/qPAwrKZwsU8hr4B4Ll4F9yn7Nbyh6ZtYhTKAIkQ==
+X-Received: by 2002:ac8:5dc9:0:b0:472:17b5:dc43 with SMTP id d75a77b69052e-474bc0e14cbmr206862361cf.37.1741060494957;
+        Mon, 03 Mar 2025 19:54:54 -0800 (PST)
+Received: from nerdopolis2.mynetworksettings.com ([2600:4040:5e66:a800:745f:1ed4:1113:4077])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-474691a1f2csm67567041cf.13.2025.03.03.19.54.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Mar 2025 19:54:53 -0800 (PST)
+From: adamsimonelli@gmail.com
+To: linux-serial@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Jiri Slaby <jirislaby@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Andy Shevchenko <andy.shevchenko@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	John Ogness <john.ogness@linutronix.de>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Petr Mladek <pmladek@suse.com>
+Cc: Adam Simonelli <adamsimonelli@gmail.com>
+Subject: [PATCH v6 0/3] Optionally allow ttynull to be selected as a default console
+Date: Mon,  3 Mar 2025 22:54:44 -0500
+Message-ID: <20250304035447.3138221-1-adamsimonelli@gmail.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250227041209.2031104-1-almasrymina@google.com>
- <20250227041209.2031104-8-almasrymina@google.com> <20250228164301.07af6753@kernel.org>
- <CAHS8izO-N4maVtjhgH7CFv5D-QEtjQaYKSrHUrth=aJje4NZgg@mail.gmail.com> <20250303162901.7fa57cd0@kernel.org>
-In-Reply-To: <20250303162901.7fa57cd0@kernel.org>
-From: Mina Almasry <almasrymina@google.com>
-Date: Mon, 3 Mar 2025 19:53:44 -0800
-X-Gm-Features: AQ5f1JrYu9C4BjqccschILEVQXZn6ayr_hbqMYvwnSubi9nhcByOZkaDeGtsjTs
-Message-ID: <CAHS8izOJfSCM+qZ=npPOK3kwuA1pyGHrPo73brRq2VXg8G450g@mail.gmail.com>
-Subject: Re: [PATCH net-next v6 7/8] net: check for driver support in netmem TX
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-doc@vger.kernel.org, kvm@vger.kernel.org, 
-	virtualization@lists.linux.dev, linux-kselftest@vger.kernel.org, 
-	Donald Hunter <donald.hunter@gmail.com>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
-	Jonathan Corbet <corbet@lwn.net>, Andrew Lunn <andrew+netdev@lunn.ch>, 
-	Jeroen de Borst <jeroendb@google.com>, Harshitha Ramamurthy <hramamurthy@google.com>, 
-	Kuniyuki Iwashima <kuniyu@amazon.com>, Willem de Bruijn <willemb@google.com>, David Ahern <dsahern@kernel.org>, 
-	Neal Cardwell <ncardwell@google.com>, "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, 
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>, 
-	Stefan Hajnoczi <stefanha@redhat.com>, Stefano Garzarella <sgarzare@redhat.com>, Shuah Khan <shuah@kernel.org>, 
-	sdf@fomichev.me, asml.silence@gmail.com, dw@davidwei.uk, 
-	Jamal Hadi Salim <jhs@mojatatu.com>, Victor Nogueira <victor@mojatatu.com>, 
-	Pedro Tammela <pctammela@mojatatu.com>, Samiullah Khawaja <skhawaja@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Mon, Mar 3, 2025 at 4:29=E2=80=AFPM Jakub Kicinski <kuba@kernel.org> wro=
-te:
->
-> On Fri, 28 Feb 2025 17:53:24 -0800 Mina Almasry wrote:
-> > On Fri, Feb 28, 2025 at 4:43=E2=80=AFPM Jakub Kicinski <kuba@kernel.org=
-> wrote:
-> > > On Thu, 27 Feb 2025 04:12:08 +0000 Mina Almasry wrote:
-> > > > +     if (!skb_frags_readable(skb) && !dev->netmem_tx)
-> > >
-> > > How do you know it's for _this_ device tho?
-> >
-> > Maybe a noob question, but how do we end up here with an skb that is
-> > not targeted for the 'dev' device? We are checking in
-> > tcp_sendmsg_locked that we're targeting the appropriate device before
-> > creating the skb. Is this about a packet arriving on a dmabuf bound to
-> > a device and then being forwarded through another device that doesn't
-> > own the mapping, bypassing the check?
->
-> Forwarded or just redirected by nft/bpf/tc
->
-> > > The driver doesn't seem to check the DMA mapping belongs to it either=
-.
-> > >
-> > > Remind me, how do we prevent the unreadable skbs from getting into th=
-e
-> > > Tx path today?
-> >
-> > I'm not sure if this is about forwarding, or if there is some other
-> > way for unreadable skbs to end up in the XT path that you have in
-> > mind. At some point in this thread[1] we had talked about preventing
-> > MP bound devices from being lower devices at all to side step this
-> > entirely but you mentioned that may not be enough, and we ended up
-> > sidestepping only XDP entirely.
-> >
-> > [1] https://lore.kernel.org/bpf/20240821153049.7dc983db@kernel.org/
->
-> Upper devices and BPF access is covered I think, by the skbuff checks.
-> But I think we missed adding a check in validate_xmit_skb() to protect
-> the xmit paths of HW|virt drivers. You can try to add a TC rule which
-> forwards all traffic from your devmem flow back out to the device and
-> see if it crashes on net-next ?
+From: Adam Simonelli <adamsimonelli@gmail.com>
 
-No crash, but by adding debug logs I'm detecting that we're passing
-unreadable netmem dma-addresses to the dma_unmap_*() APIs, which is
-known to be unsafe. I just can't reproduce an issue because my
-platform has the IOMMU disabled.
+When switching to a CONFIG_VT=n world, at least on x86 systems,
+/dev/console becomes /dev/ttyS0. This can cause some undesired effects.
+/dev/console's behavior is now tied to the physical /dev/ttyS0, which when
+disconnected can cause isatty() to fail when /dev/ttyS0 is disconnected,
+and users who upgrade to a theoretical vt-less kernel from their
+distribution who have a device such as a science instrument connected to
+their /dev/ttyS0 port will suddenly see it receive kernel log messages.
 
-I guess I do need to send the hunk from validate_xmit_skb() as a fix
-to net and CC stable.
+When the new CONFIG_NULL_TTY_DEFAULT_CONSOLE option is turned on, this will
+allow the ttynull device to be leveraged as the default console. Distributions
+that had CONFIG_VT turned on before will be able to leverage this option
+to where /dev/console is still backed by a psuedo device, avoiding these
+issues, without needing to enable the entire VT subsystem.
 
-Another thing I'm worried about is ip_forward() inserting an
-unreadable skb into the tx path somewhere higher up the stack which
-calls more code that isn't expecting unreadable skbs? Specifically
-worried about skb_frag_ref/unref. Does this sound like a concern as
-well? Or is it a similar code path to tc?
+v2:
+    rebase
 
---
-Thanks,
-Mina
+v3:
+    Clarify commit messages.
+
+    Guard the all the register_console()s in ttynull to prevent it from being
+    registered twice.
+
+    Only change the link order if CONFIG_NULL_TTY_CONSOLE is enabled, otherwise
+    use the existing order for ttynull if only CONFIG_NULL_TTY is enabled.
+
+    Document why the link order changes in the drivers/tty/Makefile file.
+
+    Replace #ifdefs
+
+v4:
+    Remember to actually include the changes to v3 in the cover letter.
+
+v5:
+    Correct code formatting in Makefile comment.
+
+v6:
+    Change to CONFIG_NULL_TTY_DEFAULT_CONSOLE
+
+    Set the index to -1, and don't set the flags
+
+    Use add_preferred_console() instead of register_console() in ttynull's
+    console_initcall when CONFIG_NULL_TTY_DEFAULT_CONSOLE is enabled
+
+Adam Simonelli (3):
+  ttynull: Always initialize console index to -1
+  ttynull: Add an option to allow ttynull to be used as a console device
+  tty: Change order of ttynull to be linked sooner if enabled as a
+    console.
+
+ drivers/tty/Kconfig   | 15 ++++++++++++++-
+ drivers/tty/Makefile  | 11 +++++++++++
+ drivers/tty/ttynull.c | 12 ++++++++++++
+ 3 files changed, 37 insertions(+), 1 deletion(-)
+
+-- 
+2.45.2
+
