@@ -1,130 +1,87 @@
-Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AA3E298CB3
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 17:12:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F0F6253B48;
+	Tue,  4 Mar 2025 17:14:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741108346; cv=none; b=kf8HQSaUUpyPvwSvE6FhshP3e/ZEy7JyqgMOzLG/HiqWrVKETpzitSyL5WhNn+wWbBGsfRITmUZtaF6zfWZTEwivkjuhh/wktFLGV0ruD/INhiNdgIvWFX2tPWf3hXY+EMerKv/o88s9g+9DkeJn+JThtVEvE0cdYABbb7KNsuo=
+	t=1741108448; cv=none; b=U6lAtk0lfYju8Y+23aIM4Uspdaa+7GGwKb7g76IQySDZN2V8n+lnfpjPP+CfsHjSzAZjVT1JexJLX6XaLzAx0IL3NOtZleAEcwrXL1ndhGexyXCA1uvyBezIbtQN9XqbNM5x1ZypyLy0OJ48AID1dHTNJYVhWTSAvfJeA7gShk4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741108346; c=relaxed/simple;
-	bh=tK7rBHUGh88Jv85U3Obnwi/LSusFZfvVT+DZtwysNBo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AYusDMs+01+C9vrcGBEE0t0UUJnXI81QAhpP6kH1X98ZXfr/F/5o+3rEckPLezhDWYvNdrptiAXpUAju+paD43ShrkKPM0j3HMUkA/pqnTexCFF3RmSF5HkqR6QLY202bEagrUG35lEDxs3CSqrpcYa5onA5eG5UbfbHOsYFwog=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=SgJgYQu+; arc=none smtp.client-ip=209.85.219.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1741108448; c=relaxed/simple;
+	bh=lyvR9xDw1gIv8pbokG323uD09aikAyftbk7mfo8NNDo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=l94uBzmH/oo8EZ4LR4JGJZJ4ow+YB21/sfZiKcJtMkiOO7d/CeiYlUuI0OZ0h01W008wF8WbG5Ig/dx31nXTlRKKh/Y1exVQksTWjLa1TDICOnR8AbAn1G/0DUuzj4/PCcA2aeA46XXZ/LmDPrrI04nZ8RegmLLg0rLKJw2ZPOQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=joDFe+0p; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SgJgYQu+"
-Received: by mail-qv1-f45.google.com with SMTP id 6a1803df08f44-6e44fda56e3so55177976d6.1
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Mar 2025 09:12:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741108344; x=1741713144; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=huCv0mb4ZOJJrK8J1aZdeB4j1q2c+FJIRS5JdUarnXk=;
-        b=SgJgYQu+2UAm9iJIvCNO8UzFEzypayzj6iM3eEGAbcJKJAG44aIrwCfutRhnxKJB2m
-         SvDXcT2ATCz9xBOnllCSE/6kGCsvi3uvKTMnen4cPV0939r1rt/joMkJ3QkQhyLOorPc
-         5ewPuCrkbkgeFHFMrcUrjctpSNW2RlKuBA1gg6dyUHn+NEdnUR8WWb7lcfNAW8y5jQIP
-         gE9bmHZBCGTnaX56Vk3lm2IugCyHLpDPp8KjJA7bMifR1MfQPY0kIpfh5hktFe/AvWAC
-         0KqY4QxfuDYUm3fHtJPFt6mAK1Wox7oTy18Lstigv5/7sk+4VwJfi7HCVLzZVQJ4QQpC
-         0gPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741108344; x=1741713144;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=huCv0mb4ZOJJrK8J1aZdeB4j1q2c+FJIRS5JdUarnXk=;
-        b=AHe82czlQsAhnoloLIQP0Pk+Kpy5JdvpD9KahVkyqdjEvIi7gSrHZKYWSg9/1Hc/uU
-         y1iuD24cupROyyOUJUbn42JS6JavgHEVOyX96CLeeomw/Tp61ByQ2NYrVGjcQ/YAEiOw
-         jgr2c0sfBXsQnpTHWcUEtUG1s9oBPkmtYz6PY+DxTvrXcPwzYzk/XyJYmXzhEdd75VJz
-         LsjwNLkTK6hDGUwW6cTDtKxZRFWo+S5UKlhJ/qTAbGx+hqA3HTb5Z+5HjORwHggmPeUi
-         CM1zlYq5/Gj0rKZKOLupxKoEHz4dLuFzQQZbytbVJ/Z6AJ7aKSPLSVR6NEKtCzkHVyl1
-         5bxQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWfDZ72Bp5MO9adTWYanXl6uuOwPBLVN7cSRWd0gq8sgnmdLvWQmIG3aKcUn5K0/yAgAfA3WJ07LkFOSa4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzRzfRN8nTDxnaGGfdExcHjge/kOqV6dJKtADVlRueVGpBIUC+p
-	1x+MMSlOxNTG/Sh8V8TB0MLdncxzh20nR6Pjf42Cjz/1xse1gLAHFCvIr6bgShc=
-X-Gm-Gg: ASbGncv76ObcLLyVTU5bcuchPkS9fkbZvW7f/rt54NOBV4h6VjdXg00tZ3PrVysJstp
-	s26i79kyOdxgnIvAEvQ5diYRmmTvokRh25RJOR8KgZzGa+i/xdv6g8JUgMXGHtiWBoReWiNSp10
-	TznAQd9Mc/4mKJ7cPEfslXikfVxMeP2w8KrwG+CmOFcCyLg/GcIEQXLVAbdQpwz6O+wiAXlihnt
-	lNvgNaBIV9nqf2qD4Ll8ciyHmRU/rbbrZsoiHMR5Ojs7vIgUcpGRUp3qonc5syZY+tCCInlkBf4
-	HdG3/k+A9z3N1/tBJTqYiEUu0pLDUFajEbL2q94JO6ppBWylWIQEtfO6wuKBmwM=
-X-Google-Smtp-Source: AGHT+IHfPOMGCbV4hkPXelv9oZ/KI5jlSwi7fgElY8sgzLskKKZnKJpWwLFxwJldwCE+ZDN8gBZpKA==
-X-Received: by 2002:ad4:5fc9:0:b0:6e1:715f:cdf5 with SMTP id 6a1803df08f44-6e8da892b1emr57409106d6.15.1741108344085;
-        Tue, 04 Mar 2025 09:12:24 -0800 (PST)
-Received: from [192.168.68.113] ([5.133.47.210])
-        by smtp.googlemail.com with ESMTPSA id 6a1803df08f44-6e8bf2c3ed0sm37973426d6.11.2025.03.04.09.12.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 04 Mar 2025 09:12:23 -0800 (PST)
-Message-ID: <5831d9b1-4a05-4a7b-8733-5050588b4e59@linaro.org>
-Date: Tue, 4 Mar 2025 17:12:20 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="joDFe+0p"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52D45C4CEE7;
+	Tue,  4 Mar 2025 17:14:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741108447;
+	bh=lyvR9xDw1gIv8pbokG323uD09aikAyftbk7mfo8NNDo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=joDFe+0pXcHLdWRsbGMGA+SwAXkvCJ1I9wQ6GkiKx7DlZyl53N4QtNflDHGW210In
+	 51RHRKfs1d8V/xaNVwNjUQoHpu/GW/RhVPwup50Bfwe87ojh0SHVOLChlg9DOionLs
+	 E9zPOMct6aPNo5/VEh5qP3YDsO59fXa1qqdE+00/W9VTjXMovGqhj+IYmbFO7795yW
+	 Tij0hOmq7zXy9fMGcaTPYt6ySca0ybatgURC7bXu4G0yh/pGOE95gBmYBoHehUBlkw
+	 4JnAzfHt8p95CA1Y1K51LaqPVdOssjM0JTOJ1LSOim01OypaXA0DrILbJ096B8a4BT
+	 L/j3wIn3ZaZuQ==
+Date: Tue, 4 Mar 2025 19:14:02 +0200
+From: Jarkko Sakkinen <jarkko@kernel.org>
+To: Stefano Garzarella <sgarzare@redhat.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+	Claudio Carvalho <cclaudio@linux.ibm.com>,
+	Peter Huewe <peterhuewe@gmx.de>, x86@kernel.org,
+	Dov Murik <dovmurik@linux.ibm.com>, linux-coco@lists.linux.dev,
+	Dionna Glaze <dionnaglaze@google.com>,
+	James Bottomley <James.Bottomley@hansenpartnership.com>,
+	Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
+	Jason Gunthorpe <jgg@ziepe.ca>, linux-integrity@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Tom Lendacky <thomas.lendacky@amd.com>,
+	Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>
+Subject: Re: [RFC PATCH v2 4/6] tpm: add interface to interact with devices
+ based on TCG Simulator
+Message-ID: <Z8c02uhRhpGYbDUO@kernel.org>
+References: <20250228170720.144739-1-sgarzare@redhat.com>
+ <20250228170720.144739-5-sgarzare@redhat.com>
+ <Z8JncxQM7Nkit0Q6@kernel.org>
+ <7dltjdc4csdao5djx2jkjnvm72ubhagjwvgrpyqrr3aeo5cicn@cxrxusjpgce7>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 0/6] ASoC: q6apm: fix under runs and fragment sizes
-To: Johan Hovold <johan@kernel.org>
-Cc: broonie@kernel.org, perex@perex.cz, tiwai@suse.com,
- krzysztof.kozlowski@linaro.org, linux-sound@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
- dmitry.baryshkov@linaro.org, johan+linaro@kernel.org
-References: <20250304105723.10579-1-srinivas.kandagatla@linaro.org>
- <Z8cyt2n7qj4GkcJC@hovoldconsulting.com>
-Content-Language: en-US
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-In-Reply-To: <Z8cyt2n7qj4GkcJC@hovoldconsulting.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7dltjdc4csdao5djx2jkjnvm72ubhagjwvgrpyqrr3aeo5cicn@cxrxusjpgce7>
 
-
-
-On 04/03/2025 17:04, Johan Hovold wrote:
-> On Tue, Mar 04, 2025 at 10:57:17AM +0000, Srinivas Kandagatla wrote:
->> From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
->>
->> On Qualcomm Audioreach setup, some of the audio artifacts are seen in
->> both recording and playback. These patches fix issues by
->> 1. Adjusting the fragment size that dsp can service.
->> 2. schedule available playback buffers in time for dsp to not hit under runs
->> 3. remove some of the manual calculations done to get hardware pointer.
->>
->> With these patches, am able to see Audio quality improvements.
->>
->> Any testing would be appreciated.
+On Tue, Mar 04, 2025 at 04:23:51PM +0100, Stefano Garzarella wrote:
+> > This commit got me lost tbh.
 > 
-> This fixes the playback and capture issues with Pipewire, including the
-> heavily distorted, choppy playback when pavucontrol is open. Turns out
-> that the pavucontrol volume meters reduces the output sink quantum size
-> from the default 1024 to 256, which was too low with v2 but now seems to
-> work.
+> Now I understand why you got lost, my bad!
+
+No need for apologies, just merely reporting what I do or do not
+understand with brutal honesty ;-)
+
+> I checked further and these structures seem to be specific to the vTPM
+> protocol defined by AMD SVSM specification and independent of TCG TPM
+> (unless reusing some definitions like TPM_SEND_COMMAND).
 > 
-> Unfortunately, this series still regresses Pulseaudio as capture is now
-> choppy (e.g. when recording using parecord).
+> At this point I think it is best to remove this header (or move in x86/sev)
+> and move this rewrap to x86/sev to avoid confusion.
+
+Yeah, I do agree. We can commit to SVSM specification because that
+is the target of this driver anyhow (not Microsoft simulator) :-)
 
 > 
-> During our off-list debugging sessions you suggested reducing the max
-> capture period size (that this series increases) to 6144 (same as min)
-> and that fixed the Pulseaudio capture issue. In v3 the, the max period
-> is again increased to 65536 which appears to break Pulseaudio capture.
+> I'll do in v3, sorry for the confusion.
 
-I have verified pulseaudio on my side as well, the 64 byte alignment 
-should have fixed the issue on the pulseaudio side.
+Absolutely, np.
 
-Did you pick up the [PATCH v3 4/6] ASoC: qdsp6: q6apm-dai: set correct 
-period and buffer alignment. patch in your tests?
-
-thanks,
-Srini
 > 
->> Changes since v2:
->> 	- dropped patch which is causing regression with pluseaudio.
->> 	- setup period sizes only for capture path
->> 	- fix underruns/overruns in dsp pipelines.
->> 	- add fixes tag
->> 	- add patch to fix buffer alignment
-> 
-> Johan
+> Stefano
+
+BR, Jarkko
