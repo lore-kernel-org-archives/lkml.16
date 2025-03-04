@@ -1,125 +1,186 @@
-Received: from r-passerv.ralfj.de (r-passerv.ralfj.de [109.230.236.95])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 919592512C8;
-	Tue,  4 Mar 2025 19:03:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.230.236.95
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 46C98259C8D;
+	Tue,  4 Mar 2025 19:04:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741115039; cv=none; b=Ie+FE+R3//UkxbFbN97i8Ql2eXK3gvEZLShG2lDNWTbda/WnHXEyeYIPt1u5tVyWPJFYlUi4nHl7Zg9ffmS1MtvLrVVoiwRJHm5nPtiuRsFyHwBBlsDihu1pt0F0PmKzsXHvUpbpwDSu8UGMfKIW4UIcTPdPpkgoB/h8ZV3GY0k=
+	t=1741115045; cv=none; b=RbPukDGnazesgRGMjjIR4AsCgAWGuMZjiocY7CNU9Cv0dhJquY+6LBUNkgWDVCd9FkEbRvK0hEbcoTstWy7Ptmx3HWGOOJpDMyaVQNsRxyKxcx6IN1efoDoJwh1jFE75g0FtE3bZcl4wCht/lqSeqCrap99+FgZyCHVy2XRZ6QY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741115039; c=relaxed/simple;
-	bh=T2QMug6/HcuzNxtAtbS9Jn2aCBfG39h86vtnhUTbmLk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fSPFCvmuNSPGbz5XKqT9nJXkr3W3vRRZdugv6OnmkYsjE7/PL4vWgXXRVOQkQqS6669XMzPBGP+tQIB5otP53AeZAlqkKKHW5Qqst/Hrq25Kw+9AzbFNCcWWFvfLHboBDzDwBVws9G7pK/Z1T5c8Q9iygQDHvpxFw3VBx/FGK6Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ralfj.de; spf=pass smtp.mailfrom=ralfj.de; dkim=pass (1024-bit key) header.d=ralfj.de header.i=@ralfj.de header.b=JWFqyVR+; arc=none smtp.client-ip=109.230.236.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ralfj.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ralfj.de
+	s=arc-20240116; t=1741115045; c=relaxed/simple;
+	bh=Lo6yu2Z0euXdumXkA3ZF2eyyLZkbqY1Yd3r7gfjAOng=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=iJdj2HDnkks0AiA44lUmzgzh7kDTW2eHpXbWVnCntBE1oKTR7Cf0j4asFpOOvZGC0MT3eADTfLrqP+Yds9vAzXpxw7vQPIKcTW4Bwjzr1LzszDYqZDjT0oLPIESdWtS8qM/IeyR78FE8R/HCwPRSdEgAcytVfAHKBnaPjBSQfUA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=aPWmRBFI; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ralfj.de header.i=@ralfj.de header.b="JWFqyVR+"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=ralfj.de; s=mail;
-	t=1741115035; bh=T2QMug6/HcuzNxtAtbS9Jn2aCBfG39h86vtnhUTbmLk=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=JWFqyVR+8dD7VNvNXjfb3Q+hTZ/yKakitg36qKEMBGOPLIJz+g/YeY7UEZd9DLUrD
-	 Vdx0zdeo0HSULFw8QnfeUjRDtTnYT+j5OGHj4oKt8oVMu4AYzw5hFJjQSifEMEusSR
-	 dEserCGzfwJF/ZPhYKr4NsCq4NdpMgzNPOfxEsVw=
-Received: from [IPV6:2001:67c:10ec:5784:8000::87] (2001-67c-10ec-5784-8000--87.net6.ethz.ch [IPv6:2001:67c:10ec:5784:8000::87])
-	by r-passerv.ralfj.de (Postfix) with ESMTPSA id A271D2052D09;
-	Tue,  4 Mar 2025 20:03:55 +0100 (CET)
-Message-ID: <ae8ac31f-c6ad-46ae-80dd-10ec081a16d1@ralfj.de>
-Date: Tue, 4 Mar 2025 20:03:51 +0100
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="aPWmRBFI"
+Received: from localhost.localdomain (unknown [167.220.59.4])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 1C963210EAF6;
+	Tue,  4 Mar 2025 11:03:58 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 1C963210EAF6
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1741115038;
+	bh=rDwLyG8x98JlAJ3JT4WjH9zB21oyx+c9LLRVfLQwzE8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=aPWmRBFITjcXbcl1gxET8+qChdsH2s0kFGBJeKYeVmBoRPlaVQotLjfreDCfmaF1z
+	 TkqFOSKhzqAfL8HX55bOr/DT0mQSUeO9BakMo3MWOT0/FEdUPLCETOPP7mNsbVjbtB
+	 NeRCBIfpPry6C7Q2qQlegjT0MrB+9RnSyRnj33v4=
+From: steven chen <chenste@linux.microsoft.com>
+To: zohar@linux.ibm.com,
+	stefanb@linux.ibm.com,
+	roberto.sassu@huaweicloud.com,
+	roberto.sassu@huawei.com,
+	eric.snowberg@oracle.com,
+	ebiederm@xmission.com,
+	paul@paul-moore.com,
+	code@tyhicks.com,
+	bauermann@kolabnow.com,
+	linux-integrity@vger.kernel.org,
+	kexec@lists.infradead.org,
+	linux-security-module@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: madvenka@linux.microsoft.com,
+	nramas@linux.microsoft.com,
+	James.Bottomley@HansenPartnership.com,
+	bhe@redhat.com,
+	vgoyal@redhat.com,
+	dyoung@redhat.com
+Subject: [PATCH v9 3/7] ima: kexec: skip IMA segment validation after kexec soft reboot
+Date: Tue,  4 Mar 2025 11:03:47 -0800
+Message-Id: <20250304190351.96975-4-chenste@linux.microsoft.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20250304190351.96975-1-chenste@linux.microsoft.com>
+References: <20250304190351.96975-1-chenste@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Allow data races on some read/write operations
-To: Boqun Feng <boqun.feng@gmail.com>,
- Andreas Hindborg <a.hindborg@kernel.org>
-Cc: Alice Ryhl <aliceryhl@google.com>,
- Daniel Almeida <daniel.almeida@collabora.com>,
- Benno Lossin <benno.lossin@proton.me>,
- Abdiel Janulgue <abdiel.janulgue@gmail.com>, dakr@kernel.org,
- robin.murphy@arm.com, rust-for-linux@vger.kernel.org,
- Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
- Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?=
- <bjorn3_gh@protonmail.com>, Trevor Gross <tmgross@umich.edu>,
- Valentin Obst <kernel@valentinobst.de>, linux-kernel@vger.kernel.org,
- Christoph Hellwig <hch@lst.de>, Marek Szyprowski <m.szyprowski@samsung.com>,
- airlied@redhat.com, iommu@lists.linux.dev, comex <comexk@gmail.com>,
- lkmm@lists.linux.dev
-References: <6dea7b6a-1534-47e7-94d2-d67417c3d4c1@proton.me>
- <tnwDK3QN_Xr0Yoa3U8HVxS5OqjvxIhgmmO_ifTGJR_EtIzjoxawOHtnbOJ9yChsUWXyFPcU9beIdrgbpfGZI8w==@protonmail.internalid>
- <3202F69F-397E-4BC4-8DD8-E2D4B0AB056F@collabora.com>
- <87bjuil15w.fsf@kernel.org>
- <t4HxdvR7WBX_861hiTXo72jqC9F9oRpIzgA_dD2yhcSuLISEkC-shMfSgllrFPpnkSZXGfRcc47keudMooNiIQ==@protonmail.internalid>
- <CAH5fLgg5MuUu=TX8mMsPf5RcLhMLHSU4Vct=h8rFX6Z7HjPxeA@mail.gmail.com>
- <87ikoqjg1n.fsf@kernel.org>
- <KpWTCfIlcLYFBpSvWPfALJ9VQn5a99_RAvxgMBc1aCrSalPB-qaW9IhXyaDG7HM1AcFPX5chj_Yr7IQp3F7UqA==@protonmail.internalid>
- <CAH5fLgh6ubawHh76wq7JPbcuBCWhm91m7Rc01MVsX-a3C6qaVA@mail.gmail.com>
- <87mse2hrd8.fsf@kernel.org> <Z8YMTiKS4T9wC4t_@boqun-archlinux>
-Content-Language: en-US, de-DE
-From: Ralf Jung <post@ralfj.de>
-In-Reply-To: <Z8YMTiKS4T9wC4t_@boqun-archlinux>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi all,
+The kexec_calculate_store_digests() function calculates and stores the
+digest of the segment during the kexec_file_load syscall, where the 
+IMA segment is also allocated.
 
-Ah, the never-ending LKMM vs Rust concurrency story. :)
+With this series, the IMA segment will be updated with the measurement 
+log at the kexec execute stage when a soft reboot is initiated. 
+Therefore, the digests should be updated for the IMA segment in the 
+normal case.
 
-> In general, this will fall into the exception that we've been given
-> from the Rust people. In cases such as this where the Rust language
-> does not give us the operation we want, do it like you do in C. Since
-> Rust uses LLVM which does not miscompile the C part of the kernel, it
-> should not miscompile the Rust part either.
+The content of memory segments carried over to the new kernel during the
+kexec systemcall can be changed at kexec 'execute' stage, but the size
+and the location of the memory segments cannot be changed at kexec
+'execute' stage.
 
-Right, so to be clear this is all a compromise. :)  We don't want Rust to have 
-two official memory models. We certainly don't want random Rust programs out 
-there experimenting with any non-standard memory models and then expect that to 
-work. (They can't all have a Paul McKenny keeping things together. ;) That's why 
-in all official docs, you'll only find the one Rust concurrency memory model, 
-which is the C++ model.
-But meanwhile, the kernel is not some random Rust program out there (and you do 
-have Paul ;). The LKMM works quite well in practice, and it is a critical part 
-for Rust-for-Linux. Also, we have pretty good contacts with the Rust-for-Linux 
-folks, so when there are issues we can just talk.
+However, during the kexec execute stage, if kexec_calculate_store_digests()
+API is call to update the digest, it does not reuse the same memory segment
+allocated during the kexec 'load' stage and the new memory segment required
+cannot be transferred/mapped to the new kernel.
 
-Given that the LKMM is at the edge (or, arguably, somewhat beyond the edge) of 
-what compiler backends can reliably support, I think the lowest-risk strategy is 
-to make LKMM usage from Rust look to the compiler just like LKMM usage in C. 
-Since it works in C, it should then hopefully also work in Rust. To do this, you 
-have to bend (really, break) some of the usual rules for Rust, and that's the 
-special exception mentioned above.
+As a result, digest verification will fail in verify_sha256_digest() 
+after a kexec soft reboot into the new kernel. Therefore, the digest
+calculation/verification of the IMA segment needs to be skipped.
 
->> For cases where we need to do the equivalent of `memmove`/`memcpy`, what
->> are is our options?
->>
-> 
-> Seems we need "volatile" memmove and memcpy in Rust?
+To address this, skip the calculation and storage of the digest for the
+IMA segment in kexec_calculate_store_digests() so that it is not added 
+to the purgatory_sha_regions.
 
-Those already exist in Rust, albeit only unstably: 
-<https://doc.rust-lang.org/nightly/std/intrinsics/fn.volatile_copy_memory.html>. 
-However, I am not sure how you'd even generate such a call in C? The standard 
-memcpy function is not doing volatile accesses, to my knowledge.
+Since verify_sha256_digest() only verifies 'purgatory_sha_regions',
+no change is needed in verify_sha256_digest() in this context.
 
-Kind regards,
-Ralf
+With this change, the IMA segment is not included in the digest
+calculation, storage, and verification.
 
->> In case we have no options, do you know who would be the right people on
->> the Rust Project side to contact about getting an exception for this
->> case?
->>
-> 
-> I will say it'll be t-opsem.
-> 
-> Regards,
-> Boqun
-> 
->>
->> Best regards,
->> Andreas Hindborg
->>
->>
+Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
+Cc: Eric Biederman <ebiederm@xmission.com>
+Cc: Baoquan He <bhe@redhat.com> 
+Cc: Vivek Goyal <vgoyal@redhat.com>
+Cc: Dave Young <dyoung@redhat.com>
+Signed-off-by: steven chen <chenste@linux.microsoft.com>
+Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
+Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
+---
+ include/linux/kexec.h              |  3 +++
+ kernel/kexec_file.c                | 22 ++++++++++++++++++++++
+ security/integrity/ima/ima_kexec.c |  3 +++
+ 3 files changed, 28 insertions(+)
+
+diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+index 7d6b12f8b8d0..107e726f2ef3 100644
+--- a/include/linux/kexec.h
++++ b/include/linux/kexec.h
+@@ -362,6 +362,9 @@ struct kimage {
+ 
+ 	phys_addr_t ima_buffer_addr;
+ 	size_t ima_buffer_size;
++
++	unsigned long ima_segment_index;
++	bool is_ima_segment_index_set;
+ #endif
+ 
+ 	/* Core ELF header buffer */
+diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+index 3eedb8c226ad..606132253c79 100644
+--- a/kernel/kexec_file.c
++++ b/kernel/kexec_file.c
+@@ -38,6 +38,21 @@ void set_kexec_sig_enforced(void)
+ }
+ #endif
+ 
++#ifdef CONFIG_IMA_KEXEC
++static bool check_ima_segment_index(struct kimage *image, int i)
++{
++	if (image->is_ima_segment_index_set && i == image->ima_segment_index)
++		return true;
++	else
++		return false;
++}
++#else
++static bool check_ima_segment_index(struct kimage *image, int i)
++{
++	return false;
++}
++#endif
++
+ static int kexec_calculate_store_digests(struct kimage *image);
+ 
+ /* Maximum size in bytes for kernel/initrd files. */
+@@ -764,6 +779,13 @@ static int kexec_calculate_store_digests(struct kimage *image)
+ 		if (ksegment->kbuf == pi->purgatory_buf)
+ 			continue;
+ 
++		/*
++		 * Skip the segment if ima_segment_index is set and matches
++		 * the current index
++		 */
++		if (check_ima_segment_index(image, i))
++			continue;
++
+ 		ret = crypto_shash_update(desc, ksegment->kbuf,
+ 					  ksegment->bufsz);
+ 		if (ret)
+diff --git a/security/integrity/ima/ima_kexec.c b/security/integrity/ima/ima_kexec.c
+index 6195df128482..0465beca8867 100644
+--- a/security/integrity/ima/ima_kexec.c
++++ b/security/integrity/ima/ima_kexec.c
+@@ -169,6 +169,7 @@ void ima_add_kexec_buffer(struct kimage *image)
+ 	kbuf.buffer = kexec_buffer;
+ 	kbuf.bufsz = kexec_buffer_size;
+ 	kbuf.memsz = kexec_segment_size;
++	image->is_ima_segment_index_set = false;
+ 	ret = kexec_add_buffer(&kbuf);
+ 	if (ret) {
+ 		pr_err("Error passing over kexec measurement buffer.\n");
+@@ -179,6 +180,8 @@ void ima_add_kexec_buffer(struct kimage *image)
+ 	image->ima_buffer_addr = kbuf.mem;
+ 	image->ima_buffer_size = kexec_segment_size;
+ 	image->ima_buffer = kexec_buffer;
++	image->ima_segment_index = image->nr_segments - 1;
++	image->is_ima_segment_index_set = true;
+ 
+ 	/*
+ 	 * kexec owns kexec_buffer after kexec_add_buffer() is called
+-- 
+2.25.1
 
