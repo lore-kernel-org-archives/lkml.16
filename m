@@ -1,114 +1,172 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFC7726036C;
-	Tue,  4 Mar 2025 18:35:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05421260374
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 18:35:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741113326; cv=none; b=NBBUlmqVrJbZaUTW7zzTnydxNr489rZgvFTQq1y//VhTcla1+k6anm9nXTofHeoRs8Z5NwORfcxEsxxctoojHmk8HscLL/efBkltM0xuyKhuTacwuTP/O8bICP1I+VvgqXCZ19TPFGwlEULeBoyVNYHLEUHGypoarm0pMCasTCA=
+	t=1741113326; cv=none; b=g6VGZKvAxYH3U9smHuHM0VuphWU9EszW+oTlukOIJ0RM4f+8SHAVqxtNDZ76/gXs7cc5MpW7c9ipymW17yVchfyt0fnyaQpZcoza8B8DY3MI99TLnN++NunLy7vOAR1waLD48A6CIzJbzdi+yhEDdJ6vUaBE5RMk16pCViucCWQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1741113326; c=relaxed/simple;
-	bh=Tj/MdgPZ5cCJuJyqipEsMQgzBXtGY6F6q4iEUHpndOo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=FGqI5ysmhr36adBOKxEum4StMAjEC0n1e0nSlM6DEL0DcT2MSTaplsJ03tpo5mL3lWOIgacoWMq38XPmzaYI5iJoEaCdoTnSvtCpARlrX4tmiSWq01oxBdOpOfIeDpzTihcVq23bLtfCVSDT9el7k5iGeRihEezF1glDQwWDkAU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Qr4gssoa; arc=none smtp.client-ip=209.85.208.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	bh=rmqIxeLRyZ4MRFodNpW8/HMglrn0z0awEKd7PNYXyd0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hx/PRZ8xaEDEI4cAIbo+6eKRPmPvTE3C1llATyybgHyYiVkopN++1UE5HbYsHwf8iziARcLz3oaFPXSxXVQlZA34aH7DVIcPYty/ysQqwCM0hfxso0nJSfbjBzeuNfGSvQgHtXc6chSh4yLh+vkOBPJvYdj1HxYO8WCW9DYzRD4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=uEWyyATP; arc=none smtp.client-ip=209.85.160.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qr4gssoa"
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5e04064af07so11116391a12.0;
-        Tue, 04 Mar 2025 10:35:24 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uEWyyATP"
+Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-474fdb3212aso26761cf.0
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Mar 2025 10:35:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741113323; x=1741718123; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=google.com; s=20230601; t=1741113324; x=1741718124; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=EyDsNpX9HcSDC6V6t1dVpjf3NEtUKhWlmeySG+ENdu8=;
-        b=Qr4gssoazn91fkGY8RdhAuvgWyxQ/Ln19ABxayBzgErbDAvEQT8S6CPEwEGShakG4X
-         HCfO+Z1KWv+5CmG4Dp8ViNLMXcbt6g2I4NFPJfmnhrscjpBc1N+pd0gW89IdnXaT6umv
-         NSfqW8kyw5gX+B5x2w+BRaqUGy1cPWTdL49DFbt4wc3KAhfAVFaK/XxG4V2EBgo1NCb/
-         vaKsE1dw87GEtA2DvZK10fmgz8BuyCkY+8O1aYSbjAArnx8j1+aZ+o63dj2Ku03A1Anr
-         YiF8w2VwfI4BYMzv1UpHRObwvO5Gh7Wl3EdE+azcA8j4Ak36H4PnIe42rAtOuYscE4Tn
-         niCg==
+        bh=sE5nK4GFeJJ6OO4073CP21uOwPN4nuaYHAb6WJCLI3A=;
+        b=uEWyyATPX4JAjzb+sX/y3erQfjZ3XKhdIM80A6faJF0wXQw3WwvDzs2cqxlJotQtvc
+         0NKSmj76X+eNHmVkgWv25DQHFrrMJ+Oh87zVkZbJsj0fS+/JOYUuhMgUswzYVNkbyR5U
+         oiEDpjK9p2maW7FHr0063Nc6x45i+z1ImFXF1mJyhF3NkEng08WcGfeh80uhYDaqq8sW
+         ZRgcgBWNp324hEkQ4QIvSg3HxoSUERU/j6ejxgE4jtAvKUyd1Mz/B+CX4XGHmzGwdJgL
+         BGgflHg6/6497T/iFEy4T+W+fN/os87MSllbhV6Au1NumJmeVt2GbKI67m5g6EcxOswi
+         gSJQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741113323; x=1741718123;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1741113324; x=1741718124;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=EyDsNpX9HcSDC6V6t1dVpjf3NEtUKhWlmeySG+ENdu8=;
-        b=YLTrDP9rVYZDg6Uu3CXT3mNJ19OtKD6qteuoBukYu2F7E50fGE3yNnSDOz3sgotcV3
-         51SAFnKeUH5y4dJD6RtFVs3tSJ2+S+47cHvC02w6dpJO2lkkq35Ajzalf5bWHnmJMpai
-         9XhF1ePXxXb/3+rsyTV9RJwiBOS/n3ZzVjB6YfJVDsaSA1iDagiUaSS1rDaZtVoBQBw/
-         S6k2AAQeAjuqexu2GfjkbYZ6ho0ssVl0u7m1HgaM71NBVfeuPvcrvdA/kk4bUHzXP0qV
-         SX8Z45hIF2TQpovpJ5pn2FuBlsJng+FIt9Uik4TxnUGTJp0mUNO6IXA5VUnngh0FC3Kk
-         08jg==
-X-Forwarded-Encrypted: i=1; AJvYcCVNDSBN+MPOBy6Ve8rKeSos7PhCjGziNuRJTgmAWcE03DTXfKgvri7ipUlSjSFGDTRj242oqf9X1+sZAaC/@vger.kernel.org, AJvYcCWN+zxWBrjXH9aj2AE6JU4OP7ELqJc0v/5kM0PLqxmqxv/vVFRby23qZ04bKDthSIgVbkDCZKIBRTMnRH+r@vger.kernel.org
-X-Gm-Message-State: AOJu0YyYyH63spthe4jIcqIfzE5FXa1EjGscrVjw5Mw2sY0U4ysnUzaG
-	t6P51FGaG+50grULd/CAS/aVJq++5S7k0mu/GWKnflMi3feooY7C
-X-Gm-Gg: ASbGncscjxLUqtXORW/tDnsrcC/zO4EGEvXKRGyvc3azFa0nCJiIxAXMvPEMKZjQrxo
-	MbbUHX14a08QU47t99PZZ+mtZCsYKFd93ydrFm5h8xp59SmV+QiwcirmoNhN2lPu604+OYr6IGP
-	lcXGUblQhnZdPjbEn7h4fusFau34cgW/dgP9cdpnM2i91u6jNAm0RrMeaU60GB0V/Yb0q2krC+d
-	BYgKtFitQDPfWZJnWhMy5ARX10upSvZIVRzzvWoyeioECkMpBFQ7wM6l8VkQK7C/mT1ux4+fa2H
-	ozkQ8oHB/mb9uxNLEANtFPMc845jpncf4GKCwocLONmOmuGpVaH040NjiXXO
-X-Google-Smtp-Source: AGHT+IGABG5ux5DyBs31vWizjFg2g8zC/4PRf2kiX5akS7Vj2GWs4WMJ+xD9KZXiN3kx391JN33YOQ==
-X-Received: by 2002:a05:6402:274e:b0:5d9:a62:32b with SMTP id 4fb4d7f45d1cf-5e59f363d52mr148506a12.7.1741113322607;
-        Tue, 04 Mar 2025 10:35:22 -0800 (PST)
-Received: from f.. (cst-prg-71-44.cust.vodafone.cz. [46.135.71.44])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5e4c3bb747csm8691328a12.42.2025.03.04.10.35.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Mar 2025 10:35:21 -0800 (PST)
-From: Mateusz Guzik <mjguzik@gmail.com>
-To: brauner@kernel.org,
-	viro@zeniv.linux.org.uk
-Cc: jack@suse.cz,
-	linux-kernel@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	Mateusz Guzik <mjguzik@gmail.com>
-Subject: [PATCH v2 3/4] fs: use fput_close() in filp_close()
-Date: Tue,  4 Mar 2025 19:35:05 +0100
-Message-ID: <20250304183506.498724-4-mjguzik@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250304183506.498724-1-mjguzik@gmail.com>
-References: <20250304183506.498724-1-mjguzik@gmail.com>
+        bh=sE5nK4GFeJJ6OO4073CP21uOwPN4nuaYHAb6WJCLI3A=;
+        b=UVIcxRfyCupauliBql4MDtrOHGWS874rLF9Pg+N/HHceEi0YOsIjP4HXzrBNeTcwXM
+         28H75g0V3+OkmDfAZADaQRwPWBGlN9FytdTiY82lvPMTiXhOCfAZzmVrZP3kxM+cX+Ku
+         1Ze0iSlM/LaR/Fbzp+MsPNQqrUNHZdiZhzLCQIKEpR6d8+m6jdBOf1jrR2Y2wxeuGrY9
+         RYEukBUULIQVy2bxqcnQKX0+or+uzfvxh7ojnfA1XlezcQbfFbl9QGty68/cc+hkKMoC
+         9kHIYoVIP5MusX6/6jgE/bqu/jEAixNT7OVzefq0ldDA4upJhX8p1qk7KRUwv4IbBzlA
+         /1BA==
+X-Forwarded-Encrypted: i=1; AJvYcCWe0jj+69jyBKA260/JJV0RthWWq68ah9SY+84r6orJ1vyP9+C9Xb8sq1zs2Onokf/RFQKPdysMClZwcSY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwAHLJCZvy7odGlQs57QMDZdLSlo//dD3y+lrM0xzXAGVmGYM5s
+	nyCl1TF28ksF9Z74jGQUwDij2PloO1ocBFlM7RA3EmDyfw371MEH2Sv30c8SmMafQGAZ+VpmM6M
+	wvug1gzAsu10w0am1NPhDPR+g+N1hIWx5cwBK
+X-Gm-Gg: ASbGncszn/oiTc4jKeh9BjZSZPIzZKuvJhnGI81tXJXIBuDkvIjBOIfYAc8d1uNdz9A
+	4Fsr6IkJ1zGl9jP9ly+HP23SlCdtt0mkgcbToGyKEbZ+z3hxIZ9esRCT54/5aP0O4zFZkbsK5IP
+	BXJehB6Daydm+jFlglImKwE1Cb+VY5qCGnVrOFWK/C0TPXAQRlLwJBjI5+
+X-Google-Smtp-Source: AGHT+IE0ojfFK56Nsc3hks2mutUiZjNncnjFf0jJTwub5pXkrgW/XbWDNcjElNzyhKr+WIvjR4oqHA7Mz9eABlzihIM=
+X-Received: by 2002:ac8:5e49:0:b0:472:8ac:7d3d with SMTP id
+ d75a77b69052e-4750a596138mr793651cf.29.1741113323385; Tue, 04 Mar 2025
+ 10:35:23 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250214-slub-percpu-caches-v2-0-88592ee0966a@suse.cz>
+ <ztssad52ikws3a2dwodju4o73h6rsutxnvzj5i6vyjjkudkiel@g7c7g5i3l7jd>
+ <CAJuCfpHi4Od4K2xQEUFWuG=a4zCKecWBMwBiy_7mVn6QgsTSvA@mail.gmail.com>
+ <CAJuCfpEq8P4cz7HXaRVqaagONPBKrFgOSqdigEYU60sGAE4-rg@mail.gmail.com>
+ <173d4dbe-399d-4330-944c-9689588f18e8@suse.cz> <CAJuCfpHHXYKGjaOxHcuJcuQbUVO7YqLMpcYeF3HM5Ayxy1fE+g@mail.gmail.com>
+ <CAJuCfpE7t83PKWw+8XJLE5538kKJnbhirLg2siDSw=F4sw=9uA@mail.gmail.com> <19df9218-c984-4cbc-8b5d-4e0f7658935f@suse.cz>
+In-Reply-To: <19df9218-c984-4cbc-8b5d-4e0f7658935f@suse.cz>
+From: Suren Baghdasaryan <surenb@google.com>
+Date: Tue, 4 Mar 2025 10:35:12 -0800
+X-Gm-Features: AQ5f1JouTAVSQFXAmbLWqUnRspW1HmqjJwV-_XkDFpiV6uDsQZI3IuNVoE7yJ74
+Message-ID: <CAJuCfpG2U0DW2PubJw6aAwf2VLdy8Y9ov5iwt7nkn9XskBc6Ww@mail.gmail.com>
+Subject: Re: [PATCH RFC v2 00/10] SLUB percpu sheaves
+To: Vlastimil Babka <vbabka@suse.cz>
+Cc: Kent Overstreet <kent.overstreet@linux.dev>, "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
+	Christoph Lameter <cl@linux.com>, David Rientjes <rientjes@google.com>, 
+	Roman Gushchin <roman.gushchin@linux.dev>, Hyeonggon Yoo <42.hyeyoo@gmail.com>, 
+	Uladzislau Rezki <urezki@gmail.com>, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+	rcu@vger.kernel.org, maple-tree@lists.infradead.org, 
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Alexei Starovoitov <ast@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-When tracing a kernel build over refcounts seen this is a wash:
-@[kprobe:filp_close]:
-[0]                32195 |@@@@@@@@@@                                          |
-[1]               164567 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@|
+On Tue, Mar 4, 2025 at 2:55=E2=80=AFAM Vlastimil Babka <vbabka@suse.cz> wro=
+te:
+>
+> On 2/25/25 21:26, Suren Baghdasaryan wrote:
+> > On Mon, Feb 24, 2025 at 1:12=E2=80=AFPM Suren Baghdasaryan <surenb@goog=
+le.com> wrote:
+> >>
+> >> >
+> >> > > The values represent the total time it took to perform mmap syscal=
+ls, less is
+> >> > > better.
+> >> > >
+> >> > > (1)                  baseline       control
+> >> > > Little core       7.58327       6.614939 (-12.77%)
+> >> > > Medium core  2.125315     1.428702 (-32.78%)
+> >> > > Big core          0.514673     0.422948 (-17.82%)
+> >> > >
+> >> > > (2)                  baseline      control
+> >> > > Little core       7.58327       5.141478 (-32.20%)
+> >> > > Medium core  2.125315     0.427692 (-79.88%)
+> >> > > Big core          0.514673    0.046642 (-90.94%)
+> >> > >
+> >> > > (3)                   baseline      control
+> >> > > Little core        7.58327      4.779624 (-36.97%)
+> >> > > Medium core   2.125315    0.450368 (-78.81%)
+> >> > > Big core           0.514673    0.037776 (-92.66%)
+> >
+> > (4)                   baseline      control
+> > Little core        7.58327      4.642977 (-38.77%)
+> > Medium core   2.125315    0.373692 (-82.42%)
+> > Big core           0.514673    0.043613 (-91.53%)
+> >
+> > I think the difference between (3) and (4) is noise.
+> > Thanks,
+> > Suren.
+>
+> Hi, as we discussed yesterday, it would be useful to set the baseline to
+> include everything before sheaves as that's already on the way to 6.15, s=
+o
+> we can see more clearly what sheaves do relative to that. So at this poin=
+t
+> it's the vma lock conversion including TYPESAFE_BY_RCU (that's not undone=
+,
+> thus like in scenario (4)), and benchmark the following:
+>
+> - baseline - vma locking conversion with TYPESAFE_BY_RCU
+> - baseline+maple tree node reduction from mm-unstable (Liam might point o=
+ut
+> which patches?)
+> - the above + this series + sheaves enabled for vm_area_struct cache
+> - the above + full maple node sheaves conversion [1]
+> - the above + the top-most patches from [1] that are optimizations with a
+> tradeoff (not clear win-win) so it would be good to know if they are usef=
+ul
+>
+> [1] currently the 4 commits here:
+> https://web.git.kernel.org/pub/scm/linux/kernel/git/vbabka/linux.git/log/=
+?h=3Dslub-percpu-sheaves-v2-maple
+> from "maple_tree: Sheaf conversion" to "maple_tree: Clean up sheaf"
+> but as Liam noted, they won't cherry pick without conflict once maple tre=
+e
+> node reduction is backported, but he's working on a rebase
+>
+> Thanks in advance!
 
-I verified vast majority of the skew comes from do_close_on_exec() which
-could be changed to use a different variant instead.
+Sure, I'll run the tests and post results sometime later this week.
+Thanks!
 
-Even without changing that, the 19.5% of calls which got here still can
-save the extra atomic. Calls here are borderline non-existent compared
-to fput (over 3.2 mln!), so they should not negatively affect
-scalability.
-
-Signed-off-by: Mateusz Guzik <mjguzik@gmail.com>
----
- fs/open.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/fs/open.c b/fs/open.c
-index fc1c6118eb30..ffb7e2e5e1ef 100644
---- a/fs/open.c
-+++ b/fs/open.c
-@@ -1589,7 +1589,7 @@ int filp_close(struct file *filp, fl_owner_t id)
- 	int retval;
- 
- 	retval = filp_flush(filp, id);
--	fput(filp);
-+	fput_close(filp);
- 
- 	return retval;
- }
--- 
-2.43.0
-
+>
+> >> > >
+> >> > > Results in (3) vs (2) indicate that using sheaves for vm_area_stru=
+ct
+> >> > > yields slightly better averages and I noticed that this was mostly=
+ due
+> >> > > to sheaves results missing occasional spikes that worsened
+> >> > > TYPESAFE_BY_RCU averages (the results seemed more stable with
+> >> > > sheaves).
+> >> >
+> >> > Thanks a lot, that looks promising!
+> >>
+> >> Indeed, that looks better than I expected :)
+> >> Cheers!
+> >>
+> >> >
+> >> > > [1] https://lore.kernel.org/all/20250213224655.1680278-1-surenb@go=
+ogle.com/
+> >> > >
+> >> >
+>
