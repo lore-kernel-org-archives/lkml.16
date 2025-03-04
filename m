@@ -1,112 +1,124 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A26841E7C20;
-	Tue,  4 Mar 2025 09:22:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 879D63A8C1;
+	Tue,  4 Mar 2025 09:24:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741080146; cv=none; b=D41s8X1mdIwTkIpsX6qjVxWnswSvSBMLjNYyZLccSLD4iW6MY+kn5x8eJLkQFOeg4RZ9sUu/SGlqPHj4VLITHvGtU7ty3F22TcUEr1aNLwuA/+I8bzu4bEbD40DvyLbd6JKyye2SKJ4e4uyp42mqPpZXVXrgKBAc3U1Ptr2/POA=
+	t=1741080244; cv=none; b=lG/Hi28Wx9q5cnGWpGxNfM4ZNLWT/pL04dNYkVoD7GtEoWoC7vCU6fWOCsc89TxZUSElzuMwFeiOyZyeC3tNCtNJ1onB/BDcU8iy4CxPjcLJSf6tTr72bIdCCqOxcrGaSOKS/fHCXVOWHVHd1cFSSAISGX1MTAVXFl5AXpt5/0M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741080146; c=relaxed/simple;
-	bh=SzzsRRoVJ9on6nCvD3rxckgTKyuW2QMhoe9u+u7oqQY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=A8k6QqyesxJGuHoRSc3hgStHV3eBhw0SDbURRoITF7rSLsEEu61jhEqULN9Dc4RbGmmN7TBnYAOI78v4P4VMxhBjJvrYpyBBwQkHjYK10akjgZ5XlMYPgLZEzusH2tDphzEgBehBFFsasNA5jhD6rNVFnoZtyX/5+y/jpiL5LmU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=R4c+7N+b; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1741080244; c=relaxed/simple;
+	bh=qAOUbI/BEbZDvaPix7eWz3Zl3lsDI9E9B/i/XFncmrE=;
+	h=MIME-Version:Message-ID:From:To:Cc:Subject:Content-Type:
+	 In-Reply-To:References:Date; b=RY6zgQqe+ckkmrlkTPrUP13sat1f0Diax9DQS4oK1S5jOtKfj0zodV+dEcjrngZbw6Fu24jJQ7lG++uBX4IBbptwP4bekzi1SklEv/E7fzmUCAXUd6I3YFJaAe9p2vqU6a5ZfChC2RTdFYubLl5G+Ynexf62NhmJ222Tpr48wfg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=public-files.de; spf=pass smtp.mailfrom=public-files.de; dkim=pass (2048-bit key) header.d=public-files.de header.i=frank-w@public-files.de header.b=AR4OKWdv; arc=none smtp.client-ip=212.227.17.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=public-files.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=public-files.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="R4c+7N+b"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741080145; x=1772616145;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=SzzsRRoVJ9on6nCvD3rxckgTKyuW2QMhoe9u+u7oqQY=;
-  b=R4c+7N+bZJDAgGcJ8a03bszDb7NWJeoplgDSAYtQdZx9Dfaz6ER6bsBs
-   3woRUEMK1uq+Fz+7RXzUViA+GGY+DEYfP74JTprw9+p9HDZyupcxt1+s/
-   Ibszzqh1gWaVIhf08Nko2ANgT83Z8I6NGVgJSCs6P1qp/rnAI0UrZ7QUC
-   bVsSsOLv2bEL9IDIeLCR77i1LlDaY7jS+EsXqoh+cEjEqRtmeD2lk8Jqt
-   AO9TA0ZyK0SaBee9Lpt4lrFmxvuvGdXT+FPVMm8T9VvTRDK35lr9vxVky
-   Az8pXzY4GGWxAS8jYPOvtOC0cHsp/cWTVvurAhH6GSlTC3z0GVOEvqhOj
-   w==;
-X-CSE-ConnectionGUID: dj7rggjBT4Gq0tKAsvsdgw==
-X-CSE-MsgGUID: BAPSUnnOQsmddXd7SJenMw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11362"; a="42015201"
-X-IronPort-AV: E=Sophos;i="6.13,331,1732608000"; 
-   d="scan'208";a="42015201"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2025 01:22:24 -0800
-X-CSE-ConnectionGUID: C6Z0m4zgSryEZhTwrMg74w==
-X-CSE-MsgGUID: P/Z78RriRpeF2xKcmkXNmQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="155509074"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa001.jf.intel.com with ESMTP; 04 Mar 2025 01:22:21 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-	id 433A218F; Tue, 04 Mar 2025 11:22:19 +0200 (EET)
-Date: Tue, 4 Mar 2025 11:22:19 +0200
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-To: Li Zhijian <lizhijian@fujitsu.com>
-Cc: linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	ilpo.jarvinen@linux.intel.com, Bjorn Helgaas <bhelgaas@google.com>,
-	Ying Huang <huang.ying.caritas@gmail.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	linux-cxl@vger.kernel.org
-Subject: Re: [PATCH] resource: Fix resource leak in get_free_mem_region()
-Message-ID: <20250304092219.GH3713119@black.fi.intel.com>
-References: <20250304043415.610286-1-lizhijian@fujitsu.com>
+	dkim=pass (2048-bit key) header.d=public-files.de header.i=frank-w@public-files.de header.b="AR4OKWdv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=public-files.de;
+	s=s31663417; t=1741080239; x=1741685039; i=frank-w@public-files.de;
+	bh=qAOUbI/BEbZDvaPix7eWz3Zl3lsDI9E9B/i/XFncmrE=;
+	h=X-UI-Sender-Class:MIME-Version:Message-ID:From:To:Cc:Subject:
+	 Content-Type:In-Reply-To:References:Date:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=AR4OKWdvdxDkf5DnYJm79Y0Sc4ijHsQWiPWZt9Jxh7CXEcy3rWXJVsRT3FEsY5V1
+	 arkL5I0mVS06IXKJzsJ6EL5n7OKgaBfXEQm07zyx8teMKZPBkyv58BVwCX77qkXCQ
+	 NDyyNdNY/TzgHHzji5S/hJZJy4mqeoR2iv215vEIaPL1z0imelNWTr4s3+YySLAKZ
+	 kMuP8puk2OI5D8aFIvk0WW7eZ7SGGJyQBSygnqxp4jm38b1dnVeejUK4uk2AcXg5v
+	 cteS8a02dNP5iJ5E2PNoKFJmYCsDacJJrVdAHcjiOica9LInOsX2vgvIdAP0tAdkb
+	 nnngzLRRmEEKWDArhA==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [194.15.84.185] ([194.15.84.185]) by
+ trinity-msg-rest-gmx-gmx-live-5779db864f-7hl68 (via HTTP); Tue, 4 Mar 2025
+ 09:23:59 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250304043415.610286-1-lizhijian@fujitsu.com>
+Message-ID: <trinity-a81b2adf-df25-4888-9490-cc33257061b2-1741080239272@trinity-msg-rest-gmx-gmx-live-5779db864f-7hl68>
+From: Frank Wunderlich <frank-w@public-files.de>
+To: angelogioacchino.delregno@collabora.com, mikhail.kshevetskiy@iopsys.eu,
+ matthias.bgg@gmail.com, daniel@makrotopia.org
+Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org
+Subject: Aw: Re: [RESEND][PATCH] arm64: dts: mediatek: mt7986: fix pwn fan
+ settings for sinovoip bpi-r3 board
+Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <618b3cdb-0fef-4194-aeb0-4111c011904d@collabora.com>
+Importance: normal
+References: <20250226050132.547353-1-mikhail.kshevetskiy@iopsys.eu>
+ <618b3cdb-0fef-4194-aeb0-4111c011904d@collabora.com>
+Date: Tue, 4 Mar 2025 09:23:59 +0000
+Sensitivity: Normal
+X-Priority: 3
+X-UI-CLIENT-META-MAIL-DROP: W10=
+X-Provags-ID: V03:K1:KFILJolE/lIPpZ7AIJtQRhRvi++wI/bcQ2lgkUKddOMA3Q7Xb/PEi20XCxNzINqPUzkHm
+ r7bRg3aTVEVsMlCFezAHQpCfZIo0rmfInJ2+KshK3/HnsDZVQyToDOfIq7Yg8TUITj56FlSD79uJ
+ au2duhPJe/A8BywlmkG/zages3nOVMXUZpRudMTyhvgo9ASG9EMq7pUL7v5YnA7dBXvdqCXeAygt
+ hZbvoECRr1DoZaOcqaJQxu8MG07dfNHknBdI7vF/3G+J8lWUMPq46r5DYZ+ogOorGIrIxlfNjHDD
+ NE2eaCL+j9qRs6ulzEcIxr0a1XQpGMGixNQ8jBP66Lvlx+cYXMiL3KDNoM8gKzEbI0=
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:AxtGf+C3hYI=;FsXk14KBPKOyZP9J+CXltFfvtq2
+ dkwYcHX+hPt9iTQqnJndWDKtrP2/oQun9cOggieklZuBgtwYaKW49tHL+CuHemzdlUDGJVpDu
+ vwbfyYwXvWuk653PnMYvro0nqq4iuyzAJrauVKriQoApj6IJzvfEYSe7rJn20docf0vk6vRSa
+ Ox6uLXiFB6rd4dW0u32lqFrnSJZMSxrU3a2pZQKniOBP23BhtFUBzHi1+Lx067uHyDSlD1ZsI
+ xIJHauw41xHXmRE6e6xJ6Ddowzdm12er5T4+wx45slQjZPXBYwChWpOqwtC9wZSLa/Xj/q03a
+ 3Ttf8GMDTWZBOz0GIZPMhBhm/yTooJJBnyo/R7DXoj1Gxf0waCuQU6gp8/28gmEanPQl5EkwR
+ wGtUPwl2fkJ+Hkr6QewmizRuh7ssrIEfGRZHcFxRYJVPLYzwyK6HwTiW6yaJPyj9vm2544pFv
+ zyxbFRqMnW0lj8SjmtOqhyZinC5HQnnrTUcLs8S/piCBg9FyxSVNQwbto+Adg03sQM+5mjf3r
+ zKMU2Yi5JdFdH9M+L6JJptDGHZz26P+7Wh5ckfF+EQZ23bfBFtlEqGlDZf73dA5IYSQfhk+Gw
+ F0xKm2lMp9U9u2oc5hwtiIeMtbVX2FKM0UbaW87jreVzAljQlCNFCRHJpwNn8c8O+jdkgvp5v
+ N80nE+vcDiIMwkXew8goRl999b0yfe3HCy4qZvpG3unhfkINIAv9+X1x6LAn9BgQghSEdbe5P
+ EqKVsc35uCYrI/ksr6s1LXj/aTJk8ndZe1g2m78eTc/5k7ORl+SoavD3IWn3GGi984p78vxNT
+ +yLpCYBNeab8R+jelpy4Ptnq0iW/v6WptYRSfilS+ucN6+6I+adWjtuE8K/MLt/wH1iG3c9Jo
+ T6sIfnmXl4JkTa2kF8ZNVufhUMY1phc2syJBy7xbjvEaslVIPc8HV31jr7M1P/J+27Xh/FDce
+ y/6pn/wrrPSdqmputgAQzGAoBajxhAhVW2pjWobo/6jVhRz/ui/3Po6fHi2lTYex3DTq7T9p4
+ Y4QW2jnluSWJEJ3pJgjwNGSBn0znCFLWkO3vXtM+ti38NhYuDf5apyjM1d1GtbnVwLUIe8fe3
+ x/HoX9uQtV9Yho7DH9h+InsuuEoS8z6SlOAZ5k7q7C8lIiYJXYTIao25kc16kCneD4FLqeGS8
+ u16NW7a097nFzsjtWWs8Pyh4XdB+H7iLafDpXOUCimWo213NtkMTsKvl3FRVPVDkLWV9oXfaA
+ vdfFMJv3KA12sFRTPLWFeRSD1uElb0l7Bj1wv+kf9f6hnGFBMauN8gk=
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Mar 04, 2025 at 12:34:15PM +0800, Li Zhijian wrote:
-> The leak is detected by the kernel memory leak detector (`kmemleak`)
-> following a `cxl create-region` failure:
-> 
->  cxl_acpi ACPI0017:00: decoder0.0: created region2
->  cxl region2: HPA allocation error (-34) for size:0x0000000100000000 in CXL Window 0 [mem 0xa90000000-0x1a8fffffff flags 0x200]
->  kmemleak: 1 new suspected memory leaks (see /sys/kernel/debug/kmemleak)
-> 
->     __kmalloc_cache_noprof+0x28c/0x350
->     get_free_mem_region+0x45/0x380
->     alloc_free_mem_region+0x1d/0x30
->     size_store+0x180/0x290 [cxl_core]
->     kernfs_fop_write_iter+0x13f/0x1e0
->     vfs_write+0x37c/0x540
->     ksys_write+0x68/0xe0
->     do_syscall_64+0x6e/0x190
->     entry_SYSCALL_64_after_hwframe+0x76/0x7e
-> 
-> Fixes: 14b80582c43e ("resource: Introduce alloc_free_mem_region()")
-> Signed-off-by: Li Zhijian <lizhijian@fujitsu.com>
-> ---
->  kernel/resource.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/kernel/resource.c b/kernel/resource.c
-> index 12004452d999..aa0b1da143eb 100644
-> --- a/kernel/resource.c
-> +++ b/kernel/resource.c
-> @@ -2000,6 +2000,8 @@ get_free_mem_region(struct device *dev, struct resource *base,
->  		devres_free(dr);
->  	} else if (dev)
->  		devm_release_action(dev, remove_free_mem_region, res);
-> +	else
-> +		free_resource(res);
+> Gesendet: Mittwoch, 26. Februar 2025 um 10:46
+> Von: "AngeloGioacchino Del Regno" <angelogioacchino.delregno@collabora.c=
+om>
+> Betreff: Re: [RESEND][PATCH] arm64: dts: mediatek: mt7986: fix pwn fan s=
+ettings for sinovoip bpi-r3 board
 
-It should use {} as per coding style:
+> I get that the cheapest fans you can get are not working correctly with =
+the current
+> mid pwm setting, but you can't break things.
+>
+> This devicetree should, at this point, hold default values that would ge=
+nerally
+> make the vast majority of fans to actually spin, because it's impossible=
+ to have
+> something perfectly (or vaguely, sometimes) optimized for each fan on th=
+e market.
+>
+> Of course this means that you need to properly configure your fans in us=
+erspace
+> if you want to reach the sweet spot.
+>
+> I added Frank and Daniel to this thread, as they are the ones who origin=
+ally did
+> upstream this device.
+>
+> Frank, Daniel, any suggestion regarding the PWM values here?
 
-	} else {
-		free_resource(res);
-	}
+Hi,
 
-(probably should add that to the previous branch too).
+sorry for delay
+
+i have the fan from sinovoip and that was working for me, but if your fan =
+only works with new values, i have no point against this change.
+
+btw. angelo, how is state for my r4-dtsi change?
+
+regards Frank
