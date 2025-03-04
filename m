@@ -1,145 +1,182 @@
-Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A32221FC7C9;
-	Tue,  4 Mar 2025 14:05:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D70617583;
+	Tue,  4 Mar 2025 14:05:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.149.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741097104; cv=none; b=iiTaXEvajUfivbSoWwISIBuUdsLqcjEYkFgvlRCjJ/CsYFnFEJlxdteQlgbhJqN0WPTuuzsC/0IJbyRyTLDhbE9GEIk1siRGaXjykOGmjSesXO29d7E1M/yYFrr2OKaeLB2wWUqgL1NwNMCq4BI4dc4SDUUwMyy1Oy68areSBkQ=
+	t=1741097134; cv=none; b=oFlm7g6dtCJSf2p5tVcvL6tT4kAPG6jILtWyHdQ1cT8brUinB8CbvHLOMB9NesrI1uNXBDT2laRf80fR5zdNiOm/ZzuPLUhM84WDnud6Jgh9yv6eFTb6nlflk5fayyGPdKWs/2x5qgxjidTLDycnNjErKptx7CS6nFJEBL0f9bQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741097104; c=relaxed/simple;
-	bh=1eoIIC4qiHRnKRLjedXcJ5O9iur+JZ4LV8C6XUhe3qc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CuevJAlDf7VaTcrZoMg1ElXaKN/IvQ4jRm5U/cPH1jVulYXkH5y5aweBtqNjLs6Wn+R+abKbEeqR7tYyYTqgj50iZI4h/yfgdwCHXb92dkjuMsnLNL7g2bQSk8XZRVwN0dJBaogmbQwD9UEJT/QehIC3POiwSJkvt9MFci/P/eA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-7c3b533a683so243580985a.2;
-        Tue, 04 Mar 2025 06:05:02 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741097101; x=1741701901;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=wEGRTygTyU6cymLHKZseFJhmsuIezHZQHssj+Olk7dA=;
-        b=oOsKP2EtuHAiJzsKQi3Xjm34nzzq0tlBwOyeYJg2xzAhZIKzINZy339df/TMIcLM3V
-         mU1JKcoTLSLB/z7Z/iky372RLBLwZc+IGWr1XepxhPmS3rpWOiZ+KoUMfXfqnhaxm+by
-         Q8WHCqpe0f5UIHmmxiMMcF4CC1kXIuA2XDfMjNFYb97q2BY809vQeXx+NBbPUxixI7ps
-         Uxb5SsXp0Gqmo7wPU1fQKVPNnMOjwpJjSGfGZBnvPeuk2a8vxgXG7jg8EzPFG7vOB0uv
-         mQE4dq7Dq1iTZzG6rr+KNoCK3lNYtjKsW38DNH9XEJ5SSjw0M/7XvSYIflXiLIvH1hBx
-         2ZiQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU5J2JyTtRgoYdZueHCW3D4XBjQqF/oT2ulBiyOvfw1mKcqEJ2Gmkj4/xgMmkVyRNnrX7km+k5taqZaxWXr@vger.kernel.org, AJvYcCUoa5KnKP9KKAjCP7XRUTrj3sQjT0K5k68s/ERxI6puTaqE7tc3IRGjVurzGW+6hXt12MK9rRnrbIdXmSmIQCiyO1s=@vger.kernel.org, AJvYcCV9L7EyFH2rl28/gTrIGumLj1OHEDMXpPBxT11qMfcdpUjKI//6EyyJOKDAxzhL5Czo7G/bSDQm@vger.kernel.org, AJvYcCWBOGagp1egzs4ihQY4vIf8K5IqnXwzT+GHn3VdSYRR4IH0rlqWgLWHrDAcvtzkb6Ms5TwWXBlOHz4g@vger.kernel.org
-X-Gm-Message-State: AOJu0YyKQ/xAZeeWqFjSOAovnEzA45kSWYbErSUSo38qYa8/65K1ahTv
-	ltVPod5QNjdRKcEzcuvBoDUh5WewBgR6mp6l8XUXPtqWEqvAYgBaJYGcuIfu
-X-Gm-Gg: ASbGncsEt83bXHlolzm6ekHY0leFM0XYb1GRMM9X2kDyzO8DlkshjcUm5+Ko20INCpg
-	/8FbZG4ZRGCo4WDutH283okyhZGY6pnifz21QFw9lnB4cR8kcnJZcEtVvcylKdaFF0bpxYoiw3P
-	6GJ5T2z2ro3Q92uab5RhmhkKH15cq1/Xzt12yX7l8T915vNliswMDzXknEtWPYyI9yW+rQ1TRTm
-	YbDMfEZ8ArEtmeVHJ+Hz4W5yBuaEGjDRjeLd7vlhsLr5uqMpFoE2WqrH6OdxPD8ddNUD/Gr6mIz
-	4waTLS/CcIDwWamnNJdRckmvXfPvRHpDcPpBuyA6Bbz0Q1W2zJy7DuU1i28oWgSN1mf+UPOBftd
-	eB6q13sI=
-X-Google-Smtp-Source: AGHT+IE2N8f8hUagKLqg+WW0SX5zS2E+TiqiD9xESm5aR7zJzYlyjIWpNTeS1f6CZd3NHj8CEiawww==
-X-Received: by 2002:a05:620a:26a7:b0:7c3:d3a1:6f43 with SMTP id af79cd13be357-7c3d3a17071mr174218585a.57.1741097100956;
-        Tue, 04 Mar 2025 06:05:00 -0800 (PST)
-Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com. [209.85.219.54])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c3b53ce7a6sm322668285a.31.2025.03.04.06.04.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 04 Mar 2025 06:04:59 -0800 (PST)
-Received: by mail-qv1-f54.google.com with SMTP id 6a1803df08f44-6e88983cedaso43141756d6.1;
-        Tue, 04 Mar 2025 06:04:59 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUOSmxwrOqyDqku76a94/WWmtz1pA64t7uJWEGottWGbSsATILfz4aZ1LBlxlUJNZBDOmWdP7IfjHodPeem@vger.kernel.org, AJvYcCVktdYIZriim03kjfud4VwPDbrwe9ztsi4T3WggTkF+6Jm0nQUTOeIHMCDqdqsrPdf4JpU5OzuqjVzg@vger.kernel.org, AJvYcCW3gFLL1eK2c+VVADAINAdnA0hhMxvzykcz3pK2Gc0dAbXkAgmXcMAQaRiILgZzeNFfuHzNWeifaInXpThtY/G3/Hs=@vger.kernel.org, AJvYcCW88syuJ+YNOxeSuZTUMzT+Bw3L/4uHdXwHgTZugvglUtDRWj0HpetljevJ3s8u0dnzdPfdNOUB@vger.kernel.org
-X-Received: by 2002:a05:6214:21e7:b0:6e6:5aa2:4e4f with SMTP id
- 6a1803df08f44-6e8a0d80ce8mr261405046d6.32.1741097099661; Tue, 04 Mar 2025
- 06:04:59 -0800 (PST)
+	s=arc-20240116; t=1741097134; c=relaxed/simple;
+	bh=sD+FYTGd/Iv4+waBDe9Jou1vTCSFrK2mIssv1CG87Ss=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=FVWKVxi1VOyYA7oEW540mRhSoqoILpNQtNwN7Yre83T3HcYvO0bf3AkC6mGu16V8gWys3kpZfToRMMpmnFt9BxjKOmnqwrgFepTSvW9kfwFg2pI/SjTPguHzjJQBA1Xkf2V4Cfa1J7ROIxE2cfzH8Mmba5+aEklVsxDJ0DwMQis=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=T4eM8wzB; arc=none smtp.client-ip=67.231.149.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="T4eM8wzB"
+Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
+	by mx0a-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52472HMv003809;
+	Tue, 4 Mar 2025 08:05:27 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=PODMain02222019; bh=CxPdc0sVJcuHoGRz
+	dZ4jUkHGsDiwd7A69fQatlUcZik=; b=T4eM8wzB5WGjHpLzd58fPnCg8ntTC8Hz
+	+NDwZLzAO9N2tQeFZ/2OE7D5Qyj+FrFd3UKCkx1Dsz2aQAU279wTrHIGr6qeMc4a
+	tQI4AHNql1pxz7Z9ev1DCC+3J0rJtuRY9uQ+UYL3emFb56Y0ApKHMIgf89xIAQ8c
+	86laynMINhBSzW/ynF/TMmnoA2Dt1miW+RTPzI1v9sh7NGk4nVXTYn6Kn1GYRUMo
+	gH9WZ856CCZ8fk1TOB+F6MzhkE9SkDO+BBSTrXVsf3gj48VRsOewNgVQQdDq2ERu
+	0x2gmMebj5so8F0capVqBCW8pF8qn3pjEDfu0/J0LhP+GPu8GfVNag==
+Received: from ediex02.ad.cirrus.com ([84.19.233.68])
+	by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 455fyyj0ts-2
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 04 Mar 2025 08:05:24 -0600 (CST)
+Received: from ediex01.ad.cirrus.com (198.61.84.80) by ediex02.ad.cirrus.com
+ (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Tue, 4 Mar
+ 2025 14:05:05 +0000
+Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
+ anon-ediex01.ad.cirrus.com (198.61.84.80) with Microsoft SMTP Server id
+ 15.2.1544.14 via Frontend Transport; Tue, 4 Mar 2025 14:05:05 +0000
+Received: from upx-tgl-008-ubuntu.ad.cirrus.com (upx-tgl-008-ubuntu.ad.cirrus.com [198.90.251.167])
+	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id B0ECE820248;
+	Tue,  4 Mar 2025 14:05:05 +0000 (UTC)
+From: Maciej Strozek <mstrozek@opensource.cirrus.com>
+To: Mark Brown <broonie@kernel.org>
+CC: Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>,
+        <linux-sound@vger.kernel.org>, <patches@opensource.cirrus.com>,
+        <linux-kernel@vger.kernel.org>,
+        Maciej Strozek
+	<mstrozek@opensource.cirrus.com>
+Subject: [PATCH] ASoC: cs42l43: Add jack delay debounce after suspend
+Date: Tue, 4 Mar 2025 14:05:04 +0000
+Message-ID: <20250304140504.139245-1-mstrozek@opensource.cirrus.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250302181808.728734-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20250302181808.728734-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <Z8SydsdDsZfdrdbE@shell.armlinux.org.uk> <CA+V-a8vCB7nP=tsv4UkOwODSs-9hiG-PxN6cpihfvwjq2itAHg@mail.gmail.com>
- <Z8TRQX2eaNzXOzV0@shell.armlinux.org.uk> <CA+V-a8vykhxqP30iTwN6yrqDgT8YRVE_MadjiTFp653rHVqMNg@mail.gmail.com>
- <Z8WQJQo5kW9QV-wV@shell.armlinux.org.uk> <TY3PR01MB113468803E298C5FA6FB6712886C82@TY3PR01MB11346.jpnprd01.prod.outlook.com>
- <Z8bPPaT4Vsob4FHH@shell.armlinux.org.uk>
-In-Reply-To: <Z8bPPaT4Vsob4FHH@shell.armlinux.org.uk>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 4 Mar 2025 15:04:47 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdVQkzDhJmkpGah7omE7UqTgM3GSpVVDE-1mh9wW7O8vBA@mail.gmail.com>
-X-Gm-Features: AQ5f1JqGYJsTOdNI9PAwDvGf850hGSzvpOQrNGjb6j2I3wF8GT8UjrisfucgoQw
-Message-ID: <CAMuHMdVQkzDhJmkpGah7omE7UqTgM3GSpVVDE-1mh9wW7O8vBA@mail.gmail.com>
-Subject: Re: [PATCH 3/3] net: stmmac: Add DWMAC glue layer for Renesas GBETH
-To: "Russell King (Oracle)" <linux@armlinux.org.uk>
-Cc: Biju Das <biju.das.jz@bp.renesas.com>, 
-	"Lad, Prabhakar" <prabhakar.csengg@gmail.com>, Andrew Lunn <andrew+netdev@lunn.ch>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Philipp Zabel <p.zabel@pengutronix.de>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, 
-	Jose Abreu <joabreu@synopsys.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
-	"netdev@vger.kernel.org" <netdev@vger.kernel.org>, 
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>, 
-	Emil Renner Berthing <kernel@esmil.dk>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-GUID: rFo4_YHenBWq8uUbFWNY_UqT7QQE5HKN
+X-Proofpoint-ORIG-GUID: rFo4_YHenBWq8uUbFWNY_UqT7QQE5HKN
+X-Authority-Analysis: v=2.4 cv=DaftqutW c=1 sm=1 tr=0 ts=67c708a6 cx=c_pps a=uGhh+3tQvKmCLpEUO+DX4w==:117 a=uGhh+3tQvKmCLpEUO+DX4w==:17 a=Vs1iUdzkB0EA:10 a=w1d2syhTAAAA:8 a=JvfFBMRiBjqy9hV9PBMA:9 a=YXXWInSmI4Sqt1AkVdoW:22
+X-Proofpoint-Spam-Reason: safe
 
-Hi Russell,
+Hardware reports jack absent after reset/suspension regardless of jack
+state, so introduce an additional delay only in suspension case to allow
+proper detection to take place after a short delay.
 
-On Tue, 4 Mar 2025 at 11:00, Russell King (Oracle)
-<linux@armlinux.org.uk> wrote:
-> For the failure to happen, you need to check whether EEE is being used:
->
-> # ethtool --show-eee ethX
+Signed-off-by: Maciej Strozek <mstrozek@opensource.cirrus.com>
+---
+ sound/soc/codecs/cs42l43-jack.c | 13 ++++++++++---
+ sound/soc/codecs/cs42l43.c      | 15 ++++++++++++++-
+ sound/soc/codecs/cs42l43.h      |  3 +++
+ 3 files changed, 27 insertions(+), 4 deletions(-)
 
-Doh, that's also not supported on Starlight (BeagleV beta).
+diff --git a/sound/soc/codecs/cs42l43-jack.c b/sound/soc/codecs/cs42l43-jack.c
+index d9ab003e166b..ac19a572fe70 100644
+--- a/sound/soc/codecs/cs42l43-jack.c
++++ b/sound/soc/codecs/cs42l43-jack.c
+@@ -167,7 +167,7 @@ int cs42l43_set_jack(struct snd_soc_component *component,
+ 		autocontrol |= 0x3 << CS42L43_JACKDET_MODE_SHIFT;
 
-I tried unbind/rebind regardless, and it works (sort of),
-using the old Beagle V Fedora rootfs on microSD:
+ 	ret = cs42l43_find_index(priv, "cirrus,tip-fall-db-ms", 500,
+-				 NULL, cs42l43_accdet_db_ms,
++				 &priv->tip_fall_db_ms, cs42l43_accdet_db_ms,
+ 				 ARRAY_SIZE(cs42l43_accdet_db_ms));
+ 	if (ret < 0)
+ 		goto error;
+@@ -175,7 +175,7 @@ int cs42l43_set_jack(struct snd_soc_component *component,
+ 	tip_deb |= ret << CS42L43_TIPSENSE_FALLING_DB_TIME_SHIFT;
 
-[root@fedora-starfive starfive-dwmac]# echo 10020000.ethernet > unbind
-starfive-dwmac 10020000.ethernet eth0: stmmac_dvr_remove: removing driver
-starfive-dwmac 10020000.ethernet eth0: Link is Down
-[root@fedora-starfive starfive-dwmac]# echo 10020000.ethernet > bind
-starfive-dwmac 10020000.ethernet: IRQ eth_lpi not found
-starfive-dwmac 10020000.ethernet: IRQ sfty not found
-starfive-dwmac 10020000.ethernet: Hash table entries set to unexpected value 32
-starfive-dwmac 10020000.ethernet: User ID: 0x59, Synopsys ID: 0x37
-starfive-dwmac 10020000.ethernet:        DWMAC1000
-starfive-dwmac 10020000.ethernet: DMA HW capability register supported
-starfive-dwmac 10020000.ethernet: RX Checksum Offload Engine supported
-starfive-dwmac 10020000.ethernet: COE Type 2
-starfive-dwmac 10020000.ethernet: Wake-Up On Lan supported
-starfive-dwmac 10020000.ethernet: Enhanced/Alternate descriptors
-starfive-dwmac 10020000.ethernet: Enabled extended descriptors
-starfive-dwmac 10020000.ethernet: Chain mode enabled
-starfive-dwmac 10020000.ethernet: Enable RX Mitigation via HW Watchdog Timer
-starfive-dwmac 10020000.ethernet: device MAC address fa:58:39:0a:37:37
-libphy: get_phy_c22_id: mii_bus stmmac phy_id = 0x00221622
-starfive-dwmac 10020000.ethernet eth0: Register MEM_TYPE_PAGE_POOL RxQ-0
-starfive-dwmac 10020000.ethernet eth0: PHY [stmmac-0:07] driver
-[Micrel KSZ9031 Gigabit PHY] (irq=POLL)
-dwmac1000: Master AXI performs fixed burst length
-starfive-dwmac 10020000.ethernet eth0: No Safety Features support found
-starfive-dwmac 10020000.ethernet eth0: No MAC Management Counters available
-starfive-dwmac 10020000.ethernet eth0: IEEE 1588-2008 Advanced
-Timestamp supported
-starfive-dwmac 10020000.ethernet eth0: configuring for phy/rgmii-id link mode
-starfive-dwmac 10020000.ethernet eth0: Link is Up - 1Gbps/Full - flow
-control off
+ 	ret = cs42l43_find_index(priv, "cirrus,tip-rise-db-ms", 500,
+-				 NULL, cs42l43_accdet_db_ms,
++				 &priv->tip_rise_db_ms, cs42l43_accdet_db_ms,
+ 				 ARRAY_SIZE(cs42l43_accdet_db_ms));
+ 	if (ret < 0)
+ 		goto error;
+@@ -764,6 +764,8 @@ void cs42l43_tip_sense_work(struct work_struct *work)
+ error:
+ 	mutex_unlock(&priv->jack_lock);
 
-Apparently the MAC address has changed, so the board got a different
-IP address from my DHCP server :-(
++	priv->suspend_jack_debounce = false;
++
+ 	pm_runtime_mark_last_busy(priv->dev);
+ 	pm_runtime_put_autosuspend(priv->dev);
+ }
+@@ -771,14 +773,19 @@ void cs42l43_tip_sense_work(struct work_struct *work)
+ irqreturn_t cs42l43_tip_sense(int irq, void *data)
+ {
+ 	struct cs42l43_codec *priv = data;
++	unsigned int db_delay = priv->tip_debounce_ms;
 
-Gr{oetje,eeting}s,
+ 	cancel_delayed_work(&priv->bias_sense_timeout);
+ 	cancel_delayed_work(&priv->tip_sense_work);
+ 	cancel_delayed_work(&priv->button_press_work);
+ 	cancel_work(&priv->button_release_work);
 
-                        Geert
++	// Ensure delay after suspend is long enough to avoid false detection
++	if (priv->suspend_jack_debounce)
++		db_delay += priv->tip_fall_db_ms + priv->tip_rise_db_ms;
++
+ 	queue_delayed_work(system_long_wq, &priv->tip_sense_work,
+-			   msecs_to_jiffies(priv->tip_debounce_ms));
++			   msecs_to_jiffies(db_delay));
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+ 	return IRQ_HANDLED;
+ }
+diff --git a/sound/soc/codecs/cs42l43.c b/sound/soc/codecs/cs42l43.c
+index d2a2daefc2ec..4257dbefe9dd 100644
+--- a/sound/soc/codecs/cs42l43.c
++++ b/sound/soc/codecs/cs42l43.c
+@@ -2402,9 +2402,22 @@ static int cs42l43_codec_runtime_resume(struct device *dev)
+ 	return 0;
+ }
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
++static int cs42l43_codec_runtime_force_suspend(struct device *dev)
++{
++	struct cs42l43_codec *priv = dev_get_drvdata(dev);
++
++	dev_dbg(priv->dev, "Runtime suspend\n");
++
++	priv->suspend_jack_debounce = true;
++
++	pm_runtime_force_suspend(dev);
++
++	return 0;
++}
++
+ static const struct dev_pm_ops cs42l43_codec_pm_ops = {
+ 	RUNTIME_PM_OPS(NULL, cs42l43_codec_runtime_resume, NULL)
+-	SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend, pm_runtime_force_resume)
++	SET_SYSTEM_SLEEP_PM_OPS(cs42l43_codec_runtime_force_suspend, pm_runtime_force_resume)
+ };
+
+ static const struct platform_device_id cs42l43_codec_id_table[] = {
+diff --git a/sound/soc/codecs/cs42l43.h b/sound/soc/codecs/cs42l43.h
+index 9c144e129535..1cd9d8a71c43 100644
+--- a/sound/soc/codecs/cs42l43.h
++++ b/sound/soc/codecs/cs42l43.h
+@@ -78,6 +78,8 @@ struct cs42l43_codec {
+
+ 	bool use_ring_sense;
+ 	unsigned int tip_debounce_ms;
++	unsigned int tip_fall_db_ms;
++	unsigned int tip_rise_db_ms;
+ 	unsigned int bias_low;
+ 	unsigned int bias_sense_ua;
+ 	unsigned int bias_ramp_ms;
+@@ -95,6 +97,7 @@ struct cs42l43_codec {
+ 	bool button_detect_running;
+ 	bool jack_present;
+ 	int jack_override;
++	bool suspend_jack_debounce;
+
+ 	struct work_struct hp_ilimit_work;
+ 	struct delayed_work hp_ilimit_clear_work;
+--
+2.34.1
+
