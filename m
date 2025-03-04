@@ -1,111 +1,163 @@
-Received: from mail-vk1-f181.google.com (mail-vk1-f181.google.com [209.85.221.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from r-passerv.ralfj.de (r-passerv.ralfj.de [109.230.236.95])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A019283682
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 18:23:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 812F82777F4;
+	Tue,  4 Mar 2025 18:24:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.230.236.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741112630; cv=none; b=VcXJUyLWqya/aULkcgqhjvTCij09uxFcUipR5d04OvNQp9X+z4mmbgtaMI5Yj0IqCFTME4XxBlh+xby5ogbtiiUX4o7YTQKmbpdY0ZBxFkRHQbQ/sC+ANT7u2PGXCNCVGz4pDX+eZaGlMhTB+z8RF2xT8hjUBJPyw6Jyc12v0do=
+	t=1741112659; cv=none; b=sVo3R/WnML4EPI2fkqz7E45o5eAawCTI4GngeXIothtE0rxnI7NgjOUgh3sI16+Vpl52rKH+RX7MaC6BrufAzsVmkrbLQkGbriy1XXRDtLuYdIaysGMKPrt9+6pdSNFy0fgZy091WB9SFPl8cvLB6+MKAMQvgZSZFyVRvvcvdyA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741112630; c=relaxed/simple;
-	bh=9C3HRgMvOSEa4ktjDvIz4M/r6v4WMGEKoFgWeLzkARM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dkju0k8At0rMiayc8fASHWRpo0d6bqYJ0/4g3xDHZXMInZlQizqOwNDJby972ywXDD1TMRaWfnyA42vhbaJzIviUQ80bWStj24WZdokmiU3ZuSum+6nHGJHlMxWj/bRSgg5mo2GdfJgizHK7FVfHjCeQOarwOkO7yBViN3duGuo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CkM6idHO; arc=none smtp.client-ip=209.85.221.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741112659; c=relaxed/simple;
+	bh=aRrdrLOf2kIT4ORfOYXW5hYLJW9ANt36zFUYL88XoR8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FdpxgD0Zh4lo1A3rgCEPXQ0mWWj5vyzwH0GFn82A4HadfVVDJtA3O4YqeEV5Re6/+N9oLF3v3kYPxTmXLNOS8LlliFTXxXbRskLpsMYdxe1hjtHmeEXxkdBvE1ZyM0Z3U4LZSOM5AQnHCJVDF84Yf7h3kCTW+QVzW7CKLKS9wRM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ralfj.de; spf=pass smtp.mailfrom=ralfj.de; dkim=pass (1024-bit key) header.d=ralfj.de header.i=@ralfj.de header.b=Ek3d5AEn; arc=none smtp.client-ip=109.230.236.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ralfj.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ralfj.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CkM6idHO"
-Received: by mail-vk1-f181.google.com with SMTP id 71dfb90a1353d-5235d7f9599so2119877e0c.1
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Mar 2025 10:23:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741112628; x=1741717428; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=UTvXX8sSlYolu/q7NpQQdlJiEqFKcsD2LSJ4GjwRKNM=;
-        b=CkM6idHOQ6/qPKKIthQAkoq2q5IjeLJFjFvzXvmbG7TqsMXRVBzM1VJcODzlBQcpyL
-         e2tdCVtAL6Uxs+8YwRREgKE+DxPGoH2r/+dAuB0rbPij6yJRB2qcvhLbWHIPvsxzKH5D
-         HwBN038XUDXUrprG/7WZKZU/Q5tR0ffubNsO/DDwka3mgZ7lLgALgsNPIRAewkIgYzll
-         P3Wq7mLevno8q+jJ8SWEIODnEqvl5vA7v6hxBHxFA/2fMGtGMNa/f6ACg/YK2cowYasn
-         BNpthy+jEmAa+2ft9vlkoJc1+IVydk0EtUYhZeKxDzu6oWLRTcyX6I8fvGTPz5oJCT7z
-         bIRg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741112628; x=1741717428;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=UTvXX8sSlYolu/q7NpQQdlJiEqFKcsD2LSJ4GjwRKNM=;
-        b=qnhialtYhrABbq/PlUtHe0JRdscGYi9QTn0ADPRNIb++4rBb46TKmBRXX+5rUou91R
-         e1oGk47OeOSYN9M2Y8T7oS2m9AJwSRsJBdkwTsY+DOcofto14naeazWO2Pj+fZLCysfy
-         geZ0fNhSqEdfCP/wc5bt0yxFLHaq6jraUH0bfMMC8HnAyg2pEAIGPQSSn/Tuzjlf+m8F
-         d0WDGGWhjQqYzR7eh3w7htnSJieDUx/QCvEBAzT4sv6pwoel01U9HLJrxckxXCCaDWTu
-         fsVyNxVtnlMVqtV6vLgGNuAAkKq9zg2wurdAkk8EkH+vJmxdQHNq2FdxkAu6sCAIZbXX
-         OjTQ==
-X-Gm-Message-State: AOJu0Yy3chnTxGQxr1k8wNsC4ZsWmmg2++rzbLPikQvUav9OybPj8gr1
-	52bJb3p4xRI4BqurhaCcPFYDm1p0lKnY43HPMTIpuaT/stpiEU8JRxbuaEh7eYGaUcABpbh9ks3
-	Bo3iQel8YpQmqmLzsRQIiB6AmeQ0=
-X-Gm-Gg: ASbGncun9GBUEoqJjFwaTfaWWP+VH5i28TEckhEJUho1L3EJeK9uHErT8vN3tYaPy1O
-	WR7DoigxZ9DURk46Be3R5PXrYQa/Ce57orb+FLMJnnRGzN/16STc3jBElsTSN5dbFMX4fJnrFqB
-	krdvlnTo8BT7c119gcwnO5NGYN7vgcBwR4oLkY0sAIeATwyRkIra5SZMJ4
-X-Google-Smtp-Source: AGHT+IEZ/7BRp+uRS9nvklgUVf2SLGq8Z8YVnf3r6v7ElAdA67PrC/xXF/mqmYSEMUQX29CjECzNkD4WGfrOQXTiWbs=
-X-Received: by 2002:a05:6102:2924:b0:4bb:e2a1:183e with SMTP id
- ada2fe7eead31-4c044a0017cmr10533700137.18.1741112627454; Tue, 04 Mar 2025
- 10:23:47 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=ralfj.de header.i=@ralfj.de header.b="Ek3d5AEn"
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=ralfj.de; s=mail;
+	t=1741112655; bh=aRrdrLOf2kIT4ORfOYXW5hYLJW9ANt36zFUYL88XoR8=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Ek3d5AEn9ZSdmiVKJwAt61WVz86wtURGUckvR85lznKbN8jUMpWjLfs6XcphJxd7G
+	 SFfmHuj4a5nAkRdDzaApZtUPBIioqQ0A6Haizinno81NH+IsrmyazjiG1mDRcZcZ/L
+	 lt2IwEQc6eOBeOsGiV4B3SPsNWBbcL3YOtASla6c=
+Received: from [IPV6:2001:67c:10ec:5784:8000::87] (2001-67c-10ec-5784-8000--87.net6.ethz.ch [IPv6:2001:67c:10ec:5784:8000::87])
+	by r-passerv.ralfj.de (Postfix) with ESMTPSA id 84AAD2052D09;
+	Tue,  4 Mar 2025 19:24:15 +0100 (CET)
+Message-ID: <aab4312f-67dc-4fc8-ae5a-59b5933aa220@ralfj.de>
+Date: Tue, 4 Mar 2025 19:24:14 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250303221730.1284822-1-jaegeuk@kernel.org>
-In-Reply-To: <20250303221730.1284822-1-jaegeuk@kernel.org>
-From: Daeho Jeong <daeho43@gmail.com>
-Date: Tue, 4 Mar 2025 10:23:36 -0800
-X-Gm-Features: AQ5f1JpfsRQkcPF6KIFZ7YMYTdcL01aAD6xF-xk3YtBCXsNdVl8h0JTYeOohAe8
-Message-ID: <CACOAw_zmqS8UrpsYeMEEvyc_Xe9edx4ptWOtQBz3UufZM+iNag@mail.gmail.com>
-Subject: Re: [f2fs-dev] [PATCH] f2fs: set highest IO priority for checkpoint thread
-To: Jaegeuk Kim <jaegeuk@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: C aggregate passing (Rust kernel policy)
+To: Ventura Jack <venturajack85@gmail.com>
+Cc: Kent Overstreet <kent.overstreet@linux.dev>,
+ Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, Gary Guo <gary@garyguo.net>,
+ torvalds@linux-foundation.org, airlied@gmail.com, boqun.feng@gmail.com,
+ david.laight.linux@gmail.com, ej@inai.de, gregkh@linuxfoundation.org,
+ hch@infradead.org, hpa@zytor.com, ksummit@lists.linux.dev,
+ linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org
+References: <CAFJgqgRygssuSya_HCdswguuj3nDf_sP9y2zq4GGrN1-d7RMRw@mail.gmail.com>
+ <20250222141521.1fe24871@eugeo>
+ <CAFJgqgSG4iZE12Yg6deX3_VYSOLxkm5yr5yu25HxN+y4wPD5bg@mail.gmail.com>
+ <6pwjvkejyw2wjxobu6ffeyolkk2fppuuvyrzqpigchqzhclnhm@v5zhfpmirk2c>
+ <CANiq72mdzUJocjXhPRQEEdgRXsr+TEMt99V5-9R7TjKB7Dtfaw@mail.gmail.com>
+ <lz7hsnvexoywjgdor33mcjrcztxpf7lzvw3khwzd5rifetwrcf@g527ypfkbhp2>
+ <780ff858-4f8e-424f-b40c-b9634407dce3@ralfj.de>
+ <CAFJgqgRN0zwwaNttS_9qnncTDnSA-HU5EgAXFrNHoPQ7U8fUxw@mail.gmail.com>
+ <f3a83d60-3506-4e20-b202-ef2ea99ef4dc@ralfj.de>
+ <CAFJgqgR4Q=uDKNnU=2yo5zoyFOLERG+48bFuk4Dd-c+S6x+N5w@mail.gmail.com>
+ <7edf8624-c9a0-4d8d-a09e-2eac55dc6fc5@ralfj.de>
+ <CAFJgqgS-S3ZbPfYsA-eJmCXHhMrzwaKW1-G+LegKJNqqGm31UQ@mail.gmail.com>
+ <d29ebda1-e6ca-455d-af07-ac1daf84a3d2@ralfj.de>
+ <CAFJgqgQ=dJk7Jte-aaB55_CznDEnSVcy+tEh83BwmrMVvOpUgQ@mail.gmail.com>
+ <651a087b-2311-4f70-a2d3-6d2136d0e849@ralfj.de>
+ <CAFJgqgRFEvsyf9Hej-gccSdC-Ce8DbO5DgHatLoJ-aYi1_ZcyA@mail.gmail.com>
+Content-Language: en-US, de-DE
+From: Ralf Jung <post@ralfj.de>
+In-Reply-To: <CAFJgqgRFEvsyf9Hej-gccSdC-Ce8DbO5DgHatLoJ-aYi1_ZcyA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Mar 3, 2025 at 2:19=E2=80=AFPM Jaegeuk Kim via Linux-f2fs-devel
-<linux-f2fs-devel@lists.sourceforge.net> wrote:
->
-> The checkpoint is the top priority thread which can stop all the filesyst=
-em
-> operations. Let's make it RT priority.
->
-> Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
-> ---
->  fs/f2fs/checkpoint.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
-> index bd890738b94d..8dbb815a35c0 100644
-> --- a/fs/f2fs/checkpoint.c
-> +++ b/fs/f2fs/checkpoint.c
-> @@ -21,7 +21,7 @@
->  #include "iostat.h"
->  #include <trace/events/f2fs.h>
->
-> -#define DEFAULT_CHECKPOINT_IOPRIO (IOPRIO_PRIO_VALUE(IOPRIO_CLASS_BE, 3)=
-)
-> +#define DEFAULT_CHECKPOINT_IOPRIO (IOPRIO_PRIO_VALUE(IOPRIO_CLASS_RT, 3)=
-)
->
->  static struct kmem_cache *ino_entry_slab;
->  struct kmem_cache *f2fs_inode_entry_slab;
-> --
-> 2.48.1.711.g2feabab25a-goog
->
+Hi all,
 
-Reviewed-by: Daeho Jeong <daehojeong@google.com>
+>>> The time crate breaking example above does not
+>>> seem nice.
+>>
+>> The time issue is like the biggest such issue we had ever, and indeed that did
+>> not go well. We should have given the ecosystem more time to update to newer
+>> versions of the time crate, which would have largely mitigated the impact of
+>> this. A mistake was made, and a *lot* of internal discussion followed to
+>> minimize the chance of this happening again. I hope you don't take that accident
+>> as being representative of regular Rust development.
+> 
+> Was it an accident? I thought the breakage was intentional,
+> and in line with Rust's guarantees on backwards
+> compatibility, since it was related to type inference,
+> and Rust is allowed to do breaking changes for that
+> according to its guarantees as I understand it.
+> Or do you mean that it was an accident that better
+> mitigation was not done in advance, like you describe
+> with giving the ecosystem more time to update?
 
->
->
-> _______________________________________________
-> Linux-f2fs-devel mailing list
-> Linux-f2fs-devel@lists.sourceforge.net
-> https://lists.sourceforge.net/lists/listinfo/linux-f2fs-devel
+It was an accident. We have an established process for making such changes while 
+keeping the ecosystem impact to a minimum, but mistakes were made and so the 
+ecosystem impact was beyond what we'd be willing to accept.
+
+The key to understand here that there's a big difference between "we do a 
+breaking change but hardly anyone notices" and "we do a breaking change and 
+everyone hears about it". The accident wasn't that some code broke, the accident 
+was that so much code broke. As you say, we have minor breaking changes fairly 
+regularly, and yet all the examples you presented of people being upset were 
+from this one case where we screwed up. I think that shows that generally, the 
+process works: we can do minor breaking changes without disrupting the 
+ecosystem, and we can generally predict pretty well whether a change will 
+disrupt the ecosystem. (In this case, we actually got the prediction and it was 
+right! It predicted significant ecosystem breakage. But then diffusion of 
+responsibility happened and nobody acted on that data.)
+
+And yes, *technically* that change was permitted as there's an exception in the 
+stability RFC for such type ambiguity changes. However, we're not trying to be 
+"technically right", we're trying to do the right thing for the ecosystem, and 
+the way this went, we clearly didn't do the right thing. If we had just waited 
+another 3 or 4 Rust releases before rolling out this change, the impact would 
+have been a lot smaller, and you likely would never have heard about this.
+
+(I'm saying "we" here since I am, to an extent, representing the Rust project in 
+this discussion. I can't actually speak for the Rust project, so these opinions 
+are my own. I also was not involved in any part of the "time" debacle.)
+
+> Another concern I have is with Rust editions. It is
+> a well defined way of having language "versions",
+> and it does have automated conversion tools,
+> and Rust libraries choose themselves which
+> edition of Rust that they are using, independent
+> of the version of the compiler.
+> 
+> However, there are still some significant changes
+> to the language between editions, and that means
+> that to determine the correctness of Rust code, you
+> must know which edition it is written for.
+
+There exist corner cases where that is true, yes. They are quite rare. Congrats 
+on finding one! But you hardly ever see such examples in practice. As above, 
+it's important to think of these things quantitatively, not qualitatively.
+
+Kind regards,
+Ralf
+
+> 
+> For instance, does this code have a deadlock?
+> 
+>      fn f(value: &RwLock<Option<bool>>) {
+>          if let Some(x) = *value.read().unwrap() {
+>              println!("value is {x}");
+>          } else {
+>              let mut v = value.write().unwrap();
+>              if v.is_none() {
+>                  *v = Some(true);
+>              }
+>          }
+>      }
+> 
+> The answer is that it depends on whether it is
+> interpreted as being in Rust edition 2021 or
+> Rust edition 2024. This is not as such an
+> issue for upgrading, since there are automated
+> conversion tools. But having semantic
+> changes like this means that programmers must
+> be aware of the edition that code is written in, and
+> when applicable, know the different semantics of
+> multiple editions. Rust editions are published every 3
+> years, containing new semantic changes typically.
+> 
+> There are editions Rust 2015, Rust 2018, Rust 2021,
+> Rust 2024.
+> 
+> Best, VJ.
+
