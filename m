@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 026F425FA28;
-	Tue,  4 Mar 2025 16:31:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4C4A29B234;
+	Tue,  4 Mar 2025 16:32:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741105916; cv=none; b=RH+qtGHQrhjv8v8jeTgQfz9r3Ebak0cPN/t6At1Ss3+p5mx512SkbQYIWkFhtrpsZbsTmG5I9e64i9+B3KP2TVDrdGIsIgMgWqDkaHSUofHoIitdJ1WeVK2+2n3sk9muNFrxZCXqrlz6LHX3FktemendbcGjDJyw1U8Tci4eu7s=
+	t=1741105979; cv=none; b=KY8I2bHpPwoCoou1KGvvSIXRWXJQr29hJx/LhkQsfGzGDd9dC8L76EnZRgkKZqrUSeqkrUsGqexb2eqioeTjooe6Ow4aqqEgAnxupxKzv1MIB1EjLfG73PNMof+7B20ZROIWGKpgtz2z8eevXo1T/FNd+YBZkup7z6ehnjf0maw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741105916; c=relaxed/simple;
-	bh=1b7ToBllyPpn0zk+DtE2pK66E04RdkGhHH2S/sCQtoI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DxOTSTBkcT+qmKHO+Ieysdjghjw96HgOvANF6EoI6G/XzsODUF/hx8Epopz2tiCdcVV1aJ+tm9yt0X7DbrrIYF0t4Z0UZkmzoxsmFXVcuh4deDPfzVK5uiSwOFt+DI3utD81hUObwbxhZgkbvpkaCXZz/efmyo1CPGkWQ+cHLTE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ojTooJ3e; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741105979; c=relaxed/simple;
+	bh=HoIZgaKi1QUHmU1k95AEv//RjwsP1AIOtEf1NJ1b9lE=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=NiaB14Rxo/ycRqWrrajlymHWjUjktHS7tlU2o0VyyA9iH6MdLjPKjw3C4KnWp1qjynkVx9A+YtXBoWMP2FJFhkzHtRCICKnN4UB4RphAF7lcV5BrIZsKitLr/BgUGUUifBE4hVNxQf8b3uZk1i9eQIXDtJQ5PFopIn736b62g44=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k6D2ufYH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ojTooJ3e"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC6DEC4CEE5;
-	Tue,  4 Mar 2025 16:31:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k6D2ufYH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88622C4CEE9;
+	Tue,  4 Mar 2025 16:32:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741105915;
-	bh=1b7ToBllyPpn0zk+DtE2pK66E04RdkGhHH2S/sCQtoI=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ojTooJ3elCLNG/aGdXcD7y+0S07fyNBZVVTXHKZiwN+h40LFTXwngX5eFCGc+xOMd
-	 Eh4dCwm0JFnhykfrmMbB7eB2fkYbrFByCulpXD+Ji/tTTxlevzV3/MRihZMTw1KYOi
-	 w1tu1/RqoDtHK823LgSU3PJqbH5bFeOYUq5Ha/yhD5vTXFZuUgFNMZLdWuJXM2et8+
-	 ARVKXGj6EVzau5WJuC/iqHc+geNzG3lTI7q1yfr9nDQSCFdy0o+cs62G7u0u98wXWu
-	 N1/NFMkPHjzUwobZpYZVpvUfMb7IpQIeF+g2OWID2M4rpPuDzTgNgvM/OHq3rbYHtS
-	 gOI/8uHbnHv9Q==
-Message-ID: <880bac84-c593-44fa-a9dc-63462e1cee9d@kernel.org>
-Date: Tue, 4 Mar 2025 17:31:47 +0100
+	s=k20201202; t=1741105979;
+	bh=HoIZgaKi1QUHmU1k95AEv//RjwsP1AIOtEf1NJ1b9lE=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=k6D2ufYHalX0UT7bInUiB0UD2G/7zBgEt0dmBPlp0CKp5kWSE2iEODFcmURhOsJiA
+	 QrOCv1dS2GgM1ooFSDFc5Tv5b44SyZpz4w50c4Sf0XXSLHvLl/D8Tkuoo7uAxYU7as
+	 /H0iIKOr5tCMWoKTy+eD+sStZNRG1Ggrc2iZcjP1iHrGgiMsu9UdcdLVu7ly+w7Pwe
+	 A94BoHMvGTHLLJkjH5ddOahgFfvizBWeBkRx3aID5ksg8vJFsus4g09JnA246h+3Ja
+	 +OYT9+eeXtx3QW9orgfLr9YDxtFCB3F79XRO9z10e+Qr8NN9fv5slEQb8C5+KnMQPh
+	 Ev4pmZWcLcPlg==
+Message-ID: <fda24b29-3a86-484f-b674-e933d2fa3704@kernel.org>
+Date: Tue, 4 Mar 2025 17:32:50 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -37,6 +37,7 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH v3 1/3] dt-bindings: hwmon: Add Microchip emc2305 yaml
  schema
+From: Krzysztof Kozlowski <krzk@kernel.org>
 To: Conor Dooley <conor@kernel.org>, florin.leotescu@oss.nxp.com
 Cc: Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>,
  Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
@@ -48,7 +49,7 @@ Cc: Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>,
 References: <20250304162136.1963384-1-florin.leotescu@oss.nxp.com>
  <20250304162136.1963384-2-florin.leotescu@oss.nxp.com>
  <20250304-serving-stem-e059361db2b8@spud>
-From: Krzysztof Kozlowski <krzk@kernel.org>
+ <880bac84-c593-44fa-a9dc-63462e1cee9d@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
  xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
@@ -93,34 +94,36 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20250304-serving-stem-e059361db2b8@spud>
+In-Reply-To: <880bac84-c593-44fa-a9dc-63462e1cee9d@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 04/03/2025 17:29, Conor Dooley wrote:
->> +properties:
->> +  compatible:
->> +    enum:
->> +      - microchip,emc2301
->> +      - microchip,emc2302
->> +      - microchip,emc2303
->> +      - microchip,emc2305
+On 04/03/2025 17:31, Krzysztof Kozlowski wrote:
+> On 04/03/2025 17:29, Conor Dooley wrote:
+>>> +properties:
+>>> +  compatible:
+>>> +    enum:
+>>> +      - microchip,emc2301
+>>> +      - microchip,emc2302
+>>> +      - microchip,emc2303
+>>> +      - microchip,emc2305
+>>
+>> Driver has no match data etc, suggesting all of these are compatible.
+>> Please pick one as a fallback compatible.
+>>
+>>> +
+>>> +  reg:
+>>> +    maxItems: 1
+>>> +
+>>> +required:
+>>> +  - compatible
+>>> +  - reg
+>>
+>> Missing descriptions of the fans, no?
+>> See max6639 for an example.
 > 
-> Driver has no match data etc, suggesting all of these are compatible.
-> Please pick one as a fallback compatible.
-> 
->> +
->> +  reg:
->> +    maxItems: 1
->> +
->> +required:
->> +  - compatible
->> +  - reg
-> 
-> Missing descriptions of the fans, no?
-> See max6639 for an example.
-
-Yes and missing $ref to fan-controller schema.
+> Yes and missing $ref to fan-controller schema.
+About which I asked at v2...
 
 Best regards,
 Krzysztof
