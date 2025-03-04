@@ -1,364 +1,137 @@
-Received: from mail.mainlining.org (mail.mainlining.org [5.75.144.95])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AF68260384;
-	Tue,  4 Mar 2025 19:32:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.75.144.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03B39253B75
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 19:32:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741116749; cv=none; b=m1lsRBBGLRRDWbaI8WLnoOyD6GdbNYFKlOy1DI+Zw4s3H0AVa/zvvzRtGaMi9HH2/QixuGBmuDON59oe51+D4H/AsTjiEKGKaS1Wlb9Xm9OluaQkre3a4mbqyPHLszU+qMAbwZNgJ5prcQ/7TT9mr0mGWfSM19nPydgMH9qQUpY=
+	t=1741116773; cv=none; b=YnbQGUpysQGAB3CizA7kq7q1+pb05iBDv4XHfCRj9hGpw7QmfuTppetIq+N3xA5fOUuMVV/6KzMoUxebg3BgOMygENXCg2tgXhI/lZJwhsbU+BtuxJF+Ph5qZkEm9HS9yrCmkD/1WsDCKlye1lzkCrFB4Jvg/s2lypN878Tm9yM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741116749; c=relaxed/simple;
-	bh=yq0FNK2cRC707WXhZqTcNMaGYykukvLuH96mp4sMtns=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=tMkiD8XlD9NjjatRqYhWr62ZHLyc9S9+kwSLAa19ohk2oT8W5xpppqQvgpj96pgA0+/xCme9SR068Aaly0S3pZMk5esY/wiDVU3YC+dYnmMFCCb0FaCtNyDgKt7vr3B15eXSs0UV2EZ1qB4vdZiVU8ruP763/S0RnfMy9V1hUc4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mainlining.org; spf=pass smtp.mailfrom=mainlining.org; dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=Y6vRqh4L; arc=none smtp.client-ip=5.75.144.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mainlining.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mainlining.org
+	s=arc-20240116; t=1741116773; c=relaxed/simple;
+	bh=OQA+2QFOcgjj6uSfiTcIy6Fu6+7/+zNnoI9reAWPQSQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fLiD2vl3SRKZQYHmzCV+GV9Iv344B8K443iux9OuGgVNkU1S+mjsi4D4YPRCgxXdnPTGwH7DPRgu8eDKXHiBB6epFZSpm1iZTYbtISPxQRibA1uCcxyN/6+dRIwVo/Dqi7xOu+pqeA4AwAYXxGXxNLpXYN/dGc4MEwROp8bdazE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Y3tVnVrx; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="Y6vRqh4L"
-Received: from [192.168.1.78] (unknown [45.136.247.92])
-	by mail.mainlining.org (Postfix) with ESMTPSA id A316CBBEE8;
-	Tue,  4 Mar 2025 19:32:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mainlining.org;
-	s=psm; t=1741116745;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Y3tVnVrx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1741116770;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=ckPssTrKMktRUpJ0aj4vrjrbuYXucVZeA/vL65l1sN0=;
-	b=Y6vRqh4LGdEKdfRW3oQmhP2qS7E1lJXoTNimK24gFieFiU3bb2SYdVTpneEtaP64jygAaR
-	qEHwUM8mnj9WN6wSnpYa3Rs/vPNe1EHI4h2XMNsAbjzyKd9YGyPQCPGf7tnU7sAMFsHfHp
-	dT5A5xLH9dPJ5gWGKr7kw4284Tlgiq2HiC+p+c5OAdm8wozNNh0liTOohBMP1eRDbh93gm
-	QLNirJgNYsR23hm3rUMh5y43ucJO2fsI4A0g8x6UDr7FE878c3tHZTRNXkaVH49Cf+NgD/
-	tH2NEL4JlJ8CstsOTQjbtjmd0oJgvejZPipK6WSKpoGYSSxHhfdRPVEoTTq/aw==
-From: Vasiliy Doylov <nekocwd@mainlining.org>
-Date: Tue, 04 Mar 2025 22:32:20 +0300
-Subject: [PATCH v2 3/3] media: i2c: Add driver for LC898217XC VCM
+	bh=UXl4nfp4fR0Yavdrh2eSsQ01fUfNdG7jydctAhRfRE8=;
+	b=Y3tVnVrx0OkUinbCf0Z7t6LCyf0xY/QBqAiybQMP1QR4xXBfGmNCS24x0kKWVuUhlzaF9l
+	2EzKjrRENR6K/3UHZlo73hRmMDYMPmX28HslZBRxhwUIVAkOUmgq9BGnN8MJbYCys5zIpf
+	OA/s2amEr8nltBRHjjkd8oYLujrcv/s=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-232-ozIiO8-vN66lw4xfV_wuPA-1; Tue,
+ 04 Mar 2025 14:32:37 -0500
+X-MC-Unique: ozIiO8-vN66lw4xfV_wuPA-1
+X-Mimecast-MFC-AGG-ID: ozIiO8-vN66lw4xfV_wuPA_1741116756
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B75F71801A1A;
+	Tue,  4 Mar 2025 19:32:35 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.32])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 802B9300018D;
+	Tue,  4 Mar 2025 19:32:32 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Tue,  4 Mar 2025 20:32:04 +0100 (CET)
+Date: Tue, 4 Mar 2025 20:32:00 +0100
+From: Oleg Nesterov <oleg@redhat.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Mateusz Guzik <mjguzik@gmail.com>, brauner@kernel.org, mingo@redhat.com,
+	peterz@infradead.org, rostedt@goodmis.org,
+	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: pipes && EPOLLET, again
+Message-ID: <20250304193137.GE5756@redhat.com>
+References: <20250303230409.452687-1-mjguzik@gmail.com>
+ <20250303230409.452687-2-mjguzik@gmail.com>
+ <20250304140726.GD26141@redhat.com>
+ <20250304154410.GB5756@redhat.com>
+ <CAHk-=wj1V4wQBPUuhWRwmQ7Nfp2WJrH=yAv-v0sP-jXBKGoPdw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250304-media-i2c-lc898217xc-initial-driver-v2-3-6a463cef3ea8@mainlining.org>
-References: <20250304-media-i2c-lc898217xc-initial-driver-v2-0-6a463cef3ea8@mainlining.org>
-In-Reply-To: <20250304-media-i2c-lc898217xc-initial-driver-v2-0-6a463cef3ea8@mainlining.org>
-To: Mauro Carvalho Chehab <mchehab@kernel.org>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: linux@mainlining.org, linux-kernel@vger.kernel.org, 
- linux-media@vger.kernel.org, devicetree@vger.kernel.org, 
- phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht, 
- Vitalii Skorkin <nikroks@mainlining.org>, 
- Antonio Rische <nt8r@protonmail.com>, 
- Vasiliy Doylov <nekocwd@mainlining.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=8861;
- i=nekocwd@mainlining.org; h=from:subject:message-id;
- bh=yq0FNK2cRC707WXhZqTcNMaGYykukvLuH96mp4sMtns=;
- b=owGbwMvMwCW2fZ/SFZeSpU2Mp9WSGNKPh7rMEnvfeP3mlqrq+Srn5EoWZ4vtLnXUXr8k2/nyn
- dz2UDG+jlIWBjEuBlkxRRabjR6zxfLDJSdNe6oAM4eVCWQIAxenAEzkJDfDX6mqHEGXLNaus0eM
- zsRblf93OsZzSS0v/5ZXntfkcLMTGgz/DPldJ1Z5Pz4ft/v7xyALdZvGqyby+v+K3jyTfbNASEO
- DDQA=
-X-Developer-Key: i=nekocwd@mainlining.org; a=openpgp;
- fpr=3CB1489B166F57199296E520B7BE22D44474A582
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wj1V4wQBPUuhWRwmQ7Nfp2WJrH=yAv-v0sP-jXBKGoPdw@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-LC898217XC is a 11 bit DAC, designed for linear control
-of voice coil motor. This driver creates a V4L2 subdevice
-and provides control to set the desired focus.
+On 03/04, Linus Torvalds wrote:
+>
+> On Tue, 4 Mar 2025 at 05:45, Oleg Nesterov <oleg@redhat.com> wrote:
+> >
+> > Don't we need the trivial one-liner below anyway?
+>
+> See this email of mine:
+>
+>   https://lore.kernel.org/all/CAHk-=wiCRwRFi0kGwd_Uv+Xv4HOB-ivHyUp9it6CNSmrKT4gOA@mail.gmail.com/
+>
+> and the last paragraph in particular.
+>
+> The whole "poll_usage" thing is a kernel *hack* to deal with broken
+> user space that expected garbage semantics that aren't real, and were
+> never real.
 
-Tested on Oneplus 6 (oneplus-enchilada)
+Yes agreed. But we can make this hack more understandable. But as I said,
+this is off-topic right now.
 
-Signed-off-by: Vasiliy Doylov <nekocwd@mainlining.org>
----
- drivers/media/i2c/Kconfig      |  11 ++
- drivers/media/i2c/Makefile     |   1 +
- drivers/media/i2c/lc898217xc.c | 240 +++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 252 insertions(+)
+> introduced that completely bogus hack to say "ok, we'll send these
+> completely wrong extraneous events despite the fact that nothing has
+> changed, because some broken user space program was written to expect
+> them".
 
-diff --git a/drivers/media/i2c/Kconfig b/drivers/media/i2c/Kconfig
-index 85ecb2aeefdbfff744c8de86866560518abeace1..aa16d4729ba914e774da2ada228b00cfd2462080 100644
---- a/drivers/media/i2c/Kconfig
-+++ b/drivers/media/i2c/Kconfig
-@@ -794,6 +794,17 @@ config VIDEO_DW9807_VCM
- 	  capability. This is designed for linear control of
- 	  voice coil motors, controlled via I2C serial interface.
- 
-+config VIDEO_LC898217XC
-+	tristate "LC898217XC lens voice coil support"
-+	depends on I2C && VIDEO_DEV
-+	select MEDIA_CONTROLLER
-+	select VIDEO_V4L2_SUBDEV_API
-+	select V4L2_ASYNC
-+	help
-+	  This is a driver for the LC898217XC camera lens voice coil.
-+	  LC898217XC is a 11 bit DAC with 110mA output current sink
-+	  capability. This is designed for linear control of
-+	  voice coil motors, controlled via I2C serial interface.
- endmenu
- 
- menu "Flash devices"
-diff --git a/drivers/media/i2c/Makefile b/drivers/media/i2c/Makefile
-index fbb988bd067a1b8b577248811f18a15671eb8932..514b61a7e8769457c2e831df4cbe3c4aabc6ed1c 100644
---- a/drivers/media/i2c/Makefile
-+++ b/drivers/media/i2c/Makefile
-@@ -62,6 +62,7 @@ obj-$(CONFIG_VIDEO_IMX415) += imx415.o
- obj-$(CONFIG_VIDEO_IR_I2C) += ir-kbd-i2c.o
- obj-$(CONFIG_VIDEO_ISL7998X) += isl7998x.o
- obj-$(CONFIG_VIDEO_KS0127) += ks0127.o
-+obj-$(CONFIG_VIDEO_LC898217XC) += lc898217xc.o
- obj-$(CONFIG_VIDEO_LM3560) += lm3560.o
- obj-$(CONFIG_VIDEO_LM3646) += lm3646.o
- obj-$(CONFIG_VIDEO_M52790) += m52790.o
-diff --git a/drivers/media/i2c/lc898217xc.c b/drivers/media/i2c/lc898217xc.c
-new file mode 100644
-index 0000000000000000000000000000000000000000..86afbf88e72a078da131a26ac0bc89ec2a2c92ff
---- /dev/null
-+++ b/drivers/media/i2c/lc898217xc.c
-@@ -0,0 +1,240 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+// Copyright (c) 2025 Vasiliy Doylov <nekocwd@mainlining.org>
-+
-+#include <linux/delay.h>
-+#include <linux/i2c.h>
-+#include <linux/module.h>
-+#include <linux/pm_runtime.h>
-+#include <linux/regulator/consumer.h>
-+#include <media/v4l2-async.h>
-+#include <media/v4l2-ctrls.h>
-+#include <media/v4l2-device.h>
-+#include <media/v4l2-fwnode.h>
-+#include <media/v4l2-subdev.h>
-+#include <media/v4l2-event.h>
-+
-+#define LC898217XC_NAME "lc898217xc"
-+/* Actuator has 11 bit resolution */
-+#define LC898217XC_MAX_FOCUS_POS (2048 - 1)
-+#define LC898217XC_MIN_FOCUS_POS 0
-+#define LC898217XC_FOCUS_STEPS 1
-+
-+#define LC898217XC_MSB_ADDR 132
-+
-+static const char *const lc898217xc_supply_names[] = {
-+	"vcc",
-+};
-+
-+struct lc898217xc {
-+	struct regulator_bulk_data supplies[ARRAY_SIZE(lc898217xc_supply_names)];
-+	struct v4l2_ctrl_handler ctrls;
-+	struct v4l2_ctrl *focus;
-+	struct v4l2_subdev sd;
-+};
-+
-+static inline struct lc898217xc *sd_to_lc898217xc(struct v4l2_subdev *subdev)
-+{
-+	return container_of(subdev, struct lc898217xc, sd);
-+}
-+
-+static int lc898217xc_set_dac(struct lc898217xc *lc898217xc, u16 val)
-+{
-+	struct i2c_client *client = v4l2_get_subdevdata(&lc898217xc->sd);
-+
-+	return i2c_smbus_write_word_swapped(client, LC898217XC_MSB_ADDR, val);
-+}
-+
-+static int __maybe_unused lc898217xc_runtime_suspend(struct device *dev)
-+{
-+	struct v4l2_subdev *sd = dev_get_drvdata(dev);
-+	struct lc898217xc *lc898217xc = sd_to_lc898217xc(sd);
-+
-+	regulator_bulk_disable(ARRAY_SIZE(lc898217xc_supply_names),
-+			       lc898217xc->supplies);
-+
-+	return 0;
-+}
-+
-+static int __maybe_unused lc898217xc_runtime_resume(struct device *dev)
-+{
-+	struct v4l2_subdev *sd = dev_get_drvdata(dev);
-+	struct lc898217xc *lc898217xc = sd_to_lc898217xc(sd);
-+	int ret;
-+
-+	ret = regulator_bulk_enable(ARRAY_SIZE(lc898217xc_supply_names),
-+				    lc898217xc->supplies);
-+
-+	if (ret < 0) {
-+		dev_err(dev, "failed to enable regulators\n");
-+		return ret;
-+	}
-+
-+	usleep_range(8000, 10000);
-+
-+	return ret;
-+}
-+
-+static int lc898217xc_set_ctrl(struct v4l2_ctrl *ctrl)
-+{
-+	struct lc898217xc *lc898217xc =
-+		container_of(ctrl->handler, struct lc898217xc, ctrls);
-+
-+	if (ctrl->id == V4L2_CID_FOCUS_ABSOLUTE)
-+		return lc898217xc_set_dac(lc898217xc, ctrl->val);
-+
-+	return 0;
-+}
-+
-+static const struct v4l2_ctrl_ops lc898217xc_ctrl_ops = {
-+	.s_ctrl = lc898217xc_set_ctrl,
-+};
-+
-+static int lc898217xc_open(struct v4l2_subdev *sd, struct v4l2_subdev_fh *fh)
-+{
-+	return pm_runtime_resume_and_get(sd->dev);
-+}
-+
-+static int lc898217xc_close(struct v4l2_subdev *sd, struct v4l2_subdev_fh *fh)
-+{
-+	pm_runtime_mark_last_busy(sd->dev);
-+	pm_runtime_put_autosuspend(sd->dev);
-+
-+	return 0;
-+}
-+
-+static const struct v4l2_subdev_internal_ops lc898217xc_int_ops = {
-+	.open = lc898217xc_open,
-+	.close = lc898217xc_close,
-+};
-+
-+static const struct v4l2_subdev_core_ops lc898217xc_core_ops = {
-+	.log_status = v4l2_ctrl_subdev_log_status,
-+	.subscribe_event = v4l2_ctrl_subdev_subscribe_event,
-+	.unsubscribe_event = v4l2_event_subdev_unsubscribe,
-+};
-+
-+static const struct v4l2_subdev_ops lc898217xc_ops = {
-+	.core = &lc898217xc_core_ops,
-+};
-+
-+static int lc898217xc_init_controls(struct lc898217xc *lc898217xc)
-+{
-+	struct v4l2_ctrl_handler *hdl = &lc898217xc->ctrls;
-+	const struct v4l2_ctrl_ops *ops = &lc898217xc_ctrl_ops;
-+
-+	v4l2_ctrl_handler_init(hdl, 1);
-+
-+	lc898217xc->focus = v4l2_ctrl_new_std(hdl, ops, V4L2_CID_FOCUS_ABSOLUTE,
-+					      LC898217XC_MIN_FOCUS_POS,
-+					      LC898217XC_MAX_FOCUS_POS,
-+					      LC898217XC_FOCUS_STEPS, 0);
-+
-+	if (hdl->error)
-+		return hdl->error;
-+
-+	lc898217xc->sd.ctrl_handler = hdl;
-+
-+	return 0;
-+}
-+
-+static int lc898217xc_probe(struct i2c_client *client)
-+{
-+	struct device *dev = &client->dev;
-+	struct lc898217xc *lc898217xc;
-+	unsigned int i;
-+	int ret;
-+
-+	lc898217xc = devm_kzalloc(dev, sizeof(*lc898217xc), GFP_KERNEL);
-+	if (!lc898217xc)
-+		return -ENOMEM;
-+
-+	/* Initialize subdev */
-+	v4l2_i2c_subdev_init(&lc898217xc->sd, client, &lc898217xc_ops);
-+
-+	for (i = 0; i < ARRAY_SIZE(lc898217xc_supply_names); i++)
-+		lc898217xc->supplies[i].supply = lc898217xc_supply_names[i];
-+
-+	ret = devm_regulator_bulk_get(dev, ARRAY_SIZE(lc898217xc_supply_names),
-+				      lc898217xc->supplies);
-+
-+	if (ret) {
-+		dev_err(dev, "failed to get regulators\n");
-+		return ret;
-+	}
-+
-+	/* Initialize controls */
-+	ret = lc898217xc_init_controls(lc898217xc);
-+	if (ret)
-+		goto err_free_handler;
-+
-+	/* Initialize subdev */
-+	lc898217xc->sd.flags |= V4L2_SUBDEV_FL_HAS_DEVNODE |
-+				V4L2_SUBDEV_FL_HAS_EVENTS;
-+	lc898217xc->sd.internal_ops = &lc898217xc_int_ops;
-+
-+	ret = media_entity_pads_init(&lc898217xc->sd.entity, 0, NULL);
-+	if (ret < 0)
-+		goto err_free_handler;
-+
-+	lc898217xc->sd.entity.function = MEDIA_ENT_F_LENS;
-+
-+	pm_runtime_enable(dev);
-+	ret = v4l2_async_register_subdev(&lc898217xc->sd);
-+
-+	if (ret < 0) {
-+		dev_err(dev, "failed to register V4L2 subdev: %d", ret);
-+		goto err_power_off;
-+	}
-+
-+	pm_runtime_set_autosuspend_delay(dev, 1000);
-+	pm_runtime_use_autosuspend(dev);
-+	pm_runtime_idle(dev);
-+
-+	return 0;
-+
-+err_power_off:
-+	pm_runtime_disable(dev);
-+	media_entity_cleanup(&lc898217xc->sd.entity);
-+err_free_handler:
-+	v4l2_ctrl_handler_free(&lc898217xc->ctrls);
-+
-+	return ret;
-+}
-+
-+static void lc898217xc_remove(struct i2c_client *client)
-+{
-+	struct v4l2_subdev *sd = i2c_get_clientdata(client);
-+	struct lc898217xc *lc898217xc = sd_to_lc898217xc(sd);
-+	struct device *dev = &client->dev;
-+
-+	v4l2_async_unregister_subdev(&lc898217xc->sd);
-+	v4l2_ctrl_handler_free(&lc898217xc->ctrls);
-+	media_entity_cleanup(&lc898217xc->sd.entity);
-+	pm_runtime_disable(dev);
-+}
-+
-+static const struct of_device_id lc898217xc_of_table[] = {
-+	{ .compatible = "onnn,lc898217xc" },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, lc898217xc_of_table);
-+
-+static const struct dev_pm_ops lc898217xc_pm_ops = {
-+	SET_RUNTIME_PM_OPS(lc898217xc_runtime_suspend,
-+			   lc898217xc_runtime_resume, NULL)
-+};
-+
-+static struct i2c_driver lc898217xc_i2c_driver = {
-+	.driver = {
-+		.name = LC898217XC_NAME,
-+		.pm = &lc898217xc_pm_ops,
-+		.of_match_table = lc898217xc_of_table,
-+	},
-+	.probe = lc898217xc_probe,
-+	.remove = lc898217xc_remove,
-+};
-+module_i2c_driver(lc898217xc_i2c_driver);
-+
-+MODULE_AUTHOR("Vasiliy Doylov <nekocwd@mainlining.org>");
-+MODULE_DESCRIPTION("Onsemi LC898217XC VCM driver");
-+MODULE_LICENSE("GPL");
+Yes, but since we already have this hack:
 
--- 
-2.48.1
+> That program is buggy, and we're not adding new hacks for new bugs.
+
+Yes, but see below...
+
+> If you ask for an edge-triggered EPOLL event, you get an *edge*
+> triggered EPOLL event. And there is no edge - the pipe was already
+> readable, no edge anywhere in sight.
+
+Yes, the pipe was already readable before before fork, but this condition
+was already "consumed" by the 1st epoll_wait(EPOLLET). Please see below.
+
+> If anything, we might consider removing the crazy "poll_usage" hack in
+> the (probably futile) hope that user space has been fixed.
+
+This would be the best option ;) Until then:
+
+I agree that my test case is "buggy", but afaics it is not buggier than
+userspace programs which rely on the unconditional kill_fasync()'s in
+pipe_read/pipe_write?
+
+So. anon_pipe_write() does
+
+	if (was_empty)
+		wake_up_interruptible_sync_poll(&pipe->rd_wait, EPOLLIN | EPOLLRDNORM);
+	kill_fasync(&pipe->fasync_readers, SIGIO, POLL_IN);
+
+before wait_event(pipe->wr_wait), but before return it does
+
+	if (was_empty || pipe->poll_usage)
+		wake_up_interruptible_sync_poll(&pipe->rd_wait, EPOLLIN | EPOLLRDNORM);
+	kill_fasync(&pipe->fasync_readers, SIGIO, POLL_IN);
+
+and this looks confusing to me.
+
+If pipe_write() doesn't take poll_usage into account before wait_event(wr_wait),
+then it doesn't need kill_fasync() too?
+
+So I won't argue, but why not make both cases more consistent?
+
+Oleg.
 
