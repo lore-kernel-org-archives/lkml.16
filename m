@@ -1,178 +1,150 @@
-Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0687E2D1F41
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 16:15:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EA82259C87;
+	Tue,  4 Mar 2025 16:15:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741104913; cv=none; b=FQTSdmsByOvIby+wt1u+5Ca9QpIi/F5vlmueiIVzJLSDcLH7fnoUo4tbEm1BxqepSLSpepwIC6IPCDE0A4vgfl0VXZ4M+wXwYyKqw1/qsoIqZzgRiM2SZtfEJWyBto/jJJzw+LfdD1p1gb0Bfs7JxGTy06VIMIpCWkQS6nS3uQo=
+	t=1741104925; cv=none; b=Wl94H1/bjM/1z+ymiclZZvOyt7VxqQ/gQRTOFBkf2SDNGbC6HMDvBeDqLED93MGsF266DT+/xEmRNdco31kKX9+6xZeeCSioRYKfX2iUyww59qRg1ekklGb6TV2OcPC29mQyPC7TWzu8KsQuDtqNLtOSUY9zK9GwZTxaQVax4pI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741104913; c=relaxed/simple;
-	bh=HoUdEEUij4AowK9YlSYz+ODggQby4SqBMMaaeIy+IZo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NtV20klUaKACmv28UIBF9TbijopOSTG+snWSm+ZKRMCCJ+DA96b4nmzvSUPGbRxd4Gjdw587fblkDIgrd7p7BxompRPK3JwuRqgDrwLsvTQmyhuEfhdfyu6OVg/ab5heo2TQSpnUXryUhKR5rKOLZHerdgrtcLYTLJY9SRG+xlQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toxicpanda.com; spf=none smtp.mailfrom=toxicpanda.com; dkim=pass (2048-bit key) header.d=toxicpanda-com.20230601.gappssmtp.com header.i=@toxicpanda-com.20230601.gappssmtp.com header.b=Dfnn7tAZ; arc=none smtp.client-ip=209.85.160.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toxicpanda.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toxicpanda.com
+	s=arc-20240116; t=1741104925; c=relaxed/simple;
+	bh=FaitQFZZEqjD/jJ9v92zye6uteHEsM/IP3Sgot+eYM8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=nozAVSKnczdqDsGJGVLHChw8ykn9QcI7018pxhwtYo2Coa25XngQ87y2IWAxcdpsynCf1J5n6SpD8WvewaDuj8QyqAMj4oJAArRsn7yX8BqXMAjF4OR08EDjdjzDrtP4UL1ns/Jq18i3EK6dAseAaukq4jfmViWgHiQSSVvCgkk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=o9OpQSWC; arc=none smtp.client-ip=217.70.183.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toxicpanda-com.20230601.gappssmtp.com header.i=@toxicpanda-com.20230601.gappssmtp.com header.b="Dfnn7tAZ"
-Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-47509ac80cbso850521cf.0
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Mar 2025 08:15:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toxicpanda-com.20230601.gappssmtp.com; s=20230601; t=1741104911; x=1741709711; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=Yn/mVNLBd6udkX5JiXXuHWAdMeM57oaufTToD3WukKw=;
-        b=Dfnn7tAZ/Sxotj5vmOnH7uB1/z34MJBlvcJ4RethG9Xo4c1rYRWSkp8N+q+O7gntpy
-         0ubuCoxTlP6/wwkrIyM0UbTMGjD12pCEDeDm4pYpPIRxUxzHALdlBSlMonzTQd1Xb4sf
-         qRl16sVK/oZ2dnSIHyQ3eKqwiUzyF52fgAFdvYLGb5xFHV06YLG2+h5FXtyMXws8Vdqi
-         xoOdT8hCmVJjBoAW9dJq7GUwr26/sAEnf04Oz1RMN2Z67S054yi68XJkH1pFBhUWVWTO
-         ahGf7PQpjJeOSuGY1rL+Z5F+GpU3deOYiGad00ifwEuxg71NtgcN5spHuIs5ul2m+FRN
-         OC9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741104911; x=1741709711;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Yn/mVNLBd6udkX5JiXXuHWAdMeM57oaufTToD3WukKw=;
-        b=SP+2esG+R/E33KxmbrzbjBvq+PWrSstbB3A2Ivvw5riESg2kOu5nzmWdwrvHoMN3aY
-         xdqB6k8G/QAXcqZPZiFMLdy8MSgpkFoEZkoePtL8Eh1hS5Iitr/1Sf7YnzlFfe19Qwil
-         LRrN7GV+wEGPBzGCERsf03Q/i+F2NIvMk3iFWOsrrl+1EmTrcgfuZtrrESE5HZDrkUKH
-         RY2M2TQBUxzTFfHzX2nzglR0PxMleBnHYfyp0mii5OfpqVYxYyE5Y+vgjrlK31nBZhV7
-         dYBQ1wcmtPzDYBmzWNIaw2UHi3sBJ5Qv9FKtm/zWPn0IP2K3XICPc2mv+q2fTdPX95DU
-         E5Fw==
-X-Forwarded-Encrypted: i=1; AJvYcCXhfNIDiljZyfKlYmIkRZqREuHcSU+R+5spR0vIo+jvQ9HmppQcoBlbAC/LA+YoVG42QOgkJ7Q+bdjnPRA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YydJQ5AofDlseJIaRXDgpcHTNT1NhtQXtG6WYdvniU2AGrmbv0n
-	8QeeyV8ZOTe+ELgRDgYzyHCjnS1y5o6wIk/S7TzS1A+MlI1Y7Rl037iB3eKjObc=
-X-Gm-Gg: ASbGnctbsLKCXWaUGkjryJjtDXBTgJQoqeWsfRoB6dOIziqcPKIOxXLU0bBWbDyTWzE
-	3yK9diNm5McLYQrOrCYBnpRcp7M4slXYf4q2SjgBsRedR2ntWVgyrgIr0qGn6prVhKcJ4W4ptCL
-	yUuPOzZRhPuZU8qBYhpLi1WJpHsleos0wIccip6ejHgWxX79PD6sFNq6j3yo9P0lfKWBrm2BdM+
-	uJ9xHDqsuncOgSTICNhB8b9EEMOJ0UMyUjjDC9E9psjI9yErU9hyYnBIroCdtOH0EwVRdcWsISY
-	L1IMeFrNLS17+qbQqeECuoahxoQmCvjYFfQPkYBz+n6syJszdyUpv6i8Kq/g8OQaQfVHrJUmC2j
-	2wpUpgw==
-X-Google-Smtp-Source: AGHT+IET7KPbwwaDJPgxaLzaAdHSOjh+Hip5XZIqRDysdxQdHiaEvAFtjPuu1+nbA8r6dL+tqRwBGA==
-X-Received: by 2002:ac8:5a49:0:b0:471:a523:6ac1 with SMTP id d75a77b69052e-474bc0558bcmr281954941cf.6.1741104910839;
-        Tue, 04 Mar 2025 08:15:10 -0800 (PST)
-Received: from localhost (syn-076-182-020-124.res.spectrum.com. [76.182.20.124])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-47503d688f7sm5731921cf.56.2025.03.04.08.15.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Mar 2025 08:15:10 -0800 (PST)
-Date: Tue, 4 Mar 2025 11:15:09 -0500
-From: Josef Bacik <josef@toxicpanda.com>
-To: Amir Goldstein <amir73il@gmail.com>
-Cc: Jan Kara <jack@suse.cz>,
-	syzbot <syzbot+7229071b47908b19d5b7@syzkaller.appspotmail.com>,
-	akpm@linux-foundation.org, axboe@kernel.dk, brauner@kernel.org,
-	cem@kernel.org, chandan.babu@oracle.com, djwong@kernel.org,
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, linux-xfs@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [xfs?] WARNING in fsnotify_file_area_perm
-Message-ID: <20250304161509.GA4047943@perftesting>
-References: <67a487f7.050a0220.19061f.05fc.GAE@google.com>
- <67c4881e.050a0220.1dee4d.0054.GAE@google.com>
- <7ehxrhbvehlrjwvrduoxsao5k3x4aw275patsb3krkwuq573yv@o2hskrfawbnc>
- <CAOQ4uxjf5H_vj-swF7wEvUkPobEuxs2q6jfO9jFsx4pqxtJMMg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="o9OpQSWC"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id C0A8720479;
+	Tue,  4 Mar 2025 16:15:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1741104921;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=CqAT5+Gi1O68uLcYreVHzC9MDAGC4lcpXT9gC3flVdI=;
+	b=o9OpQSWCPcLhU75kNX2KB5/lnvHNChPaWtHihmyulicnkYRnOi0iBSibqDPh1HIurd5oXa
+	I8YiOwkICGHH3ijfJHOspj/VJLvjtz2DlSh+Bm5gAyC7rHHtSLhXp143kVLyZS0xblCbxy
+	GnHWOPVcYD+nAQ+wn2K1khX2vrkj+D8MMHwmxxkUTTFCFshXEbkYNMnhpxi7X2Lc7pqTfa
+	cNNZwJoEJqtLXnVLoXIKDuvzE+ZQybJEVzqdOfexBoUSMDrrWx0uFTJd3uDtXqx/sUU5je
+	uSScUY8lwpYIcZOGgvyNhh4fd3+xdXA3FGhygoOH6J5hzvElm5v03SYg1D1rww==
+Date: Tue, 4 Mar 2025 17:15:15 +0100
+From: Maxime Chevallier <maxime.chevallier@bootlin.com>
+To: Kory Maincent <kory.maincent@bootlin.com>
+Cc: davem@davemloft.net, Andrew Lunn <andrew@lunn.ch>, Jakub Kicinski
+ <kuba@kernel.org>, Eric Dumazet <edumazet@google.com>, Paolo Abeni
+ <pabeni@redhat.com>, Heiner Kallweit <hkallweit1@gmail.com>,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ thomas.petazzoni@bootlin.com, linux-arm-kernel@lists.infradead.org,
+ Christophe Leroy <christophe.leroy@csgroup.eu>, Herve Codina
+ <herve.codina@bootlin.com>, Florian Fainelli <f.fainelli@gmail.com>,
+ Russell King <linux@armlinux.org.uk>, Vladimir Oltean
+ <vladimir.oltean@nxp.com>, Oleksij Rempel <o.rempel@pengutronix.de>, Simon
+ Horman <horms@kernel.org>, Romain Gantois <romain.gantois@bootlin.com>,
+ Piergiorgio Beruto <piergiorgio.beruto@gmail.com>
+Subject: Re: [PATCH net] net: ethtool: Set the req_info->dev on DUMP
+ requests for each dev
+Message-ID: <20250304171515.297d15df@fedora.home>
+In-Reply-To: <20250304170051.607097e9@kmaincent-XPS-13-7390>
+References: <20250302162137.698092-1-maxime.chevallier@bootlin.com>
+	<20250304170051.607097e9@kmaincent-XPS-13-7390>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAOQ4uxjf5H_vj-swF7wEvUkPobEuxs2q6jfO9jFsx4pqxtJMMg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddutddvhedtucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtqhertdertdejnecuhfhrohhmpeforgigihhmvgcuvehhvghvrghllhhivghruceomhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepuefhfefggfdthffghfdvhffhhfetuedtkeetgffhteevheehjeejgfduieduhedunecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopehfvgguohhrrgdrhhhomhgvpdhmrghilhhfrhhomhepmhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepvddtpdhrtghpthhtohepkhhorhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomhdprhgtphhtthhopegurghvvghmsegurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtoheprghnughrvgifsehluhhnnhdrtghhpdhrtghpthhtohepkhhusggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegvughumhgriigvthesghhoohhglhgvrdgtohhmpdhrt
+ ghpthhtohepphgrsggvnhhisehrvgguhhgrthdrtghomhdprhgtphhtthhopehhkhgrlhhlfigvihhtudesghhmrghilhdrtghomhdprhgtphhtthhopehnvghtuggvvhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-GND-Sasl: maxime.chevallier@bootlin.com
 
-On Tue, Mar 04, 2025 at 04:09:16PM +0100, Amir Goldstein wrote:
-> On Tue, Mar 4, 2025 at 12:06 PM Jan Kara <jack@suse.cz> wrote:
-> >
-> > Josef, Amir,
-> >
-> > this is indeed an interesting case:
-> >
-> > On Sun 02-03-25 08:32:30, syzbot wrote:
-> > > syzbot has found a reproducer for the following issue on:
-> > ...
-> > > ------------[ cut here ]------------
-> > > WARNING: CPU: 1 PID: 6440 at ./include/linux/fsnotify.h:145 fsnotify_file_area_perm+0x20c/0x25c include/linux/fsnotify.h:145
-> > > Modules linked in:
-> > > CPU: 1 UID: 0 PID: 6440 Comm: syz-executor370 Not tainted 6.14.0-rc4-syzkaller-ge056da87c780 #0
-> > > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 12/27/2024
-> > > pstate: 80400005 (Nzcv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-> > > pc : fsnotify_file_area_perm+0x20c/0x25c include/linux/fsnotify.h:145
-> > > lr : fsnotify_file_area_perm+0x20c/0x25c include/linux/fsnotify.h:145
-> > > sp : ffff8000a42569d0
-> > > x29: ffff8000a42569d0 x28: ffff0000dcec1b48 x27: ffff0000d68a1708
-> > > x26: ffff0000d68a16c0 x25: dfff800000000000 x24: 0000000000008000
-> > > x23: 0000000000000001 x22: ffff8000a4256b00 x21: 0000000000001000
-> > > x20: 0000000000000010 x19: ffff0000d68a16c0 x18: ffff8000a42566e0
-> > > x17: 000000000000e388 x16: ffff800080466c24 x15: 0000000000000001
-> > > x14: 1fffe0001b31513c x13: 0000000000000000 x12: 0000000000000000
-> > > x11: 0000000000000001 x10: 0000000000ff0100 x9 : 0000000000000000
-> > > x8 : ffff0000c6d98000 x7 : 0000000000000000 x6 : 0000000000000000
-> > > x5 : 0000000000000020 x4 : 0000000000000000 x3 : 0000000000001000
-> > > x2 : ffff8000a4256b00 x1 : 0000000000000001 x0 : 0000000000000000
-> > > Call trace:
-> > >  fsnotify_file_area_perm+0x20c/0x25c include/linux/fsnotify.h:145 (P)
-> > >  filemap_fault+0x12b0/0x1518 mm/filemap.c:3509
-> > >  xfs_filemap_fault+0xc4/0x194 fs/xfs/xfs_file.c:1543
-> > >  __do_fault+0xf8/0x498 mm/memory.c:4988
-> > >  do_read_fault mm/memory.c:5403 [inline]
-> > >  do_fault mm/memory.c:5537 [inline]
-> > >  do_pte_missing mm/memory.c:4058 [inline]
-> > >  handle_pte_fault+0x3504/0x57b0 mm/memory.c:5900
-> > >  __handle_mm_fault mm/memory.c:6043 [inline]
-> > >  handle_mm_fault+0xfa8/0x188c mm/memory.c:6212
-> > >  do_page_fault+0x570/0x10a8 arch/arm64/mm/fault.c:690
-> > >  do_translation_fault+0xc4/0x114 arch/arm64/mm/fault.c:783
-> > >  do_mem_abort+0x74/0x200 arch/arm64/mm/fault.c:919
-> > >  el1_abort+0x3c/0x5c arch/arm64/kernel/entry-common.c:432
-> > >  el1h_64_sync_handler+0x60/0xcc arch/arm64/kernel/entry-common.c:510
-> > >  el1h_64_sync+0x6c/0x70 arch/arm64/kernel/entry.S:595
-> > >  __uaccess_mask_ptr arch/arm64/include/asm/uaccess.h:169 [inline] (P)
-> > >  fault_in_readable+0x168/0x310 mm/gup.c:2234 (P)
-> > >  fault_in_iov_iter_readable+0x1dc/0x22c lib/iov_iter.c:94
-> > >  iomap_write_iter fs/iomap/buffered-io.c:950 [inline]
-> > >  iomap_file_buffered_write+0x490/0xd54 fs/iomap/buffered-io.c:1039
-> > >  xfs_file_buffered_write+0x2dc/0xac8 fs/xfs/xfs_file.c:792
-> > >  xfs_file_write_iter+0x2c4/0x6ac fs/xfs/xfs_file.c:881
-> > >  new_sync_write fs/read_write.c:586 [inline]
-> > >  vfs_write+0x704/0xa9c fs/read_write.c:679
-> >
-> > The backtrace actually explains it all. We had a buffered write whose
-> > buffer was mmapped file on a filesystem with an HSM mark. Now the prefaulting
-> > of the buffer happens already (quite deep) under the filesystem freeze
-> > protection (obtained in vfs_write()) which breaks assumptions of HSM code
-> > and introduces potential deadlock of HSM handler in userspace with filesystem
-> > freezing. So we need to think how to deal with this case...
-> 
-> Ouch. It's like the splice mess all over again.
-> Except we do not really care to make this use case work with HSM
-> in the sense that we do not care to have to fill in the mmaped file content
-> in this corner case - we just need to let HSM fail the access if content is
-> not available.
-> 
-> If you remember, in one of my very early version of pre-content events,
-> the pre-content event (or maybe it was FAN_ACCESS_PERM itself)
-> carried a flag (I think it was called FAN_PRE_VFS) to communicate to
-> HSM service if it was safe to write to fs in the context of event handling.
-> 
-> At the moment, I cannot think of any elegant way out of this use case
-> except annotating the event from fault_in_readable() as "unsafe-for-write".
-> This will relax the debugging code assertion and notify the HSM service
-> (via an event flag) that it can ALLOW/DENY, but it cannot fill the file.
-> Maybe we can reuse the FAN_ACCESS_PERM event to communicate
-> this case to HSM service.
-> 
-> WDYT?
+Hi K=C3=B6ry,
 
-I think that mmap was a mistake.
+On Tue, 4 Mar 2025 17:00:51 +0100
+Kory Maincent <kory.maincent@bootlin.com> wrote:
 
-Is there a way to tell if we're currently in a path that is under fsfreeze
-protection?  Just denying this case would be a simpler short term solution while
-we come up with a long term solution. I think your solution is fine, but I'd be
-just as happy with a simpler "this isn't allowed" solution. Thanks,
+> On Sun,  2 Mar 2025 17:21:36 +0100
+> Maxime Chevallier <maxime.chevallier@bootlin.com> wrote:
+>=20
+> > There are a few netlink commands that rely on the req_info->dev field
+> > being populated by ethnl in their ->prepare_data() and ->fill_reply().
+> >=20
+> > For a regular GET request, this will be set by ethnl_default_parse(),
+> > which calls ethnl_parse_header_dev_get().
+> >=20
+> > In the case of a DUMP request, the ->prepare_data() and ->fill_reply()
+> > callbacks will be called with the req_info->dev being NULL, which can
+> > cause discrepancies in the behaviour between GET and DUMP results.
+> >=20
+> > The main impact is that ethnl_req_get_phydev() will not find any
+> > phy_device, impacting :
+> >  - plca
+> >  - pse-pd
+> >  - stats
+> >=20
+> > Some other commands rely on req_info->dev, namely :
+> >  - coalesce in ->fill_reply to look for an irq_moder
+> >=20
+> > Although cable_test and tunnels also rely on req_info->dev being set,
+> > that's not a problem for these commands as :
+> >  - cable_test doesn't support DUMP
+> >  - tunnels rolls its own ->dumpit (and sets dev in the req_info).
+> >  - phy also has its own ->dumpit
+> >=20
+> > All other commands use reply_data->dev (probably the correct way of
+> > doing things) and aren't facing this issue.
+> >=20
+> > Simply set the dev in the req_info context when iterating to dump each
+> > dev.
+> >=20
+> > Fixes: c15e065b46dc ("net: ethtool: Allow passing a phy index for some
+> > commands") Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.=
+com>
+> > ---
+> >=20
+> > Fixes tag targets the phy-index commit, as it introduced a change in
+> > behaviour for PLCA. From what I can tell, coalesce never correctly
+> > detected irq_moder in DUMP requests.
+> >=20
+> > We could also consider fixing all individual commands that use
+> > req_info->dev, however I'm not actually sure it's incorrect to do so,
+> > feel free to correct me though.
+> >=20
+> > Maxime
+> >=20
+> >  net/ethtool/netlink.c | 1 +
+> >  1 file changed, 1 insertion(+)
+> >=20
+> > diff --git a/net/ethtool/netlink.c b/net/ethtool/netlink.c
+> > index b4c45207fa32..de967961d8fe 100644
+> > --- a/net/ethtool/netlink.c
+> > +++ b/net/ethtool/netlink.c
+> > @@ -582,6 +582,7 @@ static int ethnl_default_dumpit(struct sk_buff *skb,
+> >  		dev_hold(dev);
+> >  		rcu_read_unlock();
+> > =20
+> > +		ctx->req_info->dev =3D dev; =20
+>=20
+> I would rather put it in ethnl_default_dump_one() before
+> ethnl_init_reply_data() call.
 
-Josef
+Ah yes true, that'll be more consistent with the other callpaths.
+
+> With this change:
+> Reviewed-by: Kory Maincent <kory.maincent@bootlin.com>
+> Tested-by: Kory Maincent <kory.maincent@bootlin.com>
+
+Thank you for testing, I'll respin.
+
+Maxime
+
+>=20
+
