@@ -1,168 +1,88 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A0E6A136347;
-	Tue,  4 Mar 2025 01:47:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from out203-205-221-205.mail.qq.com (out203-205-221-205.mail.qq.com [203.205.221.205])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B13FDF5C
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 01:51:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.205
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741052851; cv=none; b=YAOtCvL9rO/Z9Uc+/NGgPDrO3+s2sCishrGwLHjnqYm5SyTUqUAr4jIErGRnobmCZHCrDtE/5pmQWPLyN+t/ljkuMb3X0YGWoZOr7MaZokGnWud4hws3+HSaoXqtejhT3Ybqh4nj1cv4W1vdiYaCBoEKrPcxP0g9pR0pQJj4JQA=
+	t=1741053090; cv=none; b=aVqsHKHtBqua4X3zNbC6kWFp6jJ7veElXUqZVwga88h9KqYvo/A29yv48s40OHvGbn8Ol1iIUzJoW1F46AMmpgPKI9/nDB+uhKrk0tMR2hzVBcX58pKTqbalIYSYfGc77Um+lwRwukDcJFQlubExlsfcrATD5bBPBIQAeCeUkew=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741052851; c=relaxed/simple;
-	bh=itatnIBL9MuZ4JyVcFNO6XYKdUfb6qT39ConBCUndNA=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=r1C518cMLcZzIb62Zr2XlGpkPYiGK/I0PbdtuEyC1sEoxVvmQCpAXxv3orXAtuAsz65IvkQ+mFaZrr6YwP+Qlf0TQKQ8F3Q2ZZXpTv2+gVsffJTqxvpC5/Unq8PcRAwGfUPopxTFEbEq+AnyWzRabXg+hXYeNdGT2Am5f9FHzVg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxonhyperv.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linuxonhyperv.com header.i=@linuxonhyperv.com header.b=D0mGKI6u; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxonhyperv.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1741053090; c=relaxed/simple;
+	bh=Tnc9QYLFHMTbHxf9Pjrurw2eFXWx2cGybMwUu8FZlxU=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=dNXu6npwwoZ/fhdsBKH1JEiN7crBNz8fShrrxzt+jasyh3lkSXDPHVJMwDsidIqT5kZ9K5g9lhichAD0hS9rgD5xLTI4W7fUvBSHrqEH0Bbi+E/hT/4fEU0OJYnBjrxAgX94e2lJ1egBvCnBHICXj62vwkWusaQLK0rALWC0+Do=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=BEvOCYxu; arc=none smtp.client-ip=203.205.221.205
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxonhyperv.com header.i=@linuxonhyperv.com header.b="D0mGKI6u"
-Received: by linux.microsoft.com (Postfix, from userid 1202)
-	id 126D9204E5B9; Mon,  3 Mar 2025 17:47:29 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 126D9204E5B9
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linuxonhyperv.com;
-	s=default; t=1741052849;
-	bh=bSP8AbizQps9S7CQl+lE3G/sxd1tc37Q1iVyE0aCu4E=;
-	h=From:To:Cc:Subject:Date:From;
-	b=D0mGKI6uNQC7M8tBttoqq04lMw5G7hJuaBOvg8Ik25rMIlz0LVhg9gc8g9KhJl5LW
-	 aAGnM6+7DQA37FbOt2xvRVvgYjMjtHd+KDyJzouq6xnrdQfWD4NN25CdebFgXS55Yc
-	 fl/n09UL+OV3MLYe0NSOTTlItLTOha3XtvRKC7GI=
-From: longli@linuxonhyperv.com
-To: Jason Gunthorpe <jgg@ziepe.ca>,
-	Leon Romanovsky <leon@kernel.org>,
-	Konstantin Taranov <kotaranov@microsoft.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>
-Cc: linux-rdma@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-hyperv@vger.kernel.org,
-	Long Li <longli@microsoft.com>
-Subject: [Patch rdma-next v2] RDMA/mana_ib: handle net event for pointing to the current netdev
-Date: Mon,  3 Mar 2025 17:47:27 -0800
-Message-Id: <1741052847-8271-1-git-send-email-longli@linuxonhyperv.com>
-X-Mailer: git-send-email 1.8.3.1
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="BEvOCYxu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1741053083; bh=4IpTC/uMXQrR+mSWj3V7OazI/DHQCb0+Nh1aJnKfhbU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=BEvOCYxupWLlzBOoLLtnzdCe9PpAnfq9luphzJQy74jrTb0SzHrvV561bOd40UyKO
+	 0/3vY6C1/m476foieOeKk52SIRM8CwMqz7nLqMIqiRqRSkV2ByoixZgu4Q4iBM6FWN
+	 /VqDm6YcF7eb+KMOpvgJRlsTjaDoRF/gMfJ7UYbw=
+Received: from pek-lxu-l1.wrs.com ([114.244.57.157])
+	by newxmesmtplogicsvrsza29-0.qq.com (NewEsmtp) with SMTP
+	id 98BA0EF2; Tue, 04 Mar 2025 09:38:11 +0800
+X-QQ-mid: xmsmtpt1741052291t2njof3fz
+Message-ID: <tencent_2CD78CA727DD06C992F4C65189BE6ED72E06@qq.com>
+X-QQ-XMAILINFO: Mjkyxxrp/C7/w0LCZrseFHRR8LydWfyBpbFiC51y+loJdogg05mzeDk8J8yAkF
+	 NFQrvohgwrgrStIC81wx+EN/p1y+jqyJuURHMuYHI1hATNTFud7wJDkHEXM/IaCigbNCz9vsFLxU
+	 Zpko4T3bJ0wuUDsHGpMUBv7/t3vpwXG+iZW6SLrWDsBYT4Sm7yGJaCOrguJH+Q+QVNUePvdWWtva
+	 4LrVUCJFeLOTuICT5douHOWaF3TtYy4biHJByeXo7sxtTpL7h15dl/n4kSED6KW9qHFvH82wo6iN
+	 ZWoAxyIKbWJHu3iS8nVX1JKfcPmkhfURC8IRiNmLFLXUIQG82AV0uEOLlt4/wdxZQL0HIi/bMRbA
+	 6XVQ7BF4bOfnJQXI6rMRsSE4nliyS4xX5aKg9iZoeP0HtgNO3xBnHYmqAbRqlA72Ew2Lly5q64Rh
+	 K4seRtCGjJ6w01swEUmvAlBeWW3m5tRo/LrVpXWoep1eor9Pvj6XY74/kZFXBFCdjRJL9km1cyIj
+	 0xbwfo1ObtUxoDlrRm+zoFTUKozJ+6fmBvkfuJ/z0DEOGT07ERfeatha2HODGMaSkHNMuPJMkAob
+	 eK2o21gVtonOPBBi/fyWELn4PnTMBBu5RTVLVZbLfA7DhPrHbd4wUThaY0IbnrNxejb3sYhcCtSd
+	 cwmuBZbb4HWymJrJelQB+q5i8nlgY08LSSj1D9yBBm8EC1sUDzXQSNrq5VMruJnf0i8LDj7zsNWu
+	 OAGfXGpQx7MU/jj/4fOUegDu1SIyuylhSo9tUNMtXxzhwwcHUZNxK8XDUjgPOG6Q4QKFHR5VlraO
+	 SHxNODUrx3haXPskup041mEtUcUlvDG/inGRlrFAwCPwcUvwz3900QlzfgxxJ4fuIgpnoDngpf94
+	 /RMMyDfC+z0rv/o4OSUu6gGCl4qY7z0EKFjHP/0//Y
+X-QQ-XMRINFO: NS+P29fieYNw95Bth2bWPxk=
+From: Edward Adam Davis <eadavis@qq.com>
+To: syzbot+8f9f411152c9539f4e59@syzkaller.appspotmail.com
+Cc: linux-kernel@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [xfs?] [mm?] WARNING: bad unlock balance in __mm_populate
+Date: Tue,  4 Mar 2025 09:38:07 +0800
+X-OQ-MSGID: <20250304013806.4172685-2-eadavis@qq.com>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <67c49230.050a0220.55417.04d5.GAE@google.com>
+References: <67c49230.050a0220.55417.04d5.GAE@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-From: Long Li <longli@microsoft.com>
+#syz test
 
-When running under Hyper-V, the master device to the RDMA device is always
-bonded to this RDMA device. This is not user-configurable.
-
-The master device can be unbind/bind from the kernel. During those events,
-the RDMA device should set to the current netdev to relect the change of
-master device from those events.
-
-Signed-off-by: Long Li <longli@microsoft.com>
----
-Change in v2:
-Add missing error handling when register_netdevice_notifier() fails.
-
- drivers/infiniband/hw/mana/device.c  | 46 ++++++++++++++++++++++++++--
- drivers/infiniband/hw/mana/mana_ib.h |  1 +
- 2 files changed, 45 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/infiniband/hw/mana/device.c b/drivers/infiniband/hw/mana/device.c
-index 3416a85f8738..8c922a6d6720 100644
---- a/drivers/infiniband/hw/mana/device.c
-+++ b/drivers/infiniband/hw/mana/device.c
-@@ -51,6 +51,37 @@ static const struct ib_device_ops mana_ib_dev_ops = {
- 			   ib_ind_table),
- };
+diff --git a/mm/gup.c b/mm/gup.c
+index 3883b307780e..4caa7c635320 100644
+--- a/mm/gup.c
++++ b/mm/gup.c
+@@ -1998,7 +1998,11 @@ int __mm_populate(unsigned long start, unsigned long len, int ignore_errors)
+ 	struct vm_area_struct *vma = NULL;
+ 	int locked = 0;
+ 	long ret = 0;
++	static poping = 0;
  
-+static int mana_ib_netdev_event(struct notifier_block *this,
-+				unsigned long event, void *ptr)
-+{
-+	struct mana_ib_dev *dev = container_of(this, struct mana_ib_dev, nb);
-+	struct net_device *event_dev = netdev_notifier_info_to_dev(ptr);
-+	struct gdma_context *gc = dev->gdma_dev->gdma_context;
-+	struct mana_context *mc = gc->mana.driver_data;
-+	struct net_device *ndev;
-+
-+	if (event_dev != mc->ports[0])
-+		return NOTIFY_DONE;
-+
-+	switch (event) {
-+	case NETDEV_CHANGEUPPER:
-+		rcu_read_lock();
-+		ndev = mana_get_primary_netdev_rcu(mc, 0);
-+		rcu_read_unlock();
-+
-+		/*
-+		 * RDMA core will setup GID based on updated netdev.
-+		 * It's not possible to race with the core as rtnl lock is being
-+		 * held.
-+		 */
-+		ib_device_set_netdev(&dev->ib_dev, ndev, 1);
-+
-+		return NOTIFY_OK;
-+	default:
-+		return NOTIFY_DONE;
-+	}
-+}
-+
- static int mana_ib_probe(struct auxiliary_device *adev,
- 			 const struct auxiliary_device_id *id)
- {
-@@ -109,17 +140,25 @@ static int mana_ib_probe(struct auxiliary_device *adev,
++	if (poping)
++		return 0;
++	poping = 1;
+ 	end = start + len;
+ 
+ 	for (nstart = start; nstart < end; nstart = nend) {
+@@ -2042,6 +2046,7 @@ int __mm_populate(unsigned long start, unsigned long len, int ignore_errors)
  	}
- 	dev->gdma_dev = &mdev->gdma_context->mana_ib;
- 
-+	dev->nb.notifier_call = mana_ib_netdev_event;
-+	ret = register_netdevice_notifier(&dev->nb);
-+	if (ret) {
-+		ibdev_err(&dev->ib_dev, "Failed to register net notifier, %d",
-+			  ret);
-+		goto deregister_device;
-+	}
-+
- 	ret = mana_ib_gd_query_adapter_caps(dev);
- 	if (ret) {
- 		ibdev_err(&dev->ib_dev, "Failed to query device caps, ret %d",
- 			  ret);
--		goto deregister_device;
-+		goto deregister_net_notifier;
- 	}
- 
- 	ret = mana_ib_create_eqs(dev);
- 	if (ret) {
- 		ibdev_err(&dev->ib_dev, "Failed to create EQs, ret %d", ret);
--		goto deregister_device;
-+		goto deregister_net_notifier;
- 	}
- 
- 	ret = mana_ib_gd_create_rnic_adapter(dev);
-@@ -148,6 +187,8 @@ static int mana_ib_probe(struct auxiliary_device *adev,
- 	mana_ib_gd_destroy_rnic_adapter(dev);
- destroy_eqs:
- 	mana_ib_destroy_eqs(dev);
-+deregister_net_notifier:
-+	unregister_netdevice_notifier(&dev->nb);
- deregister_device:
- 	mana_gd_deregister_device(dev->gdma_dev);
- free_ib_device:
-@@ -164,6 +205,7 @@ static void mana_ib_remove(struct auxiliary_device *adev)
- 	mana_ib_gd_destroy_rnic_adapter(dev);
- 	mana_ib_destroy_eqs(dev);
- 	mana_gd_deregister_device(dev->gdma_dev);
-+	unregister_netdevice_notifier(&dev->nb);
- 	ib_dealloc_device(&dev->ib_dev);
+ 	if (locked)
+ 		mmap_read_unlock(mm);
++	poping = 0;
+ 	return ret;	/* 0 or negative error code */
  }
- 
-diff --git a/drivers/infiniband/hw/mana/mana_ib.h b/drivers/infiniband/hw/mana/mana_ib.h
-index b53a5b4de908..d88187072899 100644
---- a/drivers/infiniband/hw/mana/mana_ib.h
-+++ b/drivers/infiniband/hw/mana/mana_ib.h
-@@ -64,6 +64,7 @@ struct mana_ib_dev {
- 	struct gdma_queue **eqs;
- 	struct xarray qp_table_wq;
- 	struct mana_ib_adapter_caps adapter_caps;
-+	struct notifier_block nb;
- };
- 
- struct mana_ib_wq {
--- 
-2.34.1
+ #else /* CONFIG_MMU */
 
