@@ -1,60 +1,62 @@
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 419C424EA85;
-	Tue,  4 Mar 2025 18:35:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 520F725F979;
+	Tue,  4 Mar 2025 18:35:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741113322; cv=none; b=lwjxRsQcVEXJhMXvlKMZuT0AD3hZ7DJ7dZaYTMrqIME7r8YYBlKmyUr2lR1gepvcrAK/DWMtUVf/ZNfAQaAIBBvm5ZDWMldRwdKll5hg0aA3hqtJS4CmR7WhwY+mheOoE8ySvrBKrBNRiZXlUFqTgnjZCy2UfEr/m6VbD1Rcl0M=
+	t=1741113325; cv=none; b=iPeoMKxHupqxjlkvWSGUtVw8XdFhpSFwqA60sR7uW5MJVpU85PH00z469p27ZPJ1wdZ4h+b3+IhSnQAR9EIx3Eionp416rbINk2wtfhIKCNCIeFtmCQjzlkA+RWY7cDN/qxbLbpgZJrdnZOcCZcYZvaOP/Yo2LG31gL6ZJyR7pU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741113322; c=relaxed/simple;
-	bh=bdqLolqLrNOQTG0xL25LOQlvD9pbCT1gykmvKt6j8ik=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=aLAwr6vd1olIckfN0t9Op3CdHqNUUo/+rKiLDWgRuR/eb73V+W6qsUk84cg0xAjGOSgMSQzRNzRyAIInC2W5avYC4NtbnwfEpP0OdaRg7uGWjCdB6l5z90MAJV05PkjtffcskGx51C4tm954g5+aB6IkLZjZdb0wUb0MNZgoWik=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TZhTxO7W; arc=none smtp.client-ip=209.85.208.51
+	s=arc-20240116; t=1741113325; c=relaxed/simple;
+	bh=IZKkII3GsTbBpXvb55aEojomBZ87Acjg3RlbkVqzuKg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=SIBaoKL+kODCfFTeTmyItQ4ki/Z+nJLb2uy5taiZ774sUsZwYrvYKFCWag87/8+osF54h2xJXe4GfavD9RqAJjYOEGMC7u09QRK0vBT+58ai2M/wTXpJsCqxZ3WgTsTr136wAudieRKL9u8P9s3lge0nPw9DiubOyk+EHJGJ10M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=alX1RNYG; arc=none smtp.client-ip=209.85.208.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TZhTxO7W"
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5dccaaca646so177740a12.0;
-        Tue, 04 Mar 2025 10:35:18 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="alX1RNYG"
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5e095d47a25so10521921a12.0;
+        Tue, 04 Mar 2025 10:35:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741113317; x=1741718117; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=z+J95x80BXx1IFj8d9HujegeeTJ5w2Jkd/IoDuq5DfM=;
-        b=TZhTxO7Wipwuw5+6lF5hxw2Oe4HcRhEa+gh4tTH7YsxoJ9wDoPP0ctZietwcgpID+Z
-         jsAbbdq6QRgK8P5XOMGLO91faybS/espjGMVJnMNe9Fchcy3dctVUxn/vAV5M76UgH2b
-         cQ4ZTcAqCmH1jBe0yORDMPjMpmrXDpNj6Fngefqqh5tUDhS0P9c93V9DltHxAIDW7GhG
-         024QXJepMsxtWARCG2HLPIpTz2jDPkBpmTQW527Xwa6l9aibQWoRg3/EXKKz+pYCBri0
-         gAWRe9SckpJKos7q7U//ovDBD5Uq2MYJjiz65xrGgRTS3dAOmQ16ljiW4CW3QWx50N/3
-         krsQ==
+        d=gmail.com; s=20230601; t=1741113321; x=1741718121; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZG+p+/aCZFjlwhK8PkbgiMPAkrT2FwPNvQL1x2aok6M=;
+        b=alX1RNYG4xM31Dch1EXIsFF6wX5Z/i0Qr+EkStQjDLtqq2M38DwdPDJlZnsN//swsj
+         feIyOzF/uKtYCDFJh315ajeB9C25FPOyJjXX9rn+uD9xL3cRwrD5FiQUuzVS2K3/6hRm
+         JwAs08jAywdSKLmE7cjXqoGHob0XvQGNTYdTHZNqaAfqV5wcxGm6PIt+BoYHZShGk4dt
+         82kgSb9pTpLfTRrjvwweIQcbPOrq9BfTMgdWcPWsL/9DyWB2xfHZKXwiLGWiqSbT9Wyc
+         pf6oO0AfhEB0Y6gGfuAFof8f0tziof50m+656o5rs+68VILzJVzVz3hZMJuqb0dKmO3I
+         hxUA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741113317; x=1741718117;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=z+J95x80BXx1IFj8d9HujegeeTJ5w2Jkd/IoDuq5DfM=;
-        b=Asbdle/CK8EM1Rqdu6JdTgnQq/cZDGW6zJZLf0h4j4HWJbcED7JsLal5Gmvi6b8UlH
-         fZE1DeU0j9/2iXFjLbXeAN89ZbBMiWdMg3IAz6s7/bKYMbj4XLKypA399sorGyM7S6ge
-         0S4THvNukmuPoAsMlh6Wvn1ESVUyDW0fUYWuBva+QrPKRNK/JuN4sH6ljEDH4zYhvvvf
-         mt9EnXPPgs60b/8KxgMmrHm5bWbj/jXHJ/7aTArOX1ilpFIV8Gr+6/GQgp0MSGVIVe1+
-         lfutKaPTqw32EGGHn6jFTpAcjhc2T7jLZ3FIE6W8LsWVY36JlKpQUyeqO+sur1TBevmj
-         Ep9A==
-X-Forwarded-Encrypted: i=1; AJvYcCWOSkPnxgMH8Z0D5FtHtnyoUjCiadpRqmkpAEvnIMfRJcxgEez0plA3s+1qKOV6VFcm70sapglVv1+WhtIU@vger.kernel.org, AJvYcCXDmWohKX912s0MJBgtTp5P1Mf9VmsqcHo8x2l7O12NeoMELNNFq55jJzpPcY78ru0oqlfijQHair7m6oCP@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz+Zl3iCKzu6/PWE/SlITQ02KhEruHlpw+ixX7Aya2GorZ/VMCO
-	J5IMl5TypaosH3gPAj19XiSvVh9HFFfLH8yPvvk4OeOne0c/MjTa
-X-Gm-Gg: ASbGncsHrUF94LMdYbO8NRkGtx6hSqn/R18j1Tt2coJHM1e0fvuP5m0zMbFg98ABnNY
-	3m7VOP6PKT0ek/9GeWBNnUZqMANVmuulSG80TMgmu7lMFZ0EJ5zY64ZDKOou/t11SRfoVdRcNn9
-	5tdKibDDsH8kBwLmmZOZaYDRD1gGV4r5fmXvZG4bJt3vGWtipl/wCX2ntp6v2tJbFdwHTX0+Bmo
-	Flb0m5au/ZLYtVm021c6KQ1dxLaOKpH1ymzeymVMy0YgD5t/5CVKacURKsYEYjSvUmAS3n2aizy
-	8ylkQN24h8jG2F82Kxl+uTBmFM21BsXBKNU+t5bhwXpqb9gkIaZlL7egcGFs
-X-Google-Smtp-Source: AGHT+IE353GjHnf067W0Q1HIOLcONPZR0+KcWOC+XbHXYYPpsuBWbo4eCRqyUsKiRMpEYhT+JdgZsA==
-X-Received: by 2002:a05:6402:2742:b0:5dc:eb2:570d with SMTP id 4fb4d7f45d1cf-5e59f0dc9d3mr215888a12.2.1741113317028;
-        Tue, 04 Mar 2025 10:35:17 -0800 (PST)
+        d=1e100.net; s=20230601; t=1741113321; x=1741718121;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ZG+p+/aCZFjlwhK8PkbgiMPAkrT2FwPNvQL1x2aok6M=;
+        b=nGxRF5UwuMPm7mLsi0T7dw/+cgZLHGz42ux+HGxsIYOB/6ALCqeuwImr703Os0ybsJ
+         T2sE9maXvbRsXvQ0GCvinj4/MXKTWgo9nhvXOPr8+QFoVuRqZe80YMXxGEFoShRvbI/x
+         9fXb/NXnX72i7sCA31LkfqpbFqtiq/ganVZFWKvvw397BsQ5xBooMfmUKldKVIgb1z5u
+         I91cBb3SSJ41mMtarAe3O6/TAcVaFioO45XitXl4n+kmK52FFxVFYCrjBnjlArM+zU5e
+         QSIst8/LMUcagtWGezzinPJ0lvuWIrpBySos/gCM524tOPUORdfuAfyPjdpCVll3TZVD
+         FCWw==
+X-Forwarded-Encrypted: i=1; AJvYcCUbN89aJrnrR3Cw1lM9Wkc+0n8sgqpDMZ7OpLEDOTuDP9frct9QW/OMzRmsfyabD/k1T6oxpAFxDKkm9qIx@vger.kernel.org, AJvYcCXrwl/vRuEyg+QrbLsvZ4dGnpcxG+m/yc+Htd5Hk1LzGYUhBqlwQy75ffvbCwbssFxZb1+vLnfQOq/YzkWh@vger.kernel.org
+X-Gm-Message-State: AOJu0YzW+vDgz9BpXjnjSStQV1Uffzt/yqfmfdjHX7hHEfEEYO/cpNCN
+	Bjx6s/g3/k4+E6l9LGdr632iPIQjRAQXNnAV3L0wYIm+E5NG4d+lamuJFDAE
+X-Gm-Gg: ASbGnctbeybxVSUgmZx2nQl8y8bWg8VXjN51tIJLGy5mJf3lnZtQ+3VJYA5p1j5wdG0
+	90QjDx0pFswteeBkI0ea1cA0/2BOPqvnunbS9rnPY9mBHizO+qDxpAawFjbwjRKpLXrgKPAY9Vz
+	tOHX+hKG7sll20GNxu2rpybfgOWXQFP5m1u/qoBbdzKHb+gbZzgQMPo+9khf2Ho2csYHASzfO7I
+	BVtf4J5ynDtyV78FUHtiQ1A74Te6TfVXWHInEUVN9C3zfknyFy8oDlJOwCWM3oT2JHOdSlpV6Sn
+	ohrkJhJl9xoBhNNJjkGgNka1wCaZq6MEIAWzj0tuetjpHt5lR3Yiy8vtjNwo
+X-Google-Smtp-Source: AGHT+IGUIWSwHVfcDcQvsbiCwWGuUvD/8uXd+Bh3JnzxRg9cW1ilahu5HftYqLnVLbxT1yE6vABlVg==
+X-Received: by 2002:a05:6402:2811:b0:5e5:35d1:87d with SMTP id 4fb4d7f45d1cf-5e59f4cc3a0mr83969a12.20.1741113321208;
+        Tue, 04 Mar 2025 10:35:21 -0800 (PST)
 Received: from f.. (cst-prg-71-44.cust.vodafone.cz. [46.135.71.44])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5e4c3bb747csm8691328a12.42.2025.03.04.10.35.14
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5e4c3bb747csm8691328a12.42.2025.03.04.10.35.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Mar 2025 10:35:16 -0800 (PST)
+        Tue, 04 Mar 2025 10:35:20 -0800 (PST)
 From: Mateusz Guzik <mjguzik@gmail.com>
 To: brauner@kernel.org,
 	viro@zeniv.linux.org.uk
@@ -62,10 +64,12 @@ Cc: jack@suse.cz,
 	linux-kernel@vger.kernel.org,
 	linux-fsdevel@vger.kernel.org,
 	Mateusz Guzik <mjguzik@gmail.com>
-Subject: [RFC PATCH v v2 0/4] avoid the extra atomic on a ref when closing a fd
-Date: Tue,  4 Mar 2025 19:35:02 +0100
-Message-ID: <20250304183506.498724-1-mjguzik@gmail.com>
+Subject: [PATCH v2 2/4] fs: use fput_close_sync() in close()
+Date: Tue,  4 Mar 2025 19:35:04 +0100
+Message-ID: <20250304183506.498724-3-mjguzik@gmail.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250304183506.498724-1-mjguzik@gmail.com>
+References: <20250304183506.498724-1-mjguzik@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,75 +78,30 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The stock kernel transitioning the file to no refs held penalizes the
-caller with an extra atomic to block any increments.
+This bumps open+close rate by 1% on Sapphire Rapids by eliding one
+atomic.
 
-For cases where the file is highly likely to be going away this is
-easily avoidable.
+It would be higher if it was not for several other slowdowns of the same
+nature.
 
-In the open+close case the win is very modest because of the following
-problems:
-- kmem and memcg having terrible performance
-- putname using an atomic (I have a wip to whack that)
-- open performing an extra ref/unref on the dentry (there are patches to
-  do it, including by Al. I mailed about them in [1])
-- creds using atomics (I have a wip to whack that)
-- apparmor using atomics (ditto, same mechanism)
+Signed-off-by: Mateusz Guzik <mjguzik@gmail.com>
+---
+ fs/open.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-On top of that I have a WIP patch to dodge some of the work at lookup
-itself.
-
-All in all there is several % avoidably lost here.
-
-stats colected during a kernel build with:
-bpftrace -e 'kprobe:filp_close,kprobe:fput,kprobe:fput_close* { @[probe] = hist(((struct file *)arg0)->f_ref.refcnt.counter > 0); }'
-
-@[kprobe:filp_close]:
-[0]                32195 |@@@@@@@@@@                                          |
-[1]               164567 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@|
-
-@[kprobe:fput]:
-[0]               339240 |@@@@@@                                              |
-[1]              2888064 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@|
-
-@[kprobe:fput_close]:
-[0]              5116767 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@|
-[1]               164544 |@                                                   |
-
-@[kprobe:fput_close_sync]:
-[0]              5340660 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@|
-[1]               358943 |@@@                                                 |
-
-
-0 indicates the last reference, 1 that there is more.
-
-filp_close is largely skewed because of close_on_exec.
-
-vast majority of last fputs are from remove_vma. I think that code wants
-to be patched to batch them (as in something like fput_many should be
-added -- something for later).
-
-[1] https://lore.kernel.org/linux-fsdevel/20250304165728.491785-1-mjguzik@gmail.com/T/#u
-
-v2:
-- patch filp_close
-- patch failing open
-
-Mateusz Guzik (4):
-  file: add fput and file_ref_put routines optimized for use when
-    closing a fd
-  fs: use fput_close_sync() in close()
-  fs: use fput_close() in filp_close()
-  fs: use fput_close() in path_openat()
-
- fs/file.c                | 75 ++++++++++++++++++++++++++++++----------
- fs/file_table.c          | 72 +++++++++++++++++++++++++++-----------
- fs/namei.c               |  2 +-
- fs/open.c                |  4 +--
- include/linux/file.h     |  2 ++
- include/linux/file_ref.h |  1 +
- 6 files changed, 114 insertions(+), 42 deletions(-)
-
+diff --git a/fs/open.c b/fs/open.c
+index 57e088c01ea4..fc1c6118eb30 100644
+--- a/fs/open.c
++++ b/fs/open.c
+@@ -1615,7 +1615,7 @@ SYSCALL_DEFINE1(close, unsigned int, fd)
+ 	 * We're returning to user space. Don't bother
+ 	 * with any delayed fput() cases.
+ 	 */
+-	__fput_sync(file);
++	fput_close_sync(file);
+ 
+ 	if (likely(retval == 0))
+ 		return 0;
 -- 
 2.43.0
 
