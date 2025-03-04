@@ -1,65 +1,66 @@
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5047E1FF1A0
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 10:58:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E67F1FF1A7
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 10:58:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741085891; cv=none; b=sBd+bszA9yjYTQSecmnU8Td9JDtDKeKoLc2YghKItKF2uxE1OPGDePHvqZlMz93MzefRwVIFqnGlB4jt1fZe/3zRWmn+CINhtIdD+lBYmGObNfs7vmOWTSsxTJbyzf3Sb4I7ovZc5HH90OnO+uMQnvhqjsQa7liWLVOnkmtKiw4=
+	t=1741085893; cv=none; b=g8cKEOxFWC8rTrkhn+iZepmzL9GQ+dYfZ2eOTjVKMP/P40c5xgUiqBtoQnqt4ilO4zdyIAt7SSMeVl8sotJhEuO55Lglu4et6avZwZ9m+A/+4QXl+jU6F2gaCQf7nOGceIX3Kj+ORMKwSFhJ46PlEiVhb8BTIAkMMIbPWgAkkEs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741085891; c=relaxed/simple;
-	bh=wOUo2jbvXNBvIELvN8SO4TO7+03wuKIRURhdIdb5KQA=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=dPCSzlzcpdhEnssX4ljcbO28HaUC1ogRHZwka9WNhij37yDl/cn+lwkXnBmft4JyExn48hDmLFLoGCldQuv7lY5uEXtm6ROCeScrSxXVwteOOwvAAji0PlunoztW7wp6yi4+kM399SJuTL6KiJfZQIFyTKlKzwy/g/TR72nHuK4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=kSn31Q+6; arc=none smtp.client-ip=209.85.218.44
+	s=arc-20240116; t=1741085893; c=relaxed/simple;
+	bh=95ZioWTOFYyGeCgq7GdjvtNHse8rEA2pxGA2e/BaNy8=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=qc4F5BuQGT3Is5F4xgQFGI0PFNUMOFCFUPr3A4xqa/trfdy3xZAi/agxI3Aj6cV/NYz717hnTez8JVmav1K8pfTb6S7iYmugSAMVmxcC2oskP9Gps7KWpV9Wvmen1FU95Cp33U1V8u5mhwkdDnJ8ycm8MeaKV4H/gBA8sKnaWCg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=u5qYO908; arc=none smtp.client-ip=209.85.218.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kSn31Q+6"
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-abf42913e95so556494766b.2
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Mar 2025 02:58:08 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="u5qYO908"
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-abbb12bea54so990324566b.0
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Mar 2025 02:58:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741085887; x=1741690687; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ep9QE8ZgBdpAiwKPizNUm4MFunX+10NNVd1ZFVVsV3A=;
-        b=kSn31Q+6ef0s5jTJZ4ayDD2c5UcsvwL1ODfn4xzsYcIolKdhWfwe01DbJ32ifQXQA8
-         INUXOeJjWjcJi4JetFRZl49bvxtC63KhLJU+KcsLHm3Yuwla9QR7U6X2Yul8kIJ2al3l
-         BlJok/aCGioDF7SthBbel6mKAYT+HF2gR7VCBHypZ79eND3t7lyUII3RJAuh8KHW9/gu
-         TcY7MfbBKyqmwxP8gpxtQIOcynqEoDykKKaURpsSY6LEx8doYXrUxN8CYji9QUlowG+z
-         T3Nzrxg8DLgdNzLOakRWjqK5bV0bOM4g/fZRTOhFvJWdYRE9pFuNQyaplrr6A+efCF3P
-         tdFw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741085887; x=1741690687;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=linaro.org; s=google; t=1741085890; x=1741690690; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=Ep9QE8ZgBdpAiwKPizNUm4MFunX+10NNVd1ZFVVsV3A=;
-        b=SdkQh10aW2hKFYLq10B93ZBVIewiO/aZwl5vyOwU+uVfNAPEOZMWOvC596drPDDNtH
-         iQ2JGRQ7ZkF54zGTCjJQNs4aNHIRp1BTtMND4ITQ2QD9D3APaBL4LEUg04u2LGBl6Z7L
-         t2fe5K+NhOC7IQ5Z9pvf16NYjehNA8CXksalWLieeywl2pqVle113ll6M4da3KdnwsIe
-         dEO8Z1mkB8bhwCuQXOy9qRpuQANg2Q2f0gG8Svhrvbq+LKRH1bNsQQZJ80ampKGbQ90q
-         9XlsHzQMiY5tktVym4NA1wvfpvDzC/skyiw4wbsao7KgaCLKGVkAhfdpLAIeEkobuLI1
-         V/Hw==
-X-Forwarded-Encrypted: i=1; AJvYcCV3YcKLfydgkoJwhN28t3sYjoHAdSL1z9jGt7VK5UKvy/NQgScWPNsFCjRydFsBxPOUPd1V2Y3x35E1478=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwWI+V0yps5QFN6fauwdq6RjyIe4cC86h7moqwTSpJpeyvgKCkP
-	BbpSAqKUpS+E+7dizVAGqv/gQJi9mlH5YPouph/6c66yzUlutLAuO7OLV1ERDqA=
-X-Gm-Gg: ASbGncuoBLSLK70m9hvR8YabLY7z9YXemVFBxGZtRz01Bl4Tm4tba9wD0Z2TE1bgahE
-	lUec/Ojg/mMxyEy9lw1UE557LQ+peGk2LOkBqOUfSdeYLde1RTnebaQY/Vhcvn6mPgms0xMYsJN
-	cYjcpMvezmKkVoeUS9yi8Hu7HFlhOum89PUT/HnQ8EEYk4iWKlj7RgNyYV0c40Zq3Nbe95Ykgsu
-	hkxY1/6kR4WvV2uHcg9xAaXNOAadriXvSUuSM8MGCtDbITvuCt2KGpm2zNtd2u9H4Baup9qwqOu
-	sVnEBaK8AEo/gs0cZCgy8s9AXaag/zBzItBqCl7+yz4=
-X-Google-Smtp-Source: AGHT+IFD/ObPed5O+mHCOziYcTBZaiZTKm8Gsx1JV9YxWhJV81LeOWJyKbyCJBafUbJ05F/opRYNfw==
-X-Received: by 2002:a17:907:3fa6:b0:abf:65c8:70e5 with SMTP id a640c23a62f3a-abf65c8922cmr1103208366b.25.1741085886592;
-        Tue, 04 Mar 2025 02:58:06 -0800 (PST)
+        bh=JkQiSZ/wmeIK3Ln89KuiJp4g0swVb994H9Tz4aOmNUk=;
+        b=u5qYO9080uqddyn4hVisTDfmbhR+MST14GMcGkAaKbIqZYUTSt/AOP+QfD625X8ONb
+         HAXo6x21ugbn55RfPZOGkpdAkzpbM+sWjJAdG5HVIdk7GJtaHpS18WAm772ZDVhyFK82
+         WD50g+QMAY6aZhyEWBzNhf1witXoqJAiwxVnO7jEnTRXr70P85rg5O3OPJmPug8gxU1x
+         Lzn+iizmrmiXtlI7zYLlIHRBfs4HeUfsj+Z/1LXt0go/bcuUT/jr1ugb2e2KFVVC/6sF
+         DxkGimQP8CM35FC+SxkngldATKTxaVfUfFt/rOpNCBSmz5w+bOaKvkJx7tihy4pBAQ1a
+         lyeg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741085890; x=1741690690;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=JkQiSZ/wmeIK3Ln89KuiJp4g0swVb994H9Tz4aOmNUk=;
+        b=VQnAnVGAt3C6vEItmRa1mXXlSlkqP7G1sKkTjkcyt4MGGrp+pPFO9imsBBUhXDf3/N
+         IYPBkrhgsASmgzfwiciNQMk4AKrTVl79CYAEJpFJvM/NeUEhOeLBZyl+SlA/enHJ/gGY
+         UregIDsRFc7HX/A4x6kRQa2FXBvmq4RBcPg3n7lBE4dZlFRokTwqvAy9MkQTKHIqO/29
+         gwdetv1kdATYwg3i6hebydR0UgfSEE/JlZN5Vojc6El4Up9tBeaKX4n8oDJqlCx8XiRB
+         29cH4pjUkZI7+VKVk/wC45LJXzc3pQerynMloPJhRAkRCNwLjZBeK+yP656cBH6qXTgk
+         cdFA==
+X-Forwarded-Encrypted: i=1; AJvYcCViWTAh5WIOaphvFIrLer0CRegXf5UGD7OtTWbQJ0qcnm3CBhGArDKjZYBS6ZtI+4dTjouEoEfltgGzphw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwIQ1GfMXX/QEEeRDJlPN7xsXdQ8P9IrrNDbZ63tDAJ/guHPk0Y
+	I38WIsPv3+B4sijV5EsfA49V2ZJK9dMtl5ryfh+GiY33pPVnQZKoyD3D0UmbX08=
+X-Gm-Gg: ASbGncshXzQXL7cAV/HUHrRIrew6Hrck7thdCTpTUwBHmxMI+7uY0yY3iTv9QwQiOlv
+	yrtSSrBRI4W9VmPGSd75TLdGVkHuM/v1ETzneRVhzYntdz1n9v4yym8/cDQeZlmVM02Ps5pFY/4
+	EtObu1D2qo3kEpKWhP+U0j98QOnU37cSrtMaVkepaA8rsCODRg458+srR9Gh4NWKFejhc7+WzQc
+	iojn1bCmpvYg4NjOHRoUv0PqTheiw+AMMOMruxH2+QxCKTJCzSj+ybvUxvbE2/aznV3lKE1HfU2
+	2xylvoXNy9HbjAtJddfc/pqExugMaR0IVEpbePc0XZA=
+X-Google-Smtp-Source: AGHT+IFlevWIsVV9QpmLVmSKI0RDAqmBsSPQlBY6GR6iTVQNwReaXcAb8Esi43q7fS8EvqvXaJbk1A==
+X-Received: by 2002:a17:906:6a14:b0:ac2:13f:338b with SMTP id a640c23a62f3a-ac2013f37d0mr56922366b.55.1741085889677;
+        Tue, 04 Mar 2025 02:58:09 -0800 (PST)
 Received: from [127.0.1.1] ([62.231.96.41])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac1fde3f585sm38973266b.53.2025.03.04.02.58.05
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac1fde3f585sm38973266b.53.2025.03.04.02.58.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Mar 2025 02:58:06 -0800 (PST)
+        Tue, 04 Mar 2025 02:58:09 -0800 (PST)
 From: Abel Vesa <abel.vesa@linaro.org>
-Subject: [PATCH v6 0/4] arm64: dts: qcom: x1e80100: crd/t14s: Enable Parade
- Type-C retimers
-Date: Tue, 04 Mar 2025 12:57:45 +0200
-Message-Id: <20250304-x1e80100-dts-crd-t14s-enable-typec-retimers-v6-0-e5a49fae4e94@linaro.org>
+Date: Tue, 04 Mar 2025 12:57:47 +0200
+Subject: [PATCH v6 2/4] arm64: dts: qcom: x1e80100-crd: Enable external
+ DisplayPort support
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,11 +69,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAKncxmcC/53NQQ6CMBCF4auYrh0zFCvoynsYFqUdYRKkZNoQC
- OHuVo7g8n+L920qkjBF9ThtSmjmyGHMcTuflOvt2BGwz600aoNaIywF1Vgggk8RnHhIxTUCjbY
- dCNI6kQOhxB+SCKU2zrdVi/fKq/w4Cb15ObRXk7vnmIKsBz6b3/qfMxtAKGu0JSFV5N1z4NFKu
- ATpVLPv+xc/9OyM5wAAAA==
-X-Change-ID: 20250220-x1e80100-dts-crd-t14s-enable-typec-retimers-325cdb7b097d
+Message-Id: <20250304-x1e80100-dts-crd-t14s-enable-typec-retimers-v6-2-e5a49fae4e94@linaro.org>
+References: <20250304-x1e80100-dts-crd-t14s-enable-typec-retimers-v6-0-e5a49fae4e94@linaro.org>
+In-Reply-To: <20250304-x1e80100-dts-crd-t14s-enable-typec-retimers-v6-0-e5a49fae4e94@linaro.org>
 To: Bjorn Andersson <andersson@kernel.org>, 
  Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
  Krzysztof Kozlowski <krzk+dt@kernel.org>, 
@@ -84,61 +83,81 @@ Cc: Johan Hovold <johan@kernel.org>,
  Christophe JAILLET <christophe.jaillet@wanadoo.fr>, 
  Trilok Soni <quic_tsoni@quicinc.com>, linux-arm-msm@vger.kernel.org, 
  devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Abel Vesa <abel.vesa@linaro.org>, Johan Hovold <johan+linaro@kernel.org>, 
- Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+ Abel Vesa <abel.vesa@linaro.org>, 
+ Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, 
+ Johan Hovold <johan+linaro@kernel.org>
 X-Mailer: b4 0.15-dev-dedf8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1780; i=abel.vesa@linaro.org;
- h=from:subject:message-id; bh=wOUo2jbvXNBvIELvN8SO4TO7+03wuKIRURhdIdb5KQA=;
- b=owEBbQKS/ZANAwAKARtfRMkAlRVWAcsmYgBnxtyxL1EL3VeoqbddYBC6vFLwLOix+x0X5djp5
- JGpP0y3olqJAjMEAAEKAB0WIQRO8+4RTnqPKsqn0bgbX0TJAJUVVgUCZ8bcsQAKCRAbX0TJAJUV
- VpzKEACArvNpPIzsxCH48RaWlnCRRoxSPhITR44QHeCuishnXRutzQqEFL/e1UK9/FaX4CCAjJL
- CQBkiI/1N/y2YY6Env6G1tzzsV6AdHIY5KnuAlfl9G9fcXGynUIyKYP/KYpptI2YWKBRjp9nQOk
- eCdDGdsZJNBJ95dTh9NmvTssCaImJ6PyKwlTF9Ja9ncOSkvJmYviMFac5JvYfu7rg7HMXhgjw69
- zqJfwQ2+6T9Ph0883T0kCiCtBRSJ9u87Bqql3+oF8wThmFG5HACfY0oWWqHwOKeuWICtbO2iWaC
- /PuVLsjW2afDqsMkUyz10zcsycS4HLNv7AyR+VCg7KjYrmRJNLp0+BYIYY/d0Ny4zxnSAS2wftt
- pq+MIIol4lrXzHbZByjKBhDNyBR3rfkUozMeFTTXksu6M+7QSM1CoiOpmUG94ETmf6ydsvbmn9D
- 6TQRQnSx6xqvI3k9kFmceGfB1heCigy4pB7zoexM28IQ7ovI4uOgQCFN7Z1HdlJq7xLJy6cI1mG
- ucS4/p/DSMPEsc5Xs6xnxYsOXFWY/HfPkUjT4uyV23qRaYSzR7XaPAOx2ivkwLXzgU9Y0DKCX0A
- whnyGshD0sbA2UMo8lBB2wJEEWnTVfNzy35IH0v/9VFB3u+J1syoWskKMQHaf5qFQVWU8TDwwnE
- bCXsDFyeaHvlikw==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1400; i=abel.vesa@linaro.org;
+ h=from:subject:message-id; bh=95ZioWTOFYyGeCgq7GdjvtNHse8rEA2pxGA2e/BaNy8=;
+ b=owEBbQKS/ZANAwAKARtfRMkAlRVWAcsmYgBnxty5tnc4mm2cJL42Y8k/gxcQiQEBOFLdKb9AN
+ qvlhiLPXbWJAjMEAAEKAB0WIQRO8+4RTnqPKsqn0bgbX0TJAJUVVgUCZ8bcuQAKCRAbX0TJAJUV
+ Vt1HEAC+bgP7BwSGqeBs6xep8USVAdmKde7YNd3q4vyossGxD8kR2AoS/cLZ8OvF6uJUjqFUg1R
+ Cc3Mq0PsHMRkkk7gNkf/1qVWqraeXAOCq2pIMb9ihMB2VXzwwYUX+mJcrgtce2D+d8EYSQ25dY2
+ ut+ZSicEUSz+ESEsodc81SiKzXz+3LYSKH4zzjQ4+Ni3xjtwFmIUSNPZVHvFzVfTl32wIFeJ8nu
+ 9ddXJ0Ot2HkirGCDZuvHyr+boFm69ejzZG11sswWOHTzF9O+KDCQFmMnXucqlhuyfxz2825L9iJ
+ EoK2KJz+OudxNLDOIj5xWU/GyFISHJxDt+I5GeNMdIH2JN6KSuE7HlUhbK5z/PwW8IKEBf/rqEM
+ v1SD9Ifac/ckXoq2Qjw3HNlIKsC3wGYG1AJXrx+4GUsS01RCE7uFaTav4cQPN1Vt7u27TEP7oKP
+ xsaM4Z6vcqaRG0IAvtZQjyWT+CBg8OHHEzuaFXvqjbzybvkdxTqi+SpwBn288t3DFzFiLCY2QCF
+ GiETw4g1LPz8CD4EEyJXN5QEjnZJ2eJmzjFslqKC2NU4Mmb4yMFQ1sX1vupVY0SkueHMvNEIffL
+ 99zHOPuG88xsNzE+4/1s4IVPzbjTRkFJZ9+NvDjHELclSIdIgD6OEaWiGMAqJZTGiA+EPkv5K7l
+ m7zHvqEFEPBBR4A==
 X-Developer-Key: i=abel.vesa@linaro.org; a=openpgp;
  fpr=6AFF162D57F4223A8770EF5AF7BF214136F41FAE
 
-Since the driver and dt-bindings have been alread merged, it has been
-agreed offline that there is no point of holding on to these DT patches
-even though there are some issues with plug/unplug during suspend in
-both pmic-glink-altmode and ucsi-glink. These issues are being worked on
-meanwhile. Merging these means that even though this will provide external DP
-and USB orientation, plug/unplug during suspend will give some splats
-and render both the USB orientation and DP broken. But then, other
-X Elite boards already have these nodes described, so lets bring the crd
-and t14s to the same level.
+The X Elite CRD provides external DisplayPort on all 3 USB Type-C ports.
+Each one of this ports is connected to a dedicated DisplayPort
+controller.
 
+Due to support missing in the USB/DisplayPort combo PHY driver,
+the external DisplayPort is limited to 2 lanes.
+
+So enable all 3 remaining DisplayPort controllers and limit their data
+lanes number to 2.
+
+Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Reviewed-by: Johan Hovold <johan+linaro@kernel.org>
+Tested-by: Johan Hovold <johan+linaro@kernel.org>
 Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
 ---
-Changes in v6:
-- Rebased on Bjorn's arm64-for-6.15 branch to fix conflicts with
-  Konrad's X1E CRD DT rework.
-- Picked up Konrad's and Johan's R-b and T-b tags
-- Dropped the extra blank line in T14s dts and CRD dtsi i2c7 retimer
-  port@2 reported by Johan
-- Link to v5: https://lore.kernel.org/r/20250220-x1e80100-dts-crd-t14s-enable-typec-retimers-v5-0-380a3e0e7edc@linaro.org
+ arch/arm64/boot/dts/qcom/x1-crd.dtsi | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
----
-Abel Vesa (4):
-      arm64: dts: qcom: x1e80100-crd: Describe the Parade PS8830 retimers
-      arm64: dts: qcom: x1e80100-crd: Enable external DisplayPort support
-      arm64: dts: qcom: x1e80100-t14s: Describe the Parade PS8830 retimers
-      arm64: dts: qcom: x1e80100-t14s: Enable external DisplayPort support
+diff --git a/arch/arm64/boot/dts/qcom/x1-crd.dtsi b/arch/arm64/boot/dts/qcom/x1-crd.dtsi
+index 34e203fb7a4bfd781cf268429b3e4174e8d19bf9..53f329c320190afa263fb8d8028828022464fd99 100644
+--- a/arch/arm64/boot/dts/qcom/x1-crd.dtsi
++++ b/arch/arm64/boot/dts/qcom/x1-crd.dtsi
+@@ -1117,6 +1117,30 @@ &mdss {
+ 	status = "okay";
+ };
+ 
++&mdss_dp0 {
++	status = "okay";
++};
++
++&mdss_dp0_out {
++	data-lanes = <0 1>;
++};
++
++&mdss_dp1 {
++	status = "okay";
++};
++
++&mdss_dp1_out {
++	data-lanes = <0 1>;
++};
++
++&mdss_dp2 {
++	status = "okay";
++};
++
++&mdss_dp2_out {
++	data-lanes = <0 1>;
++};
++
+ &mdss_dp3 {
+ 	compatible = "qcom,x1e80100-dp";
+ 	/delete-property/ #sound-dai-cells;
 
- arch/arm64/boot/dts/qcom/x1-crd.dtsi               | 473 ++++++++++++++++++++-
- .../dts/qcom/x1e78100-lenovo-thinkpad-t14s.dts     | 320 +++++++++++++-
- 2 files changed, 783 insertions(+), 10 deletions(-)
----
-base-commit: f22be5c1dd3e12519e3f3b80c14d10b90be2c2fc
-change-id: 20250220-x1e80100-dts-crd-t14s-enable-typec-retimers-325cdb7b097d
-
-Best regards,
 -- 
-Abel Vesa <abel.vesa@linaro.org>
+2.34.1
 
