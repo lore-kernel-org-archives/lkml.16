@@ -1,111 +1,80 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D3361EA7CE;
-	Tue,  4 Mar 2025 12:48:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF5FE1FFC74;
+	Tue,  4 Mar 2025 12:48:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741092517; cv=none; b=BPfpfqu7ZCbQB6d6ID370rSGAnQj9xwkld1lh5/VHGNEhXlWh4cXQC2b2gspLlxKAuOGrVnB8iMUGFxhvcD32FReuSszW10LvIEI6sYzXEGDeUTvKXmdvF1RpScbaSghaPVnT//ud5/WTzapELDk+WGBE7cwYKpjVoizsL0fENE=
+	t=1741092525; cv=none; b=F0MxMM2cS9EL0DQmn3gp6mxtWrleHoteyNTMLuhWnZBR4PAGp+vlqaZZvpWd/MGe9GMXYQhEEbZlYzLhTeJ5nHkp+57EcVAfMbpqrLKjPJk0Q/qMp4t6o1RfsHjEPLi8PAu1Kb9qN3fB3WHUNjK0PKZPCQ1FzWFQS/i7WsyCv3E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741092517; c=relaxed/simple;
-	bh=ODVFBe/e11v9wJrhnq4WBKSfBQBazIMfPT6QZbpiSN4=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lYCRKF5ZlzRPJu48dX+G4/e+FZ1l8Tzt2/zuwYA2Ja5ohRFoT/3hMDxn01XiIoNNPHU5tHQL2xBrMmH7uYE+EdH9rAx9EwbnZtZBBH7IHpxkt/nyHaq2EPPG+dFvWurhF32HeQY38ox/nCHW5bx5a6OT9r7N1N8ulwLfTwpzMEo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.252])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4Z6b6Y4rQKzpbTS;
-	Tue,  4 Mar 2025 20:47:01 +0800 (CST)
-Received: from kwepemg500017.china.huawei.com (unknown [7.202.181.81])
-	by mail.maildlp.com (Postfix) with ESMTPS id 7E7811800EB;
-	Tue,  4 Mar 2025 20:48:32 +0800 (CST)
-Received: from huawei.com (10.175.127.227) by kwepemg500017.china.huawei.com
- (7.202.181.81) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Tue, 4 Mar
- 2025 20:48:31 +0800
-From: Li Lingfeng <lilingfeng3@huawei.com>
-To: <trondmy@kernel.org>, <anna@kernel.org>
-CC: <linux-nfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<ehagberg@janestreet.com>, <linux-nfs@dimebar.com>,
-	<yukuai1@huaweicloud.com>, <houtao1@huawei.com>, <yi.zhang@huawei.com>,
-	<yangerkun@huawei.com>, <lilingfeng@huaweicloud.com>,
-	<lilingfeng3@huawei.com>
-Subject: [PATCH 2/2] nfs: ignore SB_RDONLY when remounting nfs
-Date: Tue, 4 Mar 2025 21:05:33 +0800
-Message-ID: <20250304130533.549840-3-lilingfeng3@huawei.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20250304130533.549840-1-lilingfeng3@huawei.com>
-References: <20250304130533.549840-1-lilingfeng3@huawei.com>
+	s=arc-20240116; t=1741092525; c=relaxed/simple;
+	bh=qs1uaw+fmZ/8gb8hir4yFJES2X7FcZuc7NwFrXHu62M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RoDEhdhJfqeP1k9c3QqlYklrDOQqOELdZmx4lUfesc4z4DVaLu4CwU+WPijVnSfc5DVGJT0nh3m0ipwLhd5q45qk1WIzZ+I4fPWwBJihC9Tc2lDckC5gn7jqIpJKdfoTHXC9AjU6o1xGylljeHGP4i0M4pUtF+VVhPrUS9GfmfE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TW348z9j; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TW348z9j"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77EA3C4CEE5;
+	Tue,  4 Mar 2025 12:48:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741092524;
+	bh=qs1uaw+fmZ/8gb8hir4yFJES2X7FcZuc7NwFrXHu62M=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=TW348z9jRX5ZSgJoPBlyk5//Ug5GqU9KnYD1BLdu2ADKTpJKJPZFTV44+ordyBa8b
+	 4dJ80PIpwujBtHUJt70dfbuL6b4kioAxjeKM1A5EvKQfPm1toQkvkNl3Z6mLYFGyRO
+	 ow9YIZD5TnWC2BfZSxbow5MULEoAYP2zC6lEfxii8GSxYjayYoAKx/nvE+L6tbmnvP
+	 iJLW/ElVnwlAwWb1DVwoRyAv2ncYLXRXQLAJ3SlxDwKIbWkDNnk7E/WW32FWVpPHJr
+	 OXLrpw9MGFfFMk+SjJsQyuiiYPml+qhnqarSVF+snpgOPbkXbQckBze1ZpQjfePTPH
+	 bQ0ZkN01iyo4Q==
+Message-ID: <47cb57f6-2270-43af-8786-2827a08ddf9c@kernel.org>
+Date: Tue, 4 Mar 2025 06:48:44 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- kwepemg500017.china.huawei.com (7.202.181.81)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RESEND v3 2/2] arm64: dts: socfpga: agilex5: add
+ clock-names property to nand node
+To: niravkumar.l.rabara@intel.com, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, nirav.rabara@altera.com, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+References: <20250228045349.1429680-1-niravkumar.l.rabara@intel.com>
+Content-Language: en-US
+From: Dinh Nguyen <dinguyen@kernel.org>
+In-Reply-To: <20250228045349.1429680-1-niravkumar.l.rabara@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-In some scenarios, when mounting NFS, more than one superblock may be
-created. The final superblock used is the last one created, but only the
-first superblock carries the ro flag passed from user space. If a ro flag
-is added to the superblock via remount, it will trigger the issue
-described in Link[1].
+On 2/27/25 22:53, niravkumar.l.rabara@intel.com wrote:
+> From: Niravkumar L Rabara <niravkumar.l.rabara@intel.com>
+> 
+> Add required clock-names property to the nand node.
+> 
+> Fixes: 2d599bc43813 (arm64: dts: agilex5: add initial support for Intel Agilex5 SoCFPGA)
+> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> Signed-off-by: Niravkumar L Rabara <niravkumar.l.rabara@intel.com>
+> ---
+>   arch/arm64/boot/dts/intel/socfpga_agilex5.dtsi | 1 +
+>   1 file changed, 1 insertion(+)
+> 
+> diff --git a/arch/arm64/boot/dts/intel/socfpga_agilex5.dtsi b/arch/arm64/boot/dts/intel/socfpga_agilex5.dtsi
+> index 51c6e19e40b8..27f75e1bc8eb 100644
+> --- a/arch/arm64/boot/dts/intel/socfpga_agilex5.dtsi
+> +++ b/arch/arm64/boot/dts/intel/socfpga_agilex5.dtsi
+> @@ -271,6 +271,7 @@ nand: nand-controller@10b80000 {
+>   			#size-cells = <0>;
+>   			interrupts = <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>;
+>   			clocks = <&clkmgr AGILEX5_NAND_NF_CLK>;
+> +			clock-names = "nf_clk";
+>   			cdns,board-delay-ps = <4830>;
+>   			status = "disabled";
+>   		};
 
-Link[2] attempted to address this by marking the superblock as ro during
-the initial mount. However, this introduced a new problem in scenarios
-where multiple mount points share the same superblock:
-[root@a ~]# mount /dev/sdb /mnt/sdb
-[root@a ~]# echo "/mnt/sdb *(rw,no_root_squash)" > /etc/exports
-[root@a ~]# echo "/mnt/sdb/test_dir2 *(ro,no_root_squash)" >> /etc/exports
-[root@a ~]# systemctl restart nfs-server
-[root@a ~]# mount -t nfs -o rw 127.0.0.1:/mnt/sdb/test_dir1 /mnt/test_mp1
-[root@a ~]# mount | grep nfs4
-127.0.0.1:/mnt/sdb/test_dir1 on /mnt/test_mp1 type nfs4 (rw,relatime,...
-[root@a ~]# mount -t nfs -o ro 127.0.0.1:/mnt/sdb/test_dir2 /mnt/test_mp2
-[root@a ~]# mount | grep nfs4
-127.0.0.1:/mnt/sdb/test_dir1 on /mnt/test_mp1 type nfs4 (ro,relatime,...
-127.0.0.1:/mnt/sdb/test_dir2 on /mnt/test_mp2 type nfs4 (ro,relatime,...
-[root@a ~]#
+Applied!
 
-When mounting the second NFS, the shared superblock is marked as ro,
-causing the previous NFS mount to become read-only.
-
-To resolve both issues, the ro flag is no longer applied to the superblock
-during remount. Instead, the ro flag on the mount is used to control
-whether the mount point is read-only.
-
-Fixes: 281cad46b34d ("NFS: Create a submount rpc_op")
-Link[1]: https://lore.kernel.org/all/20240604112636.236517-3-lilingfeng@huaweicloud.com/
-Link[2]: https://lore.kernel.org/all/20241130035818.1459775-1-lilingfeng3@huawei.com/
-Signed-off-by: Li Lingfeng <lilingfeng3@huawei.com>
----
- fs/nfs/super.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
-
-diff --git a/fs/nfs/super.c b/fs/nfs/super.c
-index 3e5528c2c822..8f50447eb5d0 100644
---- a/fs/nfs/super.c
-+++ b/fs/nfs/super.c
-@@ -1047,6 +1047,16 @@ int nfs_reconfigure(struct fs_context *fc)
- 
- 	sync_filesystem(sb);
- 
-+	/*
-+	 * The SB_RDONLY flag has been removed from the superblock during
-+	 * mounts to prevent interference between different filesystems.
-+	 * Similarly, it is also necessary to ignore the SB_RDONLY flag
-+	 * during reconfiguration; otherwise, it may also result in the
-+	 * creation of redundant superblocks when mounting a directory with
-+	 * different rw and ro flags multiple times.
-+	 */
-+	fc->sb_flags_mask &= ~SB_RDONLY;
-+
- 	/*
- 	 * Userspace mount programs that send binary options generally send
- 	 * them populated with default values. We have no way to know which
--- 
-2.31.1
-
+Thanks,
+Dinh
