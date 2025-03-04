@@ -1,148 +1,116 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E20A20409B
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 13:09:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 419AD1FECDB;
+	Tue,  4 Mar 2025 13:11:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741093801; cv=none; b=qIwDsVf6uXSzIR0JiCyiAFevw+JOr6l+F4PE2WNtl/5WgE0P3V1Fp3RUNU02Wtc9EwFS7bMsKZJjB6q2B/vsbBNbl54USbGNjUmb18kQmZWcLZ4sGQW9AwytpvuZPwO883MSb6BferlM8NJviufw7IlfX74h9KSPzIi9BgPXTeM=
+	t=1741093894; cv=none; b=I/ULNbRPsWMgnn2/iNzQWj650gi1GJfFw3LVzfLtJC/NF0vMigl3y8FIyFTUxNear9De6rwd5ckI6MbKli58I3SN1myd6w67r+kwjZmeB2h1JGLTQ+XFThuT2RsD2lj86alv5NXkbrh7l97u9ca7qTLVWnafWryIZzEU6rVReQA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741093801; c=relaxed/simple;
-	bh=NcEqiAia7PtxdRC2CO01i7tbbhPiGij2sr/fLY4ZFuo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ueP0rbMBJJyUp1gdnKFqUkHIAyE5tUcOwPSa8hQmAFF/KJwfq924ukTJNFhCeslqUJ6einMFWQj7G88Udzg3Yxwjw7nU/RikvvMo5h9j7fgto9y/2J+dwDPVEMWTqbTwVBv3uhq/v57IT1gH5XmMbNWmVj0P4M8EJw5tntETHnE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=lgAjNSH8; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1741093894; c=relaxed/simple;
+	bh=rZSB8ttJc33k4p7Ftc2PQRAgzsvuJBhIKVv79k++F8U=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cHK5uZ6w/PcL0SGdfdB2WJc1FBUITT3dVeTj2JcfwuKkbJ10HNl5z0nCQWpxTRIKuYSNsUFwMUmDoJSt66mmHrmDYTbqVJdpcaM9ViecYVB4bJBjpBMOnKruq8xI9vvVQdoX0bRa2UKR66B0z+6yokpxpk5HJR8hhpShIEjjp90=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OlUsRcar; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lgAjNSH8"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2233622fdffso105042905ad.2
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Mar 2025 05:09:59 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OlUsRcar"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-22337bc9ac3so104926585ad.1;
+        Tue, 04 Mar 2025 05:11:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1741093798; x=1741698598; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=x117HPWY7hfxCsyRoomSLqnsp6TkG/IZ7mxFwBfWDy4=;
-        b=lgAjNSH82Xe0CP1ujbQj7vPkQrbO8ZclVJWv90V5wBvqUXjqSghCtyJRvjhHIr8M0M
-         /OuZ4QHZQQcC65o62tiWI9yXaGXaihz74p0q1M61rW7DhwwcOWkY+OH6eWqC8+tu4jeB
-         gEPiv6zkAHwYBMbLsuplq0EamVVXdhbDLdQGy8c/4sSkij5yOdAiUBW8wucJUbUWkez6
-         4MTzAblno9u3tr+lOa3zW/i0MubBIC+Q7FOFgvnMrJAS5fPu8mzyQ4XySxRkuIvs5U24
-         NY8dqCuTDoey43LQG0iIUoYJWNvGXCPHBqNNZpQ44+X9R29pTR131iCB9XKXPt0H0JVN
-         9GiQ==
+        d=gmail.com; s=20230601; t=1741093892; x=1741698692; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=uoBQMXTscKMSBK7mXc73SSB9UbMhqYi1iTf6fQEcMsQ=;
+        b=OlUsRcar27PSEQ1qreMtXJCQiaLyBmQGi/cA2ccE187sNJ9F0/irXW+v8Y1gHjtnWJ
+         9RsD5bHYasw4zOpPu97hLhCA0IIAkj03wvgUQ50l4/6twCDqNFryIZh29uX2dI1yQ/SL
+         ELwOzVOFsMEcbcesT+wEUpEmsQXKaCLITvZz26Z0dxzFaZScduIz1GME+mnMJfMxbz7W
+         muwu3LUh6o0XY3qIOql80lVHkpSt76WcLFqPCGt+YdkaZVCagrPD0YKi+4u6OFGywbHe
+         oa/x2bVXJMUWTaMpWk2i5fm0wCp7ytbYDAFgHbs+epNmvPyGEKCrqseGSplsHQoIavW7
+         hrhg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741093798; x=1741698598;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1741093892; x=1741698692;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=x117HPWY7hfxCsyRoomSLqnsp6TkG/IZ7mxFwBfWDy4=;
-        b=PFxp7NPGjulSNqu1ot6M1yGw/gZ2Slcqy+ZP7L5KFmPY8JLtm/fGxgtu2MsWwSLpCb
-         jPJlAvSp3wYIAsCtPzDEAug6Jx5ehiUStELreea0/WUTdiWbO1R2BOwWh7w7LkUxVwID
-         yObtVhwSByYo5fxudXH7lukQvhVWw7knT+C1YAo62omUtXpmsWAAiM79UGWSXF9EI86n
-         cf8rp6bXuuL6Yt9KtuGSZONtjCQQTJdU2DBfygn9Al4csOgQKMdXg+hLzbMWIt4zuX7U
-         91+Ni+o/qzcTa5e3aR+HOLC1eN74qOEDf/kRbaO0y6mGJc8rUl9jBX30Xa2jxH1aj7iK
-         c/aw==
-X-Forwarded-Encrypted: i=1; AJvYcCV7X46hXPLFcB7nRdKTNLRPuoooyRQyCzgjNyc2C5kkgepdt+eWwYulhiNf4xZ0WMgVkhtru9wxbkce96Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyZrOVXV+a9I1iGc2gNi9ZDbEgWCDKxIW4TTl6gkPfwKr8eoH67
-	p70WJEzVFbSjfhb5rQhAWlUq20Tbs0shk5uidxqmJLzaNQSFFe8LjJnmwkXZVT8KmYtFmVKk6fj
-	lmfd5g6hJWiPBf7FEKbNzU4dl8NAGEkU/cMQl
-X-Gm-Gg: ASbGncuvZJdVY55lRGWrXXekfKprlfaqNc9j1x99v+WoFVTZLH0FQfkXMZ4Ml9gHMJr
-	apaouq1+RwrayYr08NzvyqhMJJUoC7ZTo/buKHB5dfnMiCrBV1R9Td0jQ2MYSnOUx2Ms7fWMAXK
-	Eceknc0Mpw73GR/JFy4xa4WXgrlvO9MTzjPEVKEyK+Jp0iPtIKPuplH4v4
-X-Google-Smtp-Source: AGHT+IFiWcYRRwZhjH3eoEETTKHMFeBTK3Bvk1Dikxat7wutRisU34tzNCYhuoO1ktV/UerXXSrorJjwJzvEu41/niQ=
-X-Received: by 2002:a17:902:ec91:b0:223:5ada:2484 with SMTP id
- d9443c01a7336-2236926e8bemr319887595ad.44.1741093798418; Tue, 04 Mar 2025
- 05:09:58 -0800 (PST)
+        bh=uoBQMXTscKMSBK7mXc73SSB9UbMhqYi1iTf6fQEcMsQ=;
+        b=F/g1DUFVQnX1BU14G/YT2A0bzK9Wefn+2lA/OHgAAgtsKfd9H4GJTC0t+wT4N572Wb
+         kAy4qWSzo/8eE8OwkUPW+T3TZ3bqVyW3bTKRlhkAUyPcQtlZhDbJO2W9NsrWfaXekBF9
+         cBZTK/VmTbvrUyLUlLSJjxF0y7pWcMZL5tHcsM/1RAraGHlS7szxSsUkDysvEWSSNJCw
+         vB4g8t4WKqVOFggUkpimQfgXnRGejH5xHlgZTRiU2SZ4n+6+kXMtXx29YSINq28uvvYW
+         kbCMq8lkMB0VwkgEbdchakyOphC21ebDFmgd4Ft1XUBqewU3k3nWoKFsqljDxqiC0ukU
+         07Fg==
+X-Forwarded-Encrypted: i=1; AJvYcCVPS8nAsgZHJ5UrUeKTT/NOAYX/hfAcPiUZ7fR9aTIc8VKBhrIZ4FbaDXPFjUgpouzSA7zTbdl+AnrwYYnr8WAQ@vger.kernel.org, AJvYcCWHKaf43IioxeDBe9PZmEsEgtgV648RfJQnU7ZHZTmIYwG5kQtCQkV4RZ2SNE6lAV/m7DWi2KgudLn965c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwN7WXACygzgGdv1EBFBM0mNY6vmx6nJb+fHppjfQgK5mObtFRM
+	qEmunVoSb7la9T2KfzHM/BsYOq3uSvVmRuLKPWtyxmjYFmBZbB7kJuv6du3e5r/lIg==
+X-Gm-Gg: ASbGncuQxJi55C5Zp2QQ7dEJWQ7eBtr+VGfp65yA16q7+prrdAxEzM6F7QxDxTzS1T9
+	xiT8uW3EEiv73m2tzDViWq2DVRAROZydbVfI/7pfKo2NvPoanyTXTvAZM+Xa7SkTNyj6qIhws2e
+	tJ5fW0hK9VgaRpHdzZmPld+NXtgnf6Rs6cxynBMohhB+2kXVl46XEX31Hah7asdKpDG6h1Pks+O
+	ozUCf4/q70yr371LepW+ySfGU/9+BsvpIKzpsRaMY9REjyDh8QoBZfKRVca9Qxum6fQ3CEXAWm+
+	lfaxKxFqarXIlnQNLbg/YknPopU0vdpgcE2OEHfOeAc/XNo7brJIrmV+wjNXEinL
+X-Google-Smtp-Source: AGHT+IEfsnSbzTHyDxFsr+hqkwQxcQYjceyAHDwsu2spopC0Uu00vPNa4OOk9Ujk6+K2F17feBA/Yg==
+X-Received: by 2002:a17:902:d2cb:b0:220:dff2:18ee with SMTP id d9443c01a7336-22368f819abmr268409195ad.14.1741093892134;
+        Tue, 04 Mar 2025 05:11:32 -0800 (PST)
+Received: from fedora.dns.podman ([43.228.180.230])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7349fe2a668sm10824199b3a.30.2025.03.04.05.11.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Mar 2025 05:11:31 -0800 (PST)
+From: Hangbin Liu <liuhangbin@gmail.com>
+To: netdev@vger.kernel.org
+Cc: Jay Vosburgh <jv@jvosburgh.net>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Nikolay Aleksandrov <razor@blackwall.org>,
+	Simon Horman <horms@kernel.org>,
+	Shuah Khan <shuah@kernel.org>,
+	Tariq Toukan <tariqt@nvidia.com>,
+	Jianbo Liu <jianbol@nvidia.com>,
+	Jarod Wilson <jarod@redhat.com>,
+	Steffen Klassert <steffen.klassert@secunet.com>,
+	Cosmin Ratiu <cratiu@nvidia.com>,
+	Petr Machata <petrm@nvidia.com>,
+	linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Hangbin Liu <liuhangbin@gmail.com>
+Subject: [PATCHv4 net 0/3] bond: fix xfrm offload issues
+Date: Tue,  4 Mar 2025 13:11:17 +0000
+Message-ID: <20250304131120.31135-1-liuhangbin@gmail.com>
+X-Mailer: git-send-email 2.46.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250304092417.2873893-1-elver@google.com> <20250304092417.2873893-7-elver@google.com>
- <20250304125516.GF11590@noisy.programming.kicks-ass.net>
-In-Reply-To: <20250304125516.GF11590@noisy.programming.kicks-ass.net>
-From: Marco Elver <elver@google.com>
-Date: Tue, 4 Mar 2025 14:09:21 +0100
-X-Gm-Features: AQ5f1JpRduzHYdRlbPZG29NFbDiaHAHst1RMQPMNTm3NjpUDRIeFlhtOLA45DL8
-Message-ID: <CANpmjNNNB8zQJKZaby8KNu8PdAJDufcia+sa2RajWm6Bd2TC4A@mail.gmail.com>
-Subject: Re: [PATCH v2 06/34] cleanup: Basic compatibility with capability analysis
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: "David S. Miller" <davem@davemloft.net>, Luc Van Oostenryck <luc.vanoostenryck@gmail.com>, 
-	"Paul E. McKenney" <paulmck@kernel.org>, Alexander Potapenko <glider@google.com>, Arnd Bergmann <arnd@arndb.de>, 
-	Bart Van Assche <bvanassche@acm.org>, Bill Wendling <morbo@google.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Dmitry Vyukov <dvyukov@google.com>, Eric Dumazet <edumazet@google.com>, 
-	Frederic Weisbecker <frederic@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Herbert Xu <herbert@gondor.apana.org.au>, Ingo Molnar <mingo@kernel.org>, 
-	Jann Horn <jannh@google.com>, Jiri Slaby <jirislaby@kernel.org>, 
-	Joel Fernandes <joel@joelfernandes.org>, Jonathan Corbet <corbet@lwn.net>, 
-	Josh Triplett <josh@joshtriplett.org>, Justin Stitt <justinstitt@google.com>, 
-	Kees Cook <kees@kernel.org>, Kentaro Takeda <takedakn@nttdata.co.jp>, 
-	Mark Rutland <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Miguel Ojeda <ojeda@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>, Thomas Gleixner <tglx@linutronix.de>, 
-	Uladzislau Rezki <urezki@gmail.com>, Waiman Long <longman@redhat.com>, Will Deacon <will@kernel.org>, 
-	kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org, 
-	llvm@lists.linux.dev, rcu@vger.kernel.org, linux-crypto@vger.kernel.org, 
-	linux-serial@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-On Tue, 4 Mar 2025 at 13:55, Peter Zijlstra <peterz@infradead.org> wrote:
->
-> On Tue, Mar 04, 2025 at 10:21:05AM +0100, Marco Elver wrote:
-> > Due to the scoped cleanup helpers used for lock guards wrapping
-> > acquire/release around their own constructors/destructors that store
-> > pointers to the passed locks in a separate struct, we currently cannot
-> > accurately annotate *destructors* which lock was released. While it's
-> > possible to annotate the constructor to say which lock was acquired,
-> > that alone would result in false positives claiming the lock was not
-> > released on function return.
-> >
-> > Instead, to avoid false positives, we can claim that the constructor
-> > "asserts" that the taken lock is held. This will ensure we can still
-> > benefit from the analysis where scoped guards are used to protect access
-> > to guarded variables, while avoiding false positives. The only downside
-> > are false negatives where we might accidentally lock the same lock
-> > again:
-> >
-> >       raw_spin_lock(&my_lock);
-> >       ...
-> >       guard(raw_spinlock)(&my_lock);  // no warning
-> >
-> > Arguably, lockdep will immediately catch issues like this.
-> >
-> > While Clang's analysis supports scoped guards in C++ [1], there's no way
-> > to apply this to C right now. Better support for Linux's scoped guard
-> > design could be added in future if deemed critical.
->
-> Would definitely be nice to have.
+The first patch fixes the incorrect locks using in bond driver.
+The second patch fixes the xfrm offload feature during setup active-backup
+mode. The third patch add a ipsec offload testing.
 
-Once we have the basic infra here, I think it'll be easier to push for
-these improvements. It's not entirely up to me, and we have to
-coordinate with the Clang maintainers. Definitely is on the list.
+v4: hold xs->lock for bond_ipsec_{del, add}_sa_all (Cosmin Ratiu)
+    use the defer helpers in lib.sh for selftest (Petr Machata)
+v3: move the ipsec deletion to bond_ipsec_free_sa (Cosmin Ratiu)
+v2: do not turn carrier on if bond change link failed (Nikolay Aleksandrov)
+    move the mutex lock to a work queue (Cosmin Ratiu)
 
-> > @@ -383,6 +387,7 @@ static inline void *class_##_name##_lock_ptr(class_##_name##_t *_T)       \
-> >
-> >  #define __DEFINE_LOCK_GUARD_1(_name, _type, _lock)                   \
-> >  static inline class_##_name##_t class_##_name##_constructor(_type *l)        \
-> > +     __no_capability_analysis __asserts_cap(l)                       \
-> >  {                                                                    \
-> >       class_##_name##_t _t = { .lock = l }, *_T = &_t;                \
-> >       _lock;                                                          \
-> > @@ -391,6 +396,7 @@ static inline class_##_name##_t class_##_name##_constructor(_type *l)     \
-> >
-> >  #define __DEFINE_LOCK_GUARD_0(_name, _lock)                          \
-> >  static inline class_##_name##_t class_##_name##_constructor(void)    \
-> > +     __no_capability_analysis                                        \
->
-> Does this not need __asserts_cal(_lock) or somesuch?
->
-> GUARD_0 is the one used for RCU and preempt, rather sad if it doesn't
-> have annotations at all.
+Hangbin Liu (3):
+  bonding: move IPsec deletion to bond_ipsec_free_sa
+  bonding: fix xfrm offload feature setup on active-backup mode
+  selftests: bonding: add ipsec offload test
 
-This is solved later in the series where we need it for RCU:
-https://lore.kernel.org/all/20250304092417.2873893-15-elver@google.com/
+ drivers/net/bonding/bond_main.c               |  55 +++++--
+ drivers/net/bonding/bond_netlink.c            |  16 +-
+ include/net/bonding.h                         |   1 +
+ .../selftests/drivers/net/bonding/Makefile    |   3 +-
+ .../drivers/net/bonding/bond_ipsec_offload.sh | 154 ++++++++++++++++++
+ .../selftests/drivers/net/bonding/config      |   4 +
+ 6 files changed, 208 insertions(+), 25 deletions(-)
+ create mode 100755 tools/testing/selftests/drivers/net/bonding/bond_ipsec_offload.sh
 
-We can't add this to all GUARD_0, because not all will be for
-capability-enabled structs. Instead I added a helper to add the
-necessary annotations where needed (see DECLARE_LOCK_GUARD_0_ATTRS).
+-- 
+2.46.0
+
