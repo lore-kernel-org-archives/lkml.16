@@ -1,247 +1,190 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB5E91F4CB0
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 09:21:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A142B1F666B;
+	Tue,  4 Mar 2025 09:21:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741080100; cv=none; b=Fe19/6oJG1m7NgIHzbd+R21J3/JITgMerAYSkWCTYMWQ608PRSV9moor3iqwJzG+vA3mAXmjywxxTe/HAZw/3uzFEzjHY6SwQoK2VjcY9D6DM1B8dd97GNC/BJ5avffhomvW86CbEAioxaj7UL+PUgFyiTzppw8DnvyhK9T408s=
+	t=1741080117; cv=none; b=Qu0u80m1VW7GvOM1HgLSeaPHrFy/RevYD8g0ivVy5kw1DIntWwXUDTFG4i7QDI/n6hGRBhf/WhXARrQ932xQ7qnZPExlFoA/O4x+w8ajVrp8bjeEvGvipdKATtFkzgUkc+0NIXLF36aB4tMfHg0kHEJsl5YC9IzyOboM6K+o7Wo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741080100; c=relaxed/simple;
-	bh=lq/BDL5jJ64l2aHQwFqjRVl947SflAx+AjctfrNfxRE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sk2bY0wyp/hCztQu9iGcyCj/JMNg7YJ6tint30TVqtUU2gIFhsturhEMjGfup84b9/HSljSdp7ikuGlxeyNMD7HKzmaT9vwcpFlGQ6hsU3b1EQjFt6K4czoxw4hAwvgGjP7lMmN2lG15l16HDzwmFOW7ZlT70yJplbzT3h/KBhA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Z35oaL6I; arc=none smtp.client-ip=209.85.208.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1741080117; c=relaxed/simple;
+	bh=/1wKwYgH19DpR7ZDJ3t00Y7uW5W0ujgdjwaOYeJddnU=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=S0bhdlgQuJOURkTy2/XQeXOspSztCRVoVSVUu5p/bEhvEuxYPXSbOFbJ54kf37e4nrU+7X0iXcXe8kvWhU9Np4kkmE2I6cZjBqpPZtCu7in7jfHh7GO4UqOEcu+FgMocHqa2c0fWzaVtaiJ8ngEZR0KQiIGB+GCC8rq6QAqsnY4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=X0lw7Z0V; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Z35oaL6I"
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5e56b229d60so2736563a12.0
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Mar 2025 01:21:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741080097; x=1741684897; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=P6N7lI+rHL6398LvsH4/ulHyXdMgbwpCXnaC+p2V88M=;
-        b=Z35oaL6I/AuZ++BHooLIdRc3f/9cEpTmoC8ejzAuQtd0OhPdsUcqF5iCIPc2Kn+jYl
-         6P0V2RdYsRtU2z2E6u4W7kKLCrRmqQx8DefePTG34xh5tbFeqALs9YcNPr55GYwVOL7D
-         of/upUmpbMhjLSjJFOtvFtAcPPjUr3PloWPKclRAy2NtsN4IwTDFUgv+Fp7hAFUPQGCu
-         koJ4XPkbqmboYP4mlaEgb4gYAW3UNRd3n0G+gFW/+9K2TgF7gdznsXKMS/emgEqFwwWX
-         5fE0kaTtxtsowOQYoTeKJHPCf4/8ihibo284kTivSyF8pUHCB0BT5c39Nng4lH3BNZO4
-         jJ5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741080097; x=1741684897;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=P6N7lI+rHL6398LvsH4/ulHyXdMgbwpCXnaC+p2V88M=;
-        b=BKOV+lmC9vXth0TNnCbUCbyGgDK7Kr5GVBfm11FdPBiI+/VN0dQmhr/bV+3UbuCLWS
-         B8j7GXy4nB1qngcrTfl5Q6j1YL877TbsoqODpbzd0sdkOEXyuueUVPD55W3RGotiHnzq
-         tRLQA0ftRkhWGpSklUDBiGwV9+98ENOUuEwbr14oZw03Twu2dxSsR6ZtUbZz/IfLNh3A
-         hNu+HUoB8OB31lSOfv8maoYljROF/ROZrVkwzN6N+y3tHBQ8Z5KOhVf01GC/EwKeujDE
-         qKLgxx4VgNaogjQm8aASgsLblPtSWkBl+W3z+RbZov1WaP+HciCwR2TAPZmIL7i+9JkH
-         0IPQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXEBbsb9Pkmbc2OoON0j7rvSmDfbTiOgHXKjLy2nYGUmAVwSSajdyF3ntqbQVZEWEq6eZvaSgiRJpoI4Bo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzeIhuaAybLSsKQPJkV2WXqdowmDr/iQQOzFJHXmAmHmLPfAy18
-	P5ypgC3/rTKdlf3GRtlEVrpV9vqBofCtIOm6kz2T0sAQLS2QOdACLBrwdIrb3Hw=
-X-Gm-Gg: ASbGnctXvhF/1eztleaMmsm0Zcw4qk9/caURy0Nhn4hIRd/nOBElsMyRIbvJtDs2JJ3
-	ay162+uhVAdK3KE4a9q384IUOtNpx1ysAD58j4I/GvfBsZoNbfn9EoXO9bSl/dCcjX4sstNR2hJ
-	zoeSeVs7Z8QufULMU0zERGtiDahBeztNciwJ0aiD06uIX6O8a9zp0qaJnvnaTKziThw0Yxl8Am5
-	3urYSs93/IORXzDYzp6Z7faB/Kv/d6aZPFXNGFTaFFHm+mch50bNTxXiWk05Mid2jQgYAvZnNn8
-	lf8BXNW7yyrKmJtMDsqmVdKKog/WXwWVQ6KQHvC9bw==
-X-Google-Smtp-Source: AGHT+IF+NHw6YRxZ+Q6MxjBPaEo7/hgL3hMb3kNmiSqnwiDxqoF4FESTNIlIhFAUOMNrQdd4JNXBeQ==
-X-Received: by 2002:a17:907:da3:b0:abf:6f95:22fc with SMTP id a640c23a62f3a-ac1f1380c6dmr244803266b.28.1741080095904;
-        Tue, 04 Mar 2025 01:21:35 -0800 (PST)
-Received: from linaro.org ([62.231.96.41])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abf795ba15esm309449666b.131.2025.03.04.01.21.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Mar 2025 01:21:35 -0800 (PST)
-Date: Tue, 4 Mar 2025 11:21:33 +0200
-From: Abel Vesa <abel.vesa@linaro.org>
-To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>
-Cc: Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>,
-	Anjelique Melendez <anjelique.melendez@oss.qualcomm.com>,
-	Kamal Wadhwa <quic_kamalw@quicinc.com>,
-	Jishnu Prakash <jishnu.prakash@oss.qualcomm.com>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Johan Hovold <johan@kernel.org>, Sebastian Reichel <sre@kernel.org>,
-	Pavel Machek <pavel@ucw.cz>, linux-leds@vger.kernel.org,
-	linux-pwm@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC] leds: rgb: leds-qcom-lpg: Compute PWM value based on
- period instead
-Message-ID: <Z8bGHV4PIkY4te6V@linaro.org>
-References: <20250303-leds-qcom-lpg-compute-pwm-value-using-period-v1-1-833e729e3da2@linaro.org>
- <ylnkjxnukss7askv7ip5htrb4tyjzhpw7jim2se6rloleq5h6w@ngk7lbk26hxj>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="X0lw7Z0V"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 523Ka1Oq022695;
+	Tue, 4 Mar 2025 09:21:41 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=1Yq58o
+	psB7IHhCTkH6W3tTgFClxwqWnFAP5FP/WEa0c=; b=X0lw7Z0VjVTksB3zFoSAto
+	4S+VlWluS/uLTlHPf9xVpjfF5e7R3WMnbovHYXFMGave8kUPJ8hM2i45w7pEbpQT
+	xft9NRj0pwrX4h8AHSKqLQEDwiEq5IlGz2/LSLlBEJoaBspX3mf3kPnomiX0QPnI
+	5bQTSBcttLHzGEYFIDi7QUeRlANfIAMHvjHiXhuJKP0flxpEHC6FkGshSN5aw/zi
+	yO1S3ZzwQPfPp8xsliDjXLXrn73upIf7m2lrB9P6tdxwEIw2/Sqr9cwy46JbWKKy
+	RRr3JMfKxLuW5oUMWPa9jcoJKPL5Epuvh2pBmtBJw1PJ1fB005PgSSUCUZc+MqCA
+	==
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 455dunwqfh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 04 Mar 2025 09:21:41 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5245mPVu025026;
+	Tue, 4 Mar 2025 09:21:40 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 454f91v6t0-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 04 Mar 2025 09:21:40 +0000
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5249LbXD54460758
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 4 Mar 2025 09:21:37 GMT
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id E7B3D20040;
+	Tue,  4 Mar 2025 09:21:36 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 360C020049;
+	Tue,  4 Mar 2025 09:21:36 +0000 (GMT)
+Received: from p-imbrenda (unknown [9.179.5.148])
+	by smtpav06.fra02v.mail.ibm.com (Postfix) with SMTP;
+	Tue,  4 Mar 2025 09:21:36 +0000 (GMT)
+Date: Tue, 4 Mar 2025 10:21:34 +0100
+From: Claudio Imbrenda <imbrenda@linux.ibm.com>
+To: David Hildenbrand <david@redhat.com>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org, frankja@linux.ibm.com,
+        borntraeger@de.ibm.com, nrb@linux.ibm.com, seiden@linux.ibm.com,
+        nsg@linux.ibm.com, schlameuss@linux.ibm.com, hca@linux.ibm.com
+Subject: Re: [PATCH v3 1/1] KVM: s390: pv: fix race when making a page
+ secure
+Message-ID: <20250304102134.1bd9fb03@p-imbrenda>
+In-Reply-To: <370231a1-af36-46ca-a87c-ce1929473c1d@redhat.com>
+References: <20250227130954.440821-1-imbrenda@linux.ibm.com>
+	<20250227130954.440821-2-imbrenda@linux.ibm.com>
+	<370231a1-af36-46ca-a87c-ce1929473c1d@redhat.com>
+Organization: IBM
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ylnkjxnukss7askv7ip5htrb4tyjzhpw7jim2se6rloleq5h6w@ngk7lbk26hxj>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: XalftXI9k2WUBCiF3t9fhOPR3smvupSv
+X-Proofpoint-GUID: XalftXI9k2WUBCiF3t9fhOPR3smvupSv
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-04_04,2025-03-03_04,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ adultscore=0 priorityscore=1501 malwarescore=0 bulkscore=0 spamscore=0
+ suspectscore=0 mlxlogscore=915 phishscore=0 clxscore=1015 mlxscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502100000 definitions=main-2503040075
 
-On 25-03-04 07:24:32, Uwe Kleine-König wrote:
-> Hello Abel,
+On Fri, 28 Feb 2025 22:15:04 +0100
+David Hildenbrand <david@redhat.com> wrote:
+
+> On 27.02.25 14:09, Claudio Imbrenda wrote:
+> > Holding the pte lock for the page that is being converted to secure is
+> > needed to avoid races. A previous commit removed the locking, which
+> > caused issues. Fix by locking the pte again.
+> > 
+> > Fixes: 5cbe24350b7d ("KVM: s390: move pv gmap functions into kvm")
+> > Reported-by: David Hildenbrand <david@redhat.com>
+> > Signed-off-by: Claudio Imbrenda <imbrenda@linux.ibm.com>  
 > 
-> On Mon, Mar 03, 2025 at 06:14:36PM +0200, Abel Vesa wrote:
-> > Currently, the implementation computes the best matched period based
-> > on the requested one, by looping through all possible register
-> > configurations. The best matched period is below the requested period.
+> Tested with shmem / memory-backend-memfd that ends up using large folios 
+> / THPs.
 > 
-> The best matched period *isn't above* the requested one. An exact match
-> is fine.
+> Tested-by: David Hildenbrand <david@redhat.com>
+> Reviewed-by: David Hildenbrand <david@redhat.com>
 > 
+> Two comments below.
 
-Yep, that's better. Will re-word.
-
-> > This means the PWM consumer could request duty cycle values between
-> > the best matched period and the requested period, which with the current
-> > implementation for computing the PWM value, it will result in values out
-> > of range with respect to the selected resolution.
-> 
-> I still don't understand what you mean with resolution here.
-
-Resolution in this context means the number of bits the PWM value
-(register value) is represented in. Currently, the driver supporst two PWM
-HW subtypes: normal and Hi-Res. Normal ones recently got support for changing
-the resolution between 6 bits or 9 bits. The high resolution ones support
-anything between 8 bits and 15 bits.
-
-> 
-> I guess you spend some time understanding the workings of the driver and
-> you also have an example request that results in a hardware
-> configuration you don't like. Please share the latter to a) support your
-> case and b) make it easier for your reviewers to judge if your change is
-> indeed an improvement.
-
-Sure, will bring up the 5ms period scenario again.
-
-When the consumer requests a period of 5ms, the closest the HW can do in
-this case is actually 4.26ms. Since the PWM API will continue to ask for
-duty cycle values based on the 5ms period, for any duty cycle value
-between 4.26ms and 5ms, the resulting PWM value will be above 255, which
-has been selected as best resolution for the 4.26ms best matched period.
-
-For example, when 5ms duty cycle value is requested, it will result in a
-PWM value of 300, which overflows the 255 selected resolution.
+I will need to send a v4, unfortunately there are other issues with this
+patch (as you have probably noticed by now as well)
 
 > 
-> > So change the way the PWM value is determined as a ratio between the
-> > requested period and duty cycle, mapped on the resolution interval.
+> [...]
 > 
-> Is the intention here that (for the picked period) a duty_cycle is
-> selected that approximates the requested relative duty_cycle (i.e.
-> .duty_cycle / .period)?
-
-Yes, that exactly what the intention is.
-
+> > +
+> > +int make_hva_secure(struct mm_struct *mm, unsigned long hva, struct uv_cb_header *uvcb)
+> > +{
+> > +	struct folio *folio;
+> > +	spinlock_t *ptelock;
+> > +	pte_t *ptep;
+> > +	int rc;
+> > +
+> > +	ptep = get_locked_valid_pte(mm, hva, &ptelock);
+> > +	if (!ptep)
+> > +		return -ENXIO;
+> > +
+> > +	folio = page_folio(pte_page(*ptep));
+> > +	folio_get(folio);  
 > 
-> If it's that: Nack. This might be the right thing for your use case, but
-> it's wrong for others, it complicates the driver because you have spend
-> more effort in the calculation and (from my POV even worse) the driver's
-> behaviour deviates from the usual one for pwm drivers. I admit there are
-> some other lowlevel pwm drivers that are not aligned to the procedure I
-> described that should be used to determine the register settings for a
-> given request. But I target a common behaviour of all pwm drivers
-> because that is the only way the pwm API functions can make a promise to
-> its consumers about the resulting behaviour. Reaching this is difficult,
-> because some consumers might depend on the "broken" behaviour of a given
-> lowlevel driver (and also because analysing a driver to check and fix
-> its behaviour is an effort). But "fixing" a driver to deviate from the
-> declared right behaviour is wrong and includes all downsides that make
-> me hesitate to align the old drivers to the common policy.
+> Grabbing a folio reference is only required if you want to keep using 
+> the folio after the pte_unmap_unlock. While the PTL is locked it cannot 
+> vanish.
+> 
+> So consider grabbing a reference only before dropping the PTL and you 
+> inted to call kvm_s390_wiggle_split_folio(). Then, you would effectively 
+> not require these two atomics on the expected hot path.
+> 
+> (I recall that the old code did that)
 
-OK, fair enough. But I still don't get what you expect from the provider
-that can't give the exact requested period. Do you expect the consumer
-to request a period, then provider compute a best matched one, which in
-our case is pretty far, and then still give exact duty cycle values ?
-
-Like: request 5ms period, get 4.26ms instead, then request 4ms duty
-cycle and get exact 4ms duty cycle when measured, instead of a
-proportional value to the best matched period?
-
-If so, then what happens when consumer asks for 5ms duty cycle?
-Everything above the 4.26ms will just represent 100% duty cycle.
+This code will go away hopefully in the next merge window anyway
+(unless I get sick *again*)
 
 > 
-> The policy to pick a hardware setting is a compromise between consumer
-> needs and what is straight forward to implement for (most) hardware
-> drivers. Please stick to that. If you want more flexibility and
-> precision in your consumer, please consider converting the pwm driver to
-> the waveform API.
+> > +	/*
+> > +	 * Secure pages cannot be huge and userspace should not combine both.
+> > +	 * In case userspace does it anyway this will result in an -EFAULT for
+> > +	 * the unpack. The guest is thus never reaching secure mode.
+> > +	 * If userspace plays dirty tricks and decides to map huge pages at a
+> > +	 * later point in time, it will receive a segmentation fault or
+> > +	 * KVM_RUN will return -EFAULT.
+> > +	 */
+> > +	if (folio_test_hugetlb(folio))
+> > +		rc =  -EFAULT;
+> > +	else if (folio_test_large(folio))
+> > +		rc = -E2BIG;
+> > +	else if (!pte_write(*ptep))
+> > +		rc = -ENXIO;
+> > +	else
+> > +		rc = make_folio_secure(mm, folio, uvcb);
+> > +	pte_unmap_unlock(ptep, ptelock);
+> > +
+> > +	if (rc == -E2BIG || rc == -EBUSY)
+> > +		rc = kvm_s390_wiggle_split_folio(mm, folio, rc == -E2BIG);
+> > +	folio_put(folio);
+> > +
+> > +	return rc;
+> > +}
+> > +EXPORT_SYMBOL_GPL(make_hva_secure);
+> >   
+> >   /*
+> >    * To be called with the folio locked or with an extra reference! This will
+> > diff --git a/arch/s390/kvm/gmap.c b/arch/s390/kvm/gmap.c
+> > index 02adf151d4de..c08950b4301c 100644  
+> 
+> 
+> There is one remaining reference to __gmap_make_secure, which you remove:
+> 
+> $ git grep __gmap_make_secure
+> arch/s390/kvm/gmap.c: * Return: 0 on success, < 0 in case of error (see 
+> __gmap_make_secure()).
 
-That means the pwm_bl driver will have to switch to waveform API, IIUC.
-
-That might break other providers for the pwm_bl consumer, wouldn't it?
+will fix
 
 > 
-> > [...]
-> > @@ -532,13 +534,15 @@ static void lpg_calc_duty(struct lpg_channel *chan, uint64_t duty)
-> >  	if (chan->subtype == LPG_SUBTYPE_HI_RES_PWM) {
-> >  		max = BIT(lpg_pwm_resolution_hi_res[chan->pwm_resolution_sel]) - 1;
-> >  		clk_rate = lpg_clk_rates_hi_res[chan->clk_sel];
-> > +		pwm_resolution_arr = lpg_pwm_resolution_hi_res;
-> >  	} else {
-> >  		max = BIT(lpg_pwm_resolution[chan->pwm_resolution_sel]) - 1;
-> >  		clk_rate = lpg_clk_rates[chan->clk_sel];
-> > +		pwm_resolution_arr = lpg_pwm_resolution;
-> >  	}
-> >  
-> > -	val = div64_u64(duty * clk_rate,
-> > -			(u64)NSEC_PER_SEC * lpg_pre_divs[chan->pre_div_sel] * (1 << chan->pre_div_exp));
-> > +	step = div64_u64(period, max);
-> > +	val = div64_u64(duty, step);
 > 
-> Such a pair of divisions is bound to loose precision. I didn't try to
-> determine values that can happen in practise here, but consider:
 > 
-> 	period =  999996
-> 	max =     500000
-> 	duty =    499998
-> 
-> The exact value for val is 250000. However with integer division you
-> get 499998. What you can do about that is calculating
-> 
-> 	val = duty * max / period
-> 
-> instead which gives you a more exact result. The challenge here however
-> is that the multiplication might overflow. If you know that the result
-> fits into a u64, mul_u64_u64_div_u64() is the function that gets this
-> right for you.
-
-I like this idea. Will use that instead.
-
-> 
-> >  	chan->pwm_value = min(val, max);
-> >  }
-> > [...]
-> > ---
-> > base-commit: 0067a4b21c9ab441bbe6bf3635b3ddd21f6ca7c3
-> 
-> My git repo doesn't know that commit. Given that you said your patch
-> bases on that other series, this isn't surprising. Please use a publicly
-> available commit as base parameter, otherwise you (and I) don't benefit
-> from the armada of build bots because they just silently fail to test in
-> this case.
-
-Well, this is a pretty common practice. When the patch relies on other
-patches that haven't been merged yet, but are still on the list, you
-can't really base it on a publicly available commit.
-
-And the fixes patchset that this is based on is needed for this to work.
-
-So I really don't get how this can be done differently.
-
-> 
-> Best regards
-> Uwe
-
-Thanks for reviewing,
-Abel
 
