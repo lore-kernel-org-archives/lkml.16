@@ -1,83 +1,102 @@
-Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E1F925334D
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 15:15:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.70
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BE90427E1A7;
+	Tue,  4 Mar 2025 15:16:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741101323; cv=none; b=COdXMZEjkxEvLlWFSwWfvUgvk75bNE4ASw++mwvH2+YXfMcOwdA5sRSYfu1dzWFzz4tByCNUimLhKu1aBZpEXnAgPxB5aK04HAZTear3xbEezdxZDG1968XleH481cfmE8j6RXxCnqR/9ZxUsCBiExQ28oTCCnCWNhCt0QwnBIg=
+	t=1741101369; cv=none; b=Mhd1OeZga/ikxRrT0G5egOagYNlUE4gjlURF26dgA0Jaz8n/2t5EK4D+VkQX411qY7TgVbbjXmRhLJ9HU5NJjwpurt43eRLIpuW6aTVoAR3aNWE+4MZP2cjOKMtLN76WVdHN6H40OmNnzW0xPAm41PN5UrtdJsvDPohN2MLZvKE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741101323; c=relaxed/simple;
-	bh=chcXcvuikcBH/ICfxxyR4lmX86zFuuGpphD4P71zF5I=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=t2H94PsORVm4pl2jWXePYNUR5spt3hGxVeeFf9HV2/kAGd34i4fGFQmk/Hzd3fqIN1snNFrMYTXUMdiL8CYAQcjZSUwgI2ntA5sNwXYXANY1WsaAev9dNsqA2XoyA1Sb39XKF4npJH//HiKKBmcbzrr0yD7iDrV49I8sKgG+6PI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-851a991cf8bso508393039f.0
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Mar 2025 07:15:21 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741101321; x=1741706121;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=VVPHum93vQ+4McdAoIpqqn3xv9w1jDzlp0vknZoAs9g=;
-        b=Fzg9nTg2rV0V1nrC5y1yeOTuMW+X7DsJKAv9X2F9x2giHQN4iz+2gO4SjhPejbSEuF
-         XGCjJlsEQQPCj1f5h2CEYtZZs6x7w/EJMP4nIWapXklGRtLHJSQOmQv0qojrbReCLoib
-         Dwn2LkImIqQb4NyVzsvlYmp9sIxI9V0DSJ4l09UowVWCj32BHAp+dZWAMSLsHrYE+DlR
-         fAwGd1dgYIfgtm8pQYr6Prijcnz+0pE8t46GLIuQQDjVCz7coyA+Uws0yRBjU5qFhJiZ
-         S1hdYJrnfd3paRVlnjpua9s+lArKFHBf8ZqBYbcX7OKoB28LdfIt78rskeM7AE+o+IJl
-         hk1A==
-X-Forwarded-Encrypted: i=1; AJvYcCXjn7YqOCxjJbaD3de30LjCXj2GetZ0DTVPHBC0is5oE2Bng6Ov60jaD168IVOuceCi5iBp6D1y3JwSNPY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwmoNilNs0dlsfuSkTPoDKxvYYemAjaorv7axY1AU3Np+SH4t8t
-	3HwRN//3/1GJoezAnjcKNEi8xmCvZOEgsSRpJE6YzK0LlJrTfG3ecSGH8o0VGsKyM2hSdh3d492
-	7EQidiOKQ/PQoLRVDbUfT69HAvC2NbcaNX8SY+GQrHLZaCoyYFlGgKYc=
-X-Google-Smtp-Source: AGHT+IHZp2JcDtWVHVX7r/bgLgaAh0PsvtXXDIjy4+ah1maw+gtJ8gs943tSME9f2/ECI+Hsgg8a+zimyBITtUygXNuKchIhWidO
+	s=arc-20240116; t=1741101369; c=relaxed/simple;
+	bh=3vs6fa+35UNMa4PxgO1HCbpblGveRjv4ZsbbxAKpvak=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oVAAjCaxumdUtE47QMftlJUtYM2KhqaBuVGECHPRoLoYC+J81/7VEa4nkQk+feMw0adJHRqorPFjk+k5VTh3YWGgREkVkIRcQ+HENUnGikQInaevgMFn3x0ixB3s6YB14NTB3QJ7SQ22UGAK1PnEcU6MEKoETC8rquVifAbuE3c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C1D3EFEC;
+	Tue,  4 Mar 2025 07:16:20 -0800 (PST)
+Received: from localhost (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B2BFE3F66E;
+	Tue,  4 Mar 2025 07:16:06 -0800 (PST)
+Date: Tue, 4 Mar 2025 15:16:04 +0000
+From: Leo Yan <leo.yan@arm.com>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	Thomas Richter <tmricht@linux.ibm.com>
+Subject: Re: [PATCH v2 5/6] perf test: Add timeout to datasym workload
+Message-ID: <20250304151604.GB13418@e132581.arm.com>
+References: <20250304022837.1877845-1-namhyung@kernel.org>
+ <20250304022837.1877845-6-namhyung@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1708:b0:3d3:fbc6:96c6 with SMTP id
- e9e14a558f8ab-3d41dba3f60mr37768485ab.1.1741101320904; Tue, 04 Mar 2025
- 07:15:20 -0800 (PST)
-Date: Tue, 04 Mar 2025 07:15:20 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67c71908.050a0220.15b4b9.0011.GAE@google.com>
-Subject: [syzbot] Monthly v9fs report (Mar 2025)
-From: syzbot <syzbot+list6e31de9aa6d237da5d04@syzkaller.appspotmail.com>
-To: asmadeus@codewreck.org, ericvh@kernel.org, linux-kernel@vger.kernel.org, 
-	lucho@ionkov.net, syzkaller-bugs@googlegroups.com, v9fs@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250304022837.1877845-6-namhyung@kernel.org>
 
-Hello v9fs maintainers/developers,
+On Mon, Mar 03, 2025 at 06:28:36PM -0800, Namhyung Kim wrote:
+> Unlike others it has an infinite loop that make it annoying to call.
+> Make it finish after 1 second and handle command-line argument to change
+> the setting.
+> 
+> Cc: Thomas Richter <tmricht@linux.ibm.com>
+> Cc: Leo Yan <leo.yan@arm.com>
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 
-This is a 31-day syzbot report for the v9fs subsystem.
-All related reports/information can be found at:
-https://syzkaller.appspot.com/upstream/s/v9fs
+Reviewed-by: Leo Yan <leo.yan@arm.com>
 
-During the period, 2 new issues were detected and 0 were fixed.
-In total, 13 issues are still open and 34 have already been fixed.
-
-Some of the still happening issues:
-
-Ref Crashes Repro Title
-<1> 1131    Yes   WARNING in __alloc_frozen_pages_noprof
-                  https://syzkaller.appspot.com/bug?extid=03fb58296859d8dbab4d
-<2> 40      Yes   WARNING: refcount bug in p9_req_put (3)
-                  https://syzkaller.appspot.com/bug?extid=d99d2414db66171fccbb
-<3> 12      No    BUG: corrupted list in p9_fd_cancelled (3)
-                  https://syzkaller.appspot.com/bug?extid=15a08eabe3d3838fb641
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-To disable reminders for individual bugs, reply with the following command:
-#syz set <Ref> no-reminders
-
-To change bug's subsystems, reply with:
-#syz set <Ref> subsystems: new-subsystem
-
-You may send multiple commands in a single email message.
+> ---
+>  tools/perf/tests/workloads/datasym.c | 23 +++++++++++++++++++++--
+>  1 file changed, 21 insertions(+), 2 deletions(-)
+> 
+> diff --git a/tools/perf/tests/workloads/datasym.c b/tools/perf/tests/workloads/datasym.c
+> index 8e08fc75a973e5f7..8ddb2aa6a049e343 100644
+> --- a/tools/perf/tests/workloads/datasym.c
+> +++ b/tools/perf/tests/workloads/datasym.c
+> @@ -1,3 +1,6 @@
+> +#include <stdlib.h>
+> +#include <signal.h>
+> +#include <unistd.h>
+>  #include <linux/compiler.h>
+>  #include "../tests.h"
+>  
+> @@ -12,9 +15,25 @@ static buf buf1 = {
+>  	.reserved[0] = 1,
+>  };
+>  
+> -static int datasym(int argc __maybe_unused, const char **argv __maybe_unused)
+> +static volatile sig_atomic_t done;
+> +
+> +static void sighandler(int sig __maybe_unused)
+> +{
+> +	done = 1;
+> +}
+> +
+> +static int datasym(int argc, const char **argv)
+>  {
+> -	for (;;) {
+> +	int sec = 1;
+> +
+> +	if (argc > 0)
+> +		sec = atoi(argv[0]);
+> +
+> +	signal(SIGINT, sighandler);
+> +	signal(SIGALRM, sighandler);
+> +	alarm(sec);
+> +
+> +	while (!done) {
+>  		buf1.data1++;
+>  		if (buf1.data1 == 123) {
+>  			/*
+> -- 
+> 2.48.1.711.g2feabab25a-goog
+> 
