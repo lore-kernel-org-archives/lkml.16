@@ -1,84 +1,59 @@
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C7C920A5EB;
-	Tue,  4 Mar 2025 14:51:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FF652641DF;
+	Tue,  4 Mar 2025 14:51:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741099885; cv=none; b=Dk03XqbeYB4woZy9M9PfnnwnX4JIW7xL6bv0DQ1CpHfU/zd8QrFfvy+rv/24Y2hs5omxN9VTWx2LDHZeaJ7Vx7yySkQ1WG/WDUXs3JULYXBIUzWs3ONXMVYQMV0IoU9Q9NJSk7fyBbDghcqQ0xYfJ/VUcxzNyGeq37zjonxdPjw=
+	t=1741099886; cv=none; b=ci2zLFGmBsGzR8nbAvmZwVg3CzXqFZ46D1agqZrWbYqzb311LWbg1wFOcDu5/0IQZ+Qgb780SgKrOGQvdURt7ImSfX7S2z9ud5G4cb44GnlyJzkl0bL9T1AobMS+L0TBFtEd9ib3lQyWZIEggWjCWFiWRfzfya0+jpHbmoHBTHA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741099885; c=relaxed/simple;
-	bh=tXTdXRn7ghG5zVsDSwWDun4bx1MHi7MVxfjidCyX9Xo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QZAwHSfsi3VaF4VyLMYk1si+6eNg9gRj4LmG2jg28asmWcz4PJ+zjXfN0XEiQJxzRV7vNJjQZuGbf0TWIYox+ejJjk5Emo4fjSDl9cM5SerxiOFURg1x5rNc011H+oIJPhl3kVDD6bzkoDALseboacnqgYavhJe02L54xfgwdjA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=M1SKXOHD; arc=none smtp.client-ip=159.69.126.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
+	s=arc-20240116; t=1741099886; c=relaxed/simple;
+	bh=gG5Cp/dvELEfgFwoOd+ks62Nuw5ztz7OeHZgm2BVqTY=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=WmB9SCOe6a6A0hhDfTkZyygYVYeaSUvSdFBrnHbvF0zJY4YAH8/JF+TGg9i4Xc9GJqlbv4/pmuzH9NeTxl5pBqLMJY+4qoHQsGUc//L+VyUKbV6EPmYI33gyh9SQR0UWwBCdYnLZJdmEpn37wn+KitAj0bcTiFx2N0ZZROW3DgU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C/eWYJcJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="M1SKXOHD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-	s=mail; t=1741099880;
-	bh=tXTdXRn7ghG5zVsDSwWDun4bx1MHi7MVxfjidCyX9Xo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=M1SKXOHDTkwjPcy8GfnDAQyQhohNdVNcEZ9DBtCotWWkXdXMoHUYR6NfZu8K8PUMs
-	 GaSnx2p5moxNLsup++713v8M735cBfb53S3PMNLhru8nqT34Blr6ZiTBJk4x7g33ai
-	 0ixPxORspwjZNUg3h719R2CmiAOYIW9F9An7txNo=
-Date: Tue, 4 Mar 2025 15:51:19 +0100
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
-To: Nathan Chancellor <nathan@kernel.org>
-Cc: Kees Cook <kees@kernel.org>, 
-	Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, Masahiro Yamada <masahiroy@kernel.org>, 
-	Nicolas Schier <nicolas@fjasle.eu>, llvm@lists.linux.dev, linux-kbuild@vger.kernel.org, 
-	David Gow <davidgow@google.com>, linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] kbuild: clang: Support building UM with SUBARCH=i386
-Message-ID: <e1a1531d-6968-4ae8-a3b5-5ea0547ec4b3@t-8ch.de>
-References: <20250303215240.work.379-kees@kernel.org>
- <05a25510-ab44-4eb1-a878-71e84c8aff0d@t-8ch.de>
- <20250304102536.GB2529736@ax162>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C/eWYJcJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02EC9C4CEE9;
+	Tue,  4 Mar 2025 14:51:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741099886;
+	bh=gG5Cp/dvELEfgFwoOd+ks62Nuw5ztz7OeHZgm2BVqTY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=C/eWYJcJSyz4aT3JPFK4JtCR1ilhX/ZsfhorqbXUDuaWTjVksz5w/8YkoFfPiWhTt
+	 eE8SRU2TM492iTtSX93ySmTck2IwaIp1OT0YEn2aTOQaVXzLZmfCPWs2F2ay94iglY
+	 AsPUaK/epqWS2+W/Qjyfi2Ou2HMiqhGBj8Ur+F8uDw+5GYNxwaloD7GQ3XeAmLuM7H
+	 7q2u9oA1c1/yoMBgn09ZCOChSAxMpy7RMmKWk0ageBwBPu+B6wic3aT9EAdezxuyzE
+	 hZJD09sDMQMqEjfXf5WcQMqVp0C6MAGSU09BSos1qQBQAVUIk32CaNIkTjJM8co/Mt
+	 qPzKBOpeEtcwQ==
+Date: Tue, 4 Mar 2025 14:51:14 +0000
+From: Jonathan Cameron <jic23@kernel.org>
+To: Colin Ian King <colin.i.king@gmail.com>
+Cc: Kevin Tsai <ktsai@capellamicro.com>, Lars-Peter Clausen
+ <lars@metafoo.de>, linux-iio@vger.kernel.org,
+ kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][next] iio: light: Fix spelling mistake "regist" ->
+ "register"
+Message-ID: <20250304145114.1757cec8@jic23-huawei>
+In-Reply-To: <20250228090228.679535-1-colin.i.king@gmail.com>
+References: <20250228090228.679535-1-colin.i.king@gmail.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250304102536.GB2529736@ax162>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On 2025-03-04 11:25:36+0100, Nathan Chancellor wrote:
-> On Mon, Mar 03, 2025 at 11:29:58PM +0100, Thomas Weißschuh wrote:
-> > On 2025-03-03 13:52:41-0800, Kees Cook wrote:
+On Fri, 28 Feb 2025 09:02:28 +0000
+Colin Ian King <colin.i.king@gmail.com> wrote:
 
-<snip>
-
-> > This is also what exists in tools/testing/selftests/lib.mk.
-> > Minus the missing CONFIG_FORTIFY_SOURCE on clang x86_32
-> > and a failure of overflow.DEFINE_FLEX_test (clang 19.1.7).
+> There are spelling mistakes in dev_err messages. Fix them.
 > 
-> Does Kees's other patch resolve the second issue? It'll obviously fix
-> the first :P
-> 
-> https://lore.kernel.org/20250303214929.work.499-kees@kernel.org/
+> Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+> ---
+Applied.  Thanks
 
-No, it doesn't.
-
-Running tests with:
-$ .kunit/linux kunit.filter_glob=overflow.DEFINE_FLEX_test kunit.enable=1 mem=1G console=tty kunit_shutdown=halt
-[15:48:30] =================== overflow (1 subtest) ===================
-[15:48:30] # DEFINE_FLEX_test: EXPECTATION FAILED at lib/overflow_kunit.c:1200
-[15:48:30] Expected __builtin_dynamic_object_size(two_but_zero, 0) == expected_raw_size, but
-[15:48:30]     __builtin_dynamic_object_size(two_but_zero, 0) == 12 (0xc)
-[15:48:30]     expected_raw_size == 8 (0x8)
-[15:48:30] [FAILED] DEFINE_FLEX_test
-[15:48:30] # module: overflow_kunit
-[15:48:30] ==================== [FAILED] overflow =====================
-[15:48:30] ============================================================
-[15:48:30] Testing complete. Ran 1 tests: failed: 1
-[15:48:31] Elapsed time: 43.985s total, 0.001s configuring, 43.818s building, 0.133s running
-
-If I force CONFIG_CC_HAS_COUNTED_BY=n then the test succeeds.
-Clang 19.1.7 from the Arch Linux repos.
-
-<snip>
+J
