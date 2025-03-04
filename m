@@ -1,252 +1,80 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11A36266561;
-	Tue,  4 Mar 2025 16:38:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB86C27C865;
+	Tue,  4 Mar 2025 16:38:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741106299; cv=none; b=HBMFi+wezY321xpVcqz2zmug6pKDUJr0dqLroQ7GEKs8jcNlkjMmSUFyUhXkArMmTmiQNSucx25gv4uxmg4RALVXEIAXPRW9JSPAyxMF8GOnKouKbrd6hR0xnb+Ahz947ntaAvs9n4EB8FtojpHWlezMukZuMzoJvGwOEuNWlbQ=
+	t=1741106307; cv=none; b=YykGdmu65V9A/O5Y0hEReQLbxJ8Idgji3UaGNaWmk+BrH4opjpT5UPzNBCFWVjAk44nEtY4uyM2izw95OHiq9lgrl7tphPZ2+8DvQqakWX0Cr/cbTsM9AqSOQSql8kfcKJv/czwQP0F5gf1QS/eyGiJjnq1Ek2jSdfP5pLGbqpY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741106299; c=relaxed/simple;
-	bh=xOBqQU1/wBdBKF+hOUQI10NBZHd2K9ykweBVZqgwYKM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=advCMsHOdlC0W699E2NthW+EKE6f8z2KFSLRZanHp4opl5TN7+l1u6LrYaTZvjNIbjEz04YQogLzK9vIgXEpAh6O8MLdj/H3DNhqoZ24jomzMKm8X7TwpJmxqCGP0Qwq30iXTtdCeiDyWjPPa3I/tKZaTGnCUa6vnoWp0XZeT9s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fl/RLT8+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741106307; c=relaxed/simple;
+	bh=0NFhIHUSIXLQ1IERnVrz79OxkFLXeS/HqU9Qitji2q0=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=rIhkXjR+V3M2/kQctT2/1T0DCyVUsrQpd/S8iewBnRdB6CAkzyziec6p3MtbcdL6s65RScCxlKmzFvRKnRd5EYPDfvd/Hi3MUb9RmLJlZ7O/2PCFCi0+2+M/odH1BNDVgnk+wLv9FTDAtJdIICA7kR/TvvpZtG9iiyg3k50DTTM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=CqpFpRab; arc=none smtp.client-ip=45.79.88.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fl/RLT8+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE116C4CEEB;
-	Tue,  4 Mar 2025 16:38:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741106298;
-	bh=xOBqQU1/wBdBKF+hOUQI10NBZHd2K9ykweBVZqgwYKM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=fl/RLT8+SH6U5FcsYMizhYNwOFPKh2pnMtRJ8LqLRYztUAP6Ah3LWeOK0yb7lQYFd
-	 8ZLQCbGzyTu4SxwZ6f8Ftf/S+uaQ0ifI2OfH4voAFPTo3F196LHfTv6wcAEuK6uIbN
-	 NYW5ljY3Ql5FDAiPrJtFjQeYbcMn4IdkWfLU9IrV3HNNFB/BnCgOBwPspY54Nr59tC
-	 SP7jVp8VvgI2js4Icd/gb2kWNi6u0krw0PFq1WmaZO8P9gyavUfEPQb9rpfYjwCDGw
-	 ZMceWjyq84T+6YshAGGRM2hjSqGCvMihvX7UTsWZMl2nvTv6CioAFkgh2pgSFfKIXf
-	 S0B40y08ZAlQg==
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-abf615d5f31so569740766b.2;
-        Tue, 04 Mar 2025 08:38:18 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCU6to/WPUMLO+vkDXk+RyKBqlRb0Oj/7xJTpOOxfpUOBe/p31ANpCW8urMLOv5G/DEG+shJwLlbhdpI@vger.kernel.org, AJvYcCVAI0Mbw8pXsSCsnMf3YRimprdCerMeJjvIIYzRvzQF5NgmbIVKJKFOzaDhJFL/sCxO+k6hSOH8mrRWyRM4@vger.kernel.org, AJvYcCX8cRQxPdC3G3BmJNewFIFeXLlpArH+gonybhHw3kZRo55hS+kCDj0Xso3rufKr1+E6krXQe/2d59hk7Ittew==@vger.kernel.org
-X-Gm-Message-State: AOJu0YwP8uFso5J3rZpZkf9gfBS6UAYmUsRPcP6QOooQDTIjJl4LJ6dS
-	PmBVrYA1Hw80+0qx2znnbFp445ZKupz/ti9gE2wAJNATjXKgypT1cxFMZrTo7bUdsfVIaDNOTgX
-	9Pbtg8cXAYqQgyoq/b8iCcrvOGA==
-X-Google-Smtp-Source: AGHT+IEw+X5joqLWCPWv0VGQNAmhXwfbVOK9kqhQQdx1rRlbl9aTYNRL5ii4DIWF7RvyE9RZ769TVeWAWpvYjsaHw8g=
-X-Received: by 2002:a17:906:dc8f:b0:abf:777e:79e5 with SMTP id
- a640c23a62f3a-abf777e7cfbmr954338266b.9.1741106297250; Tue, 04 Mar 2025
- 08:38:17 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="CqpFpRab"
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net DF3484105F
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
+	t=1741106305; bh=GNXSsU+nJrWFy0zOEQmbq0fVDqKBxRTGtxEH/aS4AaA=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=CqpFpRabFcZkVlHkdXF5u0TnXe5vmPQDD5+hgy/Ut8ryHvW2EFjp8PbrVuGfAAg8f
+	 JFhAOCqoHadLBKNSfX7xKNQAHQC0Il2Hqw96j2IBTwG/KAwYtI3hIBbsZsZSxk65S8
+	 actAD2/JcXNLiulR8WtVK+Qu9gKQ15cR3TXAy4rWJ2rVst8/v96ZFsGzpz0JO+SKQN
+	 B/LuliWECXn0y8Q/bKt50TGrUztHAvnC2T89LRRhYPRq0pXo+mgjnBOw+jKKF+13ON
+	 NhHI/LMZsiyxFFxuEOY+Y2KWdyh5pKhlGSFFl0MfCHbtb6Rc6gtNAw0U1v5kddpuJZ
+	 SS7Ul0z4311Mw==
+Received: from localhost (unknown [73.243.92.182])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by ms.lwn.net (Postfix) with ESMTPSA id DF3484105F;
+	Tue,  4 Mar 2025 16:38:24 +0000 (UTC)
+From: Jonathan Corbet <corbet@lwn.net>
+To: gshahrouzi@gmail.com, linux-kernel@vger.kernel.org
+Cc: trivial@kernel.org, skhan@linuxfoundation.org,
+ linux-kernel-mentees@lists.linuxfoundation.org, linux-doc@vger.kernel.org
+Subject: Re: [PATCH] Docs/arch/arm64: Fix spelling in amu.rst
+In-Reply-To: <67bd05b5.c80a0220.205997.19df@mx.google.com>
+References: <67bd05b5.c80a0220.205997.19df@mx.google.com>
+Date: Tue, 04 Mar 2025 09:38:23 -0700
+Message-ID: <87cyeweoow.fsf@trenco.lwn.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241129-topic-sl7_feat2-v2-0-fb6cf5660cfc@oss.qualcomm.com> <20241129-topic-sl7_feat2-v2-3-fb6cf5660cfc@oss.qualcomm.com>
-In-Reply-To: <20241129-topic-sl7_feat2-v2-3-fb6cf5660cfc@oss.qualcomm.com>
-From: Rob Herring <robh@kernel.org>
-Date: Tue, 4 Mar 2025 10:38:05 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJVVJD91Q=xG_gkuFXg5mq-EQReUGVbyy7HZ+YQm1EAiw@mail.gmail.com>
-X-Gm-Features: AQ5f1JpY0Y8giIR5-SdVrOf21k37EMiWJTHMP4VfoTckpgm1PsiQyNH9qk-Zj7Y
-Message-ID: <CAL_JsqJVVJD91Q=xG_gkuFXg5mq-EQReUGVbyy7HZ+YQm1EAiw@mail.gmail.com>
-Subject: Re: [PATCH v2 3/3] arm64: dts: qcom: x1e80100-romulus: Set up PS8830s
-To: Konrad Dybcio <konradybcio@kernel.org>
-Cc: Bjorn Andersson <andersson@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Marijn Suijten <marijn.suijten@somainline.org>, 
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, 
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 
-On Fri, Nov 29, 2024 at 11:20=E2=80=AFAM Konrad Dybcio <konradybcio@kernel.=
-org> wrote:
+gshahrouzi@gmail.com writes:
+
+>>From 748db76c8e9f6e5906be0033dcdec9bb5749b303 Mon Sep 17 00:00:00 2001
+> From: Gabriel <gshahrouzi@gmail.com>
+> Date: Mon, 24 Feb 2025 18:09:26 -0500
+> Subject: [PATCH] Docs/arch/arm64: Fix spelling in amu.rst
 >
-> From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+> Change though to through.
 >
-> The Laptop 7 features two USB-C ports, each one sporting a PS8830 USB-C
-> retimer/mux. Wire them up.
->
-> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+> Signed-off-by: Gabriel <gshahrouzi@gmail.com>
 > ---
->  .../boot/dts/qcom/x1e80100-microsoft-romulus.dtsi  | 282 +++++++++++++++=
-+++++-
->  1 file changed, 276 insertions(+), 6 deletions(-)
+>  Documentation/arch/arm64/amu.rst | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> diff --git a/arch/arm64/boot/dts/qcom/x1e80100-microsoft-romulus.dtsi b/a=
-rch/arm64/boot/dts/qcom/x1e80100-microsoft-romulus.dtsi
-> index 80fbcaea5d83e1147a74dd3320ae8fe8c953db57..2236095023a135d8fb1baaede=
-111a34be54d160c 100644
-> --- a/arch/arm64/boot/dts/qcom/x1e80100-microsoft-romulus.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/x1e80100-microsoft-romulus.dtsi
-> @@ -124,7 +124,15 @@ port@1 {
->                                         reg =3D <1>;
->
->                                         pmic_glink_ss0_ss_in: endpoint {
-> -                                               remote-endpoint =3D <&usb=
-_1_ss0_qmpphy_out>;
-> +                                               remote-endpoint =3D <&ret=
-imer_ss0_ss_out>;
-> +                                       };
-> +                               };
-> +
-> +                               port@2 {
-> +                                       reg =3D <2>;
-> +
-> +                                       pmic_glink_ss0_con_sbu_in: endpoi=
-nt {
-> +                                               remote-endpoint =3D <&ret=
-imer_ss0_con_sbu_out>;
->                                         };
->                                 };
->                         };
-> @@ -153,7 +161,15 @@ port@1 {
->                                         reg =3D <1>;
->
->                                         pmic_glink_ss1_ss_in: endpoint {
-> -                                               remote-endpoint =3D <&usb=
-_1_ss1_qmpphy_out>;
-> +                                               remote-endpoint =3D <&ret=
-imer_ss1_ss_out>;
-> +                                       };
-> +                               };
-> +
-> +                               port@2 {
-> +                                       reg =3D <2>;
-> +
-> +                                       pmic_glink_ss1_con_sbu_in: endpoi=
-nt {
-> +                                               remote-endpoint =3D <&ret=
-imer_ss1_con_sbu_out>;
->                                         };
->                                 };
->                         };
-> @@ -185,6 +201,109 @@ vreg_edp_3p3: regulator-edp-3p3 {
->                 regulator-boot-on;
->         };
->
-> +       vreg_rtmr0_1p15: regulator-rtmr0-1p15 {
-> +               compatible =3D "regulator-fixed";
-> +
-> +               regulator-name =3D "VREG_RTMR0_1P15";
-> +
-> +               regulator-min-microvolt =3D <1150000>;
-> +               regulator-max-microvolt =3D <1150000>;
-> +
-> +               gpio =3D <&pmc8380_5_gpios 8 GPIO_ACTIVE_HIGH>;
-> +               enable-active-high;
-> +
-> +               pinctrl-0 =3D <&rtmr0_1p15_reg_en>;
-> +               pinctrl-names =3D "default";
-> +
-> +               regulator-boot-on;
-> +       };
-> +
-> +       vreg_rtmr0_1p8: regulator-rtmr0-1p8 {
-> +               compatible =3D "regulator-fixed";
-> +
-> +               regulator-name =3D "VREG_RTMR0_1P8";
-> +
-> +               regulator-min-microvolt =3D <1800000>;
-> +               regulator-max-microvolt =3D <1800000>;
-> +
-> +               gpio =3D <&pm8550ve_9_gpios 8 GPIO_ACTIVE_HIGH>;
-> +               enable-active-high;
-> +
-> +               pinctrl-0 =3D <&rtmr0_1p8_reg_en>;
-> +               pinctrl-names =3D "default";
-> +
-> +               regulator-boot-on;
-> +       };
-> +
-> +       vreg_rtmr0_3p3: regulator-rtmr0-3p3 {
-> +               compatible =3D "regulator-fixed";
-> +
-> +               regulator-name =3D "VREG_RTMR0_3P3";
-> +
-> +               regulator-min-microvolt =3D <3300000>;
-> +               regulator-max-microvolt =3D <3300000>;
-> +
-> +               gpio =3D <&pm8550_gpios 11 GPIO_ACTIVE_HIGH>;
-> +               enable-active-high;
-> +
-> +               pinctrl-0 =3D <&rtmr0_3p3_reg_en>;
-> +               pinctrl-names =3D "default";
-> +
-> +               regulator-boot-on;
-> +       };
-> +
-> +       vreg_rtmr1_1p15: regulator-rtmr1-1p15 {
-> +               compatible =3D "regulator-fixed";
-> +
-> +               regulator-name =3D "VREG_RTMR1_1P15";
-> +
-> +               regulator-min-microvolt =3D <1150000>;
-> +               regulator-max-microvolt =3D <1150000>;
-> +
-> +               gpio =3D <&tlmm 188 GPIO_ACTIVE_HIGH>;
-> +               enable-active-high;
-> +
-> +               pinctrl-0 =3D <&rtmr1_1p15_reg_en>;
-> +               pinctrl-names =3D "default";
-> +
-> +               regulator-boot-on;
-> +       };
-> +
-> +       vreg_rtmr1_1p8: regulator-rtmr1-1p8 {
-> +               compatible =3D "regulator-fixed";
-> +
-> +               regulator-name =3D "VREG_RTMR1_1P8";
-> +
-> +               regulator-min-microvolt =3D <1800000>;
-> +               regulator-max-microvolt =3D <1800000>;
-> +
-> +               gpio =3D <&tlmm 175 GPIO_ACTIVE_HIGH>;
-> +               enable-active-high;
-> +
-> +               pinctrl-0 =3D <&rtmr1_1p8_reg_en>;
-> +               pinctrl-names =3D "default";
-> +
-> +               regulator-boot-on;
-> +       };
-> +
-> +       vreg_rtmr1_3p3: regulator-rtmr1-3p3 {
-> +               compatible =3D "regulator-fixed";
-> +
-> +               regulator-name =3D "VREG_RTMR1_3P3";
-> +
-> +               regulator-min-microvolt =3D <3300000>;
-> +               regulator-max-microvolt =3D <3300000>;
-> +
-> +               gpio =3D <&tlmm 186 GPIO_ACTIVE_HIGH>;
-> +               enable-active-high;
-> +
-> +               pinctrl-0 =3D <&rtmr1_3p3_reg_en>;
-> +               pinctrl-names =3D "default";
-> +
-> +               regulator-boot-on;
-> +       };
-> +
-> +
->         vreg_nvme: regulator-nvme {
->                 compatible =3D "regulator-fixed";
->
-> @@ -665,7 +784,59 @@ &i2c3 {
->
->         status =3D "okay";
->
-> -       /* PS8830 USB retimer @8 */
-> +       /* Left-side rear port */
-> +       typec-mux@8 {
-> +               compatible =3D "parade,ps8830";
-> +               reg =3D <0x8>;
-> +
-> +               reset-gpios =3D <&pm8550_gpios 10 GPIO_ACTIVE_LOW>;
-> +
-> +               clocks =3D <&rpmhcc RPMH_RF_CLK3>;
-> +               clock-names =3D "xo";
+> diff --git a/Documentation/arch/arm64/amu.rst b/Documentation/arch/arm64/amu.rst
+> index 01f2de2b0450..ac1b3f0e211d 100644
+> --- a/Documentation/arch/arm64/amu.rst
+> +++ b/Documentation/arch/arm64/amu.rst
+> @@ -80,7 +80,7 @@ bypass the setting of AMUSERENR_EL0 to trap accesses from EL0 (userspace) to
+>  EL1 (kernel). Therefore, firmware should still ensure accesses to AMU registers
+>  are not trapped in EL2/EL3.
+>  
+> -The fixed counters of AMUv1 are accessible though the following system
+> +The fixed counters of AMUv1 are accessible through the following system
+>  register definitions:
 
-clock-names is not part of the binding.
+Applied, thanks.
 
-Rob
+jon
