@@ -1,46 +1,46 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E97991FAC38;
-	Tue,  4 Mar 2025 07:11:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 385221FA165;
+	Tue,  4 Mar 2025 07:11:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741072279; cv=none; b=a80zZ8HRkCjRJdKaljtV5DhqbeqVYd6lpJqZxtyCIQOprp2d49263CkABqPckpFvPWlkt+gY0UBQaVVdgm5zWcCnrRFazO87hR3gLNY2HKA7hCMOWJjZmFoTrUnTm9OqmxzyYhGzTNWOsh2bTHYSknkrCxcYPDNG5wEm/TGC07s=
+	t=1741072280; cv=none; b=YoiPh53wNLLkHVczszdhCT7z8wdBaWJ4HW2Ni7XArdv2R5wHldnN70ggq+AqV1kog/E2jVni3nm626ImQtz9fwqPY7HjdkAbSfIuaOAMmGLBKWpc3o4Js2doL7jjHBmh8gjYkArwAj0VDP1Ad7KMXt9HhfkNS3fTI9whhtVm2Zc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741072279; c=relaxed/simple;
-	bh=M1vd8Z9iYa877FOzbc1SvHGKXTYeUeiOx5fq6u0VCh8=;
+	s=arc-20240116; t=1741072280; c=relaxed/simple;
+	bh=LVdk5mxObbMfu6i2vClWjXlgJzMhcCXBaIxt/EeFGhE=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Fhhx690+m2bpBOLbWR4J3SRYIIGZjSteuK+vHHIf4WPOQCqOeHZJD/LuS/uDZb5lVyW5AEEergt1X/mvPYqPruyuh1VVZ+Qk+wN7bNvOu+hxzhS+9iyVgfAP8fVxgaFClNyEb1jVSk8tnki1SW+Ir/VdmoPKDl4wQ+IR4OjHsI4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=4eW7ksq3; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=gloEuXll; arc=none smtp.client-ip=193.142.43.55
+	 In-Reply-To:To:Cc; b=PN8P1lwdAeMXFF5N2JWDB9zWrGoZhqmLXxYVw+dIek966pC0EvGtKd1b2HOCAZweSUE5OUqdIe8hyGbd7tJ4+p5HT7P+s5aWoqmUdJgeaFGurY2TMDg7zB00RrNhTQA/p0qVDLuT4UF0nsn41apODR/QkxtoANFAUvhZ6PeXkHE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=nynnH1XA; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=wr8uFBG0; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="4eW7ksq3";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="gloEuXll"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="nynnH1XA";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="wr8uFBG0"
 From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1741072275;
+	s=2020; t=1741072276;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=LfPXv/LXz8n1+ZUFV+l2WWTtIn2W+XR413g/QfPa9lU=;
-	b=4eW7ksq3R3vHxKCYSNGZybQTTiYpakb716N0ANgGs3/tk3Nu4iszX5jq9TzSgJ8ip4mHh7
-	kyQ+fNZOpy651MIvHhVvy446fYro7GKicFrISaU0NvoyF9yXcCYBW7AeP0QAQQmjkiQY4s
-	wYPut4pHhUxpu1cIZoonysaXY8XJCgViaRn/9hBFgl+tiQxDpf1Gw6U1ObeJnaGQuiiIKI
-	auBnGFXviHXshdBeyJrK4LZTjmRmNoe5qV+a0fI/L0LnP6dSbZxQ1yi9ZEHvcfVgmphLA8
-	QPwG8vhvV9WTQNRhAsBPvZpuklD36PeZdzu4I8MeocqftW/qtdNtsJnmmEjkhQ==
+	bh=6isZ852xlL9hSmHb8o3TzBvQ/BwM4VpQuLYoBOElsAw=;
+	b=nynnH1XA0yPK8wN9kJK7YT6ct/7YcwJlrFV09/K4wZ6ZCggkn6lI4GW9gCp9+afjeTepG8
+	ZvG0HzKyB17vJxl0rm0Sy++0mxMAcx4tQ3jbUHisqJWXtb/RyiAj0D48PfICFd4DyqUU8t
+	CiADp3QfmuG7JfCqeO7UVHJC4KdJFfOYF9M3WVRflN7YnkYEnd7nEf7rdbr8Y0lXNKLl/O
+	2NuuPWeLf5fVegdPBldOANoqJddCtxhxZ1F+BakFi8xDFBsTxg/Xz3gv7gtH9pwA2e1/gA
+	JAaV4mc5WJcb+fTFizzZ4moPR+2BOn5aLXENZRYekaG8ac2uLJSifImCP44MiA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1741072275;
+	s=2020e; t=1741072276;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=LfPXv/LXz8n1+ZUFV+l2WWTtIn2W+XR413g/QfPa9lU=;
-	b=gloEuXllwIHeUJkDMCbyJ8kIa2CNGUt2ZeMutcr/uR6bO2YJVmiQiuPc63NXkVzLyRuSng
-	1yv3CMvXuDQshgCw==
-Date: Tue, 04 Mar 2025 08:10:43 +0100
-Subject: [PATCH 13/32] selftests: harness: Stop using setjmp()/longjmp()
+	bh=6isZ852xlL9hSmHb8o3TzBvQ/BwM4VpQuLYoBOElsAw=;
+	b=wr8uFBG0RDBozuLwdT1CTMTeMhrbsMl9x0dnNwgDfSAOIrZblipaY/fQJ+d0xrDFFQRcin
+	Ha70caANi1NWD3Cg==
+Date: Tue, 04 Mar 2025 08:10:46 +0100
+Subject: [PATCH 16/32] tools/nolibc: use pselect6_time64 if available
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,7 +49,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250304-nolibc-kselftest-harness-v1-13-adca7cd231e2@linutronix.de>
+Message-Id: <20250304-nolibc-kselftest-harness-v1-16-adca7cd231e2@linutronix.de>
 References: <20250304-nolibc-kselftest-harness-v1-0-adca7cd231e2@linutronix.de>
 In-Reply-To: <20250304-nolibc-kselftest-harness-v1-0-adca7cd231e2@linutronix.de>
 To: Shuah Khan <shuah@kernel.org>, Shuah Khan <skhan@linuxfoundation.org>, 
@@ -57,150 +57,42 @@ To: Shuah Khan <shuah@kernel.org>, Shuah Khan <skhan@linuxfoundation.org>,
  =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
 Cc: linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
  =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1741072266; l=5108;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1741072266; l=1128;
  i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
- bh=M1vd8Z9iYa877FOzbc1SvHGKXTYeUeiOx5fq6u0VCh8=;
- b=edHn/YmGaQAh2EiAaKEG9Cgjg2T8YzYmUEjXA04lvcy3faT4QxEF1+tQmyP2AXdHIFoA8v1kB
- kv26q43Rx1DC4tPITW9IqXAy3K1R6mr05qYli8SMHIPWdjXInOVOwr8
+ bh=LVdk5mxObbMfu6i2vClWjXlgJzMhcCXBaIxt/EeFGhE=;
+ b=iDl3jMwM5Bt5cFyY2aBnoGWqUBpuNKq00hHPgN3L5Se3XAxWL949V2GVaLYaAJ3EX6h/sphK1
+ v0aCUbjM7a3DdxKxoWd9kWuQpSOHK9khgj8apMlevfDDVp5nHdgOISz
 X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
  pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
-Usage of longjmp() was added to ensure that teardown is always run in
-commit 63e6b2a42342 ("selftests/harness: Run TEARDOWN for ASSERT failures")
-However instead of calling longjmp() to the teardown handler it is easier to
-just call the teardown handler directly from __bail().
-Any potential duplicate teardown invocations are harmless as the actual
-handler will only ever be executed once since
-commit fff37bd32c76 ("selftests/harness: Fix fixture teardown").
-
-Additionally this removes a incompatibility with nolibc,
-which does not support setjmp()/longjmp().
+riscv32 does not have any of the older select systemcalls.
+Use pselect6_time64 instead.
+poll() is also used to implement sleep().
 
 Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
 ---
- tools/testing/selftests/kselftest_harness.h | 49 ++++++++++-------------------
- 1 file changed, 17 insertions(+), 32 deletions(-)
+ tools/include/nolibc/sys.h | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/tools/testing/selftests/kselftest_harness.h b/tools/testing/selftests/kselftest_harness.h
-index efc855b93315892a822c9eefc8d7a3784793c754..b7842dd5302375b75416830c22fac0775e0d12d1 100644
---- a/tools/testing/selftests/kselftest_harness.h
-+++ b/tools/testing/selftests/kselftest_harness.h
-@@ -70,7 +70,6 @@
- #include <sys/mman.h>
- #include <sys/types.h>
- #include <sys/wait.h>
--#include <setjmp.h>
- #endif
- 
- #include "kselftest.h"
-@@ -182,9 +181,7 @@
- 		struct __test_metadata *_metadata, \
- 		struct __fixture_variant_metadata __attribute__((unused)) *variant) \
- 	{ \
--		if (setjmp(_metadata->env) == 0) \
--			test_name(_metadata, NULL, NULL); \
--		__test_check_assert(_metadata); \
-+		test_name(_metadata, NULL, NULL); \
- 	} \
- 	static struct __test_metadata _##test_name##_object = \
- 		{ .name = #test_name, \
-@@ -429,24 +426,20 @@
- 				self = &self_private; \
- 			} \
- 		} \
--		if (setjmp(_metadata->env) == 0) { \
--			/* _metadata and potentially self are shared with all forks. */ \
--			child = fork(); \
--			if (child == 0) { \
--				fixture_name##_setup(_metadata, self, variant->data); \
--				/* Let setup failure terminate early. */ \
--				if (_metadata->exit_code) \
--					_exit(0); \
--				*_metadata->no_teardown = false; \
--				fixture_name##_##test_name(_metadata, self, variant->data); \
--			} else if (child < 0 || child != waitpid(child, &status, 0)) { \
--				ksft_print_msg("ERROR SPAWNING TEST GRANDCHILD\n"); \
--				_metadata->exit_code = KSFT_FAIL; \
--			} \
--		} \
-+		/* _metadata and potentially self are shared with all forks. */ \
-+		child = fork(); \
- 		if (child == 0) { \
-+			fixture_name##_setup(_metadata, self, variant->data); \
-+			/* Let setup failure terminate early. */ \
-+			if (_metadata->exit_code) \
-+				_exit(0); \
-+			*_metadata->no_teardown = false; \
-+			fixture_name##_##test_name(_metadata, self, variant->data); \
- 			_metadata->teardown_fn(false, _metadata, self, variant->data); \
- 			_exit(0); \
-+		} else if (child < 0 || child != waitpid(child, &status, 0)) { \
-+			ksft_print_msg("ERROR SPAWNING TEST GRANDCHILD\n"); \
-+			_metadata->exit_code = KSFT_FAIL; \
- 		} \
- 		_metadata->teardown_fn(true, _metadata, self, variant->data); \
- 		munmap(_metadata->no_teardown, sizeof(*_metadata->no_teardown)); \
-@@ -460,7 +453,6 @@
- 			/* Forward signal to __wait_for_test(). */ \
- 			kill(getpid(), WTERMSIG(status)); \
- 		} \
--		__test_check_assert(_metadata); \
- 	} \
- 	static void wrapper_##fixture_name##_##test_name##_teardown( \
- 		bool in_parent, struct __test_metadata *_metadata, \
-@@ -761,7 +753,7 @@
-  */
- #define OPTIONAL_HANDLER(_assert) \
- 	for (; _metadata->trigger; _metadata->trigger = \
--			__bail(_assert, _metadata))
-+			__bail(_assert, _metadata, self, variant))
- 
- #define is_signed_type(var)       (!!(((__typeof__(var))(-1)) < (__typeof__(var))1))
- 
-@@ -931,7 +923,6 @@ struct __test_metadata {
- 	int timeout;	/* seconds to wait for test timeout */
- 	bool aborted;	/* stopped test due to failed ASSERT */
- 	bool *no_teardown; /* fixture needs teardown */
--	jmp_buf env;	/* for exiting out of test early */
- 	struct __test_results *results;
- 	struct __test_metadata *prev, *next;
- };
-@@ -961,23 +952,18 @@ static inline void __register_xfail(struct __test_xfail *xf)
- 	__LIST_APPEND(xf->variant->xfails, xf);
- }
- 
--static inline int __bail(int for_realz, struct __test_metadata *t)
-+static inline int __bail(int for_realz, struct __test_metadata *t, void *self, const void *variant)
- {
- 	/* if this is ASSERT, return immediately. */
- 	if (for_realz) {
--		t->aborted = true;
--		longjmp(t->env, 1);
-+		if (t->teardown_fn)
-+			t->teardown_fn(false, t, self, variant);
-+		abort();
+diff --git a/tools/include/nolibc/sys.h b/tools/include/nolibc/sys.h
+index 8f44c33b121300e80b41c971019484007d050b17..128a11441ba1f95a4331b63ff1cdfb9507d4fb33 100644
+--- a/tools/include/nolibc/sys.h
++++ b/tools/include/nolibc/sys.h
+@@ -1005,6 +1005,14 @@ int sys_select(int nfds, fd_set *rfds, fd_set *wfds, fd_set *efds, struct timeva
+ 		t.tv_nsec = timeout->tv_usec * 1000;
  	}
- 	/* otherwise, end the for loop and continue. */
- 	return 0;
- }
- 
--static inline void __test_check_assert(struct __test_metadata *t)
--{
--	if (t->aborted)
--		abort();
--}
--
- static void __wait_for_test(struct __test_metadata *t)
- {
- 	/*
-@@ -1210,7 +1196,6 @@ static void __run_test(struct __fixture_metadata *f,
- 	t->trigger = 0;
- 	t->aborted = false;
- 	t->no_teardown = NULL;
--	memset(t->env, 0, sizeof(t->env));
- 	memset(t->results->reason, 0, sizeof(t->results->reason));
- 
- 	snprintf(test_name, sizeof(test_name), "%s%s%s.%s",
+ 	return my_syscall6(__NR_pselect6, nfds, rfds, wfds, efds, timeout ? &t : NULL, NULL);
++#elif defined(__NR_pselect6_time64)
++	struct __kernel_timespec t;
++
++	if (timeout) {
++		t.tv_sec  = timeout->tv_sec;
++		t.tv_nsec = timeout->tv_usec * 1000;
++	}
++	return my_syscall6(__NR_pselect6_time64, nfds, rfds, wfds, efds, timeout ? &t : NULL, NULL);
+ #else
+ 	return __nolibc_enosys(__func__, nfds, rfds, wfds, efds, timeout);
+ #endif
 
 -- 
 2.48.1
