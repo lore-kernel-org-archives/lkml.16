@@ -1,181 +1,147 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 518F5204594;
-	Tue,  4 Mar 2025 14:02:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A99A61487DD
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 14:02:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741096923; cv=none; b=WKJbDGdo0BmA22K6Dth12ua89IRyTyTOVGi++6f6Vv1uCd5YhGLkURtoKCM1x8OlW3V1Vv4mCB8XLJvEnXUI9cnleQnXaYfk2wthxNlk+VnO3SnAJmhkW2nfxzqhZf0CYr1gIcPRJbhdvzd6zo6+p0oUpn8fXzJMvy4gJiK0J8I=
+	t=1741096936; cv=none; b=UgDa3R/QkOiEshAGDVivqYNnlofak5vzc593sMobe4lbTLbq6GiPAgGDBlriouWhQKZYKQ2SkLmEaTHE+6D+ZWtILFCOUuHZMQQa5NrrNoUDdSPiVc8Je3GnWPCi4/YbYfhzFAVpeKF8wppvXtg6x86m4ItDSoqqHTMh9RNmNzM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741096923; c=relaxed/simple;
-	bh=yt2BhK78wO3VCoBAp3bBwVbzYRTRZrZYVfmzQyD7dWY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=uT4LVdXPA7KePWzSxeH+ggW8bw9gmmVtIRwlK9rVzZXe49z2K/D+PtFSCPS+uFOO/YU7eUwnumukimlP3fLxQ2OFKVeeWngmWf23nUPHlfPveJ5ngbuaK84FuZsiEwJezZiLkqFfxc+fnwRuBsFCQTOzVoYE5Q1qcZJOBYi+pwo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=aGY3ur5o; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1741096936; c=relaxed/simple;
+	bh=X3wVSbPdGLiyAWBYqUq06EAyrsnlLLs1nOsCTzAax4g=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=sUV7+mBzx5oHvLKTeKTpXSqyQ64Zp6nKa+dWDwdbMuypS099Cw8dy8JDlwlSdnOH98Iiu5aZGpmuFrx6hvxBOR0Tm6KcExb7lCNITmsA0xBI4ZJQR1bqVVXjspBM/05Ow1WGfYYV4BlcPmpEZjyn6oa09mV6fdsu24Wex6GMqOg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lwf1I0gH; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="aGY3ur5o"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1741096919;
-	bh=yt2BhK78wO3VCoBAp3bBwVbzYRTRZrZYVfmzQyD7dWY=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=aGY3ur5orYmk/WCjTAXkcneoI09H5KxJrlLb+DZrfB/tuMuj2/ACtcNTMXcreakbu
-	 i+fLskyhBzDuDN0PlnYMHjOcSFrtDwvd+2lumkiu685apjng+eftIGJnyvPqMJ5Nl8
-	 jFJZY5ctoazf2mnpfECL/mPyuAQPIh1gn00z4mxiIwPRU7uv5LcPfWkMFdyKmAZepx
-	 5q/t30lC8Z2+yy5BkInhkP1GAqvAg9XkLwR9Vk+MK0/zzKUTeFqJcxcM+2QucRDc4P
-	 ocLLrzmB78MMCmdVimSF9FxPWAyj01NGQWhpQGbWAWMHpOqEzpRYlgV4rEAx9mthxf
-	 1Yo+HvCh3pimw==
-Received: from apertis-1.home (2a01cb0892F2D600C8F85cf092d4Af51.ipv6.abo.wanadoo.fr [IPv6:2a01:cb08:92f2:d600:c8f8:5cf0:92d4:af51])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: jmassot)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 84C8E17E0F3D;
-	Tue,  4 Mar 2025 15:01:58 +0100 (CET)
-From: Julien Massot <julien.massot@collabora.com>
-Date: Tue, 04 Mar 2025 15:01:56 +0100
-Subject: [PATCH v2 2/2] arm64: dts: mediatek: mt8395-radxa-nio-12l: Add
- Radxa 8 HD panel
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lwf1I0gH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741096933; x=1772632933;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=X3wVSbPdGLiyAWBYqUq06EAyrsnlLLs1nOsCTzAax4g=;
+  b=lwf1I0gHetN9SnjsVN4jUHBcAkMWFTbVCW2vnxDLbyLUJdsH7OaQWyTz
+   7smaxuY0omLRJMAts7Pow6LTPGBgMtLjteDalIixyr4zJKoIOdSyjeUsT
+   xliliRwGvbknQMfdjxszKNV8UyFqquLfTmSUHBA9iJdcvn+YobTGcqgn/
+   UlpGMKcnTsPL12IbI4Ol+SKqI1+9jPIzhXtc2PaXYmDWfIoTbBr6mGRMP
+   jiuTOQeRmVVw+mwkON2brAw9hB3ko6y3iPztKm6+qDK+/f+zVt59rYhzB
+   zk/hYguk3DpCN3NHGIEAL3/goBID4+NieuYoTNNTShbwmYh0bGD6HvHRf
+   A==;
+X-CSE-ConnectionGUID: 4ZkbKpe/SOy8/ceMdPfnCA==
+X-CSE-MsgGUID: vJc76ej5TTqzmUWsOUgybA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11363"; a="45940290"
+X-IronPort-AV: E=Sophos;i="6.14,220,1736841600"; 
+   d="scan'208";a="45940290"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2025 06:02:11 -0800
+X-CSE-ConnectionGUID: hoxkgx5WT8ShuT5jLp3JcA==
+X-CSE-MsgGUID: eBQYa5DQRTOQGm5p+NKFCQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,220,1736841600"; 
+   d="scan'208";a="122995077"
+Received: from lkp-server02.sh.intel.com (HELO 76cde6cc1f07) ([10.239.97.151])
+  by fmviesa005.fm.intel.com with ESMTP; 04 Mar 2025 06:02:10 -0800
+Received: from kbuild by 76cde6cc1f07 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tpSqH-000JqT-1v;
+	Tue, 04 Mar 2025 14:01:57 +0000
+Date: Tue, 4 Mar 2025 21:59:51 +0800
+From: kernel test robot <lkp@intel.com>
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Alice Ryhl <aliceryhl@google.com>,
+	Daniel Almeida <daniel.almeida@collabora.com>
+Subject: rust/helpers/io.c:12:10: error: passing 'volatile void *' to
+ parameter of type 'void *' discards qualifiers
+Message-ID: <202503042137.LYjq6GwD-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250304-radxa-panel-overlay-v2-2-3ee6797d3f86@collabora.com>
-References: <20250304-radxa-panel-overlay-v2-0-3ee6797d3f86@collabora.com>
-In-Reply-To: <20250304-radxa-panel-overlay-v2-0-3ee6797d3f86@collabora.com>
-To: kernel@collabora.com, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Matthias Brugger <matthias.bgg@gmail.com>, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
- kernel@collabora.com, Julien Massot <julien.massot@collabora.com>
-X-Mailer: b4 0.14.2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-The Radxa 8 HD touchscreen can be used with various Radxa board
-and is sold appart from the Radxa NIO 12L development kit.
+Hi Danilo,
 
-Add a DTS overlay for this panel.
+FYI, the error/warning still remains.
 
-Signed-off-by: Julien Massot <julien.massot@collabora.com>
----
- arch/arm64/boot/dts/mediatek/Makefile              |  2 +
- .../mediatek/mt8395-radxa-nio-12l-8-hd-panel.dtso  | 84 ++++++++++++++++++++++
- 2 files changed, 86 insertions(+)
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   99fa936e8e4f117d62f229003c9799686f74cebc
+commit: ce30d94e6855a4f6dc687f658e63c225fcc1d690 rust: add `io::{Io, IoRaw}` base types
+date:   2 months ago
+config: um-randconfig-r121-20250304 (https://download.01.org/0day-ci/archive/20250304/202503042137.LYjq6GwD-lkp@intel.com/config)
+compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project 14170b16028c087ca154878f5ed93d3089a965c6)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250304/202503042137.LYjq6GwD-lkp@intel.com/reproduce)
 
-diff --git a/arch/arm64/boot/dts/mediatek/Makefile b/arch/arm64/boot/dts/mediatek/Makefile
-index ae1147eca9a915f117487101e2ad4acead97adfe..58484e8300632edbdef24bbda33ccf00db9df937 100644
---- a/arch/arm64/boot/dts/mediatek/Makefile
-+++ b/arch/arm64/boot/dts/mediatek/Makefile
-@@ -100,9 +100,11 @@ dtb-$(CONFIG_ARCH_MEDIATEK) += mt8395-genio-1200-evk.dtb
- dtb-$(CONFIG_ARCH_MEDIATEK) += mt8390-genio-700-evk.dtb
- dtb-$(CONFIG_ARCH_MEDIATEK) += mt8395-kontron-3-5-sbc-i1200.dtb
- dtb-$(CONFIG_ARCH_MEDIATEK) += mt8395-radxa-nio-12l.dtb
-+dtb-$(CONFIG_ARCH_MEDIATEK) += mt8395-radxa-nio-12l-8-hd-panel.dtbo
- dtb-$(CONFIG_ARCH_MEDIATEK) += mt8516-pumpkin.dtb
- 
- # Device tree overlays support
- DTC_FLAGS_mt7986a-bananapi-bpi-r3 := -@
- DTC_FLAGS_mt7986a-bananapi-bpi-r3-mini := -@
- DTC_FLAGS_mt7988a-bananapi-bpi-r4 := -@
-+DTC_FLAGS_mt8395-radxa-nio-12l := -@
-diff --git a/arch/arm64/boot/dts/mediatek/mt8395-radxa-nio-12l-8-hd-panel.dtso b/arch/arm64/boot/dts/mediatek/mt8395-radxa-nio-12l-8-hd-panel.dtso
-new file mode 100644
-index 0000000000000000000000000000000000000000..0389c9cb8581c0bb50bb38fd35d1190de13feb6e
---- /dev/null
-+++ b/arch/arm64/boot/dts/mediatek/mt8395-radxa-nio-12l-8-hd-panel.dtso
-@@ -0,0 +1,84 @@
-+// SPDX-License-Identifier: (GPL-2.0 OR MIT)
-+/*
-+ * Radxa Display 8 HD touchscreen module
-+ * Copyright (C) 2025 Collabora Ltd.
-+ */
-+
-+/dts-v1/;
-+/plugin/;
-+
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/interrupt-controller/irq.h>
-+
-+&backlight {
-+	status = "okay";
-+};
-+
-+&disp_pwm0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pwm0_default_pins>;
-+	status = "okay";
-+};
-+
-+&dsi0 {
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	status = "okay";
-+
-+	panel@0 {
-+		compatible = "radxa,display-8hd-ad002", "jadard,jd9365da-h3";
-+		reg = <0>;
-+		backlight = <&backlight>;
-+		vdd-supply = <&mt6359_vcn33_2_bt_ldo_reg>;
-+		vccio-supply = <&mt6360_ldo2>;
-+		reset-gpios = <&pio 108 GPIO_ACTIVE_LOW>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&panel_default_pins>;
-+
-+		port {
-+			dsi_panel_in: endpoint {
-+				remote-endpoint = <&dsi0_out>;
-+			};
-+		};
-+	};
-+};
-+
-+&dsi0_out {
-+	remote-endpoint = <&dsi_panel_in>;
-+};
-+
-+&i2c4 {
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+
-+	touchscreen@14 {
-+		compatible = "goodix,gt911";
-+		reg = <0x14>;
-+		interrupts-extended = <&pio 132 IRQ_TYPE_EDGE_RISING>;
-+		irq-gpios = <&pio 132 GPIO_ACTIVE_HIGH>;
-+		reset-gpios = <&pio 133 GPIO_ACTIVE_HIGH>;
-+		VDDIO-supply = <&mt6359_vcn33_2_bt_ldo_reg>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&touch_pins>;
-+	};
-+};
-+
-+&mipi_tx0 {
-+	status = "okay";
-+};
-+
-+&ovl0_in {
-+	remote-endpoint = <&vdosys0_ep_main>;
-+};
-+
-+&vdosys0 {
-+	port {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		vdosys0_ep_main: endpoint@0 {
-+			reg = <0>;
-+			remote-endpoint = <&ovl0_in>;
-+		};
-+	};
-+};
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202503042137.LYjq6GwD-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   ***
+   *** Rust bindings generator 'bindgen' < 0.69.5 together with libclang >= 19.1
+   *** may not work due to a bug (https://github.com/rust-lang/rust-bindgen/pull/2824),
+   *** unless patched (like Debian's).
+   ***   Your bindgen version:  0.65.1
+   ***   Your libclang version: 21.0.0
+   ***
+   ***
+   *** Please see Documentation/rust/quick-start.rst for details
+   *** on how to set up the Rust support.
+   ***
+   In file included from rust/helpers/helpers.c:10:
+   In file included from rust/helpers/blk.c:3:
+   In file included from include/linux/blk-mq.h:5:
+   In file included from include/linux/blkdev.h:9:
+   In file included from include/linux/blk_types.h:10:
+   In file included from include/linux/bvec.h:10:
+   In file included from include/linux/highmem.h:8:
+   In file included from include/linux/cacheflush.h:5:
+   In file included from arch/um/include/asm/cacheflush.h:4:
+   In file included from arch/um/include/asm/tlbflush.h:9:
+   In file included from include/linux/mm.h:2223:
+   include/linux/vmstat.h:518:36: warning: arithmetic between different enumeration types ('enum node_stat_item' and 'enum lru_list') [-Wenum-enum-conversion]
+     518 |         return node_stat_name(NR_LRU_BASE + lru) + 3; // skip "nr_"
+         |                               ~~~~~~~~~~~ ^ ~~~
+   In file included from rust/helpers/helpers.c:17:
+>> rust/helpers/io.c:12:10: error: passing 'volatile void *' to parameter of type 'void *' discards qualifiers [-Werror,-Wincompatible-pointer-types-discards-qualifiers]
+      12 |         iounmap(addr);
+         |                 ^~~~
+   arch/um/include/asm/io.h:19:42: note: passing argument to parameter 'addr' here
+      19 | static inline void iounmap(void __iomem *addr)
+         |                                          ^
+   1 warning and 1 error generated.
+   make[3]: *** [scripts/Makefile.build:194: rust/helpers/helpers.o] Error 1
+   clang diag: include/linux/vmstat.h:518:36: warning: arithmetic between different enumeration types ('enum node_stat_item' and 'enum lru_list') [-Wenum-enum-conversion]
+   include/linux/vmstat.h:518:36: warning: arithmetic between different enumeration types ('enum node_stat_item' and 'enum lru_list') [-Wenum-enum-conversion]
+>> rust/helpers/io.c:12:10: error: passing 'volatile void *' to parameter of type 'void *' discards qualifiers [-Wincompatible-pointer-types-discards-qualifiers]
+   arch/um/include/asm/io.h:19:42: note: passing argument to parameter 'addr' here
+   clang diag: include/linux/vmstat.h:518:36: warning: arithmetic between different enumeration types ('enum node_stat_item' and 'enum lru_list') [-Wenum-enum-conversion]
+   make[3]: *** [rust/Makefile:330: rust/bindings/bindings_helpers_generated.rs] Error 101
+   make[3]: *** Deleting file 'rust/bindings/bindings_helpers_generated.rs'
+   clang diag: include/linux/vmstat.h:518:36: warning: arithmetic between different enumeration types ('enum node_stat_item' and 'enum lru_list') [-Wenum-enum-conversion]
+   make[3]: Target 'rust/' not remade because of errors.
+   make[2]: *** [Makefile:1269: prepare] Error 2
+   make[1]: *** [Makefile:251: __sub-make] Error 2
+   make[1]: Target 'prepare' not remade because of errors.
+   make: *** [Makefile:251: __sub-make] Error 2
+   make: Target 'prepare' not remade because of errors.
+
+
+vim +12 rust/helpers/io.c
+
+     9	
+    10	void rust_helper_iounmap(volatile void __iomem *addr)
+    11	{
+  > 12		iounmap(addr);
+    13	}
+    14	
 
 -- 
-2.48.1
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
