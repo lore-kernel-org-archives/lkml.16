@@ -1,109 +1,114 @@
-Received: from ixit.cz (ip-89-177-23-149.bb.vodafone.cz [89.177.23.149])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C11F204C22;
-	Tue,  4 Mar 2025 18:50:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.177.23.149
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD4DA1F583E
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 18:50:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741114205; cv=none; b=cha1/cIZWDkVFIYEmrwScQeVqna/DQsghX0HaNNDkuF7JyFMSmEzo2i8Hg/xqj6ZwZzNA0h/wUFTCyP8lIKzFPTEA3+guj/NCBZZ1MWMLDsH0m9N8YueOlubiyS4NceB+F9G8ha+PZRHy1CE8aI98JxafuXK594ps7rKYpaYfsE=
+	t=1741114206; cv=none; b=Pk37mbltJgQfiRETYGwk8J8K4hWieFn4xnJ84tS/D3oELxz5BwGAOn5RsoijuBJcEY2GLW6H7HrnOYqWTela6YdcBnUyer+6kK0x41pgZZc0Vb2t8jbDzX5vubPknB7iiw+e6sfj7vXpN1UZdfjsvoq1bcYYiL/ZCARFP+ufO/g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741114205; c=relaxed/simple;
-	bh=0CAx1mQ5RZ6zsMxOMxa0QiY+PZp3mnFBFPc/jCZGve4=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=gD65AjMsW2qowNxYbCpX+DC6a2HYNjBjIOPHXLNEE52ewoEbVogEB4iktdWI5XlTZNBY/edQQpOsxhiCD3k4Vzkvpt6lb2XDp20P9cuDUyINrfFXcqnqJ0BCrMfGPP7jUSKnmuF3Pjml+2ilJrC+2ZAEQK5eiANQZESw8j+mZbs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ixit.cz; spf=pass smtp.mailfrom=ixit.cz; dkim=pass (1024-bit key) header.d=ixit.cz header.i=@ixit.cz header.b=eOfA0JzF; arc=none smtp.client-ip=89.177.23.149
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ixit.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ixit.cz
+	s=arc-20240116; t=1741114206; c=relaxed/simple;
+	bh=ERDSiQRCm2WziHCfxkR9TWnvgzH+j6+KMNNxZfF4lWE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ou/dZpZEQMrP0CSoXVKRm/DqLCTk9G5ndKctTGar0vh+UAWAMFNPCW59wXDfqSnd9YA442jlXDuWsqUU+AohhQ3EQ7aeXdE6pPVWhupRiGo7z2jw48rsU3Hd4OprAQZkOSZkm15eRtdDkS1a2x6aThZ+tscRTB/YLxoaP187sXM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KzB3Gi66; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ixit.cz header.i=@ixit.cz header.b="eOfA0JzF"
-Received: from [10.0.0.228] (unknown [10.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by ixit.cz (Postfix) with ESMTPSA id 7EBF116508E;
-	Tue,  4 Mar 2025 19:43:44 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ixit.cz; s=dkim;
-	t=1741113824; h=from:from:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=0CAx1mQ5RZ6zsMxOMxa0QiY+PZp3mnFBFPc/jCZGve4=;
-	b=eOfA0JzF8XO4Oy6q9bZSu45oTn4TozB4eK33nfrsSbKtCx+rx41ZQu1V1gPmoRtQpXQjKB
-	DsRj8bLeu3L+0pqe3cRvqhvh8iQQYXrK+DIDVuwndJ2foTeVswZ0oJI4O0AQrKhqHfRira
-	0mP8EMEAVCTWwhcUauIHqB/wbvg+pjc=
-Message-ID: <b796bfee-b753-479a-a8d6-ba1fe3ee6222@ixit.cz>
-Date: Tue, 4 Mar 2025 19:43:44 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KzB3Gi66"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741114205; x=1772650205;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=ERDSiQRCm2WziHCfxkR9TWnvgzH+j6+KMNNxZfF4lWE=;
+  b=KzB3Gi66euFArwO0URpDfCMe5BsZQdXjpdJwsO0JpSJOClHsD29xTZ05
+   YtykOXQYrE0vCOXWxYpOHkzgvCRXf4/86RbKGe4f8UtKj+qXlPi8fizDh
+   redo7fFZ0GlcuqMYkKf8gXT1pIvhy+VOZPVq74oa0i85gPjsg514ro9Jp
+   5fLrLJP4tFf0bwkDnJRiHHJTRC8wPfDXOBmFx7rBQLtKhFQZ6pjpUVq1s
+   XhK+fteVKXiYx8n1RrxwhWjCLySh8Qo5Pqd3Xm+hxb1qVH1/0XBmGwkbW
+   O3VarGZyV6vuKPjI+myqfjzyYE2OSBzhvBCXNgx2qV29wzsygB/Uqv3Uq
+   Q==;
+X-CSE-ConnectionGUID: SyA3HwUNSU+Rasx3V2+QIg==
+X-CSE-MsgGUID: ttvmOaVyQcigCVLgBwX+zA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11363"; a="41300918"
+X-IronPort-AV: E=Sophos;i="6.14,220,1736841600"; 
+   d="scan'208";a="41300918"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2025 10:50:04 -0800
+X-CSE-ConnectionGUID: L2gp5m1iTESUO//o6ZLqsw==
+X-CSE-MsgGUID: PJuqkSteSBei5ABb7SshKA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,220,1736841600"; 
+   d="scan'208";a="118193970"
+Received: from lkp-server02.sh.intel.com (HELO 76cde6cc1f07) ([10.239.97.151])
+  by orviesa009.jf.intel.com with ESMTP; 04 Mar 2025 10:50:01 -0800
+Received: from kbuild by 76cde6cc1f07 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tpXL4-000K9m-0h;
+	Tue, 04 Mar 2025 18:49:58 +0000
+Date: Wed, 5 Mar 2025 02:49:38 +0800
+From: kernel test robot <lkp@intel.com>
+To: Christian Eggers <ceggers@arri.de>,
+	Russell King <linux@armlinux.org.uk>,
+	Yuntao Liu <liuyuntao12@huawei.com>,
+	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	linux-arm-kernel@lists.infradead.org
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	linux-kernel@vger.kernel.org, Christian Eggers <ceggers@arri.de>,
+	kernel test robot <lkp@intel.com>
+Subject: Re: [PATCH v2 1/2] ARM: substitute OVERLAY description in linker
+ script
+Message-ID: <202503050230.820w99b6-lkp@intel.com>
+References: <20250224125414.2184-1-ceggers@arri.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-To: amit.pundir@linaro.org
-Cc: ath10k@lists.infradead.org, bjorn.andersson@linaro.org,
- davem@davemloft.net, devicetree@vger.kernel.org, jeffrey.l.hugo@gmail.com,
- john.stultz@linaro.org, konradybcio@gmail.com, kuba@kernel.org,
- kvalo@codeaurora.org, linux-kernel@vger.kernel.org,
- linux-wireless@vger.kernel.org, netdev@vger.kernel.org, robh@kernel.org,
- sumit.semwal@linaro.org
-References: <CAMi1Hd2g68U8LVng2+RmhD+zFLqW8vcHS54FvaKxNF+BMs_tZg@mail.gmail.com>
-Subject: Re: [PATCH] ath10k: Introduce a devicetree quirk to skip host cap QMI
- requests
-Content-Language: en-US
-Reply-To: CAMi1Hd2g68U8LVng2+RmhD+zFLqW8vcHS54FvaKxNF+BMs_tZg@mail.gmail.com
-From: David Heidelberg <david@ixit.cz>
-Autocrypt: addr=david@ixit.cz; keydata=
- xsFNBF5v1x4BEADS3EddwsNsvVAI1XF8uQKbdYPY/GhjaSLziwVnbwv5BGwqB1tfXoHnccoA
- 9kTgKAbiXG/CiZFhD6l4WCIskQDKzyQN3JhCUIxh16Xyw0lECI7iqoW9LmMoN1dNKcUmCO9g
- lZxQaOl+1bY/7ttd7DapLh9rmBXJ2lKiMEaIpUwb/Nw0d7Enp4Jy2TpkhPywIpUn8CoJCv3/
- 61qbvI9y5utB/UhfMAUXsaAgwEJyGPAqHlC0YZjaTwOu+YQUE3AFzhCbksq95CwDz4U4gdls
- dmv9tkATfu2OmzERZQ6vJTehK0Pu4l5KmCAzYg42I9Dy4E6b17x6NncKbcByQFOXMtG0qVUk
- F1yeeOQUHwu+8t3ZDMBUhCkRL/juuoqLmyDWKMc0hKNNeZ9BNXgB8fXkRLWEUfgDXsFyEkKp
- NxUy5bDRlivf6XfExnikk5kj9l2gGlNQwqROti/46bfbmlmc/a2GM4k8ZyalHNEAdwtXYSpP
- 8JJmlbQ7hNTLkc3HQLRsIocN5th/ur7pPMz1Beyp0gbE9GcOceqmdZQB80vJ01XDyCAihf6l
- AMnzwpXZsjqIqH9r7T7tM6tVEVbPSwPt4eZYXSoJijEBC/43TBbmxDX+5+3txRaSCRQrG9dY
- k3mMGM3xJLCps2KnaqMcgUnvb1KdTgEFUZQaItw7HyRd6RppewARAQABzSBEYXZpZCBIZWlk
- ZWxiZXJnIDxkYXZpZEBpeGl0LmN6PsLBlAQTAQgAPgIbAwULCQgHAgYVCgkICwIEFgIDAQIe
- AQIXgBYhBNd6Cc/u3Cu9U6cEdGACP8TTSSByBQJl+KksBQkPDaAOAAoJEGACP8TTSSBy6IAQ
- AMqFqVi9LLxCEcUWBn82ssQGiVSDniKpFE/tp7lMXflwhjD5xoftoWOmMYkiWE86t5x5Fsp7
- afALx7SEDz599F1K1bLnaga+budu55JEAYGudD2WwpLJ0kPzRhqBwGFIx8k6F+goZJzxPDsf
- loAtXQE62UvEKa4KRRcZmF0GGoRsgA7vE7OnV8LMeocdD3eb2CuXLzauHAfdvqF50IfPH/sE
- jbzROiAZU+WgrwU946aOzrN8jVU+Cy8XAccGAZxsmPBfhTY5f2VN1IqvfaRdkKKlmWVJWGw+
- ycFpAEJKFRdfcc5PSjUJcALn5C+hxzL2hBpIZJdfdfStn+DWHXNgBeRDiZj1x6vvyaC43RAb
- VXvRzOQfG4EaMVMIOvBjBA/FtIpb1gtXA42ewhvPnd5RVCqD9YYUxsVpJ9d+XsAy7uib3BsV
- W2idAEsPtoqhVhq8bCUs/G4sC2DdyGZK8MRFDJqciJSUbqA+5z1ZCuE8UOPDpZKiW6H/OuOM
- zDcjh0lOzr4p+/1TSg1PbUh7fQ+nbMuiT044sC1lLtJK0+Zyn0GwhR82oNM4fldNsaHRW42w
- QGD35+eNo5Pvb3We5XRMlBdhFnj7Siggp4J8/PJ6MJvRyC+RIJPGtbdMB2/RxWunFLn87e5w
- UgwR9jPMHAstuTR1yR23c4SIYoQ2fzkrRzuazsFNBF5v1x4BEADnlrbta2WL87BlEOotZUh0
- zXANMrNV15WxexsirLetfqbs0AGCaTRNj+uWlTUDJRXOVIwzmF76Us3I2796+Od2ocNpLheZ
- 7EIkq8budtLVd1c06qJ+GMraz51zfgSIazVInNMPk9T6fz0lembji5yEcNPNNBA4sHiFmXfo
- IhepHFOBApjS0CiOPqowYxSTPe/DLcJ/LDwWpTi37doKPhBwlHev1BwVCbrLEIFjY0MLM0aT
- jiBBlyLJaTqvE48gblonu2SGaNmGtkC3VoQUQFcVYDXtlL9CVbNo7BAt5gwPcNqEqkUL60Jh
- FtvVSKyQh6gn7HHsyMtgltjZ3NKjv8S3yQd7zxvCn79tCKwoeNevsvoMq/bzlKxc9QiKaRPO
- aDj3FtW7R/3XoKJBY8Hckyug6uc2qYWRpnuXc0as6S0wfek6gauExUttBKrtSbPPHiuTeNHt
- NsT4+dyvaJtQKPBTbPHkXpTO8e1+YAg7kPj3aKFToE/dakIh8iqUHLNxywDAamRVn8Ha67WO
- AEAA3iklJ49QQk2ZyS1RJ2Ul28ePFDZ3QSr9LoJiOBZv9XkbhXS164iRB7rBZk6ZRVgCz3V6
- hhhjkipYvpJ/fpjXNsVL8jvel1mYNf0a46T4QQDQx4KQj0zXJbC2fFikAtu1AULktF4iEXEI
- rSjFoqhd4euZ+QARAQABwsF8BBgBCAAmAhsMFiEE13oJz+7cK71TpwR0YAI/xNNJIHIFAmX4
- qVAFCQ8NoDIACgkQYAI/xNNJIHKN4A/+Ine2Ii7JiuGITjJkcV6pgKlfwYdEs4eFD1pTRb/K
- 5dprUz3QSLP41u9OJQ23HnESMvn31UENk9ffebNoW7WxZ/8cTQY0JY/cgTTrlNXtyAlGbR3/
- 3Q/VBJptf04Er7I6TaKAmqWzdVeKTw33LljpkHp02vrbOdylb4JQG/SginLV9purGAFptYRO
- 8JNa2J4FAQtQTrfOUjulOWMxy7XRkqK3QqLcPW79/CFn7q1yxamPkpoXUJq9/fVjlhk7P+da
- NYQpe4WQQnktBY29SkFnvfIAwqIVU8ix5Oz8rghuCcAdR7lEJ7hCX9bR0EE05FOXdZy5FWL9
- GHvFa/Opkq3DPmFl/0nt4HJqq1Nwrr+WR6d0414oo1n2hPEllge/6iD3ZYwptTvOFKEw/v0A
- yqOoYSiKX9F7Ko7QO+VnYeVDsDDevKic2T/4GDpcSVd9ipiKxCQvUAzKUH7RUpqDTa+rYurm
- zRKcgRumz2Tc1ouHj6qINlzEe3a5ldctIn/dvR1l2Ko7GBTG+VGp9U5NOAEkGpxHG9yg6eeY
- fFYnMme51H/HKiyUlFiE3yd5LSmv8Dhbf+vsI4x6BOOOq4Iyop/Exavj1owGxW0hpdUGcCl1
- ovlwVPO/6l/XLAmSGwdnGqok5eGZQzSst0tj9RC9O0dXO1TZocOsf0tJ8dR2egX4kxM=
-In-Reply-To: <CAMi1Hd2g68U8LVng2+RmhD+zFLqW8vcHS54FvaKxNF+BMs_tZg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250224125414.2184-1-ceggers@arri.de>
 
-Kind reminder.
+Hi Christian,
 
-This workaround is still used by sdm845 downstream.
+kernel test robot noticed the following build errors:
 
-Thank you
-David
+[auto build test ERROR on soc/for-next]
+[also build test ERROR on linus/master v6.14-rc5 next-20250304]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Christian-Eggers/ARM-avoid-that-vectors-are-removed-during-linker-garbage-collection/20250224-210146
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/soc/soc.git for-next
+patch link:    https://lore.kernel.org/r/20250224125414.2184-1-ceggers%40arri.de
+patch subject: [PATCH v2 1/2] ARM: substitute OVERLAY description in linker script
+config: arm-milbeaut_m10v_defconfig (https://download.01.org/0day-ci/archive/20250305/202503050230.820w99b6-lkp@intel.com/config)
+compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project 14170b16028c087ca154878f5ed93d3089a965c6)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250305/202503050230.820w99b6-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202503050230.820w99b6-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+>> ld.lld: error: section .vectors.bhb.bpiall virtual address range overlaps with .vectors.bhb.loop8
+   >>> .vectors.bhb.bpiall range is [0xFFFF0000, 0xFFFF001F]
+   >>> .vectors.bhb.loop8 range is [0xFFFF0000, 0xFFFF001F]
+--
+>> ld.lld: error: section .vectors.bhb.loop8 virtual address range overlaps with .vectors
+   >>> .vectors.bhb.loop8 range is [0xFFFF0000, 0xFFFF001F]
+   >>> .vectors range is [0xFFFF0000, 0xFFFF001F]
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
