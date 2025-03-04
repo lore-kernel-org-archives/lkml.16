@@ -1,39 +1,39 @@
 Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B332201262;
-	Tue,  4 Mar 2025 10:20:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 416F6202C4F;
+	Tue,  4 Mar 2025 10:20:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741083657; cv=none; b=GYZLWPTzkBKuPG47XhZflPBDW03rteql1GAu6nwAdMhAkQWHJ6PGPPr77wEj7rNFCCVffsbRjZiRF1ARkc685yn+D3bnw6+qJFPYyj2hamhc2pAa6ewO2SbhTwmgcDltOA2+zlZk2FVJn3t24FGAd20YbBwfyQ5fRyi1Y/aij+M=
+	t=1741083660; cv=none; b=tHQZqERsuehgg1xUs9p0sTKyuhI7IRyV7zjEtljmvQUFjCpko75NNXZsbTxmN86FL+RpbzvMyh/WIh9SYX2NvQTQO+Bc0rYXxhYt90T4lHNZz9TYHBcizCOKoyrr3ZI/JEshl5sp+vvGQq6t1r2qxddAXiNjH53HODiAiPrMxSw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741083657; c=relaxed/simple;
-	bh=0cLXGW0anugINc13O8jTjVpvtTql76t+wogLqQj4r6Q=;
+	s=arc-20240116; t=1741083660; c=relaxed/simple;
+	bh=3QSQiiEkpInCqAJZ0oopQLokNfbrFQltP45H1BxJNtk=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=SbC95B9JaY2afXazSyLFl4Cjt9w1/+34NRtQxnpP1u6+6CBNlUKgIbaaCJF5eg3sszgB9y2Fzx77keYU/+UO5ZkmNau6E9jzXa5BSHRqKk0Somky/Dz6t901OVzQ5tapdKlD8JK7Xv0TKPDtgn0PDUkHqvZclRlHGsHo+5icbss=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=n1wvm3AV; arc=none smtp.client-ip=217.70.183.198
+	 In-Reply-To:To:Cc; b=YNxIMBl3Ileyal37qMXBWpUvebqklLz6GelCTW6AWqEzc3AzB1fB0YiE41aL6f8FkcmkxPtYqmTQ/aOdSxVPJPNnSqht9RkKA3paoz+DrToKSSBCzs+3rY3W6Yk0h2g9WWFPPkRZ/zG+PznGPX1ze6s231GDjxXPtFY/BpZ990g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=QQEZSaYR; arc=none smtp.client-ip=217.70.183.198
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="n1wvm3AV"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 7105E43292;
-	Tue,  4 Mar 2025 10:20:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="QQEZSaYR"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 4ED8D432BD;
+	Tue,  4 Mar 2025 10:20:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1741083653;
+	t=1741083656;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=YlVx7SlHIPffK405fm9yRTlBoVv0Vauslk0Qhi+HhtA=;
-	b=n1wvm3AVTRfBa2slj2oTOSGH8/Fvosv+1j2PF3gjiwPGBrY3VJgCyt+d5/GRCJQ6woubEP
-	9NP2Ayv3uS6dYKckC2TH+wvnVbYXEvpZxXXFqXndsP0KMo4CbN99ev+wYeo5OY/eW9eCk4
-	SxN3HPgq/P/KNgbVUJ1N9n32wYAAfqwToXtobxDoj7T5VcIGpBYRnggsg9v6myEKBS3gRp
-	kTzmFep1jDQafr6RPwDUl0kIc9P1lFgpwc+B6B9AozH3M0YBiPSZUI47fBU4KsS80leC9M
-	KGKs2FbQFmSFFFlh/0bHxSLHwtWmZZndDue1kgW7A8sOepqeuCk1JExEb3ltvQ==
+	bh=v03atscDreRB9AJDvXothgKRiTD19mycZa+MJCNJB5I=;
+	b=QQEZSaYRWFZrr9y4nDiCY8rrQ02gKRcBZbDM+ga1qdvkH6owUtP9TqYDpB82wEVeLxaOiA
+	08kqfGGH0zsR+/TQi47tCA/Ys/4X7zaUb8K4fnDtyVs1wAJbuwmrrJPDm854+AUdcoA8nt
+	42T9tj6hXFTlQB5s6RgdtpbfZO0466De1xm5HZAdQGFofoeIjKShm22l5SKkjo4PQz/nNs
+	YhpoHh+5p7RsF+MjwIzjvBIFcVNLFN0Stih8mjBfTelYLQh2VWC4yly+X643sO8Nf2jMhq
+	TNfvdIj7Cx+CQBggaiw/B64GTwKWcIZCTmIuWH5maU/QdA9zan+88V0gx4mXMg==
 From: Kory Maincent <kory.maincent@bootlin.com>
-Date: Tue, 04 Mar 2025 11:18:59 +0100
-Subject: [PATCH net-next v6 10/12] dt-bindings: net: pse-pd:
- microchip,pd692x0: Add manager regulator supply
+Date: Tue, 04 Mar 2025 11:19:01 +0100
+Subject: [PATCH net-next v6 12/12] dt-bindings: net: pse-pd: ti,tps23881:
+ Add interrupt description
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,7 +42,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250304-feature_poe_port_prio-v6-10-3dc0c5ebaf32@bootlin.com>
+Message-Id: <20250304-feature_poe_port_prio-v6-12-3dc0c5ebaf32@bootlin.com>
 References: <20250304-feature_poe_port_prio-v6-0-3dc0c5ebaf32@bootlin.com>
 In-Reply-To: <20250304-feature_poe_port_prio-v6-0-3dc0c5ebaf32@bootlin.com>
 To: Andrew Lunn <andrew@lunn.ch>, Oleksij Rempel <o.rempel@pengutronix.de>, 
@@ -65,93 +65,72 @@ Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
 X-Mailer: b4 0.15-dev-8cb71
 X-GND-State: clean
 X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddutddujeekucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhfffugggtgffkfhgjvfevofesthejredtredtjeenucfhrhhomhepmfhorhihucforghinhgtvghnthcuoehkohhrhidrmhgrihhntggvnhhtsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeevgfdvgfektefgfefggeekudfggffhtdfffedtueetheejtddvledvvdelhedtveenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpeehnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplgduvdejrddtrddurddungdpmhgrihhlfhhrohhmpehkohhrhidrmhgrihhntggvnhhtsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvkedprhgtphhtthhopehthhhomhgrshdrphgvthgriiiiohhnihessghoohhtlhhinhdrtghomhdprhgtphhtthhopehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmpdhrtghpthhtoheptghorhgsvghtsehlfihnrdhnvghtpdhrtghpthhtoheplhhgihhrugifohhougesghhmrghilhdrtghomhdprhgtphhtthhopeguvghnthhprhhojhgvtghtsehlihhnuhigf
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddutddujeekucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhfffugggtgffkfhgjvfevofesthejredtredtjeenucfhrhhomhepmfhorhihucforghinhgtvghnthcuoehkohhrhidrmhgrihhntggvnhhtsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeevgfdvgfektefgfefggeekudfggffhtdfffedtueetheejtddvledvvdelhedtveenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpeelnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplgduvdejrddtrddurddungdpmhgrihhlfhhrohhmpehkohhrhidrmhgrihhntggvnhhtsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvkedprhgtphhtthhopehthhhomhgrshdrphgvthgriiiiohhnihessghoohhtlhhinhdrtghomhdprhgtphhtthhopehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmpdhrtghpthhtoheptghorhgsvghtsehlfihnrdhnvghtpdhrtghpthhtoheplhhgihhrugifohhougesghhmrghilhdrtghomhdprhgtphhtthhopeguvghnthhprhhojhgvtghtsehlihhnuhigf
  hhouhhnuggrthhiohhnrdhorhhgpdhrtghpthhtohepkhhriihkodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhhriiihshiithhofhdrkhhoiihlohifshhkiheslhhinhgrrhhordhorhhgpdhrtghpthhtohepkhgvrhhnvghlsehpvghnghhuthhrohhnihigrdguvg
 X-GND-Sasl: kory.maincent@bootlin.com
 
 From: Kory Maincent (Dent Project) <kory.maincent@bootlin.com>
 
-Adds the regulator supply parameter of the managers.
-Update also the example as the regulator supply of the PSE PIs
-should be the managers itself and not an external regulator.
+Add an interrupt property to the device tree bindings for the TI TPS23881
+PSE controller. The interrupt is primarily used to detect classification
+and disconnection events, which are essential for managing the PSE
+controller in compliance with the PoE standard.
+
+Interrupt support is essential for the proper functioning of the TPS23881
+controller. Without it, after a power-on (PWON), the controller will
+no longer perform detection and classification. This could lead to
+potential hazards, such as connecting a non-PoE device after a PoE device,
+which might result in magic smoke.
 
 Signed-off-by: Kory Maincent (Dent Project) <kory.maincent@bootlin.com>
 Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 ---
 
-Changes in v5:
-- Add description of others power supplies.
+Change in v5:
+- Use standard interrupt flag in the example.
 
-Changes in v3:
+Change in v3:
 - New patch
 ---
- .../bindings/net/pse-pd/microchip,pd692x0.yaml     | 22 +++++++++++++++++++---
- 1 file changed, 19 insertions(+), 3 deletions(-)
+ Documentation/devicetree/bindings/net/pse-pd/ti,tps23881.yaml | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/net/pse-pd/microchip,pd692x0.yaml b/Documentation/devicetree/bindings/net/pse-pd/microchip,pd692x0.yaml
-index fd4244fceced9..ca61cc37a7902 100644
---- a/Documentation/devicetree/bindings/net/pse-pd/microchip,pd692x0.yaml
-+++ b/Documentation/devicetree/bindings/net/pse-pd/microchip,pd692x0.yaml
-@@ -22,6 +22,12 @@ properties:
+diff --git a/Documentation/devicetree/bindings/net/pse-pd/ti,tps23881.yaml b/Documentation/devicetree/bindings/net/pse-pd/ti,tps23881.yaml
+index d08abcb012113..3a5f960d8489a 100644
+--- a/Documentation/devicetree/bindings/net/pse-pd/ti,tps23881.yaml
++++ b/Documentation/devicetree/bindings/net/pse-pd/ti,tps23881.yaml
+@@ -20,6 +20,9 @@ properties:
    reg:
      maxItems: 1
  
-+  vdd-supply:
-+    description: Regulator that provides 3.3V VDD power supply.
++  interrupts:
++    maxItems: 1
 +
-+  vdda-supply:
-+    description: Regulator that provides 3.3V VDDA power supply.
-+
-   managers:
-     type: object
-     additionalProperties: false
-@@ -68,6 +74,15 @@ properties:
-           "#size-cells":
-             const: 0
+   '#pse-cells':
+     const: 1
  
-+          vmain-supply:
-+            description: Regulator that provides 44-57V VMAIN power supply.
+@@ -62,9 +65,12 @@ unevaluatedProperties: false
+ required:
+   - compatible
+   - reg
++  - interrupts
+ 
+ examples:
+   - |
++    #include <dt-bindings/interrupt-controller/irq.h>
 +
-+          vaux5-supply:
-+            description: Regulator that provides 5V VAUX5 power supply.
-+
-+          vaux3p3-supply:
-+            description: Regulator that provides 3.3V VAUX3P3 power supply.
-+
-         patternProperties:
-           '^port@[0-7]$':
-             type: object
-@@ -106,10 +121,11 @@ examples:
+     i2c {
+       #address-cells = <1>;
+       #size-cells = <0>;
+@@ -72,6 +78,8 @@ examples:
+       ethernet-pse@20 {
+         compatible = "ti,tps23881";
+         reg = <0x20>;
++        interrupts = <8 IRQ_TYPE_LEVEL_HIGH>;
++        interrupt-parent = <&gpiog>;
+ 
+         channels {
            #address-cells = <1>;
-           #size-cells = <0>;
- 
--          manager@0 {
-+          manager0: manager@0 {
-             reg = <0>;
-             #address-cells = <1>;
-             #size-cells = <0>;
-+            vmain-supply = <&pse1_supply>;
- 
-             phys0: port@0 {
-               reg = <0>;
-@@ -161,7 +177,7 @@ examples:
-             pairset-names = "alternative-a", "alternative-b";
-             pairsets = <&phys0>, <&phys1>;
-             polarity-supported = "MDI", "S";
--            vpwr-supply = <&vpwr1>;
-+            vpwr-supply = <&manager0>;
-           };
-           pse_pi1: pse-pi@1 {
-             reg = <1>;
-@@ -169,7 +185,7 @@ examples:
-             pairset-names = "alternative-a";
-             pairsets = <&phys2>;
-             polarity-supported = "MDI";
--            vpwr-supply = <&vpwr2>;
-+            vpwr-supply = <&manager0>;
-           };
-         };
-       };
 
 -- 
 2.34.1
