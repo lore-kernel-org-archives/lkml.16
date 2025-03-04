@@ -1,182 +1,110 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62221205511;
-	Tue,  4 Mar 2025 16:17:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59EE8255235
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 16:18:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741105053; cv=none; b=sKVE8GX3w3O4/CQMute/o4y2Fk5ZvGs8hV+Fs54r0iAqyb+P4cXUsYqQp5CQRv9iD96yDMRIRoFhFXfPAUMi+W1zDhLiqmlQp8w7KdEpKrR+ZriH1494Xp48WSLCiW5VE9pbumMWcR6vimRuaCc/20AHeBx+5QMjb4SEepUj9nU=
+	t=1741105106; cv=none; b=INemGo4bEOKFqUAHRoSw3r9i8uPYRpVqmSzYBqew28cZxxM3b0VCGe3Quoja2b1OZtBE/apIrkZfd61zWA11GTZGq4jFZVjqvtbIifrcqvnaCgwb+LNc1w+NUW8M8mdQ+17uSGAd881JtLqKPc1br6k/StLMiEYuKJUgV43k5ts=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741105053; c=relaxed/simple;
-	bh=AFgR0mNR/8SlLvdj/O+UVxnsCaumYfIisXWz4wTDJ0Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=H4m6voI2zFL7QGVUKbqpFNpu7kJFNwhrp7oDT/kY4rT538Is/PW7XAinxSV/FCcAalETRM/C6dM9zMs3ep7q8TztjwRGX/Y41gjF9njwO99WSBIKY5WRigTR6hXN2euOdOmv7wOZtc5owonRiYZIM7Ij6beLNb0j2imGtjCz9hU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D231C4CEE5;
-	Tue,  4 Mar 2025 16:17:29 +0000 (UTC)
-Message-ID: <cade5c73-e25f-4f56-be10-7d5a06f92917@xs4all.nl>
-Date: Tue, 4 Mar 2025 17:17:28 +0100
+	s=arc-20240116; t=1741105106; c=relaxed/simple;
+	bh=EUw6JN41FjtAkvEpNEZvohRqw0SNngFs3t0M/G8bodA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cwM8/5dQEO9WkafY8ATeiUsl9ys2EYqTRqnNpA3TcA2qKt0M8w7tKMqw6oBEA32BiNcXnKgjtjieTvisS68TRfbkKxxldo627yMdW0UCcxCM+4tySjVCLiTsqt6uMGousISiNbXWw4bKZxGEAwazzXCFgTt0ZBeKqCQt/8T6HN0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HE9aV1nA; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HE9aV1nA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1741105103;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=JHbbkf59GK3BHCnXuBfd7al8ax8T3UploK3icFv3u0M=;
+	b=HE9aV1nAwKWWhM4hLgVudNZCsVlmiiY1XVDwYaJ7ae6D2pFFjEZDxHhuD5e6qJ/MzGYF8J
+	TwTv9LJLmDOYetptIq9ScX7TTu5fR7TKW83vf67Da2Fhaj0IsQKj1P+lvZG+GEA075ZaOm
+	1IqFlGFFiIc5rYXjRgB/EqaZR4JeXFg=
+Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com
+ [209.85.219.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-97-BsFwLcQIPPGjEiq-YeZdVA-1; Tue, 04 Mar 2025 11:18:15 -0500
+X-MC-Unique: BsFwLcQIPPGjEiq-YeZdVA-1
+X-Mimecast-MFC-AGG-ID: BsFwLcQIPPGjEiq-YeZdVA_1741105095
+Received: by mail-qv1-f71.google.com with SMTP id 6a1803df08f44-6e89808749eso136940086d6.3
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Mar 2025 08:18:15 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741105095; x=1741709895;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JHbbkf59GK3BHCnXuBfd7al8ax8T3UploK3icFv3u0M=;
+        b=s4q6/XeMRSfwtQtf7T8RMRmZgybeFcssTs/LTf/pQ6wyihkw4+TcAfXGNIvWlAF9CY
+         Y+ILUXp8cl19srdVipE9h0e4lqAG7geLr07FQ3andtlPYVZ65lStmTGwNcmxR5LPE3HK
+         9KzqrQ3hB0WxwZ4rVnV6xYnxw0Wex8aDslydYLcNrlJq3HlRe7h/rAjht3/uHvm1FELB
+         skz+gnB02jS0aZRPh5AwSspmTlDCzC5AIt0kBvt4eM2nJZGDs531S/dhVtzyYmn96KNj
+         gY/Y57MWrHQn4yY+3ZSFkS3zZdaU/IyHySnPrvlZUoyXZYx2xPmUrJPrnyHJNrwZmPwo
+         pT0Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWuz3xpuL6ZNc5PmZjZ7FJUBoOlr+BQnqXCpkABjWW+WCFe2ggej6u6gNaG42P2Esd372BTE7agyBqktqY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzD5JB0p7qJRPLbDNFxb1IkDjBUyxp1/kh97t6lr0b6M4Y5g+tw
+	eXEfWy4erIg2UNIt48eyZd4VfJARob0gYrWDSgZQLszYOw6/ND7qxHmktll2VWL6xdn8NS2pnPy
+	wi8NjaFRreXJxvglP3+/iYBPULEj1xS7Or0yUnZqDXIBn9Y/yRjUk0CLxvsM7lw==
+X-Gm-Gg: ASbGncum8fRXL2BuXbhyynyJVU3GsxsjpBmeYkD6gwiDaqFWMXbnFk9Njh1EKG8aDOI
+	uO/MAjBLERuOCsFo/5gN+o62A2nbnGaeKLwkoX02wdLdrJytK8IKk2fqD5o+5+qPvwa7Jrj5Ovc
+	bgTIzcasJM+SoXBFhtvUmHtLf1Kk2AaYuhcjgvRTKlTljNbzgFFM4o21PVir9pETBl+kOs6tVwj
+	1XoEL4VDF/nV9jQ3VnvmBusexIKtIQfdPtsIGjgtaFsIdF4kzm3fDndbdvOOzG/QmZNRlFVWWPf
+	l3A00y3Eni4UA93JRLOMJ4cG/nCb5358IKsU3aQB+rt9GWfgCsu+mmKwRxwvcs3ZCzVn0nQcLDW
+	t7zHH
+X-Received: by 2002:a05:6214:1d25:b0:6e6:6b99:cd1e with SMTP id 6a1803df08f44-6e8a0d2843amr244067856d6.26.1741105094848;
+        Tue, 04 Mar 2025 08:18:14 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGMZBXmxWTsjkO8lCuuk5ALhI5q/JUqSiC/jW4yEUCOQvQ6zIJ44eFdx2yvZOG7FjeiCP1pFQ==
+X-Received: by 2002:a05:6214:1d25:b0:6e6:6b99:cd1e with SMTP id 6a1803df08f44-6e8a0d2843amr244067466d6.26.1741105094501;
+        Tue, 04 Mar 2025 08:18:14 -0800 (PST)
+Received: from jlelli-thinkpadt14gen4.remote.csb (host-89-240-117-139.as13285.net. [89.240.117.139])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e8976ec158sm68172966d6.119.2025.03.04.08.18.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Mar 2025 08:18:13 -0800 (PST)
+Date: Tue, 4 Mar 2025 16:18:09 +0000
+From: Juri Lelli <juri.lelli@redhat.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Harshit Agarwal <harshit@nutanix.com>, Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	linux-kernel@vger.kernel.org, Jon Kohler <jon@nutanix.com>,
+	Gauri Patwardhan <gauri.patwardhan@nutanix.com>,
+	Rahul Chunduru <rahul.chunduru@nutanix.com>,
+	Will Ton <william.ton@nutanix.com>, stable@vger.kernel.org
+Subject: Re: [PATCH v3] sched/rt: Fix race in push_rt_task
+Message-ID: <Z8cnwcHxDxz1TmfL@jlelli-thinkpadt14gen4.remote.csb>
+References: <20250225180553.167995-1-harshit@nutanix.com>
+ <Z8bEyxZCf8Y_JReR@jlelli-thinkpadt14gen4.remote.csb>
+ <20250304103001.0f89e953@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v10 6/6] arm64: defconfig: Enable Synopsys HDMI receiver
-To: Nicolas Dufresne <nicolas.dufresne@collabora.com>,
- Dmitry Osipenko <dmitry.osipenko@collabora.com>,
- Shreeya Patel <shreeya.patel@collabora.com>, Heiko Stuebner
- <heiko@sntech.de>, Mauro Carvalho Chehab <mchehab@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, jose.abreu@synopsys.com,
- nelson.costa@synopsys.com, shawn.wen@rock-chips.com,
- Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc: kernel@collabora.com, linux-media@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-rockchip@lists.infradead.org, Tim Surber <me@timsurber.de>,
- Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-References: <20250225183058.607047-1-dmitry.osipenko@collabora.com>
- <20250225183058.607047-7-dmitry.osipenko@collabora.com>
- <a8a6c8c8-ee3b-422a-8573-a2cbb61fc3aa@xs4all.nl>
- <863f9c1beb7a912f94f8740b3e5095e09e49cee5.camel@collabora.com>
-Content-Language: en-US, nl
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Autocrypt: addr=hverkuil@xs4all.nl; keydata=
- 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
-In-Reply-To: <863f9c1beb7a912f94f8740b3e5095e09e49cee5.camel@collabora.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250304103001.0f89e953@gandalf.local.home>
 
-On 28/02/2025 04:51, Nicolas Dufresne wrote:
-> Hi Hans,
+On 04/03/25 10:30, Steven Rostedt wrote:
+> On Tue, 4 Mar 2025 09:15:55 +0000
+> Juri Lelli <juri.lelli@redhat.com> wrote:
 > 
-> Le mercredi 26 février 2025 à 09:31 +0100, Hans Verkuil a écrit :
->> On 25/02/2025 19:30, Dmitry Osipenko wrote:
->>> From: Sebastian Reichel <sebastian.reichel@collabora.com>
->>>
->>> The Rockchip RK3588 has a built-in HDMI receiver block from
->>> Synopsys. Let's enable the driver for it.
->>>
->>> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
->>> Signed-off-by: Dmitry Osipenko <dmitry.osipenko@collabora.com>
->>> ---
->>>  arch/arm64/configs/defconfig | 2 ++
->>>  1 file changed, 2 insertions(+)
->>>
->>> diff --git a/arch/arm64/configs/defconfig
->>> b/arch/arm64/configs/defconfig
->>> index cb7da4415599..3dccc9e1c4aa 100644
->>> --- a/arch/arm64/configs/defconfig
->>> +++ b/arch/arm64/configs/defconfig
->>> @@ -859,6 +859,8 @@ CONFIG_VIDEO_SAMSUNG_EXYNOS_GSC=m
->>>  CONFIG_VIDEO_SAMSUNG_S5P_JPEG=m
->>>  CONFIG_VIDEO_SAMSUNG_S5P_MFC=m
->>>  CONFIG_VIDEO_SUN6I_CSI=m
->>> +CONFIG_VIDEO_SYNOPSYS_HDMIRX=m
->>> +CONFIG_VIDEO_SYNOPSYS_HDMIRX_LOAD_DEFAULT_EDID=y
->>
->> I do not believe it is a good idea to default to y for this option.
->>
->> The EDID depends on the specific device you make, and you should
->> think carefully about whether the default EDID fits the needs of the
->> device.
->>
->> So if you want the default EDID, then you should manually select it
->> and not have it autoselected.
+> > As usual, we have essentially the same in deadline.c, do you think we
+> > should/could implement the same fix proactively in there as well? Steve?
+> > 
 > 
-> Following up here, from the device maker perspective sure, but I'm not
-> sure this is the best choice for generic Linux distribution. As of
-> today, pretty much no userspace capture software knows about this,
-> meaning the device will not work out of the box in OBS, GStreamer,
-> Ffmpeg, Web Browsers. In comparison, if you pick any UVC HDMI capture,
-> it just work, with a default EDID that covers the range of
-> capabilities, which in this case are defined by the SoC.
+> Probably. It would be better if we could find a way to consolidate the
+> functionality so that when we fix a bug in one, the other gets fixed too.
 
-A UVC HDMI capture device is not a good comparison: that has it's own
-EDID that is configured for the specific hardware and USB bandwidth
-limitations. EDID handling is all internal to that device, nothing to
-do with the UVC driver.
+That would be nice indeed.
 
-That said, this device is a bit different compared to most other
-HDMI receivers in that it also has a DMA engine. Usually HDMI receivers
-are i2c devices that connect to an SoC. In this case the hardware is
-inside the SoC. So I am OK with making LOAD_DEFAULT_EDID=y in the defconfig.
-
-So:
-
-Acked-by: Hans Verkuil <hverkuil@xs4all.nl>
-
-Note that I will merge the v13 driver (patches 1-3), since it looks good.
-
-But v11-v13 of this defconfig patch dropped the "CONFIG_VIDEO_SYNOPSYS_HDMIRX_LOAD_DEFAULT_EDID=y"
-line, so you might want to post a v14 of just patches 4-6, restoring that
-line, once I merged patches 1-3.
-
-Regards,
-
-	Hans
-
-> 
-> Whatever we make as a choice, will always be the wrong choice for
-> someone, though I expect this to be a lot easier to change for
-> "specialized" implementation. Now, since there is no reason you can't
-> do a specilized implementation on generic Linux distro, and because you
-> might disagree with me, perhaps a compromise is to also add a module
-> parameter, so that there is a run-time override to this.
-> 
-> Nicolas
-> 
->>
->> Regards,
->>
->> 	Hans
->>
->>>  CONFIG_VIDEO_TI_J721E_CSI2RX=m
->>>  CONFIG_VIDEO_HANTRO=m
->>>  CONFIG_VIDEO_IMX219=m
->>
->>
-> 
+Thanks,
+Juri
 
