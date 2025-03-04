@@ -1,67 +1,76 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7631273FE;
-	Tue,  4 Mar 2025 04:46:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7650273FE;
+	Tue,  4 Mar 2025 04:46:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741063563; cv=none; b=LeAKuuh9li8StLpYV8oeTzRhH1cdK77te397pYZb3gv2PJbsrHiDZhLolNFPPViiDXlXhXdopwdLFALLxwBZro/c/Ye69jkqoV+yIj1euH198GVpg+2h4fq0zqdaOsBnQNX8qmceQYOYQX5HcXyfGqsAPHTeEbjD52ail6ETI2s=
+	t=1741063570; cv=none; b=AlV/5j8A2J2aL49NuggOfHzWBLhSH/j9B1bnAdKbR6ywTRGIiugFUZNKLDCuf8Q5FGpC1MwMAoJSMoIxrIGtW1PaAP/AwewgSZTqzLAhq3mR2PnTCByeSzIj+DwAvvIh6JAIYX3uR3K6Ld8GPmV3j5MTxzJKO+kEc3a4syZ4he4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741063563; c=relaxed/simple;
-	bh=BIFrLh9/bQIuBnwap0eqz54Lk04kbf4V0DZ+B0m2mNI=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=jfB1EMyrwQsdTUZjvh8yd5fsIP45BrcNRWreoPx8oGLW5nmvs39visp7L80Py/VRJd9qbQ+cicRhBh6cOme3XsCCKu+a8kQesVZJZNDmGxfNygrX75bLRMeq9kcmXTqq3QaRAmyCTgmn9J9YrH29Nm/D7dBsYud0YOroVf89XJU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=dF8tbczv; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741063570; c=relaxed/simple;
+	bh=fLrUZzi2O2CHXVLtjjJD/Zz4ACTitOh1CdYE2z+7TTs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=T/F670JcweCEwSP2gR1EWJInVBuDxdL97xS1vO+46mB8eCTLZUqAbnDVlcQQzMJ8ZvVisVMY8qVF+C57FdO3M60BpJnGUxWzYLyXnzga2LjW1CkwJG0ge60H8MXJ0VHs9b1Xvds4xfZlZongr6s12Bt7zdjghdRwnT+QqibW7hA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=P2+ExE1B; arc=none smtp.client-ip=178.21.23.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="dF8tbczv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13364C4CEE5;
-	Tue,  4 Mar 2025 04:46:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1741063562;
-	bh=BIFrLh9/bQIuBnwap0eqz54Lk04kbf4V0DZ+B0m2mNI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=dF8tbczvEn6O6hRjSdWKxvQKkGRzNDZEQd6dsg0AiFp2L+F6YCMhGyxTx3ZlL53AI
-	 kaXbQDaf9UtJ2eGtPxCyhDiD+/NG8ggB7max5UArq9jsbxOqNhnoi74SE44bszJ2Pe
-	 oKDZeMXGXB5LFz8Eg4Vk7YAWHaK0unPGQ7GwUCdU=
-Date: Mon, 3 Mar 2025 20:46:00 -0800
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Alistair Popple <apopple@nvidia.com>
-Cc: dan.j.williams@intel.com, linux-mm@kvack.org, Alison Schofield
- <alison.schofield@intel.com>, lina@asahilina.net, zhang.lyra@gmail.com,
- gerald.schaefer@linux.ibm.com, vishal.l.verma@intel.com,
- dave.jiang@intel.com, logang@deltatee.com, bhelgaas@google.com,
- jack@suse.cz, jgg@ziepe.ca, catalin.marinas@arm.com, will@kernel.org,
- mpe@ellerman.id.au, npiggin@gmail.com, dave.hansen@linux.intel.com,
- ira.weiny@intel.com, willy@infradead.org, djwong@kernel.org, tytso@mit.edu,
- linmiaohe@huawei.com, david@redhat.com, peterx@redhat.com,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
- nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
- linux-xfs@vger.kernel.org, jhubbard@nvidia.com, hch@lst.de,
- david@fromorbit.com, chenhuacai@kernel.org, kernel@xen0n.name,
- loongarch@lists.linux.dev
-Subject: Re: [PATCH v9 00/20] fs/dax: Fix ZONE_DEVICE page reference counts
-Message-Id: <20250303204600.cb49d2d614efcded0b28f8c1@linux-foundation.org>
-In-Reply-To: <xhbru4aekyfl25552le5tvifwonyuwoyioxrqxy6zkm2xlyhc5@oqxnudb4bope>
-References: <cover.8068ad144a7eea4a813670301f4d2a86a8e68ec4.1740713401.git-series.apopple@nvidia.com>
-	<xhbru4aekyfl25552le5tvifwonyuwoyioxrqxy6zkm2xlyhc5@oqxnudb4bope>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="P2+ExE1B"
+Received: from mail01.disroot.lan (localhost [127.0.0.1])
+	by disroot.org (Postfix) with ESMTP id EE45925CB8;
+	Tue,  4 Mar 2025 05:38:14 +0100 (CET)
+X-Virus-Scanned: SPAM Filter at disroot.org
+Received: from layka.disroot.org ([127.0.0.1])
+ by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id N9u9EjEUFwdy; Tue,  4 Mar 2025 05:38:14 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
+	t=1741063094; bh=fLrUZzi2O2CHXVLtjjJD/Zz4ACTitOh1CdYE2z+7TTs=;
+	h=From:To:Cc:Subject:Date;
+	b=P2+ExE1B39+bn7wpWI+RPAr/3RPEMicqUvXhMg8KPeCP6mQMzM92UkJNnFQ6BuWZ0
+	 DC0rmbdfOJ52Ix5c2lm/tWgYDEKAlAJvwPcc/pXuqD6lnSRkOUlKTWKDkfdrAvc/up
+	 593YzPBT7Lt59UxLY/3ei8UakqCUVXvqPSGm4s8Iq5TG/Xh7FgxicvrbmsASTrBAVi
+	 l9uiZdG01isqPbgh74XKBdmXLOVjI8rQUkNE29eFjs8g+fQkap1GT/30dy7+wx/sru
+	 VAk7Z26guDcFHLA29ViO2Tyo68K/LKZssX34zsXQo37GenN8BChrTi2CrNy02zFdhW
+	 7wLzNz7GzOeJQ==
+From: Gabriel Gonzales <semfault@disroot.org>
+To: linux-kernel@vger.kernel.org
+Cc: Gabriel Gonzales <semfault@disroot.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org
+Subject: [PATCH v1 1/2] dt-bindings: arm: qcom: Add Xiaomi Redmi Note 8
+Date: Tue,  4 Mar 2025 12:37:39 +0800
+Message-ID: <20250304043742.9252-1-semfault@disroot.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Fri, 28 Feb 2025 14:42:40 +1100 Alistair Popple <apopple@nvidia.com> wrote:
+Document the Xiaomi Redmi Note 8, which is based off the SM6125 SoC
 
-> This is essentially the same as what's currently in mm-unstable aside from
-> the two updates listed below. The main thing to note is it incorporates
-> Balbir's fixup which is currently in mm-unstable as c98612955016
-> ("mm-allow-compound-zone-device-pages-fix-fix")
-> 
+Signed-off-by: Gabriel Gonzales <semfault@disroot.org>
+---
+ Documentation/devicetree/bindings/arm/qcom.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-Thanks, I've updated mm.git to this v9 series.
+diff --git a/Documentation/devicetree/bindings/arm/qcom.yaml b/Documentation/devicetree/bindings/arm/qcom.yaml
+index 618a87693..52f7b217b 100644
+--- a/Documentation/devicetree/bindings/arm/qcom.yaml
++++ b/Documentation/devicetree/bindings/arm/qcom.yaml
+@@ -1020,6 +1020,7 @@ properties:
+       - items:
+           - enum:
+               - sony,pdx201
++              - xiaomi,ginkgo
+               - xiaomi,laurel-sprout
+           - const: qcom,sm6125
+ 
+-- 
+2.47.0
+
