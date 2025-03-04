@@ -1,270 +1,129 @@
-Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com [209.85.128.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98F401F91F6
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 08:34:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C508E1F91F6
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 08:36:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741077298; cv=none; b=S4fMjNmkb+cFWcBri48oLKnC7jvIzxryDeLXpgVu+BpwRTHg0QdAIgzxLuYDqdM/m/5td+m+yABQx9HkFJ0NEOD+EfcoGutkGC26/hlf1N/0O/ZsoS3shKK6ri1Py5GDrvsVxJm/xHlR7yF5kv0JScTaZJD1P5XvV0elgiERn5I=
+	t=1741077366; cv=none; b=JqvvgZtCvDjXED66O5KTrVuDMXh/Z2ZoG59/PSlz78zGE3tKas930Owghbh5F4LnuxC+8ZdBBIWBGNc4iF9pTRmrSNFMQ5uBqBIBySa7QuGuAmx9lBdxhLhapp4/YY7gjOkV/4M1ZfsVXlSA9/Sog8hZEta9qATSficQVx0y3Mc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741077298; c=relaxed/simple;
-	bh=V2KSTpqN9yyPdPBDmFTpPQHR090zUwos7Uqal+nkViE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UniYueQ/rlXMRTUM0P2JeYiAMnYnnF7XLGnElJagZcp2ampx2Ux72zwqJub9MFDW2E8DnR6U8CDQm0Jokq51mTo2APdHVwaCpV7fleynjyG6TTGwLssmN6jhWP/zc8mRYYNVmrGvSGlJM/XraQ9DipW/UUvaxZCS6UhTRa0aFT4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=up0Z5QoF; arc=none smtp.client-ip=209.85.128.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1741077366; c=relaxed/simple;
+	bh=XgA9qqbw3UkE7vJt7EJN9UvDMWDyIUQzyLjlUvqTt0M=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GRPLe9P5Tf+6oyoY9Wj3j93LHJv7Nrq8FE8Sydh94fc+Q53cF6NA0to+l3k9OGWoRaYcHwUepKxP9d7GEXivab2zrMp1+S1sphzfprssQPuvjWLllZGJZeIk8ZN5e039lKLl968bndJ8z/YfypQ92Cj+PHa6A8fpLHr32FpKgnM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=jvUG1PgG; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="up0Z5QoF"
-Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-6f9625c0fccso47627117b3.1
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Mar 2025 00:34:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741077295; x=1741682095; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YpYaFgX/DIeu+Y0M+C6PCuEaWiBduI0jsXCByUJfKZk=;
-        b=up0Z5QoFeS9MG13eU/opb60ws/3fZAqoYqpjKOCbjeHlnrJAA7/+bUgWK8bC0xyCIU
-         SlcgxGmZBpebZFH8dDpw4AD3hipvjF1GgMpr7tAEQ92igx88eGFwS68dQQyH3fVJ8Jby
-         bB/KnBnGB7hbbcW6Iv61x7qp5TD5o+TGLyK1+p/i1itP6Qah8cy8/9IkDR/HljDZB6wB
-         BFZ0mrihWU4ZyI+wOnbSJP5KPvtB/PSeuxh/HaG8bbi4q8LDbdS9mv0btJbfvVxM+asT
-         gsII2XwDE3GQ3qIMzUFVv1/WixEpGL3hoJym7uLRF36loOcd46Or2d/b8C1wG2p7CirI
-         VqCQ==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="jvUG1PgG"
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 523NX3PT017193
+	for <linux-kernel@vger.kernel.org>; Tue, 4 Mar 2025 08:36:04 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=XAMOM7rvhCYgMuIw3HT4H/aO
+	fsEkoZQ5Aqu4Fze2AEU=; b=jvUG1PgGOVC5kQ7DsFZlnFb43l5Lntg0lg8RuOxb
+	xcqIawn1FrIoBG2AnX09O/3fL80pZ7MzN2EBN15To8lm2KF9O6jjFMDcQUkgd42i
+	Qik8A8DLDoHf/jnBB/22laPT7G7F5l7ewrhymH/V2AW/e5UbL36g2yo/aU/kAZsZ
+	uF5bKgXUxjfjUHsD21qMr/s6gr/D5xDAlg7aaVsUvbiO398Nn3WVCBC8W6iU+J8l
+	gnpMM7NpuJYhfj3Ko+GiYNzQWxk3d9O+gmDP2xztPaQ1fnJvUot74YZXyF4VzDjd
+	te7Dq0Mtfn7c1ZOOSx5z+k1jiAdwXAuFrUVroUqgP2o2Pw==
+Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com [209.85.219.71])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 455p6th814-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Tue, 04 Mar 2025 08:36:03 +0000 (GMT)
+Received: by mail-qv1-f71.google.com with SMTP id 6a1803df08f44-6e8c4f5f477so41765926d6.3
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Mar 2025 00:36:03 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741077295; x=1741682095;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=YpYaFgX/DIeu+Y0M+C6PCuEaWiBduI0jsXCByUJfKZk=;
-        b=hD6IYaK7o2m0ChBg9J5OoDIoefsaWroQuvO8zePLLD6pm50gXQxLa3AFfhAHCeY6jv
-         eadARgS5R2vSGFDJoiYMeHYrAs5FRqCbcAeixN3l7l0jZZYjl4RrrHnBo6VYbI7dVSEW
-         zO3E6Uh/7+Oh09M0szohBuLAP6R5kuc017Ab0Ji7eBxS9bQ4hlr/69V+xE1Cr43/ZZE5
-         NjKCe+rCHbJ6FjiCbfscrq0Lqg/X5J6EXCJRshoPsF21j0P3QTqgR/df/oi3UcVeeiRr
-         Iq9AJp0uRaFWuPvMVyULcZHQwArH9nDU0hDCztSPKrrwJ9fH8KyE3S5ONHJ4D7Vomigl
-         Rvtw==
-X-Forwarded-Encrypted: i=1; AJvYcCUAWjqxbPCaLnmTEkD9+S5RnoWZGLVgKFAMUQXOZokjdN7IfMgIGcoqXj/8oNQYLZd+yC3YsFHtiGHdxdQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxmB8IhNaTqlfUb3+vsnFjnbgJfXb/x4kRPuKvgCtErHqDlSVUy
-	vpzuFvFZOk58Eoi1RqK3deAnTkcvHyb/5N61a7l3+y0Hc1IwNdRN+93nYtb8/fyi6JsO/kHShZH
-	aLZsci+HoRPjvjPhGzboZNaPbU/Sx6KGkyiRCOQ==
-X-Gm-Gg: ASbGnctKuRaJ2zIEXqtNzsj01TP8vdx++eOaFD+hFCtnY9CFayjXWE5O80jwk7gPX0S
-	PaDzCs9NcK0paMHUT7OWibQrkm7FSbP/RxQ5XKgGm0EP0qklYetT3HaT1PffbjUbBpGqlHwZiti
-	9JE1IG6eQw27qKCUzjMwHRcx/3dg==
-X-Google-Smtp-Source: AGHT+IFhGPO8Z+0jx6KGBynNtPT6yYF9xszM4x36wjx9yMMgVztmaWf8Qs8IKShaST2LvOhz0lgri9jNyCWBfrQUF7s=
-X-Received: by 2002:a05:690c:7006:b0:6fb:b2c0:71da with SMTP id
- 00721157ae682-6fd4a15155bmr214892977b3.36.1741077295472; Tue, 04 Mar 2025
- 00:34:55 -0800 (PST)
+        d=1e100.net; s=20230601; t=1741077362; x=1741682162;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XAMOM7rvhCYgMuIw3HT4H/aOfsEkoZQ5Aqu4Fze2AEU=;
+        b=W4tjB9lsBY48SfTlJLyXPRGA26cATKgqXT1VUfIXZUOi8HOjJxGFqK0NYiSxQbQuIs
+         8GkUdlWUeQ8Oocqh2jonJOvqMpSCduWA1xcA2//xt1t28VS+FoK9p0yUBBVPieu5phvO
+         XHlRiS6Wv0/jjZUgfxVk2apYi8to7XQjkmzY9aYWPe3pW3eCGKKZeb7/VPBiJYi4mdeA
+         ES/h2Jb4iTYi6YYOYDch/DqQ4zqshu04Dcpm+SR8a0+85Iwz7QZJJTp6YmDu9xjLcX41
+         xQ9EaSgLRBcav+tUtK8XRRyNfaaWsm7V7KZJx+Mqidaq6DVoIQxkWZymiEQc9E1lBVdy
+         I2Xg==
+X-Forwarded-Encrypted: i=1; AJvYcCXc2bDIhuhf4Ur7T3kl74O8koOvphV1SGG3AWn7OcmxtuQiZ6S/sQ0CO+l7YSBSSoB+fnYOiZi/rcElMac=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzgkbkgrxhV6qSQ2CSLyOB6rtNBGVy6AZ9aUSH2xReu+cv1Ef4V
+	w5usCUZneG8Kn5rZX2f/MMGoSEx+crOiAZTbB/TIf478MP8kNQ0ZGulB35I8Q5AJYqalWJ31OsT
+	IB1Y0/0Z3Jazi9nCWbX64GBy2JCMoFueA2USK05Yu521y/ZjYaAYWbsOxZCbBDqY=
+X-Gm-Gg: ASbGnct9MtPgYkZRua2SnYSRPEVyLF0pgfwNqLLkDklSN4/fd93sAnNEqkXCD5pryVd
+	FaZpwiRCxL+DlDlQrlhZAfJJkEYhoAfYW1XTr1WpyfMO7C36u+CCdL15JGYQNR6ws2XDogeEim1
+	obybK6uzUzDLEDzbqnPzNz9B8LqFKSPCE7yT+lAqgWmMqJGWRxkC79iKMkymqovDiRqWIXmWILp
+	JLrH3nXjqnGrTDpD6NtC8Yy7r1lchqvNkBW0RhSHquMHJFKgAMdwTlX1AlOg9Yz8voWUXJQL/L6
+	zrsp+NZUq20GGnww1jJOudv0I5W/ey/VMWOVXuvtCFWv9bAn
+X-Received: by 2002:ad4:5ba3:0:b0:6e8:9086:261 with SMTP id 6a1803df08f44-6e8a0c87592mr237230196d6.3.1741077362664;
+        Tue, 04 Mar 2025 00:36:02 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEYTjjYAGqBjSa8LYcj6moKGc25A1v1rHHnj0+thRYs3Enml4DGKp4CuJXYuuPTy+m3iTBSkg==
+X-Received: by 2002:ad4:5ba3:0:b0:6e8:9086:261 with SMTP id 6a1803df08f44-6e8a0c87592mr237230006d6.3.1741077362372;
+        Tue, 04 Mar 2025 00:36:02 -0800 (PST)
+Received: from trex (54.red-79-144-194.dynamicip.rima-tde.net. [79.144.194.54])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-390e4796051sm17265067f8f.12.2025.03.04.00.36.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Mar 2025 00:36:01 -0800 (PST)
+From: Jorge Ramirez <jorge.ramirez@oss.qualcomm.com>
+X-Google-Original-From: Jorge Ramirez <JorgeRamirez-Ortiz>
+Date: Tue, 4 Mar 2025 09:36:00 +0100
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Vikram Sharma <quic_vikramsa@quicinc.com>, rfoss@kernel.org,
+        todor.too@gmail.com, bryan.odonoghue@linaro.org, mchehab@kernel.org,
+        robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+        andersson@kernel.org, konradybcio@kernel.org, hverkuil-cisco@xs4all.nl,
+        cros-qcom-dts-watchers@chromium.org, catalin.marinas@arm.com,
+        will@kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Konrad Dybcio <konrad.dybcio@linaro.org>
+Subject: Re: [PATCH v14 2/2] arm64: dts: qcom:
+ qcs6490-rb3gen2-vision-mezzanine: Add vision mezzanine
+Message-ID: <Z8a7cMmxJuHIhgjo@trex>
+References: <20250208225143.2868279-1-quic_vikramsa@quicinc.com>
+ <20250208225143.2868279-3-quic_vikramsa@quicinc.com>
+ <ca8e6569-b466-4f83-83af-38c51891d395@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250228165749.3476210-1-pratap.nirujogi@amd.com>
-In-Reply-To: <20250228165749.3476210-1-pratap.nirujogi@amd.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Tue, 4 Mar 2025 09:34:37 +0100
-X-Gm-Features: AQ5f1Jr9Zy0fCfWDPGh4yq2xUe8K7tk64A7TE75BVReNHw7SurNadKCZOEUvAVc
-Message-ID: <CACRpkdZv6ykTPWUNmbPNv+VS=a_YTFBqiDS0eojt28Myvs-ZZQ@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: amd: isp411: Add amdisp GPIO pinctrl
-To: Pratap Nirujogi <pratap.nirujogi@amd.com>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	benjamin.chan@amd.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ca8e6569-b466-4f83-83af-38c51891d395@kernel.org>
+X-Authority-Analysis: v=2.4 cv=PMb1+eqC c=1 sm=1 tr=0 ts=67c6bb73 cx=c_pps a=UgVkIMxJMSkC9lv97toC5g==:117 a=cl0az7d0LwC7qAhl51RXhA==:17 a=kj9zAlcOel0A:10 a=Vs1iUdzkB0EA:10 a=-c0S-HA5VnWDXXpzp3AA:9 a=CjuIK1q_8ugA:10 a=1HOtulTD9v-eNWfpl4qZ:22
+X-Proofpoint-ORIG-GUID: gaaj3dGJYWwA_H4JFYnvGxDcY6rlDrnT
+X-Proofpoint-GUID: gaaj3dGJYWwA_H4JFYnvGxDcY6rlDrnT
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-04_04,2025-03-03_04,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxlogscore=809
+ phishscore=0 lowpriorityscore=0 malwarescore=0 priorityscore=1501
+ mlxscore=0 adultscore=0 spamscore=0 suspectscore=0 impostorscore=0
+ clxscore=1011 classifier=spam authscore=0 adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502100000 definitions=main-2503040072
 
-Hi Pratap,
+On 03/03/25 18:13:20, Krzysztof Kozlowski wrote:
+> On 08/02/2025 23:51, Vikram Sharma wrote:
+> > The Vision Mezzanine for the Qualcomm RB3 Gen 2 ships with an imx577
+> > camera sensor. Enable IMX577 on the vision mezzanine.
+> > 
+> > An example media-ctl pipeline for the imx577 is:
+> > 
+> > media-ctl --reset
+> > media-ctl -V '"imx577 '17-001a'":0[fmt:SRGGB10/4056x3040 field:none]'
+> 
+> AFAIU, camss does not support SRGGB10, but only SRGGB10P.
+> 
+> Based on tests reported on IRC I think this might not have been tested
+> correctly.
 
-thanks for your patch!
+I acquired SRGGB10P (10 bit packed) frames from the camera despite the
+pipeline being set to SRGGB10 (16 bit) samples.
 
-On Fri, Feb 28, 2025 at 5:58=E2=80=AFPM Pratap Nirujogi <pratap.nirujogi@am=
-d.com> wrote:
+so something does not add up.
 
-> +config PINCTRL_AMDISP
-> +       tristate "AMDISP GPIO pin control"
-> +       depends on HAS_IOMEM
-> +       select GPIOLIB
-> +       select PINCONF
-> +       select GENERIC_PINCONF
-> +       help
-> +         The driver for memory mapped GPIO functionality on AMD platform=
-s
-> +         with ISP support. All the pins are output controlled only
-> +
-> +         Requires AMDGPU to MFD add device for enumeration to set up as
-> +         platform device.
-
-> +/* SPDX-License-Identifier: MIT */
-
-OK we have this...
-
-> +/*
-> + * Copyright (C) 2025 Advanced Micro Devices, Inc. All rights reserved.
-> + * All Rights Reserved.
-> + *
-
-That can be kept
-
-> + * Permission is hereby granted, free of charge, to any person obtaining=
- a
-> + * copy of this software and associated documentation files (the
-> + * "Software"), to deal in the Software without restriction, including
-> + * without limitation the rights to use, copy, modify, merge, publish,
-> + * distribute, sub license, and/or sell copies of the Software, and to
-> + * permit persons to whom the Software is furnished to do so, subject to
-> + * the following conditions:
-> + *
-> + * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRE=
-SS OR
-> + * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILI=
-TY,
-> + * FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SH=
-ALL
-> + * THE COPYRIGHT HOLDERS, AUTHORS AND/OR ITS SUPPLIERS BE LIABLE FOR ANY=
- CLAIM,
-> + * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
-> + * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR=
- THE
-> + * USE OR OTHER DEALINGS IN THE SOFTWARE.
-> + *
-> + * The above copyright notice and this permission notice (including the
-> + * next paragraph) shall be included in all copies or substantial portio=
-ns
-> + * of the Software.
-
-This is already in:
-LICENSES/preferred/MIT
-
-Which is referenced by the SPDX tag.
-
-Can we just drop it? It's very annoying with all this boilerplate.
-
-> +#ifdef CONFIG_GPIOLIB
-
-You select GPIOLIB in the Kconfig so drop the ifdef, it's always
-available.
-
-> +static int amdisp_gpio_set_config(struct gpio_chip *gc, unsigned int gpi=
-o,
-> +                                 unsigned long config)
-> +{
-> +       /* Nothing to do, amdisp gpio has no other config */
-> +       return 0;
-> +}
-
-Don't even assign the callback then, that's fine.
-
-> +static int amdisp_gpiochip_add(struct platform_device *pdev,
-> +                              struct amdisp_pinctrl *pctrl)
-> +{
-> +       struct gpio_chip *gc =3D &pctrl->gc;
-> +       struct pinctrl_gpio_range *grange =3D &pctrl->gpio_range;
-> +       int ret;
-> +
-> +       gc->label               =3D dev_name(pctrl->dev);
-> +       gc->owner               =3D THIS_MODULE;
-
-I think the core default-assigns owner so you don't need to
-assign this.
-
-> +       gc->parent              =3D &pdev->dev;
-> +       gc->names               =3D amdisp_range_pins_name;
-> +       gc->request             =3D gpiochip_generic_request;
-> +       gc->free                =3D gpiochip_generic_free;
-> +       gc->get_direction       =3D amdisp_gpio_get_direction;
-> +       gc->direction_input     =3D amdisp_gpio_direction_input;
-> +       gc->direction_output    =3D amdisp_gpio_direction_output;
-> +       gc->get                 =3D amdisp_gpio_get;
-> +       gc->set                 =3D amdisp_gpio_set;
-> +       gc->set_config          =3D amdisp_gpio_set_config;
-
-I.e. drop this.
-
-> +       gc->base                =3D -1;
-> +       gc->ngpio               =3D ARRAY_SIZE(amdisp_range_pins);
-> +#if defined(CONFIG_OF_GPIO)
-> +       gc->of_node             =3D pdev->dev.of_node;
-> +       gc->of_gpio_n_cells     =3D 2;
-> +#endif
-
-Drop the ifdefs.
-
-> +#ifdef CONFIG_GPIOLIB
-> +       res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +       if (IS_ERR(res))
-> +               return PTR_ERR(res);
-> +
-> +       pctrl->gpiobase =3D devm_ioremap_resource(&pdev->dev, res);
-> +       if (IS_ERR(pctrl->gpiobase))
-> +               return PTR_ERR(pctrl->gpiobase);
-> +#endif
-
-Drop ifdefs
-
-> +#ifdef CONFIG_GPIOLIB
-> +       ret =3D amdisp_gpiochip_add(pdev, pctrl);
-> +       if (ret)
-> +               return ret;
-> +#endif
-
-Drop ifdefs
-
-> +static int __init amdisp_pinctrl_init(void)
-> +{
-> +       return platform_driver_register(&amdisp_pinctrl_driver);
-> +}
-> +arch_initcall(amdisp_pinctrl_init);
-> +
-> +static void __exit amdisp_pinctrl_exit(void)
-> +{
-> +       platform_driver_unregister(&amdisp_pinctrl_driver);
-> +}
-> +module_exit(amdisp_pinctrl_exit);
-
-Why do you need arch_initcall()?
-
-Try to just use module_platform_driver() for the
-whole module.
-
-> +MODULE_AUTHOR("Benjamin Chan <benjamin.chan@amd.com>");
-> +MODULE_AUTHOR("Pratap Nirujogi <pratap.nirujogi@amd.com>");
-> +MODULE_DESCRIPTION("AMDISP pinctrl driver");
-> +MODULE_LICENSE("GPL and additional rights");
-
-Well that does not correspond to MIT does it?
-
-> +/* SPDX-License-Identifier: MIT */
-> +/*
-> + * Copyright (C) 2025 Advanced Micro Devices, Inc. All rights reserved.
-> + * All Rights Reserved.
-> + *
-> + * Permission is hereby granted, free of charge, to any person obtaining=
- a
-> + * copy of this software and associated documentation files (the
-> + * "Software"), to deal in the Software without restriction, including
-> + * without limitation the rights to use, copy, modify, merge, publish,
-> + * distribute, sub license, and/or sell copies of the Software, and to
-> + * permit persons to whom the Software is furnished to do so, subject to
-> + * the following conditions:
-> + *
-> + * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRE=
-SS OR
-> + * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILI=
-TY,
-> + * FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SH=
-ALL
-> + * THE COPYRIGHT HOLDERS, AUTHORS AND/OR ITS SUPPLIERS BE LIABLE FOR ANY=
- CLAIM,
-> + * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
-> + * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR=
- THE
-> + * USE OR OTHER DEALINGS IN THE SOFTWARE.
-> + *
-> + * The above copyright notice and this permission notice (including the
-> + * next paragraph) shall be included in all copies or substantial portio=
-ns
-> + * of the Software.
-
-Can we drop this?
-
-Yours,
-Linus Walleij
+> 
+> Best regards,
+> Krzysztof
