@@ -1,60 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out30-112.freemail.mail.aliyun.com (out30-112.freemail.mail.aliyun.com [115.124.30.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D2432CCC5;
-	Tue,  4 Mar 2025 02:37:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B4632AE8C;
+	Tue,  4 Mar 2025 02:39:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.112
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741055822; cv=none; b=IMIjDpJqayJB/usfq5OHT+tjPFlOjS4ggtuqBLbThFkaBMW8UnNyIYRgiKovYdGuhA1IlXHBD3IJzMResSMxA7PTORIZBEKXBFjAOar3bTY1kz5T5KjmCGzT9RTdloIEr5/G59fADCXSN8h20O6Ln1mGlooJmxEWDQnn/Z3zEdU=
+	t=1741055965; cv=none; b=EARM9WJkTfuF0SfPOWhoCN3iA2mGxxWjzG6n3+Zrih1mBPK4RJbcKcBgYkWiylpveHowwLmJMB1edBW3h0pJBfe1qeRZvIIdyOkouJiTa3TdQWNlsGEC3JWrYmyCsKGN83MWpVy/dx1PjxXfTOZlW8OCUlLdeAvkiUXmrwtvk5U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741055822; c=relaxed/simple;
-	bh=r+u+SDpxZAlaUfmN/RqhvJgErVPdeQzLaIabC9Bq1wc=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=mcJO+sSYgeDwa+nbidUMHzYSiliqNHamBofJmrifHGdBz8IeD+2wwvkYWUz1SOdQlWjvlpyh8AMPQh2sVcuYGJXdiDgzXVSA5YsubO5Tn1AFEtfQ8BTn0mH2KSCtGtLRJF5VqNvHDSHQ8K2FWKQN1qmyoo4NV6kcXEyYig9SIrE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=CCS25n5R; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741055965; c=relaxed/simple;
+	bh=S6UahJypzv0OFjPYG4CuqQEAnDKBxU5UlGzMb+Pa2tY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=K8sGYQBpVs/3q9U/ENWszK4jNESlOqbTWmCz/G5kVW7XxDBsgw5pUOHlsQNhpznnN0NY1WDdMQljh+1TP/Tga6JK8aomns0cjptYpydepM+yUSW+S6Q6y07675uyNpjhR8tmdD5jDYs7aVG5A8aJI8kkbhLKumv4I8oGrCJnq3Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=hXNh7Jik; arc=none smtp.client-ip=115.124.30.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="CCS25n5R"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 929C3C4CEE4;
-	Tue,  4 Mar 2025 02:37:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1741055821;
-	bh=r+u+SDpxZAlaUfmN/RqhvJgErVPdeQzLaIabC9Bq1wc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=CCS25n5RNCKIWp352AQEuH/sqPYbkZOEKTZM2vKeebUvFrvGK6SRBsjAz5a9kiUKC
-	 uaO63fKrgpNkvwzv9Jt6pzQDLmW7/WHCApbRVs3U3eyNQbWPeVWlll7220mzNIEwk9
-	 TM6Mhe/yF0LvcMAWmyraoBeVWSU7KSupMpuSqG3A=
-Date: Mon, 3 Mar 2025 18:37:01 -0800
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- tytso@mit.edu, willy@infradead.org, mjguzik@gmail.com, david@fromorbit.com
-Subject: Re: [PATCH] [v2] filemap: Move prefaulting out of hot write path
-Message-Id: <20250303183701.36624c484c54c2c3c6b470a5@linux-foundation.org>
-In-Reply-To: <20250228203722.CAEB63AC@davehans-spike.ostc.intel.com>
-References: <20250228203722.CAEB63AC@davehans-spike.ostc.intel.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="hXNh7Jik"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1741055951; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=USo7sAYD7oXp/gFBg03CGd9QfUctKLOWmyXr8TKIUO8=;
+	b=hXNh7JikXzFCHmBKGXGSjLH5Jjtu/JYbocIH/6slbhxyDiWgc0klrtg3yzjQthfh2DfeOHyjR0NNIeUe4TuLu4JDX8qNce6RN4jDLrdTKS/zmclJ86OkLppBlvkfSlu5Mpj8l7Clb6/5jzWgzc/fYhMPD/SZQKYsCgFbk0hmu8k=
+Received: from 30.221.99.241(mailfrom:guangguan.wang@linux.alibaba.com fp:SMTPD_---0WQgMsiM_1741055949 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Tue, 04 Mar 2025 10:39:10 +0800
+Message-ID: <e59e4632-c689-4cd4-a9ab-73edc93d002d@linux.alibaba.com>
+Date: Tue, 4 Mar 2025 10:39:08 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net] net/smc: use the correct ndev to find pnetid by
+ pnetid table
+To: Halil Pasic <pasic@linux.ibm.com>
+Cc: Paolo Abeni <pabeni@redhat.com>, wenjia@linux.ibm.com,
+ jaka@linux.ibm.com, alibuda@linux.alibaba.com, tonylu@linux.alibaba.com,
+ guwen@linux.alibaba.com, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, horms@kernel.org, linux-rdma@vger.kernel.org,
+ linux-s390@vger.kernel.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Alexandra Winter <wintera@linux.ibm.com>
+References: <20241227040455.91854-1-guangguan.wang@linux.alibaba.com>
+ <1f4a721f-fa23-4f1d-97a9-1b27bdcd1e21@redhat.com>
+ <20250107203218.5787acb4.pasic@linux.ibm.com>
+ <908be351-b4f8-4c25-9171-4f033e11ffc4@linux.alibaba.com>
+ <20250109040429.350fdd60.pasic@linux.ibm.com>
+ <b1053a92-3a3f-4042-9be9-60b94b97747d@linux.alibaba.com>
+ <20250210145255.793e6639.pasic@linux.ibm.com>
+ <4eb38707-1a93-4c5c-aa65-14adfd595d14@linux.alibaba.com>
+ <20250303152410.31f5e3df.pasic@linux.ibm.com>
+Content-Language: en-US
+From: Guangguan Wang <guangguan.wang@linux.alibaba.com>
+In-Reply-To: <20250303152410.31f5e3df.pasic@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On Fri, 28 Feb 2025 12:37:22 -0800 Dave Hansen <dave.hansen@linux.intel.com> wrote:
 
-> There is a generic anti-pattern that shows up in the VFS and several
-> filesystems where the hot write paths touch userspace twice when they
-> could get away with doing it once.
+
+On 2025/3/3 22:24, Halil Pasic wrote:
+> On Tue, 11 Feb 2025 11:44:32 +0800
+> Guangguan Wang <guangguan.wang@linux.alibaba.com> wrote:
 > 
-> Dave Chinner suggested that they should all be fixed up[1]. I agree[2].
-> But, the series to do that fixup spans a bunch of filesystems and a lot
-> of people. This patch fixes common code that absolutely everyone uses.
-> It has measurable performance benefits[3].
+>>> Can you please help me reason about this? I'm unfortunately lacking
+>>> Kubernetes skills here, and it is difficult for me to think along.  
+>>
+>> Yes, it is also a problem that not being able to set eth0 (veth/POD)'s PNEDID from the host.
+>> Even if the eth1(host) have hardware PNETID, the eth0 (veth/POD) can not search the hardware
+>> PNETID. Because the eth0 (veth/POD) and eth1(host) are not in one netdev hierarchy.
+>> But the two netdev hierarchies have relationship. Maybe search PNETID in all related netdev
+>> hierarchies can help resolve this. For example when finding the base_ndev, if the base_ndev
+>> is a netdev has relationship with other netdev(veth .etc) then jump to the related netdev
+>> hierarchy through the relationship to iteratively find the base_ndev.
+>> It is an idea now. I have not do any research about it yet and I am not sure if it is feasible.
 > 
-> I think this patch can go in and not be held up by the others.
+> I did a fair amount of thinking and I've talked to Wenjia and Sandy as
+> well, and now I'm fine with moving forward with a variant that
+> prioritizes compatibility but makes the scenarios you have pointed out
+> work by enabling taking the SW PNETID of the non-leaf netdev(s) if the
+> base_dev has no PNETID (neither hw nor sw).
+> 
+> Regards,
+> Halil
 
-I'll queue this in mm-hotfixes with a view to sneaking it into 6.14-rcX
-as a basis for others to work against.
+Thanks Halil, Wenjia and Alexandra.
 
+I will send a v2 patch soon, in which software pnetid will be searched in both base_ndev and ndev,
+and base_ndev will take precedence over ndev.
+
+Regards,
+Guangguan Wang
