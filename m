@@ -1,81 +1,99 @@
-Received: from 1wt.eu (ded1.1wt.eu [163.172.96.212])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DF1A61F8BC5;
-	Tue,  4 Mar 2025 07:59:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=163.172.96.212
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56D141BF37
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 07:59:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741075170; cv=none; b=rhZA17ELPU89k2ZdAElVNp1hekPC0NT9kq8KNFIL/KhKtAsW2bbVylpeR8n1T1z0oOjyk+KOqYI6cOJZJbp78CIDeVAJ+nlhMF969D6/8mO8U/hW/8WlMYU2tb5WPcpRZAK6icPTbGnF4ZjzQObC3xVMjjuKGRg6GelCH9wp5Wg=
+	t=1741075170; cv=none; b=SVbaa+yl+kfR0S2OqV0KdxxayenXIc2tW2DsViVNq565II8hLdMSBbYpftz6kIOPKXgYT1UdHBDRqjoXSperYcI9ShcktpHyRBjwb8Th7GNVaVkGu0zM1iLbG5dxbZ75meEcy6+zBHCg0SpEUGrk7ka0CG9NHbNQggmCupRzF1k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1741075170; c=relaxed/simple;
-	bh=Nabd75DYqiDSzGCMHIZ7qTgGtVKvqbVvwK98tZlQKAo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Z4Cyj962WFSDOxTORmFzseXUYoABW7vhDvWPXv63nyKHRck1H9LWVQSJUrSenKxWSuLp/PA37u/kXlnPIVTg5B9PyWeTtLHsoaWfVyx1ppWwv6+FYZp+T/S/9XxVTQ131D0b36s96mb0MmXEm+AU8iknTseg0weii4lp5VIPpyY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=1wt.eu; spf=pass smtp.mailfrom=1wt.eu; arc=none smtp.client-ip=163.172.96.212
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=1wt.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=1wt.eu
-Received: (from willy@localhost)
-	by pcw.home.local (8.15.2/8.15.2/Submit) id 5247xNcc010207;
-	Tue, 4 Mar 2025 08:59:23 +0100
-Date: Tue, 4 Mar 2025 08:59:23 +0100
-From: Willy Tarreau <w@1wt.eu>
-To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>
-Cc: Shuah Khan <shuah@kernel.org>, Shuah Khan <skhan@linuxfoundation.org>,
-        Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH 25/32] tools/nolibc: allow different write callbacks in
- printf
-Message-ID: <20250304075923.GC9911@1wt.eu>
-References: <20250304-nolibc-kselftest-harness-v1-0-adca7cd231e2@linutronix.de>
- <20250304-nolibc-kselftest-harness-v1-25-adca7cd231e2@linutronix.de>
+	bh=UhYnxzjwvRCTrXKHXhPQKkRSpGC3j82Xs/9pK8fLlOQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=SKGjF/cenOLKr0DsLshbETbMUbXK0d8Xo4KkfvKiA7e9skE3XqyXGX8bp0D3BDoJ2/4ePvmC+sTs0WfE3Me5lJ3PJ8iUiaqZvKH9upaX4qSRiZyDslSFhjk8KiDwuH0fyzUviYU5+lhPjiE4JKlW/7LunKEcCsjm2gOFPAovjTo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kragniz.eu; spf=none smtp.mailfrom=kragniz.eu; dkim=pass (1024-bit key) header.d=kragniz.eu header.i=@kragniz.eu header.b=lEnuHSOs; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kragniz.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=kragniz.eu
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=kragniz.eu header.i=@kragniz.eu header.b="lEnuHSOs"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-38f2f391864so2906068f8f.3
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Mar 2025 23:59:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kragniz.eu; s=google; t=1741075166; x=1741679966; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KQryvvyI2Rb/9+Iiv+kqTvYILdOjn2TN/fO7bcat3VI=;
+        b=lEnuHSOsrwNoploszlmBUmVrERWyGOHtmO5EsvVN0zgq0qeRxJj2nAyhEizVsEW9vg
+         yFCSDIlOw3d1CJjeLABy7Ur5RacVyaxhH2a9rgO7P9ar9RahSfwYGEoXoQe0G62qOpex
+         fTju/UDnVlweVB4c6WM1YDgsGi1cQ2k3ggRfE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741075166; x=1741679966;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=KQryvvyI2Rb/9+Iiv+kqTvYILdOjn2TN/fO7bcat3VI=;
+        b=gFISdx2qI5MXWKNU+i2kUzT9PV+5gX7u1JrPH9Dju/CyWLZbzth9wy86UlBThwf+bT
+         iGdTvJO7ydFVbKKMMYg8xU4HvVJsq12+b7cfdlglMbfyE7H2qh5d2DbZ8WwDpvdyn7q3
+         rWSicnLV3q9PVFuBW0fVdcApsFLUlw2aVjFTFAUHYemyIGYoOCpZLtT6MSIf5fZYdDlr
+         Akqp93G59eYxj5moQy/EmExrX53bY7lzO2VR7aiof59HnwGryJ+htBR9rN3d/EqhxlQA
+         Uo53xn6ROb6PyuALOudj5bzwxBm3wc1MYEmQ613HrMrgrXronlTz8Up9Pfc9jEyfsZtN
+         3p+g==
+X-Forwarded-Encrypted: i=1; AJvYcCXuTiuNq54Zunz7qDZ5a5PmqnVp3ZjWgIMipv2IAAeQE8ish51EzdDh2Xs5Q9LGtR37FHLZixp1JVdwk/0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyZ8Eqp0hk4YWrJj93BUFr8tiG2By1WB/FsnYih82oL3GHmKTqi
+	kMHjBCP7hDJxIKcPqqAwmKssnmW9G+PIpu2QdZiZhtMbaEJBtQ3YDlBVK0TYze0=
+X-Gm-Gg: ASbGncsopM0usYH4Ioo6n2c8a3meoiS05R1JlMqaKcsGsCNA2gDTWzt7AdylcQWhCfr
+	wI2Jf9ZkB4cfTLTkEvY2kuc8zuOETBIZjiRuo+eo/Gcs5JCOLwiRtlMMQtPkPiRgryi3nqo0pCw
+	WQkmawSxee6sWThmFxOQG1dPHbc5V9yvASRrRFbs/1H/9lQ9LWvwqAhKQDnpLVvHejyKDyLZMGM
+	UNV/yjDBC2Fc48JvWIiOfzfmjhsZWmavHeKapoxWC/oihsh/ewxr+Vj4wKh1vP43n5duWhxQaRF
+	N/VRn/qQW+7HJaw26Y/9U2cE1XfwmqrNt3wef7AereKddlKAIodOw/MZ8zx/53lRPqQVaiJgJZg
+	LJ/tIMA==
+X-Google-Smtp-Source: AGHT+IF0HwvccvNiGHPF5xqB1vj8kOiU4HSZjDPSXE/JBr0igt1FUNYzeb5j7raRFD5j3xoDF2GMVA==
+X-Received: by 2002:a05:6000:1545:b0:390:fe8b:f43f with SMTP id ffacd0b85a97d-390fe8bf590mr6944830f8f.42.1741075166645;
+        Mon, 03 Mar 2025 23:59:26 -0800 (PST)
+Received: from localhost.localdomain (161.26.169.217.in-addr.arpa. [217.169.26.161])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-390e4796517sm16618101f8f.5.2025.03.03.23.59.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Mar 2025 23:59:26 -0800 (PST)
+From: Louis Taylor <louis@kragniz.eu>
+To: Willy Tarreau <w@1wt.eu>,
+	=?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>
+Cc: Louis Taylor <louis@kragniz.eu>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 3/5] tools/nolibc: process open() vararg as mode_t
+Date: Tue,  4 Mar 2025 07:58:17 +0000
+Message-ID: <20250304075846.66563-3-louis@kragniz.eu>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20250304075846.66563-1-louis@kragniz.eu>
+References: <20250304075846.66563-1-louis@kragniz.eu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250304-nolibc-kselftest-harness-v1-25-adca7cd231e2@linutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 
-On Tue, Mar 04, 2025 at 08:10:55AM +0100, Thomas Weiﬂschuh wrote:
-> Decouple the formatting logic from the writing logic to later enable
-> writing straight to a buffer in sprintf().
-> 
-> Signed-off-by: Thomas Weiﬂschuh <thomas.weissschuh@linutronix.de>
-> ---
->  tools/include/nolibc/stdio.h | 21 +++++++++++++++++----
->  1 file changed, 17 insertions(+), 4 deletions(-)
-> 
-> diff --git a/tools/include/nolibc/stdio.h b/tools/include/nolibc/stdio.h
-> index 262d0da4da9062e0c83b55661b2509f36548cf88..434fbaddae7a216159fecf618da85889d631dff7 100644
-> --- a/tools/include/nolibc/stdio.h
-> +++ b/tools/include/nolibc/stdio.h
-> @@ -208,13 +208,15 @@ char *fgets(char *s, int size, FILE *stream)
->  }
->  
->  
-> -/* minimal vfprintf(). It supports the following formats:
-> +/* minimal printf(). It supports the following formats:
->   *  - %[l*]{d,u,c,x,p}
->   *  - %s
->   *  - unknown modifiers are ignored.
->   */
-> -static __attribute__((unused, format(printf, 2, 0)))
-> -int vfprintf(FILE *stream, const char *fmt, va_list args)
-> +typedef int (*_printf_cb)(intptr_t state, const char *buf, size_t size);
+openat() uses mode_t for this, so also update open() to be consistent.
 
-Keep in mind these ones will appear in the application, so you'd rather
-appropriate the type name by prefixing it with "nolibc" as we've done in
-a few macros and internal structs.
+Signed-off-by: Louis Taylor <louis@kragniz.eu>
+---
+ tools/include/nolibc/sys.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> +static __attribute__((unused, format(printf, 3, 0)))
-> +int _printf(_printf_cb cb, intptr_t state, const char *fmt, va_list args)
-       ^^^^^^^
-Here as well, since it's not meant to be exposed to the application.
+diff --git a/tools/include/nolibc/sys.h b/tools/include/nolibc/sys.h
+index a8dca5ac6542..5d8adc778575 100644
+--- a/tools/include/nolibc/sys.h
++++ b/tools/include/nolibc/sys.h
+@@ -810,7 +810,7 @@ int open(const char *path, int flags, ...)
+ 		va_list args;
+ 
+ 		va_start(args, flags);
+-		mode = va_arg(args, int);
++		mode = va_arg(args, mode_t);
+ 		va_end(args);
+ 	}
+ 
+-- 
+2.45.2
 
-> +static int _fprintf_cb(intptr_t state, const char *buf, size_t size)
-
-Likewise here I think.
-
-Willy
