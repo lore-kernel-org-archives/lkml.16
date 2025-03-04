@@ -1,202 +1,114 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0E6733D8;
-	Tue,  4 Mar 2025 01:44:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC8DD86328
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 01:44:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741052646; cv=none; b=ajpJoocNxcgtDbxaVEoNtDauL0PBlMXtLxIGp7I7ESO57pbiujW39yN59OM8bhIYrez2cW72VIuxenf21f6eizNTs1J9XlBptRLKLaktz6PS6JTaSZgBFRge+HlQ2sYdWuI/EdmnkLAMrZWNMVzsFfRhigAaxrqnQ9JqYatbyAI=
+	t=1741052666; cv=none; b=Wb8UFZ461SVKlax+AM19v/Z/Gufd69meNzb+1di1rhVHr2hYHwaOLzJHAmA+AbEIMaZRSyjCjlPOobwsZzmMpoX8S3fXXFjmuqnP4RvgZ7WgifHZdmLy8ReGnWVo9mrP38M5CLnVzcafg5APs4O0501mOf2texzzc7BS2+41buk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741052646; c=relaxed/simple;
-	bh=Hm8/JkSd6ej479ogJ1QTyYgA3ezyJHCm2ycDRDJXQAE=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hli6e3NDUzYi+n+hzLHl5luYKINqwmvQ8kHIuCTTZ6yA2ww2SH/tXGMgsMmoGmCGpGeyHxBeRKynL4o464nzftqfpXAlAMdaSyCTuurmH2mreR28SBJ8wFchf0FqFQN7N6n3DpIqI9vbVCpQJ9cUsCqBjpwberDbthhecECaWcU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E424C4CEE4;
-	Tue,  4 Mar 2025 01:44:02 +0000 (UTC)
-Date: Mon, 3 Mar 2025 20:44:55 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Joel Granados <joel.granados@kernel.org>
-Cc: Kees Cook <kees@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Alexander Shishkin
- <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Ian
- Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
- "Liang, Kan" <kan.liang@linux.intel.com>, "David S. Miller"
- <davem@davemloft.net>, Andreas Larsson <andreas@gaisler.com>, Heiko
- Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, Alexander
- Gordeev <agordeev@linux.ibm.com>, Christian Borntraeger
- <borntraeger@linux.ibm.com>, Sven Schnelle <svens@linux.ibm.com>, Gerald
- Schaefer <gerald.schaefer@linux.ibm.com>, Thomas Gleixner
- <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, Dave Hansen
- <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin"
- <hpa@zytor.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown
- <lenb@kernel.org>, linux-kernel@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, sparclinux@vger.kernel.org,
- linux-s390@vger.kernel.org, linux-acpi@vger.kernel.org
-Subject: Re: [PATCH 3/8] ftrace: Move trace sysctls into trace.c
-Message-ID: <20250303204455.69723c20@gandalf.local.home>
-In-Reply-To: <20250218-jag-mv_ctltables-v1-3-cd3698ab8d29@kernel.org>
-References: <20250218-jag-mv_ctltables-v1-0-cd3698ab8d29@kernel.org>
-	<20250218-jag-mv_ctltables-v1-3-cd3698ab8d29@kernel.org>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1741052666; c=relaxed/simple;
+	bh=LBjWJrMp2bknkYtBu/515aGST55w/wc355zwRJ0QyN4=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=CJzFHbHTUsuszJ8luVd1K9Gx7qcxHZZ5nykqMDvN1C64SXzeRgdB6KG704luHkRa/zxeXxbthRvHzA4ElYOIYAsOszNml3OnpmgeIPmVNkCnnQvj7lh2RfKErSm27Gc4FDhko4UNqMR4WEDlpaLMNEREvxRhyHCGKIfyQunSPio=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=S58iApqS; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="S58iApqS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1741052657;
+	bh=LBjWJrMp2bknkYtBu/515aGST55w/wc355zwRJ0QyN4=;
+	h=From:Subject:Date:To:Cc:From;
+	b=S58iApqS3FFyg+uA6r/pTZJsDth6HISAI3/sq9P9XzeqZbXRsrUeLTB+9764EDmtT
+	 tkfB6Fl+SxR5iblOwj4xFGPzP1uhJ0S+WERSAkcwR75jZT+FXZ/3r0ryk95DeUdjks
+	 2cUnmlZuC2lz0M17d1iqkxOdYFt+L3Hdetd5n49aAY3W4EJnQXXNnT65ZRSl2Udd6H
+	 nTOwsyRqKUE+J1P6zkT6ZJHLJ/XXJvDvSF1OIdyaHPKKG0fJNIKj7zEEEIhIBNQ1Pa
+	 IYN4qLfjKIbyUSWpOHFNTicR9cgJb9z/8lGytHSSkukkM3MBt6+1FhIcLb0jHgLuu4
+	 GQ1BdFn81Eg1A==
+Received: from localhost (unknown [188.27.58.83])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: cristicc)
+	by bali.collaboradmins.com (Postfix) with UTF8SMTPSA id 3D0BE17E0B71;
+	Tue,  4 Mar 2025 02:44:17 +0100 (CET)
+From: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+Subject: [PATCH v4 00/12] phy: rockchip: samsung-hdptx: Support high color
+ depth management
+Date: Tue, 04 Mar 2025 03:43:59 +0200
+Message-Id: <20250304-phy-sam-hdptx-bpc-v4-0-8657847c13f7@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAN9axmcC/23O0QqDIBQG4FcZXs9hR9O2q73H2IWpLaFSNKKI3
+ n0WBIPJufoP/N85K4omWBPR47KiYCYbrRtSYNcLUq0cPgZbnTICAqwAwrFvFxxlj1vtxxnXXmF
+ ak1JxELzRAqWeD6ax82G+3im3No4uLMeJqdi3pyYy2lRggglVYJjmWtzFU7muk7UL8qZcj3Zxg
+ h+lgJwCSSmF4QKUSMNyCj2VkgDQnEKTwrksVWV4ReHvl23bvnPGvoBCAQAA
+X-Change-ID: 20241206-phy-sam-hdptx-bpc-3b05c6276fd7
+To: Vinod Koul <vkoul@kernel.org>, 
+ Kishon Vijay Abraham I <kishon@kernel.org>, 
+ Heiko Stuebner <heiko@sntech.de>
+Cc: Algea Cao <algea.cao@rock-chips.com>, Sandor Yu <Sandor.yu@nxp.com>, 
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
+ Maxime Ripard <mripard@kernel.org>, kernel@collabora.com, 
+ linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org, 
+ linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org
+X-Mailer: b4 0.14.2
 
-On Tue, 18 Feb 2025 10:56:19 +0100
-Joel Granados <joel.granados@kernel.org> wrote:
+This series relies on the new HDMI PHY configuration options [1] (patch
+included here for convenience) to provide high color depth management
+for rockchip-samsung-hdptx, and to introduce a proper solution to setup
+the TMDS character rate on this PHY.
 
-Nit, change the subject to:
+[1] https://lore.kernel.org/lkml/d1cff6c03ec3732d2244022029245ab2d954d997.1734340233.git.Sandor.yu@nxp.com/
 
-  tracing: Move trace sysctls into trace.c
+Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+---
+Changes in v4:
+- Added patches to drop unnecessary phy_cfg & cfgs driver data
+- Embedded struct phy_configure_opts_hdmi in driver data (Dmitry)
+- Added new patch to provide config params validation support
+- Provided a patch to restrict altering TMDS char rate via CCF (Dmitry)
+- Made a bunch of small tweaks here and there
+- Link to v3: https://lore.kernel.org/r/20250223-phy-sam-hdptx-bpc-v3-0-66a5c8e68327@collabora.com
 
-as I try to only have the "ftrace:" label for modifications that affect
-attaching to functions, and "tracing:" for everything else.
+Changes in v3:
+- Rebased series onto next-20250221 and fixed several conflicts due to
+  the recently introduced eDP support
+- Link to v2: https://lore.kernel.org/r/20241212-phy-sam-hdptx-bpc-v2-0-57e672c7c7c4@collabora.com
 
-Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Changes in v2:
+- Added new patches providing a bug fix and several driver cleanups and
+  improvements
+- Link to v1: https://lore.kernel.org/r/20241207-phy-sam-hdptx-bpc-v1-0-03c2e4d6d797@collabora.com
 
--- Steve
+---
+Cristian Ciocaltea (11):
+      phy: hdmi: Add color depth configuration
+      phy: rockchip: samsung-hdptx: Fix clock ratio setup
+      phy: rockchip: samsung-hdptx: Drop unused struct lcpll_config
+      phy: rockchip: samsung-hdptx: Drop unused phy_cfg driver data
+      phy: rockchip: samsung-hdptx: Drop superfluous cfgs driver data
+      phy: rockchip: samsung-hdptx: Setup TMDS char rate via phy_configure_opts_hdmi
+      phy: rockchip: samsung-hdptx: Provide config params validation support
+      phy: rockchip: samsung-hdptx: Restrict altering TMDS char rate via CCF
+      phy: rockchip: samsung-hdptx: Add high color depth management
+      phy: rockchip: samsung-hdptx: Optimize internal rate handling
+      phy: rockchip: samsung-hdptx: Avoid Hz-hHz unit conversion overhead
 
+Sandor Yu (1):
+      phy: Add HDMI configuration options
 
-> Move trace ctl tables into their own const array in
-> kernel/trace/trace.c. The sysctl table register is called with
-> subsys_initcall placing if after its original place in proc_root_init.
-> This is part of a greater effort to move ctl tables into their
-> respective subsystems which will reduce the merge conflicts in
-> kerenel/sysctl.c.
-> 
-> Signed-off-by: Joel Granados <joel.granados@kernel.org>
-> ---
->  include/linux/ftrace.h |  7 -------
->  kernel/sysctl.c        | 24 ------------------------
->  kernel/trace/trace.c   | 36 +++++++++++++++++++++++++++++++++++-
->  3 files changed, 35 insertions(+), 32 deletions(-)
-> 
-> diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
-> index fbabc3d848b3..59774513ae45 100644
-> --- a/include/linux/ftrace.h
-> +++ b/include/linux/ftrace.h
-> @@ -1298,16 +1298,9 @@ static inline void unpause_graph_tracing(void) { }
->  #ifdef CONFIG_TRACING
->  enum ftrace_dump_mode;
->  
-> -#define MAX_TRACER_SIZE		100
-> -extern char ftrace_dump_on_oops[];
->  extern int ftrace_dump_on_oops_enabled(void);
-> -extern int tracepoint_printk;
->  
->  extern void disable_trace_on_warning(void);
-> -extern int __disable_trace_on_warning;
-> -
-> -int tracepoint_printk_sysctl(const struct ctl_table *table, int write,
-> -			     void *buffer, size_t *lenp, loff_t *ppos);
->  
->  #else /* CONFIG_TRACING */
->  static inline void  disable_trace_on_warning(void) { }
-> diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-> index 6514c13800a4..baa250e223a2 100644
-> --- a/kernel/sysctl.c
-> +++ b/kernel/sysctl.c
-> @@ -51,7 +51,6 @@
->  #include <linux/nfs_fs.h>
->  #include <linux/acpi.h>
->  #include <linux/reboot.h>
-> -#include <linux/ftrace.h>
->  #include <linux/perf_event.h>
->  #include <linux/oom.h>
->  #include <linux/kmod.h>
-> @@ -1684,29 +1683,6 @@ static const struct ctl_table kern_table[] = {
->  		.proc_handler	= stack_trace_sysctl,
->  	},
->  #endif
-> -#ifdef CONFIG_TRACING
-> -	{
-> -		.procname	= "ftrace_dump_on_oops",
-> -		.data		= &ftrace_dump_on_oops,
-> -		.maxlen		= MAX_TRACER_SIZE,
-> -		.mode		= 0644,
-> -		.proc_handler	= proc_dostring,
-> -	},
-> -	{
-> -		.procname	= "traceoff_on_warning",
-> -		.data		= &__disable_trace_on_warning,
-> -		.maxlen		= sizeof(__disable_trace_on_warning),
-> -		.mode		= 0644,
-> -		.proc_handler	= proc_dointvec,
-> -	},
-> -	{
-> -		.procname	= "tracepoint_printk",
-> -		.data		= &tracepoint_printk,
-> -		.maxlen		= sizeof(tracepoint_printk),
-> -		.mode		= 0644,
-> -		.proc_handler	= tracepoint_printk_sysctl,
-> -	},
-> -#endif
->  #ifdef CONFIG_MODULES
->  	{
->  		.procname	= "modprobe",
-> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-> index 0e6d517e74e0..abfc0e56173b 100644
-> --- a/kernel/trace/trace.c
-> +++ b/kernel/trace/trace.c
-> @@ -117,6 +117,7 @@ static int tracing_disabled = 1;
->  
->  cpumask_var_t __read_mostly	tracing_buffer_mask;
->  
-> +#define MAX_TRACER_SIZE		100
->  /*
->   * ftrace_dump_on_oops - variable to dump ftrace buffer on oops
->   *
-> @@ -139,7 +140,40 @@ cpumask_var_t __read_mostly	tracing_buffer_mask;
->  char ftrace_dump_on_oops[MAX_TRACER_SIZE] = "0";
->  
->  /* When set, tracing will stop when a WARN*() is hit */
-> -int __disable_trace_on_warning;
-> +static int __disable_trace_on_warning;
-> +
-> +int tracepoint_printk_sysctl(const struct ctl_table *table, int write,
-> +			     void *buffer, size_t *lenp, loff_t *ppos);
-> +static const struct ctl_table trace_sysctl_table[] = {
-> +	{
-> +		.procname	= "ftrace_dump_on_oops",
-> +		.data		= &ftrace_dump_on_oops,
-> +		.maxlen		= MAX_TRACER_SIZE,
-> +		.mode		= 0644,
-> +		.proc_handler	= proc_dostring,
-> +	},
-> +	{
-> +		.procname	= "traceoff_on_warning",
-> +		.data		= &__disable_trace_on_warning,
-> +		.maxlen		= sizeof(__disable_trace_on_warning),
-> +		.mode		= 0644,
-> +		.proc_handler	= proc_dointvec,
-> +	},
-> +	{
-> +		.procname	= "tracepoint_printk",
-> +		.data		= &tracepoint_printk,
-> +		.maxlen		= sizeof(tracepoint_printk),
-> +		.mode		= 0644,
-> +		.proc_handler	= tracepoint_printk_sysctl,
-> +	},
-> +};
-> +
-> +static int __init init_trace_sysctls(void)
-> +{
-> +	register_sysctl_init("kernel", trace_sysctl_table);
-> +	return 0;
-> +}
-> +subsys_initcall(init_trace_sysctls);
->  
->  #ifdef CONFIG_TRACE_EVAL_MAP_FILE
->  /* Map of enums to their values, for "eval_map" file */
-> 
+ drivers/phy/rockchip/phy-rockchip-samsung-hdptx.c | 289 +++++++++++++---------
+ include/linux/phy/phy-hdmi.h                      |  21 ++
+ include/linux/phy/phy.h                           |   7 +-
+ 3 files changed, 200 insertions(+), 117 deletions(-)
+---
+base-commit: cd3215bbcb9d4321def93fea6cfad4d5b42b9d1d
+change-id: 20241206-phy-sam-hdptx-bpc-3b05c6276fd7
 
