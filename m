@@ -1,187 +1,228 @@
-Received: from mail-il1-f208.google.com (mail-il1-f208.google.com [209.85.166.208])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D13818D
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 01:01:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.208
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50999BE5E
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 01:03:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741050088; cv=none; b=fkD+eY7lF1txKl3E1nmbtRVjYb6zklvJ828MqJJYgvnJ47A2R65jqzsUt+heoFpX/pZlZbZShrWZ0Hh9DQ0vBxE5xC7CLqYIIEzcL4PxKZFLBTW2bge6sOqQN2p+TXzrQHpYx4QoV1NzT2ioDIHZ1XLcMHAO4eJ3bEjLCmwLV5g=
+	t=1741050217; cv=none; b=VetDDBFBaMOk8f5/UKLoto9AkEd+QpGwXIFTVv2xy/AtbwK92lPp1UOshZ6J12EwqQUhlzy/XSk2QaRDEDoE5cJCAp4XfP2cFyFmDtxF5ufKmUvhFjgARVCFdXO63H1vOUWCEjlw5l6NSOaCpcg3HuISzFztjzazn/tvzrqG/tQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741050088; c=relaxed/simple;
-	bh=n2+xaOlkLWs+xjeOgT2HGWy/plfykuL9kjEK0RuGT+o=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=j91MVEhFE6+DpXAFKqrUerF5b3Sn1C0wgcgNzrW7JG+EqAgo2T+lEGedJo4G7I8NcWR6Xy/O3Et9OzFdTQbuSEBnjGfAuer+QW1lq+F0YFXMnBJU1EkQ3p+9cHCiOBxfON0KV/sxN8ILp4aUIaPftoHHgogD7upgAuJJnszstLg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.208
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f208.google.com with SMTP id e9e14a558f8ab-3d060cfe752so47783455ab.2
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Mar 2025 17:01:27 -0800 (PST)
+	s=arc-20240116; t=1741050217; c=relaxed/simple;
+	bh=X7vkqyMBNaheIUNkehORS3JSEiBfbHm+bdTobACrNNs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ddIBJ5XTfPCbS+ts3ZiPRQtJ0v/YLTZ05CgNrXkUpzvaUUBxYEVjuWrTIM+Js4WG6GVtlL9k5NWRWnPXll48gVARYFV2+0KrMEN0diWLxE/Ugo+znq3ZY1mv/g2EJyBTEqcNICxppP9mr6M67Pt65QghXnAD7vj8FPDxea9pknI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WpRV8Ng8; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WpRV8Ng8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1741050214;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=bnm2BczQeE+oTxQUkTu0mGWgYbP3KRiI/EZBYxWyGBw=;
+	b=WpRV8Ng8ORVkZxca2NVZyEkS+S8Sei1ppLUnm8n6UadFDO1Va+fjHocOrzpLZ/Lo0Mu1Qt
+	F7njx5BNT3wiWV3ezxdJtK6h9RIrauw82J/HwuXXhZOd/Og72hhx+2JfwITpNxqd6yhAsD
+	DMwpPZRU6rzs0/XYNg+BR7aM3NK6xHg=
+Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com
+ [209.85.216.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-441-MoNlUajHMSS5hFC1ZHm5xQ-1; Mon, 03 Mar 2025 20:03:33 -0500
+X-MC-Unique: MoNlUajHMSS5hFC1ZHm5xQ-1
+X-Mimecast-MFC-AGG-ID: MoNlUajHMSS5hFC1ZHm5xQ_1741050212
+Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-2feb8d29740so7643578a91.1
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Mar 2025 17:03:32 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741050086; x=1741654886;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
+        d=1e100.net; s=20230601; t=1741050212; x=1741655012;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/ggAzNV9vb43xj1jb6gbzWNpLyhz275iEsN9bMiszOc=;
-        b=tTOoiGKo65nscyi8/81CKM+RN21XxYicrWz5+ILHaOZ9oRahHaCp7s+KlVKEWTXw8Y
-         uGDSp6GMutBMOaBFU99cNvaLdR91dv64fShyJzo0RUxhEjk/lEgcmXsarVCt+jn0M3H1
-         aHDjklCIGsId2qjpgm9CftQGcTVXSCOY1PHspV8HfgJNxcwoGDfi8sh/eBwU+fFEs1WM
-         0TOuxujK5uz9E34mX9D0hbKDHOhXLHzVhlWrhswuYduLHIRNajsJrExs0TjCK4CWcq9y
-         r1CAqD+szED7YjNwoCnk5nMW/apx+MeulBSF/wiipQaeipRW+ymhATudBq8kcuSRImyA
-         tRog==
-X-Forwarded-Encrypted: i=1; AJvYcCXd1MJmbT1bX8tw9lAV9PCyGGHSqKCPsYz/cHokPwWd6hLXbHDrra920TZvio16pEOQE1wdmEhDFT5M5ps=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy9uqCFwV4QS9fdCoAkAemM3CrJSq75eikS47605COTssT1QpbF
-	uR23zHCZjCU6/O3pfOE7i5hsxY1fJrZtt7SvUrr0PK1icD4efGZdOQCHrtH5uaDDxPufMXxPcru
-	Sj4WJ4ocdfOofMJuc+VE83M0ZjZo6KGVMvICx3uUyX0T8oWm/oOMrovo=
-X-Google-Smtp-Source: AGHT+IGViILyhDJA2S+W/0tk1fQCkMWUZjAwwmF8S5FO/vtplrEE7hVUdDMC3iJxbzxs3cCwZLladWTqd1XAd/hyknEe0miyYxPK
+        bh=bnm2BczQeE+oTxQUkTu0mGWgYbP3KRiI/EZBYxWyGBw=;
+        b=Et7/oMqQc9xUsrxk9F7/vlJMZ3HSQRaASacS0yg1c/Y0N+MbV1u9zeVXuCJeVNgQs6
+         aoGw9L0JqRpZkVfZCtfRR0qlE5ZAhirzAF31YkQP2Fo4UNxwy89ZgH1c0GjB4ewhimnx
+         Tz64scm7td8VKqnRjwD/OIRSSj5GM08X8e8V/imBzYettUR4kXlv9EBD/NZ3mWdkJ4+K
+         X1Reu46iEQE/G747sLgHbEvmJjmvZF0W7Ej7fd3+ertu+Qx2HZZRyZjN/nvJ1z8XBxBR
+         ySbsMOWqOT3kFomyYGGAH6vxN7XfT9nj42Oc4/tHOv/fpqdxJl6Tm8adpRZ/yT6Q0kYR
+         6/XQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUe1QWC+uDwtrk+XC1znEWVxFAdXcOgZHOFgMnx6d5YlymgmW3ynBKsSKjHEJ9hPtSe8eYxTq2JQF1ZCNw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyEQ8eL6/A2adZgwz9vvv3Uu2fXZ7VY73PWEKs2aEL65+BXZnIA
+	Xhc48n2EihQurWCPXuhfgET0Ti/kmPh2gN1+x5DWo9OwyWqfW20QgxcFR00xQW1rxhVCsewq2mC
+	JCTV0vMmDcJN+Xhkfjwm2/dEudVbH+BIApPc9Jz148YAI9B2D69byMimFQIKurQ==
+X-Gm-Gg: ASbGncuPKcFhVvJKY0M8fj6WYANb4IBO4+BNLxMW1QChhL9LcmfP+q4LH49RMf0v35/
+	ucH9SZJT0mr5l7SxNbf1PWtiGEmnGilaJ7x0FSBNqXl6uU8GUsikBchiX8KHIJQ2apntb3LHZwA
+	kqQQqwUaxyrJUifLcPYzkgqw0f3uucZNOvLosklJsXOjW85jYx0Oz97yXoHTJ1YEv0XDwaedwAI
+	Om4B0H0aFAmagAf4SKIS++Zgx+i98oa4US/4ilCitQ5Mmi8bPwOY2JI7G0+0n3mnqXA9q8vmyTM
+	IYZAWOAAU+BsFLGfqA==
+X-Received: by 2002:a05:6a20:1594:b0:1ee:650b:ac22 with SMTP id adf61e73a8af0-1f2f4e4c8e2mr29503602637.40.1741050211925;
+        Mon, 03 Mar 2025 17:03:31 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEh6O0/XBxWNy8f6zQpOsX8TWQ/teZrvIDTKOnq0U3+AlSWoqSQsK295l3GALc1XNoc+vUz9w==
+X-Received: by 2002:a05:6a20:1594:b0:1ee:650b:ac22 with SMTP id adf61e73a8af0-1f2f4e4c8e2mr29503541637.40.1741050211560;
+        Mon, 03 Mar 2025 17:03:31 -0800 (PST)
+Received: from [192.168.68.55] ([180.233.125.164])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-aee7ddf2444sm9001374a12.3.2025.03.03.17.03.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 03 Mar 2025 17:03:30 -0800 (PST)
+Message-ID: <80983793-5df7-4828-96e8-90540e7d9183@redhat.com>
+Date: Tue, 4 Mar 2025 11:03:21 +1000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1528:b0:3d1:4b97:4f2d with SMTP id
- e9e14a558f8ab-3d3e6e458bamr145679475ab.5.1741050086393; Mon, 03 Mar 2025
- 17:01:26 -0800 (PST)
-Date: Mon, 03 Mar 2025 17:01:26 -0800
-In-Reply-To: <6742b399.050a0220.1cc393.0033.GAE@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67c650e6.050a0220.1dee4d.01c8.GAE@google.com>
-Subject: Re: [syzbot] [usb?] general protection fault in dummy_timer (2)
-From: syzbot <syzbot+faf3a6cf579fc65591ca@syzkaller.appspotmail.com>
-To: gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, 
-	linux-usb@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 17/45] arm64: RME: Handle realm enter/exit
+To: Steven Price <steven.price@arm.com>, kvm@vger.kernel.org,
+ kvmarm@lists.linux.dev
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Marc Zyngier <maz@kernel.org>,
+ Will Deacon <will@kernel.org>, James Morse <james.morse@arm.com>,
+ Oliver Upton <oliver.upton@linux.dev>,
+ Suzuki K Poulose <suzuki.poulose@arm.com>, Zenghui Yu
+ <yuzenghui@huawei.com>, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, Joey Gouly <joey.gouly@arm.com>,
+ Alexandru Elisei <alexandru.elisei@arm.com>,
+ Christoffer Dall <christoffer.dall@arm.com>, Fuad Tabba <tabba@google.com>,
+ linux-coco@lists.linux.dev,
+ Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>,
+ Shanker Donthineni <sdonthineni@nvidia.com>, Alper Gun
+ <alpergun@google.com>, "Aneesh Kumar K . V" <aneesh.kumar@kernel.org>
+References: <20250213161426.102987-1-steven.price@arm.com>
+ <20250213161426.102987-18-steven.price@arm.com>
+Content-Language: en-US
+From: Gavin Shan <gshan@redhat.com>
+In-Reply-To: <20250213161426.102987-18-steven.price@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-syzbot has found a reproducer for the following issue on:
+On 2/14/25 2:13 AM, Steven Price wrote:
+> Entering a realm is done using a SMC call to the RMM. On exit the
+> exit-codes need to be handled slightly differently to the normal KVM
+> path so define our own functions for realm enter/exit and hook them
+> in if the guest is a realm guest.
+> 
+> Signed-off-by: Steven Price <steven.price@arm.com>
+> ---
+> Changes since v6:
+>   * Use vcpu_err() rather than pr_err/kvm_err when there is an associated
+>     vcpu to the error.
+>   * Return -EFAULT for KVM_EXIT_MEMORY_FAULT as per the documentation for
+>     this exit type.
+>   * Split code handling a RIPAS change triggered by the guest to the
+>     following patch.
+> Changes since v5:
+>   * For a RIPAS_CHANGE request from the guest perform the actual RIPAS
+>     change on next entry rather than immediately on the exit. This allows
+>     the VMM to 'reject' a RIPAS change by refusing to continue
+>     scheduling.
+> Changes since v4:
+>   * Rename handle_rme_exit() to handle_rec_exit()
+>   * Move the loop to copy registers into the REC enter structure from the
+>     to rec_exit_handlers callbacks to kvm_rec_enter(). This fixes a bug
+>     where the handler exits to user space and user space wants to modify
+>     the GPRS.
+>   * Some code rearrangement in rec_exit_ripas_change().
+> Changes since v2:
+>   * realm_set_ipa_state() now provides an output parameter for the
+>     top_iap that was changed. Use this to signal the VMM with the correct
+>     range that has been transitioned.
+>   * Adapt to previous patch changes.
+> ---
+>   arch/arm64/include/asm/kvm_rme.h |   3 +
+>   arch/arm64/kvm/Makefile          |   2 +-
+>   arch/arm64/kvm/arm.c             |  19 +++-
+>   arch/arm64/kvm/rme-exit.c        | 171 +++++++++++++++++++++++++++++++
+>   arch/arm64/kvm/rme.c             |  19 ++++
+>   5 files changed, 208 insertions(+), 6 deletions(-)
+>   create mode 100644 arch/arm64/kvm/rme-exit.c
+> 
 
-HEAD commit:    811d22141369 usb: dwc3: exynos: add support for exynos7870
-git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git usb-testing
-console output: https://syzkaller.appspot.com/x/log.txt?x=1690e464580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=f429368eda610a89
-dashboard link: https://syzkaller.appspot.com/bug?extid=faf3a6cf579fc65591ca
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11500697980000
+With below nitpicks addressed:
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/c0764bd2a6ef/disk-811d2214.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/a8d014106735/vmlinux-811d2214.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/80062d83482e/bzImage-811d2214.xz
+Reviewed-by: Gavin Shan <gshan@redhat.com>
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+faf3a6cf579fc65591ca@syzkaller.appspotmail.com
+[...]
 
-Oops: general protection fault, probably for non-canonical address 0xdffffc0000000060: 0000 [#1] PREEMPT SMP KASAN PTI
-KASAN: null-ptr-deref in range [0x0000000000000300-0x0000000000000307]
-CPU: 0 UID: 0 PID: 7918 Comm: syz-executor Not tainted 6.14.0-rc3-syzkaller-00056-g811d22141369 #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
-RIP: 0010:strcmp+0x5b/0xb0 lib/string.c:277
-Code: fa 48 c1 e8 03 83 e2 07 42 0f b6 04 28 38 d0 7f 04 84 c0 75 58 0f b6 6b ff 4c 8d 66 01 48 89 f0 48 89 f2 48 c1 e8 03 83 e2 07 <42> 0f b6 04 28 38 d0 7f 04 84 c0 75 2c 41 3a 6c 24 ff 74 ae 19 c0
-RSP: 0018:ffffc90000007848 EFLAGS: 00010046
-RAX: 0000000000000060 RBX: ffffffff8747ce21 RCX: ffffffff8fb2a5e8
-RDX: 0000000000000000 RSI: 0000000000000300 RDI: ffffffff8747ce20
-RBP: 0000000000000026 R08: 0000000000000001 R09: dffffc0000000000
-R10: ffffffff8fb2a5f8 R11: ffffffff8fb2a5e8 R12: 0000000000000301
-R13: dffffc0000000000 R14: 00000000000003b1 R15: ffffffff934e19e0
-FS:  000055558b609500(0000) GS:ffff8881f5800000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f143e94aea2 CR3: 000000012b09c000 CR4: 00000000003506f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <IRQ>
- count_matching_names kernel/locking/lockdep.c:877 [inline]
- register_lock_class+0x63b/0x1240 kernel/locking/lockdep.c:1342
- __lock_acquire+0x135/0x3c40 kernel/locking/lockdep.c:5103
- lock_acquire.part.0+0x11b/0x380 kernel/locking/lockdep.c:5851
- __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
- _raw_spin_lock_irqsave+0x3a/0x60 kernel/locking/spinlock.c:162
- complete_with_flags kernel/sched/completion.c:20 [inline]
- complete+0x1d/0x200 kernel/sched/completion.c:47
- transfer drivers/usb/gadget/udc/dummy_hcd.c:1523 [inline]
- dummy_timer+0x1c37/0x3960 drivers/usb/gadget/udc/dummy_hcd.c:1978
- __run_hrtimer kernel/time/hrtimer.c:1801 [inline]
- __hrtimer_run_queues+0x20a/0xae0 kernel/time/hrtimer.c:1865
- hrtimer_run_softirq+0x17d/0x350 kernel/time/hrtimer.c:1882
- handle_softirqs+0x206/0x8d0 kernel/softirq.c:561
- __do_softirq kernel/softirq.c:595 [inline]
- invoke_softirq kernel/softirq.c:435 [inline]
- __irq_exit_rcu+0xfa/0x160 kernel/softirq.c:662
- irq_exit_rcu+0x9/0x30 kernel/softirq.c:678
- instr_sysvec_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1049 [inline]
- sysvec_apic_timer_interrupt+0x90/0xb0 arch/x86/kernel/apic/apic.c:1049
- </IRQ>
- <TASK>
- asm_sysvec_apic_timer_interrupt+0x1a/0x20 arch/x86/include/asm/idtentry.h:702
-RIP: 0010:lock_acquire.part.0+0x155/0x380 kernel/locking/lockdep.c:5816
-Code: b8 ff ff ff ff 65 0f c1 05 90 2f aa 7e 83 f8 01 0f 85 d0 01 00 00 9c 58 f6 c4 02 0f 85 e5 01 00 00 48 85 ed 0f 85 b6 01 00 00 <48> b8 00 00 00 00 00 fc ff df 48 01 c3 48 c7 03 00 00 00 00 48 c7
-RSP: 0018:ffffc9000446fc98 EFLAGS: 00000206
-RAX: 0000000000000046 RBX: 1ffff9200088df94 RCX: 00000000521e9cf7
-RDX: 0000000000000001 RSI: ffffffff87281ac0 RDI: ffffffff8747c1a0
-RBP: 0000000000000200 R08: 0000000000000000 R09: fffffbfff1f5cdc0
-R10: ffffffff8fae6e07 R11: 0000000000000000 R12: 0000000000000000
-R13: ffffffff88ebe3c0 R14: 0000000000000000 R15: 0000000000000000
- rcu_lock_acquire include/linux/rcupdate.h:337 [inline]
- rcu_read_lock_sched include/linux/rcupdate.h:941 [inline]
- fd_install+0xc0/0x750 fs/file.c:639
- do_sys_openat2+0x1a4/0x1e0 fs/open.c:1433
- do_sys_open fs/open.c:1443 [inline]
- __do_sys_openat fs/open.c:1459 [inline]
- __se_sys_openat fs/open.c:1454 [inline]
- __x64_sys_openat+0x175/0x210 fs/open.c:1454
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xcd/0x250 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f143e88ba51
-Code: 75 57 89 f0 25 00 00 41 00 3d 00 00 41 00 74 49 80 3d fa 1a 1f 00 00 74 6d 89 da 48 89 ee bf 9c ff ff ff b8 01 01 00 00 0f 05 <48> 3d 00 f0 ff ff 0f 87 93 00 00 00 48 8b 54 24 28 64 48 2b 14 25
-RSP: 002b:00007ffc6205c990 EFLAGS: 00000202 ORIG_RAX: 0000000000000101
-RAX: ffffffffffffffda RBX: 0000000000080001 RCX: 00007f143e88ba51
-RDX: 0000000000080001 RSI: 00007f143e90fadc RDI: 00000000ffffff9c
-RBP: 00007f143e90fadc R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000202 R12: 0000000000000004
-R13: 00007ffc6205ca30 R14: 00000000000aeedc R15: 00007ffc6205cfa0
- </TASK>
-Modules linked in:
----[ end trace 0000000000000000 ]---
-RIP: 0010:strcmp+0x5b/0xb0 lib/string.c:277
-Code: fa 48 c1 e8 03 83 e2 07 42 0f b6 04 28 38 d0 7f 04 84 c0 75 58 0f b6 6b ff 4c 8d 66 01 48 89 f0 48 89 f2 48 c1 e8 03 83 e2 07 <42> 0f b6 04 28 38 d0 7f 04 84 c0 75 2c 41 3a 6c 24 ff 74 ae 19 c0
-RSP: 0018:ffffc90000007848 EFLAGS: 00010046
-RAX: 0000000000000060 RBX: ffffffff8747ce21 RCX: ffffffff8fb2a5e8
-RDX: 0000000000000000 RSI: 0000000000000300 RDI: ffffffff8747ce20
-RBP: 0000000000000026 R08: 0000000000000001 R09: dffffc0000000000
-R10: ffffffff8fb2a5f8 R11: ffffffff8fb2a5e8 R12: 0000000000000301
-R13: dffffc0000000000 R14: 00000000000003b1 R15: ffffffff934e19e0
-FS:  000055558b609500(0000) GS:ffff8881f5800000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f143e94aea2 CR3: 000000012b09c000 CR4: 00000000003506f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-----------------
-Code disassembly (best guess):
-   0:	fa                   	cli
-   1:	48 c1 e8 03          	shr    $0x3,%rax
-   5:	83 e2 07             	and    $0x7,%edx
-   8:	42 0f b6 04 28       	movzbl (%rax,%r13,1),%eax
-   d:	38 d0                	cmp    %dl,%al
-   f:	7f 04                	jg     0x15
-  11:	84 c0                	test   %al,%al
-  13:	75 58                	jne    0x6d
-  15:	0f b6 6b ff          	movzbl -0x1(%rbx),%ebp
-  19:	4c 8d 66 01          	lea    0x1(%rsi),%r12
-  1d:	48 89 f0             	mov    %rsi,%rax
-  20:	48 89 f2             	mov    %rsi,%rdx
-  23:	48 c1 e8 03          	shr    $0x3,%rax
-  27:	83 e2 07             	and    $0x7,%edx
-* 2a:	42 0f b6 04 28       	movzbl (%rax,%r13,1),%eax <-- trapping instruction
-  2f:	38 d0                	cmp    %dl,%al
-  31:	7f 04                	jg     0x37
-  33:	84 c0                	test   %al,%al
-  35:	75 2c                	jne    0x63
-  37:	41 3a 6c 24 ff       	cmp    -0x1(%r12),%bpl
-  3c:	74 ae                	je     0xffffffec
-  3e:	19 c0                	sbb    %eax,%eax
+> diff --git a/arch/arm64/kvm/rme-exit.c b/arch/arm64/kvm/rme-exit.c
+> new file mode 100644
+> index 000000000000..aae1adefe1a3
+> --- /dev/null
+> +++ b/arch/arm64/kvm/rme-exit.c
+> @@ -0,0 +1,171 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Copyright (C) 2023 ARM Ltd.
+> + */
+> +
+> +#include <linux/kvm_host.h>
+> +#include <kvm/arm_hypercalls.h>
+> +#include <kvm/arm_psci.h>
+> +
+> +#include <asm/rmi_smc.h>
+> +#include <asm/kvm_emulate.h>
+> +#include <asm/kvm_rme.h>
+> +#include <asm/kvm_mmu.h>
+> +
+> +typedef int (*exit_handler_fn)(struct kvm_vcpu *vcpu);
+> +
 
+Duplicated to exit_handler_fn, defined in handle_exit.c, need move the
+definition to header file.
 
----
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
+> +static int rec_exit_reason_notimpl(struct kvm_vcpu *vcpu)
+> +{
+> +	struct realm_rec *rec = &vcpu->arch.rec;
+> +
+> +	vcpu_err(vcpu, "Unhandled exit reason from realm (ESR: %#llx)\n",
+> +		 rec->run->exit.esr);
+> +	return -ENXIO;
+> +}
+> +
+> +static int rec_exit_sync_dabt(struct kvm_vcpu *vcpu)
+> +{
+> +	return kvm_handle_guest_abort(vcpu);
+> +}
+> +
+> +static int rec_exit_sync_iabt(struct kvm_vcpu *vcpu)
+> +{
+> +	struct realm_rec *rec = &vcpu->arch.rec;
+> +
+> +	vcpu_err(vcpu, "Unhandled instruction abort (ESR: %#llx).\n",
+> +		 rec->run->exit.esr);
+> +	return -ENXIO;
+> +}
+> +
+> +static int rec_exit_sys_reg(struct kvm_vcpu *vcpu)
+> +{
+> +	struct realm_rec *rec = &vcpu->arch.rec;
+> +	unsigned long esr = kvm_vcpu_get_esr(vcpu);
+> +	int rt = kvm_vcpu_sys_get_rt(vcpu);
+> +	bool is_write = !(esr & 1);
+> +	int ret;
+> +
+> +	if (is_write)
+> +		vcpu_set_reg(vcpu, rt, rec->run->exit.gprs[0]);
+> +
+> +	ret = kvm_handle_sys_reg(vcpu);
+> +
+> +	if (ret >= 0 && !is_write)
+> +		rec->run->enter.gprs[0] = vcpu_get_reg(vcpu, rt);
+> +
+
+Unncessary blank line and the conditon isn't completely correct: kvm_handle_sys_reg()
+should return 0 if the requested emulation fails, even it always returns 1 for now.
+
+	ret = kvm_handle_sys_reg(vcpu);
+	if (ret > 0 && !is_write)
+		rec->run->enter.gprs[0] = vcpu_get_reg(vcpu, rt);
+
+> +	return ret;
+> +}
+> +
+
+[...]
+
+Thanks,
+Gavin
+
