@@ -1,134 +1,275 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA0AE1FC105
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 08:41:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B4BE1FBEBE
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 08:41:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741077685; cv=none; b=DDYgODO7zn01cZREROIzh0DUvq44klZVM/cotFlwmfrjRm6vtrtW6ERD39A1dtZa3i9MAvrnZw196J33Mf51ZVjzbTiTJATSwTbN7CzxmD1h+SEpXJu+2fFidz9MJ4/8oryT0FhT1h9HPCEcgSywU7rntSTY+uRMmeOG7Hr2nUY=
+	t=1741077693; cv=none; b=TdyDf0ikxjkPZSqHhV6tE0M8BEBGBaYrRTvGU3aww99UAIZ+zhyMnIDu1XrJJo6F1tqBcBdPbZC3bhJyQp4LFelFMZUMiLmqlqXlEgiyQaOKPYDtlvOcOQ1bS5BBmNevZpDFtdH5ArK8TvRACt5QjeIPA/WhcCXFcBu3lJekNNk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741077685; c=relaxed/simple;
-	bh=xcnCm892YVWrZWbMShd7y4D6hSOZDUxmmffjBmaQwmw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=HkTdOi223rvgXRudjbU5cMhA3Pb1LU1hGL3ZmZqr846/S9ljginBY19a7krw0VC4Hw0VnWcPvnvKtRxbzw5OgS0nCOr5dzReALbqVqGWDj61mYYmALby+zybqAHrJa6Yd9rHle2R3R+02iSA7GVYqWVbtlfWLbMxWWFuOhFgJ1s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HbRDXJY3; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1741077693; c=relaxed/simple;
+	bh=q182o3gqf6yupqadBdbVD/j9y+Ok7W9ubFxiI9oEXoY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Fjn2PKItQ3SD7OPqwxMJNYZfNeJcuNI0B/azFva3Z90uvig+feUujWWT1IRwYvYBadC4Op2Ts2abzC0zG0HnC3QjCDNPt4Dx7MqngecL6S9H6jv1oHHXpBUj1jR84qdxdm106fpeANfy+FRpOh5JeEm6OjVI+T0SFUyp20quxu0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=ONfA4h+e; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=lE1n3adN; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=ONfA4h+e; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=lE1n3adN; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HbRDXJY3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1741077682;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="ONfA4h+e";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="lE1n3adN";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="ONfA4h+e";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="lE1n3adN"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id BF3211F387;
+	Tue,  4 Mar 2025 08:41:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1741077683; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=fsKE1JxR4r83PaPSyABYFCVJq9bgn0zVEf+tY5alCNY=;
-	b=HbRDXJY3dEkYocenNO3jS2Am40bHDPlvHI651ul1CLgLwOW/K0sn3Q0TlQuw9+WepOrGQu
-	HFN/XiHNdYhXQVAl8raiaodb8s8vIFv/ABSYrnGsiykvWEvjD71tcO9tQA+WBHcXtbRwp4
-	xLHx7z7KZAoy70woPa5Sg3S9pGdWMkM=
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
- [209.85.222.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-418-0vABoAXiMqmVQkTmAYGwpg-1; Tue, 04 Mar 2025 03:41:16 -0500
-X-MC-Unique: 0vABoAXiMqmVQkTmAYGwpg-1
-X-Mimecast-MFC-AGG-ID: 0vABoAXiMqmVQkTmAYGwpg_1741077676
-Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7c0b3cd4cbcso623392285a.1
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Mar 2025 00:41:16 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741077672; x=1741682472;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=fsKE1JxR4r83PaPSyABYFCVJq9bgn0zVEf+tY5alCNY=;
-        b=s5Jl8C2ZjXhJuKpN+UVRA5CSGiDtuC9F5UexaKLs00hGWHpNfH+Z90kdHx2BrxanoK
-         ZkYbSEdwmrLIm6J9M5ffLsk3BrGMMCvQX7TYuDrKbWNysWaRmhvpB9lU4Pxsydqxgtih
-         W+UMw0OrTGpAmIu5z1WvIsyIlEcSDMb+Twqg8sDHuXrRJWdMGUL+aJqzEhAL6MgseA5s
-         gpp3m+tGrnOAXSDIpHSNZ9cEh1MWcOkD8sw9dLGABjpZOPIQBG2YdsWZ8UdOImXhr/kD
-         sPTWPu86vb5HWv7Y41ZbgLnxEIGU0ImIuX59YXCF80wfYRObW0oT6j2qP6ImgkOC6GOY
-         RSRg==
-X-Gm-Message-State: AOJu0Yzbsp516ZFhh0WVG/MlMvBPgBw1c/nRoiD3Wl/V2TgQ9f6MVi/K
-	fl9StJbJW7hWaT0ytGjvpy8kGxMCMWcBZZ8ITXkkogHLEP9i1Qn2MULJmL/wFnLL8u3EiOsBCWE
-	+skpbxLORRsyYgZD+n5wLU4eJsfCCStt6wQCFOlqcM1fJmI0SYLah3dQX9rnbzFl4sUjESxv12M
-	6ZOnAwYT1SpwNy00mCBFqbyOoxSrd//lXDIg6oCapwxpi2odTGlluYlQ==
-X-Gm-Gg: ASbGnctZuupBnE1LzylIs9awLK1GBHxRev3I/ExwQPt2DlfLTedU/9nqO4nq7rhktNE
-	vk8FiN/IpQUoGyY9DdiirmRiv1SzaCEH4TZYIBEbYBpG/+CXl2pXfkiDDrfO8fw2qtfJlzf0M9d
-	9hmeXKJZOFSqtxoH1unTDYycTMJpib6tpW58d+NZed0My2NC6MuhxsXWT2A+JJeu99XdJdqNgdy
-	WfpG0jPm7VBlFV3gnWIM7o8xbZ5ypm5aDTwlSQfZ0eTgZshBpRC1ezmwEvibL2+DfcRIfHIhqWC
-	uIWe4HCHFpJ5fBpm4spfdIrJmlYw1brX1/TAWBW/q6nbnARsRMUf+I+yrfx7/9MGy4oSqpF4Xyf
-	zA8eX
-X-Received: by 2002:a05:620a:46a3:b0:7c2:49ef:1f77 with SMTP id af79cd13be357-7c39c4a0181mr2593148885a.1.1741077672085;
-        Tue, 04 Mar 2025 00:41:12 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHG79q9XffEJNpdX763jIx+W9EQRrB41TjQwa3qn+cmvJTNbdOuOPZAWMQ1iApXQL2A4RS0MQ==
-X-Received: by 2002:a05:620a:46a3:b0:7c2:49ef:1f77 with SMTP id af79cd13be357-7c39c4a0181mr2593144285a.1.1741077671659;
-        Tue, 04 Mar 2025 00:41:11 -0800 (PST)
-Received: from jlelli-thinkpadt14gen4.remote.csb (host-89-240-117-139.as13285.net. [89.240.117.139])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c3c0a94fbbsm218395285a.1.2025.03.04.00.41.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Mar 2025 00:41:08 -0800 (PST)
-From: Juri Lelli <juri.lelli@redhat.com>
-To: linux-kernel@vger.kernel.org,
-	cgroups@vger.kernel.org
-Cc: Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>,
-	Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Waiman Long <longman@redhat.com>,
-	Tejun Heo <tj@kernel.org>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	=?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>,
-	Qais Yousef <qyousef@layalina.io>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Swapnil Sapkal <swapnil.sapkal@amd.com>,
-	Shrikanth Hegde <sshegde@linux.ibm.com>,
-	Phil Auld <pauld@redhat.com>,
-	luca.abeni@santannapisa.it,
-	tommaso.cucinotta@santannapisa.it,
-	Jon Hunter <jonathanh@nvidia.com>
-Subject: [PATCH 1/5] sched/deadline: Ignore special tasks when rebuilding domains
-Date: Tue,  4 Mar 2025 08:40:41 +0000
-Message-ID: <20250304084045.62554-2-juri.lelli@redhat.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250304084045.62554-1-juri.lelli@redhat.com>
-References: <20250304084045.62554-1-juri.lelli@redhat.com>
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=eY48bp8QL7Jwi8pCQ+GUudIBOPIj3TGHcGdFTuIEtMg=;
+	b=ONfA4h+ek6u7ohHhT8EyldH2ZmoekiosrYMTeOrH3yCOthpMW3e3uz95C8PmMsBScyFtrT
+	nnZP4NRQdRVnxgukMUfX1/x4jB7dxfdKc1GngLxYwnzIg58VkkVbP06dLwOBV5hHDBuV/H
+	tFlk6UzQf4TJS0udBS/PXDzHYMliq9c=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1741077683;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=eY48bp8QL7Jwi8pCQ+GUudIBOPIj3TGHcGdFTuIEtMg=;
+	b=lE1n3adN2+vtwG9Tq4EdJ4TsZgdwKH1uty9j3jEcMr8EhvEN3ljTGja6qQ3BgIUd6Yjf9J
+	gvTYBLVU0ABgkPDw==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1741077683; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=eY48bp8QL7Jwi8pCQ+GUudIBOPIj3TGHcGdFTuIEtMg=;
+	b=ONfA4h+ek6u7ohHhT8EyldH2ZmoekiosrYMTeOrH3yCOthpMW3e3uz95C8PmMsBScyFtrT
+	nnZP4NRQdRVnxgukMUfX1/x4jB7dxfdKc1GngLxYwnzIg58VkkVbP06dLwOBV5hHDBuV/H
+	tFlk6UzQf4TJS0udBS/PXDzHYMliq9c=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1741077683;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=eY48bp8QL7Jwi8pCQ+GUudIBOPIj3TGHcGdFTuIEtMg=;
+	b=lE1n3adN2+vtwG9Tq4EdJ4TsZgdwKH1uty9j3jEcMr8EhvEN3ljTGja6qQ3BgIUd6Yjf9J
+	gvTYBLVU0ABgkPDw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id A4BCF1393C;
+	Tue,  4 Mar 2025 08:41:23 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id yyjiJ7O8xmfKPQAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Tue, 04 Mar 2025 08:41:23 +0000
+Message-ID: <714d353a-49c8-4cbd-88d6-e24ae8f78aaa@suse.cz>
+Date: Tue, 4 Mar 2025 09:41:23 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] slub: Fix Off-By-One in the While condition in
+ on_freelist()
+Content-Language: en-US
+To: Lilith Gkini <lilithpgkini@gmail.com>
+Cc: Christoph Lameter <cl@linux.com>, Pekka Enberg <penberg@kernel.org>,
+ David Rientjes <rientjes@google.com>, Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Roman Gushchin <roman.gushchin@linux.dev>,
+ Hyeonggon Yoo <42.hyeyoo@gmail.com>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, harry.yoo@oracle.com
+References: <Z8Sc4DEIVs-lDV1J@Arch>
+ <b951acd4-5510-4d03-8f1e-accf38d909b6@suse.cz> <Z8XbomV9WCabATIM@Arch>
+ <8cabcf70-d887-471d-9277-ef29aca1216b@suse.cz> <Z8a4r2mnIzTD2cZa@Arch>
+From: Vlastimil Babka <vbabka@suse.cz>
+Autocrypt: addr=vbabka@suse.cz; keydata=
+ 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
+ EP+ylKVEKb0Q2A==
+In-Reply-To: <Z8a4r2mnIzTD2cZa@Arch>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Score: -2.80
+X-Spamd-Result: default: False [-2.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-0.999];
+	MIME_GOOD(-0.10)[text/plain];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	TAGGED_RCPT(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FREEMAIL_TO(0.00)[gmail.com];
+	MID_RHS_MATCH_FROM(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[linux.com,kernel.org,google.com,lge.com,linux-foundation.org,linux.dev,gmail.com,kvack.org,vger.kernel.org,oracle.com];
+	RCPT_COUNT_SEVEN(0.00)[11];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.cz:mid]
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-SCHED_DEADLINE special tasks get a fake bandwidth that is only used to
-make sure sleeping and priority inheritance 'work', but it is ignored
-for runtime enforcement and admission control.
+On 3/4/25 09:24, Lilith Gkini wrote:
+> On Mon, Mar 03, 2025 at 08:06:32PM +0100, Vlastimil Babka wrote:
+>> Yeah, I think bools were not used initially int the kernel, but we're fine
+>> with them now and changing a function for other reasons is a good
+>> opportunity to modernize. There are some guidelines in
+>> Documentation/process/coding-style.rst about this (paragraphs 16 and 17).
+>> int is recommended if 0 means success and -EXXX for error, bool for simple
+>> true/false which is the case here.
+> 
+> Oh! because of the emote I thought you were being sarcastic that I didnt
+> report it properly.
 
-Be consistent with it also when rebuilding root domains.
+Ah, sorry about that misunderstanding.
 
-Reported-by: Jon Hunter <jonathanh@nvidia.com>
-Fixes: 53916d5fd3c0 ("sched/deadline: Check bandwidth overflow earlier for hotplug")
-Signed-off-by: Juri Lelli <juri.lelli@redhat.com>
----
- kernel/sched/deadline.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> Thank you for clarifying! That should be an easy fix!
 
-diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
-index 38e4537790af..ab565a151355 100644
---- a/kernel/sched/deadline.c
-+++ b/kernel/sched/deadline.c
-@@ -2956,7 +2956,7 @@ void dl_add_task_root_domain(struct task_struct *p)
- 	struct dl_bw *dl_b;
- 
- 	raw_spin_lock_irqsave(&p->pi_lock, rf.flags);
--	if (!dl_task(p)) {
-+	if (!dl_task(p) || dl_entity_is_special(&p->dl)) {
- 		raw_spin_unlock_irqrestore(&p->pi_lock, rf.flags);
- 		return;
- 	}
--- 
-2.48.1
+Great!
+
+>> > When it reaches nr == slab->objects and we are still in the while loop
+>> > it means that fp != NULL and therefore the freelist is corrupted (note
+>> > that nr starts from 0).
+>> > 
+>> > This would add fewer lines of code and there won't be any repeating
+>> > code.
+>> > It will enter in the "Freechain corrupt" branch and set the tail of 
+>> > the freelist to NULL, inform us of the error and it won't get a chance
+>> > to do the nr++ part, leaving nr == slab->objects in that particular 
+>> > case, because it breaks of the loop afterwards.
+>> > 
+>> > But it will not Null-out the freelist and set inuse to objects like you
+>> > suggested. If that is the desired behavior instead then we could do
+>> > something like you suggested.
+>> 
+>> We could change if (object) to if (object && nr != slab->objects) to force
+>> it into the "Freepointer corrupt" variant which is better. But then the
+> 
+> We could add a ternary operator in addition to you suggestion.
+> Changing this:
+> `slab_err(s, slab, "Freepointer corrupt");`
+> 
+> to this (needs adjusting for the proper formating ofc...):
+> `slab_err(s, slab, (nr == slab->objects) ? "Freelist cycle detected" : "Freepointer corrupt");`
+> 
+> But this might be too much voodoo...
+
+Yeah it means 3 places where we check (nr == slab->objects) so it's not very
+readable.
+
+>> message should be also adjusted depending on nr... it should really report
+> 
+> I m not sure what you have in mind about the adjusting the message on
+> nr. Do we really need to report the nr in the error? Do we need to
+> mention anything besides "Freelist cycle detected" like you mentioned?
+
+I meant just the Freelist cycle detected" message. As "nr" equals
+slab->objects it's not so interesting.
+
+>> "Freelist cycle detected", but that's adding too many conditions just to
+>> reuse the cleanup code so maybe it's more readable to check that outside of
+>> the while loop after all.
+> 
+> If the ternary operator is too unreadable we could do something like you
+> suggested
+> 
+> ```
+> if (fp != NULL && nr == slab->objects) {
+> 	slab_err(s, slab, "Freelist cycle detected");
+> 	slab->freelist = NULL;
+> 	slab->inuse = slab->objects;
+> 	slab_fix(s, "Freelist cleared");
+> 	return false;
+> }
+> ```
+
+Yeah looks good.
+> 
+> What more would you like to add in the error message?
+> 
+> In a previous email you mentioned this
+> 
+>> >> I think there's a problem that none of this will fix or even report the
+>> >> situation properly. Even worse we'll set slab->inuse to 0 and thus pretend
+>> >> all objects are free. This goes contrary to the other places that respond to
+>> >> slab corruption by setting all objects to used and trying not to touch the
+>> >> slab again at all.
+> 
+> If nuking it is how we should hangle corrupted freelists shouldn't we
+> also do the same in the "Freechain corrupt" branch? Otherwise it
+> wouldn't be consistent. Instead the code now just sets the tail to NULL.
+
+It sets the tail to NULL but then also breaks out of the loop (btw that
+break; could be moved to the if (object) branch to make it more obvious) to
+the code below, which should also set slab->inuse properly. So the result
+should be consistent? In that case we're able to salvage at least the
+uncorrupted part of the freelist. It's likely corrupted by a use-after-free
+of a single object overwriting the freepointer.
+
+In case of the cycle we could also in theory replace the freepointer causing
+the cycle to NULL. But we'd have to spend more effort to determine which it
+was. Cycle is also probably due to a more serious issue than single object
+overwrite - it's unlikely a random overwrite would corrupt a freepointer in
+a way that it's valid but causing a cycle. So throwing out everything seems
+the easiest.
+
+> In that case we'll need to do a lot more rewriting, but it might help
+> out with avoiding the reuse of cleanup code.
 
