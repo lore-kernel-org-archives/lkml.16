@@ -1,244 +1,94 @@
-Received: from EUR02-VI1-obe.outbound.protection.outlook.com (mail-vi1eur02on2052.outbound.protection.outlook.com [40.107.241.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD4451FDA9B;
-	Tue,  4 Mar 2025 07:40:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.241.52
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741074012; cv=fail; b=pNjCTIGp86l0rtcuiujLxKtEoCf8GkR+/B/flCsQcIrlS0ICYErwpfZE4gAxxoqTioMU56s9R6hant7DjenVbQekvGGxSY8U03OHhrgicJaDj7LAh0gIN54rsdh5X2qHsZLiFGXHGTTqdms1QtgpgcdeNszAiEleCEf3VIoix8A=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741074012; c=relaxed/simple;
-	bh=/1AsOjHAaFW1TnJ2m6laA98FgpApOs3AgqhG0OKKgjg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=ZeJ7rLjPjfsJZx/YYPTA/kMPgJWSERYQBqiNTaOT9xL1mU5Of7h95fv0o5f6hDIlv3aoMolHX5g39whc6DKGdbR6Q4Wg8LC7xsZuzq+qsgyuJ5XjZ1tDJHgVKXp3k8WeWAb1w7/aoStOVBdPWFtgz3H4kLhPHhGA1POf55vfRPY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=QZkE87m9; arc=fail smtp.client-ip=40.107.241.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 141321FE449
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 07:40:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741074016; cv=none; b=hMkN2xWnjHzVwe0sZw2/rRGLu6DxOheTlwN0SYOB7AjFMsenH+Z4vZcZh+dzANm0PXAGTwb4WeRU7CTgqgrIFLnomPauBi/I3BdbNIjvYDANJ0Bx5TxPSw7ovhgyUgqGZXboXyDkNiZuUbrJfdsWmoG7uUgzk7U7eHYV4QHiwJw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741074016; c=relaxed/simple;
+	bh=3T+luX8w3tRQBHenZr4Mib8LyLSph+Ibdvl/8KKqw98=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=G4hlPXg7fPwJonnBHPXApN0GAw68jN8bk1k3t7XLFGVoVpq+3V6WOVFBbCp6C1qMxCiZt2niRKsWaibN/1fliYFEY9ttefY04D+GWhak3S8e0wI26NFbDk+ucRj+RUvEnbwc7NBk5ES8foryebGbhw0q10eW+lvp6TcOP+Fmb2Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=keokISX1; arc=none smtp.client-ip=209.85.208.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="QZkE87m9"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=JJnOObAUEmEkQLR4vI9tbbklMtcS87i2ie4p7r0BRANpUCuvF2nHXkM/9E6P4ZyGVEZNFLAQDh8NtMgUr6QD2RmzR3Wz8gEgp+DGLK1XjyoB6moSxXcBj51uzeIqBbAfHD1654Ob9E3Dwu5e8NsmkZ/g+fZNBuPYRIHAoilQo+nQC+b7ISVBzXae0cFje/WDxyverX68AIu1FW6Co0sl0e44I2hibuCfYfKHLHadOpP6HjRhn4ftc5oOisXu7cT3TO/RTBPVNJJuCXJvR35MZ0YzCkGFGeFLQvpBrt7g3xPofXHaHn+B7X1M9l2zvnI9G9e9yJOh1wdSWrYTF6XpVg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=TG/uE1RncJyCkIAfdm176LtHy2r89umHjThLOCOpG0E=;
- b=vv5YtseCxGsF0EwiP8a78xZTb4dBmNolR/IdEw0sYfvbrDzlFHrmYoIXqikAEUhf9+HyrJ1zBwzpFD1s6fo1bILHSexA+38LApiCzMzzBe+IFKX3PqUeGtL0lwnu3+ME/6kivAGpyq8HLb6Ye1/Z0i3dW1kAn8GlOOypTaqC/tcvzChduLSK6saiCkeCtejVqP64YQ14IJtGhZlgiZLn8Vcd7bx39w2lhBDFB21x2ijpFnQ4Ovc2kMRadYFx+Q6wfNU+MT3dszlGWCm+OusUIfTO79F0QZ8fsgtZveowTrrmTOS4dlrDptTZ97JBi4+BxluBkzL7IGKRub+SLJ179A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TG/uE1RncJyCkIAfdm176LtHy2r89umHjThLOCOpG0E=;
- b=QZkE87m9Co3b40DYutqm3z8nSIP4w1sHpY0A92pQj+wh+7f+B687BHjIaXK0UWHV4Tonb+7J6/LeOGZwsdKPtFITaT+Ebt+K2Go7baCFi2/MXyzf+ygYXYGwkTKkDqJhOEdRYY/P9tnZKcAXffRGTRfQanm+8KiOO2WmAE4TJzDg6ZH1IIqht3fSQa+uFZtOSeoHaJOGm8GL7+m05yV4VbF78QKaxvHV9O9jauXqb3xYUab7k6iWU0p+B50uN1ZKLfji4ghNXzcFhEaQeAbaFXz2rFSncImc611vQNnCjYSMfduljvZh7/81trc7XprMGmb8ybLmsOEB/lh0wHAH8w==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB8510.eurprd04.prod.outlook.com (2603:10a6:102:211::7)
- by VI2PR04MB11171.eurprd04.prod.outlook.com (2603:10a6:800:29a::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.11; Tue, 4 Mar
- 2025 07:40:08 +0000
-Received: from PAXPR04MB8510.eurprd04.prod.outlook.com
- ([fe80::a7c2:e2fa:8e04:40db]) by PAXPR04MB8510.eurprd04.prod.outlook.com
- ([fe80::a7c2:e2fa:8e04:40db%5]) with mapi id 15.20.8466.020; Tue, 4 Mar 2025
- 07:40:08 +0000
-From: Wei Fang <wei.fang@nxp.com>
-To: claudiu.manoil@nxp.com,
-	vladimir.oltean@nxp.com,
-	xiaoning.wang@nxp.com,
-	andrew+netdev@lunn.ch,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com
-Cc: christophe.leroy@csgroup.eu,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	imx@lists.linux.dev,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v3 net-next 11/13] net: enetc: add VLAN filtering support for i.MX95 ENETC PF
-Date: Tue,  4 Mar 2025 15:21:59 +0800
-Message-Id: <20250304072201.1332603-12-wei.fang@nxp.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250304072201.1332603-1-wei.fang@nxp.com>
-References: <20250304072201.1332603-1-wei.fang@nxp.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SG3P274CA0007.SGPP274.PROD.OUTLOOK.COM (2603:1096:4:be::19)
- To PAXPR04MB8510.eurprd04.prod.outlook.com (2603:10a6:102:211::7)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="keokISX1"
+Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-307bc125e2eso59692041fa.3
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Mar 2025 23:40:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1741074012; x=1741678812; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CYa7EfywJTw6o3MYMu3IjFEnE/ok1aP+gt2n/HM5KmA=;
+        b=keokISX1Zuf4x8H8C2osLFVu7Dn/xGzX3xfWoRPvcN9QNkYmnLsiUHA3/HZ5aOwHTf
+         MwgXiFzFwwp+qDAeRahjBUuqtQVkNd5/9UgT7ahlGZahd7+UvF2hT7kQk/zQRg19TX0v
+         IgTEpNcMkwEUIH4BaJANb/lQGN5AtRDeUo+35dP2IP7WpMFBXpqWiD3C05LF4vMFDZgc
+         ktPohCl3kl9sjbTO08V0p8CIrl3rUJLYmBs0DGuWpmMwqqIBZPAXlrkmUVvBqYB25nhN
+         0AJAmDlD6g2/tYkrWMVs32zeMpXEMtjeDES8NwiH3tziDcQvMMnwCoYsbHiIBsjTxpLe
+         9WDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741074012; x=1741678812;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=CYa7EfywJTw6o3MYMu3IjFEnE/ok1aP+gt2n/HM5KmA=;
+        b=C4xMUVZzUGRbWsnXf/BOxPcwGsyT8Hz5LqD9t6xzbFRvG3AUy9MMuzNAmYuXzd3N1H
+         WtQYn2RhxidZAJj0iOfKYB8TnoqMhmwhHhWfWpaBXWl01xrRA+VqqWQCu1YPPiqsX/Rn
+         c81YNsn7B3YTD2lrYBxj4RLjJTHwSLwQ0sVTHJn0wgdIa91mblYbuBZ61KYoB+YCwSRS
+         lHPI1f8q18taYAkxx1M/ZzfJgMtQdWjJ/oNRYE0Aus5b2woD7RCtd2zJENV+laP8GbnP
+         jHo9sgV8kAuUHGWlbeNdeS3qKnkQnOKIZnX110vQ3vLoQylzyCkpEP/FCjQoU6sXd9TU
+         3gpg==
+X-Forwarded-Encrypted: i=1; AJvYcCXo4fHlIxNaSjVhnovqQoFQNR+Ca35W8UobeiDfEYwCRr7J8llb63r5X4qsdZztlYnXsM3+EP97soDcvRY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy/YCavMx6eQOEy66dsGwJSMj3MA0Ga8J0Si3GaNTiFNtKnTftL
+	Rer+2HBbS7LWRy4Qztxy+g8+z3U5KPKA4TOHGGGR6HT+EmjGu5QOQSNPbzASEtzzGJH5u0DVB7E
+	LsnZ6ZTtPSSM6d3BiM6VqvXuiGCUmC2z2RWDKng==
+X-Gm-Gg: ASbGncsYoUZLzq//8+ffeNTMAig2h0wflwVMU2goFjevAoBQSpX6vIQIWjCQBXMA2op
+	jgI8xf+pY1kDMIslS5Bqz2SYRDhQ0Hgjjc5Yxhi2N8JYWfQ3ZWa5Rmae8xtPyQQNQqfmMvguN5j
+	sBM2VE9v8xCGIxs3wUE3VTPbYalg==
+X-Google-Smtp-Source: AGHT+IHXJH8RsSh9MugAj23AQppoEi7+HBO8uvCiCpR+EoTX8kmz1M4QPFhcf3U1tuxSzojD8Ca99DcRZmVr3olmu1M=
+X-Received: by 2002:a2e:a716:0:b0:309:2267:32d0 with SMTP id
+ 38308e7fff4ca-30b932443e5mr44153791fa.21.1741074012067; Mon, 03 Mar 2025
+ 23:40:12 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB8510:EE_|VI2PR04MB11171:EE_
-X-MS-Office365-Filtering-Correlation-Id: e92011c9-f6dd-4a92-623d-08dd5aefc944
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|52116014|366016|1800799024|376014|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?wVkfoLRkb/JRCZOsfeLs0jdsWg2FeQStfwU4HAmqvljStnrAo1IDoKM8BMtE?=
- =?us-ascii?Q?yBXOn2bYGllAr6hskxru8vr4TJwajeag5G1vr+SVWC+3g+NnFI8hNC2Pp1Bu?=
- =?us-ascii?Q?ZkIBxyUTx8OT89YrNlDUZPDixzgU7Xuj/paV/QuKjMT0vzhVO1c3ui1ZCpfP?=
- =?us-ascii?Q?B+eG2sCwMzF3JEsN0l3OQKcptvwGSZ/48Hn5pvmnu5YSoj6HeKF6bWvgK2gh?=
- =?us-ascii?Q?HJYZv/sXVcZrDU0BJh70aEsSuKRk4exjQO1SBKhL/aOyrQxlC/jpt5ZJjr5y?=
- =?us-ascii?Q?OJRGBZAqpQf/olCoz3ZIFMSPpaQv+F7aIN0CfVtleJsxGSUy2+MwKc7T+gRp?=
- =?us-ascii?Q?6YHDQQOB2Ej8aQjfxRCxdU0z/hzpgj9FdpZEE5zafiL9ENXteXuTI3/9ejA5?=
- =?us-ascii?Q?LBC1ZDLy+hWc72oo7LXw+OOz0epkAUk+9qSXIxrFmRgLU/BfZJlAhA2YJwdH?=
- =?us-ascii?Q?Vwd15mugPHfYuNsDpacJp5RzA2471HN7NjBZVG3G6ooBVMn4w48guUtS7hql?=
- =?us-ascii?Q?Yo8VsbWx/ufq+XvAGa6EduVQoV1NaxKXi4vBDpiLb8rqQdmz+ctijsKB8tCR?=
- =?us-ascii?Q?AMU3RmFPwfyPAVNqvs8FhR66oov32eY8Ya0S6+z4Z+a9yKV8KstuGMdb7vTy?=
- =?us-ascii?Q?V1tkx56QUtMbYQAGsSLJ8i09wTAC+R/BMZFlwFh8XORzYtNs5LNHodVnLO+J?=
- =?us-ascii?Q?wHGVo4jwzmpArDJugR5naQDisBtjAeMQ5qxU0BWZQt/FnQiI+ohBIUTJ0rhM?=
- =?us-ascii?Q?jliWs3v9z7+UfStEaKagBoiziequdlQi4Ge3xXyWs+q77gJVyDss5U4YmoZ+?=
- =?us-ascii?Q?ULI6LHjZkKW+R/uJkqrcOC+duXufQLM9mlo9VywzK3sFji1EiK0Gvycd79nM?=
- =?us-ascii?Q?9bs07qfbZF2azl748qiWIi9I5vlq2J+iHjfPMOJLcowi660e7g5a5045fqNk?=
- =?us-ascii?Q?MA9vkPPsnM6lpKRgsUQab+Q7oNgyfZgaN9DF5ZvRieUPEWN+aCu8jXq5LrYD?=
- =?us-ascii?Q?Q3Z3NaUxRI+h7XaayALDIOicUxPuFUMHUx+BaIRIPKsOOphhlWkKad4TBaX6?=
- =?us-ascii?Q?wyzBaVv2pbSQwlnf8OjQc9t1qaxA3HZZMorUlxpckfn2aXu7LOAE3o1pzNrH?=
- =?us-ascii?Q?+xLlPV4S8Lw5iec6GrrQCGCGpvJNtDYbimBJ5eW3OkiVOUqaaGXe0PN7O6Gp?=
- =?us-ascii?Q?7aOCAIF6A0yDmbcs79rZiEkM7806Poi5xCG19lrCQWodyeGBmzk1UNU+Xmdq?=
- =?us-ascii?Q?C0oSpda3j+048KvNxoQU7mcxygDCW7hv5NLkRnEfvln27rf0D+jKS5KPyKDM?=
- =?us-ascii?Q?mm0ArFhb+1PSeeZ+6jff/zNf0kn9GuUmVFJOIoeyFELxYP3yHhbByPW3CD3Z?=
- =?us-ascii?Q?8RGhcl7TuaKPzZWKbdXgdj3ghBDz2qzhosZgztrlWxhI8pG0THN5gxwXjpx9?=
- =?us-ascii?Q?CIsiEXyd5gD4CDx2JZK1+tqVl7ayw7VP?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB8510.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(52116014)(366016)(1800799024)(376014)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?eS35H0GfR+9JdI4hSsYBqRBlmLi1eZl1cksb49KtzIqCYMTWHr85fhB+LBpy?=
- =?us-ascii?Q?7+AwTgV2q0ww9AeMzin2JnA4gJ5Ga0JccVIAboepXTKFFzqUpL5EFLhrULm1?=
- =?us-ascii?Q?PwJE0zudYxgHsQcUx6/prgUBore78Rw+ihlG2hW0YWJ4nS2qPgYA4/yM/7wX?=
- =?us-ascii?Q?VwIKxPQYY+iGemDEAhmRCt2crGQhKG21LutVMDklxXnKoJD34MH0qo20xpQN?=
- =?us-ascii?Q?RW/unDu2H0tguY06UJRMqO0GPRMBC4WLaHQdd4WVFOxIp4UO4oNgKY8lBekg?=
- =?us-ascii?Q?pQyGuLZeWc/EsOJE+y6Hkv9UevzYrEk/paubYTZDpmEgaT2CLkIta9Wr0Fux?=
- =?us-ascii?Q?74QMcl7bASzB6EKmbR4jypnR5Z1ZMCPq7yhbzm6vSX0Zq3dhGZUUuKvSlz58?=
- =?us-ascii?Q?2zOKtdyCPAQTMOZzEmkm9Bca+U9laOcq5dzHm5Pf42+wxoolKqhFx3jNnif2?=
- =?us-ascii?Q?3ihm6n48IG+3Ef5/lg8ocCwmbKFTm+Xdtpb6Yjdonsytbncwhj3FOV0RjFyi?=
- =?us-ascii?Q?bdolxpZXY7g8vp6eJDH3CIC/v7HaD1e1jDw0blRxcw7ljJbxRn/4I9oUTuAv?=
- =?us-ascii?Q?9fQ6EAifxAqIkIOOwoubyJpPk9mW4LUzgVhWR5FNEkqi2QHwOIZ1T0G2oJSF?=
- =?us-ascii?Q?CnVXHyWWhoUDVaIMFtKSWXuEYbvf3BUsvkeyT82ZCYKW5gkLc3j9x3ujuCDh?=
- =?us-ascii?Q?2kJ8GroTmbqS7zJTqfD5KYRXKQGQ2UPyEQbCsv91k+CQy4tq2laBg8P3X7i5?=
- =?us-ascii?Q?2ehov/M9rIPxIO4MlSqJSHwCwoqMbY1o+PfNel+AkbOp3GGqjvAyKgfpuUhi?=
- =?us-ascii?Q?2+p0vlJC37fVXPjkv0kQfAYtfTa7KfeMy5l15rHTjkU8hl2o9i2X20BMOKgQ?=
- =?us-ascii?Q?mArIuXUTcWLqp4dgn0JDSQbC4AHiu2P4j9PQVIdHJf3BkiB294y8WY1Qra1B?=
- =?us-ascii?Q?w1LX1oZo+JwDt2UB++0SfqJMCcHGj9wBmV6FkwDv62SS5gxrxkHv2UExr9YX?=
- =?us-ascii?Q?rOI9/PFaGbfMmOjJ1T6ajN7CxIbppLLTgUVI+yq+ndMtYjBZbjC2yiX/gOi2?=
- =?us-ascii?Q?wLSvEjleI6jojsz1T0TRmbhmKiG3d2oR5v9pNVzCUiPVohksOvlDkhEik9bz?=
- =?us-ascii?Q?40h+of7j8hWI7rd9WtWoR0prVUfsgExrt5XsQDD6f3rZ6UkgV+kW86bA1z4I?=
- =?us-ascii?Q?gffLFImNban+BLtq6U2cwKH5BtHyftowAkG/DtY5kIkv73Kcr5/iXyFUiB9u?=
- =?us-ascii?Q?pQwxwsQNeDaaeaoRt++AOyuwcIe7NOYlLcsx5XxeoE+Pm8tp7+yRXlooU0Nc?=
- =?us-ascii?Q?xBHzxWT4HPQc7o0v7TsnvqcQQIIDChLYG5ED/nIlxPgtHgMcvaQDRJfhjgUd?=
- =?us-ascii?Q?FQwsR7/k7Ll2El4IrVRbPN7y3/Lkvpunzp2+Ksve2QQz46jYx3UkEH6ReExH?=
- =?us-ascii?Q?KYTr64uyKne1bau12+w4f7b04PUXHE3opGWVr6b1qe5mTeiNN8sovkuYt3Tj?=
- =?us-ascii?Q?sZcazR4oVuB9vC4mLLbMVhUdRkDWnkZfNIa1ZRNw0Cf+IDZdkzSQv2XzqGF3?=
- =?us-ascii?Q?a6AEBqYb9GCSUHABUJB8fGWtFNzr0ioVs6Vg45S5?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e92011c9-f6dd-4a92-623d-08dd5aefc944
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB8510.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Mar 2025 07:40:07.9643
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: DCj/imYcN/36AbAOimf6JiqIZoP/o9Icx+/xXD/sN7Hap7D2wDTn/rxdp35m+H5iSFqKWtwjzYikIHUYaaEhNQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI2PR04MB11171
+References: <20250302-04-gpio-irq-threecell-v2-0-34f13ad37ea4@gentoo.org> <20250302-04-gpio-irq-threecell-v2-2-34f13ad37ea4@gentoo.org>
+In-Reply-To: <20250302-04-gpio-irq-threecell-v2-2-34f13ad37ea4@gentoo.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Tue, 4 Mar 2025 08:40:01 +0100
+X-Gm-Features: AQ5f1JpaPsAGaJQpCY5h6TnkBJvDhbXUxtDbGepWe3FtwHACW1AT0pWNBP_lsZY
+Message-ID: <CACRpkday=ZgxovKB03PCweh_rGzaJjSJ3ezC_UzPacQPPNJ6KA@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] gpiolib: support parsing gpio three-cell
+ interrupts scheme
+To: Yixun Lan <dlan@gentoo.org>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Thomas Gleixner <tglx@linutronix.de>, Alex Elder <elder@riscstar.com>, 
+	Inochi Amaoto <inochiama@gmail.com>, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	spacemit@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add VLAN hash filter support for i.MX95 ENETC PF. If VLAN filtering is
-disabled, then VLAN promiscuous mode will be enabled, which means that
-PF qualifies for reception of all VLAN tags.
+On Sun, Mar 2, 2025 at 12:16=E2=80=AFAM Yixun Lan <dlan@gentoo.org> wrote:
 
-Signed-off-by: Wei Fang <wei.fang@nxp.com>
----
- .../net/ethernet/freescale/enetc/enetc4_hw.h  |  4 ++++
- .../net/ethernet/freescale/enetc/enetc4_pf.c  | 20 +++++++++++++++++++
- .../freescale/enetc/enetc_pf_common.c         |  2 +-
- 3 files changed, 25 insertions(+), 1 deletion(-)
+> gpio irq which using three-cell scheme should always call
+> instance_match() function to find the correct irqdomain.
+>
+> The select() function will be called with !DOMAIN_BUS_ANY,
+> so for specific gpio irq driver, it need to set bus token
+> explicitly, something like:
+>   irq_domain_update_bus_token(girq->domain, DOMAIN_BUS_WIRED);
+>
+> Signed-off-by: Yixun Lan <dlan@gentoo.org>
 
-diff --git a/drivers/net/ethernet/freescale/enetc/enetc4_hw.h b/drivers/net/ethernet/freescale/enetc/enetc4_hw.h
-index 826359004850..aa25b445d301 100644
---- a/drivers/net/ethernet/freescale/enetc/enetc4_hw.h
-+++ b/drivers/net/ethernet/freescale/enetc/enetc4_hw.h
-@@ -107,6 +107,10 @@
- #define ENETC4_PSIMMHFR0(a)		((a) * 0x80 + 0x2058)
- #define ENETC4_PSIMMHFR1(a)		((a) * 0x80 + 0x205c)
- 
-+/* Port station interface a VLAN hash filter register 0/1 */
-+#define ENETC4_PSIVHFR0(a)		((a) * 0x80 + 0x2060)
-+#define ENETC4_PSIVHFR1(a)		((a) * 0x80 + 0x2064)
-+
- #define ENETC4_PMCAPR			0x4004
- #define  PMCAPR_HD			BIT(8)
- #define  PMCAPR_FP			GENMASK(10, 9)
-diff --git a/drivers/net/ethernet/freescale/enetc/enetc4_pf.c b/drivers/net/ethernet/freescale/enetc/enetc4_pf.c
-index adaf28fdf0aa..e08d06e22898 100644
---- a/drivers/net/ethernet/freescale/enetc/enetc4_pf.c
-+++ b/drivers/net/ethernet/freescale/enetc/enetc4_pf.c
-@@ -101,6 +101,13 @@ static void enetc4_pf_set_si_mac_hash_filter(struct enetc_hw *hw, int si,
- 	}
- }
- 
-+static void enetc4_pf_set_si_vlan_hash_filter(struct enetc_hw *hw,
-+					      int si, u64 hash)
-+{
-+	enetc_port_wr(hw, ENETC4_PSIVHFR0(si), lower_32_bits(hash));
-+	enetc_port_wr(hw, ENETC4_PSIVHFR1(si), upper_32_bits(hash));
-+}
-+
- static void enetc4_pf_destroy_mac_list(struct enetc_pf *pf)
- {
- 	struct enetc_mac_list_entry *entry;
-@@ -403,6 +410,7 @@ static void enetc4_pf_set_mac_filter(struct enetc_pf *pf, int type)
- static const struct enetc_pf_ops enetc4_pf_ops = {
- 	.set_si_primary_mac = enetc4_pf_set_si_primary_mac,
- 	.get_si_primary_mac = enetc4_pf_get_si_primary_mac,
-+	.set_si_vlan_hash_filter = enetc4_pf_set_si_vlan_hash_filter,
- };
- 
- static int enetc4_pf_struct_init(struct enetc_si *si)
-@@ -692,6 +700,16 @@ static void enetc4_pf_set_rx_mode(struct net_device *ndev)
- static int enetc4_pf_set_features(struct net_device *ndev,
- 				  netdev_features_t features)
- {
-+	netdev_features_t changed = ndev->features ^ features;
-+	struct enetc_ndev_priv *priv = netdev_priv(ndev);
-+	struct enetc_hw *hw = &priv->si->hw;
-+
-+	if (changed & NETIF_F_HW_VLAN_CTAG_FILTER) {
-+		bool promisc_en = !(features & NETIF_F_HW_VLAN_CTAG_FILTER);
-+
-+		enetc4_pf_set_si_vlan_promisc(hw, 0, promisc_en);
-+	}
-+
- 	enetc_set_features(ndev, features);
- 
- 	return 0;
-@@ -705,6 +723,8 @@ static const struct net_device_ops enetc4_ndev_ops = {
- 	.ndo_set_mac_address	= enetc_pf_set_mac_addr,
- 	.ndo_set_rx_mode	= enetc4_pf_set_rx_mode,
- 	.ndo_set_features	= enetc4_pf_set_features,
-+	.ndo_vlan_rx_add_vid	= enetc_vlan_rx_add_vid,
-+	.ndo_vlan_rx_kill_vid	= enetc_vlan_rx_del_vid,
- };
- 
- static struct phylink_pcs *
-diff --git a/drivers/net/ethernet/freescale/enetc/enetc_pf_common.c b/drivers/net/ethernet/freescale/enetc/enetc_pf_common.c
-index 9f812c1af7a3..3f7ccc482301 100644
---- a/drivers/net/ethernet/freescale/enetc/enetc_pf_common.c
-+++ b/drivers/net/ethernet/freescale/enetc/enetc_pf_common.c
-@@ -135,7 +135,7 @@ void enetc_pf_netdev_setup(struct enetc_si *si, struct net_device *ndev,
- 
- 	/* TODO: currently, i.MX95 ENETC driver does not support advanced features */
- 	if (!is_enetc_rev1(si)) {
--		ndev->hw_features &= ~(NETIF_F_HW_VLAN_CTAG_FILTER | NETIF_F_LOOPBACK);
-+		ndev->hw_features &= ~NETIF_F_LOOPBACK;
- 		goto end;
- 	}
- 
--- 
-2.34.1
+I read up on the bus token code and it seems to do the right thing!
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
+Yours,
+Linus Walleij
