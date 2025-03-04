@@ -1,70 +1,109 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F8B5290BD0;
-	Tue,  4 Mar 2025 15:39:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1B0828FFD9
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 15:39:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741102744; cv=none; b=W2o66X9rdfXoPNxeQhC+te00w+kwKzZxk3/rc5o7M3AqU6MmAKXlYojRdA3FKF7jsE0hcylMAoBh2GKgIFGOOK6NiQgFg37kfH32st10AdQBp87+YBm3RPHpCNI1TWsQOvVbinoy8qrGEE3pnXfqcVbC9V8Fx61WRJVpetem/Uo=
+	t=1741102743; cv=none; b=FG2jBcUsmQlboV1NnzxIj5Enwc85iHqcaXSQS0zWhCPyBECs+sFEBLZhrlmHgmOfO0EBgSe+0mltFXqRHPeZePrn/IQZU5eEmeMNmiYYvzvY6akWcwoA4ZAkQ6ulvczQrg25aIrGfH//y7TwWbMJVTm36Ne2syFzWAFp0T9vc8Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741102744; c=relaxed/simple;
-	bh=6HgwrSjLCzomZbkJhXnmgrDy7Sm9jKUjliKEcXcaDyY=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=E0wHaWlg9L3gGzxQry8qHBfWyZ5Ip3v/Mtz53uC7MTnB4UmI6bHYq15bLSgrLN7qqptQ7WJ9GtrwhJzzeynrLzXY7NTy93U7j6uSK1YYCImnsDWme7cNZWkB+A3gSUDz0O/QEiljwgzHBvGCQJmTY9OfyG5JI4AcFRk8WpEPJFc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0796C4CEE7;
-	Tue,  4 Mar 2025 15:39:02 +0000 (UTC)
-Date: Tue, 4 Mar 2025 10:39:57 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Tang Yizhou <yizhou.tang@shopee.com>
-Cc: tj@kernel.org, jack@suse.cz, brauner@kernel.org, willy@infradead.org,
- akpm@linux-foundation.org, mhiramat@kernel.org, ast@kernel.org,
- linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] writeback: Let trace_balance_dirty_pages() take
- struct dtc as parameter
-Message-ID: <20250304103957.08c79da0@gandalf.local.home>
-In-Reply-To: <20250304110318.159567-2-yizhou.tang@shopee.com>
-References: <20250304110318.159567-1-yizhou.tang@shopee.com>
-	<20250304110318.159567-2-yizhou.tang@shopee.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1741102743; c=relaxed/simple;
+	bh=m52peCNVice4dNNY5xbCz5VOoTIMY+0qmJAW8b2N3QY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=NTd2fXi+oIGrEdzGFBNLwfC4fAGX1ZH0sjwlGk1xEwlj9GYzM7CaiY5qzlFeY7aP4VvQCAY1/i5/hyhYVWl45BOSlwjEbuELSilefbLyjmFp24G9BZ4PdtCx3Qz6JR7QswYw7dykZ9CJa745UmjW+aClAK0ya2BZnktLGbLI9vk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=CIjlrGVD; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="CIjlrGVD"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-43bbc8b7c65so27180245e9.0
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Mar 2025 07:39:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1741102740; x=1741707540; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=K0SMnkypgJ+E0WuuzIPm19tlt9b9dHVVlixZH4mmHVo=;
+        b=CIjlrGVD0tl2N1dEl0VymJokuUjMCJi27QUmXaxHeMRaLwon9MBFTUQSJLV9rbUAm9
+         avvwf5k/Pc1u5vYR1tpZihY+tzq0nyhjjeP2DmbTdKrEAfkvOSt5S3tZ0jdE3dVMm7DH
+         dv6tswX6zFpK7r7/mP+iViWiapeG+9ty+cT4W3kDycLoo+mBRVL52aeWFAwvBUvAZbjC
+         3skbz+xMJQjhnrGSZnNIkmXl2Q9RcBhPb3ZG8dXDXe6FgBR7d7J7h/SQicnuPAwPYgZE
+         oTlvsQlzzir8ZRPxynCEJreh5tFrBVqRbnLIoYsbgW6HGeAXemeL4RuOKh/T/wKxUbAe
+         w4jg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741102740; x=1741707540;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=K0SMnkypgJ+E0WuuzIPm19tlt9b9dHVVlixZH4mmHVo=;
+        b=T6yNTriM4CyJKWmfSqUC3T0Gb87D0ua0D2tonHwD6G5DQbDgwWecj/3eeDvyyV7iKe
+         sFCm3Ui0k/eUTvNklalqu7MxgwIRnLXRniAr0IsrlnyXBcpWWpH4pRu9BD3GBw920whW
+         ggD966zVdz4zAVcOx6PZHNvcpiq+752+sGc8mxeW/AZh3cayZypXuRDI2CSJWRqdJeJO
+         SSd9b0Pw0qABr8YD0bxw80AmPaeTAUZzTn3MGGWZKIGdn87r5qVPn9b2L0ZUWL2MoJHl
+         0y9KjhwuiYkxmTh+fr+VuAIA3oi8/BhwQ4aNJKdOosCiuk+TksQe37ZpEcU1bywueZjR
+         2Riw==
+X-Forwarded-Encrypted: i=1; AJvYcCUX420VsnIRWuw4YKduIly233U5P3ajSMSyL4gAE0mqp0AMDWl7a15ckNOLMdJgNS+aEyiJCzzeEMLsTYk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzuTFbJ5IQ/s1bY/O6XMTdNSjNVvJPm8xvxJrIoRXxM7uSRX81+
+	xGd31qGzUOBhUR0lyv/IwKHLHTzdkIp1yslsPHYPp9R8+7SnYhxR5F03mToPPBE=
+X-Gm-Gg: ASbGncunzU+1kVtXUUXEINP3vHyBoKMdbgiW+4xnbWm3HgXMY+f8kXiHZCjVAERUzhq
+	uhq5xfG78Hy19+IznSSrUiC++C8nSX1jaKfnmpRZNaHH1HcmzOvtxICNso06sNxllHnN3e8f+aM
+	uCSD/9PZilssWEl5kVVG2OC35dKG1h/KZAHotDe4MNUw8o+pJxewlpK0H942+kga/kCwl8wubAY
+	aRqDcVd0rG4LvTVtu88Mh8caNlgKWmv8X6bHvc1Ba0V+gAypxcI5p0F0fqbwfURYJGNu+rPb1Sn
+	PeXOBjjRmu5OZnI0UIicm4OXVZunf3GRNxtDc/S33lLWsQM=
+X-Google-Smtp-Source: AGHT+IHVsiEQmN3Y21537PIQvBH5PobiQYRSPlH0O79ylXjcUAzUwaUszPliAbCkCArUCFHUG5m/LA==
+X-Received: by 2002:a05:600c:4685:b0:439:a0a3:a15 with SMTP id 5b1f17b1804b1-43ba67045camr187495795e9.14.1741102740250;
+        Tue, 04 Mar 2025 07:39:00 -0800 (PST)
+Received: from blackdock.suse.cz ([193.86.92.181])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43aba5710ebsm238670625e9.26.2025.03.04.07.38.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Mar 2025 07:39:00 -0800 (PST)
+From: =?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>
+To: cgroups@vger.kernel.org,
+	linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Tejun Heo <tj@kernel.org>,
+	Josef Bacik <josef@toxicpanda.com>,
+	Jens Axboe <axboe@kernel.dk>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	=?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>,
+	Waiman Long <longman@redhat.com>,
+	Hidetoshi Seto <seto.hidetoshi@jp.fujitsu.com>
+Subject: [PATCH 7/9] RFC cgroup/cpuset-v1: Add deprecation warnings to sched_relax_domain_level
+Date: Tue,  4 Mar 2025 16:37:59 +0100
+Message-ID: <20250304153801.597907-8-mkoutny@suse.com>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250304153801.597907-1-mkoutny@suse.com>
+References: <20250304153801.597907-1-mkoutny@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Tue,  4 Mar 2025 19:03:16 +0800
-Tang Yizhou <yizhou.tang@shopee.com> wrote:
+This is not a properly hierarchical resource, it might be better
+implemented based on a sched_attr.
 
-> @@ -664,16 +660,16 @@ TRACE_EVENT(balance_dirty_pages,
->  	),
->  
->  	TP_fast_assign(
-> -		unsigned long freerun = (thresh + bg_thresh) / 2;
-> +		unsigned long freerun = (dtc->thresh + dtc->bg_thresh) / 2;
->  		strscpy_pad(__entry->bdi, bdi_dev_name(wb->bdi), 32);
->  
->  		__entry->limit		= global_wb_domain.dirty_limit;
->  		__entry->setpoint	= (global_wb_domain.dirty_limit +
->  						freerun) / 2;
-> -		__entry->dirty		= dirty;
-> +		__entry->dirty		= dtc->dirty;
->  		__entry->bdi_setpoint	= __entry->setpoint *
-> -						bdi_thresh / (thresh + 1);
-> -		__entry->bdi_dirty	= bdi_dirty;
-> +						dtc->wb_thresh / (dtc->thresh + 1);
-> +		__entry->bdi_dirty	= dtc->wb_dirty;
->  		__entry->dirty_ratelimit = KBps(dirty_ratelimit);
->  		__entry->task_ratelimit	= KBps(task_ratelimit);
->  		__entry->dirtied	= dirtied;
+Cc: Hidetoshi Seto <seto.hidetoshi@jp.fujitsu.com>
+Signed-off-by: Michal Koutný <mkoutny@suse.com>
+---
+ kernel/cgroup/cpuset-v1.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-I don't know how much of a fast path these tracepoints are in, but instead
-of doing the divisions above, why not just save the values in the ring
-buffer, and do the divisions in the TP_printk() section, which is done when
-the user reads it and not when the code is executing?
+diff --git a/kernel/cgroup/cpuset-v1.c b/kernel/cgroup/cpuset-v1.c
+index 6155d890f10a4..ada6fcdffe0b5 100644
+--- a/kernel/cgroup/cpuset-v1.c
++++ b/kernel/cgroup/cpuset-v1.c
+@@ -175,6 +175,7 @@ static int cpuset_write_s64(struct cgroup_subsys_state *css, struct cftype *cft,
+ 
+ 	switch (type) {
+ 	case FILE_SCHED_RELAX_DOMAIN_LEVEL:
++		pr_warn_once("cpuset.%s is deprecated\n", cft->name);
+ 		retval = update_relax_domain_level(cs, val);
+ 		break;
+ 	default:
+-- 
+2.48.1
 
--- Steve
