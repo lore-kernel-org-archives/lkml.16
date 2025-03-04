@@ -1,44 +1,44 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A65CB1FF1CC
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 08:52:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FABF1FF5F1
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 08:52:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741078378; cv=none; b=EU2miwXEr3ZBHxccLIUfSrgyWcEFO+qijPtbAqYJCzUBvgZyJ1vqlk3NRo/7W3mafxoIyO27Zd8cJBALPziIYkL9b+adW7U9j1NGegIfkOuwz1eNx3d3fgBef93BpFmjWuu4Z6pVeAYXUxhl+KqlDzoId9HtFBq8eEPjVHw5VtQ=
+	t=1741078381; cv=none; b=I/T87Gfx0Hne5k1giPFrH/UxjX14atlDzz4H+v/qeflThEPtaZ2etDjXrEwdFT0g/OWEaxel5Aqp29gQ6f8E4FjC5sd+XTC/MWSxZaihXzJGwMjW1EF5pAjGMAiZK7UGBIBvg4zB3mkFxfDvom7Qlpx33rDqROrKQRE89t4T12U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741078378; c=relaxed/simple;
-	bh=EnEH/HxL7CFApfE2738rn4UaluGnGilQnm9yKXmH4pM=;
+	s=arc-20240116; t=1741078381; c=relaxed/simple;
+	bh=2ISi/BmkfTGvQiIunIigGmW6qc7/h3mdah4zLn6e808=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fYE6ObufytM81aDXx6yKDb3k3k2JgyHOXgJhy2Pr1iYk1SS41qzheo9pYQH217wPedWHmKMdQ8XqWnNHRCGWDAYGCSbzDQvL+QAIb2pj6ehHTjfMfGZEul6Hzg+799vkHKnOYDTx3d4kljE13hoMdV6vqs+9+5d/jCqTOD/NL2A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=CFg9Antq; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=3WGlTcb0; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=pgp/a5U3X02Ne/z+v3vqrJbQQdrHLsLOq1NfYMSN5yywKWz0wdtaskgAi3pkaCj6MpBJ0n5GY8WpIzpvqMGMzpGvSRfbVS1JuOMlh31UxCUhDfbyyirzNr1vuBHfxImUopfydZb+u2S4xU9cJRcgKdOMT0BExLsT99fcQjDIhdA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=eNm4AuxD; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=yfc74S8C; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="CFg9Antq";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="3WGlTcb0"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="eNm4AuxD";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="yfc74S8C"
 From: "Ahmed S. Darwish" <darwi@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1741078375;
+	s=2020; t=1741078378;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=gIkB3EWOtaCyLLbuByoHG0PeQx63B1yTmcOIalcAzmE=;
-	b=CFg9Antq/UQcZuu6IrARirHs+nWuVHcFNTarQvG6e529eblIKQKundAaYXS7vyBhfMZ3lh
-	iX243a0zFhI6xXfVktxAQNrqsexIrE/fQmUToOp5WbSw9QVTcqW58xhzEHzVVMm5/VRjz0
-	lmV1uFMBRgAKyZ+KFHgtfBH9jSqMc5Z/O6vd/su2d9G2Sr515aa3983wugT0j4a1x9ixwQ
-	rsPJOjt28mDGdvfw9BY47+m2VfLRn2N8QmJHgfUcpiB6DpHYZ8sLbXAyGDvqbiEvLWmbq9
-	tzhhUBv6MrZNExxRz03HvfthnXWPVXTgSiHCxmVT7brWwrCQkUE/uLqTRLvq/Q==
+	bh=dEB1hgCePv+Z7eLVlwXr81lW6Eepp/nb4cZzNnOU4zE=;
+	b=eNm4AuxDKI+Iznd/DSfUs3X7G0l0krIVgfu9p1n18jDtJmcFdwm9ReZ0zRTRLpPd6K5pH6
+	0IQEjLLcRKSeCzNOCFsQgivMiWI+co+BcwNxuM2QnnrNAF44OkClqBw1IjzBxS9fohbepR
+	rYcpI8epwwBTHRd8Lvx7wciEZm2fKqPQdAPrjYxZrsMOu3nV9FIl7mW4bmVYOApjNI8ReI
+	7yHTNV4SrmmdYMxRelEtjE7P3LvzC5++uVIhnjiofEeRQiynRjBLQgem1r3H8Ja0pH5qTS
+	842487dFhRRdUfduhjAAV8sqm/buEHSeZzwV6pOjNkst/5C498d7H9Zpv0Vxmw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1741078375;
+	s=2020e; t=1741078378;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=gIkB3EWOtaCyLLbuByoHG0PeQx63B1yTmcOIalcAzmE=;
-	b=3WGlTcb08Zk/VlD+EYPxL7YSE+/5yDkNPktNeGTZp/kSE9SUDT8XeOOBdtN+Hq5S1+uG0e
-	vNdvaHciFcQyScBA==
+	bh=dEB1hgCePv+Z7eLVlwXr81lW6Eepp/nb4cZzNnOU4zE=;
+	b=yfc74S8CthYcAJri1vgvQ2qzJT3z32Q4wDS7oPWCN82jTXeWj0qsn3ZiSHUZsc97yzG1bb
+	3LZdaSkr0+x6CeCw==
 To: Borislav Petkov <bp@alien8.de>,
 	Ingo Molnar <mingo@redhat.com>,
 	Dave Hansen <dave.hansen@linux.intel.com>
@@ -50,9 +50,9 @@ Cc: Thomas Gleixner <tglx@linutronix.de>,
 	x86-cpuid@lists.linux.dev,
 	LKML <linux-kernel@vger.kernel.org>,
 	"Ahmed S. Darwish" <darwi@linutronix.de>
-Subject: [PATCH v1 14/40] x86/cacheinfo: Refactor leaf 0x2 cache descriptor lookup
-Date: Tue,  4 Mar 2025 09:51:25 +0100
-Message-ID: <20250304085152.51092-15-darwi@linutronix.de>
+Subject: [PATCH v1 15/40] x86/cacheinfo: Properly name amd_cpuid4()'s first parameter
+Date: Tue,  4 Mar 2025 09:51:26 +0100
+Message-ID: <20250304085152.51092-16-darwi@linutronix.de>
 In-Reply-To: <20250304085152.51092-1-darwi@linutronix.de>
 References: <20250304085152.51092-1-darwi@linutronix.de>
 Precedence: bulk
@@ -65,97 +65,67 @@ Content-Transfer-Encoding: 8bit
 
 From: Thomas Gleixner <tglx@linutronix.de>
 
-Extract the cache descriptor lookup logic out of the leaf 0x2 parsing
-code and into a dedicated function.  This disentangles such lookup from
-the deeply nested leaf 0x2 parsing loop.
+amd_cpuid4()'s first parameter, "leaf", is not a cpuid leaf as the name
+implies.  Rather, it's an index emulating CPUID(4)'s subleaf semantics;
+i.e. an ID for the cache object currently enumerated.  Rename that
+parameter to "index".
 
-Remove the cache table termination entry, as it is no longer needed
-after the ARRAY_SIZE()-based lookup.
+Apply minor coding style fixes to the rest of the function as well.
 
-[darwi: Move refactoring logic into this separate commit + commit log.
-	Remove the cache table termination entry.]
+[darwi: Move into a separate commit and write commit log.
+        Use "index" instead of "subleaf" for amd_cpuid4() first param,
+	as that's the name typically used at the whole of cacheinfo.c.]
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Signed-off-by: Ahmed S. Darwish <darwi@linutronix.de>
 ---
- arch/x86/kernel/cpu/cacheinfo.c | 45 +++++++++++++++------------------
- 1 file changed, 20 insertions(+), 25 deletions(-)
+ arch/x86/kernel/cpu/cacheinfo.c | 15 ++++++---------
+ 1 file changed, 6 insertions(+), 9 deletions(-)
 
 diff --git a/arch/x86/kernel/cpu/cacheinfo.c b/arch/x86/kernel/cpu/cacheinfo.c
-index ebd72016e7a2..3be7ea8444ec 100644
+index 3be7ea8444ec..24a7503f37e2 100644
 --- a/arch/x86/kernel/cpu/cacheinfo.c
 +++ b/arch/x86/kernel/cpu/cacheinfo.c
-@@ -123,7 +123,6 @@ static const struct _cache_table cache_table[] =
- 	{ 0xea, LVL_3,      MB(12) },	/* 24-way set assoc, 64 byte line size */
- 	{ 0xeb, LVL_3,      MB(18) },	/* 24-way set assoc, 64 byte line size */
- 	{ 0xec, LVL_3,      MB(24) },	/* 24-way set assoc, 64 byte line size */
--	{ 0x00, 0, 0}
+@@ -233,12 +233,10 @@ static const enum cache_type cache_type_map[] = {
  };
  
- 
-@@ -728,6 +727,16 @@ void init_hygon_cacheinfo(struct cpuinfo_x86 *c)
- 	ci->num_leaves = find_num_cache_leaves(c);
- }
- 
-+static const struct _cache_table *cache_table_get(u8 desc)
-+{
-+	for (int i = 0; i < ARRAY_SIZE(cache_table); i++) {
-+		if (cache_table[i].descriptor == desc)
-+			return &cache_table[i];
-+	}
-+
-+	return NULL;
-+}
-+
- void init_intel_cacheinfo(struct cpuinfo_x86 *c)
+ static void
+-amd_cpuid4(int leaf, union _cpuid4_leaf_eax *eax,
+-		     union _cpuid4_leaf_ebx *ebx,
+-		     union _cpuid4_leaf_ecx *ecx)
++amd_cpuid4(int index, union _cpuid4_leaf_eax *eax,
++	   union _cpuid4_leaf_ebx *ebx, union _cpuid4_leaf_ecx *ecx)
  {
- 	/* Cache sizes */
-@@ -784,35 +793,21 @@ void init_intel_cacheinfo(struct cpuinfo_x86 *c)
+-	unsigned dummy;
+-	unsigned line_size, lines_per_tag, assoc, size_in_kb;
++	unsigned int dummy, line_size, lines_per_tag, assoc, size_in_kb;
+ 	union l1_cache l1i, l1d;
+ 	union l2_cache l2;
+ 	union l3_cache l3;
+@@ -251,7 +249,7 @@ amd_cpuid4(int leaf, union _cpuid4_leaf_eax *eax,
+ 	cpuid(0x80000005, &dummy, &dummy, &l1d.val, &l1i.val);
+ 	cpuid(0x80000006, &dummy, &dummy, &l2.val, &l3.val);
  
- 	/* Don't use CPUID(2) if CPUID(4) is supported. */
- 	if (!ci->num_leaves && c->cpuid_level > 1) {
-+		const struct _cache_table *entry;
- 		union leaf_0x2_regs regs;
- 		u8 *desc;
- 
- 		get_leaf_0x2_regs(&regs);
- 		for_each_leaf_0x2_desc(regs, desc) {
--			unsigned char k = 0;
--
--			/* look up this descriptor in the table */
--			while (cache_table[k].descriptor != 0) {
--				if (cache_table[k].descriptor == *desc) {
--					switch (cache_table[k].cache_type) {
--					case LVL_1_INST:
--						l1i += cache_table[k].size;
--						break;
--					case LVL_1_DATA:
--						l1d += cache_table[k].size;
--						break;
--					case LVL_2:
--						l2 += cache_table[k].size;
--						break;
--					case LVL_3:
--						l3 += cache_table[k].size;
--						break;
--					}
--
--					break;
--				}
--
--					k++;
-+			entry = cache_table_get(*desc);
-+			if (!entry)
-+				continue;
-+
-+			switch (entry->cache_type) {
-+			case LVL_1_INST: l1i += entry->size; break;
-+			case LVL_1_DATA: l1d += entry->size; break;
-+			case LVL_2:	 l2  += entry->size; break;
-+			case LVL_3:	 l3  += entry->size; break;
- 			}
- 		}
+-	switch (leaf) {
++	switch (index) {
+ 	case 1:
+ 		l1 = &l1i;
+ 		fallthrough;
+@@ -289,12 +287,11 @@ amd_cpuid4(int leaf, union _cpuid4_leaf_eax *eax,
  	}
+ 
+ 	eax->split.is_self_initializing = 1;
+-	eax->split.type = types[leaf];
+-	eax->split.level = levels[leaf];
++	eax->split.type = types[index];
++	eax->split.level = levels[index];
+ 	eax->split.num_threads_sharing = 0;
+ 	eax->split.num_cores_on_die = topology_num_cores_per_package();
+ 
+-
+ 	if (assoc == 0xffff)
+ 		eax->split.is_fully_associative = 1;
+ 	ebx->split.coherency_line_size = line_size - 1;
 -- 
 2.48.1
 
