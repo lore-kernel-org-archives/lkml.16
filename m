@@ -1,136 +1,97 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9787202F90;
-	Tue,  4 Mar 2025 14:01:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83BC142A9E;
+	Tue,  4 Mar 2025 14:01:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741096880; cv=none; b=OB+pnYgUwsh4xz22XXjyRs+Otk8Z8wSNiwxLQHCzGEU3FaUNo8XkFWEVpROlutkBvaccvP1pVZgoHGk3v/VER0IYtDUyeq8fGsTFRq17bgGMrt4En1dqq1BsuRA+qZh5h6VNuFQM+08qfu57q6dU/ll0iY2F3S6cM9L5jBXiaio=
+	t=1741096921; cv=none; b=qVJgb7ITZuYIX2vmQQAlSmbLJMpNQO9fjVTEQZgs1olVg5Q9BHyXVNvkWafTiT6d4IPHdZQY1/hrJm1Gj6db3gZ+q21LkKiOS93nm2dKmrhbcwPKcSZUtzNpiZ18bILkqzxqy9ECyRygPqebC6CQ66/TQwXLFPxPisZV/no8tCM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741096880; c=relaxed/simple;
-	bh=vJyQB5Blh3KGhbpLZmZIfPJA0eS8D7VJOGBnqE9Cvcg=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version; b=c+s3rjArvtiE9Iye2Col3dJF6w6RVOtdHQafl58TeFiqezXCr3yIZSwtNK5gYezM5HAFDl6psgnttwswFX269ecm6FLpaxQY2krdOItSlUNUk0gtt0Y/byziTuF3J3UL9tXw3G+n6m8WWxEUpZegUsRY+7nyCBuuqesEaIyRBNo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kNIWBPfE; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1741096921; c=relaxed/simple;
+	bh=uiZsGkjVPALBqyMp/QBuYMSVQNJhd7VY33/kwzTcb58=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=JK6bYaiUvA2yq2qScaD8OT11BSARJh+998xOhVGsBXo2oM6iQ2BGmoE559fRZAiIs4S9bevMOnFgAM3IkaMiGfysZvqszUb6cyJIaooWGrOWUsAOCBwfabR6b91SlY/f5gsnZYApyUW+fXFjgXMTwGuSHM5aza3MG4epcGp3reA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=S8cuiZyj; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kNIWBPfE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741096878; x=1772632878;
-  h=from:to:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=vJyQB5Blh3KGhbpLZmZIfPJA0eS8D7VJOGBnqE9Cvcg=;
-  b=kNIWBPfEOu8CrxZrboRXrG8yNBo/AbX5vOUboRAjivhrTFG6xNYtvmLb
-   2K3gXdqcZudZHy4OcTxsm7wPmDJkBwC+cWNTK3LIKVK+/T9fofvxFAp+q
-   sM08PrUpqs8g0q8c/2Ts37wRUf1EcbWUiS5WT/kMD7TADVMSX9BDTWJdM
-   pMYz6pTc9F1OWQbq9oqbeZ9/gaWH3rrCN7HzHmH5KDImVJO5k4KgUaz6S
-   bRbimsnvN94rk7rZXiHF2th7IDyoMeRsd6Zwbvprozw1GCLGiOdqTJq5c
-   FtEjWs0GFkrq6qiqJtk7mDWHfQ6zmtMGkUHgRGJlZYj7oEzlrhTcljZY5
-   w==;
-X-CSE-ConnectionGUID: ISXKQ6bvSiONRSuo78QACQ==
-X-CSE-MsgGUID: rt5XKkawSJSMA91fz+sQQQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11363"; a="42261681"
-X-IronPort-AV: E=Sophos;i="6.14,220,1736841600"; 
-   d="scan'208";a="42261681"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2025 06:01:17 -0800
-X-CSE-ConnectionGUID: VTHynAnQTIGub0JKGisgzA==
-X-CSE-MsgGUID: VTWkiimRTJW1rhom4ATjmw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,220,1736841600"; 
-   d="scan'208";a="119060914"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa009.fm.intel.com with ESMTP; 04 Mar 2025 06:01:17 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 4249E27D; Tue, 04 Mar 2025 16:01:15 +0200 (EET)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Guenter Roeck <linux@roeck-us.net>,
-	Wim Van Sebroeck <wim@linux-watchdog.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	linux-watchdog@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/1] watchdog: nic7018_wdt: tidy up ACPI ID table
-Date: Tue,  4 Mar 2025 15:45:35 +0200
-Message-ID: <20250304140114.1812452-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.47.2
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="S8cuiZyj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1741096917;
+	bh=uiZsGkjVPALBqyMp/QBuYMSVQNJhd7VY33/kwzTcb58=;
+	h=From:Subject:Date:To:Cc:From;
+	b=S8cuiZyjljT3JMmX+9hETnyOta6k0GRU4it8yY/35FwzmfIUlRkDOOAhB3hsbuCb1
+	 bJWt2KEtORIXlLwHLjLrGKm0TxXbzfha3YVhR6sx39o1qsg4x+mMeKOfqTDoRTQm2R
+	 L4PlWbdkq8dMTcfM7KKCwAd4JN0dvs6Z7O4tbDzrZH0GSamsZvQP1gb3aOCWyufwT9
+	 dsmX42SS752HzjU0Jbk/BNMp6FtxXgIW56oGFCZPAfcvCdOVP0SuAjS9rZwTX66zoh
+	 6qFqmCN4sLpwy0zFUAX5juohusVRIETqtOFOJv0EKiZziajDQLmsJ420rHem8BDpUe
+	 1yavBZ+okHL5w==
+Received: from apertis-1.home (2a01cb0892F2D600C8F85cf092d4Af51.ipv6.abo.wanadoo.fr [IPv6:2a01:cb08:92f2:d600:c8f8:5cf0:92d4:af51])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: jmassot)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 242AD17E087E;
+	Tue,  4 Mar 2025 15:01:57 +0100 (CET)
+From: Julien Massot <julien.massot@collabora.com>
+Subject: [PATCH v2 0/2] mt8395-radxa-nio-12l: Add overlay for Radxa 8HD
+ panel
+Date: Tue, 04 Mar 2025 15:01:54 +0100
+Message-Id: <20250304-radxa-panel-overlay-v2-0-3ee6797d3f86@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIANIHx2cC/32NQQ6CMBBFr0Jm7Ris1FBX3sOwGNpBmlRKpqaBE
+ O5u5QAu30v++xskFs8J7tUGwtknH6cC6lSBHWl6MXpXGFStdK3UDYXcQjjTxAFjZgm0om5U43q
+ jjdEWynIWHvxyVJ9d4dGnT5T1OMmXn/3fyxes0XBrrq0beib3sDEE6qPQ2cY3dPu+fwFbL20Nu
+ gAAAA==
+X-Change-ID: 20250226-radxa-panel-overlay-5424db95995c
+To: kernel@collabora.com, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Matthias Brugger <matthias.bgg@gmail.com>, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
+ kernel@collabora.com, Julien Massot <julien.massot@collabora.com>
+X-Mailer: b4 0.14.2
 
-Tidy up ACPI ID table:
-- drop ACPI_PTR() and hence replace acpi.h with mod_devicetable.h
-- remove explicit driver_data initializer
-- drop comma in the terminator entry
+Hi,
+small series to enable a DSI panel on Radxa NIO 12L.
 
-With that done, extend compile test coverage.
+The first patch adds missing dts nodes to expose some
+feature of the DSI0 port.
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+The second patch adds the Radxa 8 HD panel as an overlay.
+
+Tested on top of linux-next tag:next-20250303
+
+Signed-off-by: Julien Massot <julien.massot@collabora.com>
 ---
+Changes in v2:
+- Moved video pipeline enablement to the overlay (ovl0, vdosys0)
+- Keep backlight disabled in the board dts, enabled in the panel overlay
+- Test again on Linux next-20250303
+- Link to v1: https://lore.kernel.org/r/20250226-radxa-panel-overlay-v1-0-9e8938dfbead@collabora.com
 
-v2: fixed the dependency to be on HAS_IOPORT (LKP)
+---
+Julien Massot (2):
+      arm64: dts: mediatek: mt8395-nio-12l: Prepare MIPI DSI port
+      arm64: dts: mediatek: mt8395-radxa-nio-12l: Add Radxa 8 HD panel
 
- drivers/watchdog/Kconfig       | 3 ++-
- drivers/watchdog/nic7018_wdt.c | 9 +++++----
- 2 files changed, 7 insertions(+), 5 deletions(-)
+ arch/arm64/boot/dts/mediatek/Makefile              |  2 +
+ .../mediatek/mt8395-radxa-nio-12l-8-hd-panel.dtso  | 84 ++++++++++++++++++++++
+ .../boot/dts/mediatek/mt8395-radxa-nio-12l.dts     | 45 ++++++++++++
+ 3 files changed, 131 insertions(+)
+---
+base-commit: cd3215bbcb9d4321def93fea6cfad4d5b42b9d1d
+change-id: 20250226-radxa-panel-overlay-5424db95995c
 
-diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-index f81705f8539a..a2ed9ee0b808 100644
---- a/drivers/watchdog/Kconfig
-+++ b/drivers/watchdog/Kconfig
-@@ -1730,7 +1730,8 @@ config NI903X_WDT
- 
- config NIC7018_WDT
- 	tristate "NIC7018 Watchdog"
--	depends on X86 && ACPI
-+	depends on HAS_IOPORT
-+	depends on ACPI || COMPILE_TEST
- 	select WATCHDOG_CORE
- 	help
- 	  Support for National Instruments NIC7018 Watchdog.
-diff --git a/drivers/watchdog/nic7018_wdt.c b/drivers/watchdog/nic7018_wdt.c
-index 44982b37ba6f..44b5298f599a 100644
---- a/drivers/watchdog/nic7018_wdt.c
-+++ b/drivers/watchdog/nic7018_wdt.c
-@@ -3,12 +3,13 @@
-  * Copyright (C) 2016 National Instruments Corp.
-  */
- 
--#include <linux/acpi.h>
- #include <linux/bitops.h>
- #include <linux/device.h>
- #include <linux/io.h>
-+#include <linux/mod_devicetable.h>
- #include <linux/module.h>
- #include <linux/platform_device.h>
-+#include <linux/types.h>
- #include <linux/watchdog.h>
- 
- #define LOCK			0xA5
-@@ -229,8 +230,8 @@ static void nic7018_remove(struct platform_device *pdev)
- }
- 
- static const struct acpi_device_id nic7018_device_ids[] = {
--	{"NIC7018", 0},
--	{"", 0},
-+	{ "NIC7018" },
-+	{ }
- };
- MODULE_DEVICE_TABLE(acpi, nic7018_device_ids);
- 
-@@ -239,7 +240,7 @@ static struct platform_driver watchdog_driver = {
- 	.remove = nic7018_remove,
- 	.driver = {
- 		.name = KBUILD_MODNAME,
--		.acpi_match_table = ACPI_PTR(nic7018_device_ids),
-+		.acpi_match_table = nic7018_device_ids,
- 	},
- };
- 
+Best regards,
 -- 
-2.47.2
+Julien Massot <julien.massot@collabora.com>
 
