@@ -1,241 +1,253 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2047.outbound.protection.outlook.com [40.107.243.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 524D627F4C1
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 15:57:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741103872; cv=none; b=eBL22BTpXtEGF/IlC1tkrGcxW/bkCkYxi3RkTzDDENuvSZoMI6S44PkZ3tLBxjrIbbgCv6ogbMAbLZ5WTOyiN5iF+iJVTfDd2r2CcVLy5qsa0bTF8fOqjqxJQbhrXIoFjxrXYlIXE0D7tlhx6xugmcYSC8vojHxgy1b4GRV58CM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741103872; c=relaxed/simple;
-	bh=0A5RzxULdn6BnG/wUjI8HXWCUR1CnoyxE7bNXv0lXO0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Jg/NH1vyJi29NKP2+QzFZx2bMbMAhhijUSuZo2/kzaAE9Qbi7Z82WtIQ1HunR/RA8qTJAwFEYaYsR+G5by4BIRZ14xkrKJCURqp03KxX7+iqBOpstqWrmXbIPiWZiwFhKu7z6mEQ+LIWlB5UgEXH2cnn3lzzk8U97NlDqpIAt1I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KrNgxOAf; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47B2D27F4C1;
+	Tue,  4 Mar 2025 15:57:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.47
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741103879; cv=fail; b=FnHZOTcCcrkcPZuBEN95p8NQd8LFXWDp7R64yWarPFxw3vNTNteuMVYGXKGdEgGPuw8VFwFMBe7qp98d2qvyCZnS5bioLJ976W25kFLu3GyHzgaT0sbZ0iCIsDJuyBmAuhZDD6OX0E1jqlYKyUl4PuZMxMCQQvlFPM408rCgzoU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741103879; c=relaxed/simple;
+	bh=tesTLzsJBXk7HI10qCwfN+ymDxVmyx2OTm7TXfUecRw=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=IIyxGuAZZmenUYXKBSrxtWqqsTALN6BTnS7HT9pnZpKEd3Eeoaqb3RbAkX6I85CXKRBdqAJ593c2iquLcjFHhzRAo98TfNmGU/sOLW3QYlsu/6U3Pt/xhj7vehVgNWxPQmov9yzBaAB6nKlH/KX5TtEX0IIl9quLYANX0S1PKf0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=fDAI498l; arc=fail smtp.client-ip=40.107.243.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KrNgxOAf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1741103869;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=I5c+TIt92FxB8qVNIe2L0vIj1KttGJBjP8IGbM1VlN8=;
-	b=KrNgxOAfXLuasfXDxMVK8GM7BfkdC2CHT9gSDKhaGt5nXHqB5jM9ARlg9ADqoWmFoFWTgN
-	oZKMMKsuQEVDuZioJGpoQsIDaNU+HdnU2LRRJjSN6QdwD+eK8ll6URLNJgeGJMOY/LC5Ct
-	kfP7kaWOpA2EdO6afSTZwf2mfaIhlDI=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-318-Xp_550LOPBas6fCGZ3iO5A-1; Tue, 04 Mar 2025 10:57:26 -0500
-X-MC-Unique: Xp_550LOPBas6fCGZ3iO5A-1
-X-Mimecast-MFC-AGG-ID: Xp_550LOPBas6fCGZ3iO5A_1741103845
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-43935e09897so42263805e9.1
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Mar 2025 07:57:26 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741103845; x=1741708645;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=I5c+TIt92FxB8qVNIe2L0vIj1KttGJBjP8IGbM1VlN8=;
-        b=EJ19qiaPaa7z/BE0y6EFKKywQ0DXku9bRzWyZd7wWbHVCNXROyPRuRNhLrz64ShL0T
-         dDxQlgrmVm+34oSFcWbqSLZiGJ825HXJgRfXVGeI7LZCZM2gSwps9Ad8seFL/luB4q4V
-         OIyuxEw5Jh2EP3vgfsBxU3BXltgDYuw4GT7IFU4a8EMoTUIW4pFR86C+9pOsiKo5BibK
-         bk0mLWz01jc00gKDPF765GL5DxSCmcr/QI2EbSVGUfz4v7mIJLpty0bnirwM+5+AnyHC
-         jwKKuTQFMZQsarpDYnWR9P0tbgeQMJTHhjbd+Dv+LgCxqKGIb1ld09RErcIldV2eFEhb
-         B8XA==
-X-Gm-Message-State: AOJu0YyVrEKxOWo8bPtSZ4icN431LBKvFwAe6o3jxchzQaQjw42hY+E/
-	HHDj+kVUslCozTHnr3Z2oVLVlCHzGwRD4tjpXp6LsL5znPq/YmbXsd0ZPUT4rZXFurQdG7MTjr/
-	w2hyERjvd98h4qo85Y7q5YdpE50ea+1S7+5Gfr4+lsBlFUsCC8KlZjv2atPfHlw==
-X-Gm-Gg: ASbGncv26eysA3hZvJayGcw6pBgEvofzm+aAw3XP+xiLFrr9QV/7A2LwFhUk8kqyEBW
-	fe/enDKWg0br127oaExkyWW9dYY2+omvt6NscS6nYMDEz58INlyMViZFBNPwxFDB73Il9BTp+LC
-	k5UWloxvojAu04iwBb4EZM9p9E43LFwXbT5aZmDiClQNLbPLn2A8VHUPmgSPakjYWXgF5zvihwf
-	/qqgpufgwOJ/zDFLhyaMqRl+HHFCMzXf1R3vOIGA8NrDexXoWcFIc7vszEK6N3toYJuS+ksFMqw
-	58CRiofp9gIFil5yCAF5f8raKOxSX9BZc4BZJCqC6RpBGENUmSnMj0hdhZv5s+O314eBGJTb8z7
-	e5iHh
-X-Received: by 2002:a05:600c:4f86:b0:43b:ca39:a9ca with SMTP id 5b1f17b1804b1-43bca39ac88mr48532085e9.16.1741103845271;
-        Tue, 04 Mar 2025 07:57:25 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IF551Hnt03L5tmeixMOfNScnGLbQ9obdAPDfAXfF76/qxOEU3+vZ2la9fN5VW2oCHpNIfsibg==
-X-Received: by 2002:a05:600c:4f86:b0:43b:ca39:a9ca with SMTP id 5b1f17b1804b1-43bca39ac88mr48531665e9.16.1741103844801;
-        Tue, 04 Mar 2025 07:57:24 -0800 (PST)
-Received: from jlelli-thinkpadt14gen4.remote.csb (host-89-240-117-139.as13285.net. [89.240.117.139])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43bcbb82074sm29324895e9.28.2025.03.04.07.57.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Mar 2025 07:57:24 -0800 (PST)
-Date: Tue, 4 Mar 2025 15:57:22 +0000
-From: Juri Lelli <juri.lelli@redhat.com>
-To: Waiman Long <llong@redhat.com>
-Cc: linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
-	Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>, Tejun Heo <tj@kernel.org>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>,
-	Qais Yousef <qyousef@layalina.io>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Swapnil Sapkal <swapnil.sapkal@amd.com>,
-	Shrikanth Hegde <sshegde@linux.ibm.com>,
-	Phil Auld <pauld@redhat.com>, luca.abeni@santannapisa.it,
-	tommaso.cucinotta@santannapisa.it,
-	Jon Hunter <jonathanh@nvidia.com>
-Subject: Re: [PATCH 2/5] sched/topology: Wrappers for sched_domains_mutex
-Message-ID: <Z8ci4jq5IhYGkxtk@jlelli-thinkpadt14gen4.remote.csb>
-References: <20250304084045.62554-1-juri.lelli@redhat.com>
- <20250304084045.62554-3-juri.lelli@redhat.com>
- <c02dd563-7cfc-404d-80d1-cec934117caf@redhat.com>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="fDAI498l"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=SEgADAMKGOlD8Ie3MruiCkvFpE3d1qaQX3eKGmbl+6/rtrrC9qXlDMCIyvZm8VmCJ75Bkc9X4APRmr/w8v0gIEV1+G625/LVrCNjUEcmzBUkWG+LTjL5XW2p5mnLzIZk73l+XiYZmofLw+fIpw2NEUT1Z6NIJLyze7w6ACOBtx3UuDeckYJSXVReL+jAn27czrc7PaAE/CEMR2RteBBheAixMkjznkWD0P6ZKNwMGneiq2yGXH+IuStE6kb7XKbWAXm6GCLjLrdnOmIgwH9YKV1HkGaCYZVhIFv5ZcZW2gGC+jtCSu0LIaJqVFhTCQ15k2vYSr2UOo8yplNJczaGoA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=F/0KwfEA+Cjb/eYXAQsaYeMfOJNkl1XjO430uRjjHVk=;
+ b=h33EF5sONlkN2pAGjTd/FvUmGr+Svs2s//FuPL01ULGOQdoOxzUaDPoUeF+P/7nKDL2t05kuxcew5izL53DVTRXkuPokKqz2Cyx7ttcS/j8f7hM++xkgMq8QTAt0hOuJCvydDdtKIBpAQi1Y3kojgyvoRWN+HgizZuqc0dHg97DvX7UaJDfvxnFbbvRRogx1vvl8vdGZvDylzkDnNb0cKmmxraRsLqRfDcOvp3JRcLxSP6CIVv6HH+jH43h3Df1jFPE7AYapk+0gsnliKf7lmJlyH0BVALe0tP4X/pbHpYUziXCqwyBIfniZNtGwUZguYNupc7tY6ndhPOzxgaqMXQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=F/0KwfEA+Cjb/eYXAQsaYeMfOJNkl1XjO430uRjjHVk=;
+ b=fDAI498ldOUN/54blcGZI72sYmjeJYsYTLeJY0pbiCokWGH2p3M/6yLMYI7WrJIaBxmgr95bPnNBTF4OOxxb7bidq5eeeWChmpk2c5y9QkmGSOduXcIxcgdOm7CtAN1u2ZNpzEnEnh/O3Hix3c1yayECwyvvjEZyiSHfzWtIiU8dZC5V38i2YlJh+D/oIl+trvGMj5LcFnmgpWurUDYSwQDYxBNYvk4s97dRNFsebvjKV8MGLu/RReBbch7e3aARCHiKFp9/fYOydJgxvLtpOIKXRjwY2syCUA6H6ptEdpKIffUmsiEz9WG8Hk2Gsfw0pDkG8accomFlaVvvdSlD7A==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CH3PR12MB8583.namprd12.prod.outlook.com (2603:10b6:610:15f::12)
+ by LV8PR12MB9360.namprd12.prod.outlook.com (2603:10b6:408:205::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.29; Tue, 4 Mar
+ 2025 15:57:54 +0000
+Received: from CH3PR12MB8583.namprd12.prod.outlook.com
+ ([fe80::32a8:1b05:3bcf:4e4]) by CH3PR12MB8583.namprd12.prod.outlook.com
+ ([fe80::32a8:1b05:3bcf:4e4%5]) with mapi id 15.20.8511.017; Tue, 4 Mar 2025
+ 15:57:53 +0000
+Message-ID: <cf97f6fd-d40a-43f0-8b58-ad51d602fdfd@nvidia.com>
+Date: Tue, 4 Mar 2025 17:57:47 +0200
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] RDMA/mlx5: Prevent UB from shifting negative signed value
+To: Qasim Ijaz <qasdev00@gmail.com>, leon@kernel.org, jgg@ziepe.ca
+Cc: linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org
+References: <20250304140246.205919-1-qasdev00@gmail.com>
+Content-Language: en-US
+From: Patrisious Haddad <phaddad@nvidia.com>
+In-Reply-To: <20250304140246.205919-1-qasdev00@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: FR0P281CA0096.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:a9::9) To CH3PR12MB8583.namprd12.prod.outlook.com
+ (2603:10b6:610:15f::12)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c02dd563-7cfc-404d-80d1-cec934117caf@redhat.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH3PR12MB8583:EE_|LV8PR12MB9360:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6b0838a2-8816-45ed-9cd8-08dd5b3552b8
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?TnVuSkF5YkF1akVDSU9kcHIrcXBiNUl2YUNaSmpLWjhjVzZaZk9FMEJURWpp?=
+ =?utf-8?B?MnlZMitWcFptWk5DREg1enZaa29tZHRyMjBVZ09YemduczlUVFIxME9mckQr?=
+ =?utf-8?B?Yzg3aTNUZDN3TThBMjBvQ2RiNThnUlhJY1lsQW1raHVIeVE3VjFndk1nclBs?=
+ =?utf-8?B?RFhEZmJhbk4vT2tFdmprWENTMEo1c2VacTQ1amg5dDhwMndSakxjVXI5Qm1R?=
+ =?utf-8?B?WUFCV0JzU2hNWmNGZWhacVJRRnJIODdDL0UrWVAvSHFLcTRyUUt6djRLc2FW?=
+ =?utf-8?B?SDdKY1ZLbjNneXM1RHhkU0VYVkVvMG5Qb280NldpYlY2MkhMbzIvNzhTMHRU?=
+ =?utf-8?B?Nk1CSHprV2s2UG5SL3JNdTIrWGRQY3pKb1V6Tnc2M3VWLzZUSHhkbUVtcFoy?=
+ =?utf-8?B?NTV4RmhqQ2EwTmpBcDJoVSs5S2VmeFVhWUNUdGY2UnROV0hrd1V3bW02T21M?=
+ =?utf-8?B?THRsOWFqRjNEZVVjVXF2ZTQ1alUyaTJadU5IZDhKc2RRVTNiTWNrMjVtOWFW?=
+ =?utf-8?B?U1EzSmJiZG1sRTJLZ3BWeGs4OUF5aE50UTQrZk1yLzkzYldZajI2SlNaRW1s?=
+ =?utf-8?B?eGo5WmJYYUVUWmZKVkRrMGpuYk91UGFLcGVxUFR2SlY2elB1WFlPcVowRFRM?=
+ =?utf-8?B?bFlJS3lkb1ZFVWhlSGVLSjJ5QXpzbVdXMktaTzcwQTQwMHJLdjV4WUdrR2VG?=
+ =?utf-8?B?QmRxZnBtbEpRUit5VGRySU1nb2lQNzJ4NVhNOWRkbXc0SFljdXl0Zmp5QWFJ?=
+ =?utf-8?B?WGhGdnJmSFJia0hreTA1dHUwYzFuMWtCVCtmTzBuVmZoRHNwVDBvVy8zTzQz?=
+ =?utf-8?B?ZzR2S1ZBRldzL3pOMWFtRVdnMU9EUGhRd2NZSTZxOTlRTzdJZ08veDhIaStq?=
+ =?utf-8?B?QUcyMmNMMUJMUDN1QmZNeDBBNENtY0JVSFA1czlzbDJBend3a1FzZWxKVEdy?=
+ =?utf-8?B?QzQ4TWswM0draFNPSytybUV1eDRRNzVsM1VLcVlzR09MdDFLWXVwTXZVUk1y?=
+ =?utf-8?B?blVnS0E4RSs5bUZvVk9OZGZyUGxUcHNXbWZQUEpYY1JtTTZQMVZaei9oMXMv?=
+ =?utf-8?B?cGg2ZEJrSUFpTnkzZmw5M0RCSTgydlpkOHhWN0FncEI3WE8wbTYySUdFNGs4?=
+ =?utf-8?B?b1R6YW5jNzF6WEU4RWgyYTJXV0xyYVNvbnorQy96Y29BbVNtakRvZ2VnaURP?=
+ =?utf-8?B?UGxMbkozb1RaWGRLdkhFM09KekN5KzI2T2E5WFVzT0pETXNSYkF5VmFOTUJ1?=
+ =?utf-8?B?NVkyaFhhWjhmMVJ2QTQzZXZnVlZYYjR0THJCQ2doclA5V3U2Q2laK1NXVHIw?=
+ =?utf-8?B?WnBET3RsZGQzbDhSS3V6U20xeHFGWkhCbnVBTGlwUjhXajZWZFNUdENGamls?=
+ =?utf-8?B?TWFoRTdiaEtjK3lGcnB4aGJydEZWa0MyOU5Zdk9BWDRsMlhkZzNmTDJYV2tT?=
+ =?utf-8?B?MExqRnE2Y0QzajN2cWFtYWx0TkdHMzJTcjhjSDR3ZnU3eW9hTmxjNzlsaUFJ?=
+ =?utf-8?B?aUQvUGVqYm1OK0QwcTA1Zm55dEJrejVyeEpuSXZ5QUhrMm16aFdhZVpMWExj?=
+ =?utf-8?B?R3dhalJGVC8wL0YwZlB2T05aNnlkSXIwSk1Penc3Nm5pVGx4dDVNazQzZ1FG?=
+ =?utf-8?B?UU5LOHdMNXVCR3I2OEVValhVdnZOOW1kRlNhekpwRjFhK0VLQURrdEN0SEtD?=
+ =?utf-8?B?RVdjZVdQQVoxYXY3a2xmT1N2dkRzaE9RSlZlNC9BMDYzMkg1elJZWDI3WGZw?=
+ =?utf-8?B?MW5xSFM2MW9kenNSbDk0ekd6aW1GTVVPcVB4TWNyR1dnTjZtQkI4UDhXMTdk?=
+ =?utf-8?B?enB3YUxOSU9MekxFaHVka1JJREs0eDJKMW5oRmZtdCtTenp5b1p2SiswcGhh?=
+ =?utf-8?Q?gjCVni2vZ6hwk?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8583.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?OXB1WVVjUlhac2kvcFNHc3plUjhqNGh4a3VkelhKVXlpU2NmMEt1bkFWV2h5?=
+ =?utf-8?B?TkI1cGVCdlp4TXN2V3J3MUFNdHNTYTFEMHNzc2NLSTNiQTdSS3hyaG80M2JC?=
+ =?utf-8?B?Y29pemF2cFYzRmtsa0tETE9sdTdJNC8rcW4zMnk1dHpDYkVZS1FEQk9teFdk?=
+ =?utf-8?B?aHRRMGJtK01IMjMyMmJIWVhheHJwR1d1NUZCY1p0NVFHZnkzNTBRd2lHbnNZ?=
+ =?utf-8?B?V1NpMHhYd24ya256TEUzQUlFSWZOWCtJZHlCalhtdFpETFNSZWo1RUlnTFYx?=
+ =?utf-8?B?TjMrVElFSlBRMHdBekszS2JVZHhjcm5HQUdITk5RQUFLc1NuMWExZ3BVMUVt?=
+ =?utf-8?B?MzV4WUR3K1d4djBJL0E4Q0llRGVOd2JPVkl5TUp1czVhZVFReUhEeUd0LzNt?=
+ =?utf-8?B?TGJUYytlMml0SXJ2byswTXlkQ2t6L3NtbkNFcFdiWmJHcWJnVUhRaHJQWGcv?=
+ =?utf-8?B?aWpac04zcG5UbzdxdlJTcCtUYnRhaWM2Ny9pQzJUTlNtME5kQ2xHaTZ1WXhZ?=
+ =?utf-8?B?UlJxU1d1Rmt4SDgrWG8yYXpTczE5L2hrSkQ4Z0NOT1QyVFYvRjg3clNnRGM5?=
+ =?utf-8?B?K0FjT2JVSDhDVVZzNXNteEV5SmJ0L0lwSnZ1dVJYSjVlUS9pdTFSWFZXd2FB?=
+ =?utf-8?B?N2lGR3dhMDg0ZEZDZ05PcFJ1Q2tZYzRLb3ZNQ1FFNnJMUVNuU0RHbVhXSjBp?=
+ =?utf-8?B?Zk0xakFUZGtBRGdrdGs2NHB1WWJWTHYwUUJiYkpLUTVPQkhUWmpPSE9kL2JZ?=
+ =?utf-8?B?UytGa3V1cDVyRWg1UldzK0R1a2FneGNtNWRFaVFCUS96WTVIOUl6YXdXMVFH?=
+ =?utf-8?B?ZUZlRFpKdzkvYzNLcjBkZVRMOEdpWTExRUNpOVNpSGhpenNIS0Q2OWhIS0Jj?=
+ =?utf-8?B?NmNrTEEvQ0VkZjhNK25SZ3d0NnVzR0xia0pxT21tYTMxNVhxQmNockhtYlpZ?=
+ =?utf-8?B?TmJMNzBDUzdmR2JsQ3d2Y2hOdHUwdUloUVd1aWFoSGZpWFR0UklSbnJOc3BH?=
+ =?utf-8?B?U0NWVlNuemlWS2NFbno2YVZlOHNkZVIvWU04MXdubmtFK2k3czNmOGZFdzZ3?=
+ =?utf-8?B?VUlGRW1HdktkazZ5WlpuZk9BM0tCS0hTUnpRNE4yM1BrUGhMcEluQnVpSkor?=
+ =?utf-8?B?V0E1b3lQUmk0azIvSUVuL3FjNjM4NjEvbE5yUXZvek1aTUUrTG9WeDBZa251?=
+ =?utf-8?B?Nmllay9HVmF2NXBWS3J0dzIrWnUrRklZVHpVa2pJWkgrVWtIL0U5S1pLdDZj?=
+ =?utf-8?B?M1B0SXJ0aG14R3lEVklSZnJ0NzE3Z3JURFFJQUdYOVkwanRLWkV2czh0Y29v?=
+ =?utf-8?B?ZW5ERHJ6MDFwZWpBNFVqcWdCWjFZT0tRRFp5c0c4Z0kzeDNXaTJkSDg3b1Jv?=
+ =?utf-8?B?em1uVWducWlUeEtkRzJGS0NCTjEyOHpBbnVuY2wway9vQmJhdGFKNjBSdFE4?=
+ =?utf-8?B?QTRhVmV5OWRWT2w0QmxGYVhJTk1GdkN6ZUE5NlpVQlhkektoUjYzVXlxY1dp?=
+ =?utf-8?B?c04zZGFMMTJobWhpdlpJN1VLbTRUYmZoK3JjNFJFOUVtdFBsV0tsVXBYZm9t?=
+ =?utf-8?B?ZHFNYlFJd2luTDVqcHpaYnAvenV1Sy9tRjJmRTJxOGlLWHJ6cTIycWM0REsr?=
+ =?utf-8?B?dmRqSGQ1eVgvaFcyMXdmMEJmRHdYeFB6alVQdEx5dTI0TWVUNEtlaGw0WWpo?=
+ =?utf-8?B?ekRFcEw1VUIzdG5qRjlRbi9yQUxZUVVEa2RxK0MzWUtQMFlaa2dlL3UrMlkx?=
+ =?utf-8?B?cGhQdWNuSTV6cGFhNEM2MUVhd3lSenhkNmtYVkhhZkkzSzNKTTMxRHp3MUhr?=
+ =?utf-8?B?R3NmbnNJL0xoRkNKS3ZPZHdOTmVjL0JZcjFUWlVnbFdhd0MwWEdtUFdtUzBh?=
+ =?utf-8?B?dWVKZXhlWWlKTU1SZHlzUy9wL1Rva1dYY29kc0h5anZlY3hXVWF4YjFWcm9y?=
+ =?utf-8?B?UDBwNDlmYWlQVXVZQTE0TEoyTi9VTVAyeUJPdnFaS0R5NGpNYWx5YkhlQTBJ?=
+ =?utf-8?B?Mk5Qek5TRG5aaVgrbXc2R0phbi9XMVNtR0N1S3FxclVrUE1RaWdMaHIydHRY?=
+ =?utf-8?B?ZnFjcWFXeUlVWEZ1bE8rcVZkODAxb3BXaDhyRlRzTlZZeXdPOFM5dnFHVDhJ?=
+ =?utf-8?Q?3FXFkkMDV70lO5Mi1mDtWYL5F?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6b0838a2-8816-45ed-9cd8-08dd5b3552b8
+X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8583.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Mar 2025 15:57:53.8235
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: IWvKjsce3ARsFiNc1OHP/4xKrJM8yxO6vTrhMp4KVenEQer9LW8ZLXM0iUkodEH0ZAHoIIRwOI6vEl7pBQ7lpw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV8PR12MB9360
 
-Hi Waiman,
+On 3/4/2025 4:02 PM, Qasim Ijaz wrote:
+> External email: Use caution opening links or attachments
+>
+>
+> In function create_ib_ah() the following line attempts
+> to left shift the return value of mlx5r_ib_rate() by 4
+> and store it in the stat_rate_sl member of av:
+>
+>                  ah->av.stat_rate_sl = (mlx5r_ib_rate(dev, rdma_ah_get_static_rate(ah_attr)) << 4);
+>
+> However the code overlooks the fact that mlx5r_ib_rate()
+> may return -EINVAL if the rate passed to it is less than
+> IB_RATE_2_5_GBPS or greater than IB_RATE_800_GBPS.
+>
+> Because of this, the code may invoke undefined behaviour when
+> shifting a signed negative value when doing "-EINVAL << 4".
+>
+> To fix this check for errors before assigning stat_rate_sl and
+> propagate any error value to the callers.
+>
+> Signed-off-by: Qasim Ijaz <qasdev00@gmail.com>
+> Fixes: c534ffda781f ("RDMA/mlx5: Fix AH static rate parsing")
+> Cc: stable@vger.kernel.org
 
-Thanks for the review!
+Thanks for fixing this , looks good to me.
 
-On 04/03/25 10:05, Waiman Long wrote:
-> On 3/4/25 3:40 AM, Juri Lelli wrote:
-> > Create wrappers for sched_domains_mutex so that it can transparently be
-> > used on both CONFIG_SMP and !CONFIG_SMP, as some function will need to
-> > do.
-> > 
-> > Reported-by: Jon Hunter <jonathanh@nvidia.com>
-> > Fixes: 53916d5fd3c0 ("sched/deadline: Check bandwidth overflow earlier for hotplug")
-> > Signed-off-by: Juri Lelli <juri.lelli@redhat.com>
-> > ---
-> >   include/linux/sched.h   |  2 ++
-> >   kernel/cgroup/cpuset.c  |  4 ++--
-> >   kernel/sched/core.c     |  4 ++--
-> >   kernel/sched/debug.c    |  8 ++++----
-> >   kernel/sched/topology.c | 17 +++++++++++++++--
-> >   5 files changed, 25 insertions(+), 10 deletions(-)
-> > 
-> > diff --git a/include/linux/sched.h b/include/linux/sched.h
-> > index 9632e3318e0d..d5f8c161d852 100644
-> > --- a/include/linux/sched.h
-> > +++ b/include/linux/sched.h
-> > @@ -383,6 +383,8 @@ enum uclamp_id {
-> >   extern struct root_domain def_root_domain;
-> >   extern struct mutex sched_domains_mutex;
-> >   #endif
-> > +extern void sched_domains_mutex_lock(void);
-> > +extern void sched_domains_mutex_unlock(void);
-> 
-> If all access to sched_domains_mutex is through the wrappers, we may not
-> need to expose sched_domains_mutex at all. Also it is more efficient for the
-> non-SMP case to put the wrappers inside the CONFIG_SMP block and define the
-> empty inline functions in the else part.
-> 
-> 
-> >   struct sched_param {
-> >   	int sched_priority;
-> > diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
-> > index 0f910c828973..f87526edb2a4 100644
-> > --- a/kernel/cgroup/cpuset.c
-> > +++ b/kernel/cgroup/cpuset.c
-> > @@ -994,10 +994,10 @@ static void
-> >   partition_and_rebuild_sched_domains(int ndoms_new, cpumask_var_t doms_new[],
-> >   				    struct sched_domain_attr *dattr_new)
-> >   {
-> > -	mutex_lock(&sched_domains_mutex);
-> > +	sched_domains_mutex_lock();
-> >   	partition_sched_domains_locked(ndoms_new, doms_new, dattr_new);
-> >   	dl_rebuild_rd_accounting();
-> > -	mutex_unlock(&sched_domains_mutex);
-> > +	sched_domains_mutex_unlock();
-> >   }
-> >   /*
-> > diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> > index 9aecd914ac69..7b14500d731b 100644
-> > --- a/kernel/sched/core.c
-> > +++ b/kernel/sched/core.c
-> > @@ -8424,9 +8424,9 @@ void __init sched_init_smp(void)
-> >   	 * CPU masks are stable and all blatant races in the below code cannot
-> >   	 * happen.
-> >   	 */
-> > -	mutex_lock(&sched_domains_mutex);
-> > +	sched_domains_mutex_lock();
-> >   	sched_init_domains(cpu_active_mask);
-> > -	mutex_unlock(&sched_domains_mutex);
-> > +	sched_domains_mutex_unlock();
-> >   	/* Move init over to a non-isolated CPU */
-> >   	if (set_cpus_allowed_ptr(current, housekeeping_cpumask(HK_TYPE_DOMAIN)) < 0)
-> > diff --git a/kernel/sched/debug.c b/kernel/sched/debug.c
-> > index ef047add7f9e..a0893a483d35 100644
-> > --- a/kernel/sched/debug.c
-> > +++ b/kernel/sched/debug.c
-> > @@ -292,7 +292,7 @@ static ssize_t sched_verbose_write(struct file *filp, const char __user *ubuf,
-> >   	bool orig;
-> >   	cpus_read_lock();
-> > -	mutex_lock(&sched_domains_mutex);
-> > +	sched_domains_mutex_lock();
-> >   	orig = sched_debug_verbose;
-> >   	result = debugfs_write_file_bool(filp, ubuf, cnt, ppos);
-> > @@ -304,7 +304,7 @@ static ssize_t sched_verbose_write(struct file *filp, const char __user *ubuf,
-> >   		sd_dentry = NULL;
-> >   	}
-> > -	mutex_unlock(&sched_domains_mutex);
-> > +	sched_domains_mutex_unlock();
-> >   	cpus_read_unlock();
-> >   	return result;
-> > @@ -515,9 +515,9 @@ static __init int sched_init_debug(void)
-> >   	debugfs_create_u32("migration_cost_ns", 0644, debugfs_sched, &sysctl_sched_migration_cost);
-> >   	debugfs_create_u32("nr_migrate", 0644, debugfs_sched, &sysctl_sched_nr_migrate);
-> > -	mutex_lock(&sched_domains_mutex);
-> > +	sched_domains_mutex_lock();
-> >   	update_sched_domain_debugfs();
-> > -	mutex_unlock(&sched_domains_mutex);
-> > +	sched_domains_mutex_unlock();
-> >   #endif
-> >   #ifdef CONFIG_NUMA_BALANCING
-> > diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
-> > index c49aea8c1025..e2b879ec9458 100644
-> > --- a/kernel/sched/topology.c
-> > +++ b/kernel/sched/topology.c
-> > @@ -6,6 +6,19 @@
-> >   #include <linux/bsearch.h>
-> >   DEFINE_MUTEX(sched_domains_mutex);
-> > +#ifdef CONFIG_SMP
-> > +void sched_domains_mutex_lock(void)
-> > +{
-> > +	mutex_lock(&sched_domains_mutex);
-> > +}
-> > +void sched_domains_mutex_unlock(void)
-> > +{
-> > +	mutex_unlock(&sched_domains_mutex);
-> > +}
-> > +#else
-> > +void sched_domains_mutex_lock(void) { }
-> > +void sched_domains_mutex_unlock(void) { }
-> > +#endif
-> >   /* Protected by sched_domains_mutex: */
-> >   static cpumask_var_t sched_domains_tmpmask;
-> > @@ -2791,7 +2804,7 @@ void partition_sched_domains_locked(int ndoms_new, cpumask_var_t doms_new[],
-> >   void partition_sched_domains(int ndoms_new, cpumask_var_t doms_new[],
-> >   			     struct sched_domain_attr *dattr_new)
-> >   {
-> > -	mutex_lock(&sched_domains_mutex);
-> > +	sched_domains_mutex_lock();
-> >   	partition_sched_domains_locked(ndoms_new, doms_new, dattr_new);
-> > -	mutex_unlock(&sched_domains_mutex);
-> > +	sched_domains_mutex_unlock();
-> >   }
-> 
-> There are two "lockdep_assert_held(&sched_domains_mutex);" statements in
-> topology.c file and one in cpuset.c. That can be problematic in the non-SMP
-> case. Maybe another wrapper to do the assert?
+Reviewed-by: Patrisious Haddad <phaddad@nvidia.com>
 
-Yes, makes sense. Will modify as you suggest here and above.
-
-Best,
-Juri
-
+> ---
+>   drivers/infiniband/hw/mlx5/ah.c | 17 +++++++++++++----
+>   1 file changed, 13 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/infiniband/hw/mlx5/ah.c b/drivers/infiniband/hw/mlx5/ah.c
+> index 99036afb3aef..6bccd9ce4538 100644
+> --- a/drivers/infiniband/hw/mlx5/ah.c
+> +++ b/drivers/infiniband/hw/mlx5/ah.c
+> @@ -50,11 +50,12 @@ static __be16 mlx5_ah_get_udp_sport(const struct mlx5_ib_dev *dev,
+>          return sport;
+>   }
+>
+> -static void create_ib_ah(struct mlx5_ib_dev *dev, struct mlx5_ib_ah *ah,
+> +static int create_ib_ah(struct mlx5_ib_dev *dev, struct mlx5_ib_ah *ah,
+>                           struct rdma_ah_init_attr *init_attr)
+>   {
+>          struct rdma_ah_attr *ah_attr = init_attr->ah_attr;
+>          enum ib_gid_type gid_type;
+> +       int rate_val;
+>
+>          if (rdma_ah_get_ah_flags(ah_attr) & IB_AH_GRH) {
+>                  const struct ib_global_route *grh = rdma_ah_read_grh(ah_attr);
+> @@ -67,8 +68,10 @@ static void create_ib_ah(struct mlx5_ib_dev *dev, struct mlx5_ib_ah *ah,
+>                  ah->av.tclass = grh->traffic_class;
+>          }
+>
+> -       ah->av.stat_rate_sl =
+> -               (mlx5r_ib_rate(dev, rdma_ah_get_static_rate(ah_attr)) << 4);
+> +       rate_val = mlx5r_ib_rate(dev, rdma_ah_get_static_rate(ah_attr));
+> +       if (rate_val < 0)
+> +               return rate_val;
+> +       ah->av.stat_rate_sl = rate_val << 4;
+>
+>          if (ah_attr->type == RDMA_AH_ATTR_TYPE_ROCE) {
+>                  if (init_attr->xmit_slave)
+> @@ -89,6 +92,8 @@ static void create_ib_ah(struct mlx5_ib_dev *dev, struct mlx5_ib_ah *ah,
+>                  ah->av.fl_mlid = rdma_ah_get_path_bits(ah_attr) & 0x7f;
+>                  ah->av.stat_rate_sl |= (rdma_ah_get_sl(ah_attr) & 0xf);
+>          }
+> +
+> +       return 0;
+>   }
+>
+>   int mlx5_ib_create_ah(struct ib_ah *ibah, struct rdma_ah_init_attr *init_attr,
+> @@ -99,6 +104,7 @@ int mlx5_ib_create_ah(struct ib_ah *ibah, struct rdma_ah_init_attr *init_attr,
+>          struct mlx5_ib_ah *ah = to_mah(ibah);
+>          struct mlx5_ib_dev *dev = to_mdev(ibah->device);
+>          enum rdma_ah_attr_type ah_type = ah_attr->type;
+> +       int ret;
+>
+>          if ((ah_type == RDMA_AH_ATTR_TYPE_ROCE) &&
+>              !(rdma_ah_get_ah_flags(ah_attr) & IB_AH_GRH))
+> @@ -121,7 +127,10 @@ int mlx5_ib_create_ah(struct ib_ah *ibah, struct rdma_ah_init_attr *init_attr,
+>                          return err;
+>          }
+>
+> -       create_ib_ah(dev, ah, init_attr);
+> +       ret = create_ib_ah(dev, ah, init_attr);
+> +       if (ret)
+> +               return ret;
+> +
+>          return 0;
+>   }
+>
+> --
+> 2.39.5
+>
+>
