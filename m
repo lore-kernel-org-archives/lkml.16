@@ -1,149 +1,220 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CE53194080;
-	Tue,  4 Mar 2025 03:13:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741058000; cv=none; b=sFyNAsgc01rx2vhYQSJn41KC9bDJ1ONhs57c0J/BsYzsyvcPQFuKV0M3qRy3BqqMNndn157cm5QA5uG3rXWMRYUaBnvtLwtW366gnO7UTZZK3bmOro83afQdo+0gJFAbMFQjL+obJdlbwus+KBNbKhvebOx05rpy/+xMvEdPZNk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741058000; c=relaxed/simple;
-	bh=JIj+/tr9TcRP5XhO/iLdeKqe04P1XWqfEvK8p1Y3Nm4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QbX9JEbR1VAYeGl+4fqkizAuJ5GE4FN6qREr5PDKCQsDHTwLS7DbJsacaPDTLJndS+WxlwgDyHhieb21/dCaQnwMg/DdRYlSAQ6CVA+nBeJ86LtVX4jUtP2J3SqBMvyX7ZOEMWEY8qpv+RgXoM42ZIl1dtv6Wbw+x7UDBqsGVYw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lyfgLJYb; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lyfgLJYb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7D16C4CEE8;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD35918A6D4;
 	Tue,  4 Mar 2025 03:13:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741058000;
-	bh=JIj+/tr9TcRP5XhO/iLdeKqe04P1XWqfEvK8p1Y3Nm4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=lyfgLJYbuEuCn3kETuOm0igYrIuR8EE55vkdXqL0wHQSrw5doOIzySdMPam3sIzwr
-	 pmVXGFQHDe9dLnAlOE8fnr/SarDaMIwzu4zv6Uwz1CNYsIYnuowUhZKkVzto2yq6A3
-	 oTHeo4sXq4zDIibz53K1gEXj9HsAlvrI7sxUM4goe3g/Ch1U/0tUi3RbKbObbabRCu
-	 XeDajTZ9dyXjGHxz/TT7TiSB29JmmZ8pBQPGBRNdQYx/zSwSalUBCWy26s3l7RXe9Y
-	 dB1roGm1Fh7Hz/VAUO1ZOxhqncLkQfYFcTt65Qq4QvuJKSBGhtWHSnxmAVd0Fnwm4u
-	 TSuI4vrvx2Xsg==
-Date: Mon, 3 Mar 2025 21:13:16 -0600
-From: Bjorn Andersson <andersson@kernel.org>
-To: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
-Cc: Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Felipe Balbi <balbi@kernel.org>, Wesley Cheng <quic_wcheng@quicinc.com>, 
-	Saravana Kannan <saravanak@google.com>, Philipp Zabel <p.zabel@pengutronix.de>, 
-	Konrad Dybcio <konradybcio@kernel.org>, Frank Li <Frank.li@nxp.com>, 
-	"linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, 
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 5/7] usb: dwc3: qcom: Snapshot driver for backwards
- compatibilty
-Message-ID: <zr6qdi3gtjaj3gyalpspzej33q356bs5ynchcmtr73765gjel5@c5ijv7czkhqt>
-References: <20250226-dwc3-refactor-v4-0-4415e7111e49@oss.qualcomm.com>
- <20250226-dwc3-refactor-v4-5-4415e7111e49@oss.qualcomm.com>
- <20250304000527.ybxfdjx5xzypcals@synopsys.com>
- <20250304003913.bsn5sucnofq6d6jo@synopsys.com>
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741058001; cv=none; b=JBBZFe9H4tMPy50kCepVFdWf8y8a4A08/xsNHNs93h4OE3EAhX/Eyz+exq7AohZtjE9aH8ekMg6g8g/wbhG06IFc2fN1WZIEuDccrYkGv3MbUN97sT39XZ+4lPVcQtfJp1iZOTz4HNM5o26ZGFD1MEPKGqPNNtfkZRxvgWJFiow=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741058001; c=relaxed/simple;
+	bh=x6KpIjhdNrzNoOgiXRVg0LP3KzS+DSO6ifA6XJJokKU=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=EpY2IgLfSt9QkIms+1hrY//hRLd1CCQ1HKICwHeFmXwa+UMAjBR66ERyqRKQyFi8HLoIx5jlSshjcMy1FxC+/fMB6g8DuXdNuqUZwcXrK1RhXEMQ2931aOyhBMMCMhoVklVE1c4I3QqAXEyJ5Jzm7QcDi2LJTT8tfhqH+fvNmk8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PkVmAdAq; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PkVmAdAq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741058000; x=1772594000;
+  h=message-id:date:mime-version:subject:from:to:cc:
+   references:in-reply-to:content-transfer-encoding;
+  bh=x6KpIjhdNrzNoOgiXRVg0LP3KzS+DSO6ifA6XJJokKU=;
+  b=PkVmAdAqfDq0c/KtIz6RqMz7zEz0ntTwJeLyuWcrOUgd4i3tKWK1DQng
+   ma2B6J+e1GL+EsevN1lp+lmPmdpc2XK0/PDXgyZX+j6t2SOlT+JIRXy60
+   y0UsUvccgf94UKpwZqhPI5yC5Sm6ZYl/FxBFVds7+4cihpxy3SA1Lp61k
+   gYSuE6gnuYzntOJi830Z+eKZBWf++XKWQQ5cXgY5Va30+GvfRzr5cciYs
+   DZ83sSF3Aj9nqZejDDsdEmBPCceW2F1skb18c0pav9pQQ9mDedECG3BTX
+   lalIg+qxCbpx65y6nY372YEexKbiIKr6iac21rv1CMuEFwnoEDz+5HIsu
+   g==;
+X-CSE-ConnectionGUID: 6MKW2XrKQUW1dZgpY/PNOQ==
+X-CSE-MsgGUID: DdbzMWyjRJmh7U0gz9xi8w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11362"; a="53352289"
+X-IronPort-AV: E=Sophos;i="6.13,331,1732608000"; 
+   d="scan'208";a="53352289"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Mar 2025 19:13:18 -0800
+X-CSE-ConnectionGUID: 6QbeHxE8TRWBheCS4GirrQ==
+X-CSE-MsgGUID: /pDlgezbQEmGYPyXjdlYHw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,331,1732608000"; 
+   d="scan'208";a="118927674"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.245.128]) ([10.124.245.128])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Mar 2025 19:08:43 -0800
+Message-ID: <71c0f66a-9ee8-4c01-8a29-2c6faf015b4d@linux.intel.com>
+Date: Tue, 4 Mar 2025 11:08:41 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250304003913.bsn5sucnofq6d6jo@synopsys.com>
-
-On Tue, Mar 04, 2025 at 12:39:12AM +0000, Thinh Nguyen wrote:
-> On Tue, Mar 04, 2025, Thinh Nguyen wrote:
-> > On Wed, Feb 26, 2025, Bjorn Andersson wrote:
-> > > In order to more tightly integrate the Qualcomm glue driver with the
-> > > dwc3 core the driver is redesigned to avoid splitting the implementation
-> > > using the driver model. But due to the strong coupling to the Devicetree
-> > > binding needs to be updated as well.
-> > > 
-> > > Various ways to provide backwards compatibility with existing Devicetree
-> > > blobs has been explored, but migrating the Devicetree information
-> > > between the old and the new binding is non-trivial.
-> > > 
-> > > For the vast majority of boards out there, the kernel and Devicetree are
-> > > generated and handled together, which in practice means that backwards
-> > > compatibility needs to be managed across about 1 kernel release.
-> > > 
-> > > For some though, such as the various Snapdragon laptops, the Devicetree
-> > > blobs live a life separate of the kernel. In each one of these, with the
-> > > continued extension of new features, it's recommended that users would
-> > > upgrade their Devicetree somewhat frequently.
-> > > 
-> > > With this in mind, simply carrying a snapshot/copy of the current driver
-> > > is simpler than creating and maintaining the migration code.
-> > > 
-> > > The driver is kept under the same Kconfig option, to ensure that Linux
-> > > distributions doesn't drop USB support on these platforms.
-> > > 
-> > > The driver, which is going to be refactored to handle the newly
-> > > introduced qcom,snps-dwc3 compatible, is updated to temporarily not
-> > > match against any compatible.
-> > > 
-> > > This driver should be removed after 2 LTS releases.
-> > > 
-> > > Signed-off-by: Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
-> > > ---
-> > >  drivers/usb/dwc3/Makefile           |   1 +
-> > >  drivers/usb/dwc3/dwc3-qcom-legacy.c | 934 ++++++++++++++++++++++++++++++++++++
-> > >  drivers/usb/dwc3/dwc3-qcom.c        |   1 -
-> > >  3 files changed, 935 insertions(+), 1 deletion(-)
-> > > 
-> > 
-> > This is a bit concerning if there's no matching compatible string. ie.
-> > we don't have user for the new driver without downstream dependencies
-> > (or some workaround in the driver binding).
-> 
-> Ignore the comment above, I missed the "temporarily" in your log
-> above. However, the comment below still stands.
-> 
-> > 
-> > While I understand the intention, I'm afraid we may have to support and
-> > maintain this much longer than the proposed 2 LTS releases (as seen with
-> > anything tagged with "legacy" in the upstream kernel).
-
-There are no products shipping today using dwc3-qcom where Devicetree is
-considered firmware. The primary audience for a longer transition is
-users of the various laptops with Qualcomm-chip in them. But given the
-rapid development in a variety of functional areas, these users will be
-highly compelled to update their DTBs within 2 years.
-
-The other obvious user group is to make sure us upstream developers
-don't loose USB when things get out of sync.
+User-Agent: Mozilla Thunderbird
+Subject: Re: [Patch v2 18/24] perf/x86/intel: Support arch-PEBS vector
+ registers group capturing
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo
+ <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+ Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Kan Liang <kan.liang@linux.intel.com>, Andi Kleen <ak@linux.intel.com>,
+ Eranian Stephane <eranian@google.com>, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, Dapeng Mi <dapeng1.mi@intel.com>
+References: <20250218152818.158614-1-dapeng1.mi@linux.intel.com>
+ <20250218152818.158614-19-dapeng1.mi@linux.intel.com>
+ <20250225153257.GQ11590@noisy.programming.kicks-ass.net>
+ <bda04ccd-fa90-4f14-89cc-9835de36bcfb@linux.intel.com>
+ <a62bfd22-0469-46cc-954d-8331aa2922e9@linux.intel.com>
+Content-Language: en-US
+In-Reply-To: <a62bfd22-0469-46cc-954d-8331aa2922e9@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 
-That said, if the model defined here is to be followed in other cases
-(or my other vendors) where Devicetree is treated as firmware, your
-concerns are valid - and it might be worth taking the cost of managing
-the live-migration code.
+On 2/27/2025 2:40 PM, Mi, Dapeng wrote:
+> On 2/26/2025 4:08 PM, Mi, Dapeng wrote:
+>> On 2/25/2025 11:32 PM, Peter Zijlstra wrote:
+>>> On Tue, Feb 18, 2025 at 03:28:12PM +0000, Dapeng Mi wrote:
+>>>> Add x86/intel specific vector register (VECR) group capturing for
+>>>> arch-PEBS. Enable corresponding VECR group bits in
+>>>> GPx_CFG_C/FX0_CFG_C MSRs if users configures these vector registers
+>>>> bitmap in perf_event_attr and parse VECR group in arch-PEBS record.
+>>>>
+>>>> Currently vector registers capturing is only supported by PEBS based
+>>>> sampling, PMU driver would return error if PMI based sampling tries to
+>>>> capture these vector registers.
+>>>> @@ -676,6 +709,32 @@ int x86_pmu_hw_config(struct perf_event *event)
+>>>>  			return -EINVAL;
+>>>>  	}
+>>>>  
+>>>> +	/*
+>>>> +	 * Architectural PEBS supports to capture more vector registers besides
+>>>> +	 * XMM registers, like YMM, OPMASK and ZMM registers.
+>>>> +	 */
+>>>> +	if (unlikely(has_more_extended_regs(event))) {
+>>>> +		u64 caps = hybrid(event->pmu, arch_pebs_cap).caps;
+>>>> +
+>>>> +		if (!(event->pmu->capabilities & PERF_PMU_CAP_MORE_EXT_REGS))
+>>>> +			return -EINVAL;
+>>>> +
+>>>> +		if (has_opmask_regs(event) && !(caps & ARCH_PEBS_VECR_OPMASK))
+>>>> +			return -EINVAL;
+>>>> +
+>>>> +		if (has_ymmh_regs(event) && !(caps & ARCH_PEBS_VECR_YMM))
+>>>> +			return -EINVAL;
+>>>> +
+>>>> +		if (has_zmmh_regs(event) && !(caps & ARCH_PEBS_VECR_ZMMH))
+>>>> +			return -EINVAL;
+>>>> +
+>>>> +		if (has_h16zmm_regs(event) && !(caps & ARCH_PEBS_VECR_H16ZMM))
+>>>> +			return -EINVAL;
+>>>> +
+>>>> +		if (!event->attr.precise_ip)
+>>>> +			return -EINVAL;
+>>>> +	}
+>>>> +
+>>>>  	return x86_setup_perfctr(event);
+>>>>  }
+>>>>  
+>>>> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+>>>> index f21d9f283445..8ef5b9a05fcc 100644
+>>>> --- a/arch/x86/events/intel/core.c
+>>>> +++ b/arch/x86/events/intel/core.c
+>>>> @@ -2963,6 +2963,18 @@ static void intel_pmu_enable_event_ext(struct perf_event *event)
+>>>>  			if (pebs_data_cfg & PEBS_DATACFG_XMMS)
+>>>>  				ext |= ARCH_PEBS_VECR_XMM & cap.caps;
+>>>>  
+>>>> +			if (pebs_data_cfg & PEBS_DATACFG_YMMS)
+>>>> +				ext |= ARCH_PEBS_VECR_YMM & cap.caps;
+>>>> +
+>>>> +			if (pebs_data_cfg & PEBS_DATACFG_OPMASKS)
+>>>> +				ext |= ARCH_PEBS_VECR_OPMASK & cap.caps;
+>>>> +
+>>>> +			if (pebs_data_cfg & PEBS_DATACFG_ZMMHS)
+>>>> +				ext |= ARCH_PEBS_VECR_ZMMH & cap.caps;
+>>>> +
+>>>> +			if (pebs_data_cfg & PEBS_DATACFG_H16ZMMS)
+>>>> +				ext |= ARCH_PEBS_VECR_H16ZMM & cap.caps;
+>>>> +
+>>>>  			if (pebs_data_cfg & PEBS_DATACFG_LBRS)
+>>>>  				ext |= ARCH_PEBS_LBR & cap.caps;
+>>>>  
+>>>> @@ -5115,6 +5127,9 @@ static inline void __intel_update_pmu_caps(struct pmu *pmu)
+>>>>  
+>>>>  	if (hybrid(pmu, arch_pebs_cap).caps & ARCH_PEBS_VECR_XMM)
+>>>>  		dest_pmu->capabilities |= PERF_PMU_CAP_EXTENDED_REGS;
+>>>> +
+>>>> +	if (hybrid(pmu, arch_pebs_cap).caps & ARCH_PEBS_VECR_EXT)
+>>>> +		dest_pmu->capabilities |= PERF_PMU_CAP_MORE_EXT_REGS;
+>>>>  }
+>>> There is no technical reason for it to error out, right? We can use
+>>> FPU/XSAVE interface to read the CPU state just fine.
+>> I think it's not because of technical reason. Let me confirm if we can add
+>> it for non-PEBS sampling.
+> Hi Peter,
+>
+> Just double confirm, you want only PEBS sampling supports to capture SSP
+> and these vector registers for both *interrupt* and *user space*? or
+> further, you want PMI based sampling can also support to capture SSP and
+> these vector registers? Thanks.
 
-> > If possible, I'd
-> > prefer the complications of maintenance of the migration code be handled
-> > downstream.
-> > 
+Hi Peter,
 
-I'm sorry, but here it sounds like you're saying that you don't want any
-migration code upstream at all? This is not possible, as this will break
-USB for developers and users short term. We can of course discuss the 2
-LTS though, if you want a shorter life span for this migration.
+May I know your opinion on this? Thanks.
 
 
-In my view, setting a flag date when the dwc3-qcom-legacy.c will be
-removed will provide upstream users a transition period, at a very low
-additional cost (934 lines of already tested code). If someone
-downstream after that flag date wants to retain support for qcom,dwc3
-they can just revert the removal of dwc3-qcom-legacy.c.
-
-The alternative is that I try to get the migration code suggested in v3
-to a state where it can be merged (right now it's 6x larger) and then
-keep investing indefinitely in making sure it's not bit-rotting
-(although Rob Herring did request a flag date of the migration code in
-v3 as well...).
-
-Regards,
-Bjorn
+>
+>>
+>>>> diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
+>>>> index 4b01beee15f4..7e5a4202de37 100644
+>>>> --- a/arch/x86/events/intel/ds.c
+>>>> +++ b/arch/x86/events/intel/ds.c
+>>>> @@ -1437,9 +1438,37 @@ static u64 pebs_update_adaptive_cfg(struct perf_event *event)
+>>>>  	if (gprs || (attr->precise_ip < 2) || tsx_weight)
+>>>>  		pebs_data_cfg |= PEBS_DATACFG_GP;
+>>>>  
+>>>> -	if ((sample_type & PERF_SAMPLE_REGS_INTR) &&
+>>>> -	    (attr->sample_regs_intr & PERF_REG_EXTENDED_MASK))
+>>>> -		pebs_data_cfg |= PEBS_DATACFG_XMMS;
+>>>> +	if (sample_type & PERF_SAMPLE_REGS_INTR) {
+>>>> +		if (attr->sample_regs_intr & PERF_REG_EXTENDED_MASK)
+>>>> +			pebs_data_cfg |= PEBS_DATACFG_XMMS;
+>>>> +
+>>>> +		for_each_set_bit_from(bit,
+>>>> +			(unsigned long *)event->attr.sample_regs_intr_ext,
+>>>> +			PERF_NUM_EXT_REGS) {
+>>> This is indented wrong; please use cino=(0:0
+>>> if you worry about indentation depth, break out in helper function.
+>> Sure. would modify it.
+>>
+>>
+>>>> +			switch (bit + PERF_REG_EXTENDED_OFFSET) {
+>>>> +			case PERF_REG_X86_OPMASK0 ... PERF_REG_X86_OPMASK7:
+>>>> +				pebs_data_cfg |= PEBS_DATACFG_OPMASKS;
+>>>> +				bit = PERF_REG_X86_YMMH0 -
+>>>> +				      PERF_REG_EXTENDED_OFFSET - 1;
+>>>> +				break;
+>>>> +			case PERF_REG_X86_YMMH0 ... PERF_REG_X86_ZMMH0 - 1:
+>>>> +				pebs_data_cfg |= PEBS_DATACFG_YMMS;
+>>>> +				bit = PERF_REG_X86_ZMMH0 -
+>>>> +				      PERF_REG_EXTENDED_OFFSET - 1;
+>>>> +				break;
+>>>> +			case PERF_REG_X86_ZMMH0 ... PERF_REG_X86_ZMM16 - 1:
+>>>> +				pebs_data_cfg |= PEBS_DATACFG_ZMMHS;
+>>>> +				bit = PERF_REG_X86_ZMM16 -
+>>>> +				      PERF_REG_EXTENDED_OFFSET - 1;
+>>>> +				break;
+>>>> +			case PERF_REG_X86_ZMM16 ... PERF_REG_X86_ZMM_MAX - 1:
+>>>> +				pebs_data_cfg |= PEBS_DATACFG_H16ZMMS;
+>>>> +				bit = PERF_REG_X86_ZMM_MAX -
+>>>> +				      PERF_REG_EXTENDED_OFFSET - 1;
+>>>> +				break;
+>>>> +			}
+>>>> +		}
+>>>> +	}
+>>>>  
+>>>>  	if (sample_type & PERF_SAMPLE_BRANCH_STACK) {
+>>>>  		/*
