@@ -1,169 +1,157 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com [209.85.219.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E5D1237180;
-	Tue,  4 Mar 2025 19:17:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A894259CA8;
+	Tue,  4 Mar 2025 19:17:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741115835; cv=none; b=Voku5Zp9etGFG4Xt6tiEOdiijJleyzqOHxKhgh8OlqBPAJoKSV48SN0wI5AkReN6oh7b61KOvVSmAiSAYR/7G4hiq8xpxT0rUukgXfRPcoYW/AlGbXmXjIWPBxmZDztrwDaMaH59ZY3MLZqep2ynBLrRI94OhfjpO1N0/bohEA0=
+	t=1741115839; cv=none; b=hhVUWVzLIiVIBjpIz4IKJ22sqnEHsLLf4C2u/2aGk/oF3yx2BJVlC2UnyL+FcHdmj3NGMmjMJPpVGmSSvSCKXjP+JnUHk1FgCQ/YbZnrJWWeL8bhb8rzDD53D4Z14qxU/4ChbB4CVdiEb3jBRy0ShLGCXaukKpxa5A6gfclGr8o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741115835; c=relaxed/simple;
-	bh=PMboUH21QxSZynvmqYXTsJlCbDsI3wUH1QQCqbJpVC0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ItyCo3NgCdoax2kft9IA3z5X4Sfd1fn4XFQMssMjJizNbXQp0BpvX0MICzpBZPnCTOcaDRl6ohS+LhlG5wW37oBtfmbR6bThoAiZ9UP+FHGMEp7wPpaE63gK0IowX3SNTRhUDoZ+lWyLfpHhEWIlNLQSci1OyDicLWiUYI+pLDE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=irJ7QdaR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741115839; c=relaxed/simple;
+	bh=71zrPBadSpry4UNGM7EYnqgo5CnGblRzB2FptXkHvoc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=lwyNofdIo16bt+tVn+9QYykl5C7jHLpO3xfg9QbVRSTX5nhd12zl+lgOVlZJLrnFMKk2prT53Y/vXpGzua3k04E8JiQamVrmZzZrI/ztbvm4qygGbxqL0HfPrQB4v+GsHlbE2eebprL9z7elWuBxOA8BWGd4NxgJ2UOr73DBiRg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gRYNBYEB; arc=none smtp.client-ip=209.85.219.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="irJ7QdaR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4DEB2C4CEE5;
-	Tue,  4 Mar 2025 19:17:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741115835;
-	bh=PMboUH21QxSZynvmqYXTsJlCbDsI3wUH1QQCqbJpVC0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=irJ7QdaR0K0c04nUp9b2wT+j89G4yrbHif+hu8lFO/egIAVdxMP+68HZBNcVhAMHn
-	 553GEYa/+Ppt5fcaxYJZ+jysAIxz7DNKriXV9R7mF1UFoFFGOvm2SicSkZYdK3GFKv
-	 hEAEg+m+bSXQQrCt/lrjDaRsbdtWmpLSnnJFCvu6RHx1nmBNpzctDhvx+b/x4dBSh0
-	 6/n3Uv+kvpFYtCW0XCXTp6HyhthA5/jBPGZ8vz/J3/ZkjYOk77t5IzWNubNl4Exr9k
-	 oV6k2bNSI/Iad/IPd+AWmbx7KHy7rwxVdd9igchCOuWhAkHqkJVD1oSE8muqq2z7CX
-	 ZBbbYaYOgTZWg==
-Date: Tue, 4 Mar 2025 21:17:10 +0200
-From: Jarkko Sakkinen <jarkko@kernel.org>
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: airlied@gmail.com, simona@ffwll.ch, corbet@lwn.net,
-	maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-	tzimmermann@suse.de, ajanulgu@redhat.com, lyude@redhat.com,
-	pstanner@redhat.com, zhiw@nvidia.com, cjia@nvidia.com,
-	jhubbard@nvidia.com, bskeggs@nvidia.com, acurrid@nvidia.com,
-	ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com,
-	gary@garyguo.net, bjorn3_gh@protonmail.com, benno.lossin@proton.me,
-	a.hindborg@kernel.org, aliceryhl@google.com, tmgross@umich.edu,
-	gregkh@linuxfoundation.org, mcgrof@kernel.org,
-	russ.weight@linux.dev, dri-devel@lists.freedesktop.org,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	nouveau@lists.freedesktop.org, rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH v5 3/5] rust: firmware: add `module_firmware!` macro
-Message-ID: <Z8dRtiUaS_Yrv8-K@kernel.org>
-References: <20250304173555.2496-1-dakr@kernel.org>
- <20250304173555.2496-4-dakr@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gRYNBYEB"
+Received: by mail-qv1-f53.google.com with SMTP id 6a1803df08f44-6e8a2fd46ddso7646546d6.1;
+        Tue, 04 Mar 2025 11:17:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741115835; x=1741720635; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=6zRcHrLZY9EoRfX7Tn+hs2QGXmbsG5cYizLUiF4DS5k=;
+        b=gRYNBYEBlYVfX2Y1N3XJmVC1IhyXem6knoI9C4irKAS5v0dmdj93r24VbuLtZaA9B0
+         wv9RpCJoMrXlx/UAiAMyiZEXdIxrLDy1D79o1A76KJVGARQGy/1rf415tfUWFgY6yvwy
+         uPtRo69rHhCtz3KxgJThE0/KZCtUo/13ShafvqVV7ViubdLfIhebEgPAO4MX62ouqgCl
+         KkBY4mRazk5e6tyB+xOOoxe/GMHyvcADt9Q59srtUH6CVNTjUrRUnnKxY7ulH3sPcR/q
+         zEJj/89DpOw9K8rYQxIB/GI9/EgXlY5q5nXQWykOqhhAKvFUmEvGSwvaNTg1mdgH3dkL
+         NYtA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741115835; x=1741720635;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=6zRcHrLZY9EoRfX7Tn+hs2QGXmbsG5cYizLUiF4DS5k=;
+        b=NQlS0c/w+aQdoXaTT4ZAArjgbUNz74IlPrv/5NTHra83TyP6PXm5HoEW+yjqRrYG3y
+         ebce/JD4P6UDz1Ung9cylZXE1Dt+/n2gJBuWepQcoTe5KDZro7NGmnP1wfM/pI3jvyQy
+         vljB5qKHpgKckWeXAl28nvI6hJACER7qzXIFsDVYMvN6ULv5W7Ilxs+0PngLRQ/FI/qO
+         +gWJ0VBX8ZaQnZwv5M4/zJrL7fhrVHy3kJVmrMZQHC3Qfx8zl/VgLjxApaU63lQeLPqF
+         DTbshmOLX1fFXyJSlfzmUPKoC1DG4h2hroUylbKPgds1vW1gL7BVDunTnryo/NqKO3oL
+         8c1A==
+X-Forwarded-Encrypted: i=1; AJvYcCVvXV80VBglZK4fj7XD+t9b+hEYMKHM5dj1PL1ZAZNDyVJCR07+NNV1re3qrB9XkkUDblwI7JO7RomX2Gc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy/H9EVudDI5bmfXGOLaePGQUizgKYuYLg9V9yXK1Y0xedph59p
+	5qqG9iqRWHXHG2Ylpd9pLe3ITFjmhPXCq3zLN394hDcy1YDR+sPE/a9kDg==
+X-Gm-Gg: ASbGncvGYk1K3f0cH8UEB8k9FE7uSkiE8dd3gFnf33wiuQwDYAnDsgHluwDogLQoSa5
+	8NXTFpzvRSZwYHhD07TKnkgGQ7In1V+nU+rh3ykCwDOdurP/vEyzXUuMQht7fXMG6IVtLxqXFkR
+	Wzs59nA6NFYkAeXx+sxJvG6ciaq62xSuoPUx0u/5ZXyD8PCVxiZjUxRj3PriotOcS1Z1ULA9v4I
+	pneGOVdtOSDWuU45Og4WUcdGH3w16OsLACgq8Ob4En6WS0rJixXhXccs3xiWyfOq38RBBI3Fswi
+	E9f5HKYx4uE7jjIzhDDxSDp8PR8m07SPDS7i6lBaZ4LWpd9TMQ0LZpnWnF0KrvRn9OHoNX3K3yv
+	aoI/i9abjTg==
+X-Google-Smtp-Source: AGHT+IGFEVxkxJdDHL70k8ZQHEkVjG2El2E5FYW5OuYB6c//CkBOdewtyopoiMtF/Fbxc/jwWaZDUA==
+X-Received: by 2002:ac8:5715:0:b0:474:ee9d:43db with SMTP id d75a77b69052e-4750b4b7362mr982781cf.11.1741115835373;
+        Tue, 04 Mar 2025 11:17:15 -0800 (PST)
+Received: from matt-Z87X-UD4H.mynetworksettings.com ([2600:1002:a012:8f2c:1c50:24c:178b:a9b3])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-474f351687bsm24079351cf.19.2025.03.04.11.17.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Mar 2025 11:17:14 -0800 (PST)
+From: Matthew Majewski <mattwmajewski@gmail.com>
+To: Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Hans Verkuil <hverkuil@xs4all.nl>,
+	Uwe Kleine-Konig <u.kleine-koenig@baylibre.com>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Jacopo Mondi <jacopo.mondi@ideasonboard.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	Naushir Patuck <naush@raspberrypi.com>
+Cc: linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Matthew Majewski <mattwmajewski@gmail.com>
+Subject: [PATCH 0/3] media: vim2m: add multiplanar API support
+Date: Tue,  4 Mar 2025 14:16:58 -0500
+Message-Id: <20250304191701.2957096-1-mattwmajewski@gmail.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250304173555.2496-4-dakr@kernel.org>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Mar 04, 2025 at 06:34:50PM +0100, Danilo Krummrich wrote:
-> Analogous to the `module!` macro `module_firmware!` adds additional
-> firmware path strings to the .modinfo section.
-> 
-> In contrast to `module!`, where path strings need to be string literals,
-> path strings can be composed with the `firmware::ModInfoBuilder`.
-> 
-> Some drivers require a lot of firmware files (such as nova-core) and
-> hence benefit from more flexibility composing firmware path strings.
-> 
-> Signed-off-by: Danilo Krummrich <dakr@kernel.org>
-> ---
->  rust/kernel/firmware.rs | 79 +++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 79 insertions(+)
-> 
-> diff --git a/rust/kernel/firmware.rs b/rust/kernel/firmware.rs
-> index 6e6972d94597..5d1ac8287171 100644
-> --- a/rust/kernel/firmware.rs
-> +++ b/rust/kernel/firmware.rs
-> @@ -116,6 +116,85 @@ unsafe impl Send for Firmware {}
->  // be used from any thread.
->  unsafe impl Sync for Firmware {}
->  
-> +/// Create firmware .modinfo entries.
-> +///
-> +/// This macro is the counterpart of the C macro `MODULE_FIRMWARE()`, but instead of taking a
-> +/// simple string literals, which is already covered by the `firmware` field of
-> +/// [`crate::prelude::module!`], it allows the caller to pass a builder type (e.g.
-> +/// [`ModInfoBuilder`]) which can create the firmware modinfo strings in a more flexible way.
-> +///
-> +/// Drivers should extend the [`ModInfoBuilder`] with their own driver specific builder type.
-> +///
-> +/// The `builder` argument must be a type which implements the following function.
-> +///
-> +/// `const fn create(module_name: &'static CStr) -> ModInfoBuilder`
-> +///
-> +/// `create` should pass the `module_name` to the [`ModInfoBuilder`] and, with the help of
-> +/// it construct the corresponding firmware modinfo.
-> +///
-> +/// Typically, such contracts would be enforced by a trait, however traits do not (yet) support
-> +/// const functions.
-> +///
-> +/// # Example
-> +///
-> +/// ```
-> +/// # mod module_firmware_test {
-> +/// # use kernel::firmware;
-> +/// # use kernel::prelude::*;
-> +/// #
-> +/// # struct MyModule;
-> +/// #
-> +/// # impl kernel::Module for MyModule {
-> +/// #     fn init(_module: &'static ThisModule) -> Result<Self> {
-> +/// #         Ok(Self)
-> +/// #     }
-> +/// # }
-> +/// #
-> +/// #
-> +/// struct Builder<const N: usize>;
-> +///
-> +/// impl<const N: usize> Builder<N> {
-> +///     const fn create(module_name: &'static kernel::str::CStr) -> firmware::ModInfoBuilder<N> {
-> +///         firmware::ModInfoBuilder::new(module_name)
-> +///             .prepare()
-> +///             .push("vendor/foo.bin")
-> +///             .prepare()
-> +///             .push("vendor/bar.bin")
-> +///     }
-> +/// }
-> +///
-> +/// module! {
-> +///    type: MyModule,
-> +///    name: "module_firmware_test",
-> +///    author: "Rust for Linux",
-> +///    description: "module_firmware! test module",
-> +///    license: "GPL",
-> +/// }
-> +///
-> +/// kernel::module_firmware!(Builder);
-> +/// # }
-> +/// ```
-> +#[macro_export]
-> +macro_rules! module_firmware {
-> +    ($($builder:tt)*) => {
-> +
-> +        #[cfg(not(MODULE))]
-> +        const fn __module_name() -> &'static kernel::str::CStr {
-> +            <LocalModule as kernel::ModuleMetadata>::NAME
-> +        }
-> +
-> +        #[cfg(MODULE)]
-> +        const fn __module_name() -> &'static kernel::str::CStr {
-> +            kernel::c_str!("")
-> +        }
-> +
-> +        #[link_section = ".modinfo"]
-> +        #[used]
-> +        static __MODULE_FIRMWARE: [u8; $($builder)*::create(__module_name()).build_length()] =
-> +            $($builder)*::create(__module_name()).build();
-> +    };
-> +}
-> +
->  /// Builder for firmware module info.
->  ///
->  /// [`ModInfoBuilder`] is a helper component to flexibly compose firmware paths strings for the
-> -- 
-> 2.48.1
-> 
-> 
-Acked-by: Jarkko Sakkinen <jarkko@kernel.org>
+Hi everyone,
 
-BR, Jarkko
+This patch series adds multiplane API support for the virtual M2M
+driver, along with some minor driver refactoring/improvements.
+
+I followed the lead of the vivid driver and made multiplanar support
+selectable with a module parameter, and the default is to use the
+single planar api.
+
+Although there are not yet any pixelformats in the driver that make
+use of multiple memory planes, adding support for these should be
+easier now with the API level changes taken care of.
+
+v4l2-compliance reports the following with multiplane support disabled:
+
+  Total for vim2m device /dev/video0: 48, Succeeded: 48, Failed: 0, Warnings: 0
+
+and the same with multiplane support enabled:
+
+  Total for vim2m device /dev/video0: 48, Succeeded: 48, Failed: 0, Warnings: 0
+
+Patches need to be applied in increasing numerical order (Patch [3/3]
+depends on [1/3] and [2/3]).
+
+Since the multi-plane changes had to touch a lot of the driver, I did
+a basic regression test with the following script which generates a
+test input image with vivid and an output image from vim2m for each
+supported format. I confirmed all outputs visually and verified they
+were identical to the outputs before the change. Testing was done on
+an x86_64 qemu image.
+
+#!/bin/sh
+
+# tested with HDMI vivid emulation
+# modprobe vivid num_inputs=1 input_types=3
+
+vim2m=/dev/video0
+vivid=/dev/video1
+
+width=640
+height=480
+out_width=320
+out_height=240
+
+capture_formats=$(v4l2-ctl -d $vim2m --list-formats | awk '/\]:/ {print $2}' | sed "s/'//g")
+output_formats=$(v4l2-ctl -d $vim2m --list-formats-out | awk '/\]:/ {print $2}' | sed "s/'//g")
+
+# Turn off text mode so that images will be identical
+v4l2-ctl -d $vivid -c osd_text_mode=2
+
+for ofmt in ${output_formats}; do
+    # generate input image
+    inname="${width}x${height}.${ofmt}"
+    v4l2-ctl -d $vivid -v pixelformat=$ofmt,width=$width,height=$height,field=none \
+             --stream-mmap --stream-count=1 --stream-to=$inname
+    for cfmt in ${capture_formats}; do
+        outname="${out_width}x${out_height}-out.${cfmt}"
+        v4l2-ctl -d $vim2m -x pixelformat=$ofmt,width=$width,height=$height \
+                 -v pixelformat=$cfmt,width=$out_width,height=$out_height \
+                 --stream-from=$inname --stream-to=$outname --stream-mmap --stream-out-mmap \
+                 --stream-count=1
+    done
+done
+
+Matthew Majewski (3):
+  media: v4l2-common: Add RGBR format info
+  media: vim2m: Simplify try_fmt
+  media: vim2m: Add parametized support for multiplanar API
+
+ drivers/media/test-drivers/vim2m.c    | 327 +++++++++++++++++++++-----
+ drivers/media/v4l2-core/v4l2-common.c |   1 +
+ 2 files changed, 274 insertions(+), 54 deletions(-)
+
+-- 
+2.25.1
