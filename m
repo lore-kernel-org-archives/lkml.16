@@ -1,161 +1,145 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F2161FDE3A;
-	Tue,  4 Mar 2025 14:04:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A32221FC7C9;
+	Tue,  4 Mar 2025 14:05:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741097062; cv=none; b=B4iYJVf2PXdDqkFULNpBlUKVGZLzgh0EZZyZyPet2jyxbQncOkWR3D2BnTmfKrLD9os3TLDTMS4A67bS4gp0ZUC6UaxiFdo1c7hCHFiETj9isM+dvsoiVjeBCUFf4tPhPLr+MDpvnO+9O+4yaMi/soSWpKIhRGhd0PxXyDB5fSA=
+	t=1741097104; cv=none; b=iiTaXEvajUfivbSoWwISIBuUdsLqcjEYkFgvlRCjJ/CsYFnFEJlxdteQlgbhJqN0WPTuuzsC/0IJbyRyTLDhbE9GEIk1siRGaXjykOGmjSesXO29d7E1M/yYFrr2OKaeLB2wWUqgL1NwNMCq4BI4dc4SDUUwMyy1Oy68areSBkQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741097062; c=relaxed/simple;
-	bh=Cu0vRhc2l1pNNOB1DIImUKRxHQPlGsWExbF+PZhgDHI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=fQSyNBm89bA2sPqH79wy55F8DGXRdp4bxRlvz+j7jAGXBmIn5NMUKIo27ft6S4xijegqnGIRA3yrXC/LdoudPeeJJ+k7cnc6gAIdmKeO9llW2DSQHjXskD6S5FbgBLvlOS2fCs818i1txKbyAhVBC/6WiM6P9R0dD4KgN99ULlU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=A7Bi7GN3; arc=none smtp.client-ip=209.85.218.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	s=arc-20240116; t=1741097104; c=relaxed/simple;
+	bh=1eoIIC4qiHRnKRLjedXcJ5O9iur+JZ4LV8C6XUhe3qc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=CuevJAlDf7VaTcrZoMg1ElXaKN/IvQ4jRm5U/cPH1jVulYXkH5y5aweBtqNjLs6Wn+R+abKbEeqR7tYyYTqgj50iZI4h/yfgdwCHXb92dkjuMsnLNL7g2bQSk8XZRVwN0dJBaogmbQwD9UEJT/QehIC3POiwSJkvt9MFci/P/eA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A7Bi7GN3"
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-abf4b376f2fso550273166b.3;
-        Tue, 04 Mar 2025 06:04:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741097059; x=1741701859; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=yGHWVfgFpYsOixf8HC1qT+TlcUPnq+D1bDVJISImCiE=;
-        b=A7Bi7GN3g0ZEoo1dtb7ML/h4D5DgUfIAkJaj0PFbZwO6Q8VBWsFPhAP5WOGzTXa+u3
-         YmPeT3cc+r/HS0hVoK1knT+FXdFRgh3zFdwEZvZu20yWFd/0jkPRqX7KFjr6s7+KW5dG
-         ijQwvxXlWlummGQ0tpwcChQ0VY1Q5SPXrYm9rlMvp6KfLwOD25J2XRNaH+b8Mu44ouZY
-         UMtVmhgAsDRVqqF+uByy/BCaAFFtcuC6zM5h+Wd0OE8ZcTzTWtGv+FyoImd0gZzJ0Qwi
-         b4zcNkbNCq3/1MfWw9Fh/V72TMFUuhbqDTDbZWS53g+PWbmSQ3lP94/+TuUv3motmcd9
-         3qmA==
+Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-7c3b533a683so243580985a.2;
+        Tue, 04 Mar 2025 06:05:02 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741097059; x=1741701859;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1741097101; x=1741701901;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=yGHWVfgFpYsOixf8HC1qT+TlcUPnq+D1bDVJISImCiE=;
-        b=Rq3iSZPUI+hhjs4oZSD6Y+OJYRM1I+p2jaQa90YBsO9poclAOW5GheaYqII6FbCkP5
-         IO2MxtRCXCAkUruV1Svt0Jdj6FF2KswHLbxAxWh3zPlZMu/z1/h2fu+bTfYHVvkQmRAt
-         MAW/gfN6BZYcamtIMp9mC81KszVamlc8IoLSSjNucTarZuOWNcZf6B3IBnXR9O8Rkv9a
-         rYARrYgqjEf7e1OqlPGgcjlV/YFo4OsXjXUEAuHpvWFBZVZcFdKZYxe5ayR+dh2eXvyb
-         g9GR3WcQKrfFnzYj1XofnIMtfnsUMw6BVBiffO1R1d3VALVNFF+9rM7e2d+bjnS5UEWA
-         i4nQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU5+YMIX+VqvlQ05vLDUzvBk0MiU7o+OTOhqWCam6E9hCvKjSJ/D3jrsezUKkaq0v97aEXWJQ/zz1YlJTw=@vger.kernel.org, AJvYcCVSnX97MRNIxAQ0hTFokrQdruzksP5KYzRT/X0e23C9PNMS7MCl3HTigPh87dQon/E+2hQtHg/P@vger.kernel.org
-X-Gm-Message-State: AOJu0YwTcE0JK8re5gLvEfAHhIrTbuw5y3we9G/DKJzmnmn4ChR1ez5M
-	uxxGO+t0s8x+SpnTg91BvsIL3QjNc7QxCK/GpdE5OMJ2M9TvyayN
-X-Gm-Gg: ASbGncudwrmk322/vbIhC9AqlFBDbZwuOLIepXm5786AAOpB7ucgy/IrDSPIWU0wQ8g
-	3fiVSNEh2LZfOB1L/tDLjSivnsb7vEeU6gIoFOis2zziViFfrMAVlEhDVMuTqUitGdNyXG9H3ss
-	EXp8gTvIrNyddEOPOqnlyrveswf5KMruv9n+isFP9yJkE5aCt4rWu+GfKCuYNhNwzz6yBMO6FHm
-	fgnU04Gmi0r46Cp4whbmFWS3MgasYtZkxR9m8SAI3RpkGPsAFrGwt4ucU5LVRmv10946kWDj4Yt
-	ca5zVbuD2jujp4PYNZqZm2Y4ssW1ztlZIGkKf37y8LxeUA==
-X-Google-Smtp-Source: AGHT+IF+L/wf0isDYX6j5oD3HXuFl+JS6RCLB7/lspL/L4jaoEz/L3cXMrsjf5dIytwv+VfNog5ipQ==
-X-Received: by 2002:a17:906:6a1b:b0:ac1:e889:c2a with SMTP id a640c23a62f3a-ac1e8891834mr512462466b.11.1741097058504;
-        Tue, 04 Mar 2025 06:04:18 -0800 (PST)
-Received: from qasdev.Home ([2a02:c7c:6696:8300:8e4b:863e:7e57:3c84])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac1e6a5c13bsm201987966b.132.2025.03.04.06.04.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Mar 2025 06:04:17 -0800 (PST)
-From: Qasim Ijaz <qasdev00@gmail.com>
-To: leon@kernel.org,
-	jgg@ziepe.ca
-Cc: linux-rdma@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: [PATCH] RDMA/mlx5: Prevent UB from shifting negative signed value
-Date: Tue,  4 Mar 2025 14:02:46 +0000
-Message-Id: <20250304140246.205919-1-qasdev00@gmail.com>
-X-Mailer: git-send-email 2.39.5
+        bh=wEGRTygTyU6cymLHKZseFJhmsuIezHZQHssj+Olk7dA=;
+        b=oOsKP2EtuHAiJzsKQi3Xjm34nzzq0tlBwOyeYJg2xzAhZIKzINZy339df/TMIcLM3V
+         mU1JKcoTLSLB/z7Z/iky372RLBLwZc+IGWr1XepxhPmS3rpWOiZ+KoUMfXfqnhaxm+by
+         Q8WHCqpe0f5UIHmmxiMMcF4CC1kXIuA2XDfMjNFYb97q2BY809vQeXx+NBbPUxixI7ps
+         Uxb5SsXp0Gqmo7wPU1fQKVPNnMOjwpJjSGfGZBnvPeuk2a8vxgXG7jg8EzPFG7vOB0uv
+         mQE4dq7Dq1iTZzG6rr+KNoCK3lNYtjKsW38DNH9XEJ5SSjw0M/7XvSYIflXiLIvH1hBx
+         2ZiQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU5J2JyTtRgoYdZueHCW3D4XBjQqF/oT2ulBiyOvfw1mKcqEJ2Gmkj4/xgMmkVyRNnrX7km+k5taqZaxWXr@vger.kernel.org, AJvYcCUoa5KnKP9KKAjCP7XRUTrj3sQjT0K5k68s/ERxI6puTaqE7tc3IRGjVurzGW+6hXt12MK9rRnrbIdXmSmIQCiyO1s=@vger.kernel.org, AJvYcCV9L7EyFH2rl28/gTrIGumLj1OHEDMXpPBxT11qMfcdpUjKI//6EyyJOKDAxzhL5Czo7G/bSDQm@vger.kernel.org, AJvYcCWBOGagp1egzs4ihQY4vIf8K5IqnXwzT+GHn3VdSYRR4IH0rlqWgLWHrDAcvtzkb6Ms5TwWXBlOHz4g@vger.kernel.org
+X-Gm-Message-State: AOJu0YyKQ/xAZeeWqFjSOAovnEzA45kSWYbErSUSo38qYa8/65K1ahTv
+	ltVPod5QNjdRKcEzcuvBoDUh5WewBgR6mp6l8XUXPtqWEqvAYgBaJYGcuIfu
+X-Gm-Gg: ASbGncsEt83bXHlolzm6ekHY0leFM0XYb1GRMM9X2kDyzO8DlkshjcUm5+Ko20INCpg
+	/8FbZG4ZRGCo4WDutH283okyhZGY6pnifz21QFw9lnB4cR8kcnJZcEtVvcylKdaFF0bpxYoiw3P
+	6GJ5T2z2ro3Q92uab5RhmhkKH15cq1/Xzt12yX7l8T915vNliswMDzXknEtWPYyI9yW+rQ1TRTm
+	YbDMfEZ8ArEtmeVHJ+Hz4W5yBuaEGjDRjeLd7vlhsLr5uqMpFoE2WqrH6OdxPD8ddNUD/Gr6mIz
+	4waTLS/CcIDwWamnNJdRckmvXfPvRHpDcPpBuyA6Bbz0Q1W2zJy7DuU1i28oWgSN1mf+UPOBftd
+	eB6q13sI=
+X-Google-Smtp-Source: AGHT+IE2N8f8hUagKLqg+WW0SX5zS2E+TiqiD9xESm5aR7zJzYlyjIWpNTeS1f6CZd3NHj8CEiawww==
+X-Received: by 2002:a05:620a:26a7:b0:7c3:d3a1:6f43 with SMTP id af79cd13be357-7c3d3a17071mr174218585a.57.1741097100956;
+        Tue, 04 Mar 2025 06:05:00 -0800 (PST)
+Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com. [209.85.219.54])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c3b53ce7a6sm322668285a.31.2025.03.04.06.04.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 04 Mar 2025 06:04:59 -0800 (PST)
+Received: by mail-qv1-f54.google.com with SMTP id 6a1803df08f44-6e88983cedaso43141756d6.1;
+        Tue, 04 Mar 2025 06:04:59 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUOSmxwrOqyDqku76a94/WWmtz1pA64t7uJWEGottWGbSsATILfz4aZ1LBlxlUJNZBDOmWdP7IfjHodPeem@vger.kernel.org, AJvYcCVktdYIZriim03kjfud4VwPDbrwe9ztsi4T3WggTkF+6Jm0nQUTOeIHMCDqdqsrPdf4JpU5OzuqjVzg@vger.kernel.org, AJvYcCW3gFLL1eK2c+VVADAINAdnA0hhMxvzykcz3pK2Gc0dAbXkAgmXcMAQaRiILgZzeNFfuHzNWeifaInXpThtY/G3/Hs=@vger.kernel.org, AJvYcCW88syuJ+YNOxeSuZTUMzT+Bw3L/4uHdXwHgTZugvglUtDRWj0HpetljevJ3s8u0dnzdPfdNOUB@vger.kernel.org
+X-Received: by 2002:a05:6214:21e7:b0:6e6:5aa2:4e4f with SMTP id
+ 6a1803df08f44-6e8a0d80ce8mr261405046d6.32.1741097099661; Tue, 04 Mar 2025
+ 06:04:59 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250302181808.728734-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20250302181808.728734-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <Z8SydsdDsZfdrdbE@shell.armlinux.org.uk> <CA+V-a8vCB7nP=tsv4UkOwODSs-9hiG-PxN6cpihfvwjq2itAHg@mail.gmail.com>
+ <Z8TRQX2eaNzXOzV0@shell.armlinux.org.uk> <CA+V-a8vykhxqP30iTwN6yrqDgT8YRVE_MadjiTFp653rHVqMNg@mail.gmail.com>
+ <Z8WQJQo5kW9QV-wV@shell.armlinux.org.uk> <TY3PR01MB113468803E298C5FA6FB6712886C82@TY3PR01MB11346.jpnprd01.prod.outlook.com>
+ <Z8bPPaT4Vsob4FHH@shell.armlinux.org.uk>
+In-Reply-To: <Z8bPPaT4Vsob4FHH@shell.armlinux.org.uk>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Tue, 4 Mar 2025 15:04:47 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdVQkzDhJmkpGah7omE7UqTgM3GSpVVDE-1mh9wW7O8vBA@mail.gmail.com>
+X-Gm-Features: AQ5f1JqGYJsTOdNI9PAwDvGf850hGSzvpOQrNGjb6j2I3wF8GT8UjrisfucgoQw
+Message-ID: <CAMuHMdVQkzDhJmkpGah7omE7UqTgM3GSpVVDE-1mh9wW7O8vBA@mail.gmail.com>
+Subject: Re: [PATCH 3/3] net: stmmac: Add DWMAC glue layer for Renesas GBETH
+To: "Russell King (Oracle)" <linux@armlinux.org.uk>
+Cc: Biju Das <biju.das.jz@bp.renesas.com>, 
+	"Lad, Prabhakar" <prabhakar.csengg@gmail.com>, Andrew Lunn <andrew+netdev@lunn.ch>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Philipp Zabel <p.zabel@pengutronix.de>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, 
+	Jose Abreu <joabreu@synopsys.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>, 
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>, 
+	Emil Renner Berthing <kernel@esmil.dk>
+Content-Type: text/plain; charset="UTF-8"
 
-In function create_ib_ah() the following line attempts 
-to left shift the return value of mlx5r_ib_rate() by 4 
-and store it in the stat_rate_sl member of av:
+Hi Russell,
 
-		ah->av.stat_rate_sl = (mlx5r_ib_rate(dev, rdma_ah_get_static_rate(ah_attr)) << 4);
-		
-However the code overlooks the fact that mlx5r_ib_rate() 
-may return -EINVAL if the rate passed to it is less than 
-IB_RATE_2_5_GBPS or greater than IB_RATE_800_GBPS.
+On Tue, 4 Mar 2025 at 11:00, Russell King (Oracle)
+<linux@armlinux.org.uk> wrote:
+> For the failure to happen, you need to check whether EEE is being used:
+>
+> # ethtool --show-eee ethX
 
-Because of this, the code may invoke undefined behaviour when
-shifting a signed negative value when doing "-EINVAL << 4".
+Doh, that's also not supported on Starlight (BeagleV beta).
 
-To fix this check for errors before assigning stat_rate_sl and
-propagate any error value to the callers.
+I tried unbind/rebind regardless, and it works (sort of),
+using the old Beagle V Fedora rootfs on microSD:
 
-Signed-off-by: Qasim Ijaz <qasdev00@gmail.com>
-Fixes: c534ffda781f ("RDMA/mlx5: Fix AH static rate parsing")
-Cc: stable@vger.kernel.org
----
- drivers/infiniband/hw/mlx5/ah.c | 17 +++++++++++++----
- 1 file changed, 13 insertions(+), 4 deletions(-)
+[root@fedora-starfive starfive-dwmac]# echo 10020000.ethernet > unbind
+starfive-dwmac 10020000.ethernet eth0: stmmac_dvr_remove: removing driver
+starfive-dwmac 10020000.ethernet eth0: Link is Down
+[root@fedora-starfive starfive-dwmac]# echo 10020000.ethernet > bind
+starfive-dwmac 10020000.ethernet: IRQ eth_lpi not found
+starfive-dwmac 10020000.ethernet: IRQ sfty not found
+starfive-dwmac 10020000.ethernet: Hash table entries set to unexpected value 32
+starfive-dwmac 10020000.ethernet: User ID: 0x59, Synopsys ID: 0x37
+starfive-dwmac 10020000.ethernet:        DWMAC1000
+starfive-dwmac 10020000.ethernet: DMA HW capability register supported
+starfive-dwmac 10020000.ethernet: RX Checksum Offload Engine supported
+starfive-dwmac 10020000.ethernet: COE Type 2
+starfive-dwmac 10020000.ethernet: Wake-Up On Lan supported
+starfive-dwmac 10020000.ethernet: Enhanced/Alternate descriptors
+starfive-dwmac 10020000.ethernet: Enabled extended descriptors
+starfive-dwmac 10020000.ethernet: Chain mode enabled
+starfive-dwmac 10020000.ethernet: Enable RX Mitigation via HW Watchdog Timer
+starfive-dwmac 10020000.ethernet: device MAC address fa:58:39:0a:37:37
+libphy: get_phy_c22_id: mii_bus stmmac phy_id = 0x00221622
+starfive-dwmac 10020000.ethernet eth0: Register MEM_TYPE_PAGE_POOL RxQ-0
+starfive-dwmac 10020000.ethernet eth0: PHY [stmmac-0:07] driver
+[Micrel KSZ9031 Gigabit PHY] (irq=POLL)
+dwmac1000: Master AXI performs fixed burst length
+starfive-dwmac 10020000.ethernet eth0: No Safety Features support found
+starfive-dwmac 10020000.ethernet eth0: No MAC Management Counters available
+starfive-dwmac 10020000.ethernet eth0: IEEE 1588-2008 Advanced
+Timestamp supported
+starfive-dwmac 10020000.ethernet eth0: configuring for phy/rgmii-id link mode
+starfive-dwmac 10020000.ethernet eth0: Link is Up - 1Gbps/Full - flow
+control off
 
-diff --git a/drivers/infiniband/hw/mlx5/ah.c b/drivers/infiniband/hw/mlx5/ah.c
-index 99036afb3aef..6bccd9ce4538 100644
---- a/drivers/infiniband/hw/mlx5/ah.c
-+++ b/drivers/infiniband/hw/mlx5/ah.c
-@@ -50,11 +50,12 @@ static __be16 mlx5_ah_get_udp_sport(const struct mlx5_ib_dev *dev,
- 	return sport;
- }
- 
--static void create_ib_ah(struct mlx5_ib_dev *dev, struct mlx5_ib_ah *ah,
-+static int create_ib_ah(struct mlx5_ib_dev *dev, struct mlx5_ib_ah *ah,
- 			 struct rdma_ah_init_attr *init_attr)
- {
- 	struct rdma_ah_attr *ah_attr = init_attr->ah_attr;
- 	enum ib_gid_type gid_type;
-+	int rate_val;
- 
- 	if (rdma_ah_get_ah_flags(ah_attr) & IB_AH_GRH) {
- 		const struct ib_global_route *grh = rdma_ah_read_grh(ah_attr);
-@@ -67,8 +68,10 @@ static void create_ib_ah(struct mlx5_ib_dev *dev, struct mlx5_ib_ah *ah,
- 		ah->av.tclass = grh->traffic_class;
- 	}
- 
--	ah->av.stat_rate_sl =
--		(mlx5r_ib_rate(dev, rdma_ah_get_static_rate(ah_attr)) << 4);
-+	rate_val = mlx5r_ib_rate(dev, rdma_ah_get_static_rate(ah_attr));
-+	if (rate_val < 0)
-+		return rate_val;
-+	ah->av.stat_rate_sl = rate_val << 4;
- 
- 	if (ah_attr->type == RDMA_AH_ATTR_TYPE_ROCE) {
- 		if (init_attr->xmit_slave)
-@@ -89,6 +92,8 @@ static void create_ib_ah(struct mlx5_ib_dev *dev, struct mlx5_ib_ah *ah,
- 		ah->av.fl_mlid = rdma_ah_get_path_bits(ah_attr) & 0x7f;
- 		ah->av.stat_rate_sl |= (rdma_ah_get_sl(ah_attr) & 0xf);
- 	}
-+
-+	return 0;
- }
- 
- int mlx5_ib_create_ah(struct ib_ah *ibah, struct rdma_ah_init_attr *init_attr,
-@@ -99,6 +104,7 @@ int mlx5_ib_create_ah(struct ib_ah *ibah, struct rdma_ah_init_attr *init_attr,
- 	struct mlx5_ib_ah *ah = to_mah(ibah);
- 	struct mlx5_ib_dev *dev = to_mdev(ibah->device);
- 	enum rdma_ah_attr_type ah_type = ah_attr->type;
-+	int ret;
- 
- 	if ((ah_type == RDMA_AH_ATTR_TYPE_ROCE) &&
- 	    !(rdma_ah_get_ah_flags(ah_attr) & IB_AH_GRH))
-@@ -121,7 +127,10 @@ int mlx5_ib_create_ah(struct ib_ah *ibah, struct rdma_ah_init_attr *init_attr,
- 			return err;
- 	}
- 
--	create_ib_ah(dev, ah, init_attr);
-+	ret = create_ib_ah(dev, ah, init_attr);
-+	if (ret)
-+		return ret;
-+
- 	return 0;
- }
- 
+Apparently the MAC address has changed, so the board got a different
+IP address from my DHCP server :-(
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.39.5
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
