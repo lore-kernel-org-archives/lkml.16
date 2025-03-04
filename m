@@ -1,55 +1,52 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81AB81F92A;
-	Tue,  4 Mar 2025 00:09:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 564762905;
+	Tue,  4 Mar 2025 00:10:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741046991; cv=none; b=Jrc4hszOHWLLMJ18bqCa0DObidmhKIdLfpXo9jb+EdLH4qWAb/wbPiBXXhGCROEFpUtpgzpgg+LafJWtRoxOS6StlqVIwVE11tdVE3+rXlVlf0+pduiFEvZsfHCGwNxw+8r0IJmOEgklBYyNxEqf8x2PKFOq6iS0UNCUY5uu4Bo=
+	t=1741047026; cv=none; b=uAoBB1qTJ9EfWra3VeyxUbI+lgumOn/eXvu8khVPZvDDRp3y3Y6THolOMUpduZbXJ+AUYp3Z56sU3JyIKwsyIZ7p73+IXBBfz6SCLEWMMNuOqNNe5CkVzKZTiOfIG4Kgo35PsLb+d04sn0e1kFLzVndUGKeGPbJY2SFlySe1DIk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741046991; c=relaxed/simple;
-	bh=HYDy0V16CbXKV+Z0Ebwz9QqNroH1o7OVsMOOPFZOv8o=;
+	s=arc-20240116; t=1741047026; c=relaxed/simple;
+	bh=mhb0R+JmZbuqZb2vKrLLB9HfKDaCWuI1Q6s/9+i/gkc=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=NjypXU5gyzx8AbixocZWMiNSVRsmFe12eXEUFlnphTNgla63GMO2goH6ZGz2TG8izyseh6Vdea+z+SBAqZo7BJ14QPBt+8ViRtI97B6mao3blSzhDdKdkBPctO/B7C/jaWcLHB7YH7WRZEAkieYGGCKHaQ68ObyM1Qb8nxb/+nY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F8rweL6z; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=qpYY3lhvxZop5JRXoJ1CfXWPk4GXZWRzBOUy7Qv02VBqq7R3BbjikkXxwHLYvnM1WuRDboUODnkFsWow7kkp1IJ4oAAgpmnDmf8qX9cyYl7AR7GxG1L68ZIO0+3V1MMsN4Jfz1DS7U2mIffS+Z6X3OiPg+YmHtnFhGa1zCZm+nA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hSNxcxjQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F8rweL6z"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E92D3C4CEE4;
-	Tue,  4 Mar 2025 00:09:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hSNxcxjQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B3C1C4CEE4;
+	Tue,  4 Mar 2025 00:10:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741046990;
-	bh=HYDy0V16CbXKV+Z0Ebwz9QqNroH1o7OVsMOOPFZOv8o=;
+	s=k20201202; t=1741047026;
+	bh=mhb0R+JmZbuqZb2vKrLLB9HfKDaCWuI1Q6s/9+i/gkc=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=F8rweL6z8sb03sGNJu6P+EjwBBwv8zF1+YLwXCWEPWym0DdxXODtNhIrVss7pzQuF
-	 ht+XrUeCTypcwk4Sf5/2Dzy7AVdsJsTxvhL/IkCKRAu6Ih7aKaE37UZHC8fEo9Y8Dz
-	 +xTRikR0XQQ68mdX1zTebYrZ2ZOM02sYc3MLzCMH2FUmX+WtyUK/DE3YH7UjKlDSU5
-	 xsrniPbzjCkDbNHZ6AGjVKAqTJjXlhnUyXVj77GzEnLIBqi5tRmNIQL9dWUr4NzSvy
-	 zv+ZZz1iKxkpvYuIQLcpoeYNw4i1AbeSiCYNa8YmfH69T6sR9PHknK3KcJOXUvt8zg
-	 bVqlAq6dyNbaw==
-Date: Tue, 4 Mar 2025 00:09:31 +0000
-From: Jonathan Cameron <jic23@kernel.org>
-To: Jishnu Prakash <jishnu.prakash@oss.qualcomm.com>
-Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
- agross@kernel.org, andersson@kernel.org, dmitry.baryshkov@linaro.org,
- konradybcio@kernel.org, daniel.lezcano@linaro.org, sboyd@kernel.org,
- amitk@kernel.org, thara.gopinath@gmail.com, lee@kernel.org,
- rafael@kernel.org, subbaraman.narayanamurthy@oss.qualcomm.com,
- david.collins@oss.qualcomm.com, anjelique.melendez@oss.qualcomm.com,
- quic_kamalw@quicinc.com, rui.zhang@intel.com, lukasz.luba@arm.com,
- lars@metafoo.de, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-pm@vger.kernel.org, cros-qcom-dts-watchers@chromium.org,
- quic_skakitap@quicinc.com, neil.armstrong@linaro.org
-Subject: Re: [PATCH V5 4/5] iio: adc: Add support for QCOM PMIC5 Gen3 ADC
-Message-ID: <20250304000931.5be25de1@jic23-huawei>
-In-Reply-To: <449712bb-961e-4ccf-bf74-50dd55315abc@oss.qualcomm.com>
-References: <20250131183242.3653595-1-jishnu.prakash@oss.qualcomm.com>
-	<20250131183242.3653595-5-jishnu.prakash@oss.qualcomm.com>
-	<20250201121134.53040aae@jic23-huawei>
-	<9e14f58f-e345-4bae-b14e-de25fc28d9a8@oss.qualcomm.com>
-	<20250301032519.16e77288@jic23-huawei>
-	<449712bb-961e-4ccf-bf74-50dd55315abc@oss.qualcomm.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	b=hSNxcxjQZv/RKSYZQNum16KV0wryu2LL8z+zTyog6YdTtK1gF1VttJ/xPPcbtjVHU
+	 JZmil/BGqLpE9YLTHHzWIun8yrHJm+/uxcu/ucV3NF2apROYk68N6E6TFTzyEOSopS
+	 Jty+DVMyr4zLFToJtTEvwTqvv8X+DC7+joSl3XW/C6igqAT6n6pUTWDTg91XHvJTEA
+	 0WomYPJlQ6vQqWI2DjEtdX8BSwLWMZeK8AfhRVB1sbDI4T1aAiJ8xamF+Jv6J/tJ5w
+	 3/yHvoE8D8dHNXXPhhPIcJdlAxr6SsqcrsyMxOIxvGr956jKnaxA93cLPHpNqQuYHZ
+	 sskj05VhvjrOA==
+Date: Mon, 3 Mar 2025 16:10:24 -0800
+From: Jakub Kicinski <kuba@kernel.org>
+To: Maxime Chevallier <maxime.chevallier@bootlin.com>
+Cc: davem@davemloft.net, Andrew Lunn <andrew@lunn.ch>, Eric Dumazet
+ <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Heiner Kallweit
+ <hkallweit1@gmail.com>, Parthiban Veerasooran
+ <parthiban.veerasooran@microchip.com>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com,
+ linux-arm-kernel@lists.infradead.org, Christophe Leroy
+ <christophe.leroy@csgroup.eu>, Herve Codina <herve.codina@bootlin.com>,
+ Florian Fainelli <f.fainelli@gmail.com>, Vladimir Oltean
+ <vladimir.oltean@nxp.com>, =?UTF-8?B?S8O2cnk=?= Maincent
+ <kory.maincent@bootlin.com>, Oleksij Rempel <o.rempel@pengutronix.de>,
+ Simon Horman <horms@kernel.org>, Romain Gantois
+ <romain.gantois@bootlin.com>, Piergiorgio Beruto
+ <piergiorgio.beruto@gmail.com>
+Subject: Re: [PATCH net v2] net: ethtool: netlink: Allow NULL nlattrs when
+ getting a phy_device
+Message-ID: <20250303161024.43969294@kernel.org>
+In-Reply-To: <20250301141114.97204-1-maxime.chevallier@bootlin.com>
+References: <20250301141114.97204-1-maxime.chevallier@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -59,63 +56,44 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Mon, 3 Mar 2025 19:26:37 +0530
-Jishnu Prakash <jishnu.prakash@oss.qualcomm.com> wrote:
+On Sat,  1 Mar 2025 15:11:13 +0100 Maxime Chevallier wrote:
+> ethnl_req_get_phydev() is used to lookup a phy_device, in the case an
+> ethtool netlink command targets a specific phydev within a netdev's
+> topology.
+> 
+> It takes as a parameter a const struct nlattr *header that's used for
+> error handling :
+> 
+>        if (!phydev) {
+>                NL_SET_ERR_MSG_ATTR(extack, header,
+>                                    "no phy matching phyindex");
+>                return ERR_PTR(-ENODEV);
+>        }
+> 
+> In the notify path after a ->set operation however, there's no request
+> attributes available.
+> 
+> The typical callsite for the above function looks like:
+> 
+> 	phydev = ethnl_req_get_phydev(req_base, tb[ETHTOOL_A_XXX_HEADER],
+> 				      info->extack);
+> 
+> So, when tb is NULL (such as in the ethnl notify path), we have a nice
+> crash.
+> 
+> It turns out that there's only the PLCA command that is in that case, as
+> the other phydev-specific commands don't have a notification.
+> 
+> This commit fixes the crash by passing the cmd index and the nlattr
+> array separately, allowing NULL-checking it directly inside the helper.
+> 
+> Fixes: c15e065b46dc ("net: ethtool: Allow passing a phy index for some commands")
+> Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
 
-> Hi Jonathan,
-> 
-> On 3/1/2025 8:55 AM, Jonathan Cameron wrote:
-> > On Wed, 26 Feb 2025 14:22:05 +0530
-> > Jishnu Prakash <jishnu.prakash@oss.qualcomm.com> wrote:
-> >   
-> ...
-> >>>> +void adc5_take_mutex_lock(struct device *dev, bool lock)
-> >>>> +{
-> >>>> +	struct iio_dev *indio_dev = dev_get_drvdata(dev->parent);
-> >>>> +	struct adc5_chip *adc = iio_priv(indio_dev);
-> >>>> +
-> >>>> +	if (lock)
-> >>>> +		mutex_lock(&adc->lock);
-> >>>> +	else
-> >>>> +		mutex_unlock(&adc->lock);
-> >>>> +}
-> >>>> +EXPORT_SYMBOL_NS_GPL(adc5_take_mutex_lock, "QCOM_SPMI_ADC5_GEN3");    
-> >>>
-> >>> This is potentially going to make a mess for sparse.  Might be better to split
-> >>> it in two so you can had __acquires and __releases markings.
-> >>>
-> >>> If you don't get any warnings with sparse then I guess we are fine.
-> >>>     
-> >>
-> >> I had tried building with sparse in my local workspace and I did not get any errors in this file. Do you think I can keep this unchanged?
-> >> Also, would any kernel bots run sparse later on this patch, if it's not already done?  
-> > 
-> > Problems around this tend to turn up a bit late in build tests as requires
-> > particular combinations of features.  Here you may not see problems because
-> > sparse can't see far enough to understand the locking.
-> > 
-> > I would still split this into lock / unlock as that matches better
-> > with common syntax for locks.  We can then add markings
-> > as necessary later.
-> >   
-> 
-> OK, I can split this into separate lock and unlock functions.
-> And for markings, you mean I should add these:
-> 
->     __acquires(&adc->lock)
->     __releases(&adc->lock)
-> 
-> under the lock and unlock functions respectively?
-yes
+Well, this alone doesn't look too bad.. :) Hopefully we can address
+adding more suitable handlers for phy ops in net-next.
 
-> 
-> Thanks,
-> Jishnu
-> 
-> >>>> +/*    
-> >>>
-> >>> Looks like valid kernel doc, so /** and check it builds fine
-> >>> with the kernel-doc script.
-> >>>     
-> 
-
+Didn't someone report this, tho? I vaguely remember seeing an email,
+unless they said they don't want to be credited maybe we should add
+a Reported-by tag? You can post it in reply, no need to repost 
+the patch.
