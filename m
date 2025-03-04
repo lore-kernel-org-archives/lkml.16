@@ -1,136 +1,114 @@
-Received: from sender4-op-o12.zoho.com (sender4-op-o12.zoho.com [136.143.188.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 606E02517BB;
-	Tue,  4 Mar 2025 16:49:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.12
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741106943; cv=pass; b=F8mDs2z/uo0ChYHAJycPRyB9lxrCeuvLgl9dGdA6Gt7Gv5nQY7xipxMr6ESmrGTz2pJRiUXbuoSWYwpLg4/0elb1bpQHWUZKSuPg2YTJN0dHMDAia+b3fRCLQEZebKts1jR58EFd6wCWTdX5CH4dRMiaa8WgBO1d/Z1V3K3t5kI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741106943; c=relaxed/simple;
-	bh=4RAoUkuf7ewwJ8cnrWg8tsLrSLar35HtgkvQotfrXug=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=SiLvpzpdQCe4dkbz9vfDcMVUcSQlZdBAPOQ2E1qVHW85WsmQbWSVpZCD/obtP1EmK4nc1QzpqXizAN48oh5IFCua8+GATPaIXKuulglEkwLzEf1qlIQNxnkYzqdiWmA2vk4XssOh3q4HU0MYUV+xpnQklsVTM2synOiQn63tCsc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=aYEeSW6P; arc=pass smtp.client-ip=136.143.188.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 683A9279334
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 16:49:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741106972; cv=none; b=YmMWiMclwNb5ldJwhacHw96JdYKqi+D0/I6l2p1UYA92ICoMPnhk+W41rvGp5vCA3vJTkt3KggNNGpyrTU6vadralsyFO86en9RasD/+njsT/4XNTa9f8HyxFYTED8VqmbdESzrva9Tbl7tTsqbmFXmcECl1OHDJuVES9Hrp+Pk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741106972; c=relaxed/simple;
+	bh=9Z5yiF0KSO+NPcolTUzxks0Yc/uCbphDTbGq4JaB8Vo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VzdJLoEEC9XTKqJyZUngoyN03Z48WctAhiY/eKCwKuXt64H03+TFmwI5fCgR8cOqEQl0AZQ7quxuoz9EPHnyxt4WnvMLm5Aw+RoGFYBYdlSGZFaCjbpAltKdZGhml69m+AcojBQDz8r0CoL9KKrOsfxtCucPG13Yrq4YRQmbvV4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Nuur6wkI; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="aYEeSW6P"
-ARC-Seal: i=1; a=rsa-sha256; t=1741106922; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=oD6ujRjG+rsYxCx4iGEyaaiezw/7wmwGdhJZAMizG4U8lFLrUl+m4d/2FWA9Vk55Zzyp6IJzFNBWQLVHxw7S4+aR/s3c4BurtrA+YVdeI814VUvKQffCvVlHGvHNXGaTxsUS5PlPJqubP9dAi0UpLAiK+3QQFuW92qdOjwctNN4=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1741106922; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=dwy5+ghU3OdxRxXJ5Gg2zsehsrGVRP88ZDUxKwxlNq8=; 
-	b=GotW3QTbO8u6iESn0fn7Mly94JXRKfTNeqUsQmApfpVfnvxgtNpeF77VZdJs4VAYGfd8jD5nCm+Lx0QLalU2bZNfL2rzWhuwmmE8ss2YFezIgMm7V5u2o3Xzl/XZslXWFRm4DCtKy9Wl5fXqrqLxihh476cy0NRTdnhO7STvhJE=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
-	dmarc=pass header.from=<daniel.almeida@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1741106922;
-	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
-	h=Content-Type:Mime-Version:Subject:Subject:From:From:In-Reply-To:Date:Date:Cc:Cc:Content-Transfer-Encoding:Message-Id:Message-Id:References:To:To:Reply-To;
-	bh=dwy5+ghU3OdxRxXJ5Gg2zsehsrGVRP88ZDUxKwxlNq8=;
-	b=aYEeSW6PsY8U0KJa4Sy+jfb6NwH6ByLrAY0Ioui7hBX6296opa/L2UGvo2IVT5el
-	gOObVd4rtiXEvHXe/5vt4ifnwSg8/nHE2KSyuzGdJY18S33/A5m/O9Zd2bDTV9N8QAk
-	GECH72e8TOvsIfEKhBa9HWkNqt6QYVvAZj2KpH6g=
-Received: by mx.zohomail.com with SMTPS id 1741106920056781.2730201045849;
-	Tue, 4 Mar 2025 08:48:40 -0800 (PST)
-Content-Type: text/plain;
-	charset=utf-8
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Nuur6wkI"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-43995b907cfso38144165e9.3
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Mar 2025 08:49:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1741106969; x=1741711769; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Zouj1Hp3SfYIrOLTqQLJUUDe/x9qYEs9R8lkvyWGV2M=;
+        b=Nuur6wkIzXEfa4bQLuv4P1LuUykaEFULdZQ0hjYoK1XXBIxOjLbbNzh7jqlOlyObI9
+         D7XFMipUXdbJ0tPH7Z8L1TgbSIwDimsGvZEaQT1px9KXuSp5Dj964IqB2+oIxuURTdNG
+         jiAzaQY5eGkr4Og0Z3LmcmgQO+ZuE3wwvPS8bZrUg+sZ80BeB5KoionPzfeyyMUwpnRi
+         EGwAvkqy39zmf/UNGyIJ/tBDCLfVhDsT9flZI8llVH7qBpCIWTqEeebzTdyReYvz2zNH
+         cYFBqms1GoR1Wzx1q/pRCtRNGopLuK5JUa3gVklLO6TG9ZeJ4iXZCYchisIm2wEYf+b+
+         Vqkg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741106969; x=1741711769;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Zouj1Hp3SfYIrOLTqQLJUUDe/x9qYEs9R8lkvyWGV2M=;
+        b=KjBLdiSw957urhbLsINI2zVb/t45DdsDr7KdzDOADTt0cSeGm31sloGmxDMF7X/Ra/
+         jaN5i5wTrrb8dt76RdflSRQZkQ86B6mhq7Pu4959vRLgJCFYbIpI9IkrNdRZ0rHZz7pH
+         PivWTPMrrxATkzN+WiJo0ViXqXudQ2N4U36YwDhIVmfYa9iHyIO4gZ4bD8wBO3PKg3K5
+         zS4maYggVH/3He9YLB/zqOp2b4fGehP6A/8KNQK1eJlfN46i7JAFd+gifUtY7D6Dnlo2
+         5FCo1jtKmacdqcynmGfSivPDBdNcz+UyTt1vhv6OnrsDZZ+ubbVIhxTr6+gwylCDiy+z
+         YtEw==
+X-Forwarded-Encrypted: i=1; AJvYcCUjj82jh7Tb0glBsBdNbzf9EVqrmBNgaoZnPw3KPO4fJgF+P8WhC7JqXIvAaX+/W7wEXdsr6jYnEwRddHU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwH165NkxC33eurQuvcqzr7ndFXT/S5qEs66x6zzR6k3oBKwETU
+	Tt97es5D2SqknHMwy9Q4oikdmYkWEWnFuKr6CIWx1nnQWk0/M9ysREaxDqUcPsI=
+X-Gm-Gg: ASbGncvIo4L6uq2CwqFhIugkGTaAfgWnMWmhSDbHCF/42t9tm+Fll5ybwaJzNSKtLQx
+	iUjDMbNn7U/Rf31KS0mNRxHjI2X9x4H0kk2PRaIUGpXBce3vFlgpP36YdrFUfd/sMPk2up3tGYn
+	slrVTdPShrqwIHHFErUnhJjYIIfBD3F3zhJPqYOZThjpXCVDYC9MCgOfkqbL53CxO8MHEee+JEg
+	0JtklhoDiXLr3aGQelQgXgorncSCu/uo4br48e7D1nqi5NlA3EixeJVJgbadrNrVoB+2+gzUDJp
+	inwu1FqA/j0NbiEJi4c/2ChrZTbLwpBFvZGp98//eWo1B3hzTd3qsWXcIS7EV6ch3VEabFzdaB6
+	wB+2IYIUIfw==
+X-Google-Smtp-Source: AGHT+IHnEjomaLJcNubPCqgScHWOFRvf7a69WTdmkPmuw90OYKp/8j177FQoZiJgfCYxKTwR20hDgA==
+X-Received: by 2002:a05:600c:1d9e:b0:43b:c309:da40 with SMTP id 5b1f17b1804b1-43bc309dba5mr62613095e9.4.1741106968691;
+        Tue, 04 Mar 2025 08:49:28 -0800 (PST)
+Received: from [192.168.0.35] (188-141-3-146.dynamic.upc.ie. [188.141.3.146])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43b7a28b285sm204943155e9.33.2025.03.04.08.49.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 04 Mar 2025 08:49:28 -0800 (PST)
+Message-ID: <10ab5c5a-68c5-4f5c-9484-a5a8fc420ad3@linaro.org>
+Date: Tue, 4 Mar 2025 16:49:27 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.300.87.4.3\))
-Subject: Re: [PATCH v2] rust: irq: add support for request_irq()
-From: Daniel Almeida <daniel.almeida@collabora.com>
-In-Reply-To: <87cyewhpxj.fsf@kernel.org>
-Date: Tue, 4 Mar 2025 13:48:30 -0300
-Cc: ojeda@kernel.org,
- alex.gaynor@gmail.com,
- boqun.feng@gmail.com,
- gary@garyguo.net,
- bjorn3_gh@protonmail.com,
- benno.lossin@proton.me,
- tmgross@umich.edu,
- rust-for-linux@vger.kernel.org,
- linux-kernel@vger.kernel.org,
- Alice Ryhl <aliceryhl@google.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <BE595E8E-CB77-4E8B-B6EF-215CCAF5580A@collabora.com>
-References: <u-vC1KbeOK3Fd2PClzinb8LmqS_dntOW-pOSmZIFWotCZeTOg30xR_GYUc4oReAKZeuuu7ZaXWzfeTkpGMlr0A==@protonmail.internalid>
- <20250122163932.46697-1-daniel.almeida@collabora.com>
- <87cyewhpxj.fsf@kernel.org>
-To: Andreas Hindborg <a.hindborg@kernel.org>
-X-Mailer: Apple Mail (2.3826.300.87.4.3)
-X-ZohoMailClient: External
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 7/8] arm64: dts: qcom: sc8280xp: Add Venus
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+ Krzysztof Kozlowski <krzk@kernel.org>,
+ Stanimir Varbanov <stanimir.k.varbanov@gmail.com>,
+ Vikash Garodia <quic_vgarodia@quicinc.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>,
+ Bjorn Andersson <andersson@kernel.org>
+Cc: linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Johan Hovold <johan+linaro@kernel.org>
+References: <20250304-b4-linux-media-comitters-sc8280xp-venus-v1-0-279c7ea55493@linaro.org>
+ <20250304-b4-linux-media-comitters-sc8280xp-venus-v1-7-279c7ea55493@linaro.org>
+ <77475c23-c173-4512-b257-d7b01fa2054d@kernel.org>
+ <d4d658a3-e276-4e0f-ae71-5efd077e8a12@oss.qualcomm.com>
+Content-Language: en-US
+From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+In-Reply-To: <d4d658a3-e276-4e0f-ae71-5efd077e8a12@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Andreas,
+On 04/03/2025 16:41, Konrad Dybcio wrote:
+> On 4.03.2025 3:02 PM, Krzysztof Kozlowski wrote:
+>> On 04/03/2025 14:07, Bryan O'Donoghue wrote:
+>>> From: Konrad Dybcio <konradybcio@kernel.org>
+>>>
+>>> Add the required nodes to enable Venus on sc8280xp.
+>>>
+>>> Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+>>
+>>
+>> SoB and From do not match.
+> 
+> .mailmap breaks this
+> 
+> I previously worked around this by kicking the relevant entries from the
+> file, but that in turn broke base-commit in the cover letter
+> 
+> Konrad
 
-I will address your other comments later this week, as I=E2=80=99m off =
-for a few days.
+OK with you if I switch your email to kernel.org here ?
 
-> On 4 Mar 2025, at 10:43, Andreas Hindborg <a.hindborg@kernel.org> =
-wrote:
->=20
-> "Daniel Almeida" <daniel.almeida@collabora.com> writes:
->=20
->> Add support for registering IRQ handlers in Rust.
->>=20
->> IRQ handlers are extensively used in drivers when some peripheral =
-wants to
->> obtain the CPU attention. Registering a handler will make the system =
-invoke the
->> passed-in function whenever the chosen IRQ line is triggered.
->>=20
->> Both regular and threaded IRQ handlers are supported through a =
-Handler (or
->> ThreadedHandler) trait that is meant to be implemented by a type =
-that:
->>=20
->> a) provides a function to be run by the system when the IRQ fires =
-and,
->>=20
->> b) holds the shared data (i.e.: `T`) between process and IRQ =
-contexts.
->>=20
->> The requirement that T is Sync derives from the fact that handlers =
-might run
->> concurrently with other processes executing the same driver, creating =
-the
->> potential for data races.
->>=20
->> Ideally, some interior mutability must be in place if T is to be =
-mutated. This
->> should usually be done through the in-flight SpinLockIrq type.
->>=20
->> Co-developed-by: Alice Ryhl <aliceryhl@google.com>
->> Signed-off-by: Alice Ryhl <aliceryhl@google.com>
->> Signed-off-by: Daniel Almeida <daniel.almeida@collabora.com>
->=20
-> What is the base commit to apply this patch to? I am getting some
-> compiler errors when trying it out:
->=20
->   error[E0308]: mismatched types
->     --> =
-/home/aeh/src/linux-rust/linux/rust/kernel/irq/request.rs:240:21
->       |
->   237 |                 bindings::request_irq(
->       |                 --------------------- arguments to this =
-function are incorrect
->   ...
->   240 |                     flags.0,
->       |                     ^^^^^^^ expected `usize`, found `u64`
->       |
->=20
-> [...]
-
-This patch needs a rebase. I=E2=80=99ve been waiting for Lyude & Boqun
-new SpinLockIrq series, which just came out last week.
-
-I=E2=80=99ll work on a v3 soon.
-
-
-
+---
+bod
