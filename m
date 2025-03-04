@@ -1,127 +1,287 @@
-Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2078.outbound.protection.outlook.com [40.107.102.78])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 864DB1F473C
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 06:11:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741068698; cv=none; b=FA+/iFMInKdRbbg56Iax8cxmJwWldgXke7hzMoR/Z8O9YjNGUWsKVSh99hj9qbksBD0nHTfxU3apz3g22dXPpolZ5xgDmYrFwYKb0YVjgCM80YfIMN7ME8fZ4pjiIcNamkDu59VKAPoiYb25FCsn1R51YTVhD3Nu9teXPUvAnZQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741068698; c=relaxed/simple;
-	bh=xVZb2uxImUx0ECcSqYKHOxrGyYGp1I4gtxr8DYt1oOg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kEeKuCPrpUvu+n7YIhiYfHRuL0ioNLKR7dM4ZPIb4lZmbox/MfNFAVs9T5f/9STJCkCSQVsKxZoRarBvAmALZI6fLt9N9d7nMDh8kh5IHSXNBo/hRcEGBEDYPWn8mWzPIP/q6eeXapNMoXSdk4GQfRe9lV1BszVGOn/YIsE+SWQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=AUPfMz6H; arc=none smtp.client-ip=209.85.216.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2123953AC;
+	Tue,  4 Mar 2025 06:13:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.102.78
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741068830; cv=fail; b=hW0tmtR6H4zmvwwCtKsI/kM0WR6+1CFxTnLUryIVC92sVtOHc1C5aB6D/HhW6FXLeuG5cCeItuQRwp1MuwQ1zTV3EtnoHGg7gbYO1+1VAaiuwfGBK5nkfTS/1Tv8fudbDNI8jBwGZE5+zeF7dRkmpQEwf+nfAW7dVOKKHwvSwM4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741068830; c=relaxed/simple;
+	bh=UVNGiUO2+69GCddmGG6fNBZJIGcTV/8bJuJ4JB9RCLw=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=kqooiQkQLCJKFBMDzlYWUhiVahBaIad99QtjxD6cnrToKvmbk6CLX7sARBzyQhsS0LMN85PXpynTS4/3jsPFYpPHBojI9JVH48XnP29q0BBcx/B3waouWSj//Z8lSv6T2ZIKgA5XnlZTPbJLD09sknexIO6IkLd7WNhpKq/6JVE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=kK5xykuh; arc=fail smtp.client-ip=40.107.102.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="AUPfMz6H"
-Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-2feb9078888so8399677a91.3
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Mar 2025 22:11:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1741068696; x=1741673496; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4FvNFViwfp2APOt2jux8SKthZ9o17Z2NZrToAsK4eao=;
-        b=AUPfMz6HBETFK4R0Mgs28jh2E0iSLs4SSEp7XTmoiALoDkS//Uy7h4hJbFXzCH3UcR
-         lGIj13pM/OuDs+VBhkjVDmvJpWnMaiqk3LM4WUKgsyzn/uq3QVeTneYl9F5gefREB3Es
-         UYCXiAMwlluep6lkTCQAPfgOCzsmZm86Hl+GwRNInToF+9pD95vYLhQ4ute8JQsrKTXi
-         yBQXB2yWVOzjPbFf2j5JZnM+ScKcqEVfgVBLLa+05TxvwRCNF3TBP2jVaSOiI4nBuv33
-         t27pXqg5Pf3y1O8teLeBXMcQc8bZr2I5Rv3DKEAWMgJUq9Uek4VgjicA9lYrdV/B9XMI
-         3PCw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741068696; x=1741673496;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=4FvNFViwfp2APOt2jux8SKthZ9o17Z2NZrToAsK4eao=;
-        b=Tt8zyPrEXsnPWtd/u8UxxWZRhWieZEW6bPP4eCkaqUTUpnYfbNTQKsFWKAcElFEFLc
-         Qepi1SXuAStzZFFw4yrwrHXNMeldVqbKGS9uzk9jl6WF7CaRgJkSjQS0OnNSjsbqdZBm
-         qGHU+qLDkGYEaUS0vsAd788NnfkXbJnxxf7fWwLcPlYyi0b705UdGtg5nnvO66DYh9pt
-         6EwcqzLrmEbbgrU+u/WHlW9ApsYTpKNdeJyCPOTuQz+pQ3mfCie6JEK2dUB1s/DHekGq
-         lO1Lj2u8x0sCoYogkVbLTLEIkQZuzaVHoXHzGp7CdB6YuEKGi3UiV3qYbiajZdx+cnhH
-         8B6Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXO8jkumP/BzQMNof2K9dXM4nWG/DGzw1ArES3yyVzFcDKKUd04EoydWqPasO6qEUEk6YgmFxMz4bszpsU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxrUPSdzIlN1C/VwVOtcsHpmY53jLitkD8aWldaBfujCEo3UG//
-	HQBoTKQl+5uPwMvWTAdgjonZvJ+n07SbolQ5M1w0musuq53rGXec0QKGVuyauHw=
-X-Gm-Gg: ASbGnctJK12Qh0gpPJoQCX4gXdxq2am59oxFFas3OpUmjd3fjUqWSN+tZAaWm5OBpfH
-	0HLKG0EZXtz9m3LRKBWqjUjPd+UR1oeiNVuW6BrdRhbH89cQgWijQ71tQmfjUFgkpRkhys+kex0
-	FaglkNBUlWafX6kBdvLJ0fkRMRtoqfVd2lnLqSJTWUG4tVIBY5oonYCAX21DRQFE3iDprFSzENm
-	TXG/jUSv3ZQCy+kmlYGqkbh04M/AlTEK4Br9ykXXG0fNFU565iADNw2a9LF0JP8ocxmoFbpbdg7
-	GopFHl4xWdK28T0/ooW0NGbsrLWlvC0vJEMqcu6zDbXnIfFu8HSZt/MWdUpvWuLhzAY6
-X-Google-Smtp-Source: AGHT+IEXDQyCMQ8sBrL+0HeKoJpZdetEfwPwd6LYj+c4cbVY5/CTPcBDN/0v1nn1xNdV90cajxorag==
-X-Received: by 2002:a05:6a20:db0a:b0:1f3:40d3:67d4 with SMTP id adf61e73a8af0-1f340d369d8mr504424637.30.1741068695820;
-        Mon, 03 Mar 2025 22:11:35 -0800 (PST)
-Received: from [10.68.122.90] ([63.216.146.178])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-aee7ddf23b6sm9305805a12.15.2025.03.03.22.11.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 03 Mar 2025 22:11:35 -0800 (PST)
-Message-ID: <7d1c834d-bc65-4979-9b72-0d1d91019501@bytedance.com>
-Date: Tue, 4 Mar 2025 14:11:24 +0800
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="kK5xykuh"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=x0q5ljtrPy6vHskzn6ADGsdHgtBxCvOlmQjb5oKihj0GQ/jgON6U+/Xgu1F1pzTqvtZW4b5VtzGEhiwQoUOsT6g6v3Ftgsak+dDOsWITkK5+wUxHKXtfc7p6ChAZ8wODP6PhKIgFYhSFGEm0MYLUfag+yKmYy+4QPiEI/tKU3Uy5lm8JQVbmFi84UaXL8KdPzBIsN/2aBFWDqQ6cGjs+z/1bP4R0NPazpRPr+63KArtcRd1hsXUs0nUHl/DifCMPDaPNGnuCUXH9ewdFThSWQhHZMzvN4KEQURUo/e/baBWUBf5ww2mFgRlD6Dsdx5Zt1mwRcukUQyf9TDEJ5B3uAg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=9euTXKoz9PqnOUFDeTKncdDaP3nWS52U/DojlTvZHPE=;
+ b=ELcrQc4kRjnydmP4Yr3EBoEkiq74ponN0fBd2Oi7kkc28+m0WdGrwZ+NHCWt7r6WZaWdfbEVc9L1YvM6dgCvn5VgInhx/ot92B3WW001L/KmoOmpBsdAYVc3G6bZ5ejadC16QmLi3/XpvmUfxSSIpzmI4DGwOGHLsgZkdbjxN+7QvxwdHyMDwiiawbJfn79YiGJcnPdEufO3LqIlnx98dSIBupCCyP+slhRbxuphME/QwIxUYM4uu0ipxl5536S5STaYka4d/aFKxzNX1htnm2ZPlf/aHDLeBWnduW24S+VDbE9NHB9jPkrKcC3s2onmxikme15AXm0S3pOi42MTCA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microchip.com; dmarc=pass action=none
+ header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microchip.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9euTXKoz9PqnOUFDeTKncdDaP3nWS52U/DojlTvZHPE=;
+ b=kK5xykuh0ACuAI4tQQnoGQPc8j8cabP+aCam0inT/9Yhl1aJuKv8WBDWFs4LAIqGfepMdvZrr6350XzeeneiZttBIm5gxTKnzUQwV9qSXmKsFSbT65ybzZCjN+nnN76T7uvO8Ps47IjCYlcqTOYetV3iWwykz9C3fTVPxg2QJT7lY3Ll7Y6r2a7xzpv3XYevgjrjhcN7ovUUmJdJy1nUrgKQLRrWNrfRhO5leHbhdrN4ZHvZ6Um6DxNk4gNBKUz7KwOKHV21FSqLSDnzQXsqoyQxqlpjZEjJbySwTEjOqsnwhHi7fcYCiWbUyb/5VY2HRJxAiHlpaakFUN95/g/b8Q==
+Received: from PH0PR11MB5611.namprd11.prod.outlook.com (2603:10b6:510:ed::9)
+ by SJ0PR11MB5182.namprd11.prod.outlook.com (2603:10b6:a03:2ae::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.16; Tue, 4 Mar
+ 2025 06:13:45 +0000
+Received: from PH0PR11MB5611.namprd11.prod.outlook.com
+ ([fe80::9ea3:51c1:edff:4d3a]) by PH0PR11MB5611.namprd11.prod.outlook.com
+ ([fe80::9ea3:51c1:edff:4d3a%6]) with mapi id 15.20.8489.025; Tue, 4 Mar 2025
+ 06:13:44 +0000
+From: <Shravan.Chippa@microchip.com>
+To: <sakari.ailus@linux.intel.com>
+CC: <mchehab@kernel.org>, <kieran.bingham@ideasonboard.com>,
+	<linux-media@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<Conor.Dooley@microchip.com>, <Valentina.FernandezAlanis@microchip.com>,
+	<Praveen.Kumar@microchip.com>
+Subject: RE: [PATCH V6 1/3] media: i2c: imx334: Optimized 4k and 2k mode
+ register arrays
+Thread-Topic: [PATCH V6 1/3] media: i2c: imx334: Optimized 4k and 2k mode
+ register arrays
+Thread-Index: AQHbicx/NYQCRnacwE+Q13BsI0u1H7NcmeaAgADbiwCAA5oUAIAAAD+AgAFz0QA=
+Date: Tue, 4 Mar 2025 06:13:44 +0000
+Message-ID:
+ <PH0PR11MB5611D7DD41867106B733137281C82@PH0PR11MB5611.namprd11.prod.outlook.com>
+References: <20250228103332.3647098-1-shravan.chippa@microchip.com>
+ <20250228103332.3647098-2-shravan.chippa@microchip.com>
+ <Z8GiqSfuyQdUNylt@kekkonen.localdomain>
+ <PH0PR11MB5611466B2027B79F7598534B81CF2@PH0PR11MB5611.namprd11.prod.outlook.com>
+ <Z8VgUoNklDUd_jaF@kekkonen.localdomain>
+ <Z8Vgh24HtnjmuBNy@kekkonen.localdomain>
+In-Reply-To: <Z8Vgh24HtnjmuBNy@kekkonen.localdomain>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microchip.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: PH0PR11MB5611:EE_|SJ0PR11MB5182:EE_
+x-ms-office365-filtering-correlation-id: 6099c1ad-afb9-48b3-a540-08dd5ae3b7f3
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|376014|366016|1800799024|38070700018;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?MoPxAgJWauMECuhPUPihLXf3Yd464GPr/it4yTv6DORBgmdozS4MzevKD+Pa?=
+ =?us-ascii?Q?+of7HRRZqwJRC3SBw99Nf/ox1dMKvCzgvCrdQdpB8MYs3IaCHkE/cjysNv3T?=
+ =?us-ascii?Q?042y7WwvxJmicIoZqVUP1ZYuyrqiXpCET1jmAMgHRTeUnJZN2WN3AlaPmPbZ?=
+ =?us-ascii?Q?/1TGLvFC+zbWuemX0MMY8PEnoSUjyZi9yXF5bz4JHlLjDPvK1FrjnOEajq20?=
+ =?us-ascii?Q?UwUlrWTbSOPMg4aAUphTmWuiJPC/SwY0hv5v3ts0qkRYscSo/cpzDWeFec72?=
+ =?us-ascii?Q?E/jl2rm7WiHYfIwq+cTLbhfvCGHepOWYipxJLUkJCEuKAPoFNVoLYbURiRkL?=
+ =?us-ascii?Q?bNkNg/Vz+iQQYwzxSq/fIzM/JJDg97qrj8UiQ8h+xN/G5HkDym6gyGwEqz9k?=
+ =?us-ascii?Q?BlG+7xE6EUKUMbf1MK1bFQw27QCiD6EiN6eU7l529NjQkMemYn9R6VzEo7bg?=
+ =?us-ascii?Q?xUdydYVgnYq9Uu5oV2ZMJVZmaSJ55sXpw29eplCFR9vGF/vbfoJgL2KniXFK?=
+ =?us-ascii?Q?ATeplQ4LG1NXE7jAgZZ3uL7iHqC4I8OQPTkvujotBNScK9EEErKd1BDyuFm1?=
+ =?us-ascii?Q?EcEWmvdFVVKx2/5/Buvg21fwV7qJ2jHz68XWG7/7dYirptaSPcvZ+ko9MWxL?=
+ =?us-ascii?Q?cK2l3+inUleqKMtwYE2rRKMppPm6tjS+D5XFa+uDdPsJghuAulhzYVbNb7hC?=
+ =?us-ascii?Q?M8g1KNHf+eItV6kpSOxDEjGePfgk86Jtwkh3LXwqjw+DMbrEwN/AqJ+G+2kG?=
+ =?us-ascii?Q?a5VW9wWz4B/C8JtflV6RI9Q4HldyPkTHMI3YrnPMCEBE4m+kwoeol839TY6Y?=
+ =?us-ascii?Q?BXXoQntyxa2HT3qJaYXr8+cI8VGndgSwZdDF4aIMTzzOjXHXyW3low/j1DbW?=
+ =?us-ascii?Q?cGb96LAh4sdnJFdl/dxLVgc1cV+XY9HWqeARcaJzR+gYG+YzDgFM3MZpcrc/?=
+ =?us-ascii?Q?dVe250FNcEx8x6sNbi6pjJ/CD7oc+3SMx4GtrwxpkfkLu9Y1Af/jF0kC+g0S?=
+ =?us-ascii?Q?LzqK2tglK015PIZKF+pOokstJ6Nr81LxVR43lQpHCNbE5XDRvIzj8MvA0KBp?=
+ =?us-ascii?Q?u8JCcD1geQNvXpb8T5YPK2rD43wjnnXaEgTVThL2Q2sEiz7XIdsrLRITHpUi?=
+ =?us-ascii?Q?bgxHbYbEcPqwCKRaUtZrc9UsyRx3xjrhDf03DaJYsHZAsRRpSK2iR0F8/qpQ?=
+ =?us-ascii?Q?943RHIa/vyuxTifJSlnul0Qf5Nm1KsaQK6AVSXOOfnBZWOKkPSfWIBhmi/CK?=
+ =?us-ascii?Q?h+XVx0qlnVwWODdQLFrE8sz4m8ncnQQQb/jUijaRuloCRm5GoOZi99Hh3jq3?=
+ =?us-ascii?Q?MBazYE1X+Vfs4+g/8o52xpzZZrYgrQBA7WwGAP+2Dvy3ElJ/ngdqIHTIrXMX?=
+ =?us-ascii?Q?vTq2wzF1wiULz2oQqOGPezeMicBw3GiYxPt+/2WEdhLmjF1pr12Wd767utFd?=
+ =?us-ascii?Q?m9Unj+ZMIBcpT3uoLDLbMktNm2h+OAqf?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR11MB5611.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?P7U4RgmI3ZayAe6Drf2nQTX1L7CpcpsTIzGts0nMSv5imjAj3s0m8Q4Vn9of?=
+ =?us-ascii?Q?IVhFNwX7M3dg9FUVxu04hYxf/FRmsZEOfFc/yHFEAi1EmQKX9Q9l5ji5mzLv?=
+ =?us-ascii?Q?e1cuFS2yD66cyKfZ+YxgDyiWYx9CdDA+AJcFe/hQqW9m+dH0GB02RgVVHB7n?=
+ =?us-ascii?Q?bvEnS4qTuizeP3z6UlR5t+tzspDLwtt2bnKaN7+ETqQG+PjfKVTVHunbGh1c?=
+ =?us-ascii?Q?eqnPvy5521uwkqPoAmcMKrjEZIihKlNly6PXPwY383epM5YBxZ3VGqzlbOyc?=
+ =?us-ascii?Q?oe69pjI1jz9XjlU4HNAGJiqldDL9B5xFT5r01+iVC3ou+6vuOguUbqnqrlQR?=
+ =?us-ascii?Q?2/q2+jgc3aikX715Rv9yrusJWTwoyg1mmC8txDKFrD6ReNky+D9HOsptqVNK?=
+ =?us-ascii?Q?6Q+uhSoxD7YcNP3fxuxKV21kGDuRENXmDnPEBsrMsWCDtSLlLTXagKI1/fOl?=
+ =?us-ascii?Q?e0b3RcbCQ4vOt/e1MIOfaJOFhac9mHKlFZ2Ao5RTHuB48ldQVuxsKLOTZlpm?=
+ =?us-ascii?Q?UwFtliLGv7WCO2useV37Ffq3NlYKrfxKVwub6ZC3bTCP1N+cnDlIQiCe8zG1?=
+ =?us-ascii?Q?lbVE9gkDV8VZyt/QFNN1WkXBpJ/xC+gYB9DGWPLk9sjEXoBensnbjjqRFeBe?=
+ =?us-ascii?Q?ziBiLxUZihdBYukRBhtBMoFZckUHD5I+odqGl5AAgAO31z7FGXbhGT54bzNU?=
+ =?us-ascii?Q?ZkOGml3i3HtEOf40DKc8i8ti8xdadQIVUCaa/Rju4IlM0mrypDEdoN0H0JOa?=
+ =?us-ascii?Q?J67pKO3lNfB/KWQqdfCTBJ0iQ+HeGBvKTjSFNNfHaV61Q6xMJBN+kT/T9XoW?=
+ =?us-ascii?Q?GZ/u6HJMsrNJimTthWYYRAT0XJrddMZKzq8H3PtzH7EOpUORO2af5ccCmPik?=
+ =?us-ascii?Q?BHSP/NkQEEqn8KCz3w8G621YY52rK3h3Hlz+nX9oVCObKV+IbV/rQSDKMH5b?=
+ =?us-ascii?Q?Onaqk5cpoQY2Hga00Mb9KgcfF3JgsWVvz2KEFQDjbfavJW65hW+pqvIjumXo?=
+ =?us-ascii?Q?un+6wZZZXcnI8lCicATP8eHmMxLBBU6V3dKLUX181kwmo1PV3EiWECW36Y04?=
+ =?us-ascii?Q?XZ9kP9nIgZGVBhaVSAYVB85E7DFOGPlYZiqZTrFeXT/Oo0tmfQlRHEXCdM0G?=
+ =?us-ascii?Q?cYWUnumGALi9SkvArJtZjl9PrRCA3csS0PSIIRsMdiilSmgnK8HE0UiOQy/z?=
+ =?us-ascii?Q?qhnj+ZEp4UXFKhQgb1RAtg2pJJjaz2OXQnXO+kvUIRolbaSLT/FKG2BDDEip?=
+ =?us-ascii?Q?/DFGpMVXVAIIT6qWX/Ddvd1jwEDEhDA4a9wEfduKx5uxeaqadtXvT083Kdx7?=
+ =?us-ascii?Q?Iz+ITzUfPwK7mVd8MhJtXve+/9xLifBsWjSHc2LmFsxlJVr2vU8/MNoeq1pu?=
+ =?us-ascii?Q?cpMogDjKUjcvXoVW3iXgBx219j+8kHSpXpj+Pis5hjlDgeotuHgPp1nUB8eH?=
+ =?us-ascii?Q?NqbQ2dGCesa4wCFQhfn7KkyBzvm4gO0xXNmwN6YTUxI9N5/XCaovRYOwoS6q?=
+ =?us-ascii?Q?8obqVXpYYblaDFsuB66ExYALHMb/5tH60jvyrs0QVDXBNFXhmYr05zCOXvYb?=
+ =?us-ascii?Q?3/TB9T+hZwXLrwYm+1HaoVPL6XgO/VtZC7M4H1Y3IfYV8EU7kA9H+p4b7WX2?=
+ =?us-ascii?Q?MA=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/6 update] mm: pgtable: convert some architectures to
- use tlb_remove_ptdesc()
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: peterz@infradead.org, kevin.brodsky@arm.com, riel@surriel.com,
- vishal.moola@gmail.com, david@redhat.com, jannh@google.com,
- hughd@google.com, willy@infradead.org, yuzhao@google.com,
- muchun.song@linux.dev, will@kernel.org, aneesh.kumar@kernel.org,
- npiggin@gmail.com, arnd@arndb.de, dave.hansen@linux.intel.com,
- rppt@kernel.org, alexghiti@rivosinc.com, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, linux-csky@vger.kernel.org,
- linux-hexagon@vger.kernel.org, loongarch@lists.linux.dev,
- linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
- linux-openrisc@vger.kernel.org, linux-sh@vger.kernel.org,
- linux-um@lists.infradead.org, Geert Uytterhoeven <geert@linux-m68k.org>
-References: <19db3e8673b67bad2f1df1ab37f1c89d99eacfea.1740454179.git.zhengqi.arch@bytedance.com>
- <20250303072603.45423-1-zhengqi.arch@bytedance.com>
- <20250303155331.de9b2fff9b04984a255a7bc2@linux-foundation.org>
- <c48715aa-8c1f-41bf-92a0-bacf401c2f7c@bytedance.com>
- <20250303200815.53007fb79e5049a99f24c999@linux-foundation.org>
-From: Qi Zheng <zhengqi.arch@bytedance.com>
-In-Reply-To: <20250303200815.53007fb79e5049a99f24c999@linux-foundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: microchip.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: PH0PR11MB5611.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6099c1ad-afb9-48b3-a540-08dd5ae3b7f3
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Mar 2025 06:13:44.6229
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 6xI8q827REN6D0Pxv2xQDUHM7zIh7WDpQ6SRKKlNqUB25869btLX9pxwSZEu+Eu4wR2bxrCBRyW2LWqKvIQlEJQYJTwNRBXcQviyh+uoQXw=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR11MB5182
 
+Hi Sakari,
 
+> -----Original Message-----
+> From: Sakari Ailus <sakari.ailus@linux.intel.com>
+> Sent: Monday, March 3, 2025 1:26 PM
+> To: shravan Chippa - I35088 <Shravan.Chippa@microchip.com>
+> Cc: mchehab@kernel.org; kieran.bingham@ideasonboard.com; linux-
+> media@vger.kernel.org; linux-kernel@vger.kernel.org; Conor Dooley -
+> M52691 <Conor.Dooley@microchip.com>; Valentina Fernandez Alanis -
+> M63239 <Valentina.FernandezAlanis@microchip.com>; Praveen Kumar -
+> I30718 <Praveen.Kumar@microchip.com>
+> Subject: Re: [PATCH V6 1/3] media: i2c: imx334: Optimized 4k and 2k mode
+> register arrays
+>=20
+> EXTERNAL EMAIL: Do not click links or open attachments unless you know th=
+e
+> content is safe
+>=20
+> On Mon, Mar 03, 2025 at 07:54:58AM +0000, Sakari Ailus wrote:
+> > Hi Shravan,
+> >
+> > On Sat, Mar 01, 2025 at 12:56:55AM +0000,
+> Shravan.Chippa@microchip.com wrote:
+> > > Hi Sakari,
+> > >
+> > > > -----Original Message-----
+> > > > From: Sakari Ailus <sakari.ailus@linux.intel.com>
+> > > > Sent: Friday, February 28, 2025 5:19 PM
+> > > > To: shravan Chippa - I35088 <Shravan.Chippa@microchip.com>
+> > > > Cc: mchehab@kernel.org; kieran.bingham@ideasonboard.com; linux-
+> > > > media@vger.kernel.org; linux-kernel@vger.kernel.org; Conor Dooley
+> > > > -
+> > > > M52691 <Conor.Dooley@microchip.com>; Valentina Fernandez Alanis -
+> > > > M63239 <Valentina.FernandezAlanis@microchip.com>; Praveen Kumar -
+> > > > I30718 <Praveen.Kumar@microchip.com>
+> > > > Subject: Re: [PATCH V6 1/3] media: i2c: imx334: Optimized 4k and
+> > > > 2k mode register arrays
+> > > >
+> > > > EXTERNAL EMAIL: Do not click links or open attachments unless you
+> > > > know the content is safe
+> > > >
+> > > > Hi Shravan,
+> > > >
+> > > > On Fri, Feb 28, 2025 at 04:03:30PM +0530, shravan kumar wrote:
+> > > > > From: Shravan Chippa <shravan.chippa@microchip.com>
+> > > > >
+> > > > > Optimized the resolution arrays by integrating a common register =
+array.
+> > > > >
+> > > > > Adjusted the register array values for 1920x1080@30 and
+> > > > > 3840x2160@30 resolutions to align with the common register array
+> values.
+> > > > >
+> > > > > Signed-off-by: Shravan Chippa <shravan.chippa@microchip.com>
+> > > > > ---
+> > > > >  drivers/media/i2c/imx334.c | 132
+> > > > > +++++++++----------------------------
+> > > > >  1 file changed, 31 insertions(+), 101 deletions(-)
+> > > > >
+> > > > > diff --git a/drivers/media/i2c/imx334.c
+> > > > > b/drivers/media/i2c/imx334.c index a544fc3df39c..a800f2203592
+> > > > > 100644
+> > > > > --- a/drivers/media/i2c/imx334.c
+> > > > > +++ b/drivers/media/i2c/imx334.c
+> > > > > @@ -167,8 +167,8 @@ static const s64 link_freq[] =3D {
+> > > > >       IMX334_LINK_FREQ_445M,
+> > > > >  };
+> > > > >
+> > > > > -/* Sensor mode registers for 1920x1080@30fps */ -static const
+> > > > > struct imx334_reg mode_1920x1080_regs[] =3D {
+> > > > > +/* Sensor common mode registers values */ static const struct
+> > > > > +imx334_reg common_mode_regs[] =3D {
+> > > > >       {0x3000, 0x01},
+> > > > >       {0x3018, 0x04},
+> > > > >       {0x3030, 0xca},
+> > > > > @@ -176,26 +176,10 @@ static const struct imx334_reg
+> > > > mode_1920x1080_regs[] =3D {
+> > > > >       {0x3032, 0x00},
+> > > > >       {0x3034, 0x4c},
+> > > > >       {0x3035, 0x04},
+> > > > > -     {0x302c, 0xf0},
+> > > > > -     {0x302d, 0x03},
+> > > > > -     {0x302e, 0x80},
+> > > > > -     {0x302f, 0x07},
+> > > > > -     {0x3074, 0xcc},
+> > > > > -     {0x3075, 0x02},
+> > > > > -     {0x308e, 0xcd},
+> > > > > -     {0x308f, 0x02},
+> > > > > -     {0x3076, 0x38},
+> > > > > -     {0x3077, 0x04},
+> > > > > -     {0x3090, 0x38},
+> > > > > -     {0x3091, 0x04},
+> > > > > -     {0x3308, 0x38},
+> > > > > -     {0x3309, 0x04},
+> > > > > -     {0x30C6, 0x00},
+> > > > > +     {0x30c6, 0x00},
+> > > > >       {0x30c7, 0x00},
+> > > > >       {0x30ce, 0x00},
+> > > > >       {0x30cf, 0x00},
+> > > > > -     {0x30d8, 0x18},
+> > > > > -     {0x30d9, 0x0a},
+> > > > >       {0x304c, 0x00},
+> > > > >       {0x304e, 0x00},
+> > > > >       {0x304f, 0x00},
+> > > > > @@ -210,7 +194,7 @@ static const struct imx334_reg
+> > > > mode_1920x1080_regs[] =3D {
+> > > > >       {0x300d, 0x29},
+> > > > >       {0x314c, 0x29},
+> > > > >       {0x314d, 0x01},
+> > > > > -     {0x315a, 0x06},
+> > > > > +     {0x315a, 0x0a},
+> > > >
+> > > > We still have this change in the patch that's just supposed to
+> > > > move register address/value pairs around. :-( Please check the
+> > > > changes yourself before posting v7.
+> > >
+> > > Do I need to split the patch or drop this change ? in v7
+> >
+> > Either way but it does not belong here.
+>=20
+> Oh, and btw. if you want to make the change, then I think you'll need to =
+make
+> HBLANK configurable with the default being the original value.
 
-On 3/4/25 12:08 PM, Andrew Morton wrote:
-> On Tue, 4 Mar 2025 10:31:07 +0800 Qi Zheng <zhengqi.arch@bytedance.com> wrote:
-> 
->>
->>
->> On 3/4/25 7:53 AM, Andrew Morton wrote:
->>> On Mon,  3 Mar 2025 15:26:03 +0800 Qi Zheng <zhengqi.arch@bytedance.com> wrote:
->>>
->>>> Now, the nine architectures of csky, hexagon, loongarch, m68k, mips,
->>>> nios2, openrisc, sh and um do not select CONFIG_MMU_GATHER_RCU_TABLE_FREE,
->>>> and just call pagetable_dtor() + tlb_remove_page_ptdesc() (the wrapper of
->>>> tlb_remove_page()). This is the same as the implementation of
->>>> tlb_remove_{ptdesc|table}() under !CONFIG_MMU_GATHER_TABLE_FREE, so
->>>> convert these architectures to use tlb_remove_ptdesc().
->>>>
->>>
->>> checkpatch warns.
->>>
->>> Do these things have to be macros?  Switching to static inline fixes
->>> the unused-arg warning in a nice fashion.
->>
->> This can be switched to static inline. In addition, I found that alpha,
->> arc, microblaze, parisc, sparc32 and xtensa also have the unused-arg
->> issue. Do I need to add a new patch to fix all of them, or just fix the
->> newly added 11 warnings?
-> 
-> I guess leave things as they are now.  Switching all these to C
-> functions can be addressed at a later time?
+Ok, I will change according to datasheet with respect link frequency in V7.
+As of now, I will not be able to do configurable HBLANK changes in this dri=
+ver.
 
-Okay, let's leave it for later.
+Thanks,
+Shravan
 
-
-
+>=20
+> --
+> Sakari Ailus
