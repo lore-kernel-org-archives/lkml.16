@@ -1,61 +1,73 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03B39253B75
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 19:32:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 969181F4722
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 19:33:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741116773; cv=none; b=YnbQGUpysQGAB3CizA7kq7q1+pb05iBDv4XHfCRj9hGpw7QmfuTppetIq+N3xA5fOUuMVV/6KzMoUxebg3BgOMygENXCg2tgXhI/lZJwhsbU+BtuxJF+Ph5qZkEm9HS9yrCmkD/1WsDCKlye1lzkCrFB4Jvg/s2lypN878Tm9yM=
+	t=1741116817; cv=none; b=A12YCNYQTzMp4IlADmIEcLOtCMSGJazEscW62xMSbizBhFRyoXZCpROGRR/Rg/fKn0KF8Bi/7qlBWn9MMo4sBE+gjN3AgEstWVBva/zDnKSCL3VmpYNXilpgKMJyCzXOuAPUUHnZUeEx2IXVQX5Ocik5zwuLWaJQtbPnkQMFJBA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741116773; c=relaxed/simple;
-	bh=OQA+2QFOcgjj6uSfiTcIy6Fu6+7/+zNnoI9reAWPQSQ=;
+	s=arc-20240116; t=1741116817; c=relaxed/simple;
+	bh=Fyz3JfHHOvuotSLhbCETLSUbx3X7uzkobiKMeoVFgUY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fLiD2vl3SRKZQYHmzCV+GV9Iv344B8K443iux9OuGgVNkU1S+mjsi4D4YPRCgxXdnPTGwH7DPRgu8eDKXHiBB6epFZSpm1iZTYbtISPxQRibA1uCcxyN/6+dRIwVo/Dqi7xOu+pqeA4AwAYXxGXxNLpXYN/dGc4MEwROp8bdazE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Y3tVnVrx; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=JkoZZ6dRFU/MVFeuPNzA3FdBnbzGd8E8Tf7BXPXlqLpveGFVVfq1YhVk2AT/DWSpBc6kXpeM9bfXFqkerV4oPSJFZWCMZb8NpPy4wXevDjhgwvq0Ib/jk2+JOkIBFK6KVfGDaVSCjD4y7ViovQ2MnqcQTWbPbVL9zmHejdUq/Kg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LeQAr1zO; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Y3tVnVrx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1741116770;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UXl4nfp4fR0Yavdrh2eSsQ01fUfNdG7jydctAhRfRE8=;
-	b=Y3tVnVrx0OkUinbCf0Z7t6LCyf0xY/QBqAiybQMP1QR4xXBfGmNCS24x0kKWVuUhlzaF9l
-	2EzKjrRENR6K/3UHZlo73hRmMDYMPmX28HslZBRxhwUIVAkOUmgq9BGnN8MJbYCys5zIpf
-	OA/s2amEr8nltBRHjjkd8oYLujrcv/s=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-232-ozIiO8-vN66lw4xfV_wuPA-1; Tue,
- 04 Mar 2025 14:32:37 -0500
-X-MC-Unique: ozIiO8-vN66lw4xfV_wuPA-1
-X-Mimecast-MFC-AGG-ID: ozIiO8-vN66lw4xfV_wuPA_1741116756
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B75F71801A1A;
-	Tue,  4 Mar 2025 19:32:35 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.32])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 802B9300018D;
-	Tue,  4 Mar 2025 19:32:32 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Tue,  4 Mar 2025 20:32:04 +0100 (CET)
-Date: Tue, 4 Mar 2025 20:32:00 +0100
-From: Oleg Nesterov <oleg@redhat.com>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Mateusz Guzik <mjguzik@gmail.com>, brauner@kernel.org, mingo@redhat.com,
-	peterz@infradead.org, rostedt@goodmis.org,
-	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: pipes && EPOLLET, again
-Message-ID: <20250304193137.GE5756@redhat.com>
-References: <20250303230409.452687-1-mjguzik@gmail.com>
- <20250303230409.452687-2-mjguzik@gmail.com>
- <20250304140726.GD26141@redhat.com>
- <20250304154410.GB5756@redhat.com>
- <CAHk-=wj1V4wQBPUuhWRwmQ7Nfp2WJrH=yAv-v0sP-jXBKGoPdw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LeQAr1zO"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-2235025322fso11899295ad.2
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Mar 2025 11:33:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741116815; x=1741721615; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=wtIegLy+r+GMqADIrfnswa2mJO1assc6TIqGWvq1Thk=;
+        b=LeQAr1zOXY79/K+1GB1zwA75oVdJUTnL4Vmo7XyEVQ1SIo6Ji4MrA1vafhsat044ym
+         8UHWqL4leldfY1K332XOQVtV1B9CEGBaWvYo45TMb5AIKkFzixzC+pAqQ0zH4gZg/wS3
+         87P2Wdf8wPI2zQ+fG80t18F6kxx52ixVcStiS817fauMo+IRTSZQD1zSFRa/ywrwIl78
+         cif2teozPeN0o/rEK7hHaViHG+BsoYBya0OzI0nytY4GXSOsiFlHfF9rIUEKlIJj6piM
+         lzAFIYG1WddQvhD08o3fhpSRRw21SoARrg+wLqW9bL3eRnkuTrpikDllTfxfx2YBHYFC
+         tjTQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741116815; x=1741721615;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wtIegLy+r+GMqADIrfnswa2mJO1assc6TIqGWvq1Thk=;
+        b=e2pB9X0AmZk17BRDcxolrcFTzfw0s89KaxS8iTXCD3vsWJNznfLvy2HKm0QvXtDsf+
+         Exp1A1dDJNuJcMsYbgzXg67b71/mwGcU7CHQFWvXlHHZ1Sk64WNShNc7liexne31R73h
+         PyWCwi/Ug82QE+DYO7Dkq0QEdrzu+pr0kBz27xUPVVdxmayFRcl/I39AyEvo8wmHmRJk
+         RXU1bHkY8Ul6VgItZn4TO1mVv6oFZ31IX8dqxiFrXT3X4mk1E8048kCSlKKpGwdUEzzy
+         0JAJSd/s9VnPzQnsY2SFd/ksOu/gri5A7GxXhx0UdohjuUP4iV18dQueBoETwV0f0jRk
+         y46g==
+X-Forwarded-Encrypted: i=1; AJvYcCVIAcYYwgMEUMEm3hMWL3gkitGyhsepl4mR3l8qiqTEquJhSOG4oNAFt9f1/BkpfJLZHABZDUjfTk1b4oA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzNyDnkxM36bYTb6iXS4cxzrgCbe2/rbXFt7NWDIRMbDUq1k7Da
+	a0H4lHMqefCN9CNuCfBUSrq3fqrH8+UTOa5cJVAPoB3P5XpZGE9z
+X-Gm-Gg: ASbGncucR4WrbXgbnomN/CnbqXsBUXRw61vwH/jhZ8YXPVUrkhBoYFLSa8Sr0uZx9xw
+	zxqdmFKLZk/np1n8BrY2QCTa/JqlSvlEU5ujlVG/1za4ajpGlN6AVtGbQ9NJvGoPQnZvaC56ARQ
+	pqD44efufjTpkd5ehVMvYQ7Zt4huz/RnnLXCjb/LPVzG4CEyInfOpwQ3CuSWSUS9aUtzDfNrJtp
+	mgvok9Ns1gMM/OewqCzanTR1SUYb0slpcHmyM38/L2nJfqC+hhNPeupEa8+rgQscHcbQqslgQR6
+	/HYDy8KDkFo5EORFzhubhlFHduNkWpBG2zWyvpunAHg1oS8wfo3jVqk/31R5uJ4m3X6DuiXKorI
+	=
+X-Google-Smtp-Source: AGHT+IGOO8Q+oMRYcQBpw0l9B2qNi9FXTCKn0LBXiMRpfwxOYA9XY/0EpSQI8e4oPMFBQPO2/mpoiw==
+X-Received: by 2002:a17:902:ea05:b0:215:8721:30b7 with SMTP id d9443c01a7336-223f1d33a9dmr2163445ad.11.1741116814849;
+        Tue, 04 Mar 2025 11:33:34 -0800 (PST)
+Received: from debian-BULLSEYE-live-builder-AMD64 ([2802:8012:1f:3200:f1d1:c186:ba5b:8f06])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-734a003dd19sm11660791b3a.131.2025.03.04.11.33.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Mar 2025 11:33:34 -0800 (PST)
+Date: Tue, 4 Mar 2025 16:33:09 -0300
+From: Gaston Gonzalez <gascoar@gmail.com>
+To: linux-staging@lists.linux.dev
+Cc: dpenkler@gmail.com, gregkh@linuxfoundation.org, 
+	dan.carpenter@linaro.org, arnd@arndb.de, niharchaithanya@gmail.com, 
+	jiapeng.chong@linux.alibaba.com, linux-kernel@vger.kernel.org, gascoar@gmail.com
+Subject: Re: [PATCH 3/4] staging: gpib: fix kernel-doc section for
+ usb_gpib_line_status() function
+Message-ID: <mcagpfhzrwlvys76ketpo33l5yn2ij2csshrzz3tgufrdr5lg3@i4nmisbi3l6f>
+References: <20250304192603.40565-1-gascoar@gmail.com>
+ <20250304192603.40565-7-gascoar@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,74 +76,79 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHk-=wj1V4wQBPUuhWRwmQ7Nfp2WJrH=yAv-v0sP-jXBKGoPdw@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+In-Reply-To: <20250304192603.40565-7-gascoar@gmail.com>
 
-On 03/04, Linus Torvalds wrote:
->
-> On Tue, 4 Mar 2025 at 05:45, Oleg Nesterov <oleg@redhat.com> wrote:
-> >
-> > Don't we need the trivial one-liner below anyway?
->
-> See this email of mine:
->
->   https://lore.kernel.org/all/CAHk-=wiCRwRFi0kGwd_Uv+Xv4HOB-ivHyUp9it6CNSmrKT4gOA@mail.gmail.com/
->
-> and the last paragraph in particular.
->
-> The whole "poll_usage" thing is a kernel *hack* to deal with broken
-> user space that expected garbage semantics that aren't real, and were
-> never real.
+On Tue, Mar 04, 2025 at 04:25:41PM -0300, Gaston Gonzalez wrote:
+> The function name field in the kernel-doc section for the
+> usb_gpib_line_status() is defined as 'line_status'. In addition, after
+> the kernel-doc section, there are three macro definition instead of the
+> function definition.
+> 
+> These issues trigger the warning:
+> 
+> warning: expecting prototype for line_status(). Prototype was for WQT()
+> instead.
+> 
+> Fix the warning by renaming the function in the kernel-doc section and
+> by moving the macros at the beginning of the file with the rest of
+> macros definition.
+> 
+> Signed-off-by: Gaston Gonzalez <gascoar@gmail.com>
+> ---
+>  drivers/staging/gpib/lpvo_usb_gpib/lpvo_usb_gpib.c | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/staging/gpib/lpvo_usb_gpib/lpvo_usb_gpib.c b/drivers/staging/gpib/lpvo_usb_gpib/lpvo_usb_gpib.c
+> index 090857824d07..f7dd0809b06c 100644
+> --- a/drivers/staging/gpib/lpvo_usb_gpib/lpvo_usb_gpib.c
+> +++ b/drivers/staging/gpib/lpvo_usb_gpib/lpvo_usb_gpib.c
+> @@ -78,6 +78,10 @@ module_param(debug, int, 0644);
+>  			dev_dbg(board->gpib_dev, format, ## __VA_ARGS__); } \
+>  	while (0)
+>  
+> +#define WQT wait_queue_entry_t
+> +#define WQH head
+> +#define WQE entry
+> +
+>  /* standard and extended command sets of the usb-gpib adapter */
+>  
+>  #define USB_GPIB_ON	 "\nIB\n"
+> @@ -131,6 +135,7 @@ module_param(debug, int, 0644);
+>  
+>  #define INBUF_SIZE 128
+>  
+> +
 
-Yes agreed. But we can make this hack more understandable. But as I said,
-this is off-topic right now.
+Please disregard this patch. I noticed this blank line after I sent the
+patch.
 
-> introduced that completely bogus hack to say "ok, we'll send these
-> completely wrong extraneous events despite the fact that nothing has
-> changed, because some broken user space program was written to expect
-> them".
+Will resend.
 
-Yes, but since we already have this hack:
+Gaston
 
-> That program is buggy, and we're not adding new hacks for new bugs.
 
-Yes, but see below...
-
-> If you ask for an edge-triggered EPOLL event, you get an *edge*
-> triggered EPOLL event. And there is no edge - the pipe was already
-> readable, no edge anywhere in sight.
-
-Yes, the pipe was already readable before before fork, but this condition
-was already "consumed" by the 1st epoll_wait(EPOLLET). Please see below.
-
-> If anything, we might consider removing the crazy "poll_usage" hack in
-> the (probably futile) hope that user space has been fixed.
-
-This would be the best option ;) Until then:
-
-I agree that my test case is "buggy", but afaics it is not buggier than
-userspace programs which rely on the unconditional kill_fasync()'s in
-pipe_read/pipe_write?
-
-So. anon_pipe_write() does
-
-	if (was_empty)
-		wake_up_interruptible_sync_poll(&pipe->rd_wait, EPOLLIN | EPOLLRDNORM);
-	kill_fasync(&pipe->fasync_readers, SIGIO, POLL_IN);
-
-before wait_event(pipe->wr_wait), but before return it does
-
-	if (was_empty || pipe->poll_usage)
-		wake_up_interruptible_sync_poll(&pipe->rd_wait, EPOLLIN | EPOLLRDNORM);
-	kill_fasync(&pipe->fasync_readers, SIGIO, POLL_IN);
-
-and this looks confusing to me.
-
-If pipe_write() doesn't take poll_usage into account before wait_event(wr_wait),
-then it doesn't need kill_fasync() too?
-
-So I won't argue, but why not make both cases more consistent?
-
-Oleg.
-
+>  struct char_buf {		/* used by one_char() routine */
+>  	char *inbuf;
+>  	int last;
+> @@ -644,17 +649,12 @@ static void usb_gpib_interface_clear(gpib_board_t *board, int assert)
+>  }
+>  
+>  /**
+> - * line_status() - Read the status of the bus lines.
+> + * usb_gpib_line_status() - Read the status of the bus lines.
+>   *
+>   *  @board:    the gpib_board data area for this gpib interface
+>   *
+>   *    We can read all lines.
+>   */
+> -
+> -#define WQT wait_queue_entry_t
+> -#define WQH head
+> -#define WQE entry
+> -
+>  static int usb_gpib_line_status(const gpib_board_t *board)
+>  {
+>  	int buffer;
+> -- 
+> 2.49.0.rc0
+> 
