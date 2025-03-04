@@ -1,142 +1,303 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f73.google.com (mail-ej1-f73.google.com [209.85.218.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E67DC20468A;
-	Tue,  4 Mar 2025 09:26:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B62020459E
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 09:26:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741080369; cv=none; b=r63dHLqzSRtJA+GSZ9MTe6jqT4DLDcQnEUgcfL4J2KfFacY/tnPccW/yPdgQO2QeqG2vlk/5sMJowJuhSL5+eMM5LC+mHBAPTpAYFzT9vxZ+idw5m+gf0wmqMz74sr+U89ErLDvlZNf873KuuPIJLSNk/v6YG3ftBW222YP+TVk=
+	t=1741080367; cv=none; b=BegUYgHvrIolqxKYbx1ZmgU49fbF6mO3DECXC1xHBaHamW7dyXToWMdtf1Bqu2XKvSI92zDJkeO7HcxVTB0aFuhvzmBS13GmRTyEaphGkajAz8iyFBwDi7UROPMRxUH4zw1GP5qOY3WSKIGu6XVng6uZAirz0kAqaOBObHix+HY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741080369; c=relaxed/simple;
-	bh=t6huNBUdOZacHdIaCFIq+flDCD6LJRCBE8a6PIsmI7g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Yw/QEbMl4ArZREFoZNpK8t15V2h9R+H/z32YcPnBqs+SRNUt3bK43996Ftx7zb35AP/l9KDVpWj4Ucz6CsssqE/QY9G4MKIK3GzKtj3ne53sawfX5c69sf2wbXSrebaD1NDhZN8J4qtDLx/1GAqUSpqv8FB50mEvOCSxt3Ipyrs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gRUrUVcZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741080367; c=relaxed/simple;
+	bh=FzAM8kONcmoqRCoI2LnTHYjYi8+dzOgEjJ0xHcXrIBg=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=eG3733iR3kiOAvMQ6wLMikwKkNTHfI4hm3JS+5/cBKEipqnL+hOMduBaD98TzgCp6kQGDfVfEnCCqUjO4vzUuoWUdaKPk4MRsw33cGYSIWBSF4vSu7mOCFaIl512uff9se0UfbMamvz+nGddtop+ESvykjpU8Hl4+l2UPaZGZHc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--elver.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pbvIalTH; arc=none smtp.client-ip=209.85.218.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--elver.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gRUrUVcZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4BB7C4CEEE;
-	Tue,  4 Mar 2025 09:26:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741080368;
-	bh=t6huNBUdOZacHdIaCFIq+flDCD6LJRCBE8a6PIsmI7g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=gRUrUVcZ6sNHDZqA1x65fJcd4NLyiyoWSJTt2DlsnIPZaWqLIigqj4Ltt06aOFDMD
-	 Bzdx+8P3qGSc59RxFHLUJQ+J7enHiPLgOmERtg8PU2dnikZVmp9wW/eDSx7LbPkLpO
-	 kTmPyEHmD438+FDPxtxoqcLn2Tb4c72DyhV9cY+jSn4eIL7qsFQ8zvuEPg1obAYR7R
-	 8NW3f9HeHtEidLgMZX222vKUA1uZXo6Eiry/tOjZPcJ6WibeXdYvJt/aOjGqdhaSi9
-	 FVQFxvOnzEsEGSDiEtTBU/fASWM0llgrG/VFBUSmButGNyHoeqR6TfjUZyh2RMSWBo
-	 QmepfJMbuScRw==
-Date: Tue, 4 Mar 2025 10:26:03 +0100
-From: Ingo Molnar <mingo@kernel.org>
-To: "Ahmed S. Darwish" <darwi@linutronix.de>
-Cc: Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	John Ogness <john.ogness@linutronix.de>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Andrew Cooper <andrew.cooper3@citrix.com>, x86@kernel.org,
-	x86-cpuid@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1 10/40] x86/cpu: Remove leaf 0x2 parsing loop and add
- helpers
-Message-ID: <Z8bHK391zKE4gUEW@gmail.com>
-References: <20250304085152.51092-1-darwi@linutronix.de>
- <20250304085152.51092-11-darwi@linutronix.de>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pbvIalTH"
+Received: by mail-ej1-f73.google.com with SMTP id a640c23a62f3a-abf6e9bbef5so251238066b.1
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Mar 2025 01:26:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1741080363; x=1741685163; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=8Nr2jdJ0PNmITUGav9EmcnRuPAHdAawXc4SBIYnGZjc=;
+        b=pbvIalTHqFtB6ktPb+QrNlCcjMSeUCtpa2OgmieHIfbyPL2sGYAN0Obuw5CLRbws6b
+         zrAAJ1Pj56NzzBMegI8M9ArUWqn5H15yXyAzxqS/GhUG509kDTbamFA2Egwtkxl15djL
+         g50MhIha17I5/wY0mBTr7QOV7RKa5avt9NAHeyrBQ+IqoBEliqdJQ+1iuaSHE1sBRuBG
+         DT0BI/jnq+ajpqzitEpot1f3NC8JEPYUFmcfaxQw+Q1qgt71CkVkQ53xX5rop/kzpQX/
+         v7AvvPKVhoXQjgTE0wQynN2szS+dKtcaeClMsJEdymbMm2xuTHuGfQLMpFdsPZ7xpYKn
+         3/VQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741080363; x=1741685163;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=8Nr2jdJ0PNmITUGav9EmcnRuPAHdAawXc4SBIYnGZjc=;
+        b=loY0jAySFOFR8FR/ZzdDfxj+7LVvefueYUeuz98WqCF6FVS2Z2xkcqa3dkI1vHATW8
+         l7mXFVf3s02KKIxxVJQptph1oTus7Hpt/lHBCSlzmATT3y87J7JyatnY3Mjh0wTXBL2B
+         Ic9nqX3MKiu5yGott2U1REAt/edgDmISujqd9mxxI/hOBLSqDIHptu0ZmctJ/u3UB3Oy
+         zpcBwghSuatZlPCZQAX2s6mhL1SdhhushBSWObRjsfccA9JLOEk/tPk1Ci1UVGzddOMO
+         TZmof3nToDv5hxNM5LPasrYaLRgV/F9fSFbdntamaqVwlYXu+/n3Rp0VXbVzvLnnS0B2
+         ylKQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWshaPH7C2XTUx11op+0nuB+j6B/wylTuyVwfw16udU8jCXLtkrIKd1OgvttHt7BRMP5TiFf5b/sjZ5Mcc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz+IEh+k25OI3qfBVWvf7vv1pUfmkXebDUSpFsyLkYuG/rtGT/V
+	3WuBUnNWIQjGOuYxIKbydTORgbhWFm7nce/MuZvetzLmbpTbgmNz7U1R0AaIku0AP/C+evRcog=
+	=
+X-Google-Smtp-Source: AGHT+IHUR6sYdD9TRGssa7cwqccEPoCIYdfeCgWX5dDy0wIQx6B6340985LLh8jF353quqMjRUM/OMs67A==
+X-Received: from ejcso7.prod.google.com ([2002:a17:907:3907:b0:abf:71ba:a144])
+ (user=elver job=prod-delivery.src-stubby-dispatcher) by 2002:a17:907:2da1:b0:ac1:deb0:5c3e
+ with SMTP id a640c23a62f3a-ac1deb0d856mr500700666b.16.1741080363274; Tue, 04
+ Mar 2025 01:26:03 -0800 (PST)
+Date: Tue,  4 Mar 2025 10:21:19 +0100
+In-Reply-To: <20250304092417.2873893-1-elver@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250304085152.51092-11-darwi@linutronix.de>
+Mime-Version: 1.0
+References: <20250304092417.2873893-1-elver@google.com>
+X-Mailer: git-send-email 2.48.1.711.g2feabab25a-goog
+Message-ID: <20250304092417.2873893-21-elver@google.com>
+Subject: [PATCH v2 20/34] locking/ww_mutex: Support Clang's capability analysis
+From: Marco Elver <elver@google.com>
+To: elver@google.com
+Cc: "David S. Miller" <davem@davemloft.net>, Luc Van Oostenryck <luc.vanoostenryck@gmail.com>, 
+	"Paul E. McKenney" <paulmck@kernel.org>, Alexander Potapenko <glider@google.com>, Arnd Bergmann <arnd@arndb.de>, 
+	Bart Van Assche <bvanassche@acm.org>, Bill Wendling <morbo@google.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Dmitry Vyukov <dvyukov@google.com>, Eric Dumazet <edumazet@google.com>, 
+	Frederic Weisbecker <frederic@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Herbert Xu <herbert@gondor.apana.org.au>, Ingo Molnar <mingo@kernel.org>, 
+	Jann Horn <jannh@google.com>, Jiri Slaby <jirislaby@kernel.org>, 
+	Joel Fernandes <joel@joelfernandes.org>, Jonathan Corbet <corbet@lwn.net>, 
+	Josh Triplett <josh@joshtriplett.org>, Justin Stitt <justinstitt@google.com>, 
+	Kees Cook <kees@kernel.org>, Kentaro Takeda <takedakn@nttdata.co.jp>, 
+	Mark Rutland <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Miguel Ojeda <ojeda@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Steven Rostedt <rostedt@goodmis.org>, Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>, 
+	Thomas Gleixner <tglx@linutronix.de>, Uladzislau Rezki <urezki@gmail.com>, Waiman Long <longman@redhat.com>, 
+	Will Deacon <will@kernel.org>, kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org, 
+	llvm@lists.linux.dev, rcu@vger.kernel.org, linux-crypto@vger.kernel.org, 
+	linux-serial@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
+Add support for Clang's capability analysis for ww_mutex.
 
-* Ahmed S. Darwish <darwi@linutronix.de> wrote:
+The programming model for ww_mutex is subtly more complex than other
+locking primitives when using ww_acquire_ctx. Encoding the respective
+pre-conditions for ww_mutex lock/unlock based on ww_acquire_ctx state
+using Clang's capability analysis makes incorrect use of the API harder.
 
-> Leaf 0x2 output includes a "query count" byte where it was supposed to
-> specify the number of repeated cpuid leaf 0x2 subleaf 0 queries needed
-> to extract all of the hardware's cache and TLB descriptors.
+Signed-off-by: Marco Elver <elver@google.com>
+---
+v2:
+* New patch.
+---
+ .../dev-tools/capability-analysis.rst         |  3 +-
+ include/linux/ww_mutex.h                      | 21 ++++--
+ lib/test_capability-analysis.c                | 65 +++++++++++++++++++
+ 3 files changed, 82 insertions(+), 7 deletions(-)
 
-s/cpuid
- /CPUID
+diff --git a/Documentation/dev-tools/capability-analysis.rst b/Documentation/dev-tools/capability-analysis.rst
+index e892a5292841..51ea94b0f4cc 100644
+--- a/Documentation/dev-tools/capability-analysis.rst
++++ b/Documentation/dev-tools/capability-analysis.rst
+@@ -80,7 +80,8 @@ Supported Kernel Primitives
+ 
+ Currently the following synchronization primitives are supported:
+ `raw_spinlock_t`, `spinlock_t`, `rwlock_t`, `mutex`, `seqlock_t`,
+-`bit_spinlock`, RCU, SRCU (`srcu_struct`), `rw_semaphore`, `local_lock_t`.
++`bit_spinlock`, RCU, SRCU (`srcu_struct`), `rw_semaphore`, `local_lock_t`,
++`ww_mutex`.
+ 
+ For capabilities with an initialization function (e.g., `spin_lock_init()`),
+ calling this function on the capability instance before initializing any
+diff --git a/include/linux/ww_mutex.h b/include/linux/ww_mutex.h
+index 45ff6f7a872b..e1d5455bd075 100644
+--- a/include/linux/ww_mutex.h
++++ b/include/linux/ww_mutex.h
+@@ -44,7 +44,7 @@ struct ww_class {
+ 	unsigned int is_wait_die;
+ };
+ 
+-struct ww_mutex {
++struct_with_capability(ww_mutex) {
+ 	struct WW_MUTEX_BASE base;
+ 	struct ww_acquire_ctx *ctx;
+ #ifdef DEBUG_WW_MUTEXES
+@@ -52,7 +52,7 @@ struct ww_mutex {
+ #endif
+ };
+ 
+-struct ww_acquire_ctx {
++struct_with_capability(ww_acquire_ctx) {
+ 	struct task_struct *task;
+ 	unsigned long stamp;
+ 	unsigned int acquired;
+@@ -107,6 +107,7 @@ struct ww_acquire_ctx {
+  */
+ static inline void ww_mutex_init(struct ww_mutex *lock,
+ 				 struct ww_class *ww_class)
++	__asserts_cap(lock)
+ {
+ 	ww_mutex_base_init(&lock->base, ww_class->mutex_name, &ww_class->mutex_key);
+ 	lock->ctx = NULL;
+@@ -141,6 +142,7 @@ static inline void ww_mutex_init(struct ww_mutex *lock,
+  */
+ static inline void ww_acquire_init(struct ww_acquire_ctx *ctx,
+ 				   struct ww_class *ww_class)
++	__acquires(ctx) __no_capability_analysis
+ {
+ 	ctx->task = current;
+ 	ctx->stamp = atomic_long_inc_return_relaxed(&ww_class->stamp);
+@@ -179,6 +181,7 @@ static inline void ww_acquire_init(struct ww_acquire_ctx *ctx,
+  * data structures.
+  */
+ static inline void ww_acquire_done(struct ww_acquire_ctx *ctx)
++	__releases(ctx) __acquires_shared(ctx) __no_capability_analysis
+ {
+ #ifdef DEBUG_WW_MUTEXES
+ 	lockdep_assert_held(ctx);
+@@ -196,6 +199,7 @@ static inline void ww_acquire_done(struct ww_acquire_ctx *ctx)
+  * mutexes have been released with ww_mutex_unlock.
+  */
+ static inline void ww_acquire_fini(struct ww_acquire_ctx *ctx)
++	__releases_shared(ctx) __no_capability_analysis
+ {
+ #ifdef CONFIG_DEBUG_LOCK_ALLOC
+ 	mutex_release(&ctx->first_lock_dep_map, _THIS_IP_);
+@@ -245,7 +249,8 @@ static inline void ww_acquire_fini(struct ww_acquire_ctx *ctx)
+  *
+  * A mutex acquired with this function must be released with ww_mutex_unlock.
+  */
+-extern int /* __must_check */ ww_mutex_lock(struct ww_mutex *lock, struct ww_acquire_ctx *ctx);
++extern int /* __must_check */ ww_mutex_lock(struct ww_mutex *lock, struct ww_acquire_ctx *ctx)
++	__cond_acquires(0, lock) __must_hold(ctx);
+ 
+ /**
+  * ww_mutex_lock_interruptible - acquire the w/w mutex, interruptible
+@@ -278,7 +283,8 @@ extern int /* __must_check */ ww_mutex_lock(struct ww_mutex *lock, struct ww_acq
+  * A mutex acquired with this function must be released with ww_mutex_unlock.
+  */
+ extern int __must_check ww_mutex_lock_interruptible(struct ww_mutex *lock,
+-						    struct ww_acquire_ctx *ctx);
++						    struct ww_acquire_ctx *ctx)
++	__cond_acquires(0, lock) __must_hold(ctx);
+ 
+ /**
+  * ww_mutex_lock_slow - slowpath acquiring of the w/w mutex
+@@ -305,6 +311,7 @@ extern int __must_check ww_mutex_lock_interruptible(struct ww_mutex *lock,
+  */
+ static inline void
+ ww_mutex_lock_slow(struct ww_mutex *lock, struct ww_acquire_ctx *ctx)
++	__acquires(lock) __must_hold(ctx) __no_capability_analysis
+ {
+ 	int ret;
+ #ifdef DEBUG_WW_MUTEXES
+@@ -342,6 +349,7 @@ ww_mutex_lock_slow(struct ww_mutex *lock, struct ww_acquire_ctx *ctx)
+ static inline int __must_check
+ ww_mutex_lock_slow_interruptible(struct ww_mutex *lock,
+ 				 struct ww_acquire_ctx *ctx)
++	__cond_acquires(0, lock) __must_hold(ctx)
+ {
+ #ifdef DEBUG_WW_MUTEXES
+ 	DEBUG_LOCKS_WARN_ON(!ctx->contending_lock);
+@@ -349,10 +357,11 @@ ww_mutex_lock_slow_interruptible(struct ww_mutex *lock,
+ 	return ww_mutex_lock_interruptible(lock, ctx);
+ }
+ 
+-extern void ww_mutex_unlock(struct ww_mutex *lock);
++extern void ww_mutex_unlock(struct ww_mutex *lock) __releases(lock);
+ 
+ extern int __must_check ww_mutex_trylock(struct ww_mutex *lock,
+-					 struct ww_acquire_ctx *ctx);
++					 struct ww_acquire_ctx *ctx)
++	__cond_acquires(true, lock) __must_hold(ctx);
+ 
+ /***
+  * ww_mutex_destroy - mark a w/w mutex unusable
+diff --git a/lib/test_capability-analysis.c b/lib/test_capability-analysis.c
+index 81c8e74548a9..853fdc53840f 100644
+--- a/lib/test_capability-analysis.c
++++ b/lib/test_capability-analysis.c
+@@ -14,6 +14,7 @@
+ #include <linux/seqlock.h>
+ #include <linux/spinlock.h>
+ #include <linux/srcu.h>
++#include <linux/ww_mutex.h>
+ 
+ /*
+  * Test that helper macros work as expected.
+@@ -479,3 +480,67 @@ static void __used test_local_lock_guard(void)
+ 	{ guard(local_lock_irqsave)(&test_local_lock_data.lock); this_cpu_add(test_local_lock_data.counter, 1); }
+ 	{ guard(local_lock_nested_bh)(&test_local_lock_data.lock); this_cpu_add(test_local_lock_data.counter, 1); }
+ }
++
++static DEFINE_WD_CLASS(ww_class);
++
++struct test_ww_mutex_data {
++	struct ww_mutex mtx;
++	int counter __guarded_by(&mtx);
++};
++
++static void __used test_ww_mutex_init(struct test_ww_mutex_data *d)
++{
++	ww_mutex_init(&d->mtx, &ww_class);
++	d->counter = 0;
++}
++
++static void __used test_ww_mutex_lock_noctx(struct test_ww_mutex_data *d)
++{
++	if (!ww_mutex_lock(&d->mtx, NULL)) {
++		d->counter++;
++		ww_mutex_unlock(&d->mtx);
++	}
++
++	if (!ww_mutex_lock_interruptible(&d->mtx, NULL)) {
++		d->counter++;
++		ww_mutex_unlock(&d->mtx);
++	}
++
++	if (ww_mutex_trylock(&d->mtx, NULL)) {
++		d->counter++;
++		ww_mutex_unlock(&d->mtx);
++	}
++
++	ww_mutex_lock_slow(&d->mtx, NULL);
++	d->counter++;
++	ww_mutex_unlock(&d->mtx);
++}
++
++static void __used test_ww_mutex_lock_ctx(struct test_ww_mutex_data *d)
++{
++	struct ww_acquire_ctx ctx;
++
++	ww_acquire_init(&ctx, &ww_class);
++
++	if (!ww_mutex_lock(&d->mtx, &ctx)) {
++		d->counter++;
++		ww_mutex_unlock(&d->mtx);
++	}
++
++	if (!ww_mutex_lock_interruptible(&d->mtx, &ctx)) {
++		d->counter++;
++		ww_mutex_unlock(&d->mtx);
++	}
++
++	if (ww_mutex_trylock(&d->mtx, &ctx)) {
++		d->counter++;
++		ww_mutex_unlock(&d->mtx);
++	}
++
++	ww_mutex_lock_slow(&d->mtx, &ctx);
++	d->counter++;
++	ww_mutex_unlock(&d->mtx);
++
++	ww_acquire_done(&ctx);
++	ww_acquire_fini(&ctx);
++}
+-- 
+2.48.1.711.g2feabab25a-goog
 
-Please do this in the rest of the series too. (I did it for the first 9 
-patches.)
-
-> +++ b/arch/x86/include/asm/cpuid/types.h
-> @@ -0,0 +1,79 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#ifndef _ASM_X86_CPUID_TYPES_H
-> +#define _ASM_X86_CPUID_TYPES_H
-> +
-> +#include <linux/types.h>
-> +
-> +#include <asm/cpuid.h>
-
-So that header organization is a bit messy: if <asm/cpuid.h> is 
-supposed to be the main header, why is there a <asm/cpuid/types.h>?
-
-I'd suggest we follow the FPU header structure:
-
-  starship:~/tip/arch/x86/include/asm/fpu> ls -l
-  total 48
-  -rw-rw-r-- 1 mingo mingo  5732 Feb 27 19:24 api.h
-  -rw-rw-r-- 1 mingo mingo   671 Feb 26 16:13 regset.h
-  -rw-rw-r-- 1 mingo mingo  2203 Feb 27 13:52 sched.h
-  -rw-rw-r-- 1 mingo mingo  1110 Feb 27 19:24 signal.h
-  -rw-rw-r-- 1 mingo mingo 14741 Feb 27 19:24 types.h
-  -rw-rw-r-- 1 mingo mingo   811 Feb 26 16:13 xcr.h
-  -rw-rw-r-- 1 mingo mingo  4401 Feb 27 23:01 xstate.h
-
-With <asm/cpuid/api.h> being the main header - established via a 
-separate preparatory patch.
-
-This followup patch can then add <asm/cpuid/types.h> which will also be 
-included in <asm/cpuid/api.h>.
-
-
-> +/*
-> + * CPUID(0x2) parsing helpers
-> + * Check for_each_leaf_0x2_desc() documentation.
-> + */
-> +
-> +struct leaf_0x2_reg {
-> +		u32		: 31,
-> +			invalid	: 1;
-> +};
-> +
-> +union leaf_0x2_regs {
-> +	struct leaf_0x2_reg	reg[4];
-> +	u32			regv[4];
-> +	u8			desc[16];
-> +};
-> +
-> +/**
-> + * get_leaf_0x2_regs() - Return sanitized leaf 0x2 register output
-> + * @regs:	Output parameter
-> + *
-> + * Get leaf 0x2 register output and store it in @regs.  Invalid byte
-> + * descriptors returned by the hardware will be force set to zero (the
-> + * NULL cache/TLB descriptor) before returning them to the caller.
-> + */
-> +static inline void get_leaf_0x2_regs(union leaf_0x2_regs *regs)
-
-
-Please prefix all new cpuid API functions and types with cpuid_.
-
-> +#define for_each_leaf_0x2_desc(regs, desc)				\
-> +	/* Skip the first byte as it is not a descriptor */		\
-> +	for (desc = &(regs).desc[1]; desc < &(regs).desc[16]; desc++)
-
-The comment line can come before the macro.
-
-> +	get_leaf_0x2_regs(&regs);
-> +	for_each_leaf_0x2_desc(regs, desc)
-> +		intel_tlb_lookup(*desc);
-
-Nice interface otherwise.
-
-Thanks,
-
-	Ingo
