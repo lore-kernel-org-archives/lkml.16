@@ -1,99 +1,136 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C46BD202984;
-	Tue,  4 Mar 2025 12:23:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86E5478F4C
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 12:25:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741091036; cv=none; b=E+rEwPffGOS3b4WXXSeaofAn7vfliFtbSKeYRu+zUjKvKttovL450ZFDNNdNYhEsObVeE7K7XAsN2CGlkY10CF6+5kTWQThm8mNp2aH05mwFN/t32E8C3oQVeDSepLL0g2ZPx5NKjSvyikBNmeym0BRuSGGXg6Qu0zvEKGMZ59g=
+	t=1741091119; cv=none; b=Oqefu4Mk6VpIp6yr8Yy5m51j9EhDNaXAm6MUBOEhByOKVoYU5EOp6XiChPSAv+wfDqS19sUiEkfE5ZLJjoZTja1iR9w1NOqZ0fES6xfFa8vDLSdlvuSHtfrNA30I4hKfM7iJO01lE4+Ja1YOCC9pw0YjBRcz8nf7n3zya1oYqJM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741091036; c=relaxed/simple;
-	bh=fK01A2FhtET1I5fWk9BnZhECN7fNOjaIqKDIDqP1ANk=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=uqQqUGz2JrwPjBKHgnE0tedturabLSkUBiuoL5Z114VxDZX6pgAoezMFNnIpmxMsLCq/ItbS9qY49PcDsO3DGkGUdeo0vnjCUJ0BPK6A5yQ8bciWWOaN1qi77u+LshI8NeaLT/r/ZuPwW80JU58NnkygZSt8WGMykpKtjoQGqdQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Z6ZbN5vWCz4f3jt9;
-	Tue,  4 Mar 2025 20:23:28 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 89B4C1A16DC;
-	Tue,  4 Mar 2025 20:23:45 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP4 (Coremail) with SMTP id gCh0CgB321_O8MZnFO8VFg--.52907S8;
-	Tue, 04 Mar 2025 20:23:45 +0800 (CST)
-From: linan666@huaweicloud.com
-To: axboe@kernel.dk,
-	song@kernel.org,
-	yukuai3@huawei.com,
-	hare@suse.de,
-	martin.petersen@oracle.com
-Cc: linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-raid@vger.kernel.org,
-	linan666@huaweicloud.com,
-	yangerkun@huawei.com,
-	zhangxiaoxu5@huawei.com,
-	wanghai38@huawei.com
-Subject: [PATCH 4/4] md: Fix the return value of mddev_stack_new_rdev
-Date: Tue,  4 Mar 2025 20:19:18 +0800
-Message-Id: <20250304121918.3159388-5-linan666@huaweicloud.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20250304121918.3159388-1-linan666@huaweicloud.com>
-References: <20250304121918.3159388-1-linan666@huaweicloud.com>
+	s=arc-20240116; t=1741091119; c=relaxed/simple;
+	bh=+SQIqfuPQGlhPLydbzZug4XPIpy3ANWjl4UsoMWLAOw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=MGkRGhjzgPdrQ66vvV3lgt9OHcXmcRqVjD3Qj6uEJKhcyDRoiqnbbdxiYlqCkgBsEkAV4+izzoAZjxikLXGphSSx6kbRJ8EzDSU9ce/JkwdNRN3FNrxOiVURxr17z6agz3NhD53yNn2PTgsY3/yfhfSKolhdypgL/pXgHKI9OuI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rg0y9E2s; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rg0y9E2s"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13DFDC4CEEB
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 12:25:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741091119;
+	bh=+SQIqfuPQGlhPLydbzZug4XPIpy3ANWjl4UsoMWLAOw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=rg0y9E2srMnpJ0vkn/NxDD/Zo11h+pw4YlXKrOzS1YwzQhkVkUJ2G7EEjCiAR+gzN
+	 OvbbkVodyKukw78n6H9nn428+6DK18drFCl/BwVbRgWcOoaJd9hpRmxadg3jkqLYZO
+	 MZ0s9NMe78ay6uvwNZMlDJYQUw5QCJvDxlgb4MwucTgeia0t1WmTjMtkYjzquNixWk
+	 AfRLsJGv7ASdiGordnYbyBy93TIXXohycU2+ymPmPWKJGwIexlIeZsQu03g469ptSz
+	 d9sEuOpDNmEnopbEUD7ejZYcahErYG0OYteuLCrth8ZVVKN7T6AQ7so2VUr0SIfZiT
+	 K8UD7zV5fm2Og==
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-abf4802b242so608426266b.1
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Mar 2025 04:25:18 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXuhwRzg1dllMIh6btnrYjYvnsTrR2Ba4+s+pDvce5FcTthhs3A4PqIcprxEf4KSc7zB8Kr50nHmVvGDL8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy2GkiDyVp/YivkPQPnacmxJ6QP2LOaqNJ/kGou/zs7BcSx2rIy
+	ED7JZnS/Mr097cQ4TT3pstP5jVLceL1IpQPalmNTV0nQCNqO8W9a+fS1kcB2TB1g+siyUeR3iV2
+	OtJ4jOGNDtr/x3QV6XXhwIckUzNc=
+X-Google-Smtp-Source: AGHT+IHTM2B6gBG2tuNtbvGhXs0HRVKxnREPumHz+CUuDza6UnEgzUL4jYxv6z9dkqEEldaNE741AH1fQTec1gE2Dgo=
+X-Received: by 2002:a17:907:7205:b0:abf:752c:9e33 with SMTP id
+ a640c23a62f3a-abf752ca22emr747133766b.2.1741091117515; Tue, 04 Mar 2025
+ 04:25:17 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgB321_O8MZnFO8VFg--.52907S8
-X-Coremail-Antispam: 1UD129KBjvdXoWruFyDZF43Gr45Kw4kKF1Dtrb_yoWftwc_CF
-	ZYvF92qrykCF97Zr1YvFWxZryDt3W8Wan7XF1ag3WfZFZrJrn5JFy8C343W3y5u3yayryU
-	KrsF9aySyw4akjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbl8FF20E14v26rWj6s0DM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUAVCq3wA2048vs2
-	IY020Ec7CjxVAFwI0_Xr0E3s1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28E
-	F7xvwVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr
-	1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0D
-	M2vYz4IE04k24VAvwVAKI4IrM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64
-	kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AKxVWUJVW8JwAm
-	72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYx
-	C7M4IIrI8v6xkF7I0E8cxan2IY04v7M4kE6xkIj40Ew7xC0wCY1x0262kKe7AKxVWUtVW8
-	ZwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r
-	1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij
-	64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Cr
-	0_Gr1UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI
-	42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUoHqcDUUUU
-X-CM-SenderInfo: polqt0awwwqx5xdzvxpfor3voofrz/
+References: <20250304112708.1810033-1-maobibo@loongson.cn>
+In-Reply-To: <20250304112708.1810033-1-maobibo@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Tue, 4 Mar 2025 20:25:05 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H7ZAK15ob3M=5eQrOhPvkSFhkrmVHd-mn6RXgQqQV_Ebg@mail.gmail.com>
+X-Gm-Features: AQ5f1JqF5QhZxAFTxQdMCNiNL9NNlex1F3CaHUyR2YHD8bmyPO4_3TAL-reJgaI
+Message-ID: <CAAhV-H7ZAK15ob3M=5eQrOhPvkSFhkrmVHd-mn6RXgQqQV_Ebg@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch: mm: Set max_pfn with the PFN of the last page
+To: Bibo Mao <maobibo@loongson.cn>
+Cc: WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Li Nan <linan122@huawei.com>
+Hi, Bibo,
 
-In mddev_stack_new_rdev(), if the integrity profile check fails, it
-returns -ENXIO, which means "No such device or address". This is
-inaccurate and can mislead users. Change it to return -EINVAL.
+On Tue, Mar 4, 2025 at 7:27=E2=80=AFPM Bibo Mao <maobibo@loongson.cn> wrote=
+:
+>
+> The current max_pfn equals to zero. In this case, it caused users cannot
+> get some page information through /proc such as kpagecount. The following
+> message is displayed by stress-ng test suite with the command
+> "stress-ng --verbose --physpage 1 -t 1".
+>
+>  # stress-ng --verbose --physpage 1 -t 1
+>  stress-ng: error: [1691] physpage: cannot read page count for address 0x=
+134ac000 in /proc/kpagecount, errno=3D22 (Invalid argument)
+>  stress-ng: error: [1691] physpage: cannot read page count for address 0x=
+7ffff207c3a8 in /proc/kpagecount, errno=3D22 (Invalid argument)
+>  stress-ng: error: [1691] physpage: cannot read page count for address 0x=
+134b0000 in /proc/kpagecount, errno=3D22 (Invalid argument)
+>  ...
+>
+> After applying this patch, the kernel can pass the test.
+>  # stress-ng --verbose --physpage 1 -t 1
+>  stress-ng: debug: [1701] physpage: [1701] started (instance 0 on CPU 3)
+>  stress-ng: debug: [1701] physpage: [1701] exited (instance 0 on CPU 3)
+>  stress-ng: debug: [1700] physpage: [1701] terminated (success)
+>
+> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+I think this patch are mainly fix commit
+ff6c3d81f2e86b63a3a530683f89ef39 ("NUMA: optimize detection of memory
+with no node id assigned by firmware"). So it is better to add a
+Fixes: tag and Cc stable.
 
-Fixes: c6e56cf6b2e7 ("block: move integrity information into queue_limits")
-Signed-off-by: Li Nan <linan122@huawei.com>
----
- drivers/md/md.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+And the patch itself can be improved. there are three cases of
+calculating max_low_pfn:
+ACPI with NUMA, handled in numa.c
+ACPI without NUMA, handled in mem.c
+FDT, handled in setup.c
 
-diff --git a/drivers/md/md.c b/drivers/md/md.c
-index 48c35b6fb52e..e974280b38bb 100644
---- a/drivers/md/md.c
-+++ b/drivers/md/md.c
-@@ -5869,7 +5869,7 @@ int mddev_stack_new_rdev(struct mddev *mddev, struct md_rdev *rdev)
- 		pr_err("%s: incompatible integrity profile for %pg\n",
- 		       mdname(mddev), rdev->bdev);
- 		queue_limits_cancel_update(mddev->gendisk->queue);
--		return -ENXIO;
-+		return -EINVAL;
- 	}
- 
- 	return queue_limits_commit_update(mddev->gendisk->queue, &lim);
--- 
-2.39.2
+You have missed the 2nd case. The simplest way is add "max_pfn =3D
+max_low_pfn" at the beginning of arch_mem_init() because all cases can
+be handled here.
 
+Huacai
+
+> ---
+>  arch/loongarch/kernel/numa.c  | 2 +-
+>  arch/loongarch/kernel/setup.c | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/arch/loongarch/kernel/numa.c b/arch/loongarch/kernel/numa.c
+> index 84fe7f854820..002dbe62b329 100644
+> --- a/arch/loongarch/kernel/numa.c
+> +++ b/arch/loongarch/kernel/numa.c
+> @@ -356,7 +356,7 @@ int __init init_numa_memory(void)
+>                 node_mem_init(node);
+>                 node_set_online(node);
+>         }
+> -       max_low_pfn =3D PHYS_PFN(memblock_end_of_DRAM());
+> +       max_low_pfn =3D max_pfn =3D PHYS_PFN(memblock_end_of_DRAM());
+>
+>         setup_nr_node_ids();
+>         loongson_sysconf.nr_nodes =3D nr_node_ids;
+> diff --git a/arch/loongarch/kernel/setup.c b/arch/loongarch/kernel/setup.=
+c
+> index edcfdfcad7d2..ab8c9336d8f5 100644
+> --- a/arch/loongarch/kernel/setup.c
+> +++ b/arch/loongarch/kernel/setup.c
+> @@ -294,7 +294,7 @@ static void __init fdt_setup(void)
+>         early_init_dt_scan(fdt_pointer, __pa(fdt_pointer));
+>         early_init_fdt_reserve_self();
+>
+> -       max_low_pfn =3D PFN_PHYS(memblock_end_of_DRAM());
+> +       max_low_pfn =3D max_pfn =3D PFN_PHYS(memblock_end_of_DRAM());
+>  #endif
+>  }
+>
+> --
+> 2.39.3
+>
