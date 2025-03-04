@@ -1,81 +1,64 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6CDD1FC7FD;
-	Tue,  4 Mar 2025 12:47:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42EB026ACD;
+	Tue,  4 Mar 2025 12:48:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741092467; cv=none; b=QojOV808+1RuSyDOOx0FumvwBCc/43BhM2J6M1bKtPgbU7sLIPE+3e7JGpP2A7WKT8CLsuF2dJ9IEBX2KvDWKkpS0FDxNAQBL5PMyXj8Q9DSVZTbJqebAsTQEIp81SE37C7WlFvsr3Lf8Qy/oej0xsZisGmvgnxWh4kdPGy8Clk=
+	t=1741092516; cv=none; b=I+0MIT6r/E6LaCaBxMkAzp7yMjxga+pJh3Mrewuc+R8QXoLA67Wc35c4czF9BAtzCvYbsSvXKXDMAfkkIoy4otvIpmNkiihkvaxpM3AZyhJy1p1WN9iAruXGlpVVt57HqkJMueXa0TvZow7S5baDjU1yeJk63o2UHXOzKr/CKR4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741092467; c=relaxed/simple;
-	bh=s41CNZeyxYqiFP0x3AH953mCpbPKMcXkWgAF8ScBLQk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=OXoJvWCltoDOntVC4FkXcKWo5hjRaXPXnQ0U845L9GeKHcsWj+3ID3w+1YAaoGUedBkcbiaFocSQYjjCRM9Dge4rkKlUbiWgkf0vhVgb5xLQ+EKXZsWNUjqoRB9hi5Im3hUrg5jdikeihsjMSDr1BCPolQONCyGVEcq+chBTg6o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UuhCZpCV; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UuhCZpCV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8CC72C4CEE5;
-	Tue,  4 Mar 2025 12:47:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741092467;
-	bh=s41CNZeyxYqiFP0x3AH953mCpbPKMcXkWgAF8ScBLQk=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=UuhCZpCV+48Hwj2XBN9aDqgVdGjzmqaNboPLV2rN0vRryFgNZRj8LK8HSPT7guefr
-	 ExtRYcA/Z1eI1pRFkRtaNglWGsMD5L28t8nwHmDF0NCAhRL0pS0JN1KodKD9FMBAXx
-	 T94GxVYd93us+/ulMAwIpgAFt/+BeCcYkHf5h0+ykShuPFEsXfym+rTkM5tGDxeT8v
-	 22HUBkxKEUqYlp7Y2W3lPHrzAd9bHGXDxNaAhtZw5JiDRptcCWOmFiv+1HmQ0j9AfG
-	 7wPc9vO5w3uG7BdlnXfjdvKpQftTbcZBDzEVQmtnM653AkHbNTjUmM5Qk5++ts1HsI
-	 dhxMVbiKte0XQ==
-Message-ID: <f2c1a48e-74e3-4f8c-af3c-aafbfc40fd3f@kernel.org>
-Date: Tue, 4 Mar 2025 06:47:48 -0600
+	s=arc-20240116; t=1741092516; c=relaxed/simple;
+	bh=M1RC0c8Lm4NIyyJY/aAgHNkXEayMLHduAvUH/c7VGcM=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=EkCU5km6P/5jcj7QccUptPJ5FT1tUvh84AgV7XPTnZyCx5qB8DdjyKOxXv6Yeo0SOVGx4Eb8HU8XWGp5hfLy2mY+gZZFGsFte2f8u0SJVnpHQ8XqRICujQMmVzotPIV9SfGQbNWICoKRyhEx4ejjzKW2yy56erscVvlj1lnslqQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.252])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4Z6b6W5j6zzpbTn;
+	Tue,  4 Mar 2025 20:46:59 +0800 (CST)
+Received: from kwepemg500017.china.huawei.com (unknown [7.202.181.81])
+	by mail.maildlp.com (Postfix) with ESMTPS id 9B6F01800EB;
+	Tue,  4 Mar 2025 20:48:30 +0800 (CST)
+Received: from huawei.com (10.175.127.227) by kwepemg500017.china.huawei.com
+ (7.202.181.81) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Tue, 4 Mar
+ 2025 20:48:29 +0800
+From: Li Lingfeng <lilingfeng3@huawei.com>
+To: <trondmy@kernel.org>, <anna@kernel.org>
+CC: <linux-nfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<ehagberg@janestreet.com>, <linux-nfs@dimebar.com>,
+	<yukuai1@huaweicloud.com>, <houtao1@huawei.com>, <yi.zhang@huawei.com>,
+	<yangerkun@huawei.com>, <lilingfeng@huaweicloud.com>,
+	<lilingfeng3@huawei.com>
+Subject: [PATCH 0/2] Ignore SB_RDONLY when mounting and remounting nfs
+Date: Tue, 4 Mar 2025 21:05:31 +0800
+Message-ID: <20250304130533.549840-1-lilingfeng3@huawei.com>
+X-Mailer: git-send-email 2.31.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] arm64: dts: intel: socfpga_agilex: add frequencies to
- internal oscillators
-To: Matthew Gerlach <matthew.gerlach@altera.com>, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250226185451.11748-1-matthew.gerlach@altera.com>
-Content-Language: en-US
-From: Dinh Nguyen <dinguyen@kernel.org>
-In-Reply-To: <20250226185451.11748-1-matthew.gerlach@altera.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ kwepemg500017.china.huawei.com (7.202.181.81)
 
-On 2/26/25 12:54, Matthew Gerlach wrote:
-> Add clock-frequency property to the internal oscillators, cb_intosc_ls_clk
-> and cb_intosc_hs_div2_clk.
-> 
-> Signed-off-by: Matthew Gerlach <matthew.gerlach@altera.com>
-> ---
->   arch/arm64/boot/dts/intel/socfpga_agilex.dtsi | 2 ++
->   1 file changed, 2 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/intel/socfpga_agilex.dtsi b/arch/arm64/boot/dts/intel/socfpga_agilex.dtsi
-> index 1235ba5a9865..bcd12f82636f 100644
-> --- a/arch/arm64/boot/dts/intel/socfpga_agilex.dtsi
-> +++ b/arch/arm64/boot/dts/intel/socfpga_agilex.dtsi
-> @@ -114,11 +114,13 @@ clocks {
->   		cb_intosc_hs_div2_clk: cb-intosc-hs-div2-clk {
->   			#clock-cells = <0>;
->   			compatible = "fixed-clock";
-> +			clock-frequency = <200000000>;
->   		};
->   
->   		cb_intosc_ls_clk: cb-intosc-ls-clk {
->   			#clock-cells = <0>;
->   			compatible = "fixed-clock";
-> +			clock-frequency = <400000000>;
->   		};
->   
->   		f2s_free_clk: f2s-free-clk {
+When NFS_MOUNT_UNSHARED is not set, NFS forces the sharing of a
+superblock among each filesystem that mounts sub-directories elonging to
+a single exported root path.
 
-Applied!
+To prevent interference between different filesystems, ignore SB_RDONLY
+when mounting and remounting nfs.
 
-Thanks,
-Dinh
+Li Lingfeng (2):
+  nfs: clear SB_RDONLY before getting superblock
+  nfs: ignore SB_RDONLY when remounting nfs
+
+ fs/nfs/super.c | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
+
+-- 
+2.31.1
+
