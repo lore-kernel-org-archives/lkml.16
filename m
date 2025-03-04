@@ -1,155 +1,131 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF29DF9E6;
-	Mon,  3 Mar 2025 23:59:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D07A529A9
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 00:01:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741046380; cv=none; b=Z1tUFaLLa7W1ZMrjp3Id/L/sFyz66zQ7rJgKXxeGPa6EYMZRrPlrcA8GR/ziTtiKtDhyNt52h98u6zDkA+wDjlLtZELdHyYIT2fksYoCeyxOwVPPtd/E6u0DAtBAlKOE+4qg2DT4pT3Px867Xr3ujflA6daY8UsB1KN9ue7Jc1Q=
+	t=1741046476; cv=none; b=ESmBF3bshTxcykuiZI89EsPVDmjNvJ5/xsBOK11JRlKT6JcYARvGRKus7e+S4vkW1v5z98X99udWEP0QcRpDmjqXS7dNBG4KJPpMPZJBpSByRSxWyPnoipIL7RKC0kfDCHTMvvOSdzHhG7gIcnM66p/1uStEa5okkFMIBxS9Ws0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741046380; c=relaxed/simple;
-	bh=04bpoOcPW4nahyQoGffhYfeUl/7cvNwek56IxXN5nLE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ZOJQnHDOlOhGV9QeE1uKD7UCn4dLjPDEwmkwAkS1AFPR0/d+R2iMhymtt/3NKgaoN+TWN2nBwuN2JQUOoMdEfSYBhTsuLX6pB3N1FqsD2VkzwJuMPVmxO53mOzLjw6VhbTMQkW8P57fXbGRuUUR3UkWR5F+A0fqREu4yOY4qd4Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Eb4BMwjL; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741046476; c=relaxed/simple;
+	bh=9+pEkwg2vuoEzMhL5Cl/B8uzhCiG5riWIsKZ/O2ZmG4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=p5sgLYbQxJKVJpKCB89PmNJlRw4lvzxeKb5U9mZmN3Z0V9mv7CPDHcuyRobgCJm8xpRwPI1CE7sWcvJJueq4WYDABBMWHsE9/VK32jaazVuqWxpShQ0L3LAUYMg4+8azpI359MPykkksfYn3V2veJBNapzcQqodHpYABZ8uIRFM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=L4oW7hKk; arc=none smtp.client-ip=209.85.167.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Eb4BMwjL"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2239aa5da08so33309705ad.3;
-        Mon, 03 Mar 2025 15:59:38 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="L4oW7hKk"
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-54955222959so3625324e87.3
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Mar 2025 16:01:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741046378; x=1741651178; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=+Nl5k4lX8ykAjaBSh+OFtZkq9yFs9ZO8ZZS3/cchBXs=;
-        b=Eb4BMwjLNVgxGLZxkvHkNoIp0NdzIsYMeH0xT4a4aApjEPMVBM1HYzX8pKRoMkaJRQ
-         Af80Pv+i0WL8lxpr7EwIYVg6hIa1JaaEAXzTV4UVL7nPNIQiRNEs8zH3yHaBx86uPtr0
-         G37EDMVlrhOXMx2SZWLzqTRPPSDHrJSziLZuu+7oyf7/v4cEkoPF4T9PL2Es6wqEIS9Q
-         NBfXkaONCft1aDPTt37CCHzrcjYJzMy0L2nlw3yFwpMZdjUm0qcYRX5iGDt62PTXaBAm
-         F5dgB03vPr6WcvP/keuxHDamJQQEOCp0Q4rAm1kL49psc+rpTTgJLUbY0dj7cQodQK3w
-         sC/A==
+        d=linaro.org; s=google; t=1741046472; x=1741651272; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=nkqxBKG8Qf6FiNEdeYYpYgDqec2n3GJdXjk7zy/AcfA=;
+        b=L4oW7hKkNdPbLc3YEYxfQKZXt7dw9dyMP94iLnu6Hv1JA30UnNrCqxfSp1SLYbtDvd
+         SMuBZagCi6OOA4mv5TMCGJuz4MdW0+f3DFS5WU7jR+DK8v245NbFFJxQtfrLWs52ebs+
+         /ZjVFhCqgigHz74aOeWpB5Mk4SB29KKCtGmeSh/lK+yqAczJ2MiRGO1X1Zi4dLTuHkyH
+         B/tjUw2peUC7AuJh43L66KOF/FPBcXubzA7ths+5fUJHMEBYhX+sn3S4LEKKivyYsqeK
+         k7quxmnGbMTRtj5SmeXtDFpRBGHWuylLP0NCT96wLbYpqhgBJ9TRSPFBkbFRhdX04cuZ
+         Zwrw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741046378; x=1741651178;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=+Nl5k4lX8ykAjaBSh+OFtZkq9yFs9ZO8ZZS3/cchBXs=;
-        b=T72s71oiL89FOGswB3aKhXZ5ZFyhVQGDpM7z0Sqr85eJB06TyGSvne2J5vmqCxBnPq
-         yIJQxq+d/DRfaZXpsjS/M66B5sH4pLY1lLZVXWb0xP5ZtcMt5fZDLfkDprUlXy78svDM
-         kDqG3EO3d3vss/4tbddCZT2ScaN8h0pYdvMRmecMuGDv6F3D8IDDEYar6ShdxxlIrKcc
-         9fReFXwmWjCwL2xGZhyk4OaZ5TAFzIuaJKvweSHBI7fza4xuuEnmb22mciZ/gSYsYjGB
-         EgPFWvij/q+pNcgKiFpbq0P2K3xdQFP1etKpozzKNnXIYJcyFjF2ouZUI9DXQpBEUI+f
-         ppBw==
-X-Forwarded-Encrypted: i=1; AJvYcCUU03s1U68wOjAfeH6QXLZ2P6DbmK/vFl2hBNHzOL1nHP8BjQgmG1dV36DvPgw6ZB2q8RmdWaVzuPMF@vger.kernel.org, AJvYcCUWzPLGNU8xVMS3196Q9qiYIu9ulGaO7GxHA2RYxKJmPoZNHz40BCtT9ci8y7XzMJIiySLUzzj9m68G@vger.kernel.org, AJvYcCUuQMXTdoYNgCMEt7XCvcbOAr3Q+YHdFOz6e6Fo1m2pinzFm7a2R2VFSo0e5xnwprm1go2qwTs3ZIPJX+9F@vger.kernel.org
-X-Gm-Message-State: AOJu0YxKFPin54UOk7AP/GxDPpK25ehZJFgzv7q70ISGJqm6sfq5gsia
-	sI2Jk5UxCr4sxO+ZJgfjuCh3VXvSZx2khQAPQn/tD4bfSG09wVoY
-X-Gm-Gg: ASbGnctB3eAmQy8JNRpvysWFETF8vjDlpobkuU8CyjNoj3CguoFl7LDDwSMX0FGr1lk
-	8mpKKE/+xCLCp0J1ROmASsWOuGf17KujpyrMxIY6hqhffkr9psEy/rff2S+Qn6xS4QPNrDmTlOX
-	n7yZHLrEirbtKT25NFYdNorA3yLtBY4fNEHZm4AWl1YONJmJbRhR/Sulz6TWqqswJU6w+LS8Yb+
-	S2S6BB29GtE1kp8RuIrpuIAVk6YYmC64HXplyoGlQMq+BAYzRZBDHQNuZJZdnDfg5jWCq4GJu+E
-	9CAURcOtt5KGm1tzX9gyfMbzT+Me8ywwKBo3RFe9KLy08ZK+dig9KU3xWqL7skBHv6UG
-X-Google-Smtp-Source: AGHT+IGk+zORULG18C0l/CqE4lIgOVZvq9u81/ReypCKT4mvBK1lYyGlpNr3ONZlH2rHl5CMFl/KhA==
-X-Received: by 2002:a17:902:ce91:b0:223:64bb:f657 with SMTP id d9443c01a7336-2236922352bmr222799545ad.46.1741046377894;
-        Mon, 03 Mar 2025 15:59:37 -0800 (PST)
-Received: from danascape.tail34aafc.ts.net ([2402:e280:218d:2e5:7b03:1e42:d492:fb71])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22350531e1asm83591775ad.240.2025.03.03.15.59.34
+        d=1e100.net; s=20230601; t=1741046472; x=1741651272;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nkqxBKG8Qf6FiNEdeYYpYgDqec2n3GJdXjk7zy/AcfA=;
+        b=lqCrNU2Tqc11EaXe6jWfBeWh1t5I48rJCr1QrJYPgh8KUb/QR+THjz+/NNd1YdeK5D
+         WYH4W+xieD7LcqMCJQzTb0TQIRHFi/EOyrvEimkRcEH4agu7e04AZV+/xjVeEr/jxMSI
+         v4TBGaNfyijjAVzJz5iXvD1LnDEfS3ymPEmDeYJ8pf5xCIEfNSm/6FvaaTrPTLCPac/f
+         gOzDdOLT0yqLaZoCyDELd+AJT5GWkUo6qLAqi4DCOAQQ6sHAzyfEAjjBWXFSwHPyRjIy
+         i+rKHCT4c/YpazRSQlNWHDj4S8FvJYXRJTHBxDQWQDM7+u37j7TnJPcvG7+HzEfdrE2m
+         g8fw==
+X-Forwarded-Encrypted: i=1; AJvYcCUu6Emjiscnp7MC9DX+6HGCdgJQFyS+TlbDuPvUluD+UyDUOgMpFumJnNLyKbXlJk7iBImAiojYEUUWm6M=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzBE8s67DS6HUGxsGyXbyzrRFcSrHCA3dCK9PeO5/On+7FbCv2Q
+	S+l/ef9lFp8nNHm9OTnLwBtUGziBfSYTnplGLjU+hChgQ3JLwexOj6B7nJhSglQ=
+X-Gm-Gg: ASbGnctDULWmbIidXl4rvHyVa8lLUXrB79AE6xwVJ9DFOu+1OPkpNDx9lEwSYTNMThd
+	vBOZEcEhmxDvsruTCLNyu16rMrqKNxK9JvpvrFbpZd69W3MYOi6YL5+0bCXtzWaga2jeOf5pH1j
+	CryM39G2ek330ZD7MpLmgA8kj0t5cZ8pGOJnu9QeKs1duhal+g4MEjnYWNWT5uq1zSYdLMsvAU7
+	UsEvHgvXZBpyZzqiQCbd+LyVJeY3DeB2r8BlwIlGobg92E+ozh1cOVT8aQjD1uMElMMi17R4tUg
+	FJwBa7Kt8E7aqzhrTXH8XohfM+XgJ7LCB0mBtVNPZjEAR9rzQ3YZUyvq1SoTmB1MBUcTDBwrJ3H
+	GLY8VDihl4ZFyKBKUp03/lZ0b
+X-Google-Smtp-Source: AGHT+IGAn6gM1TyoFfcxy1mqC0F4XhADSkCvoUeeALC8/A3I1KfzwKl6LMwy2iUWuocM+y/26k7tHw==
+X-Received: by 2002:a05:6512:234f:b0:549:6451:7ea0 with SMTP id 2adb3069b0e04-54964517fb8mr2749118e87.19.1741046471766;
+        Mon, 03 Mar 2025 16:01:11 -0800 (PST)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-549443cd03dsm1427182e87.244.2025.03.03.16.01.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Mar 2025 15:59:37 -0800 (PST)
-From: Saalim Quadri <danascape@gmail.com>
-To: jic23@kernel.org
-Cc: lars@metafoo.de,
-	Michael.Hennerich@analog.com,
-	gregkh@linuxfoundation.org,
-	linux-iio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-staging@lists.linux.dev,
-	21cnbao@gmail.com,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	devicetree@vger.kernel.org,
-	Saalim Quadri <danascape@gmail.com>
-Subject: [PATCH v2] dt-bindings: iio: accel: add binding documentation for ADIS16203
-Date: Tue,  4 Mar 2025 05:29:30 +0530
-Message-Id: <20250303235930.68731-1-danascape@gmail.com>
-X-Mailer: git-send-email 2.34.1
+        Mon, 03 Mar 2025 16:01:10 -0800 (PST)
+Date: Tue, 4 Mar 2025 02:01:07 +0200
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Alyssa Rosenzweig <alyssa@rosenzweig.io>
+Cc: Neil Armstrong <neil.armstrong@linaro.org>, 
+	Maxime Ripard <mripard@kernel.org>, fnkl.kernel@gmail.com, Hector Martin <marcan@marcan.st>, 
+	Sven Peter <sven@svenpeter.dev>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Jessica Zhang <quic_jesszhan@quicinc.com>, asahi@lists.linux.dev, Janne Grunau <j@jannau.net>, 
+	linux-arm-kernel@lists.infradead.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Alyssa Ross <hi@alyssa.is>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Neal Gompa <neal@gompa.dev>, Nick Chan <towinchenmi@gmail.com>
+Subject: Re: [PATCH v7 0/5] Driver for pre-DCP apple display controller.
+Message-ID: <dn7zskhxgdgr25nvbnsjyn5brc3yoc446dxz3vqgbiwoccvlcr@5l6f4byj53fo>
+References: <20250217-adpdrm-v7-0-ca2e44b3c7d8@gmail.com>
+ <c3927b51-55ef-4a38-8931-18ff00caa8d8@linaro.org>
+ <Z8XcH7xoDC7TA7ZC@blossom>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z8XcH7xoDC7TA7ZC@blossom>
 
-This patch add device tree binding documentation for ADIS16203.
+On Mon, Mar 03, 2025 at 11:43:11AM -0500, Alyssa Rosenzweig wrote:
+> > > Sasha Finkelstein (5):
+> > >        dt-bindings: display: Add Apple pre-DCP display controller
+> > >        drm: adp: Add Apple Display Pipe driver
+> > >        drm: panel: Add a panel driver for the Summit display
+> > >        arm64: dts: apple: Add touchbar screen nodes
+> > >        MAINTAINERS: Add entries for touchbar display driver
+> > > 
+> > >   .../display/apple,h7-display-pipe-mipi.yaml        |  83 +++
+> > >   .../bindings/display/apple,h7-display-pipe.yaml    |  88 +++
+> > >   .../bindings/display/panel/apple,summit.yaml       |  58 ++
+> > >   MAINTAINERS                                        |  16 +
+> > >   arch/arm64/boot/dts/apple/t8103-j293.dts           |  31 ++
+> > >   arch/arm64/boot/dts/apple/t8103.dtsi               |  61 ++
+> > >   arch/arm64/boot/dts/apple/t8112-j493.dts           |  31 ++
+> > >   arch/arm64/boot/dts/apple/t8112.dtsi               |  61 ++
+> > >   drivers/gpu/drm/Kconfig                            |   2 +
+> > >   drivers/gpu/drm/Makefile                           |   1 +
+> > >   drivers/gpu/drm/adp/Kconfig                        |  17 +
+> > >   drivers/gpu/drm/adp/Makefile                       |   5 +
+> > >   drivers/gpu/drm/adp/adp-mipi.c                     | 276 +++++++++
+> > >   drivers/gpu/drm/adp/adp_drv.c                      | 617 +++++++++++++++++++++
+> > >   drivers/gpu/drm/panel/Kconfig                      |   9 +
+> > >   drivers/gpu/drm/panel/Makefile                     |   1 +
+> > >   drivers/gpu/drm/panel/panel-summit.c               | 132 +++++
+> > >   17 files changed, 1489 insertions(+)
+> > > ---
+> > > base-commit: b62cef9a5c673f1b8083159f5dc03c1c5daced2f
+> > > change-id: 20241124-adpdrm-25fce3dd8a71
+> > > 
+> > > 
+> > 
+> > All patches are reviewed, can we funnel patches 1, 2 & 5 via drm-misc-next now ?
+> 
+> I'm planning to do so today, just need to get dim setup first :)
 
-Signed-off-by: Saalim Quadri <danascape@gmail.com>
----
-Changes:
-V1 - V2: change compatible property from enum to const
+Nice! As a heads up, it would be really-really nice if you can send any
+kind of 'applied' message. If you are using 'dim b4-shazam', then
+'b4 ty -a' might do that for you. Otherwise just a simple 'hey, applied'
+email is useful enough.
 
- .../bindings/iio/accel/adi,adis16203.yaml     | 52 +++++++++++++++++++
- 1 file changed, 52 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/accel/adi,adis16203.yaml
-
-diff --git a/Documentation/devicetree/bindings/iio/accel/adi,adis16203.yaml b/Documentation/devicetree/bindings/iio/accel/adi,adis16203.yaml
-new file mode 100644
-index 000000000000..64370f13e1dc
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/accel/adi,adis16203.yaml
-@@ -0,0 +1,52 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/iio/accel/adi,adis16203.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Analog Devices ADIS16203 Programmable 360 Degrees Inclinometer
-+
-+maintainers:
-+  - Barry Song <21cnbao@gmail.com>
-+
-+description: |
-+  https://www.analog.com/media/en/technical-documentation/data-sheets/adis16203.pdf
-+
-+properties:
-+  compatible:
-+    const:
-+      - adi,adis16203
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  vdd-supply: true
-+
-+required:
-+  - compatible
-+  - reg
-+
-+allOf:
-+  - $ref: /schemas/spi/spi-peripheral-props.yaml#
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    spi {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        accelerometer@0 {
-+            compatible = "adi,adis16203";
-+            reg = <0>;
-+            spi-max-frequency = <2500000>;
-+            interrupt-parent = <&gpio0>;
-+            interrupts = <0 IRQ_TYPE_LEVEL_HIGH>;
-+        };
-+    };
-+...
 -- 
-2.34.1
-
+With best wishes
+Dmitry
