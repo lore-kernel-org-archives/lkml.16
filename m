@@ -1,246 +1,93 @@
-Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2047.outbound.protection.outlook.com [40.107.22.47])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 530561FCFD2;
-	Tue,  4 Mar 2025 10:14:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.22.47
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741083287; cv=fail; b=ka9SpgcnyuREjdI1/eHE0ez6kcdIrsuCwyoq7mOd6K4jth1n7bSU43Z4xdJs2cHjrcEabdQhIslkZUtK2kkcs4XWGGfi3mZ0vsXx0XQdBN+mGeYHUIiX4YjRIqOHrP+SHTPZ7MA5HrthnIrMPlRd4ycs42uxHYgDXgLvyYY+pMc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741083287; c=relaxed/simple;
-	bh=ytXWiR8DmoNafRHX6ZgRGNpqxwWuGRoMjhIcNjGz7v4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=UugPqr6ttzzi3jqJsyLFhIBb2yG1GEK+mPVXI1xzDVAkUzFiEKknw79DXkP3XhbN/nTVIwSdq2WlnixYzd1xoy7/bS9fnJM33ziE957ToLy6lnXBh+XamANb3cJxaX7k9m/odsPGDcnwiQkd5uc6JhQVD46/7wzghbi+7fKYWvc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=g3OhoYgV; arc=fail smtp.client-ip=40.107.22.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 635141FE44B;
+	Tue,  4 Mar 2025 10:14:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741083291; cv=none; b=bZgv1Hbi994ZoFcsCHCHi3ZDK946Tzm3VonofEXjR2vsMl62cvqfZjWGmJ5Mp1aqQvljBXTcgbQPFUHraV0DN8hHpvfMKAcgOndQ9rvsL1ZjSdRYzE3X/EdSM+dGuBXqE4D6EjE6sOFT0hOR/JlriXb/T3QZAXfO5JO7nL4gqRo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741083291; c=relaxed/simple;
+	bh=TjLOJqtB1F8hWRkkxRuwtt8t9SXz+Ki1Fz1mo89VUes=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HUcYXqsk1aujR1Jq74jXvSzlnSIlyS3jaI3EJ2Npj7rMQEMqsiv32eDsLzy9BOPtD9GGCBW94zTg/ZojLA7q3vqhOFvN1I0nlC5y4dusfo1gdozohGn/DkdpTXsOXE0yp9fqAEsGWZnY6AF1NjK+8CaKHZSpHcmqsvk3HFHroC4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p3m302a/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="g3OhoYgV"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=BquACvqguzh/NTaxYo7bGd879igaVHrPv9b5yZsqYy9xEs0XEjb8C8dsZOOBqIQYhQkAOU6yPATsdgvv8gUBHid9+3M21SIAmX4ezQHY0vCX24nWEyXYItK8qUUCXRKtqvo2dkigRbrchZ8kcNpaUoQHtA2pwcyaXFkiI8Cl73CKvDn+KzRWQz6CL47oAKZMI/dNUYtKshJb7CFs5ptScwCV+lQkjZirHeUsQ0dDF+6I3Yb9bla30dFv3HRKP1TOOsLgIQ08MUaFFvC0AgKmUaJAHnV/DrJnmhBw2GWQ0R0H+AjQklGPc6oXd4wH9I5KcxhkrRbVbqtkIqV6/PuNHA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=tEnXwmmvpi0hAcKM1/oDGaFVFL8fqv5GR8PQZTvYynE=;
- b=mu1daeLDX/FsWNNPgMzKp5Q/2q32W3UHIwzxD4QukKeh8AbHDP9dJx38/sQJIv1PsY7QRggP/MEQjFwl8QQI52QGyHwEkz1WGt9TLLOo3+YDxEip7Of+vvzTJSOnwRlJc/3GMwuDVed2nhXiwQkALrHnHsZWmfu3rlJfcr/yaECsOw+65FW/UXPSjiGjfhcsMiAyEpdy0+6KhVaE5mn8bKg0BLJGZDBoI89Km+AuM/ZiqpYcz+BXekGUmgmEYioCaCjOGbm/jvKbYDor99dANmNxhnWv5e+tr1M0wfbLAWCNv3E0SpzJ9XOruwmRe00KdeOg5ND13MoqJxNkQ1XTIg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tEnXwmmvpi0hAcKM1/oDGaFVFL8fqv5GR8PQZTvYynE=;
- b=g3OhoYgV8/Ib80cixF8McgSGdRsR8hLklhAB/PBCbThlCk4MOFvFModxQ8pK87Y+NP4MKV4i9MOJA73W3kdcyeRXfNgYIZWOuFBFE5HIuxPDdJqOqMcQKyZ7mIjtXbl6/1AXyXd7CcRpBFuI5XT8jpdPKzeREaCdHmW7qCvJjv1hG1D2OnSPQ1TCrUA/eZmPrFh3j+WoHQVrQDeN04WZORiT/dRj4MYTc8QKkr8uvdIyPJVct3RekEN5J3ap5hvLlE1z8zR3YiPn3TYGAndSmmDwOW8X3BIPM84cq9k5Y5bRyue8z4N6hehTAo09SUPNXugC83hWPldVRgK7bj3KhQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from AM7PR04MB7046.eurprd04.prod.outlook.com (2603:10a6:20b:113::22)
- by DB9PR04MB9868.eurprd04.prod.outlook.com (2603:10a6:10:4c3::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.28; Tue, 4 Mar
- 2025 10:14:43 +0000
-Received: from AM7PR04MB7046.eurprd04.prod.outlook.com
- ([fe80::d1ce:ea15:6648:6f90]) by AM7PR04MB7046.eurprd04.prod.outlook.com
- ([fe80::d1ce:ea15:6648:6f90%3]) with mapi id 15.20.8489.025; Tue, 4 Mar 2025
- 10:14:43 +0000
-From: Liu Ying <victor.liu@nxp.com>
-To: dri-devel@lists.freedesktop.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	andrzej.hajda@intel.com,
-	neil.armstrong@linaro.org,
-	rfoss@kernel.org,
-	Laurent.pinchart@ideasonboard.com,
-	jonas@kwiboo.se,
-	jernej.skrabec@gmail.com,
-	maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org,
-	tzimmermann@suse.de,
-	airlied@gmail.com,
-	simona@ffwll.ch
-Subject: [PATCH 2/5] drm/of: Add drm_of_dpi_get_color_coding()
-Date: Tue,  4 Mar 2025 18:15:27 +0800
-Message-Id: <20250304101530.969920-3-victor.liu@nxp.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250304101530.969920-1-victor.liu@nxp.com>
-References: <20250304101530.969920-1-victor.liu@nxp.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SG2PR04CA0188.apcprd04.prod.outlook.com
- (2603:1096:4:14::26) To AM7PR04MB7046.eurprd04.prod.outlook.com
- (2603:10a6:20b:113::22)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p3m302a/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 682A1C4CEE5;
+	Tue,  4 Mar 2025 10:14:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741083290;
+	bh=TjLOJqtB1F8hWRkkxRuwtt8t9SXz+Ki1Fz1mo89VUes=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=p3m302a/k0SfOsBi02IpT15HnKL9GkqTwtq4VDlznbcFLhhbO8qGT5stRieyuqFUU
+	 Esj2vlfXMImK2e8p+rT7XVIsld8Hd2GUg0KnZuZZDkfNxT6kCD24DlDwCP5Dpmj8LX
+	 yd8nEeKCEdhs8jkxw1jcMuQAXvPDxiUz5kKgB2tjLp/TZI5numzst116MB9d0vuED4
+	 qOqPFnysZefOCUrxGMpo1wLKlJCGiDgCS/xvXFbKH9jFUW1hRtNSBevBsZm8oY5Jhn
+	 LOrg73y4t72P2COBKf3cRfc1VAHGgpGYxWwHwF3SnswPnz0wu4pcyn8BfDlyecQRNC
+	 Ae7EcWqlzVDVA==
+Date: Tue, 4 Mar 2025 11:14:45 +0100
+From: Nathan Chancellor <nathan@kernel.org>
+To: Kees Cook <kees@kernel.org>
+Cc: Nick Desaulniers <ndesaulniers@google.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, llvm@lists.linux.dev,
+	linux-hardening@vger.kernel.org, Paul Moore <paul@paul-moore.com>,
+	James Morris <jmorris@namei.org>,
+	"Serge E. Hallyn" <serge@hallyn.com>, linux-kernel@vger.kernel.org,
+	linux-security-module@vger.kernel.org
+Subject: Re: [PATCH] hardening: Enable i386 FORTIFY_SOURCE on Clang 16+
+Message-ID: <20250304101445.GA2529736@ax162>
+References: <20250303214929.work.499-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AM7PR04MB7046:EE_|DB9PR04MB9868:EE_
-X-MS-Office365-Filtering-Correlation-Id: 98a90a58-a318-4366-72e6-08dd5b0561fc
-X-LD-Processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
- BCL:0;ARA:13230040|52116014|366016|7416014|1800799024|376014|38350700014;
-X-Microsoft-Antispam-Message-Info:
- =?us-ascii?Q?gObhO2ncgqFatWEifwnflKgxb5wyMtDhCfckoXhWDlhgIUIVEnNbg8aC6iU9?=
- =?us-ascii?Q?GdeU4dZL86JhpyKF1j71dsVsvQI6N3ed2l3wwwKotM2rRmObGsBYLARzJOdv?=
- =?us-ascii?Q?NKY7utTSF9Z1fHBKnDuEgUPO/LNLwRbNx2bRV02DXRty3jPL1TB8Ch/jLxM/?=
- =?us-ascii?Q?0+W5tJepqo/LjpeESlZtsYTtpOOuCrqlWGKGeJNr+dx4gpMremX+ZKq9KDYC?=
- =?us-ascii?Q?MGBNWi5aAiglzSDbfmlMSXmsuNLnXaRl36PWcNzaRfXXYdJnbhfd+FwbctuY?=
- =?us-ascii?Q?nx2EJlT4VvAFRWhfP3LQo0/DmIn/GuWr/juldyrTjeh/k9eMzMPa4wXH5PGM?=
- =?us-ascii?Q?E5SQmsXdO7niOXudDse+ow5kemqffruyVDyFEwu/BFbkwnBy5YWEA2OfWTt2?=
- =?us-ascii?Q?YaXUCbXY+EKVP9ltZ94fA/VvmgbtjuTNEaOt4j6bPIEUtm3ibfaCGBrQ/5rY?=
- =?us-ascii?Q?XzLzbx+9UZRvX6aUGrKrhLXVeNzTotUDluLg3pIECi3YeXyM49AKmfpSrHWb?=
- =?us-ascii?Q?YQJ/A9o00HvAoY0+msLNQQ4qzduqBGDjhEYmm8qUPbG0/pr4wEsPqIkqi9qI?=
- =?us-ascii?Q?ILQnhsMCyNOU4qczN4sSSUtvQa8u+uBFq0RHUxfV8nQ2DH/fa9e/v1oYz2yq?=
- =?us-ascii?Q?KQ9NkCwg1H9565pOzI+u/DD9N8AHxsDkplW/NCk2dtAVEVct5ZqtmClAoMij?=
- =?us-ascii?Q?AwtEqPyPUlqikoRkeRadkk/MkRcHYePhkib2LmtaRHi++2O3Q7/d2qY0Im0x?=
- =?us-ascii?Q?DvJPJWEiSIbo4EBjJy0LQOlao6WFTIm2KWYxGl6l6KZAzT4uLnuZxZoytzUJ?=
- =?us-ascii?Q?ee5BjjAYSYzJmmu1ONrqLJPpG1E3e8IXk1JWdLEyQ1+Xa1AuunhdQEAIK6CH?=
- =?us-ascii?Q?acXvmGhf8AOcpSobv+oX2g3ZISHArLLNGtOECccT/jgakGtEiDebkfMiY75H?=
- =?us-ascii?Q?ybVNFI015LyzCRr+Ld2O3QxMUIDDaUH4IdQiNexMZfWsUXqkeK41rDfN6JSA?=
- =?us-ascii?Q?pWQWpWdutonZqMV6dHYYxLOHWdA8jbPM5eopWDclzVKyelHgkIQhFShWlK1w?=
- =?us-ascii?Q?IycOeyC/yYsJBfZ9AI6Sy1wx0EgrQyx1USj2WBCaWNFGXn0Xyao1Y2H/IMgZ?=
- =?us-ascii?Q?Fi2XB1cl6GLNhuaXG2JQm2vK+YomsfBLvhkNY0zkR3/Jc6JNqNhfsrEsuTnO?=
- =?us-ascii?Q?fwDCIAo+Vey7DCRYrorC2VFbGYmmIf8ndyFKAAbED/5YyKoAJFBhtVL77Fnk?=
- =?us-ascii?Q?WgDWyLu1ZBjJCCbyOW942RUkj5N5RrbjvTaVuIZEmTrL1if9pP1P9bJZHoF7?=
- =?us-ascii?Q?TUPPoN9vXpUTP9iaxbsliZIWXVekJxZi4g9c6nroLs39RVp0Ew1dVClJmwbG?=
- =?us-ascii?Q?ZnwRve1trHYSl6/3vMMyla5k7GK5Hsn7EhoW8JuBrApWO31mBVaFg/5S4UW0?=
- =?us-ascii?Q?/7GrDWnLmNrClV5Rfa5rGDgY+L+ujdtL?=
-X-Forefront-Antispam-Report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM7PR04MB7046.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(52116014)(366016)(7416014)(1800799024)(376014)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
- =?us-ascii?Q?0RRXg32AT54ahYoyOGr3axIIWgPVSc+NCTRPi1yCq9RWWguTzzWXtbdrG68R?=
- =?us-ascii?Q?qYJghUGST74R4KyVkXAKglBN/QuPzNI7D0N6bNHfMFNfXWhJ3naDymedFsUf?=
- =?us-ascii?Q?kiVvB7pRhJAVlydEdc7/C3sAmOd8mWD1IxYqhSrU4fz4+eRh1t9M+/J6vNr8?=
- =?us-ascii?Q?XmLNKsl2ZrcXACjpB/dR1EZVAQ8J4nuwpSV/fmk969D8PxWa/Mi4kbX4YF+l?=
- =?us-ascii?Q?b3OrfTmSmTbr16RKS5Ep7WbAYFD32OuixdfSJx8CCefsL3jcAzTCw7FbUbO2?=
- =?us-ascii?Q?LdjNOLAqfs8hJOgRxL3PR4uVsA1WeH73KFYAgelIgG5KgJLMJ7Y/IEYU5/Xs?=
- =?us-ascii?Q?gPbGoq2ntgMRaJ8WuOrbm7/aaR/IeOZP52Cam4Nx3I7YbP1KWA5c7UgRj33k?=
- =?us-ascii?Q?7p1TMTG6EasaZt8P2PLp1ZQ4Ezaci5OMIXOfVePvUZ+F+NPWvF8lGdkuKLcL?=
- =?us-ascii?Q?3pkSuYA2DE8qXy1QMKX5wq6I1EANNzmYZxbnY5JI17NRuL82Tv9LHwgURxKd?=
- =?us-ascii?Q?/C7Lev8uGHnz6sEaNew4OEU6zP+QISbwVf2dfWjViqoCc8kVTiWuS/BRS4xn?=
- =?us-ascii?Q?iIcGronT8MOTAdiIZQxIhcdgZ78O2HAEn2bz77m4sGO/cv1G3MsDY9snoIxt?=
- =?us-ascii?Q?DUO0qvFaRAzyKbFrfsccS0vIFBHQWYoRgGFNmTDibNCHpBETDpcIjJQk7qQd?=
- =?us-ascii?Q?xY8n9CabgExGvHXITyVefyibVEsEWpJ/s9dHe4AHbjyk6sNssUGjoCHCAPHd?=
- =?us-ascii?Q?WtmLQJLiIe5BP0RBv8Vk4VqmkDb+U09JTqWEicZZ0WDp75orTLRI6eCeD0yR?=
- =?us-ascii?Q?3bCgo4nztWmo2Bq3jjqcHcAR01h64Fa6fo5W60Bi3catYmkTm77IDfqEAvRG?=
- =?us-ascii?Q?bz1Y3IFef3O+OKlB/+tdVXrtW7G0sQz/mwNJ1RGbUqZV5+NO9dte8mVFh6B8?=
- =?us-ascii?Q?dvF08f/sPlC0fUB5RBOXWipAG07erc89YYnwxSNETKGnN4vfW0GaGwxjBE6c?=
- =?us-ascii?Q?DzkVO+leNRA5pa9dIX3ceD/Efo4+aYl4U5+XKyLTLjTUpNLDHOTEawlVZ2Pp?=
- =?us-ascii?Q?7CjH/gzICih1xTkOZLjyU87iSTpDYp1aNI7bDwHeFRCA2PhJthqKzxJcmJGc?=
- =?us-ascii?Q?4Hb3Z+c7iXNRy8rWJ+VaIND6A2NVXC0apZgijmPWzNrpQpCz9eDt3EzXKpuO?=
- =?us-ascii?Q?tfJ98bD8spuMumWgMhMydCQaCv/Ppt8m7Auye62UkpcaONrxMt8YWbeLRWKb?=
- =?us-ascii?Q?2pFckZVqSf6p3u6VQrDiVmlH6fT6WmXMtkwO3+jQzfQ0riFJ7IkDgP1TZfIn?=
- =?us-ascii?Q?svhxjbPnO1xlmMwgX3WnQ4cxnuspP88QsZRbt2/uYgD+5U/AesXHYi4ntTlU?=
- =?us-ascii?Q?bXua9ISOt4NPU2KkyLJbgHkt/qQcJr6SCD4ihEmpkMH2AoaSGCjJmsDGLvUV?=
- =?us-ascii?Q?GPvZLTuEhzoMXVgH5LI4kdcC8MhzBoF89yNc7i1n/QKgN8odp3EcThOExfDj?=
- =?us-ascii?Q?N5uOpyLdGbezSAxfv4pDVYwc4+8+OzMlt50bDvgwYcv8t5i3ogb0+oBxn8Tu?=
- =?us-ascii?Q?cuYGAGX6PcsN8dSdIdR+e3C6F5e5qC557BHC2ix3?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 98a90a58-a318-4366-72e6-08dd5b0561fc
-X-MS-Exchange-CrossTenant-AuthSource: AM7PR04MB7046.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Mar 2025 10:14:43.6496
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: og5nD9dxSJgtOKmQfWTKsbiDUG601wRqJW1ewvPrK5jRhjGRHWnSOvqNo4kHDgljknVcm0zBoM9Fv6FkFp4oCw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR04MB9868
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250303214929.work.499-kees@kernel.org>
 
-Add helper function drm_of_dpi_get_color_coding() to get media bus format
-value from MIPI DPI color coding string.
+On Mon, Mar 03, 2025 at 01:49:37PM -0800, Kees Cook wrote:
+> The i386 regparm bug exposed with FORTIFY_SOURCE with Clang was fixed
+> in Clang 16[1].
+> 
+> Link: https://github.com/llvm/llvm-project/commit/c167c0a4dcdb998affb2756ce76903a12f7d8ca5 [1]
+> Signed-off-by: Kees Cook <kees@kernel.org>
 
-Signed-off-by: Liu Ying <victor.liu@nxp.com>
----
- drivers/gpu/drm/drm_of.c | 43 ++++++++++++++++++++++++++++++++++++++++
- include/drm/drm_of.h     |  7 +++++++
- 2 files changed, 50 insertions(+)
+Yes, thank you for catching this!
 
-diff --git a/drivers/gpu/drm/drm_of.c b/drivers/gpu/drm/drm_of.c
-index d0183dea7703..6e2e19275b99 100644
---- a/drivers/gpu/drm/drm_of.c
-+++ b/drivers/gpu/drm/drm_of.c
-@@ -285,6 +285,49 @@ int drm_of_find_panel_or_bridge(const struct device_node *np,
- }
- EXPORT_SYMBOL_GPL(drm_of_find_panel_or_bridge);
- 
-+/**
-+ * drm_of_dpi_get_color_coding - Get DPI color coding
-+ * @endpoint: DT endpoint node of the DPI source or sink
-+ *
-+ * Convert DT "dpi-color-coding" property string value into media bus format
-+ * value.
-+ *
-+ * Return:
-+ * * MEDIA_BUS_FMT_RGB565_1X16 - dpi-color-coding is "16bit-configuration1"
-+ * * MEDIA_BUS_FMT_RGB565_1X24_CPADHI - dpi-color-coding is
-+ *                                      "16bit-configuration2"
-+ * * MEDIA_BUS_FMT_RGB666_1X18 - dpi-color-coding is "18bit-configuration1"
-+ * * MEDIA_BUS_FMT_BGR666_1X24_CPADHI - dpi-color-coding is
-+ *                                      "18bit-configuration2"
-+ * * MEDIA_BUS_FMT_RGB888_1X24 - dpi-color-coding is "24bit"
-+ * * -EINVAL - the "dpi-color-coding" property is unsupported
-+ * * -ENODEV - the "dpi-color-coding" property is missing
-+ */
-+int drm_of_dpi_get_color_coding(const struct device_node *endpoint)
-+{
-+	const char *coding;
-+	int ret;
-+
-+	ret = of_property_read_string(endpoint, "dpi-color-coding", &coding);
-+	if (ret < 0)
-+		return -ENODEV;
-+
-+	/* TODO: Add 16bit-configuration3 support. */
-+	if (!strcmp(coding, "16bit-configuration1"))
-+		return MEDIA_BUS_FMT_RGB565_1X16;
-+	if (!strcmp(coding, "16bit-configuration2"))
-+		return MEDIA_BUS_FMT_RGB565_1X24_CPADHI;
-+	if (!strcmp(coding, "18bit-configuration1"))
-+		return MEDIA_BUS_FMT_RGB666_1X18;
-+	if (!strcmp(coding, "18bit-configuration2"))
-+		return MEDIA_BUS_FMT_BGR666_1X24_CPADHI;
-+	if (!strcmp(coding, "24bit"))
-+		return MEDIA_BUS_FMT_RGB888_1X24;
-+
-+	return -EINVAL;
-+}
-+EXPORT_SYMBOL_GPL(drm_of_dpi_get_color_coding);
-+
- enum drm_of_lvds_pixels {
- 	DRM_OF_LVDS_EVEN = BIT(0),
- 	DRM_OF_LVDS_ODD = BIT(1),
-diff --git a/include/drm/drm_of.h b/include/drm/drm_of.h
-index 7f0256dae3f1..0a827f3b3a55 100644
---- a/include/drm/drm_of.h
-+++ b/include/drm/drm_of.h
-@@ -50,6 +50,7 @@ int drm_of_find_panel_or_bridge(const struct device_node *np,
- 				int port, int endpoint,
- 				struct drm_panel **panel,
- 				struct drm_bridge **bridge);
-+int drm_of_dpi_get_color_coding(const struct device_node *endpoint);
- int drm_of_lvds_get_dual_link_pixel_order(const struct device_node *port1,
- 					  const struct device_node *port2);
- int drm_of_lvds_get_dual_link_pixel_order_sink(struct device_node *port1,
-@@ -104,6 +105,12 @@ static inline int drm_of_find_panel_or_bridge(const struct device_node *np,
- 	return -EINVAL;
- }
- 
-+static inline int
-+drm_of_dpi_get_color_coding(const struct device_node *endpoint)
-+{
-+	return -EINVAL;
-+}
-+
- static inline int
- drm_of_lvds_get_dual_link_pixel_order(const struct device_node *port1,
- 				      const struct device_node *port2)
--- 
-2.34.1
+Reviewed-by: Nathan Chancellor <nathan@kernel.org>
 
+I assume you'll take this?
+
+> ---
+> Cc: Nathan Chancellor <nathan@kernel.org>
+> Cc: Nick Desaulniers <ndesaulniers@google.com>
+> Cc: Bill Wendling <morbo@google.com>
+> Cc: Justin Stitt <justinstitt@google.com>
+> Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+> Cc: llvm@lists.linux.dev
+> Cc: linux-hardening@vger.kernel.org
+> ---
+>  security/Kconfig.hardening | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/security/Kconfig.hardening b/security/Kconfig.hardening
+> index 23ffb0d7c845..c17366ce8224 100644
+> --- a/security/Kconfig.hardening
+> +++ b/security/Kconfig.hardening
+> @@ -286,7 +286,7 @@ config FORTIFY_SOURCE
+>  	bool "Harden common str/mem functions against buffer overflows"
+>  	depends on ARCH_HAS_FORTIFY_SOURCE
+>  	# https://github.com/llvm/llvm-project/issues/53645
+> -	depends on !CC_IS_CLANG || !X86_32
+> +	depends on !X86_32 || !CC_IS_CLANG || CLANG_VERSION >= 160000
+>  	help
+>  	  Detect overflows of buffers in common string and memory functions
+>  	  where the compiler can determine and validate the buffer sizes.
+> -- 
+> 2.34.1
+> 
