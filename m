@@ -1,199 +1,257 @@
-Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2050.outbound.protection.outlook.com [40.107.22.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C544C26461C;
-	Tue,  4 Mar 2025 17:49:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.22.50
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741110601; cv=fail; b=V4l3fGaMJ6LpO0Hnqxg2AXoAq48gIwhf/2MLcOUzzExm4kUSJMzjtUa8d4n0f4yLj50yYM4dsYwYTN4H6ghmzzUfUn0PR/SFcRcyRT/RDa31iEhiKtVWKc0VM5mEq0MMH+nrJP9oh3MLmgcGSyDlsMWfe+84ad8FqBqARJx0bhE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741110601; c=relaxed/simple;
-	bh=MRnp2w1JbuZ64j6mC2lny38kcmCwfis2CxC++T4dC4w=;
-	h=From:Subject:Date:Message-Id:Content-Type:To:Cc:MIME-Version; b=ep7iH3RySZqqhCwMir2VOePYm6SGNqwQqTyicw4XqsHc8+f0hIMwgAC7CYelX3bB6/lCCudG3z8ELMC1wZ4NXYo0vPFay15FniSNBChVnCb2Up4X1QXPeAHgJwTjdTPENkGzudOBsqJua0N0z1h+QG0zkmEKYwGD7BRYGwD9Uv4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=kIn5FdOc; arc=fail smtp.client-ip=40.107.22.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="kIn5FdOc"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=fxM43FUPIf5+IC5WcEJhl1E5FhCpD43vzA87HN1tu1XGUb1N7xbJe69YzFaGOcbSqqsRiUPbSM9K/mVK+NVWtEAES0WxmSl22LDX9eO5KUlkT0yjygyDZwETTVvstnlX7lSbFxeRikHG4t6vfhwRpE8Yq0b3PSWASuhKvfvSkT2p24+PEkmfw2Yy74wNBJcNbydbVyRc5GEB7jEpd6yZTuhhgWWyU3LZ4q1FlmnMb7hrLxKz2Efub3LqXFCOwAWW9wlxcvYwt5tBRneBpQdb4jLoaCGwl+er6cHDPTIRGeafEHdYX72tG5kqbA8nFl4uegBvd8LHfdlAKOinZ91Qpg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=DMCF89lSvrwz6mp2CrHDDIe/TEjMPTqLsuTL5ToswGM=;
- b=ldTRDNoTNIcr8J9F8OIi8RUjga2w18N6cGNvClthAL7RVDxtR2sp78txOSFufN+ER9vjeKtzN//AY7yYUA0GlkJ3sqY6w0UZS8oJ871enTCMcalFEjsYI79wVRbxof7ZpROZhobEzRJ2dG/MA3w/Xg6RD++MRu6boPEU5i1u/PXgeE3gA5OmXM4+7IREEeapX9tmG1eG7YT1YLpWEaxW+uOA/puk9uk9hykW49C39Wc6+nz1YyJD6B/r938q+WKdGqvuCRn/i+hHM7cg4Yl9X6WEJof6WxpQ5DcSDQpcidwhTw5yPgcqZBAQhOflxoa8Jqa3GX2ol+oK4da6PcHcJg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DMCF89lSvrwz6mp2CrHDDIe/TEjMPTqLsuTL5ToswGM=;
- b=kIn5FdOc5fxvpofrML3CrsjZra80Ho1lnEWmEqP8acfdoo+dhvnCGlwt389N8VHxdy5klbTt6l58EJFkb/+Pqe5z9fbC2umJzlWdafJgG8rP57RKPNC1unDBtF5nTNYMPaCtYshJLd9tJ2p553/5TGs+Vn+MYS4QP+8/jg0k1kMdribNDmrtfxPbxpnRNHDb+KU5ZcMQfkwxbMgPkpvpP5O6n+Rg7i0WZgAjKYWWHG+P6TeWrK5n1CoigpBpY9tj9F+Ma9hmMUEAIJ+NG8E4OCWWaK76tV7viVFkhtjFnEa3pb3vkFIf+6bvnRdynl/an9KKwIR+ODSEcvwK9QeApQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from DB9PR04MB9626.eurprd04.prod.outlook.com (2603:10a6:10:309::18)
- by PA1PR04MB10504.eurprd04.prod.outlook.com (2603:10a6:102:444::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.28; Tue, 4 Mar
- 2025 17:49:56 +0000
-Received: from DB9PR04MB9626.eurprd04.prod.outlook.com
- ([fe80::e81:b393:ebc5:bc3d]) by DB9PR04MB9626.eurprd04.prod.outlook.com
- ([fe80::e81:b393:ebc5:bc3d%4]) with mapi id 15.20.8489.025; Tue, 4 Mar 2025
- 17:49:56 +0000
-From: Frank Li <Frank.Li@nxp.com>
-Subject: [PATCH RFC NOT TESTED 0/2] PCI: artpec6: Try to clean up
- artpec6_pcie_cpu_addr_fixup()
-Date: Tue, 04 Mar 2025 12:49:34 -0500
-Message-Id: <20250304-axis-v1-0-ed475ab3a3ed@nxp.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAC49x2cC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1MDYwMT3cSKzGJdsxRDI0tzA0tzsyQTJaDSgqLUtMwKsDHRSkFuzgp+/iE
- KIa7BIa4uSrG1tQDr31ilZgAAAA==
-To: Jesper Nilsson <jesper.nilsson@axis.com>, 
- Lars Persson <lars.persson@axis.com>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Lorenzo Pieralisi <lpieralisi@kernel.org>, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
- Bjorn Helgaas <bhelgaas@google.com>
-Cc: linux-arm-kernel@axis.com, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
- Frank Li <Frank.Li@nxp.com>
-X-Mailer: b4 0.13-dev-e586c
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1741110592; l=848;
- i=Frank.Li@nxp.com; s=20240130; h=from:subject:message-id;
- bh=MRnp2w1JbuZ64j6mC2lny38kcmCwfis2CxC++T4dC4w=;
- b=4MvMCYfjLLRzrxCDf9dn9EyOlUtn3vG40KGTy4lbfm6uZyx3l7LsL5yYt6DlskAFe7//UGgJ5
- 119BwVEoXqdCZUGQSVkM7wRUPDP+FzpU3/IEA9fKsOw0f1llP9P8Hdj
-X-Developer-Key: i=Frank.Li@nxp.com; a=ed25519;
- pk=I0L1sDUfPxpAkRvPKy7MdauTuSENRq+DnA+G4qcS94Q=
-X-ClientProxiedBy: BYAPR08CA0007.namprd08.prod.outlook.com
- (2603:10b6:a03:100::20) To DB9PR04MB9626.eurprd04.prod.outlook.com
- (2603:10a6:10:309::18)
+Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A9B927F4DA
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 17:50:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.235.10
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741110606; cv=none; b=hAa6iymBjSG8SZTgsZKPiNfQjIBMQ5kZ+v+CrWZ5oe2JYx5GcoSGn+M8FY5aMP6x9KCyBy1+Oempsp1HRRcH4NoEPFzrQs+C+Et4quXkE20ixwI+fDSBDo6oMLtoAK2ebwB87VNQZZy4vU3FNtQLL05uHJWnVTu+ntJygLSoCic=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741110606; c=relaxed/simple;
+	bh=cuwFsMlZK5xkzOJ09p/VrO+s4ApWZxUmUCwU7f78poc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=rIzO1ugS57vtgX0qRQCMS7mis+T2IO5hdgIapR5dRAMoGeKpgwqkStryK3yZGs8W+Z8w89XjASE6yV7CvyoKOYoQCvrNx7aRSwsGENsbDSjJY6xnpUli2jxzcgqLgzvof0oKc9d1+jiYtmHWxFu0UM/XMwR8+fT7q1rQnw2rgaI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.235.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
+Received: from localhost (mailhub3.si.c-s.fr [172.26.127.67])
+	by localhost (Postfix) with ESMTP id 4Z6j6m6FW5z9st7;
+	Tue,  4 Mar 2025 18:17:36 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from pegase2.c-s.fr ([172.26.127.65])
+	by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id F0bJ3kJcU-Nk; Tue,  4 Mar 2025 18:17:36 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+	by pegase2.c-s.fr (Postfix) with ESMTP id 4Z6j6j6Kg0z9st8;
+	Tue,  4 Mar 2025 18:17:33 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id C60298B774;
+	Tue,  4 Mar 2025 18:17:33 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+	with ESMTP id nxD_0adB2Hhy; Tue,  4 Mar 2025 18:17:33 +0100 (CET)
+Received: from [192.168.235.99] (unknown [192.168.235.99])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 784158B763;
+	Tue,  4 Mar 2025 18:17:32 +0100 (CET)
+Message-ID: <2d535b7e-3f84-4e51-9db2-288cacf40aad@csgroup.eu>
+Date: Tue, 4 Mar 2025 18:17:31 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DB9PR04MB9626:EE_|PA1PR04MB10504:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4f44aa79-3f73-44a9-a9ea-08dd5b44f99d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|366016|7416014|52116014|376014|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?SUJ6Nm9JWnJoZmJvMzByeGhlbW1Oa3lrZXZ4WitjZjJnMzF0NjVKbmNvSlgw?=
- =?utf-8?B?ZGJxUHNqSVdsYVZpaVpJM3FqS0FNVXJkNWVlYnZvYkVtTWE5YytJKzhicHVB?=
- =?utf-8?B?QktUeXU0ZnVWR3NNZUkyUWk2b2wwMy9yRXJod0JwMEN6SXlLa0RQT0ZGaXpL?=
- =?utf-8?B?ZTdla0ZVSlgwMERzVUU4b3N0cWw3WWlLYkc5Y2p0QktMRTlpWDg1anBCbG5s?=
- =?utf-8?B?Wkt1VzEyYndtVXg5ZCt0UGpzUUllYWEvQzQwYWpyZlRYSkFXa1RFdk4zcFAw?=
- =?utf-8?B?U3loclhRcDU5a3JNUXdNQWt4ZGRtOW9OT0tzK2hTSXNpOE9BcU1tTElBSSts?=
- =?utf-8?B?NHZUWVZhRHNFNTV0dUozWm9rWUd1dmgyUnUvWUZJeWxTNGhKMHI3c2lyYlF6?=
- =?utf-8?B?cVhTWDRGZVVYK2swazZXSDhXVzN4ZmlyRnVwdkJlWVJUU3k3N3ZyVkZ0R1Z0?=
- =?utf-8?B?V0NTVGh0S0RmNkhmbFRORzUzRS9VV2lZWVpLU0Q2NVROTW45N1lzTG8vZ2NN?=
- =?utf-8?B?NGNmdjFUb21Yd04yTUlabDVCZnlBUmlpL1dPUWtHMXlsdDhDTVh6TVNveW5N?=
- =?utf-8?B?eWRsQmR4K0FMM2ZVSFBBQzhPNHkvVXFVUkxlejRYdmRSUis5ekt6bzlxK1g5?=
- =?utf-8?B?QmRDL2IxMmttNkpmd1AvaUlFd0RJTVhEVEFlUnliaVo0V25vNHJ3eS9SQnhx?=
- =?utf-8?B?aWpXTTJ5THlOcmxkMU9hL3pjQXdRNEg0blAxbXovOUdiUHlmTW5HdWtiL3NR?=
- =?utf-8?B?eDNLOEE0QWMrSzNKQUFseGdnRWQwU1doRUN0RDB5c3d3em1sZnFZNzBUVURO?=
- =?utf-8?B?S3g2V0ZFZURCQWlpZUtkcEttT25ybUh5N0k2MVpFMklRZEMvUVdZV1NsS2s1?=
- =?utf-8?B?NjRtZnNLVE9heUc5cEdBVUZUQVdWOVRTbGVScVd1WnNBcXE0ZkgxRmtDNHRu?=
- =?utf-8?B?bzZaTURONnpEZFdYeTdJaUtJY2hmTmM1dDI1dnVja1h3OXFPRmtORHdUVjlq?=
- =?utf-8?B?WFd4VDZTRnVNWmErVXBkR045TUZSemd2TEc4Vzd2cXlLVmdLMU0wTjNsQ3FI?=
- =?utf-8?B?ZFM5Q2ltaGIwalBFMVpnUkxRdjF6aUNKeUJDSG03QTFGTnNDK3h6YWhXbmMr?=
- =?utf-8?B?WkorL1JuYjVySHA5NnBYbzRlLy9aNjVOaFhCNkkyK1dXQlBkb1BadFYvZEta?=
- =?utf-8?B?WVQxVFZ1TkRBM0hKcDhlSFhGQ2JJVVdDM014ZVRoc3RkdFN4My80ZVZnZ1R1?=
- =?utf-8?B?M0dqMFJmbFFTNHl2cklBVE1naEhSNHU5dEQzL3ZiRGFlVkk1VXFxTVRjNzNC?=
- =?utf-8?B?dTEyWEU3cWgxcjErQUE1ZUpNcXErdTA5T0x0YjVvRXlyb2NubDR1M1lwenRM?=
- =?utf-8?B?OU1NRUNVamtzR0ZVVlRSNS9PdDF4cXo5ZkFXQTZ3eWxnWGFWdmNSVU1KSW9J?=
- =?utf-8?B?T0RmZVNvUGkwM3JVRVM4cWdiNFdDQkpZdUlKUnJ2NmVFdTVTQlhvSnpDOHVC?=
- =?utf-8?B?OHpaeVFaYStQdGVub2R1UC8xOFN3by94OVc1dDdqUXJvUTJyemN6WU94Z2ll?=
- =?utf-8?B?dVJCckpBdm1DcTR2dHpZbDNuWk5MQ2F4RU4vbEowWEpqMGFhdmE1Tzd0bHVa?=
- =?utf-8?B?bWhYdmVLbGdkWHFMUUlMQlQvTWw1UEtvWG5WM1doSzNGaXptdDZPRHAya2FV?=
- =?utf-8?B?T0FWVFd4QU5DaTM5elR4L3hoalVMdGgwd3dVcXFTc3dIeUE1Vk9iTXBmcnN5?=
- =?utf-8?B?TU1tYitjZXRKMXlUS2VVS0tHK3BXU01zbU1WQ0ZaUGxITDBURFRub01Wd2pH?=
- =?utf-8?B?MkdsQ1pueVlyZ2JuN2ZiTTF6MEREZFdCWTYwKy9YK29LNkFwaU1BbjNEMW9I?=
- =?utf-8?B?bVBUUVBXNUEvdGFRYzlyMXA3QXNYSDdKWEJXam9xUkFlMkV1NTRseGpodk9x?=
- =?utf-8?Q?JB7hco1RyEfuTFXJlDocHBQyhZZlDuth?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB9PR04MB9626.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(52116014)(376014)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?T3I0dHhrYlNMbDFNVy9DcWwweVNZVVJjbXEyTHFzQnpkbGcrdTMvdGRyR0tN?=
- =?utf-8?B?dzJHRWFrSGJWT3ZaWmdaUk15MTlQaGNPOGtDZkhmN2ZyUTltTFRRV3dmRk5P?=
- =?utf-8?B?THloWWdacjVFWGhMZmVlcmVPRkloTmpMTDlKajlVR3ZnYWc2SzNzVFp3aDBN?=
- =?utf-8?B?Zm4rNm5HQWRkMlJ0VzZLczlWVGtqS2JHUU5OUnYrY3FHVlgySjdZaUZNa2VI?=
- =?utf-8?B?MTNjbG12UjVZZXg2S3V6ZHloc29UbWxyMXBaVm1GbTFiRFJ6cmYzQkhaMjh6?=
- =?utf-8?B?c2RocGMxd24zSVZ4TmlqcHRwdEZCTHZpb0RkMkYrQ3FQWGZnbzhDLzZOVk1G?=
- =?utf-8?B?dnl2dWszYXhYN2hQMDNmV1h2cmZMZzBYcytpbkh5U3VKV0RZQ0JUanhQb2Jj?=
- =?utf-8?B?dmFkWWJDZkdFa2gyaXQ5cFBCbWNLN0NXMktra1ZPSUFPcnU5L1BpVnQ4OWM1?=
- =?utf-8?B?ay9YOEZiYTlFYjVQS1VwOXhod0JDM0hzWndKNDIzMnQrOWhVY1RodzFNT1Bq?=
- =?utf-8?B?WjVrNWs0T0ZWclFFV3pSaVZqS1ZwNDVYdmdJWlNCY3kwWjZNL2FYVlJjc2g4?=
- =?utf-8?B?MnVqUUpraTlaa205TkhUUEN4VkthSVJvSG9QYTZWV3hsZDVWN3k5M0VmSXlq?=
- =?utf-8?B?R29IMndIL3Q5elh1ajA1VHIyQjRSMFIyeEFUN3F0Ym80ZU9kanY2aVFLT2tY?=
- =?utf-8?B?UTBIbXN4UC93UUNWakpUWjVjQTJZQk5ldUlUYmkyRWJTWW8zNkZOOEtQS0JU?=
- =?utf-8?B?enFZQWpJWC9jWWc2aTUrTi9VbnQyNnREVElCeGk0RW4zUlZ0VXZ2bzhjUXdQ?=
- =?utf-8?B?MTdyQi9LTERYd3ZtMVlMNVllMUpER3d1QW5jSjZSandPUjE2Y0UxeUl1QVJu?=
- =?utf-8?B?Q01DR21CN2h1MEc3OFhwYTZhczk1RVRpNU9LRVArUWthSm14eDdFd21ZY2tz?=
- =?utf-8?B?ekNwYWMwNmRlVGtseUVJM2RQSVlVaEpuYlFtaVdWNURFS0pDdWtkM0FUaGRW?=
- =?utf-8?B?dnI3UnF3UWVUN3NYU0JhaklXY1VpbERWVkJndEdVS2FUMnZSb1Q4b2NTRzdh?=
- =?utf-8?B?WHdhQkFEMWo2V1MxQWl0OGhmVzV2MDVsQVVjVUhlWWNoSi9RZDM4SW8xK0lL?=
- =?utf-8?B?SFkzZmRsckQxeGRVcys1R3hJR1J0ZDBYSTBZREJRdzl1NFovS1JneThpRlY0?=
- =?utf-8?B?dW0wamNobXk5Z3RzK1hBaEMrL0p6OU5TMDVZcjI1NGdMcWoxWnM1Z3k1bkJn?=
- =?utf-8?B?Q3Nsb0VheDZScUhoSE5NcjRsYUtCT0dRRnBSMGY5ZmVrbkwxeU9iemxlT3pJ?=
- =?utf-8?B?RnB3K0c4V3U1RWxJMnpKK09FeEg5aGhDc3pMaGJJdmpJQVVCVUJ4TzJZSHpH?=
- =?utf-8?B?T1Nua1lwSHV2bG1jaDh1dnVjYWRSRGwyS2VESlBZeDlLUnI1UjJqbytyRGVL?=
- =?utf-8?B?RzFkMzVMVTJqVExIU213WStxKzhWZGRyS0xtSTVSNWFLUXlldm1RUWlSSmdJ?=
- =?utf-8?B?TkdjSGF4bzNzSjNRVnhZWElxQmtzWFh3bC8yWVJGMGFHVzlyUDJSb0IyNEJX?=
- =?utf-8?B?OXZCeGxOUHBlSk1aM3ZLZ1lMOUF0ZnRlQTRlTk9hTHdCWW1BUUF1VlY4dlNY?=
- =?utf-8?B?RTQ5clByd3pBczBhVk1CelJ3NnkxMkdEMHQ5Vis2NW82NjVYeDdnbjV4ZWQ2?=
- =?utf-8?B?ZWlqMVNhZEg3T0t4eWV4amFwRTF5R1ZNM0plbDZ0bUNuNnVuWW1HSmh0YzhW?=
- =?utf-8?B?MTNsVlplVk51aWplV0d1QWJLcmxadlIrRHlYL1BET3VkV3hWNDNiUHNlRWVr?=
- =?utf-8?B?bHpRaXF3Y05BV1ZNcCtNZEVCZ21OMFhmUnE0SzY1b0tnamY2QU1CaDY0U0RQ?=
- =?utf-8?B?aFBPaWQwNXNUcC9KNWc0SElLcWxMZUliV01TdzA3SUNwYjE0dEFhWnJnbmVq?=
- =?utf-8?B?WkhkNDBGMk44bGJCTEU1dktSd1FTdVp6UU85MW5GQ2pjdWU4ZUVtN2dCU1Zx?=
- =?utf-8?B?WWxkWCtVbUM4R0VpTkZtL09wTXlMUFcvRTJPckJFQWgwV1pRTkc1SC9RNWNW?=
- =?utf-8?B?SW9odmdPTEdEMWt6YUI0cVpXaWJBS3ZQU2NUNHVmOUxuQ3dWenJkRllBYmFt?=
- =?utf-8?Q?DnRI=3D?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4f44aa79-3f73-44a9-a9ea-08dd5b44f99d
-X-MS-Exchange-CrossTenant-AuthSource: DB9PR04MB9626.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Mar 2025 17:49:56.1338
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: BEW+9EFM0zWODpGuJLs7jv9Kishisi60Hb2vUaIqi+4zerz0p9Vm+R4ZTZk3WW8vlnm4CdAfsnwvLIcrYTt/uQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA1PR04MB10504
+User-Agent: Mozilla Thunderbird
+Subject: Re: Build Warnings at arch/powerpc/
+To: Venkat Rao Bagalkote <venkat88@linux.ibm.com>,
+ Madhavan Srinivasan <maddy@linux.ibm.com>, linuxppc-dev@lists.ozlabs.org,
+ linux-kernel@vger.kernel.org, Stephen Rothwell <sfr@canb.auug.org.au>,
+ Michael Ellerman <mpe@ellerman.id.au>, Danny Tsen <dtsen@linux.ibm.com>
+References: <8c4c3fc2-2bd7-4148-af68-2f504d6119e0@linux.ibm.com>
+ <47aa8b75-96b6-4e37-bb62-ad758b414076@linux.ibm.com>
+ <8ba544e7-cf2a-4807-a056-683115805721@csgroup.eu>
+ <bfcce9ce-bc26-4088-8d27-0797fc0d22d3@linux.ibm.com>
+ <fe937273-d81a-4f6c-9eba-b96b711b4644@linux.ibm.com>
+ <988cb994-d8b1-4688-b926-66507ebe90df@linux.ibm.com>
+ <a8336412-7b66-447e-9a90-1a376960cd4c@csgroup.eu>
+ <461ad118-a56d-414e-a15e-5ffc10fed4c8@linux.ibm.com>
+Content-Language: fr-FR
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
+In-Reply-To: <461ad118-a56d-414e-a15e-5ffc10fed4c8@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-This patches basic on
-https://lore.kernel.org/imx/20250128-pci_fixup_addr-v9-0-3c4bb506f665@nxp.com/
 
-I have not hardware to test and there are not axis,artpec7-pcie in kernel
-tree.
 
-Look for driver owner, who help test this and start move forward to remove
-cpu_addr_fixup() work.
+Le 04/03/2025 à 16:44, Venkat Rao Bagalkote a écrit :
+> Hello Christophe,
+> 
+> 
+> On 04/03/25 6:43 pm, Christophe Leroy wrote:
+>>
+>>
+>> Le 04/03/2025 à 14:03, Venkat Rao Bagalkote a écrit :
+>>> [Vous ne recevez pas souvent de courriers de venkat88@linux.ibm.com. 
+>>> Découvrez pourquoi ceci est important à https:// 
+>>> eur01.safelinks.protection.outlook.com/? 
+>>> url=https%3A%2F%2Faka.ms%2F&data=05%7C02%7Cchristophe.leroy%40csgroup.eu%7C3657f07f71b149ba489e08dd5b336e9a%7C8b87af7d86474dc78df45f69a2011bb5%7C0%7C0%7C638766998669498918%7CUnknown%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=ZM65b%2F3BuUDy5Iet3kE1%2B%2BXKdjmM86UFsJwBmSHeiv4%3D&reserved=0 LearnAboutSenderIdentification ]
+>>>
+>>> On 04/03/25 6:08 pm, Madhavan Srinivasan wrote:
+>>>>
+>>>> On 3/4/25 4:58 PM, Madhavan Srinivasan wrote:
+>>>>>
+>>>>> On 3/4/25 2:26 PM, Christophe Leroy wrote:
+>>>>>>
+>>>>>> Le 04/03/2025 à 07:13, Madhavan Srinivasan a écrit :
+>>>>>>>
+>>>>>>> On 3/4/25 10:42 AM, Venkat Rao Bagalkote wrote:
+>>>>>>>> Greetings!!
+>>>>>>>>
+>>>>>>>>
+>>>>>>>> Observing build warnings with linux-next and powerpc repo's. 
+>>>>>>>> Issue is currently not seen on mainline yet.
+>>>>>>>>
+>>>>>>>> PPC Repo: https://eur01.safelinks.protection.outlook.com/? 
+>>>>>>>> url=https%3A%2F%2Fgit.kernel.org%2Fpub%2Fscm%2Flinux%2Fkernel%2Fgit%2Fpowerpc%2Flinux.git&data=05%7C02%7Cchristophe.leroy%40csgroup.eu%7C6e17cc771a204b2998b508dd5b1cf2cf%7C8b87af7d86474dc78df45f69a2011bb5%7C0%7C0%7C638766902127463526%7CUnknown%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=f0ubC0BiY%2Fw2XLfXcX955JKhJ%2BRkUmTUVO4fV%2F%2F4v2Y%3D&reserved=0 merge branch
+>>>>>>>>
+>>>>>>>> PPC Kernel Version: 6.14.0-rc4-g1304f486dbf1
+>>>>>>>> next Repo: https://eur01.safelinks.protection.outlook.com/? 
+>>>>>>>> url=https%3A%2F%2Fgit.kernel.org%2Fpub%2Fscm%2Flinux%2Fkernel%2Fgit%2Fnext%2Flinux-next.git&data=05%7C02%7Cchristophe.leroy%40csgroup.eu%7C6e17cc771a204b2998b508dd5b1cf2cf%7C8b87af7d86474dc78df45f69a2011bb5%7C0%7C0%7C638766902127477000%7CUnknown%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=GSDtRBQ35owCeEpjMMCNiJw3iizdrUPQcHznop2BLeQ%3D&reserved=0 master branch
+>>>>>>>>
+>>>>>>>> next Kernel Version: 6.14.0-rc5-next-20250303
+>>>>>>>>
+>>>>>>>>
+>>>>>>>> On linux-next kernel issue got introduced b/w next-20250227 and 
+>>>>>>>> next-20250303
+>>>>>>>>
+>>>>>>>>
+>>>>>>>> Build Warnings:
+>>>>>>>>
+>>>>>>>> arch/powerpc/kvm/book3s_hv_rmhandlers.o: warning: 
+>>>>>>>> objtool: .text+0xe84: intra_function_call not a direct call
+>>>>>>>> arch/powerpc/crypto/ghashp8-ppc.o: warning: 
+>>>>>>>> objtool: .text+0x22c: unannotated intra-function call
+>>>>>>>> arch/powerpc/kernel/switch.o: warning: objtool: .text+0x4: 
+>>>>>>>> intra_function_call not a direct call
+>>>>>>>>
+>>>>>>>>
+>>>>>>> Can you please specific the compiler and compiler version you 
+>>>>>>> found this issue with
+>>>>>>>
+>>>>>> Can you also tell which defconfig you are using or provide 
+>>>>>> your .config
+>>>>>>
+>>>>>> It might also be helpfull if you can provide a disassembly of the 
+>>>>>> three file.o around the warned address.
+>>>>> I could recreate the issue with gcc 11.4.1 20231218 with today's 
+>>>>> linux-next (but could not recreate with gcc 14 or gcc 11.3.0)
+>>>>>
+>>>>> (20d5c66e1810 (HEAD -> master, tag: next-20250304, origin/master, 
+>>>>> origin/HEAD) Add linux-next specific files for 20250304)
+>>>>>
+>>>>> warning for one of the switch.S file :
+>>>>>
+>>>>>    CC      arch/powerpc/kernel/syscalls.o
+>>>>>    AS      arch/powerpc/kernel/switch.o
+>>>>> arch/powerpc/kernel/switch.o: warning: objtool: .text+0x4: 
+>>>>> intra_function_call not a direct call
+>>>> I guess this is becos, for bl .+4, we recently added in the 
+>>>> arch_decode_instruction (decode.c) to set the type as INSN_OTHER
+>>>>
+>>>>          case 18: /* b[l][a] */
+>>>>                  if (ins == 0x48000005)  /* bl .+4 */
+>>>>                          typ = INSN_OTHER;
+>>>>
+>>>> Which I think is the issue here, changing it to INSN_CALL from 
+>>>> INSN_OTHER fixes the warning
+>>>>
+>>>> diff --git a/tools/objtool/arch/powerpc/decode.c b/tools/objtool/ 
+>>>> arch/ powerpc/decode.c
+>>>> index 26d5050424a9..ffd63a61a585 100644
+>>>> --- a/tools/objtool/arch/powerpc/decode.c
+>>>> +++ b/tools/objtool/arch/powerpc/decode.c
+>>>> @@ -56,7 +56,7 @@ int arch_decode_instruction(struct objtool_file 
+>>>> *file, const struct section *sec
+>>>>          switch (opcode) {
+>>>>          case 18: /* b[l][a] */
+>>>>                  if (ins == 0x48000005)  /* bl .+4 */
+>>>> -                       typ = INSN_OTHER;
+>>>> +                       typ = INSN_CALL;
+>>>>                  else if (ins & 1)       /* bl[a] */
+>>>>                          typ = INSN_CALL;
+>>>>                  else            /* b[a] */
+>>>>
+>>>>
+>>>> Maddy
+>>>>
+>>> Maddy,
+>>>
+>>> I changed the code manually and gave it a try. The Proposed fix,
+>>> partially fixes the issue. It gets rid of two of the warnings, but below
+>>> warning still persists.
+>>
+>> It fixes the issue for you but will reintroduce the issue with clang.
+>>
+>> The real fix is to remove the ANNOTATE_INTRA_FUNCTION_CALL in:
+>>
+>> arch/powerpc/kernel/switch.S:42: ANNOTATE_INTRA_FUNCTION_CALL
+>> arch/powerpc/kvm/book3s_hv_rmhandlers.S:1527: 
+>> ANNOTATE_INTRA_FUNCTION_CALL
+>> arch/powerpc/kvm/book3s_hv_rmhandlers.S:1534: 
+>> ANNOTATE_INTRA_FUNCTION_CALL
+> 
+> 
+> Removed ANNOTATE_INTRA_FUNCTION_CALL in above mentioned line, and it 
+> fixes couple of warnings. But below warning still persists.
+> 
+> arch/powerpc/crypto/ghashp8-ppc.o: warning: objtool: .text+0x22c: 
+> unannotated intra-function call.
+> 
+>>
+>> Can you give it a try ?
+>>
+>> For the last one, can you provide an assembly dump ? You get it with 
+>> "objtool -dr arch/powerpc/crypto/ghashp8-ppc.o"
+> 
+> 
+> Assembly dump:
+> 
+> objdump -dr arch/powerpc/crypto/ghashp8-ppc.o
+> 
+> arch/powerpc/crypto/ghashp8-ppc.o:     file format elf64-powerpcle
+> 
+> 
+> Disassembly of section .text:
+> 
+> 0000000000000140 <gcm_ghash_p8>:
+>   140:    f8 ff 00 3c     lis     r0,-8
+...
+>   20c:    20 00 80 4e     blr
+>   210:    00 00 00 00     .long 0x0
+>   214:    00 0c 14 00     .long 0x140c00
+>   218:    00 00 04 00     .long 0x40000
+>   21c:    00 00 00 00     .long 0x0
+>   220:    47 48 41 53     rlwimi. r1,r26,9,1,3
+>   224:    48 20 66 6f     xoris   r6,r27,8264
+>   228:    72 20 50 6f     xoris   r16,r26,8306
+>   22c:    77 65 72 49     bla     1726574 <gcm_ghash_p8+0x1726434>      <==
+...
 
-Signed-off-by: Frank Li <Frank.Li@nxp.com>
----
-Frank Li (2):
-      ARM: dts: artpec6: Move PCIe nodes under bus@c0000000
-      PCI: artpec6: Use use_parent_dt_ranges and clean up artpec6_pcie_cpu_addr_fixup()
+It corresponds to:
 
- arch/arm/boot/dts/axis/artpec6.dtsi       | 92 +++++++++++++++++--------------
- drivers/pci/controller/dwc/pcie-artpec6.c | 20 +------
- 2 files changed, 52 insertions(+), 60 deletions(-)
----
-base-commit: 1552be4855dacca5ea39b15b1ef0b96c91dbea0d
-change-id: 20250304-axis-6d12970976b4
+_GLOBAL(gcm_ghash_p8)
+	lis	0,0xfff8
+...
+	blr	
+.long	0
+.byte	0,12,0x14,0,0,0,4,0
+.long	0
+.size	gcm_ghash_p8,.-gcm_ghash_p8
 
-Best regards,
----
-Frank Li <Frank.Li@nxp.com>
+.byte 
+71,72,65,83,72,32,102,111,114,32,80,111,119,101,114,73,83,65,32,50,46,48,55,44,32,67,82,89,80,84,79,71,65,77,83,32,98,121,32,60,97,112,112,114,111,64,111,112,101,110,115,115,108,46,111,114,103,62,0
+.align	2
+.align	2
 
+
+This is raw data that is after the function end and that shouldn't be 
+taken into account as text by objtool. But ghashp8-ppc.S is generated by 
+a perl script and should have been marked as OBJECT_FILES_NON_STANDARD.
+
+For some reason, commit 109303336a0c ("crypto: vmx - Move to 
+arch/powerpc/crypto") missed it. So now that 'bla' is understood as a 
+call instruction, we hit the problem.
+
+Can you try with following fix:
+
+diff --git a/arch/powerpc/crypto/Makefile b/arch/powerpc/crypto/Makefile
+index 9b38f4a7bc15..2f00b22b0823 100644
+--- a/arch/powerpc/crypto/Makefile
++++ b/arch/powerpc/crypto/Makefile
+@@ -51,3 +51,4 @@ $(obj)/aesp8-ppc.S $(obj)/ghashp8-ppc.S: $(obj)/%.S: 
+$(src)/%.pl FORCE
+  OBJECT_FILES_NON_STANDARD_aesp10-ppc.o := y
+  OBJECT_FILES_NON_STANDARD_ghashp10-ppc.o := y
+  OBJECT_FILES_NON_STANDARD_aesp8-ppc.o := y
++OBJECT_FILES_NON_STANDARD_ghashp8-ppc.o := y
+
+Christophe
