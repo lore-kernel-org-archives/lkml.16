@@ -1,63 +1,190 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 45F13204582
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 10:58:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCD112045A6;
+	Tue,  4 Mar 2025 10:58:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741085910; cv=none; b=mp16oXODCIZ7YLSIE2l40jl1BO+U7CIONYQdsTyHR8AvdF57dvDjaDLpIYRTVamZTdbSCXxXFZy6H7spefM57iIlsKKbrNXs7z/ELI7n0Dm6fo+GA1DS5spRErZDrUiBXu6h7hsVhbOfqjLOLnwFVvvf+kuYmnMLBVbbqD5kjbQ=
+	t=1741085914; cv=none; b=FqAZEgRkyxhXQ8HouVD5dyf8cXxumk7E+tARkpKi1Af2pjQl7MUFJ1Sb5x1KPGx4pS6cf8QpddX9GmeAJNyjWDTQ+BnzMfQ8VmM4LqQsP7Q6+gHgWfgaTLkp4XrBHRZjsUpmbyiv4EDvKb0waT7Atsit8Hh3ZGN3I/tuHaXq7FY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741085910; c=relaxed/simple;
-	bh=DCii+rnTvH4NBAmHMwhIHUi8ysLfX718DpGn3wLPEhY=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=l2N4kV/CBDlhCI7KbL7l96qG9cQND8aE1Ic5Iouu+JNzr0d3YAvGEGdNW/6J0iJzS/rbbr6kNNQokA8PlwunG9+Aw25mJEnOBMoWRYYnQ9irjBSl7ItsxyTvEDi05jl1rhn6miAUttybipTFHg6j66G+BYmVYxU0ERN9CEDxRYk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 04CF1FEC;
-	Tue,  4 Mar 2025 02:58:42 -0800 (PST)
-Received: from usa.arm.com (e133711.arm.com [10.1.196.55])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 186723F5A1;
-	Tue,  4 Mar 2025 02:58:26 -0800 (PST)
-From: Sudeep Holla <sudeep.holla@arm.com>
-To: linux-kernel@vger.kernel.org,
-	Paul Benoit <paul@os.amperecomputing.com>
-Cc: Sudeep Holla <sudeep.holla@arm.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v4] firmware: smccc: Support optional Arm SMC SOC_ID name
-Date: Tue,  4 Mar 2025 10:58:24 +0000
-Message-Id: <174108587625.432485.15057756163207597336.b4-ty@arm.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250219005932.3466-1-paul@os.amperecomputing.com>
-References: <20241114030452.10149-1-paul@os.amperecomputing.com> <20250219005932.3466-1-paul@os.amperecomputing.com>
+	s=arc-20240116; t=1741085914; c=relaxed/simple;
+	bh=OFoVPKxFbRyyU1By0C86UvY5L40WR9TS3JG8pQ/gf+Q=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ruYfFexg86WyX3VVDtPHT5nXjKcTkYkzalIMOmQn5AuxD91VJJmmRgbRCHIlGR+WTmxZDaf/nHzlTgj8ed0WBW4RsIQwY5fLDaud1xj9fK+QVDurw0w6y7UsbL3ojM6Y8K4Jg6nhsuCFI8DfgzuknoMjFUqDScpk+A6Hcj6t56A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=wUy+Ul4Y; arc=none smtp.client-ip=198.47.23.235
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="wUy+Ul4Y"
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 524AwBOV3625150
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 4 Mar 2025 04:58:11 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1741085891;
+	bh=GJoUAjuJfQu4k4fnMcjGL7udW/5S8lHd1rnjul2G4xk=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=wUy+Ul4YTkxaqnM4o7M6Ezc7YyXZXewjAjF8Y+TW+u7jFc7moTh4UGj+09Ke1fhfv
+	 nrcDV5v6MDGHn8nm/FhxIn5kG5Mbwyvfjxs5VPAIN9IlXzcEk83NtAytPVuavyQ1NZ
+	 1vF+DwVIqe77o13vyOTlC0O9ij2YAPjzPtFLFnzc=
+Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 524AwBsh111976
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Tue, 4 Mar 2025 04:58:11 -0600
+Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 4
+ Mar 2025 04:58:10 -0600
+Received: from fllvsmtp7.itg.ti.com (10.64.40.31) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Tue, 4 Mar 2025 04:58:10 -0600
+Received: from lelv0854.itg.ti.com (lelv0854.itg.ti.com [10.181.64.140])
+	by fllvsmtp7.itg.ti.com (8.15.2/8.15.2) with ESMTP id 524AwARO044329;
+	Tue, 4 Mar 2025 04:58:10 -0600
+Received: from localhost (meghana-pc.dhcp.ti.com [10.24.69.13] (may be forged))
+	by lelv0854.itg.ti.com (8.14.7/8.14.7) with ESMTP id 524Aw9Wr016831;
+	Tue, 4 Mar 2025 04:58:10 -0600
+From: Meghana Malladi <m-malladi@ti.com>
+To: <javier.carrasco.cruz@gmail.com>, <diogo.ivo@siemens.com>,
+        <m-malladi@ti.com>, <horms@kernel.org>, <richardcochran@gmail.com>,
+        <pabeni@redhat.com>, <kuba@kernel.org>, <edumazet@google.com>,
+        <davem@davemloft.net>, <andrew+netdev@lunn.ch>
+CC: <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <srk@ti.com>,
+        Vignesh Raghavendra
+	<vigneshr@ti.com>,
+        Roger Quadros <rogerq@kernel.org>, <danishanwar@ti.com>,
+        Jacob Keller <jacob.e.keller@intel.com>,
+        Kory Maincent
+	<kory.maincent@bootlin.com>
+Subject: [PATCH net-next v4 1/2] net: ti: icss-iep: Add pwidth configuration for perout signal
+Date: Tue, 4 Mar 2025 16:27:52 +0530
+Message-ID: <20250304105753.1552159-2-m-malladi@ti.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250304105753.1552159-1-m-malladi@ti.com>
+References: <20250304105753.1552159-1-m-malladi@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Tue, 18 Feb 2025 16:59:32 -0800, Paul Benoit wrote:
-> Issue Number 1.6 of the Arm SMC Calling Convention introduces an optional
-> SOC_ID name string.  If implemented, point the 'machine' field of the SoC
-> Device Attributes at this string so that it will appear under
-> /sys/bus/soc/devices/soc0/machine.
->
-> On Arm SMC compliant SoCs, this will allow things like 'lscpu' to
-> eventually get a SoC provider model name from there rather than each
-> tool/utility needing to get a possibly inconsistent, obsolete, or incorrect
-> model/machine name from its own hardcoded model/machine name table.
->
-> [...]
+icss_iep_perout_enable_hw() is a common function for generating
+both pps and perout signals. When enabling pps, the application needs
+to only pass enable/disable argument, whereas for perout it supports
+different flags to configure the signal.
 
-Applied to sudeep.holla/linux (for-linux-next), thanks!
+But icss_iep_perout_enable_hw() function is missing to hook the
+configuration params passed by the app, causing perout to behave
+same a pps (except being able to configure the period). As duty cycle
+is also one feature which can configured for perout, incorporate this
+in the function to get the expected signal.
 
-[1/1] firmware: smccc: Support optional Arm SMC SOC_ID name
-      https://git.kernel.org/sudeep.holla/c/5f9c23abc477
---
-Regards,
-Sudeep
+Signed-off-by: Meghana Malladi <m-malladi@ti.com>
+Reviewed-by: Jacob Keller <jacob.e.keller@intel.com>
+Reviewed-by: Kory Maincent <kory.maincent@bootlin.com>
+---
+Changes from v3 (v4-v3):
+- Move flag checks out of mutex lock as suggested by Kory Maincent <kory.maincent@bootlin.com>
+- Collected RB tag from Kory Maincent <kory.maincent@bootlin.com>
+
+ drivers/net/ethernet/ti/icssg/icss_iep.c | 47 ++++++++++++++++++++++--
+ 1 file changed, 44 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/net/ethernet/ti/icssg/icss_iep.c b/drivers/net/ethernet/ti/icssg/icss_iep.c
+index d59c1744840a..2981c19c48b1 100644
+--- a/drivers/net/ethernet/ti/icssg/icss_iep.c
++++ b/drivers/net/ethernet/ti/icssg/icss_iep.c
+@@ -406,9 +406,16 @@ static void icss_iep_update_to_next_boundary(struct icss_iep *iep, u64 start_ns)
+ static int icss_iep_perout_enable_hw(struct icss_iep *iep,
+ 				     struct ptp_perout_request *req, int on)
+ {
++	struct timespec64 ts;
++	u64 ns_width;
+ 	int ret;
+ 	u64 cmp;
+ 
++	/* Calculate width of the signal for PPS/PEROUT handling */
++	ts.tv_sec = req->on.sec;
++	ts.tv_nsec = req->on.nsec;
++	ns_width = timespec64_to_ns(&ts);
++
+ 	if (iep->ops && iep->ops->perout_enable) {
+ 		ret = iep->ops->perout_enable(iep->clockops_data, req, on, &cmp);
+ 		if (ret)
+@@ -419,8 +426,9 @@ static int icss_iep_perout_enable_hw(struct icss_iep *iep,
+ 			regmap_write(iep->map, ICSS_IEP_CMP1_REG0, lower_32_bits(cmp));
+ 			if (iep->plat_data->flags & ICSS_IEP_64BIT_COUNTER_SUPPORT)
+ 				regmap_write(iep->map, ICSS_IEP_CMP1_REG1, upper_32_bits(cmp));
+-			/* Configure SYNC, 1ms pulse width */
+-			regmap_write(iep->map, ICSS_IEP_SYNC_PWIDTH_REG, 1000000);
++			/* Configure SYNC, based on req on width */
++			regmap_write(iep->map, ICSS_IEP_SYNC_PWIDTH_REG,
++				     div_u64(ns_width, iep->def_inc));
+ 			regmap_write(iep->map, ICSS_IEP_SYNC0_PERIOD_REG, 0);
+ 			regmap_write(iep->map, ICSS_IEP_SYNC_START_REG, 0);
+ 			regmap_write(iep->map, ICSS_IEP_SYNC_CTRL_REG, 0); /* one-shot mode */
+@@ -447,6 +455,8 @@ static int icss_iep_perout_enable_hw(struct icss_iep *iep,
+ 				   + req->period.nsec;
+ 			icss_iep_update_to_next_boundary(iep, start_ns);
+ 
++			regmap_write(iep->map, ICSS_IEP_SYNC_PWIDTH_REG,
++				     div_u64(ns_width, iep->def_inc));
+ 			/* Enable Sync in single shot mode  */
+ 			regmap_write(iep->map, ICSS_IEP_SYNC_CTRL_REG,
+ 				     IEP_SYNC_CTRL_SYNC_N_EN(0) | IEP_SYNC_CTRL_SYNC_EN);
+@@ -474,7 +484,36 @@ static int icss_iep_perout_enable_hw(struct icss_iep *iep,
+ static int icss_iep_perout_enable(struct icss_iep *iep,
+ 				  struct ptp_perout_request *req, int on)
+ {
+-	return -EOPNOTSUPP;
++	int ret = 0;
++
++	/* Reject requests with unsupported flags */
++	if (req->flags & ~PTP_PEROUT_DUTY_CYCLE)
++		return -EOPNOTSUPP;
++
++	mutex_lock(&iep->ptp_clk_mutex);
++
++	if (iep->pps_enabled) {
++		ret = -EBUSY;
++		goto exit;
++	}
++
++	if (iep->perout_enabled == !!on)
++		goto exit;
++
++	/* Set default "on" time (1ms) for the signal if not passed by the app */
++	if (!(req->flags & PTP_PEROUT_DUTY_CYCLE)) {
++		req->on.sec = 0;
++		req->on.nsec = NSEC_PER_MSEC;
++	}
++
++	ret = icss_iep_perout_enable_hw(iep, req, on);
++	if (!ret)
++		iep->perout_enabled = !!on;
++
++exit:
++	mutex_unlock(&iep->ptp_clk_mutex);
++
++	return ret;
+ }
+ 
+ static void icss_iep_cap_cmp_work(struct work_struct *work)
+@@ -553,6 +592,8 @@ static int icss_iep_pps_enable(struct icss_iep *iep, int on)
+ 		rq.perout.period.nsec = 0;
+ 		rq.perout.start.sec = ts.tv_sec + 2;
+ 		rq.perout.start.nsec = 0;
++		rq.perout.on.sec = 0;
++		rq.perout.on.nsec = NSEC_PER_MSEC;
+ 		ret = icss_iep_perout_enable_hw(iep, &rq.perout, on);
+ 	} else {
+ 		ret = icss_iep_perout_enable_hw(iep, &rq.perout, on);
+-- 
+2.43.0
 
