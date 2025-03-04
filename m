@@ -1,104 +1,93 @@
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
+Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 480FD2045A6
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 13:43:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0D062040A8
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 13:43:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741095801; cv=none; b=UvMhrt4n1zd47zzjLEwGm0P5u6AteYeOoKgOdGomHjnHKfKNQeSQKUyzdkzYgr5obooOdK71mAIImH2sZG+hSyfU6qarPT5yl3OiHwI5HocvztmKs2wo5t95WvQGfImvjmRFN8lXYrJXzyD1SSqrmqKRnB6utw/RlBD7InBlWCE=
+	t=1741095834; cv=none; b=bKicixIfCWazR/6B8QVmJJ8GFJY/gPbO8uuRzhoveCerYNENTCGaLl/Iqw6jP43+tE7BlW5+li7Akc9f1Bhvpazf4zUyHn/wxdXcBmuz0/HO4WuSzG3Lutp/jFdEP2Vvp2G5T8kLQRBFwIxvu+aFCBDGD21wly5NQKRX1rKcpAE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741095801; c=relaxed/simple;
-	bh=0pGZ555KSvs9RkZQ2TF9sAp3mz0s0plHDaitzlJaP9w=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Yp6WayzVUA3J+xy5eu52hPDpZqgcg7OzPfRIswSliWyrVJMwTZpTEExyYV4Gwe8hhP99xGHW5idBh9l6e9fzEMWs+IvmHURKITyIoDUWC1QeD9ImV7H+rwW1+N2HzDMvFIS0X/wpwEqfcMeUxU5d/n2xLRXoEB+zT/plDBeAWBs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=XsnQUsgS; arc=none smtp.client-ip=209.85.167.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1741095834; c=relaxed/simple;
+	bh=80+eCrT6Rmn5Jg/jRx7FsLXSYZEFXC8qPz/qSbLB/YA=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=nG9u9qGPKLxrYBmbpN18NgAy5dJZ5/r+LrqpKn0Q6QZK0K9r9af9oPUlQASzkdpB2dhgnuM859mDJllUtNoqk+t9dL/o4tZ5OTEuh7D3lCIK23T6Mgbjb8Ji9X72jGNIx2G9AIpyQFnK4Ab+SZlnXO3Uiz0kF8GJoBTmnqJTT3I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=kjAfoxLQ; arc=none smtp.client-ip=209.85.128.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="XsnQUsgS"
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-548430564d9so5981740e87.2
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Mar 2025 05:43:18 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kjAfoxLQ"
+Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-4394c489babso31127915e9.1
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Mar 2025 05:43:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1741095797; x=1741700597; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0pGZ555KSvs9RkZQ2TF9sAp3mz0s0plHDaitzlJaP9w=;
-        b=XsnQUsgSWo4iPO/7DEA6P6yo1Vd8HfWDljiu7o+GWXt/lAC1/RanTa9riq6LJye4uu
-         6XAntWQ0EUvhPkp7FPaJy9I4i7qGNksgjVqXIo0Ivs97pHsZxkUiqRR8J9e2JIPWDkEs
-         ty+TehVPr1yoX2Bs4EAsZTMstv9cIi/gtqnLGZ3CWQpRFFXJN4UHWyViK9GgsGPmZ2ME
-         LemNwzL5DBbeRqVM16UZVpzMAJbPLnmdXlaXFXaVeSMHjNKJjog2YuV+dPOVr4J9uEiA
-         jO+r3Sptp+AgpfMM2+iRc/AyHcfIl+6m30SaAEWPIGU0JcxkRIRDUS8GmwiIibjDur6X
-         0n8A==
+        d=google.com; s=20230601; t=1741095831; x=1741700631; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=uj43tHXd4oUvGh93mFvuqSAi4hbUgB5iGKnK2cXXgbo=;
+        b=kjAfoxLQiOmgbkSud03OGbdd/CwosOCHa9DJjH5tMeMzk7P2mXpTPyj8X0lcyVX65X
+         eHt1hHVWTdHsnX7he8W3Gg43AKlmvDU/D64O84cSbQxCCp0lVueFO+On7ik2T4TRT/KA
+         k2g6l2w2FysPQCcH2+9TW15db8tEf5V06MBkuh+Lr+CgpsaJKWWkvkOTUkOlOyega45L
+         0y9/69ogEIjkzg9k3bRDuq9n70FoYfoZGli+53pgMwA1WP2rxJlTTao9eTwfxAMP5X2F
+         buNQdLZj1ddxDoF5/HedR/xkr3v3/MmhtaxPJEVLyIIsgmiuRTYZwwh0+CcygoSOrEk9
+         SXnQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741095797; x=1741700597;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0pGZ555KSvs9RkZQ2TF9sAp3mz0s0plHDaitzlJaP9w=;
-        b=DC8oNlzSDLowqyHP86Unl4nZvhR3lNXXSXIV3bPpON4sxlgKqrGFfSAvypnUrhRTi9
-         MB/7AFC/QOar0ZLfJtcfGkOdrzS0L5KF1vYecUMR6+Eu16FZ9gYKYpuM98GN5DIu5oe1
-         mYmZ4wXLn+qryHgfzSkBxbLm2vM018rRHMt5IViJ0/mu5b5yScZJ3IfSaZzcz06qJKrH
-         HIXXUkbdZLx6XlxR93n9yXCcErEQjb6xRmNId8SEDujtz4lu/sa+76qivEUsOKjw6mfo
-         G6jvgXPobEtUyhyePj5sC3jueQxMF8ESN6wqy3denxeuO5L9+N8/TAzg+EfeyvNwipN9
-         OLFQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW8xNRnWjTgRphv1a0Fl3pclyw2AzuI9uM1570G2W0nO3rHvBn8fTGNxC0MxA5M/n1IqtsHBNqQ9kCB4FQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx4+7xhTOdDKVxpt+s6QwfBezS8jDYZx4hTKr1tMbxf/gHlBe3U
-	wSIDBJ5zeCnIvph0mMvK8Q/x/ZcYD8rfuMvIfORhstydJfALnuB9eoozUsYfwB72lDC2KXBSOVf
-	nX5r3KmunoWKwvBTFBVe06erppNtsJl69j2EjCw==
-X-Gm-Gg: ASbGnctxmzE+WOeP3boFRH/EFeJLJDJ/2Zcj1OoCyYoxkQu4dPzk8bxlDAbBn68oUXW
-	NZ5bCbbuqmPBao+xgRBGhmKtnlwapKO4uBzfaYvqS0FO4KNumgUwIXQ0RiIccilZVQcTGXr7x2E
-	cKLrMDcSCdsLq8nvQ/qcpkeOjg6nWYmEzPQEa9v/ruZ+lfLehgkZGk5lBPnQ==
-X-Google-Smtp-Source: AGHT+IFWh03wXh64Ao3HRMlhJCKQLtqt910EoDBcwZtN1H8wHZ6DUI6QiDtsoKY7O3tRh80hbzaOHl+pKFDQV/B60Os=
-X-Received: by 2002:a05:6512:2398:b0:545:a5e:b4ef with SMTP id
- 2adb3069b0e04-5494c31ca37mr7947524e87.16.1741095797400; Tue, 04 Mar 2025
- 05:43:17 -0800 (PST)
+        d=1e100.net; s=20230601; t=1741095831; x=1741700631;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=uj43tHXd4oUvGh93mFvuqSAi4hbUgB5iGKnK2cXXgbo=;
+        b=a7hHNLCuH823MimDwUmC4k+uPwdAHET/iuPWr6of74L2xdPSL0HpA63/mqGUzQjYWj
+         wJQmAACU4p+RaEC8oi/2B6KsVeWzpg9o3nU39+jwJ/+c15E/MBiAkHXFts15nudeAlE3
+         rQhvegYv8v1RCjUqmf/cG3RGe7ynAjDN/Jh2WAzFMvSt5dQETU0hBJcJvQjQY33OldQ8
+         x0DTLoEzUhnWF5VJvaLjM2XRmhX8OEc1fy9GtYdItX2lltZ9CPrjM0BFBsTaQFX+cwfZ
+         0E31mlGrtK5vJow/DV4zuyX6Vg3X6amj8u8CdXCt3ZT2ml+0TvAlzMkPS4wYStppMpAG
+         1n3w==
+X-Forwarded-Encrypted: i=1; AJvYcCX4sW/pMPtuj+LavdvKdwcDXe86/R0w5yMK3QXngo5qFr71R8prkh4I36iIF2bI87ynvaLRtSZ6SbXA/CM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxVbkqRoUCsQwS4yrzVVXSoPRJonBD6e0tkEcxpXO2qT6LfBqO5
+	AwmEO7W6IrXQv0CKATheO51OwxnySRwvZt9MuASyPVHKbAUn6tr4U+eBtvMhVjyG8XN4x5oqplP
+	jooYZKuOrQXOv5BphQw==
+X-Google-Smtp-Source: AGHT+IFG5YXAtgs7Ad4x4+52R1NyxCiNTd9hIFuV0gbUB92z2vGjINs/6+xkAMSQEv2wr8uDuVNZWAe24g0ESfG4
+X-Received: from wmij20.prod.google.com ([2002:a05:600c:4114:b0:43b:cacd:235e])
+ (user=vdonnefort job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:600c:1c8c:b0:439:98ef:5d6 with SMTP id 5b1f17b1804b1-43ba6766cddmr131565855e9.22.1741095831304;
+ Tue, 04 Mar 2025 05:43:51 -0800 (PST)
+Date: Tue,  4 Mar 2025 13:43:43 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250303160341.1322640-1-andriy.shevchenko@linux.intel.com>
- <20250303160341.1322640-3-andriy.shevchenko@linux.intel.com>
- <20250304091804.GG3713119@black.fi.intel.com> <Z8bdDQGg_xcamZv2@smile.fi.intel.com>
- <20250304111157.GJ3713119@black.fi.intel.com> <Z8bhJq3kn_uw3iYE@smile.fi.intel.com>
- <20250304113135.GK3713119@black.fi.intel.com> <Z8brYjfL1yj_BvpN@smile.fi.intel.com>
- <CAMRc=MfsKc+r=uhDZVbd_BW=Gs1BpaidPC1tfF6TGqcq9bgP6Q@mail.gmail.com> <Z8cCQPWBmJXFgKAe@smile.fi.intel.com>
-In-Reply-To: <Z8cCQPWBmJXFgKAe@smile.fi.intel.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Tue, 4 Mar 2025 14:43:05 +0100
-X-Gm-Features: AQ5f1JpqX_GHUguz2RwObiRuAUFX8DZ0DsNPbeLxo7WFuOXHLfYuwvzPP9w3pks
-Message-ID: <CAMRc=McQY1r-Ni4buuvhD8DP6LGz22PAxk_QC9ENYBEzYTc+7g@mail.gmail.com>
-Subject: Re: [PATCH v1 2/3] gpiolib: Rename gpio_set_debounce_timeout() to gpiod_do_set_debounce()
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Mika Westerberg <mika.westerberg@linux.intel.com>, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, linux-gpio@vger.kernel.org, 
-	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Mika Westerberg <westeri@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
-	Kent Gibson <warthog618@gmail.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.48.1.711.g2feabab25a-goog
+Message-ID: <20250304134347.369854-1-vdonnefort@google.com>
+Subject: [PATCH v2 0/3] Count pKVM stage-2 usage in secondary pagetable stat
+From: Vincent Donnefort <vdonnefort@google.com>
+To: maz@kernel.org, oliver.upton@linux.dev, joey.gouly@arm.com, 
+	suzuki.poulose@arm.com, yuzenghui@huawei.com, catalin.marinas@arm.com, 
+	will@kernel.org
+Cc: qperret@google.com, linux-arm-kernel@lists.infradead.org, 
+	kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org, kernel-team@android.com, 
+	Vincent Donnefort <vdonnefort@google.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Mar 4, 2025 at 2:38=E2=80=AFPM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> >
-> > I'm definitely in favor of consolidation instead of renaming to
-> > gpiod_go_set_debounce(). If anything a better name would be:
-> > gpiod_set_debounce_nocheck() to indicate the actual functionality.
-> >
-> > How about first extending gpio_set_config_with_argument() to take a
-> > boolean "optional" argument and removing
-> > gpio_set_config_with_argument_optional() altogether? Both are internal
-> > to drivers/gpio/ so it would have no effect on consumers.
->
-> Consider this series as a report then, I am not going to spend time on it=
-.
-> Thank you for the review.
->
+This series allows to count stage-2 related memory when using pKVM. The
+value can be found in the /proc/meminfo field SecPageTables.
 
-No worries. I applied patch 1/3. 3/3 doesn't apply on its own so feel
-free to resend it if you still want it.
+Changes since v1: https://lore.kernel.org/all/20250228121355.1377891-1-vdonnefort@google.com/
+  - Flags to kvm_hyp_memcache
+  - Separate stage-2 memcache
+  - Account for PGD
 
-Bartosz
+Vincent Donnefort (3):
+  KVM: arm64: Add flags to kvm_hyp_memcache
+  KVM: arm64: Distinct pKVM teardown memcache for stage-2
+  KVM: arm64: Count pKVM stage-2 usage in secondary pagetable stats
+
+ arch/arm64/include/asm/kvm_host.h |  4 ++++
+ arch/arm64/kvm/hyp/nvhe/pkvm.c    |  7 ++++---
+ arch/arm64/kvm/mmu.c              | 18 +++++++++++++-----
+ arch/arm64/kvm/pkvm.c             |  5 +++++
+ 4 files changed, 26 insertions(+), 8 deletions(-)
+
+
+base-commit: d082ecbc71e9e0bf49883ee4afd435a77a5101b6
+-- 
+2.48.1.711.g2feabab25a-goog
+
