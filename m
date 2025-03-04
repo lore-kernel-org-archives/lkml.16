@@ -1,148 +1,141 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CC07253347;
-	Tue,  4 Mar 2025 19:04:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49145158524;
+	Tue,  4 Mar 2025 19:06:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741115070; cv=none; b=WksEtqWzmT9KoLcXjrpZR7o6GIkkTFpaa/cu2TSnJPp4MiwjQU2R1Apa+NQEbdr+UNLj7Vte2F7+uq659YV9Qw9Xv25Sl7w6HAl4h1wd8Llxh897hLKJ4zw2lt149tdD22JCiUo+0z+3CvKdm99DcGY4SgJYAotzlLV5NVX28UA=
+	t=1741115200; cv=none; b=IFKIFHLKu0xu6u0wrDStP1Db62/6wZqxcegACLtkzM5s6dx4o4BCywe6iD3JxmgTfHsoMtNIwTFAtGqX+SFockfOxqjWmjOKjPaI33X6iEDJT7K4YU//A9GXo98YQy4DKPBmpRDQ13FhxP3fkcz9HGr1qkz0kdPhBL6VWZj88kU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741115070; c=relaxed/simple;
-	bh=Qn9S4+V/97GfF3eFipo304AU6RxOjXrFfbihFVbAP94=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JnvkBngTx7TioNeXYjkE8eM2Afhl/GIDAKrU/Fo69H3JQ8xTehIDek4zTITT9JmdIcrsTlLsfBUPmpHAm14f9Q+GW1/sUJoXD1HHrw3Mp7y0F/xtijEaVjcP0VqFofqpbMsaykqdxTxFWpaO4r+u+n2u22LbaOGZA8pKldj7tRg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ATlmuVYr; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741115200; c=relaxed/simple;
+	bh=qgBjp+ydpJlBw52x0uUkgJn409XwUZVGlumTnsWJ3m0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CvvJj59b0UmDtx7W0zoAYMahjxJ4CGoCJPPCvudXmJmvRyo0678gh8v48Pm3HMg9pwk5pEx1Vj921vyq3YnAXCVGsbQp+Yt2sGpx3P0UhxyAX89e5v7M5ZMoPd7fQZuzeAoa6W7yiC6hfoEKcsQSRQd8b5RZHjQxJkIGRKS5omo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cEzlNw1l; arc=none smtp.client-ip=209.85.160.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ATlmuVYr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE1B7C4CEE8;
-	Tue,  4 Mar 2025 19:04:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741115070;
-	bh=Qn9S4+V/97GfF3eFipo304AU6RxOjXrFfbihFVbAP94=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=ATlmuVYr87M1pgs/yT1CaSYvsj4kyKYlB3VQMMXsC2aWYj67Cdzz9NbEXM54f/TYJ
-	 R+zu0a73Hh3QQ02Vlrsj+rvOhoEpTfyuxYE/ujo682tOAPJMyeW8wWSNfjVh32/4gd
-	 rD9vz5xt+/ZLxRGMzF6PsTMZlVIgtE+VW1x588tx6RFVMLMG4dcQlVc8V482kcW8UG
-	 tWia6uqUujvAIArFI3mGTh1hiOkTGCcvIdz7q29mr+GDzNf2gHJoNP39Q2CG50VA3q
-	 pfALpMwXSQNYUmkezcsSCJ30TItd1Fz981UE1fAAtuLF7FY5uxNYjG9EGPJV5wGnbm
-	 qyRuiUNj66XAQ==
-Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-549662705ffso3060005e87.0;
-        Tue, 04 Mar 2025 11:04:29 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWxi5tVFh0IDiYP8B1lV3/OWtUw99T2Cp1JVc7waXi26V3AMYa7IDd9KlRRueW9p9Mep8Y1Rglp@vger.kernel.org, AJvYcCXE+vFrkxYzO1vRNz/s2HLTu8yWgD5ura2AAzHjqb7QR5MQnrUq/VnJaTF/3/rZ9GUGAnoI2U9YwoNb73E=@vger.kernel.org, AJvYcCXGkJ4gq8vzLNJMW5SY8TS22xb6CZul23t0qUyZtv+cN4WqPCfCmCUeA2VabqPvfOWFvPQa0cUNXUXeJ0Ft@vger.kernel.org
-X-Gm-Message-State: AOJu0YyzUmaUGBG6j7xltysUOpveHJjUmVTyxnTfIL4a+3gy/KJbYWZ0
-	fxQzft5pFGO1WxScx6LmkzFPvMPmkL9N9Emne+P//DUpLlRDY8BeRT227Kt/i9siurIcNK7EvrP
-	LbBh0RoRldQF64elkzVciMN2/72E=
-X-Google-Smtp-Source: AGHT+IGpQbtm58WHCyoUrOTWmhWSWXoTW1SjSCbDYNUUDn/O7H6EdSr/JG96ZlnKCyZZJuOlu+UPpWaQ113YGzdow/A=
-X-Received: by 2002:a05:6512:2807:b0:545:4b0:3dce with SMTP id
- 2adb3069b0e04-5497d3304e6mr103775e87.1.1741115068559; Tue, 04 Mar 2025
- 11:04:28 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cEzlNw1l"
+Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-471f686642cso54965921cf.2;
+        Tue, 04 Mar 2025 11:06:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741115198; x=1741719998; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=tA27Lf3iJciKnB0JvEl1MO3LlYSglnQEOYlC6Hgx3eQ=;
+        b=cEzlNw1lynEIgIZFQISmLeHtfKUbOmIuju6y6l3dss/GqCAgbIO77rfOVjoL7hfpfY
+         f8nziJ66ODFCa8tl0eEYdoovU/IXeU3Yqf8b3o4zwsHVW8fjOFVguTU1NJAN2fRSg7mf
+         Z1Fqw0vTADT3xlSPomFUllleXbhRL6cjqZh1unnNQGPCjKSn4eKYBIQMagBSg15tAXn3
+         +N0JHa6nDPDsX44C1gVwiITo+3BbEsq/24X7R0zm2ZePkRKUyt8CNynmXz0HZxI7H1dC
+         mKI7J6Dpu5hCUv12ND2ZygLONFJgHP8cQdII6nAELf6RLYdbQVpmSW6yrgR76khXVg/N
+         q1Pg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741115198; x=1741719998;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=tA27Lf3iJciKnB0JvEl1MO3LlYSglnQEOYlC6Hgx3eQ=;
+        b=fcynWkVpr0APv5mxOymmoyYit6uzMkvbJ4SNrHDBAFgkW0U8EZLKujdET+ENm6IYS7
+         Z5da7Nq9Zy+sbNZFHjyajM0xQbiiX075IN+c0t+EFqp0M7ml6Iz02PV4o634DvCYtJ07
+         u5VQGyhzKT+EXs1qYU2+8oocOa1GR3qjCBACI7uS7p65PCXvT61Lv8oNe3sJ6eclisM/
+         9kp13MKqepvar2YuwDHqm/44gBsNIbZl2zfj8PdWra2LMAWdDZZTGn3xuIzUnS1Apx3G
+         OTN19P0utH398beMkQIdlRZqtxSowzgfOJDgsiDibkyPXhB8/qU9mzazJF8j5rO+Fd8Q
+         1bZQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWMy8vxVusF2SJPwDg4W/CzS7zKAM21z78/+ThW3D+8gBskwumSCcthWlVsJJBkdeKYMHxQ643FDx6ANmK+@vger.kernel.org, AJvYcCWVcVGcgtL1H0o6rsq3UkBtYBJL1r+vS9k6VJ5N2UNkGvCxoNlRONXom3RW5JSZq2/gSzrckXWjY8ev2IPJ@vger.kernel.org
+X-Gm-Message-State: AOJu0YzTsyh65K6EJjIZ9q/0Y/eC3Z1I4hbVCXvhnYn9/oBX+PzA1DYQ
+	JHrkH9G5vmRpWOzVNFYWR51MfLWWPwbHlCsbYAppTMUxp/Uad73F
+X-Gm-Gg: ASbGncvwuQrD1KXc7qXxJArTEps7wL2TCUWJx/3OsT0kx/9/JzVU7m2j9OhT0kOGMoF
+	oS+ZAImPKkzjtlSc9F2K9AOPDWw57sFy1QoVu/SLiuAaDefVNgxRbRy2smiPthWRdHbgK/vgmVZ
+	5OGiNiVYzAUJtUkGSu+3/TFhKIvK9k7TNAUfpvGHFAjSI81DxkZFqcQGl1+Kt16k7vA52qquF5S
+	7hxIzoXqZQDS4ZoTUbQzcukY0PHPGarRyXa9IyhnP6h7QggotaV+ziP1SdN90rLtKPH0HbKogIS
+	1f55ZAd7azFiira1LkxThxLUk2x+O9pxaz1Sv88VzztLic6FnCx7slgtqGPVMvzYa5/2wOtMiyn
+	8
+X-Google-Smtp-Source: AGHT+IEHMACm3UtM3g8IwgX8ccOiICa/jh1pmKFAIbjW7DNmAGnXI/0lrR7EO3ZtAv/HzcyoRr3unw==
+X-Received: by 2002:a05:622a:198f:b0:472:13f8:a974 with SMTP id d75a77b69052e-4750b4c51d2mr2585531cf.41.1741115198077;
+        Tue, 04 Mar 2025 11:06:38 -0800 (PST)
+Received: from localhost (pat-199-212-65-16.resnet.yorku.ca. [199.212.65.16])
+        by smtp.gmail.com with UTF8SMTPSA id d75a77b69052e-4746b5eed4fsm76428501cf.31.2025.03.04.11.06.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Mar 2025 11:06:37 -0800 (PST)
+Date: Tue, 4 Mar 2025 14:07:39 -0500
+From: Seyediman Seyedarab <imandevel@gmail.com>
+To: Amir Goldstein <amir73il@gmail.com>
+Cc: jack@suse.cz, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-kernel-mentees@lists.linux.dev
+Subject: Re: [PATCH] inotify: disallow watches on unsupported filesystems
+Message-ID: <hg55e37tvfjnb76lvffuhnvozdwm4k6xuqq6nmvjgjaryjqmee@ppujm6t5y7ju>
+References: <20250304080044.7623-1-ImanDevel@gmail.com>
+ <CAOQ4uxiaY9cZFpj4m65SrAVXm7MqB2OFSfyH5D03hEwmdtiBVQ@mail.gmail.com>
+ <5tq33ajgtu62tvaiymf3st74ctkurgskq6xpx2ax53vdbayoce@jffpxkthro3u>
+ <CAOQ4uxiZfJYHrYmE2k0vWrgbLLbDQ2LTrVggYwL3pv4FUyjctQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250217-kbuild-userprog-fixes-v2-1-4da179778be0@linutronix.de>
-In-Reply-To: <20250217-kbuild-userprog-fixes-v2-1-4da179778be0@linutronix.de>
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Wed, 5 Mar 2025 04:03:52 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATc-a0CP_tXqwpuCmLLMHAhqnx40Dg5ouUACAdVFpHarw@mail.gmail.com>
-X-Gm-Features: AQ5f1JqwhglpY45o1CvWGoVnnF4T9ViEX1OZhwj_NTTO7J3MsENWkja9EDuvu_A
-Message-ID: <CAK7LNATc-a0CP_tXqwpuCmLLMHAhqnx40Dg5ouUACAdVFpHarw@mail.gmail.com>
-Subject: Re: [PATCH v2] kbuild: userprogs: use correct lld when linking
- through clang
-To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-Cc: Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, 
-	Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, Sam Ravnborg <sam@ravnborg.org>, linux-kbuild@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, llvm@lists.linux.dev, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAOQ4uxiZfJYHrYmE2k0vWrgbLLbDQ2LTrVggYwL3pv4FUyjctQ@mail.gmail.com>
 
-On Mon, Feb 17, 2025 at 4:28=E2=80=AFPM Thomas Wei=C3=9Fschuh
-<thomas.weissschuh@linutronix.de> wrote:
->
-> The userprog infrastructure links objects files through $(CC).
-> Either explicitly by manually calling $(CC) on multiple object files or
-> implicitly by directly compiling a source file to an executable.
-> The documentation at Documentation/kbuild/llvm.rst indicates that ld.lld
-> would be used for linking if LLVM=3D1 is specified.
-> However clang instead will use either a globally installed cross linker
-> from $PATH called ${target}-ld or fall back to the system linker, which
-> probably does not support crosslinking.
-> For the normal kernel build this is not an issue because the linker is
-> always executed directly, without the compiler being involved.
->
-> Explicitly pass --ld-path to clang so $(LD) is respected.
-> As clang 13.0.1 is required to build the kernel, this option is available=
-.
->
-> Fixes: 7f3a59db274c ("kbuild: add infrastructure to build userspace progr=
-ams")
-> Cc: stable@vger.kernel.org # needs wrapping in $(cc-option) for < 6.9
-> Signed-off-by: Thomas Wei=C3=9Fschuh <thomas.weissschuh@linutronix.de>
-> ---
+On 25/03/04 05:41PM, Amir Goldstein wrote:
+> On Tue, Mar 4, 2025 at 5:05 PM Seyediman Seyedarab <imandevel@gmail.com> wrote:
+> >
+> > On 25/03/04 12:57PM, Amir Goldstein wrote:
+> > > On Tue, Mar 4, 2025 at 8:59 AM Seyediman Seyedarab <imandevel@gmail.com> wrote:
 
-Applied to linux-kbuild/fixes.
-Thanks.
+> > I understand why it might seem like disallowing users from monitoring
+> > these filesystems could break userspace in some way. BUT, programs
+> > work incorrectly precisely because they do not receive any information
+> > from the kernel, so in other words they are already broken. There is no
+> > way for them to know if the fs is supported or not. I mean, even we are
+> > not sure at the moment, then how would they know.
+> 
+> Programs not knowing is a problem that could be fixed with a new API
+> or new init flag to fanotify/inotify.
+> 
+> Existing programs that would break due to this change is unacceptable.
+> 
 
-> Reproducer, using nolibc to avoid libc requirements for cross building:
->
-> $ tail -2 init/Makefile
-> userprogs-always-y +=3D test-llvm
-> test-llvm-userccflags +=3D -nostdlib -nolibc -static -isystem usr/ -inclu=
-de $(srctree)/tools/include/nolibc/nolibc.h
->
-> $ cat init/test-llvm.c
-> int main(void)
-> {
->         return 0;
-> }
->
-> $ make ARCH=3Darm64 LLVM=3D1 allnoconfig headers_install init/
->
-> Validate that init/test-llvm builds and has the correct binary format.
-> ---
-> Changes in v2:
-> - Use --ld-path instead of -fuse-ld
-> - Drop already applied patch
-> - Link to v1: https://lore.kernel.org/r/20250213-kbuild-userprog-fixes-v1=
--0-f255fb477d98@linutronix.de
-> ---
->  Makefile | 5 +++++
->  1 file changed, 5 insertions(+)
->
-> diff --git a/Makefile b/Makefile
-> index 96407c1d6be167b04ed5883e455686918c7a75ee..b41c164533d781d010ff8b252=
-2e523164dc375d0 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -1123,6 +1123,11 @@ endif
->  KBUILD_USERCFLAGS  +=3D $(filter -m32 -m64 --target=3D%, $(KBUILD_CPPFLA=
-GS) $(KBUILD_CFLAGS))
->  KBUILD_USERLDFLAGS +=3D $(filter -m32 -m64 --target=3D%, $(KBUILD_CPPFLA=
-GS) $(KBUILD_CFLAGS))
->
-> +# userspace programs are linked via the compiler, use the correct linker
-> +ifeq ($(CONFIG_CC_IS_CLANG)$(CONFIG_LD_IS_LLD),yy)
-> +KBUILD_USERLDFLAGS +=3D --ld-path=3D$(LD)
-> +endif
-> +
->  # make the checker run with the right architecture
->  CHECKFLAGS +=3D --arch=3D$(ARCH)
->
->
-> ---
-> base-commit: 0ad2507d5d93f39619fc42372c347d6006b64319
-> change-id: 20250213-kbuild-userprog-fixes-4f07b62ae818
->
-> Best regards,
-> --
-> Thomas Wei=C3=9Fschuh <thomas.weissschuh@linutronix.de>
->
->
+Maybe something like IN_DISALLOW_REMOTE could work for now, at least
+until remote change notifications are properly implemented for those
+specific filesystems? Later, if needed, it could evolve into a new API,
+and the flag could become the default behavior when passed to that API.
 
+> > As an example, 'Waybar' is a userspace program affected by this patch.
+> > Since it relies on monitoring sysfs, it isn't working properly anyway.
+> > This is also due to the issue mentioned earlier... inotify_add_watch()
+> > returns without an error, so the developers haven't realized that
+> > inotify isn't actually supported on sysfs. There are over five
+> > discussions regarding this issue that you can find them here:
+> > https://github.com/Alexays/Waybar/pull/3474
+> >
+> 
+> You need to distinguish "inotify does not work"
+> from "inotify does not notify on 'remote' changes"
+> that is changes that happen on the network fs server or inside the
+> kernel (in sysfs case) vs. changes that happen via vfs syscalls
+> on the mounted fs, be it p9, cifs, sysfs.
+> 
+> There are several discussions about supporting "remote change"
+> notifications for network filesystems - this is a more complex problem.
+> 
+> In any case, I believe performing operations on the mounted fs
+> generated inotify events for all the fs that you listed and without
+> a claim that nobody is using this facility we cannot regress this
+> behavior without an opt-in from the application.
 
---=20
-Best Regards
-Masahiro Yamada
+Understood. So this is what I should work on (correct me if anything
+seems off):
+1. Carefully list all filesystems where "remote" changes occur.
+2. Introduce a flag like FS_DISALLOW_INOTIFY_REMOTE in fs_flags
+   for these filesystems.
+3. Provide an option for userspace, such as IN_DISALLOW_REMOTE,
+   so applications can explicitly handle this behavior.
+4. (Possibly later, if it makes sense) Introduce a new syscall where
+   FS_DISALLOW_INOTIFY_REMOTE is the default behavior.
+
+Regards,
+Seyediman
