@@ -1,316 +1,331 @@
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A12A2284B22;
-	Tue,  4 Mar 2025 16:36:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2544259C97;
+	Tue,  4 Mar 2025 16:37:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741106211; cv=none; b=IukDLMxOr+AughMmNTXB49MgVX27ssQKkfs7MZcSRDEysfpBtHhUhZqe1rWN4KVpxaARrcktGlJZC3NGerHJjkVbVLnIa1C3FffIO+m8RRxgL6dUU3YXJ2LKyOaeU6tg3/KH1aWkBfSaS7CzWXkioqerOoPkCIxDJnhaF1c24TE=
+	t=1741106225; cv=none; b=hxI6tE0pU+UGDOPKv70VPfHwWm9W+UI0DYhZUIMfhw64kVrZwTNb65avjjzrhmbzhOHlx1W8ivQpD7P1y3aTQtsHiBlBF0jbBI9768lmMJIaGVyrwdVuI0zauMzUl3Cwi01S+sxFfTjRaPxzaAJg02AuL1IUfYJVEecfpuV0Q8A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741106211; c=relaxed/simple;
-	bh=SbQI9pTMf3lPQqupzGsHRb1g5450ijhBzSpJxvCgNns=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=cyS3fKQtM3KZ274ZofTE8Gp9GdVdYsslEdmju+SgDxxfnhFt6T0M3AOPUZRtOKS6we27YYFiY6tCea3aifteAIBrALnAKPO0yIyd3WeWymxmNVAGbG3bbK7b3T/5AgSW3pzSXk6Dqq2CsBRFSeKcjkQwjRqpcifDR6TLI9dIRgY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QEs+yn1K; arc=none smtp.client-ip=209.85.208.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741106225; c=relaxed/simple;
+	bh=AGrLOKSnlTsmkbcllVLZaU8Of6y6Q1llDLw2a3rkPkM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=F/9NAiPlFshRgAtIET7zrxx+rTy/hKYVQOBQDiAfjHQoe7GsH/fJfqcsqqYOHhp86QUh/BUW1zOCmHAdKyxhxIOP74wfdrHppPAfPMU2y5USFDv5UBMatAg5ezYKmw0i3AILMYFxZ01xhAQvLsOc/t6k8GZ8ars2bRY0dWK/RnQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gh5fwzpc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QEs+yn1K"
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5e033c2f106so6804823a12.3;
-        Tue, 04 Mar 2025 08:36:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741106208; x=1741711008; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xIPb+e/x+8sDHS2bhbWUC7800IWMYNtI+fV8xWCTFZI=;
-        b=QEs+yn1KIai0+hV7jvlsIkkKkVeL70g5wIfgViKZGg1mvtDuH8ZIPY5QkCcjPc0fNA
-         H4cfVzehJmn1CPe1EupOIVsTtK/mqXxfA3VvCNpU76PdMt0wYdAGqbKHkYI/Ngd/xksy
-         NdwBYZiEaVeolH2by8Aoq9r6qg6O6PxNpcyCS/mmZKrSSvwlAALXoXIroRhiTtDUcRGc
-         /EKU1bVN/a+sjsCF+ifP523ah2K/1bqCTWRnPQnomZXYbyv+Pb3wb5tf/4HJk3LNXDZ1
-         lDJTkNd/zfgGVVrlcTGafL1NeqzmYECVs9oyr7ubbY/nu7wlWavVPDDY+hhy/UKHPVkK
-         5/5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741106208; x=1741711008;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xIPb+e/x+8sDHS2bhbWUC7800IWMYNtI+fV8xWCTFZI=;
-        b=JEj8wfn7jPqf7fjRJ+Oqlfdpm4CKJ9UEW6lyWQhzzW5AF69SeeY8bFnUK84B3fh2bS
-         m/p5+LvRPI9n5lyIZoPYlh6V0tjHDCj7vLeojyybsJqwv486bdTNdnrU2Lm5lZYVBmIk
-         nhoFvm0Ipb7JsJZ98cAfvbQv3zpxede8r1DmyNKN6ugTqSuKO1VzVbYwug43Nchjgs9k
-         bl38mwPZo7mgaDInyltqJuKDuwxXIpZJysbPXOhvdb+TFLfHKgh63aGp3t4IukA+bt1j
-         tAulG8hxW1GFWhHA37dQ20Bs343SSa+d/+4hwL/3Ee9L+zzYzHcbok63U8ruWIbvhhZQ
-         9h7w==
-X-Forwarded-Encrypted: i=1; AJvYcCWSyZjfc9Uv63qs8CQzvYHyYQOIrmqQ2seaUIGpP4rYrbve2IZzIGgWUeD/1rxcAuQ3O6I4VPV7lqABsAVs@vger.kernel.org, AJvYcCXZqfConFdafFmeTT/GUbuiwG0srg2GH6BNU/HVTw5u3f6QYkL5cohDVeIkpPGhW4gwqShQNPpQ3Pe3/d/c@vger.kernel.org
-X-Gm-Message-State: AOJu0YwIqFZ5HAai4K3lT5Oi0SnkRtFnjI4OgKD319/AmbYRe6ZvhFrT
-	+sq7d3+3119PEzfp5Wg8qF+0Q4dQ7gbU72pwSDEQDoSla4oeJYTN
-X-Gm-Gg: ASbGncvsIekVCvpz6XX05DjS1skehLNWCjp7owL/ezklBD7Ro5iNrxZyIuUCeCkB/WI
-	hDlBKfpe1SXYJt0W5HaY362Azcktb973DrTwW1P2vZ0cqCtfcrjDlFgjjVznYK0epBliQ4Ate47
-	4RG5ResPlXzEtr0+QeQsQVWiklbq3oF/BSRRm7PnEw7B+IK2JwIk1B08jQW9KoxeIUoPqXTQ8NR
-	ib5oKDPRuqSHbzo6V7a3MGkNYCqlM8e8WE0pv+upRn2826ALYA9uaw7zlRjyPFkBKrb7ZhVFzkJ
-	U7ywbXWoJ4HwUnY/LZP9+V+Lo2J/a3YtmZajdtFaSvndJkOtwVcGoF6BKDvO
-X-Google-Smtp-Source: AGHT+IFL7DuKXrBb+vnVzvrZkZQWGjgPs6e+zFQbuMejQ/IF2K8aKfxGJ3l55SHVGiq+dhGDI7o0aw==
-X-Received: by 2002:a05:6402:42c8:b0:5df:25e8:26d2 with SMTP id 4fb4d7f45d1cf-5e4d6ac58fdmr43293150a12.5.1741106204904;
-        Tue, 04 Mar 2025 08:36:44 -0800 (PST)
-Received: from f.. (cst-prg-71-44.cust.vodafone.cz. [46.135.71.44])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5e4c43a663fsm8246202a12.68.2025.03.04.08.36.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Mar 2025 08:36:44 -0800 (PST)
-From: Mateusz Guzik <mjguzik@gmail.com>
-To: brauner@kernel.org
-Cc: viro@zeniv.linux.org.uk,
-	jack@suse.cz,
-	linux-kernel@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	Mateusz Guzik <mjguzik@gmail.com>
-Subject: [PATCH 1/2] file: add fput and file_ref_put routines optimized for use when closing a fd
-Date: Tue,  4 Mar 2025 17:36:30 +0100
-Message-ID: <20250304163631.490769-2-mjguzik@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250304163631.490769-1-mjguzik@gmail.com>
-References: <20250304163631.490769-1-mjguzik@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gh5fwzpc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F22EC4AF09;
+	Tue,  4 Mar 2025 16:37:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741106224;
+	bh=AGrLOKSnlTsmkbcllVLZaU8Of6y6Q1llDLw2a3rkPkM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=Gh5fwzpcgQ4WycUz8DDbUmugthHbVdASqnZZ+hRbmKccEK6Do/AkAVkxaHvra2HZa
+	 2u9anmYX17GogplvQcWCIUAGXYPqyd+DmSptfLjUzK9OGLPukd/fopHHoI/RjEA4h8
+	 l01g+yKa/bqv+CJzLZalt2AfkrNf2K9jUQJQS050LMmYiGdeBxZihH1tk4KeZPFF0y
+	 tWV+rwu/rs09oGssAAziO5J5bl8ORU2o4ooDqNV5IEG4t87aTrPiETsvQCFu8O6joy
+	 lr1DsOyCKuuWfFpEEimcoKIhgsZa0kweBdtZEY4X547wbppILw6q6aV4rpckohz5VQ
+	 8iZYlvzWVGzQg==
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5e4d3f92250so7938790a12.1;
+        Tue, 04 Mar 2025 08:37:04 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCURZocEtgtjBIJ9qXigF6gL5gQWZF6qvAeBI6exAz9A/NBpFbJMRz3LbCjdvDiERZ1G8LC7pmWoCNIdPYGsNw==@vger.kernel.org, AJvYcCUb7kk6DxDHlHVT2aoaOkJppfx28jf4gJfmakTGbYpiji8C+bmquOt63EaK5hnQuhMfDwghc8vZ4era@vger.kernel.org, AJvYcCVXzlJ2K0Zs4CX+kqv11t+Jx1l0uq+VXZyQgnPw17V9De/sz4xO+GvNoOnT0Z5DBkQwjIp9TBE2kJVlk/59@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyd7WnUUsoSgSGWdbKS/t1z9ymTMylq2s4uZvwUWBIaCrlt3NJt
+	yEgumG6xiJtj+oxa1Y+i+cl3fw8Cqoc2xsmEIGVDTVxjufK/nQkUXEP8xSynXuKeFxuhBu+zh74
+	wJTWj725qNI4vN19j81p9Yx8siw==
+X-Google-Smtp-Source: AGHT+IFnZUUkuzztJVmNm0EIvnT5yYMUMy8czgykJcs7fOhf7ibcG+kt/eHyHe+5+RJxH7a19UB86I+dlcvxW98dDTs=
+X-Received: by 2002:a05:6402:2788:b0:5e4:c25d:77cd with SMTP id
+ 4fb4d7f45d1cf-5e4d6af1417mr20467320a12.13.1741106222853; Tue, 04 Mar 2025
+ 08:37:02 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20241025123551.3528206-1-quic_sibis@quicinc.com> <20241025123551.3528206-4-quic_sibis@quicinc.com>
+In-Reply-To: <20241025123551.3528206-4-quic_sibis@quicinc.com>
+From: Rob Herring <robh+dt@kernel.org>
+Date: Tue, 4 Mar 2025 10:36:51 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+xZyP9Tx34F310ccsjHjvZPowgc39V-aihvtEm6G5K_g@mail.gmail.com>
+X-Gm-Features: AQ5f1JpU0LB6yMpKPRbDilLG44xwhXL7vgOstzbRn1fbTa1az4PRiEHyDTg4Yw4
+Message-ID: <CAL_Jsq+xZyP9Tx34F310ccsjHjvZPowgc39V-aihvtEm6G5K_g@mail.gmail.com>
+Subject: Re: [PATCH V1 3/3] arm64: dts: qcom: x1e001de-devkit: Enable external
+ DP support
+To: Sibi Sankar <quic_sibis@quicinc.com>
+Cc: andersson@kernel.org, konradybcio@kernel.org, krzk+dt@kernel.org, 
+	dmitry.baryshkov@linaro.org, linux-kernel@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+	conor+dt@kernel.org, abel.vesa@linaro.org, srinivas.kandagatla@linaro.org, 
+	quic_jjohnson@quicinc.com, maz@kernel.org, jens.glathe@oldschoolsolutions.biz
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Vast majority of the time closing a file descriptor also operates on the
-last reference, where a regular fput usage will result in 2 atomics.
-This can be changed to only suffer 1.
+On Fri, Oct 25, 2024 at 7:36=E2=80=AFAM Sibi Sankar <quic_sibis@quicinc.com=
+> wrote:
+>
+> The Qualcomm Snapdragon X Elite Devkit for Windows has the same
+> configuration as the CRD variant i.e. all 3 of the type C ports
+> support external DP altmode. Add all the nodes needed to enable
+> them.
+>
+> Signed-off-by: Sibi Sankar <quic_sibis@quicinc.com>
+> ---
+>
+> PS: The ext display patch 3 needs pin-conf and updates from comments on
+>     the list. Just included it in the series so that people can get
+>     display up. Type c to DP was tested on all ports with [1] as the
+>     base branch.
+>
+> [1] https://git.codelinaro.org/abel.vesa/linux/-/commits/x1e-next-2024093=
+0
+>
+>  arch/arm64/boot/dts/qcom/x1e001de-devkit.dts | 444 ++++++++++++++++++-
+>  1 file changed, 438 insertions(+), 6 deletions(-)
+>
+> diff --git a/arch/arm64/boot/dts/qcom/x1e001de-devkit.dts b/arch/arm64/bo=
+ot/dts/qcom/x1e001de-devkit.dts
+> index f169714abcd3..a1dc29a3a05e 100644
+> --- a/arch/arm64/boot/dts/qcom/x1e001de-devkit.dts
+> +++ b/arch/arm64/boot/dts/qcom/x1e001de-devkit.dts
+> @@ -82,7 +82,15 @@ port@1 {
+>                                         reg =3D <1>;
+>
+>                                         pmic_glink_ss0_ss_in: endpoint {
+> -                                               remote-endpoint =3D <&usb=
+_1_ss0_qmpphy_out>;
+> +                                               remote-endpoint =3D <&ret=
+imer_ss0_ss_out>;
+> +                                       };
+> +                               };
+> +
+> +                               port@2 {
+> +                                       reg =3D <2>;
+> +
+> +                                       pmic_glink_ss0_con_sbu_in: endpoi=
+nt {
+> +                                               remote-endpoint =3D <&ret=
+imer_ss0_con_sbu_out>;
+>                                         };
+>                                 };
+>                         };
+> @@ -111,7 +119,15 @@ port@1 {
+>                                         reg =3D <1>;
+>
+>                                         pmic_glink_ss1_ss_in: endpoint {
+> -                                               remote-endpoint =3D <&usb=
+_1_ss1_qmpphy_out>;
+> +                                               remote-endpoint =3D <&ret=
+imer_ss1_ss_out>;
+> +                                       };
+> +                               };
+> +
+> +                               port@2 {
+> +                                       reg =3D <2>;
+> +
+> +                                       pmic_glink_ss1_con_sbu_in: endpoi=
+nt {
+> +                                               remote-endpoint =3D <&ret=
+imer_ss1_con_sbu_out>;
+>                                         };
+>                                 };
+>                         };
+> @@ -140,7 +156,15 @@ port@1 {
+>                                         reg =3D <1>;
+>
+>                                         pmic_glink_ss2_ss_in: endpoint {
+> -                                               remote-endpoint =3D <&usb=
+_1_ss2_qmpphy_out>;
+> +                                               remote-endpoint =3D <&ret=
+imer_ss2_ss_out>;
+> +                                       };
+> +                               };
+> +
+> +                               port@2 {
+> +                                       reg =3D <2>;
+> +
+> +                                       pmic_glink_ss2_con_sbu_in: endpoi=
+nt {
+> +                                               remote-endpoint =3D <&ret=
+imer_ss2_con_sbu_out>;
+>                                         };
+>                                 };
+>                         };
+> @@ -213,6 +237,150 @@ vreg_nvme: regulator-nvme {
+>                 regulator-boot-on;
+>         };
+>
+> +       vreg_rtmr0_1p15: regulator-rtmr0-1p15 {
+> +               compatible =3D "regulator-fixed";
+> +
+> +               regulator-name =3D "VREG_RTMR0_1P15";
+> +               regulator-min-microvolt =3D <1150000>;
+> +               regulator-max-microvolt =3D <1150000>;
+> +
+> +               gpio =3D <&pmc8380_5_gpios 8 GPIO_ACTIVE_HIGH>;
+> +               enable-active-high;
+> +
+> +               pinctrl-0 =3D <&usb0_pwr_1p15_en>;
+> +               pinctrl-names =3D "default";
+> +
+> +               regulator-boot-on;
+> +       };
+> +
+> +       vreg_rtmr0_1p8: regulator-rtmr0-1p8 {
+> +               compatible =3D "regulator-fixed";
+> +
+> +               regulator-name =3D "VREG_RTMR0_1P8";
+> +               regulator-min-microvolt =3D <1800000>;
+> +               regulator-max-microvolt =3D <1800000>;
+> +
+> +               gpio =3D <&pm8550ve_9_gpios 8 GPIO_ACTIVE_HIGH>;
+> +               enable-active-high;
+> +
+> +               pinctrl-0 =3D <&usb0_1p8_reg_en>;
+> +               pinctrl-names =3D "default";
+> +
+> +               regulator-boot-on;
+> +       };
+> +
+> +       vreg_rtmr0_3p3: regulator-rtmr0-3p3 {
+> +               compatible =3D "regulator-fixed";
+> +
+> +               regulator-name =3D "VREG_RTMR0_3P3";
+> +               regulator-min-microvolt =3D <3300000>;
+> +               regulator-max-microvolt =3D <3300000>;
+> +
+> +               gpio =3D <&pm8550_gpios 11 GPIO_ACTIVE_HIGH>;
+> +               enable-active-high;
+> +
+> +               pinctrl-0 =3D <&usb0_3p3_reg_en>;
+> +               pinctrl-names =3D "default";
+> +
+> +               regulator-boot-on;
+> +       };
+> +
+> +       vreg_rtmr1_1p15: regulator-rtmr1-1p15 {
+> +               compatible =3D "regulator-fixed";
+> +
+> +               regulator-name =3D "VREG_RTMR1_1P15";
+> +               regulator-min-microvolt =3D <1150000>;
+> +               regulator-max-microvolt =3D <1150000>;
+> +
+> +               gpio =3D <&tlmm 188 GPIO_ACTIVE_HIGH>;
+> +               enable-active-high;
+> +
+> +               pinctrl-0 =3D <&rtmr1_1p15_reg_en>;
+> +               pinctrl-names =3D "default";
+> +
+> +               regulator-boot-on;
+> +       };
+> +
+> +       vreg_rtmr1_1p8: regulator-rtmr1-1p8 {
+> +               compatible =3D "regulator-fixed";
+> +
+> +               regulator-name =3D "VREG_RTMR1_1P8";
+> +               regulator-min-microvolt =3D <1800000>;
+> +               regulator-max-microvolt =3D <1800000>;
+> +
+> +               gpio =3D <&tlmm 175 GPIO_ACTIVE_HIGH>;
+> +               enable-active-high;
+> +
+> +               pinctrl-0 =3D <&rtmr1_1p8_reg_en>;
+> +               pinctrl-names =3D "default";
+> +
+> +               regulator-boot-on;
+> +       };
+> +
+> +       vreg_rtmr1_3p3: regulator-rtmr1-3p3 {
+> +               compatible =3D "regulator-fixed";
+> +
+> +               regulator-name =3D "VREG_RTMR1_3P3";
+> +               regulator-min-microvolt =3D <3300000>;
+> +               regulator-max-microvolt =3D <3300000>;
+> +
+> +               gpio =3D <&tlmm 186 GPIO_ACTIVE_HIGH>;
+> +               enable-active-high;
+> +
+> +               pinctrl-0 =3D <&rtmr1_3p3_reg_en>;
+> +               pinctrl-names =3D "default";
+> +
+> +               regulator-boot-on;
+> +       };
+> +
+> +       vreg_rtmr2_1p15: regulator-rtmr2-1p15 {
+> +               compatible =3D "regulator-fixed";
+> +
+> +               regulator-name =3D "VREG_RTMR2_1P15";
+> +               regulator-min-microvolt =3D <1150000>;
+> +               regulator-max-microvolt =3D <1150000>;
+> +
+> +               gpio =3D <&tlmm 189 GPIO_ACTIVE_HIGH>;
+> +               enable-active-high;
+> +
+> +               pinctrl-0 =3D <&rtmr2_1p15_reg_en>;
+> +               pinctrl-names =3D "default";
+> +
+> +               regulator-boot-on;
+> +       };
+> +
+> +       vreg_rtmr2_1p8: regulator-rtmr2-1p8 {
+> +               compatible =3D "regulator-fixed";
+> +
+> +               regulator-name =3D "VREG_RTMR2_1P8";
+> +               regulator-min-microvolt =3D <1800000>;
+> +               regulator-max-microvolt =3D <1800000>;
+> +
+> +               gpio =3D <&tlmm 126 GPIO_ACTIVE_HIGH>;
+> +               enable-active-high;
+> +
+> +               pinctrl-0 =3D <&rtmr2_1p8_reg_en>;
+> +               pinctrl-names =3D "default";
+> +
+> +               regulator-boot-on;
+> +       };
+> +
+> +       vreg_rtmr2_3p3: regulator-rtmr2-3p3 {
+> +               compatible =3D "regulator-fixed";
+> +
+> +               regulator-name =3D "VREG_RTMR2_3P3";
+> +               regulator-min-microvolt =3D <3300000>;
+> +               regulator-max-microvolt =3D <3300000>;
+> +
+> +               gpio =3D <&tlmm 187 GPIO_ACTIVE_HIGH>;
+> +               enable-active-high;
+> +
+> +               pinctrl-0 =3D <&rtmr2_3p3_reg_en>;
+> +               pinctrl-names =3D "default";
+> +
+> +               regulator-boot-on;
+> +       };
+> +
+>         vph_pwr: regulator-vph-pwr {
+>                 compatible =3D "regulator-fixed";
+>
+> @@ -591,6 +759,207 @@ vreg_l3j_0p8: ldo3 {
+>         };
+>  };
+>
+> +&gpu {
+> +       status =3D "okay";
+> +
+> +       zap-shader {
+> +               firmware-name =3D "qcom/x1e80100/Thundercomm/DEVKIT/qcdxk=
+msuc8380.mbn";
+> +       };
+> +};
+> +
+> +&i2c1 {
+> +       clock-frequency =3D <400000>;
+> +
+> +       status =3D "okay";
+> +
+> +       typec-mux@8 {
+> +               compatible =3D "parade,ps8830";
+> +               reg =3D <0x08>;
+> +
+> +               clocks =3D <&rpmhcc RPMH_RF_CLK5>;
+> +               clock-names =3D "xo";
 
-See commentary above file_ref_put_close() for more information.
+clock-names is not part of the binding and dtbs_checks now complains.
 
-Signed-off-by: Mateusz Guzik <mjguzik@gmail.com>
----
- fs/file.c                | 75 ++++++++++++++++++++++++++++++----------
- fs/file_table.c          | 72 +++++++++++++++++++++++++++-----------
- include/linux/file.h     |  2 ++
- include/linux/file_ref.h |  1 +
- 4 files changed, 111 insertions(+), 39 deletions(-)
-
-diff --git a/fs/file.c b/fs/file.c
-index 44efdc8c1e27..ea753f9c8e08 100644
---- a/fs/file.c
-+++ b/fs/file.c
-@@ -26,6 +26,28 @@
- 
- #include "internal.h"
- 
-+static bool __file_ref_put_badval(file_ref_t *ref, unsigned long cnt)
-+{
-+	/*
-+	 * If the reference count was already in the dead zone, then this
-+	 * put() operation is imbalanced. Warn, put the reference count back to
-+	 * DEAD and tell the caller to not deconstruct the object.
-+	 */
-+	if (WARN_ONCE(cnt >= FILE_REF_RELEASED, "imbalanced put on file reference count")) {
-+		atomic_long_set(&ref->refcnt, FILE_REF_DEAD);
-+		return false;
-+	}
-+
-+	/*
-+	 * This is a put() operation on a saturated refcount. Restore the
-+	 * mean saturation value and tell the caller to not deconstruct the
-+	 * object.
-+	 */
-+	if (cnt > FILE_REF_MAXREF)
-+		atomic_long_set(&ref->refcnt, FILE_REF_SATURATED);
-+	return false;
-+}
-+
- /**
-  * __file_ref_put - Slowpath of file_ref_put()
-  * @ref:	Pointer to the reference count
-@@ -67,27 +89,44 @@ bool __file_ref_put(file_ref_t *ref, unsigned long cnt)
- 		return true;
- 	}
- 
--	/*
--	 * If the reference count was already in the dead zone, then this
--	 * put() operation is imbalanced. Warn, put the reference count back to
--	 * DEAD and tell the caller to not deconstruct the object.
--	 */
--	if (WARN_ONCE(cnt >= FILE_REF_RELEASED, "imbalanced put on file reference count")) {
--		atomic_long_set(&ref->refcnt, FILE_REF_DEAD);
--		return false;
--	}
--
--	/*
--	 * This is a put() operation on a saturated refcount. Restore the
--	 * mean saturation value and tell the caller to not deconstruct the
--	 * object.
--	 */
--	if (cnt > FILE_REF_MAXREF)
--		atomic_long_set(&ref->refcnt, FILE_REF_SATURATED);
--	return false;
-+	return __file_ref_put_badval(ref, cnt);
- }
- EXPORT_SYMBOL_GPL(__file_ref_put);
- 
-+/**
-+ * file_ref_put_close - drop a reference expecting it would transition to FILE_REF_NOREF
-+ * @ref:	Pointer to the reference count
-+ *
-+ * Semantically it is equivalent to calling file_ref_put(), but it trades lower
-+ * performance in face of other CPUs also modifying the refcount for higher
-+ * performance when this happens to be the last reference.
-+ *
-+ * For the last reference file_ref_put() issues 2 atomics. One to drop the
-+ * reference and another to transition it to FILE_REF_DEAD. This routine does
-+ * the work in one step, but in order to do it has to pre-read the variable which
-+ * decreases scalability.
-+ *
-+ * Use with close() et al, stick to file_ref_put() by default.
-+ */
-+bool file_ref_put_close(file_ref_t *ref)
-+{
-+	long old, new;
-+
-+	old = atomic_long_read(&ref->refcnt);
-+	do {
-+		if (unlikely(old < 0))
-+			return __file_ref_put_badval(ref, old);
-+
-+		if (old == FILE_REF_ONEREF)
-+			new = FILE_REF_DEAD;
-+		else
-+			new = old - 1;
-+	} while (!atomic_long_try_cmpxchg(&ref->refcnt, &old, new));
-+
-+	return new == FILE_REF_DEAD;
-+}
-+EXPORT_SYMBOL_GPL(file_ref_put_close);
-+
- unsigned int sysctl_nr_open __read_mostly = 1024*1024;
- unsigned int sysctl_nr_open_min = BITS_PER_LONG;
- /* our min() is unusable in constant expressions ;-/ */
-diff --git a/fs/file_table.c b/fs/file_table.c
-index 5c00dc38558d..82d96ad141e2 100644
---- a/fs/file_table.c
-+++ b/fs/file_table.c
-@@ -511,31 +511,37 @@ void flush_delayed_fput(void)
- }
- EXPORT_SYMBOL_GPL(flush_delayed_fput);
- 
--void fput(struct file *file)
-+static void __fput_defer_free(struct file *file)
- {
--	if (file_ref_put(&file->f_ref)) {
--		struct task_struct *task = current;
-+	struct task_struct *task = current;
- 
--		if (unlikely(!(file->f_mode & (FMODE_BACKING | FMODE_OPENED)))) {
--			file_free(file);
-+	if (unlikely(!(file->f_mode & (FMODE_BACKING | FMODE_OPENED)))) {
-+		file_free(file);
-+		return;
-+	}
-+	if (likely(!in_interrupt() && !(task->flags & PF_KTHREAD))) {
-+		init_task_work(&file->f_task_work, ____fput);
-+		if (!task_work_add(task, &file->f_task_work, TWA_RESUME))
- 			return;
--		}
--		if (likely(!in_interrupt() && !(task->flags & PF_KTHREAD))) {
--			init_task_work(&file->f_task_work, ____fput);
--			if (!task_work_add(task, &file->f_task_work, TWA_RESUME))
--				return;
--			/*
--			 * After this task has run exit_task_work(),
--			 * task_work_add() will fail.  Fall through to delayed
--			 * fput to avoid leaking *file.
--			 */
--		}
--
--		if (llist_add(&file->f_llist, &delayed_fput_list))
--			schedule_delayed_work(&delayed_fput_work, 1);
-+		/*
-+		 * After this task has run exit_task_work(),
-+		 * task_work_add() will fail.  Fall through to delayed
-+		 * fput to avoid leaking *file.
-+		 */
- 	}
-+
-+	if (llist_add(&file->f_llist, &delayed_fput_list))
-+		schedule_delayed_work(&delayed_fput_work, 1);
- }
- 
-+void fput(struct file *file)
-+{
-+	if (unlikely(file_ref_put(&file->f_ref))) {
-+		__fput_defer_free(file);
-+	}
-+}
-+EXPORT_SYMBOL(fput);
-+
- /*
-  * synchronous analog of fput(); for kernel threads that might be needed
-  * in some umount() (and thus can't use flush_delayed_fput() without
-@@ -549,10 +555,34 @@ void __fput_sync(struct file *file)
- 	if (file_ref_put(&file->f_ref))
- 		__fput(file);
- }
--
--EXPORT_SYMBOL(fput);
- EXPORT_SYMBOL(__fput_sync);
- 
-+/*
-+ * Equivalent to __fput_sync(), but optimized for being called with the last
-+ * reference.
-+ *
-+ * See file_ref_put_close() for details.
-+ */
-+void fput_close_sync(struct file *file)
-+{
-+	if (file_ref_put_close(&file->f_ref))
-+		__fput(file);
-+}
-+EXPORT_SYMBOL(fput_close_sync);
-+
-+/*
-+ * Equivalent to fput(), but optimized for being called with the last
-+ * reference.
-+ *
-+ * See file_ref_put_close() for details.
-+ */
-+void fput_close(struct file *file)
-+{
-+	if (file_ref_put_close(&file->f_ref))
-+		__fput_defer_free(file);
-+}
-+EXPORT_SYMBOL(fput_close);
-+
- void __init files_init(void)
- {
- 	struct kmem_cache_args args = {
-diff --git a/include/linux/file.h b/include/linux/file.h
-index 302f11355b10..7b04e87cbde6 100644
---- a/include/linux/file.h
-+++ b/include/linux/file.h
-@@ -124,6 +124,8 @@ int receive_fd_replace(int new_fd, struct file *file, unsigned int o_flags);
- 
- extern void flush_delayed_fput(void);
- extern void __fput_sync(struct file *);
-+void fput_close_sync(struct file *);
-+void fput_close(struct file *);
- 
- extern unsigned int sysctl_nr_open_min, sysctl_nr_open_max;
- 
-diff --git a/include/linux/file_ref.h b/include/linux/file_ref.h
-index 9b3a8d9b17ab..f269299941aa 100644
---- a/include/linux/file_ref.h
-+++ b/include/linux/file_ref.h
-@@ -62,6 +62,7 @@ static inline void file_ref_init(file_ref_t *ref, unsigned long cnt)
- }
- 
- bool __file_ref_put(file_ref_t *ref, unsigned long cnt);
-+bool file_ref_put_close(file_ref_t *ref);
- 
- /**
-  * file_ref_get - Acquire one reference on a file
--- 
-2.43.0
-
+Rob
