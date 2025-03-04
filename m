@@ -1,120 +1,291 @@
-Received: from fw2.prolan.hu (fw2.prolan.hu [193.68.50.107])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f196.google.com (mail-yw1-f196.google.com [209.85.128.196])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B2AB1FDE1A;
-	Tue,  4 Mar 2025 11:14:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.68.50.107
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 071141F9F73
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 11:15:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741086851; cv=none; b=ithq7v9F+DMaZh0p1MrrM/AcipCdNy+23sc9QMv5JBStzbEsPpXRB+QFz+LY4v1AYPRtNuPjMGZHoFdJwt6NpdFxEO3AvRrmju/tktT/7/rqQR8Dtc+NkKrO0eTRK4Cb3z8W1qRFIUQDtswFbwzE2CzsjiguWkAPXgTOgU6NhvY=
+	t=1741086918; cv=none; b=c/RNTcOZBAfbY4T1Jw6OuxKtBE2MxpS3Y9DroTR30Kdxva2CEM7bP4sODDhHcL0cp7SjxkpyDXKqP4a1qdhTqziS5cEh023Q0Bx4m+WMCg6+auVfVlpzS3jqZsisl9K1BdQ5aNBYkDlhfFgIPNpye/udSSxl5WLp5XpVWF5IuV4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741086851; c=relaxed/simple;
-	bh=XOdBksz8Vf2+lJNphsoE9ZmVFjju/xls/RhmovDo7d0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=jVqkKFo5STfg2RhlqieYZMVtM5h0vpZ2yyuGxTkpqGShn+p76pc50jfJovHpdwC41P9UauksDgQLXPA9PKW7um/L26Ac/y9EU9M1yPQ7byUAngVkkFwHfHDn/7mlVSH6F3fpNStYZ0u7sbIIg/vP6qxtpaUDXK+FK4FEm7N4WS8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu; spf=pass smtp.mailfrom=prolan.hu; dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b=O2Eo/dig; arc=none smtp.client-ip=193.68.50.107
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=prolan.hu
+	s=arc-20240116; t=1741086918; c=relaxed/simple;
+	bh=00J+U2HrXRRY9mo+XD37HuUOAnY6kI5heqWQuH+9eY0=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=qZSeePqQnHb6LiwDTAd6MMbql6GgJXvd4gSpP/FJGwWJD80ogOa5bIr/RjEBBQfAQHsOQt2xKAo27UZPLbJ/bebzvb2TuEywEUGaSA6dPKKP526mN7aGY33ywDLPw1wFDVWhFF803LRPl5RaJyuDjNPYjoqsGCk0lLVtlTH5kpM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=POVDISCp; arc=none smtp.client-ip=209.85.128.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b="O2Eo/dig"
-Received: from proxmox-mailgw.intranet.prolan.hu (localhost.localdomain [127.0.0.1])
-	by proxmox-mailgw.intranet.prolan.hu (Proxmox) with ESMTP id A114CA028B;
-	Tue,  4 Mar 2025 12:14:05 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prolan.hu; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:from:from:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=mail; bh=/mDRp4/mkuaV1Yy1R0fV
-	mKQrTdpMwxGr5IRopCnt1VA=; b=O2Eo/diglpqOv6fh4s2gELtN/AllTdGKIItn
-	ImtH3HyMZhCZ6Xan9Stww5iUxYWZCP1k8w2zigOw1zl0h64hBtqjR07B9YtIyW2E
-	za9el3NCgabIWOEDlZr46F5pvo3BvH+sc05eYO76kx7N8Sj69LzLYWQfpvpRPsZL
-	ezZuQqgP0Prd9us6q4wv/+7uDpC/eZfoOvdzEJ3tMmSzED4uIsvq/i5aW0OwvzLz
-	KUQCo5g5rgLduUQS4l9bPMSdHlX9HSjryd6b62ahtQ686AhPXYdw6zEDjaSYQXAu
-	NoR7bYMu2YCwd9dOaanQLXTThuDJcOmVEQpHpI0qvTZYVUIw6e3UFq4kMuqGrp9K
-	1sc47k1o7D3+6Vx4C4YMTfJd3e0copso+vuyNlpY82edA6crKSAaRZTVbZf/re80
-	5xG9POmujLgAe/vPeDkW+M5cKuh/m+AJnDjLLgz+v+VQyLllMf4uk9yeDgpBfT5q
-	PG3DqdWZSDxSFU//zDaq6dpe4qH9BOFCLnddiM3x+Wlw8eiN+Uq6M6TZtWZC01/L
-	PCmqwv99/kv9XYS7pzoZyroV/garfmCY+I+Z9VzNMWPRoNT7yoXEHlh5W5UlvOI/
-	k2uaO1wP0+irRhZlgkI+R+95yfu4mJIfRNFxFTADwsMZkJ187nsXXcVo4Qjnku60
-	85dx7EA=
-Message-ID: <8cf056d7-22d0-4bf2-8dd6-79a45977bfc1@prolan.hu>
-Date: Tue, 4 Mar 2025 12:14:04 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="POVDISCp"
+Received: by mail-yw1-f196.google.com with SMTP id 00721157ae682-6fd2fca1cebso34303747b3.0
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Mar 2025 03:15:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741086915; x=1741691715; darn=vger.kernel.org;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=u1u6A3exscEAR1j00w/e4EA5kReEo6jf+SB/fNoSzP8=;
+        b=POVDISCp0r/UDlFBktO53/qLsK9sca3KA5H3vwzmGjLCBy3o/dNNtsW9epKwVyd4kF
+         eZ4GVYTCAN2fwidvcw0ZKgf+hPPCrc38obZHuyeeEfZxBe2vpgerSfjZuFqvOxGg4Izh
+         oYfJMTIWn11IfoKqDFIWV2PAzxlKSElLIwmFK2QZI5VG93X1t64hnoqAPLhDVc0ZCZFL
+         VvLRoKSv4hf0SMClWTA+ZjgJAgsOHo56/kh3nRsOCvsrxlCba/gyPMGtixp/D2DxKNA0
+         o0v5a+sOdgim5qfTdUYckkX40HO6qm+Q5ta++vOcpgdUER9kHUuihOVhlK3W4NMV+Uly
+         DZ+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741086915; x=1741691715;
+        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=u1u6A3exscEAR1j00w/e4EA5kReEo6jf+SB/fNoSzP8=;
+        b=bAl4dqFPrjCe6AZkRvX1lS8pDqY3xQIxLX7W3oElMusynSR5g4YHSlxa171woxo7Qf
+         hFS94Gbm8gUSplqg6BFflniH0clUfPl6mSF3GG8qfAM16b37LPgp7R0goGTmxxqBMN88
+         Zucr7y7dB5yilcCtd0aeyqoYLKJAv1/g58RVCQyBr/9iMssKVW9dca0MQw5iqJHw2O3f
+         aKN28mGKvqlMWhFjWPuob3pfY5KGsxZ2TahaKI22FyNZ8wAy2vLRoMO62PK6jV0DgWIM
+         XEfgStHhF/L1fJC31p/MXqaxHcsR9EIzalVwx/9VXW0WYNHl0S5FXEJ19ACD63y3/1c7
+         +4LA==
+X-Gm-Message-State: AOJu0Yyn89WCMBM9QmLNtz9Wj5WFFm1GolScAeiICeAgYJsXAovW7L/B
+	R6EUPVmlIXI7Qyo6Nok5ZMotewleVsxDGnSSqfUR9VshzxuPYz5L5yb2ZgQddyEnKMBf2LDEreq
+	sOm++Ro2/ikr8Qxa9RIUdSfEp3pEfEdU0nsOoqA==
+X-Gm-Gg: ASbGncsEH5SFM7NKnbSdpiH4Y5fxDyclkwpor/9sU3c8VWe3iAtp0knDZD6yn8z8+a5
+	l0A56NcjYghpCJAAuRVBXa2NDbzM3Q9FgQDRiDWLJ9W9ZxC92cDT5C9RQxMxbw6J5BniSjeSgXf
+	+9EV8qvMv3sMcz7VFK43fhgL7uGw4Ot50POR16U88xoH/WNj++YYJxkbIxM9eA
+X-Google-Smtp-Source: AGHT+IFdtYnSUcgnZsvzol9jjNu0Rj+3gPWbD3nvh9IMBA/D7qJM3ijFShXtfefT6CkR4RvPfOcxZASRs6TEyobkefI=
+X-Received: by 2002:a05:690c:4a0e:b0:6fb:1c5a:80fc with SMTP id
+ 00721157ae682-6fd4a0c405amr221510397b3.26.1741086914711; Tue, 04 Mar 2025
+ 03:15:14 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 1/3] include: uapi: counter: Add
- microchip-tcb-capture.h
-To: William Breathitt Gray <wbg@kernel.org>
-CC: <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-iio@vger.kernel.org>, Kamel Bouhara <kamel.bouhara@bootlin.com>
-References: <20250227144023.64530-1-csokas.bence@prolan.hu>
- <20250227144023.64530-2-csokas.bence@prolan.hu> <Z8bNFjh85p2jqK9C@ishi>
-Content-Language: en-US, hu-HU
-From: =?UTF-8?B?Q3PDs2vDoXMgQmVuY2U=?= <csokas.bence@prolan.hu>
-In-Reply-To: <Z8bNFjh85p2jqK9C@ishi>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: ATLAS.intranet.prolan.hu (10.254.0.229) To
- ATLAS.intranet.prolan.hu (10.254.0.229)
-X-EsetResult: clean, is OK
-X-EsetId: 37303A2980D94852637266
+From: Amit <amitchoudhary0523@gmail.com>
+Date: Tue, 4 Mar 2025 16:45:03 +0530
+X-Gm-Features: AQ5f1JrIOLst8nuuw5P0b3AcgW5j5lUkG1UzngpbN8TTcp3rgPG0hxYIsBycA7c
+Message-ID: <CAFf+5ziHz+v=iOaS+3bQ+LMoOuvmruR3o_7+sXH5Au_6tf08KA@mail.gmail.com>
+Subject: Example program (user_menu_code.c) for presenting a text menu to the
+ user and getting a valid option from the user.
+To: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Hi,
+--------------------------
+user_menu_code.c
+--------------------------
 
-On 2025. 03. 04. 10:51, William Breathitt Gray wrote:
-> On Thu, Feb 27, 2025 at 03:40:18PM +0100, Bence Csókás wrote:
->> Add UAPI header for the microchip-tcb-capture.c driver.
->> This header will hold the various event channels, component numbers etc.
->> used by this driver.
->>
->> Signed-off-by: Bence Csókás <csokas.bence@prolan.hu>
-> 
-> Oops, I almost missed this one! Make sure I'm included in the To field
-> for the next revision. ;-)
-> 
-> By the way, b4 is a nifty tool that can save you some work and help you
-> prep patch series for submission.[^1]
 
-Yes, I have considered it, but unfortunately it still has quite a few 
-bugs, for example [1], which has mangled my tags before, when a 
-maintainer using it tried to apply one of my patches with it.
+/*
+ * License: This file has been released under GNU General Public License,
+ *          version 2 (GPLv2).
+ *
+ * The license details can be found here:
+ *                  https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html
+ */
 
-[1] https://github.com/mricon/b4/issues/52
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <limits.h>
 
->> +/*
->> + * The driver defines the following components:
->> + *
->> + * Count 0
->> + * \__  Synapse 0 -- Signal 0 (Channel A, i.e. TIOA)
->> + * \__  Synapse 1 -- Signal 1 (Channel B, i.e. TIOB)
->> + */
->> +
->> +enum counter_mchp_signals {
->> +	COUNTER_MCHP_SIG_TIOA,
->> +	COUNTER_MCHP_SIG_TIOB,
->> +};
-> 
-> Are these meant to be used to identify the Signals in the
-> microchip-tcb-capture.c file. You should set the the counter_signal id
-> members to these enum constants then. However, this enum doesn't need to
-> be exposed to userspace in that case.
+#define NUM_TRUE  1
+#define NUM_FALSE 0
 
-The thought was to let userspace figure out which 
-`signal%d_action_component_id` to read, but now I see that this is not 
-the way to go.
+// function prototypes for gcc flag -Werror-implicit-function-declaration
+char *get_input_from_stdin_and_discard_extra_characters(char *str, long size);
+int is_str_a_number(const char *str);
+void print_menu(void);
+int print_menu_and_get_valid_user_option(void);
+void process_user_option(int option);
+void __func(int option);
 
-> If that is the only purpose of enum counter_mchp_signals, then we can
-> omit this patch from the series and you won't need to send it in the
-> next revision.
+char *get_input_from_stdin_and_discard_extra_characters(char *str, long size)
+{
 
-Alright, I'll drop this enum. Then this header will be empty at the 
-start, save for the block comment. I hope that will be alright.
+    int c = 0;
+    long i = 0;
 
-> William Breathitt Gray
-> 
-> [^1] https://b4.docs.kernel.org/en/latest/
+    // If 'size' is 0 then this function will discard all input and return NULL.
+    // No need to check 'str' if 'size' is 0.
+    if (size == 0) {
+        // discard all input
+        while ((c = getchar()) && (c != '\n') && (c != EOF));
+        return NULL;
+    }
 
-Bence
+    if (str == NULL)
+        return NULL;
 
+    if (size < 0)
+        return NULL;
+
+    for (i = 0; i < (size - 1); i = i + 1) {
+
+        c = getchar();
+
+        if ((c == '\n') || (c == EOF)) {
+            str[i] = 0;
+            return str;
+        }
+
+        str[i] = (char)(c);
+
+    } // end of for loop
+
+    str[i] = 0;
+
+    // discard rest of input
+    while ((c = getchar()) && (c != '\n') && (c != EOF));
+
+    return str;
+
+} // end of function get_input_from_stdin_and_discard_extra_characters()
+
+int is_str_a_number(const char *str)
+{
+
+    char c = '=';
+
+    if (str == NULL) {
+        return NUM_FALSE;
+    }
+
+    if (str[0] == '\0') { // empty string
+        return NUM_FALSE;
+    }
+
+    while ((c = *str)) {
+        if ((c < '0') || (c > '9')) {
+            return NUM_FALSE;
+        }
+        str++;
+    }
+
+    return NUM_TRUE;
+
+} // end of function is_str_a_number()
+
+void print_menu(void)
+{
+
+    printf("\n\n");
+
+    printf("----\n");
+    printf("Menu\n");
+    printf("----\n");
+    printf("\n");
+
+    printf("1. Option 1\n");
+    printf("2. Option 2\n");
+    printf("3. Option 3\n");
+    printf("4. Exit\n");
+
+    return;
+
+} // end of function print_menu()
+
+int print_menu_and_get_valid_user_option(void)
+{
+#define MIN_USER_OPTION 1
+#define MAX_USER_OPTION 4
+#define OPTION_SIZE     8
+
+    char option_str[OPTION_SIZE] = {0};
+    int option = -1;
+
+    while (1) {
+
+        print_menu();
+
+        printf("\n");
+
+        while (1) {
+
+            printf("Please enter a valid option (%d - %d)"
+                   " (spaces not allowed): ", MIN_USER_OPTION, MAX_USER_OPTION);
+
+            get_input_from_stdin_and_discard_extra_characters(option_str,
+                                                              OPTION_SIZE);
+
+            if (is_str_a_number(option_str) != NUM_TRUE) {
+                continue;
+            }
+
+            option = atoi(option_str);
+
+            if ((option < MIN_USER_OPTION) || (option > MAX_USER_OPTION)) {
+                continue;
+            }
+
+            printf("\n");
+            printf("Option number given by the user is: %d\n", option);
+            printf("\n");
+            printf("Do you want to proceed (Enter only 'n' (without the quotes)"
+                   " for not proceeding, enter any thing else for proceeding):"
+                   " ");
+            get_input_from_stdin_and_discard_extra_characters(option_str,
+                                                              OPTION_SIZE);
+            if (strcmp(option_str, "n") != 0) {
+                return option;
+            }
+
+            break;
+
+        } // end of inner while(1) loop
+
+    }  // end of outer while(1) loop
+
+    // Unreachable code. Program execution should not reach here.
+    // Exit the program.
+    printf("\n");
+    printf("Line %d: Some BUG in the program. Exiting..\n", __LINE__);
+    printf("\n");
+    exit(1);
+
+} // end of function print_menu_and_get_valid_user_option()
+
+void process_user_option(int option)
+{
+
+    switch (option) {
+
+        case 1: __func(option);
+                break;
+        case 2: __func(option);
+                break;
+        case 3: __func(option);
+                break;
+        case 4: printf("\n");
+                printf("**THE USER GAVE OPTION NUMBER %d**\n", option);
+                printf("\n");
+                printf("Exiting..\n");
+                printf("\n");
+                exit(0);
+        default: printf("\n");
+                 printf("Line %d: Some BUG in the program. Exiting..\n",
+                                                                    __LINE__);
+                 printf("\n");
+                 exit(1);
+
+    } // end of switch statement
+
+    return;
+
+} // end of function process_user_option()
+
+void __func(int option)
+{
+
+    printf("\n");
+    printf("**THE USER GAVE OPTION NUMBER %d**\n", option);
+
+    return;
+
+} // end of function __func()
+
+int main(void)
+{
+    int option = -1;
+
+    while (1) {
+
+        option = print_menu_and_get_valid_user_option();
+        process_user_option(option);
+
+    } // end of while loop
+
+} // end of function main()
