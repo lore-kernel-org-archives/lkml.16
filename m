@@ -1,116 +1,96 @@
-Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B541D18FC6B;
-	Tue,  4 Mar 2025 09:20:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.149.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB70418FC6B
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 09:21:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741080013; cv=none; b=SI2qwfEpS7r7eSt4zYKtSNKPGUP8qbgUqNJWsOZEo5rtQQEUx7GyYY1g8rUXGIRJ8QyNkJ1jNNSTNrLKti006KMpONp0aAbkqRx6w4y0ghmBrmpX+ypS0poQgVqQXyycG8XlJEEG8TW4OIqqy2khkyA9HnkhqcpsBEgqgCzNotI=
+	t=1741080075; cv=none; b=S1oOQlabIGc5Yyf8aWZQZFCXuynBA3rv178gKjmlK7mUf2bh2za7UYJD/KRGSYgkBTHeVqRBdM3Of76QgCRFuyd8KUBg63ed5GgyqplE18eu312aRLwkyXlqez7xp9PhRnAoLCrjNDUR7qdYP2od15Acdi3oJE22fOgo9tWwIoM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741080013; c=relaxed/simple;
-	bh=xOFxo8gsMiynVWd3ZJwDqa4GVx8u3YsAkiZhHyTFQJs=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YewIApM5rC37iQNmrSfpJycwS+M7CYd8u7Hed4Bx2WU7OuOSxnFeM3W75AtXScocjwPfwEug0J6oPsw5XH3Gslga4fV/g3MtdES32yxO6RjGRDw03pKrEk0x7qhepwcL1tBWCB67StTRIahjQARq/wySaCuQ/xObO4kVfR0Jtd0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=WDY4XJlj; arc=none smtp.client-ip=67.231.149.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="WDY4XJlj"
-Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
-	by mx0a-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5245gdSF021938;
-	Tue, 4 Mar 2025 03:19:52 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=
-	PODMain02222019; bh=BZZRwtW2h9tlEFc5ND3Fz0ti//9gALGRUJP7ScdQV1s=; b=
-	WDY4XJljQwvTVZJ2TBxOfPmqhhD7tRjjFcYAmekoF856zw0lxLgRcXObWIldlA2h
-	HgH6SgkpOSTghfyBCyRs+9dKWmh0jFHj0dw9BrhFamgItUuG4GFZTgqZp6uSW2u8
-	P9/8bWxRlFq6udMsPrtt5m9z43gooVwiCXHdLVeLhMjn6dlDQeYNsePHnlebimLk
-	xi20X6q3uG7AYdIJ+OcBILkubOm6YVC4dDZNUiORJJ9i0Xr8AeEXomuvte+Rpl7o
-	do81pVketS+L4wzZl3o0n7D0+k6hOuet0mgI4AdGhWqrvdCk0AIrhI0oacM8Jxzf
-	v9cpIJkVVu0zUys9/HlmAg==
-Received: from ediex01.ad.cirrus.com ([84.19.233.68])
-	by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 455fyyhhmn-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 04 Mar 2025 03:19:51 -0600 (CST)
-Received: from ediex02.ad.cirrus.com (198.61.84.81) by ediex01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Tue, 4 Mar
- 2025 09:19:49 +0000
-Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
- anon-ediex02.ad.cirrus.com (198.61.84.81) with Microsoft SMTP Server id
- 15.2.1544.14 via Frontend Transport; Tue, 4 Mar 2025 09:19:49 +0000
-Received: from opensource.cirrus.com (ediswmail9.ad.cirrus.com [198.61.86.93])
-	by ediswmail9.ad.cirrus.com (Postfix) with ESMTPS id F0E3F820248;
-	Tue,  4 Mar 2025 09:19:48 +0000 (UTC)
-Date: Tue, 4 Mar 2025 09:19:47 +0000
-From: Charles Keepax <ckeepax@opensource.cirrus.com>
-To: Mark Brown <broonie@kernel.org>
-CC: <lgirdwood@gmail.com>, <peda@axentia.se>, <andrei.simion@microchip.com>,
-        <nuno.sa@analog.com>, <paul@crapouillou.net>, <oder_chiou@realtek.com>,
-        <kiseok.jo@irondevice.com>, <shenghao-ding@ti.com>, <kevin-lu@ti.com>,
-        <baojun.xu@ti.com>, <srinivas.kandagatla@linaro.org>,
-        <linux-sound@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <patches@opensource.cirrus.com>
-Subject: Re: [PATCH v2 13/13] ASoC: Tidy up SOC_DOUBLE_* and SOC_SINGLE_*
- helpers
-Message-ID: <Z8bFs5xPjVzbLJoa@opensource.cirrus.com>
-References: <20250303171424.444556-1-ckeepax@opensource.cirrus.com>
- <20250303171424.444556-14-ckeepax@opensource.cirrus.com>
- <4db99187-63f9-41cc-966b-0c77ba86e390@sirena.org.uk>
+	s=arc-20240116; t=1741080075; c=relaxed/simple;
+	bh=dqTF9c+PHa0w+sPxfqURNbcThtMGZJqqUoJDmdYR1Fc=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=e/xm9dlM1jZisA/l/R3rNuA1plLJDhqvENIWBcorEEumOi/yaarBs++RnAfpxl1zX+xQ/caFZ5lfB3eY7jtagp0qxIxi+2thzmF5W7U+nX6u2jEU5MRZXgZ5IyQVVQC2vMO+wj9k4C3SqtpUoB/zWmfpZf5qXjCyn28HXlj+52g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Z6VVV3RPXz6K9BZ;
+	Tue,  4 Mar 2025 17:18:58 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 592D9140A08;
+	Tue,  4 Mar 2025 17:21:10 +0800 (CST)
+Received: from localhost (10.96.237.92) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 4 Mar
+ 2025 10:21:07 +0100
+Date: Tue, 4 Mar 2025 17:21:02 +0800
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Yicong Yang <yangyicong@huawei.com>
+CC: Will Deacon <will@kernel.org>, <yangyicong@hisilicon.com>,
+	<mark.rutland@arm.com>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>, <prime.zeng@hisilicon.com>,
+	<linuxarm@huawei.com>, <wangyushan12@huawei.com>
+Subject: Re: [PATCH 1/9] drivers/perf: hisi: Extend struct hisi_pmu_dev_info
+Message-ID: <20250304172102.00006e54@huawei.com>
+In-Reply-To: <e6cfcfd0-5412-20bb-f4b5-cf266884c5d0@huawei.com>
+References: <20250218092000.41641-1-yangyicong@huawei.com>
+	<20250218092000.41641-2-yangyicong@huawei.com>
+	<20250301062343.GA27700@willie-the-truck>
+	<e6cfcfd0-5412-20bb-f4b5-cf266884c5d0@huawei.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <4db99187-63f9-41cc-966b-0c77ba86e390@sirena.org.uk>
-X-Proofpoint-GUID: 1FAcLbG5eH93_QGHrjEHF1N4dxMlgdaA
-X-Proofpoint-ORIG-GUID: 1FAcLbG5eH93_QGHrjEHF1N4dxMlgdaA
-X-Authority-Analysis: v=2.4 cv=DaftqutW c=1 sm=1 tr=0 ts=67c6c5b7 cx=c_pps a=uGhh+3tQvKmCLpEUO+DX4w==:117 a=uGhh+3tQvKmCLpEUO+DX4w==:17 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=hR2cDPa-ULlpED4iyd0A:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
-X-Proofpoint-Spam-Reason: safe
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500010.china.huawei.com (7.191.174.240) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On Mon, Mar 03, 2025 at 06:53:08PM +0000, Mark Brown wrote:
-> On Mon, Mar 03, 2025 at 05:14:24PM +0000, Charles Keepax wrote:
-> > Re-implement SOC_DOUBLE_VALUE() in terms of SOC_DOUBLE_S_VALUE().
-> > SOC_DOUBLE_S_VALUE() already had a minimum value so add this to
-> > SOC_DOUBLE_VALUE as well, this allows replacement of several hard coded
-> > value entries. Likewise update SOC_SINGLE_VALUE to match, which allows
-> > replacement of even more hard coded values.
+On Mon, 3 Mar 2025 22:43:35 +0800
+Yicong Yang <yangyicong@huawei.com> wrote:
+
+> On 2025/3/1 14:23, Will Deacon wrote:
+> > On Tue, Feb 18, 2025 at 05:19:52PM +0800, Yicong Yang wrote:  
+> >> From: Junhao He <hejunhao3@huawei.com>
+> >>
+> >> The counter bits and event range may differ from versions of a
+> >> certain uncore PMU. Make this device specific information into
+> >> struct hisi_pmu_dev_info. This will help to simplify the
+> >> initialization process by using a list of struct hisi_pmu_dev_info
+> >> rather than checking the version.
+> >>
+> >> Signed-off-by: Junhao He <hejunhao3@huawei.com>
+> >> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
+> >> ---
+> >>  drivers/perf/hisilicon/hisi_uncore_pmu.h | 2 ++
+> >>  1 file changed, 2 insertions(+)
+> >>
+> >> diff --git a/drivers/perf/hisilicon/hisi_uncore_pmu.h b/drivers/perf/hisilicon/hisi_uncore_pmu.h
+> >> index f4fed2544877..777675838b80 100644
+> >> --- a/drivers/perf/hisilicon/hisi_uncore_pmu.h
+> >> +++ b/drivers/perf/hisilicon/hisi_uncore_pmu.h
+> >> @@ -72,6 +72,8 @@ struct hisi_uncore_ops {
+> >>  struct hisi_pmu_dev_info {
+> >>  	const char *name;
+> >>  	const struct attribute_group **attr_groups;
+> >> +	u32 counter_bits;
+> >> +	u32 check_event;
+This name is a little confusing.  Maybe nr_events or similar?
+
+
+> >>  	void *private;
+> >>  };  
+> > 
+> > This doesn't really do anything on its own; please just fold it into the
+> > patch where the new fields are used.
+> >   
 > 
-> This breaks an arm64 defconfig build:
+> sure, will make this into the following patch.
 > 
-> In file included from /build/stage/linux/sound/soc/codecs/rk3308_codec.c:24:
-> /build/stage/linux/include/sound/soc.h:150:49: error: ‘shift_left’ undeclared here (not in a function)
->   150 |         .private_value = SOC_DOUBLE_VALUE(xreg, shift_left, shift_right, \
->       |                                                 ^~~~~~~~~~
-> /build/stage/linux/include/sound/soc.h:45:46: note: in definition of macro ‘SOC_DOUBLE_S_VALUE’
->    45 |         {.reg = xreg, .rreg = xreg, .shift = shift_left, \
->       |                                              ^~~~~~~~~~
-> /build/stage/linux/include/sound/soc.h:150:26: note: in expansion of macro ‘SOC_DOUBLE_VALUE’
->   150 |         .private_value = SOC_DOUBLE_VALUE(xreg, shift_left, shift_right, \
->       |                          ^~~~~~~~~~~~~~~~
-> /build/stage/linux/sound/soc/codecs/rk3308_codec.c:171:9: note: in expansion of macro ‘SOC_DOUBLE_RANGE_TLV’
->   171 |         SOC_DOUBLE_RANGE_TLV("DAC HPMIX Playback Volume",
->       |         ^~~~~~~~~~~~~~~~~~~~
-> /build/stage/linux/include/sound/soc.h:150:61: error: ‘shift_right’ undeclared here (not in a function)
->   150 |         .private_value = SOC_DOUBLE_VALUE(xreg, shift_left, shift_right, \
->       |                                                             ^~~~~~~~~~~
-> /build/stage/linux/include/sound/soc.h:46:19: note: in definition of macro ‘SOC_DOUBLE_S_VALUE’
->    46 |         .rshift = shift_right, .min = xmin, .max = xmax, \
->       |                   ^~~~~~~~~~~
-> /build/stage/linux/include/sound/soc.h:150:26: note: in expansion of macro ‘SOC_DOUBLE_VALUE’
->   150 |         .private_value = SOC_DOUBLE_VALUE(xreg, shift_left, shift_right, \
->       |                          ^~~~~~~~~~~~~~~~
-> /build/stage/linux/sound/soc/codecs/rk3308_codec.c:171:9: note: in expansion of macro ‘SOC_DOUBLE_RANGE_TLV’
->   171 |         SOC_DOUBLE_RANGE_TLV("DAC HPMIX Playback Volume",
->       |         ^~~~~~~~~~~~~~~~~~~~
+> Thanks.
 > 
 
-Apologies I will check that out and resend.
-
-Thanks,
-Charles
