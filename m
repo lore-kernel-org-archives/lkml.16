@@ -1,145 +1,118 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 508A11FECAA;
-	Tue,  4 Mar 2025 11:57:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from ksmg01.maxima.ru (ksmg01.maxima.ru [81.200.124.38])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82153201018;
+	Tue,  4 Mar 2025 11:58:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=81.200.124.38
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741089483; cv=none; b=tclJTbagBVzM3oqXYehdpRZZyMcWJiKRbiQe4YcmW5jjQ0T40IFNLDgCYW5rOIeBmI6Svj3AwU6z4Xc5rlq7z6WFu9psya+CRY6i6vuPgMdxgX/i3rKl1BJt+VMYH4CQF9wwCgfCxxVDxFKt2LmAe696ARacrmtq3CGeIUpycbc=
+	t=1741089490; cv=none; b=lK1eFdFLEKIjJpt/NYaKy1/F7jAdgYH3dcsIk37De3YgGDjZLhrzakoTeJuSwaicploWESCLfWSyrTJr/cAihJ/gKtuUl9sPU2BKsFU+SQEJvxYkIY3nw9qlhEwNhnBei+WETsyIX8iJuHUPaV3LjgLlXmXTQLqJF9fwi8eX4n4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741089483; c=relaxed/simple;
-	bh=Nhu10BBEZYqhWwvbHcZpp6y3LPzTzrFgTqW0s1XBdmU=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=u9spylQ8Y+eyVaNjBY2jsyVvpt8GOxsSDUQsK4udq0KsqixAyBf/arHXi+eW0vkBtbILPdaj3G6gFXztFXaOirAVI8U21RN9bsBJI+uHhwzA+kElkNrMGCe7Zqr/sJY7BnuPXsb2vlthul5r5vH0A29evm1HHE2dTZhCQqvo3Rc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.62])
-	by gateway (Coremail) with SMTP id _____8AxmnHG6sZnKg+KAA--.39228S3;
-	Tue, 04 Mar 2025 19:57:58 +0800 (CST)
-Received: from [10.20.42.62] (unknown [10.20.42.62])
-	by front1 (Coremail) with SMTP id qMiowMCxLcXD6sZnQ401AA--.65028S3;
-	Tue, 04 Mar 2025 19:57:57 +0800 (CST)
-Subject: Re: [PATCH] LoongArch: KVM: Reload guest CSR registers after S4
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Tianrui Zhao <zhaotianrui@loongson.cn>, WANG Xuerui <kernel@xen0n.name>,
- kvm@vger.kernel.org, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org, Xianglai Li <lixianglai@loongson.cn>
-References: <20250303091114.1511496-1-maobibo@loongson.cn>
- <CAAhV-H7VGkmRhu+bV0ueLdbaaxuY7W9tLu3yyYeK75FLSvRaug@mail.gmail.com>
-From: bibo mao <maobibo@loongson.cn>
-Message-ID: <8f3ae3e5-6827-7c8d-2b80-726b56254ea1@loongson.cn>
-Date: Tue, 4 Mar 2025 19:57:19 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1741089490; c=relaxed/simple;
+	bh=mxkGe76fANnDNUd93SXNtSBMrY87h5WgLsqxXocUux8=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=UUcw5leQQqGUvRbwhnvBlWOwn0fUY/Ycrt8U8KapIcPog2VSsbe+j7p9tWx5Z6InR1gEEJpPbAJ5EyuGCZW4dw/q7HI9XehyeO8HHdgkU+ACHVIHH5nvvUkyVcRdhHugyIzR5iA6Qpxz0EEbKum+T2Uu3FU3YnQGuGyrl+7krPA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mt-integration.ru; spf=pass smtp.mailfrom=mt-integration.ru; dkim=pass (2048-bit key) header.d=mt-integration.ru header.i=@mt-integration.ru header.b=Uqrg+qR2; arc=none smtp.client-ip=81.200.124.38
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mt-integration.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mt-integration.ru
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=mt-integration.ru header.i=@mt-integration.ru header.b="Uqrg+qR2"
+Received: from ksmg01.maxima.ru (localhost [127.0.0.1])
+	by ksmg01.maxima.ru (Postfix) with ESMTP id 52DFDC000F;
+	Tue,  4 Mar 2025 14:57:57 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 ksmg01.maxima.ru 52DFDC000F
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mt-integration.ru;
+	s=sl; t=1741089477; bh=I+2PHlKZ/Tp6XTpd0mZkHPbi2TiqITlIRsNyBnyDVK8=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
+	b=Uqrg+qR2xSSGqhLQsZENJPDv82LWxWZXKH6/srWXO6zMjr+XgJXVijObEGPaSe8ku
+	 5XdiVSZYkG6zegSk9LiZ6/nQMtniKTjAsXMiu1z6h+o8fQQS5dNOdokgs1lKaOZu/c
+	 9DQFsfdwMEA+5AiWBP83UUUj9KkAP+gcydGYFLcNDvycBWmrHBt5T8lofha6Hmh8tp
+	 3XT0wBz4RHdFeNbKDzz08IhmRlGyth98THP4EvfT+OHJ3eZpaVaS6UOHpmPL7EPDiG
+	 1cKUeML4oP54RE8TOzEJIO6LT3TnW5L3ShbzgW4l4/B3b8jagXOrympzzrfVbUWezQ
+	 p1mMZNdP5hdIw==
+Received: from ksmg01.maxima.ru (autodiscover.maxima.ru [81.200.124.61])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(Client CN "*.maxima.ru", Issuer "GlobalSign GCC R3 DV TLS CA 2020" (verified OK))
+	by ksmg01.maxima.ru (Postfix) with ESMTPS;
+	Tue,  4 Mar 2025 14:57:57 +0300 (MSK)
+Received: from localhost.maximatelecom.ru (5.1.51.168) by mmail-p-exch01.mt.ru
+ (81.200.124.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.2.1544.4; Tue, 4 Mar 2025
+ 14:57:55 +0300
+From: Vitaliy Shevtsov <v.shevtsov@mt-integration.ru>
+To: David Rhodes <david.rhodes@cirrus.com>
+CC: Vitaliy Shevtsov <v.shevtsov@mt-integration.ru>, Richard Fitzgerald
+	<rf@opensource.cirrus.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown
+	<broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai
+	<tiwai@suse.com>, Lucas Tanure <tanureal@opensource.cirrus.com>, Charles
+ Keepax <ckeepax@opensource.cirrus.com>, <linux-sound@vger.kernel.org>,
+	<patches@opensource.cirrus.com>, <linux-kernel@vger.kernel.org>,
+	<lvc-project@linuxtesting.org>
+Subject: [PATCH] ASoC: cs35l41: check the return value from spi_setup()
+Date: Tue, 4 Mar 2025 16:56:37 +0500
+Message-ID: <20250304115643.2748-1-v.shevtsov@mt-integration.ru>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <CAAhV-H7VGkmRhu+bV0ueLdbaaxuY7W9tLu3yyYeK75FLSvRaug@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMCxLcXD6sZnQ401AA--.65028S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxXw4kAF48Wr45JryDXryxJFc_yoW5XF48pr
-	WUC3Z8trWrKr1Ik34qv3Z0qr4DuryDKr1Iv3yqqFyay3saqF1FgrWrKayDZFyUu3yFkF4I
-	qryrK3WY9F45JwcCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUvjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
-	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v2
-	6r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67
-	vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAF
-	wI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc4
-	0Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AK
-	xVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr
-	1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU25EfUUUU
-	U
+Content-Type: text/plain
+X-ClientProxiedBy: mt-exch-01.mt.ru (91.220.120.210) To mmail-p-exch01.mt.ru
+ (81.200.124.61)
+X-KSMG-AntiPhishing: NotDetected
+X-KSMG-AntiSpam-Auth: dmarc=none header.from=mt-integration.ru;spf=none smtp.mailfrom=mt-integration.ru;dkim=none
+X-KSMG-AntiSpam-Envelope-From: v.shevtsov@mt-integration.ru
+X-KSMG-AntiSpam-Info: LuaCore: 51 0.3.51 68896fb0083a027476849bf400a331a2d5d94398, {rep_avail}, {Tracking_from_domain_doesnt_match_to}, d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;127.0.0.199:7.1.2;ksmg01.maxima.ru:7.1.1;81.200.124.61:7.1.2;mt-integration.ru:7.1.1, FromAlignment: s, ApMailHostAddress: 81.200.124.61
+X-KSMG-AntiSpam-Interceptor-Info: scan successful
+X-KSMG-AntiSpam-Lua-Profiles: 191457 [Mar 04 2025]
+X-KSMG-AntiSpam-Method: none
+X-KSMG-AntiSpam-Rate: 0
+X-KSMG-AntiSpam-Status: not_detected
+X-KSMG-AntiSpam-Version: 6.1.1.11
+X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.1.1.8310, bases: 2025/03/04 09:41:00 #27591543
+X-KSMG-AntiVirus-Status: NotDetected, skipped
+X-KSMG-LinksScanning: NotDetected
+X-KSMG-Message-Action: skipped
+X-KSMG-Rule-ID: 7
 
+Currently the return value from spi_setup() is not checked for a failure.
+It is unlikely it will ever fail in this particular case but it is still
+better to add this check for the sake of completeness and correctness. This
+is cheap since it is performed once when the device is being probed.
 
+Handle spi_setup() return value.
 
-On 2025/3/3 下午10:06, Huacai Chen wrote:
-> Hi, Bibo,
-> 
-> On Mon, Mar 3, 2025 at 5:11 PM Bibo Mao <maobibo@loongson.cn> wrote:
->>
->> On host HW guest CSR registers are lost after suspend and resume
->> operation. Since last_vcpu of boot CPU still records latest vCPU pointer
->> so that guest CSR register skips to reload when boot CPU resumes and
->> vCPU is scheduled.
->>
->> Here last_vcpu is cleared so that guest CSR register will reload from
->> scheduled vCPU context after suspend and resume.
->>
->> Also there is another small fix for Loongson AVEC support, bit 14 is added
->> in CSR ESTAT register. Macro CSR_ESTAT_IS is replaced with hardcoded value
->> 0x1fff and AVEC interrupt status bit 14 is supported with macro
->> CSR_ESTAT_IS.
->>
->> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
->> ---
->>   arch/loongarch/kvm/main.c | 8 ++++++++
->>   arch/loongarch/kvm/vcpu.c | 2 +-
->>   2 files changed, 9 insertions(+), 1 deletion(-)
->>
->> diff --git a/arch/loongarch/kvm/main.c b/arch/loongarch/kvm/main.c
->> index f6d3242b9234..b177773f38f6 100644
->> --- a/arch/loongarch/kvm/main.c
->> +++ b/arch/loongarch/kvm/main.c
->> @@ -284,6 +284,7 @@ long kvm_arch_dev_ioctl(struct file *filp,
->>   int kvm_arch_enable_virtualization_cpu(void)
->>   {
->>          unsigned long env, gcfg = 0;
->> +       struct kvm_context *context;
->>
->>          env = read_csr_gcfg();
->>
->> @@ -317,6 +318,13 @@ int kvm_arch_enable_virtualization_cpu(void)
->>          kvm_debug("GCFG:%lx GSTAT:%lx GINTC:%lx GTLBC:%lx",
->>                    read_csr_gcfg(), read_csr_gstat(), read_csr_gintc(), read_csr_gtlbc());
->>
->> +       /*
->> +        * HW Guest CSR registers are lost after CPU suspend and resume
->> +        * Clear last_vcpu so that Guest CSR register forced to reload
->> +        * from vCPU SW state
->> +        */
->> +       context = this_cpu_ptr(vmcs);
->> +       context->last_vcpu = NULL;
-> This can be simplified as this_cpu_ptr(vmcs)->last_vcpu = NULL;
-Sure, will do.
-> 
->>          return 0;
->>   }
->>
->> diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
->> index 20f941af3e9e..9e1a9b4aa4c6 100644
->> --- a/arch/loongarch/kvm/vcpu.c
->> +++ b/arch/loongarch/kvm/vcpu.c
->> @@ -311,7 +311,7 @@ static int kvm_handle_exit(struct kvm_run *run, struct kvm_vcpu *vcpu)
->>   {
->>          int ret = RESUME_GUEST;
->>          unsigned long estat = vcpu->arch.host_estat;
->> -       u32 intr = estat & 0x1fff; /* Ignore NMI */
->> +       u32 intr = estat & CSR_ESTAT_IS;
-> This part has nothing to do with S4, please split to another patch.
-ok, will split into two patches.
+Found by Linux Verification Center (linuxtesting.org) with Svace.
 
-Regards
-Bibo Mao
-> 
-> Huacai
-> 
->>          u32 ecode = (estat & CSR_ESTAT_EXC) >> CSR_ESTAT_EXC_SHIFT;
->>
->>          vcpu->mode = OUTSIDE_GUEST_MODE;
->>
->> base-commit: 1e15510b71c99c6e49134d756df91069f7d18141
->> --
->> 2.39.3
->>
->>
+Fixes: 872fc0b6bde8 ("ASoC: cs35l41: Set the max SPI speed for the whole device")
+Signed-off-by: Vitaliy Shevtsov <v.shevtsov@mt-integration.ru>
+---
+ sound/soc/codecs/cs35l41-spi.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/sound/soc/codecs/cs35l41-spi.c b/sound/soc/codecs/cs35l41-spi.c
+index a6db44520c06..f9b6bf7bea9c 100644
+--- a/sound/soc/codecs/cs35l41-spi.c
++++ b/sound/soc/codecs/cs35l41-spi.c
+@@ -32,13 +32,16 @@ static int cs35l41_spi_probe(struct spi_device *spi)
+ 	const struct regmap_config *regmap_config = &cs35l41_regmap_spi;
+ 	struct cs35l41_hw_cfg *hw_cfg = dev_get_platdata(&spi->dev);
+ 	struct cs35l41_private *cs35l41;
++	int ret;
+ 
+ 	cs35l41 = devm_kzalloc(&spi->dev, sizeof(struct cs35l41_private), GFP_KERNEL);
+ 	if (!cs35l41)
+ 		return -ENOMEM;
+ 
+ 	spi->max_speed_hz = CS35L41_SPI_MAX_FREQ;
+-	spi_setup(spi);
++	ret = spi_setup(spi);
++	if (ret < 0)
++		return ret;
+ 
+ 	spi_set_drvdata(spi, cs35l41);
+ 	cs35l41->regmap = devm_regmap_init_spi(spi, regmap_config);
+-- 
+2.48.1
 
