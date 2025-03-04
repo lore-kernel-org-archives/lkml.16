@@ -1,89 +1,127 @@
-Received: from out162-62-57-137.mail.qq.com (out162-62-57-137.mail.qq.com [162.62.57.137])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f193.google.com (mail-yw1-f193.google.com [209.85.128.193])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39F722F46
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 02:06:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.137
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1766333D8;
+	Tue,  4 Mar 2025 02:08:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741053992; cv=none; b=SMld0zNVAVJ/fOtScrQ4BqV7itM1GBgtte6mMS5YGoPgV3ZWIqtBweVqHP2XnUkU4JgmxBF9Vf63sSgnJ+NEunI/RRT8h9Q8A7yAg9ZMFMsjn/ia6OIBJEYBH1wPUo1tpM0lx2pQeCxowROVQebOFmaJ6Cp5nSgp9AteZiGB0wA=
+	t=1741054141; cv=none; b=VHtEgo2E55Lr6OJCZgifmaviWWeq/plb9lyli2uXofNMb5WZZfX5vdP3DhAC9LCwb9Y2mh+on09tP9hpA5x2NoX2n1yDQbwCz/G+FmHMXe8rr8fJaiDn+1pI5TI5D7eDSFPSL+AaVexnwnrBxO/0tcWzaE+mwjnmGtekuzhIBwA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741053992; c=relaxed/simple;
-	bh=q8YHmyNgMsvW2HeGh3/5I4724NkslUAW7U5qEQXZbHI=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=W7UWhKonFnpsLlStV87EfnImvaXql2K8O5Leo2KUjo2ye9SR9aF5kIfEQUlZOgeW/c0xcvtTzKOVYWS7+btSkwCQIe5pUacBZdYQQD6o6c9DW29KlvR0RlDk4zJa/+VAUq8gUD1EF+n82b3SMrOe5L34bPN/2lI4C3Y7Eg4JfaA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=RzjK5Bnb; arc=none smtp.client-ip=162.62.57.137
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1741054141; c=relaxed/simple;
+	bh=CMTlN2042F1cPygssJ1pVpNt6nZSTMZWYy14BylY0bg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=SqjnS2VxhdgMdPiYLCRlgHYKgyI+QYWkXoy57NtCAgkRLqPh48vU8xnA7ZXfmK8WXWCboZgZvE9i+0fRduyQi3B/ID4mGvW+mDuIRtF1GUQgoSCi1dgUikTV3/7578w6Eunb2/VA8g64Ppwk4AQi3islRzHidd/IXSgMzrSazvM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=coBIWmTA; arc=none smtp.client-ip=209.85.128.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="RzjK5Bnb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1741053684; bh=OcErTu24xHtuc2/X1k3Y3noIn3GmgUak/szKDbzJK94=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=RzjK5Bnbc5rUtX8Wo89xAqsGtJbtWbVFYTxhU41Zian1V2Bte3vv4vLuI51sK9uwf
-	 VucaZuT1mQ5Vl4qv3YVvwqSEO/O11IfrPX6bJ0q68WWxFvEop51y5WOj0bb0HU8SCS
-	 h8VlxYAqQ3+tdjIHhV9F4RCk8h77o1hEQQssCeww=
-Received: from pek-lxu-l1.wrs.com ([114.244.57.157])
-	by newxmesmtplogicsvrszb16-1.qq.com (NewEsmtp) with SMTP
-	id 56A4E8B; Tue, 04 Mar 2025 10:01:22 +0800
-X-QQ-mid: xmsmtpt1741053682th7lkwn20
-Message-ID: <tencent_B976976066C3B3690374096D23B1845F3705@qq.com>
-X-QQ-XMAILINFO: MOpJcPT3Yy24PzqN7pwAGZcYvgjIDjsOGD5UhdudKpdVtjaw+8hCW9Om9l/NbT
-	 0eFJ06xnEwlxN36YQICa/RxdZRY3YEhKV3NSZDXGEB4pmu2H3GNMgYYRvwLKPS4vcMWQMatSp/tN
-	 YE7JTZ64KwxC/7i7SuwY8nbu8UC2tg0TtbbjBPhWRBw/wFk6fwT99we0gFNcdtWemtwap6wR2Fvc
-	 NZCbhSkTYkeBt6JLiuNcc01pxbwvB87XGV3XDHGf+slN+G9rKjuLjO0Cms6/zr852h0oJ+miV55j
-	 ZeYbuozqncnVDiZ4TdIQJ/TQN4yi2HFIZgm5BnBBqM46XxOSAGo7H3gnBH6iU85sux0OkgG12KrY
-	 M4W6m6gQJVz/c0E3pY3AJFOSZb3sp4yZv3AWMOkxFZ9IU7DzCVuO0WMtirfdzwTUk4c/rJeUghx0
-	 sIpnpbG+KKZzFtCZORYL2hFv/9dpYeuSzFUv8jCPMg8hBRXE3631P7Cc3MWMKSxuaWm9yOgISgUA
-	 9oEo8KrZfxl6pG2GgMHqEeMcMM+BWcp5RzruFGBqE65lgPzLbgVZK+TAInZrLtR1MpBZ+6Z5j6jq
-	 E1oMrA/hwPtHc1KY+TsiMjWJkUhDuRvZ3SReuyFOo+GrYxPTbOlE/Z1ZCnDnmO8u+FxQD2eb6heP
-	 zwQ0SOJcgymUVDwndQuRRFmZVFkENK6iFyMFe44/oFzMjM9m4gf5j9+M58D5gCbKCOgrK/FUQHKg
-	 rNY0lLD9IAVJz760hSyYa3OXBaNEubNKq2hdP8WqbvOdLvEzoPUcjnItTtcoQog1VNuprpsTCcoK
-	 rBlbBA0Lf0vvpjHmQinhz+k2pirGZr7Q0uK6S6n1LUU+7V9qga134LwYmJ+0Wh2kIEZGEsrTkV9o
-	 DZYZ/xsYE6YuG1MO/jFBMXAttF78rNnTF+H9oPNKgLM0Noj71jsyZ/kk8zXrhW1jZhJbbC3Y/73R
-	 qBp3XKRBhKvt4hmk8fO8XReN0Zg2l+
-X-QQ-XMRINFO: M/715EihBoGSf6IYSX1iLFg=
-From: Edward Adam Davis <eadavis@qq.com>
-To: syzbot+8f9f411152c9539f4e59@syzkaller.appspotmail.com
-Cc: linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [xfs?] [mm?] WARNING: bad unlock balance in __mm_populate
-Date: Tue,  4 Mar 2025 10:01:23 +0800
-X-OQ-MSGID: <20250304020122.5256-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <67c49230.050a0220.55417.04d5.GAE@google.com>
-References: <67c49230.050a0220.55417.04d5.GAE@google.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="coBIWmTA"
+Received: by mail-yw1-f193.google.com with SMTP id 00721157ae682-6fd719f9e0dso15598267b3.1;
+        Mon, 03 Mar 2025 18:08:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741054139; x=1741658939; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Uprm3w7QSLW+3a1cofYW+cceQk8H3e14YKGxf9c5SEc=;
+        b=coBIWmTA++2Am+Yb5/Wxl4cm/Jmd8m4m6FMZ3EU37r7vDTJAvpm7ziCv3+rmw9K3gw
+         OdEhi3sg/4S3L/iu1+lLP6LSALH0vndwY7h3EFlCwlTf9RyImP3w1IfyyqXiCqOD0KLJ
+         3VKyQ3iraRg3hRdFjG5r49RCHg6rzaBN/x1TC8/sxpHuPwq/lZ558R6BkGNXrHBMJKOb
+         VgQAgSaDRs4+5Zr8APidXL7xOPl50Falf5WzkhJyq1zhoPcMk1V0iKt7IB5HNfTYuNF0
+         y441qjbaUiLUjxMj0AwLIinLWJytg9eEmkD2Y959ymiuBmMx9dI5DtgdQC/z0iygVdeW
+         7mnA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741054139; x=1741658939;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Uprm3w7QSLW+3a1cofYW+cceQk8H3e14YKGxf9c5SEc=;
+        b=H4jeAMbLpXjGJ9Py9jceEIPbwhvkqX8k0QC1akzVr5lXRpgO86WFOmLynK5J0tJEjB
+         sDT1P3M7Ur6LjFwor3E/OcWzoFGPqEshcvRQVFNVN8biuPLEudHQ7xdCGoighd/AQyrn
+         c1J0o7uysMorADPRDTdzwzmWQdRgW+lJABkmFTKom+jqGwddl+QbIgz6VCIvj4OhLiNl
+         KQ4imv1xExhm9OB8dpntzzJCH2eoiFBIcsmnJ0DsD2Ryc1WAVdhKwu1STxbIrAShyPRb
+         pnjs5MHXEZwA7Yo2V9ku3SlnqQ7yuJnQ0urBCwqY8NdxZ0ydOaQH/4btUZe0VHvdruOJ
+         3qTQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUry5J3y7bRbaYJgjqK42QOYX38gj1GeuNKTGPd6NLwILxk2CrMwq9lQZplz4nOWHpI6oE=@vger.kernel.org, AJvYcCVYx1fj34nogjAVt/HHdvy0+XDE7BARJrFnQ6qIXqpIboU5P6Atvuz+XHCRephGl8e4sxYJf1XBp1Tk89yk@vger.kernel.org, AJvYcCVur22qSBFFnkFaffuTJP/jc583ny2BNarDOP8muztHvMY+ZGbJYyzKc00a6EADxfz+R/WhHbHx@vger.kernel.org, AJvYcCWbb0Amakf9gd9rseVdy9scwyRRqsHV3AUfEP/5zV3osIeJnDvhRFEbPRmURTdqJ1lIjBNrSpE9uvxHWjuKWj2YNSuL@vger.kernel.org
+X-Gm-Message-State: AOJu0YxRdQmUmgePLcIXqiT23pghEYv2HAN1dw7RvUSGR2RXS3lLnHa7
+	zlepg2sWDbiFeaIq2gFD1WuJLWWYVr1ISiCHamQFVqjKkSmiyJ0HfeaRxn59hS9oCkRtGJe02aY
+	VyffLLseZaKzNhuAf6yXRCxokpYI=
+X-Gm-Gg: ASbGncuOxRlUvluJsHHSBAjLiwKdzIFr+j+3tfuIa3B5pYY7kEW4IRMzWnH+Xiyu2yw
+	9EokWH2gbspCe+zWTmWG5SeaEwZEMn+mKaqc8V0IFQQ+MHRzkpdOqmXGQ0HP6vfxLdJ4euTTmZ+
+	is1c9Shphhgxn/E+si5SQPQY3peg==
+X-Google-Smtp-Source: AGHT+IGNh2K54VaqDxAbwZPq6ghZwf/0d9iTd28qnutLtwuc/n0G9myX7k8yUwefwHhFhOUKlgvRS6Iy3hX/wt2iX1c=
+X-Received: by 2002:a05:690c:3506:b0:6ef:6fef:4cb6 with SMTP id
+ 00721157ae682-6fd49ea038fmr219227267b3.0.1741054138974; Mon, 03 Mar 2025
+ 18:08:58 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250303065345.229298-1-dongml2@chinatelecom.cn>
+ <20250303065345.229298-4-dongml2@chinatelecom.cn> <20250303110559.5a584602@gandalf.local.home>
+In-Reply-To: <20250303110559.5a584602@gandalf.local.home>
+From: Menglong Dong <menglong8.dong@gmail.com>
+Date: Tue, 4 Mar 2025 10:07:22 +0800
+X-Gm-Features: AQ5f1JqbmerWbAPhQH3CompG0G6GUmmcqJsAR9G321CVuef2yZdxRX3kR81QiyY
+Message-ID: <CADxym3ZJf3TEMwCy4JVT1gs9GP=U1n1qss3ycnuMZVyp9TfDdw@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v3 3/4] x86: implement per-function metadata
+ storage for x86
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: peterz@infradead.org, mark.rutland@arm.com, alexei.starovoitov@gmail.com, 
+	catalin.marinas@arm.com, will@kernel.org, mhiramat@kernel.org, 
+	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
+	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, ast@kernel.org, 
+	daniel@iogearbox.net, andrii@kernel.org, martin.lau@linux.dev, 
+	eddyz87@gmail.com, yonghong.song@linux.dev, john.fastabend@gmail.com, 
+	kpsingh@kernel.org, sdf@fomichev.me, jolsa@kernel.org, davem@davemloft.net, 
+	dsahern@kernel.org, mathieu.desnoyers@efficios.com, nathan@kernel.org, 
+	nick.desaulniers+lkml@gmail.com, morbo@google.com, samitolvanen@google.com, 
+	kees@kernel.org, dongml2@chinatelecom.cn, akpm@linux-foundation.org, 
+	riel@surriel.com, rppt@kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	bpf@vger.kernel.org, netdev@vger.kernel.org, llvm@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-#syz test
+On Tue, Mar 4, 2025 at 12:05=E2=80=AFAM Steven Rostedt <rostedt@goodmis.org=
+> wrote:
+>
+> On Mon,  3 Mar 2025 14:53:44 +0800
+> Menglong Dong <menglong8.dong@gmail.com> wrote:
+>
+> > In the third case, we make the kernel function 32 bytes aligned, and th=
+ere
+> > will be 32 bytes padding before the functions. According to my testing,
+> > the text size didn't increase on this case, which is weird.
+> >
+> > With 16-bytes padding:
+> >
+> > -rwxr-xr-x 1 401190688  x86-dev/vmlinux*
+> > -rw-r--r-- 1    251068  x86-dev/vmlinux.a
+> > -rw-r--r-- 1 851892992  x86-dev/vmlinux.o
+> > -rw-r--r-- 1  12395008  x86-dev/arch/x86/boot/bzImage
+> >
+> > With 32-bytes padding:
+> >
+> > -rwxr-xr-x 1 401318128 x86-dev/vmlinux*
+> > -rw-r--r-- 1    251154 x86-dev/vmlinux.a
+> > -rw-r--r-- 1 853636704 x86-dev/vmlinux.o
+> > -rw-r--r-- 1  12509696 x86-dev/arch/x86/boot/bzImage
+>
+> Use the "size" command to see the differences in sizes and not the file s=
+ize.
+>
+> $ size vmlinux
+>    text    data     bss     dec     hex filename
+> 36892658        9798658 16982016        63673332        3cb93f4 vmlinux
 
-diff --git a/mm/gup.c b/mm/gup.c
-index 3883b307780e..4caa7c635320 100644
---- a/mm/gup.c
-+++ b/mm/gup.c
-@@ -1998,7 +1998,11 @@ int __mm_populate(unsigned long start, unsigned long len, int ignore_errors)
- 	struct vm_area_struct *vma = NULL;
- 	int locked = 0;
- 	long ret = 0;
-+	static char poping = 0;
- 
-+	if (poping)
-+		return 0;
-+	poping = 1;
- 	end = start + len;
- 
- 	for (nstart = start; nstart < end; nstart = nend) {
-@@ -2042,6 +2046,7 @@ int __mm_populate(unsigned long start, unsigned long len, int ignore_errors)
- 	}
- 	if (locked)
- 		mmap_read_unlock(mm);
-+	poping = 0;
- 	return ret;	/* 0 or negative error code */
- }
- #else /* CONFIG_MMU */
+Great! It seems that the way I tested has something wrong. I'll
+compare the text size with "size" command later.
 
+Thanks!
+Menglong Dong
+
+>
+> -- Steve
