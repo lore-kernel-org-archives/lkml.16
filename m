@@ -1,75 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A43E1FF614;
-	Tue,  4 Mar 2025 10:29:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC4AC1FFC4C;
+	Tue,  4 Mar 2025 10:29:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741084160; cv=none; b=R8+GnPb0qUoUiZNuKlL6o0Y0m3Tw0c6+HdElZO7bF48/56NN/0KY+32A5kDpVhhRIYGCmIF35wDNGseeuSZBTgVesdOWJObcjhozeFoFSMFgo52xEg9ZkjcrBU17ozQj7gk/+GD+zqXajMkoGgVLPWUOA3LI3nidqj827Aw9HVo=
+	t=1741084187; cv=none; b=WZL3vqPFPzTTpoEiuy/q/M/AAdxAB1DHmrmKhN6F46eh34HoaAunYUG1KNGjRXaua1vn3fZq2pud+Ll52SPhFNBs5c4oJAn2bcKU26Ca2LUhJOH9OVykAQQISPABK7pdrsCHNM5T64OwWrb6H3EuANNK4TJpXyXRhDv3sRkY+ec=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741084160; c=relaxed/simple;
-	bh=EplWlSoRJA83AmlqX8c2hMFGp2dhjVihkkYBWa3OdiY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=TAs4udC6/mvihVmCtC3vaEuMm9MYa1zB55tdWktKQs8kn/G1seEAIIyiYza5xERH1udqTyss7rpWaYX3QqmTeraxrlXTYKNZzy9ZzTSrLUl209HKhftFkNcmbxs/7EAE99VwnwQJlZnikXxhYUAmY5T54JOYyI04wYvR/cykOrw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pCEw2nDV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741084187; c=relaxed/simple;
+	bh=pI0HJfwpbAZaW1922lZNHz2lBW0wLacOGRUyghQ1l8c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=P0ETrgZGjt3ejxlk5Z4etOpntsgWluLtcZL89E2P6GZzhP/ihfnRa2tndjk1c5b8KSK/ALwSZDVZth0eYh9JECiobDTJTNsEtk/sPFlghw0uIZIZlwzaWSE6PyqpwIABJt2GED5VcT7tH4PuYAiFDQf9fYHxnakCpvSpro4u0ps=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=UILNwCCN; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pCEw2nDV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A307AC4CEE5;
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="UILNwCCN"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id E98C840E0216;
+	Tue,  4 Mar 2025 10:29:39 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id CAE7udcNv7Us; Tue,  4 Mar 2025 10:29:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1741084175; bh=qp7g7t4g+xuD39/na+PShGGbLo7cwlzyR6sGXzc71sQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=UILNwCCNd9Yu8FvBz86+UZarp09ZZcfFagyUDl/8edLiIlpQlmRUqRzgIoha8fKDl
+	 lvbJlwoFqHAJZZHzxppxwaFEnmGdX0gZHKkTX1dmxGWHusbqPcYXK29pN2wpINDXq4
+	 ApIFUwU7Xa5LOewX0pUFeYpmyFyudevUAMz2E/X1esTrV5VVRY6OONZpkJVnGgKrLf
+	 avQm7q9gdu7tq1AB1YuHXZ0ztYX6sqrE3bq87zIOCd3o6wetGbLAZgH8B7sCaakdz7
+	 IMbLU3QIYYjEIRE347rkaF26V/QyRn4zLlm+fRfdoBQFAeXVNSKNKcxLIq+2Qit9LM
+	 ZCOygS2slQyojNuY7ZQ13ArM9jRSKg7avhD5aRvHFLYfzPTfebKBLjnkSsH+EFNlAN
+	 llE/629/EtehYezxEgbjkPlha13VZJc2uniFpuy0Q+fIMfwwj6Ybns/O20HwFZK1Tt
+	 kGpYy/wpq0z984cHsxS4hnTrSjKeQHNnWkLK2ARC5FtkSuWD0hL9r11RgM8EEC0haC
+	 caQGFKc8CZe4mWiJVOHPNktH+rH+ioZV2SSoSBMciAZaWv9UnMiRGyGK/tc2InFYok
+	 l1VPnIH8/FGbLELfwxqvUEbpbJ0BMO5sLPrSansDNSCwhG7m0A4DwoTIwnWjeMszkY
+	 afdelxI8J/2GjQcI5LYe56kY=
+Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id BEE3540E0214;
 	Tue,  4 Mar 2025 10:29:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741084158;
-	bh=EplWlSoRJA83AmlqX8c2hMFGp2dhjVihkkYBWa3OdiY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=pCEw2nDVmaMxddk+m0CxK9txDxc76pc+CXngQjvGIXPsu0HykeXtCHepJ6nX9feIX
-	 HKFp+zbC3ngQmgzo2RAbfhObvVm+KSGUal7pEeGi/hTkg44iiNaF90pfa4lIKS3x6o
-	 Qvv0rxoRcAfLjQraZH4FMzphDqWSBACDQ6AULldtUPt69f+9gV7aeP+3fhHZsYsS2h
-	 c6NDfUovmdiz1WiidYCZqJX/3OcC4dMtOix2g19bY8lLJUzGVYCTHEX7VW+ia8uRW+
-	 JTA+GJ3zSWBKsQQ4UrA8ekhsTQF1nLIgFUqjXDZl4SoNAY7OPAqXNudJCEdAeF8hVF
-	 /NmyTeDsE7c5A==
-From: William Breathitt Gray <wbg@kernel.org>
-To: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
-Cc: William Breathitt Gray <wbg@kernel.org>,
-	alexandre.torgue@foss.st.com,
-	olivier.moysan@foss.st.com,
-	linux-iio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-stm32@st-md-mailman.stormreply.com
-Subject: Re: [PATCH] counter: stm32-lptimer-cnt: fix error handling when enabling
-Date: Tue,  4 Mar 2025 19:28:42 +0900
-Message-ID: <174108402893.227977.9200776572329997415.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250224170657.3368236-1-fabrice.gasnier@foss.st.com>
-References: <20250224170657.3368236-1-fabrice.gasnier@foss.st.com>
+Date: Tue, 4 Mar 2025 11:29:10 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: Xin Li <xin@zytor.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>, "Aithal, Srikanth" <sraithal@amd.com>,
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com,
+	x86@kernel.org, will@kernel.org, peterz@infradead.org,
+	yury.norov@gmail.com, akpm@linux-foundation.org, acme@kernel.org,
+	namhyung@kernel.org, brgerst@gmail.com, andrew.cooper3@citrix.com,
+	nik.borisov@suse.com
+Subject: Re: [PATCH v6 3/5] x86/cpufeatures: Generate a feature mask header
+ based on build config
+Message-ID: <20250304102910.GAZ8bV9hXqVb5tA9rs@fat_crate.local>
+References: <20250228082338.73859-1-xin@zytor.com>
+ <20250228082338.73859-4-xin@zytor.com>
+ <7c3b4623-45ea-4340-ac47-334071c1d15f@amd.com>
+ <D03DAFD2-5EC9-4D16-BA66-FDA4B51F45DD@zytor.com>
+ <20250303132505.GEZ8WtsXqFpuMOpDjT@fat_crate.local>
+ <8e4e1723-321a-4e8e-bbac-e2e5d8b08bfc@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Developer-Signature: v=1; a=openpgp-sha256; l=758; i=wbg@kernel.org; h=from:subject:message-id; bh=voCn1RjNuoiczOEdMALQZ3vX+Eb+fDa/WmXmEaBSPz8=; b=owGbwMvMwCW21SPs1D4hZW3G02pJDOnHru6brC/xqmPi2tDZG2b0cfjqJiZluXM5y1dI3N1vp uKiV7Kro5SFQYyLQVZMkaXX/OzdB5dUNX68mL8NZg4rE8gQBi5OAZjIqkmMDCear2b9vbU4Ikb1 hO1OrsO/Xhd1LJvO3pB5sfEPz+94s4eMDG9Osugv4eVMn6adcZt1R4JAkaitr2HlzADdaZnVCh4 eXAA=
-X-Developer-Key: i=wbg@kernel.org; a=openpgp; fpr=8D37CDDDE0D22528F8E89FB6B54856CABE12232B
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <8e4e1723-321a-4e8e-bbac-e2e5d8b08bfc@zytor.com>
 
+On Tue, Mar 04, 2025 at 02:18:51AM -0800, Xin Li wrote:
+> It seems that 'archprepare' works, however I'm not sure if it's the best
+> choice.  Any suggestion?
 
-On Mon, 24 Feb 2025 18:06:57 +0100, Fabrice Gasnier wrote:
-> In case the stm32_lptim_set_enable_state() fails to update CMP and ARR,
-> a timeout error is raised, by regmap_read_poll_timeout. It may happen,
-> when the lptimer runs on a slow clock, and the clock is gated only
-> few times during the polling.
-> 
-> Badly, when this happen, STM32_LPTIM_ENABLE in CR register has been set.
-> So the 'enable' state in sysfs wrongly lies on the counter being
-> correctly enabled, due to CR is read as one in stm32_lptim_is_enabled().
-> 
-> [...]
+Why do you even need featuremasks_hdr as a prereq?
 
-Applied, thanks!
+I still don't get the dependency there.
 
-[1/1] counter: stm32-lptimer-cnt: fix error handling when enabling
-      commit: 8744dcd4fc7800de2eb9369410470bb2930d4c14
+In any case, you'd have to redo your patches - we've zapped them from tip.
 
-Best regards,
+> Want me to add it btw?
+
+Yes pls.
+
+Thx.
+
 -- 
-William Breathitt Gray <wbg@kernel.org>
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
