@@ -1,250 +1,237 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from EUR03-AM7-obe.outbound.protection.outlook.com (mail-am7eur03on2057.outbound.protection.outlook.com [40.107.105.57])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3F0C28F922;
-	Tue,  4 Mar 2025 16:26:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741105614; cv=none; b=SOfHL5nuN3OsYfh5JITxntBM6pUAvmQfZGn0IzEfyQhaWpaFenK5wZhtfjmjVJLKj8bV8zMTfJbRTM/Ky/nAixod2idy381YkGTeyCmjn5Fa/De3SzwSZXYEVhh4RUwS+cU7V6PQ2d1C6uDZHuJ9U6Y8m9MBsI96dyfArnYsG+0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741105614; c=relaxed/simple;
-	bh=ZWnvFIc1+4MI0HYCuKBIkGMsjz8nj9Zh4MxXjUd97j0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qElJ0J1bhtGtOGaBWTWMftx7T1usNML5O4+jU7D+L8+uZl8JEpaASUw9Itsep8DUe9YIVGJUc6+p6fu7weUP4+nge/HL1/FaiomoEVjj59YdoKcuGq12fn+AAeYiXokYqfX6hS5qf4hdlduvAu7OtRrxk2xFeQF3H3pixg3Ffkc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nDpZh5Bv; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE18D2862AB;
+	Tue,  4 Mar 2025 16:27:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.105.57
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741105642; cv=fail; b=GitMGgyq3k+llb6VorlzXV/YL2n7vBCJxydE1t7VM+FernONXpTgGJNoOUd6eqrN8YpZQYwB9n/nmt+Cr2fh/VcGStYPmEu2p8VuJBn5Xf4ZS6Rfue1AGs/Z75NJIbvZeFucYbAr0LuwM9bnH/NByptbucdXCl9LAcZBKuYToP4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741105642; c=relaxed/simple;
+	bh=k7xbUlloyPo2RtxNyB4XcwOYKMrzEtIzYPVyKX0R9PU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=dXNCldb7H/PZrDheetLFG4YExLr9wY7LpS/EYTrKHwYfEL7en+bvRmDzsNoYvLYfhYewOSPwtYaZSPiaffHFX3NYs9HUTxHGadGbHyUS1fyMHsOL+RRiACzC7S4YTDr6YUHP9ODalhamt/rMhELIKduAV0sPbna9oA8LnC1ik4I=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=blvSa8Jf; arc=fail smtp.client-ip=40.107.105.57
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nDpZh5Bv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741105613; x=1772641613;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=ZWnvFIc1+4MI0HYCuKBIkGMsjz8nj9Zh4MxXjUd97j0=;
-  b=nDpZh5BvlKZrcD/Tu4YwwHS8kFjE6I6C1WnUVsOba4KdMMQZ+fLjkP1Z
-   sDT2qhxI2fWZvzeAPjXflCpsX5sEV45f2MzPkr6wrUn+1H5Yd2rC+j3NW
-   tRmX+9nHbJ6Qw4rlNLgmAUX0YlR1pE6xjQrvRmwEAT3KAANn9rxmWYtlL
-   64y3PUYGyXe2OpdmUu2XeigjL7T++MqoTsBOJoXnJlIoYj6qX3aw6r6wV
-   ohdRL3QUvMfrqYWAQtagcEFQqWHpXoyaRcvd1DQVCY2EH0eaQbHYxYx8L
-   qXLZFMJ7+5jorF5rjTbjSiDZbFoNNhi9GzTLv5i917Z1c2CCWLWCANmzr
-   w==;
-X-CSE-ConnectionGUID: Z6AbWIk2Qt6dNvhHF0f8hA==
-X-CSE-MsgGUID: HOg0U3EyQu2x6awxVgucGw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11363"; a="42157629"
-X-IronPort-AV: E=Sophos;i="6.14,220,1736841600"; 
-   d="scan'208";a="42157629"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2025 08:26:52 -0800
-X-CSE-ConnectionGUID: bD8s7er+QNGStOhvajRWsQ==
-X-CSE-MsgGUID: QSaChyglQ+ezeqmh9xaW/A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,220,1736841600"; 
-   d="scan'208";a="123022127"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmviesa005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2025 08:26:51 -0800
-Received: from [10.246.136.14] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.14])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id 266BA20B5736;
-	Tue,  4 Mar 2025 08:27:12 -0800 (PST)
-Message-ID: <987b099a-2add-486e-a7bd-ffa5ebfc2426@linux.intel.com>
-Date: Tue, 4 Mar 2025 11:26:48 -0500
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="blvSa8Jf"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=EB3ImQO1WvNzNAwrJfhCIfhS0l57WnXyrnfASinPbTFMaurgINo2WIPzlRq0JV7ZELfr/C3NwyYPzAuD19gWgzdFrzp48tEeV6Piayp/c3fHggKaX8E8oP8OdoDrhjk4/PxlqjCj20sjocyiBVI7/waoDfRuQheHoy85yU0ZyX1SS01JPJNklnyauj4RwRJUEJcRWcn5oBelcJpO3agqNKBcBK0dCKv0R6OdxhDuLKqnO3Bb2oqjWri70uAGLjFLpmIP0fJCMZJlIdVTKWpR6tPLys67Yral+yZUuRl1bBwChMSM6qFD8Lc6b9IhIEOJPjPt5Z/k2PHz04zjNNg0Tw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ckT05wTEhij0B0lX37U9ibmcidSITwwtmI+6Om0aMyQ=;
+ b=KjuR+Wn5MCflEuSmk3CK/Cw+UV1dVhw2F8xQSWJjGcczrhx48sn1JbmlLzO3d+X6bIv4WuNRjejBs9WlotA8Ad3F2IL1gS5DsMXq4fAPoTcB2a6y/YPur3zwAMXb0WZFBQH5S3Zrb5m+nB8GRfHI8NnQrJBNDiqMg9YlP5KqwX+7I4AEFHqPTWI9XEPF47AcfYgOiBzEWJTeVcEb9PP/c2891ZNuOTeEI7NpZa5ll83B7GbhZNdbQqQkXp7BsOsFqAJMtaYX/x92KNMLK+SekrKvyyh3EQgKw2QnsdZt1ytqmb5Fw6NC3dZVYVMASpzvaQhR/QfPJzRR6RSpwiOwoQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ckT05wTEhij0B0lX37U9ibmcidSITwwtmI+6Om0aMyQ=;
+ b=blvSa8Jf6+ogGu468QlIJV86RyM5cxPPLWD/Q132gwim69igsI73Wj3z36t6kf6JyHfu8zkgeWZHq/BhO3fZVkcZu7mCxzYnIXyLHZThis+zsQX6YCOWrn5zQkPIyA8uZ1Cf8dD83fHDnucRiFTIxLmt/9ezS0p6ckSF6wiqjixKZm7QIttF8AVsQZysLP9UeVhVk8Pv8Z9nk4YwaDGflf/g8drSauWY/yRnuOCyA3OKomlpTgXCiefFNx6YRgZ5plYlApwXJMVjED/qJ10JIXpTkr/L14A7DG0Yc0yQz9QDF5wCqbAU8k1qAqJuzaKl1yyCNANqobgla/0c4nnDRg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from DB9PR04MB9626.eurprd04.prod.outlook.com (2603:10a6:10:309::18)
+ by DU7PR04MB11137.eurprd04.prod.outlook.com (2603:10a6:10:5b1::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.23; Tue, 4 Mar
+ 2025 16:27:17 +0000
+Received: from DB9PR04MB9626.eurprd04.prod.outlook.com
+ ([fe80::e81:b393:ebc5:bc3d]) by DB9PR04MB9626.eurprd04.prod.outlook.com
+ ([fe80::e81:b393:ebc5:bc3d%4]) with mapi id 15.20.8489.025; Tue, 4 Mar 2025
+ 16:27:17 +0000
+Date: Tue, 4 Mar 2025 11:27:03 -0500
+From: Frank Li <Frank.li@nxp.com>
+To: florin.leotescu@oss.nxp.com
+Cc: Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Michael Shych <michaelsh@nvidia.com>, linux-hwmon@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	viorel.suman@nxp.com, carlos.song@nxp.com,
+	linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev,
+	festevam@gmail.com, Florin Leotescu <florin.leotescu@nxp.com>
+Subject: Re: [PATCH v3 1/3] dt-bindings: hwmon: Add Microchip emc2305 yaml
+ schema
+Message-ID: <Z8cp1xoIXT8lgD8T@lizhi-Precision-Tower-5810>
+References: <20250304162136.1963384-1-florin.leotescu@oss.nxp.com>
+ <20250304162136.1963384-2-florin.leotescu@oss.nxp.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250304162136.1963384-2-florin.leotescu@oss.nxp.com>
+X-ClientProxiedBy: BY1P220CA0001.NAMP220.PROD.OUTLOOK.COM
+ (2603:10b6:a03:59d::14) To DB9PR04MB9626.eurprd04.prod.outlook.com
+ (2603:10a6:10:309::18)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Patch v2 18/24] perf/x86/intel: Support arch-PEBS vector
- registers group capturing
-To: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>,
- Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo
- <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
- Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>,
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- Dapeng Mi <dapeng1.mi@intel.com>
-References: <20250218152818.158614-1-dapeng1.mi@linux.intel.com>
- <20250218152818.158614-19-dapeng1.mi@linux.intel.com>
- <20250225153257.GQ11590@noisy.programming.kicks-ass.net>
- <bda04ccd-fa90-4f14-89cc-9835de36bcfb@linux.intel.com>
- <a62bfd22-0469-46cc-954d-8331aa2922e9@linux.intel.com>
- <71c0f66a-9ee8-4c01-8a29-2c6faf015b4d@linux.intel.com>
-Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <71c0f66a-9ee8-4c01-8a29-2c6faf015b4d@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DB9PR04MB9626:EE_|DU7PR04MB11137:EE_
+X-MS-Office365-Filtering-Correlation-Id: b3ffe4ae-463f-4466-f835-08dd5b396db4
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|1800799024|7416014|52116014|376014|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?wHsKxBIogj2E3rt2DAHtUNy/3yfvHgsMCxlLgZnkjdE7wgDXSSE1xTC4nHhC?=
+ =?us-ascii?Q?BSEwK64ZtL+ugQOKCJaWDhkKVOXWsLrzkPTbG4/ZojHRqfotMoUqQkLwXhNg?=
+ =?us-ascii?Q?DqiAtsogkKDALhr0aiCpGDcMyhx4iN18TPTbPUkObtKebAmmH77kiw3k495k?=
+ =?us-ascii?Q?+UvYaMKqOvhXxOF95yA65ppabOlnqtsf+XQ+itFM5tho25PVJMPqdJM5TDsX?=
+ =?us-ascii?Q?4eQCeotqhIEdWGDqbYhTSJ+TX3m5v7byx+7uu1GHKt6z76gpj4UlumJ2SMff?=
+ =?us-ascii?Q?lYUEpC7btfbROvsZD5u0JtqUIzAkT/5sPaJlK5hDUh1fIZuBT6S0LbjTHt7i?=
+ =?us-ascii?Q?pTmaJkgojORM3afCL/gcv1XA8jEVn0MrigmV1kBf11VcvnyIcvbe0GOdm5g1?=
+ =?us-ascii?Q?3A8lP9+RghpYn4kvKPCeMQEvNNOemDaCjIhijaojtcLls10m7F6SR7mds5Dl?=
+ =?us-ascii?Q?HmuTsOZzEausj3pLuCBNKgc4SZ2Ggzr21e+xd/sF+J0BY/J7w/IYAOxIkmvE?=
+ =?us-ascii?Q?kCw/++Yt9xrVDDV655YSmIYOSjG+pR4Z3tdh2sEjc2ctGhARrC1pTdtxBskP?=
+ =?us-ascii?Q?ro/Qs+PU9WfXL9oCFfwkaeIIGPcUb5G07Wd6d3usWZNxU6R0tl06lehs4C6A?=
+ =?us-ascii?Q?iRz/pn0Dxws3BObVXAzGw4iCDJ0RYeCmg5Ousv8gWaQDIko4giA76+j7PejU?=
+ =?us-ascii?Q?5DPvJBKlITx6Dphbv2r9NfR38SnS7txXqgwKPCa/lTkvuTu5eu5Fp6/VmeBC?=
+ =?us-ascii?Q?Xqbc4RcxlDH8qtsjeWIOSidrnlrcBycJywzkCproKnrXyAN8v4p9ivfQaxUY?=
+ =?us-ascii?Q?t+hXlSXveJzY35+AG8q4ljvWOl2Qv0Xv28Ik1MppQOPYGj/vgAOZMc6AN78G?=
+ =?us-ascii?Q?oUmFS9gCGSoBoCF9/WtPob7Ddnfqrjl8ir6EWx7hN5eqno1Dwc8Kw2x4KKTS?=
+ =?us-ascii?Q?SW49pwfTNAkHlnHu7gKj+VBUXJi5u7hpoG5CIy7OI9IK+ClK5ZRlEzt2VAIv?=
+ =?us-ascii?Q?7WF6fDwF98vF/AoyHH7xbIs19nkXkUUsptk2UVriObgrtjGnpiPgjT+B8lim?=
+ =?us-ascii?Q?20ifQyFY5y3f+c1p5z9HDH9257A9GlqDaB4L2iQdYqwem63n/Y1WjjGoqVhW?=
+ =?us-ascii?Q?z1rNKrgvFXxqyJzuwmUPsVNqNnxUgHutkuVBfL4zDK90d2hzirHhAbNToL38?=
+ =?us-ascii?Q?O2bSvIKTDmgBaMZncXfI6mBw0/lbNnr6jFyFb50JHEfQBTyu1rHDz8Dpm5Ws?=
+ =?us-ascii?Q?/s1/6fgysxI6chwObmJS5A14POZO2eyGMIICnk0i+gVehXvUJjTgDwubxrTa?=
+ =?us-ascii?Q?0KieFKSOnYJWF6CZyR8K7097zJtAG9DPJZbQtQVCRtALmPrIveq3JQN21jyj?=
+ =?us-ascii?Q?N26VvJUjYH9Bw04FJsKN73x1DQju?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB9PR04MB9626.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(52116014)(376014)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?hHW59JKoVe/N/ZHgXO7W5g5o4E3G5Gx+CEoLlOGbw6MysWJ1vTrUdyYWB/+9?=
+ =?us-ascii?Q?qaigKdy4wtyj3Fe98kXVBre/oGDp3vDl01BIG1lIyF0/xb0m9xTlQgncUiL6?=
+ =?us-ascii?Q?ohq1nuhVwUjPmVjYj8ZBQQ9LbeA++RtSHUcHZG4ZPYSRJDa/2MPG2K2h9MWt?=
+ =?us-ascii?Q?gXVwiK7U/A3MUwxfNWWRoiLTZwWOIC1vctYuwR/r8fR1L2S0kiJ+jjyCT1DS?=
+ =?us-ascii?Q?znGzEBTiO6G4Ra/A9kNLBwrrc8SIM5ta+p5GiEzLit1B0Xyjw01n1TUX7cca?=
+ =?us-ascii?Q?ZTNwNVpC36aFo43ZNcKKbBNu+KWYlUaZbWNx7xCDrcJ2sCpxfRuEKP/K+cZB?=
+ =?us-ascii?Q?l5yeKXt9CocXgkIffvbeqp/18+JAC/WdDt7mdl40k6RT2/L4RhX4Wdur143f?=
+ =?us-ascii?Q?HRbxdv2V5il98mvVqEWItmdm220GtYqsveJa+yhaVKp0xROdf6PPUBK1sU9k?=
+ =?us-ascii?Q?Udklxplg33U7grZk9u8eS/Pr2HC52divBj97KsYblK/enO+5pxmtvIPNMf+0?=
+ =?us-ascii?Q?xYwIY+agudKzNQX50A/RfpKRw5LWUPU1OTdTegCC94iF5umnzoOqXG6aFnzD?=
+ =?us-ascii?Q?MYmJnWqevuiq5ZV4Wy+2X6pEZ73Z0yxh9uCBZxCiScxMDCmY+39lbRGq+54M?=
+ =?us-ascii?Q?KUCeFQTzBVvmS/uV5drpTCw84iZPSIthFt947mbso38vTyDPCJoPi+gC2P+4?=
+ =?us-ascii?Q?XKYRrnfAYhqEvvXDIZz0rpzL1l1ZgKJILxqhN7a+SHYkf3J2cRQSUDLJVmgW?=
+ =?us-ascii?Q?Inx6x//AC+gcstLst9mwtMd236adpetBOpAnR4zQHqz0wJ92Vpx84kkbPUth?=
+ =?us-ascii?Q?yJWDmVyycqqazEDQsxYf6YSaLVuGuvKvXFYBxg+Ofec/Sl/H6wgCt41vW8Xn?=
+ =?us-ascii?Q?TRJamov1GM08T1Ay5YFIZdqnQDht5jmTDwI7SSbLwLKZle2AJ7TQbn+RSsc6?=
+ =?us-ascii?Q?loaIBOEONeLXDJVGkBBudiDebKFHHt+BBg7NWxvsMbnTqCpFhLMNiCmhv4Bg?=
+ =?us-ascii?Q?x2yvJz80nHR3qYTkQYjIJF+nftRz8w+ryYfSJkKEnphYr4mYcSMBeVWgyEAD?=
+ =?us-ascii?Q?gnnjPioehY7twBZUDg16fPTayCJIHyXXGPAsHd9lc2/MJmUWYvR9/ydpMkiN?=
+ =?us-ascii?Q?uKUHjm3w/SxYNG5sEzXNmnQu0r7JWXq3i9oXk+QD3DDBz2aGb8szm7Wpv7k+?=
+ =?us-ascii?Q?PdeTHO6JsNz2xaECUEkuS8lgWEABx5A4TVSyN82l2K9AqNdtme3ZRHthxU+N?=
+ =?us-ascii?Q?AIx/Q0kZZ9U6ZHvJX8xVXozxGPwy9OoA4piDMAWMJX7gsadDN83epQLvalB6?=
+ =?us-ascii?Q?EP8OPCulUfeQdxO0rifCSDs6nMKBMWwhAXw9AX1BAxnTOu1yAzLkgemuM/us?=
+ =?us-ascii?Q?mKjgbd+UBsexBdEflA4uhymhYirzqGdfk8K+e1qX09i6gNTnnilD+jLeLGmD?=
+ =?us-ascii?Q?mHUjZ5JfWvThryHKAXYmhzLE8yIgtlxerdwIrbKsYDulA7DdsEF8iWieIyG5?=
+ =?us-ascii?Q?7cecvfWUGxtPbqLoe0KmW5v7I1wh98hqmubnpv4CHMuHcUqnbIAfoV0Ki7ST?=
+ =?us-ascii?Q?YzfgYhQdeiLrGQogaF+DI4pNKOSBb/AG6aOtwHOD?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b3ffe4ae-463f-4466-f835-08dd5b396db4
+X-MS-Exchange-CrossTenant-AuthSource: DB9PR04MB9626.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Mar 2025 16:27:17.1361
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: THCRa4PIPDrYR9il8vtHaz6jWeTK28enqJT2cNRvy9Mc9mnT64M1IxiH/pZkg4k1AdBGj883DI0BTSL/uG74gw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU7PR04MB11137
 
+On Tue, Mar 04, 2025 at 06:21:34PM +0200, florin.leotescu@oss.nxp.com wrote:
+> From: Florin Leotescu <florin.leotescu@nxp.com>
+>
+> Introduce yaml schema for Microchip emc2305 pwm fan controller.
+>
+> Signed-off-by: Florin Leotescu <florin.leotescu@nxp.com>
+> ---
+>  .../bindings/hwmon/microchip,emc2305.yaml     | 43 +++++++++++++++++++
+>  1 file changed, 43 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/hwmon/microchip,emc2305.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/hwmon/microchip,emc2305.yaml b/Documentation/devicetree/bindings/hwmon/microchip,emc2305.yaml
+> new file mode 100644
+> index 000000000000..cac0075a65bb
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/hwmon/microchip,emc2305.yaml
+> @@ -0,0 +1,43 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/hwmon/microchip,emc2305.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Microchip EMC2305 SMBus compliant PWM fan controller
+> +
+> +maintainers:
+> +  - Michael Shych <michaelsh@nvidia.com>
 
+who is it? look like not Microchip and hwmon maintainer.
 
-On 2025-03-03 10:08 p.m., Mi, Dapeng wrote:
-> 
-> On 2/27/2025 2:40 PM, Mi, Dapeng wrote:
->> On 2/26/2025 4:08 PM, Mi, Dapeng wrote:
->>> On 2/25/2025 11:32 PM, Peter Zijlstra wrote:
->>>> On Tue, Feb 18, 2025 at 03:28:12PM +0000, Dapeng Mi wrote:
->>>>> Add x86/intel specific vector register (VECR) group capturing for
->>>>> arch-PEBS. Enable corresponding VECR group bits in
->>>>> GPx_CFG_C/FX0_CFG_C MSRs if users configures these vector registers
->>>>> bitmap in perf_event_attr and parse VECR group in arch-PEBS record.
->>>>>
->>>>> Currently vector registers capturing is only supported by PEBS based
->>>>> sampling, PMU driver would return error if PMI based sampling tries to
->>>>> capture these vector registers.
->>>>> @@ -676,6 +709,32 @@ int x86_pmu_hw_config(struct perf_event *event)
->>>>>  			return -EINVAL;
->>>>>  	}
->>>>>  
->>>>> +	/*
->>>>> +	 * Architectural PEBS supports to capture more vector registers besides
->>>>> +	 * XMM registers, like YMM, OPMASK and ZMM registers.
->>>>> +	 */
->>>>> +	if (unlikely(has_more_extended_regs(event))) {
->>>>> +		u64 caps = hybrid(event->pmu, arch_pebs_cap).caps;
->>>>> +
->>>>> +		if (!(event->pmu->capabilities & PERF_PMU_CAP_MORE_EXT_REGS))
->>>>> +			return -EINVAL;
->>>>> +
->>>>> +		if (has_opmask_regs(event) && !(caps & ARCH_PEBS_VECR_OPMASK))
->>>>> +			return -EINVAL;
->>>>> +
->>>>> +		if (has_ymmh_regs(event) && !(caps & ARCH_PEBS_VECR_YMM))
->>>>> +			return -EINVAL;
->>>>> +
->>>>> +		if (has_zmmh_regs(event) && !(caps & ARCH_PEBS_VECR_ZMMH))
->>>>> +			return -EINVAL;
->>>>> +
->>>>> +		if (has_h16zmm_regs(event) && !(caps & ARCH_PEBS_VECR_H16ZMM))
->>>>> +			return -EINVAL;
->>>>> +
->>>>> +		if (!event->attr.precise_ip)
->>>>> +			return -EINVAL;
->>>>> +	}
->>>>> +
->>>>>  	return x86_setup_perfctr(event);
->>>>>  }
->>>>>  
->>>>> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
->>>>> index f21d9f283445..8ef5b9a05fcc 100644
->>>>> --- a/arch/x86/events/intel/core.c
->>>>> +++ b/arch/x86/events/intel/core.c
->>>>> @@ -2963,6 +2963,18 @@ static void intel_pmu_enable_event_ext(struct perf_event *event)
->>>>>  			if (pebs_data_cfg & PEBS_DATACFG_XMMS)
->>>>>  				ext |= ARCH_PEBS_VECR_XMM & cap.caps;
->>>>>  
->>>>> +			if (pebs_data_cfg & PEBS_DATACFG_YMMS)
->>>>> +				ext |= ARCH_PEBS_VECR_YMM & cap.caps;
->>>>> +
->>>>> +			if (pebs_data_cfg & PEBS_DATACFG_OPMASKS)
->>>>> +				ext |= ARCH_PEBS_VECR_OPMASK & cap.caps;
->>>>> +
->>>>> +			if (pebs_data_cfg & PEBS_DATACFG_ZMMHS)
->>>>> +				ext |= ARCH_PEBS_VECR_ZMMH & cap.caps;
->>>>> +
->>>>> +			if (pebs_data_cfg & PEBS_DATACFG_H16ZMMS)
->>>>> +				ext |= ARCH_PEBS_VECR_H16ZMM & cap.caps;
->>>>> +
->>>>>  			if (pebs_data_cfg & PEBS_DATACFG_LBRS)
->>>>>  				ext |= ARCH_PEBS_LBR & cap.caps;
->>>>>  
->>>>> @@ -5115,6 +5127,9 @@ static inline void __intel_update_pmu_caps(struct pmu *pmu)
->>>>>  
->>>>>  	if (hybrid(pmu, arch_pebs_cap).caps & ARCH_PEBS_VECR_XMM)
->>>>>  		dest_pmu->capabilities |= PERF_PMU_CAP_EXTENDED_REGS;
->>>>> +
->>>>> +	if (hybrid(pmu, arch_pebs_cap).caps & ARCH_PEBS_VECR_EXT)
->>>>> +		dest_pmu->capabilities |= PERF_PMU_CAP_MORE_EXT_REGS;
->>>>>  }
->>>> There is no technical reason for it to error out, right? We can use
->>>> FPU/XSAVE interface to read the CPU state just fine.
->>> I think it's not because of technical reason. Let me confirm if we can add
->>> it for non-PEBS sampling.
->> Hi Peter,
->>
->> Just double confirm, you want only PEBS sampling supports to capture SSP
->> and these vector registers for both *interrupt* and *user space*? or
->> further, you want PMI based sampling can also support to capture SSP and
->> these vector registers? Thanks.
+> +
+> +description: |
 
-I think one of the main reasons to add the vector registers into PEBS
-records is because of the large PEBS. So perf can get all the interested
-registers and avoid a PMI for each sample.
-Technically, I don't think there is a problem supporting them in
-non-PEBS PMI sampling. But I'm not sure if it's useful in practice.
+Needn't |
 
-The REGS_USER should be more useful. The large PEBS is also available as
-long as exclude_kernel.
+> +  Microchip EMC2301/2/3/5 pwm controller which supports up
+> +  to five programmable fan control circuits
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - microchip,emc2301
+> +      - microchip,emc2302
+> +      - microchip,emc2303
+> +      - microchip,emc2305
 
-In my opinion, we may only support the new vector registers for both
-REGS_USER and REGS_INTR with PEBS events for now. We can add the support
-for non-PEBS events later if there is a requirement.
+According to your driver code look like all compatible with microchip,emc2301
 
-Thanks,
-Kan
+oneOf:
+  - enum:
+      - microchip,emc2301
+  - items:
+      - enum:
+          - microchip,emc2302
+          - microchip,emc2303
+          - microchip,emc2305
+      - const: microchip,emc2301
 
-> 
-> Hi Peter,
-> 
-> May I know your opinion on this? Thanks.
-> 
-> 
->>
->>>
->>>>> diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
->>>>> index 4b01beee15f4..7e5a4202de37 100644
->>>>> --- a/arch/x86/events/intel/ds.c
->>>>> +++ b/arch/x86/events/intel/ds.c
->>>>> @@ -1437,9 +1438,37 @@ static u64 pebs_update_adaptive_cfg(struct perf_event *event)
->>>>>  	if (gprs || (attr->precise_ip < 2) || tsx_weight)
->>>>>  		pebs_data_cfg |= PEBS_DATACFG_GP;
->>>>>  
->>>>> -	if ((sample_type & PERF_SAMPLE_REGS_INTR) &&
->>>>> -	    (attr->sample_regs_intr & PERF_REG_EXTENDED_MASK))
->>>>> -		pebs_data_cfg |= PEBS_DATACFG_XMMS;
->>>>> +	if (sample_type & PERF_SAMPLE_REGS_INTR) {
->>>>> +		if (attr->sample_regs_intr & PERF_REG_EXTENDED_MASK)
->>>>> +			pebs_data_cfg |= PEBS_DATACFG_XMMS;
->>>>> +
->>>>> +		for_each_set_bit_from(bit,
->>>>> +			(unsigned long *)event->attr.sample_regs_intr_ext,
->>>>> +			PERF_NUM_EXT_REGS) {
->>>> This is indented wrong; please use cino=(0:0
->>>> if you worry about indentation depth, break out in helper function.
->>> Sure. would modify it.
->>>
->>>
->>>>> +			switch (bit + PERF_REG_EXTENDED_OFFSET) {
->>>>> +			case PERF_REG_X86_OPMASK0 ... PERF_REG_X86_OPMASK7:
->>>>> +				pebs_data_cfg |= PEBS_DATACFG_OPMASKS;
->>>>> +				bit = PERF_REG_X86_YMMH0 -
->>>>> +				      PERF_REG_EXTENDED_OFFSET - 1;
->>>>> +				break;
->>>>> +			case PERF_REG_X86_YMMH0 ... PERF_REG_X86_ZMMH0 - 1:
->>>>> +				pebs_data_cfg |= PEBS_DATACFG_YMMS;
->>>>> +				bit = PERF_REG_X86_ZMMH0 -
->>>>> +				      PERF_REG_EXTENDED_OFFSET - 1;
->>>>> +				break;
->>>>> +			case PERF_REG_X86_ZMMH0 ... PERF_REG_X86_ZMM16 - 1:
->>>>> +				pebs_data_cfg |= PEBS_DATACFG_ZMMHS;
->>>>> +				bit = PERF_REG_X86_ZMM16 -
->>>>> +				      PERF_REG_EXTENDED_OFFSET - 1;
->>>>> +				break;
->>>>> +			case PERF_REG_X86_ZMM16 ... PERF_REG_X86_ZMM_MAX - 1:
->>>>> +				pebs_data_cfg |= PEBS_DATACFG_H16ZMMS;
->>>>> +				bit = PERF_REG_X86_ZMM_MAX -
->>>>> +				      PERF_REG_EXTENDED_OFFSET - 1;
->>>>> +				break;
->>>>> +			}
->>>>> +		}
->>>>> +	}
->>>>>  
->>>>>  	if (sample_type & PERF_SAMPLE_BRANCH_STACK) {
->>>>>  		/*
-> 
+So your driver just need one "microchip,emc2301" compatible string.
 
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    i2c {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        emc2301: pwm@2f {
+> +            compatible = "microchip,emc2301";
+> +            reg = <0x2f>;
+
+If only one reg:
+You can go through trivial-devices.yaml
+
+Frank
+
+> +        };
+> +    };
+> --
+> 2.34.1
+>
