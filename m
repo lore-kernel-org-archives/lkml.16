@@ -1,234 +1,143 @@
-Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2054.outbound.protection.outlook.com [40.107.21.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98D88202964;
-	Tue,  4 Mar 2025 10:38:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.21.54
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741084716; cv=fail; b=PZ8J3WJVrPaQoitg7OTU069L+LlQDsIkNLWnPnxRBnC9ZDNp7cuxElLu/ptyfPYHAEhthuBOORad2d8TTQPuHHYpwy8wLjmkVpBMInGxQY2tIko7FpOgAfhoST1Dweeaevl3MppFnhuGfNkp48HK58WXWzOq+2kmX5CbyuzJU2Y=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741084716; c=relaxed/simple;
-	bh=3h/tOrfPNw+Iln9yjiDDqK8691nRjvFCH5PO5ZRuzdQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=ZYalxLMk+o9HvOnvkG5hCZafvWx4CJdY+CgTkkP5q7eGnLkPkzV/kbWhHryXXqWDaLfg6Lu6YOGZpVyhCdLw7HfDDSrvNdVOA7gmhe0LvedVhB7RNCFUNRirOsWDOvN9/XfGI7akGaSrv5cBmS7nsU//pVH/cpvOe/ZjqF8Wl1g=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mt.com; spf=pass smtp.mailfrom=mt.com; dkim=pass (2048-bit key) header.d=mt.com header.i=@mt.com header.b=gSuplPGq; arc=fail smtp.client-ip=40.107.21.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mt.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mt.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 013B52063C6
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 10:38:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741084719; cv=none; b=nWvcYzxjELaDvaPUjZhA/XmxgLP0GjyufW2a/wq7PYzGKR8u5DAOuGVAsVj5AqIN99NNSJCFRpSvsy5URjqKK7VdT7yKRrcAOGYT1vZnYL4i1tiODQoT9pAxJUSNgkobRjMhBK3k6h7EWfSs1e4gX/8sRL8hf7pzUcWmA+gcmrU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741084719; c=relaxed/simple;
+	bh=+Bw7XirvpxT5oKw5f1yKqDDpyEZbMtAIUVlUkrhS4eg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WbAeW3A3bZrZpKsOQJ8EISoE0Xknrie0Y3pe58jhGlTmfCUJbGCW6CBwOGEFxPYAdhv9+u9jauBx8fwxIEZ+11JtCS2pNMytsn1FnuxnzHeVnfw67klfbTF8sOm5BD57PdGQKmFXZSUSzLYP5a9eDOBfvXbowhk3ywQHWaz/avc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com; spf=pass smtp.mailfrom=cloud.com; dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b=FjtZgQEH; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloud.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mt.com header.i=@mt.com header.b="gSuplPGq"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=S4ydpqUy64A6pWeTw5cz743mBix1cyghthLhppeyWfUeMcRsWEBn6nF4E4K8S6uUUQP35/n0IWIIG6qhfZ8DnO22PQR777uHKeAoENcB0hQh/xlsKSa/yC30TOY7hYN4LlRSslHBV9bN4KIf0Da2Jp+WyXsXX0Iavv0oHQrwA4m1ls276p/fALIj/NziGoScgDuegYxQYn8VACtxIRCy3Wsem1EpbqKTPL82I0i3eFatECunKapDllUTbgCcMJhSFlhpHd8cukT8rfj6z54TAivD2GbwON5UkzfimgTqcDiAHZts4BOa+nDowfa27F0jg6gYImKwNioFALxV6WmRSg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=LF2d3dZHWL4GZh7gC1xWXm7kUt+pul+NNcIb0b8Mx2s=;
- b=vpBUaQS3JdNbFpF+TwGr5zfGJJwRn3V6mxc7lyfR15hLz6oFA+cS5VIQj3Tjb9Lwnl9Z3IVOBv3eH5LDbswHpEQJHE+mGPEpznKwpeDawVlqD0pceHulDLXfwozwXPZWLUORMYbV/Jv+jD6x7R8lWRgqEK/IQEopvMkZphMBiGzWx+Ai+nBHhVeI0PSydlaUSEfAY0MuNmcIeQrOff+DknJb0K1+K2tLXosJviMuPubyvS30M2AA0u1OlS3ZEXePPDSJh6Ynm2DW5GYe3KDmuATj2NAyQdHPFVlT6ttmkbvJZe16cG6RsU/Ti9zFk2RAPRsTWnyUdGMyvmmgr2EJ0Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mt.com; dmarc=pass action=none header.from=mt.com; dkim=pass
- header.d=mt.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mt.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LF2d3dZHWL4GZh7gC1xWXm7kUt+pul+NNcIb0b8Mx2s=;
- b=gSuplPGqWy6lPrLJReZ9ufG5sN/+Z4cVnry9xeAsZvkWQ7PVOi/ikA9hFoUXVEklu8RaLSVFHtlrbvNe96/grInBwzZdyL0rUUmtgJ4lgtmo3vuHRGjUV5Gc52mY60c6os8NQ5Vb0YnwfSbusboLxhgmjMRRc4vXzRquPxRufwKi0QssAb2tKbX7eGPT8HJniND4KRXAnvpfj4e89zBSOavCFOBsKX87TT3LIvBky+WPn9RZiiS9Jp7fHnKaMbEw03GpQqUsaWBehf/5rWL5zg8fUPTdFrB+22/E2nkm+Ac+pin6QAzgaQnoGw7WS5OkYJim4mXopjMXeMh/G42raQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=mt.com;
-Received: from VI0PR03MB10400.eurprd03.prod.outlook.com
- (2603:10a6:800:203::15) by AS8PR03MB7383.eurprd03.prod.outlook.com
- (2603:10a6:20b:2ef::16) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.16; Tue, 4 Mar
- 2025 10:38:31 +0000
-Received: from VI0PR03MB10400.eurprd03.prod.outlook.com
- ([fe80::48f6:ae9a:fcdf:b5bd]) by VI0PR03MB10400.eurprd03.prod.outlook.com
- ([fe80::48f6:ae9a:fcdf:b5bd%6]) with mapi id 15.20.8489.025; Tue, 4 Mar 2025
- 10:38:31 +0000
-From: Mathis Foerst <mathis.foerst@mt.com>
-To: linux-kernel@vger.kernel.org
-Cc: Mathis Foerst <mathis.foerst@mt.com>,
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	linux-media@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	manuel.traut@mt.com,
-	mathis.foerst@zuehlke.com
-Subject: [PATCH v2 7/7] media: mt9m114: Set pad-slew-rate
-Date: Tue,  4 Mar 2025 11:36:47 +0100
-Message-Id: <20250304103647.34235-8-mathis.foerst@mt.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250304103647.34235-1-mathis.foerst@mt.com>
-References: <20250304103647.34235-1-mathis.foerst@mt.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: ZRAP278CA0008.CHEP278.PROD.OUTLOOK.COM
- (2603:10a6:910:10::18) To VI0PR03MB10400.eurprd03.prod.outlook.com
- (2603:10a6:800:203::15)
+	dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="FjtZgQEH"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-43bc63876f1so14136675e9.3
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Mar 2025 02:38:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=citrix.com; s=google; t=1741084715; x=1741689515; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=W4qVVOExrtRW+entKLUaKt+MVkIEX24hGaFt2+MT4Vo=;
+        b=FjtZgQEHzsSyFRa1nacgbUbOwVTQAcRQ5MFw8cQ8LZFdu3yZgN8ozviVTc6Idutc0y
+         vaW4gyMVFH0wTeDwnJ9Qo9IDMKbtkf03kr5EiIX9laBGFzAVWms7+uQjgBl4hYxnhnBX
+         zklCF5hDou187DRbphdollKt9r+VxfsS/qhMk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741084715; x=1741689515;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=W4qVVOExrtRW+entKLUaKt+MVkIEX24hGaFt2+MT4Vo=;
+        b=vvkVv2jGktkiSoxIxmdxS+wWaZ/veaFqrObyGBSakI60YWvcMljUlZ7ppFDXZykHI4
+         E0UJwWJipPHLlYfNCnpISZsAIv5AvVwpuRaNTudgWFPOJjJhp4vFnWL+Z6a+8FjXVeo5
+         1ulDoUjt0AErhi8BVxWMCFxvvSUTIwSe8mWmwLyV/iPP7YAUAwYh3YJF7mqi9gJLv5cz
+         PPCMD6N3TJnieF13uUqMa1CTg6lwwr2belqM3L4TmB2LI1kSbWllEc5Y7FW+aJ6Qj1qL
+         RTwlFE+1PVUBGCTkcOOsfzr7SZgfzzynBO6WWGyCDOAGazCQDhrvr9EwUe1I0YjKZB1M
+         hRIw==
+X-Forwarded-Encrypted: i=1; AJvYcCWyiU28AwV6baZkMaR6X2tPjL5w6aX8EMmCxR9EeEfBoggcJveKwwVr49KIr75+mxDX07rC34iJ8EbfXTw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzw9WXGSp9wTC285tHzG3OMugGsDul3XPJnddcJpsAug4JJzQmb
+	6xkwpoYjgfDEDKr6MnYemoPcAKQs090Q1ScmipHCtVU9T3RaEhISEiDiLNGkd0A=
+X-Gm-Gg: ASbGncuUMLCAcStDfi8uAnF0z6jsl/1bnnP+rmznAJEneDyCrw6c1CfSOxXdqriH1Za
+	80rw5FXzcc3PFhgTstDr/2vcUmFTicPBy3kw4EDnrNhBJUC/X6j5yvOqVLwjNjYpx6ta7QDhihr
+	7gROhOcVpEtVGyMEbflBg0o0roor7X1rwRRalRK3vl+EW4GqJqFjk9LlhWo/PtrBVoGw2TxOHlF
+	weNzesEG51lp6AopIPRudygwpxq3cBD2jTb6zVgFYyR/IBr//RrrZWmh9Rg4Xf4qC8ClvmwoQwS
+	6lF6ePfnS0DFgJPiubcIlknmy+pqAi0yZ3pGqUcEau/mn6gg65+F10bM8fPpNoH2G60ZwWJMHd2
+	MaF0FJu2i
+X-Google-Smtp-Source: AGHT+IGDzu80tz1rHJvOV0uZWSIgAnFYmFBxu/NV0NJKiiusnGA5MNIT3f8/IIJK2mMGb4yfc07nQA==
+X-Received: by 2002:a05:600c:3ba8:b0:43a:9ef6:77ec with SMTP id 5b1f17b1804b1-43ba697ef79mr129556435e9.23.1741084715192;
+        Tue, 04 Mar 2025 02:38:35 -0800 (PST)
+Received: from [192.168.1.10] (host-92-26-98-202.as13285.net. [92.26.98.202])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43b7a28b285sm194398265e9.33.2025.03.04.02.38.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 04 Mar 2025 02:38:34 -0800 (PST)
+Message-ID: <01367a6b-8eeb-417e-9a66-e7a64d518319@citrix.com>
+Date: Tue, 4 Mar 2025 10:38:33 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: VI0PR03MB10400:EE_|AS8PR03MB7383:EE_
-X-MS-Office365-Filtering-Correlation-Id: 47000a53-ba1b-477b-2e94-08dd5b08b555
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|7416014|52116014|366016|1800799024|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?k+MDBnLeFi9LMKO3m6ZiEwLg6gLnj06uw2u/BVlBag/nguvvyNLiJ+jg8hzk?=
- =?us-ascii?Q?fjD6yBlZLrmAiOteEaxnySclYb1iuj2vw33XMeA8ZP0hv4KyIPmeT//4r4xO?=
- =?us-ascii?Q?0YmeLq5ARMsVmySanA+iFDvVUN89hdeHfvK/xR4OVuL8v1wLyDg0C8wlMYjp?=
- =?us-ascii?Q?y+9q64pjjXvoQa1AOaYsDRU99UuEOs0c6sEc/ixBcnRLTrp/MfegXxhTeJGv?=
- =?us-ascii?Q?vwTtr/VRUfKNsvt7CbWFuoiPOSWW8hU/lOeI7lov1W4mGbKMFGOX1iJpFDK+?=
- =?us-ascii?Q?ALNjptdC7KHAgzGYDdmCTwDtoMXZFzxAio7bwa6Xh0PIq7dHWy4nMoeSONs4?=
- =?us-ascii?Q?pdYboIbFnkzigHuQQNU+hbO1M1IFw1xyFlCEY4mGUT1JR33UAaTdYvpa/Ykw?=
- =?us-ascii?Q?5yoMmJH3BgB0P4igxcN+4drCZKuRyCW5kCoHrgrWc1Th72thvQ+ycRkOJ1qs?=
- =?us-ascii?Q?UAjOpId6xxjbKBqb/VvdZ12ZqhMD8JBwi+/WWCLvTYw0t4O11KZJpSx6/yOS?=
- =?us-ascii?Q?z5Hpi0WVeIEcwFqQEoIkYgUipiXrR9NaxZ0kOrr3Kwn23ufyOhGxIZ3iVXBJ?=
- =?us-ascii?Q?Nsv/jU9Hay8fM/wgTU9wt0OlyvVQItVSHBC/ROv2jff6ATBquRlnisivPB3d?=
- =?us-ascii?Q?oAqj5lZZZR/c4ZTodYKi3caqJfiIFF2wgvamKjcXMzffJpgAZ6Yc4YUVUlde?=
- =?us-ascii?Q?fWNgJGvEPAjze0e+OPxH4DLzwiVURMFMEJeuqQC3SZ7KAyz/3bJMBslR2ao5?=
- =?us-ascii?Q?qlglqtW+/pwZQqD+JDaoylDu4P3FR25IUEVAVGbpV7ytOkZtL2crf6wzXpQI?=
- =?us-ascii?Q?T3fpf8BJ1ujs+5C/RVksgA5TtJ0qpLxSR1zgijjmEU6sItD2y9AhgijKshxr?=
- =?us-ascii?Q?C0WIRiNxiFqzLKB54h8XG2F1uMpinzFJrtuJR0XNnHFx2+kp2MTQSp+FfYlO?=
- =?us-ascii?Q?l1eEljkbyXDMs9ohQQdxrrdp5Un7tC2cZkXPRTACqjFv6xxNK9N7fQl8VBQS?=
- =?us-ascii?Q?GiEtJzJBdiTUNETPvfsv2iLWSUVao/aOItSHKK00fUMKcL4xpr6n1pLfLpe3?=
- =?us-ascii?Q?4FbOxXtWz5fUSetmhML36Wc2Hc7QPjxel7t/NqBaM4P88QJIt0TpX2ygUlgh?=
- =?us-ascii?Q?4LEKORLeuLVfJQwMUIoVWQGtcKkPoB8gIWDdFFDK5eqFS3+sqP2H94sHr6ON?=
- =?us-ascii?Q?YinDPAN3ow6SFHXJdxON6Dvcpbhy1XNbsZc7xlBXyKSeioQvQMNqmS9D8Wk8?=
- =?us-ascii?Q?sLr95KALIaC6+RuZ4gsJiWOsfQ5Xb3UhnAdNLdKR2Ds2Tvgp9lTTYW11+Efa?=
- =?us-ascii?Q?t/ZWga/w4fME/nYs+xLzhc2Met+8XykD+9B0C6DICfagYoq3wGfhUpkgFEOz?=
- =?us-ascii?Q?qpEcKIaM3S+Yc9Tp2xAmK8RlDyfEblgsOfgMtRAndvAry9k+gb3p/pev/2Tu?=
- =?us-ascii?Q?4aK5XydVI2agnmdkvv2SNfzf1W4Y0VLQ?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI0PR03MB10400.eurprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(52116014)(366016)(1800799024)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?cL5qApNcYOt6/QSDUjNzXwn5PdTk/DUqjdeGfQaWAbupau7tYE7XnQhYSeaw?=
- =?us-ascii?Q?rsgf/9XzLs8GA1zlxgYKg1v7RoIDM8viEjjsKQ1Z9IohMw4lp2sSu7N7m3Ca?=
- =?us-ascii?Q?uKuj7l6aQgGXasjeie78EVdHcA6K8v131FuTFVVKaEx5NCJvsPSx42edD9GO?=
- =?us-ascii?Q?fPK482kzZix3jIPN5zJ/5mDY9pvoi6cNj6GubMIjPSj6SuJM0YWx5sfW85Ch?=
- =?us-ascii?Q?7oVYywHl/QxVzyoZsGNk+EvXdxd6kzk6mppw+unzGNR+RZ8xb3HHI2vK/pOA?=
- =?us-ascii?Q?81PJB3U1+6kPQ7FDynWJR1t3Iupfkoh9TwY+kwZrXSR7zDSmKxKyS+GnJ4nv?=
- =?us-ascii?Q?Uj2quizAHgob/824kjn0RH5C2K/FVCj7ziWU+yUkWGXJBmrNKyZ+ipaUyI+h?=
- =?us-ascii?Q?iTaA6g3/l3bAWcRSkmE0GxN6Um9zYwx/dE+mDveTejZQzH/4cDMvmyreZiED?=
- =?us-ascii?Q?TmIXgSHuy6uMVuUVn83JM2U7QbVbQEUYXodnQbe6LzX7HnADCcfeLBYiK8t5?=
- =?us-ascii?Q?KjKcJzyBOwMCfbLHDNWdKQruJQDXAqShyE86Lj0FDj0u4BUAACOBBIx+Ruyc?=
- =?us-ascii?Q?RCBx1v3XUzHGORcCA9a6YsxCldMtr7byjAyYhslIZvVNlI8esS/vci3aeB52?=
- =?us-ascii?Q?itRPN04hmZbqRlA3dwOEKKBu6wBUIOTn81fA4bgvU4wmDX5v2M7Hl59jt/zQ?=
- =?us-ascii?Q?FWl0Sp9e62NmnC4UrFsqqMbVuNOXbEBgeOvhwjKpdDwFIiflNCe3UkeBvkP2?=
- =?us-ascii?Q?DV4gGiwKBlhW1eem6p5HGPf/6JniaOt2l4JuNM8XBYZpq+ssPSu49w6D+r2X?=
- =?us-ascii?Q?VSWKQEqreSjMdgOchRL3hzIRz1axHCB/KiLEwELNjdfDfHR+ersixOwhx72m?=
- =?us-ascii?Q?azmi8jyJ3Rzar6D6NLGPqB+lnwiqm4jCo8p1optB5ekoDEN2iwpFh5z5V7Mf?=
- =?us-ascii?Q?IHN4b+ZqIQJc53WWiDPeJ4hpdNr9Wd2bkIX5AJny2qNtW1Fs3MCpT27aPlNn?=
- =?us-ascii?Q?lQoAJuOGi8WRu+2K4EMlUDj0DlvlONHW5drpI6OMNLK33bdSq0xdT2sBV87u?=
- =?us-ascii?Q?qk7ZwF8Hc5TVPuCrffWBoJxmyT2ojS5/P7PtdDW71sc4jR9kQVupyg9HV5Ja?=
- =?us-ascii?Q?5MqNz6C4AHGQK3mB/vnQgq5Hm2S4Eram4LAow+c/64+o2/Vsmnu0Wyvat40d?=
- =?us-ascii?Q?gHQSeISE0s59YLfk+eGm4BmzYs5CWcAUrOj4aoi6nEr80TCCc3vd2mdYmEwe?=
- =?us-ascii?Q?2Xd1/350UQhti97HbM+OVKn3c7B+AIozLkcHOllgOIafF228CXry49lk4kly?=
- =?us-ascii?Q?kOVkOM9u/pDKOBaHUck0X0wDvO9agN3aRVl3JJHyAntpuO1jYBQ/vmmHxAaC?=
- =?us-ascii?Q?6ujuZWL6t3pCWs4pS4qCb2UkHOlWHaR+cHY8S5vGb42Bas3GqzM/fJ1R+1xz?=
- =?us-ascii?Q?4YJlStJAUXgZgArK4DHQXqTm1CsnTAEWpywVXys3jod/ChJ089sEdi/w2mOT?=
- =?us-ascii?Q?3p/L9rvKEXRBEr/x2Bme26GhFAmsin03RCsalir27mjs6EftASm7DVrYqZR8?=
- =?us-ascii?Q?hNtXpcFtP43roZ+QAD2yzQf4/wPx3bZoRyerNXZW?=
-X-OriginatorOrg: mt.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 47000a53-ba1b-477b-2e94-08dd5b08b555
-X-MS-Exchange-CrossTenant-AuthSource: VI0PR03MB10400.eurprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Mar 2025 10:38:31.8188
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: fb4c0aee-6cd2-482f-a1a5-717e7c02496b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 9WdCv/G1x+VHM4GNw8hLEStg2PNspSUfqBxWLrcCmQyiEMHmrl9mYJWaeZ2ngK5OUoe6+H0djOztsrKO5n1I3A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR03MB7383
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 37/40] x86/cacheinfo: Extract out cache self-snoop
+ checks
+To: "Ahmed S. Darwish" <darwi@linutronix.de>, Borislav Petkov <bp@alien8.de>,
+ Ingo Molnar <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+ John Ogness <john.ogness@linutronix.de>, "H. Peter Anvin" <hpa@zytor.com>,
+ x86@kernel.org, x86-cpuid@lists.linux.dev,
+ LKML <linux-kernel@vger.kernel.org>
+References: <20250304085152.51092-1-darwi@linutronix.de>
+ <20250304085152.51092-38-darwi@linutronix.de>
+Content-Language: en-GB
+From: Andrew Cooper <andrew.cooper3@citrix.com>
+Autocrypt: addr=andrew.cooper3@citrix.com; keydata=
+ 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
+ 6+ahAA==
+In-Reply-To: <20250304085152.51092-38-darwi@linutronix.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-The MT9M114 supports the different slew rates (0 to 7) on the output pads.
-At the moment, this is hardcoded to 7 (the fastest rate).
-The user might want to change this values due to EMC requirements.
+On 04/03/2025 8:51 am, Ahmed S. Darwish wrote:
+> The logic of not doing a cache flush if the CPU declares cache self
+> snooping support is repeated across the x86/cacheinfo code.  Extract it
+> into its own function.
+>
+> Signed-off-by: Ahmed S. Darwish <darwi@linutronix.de>
 
-Read the 'pad-slew-rate' from the DT and configure the pad slew rates of
-the output pads accordingly in mt9m114_initialize().
-Remove the hardcoded slew rate setting from the mt9m114_init table.
+I know you're just refactoring code, but the SDM has basically reverted
+this statement about it being safe to skip WBINVD based on SELFSNOOP.
 
-Signed-off-by: Mathis Foerst <mathis.foerst@mt.com>
----
- drivers/media/i2c/mt9m114.c | 23 ++++++++++++++++++++---
- 1 file changed, 20 insertions(+), 3 deletions(-)
+It turns out not to be safe in cases where the underlying physical
+memory changes from cacheable to unchangeable.  By skipping the WBINVD
+as part of changing the memory type, you end up with spurious writebacks
+at a later point when the memory is expected to be UC.  Apparently this
+is a problem for CLX devices, hence the change in the SDM.
 
-diff --git a/drivers/media/i2c/mt9m114.c b/drivers/media/i2c/mt9m114.c
-index 9ab1147a9aaf..93e220854d20 100644
---- a/drivers/media/i2c/mt9m114.c
-+++ b/drivers/media/i2c/mt9m114.c
-@@ -42,6 +42,9 @@
- #define MT9M114_RESET_AND_MISC_CONTROL			CCI_REG16(0x001a)
- #define MT9M114_RESET_SOC					BIT(0)
- #define MT9M114_PAD_SLEW				CCI_REG16(0x001e)
-+#define MT9M114_PAD_SLEW_MIN					0x00
-+#define MT9M114_PAD_SLEW_MAX					0x07
-+#define MT9M114_PAD_SLEW_DEFAULT				0x07
- #define MT9M114_PAD_CONTROL				CCI_REG16(0x0032)
- 
- /* XDMA registers */
-@@ -388,6 +391,7 @@ struct mt9m114 {
- 
- 	unsigned int pixrate;
- 	bool streaming;
-+	u32 pad_slew_rate;
- 
- 	/* Pixel Array */
- 	struct {
-@@ -645,9 +649,6 @@ static const struct cci_reg_sequence mt9m114_init[] = {
- 	{ MT9M114_CAM_SENSOR_CFG_FINE_INTEG_TIME_MAX,	1459 },
- 	{ MT9M114_CAM_SENSOR_CFG_FINE_CORRECTION,	96 },
- 	{ MT9M114_CAM_SENSOR_CFG_REG_0_DATA,		32 },
--
--	/* Miscellaneous settings */
--	{ MT9M114_PAD_SLEW,				0x0777 },
- };
- 
- /* -----------------------------------------------------------------------------
-@@ -778,6 +779,13 @@ static int mt9m114_initialize(struct mt9m114 *sensor)
- 	if (ret < 0)
- 		return ret;
- 
-+	value = (sensor->pad_slew_rate & 0xF)
-+	      | (sensor->pad_slew_rate & 0xF) << 4
-+	      |	(sensor->pad_slew_rate & 0xF) << 8;
-+	cci_write(sensor->regmap, MT9M114_PAD_SLEW, value, &ret);
-+	if (ret < 0)
-+		return ret;
-+
- 	ret = mt9m114_set_state(sensor, MT9M114_SYS_STATE_ENTER_CONFIG_CHANGE);
- 	if (ret < 0)
- 		return ret;
-@@ -2376,6 +2384,8 @@ static int mt9m114_parse_dt(struct mt9m114 *sensor)
- {
- 	struct fwnode_handle *fwnode = dev_fwnode(&sensor->client->dev);
- 	struct fwnode_handle *ep;
-+	struct device_node *dev_node = sensor->client->dev.of_node;
-+	u32 slew_rate;
- 	int ret;
- 
- 	ep = fwnode_graph_get_next_endpoint(fwnode, NULL);
-@@ -2404,6 +2414,13 @@ static int mt9m114_parse_dt(struct mt9m114 *sensor)
- 		goto error;
- 	}
- 
-+	sensor->bypass_pll = of_property_read_bool(dev_node, "bypass-pll");
-+
-+	ret = of_property_read_u32(dev_node, "pad-slew-rate", &slew_rate);
-+	if (ret || slew_rate < MT9M114_PAD_SLEW_MIN || slew_rate > MT9M114_PAD_SLEW_MAX)
-+		slew_rate = MT9M114_PAD_SLEW_DEFAULT;
-+	sensor->pad_slew_rate = slew_rate;
-+
- 	return 0;
- 
- error:
--- 
-2.34.1
-
+~Andrew
