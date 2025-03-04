@@ -1,136 +1,85 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6E661F37CE;
-	Tue,  4 Mar 2025 09:54:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 931E51FCFDB
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 09:54:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741082042; cv=none; b=JT7VpBhyz5B++5XzirDO47DenaeJSRSsYOjgLa9ArkmjpSoHiTb1UsyNAOqUahFPUJYKRJ/ZhprHZyJYDyk4Zdp+MqPUaijtl0JPytCymnuGxBPyUdvRWdDzJfvBCNeEezVw/dtMmp7aMYOppQ18YdQI+ICh/+PRez7/Pd4lQcg=
+	t=1741082080; cv=none; b=lEUT97CAc50Xu5Fms1vSYwpYwSiGdgHtWyOwD3tA83XyLpSeVqkOGSwV7euhDfjiSH6Uf3ko4n9GvkARb7wFOkggiQuJjBlgnkIC7Zp7sgIZKRGro6qe6XlmKPi/2OUdBgb6clYcsnBthpkdB45qHxhlYQJuTKCvVWIxgg4oPw8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741082042; c=relaxed/simple;
-	bh=rKQJPmc4t9cLCPtNb/ynBMmWqqSyhN+Gj4ElMGoFcik=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Zq3lcA11NkBJFH+/FHNBJNe2a4rBPhqVVuqn3UeID4gkGBmAuoz5tdBxtiWN/e8w4WEhAStae/cCYJmoWYXJpjQ/pfxsGNfs5paAduNESDNwl6p6tVXSiGxx2SuscQ1oaN0y8qqAl2cIIywlal/iCD44oBz+CUvfKZkESHkWMb8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p44n2U0m; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p44n2U0m"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95C65C4CEE5;
-	Tue,  4 Mar 2025 09:53:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741082042;
-	bh=rKQJPmc4t9cLCPtNb/ynBMmWqqSyhN+Gj4ElMGoFcik=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=p44n2U0mJDtJvD+ANxHQpsuTDcVydK50y6LZSPcNEsmqaL/RQMUDikht83eImLorf
-	 OCNFTBXD/aMgoYfDkHXlFuacrmltjI4039FuX2NxOD+mbx9USJNbZ8QLo594Nnbfam
-	 Jkj20hUG0LFqXWSLbu5CcScoJoFTUu/8FIkBnZoWMEncAWgBL/fNvJxjBTMfPlJbeE
-	 EsBovuN2qDq7Yg5Z7fnN57BjDlP95TZL+4qd53cy5tNTroOjM/j0CaRTsGRp7H6RK9
-	 fgj4e3W+WhrisFYDxg2U7R/VFccZdNHMwtrb0du8qw0QGxcqbAeAwvGkyi78KG2qSC
-	 plUiHGYwIQzEg==
-Message-ID: <dbfb17df-90e2-4a7c-9921-9dff5e9382f4@kernel.org>
-Date: Tue, 4 Mar 2025 10:53:53 +0100
+	s=arc-20240116; t=1741082080; c=relaxed/simple;
+	bh=aAAx0WCfVD9Yht0Hjqf+5lQdm3MbQGouHvs42YNXPAI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ANtvmURu1ah1OxKaPXadOVwtY8SWzUHUpWpd4mjSplZz628FvgOJJ188y4nNhOKc6Haa1zEqYlyh5x3/nI+ovpGpA5COlI4QGi4w/GfZ3f128YkWkjO6MJRIZSORhvZkeNNLz/Dvbz/xl8U83f9N4d+S4O7gqMPcMJwbNWVW24o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9EBE9FEC;
+	Tue,  4 Mar 2025 01:54:51 -0800 (PST)
+Received: from bogus (e133711.arm.com [10.1.196.55])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 676D93F5A1;
+	Tue,  4 Mar 2025 01:54:35 -0800 (PST)
+Date: Tue, 4 Mar 2025 09:54:32 +0000
+From: Sudeep Holla <sudeep.holla@arm.com>
+To: Will Deacon <will@kernel.org>
+Cc: Marc Zyngier <maz@kernel.org>, Sebastian Ene <sebastianene@google.com>,
+	Sudeep Holla <sudeep.holla@arm.com>, catalin.marinas@arm.com,
+	joey.gouly@arm.com, oliver.upton@linux.dev, snehalreddy@google.com,
+	suzuki.poulose@arm.com, vdonnefort@google.com, yuzenghui@huawei.com,
+	kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, kernel-team@android.com
+Subject: Re: [PATCH v2 2/4] KVM: arm64: Move the ffa_to_linux definition to
+ the ffa header
+Message-ID: <Z8bN2MI5GYdVtGyE@bogus>
+References: <20250227181750.3606372-1-sebastianene@google.com>
+ <20250227181750.3606372-3-sebastianene@google.com>
+ <20250227202557.d3fd6ylzbaho4pvx@bogus>
+ <Z8DxZY-09R6lwEW3@google.com>
+ <86wmdapei8.wl-maz@kernel.org>
+ <20250303234426.GB30749@willie-the-truck>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC] leds: rgb: leds-qcom-lpg: Compute PWM value based on
- period instead
-To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
- Abel Vesa <abel.vesa@linaro.org>
-Cc: Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>,
- Anjelique Melendez <anjelique.melendez@oss.qualcomm.com>,
- Kamal Wadhwa <quic_kamalw@quicinc.com>,
- Jishnu Prakash <jishnu.prakash@oss.qualcomm.com>,
- Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>, Johan Hovold <johan@kernel.org>,
- Sebastian Reichel <sre@kernel.org>, Pavel Machek <pavel@ucw.cz>,
- linux-leds@vger.kernel.org, linux-pwm@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250303-leds-qcom-lpg-compute-pwm-value-using-period-v1-1-833e729e3da2@linaro.org>
- <ylnkjxnukss7askv7ip5htrb4tyjzhpw7jim2se6rloleq5h6w@ngk7lbk26hxj>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <ylnkjxnukss7askv7ip5htrb4tyjzhpw7jim2se6rloleq5h6w@ngk7lbk26hxj>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250303234426.GB30749@willie-the-truck>
 
-On 04/03/2025 07:24, Uwe Kleine-KÃ¶nig wrote:
-> instead which gives you a more exact result. The challenge here however
-> is that the multiplication might overflow. If you know that the result
-> fits into a u64, mul_u64_u64_div_u64() is the function that gets this
-> right for you.
-> 
->>  	chan->pwm_value = min(val, max);
->>  }
->> [...]
->> ---
->> base-commit: 0067a4b21c9ab441bbe6bf3635b3ddd21f6ca7c3
-> 
-> My git repo doesn't know that commit. Given that you said your patch
-> bases on that other series, this isn't surprising. Please use a publicly
-> available commit as base parameter, otherwise you (and I) don't benefit
-> from the armada of build bots because they just silently fail to test in
+On Mon, Mar 03, 2025 at 11:44:28PM +0000, Will Deacon wrote:
+> On Fri, Feb 28, 2025 at 10:09:19AM +0000, Marc Zyngier wrote:
+> > On Thu, 27 Feb 2025 23:12:37 +0000,
+> > Sebastian Ene <sebastianene@google.com> wrote:
+> > >
+> > > On Thu, Feb 27, 2025 at 08:25:57PM +0000, Sudeep Holla wrote:
+> > > > On Thu, Feb 27, 2025 at 06:17:47PM +0000, Sebastian Ene wrote:
+> > > > > Keep the ffa_to_linux error map in the header and move it away
+> > > > > from the arm ffa driver to make it accessible for other components.
+> > > >
+> > > > Do you plan to push/target these changes for v6.15 ? If not, I can take
+> > > > this patch with other FF-A changes in my tree for v6.15. Otherwise, it
+> > > > is must go along with other changes.
+> > > >
+> > >
+> > > Yes, feel free to pick them with your changes and we can push them
+> > > later.
+> >
+> > So this series is not a 6.15 candidate?
+>
+> I think this is 6.15 stuff once it's been reviewed. Sudeep's message is
+> a little confusing as it refers to 6.15 twice (I guess he meant 6.14 the
+> first time?).
+>
 
-As you can easily see in the signature, this patchset was generated by
-b4 and such tag was added automatically. No point in stripping it even
-if it is not useful (life, happens).
+No I meant v6.15 both times 😉. Since not much time before v6.15, I was
+thinking if this is not v6.15 material, I can just take the driver change
+for v6.15 itself via my tree. Now that, you have clarified, I will leave
+it to you. I think it doesn't conflict with any of driver changes in -next.
 
-In the same time the dependency, so the base of this patchset, is
-explained in the changelog, exactly in the place where it should be.
-Exactly how we all want.
+In short, just to avoid any further confusion, please take it via arm64/kvm
+tree.
 
-I don't understand what you are poking now. This is exactly the process
-how to send an RFC, which you can find in "[PATCH RFC]" subject, based
-on some other work in flight/progress.
-
-This is basically an exemplary patch how to do this. You cannot do it
-better.
-
-Best regards,
-Krzysztof
-
+--
+Regards,
+Sudeep
