@@ -1,104 +1,119 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD1BA25F979;
-	Tue,  4 Mar 2025 17:11:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8EC727FE89
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 17:11:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741108261; cv=none; b=iGjUh/dG3guyzeYDLN26g0EQ+L0kRvYJQNwnkcNPORoIicswOZgrAbWuKiyfyJgWrCOaz9G8EzfQZheGl2urNGdVFbfB2Q6Ury48YwODN1gJEjZD6/zE4IztXc91ZvMFbP3pMYE+P7cVRd5zKBWuND81VsPN1n13dTuvIaDZMtc=
+	t=1741108264; cv=none; b=uPNwKcHVgqJKjjO/EZiWZ78NkA5AQ7Uq7ZLaROZPYNvjTV7tAPgwKTmrymiPrzoBuQ5RAvaMIT1TXkpePaM4ZowjbED6D5FQuKPyNhCFhJk1oxnrycPcy/Sp9IxuDMvT8EFVOoDCvNx7MEzqjf22JyRxP6Yky8LEMNvS0B22n4I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741108261; c=relaxed/simple;
-	bh=QyJnJjJ/lXLnZyjDS28b5GSFwV9FD3aP+4XwcadNkRM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=GBvbkuYUNurxcqRUuFTeDWwKye3926VzeVNr/b73xALqNPzpLN5/lrwarfJhwK3wptDKH2mtLGyWS16OigyLyuOplx2x7qQSRCY8+WV1lOVSLefACltJTUR/5b1Zec07EN/3wtiRh+zdWNrDqibbKp101FsL7wEjH5FYb02Sq+4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RGYo0f47; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741108264; c=relaxed/simple;
+	bh=BNIsmV/M1wFMJoJxKUmeED+xm/DpApiloOyzGvi1rhA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LAw3PmKBDldcGQqZsXM0hA3HVfLTohS9mslt7+0OnSgzuRTW+vFDMWX4HLSw7W+Ovqih33v3HHGdTKx1Y37p+K6OBYOYZCMfXiZd7Kc64fqYDOWvHO6HxbTk9PWaS4a+W1XT1fNamxh5ldyOCmj0HXbqtbGZCD5bIZ5sTuYpB28=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=VMKvqcil; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RGYo0f47"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 746AEC4CEE5;
-	Tue,  4 Mar 2025 17:10:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741108261;
-	bh=QyJnJjJ/lXLnZyjDS28b5GSFwV9FD3aP+4XwcadNkRM=;
-	h=From:Date:Subject:To:Cc:From;
-	b=RGYo0f47bdIphAXi3nG487Me7SQvi3vSP8HlcI1krepoc4UIgzfLABTZlLoOOYEd/
-	 vFjRPpa8mV2DKyp63Z0hnG4BYKK2A8gKBlyiQxCfuNsSrc6h+MFtRio80jn3RrdsdH
-	 1Ypn9wEvG2YXqlWYFZSUwmDZ5a6Ze7EyhR+ZIojN0M3O+JRsGeGrho7IjgrPDns68p
-	 O1bkgcSAUphQluzSh8pco38/wZn80RA4ZLOgqtXzGFU82K7aeVbbb95PiWxi+icVnu
-	 axyq/oDmmp5VqJMHb0i6cUoxhRs6fQnM7wvUxf4M9X56lbLLhUxIn0vhG8Bo53BiRJ
-	 f6xmAKe5Bf9Lw==
-From: Konrad Dybcio <konradybcio@kernel.org>
-Date: Tue, 04 Mar 2025 18:10:46 +0100
-Subject: [PATCH] arm64: dts: qcom: x1e80100-romulus: Keep L12B and L15B
- always on
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="VMKvqcil"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-439ac3216dcso40490475e9.1
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Mar 2025 09:11:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1741108259; x=1741713059; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=BNIsmV/M1wFMJoJxKUmeED+xm/DpApiloOyzGvi1rhA=;
+        b=VMKvqcilJiWN/SLu2HWRC79C4z1jJNs3KpF+X74a/+lxGVA5ClH8dTWLmHTdgzM/74
+         ohjOn25aXY8DdqXo+gWgbKaFLeTlzR1r0xO6O9NUWca0LoqWMZP9fX8GBzrP3PDjjmOT
+         MtMAM7pXYRgOpUcjoEBOnL1cfOLqFLcITMD8t2eBaYrm5AhbGSpw49facyYz1yacS+85
+         Ekb/EuU7t0BS61ob2OHx6dIA5lFV02kE9684RU+5u0CxMHHXIoOJ99vuLN9jnpH0xa5/
+         NQnbaA6LQTPbFzb+s1I4iFbk98THCg94xPnEGJ2FhmRns4sWCPmUU6B1dsjxYUW+foMq
+         RZ6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741108259; x=1741713059;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BNIsmV/M1wFMJoJxKUmeED+xm/DpApiloOyzGvi1rhA=;
+        b=wJycrtjnku9oN8fTajubYjtBwtmJc9hSWeZtjHOWpAXEDUKQ+Nk8Zk+9a2Yh3zKaaV
+         bRZoHRX8KX4ln8JtHqtT5C1av/FAnZ033wmg4L3q+8EPAwIait9woheZQKeSy73e/iFH
+         a5nWa0mjrC4ISHTWHw6wAhmD/oDg/deaduZQ+dPYedIUqKz8BvUGmB+JO7syIWzV1Wr6
+         MG1R/iPkv7YT2D6KN5O6X9rqz2wkQtWLhkVow91uiPXMPhHSm5VhvrjX8SCbsdwBKaFh
+         u2nCJT1y9V+4JF8N8AscFK0lDnyoMJ+Zm29NbfgE1wEGvP0TohpBRKzwxOcCuvfmhPnO
+         tvXw==
+X-Forwarded-Encrypted: i=1; AJvYcCV3KleQX7sybmVNl+gBhTPvr8abwN8On9wvtt0QoRf201yTcK1kwPg00hrbHrnVnn2XN+lFPm9luAS+mxw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxlUET3et6P0cjHGePh+c+fzNpY+U5GBFc4V2shqaq3rp37Of+q
+	Ej/NthgeHrqzuN446sGfA6OOt436NsX0BdttsbqJNsx2ZUMyVwe/KqjyubcBC6N7sqghjag1yzb
+	CGOQ=
+X-Gm-Gg: ASbGncvMxgsMmBMXWSldfun9FnthhMG/8lP+V3Gk7kNDVNXlj3xS5+9CneAwhH2EIJQ
+	6sIVxabE0CK1y9/gV9rOmXqA/QRNw5dRTNw8/4XlKAdwVuhm2xg6trCYbq2KKYp5cOnUZEsO8+e
+	n00e7G1x2xPeFzlvwP8Rap6xk6gJgwloxagjfH/3bYvgEHnl7f9N69U/JhkUX6bIiU7xjnLci+w
+	kYIPU5LxxuvhXVvzGSWUS4VMhSol0icJDLxf02P6qqqPydGNrr3Ep9c6Got4UC5W5iXFqylZKd3
+	W9Aj0dgqwXZgB/OOKWNfOrEy0uOEuTaiOTOtaw==
+X-Google-Smtp-Source: AGHT+IHwyTmNw7GkziQGU/grcke+J8YWNXy2qyeoEeNcQkNtnZMfPor87Z8qPAtdVAi/1sBgMwZwBQ==
+X-Received: by 2002:a05:600c:4693:b0:439:8523:36cc with SMTP id 5b1f17b1804b1-43ba66e66d7mr174859195e9.11.1741108259007;
+        Tue, 04 Mar 2025 09:10:59 -0800 (PST)
+Received: from blackbook2 ([193.86.92.181])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43bcc8cb8c9sm25012195e9.35.2025.03.04.09.10.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Mar 2025 09:10:58 -0800 (PST)
+Date: Tue, 4 Mar 2025 18:10:56 +0100
+From: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
+To: Tejun Heo <tj@kernel.org>
+Cc: Waiman Long <llong@redhat.com>, cgroups@vger.kernel.org, 
+	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>, 
+	Jens Axboe <axboe@kernel.dk>, Johannes Weiner <hannes@cmpxchg.org>
+Subject: Re: [PATCH 1/9] cgroup/cpuset-v1: Add deprecation warnings to
+ sched_load_balance and memory_pressure_enabled
+Message-ID: <n2ygi7m53y5y4dx5tjxhqgzqtgs5sisdi27sk7x2xjngpxenod@7behfsvlzhxi>
+References: <20250304153801.597907-1-mkoutny@suse.com>
+ <20250304153801.597907-2-mkoutny@suse.com>
+ <8b8f0f99-6d42-4c6f-9c43-d0224bdedf9e@redhat.com>
+ <Z8cv2akQ_RY4uKQa@slm.duckdns.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250304-topic-sl7_vregs_aon-v1-1-b2dc706e4157@oss.qualcomm.com>
-X-B4-Tracking: v=1; b=H4sIABU0x2cC/x3M2wpAQBRG4VfRvjY1ByKvIknjxy7NaLak5N1NL
- r+LtR4SJIZQVzyUcLFwDBmmLMhvU1iheM4mq22tna7UGQ/2SvZmvBJWGacYlLHaALX1aB3l8kh
- Y+P6v/fC+H9PfDDJlAAAA
-X-Change-ID: 20250304-topic-sl7_vregs_aon-1201ee52ce83
-To: Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: Marijn Suijten <marijn.suijten@somainline.org>, 
- Konrad Dybcio <quic_kdybcio@quicinc.com>, linux-arm-msm@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, 
- Johan Hovold <johan+linaro@kernel.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1741108257; l=1496;
- i=konrad.dybcio@oss.qualcomm.com; s=20230215; h=from:subject:message-id;
- bh=Q1raCAdNlbWo+epSFVrbDIAnmmxs+X4h74jjAxQUfLU=;
- b=IgCjeXZpbP0EeY9TZrvIxpTFUsVbsEiCtkLNSlhtHr/5lSuxS8wjCBfFcFaacDGfZmKXuNfuJ
- pKaHFJs9pPWBF7BW4EaRURpD3WMB3vJTE+yTLQhnlc99aoiPrEESgUJ
-X-Developer-Key: i=konrad.dybcio@oss.qualcomm.com; a=ed25519;
- pk=iclgkYvtl2w05SSXO5EjjSYlhFKsJ+5OSZBjOkQuEms=
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="m7t5ylg5sh4ub3qc"
+Content-Disposition: inline
+In-Reply-To: <Z8cv2akQ_RY4uKQa@slm.duckdns.org>
 
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 
-These regulators power some electronic components onboard. They're
-most likely kept online by other pieces of firmware, but you can never
-be sure enough.
+--m7t5ylg5sh4ub3qc
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH 1/9] cgroup/cpuset-v1: Add deprecation warnings to
+ sched_load_balance and memory_pressure_enabled
+MIME-Version: 1.0
 
-Fixes: 09d77be56093 ("arm64: dts: qcom: Add support for X1-based Surface Laptop 7 devices")
-Reported-by: Johan Hovold <johan+linaro@kernel.org>
-Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
----
- arch/arm64/boot/dts/qcom/x1e80100-microsoft-romulus.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+On Tue, Mar 04, 2025 at 06:52:41AM -1000, Tejun Heo <tj@kernel.org> wrote:
+> On Tue, Mar 04, 2025 at 11:19:00AM -0500, Waiman Long wrote:
+> ...
+> > I do have some concern with the use of pr_warn*() because some users may
+> > attempt to use the panic_on_warn command line option.
+>=20
+> Yeah, let's print these as info.
 
-diff --git a/arch/arm64/boot/dts/qcom/x1e80100-microsoft-romulus.dtsi b/arch/arm64/boot/dts/qcom/x1e80100-microsoft-romulus.dtsi
-index 5867953c73564ca7ae1279b73f6834aa1d732792..6a883fafe3c77a45e045beba8357d67caa88dabf 100644
---- a/arch/arm64/boot/dts/qcom/x1e80100-microsoft-romulus.dtsi
-+++ b/arch/arm64/boot/dts/qcom/x1e80100-microsoft-romulus.dtsi
-@@ -510,6 +510,7 @@ vreg_l12b: ldo12 {
- 			regulator-min-microvolt = <1200000>;
- 			regulator-max-microvolt = <1200000>;
- 			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+			regulator-always-on;
- 		};
- 
- 		vreg_l13b: ldo13 {
-@@ -531,6 +532,7 @@ vreg_l15b: ldo15 {
- 			regulator-min-microvolt = <1800000>;
- 			regulator-max-microvolt = <1800000>;
- 			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+			regulator-always-on;
- 		};
- 
- 		vreg_l16b: ldo16 {
+The intention is _not_ to cause panic by any of this this.
+Note the difference between WARN() and pr_warn() (only the former
+panics).
+Warn level has precedent in mm/memcontrol-v1.c already.
 
----
-base-commit: 20d5c66e1810e6e8805ec0d01373afb2dba9f51a
-change-id: 20250304-topic-sl7_vregs_aon-1201ee52ce83
+Michal
 
-Best regards,
--- 
-Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+--m7t5ylg5sh4ub3qc
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQTd6mfF2PbEZnpdoAkt3Wney77BSQUCZ8c0HgAKCRAt3Wney77B
+SbexAQDwJlCeZoumG/jlue6Kzy4cUn1Ow4uQgOGmkE/7VYcugQEA0MuK4dJSSgbL
+rcAd7YdHp7o0baFNH7DpxWvcmSi0Zgo=
+=VnWp
+-----END PGP SIGNATURE-----
+
+--m7t5ylg5sh4ub3qc--
