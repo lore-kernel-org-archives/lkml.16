@@ -1,65 +1,65 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9926F201021;
-	Tue,  4 Mar 2025 10:36:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BC0A1FDE06;
+	Tue,  4 Mar 2025 10:36:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741084594; cv=none; b=Z+vrzDiETXldrlgUyaF5I2LsTqe9v0PNdwH+JQNUKelHGdyD3RPHfmF3pYgD1TlcTpARTxim8wJyiZB3ro8iZmC5uXLJW+aDWaQl00JbnleutFWB2sTiWe/YqDap/k6A3UWZl2C/KllRXgm6dwE6AUN6CNCt2NRumfe7A6p1/Tg=
+	t=1741084597; cv=none; b=oULD+XDHR6IN5yg8sz5auovRrcvOr8ydY9MO5IxzFjlq7vD0dB5SMdX594uXYlFH/iTR7hUwo5XZeQJFWIPKgntp4HIoPcuTryCQ04GQIk4oSdUxCWC7S/miFXMV0B7sQh3LqcArFzqguBmaEZphwltivGh76oOpuu2JGR6exUU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741084594; c=relaxed/simple;
-	bh=xKRCoLsAPW32liwRNh6RbWGkQ9nnA3sIdc5bA7VgSRM=;
+	s=arc-20240116; t=1741084597; c=relaxed/simple;
+	bh=kqJWXTyQtubdiMhdTGun7JTnPnk3ez0ATuGma2d5F2Q=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=NjemfkHOU/Mswa+x+qujKSQcEtmchyEur5NgzL7BsRrCqqxCVaIisFM6A2EE6jba8dzYCVtr8zk0Di9xnJ8NLwZr1YRj4Gcvo3/e4jVxcUfxJ6+i9RAnJ8mfxbRjPgurzV5qEhNT6l6XqzYhkPRtatXrIKWM31Dyz70g8Elzsiw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=3DEv5xL8; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=u75vwD8f; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=bmqYAU6LgAEIKln1JnA3XwW5/FCoj8BNFxbmdJCYeB/rvjZrMJo3b5aPwrEgrA4CmfoMSsidrxDkMfhl+uimTSKnFu3nDhZUgZ+aMoIDkalPzIeIjl6I7IMz7JCHx9gFXGODAQOg2Y/5r8YnPjjAg/QGK6f0Jes3q7Xh2GgRef8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=DxBBWDmG; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=L29LQ7st; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="3DEv5xL8";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="u75vwD8f"
-Date: Tue, 04 Mar 2025 10:36:29 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="DxBBWDmG";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="L29LQ7st"
+Date: Tue, 04 Mar 2025 10:36:33 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1741084591;
+	s=2020; t=1741084593;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=MBGEPpiBnh4luRPuw5Gb45vdZt1YJ2CtBa7x8kTRRNY=;
-	b=3DEv5xL8c/rxwHNFUpY2J7lbOM3OYG/3E0NFISkVXxbg5HgsJbMGJysmtjS875VzR5HGmi
-	Wvyq8P5znwqbyP5j5R6oTj+P5dIebAcCFKC0YW6IcLkaY264iMT2NaCrubVGoARCVRcEP+
-	oH7GQfD3OzZ19trrEZHgQ7oRl3RZTw9Evhx6YLExlzKVUjj6t4I0PHft3vTIDZDmNF2+oF
-	JyJJikoI7HNmQFalqYVe/wgZB47JboH5/fs6LvOSnr7FUyF6lRdOVkOzMDctLMWo8n1K0b
-	biy4mLwWGySzmlTaN8Y5CxeyrG9jCyWAWfVMktdEu4dQ48bUAj1/qZnpqW+8sA==
+	bh=GHWWD0MTz5KEaGp9NMQVn+ilLxTKhjYfbT6s55lpOzQ=;
+	b=DxBBWDmGjKuzyy9WfJNqGPf9sDLPvqQYcb+vInUlSLao98oyLj9DRM99NUGCJcMYucxa+m
+	nIC7zLi6MpHaMnt5KYExTKJmIKuA7lKtYufKjPEAj35cRZPdFGOuLQpwrhCBbpxhbSPk6k
+	XG7+eMDHFwksGWKCLclSK6xsraTWuPcjwCRn/3tTL6G1UYIOSFLZ2lR8h4cIZKtoSeGTSO
+	Ptp2Erib96dFHm7WaDNbbFxaeJjRSuTA7B7kETW1E0PuFVO96DC9BSv8Kb6Gei5zyrOtlx
+	jOHF5NvRqRQkOhWbi1Sw41nOUjq9q/3Wu7pa2tpkAoRH4FiNf8ekINn1We1QzA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1741084591;
+	s=2020e; t=1741084593;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=MBGEPpiBnh4luRPuw5Gb45vdZt1YJ2CtBa7x8kTRRNY=;
-	b=u75vwD8fuQwUk1DlXQzFxhDunjnba5x2Mop/j3V0tNMNjCiTRrEkwBR4mKFI8uBS0rqoMF
-	i7Fwv4YKwnc77GBQ==
+	bh=GHWWD0MTz5KEaGp9NMQVn+ilLxTKhjYfbT6s55lpOzQ=;
+	b=L29LQ7st6GYtwMzBfXg1+wS/mAZ3EYvuF6ZGK8MP+SUQoG+7BpvNh487Cx7Jc/6yeWG1Fx
+	UYHjQPSr6CnDrUAA==
 From: "tip-bot2 for Brian Gerst" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/core] x86/percpu: Move current_task to percpu hot section
+Subject: [tip: x86/core] x86/smp: Move cpu number to percpu hot section
 Cc: Brian Gerst <brgerst@gmail.com>, Ingo Molnar <mingo@kernel.org>,
  Uros Bizjak <ubizjak@gmail.com>,
  Linus Torvalds <torvalds@linux-foundation.org>,
  Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
  linux-kernel@vger.kernel.org
-In-Reply-To: <20250303165246.2175811-10-brgerst@gmail.com>
-References: <20250303165246.2175811-10-brgerst@gmail.com>
+In-Reply-To: <20250303165246.2175811-5-brgerst@gmail.com>
+References: <20250303165246.2175811-5-brgerst@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174108458981.14745.11391945364780788398.tip-bot2@tip-bot2>
+Message-ID: <174108459311.14745.14223286895294585090.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -69,14 +69,14 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the x86/core branch of tip:
 
-Commit-ID:     f19a605f4334e0dab51c839202a089f79c46579d
-Gitweb:        https://git.kernel.org/tip/f19a605f4334e0dab51c839202a089f79c46579d
+Commit-ID:     816a6123b28ce5be9af27666e4a45b09fde3865b
+Gitweb:        https://git.kernel.org/tip/816a6123b28ce5be9af27666e4a45b09fde3865b
 Author:        Brian Gerst <brgerst@gmail.com>
-AuthorDate:    Mon, 03 Mar 2025 11:52:44 -05:00
+AuthorDate:    Mon, 03 Mar 2025 11:52:39 -05:00
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Tue, 04 Mar 2025 11:24:29 +01:00
+CommitterDate: Tue, 04 Mar 2025 11:24:28 +01:00
 
-x86/percpu: Move current_task to percpu hot section
+x86/smp: Move cpu number to percpu hot section
 
 No functional change.
 
@@ -85,181 +85,90 @@ Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Acked-by: Uros Bizjak <ubizjak@gmail.com>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: https://lore.kernel.org/r/20250303165246.2175811-10-brgerst@gmail.com
+Link: https://lore.kernel.org/r/20250303165246.2175811-5-brgerst@gmail.com
 ---
- arch/x86/include/asm/current.h | 17 ++++++-----------
- arch/x86/include/asm/percpu.h  |  2 +-
- arch/x86/kernel/asm-offsets.c  |  1 -
- arch/x86/kernel/cpu/common.c   |  8 +++-----
- arch/x86/kernel/head_64.S      |  4 ++--
- arch/x86/kernel/process_32.c   |  2 +-
- arch/x86/kernel/process_64.c   |  2 +-
- arch/x86/kernel/smpboot.c      |  2 +-
- arch/x86/kernel/vmlinux.lds.S  |  2 +-
- scripts/gdb/linux/cpus.py      |  2 +-
- 10 files changed, 17 insertions(+), 25 deletions(-)
+ arch/x86/include/asm/current.h | 1 -
+ arch/x86/include/asm/smp.h     | 7 ++++---
+ arch/x86/kernel/setup_percpu.c | 5 ++++-
+ kernel/bpf/verifier.c          | 4 ++--
+ 4 files changed, 10 insertions(+), 7 deletions(-)
 
 diff --git a/arch/x86/include/asm/current.h b/arch/x86/include/asm/current.h
-index 3d1b123..dea7d8b 100644
+index 46a736d..f988462 100644
 --- a/arch/x86/include/asm/current.h
 +++ b/arch/x86/include/asm/current.h
-@@ -12,22 +12,17 @@
+@@ -14,7 +14,6 @@ struct task_struct;
  
- struct task_struct;
- 
--struct pcpu_hot {
--	struct task_struct	*current_task;
--};
--
--DECLARE_PER_CPU_CACHE_HOT(struct pcpu_hot, pcpu_hot);
--
--/* const-qualified alias to pcpu_hot, aliased by linker. */
--DECLARE_PER_CPU_CACHE_HOT(const struct pcpu_hot __percpu_seg_override,
--			const_pcpu_hot);
-+DECLARE_PER_CPU_CACHE_HOT(struct task_struct *, current_task);
-+/* const-qualified alias provided by the linker. */
-+DECLARE_PER_CPU_CACHE_HOT(struct task_struct * const __percpu_seg_override,
-+			  const_current_task);
- 
- static __always_inline struct task_struct *get_current(void)
- {
- 	if (IS_ENABLED(CONFIG_USE_X86_SEG_SUPPORT))
--		return this_cpu_read_const(const_pcpu_hot.current_task);
-+		return this_cpu_read_const(const_current_task);
- 
--	return this_cpu_read_stable(pcpu_hot.current_task);
-+	return this_cpu_read_stable(current_task);
- }
- 
- #define current get_current()
-diff --git a/arch/x86/include/asm/percpu.h b/arch/x86/include/asm/percpu.h
-index 1ca290b..6fbb52a 100644
---- a/arch/x86/include/asm/percpu.h
-+++ b/arch/x86/include/asm/percpu.h
-@@ -549,7 +549,7 @@ do {									\
-  * it is accessed while this_cpu_read_stable() allows the value to be cached.
-  * this_cpu_read_stable() is more efficient and can be used if its value
-  * is guaranteed to be valid across CPUs.  The current users include
-- * pcpu_hot.current_task and cpu_current_top_of_stack, both of which are
-+ * current_task and cpu_current_top_of_stack, both of which are
-  * actually per-thread variables implemented as per-CPU variables and
-  * thus stable for the duration of the respective task.
-  */
-diff --git a/arch/x86/kernel/asm-offsets.c b/arch/x86/kernel/asm-offsets.c
-index 54ace80..ad4ea6f 100644
---- a/arch/x86/kernel/asm-offsets.c
-+++ b/arch/x86/kernel/asm-offsets.c
-@@ -107,7 +107,6 @@ static void __used common(void)
- 	OFFSET(TSS_sp0, tss_struct, x86_tss.sp0);
- 	OFFSET(TSS_sp1, tss_struct, x86_tss.sp1);
- 	OFFSET(TSS_sp2, tss_struct, x86_tss.sp2);
--	OFFSET(X86_current_task, pcpu_hot, current_task);
- #if IS_ENABLED(CONFIG_CRYPTO_ARIA_AESNI_AVX_X86_64)
- 	/* Offset for fields in aria_ctx */
- 	BLANK();
-diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
-index 51653e0..3f45fdd 100644
---- a/arch/x86/kernel/cpu/common.c
-+++ b/arch/x86/kernel/cpu/common.c
-@@ -2064,11 +2064,9 @@ static __init int setup_setcpuid(char *arg)
- }
- __setup("setcpuid=", setup_setcpuid);
- 
--DEFINE_PER_CPU_CACHE_HOT(struct pcpu_hot, pcpu_hot) = {
--	.current_task	= &init_task,
--};
--EXPORT_PER_CPU_SYMBOL(pcpu_hot);
--EXPORT_PER_CPU_SYMBOL(const_pcpu_hot);
-+DEFINE_PER_CPU_CACHE_HOT(struct task_struct *, current_task) = &init_task;
-+EXPORT_PER_CPU_SYMBOL(current_task);
-+EXPORT_PER_CPU_SYMBOL(const_current_task);
- 
- DEFINE_PER_CPU_CACHE_HOT(int, __preempt_count) = INIT_PREEMPT_COUNT;
- EXPORT_PER_CPU_SYMBOL(__preempt_count);
-diff --git a/arch/x86/kernel/head_64.S b/arch/x86/kernel/head_64.S
-index 2843b0a..fefe2a2 100644
---- a/arch/x86/kernel/head_64.S
-+++ b/arch/x86/kernel/head_64.S
-@@ -322,7 +322,7 @@ SYM_INNER_LABEL(common_startup_64, SYM_L_LOCAL)
- 	 *
- 	 * RDX contains the per-cpu offset
- 	 */
--	movq	pcpu_hot + X86_current_task(%rdx), %rax
-+	movq	current_task(%rdx), %rax
- 	movq	TASK_threadsp(%rax), %rsp
- 
- 	/*
-@@ -433,7 +433,7 @@ SYM_CODE_START(soft_restart_cpu)
- 	UNWIND_HINT_END_OF_STACK
- 
- 	/* Find the idle task stack */
--	movq	PER_CPU_VAR(pcpu_hot + X86_current_task), %rcx
-+	movq	PER_CPU_VAR(current_task), %rcx
- 	movq	TASK_threadsp(%rcx), %rsp
- 
- 	jmp	.Ljump_to_C_code
-diff --git a/arch/x86/kernel/process_32.c b/arch/x86/kernel/process_32.c
-index 8ec44ac..4636ef3 100644
---- a/arch/x86/kernel/process_32.c
-+++ b/arch/x86/kernel/process_32.c
-@@ -206,7 +206,7 @@ __switch_to(struct task_struct *prev_p, struct task_struct *next_p)
- 	if (prev->gs | next->gs)
- 		loadsegment(gs, next->gs);
- 
--	raw_cpu_write(pcpu_hot.current_task, next_p);
-+	raw_cpu_write(current_task, next_p);
- 
- 	switch_fpu_finish(next_p);
- 
-diff --git a/arch/x86/kernel/process_64.c b/arch/x86/kernel/process_64.c
-index d8f4bce..7196ca7 100644
---- a/arch/x86/kernel/process_64.c
-+++ b/arch/x86/kernel/process_64.c
-@@ -668,7 +668,7 @@ __switch_to(struct task_struct *prev_p, struct task_struct *next_p)
- 	/*
- 	 * Switch the PDA and FPU contexts.
- 	 */
--	raw_cpu_write(pcpu_hot.current_task, next_p);
-+	raw_cpu_write(current_task, next_p);
- 	raw_cpu_write(cpu_current_top_of_stack, task_top_of_stack(next_p));
- 
- 	switch_fpu_finish(next_p);
-diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
-index c3a26e6..42ca131 100644
---- a/arch/x86/kernel/smpboot.c
-+++ b/arch/x86/kernel/smpboot.c
-@@ -822,7 +822,7 @@ int common_cpu_up(unsigned int cpu, struct task_struct *idle)
- 	/* Just in case we booted with a single CPU. */
- 	alternatives_enable_smp();
- 
--	per_cpu(pcpu_hot.current_task, cpu) = idle;
-+	per_cpu(current_task, cpu) = idle;
- 	cpu_init_stack_canary(cpu, idle);
- 
- 	/* Initialize the interrupt stack(s) */
-diff --git a/arch/x86/kernel/vmlinux.lds.S b/arch/x86/kernel/vmlinux.lds.S
-index 475f671..31f9102 100644
---- a/arch/x86/kernel/vmlinux.lds.S
-+++ b/arch/x86/kernel/vmlinux.lds.S
-@@ -43,7 +43,7 @@ ENTRY(phys_startup_64)
+ struct pcpu_hot {
+ 	struct task_struct	*current_task;
+-	int			cpu_number;
+ #ifdef CONFIG_MITIGATION_CALL_DEPTH_TRACKING
+ 	u64			call_depth;
  #endif
+diff --git a/arch/x86/include/asm/smp.h b/arch/x86/include/asm/smp.h
+index 76d7c01..bcfa002 100644
+--- a/arch/x86/include/asm/smp.h
++++ b/arch/x86/include/asm/smp.h
+@@ -6,7 +6,8 @@
+ #include <linux/thread_info.h>
  
- jiffies = jiffies_64;
--const_pcpu_hot = pcpu_hot;
-+const_current_task = current_task;
- const_cpu_current_top_of_stack = cpu_current_top_of_stack;
+ #include <asm/cpumask.h>
+-#include <asm/current.h>
++
++DECLARE_PER_CPU_CACHE_HOT(int, cpu_number);
  
- #if defined(CONFIG_X86_64)
-diff --git a/scripts/gdb/linux/cpus.py b/scripts/gdb/linux/cpus.py
-index 13eb8b3..8f7c4fb 100644
---- a/scripts/gdb/linux/cpus.py
-+++ b/scripts/gdb/linux/cpus.py
-@@ -164,7 +164,7 @@ def get_current_task(cpu):
-             var_ptr = gdb.parse_and_eval("(struct task_struct *)cpu_tasks[0].task")
-             return var_ptr.dereference()
-         else:
--            var_ptr = gdb.parse_and_eval("&pcpu_hot.current_task")
-+            var_ptr = gdb.parse_and_eval("&current_task")
-             return per_cpu(var_ptr, cpu).dereference()
-     elif utils.is_target_arch("aarch64"):
-         current_task_addr = gdb.parse_and_eval("(unsigned long)$SP_EL0")
+ DECLARE_PER_CPU_READ_MOSTLY(cpumask_var_t, cpu_sibling_map);
+ DECLARE_PER_CPU_READ_MOSTLY(cpumask_var_t, cpu_core_map);
+@@ -132,8 +133,8 @@ __visible void smp_call_function_single_interrupt(struct pt_regs *r);
+  * This function is needed by all SMP systems. It must _always_ be valid
+  * from the initial startup.
+  */
+-#define raw_smp_processor_id()  this_cpu_read(pcpu_hot.cpu_number)
+-#define __smp_processor_id() __this_cpu_read(pcpu_hot.cpu_number)
++#define raw_smp_processor_id()  this_cpu_read(cpu_number)
++#define __smp_processor_id() __this_cpu_read(cpu_number)
+ 
+ static inline struct cpumask *cpu_llc_shared_mask(int cpu)
+ {
+diff --git a/arch/x86/kernel/setup_percpu.c b/arch/x86/kernel/setup_percpu.c
+index 1e7be94..175afc3 100644
+--- a/arch/x86/kernel/setup_percpu.c
++++ b/arch/x86/kernel/setup_percpu.c
+@@ -23,6 +23,9 @@
+ #include <asm/cpumask.h>
+ #include <asm/cpu.h>
+ 
++DEFINE_PER_CPU_CACHE_HOT(int, cpu_number);
++EXPORT_PER_CPU_SYMBOL(cpu_number);
++
+ DEFINE_PER_CPU_READ_MOSTLY(unsigned long, this_cpu_off);
+ EXPORT_PER_CPU_SYMBOL(this_cpu_off);
+ 
+@@ -161,7 +164,7 @@ void __init setup_per_cpu_areas(void)
+ 	for_each_possible_cpu(cpu) {
+ 		per_cpu_offset(cpu) = delta + pcpu_unit_offsets[cpu];
+ 		per_cpu(this_cpu_off, cpu) = per_cpu_offset(cpu);
+-		per_cpu(pcpu_hot.cpu_number, cpu) = cpu;
++		per_cpu(cpu_number, cpu) = cpu;
+ 		setup_percpu_segment(cpu);
+ 		/*
+ 		 * Copy data used in early init routines from the
+diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
+index f485951..6e604ca 100644
+--- a/kernel/bpf/verifier.c
++++ b/kernel/bpf/verifier.c
+@@ -21702,12 +21702,12 @@ patch_map_ops_generic:
+ 		if (insn->imm == BPF_FUNC_get_smp_processor_id &&
+ 		    verifier_inlines_helper_call(env, insn->imm)) {
+ 			/* BPF_FUNC_get_smp_processor_id inlining is an
+-			 * optimization, so if pcpu_hot.cpu_number is ever
++			 * optimization, so if cpu_number is ever
+ 			 * changed in some incompatible and hard to support
+ 			 * way, it's fine to back out this inlining logic
+ 			 */
+ #ifdef CONFIG_SMP
+-			insn_buf[0] = BPF_MOV64_IMM(BPF_REG_0, (u32)(unsigned long)&pcpu_hot.cpu_number);
++			insn_buf[0] = BPF_MOV64_IMM(BPF_REG_0, (u32)(unsigned long)&cpu_number);
+ 			insn_buf[1] = BPF_MOV64_PERCPU_REG(BPF_REG_0, BPF_REG_0);
+ 			insn_buf[2] = BPF_LDX_MEM(BPF_W, BPF_REG_0, BPF_REG_0, 0);
+ 			cnt = 3;
