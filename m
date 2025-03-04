@@ -1,151 +1,102 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D670A1F583B;
-	Tue,  4 Mar 2025 07:54:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9629F1F3D52
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 07:55:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741074879; cv=none; b=SR9Tmr0xNZrCIxiAdkwp6K8N3bS9F1vkhoGb8BbNiTqk0rBJPXPLfvXYm1U6uW4ZoRLHw1LpFuSJcRkR3a1VvxdRCG86RK/UtwkqF91otU07hT6PWsQn6+841KzQl3Xxs00hxAaCdXUXKyV35YWdXP1YqzDwFWIFgn20Zq7Kp0Y=
+	t=1741074957; cv=none; b=JoUq3Hbpwl7Zi2HIxufuUUx5tkHX+sGLhPVHl/beINh/lTfhvF7gtZaEQd5wQprs6QiWM53tZqUhGJprcvq/Ub0mn6WMacehkR8MzvxiPUEhFlyBjr3WRvM0i1Ew0rJ5pTYruSuXKFCTt/XORdjr0YC5h/Hi/RMOKhHxiCbEmR8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741074879; c=relaxed/simple;
-	bh=bakggjADoge3PlUC06WHqCG9hdUKEoVxgs+5cA5dUIc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aaRKAKlMGdGCzE4fFh8gdhApDl+rm+3s5bDT20DHMIDikaFUtvslK8P3j8T7pZgGYThnsgAMCte6JgQFB3FBL/YLjWAwAl8F8JS7q/9O9rDHTnb24QnMoNHSRrVav+06mXqlHDncioA/hVQoqJKK1Vlxa2zWDYbpwbhOo1/CjMg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=El2Q9IsP; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1741074957; c=relaxed/simple;
+	bh=wMro+oQYT8L3eIKeDTeKQmWxyrhEKtJYvqmJAViAmFk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=IfhtklY8wd2+odGvM0ekTI24qWb61jShzt8RF+fMjVBRjYiNPc8QYsZO1vPMOPFr8doixdITrwe75NFzAo1VJaPb2+SQhByW1CgkLTfR6YxmcfOUU+q5UesaqJzQ+I8+e0MjUx2cPCcj3976/4NBlODb615Qw/FL5tCivdmroPw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=LpHpgR04; arc=none smtp.client-ip=209.85.208.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="El2Q9IsP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741074877; x=1772610877;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=bakggjADoge3PlUC06WHqCG9hdUKEoVxgs+5cA5dUIc=;
-  b=El2Q9IsPb3kNhN6Y8wy+bIBApFqCPKcy+bd6SRE+0ypEw7vkdEV9ehEw
-   8upl+TfLVJB+H+d+sZZAANJ63FWzsPYtsC6Q0o4j3ZMYKTqsJN/0Uz/pb
-   PGh2F+UDvkmtyI18E/oSV92VKAo3SxnOOkTVZvJoYQImDOJp+ltxlu/TP
-   lw54Q9simdFrAcCqIOf3jePNdEVn6oZRnt6bp9ivSzhC+yexVa04cJaVE
-   7/kjF2ugPkaQCoc9QrqF7hzJMin70a1rDp5NBmzeh7zm6cKF18FSNKrWB
-   8kVFL0ylTsESiIun4UvFCeysVYNOUg/F6Cx+JQ8egTAzCte7ZsQU9Gs8W
-   Q==;
-X-CSE-ConnectionGUID: hcMK4nukRdaAyc733scfwQ==
-X-CSE-MsgGUID: AWLJ0/aOSDKnxPK43Jodvw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11362"; a="41874283"
-X-IronPort-AV: E=Sophos;i="6.13,331,1732608000"; 
-   d="scan'208";a="41874283"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Mar 2025 23:54:36 -0800
-X-CSE-ConnectionGUID: P0BmQndnQL6qmYHE58fIeQ==
-X-CSE-MsgGUID: f/KuNc03TBqeFuq5Hib8YQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,331,1732608000"; 
-   d="scan'208";a="149098853"
-Received: from mev-dev.igk.intel.com ([10.237.112.144])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Mar 2025 23:54:33 -0800
-Date: Tue, 4 Mar 2025 08:50:46 +0100
-From: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
-To: Tariq Toukan <tariqt@nvidia.com>
-Cc: "David S. Miller" <davem@davemloft.net>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Eric Dumazet <edumazet@google.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	Saeed Mahameed <saeedm@nvidia.com>, Gal Pressman <gal@nvidia.com>,
-	Leon Romanovsky <leonro@nvidia.com>,
-	Leon Romanovsky <leon@kernel.org>, netdev@vger.kernel.org,
-	linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next 6/6] net/mlx5e: Properly match IPsec subnet
- addresses
-Message-ID: <Z8aw1gn5iFNiSxd3@mev-dev.igk.intel.com>
-References: <20250226114752.104838-1-tariqt@nvidia.com>
- <20250226114752.104838-7-tariqt@nvidia.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LpHpgR04"
+Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-30bae572157so24887721fa.3
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Mar 2025 23:55:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1741074953; x=1741679753; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dZ9DDcCt9QUtQRCh/VCueix6q79R8Gu4pWj0lHBrn+E=;
+        b=LpHpgR04YegxvVXXkteciN3cJ0lKUmaPebPmFhaA7R86fg/6KuBYzk8SIEPZ7matho
+         Bn9whmBBZrrZJnF6Ilnltyu2kBRi7G40t7ZlKMFHqVCyk731U8Y92iuQzIf1xSK357pX
+         R7DVfkZ4p6Z0ZVbfDmkqbqYuvQtuSToM1Jy0k2tmmGSveSpMQeTyUik/Z9Hu4c9p2XHM
+         /UJpok8T44oxaosD7ZKLg36XxE0zoeAgNL6osIl06fWuL4BB7gpmPpvcbOnFEANZjm0h
+         APgob62LWlPkT0L2slXDnUYHOuYywQfk1HXiTWyfVGr2btTXQL3E+rMT06GIlFi6sTBa
+         ++1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741074953; x=1741679753;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=dZ9DDcCt9QUtQRCh/VCueix6q79R8Gu4pWj0lHBrn+E=;
+        b=tDY9a6b6E5dEgUCFxmC0zanAtLNoXvabwtHk1yrQbRoDkiVp3PmVooiHGcJOEpkg5P
+         FvKHNTbKIN4e+/sWwp5VM/wFoifbvvP8GfcZ0DQcUY7vec3UI01a0Aaxlc0ktkkZBRka
+         KzU1vz5ldrTSqmEGMLkL1MVevjkKvzxR1Bl23rg17BvIetYHDbWLL5RoZnuTTUbr4how
+         TTL8s0FeQgUaCpByWVZbKXn9Kio1NVYuRD2s2WOZjM7v8TrDCFDnP9v+6PAPDdNYsnd4
+         JImeEeX2jnHBrvVHpGExzjdrzUNx2G5k1htyrjgxjGx9kOzPqZYniAUlHK45iIVoZVAA
+         WlQQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWXlh1TGDms8bJ0mcnEzYXa4w84351f8Alra6D9mwMG/iWkORHsgjPdgyadBz4TAeY3pE1aOCbXrg6rwFs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxxN8nhYe9h8EbJfeG3wwJ3Bu39AfaV+Vd+Xq1qx52rZpMF5nmb
+	gTukJc2qNDCBUTZDFgWQu8Ox3wy0snxD8eAVmDH+/qXGOOkTMOYypG2uVaeamCh9e50851EsTgd
+	OBoB59pNsw0i1AOJaplth4H+Ku1uggopQmoojRaVq61Wg340F
+X-Gm-Gg: ASbGncvm0J4WNxfeEWxioqykriXyWbRlMOLoMbRMpQU3YEDEX2YuCvCSlKrrOU9j4rf
+	KPSVmbMhSXwObvUt1CuVHFP0LhgFnLcHZxWTlpsi5pSXogcSfae8Weu0YBbbr0UF3EgspuVt3Vx
+	Swbm103fgltOAryOyi9Co+cUWtjg==
+X-Google-Smtp-Source: AGHT+IHzVd8RaIZzzyr6YTNF8GY5ofx0PywPASYXwtX0erFZJL3oJT+GFdH/GWC223tClxws6TZBUM7lp+ECMgXu1vE=
+X-Received: by 2002:a05:651c:503:b0:30b:b204:6b70 with SMTP id
+ 38308e7fff4ca-30bb2047363mr34222911fa.10.1741074953543; Mon, 03 Mar 2025
+ 23:55:53 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250226114752.104838-7-tariqt@nvidia.com>
+References: <cover.1740745270.git.mazziesaccount@gmail.com> <e50cf74a587b33cae3133a6b9e0081062f771249.1740745270.git.mazziesaccount@gmail.com>
+In-Reply-To: <e50cf74a587b33cae3133a6b9e0081062f771249.1740745270.git.mazziesaccount@gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Tue, 4 Mar 2025 08:55:42 +0100
+X-Gm-Features: AQ5f1Jpy987oPMQI8JiveGzipXCGjOLloV363WVv3DPMAv-V3aTk6ejZsBcPGkg
+Message-ID: <CACRpkdZE2mtOB2BkKudQHq5-=-dyK6S2Se2hXUH+_equXhqwdw@mail.gmail.com>
+Subject: Re: [PATCH v2 1/4] gpio: Respect valid_mask when requesting GPIOs
+To: Matti Vaittinen <mazziesaccount@gmail.com>
+Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Biju Das <biju.das.jz@bp.renesas.com>, Geert Uytterhoeven <geert@linux-m68k.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Feb 26, 2025 at 01:47:52PM +0200, Tariq Toukan wrote:
-> From: Leon Romanovsky <leonro@nvidia.com>
-> 
-> Existing match criteria didn't allow to match whole subnet and
-> only by specific addresses only. This caused to tunnel mode do not
-> forward such traffic through relevant SA.
-> 
-> In tunnel mode, policies look like this:
-> src 192.169.0.0/16 dst 192.169.0.0/16
->         dir out priority 383615 ptype main
->         tmpl src 192.169.101.2 dst 192.169.101.1
->                 proto esp spi 0xc5141c18 reqid 1 mode tunnel
->         crypto offload parameters: dev eth2 mode packet
-> 
-> In this case, the XFRM core code handled all subnet calculations and
-> forwarded network address to the drivers e.g. 192.169.0.0.
-> 
-> For mlx5 devices, there is a need to set relevant prefix e.g. 0xFFFF00
-> to perform flow steering match operation.
-> 
-> Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
-> Signed-off-by: Tariq Toukan <tariqt@nvidia.com>
-> ---
->  .../mellanox/mlx5/core/en_accel/ipsec.c       | 49 +++++++++++++++++++
->  .../mellanox/mlx5/core/en_accel/ipsec.h       |  9 +++-
->  .../mellanox/mlx5/core/en_accel/ipsec_fs.c    | 20 +++++---
->  3 files changed, 69 insertions(+), 9 deletions(-)
-> 
+On Fri, Feb 28, 2025 at 1:35=E2=80=AFPM Matti Vaittinen
+<mazziesaccount@gmail.com> wrote:
 
-[...]
+> When GPIOs were requested the validity of GPIOs were checked only when
+> the GPIO-chip had the request -callback populated. This made using
+> masked GPIOs possible.
+>
+> The GPIO chip driver authors may find it difficult to understand the
+> relation of enforsing the GPIO validity and the 'request' -callback
+> because the current documentation for the 'request' callback does not
+> mention this. It only states:
+>
+>  * @request: optional hook for chip-specific activation, such as
+>  *      enabling module power and clock; may sleep
+>
+> The validity of the GPIO line should be checked whether the driver
+> provides the 'request' callback or not.
+>
+> Unconditionally check the GPIO validity when GPIO is being requested.
+>
+> Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
 
->  
-> +static __be32 word_to_mask(int prefix)
-> +{
-> +	if (prefix < 0)
-> +		return 0;
-> +
-> +	if (!prefix || prefix > 31)
-> +		return cpu_to_be32(0xFFFFFFFF);
-> +
-> +	return cpu_to_be32(((1U << prefix) - 1) << (32 - prefix));
+Good catch!
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-Isn't it GENMASK(31, 32 - prefix)? I don't know if it is preferable to
-use this macro in such place.
-
-> +}
-> +
-> +static void mlx5e_ipsec_policy_mask(struct mlx5e_ipsec_addr *addrs,
-> +				    struct xfrm_selector *sel)
-> +{
-> +	int i;
-> +
-> +	if (addrs->family == AF_INET) {
-> +		addrs->smask.m4 = word_to_mask(sel->prefixlen_s);
-> +		addrs->saddr.a4 &= addrs->smask.m4;
-> +		addrs->dmask.m4 = word_to_mask(sel->prefixlen_d);
-> +		addrs->daddr.a4 &= addrs->dmask.m4;
-> +		return;
-> +	}
-> +
-> +	for (i = 0; i < 4; i++) {
-> +		if (sel->prefixlen_s != 32 * i)
-> +			addrs->smask.m6[i] =
-> +				word_to_mask(sel->prefixlen_s - 32 * i);
-> +		addrs->saddr.a6[i] &= addrs->smask.m6[i];
-> +
-> +		if (sel->prefixlen_d != 32 * i)
-> +			addrs->dmask.m6[i] =
-> +				word_to_mask(sel->prefixlen_d - 32 * i);
-> +		addrs->daddr.a6[i] &= addrs->dmask.m6[i];
-> +	}
-> +}
-> +
-
-[...]
-
-Looks fine,
-Reviewed-by: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
-
-Thanks
+Yours,
+Linus Walleij
