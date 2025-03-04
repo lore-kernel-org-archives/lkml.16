@@ -1,93 +1,164 @@
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BC9C2AE8D
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 07:51:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7D3B2AE8D
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 07:52:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741074707; cv=none; b=ek8iggosGGspjtbScgKx+cycJU2wQ4eeuaYVV771Bh0PA1rfDhonxrhlcSRfL5Atcdrt13b75FuewLmU+pSoy7gjixFZZ4YSZiide4WhR4FmuMz377WhwPeFWv0xRBsRZ04L7JEsyhJZ9Jxmg/2Gp9DFvBsW7TAl3O3TGq+RqFg=
+	t=1741074775; cv=none; b=r3OfO1Kv8tvmHug6PeA294AH4sKlWSyagTHF8S6zAgAAtj03QLtCaO/tsRwYeWu/RgEdPEeMIQow/NTOBWbHrP+G5uIGpN/D8+RPQEJMuFhG6ql7W4htB9rSQ2dEQECh+DdS8av4B4FTNHbJoqAT446ucFXA1QdHXBndj7wMhO4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741074707; c=relaxed/simple;
-	bh=u9ZCYhaK23fUJUUt5s7FYrwFuoV7Wm409Bw5a49OPOk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LztfcEXDpUNajPYhwviVgKhDupeO7HEKWi4MDh0ZB02E2esWu6ETE4yfvYkzHqR34J4aULLAvQXF5KkM3oJXTfKGOCHkQEssGUxcFowGblLcwcMR1WbJSptHZGRb3PpnZNcLOsWJOfguQN/2swFBdsg1jwzK4wrOCADJU5FfRyM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=X7jbZIFP; arc=none smtp.client-ip=209.85.167.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1741074775; c=relaxed/simple;
+	bh=Pdi9LiPW2XDqWccj0IQnT0WEQyNxj1rc9Fh524oc0Gg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
+	 Content-Type:References; b=t+m7oLBWdw+Eu26tDjaeKnOXiVizvgtS+zgOtyIII3AAFNcBdER9nbKwb6Jd1SHztre4WSoMrCJviK/+lk9xeyy+SpAXcUYh3Z00/cfQf5BPFdeQIbQG94h4DDl8Rfd69x3FLOWJrN6ERBDoYxwo7GfIVthGwJpHq2HRRQ6nMWo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=adrHId7U; arc=none smtp.client-ip=210.118.77.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="X7jbZIFP"
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-54965898051so2043029e87.2
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Mar 2025 23:51:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741074704; x=1741679504; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pA6zLWQ+dYJkLtBz+wtBiNsIVYV44LsyhmBHfgcYN+Y=;
-        b=X7jbZIFPqI8JAVpRk1d6NEU3kZGfohQ8AM0VeK9OaPWz0+8GMUkLao79JE7gko/6eP
-         fsDak7rS4FvpICROy2ti/qV+TZcoFkgFkDpVAuzQv5jFXHzVRfUuVwJ1gmA5m4HVw/B3
-         q+gOrNsJCljeCco2lg4gRvgtZKBWWuIRWOeapL1i8sO16+m4kRjWozHN07k4uJ8pJHBz
-         VWtQks94MRZwp1tZ5oUYMKQz+bhqh0kJlRyiG2E8J63qxGrb/pjfiYPZHpIfkdkiyepu
-         WvoCICCvdZ7tHGUPGzj6bpPS4MRuHQOsUPIIsqLD2YiRflyVvddQ0qw9yxqsrcqs0Jsj
-         gliQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741074704; x=1741679504;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=pA6zLWQ+dYJkLtBz+wtBiNsIVYV44LsyhmBHfgcYN+Y=;
-        b=UQesBiJVfVPSE9f9iw453DH4Ybw/o2EQ3K7MGnqAjPzk9xrfjWp7z17dwLSDU6+hmd
-         BJzv1aCp6ZCFGHA6kkFFplosEBXy7INKcKPQ9lAJZgGnbn1ApBpyU8dtSziUGwNLGJ21
-         5Qz879TSmAtaYHJSa6tClsivrVqdZ4b1uefidw1dB6M6oHSBsIiilsnOeWc/61zwrinI
-         jThdNqCAe8TMBL92prSY8xkC6c4S6pOWCgMcCENIv9DbObha9U70WiPIO+qEn8mrdHyy
-         64OOC3PmfrkDAqkYSZ491g5SX1EdMeMLjIA4+4tMrdjC4BEjl2MLm+gYvHlfRFflUb1g
-         tIYg==
-X-Forwarded-Encrypted: i=1; AJvYcCUxzgovypKPr4nL1zwm0hDSdOn9uoarlYJLFhLnRf8oKRpMJX/hAtq/SdQDTCkt19bOiIu8KrumOV0Qr1w=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxIe9pf+EUmeoK40gUMXxBuJFhc/7rnpnAR9LBO3e2bOs5XyB/a
-	eNGq8gyH4gvUhIiwv8gk7RjT7zDqpNCBYVMuKp/wed0+9h2iH3UIgeAE0tUKeXX/gXeFqf9b6Us
-	b2pUN09n7CM1das7SO6JVV53P+7xjpsWHwU1qwA==
-X-Gm-Gg: ASbGncvfNg4dsuiJArwMM1TPTiaKCk1WsryYLmK785eTvyg8QrPVMa/17ylXUZAJvAi
-	9/DIc49DQwTXYYcrfRHo/5OSUpcFbAi0IXhKhGPiSxOqGI9qg80BTIppNZzsV6aZaY999qnB9u0
-	Fz6KeojtSX5vDSTKVfXDxIysfZOA==
-X-Google-Smtp-Source: AGHT+IF2HnTvgALEagtidtwMTknG9FoykhqBphkMLjIu+urEhq+snaAKQPbxfAEiEdOYOfpEU/z8RIcNqZf0RTZQZA0=
-X-Received: by 2002:a05:6512:1292:b0:545:c9d:ef26 with SMTP id
- 2adb3069b0e04-5494c34fcd9mr5744703e87.46.1741074704091; Mon, 03 Mar 2025
- 23:51:44 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="adrHId7U"
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20250304075250euoutp017ee1ebf5a841e967e3bc807d05d537b1~pikdkdXb53171331713euoutp01A
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 07:52:50 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20250304075250euoutp017ee1ebf5a841e967e3bc807d05d537b1~pikdkdXb53171331713euoutp01A
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1741074770;
+	bh=lea+ualRj8bz1DmBFIqvryrAEtTAwUiOAMc/0EqaREQ=;
+	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
+	b=adrHId7UICeA7/DFlY7GUV1AoEnJjFAoDq05EhUfKMMwLS20bS1fsiFByUDhQQri6
+	 LYjDCmonE+4dvus6BOC1a/wq3k8RrYnEDEsvAGwOLJVQliFYXDN1dYgzekgLYkK3D2
+	 yW+sKKLwOabTXRG3ZIRVS6pEzELHBObb7jy4E1Og=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+	eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+	20250304075249eucas1p233c07fd6fccde4cb2074a8ea69813087~pikdEUWMq0502905029eucas1p2-;
+	Tue,  4 Mar 2025 07:52:49 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+	eusmges1new.samsung.com (EUCPMTA) with SMTP id 59.A8.20821.151B6C76; Tue,  4
+	Mar 2025 07:52:49 +0000 (GMT)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+	20250304075248eucas1p193463e8d646ef3fcda680ca785579934~pikcZBp7w0034500345eucas1p1g;
+	Tue,  4 Mar 2025 07:52:48 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+	eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+	20250304075248eusmtrp195ba42f7a1a1786cab2e20ffc929430a~pikcX6xRy0401204012eusmtrp1E;
+	Tue,  4 Mar 2025 07:52:48 +0000 (GMT)
+X-AuditID: cbfec7f2-b09c370000005155-7a-67c6b151ec14
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+	eusmgms1.samsung.com (EUCPMTA) with SMTP id 33.DC.19920.051B6C76; Tue,  4
+	Mar 2025 07:52:48 +0000 (GMT)
+Received: from [192.168.1.44] (unknown [106.210.136.40]) by
+	eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20250304075247eusmtip19a6fe9a7de8dd05807269c046561fe49~pikbfaLZv2935529355eusmtip1O;
+	Tue,  4 Mar 2025 07:52:47 +0000 (GMT)
+Message-ID: <08e5ffb9-2187-42b6-8090-9922b349fe2a@samsung.com>
+Date: Tue, 4 Mar 2025 08:52:47 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250228064024.3200000-1-jonas@kwiboo.se>
-In-Reply-To: <20250228064024.3200000-1-jonas@kwiboo.se>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Tue, 4 Mar 2025 08:51:32 +0100
-X-Gm-Features: AQ5f1Jqk33uHsY5UV1F0bE-LoNlIC6DrZiXxoZsYoJWU763-1spk-ecprSEFCuY
-Message-ID: <CACRpkdaELuU6XDKacOLsWAF8ncbudJ9Tp0jykAyf-NXRLjoSdw@mail.gmail.com>
-Subject: Re: [PATCH 0/7] rockchip: Add support for leds and user button on
- Radxa E20C
-To: Jonas Karlman <jonas@kwiboo.se>
-Cc: Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Yao Zi <ziyao@disroot.org>, 
-	linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/5] dt-bindings: firmware: thead,th1520: Add support
+ for firmware node
+To: Krzysztof Kozlowski <krzk@kernel.org>, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, drew@pdp7.com, guoren@kernel.org,
+	wefu@redhat.com, paul.walmsley@sifive.com, palmer@dabbelt.com,
+	aou@eecs.berkeley.edu, alex@ghiti.fr, jszhang@kernel.org,
+	ulf.hansson@linaro.org, m.szyprowski@samsung.com
+Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, Krzysztof
+	Kozlowski <krzysztof.kozlowski@linaro.org>
+Content-Language: en-US
+From: Michal Wilczynski <m.wilczynski@samsung.com>
+In-Reply-To: <377951ad-341f-4e19-a582-a534567dc466@kernel.org>
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrIKsWRmVeSWpSXmKPExsWy7djP87qBG4+lG6x/KWfx7M5XVoutv2ex
+	W6zZe47JYv6Rc6wW9y5tYbJ4sbeRxaL52Ho2i5ez7rFZnD+/gd1i7+ut7BaXd81hs/jce4TR
+	YtvnFjaLtUfuslu8vNzDbNE2i9/i/54d7BbH14ZbtOyfwuIg7PHm5UsWj8MdX9g97p2Yxuqx
+	aVUnm8eda3vYPDYvqfdoWXuMyeP9vqtsHn1bVjF6XGq+zu7xeZNcAHcUl01Kak5mWWqRvl0C
+	V8aTiWYFM7gqPrzzbmBcytHFyMkhIWAi8arrPUsXIxeHkMAKRonFhy6zQzhfGCVmzj7DDFIl
+	JPCZUeL33xyYjhtzXzBDFC1nlJjW8RKq/S2jxJ7ui2xdjBwcvAJ2EvPuqoI0sAioSMx48oAN
+	xOYVEJQ4OfMJC4gtKiAvcf/WDHYQW1ggQeL2+SawoSICO5gkrrzZA+YwC2xklFh39DVYB7OA
+	uMStJ/OZQGw2ASOJB8vns4LYnEDLLh/9xQZRIy+x/e0csGYJgVecEtObH4JdJCHgInFxswXE
+	C8ISr45vYYewZSROT+5hgbDzJR5s/cQMYddI7Ow5DmVbS9w59wtsDLOApsT6XfoQYUeJCa/b
+	mCCm80nceCsIcQGfxKRt05khwrwSHW1CENVqElN7euGWnluxjWkCo9IspFCZheTHWUh+mYWw
+	dwEjyypG8dTS4tz01GLDvNRyveLE3OLSvHS95PzcTYzAVHn63/FPOxjnvvqod4iRiYPxEKME
+	B7OSCO+t9qPpQrwpiZVVqUX58UWlOanFhxilOViUxHkX7W9NFxJITyxJzU5NLUgtgskycXBK
+	NTDFGf6VjeLucM/6Vcn0d3GywORVvWonz/dzbvkat0Okb9vxyf165pbO+QEBDcab+c6uefr/
+	osFhezmpQ0sny6n6xkhOXPX77hdjac5Sfq65//p14/ss6tKE7p1vmiS24xmrTTzf04qNpkav
+	Jm2SSJmceiNy5fad+lt651kLLOaZP+H35++KFXe/7l52XnEyz03h67NehvotLdhbuO65yjzm
+	LrNT/7YZBx66KNaxL3+nKtcCvcVRdyInFv3rOfRY3/20W+bd6wLT2gStRK1rt3Vv5DI8qv+y
+	qcbg5pVzv7n2aWZlNt/Zo3HZQeLsCxXFhdN73ksK5C3wuCQzUVWoZwsPn8JELU7zai5mx72y
+	stVKLMUZiYZazEXFiQAm+R8GBAQAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmplleLIzCtJLcpLzFFi42I5/e/4Xd2AjcfSDT7MNLR4ducrq8XW37PY
+	LdbsPcdkMf/IOVaLe5e2MFm82NvIYtF8bD2bxctZ99gszp/fwG6x9/VWdovLu+awWXzuPcJo
+	se1zC5vF2iN32S1eXu5htmibxW/xf88Odovja8MtWvZPYXEQ9njz8iWLx+GOL+we905MY/XY
+	tKqTzePOtT1sHpuX1Hu0rD3G5PF+31U2j74tqxg9LjVfZ/f4vEkugDtKz6Yov7QkVSEjv7jE
+	Vina0MJIz9DSQs/IxFLP0Ng81srIVEnfziYlNSezLLVI3y5BL+PJRLOCGVwVH955NzAu5ehi
+	5OSQEDCRuDH3BXMXIxeHkMBSRomZi5YwQyRkJK51v2SBsIUl/lzrYoMoes0o8XvdZtYuRg4O
+	XgE7iXl3VUFqWARUJGY8ecAGYvMKCEqcnPkErFdUQF7i/q0Z7CC2sECCxO3zTWDLRAR2MEkc
+	7dsBNpRZYCOjxMLvu9ghNsxgljhxbg1YO7OAuMStJ/OZQGw2ASOJB8vns4LYnECbLx/9xQZy
+	BbOAusT6eUIQ5fIS29/OYZ7AKDQLySGzkEyahdAxC0nHAkaWVYwiqaXFuem5xYZ6xYm5xaV5
+	6XrJ+bmbGIHpYduxn5t3MM579VHvECMTB+MhRgkOZiUR3lvtR9OFeFMSK6tSi/Lji0pzUosP
+	MZoCA2Mis5Rocj4wQeWVxBuaGZgamphZGphamhkrifO6XT6fJiSQnliSmp2aWpBaBNPHxMEp
+	1cDEXyi9bJfB3SubL27/eXgeX+ONvfUub1bFWNSvuxG+97F5aWDXUrWZJxZkZxi/+9nt8Xju
+	3J/GTIEmDBNXc7au3r6jfXpXZ8PRuRv9Vk8xeOTTf/Km5PI9V7Lzr5i3da5fdPVqsabX27AT
+	u3vf2hst28lz693U+uTYVVYrgp54xnWG8MRc2iEQzZDx9cd9aQ7fg5PyWo/GiJ40Wx3/Znav
+	cmP7knstR46FvA9WOpdsvObne5WrPjuFtzG+4nu2TzZA/eK5a+4uRtNd3npzvbrwOvT4xynJ
+	NldEmouaXNaHe6xIOhG2tTL9x8mVs7csv2qsyHBAq9d+boTamk8LxGKijCWnvdSUuPf+rJj9
+	zOnL5yixFGckGmoxFxUnAgBoKA+fmAMAAA==
+X-CMS-MailID: 20250304075248eucas1p193463e8d646ef3fcda680ca785579934
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20250303145918eucas1p10f64b2ce75e395ce208439307daa8a8f
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20250303145918eucas1p10f64b2ce75e395ce208439307daa8a8f
+References: <20250303145901.446791-1-m.wilczynski@samsung.com>
+	<CGME20250303145918eucas1p10f64b2ce75e395ce208439307daa8a8f@eucas1p1.samsung.com>
+	<20250303145901.446791-2-m.wilczynski@samsung.com>
+	<edb3dd6e-8b56-42b3-8bb2-8ed7ad186b75@kernel.org>
+	<8dcdd2ec-e4b6-4fc0-be50-12fe187cd5e0@kernel.org>
+	<99fcf36f-7fed-43e8-a94f-47563ab00fc6@samsung.com>
+	<377951ad-341f-4e19-a582-a534567dc466@kernel.org>
 
-Hi Jonas,
 
-On Fri, Feb 28, 2025 at 7:40=E2=80=AFAM Jonas Karlman <jonas@kwiboo.se> wro=
-te:
 
->   dt-bindings: pinctrl: Add pinctrl support for RK3528
->   pinctrl: rockchip: Add support for RK3528
+On 3/4/25 08:45, Krzysztof Kozlowski wrote:
+> On 04/03/2025 08:43, Michal Wilczynski wrote:
+>>
+>>
+>> On 3/3/25 18:46, Krzysztof Kozlowski wrote:
+>>> On 03/03/2025 18:42, Krzysztof Kozlowski wrote:
+>>>> On 03/03/2025 15:58, Michal Wilczynski wrote:
+>>>>> The kernel communicates with the E902 core through the mailbox
+>>>>> transport using AON firmware protocol. Add dt-bindings to document it
+>>>>> the dt node.
+>>>>>
+>>>>> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+>>>>
+>>>>
+>>>> How is this possible? That's v1 and I never review outside of mailing list.
+>>>>
+>>> OK, I found v5:
+>>> https://lore.kernel.org/all/20250219140239.1378758-4-m.wilczynski@samsung.com/
+>>>
+>>> so is this the same?
+>>
+>> Yeah, I thought by splitting the patchset and creating new sub-series I
+>> should start versioning from v1 again, and leave that bigger patchset as
+> 
+> What was unclear in my "keep versioning and keep changelog"? How this
+> can lead to "start new versioning"?
 
-These two patches applied to the pinctrl tree.
+OK, my bad misunderstood you. I don't want to spam too much so maybe I
+should wait if there will be any comments before re-sending with the proper
+changelog and version.
 
-Please funnel the rest through the SoC tree, it seems
-it should all be able to go in orthogonally.
-
-Yours,
-Linus Walleij
+> 
+>> a reference, I've linked it in each cover letter for each sub-series.
+> 
+> Best regards,
+> Krzysztof
+> 
