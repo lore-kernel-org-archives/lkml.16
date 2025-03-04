@@ -1,225 +1,314 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f42.google.com (mail-ot1-f42.google.com [209.85.210.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D5B81F4611;
-	Tue,  4 Mar 2025 06:22:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.13
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741069361; cv=fail; b=McBjXGsHIQ4fuEnsxFAbEw0SyJcwnSFL8r3ewZVJY36yEGkubheKpTZY0aUuyeDHH5svsbL0bheIEf8Apika/EF+O3ZY/KXokecJxgDjiS1/oxpafCHzOrxyJT0NzOJNwTO7/5+uRy1UwcGn+eIpt7vWADXvZ04KS5kRpORm+Uc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741069361; c=relaxed/simple;
-	bh=d7zODudGDtM06QgPeP4TUjhcwzyRSa7Tm/BFXyLry/U=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=tXQV4LPeOM9U8BOE/NEra/6Gg0uLCQHf7yyoE2ckvzDoObaHaU+K6OcABGKc4kxijgW4Ev5wASRxTVVQPNKsCkBcRlASs5ihQjbzVvu6cDJNIKJwWHhao/lnMeCzKYke8VGTQTVRfK8kb4o7JoVLCuKjOvvp+7JDiUmDSVlECAc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=afnTi06G; arc=fail smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FBA51F4611;
+	Tue,  4 Mar 2025 06:23:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.42
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741069429; cv=none; b=t6Ho0j8nZmDQkuABBAcrs4xSnpSbbbM8B9+ww6f5RV5rah1xLsmkl1gO7wbH4tiiWzj20jQxmAXr48RIUZJeXVYC/qfl5DWsL0wUmdlQD75mLx+K/0+U6cKPiQ7kR/LJsA3jxzNhQpNo7kMMMvq2djxNk7YjoiE/mS1o1Ui6dsE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741069429; c=relaxed/simple;
+	bh=qM6nzWU59w7y5QIHA+NK/RTyMJt9argx6ArxIGu4q7Q=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=qhS1SlRW+UCH4zePpU8ZbAUYahx1IdMJX4hfM9rbze9gXQ0AtvBgxr84sxpBTQNazZr5mTBgEQeEyWKBczDQ1NeydDgQjXEqdeQ+GJohNAJfpDu7li0Bn1W+DjQjuluKgWENQY++X9ZW+OVi4MB0bESpg9GJCX8y6civUm/nIZ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=h5UHhJg/; arc=none smtp.client-ip=209.85.210.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="afnTi06G"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741069360; x=1772605360;
-  h=date:from:to:cc:subject:message-id:reply-to:references:
-   in-reply-to:mime-version;
-  bh=d7zODudGDtM06QgPeP4TUjhcwzyRSa7Tm/BFXyLry/U=;
-  b=afnTi06GYO5kMSCxvv35ivDHVbdRx/zbYvIwmkxHRQFmcOIEaTv4IhOk
-   qgw3Y57ZsYzU5nCKH+aPowc9K+5QW1C30vCYUPGBm5pA+VOvS24Vn+rC1
-   EftZsd0RoCuo5MtsM4NaK6D8Ppq40PJxAfPo6cHxkMr0GOqpNrePvl7Xc
-   2I/L3yPWsluuqqnhsGFF8pKPG+mF5OW9fb+jEXw72VpQMls2wdUiuxhlK
-   uWbJKRniPckA2E30FMCUb5bUxmgq80TogdlU8xt7NlpTRRHvkit4snmFS
-   DdfZLNLsuWxcDU+c2El5gav0EzIHwlXwp7N+1d5vjiNjidKP4lxMnzrWx
-   Q==;
-X-CSE-ConnectionGUID: u7bljd1aR56lHRUv99Ks8Q==
-X-CSE-MsgGUID: bFdCYVWOS2yJAx0gDLZIfA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11362"; a="52952107"
-X-IronPort-AV: E=Sophos;i="6.13,331,1732608000"; 
-   d="scan'208";a="52952107"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Mar 2025 22:22:40 -0800
-X-CSE-ConnectionGUID: j1+kI5n3Qg63xXUhpd/3PQ==
-X-CSE-MsgGUID: 74Rlkv92T+aX9c07fhSFmQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,331,1732608000"; 
-   d="scan'208";a="123220391"
-Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
-  by orviesa003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Mar 2025 22:22:37 -0800
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14; Mon, 3 Mar 2025 22:22:37 -0800
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14 via Frontend Transport; Mon, 3 Mar 2025 22:22:37 -0800
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.44) by
- edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Mon, 3 Mar 2025 22:22:34 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=iZZ12+fNcHBXw+OmVj13HDakVUOTBDuDdKI1GhbuDRX8VlQTKdHy4rFZC3c2QEEKnEGYdY81I3ITNBVn/txA82CzLRtoFswCzlF3XRG13Lh+gDBWS4WdTNKtR1E38go6geKyfbLwD6yA8h4NZdRLiGv5zd4FRfkChbITICE2knO4serSHSKSmEIS4uUZypPnPdS+LAr2iLN3jRsDlQHbBVAtMkywm0w3y34GdQPUZeqGe2TlmOh5Pum49ROz5d8i66w1OMDU09p3Q5bkgsqE/pFQ9tR05f3IBSN4OhG2CoLlfM119uva4Z7nSJYSMYjFPugu2lviB+msp7G39SmbJg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=0a0D3jSE/rGmud6P3H/vhYgdpZl8ybipk9Vbrv/Gj4c=;
- b=hzWq7CBN7chKovQ8n1NnN6U2vJ1TZX4W3SSeXHs3nM6bj2kNO4gWn4ZBeHNW4xS0BVRSdc7SgpFgAGeKU8CWR8e3sjfW2kCq3gDFWRG36JtZX+fwHvJsA1UfhhZY6BlFEtPYlZlQsTXG9oJPtCI1YZ47YV5Un7O3GAYprnTQxld55E3OW/hTR8JSz7VdTbh+vu99MtQ70M3h3VPZsiTnN8TCXNVV3koR2mTbvvvkeDMVzoGJ70fPPB3VyM7qiw/plcNfAN7Cy/yeKupOGL14v32pP51drO6c/AHEJCQeKzTvx3f4ouqepwirTWvKnODTEJIlF/1ZgW4gthaG/kfkHQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from MN0PR11MB5964.namprd11.prod.outlook.com (2603:10b6:208:373::17)
- by PH0PR11MB5784.namprd11.prod.outlook.com (2603:10b6:510:129::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.25; Tue, 4 Mar
- 2025 06:21:51 +0000
-Received: from MN0PR11MB5964.namprd11.prod.outlook.com
- ([fe80::7a0e:21e8:dce9:dbee]) by MN0PR11MB5964.namprd11.prod.outlook.com
- ([fe80::7a0e:21e8:dce9:dbee%4]) with mapi id 15.20.8511.015; Tue, 4 Mar 2025
- 06:21:51 +0000
-Date: Tue, 4 Mar 2025 14:20:29 +0800
-From: Yan Zhao <yan.y.zhao@intel.com>
-To: Paolo Bonzini <pbonzini@redhat.com>
-CC: <linux-kernel@vger.kernel.org>, <kvm@vger.kernel.org>, <seanjc@google.com>
-Subject: Re: [PATCH 4/4] KVM: TDX: Always honor guest PAT on TDX enabled
- platforms
-Message-ID: <Z8abrYiSJAX6mCTi@yzhao56-desk.sh.intel.com>
-Reply-To: Yan Zhao <yan.y.zhao@intel.com>
-References: <20250301073428.2435768-1-pbonzini@redhat.com>
- <20250301073428.2435768-5-pbonzini@redhat.com>
- <Z8UGIryFjJ+msO6i@yzhao56-desk.sh.intel.com>
- <530fd31f-923b-4337-a9fb-76715eadc338@redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <530fd31f-923b-4337-a9fb-76715eadc338@redhat.com>
-X-ClientProxiedBy: SG2PR01CA0189.apcprd01.prod.exchangelabs.com
- (2603:1096:4:189::15) To DS7PR11MB5966.namprd11.prod.outlook.com
- (2603:10b6:8:71::6)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h5UHhJg/"
+Received: by mail-ot1-f42.google.com with SMTP id 46e09a7af769-7289871af1eso1017398a34.1;
+        Mon, 03 Mar 2025 22:23:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741069427; x=1741674227; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=LsFPwJO5HkMNkZKtQtsHb6wDsOU2hAWmu+ONuIeET/c=;
+        b=h5UHhJg/LXQyNrsc3mssCos7KeBlviC9NKRZ1Eo7R8JCg7mIzUJxqOwUTwFnsmoAkH
+         lo3NHDcHhX+bBppFWGUI0Dgpa/tukGYZ5JbfKmhuqJZTigpfjB5mQWCxIzcaeMajXRWq
+         hitrEj8KMh608VYvoHXbQOSozh5iPNm0tpDpM24+ApGo5UhmS1w0BVeBxECWqT6iTdQM
+         W6RtY3d1fFvndDadPHsrh6XEx9g+UhdXWkGiXcFxBcELQp8hKLv2gXMciGFjVKXJmID4
+         0tA3uvqRCEwCcOC1RsC1KjbS2EHTkWPfiUA5NW7wDrPK2d5rVa2/m/xafAdktVasfl4U
+         pNoA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741069427; x=1741674227;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=LsFPwJO5HkMNkZKtQtsHb6wDsOU2hAWmu+ONuIeET/c=;
+        b=HgBoxI+tabpMAH+EZm6MYsIteDi6Xw+DJKVE9BOC8rS8S8Yr/wKVN1rpMHFjNjCom7
+         913vsLHcvKXF3Kl4H9NbaRRGqfkraCECnnF+2pMkzDhFNDTZL8xxgM43RGjedBakwwP6
+         /8KR5a1jNo8rYzFJMULNvuIbpik10zyA2BQ8KIoKqRkV3C19K+8IY7HrUSsje7KBsHsS
+         7YYjBouv/hDuiNw3uDp1keACk4rBIbWMEP8nLWOMUWdxiH9jzFqzAurAwVk7qkSrfPwq
+         Dl7/n4RXLfb7+IC+xvH7/CtMUtWz0yL4HEUQzHnMX89/ox9b0WKp+8dQvXSxNsOAx3/i
+         HaWA==
+X-Forwarded-Encrypted: i=1; AJvYcCVnuwxsJCNUgPXureVj/oYd8/h1lVtwJN/hi4kxDMduurUYVa30m3DDPLqLoe97m0zlEPdkEcqiOG64tCc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxwCPfbgyH4UFCjFownYucoIgo1GKULvGWuq7hWR9i/kEAZ7h5d
+	gesiQfsZYLfOHxPkjtd/FsbVOhiYXzFPGvwCqcDszmkNfvMroX+iC8WqamtE+jQ=
+X-Gm-Gg: ASbGncvPaoiTtV7bO7BjjBEUmPlDoJK2CiH5VYMCXZZ6gqfk+nJKAHdWH0QMqz5Mebb
+	TxGCeX4ueIxPKwRUxyFvuh3x2OfWw6Y6O1cRXyb4cEnIQxmpp8yNWxPB+WslC1dCYOM0MerbhGZ
+	LeV5864I+5s2StEaDSlFS8jCuh/SPO1wHBg/GWvpUsYmJH8r8oA6/7ncwTu2qdd9FaTDp3pOcQH
+	6AWK+vbxypoe/0EgkVm23ey1TH4OXFUvqcRWyObvwrFmqNBkc4r5WNXhqJeYRiq5qWSdQoUo9Lh
+	Zr7do6OEUKpUFOQaZa3v9z3skdgzKcydwOREhcQ+tMEhk7XgSLk5EHL5VhLy
+X-Google-Smtp-Source: AGHT+IFYVqT7e4pt9P1YxcLrzijcsKFOZitU1MKq1f72CECHf/FpON3LbG7oiifQOngyNTtxbg6AXg==
+X-Received: by 2002:a05:6830:3693:b0:72a:fc7:21fa with SMTP id 46e09a7af769-72a0fc7230cmr3053301a34.27.1741069426732;
+        Mon, 03 Mar 2025 22:23:46 -0800 (PST)
+Received: from TM-Oleander.attlocal.net ([2600:1700:f7e0:e3e0:f5ed:3e21:9996:a1a9])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-72a0461b9cesm679824a34.25.2025.03.03.22.23.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Mar 2025 22:23:46 -0800 (PST)
+From: Tadeu Marchese <marchese.kdev@gmail.com>
+X-Google-Original-From: Tadeu Marchese <marchese@hp.com>
+To: hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com
+Cc: platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Tadeu Marchese <marchese@hp.com>
+Subject: platform/x86/hp-bioscfg: Fix buffer alignment and conversion
+Date: Tue,  4 Mar 2025 00:23:19 -0600
+Message-Id: <20250304062319.86270-1-marchese@hp.com>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN0PR11MB5964:EE_|PH0PR11MB5784:EE_
-X-MS-Office365-Filtering-Correlation-Id: 635d9c8b-dd13-4636-f876-08dd5ae4d99d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?ywAKOYkinu3Bg5tjHdzK/LPjHoHMYykdHaXMsNeBLAMgToer3RouGcAjBxhK?=
- =?us-ascii?Q?qOcXyO2KPs7moBJk3hhQivanZ+7X1PYp59uQfTN8QyWsLpoOgCWAZBuN9ftQ?=
- =?us-ascii?Q?RjZeXixey1nhvy7lQUNPVTmS5vUprS7qzK+oOMbAZ6G9Ne06uz0WwX2/w1mj?=
- =?us-ascii?Q?iEaa4gQQPfuTfR2SImRSHQJr9Djukn2+v9Vh4met+e7DQgeT+RAypvNQPBXh?=
- =?us-ascii?Q?ud4QwgqGzVLogCoDGUxg7Cqz0Xyeb5pKKVcTH0SuCIRywp3KUzVy1L5rli8T?=
- =?us-ascii?Q?wH0IlR1nmRjPZWXc8m9aOH6tLsGniJqHC7Z1de01JfazKSfoD/UWTYAJPiqD?=
- =?us-ascii?Q?3o6pT9AGRaZ+zdG7XQi173R3bXMFi37hrqJYvQe8Z1JExdXQtzbEVgG1zksT?=
- =?us-ascii?Q?CINdPfIv8H3LPk5ikY2zBPDADA6DJ3KUpaoqwivP/EeBUkDbv8bLaaCnNl6N?=
- =?us-ascii?Q?EtRYTuc/EDYatJVXw9UT5PRTbzylRk6ZlQPf1qo1HXPGd86qwbX5P0s7kSg7?=
- =?us-ascii?Q?PbB+S3uU3B/5dd6T2GfgIyN2NV5Vg6pwk342idO/Ksrfu0+z0dxj0JOByLMJ?=
- =?us-ascii?Q?KYWmGbINCrHMRxRYFW9CRuqFnQccz0bxFWeGUrUny1un0aqPR4ZiFPzWqjql?=
- =?us-ascii?Q?h9CmgZNBEfeTwh6UHQPEAGF6KErjrmGfo94qXL7d4zQ23BrSenqN5x/Esdpm?=
- =?us-ascii?Q?HxBJH0fruvoDiEr76NIQ7IwyOYoL3C8FThtzSsTk6uzN8Jabkqp7PdqcvVb/?=
- =?us-ascii?Q?eB3U4kdgGXDJBgb9R6kaNBQuiy3x2izZTkCUZefvljhCvo+iEJMaqF/eMUZc?=
- =?us-ascii?Q?j+pRVvbNBKfKRx6l+k8b8+cKB26nPROYx2CELoK9/+rurgO7cZwGM3Omweq3?=
- =?us-ascii?Q?gk4TcDNCfYJyljK0NAsmBXcfqapVkxHtmUQIvpY7v2PzYt3T6Ykz7jsfw4Lv?=
- =?us-ascii?Q?ceLbwUN9d6QxlHmeoaktska/52wVT4+3vH3zG+Hn/Z8KSTVl3dqmB4i2FfRV?=
- =?us-ascii?Q?RkLzkUR+Dd8FVTyZsUfu6Wch6AEzKg/ijVBwPTHvix98joI/peCSjVv7GobM?=
- =?us-ascii?Q?3bbi1X5JK4wSkGhcgHu5dSCu8LR+9dRvj51r/xKbdJtkZU1RLqKdIh9GQi0A?=
- =?us-ascii?Q?XTshQiIatRWS5V7V/3Ud+nQTq5P2VUGMhW6h2r/HvL+8j8p3aUA01kKfPbCK?=
- =?us-ascii?Q?iRLIQIqzflp0rDoAhjJakhfUL0PEIb+gc7NJRS+xTDDNDdnkyOCFHMyDFJpJ?=
- =?us-ascii?Q?comn7Zc/oSykSQkp/zs5EdbYRjjLIDQevAdUFLmUMHF2NvoIcpmLobsrQ995?=
- =?us-ascii?Q?EQbu4QBE7TUeHkZFvJlQKWcVdB3Vy2+ecTJPn4ui/0EFAheHzgjm2/FWNTML?=
- =?us-ascii?Q?7o33bEmDBp1oOP+U6OyaqoMZsvwv?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR11MB5964.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?usRNNtBTg+HvB8NIPxN4Xln/8rDJXfmTxZg9DTXr7yJtYmzqmpjeEeXKlTJG?=
- =?us-ascii?Q?z1/9Igb4Ks6J4w7ABhtRk7MIEQNsIye8/wWgGa1e1KqTL14LADVc2RjDqjLc?=
- =?us-ascii?Q?t1An+PJ7WOKsVHjyHV9Expi1kjNKxOPPUXHdO1NPaXjX/8EgNaaGEC017Ipq?=
- =?us-ascii?Q?p3VO609VIo3xBEWVWttQGwnk7WqfW2n80p7X1mt29MNKB5IhkjoZjcQKN46H?=
- =?us-ascii?Q?vFiy1yqaxtdq4q3MYgXojevduEoJd4D5+eummPOuK6+I7zEAlKZ6r/TdcbDi?=
- =?us-ascii?Q?bt4VN/6h5Uv4Af24LozNKJiBdkkslOc0Zlmx0iVj38DNgGFrf8bkDeDSRY9K?=
- =?us-ascii?Q?GRnCvXxTb6Z3tegQA/P0qvPe2jaIOS8zpU+U34VzXyipLv0DX1ArPLwLWVIC?=
- =?us-ascii?Q?AnPuwPOAjCO1CWOnuYP22p7A6afrfxX3WoCchO+rP0N+8eIEJvJwqelMTkHg?=
- =?us-ascii?Q?Ozb2kCncXral/R3nkYe1hwH91A8svfnh4QwYd8yLPiIJwXd5g8xC91LMFlZW?=
- =?us-ascii?Q?ipVldWunWsqCI38XENUWKJcItTdFEYxI/HW/VTNkhs5f6wJJj9jttCJba/F1?=
- =?us-ascii?Q?SWEaX2RNzNPvKm0k25zpTzYzImrL/cBmoe5iaXDGtBgWljP5r5RGbq2JJKV8?=
- =?us-ascii?Q?7yNTLM8eVLUpE7gVh7WeztiW3wLjR4qv8Fe9aTSzIS907QYcePQYpM2ZX4px?=
- =?us-ascii?Q?86icDGwDQH7j7UIEgO8ByGdhQjfEzRmPFIHC07b7ZRjiLDwDrdku8QmmhTTo?=
- =?us-ascii?Q?8HJfW7n+gFvB/jFU2zPHsq6qofCPpuV0/tAOEFPyrfh6nA3Mwjb8URq72yaC?=
- =?us-ascii?Q?Gw4e3LyqshxYfCWm9ZJ+/5eOc0ciCdNDCktCA9sUwO9h1unutMid01lM8mdL?=
- =?us-ascii?Q?Swx8BaIrqjCuQh9zwChcGQ3ZJ81zu9/6k1OWMSOSugRlNRgmskVigmuH9y2R?=
- =?us-ascii?Q?DtiwmdqRJhGLhJJWSoMaOIuNgNTm00QQ6kKVuFX4X/IS1G+EyP+EPFsgG1ZU?=
- =?us-ascii?Q?Tj6JQ/I4vWmlMTm6ZqL8xsRGviGCmZfqfJag8F3SmQb3mzbzBQoWhlWW2qkz?=
- =?us-ascii?Q?yBrg8Ba3tWboOI4oCSj9R8GqOBkyWPPqFjtmfSQ1Su4yPR2Vo8XOPOe0A8PL?=
- =?us-ascii?Q?Zm2zuObTe9s76M/NL3HzJqCNvAi/cYohjoEhaOGgQMwj6TF/kSveQLcWuxl9?=
- =?us-ascii?Q?oqjC4XUhOOxAQfnuqFREs7hgNs6aooMBJzZJETym5lPAdQ/J5spmzNHBwNtw?=
- =?us-ascii?Q?4nf1eVI3KDEqtXU05Pfjg9ayGnx8a8HPYfz41EiUIseHoDGfIY20AOdDGmjC?=
- =?us-ascii?Q?L3WGi1jIYSanApUojxsXMdlAGhY3261TVvWvAKc2Owp3r/dL4BB6Z8oN0CPT?=
- =?us-ascii?Q?fQWDzE37VlqulV3G43WptiHm1O67cjIdjFjHupElS8ZlBIV5Et0Gh1JMvqcC?=
- =?us-ascii?Q?VMFLzGwQRYo92RdVDAMFkZsgX5I3g6iqCcgJrhF6p0g2/c/yO1N9sMglmaWJ?=
- =?us-ascii?Q?cVSU5H/h1U+Xu6vWkok8j5qQjdFVhkmKeL7Zn55lQcsSrzMZJkuRviV4AlWM?=
- =?us-ascii?Q?kO/22kwD54rTqqMLvwGOIi6Y7klhZMVLJBumeDeR?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 635d9c8b-dd13-4636-f876-08dd5ae4d99d
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR11MB5966.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Mar 2025 06:21:51.5022
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: RiLmo5Rf3uOnZFlPuang4RKCXJi/TS0xPRqoa5Jd8iOBw731zJMs4h9nkq7OuMZ7zgbXJ0NijJMomv0ynXTISg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR11MB5784
-X-OriginatorOrg: intel.com
+Content-Transfer-Encoding: 8bit
 
-On Mon, Mar 03, 2025 at 05:14:55PM +0100, Paolo Bonzini wrote:
-> On 3/3/25 02:30, Yan Zhao wrote:
-> > >   	kvm->arch.has_protected_state = true;
-> > >   	kvm->arch.has_private_mem = true;
-> > > +	kvm->arch.disabled_quirks |= KVM_X86_QUIRK_EPT_IGNORE_GUEST_PAT;
-> > Though the quirk is disabled by default in KVM in tdx_vm_init() for TDs, the
-> > kvm->arch.disabled_quirks can be overwritten by a userspace specified value in
-> > kvm_vm_ioctl_enable_cap().
-> > "kvm->arch.disabled_quirks = cap->args[0] & kvm_caps.supported_quirks;"
-> > 
-> > So, when an old userspace tries to disable other quirks on this new KVM, it may
-> > accidentally turn KVM_X86_QUIRK_EPT_IGNORE_GUEST_PAT into enabled for TDs, which
-> > would cause SEPT being zapped when (de)attaching non-coherent devices.
-> 
-> Yeah, sorry about that - Xiaoyao also pointed it out and I should have
-> noticed it---or marked the patches as RFC which they were.
-> 
-> > Could we force KVM_X86_QUIRK_EPT_IGNORE_GUEST_PAT to be disabled for TDs?
-> > 
-> > e.g.
-> > 
-> > tdx_vm_init
-> >     kvm->arch.always_disabled_quirks |= KVM_X86_QUIRK_EPT_IGNORE_GUEST_PAT;
-> > 
-> > static inline bool kvm_check_has_quirk(struct kvm *kvm, u64 quirk)
-> > {
-> >          WARN_ON_ONCE(kvm->arch.always_disabled_quirk & kvm_caps.force_enabled_quirks);
-> > 
-> >          u64 disabled_quirks = kvm->arch.always_disabled_quirk | kvm->arch.disabled_quirks;
-> >          return !(disabled_quirks & quirk) |
-> >                 (kvm_caps.force_enabled_quirks & quirk);
-> > }
-> 
-> We can change KVM_ENABLE_CAP(KVM_X86_DISABLE_QUIRKS), as well as QUIRKS2, to
-> use "|=" instead of "=".
-> 
-> While this is technically a change in the API, the current implementation is
-> just awful and I hope that no one is relying on it! This way, the
-I think QEMU is not relying on it.
+Use PTR_ALIGN to access buffer in hp_get_string_from_buffer().
+Remove code that escapes characters with backslashes.
+Use kstrtouint() for unsigned string-to-integer conversion.
+Increase the string_data buffer size by defining MAX_STRING_BUFF_SIZE.
 
-I considered making this change while writing the quirk SLOT_ZAP_ALL but gave it
-up, thinking it might allow users to re-enable a quirk later on.
+Signed-off-by: Tadeu Marchese <marchese@hp.com>
+---
+This patch ensures proper alignment when reading the string size from the 
+buffer and simplifies Unicode-to-UTF-8 conversion by removing 
+unnecessary character escaping.
 
-I'm glad you also see it as a bug:)
+Issues fixed at the module initialization:
+[  433.823905] hp_bioscfg: Prerequisites size value exceeded the maximum 
+  number of elements supported or data may be malformed
+[  433.837747] Unable to convert string to integer: 4294967295
 
-> "always_disabled_quirks" are not needed.
-> 
-> If the "|=" idea doesn't work out I agree that
-> kvm->arch.always_disabled_quirk is needed.
-> 
-> Sending v3 shortly...
-Thanks!
+The buffer size was too small for string attributes such as 
+'HP_Disk0MapForUefiBootOrder'.
+
+ drivers/platform/x86/hp/hp-bioscfg/bioscfg.c  | 82 ++++++-------------
+ drivers/platform/x86/hp/hp-bioscfg/bioscfg.h  |  6 +-
+ .../x86/hp/hp-bioscfg/int-attributes.c        |  8 +-
+ 3 files changed, 33 insertions(+), 63 deletions(-)
+
+diff --git a/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c b/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
+index 0b277b7e37dd..b537fbaac15e 100644
+--- a/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
++++ b/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
+@@ -51,19 +51,21 @@ int hp_get_integer_from_buffer(u8 **buffer, u32 *buffer_size, u32 *integer)
+ 
+ int hp_get_string_from_buffer(u8 **buffer, u32 *buffer_size, char *dst, u32 dst_size)
+ {
+-	u16 *src = (u16 *)*buffer;
++	u16 *src = PTR_ALIGN((u16 *)*buffer, sizeof(u16));
+ 	u16 src_size;
+ 
+-	u16 size;
+-	int i;
++	u16 length;
+ 	int conv_dst_size;
++	int result;
+ 
+ 	if (*buffer_size < sizeof(u16))
+ 		return -EINVAL;
+ 
++	/* String size is in the first two bytes of the buffer */
+ 	src_size = *(src++);
+-	/* size value in u16 chars */
+-	size = src_size / sizeof(u16);
++
++	/* Get the string length considering it is u16 */
++	length = src_size / sizeof(u16);
+ 
+ 	/* Ensure there is enough space remaining to read and convert
+ 	 * the string
+@@ -71,54 +73,22 @@ int hp_get_string_from_buffer(u8 **buffer, u32 *buffer_size, char *dst, u32 dst_
+ 	if (*buffer_size < src_size)
+ 		return -EINVAL;
+ 
+-	for (i = 0; i < size; i++)
+-		if (src[i] == '\\' ||
+-		    src[i] == '\r' ||
+-		    src[i] == '\n' ||
+-		    src[i] == '\t')
+-			size++;
+-
+-	/*
+-	 * Conversion is limited to destination string max number of
+-	 * bytes.
+-	 */
+-	conv_dst_size = size;
+-	if (size > dst_size)
+-		conv_dst_size = dst_size - 1;
++	conv_dst_size = length;
++	if (dst_size < conv_dst_size)
++		return -EINVAL;
+ 
+ 	/*
+-	 * convert from UTF-16 unicode to ASCII
++	 * Convert from UTF-16 unicode to UTF-8 and ensure
++	 * the string is null terminated
+ 	 */
+-	utf16s_to_utf8s(src, src_size, UTF16_HOST_ENDIAN, dst, conv_dst_size);
+-	dst[conv_dst_size] = 0;
+-
+-	for (i = 0; i < conv_dst_size; i++) {
+-		if (*src == '\\' ||
+-		    *src == '\r' ||
+-		    *src == '\n' ||
+-		    *src == '\t') {
+-			dst[i++] = '\\';
+-			if (i == conv_dst_size)
+-				break;
+-		}
+-
+-		if (*src == '\r')
+-			dst[i] = 'r';
+-		else if (*src == '\n')
+-			dst[i] = 'n';
+-		else if (*src == '\t')
+-			dst[i] = 't';
+-		else if (*src == '"')
+-			dst[i] = '\'';
+-		else
+-			dst[i] = *src;
+-		src++;
+-	}
++	result = utf16s_to_utf8s(src, src_size, UTF16_HOST_ENDIAN, dst, conv_dst_size);
++	dst[result] = 0;
+ 
+-	*buffer = (u8 *)src;
+-	*buffer_size -= size * sizeof(u16);
++	/* Update buffer to point to the next position */
++	*buffer = (u8 *)src + src_size;
++	*buffer_size -= src_size;
+ 
+-	return size;
++	return result;
+ }
+ 
+ int hp_get_common_data_from_buffer(u8 **buffer_ptr, u32 *buffer_size,
+@@ -999,37 +969,37 @@ static int __init hp_init(void)
+ 	 */
+ 	ret = create_attributes_level_sysfs_files();
+ 	if (ret)
+-		pr_debug("Failed to create sysfs level attributes\n");
++		pr_warn("Failed to create sysfs level attributes\n");
+ 
+ 	ret = hp_init_bios_attributes(HPWMI_STRING_TYPE, HP_WMI_BIOS_STRING_GUID);
+ 	if (ret)
+-		pr_debug("Failed to populate string type attributes\n");
++		pr_warn("Failed to populate string type attributes\n");
+ 
+ 	ret = hp_init_bios_attributes(HPWMI_INTEGER_TYPE, HP_WMI_BIOS_INTEGER_GUID);
+ 	if (ret)
+-		pr_debug("Failed to populate integer type attributes\n");
++		pr_warn("Failed to populate integer type attributes\n");
+ 
+ 	ret = hp_init_bios_attributes(HPWMI_ENUMERATION_TYPE, HP_WMI_BIOS_ENUMERATION_GUID);
+ 	if (ret)
+-		pr_debug("Failed to populate enumeration type attributes\n");
++		pr_warn("Failed to populate enumeration type attributes\n");
+ 
+ 	ret = hp_init_bios_attributes(HPWMI_ORDERED_LIST_TYPE, HP_WMI_BIOS_ORDERED_LIST_GUID);
+ 	if (ret)
+-		pr_debug("Failed to populate ordered list object type attributes\n");
++		pr_warn("Failed to populate ordered list object type attributes\n");
+ 
+ 	ret = hp_init_bios_attributes(HPWMI_PASSWORD_TYPE, HP_WMI_BIOS_PASSWORD_GUID);
+ 	if (ret)
+-		pr_debug("Failed to populate password object type attributes\n");
++		pr_warn("Failed to populate password object type attributes\n");
+ 
+ 	bioscfg_drv.spm_data.attr_name_kobj = NULL;
+ 	ret = hp_add_other_attributes(HPWMI_SECURE_PLATFORM_TYPE);
+ 	if (ret)
+-		pr_debug("Failed to populate secure platform object type attribute\n");
++		pr_warn("Failed to populate secure platform object type attribute\n");
+ 
+ 	bioscfg_drv.sure_start_attr_kobj = NULL;
+ 	ret = hp_add_other_attributes(HPWMI_SURE_START_TYPE);
+ 	if (ret)
+-		pr_debug("Failed to populate sure start object type attribute\n");
++		pr_warn("Failed to populate sure start object type attribute\n");
+ 
+ 	return 0;
+ 
+diff --git a/drivers/platform/x86/hp/hp-bioscfg/bioscfg.h b/drivers/platform/x86/hp/hp-bioscfg/bioscfg.h
+index 3166ef328eba..99a95c709061 100644
+--- a/drivers/platform/x86/hp/hp-bioscfg/bioscfg.h
++++ b/drivers/platform/x86/hp/hp-bioscfg/bioscfg.h
+@@ -17,11 +17,11 @@
+ 
+ #define DRIVER_NAME		"hp-bioscfg"
+ 
++#define MAX_STRING_BUFF_SIZE	1024
+ #define MAX_BUFF_SIZE		512
+ #define MAX_KEY_MOD_SIZE	256
+ #define MAX_PASSWD_SIZE		64
+ #define MAX_PREREQUISITES_SIZE	20
+-#define MAX_REQ_ELEM_SIZE	128
+ #define MAX_VALUES_SIZE		16
+ #define MAX_ENCODINGS_SIZE	16
+ #define MAX_ELEMENTS_SIZE	16
+@@ -131,8 +131,8 @@ struct common_data {
+ struct string_data {
+ 	struct common_data common;
+ 	struct kobject *attr_name_kobj;
+-	u8 current_value[MAX_BUFF_SIZE];
+-	u8 new_value[MAX_BUFF_SIZE];
++	u8 current_value[MAX_STRING_BUFF_SIZE];
++	u8 new_value[MAX_STRING_BUFF_SIZE];
+ 	u32 min_length;
+ 	u32 max_length;
+ };
+diff --git a/drivers/platform/x86/hp/hp-bioscfg/int-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/int-attributes.c
+index 6c7f4d5fa9cb..3e8f99b4174d 100644
+--- a/drivers/platform/x86/hp/hp-bioscfg/int-attributes.c
++++ b/drivers/platform/x86/hp/hp-bioscfg/int-attributes.c
+@@ -38,7 +38,7 @@ static int validate_integer_input(int instance_id, char *buf)
+ 	if (integer_data->common.is_readonly)
+ 		return -EIO;
+ 
+-	ret = kstrtoint(buf, 10, &in_val);
++	ret = kstrtouint(buf, 10, &in_val);
+ 	if (ret < 0)
+ 		return ret;
+ 
+@@ -55,7 +55,7 @@ static void update_integer_value(int instance_id, char *attr_value)
+ 	int ret;
+ 	struct integer_data *integer_data = &bioscfg_drv.integer_data[instance_id];
+ 
+-	ret = kstrtoint(attr_value, 10, &in_val);
++	ret = kstrtouint(attr_value, 10, &in_val);
+ 	if (ret == 0)
+ 		integer_data->current_value = in_val;
+ 	else
+@@ -185,7 +185,7 @@ static int hp_populate_integer_elements_from_package(union acpi_object *integer_
+ 		/* Assign appropriate element value to corresponding field*/
+ 		switch (eloc) {
+ 		case VALUE:
+-			ret = kstrtoint(str_value, 10, &int_value);
++			ret = kstrtouint(str_value, 10, &int_value);
+ 			if (ret)
+ 				continue;
+ 
+@@ -328,7 +328,7 @@ static int hp_populate_integer_elements_from_buffer(u8 *buffer_ptr, u32 *buffer_
+ 	integer_data->current_value = 0;
+ 
+ 	hp_get_string_from_buffer(&buffer_ptr, buffer_size, dst, dst_size);
+-	ret = kstrtoint(dst, 10, &integer_data->current_value);
++	ret = kstrtouint(dst, 10, &integer_data->current_value);
+ 	if (ret)
+ 		pr_warn("Unable to convert string to integer: %s\n", dst);
+ 	kfree(dst);
+-- 
+2.40.1
+
