@@ -1,38 +1,37 @@
 Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74B2A202F70
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 12:44:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A18F2036FB
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 12:44:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741092289; cv=none; b=lUKwL7E/CMcV80zkAMh9TrfwLmBaVIpGIRrnYa8SAHOrZd3e2uThrP0c9UgkevD7HaMCYMA8OikMD25w2oXgcHvsUjM0D0+3KMr46zHo9LXKA/1Mz/d+67Q0MJIiEn6b5OjndR2YQZbXlURGB0TD8wLZhx/I1aw1mGwE2hUZdAg=
+	t=1741092291; cv=none; b=H3esATQy/LIXbAlzpRhDFx0lIDNzpaf1hlWe1D7PhrGiU+1eTPZm3+uwF3e4Dgpdv9ULvyKvYD4UPywESUcDDsG9lSai6KSRHj4htbaV2j8msktToAf/tsxloaT7eXgnaifuoRrIOw8UZSSToyFD92n2kfQANLee3TEjgN5slfM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741092289; c=relaxed/simple;
-	bh=p52caFVCC/RT99Rzjhd4LQTnNLGIz2zKYYi5cQiWnjc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=cPre/VOJ8pL/ymBEY0EWEOC+iMuiPWk2ttQSd320Xt/3yNJm56t2MAUE6PFxyHP5z0tXoUMYPJuJznUuA6dop3LSZRY9ldl1X/MWuispUqorwJ2FA4sZyahbCt3QFKjd2OBV3xZt09TKzA/g+wkGDrEnkjWNVuUCmdVqiPWLZqk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=alw6DETQ; arc=none smtp.client-ip=185.11.138.130
+	s=arc-20240116; t=1741092291; c=relaxed/simple;
+	bh=rWWpAZgc175k+0pXOa23OLzHBHdWaNu4Clo0Oq4U0S8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HN/FA5WUgCB8UUTMjVt9u083FFu1zTTH315tGJNkjI61tnOl4oWQp3pMHzzLohzmNqwhuTJXjQMP2UvelEONmwOx5RKWK13vjK2jtxtQxAAFfF/ghp36EVlv+f1Z8UmWV6uPVpYxsaJZo/sKz3WCMURa3Y61Jur6GVfsRMVwzQs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=hcpTmM9z; arc=none smtp.client-ip=185.11.138.130
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="alw6DETQ"
+	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="hcpTmM9z"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
-	s=gloria202408; h=Content-Transfer-Encoding:MIME-Version:References:
-	In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	s=gloria202408; h=Content-Transfer-Encoding:MIME-Version:Message-ID:Date:
+	Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
 	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=Pu83Mb40jejkNbJKC2LIx4LiblmoRe/j7LFnThEkjwI=; b=alw6DETQckRTX6x5yzyqCZGAtw
-	xutdjeey1EdrIAPe7clsn6m3TkcERsyoV34D7JZPUXNyjH1MQnbLdMBvIHpUpQhstvKYa+DA/Ak8B
-	UR426//s+1PaxuglwwVtNKIjGdqmPaECqhzW0EqAaTPrKLlaO2vy3LYVf3CWl7NddNQgpEnvyfhY1
-	r90kNSu54aPsaJZKtJ7/zVIk4g/1crhNaNh4fNkzoh33FB4+AbXxGVSNswi/6zHZzGzB1kllq+EhE
-	jCsKHhVvVlAq7yadddewH7twf3gdM80aV6jNv2vKSFy8bK4KBIB/aIloNYqgV2L6Uf5Ez+RMKcoap
-	q09asTsg==;
+	bh=Uq//8R4KcceSoF42PN1qalpKcxAauo2AUVr954FoHRQ=; b=hcpTmM9zVPfmgzXsBYELu0LEpG
+	ZVmbssxcvFtAuGWTGfMbERbFQNbwoDGgMO0yP2Oe3sMDpXfUFUP56Nfhm7P0cqAkjkC2xquLqZOg2
+	aMOklcw/At4+SlWBsggvCr2PWSJ034x82Hh+dv5XpuUh5lQXUP5RkJQEo5DBNZ+VqSxB1a2jdnz5z
+	f8oyh09r1F4RYk70xa4x4BuTWfsSlu2vL5/MxayUoKMPYkYFBwBLyj1hzFOGOX13Qxg/N0LkCjXt/
+	l5p1SjWdwxrUEU5Pu90ks7XXbxKVKfxj0wkqSooxvkVnXccXQ3QvkFraGDCFLD0PKlmQqnICGW52g
+	b82OoMJQ==;
 Received: from i53875a38.versanet.de ([83.135.90.56] helo=phil..)
 	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.94.2)
 	(envelope-from <heiko@sntech.de>)
-	id 1tpRdS-0003B0-MR; Tue, 04 Mar 2025 13:44:34 +0100
+	id 1tpRdR-0003B0-6Y; Tue, 04 Mar 2025 13:44:33 +0100
 From: Heiko Stuebner <heiko@sntech.de>
 To: heiko@sntech.de
 Cc: andy.yan@rock-chips.com,
@@ -43,14 +42,11 @@ Cc: andy.yan@rock-chips.com,
 	linux-arm-kernel@lists.infradead.org,
 	linux-rockchip@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
-	quentin.schulz@cherry.de,
-	Heiko Stuebner <heiko.stuebner@cherry.de>
-Subject: [PATCH v3 3/3] drm/rockchip: lvds: lower log severity for missing pinctrl settings
-Date: Tue,  4 Mar 2025 13:44:18 +0100
-Message-ID: <20250304124418.111061-4-heiko@sntech.de>
+	quentin.schulz@cherry.de
+Subject: [PATCH v3 0/3] drm/rockchip: lvds: probe logging improvements
+Date: Tue,  4 Mar 2025 13:44:15 +0100
+Message-ID: <20250304124418.111061-1-heiko@sntech.de>
 X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250304124418.111061-1-heiko@sntech.de>
-References: <20250304124418.111061-1-heiko@sntech.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -59,39 +55,30 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Heiko Stuebner <heiko.stuebner@cherry.de>
+Getting the panel already uses dev_err_probe to stay silent, when
+the panel just probes later, and the lvds defers.
 
-While missing lvds pinctrl is unexpected and is reported, we nevertheless
-don't fail setting up the device and instead continue without explicit
-pinctrl handling. So lower the log-level from error to warning to reflect
-that.
+But the phy needed on px30, also has the capability to probe after
+the lvds. So make the rest of the lvds probe/bind logic also use
+more modern logging than DRM_DEV_ERR, that is deprecated anyway.
 
-Signed-off-by: Heiko Stuebner <heiko.stuebner@cherry.de>
----
- drivers/gpu/drm/rockchip/rockchip_lvds.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+changes in v3:
+- add patch to lower warning level on missing pinctrl (Quentin)
+- one more dev_err_probe (Quentin)
 
-diff --git a/drivers/gpu/drm/rockchip/rockchip_lvds.c b/drivers/gpu/drm/rockchip/rockchip_lvds.c
-index bfebe42a0331..a673779de3d2 100644
---- a/drivers/gpu/drm/rockchip/rockchip_lvds.c
-+++ b/drivers/gpu/drm/rockchip/rockchip_lvds.c
-@@ -464,14 +464,14 @@ static int rk3288_lvds_probe(struct platform_device *pdev,
- 
- 	lvds->pins->p = devm_pinctrl_get(lvds->dev);
- 	if (IS_ERR(lvds->pins->p)) {
--		dev_err(lvds->dev, "no pinctrl handle\n");
-+		dev_warn(lvds->dev, "no pinctrl handle\n");
- 		devm_kfree(lvds->dev, lvds->pins);
- 		lvds->pins = NULL;
- 	} else {
- 		lvds->pins->default_state =
- 			pinctrl_lookup_state(lvds->pins->p, "lcdc");
- 		if (IS_ERR(lvds->pins->default_state)) {
--			dev_err(lvds->dev, "no default pinctrl state\n");
-+			dev_warn(lvds->dev, "no default pinctrl state\n");
- 			devm_kfree(lvds->dev, lvds->pins);
- 			lvds->pins = NULL;
- 		}
+changes in v2:
+- reword the messages about getting (and preparing) pclk (Quentin)
+- use a ret = dev_err_probe(dev, -EINVAL, ...) pattern
+  in some (additional) places (Quentin)
+
+Heiko Stuebner (3):
+  drm/rockchip: lvds: move pclk preparation in with clk_get
+  drm/rockchip: lvds: Hide scary error messages on probe deferral
+  drm/rockchip: lvds: lower log severity for missing pinctrl settings
+
+ drivers/gpu/drm/rockchip/rockchip_lvds.c | 80 +++++++++---------------
+ 1 file changed, 29 insertions(+), 51 deletions(-)
+
 -- 
 2.47.2
 
