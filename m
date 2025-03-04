@@ -1,108 +1,122 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 826FD204C22
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 15:30:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F33DF24C060
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 15:30:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741102204; cv=none; b=huIEOZ9XPCE4gquWnfeCjusKHJqurcK5of3U6xt9PLxsONmi/EpubeRxCyU4cmUv6ycdV1fmS9DTOvqV0R6Oj9jcn4Grj6WPSEU67lblMqOrGxUBTtW89N9cCqjqM8tUzxc7HwXOt10cXcW1Dn3arwuwmlttrLpzm4pflpm098Y=
+	t=1741102223; cv=none; b=BGWyczLFFnyCuy0oLXqRF6wOFJA2tv/sTjWi7/c7WeBzmsnGlBehwd4J/NRiUtreI4V0N9L23lo7PhNnMy8sq6QIKDaaZpFSBRj6bssmHculIgSKJaswmVHBg8bhDTpW9Y0Nfvm8N96dgzht7hoFeg84Ir2IKPwsWT/of+sRlsk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741102204; c=relaxed/simple;
-	bh=DvT37mlLylWirMmvziApQyMOyXFz2tPHw47pSw/2Ns0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HGJMNk/T12RjIyVSMISzQBAKaiuhCoiU9/WlZIEdgoF6n8CzPTt2+63UjsCnmhz2SOcpVeh1WWAhejS9UsPo01v2nXqn/M+eu9z7P5WgIwn1PwHWkmYW+4Mp0a/O3guedn5d3alExO9s3bcJG58jFkhTClZ6dIPVOWSXu1x3Uqo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=f0qihsw6; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1741102223; c=relaxed/simple;
+	bh=pCfGtvk96jzYY0aDPo6UzD5wZN4EHA8IEklxkYVKezQ=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=Vk+uAitTXXR2UZ9MJReeCe7j9O7IZyIJWnne29SMi1Rgs9XPzBk4wvGxdZNw6uzyZwrBo9o6QmIaAVYb5JJBbXEUx07bFfkLh4kbfl9cio3o6qf4PXxec3SigmoYk9Dx1m2ft6b+7hoRALQYCmNUk74rvhjn9sjJSg6DgU0AO+M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DiF3v5Vk; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="f0qihsw6"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2234bec7192so97299865ad.2
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Mar 2025 07:30:03 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DiF3v5Vk"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2fed20dd70cso6345592a91.1
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Mar 2025 07:30:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741102202; x=1741707002; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=66psdEYIrVGR86JKMR8+mqBEFxkGfgmcukM2sBzapxc=;
-        b=f0qihsw6h6E1twiuVjL+pwN2kHj+/eIdoqLQS/bM5Pu1Rcst++qQvUyQnyW4fIl3Fw
-         XHmrKq6oSDnN+xGBU+RPFbDbngaZY06NTdSdDc8lixsezuXDonsQtMs1DGPVU1+5o06U
-         geZyewK6D+0sAxdjsYLg23YV+TA2kHt7sp/cAAWt0tKecJxorvOrQFJpAWJlOX6rGtXT
-         aiRCAFZPNplSmEsb20L7Yjy3Oy5aNa4dIG6QvrRILp33DAlP208t+V8sni5oafxqCkrI
-         KowpbOlG9gjuYfBw6xi5OHCkdKYAOqnd31j/Smi9wHgI5RTMl4TKXW0BpSlgeTgElKoe
-         wKNQ==
+        d=google.com; s=20230601; t=1741102221; x=1741707021; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=cvg9RGNtgXTSILk0IdpR94FQL1jxJC1gyLgPdqw8XU0=;
+        b=DiF3v5VkUGnzU9LKyJFBLtvo7EuoyDw4OnRAFiK+y8GgN2HpMhbK8zc+rPW6V+4IK8
+         TYW4fTuVYM41oIxmQaZBZq0o0HbHJLedCSSU2GgvWAH5pz6pLojHA/aIl9g8er5M03Yr
+         BjAISmyhDBrGcce83oggSEo1XMgS/4C8xlA6tW0JCgl0dW3TBJn8ksyPyrh9ZEdqA9xU
+         Nbtp3xtpEx6yvGs/9oPSIOx6pib+NM4PGyvglFbFc7K3+inEa8mXx/cYzMAxwgVlJmhH
+         dM+EarfIA5cX5aGGpBxXzZsLq0QwUCrrq7TQPuLflyLlIzjlgIo6Z9iyzUeXJoqyIYni
+         dVlg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741102202; x=1741707002;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=66psdEYIrVGR86JKMR8+mqBEFxkGfgmcukM2sBzapxc=;
-        b=oO5Jsv2TAvFaBkcfwBLTo01uA7LDN9e5YaUXXw+m/YgHMVAIG3H7s1JtMKAdT01nOD
-         6or5MCwGQjUQNjv4O59ZDyITnyMaZdtV5xjTtqKW/sWRU75qlGW86hS5N43khyBl+KsL
-         ky/ngbbimvBbWPkfdSts2ImgTLdO9huIzRYQABgD7iDkXVmmlWCLM0k1MGj0+Jt0WPYb
-         zEWA6LJsvCfZxFxAL1RdoIc7HaXH6iAvS5E7eHoeOFMiQdV+GgoGZPeN9qWi0iZcfA/c
-         I9+bn1BkZ8kGxzo06VLpkL0wNfxaOnq4JSAVTJtgN+cIRe5d1pHRdiMt4b5NUWCe9WZe
-         WTXw==
-X-Forwarded-Encrypted: i=1; AJvYcCWh4+Tsrydq97l+YEO+svc/0Zjue6IWi3A9cyUt+7QJ+pF7zOuiguObU7L0iICjXrGJx9rZLpHE39tooRA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzALWIQhXSibNUGpsmkxflcXj+FhzFL27FZbAdz3NTgWiCFBGUV
-	38/CEesUWDAP7HZ4cDzm8u2Ivw370ECTchceQo+9//VVWN83ZEVf8yavZwZhlQ==
-X-Gm-Gg: ASbGnctpmNlYqtYasQ79Urgd69GAg3TCv5ZY4wCpsVWbUGMWi75HvKHRsOIamcdO88c
-	Lll4FazZ+HCZPzTFgEbBj04+6DJ6up8T3v+N7miuhrnvKJhaiI8++zQh04JV6V/D0oUAvta1Gxz
-	Ksq6jKjGmPkgxVzPbEGdYf3X3DS+sTIK0sFs23UwKIUbs3ALfFb2i6IUBaUQrkiCJ3nB9Jeq+/j
-	FHXz3FRAZrvKkFKjSdZBEwpMnmPjyA5by99yA3OSZJGMJuli92rl8rMMCkoZaLy3kDqPLSzWozR
-	X+AANEu8JMI6saZyhjctpARJA3BA7Np33iOfwnkVLbMbDnfgSNusNUs=
-X-Google-Smtp-Source: AGHT+IHDLoudvsE8ThGCBDtv8xpmDC4PMrV1KRLn9yaD488OmdYvS42vvygcsTzqkS+txl9sTFzPNQ==
-X-Received: by 2002:a05:6a20:7348:b0:1ee:be88:f5cf with SMTP id adf61e73a8af0-1f2f4e00bfbmr34435609637.32.1741102202650;
-        Tue, 04 Mar 2025 07:30:02 -0800 (PST)
-Received: from thinkpad ([120.60.51.199])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-aee7de38003sm10265993a12.33.2025.03.04.07.29.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Mar 2025 07:30:01 -0800 (PST)
-Date: Tue, 4 Mar 2025 20:59:52 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-Cc: Shradha Todi <shradha.t@samsung.com>, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org, lpieralisi@kernel.org,
-	robh@kernel.org, bhelgaas@google.com, jingoohan1@gmail.com,
-	Jonathan.Cameron@huawei.com, fan.ni@samsung.com,
-	nifan.cxl@gmail.com, a.manzanares@samsung.com,
-	pankaj.dubey@samsung.com, cassel@kernel.org, 18255117159@163.com,
-	xueshuai@linux.alibaba.com, renyu.zj@linux.alibaba.com,
-	will@kernel.org, mark.rutland@arm.com
-Subject: Re: [PATCH v7 4/5] Add debugfs based error injection support in DWC
-Message-ID: <20250304152952.pal66goo2dwegevh@thinkpad>
-References: <20250221131548.59616-1-shradha.t@samsung.com>
- <CGME20250221132039epcas5p31913eab0acec1eb5e7874897a084c725@epcas5p3.samsung.com>
- <20250221131548.59616-5-shradha.t@samsung.com>
- <20250303095200.GB1065658@rocinante>
+        d=1e100.net; s=20230601; t=1741102221; x=1741707021;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=cvg9RGNtgXTSILk0IdpR94FQL1jxJC1gyLgPdqw8XU0=;
+        b=vZ+BwHfogkTtXlSYa8eUbNVmO2asL3yeWkYYEKAKDQyWLAbtSCUj4GB/QpBnzmguMd
+         JX1NQ1YiX1nQ17VXpcqz7ZVb5rgHhDTYGQ1KahktXYUeqQ5nf3jXMTD7/uuNo0E8WAIH
+         cLCUvZg7ryEq/EH9W7yknib1LeoKDwGbRN1i2SdmXakkN6I0VadaoPWS9PsJ/V/VRxOl
+         3o6glYMhYsVBOh1OpLmKyXgvmROlKPcKS3ZsXYt+iHQTv1fg/pV8P/3ROqdPBwtqnSQ/
+         Ql/XyE/L82aMWseBS1QSBIsEiGI30oQ7d/tCCrmxQsaNs9K5DChriQtpVI+syDU/xrIl
+         Sjxg==
+X-Forwarded-Encrypted: i=1; AJvYcCX4alfrvdssOIjSI2Kh4IaCPgXgYhJjST4lfspavFbHHvHeL5u5fF+9ToaeXq3Ltbz4ahlHBQjksLFd3XA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyMA1NkZKsZhHB9isbnt23JD0hzBEz7HDndh3ngdetXXhheLkXV
+	L267UwhrlYW6HDFXgecHAihyOTWp6yAe6s3PrELqnf6G++11SadIb/yC1+vE0yRYQDxbywYzcr5
+	JOw==
+X-Google-Smtp-Source: AGHT+IEM4E5/Zptus46DoKrgzz5+XTeSJ4hJIAQWQAIYRnIL9pjg60K5aKaF81Eu644JbhsDlC5832QLpoQ=
+X-Received: from pjur6.prod.google.com ([2002:a17:90a:d406:b0:2fc:2959:b397])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2c90:b0:2ee:db8a:2a01
+ with SMTP id 98e67ed59e1d1-2febac10a9fmr26741760a91.30.1741102221273; Tue, 04
+ Mar 2025 07:30:21 -0800 (PST)
+Date: Tue, 4 Mar 2025 07:30:19 -0800
+In-Reply-To: <diqz8qplabre.fsf@ackerleytng-ctop.c.googlers.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250303095200.GB1065658@rocinante>
+Mime-Version: 1.0
+References: <b494af0e-3441-48d4-abc8-df3d5c006935@suse.cz> <diqz8qplabre.fsf@ackerleytng-ctop.c.googlers.com>
+Message-ID: <Z8cci0nNtwja8gyR@google.com>
+Subject: Re: [PATCH v6 4/5] KVM: guest_memfd: Enforce NUMA mempolicy using
+ shared policy
+From: Sean Christopherson <seanjc@google.com>
+To: Ackerley Tng <ackerleytng@google.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>, shivankg@amd.com, akpm@linux-foundation.org, 
+	willy@infradead.org, pbonzini@redhat.com, linux-fsdevel@vger.kernel.org, 
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org, 
+	linux-coco@lists.linux.dev, chao.gao@intel.com, david@redhat.com, 
+	bharata@amd.com, nikunj@amd.com, michael.day@amd.com, Neeraj.Upadhyay@amd.com, 
+	thomas.lendacky@amd.com, michael.roth@amd.com, tabba@google.com
+Content-Type: text/plain; charset="us-ascii"
 
-On Mon, Mar 03, 2025 at 06:52:00PM +0900, Krzysztof Wilczyński wrote:
-> Hello,
+On Tue, Mar 04, 2025, Ackerley Tng wrote:
+> Vlastimil Babka <vbabka@suse.cz> writes:
+> >> struct shared_policy should be stored on the inode rather than the file,
+> >> since the memory policy is a property of the memory (struct inode),
+> >> rather than a property of how the memory is used for a given VM (struct
+> >> file).
+> >
+> > That makes sense. AFAICS shmem also uses inodes to store policy.
+> >
+> >> When the shared_policy is stored on the inode, intra-host migration [1]
+> >> will work correctly, since the while the inode will be transferred from
+> >> one VM (struct kvm) to another, the file (a VM's view/bindings of the
+> >> memory) will be recreated for the new VM.
+> >> 
+> >> I'm thinking of having a patch like this [2] to introduce inodes.
+> >
+> > shmem has it easier by already having inodes
+> >
+> >> With this, we shouldn't need to pass file pointers instead of inode
+> >> pointers.
+> >
+> > Any downsides, besides more work needed? Or is it feasible to do it using
+> > files now and convert to inodes later?
+> >
+> > Feels like something that must have been discussed already, but I don't
+> > recall specifics.
 > 
-> [...]
-> > +		29) Generates duplicate TLPs - duplicate_dllp
-> > +		30) Generates Nullified TLPs - nullified_tlp
+> Here's where Sean described file vs inode: "The inode is effectively the
+> raw underlying physical storage, while the file is the VM's view of that
+> storage." [1].
 > 
-> Would the above field called "duplicate_dllp" for duplicate TLPs be
-> a potential typo?  Perhaps this should be called "duplicate_tlp"?
+> I guess you're right that for now there is little distinction between
+> file and inode and using file should be feasible, but I feel that this
+> dilutes the original intent.
+
+Hmm, and using the file would be actively problematic at some point.  One could
+argue that NUMA policy is property of the VM accessing the memory, i.e. that two
+VMs mapping the same guest_memfd could want different policies.  But in practice,
+that would allow for conflicting requirements, e.g. different policies in each
+VM for the same chunk of memory, and would likely lead to surprising behavior due
+to having to manually do mbind() for every VM/file view.
+
+> Something like [2] doesn't seem like too big of a change and could perhaps be
+> included earlier rather than later, since it will also contribute to support
+> for restricted mapping [3].
 > 
-
-Looks like a typo. As per Synopsys documentation, there is only 'duplicate TLP'
-field.
-
-Good catch!
-
-- Mani
-
--- 
-மணிவண்ணன் சதாசிவம்
+> [1] https://lore.kernel.org/all/ZLGiEfJZTyl7M8mS@google.com/
+> [2] https://lore.kernel.org/all/d1940d466fc69472c8b6dda95df2e0522b2d8744.1726009989.git.ackerleytng@google.com/
+> [3] https://lore.kernel.org/all/20250117163001.2326672-1-tabba@google.com/T/
