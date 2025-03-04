@@ -1,74 +1,83 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C25B1FBC98
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 22:13:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FD0F33998
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 22:16:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741126387; cv=none; b=WwptXvNqxcLJOaJS8RjNiE7HxJ99+w3JQKiPAlTZDw5fZ2LTVh+WuBbBWBdnwRGOx4jABlWWysSlkU+A3s8ncl4uuAVxW2P+eYEoacQ2Gh9qsraViNsb68vrRp1MDcaxaXtxOQwTGf2RDVdG/Kmthjr4wXwpcHtZQ8diqrOwf5w=
+	t=1741126587; cv=none; b=Nxf1zM4wbrseZiJn1+fP0TLpSTMMs34y+nxOe0jOocZ0Ik61p/Xc/BHnfvHHVsfEiaoT0pomCoqcLbhCPsGyLZ6ROW42qUc0I9Ak8jUHAA9gN1mkCW+XijS1YZtps61mAbgIailJtoLnx3Fcfh2n42UaF3ykXSB0BG6qWy9GViM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741126387; c=relaxed/simple;
-	bh=a4tkddoYQZCAwbSeOexG1IF/4ozopqjnclajsoXxAdo=;
+	s=arc-20240116; t=1741126587; c=relaxed/simple;
+	bh=J1zT4ttI1/ipMv4SRCFdEmuAVaIbre469EL8k9w3Oqg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qy+FrNPPEzqGzNxUkjlUZRpDE45AT5YalS34tEQji9k7w1mRLhcx0Zx/CNtqUMBqiBu/GmBjvqgqkfSEg8BJ7+1HM8jxtFJKq5O+NyeFZy7K8auWn+YIBPWLnv6P5zCbmeXe+n3IWkeE/CIYhggk/tmEeLub7YNDB4mgiIWqVuo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JWli1bN0; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=Tl+Ms6i+2r2LAbl2EJsHteNJQFhLqqXr4cRA5ejbc7FJPScAK/CWk7MwcQViS3uPW4K554KKcYIeRUTcGrZcUjQvpdrFNjiyOq94zhg1fzaSSsNAUmd4JWLVF3aH3VXInkjl9WZo91YT4RuVx/wGRTD/y2B/Hy35sYqkBZ2qI3I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SQ1WJNTI; arc=none smtp.client-ip=209.85.167.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JWli1bN0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1741126384;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=xDY9DZSt/pga4XOkGDiwhfhBrFCi6In+qL03vH6vWuY=;
-	b=JWli1bN0w9pBfeQSDNs2GY6iow5XG4+SmxASSOIl1XY7F3IK6UMDkpecdv5GxsUGFNjNub
-	Y1hiJurk8JhpIT/jABxqzuE3IdSmeXEGasde4DapH2zDSw+YUFxV8tz7AE9NSqC8U8EAO6
-	kzevtmgcd+0K3ShmztrlbPMkM5YuA98=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-248-aV3nPBbaMwi_wGSvEqJQug-1; Tue,
- 04 Mar 2025 17:12:50 -0500
-X-MC-Unique: aV3nPBbaMwi_wGSvEqJQug-1
-X-Mimecast-MFC-AGG-ID: aV3nPBbaMwi_wGSvEqJQug_1741126368
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B5AAF180087D;
-	Tue,  4 Mar 2025 22:12:47 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.41])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id ED979180087B;
-	Tue,  4 Mar 2025 22:12:42 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Tue,  4 Mar 2025 23:12:16 +0100 (CET)
-Date: Tue, 4 Mar 2025 23:11:39 +0100
-From: Oleg Nesterov <oleg@redhat.com>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Mateusz Guzik <mjguzik@gmail.com>,
-	K Prateek Nayak <kprateek.nayak@amd.com>,
-	"Sapkal, Swapnil" <swapnil.sapkal@amd.com>,
-	Manfred Spraul <manfred@colorfullife.com>,
-	Christian Brauner <brauner@kernel.org>,
-	David Howells <dhowells@redhat.com>,
-	WangYuli <wangyuli@uniontech.com>, linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	"Shenoy, Gautham Ranjal" <gautham.shenoy@amd.com>,
-	Neeraj.Upadhyay@amd.com, Ananth.narayan@amd.com
-Subject: Re: [PATCH] pipe_read: don't wake up the writer if the pipe is still
- full
-Message-ID: <20250304221138.GG5756@redhat.com>
-References: <CAGudoHE_M2MUOpqhYXHtGvvWAL4Z7=u36dcs0jh3PxCDwqMf+w@mail.gmail.com>
- <741fe214-d534-4484-9cf3-122aabe6281e@amd.com>
- <3jnnhipk2at3f7r23qb7fvznqg6dqw4rfrhajc7h6j2nu7twi2@wc3g5sdlfewt>
- <CAHk-=whuLzj37umjCN9CEgOrZkOL=bQPFWA36cpb24Mnm3mgBw@mail.gmail.com>
- <CAGudoHG2PuhHte91BqrnZi0VbhLBfZVsrFYmYDVrmx4gaLUX3A@mail.gmail.com>
- <CAHk-=whVfFhEq=Hw4boXXqpnKxPz96TguTU5OfnKtCXo0hWgVw@mail.gmail.com>
- <20250303202735.GD9870@redhat.com>
- <CAHk-=wiA-7pdaQm2nV0iv-fihyhWX-=KjZwQTHNKoDqid46F0w@mail.gmail.com>
- <20250304125416.GA26141@redhat.com>
- <CAHk-=wgvyahW4QemhmD_xD9DVTzkPnhTNid7m2jgwJvjKL+u5g@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SQ1WJNTI"
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-5496301c6afso282933e87.0
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Mar 2025 14:16:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741126583; x=1741731383; darn=vger.kernel.org;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6WX4nyHf58fSCu7WOT40A2wbQKdGUiev3A8Wr+Eeu60=;
+        b=SQ1WJNTIFqJWl/1z89p2Xg1lnU80XIQgEHbRmr2cGLrx0l+K6l8MEna0j8MC8qhnAJ
+         8xK5HRBKEpLPEZfgn0zoz52oyBG7WUkmdillcjuE/ziBKdeouhUhdySaBIRRJwt+DJiH
+         3U4sWo67bstjPyOT11rTbybiV2ByfKn+12ZG9y82KlCrw+MG0Pc1Diblg7Mih18PsbTM
+         ZS8VQg5p7HewB7PRQvrUZQj5NUhkQRpLEosPfWA60JbqGgdpjbzUeo8H+A6Ecxy3PXgq
+         8ZSmEDc0lkeoEunSnhnZZeqxl9x12LcTj2UoXNT67rHMdp9dUm4PKvjblU6+TrW/V/Qc
+         LiKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741126583; x=1741731383;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=6WX4nyHf58fSCu7WOT40A2wbQKdGUiev3A8Wr+Eeu60=;
+        b=FwNiRsJNoR6kwCCW7QDNvSGxT4FVvgeH07tdYOaznnrOdQRr65SMJkbfDyUGRyvMeL
+         o0Bo9n7+8ya9D0Jldrr0zg9MSXYFZrd6SFyfrvGvHMuj8bG34DiE7umOFFu91qivyzZp
+         9ynxKIbOEnm+bc1dPne7y7Dgk0HTEbVdilQ3H3QoJXLlMnBrwu/LBQ9B4nVF0irdobD4
+         7kjsoMxc2CkCF1T+rsK2AUAv/Ggl+PPRaRjfMwaEwb2LY/i16PY+BuyYhl76SY3eSh1F
+         l0FoxiT9Z9PmlG7vbRj9i6MYogYMWTU0OlMXQiscW00usKgfOUzY+CbD6Biw8rhdAzyV
+         LIhg==
+X-Gm-Message-State: AOJu0Ywtp7ymgN+FN5pL44UfvjSut/fi8jE/7N3Bx8TZJtlL6/w2L4Po
+	p0k8THpWXZCZs2PZI15caWUTHeZlnFCiMySTNvy2vlJdYByQsOA4
+X-Gm-Gg: ASbGncvRWRWa9K9YncEZe2Jdc3kOfpVZXUICuB86KxaP4TgJHvSBJlt6M6rTXgUfl8+
+	oSbrtUrWIonYv3yeAp0dm808L3LrJMgS7RGmp18xmK8N+A4PMHnB3OKTL4nMwN8xW2wkmGi89vu
+	tevb36tplHpn+RxOSBZ6Qr4OcuHLFTtvGKwHFqDQQ3LKfbOfUU/UGWpbmSqjJJGhvK5LuYXlEXt
+	KxAHJejgDrQ2SOKs+HjCRPVPrTBQxrtlQYSGCZHBjzPDGMhlMo4bSxK7I2sfBlsva8xyRo0/p1L
+	iecx7prxUL+HG7J2OWuF6haFiyFCWL+EIY8CTLuEUtkSOg==
+X-Google-Smtp-Source: AGHT+IGTaDy82c512qOasiS5NrBQ1bgGqKGq7jC9aALQjNTV4T7hF+u3nl3JLPQQdGDKghZG3WDunA==
+X-Received: by 2002:a05:6512:3e20:b0:549:6451:7e78 with SMTP id 2adb3069b0e04-5497d3a04e4mr249202e87.20.1741126583004;
+        Tue, 04 Mar 2025 14:16:23 -0800 (PST)
+Received: from grain.localdomain ([5.18.255.97])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54961edb9c4sm884053e87.33.2025.03.04.14.16.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Mar 2025 14:16:22 -0800 (PST)
+Received: by grain.localdomain (Postfix, from userid 1000)
+	id 29F145A0136; Wed, 05 Mar 2025 01:16:22 +0300 (MSK)
+Date: Wed, 5 Mar 2025 01:16:22 +0300
+From: Cyrill Gorcunov <gorcunov@gmail.com>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+	Anna-Maria Behnsen <anna-maria@linutronix.de>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Benjamin Segall <bsegall@google.com>,
+	Eric Dumazet <edumazet@google.com>,
+	Andrey Vagin <avagin@openvz.org>,
+	Pavel Tikhomirov <ptikhomirov@virtuozzo.com>,
+	Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [patch V2 10/17] posix-timers: Make
+ signal_struct::next_posix_timer_id an atomic_t
+Message-ID: <Z8d7tm5dQN6dZEvu@grain>
+References: <20250302185753.311903554@linutronix.de>
+ <20250302193627.543399558@linutronix.de>
+ <Z8YPQn0UpxucZLJP@grain>
+ <87sentbyer.ffs@tglx>
+ <Z8c-vvnMpPjYRvOn@grain>
+ <87mse05yk3.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -77,37 +86,52 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHk-=wgvyahW4QemhmD_xD9DVTzkPnhTNid7m2jgwJvjKL+u5g@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+In-Reply-To: <87mse05yk3.ffs@tglx>
+User-Agent: Mutt/2.2.13 (2024-03-09)
 
-On 03/04, Linus Torvalds wrote:
->
-> On Tue, 4 Mar 2025 at 02:55, Oleg Nesterov <oleg@redhat.com> wrote:
+On Tue, Mar 04, 2025 at 09:30:04PM +0100, Thomas Gleixner wrote:
+> On Tue, Mar 04 2025 at 20:56, Cyrill Gorcunov wrote:
+> > On Mon, Mar 03, 2025 at 10:24:28PM +0100, Thomas Gleixner wrote:
+> >> 
+> >> Welcome. Some quick validation with CRIU would be appreciated.
 > >
-> > > + * Really only alpha needs 32-bit fields, but
-> > > + * might as well do it for 64-bit architectures
-> > > + * since that's what we've historically done,
-> > > + * and it makes 'head_tail' always be a simple
-> > > + * 'unsigned long'.
-> > > + */
-> > > +#ifdef CONFIG_64BIT
-> > > +  typedef unsigned int pipe_index_t;
-> > > +#else
-> > > +  typedef unsigned short pipe_index_t;
-> > > +#endif
-> >
-> > I am just curious, why we can't use "unsigned short" unconditionally
-> > and avoid #ifdef ?
-> >
-> > Is "unsigned int" more efficient on 64-bit?
->
-> The main reason is that a "unsigned short" write on alpha isn't atomic
+> > Just tested in criu: works without problem, both modes -- with new
+> > prctl and without it. Note that I only have ran separate posix-timers
+> > test case, probably virtuozzo team might do more deep tesing.
+> 
+> Thank you very much!
 
-Yes, I have already realized this when I tried to actually read the
-comment, see my next email in reply to myself.
+Thanks for handling this) Also looking into this series I wonder why can't
+we instead of mangling ::it_signal zero bit just use ::it_id with negative
+value as a sign of not yet fully initialized timer? This would allow to not
+read-modify action while traversing bucket hash chain. I mean we could do
 
-But thanks for your detailed explanation!
+static bool posix_timer_add_at(struct k_itimer *timer, struct signal_struct *sig, unsigned int id)
+{
+	struct timer_hash_bucket *bucket = hash_bucket(sig, id);
 
-Oleg.
+	scoped_guard (spinlock, &bucket->lock) {
+		if (!posix_timer_hashed(bucket, sig, id)) {
+--->			timer->it_id = -(timer_t)id;
+			timer->it_signal = (struct signal_struct *)((unsigned long)sig | 1UL);
+			hlist_add_head_rcu(&timer->t_hash, &bucket->head);
+			return true;
+		}
+	}
+	return false;
+}
 
+Then hash traverse won't find the timer until the do_timer_create will do
+
+	scoped_guard (spinlock_irq, &current->sighand->siglock) {
+		WRITE_ONCE(new_timer->it_id, abs(new_timer->it_id));
+		hlist_add_head_rcu(&new_timer->list, &current->signal->posix_timers);
+	}
+
+Or I miss something obvious? (Of course when deleting timer we will have to pass
+abs it_id for hash traversing).
+
+It looks that in case of many many timers present in the system traversing hash
+in read-modify way might be heavy (though I didn't measure of course).
+
+	Cyrill
