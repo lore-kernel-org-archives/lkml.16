@@ -1,158 +1,153 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50EDB202F65;
-	Tue,  4 Mar 2025 10:36:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9488D1FECA4;
+	Tue,  4 Mar 2025 10:36:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741084599; cv=none; b=E2khrxS7ho2n5FNINcctZWVnvAYagjssOsaHMjMMMAEAumywSZoRAmI4Hn64EJNbzrO58s6tQnB5IZb/y2VVEvffuI+foro+bU5FbzJgq71g2Imk+4kGyUOb2W68iwD69xE6Q+joaBDgnumr4ea0MXmI70X93qw9Be/yHnMLlQA=
+	t=1741084618; cv=none; b=kXsrguPW6/cp7Odaz+kfbQ75xkguU+fvvwB+ts7z/mECa/DKAS07TQFSlejxwwPFaxnkCvt1YflkA4U2ay1qKfrHlaFMQbsxCEBMZokBno4NAqOzGCWKHDmNq2s5ai5ciMUTpDMxCxG7UibLmezppw/L2cn52vRmy178tMelN1g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741084599; c=relaxed/simple;
-	bh=cVLrw44xjJRSaEzFEAyiT1rNyrU2ZSOnINtE9hkR/3c=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=WrTCB2GmL2djyqg/eqJ1vupzI05Rumndl/+twJCrwLbUphNSbPzIeJlz/SxNzzFGbCEvRwjzudQHGMw3spNv/sjCoUI1TvHQ0tzKoJMaIJh6OnRE1WGqCW3zhfpG/PAA+P+xTN3SPndmNz7G/mw+RxjhWJdqYEInMh1YCGXjSXk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=d0fuCrH7; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=3oEcuID3; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="d0fuCrH7";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="3oEcuID3"
-Date: Tue, 04 Mar 2025 10:36:34 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1741084596;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2Msj3Ve0LTQaTUUUvd5PBNfNinjh8Q/wsxezn7Nm5X4=;
-	b=d0fuCrH755YQRY+YIhE5lY6Cn9i8nhJxYf41/wOFzVJ/vXknUkSoLbY8cGyk35zAtV/mg4
-	FtYgnVdpqwUpH1K0XA2jsexUid6k/n5h4WuBTmmkZDCRl0OT/SpBNs933ipXuQsOu2ODvb
-	Xd0+HruFImoAokdTB/i3WQWkA35PilZb2c5WCLkEStYCTj89oZO3ZwO5qvGwZHvhq7yLxe
-	NG+T9yb+M+D4kZqUX2UJbIdJuzKgHwkC20JJ6lFHETbHIhvOLmtOHT5OKAoFjRRqQKlfdk
-	JzehfaoKHmanY75Nlvowv5t/4De0dKypPag4gKvYOzLCau2CIKZd5sl2sw5Eyg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1741084596;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2Msj3Ve0LTQaTUUUvd5PBNfNinjh8Q/wsxezn7Nm5X4=;
-	b=3oEcuID3PT9cWsVpSqwfvp9OztGOrhJjWIhOoUwa5WHvmtlzbM9rBkBlLtBwhe9id163Mg
-	lRR7gZlkV/+vfDBw==
-From: "tip-bot2 for Brian Gerst" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/core] percpu: Introduce percpu hot section
-Cc: Brian Gerst <brgerst@gmail.com>, Ingo Molnar <mingo@kernel.org>,
- Uros Bizjak <ubizjak@gmail.com>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
+	s=arc-20240116; t=1741084618; c=relaxed/simple;
+	bh=BmEMnUQazYWnIZvlMgVe+B+0gK3c+s4Wul/qIhUAqyw=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=MbnBpg21Li1kLqLL1h8DWt+ZG4ZWv/v5m7zafUctse2jsRFRNZWSpe2SHHIz6OR/PN4IPnQ1uF9nyksNUrASjNNYQhCmk6DDGfd2RROUjGuzVSqFqbM5ETbA7gyfCMUIgMpG8pQAa8/7KFwx6YEFgGprdgVLZ70b4mp00cAQbeE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A01C3FEC;
+	Tue,  4 Mar 2025 02:37:09 -0800 (PST)
+Received: from donnerap.manchester.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 01D2B3F5A1;
+	Tue,  4 Mar 2025 02:36:53 -0800 (PST)
+Date: Tue, 4 Mar 2025 10:36:50 +0000
+From: Andre Przywara <andre.przywara@arm.com>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
+ <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai
+ <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland
+ <samuel@sholland.org>, Philipp Zabel <p.zabel@pengutronix.de>,
+ linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
  linux-kernel@vger.kernel.org
-In-Reply-To: <20250303165246.2175811-2-brgerst@gmail.com>
-References: <20250303165246.2175811-2-brgerst@gmail.com>
+Subject: Re: [PATCH v3 04/15] dt-bindings: clk: sunxi-ng: document Allwinner
+ A523 CCU
+Message-ID: <20250304103650.704fd28b@donnerap.manchester.arm.com>
+In-Reply-To: <20250304-resilient-spiritual-crane-30d4e1@krzk-bin>
+References: <20250304012805.28594-1-andre.przywara@arm.com>
+	<20250304012805.28594-5-andre.przywara@arm.com>
+	<20250304-resilient-spiritual-crane-30d4e1@krzk-bin>
+Organization: ARM
+X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.32; aarch64-unknown-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174108459478.14745.16503190698513195117.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-The following commit has been merged into the x86/core branch of tip:
+On Tue, 4 Mar 2025 09:25:24 +0100
+Krzysztof Kozlowski <krzk@kernel.org> wrote:
 
-Commit-ID:     120df9cb53f01237fdc4bfc8798d51442fe82311
-Gitweb:        https://git.kernel.org/tip/120df9cb53f01237fdc4bfc8798d51442fe82311
-Author:        Brian Gerst <brgerst@gmail.com>
-AuthorDate:    Mon, 03 Mar 2025 11:52:36 -05:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Tue, 04 Mar 2025 11:24:28 +01:00
+Hi,
 
-percpu: Introduce percpu hot section
+> On Tue, Mar 04, 2025 at 01:27:54AM +0000, Andre Przywara wrote:
+> > The Allwinner A523/T527 SoCs have four CCUs, this adds the binding for
+> > the main CCU.
+> > 
+> > The source clock list differs in some annoying details, and folding this
+> > into the existing Allwinner CCU clock binding document gets quite
+> > unwieldy, so create a new document for these CCUs.
+> > Add the new compatible string, along with the required input clock
+> > lists. This conditionally describes the input clock list, to make for
+> > an easier patch adding the other CCUs.
+> > 
+> > Also add the DT binding headers, listing all the clocks with their ID
+> > numbers.
+> > 
+> > Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+> > ---
+> >  .../clock/allwinner,sun55i-a523-ccu.yaml      |  77 +++++++
+> >  include/dt-bindings/clock/sun55i-a523-ccu.h   | 189 ++++++++++++++++++
+> >  include/dt-bindings/reset/sun55i-a523-ccu.h   |  88 ++++++++
+> >  3 files changed, 354 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun55i-a523-ccu.yaml
+> >  create mode 100644 include/dt-bindings/clock/sun55i-a523-ccu.h
+> >  create mode 100644 include/dt-bindings/reset/sun55i-a523-ccu.h
+> > 
+> > diff --git a/Documentation/devicetree/bindings/clock/allwinner,sun55i-a523-ccu.yaml b/Documentation/devicetree/bindings/clock/allwinner,sun55i-a523-ccu.yaml
+> > new file mode 100644
+> > index 0000000000000..2eacaeaeabac7
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/clock/allwinner,sun55i-a523-ccu.yaml
+> > @@ -0,0 +1,77 @@
+> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/clock/allwinner,sun55i-a523-ccu.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Allwinner A523 Clock Control Unit
+> > +
+> > +maintainers:
+> > +  - Andre Przywara <andre.przywara@arm.com>
+> > +
+> > +properties:
+> > +  "#clock-cells":
+> > +    const: 1
+> > +
+> > +  "#reset-cells":
+> > +    const: 1
+> > +
+> > +  compatible:
+> > +    enum:
+> > +      - allwinner,sun55i-a523-ccu
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +  clocks:
+> > +    minItems: 4  
+> 
+> Drop, redundant.
+> 
+> > +    maxItems: 4
+> > +
+> > +  clock-names:
+> > +    minItems: 4
+> > +    maxItems: 4  
+> 
+> Drop both and instead you need to list the items.
 
-Add a subsection to the percpu data for frequently accessed variables
-that should remain cached on each processor.  These varables should not
-be accessed from other processors to avoid cacheline bouncing.
+> 
+> > +
+> > +required:
+> > +  - "#clock-cells"
+> > +  - "#reset-cells"
+> > +  - compatible
+> > +  - reg
+> > +  - clocks
+> > +  - clock-names
+> > +
+> > +if:  
+> 
+> Drop, you have here only one device, no need for if:then.
 
-This will replace the pcpu_hot struct on x86, and open up similar
-functionality to other architectures and the kernel core.
+I know, and I do understand the redundancy of the minItems/maxItems above,
+but as I wrote in the commit message, this paves the way for the follow up
+patch and makes both more readable.
+Apart from helping with the review, I didn't want to conflate both devices
+into one patch, I think I saw people complaining about that in the past.
 
-Signed-off-by: Brian Gerst <brgerst@gmail.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Acked-by: Uros Bizjak <ubizjak@gmail.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: https://lore.kernel.org/r/20250303165246.2175811-2-brgerst@gmail.com
----
- include/asm-generic/vmlinux.lds.h | 11 +++++++++++
- include/linux/percpu-defs.h       | 13 +++++++++++++
- 2 files changed, 24 insertions(+)
+If you are fine with having them both added all in one go, I am happy to
+just squash the patches.
 
-diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
-index b32e453..c4e8fac 100644
---- a/include/asm-generic/vmlinux.lds.h
-+++ b/include/asm-generic/vmlinux.lds.h
-@@ -385,6 +385,11 @@ defined(CONFIG_AUTOFDO_CLANG) || defined(CONFIG_PROPELLER_CLANG)
- 	. = ALIGN(PAGE_SIZE);						\
- 	__nosave_end = .;
- 
-+#define CACHE_HOT_DATA(align)						\
-+	. = ALIGN(align);						\
-+	*(SORT_BY_ALIGNMENT(.data..hot.*))				\
-+	. = ALIGN(align);
-+
- #define PAGE_ALIGNED_DATA(page_align)					\
- 	. = ALIGN(page_align);						\
- 	*(.data..page_aligned)						\
-@@ -1065,6 +1070,11 @@ defined(CONFIG_AUTOFDO_CLANG) || defined(CONFIG_PROPELLER_CLANG)
- 	. = ALIGN(PAGE_SIZE);						\
- 	*(.data..percpu..page_aligned)					\
- 	. = ALIGN(cacheline);						\
-+	__per_cpu_hot_start = .;					\
-+	*(SORT_BY_ALIGNMENT(.data..percpu..hot.*))			\
-+	__per_cpu_hot_pad = .;						\
-+	. = ALIGN(cacheline);						\
-+	__per_cpu_hot_end = .;						\
- 	*(.data..percpu..read_mostly)					\
- 	. = ALIGN(cacheline);						\
- 	*(.data..percpu)						\
-@@ -1112,6 +1122,7 @@ defined(CONFIG_AUTOFDO_CLANG) || defined(CONFIG_PROPELLER_CLANG)
- 		INIT_TASK_DATA(inittask)				\
- 		NOSAVE_DATA						\
- 		PAGE_ALIGNED_DATA(pagealigned)				\
-+		CACHE_HOT_DATA(cacheline)				\
- 		CACHELINE_ALIGNED_DATA(cacheline)			\
- 		READ_MOSTLY_DATA(cacheline)				\
- 		DATA_DATA						\
-diff --git a/include/linux/percpu-defs.h b/include/linux/percpu-defs.h
-index 40d34e0..0fcacb9 100644
---- a/include/linux/percpu-defs.h
-+++ b/include/linux/percpu-defs.h
-@@ -113,6 +113,19 @@
- 	DEFINE_PER_CPU_SECTION(type, name, "")
- 
- /*
-+ * Declaration/definition used for per-CPU variables that are frequently
-+ * accessed and should be in a single cacheline.
-+ *
-+ * For use only by architecture and core code.  Only use scalar or pointer
-+ * types to maximize density.
-+ */
-+#define DECLARE_PER_CPU_CACHE_HOT(type, name)				\
-+	DECLARE_PER_CPU_SECTION(type, name, "..hot.." #name)
-+
-+#define DEFINE_PER_CPU_CACHE_HOT(type, name)				\
-+	DEFINE_PER_CPU_SECTION(type, name, "..hot.." #name)
-+
-+/*
-  * Declaration/definition used for per-CPU variables that must be cacheline
-  * aligned under SMP conditions so that, whilst a particular instance of the
-  * data corresponds to a particular CPU, inefficiencies due to direct access by
+Cheers,
+Andre
+
+> 
+> Best regards,
+> Krzysztof
+> 
+
