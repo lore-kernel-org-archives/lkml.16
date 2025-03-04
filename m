@@ -1,400 +1,104 @@
-Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2046.outbound.protection.outlook.com [40.107.21.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f43.google.com (mail-ua1-f43.google.com [209.85.222.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBFC11F9F64;
-	Tue,  4 Mar 2025 07:39:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.21.46
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741073978; cv=fail; b=Gyp5evfoWsZjcnYYTcfZ+Uk7w1lAz4PboEPBdbrMDo/zC3BC8s9oGXjGmlYSeN0vtgfygfYT9ykyknUx2k1RBpWo+sQ/TdFb5ZUIIzA78dGbXuEph5HtBlU6EZxh9lYpq73yf34U6x3S7I1d4D3XyaGhSjgZd3rHl3or4lV25kE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741073978; c=relaxed/simple;
-	bh=EE+lC+W056o+uMkYc6o1mqtCm6sxHEvfXuowtpkdbUw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=qy6CTdFm0ZTVhPYBOHFZToEfxEG4+tvrJQvfo7qUSw2/28sShStf7prsrx1dz/9l5bIjxlEHIyPHYvlVqDcvRS8iihaKQVJod+mlMyJqkGq8UcbyqeftKsO/EHdV8KmGu9GkltHKrlNxzCJ9Dj3N0X18iRjb8RQ645yz0Hlj5Ws=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=CreVcpA0; arc=fail smtp.client-ip=40.107.21.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BF9B1FAC5A
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 07:39:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.43
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741073984; cv=none; b=YgZiPixhVC3il1hbfJEXbONYOf2Qurb6+TCVhKo51GEyHPfwcDvx85+NARjdXjjeon1hoKvYPLg1n0+VP4RzX7Nog7LKVyrrds25plVuqy9QD2XDhr/a3/X66/KPj8v3Cc4gqk8ahTTI6iX6f9Jfs2uMlQrGHubLzhZMi4JlkyQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741073984; c=relaxed/simple;
+	bh=CPnzM1fw74lR2iJtYGUJoxG2I//OQLR4COigFE65VMM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WOcPBfOFVFl/ok19mdXIshgDJ7qkqaMI51UKSP+7Fb2haLMBXg9x3CaV/AIBFrk7Y5AODasoAd7QYIxq0IiRL+XM3zoK+PalatiBBvr+9gXPA8ItoyZB2h6GUs40cDvwlrVca66gUnAqDw0H47qaaphlrKmQB9xkXTe8c5hugpw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=qtec.com; spf=pass smtp.mailfrom=qtec.com; dkim=pass (2048-bit key) header.d=qtec.com header.i=@qtec.com header.b=U+O6BEn/; arc=none smtp.client-ip=209.85.222.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=qtec.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qtec.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="CreVcpA0"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=uZNa4r3NNjpdR8lZb4xOaoVDgxDNFDoSe879iC970Pv6W1AgswL8p7aOGV6K+z5qH/KXgKLFn9aLQFNF6cMaxWutRif19o+cT18JMVJnpH+yhMmdYv9uinFhEAXC/tkgZwmKivG+YSnjLibZsWdkfSAm3LBBIIFT7t/QvxmwaI4bctj/eld1Q//7upLv0KTu2ds3YSSpDvBGQdE/KH/20/AeE36PqFFUa+Mp6X6e+QNS6q7Dn1hJibF7U9mu+ghXNi3egcdL5zKWxs/uKHa3z2opvjzX9rTzxhOQFUZNrqzT6GCwfQzTqz3qbLojnbkcqrxjS3KWHyZakocNZC+HPw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=b6NCk0/fRUssINj2yqGY7VahHSG9G3UMOJV47aDiwfI=;
- b=GKjrv6iwPK1qW9LxlRq2qve6UdmRHxRA2aEA8fTlLS+BEylaDBW51f4yuKLSicQfIO2wrHm6w2/f6JzTjldpz0AxchM9zVN4P/TmdHxatrj6nSetL2NL2VQ6vB7X5RK7m7fmCG+wLXA2Ah5lErEh9VQdJiupTj2JOWye2d6Dknzk5uICDqGe+U7KmPTba+vGsu44qkprTEmBVNXdptVV3stTJg/Jx8oCFR0G0VctWmw0uh7sOglO7BD9UouWI40qKo05kxYRMoNOGtlkS46p1uWCFySpOBC84BUJvaGQ0JrMlOAwPOLPxbJfRpnmT1UsFg6N38eQsyzvhrnnl0wubg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=b6NCk0/fRUssINj2yqGY7VahHSG9G3UMOJV47aDiwfI=;
- b=CreVcpA0xyLUfjJfGJGa2DIUS0/3gROX2AJeZ2z6x6v2zlcYfBEMub8qoMTGbcJfZ0LsPLaccBUNCE3zPH+R/32y86nUZkMRXhTL04pRBtqGM3ZUEWn41Z54dlwLr8xt1ErIdRTPwqXyrwDoUuCq+5Yp6eCznT/crq/Xa8RQHQ5YgZsRQdSqMQqlKmTIfTzP5Ijct/F7ETfsMcmVdtnNX6z2g73/qn6bwSi29yLuCTW4KUThbTJpVeHI8+AkHJgE/wqIaqOrzeXxbGcoRj9keqj7P6bOlOe+wDlHbnbJ6Pflztf2LYJUtM+4fys6QeFaZnlrIGe5Fq7wemuOsET0vg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB8510.eurprd04.prod.outlook.com (2603:10a6:102:211::7)
- by VI2PR04MB11171.eurprd04.prod.outlook.com (2603:10a6:800:29a::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.11; Tue, 4 Mar
- 2025 07:39:32 +0000
-Received: from PAXPR04MB8510.eurprd04.prod.outlook.com
- ([fe80::a7c2:e2fa:8e04:40db]) by PAXPR04MB8510.eurprd04.prod.outlook.com
- ([fe80::a7c2:e2fa:8e04:40db%5]) with mapi id 15.20.8466.020; Tue, 4 Mar 2025
- 07:39:32 +0000
-From: Wei Fang <wei.fang@nxp.com>
-To: claudiu.manoil@nxp.com,
-	vladimir.oltean@nxp.com,
-	xiaoning.wang@nxp.com,
-	andrew+netdev@lunn.ch,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com
-Cc: christophe.leroy@csgroup.eu,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	imx@lists.linux.dev,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v3 net-next 03/13] net: enetc: move generic MAC filterng interfaces to enetc-core
-Date: Tue,  4 Mar 2025 15:21:51 +0800
-Message-Id: <20250304072201.1332603-4-wei.fang@nxp.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250304072201.1332603-1-wei.fang@nxp.com>
-References: <20250304072201.1332603-1-wei.fang@nxp.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SG3P274CA0007.SGPP274.PROD.OUTLOOK.COM (2603:1096:4:be::19)
- To PAXPR04MB8510.eurprd04.prod.outlook.com (2603:10a6:102:211::7)
+	dkim=pass (2048-bit key) header.d=qtec.com header.i=@qtec.com header.b="U+O6BEn/"
+Received: by mail-ua1-f43.google.com with SMTP id a1e0cc1a2514c-86112ab1ad4so2144862241.1
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Mar 2025 23:39:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=qtec.com; s=google; t=1741073980; x=1741678780; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=CPnzM1fw74lR2iJtYGUJoxG2I//OQLR4COigFE65VMM=;
+        b=U+O6BEn/WqQwLh4b5qjanKK6ULHW72iRRSe/bXTKMtwbFUpgaEZXbyqGB9AiBdo2hQ
+         NIVh+/GUz0AjOFDatDluewSBLAFfB4eFna0fLVHukFxY9FVjfjQ3TKnJLNsphy6fKBD4
+         MSGCGmibUBGgFC8oaSNgXOxU4EipBK4q0HiuWAn8pi2+XgSUXBzZm+i0cthcJ75X648f
+         p8lmfhKSs+i+aS7R84J9QxPmtdfsUnh9pdYDkrtYWvehg0X66K+qU3Bb7yD7GKkxEsuf
+         KtQEOrU1d3RL8b+abIPNF97yNkauYepRH6LJUR7syUcIFeT0hkQIsAm639lBZ9WGbRTN
+         t4+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741073980; x=1741678780;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=CPnzM1fw74lR2iJtYGUJoxG2I//OQLR4COigFE65VMM=;
+        b=clnt5JDfm0pHa8h+hnl2NNFrpzScD12LOlIIybX1e2a6aSzeQvn5nFsuSh7CCKemqz
+         qr4vIZp17bfWeA62/15biGvkCnTB2dUWY01oRsCU2gGsqWV2sFmbm1nfL67/PGRYiYhx
+         6Wa3ck44rBymitscLrpnhWB7R6PLEC8S27XxgJWc3pQJAwp3CUv7ewdNN9yQFERT8JOt
+         Cr9arMToeIkmjnotOpKrLZfj2gflt3HS0jJEcij8qf8aF/ukzful7Wt4YCUhlmlXzJ9W
+         sVfONq4MfbA9qBSNaqtOSlNTM7dNVm95rtv5vWkXq9zrDyRCCV1HJlIHw4mX8Hb2fPxy
+         +png==
+X-Forwarded-Encrypted: i=1; AJvYcCXbQeVGr3KKUnfUWjk7rIiehzoQbT1faD4hOkHAUavml22wR0dP3AcjEL1q0qn+5pzaJA+qyp9f6kSYKxU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxYDgurDfMuC7Uh/t+/1Cqd2VzPy/jOhvFi9iPOWAne1lJzg6ZE
+	lx+mWQru0A1uSEIfKmoqv1Fqmu+9waYE4yBl9MRgNE3zMjJXqPoxpi1fCNHmLF4CUUqNqtWr6ro
+	o/iXgwsRPwePhIWF4axhmvzlz53KHez7fKt2dMg==
+X-Gm-Gg: ASbGnctVcYQJqie0PE+aZQpTqzsMwMDi9czAYHJ7iiTxFWXGvfpRu9b7W71nleVBQXm
+	69W4OetMZYEyP/XrUSAvIEz1/RJhFiFTL2NrangEytoMKZNFyp8Axa0ZPMTVffL1Tt67byELbM3
+	WO6+XTXRoUWg4pO87w+ACg7SKn
+X-Google-Smtp-Source: AGHT+IHBTquF9MMdpA9ujTlISPqC+SGfvhVpdyIpNp2XJLqCK3NGLsT+uSlBNoyMtDFz+YtnQ61PW04FxbJj1JrvxVM=
+X-Received: by 2002:a05:6102:568a:b0:4ba:95f1:cc83 with SMTP id
+ ada2fe7eead31-4c044ed8255mr8739901137.16.1741073980287; Mon, 03 Mar 2025
+ 23:39:40 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB8510:EE_|VI2PR04MB11171:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6fcaf431-6c70-43a4-84ea-08dd5aefb3dc
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|52116014|366016|1800799024|376014|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?J1DtNYtIROQHIwbm0XfXxyP2Sa1P0zzkyUxcOP8cU8mj9kW8rgF9n1ssBf91?=
- =?us-ascii?Q?GHHulxl8w2/GUcj4sqIIGK2Q5EgSIf+W5ICRDd7oAirXR74qkTClvnKdbJGH?=
- =?us-ascii?Q?Go02V4SbWalcOhbQpsawxWh1PKXOgreoaROGYfo3lHxTzglY5I8SCsZDe0Xd?=
- =?us-ascii?Q?HNp8Nd6vzI7Y6zwQl8EyFU5cJbjn77tkTFVPLS6b8Muyo/6cdYLaaB2vuPhv?=
- =?us-ascii?Q?o4xqQq3gVur7YMTFDzBzGdFwDdHcjBElaKVZhHBgRWLS+TFZe1ydCTl7e20c?=
- =?us-ascii?Q?4KNwIIIFm5DKrVr2nJMC8SIzDHyPx6nQ0S8HOa+pDYD52az5np57MgRY9Jzo?=
- =?us-ascii?Q?doYenvJGtCnGoidMS6TwwGnXiTufWgseUiuoizh77xjNGoHf6HIGf7qq9K4K?=
- =?us-ascii?Q?j83tVUdhbbUoXCayb8tKTrGsztvY1WM3dDc5psK6wVUX7HjfPo7POiuGw9We?=
- =?us-ascii?Q?+pIRPfyczj954TfHDWn9uHgOGc4PCwlUyK7/NuIvyiDAS9otDiSEDCTcl8nB?=
- =?us-ascii?Q?c0UGSWM87ZphUsGRNCEn5ErSOLVguGUx+drbQ4wPcFISiwVTAUejBTOYbtTQ?=
- =?us-ascii?Q?+pC6jXvCylzn0DmJFKMsAcRwwxidzCMjk/ajvHOv835FPvnDvjhAbqRu0Gsv?=
- =?us-ascii?Q?vKegbSAV9Kr3XPRkxKFCmaqQIxZA6uWAtqIkb3duB9I57f/dbE93EG3iICau?=
- =?us-ascii?Q?vQHtdqUEx3Qfx5ctDIKw1zvYiV+ip9Kr/c2mBiGGdpjhvNJEc0EVU+6MLwdR?=
- =?us-ascii?Q?2a5P/63ZHM6iLUywo3yWRH5BO6HWV5I3HdH9KBXLdOUrznXKaZ8IS7DO4ufG?=
- =?us-ascii?Q?1d8a3VbxikesyxCuUliZIVXSamkbIdxqRPUbmKWFZKk2dOe35FZlNEqO2TVV?=
- =?us-ascii?Q?uX2suULCEaDouGdo26Z6Twdlx6O6eC8100tPJ8nct503bNgMvBdJiPcz/dNU?=
- =?us-ascii?Q?9kc9A9LRwiq1HaxbON8GvybxEwQjf3eAGXW+zMIJBK0L9GRXQ2lP4Lf35o95?=
- =?us-ascii?Q?ZBubQnNQ94yxudmKpEs9V93I83FOD0xEULElyJv9Q2dQ5B1nDv8+2JmQGL0C?=
- =?us-ascii?Q?BYJdmN1aeG8cY6UzEeb+fPZujGbGHRjAB363nCk93oWY1AMrlFRx10G058VO?=
- =?us-ascii?Q?cYk0zJd2P1YL9azSpC1+Q3rrQ8GIf2RyfSIUMwZkZi6tB423L2jsY5uMPzEh?=
- =?us-ascii?Q?GWYVUvJarGIBSeDMre35NIWdN7Y0WjOwNK6wbP457rdHiMJu/WfJ+b+jdTF9?=
- =?us-ascii?Q?A06F6tscJtcnwhhhiAw7Cv1Th3s48TzQvSWowN9PD+FhSDHwoauFijX+LMnv?=
- =?us-ascii?Q?u6UZeYSx1PEna56PoAmb/zziLVRQO1XEqNCuEMRCo/GV0UA90PAKxqlU0RFV?=
- =?us-ascii?Q?9qrhDpMb6cQW1GAQmg/3WThxKRMWLL4ZcMJXfcDoKoSd46kEYnHf2/y+Fg87?=
- =?us-ascii?Q?yxIsn6QbuBLznPPSFEk8nBhCRSqCbMw8?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB8510.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(52116014)(366016)(1800799024)(376014)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?k50rusoD+4B7tZJQybOApDeWewDwQJxtkicMmoITAfxswq/B7RO/0TNDavKR?=
- =?us-ascii?Q?6Z1AMctclav8Ag5LifYGJsGrSZ0BYfnD9u8fy+uXClBahbat7iHw4ZFwDeU6?=
- =?us-ascii?Q?apdaJ2WF+9NxcrX0Q9EeYiDpI9yctr5vI1Aub44qyF+tfU7L68UhUOW1Gu9p?=
- =?us-ascii?Q?pZgKJsm/aJUuE2UNiU4Z3Ksk3SoaR6rl6w4wGOQia1JdI+ZM3V87u6qmVQU7?=
- =?us-ascii?Q?MRZpxazXErIJ+8VC1F+UEUiMqxiXSu6ZhEaYYlTvl1IvFz/i+wsH45dPz9bA?=
- =?us-ascii?Q?DxfY06lHDkEe+jGxEiN83vv9WgQIcbpbn+Cd7WF5qRNxxKQj5HAn5dyskmT8?=
- =?us-ascii?Q?lJ5G8Uo2zZoLNhHcjoJNd9AwCv/d6QRMFq/tiMXDrkXhLpHR1sccCQuZqbTR?=
- =?us-ascii?Q?WTCaDF/M5wDiRfKaj2aGL3k5aRMNh+asm4jwIRXiAzAN4mrS5Vht9OCfTrvL?=
- =?us-ascii?Q?Hs5vGkPkdVuIl7gjPNVYz+N8fCQ15EGryqacsk23snTWk/tVNh4WY/yigCoc?=
- =?us-ascii?Q?HLD9x20YEXwqJmpxu1e8BvhMQ/cJJWLzIQcoeBZP9bD1jXS5pi10s89tYXy6?=
- =?us-ascii?Q?vu3aTq0Hry3Hq14ARNopAUzQNIdCQIuYK8n+AvO47pw+6n5ZdXFqF59JVdHJ?=
- =?us-ascii?Q?rM5n63l+3jYjN8t0RE73RKehoM6DGaaD35qhuPK6ScPBQVqwuihOnpwhQ8Hw?=
- =?us-ascii?Q?e6+JArB1eAvSKsOXkM7XH1E45tiLRfY4TRJtCW1McoQnrUINQPT4KZljplB2?=
- =?us-ascii?Q?tWfRKaP/W0aCNVuCfl3RJLlkerbiHBtvJdHkb7CWiRXzWLSPrQwqT1QVBbmt?=
- =?us-ascii?Q?TPLQaQ3edLWfLCGdU+vPIpH7FuE7+ytSBUCbRoWEFx2HylmjFI9FAJn4S1fM?=
- =?us-ascii?Q?GZm+SvZTA4GWkXS25D2As7YiPBBcUeIBEGLm8qaaFF1GVVHjhR8w1WBpDrN0?=
- =?us-ascii?Q?qncbMGrkjnWmUpCnDgIGM7HeYB2uSFknnl1JJBe3CczzfyJ9anysZq/PSmVY?=
- =?us-ascii?Q?CwMHS6fCQUG9ePved0Rc6NAJdKoDVilm7LDdV/1Qki9232YswdzZqeWcMfbJ?=
- =?us-ascii?Q?mfWIGsSZMld5PPvaXeJlqjyzgdxJUkw2ggssio4z6lGfBpussgZwPNQyCp8B?=
- =?us-ascii?Q?U+YcTASuTX7No/h6AM/hYhQzr03+GieUPkqxE4iQNA5G+rLNIOJ5+7KQRw0r?=
- =?us-ascii?Q?P0FlAWON4H+Lyq0AFiS2JlfZeUU6LsdUAinumxuV07N5NnSpJC2PSf5dTxre?=
- =?us-ascii?Q?DVobLhg5G2DSCsR12ZXfoEVjKSEJ9bC/z7S2ZfUDNdbroXpn98Orgf6bQPRf?=
- =?us-ascii?Q?KK10Ud7d4FKzvmay7A1GmTupSmQnE/1IAPII9Y2GwzFalTTIR5tg4bVzY2no?=
- =?us-ascii?Q?G1CgFU2ZZEqP50QD/IaV/5Gs01GLvVAunKHLGxtG1n3TJjSKzxZckOCeuO2Z?=
- =?us-ascii?Q?wndkIq5t6ZsT+OS1zNwMfYWGS2IZ/o5AXSj4BaW2jLhBKrQBRa9cbewgR9+e?=
- =?us-ascii?Q?WvLoTkFeEIT5VtxRjxDGNkZe9dwsz5zdbmyF2jNHTL9N51lnWTK+JBQN0/Yd?=
- =?us-ascii?Q?39SRGxJFKZGvCPd7vtS6HrZb3cURZmEwdQ1ESjDr?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6fcaf431-6c70-43a4-84ea-08dd5aefb3dc
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB8510.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Mar 2025 07:39:32.1099
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: f3i0CRyLZreLdY43VpNJdR/v9/XTvTDV2m4qnbwXb+ahnVOFjVN7jTPKGS5hX2d2akYzhmveGp8rXpFlm/Qh5Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI2PR04MB11171
+References: <CAJDH93s25fD+iaPJ1By=HFOs_M4Hc8LawPDy3n_-VFy04X4N5w@mail.gmail.com>
+ <20241219112125.GAZ2QBteug3I1Sb46q@fat_crate.local> <20241219164408.GA1454146@yaz-khff2.amd.com>
+ <CAJDH93vm0buJn5vZEz9k9GRC3Kr6H7=0MSJpFtdpy_dSsUMDCQ@mail.gmail.com>
+ <Z78uOaPESGXWN46M@gmail.com> <CAJDH93uE+foFfRAXVJ48-PYvEUsbpEu_-BVoG-5HsDG66yY7AQ@mail.gmail.com>
+ <Z8WTON2K77Q567Kg@gmail.com> <CAJDH93vwqiiNgiUQrw0kqDkHvaUNUcrOfHJW7PGezDHSOb-5Hg@mail.gmail.com>
+ <20250303184208.GB1520489@yaz-khff2.amd.com>
+In-Reply-To: <20250303184208.GB1520489@yaz-khff2.amd.com>
+From: Rostyslav Khudolii <ros@qtec.com>
+Date: Tue, 4 Mar 2025 08:39:29 +0100
+X-Gm-Features: AQ5f1JpHqszI2Fm3lvlQuFDw_o2qX63ihfzLeXdQyT7L_4E9WZBCEpsmQxne4Q8
+Message-ID: <CAJDH93u+9KLBVSrFnQm3==9E4VaVohavq+FZT+UqWdRs9FHn-g@mail.gmail.com>
+Subject: Re: PCI IO ECS access is no longer possible for AMD family 17h
+To: Yazen Ghannam <yazen.ghannam@amd.com>
+Cc: Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>, linux-pci@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, x86@kernel.org, 
+	"bhelgaas@google.com" <bhelgaas@google.com>, "tglx@linutronix.de" <tglx@linutronix.de>
+Content-Type: text/plain; charset="UTF-8"
 
-Although only ENETC PF can access the MAC address filter table, the table
-entries can specify MAC address filtering for one or more SIs based on
-SI_BITMAP, which means that the table also supports MAC address filtering
-for VFs.
+Hi Yazen,
 
-Currently, only the ENETC v1 PF driver supports MAC address filtering. In
-order to add the MAC address filtering support for the ENETC v4 PF driver
-and VF driver in the future, the relevant generic interfaces are moved to
-the enetc-core driver. At the same time, the struct enetc_mac_filter is
-moved from enetc_pf to enetc_si, because enetc_si is a structure shared by
-PF and VFs. This lays the basis for i.MX95 ENETC PF and VFs to support
-MAC address filtering.
+>
+> Ros,
+> Is/was there a reason why you didn't have the MCFG/MMCONFIG options
+> enabled in your kernel?
+>
+> Was this a side effect of trying to build a minimal kernel or similar?
+>
+> Thanks,
+> Yazen
+>
+> P.S. Sorry for the late reply. My mailbox is missing Ros's reply to me.
 
-Signed-off-by: Wei Fang <wei.fang@nxp.com>
----
- drivers/net/ethernet/freescale/enetc/enetc.c  | 36 ++++++++++++++
- drivers/net/ethernet/freescale/enetc/enetc.h  | 17 +++++++
- .../net/ethernet/freescale/enetc/enetc_pf.c   | 49 +++----------------
- .../net/ethernet/freescale/enetc/enetc_pf.h   | 14 ------
- 4 files changed, 60 insertions(+), 56 deletions(-)
+I inherited a kernel config used here from a previous custom,
+V1000-based solution. Most likely originally
+it came from the x86_64_defconfig. Maybe MMCONFIG wasn't enabled by
+default at that time.
+We never had problems with this because our BIOS keeps the IO ECS
+enabled (that's against the spec recommendation).
+The kernel default for PCI_MMCONFIG is 'y' now, so it's unlikely that
+people will run into this issue unless
+they explicitly disable it.
 
-diff --git a/drivers/net/ethernet/freescale/enetc/enetc.c b/drivers/net/ethernet/freescale/enetc/enetc.c
-index 2106861463e4..3832d2cd91ba 100644
---- a/drivers/net/ethernet/freescale/enetc/enetc.c
-+++ b/drivers/net/ethernet/freescale/enetc/enetc.c
-@@ -36,6 +36,42 @@ static void enetc_change_preemptible_tcs(struct enetc_ndev_priv *priv,
- 	enetc_mm_commit_preemptible_tcs(priv);
- }
- 
-+static int enetc_mac_addr_hash_idx(const u8 *addr)
-+{
-+	u64 fold = __swab64(ether_addr_to_u64(addr)) >> 16;
-+	u64 mask = 0;
-+	int res = 0;
-+	int i;
-+
-+	for (i = 0; i < 8; i++)
-+		mask |= BIT_ULL(i * 6);
-+
-+	for (i = 0; i < 6; i++)
-+		res |= (hweight64(fold & (mask << i)) & 0x1) << i;
-+
-+	return res;
-+}
-+
-+void enetc_add_mac_addr_ht_filter(struct enetc_mac_filter *filter,
-+				  const unsigned char *addr)
-+{
-+	int idx = enetc_mac_addr_hash_idx(addr);
-+
-+	/* add hash table entry */
-+	__set_bit(idx, filter->mac_hash_table);
-+	filter->mac_addr_cnt++;
-+}
-+EXPORT_SYMBOL_GPL(enetc_add_mac_addr_ht_filter);
-+
-+void enetc_reset_mac_addr_filter(struct enetc_mac_filter *filter)
-+{
-+	filter->mac_addr_cnt = 0;
-+
-+	bitmap_zero(filter->mac_hash_table,
-+		    ENETC_MADDR_HASH_TBL_SZ);
-+}
-+EXPORT_SYMBOL_GPL(enetc_reset_mac_addr_filter);
-+
- static int enetc_num_stack_tx_queues(struct enetc_ndev_priv *priv)
- {
- 	int num_tx_rings = priv->num_tx_rings;
-diff --git a/drivers/net/ethernet/freescale/enetc/enetc.h b/drivers/net/ethernet/freescale/enetc/enetc.h
-index 4ff0957e69be..9380d3e8ca01 100644
---- a/drivers/net/ethernet/freescale/enetc/enetc.h
-+++ b/drivers/net/ethernet/freescale/enetc/enetc.h
-@@ -23,6 +23,18 @@
- 
- #define ENETC_CBD_DATA_MEM_ALIGN 64
- 
-+#define ENETC_MADDR_HASH_TBL_SZ	64
-+
-+enum enetc_mac_addr_type {UC, MC, MADDR_TYPE};
-+
-+struct enetc_mac_filter {
-+	union {
-+		char mac_addr[ETH_ALEN];
-+		DECLARE_BITMAP(mac_hash_table, ENETC_MADDR_HASH_TBL_SZ);
-+	};
-+	int mac_addr_cnt;
-+};
-+
- struct enetc_tx_swbd {
- 	union {
- 		struct sk_buff *skb;
-@@ -302,6 +314,8 @@ struct enetc_si {
- 	int hw_features;
- 	const struct enetc_drvdata *drvdata;
- 	const struct enetc_si_ops *ops;
-+
-+	struct enetc_mac_filter mac_filter[MADDR_TYPE];
- };
- 
- #define ENETC_SI_ALIGN	32
-@@ -484,6 +498,9 @@ int enetc_alloc_si_resources(struct enetc_ndev_priv *priv);
- void enetc_free_si_resources(struct enetc_ndev_priv *priv);
- int enetc_configure_si(struct enetc_ndev_priv *priv);
- int enetc_get_driver_data(struct enetc_si *si);
-+void enetc_add_mac_addr_ht_filter(struct enetc_mac_filter *filter,
-+				  const unsigned char *addr);
-+void enetc_reset_mac_addr_filter(struct enetc_mac_filter *filter);
- 
- int enetc_open(struct net_device *ndev);
- int enetc_close(struct net_device *ndev);
-diff --git a/drivers/net/ethernet/freescale/enetc/enetc_pf.c b/drivers/net/ethernet/freescale/enetc/enetc_pf.c
-index a214749a4af6..cc3e52bd3096 100644
---- a/drivers/net/ethernet/freescale/enetc/enetc_pf.c
-+++ b/drivers/net/ethernet/freescale/enetc/enetc_pf.c
-@@ -72,30 +72,6 @@ static void enetc_set_isol_vlan(struct enetc_hw *hw, int si, u16 vlan, u8 qos)
- 	enetc_port_wr(hw, ENETC_PSIVLANR(si), val);
- }
- 
--static int enetc_mac_addr_hash_idx(const u8 *addr)
--{
--	u64 fold = __swab64(ether_addr_to_u64(addr)) >> 16;
--	u64 mask = 0;
--	int res = 0;
--	int i;
--
--	for (i = 0; i < 8; i++)
--		mask |= BIT_ULL(i * 6);
--
--	for (i = 0; i < 6; i++)
--		res |= (hweight64(fold & (mask << i)) & 0x1) << i;
--
--	return res;
--}
--
--static void enetc_reset_mac_addr_filter(struct enetc_mac_filter *filter)
--{
--	filter->mac_addr_cnt = 0;
--
--	bitmap_zero(filter->mac_hash_table,
--		    ENETC_MADDR_HASH_TBL_SZ);
--}
--
- static void enetc_add_mac_addr_em_filter(struct enetc_mac_filter *filter,
- 					 const unsigned char *addr)
- {
-@@ -104,16 +80,6 @@ static void enetc_add_mac_addr_em_filter(struct enetc_mac_filter *filter,
- 	filter->mac_addr_cnt++;
- }
- 
--static void enetc_add_mac_addr_ht_filter(struct enetc_mac_filter *filter,
--					 const unsigned char *addr)
--{
--	int idx = enetc_mac_addr_hash_idx(addr);
--
--	/* add hash table entry */
--	__set_bit(idx, filter->mac_hash_table);
--	filter->mac_addr_cnt++;
--}
--
- static void enetc_clear_mac_ht_flt(struct enetc_si *si, int si_idx, int type)
- {
- 	bool err = si->errata & ENETC_ERR_UCMCSWP;
-@@ -145,10 +111,9 @@ static void enetc_set_mac_ht_flt(struct enetc_si *si, int si_idx, int type,
- 	}
- }
- 
--static void enetc_sync_mac_filters(struct enetc_pf *pf)
-+static void enetc_sync_mac_filters(struct enetc_si *si)
- {
--	struct enetc_mac_filter *f = pf->mac_filter;
--	struct enetc_si *si = pf->si;
-+	struct enetc_mac_filter *f = si->mac_filter;
- 	int i, pos;
- 
- 	pos = EMETC_MAC_ADDR_FILT_RES;
-@@ -192,10 +157,10 @@ static void enetc_sync_mac_filters(struct enetc_pf *pf)
- static void enetc_pf_set_rx_mode(struct net_device *ndev)
- {
- 	struct enetc_ndev_priv *priv = netdev_priv(ndev);
--	struct enetc_pf *pf = enetc_si_priv(priv->si);
--	struct enetc_hw *hw = &priv->si->hw;
- 	bool uprom = false, mprom = false;
- 	struct enetc_mac_filter *filter;
-+	struct enetc_si *si = priv->si;
-+	struct enetc_hw *hw = &si->hw;
- 	struct netdev_hw_addr *ha;
- 	u32 psipmr = 0;
- 	bool em;
-@@ -214,7 +179,7 @@ static void enetc_pf_set_rx_mode(struct net_device *ndev)
- 	/* first 2 filter entries belong to PF */
- 	if (!uprom) {
- 		/* Update unicast filters */
--		filter = &pf->mac_filter[UC];
-+		filter = &si->mac_filter[UC];
- 		enetc_reset_mac_addr_filter(filter);
- 
- 		em = (netdev_uc_count(ndev) == 1);
-@@ -230,7 +195,7 @@ static void enetc_pf_set_rx_mode(struct net_device *ndev)
- 
- 	if (!mprom) {
- 		/* Update multicast filters */
--		filter = &pf->mac_filter[MC];
-+		filter = &si->mac_filter[MC];
- 		enetc_reset_mac_addr_filter(filter);
- 
- 		netdev_for_each_mc_addr(ha, ndev) {
-@@ -243,7 +208,7 @@ static void enetc_pf_set_rx_mode(struct net_device *ndev)
- 
- 	if (!uprom || !mprom)
- 		/* update PF entries */
--		enetc_sync_mac_filters(pf);
-+		enetc_sync_mac_filters(si);
- 
- 	psipmr |= enetc_port_rd(hw, ENETC_PSIPMR) &
- 		  ~(ENETC_PSIPMR_SET_UP(0) | ENETC_PSIPMR_SET_MP(0));
-diff --git a/drivers/net/ethernet/freescale/enetc/enetc_pf.h b/drivers/net/ethernet/freescale/enetc/enetc_pf.h
-index a26a12863855..2b9d0f625f01 100644
---- a/drivers/net/ethernet/freescale/enetc/enetc_pf.h
-+++ b/drivers/net/ethernet/freescale/enetc/enetc_pf.h
-@@ -6,18 +6,6 @@
- 
- #define ENETC_PF_NUM_RINGS	8
- 
--enum enetc_mac_addr_type {UC, MC, MADDR_TYPE};
--#define ENETC_MAX_NUM_MAC_FLT	((ENETC_MAX_NUM_VFS + 1) * MADDR_TYPE)
--
--#define ENETC_MADDR_HASH_TBL_SZ	64
--struct enetc_mac_filter {
--	union {
--		char mac_addr[ETH_ALEN];
--		DECLARE_BITMAP(mac_hash_table, ENETC_MADDR_HASH_TBL_SZ);
--	};
--	int mac_addr_cnt;
--};
--
- #define ENETC_VLAN_HT_SIZE	64
- 
- enum enetc_vf_flags {
-@@ -52,8 +40,6 @@ struct enetc_pf {
- 	int total_vfs; /* max number of VFs, set for PF at probe */
- 	struct enetc_vf_state *vf_state;
- 
--	struct enetc_mac_filter mac_filter[ENETC_MAX_NUM_MAC_FLT];
--
- 	struct enetc_msg_swbd rxmsg[ENETC_MAX_NUM_VFS];
- 	struct work_struct msg_task;
- 	char msg_int_name[ENETC_INT_NAME_MAX];
--- 
-2.34.1
-
+Regards,
+Rostyslav
