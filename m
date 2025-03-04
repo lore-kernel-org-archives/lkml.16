@@ -1,173 +1,186 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from BN1PR04CU002.outbound.protection.outlook.com (mail-eastus2azolkn19010021.outbound.protection.outlook.com [52.103.12.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19D7637160
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 04:20:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741062037; cv=none; b=S4tcwA4VVE8Uy3fLPOfPDISrnOdbpLYp1PDR4RN3MPt+lVcYXDg/am9p+BA4hgPeJVARXc1AIQlCyJ9OhVdG0XCRIdMIWyJFOxy0RoxD7wFKaLnvmf4A4aK+6LjWZkWps8KfPl9wj9kvrFJkQY3ETRJvHYr7A+QPilovyLny4qs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741062037; c=relaxed/simple;
-	bh=4WvJQJNdJoTNKt5ltUO+3gTtnOgNAYVCaYW6DAjFMBE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iOAIsSkqPSXH2n7Rg/n5EtIdV7JjSzwWEBP5uLjyxqxnKWK3broagwK4/efnigGzGS/8aBprQVUeKBH5M+X/PhKcEnvlf7S5UhfCEdXrnFKjWsFb9b+SGmYAcmuQTeY7I/3nnT6x3s/MxGdiwXwEmqvV1dcBOFYAfRQrMPiEemE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gm7LoIFj; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 848F0225D6;
+	Tue,  4 Mar 2025 04:21:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.12.21
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741062120; cv=fail; b=hz41sD/cYJTfheiHvGH4kUjKC3zI3sK7KkP6GL9igsy/vu7bj6gbMvPz0gqe6AphZvNVtG6E62oZmWbNbfQeQnOQ25ajBs5h31OI2njOSds+JVu2jEJjJffP7spJu7Hg10m0/MFCP2x8EZ8ilIkrroKDDnRcXrOxAhiWubgOth4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741062120; c=relaxed/simple;
+	bh=AQQfsD1BNvW9DfR4w2enzQxu/ez76qFB3QeEL7CSRyM=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=I9oCzno1qj9YWMLbafOxMo6iI5vyfARXSLlC+oOnugCz1GLtGA6uObAn82bq60rFb3Hs1lXHbSLTqz1oCg3MrqQ7HtijPiTdMNAZgoisqr+ReIzWqtQevPk09o+r7xMjhOt0z1YsyA2SwXrqVsAW8eJnEpF1y7qpegGLgsC6SNA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=W8p/T9gl; arc=fail smtp.client-ip=52.103.12.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gm7LoIFj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1741062033;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=H8QNG9Tzo6lIVKKqIyvnewf5NhMdnqlRqTf63SVtc9A=;
-	b=gm7LoIFj78RJ7HOliEuZWC7OFY6JnwGWUDZ1cSmJ0aWBTLX1fQkLsbc7/6r0s6wK5tzQ9K
-	PthaBvl6ThRxIxdydig8b0gbpbWlUK6xjPGlzqFtPqTaA+tSuQMBqoI9Uqmc36IORHKVhn
-	cwA9QdTi3r0qIqi8ky6n3Td4hzvOLL8=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-562-C1m5irFeO22yySSrr7fZHg-1; Mon,
- 03 Mar 2025 23:20:27 -0500
-X-MC-Unique: C1m5irFeO22yySSrr7fZHg-1
-X-Mimecast-MFC-AGG-ID: C1m5irFeO22yySSrr7fZHg_1741062026
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 5581E1800264;
-	Tue,  4 Mar 2025 04:20:26 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.52])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id BD28519560AA;
-	Tue,  4 Mar 2025 04:20:23 +0000 (UTC)
-Date: Tue, 4 Mar 2025 12:20:18 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Donald Dutile <ddutile@redhat.com>,
-	David Hildenbrand <david@redhat.com>, Jiri Bohac <jbohac@suse.cz>
-Cc: Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>,
-	kexec@lists.infradead.org, Philipp Rudo <prudo@redhat.com>,
-	Pingfan Liu <piliu@redhat.com>, Tao Liu <ltao@redhat.com>,
-	linux-kernel@vger.kernel.org,
-	David Hildenbrand <dhildenb@redhat.com>,
-	Michal Hocko <mhocko@suse.cz>
-Subject: Re: [PATCH v2 0/5] kdump: crashkernel reservation from CMA
-Message-ID: <Z8Z/gnbtiXT9QAZr@MiWiFi-R3L-srv>
-References: <Z7dc9Cd8KX3b_brB@dwarf.suse.cz>
- <04904e86-5b5f-4aa1-a120-428dac119189@redhat.com>
- <427fec88-2a74-471e-aeb6-a108ca8c4336@redhat.com>
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="W8p/T9gl"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=NFuy9xc7upuZh1k4p26vfiBlTnMZLpcKr6jXAEwmnAqmHr4w9XirqpECaA7xhsml6SqYHiAeecA4iyVU7es/ntxXIb/uKH5T3vn571h3jUsHItnUdoqGfFMdpe/zJvJ4AbuiD8ZG+NoFvAjgeY5jgWbeiRwXG1xdWtM2Z0V67wuVCuMi8oaoD5i4ZQrQAUilb7aorwtOixWoa5ZRvvIwTONJGN7nh7Al1u5pMIHFj0DwfUsqMOi2YZNqu7TafQCGHuzgrDPwOI+7/vPYKMJ7m0Axhvt9kgUuMZTBsMYSNxwOU0XejimvY8Q38EPP3x5dCxviEuPUwpfIR1/u7OkvMg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=UY2oMWp3OfauMKYflhkuEHqxxQpnF99J+FJONL+RMY0=;
+ b=esvkPEKNm0isBBOR8rUiObAmdv/amvs05J7GDaQu48shxsuEsD9m3uvWTnG+qbnoJ1wBwu6tddqfhwqdhm1f5tMV0uUNh3e14olQXceMWSRh64LRAo/raGaXFmZ84ikSNRfnf0isieHOXHNmc2bfYztUQ5UZIUy3n3U948uXCoNgKkD/Plwua/VWsH5DJmilEcbjQXmhJEMbyT5/6355t4ip6WJU/jv3lXdoyWi6GgyYKZlFvfrn/wTfgzJeLy0yALY3JbUjI/T8BEOqDQ0dP1qPgz0ppKE8hqTSiEAA/oNjY1zjKxkXXLsur+6GrUGppiXh4MODVG9c2ulaYglB6w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=UY2oMWp3OfauMKYflhkuEHqxxQpnF99J+FJONL+RMY0=;
+ b=W8p/T9gl6gILnlIwgSU/E6a6HZ4vQK5iHNn9gvy+mf3kdHIRVlE4n2Hcd5nD68uhDhDktq3Eyz3wjDYsqbFuKS1nvMUjmNre9imfWnbd0HT8sj2zcU+sVMEaYmSWXLcFkA1Z/Qi4Y6Dk9q5DMF9IXNcC+dkpISbJheLM3dG39Bupeq7bCHJOhF+a26j4x92rpT0xVd43EGS6RtuxnOJACUzjnLWCDgxJDpqkQhtoXvZ/Cmd6rwucoG6A9HJUrtPJe+dzXnl6XMTQd2MiPOGF6+7ktiBgRRcbjYBbOAEK5rU8wTCw81sr2LyHLjbeMONvYKRc2dJIacjugd7MU8OzDA==
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
+ by PH8PR02MB10184.namprd02.prod.outlook.com (2603:10b6:510:224::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.26; Tue, 4 Mar
+ 2025 04:21:55 +0000
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::cedd:1e64:8f61:b9df]) by SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::cedd:1e64:8f61:b9df%3]) with mapi id 15.20.8489.025; Tue, 4 Mar 2025
+ 04:21:55 +0000
+From: Michael Kelley <mhklinux@outlook.com>
+To: Roman Kisel <romank@linux.microsoft.com>, "eahariha@linux.microsoft.com"
+	<eahariha@linux.microsoft.com>, "kys@microsoft.com" <kys@microsoft.com>,
+	"haiyangz@microsoft.com" <haiyangz@microsoft.com>, "wei.liu@kernel.org"
+	<wei.liu@kernel.org>, "decui@microsoft.com" <decui@microsoft.com>,
+	"James.Bottomley@HansenPartnership.com"
+	<James.Bottomley@HansenPartnership.com>, "martin.petersen@oracle.com"
+	<martin.petersen@oracle.com>, "linux-hyperv@vger.kernel.org"
+	<linux-hyperv@vger.kernel.org>, "linux-scsi@vger.kernel.org"
+	<linux-scsi@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+CC: "apais@microsoft.com" <apais@microsoft.com>, "benhill@microsoft.com"
+	<benhill@microsoft.com>, "sunilmut@microsoft.com" <sunilmut@microsoft.com>
+Subject: RE: [PATCH hyperv-next v2 1/1] scsi: storvsc: Don't report the host
+ packet status as the hv status
+Thread-Topic: [PATCH hyperv-next v2 1/1] scsi: storvsc: Don't report the host
+ packet status as the hv status
+Thread-Index: AQHbjJm9EpwhEe8n1UachPV3bNTU47NiYC9g
+Date: Tue, 4 Mar 2025 04:21:55 +0000
+Message-ID:
+ <SN6PR02MB4157DD35957FC26640C6F629D4C82@SN6PR02MB4157.namprd02.prod.outlook.com>
+References: <20250304000940.9557-1-romank@linux.microsoft.com>
+ <20250304000940.9557-2-romank@linux.microsoft.com>
+In-Reply-To: <20250304000940.9557-2-romank@linux.microsoft.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|PH8PR02MB10184:EE_
+x-ms-office365-filtering-correlation-id: d28f3a16-e422-4902-aacd-08dd5ad418ec
+x-microsoft-antispam:
+ BCL:0;ARA:14566002|19110799003|8060799006|15080799006|12121999004|461199028|8062599003|41001999003|13041999003|102099032|3412199025|440099028;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?4Gi+ccTRb8bjOCvf/f+LzpBscFKMmqRR5M8//iD/FktBgGMVaA/Py7RXIMmz?=
+ =?us-ascii?Q?6+JAZ3I7m1ds7Nb4H7kFsEZn0Nw4kDsjtM0prOj7evGf5MBWanDqNfsDTck0?=
+ =?us-ascii?Q?gGPFkKuHVX8JrC3vsGGA4HbSgCsanZkyg95/AVSweglzQFntGkTJFb5naLvy?=
+ =?us-ascii?Q?cj2ijySCEl7KL4ZZ3puTDOp1+cRyQTN7z1DmzbsdlmSO/Pi7gsiftTf78olC?=
+ =?us-ascii?Q?4jIWo6D8W7IePk0p7TGCUXX7hWW8ilSYq8lLOhSkqCqVXFGO5su9oFpkos+y?=
+ =?us-ascii?Q?rBULUkxB1GyTMOFxtv78S3u82Lr+GQvFvvfPAiZvg55PqLJ7laLXWYRiQUv8?=
+ =?us-ascii?Q?Jrl1fYaklLvHYOzksXjjVBHapauMU4pkpribtsroQWK7/nDuQTE3mJlrb2LJ?=
+ =?us-ascii?Q?i6M1uKSLknZ7Yo2o+AFLzU5uYl0v+F05JWnjjG2KemtTXoT6MDVoTNWuFNqZ?=
+ =?us-ascii?Q?OxRPsdc3viMFqx0HeQ2R6XuSBkpIJ5BzK37Q/EGzlsDRFmRgpaSpEQyO/g9B?=
+ =?us-ascii?Q?RdH7ddmtHkrYzV3lLCmm84J00zFnH8yYxIHjhnwWmeqee9xmp445HVK8Ad6f?=
+ =?us-ascii?Q?S8Ttkk2kClWAwDGUJxm1aAxMtWk0ouLUgabt4lxOev3Eou66r793pSiLIrCY?=
+ =?us-ascii?Q?vKEYkmgtb5kKjH5Zmr76cMYj4O7SFEqK4f8vQEZgOhqZkA2djMV8DwKPaMZW?=
+ =?us-ascii?Q?MzARl0yTGO9BoMwdWlkJ4b0zoQRKruPyBfJSADGDK+No0S2NGIXcukQfq+8f?=
+ =?us-ascii?Q?e2upZu0T2FYHXgF4ZbTdzfpx4N6X+W4Z5o8OWX3HM7UHXs03MXGlruKcJ57l?=
+ =?us-ascii?Q?zY5ikuzwr92gRrWTYRmoMDY4LcODPYe+cjRWGl2XJH4XlvRdfDLBBBA7Tar9?=
+ =?us-ascii?Q?zGY0B32NJmJj3V+3PFZ736wALEOUC8pbTO3V5dSttIboI/3odh0JDiU0uVih?=
+ =?us-ascii?Q?bH34GNY+MlY9UZjQPAiOfBACiOfD+kJlgh5p3SGxYeADi61FjSnikcrMc+Mw?=
+ =?us-ascii?Q?ZLloojhu5f3UtxR496O06VhnatlOBUHMOoqeFosHZm+k4NS3F9VJylNBLNun?=
+ =?us-ascii?Q?UGTNGgjuxRfTyet8W58EnmDvRmBJ48+3qrR2FOFi9d3SEPwWGarChH5L02Zs?=
+ =?us-ascii?Q?jQA1FkI8EHAlPOxEn7B/An5BiR1+DBuAoQ=3D=3D?=
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?eLfXBrCBeepbBTY1o44gGST+5AQ7+7OXw0ib4UCNkhx1cyvcDJoQDD2IuDtn?=
+ =?us-ascii?Q?xMa2cc6YnhP8wlGtZzS/iRhOIVpFI+BzO5uwUnwmOTJzZ1Ziv7Qka0N0vm1G?=
+ =?us-ascii?Q?wxZ6I5VWDl3Rspg32aM9yLiN3Y4dWiCOpiUdoR1G5kZT4ik9l36EU0o7qtWw?=
+ =?us-ascii?Q?KR7buPA+6YqM6TXJbaPdWU6bpnceT12ECCHpAOilf9b8/u8bIM+WvR7Nm5zT?=
+ =?us-ascii?Q?SfDZFbOQQAKCmsEz3xecgWQdA+K8DB9GbT3zlahAQWrvXCRv0AR4lZnerVt9?=
+ =?us-ascii?Q?KFdJq7ybeYe2hhNvwfVirzwyM5alyzFiY7z72TIRXGaLSCCHCDN468/wNQdu?=
+ =?us-ascii?Q?ZljaC3m6Nin+uV6wHNI2CfcBU7sfzZO1l7xuvhXQOJHBDBw7T1Ampw4pDCpM?=
+ =?us-ascii?Q?81dWvrOhTTW8WzyTl+6ezFwCjqxIpHtKoIMJJw3OC6ykw6gy1+Hnf8pdBLzM?=
+ =?us-ascii?Q?zGxu6ySjx1FtWMdnqSn+Ujyrwsij2DLanMS+XetQWDusXdsZCm1BfyGow8JC?=
+ =?us-ascii?Q?ykK7TrVATVGCjBWkkjY4Yl/wQzsEuf7+JERkl9cKQQE7C+4c3kgYeBcYKgzP?=
+ =?us-ascii?Q?J3CCl78Bl4RWKILiyxaM2ghUkT5eJ6ZQteAN11+wy32RzIdpSIKzdqk8Bdvi?=
+ =?us-ascii?Q?CaSgM59StWSXgmw0rnG3/XIqVMzDEYtZK6M63mpW14bOm+13EfMpJpw5NNHr?=
+ =?us-ascii?Q?0uZckjAmn5C3jGI2idUSAm+hs6aXPxixaDjz8UIdMYSd4Bb9i6PO97ErYRQ3?=
+ =?us-ascii?Q?jSdyQbVP/KHVBqXmXolh0zhBUSCFm0bwJ/hZ7jDBBnqkNq29OZpZHa1B8mpt?=
+ =?us-ascii?Q?yWQXd1VqxR1IMu9VwDQ0ldlfEhfmYl+gCEBihpV4/dkS60A6L25xOaV6dD6x?=
+ =?us-ascii?Q?6x0kdYdICKvkpbVNfpfQgXp8bQJquPHwra/Jl+U/kWxK/MV1UQm3V+v4f404?=
+ =?us-ascii?Q?edp5SS2rnBzpAOp42tvbpY7T66u5IfL4ZsX30vpjMUTT9giVyJ+++nWc98ey?=
+ =?us-ascii?Q?iZ0XqSx+lxmxvLFORxhk3HMWa8WobGA6nElRKXFNWEwgWd04+mInThGXCvoH?=
+ =?us-ascii?Q?kUJbARVf2qv6mldN3YBQxNJeV88f30AeU/6FefdXaMfdfeMuh+yVsIhzdZ9w?=
+ =?us-ascii?Q?L+S+hHdHFiPyQ9XwFFjsbu+PvPv4WuC7njT9smvocwSZaGOd/fXdrUqK/+Go?=
+ =?us-ascii?Q?fsl5Ok2E2Nh6w9Uw5FWIOiR2O8BdgjKg4KBPKMVO0SoqKd9+lrUlATqfhBg?=
+ =?us-ascii?Q?=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <427fec88-2a74-471e-aeb6-a108ca8c4336@redhat.com>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: d28f3a16-e422-4902-aacd-08dd5ad418ec
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Mar 2025 04:21:55.3616
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR02MB10184
 
-On 03/03/25 at 09:17am, Donald Dutile wrote:
-> 
-> 
-> On 3/3/25 3:25 AM, David Hildenbrand wrote:
-> > On 20.02.25 17:48, Jiri Bohac wrote:
-> > > Hi,
-> > > 
-> > > this series implements a way to reserve additional crash kernel
-> > > memory using CMA.
-> > > 
-> > > Link to the v1 discussion:
-> > > https://lore.kernel.org/lkml/ZWD_fAPqEWkFlEkM@dwarf.suse.cz/
-> > > See below for the changes since v1 and how concerns from the
-> > > discussion have been addressed.
-> > > 
-> > > Currently, all the memory for the crash kernel is not usable by
-> > > the 1st (production) kernel. It is also unmapped so that it can't
-> > > be corrupted by the fault that will eventually trigger the crash.
-> > > This makes sense for the memory actually used by the kexec-loaded
-> > > crash kernel image and initrd and the data prepared during the
-> > > load (vmcoreinfo, ...). However, the reserved space needs to be
-> > > much larger than that to provide enough run-time memory for the
-> > > crash kernel and the kdump userspace. Estimating the amount of
-> > > memory to reserve is difficult. Being too careful makes kdump
-> > > likely to end in OOM, being too generous takes even more memory
-> > > from the production system. Also, the reservation only allows
-> > > reserving a single contiguous block (or two with the "low"
-> > > suffix). I've seen systems where this fails because the physical
-> > > memory is fragmented.
-> > > 
-> > > By reserving additional crashkernel memory from CMA, the main
-> > > crashkernel reservation can be just large enough to fit the
-> > > kernel and initrd image, minimizing the memory taken away from
-> > > the production system. Most of the run-time memory for the crash
-> > > kernel will be memory previously available to userspace in the
-> > > production system. As this memory is no longer wasted, the
-> > > reservation can be done with a generous margin, making kdump more
-> > > reliable. Kernel memory that we need to preserve for dumping is
-> > > never allocated from CMA. User data is typically not dumped by
-> > > makedumpfile. When dumping of user data is intended this new CMA
-> > > reservation cannot be used.
-> > 
-> > 
-> > Hi,
-> > 
-> > I'll note that your comment about "user space" is currently the case, but will likely not hold in the long run. The assumption you are making is that only user-space memory will be allocated from MIGRATE_CMA, which is not necessarily the case. Any movable allocation will end up in there.
-> > 
-> > Besides LRU folios (user space memory and the pagecache), we already support migration of some kernel allocations using the non-lru migration framework. Such allocations (which use __GFP_MOVABLE, see __SetPageMovable()) currently only include
-> > * memory balloon: pages we never want to dump either way
-> > * zsmalloc (->zpool): only used by zswap (-> compressed LRU pages)
-> > * z3fold (->zpool): only used by zswap (-> compressed LRU pages)
-> > 
-> > Just imagine if we support migration of other kernel allocations, such as user page tables. The dump would be missing important information.
-> > 
-> IOMMUFD is a near-term candidate for user page tables with multi-stage iommu support with going through upstream review atm.
-> Just saying, that David's case will be a norm in high-end VMs with performance-enhanced guest-driven iommu support (for GPUs).
+From: Roman Kisel <romank@linux.microsoft.com> Sent: Monday, March 3, 2025 =
+4:10 PM
+>=20
+> The log statement reports the packet status code as the hv
+> status code which causes confusion when debugging as "hv"
+> might refer to a hypervisor, and sometimes to the host part
+> of the Hyper-V virtualization stack.
+>=20
+> Fix the name of the datum being logged to clearly indicate
+> the component reporting the error. Also log it in hexadecimal
+> everywhere for consistency.
+>=20
+> Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
+> ---
+>  drivers/scsi/storvsc_drv.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/drivers/scsi/storvsc_drv.c b/drivers/scsi/storvsc_drv.c
+> index a8614e54544e..35db061ae3ec 100644
+> --- a/drivers/scsi/storvsc_drv.c
+> +++ b/drivers/scsi/storvsc_drv.c
+> @@ -776,7 +776,7 @@ static void  handle_multichannel_storage(struct hv_de=
+vice *device, int max_chns)
+>=20
+>  	if (vstor_packet->operation !=3D VSTOR_OPERATION_COMPLETE_IO ||
+>  	    vstor_packet->status !=3D 0) {
+> -		dev_err(dev, "Failed to create sub-channel: op=3D%d, sts=3D%d\n",
+> +		dev_err(dev, "Failed to create sub-channel: op=3D%d, host=3D0x%x\n",
+>  			vstor_packet->operation, vstor_packet->status);
+>  		return;
+>  	}
+> @@ -1183,7 +1183,7 @@ static void storvsc_on_io_completion(struct storvsc=
+_device *stor_device,
+>  			STORVSC_LOGGING_WARN : STORVSC_LOGGING_ERROR;
+>=20
+>  		storvsc_log_ratelimited(device, loglevel,
+> -			"tag#%d cmd 0x%x status: scsi 0x%x srb 0x%x hv 0x%x\n",
+> +			"tag#%d cmd 0x%x status: scsi 0x%x srb 0x%x host 0x%x\n",
+>  			scsi_cmd_to_rq(request->cmd)->tag,
+>  			stor_pkt->vm_srb.cdb[0],
+>  			vstor_packet->vm_srb.scsi_status,
 
-Thank both for valuable inputs, David and Don. I agree that we may argue
-not every system have ballon or enabling swap for now, while future
-extending of migration on other kernel allocation could become obstacle
-we can't detour.
+I had not realized that handle_multichannel_storage() was displaying the ho=
+st status
+in decimal! Ugh.
 
-If we have known for sure this feature could be a bad code, we may need
-to stop it in advance.
-
-Thoughts, Jiri?
-
-> 
-> > Once that happens, it will become a lot harder to judge whether CMA can be used or not. At least, the kernel could bail out/warn for these kernel configs.
-> > 
-> I don't think the aforementioned focus is to use CMA, but given its performance benefits, it won't take long to be the next perf improvement step taken.
-> 
-> > > 
-> > > There are five patches in this series:
-> > > 
-> > > The first adds a new ",cma" suffix to the recenly introduced generic
-> > > crashkernel parsing code. parse_crashkernel() takes one more
-> > > argument to store the cma reservation size.
-> > > 
-> > > The second patch implements reserve_crashkernel_cma() which
-> > > performs the reservation. If the requested size is not available
-> > > in a single range, multiple smaller ranges will be reserved.
-> > > 
-> > > The third patch updates Documentation/, explicitly mentioning the
-> > > potential DMA corruption of the CMA-reserved memory.
-> > > 
-> > > The fourth patch adds a short delay before booting the kdump
-> > > kernel, allowing pending DMA transfers to finish.
-> > 
-> > 
-> > What does "short" mean? At least in theory, long-term pinning is forbidden for MIGRATE_CMA, so we should not have such pages mapped into an iommu where DMA can happily keep going on for quite a while.
-> > 
-> Hmmm, in the case I mentioned above, should there be a kexec hook in multi-stage IOMMU support for the hypervisor/VMM to invalidate/shut-off stage 2 mappings asap (a multi-microsecond process) so
-> DMA termination from VMs is stunted ?  is that already done today (due to 'simple', single-stage, device assignment in a VM)?
-> 
-> > But that assumes that our old kernel is not buggy, and doesn't end up mapping these pages into an IOMMU where DMA will just continue. I recall that DRM might currently be a problem, described here [1].
-> > 
-> > If kdump starts not working as expected in case our old kernel is buggy, doesn't that partially destroy the purpose of kdump (-> debug bugs in the old kernel)?
-> > 
-> > 
-> > [1] https://lore.kernel.org/all/Z6MV_Y9WRdlBYeRs@phenom.ffwll.local/T/#u
-> > 
-> 
-
+Reviewed-by: Michael Kelley <mhklinux@outlook.com>
