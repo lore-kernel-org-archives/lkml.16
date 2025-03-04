@@ -1,89 +1,84 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 633AD28151B
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 16:02:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D393A291FB8;
+	Tue,  4 Mar 2025 16:02:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741104149; cv=none; b=ESkshSBNtcBZT0d50uGW8YKe4nKHGCeTWB7mWEkhjCTid9SL9phng6RLcCZS3uW5rK1kbDSGauzb6I35+o4f0ook3ozO4PcCmXkgWGCGmpFB9OVBq7oA9AllkNbIU2SWO4M448yoxBbqEDkgzcRusY7Ps/ybBA4CMUF7pD7W4jM=
+	t=1741104165; cv=none; b=hju+YSkcKxlS3OqSKqgwj0GP84CVk5YLTPk9jksrGMA6V8lZqnQ9BwVVfjXHXeNFZk2LZlLUx4jL6aXJsqL95EhXMYl+k6HbUSRyecxSnXkABIpcFBsepb/tH6GbFY1Dkd0ZalKEdnsD/EL4caUbE3xuc5oXJ2LRCNssycE0gMk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741104149; c=relaxed/simple;
-	bh=Ife1S2+6Gw0oW5C4+eCeVlOTVa8vt6NEV5srvuNBU6w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bOMq9hyQz2Hg8x0gYSWewVrNlZsAXndy71/lKSJkLx+ivsFvZU6T641yy1QgJ+PCOqikbzkDpWOIuCzM/8J5ydl/LxweYaiao74shJMdiwFxpweWn9nIuD6V3xujzLarP9lVV6ZiDirio6xgtmWpZRLfPp7rSSomdTHsD0DaULw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 619542F;
-	Tue,  4 Mar 2025 08:02:40 -0800 (PST)
-Received: from [10.57.83.152] (unknown [10.57.83.152])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6C0B73F5A1;
-	Tue,  4 Mar 2025 08:02:22 -0800 (PST)
-Message-ID: <67fbe3f4-4fb6-4753-b34c-320b7897fd16@arm.com>
-Date: Tue, 4 Mar 2025 16:02:20 +0000
+	s=arc-20240116; t=1741104165; c=relaxed/simple;
+	bh=fODSOaI+FtI/eZFae3SdM/rtyBiDqJI9/Eb/fhEPB3M=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=ZYKlmbrQ5msF3oGZ7L9O0v49HnChqIXR8J1c3oIg5CJn1ZiIc1bjBDyEi+O4DgZaoGi+MmZaXrImns4pzgQSmMg5YeM0f2rORDem7cRlYwmJC/1s6gDoRSQBfcl7FexOp/CTGAHJyGcKn05wa76+SP0vIJBBWYZ6aFOH5CUQH68=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FjR0hx9n; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FjR0hx9n"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6442C4CEE5;
+	Tue,  4 Mar 2025 16:02:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741104165;
+	bh=fODSOaI+FtI/eZFae3SdM/rtyBiDqJI9/Eb/fhEPB3M=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=FjR0hx9ngNJbUYJXiBZ8xYk1pPG81Qh3cxgju0KeVFNWdaX3zXcQssb/DrqPCnvi0
+	 xe71ctKmEeNs3cx3QHmyqJHApzcnHrc3nZNp86Dtp2C4LEFCH4zY5UkCjetXXXXHb9
+	 ImAXHDBl/e/Q1h8JrC+K6E8MESGNjVY5sOEmt9u9rVG7tALJXvyT5+ue0b5/SsEiPn
+	 BI5Ws9mNXS6Bcqx8sh3YfGKATrnL7fSu2mkEltwPboiMLEnYAlXNfHl6Lze9XNQcId
+	 lUQ+JaL4vUfzrRR8p6BDyzX1WJfAw9IeP1FoGRfWpRpstwBOJqyzYQYr22C26R95sW
+	 Bkm1C946nWNEw==
+Message-ID: <3b9141a372e9e787089a28beeb4bf11d5a144553.camel@kernel.org>
+Subject: Re: [PATCH v4 0/5] Add support for the TPM FF-A start method
+From: Jarkko Sakkinen <jarkko@kernel.org>
+To: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: Stuart Yoder <stuart.yoder@arm.com>, linux-integrity@vger.kernel.org, 
+	peterhuewe@gmx.de, sudeep.holla@arm.com, rafael@kernel.org,
+ lenb@kernel.org, 	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Tue, 04 Mar 2025 18:02:40 +0200
+In-Reply-To: <20250303165535.GT5011@ziepe.ca>
+References: <20250217224946.113951-1-stuart.yoder@arm.com>
+	 <Z8SypwnbJR4g8Bho@kernel.org> <20250303165535.GT5011@ziepe.ca>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 4/4] iommu/arm: Add BBM Level 2 smmu feature
-Content-Language: en-GB
-To: Jason Gunthorpe <jgg@ziepe.ca>,
- =?UTF-8?Q?Miko=C5=82aj_Lenczewski?= <miko.lenczewski@arm.com>
-Cc: Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>,
- "suzuki.poulose@arm.com" <suzuki.poulose@arm.com>,
- "yang@os.amperecomputing.com" <yang@os.amperecomputing.com>,
- "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
- "will@kernel.org" <will@kernel.org>, "joro@8bytes.org" <joro@8bytes.org>,
- "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
- "mark.rutland@arm.com" <mark.rutland@arm.com>,
- "joey.gouly@arm.com" <joey.gouly@arm.com>,
- "oliver.upton@linux.dev" <oliver.upton@linux.dev>,
- "james.morse@arm.com" <james.morse@arm.com>,
- "broonie@kernel.org" <broonie@kernel.org>, "maz@kernel.org"
- <maz@kernel.org>, "david@redhat.com" <david@redhat.com>,
- "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
- "nicolinc@nvidia.com" <nicolinc@nvidia.com>,
- "mshavit@google.com" <mshavit@google.com>,
- "jsnitsel@redhat.com" <jsnitsel@redhat.com>,
- "smostafa@google.com" <smostafa@google.com>,
- "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "iommu@lists.linux.dev" <iommu@lists.linux.dev>
-References: <20250228182403.6269-2-miko.lenczewski@arm.com>
- <20250228182403.6269-6-miko.lenczewski@arm.com>
- <20250228193221.GM5011@ziepe.ca>
- <b23aa37f8e864dea82a6143bece912d6@huawei.com>
- <20250303103102.GC13345@e133081.arm.com> <20250303165255.GS5011@ziepe.ca>
- <20250303190330.GA426248@e133081.arm.com> <20250304142634.GC5011@ziepe.ca>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <20250304142634.GC5011@ziepe.ca>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 
-On 04/03/2025 14:26, Jason Gunthorpe wrote:
-> On Mon, Mar 03, 2025 at 07:03:42PM +0000, Mikołaj Lenczewski wrote:
-> 
->> For example, if we use BBML2 for kernel mappings, does that require us
->> to repaint all kernel mappings when disabling BBML2 on smmu attach? I
->> am not sure, but definitely something to be worked out.
-> 
-> No, it would be a per-mm_struct basis only if we did something like
-> that
-> 
-> When the SMMU driver puts a SVA on top of the mm_struct it would
-> disable BBML2 usage only for that mm_struct and it's contained VMAs.
+On Mon, 2025-03-03 at 12:55 -0400, Jason Gunthorpe wrote:
+> On Sun, Mar 02, 2025 at 09:33:59PM +0200, Jarkko Sakkinen wrote:
+> > WARNING: line length of 102 exceeds 100 columns
+> > #764: FILE: drivers/char/tpm/tpm_crb.c:821:
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0  FW_BUG "TPM2 ACPI table has wrong
+> > size %u for start method type %d\n",
+>=20
+> Just ignore that, it is an error in checkpatch. Strings are required
+> to
+> be long. I suspect FW_BUG confused it.
 
-I guess we would need to figure out some synchonization mechanism if disabling
-BBML2 dynaically per-mm. If there was already a BBML2 operation in flight would
-want to wait for it to end. But that's a problem to solve if/when it's shown to
-be needed, I think.
+Yep, as its own issue I think you are right.
 
-> 
-> Kernel mappings are never made into a SVA so are not effected.
-> Userspace only.
-> 
+I also noticed couple of additional style issues not picked
+by checkpatch:
+
+	if (rc =3D=3D -ENOENT) {  // FF-A driver is not available yet
+		rc =3D -EPROBE_DEFER;
+	}
+
+I.e. extra curly braces and "//" comment.
+
+Should be:
+
+	/* If driver is not available yet, request probe retry: */
+	if (rc =3D=3D -ENOENT)
+		rc =3D -EPROBE_DEFER;
+
+>=20
 > Jason
+>=20
 
+BR, Jarkko
