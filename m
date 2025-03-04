@@ -1,125 +1,230 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F06A1DFD8B;
-	Tue,  4 Mar 2025 09:51:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BED133998;
+	Tue,  4 Mar 2025 09:52:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741081883; cv=none; b=CF8yWl0liAbKMFgqdA2s236jC1XgD0IAoSou82B7T02w2jwxHdBq+wmccs00fCZA3GNYrMNCgTIeTimtKmPgFTsjeYOO21Zrjyllm3jbR19anPGV7i6YSIeoT4Hi6mD/eDz2Bp1PPs/OMk+vTjODF0dhRFl38uIortCgktRA+Ls=
+	t=1741081939; cv=none; b=N/zRKzOvoGwbupePW6BxKWOsCzYcA8eYqZp85McV0xmZ9nexCESyCAxGTD2Z+aaUEbPWXPMzijtKREIHgCyHP1Y0jLiMhmVBvXdXtL8RrO6Ut8cnusoY+/bBX5xvl6PLlL/uwNywTSB3u4wrWujU4ms99rIUnu5CY1NKWpaqZR8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741081883; c=relaxed/simple;
-	bh=3AC8YGVOMopiGMhE+q/wk3R/hqs4Zk918q6dZqSrKY8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=axXltGoguC8yYOiSsi7N874vtZrgJsRYXRwGAV+gHPwHfOlUKox8tBPlT+umJ4jxZq03qaO/kC0VNYxZVblRBmP8Rqw5mKCfPfgq2/qyFEOjOrjQVphYi3WXxn5vNjcNa5AoYXk2CM5uZHDHyQsjx4fCl5abh+C69oAjua77W+A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TnukOhcE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741081939; c=relaxed/simple;
+	bh=hXGug7FgtSHuxCFFEipVALOby2Wjhd3nLF352x7nsFY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=BXW2+f//07fvUNfjFxPbkToWon5fGPJJ2ZAN2SjIGFg2fMK1gT+IZGoCm7VnlIx8TIEX6j7V7Vm3Tkk78E8QK9iJrwqo/fl+cA90c6kwpelffDE+tRHzKRjSOIs+Q1RLglsizznAyjUGJn9liYYP/A9vqnaRunPctBUf2Cz/fRk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=EMr/+P6X; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=koFWoSw0 reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TnukOhcE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89A97C4CEE5;
-	Tue,  4 Mar 2025 09:51:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741081882;
-	bh=3AC8YGVOMopiGMhE+q/wk3R/hqs4Zk918q6dZqSrKY8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=TnukOhcELWDMHSi92I6AH2aVZA9crN168Hg83AUocvBIll0kQbw0l+fEnwj72lKJJ
-	 b3l7qDO1A6XN/OiOYGlOzZkiN2L8wkfPQtFMYX7FP0ETLgIufnIpxVK12lRO60Vwbn
-	 FOzW6bfq2OZ1q2lJp6qfDYvFRXw+uvRaFgOyophzj0eDVgP9G5AnvacAy8UsuVHExt
-	 YNdPupAKT8/17iBibqkWQVI4pWS79b9nO0nT0WeEA0TTAQa0sx00gKJ8e6J+G+PRpW
-	 sMsmCa7u4QWQ0Jo7HkcwyBjFYAzfI/zE5INB4pXxqNix5LhPtr98+WULFek4Pu9yPF
-	 sXmvtFguS0miw==
-Date: Tue, 4 Mar 2025 18:51:18 +0900
-From: William Breathitt Gray <wbg@kernel.org>
-To: Bence =?iso-8859-1?B?Q3Pza+Fz?= <csokas.bence@prolan.hu>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-iio@vger.kernel.org,
-	Kamel Bouhara <kamel.bouhara@bootlin.com>
-Subject: Re: [PATCH v6 1/3] include: uapi: counter: Add
- microchip-tcb-capture.h
-Message-ID: <Z8bNFjh85p2jqK9C@ishi>
-References: <20250227144023.64530-1-csokas.bence@prolan.hu>
- <20250227144023.64530-2-csokas.bence@prolan.hu>
+	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="EMr/+P6X";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="koFWoSw0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1741081938; x=1772617938;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=iUsHT7BkvvVZ2doNOAGllF0BwQPdhpWqLZzk/yD8Vrc=;
+  b=EMr/+P6XuzExp8oHwsL6J3+z1jWwE7i1B8aRlEw52/91RCB4McfXQuEO
+   ghk8JBbIXLJ4d+gxOE32dRNQUWyA6LK9o4kLwZ+X3TWhEJ7RrIOF7rdLM
+   ekkR1Us3KAhFvMPeprN0HR9bkd+afLqYwXcWMbkH1nE7r3+LVR/FOg3Ck
+   fbD/NggBSzF9JNbMuVk94g3qeJjRENuNxDpPyNrk7eVSEWdTJPjOWnEdY
+   6imDZ+Jx45wpW+ZPQGzTN4vyMoYwoBlUPDhVW3shgf/ZRbdSIm3X1Szus
+   fQobYj9RKjeJQ4O/uxDme3qOu2SfFDUuuECZat91+wrmj7bfUq7ZeQSdd
+   Q==;
+X-CSE-ConnectionGUID: /bl8OXK5RaaGQPX/3aiVLQ==
+X-CSE-MsgGUID: REU/aoFmSIOpOSZV6HugPg==
+X-IronPort-AV: E=Sophos;i="6.13,331,1732575600"; 
+   d="scan'208";a="42262157"
+Received: from vmailcow01.tq-net.de ([10.150.86.48])
+  by mx1.tq-group.com with ESMTP; 04 Mar 2025 10:52:14 +0100
+X-CheckPoint: {67C6CD4E-28-97089932-E672704E}
+X-MAIL-CPID: 628BE1DE09BC53C991B85770F1670AD8_3
+X-Control-Analysis: str=0001.0A002111.67C6CD4E.00B4,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 54FF116CC2F;
+	Tue,  4 Mar 2025 10:52:06 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
+	s=dkim; t=1741081930;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=iUsHT7BkvvVZ2doNOAGllF0BwQPdhpWqLZzk/yD8Vrc=;
+	b=koFWoSw09WVbwOj8YlQRnL11S9C72pwazdD9v2+cQHPuYzuVo+7ciykwETxJbylbU/Ycqg
+	f82kmBhNIDF917h/CPFJcpQKdQJbCU6qE0fcNKX7/b9V0rLpz3jd3Vf72OBDBD0H3rqY7d
+	muwWJfuGQpHWrhWNHbaqNtC2GGp2rBte7V8a3c6Gr9eGxM16HXtHGA3BRJRaBgdcr11rfK
+	RDYryUbgqEOsN473Gj3/2gvVt49FEB6cgoJxboRSj4/vIC6EaLIEb2D2os2BL7VQ+tmvYu
+	tX9akweDqLrAk/X0RVLQBIw6RJrY3bv5OaF7g5j/YA0NO7yBQaknRVhoxdRs2Q==
+From: Alexander Stein <alexander.stein@ew.tq-group.com>
+To: devicetree@vger.kernel.org, imx@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, Liu Ying <victor.liu@nxp.com>
+Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+ festevam@gmail.com, victor.liu@nxp.com, andrzej.hajda@intel.com,
+ neil.armstrong@linaro.org, rfoss@kernel.org,
+ Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se, jernej.skrabec@gmail.com,
+ maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de,
+ airlied@gmail.com, simona@ffwll.ch, peng.fan@nxp.com,
+ Conor Dooley <conor.dooley@microchip.com>
+Subject:
+ Re: [PATCH v5 1/2] dt-bindings: soc: imx93-media-blk-ctrl: Add PDFC subnode
+ to schema and example
+Date: Tue, 04 Mar 2025 10:52:05 +0100
+Message-ID: <3348463.44csPzL39Z@steina-w>
+Organization: TQ-Systems GmbH
+In-Reply-To: <20250304082434.834031-2-victor.liu@nxp.com>
+References:
+ <20250304082434.834031-1-victor.liu@nxp.com>
+ <20250304082434.834031-2-victor.liu@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="8INrE+XEHmoL1yAg"
-Content-Disposition: inline
-In-Reply-To: <20250227144023.64530-2-csokas.bence@prolan.hu>
-
-
---8INrE+XEHmoL1yAg
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="iso-8859-1"
+X-Last-TLS-Session-Version: TLSv1.3
 
-On Thu, Feb 27, 2025 at 03:40:18PM +0100, Bence Cs=F3k=E1s wrote:
-> Add UAPI header for the microchip-tcb-capture.c driver.
-> This header will hold the various event channels, component numbers etc.
-> used by this driver.
+Hi,
+
+thanks for the update.
+
+Am Dienstag, 4. M=E4rz 2025, 09:24:33 CET schrieb Liu Ying:
+> i.MX93 SoC mediamix blk-ctrl contains one DISPLAY_MUX register which
+> configures parallel display format by using the "PARALLEL_DISP_FORMAT"
+> field. Document the Parallel Display Format Configuration(PDFC) subnode
+> and add the subnode to example.
 >=20
-> Signed-off-by: Bence Cs=F3k=E1s <csokas.bence@prolan.hu>
-
-Oops, I almost missed this one! Make sure I'm included in the To field
-for the next revision. ;-)
-
-By the way, b4 is a nifty tool that can save you some work and help you
-prep patch series for submission.[^1]
-
-> +/*
-> + * The driver defines the following components:
-> + *
-> + * Count 0
-> + * \__  Synapse 0 -- Signal 0 (Channel A, i.e. TIOA)
-> + * \__  Synapse 1 -- Signal 1 (Channel B, i.e. TIOB)
-> + */
+> Signed-off-by: Liu Ying <victor.liu@nxp.com>
+> Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
+> ---
+> v3->v5:
+> * No change.
+>=20
+> v2->v3:
+> * Newly introduced to replace the standalone dt-binding in v1 and v2. (Ro=
+b)
+> * Resend with Conor's R-b tag and with the patch rebased upon v6.11-rc1.
+>=20
+>  .../soc/imx/fsl,imx93-media-blk-ctrl.yaml     | 68 +++++++++++++++++++
+>  1 file changed, 68 insertions(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/soc/imx/fsl,imx93-media-bl=
+k-ctrl.yaml b/Documentation/devicetree/bindings/soc/imx/fsl,imx93-media-blk=
+=2Dctrl.yaml
+> index b3554e7f9e76..3f550c30d93d 100644
+> --- a/Documentation/devicetree/bindings/soc/imx/fsl,imx93-media-blk-ctrl.=
+yaml
+> +++ b/Documentation/devicetree/bindings/soc/imx/fsl,imx93-media-blk-ctrl.=
+yaml
+> @@ -24,6 +24,12 @@ properties:
+>    reg:
+>      maxItems: 1
+> =20
+> +  '#address-cells':
+> +    const: 1
 > +
-> +enum counter_mchp_signals {
-> +	COUNTER_MCHP_SIG_TIOA,
-> +	COUNTER_MCHP_SIG_TIOB,
-> +};
+> +  '#size-cells':
+> +    const: 1
+> +
+>    '#power-domain-cells':
+>      const: 1
+> =20
+> @@ -46,9 +52,43 @@ properties:
+>        - const: csi
+>        - const: dsi
+> =20
+> +  bridge@60:
+> +    type: object
+> +    additionalProperties: false
+> +
+> +    properties:
+> +      compatible:
+> +        const: nxp,imx93-pdfc
+> +
+> +      reg:
+> +        maxItems: 1
+> +
+> +      ports:
+> +        $ref: /schemas/graph.yaml#/properties/ports
+> +
+> +        properties:
+> +          port@0:
+> +            $ref: /schemas/graph.yaml#/properties/port
+> +            description: Input port node to receive pixel data.
+> +
+> +          port@1:
+> +            $ref: /schemas/graph.yaml#/properties/port
+> +            description: Output port node to downstream pixel data recei=
+vers.
+> +
+> +        required:
+> +          - port@0
+> +          - port@1
+> +
+> +    required:
+> +      - compatible
+> +      - reg
+> +      - ports
+> +
+>  required:
+>    - compatible
+>    - reg
+> +  - '#address-cells'
+> +  - '#size-cells'
+>    - power-domains
+>    - clocks
+>    - clock-names
+> @@ -76,5 +116,33 @@ examples:
+>                 <&clk IMX93_CLK_MIPI_DSI_GATE>;
+>                 clock-names =3D "apb", "axi", "nic", "disp", "cam",
+>                               "pxp", "lcdif", "isi", "csi", "dsi";
+> +      #address-cells =3D <1>;
+> +      #size-cells =3D <1>;
+>        #power-domain-cells =3D <1>;
+> +
+> +      bridge@60 {
 
-Are these meant to be used to identify the Signals in the
-microchip-tcb-capture.c file. You should set the the counter_signal id
-members to these enum constants then. However, this enum doesn't need to
-be exposed to userspace in that case.
+Given that you add a subnode, I would assume Rob's comment from [1]
+also applies to you here.
 
-Or is the purpose of this to match the parent ID of the Signal when
-you create Counter watches? That won't work safely the way you intend
-because the Counter subsystem creates the userspace parent IDs
-independent of the kernelspace counter_signal struct id member.
+Despite that, looks good to me. With that fixed:
+Reviewed-by: Alexander Stein <alexander.stein@ew.tq-group.com>
 
-Right now the Counter subsystem just happens to create these parent IDs
-sequentially from 0 because it was a simple way to implement it at the
-time we introduced the feature. However, there is nothing that ensures
-this will stay that way in the future, and in fact the design intention
-was exactly to allow the possibility of a future change to this area of
-code.
+[1] https://lore.kernel.org/all/20250225145833.GB2361434-robh@kernel.org/
 
-In other words, there's no gurantee the parent ID in userspace will
-remain the same even between driver reloads. The intended way for
-userspace to behave is to first identify the desired Signals at startup
-based on their "name" sysfs attribute and then set Counter watches and
-such accordingly thereafter as desired.
+> +        compatible =3D "nxp,imx93-pdfc";
+> +        reg =3D <0x60 0x4>;
+> +
+> +        ports {
+> +          #address-cells =3D <1>;
+> +          #size-cells =3D <0>;
+> +
+> +          port@0 {
+> +            reg =3D <0>;
+> +
+> +            pdfc_from_lcdif: endpoint {
+> +              remote-endpoint =3D <&lcdif_to_pdfc>;
+> +            };
+> +          };
+> +
+> +          port@1 {
+> +            reg =3D <1>;
+> +
+> +            pdfc_to_panel: endpoint {
+> +              remote-endpoint =3D <&panel_from_pdfc>;
+> +            };
+> +          };
+> +        };
+> +      };
+>      };
+>=20
 
-If that is the only purpose of enum counter_mchp_signals, then we can
-omit this patch from the series and you won't need to send it in the
-next revision.
 
-William Breathitt Gray
+=2D-=20
+TQ-Systems GmbH | M=FChlstra=DFe 2, Gut Delling | 82229 Seefeld, Germany
+Amtsgericht M=FCnchen, HRB 105018
+Gesch=E4ftsf=FChrer: Detlef Schneider, R=FCdiger Stahl, Stefan Schneider
+http://www.tq-group.com/
 
-[^1] https://b4.docs.kernel.org/en/latest/
 
---8INrE+XEHmoL1yAg
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEARYKAB0WIQSNN83d4NIlKPjon7a1SFbKvhIjKwUCZ8bNFgAKCRC1SFbKvhIj
-K8vtAQDQtKdqNviMCtM14inLMV9gO9XK9+zhMyb3MGIEkiBZ6AEAmowtr8SAqf6v
-JEe9IFPC1iVoe0A355hZA2t2H7E3LwE=
-=Wees
------END PGP SIGNATURE-----
-
---8INrE+XEHmoL1yAg--
