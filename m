@@ -1,44 +1,60 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40DBE28F94A;
-	Tue,  4 Mar 2025 15:42:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E85F027FE9C
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 15:44:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741102962; cv=none; b=UqwagCLRSCjC0joRrzztU8wNt2O9fGPvayHFaKthqVj2ZNMm0Tph2n8u7rj/LObjGLlb9soYjhDlOyLJpO2ceUlZ90UikTMg9Edx+byUmSx94zdQ2qQJbipkKPbRuKHIsAncHee8eqrVP4Z8961XopoRmnr1QR2Elj9W5Bw9g88=
+	t=1741103093; cv=none; b=sz6JJGPyU7JawFRqxtdB1kLgmnBpJhOXXtJmX2hoepyZr6lCEai6g0JKLd3H4omxepZ5ojkEZR8RcFOpER2jxP9yEqHi7lffv2/L5utbuMnTCZUOV81ejcG4xbi+HpykGhADWy3L2YNUr5b+SYQ5gcUef31kn1NzGx2sydOLhZM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741102962; c=relaxed/simple;
-	bh=54cw3ZsEsDqGaWMwifys1UxImGLZAucBvesS78YvsZc=;
+	s=arc-20240116; t=1741103093; c=relaxed/simple;
+	bh=P7zlqxS73dBlTunRicBMxfpsw7GvNiWmDWbC7VkkOnA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YkRz9SrFBjXbekxrWjXsUJS3v20Lo1Puy+aoMkIOHvv87XRaHG9PYsD+oCFgovqtfQWzlR7vm53FPxpW6+RzEuYKocGGz7HmWhY/L6R7/z27JYguLAKstVJdJN0IIWYl9B5OQSI0tufMSj//J4AR2evU49y3xm0hQKJIv4dQhkA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mM6ty0yc; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=jMpNkz8E8udfHoliRdZo/F83ASpNxVXdDTRjWzX4MHL87YM1zpPdnX/ZHG/D3K/puXvQeBT2MRKJKX2br6R8fvCdMsgTtC5ApDdGPqMQ58YuBILWaH9+ZQcLP82fKj1BqUhDA8MKEGGuTRQx7V5R3zs0gft+dsRZCu+DI7fUNlA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OikjqTWD; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mM6ty0yc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 876A3C4CEE5;
-	Tue,  4 Mar 2025 15:42:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741102961;
-	bh=54cw3ZsEsDqGaWMwifys1UxImGLZAucBvesS78YvsZc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mM6ty0ycLjzDp5PBT5OUCIgMNa0sVGhucEz2xIftlfLjEbpsrB9SusnLojl6Mf3C8
-	 3mljRiSznlb9s6f9Dviq5oXD+21DG21o/uq0EsZIvFDmbAKb/PMCFdRlDIatBGJLkj
-	 kz91wnm0ybBJ10uYVD+Hi6iJ7w8wGNP8HqCrwyi0/d+B2vE+zjDvbdJk24I5JQ8gyh
-	 sC8xFqudDB35xlJA7leYqQMTOyVSgIPdr4wx1Ex48DN3ZW/mOFF36EHPlkcBU6AeEK
-	 LDj/UFxguLHGfrfUwNJHU6j9MlawV5d+PRjmRSg/oD/19F/91tBWd6wqJvCnJiyhOu
-	 qGEaKFu0g61Kg==
-Date: Tue, 4 Mar 2025 15:42:36 +0000
-From: Simon Horman <horms@kernel.org>
-To: Jiayuan Chen <jiayuan.chen@linux.dev>
-Cc: kuba@kernel.org, bpf@vger.kernel.org, netdev@vger.kernel.org,
-	andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
-	pabeni@redhat.com, ricardo@marliere.net, viro@zeniv.linux.org.uk,
-	dmantipov@yandex.ru, aleksander.lobakin@intel.com,
-	linux-ppp@vger.kernel.org, linux-kernel@vger.kernel.org,
-	mrpre@163.com, Paul Mackerras <paulus@samba.org>,
-	syzbot+853242d9c9917165d791@syzkaller.appspotmail.com
-Subject: Re: [PATCH net-next v5] ppp: Fix KMSAN uninit-value warning with bpf
-Message-ID: <20250304154236.GE3666230@kernel.org>
-References: <20250228141408.393864-1-jiayuan.chen@linux.dev>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OikjqTWD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1741103090;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Xl83TUzrsDMAxwdtPBM+T12tQFrYoJHVzO8Es+0i5IA=;
+	b=OikjqTWD1Afiv/eNsCRWAwyKo31o1yNDtz4Oc2u2NhiO7u71+cH3dS0CvjFnzRQIUiRQH5
+	8qVVthQhxc8zxsq6g7I3sIZHI2EyHfLZsGwZVRzK6p7x+EL0XarRMZd5QED9F7WkjFIkHY
+	DeLnnx/cGHyLipNa1GaOWDTC6XSxYN4=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-302-_D6eKitbNrSWX_du191Xww-1; Tue,
+ 04 Mar 2025 10:44:49 -0500
+X-MC-Unique: _D6eKitbNrSWX_du191Xww-1
+X-Mimecast-MFC-AGG-ID: _D6eKitbNrSWX_du191Xww_1741103087
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id CA0CF18EB2D3;
+	Tue,  4 Mar 2025 15:44:46 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.225.246])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id B562E1800947;
+	Tue,  4 Mar 2025 15:44:43 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Tue,  4 Mar 2025 16:44:16 +0100 (CET)
+Date: Tue, 4 Mar 2025 16:44:11 +0100
+From: Oleg Nesterov <oleg@redhat.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>,
+	Mateusz Guzik <mjguzik@gmail.com>
+Cc: brauner@kernel.org, mingo@redhat.com, peterz@infradead.org,
+	rostedt@goodmis.org, linux-kernel@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org
+Subject: pipes && EPOLLET, again
+Message-ID: <20250304154410.GB5756@redhat.com>
+References: <20250303230409.452687-1-mjguzik@gmail.com>
+ <20250303230409.452687-2-mjguzik@gmail.com>
+ <20250304140726.GD26141@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,54 +63,73 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250228141408.393864-1-jiayuan.chen@linux.dev>
+In-Reply-To: <20250304140726.GD26141@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-On Fri, Feb 28, 2025 at 10:14:08PM +0800, Jiayuan Chen wrote:
-> Syzbot caught an "KMSAN: uninit-value" warning [1], which is caused by the
-> ppp driver not initializing a 2-byte header when using socket filter.
-> 
-> The following code can generate a PPP filter BPF program:
-> '''
-> struct bpf_program fp;
-> pcap_t *handle;
-> handle = pcap_open_dead(DLT_PPP_PPPD, 65535);
-> pcap_compile(handle, &fp, "ip and outbound", 0, 0);
-> bpf_dump(&fp, 1);
-> '''
-> Its output is:
-> '''
-> (000) ldh [2]
-> (001) jeq #0x21 jt 2 jf 5
-> (002) ldb [0]
-> (003) jeq #0x1 jt 4 jf 5
-> (004) ret #65535
-> (005) ret #0
-> '''
-> Wen can find similar code at the following link:
-> https://github.com/ppp-project/ppp/blob/master/pppd/options.c#L1680
-> The maintainer of this code repository is also the original maintainer
-> of the ppp driver.
-> 
-> As you can see the BPF program skips 2 bytes of data and then reads the
-> 'Protocol' field to determine if it's an IP packet. Then it read the first
-> byte of the first 2 bytes to determine the direction.
-> 
-> The issue is that only the first byte indicating direction is initialized
-> in current ppp driver code while the second byte is not initialized.
-> 
-> For normal BPF programs generated by libpcap, uninitialized data won't be
-> used, so it's not a problem. However, for carefully crafted BPF programs,
-> such as those generated by syzkaller [2], which start reading from offset
-> 0, the uninitialized data will be used and caught by KMSAN.
-> 
-> [1] https://syzkaller.appspot.com/bug?extid=853242d9c9917165d791
-> [2] https://syzkaller.appspot.com/text?tag=ReproC&x=11994913980000
-> 
-> Cc: Paul Mackerras <paulus@samba.org>
-> Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-> Reported-by: syzbot+853242d9c9917165d791@syzkaller.appspotmail.com
-> Closes: https://lore.kernel.org/bpf/000000000000dea025060d6bc3bc@google.com/
-> Signed-off-by: Jiayuan Chen <jiayuan.chen@linux.dev>
+Linus,
 
-Reviewed-by: Simon Horman <horms@kernel.org>
+On 03/04, Oleg Nesterov wrote:
+>
+> and we need to cleanup the poll_usage
+> logic first.
+
+We have already discussed this before, I'll probably do this later,
+but lets forget it for now.
+
+Don't we need the trivial one-liner below anyway?
+
+I am not saying this is a bug, but please consider
+
+	#include <stdio.h>
+	#include <stdbool.h>
+	#include <stdlib.h>
+	#include <unistd.h>
+	#include <sys/epoll.h>
+	#include <assert.h>
+
+	static char buf[16 * 4096];
+
+	int main(void)
+	{
+		int pfd[2], efd;
+		struct epoll_event evt = { .events = EPOLLIN | EPOLLET };
+
+		pipe(pfd);
+		efd = epoll_create1(0);
+		epoll_ctl(efd, EPOLL_CTL_ADD, pfd[0], &evt);
+
+		write(pfd[1], buf, 4096);
+		assert(epoll_wait(efd, &evt, 1, 0) == 1);
+
+		if (!fork()) {
+			write(pfd[1], buf, sizeof(buf));
+			assert(0);
+		}
+
+		sleep(1);
+		assert(epoll_wait(efd, &evt, 1, 0) == 1);
+
+		return 0;
+	}
+
+the 2nd epoll_wait() fails, despite the fact that the child has already
+written 15 * PAGE_SIZE bytes. This doesn't look consistent to me...
+
+Oleg.
+---
+
+diff --git a/fs/pipe.c b/fs/pipe.c
+index b0641f75b1ba..8a32257cc74f 100644
+--- a/fs/pipe.c
++++ b/fs/pipe.c
+@@ -554,7 +554,7 @@ anon_pipe_write(struct kiocb *iocb, struct iov_iter *from)
+ 		 * become empty while we dropped the lock.
+ 		 */
+ 		mutex_unlock(&pipe->mutex);
+-		if (was_empty)
++		if (was_empty || pipe->poll_usage)
+ 			wake_up_interruptible_sync_poll(&pipe->rd_wait, EPOLLIN | EPOLLRDNORM);
+ 		kill_fasync(&pipe->fasync_readers, SIGIO, POLL_IN);
+ 		wait_event_interruptible_exclusive(pipe->wr_wait, pipe_writable(pipe));
 
