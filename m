@@ -1,145 +1,136 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DF3E204695;
-	Tue,  4 Mar 2025 14:00:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9787202F90;
+	Tue,  4 Mar 2025 14:01:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741096846; cv=none; b=Mbcs4kkZMSIt29RAbAcODvCU5GsFijY2I0JiJez9Ipo7AltzprfzPY1NZkNz5+y4mv0iJ5QIUJ4AhktSE3nZqpXmeCr6c6DliSXSYaljVridR9JXcTcnGnYq02KalsY92WRADgHWU0yiDH7LbIuW0DipOQjZgB4niH5UZewSadE=
+	t=1741096880; cv=none; b=OB+pnYgUwsh4xz22XXjyRs+Otk8Z8wSNiwxLQHCzGEU3FaUNo8XkFWEVpROlutkBvaccvP1pVZgoHGk3v/VER0IYtDUyeq8fGsTFRq17bgGMrt4En1dqq1BsuRA+qZh5h6VNuFQM+08qfu57q6dU/ll0iY2F3S6cM9L5jBXiaio=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741096846; c=relaxed/simple;
-	bh=iOf/Btd00TVbhUUPH7qKnM1gAcJ9dD7LIZMQq0bBGOA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fv2XEikB9MyEAAbVijT7Jl+bSr60P73mEQcmiUxo1xgGh9mU0ABIJbZjZe3LwvePaDjSZHYmqMBAwLiDY+sC0tquRsosWp5xrXmfcsbPvhdjTOpbg9m7ib/Va5nty8McwzBE71yiGEwZV7/OXXDc/RThj+Qn7BL4V2NocLlk6Gk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oCiV58v8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741096880; c=relaxed/simple;
+	bh=vJyQB5Blh3KGhbpLZmZIfPJA0eS8D7VJOGBnqE9Cvcg=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=c+s3rjArvtiE9Iye2Col3dJF6w6RVOtdHQafl58TeFiqezXCr3yIZSwtNK5gYezM5HAFDl6psgnttwswFX269ecm6FLpaxQY2krdOItSlUNUk0gtt0Y/byziTuF3J3UL9tXw3G+n6m8WWxEUpZegUsRY+7nyCBuuqesEaIyRBNo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kNIWBPfE; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oCiV58v8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA4AAC4CEE7;
-	Tue,  4 Mar 2025 14:00:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741096845;
-	bh=iOf/Btd00TVbhUUPH7qKnM1gAcJ9dD7LIZMQq0bBGOA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=oCiV58v8EKD9fbf6RJJ84xkHHP0cyJ6kpYnTV3hbiQeDBMFuJka+DR6/TIyAU8XHG
-	 voTacVP2wbLrRZPinrWGWnPIswT6op/wpkDOjncQ0v1T8AxmRllVlGArM04mr05fly
-	 nNLE5fkl9EqOeBAQ/4oiABfG/+vRXfU23ct75+7JxEIuCSa0SGTBTYOxKQiJrBq9zJ
-	 vVi3l2v5SZBnXu4mmMjA2PjT+DyqXIAxUKkxzy+Dxt6oP3tBIlthQGHE/BURS5NEZw
-	 MvNk5AZSgPJtQhtHMe1fDfWg53wfahLVcJlJLf7xoLpXmFZ94HwB5zaUIJbsnQr+X9
-	 gQeCJlanbfPww==
-Message-ID: <6f7fea59-310d-4a7e-94f7-2483363012ba@kernel.org>
-Date: Tue, 4 Mar 2025 15:00:37 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kNIWBPfE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741096878; x=1772632878;
+  h=from:to:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=vJyQB5Blh3KGhbpLZmZIfPJA0eS8D7VJOGBnqE9Cvcg=;
+  b=kNIWBPfEOu8CrxZrboRXrG8yNBo/AbX5vOUboRAjivhrTFG6xNYtvmLb
+   2K3gXdqcZudZHy4OcTxsm7wPmDJkBwC+cWNTK3LIKVK+/T9fofvxFAp+q
+   sM08PrUpqs8g0q8c/2Ts37wRUf1EcbWUiS5WT/kMD7TADVMSX9BDTWJdM
+   pMYz6pTc9F1OWQbq9oqbeZ9/gaWH3rrCN7HzHmH5KDImVJO5k4KgUaz6S
+   bRbimsnvN94rk7rZXiHF2th7IDyoMeRsd6Zwbvprozw1GCLGiOdqTJq5c
+   FtEjWs0GFkrq6qiqJtk7mDWHfQ6zmtMGkUHgRGJlZYj7oEzlrhTcljZY5
+   w==;
+X-CSE-ConnectionGUID: ISXKQ6bvSiONRSuo78QACQ==
+X-CSE-MsgGUID: rt5XKkawSJSMA91fz+sQQQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11363"; a="42261681"
+X-IronPort-AV: E=Sophos;i="6.14,220,1736841600"; 
+   d="scan'208";a="42261681"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2025 06:01:17 -0800
+X-CSE-ConnectionGUID: VTHynAnQTIGub0JKGisgzA==
+X-CSE-MsgGUID: VTWkiimRTJW1rhom4ATjmw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,220,1736841600"; 
+   d="scan'208";a="119060914"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa009.fm.intel.com with ESMTP; 04 Mar 2025 06:01:17 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id 4249E27D; Tue, 04 Mar 2025 16:01:15 +0200 (EET)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Guenter Roeck <linux@roeck-us.net>,
+	Wim Van Sebroeck <wim@linux-watchdog.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	linux-watchdog@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 1/1] watchdog: nic7018_wdt: tidy up ACPI ID table
+Date: Tue,  4 Mar 2025 15:45:35 +0200
+Message-ID: <20250304140114.1812452-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/8] media: dt-bindings: Document SC8280XP/SM8350 Venus
-To: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
- Stanimir Varbanov <stanimir.k.varbanov@gmail.com>,
- Vikash Garodia <quic_vgarodia@quicinc.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>,
- Bjorn Andersson <andersson@kernel.org>
-Cc: linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- Johan Hovold <johan+linaro@kernel.org>
-References: <20250304-b4-linux-media-comitters-sc8280xp-venus-v1-0-279c7ea55493@linaro.org>
- <20250304-b4-linux-media-comitters-sc8280xp-venus-v1-1-279c7ea55493@linaro.org>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20250304-b4-linux-media-comitters-sc8280xp-venus-v1-1-279c7ea55493@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 04/03/2025 14:07, Bryan O'Donoghue wrote:
-> From: Konrad Dybcio <konradybcio@kernel.org>
-> 
-> Both of these SoCs implement an IRIS2 block, with SC8280XP being able
-> to clock it a bit higher.
-> 
-> Document it.
-> 
-> Signed-off-by: Konrad Dybcio <konradybcio@kernel.org>
-> Link: https://lore.kernel.org/r/20230731-topic-8280_venus-v1-1-8c8bbe1983a5@linaro.org
-> Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
-> [ bod: dropped dts video-encoder/video-decoder ]
-> Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-> ---
+Tidy up ACPI ID table:
+- drop ACPI_PTR() and hence replace acpi.h with mod_devicetable.h
+- remove explicit driver_data initializer
+- drop comma in the terminator entry
 
+With that done, extend compile test coverage.
 
-If this is the same version, then please implement previous feedback.
-
-If this is a new version, then please mark it as v2 and provide
-changelog. This is what b4 gave me:
-
-b4 diff
-'<20250304-b4-linux-media-comitters-sc8280xp-venus-v1-1-279c7ea55493@linaro.org>'
-Grabbing thread from
-lore.kernel.org/all/20250304-b4-linux-media-comitters-sc8280xp-venus-v1-1-279c7ea55493@linaro.org/t.mbox.gz
-Breaking thread to remove parents of
-20250304-b4-linux-media-comitters-sc8280xp-venus-v1-0-279c7ea55493@linaro.org
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
-Analyzing 9 messages in the thread
-Could not find lower series to compare against.
 
-...
+v2: fixed the dependency to be on HAS_IOPORT (LKP)
 
-> +
-> +        operating-points-v2 = <&venus_opp_table>;
-> +        iommus = <&apps_smmu 0x2100 0x400>;
-> +        memory-region = <&pil_video_mem>;
-> +
-> +        status = "disabled";
+ drivers/watchdog/Kconfig       | 3 ++-
+ drivers/watchdog/nic7018_wdt.c | 9 +++++----
+ 2 files changed, 7 insertions(+), 5 deletions(-)
 
-So it is the same...
+diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+index f81705f8539a..a2ed9ee0b808 100644
+--- a/drivers/watchdog/Kconfig
++++ b/drivers/watchdog/Kconfig
+@@ -1730,7 +1730,8 @@ config NI903X_WDT
+ 
+ config NIC7018_WDT
+ 	tristate "NIC7018 Watchdog"
+-	depends on X86 && ACPI
++	depends on HAS_IOPORT
++	depends on ACPI || COMPILE_TEST
+ 	select WATCHDOG_CORE
+ 	help
+ 	  Support for National Instruments NIC7018 Watchdog.
+diff --git a/drivers/watchdog/nic7018_wdt.c b/drivers/watchdog/nic7018_wdt.c
+index 44982b37ba6f..44b5298f599a 100644
+--- a/drivers/watchdog/nic7018_wdt.c
++++ b/drivers/watchdog/nic7018_wdt.c
+@@ -3,12 +3,13 @@
+  * Copyright (C) 2016 National Instruments Corp.
+  */
+ 
+-#include <linux/acpi.h>
+ #include <linux/bitops.h>
+ #include <linux/device.h>
+ #include <linux/io.h>
++#include <linux/mod_devicetable.h>
+ #include <linux/module.h>
+ #include <linux/platform_device.h>
++#include <linux/types.h>
+ #include <linux/watchdog.h>
+ 
+ #define LOCK			0xA5
+@@ -229,8 +230,8 @@ static void nic7018_remove(struct platform_device *pdev)
+ }
+ 
+ static const struct acpi_device_id nic7018_device_ids[] = {
+-	{"NIC7018", 0},
+-	{"", 0},
++	{ "NIC7018" },
++	{ }
+ };
+ MODULE_DEVICE_TABLE(acpi, nic7018_device_ids);
+ 
+@@ -239,7 +240,7 @@ static struct platform_driver watchdog_driver = {
+ 	.remove = nic7018_remove,
+ 	.driver = {
+ 		.name = KBUILD_MODNAME,
+-		.acpi_match_table = ACPI_PTR(nic7018_device_ids),
++		.acpi_match_table = nic7018_device_ids,
+ 	},
+ };
+ 
+-- 
+2.47.2
 
-Same comments apply, same review.
-
-Best regards,
-Krzysztof
