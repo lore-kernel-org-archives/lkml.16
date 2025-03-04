@@ -1,128 +1,90 @@
-Received: from mail.manjaro.org (mail.manjaro.org [116.203.91.91])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E5081F55F2;
-	Tue,  4 Mar 2025 06:45:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.91.91
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BF1C13C67C;
+	Tue,  4 Mar 2025 06:48:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741070711; cv=none; b=WLof5tM64Gil9FZanRyYukDJCoMLof1qrCNOSDddkFQ/qLbjsoxgW9kJA12jqetKYtRCvXINYE06SDkbwiWP93g2TqCG9n+2mOkuRsWQE6GAREKAvWnGuNlWz713EumiT5wudksVR9kSUHFb7jIse3JzrFER/0Yw8d9P5tWowx0=
+	t=1741070882; cv=none; b=dH0EcYLhKOHhDNFlpYnxkdCFWYLED7VpVRJQIWL+Vf1wfJE/poBuTUutrHjNzUDnJSTCgUUjoa9DHqlO9fHey9QXu5W9PQ2fV3xzu4W65whViop820VIeiGlNwyEjdBaEwP7TfLepDP8pv9otFBSoxpwhXo30XG7SqRijQkbYt4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741070711; c=relaxed/simple;
-	bh=E3gnXyFQHYdK/um4QLi+b01/ER0xVl4WeReWEqAjdMg=;
-	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
-	 Message-ID:Content-Type; b=EpEdppDyWEShoCemkIWEu31cdHlQ9BoNB5cjS4qsNEa3z7Ibnod8TMuYNlSHz/BCGshJeTvZ1GRtIRzXXBv56JCP13U8dNJU2Rl9PgGqnjtYKxd/+mAtMUQkYlyrjq0xmo2tZSX4lyriPAHY4Xm4B5VCR6bG0ZTOQky0I5/jh1k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org; spf=pass smtp.mailfrom=manjaro.org; dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b=KafPlS2c; arc=none smtp.client-ip=116.203.91.91
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=manjaro.org
+	s=arc-20240116; t=1741070882; c=relaxed/simple;
+	bh=2evXEWK0mr645FbMREGaH3Ahgwgh/0pXncUK/iaq3kE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=su5h+yGz7yMVq8P32cz/FLHkIyo3mppwc5dcVrisVdsTsSN/067N5TvaFL4hhbbHNiD1e1WIy38MFSu+rs8c4dBjM4LET4ccqhO+f0PsAzup8FaUI6q0nnuGoIgzJgq8nauN+m+hZTMe5vDYYJEsl/6VwNU9X0XBzjxz6H0fCgk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NIv3NefG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b="KafPlS2c"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NIv3NefG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3D41C4CEE5;
+	Tue,  4 Mar 2025 06:48:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741070882;
+	bh=2evXEWK0mr645FbMREGaH3Ahgwgh/0pXncUK/iaq3kE=;
+	h=From:To:Cc:Subject:Date:From;
+	b=NIv3NefGz6ynuC6Zp7VgLIqrdaNX7RqUIuCuE19nH/4WtkR1jdtwKntA59Z6AYBdL
+	 hIMa5fI9TltRsXS4pRrlBe8ho/mHfX2CTBeK+rJ391fZoWGePcLspK5gRalovV8FGc
+	 zvNv4weSYfNXmc5jRQN1bDqggq6WK7aLUIOcg+PzH7oZVD4kRfpT892xCct/ILiya0
+	 jLkQoNA/uL7LqmvBw3AVoRzuvlK75BjHul/GtatdLnwh9oY4RFahTS2g1X1DgVYloA
+	 WKsLQDuuv27JN9+DW1argOg7e8aaGB/ZAr9v+8FetF5HxaSxWnt0y6Ik19QMlgf8Tr
+	 NEN9c97EF6FHA==
+From: Mario Limonciello <superm1@kernel.org>
+To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Hans de Goede <hdegoede@redhat.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	"Luke D . Jones" <luke@ljones.dev>,
+	Mark Pearson <mpearson-lenovo@squebb.ca>
+Cc: platform-driver-x86@vger.kernel.org (open list:AMD PMF DRIVER),
+	linux-kernel@vger.kernel.org (open list),
+	linux-acpi@vger.kernel.org (open list:ACPI),
+	"Derek J . Clark" <derekjohn.clark@gmail.com>,
+	Antheas Kapenekakis <lkml@antheas.dev>,
+	me@kylegospodneti.ch,
+	Denis Benato <benato.denis96@gmail.com>,
+	Mario Limonciello <mario.limonciello@amd.com>
+Subject: [PATCH v2 0/1] Add quiet/low power compat code
+Date: Tue,  4 Mar 2025 00:47:44 -0600
+Message-ID: <20250304064745.1073770-1-superm1@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manjaro.org; s=2021;
-	t=1741070700;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=FmcbSR4fpWNtNMrwgorLBn1ejOQXpMGWv3rjGuDsu/0=;
-	b=KafPlS2cao/nkE3TIuUzFLvT/erara6+Y2BEZ2H14/Uo4qNsaWXNGS1U/c0NA+apCFUMYD
-	mc/rMiELEMkWa2jYe47TPRaf5zdIK08Ge7Dl/okrH2n8ARTId8mocZOSJ2bl4855JE/LWK
-	zQ0brIW4olIAMQgBSr1nCY+18N/pF83NiANjO+VHS9qUdPBtbI/GVZrvojeuMOyS0dsPcb
-	ZA03r/0K6Lfzmn4xoZVvbTvPq3kbyE9q2sXdtNr86zrY7hNP+cEFBQk6IfIlxV1V8ix+IF
-	S6mVe4bhchQ9jFB6A4vxIvAU28cUUidKev16wn6QhBqUGe6EsyBe0jOM6Id83w==
-Date: Tue, 04 Mar 2025 07:44:59 +0100
-From: Dragan Simic <dsimic@manjaro.org>
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: linux-rockchip@lists.infradead.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, didi.debian@cknow.org, chris@z9.de
-Subject: Re: [PATCH v2 0/2] Slightly improve hardware description of Pine64
- RockPro64
-In-Reply-To: <174104113599.8946.16805724674396090918.b4-ty@sntech.de>
-References: <cover.1740941097.git.dsimic@manjaro.org>
- <174104113599.8946.16805724674396090918.b4-ty@sntech.de>
-Message-ID: <757afa87255212dfa5abf4c0e31deb08@manjaro.org>
-X-Sender: dsimic@manjaro.org
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Authentication-Results: ORIGINATING;
-	auth=pass smtp.auth=dsimic@manjaro.org smtp.mailfrom=dsimic@manjaro.org
+Content-Transfer-Encoding: 8bit
 
-Hello Heiko,
+From: Mario Limonciello <mario.limonciello@amd.com>
 
-On 2025-03-03 23:36, Heiko Stuebner wrote:
-> On Sun, 02 Mar 2025 19:48:02 +0100, Dragan Simic wrote:
->> This is a small series that introduces small improvements to the way
->> Pine64 RockPro64 [1] single-board-computer is described in the DT 
->> files.
->> This applies to both production-run revisions of the RockPro64.
->> 
->> The introduced improvements boil down to eliminating some warnings 
->> from
->> the kernel log, by adding a previously undefined regulator and by 
->> adding
->> some previously missing references to the regulators.
->> 
->> [...]
-> 
-> Applied, thanks!
-> 
-> [1/2] arm64: dts: rockchip: Add avdd HDMI supplies to RockPro64 board 
-> dtsi
->       commit: bd1c959f37f384b477f51572331b0dc828bd009a
-> [2/2] arm64: dts: rockchip: Add missing PCIe supplies to RockPro64 
-> board dtsi
->       commit: 64ef4a4320e7aa3f0f267e01f170f52b90bf0b1b
-> 
-> I've moved the pcie12v supply up one line.
-> While in a mathematical sense it's true 12 > 3.3, we're sorting
-> alphabetical, so it's 1?? < 3?? .
-> 
-> And yes I sympathize with 3.3 < 12, but also have come to appreciate 
-> not
-> having overly many special cases :-)
+When two drivers provide platform profile handlers but use different
+strings to mean (essentially) the same thing the legacy interface won't
+export them because it only shows profiles common to multiple drivers.
 
-Great, thanks! :)
+This causes an unexpected behavior to people who have upgraded from an
+earlier kernel because if multiple drivers have bound platform profile
+handlers they might not be able to access profiles they were expecting.
 
-I'm fine with the alphabetical ordering, albeit with some caveats
-described below, but the following part of the patch description
-should also be removed, if possible, so the patch description fully
-matches the introduced changes:
+Introduce a compatibility mode to the core that when one driver supports
+quiet and the other supports low power that allows both to enter the
+appropriate mode.
 
-   Shuffle and reorder the "vpcie*-supply" properties a bit, so they're 
-sorted
-   alphanumerically, which is a bit more logical and more useful than 
-having
-   these properties listed in their strict alphabetical order.
+There have been some other attempts at solving this issue in other ways.
+This serves as an alternative to those attempts.
 
-Admittedly, the patch itself indeed looks nicer [1] with the
-alphabetical ordering, :) (which is quasi-alphabetical, actually,
-please see below) but it might be better to have the DT guidelines
-adjusted to specify alphanumerical ordering as well.  Even ls(1)
-can sort filenames alphanumerically, with its "-v" option that
-performs "natural sort of (version) numbers within text". [2]
+v1 -> v2:
+ * Drop hidden choices.
+ * Just add compatibility to the core for low power and quiet modes 
 
-The real trouble is that, if we were to apply the alphabetical
-ordering strictly, we'd end up with the following order of node
-properties in which 12 is before 1.8 and 3.3, which IMHO doesn't
-make much sense:
+Link: https://lore.kernel.org/platform-driver-x86/e64b771e-3255-42ad-9257-5b8fc6c24ac9@gmx.de/T/#t
+Link: https://lore.kernel.org/platform-driver-x86/CAGwozwF-WVEgiAbWbRCiUaXf=BVa3KqmMJfs06trdMQHpTGmjQ@mail.gmail.com/T/#m2f3929e2d4f73cc0eedd14738170dad45232fd18
+Link: https://lore.kernel.org/platform-driver-x86/20250228170155.2623386-1-superm1@kernel.org/
+Cc: Antheas Kapenekakis <lkml@antheas.dev>
+Cc: "Luke D. Jones" <luke@ljones.dev>
 
-   vpcie0v9-supply = <&vcca_0v9>;
-   vpcie12v-supply = <&vcc12v_dcin>;
-   vpcie1v8-supply = <&vcca_1v8>;
-   vpcie3v3-supply = <&vcc3v3_pcie>;
+Mario Limonciello (1):
+  ACPI: platform_profile: Treat quiet and low power the same
 
-I'm hoping you'll agree that specifying alphanumerical ordering
-for the properties in the DTS coding style is the way to go, just
-like it's already specified for the ordering of the nodes.  I'll
-go ahead and submit an appropriate patch for the DT guidelines.
+ drivers/acpi/platform_profile.c | 26 +++++++++++++++++++++++---
+ 1 file changed, 23 insertions(+), 3 deletions(-)
 
-[1] 
-https://web.git.kernel.org/pub/scm/linux/kernel/git/mmind/linux-rockchip.git/commit/?id=64ef4a4320e7aa3f0f267e01f170f52b90bf0b1b
-[2] https://man.archlinux.org/man/ls.1.en#v
+-- 
+2.43.0
+
