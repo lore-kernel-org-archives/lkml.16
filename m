@@ -1,200 +1,166 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35F062045AE;
-	Tue,  4 Mar 2025 10:26:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFD6F1FCFD2
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 10:26:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741083992; cv=none; b=NqvjWyFM8aI0Hn6lHZ4/TGuBtsHDjsM+dUk9wSwUcXpF2L6DpTsdXSj5cMyaupdut13CMV+CWay93iKZ1YUlS8fieAjtOmceAYbo/TfFShgdPGRLrJhNyT8p5S6tzfNmMZ1DN90FL5Amh748Hpelyk4mTGQVZYJqoPFctguB5BE=
+	t=1741084020; cv=none; b=kqtok+bABQuHYvhujFblIYTwcnG2qbXu6NyHP3TjgJQ7Wn6pppfWebm3hvWS6k7nartGf1EIjY+6X2HtuGdvY28BccGF7QgPkDXdwz+YTfyEWz86bILhTRh/B8PWHhnenJ9Fim8yqdkK8gWqeSDrvUMMjH8UJnjXlznOBENk83w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741083992; c=relaxed/simple;
-	bh=6uEAJ8nD7fDYMEhw/EcoWoFmQyEslDZJFKt5CsJ8GCA=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=tEfBGmExVhA1b2MpjfWVJDMEnqNiR9UZVgcccHkDJAmwJDW6VvjoAjLu2EnI74TNSIL+YnTDjxV2gkb3qn+ixJB1NbaghVrJaz0lKLicihxHp/cloHLhb++7/LmAXO//944lwza7fgL8rW43aYVr80O9J3WOV1hELLBkKelJ/+s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=o+3un1Ow; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=FAbl5B3+; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1741084020; c=relaxed/simple;
+	bh=PcNgFKpvoqsI2d+GTVFiDpd0z0+TWHIXV0Sov3jinU4=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=P7Jf/gEM+18OC6gB/EwCDgVweel8jm6HZA39o8K/msmlLEcu/q9IcuXZ88izKxFOMYha8bvZQ/MzYI895dg1/4g4UeYlCul5uI4Qc2s+k26VIdC0T89oNNGrF/4OyadmG7hKAdvi/0Aahkq2XZPHSgG5+ZH7ROHQ5IFUBMSCC10=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vkD8ifLu; arc=none smtp.client-ip=209.85.128.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="o+3un1Ow";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="FAbl5B3+"
-Date: Tue, 04 Mar 2025 10:26:25 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1741083988;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=CHHe/QlEvJCZDxnMMZ6s6iM4BrQ+XxwIJ9j9GMaOkS4=;
-	b=o+3un1OwvZ1VKbqkwYYsnfwyhaAZwGiRofXez0ZXu6/Dd5OX6tdUa7Fnv/7T9GnLqVoQ8v
-	fVuTLk2Y10EKoELMlSCVfIM+FXEfVq9bpGJiG6S9ZfJXR/YrG9tVxzT7PnTUUYeXzzOzWD
-	fpoKWe8mo0zrr2BPCZx9Ai7f3YCpE+X+RPOf198L/Px+1ZSmVov8piHKb/qfq65niI7q0K
-	p3rjCx7UXPoE/oZHlJY2FBpIXcxLLLXAwZHNFxWhv7FhjeGzk2/hbsv8gHVOE9MB4lTgIK
-	T5K2tLEdvxgijSx4pIW7gwDWEwrqKj7Tz8ux6hFg3xQt3lVbfHtWFAyN5nl5Dw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1741083988;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=CHHe/QlEvJCZDxnMMZ6s6iM4BrQ+XxwIJ9j9GMaOkS4=;
-	b=FAbl5B3+qfhNANqVrP6wcNxQ4Bx8YowQDSnwKXBG9ALdQN7OgDLpxdXkqhAPa9bQdERkpA
-	GGnJ/OjPWe9tbIAA==
-From: "tip-bot2 for Josh Poimboeuf" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/cpu] x86/smp: Fix mwait_play_dead() and
- acpi_processor_ffh_play_dead() noreturn behavior
-Cc: "Paul E. McKenney" <paulmck@kernel.org>,
- Josh Poimboeuf <jpoimboe@kernel.org>, Ingo Molnar <mingo@kernel.org>,
- x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To:
- <e885c6fa9e96a61471b33e48c2162d28b15b14c5.1740962711.git.jpoimboe@kernel.org>
-References:
- <e885c6fa9e96a61471b33e48c2162d28b15b14c5.1740962711.git.jpoimboe@kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vkD8ifLu"
+Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-43947a0919aso49285755e9.0
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Mar 2025 02:26:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1741084016; x=1741688816; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=P91a/ScZPMObCTQZiDV75XYWZDr4e4/JP6vqUsEn9yY=;
+        b=vkD8ifLuM5XxW74NOEw9S/ZGt7107JIc5ZFb1GYAEXQ1ZgL6iS5NTemi7X1jEY51s3
+         qNwYB8a/55eUDUP2JCyM3by7aPrtCiPSRniQ6oc+NmwlSjisXC3CK3B9Src+gJcxEcVY
+         ACyZmiedCly4PyM/pnxAyFZwNS/iZmiWXovEzBfELvxS405RYXiLSe1TBs0J6p9+Kya7
+         TSuyPiY+WHxQeZtb0WLmoXIf1lxgLQ0sBJhEiZRZ+c3n9xFqyxjO1GtgXqhelwKd6G6U
+         2vtJ633+6RVNsVDdf/JZTfxQQ4fTTiY0UWPyOmpxWjP129vvUI/0FM2edEX3UDRQ2byy
+         SUkA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741084016; x=1741688816;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=P91a/ScZPMObCTQZiDV75XYWZDr4e4/JP6vqUsEn9yY=;
+        b=czL+js/8uiGkCsxut8nM7ERzEp8QAhDI+VBowLudlsd/qAh08r2uAQHyQhWxEuu/g3
+         2Vo5PM/H+/j5PqwaOATVqaTCpglebOfl7pk4tl9bX3rTjF/4qs8ibffDTSTbVH5a+Pot
+         rPWoMNpAyfJc3ulpjp+OY/2f8sbPyguRVw79ubHIIh5jl65mZQyIgEHt1MNbJToXEJ9h
+         o48mnBNykux+qg//PS19ZdUtLjo7aYoZ9SqAulfdO/oMMIGNM1n8QECmTXp1Edyf+xfA
+         1k8gYVtlaR/I/XfiM5u1jBFIrlRjxZyLMJStIx9fcUzNR5vO86LNPbCA+OBLsx9iI/Ul
+         jZHA==
+X-Forwarded-Encrypted: i=1; AJvYcCVE03NHO0wDWnpHxZXOF1mnn2qZ8huXhEYGoPjMRXyvCakSYDPp+TpwkwT93b4e9I9ywcuFFEe1C8iuIr0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzyWqh8XaT/2128adtpKZUrI2FM6fhcY6aH2Oc3lnVJzoOPy/s9
+	+sVtosgfTz1KMlORD3PFuXmSbw+687Ip2PaqPH7tULUcf4+vnAs1y41R+YbmzXrGB92Z2l5pWJx
+	fHqN9bHITNfpJ8Q==
+X-Google-Smtp-Source: AGHT+IHHpx7TMZfBfYayuTaMrwBT4iKvqxmdwIi/f4Q36aLhBfvN/DU32Z4yAQaGBrgEJsvzsvjRPnOEEXl09JA=
+X-Received: from wmbbi6.prod.google.com ([2002:a05:600c:3d86:b0:439:8688:5f9])
+ (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:600c:4588:b0:439:9d75:9e92 with SMTP id 5b1f17b1804b1-43ba675c6dbmr143871395e9.28.1741084016018;
+ Tue, 04 Mar 2025 02:26:56 -0800 (PST)
+Date: Tue, 04 Mar 2025 10:26:52 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Message-ID: <174108398752.14745.6850468204610985728.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
+Mime-Version: 1.0
+X-B4-Tracking: v=1; b=H4sIAGvVxmcC/32NQQ6CMBBFr0JmbU1bpAZX3sOwoMMUJsGWtEggh
+ LtbOYDL95L//g6JIlOCR7FDpIUTB59BXwrAofU9Ce4yg5a6kqUsBfuRPYlE+Ik8bzivwjhU2Bp
+ Tq8pAHk6RHK9n9NVkHjjNIW7nx6J+9m9uUUIJZ++2tuamXOeefQj9SFcMb2iO4/gCrbmUC7UAA AA=
+X-Change-Id: 20250303-inline-securityctx-6fc1ca669156
+X-Developer-Key: i=aliceryhl@google.com; a=openpgp; fpr=49F6C1FAA74960F43A5B86A1EE7A392FDE96209F
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2811; i=aliceryhl@google.com;
+ h=from:subject:message-id; bh=PcNgFKpvoqsI2d+GTVFiDpd0z0+TWHIXV0Sov3jinU4=;
+ b=owEBbQKS/ZANAwAKAQRYvu5YxjlGAcsmYgBnxtVtyfSswXF+elq/PY/YZLey2gZk8TxU2PQHe
+ YomYEvZqWyJAjMEAAEKAB0WIQSDkqKUTWQHCvFIvbIEWL7uWMY5RgUCZ8bVbQAKCRAEWL7uWMY5
+ Rm8rEAC2faDraMM23kvkE7JyQFR57zHEShAfVjha788OSeCJ27XF7+H7nGC4jNPcNPBowQIwnBm
+ 88fJo42e3my74JAPjFWRpOdu33Oc3jgX+kfV0dEZu/fS+PIUIuOUeFgD52swaPzIqrybuW5HvQg
+ cFswrLCysnpb8QmD8m0ynuzD3RcsBW3Xv9kM9nN4LxV2lyqPSTa2Wx0B5jO33dhbEaBNHe3d8Rw
+ ZomDvL3XHh/dHAbQWn4hL+Firigxtd29GvVZTVs5CUmW4TrSIJewkQu9kLjFWZwn14A4/fe6u9X
+ JKGJ9Wn6sKlcpS0/li95X2Hz5WiLlOoAYb8ZzuvfbXnze5FwGB8q/cQM+8YpkzBHO9WSWtqqz5Y
+ Gg0exDhMCZqZ+OIeD+gXDOXNhMjPM1blEiuXLk+eWkSxnLeoyxTP9dAdMFgj599mqdI29EyNCGA
+ C82fPg79Q32UI40Z14Ixm0hj7/RRFwVbOwnfksuRBHInBrqZP3iNidCqBtWsY/MunpRYnGLYU+h
+ AfEHRHsJrJi0ktD1W75aJK7a9cwkLfrvzv5OjePInyjvzirGAanykDf3wAkDj8NSlcaq3TtBCoS
+ H9t0Doz1Py0LvzdDyzUqd3FQ/nExY4Vt3XLKGvc0F+NUc9a/I99GKnpU6XFCypPGIgaRGWzdeK0 eA61rh3c0t7BhIg==
+X-Mailer: b4 0.14.2
+Message-ID: <20250304-inline-securityctx-v2-1-f110f2c6e7ff@google.com>
+Subject: [PATCH v2] lsm: rust: mark SecurityCtx methods inline
+From: Alice Ryhl <aliceryhl@google.com>
+To: Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>, 
+	"Serge E. Hallyn" <serge@hallyn.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	"=?utf-8?q?Bj=C3=B6rn_Roy_Baron?=" <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
+	rust-for-linux@vger.kernel.org, linux-security-module@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Alice Ryhl <aliceryhl@google.com>
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
 
-The following commit has been merged into the x86/cpu branch of tip:
+When you build the kernel using the llvm-19.1.4-rust-1.83.0-x86_64
+toolchain provided by kernel.org with ARCH=arm64, the following symbols
+are generated:
 
-Commit-ID:     4e32645cd8f97a308300623f81c902747df6b97b
-Gitweb:        https://git.kernel.org/tip/4e32645cd8f97a308300623f81c902747df6b97b
-Author:        Josh Poimboeuf <jpoimboe@kernel.org>
-AuthorDate:    Sun, 02 Mar 2025 16:48:51 -08:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Tue, 04 Mar 2025 11:14:25 +01:00
+$ nm vmlinux | grep ' _R'.*SecurityCtx | rustfilt
+ffffffc0808fe8a0 T <kernel::security::SecurityCtx>::from_secid
+ffffffc0808fe9a4 T <kernel::security::SecurityCtx as core::ops::drop::Drop>::drop
 
-x86/smp: Fix mwait_play_dead() and acpi_processor_ffh_play_dead() noreturn behavior
+However, these Rust symbols are trivial wrappers around the functions
+security_secid_to_secctx and security_release_secctx respectively. It
+doesn't make sense to go through a trivial wrapper for these functions,
+so mark them inline. Also mark other trivial methods inline to prevent
+similar cases in the future.
 
-Fix some related issues (done in a single patch to avoid introducing
-intermediate bisect warnings):
+After applying this patch, the above command will produce no output.
 
-  1) The SMP version of mwait_play_dead() doesn't return, but its
-     !SMP counterpart does.  Make its calling behavior consistent by
-     resolving the !SMP version to a BUG().  It should never be called
-     anyway, this just enforces that at runtime and enables its callers
-     to be marked as __noreturn.
-
-  2) While the SMP definition of mwait_play_dead() is annotated as
-     __noreturn, the declaration isn't.  Nor is it listed in
-     tools/objtool/noreturns.h.  Fix that.
-
-  3) Similar to #1, the SMP version of acpi_processor_ffh_play_dead()
-     doesn't return but its !SMP counterpart does.  Make the !SMP
-     version a BUG().  It should never be called.
-
-  4) acpi_processor_ffh_play_dead() doesn't return, but is lacking any
-     __noreturn annotations.  Fix that.
-
-This fixes the following objtool warnings:
-
-  vmlinux.o: warning: objtool: acpi_processor_ffh_play_dead+0x67: mwait_play_dead() is missing a __noreturn annotation
-  vmlinux.o: warning: objtool: acpi_idle_play_dead+0x3c: acpi_processor_ffh_play_dead() is missing a __noreturn annotation
-
-Fixes: a7dd183f0b38 ("x86/smp: Allow calling mwait_play_dead with an arbitrary hint")
-Fixes: 541ddf31e300 ("ACPI/processor_idle: Add FFH state handling")
-Reported-by: Paul E. McKenney <paulmck@kernel.org>
-Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Tested-by: Paul E. McKenney <paulmck@kernel.org>
-Link: https://lore.kernel.org/r/e885c6fa9e96a61471b33e48c2162d28b15b14c5.1740962711.git.jpoimboe@kernel.org
+Reviewed-by: Andreas Hindborg <a.hindborg@kernel.org>
+Signed-off-by: Alice Ryhl <aliceryhl@google.com>
 ---
- arch/x86/include/asm/smp.h    | 4 ++--
- arch/x86/kernel/acpi/cstate.c | 2 +-
- include/acpi/processor.h      | 6 +++---
- tools/objtool/noreturns.h     | 2 ++
- 4 files changed, 8 insertions(+), 6 deletions(-)
+Changes in v2:
+- Reword commit message.
+- Link to v1: https://lore.kernel.org/r/20250303-inline-securityctx-v1-1-fb7b9b641fdf@google.com
+---
+I will also reword "destroy"/"free" to "release" as suggested by Casey,
+but I'll send a separate patch for that change.
+---
+ rust/kernel/security.rs | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/arch/x86/include/asm/smp.h b/arch/x86/include/asm/smp.h
-index 80f8bfd..1d3b11e 100644
---- a/arch/x86/include/asm/smp.h
-+++ b/arch/x86/include/asm/smp.h
-@@ -114,7 +114,7 @@ void wbinvd_on_cpu(int cpu);
- int wbinvd_on_all_cpus(void);
+diff --git a/rust/kernel/security.rs b/rust/kernel/security.rs
+index 25d2b1ac383355941ecbe86bd3c505eb6517c180..24321105052648e150f2875bcfa5ef29f4249516 100644
+--- a/rust/kernel/security.rs
++++ b/rust/kernel/security.rs
+@@ -23,6 +23,7 @@ pub struct SecurityCtx {
  
- void smp_kick_mwait_play_dead(void);
--void mwait_play_dead(unsigned int eax_hint);
-+void __noreturn mwait_play_dead(unsigned int eax_hint);
+ impl SecurityCtx {
+     /// Get the security context given its id.
++    #[inline]
+     pub fn from_secid(secid: u32) -> Result<Self> {
+         // SAFETY: `struct lsm_context` can be initialized to all zeros.
+         let mut ctx: bindings::lsm_context = unsafe { core::mem::zeroed() };
+@@ -35,16 +36,19 @@ pub fn from_secid(secid: u32) -> Result<Self> {
+     }
  
- void native_smp_send_reschedule(int cpu);
- void native_send_call_func_ipi(const struct cpumask *mask);
-@@ -166,7 +166,7 @@ static inline struct cpumask *cpu_llc_shared_mask(int cpu)
- 	return (struct cpumask *)cpumask_of(0);
+     /// Returns whether the security context is empty.
++    #[inline]
+     pub fn is_empty(&self) -> bool {
+         self.ctx.len == 0
+     }
+ 
+     /// Returns the length of this security context.
++    #[inline]
+     pub fn len(&self) -> usize {
+         self.ctx.len as usize
+     }
+ 
+     /// Returns the bytes for this security context.
++    #[inline]
+     pub fn as_bytes(&self) -> &[u8] {
+         let ptr = self.ctx.context;
+         if ptr.is_null() {
+@@ -61,6 +65,7 @@ pub fn as_bytes(&self) -> &[u8] {
  }
  
--static inline void mwait_play_dead(unsigned int eax_hint) { }
-+static inline void __noreturn mwait_play_dead(unsigned int eax_hint) { BUG(); }
- #endif /* CONFIG_SMP */
- 
- #ifdef CONFIG_DEBUG_NMI_SELFTEST
-diff --git a/arch/x86/kernel/acpi/cstate.c b/arch/x86/kernel/acpi/cstate.c
-index 86c87c0..d255842 100644
---- a/arch/x86/kernel/acpi/cstate.c
-+++ b/arch/x86/kernel/acpi/cstate.c
-@@ -206,7 +206,7 @@ int acpi_processor_ffh_cstate_probe(unsigned int cpu,
- }
- EXPORT_SYMBOL_GPL(acpi_processor_ffh_cstate_probe);
- 
--void acpi_processor_ffh_play_dead(struct acpi_processor_cx *cx)
-+void __noreturn acpi_processor_ffh_play_dead(struct acpi_processor_cx *cx)
- {
- 	unsigned int cpu = smp_processor_id();
- 	struct cstate_entry *percpu_entry;
-diff --git a/include/acpi/processor.h b/include/acpi/processor.h
-index 63a37e7..d0eccbd 100644
---- a/include/acpi/processor.h
-+++ b/include/acpi/processor.h
-@@ -280,7 +280,7 @@ int acpi_processor_ffh_cstate_probe(unsigned int cpu,
- 				    struct acpi_processor_cx *cx,
- 				    struct acpi_power_register *reg);
- void acpi_processor_ffh_cstate_enter(struct acpi_processor_cx *cstate);
--void acpi_processor_ffh_play_dead(struct acpi_processor_cx *cx);
-+void __noreturn acpi_processor_ffh_play_dead(struct acpi_processor_cx *cx);
- #else
- static inline void acpi_processor_power_init_bm_check(struct
- 						      acpi_processor_flags
-@@ -301,9 +301,9 @@ static inline void acpi_processor_ffh_cstate_enter(struct acpi_processor_cx
- {
- 	return;
- }
--static inline void acpi_processor_ffh_play_dead(struct acpi_processor_cx *cx)
-+static inline void __noreturn acpi_processor_ffh_play_dead(struct acpi_processor_cx *cx)
- {
--	return;
-+	BUG();
- }
- #endif
- 
-diff --git a/tools/objtool/noreturns.h b/tools/objtool/noreturns.h
-index b217489..5a4aec4 100644
---- a/tools/objtool/noreturns.h
-+++ b/tools/objtool/noreturns.h
-@@ -16,6 +16,7 @@ NORETURN(__tdx_hypercall_failed)
- NORETURN(__ubsan_handle_builtin_unreachable)
- NORETURN(__x64_sys_exit)
- NORETURN(__x64_sys_exit_group)
-+NORETURN(acpi_processor_ffh_play_dead)
- NORETURN(arch_cpu_idle_dead)
- NORETURN(bch2_trans_in_restart_error)
- NORETURN(bch2_trans_restart_error)
-@@ -34,6 +35,7 @@ NORETURN(kunit_try_catch_throw)
- NORETURN(machine_real_restart)
- NORETURN(make_task_dead)
- NORETURN(mpt_halt_firmware)
-+NORETURN(mwait_play_dead)
- NORETURN(nmi_panic_self_stop)
- NORETURN(panic)
- NORETURN(panic_smp_self_stop)
+ impl Drop for SecurityCtx {
++    #[inline]
+     fn drop(&mut self) {
+         // SAFETY: By the invariant of `Self`, this frees a context that came from a successful
+         // call to `security_secid_to_secctx` and has not yet been destroyed by
+
+---
+base-commit: a64dcfb451e254085a7daee5fe51bf22959d52d3
+change-id: 20250303-inline-securityctx-6fc1ca669156
+
+Best regards,
+-- 
+Alice Ryhl <aliceryhl@google.com>
+
