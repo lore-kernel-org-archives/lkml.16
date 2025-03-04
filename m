@@ -1,105 +1,122 @@
-Received: from mail114-241.sinamail.sina.com.cn (mail114-241.sinamail.sina.com.cn [218.30.114.241])
+Received: from camel.cherry.relay.mailchannels.net (camel.cherry.relay.mailchannels.net [23.83.223.29])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2100C1FF61D
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 23:35:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=218.30.114.241
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741131327; cv=none; b=klnYM7faeuNQ3QXDVHwlSWxjx3BvOFjGIDmH0ZUD9t+1OHsOclTPu/CHKejg6xVcOm9eKOsBuX3+QBvz4g2T+zuZ96h+JtjjY0HlBz1sCCdujabpbQqGxdGyVXogrkX6GAt5HiGYQ5499i9QfoaXipL5LT/XOjQu3r0eH4G863E=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741131327; c=relaxed/simple;
-	bh=d/7vgs/C5rwes4Txtu4q0m9uILsnhLNub4HC3E8ykmE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=J1CgXPsy/q77TsOvD/UZtmDyZTVMqZ43UXkCQ1M6RL9pwFSp1zhNWJUA9SCm39EuhZMquKDuT7mWYp1KeRiXtfKEoBYcLllwi4vF2mC0azh+62437kj8muYaAWafxsiA7q1pPE3uNHm2NiFQrvNxEKwRD20BUDcPx29uZBofPoc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com; spf=pass smtp.mailfrom=sina.com; arc=none smtp.client-ip=218.30.114.241
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.com
-X-SMAIL-HELO: localhost.localdomain
-Received: from unknown (HELO localhost.localdomain)([113.118.69.118])
-	by sina.com (10.185.250.23) with ESMTP
-	id 67C78E2E00002C0E; Tue, 5 Mar 2025 07:35:13 +0800 (CST)
-X-Sender: hdanton@sina.com
-X-Auth-ID: hdanton@sina.com
-Authentication-Results: sina.com;
-	 spf=none smtp.mailfrom=hdanton@sina.com;
-	 dkim=none header.i=none;
-	 dmarc=none action=none header.from=hdanton@sina.com
-X-SMAIL-MID: 2523278913411
-X-SMAIL-UIID: A9E38C04C32D46F99DE422E1BD7AAFB2-20250305-073513-1
-From: Hillf Danton <hdanton@sina.com>
-To: Oleg Nesterov <oleg@redhat.com>
-Cc: K Prateek Nayak <kprateek.nayak@amd.com>,
-	Mateusz Guzik <mjguzik@gmail.com>,
-	"Sapkal, Swapnil" <swapnil.sapkal@amd.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] pipe_read: don't wake up the writer if the pipe is still full
-Date: Wed,  5 Mar 2025 07:35:00 +0800
-Message-ID: <20250304233501.3019-1-hdanton@sina.com>
-In-Reply-To: <20250304123457.GA25281@redhat.com>
-References: <e813814e-7094-4673-bc69-731af065a0eb@amd.com> <20250224142329.GA19016@redhat.com> <qsehsgqnti4csvsg2xrrsof4qm4smhdhv6s4v4twspf76bp3jo@2mpz5xtqhmgt> <c63cc8e8-424f-43e2-834f-fc449b24787e@amd.com> <20250227211229.GD25639@redhat.com> <06ae9c0e-ba5c-4f25-a9b9-a34f3290f3fe@amd.com> <20250228143049.GA17761@redhat.com> <20250228163347.GB17761@redhat.com> <20250304050644.2983-1-hdanton@sina.com> <20250304102934.2999-1-hdanton@sina.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 917AA1FAC40;
+	Tue,  4 Mar 2025 23:36:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.223.29
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741131398; cv=pass; b=I2jKsZ8jVeRm6Ojhq/WCnX5dp0idWhO3gOR45zGeVoYd268I7OcaiUfDbTpGLjWuaVqLGpLu1cCaop0vFGiOxXTfyX4Vdn5EQc3ILqLqUjUKptQhHPwl1AQo8u7CKlX9DJL2ioTpu2VDT7nSrxiWyiOi8HU4LqmaouDKfEIupAs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741131398; c=relaxed/simple;
+	bh=au4ZHHjqyU6in8xgr/VtU+7ORsPZNbiGMQowSls/TzI=;
+	h=Message-ID:MIME-Version:Subject:To:References:From:In-Reply-To:
+	 Content-Type:Date; b=iu1PvXcXePXx87gK5fCqBWRqUBxvxLbZPFUiTjx0O9BU9rA3KiXGB/mkn8zBJjuyhVcLGH7IqJMKxxD5FlzvSkMv3gNX9BZmDZe+7JsCbhcM7lSnf8A3DcsrHWPCprGdIYxnN2/7P5IkpZK3PHvLagzrQ0Y/DlwIcAVp21QR/y4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arinc9.com; spf=pass smtp.mailfrom=arinc9.com; dkim=pass (2048-bit key) header.d=arinc9.com header.i=@arinc9.com header.b=VlYuS0Sb; arc=pass smtp.client-ip=23.83.223.29
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arinc9.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arinc9.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=arinc9.com header.i=@arinc9.com header.b="VlYuS0Sb"
+X-Sender-Id: hostingeremail|x-authuser|chester.a.unal@arinc9.com
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id E9A30782DBC;
+	Tue,  4 Mar 2025 17:57:31 +0000 (UTC)
+Received: from nl-srv-smtpout1.hostinger.io (100-105-75-112.trex-nlb.outbound.svc.cluster.local [100.105.75.112])
+	(Authenticated sender: hostingeremail)
+	by relay.mailchannels.net (Postfix) with ESMTPA id 6E6FD7821D7;
+	Tue,  4 Mar 2025 17:57:28 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1741111051; a=rsa-sha256;
+	cv=none;
+	b=4kIyyYpRo4F2Zo5ZlP8/25GUpSfkqmS+oB+5jUpQpJ56D20fMZdK+bbp5UQ9HwrtmajeVC
+	Pm9vOeQq+N92OPjYAOdyC8pwCzkfJBH+ZMP5LUrt4mEw62hubi2yLs08xBPUKpU4cjxlpW
+	lnD6ecc6UZg+vlldEjcvql/Tmmffo6FHf+z7fgu+fto90pDpJ/FpjsOtkDqBiYuLaVqJp3
+	oWQpATvb0+AcrY5n66p3LUxeK2efh7YXUFGYV7u2s9R54zKjDhOV3GeTwW+XCZuu8lGV7a
+	x4ZwsnHKrwK/uvCRwf6JKM3tIp4SammQwTIPU8uHACMGSjYxlf+2G6wqqL8YdA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+	s=arc-2022; t=1741111051;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:dkim-signature;
+	bh=uHrANchvNJ+aKAH+dxKPt87xl9/ANWKJQ/Jgn87Orgg=;
+	b=voRx0J38LeQaH0gsL85SbJCNy8ycVN24s+g1aYkTYvUurNZsLSeKjupQxWnzBUA0a8jPo4
+	vy8pnYIivlUhJBd+wJem3XJOTLwQTR1S3dzhWQzNhd7+nf0cBcjCaTY2rENhtedQNnC8Wf
+	m2cvs5vbjzuRWWV5AlIX0sQrhgdfifijhdnW+RibhkG1hLBBd/GLoUPoWS7m1iLiUltUr9
+	Ab8sSfDmGFLuj4Xii1A9rogqmhKfACkTHsu7KNmwTTMVba2/TBxGPB7IHGxiE6Od9jYJbU
+	NvfuO50AwVj4cVSywytMM90+O7Bn2dlSyxXXu3+Jvh4VuGiSpDh4OlcentC4iQ==
+ARC-Authentication-Results: i=1;
+	rspamd-5c7b96f5b9-lglkd;
+	auth=pass smtp.auth=hostingeremail smtp.mailfrom=chester.a.unal@arinc9.com
+X-Sender-Id: hostingeremail|x-authuser|chester.a.unal@arinc9.com
+X-MC-Relay: Bad
+X-MailChannels-SenderId: hostingeremail|x-authuser|chester.a.unal@arinc9.com
+X-MailChannels-Auth-Id: hostingeremail
+X-White-Snatch: 6ac490ef0cad969d_1741111051802_1907771754
+X-MC-Loop-Signature: 1741111051802:3446199483
+X-MC-Ingress-Time: 1741111051801
+Received: from nl-srv-smtpout1.hostinger.io (nl-srv-smtpout1.hostinger.io
+ [145.14.150.87])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.105.75.112 (trex/7.0.2);
+	Tue, 04 Mar 2025 17:57:31 +0000
+Received: from [10.10.10.229] (unknown [109.228.249.111])
+	(Authenticated sender: chester.a.unal@arinc9.com)
+	by smtp.hostinger.com (smtp.hostinger.com) with ESMTPSA id 4Z6k0h58rHz35BGt;
+	Tue, 04 Mar 2025 17:57:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arinc9.com;
+	s=hostingermail-a; t=1741111046;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=uHrANchvNJ+aKAH+dxKPt87xl9/ANWKJQ/Jgn87Orgg=;
+	b=VlYuS0SbjdEYQjhRibRf6Btba4juCqtPMunmxKouR4Yq5vxsZFsVzW8LiHjC5qAtmXv+cj
+	qrddsjbnsb4qC4xveJq9FJfx4vhyVSteYj+MqzipcyB0b100MGUNZCgDaj3TBnz5fpaK+n
+	cXFg980zguMAAwaprVd9If9Z5GoY8U+TApHzvoju8j7PuH4Eh+355LTjb0Hs7DwpaaypVT
+	eEpy0YRY+8y18Uwpy7jnAoTx/XDQJhfB+1iUGQUjXsDF5cnw0jCncOiTbV4AQ1ZXMFpv7l
+	nGTbvvqmF3gDE/+E7FlD267gIbSjlHWs/GbBibxlIH/bAHmbbZi/cde/E6A11A==
+Message-ID: <411daae4-0cf6-4e47-9a38-0fe46cf2825c@arinc9.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v2] dsa: mt7530: Utilize REGMAP_IRQ for interrupt
+ handling
+To: Daniel Golle <daniel@makrotopia.org>, Andrew Lunn <andrew@lunn.ch>,
+ Vladimir Oltean <olteanv@gmail.com>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ DENG Qingfang <dqfext@gmail.com>, Sean Wang <sean.wang@mediatek.com>,
+ SkyLake Huang <SkyLake.Huang@mediatek.com>,
+ Christian Marangi <ansuelsmth@gmail.com>,
+ Matthias Brugger <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Frank Wunderlich <frank-w@public-files.de>, John Crispin <john@phrozen.org>,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+References: <221013c3530b61504599e285c341a993f6188f00.1740792674.git.daniel@makrotopia.org>
+Content-Language: en-US
+From: "Chester A. Unal" <chester.a.unal@arinc9.com>
+In-Reply-To: <221013c3530b61504599e285c341a993f6188f00.1740792674.git.daniel@makrotopia.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Date: Tue, 04 Mar 2025 17:57:24 +0000 (UTC)
+X-CM-Analysis: v=2.4 cv=F4sFdbhN c=0 sm=1 tr=0 ts=67c73f06 p=VT4XjZGOAAAA:8 a=DLgUjxyaX94o89xnTiwHMQ==:117 a=DLgUjxyaX94o89xnTiwHMQ==:17 a=IkcTkHD0fZMA:10
+X-CM-Envelope: MS4xfD7S7/gD50VTE/59nwPF/2oV/M3GLXLr6H55NKCDhTFqO+648U8qru2NN9sYDvCLk7Q60Q+9pBkIIp+dNir+Sq6xHl5eEuzwqPFqknqQ32b1xURDDOLW id8NvcuXj9UmMklo4HRP9kR8OpLqlKMf0LWhusUgxQxX3t4VdoDMR8mAWMctBZY1BKATqFcPLSlpB6ypsDNQxsbx2su/hhlWaCr/qKjg3rjbMPi3VQp2cogm dDv9ApnrR/K7zBtFslgXga7Ofq3aW8SFD6QPVQBqld6eBI9JXGEObdiKDO0BE2wxIlQZVGtgMVn/k9e6XuaT26BA/JYKGfnViM/NPkeXA6snaG7iAFO+6R8j HSkoK65c24SlQUfPDYy9Us0msyGIJz8L/AmG0opbxRFmXIlc4AgcYuP/iEDTMGLtYjks71uumOjp0Hrne9vXpgUnRXaNumqG7NymEs5IdKxNwRQuiEVgueMm 0XesZ5FFHKX734zrxglNevX08q0FmJCnyoM5bCP7FawPxPBj1WASC1yzxjAIQq0f7KSWGdPLBfNWjPYrDH5FVHh8XvAV9aWAm8VRe3OLj9OH12thVmv2t28Q jVIUd5Q8FNOrJz4ZgcGqQ3NxNOEf8q2DfEDkhjlsAHJOIZrqKQZnqpiYkbou71uR1wU4CGxFlFz6SeUjo/n1tRZas/9RKyG1F0m4oaiH0fNRBNAHlIc1vERU I8t3G8VATzsNgHtKjkojJniz8F29Cl6fUFqXRlz2ESAzghJJBqMexUddzzj5FXRMNaZbJAWZV3r6qyRXGSd8KlbbaOpmjLXGNNxgxNOuXQYY4e/REeOvgWEp 7FxtfLIZq4xokYW0dgE=
+X-AuthUser: chester.a.unal@arinc9.com
 
-On Tue, 4 Mar 2025 13:34:57 +0100 Oleg Nesterov <oleg@redhat.com>
-> On 03/04, Hillf Danton wrote:
-> > On Tue, 4 Mar 2025 11:05:57 +0530 K Prateek Nayak <kprateek.nayak@amd.com>
-> > >> @@ -573,11 +573,13 @@ pipe_write(struct kiocb *iocb, struct io
-> > >>   		 * after waiting we need to re-check whether the pipe
-> > >>   		 * become empty while we dropped the lock.
-> > >>   		 */
-> > >> +		tail = pipe->tail;
-> > >>   		mutex_unlock(&pipe->mutex);
-> > >>   		if (was_empty)
-> > >>   			wake_up_interruptible_sync_poll(&pipe->rd_wait, EPOLLIN | EPOLLRDNORM);
-> > >>   		kill_fasync(&pipe->fasync_readers, SIGIO, POLL_IN);
-> > >> -		wait_event_interruptible_exclusive(pipe->wr_wait, pipe_writable(pipe));
-> > >> +		wait_event_interruptible_exclusive(pipe->wr_wait,
-> > >> +				!READ_ONCE(pipe->readers) || tail != READ_ONCE(pipe->tail));
-> > >
-> > >That could work too for the case highlighted but in case the head too
-> > >has moved by the time the writer wakes up, it'll lead to an extra
-> > >wakeup.
-> > >
-> > Note wakeup can occur even if pipe is full,
+On 01/03/2025 01:41, Daniel Golle wrote:
+> Replace the custom IRQ chip handler and mask/unmask functions with
+> REGMAP_IRQ. This significantly simplifies the code and allows for the
+> removal of almost all interrupt-related functions from mt7530.c.
 > 
-> Perhaps I misunderstood you, but I don't think pipe_read() can ever do
-> wake_up(pipe->wr_wait) if pipe is full...
+> Tested on MT7988A built-in switch (MMIO) as well as MT7531AE IC (MDIO).
 > 
-> > 		 * So we still need to wake up any pending writers in the
-> > 		 * _very_ unlikely case that the pipe was full, but we got
-> > 		 * no data.
-> > 		 */
-> 
-> Only if wake_writer is true,
-> 
-> 		if (unlikely(wake_writer))
-> 			wake_up_interruptible_sync_poll(...);
-> 
-> and in this case the pipe is no longer full. A zero-sized buffer was
-> removed.
-> 
-> Of course this pipe can be full again when the woken writer checks the
-> condition, but this is another story. And in this case, with your
-> proposed change, the woken writer will take pipe->mutex for no reason.
-> 
-See the following sequence,
+> Signed-off-by: Daniel Golle <daniel@makrotopia.org>
 
-	1) waker makes full false
-	2) waker makes full true
-	3) waiter checks full
-	4) waker makes full false
+Acked-by: Chester A. Unal <chester.a.unal@arinc9.com>
 
-waiter has no real idea of full without lock held, perhaps regardless
-the code cut below.
-
-> Note also that the comment and code above was already removed by
-> https://lore.kernel.org/all/20250210114039.GA3588@redhat.com/
-> 
-> Oleg.
+Chester A.
