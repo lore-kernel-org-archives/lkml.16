@@ -1,71 +1,25 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1C641BBBF7
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 05:10:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 778776EB7C;
+	Tue,  4 Mar 2025 05:10:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741065014; cv=none; b=KVGvyjVy/uKFdYU1zMdItkO3KU4Lh+GGU50ZbCq3dYkQ7Ly3w7LWWrMn8eQ4B38+nbLFeaTXMLI3GquAvZ+Ct/uanPQ7D1P5v+LXGmLExho4Q/V1d7ITftNTiq3X1FZn0VhLJ3+6SVJjvipiVwmBf4G1muLhIiL66BC1SpJu3+Y=
+	t=1741065058; cv=none; b=J4DDmNkGPB+rolvBfcVNsUFvMKJqGB0zLgIO6baapSgV16rR7Yzx+tFurxh5kzvJJSpPYFDdJzoRHLMGeuV4fAFIcCBsnHfZaSREGrL63A2qGryitkhDqyeWHv3kBar4ysabV+EuaFPa3G6TLJy3PVw0KPU+eOqwenrLwrReaJ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741065014; c=relaxed/simple;
-	bh=mo6UEqLjhhD/gYk0pYC+753IVwsq5HZnkglHB39gdLU=;
+	s=arc-20240116; t=1741065058; c=relaxed/simple;
+	bh=F31NIwb7p1PuXNrDdCqd7+bhjX9BrbOWl7K/rwDVF8Y=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TLf1TaLAiQ02oiJ1mhfZ9IumftrXd0Lr//qkVvpkQPtJ9RYsHjh5pskcH/ukNtScTlSO3Q2LRz116U5uS5Nrw8PTAST2WDZkq7vPxPEZhqaW7PA2ipZ6FBts3YvTQGrRF8TTdEEG7Ie2UyzeHQMmn9lTyBvv1jJoCJ+IhDYWFWk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=D40czxia; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="D40czxia"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1741065011;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=U8NQ+qKZ44E29enCPM7Eb/wfq67YXGlkr0AyFJChf4s=;
-	b=D40czxiapcDE/K/leaSeBj6d90O0Xinb40iYNKW98yWsnT389Fzh3P7P5/MZxgbb85MSNA
-	GLdsDLLdXYd2c1YFaDyoxrmRm5UoxitqG0MVmgEenEl3cIssaMW1E347uPP7u5tETAov5+
-	+dnAbSxltukLgrEeNI9e7AQRzP/uFc4=
-Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com
- [209.85.216.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-519-mB_biFo2MSiQ4f8GZ_U8UQ-1; Tue, 04 Mar 2025 00:10:09 -0500
-X-MC-Unique: mB_biFo2MSiQ4f8GZ_U8UQ-1
-X-Mimecast-MFC-AGG-ID: mB_biFo2MSiQ4f8GZ_U8UQ_1741065009
-Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-2fed20dd70cso5434927a91.1
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Mar 2025 21:10:09 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741065009; x=1741669809;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=U8NQ+qKZ44E29enCPM7Eb/wfq67YXGlkr0AyFJChf4s=;
-        b=iRFSoJNIRPTbtXzf1/JuOMxjGpFtXbs78wlXDoyqyIgu+jaMoUPzSqG0C5U5Wr+UNN
-         wj3gB8YmHiX+Hhndp690R2qQu73v9zPE5cq0LMHpgJa8w8X3ouIUQggN/JZw+xwn5yQX
-         +nwzx/vUo0x5vNxLDpu8etrs+2A6KPokDUze9eoyyteJWrJGUMOMO7+/6zB5iq7OByFI
-         34OAiFR+RaunQCavjIC93JYmjakP+W/Xw3GbMyqejI332kTsVXsRD7tHzbxl8qwJv/42
-         f4r8o7H+5Wdjv2mnwjPoFbDcaIEq2xKS1plJGhnG6Q0YcoOfJMyb5f1sDxcv9oejHI4Q
-         HzBA==
-X-Forwarded-Encrypted: i=1; AJvYcCXoHxaquXXgDVvrkaAhwczmpZnYJBLmyLL9O4w6+oGoaSpuYCprLtgjWdk/sRgBWvuMzdS6SSl9mKpJkCI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw3UXYSgxPKIjUegUjlBvqvRrXxV4QHnp11Jy3s1KFjU2yr9VuZ
-	+znODn+lEd9b+EkP5ERZxb5skF+KYVyvEXM3kKKP4xGSpWaDl0exzk5g89znmQw+wgIIFTdaccG
-	H/khg2r82uZ4ZhYsartsGGaS01lcWcfgIyfx6Dvnsk1dAbqTlyJdx84XBOmvokA==
-X-Gm-Gg: ASbGncu/vmvnKKOnDO7PFQugljCnijFU+UGhecFxroATIUKCDRkaAY7/eJe182k6o/K
-	CphV14yw6CnlOA6mtS4KHAnHpz3qUeGa/Ox/Aqi5kzXUWnHfkvbmoFERPkF1ES2qkKDhrOi0mtV
-	0WxAaqVfjSWZTagICJuh0h1VQX+LxxuA9TRLKlRxyREGciouaqK0mWqvMtV/940lKUYcFWdW56V
-	Sb+Gb1TkQqwZk6ZmArASpkcFb8hJ4lG3kRIHyLz3/+e97Pg6SJGXGN/dSGpf1q88OmJBM8PpKyH
-	AuUTXYeuVLQ43pf03A==
-X-Received: by 2002:a17:90b:4c4d:b0:2fa:e9b:33ab with SMTP id 98e67ed59e1d1-2febab7878bmr27494278a91.16.1741065008850;
-        Mon, 03 Mar 2025 21:10:08 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEiZnTyS+PczRxTvLSMdHTFs/jB2+JERIbLYMAxRPKra+AaKI0Fes/aNpheWezo+oJpvWNtmw==
-X-Received: by 2002:a17:90b:4c4d:b0:2fa:e9b:33ab with SMTP id 98e67ed59e1d1-2febab7878bmr27494245a91.16.1741065008475;
-        Mon, 03 Mar 2025 21:10:08 -0800 (PST)
-Received: from [192.168.68.55] ([180.233.125.164])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2fe825d2b85sm12057524a91.26.2025.03.03.21.10.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 03 Mar 2025 21:10:07 -0800 (PST)
-Message-ID: <8e852bc0-9a02-42d9-8d56-712c11508626@redhat.com>
-Date: Tue, 4 Mar 2025 15:09:59 +1000
+	 In-Reply-To:Content-Type; b=FO/2lqukC5WuwvxIPIDSDHSw06jteV+9OIhnjiVM7LwBjvJq810I/9fjCF7FaU5vu3fxU1Y9TASIGN++ATc31wbvw8gnzAcOZSgVd0G7cY6sy8sE8dMfVLwF6F00suD3FFVa8lU5c6nQ7HR5N4v0wOVtAUWD2k+YvOKFXoiKArE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4A0121063;
+	Mon,  3 Mar 2025 21:11:08 -0800 (PST)
+Received: from [10.162.42.65] (unknown [10.162.42.65])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 563083F5A1;
+	Mon,  3 Mar 2025 21:10:42 -0800 (PST)
+Message-ID: <daa8ce66-f401-40ff-93b0-bdf40409c9cd@arm.com>
+Date: Tue, 4 Mar 2025 10:40:38 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -73,333 +27,348 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 20/45] arm64: RME: Allow populating initial contents
-To: Steven Price <steven.price@arm.com>, kvm@vger.kernel.org,
- kvmarm@lists.linux.dev
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Marc Zyngier <maz@kernel.org>,
- Will Deacon <will@kernel.org>, James Morse <james.morse@arm.com>,
- Oliver Upton <oliver.upton@linux.dev>,
- Suzuki K Poulose <suzuki.poulose@arm.com>, Zenghui Yu
- <yuzenghui@huawei.com>, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, Joey Gouly <joey.gouly@arm.com>,
- Alexandru Elisei <alexandru.elisei@arm.com>,
- Christoffer Dall <christoffer.dall@arm.com>, Fuad Tabba <tabba@google.com>,
- linux-coco@lists.linux.dev,
- Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>,
- Shanker Donthineni <sdonthineni@nvidia.com>, Alper Gun
- <alpergun@google.com>, "Aneesh Kumar K . V" <aneesh.kumar@kernel.org>
-References: <20250213161426.102987-1-steven.price@arm.com>
- <20250213161426.102987-21-steven.price@arm.com>
+Subject: Re: [RFC v2 7/9] khugepaged: add mTHP support
+To: Nico Pache <npache@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-mm@kvack.org, ryan.roberts@arm.com, anshuman.khandual@arm.com,
+ catalin.marinas@arm.com, cl@gentwo.org, vbabka@suse.cz, mhocko@suse.com,
+ apopple@nvidia.com, dave.hansen@linux.intel.com, will@kernel.org,
+ baohua@kernel.org, jack@suse.cz, srivatsa@csail.mit.edu,
+ haowenchao22@gmail.com, hughd@google.com, aneesh.kumar@kernel.org,
+ yang@os.amperecomputing.com, peterx@redhat.com, ioworker0@gmail.com,
+ wangkefeng.wang@huawei.com, ziy@nvidia.com, jglisse@google.com,
+ surenb@google.com, vishal.moola@gmail.com, zokeefe@google.com,
+ zhengqi.arch@bytedance.com, jhubbard@nvidia.com, 21cnbao@gmail.com,
+ willy@infradead.org, kirill.shutemov@linux.intel.com, david@redhat.com,
+ aarcange@redhat.com, raquini@redhat.com, sunnanyong@huawei.com,
+ usamaarif642@gmail.com, akpm@linux-foundation.org, rostedt@goodmis.org,
+ mathieu.desnoyers@efficios.com, tiwai@suse.de
+References: <20250211003028.213461-1-npache@redhat.com>
+ <20250211003028.213461-8-npache@redhat.com>
+ <a0cd24fe-b12c-40cd-a1d2-c1a3985dfdde@arm.com>
+ <CAA1CXcAuTVnj0Efc5e3NEtiKtRU7-UckdV8y6CYjOeha+SfKzQ@mail.gmail.com>
 Content-Language: en-US
-From: Gavin Shan <gshan@redhat.com>
-In-Reply-To: <20250213161426.102987-21-steven.price@arm.com>
+From: Dev Jain <dev.jain@arm.com>
+In-Reply-To: <CAA1CXcAuTVnj0Efc5e3NEtiKtRU7-UckdV8y6CYjOeha+SfKzQ@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 2/14/25 2:14 AM, Steven Price wrote:
-> The VMM needs to populate the realm with some data before starting (e.g.
-> a kernel and initrd). This is measured by the RMM and used as part of
-> the attestation later on.
+
+
+On 04/03/25 12:48 am, Nico Pache wrote:
+> On Mon, Feb 17, 2025 at 9:23 PM Dev Jain <dev.jain@arm.com> wrote:
+>>
+>>
+>>
+>> On 11/02/25 6:00 am, Nico Pache wrote:
+>>> Introduce the ability for khugepaged to collapse to different mTHP sizes.
+>>> While scanning a PMD range for potential collapse candidates, keep track
+>>> of pages in MIN_MTHP_ORDER chunks via a bitmap. Each bit represents a
+>>> utilized region of order MIN_MTHP_ORDER ptes. We remove the restriction
+>>> of max_ptes_none during the scan phase so we dont bailout early and miss
+>>> potential mTHP candidates.
+>>>
+>>> After the scan is complete we will perform binary recursion on the
+>>> bitmap to determine which mTHP size would be most efficient to collapse
+>>> to. max_ptes_none will be scaled by the attempted collapse order to
+>>> determine how full a THP must be to be eligible.
+>>>
+>>> If a mTHP collapse is attempted, but contains swapped out, or shared
+>>> pages, we dont perform the collapse.
+>>>
+>>> Signed-off-by: Nico Pache <npache@redhat.com>
+>>> ---
+>>>    mm/khugepaged.c | 122 ++++++++++++++++++++++++++++++++----------------
+>>>    1 file changed, 83 insertions(+), 39 deletions(-)
+>>>
+>>> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+>>> index c8048d9ec7fb..cd310989725b 100644
+>>> --- a/mm/khugepaged.c
+>>> +++ b/mm/khugepaged.c
+>>> @@ -1127,13 +1127,14 @@ static int collapse_huge_page(struct mm_struct *mm, unsigned long address,
+>>>    {
+>>>        LIST_HEAD(compound_pagelist);
+>>>        pmd_t *pmd, _pmd;
+>>> -     pte_t *pte;
+>>> +     pte_t *pte, mthp_pte;
+>>>        pgtable_t pgtable;
+>>>        struct folio *folio;
+>>>        spinlock_t *pmd_ptl, *pte_ptl;
+>>>        int result = SCAN_FAIL;
+>>>        struct vm_area_struct *vma;
+>>>        struct mmu_notifier_range range;
+>>> +     unsigned long _address = address + offset * PAGE_SIZE;
+>>>        VM_BUG_ON(address & ~HPAGE_PMD_MASK);
+>>>
+>>>        /*
+>>> @@ -1148,12 +1149,13 @@ static int collapse_huge_page(struct mm_struct *mm, unsigned long address,
+>>>                *mmap_locked = false;
+>>>        }
+>>>
+>>> -     result = alloc_charge_folio(&folio, mm, cc, HPAGE_PMD_ORDER);
+>>> +     result = alloc_charge_folio(&folio, mm, cc, order);
+>>>        if (result != SCAN_SUCCEED)
+>>>                goto out_nolock;
+>>>
+>>>        mmap_read_lock(mm);
+>>> -     result = hugepage_vma_revalidate(mm, address, true, &vma, cc, HPAGE_PMD_ORDER);
+>>> +     *mmap_locked = true;
+>>> +     result = hugepage_vma_revalidate(mm, address, true, &vma, cc, order);
+>>>        if (result != SCAN_SUCCEED) {
+>>>                mmap_read_unlock(mm);
+>>>                goto out_nolock;
+>>> @@ -1171,13 +1173,14 @@ static int collapse_huge_page(struct mm_struct *mm, unsigned long address,
+>>>                 * released when it fails. So we jump out_nolock directly in
+>>>                 * that case.  Continuing to collapse causes inconsistency.
+>>>                 */
+>>> -             result = __collapse_huge_page_swapin(mm, vma, address, pmd,
+>>> -                             referenced, HPAGE_PMD_ORDER);
+>>> +             result = __collapse_huge_page_swapin(mm, vma, _address, pmd,
+>>> +                             referenced, order);
+>>>                if (result != SCAN_SUCCEED)
+>>>                        goto out_nolock;
+>>>        }
+>>>
+>>>        mmap_read_unlock(mm);
+>>> +     *mmap_locked = false;
+>>>        /*
+>>>         * Prevent all access to pagetables with the exception of
+>>>         * gup_fast later handled by the ptep_clear_flush and the VM
+>>> @@ -1187,7 +1190,7 @@ static int collapse_huge_page(struct mm_struct *mm, unsigned long address,
+>>>         * mmap_lock.
+>>>         */
+>>>        mmap_write_lock(mm);
+>>> -     result = hugepage_vma_revalidate(mm, address, true, &vma, cc, HPAGE_PMD_ORDER);
+>>> +     result = hugepage_vma_revalidate(mm, address, true, &vma, cc, order);
+>>>        if (result != SCAN_SUCCEED)
+>>>                goto out_up_write;
+>>>        /* check if the pmd is still valid */
+>>> @@ -1198,11 +1201,12 @@ static int collapse_huge_page(struct mm_struct *mm, unsigned long address,
+>>>        vma_start_write(vma);
+>>>        anon_vma_lock_write(vma->anon_vma);
+>>>
+>>> -     mmu_notifier_range_init(&range, MMU_NOTIFY_CLEAR, 0, mm, address,
+>>> -                             address + HPAGE_PMD_SIZE);
+>>> +     mmu_notifier_range_init(&range, MMU_NOTIFY_CLEAR, 0, mm, _address,
+>>> +                             _address + (PAGE_SIZE << order));
+>>
+>> As I have mentioned before, since you are isolating the PTE table in
+>> both cases, you need to do the mmu_notifier_* stuff for HPAGE_PMD_SIZE
+>> in any case. Check out patch 8 from my patchset.
 > 
-> Co-developed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-> Signed-off-by: Steven Price <steven.price@arm.com>
-> ---
-> Changes since v6:
->   * Handle host potentially having a larger page size than the RMM
->     granule.
->   * Drop historic "par" (protected address range) from
->     populate_par_region() - it doesn't exist within the current
->     architecture.
->   * Add a cond_resched() call in kvm_populate_realm().
-> Changes since v5:
->   * Refactor to use PFNs rather than tracking struct page in
->     realm_create_protected_data_page().
->   * Pull changes from a later patch (in the v5 series) for accessing
->     pages from a guest memfd.
->   * Do the populate in chunks to avoid holding locks for too long and
->     triggering RCU stall warnings.
-> ---
->   arch/arm64/kvm/rme.c | 234 +++++++++++++++++++++++++++++++++++++++++++
->   1 file changed, 234 insertions(+)
+> Why do we need to invalidate the whole PMD if we are only changing a
+> section of it and no one can touch this memory?
+
+I confess I do not understand mmu_notifiers properly, but on a proper 
+look I guess you are correct; they are used to indicate to secondary 
+TLBs that the TLB entry is now stale for the corresponding pte. w.r.t 
+that you make sense, I just assumed that we are in a sense 
+"invalidating" the whole PMD region since we are isolating the PTE table.
+
+>>
+>>>        mmu_notifier_invalidate_range_start(&range);
+>>>
+>>>        pmd_ptl = pmd_lock(mm, pmd); /* probably unnecessary */
+>>> +
+>>>        /*
+>>>         * This removes any huge TLB entry from the CPU so we won't allow
+>>>         * huge and small TLB entries for the same virtual address to
+>>> @@ -1216,10 +1220,10 @@ static int collapse_huge_page(struct mm_struct *mm, unsigned long address,
+>>>        mmu_notifier_invalidate_range_end(&range);
+>>>        tlb_remove_table_sync_one();
+>>>
+>>> -     pte = pte_offset_map_lock(mm, &_pmd, address, &pte_ptl);
+>>> +     pte = pte_offset_map_lock(mm, &_pmd, _address, &pte_ptl);
+>>>        if (pte) {
+>>> -             result = __collapse_huge_page_isolate(vma, address, pte, cc,
+>>> -                                     &compound_pagelist, HPAGE_PMD_ORDER);
+>>> +             result = __collapse_huge_page_isolate(vma, _address, pte, cc,
+>>> +                                     &compound_pagelist, order);
+>>>                spin_unlock(pte_ptl);
+>>>        } else {
+>>>                result = SCAN_PMD_NULL;
+>>> @@ -1248,8 +1252,8 @@ static int collapse_huge_page(struct mm_struct *mm, unsigned long address,
+>>>        anon_vma_unlock_write(vma->anon_vma);
+>>>
+>>>        result = __collapse_huge_page_copy(pte, folio, pmd, _pmd,
+>>> -                                        vma, address, pte_ptl,
+>>> -                                        &compound_pagelist, HPAGE_PMD_ORDER);
+>>> +                                        vma, _address, pte_ptl,
+>>> +                                        &compound_pagelist, order);
+>>>        pte_unmap(pte);
+>>>        if (unlikely(result != SCAN_SUCCEED))
+>>>                goto out_up_write;
+>>> @@ -1260,20 +1264,37 @@ static int collapse_huge_page(struct mm_struct *mm, unsigned long address,
+>>>         * write.
+>>>         */
+>>>        __folio_mark_uptodate(folio);
+>>> -     pgtable = pmd_pgtable(_pmd);
+>>> -
+>>> -     _pmd = mk_huge_pmd(&folio->page, vma->vm_page_prot);
+>>> -     _pmd = maybe_pmd_mkwrite(pmd_mkdirty(_pmd), vma);
+>>> -
+>>> -     spin_lock(pmd_ptl);
+>>> -     BUG_ON(!pmd_none(*pmd));
+>>> -     folio_add_new_anon_rmap(folio, vma, address, RMAP_EXCLUSIVE);
+>>> -     folio_add_lru_vma(folio, vma);
+>>> -     pgtable_trans_huge_deposit(mm, pmd, pgtable);
+>>> -     set_pmd_at(mm, address, pmd, _pmd);
+>>> -     update_mmu_cache_pmd(vma, address, pmd);
+>>> -     deferred_split_folio(folio, false);
+>>> -     spin_unlock(pmd_ptl);
+>>
+>> My personal opinion is that this if-else nesting looks really weird.
+>> This is why I separated out mTHP collapse into a separate function.
+>>
+>>
+>>> +     if (order == HPAGE_PMD_ORDER) {
+>>> +             pgtable = pmd_pgtable(_pmd);
+>>> +             _pmd = mk_huge_pmd(&folio->page, vma->vm_page_prot);
+>>> +             _pmd = maybe_pmd_mkwrite(pmd_mkdirty(_pmd), vma);
+>>> +
+>>> +             spin_lock(pmd_ptl);
+>>> +             BUG_ON(!pmd_none(*pmd));
+>>> +             folio_add_new_anon_rmap(folio, vma, _address, RMAP_EXCLUSIVE);
+>>> +             folio_add_lru_vma(folio, vma);
+>>> +             pgtable_trans_huge_deposit(mm, pmd, pgtable);
+>>> +             set_pmd_at(mm, address, pmd, _pmd);
+>>> +             update_mmu_cache_pmd(vma, address, pmd);
+>>> +             deferred_split_folio(folio, false);
+>>> +             spin_unlock(pmd_ptl);
+>>> +     } else { //mTHP
+>>> +             mthp_pte = mk_pte(&folio->page, vma->vm_page_prot);
+>>> +             mthp_pte = maybe_mkwrite(pte_mkdirty(mthp_pte), vma);
+>>> +
+>>> +             spin_lock(pmd_ptl);
+>>> +             folio_ref_add(folio, (1 << order) - 1);
+>>> +             folio_add_new_anon_rmap(folio, vma, _address, RMAP_EXCLUSIVE);
+>>> +             folio_add_lru_vma(folio, vma);
+>>> +             spin_lock(pte_ptl);
+>>> +             set_ptes(vma->vm_mm, _address, pte, mthp_pte, (1 << order));
+>>> +             update_mmu_cache_range(NULL, vma, _address, pte, (1 << order));
+>>> +             spin_unlock(pte_ptl);
+>>> +             smp_wmb(); /* make pte visible before pmd */
+>>> +             pmd_populate(mm, pmd, pmd_pgtable(_pmd));
+>>> +             deferred_split_folio(folio, false);
+>>> +             spin_unlock(pmd_ptl);
+>>> +     }
+>>>
+>>>        folio = NULL;
+>>>
+>>> @@ -1353,21 +1374,27 @@ static int khugepaged_scan_pmd(struct mm_struct *mm,
+>>>    {
+>>>        pmd_t *pmd;
+>>>        pte_t *pte, *_pte;
+>>> +     int i;
+>>>        int result = SCAN_FAIL, referenced = 0;
+>>>        int none_or_zero = 0, shared = 0;
+>>>        struct page *page = NULL;
+>>>        struct folio *folio = NULL;
+>>>        unsigned long _address;
+>>> +     unsigned long enabled_orders;
+>>>        spinlock_t *ptl;
+>>>        int node = NUMA_NO_NODE, unmapped = 0;
+>>>        bool writable = false;
+>>> -
+>>> +     int chunk_none_count = 0;
+>>> +     int scaled_none = khugepaged_max_ptes_none >> (HPAGE_PMD_ORDER - MIN_MTHP_ORDER);
+>>> +     unsigned long tva_flags = cc->is_khugepaged ? TVA_ENFORCE_SYSFS : 0;
+>>>        VM_BUG_ON(address & ~HPAGE_PMD_MASK);
+>>>
+>>>        result = find_pmd_or_thp_or_none(mm, address, &pmd);
+>>>        if (result != SCAN_SUCCEED)
+>>>                goto out;
+>>>
+>>> +     bitmap_zero(cc->mthp_bitmap, MAX_MTHP_BITMAP_SIZE);
+>>> +     bitmap_zero(cc->mthp_bitmap_temp, MAX_MTHP_BITMAP_SIZE);
+>>>        memset(cc->node_load, 0, sizeof(cc->node_load));
+>>>        nodes_clear(cc->alloc_nmask);
+>>>        pte = pte_offset_map_lock(mm, pmd, address, &ptl);
+>>> @@ -1376,8 +1403,12 @@ static int khugepaged_scan_pmd(struct mm_struct *mm,
+>>>                goto out;
+>>>        }
+>>>
+>>> -     for (_address = address, _pte = pte; _pte < pte + HPAGE_PMD_NR;
+>>> -          _pte++, _address += PAGE_SIZE) {
+>>> +     for (i = 0; i < HPAGE_PMD_NR; i++) {
+>>> +             if (i % MIN_MTHP_NR == 0)
+>>> +                     chunk_none_count = 0;
+>>> +
+>>> +             _pte = pte + i;
+>>> +             _address = address + i * PAGE_SIZE;
+>>>                pte_t pteval = ptep_get(_pte);
+>>>                if (is_swap_pte(pteval)) {
+>>>                        ++unmapped;
+>>> @@ -1400,16 +1431,14 @@ static int khugepaged_scan_pmd(struct mm_struct *mm,
+>>>                        }
+>>>                }
+>>>                if (pte_none(pteval) || is_zero_pfn(pte_pfn(pteval))) {
+>>> +                     ++chunk_none_count;
+>>>                        ++none_or_zero;
+>>> -                     if (!userfaultfd_armed(vma) &&
+>>> -                         (!cc->is_khugepaged ||
+>>> -                          none_or_zero <= khugepaged_max_ptes_none)) {
+>>> -                             continue;
+>>> -                     } else {
+>>> +                     if (userfaultfd_armed(vma)) {
+>>>                                result = SCAN_EXCEED_NONE_PTE;
+>>>                                count_vm_event(THP_SCAN_EXCEED_NONE_PTE);
+>>>                                goto out_unmap;
+>>>                        }
+>>> +                     continue;
+>>>                }
+>>>                if (pte_uffd_wp(pteval)) {
+>>>                        /*
+>>> @@ -1500,7 +1529,16 @@ static int khugepaged_scan_pmd(struct mm_struct *mm,
+>>>                     folio_test_referenced(folio) || mmu_notifier_test_young(vma->vm_mm,
+>>>                                                                     address)))
+>>>                        referenced++;
+>>> +
+>>> +             /*
+>>> +              * we are reading in MIN_MTHP_NR page chunks. if there are no empty
+>>> +              * pages keep track of it in the bitmap for mTHP collapsing.
+>>> +              */
+>>> +             if (chunk_none_count < scaled_none &&
+>>> +                     (i + 1) % MIN_MTHP_NR == 0)
+>>> +                     bitmap_set(cc->mthp_bitmap, i / MIN_MTHP_NR, 1);
+>>>        }
+>>> +
+>>>        if (!writable) {
+>>>                result = SCAN_PAGE_RO;
+>>>        } else if (cc->is_khugepaged &&
+>>> @@ -1513,10 +1551,14 @@ static int khugepaged_scan_pmd(struct mm_struct *mm,
+>>>    out_unmap:
+>>>        pte_unmap_unlock(pte, ptl);
+>>>        if (result == SCAN_SUCCEED) {
+>>> -             result = collapse_huge_page(mm, address, referenced,
+>>> -                                         unmapped, cc, mmap_locked, HPAGE_PMD_ORDER, 0);
+>>> -             /* collapse_huge_page will return with the mmap_lock released */
+>>> -             *mmap_locked = false;
+>>> +             enabled_orders = thp_vma_allowable_orders(vma, vma->vm_flags,
+>>> +                     tva_flags, THP_ORDERS_ALL_ANON);
+>>> +             result = khugepaged_scan_bitmap(mm, address, referenced, unmapped, cc,
+>>> +                            mmap_locked, enabled_orders);
+>>> +             if (result > 0)
+>>> +                     result = SCAN_SUCCEED;
+>>> +             else
+>>> +                     result = SCAN_FAIL;
+>>>        }
+>>>    out:
+>>>        trace_mm_khugepaged_scan_pmd(mm, &folio->page, writable, referenced,
+>>> @@ -2476,11 +2518,13 @@ static int khugepaged_collapse_single_pmd(unsigned long addr, struct mm_struct *
+>>>                        fput(file);
+>>>                        if (result == SCAN_PTE_MAPPED_HUGEPAGE) {
+>>>                                mmap_read_lock(mm);
+>>> +                             *mmap_locked = true;
+>>>                                if (khugepaged_test_exit_or_disable(mm))
+>>>                                        goto end;
+>>>                                result = collapse_pte_mapped_thp(mm, addr,
+>>>                                                                 !cc->is_khugepaged);
+>>>                                mmap_read_unlock(mm);
+>>> +                             *mmap_locked = false;
+>>>                        }
+>>>                } else {
+>>>                        result = khugepaged_scan_pmd(mm, vma, addr,
+>>
 > 
-
-With the following comments addressed:
-
-Reviewed-by: Gavin Shan <gshan@redhat.com>
-
-> diff --git a/arch/arm64/kvm/rme.c b/arch/arm64/kvm/rme.c
-> index f965869e9ef7..7880894db722 100644
-> --- a/arch/arm64/kvm/rme.c
-> +++ b/arch/arm64/kvm/rme.c
-> @@ -624,6 +624,228 @@ void kvm_realm_unmap_range(struct kvm *kvm, unsigned long start, u64 size,
->   		realm_unmap_private_range(kvm, start, end);
->   }
->   
-> +static int realm_create_protected_data_granule(struct realm *realm,
-> +					       unsigned long ipa,
-> +					       phys_addr_t dst_phys,
-> +					       phys_addr_t src_phys,
-> +					       unsigned long flags)
-> +{
-> +	phys_addr_t rd = virt_to_phys(realm->rd);
-> +	int ret;
-> +
-> +	if (rmi_granule_delegate(dst_phys))
-> +		return -ENXIO;
-> +
-> +	ret = rmi_data_create(rd, dst_phys, ipa, src_phys, flags);
-> +	if (RMI_RETURN_STATUS(ret) == RMI_ERROR_RTT) {
-> +		/* Create missing RTTs and retry */
-> +		int level = RMI_RETURN_INDEX(ret);
-> +
-> +		WARN_ON(level == RMM_RTT_MAX_LEVEL);
-> +
-> +		ret = realm_create_rtt_levels(realm, ipa, level,
-> +					      RMM_RTT_MAX_LEVEL, NULL);
-> +		if (ret)
-> +			return -EIO;
-> +
-> +		ret = rmi_data_create(rd, dst_phys, ipa, src_phys, flags);
-> +	}
-> +	if (ret)
-> +		return -EIO;
-> +
-> +	return 0;
-> +}
-> +
-> +static int realm_create_protected_data_page(struct realm *realm,
-> +					    unsigned long ipa,
-> +					    kvm_pfn_t dst_pfn,
-> +					    kvm_pfn_t src_pfn,
-> +					    unsigned long flags)
-> +{
-> +	unsigned long rd = virt_to_phys(realm->rd);
-> +	phys_addr_t dst_phys, src_phys;
-> +	bool undelegate_failed = false;
-> +	int ret, offset;
-> +
-> +	dst_phys = __pfn_to_phys(dst_pfn);
-> +	src_phys = __pfn_to_phys(src_pfn);
-> +
-> +	for (offset = 0; offset < PAGE_SIZE; offset += RMM_PAGE_SIZE) {
-> +		ret = realm_create_protected_data_granule(realm,
-> +							  ipa,
-> +							  dst_phys,
-> +							  src_phys,
-> +							  flags);
-> +		if (ret)
-> +			goto err;
-> +
-> +		ipa += RMM_PAGE_SIZE;
-> +		dst_phys += RMM_PAGE_SIZE;
-> +		src_phys += RMM_PAGE_SIZE;
-> +	}
-> +
-> +	return 0;
-> +
-> +err:
-> +	if (ret == -EIO) {
-> +		/* current offset needs undelegating */
-> +		if (WARN_ON(rmi_granule_undelegate(dst_phys)))
-> +			undelegate_failed = true;
-> +	}
-> +	while (offset > 0) {
-> +		ipa -= RMM_PAGE_SIZE;
-> +		offset -= RMM_PAGE_SIZE;
-> +		dst_phys -= RMM_PAGE_SIZE;
-> +
-> +		rmi_data_destroy(rd, ipa, NULL, NULL);
-> +
-> +		if (WARN_ON(rmi_granule_undelegate(dst_phys)))
-> +			undelegate_failed = true;
-> +	}
-> +
-> +	if (undelegate_failed) {
-> +		/*
-> +		 * A granule could not be undelegated,
-> +		 * so the page has to be leaked
-> +		 */
-> +		get_page(pfn_to_page(dst_pfn));
-> +	}
-> +
-> +	return -ENXIO;
-> +}
-> +
-> +static int populate_region(struct kvm *kvm,
-> +			   phys_addr_t ipa_base,
-> +			   phys_addr_t ipa_end,
-> +			   unsigned long data_flags)
-> +{
-> +	struct realm *realm = &kvm->arch.realm;
-> +	struct kvm_memory_slot *memslot;
-> +	gfn_t base_gfn, end_gfn;
-> +	int idx;
-> +	phys_addr_t ipa;
-> +	int ret = 0;
-> +
-> +	base_gfn = gpa_to_gfn(ipa_base);
-> +	end_gfn = gpa_to_gfn(ipa_end);
-> +
-> +	idx = srcu_read_lock(&kvm->srcu);
-> +	memslot = gfn_to_memslot(kvm, base_gfn);
-> +	if (!memslot) {
-> +		ret = -EFAULT;
-> +		goto out;
-> +	}
-> +
-> +	/* We require the region to be contained within a single memslot */
-> +	if (memslot->base_gfn + memslot->npages < end_gfn) {
-> +		ret = -EINVAL;
-> +		goto out;
-> +	}
-> +
-> +	if (!kvm_slot_can_be_private(memslot)) {
-> +		ret = -EINVAL;
-		ret = -EPERM;
-
-> +		goto out;
-> +	}
-> +
-> +	write_lock(&kvm->mmu_lock);
-> +
-> +	ipa = ALIGN_DOWN(ipa_base, PAGE_SIZE);
-
-The aignment operation is unnecessary since the base/size are ensured
-to be aligned to PAGE_SIZE by its caller (kvm_populate_realm()).
-
-> +	while (ipa < ipa_end) {
-> +		struct vm_area_struct *vma;
-> +		unsigned long hva;
-> +		struct page *page;
-> +		bool writeable;
-> +		kvm_pfn_t pfn;
-> +		kvm_pfn_t priv_pfn;
-> +		struct page *gmem_page;
-> +
-> +		hva = gfn_to_hva_memslot(memslot, gpa_to_gfn(ipa));
-> +		vma = vma_lookup(current->mm, hva);
-> +		if (!vma) {
-> +			ret = -EFAULT;
-> +			break;
-> +		}
-> +
-> +		pfn = __kvm_faultin_pfn(memslot, gpa_to_gfn(ipa), FOLL_WRITE,
-> +					&writeable, &page);
-> +
-> +		if (is_error_pfn(pfn)) {
-> +			ret = -EFAULT;
-> +			break;
-> +		}
-> +
-> +		ret = kvm_gmem_get_pfn(kvm, memslot,
-> +				       ipa >> PAGE_SHIFT,
-> +				       &priv_pfn, &gmem_page, NULL);
-> +		if (ret)
-> +			break;
-> +
-> +		ret = realm_create_protected_data_page(realm, ipa,
-> +						       priv_pfn,
-> +						       pfn,
-> +						       data_flags);
-> +
-> +		kvm_release_faultin_page(kvm, page, false, false);
-> +
-> +		if (ret)
-> +			break;
-> +
-> +		ipa += PAGE_SIZE;
-> +	}
-> +
-> +	write_unlock(&kvm->mmu_lock);
-> +
-> +out:
-> +	srcu_read_unlock(&kvm->srcu, idx);
-> +	return ret;
-> +}
-> +
-> +static int kvm_populate_realm(struct kvm *kvm,
-> +			      struct arm_rme_populate_realm *args)
-> +{
-> +	phys_addr_t ipa_base, ipa_end;
-> +	unsigned long data_flags = 0;
-> +
-> +	if (kvm_realm_state(kvm) != REALM_STATE_NEW)
-> +		return -EINVAL;
-		return -EPERM;
-
-> +
-> +	if (!IS_ALIGNED(args->base, PAGE_SIZE) ||
-> +	    !IS_ALIGNED(args->size, PAGE_SIZE))
-> +		return -EINVAL;
-> +
-> +	if (args->flags & ~RMI_MEASURE_CONTENT)
-> +		return -EINVAL;
-
-It's perfect to combine those checks:
-
-	if (!IS_ALIGNED(...) ||
-	    !IS_ALIGNED(...) ||
-	    args->flags & ~RMI_MEASURE_CONTENT)
-		return -EINVAL;
-
-> +
-> +	ipa_base = args->base;
-> +	ipa_end = ipa_base + args->size;
-> +
-> +	if (ipa_end < ipa_base)
-> +		return -EINVAL;
-> +
-> +	if (args->flags & RMI_MEASURE_CONTENT)
-> +		data_flags |= RMI_MEASURE_CONTENT;
-> +
-> +	/*
-> +	 * Perform the populate in parts to ensure locks are not held for too
-> +	 * long
-> +	 */
-	
-s/populate/population ?
-
-> +	while (ipa_base < ipa_end) {
-> +		phys_addr_t end = min(ipa_end, ipa_base + SZ_2M);
-> +
-> +		int ret = populate_region(kvm, ipa_base, end,
-> +					  args->flags);
-> +
-> +		if (ret)
-> +			return ret;
-> +
-> +		ipa_base = end;
-> +
-> +		cond_resched();
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->   static int realm_set_ipa_state(struct kvm_vcpu *vcpu,
->   			       unsigned long start,
->   			       unsigned long end,
-> @@ -873,6 +1095,18 @@ int kvm_realm_enable_cap(struct kvm *kvm, struct kvm_enable_cap *cap)
->   		r = kvm_init_ipa_range_realm(kvm, &args);
->   		break;
->   	}
-> +	case KVM_CAP_ARM_RME_POPULATE_REALM: {
-> +		struct arm_rme_populate_realm args;
-> +		void __user *argp = u64_to_user_ptr(cap->args[1]);
-> +
-> +		if (copy_from_user(&args, argp, sizeof(args))) {
-> +			r = -EFAULT;
-> +			break;
-> +		}
-> +
-> +		r = kvm_populate_realm(kvm, &args);
-> +		break;
-> +	}
->   	default:
->   		r = -EINVAL;
->   		break;
-
-Thanks,
-Gavin
 
