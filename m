@@ -1,126 +1,126 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B0622C3773
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 16:58:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBA492C1545
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 16:59:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741107497; cv=none; b=XR1u8riDjke4jRAso2SsTDHtDM1YX4oteh22qE48mdqgsi2TiY3OiN6mx4AKdYB2HhLCHslNGx66jXZJXmCRMpZLQQ/ItPj4W+xMoRZj8FOhLlcY/ZZbqj8EUZ9EP8robuApYXD8aR7uhFDfsI6+zJlZW3naBO+y3JSWeqTVopM=
+	t=1741107564; cv=none; b=jNX2VlCyJbObIL3jba1pY0MyLQC7OTtEW4mxHKhBYTv8pzqxFbyFx1yHcwgLXJn+e8mLisqWJOBprOBJvdpZwwsXRUd75mJ1/Kqkk3sE1ye9HcqzS2n9S/SkoWVtwyflKgZ/t97I16LL2rKWmRMmQEDe6RWrZ+2J447/vf0Vxsk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741107497; c=relaxed/simple;
-	bh=xXx7LimoRaGxZZSbMjRDlhzEtcIeeTGSh9Q0GrBdkxw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Y7XGSfEE0c86+PhjItWHAMqHVvfPKiWTwamiws9zEQMKh5hp1GAA1D3RIj4qhnXyJ3POR6oUHVzTv51WtanJal+6id9fzc1MzIZ7c8XP1uI75t1EaaKvGtSbnkBMmI4IQp27LRtEHvaCsASg/VIX96/C3Wf1Ow0ASGNPXo/TxR0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=UUN9EUgK; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1741107564; c=relaxed/simple;
+	bh=NMceGXU1AayKIvYDDDytTT9zM6ePfplkGhj1Gwrp0Tc=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=mccJJ5+GmU3r6fM6budCpTtTPyQUGks42AB2K1oK7AQVKZCSXHPT+A24vSOgk53LP4ITxQsL+ea/eLkJMmk8581yrhoROTDxiZS+IwBRtJF8mW+Qe/xhL8zxsIKQKjy2C2YJQ+TDNmo4BzO9aptHrLPXg+A/LhRVmSoPej7LwSE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=xVzpIv8w; arc=none smtp.client-ip=209.85.214.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UUN9EUgK"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2232b12cd36so80740485ad.0
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Mar 2025 08:58:15 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="xVzpIv8w"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-223551ee0a3so135013255ad.1
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Mar 2025 08:59:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741107495; x=1741712295; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=JXuDlePk3z76NmB3njzb/zW9m0v0y70IIgcfh0HFsS0=;
-        b=UUN9EUgKHa0X/OazVwo0MsnuQd/ZuM4ngr/iEYWOl4u4n6hmkdrki7vTgoau7eWsbA
-         7trlWz8gJEmjjkWd8A8/JE30TAhXkJKWiUzUrA5H5P5Wv3g6/3OCK+FNYZXjR+Ui0UA2
-         Bsv3oEbuSoz+dwuLH6T5911/1VBPnIkROLmjSHbwv6WlYd6AlTJ5vdJQy271SHxjzt1d
-         468BzHSBE2Fdyqlb/woY/HdwwixCikGRclHe4uk9R69BNLpwWAEMOhz4suVlniGv0GZF
-         g2lAAP051Z9y8R+nDBoTAQE+2KiWcoGEwPwpNEhjDfZcLBD8xYv8nBmt1GgfRD6J/jnj
-         rQXw==
+        d=google.com; s=20230601; t=1741107562; x=1741712362; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=V7W7yQmf61Pq53pMS2vzrgU7eZq7ZkAtUnxQ4fLwZP8=;
+        b=xVzpIv8wKPzZufylkWP08Zk3L6PpAtcFJZqbK5fZWTOv6yzWtCz1OLqybZApjy6ZQ2
+         k2GZ1UrEtB9Rs8bxEXpyClDuHvAbnZIALZWxGlH9mV2iVrCW57deaINSsPlABGY0yJWQ
+         YHaMrxkB50e9C5nK/ZJ8zrPJxBSGQcp0jC7rsHotKUNBJ6YseLws9+xoJrCx9H2hLjZN
+         fbY6pA2XmiwM/36ztyZTla9TPDMyzTECE5ZXmnenjgYn3gP9CoXz/Z6SPnoxHSx/3PsA
+         Lv9rhuKNQX1xrJdYjNT9rHstlHTTsTcQAScduyhRfLJ4P3lJDu1w9D7dlh0w450BP9n9
+         10fg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741107495; x=1741712295;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=JXuDlePk3z76NmB3njzb/zW9m0v0y70IIgcfh0HFsS0=;
-        b=exF2BTtBxwOewOfq8xWci84fo5/Rf3Pr29GVJp28SEPq35IjzdTlIOIGDeveUQ9602
-         UfkeA4vavhyohNWhqTdbU9sCDsE8ktv2wfkV9Ys9McY63Rk1hxxXYVj2VGEtgO5pZI08
-         tGoFUBYIT3SXaOs1HYDGaeF6NMvawEjw7NuEUM2pXWuENKgGaPSYW/Otc2qF+9PFNsgJ
-         Z1oPfol1Ef8o7YbYSRjdIMD1z2GvrrOqfYxdmnrlwB40djGW7GTdOHBBOFmlPNDkSOsK
-         bVxEYkMF5fujbxGE9RDmH+g/Xj2qWnvJaUCQeslPm7Q3R/IHyuSvJDnb1916d4HNFIyK
-         KMxA==
-X-Forwarded-Encrypted: i=1; AJvYcCWVYwMqQ2lnEmhEC6Ly5C1l0QjUYSNbvYmwgk3ZWCsZBnBB6dMykwfKyZd2WkhPeeS/wN3nMEXviIQMjVU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxL3MzrZ/hMbzHr5anRYroAFEL6zZLOYmBIgdSG08lmtrrdO8Gn
-	cvB2eclkeQnGvycLNbbYFDrY3+3k0TZE0UHG/c5nmr2FZoAGDfo5R1g2ImU9nw==
-X-Gm-Gg: ASbGnctvl4FSqS1vZMWnU+29Hic3SVrsxZ5H7UB6RGZC3OFuVUOwebQrCiWUA/XITtZ
-	WID16WUhShda3YAggtLs+Gh0N10gf81HbBpOIHL6yVnDi4v7bPUyTw7SoNN8QgqnLUmBQ/G4gVz
-	5nDXtB6OyWVu9BefP0SEnZBjvQ8Q+X6fwDhFeb/lX3JJPnLiOrujUHat8WZ13mqg55lBZfuF/kG
-	Ow+W6DTc9waGQPJ6cfEAg3BlcP6XqHGkp6GFSgnaxbbabxEamnBIFaMXOkqh80xavNuU+JrFYev
-	nsUzg5++WJjFeNUJeB31xiSLGnVHEe8HFwrPmydChoawMHwEEgbfnLE=
-X-Google-Smtp-Source: AGHT+IGwnc/vs2CObgIuDM6UnQPGGyTdY/HL1MplDIozj/pFYdjiWAd6nq0u34IHMKPLJhyLx/VbEA==
-X-Received: by 2002:a05:6a00:66ce:b0:735:d89c:4b9f with SMTP id d2e1a72fcca58-735d89c4ee0mr21649526b3a.0.1741107495305;
-        Tue, 04 Mar 2025 08:58:15 -0800 (PST)
-Received: from thinkpad ([120.60.51.199])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7349fe2a5b1sm11112782b3a.23.2025.03.04.08.58.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Mar 2025 08:58:14 -0800 (PST)
-Date: Tue, 4 Mar 2025 22:28:08 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Jim Quinlan <james.quinlan@broadcom.com>
-Cc: linux-pci@vger.kernel.org, Nicolas Saenz Julienne <nsaenz@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-	Cyril Brulebois <kibi@debian.org>,
-	Stanimir Varbanov <svarbanov@suse.de>,
-	bcm-kernel-feedback-list@broadcom.com, jim2101024@gmail.com,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>,
-	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-rpi-kernel@lists.infradead.org>,
-	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>,
-	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 6/8] PCI: brcmstb: Use same constant table for config
- space access
-Message-ID: <20250304165808.t46fh6fwpardheup@thinkpad>
-References: <20250214173944.47506-1-james.quinlan@broadcom.com>
- <20250214173944.47506-7-james.quinlan@broadcom.com>
- <20250304150838.23ca5qbhm4yrpa3h@thinkpad>
- <CA+-6iNzOWU1qLfmSiThdYXX0v5RkbUYtf52yk6KXm6yDDNRUnw@mail.gmail.com>
+        d=1e100.net; s=20230601; t=1741107562; x=1741712362;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=V7W7yQmf61Pq53pMS2vzrgU7eZq7ZkAtUnxQ4fLwZP8=;
+        b=YL+lDBM0U2fvpehGQLn/D1lEE6CpWDsb4UrOWW2IaQfjYBq13Kwrb25q2PTYJy/3GQ
+         2tBjft00wh/IBKigI6clw4wgPtGApXjjPj2KsOll+ucTQWRsc4yzNAIQE3PFCuPgtfRg
+         Lx7EZ4QoE7wqhRD7Q3Ah5/4SuMhNk6hoM7hshAfQ8YjKy269HyV/C6QzXK3HtPIpUq+T
+         WX1qsld/OVqHM9jES1ntqEyCcRoKnEmUboC/ti38H14RbboHh/USDhZaAVEcIZ2PA4ud
+         De/G2PSBoug3N7o5V73NkVLXC331EO8sK8bQ7pLsgRc0iNWZEaYrvxGD2VCq3Q/9Ctqk
+         KV8A==
+X-Forwarded-Encrypted: i=1; AJvYcCVsoWpMFQ0Sio+ZSXlA9qkIg81TJ96VBsj5a7DKuoEv50qcbTTokeY6d3CeEm8WtEtQ23DGKgBOhtKwkWQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyWmCxc6xwwFRXwctyJsyPdVGVm9SvVE5E+HWDvYvDV0s+iVFTs
+	221KHa4S97i05u0WFx86CiSfca7uK4lhJPzjQppl7AmzZoUuOXErGNpXtzgZQPS7KUI07qGAK2k
+	fag==
+X-Google-Smtp-Source: AGHT+IHAFrEgPQdnRru2RpcA9ojFQVDAwMfLY/u9ofYMqa8EKlltfiiKVsKJDm4SpBm3Hx0wphR2ehXHeKw=
+X-Received: from plbju14.prod.google.com ([2002:a17:903:428e:b0:220:e84e:350c])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:3b83:b0:221:7955:64c3
+ with SMTP id d9443c01a7336-22368f9d123mr262199705ad.23.1741107562128; Tue, 04
+ Mar 2025 08:59:22 -0800 (PST)
+Date: Tue, 4 Mar 2025 08:59:20 -0800
+In-Reply-To: <9d04c204-cb9a-4109-977b-3d39b992c521@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CA+-6iNzOWU1qLfmSiThdYXX0v5RkbUYtf52yk6KXm6yDDNRUnw@mail.gmail.com>
+Mime-Version: 1.0
+References: <b494af0e-3441-48d4-abc8-df3d5c006935@suse.cz> <diqz8qplabre.fsf@ackerleytng-ctop.c.googlers.com>
+ <Z8cci0nNtwja8gyR@google.com> <9d04c204-cb9a-4109-977b-3d39b992c521@redhat.com>
+Message-ID: <Z8cxaGGoQ2163-R6@google.com>
+Subject: Re: [PATCH v6 4/5] KVM: guest_memfd: Enforce NUMA mempolicy using
+ shared policy
+From: Sean Christopherson <seanjc@google.com>
+To: David Hildenbrand <david@redhat.com>
+Cc: Ackerley Tng <ackerleytng@google.com>, Vlastimil Babka <vbabka@suse.cz>, shivankg@amd.com, 
+	akpm@linux-foundation.org, willy@infradead.org, pbonzini@redhat.com, 
+	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, kvm@vger.kernel.org, linux-coco@lists.linux.dev, 
+	chao.gao@intel.com, bharata@amd.com, nikunj@amd.com, michael.day@amd.com, 
+	Neeraj.Upadhyay@amd.com, thomas.lendacky@amd.com, michael.roth@amd.com, 
+	tabba@google.com
+Content-Type: text/plain; charset="us-ascii"
 
-On Tue, Mar 04, 2025 at 11:37:14AM -0500, Jim Quinlan wrote:
-> On Tue, Mar 4, 2025 at 10:08 AM Manivannan Sadhasivam
-> <manivannan.sadhasivam@linaro.org> wrote:
-> >
-> > On Fri, Feb 14, 2025 at 12:39:34PM -0500, Jim Quinlan wrote:
-> > > The constants EXT_CFG_DATA and EXT_CFG_INDEX vary by SOC. One of the
-> > > map_bus methods used these constants, the other used different constants.
-> > > Fortunately there was no problem because the SoCs that used the latter
-> > > map_bus method all had the same register constants.
-> > >
-> > > Remove the redundant constants and adjust the code to use them.  In
-> > > addition, update EXT_CFG_DATA to use the 4k-page based config space access
-> > > system, which is what the second map_bus method was already using.
-> > >
-> >
-> > What is the effect of this change? Why is it required? Sounds like it got
-> > sneaked in.
+On Tue, Mar 04, 2025, David Hildenbrand wrote:
+> On 04.03.25 16:30, Sean Christopherson wrote:
+> > On Tue, Mar 04, 2025, Ackerley Tng wrote:
+> > > Vlastimil Babka <vbabka@suse.cz> writes:
+> > > > > struct shared_policy should be stored on the inode rather than the file,
+> > > > > since the memory policy is a property of the memory (struct inode),
+> > > > > rather than a property of how the memory is used for a given VM (struct
+> > > > > file).
+> > > > 
+> > > > That makes sense. AFAICS shmem also uses inodes to store policy.
+> > > > 
+> > > > > When the shared_policy is stored on the inode, intra-host migration [1]
+> > > > > will work correctly, since the while the inode will be transferred from
+> > > > > one VM (struct kvm) to another, the file (a VM's view/bindings of the
+> > > > > memory) will be recreated for the new VM.
+> > > > > 
+> > > > > I'm thinking of having a patch like this [2] to introduce inodes.
+> > > > 
+> > > > shmem has it easier by already having inodes
+> > > > 
+> > > > > With this, we shouldn't need to pass file pointers instead of inode
+> > > > > pointers.
+> > > > 
+> > > > Any downsides, besides more work needed? Or is it feasible to do it using
+> > > > files now and convert to inodes later?
+> > > > 
+> > > > Feels like something that must have been discussed already, but I don't
+> > > > recall specifics.
+> > > 
+> > > Here's where Sean described file vs inode: "The inode is effectively the
+> > > raw underlying physical storage, while the file is the VM's view of that
+> > > storage." [1].
+> > > 
+> > > I guess you're right that for now there is little distinction between
+> > > file and inode and using file should be feasible, but I feel that this
+> > > dilutes the original intent.
+> > 
+> > Hmm, and using the file would be actively problematic at some point.  One could
+> > argue that NUMA policy is property of the VM accessing the memory, i.e. that two
+> > VMs mapping the same guest_memfd could want different policies.  But in practice,
+> > that would allow for conflicting requirements, e.g. different policies in each
+> > VM for the same chunk of memory, and would likely lead to surprising behavior due
+> > to having to manually do mbind() for every VM/file view.
 > 
-> Hello,
-> There is no functional difference with this commit -- the code will
-> behave the same.  A previous commit set up the "EXT_CFG_DATA" and
-> "EXT_CFG_INDEX" constants in the offset table but one of the map_bus()
-> methods did not use them, instead it relied on old generic #define
-> constants.  This commit uses them and gets rid of the old #defines.
-> 
+> I think that's the same behavior with shmem? I mean, if you have two people
+> asking for different things for the same MAP_SHARE file range, surprises are
+> unavoidable.
 
-My comment was about the change that modified the offset of EXT_CFG_DATA. This
-was not justified properly.
-
-- Mani
-
--- 
-மணிவண்ணன் சதாசிவம்
+Yeah, I was specifically thinking of the case where a secondary mapping doesn't
+do mbind() at all, e.g. could end up effectively polluting guest_memfd with "bad"
+allocations.
