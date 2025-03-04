@@ -1,123 +1,87 @@
-Received: from fout-b7-smtp.messagingengine.com (fout-b7-smtp.messagingengine.com [202.12.124.150])
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D3B327CCEF;
-	Tue,  4 Mar 2025 14:54:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.150
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8174720DD4C;
+	Tue,  4 Mar 2025 14:55:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741100098; cv=none; b=n4huGt5Jm7q08A6Iivf/iRUYhNOWZB0VHDG0trzZbdbFhq+qkggMjXNUzCAGytpDDrrDg8Lhhkgy2AedBrTFdF7MmC5xdBZRQb6TthxNkQaFMoDmCXfKubCOVlrk8CECmFdbisztsBlKKpkeS4sAU9zSLhHAH1j9baxjq/JPcyw=
+	t=1741100106; cv=none; b=A7YpTux/m9z2ePfWVY14hGIVKMHir1zKw8WrFZge+ZfAYVz8atXP6lfbvBnoQbuq7sptSN/EdypSUK1L6IFTMplWaDqErbqC5OCxPUginW1uE/yPDauNqBFtW+a54BvMw/TDxgrdTQczJ76zMBbTRrB2oq3GDnj8zH7b1glZvlc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741100098; c=relaxed/simple;
-	bh=SOmsv57xosOfo9Yhjd9h2fMWjPgtkmaO1MKNSucdFJc=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=s1UocSFpBRRSt2OAHmDhicCj8GPQ6xBVKQmFAQ2vWPgwxOmw6KcW8Idy3zyhEWYuLMW4Lr5aXdzG1osIoVTdFra51GnQo/dRgK/W0sSKlTH59EZTDMi7Oi3ghQul1W28BFw66P4aLs079mUu42+Rh4JXr3WeUXW/Tr5P7sOrT8Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=bADCX+fW; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=qbCw/KiU; arc=none smtp.client-ip=202.12.124.150
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1741100106; c=relaxed/simple;
+	bh=6sXLqOGwJPjjQ1mrwjcKafFgt74IfGmcKaUYu1Vea1Y=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=KpuRLzJFAPlZRIH3Nx2wc+6QXQPteO3vUu6lM7GqxkdQiItrqakn0C90Zca2p0nLTC6F6xiVuVpyfEzLig4XaN5jjwlk1UAML97D9zptJ74INCTQDYVPO0dRlntNYfuduEGCxmoSLvsUOvxekfhApOzzLW+e06afy7uXANb38X4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=HsBac2XW; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="bADCX+fW";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="qbCw/KiU"
-Received: from phl-compute-09.internal (phl-compute-09.phl.internal [10.202.2.49])
-	by mailfout.stl.internal (Postfix) with ESMTP id 2F96011400E9;
-	Tue,  4 Mar 2025 09:54:55 -0500 (EST)
-Received: from phl-imap-11 ([10.202.2.101])
-  by phl-compute-09.internal (MEProxy); Tue, 04 Mar 2025 09:54:55 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1741100095;
-	 x=1741186495; bh=NIjHXQqJ/X6NgY/8tEc8s1i/m83G8SEan7lIojIImsE=; b=
-	bADCX+fWtumpWO0Q9G3irDmZ6yOvJtvyLnMHI2E4bxAmshvuK3sJ9piapcAO7L5q
-	6tNpX2+URpe3xqKOOs9fppPDtk6rpapX2VWUxvO3J59rtqDgkxhpnMn3ClEpMJkG
-	y0+YoMCprj0t7J9PKYu2O1ru9sTxE+GjnwTMj8Gxl6WdWAETnrOVWVdEsdoek7Ha
-	rmZdrLxv2s7rSBZxQ1iM7wi/NgaCQRq/x9G2wO/t+h8Dwc25TMG2X+dx48u2bUyz
-	n/J5FbClWBUTmuuQJg2CjEmqPAgs5Zf9xYl6kmYRDQv0zTjnbkIi+0FH5srbCcJk
-	pzzbwtd16HOgkcG0IdaIPg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1741100095; x=
-	1741186495; bh=NIjHXQqJ/X6NgY/8tEc8s1i/m83G8SEan7lIojIImsE=; b=q
-	bCw/KiUsrJ6oZHJ/6yvVBUvYI1NDbpcEJ5p5LNvoRSXuWSHSQo55ydsfLapJr70J
-	i13YJV/6ozT3oVroR8Ryc6DqNwu67pPERAZdvQHqAQNhodHkvnZgYXEBstQXAgSV
-	eLZ4IoV4kC3+9+F5qAtlvzzmIPTvF9+2gt5o8/MzqWBqY6VuI3FRUUHTgM62fHP5
-	qLSRYQ89mnIyKY+lr1KZ6Q0euq+kGJaVnw/KRFlbOAl9EnUEx8J67cj4JTUo/vWC
-	oFzX7o53wPvQdl2URJ5bVErgXsWCZSahQugsfVQ5ZmlrRZJtVnWCs2Vu4sK3CYUX
-	eG8BfYfSKQiwFrxOAyRbw==
-X-ME-Sender: <xms:PRTHZ88fNJddVeftWP-vWDqejeanhCo5vvTjZbHaixmzNGARsEbTEg>
-    <xme:PRTHZ0uhj1JArlYL9b9zcmE7Rq-ORv0ctzbgsR7hHo3bLniAJxp6j0ABq1u9k_-U0
-    9p4HTPVKWSfH5QVZ64>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddutddvfeegucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertder
-    tddtnecuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnug
-    gsrdguvgeqnecuggftrfgrthhtvghrnhephfdthfdvtdefhedukeetgefggffhjeeggeet
-    fefggfevudegudevledvkefhvdeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
-    hmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohep
-    ledpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepjhhoshhhsehjohhshhhurghgrh
-    hishhhrghmrdgtohhmpdhrtghpthhtoheprghrnhgusehkvghrnhgvlhdrohhrghdprhgt
-    phhtthhopehsihhmohhnthesohhpvghnshhouhhrtggvrdgtihhrrhhushdrtghomhdprh
-    gtphhtthhopehpvghrvgigsehpvghrvgigrdgtiidprhgtphhtthhopehkrghilhgrnhhg
-    sehrvggrlhhtvghkrdgtohhmpdhrtghpthhtohepthhifigrihesshhushgvrdgtohhmpd
-    hrtghpthhtohepthhifigrihesshhushgvrdguvgdprhgtphhtthhopehlihhnuhigqdhk
-    vghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqd
-    hsohhunhgusehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:PhTHZyBnleRBThoIgOa87cdaUXxtu3v2sleyySotxhbrgSWR3UeSBA>
-    <xmx:PhTHZ8cUp6TjIPdMc9tiw0OyKSqbf54OKi2FYeNRM8hUoBuvThhN1Q>
-    <xmx:PhTHZxNnhi0bjXktsopkm9S5SaUCXwLzZuTusnGpWyx359-HWmR6Pg>
-    <xmx:PhTHZ2mRPyPSajQ-YlIcFTlU4eoWfp6sEgsIMGqWr536unoa5L9R9w>
-    <xmx:PxTHZ6hX7CbmFByp2uPfFav6F-W5SsF7J77RYMQFmKeoNTzaTGY2IBIC>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id E15D32220072; Tue,  4 Mar 2025 09:54:53 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="HsBac2XW"
+Received: from [127.0.0.1] ([76.133.66.138])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 524Eqsmu2303478
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Tue, 4 Mar 2025 06:52:55 -0800
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 524Eqsmu2303478
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025021701; t=1741099977;
+	bh=6sXLqOGwJPjjQ1mrwjcKafFgt74IfGmcKaUYu1Vea1Y=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=HsBac2XWWG8JTb5veE6LuaAtOLLvQu+vBFWgoKJItDg2FR2nOr9Ue8lryfQJFNb5X
+	 ojvI2P5MCIyrjDnZDpX41nGdlho2yRe4glo+hru+12GUQ7NBtdvcBedZZUsuJAWMmd
+	 N1yfFPWJ9WTY4SudzJVAuXk+ooFW+J2KOOkX3rNtdkndtmyJKXCfOOPoNoEFrEvYyS
+	 l+SyUMQ+mbWmrFpz4qKD1NBiUxnxzQF3eOYkhvJKEwllwoiSYqGIWHFHl+eS6oQqxV
+	 mHa7p//gFjY/UXuPZ99CFf8KpquSyK6rWISD0Qpt03vNg4h+TUDKnvTetXzksGMPfD
+	 /cUCOphcQnqWw==
+Date: Tue, 04 Mar 2025 06:52:53 -0800
+From: "H. Peter Anvin" <hpa@zytor.com>
+To: Peter Zijlstra <peterz@infradead.org>,
+        Menglong Dong <menglong8.dong@gmail.com>
+CC: rostedt@goodmis.org, mark.rutland@arm.com, alexei.starovoitov@gmail.com,
+        catalin.marinas@arm.com, will@kernel.org, mhiramat@kernel.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, ast@kernel.org,
+        daniel@iogearbox.net, andrii@kernel.org, martin.lau@linux.dev,
+        eddyz87@gmail.com, yonghong.song@linux.dev, john.fastabend@gmail.com,
+        kpsingh@kernel.org, sdf@fomichev.me, jolsa@kernel.org,
+        davem@davemloft.net, dsahern@kernel.org,
+        mathieu.desnoyers@efficios.com, nathan@kernel.org,
+        nick.desaulniers+lkml@gmail.com, morbo@google.com,
+        samitolvanen@google.com, kees@kernel.org, dongml2@chinatelecom.cn,
+        akpm@linux-foundation.org, riel@surriel.com, rppt@kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        netdev@vger.kernel.org, llvm@lists.linux.dev
+Subject: Re: [PATCH v4 1/4] x86/ibt: factor out cfi and fineibt offset
+User-Agent: K-9 Mail for Android
+In-Reply-To: <20250304094220.GC11590@noisy.programming.kicks-ass.net>
+References: <20250303132837.498938-1-dongml2@chinatelecom.cn> <20250303132837.498938-2-dongml2@chinatelecom.cn> <20250303165454.GB11590@noisy.programming.kicks-ass.net> <CADxym3aVtKx_mh7aZyZfk27gEiA_TX6VSAvtK+YDNBtuk_HigA@mail.gmail.com> <20250304053853.GA7099@noisy.programming.kicks-ass.net> <20250304061635.GA29480@noisy.programming.kicks-ass.net> <CADxym3bS_6jpGC3vLAAyD20GsR+QZofQw0_GgKT8nN3c-HqG-g@mail.gmail.com> <20250304094220.GC11590@noisy.programming.kicks-ass.net>
+Message-ID: <6F9EF5C3-4CAE-4C5E-B70E-F73462AC7CA0@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Tue, 04 Mar 2025 15:54:33 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Takashi Iwai" <tiwai@suse.de>, "Arnd Bergmann" <arnd@kernel.org>
-Cc: "Jaroslav Kysela" <perex@perex.cz>, "Takashi Iwai" <tiwai@suse.com>,
- "Kailang Yang" <kailang@realtek.com>,
- "Simon Trimmer" <simont@opensource.cirrus.com>,
- "Joshua Grisham" <josh@joshuagrisham.com>, linux-sound@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Message-Id: <94b39ea3-bc29-49f0-bd34-eec45d61ff1b@app.fastmail.com>
-In-Reply-To: <87tt88oo05.wl-tiwai@suse.de>
-References: <20250304142620.582191-1-arnd@kernel.org>
- <87tt88oo05.wl-tiwai@suse.de>
-Subject: Re: [PATCH] snd: hda: realtek: fix incorrect IS_REACHABLE() usage
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Mar 4, 2025, at 15:43, Takashi Iwai wrote:
-> On Tue, 04 Mar 2025 15:25:55 +0100,
+On March 4, 2025 1:42:20 AM PST, Peter Zijlstra <peterz@infradead=2Eorg> wr=
+ote:
+>On Tue, Mar 04, 2025 at 03:47:45PM +0800, Menglong Dong wrote:
+>> We don't have to select FUNCTION_ALIGNMENT_32B, so the
+>> worst case is to increase ~2=2E2%=2E
+>>=20
+>> What do you think?
 >
-> Thanks for the patch.  Indeed it's a very corner case, but I still
-> hesitate to add a kconfig dependency.  Can we take an alternative fix
-> to define the proper dummy functions like below instead?
+>Well, since I don't understand what you need this for at all, I'm firmly
+>on the side of not doing this=2E
+>
+>What actual problem is being solved with this meta data nonsense? Why is
+>it worth blowing up our I$ footprint over=2E
+>
+>Also note, that if you're going to be explaining this, start from
+>scratch, as I have absolutely 0 clues about BPF and such=2E
 
-I'm sure that works, and I had considered something like that,
-but I really dislike the IS_REACHABLE() use because I think it
-causes more problems than it solves. (I introduced the macro
-originally but regret that).
-
-Note that the only way to disable input is to have manually flip
-CONFIG_EXPERT and CONFIG_TTY as well as the major GPU drivers
-that select it:
-
-config INPUT
-        tristate "Generic input layer (needed for keyboard, mouse, ...)" if EXPERT
-        default y
-
-so in the end, there is very little difference between
-your patch and mine, as they both fix build testing on
-randconfig.
-
-    Arnd
+I would appreciate such information as well=2E The idea seems dubious on t=
+he surface=2E
