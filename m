@@ -1,128 +1,109 @@
-Received: from fout-a7-smtp.messagingengine.com (fout-a7-smtp.messagingengine.com [103.168.172.150])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AE5A1F7580;
-	Tue,  4 Mar 2025 08:24:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.150
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BD6811FBCA1
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 08:25:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741076701; cv=none; b=GW/JBEnYu/76g5hSWIxsP0RVC4SOVEruSlOVihPQqZB/Dq2UUHsZWGG0bGtJHl8r1XJpj3MQewtdzsQsOO4dEv1UpoojYR8HEl3ZpWAa5+nOfQ34VeXE45+ze1H9O/9L7SMyGbz+XkP/5iL2IvSmTs0426Z6xk8e2ahbw+Bh2Pg=
+	t=1741076718; cv=none; b=Iv0053RkY+0Q9pJoXWcBIEjElnNdyyM2JRjtgbB7l9uWp5ZInmPrJlXy7mhRvVMJ/bzjpv2N/lA2qPNILW3UlleTrd+LPRWdWEz/s1920OztrFQMTE2cPyCrH8NO6Sc9H1NjcsTyj5iuA3S0q2IzXkfjKqhhqZbGoetY9birhLU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741076701; c=relaxed/simple;
-	bh=Y27aUZUPxKEH7unyFscw2X5BcFy8avKpTq7I1tRtmds=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=EHy1ay+x3+qGHY8obkU41y7UJFZl/aAhwnjOGRZd6p18yB76Azw8K7LFqTa1gioZL7th2JC3yxfN1fpsOnnQBLK/tDA0eMX9Xnxp3JKrA1pTvMBqffJaV0T8FKaI8TL8unNl2X5FhXBi1UTR56a+IUdXxsNk3laD9ffZH9pGEB4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=NUq8Bkte; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=xl53Kcz7; arc=none smtp.client-ip=103.168.172.150
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="NUq8Bkte";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="xl53Kcz7"
-Received: from phl-compute-09.internal (phl-compute-09.phl.internal [10.202.2.49])
-	by mailfout.phl.internal (Postfix) with ESMTP id 3755A138271B;
-	Tue,  4 Mar 2025 03:24:57 -0500 (EST)
-Received: from phl-imap-11 ([10.202.2.101])
-  by phl-compute-09.internal (MEProxy); Tue, 04 Mar 2025 03:24:57 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1741076697;
-	 x=1741163097; bh=zM8W7tdbTUdh4T3yYERRBHG5NlNdx6XcKTrnIct3zRg=; b=
-	NUq8BkteQO6SDuLIORjsSkvajlvhU0vmiYacEBWhSW03bgh650C3v0bWKr5s46Td
-	riWSiSr0oA8W18I3RoDBz8CPAHAkyUy7yEMDGasexuzv+Ycky3MnIBGB+k33c1nw
-	nmkQ01VFlBTOfAlWhJh1IkurVsumBzOLe9LnvC/tIqix95bQBamre4ja7OdKnq9N
-	mIqKikbutblaiAgDLTuPNF2dAKHScNfnbLaa1or3d9xnbhc8ZSUoVvcbiLlo7kIb
-	mnHXXJDYdaRhl83XYWEpHjLaLTTOZj7be4UzShhBuHYlrk6PSbJXGkQBS9sB+VQv
-	FQABJrie9F0CutJk+bTR0w==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1741076697; x=
-	1741163097; bh=zM8W7tdbTUdh4T3yYERRBHG5NlNdx6XcKTrnIct3zRg=; b=x
-	l53Kcz7eoJFaWQ3J80H/MML1fxGTcZZVNXX6xkWLLDQc4Lmaw3N/mxQiO5vG2xRQ
-	AbF3v6GkKXcrfDs07L9QY0QfXUS86yTwVu1iy7Vvj3co519RCBsudtCAMG7xfDS1
-	yesQIgiG8Al68a3NzBAgB+1doLcgKSEv9c4wPesA5Eq7xP2bTr2iFY7NUEyz4rJt
-	iq1tp4C6z9uOiAz3DVYvdjMaAc91lceHrhRVnrHq8kRICJ2RONPEns4d8j1nlj1G
-	1dzhrvF0+U1RqlIaDU2klIdiTpFKpmE/YrgcWrpNQ12evxJ27xAZ3bD+IJRJJgKC
-	a9QtpDfwr7r6LSlqU1TVA==
-X-ME-Sender: <xms:2LjGZ2lX9OfR4lGZuLLRFZg7KDUv9_hRnViHfTziVrX3m07gNPsP3w>
-    <xme:2LjGZ92pUzSj-Ya5NUmKCsML3ldN90dsm3icq5Enp85JAb8Dgo4O-K726OPeQ6jtq
-    3R6P0iV0_XP-4Pexr0>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddutdduheegucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertder
-    tddtnecuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnug
-    gsrdguvgeqnecuggftrfgrthhtvghrnhephfdthfdvtdefhedukeetgefggffhjeeggeet
-    fefggfevudegudevledvkefhvdeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
-    hmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohep
-    udelpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopegurghvvghmsegurghvvghmlh
-    hofhhtrdhnvghtpdhrtghpthhtohepjhhonhgrthhhrghnrdhlvghmohhnsehgmhgrihhl
-    rdgtohhmpdhrtghpthhtoheprhhitghhrghruggtohgthhhrrghnsehgmhgrihhlrdgtoh
-    hmpdhrtghpthhtohepvgguuhhmrgiivghtsehgohhoghhlvgdrtghomhdprhgtphhtthho
-    pehtihgrnhhfvghirdiihhgrnhhgsehinhhtvghlrdgtohhmpdhrtghpthhtoheprghrnh
-    gusehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkuhgsrgeskhgvrhhnvghlrdhorhhg
-    pdhrtghpthhtohepthhhohhmrghsrdifvghishhsshgthhhuhheslhhinhhuthhrohhnih
-    igrdguvgdprhgtphhtthhopehvrgguihhmrdhfvgguohhrvghnkhhosehlihhnuhigrdgu
-    vghv
-X-ME-Proxy: <xmx:2LjGZ0o5WKeDUjYeoVcADYBT1YDKDZrZMuwPclwev2XUMqDqG5_C7Q>
-    <xmx:2LjGZ6lMJMUzvr9YtGi3OE6Aoen1JeNiEGUZ6pWqfW6_9uNCsWxcHA>
-    <xmx:2LjGZ00-ZAOpXYzNNzMAdFkk56eWG7NSDp5nwVwHwh6ujX7mxIxZNw>
-    <xmx:2LjGZxtRijeuEEYADWPTTa007tr36CMAFgbpXtJ4ipsNvinR8QLJwg>
-    <xmx:2bjGZ7uvsRHe2_21oQ-V2KHV9q2qGTbCMXAvb9jx2m2DyDUA8JruI20p>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 29A7C2220072; Tue,  4 Mar 2025 03:24:56 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=arc-20240116; t=1741076718; c=relaxed/simple;
+	bh=togOrjhO7oN1fgPiaw6Ef3qgBVgHc4Hv5BClWtBVcS4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uLX6a+446/2VlWvy+ERr4wsz8SOFzMIdpRlpLoduCgQf/WwmyOhW+BYw2hSuGdyaIBub7wb86xrJtIr+2uXg3nkOonz75AHuURJsw1MFrAgXA346w5JVcmdd/u6KsIbOblqFvrtB4psCSszYxbc/IwF0LLHuNAK218uhxWS6k94=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 634871063;
+	Tue,  4 Mar 2025 00:25:27 -0800 (PST)
+Received: from [10.34.129.29] (unknown [10.34.129.29])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A5ACD3F66E;
+	Tue,  4 Mar 2025 00:25:08 -0800 (PST)
+Message-ID: <2fdea4f6-db98-4dc7-947f-e19ee54d2c3c@arm.com>
+Date: Tue, 4 Mar 2025 09:25:02 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Tue, 04 Mar 2025 09:24:35 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Richard Cochran" <richardcochran@gmail.com>,
- "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>
-Cc: "Arnd Bergmann" <arnd@kernel.org>,
- =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
- "Andrew Lunn" <andrew+netdev@lunn.ch>,
- "David S . Miller" <davem@davemloft.net>,
- "Eric Dumazet" <edumazet@google.com>, "Jakub Kicinski" <kuba@kernel.org>,
- "Paolo Abeni" <pabeni@redhat.com>, "Tianfei Zhang" <tianfei.zhang@intel.com>,
- "Jonathan Lemon" <jonathan.lemon@gmail.com>,
- "Vadim Fedorenko" <vadim.fedorenko@linux.dev>,
- "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
- =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>,
- "Calvin Owens" <calvin@wbinvd.org>, "Philipp Stanner" <pstanner@redhat.com>,
- Netdev <netdev@vger.kernel.org>, linux-kernel@vger.kernel.org,
- linux-fpga@vger.kernel.org
-Message-Id: <7fd3c712-4c31-435c-80c1-1e042c9b5999@app.fastmail.com>
-In-Reply-To: <Z8Z87mkuRqE6VOTy@hoboy.vegasvil.org>
-References: <20250227141749.3767032-1-arnd@kernel.org>
- <Z8CDhIN5vhcSm1ge@smile.fi.intel.com> <Z8TFrPv1oajA3H4V@hoboy.vegasvil.org>
- <Z8VfKYMGEKhvluJV@smile.fi.intel.com> <Z8Z87mkuRqE6VOTy@hoboy.vegasvil.org>
-Subject: Re: [PATCH] RFC: ptp: add comment about register access race
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v11 3/4] arm64: topology: Support SMT control on ACPI
+ based system
+To: Yicong Yang <yangyicong@huawei.com>, Sudeep Holla <sudeep.holla@arm.com>
+Cc: yangyicong@hisilicon.com, catalin.marinas@arm.com, will@kernel.org,
+ tglx@linutronix.de, peterz@infradead.org, mpe@ellerman.id.au,
+ linux-arm-kernel@lists.infradead.org, mingo@redhat.com, bp@alien8.de,
+ dave.hansen@linux.intel.com, dietmar.eggemann@arm.com,
+ linuxppc-dev@lists.ozlabs.org, x86@kernel.org, linux-kernel@vger.kernel.org,
+ morten.rasmussen@arm.com, msuchanek@suse.de, gregkh@linuxfoundation.org,
+ rafael@kernel.org, jonathan.cameron@huawei.com, prime.zeng@hisilicon.com,
+ linuxarm@huawei.com, xuwei5@huawei.com, guohanjun@huawei.com,
+ sshegde@linux.ibm.com
+References: <20250218141018.18082-1-yangyicong@huawei.com>
+ <20250218141018.18082-4-yangyicong@huawei.com> <Z8HAkZiHYRjj97M7@bogus>
+ <336e9c4e-cd9c-4449-ba7b-60ee8774115d@arm.com>
+ <20250228190641.q23vd53aaw42tcdi@bogus>
+ <a52972c7-aadd-4a77-a292-057fa5f8372d@arm.com> <Z8WPiOweOjFZqTwN@bogus>
+ <32e572d6-dedd-d8a3-13be-6de02303a64d@huawei.com>
+Content-Language: en-US
+From: Pierre Gondois <pierre.gondois@arm.com>
+In-Reply-To: <32e572d6-dedd-d8a3-13be-6de02303a64d@huawei.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On Tue, Mar 4, 2025, at 05:09, Richard Cochran wrote:
-> On Mon, Mar 03, 2025 at 09:50:01AM +0200, Andy Shevchenko wrote:
->> Perhaps it's still good to have a comment, but rephrase it that the code is
->> questionable depending on the HW behaviour that needs to be checked.
->
-> IIRC both ixp4xx and the PCH are the same design and latch high reg on
-> read of low.
 
-Ok, if that's a common thing, let's assume that the drivers are
-all correct for the respective hardware and discard my patch.
 
-With the patch I have queued up in the asm-generic tree, the
-behavior changes so ioread64_lo_hi() no longer gets turned
-into a single 64-bit access, and that is then more likely to
-be correct for both 32-bit and 64-bit architectures in case the
-device doesn't actually implement 64-bit transactions but does
-correctly latch the contents.
+On 3/3/25 15:40, Yicong Yang wrote:
+> On 2025/3/3 19:16, Sudeep Holla wrote:
+>> On Mon, Mar 03, 2025 at 10:56:12AM +0100, Pierre Gondois wrote:
+>>> On 2/28/25 20:06, Sudeep Holla wrote:
+>>>>>>
+>>>>>> Ditto as previous patch, can get rid if it is default 1.
+>>>>>>
+>>>>>
+>>>>> On non-SMT platforms, not calling cpu_smt_set_num_threads() leaves
+>>>>> cpu_smt_num_threads uninitialized to UINT_MAX:
+>>>>>
+>>>>> smt/active:0
+>>>>> smt/control:-1
+>>>>>
+>>>>> If cpu_smt_set_num_threads() is called:
+>>>>> active:0
+>>>>> control:notsupported
+>>>>>
+>>>>> So it might be slightly better to still initialize max_smt_thread_num.
+>>>>>
+>>>>
+>>>> Sure, what I meant is to have max_smt_thread_num set to 1 by default is
+>>>> that is what needed anyways and the above code does that now.
+>>>>
+>>>> Why not start with initialised to 1 instead ?
+>>>> Of course some current logic needs to change around testing it for zero.
+>>>>
+>>>
+>>> I think there would still be a way to check against the default value.
+>>> If we have:
+>>> unsigned int max_smt_thread_num = 1;
+>>>
+>>> then on a platform with 2 threads, the detection condition would trigger:
+>>> xa_for_each(&hetero_cpu, hetero_id, entry) {
+>>>      if (entry->thread_num != max_smt_thread_num && max_smt_thread_num)     <---- (entry->thread_num=2) and (max_smt_thread_num=1)
+>>>          pr_warn_once("Heterogeneous SMT topology is partly
+>>>                        supported by SMT control\n");
+>>>
+>>> so we would need an additional variable:
+>>> bool is_initialized = false;
+>>
+>> Sure, we could do that or skip the check if max_smt_thread_num == 1 ?
+>>
+>> I mean
+>> 	if (entry->thread_num != max_smt_thread_num && max_smt_thread_num != 1)
+>>
 
-      Arnd
+I think it will be problematic if we parse:
+- first a CPU with 1 thread
+- then a CPU with 2 threads
+
+in that case we should detect the 'Heterogeneous SMT topology',
+but we cannot because we don't know whether max_smt_thread_num=1
+because 1 is the default value or we found a CPU with one thread.
