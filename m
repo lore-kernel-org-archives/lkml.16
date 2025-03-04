@@ -1,54 +1,58 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2546A1F582E
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 06:07:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E14111F4E27
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 06:07:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741068424; cv=none; b=Jbql4Zcv3zxBEyChBM+6VqoqN5DWDbBEYrZodflH1vSuuVM5Zb4tJ50qqgJQfSn6oVFfBXaXzaAZbHJVzzjWaQLSxyH7mjEDgzIG08C7bmMEOXaiYZdKS30rLBDklCjeMnjLNKqSYBHgrJZFKEx3zpV+DGir1YdyG2mlkcZSqWM=
+	t=1741068433; cv=none; b=YQ8vaEAVtgOpevAsOf/dlOMqDSUsldbZg+8o4yKlXuiIsS2314qb/M6pWEJnM7Vsh79+13D2FnSm3b5JWny+PZ4Oml3lWRo6vU2EmErBtVK6PE/ROdKHPdkXZ15Oz3XgtzEV2Y1zWvwI6MRIkNB1IC42k6m2B4Ys5DITI3k2KVc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741068424; c=relaxed/simple;
-	bh=H3yi31HVokcXJOCubsppmA5t1sFMy5S8K3VED2TAarI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=o0TpLdyGbkgTli2O3z46yTflFg7UWsLdXhbCx6zq9PlXgCPwVdk0j6W3uZW3nLMr14QYPdLa4a0/rvVGKz3z3WnbpJa29t/cGE1UhBlQaxx6d+kDwe4Bmdj8TlH79mYkqsij/0YXrvQpjtga8a27B6bRPnI9OFVvsE57vusRO28=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EKB/1p3w; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1741068433; c=relaxed/simple;
+	bh=6SMH+nvsZ9K/pkzEyIYaEKeKuAOROQOzkyq4QpI39/E=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=tkmX5F1MEgTZT+4W87WrpF0qPz3qzI3PhL7hNPwrnyx7eb0m9M5IIZ03MBvhutsBs1TO4uoob4UxdAc7jJjqMOMAzYRiMRmbtd4XifNkhHvupd6ux4Xk1pX4LK0X4UirDbk1/lJKzC+SqjtlSrUE6fUandcxqGlfzJZ6PdS16xg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EFdPBjvA; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EKB/1p3w"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EFdPBjvA"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1741068421;
+	s=mimecast20190719; t=1741068431;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=Gh8Xe3wJDPflxFCDUNvREYtPLwvRg7q/ggCpf5a4R/o=;
-	b=EKB/1p3wm0LdomkUzwqtNk2j+f8ltus6buaOX9mTwMDS9Vo5CVg5tM9gICPlcdLCIQTuUm
-	f/CnXPgGK7sm5jnI9lEKHyu9BXQV5T+Hx71eAM/LRmxik0kZOv83Dj9obofxww3fzy0ipY
-	MsFOUs6uyCK6oEtwN0RpRXVaVyuy0mk=
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=AJy41FzUFSGhCGRtfpNprpEPFn03VpR5sk8BsIsJt2c=;
+	b=EFdPBjvA34iBgdVgyKI5XTT1TSCPUOVytfa0NtPvuy5BmXc2Gy7bw5Thzl+E8AAUnCK6uZ
+	plNCryYaId1k0oCmUzM9ZsXBNk9A14S1pO+5zrXQlg4zPjPa1Vot4KLi+X+Fpmmzz0ce8Q
+	Qb9MA6cafXylPAQjfWqbSHa65nkiAlk=
 Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-230-m7A5iEGUNZ-MxK0My6uWjA-1; Tue,
- 04 Mar 2025 01:06:50 -0500
-X-MC-Unique: m7A5iEGUNZ-MxK0My6uWjA-1
-X-Mimecast-MFC-AGG-ID: m7A5iEGUNZ-MxK0My6uWjA_1741068409
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-542-IOSdMb_ZOTiy-c1hLc4Rzg-1; Tue,
+ 04 Mar 2025 01:06:57 -0500
+X-MC-Unique: IOSdMb_ZOTiy-c1hLc4Rzg-1
+X-Mimecast-MFC-AGG-ID: IOSdMb_ZOTiy-c1hLc4Rzg_1741068416
 Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 3367F180087E;
-	Tue,  4 Mar 2025 06:06:49 +0000 (UTC)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 6D9491800876;
+	Tue,  4 Mar 2025 06:06:56 +0000 (UTC)
 Received: from virtlab1023.lab.eng.rdu2.redhat.com (virtlab1023.lab.eng.rdu2.redhat.com [10.8.1.187])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 50A6919560A3;
-	Tue,  4 Mar 2025 06:06:48 +0000 (UTC)
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 3E5DA19560A3;
+	Tue,  4 Mar 2025 06:06:55 +0000 (UTC)
 From: Paolo Bonzini <pbonzini@redhat.com>
 To: linux-kernel@vger.kernel.org,
 	kvm@vger.kernel.org
 Cc: xiaoyao.li@intel.com,
 	seanjc@google.com,
 	yan.y.zhao@intel.com
-Subject: [PATCH v3 0/4] KVM: x86: Introduce quirk KVM_X86_QUIRK_IGNORE_GUEST_PAT
-Date: Tue,  4 Mar 2025 01:06:41 -0500
-Message-ID: <20250304060647.2903469-1-pbonzini@redhat.com>
+Subject: [PATCH v3 6/6] KVM: TDX: Always honor guest PAT on TDX enabled guests
+Date: Tue,  4 Mar 2025 01:06:47 -0500
+Message-ID: <20250304060647.2903469-7-pbonzini@redhat.com>
+In-Reply-To: <20250304060647.2903469-1-pbonzini@redhat.com>
+References: <20250304060647.2903469-1-pbonzini@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -59,63 +63,59 @@ Content-Type: text/plain
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-This series is my evolution of Yan's patches at
-https://patchew.org/linux/20250224070716.31360-1-yan.y.zhao@intel.com/.
+From: Yan Zhao <yan.y.zhao@intel.com>
 
-The implementation of the quirk is unchanged, but the concepts in kvm_caps
-are a bit different.  In particular:
+Always honor guest PAT in KVM-managed EPTs on TDX enabled guests by
+making self-snoop feature a hard dependency for TDX and making quirk
+KVM_X86_QUIRK_EPT_IGNORE_GUEST_PAT not a valid quirk once TDX is enabled.
 
-- if a quirk is not applicable to some hardware, it is still included
-  in KVM_CAP_DISABLE_QUIRKS2.  This way userspace knows that KVM is
-  *aware* of a particular issue - even if disabling it has no effect
-  because the quirk is not a problem on a specific hardware, userspace
-  may want to know that it can rely on the problematic behavior not
-  being present.  Therefore, KVM_X86_QUIRK_EPT_IGNORE_GUEST_PAT is
-  simply auto-disabled on TDX machines.
+The quirk KVM_X86_QUIRK_EPT_IGNORE_GUEST_PAT only affects memory type of
+KVM-managed EPTs. For the TDX-module-managed private EPT, memory type is
+always forced to WB now.
 
-- if instead a quirk cannot be disabled due to limitations, for example
-  KVM_X86_QUIRK_EPT_IGNORE_GUEST_PAT if self-snoop is not present on
-  the CPU, the quirk is removed completely from kvm_caps.supported_quirks
-  and therefore from KVM_CAP_DISABLE_QUIRKS2.
+Honoring guest PAT in KVM-managed EPTs ensures KVM does not invoke
+kvm_zap_gfn_range() when attaching/detaching non-coherent DMA devices,
+which would cause mirrored EPTs for TDs to be zapped, leading to the
+TDX-module-managed private EPT being incorrectly zapped.
 
-This series does not introduce a way to query always-disabled quirks,
-which could be for example KVM_CAP_DISABLED_QUIRKS.  This could be
-added if we wanted for example to get rid of hypercall patching; it's
-a trivial addition.
+As a new feature, TDX always comes with support for self-snoop, and does
+not have to worry about unmodifiable but buggy guests. So, simply ignore
+KVM_X86_QUIRK_IGNORE_GUEST_PAT on TDX guests just like kvm-amd.ko already
+does.
 
-The main semantic change with respect to v2 is to prevent re-enabling
-quirks that have been disabled with KVM_ENABLE_CAP.  This in turn makes
-it possible to just use kvm->arch.disabled_quirks for TDX-enabled
+Suggested-by: Sean Christopherson <seanjc@google.com>
+Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
+Message-ID: <20250224071039.31511-1-yan.y.zhao@intel.com>
+[Only apply to TDX guests. - Paolo]
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+---
+ arch/x86/kvm/vmx/tdx.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-Paolo
-
-Supersedes: <20250301073428.2435768-1-pbonzini@redhat.com>
-
-Paolo Bonzini (3):
-  KVM: x86: do not allow re-enabling quirks
-  KVM: x86: Allow vendor code to disable quirks
-  KVM: x86: remove shadow_memtype_mask
-
-Yan Zhao (3):
-  KVM: x86: Introduce supported_quirks to block disabling quirks
-  KVM: x86: Introduce Intel specific quirk
-    KVM_X86_QUIRK_IGNORE_GUEST_PAT
-  KVM: TDX: Always honor guest PAT on TDX enabled guests
-
- Documentation/virt/kvm/api.rst  | 22 +++++++++++++++++
- arch/x86/include/asm/kvm_host.h |  7 +++++-
- arch/x86/include/uapi/asm/kvm.h |  1 +
- arch/x86/kvm/mmu.h              |  2 +-
- arch/x86/kvm/mmu/mmu.c          | 13 ----------
- arch/x86/kvm/mmu/spte.c         | 19 ++-------------
- arch/x86/kvm/mmu/spte.h         |  1 -
- arch/x86/kvm/svm/svm.c          |  1 +
- arch/x86/kvm/vmx/tdx.c          |  6 +++++
- arch/x86/kvm/vmx/vmx.c          | 43 +++++++++++++++++++++++++++------
- arch/x86/kvm/x86.c              | 13 +++++++---
- arch/x86/kvm/x86.h              |  3 +++
- 12 files changed, 87 insertions(+), 44 deletions(-)
-
+diff --git a/arch/x86/kvm/vmx/tdx.c b/arch/x86/kvm/vmx/tdx.c
+index b6f6f6e2f02e..89a0e90b7aef 100644
+--- a/arch/x86/kvm/vmx/tdx.c
++++ b/arch/x86/kvm/vmx/tdx.c
+@@ -624,6 +624,7 @@ int tdx_vm_init(struct kvm *kvm)
+ 
+ 	kvm->arch.has_protected_state = true;
+ 	kvm->arch.has_private_mem = true;
++	kvm->arch.disabled_quirks |= KVM_X86_QUIRK_IGNORE_GUEST_PAT;
+ 
+ 	/*
+ 	 * Because guest TD is protected, VMM can't parse the instruction in TD.
+@@ -3470,6 +3471,11 @@ int __init tdx_bringup(void)
+ 		goto success_disable_tdx;
+ 	}
+ 
++	if (!cpu_feature_enabled(X86_FEATURE_SELFSNOOP)) {
++		pr_err("Self-snoop is required for TDX\n");
++		goto success_disable_tdx;
++	}
++
+ 	if (!cpu_feature_enabled(X86_FEATURE_TDX_HOST_PLATFORM)) {
+ 		pr_err("tdx: no TDX private KeyIDs available\n");
+ 		goto success_disable_tdx;
 -- 
 2.43.5
 
