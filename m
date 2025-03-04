@@ -1,117 +1,78 @@
-Received: from mail.thorsis.com (mail.thorsis.com [217.92.40.78])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE46D1FF7D5;
-	Tue,  4 Mar 2025 11:30:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.92.40.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 798BF1372;
+	Tue,  4 Mar 2025 11:30:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741087813; cv=none; b=npt2OV2j/jlYALVokrRccU+9E3iroNwfppu2qnu9BbUBtgV/DfvhlKH/qC3xRwaGNOu7i09NqxEXEpOty3kuQlGCHJWTyvqhSyjiejJIUoG5mkLGOo6/K6ww0J5rwV2kwpxb4p225ftHWbu1sPYa9ag0k4HU3dAqavYRs8QpcEc=
+	t=1741087857; cv=none; b=TQrTb0mdSPSXTWYyG/RwLzs8QJtp3JZU2rcTRUJt9X+ZjDGOJkj60vHb3pS7T6q8PS41TmbNQxs2d5GbFOgb3LcQbTnTf1g2Uoha0pKGsDahKpj5587rMBysXnUuloXyNEm/z9sBFNC+68DB9NcnPZxNWbtrt2E/pCrZomNWINc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741087813; c=relaxed/simple;
-	bh=4NlApes1uMZR/fEzD45gw5HtUBzCox4wK22duVcC3eY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Qr67NKr0lX+030JT0ILFyTzNfcBt1Ad8zyo2QlWh6CEirKzZWue4PeKg61N9sM54pf3qmPtfL7erDc/ThB1bQS5gxvkz8bTlR+b+XJ5ZG29GKN7xaXDEpjfjz8GKOT+PdPRrbHpKhwJ+mlvLLdLAPajITbc+urJikqOIRNYjKKk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=thorsis.com; spf=pass smtp.mailfrom=thorsis.com; dkim=pass (2048-bit key) header.d=thorsis.com header.i=@thorsis.com header.b=szojJJVZ; arc=none smtp.client-ip=217.92.40.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=thorsis.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=thorsis.com
+	s=arc-20240116; t=1741087857; c=relaxed/simple;
+	bh=m1QXoo0Ah2TX6eBak8hPjqLowqg2oHXteU+TOB7lBMM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=sJombaSgvN2QkVukxGmQCJe2jT9gPX8hXJSgt7QjteT21s4wOYxAHDeUYXeStOsExM1rxCqPtyp4vpBqzQe6chgZsKeBrujpXLnZjLnPIFfkDeKV41DVTSV+joV5yyyzlKHXM0p8NxMBQicIcfwb0dWvArS5cqstgP9G1UfLcFQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ivk18A8E; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=thorsis.com header.i=@thorsis.com header.b="szojJJVZ"
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 5B6411480850;
-	Tue,  4 Mar 2025 12:24:07 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=thorsis.com; s=dkim;
-	t=1741087453;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5abHVWwaHFEi1aRUSGkWCShuUKq/Uu+o+daM4oBhLRc=;
-	b=szojJJVZWk6XvOFPNdubWFEz43mbBbNVI+FB/KEk1K4r9ta2Gl+uI5T8z8P/l250boNeID
-	NjMViqUfeEzM+JoLZadkW4Ts7XUuc+pwSwa3vXIIDL+e1HXLp57r16IKMbx4pPOeV9DPHm
-	hEZJ+1R0nZYepTOgcTuvBVR576HtQVrxQ3Dh7t35Z+bKEG6lah6Bnt/K0TbKAT22bUrzMj
-	acNOqP0r4bYc7B4dwo8iRwKG7uuumXPrZtNFJv66c0je01nsbvzLyUJaIUODKg4Sf7sAYG
-	V65jMLIJYe9IRdBCINX5K21zFfa8JsY2Kg/cfqB5cvCs7uPHaRQo2eiQhLXpBA==
-Date: Tue, 4 Mar 2025 12:24:02 +0100
-From: Alexander Dahl <ada@thorsis.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: iansdannapel@gmail.com, linux-fpga@vger.kernel.org,
-	Moritz Fischer <mdf@kernel.org>, Wu Hao <hao.wu@intel.com>,
-	Xu Yilun <yilun.xu@intel.com>, Tom Rix <trix@redhat.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	=?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
-	Aradhya Bhatia <a-bhatia1@ti.com>,
-	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [v4 1/3] dt-bindings: vendor-prefix: Add prefix for Efinix, Inc.
-Message-ID: <20250304-despite-knee-8b528b8f7f4c@thorsis.com>
-Mail-Followup-To: Krzysztof Kozlowski <krzk@kernel.org>,
-	iansdannapel@gmail.com, linux-fpga@vger.kernel.org,
-	Moritz Fischer <mdf@kernel.org>, Wu Hao <hao.wu@intel.com>,
-	Xu Yilun <yilun.xu@intel.com>, Tom Rix <trix@redhat.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	=?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
-	Aradhya Bhatia <a-bhatia1@ti.com>,
-	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>
-References: <20250228094732.54642-1-iansdannapel@gmail.com>
- <20250228094732.54642-2-iansdannapel@gmail.com>
- <cf8b754e-f4b1-40f2-86df-e1f0cbf07189@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ivk18A8E"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741087856; x=1772623856;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=m1QXoo0Ah2TX6eBak8hPjqLowqg2oHXteU+TOB7lBMM=;
+  b=Ivk18A8EGXZ9NroUqIHCByKlU4AY6aacmQAuj+wNa9ApG5JWhMCIHhBZ
+   PJimGApdzsft5VCXULoermT5EdBdfQx8nlINwc1axVdimxeKF7QLCDYp0
+   TW3Y2TrOHv7SWwmT3KWdWGunH/bberhP2U4jc62BiOKuWtKEiM8z678Wo
+   WSwGBYf9ptVeG6VgHrjlFFxfyCEvKkFkmFbeMdJJQsiJNZy+uWK0/XPbR
+   zCkTIc/V2LMdo6OVNzeQ7RqVnb3PnYRwdDfuaLktRWGJDy98T6OB5EhId
+   S39P6uVGyuifYTFg/++OtdwIxv8/kFqRmKOsEhcLBCA1JyDiE2bWUwPNZ
+   g==;
+X-CSE-ConnectionGUID: TTOE4+UwTdqxtfttzquGHw==
+X-CSE-MsgGUID: YnynlnYLTpGldVDKeW1sQQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11362"; a="41898322"
+X-IronPort-AV: E=Sophos;i="6.13,331,1732608000"; 
+   d="scan'208";a="41898322"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2025 03:30:56 -0800
+X-CSE-ConnectionGUID: kxMrQzIDQT2c9oO6uQC5uQ==
+X-CSE-MsgGUID: pfz0CUhLQiGeV2K7ZrH0bg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,331,1732608000"; 
+   d="scan'208";a="141579989"
+Received: from unknown (HELO mattu-haswell.fi.intel.com) ([10.237.72.199])
+  by fmviesa002.fm.intel.com with ESMTP; 04 Mar 2025 03:30:54 -0800
+From: Mathias Nyman <mathias.nyman@linux.intel.com>
+To: <gregkh@linuxfoundation.org>
+Cc: <linux-usb@vger.kernel.org>,
+	linux-kernel@vger.kernel.org,
+	Mathias Nyman <mathias.nyman@linux.intel.com>
+Subject: [PATCH 0/1] xhci fix for usb-linus
+Date: Tue,  4 Mar 2025 13:31:46 +0200
+Message-ID: <20250304113147.3322584-1-mathias.nyman@linux.intel.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cf8b754e-f4b1-40f2-86df-e1f0cbf07189@kernel.org>
-User-Agent: Mutt/2.2.12 (2023-09-09)
-X-Last-TLS-Session-Version: TLSv1.3
+Content-Transfer-Encoding: 8bit
 
-Hello Ian,
+Hi Greg
 
-Am Sat, Mar 01, 2025 at 02:10:38PM +0100 schrieb Krzysztof Kozlowski:
-> On 28/02/2025 10:47, iansdannapel@gmail.com wrote:
-> > From: Ian Dannapel <iansdannapel@gmail.com>
-> > 
-> > Add entry for Efinix, Inc. (https://www.efinixinc.com/)
-> > 
-> > Signed-off-by: Ian Dannapel <iansdannapel@gmail.com>
-> 
-> <form letter>
-> This is a friendly reminder during the review process.
-> 
-> It looks like you received a tag and forgot to add it.
-> 
-> If you do not know the process, here is a short explanation:
-> Please add Acked-by/Reviewed-by/Tested-by tags when posting new versions
-> of patchset, under or above your Signed-off-by tag, unless patch changed
-> significantly (e.g. new properties added to the DT bindings). Tag is
-> "received", when provided in a message replied to you on the mailing
-> list. Tools like b4 can help here. However, there's no need to repost
-> patches *only* to add the tags. The upstream maintainer will do that for
-> tags received on the version they apply.
-> 
-> Please read:
-> https://elixir.bootlin.com/linux/v6.12-rc3/source/Documentation/process/submitting-patches.rst#L577
-> 
-> If a tag was not added on purpose, please state why and what changed.
-> </form letter>
+Michal found and fixed a regression introduced in 6.13
+If possible it would be nice to get this into 6.14 still
 
-FWIW I guess this might refer to:
+Thanks
+Mathias
 
-https://lore.kernel.org/linux-fpga/20240930-tranquil-glitch-f48685f77942@thorsis.com/
+Michal Pecio (1):
+  usb: xhci: Fix host controllers "dying" after suspend and resume
 
-Greets
-Alex
+ drivers/usb/host/xhci.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-> 
-> Best regards,
-> Krzysztof
-> 
+-- 
+2.43.0
+
