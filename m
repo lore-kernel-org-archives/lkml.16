@@ -1,97 +1,64 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2070.outbound.protection.outlook.com [40.107.93.70])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5FFC1EEA51;
-	Tue,  4 Mar 2025 05:05:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1486E1E9907;
+	Tue,  4 Mar 2025 05:09:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.70
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741064734; cv=fail; b=hCwfXttSNWMARwXIW72sdsdSrnWYDwOg9ztM8i+NEQEm+NcGqLXMl4iwpLPvj9zZz3sc2xYUbPj8bRA0qEUfDX+LezR8WLJOMgiFeF6SrhcxZXSVeLq5G4nXIN+FcBigFDxawi2hYY+dThCX8fIYHq20BXVhP8rWOX+YtVm6oTY=
+	t=1741064953; cv=fail; b=OBEs2tzYkE8cSZjG+hadmnMrLo5lVFmOqD9H1po3axd28XOFZtr+rphtFMlbzLy3fDUrDneFTICLCInzgY9tB1zVz0zXvG+1jC5pWkHYoCwwf7k1IgYvwkpuDWihk36KTZ9iy45TrZ/NIPatp1lR2unQVrvj2QLEZgBY0Eg3JcQ=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741064734; c=relaxed/simple;
-	bh=lrLaAAk4ePKi0GM+Za7C+h5KQ2tanzxdel/DtW4FTPA=;
-	h=Date:From:To:CC:Subject:Message-ID:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=siRqZWI5a8EmSrbeqh/IJd5NMlwQifO1GyUKqficJB5jfpm1zGdBZOg7MyqHwWBM8qN9JqHM9KvNXHoDQDTzJbzk4CIrjqn76utXDmS7Ax5+DUU0yDBQ+d854JLvLXZ1xa7O+AZFyizn1ITHA222zVREHNXcQjv/wOcPn2QcIGg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=G2UHNgZU; arc=fail smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1741064953; c=relaxed/simple;
+	bh=pBZK3AObBCIE3P+8CI2+/ql1hMv/lGATfBz8lOlODh0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=JCd01G6YiSz5ZbT3X8tntybUOxB/FEQwgOig6AbsIkvO/Jek6vGg009VBOjg7tW1/upkdYfZn0sjiGB5VrPhFouCEyJ0RrKiLgiWl5wtCkjfcFFz/6rUTydQCS2UnYXu7q8nz2mPqHVcLjSoNwzyRzF1ang8Qd6q4tPNN8lEprw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=HS/a379f; arc=fail smtp.client-ip=40.107.93.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="G2UHNgZU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741064732; x=1772600732;
-  h=date:from:to:cc:subject:message-id:in-reply-to:
-   mime-version;
-  bh=lrLaAAk4ePKi0GM+Za7C+h5KQ2tanzxdel/DtW4FTPA=;
-  b=G2UHNgZUqvEslHrC9iPcEd7eYjdBzHIsZbRUvQEyWRfzNuyZFsbmCtKI
-   yHMFR4kMtnQyvjqKOFq7Qmn2OjbwKgQGez2kEIOjOh03fLOM6MVU2IR/U
-   4vDOxa8Hk/hVc9lUJmR08XMr4IjVQDJtVvaITUY1eVYAnWjT64eNzhMP1
-   MVRaBfjN6+Is0UpJoyfym3d34aDm6RfFxAZFaGumcnz3E0w6jNkurozvH
-   b1FdxeqXMQrvbPkHduWB6YqTo10DFzNA7psrFNG+ePUb7BydOmpFJ9hTB
-   sBCwx+hRtaXxtxJ2RSK5lk/24vKAEMVN6SotFKVwba02h6hOjf6wZs6dW
-   Q==;
-X-CSE-ConnectionGUID: u7lHyovkSQqzjCyz1iM4lA==
-X-CSE-MsgGUID: mfF5DkDURamb/BRXG8n/ww==
-X-IronPort-AV: E=McAfee;i="6700,10204,11362"; a="29552819"
-X-IronPort-AV: E=Sophos;i="6.13,331,1732608000"; 
-   d="scan'208";a="29552819"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Mar 2025 21:05:31 -0800
-X-CSE-ConnectionGUID: F4RA/WSrT0yi9ViYGLmRFw==
-X-CSE-MsgGUID: sYxIp1nlQiC7W5rdiyhACg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="149169900"
-Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
-  by fmviesa001.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 03 Mar 2025 21:05:31 -0800
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Mon, 3 Mar 2025 21:05:30 -0800
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14 via Frontend Transport; Mon, 3 Mar 2025 21:05:30 -0800
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.44) by
- edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Mon, 3 Mar 2025 21:05:30 -0800
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="HS/a379f"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=hXOBSKSxOoyPenGBirWO0/rx3u9DgpRAPjD3Mk8q4F/RR8IzBVjD8USX2uSZoexPHsKWFg/O3WqE1fb0wHEsjUZ5ddgRdzWQgFvjYYtC5K0habWirOxbNED+EUX68AzWQiv+y0fL9qCGDhhW7y0laYwY9w4UwTPqtHtiXHKqnfG8ub40GFBz2cSsnjkIykOXBTH7FduNhkPpkW8JMnblpSU4UXapkEbPqo3vKqa5z6gJgja04yT44HSzuH9SbG8fGxnsoKUQJ1AdSn4aES9cBQPzt/OA4iRTUfteD3FSvgh6HiGFAaFV5uBkJZnSH3kjYDEz7EkNJyuC8pNy8FZuEA==
+ b=qjmkf7y9YuQcFjn0oioNQ9mb7iQGdut84m/VSVUNL4dkiyd7hjOlcjxV537RnQjQpLt4VbKHmKP3yBvJWZdwlDJpz8qQgrQZ5DYbqQBsHkBW0bruLAE76Qmi1K57t8/k/TNZHQNtXq4c5urwWmBG2fXSUsDFyw3DU7XvqgpHOVZ/AtuXfkXD0fOQyqwGZsfdOvbpx6At5HKr81AzULEFXs0vwXke6cRu0uvYmwR0SVc6YNhHoLkblCptdthHqGkMUgO30quCAzrugxFcbwBlzGvMSpJpSp1RlzR1347Qb1Ena4JDuQfP7BZlOU7pWT8qYXuEaNqX+oZ2VjpQ3H0Yow==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Iy+ojv4MdaKAiFztgHvzzrfoFuf4VM38Y7HDx66lZXQ=;
- b=I82lGyxv0E17ZfLHbiFfrtBJx3ylCg5zSdOiGHkOvtw02yq8pCM0Zpy0K7NZHWtV9hd2Q+5oHkCQU9EIjXNd68pkqcws450gVarSYqGevikbFU442HOGOVhFguPZwU/FUqzAfd1XhhCrJxjaV64I3ATcXUvhJ7fdUqZ0bo+qix3S01omeRsM7CRjDmxBW1SB0ThyYqdDJKQimqxHCKvZOao+vaAt3XYmLyGl9QXgDhfZZ7lnU5ecdCZDrGdOUOrikJw5xg6LFcUNhjI5iRKPwgZj27r/MsBKgBIDHxUG1Opqr89KbsV6el+sDANHNrQf7cCS7l2n+hUFCrIyqX3WEA==
+ bh=VdYZMTi86ZcoVH2qqYlfll6KiKBr+FO6QjswLNKwS1g=;
+ b=bS5cF/MJ3q/bQUc25ejvDNrGyNtEYnzPVKxdrMlJHqjl7wlpTrkckZZbUyxd59lUykxV2DpsmG3zJdrTwaaa/fQJwyifhURCn+3CVkceTYw4jCcebjwN+3Cec5t34wl/6VDpnrCjgRztwGbktuxbi1lMZHc/VOu/Gyxjwc3lPqNH3XayRWno8mRQvDmIoqFyO5XU7Cvw9UL1OZHaYJyMESZdaSkwuUsdYdlaYNLvU1PqKGNAeXwEp+D6sXO7QYB/v5IecVOHXmLDyOtFdZUSiSLiOThlxuxzHeRgOKOc3R5ePnkUjx7CkpCfFnPSt2+EdEI4dJxazvdAOpSoL4LYqA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VdYZMTi86ZcoVH2qqYlfll6KiKBr+FO6QjswLNKwS1g=;
+ b=HS/a379fTsjWonrw59m2OjFAPbFsdypBsVYXI314M9o2ckJUDiLClY3AWexmt7neKzmpqVFDFQECIIMft78uJYrANJffSYMj0NOkSXqbaXVNlFNiMxCHZUVUD67LFzCtt6o+IquZoQ0xqQiWXzJEzL3TkpTKCUrixIwrrbqVB5U=
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from SJ2PR11MB8587.namprd11.prod.outlook.com (2603:10b6:a03:568::21)
- by CH3PR11MB7273.namprd11.prod.outlook.com (2603:10b6:610:141::16) with
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DS7PR12MB8252.namprd12.prod.outlook.com (2603:10b6:8:ee::7) by
+ CH3PR12MB8728.namprd12.prod.outlook.com (2603:10b6:610:171::12) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.26; Tue, 4 Mar
- 2025 05:04:59 +0000
-Received: from SJ2PR11MB8587.namprd11.prod.outlook.com
- ([fe80::4050:8bc7:b7c9:c125]) by SJ2PR11MB8587.namprd11.prod.outlook.com
- ([fe80::4050:8bc7:b7c9:c125%7]) with mapi id 15.20.8489.025; Tue, 4 Mar 2025
- 05:04:59 +0000
-Date: Tue, 4 Mar 2025 13:04:50 +0800
-From: kernel test robot <oliver.sang@intel.com>
-To: Chaohai Chen <wdhh6@aliyun.com>
-CC: <oe-lkp@lists.linux.dev>, <lkp@intel.com>, <linux-scsi@vger.kernel.org>,
-	<James.Bottomley@hansenpartnership.com>, <martin.petersen@oracle.com>,
-	<linux-kernel@vger.kernel.org>, <bvanassche@acm.org>, Chaohai Chen
-	<wdhh6@aliyun.com>, <oliver.sang@intel.com>
-Subject: Re: [PATCH v2] scsi: stop judging after finding a VPD page expected
- to be processed.
-Message-ID: <202503041036.ad427cb-lkp@intel.com>
-Content-Type: text/plain; charset="us-ascii"
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.25; Tue, 4 Mar
+ 2025 05:09:07 +0000
+Received: from DS7PR12MB8252.namprd12.prod.outlook.com
+ ([fe80::2d0c:4206:cb3c:96b7]) by DS7PR12MB8252.namprd12.prod.outlook.com
+ ([fe80::2d0c:4206:cb3c:96b7%3]) with mapi id 15.20.8489.025; Tue, 4 Mar 2025
+ 05:09:07 +0000
+Date: Tue, 4 Mar 2025 10:38:57 +0530
+From: "Gautham R. Shenoy" <gautham.shenoy@amd.com>
+To: Mario Limonciello <superm1@kernel.org>
+Cc: Perry Yuan <perry.yuan@amd.com>,
+	Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>,
+	"open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <linux-kernel@vger.kernel.org>,
+	"open list:CPU FREQUENCY SCALING FRAMEWORK" <linux-pm@vger.kernel.org>,
+	Mario Limonciello <mario.limonciello@amd.com>
+Subject: Re: [PATCH v5 17/19] cpufreq/amd-pstate: Rework CPPC enabling
+Message-ID: <Z8aK6Waj5D/jq2kV@BLRRASHENOY1.amd.com>
+References: <20250226074934.1667721-1-superm1@kernel.org>
+ <20250226074934.1667721-18-superm1@kernel.org>
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250227060618.15787-1-wdhh6@aliyun.com>
-X-ClientProxiedBy: SG2PR06CA0227.apcprd06.prod.outlook.com
- (2603:1096:4:68::35) To SJ2PR11MB8587.namprd11.prod.outlook.com
- (2603:10b6:a03:568::21)
+In-Reply-To: <20250226074934.1667721-18-superm1@kernel.org>
+X-ClientProxiedBy: PN3PR01CA0036.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:97::15) To DS7PR12MB8252.namprd12.prod.outlook.com
+ (2603:10b6:8:ee::7)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -99,221 +66,432 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ2PR11MB8587:EE_|CH3PR11MB7273:EE_
-X-MS-Office365-Filtering-Correlation-Id: 0dc40801-7ddb-43c5-49e0-08dd5ada1cf4
+X-MS-TrafficTypeDiagnostic: DS7PR12MB8252:EE_|CH3PR12MB8728:EE_
+X-MS-Office365-Filtering-Correlation-Id: e364ce6e-1d51-4c64-c3b1-08dd5adab075
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024|7053199007;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?fJClI5VrEw1+ErSGzJZZibtVAnXJOlND5dkho8hqWTMtby6JduPPNWZ19qlX?=
- =?us-ascii?Q?df+HQoRAFtpaQ7K8uaeQvJ7qtx3sCdy/EQWr2KQrzcoDOmZdfmJZVG1t1jrK?=
- =?us-ascii?Q?05tjl0ozVnIKXTUfYqDKutHXRxNPJliNeu9ncq7dzSuLKk0IXLGKVXycyiCI?=
- =?us-ascii?Q?XVMb+LJNrFm065JJix/ae4jgEHxxu+3DFIamHEINxgxPqz2afvvawDhwiVGX?=
- =?us-ascii?Q?BY5wcaRj6B5shmKZO76QTIlqx3LRWgsNuDA3vSTtoKUmpuGbUckIWYYasQOu?=
- =?us-ascii?Q?Q8HiKdjuGmrv8YEJIfIg9BiYKVbfH5Ag6mnelFzf3XwH33owjrgL/9pU+vbn?=
- =?us-ascii?Q?CouQxOrgoHMD4cjXskOZ/LRLG+C9VSBXoOmD819WxTgim4YY4oxagwNzB3pL?=
- =?us-ascii?Q?03STh10IF+8tXXoW8AV7eCEhKgcxYpwD+Z3Y2W1RNtOGLkRlGr3C34KtXwFj?=
- =?us-ascii?Q?FKKOVwjfFDePabi9sj2VgOXjrsZN+ES60+C+yy6b5/YNnmgfthy4/WtWbSjh?=
- =?us-ascii?Q?hMz2lcKqwIBNXzq4xKhQdXWl3mF/DQGyiKWZ652OU5Ferrk1jWP//kTx5OFK?=
- =?us-ascii?Q?ryJSsmIgtYKoYE1L1psC/k4O8i4F6/iVUPRcAd75JzXFbpBU+AyS/1mDSbPw?=
- =?us-ascii?Q?hHe/5HgbMTGoLl5sqXlZ/ETg31TquatrcqqQMVB5uyCzHdzgMWaizk3azSY4?=
- =?us-ascii?Q?yyo5qoR5X3+hqwWKc1KAl0crFcFpgCW0RdCMGaQ35zuj3o5gfCbm4EMEa+l2?=
- =?us-ascii?Q?XhHsBXZ352J2jim/KAB4p78W9b7VPGArdRm2c7gw0qc7HVmTRltJnn2/9Tmp?=
- =?us-ascii?Q?g40uP+AMS3L4V0LtS7aL9B7KUX6oHSQKJz632gF7mOemlGiR1rieS7dFOKGc?=
- =?us-ascii?Q?ey+XDpuf9ZbYtF/gyBW2mqaNNpK9CDLBul2LIbJe+gQwf+lZMafFX3YTw5u7?=
- =?us-ascii?Q?N4cOEuy0LrecwogSKi7VKVe9jz66HpCjiTiYoak4pB0DTTrc0mk1Vpxy0VCE?=
- =?us-ascii?Q?LYmp64ZqtDmkZQTtOmFp2v6F066Ue7BDyTpXuUO0kyknx+dDTEte+MvY6oUO?=
- =?us-ascii?Q?ic6s+NnNrFy0RhAA1OkwRv6choK6L9A9xISnD5g3PLyDnBdf3Llwi4uA+Ojh?=
- =?us-ascii?Q?B0+VvwjaTPcsx71ZJ4vIzpRpXMJFu5VLTCIMLR/wgBnyar1M2NzZ2FGnRqbM?=
- =?us-ascii?Q?ltqFKSJCjXj6mZfqe4KIG8fhJqv0bEQfXJ4tMQGXKEt7/YyapqqUUOVP+65O?=
- =?us-ascii?Q?GbHQjl26Np8eAWa8YGjT4BqsEre+Akr4ufIZ5F3Twp6IUdI64t3qB/a568c+?=
- =?us-ascii?Q?flcFTahT64FlqvdzI0AlZFKKGdk1DJKY3fsY6A3/4UKQgA=3D=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ2PR11MB8587.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(7053199007);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?+SrJ17hp5FRv+hNDreY0NJqPwjnXBQ6hU2OgjfoD6Rgw7ESyNV0gdiNZraks?=
+ =?us-ascii?Q?O1VURnOc7Fj9XtoVxs9pTcv34QpfjDl2H0bbJQiQI0BnRCWcZzoy0wlyxotw?=
+ =?us-ascii?Q?2Y9DHhwwy18Crj4wpOf8oGXgAkQCaHh7weP/+4PYDmrpMaufpcAzNDrOEPsP?=
+ =?us-ascii?Q?gsL6U1EqueYh+7QytRtaLqR2E7EBV4lt1pwJImauZhPmspMxAeCXoVgfPlS4?=
+ =?us-ascii?Q?8cNROxcAwffCDIVA3qMoeM8IIlK4Js10DUWIMVdqlLoupGp87YCPbLA/MX2x?=
+ =?us-ascii?Q?hLlK2+lX9Tkw0RGfMK7S313RU14fSoz56wCKuq+buzG7TTUPM+KVrO/TqYNp?=
+ =?us-ascii?Q?PnxLzDKZFfmjV3Lgm9qq0v/ECaO9UVFTfdpV33U1c//q17fkm+z5/UsKX8ws?=
+ =?us-ascii?Q?3EYQ164cUS+XUfNGSEevwUcEjDpFfzPEsMIm0RMc/Q4Fmz/F5JyDvXxLpY9l?=
+ =?us-ascii?Q?HI4b4tSkZS1QkYWQyMcC20w4NAs0DQdmDNY4r6gOE04BxyAmQuhkPm+eEtdn?=
+ =?us-ascii?Q?+UgaQiTjiCeaDJRqTUtnUQ1GXT6wUmTpKn04IFcgy/tHn6K7du2DQDoEb7FE?=
+ =?us-ascii?Q?PDx57FQXUn3GTU6PuaYtGHWOBHMT6iaxyWQEpph4wMDwf+cgRdyxItmh+639?=
+ =?us-ascii?Q?U4MfLULAZ0AYAkbPwLnhP2Y4R7f/lLPZCh5Z7SeEi6rNp1yAKr5mgnFu5DAL?=
+ =?us-ascii?Q?pBWkH+NkkMJY1Z/KwkjQgVl/plIGGTT5aFBd7034JWuP1Ltfm6UsX8VsKUkB?=
+ =?us-ascii?Q?CbtKnqGspsvGnV/L8JgKqCaWXzWxtnrar5u9tAmtW4z4MyWDQ6Kdu34MYfmc?=
+ =?us-ascii?Q?AoRgPJMB0fTUIMTVu4VSB1prPfk2JScnME4rsGNRbARd9OkGBoGbnuJfnD2G?=
+ =?us-ascii?Q?RemaQ/CdAd9SCkHr6rHUVLP5kiwCUAIf74L0lx1GhQhvjlZ78Cn2fvHhlXrw?=
+ =?us-ascii?Q?XIXqoWZqzTLEM7vA9wXjoF97nQXAIPNXcTOj6E5pdjSoK5klaScOd74fzPfU?=
+ =?us-ascii?Q?eXWjXTtTIkBrJw0pgZd+I9+5U1mg8yswXaHsafKgAGFXkdE0jo7/Ij7v2f3D?=
+ =?us-ascii?Q?GbmA1jYQpxymbMaxrp/TqlCyZBi18DTWnqilg/D7+ER+7OvkT45egiZnh7lr?=
+ =?us-ascii?Q?85rmhHzMWjqoc1gW6VAw5BceFbhzPSwXBuQTWioFzqLw8JbzoyIHA9MdxRI0?=
+ =?us-ascii?Q?XcT/CtjKYuNo8UeAM9tSSH6gWjVaap25cgchYrCEP/nTi8VHxj6IGtyn9di1?=
+ =?us-ascii?Q?CaGuTwk+6whdV8MEzfTOpX37tXR3lJVfvMa5jt+pVupz2fOAyC0/w+DeepOA?=
+ =?us-ascii?Q?v2TGzIECVYhuuji4spxUzVH1iiuee46u7jO/en3NOr1r/nPWoVMmvwp4pLPX?=
+ =?us-ascii?Q?wklcEBr6HUne8CSsrUPwPx+paDUK?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB8252.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?fd0bicG+8XXe4TdSzULnTvxsGKnX/C+X5bf3kfkC9D1Of9Wd848K+LRWHpff?=
- =?us-ascii?Q?PXKGVc/aXP2RJ+75/7BOXDXN1t3fi/kjHjL6Vx5ADlTHDPCY5EgKRGv8Vpnt?=
- =?us-ascii?Q?2VHCgQCvzeeLVW60vJUwz1s7+mKyIwChZNmU5fOXI67mJ8DbwCTpt05n07tX?=
- =?us-ascii?Q?ei0MtNJhqk0V134UF6y3jTnG2MTaT6ybnfzTpRxaA8d30JAvq19+7I109dv5?=
- =?us-ascii?Q?TM6jMQQ0kdbdtwPmQDoFLVNQWxesswZUUAqZ99UPP0wMk0DGvx6ovGApwtAX?=
- =?us-ascii?Q?ARNJNNyLkV2Dpfq1ulD8lwv2iqhcgzahsNjVWguSsDj1kdO17N5em4DPLikl?=
- =?us-ascii?Q?XthmhY5+ZdMre2tHKczL2bVsFwC/o07qiFhw4o4DQO030ygza8HRYtn17w2n?=
- =?us-ascii?Q?1+++PV9vB6RqVHtGghb2AxUIaRiYPuhFlNs1kdBFIG0iBuivww1fW26NeuJX?=
- =?us-ascii?Q?zWiV8i9yux2IBb1jcNq9H2vF0Xz8RMPVSGp/vrTDMpsoXQBUbf9x1OUM+5zy?=
- =?us-ascii?Q?OXIZRlOsIifdrv6Th9HmAvMKb+zDJbGMrUHyA0GBBdiHUJsBMvBhIhWwwJvF?=
- =?us-ascii?Q?T+t4DgI44yZh7mvC119XcHyNxl5IdaDi3XPEM8voTcCEhApz4YZ4i6av6PZI?=
- =?us-ascii?Q?DWSsuh7P5su8AVlSc5DVHnK1LKHzkLKkIDPzlXUbKrTGf+PqArOs4dgbN7zc?=
- =?us-ascii?Q?64wrmBgTXHp+0cULu1pEkmSqQdnkBFm+m+3tck91DZnfJHzW0zlj6W6zdgl6?=
- =?us-ascii?Q?G4oOiex1pnxS2YNwksfFnnsipLedsopIBMmiHbqi89fBWqaxgtvA5zE+REZF?=
- =?us-ascii?Q?OJXHgnQhWi0ZvkAAtAcgdBNMMrn+TgtVx+JoEV18r0L+o39EWisTRgtvfjYp?=
- =?us-ascii?Q?6aex+B0EJ5WHFn2tVBXxEXyC3Q1z/TepKe3KBk7zZEUorIU963jsRW7cST3O?=
- =?us-ascii?Q?/63OLhlv53oaEqP50nZdE4Rg0kR8bBkaOyiVktG7nbF9pKfo5Ywx7oUG+yxJ?=
- =?us-ascii?Q?1/e+rZZ8eCmMcIdV/iFg2dh9YwNt/hr+wC1fgKRsIawEy6v104eCi8yyVm+V?=
- =?us-ascii?Q?1ISPHEPeamJnuEETuqu3xR4tAtf9CXDAxHyIP+hktLHfjm7K9kS3kc6NvOrT?=
- =?us-ascii?Q?10ew4DlV0e+dGYSKYlF5Tl+XQ3et8+yrEa+EtTCsVkJBPjYHldno8akOzY/I?=
- =?us-ascii?Q?4tt/+EcaPZcNvdO5tqCmoitEKyOc/CipjL90K0eHW1jNpeCCFzZYEBUj3p5v?=
- =?us-ascii?Q?KaK+4xJhGrWuUrD69vVW/J3hdtS3HI0tkxw6+CIeoQ331zMh3GM9+tU13Hmk?=
- =?us-ascii?Q?AZd7yLXDVPpKVn/X2yIVIspMI0auGFnvv1MrmFLOeGwx9tIM5b8GMGJ6cRcm?=
- =?us-ascii?Q?a+wt6OyT4Tb7Sn/oah1A13I83eLDtlaONvDBgKQzDaDMefdLWFT+Oga1227T?=
- =?us-ascii?Q?uaddLYpCi/8tLBskSetiKk8oNtFe35bUrSWeGarFRT8NPkzCa/9vlVzGJGe4?=
- =?us-ascii?Q?0yu2sgIhPktWVFG9tQ/9UfT6GImcQdzOejGWOLoH9A6DYcxj9hqFoXU0VRRW?=
- =?us-ascii?Q?PPgN5ZQAlJKjIWtXFc+bknE1/r4bYdrq+jgssz1obp60zi5JoxODd1wihZmx?=
- =?us-ascii?Q?jQ=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0dc40801-7ddb-43c5-49e0-08dd5ada1cf4
-X-MS-Exchange-CrossTenant-AuthSource: SJ2PR11MB8587.namprd11.prod.outlook.com
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?bBRYkWP400lNmr41V4YADoZV2tRKhpZS9IFDiaQGVRy+HWlJyRgwUveMbjv6?=
+ =?us-ascii?Q?5rIV3Yq44PdOw3n4JVS49/KkB+Gnz3Ghm3a3z9AGMPqqklwjX5OvxVYgx5A6?=
+ =?us-ascii?Q?ZTRRBPLxeFvD5oJzA9ApSTvqz+IP3yB2EpiXrQBIZf7u8bpCV3KtJ87+0Ogj?=
+ =?us-ascii?Q?4S6KekFaiQtsi8vxRNmkn3S6hqFaYbJrhkwzCCUXQtj6Cu1wBmOo+OTPaUFb?=
+ =?us-ascii?Q?3p9z6hIUlMVM59wv6RTYuvFTMb3GjJQXe9Sl48xVrly9zZ9E23++jM89zl26?=
+ =?us-ascii?Q?tSGw/x8HZf3vRi0XowOSX9cto1e8uLGyyhIko8BkJJhhtstnhTKPDWnVYrme?=
+ =?us-ascii?Q?pzuUXtI7gUlb+26f7uKp1z3l0pb0gOn6RB8fJdX3/yaAttXLbZL5GJG61Z5Y?=
+ =?us-ascii?Q?JvkUuU3LDk95LgcL2Ox8U7mLymIVDGns+/BkXehdImklCnrkmGXno76Y2hMV?=
+ =?us-ascii?Q?4kVL/rYODpi10P8AZk0hH2Mrga/DNLZCDYAYoR25hYvnR2cRSp+Qf0iM2jtw?=
+ =?us-ascii?Q?sa7WlsR+wxDDePRfFJ8D5wBCqPtRo7EzpJIN/FaM9mYC67fo5rpitbIqJGuH?=
+ =?us-ascii?Q?+CTxERfUfkfjH2Ll5r7nqMIAz+Msuhs346X4Z1Neew2m9TPNM2ND0CH18hTW?=
+ =?us-ascii?Q?Zjxq7zsTdoGs06PRLZUJISGuWSP7v0ldPs7tnSBM3DX8uS4U0spDgqswbqBw?=
+ =?us-ascii?Q?wQz3mTZsJLFr3lMz8saZG3lrkQJxnw6xsH1OFtjK9PjHCdnA2Kwq4+dhiG+i?=
+ =?us-ascii?Q?rbfJh2c/IiDhl6W3FhCbYhTqh6roLZ/jkKqUJO0sMH7e5YuepEKOYiD/G4LZ?=
+ =?us-ascii?Q?VW2pFHphnbRndaeJf/00+5LGTUwN0cjfgvtB3r4UaxqNR29Jebc78z2fpVb1?=
+ =?us-ascii?Q?Bebj/OE/kupPDjHopo6eWWPFYiLgeKVUuUchBuFxOCkkTjsB3s0AXbD9GIPM?=
+ =?us-ascii?Q?G+5S6NcVIC4luURHCTXJWzJYDsVUJGGgv78njGjDhbl5g0n4HpqEn2lKryWt?=
+ =?us-ascii?Q?2p0qA2Vn+j956MtAmX8NC+vkc9y3i8L9vffP+70dHsMuOgWrlKzNNMM3wYfO?=
+ =?us-ascii?Q?xo7C2BMJAnSRh4Q8HXIpniSt3sKkMscEUuVeM2mVyUQTj3ouGCIgGXBO5je3?=
+ =?us-ascii?Q?JvEzj5zn6wXk2OJ8to0fBO7Y0iwhGtlYMczPAAWTF4AfrQhmsoqIU2DsqLtQ?=
+ =?us-ascii?Q?wb2pfFBpz8QwRkvwkHUZTiKCchqewOiy+6kGRQaC6l0xS9fxpZ+mopqJQiH9?=
+ =?us-ascii?Q?Z8CQRvi1YpjuVkLSsS+zJ5m6x2xz9s5GORm77JSjp5tt+Mjuzc0QBIhGC/M0?=
+ =?us-ascii?Q?hKR317a8rKG8/dlKaQAd+FKV+w0vdEXrSygXHlBTUNihBXnFnH9kOEXFrou3?=
+ =?us-ascii?Q?Amzj/atdbu7Siz1QyarXuI2JqwpNLndeqxIIs1aBt3zIHsrJcmcxNLTBB+1g?=
+ =?us-ascii?Q?GIyB6YggAQD2e5E3E2RIE2JGF3qIQ7o8Ig1bjdUVeCVUvMGxoEqBLgUyvmp/?=
+ =?us-ascii?Q?pqqonN+AgNW4qidGRVPbVg1/bSu0VoTg56M6E7uSEtGo/QIsZjqfUKQ4Wbks?=
+ =?us-ascii?Q?C1hgMFsk5rlSiCrxeaUK3qwGnZI+WzdyQF50hmdC?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e364ce6e-1d51-4c64-c3b1-08dd5adab075
+X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB8252.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Mar 2025 05:04:59.2869
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Mar 2025 05:09:07.0676
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 1IpDWOr/BneoQZ2Aj0MKjgmpQHDHMim5vGgM/teZgaTS12AefQa13wS4sin6NBtNHbJQYnVDmF6Io6VV2MRHxA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR11MB7273
-X-OriginatorOrg: intel.com
+X-MS-Exchange-CrossTenant-UserPrincipalName: rTOnaFjFKeJZfi95cWmalRhPZwwxIHPmiCW3peMWPsISmJ4U5YEDTsUbgcAGEndLSI0P0N9XLo3nqVkKhVBRNQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB8728
 
+On Wed, Feb 26, 2025 at 01:49:32AM -0600, Mario Limonciello wrote:
+> From: Mario Limonciello <mario.limonciello@amd.com>
+> 
+> The CPPC enable register is configured as "write once".  That is
+> any future writes don't actually do anything.
+> 
+> Because of this, all the cleanup paths that currently exist for
+> CPPC disable are non-effective.
+> 
+> Rework CPPC enable to only enable after all the CAP registers have
+> been read to avoid enabling CPPC on CPUs with invalid _CPC or
+> unpopulated MSRs.
+> 
+> As the register is write once, remove all cleanup paths as well.
+> 
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> ---
+> v5:
+>  * Drop unnecessary extra code in shmem_cppc_enable()
+>  * Remove redundant tracing in store_energy_performance_preference()
+>  * Add missing call to amd_pstate_cppc_enable() in passive case
+>  * Leave cpudata->suspended alone in amd_pstate_epp_cpu_online()
+>  * Drop spurious whitespace
 
+This version looks good to me.
 
-Hello,
-
-kernel test robot noticed "BUG:unable_to_handle_page_fault_for_address" on:
-
-commit: 8e44a5176a631b6b5ba7efa557d8b1895eb56d85 ("[PATCH v2] scsi: stop judging after finding a VPD page expected to be processed.")
-url: https://github.com/intel-lab-lkp/linux/commits/Chaohai-Chen/scsi-stop-judging-after-finding-a-VPD-page-expected-to-be-processed/20250227-140720
-base: https://git.kernel.org/cgit/linux/kernel/git/jejb/scsi.git for-next
-patch link: https://lore.kernel.org/all/20250227060618.15787-1-wdhh6@aliyun.com/
-patch subject: [PATCH v2] scsi: stop judging after finding a VPD page expected to be processed.
-
-in testcase: boot
-
-config: x86_64-rhel-9.4
-compiler: gcc-12
-test machine: qemu-system-x86_64 -enable-kvm -cpu SandyBridge -smp 2 -m 16G
-
-(please refer to attached dmesg/kmsg for entire log/backtrace)
-
-
-+---------------------------------------------+------------+------------+
-|                                             | 5d51aea463 | 8e44a5176a |
-+---------------------------------------------+------------+------------+
-| boot_successes                              | 12         | 0          |
-| boot_failures                               | 0          | 14         |
-| BUG:unable_to_handle_page_fault_for_address | 0          | 14         |
-| Oops                                        | 0          | 14         |
-| RIP:build_detached_freelist                 | 0          | 14         |
-| Kernel_panic-not_syncing:Fatal_exception    | 0          | 14         |
-+---------------------------------------------+------------+------------+
-
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <oliver.sang@intel.com>
-| Closes: https://lore.kernel.org/oe-lkp/202503041036.ad427cb-lkp@intel.com
-
-
-[   14.245211][  T124] BUG: unable to handle page fault for address: ffffdeda9e000008
-[   14.245852][  T124] #PF: supervisor read access in kernel mode
-[   14.246293][  T124] #PF: error_code(0x0000) - not-present page
-[   14.246740][  T124] PGD 0 P4D 0
-[   14.247003][  T124] Oops: Oops: 0000 [#1] SMP PTI
-[   14.247375][  T124] CPU: 1 UID: 0 PID: 124 Comm: kworker/u8:3 Not tainted 6.14.0-rc1-00076-g8e44a5176a63 #1
-[   14.248100][  T124] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.2-debian-1.16.2-1 04/01/2014
-[   14.248837][  T124] Workqueue: events_unbound kfree_rcu_work
-[ 14.249283][ T124] RIP: 0010:build_detached_freelist (include/linux/page-flags.h:243 include/linux/mm.h:1297 mm/slab.h:211 mm/slub.c:4941) 
-[ 14.250299][ T124] Code: 8b 03 48 89 ca 48 01 c2 0f 82 ed 01 00 00 4d 89 d3 4c 2b 1d 74 b4 57 01 4c 01 da 48 c1 ea 0c 48 c1 e2 06 48 03 15 52 b4 57 01 <4c> 8b 6a 08 49 89 d3 41 f6 c5 01 0f 85 dd 00 00 00 0f 1f 44 00 00
-All code
-========
-   0:	8b 03                	mov    (%rbx),%eax
-   2:	48 89 ca             	mov    %rcx,%rdx
-   5:	48 01 c2             	add    %rax,%rdx
-   8:	0f 82 ed 01 00 00    	jb     0x1fb
-   e:	4d 89 d3             	mov    %r10,%r11
-  11:	4c 2b 1d 74 b4 57 01 	sub    0x157b474(%rip),%r11        # 0x157b48c
-  18:	4c 01 da             	add    %r11,%rdx
-  1b:	48 c1 ea 0c          	shr    $0xc,%rdx
-  1f:	48 c1 e2 06          	shl    $0x6,%rdx
-  23:	48 03 15 52 b4 57 01 	add    0x157b452(%rip),%rdx        # 0x157b47c
-  2a:*	4c 8b 6a 08          	mov    0x8(%rdx),%r13		<-- trapping instruction
-  2e:	49 89 d3             	mov    %rdx,%r11
-  31:	41 f6 c5 01          	test   $0x1,%r13b
-  35:	0f 85 dd 00 00 00    	jne    0x118
-  3b:	0f 1f 44 00 00       	nopl   0x0(%rax,%rax,1)
-
-Code starting with the faulting instruction
-===========================================
-   0:	4c 8b 6a 08          	mov    0x8(%rdx),%r13
-   4:	49 89 d3             	mov    %rdx,%r11
-   7:	41 f6 c5 01          	test   $0x1,%r13b
-   b:	0f 85 dd 00 00 00    	jne    0xee
-  11:	0f 1f 44 00 00       	nopl   0x0(%rax,%rax,1)
-[   14.252909][  T124] RSP: 0000:ffffa8e5004ebcd0 EFLAGS: 00010286
-[   14.253973][  T124] RAX: 0000000080000000 RBX: ffffa8e5004ebd50 RCX: 0000000000000003
-[   14.255143][  T124] RDX: ffffdeda9e000000 RSI: 0000000000000177 RDI: 0000000000000002
-[   14.256313][  T124] RBP: ffff95f9e637b028 R08: ffffdd3284e15900 R09: 0000000000000000
-[   14.257464][  T124] R10: ffffffff80000000 R11: 00006a0700000000 R12: 0000000000000178
-[   14.258661][  T124] R13: 504d56b8f995ffff R14: ffff95f980042200 R15: 000000000000017d
-[   14.259806][  T124] FS:  0000000000000000(0000) GS:ffff95fcafd00000(0000) knlGS:0000000000000000
-[   14.261074][  T124] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[   14.262173][  T124] CR2: ffffdeda9e000008 CR3: 0000000167df6000 CR4: 00000000000406f0
-[   14.263363][  T124] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[   14.264575][  T124] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[   14.265747][  T124] Call Trace:
-[   14.266530][  T124]  <TASK>
-[ 14.267349][ T124] ? __die (arch/x86/kernel/dumpstack.c:421 arch/x86/kernel/dumpstack.c:434) 
-[ 14.268182][ T124] ? page_fault_oops (arch/x86/mm/fault.c:714) 
-[ 14.269105][ T124] ? exc_page_fault (arch/x86/mm/fault.c:1478 arch/x86/mm/fault.c:1538) 
-[ 14.269972][ T124] ? asm_exc_page_fault (arch/x86/include/asm/idtentry.h:623) 
-[ 14.270888][ T124] ? build_detached_freelist (include/linux/page-flags.h:243 include/linux/mm.h:1297 mm/slab.h:211 mm/slub.c:4941) 
-[ 14.271810][ T124] kmem_cache_free_bulk (mm/slub.c:4706) 
-[ 14.272840][ T124] ? dequeue_entity (kernel/sched/fair.c:5488) 
-[ 14.273683][ T124] ? kvfree_rcu_bulk (include/linux/slab.h:791 mm/slab_common.c:1498) 
-[ 14.274542][ T124] kvfree_rcu_bulk (include/linux/slab.h:791 mm/slab_common.c:1498) 
-[ 14.275389][ T124] kfree_rcu_work (mm/slab_common.c:1576) 
-[ 14.276255][ T124] ? finish_task_switch+0x85/0x2b0 
-[ 14.277161][ T124] process_one_work (kernel/workqueue.c:3241) 
-[ 14.277998][ T124] worker_thread (kernel/workqueue.c:3311 kernel/workqueue.c:3398) 
-[ 14.278830][ T124] ? __pfx_worker_thread (kernel/workqueue.c:3344) 
-[ 14.279670][ T124] kthread (kernel/kthread.c:464) 
-[ 14.280456][ T124] ? __pfx_kthread (kernel/kthread.c:413) 
-[ 14.281263][ T124] ret_from_fork (arch/x86/kernel/process.c:154) 
-[ 14.282106][ T124] ? __pfx_kthread (kernel/kthread.c:413) 
-[ 14.282915][ T124] ret_from_fork_asm (arch/x86/entry/entry_64.S:257) 
-[   14.283726][  T124]  </TASK>
-[   14.284397][  T124] Modules linked in: ipmi_devintf ipmi_msghandler sr_mod cdrom sg snd_pcm intel_rapl_msr ata_generic intel_rapl_common snd_timer ghash_clmulni_intel ppdev rapl snd bochs drm_client_lib drm_shmem_helper soundcore i2c_piix4 ata_piix i2c_smbus drm_kms_helper joydev pcspkr parport_pc libata serio_raw parport fuse drm ip_tables
-[   14.287967][  T124] CR2: ffffdeda9e000008
-[   14.288794][  T124] ---[ end trace 0000000000000000 ]---
-[ 14.289744][ T124] RIP: 0010:build_detached_freelist (include/linux/page-flags.h:243 include/linux/mm.h:1297 mm/slab.h:211 mm/slub.c:4941) 
-[ 14.290724][ T124] Code: 8b 03 48 89 ca 48 01 c2 0f 82 ed 01 00 00 4d 89 d3 4c 2b 1d 74 b4 57 01 4c 01 da 48 c1 ea 0c 48 c1 e2 06 48 03 15 52 b4 57 01 <4c> 8b 6a 08 49 89 d3 41 f6 c5 01 0f 85 dd 00 00 00 0f 1f 44 00 00
-All code
-========
-   0:	8b 03                	mov    (%rbx),%eax
-   2:	48 89 ca             	mov    %rcx,%rdx
-   5:	48 01 c2             	add    %rax,%rdx
-   8:	0f 82 ed 01 00 00    	jb     0x1fb
-   e:	4d 89 d3             	mov    %r10,%r11
-  11:	4c 2b 1d 74 b4 57 01 	sub    0x157b474(%rip),%r11        # 0x157b48c
-  18:	4c 01 da             	add    %r11,%rdx
-  1b:	48 c1 ea 0c          	shr    $0xc,%rdx
-  1f:	48 c1 e2 06          	shl    $0x6,%rdx
-  23:	48 03 15 52 b4 57 01 	add    0x157b452(%rip),%rdx        # 0x157b47c
-  2a:*	4c 8b 6a 08          	mov    0x8(%rdx),%r13		<-- trapping instruction
-  2e:	49 89 d3             	mov    %rdx,%r11
-  31:	41 f6 c5 01          	test   $0x1,%r13b
-  35:	0f 85 dd 00 00 00    	jne    0x118
-  3b:	0f 1f 44 00 00       	nopl   0x0(%rax,%rax,1)
-
-Code starting with the faulting instruction
-===========================================
-   0:	4c 8b 6a 08          	mov    0x8(%rdx),%r13
-   4:	49 89 d3             	mov    %rdx,%r11
-   7:	41 f6 c5 01          	test   $0x1,%r13b
-   b:	0f 85 dd 00 00 00    	jne    0xee
-  11:	0f 1f 44 00 00       	nopl   0x0(%rax,%rax,1)
-
-
-The kernel config and materials to reproduce are available at:
-https://download.01.org/0day-ci/archive/20250304/202503041036.ad427cb-lkp@intel.com
-
-
+Reviewed-by: Gautham R. Shenoy <gautham.shenoy@amd.com>
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Thanks and Regards
+gautham.
 
+> v4:
+>  * Remove unnecessary amd_pstate_update_perf() call during online
+>  * Remove unnecessary if (ret) ret.
+>  * Drop amd_pstate_cpu_resume()
+>  * Drop unnecessary derefs
+> v3:
+>  * Fixup for suspend/resume issue
+
+
+
+> ---
+>  drivers/cpufreq/amd-pstate.c | 179 +++++++----------------------------
+>  1 file changed, 35 insertions(+), 144 deletions(-)
+> 
+> diff --git a/drivers/cpufreq/amd-pstate.c b/drivers/cpufreq/amd-pstate.c
+> index f0d9ee62cb30d..89e6d32223c9b 100644
+> --- a/drivers/cpufreq/amd-pstate.c
+> +++ b/drivers/cpufreq/amd-pstate.c
+> @@ -85,7 +85,6 @@ static struct cpufreq_driver *current_pstate_driver;
+>  static struct cpufreq_driver amd_pstate_driver;
+>  static struct cpufreq_driver amd_pstate_epp_driver;
+>  static int cppc_state = AMD_PSTATE_UNDEFINED;
+> -static bool cppc_enabled;
+>  static bool amd_pstate_prefcore = true;
+>  static struct quirk_entry *quirks;
+>  
+> @@ -371,89 +370,21 @@ static int shmem_set_epp(struct cpufreq_policy *policy, u8 epp)
+>  	return ret;
+>  }
+>  
+> -static int amd_pstate_set_energy_pref_index(struct cpufreq_policy *policy,
+> -					    int pref_index)
+> +static inline int msr_cppc_enable(struct cpufreq_policy *policy)
+>  {
+> -	struct amd_cpudata *cpudata = policy->driver_data;
+> -	u8 epp;
+> -
+> -	if (!pref_index)
+> -		epp = cpudata->epp_default;
+> -	else
+> -		epp = epp_values[pref_index];
+> -
+> -	if (epp > 0 && cpudata->policy == CPUFREQ_POLICY_PERFORMANCE) {
+> -		pr_debug("EPP cannot be set under performance policy\n");
+> -		return -EBUSY;
+> -	}
+> -
+> -	return amd_pstate_set_epp(policy, epp);
+> -}
+> -
+> -static inline int msr_cppc_enable(bool enable)
+> -{
+> -	int ret, cpu;
+> -	unsigned long logical_proc_id_mask = 0;
+> -
+> -       /*
+> -        * MSR_AMD_CPPC_ENABLE is write-once, once set it cannot be cleared.
+> -        */
+> -	if (!enable)
+> -		return 0;
+> -
+> -	if (enable == cppc_enabled)
+> -		return 0;
+> -
+> -	for_each_present_cpu(cpu) {
+> -		unsigned long logical_id = topology_logical_package_id(cpu);
+> -
+> -		if (test_bit(logical_id, &logical_proc_id_mask))
+> -			continue;
+> -
+> -		set_bit(logical_id, &logical_proc_id_mask);
+> -
+> -		ret = wrmsrl_safe_on_cpu(cpu, MSR_AMD_CPPC_ENABLE,
+> -				enable);
+> -		if (ret)
+> -			return ret;
+> -	}
+> -
+> -	cppc_enabled = enable;
+> -	return 0;
+> +	return wrmsrl_safe_on_cpu(policy->cpu, MSR_AMD_CPPC_ENABLE, 1);
+>  }
+>  
+> -static int shmem_cppc_enable(bool enable)
+> +static int shmem_cppc_enable(struct cpufreq_policy *policy)
+>  {
+> -	int cpu, ret = 0;
+> -	struct cppc_perf_ctrls perf_ctrls;
+> -
+> -	if (enable == cppc_enabled)
+> -		return 0;
+> -
+> -	for_each_present_cpu(cpu) {
+> -		ret = cppc_set_enable(cpu, enable);
+> -		if (ret)
+> -			return ret;
+> -
+> -		/* Enable autonomous mode for EPP */
+> -		if (cppc_state == AMD_PSTATE_ACTIVE) {
+> -			/* Set desired perf as zero to allow EPP firmware control */
+> -			perf_ctrls.desired_perf = 0;
+> -			ret = cppc_set_perf(cpu, &perf_ctrls);
+> -			if (ret)
+> -				return ret;
+> -		}
+> -	}
+> -
+> -	cppc_enabled = enable;
+> -	return ret;
+> +	return cppc_set_enable(policy->cpu, 1);
+>  }
+>  
+>  DEFINE_STATIC_CALL(amd_pstate_cppc_enable, msr_cppc_enable);
+>  
+> -static inline int amd_pstate_cppc_enable(bool enable)
+> +static inline int amd_pstate_cppc_enable(struct cpufreq_policy *policy)
+>  {
+> -	return static_call(amd_pstate_cppc_enable)(enable);
+> +	return static_call(amd_pstate_cppc_enable)(policy);
+>  }
+>  
+>  static int msr_init_perf(struct amd_cpudata *cpudata)
+> @@ -1069,6 +1000,10 @@ static int amd_pstate_cpu_init(struct cpufreq_policy *policy)
+>  							      cpudata->nominal_freq,
+>  							      perf.highest_perf);
+>  
+> +	ret = amd_pstate_cppc_enable(policy);
+> +	if (ret)
+> +		goto free_cpudata1;
+> +
+>  	policy->boost_enabled = READ_ONCE(cpudata->boost_supported);
+>  
+>  	/* It will be updated by governor */
+> @@ -1116,28 +1051,6 @@ static void amd_pstate_cpu_exit(struct cpufreq_policy *policy)
+>  	kfree(cpudata);
+>  }
+>  
+> -static int amd_pstate_cpu_resume(struct cpufreq_policy *policy)
+> -{
+> -	int ret;
+> -
+> -	ret = amd_pstate_cppc_enable(true);
+> -	if (ret)
+> -		pr_err("failed to enable amd-pstate during resume, return %d\n", ret);
+> -
+> -	return ret;
+> -}
+> -
+> -static int amd_pstate_cpu_suspend(struct cpufreq_policy *policy)
+> -{
+> -	int ret;
+> -
+> -	ret = amd_pstate_cppc_enable(false);
+> -	if (ret)
+> -		pr_err("failed to disable amd-pstate during suspend, return %d\n", ret);
+> -
+> -	return ret;
+> -}
+> -
+>  /* Sysfs attributes */
+>  
+>  /*
+> @@ -1229,8 +1142,10 @@ static ssize_t show_energy_performance_available_preferences(
+>  static ssize_t store_energy_performance_preference(
+>  		struct cpufreq_policy *policy, const char *buf, size_t count)
+>  {
+> +	struct amd_cpudata *cpudata = policy->driver_data;
+>  	char str_preference[21];
+>  	ssize_t ret;
+> +	u8 epp;
+>  
+>  	ret = sscanf(buf, "%20s", str_preference);
+>  	if (ret != 1)
+> @@ -1240,7 +1155,17 @@ static ssize_t store_energy_performance_preference(
+>  	if (ret < 0)
+>  		return -EINVAL;
+>  
+> -	ret = amd_pstate_set_energy_pref_index(policy, ret);
+> +	if (!ret)
+> +		epp = cpudata->epp_default;
+> +	else
+> +		epp = epp_values[ret];
+> +
+> +	if (epp > 0 && policy->policy == CPUFREQ_POLICY_PERFORMANCE) {
+> +		pr_debug("EPP cannot be set under performance policy\n");
+> +		return -EBUSY;
+> +	}
+> +
+> +	ret = amd_pstate_set_epp(policy, epp);
+>  
+>  	return ret ? ret : count;
+>  }
+> @@ -1273,7 +1198,6 @@ static ssize_t show_energy_performance_preference(
+>  
+>  static void amd_pstate_driver_cleanup(void)
+>  {
+> -	amd_pstate_cppc_enable(false);
+>  	cppc_state = AMD_PSTATE_DISABLE;
+>  	current_pstate_driver = NULL;
+>  }
+> @@ -1307,14 +1231,6 @@ static int amd_pstate_register_driver(int mode)
+>  
+>  	cppc_state = mode;
+>  
+> -	ret = amd_pstate_cppc_enable(true);
+> -	if (ret) {
+> -		pr_err("failed to enable cppc during amd-pstate driver registration, return %d\n",
+> -		       ret);
+> -		amd_pstate_driver_cleanup();
+> -		return ret;
+> -	}
+> -
+>  	/* at least one CPU supports CPB */
+>  	current_pstate_driver->boost_enabled = cpu_feature_enabled(X86_FEATURE_CPB);
+>  
+> @@ -1554,11 +1470,15 @@ static int amd_pstate_epp_cpu_init(struct cpufreq_policy *policy)
+>  	policy->cpuinfo.max_freq = policy->max = perf_to_freq(perf,
+>  							      cpudata->nominal_freq,
+>  							      perf.highest_perf);
+> +	policy->driver_data = cpudata;
+> +
+> +	ret = amd_pstate_cppc_enable(policy);
+> +	if (ret)
+> +		goto free_cpudata1;
+>  
+>  	/* It will be updated by governor */
+>  	policy->cur = policy->cpuinfo.min_freq;
+>  
+> -	policy->driver_data = cpudata;
+>  
+>  	policy->boost_enabled = READ_ONCE(cpudata->boost_supported);
+>  
+> @@ -1650,31 +1570,11 @@ static int amd_pstate_epp_set_policy(struct cpufreq_policy *policy)
+>  	return 0;
+>  }
+>  
+> -static int amd_pstate_epp_reenable(struct cpufreq_policy *policy)
+> -{
+> -	int ret;
+> -
+> -	ret = amd_pstate_cppc_enable(true);
+> -	if (ret)
+> -		pr_err("failed to enable amd pstate during resume, return %d\n", ret);
+> -
+> -
+> -	return amd_pstate_epp_update_limit(policy);
+> -}
+> -
+>  static int amd_pstate_epp_cpu_online(struct cpufreq_policy *policy)
+>  {
+> -	struct amd_cpudata *cpudata = policy->driver_data;
+> -	int ret;
+> -
+> -	pr_debug("AMD CPU Core %d going online\n", cpudata->cpu);
+> +	pr_debug("AMD CPU Core %d going online\n", policy->cpu);
+>  
+> -	ret = amd_pstate_epp_reenable(policy);
+> -	if (ret)
+> -		return ret;
+> -	cpudata->suspended = false;
+> -
+> -	return 0;
+> +	return amd_pstate_cppc_enable(policy);
+>  }
+>  
+>  static int amd_pstate_epp_cpu_offline(struct cpufreq_policy *policy)
+> @@ -1692,11 +1592,6 @@ static int amd_pstate_epp_cpu_offline(struct cpufreq_policy *policy)
+>  static int amd_pstate_epp_suspend(struct cpufreq_policy *policy)
+>  {
+>  	struct amd_cpudata *cpudata = policy->driver_data;
+> -	int ret;
+> -
+> -	/* avoid suspending when EPP is not enabled */
+> -	if (cppc_state != AMD_PSTATE_ACTIVE)
+> -		return 0;
+>  
+>  	/* invalidate to ensure it's rewritten during resume */
+>  	cpudata->cppc_req_cached = 0;
+> @@ -1704,11 +1599,6 @@ static int amd_pstate_epp_suspend(struct cpufreq_policy *policy)
+>  	/* set this flag to avoid setting core offline*/
+>  	cpudata->suspended = true;
+>  
+> -	/* disable CPPC in lowlevel firmware */
+> -	ret = amd_pstate_cppc_enable(false);
+> -	if (ret)
+> -		pr_err("failed to suspend, return %d\n", ret);
+> -
+>  	return 0;
+>  }
+>  
+> @@ -1717,8 +1607,12 @@ static int amd_pstate_epp_resume(struct cpufreq_policy *policy)
+>  	struct amd_cpudata *cpudata = policy->driver_data;
+>  
+>  	if (cpudata->suspended) {
+> +		int ret;
+> +
+>  		/* enable amd pstate from suspend state*/
+> -		amd_pstate_epp_reenable(policy);
+> +		ret = amd_pstate_epp_update_limit(policy);
+> +		if (ret)
+> +			return ret;
+>  
+>  		cpudata->suspended = false;
+>  	}
+> @@ -1733,8 +1627,6 @@ static struct cpufreq_driver amd_pstate_driver = {
+>  	.fast_switch    = amd_pstate_fast_switch,
+>  	.init		= amd_pstate_cpu_init,
+>  	.exit		= amd_pstate_cpu_exit,
+> -	.suspend	= amd_pstate_cpu_suspend,
+> -	.resume		= amd_pstate_cpu_resume,
+>  	.set_boost	= amd_pstate_set_boost,
+>  	.update_limits	= amd_pstate_update_limits,
+>  	.name		= "amd-pstate",
+> @@ -1901,7 +1793,6 @@ static int __init amd_pstate_init(void)
+>  
+>  global_attr_free:
+>  	cpufreq_unregister_driver(current_pstate_driver);
+> -	amd_pstate_cppc_enable(false);
+>  	return ret;
+>  }
+>  device_initcall(amd_pstate_init);
+> -- 
+> 2.43.0
+> 
