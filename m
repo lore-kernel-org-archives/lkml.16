@@ -1,35 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D9791FF1A0
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 11:11:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B488520101F
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 11:11:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741086678; cv=none; b=CXoc367dn0+WAP5QgE80LFXxuhP2SDTI3Q2OTgvS31U87g3VW6DrBd4nr77T2LYYNn0RUjFbfxTGB4A0DYVA/XT2UimGx8ymQPXNMquCOnycKMgy89QNapz/d0CJalNJNI3akig7zJ/T9yWyAiFFnvD306QtB17KaoDYi8E6CNE=
+	t=1741086682; cv=none; b=YM1RNqqjmwivq+RSKEqv7HpIWk9pGt/QxLQsm3q8mojUja7yqIW0F5xU5kzE+6IzjD+W2lOyCsHDSNI19ejxEqoOgDYSbGf0F6cv+1XPxY6AziXM4Gm+cX0MjExMTYRWs4Oa2e/sc+kzG3T6KdlEU8ruXq1cCQCmaKgIKafB1Fs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741086678; c=relaxed/simple;
-	bh=W1KZgJPSyJ/7ZZeebiPiFkuJP4qW6MCWO9Xt7TxeeEE=;
+	s=arc-20240116; t=1741086682; c=relaxed/simple;
+	bh=eNUkeV7AVLYPrx6JpkksY/XA1qUwL/vhE5SBrSDA1JU=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=CsgAfqR5N6bNSniYkVzro9i2iB71G/0jf/N5JTDu+qOJtxV4Bs1HLvbV+PmSoiOypgB3oytCAFdr8s4sqODZZZctraQuWifqSPCcM1YGWfYHQ3RON0ndp9t3DrQxJ+DhAZ3vd5XsiZrqW2ItPLRl7HkJDMhhDA4ObDvf16JUkR8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=orvLJAFi; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=AwQxFC6efN8Vm5I2JKiQ7lgEfh1NXn8IR0txImBh+7BOVnPo+Fjip4hoseh3GHfxQItL7do0k7c/fuWnpR8bpQo6RGNzviLLZZQFbIByaEK2GSblxT3JhbJSbfgClLybOBxa6+OUMOv50qlmRWVE6UrIscwZ4EebEDs4UgLigUw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HyQ6T6tP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="orvLJAFi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69758C4CEEA;
-	Tue,  4 Mar 2025 11:11:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HyQ6T6tP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF9BDC4CEE9;
+	Tue,  4 Mar 2025 11:11:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741086676;
-	bh=W1KZgJPSyJ/7ZZeebiPiFkuJP4qW6MCWO9Xt7TxeeEE=;
+	s=k20201202; t=1741086682;
+	bh=eNUkeV7AVLYPrx6JpkksY/XA1qUwL/vhE5SBrSDA1JU=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=orvLJAFi3IqjxY26li29CtOwHeOZsI+wgznmEx2TLKAcjwqKXaxJKtJxGuTVqXebs
-	 Q6n6wOCivgK64Yv2C+O0Qv/shV7CwLw/DCgV2F/7nfAwJYxkznU9Ag2o2gqvXHe7Mw
-	 QZKr2dGQ0xzbZUPqxMLCA8/qfUsVWLDqxaCf27JTiYVmiGhWdA0Z1E8ZB741DhylBk
-	 z6/Eu0qz7S/pYOkyBRa5yHpn1QLHmr798VHOMoS75ewzSvpFh0vyNFEZRs5ocoAW0c
-	 +U6rcFDs6SUp/SQCtUeBjhk0u3R/9sGoYoShom3QWIUw+Ec44guoy5unYMYGcP6y3z
-	 5ULWQRwliDPtw==
+	b=HyQ6T6tPYE4vHG8SlPz1UL0ko0mrZaVsG7tJlBZ4x0SqvJDFYXbZc5nM0lxCt5Chl
+	 4iu7SfT/YuJbWIK7nt5vRLBIKXSswD4DRdGrw5XyCPOEErvabsTcDovSHXeZ+OSSOM
+	 Gr7cLq95vp94XLz/J/cwdX5+/d6c40KS8l3b8nhz3CF2TpMaXn0iHsUVcuLBkz8Ehc
+	 EZSTZg1nbnJ5EPrvnP5M4FzEen0X/PQW4u/n1G6dG/YGfKawwctuKnMaxJAJ0rsvh8
+	 jPP7VHNyRBWsN/5YKzCpQ5YcdjyWQLM5+JKTz55bqnfzieWH6eK0Xkk1HfBDUpu0aJ
+	 ZffMupymugbNA==
 From: Maxime Ripard <mripard@kernel.org>
-Date: Tue, 04 Mar 2025 12:10:48 +0100
-Subject: [PATCH v5 05/16] drm/tests: helpers: Create new helper to enable
- output
+Date: Tue, 04 Mar 2025 12:10:50 +0100
+Subject: [PATCH v5 07/16] drm/tests: Create tests for drm_atomic
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -38,7 +37,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250304-bridge-connector-v5-5-aacf461d2157@kernel.org>
+Message-Id: <20250304-bridge-connector-v5-7-aacf461d2157@kernel.org>
 References: <20250304-bridge-connector-v5-0-aacf461d2157@kernel.org>
 In-Reply-To: <20250304-bridge-connector-v5-0-aacf461d2157@kernel.org>
 To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
@@ -53,145 +52,201 @@ Cc: Herve Codina <herve.codina@bootlin.com>,
  Maxime Ripard <mripard@kernel.org>, 
  Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4286; i=mripard@kernel.org;
- h=from:subject:message-id; bh=W1KZgJPSyJ/7ZZeebiPiFkuJP4qW6MCWO9Xt7TxeeEE=;
- b=owGbwMvMwCmsHn9OcpHtvjLG02pJDOnH7u+byuEx4eeiv8qVa2s2sa9I2co8xVuY5WT7qhK3N
- hvLMvZPHVNZGIQ5GWTFFFmeyISdXt6+uMrBfuUPmDmsTCBDGLg4BWAi9yUZazjOdt2coLHRMFIv
- IfOM2ZRnXz12KdwN/x5vXir08NWVazlmSwT+B8Y7/p2y0qcgJfuzP2PD/mJdzjwO5sVHHpc35D7
- fUB4QVs327dDL/om5c/Mlls94siLr80xHnVdRT4pV1qu9XLgeAA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5633; i=mripard@kernel.org;
+ h=from:subject:message-id; bh=eNUkeV7AVLYPrx6JpkksY/XA1qUwL/vhE5SBrSDA1JU=;
+ b=owGbwMvMwCmsHn9OcpHtvjLG02pJDOnH7u+3FVHsPnihULWL5eNldwlp0axopdnLFzAyROtmb
+ nPJe93QMZWFQZiTQVZMkeWJTNjp5e2LqxzsV/6AmcPKBDKEgYtTACbCq8PYcJvVsP1q6zS+97+y
+ O5h+TXnIPXe5atGTnPlHTxbpbnwRIzKzeRG7ytpT0nwxxU7JfQetGRtmRot96RJrPbRtkaaVpkW
+ E3yLTbcf5dB7s5SwXdD/Hvtxz2r+Jziu7bTS4+f+d81p89ioA
 X-Developer-Key: i=mripard@kernel.org; a=openpgp;
  fpr=BE5675C37E818C8B5764241C254BCFC56BF6CE8D
 
-We'll need the HDMI state tests light_up_connector() function in more
-tests, so let's promote it to a helper.
+We don't have a set of kunit tests for the functions under drm_atomic.h.
+Let's use the introduction of drm_atomic_get_connector_for_encoder() to
+create some tests for it and thus create that set.
 
 Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 Signed-off-by: Maxime Ripard <mripard@kernel.org>
 ---
- drivers/gpu/drm/tests/drm_kunit_helpers.c | 61 +++++++++++++++++++++++++++++++
- include/drm/drm_kunit_helpers.h           |  8 ++++
- 2 files changed, 69 insertions(+)
+ drivers/gpu/drm/tests/Makefile          |   1 +
+ drivers/gpu/drm/tests/drm_atomic_test.c | 153 ++++++++++++++++++++++++++++++++
+ 2 files changed, 154 insertions(+)
 
-diff --git a/drivers/gpu/drm/tests/drm_kunit_helpers.c b/drivers/gpu/drm/tests/drm_kunit_helpers.c
-index a4eb68f0decca15988105b9d58266e3871934a8b..14ad8f0a0af18410a7129ec34635678a8120d3cb 100644
---- a/drivers/gpu/drm/tests/drm_kunit_helpers.c
-+++ b/drivers/gpu/drm/tests/drm_kunit_helpers.c
-@@ -1,9 +1,10 @@
- // SPDX-License-Identifier: GPL-2.0
+diff --git a/drivers/gpu/drm/tests/Makefile b/drivers/gpu/drm/tests/Makefile
+index 6691c577d2d4581a4185bac2ce89a6b14b339b35..3afd6587df0831a0d10e91ff0a584af6ba1813e4 100644
+--- a/drivers/gpu/drm/tests/Makefile
++++ b/drivers/gpu/drm/tests/Makefile
+@@ -2,10 +2,11 @@
  
- #include <drm/drm_atomic.h>
- #include <drm/drm_atomic_helper.h>
-+#include <drm/drm_atomic_uapi.h>
- #include <drm/drm_drv.h>
- #include <drm/drm_edid.h>
- #include <drm/drm_fourcc.h>
- #include <drm/drm_kunit_helpers.h>
- #include <drm/drm_managed.h>
-@@ -269,10 +270,70 @@ drm_kunit_helper_create_crtc(struct kunit *test,
+ obj-$(CONFIG_DRM_KUNIT_TEST_HELPERS) += \
+ 	drm_kunit_helpers.o
  
- 	return crtc;
- }
- EXPORT_SYMBOL_GPL(drm_kunit_helper_create_crtc);
- 
-+/**
-+ * drm_kunit_helper_enable_crtc_connector - Enables a CRTC -> Connector output
-+ * @test: The test context object
-+ * @drm: The device to alloc the plane for
-+ * @crtc: The CRTC to enable
-+ * @connector: The Connector to enable
-+ * @mode: The display mode to configure the CRTC with
-+ * @ctx: Locking context
-+ *
-+ * This function creates an atomic update to enable the route from @crtc
-+ * to @connector, with the given @mode.
-+ *
-+ * Returns:
-+ *
-+ * A pointer to the new CRTC, or an ERR_PTR() otherwise. If the error
-+ * returned is EDEADLK, the entire atomic sequence must be restarted.
+ obj-$(CONFIG_DRM_KUNIT_TEST) += \
++	drm_atomic_test.o \
+ 	drm_atomic_state_test.o \
+ 	drm_bridge_test.o \
+ 	drm_buddy_test.o \
+ 	drm_cmdline_parser_test.o \
+ 	drm_connector_test.o \
+diff --git a/drivers/gpu/drm/tests/drm_atomic_test.c b/drivers/gpu/drm/tests/drm_atomic_test.c
+new file mode 100644
+index 0000000000000000000000000000000000000000..ea91bec6569e688ad33149d8ee6ecc3562b61254
+--- /dev/null
++++ b/drivers/gpu/drm/tests/drm_atomic_test.c
+@@ -0,0 +1,153 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Kunit test for drm_atomic functions
 + */
-+int drm_kunit_helper_enable_crtc_connector(struct kunit *test,
-+					   struct drm_device *drm,
-+					   struct drm_crtc *crtc,
-+					   struct drm_connector *connector,
-+					   const struct drm_display_mode *mode,
-+					   struct drm_modeset_acquire_ctx *ctx)
++#include <drm/drm_atomic.h>
++#include <drm/drm_atomic_state_helper.h>
++#include <drm/drm_atomic_uapi.h>
++#include <drm/drm_encoder.h>
++#include <drm/drm_kunit_helpers.h>
++#include <drm/drm_modeset_helper_vtables.h>
++
++#include <kunit/test.h>
++
++struct drm_atomic_test_priv {
++	struct drm_device drm;
++	struct drm_plane *plane;
++	struct drm_crtc *crtc;
++	struct drm_encoder encoder;
++	struct drm_connector connector;
++};
++
++static const struct drm_connector_helper_funcs drm_atomic_init_connector_helper_funcs = {
++};
++
++static const struct drm_connector_funcs drm_atomic_init_connector_funcs = {
++	.atomic_destroy_state	= drm_atomic_helper_connector_destroy_state,
++	.atomic_duplicate_state	= drm_atomic_helper_connector_duplicate_state,
++	.reset			= drm_atomic_helper_connector_reset,
++};
++
++static struct drm_atomic_test_priv *create_device(struct kunit *test)
 +{
-+	struct drm_atomic_state *state;
-+	struct drm_connector_state *conn_state;
-+	struct drm_crtc_state *crtc_state;
++	struct drm_atomic_test_priv *priv;
++	struct drm_connector *connector;
++	struct drm_encoder *enc;
++	struct drm_device *drm;
++	struct drm_plane *plane;
++	struct drm_crtc *crtc;
++	struct device *dev;
 +	int ret;
 +
-+	state = drm_kunit_helper_atomic_state_alloc(test, drm, ctx);
-+	if (IS_ERR(state))
-+		return PTR_ERR(state);
++	dev = drm_kunit_helper_alloc_device(test);
++	if (IS_ERR(dev))
++		return ERR_CAST(dev);
 +
-+	conn_state = drm_atomic_get_connector_state(state, connector);
-+	if (IS_ERR(conn_state))
-+		return PTR_ERR(conn_state);
++	priv = drm_kunit_helper_alloc_drm_device(test, dev,
++						 struct drm_atomic_test_priv, drm,
++						 DRIVER_MODESET | DRIVER_ATOMIC);
++	if (IS_ERR(priv))
++		return ERR_CAST(priv);
 +
-+	ret = drm_atomic_set_crtc_for_connector(conn_state, crtc);
++	drm = &priv->drm;
++	plane = drm_kunit_helper_create_primary_plane(test, drm,
++						      NULL,
++						      NULL,
++						      NULL, 0,
++						      NULL);
++	if (IS_ERR(plane))
++		return ERR_CAST(plane);
++	priv->plane = plane;
++
++	crtc = drm_kunit_helper_create_crtc(test, drm,
++					    plane, NULL,
++					    NULL,
++					    NULL);
++	if (IS_ERR(crtc))
++		return ERR_CAST(crtc);
++	priv->crtc = crtc;
++
++	enc = &priv->encoder;
++	ret = drmm_encoder_init(drm, enc, NULL, DRM_MODE_ENCODER_TMDS, NULL);
 +	if (ret)
-+		return ret;
++		return ERR_PTR(ret);
 +
-+	crtc_state = drm_atomic_get_crtc_state(state, crtc);
-+	if (IS_ERR(crtc_state))
-+		return PTR_ERR(crtc_state);
++	enc->possible_crtcs = drm_crtc_mask(crtc);
 +
-+	ret = drm_atomic_set_mode_for_crtc(crtc_state, mode);
++	connector = &priv->connector;
++	ret = drmm_connector_init(drm, connector,
++				  &drm_atomic_init_connector_funcs,
++				  DRM_MODE_CONNECTOR_VIRTUAL,
++				  NULL);
 +	if (ret)
-+		return ret;
++		return ERR_PTR(ret);
 +
-+	crtc_state->enable = true;
-+	crtc_state->active = true;
++	drm_connector_helper_add(connector, &drm_atomic_init_connector_helper_funcs);
 +
-+	ret = drm_atomic_commit(state);
-+	if (ret)
-+		return ret;
++	drm_connector_attach_encoder(connector, enc);
 +
-+	return 0;
++	drm_mode_config_reset(drm);
++
++	return priv;
 +}
-+EXPORT_SYMBOL_GPL(drm_kunit_helper_enable_crtc_connector);
 +
- static void kunit_action_drm_mode_destroy(void *ptr)
- {
- 	struct drm_display_mode *mode = ptr;
- 
- 	drm_mode_destroy(NULL, mode);
-diff --git a/include/drm/drm_kunit_helpers.h b/include/drm/drm_kunit_helpers.h
-index 11d59ce0bac0bbec07ae5f07ed9710cf01d73f09..1cda7281f30029e649c62fc0fd9d9ae6889d43ac 100644
---- a/include/drm/drm_kunit_helpers.h
-+++ b/include/drm/drm_kunit_helpers.h
-@@ -7,10 +7,11 @@
- 
- #include <linux/device.h>
- 
- #include <kunit/test.h>
- 
-+struct drm_connector;
- struct drm_crtc_funcs;
- struct drm_crtc_helper_funcs;
- struct drm_device;
- struct drm_plane_funcs;
- struct drm_plane_helper_funcs;
-@@ -116,10 +117,17 @@ drm_kunit_helper_create_crtc(struct kunit *test,
- 			     struct drm_plane *primary,
- 			     struct drm_plane *cursor,
- 			     const struct drm_crtc_funcs *funcs,
- 			     const struct drm_crtc_helper_funcs *helper_funcs);
- 
-+int drm_kunit_helper_enable_crtc_connector(struct kunit *test,
-+					   struct drm_device *drm,
-+					   struct drm_crtc *crtc,
-+					   struct drm_connector *connector,
-+					   const struct drm_display_mode *mode,
-+					   struct drm_modeset_acquire_ctx *ctx);
++static void drm_test_drm_atomic_get_connector_for_encoder(struct kunit *test)
++{
++	struct drm_modeset_acquire_ctx ctx;
++	struct drm_atomic_test_priv *priv;
++	struct drm_display_mode *mode;
++	struct drm_connector *curr_connector;
++	int ret;
 +
- struct drm_display_mode *
- drm_kunit_display_mode_from_cea_vic(struct kunit *test, struct drm_device *dev,
- 				    u8 video_code);
- 
- #endif // DRM_KUNIT_HELPERS_H_
++	priv = create_device(test);
++	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, priv);
++
++	mode = drm_kunit_display_mode_from_cea_vic(test, &priv->drm, 16);
++	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, mode);
++
++	drm_modeset_acquire_init(&ctx, 0);
++
++retry_enable:
++	ret = drm_kunit_helper_enable_crtc_connector(test, &priv->drm,
++						     priv->crtc, &priv->connector,
++						     mode, &ctx);
++	if (ret == -EDEADLK) {
++		drm_modeset_backoff(&ctx);
++		goto retry_enable;
++	}
++	KUNIT_ASSERT_EQ(test, ret, 0);
++
++	drm_modeset_drop_locks(&ctx);
++	drm_modeset_acquire_fini(&ctx);
++
++	drm_modeset_acquire_init(&ctx, 0);
++
++retry_conn:
++	curr_connector = drm_atomic_get_connector_for_encoder(&priv->encoder,
++							      &ctx);
++	if (PTR_ERR(curr_connector) == -EDEADLK) {
++		drm_modeset_backoff(&ctx);
++		goto retry_conn;
++	}
++	KUNIT_EXPECT_PTR_EQ(test, curr_connector, &priv->connector);
++
++	drm_modeset_drop_locks(&ctx);
++	drm_modeset_acquire_fini(&ctx);
++}
++
++static struct kunit_case drm_atomic_get_connector_for_encoder_tests[] = {
++	KUNIT_CASE(drm_test_drm_atomic_get_connector_for_encoder),
++	{ }
++};
++
++
++static struct kunit_suite drm_atomic_get_connector_for_encoder_test_suite = {
++	.name = "drm_test_atomic_get_connector_for_encoder",
++	.test_cases = drm_atomic_get_connector_for_encoder_tests,
++};
++
++kunit_test_suite(drm_atomic_get_connector_for_encoder_test_suite);
++
++MODULE_AUTHOR("Maxime Ripard <mripard@kernel.org>");
++MODULE_DESCRIPTION("Kunit test for drm_atomic functions");
++MODULE_LICENSE("GPL");
 
 -- 
 2.48.1
