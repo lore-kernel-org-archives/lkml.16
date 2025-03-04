@@ -1,146 +1,78 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8ECF20469B
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 14:13:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49100204C0C;
+	Tue,  4 Mar 2025 14:14:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741097625; cv=none; b=ej8i0usoQ3vMEyGaVRgvtktWXIu+s97ENG7SqQb4kr4Kva7Irbx6YHZQj6aEYEbgv8/9eGOhAFfXzlBluwoLJPwU9Ro6a8jguTOC7pPedJRrBjPF52lCXvkdAdz/aKQY6bMCno1Q+5wT+64HBiHsWa1fcieOUt9BGnzofBefOkc=
+	t=1741097643; cv=none; b=E9dsWt/O+/CBQ2iGS+1OM9UczK76GMyg8lFcEy7TNNTlkNlJVhTLK2xfd6cVEp/Z1tsrm6dKEe2DMKO//OYevmcegbhAvbqkI/Ju1RqtcDKcrYbOWETkIoQoET7En2rxOUfEB4fbSisDe+Q6629PHgdGAfW+bDvm1ZfKvv0oHLo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741097625; c=relaxed/simple;
-	bh=RkAdbbyUQqjk2EqBpPCG94Sc14gbb5422sQin3wFOho=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tUl/ls7j0asLbi+t8aVaRnIq1IW+QWKr+FwY5IJBC/sym6uHILdd0SSGoDyZVLiUHOZgOOZQMqC721SHnBCullnz3LEVKGNE9AQZMW7zMDGUNAuS9qUg4+pYPTvBNs9CCFJCVpVVWn9AD9Gr7U5X3ltkDxmNhdoOXtaWaXzUlQs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id D5D8D210F9;
-	Tue,  4 Mar 2025 14:13:41 +0000 (UTC)
-Authentication-Results: smtp-out1.suse.de;
-	none
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id A402D1393C;
-	Tue,  4 Mar 2025 14:13:41 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id iImOJpUKx2fdLAAAD6G6ig
-	(envelope-from <tzimmermann@suse.de>); Tue, 04 Mar 2025 14:13:41 +0000
-Message-ID: <f6441c24-667d-4127-ba34-0a600361e788@suse.de>
-Date: Tue, 4 Mar 2025 15:13:41 +0100
+	s=arc-20240116; t=1741097643; c=relaxed/simple;
+	bh=OV2CJNpd5RbwY36OXuv9fH3F4quuWs+tUzGPKWB+dfk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DHZIxszB74F99lUfbJc4p8xj/E37B6t9ySiwI9X4uo0v63DsCUhsNOA8dPmV2HhWq/1y0UsQx0FgRSPUdH7CIOBLLKoeFhtZKcVRdA4HSqN4TYitykzNaZe3TcPTkJZtNSasz9isg9AY4gAijeq7BOl2lRkBcCTjHQH7/vhUck8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VMIW/0bK; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VMIW/0bK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9AE3DC4CEE5;
+	Tue,  4 Mar 2025 14:14:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741097642;
+	bh=OV2CJNpd5RbwY36OXuv9fH3F4quuWs+tUzGPKWB+dfk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=VMIW/0bKjE1tZRI1Rs4ZbR6vix5C+Lkx3ktgfcBNXMYTo7IpY2nynzK3XXIcmMoJA
+	 guRel6Y8URIZeXm6QdNsdATb3Pc+sUCVkPiGk+2xSM7UiPu6PXVFbJADiEUNDnB4N9
+	 Wg45jZb1/yRt0R9ubWsPvXxDrhpYL3gdBZnuN02PbQBIiZyfcSrLr7mmqhjqslUSPb
+	 KihOCuDjdjvIdQT0ZLL8r0IC7DlY5UsPstzds7CXOK5dw1P8s2jyDcfayAtYyGt4wA
+	 OaiWrUTG1igICyRY17FzDyFKTgnzf3Uj+uzenZjOMLiwg2kxo7xLwgY5mf1DCdzBg4
+	 0WPPq+tBH0M/g==
+Date: Tue, 4 Mar 2025 08:14:01 -0600
+From: Rob Herring <robh@kernel.org>
+To: Gabriel Gonzales <semfault@disroot.org>
+Cc: linux-kernel@vger.kernel.org, Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH v1 1/2] dt-bindings: arm: qcom: Add Xiaomi Redmi Note 8
+Message-ID: <20250304141401.GA2537006-robh@kernel.org>
+References: <20250304043742.9252-1-semfault@disroot.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] drm/bochs: Fix DPMS regression
-To: Takashi Iwai <tiwai@suse.de>, Gerd Hoffmann <kraxel@redhat.com>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, virtualization@lists.linux.dev,
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-References: <20250304134203.20534-1-tiwai@suse.de>
-Content-Language: en-US
-From: Thomas Zimmermann <tzimmermann@suse.de>
-Autocrypt: addr=tzimmermann@suse.de; keydata=
- xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
- XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
- BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
- hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
- 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
- AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
- AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
- AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
- lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
- U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
- vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
- 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
- j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
- T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
- 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
- GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
- hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
- EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
- C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
- yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
- SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
- Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
- 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
-In-Reply-To: <20250304134203.20534-1-tiwai@suse.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Pre-Result: action=no action;
-	module=replies;
-	Message is reply to one we originated
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.00 / 50.00];
-	REPLY(-4.00)[];
-	ASN(0.00)[asn:25478, ipnet:::/0, country:RU]
-X-Spam-Score: -4.00
-X-Spam-Flag: NO
-X-Rspamd-Queue-Id: D5D8D210F9
-X-Rspamd-Pre-Result: action=no action;
-	module=replies;
-	Message is reply to one we originated
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250304043742.9252-1-semfault@disroot.org>
 
+On Tue, Mar 04, 2025 at 12:37:39PM +0800, Gabriel Gonzales wrote:
+> Document the Xiaomi Redmi Note 8, which is based off the SM6125 SoC
 
+Period.
 
-Am 04.03.25 um 14:41 schrieb Takashi Iwai:
-> The recent rewrite with the use of regular atomic helpers broke the
-> DPMS unblanking on X11.  Fix it by moving the call of
-> bochs_hw_blank(false) from CRTC mode_set_nofb() to atomic_enable().
->
-> Fixes: 2037174993c8 ("drm/bochs: Use regular atomic helpers")
-> Link: https://bugzilla.suse.com/show_bug.cgi?id=1238209
-> Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Perhaps mention where ginkgo comes from. It's not clear if one looks at 
+just the commit msg or just the schema.
 
-Reviewed-by: Thomas Zimmermann <tzimmermann@suse.de>
-
-Thanks for the patch.
-
+> 
+> Signed-off-by: Gabriel Gonzales <semfault@disroot.org>
 > ---
->   drivers/gpu/drm/tiny/bochs.c | 5 +++--
->   1 file changed, 3 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/gpu/drm/tiny/bochs.c b/drivers/gpu/drm/tiny/bochs.c
-> index 76e29950a807..c1c7d6c9e85f 100644
-> --- a/drivers/gpu/drm/tiny/bochs.c
-> +++ b/drivers/gpu/drm/tiny/bochs.c
-> @@ -323,8 +323,6 @@ static void bochs_hw_setmode(struct bochs_device *bochs, struct drm_display_mode
->   			 bochs->xres, bochs->yres, bochs->bpp,
->   			 bochs->yres_virtual);
->   
-> -	bochs_hw_blank(bochs, false);
-> -
->   	bochs_dispi_write(bochs, VBE_DISPI_INDEX_ENABLE,      0);
->   	bochs_dispi_write(bochs, VBE_DISPI_INDEX_BPP,         bochs->bpp);
->   	bochs_dispi_write(bochs, VBE_DISPI_INDEX_XRES,        bochs->xres);
-> @@ -494,6 +492,9 @@ static int bochs_crtc_helper_atomic_check(struct drm_crtc *crtc,
->   static void bochs_crtc_helper_atomic_enable(struct drm_crtc *crtc,
->   					    struct drm_atomic_state *state)
->   {
-> +	struct bochs_device *bochs = to_bochs_device(crtc->dev);
-> +
-> +	bochs_hw_blank(bochs, false);
->   }
->   
->   static void bochs_crtc_helper_atomic_disable(struct drm_crtc *crtc,
-
--- 
---
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Software Solutions Germany GmbH
-Frankenstrasse 146, 90461 Nuernberg, Germany
-GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
-HRB 36809 (AG Nuernberg)
-
+>  Documentation/devicetree/bindings/arm/qcom.yaml | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/qcom.yaml b/Documentation/devicetree/bindings/arm/qcom.yaml
+> index 618a87693..52f7b217b 100644
+> --- a/Documentation/devicetree/bindings/arm/qcom.yaml
+> +++ b/Documentation/devicetree/bindings/arm/qcom.yaml
+> @@ -1020,6 +1020,7 @@ properties:
+>        - items:
+>            - enum:
+>                - sony,pdx201
+> +              - xiaomi,ginkgo
+>                - xiaomi,laurel-sprout
+>            - const: qcom,sm6125
+>  
+> -- 
+> 2.47.0
+> 
