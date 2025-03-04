@@ -1,165 +1,182 @@
-Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B09820468F;
-	Tue,  4 Mar 2025 10:58:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52B951FCF60;
+	Tue,  4 Mar 2025 10:59:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741085919; cv=none; b=hSaPfwj810Hj8OSKPINL+YOpmJ4YY+oY0uqKGUNNxVfu2eJ7g5vv61xoAk9HwuvRH3KnNx2Z/KuxGpNV3POcMWCkqPRSv1gHUGZVJYyn/UwOlv+U8bdz8Jeq5LSuT0mNt3sDqI7cv7DvT5MSk0yUvPChcfwvVyWgiHGj7BnagFg=
+	t=1741085957; cv=none; b=hpY+KvpcCjbXhHDQ+AIVAKOHrMYw0DfI6SkbH4P3MfBBUI9wdj6bYcuIl3GO0geNw9uylBlJPw7FVZ3dWbAvlqBQ3KcDTS4a/S8ZMjgmvbRg2aqJ0zVHEU3RHkGCFiQJD+QXADABOx44LJ4if8gvCvzCeRzcAoXKikpvI7ydD2Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741085919; c=relaxed/simple;
-	bh=nchUryzcicM8roedQgtIOnXzJ+bqicXSPLLzX1Zrd88=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=b98UBtKGJYMA92gVCZwaoRq/+lUDPZAsYistX+2FBwj/+6XoYlL1Pmt/0P/L/59+nZZ/twXiw86AUpyoqb1WjLTtm+exIl3Drqks95rI6WR3vW7L9gQCicJVfDiqsIqvYV63p32GyehItuwcKNNDcM7UEJsyImi1/Gmg9ZBzMo0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=UkKqzxOk; arc=none smtp.client-ip=198.47.19.246
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1741085957; c=relaxed/simple;
+	bh=hLcfv8cs2z2Jzw4ezqrU3L60vIn/qFCZlb93ktP+vOo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=IYJY1Z//i3ay9Kbeu5njDKLg4BXGiWUA0vp9MTF7cHDLhw520AOHFaV7V01xhBqI6GUSCPxTklZPEGInwpMZCpQmj+OysPc06QYRm3NLvoGlNkzlaJozh1BIema13Mwu1TwcmvATyFlw8bLCDFhxKzipIwNlFJHzcBK+BVZXxsw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ltk75wvx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="UkKqzxOk"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 524AwJw13576389
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 4 Mar 2025 04:58:19 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1741085899;
-	bh=wRUzk5bTqm01beKg6HwXEmAMeVCJrPaBDA9inMAHOZs=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=UkKqzxOkPYEOwVCJelWNuGrtv5f8xbjxAg5TamFF7mw8ItEHQ1+F0Gn10w5E7lWSY
-	 O+K8U7FGC/8f0JpAMc5sVcMMNGwXmxpqLyyDMGfrAmrUoxtf/+eaSWuZJr4lIP/rwd
-	 vZRt3rFrF3kt6yMz4EJDXoulbUjCrKYH91wGsMQE=
-Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 524AwJkX036192
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Tue, 4 Mar 2025 04:58:19 -0600
-Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 4
- Mar 2025 04:58:18 -0600
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE101.ent.ti.com
- (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Tue, 4 Mar 2025 04:58:18 -0600
-Received: from fllv0122.itg.ti.com (fllv0122.itg.ti.com [10.247.120.72])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 524AwIdP097457;
-	Tue, 4 Mar 2025 04:58:18 -0600
-Received: from localhost (meghana-pc.dhcp.ti.com [10.24.69.13] (may be forged))
-	by fllv0122.itg.ti.com (8.14.7/8.14.7) with ESMTP id 524AwHAQ017609;
-	Tue, 4 Mar 2025 04:58:18 -0600
-From: Meghana Malladi <m-malladi@ti.com>
-To: <javier.carrasco.cruz@gmail.com>, <diogo.ivo@siemens.com>,
-        <m-malladi@ti.com>, <horms@kernel.org>, <richardcochran@gmail.com>,
-        <pabeni@redhat.com>, <kuba@kernel.org>, <edumazet@google.com>,
-        <davem@davemloft.net>, <andrew+netdev@lunn.ch>
-CC: <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <srk@ti.com>,
-        Vignesh Raghavendra
-	<vigneshr@ti.com>,
-        Roger Quadros <rogerq@kernel.org>, <danishanwar@ti.com>,
-        Jacob Keller <jacob.e.keller@intel.com>,
-        Kory Maincent
-	<kory.maincent@bootlin.com>
-Subject: [PATCH net-next v4 2/2] net: ti: icss-iep: Add phase offset configuration for perout signal
-Date: Tue, 4 Mar 2025 16:27:53 +0530
-Message-ID: <20250304105753.1552159-3-m-malladi@ti.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250304105753.1552159-1-m-malladi@ti.com>
-References: <20250304105753.1552159-1-m-malladi@ti.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ltk75wvx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC5F0C4CEE5;
+	Tue,  4 Mar 2025 10:59:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741085955;
+	bh=hLcfv8cs2z2Jzw4ezqrU3L60vIn/qFCZlb93ktP+vOo=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=ltk75wvxFHW+T4iiJgW7O6TBUcKFhqD1F4X0JzxqGWZU3uJtEylOTZ7mxwi+cQ4Lu
+	 YS9ZdFekDA/xzlVDafe2AJ0odtoomBSmIM4JNtwwWUDyfITWFIPXDYjjQ8tOHYR0KT
+	 Zr/wfr5oAjg43m7Bp1HZoLM00VRobrcILffveSYw6+bPrO0+0VgKteLRqvH7Rk3NNx
+	 nxfRZ06+cGxWwuyVfLfOlUGm85rss/J6npdiY4JXEV/ASWIH9floHLHvWBbT4DqRXt
+	 lFQJSvkYEVbDYV+pMFEF3MBy7/n42GigzI7x0ynSZRnCpKjf/3P0AwAM0X5lMO4jkC
+	 KYZIffSX7psPw==
+Message-ID: <2fd83d68-7104-4755-a0f0-8ce4a2601e09@kernel.org>
+Date: Tue, 4 Mar 2025 11:59:08 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 3/3] soc: aspeed: lpc-pcc: Add PCC controller support
+To: Kevin Chen <kevin_chen@aspeedtech.com>, lee@kernel.org, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, joel@jms.id.au,
+ andrew@codeconstruct.com.au, derek.kiernan@amd.com, dragan.cvetic@amd.com,
+ arnd@arndb.de, gregkh@linuxfoundation.org, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org,
+ linux-kernel@vger.kernel.org
+References: <20250304104434.481429-1-kevin_chen@aspeedtech.com>
+ <20250304104434.481429-4-kevin_chen@aspeedtech.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
+ cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
+ JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
+ gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
+ J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
+ NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
+ BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
+ vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
+ Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
+ TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
+ S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
+ FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJgPO8PBQkUX63hAAoJEBuTQ307
+ QWKbBn8P+QFxwl7pDsAKR1InemMAmuykCHl+XgC0LDqrsWhAH5TYeTVXGSyDsuZjHvj+FRP+
+ gZaEIYSw2Yf0e91U9HXo3RYhEwSmxUQ4Fjhc9qAwGKVPQf6YuQ5yy6pzI8brcKmHHOGrB3tP
+ /MODPt81M1zpograAC2WTDzkICfHKj8LpXp45PylD99J9q0Y+gb04CG5/wXs+1hJy/dz0tYy
+ iua4nCuSRbxnSHKBS5vvjosWWjWQXsRKd+zzXp6kfRHHpzJkhRwF6ArXi4XnQ+REnoTfM5Fk
+ VmVmSQ3yFKKePEzoIriT1b2sXO0g5QXOAvFqB65LZjXG9jGJoVG6ZJrUV1MVK8vamKoVbUEe
+ 0NlLl/tX96HLowHHoKhxEsbFzGzKiFLh7hyboTpy2whdonkDxpnv/H8wE9M3VW/fPgnL2nPe
+ xaBLqyHxy9hA9JrZvxg3IQ61x7rtBWBUQPmEaK0azW+l3ysiNpBhISkZrsW3ZUdknWu87nh6
+ eTB7mR7xBcVxnomxWwJI4B0wuMwCPdgbV6YDUKCuSgRMUEiVry10xd9KLypR9Vfyn1AhROrq
+ AubRPVeJBf9zR5UW1trJNfwVt3XmbHX50HCcHdEdCKiT9O+FiEcahIaWh9lihvO0ci0TtVGZ
+ MCEtaCE80Q3Ma9RdHYB3uVF930jwquplFLNF+IBCn5JRzsFNBFVDXDQBEADNkrQYSREUL4D3
+ Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
+ MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
+ OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
+ GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
+ 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
+ YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
+ 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
+ BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
+ JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
+ 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
+ YpsFAmA872oFCRRflLYACgkQG5NDfTtBYpvScw/9GrqBrVLuJoJ52qBBKUBDo4E+5fU1bjt0
+ Gv0nh/hNJuecuRY6aemU6HOPNc2t8QHMSvwbSF+Vp9ZkOvrM36yUOufctoqON+wXrliEY0J4
+ ksR89ZILRRAold9Mh0YDqEJc1HmuxYLJ7lnbLYH1oui8bLbMBM8S2Uo9RKqV2GROLi44enVt
+ vdrDvo+CxKj2K+d4cleCNiz5qbTxPUW/cgkwG0lJc4I4sso7l4XMDKn95c7JtNsuzqKvhEVS
+ oic5by3fbUnuI0cemeizF4QdtX2uQxrP7RwHFBd+YUia7zCcz0//rv6FZmAxWZGy5arNl6Vm
+ lQqNo7/Poh8WWfRS+xegBxc6hBXahpyUKphAKYkah+m+I0QToCfnGKnPqyYIMDEHCS/RfqA5
+ t8F+O56+oyLBAeWX7XcmyM6TGeVfb+OZVMJnZzK0s2VYAuI0Rl87FBFYgULdgqKV7R7WHzwD
+ uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
+ 7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
+ 5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
+In-Reply-To: <20250304104434.481429-4-kevin_chen@aspeedtech.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-icss_iep_perout_enable_hw() is a common function for generating
-both pps and perout signals. When enabling pps, the application needs
-to only pass enable/disable argument, whereas for perout it supports
-different flags to configure the signal.
+On 04/03/2025 11:44, Kevin Chen wrote:
+> +
+> +static int aspeed_pcc_probe(struct platform_device *pdev)
+> +{
+> +	int rc;
+> +	struct aspeed_pcc_ctrl *pcc;
+> +	struct device *dev;
+> +	uint32_t fifo_size = PAGE_SIZE;
+> +
+> +	dev = &pdev->dev;
 
-In case the app passes a valid phase offset value, the signal should
-start toggling after that phase offset, else start immediately or
-as soon as possible. ICSS_IEP_SYNC_START_REG register take number of
-clock cycles to wait before starting the signal after activation time.
-Set appropriate value to this register to support phase offset.
+This goes to declaration.
 
-Signed-off-by: Meghana Malladi <m-malladi@ti.com>
-Reviewed-by: Jacob Keller <jacob.e.keller@intel.com>
-Reviewed-by: Kory Maincent <kory.maincent@bootlin.com>
----
-Changes from v3 (v4-v3):
-- Move flag checks out of mutex lock as suggested by Kory Maincent <kory.maincent@bootlin.com>
-- Collected RB tag from Kory Maincent <kory.maincent@bootlin.com>
+> +
+> +	pcc = devm_kzalloc(&pdev->dev, sizeof(*pcc), GFP_KERNEL);
 
- drivers/net/ethernet/ti/icssg/icss_iep.c | 18 ++++++++++++++++--
- 1 file changed, 16 insertions(+), 2 deletions(-)
+Maybe my previous comment was not clear, but you agreed with it. Anyway
+nothing improved here.
 
-diff --git a/drivers/net/ethernet/ti/icssg/icss_iep.c b/drivers/net/ethernet/ti/icssg/icss_iep.c
-index 2981c19c48b1..b4a34c57b7b4 100644
---- a/drivers/net/ethernet/ti/icssg/icss_iep.c
-+++ b/drivers/net/ethernet/ti/icssg/icss_iep.c
-@@ -407,6 +407,7 @@ static int icss_iep_perout_enable_hw(struct icss_iep *iep,
- 				     struct ptp_perout_request *req, int on)
- {
- 	struct timespec64 ts;
-+	u64 ns_start;
- 	u64 ns_width;
- 	int ret;
- 	u64 cmp;
-@@ -416,6 +417,14 @@ static int icss_iep_perout_enable_hw(struct icss_iep *iep,
- 	ts.tv_nsec = req->on.nsec;
- 	ns_width = timespec64_to_ns(&ts);
- 
-+	if (req->flags & PTP_PEROUT_PHASE) {
-+		ts.tv_sec = req->phase.sec;
-+		ts.tv_nsec = req->phase.nsec;
-+		ns_start = timespec64_to_ns(&ts);
-+	} else {
-+		ns_start = 0;
-+	}
-+
- 	if (iep->ops && iep->ops->perout_enable) {
- 		ret = iep->ops->perout_enable(iep->clockops_data, req, on, &cmp);
- 		if (ret)
-@@ -430,7 +439,8 @@ static int icss_iep_perout_enable_hw(struct icss_iep *iep,
- 			regmap_write(iep->map, ICSS_IEP_SYNC_PWIDTH_REG,
- 				     div_u64(ns_width, iep->def_inc));
- 			regmap_write(iep->map, ICSS_IEP_SYNC0_PERIOD_REG, 0);
--			regmap_write(iep->map, ICSS_IEP_SYNC_START_REG, 0);
-+			regmap_write(iep->map, ICSS_IEP_SYNC_START_REG,
-+				     div_u64(ns_start, iep->def_inc));
- 			regmap_write(iep->map, ICSS_IEP_SYNC_CTRL_REG, 0); /* one-shot mode */
- 			/* Enable CMP 1 */
- 			regmap_update_bits(iep->map, ICSS_IEP_CMP_CFG_REG,
-@@ -457,6 +467,8 @@ static int icss_iep_perout_enable_hw(struct icss_iep *iep,
- 
- 			regmap_write(iep->map, ICSS_IEP_SYNC_PWIDTH_REG,
- 				     div_u64(ns_width, iep->def_inc));
-+			regmap_write(iep->map, ICSS_IEP_SYNC_START_REG,
-+				     div_u64(ns_start, iep->def_inc));
- 			/* Enable Sync in single shot mode  */
- 			regmap_write(iep->map, ICSS_IEP_SYNC_CTRL_REG,
- 				     IEP_SYNC_CTRL_SYNC_N_EN(0) | IEP_SYNC_CTRL_SYNC_EN);
-@@ -487,7 +499,8 @@ static int icss_iep_perout_enable(struct icss_iep *iep,
- 	int ret = 0;
- 
- 	/* Reject requests with unsupported flags */
--	if (req->flags & ~PTP_PEROUT_DUTY_CYCLE)
-+	if (req->flags & ~(PTP_PEROUT_DUTY_CYCLE |
-+			  PTP_PEROUT_PHASE))
- 		return -EOPNOTSUPP;
- 
- 	mutex_lock(&iep->ptp_clk_mutex);
-@@ -588,6 +601,7 @@ static int icss_iep_pps_enable(struct icss_iep *iep, int on)
- 	if (on) {
- 		ns = icss_iep_gettime(iep, NULL);
- 		ts = ns_to_timespec64(ns);
-+		rq.perout.flags = 0;
- 		rq.perout.period.sec = 1;
- 		rq.perout.period.nsec = 0;
- 		rq.perout.start.sec = ts.tv_sec + 2;
--- 
-2.43.0
+If you have 'dev' variable, use it.
 
+> +	if (!pcc)
+> +		return -ENOMEM;
+> +
+> +	pcc->regmap = syscon_node_to_regmap(pdev->dev.parent->of_node);
+
+same here and everywhere else.
+
+> +	if (IS_ERR(pcc->regmap)) {
+> +		dev_err(dev, "Couldn't get regmap\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	rc = of_property_read_u32(dev->of_node, "pcc-ports", &pcc->port);
+> +	if (rc) {
+> +		dev_err(dev, "no pcc ports configured\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	rc = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(64));
+> +	if (rc) {
+> +		dev_err(dev, "cannot set 64-bits DMA mask\n");
+> +		return rc;
+> +	}
+> +
+> +	pcc->dma.size = PCC_DMA_BUFSZ;
+> +	pcc->dma.virt = dmam_alloc_coherent(dev,
+> +					    pcc->dma.size,
+> +					    &pcc->dma.addr,
+> +					    GFP_KERNEL);
+> +	if (!pcc->dma.virt) {
+> +		dev_err(dev, "cannot allocate DMA buffer\n");
+> +		return -ENOMEM;
+> +	}
+> +
+> +	fifo_size = roundup(pcc->dma.size, PAGE_SIZE);
+> +	rc = kfifo_alloc(&pcc->fifo, fifo_size, GFP_KERNEL);
+> +	if (rc) {
+> +		dev_err(dev, "cannot allocate kFIFO\n");
+
+Drop
+
+> +		return -ENOMEM;
+> +	}
+> +
+> +	/* Disable PCC to clean up DMA buffer before request IRQ. */
+> +	rc = aspeed_pcc_disable(pcc);
+> +	if (rc) {
+> +		dev_err(dev, "Couldn't disable PCC\n");
+> +		goto err_free_kfifo;
+> +	}
+> +
+> +	pcc->irq = platform_get_irq(pdev, 0);
+> +	if (pcc->irq < 0) {
+> +		dev_err(dev, "Couldn't get IRQ\n");
+
+Drop, core already prints this. Do not duplicate messages.
+
+> +		rc = -ENODEV;
+
+Why not using pcc->irq as rc?
+
+> +		goto err_free_kfifo;
+> +	}
+> +
+Best regards,
+Krzysztof
