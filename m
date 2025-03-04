@@ -1,73 +1,72 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EEB21FBCB0
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 07:59:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A3581F9413;
+	Tue,  4 Mar 2025 07:59:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741075177; cv=none; b=ng//SGLnbKVP/p3iqjyk91NNlI0YJVBrg5BQH3j+HgxUiDUTN0hd5sBOfwljxRmeYY0gJp03pyA2M3yFVaMX+vCGqxGjYGEyc1XF3lZSk9KF4XCXnFMV4pedAzpcbvra8l5TCqe4A9kwKM7UgqtNl4JJ3yvXx1ajUcRDs3mrvyg=
+	t=1741075188; cv=none; b=E+co3fLwwlH2NNjgpS7YUJ8Oj5DIge4EbhVZu5M4YjQVCC9B+2e6nYGAgmIRoDpIIIgO1RFtBTGRdt9fMHIqHFgkf78hVrxDT2uJvZD2KDWmn1CXmjYSw4S9X0WdSFxsf47FWbgj8rMsoj80+xVrAhi68A96hNn0azUZWfq96Ao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741075177; c=relaxed/simple;
-	bh=OmpLaD36OmgP2KxXvtkrxv7kXf2SUSNINdzlwSDRI24=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RCbXbBabdUoD5IK/RvVOrMSk6BlgcRek0qD0U7KJJJmxU2sLjFZt3VifTyJR/b02eakLCQ6ruR2lJAgHe0MJ/b+tiYeq8P928P/WDQNa7ylbM3bEyvpsYL55vtrHjs8rSodbEVKDbs10wX3z2Hqu9As8OD10liX58nNhIIxIFw4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kragniz.eu; spf=none smtp.mailfrom=kragniz.eu; dkim=pass (1024-bit key) header.d=kragniz.eu header.i=@kragniz.eu header.b=H95Yqy4z; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kragniz.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=kragniz.eu
+	s=arc-20240116; t=1741075188; c=relaxed/simple;
+	bh=Cu4z4tJcKQnioK5oBCWV59p1bBfRBmR9sh8lkmQoAZs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DUXD0bUgAHKLqrFuL3bNAQRhDim0BisXWinHgAcAZdg9ok2ZtvfJUXIlT8hgL9W53ZJYDlCKeMBqmjORrkPn9q0ltfQ2THvSkzotuJQzPP8XAupaxqhyUqobnkTWSW5zY8JO/ol/UnKoJiWNC2w+WgrlcWOzCwEyYgJVBjEqM4w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GR29q8ge; arc=none smtp.client-ip=209.85.160.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=kragniz.eu header.i=@kragniz.eu header.b="H95Yqy4z"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-43bbc8b7c65so21358135e9.0
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Mar 2025 23:59:34 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GR29q8ge"
+Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-471fabc5bf5so24870121cf.3;
+        Mon, 03 Mar 2025 23:59:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kragniz.eu; s=google; t=1741075173; x=1741679973; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=r0+vePg+vh0lu4DwI91iCUCQCjYjpI2M5+FTmi5A+xg=;
-        b=H95Yqy4zb8y5GnWeR7+fYbXf7tcN0UFNXl4SMi2RcYP938bIlzl9UcqCdR41noA0zw
-         /puJJKab9cSObHZGeFsi5KfaJqZ6dc0v+WRXdkZSThzArlDAeIK+3a2YpBZjWi8D53XF
-         HL9Gi90qpIUm6DUdhgTYXsbDSFSedawVa6I3E=
+        d=gmail.com; s=20230601; t=1741075186; x=1741679986; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=1aV334ikN5dUEF1FAOBcx+MylSK4OZXxof9bYGpg/Ok=;
+        b=GR29q8geLWfOns2hVVJFCjQhI+FGIS/xgwPnzFTau9ayJqdwf1QBlmkwYTCjI3h8Xt
+         zNJ8GgcuzsOC6qrQnjirzcSdsRaSbk6eTcPGB2rPQRE1sHIc3EKNPin76iuCQKwN+AUj
+         gzDdoU/khCWlPeRc5qTU3viPU1rr5tkOZFkISSTLq7saV605DemEM3fgxj+gVd8iXAPW
+         OM06NZG++BRUBVyDAFJTinoC39qHA7+bLeK28URXL0o1OosQwwN4O0s96tdRhLSaY9Q6
+         B7GZQbJk1V7m3fQXUPFM43tHR5B/L+3EyJYPIKA8lKdAP/dqhV6V2RgqRY0UcxZ8os8n
+         rl5g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741075173; x=1741679973;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=r0+vePg+vh0lu4DwI91iCUCQCjYjpI2M5+FTmi5A+xg=;
-        b=G7A748/gzOFl4W8rBm/nhkA6xJvnVSzObkeZ17FSw3EfPcSHMC27WSW+cRmQt/dXrQ
-         W4kA0RMLqXIRSisUN8SCD9/jhDseMCc8Xy2WMwNU+hg9x5AzxcdS8BUhTOyh4wwhZmUI
-         mf0KWsvcDPh4blL2UxhEpi8hjACklpGs7oM7n+zEAAdmh8FejToT5ehvZCcFpw1AC61c
-         XcyJCHqygtg3T/TLZJBwgkz0r+CSA3FjYBKC8im+3FWaCOdUcTvomhSPdVAuLlB4bep5
-         TZFVYO2+6SSejEZK+4oY0VSD9AjrCIpOdy0GD1VLmrOteo43mGUp5cRMXrwCLyu0oz1o
-         gX0w==
-X-Forwarded-Encrypted: i=1; AJvYcCVjjjpX8CJyVWJRWzlTllkA8x9z10mAjcqGcBgZKYmkNL4+yTLuPfT05DnAz8J/ZrwMZje8e5FcyrdoPLU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzeWBNOZKFOm55RRorEY+xtReK68nzaqYnlBX5buHxFYue3OHxl
-	cwhhALZgXg2kUubEJE5TGXtCxFzuwlIF9RvI3vPpV9ljyxcqlCycdUUCyxN2Yco=
-X-Gm-Gg: ASbGncv4/iSEgqDvL+5AUAEbTJp399ViMpW/zyBbC+UnXiitEslUmHOe2q1QWDNZidc
-	t7pa+DDGc5Ylf9VjjKtYN3YFwf8/vyoenP36cJtBbv6Z/BUMGW2zlZVPcso86m8zVqBVmCKOSTu
-	35p6eargvOcrdhxDLdRvrZABG3YIiFocB8RznqFEi5tb5DXuEw2JG4d2LwzXeMEJxpr0nNPtxaw
-	z0oxs+aVHBZOL3+smFgbToI9YkrQpl/BcID4usnoprMc6KsBaiFeBjvobMyQsFLWjk1mcjdIELV
-	rqW2sgm+d6qLLkMewiP+sgQxv3rXJC/1LhBEc9O/ZUZo7EQ2BvR14NeAAtm22WAIl8sp4ClBzle
-	eiuIO3Q==
-X-Google-Smtp-Source: AGHT+IH9+UXTVhNFEk7r+u4miSHhAhVXhg6fiMdMSbnv+lSnLx4G8t9lr0LTTlz7YiOkc87QvcbFQw==
-X-Received: by 2002:a5d:5f84:0:b0:390:e9e0:5cb3 with SMTP id ffacd0b85a97d-390ec7cd28amr16223888f8f.12.1741075172781;
-        Mon, 03 Mar 2025 23:59:32 -0800 (PST)
-Received: from localhost.localdomain (161.26.169.217.in-addr.arpa. [217.169.26.161])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-390e4796517sm16618101f8f.5.2025.03.03.23.59.32
+        d=1e100.net; s=20230601; t=1741075186; x=1741679986;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=1aV334ikN5dUEF1FAOBcx+MylSK4OZXxof9bYGpg/Ok=;
+        b=pigatJrUAYkino9Yw00ATm8iFDQabdz+kvDu7WiAeM9fCMNtlMcgKjgipIYW2U8OWN
+         GM8+N4C8FviTQTHLDEVqh+Y5iRiF1Y1Gp9FAEI5wkxB3grvi3m+6PO8xLWDEfKCJLGeD
+         CpvxknG0yWFzAtcy10nAG8zw4zq2KuR6DW+PqPjcA262HiY0Kte8SRNXXVBis+aZPtuB
+         C6E9dcWvAFTWrEg6JIsHPRLA+YT119eg+7A9ftCvxnnHK6eQZ23FRGTI9vFpkMJNp1mK
+         I38800AfsT/BnVzjydGs9EqwXS9BsN8R7dypgMmv6KHMHqBBGdY4VxRIcWWhKo51qlH2
+         OPPw==
+X-Forwarded-Encrypted: i=1; AJvYcCXXirjT1TonsEkxm7Z+wY7+EpTTU6c2mipFZlkzQSBCl5YeunLDw8bggeq9BRab6S133hdMe2BJJFwZgVg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyYEh+aAJqi+Av3TcmA4J+Amc3uKjvo9UV/z9hkilBBpSzwjI4d
+	7nFcPYsqY8ayRDHT2Nf9mGTFdqMZQ8If7sDOmMC3pgnu0CFK9Kf5
+X-Gm-Gg: ASbGnctbBBlLK9AC7aaN6/CN58FeZeTSsu56/IM0X5KyY5Ow2fQ1yqPDRLdhghJVqpA
+	6kgUEMyk4RbgQrNwlOq/NH5CmTrsAueMa0rHCREtm7YuqFEtxS3nC2n7pRrAxqk8GRJNHXY3I18
+	WNz54YWp3o4dXE6LmxKQv4S2/7zOvHYROFOwhIlscRogUr4r/EaZ2XUhEVpkpgRoIwxFt4BGo8d
+	VI/qHQfUqeuAV5ESy1taCt8OXBYLnvSn8F/flq3AyHHuJGEdhyA6gzrTFV78ArqAXi8lrOxnve3
+	/+GlSFHkfWAvuYrPhthhuHoDx+NKVeC4+x52PPoDMBMpqg==
+X-Google-Smtp-Source: AGHT+IHIYoa+cieyOOJgxd5EL3wyq699sPw+C+GlH+7h85SoD+RTkabVF3VG6HjUXFBPykg/6gEcuA==
+X-Received: by 2002:a05:622a:20a:b0:471:8d66:cd68 with SMTP id d75a77b69052e-474bc0554ddmr212901451cf.3.1741075185773;
+        Mon, 03 Mar 2025 23:59:45 -0800 (PST)
+Received: from iman-pc.home ([184.148.73.125])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-474691a1f02sm70183901cf.11.2025.03.03.23.59.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Mar 2025 23:59:32 -0800 (PST)
-From: Louis Taylor <louis@kragniz.eu>
-To: Willy Tarreau <w@1wt.eu>,
-	=?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>,
-	Shuah Khan <shuah@kernel.org>
-Cc: Louis Taylor <louis@kragniz.eu>,
-	linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 5/5] tools/nolibc: mark more test functions as static
-Date: Tue,  4 Mar 2025 07:58:19 +0000
-Message-ID: <20250304075846.66563-5-louis@kragniz.eu>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250304075846.66563-1-louis@kragniz.eu>
-References: <20250304075846.66563-1-louis@kragniz.eu>
+        Mon, 03 Mar 2025 23:59:45 -0800 (PST)
+From: Seyediman Seyedarab <imandevel@gmail.com>
+X-Google-Original-From: Seyediman Seyedarab <ImanDevel@gmail.com>
+To: jack@suse.cz,
+	amir73il@gmail.com
+Cc: linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-kernel-mentees@lists.linux.dev,
+	Seyediman Seyedarab <ImanDevel@gmail.com>
+Subject: [PATCH] inotify: disallow watches on unsupported filesystems
+Date: Tue,  4 Mar 2025 03:00:44 -0500
+Message-ID: <20250304080044.7623-1-ImanDevel@gmail.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -76,81 +75,70 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-It was mentioned that a new test_ function should be static, so go back
-over existing functions and mark those static as well.
+currently, inotify_add_watch() allows adding watches on filesystems
+where inotify does not work correctly, without returning an explicit
+error. This behavior is misleading and can cause confusion for users
+expecting inotify to work on a certain filesystem.
 
-Signed-off-by: Louis Taylor <louis@kragniz.eu>
+This patch explicitly rejects inotify usage on filesystems where it
+is known to be unreliable, such as sysfs, procfs, overlayfs, 9p, fuse,
+and others.
+
+By returning -EOPNOTSUPP, the limitation is made explicit, preventing
+users from making incorrect assumptions about inotify behavior.
+
+Signed-off-by: Seyediman Seyedarab <ImanDevel@gmail.com>
 ---
- tools/testing/selftests/nolibc/nolibc-test.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ fs/notify/inotify/inotify_user.c | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
-diff --git a/tools/testing/selftests/nolibc/nolibc-test.c b/tools/testing/selftests/nolibc/nolibc-test.c
-index 2a1629938dd6..b5464ca8d050 100644
---- a/tools/testing/selftests/nolibc/nolibc-test.c
-+++ b/tools/testing/selftests/nolibc/nolibc-test.c
-@@ -807,7 +807,7 @@ static int test_dirent(void)
- 	return 0;
+diff --git a/fs/notify/inotify/inotify_user.c b/fs/notify/inotify/inotify_user.c
+index b372fb2c56bd..9b96438f4d46 100644
+--- a/fs/notify/inotify/inotify_user.c
++++ b/fs/notify/inotify/inotify_user.c
+@@ -87,6 +87,13 @@ static const struct ctl_table inotify_table[] = {
+ 	},
+ };
+ 
++static const unsigned long unwatchable_fs[] = {
++	PROC_SUPER_MAGIC,      SYSFS_MAGIC,	  TRACEFS_MAGIC,
++	DEBUGFS_MAGIC,	      CGROUP_SUPER_MAGIC, SECURITYFS_MAGIC,
++	RAMFS_MAGIC,	      DEVPTS_SUPER_MAGIC, BPF_FS_MAGIC,
++	OVERLAYFS_SUPER_MAGIC, FUSE_SUPER_MAGIC,   NFS_SUPER_MAGIC
++};
++
+ static void __init inotify_sysctls_init(void)
+ {
+ 	register_sysctl("fs/inotify", inotify_table);
+@@ -690,6 +697,14 @@ static struct fsnotify_group *inotify_new_group(unsigned int max_events)
  }
  
--int test_getpagesize(void)
-+static int test_getpagesize(void)
- {
- 	int x = getpagesize();
- 	int c;
-@@ -836,7 +836,7 @@ int test_getpagesize(void)
- 	return !c;
- }
  
--int test_fork(void)
-+static int test_fork(void)
++static inline bool is_unwatchable_fs(struct inode *inode)
++{
++	for (int i = 0; i < ARRAY_SIZE(unwatchable_fs); i++)
++		if (inode->i_sb->s_magic == unwatchable_fs[i])
++			return true;
++	return false;
++}
++
+ /* inotify syscalls */
+ static int do_inotify_init(int flags)
  {
- 	int status;
- 	pid_t pid;
-@@ -861,7 +861,7 @@ int test_fork(void)
- 	}
- }
+@@ -777,6 +792,13 @@ SYSCALL_DEFINE3(inotify_add_watch, int, fd, const char __user *, pathname,
+ 	inode = path.dentry->d_inode;
+ 	group = fd_file(f)->private_data;
  
--int test_stat_timestamps(void)
-+static int test_stat_timestamps(void)
- {
- 	struct stat st;
- 
-@@ -883,7 +883,7 @@ int test_stat_timestamps(void)
- 	return 0;
- }
- 
--int test_uname(void)
-+static int test_uname(void)
- {
- 	struct utsname buf;
- 	char osrelease[sizeof(buf.release)];
-@@ -922,7 +922,7 @@ int test_uname(void)
- 	return 0;
- }
- 
--int test_mmap_munmap(void)
-+static int test_mmap_munmap(void)
- {
- 	int ret, fd, i, page_size;
- 	void *mem;
-@@ -980,7 +980,7 @@ int test_mmap_munmap(void)
- 	return !!ret;
- }
- 
--int test_pipe(void)
-+static int test_pipe(void)
- {
- 	const char *const msg = "hello, nolibc";
- 	int pipefd[2];
-@@ -1001,7 +1001,7 @@ int test_pipe(void)
- 	return !!memcmp(buf, msg, len);
- }
- 
--int test_rlimit(void)
-+static int test_rlimit(void)
- {
- 	struct rlimit rlim = {
- 		.rlim_cur = 1 << 20,
++	/* ensure that inotify is only used on supported filesystems */
++	if (is_unwatchable_fs(inode)) {
++		pr_debug("%s: inotify is not supported on filesystem with s_magic=0x%lx\n",
++				__func__, inode->i_sb->s_magic);
++		return -EOPNOTSUPP;
++	}
++
+ 	/* create/update an inode mark */
+ 	ret = inotify_update_watch(group, inode, mask);
+ 	path_put(&path);
 -- 
-2.45.2
+2.48.1
 
