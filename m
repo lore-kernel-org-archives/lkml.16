@@ -1,111 +1,132 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1F292036FE
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 11:54:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C005E201256;
+	Tue,  4 Mar 2025 11:54:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741089250; cv=none; b=czr8Qpn3+n9j+WGIE75UBqBkvX12RBAcfQM+J4zf0UR9JhusZRAwLkCRUINrt9WFQw5dOc2kHQ4ZIJLdGb7F0GZM9ZTlKicNS0WSLfltFM+ga8PKPMfDs79ckAfz+bkrb5IE/l0joRZCjiEjvHXkt9tnPfpHTnzteWYGX3M2ycA=
+	t=1741089281; cv=none; b=KI352r0hdU0x00nEHNb2WO2YjEyzG28XHxSDxPxzsFlH5xa9XCJ7+21y95veC9wc6bwbn2MdYni92DyT1nscXn5++oHD2Yzl1E7ySdH8cx6WtQ08jVHJYfYet6OFmShKCSKisNVCOpV75/m5oqO0syuW68PzXWxKjCJ4r43DVRI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741089250; c=relaxed/simple;
-	bh=bNS41mNHHi7BXNLXQtonV4XeSMbhOnsgKPrJtmKYSHE=;
+	s=arc-20240116; t=1741089281; c=relaxed/simple;
+	bh=LUW0zHkOVQAa4MQP7h10oZ7A6fUqsf4kB4qq0+a2HpI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pXJ+deUQKCs649bP4rKhiik6WPEloeOXJeRCCbUwPUSXllqC3nZiyiT5d0pBOWv+NKYFz3wXMTP9ZH4oNItTnduQq4uM4HY+C4fcDkuGwqeiDFZSMn1LlmEZQlQWRmCth1dobWseV6Uqnj9nAASxovW2fW86gwmA9Zq7Gpmj7oc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=B6WyAz0g; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=iHwWir7/va7luyyZhiMh+PC8swx40sbFEs8nXXkyxNC3zM3fLxtD0vXyTk3613ieLXmklkJET4ujfpdS31LOKnH2LyOcW1wJ43e17L8N4lbZRF9nQqMLzlWW/sbMWdeIhD7t+ASq9pMxMyBiesWF8ua8roZLBPBVedS0vn/MLE0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UBuL8Bq3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="B6WyAz0g"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 088B440E0202;
-	Tue,  4 Mar 2025 11:54:06 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id 5eVmiwsvjl6y; Tue,  4 Mar 2025 11:54:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1741089242; bh=8GHG5SrZxrbiSvIE9KJ7OpGdZd2qAT9K/MHNn8uHvMM=;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UBuL8Bq3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6DD18C4CEE5;
+	Tue,  4 Mar 2025 11:54:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741089281;
+	bh=LUW0zHkOVQAa4MQP7h10oZ7A6fUqsf4kB4qq0+a2HpI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=B6WyAz0gzR98rv/PHGB5eUpm8blzgQE1qfpqqd+ZRj721zz1LKmQ0jL+6CrW3ies1
-	 T1pZyPdhgjObE+tC4sw0nDViNtOzAlvgA1/MaNCa7Y4WPgJLoVarl8nqa0fAmUrv/r
-	 GPmq2elRiXvilpNp6OTx4G+5ImYI4G+vEP0hvZExDLsK0/3jSdbgR9cRf97U2c7iUp
-	 VXWAWvQxfi4REUalFPlgNtPL+iKR7l1wraRNQJT09LE/3MGQBZT3lCwuppnwKJMw9G
-	 xd6TtL7h6XEmScV1m1nQEDrP8Y04r6Hb/T6LF14tdwTVLlQdPq05GGoArr7XTOLbvB
-	 tbKX283180w+wWI892XKcLiBw/8546LPsI+4J1cTuFel84Ab0JHT4c5IHo0+RPqWza
-	 QLl8Fq04dLKrZO8p1bg6deBlN+Xn07aF3MX7VHzR1l4GTJBBH/wjvvCo0ys1XXNUih
-	 rQflzTRiRJU3ZtXFfoM1cVJcgtrFNc02Qdq1okmv6NQn6FZWj5HM/EI2ML00317v3V
-	 Tfh11f/+OvRa9lxDt9sN3XXvhLRGZyGFdofNRXRd/tZ18RH/ol8exaDgme7OZMoX0c
-	 JINDDrIiRIKz/GvNJHHn0YLvhe6HNct3ob7EE4NpphdyW8cu2wZI8nQb87yHtNmdF8
-	 mM97U4fGrQSsF5wVyMiQcmLk=
-Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 25AB240E0176;
-	Tue,  4 Mar 2025 11:53:44 +0000 (UTC)
-Date: Tue, 4 Mar 2025 12:53:43 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Dave Hansen <dave.hansen@intel.com>
-Cc: Rik van Riel <riel@surriel.com>, x86@kernel.org,
-	linux-kernel@vger.kernel.org, peterz@infradead.org,
-	dave.hansen@linux.intel.com, zhengqi.arch@bytedance.com,
-	nadav.amit@gmail.com, thomas.lendacky@amd.com, kernel-team@meta.com,
-	linux-mm@kvack.org, akpm@linux-foundation.org, jackmanb@google.com,
-	jannh@google.com, mhklinux@outlook.com, andrew.cooper3@citrix.com,
-	Manali.Shukla@amd.com, mingo@kernel.org
-Subject: Re: [PATCH v14 13/13] x86/mm: only invalidate final translations
- with INVLPGB
-Message-ID: <20250304115343.GGZ8bpxwAZo9tksg17@fat_crate.local>
-References: <20250226030129.530345-1-riel@surriel.com>
- <20250226030129.530345-14-riel@surriel.com>
- <ffff0bdc-ddf9-4f70-980a-f66eb2a00b18@intel.com>
+	b=UBuL8Bq3Ngmn7f9GkjwYnrGI3+hvjmRyN4OGiX4QFdcJjtfdTmadnOaPjdQWvhLQw
+	 yFgeYHdBjhx50aJzlU+7ezQ0PKP7x0dsxm8CAbXmP8K/8OnH8iQS+FpJQy/eQw/qMN
+	 LLM1isF0KKEOP7Qzjfr/kyJASPoHfdNbx0P9iIPvhEHuT+Ole4PYLq9p953JBLpn/r
+	 7609wHlkdZ8RnjwynHDqTh+rgng/cWn5VsMaLJyRiRo0UEq8DSqPZ8cE6YcGM/0m/2
+	 ZOu/WbkYkocbVWFAul8WFI4kzUe4WRxZfEJdt2NPPKqMcoeZrpbbT2gfQy8PzxUrBo
+	 ioI4/5jLpRudA==
+Date: Tue, 4 Mar 2025 20:54:37 +0900
+From: William Breathitt Gray <wbg@kernel.org>
+To: =?iso-8859-1?B?Q3Pza+Fz?= Bence <csokas.bence@prolan.hu>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-iio@vger.kernel.org,
+	Kamel Bouhara <kamel.bouhara@bootlin.com>
+Subject: Re: [PATCH v6 1/3] include: uapi: counter: Add
+ microchip-tcb-capture.h
+Message-ID: <Z8bp_RJSPSXOLV5C@ishi>
+References: <20250227144023.64530-1-csokas.bence@prolan.hu>
+ <20250227144023.64530-2-csokas.bence@prolan.hu>
+ <Z8bNFjh85p2jqK9C@ishi>
+ <8cf056d7-22d0-4bf2-8dd6-79a45977bfc1@prolan.hu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="HCA7+K3tzLJF8OJn"
 Content-Disposition: inline
-In-Reply-To: <ffff0bdc-ddf9-4f70-980a-f66eb2a00b18@intel.com>
+In-Reply-To: <8cf056d7-22d0-4bf2-8dd6-79a45977bfc1@prolan.hu>
 
-On Mon, Mar 03, 2025 at 02:40:49PM -0800, Dave Hansen wrote:
-> On 2/25/25 19:00, Rik van Riel wrote:
-> >  static inline void __invlpgb_flush_user_nr_nosync(unsigned long pcid,
-> >  						  unsigned long addr,
-> >  						  u16 nr,
-> > -						  bool pmd_stride)
-> > +						  bool pmd_stride,
-> > +						  bool freed_tables)
-> >  {
-> > -	__invlpgb(0, pcid, addr, nr, pmd_stride, INVLPGB_PCID | INVLPGB_VA);
-> > +	u8 flags = INVLPGB_PCID | INVLPGB_VA;
-> > +
-> > +	if (!freed_tables)
-> > +		flags |= INVLPGB_FINAL_ONLY;
-> > +
-> > +	__invlpgb(0, pcid, addr, nr, pmd_stride, flags);
-> >  }
-> 
-> I'm not sure this is OK.
-> 
-> Think of a hugetlbfs mapping with shared page tables. Say you had a
-> 1GB-sized and 1GB-aligned mapping. It might zap the one PUD that it
-> needs, set tlb->cleared_puds=1 but it never sets ->freed_tables because
-> it didn't actually free the shared page table page.
-> 
-> I'd honestly just throw this patch out of the series for now. All of the
-> other TLB invalidation that the kernel does implicitly toss out the
-> mid-level paging structure caches.
 
-Right, I guess we can revisit this later, once the dust settles.
+--HCA7+K3tzLJF8OJn
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thx.
+On Tue, Mar 04, 2025 at 12:14:04PM +0100, Cs=F3k=E1s Bence wrote:
+> Hi,
+>=20
+> On 2025. 03. 04. 10:51, William Breathitt Gray wrote:
+> > On Thu, Feb 27, 2025 at 03:40:18PM +0100, Bence Cs=F3k=E1s wrote:
+> > > Add UAPI header for the microchip-tcb-capture.c driver.
+> > > This header will hold the various event channels, component numbers e=
+tc.
+> > > used by this driver.
+> > >=20
+> > > Signed-off-by: Bence Cs=F3k=E1s <csokas.bence@prolan.hu>
+> >=20
+> > Oops, I almost missed this one! Make sure I'm included in the To field
+> > for the next revision. ;-)
+> >=20
+> > By the way, b4 is a nifty tool that can save you some work and help you
+> > prep patch series for submission.[^1]
+>=20
+> Yes, I have considered it, but unfortunately it still has quite a few bug=
+s,
+> for example [1], which has mangled my tags before, when a maintainer using
+> it tried to apply one of my patches with it.
+>=20
+> [1] https://github.com/mricon/b4/issues/52
 
--- 
-Regards/Gruss,
-    Boris.
+Oh that is unfortunate, you'll have to continue submitting manually for
+now until those bugs are fixed. :-(
 
-https://people.kernel.org/tglx/notes-about-netiquette
+> > > +/*
+> > > + * The driver defines the following components:
+> > > + *
+> > > + * Count 0
+> > > + * \__  Synapse 0 -- Signal 0 (Channel A, i.e. TIOA)
+> > > + * \__  Synapse 1 -- Signal 1 (Channel B, i.e. TIOB)
+> > > + */
+> > > +
+> > > +enum counter_mchp_signals {
+> > > +	COUNTER_MCHP_SIG_TIOA,
+> > > +	COUNTER_MCHP_SIG_TIOB,
+> > > +};
+> >=20
+> > Are these meant to be used to identify the Signals in the
+> > microchip-tcb-capture.c file. You should set the the counter_signal id
+> > members to these enum constants then. However, this enum doesn't need to
+> > be exposed to userspace in that case.
+>=20
+> The thought was to let userspace figure out which
+> `signal%d_action_component_id` to read, but now I see that this is not the
+> way to go.
+>=20
+> > If that is the only purpose of enum counter_mchp_signals, then we can
+> > omit this patch from the series and you won't need to send it in the
+> > next revision.
+>=20
+> Alright, I'll drop this enum. Then this header will be empty at the start,
+> save for the block comment. I hope that will be alright.
+
+No, it'll better to drop this patch and introduce the header in the IRQ
+handling patch. You can merge the MAINTAINERS change there as well.
+
+William Breathitt Gray
+
+--HCA7+K3tzLJF8OJn
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEARYKAB0WIQSNN83d4NIlKPjon7a1SFbKvhIjKwUCZ8bp/QAKCRC1SFbKvhIj
+K/3JAP4s2rB+FgZXHuQec3IkwA03zPOiw3XbhpvrtKIxRAv6zAEApHotPB/FA3ig
+swg7lg9VXcf6u25HL0rGvfjLYWmFxww=
+=mlmk
+-----END PGP SIGNATURE-----
+
+--HCA7+K3tzLJF8OJn--
