@@ -1,89 +1,96 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A929218FC6B;
-	Tue,  4 Mar 2025 09:19:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2F0FE1CAA7B
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 09:20:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.235.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741079969; cv=none; b=WZudYTuKH9r56BzktmnyIHKdskSP+qFFYosMryRl41ThlJcmsLAqpVEjj061t8NBOe0+ST5mX1Qn2wipz0NtV80CnC1ae4lZz0x4saBDqhxosvJsKuotLmE04MEGrDsn6OQSyqrMm81o4E5Jn8AiJNfN3CKGhiklU0Xof5NJ0Vs=
+	t=1741080006; cv=none; b=O+KcXttEr++S0dedAnrFfXHCMt0cIjbt6gZkjZfXD1h7jUdhn3NYbDeszpr7j9PcncLiJkSj55Ay4+ENeICb9lXW59eaBjsUQ4eH4InHN9DZfvPMEWL6eAFyEhRZkNda2cOM4005lh2PL5bd+Hl1imUWKpA4KVF4oiWaL+o3D/E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741079969; c=relaxed/simple;
-	bh=0fl48Uf2nzn+BQtUMFHVRC5uSqFoI1ocVXeZcDYLq+8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ILia0rHnc0D6kLTAB2sXwsQpS+yuoxsgyLYfhapcja6iht0BMuI4i9w5QtzM+7OWg2aXMVxAA9LDXq65l/aOqsPXi0AORnjhU1PPbyrzlkgjEvtDeQlyCTN8p9uDzRNjXAziMNRvc+w7xIizpwSeSQqjrzOnHXE2MkxxG/tvpCc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ANeC4WE6; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ANeC4WE6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9BE66C4CEE5;
-	Tue,  4 Mar 2025 09:19:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741079969;
-	bh=0fl48Uf2nzn+BQtUMFHVRC5uSqFoI1ocVXeZcDYLq+8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ANeC4WE6Z3mc1bAMPK+9Xx0m+p6Tr5mWd42YsQ0jFX2e7yQQfMki+ufrAbvU9En0D
-	 TCR4un/wvCjMPkf2H68vxgJk3mHzlmgPFj38Dm6mI9I4KSjvZ/XcQsBfuIdhhUq0Pg
-	 H4OenVmMdJGm3axuepEjCnNTCLlh7hDMmFjR9uTJo0TqPUdj/pMIM1nRO39GIGvB/k
-	 aZcsAr//OsvrNIWYsk18WUoB8T4Rf29/HDTivVnOgmf/dNfBwc37kemFbhEnXX1bLT
-	 i99ZqjGfTKgX4ubRvJ8aCwbu86HNKddQ8vSOmVcN7th9IrRSSbVbzXIa5qB6+MWGAd
-	 GtQ0VSb1H1sBQ==
-Date: Tue, 4 Mar 2025 10:19:24 +0100
-From: Ingo Molnar <mingo@kernel.org>
-To: "Ahmed S. Darwish" <darwi@linutronix.de>
-Cc: Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	John Ogness <john.ogness@linutronix.de>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Andrew Cooper <andrew.cooper3@citrix.com>, x86@kernel.org,
-	x86-cpuid@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1 00/40] x86: Leaf 0x2 and leaf 0x4 refactorings
-Message-ID: <Z8bFnGSxmNSFQDSQ@gmail.com>
-References: <20250304085152.51092-1-darwi@linutronix.de>
+	s=arc-20240116; t=1741080006; c=relaxed/simple;
+	bh=nQIIE3rsVADulU/3dXy0ss0MFmzZdDBZpy8CCyBBFeg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=sZ9fsFJmg40iAW25kPQu6KzKCm8KNVD2V+Cv/G4Be9SwtQxjqoHQA2DB3hLqe4iEUrXaOJNl8v5Kj66Z8sVnrbXsCosrhokcOzcgQJIVwALP7PwAPVFr11gShjsGXgwogsJm595Lz67m/7EKIcUgORvqwj5LQ1E3dgbKSD+GrPg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.235.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
+Received: from localhost (mailhub3.si.c-s.fr [172.26.127.67])
+	by localhost (Postfix) with ESMTP id 4Z6V031gHbz9stG;
+	Tue,  4 Mar 2025 09:56:03 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from pegase2.c-s.fr ([172.26.127.65])
+	by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id 3I1rDI2lQlkt; Tue,  4 Mar 2025 09:56:03 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+	by pegase2.c-s.fr (Postfix) with ESMTP id 4Z6V030r5lz9st4;
+	Tue,  4 Mar 2025 09:56:03 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 0A34E8B770;
+	Tue,  4 Mar 2025 09:56:03 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+	with ESMTP id 5F1iC3gbFidx; Tue,  4 Mar 2025 09:56:02 +0100 (CET)
+Received: from [192.168.235.99] (unknown [192.168.235.99])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id A1D238B763;
+	Tue,  4 Mar 2025 09:56:02 +0100 (CET)
+Message-ID: <8ba544e7-cf2a-4807-a056-683115805721@csgroup.eu>
+Date: Tue, 4 Mar 2025 09:56:01 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250304085152.51092-1-darwi@linutronix.de>
+User-Agent: Mozilla Thunderbird
+Subject: Re: Build Warnings at arch/powerpc/
+To: Madhavan Srinivasan <maddy@linux.ibm.com>,
+ Venkat Rao Bagalkote <venkat88@linux.ibm.com>,
+ linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+ Stephen Rothwell <sfr@canb.auug.org.au>,
+ Michael Ellerman <mpe@ellerman.id.au>
+References: <8c4c3fc2-2bd7-4148-af68-2f504d6119e0@linux.ibm.com>
+ <47aa8b75-96b6-4e37-bb62-ad758b414076@linux.ibm.com>
+Content-Language: fr-FR
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
+In-Reply-To: <47aa8b75-96b6-4e37-bb62-ad758b414076@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
 
-* Ahmed S. Darwish <darwi@linutronix.de> wrote:
 
-> Hi,
+Le 04/03/2025 à 07:13, Madhavan Srinivasan a écrit :
 > 
-> As part of the onging x86-cpuid work [*], we've found that the handling
-> of leaf 0x2 and leaf 0x4 code paths is difficult to work with in its
-> current state.  This was mostly due to the organic growth of the x86/cpu
-> and x86/cacheinfo logic since its very early Linux days.
 > 
-> This series cleans up and refactors these code paths in preparation for
-> the new x86-cpuid model.
-
-Nice!
-
-> Summary:
+> On 3/4/25 10:42 AM, Venkat Rao Bagalkote wrote:
+>> Greetings!!
+>>
+>>
+>> Observing build warnings with linux-next and powerpc repo's. Issue is currently not seen on mainline yet.
+>>
+>> PPC Repo: https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fgit.kernel.org%2Fpub%2Fscm%2Flinux%2Fkernel%2Fgit%2Fpowerpc%2Flinux.git&data=05%7C02%7Cchristophe.leroy2%40cs-soprasteria.com%7C8e0f8501f09c48dbb43608dd5ae3c9bf%7C8b87af7d86474dc78df45f69a2011bb5%7C0%7C0%7C638766656585342184%7CUnknown%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=e5BrJzcrtlITkLF31KltGExQ5Qe8fDVTMV6VfR4w9o8%3D&reserved=0 merge branch
+>>
+>> PPC Kernel Version: 6.14.0-rc4-g1304f486dbf1
+>> next Repo: https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fgit.kernel.org%2Fpub%2Fscm%2Flinux%2Fkernel%2Fgit%2Fnext%2Flinux-next.git&data=05%7C02%7Cchristophe.leroy2%40cs-soprasteria.com%7C8e0f8501f09c48dbb43608dd5ae3c9bf%7C8b87af7d86474dc78df45f69a2011bb5%7C0%7C0%7C638766656585355246%7CUnknown%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=meQyZfB75HhJFCL6AX93slsyVwnogGPYFabDXl%2FLzDA%3D&reserved=0 master branch
+>>
+>> next Kernel Version: 6.14.0-rc5-next-20250303
+>>
+>>
+>> On linux-next kernel issue got introduced b/w next-20250227 and next-20250303
+>>
+>>
+>> Build Warnings:
+>>
+>> arch/powerpc/kvm/book3s_hv_rmhandlers.o: warning: objtool: .text+0xe84: intra_function_call not a direct call
+>> arch/powerpc/crypto/ghashp8-ppc.o: warning: objtool: .text+0x22c: unannotated intra-function call
+>> arch/powerpc/kernel/switch.o: warning: objtool: .text+0x4: intra_function_call not a direct call
+>>
+>>
 > 
-> - Patches 1 to 3 are independent bugfixes that were discovered during
->   this refactoring work.
+> Can you please specific the compiler and compiler version you found this issue with
+> 
 
-I've applied these three to tip:x86/urgent. I added Cc: stable to all 3 
-commits, because while these are old bugs, the first one had Cc: stable 
-and if we do it for one it's justified for all of them AFAICS. Arguably 
-our cacheinfo output in procps was inaccurate at times, and possibly 
-these bugs were part of the problem.
+Can you also tell which defconfig you are using or provide your .config
 
-> - Patches 4 to 10 are x86/cpu refactorings for code size and
->   readability.
+It might also be helpfull if you can provide a disassembly of the three 
+file.o around the warned address.
 
-I've applied patches 4 to 9 to tip:x86/cpu (with x86/urgent merged in 
-due to dependencies and to give a singular topical base branch in the 
-x86 tree), they look good and obvious. (I added the build fix to 05/40)
-
-I've left 10 to 40 for further review by others too.
-
-Thanks,
-
-	Ingo
+Christophe
