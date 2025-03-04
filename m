@@ -1,178 +1,132 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30F42259CB4;
-	Tue,  4 Mar 2025 16:15:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92F89283680
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 16:16:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741104946; cv=none; b=pwtYwCsgzj5FBwKsClWUal6gR5q8/JQIjEQcmzWJ9g2Q8GvGU6djEFbcT4LUEoShCOZPyl6iShSMEIsLdtqj5mtyc6XDnKirE0dmxRTSAPwD3vjfPF44o9wxhHZkYwPTZMGqj0R8Sv0eEiSLe0YVbASE01dWK+X/uU3ywkpm99c=
+	t=1741104982; cv=none; b=UVOYQ1RRTd3IQ3FuG2W8j77H8ocHIVY2s2J7xxTOFOdm84fr7jEAPbg3XYsgmII5AtH8U9fmjqJiK6blmd4e4Y7MGsXsNqYbYH0La6PzdhurXnRPCrLo1CN4kPQxjYI3WdMnlGJORHVWIA+hf6GrX4lzi22xaeETp0AqFtJytHc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741104946; c=relaxed/simple;
-	bh=fIpTyWL6ayzFDuJIGBcstdA8O3+/QfyIGVuGPadTW0E=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=YfpZAMl2BAqFplRe6Rspvc2d+PP0Pr9tQco5jTzqxTzTJvkr4jrHNq2kvG/aUut445no4J6QIS3yg8b6YSI2EYnRWWrszlFRgTkwi1UUqHSUUS4DCW8pCuqC01Nm5AAmk3dd2O8Xy0btg/ebe5yWJFgwcOozEglN2Z3UK1Elzzw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=enFC4w7i; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1741104982; c=relaxed/simple;
+	bh=vndrgoHzO1JbxR/Uplci2S29F5Yak6PffbtWYRGDCLE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=m9botLCZ9wg5NlpxfOlS7L6kHpM39AZyHSeSYcfNWa/XOZkeU0dgyP3aRpDyhOpCB2gtf6QsQrtrqmZbWdUzeZMQMPQV9aLWxNPZ4uqpEF669iZLhrpmU9uuzRNoDr88qdmZ31JmxhKu1ieyrcyk2IfnuNFmdiGDLRT6TXQOB3M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=d9qtE4lK; arc=none smtp.client-ip=209.85.222.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="enFC4w7i"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 524E3Ku9019009;
-	Tue, 4 Mar 2025 16:15:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=+IoJ+2
-	H9c2CFdb09znTxlwvThy3kn7nz7db1xHQkKkM=; b=enFC4w7iAxa7xBJJ50nn5r
-	YHwcsrqCj91bKzXNDMt/lK3Da6qrxKeOdyw55vTS+5tSRh/LCW7VTHne1QB6PDCH
-	E04yAMBr5R0IT1MIh+lsBn12jaenqDXOL0kCAMHHp2uTEbSNtevMf7+6e0dWDjb3
-	0lY9UYLFpaVgOmnxytJ40rCGXSXuXH4TBYq/l7WJhu8JIKDqVnSBaTqC7YQ2TDxY
-	0QahawjYm0acYxmOxim50YEc2M6BG6sI/rWcct/6OOuBbSKYvlDUKuuZPlrWfyX+
-	nVpHiXi756zfn953xIufU7xfTR8gGUa/HI/Lm5pZABYEOnqa+UXBjLdlMmRhLMTg
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4562xpgp2j-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 04 Mar 2025 16:15:18 +0000 (GMT)
-Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 524GFI8F012989;
-	Tue, 4 Mar 2025 16:15:18 GMT
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4562xpgp2b-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 04 Mar 2025 16:15:17 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 524Fxqlx013776;
-	Tue, 4 Mar 2025 16:15:16 GMT
-Received: from smtprelay04.wdc07v.mail.ibm.com ([172.16.1.71])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 454e2kp52f-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 04 Mar 2025 16:15:16 +0000
-Received: from smtpav04.wdc07v.mail.ibm.com (smtpav04.wdc07v.mail.ibm.com [10.39.53.231])
-	by smtprelay04.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 524GFGpZ53936398
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 4 Mar 2025 16:15:16 GMT
-Received: from smtpav04.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 4700E58060;
-	Tue,  4 Mar 2025 16:15:16 +0000 (GMT)
-Received: from smtpav04.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 6A27758050;
-	Tue,  4 Mar 2025 16:15:14 +0000 (GMT)
-Received: from li-43857255-d5e6-4659-90f1-fc5cee4750ad.ibm.com (unknown [9.61.136.132])
-	by smtpav04.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Tue,  4 Mar 2025 16:15:14 +0000 (GMT)
-Message-ID: <6828fbeeff42ce962cc0195466760ea136f9c049.camel@linux.ibm.com>
-Subject: Re: [PATCH v8 2/7] kexec: define functions to map and unmap segments
-From: Mimi Zohar <zohar@linux.ibm.com>
-To: Baoquan He <bhe@redhat.com>
-Cc: steven chen <chenste@linux.microsoft.com>, stefanb@linux.ibm.com,
-        roberto.sassu@huaweicloud.com, roberto.sassu@huawei.com,
-        eric.snowberg@oracle.com, ebiederm@xmission.com, paul@paul-moore.com,
-        code@tyhicks.com, bauermann@kolabnow.com,
-        linux-integrity@vger.kernel.org, kexec@lists.infradead.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org,
-        madvenka@linux.microsoft.com, nramas@linux.microsoft.com,
-        James.Bottomley@hansenpartnership.com, vgoyal@redhat.com,
-        dyoung@redhat.com, Mike Rapoport
- <mike.rapoport@gmail.com>
-Date: Tue, 04 Mar 2025 11:15:13 -0500
-In-Reply-To: <Z8FDlp8QvnSR58Vd@MiWiFi-R3L-srv>
-References: <20250218225502.747963-1-chenste@linux.microsoft.com>
-	 <20250218225502.747963-3-chenste@linux.microsoft.com>
-	 <Z7wOPiDfy/vtrkCS@MiWiFi-R3L-srv>
-	 <55acf768b52b47dd9d33fa0486772d8c7ae38779.camel@linux.ibm.com>
-	 <Z8FDlp8QvnSR58Vd@MiWiFi-R3L-srv>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="d9qtE4lK"
+Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-7c04df48a5bso588012985a.2
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Mar 2025 08:16:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1741104979; x=1741709779; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=IdH3AKQlJjVPXu/3oVyqdmU7Zg+wJAihXQK8/YRYybU=;
+        b=d9qtE4lK26a9aB7KbztbpPQHL7+8I5u1Y70I3fUrUktCXAhWXku95PKUcRx/GsmBl4
+         wu8uaLjZ2p838Z0sNgT2uSh/OdV3DjNokzona3tDgu+0Zuh1WVUk1xT17xGJv212OexR
+         raoYLc2FDtrcU/7SRDSCF7HnHu5WGgEMgRVOtDJysMkNazurDqp0psgPk63ERJf7ycpd
+         R8mY26r9O6G5rq/HAzy1ytBr2mAPRZkLMBMDOsai4RgH78s/ITm8K6sOLPErggRv+qDd
+         UI1lipV+ttsU0Hx85JJrCH14LW2gcsLW3GDWR4ChNs3VQWKJe+EuevB8J4ihLpR+uqwg
+         aGqw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741104979; x=1741709779;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IdH3AKQlJjVPXu/3oVyqdmU7Zg+wJAihXQK8/YRYybU=;
+        b=aKrC8LwNkQAvIO1HCTp11yca5bn6OWvY/NCMUodiliq2ZWSmApZJB96hSRM5KOxSbI
+         DEbFFHqf4mXRA6i2QJOzJn9aFJo2nR4w71oAACDOtxA5ChyGV18Yhwte6zN9YBEoyhpk
+         9RROqznfwfSTQyQ9j0k0k8V9UgOzUOyvJYjJwEdVTIrym5kSaYC72ZQbSQqC5R4pZ6oK
+         4fVlrXGcn36fk5i7C2lUCTd6EWkhlIYPYXyFrSNevlCbitig5q6QfrevYVtMRjAP0sXF
+         dKBJT0dxxnqQPShSv71GbGNxjApEQs+qRi8AtmBOL/838LL5ADHJAA51RxOgB6JkNKkd
+         l+hw==
+X-Forwarded-Encrypted: i=1; AJvYcCWld1UVuAIVuAfFY78bbmshQXTHe3vNZ4yfUmovK+if/FXLkw8XfMfi9YjjUtd3HpQaPY9EgQ0ChaYMpLw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxnymw8A1WPq/Cv8TMZicbUcFmHp4vWj8LgD1SLUne5DchF2wU5
+	KqAgH0C5TWvMGxnwJyk4g76ioqB3LIwSahCk5+1/p1XFxQSkqCQ7Zu2jKnrzKzk=
+X-Gm-Gg: ASbGncuJYkk/VYMiGSjP1znIV0mKpUMBun604JdJjZqKMrwVU1nFd+y8X997obQUffC
+	kkIMDjZoGWR53ct6Xjnf2yR0+qtFqgcYwgL0ttU82egRXKCBHuDwMbzSkwbhsQDl2mICDweRpy8
+	9u7fX6HnHirxrxkRp0OXamOyZvDV/4s9MOG0K/+R77m+gfbZI7Av3lJtY8SQiddVbVYq0rhJc7Z
+	XiHmWoJKrpk/RaoWOSD/m+3i6VL/52giMq43qGl563bv9/mdPJ6i7vQe4O8NKPTRqKzSIndGp1v
+	kPSeQmIvWUxf4IwPRJfBKlCe4my6wWCqZPqSXK/AYzXnK4hpWT9WAaqXH69zGQsYBttbdfK9NVP
+	BQOEN4xt8IrWZGt8vujXYFkRrCJ0=
+X-Google-Smtp-Source: AGHT+IG+8gkxb5a4FLU8HNw0RgCDeDarhruq85hL2w5mldbW/rpOd9s+9LQfuwgtmnJwF45uXgCLwA==
+X-Received: by 2002:a05:620a:26a8:b0:7c3:d3bf:d1c0 with SMTP id af79cd13be357-7c3d3bfd3d7mr258875085a.43.1741104979239;
+        Tue, 04 Mar 2025 08:16:19 -0800 (PST)
+Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c3be1f0c05sm279200385a.102.2025.03.04.08.16.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Mar 2025 08:16:18 -0800 (PST)
+Date: Tue, 4 Mar 2025 11:16:16 -0500
+From: Gregory Price <gourry@gourry.net>
+To: Honggyu Kim <honggyu.kim@sk.com>
+Cc: kernel_team@skhynix.com, Joshua Hahn <joshua.hahnjy@gmail.com>,
+	harry.yoo@oracle.com, ying.huang@linux.alibaba.com,
+	gregkh@linuxfoundation.org, rakie.kim@sk.com,
+	akpm@linux-foundation.org, rafael@kernel.org, lenb@kernel.org,
+	dan.j.williams@intel.com, Jonathan.Cameron@huawei.com,
+	dave.jiang@intel.com, horen.chuang@linux.dev, hannes@cmpxchg.org,
+	linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+	linux-mm@kvack.org, kernel-team@meta.com, yunjeong.mun@sk.com
+Subject: Re: [PATCH 2/2 v6] mm/mempolicy: Don't create weight sysfs for
+ memoryless nodes
+Message-ID: <Z8cnUA9WqsscbUtm@gourry-fedora-PF4VCD3F>
+References: <20250226213518.767670-1-joshua.hahnjy@gmail.com>
+ <20250226213518.767670-2-joshua.hahnjy@gmail.com>
+ <b8ac8654-92bd-4c08-a3fc-e28a7be5e0e6@sk.com>
+ <Z8XWqQdPC7245FA2@gourry-fedora-PF4VCD3F>
+ <95541985-8d40-4ded-a83e-46203c441640@sk.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: -oBsvbmbJu1H4kuwA-IK6n9CtSiRlunB
-X-Proofpoint-GUID: _0Rk9JlUBxHxaloj8zlUADdSvGWN6oiI
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-04_06,2025-03-03_04,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 malwarescore=0
- mlxlogscore=999 spamscore=0 bulkscore=0 priorityscore=1501 adultscore=0
- lowpriorityscore=0 phishscore=0 mlxscore=0 impostorscore=0 clxscore=1015
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2502100000
- definitions=main-2503040129
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <95541985-8d40-4ded-a83e-46203c441640@sk.com>
 
-On Fri, 2025-02-28 at 13:03 +0800, Baoquan He wrote:
-> On 02/27/25 at 10:41am, Mimi Zohar wrote:
-> > [Cc'ing Mike Rapoport]
-> >=20
-> > On Mon, 2025-02-24 at 14:14 +0800, Baoquan He wrote:
-> > > Hi Steve, Mimi,
-> > >=20
-> > > On 02/18/25 at 02:54pm, steven chen wrote:
-> > > > Currently, the mechanism to map and unmap segments to the kimage
-> > > > structure is not available to the subsystems outside of kexec.  Thi=
-s
-> > > > functionality is needed when IMA is allocating the memory segments
-> > > > during kexec 'load' operation.  Implement functions to map and unma=
-p
-> > > > segments to kimage.
-> > >=20
-> > > I am done with the whole patchset understanding. My concern is if thi=
-s
-> > > TPM PCRs content can be carried over through newly introduced KHO. I =
-can
-> > > see that these patchset doesn't introduce too much new code changes,
-> > > while if many conponents need do this, kexec reboot will be patched a=
-ll
-> > > over its body and become ugly and hard to maintain.
-> > >=20
-> > > Please check Mike Rapoport's v4 patchset to see if IMA can register
-> > > itself to KHO and do somthing during 2nd kernel init to restore those
-> > > TPM PCRs content to make sure all measurement logs are read correctly=
-.
-> > > [PATCH v4 00/14] kexec: introduce Kexec HandOver (KHO)
-> >=20
-> > Hi Baoquan,
-> >=20
-> > I was hoping to look at Mike's patch set before responding, but perhaps=
- it is
-> > better to respond earlier rather than later with my initial thoughts.
-> >=20
-> > The IMA measurement list isn't stored in contiguous memory, but has to =
-be
-> > marshalled before being carried across kexec, and then unmarshalled to =
-restore
-> > it after the kexec.  Roberto Sassu has been thinking about changing how=
- the IMA
-> > measurement list is stored so marshalling/unmarshalling wouldn't be nec=
-essary.=20
-> > Making both this change and using KHO going forward would be a good ide=
-a.
-> >=20
-> > However, that sort of change wouldn't be appropriate to backport.  So t=
-he
-> > question comes down to whether being unable to attest the measurement l=
-ist,
-> > because the measurements are copied too early at kexec load, but the TP=
-M is
-> > being extended through kexec exec, is considered a bug.  If that is the=
- case,
-> > then I suggest finish cleaning up and upstreaming this patch set so tha=
-t it
-> > could be backported.
->=20
-> Ah, I understand your concern. There are stable kernels or distros
-> kernels which need be taken care of. If then, we can continue to work on
-> polishing this patchset, as you have pointed out, there are still room
-> in this patchset to improve before merging.
+On Tue, Mar 04, 2025 at 10:03:22PM +0900, Honggyu Kim wrote:
+> Hi Gregory,
+> 
+> > This patch may have been a bit overzealous of us, I forgot to ask
+> > whether N_MEMORY is set for nodes created but not onlined at boot. So
+> > this is a good observation.
+> 
+> I didn't want to make more noise but we found many issues again after
+> getting a new machine and started using it with multiple CXL memory.
+> 
 
-Thanks, Baoquan!
+I spent yesterday looking into how nodes are created and marked N_MEMORY
+and I think now that this patch is just not correct.
 
-I've already provided feedback on the IMA related patches.  Hopefully that =
-will
-be it.
+N_MEMORY for a given nid is toggled:
+  1) during mm_init if any page is associated with that node (DRAM)
+  2) memory_hotplug when a memory block is onlined/offlined  (CXL)
 
-Mimi
+This means a CXL node which is deferred to the driver will come up as
+memoryless at boot (mm_init) but has N_MEMORY toggled on when the first
+hotplug memory block is onlined.  However, its access_coordinate data is
+reported during cxl driver probe - well prior to memory hotplug.
 
+This means we must expose a node entry for every possible node, always,
+because we can't predict what nodes will have hotplug memory.
 
+We COULD try to react to hotplug memory blocks, but this increase in
+complexity just doesn't seem worth the hassle - the hotplug callback has
+timing restrictions (callback must occur AFTER N_MEMORY is toggled).
+
+It seems better to include all nodes with reported data in the reduction.
+
+This has two downsides:
+  1) stale data may be used if hotplug occurs and the new device does
+     not have CDAT/HMAT/access_coordinate data.
+  2) any device without CDAT/HMAT/access_coordinate data will not be
+     included in the reduction by default.
+
+I think we can work around #2 by detecting this (on reduction, if data
+is missing but N_MEMORY is set, fire a warning).  We can't do much about
+#1 unless we field physical device hot-un-plug callbacks - and that
+seems like a bit much.
+
+~Gregory
