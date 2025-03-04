@@ -1,267 +1,169 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1D8128691
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 13:30:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7B941E4A4
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 13:31:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741095050; cv=none; b=R8QGr8/d3/8fOYZcoNH2K/OQMhNRSVCt+REkiOnNB86VK4ClIzkCuUGMU1qj5q/MiAkbiJWsLRHIbviwu36IA3UrQMFTvWjO5H8ZTDMTO20AyQOWUb02um7HRBmIo6gKcJ12ufg2K0u72NVn/p4UW125YKs+qWG3QIbCTzQyfGQ=
+	t=1741095076; cv=none; b=tfN5XLLkbA0qYRJ0AGuluk1ZLWL6K7LW+XaaqgjBePsgBX3eXO1vbOlokWML1dRaiH+tWsrHw9kzhstFXDTJXGvp7nYulMqMVr717m1e0YM2aBdiKYr1FLELHPl1h4ZozlB3cgXxNRVG5ulYOB3iqo3bE+QwzkJipkAu3WIL/I4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741095050; c=relaxed/simple;
-	bh=l9lXDrDNrHAfcVmXVwpacyTM635qmGlztuUUxkTz08A=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CR+bPCMAv+WjSIF1Fp9r8K5Feswh5sNtxbFw2Dd1+/aT5hr/XJ9MwhGxv14rZD4aE8QxNkEOulzRPNqcqDsmE6Zo+cb3uZCrTvVT4ERFaILecMktPQGviOwcz+9G51Qwf+Pdyx9qc7n2NApVHgpFAaXEZSjvO2gZGKwcC7OII8U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rxTBHNwm; arc=none smtp.client-ip=209.85.221.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1741095076; c=relaxed/simple;
+	bh=Rwv2wLoIBvRhAgKWWClzSANMSkoeu+rvgHxKTeUDCH4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=DcdVveb3iUq+M3sZYAC9Gc6joF7/tBhIxh/NSCFfGTMPQtQucYJYaNffZ8o9FEHwO/wEZBhkHy7NOBvT0t7a+P37pWpXeKSJI0HGNgr9OMcBsiGmCBWElBTaNM0j/WLDfF0Auq3kXTPD1B76jJfQSdsuWml1G80XBfxIleqn5hU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RyBfluVh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rxTBHNwm"
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-38a8b17d7a7so3321165f8f.2
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Mar 2025 05:30:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741095047; x=1741699847; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Dcg5N+PdgvPQdcsjlM3pvDkqAIBRju0oFl7LWXNSYlY=;
-        b=rxTBHNwmEg49Og2ux3GeSV2CAEOKUCS8xXpLZ5VoQktMUHiqe6Pz06lvXcgoxu/M+W
-         mue5QsHjmt8w+mdgFMmc5XnKJ86nK2Nw3DR4FN2pG90QvtzzWTAFjCl99RA5dzBpMsDy
-         /EfJS3yOwiKFDTAIaln95ybtLwxQVnKXAibUZT8S3Nrbrni/ftGYa634oFd9lGLJDItz
-         wWGfMEVvQBJZ9kvEpmGc6NfdWeoHB8kRo4m3vJi9NiOUJb6wsR4m5VAx4nz3dY9jrAzC
-         1/ZSDtnG5LoEckGXwRzSQNdNMLm8qG7Foqs2GcmXcw+7WjqQ3W95SMzSAgflS3NOHyl8
-         /Dow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741095047; x=1741699847;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Dcg5N+PdgvPQdcsjlM3pvDkqAIBRju0oFl7LWXNSYlY=;
-        b=ItCk6/g4ExZGMAchNZDwOpSzsJvOz18eMEZTQAF+bKr8nMZ1h6/fUc92nVPkU4nG+u
-         q6Tl88v+IPNweS20nSCfS8gMxGYMaMHSGjrmxs1BXU6xpFBHwdYZQ5ciYdL4/u25vbBU
-         1ugpaBDiiA8W3mlR6NHIdX2+W4AYtOcql0TAPjGIeww9wcWeOCKEKn7t32cNck/KTNOT
-         avePtQU+b9IjQZq43POHa7/tk12ymKAv9lfkJ7uqrDpq9ywKGmI2SILr1uFIs5p2DJs7
-         ZfpFfrqr0OFXJmt/5kPreigs++83mMMoy2b+3Q4+AI7/gn+roAZ/vpElGTqVmTvUp7Up
-         /vyw==
-X-Forwarded-Encrypted: i=1; AJvYcCX5ktfRvgs3sVKNpmc3eQURNTRNULaBqucr/FlCO+5Saw15bEM0Lbx+41CkPe5vdOCCZWH6Sxd54seRTDM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzkNF/GMWkZJJhxNfllWtzahexh4A+NAQuwhpEYl40N95rCRMai
-	1vjxQXgoy93n36490MTpP7wF33NBwtikia+L3Dl+mT34O/Z4a4ZX2M0MoC8FsMg=
-X-Gm-Gg: ASbGncvi4obkckdoinxX1raDF1RHOF+8qMFow6XPDLn7Pr7kPnJfaLWnfDo15oQVEOc
-	R3Lzy7kSMo1Cmn2RoIRouFiEXR561UL7Pvg8OKYYShxpiF836zBlNNt6oltBlh+mwG9CGONhjfd
-	V/OfX03DsN2uwcKTSbDONKs4mYJr8/EWnKDqA9Pji97Xb4W2EfeOBVUIutq+zFq2H4Tg1OBtVr1
-	hcwSol1u6j8dj93FNMHvoTr+G0KiihHn6vw1r1U1rsCJM3pDsCp3TX55EYywQsZb4Eeg1RnxZGw
-	RwLHRM2RDH/m/C3izZr0HRze1glxSZ6+zOU/VfwCnS0YIHNm85XK86t8bRh3ro+NvGo70Dt1NMu
-	F6YHFLvqkMA==
-X-Google-Smtp-Source: AGHT+IE7AebVHvoAywAZFYapD4vBmjcHVSOFlPx5VikfNNWX7mnHXDCD7bbvF9PrIS1vf2KegbOKUQ==
-X-Received: by 2002:a5d:6489:0:b0:390:f641:d8bb with SMTP id ffacd0b85a97d-390f641d990mr11651186f8f.36.1741095047165;
-        Tue, 04 Mar 2025 05:30:47 -0800 (PST)
-Received: from [192.168.0.35] (188-141-3-146.dynamic.upc.ie. [188.141.3.146])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-390e4795983sm17582091f8f.6.2025.03.04.05.30.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 04 Mar 2025 05:30:46 -0800 (PST)
-Message-ID: <f7f7923e-c5ee-4f47-8eba-972bf7f08c9d@linaro.org>
-Date: Tue, 4 Mar 2025 13:30:46 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RyBfluVh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85786C4AF09;
+	Tue,  4 Mar 2025 13:31:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741095076;
+	bh=Rwv2wLoIBvRhAgKWWClzSANMSkoeu+rvgHxKTeUDCH4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=RyBfluVh9AW1heRqsBLhFvuaz0KG7lK04XJMzCj2ULOWmlEcGb9Kj1BHCQHNyc7ZS
+	 85kXmjZToHjgfBNYI+kdhpZB7l9eNgL8rxPiWXJKr7CAnjj8swadsQwpwQVpFoQ8ky
+	 S32mbEliW+SLn3AMdEyHyDZXCrGnEdxXr7xOiqrzAF3Axab39wSp3P8z2KJ7baPiEy
+	 nqTbiyB/EjINL9zbKuXvV9xtgzo1mY5CUP+h02xEPlK5yR/adInpR06ZP9NteXsyph
+	 vxLVSpT0pEU79ZgQOroMQ9a5plYypgBz53F0rwr0x1GmHdwNu9nlhjVyHiHPXWy/EQ
+	 8p35LbpnceRNw==
+Received: from mchehab by mail.kernel.org with local (Exim 4.98)
+	(envelope-from <mchehab+huawei@kernel.org>)
+	id 1tpSMc-00000005rnX-28Ap;
+	Tue, 04 Mar 2025 14:31:14 +0100
+From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To: Igor Mammedov <imammedo@redhat.com>,
+	"Michael S . Tsirkin" <mst@redhat.com>
+Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Shiju Jose <shiju.jose@huawei.com>,
+	qemu-arm@nongnu.org,
+	qemu-devel@nongnu.org,
+	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+	Ani Sinha <anisinha@redhat.com>,
+	Eduardo Habkost <eduardo@habkost.net>,
+	Marcel Apfelbaum <marcel.apfelbaum@gmail.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Richard Henderson <richard.henderson@linaro.org>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH RFC 3/3] Add a GED device for RAS notification
+Date: Tue,  4 Mar 2025 14:30:58 +0100
+Message-ID: <453dbc6c5030c654489d3c7e4da078589f24f9ec.1741094512.git.mchehab+huawei@kernel.org>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <cover.1741094512.git.mchehab+huawei@kernel.org>
+References: <cover.1741094512.git.mchehab+huawei@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/2] venus driver fixes to avoid possible OOB read
- access
-To: Vikash Garodia <quic_vgarodia@quicinc.com>,
- Vedang Nagar <quic_vnagar@quicinc.com>,
- Stanimir Varbanov <stanimir.k.varbanov@gmail.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250215-venus-security-fixes-v2-0-cfc7e4b87168@quicinc.com>
- <c3b27e55-f627-417c-bb62-3189f248fb99@linaro.org>
- <7bf1aeaa-e1bd-412b-90fc-eda30b5f5b37@quicinc.com>
- <19109672-2856-457f-b1f6-305abc6c4434@linaro.org>
- <ba1e7a20-2f68-15e0-bc4a-fe52bc4036cc@quicinc.com>
- <2ac68f21-cea8-400c-8a61-3638e545bac8@linaro.org>
- <e64ff5f0-8dc5-fec6-ae9b-98076016365f@quicinc.com>
-Content-Language: en-US
-From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-In-Reply-To: <e64ff5f0-8dc5-fec6-ae9b-98076016365f@quicinc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Sender: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-On 03/03/2025 15:01, Vikash Garodia wrote:
-> 
-> On 3/3/2025 8:26 PM, Bryan O'Donoghue wrote:
->> On 03/03/2025 13:12, Vikash Garodia wrote:
->>>
->>> On 3/2/2025 9:26 PM, Bryan O'Donoghue wrote:
->>>> On 02/03/2025 11:58, Vedang Nagar wrote:
->>>>>>
->>>>>> The basic question : what is the lifetime of the data from RX interrupt to
->>>>>> consumption by another system agent, DSP, userspace, whatever ?
->>>>> As mentioned in [1], With the regular firmware, after RX interrupt the data
->>>>> can be considered as valid until next interrupt is raised, but with the rouge
->>>>> firmware, data can get invalid during the second read and our intention is to
->>>>> avoid out of bound access read because of such issues.
->>>>
->>>> This is definitely the part I don't compute.
->>>>
->>>> 1. RX interrupt
->>>> 2. Frame#0 Some amount of time data is always valid
->>> This is not correct. Its not the amount of time which determines the validity of
->>> the data, its the possibility of rogue firmware which, if incase, puts up the
->>> date in shared queue, would always be invalid, irrespective of time.
->>>
->>>> 3. RX interrupt - new data
->>>> 4. Frame#1 new data delivered into a buffer
->>>>
->>>> Are you describing a case between RX interrupts 1-3 or a case after 1-4?
->>>>
->>>> Why do we need to write code for rouge firmware anyway ?
->>> It is a way to prevent any possibility of OOB, similar to how any API does check
->>> for validity of any arguments passed to it, prior to processing.
->>>>
->>>> And the real question - if the data can be invalidated in the 1-3 window above
->>>> when is the safe time to snapshot that data ?
->>>>
->>>> We seem to have alot of submissions to deal with 'rouge' firmware without I
->>>> think properly describing the problem of the _expected_ data lifetime.
->>>>
->>>> So
->>>>
->>>> a) What is the expected data lifetime of an RX buffer between one
->>>>      RX IRQ and the next ?
->>>>      I hope the answer to this is - APSS owns the buffer.
->>>>      This is BTW usually the case in these types of asymmetric setups
->>>>      with a flag or some other kind of semaphore that indicates which
->>>>      side of the data-exchange owns the buffer.
->>>>
->>>> b) In this rouge - buggy - firmware case what is the scope of the
->>>>      potential race condition ?
->>>>
->>>>      What I'd really like to know here is why we have to seemingly
->>>>      memcpy() again and again in seemingly incongrous and not
->>>>      immediately obvious places in the code.
->>>>
->>>>      Would we not be better advised to do a memcpy() of the entire
->>>>      RX frame in the RX IRQ handler path if as you appear to me
->>>>      suggesting - the firmware can "race" with the APSS
->>>>      i.e. the data-buffer ownership flag either doesn't work
->>>>      or isn't respected by one side in the data-exchange.
->>>>
->>>> Can we please have a detailed description of the race condition here ?
->>> Below is the report which the reporter reported leading to OOB, let me know if
->>> you are unable to deduce the trail leading to OOB here.
->>>
->>> OOB read issue is in function event_seq_changed, please reference below code
->>> snippet:
->>>
->>> Buggy code snippet:
->>>
->>> static void event_seq_changed(struct venus_core *core, struct venus_inst *inst,
->>>           struct hfi_msg_event_notify_pkt *pkt)
->>> ...
->>> num_properties_changed = pkt->event_data2; //num_properties_changed is from
->>> message and is not validated.
->>> ...
->>> data_ptr = (u8 *)&pkt->ext_event_data[0];
->>> do {
->>>    ptype = *((u32 *)data_ptr);
->>>    switch (ptype) {
->>>    case HFI_PROPERTY_PARAM_FRAME_SIZE:
->>>     data_ptr += sizeof(u32);
->>>     frame_sz = (struct hfi_framesize *)data_ptr;
->>>     event.width = frame_sz->width;
->>> ...
->>>    }
->>>    num_properties_changed--;
->>> } while (num_properties_changed > 0);
->>> ```
->>> There is no validation against `num_properties_changed = pkt->event_data2`, so
->>> OOB read occurs.
->>>>
->>>> I don't doubt the new memcpy() makes sense to you but without this detailed
->>>> understanding of the underlying problem its virtually impossible to debate the
->>>> appropriate remediation - perhaps this patch you've submitted - or some other
->>>> solution.
->>>>
->>>> Sorry to dig into my trench here but, way more detail is needed.
->>>>
->>>>> [1]: https://lore.kernel.org/lkml/4cfc1fe1-2fab-4256-9ce2-
->>>>> b4a0aad1069e@linaro.org/T/#m5f1737b16e68f8b8fc1d75517356b6566d0ec619
->>>>>>
->>>>>> Why is it in this small specific window that the data can change but not
->>>>>> later ? What is the mechanism the data can change and how do the changes you
->>>>>> propose here address the data lifetime problem ?
->>>>> Currently this issue has been discovered by external researchers at this
->>>>> point, but if any such OOB issue is discovered at later point as well then we
->>>>> shall fix them as well.
->>>>
->>>> Right but, I'm looking for a detailed description of the problem.
->>>>
->>>> Can you describe from RX interrupt again what the expected data lifetime of the
->>>> RX frame is, which I hope we agree is until the next RX interrupt associated
->>>> with a given buffer with an ownership flag shared between firmware and APSS -
->>>> and then under what circumstances that "software contract" is being violated.
->>>>
->>>>> Also, with rougue firmware we cannot fix the data lifetime problem in my
->>>>> opinion, but atleast we can fix the out of bound issues.
->>>>>>
->>>>>> Without that context, I don't believe it is really possible to validate an
->>>>>> additional memcpy() here and there in the code as fixing anything.
->>>>> There is no additional memcpy() now in the v2 patch, but as part of the fix,
->>>>> we are just trying to retain the length of the packet which was being read in
->>>>> the first memcpy() to avoid the OOB read access.
->>>>
->>>> I can't make a suggestion because - personally speaking I still don't quite
->>>> understand the data-race you are describing.
->>> Go through the reports from the reporter, it was quite evident in leading upto
->>> OOB case.
->>> Putting up the sequence for you to go over the interrupt handling and message
->>> queue parsing of the packets from firmware
->>> 1.
->>> https://elixir.bootlin.com/linux/v6.14-rc4/source/drivers/media/platform/qcom/venus/hfi_venus.c#L1082
->>> 2.
->>> https://elixir.bootlin.com/linux/v6.14-rc4/source/drivers/media/platform/qcom/venus/hfi_msgs.c#L816
->>> 3. event handling (this particular case)
->>> https://elixir.bootlin.com/linux/v6.14-rc4/source/drivers/media/platform/qcom/venus/hfi_msgs.c#L658
->>> 4.
->>> https://elixir.bootlin.com/linux/v6.14-rc4/source/drivers/media/platform/qcom/venus/hfi_msgs.c#L22
->>>
->>> the "struct hfi_msg_event_notify_pkt *pkt" pkt here is having the data read from
->>> shared queue.
->>>
->>>>
->>>> I get that you say the firmware is breaking the contract but, without more
->>>> detail on _how_ it breaks that contract I don't think it's really possible to
->>>> validate your fix here, fixes anything.
->>>>
->>>> ---
->>>> bod
->>>
->>> Regards,
->>> Vikash
->>
->> I'll go through all of these links given here, thanks.
-> I would request you to go through the description putup by the reporter of this
-> OOB as well, i added in my earlier response. It provided a good background of
-> how the firmware response can led to this particular OOB, atleast that was the
-> source of OOB info for us.
-> Regards,
-> Vikash
->>
->> Whatever the result of the review, this detail needs to go into the commit log
->> so that a reviewer can reasonably read the problem description and evaluate
->> against submitted code as a fix.
->>
->> ---
->> bod
-
-Replied to the wrong patch.
-
-There is no memcpy() in this patch - there was in patch #1 which has 
-subsequently been dropped.
-
-Anyway I'll address my comment there.
-
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
-bod
+ hw/i386/acpi-build.c  | 42 ++++++++++++++++++++++++++++++++++++++++++
+ hw/i386/pc.c          |  7 +++----
+ include/hw/i386/x86.h |  2 ++
+ 3 files changed, 47 insertions(+), 4 deletions(-)
+
+diff --git a/hw/i386/acpi-build.c b/hw/i386/acpi-build.c
+index cf11231b5fe6..ad829e2c75c8 100644
+--- a/hw/i386/acpi-build.c
++++ b/hw/i386/acpi-build.c
+@@ -1352,6 +1352,28 @@ static void build_acpi0017(Aml *table)
+     aml_append(table, scope);
+ }
+ 
++#define GED_COMMON_MMIO_BASE         0xfee00000
++#define GED_COMMON_MMIO_BASE_REGS    (GED_COMMON_MMIO_BASE + 0x100)
++#define GED_MMIO_IRQ          9
++
++static DeviceState *create_acpi_ged(X86MachineState *x86ms)
++{
++    DeviceState *dev = qdev_new(TYPE_ACPI_GED);
++
++    fprintf(stderr, "creating GED\n");
++
++    assert(x86ms->gsi);
++
++    qdev_prop_set_uint32(dev, "ged-event", ACPI_GED_ERROR_EVT);
++    sysbus_realize_and_unref(SYS_BUS_DEVICE(dev), &error_fatal);
++
++    sysbus_mmio_map(SYS_BUS_DEVICE(dev), 0, GED_COMMON_MMIO_BASE);
++    sysbus_mmio_map(SYS_BUS_DEVICE(dev), 1, GED_COMMON_MMIO_BASE_REGS);
++    sysbus_connect_irq(SYS_BUS_DEVICE(dev), 0, x86ms->gsi[GED_MMIO_IRQ]);
++
++    return dev;
++}
++
+ static void
+ build_dsdt(GArray *table_data, BIOSLinker *linker,
+            AcpiPmInfo *pm, AcpiMiscInfo *misc,
+@@ -1794,6 +1816,26 @@ build_dsdt(GArray *table_data, BIOSLinker *linker,
+         aml_append(dsdt, scope);
+     }
+ 
++    /* Notification type SCI requires GED */
++    if (pcms->ras) {
++        if (!x86ms->ged_dev) {
++            x86ms->ged_dev = create_acpi_ged(x86ms);
++        }
++
++        sb_scope = aml_scope("_SB");
++        build_ged_aml(sb_scope, GED_DEVICE, HOTPLUG_HANDLER(x86ms->ged_dev),
++                      GED_MMIO_IRQ, AML_SYSTEM_MEMORY, GED_COMMON_MMIO_BASE);
++        aml_append(sb_scope, aml_error_device());
++        aml_append(dsdt, sb_scope);
++
++        scope =  aml_scope("_GPE");
++        method = aml_method("L08", 0, AML_NOTSERIALIZED);
++        aml_append(method, aml_notify(aml_name("\\_SB.GEDD"),
++                                      aml_int(0x80)));
++        aml_append(scope, method);
++        aml_append(dsdt, scope);
++    }
++
+     /* copy AML table into ACPI tables blob and patch header there */
+     g_array_append_vals(table_data, dsdt->buf->data, dsdt->buf->len);
+     acpi_table_end(linker, &table);
+diff --git a/hw/i386/pc.c b/hw/i386/pc.c
+index b9c32dbdbcd8..b4a2fe61da49 100644
+--- a/hw/i386/pc.c
++++ b/hw/i386/pc.c
+@@ -1700,6 +1700,8 @@ static void virt_set_ras(Object *obj, bool value, Error **errp)
+ 
+ static void pc_sci_error(Notifier *n, void *opaque)
+ {
++    PCMachineState *pcms = container_of(n, PCMachineState, ghes_sci_notifier);
++    X86MachineState *x86ms = X86_MACHINE(pcms);
+     uint16_t *source_id = opaque;
+ 
+     fprintf(stderr, "GHES error for source ID: %d\n", *source_id);
+@@ -1710,10 +1712,7 @@ static void pc_sci_error(Notifier *n, void *opaque)
+ 
+     fprintf(stderr, "GHES error notified for QMP\n");
+ 
+-    // TODO: add something equivalent to:
+-    // PCMachineState *s = container_of(n, PCMachineState, ghes_sci_notifier);
+-    // acpi_send_event(s->acpi_dev, ACPI_GENERIC_ERROR);
+-    // by calling acpi_update_sci();
++    acpi_send_event(x86ms->ged_dev, ACPI_GENERIC_ERROR);
+ }
+ 
+ static void pc_machine_initfn(Object *obj)
+diff --git a/include/hw/i386/x86.h b/include/hw/i386/x86.h
+index d43cb3908e65..06d62a944835 100644
+--- a/include/hw/i386/x86.h
++++ b/include/hw/i386/x86.h
+@@ -54,6 +54,8 @@ struct X86MachineState {
+     GMappedFile *initrd_mapped_file;
+     HotplugHandler *acpi_dev;
+ 
++    DeviceState *ged_dev;
++
+     /*
+      * Map the whole BIOS just underneath the 4 GiB address boundary. Only used
+      * in the ROM (-bios) case.
+-- 
+2.48.1
+
