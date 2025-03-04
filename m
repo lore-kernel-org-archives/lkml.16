@@ -1,144 +1,134 @@
-Received: from mail78-59.sinamail.sina.com.cn (mail78-59.sinamail.sina.com.cn [219.142.78.59])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28A471F4179
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 05:12:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=219.142.78.59
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0929E1F419B
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 05:12:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741065154; cv=none; b=YyJuLlkvqV3bORPL2d/UxB0hGhrqUQ2cPiyCfdiQSnLORZIdysp2SqjIybCV7rBOBqyeFIxhpK6feJ1SNkZ3P8LccLn5BmfOrZEqYBqIT09iFWwfZND8YVe+8YhFI8ZwJjtSAyywFzFR/dQcvz0VHzHtvkn7W/JjDs5vx2Y0F8A=
+	t=1741065164; cv=none; b=qIadYRwYXG2KfErCWbP7cOzSJPosX2erXhlZXXoLayurrblQto/fJmRMeJzZPL8OZJy2zaBnmd+cAt/Lz5BcWCz7F4O35gs+84oHi0M45Tcj0fq1zRTcNgVqXMunE9b2d+jjjbBOqm8Uhu/hAf3X5hmI+Ha3LZHn6nplYoBQgxs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741065154; c=relaxed/simple;
-	bh=voFWHS+/rEfXx/fOignyfmiLmDA597FXjb8TCQXTn8g=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=FmRmuC33/zD6GkWbJ976G0PvimFFlKk653Msdsy85DLkFbIUnDJwQGq8oOBotS9LI2YGSUuBf0HW/LRyC3hG5mXHJJbZe4/amLEitItWX+0Wg426K/7PklxIzVdlHuzveWVTfiSr2PJk0i7zMLQktgH3wRU9cTQdZIS1hRTJsxU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com; spf=pass smtp.mailfrom=sina.com; arc=none smtp.client-ip=219.142.78.59
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.com
-X-SMAIL-HELO: localhost.localdomain
-Received: from unknown (HELO localhost.localdomain)([113.88.49.155])
-	by sina.com (10.185.250.24) with ESMTP
-	id 67C68A6E00007DBC; Tue, 4 Mar 2025 13:06:57 +0800 (CST)
-X-Sender: hdanton@sina.com
-X-Auth-ID: hdanton@sina.com
-Authentication-Results: sina.com;
-	 spf=none smtp.mailfrom=hdanton@sina.com;
-	 dkim=none header.i=none;
-	 dmarc=none action=none header.from=hdanton@sina.com
-X-SMAIL-MID: 17763010748466
-X-SMAIL-UIID: 9A6D555A5EB148519F5EA3B1EE6E3CF0-20250304-130657-1
-From: Hillf Danton <hdanton@sina.com>
-To: "Sapkal, Swapnil" <swapnil.sapkal@amd.com>
-Cc: Oleg Nesterov <oleg@redhat.com>,
-	K Prateek Nayak <kprateek.nayak@amd.com>,
-	Mateusz Guzik <mjguzik@gmail.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	linux-fsdevel@vger.kernel.org,
+	s=arc-20240116; t=1741065164; c=relaxed/simple;
+	bh=UqUkulJfTVPYICuXTQxco+AaAjH3mu1LKhMq3BX2eug=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VHruLLtsHrid8xsgAfRCGmNVp/2gzLukIq6+bsZ3GJCXFvAHWe8UJDtuZ2POTbMrUFfZYF0OMzZNjgjd8ZyLzvNrQtUqPnA2mpTfVoe0wg1IrYQ60sK7Zu99EhmHUJffx32odGUUepo4Z3za+TV3ylMwRWnjfKCASXMtPTVVygI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=UxX88En5; arc=none smtp.client-ip=209.85.221.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="UxX88En5"
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-390eb7c1024so2926307f8f.0
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Mar 2025 21:12:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1741065159; x=1741669959; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=VGDcVLShV6h0jC9uhBpDDw55f7EzHOwouXG7Rkj3oio=;
+        b=UxX88En5/JVC86Bfv+hP+AzyCvDLAMmLuWZVx5830AmfOoC/Pvb08otHAfaqzRxdj0
+         XULFwsV4smVtwixD3vdSL7if3ZgzkHEWHsJJCBrREivybn7S0d8rlxFEZBlcmrnT8w4+
+         u/KhdFqZqs2Np0EbwyqD2N3Hi2zRjtuGrDxu6w/UbzAPojSjnSJ/zEVWjVRpS0ZVH7IK
+         Wo3NnUyJbdz+9a4NNh+KiKvHIGyis0l9FVl9K7nhPugYFxf5VslojmJmxS4dDYvhjlKG
+         +6dzeLrrd2A2UCMpj54hCi9mxrGtRo0nUJAvPGFclpl9qBNVehmQdaOsgT07vrdul5Fu
+         zXAg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741065159; x=1741669959;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VGDcVLShV6h0jC9uhBpDDw55f7EzHOwouXG7Rkj3oio=;
+        b=mKenZKlOJYnkOy5ZU/gidn4lWPMe0y/drgDoj7zqkf1BQgbwao7QRbesZd5RbaVVXA
+         1EX4JZLWAArMeeQG+ZWVojik2jH0EYN7J1dzCEx7vs4VGxBChsagGX7wciNaJnt24nXM
+         PYlvi/1XY5H6mbqbScsBnhG932xghdMDjgx/XweR3wci5OvK0tIgotZiHNOB2EmZ5Efk
+         fX7ryb5/N7x18LbZIVFCcVZnc64CYKi83s3W5IlVil8NnlJjZyqUdiAkFkr4FRgQeHvn
+         Ji7JE2NjlIDsDeMaokMovpen7cHBgQHuTsc8WUGEpLClIDnz8HrdJ2ZSHr66Agt3HyPd
+         rNGw==
+X-Forwarded-Encrypted: i=1; AJvYcCUyKxwvMM/K09MMhSoFZguDUsY1GOctdWeR7Qp+fVvqTij51qYLePOfhc14Pppei+Xb5aavwKaSUU28ijg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzCe2e1k/Y5oeP9MrlzrnfdnXuOGt0UbYTGkK0QsUAITIodOIRt
+	zq2aaQpYjYlayX8or5ny378+dab2W54cFVEy4ImIXhFno8ii2Mdrc2ReX3Fwyq4=
+X-Gm-Gg: ASbGncvgKXZ5rnqfQZM6sigawtrUsYvujKyGy9h2gsuSOEoIpu6/F7hUe+3eF4/tIRV
+	bDptLyp9YdrXNCWbzHWfWC0wuXB/rAz5SZ1tcQwIof0IRVAIe2a1fW2YxU21wRfg8nsCi/6uyHe
+	m2MtLhidF4+mSocIAp4TXo+YfcMXpxp7F0GwHMNwh0IiXK4ZMUDkxneGo7jzTvQjzA1dW0SK0j6
+	JDPtfz8fsIq4Vt0+LB/lmQqZpzae4i8JbfaJpPzOdWQldgSvDvY8NqvWn2IuuuZPobCVeU401mW
+	bzMZ3gzp9FTV3PrYuBYOxBOIvWhZ84Bvw3XsonOPQgdafAfCiRWw3UzZUtgrdozIQodBYn6Hfcl
+	ah0T3sdOUNEEKvaY=
+X-Google-Smtp-Source: AGHT+IHrd9PqX/DjlI9fj4DBpZmmZUNi2fJ1f/erG72uoIjwSjUT4MZjUG1DX4gjTr54ZGluOrADMQ==
+X-Received: by 2002:a05:6000:2112:b0:38f:6149:9235 with SMTP id ffacd0b85a97d-390ec7cba70mr13509775f8f.16.1741065158423;
+        Mon, 03 Mar 2025 21:12:38 -0800 (PST)
+Received: from localhost (lfbn-nic-1-357-249.w90-116.abo.wanadoo.fr. [90.116.189.249])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-390e47b7dcfsm16679767f8f.55.2025.03.03.21.12.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Mar 2025 21:12:37 -0800 (PST)
+Date: Tue, 4 Mar 2025 06:12:34 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: Yihang Li <liyihang9@huawei.com>
+Cc: Arnd Bergmann <arnd@kernel.org>, 
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, "Martin K. Petersen" <martin.petersen@oracle.com>, 
+	Arnd Bergmann <arnd@arndb.de>, Damien Le Moal <dlemoal@kernel.org>, 
+	John Garry <john.g.garry@oracle.com>, Bart Van Assche <bvanassche@acm.org>, 
+	Jason Yan <yanaijie@huawei.com>, Igor Pylypiv <ipylypiv@google.com>, linux-scsi@vger.kernel.org, 
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] pipe_read: don't wake up the writer if the pipe is still full
-Date: Tue,  4 Mar 2025 13:06:43 +0800
-Message-ID: <20250304050644.2983-1-hdanton@sina.com>
-In-Reply-To: <03a1f4af-47e0-459d-b2bf-9f65536fc2ab@amd.com>
-References: <20250102140715.GA7091@redhat.com> <e813814e-7094-4673-bc69-731af065a0eb@amd.com> <20250224142329.GA19016@redhat.com> <qsehsgqnti4csvsg2xrrsof4qm4smhdhv6s4v4twspf76bp3jo@2mpz5xtqhmgt> <c63cc8e8-424f-43e2-834f-fc449b24787e@amd.com> <20250227211229.GD25639@redhat.com> <06ae9c0e-ba5c-4f25-a9b9-a34f3290f3fe@amd.com> <20250228143049.GA17761@redhat.com> <20250228163347.GB17761@redhat.com>
+Subject: Re: [PATCH] scsi: hisi: remove incorrect ACPI_PTR annotations
+Message-ID: <h7oh3uhuvmulmqkxi5x73bnkmgkodjxemabiqwkrqu3jmbxu2e@p2pmhpxh6nxl>
+References: <20250225163637.4169300-1-arnd@kernel.org>
+ <49419ea6-5535-3612-c1c4-5ac58f2bc012@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="3hem4h7lf6bcgapu"
+Content-Disposition: inline
+In-Reply-To: <49419ea6-5535-3612-c1c4-5ac58f2bc012@huawei.com>
 
-On Mon, 3 Mar 2025 15:16:34 +0530 "Sapkal, Swapnil" <swapnil.sapkal@amd.com>
-> On 2/28/2025 10:03 PM, Oleg Nesterov wrote:
-> > And... I know, I know you already hate me ;)
-> > 
-> 
-> Not at all :)
-> 
-> > but if you have time, could you check if this patch (with or without the
-> > previous debugging patch) makes any difference? Just to be sure.
-> > 
-> 
-> Sure, I will give this a try.
-> 
-> But in the meanwhile me and Prateek tried some of the experiments in the weekend.
-> We were able to reproduce this issue on a third generation EPYC system as well as
-> on an Intel Emerald Rapids (2 X INTEL(R) XEON(R) PLATINUM 8592+).
-> 
-> We tried heavy hammered tracing approach over the weekend on top of your debug patch.
-> I have attached the debug patch below. With tracing we found the following case for
-> pipe_writable():
-> 
->    hackbench-118768  [206] .....  1029.550601: pipe_write: 000000005eea28ff: 0: 37 38 16: 1
-> 
-> Here,
-> 
-> head = 37
-> tail = 38
-> max_usage = 16
-> pipe_full() returns 1.
-> 
-> Between reading of head and later the tail, the tail seems to have moved ahead of the
-> head leading to wraparound. Applying the following changes I have not yet run into a
-> hang on the original machine where I first saw it:
-> 
-> diff --git a/fs/pipe.c b/fs/pipe.c
-> index ce1af7592780..a1931c817822 100644
-> --- a/fs/pipe.c
-> +++ b/fs/pipe.c
-> @@ -417,9 +417,19 @@ static inline int is_packetized(struct file *file)
->   /* Done while waiting without holding the pipe lock - thus the READ_ONCE() */
->   static inline bool pipe_writable(const struct pipe_inode_info *pipe)
->   {
-> -	unsigned int head = READ_ONCE(pipe->head);
-> -	unsigned int tail = READ_ONCE(pipe->tail);
->   	unsigned int max_usage = READ_ONCE(pipe->max_usage);
-> +	unsigned int head, tail;
-> +
-> +	tail = READ_ONCE(pipe->tail);
-> +	/*
-> +	 * Since the unsigned arithmetic in this lockless preemptible context
-> +	 * relies on the fact that the tail can never be ahead of head, read
-> +	 * the head after the tail to ensure we've not missed any updates to
-> +	 * the head. Reordering the reads can cause wraparounds and give the
-> +	 * illusion that the pipe is full.
-> +	 */
-> +	smp_rmb();
-> +	head = READ_ONCE(pipe->head);
->   
->   	return !pipe_full(head, tail, max_usage) ||
->   		!READ_ONCE(pipe->readers);
-> ---
-> 
-> smp_rmb() on x86 is a nop and even without the barrier we were not able to
-> reproduce the hang even after 10000 iterations.
->
-My $.02 that changes the wait condition.
-Not sure it makes sense for you.
 
---- x/fs/pipe.c
-+++ y/fs/pipe.c
-@@ -430,7 +430,7 @@ pipe_write(struct kiocb *iocb, struct io
- {
- 	struct file *filp = iocb->ki_filp;
- 	struct pipe_inode_info *pipe = filp->private_data;
--	unsigned int head;
-+	unsigned int head, tail;
- 	ssize_t ret = 0;
- 	size_t total_len = iov_iter_count(from);
- 	ssize_t chars;
-@@ -573,11 +573,13 @@ pipe_write(struct kiocb *iocb, struct io
- 		 * after waiting we need to re-check whether the pipe
- 		 * become empty while we dropped the lock.
- 		 */
-+		tail = pipe->tail;
- 		mutex_unlock(&pipe->mutex);
- 		if (was_empty)
- 			wake_up_interruptible_sync_poll(&pipe->rd_wait, EPOLLIN | EPOLLRDNORM);
- 		kill_fasync(&pipe->fasync_readers, SIGIO, POLL_IN);
--		wait_event_interruptible_exclusive(pipe->wr_wait, pipe_writable(pipe));
-+		wait_event_interruptible_exclusive(pipe->wr_wait,
-+				!READ_ONCE(pipe->readers) || tail != READ_ONCE(pipe->tail));
- 		mutex_lock(&pipe->mutex);
- 		was_empty = pipe_empty(pipe->head, pipe->tail);
- 		wake_next_writer = true;
---
+--3hem4h7lf6bcgapu
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH] scsi: hisi: remove incorrect ACPI_PTR annotations
+MIME-Version: 1.0
+
+Hello,
+
+On Wed, Feb 26, 2025 at 11:23:18AM +0800, Yihang Li wrote:
+> On 2025/2/26 0:36, Arnd Bergmann wrote:
+> > From: Arnd Bergmann <arnd@arndb.de>
+> >=20
+> > Building with W=3D1 shows a warning about sas_v2_acpi_match being unuse=
+d when
+> > CONFIG_OF is disabled:
+> >=20
+> >     drivers/scsi/hisi_sas/hisi_sas_v2_hw.c:3635:36: error: unused varia=
+ble 'sas_v2_acpi_match' [-Werror,-Wunused-const-variable]
+> >=20
+> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+>=20
+> Looks good. So Reviewed-by: Yihang Li <liyihang9@huawei.com>
+
+If you put your Reviewed-by tag in a separate line, the tooling that
+most maintainers use pick it up automatically. Martin applied your patch
+(currently as commit 7a9c0476d4073e742f474e71feeef4f54add4bc9 in
+https://git.kernel.org/pub/scm/linux/kernel/git/mkp/scsi.git 6.15/scsi-stag=
+ing
+) indeed without your tag.
+
+Best regards
+Uwe
+
+--3hem4h7lf6bcgapu
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmfGi8AACgkQj4D7WH0S
+/k6uTwf/bL2OxbnKrLPCyCJoJ83Z//yLDsboI8SAvxeHxQEkwAj81Xuyp2fdSEnk
+M9idgLnnXAh4RE3Xt0OUGm7wpC6s6+tfLQQzgS1GcSm8Zo2JSXtjR12T4FRx2tLK
+IxVnJ+ALuaEtgPV5aitknIwsEds9QNKZz4BIrxQ7YRD+Li4U7gJ4iavzRk35WK5t
+rA6b2v3g3qJAO9Oe4IPGh0TIjyc28J6ALo4U0IA0C5DwNB+JcyGeLGc1ZkApJxot
+xLlQTlI0jZtNCxn006Q39TcWIwjb28zp73JCuWSg7nSQddF80oN54kRrRRq4SmSh
+Hx1QG/MpSok55aMOI+2+Nv90RuCn8w==
+=5tCd
+-----END PGP SIGNATURE-----
+
+--3hem4h7lf6bcgapu--
