@@ -1,89 +1,113 @@
-Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC33B1FF1BD;
-	Tue,  4 Mar 2025 11:01:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F2AD1D5CFE
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 11:03:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741086099; cv=none; b=iuno+fxEHf5LilqnvQrYqgJ6WtY80EoHAWjaq3F6r2gnrVLW/PrQ7aqUWUUF5tDhPZbLWhK4ObsLhdcmK6kGx2CraxEhontB4j2830KIud8pWsgvglTUZEAJn5zp2kOmKjtYvStE+0Ko/dimmrhWzRxpGCVINbAsQJQM1m7dKnE=
+	t=1741086207; cv=none; b=OYuOnAsoPZAs4HKyZg2Wn1wD8ER98nE34fD7aoxpzx/tHc1aifUqkFApE4VZizZsqdth1vKHj7xUvF4D96hWnsfmPcpA77inHCS6y5cQ/kX0G6GC3mv+30UigH6bYVhXfGbmpzXGPIUWh9Vxp1hmTvddDI1K0Uy8PRrSp5bj51g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741086099; c=relaxed/simple;
-	bh=NwIfxOJpjQKKWVZOWUDaFc9aD87Hn1O3+ngn0ThENbY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=A+fEHCp4+EypRNkTosoKt73YKfDVbCLjf4MjfVHz2QWc2MUv5J6P8CpZSq2nWGx+89r9uBXIUIabJJAaDufuffEeAkeO+czCGqGa5asJ/MBJE5tamm8f6dvM49QG8cPfbizDiR+E7gECRHFfGHViugsvfHqjz0evLT83i9t61LU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-2fe96dd93b4so9808366a91.0;
-        Tue, 04 Mar 2025 03:01:37 -0800 (PST)
+	s=arc-20240116; t=1741086207; c=relaxed/simple;
+	bh=zqEaK6lshzIGNze+IgF53qRIWCWzyItSBvl64+V6X00=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=fCYbx6IuojSCXiccmP7m1zPOpTH2o/mE/aCcUDsFiznX81I4JZY9MLMsnDA/Xz/J2OCfcj6jO0kjGTmzfeiHHH9034GzpS/EXpgQe++AQHKIHpMKAmZ0SX2hlytC2grjV3Mvk8+BnZ9jGHbPHnN0XXMp0PK3Ps9ybHeZzt3g51E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=shopee.com; spf=pass smtp.mailfrom=shopee.com; dkim=pass (2048-bit key) header.d=shopee.com header.i=@shopee.com header.b=T1qpgAmI; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=shopee.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shopee.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=shopee.com header.i=@shopee.com header.b="T1qpgAmI"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-22398e09e39so43198445ad.3
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Mar 2025 03:03:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=shopee.com; s=shopee.com; t=1741086206; x=1741691006; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=SHtbx793tIAG1ciJBxRLA5mIHUNtam6m5RVXu4DBixg=;
+        b=T1qpgAmI6q5tdSkdoroAWQzI6raC8vj1ekYmO0S00AvDGBQgvgqjyA9DypK1bqBc26
+         CbnCYspiGfGNGr6IVKoIP1U4Dam0zCNg2KVnQGCQ/C4thCu7UZ0LY6JJpbbq6mdTOnIQ
+         eQ3i897loaTZmOEKLS+oUIExdNtaATLU+XLtO6AhgWtCfWJBbG8rS+B3roXbgs1SUTeA
+         neGmFQRfnxWWa7dQA/4qcaZ1bqx2B2sktTfz5JbhfmVn0LJu79iPvNDbsBSS4XKnUtEz
+         aMsGUeM/3jUp6VyzxWj8CfM8s665S7gMmBBUCfVBLJ1V6iwPsJrDaKnqoPSZ8VTJ4q3B
+         w32g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741086097; x=1741690897;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=iQ+Oq7PC7q9BySActJt+1QaCy/AKAyIsoVNBKS++4W4=;
-        b=UzgCN2bqoQ2N8HU79ltFDPJaQgNKAQQbGGhCOVWfrIvgpUTRTt17Is2foNNYiEVfgm
-         dCqBtDqFrI406wyDhuuJfgDMfdrrnJjsnyj28SRkvbdoWZK2Se0AlrtXuJlDR3KX54FB
-         ggLU83+jsftC2phRUyalXyGbTpRamUO/AkRo6qsv1JSzWIthlMNXj0Or3ZgtWy8+39i1
-         TIeh3jpRN0o3YA/CznrD8OyeIZy5z14Xy7ixxqeIF4Zi18NjxBbR+h9D24wjBR1mwXdc
-         2kXsbLXxcPG6FYq2iuGtS/Hqwk8onJnUM6lXWqq/J57LyMBKbwq825CB1SnrZh/tOHj1
-         vRPg==
-X-Forwarded-Encrypted: i=1; AJvYcCUCukJI3rAtliz/RdGU/zDF+90c1jrezutJcX/MGAr2C/x6Q8/+mTsAHjpFLd1m4x9nWNbVlnzdrc5JWkA=@vger.kernel.org, AJvYcCUYr2YmnETYhQ4cUzqbM21NAne0Sly3KuZMqwoCx7j6Zc4kF0vK0p05fY1DLfgZMVkB5nQEgphC3pcZ@vger.kernel.org
-X-Gm-Message-State: AOJu0YwGgghu91aAl1RpWJWCtHYJzPlbzvgzj+jTTp5+EWWi5zHOJzXd
-	7Fp1ZBoADiUPh/b0mHcfGAWlVYFQJBPW9CrDoESbuIhxw9WK6N+Q
-X-Gm-Gg: ASbGncsh82it8H0hkzGCFwm/fIPq7O3aIA/xX9KdpIgj7UjZBtUeRcAxmDZqLoL8jVD
-	kFphHkJ1jTkT2wN0TfC4iDpWLIULn/tccmgtEQcR3kmXeV3IvqGdjAGZJtqUwtHNkj6KcFbETuN
-	c58omgkmnJz9fObuOHto9mB2VsiP+tLj1UUHJ4Z+MPLoqiC9zZsEhM1ImvmxM4kYnsD5RFKudkA
-	hwRlfmwXZFykyIIhmlt8i9xnz45Ye/Xf23TsPLfWMoo8N3KkWtIiI9trb7HFU7QjFBCuUEeUvpX
-	gC6JbH1y9ddy5F4wcRWjVnr4926POQ0jzGYMd+Vwg5BrO1R0/e7duH4iKSC9x3LVG8uYSuitbFE
-	We/U=
-X-Google-Smtp-Source: AGHT+IH/XwYcLajY7Y4xCSf8zrz1ql2vE4I7XndeYgzjQlRjSeF6nzCNQa9fNe9VhBdw8XDoxdT+ag==
-X-Received: by 2002:a17:90b:2e44:b0:2fa:6793:e860 with SMTP id 98e67ed59e1d1-2ff33994c2bmr4918931a91.0.1741086096855;
-        Tue, 04 Mar 2025 03:01:36 -0800 (PST)
-Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
-        by smtp.gmail.com with UTF8SMTPSA id 98e67ed59e1d1-2fea696dcc3sm10612202a91.36.2025.03.04.03.01.36
+        d=1e100.net; s=20230601; t=1741086206; x=1741691006;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=SHtbx793tIAG1ciJBxRLA5mIHUNtam6m5RVXu4DBixg=;
+        b=lGHDIVD49Uc/LyKbKQLEm5ekK24fnVcTtowY+GYvVidcJdE2E0gVrS7gSXg2h4pZgU
+         OzYYSmh5V6qjpUmvYQYyGdyyeAqNr3AYeZ6rIThK0zfea7ZUycC9CQ+ezXCUHR16rIro
+         22DelvDViX2azGKug01x7A4OHY0kF3a72KTx14IcnsLCn+7DrngKkjGF0UvU46wMAv4X
+         keWRDdbuYCdYpRZbmHz+IJ9ITrWz4AOS4GzY3N2TPcSjPmK1coT4H0bekDmLez67Gyjj
+         nYgd9RubQQqmn5FO7wmozjjfxQaIbRL+0ckD4FOJLyeyNJpbYqjVo+1m0wkiDYbJhZKM
+         1u+w==
+X-Forwarded-Encrypted: i=1; AJvYcCUizbpAOp7kuqcNw6+n9c10TrEFv0DOvTAfXST5cTk20RbLbUtt/M2d9h1MGvkZ82onzIACKMASl9CQzpA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxWsOEfxoPOs3oWqtpsKhwEUSuTa5zjO0+qi5VSs1ZPr5giicJf
+	hBllD5oAFvOUe1klxKsHZRdaLEkIIqVzEA+tLpmIfSnDAgCoTNfoPEDiX41/IkM=
+X-Gm-Gg: ASbGncv1nHB+x703cED+zjZgim7RU55RE8RTwG6SZF3UnV/kKmASpOG8S0429yt2Pl7
+	OWdx6mfrPbe1ArDkvd3A0ZezzoiZtRfzYI9sdKEyrYOg/KYE4J0jO870cWjfUDbn2iPPp5w98CV
+	Npe4nav7D7q9oNG5puaMKFzICl+KnEeUkVk6YU68rA8QEdUrQKzOcV6rEZHID2KSAVuxbWo9igG
+	akQH7aeVzj6ucbag2uXyG6pmeS6HrH12Vg2ViooG/srg2I5LX1rpQfS4pzdsJ8IdVpevYXs/uZL
+	J6kj38TLC9S+nyL1MVAcV6S4ebqoIA==
+X-Google-Smtp-Source: AGHT+IEmfNtA9j59gyV0N5Y1sufC0pIIYm447vAhwkKJoR7YVLQIz4BOAJdQRHPoFR2B8LBfRVy0ag==
+X-Received: by 2002:a17:903:2307:b0:223:65e2:2f1f with SMTP id d9443c01a7336-2236924e56fmr240292725ad.33.1741086205808;
+        Tue, 04 Mar 2025 03:03:25 -0800 (PST)
+Received: from localhost.localdomain ([143.92.64.20])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-223501d2778sm92764415ad.36.2025.03.04.03.03.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Mar 2025 03:01:36 -0800 (PST)
-Date: Tue, 4 Mar 2025 20:01:34 +0900
-From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To: Hans Zhang <18255117159@163.com>
-Cc: lpieralisi@kernel.org, manivannan.sadhasivam@linaro.org,
-	robh@kernel.org, bhelgaas@google.com, bwawrzyn@cisco.com,
-	cassel@kernel.org, wojciech.jasko-EXT@continental-corporation.com,
-	a-verma1@ti.com, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, rockswang7@gmail.com
-Subject: Re: [v4] PCI: cadence-ep: Fix the driver to send MSG TLP for INTx
- without data payload
-Message-ID: <20250304110134.GA4101682@rocinante>
-References: <20250214165724.184599-1-18255117159@163.com>
- <20250303190602.GB1466882@rocinante>
+        Tue, 04 Mar 2025 03:03:24 -0800 (PST)
+From: Tang Yizhou <yizhou.tang@shopee.com>
+X-Google-Original-From: Tang Yizhou
+To: tj@kernel.org,
+	jack@suse.cz,
+	brauner@kernel.org,
+	willy@infradead.org,
+	akpm@linux-foundation.org
+Cc: rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	ast@kernel.org,
+	linux-mm@kvack.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Tang Yizhou <yizhou.tang@shopee.com>
+Subject: [PATCH v2 0/3] Fix calculations in trace_balance_dirty_pages() for cgwb
+Date: Tue,  4 Mar 2025 19:03:15 +0800
+Message-Id: <20250304110318.159567-1-yizhou.tang@shopee.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250303190602.GB1466882@rocinante>
 
-On 25-03-04 04:06:02, Krzysztof Wilczyński wrote:
-> Hello,
-> 
-> > Cadence reference manual cdn_pcie_gen4_hpa_axi_ips_ug_v1.04.pdf, section
-> > 9.1.7.1 'AXI Subordinate to PCIe Address Translation' mentions that
-> > axi_s_awaddr bits 16 when set, corresponds to MSG with data and when not
-> > set, MSG without data.
-> 
-> Would it be possible to get the full name of the reference manual mentioned
-> about?  I want to properly reference the full name, version, revision, etc.,
-> like we do for other documentation of this type where possible.
+From: Tang Yizhou <yizhou.tang@shopee.com>
 
-Hans, I came up with the following, have a look at:
+In my experiment, I found that the output of trace_balance_dirty_pages()
+in the cgroup writeback scenario was strange because
+trace_balance_dirty_pages() always uses global_wb_domain.dirty_limit for
+related calculations instead of the dirty_limit of the corresponding
+memcg's wb_domain.
 
-  https://web.git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/commit/?h=controller/cadence&id=09f4343a59cc2678a3a5b731d16e55c697246a40
+The basic idea of the fix is to store the hard dirty limit value computed
+in wb_position_ratio() into struct dirty_throttle_control and use it for
+calculations in trace_balance_dirty_pages().
 
-Let me know if this is OK with you.  Thank you.
+v2:
+Adopt Tejun's suggestion and split the renaming code into Patch #2.
+Pick up Tejun's Acked-by tag in Patch #3.
 
-	Krzysztof
+Tang Yizhou (3):
+  writeback: Let trace_balance_dirty_pages() take struct dtc as
+    parameter
+  writeback: Rename variables in trace_balance_dirty_pages()
+  writeback: Fix calculations in trace_balance_dirty_pages() for cgwb
+
+ include/linux/writeback.h        | 24 +++++++++++++++++++++
+ include/trace/events/writeback.h | 33 ++++++++++++----------------
+ mm/page-writeback.c              | 37 +++-----------------------------
+ 3 files changed, 41 insertions(+), 53 deletions(-)
+
+-- 
+2.25.1
+
