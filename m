@@ -1,115 +1,128 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 827531F37CE
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 09:55:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE92A1FCFCC;
+	Tue,  4 Mar 2025 09:56:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741082151; cv=none; b=dU13/WDbfEoVB4cRxQt0XvkVVCOOGJxHLnY/WYDkSsjKi5CSnJpCroRVGVTX6kgeAL0kWFLnbN7Q44SzlLAAvzRseakITpHlyezxpNiYcQD2xTG2klsvFs7BEV6o1CrDKHHFDXm0J1ITijWcJFTV6Dd6MfKfw4QT+C0jOqBEmYY=
+	t=1741082163; cv=none; b=iklqVengusQBaCe3m+vOcLg9YkfCoUT2E80OrYnJ2aP3Lg8qFn2BVslNOIa+bnwrgPViETlMnawTcX4bFmvZLCbYpyYbVBNZvZ6jheQTQ7IqD5g4U/Y03bK0ihHga4+eSZnADfAom7vruRlVvFa0EfrywA35vES25EBd3gd3xXE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741082151; c=relaxed/simple;
-	bh=Vg0JIHG39DDeLKayInuouwopWCmilHvmKYPuJMTkmSo=;
+	s=arc-20240116; t=1741082163; c=relaxed/simple;
+	bh=o51jYiIjJ7Hl+a6ZtvtnyQKJHKFVcGivr4VSA+BfR1A=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OUzz7ztleYiR1DjiS0ZO5We/BVg+oBn0OaNsyH89NX7y3ulKAjSFWIWXNqWNS0vdbanb3e2CfF2BZ/TBMUUcuNqskfBpa2zjx1Q8j0tvYwS013eBj1CHtcmI1hCzkYYPCHR3Dy4Nv81l1lklI3TJ7jlHDkxlKLMlnBBbVt2IMIs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TRaCxbUH; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=X9zhnNNVz+ndTDef9LeVdLu42W2s+1YiszfFc/BzbQvFIo2yaJrcYUY/Cyf5vjNm24PNE1EsMGlaJ66zXwDQ5SETZ5hmX0GTLZtmCgts67coIHT8p6CQ6Jhn2qj/R5grOC2nS5xLqEwJ5/jYzQnkh3XIDajkJAw6hK+10ZvAkJM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ps19xneF; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TRaCxbUH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 359F5C4CEE5;
-	Tue,  4 Mar 2025 09:55:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741082151;
-	bh=Vg0JIHG39DDeLKayInuouwopWCmilHvmKYPuJMTkmSo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=TRaCxbUHvz/dBwnYK2JGN4xmuLxPLFUpREo+EeC5RF8PCXfwIomceblSiUaXLcWXX
-	 RPXo1UiMPW/+BhZKF7RrWJOTw6iilcTCv+Ko7SvmAp9Ati8cBAxlX5c/LBwq7Uq/3M
-	 uNQ0TCC9gYQV09wvTF/Zt1OxOduCF2kMrO4WGoh/WNj3qU17mt38e2QlAOslibAgSO
-	 wHX94F2RrNjKIHkCHJeJU5Q2ryFHSFGvvwmqgS1ldVuwdzYCV09dEehb2XLkE90l/M
-	 Di9WAG2ddmzeSfHOVR07uybmiaEeBMPuDpCNON4qzrLZaqSv0RuLWP+hsSXrm75CP1
-	 vf8aOb88WnlHQ==
-Date: Tue, 4 Mar 2025 10:55:45 +0100
-From: Ingo Molnar <mingo@kernel.org>
-To: Uros Bizjak <ubizjak@gmail.com>
-Cc: Brian Gerst <brgerst@gmail.com>, linux-kernel@vger.kernel.org,
-	x86@kernel.org, "H . Peter Anvin" <hpa@zytor.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Borislav Petkov <bp@alien8.de>, Ard Biesheuvel <ardb@kernel.org>,
-	Linus Torvalds <torvalds@linuxfoundation.org>,
-	Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH v3 00/11] Add a percpu subsection for cache hot data
-Message-ID: <Z8bOIXeWYycUEmp4@gmail.com>
-References: <20250303165246.2175811-1-brgerst@gmail.com>
- <Z8YTYWs-DeDHal1Q@gmail.com>
- <CAMzpN2iB4Gv0Fq1pNtk7bpa2z6eYwQGYXT0=p=_wWDBE9Uxa7w@mail.gmail.com>
- <Z8a-NVJs-pm5W-mG@gmail.com>
- <CAMzpN2gpHRtOtRuCJF_TKOFbEJ2xkksndCH+MfntfDuZHC0O1w@mail.gmail.com>
- <Z8bMSr8JrDZtqwK8@gmail.com>
- <CAFULd4YFm-2Sc6NOzyWt4-TPDkwY-=5h-Gb99M+tFf-Mczk0Ng@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ps19xneF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741082162; x=1772618162;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=o51jYiIjJ7Hl+a6ZtvtnyQKJHKFVcGivr4VSA+BfR1A=;
+  b=Ps19xneF4D3M6cdUHBwSS+SYYl53IciSEvEWKQXVYu3aCDUh3RLnS8QY
+   0pe0O5CRMl3UV8eHpPzEUhUu+tfJeALFgFxJIGaoTeuWQtmLBmAE4dhnD
+   DYqvCPd0wuXC71RAsfZ9RWeRos8j2IyewvAZSweg/kUCI7UzQeFzIJzio
+   qPfHnqhypzE3B5BAFB4A6igpEiOAWw3+eeH+M3toUZLrJAA9dpPsAKE2y
+   QyqH+RB4PuBa1LCF90TyZdk9ThVDvY+W3LiEZaWmBDtyM0yylMxsKTsJf
+   APiifh0mzdbtmMuVdy92jM8v3vq9Ymy07dHgRmD6J8I36w9YbjsNlBEvh
+   A==;
+X-CSE-ConnectionGUID: 7pgFDQdxTzmqFAFM+f8FkA==
+X-CSE-MsgGUID: FlAd9TfXS0m4fU0rJSW1lQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11362"; a="45767245"
+X-IronPort-AV: E=Sophos;i="6.13,331,1732608000"; 
+   d="scan'208";a="45767245"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2025 01:56:02 -0800
+X-CSE-ConnectionGUID: 9/id7rMqQ4+3Zhh40VmpKg==
+X-CSE-MsgGUID: ljCGWTOARy6fccCifDPeXg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="118840957"
+Received: from mev-dev.igk.intel.com ([10.237.112.144])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2025 01:55:58 -0800
+Date: Tue, 4 Mar 2025 10:51:57 +0100
+From: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
+To: Leon Romanovsky <leonro@nvidia.com>
+Cc: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>,
+	Tariq Toukan <tariqt@nvidia.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Eric Dumazet <edumazet@google.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	Saeed Mahameed <saeedm@nvidia.com>, Gal Pressman <gal@nvidia.com>,
+	netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next 6/6] net/mlx5e: Properly match IPsec subnet
+ addresses
+Message-ID: <Z8bNPRtzOBZ7LdGJ@mev-dev.igk.intel.com>
+References: <20250226114752.104838-1-tariqt@nvidia.com>
+ <20250226114752.104838-7-tariqt@nvidia.com>
+ <Z8aw1gn5iFNiSxd3@mev-dev.igk.intel.com>
+ <20250304080543.GD1955273@unreal>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAFULd4YFm-2Sc6NOzyWt4-TPDkwY-=5h-Gb99M+tFf-Mczk0Ng@mail.gmail.com>
+In-Reply-To: <20250304080543.GD1955273@unreal>
 
-
-* Uros Bizjak <ubizjak@gmail.com> wrote:
-
-> On Tue, Mar 4, 2025 at 10:48 AM Ingo Molnar <mingo@kernel.org> wrote:
-> >
-> >
-> > * Brian Gerst <brgerst@gmail.com> wrote:
-> >
-> > > On Tue, Mar 4, 2025 at 3:47 AM Ingo Molnar <mingo@kernel.org> wrote:
-> > > >
-> > > >
-> > > > * Brian Gerst <brgerst@gmail.com> wrote:
-> > > >
-> > > > > >
-> > > > > > -       PERCPU_SECTION(INTERNODE_CACHE_BYTES)
-> > > > > > +       PERCPU_SECTION(L1_CACHE_BYTES)
-> > > > > >         ASSERT(__per_cpu_hot_end - __per_cpu_hot_start <= 64, "percpu cache hot section too large")
-> > > > > >
-> > > > > >         RUNTIME_CONST_VARIABLES
-> > > > > >
-> > > > >
-> > > > > That is probably the right call.  The initial percpu section is just
-> > > > > used by the boot cpu early and as a template for the dynamically
-> > > > > allocated percpu memory, which should account for the proper
-> > > > > alignment for NUMA.
-> > > >
-> > > > Okay.
-> > > >
-> > > > Randconfig testing found another corner case with the attached config:
-> > > >
-> > > >     KSYMS   .tmp_vmlinux0.kallsyms.S
-> > > >     AS      .tmp_vmlinux0.kallsyms.o
-> > > >     LD      .tmp_vmlinux1
-> > > >   ld: percpu cache hot section too large
-> > > >   make[2]: *** [scripts/Makefile.vmlinux:77: vmlinux] Error 1
-> > > >
-> > > > (I haven't figured out the root cause yet.)
-> > >
-> > > CONFIG_MPENTIUM4 sets X86_L1_CACHE_SHIFT to 7 (128 bytes).
-> >
-> > Hm, to resolve this I'd go for the easy out of explicitly using '64' as
-> > the size limit - like we did it in the C space.
+On Tue, Mar 04, 2025 at 10:05:43AM +0200, Leon Romanovsky wrote:
+> On Tue, Mar 04, 2025 at 08:50:46AM +0100, Michal Swiatkowski wrote:
+> > On Wed, Feb 26, 2025 at 01:47:52PM +0200, Tariq Toukan wrote:
+> > > From: Leon Romanovsky <leonro@nvidia.com>
+> > > 
+> > > Existing match criteria didn't allow to match whole subnet and
+> > > only by specific addresses only. This caused to tunnel mode do not
+> > > forward such traffic through relevant SA.
+> > > 
+> > > In tunnel mode, policies look like this:
+> > > src 192.169.0.0/16 dst 192.169.0.0/16
+> > >         dir out priority 383615 ptype main
+> > >         tmpl src 192.169.101.2 dst 192.169.101.1
+> > >                 proto esp spi 0xc5141c18 reqid 1 mode tunnel
+> > >         crypto offload parameters: dev eth2 mode packet
+> > > 
+> > > In this case, the XFRM core code handled all subnet calculations and
+> > > forwarded network address to the drivers e.g. 192.169.0.0.
+> > > 
+> > > For mlx5 devices, there is a need to set relevant prefix e.g. 0xFFFF00
+> > > to perform flow steering match operation.
+> > > 
+> > > Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
+> > > Signed-off-by: Tariq Toukan <tariqt@nvidia.com>
+> > > ---
+> > >  .../mellanox/mlx5/core/en_accel/ipsec.c       | 49 +++++++++++++++++++
+> > >  .../mellanox/mlx5/core/en_accel/ipsec.h       |  9 +++-
+> > >  .../mellanox/mlx5/core/en_accel/ipsec_fs.c    | 20 +++++---
+> > >  3 files changed, 69 insertions(+), 9 deletions(-)
+> > > 
+> > 
+> > [...]
+> > 
+> > >  
+> > > +static __be32 word_to_mask(int prefix)
+> > > +{
+> > > +	if (prefix < 0)
+> > > +		return 0;
+> > > +
+> > > +	if (!prefix || prefix > 31)
+> > > +		return cpu_to_be32(0xFFFFFFFF);
+> > > +
+> > > +	return cpu_to_be32(((1U << prefix) - 1) << (32 - prefix));
+> > 
+> > Isn't it GENMASK(31, 32 - prefix)? I don't know if it is preferable to
+> > use this macro in such place.
 > 
-> Why not simply:
+> GENMASK(a, b) expects "b" to be const type, see
+> #define GENMASK_INPUT_CHECK(h, l) BUILD_BUG_ON_ZERO(const_true((l) > (h)))
 > 
-> ASSERT(__per_cpu_hot_end - __per_cpu_hot_start <= L1_CACHE_BYTES, "...")
-> 
-> ?
 
-I don't think it's a great idea to randomly allow a larger section 
-depending on the .config ... The *actual* intended limit is 64, not 128 
-and not 4096, so I'd suggest we write it out as before.
+Sorry, I didn't know that, thanks.
 
-Thanks,
-
-	Ingo
+> Thanks
