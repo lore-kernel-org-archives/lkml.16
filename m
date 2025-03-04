@@ -1,73 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA62F1FF1BF;
-	Tue,  4 Mar 2025 23:48:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1D0DBA2D
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 23:49:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741132103; cv=none; b=WgeZs5m08TA2IFtokmBvuQLnJl462TjREliOv1EjZQjJXmCwYplSc3TqWjKNyVefdGzOBlqdBmAs+96ErpeaHcPmvydZRU2H/DyDIvWlar76T/wRYSL5Ndb4BxaneDyBELUJGneahy1Mq3U6dRf8LBrP6BV9rB2DpGpUZoPvEsM=
+	t=1741132181; cv=none; b=I4TB94GG+vLVe8W8jl+xCnfj+umH9XcO3WQhY+FseQYhv3TxcYxVyn2Ox3G9UVZcWDMC2DD6hu0Dw161Y89CZfQdKcvrT99Pk9+UrUEmszlwqh1Ytkwilv1xuajkf8+6VcNjlSjGaEFfc9FNW9fFXmj78LzSj3Dcjdpj9uTOEQY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741132103; c=relaxed/simple;
-	bh=GwQMN2sTVl7WhSar32HtmnQ4Yzh2BIMYxg373QgeE7I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gsMPDyn5dx5KxKiXvFQXnISmr8dRlIAtzwKR0FHqGAGXPtH+YFvyCG2+JHELYSesiy03b9sO5mALnjKlUFmJrHva8k2PM11beRQbaaV+q/V7nHSxGfoiFla8SAqNKmZc+3sOGOlBG6cepADeaJS5vhi25my5dM5ba+5amYKQU00=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OWzCgqyp; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741132181; c=relaxed/simple;
+	bh=KGc5ZOpthDNGd1BsUds+xgHbJiLHtxGxIIOfKvP7wJk=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=Mx5fDF6ecPcq/vtYlr+6SAV5dD0k8/1s/oZ4UIbGYqqFzOeICe7Y0DNeb8LLy/E8QVhq3XV1ZVXgAmuDKsIfOIh5l7EhAkFP3wOZJ3OMEf8wQ7qVRsAQuBskFnQzcdF9dLhc+e6VLEmplYGrWTV6p70uDRUWpeFfgCP1Ug4qQw0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--almasrymina.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=OHGS+YbH; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--almasrymina.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OWzCgqyp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F35F3C4CEE5;
-	Tue,  4 Mar 2025 23:48:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741132102;
-	bh=GwQMN2sTVl7WhSar32HtmnQ4Yzh2BIMYxg373QgeE7I=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=OWzCgqyp8y/+UYaqUQcZzU6Z3aNreE0DdjZJ57kxdI5YLzFXcQ31R1DIoyAVUrla4
-	 S4cxQU8s663H6dvW2t9A08ExiQOXdbm1pF+zL8xh1/J6dMmJktHakaCA5qqka5OsPm
-	 FYlb6c4dWIeUx/9kWVoTQGRg1V+pWciGFNPM3J7hy/D5pVhV51CyS3bt/jpThpsuvK
-	 KRiIpsq/FtPzewxRoR1NnSeKwH1tmV7qIjLNICDx0uA4TRhBVf37thS7oFkazMO/YG
-	 kNkIpckrmT2EsLhvlEPtyBqUZKTVbOb3tEg1rInMTV2khoLT6StZoyHZYEKRWBSw9q
-	 WbPl1vLsV//wA==
-Message-ID: <cd2b277b-52ce-40cb-b461-e67338fd9471@kernel.org>
-Date: Tue, 4 Mar 2025 16:48:21 -0700
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OHGS+YbH"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2feb8d29740so9708672a91.1
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Mar 2025 15:49:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1741132179; x=1741736979; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=+YMZiKSz5zNA/0UkYVvQA9DfWhT+3c5l8KwfO4x1oWs=;
+        b=OHGS+YbHklFyjo2ZqSSi0Mksn52GfkpX6woVhcc/Svmpd+5J3NhSw1NpI4353N7zKL
+         uG5p6BJHkGuA7SAOa4ZKns3mGkkPIkiZdGAqgKslUcxB1Fubs5jZXJAGwGSwG9OgI58Q
+         kUqIql8Pk8tXwOlAV2g6UsA5H9Je311SiKcboR87S702+X7c2oVjY1J3vxUU6PvVLN72
+         NnWwt5Cylk2wzGvRG8+Lu7NipnvttuhTqnLbjEekt/I507dX64NAbN4cwH2Z7XR/P+tx
+         r2/1JIm0KjHWg0qs7vnNmZ9RYjkoAtRvheYGlux269bkcUOKZVprPk1AYzQHOXtDKBNF
+         sQOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741132179; x=1741736979;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=+YMZiKSz5zNA/0UkYVvQA9DfWhT+3c5l8KwfO4x1oWs=;
+        b=IVSSthUm7aF/E20XBuIuHe50SkwtbXign3wujvT+BBcbtuXyFPMZd+coTbijndDpfP
+         +/NOHNLvS8MNmj6pD5hP+LiiPOjLpObnriW5XRtbtYbdkOGZ1PmR0Gz+ep3mo+voqLT6
+         XZy0OpjRTEHckwAYoqPtoxIbs1mS09DahZb0DcAK+CtYoPihcfE1V0J2HEqPVFIjcU2L
+         0IlbM+Saow4JhHuMuBRVX6QjNyvros2spaoGdizgrK8RFSTDFI7eYe19w+7cfJtbYeie
+         Tz1eYQOjPzAZw11Z5SashQPgHe/q30CuZbE/XM2prasotvX0f/9aLo3BoOhxyQfSRoqA
+         wjSg==
+X-Forwarded-Encrypted: i=1; AJvYcCVVFX4PgzKWVeH+bSF8SXYvZT5hUdx5z2pmxuTf4BvUHdIkNl85F1LJg7nXAVcQpQVv2LbJiYwUR98jOnM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxBcAYEzSKmUgtbJunh9B2qbytE1J0p+tc54G4fSpqUJLnXR0pt
+	pQQmeBD2EsXm2NG59QSM6ciCZzjtRpEKOTEwk2ntlqzFSnPZAW5XPGVfnVYwV+K/GoumsPuiqgn
+	RHBsxcrqhXHSewxWPFnpgcg==
+X-Google-Smtp-Source: AGHT+IHyEqSO1UoerwLMdOalFYRe0Gf8bawb/DcdZP+I3DG6F3XwdwIcjvKhQhRV3aPh8doeU1NUpGVgU+jQgq2Yfw==
+X-Received: from pjbmf13.prod.google.com ([2002:a17:90b:184d:b0:2fa:1803:2f9f])
+ (user=almasrymina job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a17:90b:3b51:b0:2ee:44ec:e524 with SMTP id 98e67ed59e1d1-2ff497c5dadmr1910088a91.35.1741132179057;
+ Tue, 04 Mar 2025 15:49:39 -0800 (PST)
+Date: Tue,  4 Mar 2025 23:49:24 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] Documentation/CoC: Spell out the TAB role in enforcement
- decisions
-To: Steven Rostedt <rostedt@goodmis.org>, Shuah <shuah@kernel.org>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
- gregkh@linuxfoundation.org, corbet@lwn.net, workflows@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, conduct@kernel.org,
- tab@lists.linux.dev, Miguel Ojeda <ojeda@kernel.org>
-References: <20250304194813.11049-1-shuah@kernel.org>
- <20250304200947.GF30583@pendragon.ideasonboard.com>
- <2b3aad9e-5288-45d5-bcdd-9dbc4f7298b4@kernel.org>
- <20250304165528.2e9b336c@gandalf.local.home>
-Content-Language: en-US
-From: Shuah <shuah@kernel.org>
-In-Reply-To: <20250304165528.2e9b336c@gandalf.local.home>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.48.1.711.g2feabab25a-goog
+Message-ID: <20250304234924.1583687-1-almasrymina@google.com>
+Subject: [PATCH net v1] netmem: prevent TX of unreadable skbs
+From: Mina Almasry <almasrymina@google.com>
+To: netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Mina Almasry <almasrymina@google.com>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Simon Horman <horms@kernel.org>, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On 3/4/25 14:55, Steven Rostedt wrote:
-> On Tue, 4 Mar 2025 14:43:13 -0700
-> Shuah <shuah@kernel.org> wrote:
-> 
->>> Without an explanation of the intent, the CoC and TAB would appear more
->>> opaque, especially given the tags present on v1 that shows the patch has
->>> been discussed behind closed doors.
->>
->> No decisions are made behind the closed doors. As mentioned above, the
->> document had inconsistent in when it described the TAB role. This patch
->> is fixing the inconsistency.
-> 
-> I guess this should have included a "Fixes" tag and described what it was fixing.
-> 
+Currently on stable trees we have support for netmem/devmem RX but not
+TX. It is not safe to forward/redirect an RX unreadable netmem packet
+into the device's TX path, as the device may call dma-mapping APIs on
+dma addrs that should not be passed to it.
 
-My bad. I should have added one. Will do that for v2.
+Fix this by preventing the xmit of unreadable skbs.
 
-thanks,
--- Shuah
+Tested by configuring tc redirect:
+
+sudo tc qdisc add dev eth1 ingress
+sudo tc filter add dev eth1 ingress protocol ip prio 1 flower ip_proto \
+tcp src_ip 192.168.1.12 action mirred egress redirect dev eth1
+
+Before, I see unreadable skbs in the driver's TX path passed to dma
+mapping APIs.
+
+After, I don't see unreadable skbs in the driver's TX path passed to dma
+mapping APIs.
+
+Fixes: 65249feb6b3d ("net: add support for skbs with unreadable frags")
+Suggested-by: Jakub Kicinski <kuba@kernel.org>
+Cc: stable@vger.kernel.org
+Signed-off-by: Mina Almasry <almasrymina@google.com>
+---
+ net/core/dev.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/net/core/dev.c b/net/core/dev.c
+index 30da277c5a6f..63b31afacf84 100644
+--- a/net/core/dev.c
++++ b/net/core/dev.c
+@@ -3914,6 +3914,9 @@ static struct sk_buff *validate_xmit_skb(struct sk_buff *skb, struct net_device
+ 
+ 	skb = validate_xmit_xfrm(skb, features, again);
+ 
++	if (!skb_frags_readable(skb))
++		goto out_kfree_skb;
++
+ 	return skb;
+ 
+ out_kfree_skb:
+
+base-commit: 3c6a041b317a9bb0c707343c0b99d2a29d523390
+-- 
+2.48.1.711.g2feabab25a-goog
+
