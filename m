@@ -1,55 +1,55 @@
 Received: from mail-ej1-f73.google.com (mail-ej1-f73.google.com [209.85.218.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DB43205E3F
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 09:26:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96F9C20010C
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 09:26:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741080398; cv=none; b=cBOkavwUvjjeitI/h2yi1objGJKN/pm0m9jNkisJWGYUpNIGtKusPymtHuVAdvWXeKmcg3IGgP4rDTK+54QsQDP6hNj2RvLGB+hynYh8hk1qkurqZmEjijnki4qrDXN4vBZ0nNdo6G7IAR7LqNgGm6wlqbCP+apSRY/A0ZYR/As=
+	t=1741080402; cv=none; b=eEA74KY0XO9tpnB/NeeuMMViAPia/Ql9rwSM4clHTq/kEZ5xaJQ0T35pvRCxcWSsSN93dY94Q3O9eAyRTeZ0zlEY1x+UgqkFBUcuvHT25vobPEhAYPIgAuuOQrz8YVywkzaj5mSghZe2Z/cJBOxvbsipmwUDhVYwN4JJePZSrbQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741080398; c=relaxed/simple;
-	bh=b0CdiKYI8plcUd/5o7nrlhwn2YMDkb9s4S0Fm28UjnM=;
+	s=arc-20240116; t=1741080402; c=relaxed/simple;
+	bh=Mh+9JdRk90KetkZXttq6SxfLAoOSSno0nfwH9pudmzA=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=mE2MbuY5TyhAxWmO6Du5e3ErUSFJyyDnBsT9c2jNe0Z04AB5rOvYGnqThDu6Hva3X3VLUNyTbivuv5YKaCU2zUzboWk1mWJ0a0WBtrbYFaj0W8yJG1bOGMQywHbT+sDOCzVmNbuVNZv0hdwDMz/BoHNIpkwaU1lGqwyx9/dGsOE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--elver.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=heQ5cuwt; arc=none smtp.client-ip=209.85.218.73
+	 To:Cc:Content-Type; b=u6wZt/SapqWjUqQJAiDExNN1laOePmqIABmV0JcTViPgsE2PnhKgMLlwXjhaYjA/7EkhsNzkyy1o7QYQfaqdgvJpN/7T0uaQvtwvdzt/GSDDl+TmsiLu0G5QYFXa7j1Pdv642WyrhHFtbvlNSaYh/1hervdS9URlBkXs3L3EaiU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--elver.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dn3EzAlo; arc=none smtp.client-ip=209.85.218.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--elver.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="heQ5cuwt"
-Received: by mail-ej1-f73.google.com with SMTP id a640c23a62f3a-abf78df3bbcso209662466b.3
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Mar 2025 01:26:34 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dn3EzAlo"
+Received: by mail-ej1-f73.google.com with SMTP id a640c23a62f3a-abf4c4294b0so308425466b.0
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Mar 2025 01:26:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1741080393; x=1741685193; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1741080398; x=1741685198; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=iDk2VwqwOTTMZfSkXTf6seWDq1RAdZgqLjXPZ94M0QA=;
-        b=heQ5cuwtqNsaCbDQI3Bp69jGS6Sl55DcabORQxz3IFOlgNbGqROyexhO8EQYA6K11k
-         ByLsbsNm10ys7wRMTWvw8EV3M42znUbPpMAwZB1Jl8dYOlPAeMuQaWTWgCGO+XLMYg+t
-         Oe1KoOF39wGt1B3tX8ZDxuFaTjb35wDIAUtxRmS4e5PPRZJKluZHrjOD3zoWKcVQWTUo
-         u0pMtXLUkww+kGiD3jc0aAMpZ95CkRYZWFpqoeKaLihqEXHKO1XFNXnWUV9bjbLW+Wcq
-         yRf+AiE4MIcps+cPgek24bj3HfOtRbICnBdU9uMy/x8Uss+gz3S+Z4B3ellw6JB9U/Jg
-         ZvMQ==
+        bh=N6cosU/aHEF331Tgbf58Vi03lqVulZKFB2l/GT8tm7Y=;
+        b=dn3EzAlosTzHbBvhgMn3ZvES4EtnSHEKhfOwLRu5lIbUArNhBz7KIywGzdE3pv0s4u
+         ShNskvRe5wx7fVAhiutKXrQUIhgxqumCsHibrqodQuNH0OHx2DeswLUfg8i+dSSqZtrP
+         lYGf3qVd3KGIYBQx/gyRcQT0049KKpUEMdBwGhiPrFerPbUEVBqiszqqf1yMdEXZc5tu
+         tf3vBDcxTaiMOCKVC+dcks+P+d60cCDfJEqxDK59mQ61pekGsmjmaW2inVuxzVYSpvIy
+         tEVJ36XQOonqVLy6Dkd+hKazxt0+LJIOibW/wfBY4gfKqnkZWoO7Uk8XyJMRtG1F5f/a
+         GJsQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741080393; x=1741685193;
+        d=1e100.net; s=20230601; t=1741080398; x=1741685198;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=iDk2VwqwOTTMZfSkXTf6seWDq1RAdZgqLjXPZ94M0QA=;
-        b=OV52kNJmvVzr2+VC+K9Y4tjj/DNhAOnSwUCrJ0SnQPj6Y9DaGIfmocq+WlAFUNCj2H
-         30G4JRM0jXbJE7jqcB4OtpVlUVGsGK55KgZptwKAXV8JBs6IzklnGjBuydD9eY/oxm8I
-         tZ6LwFGLWEchLYlR5ObcqFOmDW3yVX1dUnHFRuLE1pf+15rQkaebG/grYCDVC5nNV52g
-         IwPdRiln6FBSJ/DmqYvsu58tpvNvt4PLQbYHuH+JckNxXgLQt+ozEsUD1e2gWCnfHFUg
-         lQiG7HGraIZvEKDqSkXuuClRqK6KM0U15XGh4izUY2CQ4IjiSCd8GifbcF7QCgjLIdII
-         AWag==
-X-Forwarded-Encrypted: i=1; AJvYcCXQzNGWqxUQeafAUwNnd9/KGBIYEyA5F66Fo5IAS7I3Qchrf2PHkuJWSYm0vOxFY9eB4VIQsZYPYRcmygE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwAmBHiOF2Un/Tefd3l1Hn7WFbzxNWOQG4deVgCugXyGBR8SbzY
-	7xnNdP1Vohqki0DqCodTmTFcwDw6ke4JLkO6IStQtOoEnh3nmQZxC4iPznqEbZnWjwU3BDk/Uw=
+        bh=N6cosU/aHEF331Tgbf58Vi03lqVulZKFB2l/GT8tm7Y=;
+        b=Mzy6Q1SHJpoYaD2xaaM/U3+WE8vuEDLHcfMpoVrGv0bE6kGkaoYGvmXUjvCJH3DosB
+         S33gep5pX8JtE+QMgySgCTou3xbv9U5m4aiMRlSFah90ci3Rs2vgATjxsvoEI9nQ0kFt
+         3oLKRWFavQoYlcixcWt3zp+v9sn2ZJMw/YyZPh0gzjCvJI8lXczavGrF3B4+WtXQa2ql
+         jWvi/9Up8mtaE+MAAb5prOW2vpmAJFGN+5cq6XM6HDSoBAR+2vehLvr4AFUc2D8NrGjJ
+         jPFO2LlelJ5AEq/wWBDIqqqm4MiK6S+STWQ4D6dzlB4knw7LPUN6f6IBAMfLuc0YxKIw
+         XRBg==
+X-Forwarded-Encrypted: i=1; AJvYcCUoBvqLn4Yj2NDP3tWNaD4KkDHeLix6ld/9ziGu1HTdkKEyzZe9ml08MwFooIJo22uhWeO+Qw08R0wuIRY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyVsloBwvkImDDa0k4Lw/+HRwG3vaMqs/SGjI7CFo+iKlgX8RrY
+	EDadsjNfmulHO/W6xdDb8NGs40mW5TVtAQGEDTxrJW5iKsv9xm/HzOgHgEgorVvCAhwJi47fwg=
 	=
-X-Google-Smtp-Source: AGHT+IF8v9zLKhdVdDKTCEZYG8DbcGXKqxfAOcuUpH2RTtDLQJOOCxvLbiKCCrE4y5yhtpae3MqEZYbpjQ==
-X-Received: from ejcsn10.prod.google.com ([2002:a17:906:628a:b0:ac1:fb2a:4a65])
- (user=elver job=prod-delivery.src-stubby-dispatcher) by 2002:a17:907:3e0f:b0:abf:718f:ef27
- with SMTP id a640c23a62f3a-abf718ff14amr868693766b.1.1741080393090; Tue, 04
- Mar 2025 01:26:33 -0800 (PST)
-Date: Tue,  4 Mar 2025 10:21:30 +0100
+X-Google-Smtp-Source: AGHT+IFpyuhMExDXeCwmdXSX22gTbHPs/JgCeV/PZoB6R3/aCXNcolqtoeQq/ql3Ce1MbHxHrlos3aOHkA==
+X-Received: from ejcvx9.prod.google.com ([2002:a17:907:a789:b0:ac1:fb2a:4a70])
+ (user=elver job=prod-delivery.src-stubby-dispatcher) by 2002:a17:907:3da3:b0:ac1:edc5:d73b
+ with SMTP id a640c23a62f3a-ac1f0edc8c7mr225816966b.8.1741080398288; Tue, 04
+ Mar 2025 01:26:38 -0800 (PST)
+Date: Tue,  4 Mar 2025 10:21:32 +0100
 In-Reply-To: <20250304092417.2873893-1-elver@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250304092417.2873893-1-elver@google.com>
 X-Mailer: git-send-email 2.48.1.711.g2feabab25a-goog
-Message-ID: <20250304092417.2873893-32-elver@google.com>
-Subject: [PATCH v2 31/34] drivers/tty: Enable capability analysis for core files
+Message-ID: <20250304092417.2873893-34-elver@google.com>
+Subject: [PATCH v2 33/34] crypto: Enable capability analysis
 From: Marco Elver <elver@google.com>
 To: elver@google.com
 Cc: "David S. Miller" <davem@davemloft.net>, Luc Van Oostenryck <luc.vanoostenryck@gmail.com>, 
@@ -83,587 +83,227 @@ Cc: "David S. Miller" <davem@davemloft.net>, Luc Van Oostenryck <luc.vanoostenry
 	linux-serial@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Enable capability analysis for drivers/tty/*.
+Enable capability analysis for crypto subsystem.
 
 This demonstrates a larger conversion to use Clang's capability
 analysis. The benefit is additional static checking of locking rules,
 along with better documentation.
 
 Signed-off-by: Marco Elver <elver@google.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Jiri Slaby <jirislaby@kernel.org>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: linux-crypto@vger.kernel.org
 ---
 v2:
 * New patch.
 ---
- drivers/tty/Makefile      |  3 +++
- drivers/tty/n_tty.c       | 16 ++++++++++++++++
- drivers/tty/pty.c         |  1 +
- drivers/tty/sysrq.c       |  1 +
- drivers/tty/tty.h         |  8 ++++----
- drivers/tty/tty_buffer.c  |  8 +++-----
- drivers/tty/tty_io.c      | 12 +++++++++---
- drivers/tty/tty_ioctl.c   |  2 +-
- drivers/tty/tty_ldisc.c   | 35 ++++++++++++++++++++++++++++++++---
- drivers/tty/tty_ldsem.c   |  2 ++
- drivers/tty/tty_mutex.c   |  4 ++++
- drivers/tty/tty_port.c    |  2 ++
- include/linux/tty.h       | 14 +++++++-------
- include/linux/tty_flip.h  |  4 ++--
- include/linux/tty_ldisc.h | 19 ++++++++++---------
- 15 files changed, 97 insertions(+), 34 deletions(-)
+ crypto/Makefile                  | 2 ++
+ crypto/algapi.c                  | 2 ++
+ crypto/api.c                     | 1 +
+ crypto/crypto_engine.c           | 2 +-
+ crypto/drbg.c                    | 5 +++++
+ crypto/internal.h                | 2 +-
+ crypto/proc.c                    | 3 +++
+ crypto/scompress.c               | 8 +++++---
+ include/crypto/internal/engine.h | 2 +-
+ 9 files changed, 21 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/tty/Makefile b/drivers/tty/Makefile
-index 07aca5184a55..35e1a62cbe16 100644
---- a/drivers/tty/Makefile
-+++ b/drivers/tty/Makefile
-@@ -1,4 +1,7 @@
- # SPDX-License-Identifier: GPL-2.0
-+
+diff --git a/crypto/Makefile b/crypto/Makefile
+index f67e853c4690..b7fa58ab8783 100644
+--- a/crypto/Makefile
++++ b/crypto/Makefile
+@@ -3,6 +3,8 @@
+ # Cryptographic API
+ #
+ 
 +CAPABILITY_ANALYSIS := y
 +
- obj-$(CONFIG_TTY)		+= tty_io.o n_tty.o tty_ioctl.o tty_ldisc.o \
- 				   tty_buffer.o tty_port.o tty_mutex.o \
- 				   tty_ldsem.o tty_baudrate.o tty_jobctrl.o \
-diff --git a/drivers/tty/n_tty.c b/drivers/tty/n_tty.c
-index 5e9ca4376d68..45925fc5a8fd 100644
---- a/drivers/tty/n_tty.c
-+++ b/drivers/tty/n_tty.c
-@@ -1088,6 +1088,7 @@ static void __isig(int sig, struct tty_struct *tty)
-  * Locking: %ctrl.lock
+ obj-$(CONFIG_CRYPTO) += crypto.o
+ crypto-y := api.o cipher.o compress.o
+ 
+diff --git a/crypto/algapi.c b/crypto/algapi.c
+index 5318c214debb..c2bafcde6f64 100644
+--- a/crypto/algapi.c
++++ b/crypto/algapi.c
+@@ -230,6 +230,7 @@ EXPORT_SYMBOL_GPL(crypto_remove_spawns);
+ 
+ static void crypto_alg_finish_registration(struct crypto_alg *alg,
+ 					   struct list_head *algs_to_put)
++	__must_hold(&crypto_alg_sem)
+ {
+ 	struct crypto_alg *q;
+ 
+@@ -286,6 +287,7 @@ static struct crypto_larval *crypto_alloc_test_larval(struct crypto_alg *alg)
+ 
+ static struct crypto_larval *
+ __crypto_register_alg(struct crypto_alg *alg, struct list_head *algs_to_put)
++	__must_hold(&crypto_alg_sem)
+ {
+ 	struct crypto_alg *q;
+ 	struct crypto_larval *larval;
+diff --git a/crypto/api.c b/crypto/api.c
+index bfd177a4313a..def3430ab332 100644
+--- a/crypto/api.c
++++ b/crypto/api.c
+@@ -57,6 +57,7 @@ EXPORT_SYMBOL_GPL(crypto_mod_put);
+ 
+ static struct crypto_alg *__crypto_alg_lookup(const char *name, u32 type,
+ 					      u32 mask)
++	__must_hold_shared(&crypto_alg_sem)
+ {
+ 	struct crypto_alg *q, *alg = NULL;
+ 	int best = -2;
+diff --git a/crypto/crypto_engine.c b/crypto/crypto_engine.c
+index c7c16da5e649..4ab0bbc4c7ce 100644
+--- a/crypto/crypto_engine.c
++++ b/crypto/crypto_engine.c
+@@ -514,8 +514,8 @@ struct crypto_engine *crypto_engine_alloc_init_and_set(struct device *dev,
+ 	snprintf(engine->name, sizeof(engine->name),
+ 		 "%s-engine", dev_name(dev));
+ 
+-	crypto_init_queue(&engine->queue, qlen);
+ 	spin_lock_init(&engine->queue_lock);
++	crypto_init_queue(&engine->queue, qlen);
+ 
+ 	engine->kworker = kthread_run_worker(0, "%s", engine->name);
+ 	if (IS_ERR(engine->kworker)) {
+diff --git a/crypto/drbg.c b/crypto/drbg.c
+index f28dfc2511a2..881579afa160 100644
+--- a/crypto/drbg.c
++++ b/crypto/drbg.c
+@@ -231,6 +231,7 @@ static inline unsigned short drbg_sec_strength(drbg_flag_t flags)
   */
- static void isig(int sig, struct tty_struct *tty)
-+	__must_hold_shared(&tty->termios_rwsem)
+ static int drbg_fips_continuous_test(struct drbg_state *drbg,
+ 				     const unsigned char *entropy)
++	__must_hold(&drbg->drbg_mutex)
  {
- 	struct n_tty_data *ldata = tty->disc_data;
- 
-@@ -1135,6 +1136,7 @@ static void isig(int sig, struct tty_struct *tty)
-  * Note: may get exclusive %termios_rwsem if flushing input buffer
-  */
- static void n_tty_receive_break(struct tty_struct *tty)
-+	__must_hold_shared(&tty->termios_rwsem)
- {
- 	struct n_tty_data *ldata = tty->disc_data;
- 
-@@ -1204,6 +1206,7 @@ static void n_tty_receive_parity_error(const struct tty_struct *tty,
- 
- static void
- n_tty_receive_signal_char(struct tty_struct *tty, int signal, u8 c)
-+	__must_hold_shared(&tty->termios_rwsem)
- {
- 	isig(signal, tty);
- 	if (I_IXON(tty))
-@@ -1353,6 +1356,7 @@ static bool n_tty_receive_char_canon(struct tty_struct *tty, u8 c)
- 
- static void n_tty_receive_char_special(struct tty_struct *tty, u8 c,
- 				       bool lookahead_done)
-+	__must_hold_shared(&tty->termios_rwsem)
- {
- 	struct n_tty_data *ldata = tty->disc_data;
- 
-@@ -1463,6 +1467,7 @@ static void n_tty_receive_char_closing(struct tty_struct *tty, u8 c,
- 
- static void
- n_tty_receive_char_flagged(struct tty_struct *tty, u8 c, u8 flag)
-+	__must_hold_shared(&tty->termios_rwsem)
- {
- 	switch (flag) {
- 	case TTY_BREAK:
-@@ -1483,6 +1488,7 @@ n_tty_receive_char_flagged(struct tty_struct *tty, u8 c, u8 flag)
- 
- static void
- n_tty_receive_char_lnext(struct tty_struct *tty, u8 c, u8 flag)
-+	__must_hold_shared(&tty->termios_rwsem)
- {
- 	struct n_tty_data *ldata = tty->disc_data;
- 
-@@ -1540,6 +1546,7 @@ n_tty_receive_buf_real_raw(const struct tty_struct *tty, const u8 *cp,
- static void
- n_tty_receive_buf_raw(struct tty_struct *tty, const u8 *cp, const u8 *fp,
- 		      size_t count)
-+	__must_hold_shared(&tty->termios_rwsem)
- {
- 	struct n_tty_data *ldata = tty->disc_data;
- 	u8 flag = TTY_NORMAL;
-@@ -1571,6 +1578,7 @@ n_tty_receive_buf_closing(struct tty_struct *tty, const u8 *cp, const u8 *fp,
- static void n_tty_receive_buf_standard(struct tty_struct *tty, const u8 *cp,
- 				       const u8 *fp, size_t count,
- 				       bool lookahead_done)
-+	__must_hold_shared(&tty->termios_rwsem)
- {
- 	struct n_tty_data *ldata = tty->disc_data;
- 	u8 flag = TTY_NORMAL;
-@@ -1609,6 +1617,7 @@ static void n_tty_receive_buf_standard(struct tty_struct *tty, const u8 *cp,
- 
- static void __receive_buf(struct tty_struct *tty, const u8 *cp, const u8 *fp,
- 			  size_t count)
-+	__must_hold_shared(&tty->termios_rwsem)
- {
- 	struct n_tty_data *ldata = tty->disc_data;
- 	bool preops = I_ISTRIP(tty) || (I_IUCLC(tty) && L_IEXTEN(tty));
-@@ -2188,6 +2197,10 @@ static ssize_t n_tty_read(struct tty_struct *tty, struct file *file, u8 *kbuf,
- 				return kb - kbuf;
- 		}
- 
-+		/* Adopted locks from prior call. */
-+		__acquire(&ldata->atomic_read_lock);
-+		__acquire_shared(&tty->termios_rwsem);
-+
- 		/* No more data - release locks and stop retries */
- 		n_tty_kick_worker(tty);
- 		n_tty_check_unthrottle(tty);
-@@ -2305,6 +2318,9 @@ static ssize_t n_tty_read(struct tty_struct *tty, struct file *file, u8 *kbuf,
- more_to_be_read:
- 				remove_wait_queue(&tty->read_wait, &wait);
- 				*cookie = cookie;
-+				/* Hand-off locks to retry with cookie set. */
-+				__release_shared(&tty->termios_rwsem);
-+				__release(&ldata->atomic_read_lock);
- 				return kb - kbuf;
- 			}
- 		}
-diff --git a/drivers/tty/pty.c b/drivers/tty/pty.c
-index 8bb1a01fef2a..8d4eb0f4c84c 100644
---- a/drivers/tty/pty.c
-+++ b/drivers/tty/pty.c
-@@ -824,6 +824,7 @@ static int ptmx_open(struct inode *inode, struct file *filp)
- 	tty = tty_init_dev(ptm_driver, index);
- 	/* The tty returned here is locked so we can safely
- 	   drop the mutex */
-+	lockdep_assert_held(&tty->legacy_mutex);
- 	mutex_unlock(&tty_mutex);
- 
- 	retval = PTR_ERR(tty);
-diff --git a/drivers/tty/sysrq.c b/drivers/tty/sysrq.c
-index f85ce02e4725..82dfa964c965 100644
---- a/drivers/tty/sysrq.c
-+++ b/drivers/tty/sysrq.c
-@@ -149,6 +149,7 @@ static const struct sysrq_key_op sysrq_unraw_op = {
- static void sysrq_handle_crash(u8 key)
- {
- 	/* release the RCU read lock before crashing */
-+	lockdep_assert_in_rcu_read_lock();
- 	rcu_read_unlock();
- 
- 	panic("sysrq triggered crash\n");
-diff --git a/drivers/tty/tty.h b/drivers/tty/tty.h
-index 93cf5ef1e857..1a3c2f663b28 100644
---- a/drivers/tty/tty.h
-+++ b/drivers/tty/tty.h
-@@ -60,15 +60,15 @@ static inline void tty_set_flow_change(struct tty_struct *tty,
- 	smp_mb();
- }
- 
--int tty_ldisc_lock(struct tty_struct *tty, unsigned long timeout);
--void tty_ldisc_unlock(struct tty_struct *tty);
-+int tty_ldisc_lock(struct tty_struct *tty, unsigned long timeout) __cond_acquires(0, &tty->ldisc_sem);
-+void tty_ldisc_unlock(struct tty_struct *tty) __releases(&tty->ldisc_sem);
- 
- int __tty_check_change(struct tty_struct *tty, int sig);
- int tty_check_change(struct tty_struct *tty);
- void __stop_tty(struct tty_struct *tty);
- void __start_tty(struct tty_struct *tty);
--void tty_write_unlock(struct tty_struct *tty);
--int tty_write_lock(struct tty_struct *tty, bool ndelay);
-+void tty_write_unlock(struct tty_struct *tty) __releases(&tty->atomic_write_lock);
-+int tty_write_lock(struct tty_struct *tty, bool ndelay) __cond_acquires(0, &tty->atomic_write_lock);
- void tty_vhangup_session(struct tty_struct *tty);
- void tty_open_proc_set_tty(struct file *filp, struct tty_struct *tty);
- int tty_signal_session_leader(struct tty_struct *tty, int exit_session);
-diff --git a/drivers/tty/tty_buffer.c b/drivers/tty/tty_buffer.c
-index 79f0ff94ce00..dcc56537290f 100644
---- a/drivers/tty/tty_buffer.c
-+++ b/drivers/tty/tty_buffer.c
-@@ -52,10 +52,8 @@
-  */
- void tty_buffer_lock_exclusive(struct tty_port *port)
- {
--	struct tty_bufhead *buf = &port->buf;
--
--	atomic_inc(&buf->priority);
--	mutex_lock(&buf->lock);
-+	atomic_inc(&port->buf.priority);
-+	mutex_lock(&port->buf.lock);
- }
- EXPORT_SYMBOL_GPL(tty_buffer_lock_exclusive);
- 
-@@ -73,7 +71,7 @@ void tty_buffer_unlock_exclusive(struct tty_port *port)
- 	bool restart = buf->head->commit != buf->head->read;
- 
- 	atomic_dec(&buf->priority);
--	mutex_unlock(&buf->lock);
-+	mutex_unlock(&port->buf.lock);
- 
- 	if (restart)
- 		queue_work(system_unbound_wq, &buf->work);
-diff --git a/drivers/tty/tty_io.c b/drivers/tty/tty_io.c
-index 449dbd216460..1eb3794fde4b 100644
---- a/drivers/tty/tty_io.c
-+++ b/drivers/tty/tty_io.c
-@@ -167,6 +167,7 @@ static void release_tty(struct tty_struct *tty, int idx);
-  * Locking: none. Must be called after tty is definitely unused
-  */
- static void free_tty_struct(struct tty_struct *tty)
-+	__capability_unsafe(/* destructor */)
- {
- 	tty_ldisc_deinit(tty);
- 	put_device(tty->dev);
-@@ -965,7 +966,7 @@ static ssize_t iterate_tty_write(struct tty_ldisc *ld, struct tty_struct *tty,
- 	ssize_t ret, written = 0;
- 
- 	ret = tty_write_lock(tty, file->f_flags & O_NDELAY);
--	if (ret < 0)
-+	if (ret)
- 		return ret;
- 
- 	/*
-@@ -1154,7 +1155,7 @@ int tty_send_xchar(struct tty_struct *tty, u8 ch)
- 		return 0;
- 	}
- 
--	if (tty_write_lock(tty, false) < 0)
-+	if (tty_write_lock(tty, false))
- 		return -ERESTARTSYS;
- 
- 	down_read(&tty->termios_rwsem);
-@@ -1391,6 +1392,7 @@ static int tty_reopen(struct tty_struct *tty)
-  * Return: new tty structure
-  */
- struct tty_struct *tty_init_dev(struct tty_driver *driver, int idx)
-+	__capability_unsafe(/* returns with locked tty */)
- {
- 	struct tty_struct *tty;
- 	int retval;
-@@ -1874,6 +1876,7 @@ int tty_release(struct inode *inode, struct file *filp)
-  * will not work then. It expects inodes to be from devpts FS.
-  */
- static struct tty_struct *tty_open_current_tty(dev_t device, struct file *filp)
-+	__capability_unsafe(/* returns with locked tty */)
- {
- 	struct tty_struct *tty;
- 	int retval;
-@@ -2037,6 +2040,7 @@ EXPORT_SYMBOL_GPL(tty_kopen_shared);
-  */
- static struct tty_struct *tty_open_by_driver(dev_t device,
- 					     struct file *filp)
-+	__capability_unsafe(/* returns with locked tty */)
- {
- 	struct tty_struct *tty;
- 	struct tty_driver *driver = NULL;
-@@ -2137,6 +2141,8 @@ static int tty_open(struct inode *inode, struct file *filp)
- 		goto retry_open;
- 	}
- 
-+	lockdep_assert_held(&tty->legacy_mutex);
-+
- 	tty_add_file(tty, filp);
- 
- 	check_tty_count(tty, __func__);
-@@ -2486,7 +2492,7 @@ static int send_break(struct tty_struct *tty, unsigned int duration)
- 		return tty->ops->break_ctl(tty, duration);
- 
- 	/* Do the work ourselves */
--	if (tty_write_lock(tty, false) < 0)
-+	if (tty_write_lock(tty, false))
- 		return -EINTR;
- 
- 	retval = tty->ops->break_ctl(tty, -1);
-diff --git a/drivers/tty/tty_ioctl.c b/drivers/tty/tty_ioctl.c
-index 85de90eebc7b..a7ae6cbf3450 100644
---- a/drivers/tty/tty_ioctl.c
-+++ b/drivers/tty/tty_ioctl.c
-@@ -489,7 +489,7 @@ static int set_termios(struct tty_struct *tty, void __user *arg, int opt)
- 		if (retval < 0)
- 			return retval;
- 
--		if (tty_write_lock(tty, false) < 0)
-+		if (tty_write_lock(tty, false))
- 			goto retry_write_wait;
- 
- 		/* Racing writer? */
-diff --git a/drivers/tty/tty_ldisc.c b/drivers/tty/tty_ldisc.c
-index d80e9d4c974b..e07a5980604e 100644
---- a/drivers/tty/tty_ldisc.c
-+++ b/drivers/tty/tty_ldisc.c
-@@ -237,6 +237,7 @@ const struct seq_operations tty_ldiscs_seq_ops = {
-  * to wait for any ldisc lifetime events to finish.
-  */
- struct tty_ldisc *tty_ldisc_ref_wait(struct tty_struct *tty)
-+	__cond_acquires_shared(nonnull, &tty->ldisc_sem)
- {
- 	struct tty_ldisc *ld;
- 
-@@ -257,6 +258,7 @@ EXPORT_SYMBOL_GPL(tty_ldisc_ref_wait);
-  * and timer functions.
-  */
- struct tty_ldisc *tty_ldisc_ref(struct tty_struct *tty)
-+	__cond_acquires_shared(nonnull, &tty->ldisc_sem)
- {
- 	struct tty_ldisc *ld = NULL;
- 
-@@ -277,26 +279,43 @@ EXPORT_SYMBOL_GPL(tty_ldisc_ref);
-  * in IRQ context.
-  */
- void tty_ldisc_deref(struct tty_ldisc *ld)
-+	__releases_shared(&ld->tty->ldisc_sem)
- {
- 	ldsem_up_read(&ld->tty->ldisc_sem);
- }
- EXPORT_SYMBOL_GPL(tty_ldisc_deref);
- 
-+/*
-+ * Note: Capability analysis does not like asymmetric interfaces (above types
-+ * for ref and deref are tty_struct and tty_ldisc respectively -- which are
-+ * dependent, but the compiler cannot figure that out); in this case, work
-+ * around that with this helper which takes an unused @tty argument but tells
-+ * the analysis which lock is released.
-+ */
-+static inline void __tty_ldisc_deref(struct tty_struct *tty, struct tty_ldisc *ld)
-+	__releases_shared(&tty->ldisc_sem)
-+	__capability_unsafe(/* matches released with tty_ldisc_ref() */)
-+{
-+	tty_ldisc_deref(ld);
-+}
- 
- static inline int
- __tty_ldisc_lock(struct tty_struct *tty, unsigned long timeout)
-+	__cond_acquires(true, &tty->ldisc_sem)
- {
- 	return ldsem_down_write(&tty->ldisc_sem, timeout);
- }
- 
- static inline int
- __tty_ldisc_lock_nested(struct tty_struct *tty, unsigned long timeout)
-+	__cond_acquires(true, &tty->ldisc_sem)
- {
- 	return ldsem_down_write_nested(&tty->ldisc_sem,
- 				       LDISC_SEM_OTHER, timeout);
- }
- 
- static inline void __tty_ldisc_unlock(struct tty_struct *tty)
-+	__releases(&tty->ldisc_sem)
- {
- 	ldsem_up_write(&tty->ldisc_sem);
- }
-@@ -328,6 +347,8 @@ void tty_ldisc_unlock(struct tty_struct *tty)
- static int
- tty_ldisc_lock_pair_timeout(struct tty_struct *tty, struct tty_struct *tty2,
- 			    unsigned long timeout)
-+	__cond_acquires(0, &tty->ldisc_sem)
-+	__cond_acquires(0, &tty2->ldisc_sem)
+ 	unsigned short entropylen = drbg_sec_strength(drbg->core->flags);
+ 	int ret = 0;
+@@ -1061,6 +1062,7 @@ static inline int __drbg_seed(struct drbg_state *drbg, struct list_head *seed,
+ static inline int drbg_get_random_bytes(struct drbg_state *drbg,
+ 					unsigned char *entropy,
+ 					unsigned int entropylen)
++	__must_hold(&drbg->drbg_mutex)
  {
  	int ret;
  
-@@ -362,16 +383,23 @@ tty_ldisc_lock_pair_timeout(struct tty_struct *tty, struct tty_struct *tty2,
+@@ -1075,6 +1077,7 @@ static inline int drbg_get_random_bytes(struct drbg_state *drbg,
  }
  
- static void tty_ldisc_lock_pair(struct tty_struct *tty, struct tty_struct *tty2)
-+	__acquires(&tty->ldisc_sem)
-+	__acquires(&tty2->ldisc_sem)
-+	__capability_unsafe(/* MAX_SCHEDULE_TIMEOUT ensures acquisition */)
+ static int drbg_seed_from_random(struct drbg_state *drbg)
++	__must_hold(&drbg->drbg_mutex)
  {
- 	tty_ldisc_lock_pair_timeout(tty, tty2, MAX_SCHEDULE_TIMEOUT);
- }
- 
- static void tty_ldisc_unlock_pair(struct tty_struct *tty,
- 				  struct tty_struct *tty2)
-+	__releases(&tty->ldisc_sem)
-+	__releases(&tty2->ldisc_sem)
- {
- 	__tty_ldisc_unlock(tty);
- 	if (tty2)
- 		__tty_ldisc_unlock(tty2);
-+	else
-+		__release(&tty2->ldisc_sem);
- }
- 
- /**
-@@ -387,7 +415,7 @@ void tty_ldisc_flush(struct tty_struct *tty)
- 
- 	tty_buffer_flush(tty, ld);
- 	if (ld)
--		tty_ldisc_deref(ld);
-+		__tty_ldisc_deref(tty, ld);
- }
- EXPORT_SYMBOL_GPL(tty_ldisc_flush);
- 
-@@ -694,7 +722,7 @@ void tty_ldisc_hangup(struct tty_struct *tty, bool reinit)
- 	tty_ldisc_debug(tty, "%p: hangup\n", tty->ldisc);
- 
- 	ld = tty_ldisc_ref(tty);
--	if (ld != NULL) {
-+	if (ld) {
- 		if (ld->ops->flush_buffer)
- 			ld->ops->flush_buffer(tty);
- 		tty_driver_flush_buffer(tty);
-@@ -703,7 +731,7 @@ void tty_ldisc_hangup(struct tty_struct *tty, bool reinit)
- 			ld->ops->write_wakeup(tty);
- 		if (ld->ops->hangup)
- 			ld->ops->hangup(tty);
--		tty_ldisc_deref(ld);
-+		__tty_ldisc_deref(tty, ld);
- 	}
- 
- 	wake_up_interruptible_poll(&tty->write_wait, EPOLLOUT);
-@@ -716,6 +744,7 @@ void tty_ldisc_hangup(struct tty_struct *tty, bool reinit)
- 	 * Avoid racing set_ldisc or tty_ldisc_release
- 	 */
- 	tty_ldisc_lock(tty, MAX_SCHEDULE_TIMEOUT);
-+	lockdep_assert_held_write(&tty->ldisc_sem);
- 
- 	if (tty->driver->flags & TTY_DRIVER_RESET_TERMIOS)
- 		tty_reset_termios(tty);
-diff --git a/drivers/tty/tty_ldsem.c b/drivers/tty/tty_ldsem.c
-index 3be428c16260..26d924bb5a46 100644
---- a/drivers/tty/tty_ldsem.c
-+++ b/drivers/tty/tty_ldsem.c
-@@ -390,6 +390,7 @@ void ldsem_up_read(struct ld_semaphore *sem)
- {
- 	long count;
- 
-+	__release_shared(sem);
- 	rwsem_release(&sem->dep_map, _RET_IP_);
- 
- 	count = atomic_long_add_return(-LDSEM_READ_BIAS, &sem->count);
-@@ -404,6 +405,7 @@ void ldsem_up_write(struct ld_semaphore *sem)
- {
- 	long count;
- 
-+	__release(sem);
- 	rwsem_release(&sem->dep_map, _RET_IP_);
- 
- 	count = atomic_long_add_return(-LDSEM_WRITE_BIAS, &sem->count);
-diff --git a/drivers/tty/tty_mutex.c b/drivers/tty/tty_mutex.c
-index 784e46a0a3b1..e5576fd6f5a4 100644
---- a/drivers/tty/tty_mutex.c
-+++ b/drivers/tty/tty_mutex.c
-@@ -41,12 +41,16 @@ void tty_lock_slave(struct tty_struct *tty)
- {
- 	if (tty && tty != tty->link)
- 		tty_lock(tty);
-+	else
-+		__acquire(&tty->legacy_mutex);
- }
- 
- void tty_unlock_slave(struct tty_struct *tty)
- {
- 	if (tty && tty != tty->link)
- 		tty_unlock(tty);
-+	else
-+		__release(&tty->legacy_mutex);
- }
- 
- void tty_set_lock_subclass(struct tty_struct *tty)
-diff --git a/drivers/tty/tty_port.c b/drivers/tty/tty_port.c
-index 14cca33d2269..bcb65a26a6bf 100644
---- a/drivers/tty/tty_port.c
-+++ b/drivers/tty/tty_port.c
-@@ -509,6 +509,7 @@ EXPORT_SYMBOL(tty_port_lower_dtr_rts);
+ 	struct drbg_string data;
+ 	LIST_HEAD(seedlist);
+@@ -1132,6 +1135,7 @@ static bool drbg_nopr_reseed_interval_elapsed(struct drbg_state *drbg)
   */
- int tty_port_block_til_ready(struct tty_port *port,
- 				struct tty_struct *tty, struct file *filp)
-+	__must_hold(&tty->legacy_mutex)
+ static int drbg_seed(struct drbg_state *drbg, struct drbg_string *pers,
+ 		     bool reseed)
++	__must_hold(&drbg->drbg_mutex)
  {
- 	int do_clocal = 0, retval;
- 	unsigned long flags;
-@@ -764,6 +765,7 @@ EXPORT_SYMBOL_GPL(tty_port_install);
-  */
- int tty_port_open(struct tty_port *port, struct tty_struct *tty,
- 							struct file *filp)
-+	__must_hold(&tty->legacy_mutex)
+ 	int ret;
+ 	unsigned char entropy[((32 + 16) * 2)];
+@@ -1368,6 +1372,7 @@ static inline int drbg_alloc_state(struct drbg_state *drbg)
+ static int drbg_generate(struct drbg_state *drbg,
+ 			 unsigned char *buf, unsigned int buflen,
+ 			 struct drbg_string *addtl)
++	__must_hold(&drbg->drbg_mutex)
  {
- 	spin_lock_irq(&port->lock);
- 	++port->count;
-diff --git a/include/linux/tty.h b/include/linux/tty.h
-index 2372f9357240..ee1ba62fc398 100644
---- a/include/linux/tty.h
-+++ b/include/linux/tty.h
-@@ -234,8 +234,8 @@ struct tty_struct {
- 	void *disc_data;
- 	void *driver_data;
- 	spinlock_t files_lock;
--	int write_cnt;
--	u8 *write_buf;
-+	int write_cnt __guarded_by(&atomic_write_lock);
-+	u8 *write_buf __guarded_by(&atomic_write_lock);
+ 	int len = 0;
+ 	LIST_HEAD(addtllist);
+diff --git a/crypto/internal.h b/crypto/internal.h
+index 46b661be0f90..3ac76faf228b 100644
+--- a/crypto/internal.h
++++ b/crypto/internal.h
+@@ -45,8 +45,8 @@ enum {
+ /* Maximum number of (rtattr) parameters for each template. */
+ #define CRYPTO_MAX_ATTRS 32
  
- 	struct list_head tty_files;
+-extern struct list_head crypto_alg_list;
+ extern struct rw_semaphore crypto_alg_sem;
++extern struct list_head crypto_alg_list __guarded_by(&crypto_alg_sem);
+ extern struct blocking_notifier_head crypto_chain;
  
-@@ -500,11 +500,11 @@ long vt_compat_ioctl(struct tty_struct *tty, unsigned int cmd,
+ int alg_test(const char *driver, const char *alg, u32 type, u32 mask);
+diff --git a/crypto/proc.c b/crypto/proc.c
+index 522b27d90d29..4679eb6b81c9 100644
+--- a/crypto/proc.c
++++ b/crypto/proc.c
+@@ -19,17 +19,20 @@
+ #include "internal.h"
  
- /* tty_mutex.c */
- /* functions for preparation of BKL removal */
--void tty_lock(struct tty_struct *tty);
--int  tty_lock_interruptible(struct tty_struct *tty);
--void tty_unlock(struct tty_struct *tty);
--void tty_lock_slave(struct tty_struct *tty);
--void tty_unlock_slave(struct tty_struct *tty);
-+void tty_lock(struct tty_struct *tty) __acquires(&tty->legacy_mutex);
-+int  tty_lock_interruptible(struct tty_struct *tty) __cond_acquires(0, &tty->legacy_mutex);
-+void tty_unlock(struct tty_struct *tty) __releases(&tty->legacy_mutex);
-+void tty_lock_slave(struct tty_struct *tty) __acquires(&tty->legacy_mutex);
-+void tty_unlock_slave(struct tty_struct *tty) __releases(&tty->legacy_mutex);
- void tty_set_lock_subclass(struct tty_struct *tty);
+ static void *c_start(struct seq_file *m, loff_t *pos)
++	__acquires_shared(&crypto_alg_sem)
+ {
+ 	down_read(&crypto_alg_sem);
+ 	return seq_list_start(&crypto_alg_list, *pos);
+ }
  
- #endif
-diff --git a/include/linux/tty_flip.h b/include/linux/tty_flip.h
-index af4fce98f64e..2214714059f8 100644
---- a/include/linux/tty_flip.h
-+++ b/include/linux/tty_flip.h
-@@ -86,7 +86,7 @@ static inline size_t tty_insert_flip_string(struct tty_port *port,
- size_t tty_ldisc_receive_buf(struct tty_ldisc *ld, const u8 *p, const u8 *f,
- 			     size_t count);
+ static void *c_next(struct seq_file *m, void *p, loff_t *pos)
++	__must_hold_shared(&crypto_alg_sem)
+ {
+ 	return seq_list_next(p, &crypto_alg_list, pos);
+ }
  
--void tty_buffer_lock_exclusive(struct tty_port *port);
--void tty_buffer_unlock_exclusive(struct tty_port *port);
-+void tty_buffer_lock_exclusive(struct tty_port *port) __acquires(&port->buf.lock);
-+void tty_buffer_unlock_exclusive(struct tty_port *port) __releases(&port->buf.lock);
+ static void c_stop(struct seq_file *m, void *p)
++	__releases_shared(&crypto_alg_sem)
+ {
+ 	up_read(&crypto_alg_sem);
+ }
+diff --git a/crypto/scompress.c b/crypto/scompress.c
+index 1cef6bb06a81..0f24c84cc550 100644
+--- a/crypto/scompress.c
++++ b/crypto/scompress.c
+@@ -25,8 +25,8 @@
  
- #endif /* _LINUX_TTY_FLIP_H */
-diff --git a/include/linux/tty_ldisc.h b/include/linux/tty_ldisc.h
-index af01e89074b2..d834cf115d52 100644
---- a/include/linux/tty_ldisc.h
-+++ b/include/linux/tty_ldisc.h
-@@ -14,7 +14,7 @@ struct tty_struct;
- /*
-  * the semaphore definition
-  */
--struct ld_semaphore {
-+struct_with_capability(ld_semaphore) {
- 	atomic_long_t		count;
- 	raw_spinlock_t		wait_lock;
- 	unsigned int		wait_readers;
-@@ -33,21 +33,22 @@ do {								\
- 	static struct lock_class_key __key;			\
- 								\
- 	__init_ldsem((sem), #sem, &__key);			\
-+	__assert_cap(sem);					\
- } while (0)
+ struct scomp_scratch {
+ 	spinlock_t	lock;
+-	void		*src;
+-	void		*dst;
++	void		*src __guarded_by(&lock);
++	void		*dst __guarded_by(&lock);
+ };
  
+ static DEFINE_PER_CPU(struct scomp_scratch, scomp_scratch) = {
+@@ -34,8 +34,8 @@ static DEFINE_PER_CPU(struct scomp_scratch, scomp_scratch) = {
+ };
  
--int ldsem_down_read(struct ld_semaphore *sem, long timeout);
--int ldsem_down_read_trylock(struct ld_semaphore *sem);
--int ldsem_down_write(struct ld_semaphore *sem, long timeout);
--int ldsem_down_write_trylock(struct ld_semaphore *sem);
--void ldsem_up_read(struct ld_semaphore *sem);
--void ldsem_up_write(struct ld_semaphore *sem);
-+int ldsem_down_read(struct ld_semaphore *sem, long timeout) __cond_acquires_shared(true, sem);
-+int ldsem_down_read_trylock(struct ld_semaphore *sem) __cond_acquires_shared(true, sem);
-+int ldsem_down_write(struct ld_semaphore *sem, long timeout) __cond_acquires(true, sem);
-+int ldsem_down_write_trylock(struct ld_semaphore *sem) __cond_acquires(true, sem);
-+void ldsem_up_read(struct ld_semaphore *sem) __releases_shared(sem);
-+void ldsem_up_write(struct ld_semaphore *sem) __releases(sem);
+ static const struct crypto_type crypto_scomp_type;
+-static int scomp_scratch_users;
+ static DEFINE_MUTEX(scomp_lock);
++static int scomp_scratch_users __guarded_by(&scomp_lock);
  
- #ifdef CONFIG_DEBUG_LOCK_ALLOC
- int ldsem_down_read_nested(struct ld_semaphore *sem, int subclass,
--		long timeout);
-+		long timeout) __cond_acquires_shared(true, sem);
- int ldsem_down_write_nested(struct ld_semaphore *sem, int subclass,
--		long timeout);
-+		long timeout) __cond_acquires(true, sem);
- #else
- # define ldsem_down_read_nested(sem, subclass, timeout)		\
- 		ldsem_down_read(sem, timeout)
+ static int __maybe_unused crypto_scomp_report(
+ 	struct sk_buff *skb, struct crypto_alg *alg)
+@@ -59,6 +59,7 @@ static void crypto_scomp_show(struct seq_file *m, struct crypto_alg *alg)
+ }
+ 
+ static void crypto_scomp_free_scratches(void)
++	__capability_unsafe(/* frees @scratch */)
+ {
+ 	struct scomp_scratch *scratch;
+ 	int i;
+@@ -74,6 +75,7 @@ static void crypto_scomp_free_scratches(void)
+ }
+ 
+ static int crypto_scomp_alloc_scratches(void)
++	__capability_unsafe(/* allocates @scratch */)
+ {
+ 	struct scomp_scratch *scratch;
+ 	int i;
+diff --git a/include/crypto/internal/engine.h b/include/crypto/internal/engine.h
+index fbf4be56cf12..10edbb451f1c 100644
+--- a/include/crypto/internal/engine.h
++++ b/include/crypto/internal/engine.h
+@@ -54,7 +54,7 @@ struct crypto_engine {
+ 
+ 	struct list_head	list;
+ 	spinlock_t		queue_lock;
+-	struct crypto_queue	queue;
++	struct crypto_queue	queue __guarded_by(&queue_lock);
+ 	struct device		*dev;
+ 
+ 	bool			rt;
 -- 
 2.48.1.711.g2feabab25a-goog
 
