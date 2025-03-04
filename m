@@ -1,132 +1,161 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5102925D551
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 15:33:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B204278154
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 15:34:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741102434; cv=none; b=jZnE64YQBGt9tj3zsaC3ik6dL9MxJlNZS0bAQwqrWo6AY2v528MbJCbcORNjgtX/6jf6mW2E5QhEO24QpFe1bPRVNOijtD22aGMfugDmphbwcrR+TAO+UfdPtYOo0DBAexcP+t798pQxnAjg57FTF5xm8tPxV/DBIqp+gsjZhgw=
+	t=1741102446; cv=none; b=qZ72mpnApVAWbJKcqi5WCshCFwOiA9Wc0kumtuDrROVZUL7PAe+fr5CktTrYLbccODRPB7A2Qvy+YN34irknD43FNMD5u5Etu4awa3DYlkBaWaZ7Q1QY+BV9hlXsOBeIFeT8rTq7l6TZ3AeD1gtTauVvRR7an6cCW2jOaXsjQW8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741102434; c=relaxed/simple;
-	bh=Q2k3ww5ab+KTlyT+I/PhaznrIACSRlKw+mvfKBhY5g8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=e7CYnuR46a0c7OsYkNCZwVEH5TehSrv0MZhRnw3Nh3BUPG5oRKRVpUSwxG4cEOcUQNgoigvM6c8f/YJhqPbJmOcFaw8FisJCPKsqrWoOW22qWKMkuchVNV4fNPFVO6E34wMH/Elyy1crEkqn3I4E1jIMH1Jza/36CyanS6nv3uM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.helo=mgamail.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=k1OYlQ5W; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.helo=mgamail.intel.com
+	s=arc-20240116; t=1741102446; c=relaxed/simple;
+	bh=g9/2udOETvmToZrTCGb+qEZ+kSThEsu8wt6yi5lFMWo=;
+	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=bpeIOHnH4ZhW2FGT6/+Gi6DM+S8QZL0ThTwtyH28C0yhCrAqBPehdZBgHSK/XbrS4z//KqpXP5jAH5oxCPtyBZkJ+ovLyHTfJnQ4S42XmG4iddCUXpb+sitLym5dImc7LMYwcWopOvOFKSh+nU1HEcck3gVHZn6Sl9QlJW0T1gw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YuBC0/+r; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="k1OYlQ5W"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741102433; x=1772638433;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=Q2k3ww5ab+KTlyT+I/PhaznrIACSRlKw+mvfKBhY5g8=;
-  b=k1OYlQ5W0ZeAGN7NFur/D6gpjtFpfGvKIcIsNQTl5ObjTTx3Mfh7GCjw
-   1ZO+VMSufOF7X9rBgKt/ur+jZCRxqSIMiKUXY8euOrgnM+LXG0TL6WQ93
-   YmMwjn++9NrMtwSb6GZt33fDJWnzUF0INZXncj/Fln2pMMpP1sJSbsGuC
-   OuaYKzlntP8dMcLrAZOJPctyFRgxmUU8WuoDVq3YtsKSEhOiFWZnboez3
-   F0UILVZyjBjlP/PHj7uBkXmcBTGLei+QJdvoD3qgj95IRjcks6KUGv9x3
-   QjtugIsS0dQYmzHvJIfibx1e6gHvBeNOwPzxy7Lw2/7QTGPtjZaPmZCv1
-   g==;
-X-CSE-ConnectionGUID: 9s9YH5lvRA2lygDdJVDJpg==
-X-CSE-MsgGUID: 7gN29WQITPKgTG4eVw/TUQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11363"; a="53429613"
-X-IronPort-AV: E=Sophos;i="6.14,220,1736841600"; 
-   d="scan'208";a="53429613"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2025 07:33:52 -0800
-X-CSE-ConnectionGUID: qC0XRROISmWUx8utm6j9ww==
-X-CSE-MsgGUID: 9gzo6HUITBKlRaF9/SKNdw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,220,1736841600"; 
-   d="scan'208";a="118411687"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa007.fm.intel.com with ESMTP; 04 Mar 2025 07:33:50 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1000)
-	id 5209018F; Tue, 04 Mar 2025 17:33:49 +0200 (EET)
-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-To: Dave Hansen <dave.hansen@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
-	linux-kernel@vger.kernel.org,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: [PATCH, REBASED] x86/runtime-const: Add RUNTIME_CONST_PTR assembly macro
-Date: Tue,  4 Mar 2025 17:33:42 +0200
-Message-ID: <20250304153342.2016569-1-kirill.shutemov@linux.intel.com>
-X-Mailer: git-send-email 2.47.2
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YuBC0/+r"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1741102443;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ZwJDnZ8tY9IELE2tx6CxJ71JiDXg4oK+AyaLx02RRac=;
+	b=YuBC0/+rTOz36YW8eq/rHcdKVscZDPACpA6nGO6gfDx5yH5WuvlKhiutzIJTEa+FS042tE
+	aXpjxvhncjVIoj4ooG+Nv6Z12i4bR1FOswZpLzrpInHAQe5Xb26C6nhZZ3EuvRa4ICdh8Z
+	6sbtTZUeHrlTmq3RWh2KLTRqtjqsHZE=
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
+ [209.85.160.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-558-qAJCmSWZO4aRZ1PKyFGvAQ-1; Tue, 04 Mar 2025 10:33:56 -0500
+X-MC-Unique: qAJCmSWZO4aRZ1PKyFGvAQ-1
+X-Mimecast-MFC-AGG-ID: qAJCmSWZO4aRZ1PKyFGvAQ_1741102436
+Received: by mail-qt1-f199.google.com with SMTP id d75a77b69052e-4721d9703ecso125608551cf.3
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Mar 2025 07:33:56 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741102436; x=1741707236;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:user-agent:mime-version:date:message-id:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZwJDnZ8tY9IELE2tx6CxJ71JiDXg4oK+AyaLx02RRac=;
+        b=lJg/vZbk9PeEic2FdRjSRACltyUFaYUUBJp+TttHeZNN4oh3yrkIg+RYtF1FTm3DrT
+         tkS7Y9eLViLR5xsgjGDQA+5Mo/Wu3Wcd06iguDgN4l+DlTFte6NLe8NocMlmdzSEzs16
+         +8aQ4NHhcaPJ/r8rTmOAgtkGvjIgyRBbP0Hbinda1qN4fHrQS3sLKVdPuYnfSp3ycui+
+         rvZ3sZ9q67pRPPIndS+NsO7Zw4VCHuzg5pOoHqXjaHPxUgUlOA/P/ARuviXkccC+wnru
+         KGeqaWd8rf1Y7jJuz7eIwTp9C6+JpgwS6WM+Osxhkh2sa1KQWsw00Xu6cIibkEsUyAs9
+         MmZQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWmcLXBRJhIL9bOqxcYpWuDQbyU4BBmi77aDTuk+Xq15tPVEB5HO7sub9mC5XCWZ4NjDk1mXImutYhCokM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzBDUA1X/YYyqIqCeAxE4AjBCKqJywnZPg8GOUBGJR3eJz3+vX2
+	5e0CCOPkJtdI5fog2qn8kCofzcR04yd+uBNnZiNbhFvwsP7EXNthsNSluwimWkOvx3Ebd7ATxwg
+	51TkTHT2sHTNEGe3q3fO5AwfzWiGNgIg8L0R+EVFd8I/DefGlbLYuGzGABWHWEw==
+X-Gm-Gg: ASbGncuBdjX4TkoNXWcLhkY97nI4rsU81sLl9N2HgXlcS2YANsxxtMNTIyy/wtLqNhX
+	KR9Dce8Oi1ZQzReYwbB49W86bZ+onSKRrPFRNhI9Web3VKwr4aOEzkZwAIr39/yJHkactGvEiHi
+	3o7+ieZZPNOg/PrVFq7CrFF82O8nAPgyeG0yEQoFHX2BAgm4bCOtB3AjSTeajYZVThtqsxXhJ4w
+	Em0zv4njEofUkxClCscEXlegUY68lh2sY5FvKlxtcUpdlHDrNGWkE7stZ2iA2ePmSvXI6d1igJs
+	gsyMbhaBrYJVvsHHjpQ60fYxZ9JgwopPtju9qq62M+q4Up/HpkLuleKBZ+Q=
+X-Received: by 2002:a05:622a:1825:b0:474:b753:e262 with SMTP id d75a77b69052e-474bc04731emr188722421cf.9.1741102435727;
+        Tue, 04 Mar 2025 07:33:55 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IG/dfjVxJtyP8MAwXmEMza87tPVSQuOFN0UMpAqo6ILEemgvwl18p7DpTuFQl8dUDghKTziBA==
+X-Received: by 2002:a05:622a:1825:b0:474:b753:e262 with SMTP id d75a77b69052e-474bc04731emr188722211cf.9.1741102435420;
+        Tue, 04 Mar 2025 07:33:55 -0800 (PST)
+Received: from ?IPV6:2601:188:c100:5710:627d:9ff:fe85:9ade? ([2601:188:c100:5710:627d:9ff:fe85:9ade])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-474691a22f4sm74434221cf.5.2025.03.04.07.33.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 04 Mar 2025 07:33:54 -0800 (PST)
+From: Waiman Long <llong@redhat.com>
+X-Google-Original-From: Waiman Long <longman@redhat.com>
+Message-ID: <a53c1601-81e7-439c-b0dd-ec009227a040@redhat.com>
+Date: Tue, 4 Mar 2025 10:33:53 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 4/5] sched/deadline: Rebuild root domain accounting after
+ every update
+To: Juri Lelli <juri.lelli@redhat.com>, linux-kernel@vger.kernel.org,
+ cgroups@vger.kernel.org
+Cc: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+ Vincent Guittot <vincent.guittot@linaro.org>,
+ Dietmar Eggemann <dietmar.eggemann@arm.com>,
+ Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>,
+ Mel Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>,
+ Tejun Heo <tj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>,
+ =?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>,
+ Qais Yousef <qyousef@layalina.io>,
+ Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+ Swapnil Sapkal <swapnil.sapkal@amd.com>,
+ Shrikanth Hegde <sshegde@linux.ibm.com>, Phil Auld <pauld@redhat.com>,
+ luca.abeni@santannapisa.it, tommaso.cucinotta@santannapisa.it,
+ Jon Hunter <jonathanh@nvidia.com>
+References: <20250304084045.62554-1-juri.lelli@redhat.com>
+ <20250304084045.62554-5-juri.lelli@redhat.com>
+ <e78c0d2d-c5bf-41f1-9786-981c60b7b50c@redhat.com>
+Content-Language: en-US
+In-Reply-To: <e78c0d2d-c5bf-41f1-9786-981c60b7b50c@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Add an assembly macro to refer runtime cost. It hides linker magic and
-makes assembly more readable.
+On 3/4/25 10:17 AM, Waiman Long wrote:
+> On 3/4/25 3:40 AM, Juri Lelli wrote:
+>> Rebuilding of root domains accounting information (total_bw) is
+>> currently broken on some cases, e.g. suspend/resume on aarch64. Problem
+>> is that the way we keep track of domain changes and try to add bandwidth
+>> back is convoluted and fragile.
+>>
+>> Fix it by simplify things by making sure bandwidth accounting is cleared
+>> and completely restored after root domains changes (after root domains
+>> are again stable).
+>>
+>> Reported-by: Jon Hunter <jonathanh@nvidia.com>
+>> Fixes: 53916d5fd3c0 ("sched/deadline: Check bandwidth overflow 
+>> earlier for hotplug")
+>> Signed-off-by: Juri Lelli <juri.lelli@redhat.com>
+>> ---
+>>   include/linux/sched/deadline.h |  4 ++++
+>>   include/linux/sched/topology.h |  2 ++
+>>   kernel/cgroup/cpuset.c         | 16 +++++++++-------
+>>   kernel/sched/deadline.c        | 16 ++++++++++------
+>>   kernel/sched/topology.c        |  1 +
+>>   5 files changed, 26 insertions(+), 13 deletions(-)
+>>
+>> diff --git a/include/linux/sched/deadline.h 
+>> b/include/linux/sched/deadline.h
+>> index 6ec578600b24..a780068aa1a5 100644
+>> --- a/include/linux/sched/deadline.h
+>> +++ b/include/linux/sched/deadline.h
+>> @@ -34,6 +34,10 @@ static inline bool dl_time_before(u64 a, u64 b)
+>>   struct root_domain;
+>>   extern void dl_add_task_root_domain(struct task_struct *p);
+>>   extern void dl_clear_root_domain(struct root_domain *rd);
+>> +extern void dl_clear_root_domain_cpu(int cpu);
+>> +
+>> +extern u64 dl_cookie;
+>> +extern bool dl_bw_visited(int cpu, u64 gen);
+>>     #endif /* CONFIG_SMP */
+>>   diff --git a/include/linux/sched/topology.h 
+>> b/include/linux/sched/topology.h
+>> index 7f3dbafe1817..1622232bd08b 100644
+>> --- a/include/linux/sched/topology.h
+>> +++ b/include/linux/sched/topology.h
+>> @@ -166,6 +166,8 @@ static inline struct cpumask 
+>> *sched_domain_span(struct sched_domain *sd)
+>>       return to_cpumask(sd->span);
+>>   }
+>>   +extern void dl_rebuild_rd_accounting(void);
+>> +
+>>   extern void partition_sched_domains_locked(int ndoms_new,
+>>                          cpumask_var_t doms_new[],
+>>                          struct sched_domain_attr *dattr_new);
 
-Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
----
- arch/x86/include/asm/runtime-const.h | 13 +++++++++++++
- arch/x86/lib/getuser.S               |  7 ++-----
- 2 files changed, 15 insertions(+), 5 deletions(-)
+BTW, dl_rebuild_rd_accounting() is defined only if CONFIG_CPUSETS is 
+defined. I think you should move that declaration to cpuset.h and define 
+a proper wrapper in the else part.
 
-diff --git a/arch/x86/include/asm/runtime-const.h b/arch/x86/include/asm/runtime-const.h
-index 6652ebddfd02..8d983cfd06ea 100644
---- a/arch/x86/include/asm/runtime-const.h
-+++ b/arch/x86/include/asm/runtime-const.h
-@@ -2,6 +2,18 @@
- #ifndef _ASM_RUNTIME_CONST_H
- #define _ASM_RUNTIME_CONST_H
- 
-+#ifdef __ASSEMBLY__
-+
-+.macro RUNTIME_CONST_PTR sym reg
-+	movq	$0x0123456789abcdef, %\reg
-+	1:
-+	.pushsection runtime_ptr_\sym, "a"
-+	.long	1b - 8 - .
-+	.popsection
-+.endm
-+
-+#else /* __ASSEMBLY__ */
-+
- #define runtime_const_ptr(sym) ({				\
- 	typeof(sym) __ret;					\
- 	asm_inline("mov %1,%0\n1:\n"				\
-@@ -58,4 +70,5 @@ static inline void runtime_const_fixup(void (*fn)(void *, unsigned long),
- 	}
- }
- 
-+#endif /* __ASSEMBLY__ */
- #endif
-diff --git a/arch/x86/lib/getuser.S b/arch/x86/lib/getuser.S
-index 71d8e7da4fc5..9d5654b8a72a 100644
---- a/arch/x86/lib/getuser.S
-+++ b/arch/x86/lib/getuser.S
-@@ -35,16 +35,13 @@
- #include <asm/thread_info.h>
- #include <asm/asm.h>
- #include <asm/smap.h>
-+#include <asm/runtime-const.h>
- 
- #define ASM_BARRIER_NOSPEC ALTERNATIVE "", "lfence", X86_FEATURE_LFENCE_RDTSC
- 
- .macro check_range size:req
- .if IS_ENABLED(CONFIG_X86_64)
--	movq $0x0123456789abcdef,%rdx
--  1:
--  .pushsection runtime_ptr_USER_PTR_MAX,"a"
--	.long 1b - 8 - .
--  .popsection
-+	RUNTIME_CONST_PTR USER_PTR_MAX, rdx
- 	cmp %rdx, %rax
- 	cmova %rdx, %rax
- .else
--- 
-2.47.2
+Cheers,
+Longman
 
