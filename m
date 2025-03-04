@@ -1,303 +1,179 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2075.outbound.protection.outlook.com [40.107.22.75])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96D70847C;
-	Tue,  4 Mar 2025 00:44:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741049046; cv=none; b=un+8biQ0hVrEhtn1Y2dBHbybeXTzXCOlFgnDHUdIpavKVtHLKjEtZjho0th4onpbmL63ZCN6vTLSOOiN9Yq7w4fNrPhAwqLYpAF+9jZplgkW8HT49yMSk9j1uENfhXmF/3Ych8c931Jz8JmhMmNmm2HcMp/g8wBg1IlnYfqZI0A=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741049046; c=relaxed/simple;
-	bh=xWRDIGEJAaSKJN5L6v+Gz8Kp0GE3AOC8Pmimy78MwWY=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=QNkignFupASCfpbi5mkDtsWdsmXVUgqK/JILJrSsyvaemOEbkSKeAm3vE4WUBRHznymEZNYr1TdBOozOkWMN0O6JHWyA3E6UFl8TVAuX6KO1WbHkg6uKDlxzRjhJHmn80IpCTI+zAEqP82pzIxCEUvLYOWgX1nZvBSFrDSsjkJ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=b4cihuk+; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 533862AF00;
+	Tue,  4 Mar 2025 00:45:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.22.75
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741049126; cv=fail; b=caS+r7dJWfXHgpp6naGeAf5Cv0450wzdYvK5YmaIrmqbZD6g6qdC5siF2GoKfLGV7QW0h9Xe+k5JLw2uHowodqRF4PgnySIn7PRnFKMeeWDVWDEOs5XW2p5gROveM/7GzOBsoSTGUXUfg75YNvkI5ukBsTYi/hNTXlRQrH6MzPE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741049126; c=relaxed/simple;
+	bh=fORFCeb67eswpvoGertra0R61eIBmHNVfMNmfPTCy7k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=Hl/neunhgmNCVAP8K/pCDrCpoakNgKITfFBUxiXoUgG+Uc2nIyZTgngtNhB5fqnVvHAppvCVysrdeRs88j2t0MtAy6GoQrW7sr/XNoErcPyUBZLqqkmXiOcP0bRGibRPh880P8hdJ6gTJUof8dF6Zh48bGccpzT7Kr0A/Temkz4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=sZ+CrPwn; arc=fail smtp.client-ip=40.107.22.75
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="b4cihuk+"
-Received: from [127.0.0.1] ([76.133.66.138])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 5240hUXv1830362
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Mon, 3 Mar 2025 16:43:30 -0800
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 5240hUXv1830362
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025021701; t=1741049011;
-	bh=OSryckLw96E62f0iZRN2OBpC8ktnL4UPuvxIYyXqeks=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=b4cihuk+D1XE7MW3dGc9AT4cwhrm/tIzlFws9HV4KGf2UcgI7nzMNOpyRud6Vg/20
-	 IMT6Qh/xt3xgDT5tXTBF12LAqdGZqAXXDhR85BDaWhX2NvadNSsGNtk3FKps2rvNfi
-	 inPJNAWItdgmU++oeoHZZ4ii5D3dqZhQZ3aFZaT0+Awn9IecuNc1qRdEu76ln/VmaH
-	 1xlE54eyrQ036iCypwGvrc462lkdKYU2wdyFxDUQecEvc/tTVRxfHRvbmPXZnjdtTK
-	 4/muF4i98pGw6Gp2VQJYQs0SBGS/q+n8mKVttCU6lYr/Pg4LZJeA+1ZB/F5Vjs/zkS
-	 EZpFvBozoYAqQ==
-Date: Mon, 03 Mar 2025 16:43:30 -0800
-From: "H. Peter Anvin" <hpa@zytor.com>
-To: Bill Wendling <morbo@google.com>
-CC: David Laight <david.laight.linux@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        Eric Biggers <ebiggers@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-        Justin Stitt <justinstitt@google.com>,
-        LKML <linux-kernel@vger.kernel.org>, linux-crypto@vger.kernel.org,
-        clang-built-linux <llvm@lists.linux.dev>
-Subject: Re: [PATCH v2] x86/crc32: use builtins to improve code generation
-User-Agent: K-9 Mail for Android
-In-Reply-To: <CAGG=3QUnUQL2=YxN2ozwSba2A_x-S7sAEUP5oGhCWOzu4Q9SQA@mail.gmail.com>
-References: <CAGG=3QVi27WRYVxmsk9+HLpJw9ZJrpfLjU8G4exuXm-vUA-KqQ@mail.gmail.com> <CAGG=3QVkd9Vb9a=pQ=KwhKzGJXaS+6Mk5K+JtBqamj15MzT9mQ@mail.gmail.com> <20250303201509.32f6f062@pumpkin> <CAGG=3QV1iDn2r39v5eroO+kCvpbmJNtSeqJS+fpwb4vBG67z=w@mail.gmail.com> <20250303224216.30431b1d@pumpkin> <7BC89461-A060-462A-9B42-7C0138AA0307@zytor.com> <CAGG=3QUnUQL2=YxN2ozwSba2A_x-S7sAEUP5oGhCWOzu4Q9SQA@mail.gmail.com>
-Message-ID: <D989BBB5-8DA9-424B-A22D-CC4405747083@zytor.com>
+	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="sZ+CrPwn"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=vjjx+zzLglZxcyu2kZitpQf7UbA9xGQRDWEt2DhYRtwFAKFYzV8znxSpriI4T9MDt2d2SmxNkVdFNaS8+a0Pv/lYiAmD+9+peTO/dVlGN9lgjIKJf7oGHLQEXz7lvuFjX8cB14otQZVNSLABxC5XQnYScJ9ED1v3UOBxqV4zYJ9dmhj67/GWZuZ4k8WOc7nnlkhL5e/qN9AGNGYZgo41bjJsnbr9NRSZ98IH7EgyA+2AYxx83TwjnZzkuwixPGx62wWn4hnFyq8qGydJ9y9h9V12lbKKN8yLZCVGnpJHK8nf5xpHiU8sHw5TvRIoW1TP5lu59Jkb2iBtzM6r7AbJhA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=DbAf8a59g1mC1aOiz9V7uAUztw2vQfPHPqRXnNgnczw=;
+ b=hubB++0aMMZQhRsOBViYyiVRLk37pfSS0KlZNQvsq1KPAbdJk9MCtpGWsZvUJn2Y7SmzwZb47BxExkDp2MQWASS0Hv4Qgt3JY338ujJhDUMa6RtKip16hvjM3ed8AV8q+Thb+BDILb9+F6iUiz8QbAr5S3bqgv3j4QMJZXCfwSL7vfVpx5X+KfBaDhYCiOIPHTH/SfVO8O8WrXW3FGlxmdqd+dh3Dfp0iFP0EKco6+Dw/EpuZDDjfzPwMSsCR4wyNBuMMaUfzFvgrzVf9Jhm3KiHxEvgAlXPwVEV+oyIvesFI2BKxmDKL2vqi2jRjZlq5+l4vWn043ECfOfnPeEdyA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector1-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DbAf8a59g1mC1aOiz9V7uAUztw2vQfPHPqRXnNgnczw=;
+ b=sZ+CrPwnMhNhC2s8y2L54OvT2GZEi2Zdjh66sxRK1VycxHIJrAuCRBfPY/918UEwecXF5ZgC8EXsxPMicR5wpBBAzVwUqmJF5gsIHQwuffjOtIIS7Cy33LWuHbgnD05Kdqh0AYDRYv22jRJ5oamENBhbdKW95wHjOV0QqXzMAXIcKtP6bHTSykgP2L6AlOQzm+ZsSi1eQAoNpkoNsyKXudIw0o1uUD26KX2JEWUbB1ZWmu0B+aWt0DRhkcS4SwxULaDwqkqvEvNGtfwzXXfTOKfrq8n+9064VNGFcPt277YyLgsZyS9DQEoScfDhqIDk0G7jf7cuSRHxdk9H6EywPQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=oss.nxp.com;
+Received: from PAXPR04MB8459.eurprd04.prod.outlook.com (2603:10a6:102:1da::15)
+ by DBBPR04MB7804.eurprd04.prod.outlook.com (2603:10a6:10:1e0::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.28; Tue, 4 Mar
+ 2025 00:45:21 +0000
+Received: from PAXPR04MB8459.eurprd04.prod.outlook.com
+ ([fe80::165a:30a2:5835:9630]) by PAXPR04MB8459.eurprd04.prod.outlook.com
+ ([fe80::165a:30a2:5835:9630%4]) with mapi id 15.20.8489.025; Tue, 4 Mar 2025
+ 00:45:21 +0000
+Date: Tue, 4 Mar 2025 09:51:40 +0800
+From: Peng Fan <peng.fan@oss.nxp.com>
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Peng Fan <peng.fan@nxp.com>
+Subject: Re: [PATCH 0/4] input: use devm_pm_set_wake_irq
+Message-ID: <20250304015140.GA24694@nxa18884-linux>
+References: <20250205-input-cleanup-v1-0-9758898ff8cb@nxp.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250205-input-cleanup-v1-0-9758898ff8cb@nxp.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-ClientProxiedBy: SI2PR06CA0013.apcprd06.prod.outlook.com
+ (2603:1096:4:186::18) To PAXPR04MB8459.eurprd04.prod.outlook.com
+ (2603:10a6:102:1da::15)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB8459:EE_|DBBPR04MB7804:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9babd9ba-ceae-497e-c728-08dd5ab5d781
+X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|1800799024|376014|52116014|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?juV2X7HCWIpfGrFeTsnzUj4jQEmZc5phchBmCde/QFHdVUN84UIcUGhea0PB?=
+ =?us-ascii?Q?9XEwCfU6xssRIKEM8n0JmbPtzoSGpxiXekVocDXTKmCptYzFtokaU34Tslpg?=
+ =?us-ascii?Q?eqK0qs9TRW9f8rxZS03J38rNHBKONxglDuUfqwIywFGyXzGGQWbKtgj7J/NF?=
+ =?us-ascii?Q?ud2cFgl7g8WwNl413gQbEpj6xBch8evUYoXkW0RKHRPLn2xcDPuB8/JF+z8F?=
+ =?us-ascii?Q?1qipZf/5kH5bQeboZSsvdpt/At8r/YqtaM/+3V6fkO3wDS1GKSbiq+UODKzf?=
+ =?us-ascii?Q?JZnoG++EKJMDEsIQW+rC+5OE3kR/acHJURqO4kIxAOLuolXpdufEAMOVRWO2?=
+ =?us-ascii?Q?cCMOgRw546Zc13GbWkr43XvNN6Bv1BBOUKw0GCl30cevL/XZ58RYRlz4LmgO?=
+ =?us-ascii?Q?akwkYWRUQ9fKl7Xa+YeMAZNfWwNhkuueK0gSFnKxaOvxfKgM5ird32t5SSD9?=
+ =?us-ascii?Q?avIkKbxucJ936wblioHIuQ/touueNCk4kbVmdhkee76xnqlKsgW5eewsv3wD?=
+ =?us-ascii?Q?uzBHr/4+JuPm5m43vfD7Cw84oaASv0vjU5JZRuF+76jwJVPH2uI5JOnAMF+s?=
+ =?us-ascii?Q?QSfiYK3/RMJalu99uqo6qeeBOS13g3GXJwRO8v136Ofo+HfDtiMUbYj2IDr7?=
+ =?us-ascii?Q?EUYnbq5H3Nha3vrzyG/J4MC12riUHEzR4IPgPkhSFJqWu2lB4SsPafFOVtCb?=
+ =?us-ascii?Q?fpiNChmgdUROUGitGaDY+aPfmjAXO3r2E8Y/OhFI55fc+mfJH4s4bL5IL+TP?=
+ =?us-ascii?Q?UT3eMrFVUT//FrAo+oZhu+woePZ9cFnslRbMC1ufFSC5AMVCKb6vVnundiKG?=
+ =?us-ascii?Q?UBCNEtEfCJn1hES3U4yqYpiJDYhs3IvBbw1VpeMSRxHZiLaUXyqabnsuDdrl?=
+ =?us-ascii?Q?p7bT4vC1CDbbGA4G2Hp3Z9w4hJLF5stJwl45BaYV/oA3Ko1hc3bzeF6gvnVz?=
+ =?us-ascii?Q?nACLbQ+3gvreKtciTYFW7AEBWzeSGFA7dca0trZvgj5VSW6W/MZqLfwbH0q2?=
+ =?us-ascii?Q?C0L19/bicOzBeaDjAGxjzhifqjcC4FPuVytlqUEBeHJeqkEBwIhzAjtl7qk7?=
+ =?us-ascii?Q?o5o199e9rszd8cK94LkRHNApw1mRQ1HsDokOzn4KX7uxL17lw99QgDuLkCtb?=
+ =?us-ascii?Q?MReicH8RL+GwnmtRG6V2ccIks8+yCtIE+xte+VQqcu4rUpRq81UvVt10NX44?=
+ =?us-ascii?Q?cUMqTKply0+52CQ4+Dvg4kehlzOfY3BLZRV3hfRYVNeM4i795sV0qZAecpJO?=
+ =?us-ascii?Q?F8gKm5lMKApHBsH9Q+Dk757PFH1IHwYishdweatj1fJll3lVMB/HhZXyDa9A?=
+ =?us-ascii?Q?1MQ2arNyqDCBlbT7T6ovSzKcol8dzO1FpZMUt5GsJLTbhdBDqEBhve9Dvv8t?=
+ =?us-ascii?Q?LkIRrUUl6rfb6V0ShQeq3BkBdwM9E4m6uS/8v+h5KsCEck5VEw=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB8459.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(52116014)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?YhBX6fS0/DyOlujZUTumvEw58Uds/OLUBA1T8IOxeBvRtkGAxR2no7AndEh2?=
+ =?us-ascii?Q?miDc0j3U1ZM5h5A7ajOKEWLhgKWXVJ9Eekh+B0qQerH1fQnhWUkqRZL+cDYv?=
+ =?us-ascii?Q?fh9yTR2Abmq7BejLvSuePXDsWDKmSQvBkGdPFE0xpaWwOukq9Ss4mpeT/TJD?=
+ =?us-ascii?Q?HLsDFSQu9610CxyYT8iYsQPUsyU1Ca9/tiC6+p1P1FIxllJzh4AWiG2D2y9H?=
+ =?us-ascii?Q?JsOa/+Z8I/Aijg9reeYc4zuwXfKgr+eLWrXVhH8+FJlflYp/244g2J+lAJCh?=
+ =?us-ascii?Q?2Bm61i1MUv0qqO3x5PVORbOFc82Dd69ByOtBvCn11nIiSX5wLzR5bvVPTW81?=
+ =?us-ascii?Q?PhpY/7COG7K6APtIccn5VPw/NdQnWRnSr+1/z7MO90s2cZS1/jgmoH/xih4F?=
+ =?us-ascii?Q?tHeNVKJ8zQ8pX42JmH6qWWSLv80wrTL/DztRioTEh68OJ9L70Va0TCYzLaNp?=
+ =?us-ascii?Q?FEaBWHv/KzINDFqQGyTqp/Kr8/r/gZ9UcKHJ6Oke8X0nnpqW/TwsXNX+cXcX?=
+ =?us-ascii?Q?vXu76OOlaB7RqMWDYLfbSAHW0r8s2r8vkeehOxyIi4QKg9FOVZ+k9Ay+6rYQ?=
+ =?us-ascii?Q?LLYM22Ai+aoPYyoMUoSSdRWVs0SYdl8UIaRebLztiysH3kfBGiwcYimN3lzc?=
+ =?us-ascii?Q?x9G15V72v6ms230lgUY3/QBif2r2b6Mh0ty43PWYq5sjEZhB2NpxoDSZ7YxS?=
+ =?us-ascii?Q?UKB4rnKquVQ2h7jJr9TuhPyarFc2Gsnj7mdEFYnsp9A0WO9YL7Z/Pb2iADVE?=
+ =?us-ascii?Q?JyarExzyOhCTYKwuBSnGCtwJP8v+5fstQnPVSWPdTMhtrHvIs6Kx+GQLazRt?=
+ =?us-ascii?Q?4Y22bNnXIy/x9xLQwo7rni7PdZXKhTve213cGjNu3E7+zFOoFnnyNSrsadBx?=
+ =?us-ascii?Q?MSfiJTtxHIZLgugCR9D3n0qr9l1ix/4lH9CJF0JEsTJq6qRpcRc8xdQQpVvY?=
+ =?us-ascii?Q?IY338OyAaFt2ogqiCFVtKJ6lon6CR2kAroakKyfofeFUI+6e7JCZkWv02x0X?=
+ =?us-ascii?Q?uQ5JaZSZSHl3v3oLtvI0AaddSo6U0kyHv7n3kZiLA77eDE01w546yTPWDY4w?=
+ =?us-ascii?Q?f7YcTisJB4pD/vCzFl8XS8Y6GpmqrAlBHtJmUFccXW7LEoJ5WGxpQucCf9D1?=
+ =?us-ascii?Q?YX3E4sb4EWsvFcRP5ASjf2JvWcwF7z0hMLecsXJPYxkRnmJkk7Sab8kof/qz?=
+ =?us-ascii?Q?D9jkoUnU9H4KKR4l7GIjV+PsHDSRm6ADEkwHon/iPO7DVxtBJ9JwOyaO+Z39?=
+ =?us-ascii?Q?FJoG+FbQBBpJsp1ywOBQ6gIbZHRjnHxam0q4+IyzWWl3ZveriwTpQ3xZHcqN?=
+ =?us-ascii?Q?Yuj+Mm9+EhuTkBscwJ7xwgSmyiMhjgGn/YuvC+DhwRG4dm+yR6VgayyoXmHi?=
+ =?us-ascii?Q?uVK5PsDxWKh0pgnSplP+fC0KT5E50PnIsq3rglpR+4s7PPCgWvPN4eZWrZGL?=
+ =?us-ascii?Q?tETWUIrhuw8uBh67aRd8DRbyAyRiCOzGzI6geTHJvnu8vRDkQ0Tt71chUngn?=
+ =?us-ascii?Q?w0iAduI7dlSWqWG7t0DvdytpCfacMR2Y6rwBE/4gxIB2Vd4iYN/Dzr5puSGD?=
+ =?us-ascii?Q?Ikcs4WoRKTYOCkHABvBpxp/ePu2MDX7mihU/ENgg?=
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9babd9ba-ceae-497e-c728-08dd5ab5d781
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB8459.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Mar 2025 00:45:20.9634
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ypP/qxJIROoDHV8sY6MACYfWFRDtrncm/XXsJUwJp9R0OTmsJvvgaL33e2amCRBSxpH/8Y42NA5EoyKpCuVHZg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR04MB7804
 
-On March 3, 2025 4:16:43 PM PST, Bill Wendling <morbo@google=2Ecom> wrote:
->On Mon, Mar 3, 2025 at 3:58=E2=80=AFPM H=2E Peter Anvin <hpa@zytor=2Ecom>=
- wrote:
->> On March 3, 2025 2:42:16 PM PST, David Laight <david=2Elaight=2Elinux@g=
-mail=2Ecom> wrote:
->> >On Mon, 3 Mar 2025 12:27:21 -0800
->> >Bill Wendling <morbo@google=2Ecom> wrote:
->> >
->> >> On Mon, Mar 3, 2025 at 12:15=E2=80=AFPM David Laight
->> >> <david=2Elaight=2Elinux@gmail=2Ecom> wrote:
->> >> > On Thu, 27 Feb 2025 15:47:03 -0800
->> >> > Bill Wendling <morbo@google=2Ecom> wrote:
->> >> >
->> >> > > For both gcc and clang, crc32 builtins generate better code than=
- the
->> >> > > inline asm=2E GCC improves, removing unneeded "mov" instructions=
-=2E Clang
->> >> > > does the same and unrolls the loops=2E GCC has no changes on i38=
-6, but
->> >> > > Clang's code generation is vastly improved, due to Clang's "rm"
->> >> > > constraint issue=2E
->> >> > >
->> >> > > The number of cycles improved by ~0=2E1% for GCC and ~1% for Cla=
-ng, which
->> >> > > is expected because of the "rm" issue=2E However, Clang's perfor=
-mance is
->> >> > > better than GCC's by ~1=2E5%, most likely due to loop unrolling=
-=2E
->> >> >
->> >> > How much does it unroll?
->> >> > How much you need depends on the latency of the crc32 instruction=
-=2E
->> >> > The copy of Agner's tables I have gives it a latency of 3 on
->> >> > pretty much everything=2E
->> >> > If you can only do one chained crc instruction every three clocks
->> >> > it is hard to see how unrolling the loop will help=2E
->> >> > Intel cpu (since sandy bridge) will run a two clock loop=2E
->> >> > With three clocks to play with it should be easy (even for a compi=
-ler)
->> >> > to generate a loop with no extra clock stalls=2E
->> >> >
->> >> > Clearly if Clang decides to copy arguments to the stack an extra t=
-ime
->> >> > that will kill things=2E But in this case you want the "m" constra=
-int
->> >> > to directly read from the buffer (with a (reg,reg,8) addressing mo=
-de)=2E
->> >> >
->> >> Below is what Clang generates with the builtins=2E From what Eric sa=
-id,
->> >> this code is only run for sizes <=3D 512 bytes? So maybe it's not su=
-per
->> >> important to micro-optimize this=2E I apologize, but my ability to
->> >> measure clock loops for x86 code isn't great=2E (I'm sure I lack the
->> >> requisite benchmarks, etc=2E)
->> >
->> >Jeepers - that is trashing the I-cache=2E
->> >Not to mention all the conditional branches at the bottom=2E
->> >Consider the basic loop:
->> >1:     crc32q  (%rcx), %rbx
->> >       addq    $8, %rcx
->> >       cmp     %rcx, %rdx
->> >       jne     1b
->> >The crc32 has latency 3 so it must take at least 3 clocks=2E
->> >Even naively the addq can be issued in the same clock as the crc32
->> >and the cmp and jne in the following ones=2E
->> >Since the jne is predicted taken, the addq can be assumed to execute
->> >in the same clock as the jne=2E
->> >(The cmp+jne might also get merged into a single u-op)
->> >(I've done this with adc (for IP checksum), with two adc the loop take=
-s
->> >two clocks even with the extra memory reads=2E)
->> >
->> >So that loop is likely to run limited by the three clock latency of cr=
-c32=2E
->> >Even the memory reads will happen with all the crc32 just waiting for =
-the
->> >previous crc32 to finish=2E
->> >You can take an instruction out of the loop:
->> >1:     crc32q  (%rcx,%rdx), %rbx
->> >       addq    $8, %rdx
->> >       jne     1b
->> >but that may not be necessary, and (IIRC) gcc doesn't like letting you
->> >generate it=2E
->> >
->> >For buffers that aren't multiples of 8 bytes 'remember' that the crc o=
-f
->> >a byte depends on how far it is from the end of the buffer, and that i=
-nitial
->> >zero bytes have no effect=2E
->> >So (provided the buffer is 8+ bytes long) read the first 8 bytes, shif=
-t
->> >right by the number of bytes needed to make the rest of the buffer a m=
-ultiple
->> >or 8 bytes (the same as reading from across the start of the buffer an=
-d masking
->> >the low bytes) then treat exactly the same as a buffer that is a multi=
-ple
->> >of 8 bytes long=2E
->> >Don't worry about misaligned reads, you lose less than one clock per c=
-ache
->> >line (that is with adc doing a read every clock)=2E
->> >
->For reference, GCC does much better with code gen, but only with the buil=
-tin:
->
->=2EL39:
->        crc32q  (%rax), %rbx    # MEM[(long unsigned int *)p_40], tmp120
->        addq    $8, %rax        #, p
->        cmpq    %rcx, %rax      # _37, p
->        jne     =2EL39    #,
->        leaq    (%rsi,%rdi,8), %rsi     #, p
->=2EL38:
->        andl    $7, %edx        #, len
->        je      =2EL41    #,
->        addq    %rsi, %rdx      # p, _11
->        movl    %ebx, %eax      # crc, <retval>
->        =2Ep2align 4
->=2EL40:
->        crc32b  (%rsi), %eax    # MEM[(const u8 *)p_45], <retval>
->        addq    $1, %rsi        #, p
->        cmpq    %rsi, %rdx      # p, _11
->        jne     =2EL40    #,
->
->> >Actually measuring the performance is hard=2E
->> >You can use rdtsc because the clock speed will change when the cpu get=
-s busy=2E
->> >There is a 'performance counter' that is actual clocks=2E
->> >While you can use the library functions to set it up, you need to just=
- read the
->> >register - the library overhead it too big=2E
->> >You also need the odd lfence=2E
->> >Having done that, and provided the buffer is in the L1 d-cache you can=
- measure
->> >the loop time in clocks and compare against the expected value=2E
->> >Once you've got 3 clocks per crc32 instruction it won't get any better=
-,
->> >which is why the 'fast' code for big buffers does crc of 3+ buffers se=
-ctions
->> >in parallel=2E
->> >
->Thanks for the info! It'll help a lot the next time I need to delve
->deeply into performance=2E
->
->I tried using rdtsc and another programmatic way of measuring timing=2E
->Also tried making the task have high priority, restricting to one CPU,
->etc=2E But the numbers weren't as consistent as I wanted them to be=2E Th=
-e
->times I reported were the based on the fastest times / clocks /
->whatever from several runs for each build=2E
->
->> >       David
->> >
->> >>
->> >> -bw
->> >>
->> >> =2ELBB1_9:                                # =3D>This Inner Loop Head=
-er: Depth=3D1
->> >>         movl    %ebx, %ebx
->> >>         crc32q  (%rcx), %rbx
->> >>         addq    $8, %rcx
->> >>         incq    %rdi
->> >>         cmpq    %rdi, %rsi
->> >>         jne     =2ELBB1_9
->> >> # %bb=2E10:
->> >>         subq    %rdi, %rax
->> >>         jmp     =2ELBB1_11
->> >> =2ELBB1_7:
->> >>         movq    %r14, %rcx
->> >> =2ELBB1_11:
->> >>         movq    %r15, %rsi
->> >>         andq    $-8, %rsi
->> >>         cmpq    $7, %rdx
->> >>         jb      =2ELBB1_14
->> >> # %bb=2E12:
->> >>         xorl    %edx, %edx
->> >> =2ELBB1_13:                               # =3D>This Inner Loop Head=
-er: Depth=3D1
->> >>         movl    %ebx, %ebx
->> >>         crc32q  (%rcx,%rdx,8), %rbx
->> >>         crc32q  8(%rcx,%rdx,8), %rbx
->> >>         crc32q  16(%rcx,%rdx,8), %rbx
->> >>         crc32q  24(%rcx,%rdx,8), %rbx
->> >>         crc32q  32(%rcx,%rdx,8), %rbx
->> >>         crc32q  40(%rcx,%rdx,8), %rbx
->> >>         crc32q  48(%rcx,%rdx,8), %rbx
->> >>         crc32q  56(%rcx,%rdx,8), %rbx
->> >>         addq    $8, %rdx
->> >>         cmpq    %rdx, %rax
->> >>         jne     =2ELBB1_13
->> >> =2ELBB1_14:
->> >>         addq    %rsi, %r14
->> >> =2ELBB1_15:
->> >>         andq    $7, %r15
->> >>         je      =2ELBB1_23
->> >> # %bb=2E16:
->> >>         crc32b  (%r14), %ebx
->> >>         cmpl    $1, %r15d
->> >>         je      =2ELBB1_23
->> >> # %bb=2E17:
->> >>         crc32b  1(%r14), %ebx
->> >>         cmpl    $2, %r15d
->> >>         je      =2ELBB1_23
->> >> # %bb=2E18:
->> >>         crc32b  2(%r14), %ebx
->> >>         cmpl    $3, %r15d
->> >>         je      =2ELBB1_23
->> >> # %bb=2E19:
->> >>         crc32b  3(%r14), %ebx
->> >>         cmpl    $4, %r15d
->> >>         je      =2ELBB1_23
->> >> # %bb=2E20:
->> >>         crc32b  4(%r14), %ebx
->> >>         cmpl    $5, %r15d
->> >>         je      =2ELBB1_23
->> >> # %bb=2E21:
->> >>         crc32b  5(%r14), %ebx
->> >>         cmpl    $6, %r15d
->> >>         je      =2ELBB1_23
->> >> # %bb=2E22:
->> >>         crc32b  6(%r14), %ebx
->> >> =2ELBB1_23:
->> >>         movl    %ebx, %eax
->> >> =2ELBB1_24:
->> >
->> >
->>
->> The tail is *weird*=2E Wouldn't it be better to do a 4-2-1 stepdown?
->
->Definitely on the weird side! I considered hard-coding something like
->that, but thought it might be a bit convoluted, though certainly less
->convoluted than what we generate now=2E A simple loop is probably all
->that's needed, because it should only need to be done at most seven
->times=2E
->
->-bw
->
+Hi Dmitry,
 
-4-2-1 makes more sense probably (4 bytes, then 2 bytes, then 1 byte depend=
-ing on which bits are set=2E)
+On Wed, Feb 05, 2025 at 08:45:13AM +0800, Peng Fan (OSS) wrote:
+>This is a pick-up of patch 2-5 from patchset [1]
+>
+>Since devm_pm_set_wake_irq is in 6.14, so resend the input parts.
+
+Do you have time to give a look on this patchset?
+
+Thanks,
+Peng
+
+>
+>[1] https://lore.kernel.org/all/CAJZ5v0jb=0c5m=FeA-W-aG30H4706Ay_xCHTsiC1S-7MuGxqTQ@mail.gmail.com/#r
+>
+>Signed-off-by: Peng Fan <peng.fan@nxp.com>
+>---
+>Peng Fan (4):
+>      input: keyboard: ep93xx_keypad: Use devm_pm_set_wake_irq
+>      input: keyboard: omap4_keypad: Use devm_pm_set_wake_irq
+>      input: misc: nxp-bbnsm-pwrkey: Use resource managed API to simplify code
+>      input: touchscreen: ti_am335x_tsc: Use resource managed API to simplify code
+>
+> drivers/input/keyboard/ep93xx_keypad.c    |  8 +-----
+> drivers/input/keyboard/omap4-keypad.c     |  8 +-----
+> drivers/input/misc/nxp-bbnsm-pwrkey.c     | 15 ++++-------
+> drivers/input/touchscreen/ti_am335x_tsc.c | 43 ++++++++++---------------------
+> 4 files changed, 21 insertions(+), 53 deletions(-)
+>---
+>base-commit: 40b8e93e17bff4a4e0cc129e04f9fdf5daa5397e
+>change-id: 20250205-input-cleanup-219afcebf38a
+>
+>Best regards,
+>-- 
+>Peng Fan <peng.fan@nxp.com>
+>
+>
