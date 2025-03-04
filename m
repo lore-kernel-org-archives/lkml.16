@@ -1,33 +1,48 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEFB91F3B8B;
-	Tue,  4 Mar 2025 07:21:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34E801F3B8B;
+	Tue,  4 Mar 2025 07:26:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741072907; cv=none; b=fXZsK9VVfCQx+2hGHIxfBe2UprZg3nYJhEoOFDul+5wKUdehXOpn0GEIfdVEKhfrKegESQ+XaHAvCWGgb/GqNrWYmtk590mFEXnzgRA9wLXXgxXcCCZoOo4/c24wg8JsJGvq2f/w83OxnaHFnqpBPWLiL92sqOGrYQfqTjg2Yqo=
+	t=1741073192; cv=none; b=VQlBTixwi5O2N40fB8Z38fTs0m/O3xx+6n4pfuYTXKRINEjC/8gF3hcX5KF7f3qSlSsEks85rk0CkDl9FoJ9ZOXy61oBuwQSQnP3SU9DMexm98EBS38VlmlPFa9ee90/CRn3m7mge+GtAgjYT25gwyDBGAofjxMxRo42jMVWmu4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741072907; c=relaxed/simple;
-	bh=T+fpq98v9Io2vg6grazANB67VEQzov3KO4PYt35Zncc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KjFNBJjbu42AyNvZBBgptt0KBjQ/0pie3LR6NeJiNtZs+iVgqfa4oZmRdZtpt4o3mTEeFtXNRrg6jE4x6GyxKw2090/4a1bMC3wNbhpMkTD+4WqK3EFHduoVe87E/BO8gFRuNVMWS/YBH2XTj4FZbcqqCbeFVA38laudy1DBGKk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Yf+R5WqR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741073192; c=relaxed/simple;
+	bh=+Ui5C9JG8pRJVx6WcFdHq5Id9wMBw/pJ1/wUpeSdzMg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=pjVlGtO/ddFgRv4q48axH6wgTuOSS2ocwdrLijTwdbHCRfvcZx2liSx7vOhZloHiNcmv47yVWdmY6jEnzSnTUE6DQKk6e2OIud8ntlMQv9JJCV+Q425X+ikD9WT5Fg4mp3o7MpSk8KI8Xtwfmbq8+BMHNJdTwfzOAQV5f4aJMCA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=QQsLH7M7; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Yf+R5WqR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A282C4CEE5;
-	Tue,  4 Mar 2025 07:21:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741072907;
-	bh=T+fpq98v9Io2vg6grazANB67VEQzov3KO4PYt35Zncc=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Yf+R5WqRepIcAvZ0HF6I5wGDmnXfpZN204rxo1N9Cqt/9SU8s3VbtY93qZD7FUGKt
-	 eI07SN7t/gHc7+jUs1R26VuP09pN/FGi+ADxk81G6G4BwfsMbcWSY6IyKvkq/O5ZuA
-	 qZOn/yvo3HZDyvUwVMExev+0fhu6fQqujTm9pKl8JQiw2Trjf4jKdCQEuSLkdWIvYT
-	 A2XRwRgsh25MyUpfL1Qw1CVW++u0ioWKJZ8018iyZjt2fmFRdAJJnaQN4oO+aRUna6
-	 ucfo7qh4KQrybYXT5sFFfPZ/WCN1w6b9Qk4/wdjgcvACUdHpHkyPHhltTM+hZFXgmc
-	 X2COYGMKRAghg==
-Message-ID: <027decb4-3fa9-40a5-9cf4-65f9a69b4566@kernel.org>
-Date: Tue, 4 Mar 2025 08:21:39 +0100
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="QQsLH7M7"
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 523NX4Cu017209;
+	Tue, 4 Mar 2025 07:26:04 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	ckNT9zT97qmSsY9ujs7VbRLG9X+HS54zgHMiqLy7EEg=; b=QQsLH7M73VHftWIk
+	UCeiSKxPmmnMOZM4QTni7oHMeF6h1dwvH3OoLi1Nc24vn8Fmgs5JE1x+qbOKAuSK
+	ysXwb+pUpT3q11qDF8EkMdrBI+IiwgY972pLXdrJFWd3JypzyUV1D7MU9NXxs4LT
+	lHkNw/oQdwlRTlD2Mg4ToUfCOBJ6NkN6zPdBOB7sKazbTsOyeAP8ZIzOedcpfcBA
+	qCBQjPmrSPpjw8dtT6XYJG3kNR5+5+Q//YnowFWHF72sdWpVQDx5PWTDf4Xy9ow6
+	9M8CKQsH81DEKfWIr76LvDvNMAMWO/vRMUGY7UauRlyIHHY/qBcB2d1PM+1NEAN1
+	cLjqvA==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 455p6th1yj-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 04 Mar 2025 07:26:03 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5247Q2Pq012111
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 4 Mar 2025 07:26:03 GMT
+Received: from [10.253.15.36] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 3 Mar 2025
+ 23:25:58 -0800
+Message-ID: <b68799da-7290-418a-b7db-4cfad7b12e0f@quicinc.com>
+Date: Tue, 4 Mar 2025 15:25:55 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,165 +50,111 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/8] dt-bindings: phy: add
- samsung,exynos2200-usbcon-phy schema file
-To: Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>
-Cc: Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I
- <kishon@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>,
- Philipp Zabel <p.zabel@pengutronix.de>, Abel Vesa <abel.vesa@linaro.org>,
- linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-samsung-soc@vger.kernel.org, linux-phy@lists.infradead.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250223122227.725233-1-ivo.ivanov.ivanov1@gmail.com>
- <20250223122227.725233-4-ivo.ivanov.ivanov1@gmail.com>
- <20250224-curly-cyber-spaniel-efdc39@krzk-bin>
- <a4f63721-d094-4eda-b68a-6ef62ff54680@gmail.com>
- <c8184542-5dab-4403-bee4-867810397ae4@kernel.org>
- <4502b578-96e6-49e0-8f3b-54f6e5640c55@gmail.com>
- <354d6100-311f-44d7-b8a5-1fd671b651e3@kernel.org>
- <9fb63a04-5b3d-40cc-b96f-eb4f297f307e@gmail.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v8] arm64: mm: Populate vmemmap at the page level if not
+ section aligned
+To: David Hildenbrand <david@redhat.com>, <anshuman.khandual@arm.com>,
+        <catalin.marinas@arm.com>
+CC: <will@kernel.org>, <ardb@kernel.org>, <ryan.roberts@arm.com>,
+        <mark.rutland@arm.com>, <joey.gouly@arm.com>,
+        <dave.hansen@linux.intel.com>, <akpm@linux-foundation.org>,
+        <chenfeiyang@loongson.cn>, <chenhuacai@kernel.org>,
+        <linux-mm@kvack.org>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <quic_tingweiz@quicinc.com>,
+        <stable@vger.kernel.org>
+References: <20250219084001.1272445-1-quic_zhenhuah@quicinc.com>
+ <78d55e35-6cda-4f5e-8e52-0a54b1e64592@redhat.com>
 Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <9fb63a04-5b3d-40cc-b96f-eb4f297f307e@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+From: Zhenhua Huang <quic_zhenhuah@quicinc.com>
+In-Reply-To: <78d55e35-6cda-4f5e-8e52-0a54b1e64592@redhat.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=PMb1+eqC c=1 sm=1 tr=0 ts=67c6ab0b cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8 a=20KFwNOVAAAA:8
+ a=OyIDkqIgn3q2G5mQ1iQA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: qN3xRsxJfR6rENMgdFiS9cnF5DmYD864
+X-Proofpoint-GUID: qN3xRsxJfR6rENMgdFiS9cnF5DmYD864
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-04_03,2025-03-03_04,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxlogscore=999
+ phishscore=0 lowpriorityscore=0 malwarescore=0 priorityscore=1501
+ mlxscore=0 adultscore=0 spamscore=0 suspectscore=0 impostorscore=0
+ clxscore=1015 classifier=spam authscore=0 adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502100000 definitions=main-2503040061
 
-On 03/03/2025 18:18, Ivaylo Ivanov wrote:
-> On 3/3/25 09:24, Krzysztof Kozlowski wrote:
->> On 02/03/2025 10:16, Ivaylo Ivanov wrote:
->>> On 2/25/25 10:11, Krzysztof Kozlowski wrote:
->>>> On 24/02/2025 11:48, Ivaylo Ivanov wrote:
->>>>> On 2/24/25 10:56, Krzysztof Kozlowski wrote:
->>>>>> On Sun, Feb 23, 2025 at 02:22:22PM +0200, Ivaylo Ivanov wrote:
->>>>>>> The Exynos2200 SoC has a USB controller PHY, which acts as an
->>>>>>> intermediary between a USB controller (typically DWC3) and other PHYs
->>>>>>> (UTMI, PIPE3). Add a dt-binding schema for it.
->>>>>>>
->>>>>>> Signed-off-by: Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>
->>>>>>> ---
->>>>>>>  .../phy/samsung,exynos2200-usbcon-phy.yaml    | 76 +++++++++++++++++++
->>>>>>>  1 file changed, 76 insertions(+)
->>>>>>>  create mode 100644 Documentation/devicetree/bindings/phy/samsung,exynos2200-usbcon-phy.yaml
->>>>>> You have undocumented dependencies which prevent merging this file.
->>>>>> First, dependencies have to be clearly expressed.
->>>>> They are, in the cover letter.
->>>> Where? I read it twice. Dependencies is the most important thing and
->>>> should scream at beginning of the cover letter, so if you bury them
->>>> somewhere deep it also would not matter - just like they were missing.
->>>>
->>>>>> Second, you should
->>>>>> rather decouple the code from header dependencies, otherwise this cannot
->>>>>> be merged for current release (just use clocks with long names, without IDs).
->>>>> Sure
->>>>>>> diff --git a/Documentation/devicetree/bindings/phy/samsung,exynos2200-usbcon-phy.yaml b/Documentation/devicetree/bindings/phy/samsung,exynos2200-usbcon-phy.yaml
->>>>>>> new file mode 100644
->>>>>>> index 000000000..7d879ec8b
->>>>>>> --- /dev/null
->>>>>>> +++ b/Documentation/devicetree/bindings/phy/samsung,exynos2200-usbcon-phy.yaml
->>>>>>> @@ -0,0 +1,76 @@
->>>>>>> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
->>>>>>> +%YAML 1.2
->>>>>>> +---
->>>>>>> +$id: http://devicetree.org/schemas/phy/samsung,exynos2200-usbcon-phy.yaml#
->>>>>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->>>>>>> +
->>>>>>> +title: Exynos2200 USB controller PHY
->>>>>>> +
->>>>>>> +maintainers:
->>>>>>> +  - Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>
->>>>>>> +
->>>>>>> +description:
->>>>>>> +  Exynos2200 USB controller PHY is an intermediary between a USB controller
->>>>>>> +  (typically DWC3) and other PHYs (UTMI, PIPE3).
->>>>>> Isn't this the same as usbdrd phy? see: samsung,usb3-drd-phy.yaml
->>>>> It's not (I think). There's a few reasons I've decided to make this separate
->>>>> from the usb3-drd-phy bindings and exynos5-usbdrd driver:
->>>>>
->>>>> 1. This PHY does not provide UTMI and PIPE3 on its own. There's no tuning
->>>> USBDRD phy does not provide UTMI and PIPE on its own either if you look
->>>> at diagram - they call it phy controller.
->>> Ughm. What? So in most exynos cases, there's a combination of multiple phys?
+
+
+On 2025/3/3 18:01, David Hildenbrand wrote:
+> On 19.02.25 09:40, Zhenhua Huang wrote:
+>> On the arm64 platform with 4K base page config, SECTION_SIZE_BITS is set
+>> to 27, making one section 128M. The related page struct which vmemmap
+>> points to is 2M then.
+>> Commit c1cc1552616d ("arm64: MMU initialisation") optimizes the
+>> vmemmap to populate at the PMD section level which was suitable
+>> initially since hot plug granule is always one section(128M). However,
+>> commit ba72b4c8cf60 ("mm/sparsemem: support sub-section hotplug")
+>> introduced a 2M(SUBSECTION_SIZE) hot plug granule, which disrupted the
+>> existing arm64 assumptions.
 >>
->>>>> for them, and all that is needed from it is to disable HWACG, assert/
->>>>> deassert reset and force bvalid/vbusvalid. After that SNPS eUSB2
->>>>> initialization can be done and USB2 works. If the USBCON phy is not set
->>>>> up before the eUSB2 one, the device hangs, so there is definitely a
->>>>> dependancy between them. For PIPE3 we'd need to control the pipe3
->>>>> attaching/deattaching and then initialize the synopsys USBDP combophy.
->>>> Does it mean there is no USB DRD phy controller as before?
->>>>
->>>> Anyway the problem is you have DWC3 -> PHY -> PHY. Looks one phy too many.
->>> So...
->>>
->>> DWC3 -> USBDRD (USBCON) -> PHYs?
->> No, drop last phy. You just wrote the same as me - two phys, because
->> usbdrd is the phy. In all existing designs there is no such controllable
->> object from the point of view of operating system.
+>> The first problem is that if start or end is not aligned to a section
+>> boundary, such as when a subsection is hot added, populating the entire
+>> section is wasteful.
+>>
+>> The next problem is if we hotplug something that spans part of 128 MiB
+>> section (subsections, let's call it memblock1), and then hotplug 
+>> something
+>> that spans another part of a 128 MiB section(subsections, let's call it
+>> memblock2), and subsequently unplug memblock1, vmemmap_free() will clear
+>> the entire PMD entry which also supports memblock2 even though memblock2
+>> is still active.
+>>
+>> Assuming hotplug/unplug sizes are guaranteed to be symmetric. Do the
+>> fix similar to x86-64: populate to pages levels if start/end is not 
+>> aligned
+>> with section boundary.
+>>
+>> Cc: <stable@vger.kernel.org> # v5.4+
+>> Fixes: ba72b4c8cf60 ("mm/sparsemem: support sub-section hotplug")
+>> Signed-off-by: Zhenhua Huang <quic_zhenhuah@quicinc.com>
+>> ---
+>> Hi Catalin and David,
+>> Following our latest discussion, I've updated the patch for your review.
+>> I also removed Catalin's review tag since I've made significant 
+>> modifications.
+>>   arch/arm64/mm/mmu.c | 5 ++++-
+>>   1 file changed, 4 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+>> index b4df5bc5b1b8..de05ccf47f21 100644
+>> --- a/arch/arm64/mm/mmu.c
+>> +++ b/arch/arm64/mm/mmu.c
+>> @@ -1177,8 +1177,11 @@ int __meminit vmemmap_populate(unsigned long 
+>> start, unsigned long end, int node,
+>>           struct vmem_altmap *altmap)
+>>   {
+>>       WARN_ON((start < VMEMMAP_START) || (end > VMEMMAP_END));
+>> +    /* [start, end] should be within one section */
+>> +    WARN_ON(end - start > PAGES_PER_SECTION * sizeof(struct page));
+>> -    if (!IS_ENABLED(CONFIG_ARM64_4K_PAGES))
+>> +    if (!IS_ENABLED(CONFIG_ARM64_4K_PAGES) ||
+>> +        (end - start < PAGES_PER_SECTION * sizeof(struct page)))
 > 
-> What? Per my understanding, the phy property should refer to whatever is
-> is connected to dwc3 UTMI. In this case it's the so-called USBDRD phy (called
-> usbcon in downstream). Considering that the eUSB2 IP definitely also has UTMI
-> that has to be connected to something, doesn't that mean we have clearly
+> Indentation should be
+> 
+>      if (!IS_ENABLED(CONFIG_ARM64_4K_PAGES) ||
+>          (end - start < PAGES_PER_SECTION * sizeof(struct page)))
+> 
 
-The entire point is that eUSB2 is connected to DWC3, no? That's exactly
-how it is done for example on Qualcomm SoC. Otherwise you claim that
-DWC3 controls one phy, which controls another phy which controls UTMI...
+Thanks, I will repost with the above fix and WARN_ON_ONCE as you 
+preferred in v7.
 
-> separated hardware blocks? Now, I guess one could argue that this USBCON
-> hardware block could be classified as a syscon. But I don't see the problem
-> with the current binding description, nor the modelling, as it represents
-> how the hardware is (unless I've gotten it completely wrong).
+> 
+> Acked-by: David Hildenbrand <david@redhat.com>
+> 
+> 
+> Thanks!
+> 
 
-It is the first time you use argument that it represents how the
-hardware is and this is what we actually disagree. It is not like that.
-You do not have chain of phys. Just look at any USB 3.0 DRD DWC diagram
-from any Samsung SoC: where would you squeeze these two phys in relation
-to what is called there "USB 3.0 PHY" which would be the third phy (!!!).
-
-Best regards,
-Krzysztof
