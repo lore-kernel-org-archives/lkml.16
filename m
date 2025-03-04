@@ -1,95 +1,63 @@
-Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 105101FECB8;
-	Tue,  4 Mar 2025 10:58:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 45F13204582
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 10:58:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741085906; cv=none; b=Tvb2xKP8DqB2F2GHTwN2x32wV7NvNZPDeEF94pUGaboGeLJcMBonuyEssqeKk3bo0Oqk59HMACpeXEF8/MGm2J1KkmmWL2pVKdAZU30b+Dw3yW3Fb0CPwQ6IxTJYavFTs79C/uTN0r6eQ03VzKXOD/9xD/XLQ7GAXQQ5C765iXo=
+	t=1741085910; cv=none; b=mp16oXODCIZ7YLSIE2l40jl1BO+U7CIONYQdsTyHR8AvdF57dvDjaDLpIYRTVamZTdbSCXxXFZy6H7spefM57iIlsKKbrNXs7z/ELI7n0Dm6fo+GA1DS5spRErZDrUiBXu6h7hsVhbOfqjLOLnwFVvvf+kuYmnMLBVbbqD5kjbQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741085906; c=relaxed/simple;
-	bh=paKWdJ3ekMpBkfGupgOm2SFeo8YGolII6hImtEkYrEY=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=WLxDHcOQB0B6IsYxyNy+A411MLyvZIK1aqrfic7fBgXVI8naLdmmxnrWGDs5HgP5hlafYEFBp9XxnSEXFIWW4HhRdE7sulp8tXukJSC64rBUpQEl9vQQaizf0QQNE25ZvV0HhotpmzV+C8gr7mJE86hWTeeY5wgIWQPsOKtGljU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=rMw6y7wr; arc=none smtp.client-ip=198.47.23.235
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="rMw6y7wr"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 524Aw1RV3625146
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-	Tue, 4 Mar 2025 04:58:01 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1741085881;
-	bh=lNe+MRgzHHHs1aTDaEH9R1smMuYuwJxzycPtlvXhGEM=;
-	h=From:To:CC:Subject:Date;
-	b=rMw6y7wrvZBPP+r1BP9bYM/PxKatgtKryTO/UXNNOu3FdLMvXL/OZWGaFtL6vmPqx
-	 6kR3If52bykURMlc/+FQDaMCiiRC2jgFX2j2IGUMLWc2PS66PGP+OqkhasF9RWdZy0
-	 d2GPlfBENaD9vOX+mqmOGj8qhstnjHIkoY8SGOyU=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTP id 524Aw1K5067940;
-	Tue, 4 Mar 2025 04:58:01 -0600
-Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 4
- Mar 2025 04:58:01 -0600
-Received: from fllvsmtp8.itg.ti.com (10.64.41.158) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Tue, 4 Mar 2025 04:58:01 -0600
-Received: from lelv0854.itg.ti.com (lelv0854.itg.ti.com [10.181.64.140])
-	by fllvsmtp8.itg.ti.com (8.15.2/8.15.2) with ESMTP id 524Aw1xq027462;
-	Tue, 4 Mar 2025 04:58:01 -0600
-Received: from localhost (meghana-pc.dhcp.ti.com [10.24.69.13] (may be forged))
-	by lelv0854.itg.ti.com (8.14.7/8.14.7) with ESMTP id 524Aw0DC016815;
-	Tue, 4 Mar 2025 04:58:01 -0600
-From: Meghana Malladi <m-malladi@ti.com>
-To: <javier.carrasco.cruz@gmail.com>, <diogo.ivo@siemens.com>,
-        <m-malladi@ti.com>, <horms@kernel.org>, <richardcochran@gmail.com>,
-        <pabeni@redhat.com>, <kuba@kernel.org>, <edumazet@google.com>,
-        <davem@davemloft.net>, <andrew+netdev@lunn.ch>
-CC: <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <srk@ti.com>,
-        Vignesh Raghavendra
-	<vigneshr@ti.com>,
-        Roger Quadros <rogerq@kernel.org>, <danishanwar@ti.com>
-Subject: [PATCH net-next v4 0/2] Add perout configuration support in IEP driver
-Date: Tue, 4 Mar 2025 16:27:51 +0530
-Message-ID: <20250304105753.1552159-1-m-malladi@ti.com>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1741085910; c=relaxed/simple;
+	bh=DCii+rnTvH4NBAmHMwhIHUi8ysLfX718DpGn3wLPEhY=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=l2N4kV/CBDlhCI7KbL7l96qG9cQND8aE1Ic5Iouu+JNzr0d3YAvGEGdNW/6J0iJzS/rbbr6kNNQokA8PlwunG9+Aw25mJEnOBMoWRYYnQ9irjBSl7ItsxyTvEDi05jl1rhn6miAUttybipTFHg6j66G+BYmVYxU0ERN9CEDxRYk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 04CF1FEC;
+	Tue,  4 Mar 2025 02:58:42 -0800 (PST)
+Received: from usa.arm.com (e133711.arm.com [10.1.196.55])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 186723F5A1;
+	Tue,  4 Mar 2025 02:58:26 -0800 (PST)
+From: Sudeep Holla <sudeep.holla@arm.com>
+To: linux-kernel@vger.kernel.org,
+	Paul Benoit <paul@os.amperecomputing.com>
+Cc: Sudeep Holla <sudeep.holla@arm.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v4] firmware: smccc: Support optional Arm SMC SOC_ID name
+Date: Tue,  4 Mar 2025 10:58:24 +0000
+Message-Id: <174108587625.432485.15057756163207597336.b4-ty@arm.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250219005932.3466-1-paul@os.amperecomputing.com>
+References: <20241114030452.10149-1-paul@os.amperecomputing.com> <20250219005932.3466-1-paul@os.amperecomputing.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-IEP driver supported both perout and pps signal generation
-but perout feature is faulty with half-cooked support
-due to some missing configuration. Hence perout feature is
-removed as a bug fix. This patch series adds back this feature
-which configures perout signal based on the arguments passed
-by the perout request.
+On Tue, 18 Feb 2025 16:59:32 -0800, Paul Benoit wrote:
+> Issue Number 1.6 of the Arm SMC Calling Convention introduces an optional
+> SOC_ID name string.  If implemented, point the 'machine' field of the SoC
+> Device Attributes at this string so that it will appear under
+> /sys/bus/soc/devices/soc0/machine.
+>
+> On Arm SMC compliant SoCs, this will allow things like 'lscpu' to
+> eventually get a SoC provider model name from there rather than each
+> tool/utility needing to get a possibly inconsistent, obsolete, or incorrect
+> model/machine name from its own hardcoded model/machine name table.
+>
+> [...]
 
-This patch series is continuation to the bug fix: 
-https://lore.kernel.org/all/20250227092441.1848419-1-m-malladi@ti.com/
-as suggested by Jakub Kicinski and Jacob Keller:
-https://lore.kernel.org/all/20250220172410.025b96d6@kernel.org/
+Applied to sudeep.holla/linux (for-linux-next), thanks!
 
-v3:https://lore.kernel.org/all/20250303135124.632845-1-m-malladi@ti.com/
-
-Meghana Malladi (2):
-  net: ti: icss-iep: Add pwidth configuration for perout signal
-  net: ti: icss-iep: Add phase offset configuration for perout signal
-
- drivers/net/ethernet/ti/icssg/icss_iep.c | 63 ++++++++++++++++++++++--
- 1 file changed, 59 insertions(+), 4 deletions(-)
-
-
-base-commit: f77f12010f67259bd0e1ad18877ed27c721b627a
--- 
-2.43.0
+[1/1] firmware: smccc: Support optional Arm SMC SOC_ID name
+      https://git.kernel.org/sudeep.holla/c/5f9c23abc477
+--
+Regards,
+Sudeep
 
