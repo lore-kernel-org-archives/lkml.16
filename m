@@ -1,71 +1,116 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from fw2.prolan.hu (fw2.prolan.hu [193.68.50.107])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C69341EE7AD
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 10:02:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDDDB1FC7DF;
+	Tue,  4 Mar 2025 10:03:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.68.50.107
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741082566; cv=none; b=qqtfCARvSPmXKC0vtP4g6vJSQfFjINkpo8k+uUpi3AGg0KXP7eytgAYe3v4NLqCNaArBFfO5xVcbYn+dgKzPYLehectkpcBE99fUNHZZ08OTsE+kX1VSMmLPWFqDSCNquRIix84qZ304z9bmKhwn06SxEbrfjmm8PuCClIUnhvI=
+	t=1741082602; cv=none; b=AncwXXvfdx74XIr5JahljVErbjOc+WjkfgIzrJ/Io2YFqWGFpN8oYQp6h9Z2hVLT3O8mzBZoU09EEG2z4bCDdbJQJgtsixNKzyr74mrKYL89HQdnNmOL3+26WRcBGht4suWFsJruxODdXVkRtRR1ZVyfrS7i1RUm8iyHYKJTM5w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741082566; c=relaxed/simple;
-	bh=a8iZW3dESf47nN3davu8paH2RASSbL3s6A912OEy2ZE=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Dr8TdCfydDvlXTTwX2L/DU96mWRtLSHoq0vE0Y12o0XpHTg1uLakKKzKdP/1Q0pFK8OFgy6Vy2Hq/6AlmRE4D2a0rKCQr1wpj4BQ/kDmyKkyARDGEJrqxMK3s+/fJydUNzues6hanznOQVhTon+xRzzMHhEZRlmbZwFG2eg9e/4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Z6WQQ4HF2z6D8yv;
-	Tue,  4 Mar 2025 18:00:30 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id A5DB6140A08;
-	Tue,  4 Mar 2025 18:02:42 +0800 (CST)
-Received: from localhost (10.96.237.92) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 4 Mar
- 2025 11:02:39 +0100
-Date: Tue, 4 Mar 2025 18:02:35 +0800
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Yicong Yang <yangyicong@huawei.com>
-CC: <will@kernel.org>, <mark.rutland@arm.com>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<prime.zeng@hisilicon.com>, <linuxarm@huawei.com>,
-	<yangyicong@hisilicon.com>, <wangyushan12@huawei.com>
-Subject: Re: [PATCH 5/9] drivers/perf: hisi: Add support for HiSilicon SLLC
- v3 PMU driver
-Message-ID: <20250304180235.00005eb3@huawei.com>
-In-Reply-To: <20250218092000.41641-6-yangyicong@huawei.com>
-References: <20250218092000.41641-1-yangyicong@huawei.com>
-	<20250218092000.41641-6-yangyicong@huawei.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1741082602; c=relaxed/simple;
+	bh=CVVsRwpgc5R7QK8WI97msNJewKlVvoDsd86E8Q1TE9o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=Eu3peGrAVkIoaCOhXw/0YqreRJndfn7GWyNvQeiZpJBLYWyqMLZl6n5umqkesY91CnOBDq9+YjnZq5Jd+TeaAjdpDXFLVCDENGyGhSF+ZNdpPwo/md5T7XBBmYxH/ebnNyWhVKrarZJbHDT1TUbV/qXdWhotAQMyLf4wuD4m2r4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu; spf=pass smtp.mailfrom=prolan.hu; dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b=iWPcUVrs; arc=none smtp.client-ip=193.68.50.107
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=prolan.hu
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b="iWPcUVrs"
+Received: from proxmox-mailgw.intranet.prolan.hu (localhost.localdomain [127.0.0.1])
+	by proxmox-mailgw.intranet.prolan.hu (Proxmox) with ESMTP id DEE8BA0B13;
+	Tue,  4 Mar 2025 11:03:18 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prolan.hu; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:from:from:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to; s=mail; bh=yCqVZdRR3wuwl1YUaUII
+	xJGus32Wsp9w18Z1riLWvQk=; b=iWPcUVrsZN3bKc1ntgJPwKf2w5CUj56/hbM7
+	QbTM7wTdc2PqTyGXYDxpyFRuL7HKhsuf2CspjsWK3k4q8qp4JNAJr75bDJV1AruA
+	vdoxpnNJIcvDofbKCfIb0PNwk6576KEab40UnMwjxMz2U7u91Tv1apoDRSEICMmZ
+	SmtvwO8VTA9JI59X/rhTxpBuXD6bUh0vhvmaMwn8CpNre6BMQdVvKXADMNRzUR8u
+	1OOanzAIDxxVzRtK2iJZi48PcbGCGprEO25Gv/jOK4Vwk+lADW85V6J4z83WDisi
+	NgSvkeX9+imdXHFs8V9N/Rz9SOjN2EHwZY8Clwp/YiBEv7lWEOASFlh2j7iV24FV
+	PvgFtOiiEKW10TZ7ijwr+ME1L7isUDI2KX6NfZ9iaIKoS0fgcL2IGQPzgcS6bdS/
+	plgTAaobgQHr2BO6yj+PP7yxTKkZ0We+M5DmR1V48/i1470CXQTO52RDYLtICj4x
+	MxUK9JhR9tkuO+nALISyoEZasjaTYdNpxYAMc2xZWzR1z1qlzARnJ1Qd/iDuxbfW
+	YbWlN3IOTY3mCP1PEJvNkigPemD+aI2YBdEf5Ur6HfHop/QZ739Aa5CN7iTT+oWa
+	/6EMuk2MaAHIo+29qwGYPxahqlDGbcjQLbc5ab+NjxUA3C3GhwPHsVNRq4EepwX1
+	GUFKdbM=
+Message-ID: <1604dce5-7be6-4a95-a51c-0c760a6c9a76@prolan.hu>
+Date: Tue, 4 Mar 2025 11:03:17 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 3/3] counter: microchip-tcb-capture: Add capture
+ extensions for registers RA/RB
+To: William Breathitt Gray <wbg@kernel.org>
+CC: <linux-arm-kernel@lists.infradead.org>, <linux-iio@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, Kamel Bouhara <kamel.bouhara@bootlin.com>
+References: <20250227144023.64530-1-csokas.bence@prolan.hu>
+ <20250227144023.64530-4-csokas.bence@prolan.hu> <Z8awGBW8obpG1QPN@ishi>
+Content-Language: en-US, hu-HU
+From: =?UTF-8?B?Q3PDs2vDoXMgQmVuY2U=?= <csokas.bence@prolan.hu>
+In-Reply-To: <Z8awGBW8obpG1QPN@ishi>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
- frapeml500008.china.huawei.com (7.182.85.71)
+X-ClientProxiedBy: ATLAS.intranet.prolan.hu (10.254.0.229) To
+ ATLAS.intranet.prolan.hu (10.254.0.229)
+X-EsetResult: clean, is OK
+X-EsetId: 37303A2980D94852637260
 
-On Tue, 18 Feb 2025 17:19:56 +0800
-Yicong Yang <yangyicong@huawei.com> wrote:
+Hi,
 
-> From: Junhao He <hejunhao3@huawei.com>
+On 2025. 03. 04. 8:47, William Breathitt Gray wrote:
+> It's cleaner to exit early on an error than to carry it to the end.
+> Instead of if (!ret), perform an if (ret) return ret to exit early on an
+> error, then simply return 0 at the end of the funtion.
+
+Ok.
+
+> The capture2 extension doesn't exist in this patch so remove this
+> comment line.
 > 
-> SLLC v3 PMU has the following changes compared to previous version:
-> a) update the register layout
-> b) update the definition of SRCID_CTRL and TGTID_CTRL registers.
->    To be compatible with v2, we use maximum width (11 bits)
->    and mask the extra length for themselves.
-> c) remove latency events (driver does not need to be adapted).
+>> @@ -30,6 +33,12 @@ enum counter_mchp_signals {
+>>   	COUNTER_MCHP_SIG_TIOB,
+>>   };
+>>   
+>> +enum counter_mchp_capture_extensions {
+>> +	COUNTER_MCHP_EXCAP_RA,
+>> +	COUNTER_MCHP_EXCAP_RB,
+>> +	COUNTER_MCHP_EXCAP_RC,
+>> +};
 > 
-> SLLC v3 PMU is identified with HID HISI0264.
+> Remove COUNTER_MCHP_EXCAP_RC for the same reason as above.
 > 
-> Signed-off-by: Junhao He <hejunhao3@huawei.com>
-> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
+> Also, I would argue for these to be preprocessor defines rather than
+> enum for the same reasons as in my other review[^1].
 
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Ok.
 
+> One final comment: is RA/RB the best way to differentiate these? One of
+> the benefits of abstraction layers is that users won't need to be
+> concerned about the hardware details, and naming the capture values
+> after their respective general register hardware names feels somewhat
+> antithetic to that end.
+> 
+> I imagine there are better ways to refer to these that would communicate
+> their relationship better, such as "primary capture" and "secondary
+> capture". However at that point capture0 and capture1 would seem
+> obvious enough, in which case you might not even need to expose these to
+> userspace at all.
+
+Hmm. Well, RA and RB is what it says in the datasheet, and since we 
+don't do much processing on their value, I'd say we're still closely 
+coupled to the hardware. So, if one wants to understand what they do, 
+they will have to read the datasheet anyways in which case I think it's 
+best to be consistent with it naming-wise.
+
+> William Breathitt Gray
+> 
+> [^1] https://lore.kernel.org/all/Z8alaOTjZeRuXnUI@ishi/
+
+Bence
 
