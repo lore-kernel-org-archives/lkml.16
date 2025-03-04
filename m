@@ -1,97 +1,242 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f169.google.com (mail-vk1-f169.google.com [209.85.221.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BEEB27E1CB;
-	Tue,  4 Mar 2025 16:21:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB368281518;
+	Tue,  4 Mar 2025 16:22:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741105296; cv=none; b=iJpEbCEygR/scHhcLmXWF4Ex2ln00CoBt00osSb5UkXf53aD9ly3ey01L70MbxLKgIRsGISdi9KyRGTB+fmaiCRukKM9NDPHr+BjQDFRAsP4gRqAhJ3xsB8A9Waf3NYk8iGImyDV91EoK6Q209MBCYJNLf644RHyKglp6TEQd6I=
+	t=1741105328; cv=none; b=cVx02hQzOdoAR+ukdZi+i6GT7oZDyNe+3Y/S9chfPsu5kT5wHMSzbc1B78uPMewaIUiECPpLZokxyNV+zYZNDM/MRKNpdH2MI+hqKda3xQmOPIzU75DIY4QOATZV1ieceTSNOZ25WMoxTghElje5tEK7ynJffd4jUrHpBsdl7x8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741105296; c=relaxed/simple;
-	bh=bc8CyVVuLt3oGJmPTQJvLeVvGjaXfhqYN4p17Tr9h0I=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=Cc2nzHt+742aWZHzKMkRO58gr3dPpmfWX8guNiYYfmaTMN/YOpS/0GCYhZUVaJVQiTEKObBZY5EzwlAEeCjZzT9f/I7yklzY7yWNB5fgukYM7r1zmZBBNT/FpcxJg70GYQGpstvy1HnXIOEJk8hkubl1kT2KBKRvG7DRMN3cpTA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ARmCPjPb; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741105328; c=relaxed/simple;
+	bh=dviPh+42KoycBzS0P0x0jxsFFo479CeZTs8Ts35taFI=;
+	h=Mime-Version:Content-Type:Date:Message-Id:From:To:Cc:Subject:
+	 References:In-Reply-To; b=A5pnvxBtlMmNn4WAu+uTJpHHwAn4vjxzwZYm+iFiz9ecim5HRISjxrAt+B/onLhrxokUOedl+P/CAUYNoW7DMiznbQ5dMHkmo93ZjvDQh4yYvcuy3jEan5p04Ff7i5hw7hlfZVOqfMSyym6L0n3Fgez2Z3K0LkGI4padLHrHCeM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BOuFTp3O; arc=none smtp.client-ip=209.85.221.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ARmCPjPb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D93DC4CEE5;
-	Tue,  4 Mar 2025 16:21:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741105295;
-	bh=bc8CyVVuLt3oGJmPTQJvLeVvGjaXfhqYN4p17Tr9h0I=;
-	h=From:To:Cc:Subject:Date:From;
-	b=ARmCPjPblU7rstfp5DSTmsM3C3brZCeau2qx+PnequBW2x47B7CZE/Cc2C2KUWCJv
-	 05TYamAexDG1PuLSJdolDT843q1OLdDPGtT3X5bV/4/rMNQZHX9h9gQwQ3j4PQNciV
-	 hHGf6rhSRLp3Y040BJXgFZPo8qbTNwvrGCLfeDRJ2WFHmXgAiziVVLHhqsIVhG4/Mz
-	 RNfutL9E/dagWeizM0k1sYEHLLCTM+1yCMgVuVVhiYBAReUhe/P/67bQ2huMZcXhOF
-	 iORiKDACCbyFG0S+SYamKTbM1hGQUi6zEbkmJd3T1XUVespy240cWg312Nf2/wkLef
-	 jkNlOcdnmXqcA==
-From: Kees Cook <kees@kernel.org>
-To: Nathan Chancellor <nathan@kernel.org>
-Cc: Kees Cook <kees@kernel.org>,
-	=?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Nicolas Schier <nicolas@fjasle.eu>,
-	llvm@lists.linux.dev,
-	linux-kbuild@vger.kernel.org,
-	David Gow <davidgow@google.com>,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH v2] kbuild: clang: Support building UM with SUBARCH=i386
-Date: Tue,  4 Mar 2025 08:21:29 -0800
-Message-Id: <20250304162124.it.785-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BOuFTp3O"
+Received: by mail-vk1-f169.google.com with SMTP id 71dfb90a1353d-51eb1a6954cso2416934e0c.0;
+        Tue, 04 Mar 2025 08:22:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741105326; x=1741710126; darn=vger.kernel.org;
+        h=in-reply-to:references:subject:cc:to:from:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=H/bhrzGwd5X29SdwMkugukVNon30coMwi2kUCBkMu54=;
+        b=BOuFTp3OoP8mXYmrTge99lW1UGrBg7efaCz/NRQUWE48Zumoq9+7ZfiI1v1p07Liz3
+         ML9ARGW5BKR1jgY/XG3GoEEcQXcurT+L5mq8QJQ1Jwmaq9AYwzC4SLPKtAuT5uGg/ZVG
+         EcYK5Ds3UjzsX/Eumc68vldYmq8nj9qTjfkt1sJHZv01Mbv9aWlujwvIwZD2Ii5R98Va
+         M4vFxELkGwDmLgVNp9QjTxLoMDLA6AGfYD96HhTNlMZgHOpuRycZoB+Tgkf/2AUaxZzb
+         qw9HjOx3cM7X6cYKDV9LF6ZuxrjnERJdFPCF/9Tf4JJ+8pj86BPBZlMvD4RFnwRQS/9d
+         F1+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741105326; x=1741710126;
+        h=in-reply-to:references:subject:cc:to:from:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=H/bhrzGwd5X29SdwMkugukVNon30coMwi2kUCBkMu54=;
+        b=KzXxwYcouILJRkz4yfbwp5bXYlZulJCAz5Yo1p+KFfcF1dolZtKB9REuYBfdSPHP6a
+         E7dkOs2GGrAm+ifi7UHTKE/o1yiGallT/2ZADwplWzz1ub0OBe/RNC3xXZW7IyV3fKhk
+         LHXWW9AQJ9VNMuipEor7L2TYJgFPGL+0a7K7g2Lcdg6x8TG9me88cwlXPQczCnPayHU6
+         h88RI9eABAPDSIzbCzydKb1ZWDIZ5AUo0rb/M/i4rRE6TAOsmQQxDUGMUVNnxrmKLsBn
+         DnDb2UC0HU/IM45upmC+jKH3gV3g5aeF7OBN9TZfE5+KQGyi+Bmij3mR1S6TdBVPQFyK
+         rYKw==
+X-Forwarded-Encrypted: i=1; AJvYcCWORPahlxemdBOPOjv+evzExwbYFNJao61bJ0ohMyBOHe9shTfqmlzrMp2O7dMrLGxzwPjohdqP2ezhf2RSxD/B3I7Mvg==@vger.kernel.org, AJvYcCWpk6h20+psi5HVO4o6KWki6I++mdAMRJganAtba50BsSm1XXa98kQeMOdYHemPfjEzTY03RZUlMnmc708=@vger.kernel.org
+X-Gm-Message-State: AOJu0YziUuw4yn8sH3klKvY0F1NHaHbpwnZpLe+pfshf981SplJPmxmz
+	rkjF4c7LL6LWpnpFRBZDQS+leXcTSw4CUE8lmTFHKBBHLbNeigZy
+X-Gm-Gg: ASbGncvRZX2BtORqcrwokXZETmgigJu44kCgurJhUdeAhBqLWmCdwDbGJvw2Smn0va/
+	8HpFyxtTBikg5UkDHoFhkn/W/YZ82VQ6X5kyjmsiemRI1ygNjHjsli3TXWmdOFZgeQt5ffSNuNK
+	2R9KK3eBlKDkZtqHvna99+zVQl+6EcURJWEwKQCfL8lCq3u62XMnhzlu+kkGU+AnCHwL2NGoln2
+	dzTwNqYcTmgKBj9XLZpaj48WQR/Q8zckotaA0cRF9sHT6B2DM+WnFxwFf16gay7E4R+Zi9WDU7n
+	puixlnIUD9R8yAJzDd4wXYcSP6KiTtZpSZo7
+X-Google-Smtp-Source: AGHT+IE51PVYwuWufjYOalEz7R/cxgRfitr4ISd0OVo95G1XYW9cdSzyvl5qGARQDcc9tUw5XpQoUg==
+X-Received: by 2002:a05:6122:8293:b0:518:a261:adca with SMTP id 71dfb90a1353d-5235b8a9ec2mr9971861e0c.8.1741105325721;
+        Tue, 04 Mar 2025 08:22:05 -0800 (PST)
+Received: from localhost ([2800:bf0:82:3d2:9e61:1a62:1a8c:3e62])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-5237ada4179sm1222349e0c.16.2025.03.04.08.22.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 04 Mar 2025 08:22:04 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1450; i=kees@kernel.org; h=from:subject:message-id; bh=bc8CyVVuLt3oGJmPTQJvLeVvGjaXfhqYN4p17Tr9h0I=; b=owGbwMvMwCVmps19z/KJym7G02pJDOnHNTqq5849/mGx2sxDL34eW9Nl9KFx/32u5lVvJsds1 cuy3fKgqKOUhUGMi0FWTJElyM49zsXjbXu4+1xFmDmsTCBDGLg4BWAiE18xMnSpyJ3/umn2ktki K3pS3HuXvV0brBSR+VQtWn3efJ/CmXsYGe7uSJ/pq/JA4nfe9HpRa+OX1q++PPk2X3UeM09QwxL p69wA
-X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Date: Tue, 04 Mar 2025 11:22:02 -0500
+Message-Id: <D87MBR4SSJWW.3KZ1U09AVISKR@gmail.com>
+From: "Kurt Borja" <kuurtb@gmail.com>
+To: =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: "Armin Wolf" <W_Armin@gmx.de>, <platform-driver-x86@vger.kernel.org>,
+ "Hans de Goede" <hdegoede@redhat.com>, <Dell.Client.Kernel@dell.com>,
+ "LKML" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 05/10] platform/x86: alienware-wmi-wmax: Improve
+ platform profile probe
+X-Mailer: aerc 0.20.1-0-g2ecb8770224a
+References: <20250225222500.23535-1-kuurtb@gmail.com>
+ <20250225222500.23535-6-kuurtb@gmail.com>
+ <6f61f7dc-d5b8-7d61-c200-9c2c1ff2be7c@linux.intel.com>
+In-Reply-To: <6f61f7dc-d5b8-7d61-c200-9c2c1ff2be7c@linux.intel.com>
 
-The UM builds distinguish i386 from x86_64 via SUBARCH, but we don't
-support building i386 directly with Clang. To make SUBARCH work for
-i386 UM, we need to explicitly test for it.
+On Tue Mar 4, 2025 at 10:40 AM -05, Ilpo J=C3=A4rvinen wrote:
+> On Tue, 25 Feb 2025, Kurt Borja wrote:
+>
+>> Get and store the AWCC system description in alienware_awcc_setup()
+>> instead of awcc_platform_profile_probe() and add a check for integer
+>> overflows to avoid misbehaviors.
+>>=20
+>> While at it, replace set_bit() with it's non-atomic version __set_bit()
+>> because `choices` belong to this thread only.
+>>=20
+>> Signed-off-by: Kurt Borja <kuurtb@gmail.com>
+>> Reviewed-by: Armin Wolf <W_Armin@gmx.de>
+>> ---
+>>  .../platform/x86/dell/alienware-wmi-wmax.c    | 61 ++++++++++++++-----
+>>  1 file changed, 46 insertions(+), 15 deletions(-)
+>>=20
+>> diff --git a/drivers/platform/x86/dell/alienware-wmi-wmax.c b/drivers/pl=
+atform/x86/dell/alienware-wmi-wmax.c
+>> index 4a8335d90b5d..965b427f8f0a 100644
+>> --- a/drivers/platform/x86/dell/alienware-wmi-wmax.c
+>> +++ b/drivers/platform/x86/dell/alienware-wmi-wmax.c
+>> @@ -37,6 +37,9 @@
+>>  #define AWCC_THERMAL_MODE_MASK			GENMASK(3, 0)
+>>  #define AWCC_RESOURCE_ID_MASK			GENMASK(7, 0)
+>> =20
+>> +/* Arbitrary limit based on supported models */
+>> +#define AWCC_MAX_RES_COUNT			16
+>> +
+>>  static bool force_platform_profile;
+>>  module_param_unsafe(force_platform_profile, bool, 0);
+>>  MODULE_PARM_DESC(force_platform_profile, "Forces auto-detecting thermal=
+ profiles without checking if WMI thermal backend is available");
+>> @@ -211,6 +214,17 @@ struct wmax_u32_args {
+>> =20
+>>  struct awcc_priv {
+>>  	struct wmi_device *wdev;
+>> +	union {
+>> +		u32 system_description;
+>> +		struct {
+>> +			u8 fan_count;
+>> +			u8 temp_count;
+>> +			u8 unknown_count;
+>> +			u8 profile_count;
+>> +		} __packed;
+>> +		u8 res_count[4];
+>> +	} __packed;
+>
+> I don't like it how __packed is now creeping its way into priv structure=
+=20
+> too. It doesn't even seem useful in this case as all those are naturally=
+=20
+> aligned and take 4 bytes, AFAICT. Why did you add it?
 
-This lets me run i386 KUnit tests with Clang:
+You are right, I think alignment here is already guaranteed. Alignment
+is still a bit confusing for me.
 
-$ ./tools/testing/kunit/kunit.py run \
-	--make_options LLVM=1 \
-	--make_options SUBARCH=i386
-...
+I'll drop it for v3.
 
-Fixes: c7500c1b53bf ("um: Allow builds with Clang")
-Signed-off-by: Kees Cook <kees@kernel.org>
----
-Cc: Nathan Chancellor <nathan@kernel.org>
-Cc: Thomas Weißschuh <linux@weissschuh.net>
-Cc: Bill Wendling <morbo@google.com>
-Cc: Justin Stitt <justinstitt@google.com>
-Cc: Masahiro Yamada <masahiroy@kernel.org>
-Cc: Nicolas Schier <nicolas@fjasle.eu>
-Cc: llvm@lists.linux.dev
-Cc: linux-kbuild@vger.kernel.org
----
- scripts/Makefile.clang | 2 ++
- 1 file changed, 2 insertions(+)
+--=20
+ ~ Kurt
 
-diff --git a/scripts/Makefile.clang b/scripts/Makefile.clang
-index 2435efae67f5..b67636b28c35 100644
---- a/scripts/Makefile.clang
-+++ b/scripts/Makefile.clang
-@@ -12,6 +12,8 @@ CLANG_TARGET_FLAGS_riscv	:= riscv64-linux-gnu
- CLANG_TARGET_FLAGS_s390		:= s390x-linux-gnu
- CLANG_TARGET_FLAGS_sparc	:= sparc64-linux-gnu
- CLANG_TARGET_FLAGS_x86		:= x86_64-linux-gnu
-+# This is only for i386 UM builds, which need the 32-bit target not -m32
-+CLANG_TARGET_FLAGS_i386		:= i386-linux-gnu
- CLANG_TARGET_FLAGS_um		:= $(CLANG_TARGET_FLAGS_$(SUBARCH))
- CLANG_TARGET_FLAGS		:= $(CLANG_TARGET_FLAGS_$(SRCARCH))
- 
--- 
-2.34.1
+>
+>> +
+>>  	struct device *ppdev;
+>>  	u8 supported_profiles[PLATFORM_PROFILE_LAST];
+>>  };
+>> @@ -614,38 +628,41 @@ static int awcc_platform_profile_probe(void *drvda=
+ta, unsigned long *choices)
+>>  	enum platform_profile_option profile;
+>>  	struct awcc_priv *priv =3D drvdata;
+>>  	enum awcc_thermal_profile mode;
+>> -	u8 sys_desc[4];
+>> -	u32 first_mode;
+>> +	u8 id, offset =3D 0;
+>>  	u32 out_data;
+>>  	int ret;
+>> -	u8 id;
+>> =20
+>> -	ret =3D awcc_thermal_information(priv->wdev, AWCC_OP_GET_SYSTEM_DESCRI=
+PTION,
+>> -				       0, (u32 *) &sys_desc);
+>> -	if (ret < 0)
+>> -		return ret;
+>> -
+>> -	first_mode =3D sys_desc[0] + sys_desc[1];
+>> -
+>> -	for (u32 i =3D 0; i < sys_desc[3]; i++) {
+>> -		ret =3D awcc_op_get_resource_id(priv->wdev, i + first_mode, &out_data=
+);
+>> +	/*
+>> +	 * Thermal profile IDs are listed last at offset
+>> +	 *	fan_count + temp_count + unknown_count
+>> +	 */
+>> +	for (unsigned int i =3D 0; i < ARRAY_SIZE(priv->res_count) - 1; i++)
+>> +		offset +=3D priv->res_count[i];
+>> =20
+>> +	for (unsigned int i =3D 0; i < priv->profile_count; i++) {
+>> +		ret =3D awcc_op_get_resource_id(priv->wdev, i + offset, &out_data);
+>>  		if (ret =3D=3D -EIO)
+>>  			return ret;
+>> =20
+>> +		/*
+>> +		 * Some devices report an incorrect number of thermal profiles
+>> +		 * so the resource ID list may end prematurely
+>> +		 */
+>>  		if (ret =3D=3D -EBADRQC)
+>>  			break;
+>> =20
+>>  		/* Some IDs have a BIT(8) flag that should be ignored */
+>>  		id =3D FIELD_GET(AWCC_RESOURCE_ID_MASK, out_data);
+>> -		if (!is_awcc_thermal_profile_id(id))
+>> +		if (!is_awcc_thermal_profile_id(id)) {
+>> +			dev_dbg(&priv->wdev->dev, "Unmapped thermal profile ID 0x%02x\n", id=
+);
+>>  			continue;
+>> +		}
+>> =20
+>>  		mode =3D FIELD_GET(AWCC_THERMAL_MODE_MASK, id);
+>>  		profile =3D awcc_mode_to_platform_profile[mode];
+>>  		priv->supported_profiles[profile] =3D id;
+>> =20
+>> -		set_bit(profile, choices);
+>> +		__set_bit(profile, choices);
+>>  	}
+>> =20
+>>  	if (bitmap_empty(choices, PLATFORM_PROFILE_LAST))
+>> @@ -655,7 +672,7 @@ static int awcc_platform_profile_probe(void *drvdata=
+, unsigned long *choices)
+>>  		priv->supported_profiles[PLATFORM_PROFILE_PERFORMANCE] =3D
+>>  			AWCC_THERMAL_MODE_GMODE;
+>> =20
+>> -		set_bit(PLATFORM_PROFILE_PERFORMANCE, choices);
+>> +		__set_bit(PLATFORM_PROFILE_PERFORMANCE, choices);
+>>  	}
+>> =20
+>>  	return 0;
+>> @@ -686,6 +703,20 @@ static int alienware_awcc_setup(struct wmi_device *=
+wdev)
+>>  	if (!priv)
+>>  		return -ENOMEM;
+>> =20
+>> +	ret =3D awcc_thermal_information(wdev, AWCC_OP_GET_SYSTEM_DESCRIPTION,
+>> +				       0, &priv->system_description);
+>> +	if (ret < 0)
+>> +		return ret;
+>> +
+>> +	/* Sanity check */
+>> +	for (unsigned int i =3D 0; i < ARRAY_SIZE(priv->res_count); i++) {
+>> +		if (priv->res_count[i] > AWCC_MAX_RES_COUNT) {
+>> +			dev_err(&wdev->dev, "Malformed system description: 0x%08x\n",
+>> +				priv->system_description);
+>> +			return -ENXIO;
+>> +		}
+>> +	}
+>> +
+>>  	priv->wdev =3D wdev;
+>>  	dev_set_drvdata(&wdev->dev, priv);
+>> =20
+>>=20
 
