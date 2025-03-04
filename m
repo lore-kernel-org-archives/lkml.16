@@ -1,188 +1,110 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from vps-ovh.mhejs.net (vps-ovh.mhejs.net [145.239.82.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEA3126036C;
-	Tue,  4 Mar 2025 14:59:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A6C623A9AE;
+	Tue,  4 Mar 2025 14:59:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=145.239.82.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741100348; cv=none; b=bdsAmrD1fp2S03KujFAuDmWl4icvDVgeq4RVSkuKkbZT5UNreIHfzp9/n+mxzOLRKLkdFW83LF1prJMeB93XPhkgcHCwH8Bgmss/ZyCNatfnWb/oQ44tWJhWUL8i+mvqbHkjsXdYuglSj4YD3bt48blSPTjNZhs5EaWxSK3r2Gc=
+	t=1741100352; cv=none; b=KXmr+NSAEjfKjmH5P7BtLA34irzhgRrh/SeNnVWIckd8U+kqbKj9Sd9b0aiBQwNfF0VdJCBHGua99XyCe9mUp1f5duQ1QJqXdxKiyTejjG106SOCGXDYJ75+ozpf04mTUGyh4ZBtJiUfbFbJgYzm89BCTCrVmhN5ZY099se9Zgo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741100348; c=relaxed/simple;
-	bh=BJioHZs7npMxT1EZrWhLh92wotTsWQ13abN3EvOE9RE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CFyXReRaLD8BsiorlGK04XTIS5KS8q/vo67wYxP19gsHQHEaRNtVaXE5G3J/PD6ZJpE0hLJjZC5jY+0zebDWEi3kd9+rn32mEURr0vpJc4k+aR88QnhNy3q69EOd0NrucwBrz1Mj1s+4I+LY1SdpeQMp4FEbbkhgvp+pwGvKWfM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uRJTmVKU; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uRJTmVKU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52421C4CEF2;
-	Tue,  4 Mar 2025 14:59:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741100347;
-	bh=BJioHZs7npMxT1EZrWhLh92wotTsWQ13abN3EvOE9RE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=uRJTmVKUDQ70Nt7Z+2CFBjqCqUXW2AXR7ZZFQpBN6LtvhUk9WUxZNmGl3qEGdgVA8
-	 34ppa/Sm9DaMEcoD0ZhTIfBaYBZNiG08JQdqB7hQis1Inn05liKHh6JjPUnya1/DnM
-	 mVmwlOBLT+d6641L1lQkRtuRrenX0H0kCkgjzjIwBQzWja5eLAFMJln9CYS5Rk7Yjj
-	 /8qGYpuJGF+kzDKymQ4r5yqOUt2WmPZ76zV5u0ykeJEoQCrBLzJ/Vythn9FzMp7N18
-	 9VIOnrrOb7NFreHZpzuhIEY9oKPpAqSG8Xg4zu1O+WqUminhYQ9GzjBYF7wjVP5Drk
-	 GLdoqmOE4gQ8Q==
-Received: by mail-oo1-f43.google.com with SMTP id 006d021491bc7-5fcc45803easo1330120eaf.3;
-        Tue, 04 Mar 2025 06:59:07 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUmpQlLAh8nYuZuoIEaZ+ikq7a7vaBa3NJCHmwGTgYFHbPNV1BfGd5zYgwLN8K+sj+FckJWN2RQxQ98TnGyAzu3TLgR9g==@vger.kernel.org, AJvYcCWKUUk0GWVG5D5mFeH2PJGVJyAV7MCGvbYeUVrf0iclQl3FYmAmaa4jlUwzn38bHPGx9zmgbAyEK7mM@vger.kernel.org, AJvYcCXaQKGe0uJ+SrLDlY0dUKea3+Fq/oGZ9TULZ6tI+HtfV+5+NkmbI4IfC5hlc0JIm0B3m5OpOz5rrJikl7Al@vger.kernel.org
-X-Gm-Message-State: AOJu0YwQQElC5qAFaRfudnnidDAjz6bTPAWN4je3wS4eTcJGHbEy6u3Y
-	JLaITwSrYM69sjpKrmcmaH4zMcSh+XsRHB5lK5QCzZBn1Zz53fxtrVDrGGXfzTti250pzzk3ZyA
-	F/QPd1r2OqQYgv6I1Zj5oUmtEBRM=
-X-Google-Smtp-Source: AGHT+IHV4OYxfCU/t1WTUxkTaNo8H8GNLQAFxAAet6Nu+4CwM7JxdLruJtd4pXXPuDqTQMQDQdHOE7tLLv9Xo98895g=
-X-Received: by 2002:a05:6820:1629:b0:5fd:b85:9b47 with SMTP id
- 006d021491bc7-5feb349ece4mr9806448eaf.1.1741100346518; Tue, 04 Mar 2025
- 06:59:06 -0800 (PST)
+	s=arc-20240116; t=1741100352; c=relaxed/simple;
+	bh=UClmafexKg6NNUTLIrpb/B8GK548EN1DK2RtSIjCdMI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=K6/VWHMsrV1+C4ae/Etuk5rNW6Zy4MOkmpc5J7gsiMVt8BUXyV2nIxYFWsisn07zUj39usEPIyz/2C+8pfr7mv5xJOAeg6WlfBsYAwoGVFzvKD3iBajqgO+xVWv4GVDs2qPIu8chTUn68gLsSL6abYy88Kf0o2uttxoJco1WNcQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=maciej.szmigiero.name; spf=pass smtp.mailfrom=vps-ovh.mhejs.net; arc=none smtp.client-ip=145.239.82.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=maciej.szmigiero.name
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vps-ovh.mhejs.net
+Received: from MUA
+	by vps-ovh.mhejs.net with esmtpsa  (TLS1.3) tls TLS_AES_128_GCM_SHA256
+	(Exim 4.98)
+	(envelope-from <mhej@vps-ovh.mhejs.net>)
+	id 1tpSfV-00000000KXK-3XMb;
+	Tue, 04 Mar 2025 14:50:45 +0100
+Message-ID: <2fd13fdb-1d62-4d76-a8a0-c63fb0575fb7@maciej.szmigiero.name>
+Date: Tue, 4 Mar 2025 14:50:40 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250304064745.1073770-1-superm1@kernel.org> <20250304064745.1073770-2-superm1@kernel.org>
- <CAGwozwHniWGQ7qK6FYD_WK5zNjkro7-Q1nTcFPAuWDt9UQ+noA@mail.gmail.com>
- <23d6c735-e94f-4d43-87b0-ff119941fcac@kernel.org> <CAJZ5v0geaYYRQm0Hs2M4ak_8AZoWLJS-v0jqyrsaVjmXk267rA@mail.gmail.com>
- <71b14dc3-77e1-4fd7-b576-821e3a41ba19@kernel.org>
-In-Reply-To: <71b14dc3-77e1-4fd7-b576-821e3a41ba19@kernel.org>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Tue, 4 Mar 2025 15:58:55 +0100
-X-Gmail-Original-Message-ID: <CAJZ5v0hNHFLtBwTTuPc7mNZhCKkmFJgFwgw88_BR_7nQ+rc6Cw@mail.gmail.com>
-X-Gm-Features: AQ5f1JqiU1riY6PdY3kp9Y6wKkJOdtqDzvJA_a9LeLoMMba-AYmBjxoxf4Tpjjg
-Message-ID: <CAJZ5v0hNHFLtBwTTuPc7mNZhCKkmFJgFwgw88_BR_7nQ+rc6Cw@mail.gmail.com>
-Subject: Re: [PATCH v2 1/1] ACPI: platform_profile: Treat quiet and low power
- the same
-To: Mario Limonciello <superm1@kernel.org>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Antheas Kapenekakis <lkml@antheas.dev>, Kurt Borja <kuurtb@gmail.com>, 
-	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, Hans de Goede <hdegoede@redhat.com>, 
-	"Luke D . Jones" <luke@ljones.dev>, Mark Pearson <mpearson-lenovo@squebb.ca>, 
-	"open list:AMD PMF DRIVER" <platform-driver-x86@vger.kernel.org>, 
-	open list <linux-kernel@vger.kernel.org>, 
-	"open list:ACPI" <linux-acpi@vger.kernel.org>, "Derek J . Clark" <derekjohn.clark@gmail.com>, 
-	me@kylegospodneti.ch, Denis Benato <benato.denis96@gmail.com>, 
-	Mario Limonciello <mario.limonciello@amd.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: QEMU's Hyper-V HV_X64_MSR_EOM is broken with split IRQCHIP
+To: Vitaly Kuznetsov <vkuznets@redhat.com>,
+ Sean Christopherson <seanjc@google.com>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Paolo Bonzini <pbonzini@redhat.com>, Peter Xu <peterx@redhat.com>
+References: <Z8ZBzEJ7--VWKdWd@google.com> <87ikoposs6.fsf@redhat.com>
+Content-Language: en-US, pl-PL
+From: "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>
+Autocrypt: addr=mail@maciej.szmigiero.name; keydata=
+ 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
+In-Reply-To: <87ikoposs6.fsf@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Sender: mhej@vps-ovh.mhejs.net
 
-On Tue, Mar 4, 2025 at 3:52=E2=80=AFPM Mario Limonciello <superm1@kernel.or=
-g> wrote:
->
-> On 3/4/2025 08:08, Rafael J. Wysocki wrote:
-> > On Tue, Mar 4, 2025 at 1:49=E2=80=AFPM Mario Limonciello <superm1@kerne=
-l.org> wrote:
-> >>
-> >> On 3/4/25 02:38, Antheas Kapenekakis wrote:
-> >>> On Tue, 4 Mar 2025 at 07:48, Mario Limonciello <superm1@kernel.org> w=
-rote:
-> >>>>
-> >>>> From: Mario Limonciello <mario.limonciello@amd.com>
-> >>>>
-> >>>> When two drivers don't support all the same profiles the legacy inte=
-rface
-> >>>> only exports the common profiles.
-> >>>>
-> >>>> This causes problems for cases where one driver uses low-power but a=
-nother
-> >>>> uses quiet because the result is that neither is exported to sysfs.
-> >>>>
-> >>>> If one platform profile handler supports quiet and the other
-> >>>> supports low power treat them as the same for the purpose of
-> >>>> the sysfs interface.
-> >>>>
-> >>>> Fixes: 688834743d67 ("ACPI: platform_profile: Allow multiple handler=
-s")
-> >>>> Reported-by: Antheas Kapenekakis <lkml@antheas.dev>
-> >>>> Closes: https://lore.kernel.org/platform-driver-x86/e64b771e-3255-42=
-ad-9257-5b8fc6c24ac9@gmx.de/T/#mc068042dd29df36c16c8af92664860fc4763974b
-> >>>> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
-> >>>> ---
-> >>>>    drivers/acpi/platform_profile.c | 38 ++++++++++++++++++++++++++++=
-++---
-> >>>>    1 file changed, 35 insertions(+), 3 deletions(-)
-> >>>>
-> >>>> diff --git a/drivers/acpi/platform_profile.c b/drivers/acpi/platform=
-_profile.c
-> >>>> index 2ad53cc6aae53..d9a7cc5891734 100644
-> >>>> --- a/drivers/acpi/platform_profile.c
-> >>>> +++ b/drivers/acpi/platform_profile.c
-> >>>> @@ -73,8 +73,20 @@ static int _store_class_profile(struct device *de=
-v, void *data)
-> >>>>
-> >>>>           lockdep_assert_held(&profile_lock);
-> >>>>           handler =3D to_pprof_handler(dev);
-> >>>> -       if (!test_bit(*bit, handler->choices))
-> >>>> -               return -EOPNOTSUPP;
-> >>>> +       if (!test_bit(*bit, handler->choices)) {
-> >>>> +               switch (*bit) {
-> >>>> +               case PLATFORM_PROFILE_QUIET:
-> >>>> +                       *bit =3D PLATFORM_PROFILE_LOW_POWER;
-> >>>> +                       break;
-> >>>> +               case PLATFORM_PROFILE_LOW_POWER:
-> >>>> +                       *bit =3D PLATFORM_PROFILE_QUIET;
-> >>>> +                       break;
-> >>>> +               default:
-> >>>> +                       return -EOPNOTSUPP;
-> >>>> +               }
-> >>>> +               if (!test_bit(*bit, handler->choices))
-> >>>> +                       return -EOPNOTSUPP;
-> >>>> +       }
-> >>>>
-> >>>>           return handler->ops->profile_set(dev, *bit);
-> >>>>    }
-> >>>> @@ -252,8 +264,16 @@ static int _aggregate_choices(struct device *de=
-v, void *data)
-> >>>>           handler =3D to_pprof_handler(dev);
-> >>>>           if (test_bit(PLATFORM_PROFILE_LAST, aggregate))
-> >>>>                   bitmap_copy(aggregate, handler->choices, PLATFORM_=
-PROFILE_LAST);
-> >>>> -       else
-> >>>> +       else {
-> >>>> +               /* treat quiet and low power the same for aggregatio=
-n purposes */
-> >>>> +               if (test_bit(PLATFORM_PROFILE_QUIET, handler->choice=
-s) &&
-> >>>> +                   test_bit(PLATFORM_PROFILE_LOW_POWER, aggregate))
-> >>>> +                       set_bit(PLATFORM_PROFILE_QUIET, aggregate);
-> >>>> +               else if (test_bit(PLATFORM_PROFILE_LOW_POWER, handle=
-r->choices) &&
-> >>>> +                        test_bit(PLATFORM_PROFILE_QUIET, aggregate)=
-)
-> >>>> +                       set_bit(PLATFORM_PROFILE_LOW_POWER, aggregat=
-e);
-> >>>>                   bitmap_and(aggregate, handler->choices, aggregate,=
- PLATFORM_PROFILE_LAST);
-> >>>> +       }
-> >>>
-> >>> So you end up showing both? If that's the case, isn't it equivalent t=
-o
-> >>> just make amd-pmf show both quiet and low-power?
-> >>>
-> >>> I guess it is not ideal for framework devices. But if asus devices en=
-d
-> >>> up showing both, then it should be ok for framework devices to show
-> >>> both.
-> >>>
-> >>> I like the behavior of the V1 personally.
-> >>
-> >> No; this doesn't cause it to show both.  It only causes one to show up=
-.
-> >
-> > Which may not be the one that was shown before IIUC and that's not good=
-.
-> >
-> > What actually is the problem with the previous version?
->
-> Functionally?  Nothing.  This was to demonstrate the other way to do it
-> that I preferred and get feedback on it as an alternative.
->
-> If you and Ilpo are happy with v1 that's totally fine and we can go with
-> that.
+On 4.03.2025 13:59, Vitaly Kuznetsov wrote:
+> Sean Christopherson <seanjc@google.com> writes:
+> 
+>> FYI, QEMU's Hyper-V emulation of HV_X64_MSR_EOM has been broken since QEMU commit
+>> c82d9d43ed ("KVM: Kick resamplefd for split kernel irqchip"), as nothing in KVM
+>> will forward the EOM notification to userspace.  I have no idea if anything in
+>> QEMU besides hyperv_testdev.c cares.
+> 
+> The only VMBus device in QEMU besides the testdev seems to be Hyper-V
+> ballooning driver, Cc: Maciej to check whether it's a real problem for
+> it or not.
 
-I'd prefer to go for the v1 at this point because it fixes a
-regression affecting user space that needs to be addressed before the
-6.14 release (and there is not too much time left) and it has been
-checked on the affected systems.
+I just did a quick check on a hv-balloon Windows 2019 setup that I had on hand
+and it seems to work with "kernel-irqchip=split" the same correct way as without
+this option (which AFAIK is kernel-irqchip=on for q35 machine type).
 
-Ilpo, do you agree?
+So at least this Windows version and its VMBus client driver seem to not be
+affected by this issue.
+
+Will try to look at this deeper in coming time as I am fairly busy right now
+with QEMU live migration stuff before the code freeze soon.
+
+Thanks,
+Maciej
+
