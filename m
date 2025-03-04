@@ -1,100 +1,64 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B50EC207A1D;
-	Tue,  4 Mar 2025 18:21:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C2B027CCFA;
+	Tue,  4 Mar 2025 18:23:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741112494; cv=none; b=id8mSzQhEJ525oEr6t3pUDN+WfeuOMCEYON25gnX8dzICr0Ywd+WKIFTqrrygRkYwCAVjnhNsFd/hm0OppfnS1LHHE94CxM39CJd6ZD37S8euJ6nQ/wPqX9sq7kksfgRmII8JxVnOuKYd/tIhx+G+SlQs0uL3upO9IdFN8rmJVM=
+	t=1741112601; cv=none; b=ryQOO2tNn4JH+CvfJw8LmCE37jwv0DdYv5Py6cihTfHlhdmbHYMBLOwYn4ZvIJ0mvXPOgJbJvpBrEwLIz6OLVP0iC/MfRkbTszUC0Gbgk9Ch5Kbe89vYZEQVJRhIeyRe18Et4mJtmGabVPj8RURWR35GArmTxgrUeVguhjoDt1Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741112494; c=relaxed/simple;
-	bh=za0SuWLRhElff/bceu6BDxVrKjWckpBw7aqLeA2sbyc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lzSGhK9y6yJ68tYTqcTvG74b8k5Ql9rbhbBsNb9h7ZQ2uKw23e200FvjjqG3uycdYGOhN06pNMc6CpQxm7AoE9InugGI4u+OkyeeOKtHr4LpvWdgjPDo387kjYYMZDLTB8Zf5lvUiai1IwedLSgttAZ6JHFYTTqdYbrww8fKQsU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LyDJn9iT; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741112601; c=relaxed/simple;
+	bh=yqSfurqo9uz0GCjH+gfSO/8lIK5tXDomfIJ4KbPJeF0=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=RX5oNaMqWUiR/zRPOZS9QxY1/160ryVmjGMSSL2njSgiJlaUNStsvYVyDMtp700os2DIK45YVIF6d7cmqQC/p8ysQ7UBWb90Equg7BBIqrjzgq4QoGvVrWzPOf2XMHNnXBjVWjZSQRGEiKM887/v196supEFxkROiiKJs/IIFvs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dasi1DrL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LyDJn9iT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E10F2C4CEE5;
-	Tue,  4 Mar 2025 18:21:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dasi1DrL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8166C4CEE5;
+	Tue,  4 Mar 2025 18:23:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741112494;
-	bh=za0SuWLRhElff/bceu6BDxVrKjWckpBw7aqLeA2sbyc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LyDJn9iT5NK0ljlzd/CxYT+DQB6iW+kCeUfbS1tZN32EQUS8F6Icaw+hC1AqB29xV
-	 eN3mnDCjUwCz0KaGojeFIFtV81L1tXiTf5fGwtnEdIUQ56xC4X7qGOgvlKpVloKtm0
-	 cvBna7i/C5rDTgAXaskW6U03kJbuZUmx51eECwQzdwMFUdgof6f8YvKeKh8vY46OIq
-	 o5AmhhqGOAAIc+5rEUpYsW0zqrq0eWPMPCfuKnpqN+Dghyi5ebjJbjjJUd5QK6VnoW
-	 Kmakiko0MUzcBfmOPR1EzVR41A+rhgb3/dARydErKZi7kBxWl9NUWhJk3I8ZZwTmm/
-	 zQ0pD1xqJGHuQ==
-Date: Tue, 4 Mar 2025 10:21:32 -0800
-From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-tip-commits@vger.kernel.org,
-	"Peter Zijlstra (Intel)" <peterz@infradead.org>,
-	Brian Gerst <brgerst@gmail.com>, "H. Peter Anvin" <hpa@zytor.com>,
-	x86@kernel.org
-Subject: Re: [tip: x86/asm] x86/asm: Make ASM_CALL_CONSTRAINT conditional on
- frame pointers
-Message-ID: <20250304182132.fcn62i4ry5ndli7l@jpoimboe>
-References: <174099976188.10177.7153571701278544000.tip-bot2@tip-bot2>
- <CAHk-=wjSwqJhvzAT-=AY88+7QmN=U0A121cGr286ZpuNdC+yaw@mail.gmail.com>
- <Z8a66_DbMbP-V5mi@gmail.com>
- <CAHk-=wjRsMfndBGLZzkq7DOU7JOVZLsUaXnfjFvOcEw_Kd6h5g@mail.gmail.com>
- <CAHk-=wjc8jnsOkLq1YfmM0eQqceyTunLEcfpXcm1EBhCDaLLgg@mail.gmail.com>
+	s=k20201202; t=1741112599;
+	bh=yqSfurqo9uz0GCjH+gfSO/8lIK5tXDomfIJ4KbPJeF0=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=dasi1DrLByD/0irFoemo5gkRbMbNLub054uhf7FbhUymKZb759Oou7hBYnUuGON7F
+	 JMyzIpHAVV1KVJoTfBUe0nOxc7aRbXwcLV92BcoDSSCNLyjGv8VnVNJsDb/Slv5pP2
+	 T4LcLIB3peAls+r4aDM4IxgOJcJTdCqg7yV11q2BN864crpZK/VZg9KC3Ilwy3m/8E
+	 bcA6SdJKAdiXl6O+LC9Vd4TGiBZ+y8i+sgVMBGWE63IqmqzeWqmrBD5eUtam8zg52H
+	 hAfyoK69ihCNTVKp/7T07X8fczA0QXP0OPZsXI3phVc0zUjBVKNzPgumcciq6qnMEq
+	 rQXrpJ3YgrLuA==
+From: Niklas Cassel <cassel@kernel.org>
+To: Damien Le Moal <dlemoal@kernel.org>, Daniel Kral <d.kral@proxmox.com>
+Cc: linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250304092030.37108-1-d.kral@proxmox.com>
+References: <20250304092030.37108-1-d.kral@proxmox.com>
+Subject: Re: [PATCH] ahci: add PCI ID for Marvell 88SE9215 SATA Controller
+Message-Id: <174111259844.42927.10776968712314293712.b4-ty@kernel.org>
+Date: Tue, 04 Mar 2025 19:23:18 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wjc8jnsOkLq1YfmM0eQqceyTunLEcfpXcm1EBhCDaLLgg@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14.2
 
-On Tue, Mar 04, 2025 at 08:01:58AM -1000, Linus Torvalds wrote:
-> On Tue, 4 Mar 2025 at 07:51, Linus Torvalds
-> <torvalds@linux-foundation.org> wrote:
-> >
-> > Put another way: the old code has years of testing and is
-> > significantly simpler. The new code is new and untested and more
-> > complicated and has already caused known new problems, never mind any
-> > unknown ones.
-> >
-> > It really doesn't sound like a good trade-off to me.
-
-I'm utterly confused, what are these new problems you're referring to?
-
-And how specifically is this more fragile?
-
-AFAICT, there was one known bug before the patches.  Now there are zero
-known bugs.
-
-Of course, it's entirely possible the build bots will shake out new
-objtool warnings over the next weeks.  But as of now, I haven't seen
-anything.
-
-> Side note: it's not clear that we should need to do that
-> ASM_CALL_CONSTRAINT thing _at_all_ any more.
+On Tue, 04 Mar 2025 10:20:30 +0100, Daniel Kral wrote:
+> Add support for Marvell Technology Group Ltd. 88SE9215 SATA 6 Gb/s
+> controller, which is e.g. used in the DAWICONTROL DC-614e RAID bus
+> controller and was not automatically recognized before.
 > 
-> Iirc, the only reason we did it was for old versions of gcc, and we're
-> already in the process of switching minimum gcc versions up to past
-> where the whole thing is relevant at all. There's another tip bot
-> commit that makes the minimum gcc version be 8.1 due to the (much
-> MUCH) cleaner percpu section series.
+> Tested with a DAWICONTROL DC-614e RAID bus controller.
 > 
-> And afaik, that makes all of this completely pointless.
+> 
+> [...]
 
-I'm excited to hear we can get rid of a lot of old GCC cruft, but this
-has nothing to do with the compiler version.
+Applied to libata/linux.git (for-6.15), thanks!
 
-It's needed for CONFIG_UNWINDER_FRAME_POINTER, for all compiler
-versions.  Otherwise the callee may skip the frame pointer setup before
-doing the call.
+[1/1] ahci: add PCI ID for Marvell 88SE9215 SATA Controller
+      https://git.kernel.org/libata/linux/c/885251dc
 
-> So tell me again - why are we making the kernel code worse?
+Kind regards,
+Niklas
 
-Again I don't see how this is worse, please spell it out for me...
-
--- 
-Josh
