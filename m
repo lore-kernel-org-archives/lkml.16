@@ -1,198 +1,218 @@
-Received: from PA4PR04CU001.outbound.protection.outlook.com (mail-francecentralazon11013033.outbound.protection.outlook.com [40.107.162.33])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 839021F5834;
-	Tue,  4 Mar 2025 10:37:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.162.33
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741084651; cv=fail; b=WLcpy/274SJdNl7Cxp+PMHUqz2CAN2WMj/ZDHa1CwWzGm/WLB5Ilmu6nnmZ69Vg53quisjHgF9UHkbmyzT/IaVtfugO4h7knsqT17bAeIhel7mKZ6XnxA/ejVpNrmKAAxM7i5+dfJVvpa3valeDY9DbSbPMu8JbXOews4CX0h4Q=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741084651; c=relaxed/simple;
-	bh=mY0TpLRbENvdCftU3yfX5fWue1+QCPrcLhvmhMJ/D98=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=guwdQjGz1B6w4SNRSIvSL51zNgQj4ddxSwSPqt6YsTy5y3Un4RqYo06qEKgZwF0HWLEAyj4R6TI6pUg9v0/p9uguW0ozYWX7vZMHV5KO25JFYO/2iT7xstraEGnEVWfd00BmQWYxJ8GlEGOYnRybh0Uxws6NZtQ+o0deGUBwSYE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mt.com; spf=pass smtp.mailfrom=mt.com; dkim=pass (2048-bit key) header.d=mt.com header.i=@mt.com header.b=ZN6j4GkJ; arc=fail smtp.client-ip=40.107.162.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mt.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mt.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7486C1FCCEA;
+	Tue,  4 Mar 2025 10:37:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741084653; cv=none; b=BlNYLBv2M15jWBseuMGMrrPYKHYBC2UPanQBy2Tradfdo8xPPFDxUJjf+2dg2sXs+2ULrtLxZYvr+3aMEzhwvk/xDFO5QtzAVDCdcNgIKhLaoZAMiob9h9usUwieogsXlGkX1A1M8+Ct6HxRXHxNCpQ22nbBa3RnYk5fiak8wq8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741084653; c=relaxed/simple;
+	bh=85nhDBhTFiWJYgl6DykBnE3QBUXn9UbjndlP97pBjIQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XJXYJnjflM9bdzN00A8rE9nKKJPoMNsVQmtn5g6rOr7CpTw58l36/exuOit2TmuiJWxkeNk3r8sUrhRnKLVT/GTtjAQSZsh/GwRBhJwyJbFtj9M752G0oOaz9W2LEUrY3p7SgSHkUt7QudDakPbYj+ux9itfJyG4k+ecvEhIEjQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gCcJMVT7; arc=none smtp.client-ip=209.85.218.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mt.com header.i=@mt.com header.b="ZN6j4GkJ"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=N/bwyufRUC9t6KHQnm8V9r73ffBCQthSb5IMtfqIOt83MhD3h6/rDywhcCsbuejpc05+hdLWHZrQQ0K2BJ73hV59aO/QCzmLXYuF+FBd5G5HThHVPpBzdckI05G+e8oL2wVwLWsN3V8gFQGLdq1YedkvVbuWioSBTW3vaXHzJpkruP9LxN+QYI/N1ypTzL3lTOU1sFWcbCEIm5C5XE704xt6rOHafFtVzaTwgU9Tt0gMZ+vgwcs+Otxy6SdQpPhwxNyvGk71Lx9Ol7HuReAP42gkLzv37ZjIwcM/9QVz1bfX/BxGjCyp8hkWDQrzkLtUhUBMax1oD8haxOyFjkvRbA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=P9W6sOO92s6BpP5BFvoSvkK4YYPzZVQFDoq6TTi5FAs=;
- b=gtZELV0BYfyx1n1auCz2EYa25FXiX6SPa/aKzRnWL6C6xcUdQcmFV5zIQhgPYpMGCBbkJieti8LpaqXW/G6oqfVubiTI2Z+fZNcvzexHzZcnipNi3drsDTLNgBOkTi283qbVs2BAJWU57EnCJG5MWH4nienKlImhvvgK9H+jtCioQR8TV/VJEVsB1VFc+jt2p5hkPRCu2YCtZPxkzM9WQpJnCrSaM4tWFkexPcLlyEILIUoiWHR+izvbw4u0Eltq5gKQHuJD5zFsZQCfsApmwd+hUIsFWJrmaGUWUn1tCmmgdPnet1DkoRchC6GxMuJciDcKX0Hn32R10fOY93796A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mt.com; dmarc=pass action=none header.from=mt.com; dkim=pass
- header.d=mt.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mt.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=P9W6sOO92s6BpP5BFvoSvkK4YYPzZVQFDoq6TTi5FAs=;
- b=ZN6j4GkJpZ9SOxi5/1nWUzyg8ShFEm3vfPvHacbM+crwTW46sYffsGy2ptLSH9GFSTPrmtUFAKVBMALwff9gCzA94moiV8wyCBO3EPI/0fpUtbUcKGxZqHoohfPsTDyIvJa0saJ988KSl6evnoQKFrgah0OR/FZ7HRWI6vYjdzIkHL3xiqKADZlmjoc1sLBf1Myeze2fUYRDGHN6EJzqPBbvoSeJr8GdE73iuqF2+xqzvt3eI0Qi1GU/6HH2EJl0BpQIXPTJ7MgRB2gYwg5N6kr3pwrvX0bo7FWt3XcpkB71P+SrgR1On6IUOf+Xl/UPNftKYSOBT5ZZN+TtdzYLgA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=mt.com;
-Received: from VI0PR03MB10400.eurprd03.prod.outlook.com
- (2603:10a6:800:203::15) by GV1PR03MB10575.eurprd03.prod.outlook.com
- (2603:10a6:150:16e::5) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.16; Tue, 4 Mar
- 2025 10:37:23 +0000
-Received: from VI0PR03MB10400.eurprd03.prod.outlook.com
- ([fe80::48f6:ae9a:fcdf:b5bd]) by VI0PR03MB10400.eurprd03.prod.outlook.com
- ([fe80::48f6:ae9a:fcdf:b5bd%6]) with mapi id 15.20.8489.025; Tue, 4 Mar 2025
- 10:37:23 +0000
-From: Mathis Foerst <mathis.foerst@mt.com>
-To: linux-kernel@vger.kernel.org
-Cc: Mathis Foerst <mathis.foerst@mt.com>,
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	linux-media@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	manuel.traut@mt.com,
-	mathis.foerst@zuehlke.com
-Subject: [PATCH v2 0/7] MT9M114 driver bugfix and improvements
-Date: Tue,  4 Mar 2025 11:36:40 +0100
-Message-Id: <20250304103647.34235-1-mathis.foerst@mt.com>
-X-Mailer: git-send-email 2.34.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: ZR0P278CA0097.CHEP278.PROD.OUTLOOK.COM
- (2603:10a6:910:23::12) To VI0PR03MB10400.eurprd03.prod.outlook.com
- (2603:10a6:800:203::15)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gCcJMVT7"
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-abf5358984bso468329066b.3;
+        Tue, 04 Mar 2025 02:37:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741084650; x=1741689450; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=y05GgcUzyRvbTep5413nOELZn3QacVghe1JgbSP50KQ=;
+        b=gCcJMVT7yPWZ7sHJ6TFuLdLlysZX7LV8WhM7taG4wAOWg2+EEYXOYjPRP6cS8BV59j
+         Q450IM0/9ADf0HP96KA8EAzxqNpuFFloAlpbbT7+T2Fpbn7rJ/cygDtn8GG7IAlAbIPB
+         uGq6O7MoZWHDNWBHKIbzYpJlgOUwKSEKbGqs5QOkxAN5TLCOvPqiWVThCwdNPc1I/CjJ
+         cDbJO1C4n+MqUYMHBLNPjI4SMZj6p6ldCHzBNAFxVTML/1WQt495CwJkHofQRp+GzH7G
+         Dhy2CDU3QrNuPCC5sobm1j8YPjb5NUDqn7ir4sXCvnM3pp+3C/8CQx/lB8OQEbJFEiGP
+         EwrA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741084650; x=1741689450;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=y05GgcUzyRvbTep5413nOELZn3QacVghe1JgbSP50KQ=;
+        b=vE+IhvDEFXZBN9Vo1Jx+aRkiCW6B2iBNHR28OVjyttpRPdKqXtAO2DOJ6IzqRYZXTV
+         nppqEx98OKa89ppmwepLz6/jopHbquEc6oMzGa8uakFoFAumkDY+704FepsXYunBTczk
+         XH6ZqxgdFFqxwiY91EmrEbVBn8LP/IiwZNsOS/+0t7QlN9ciIiAKKZbQo3PQ1N5uCW1v
+         fqr/5LC5cpp265rNz+50gSJfphpS9AAcprzdg3DgUkLVSRzhuzNpWqXJe+8iY8DpGgZ6
+         bgTLG0Hl70enCp3I+vchCeaPqLci1BdgkWCAH6ilDQd5hDBW6lObJtYl3kI0uwHlnWWC
+         dBfA==
+X-Forwarded-Encrypted: i=1; AJvYcCUSQboeectvY7XoTzMse957oFtyh5lK7jEjksT410IJYUIVkSjEcEYgelRiPIABPQvlxjkmuywuejyzM3DE@vger.kernel.org, AJvYcCVFtB7QUIxg4zZmtobl/jpD3vvPMzi5OUmUTBkqTFWOT356gOFH1VsVfRVYjhC8l5Eu+xMf3W16WZvDU6JvKw==@vger.kernel.org, AJvYcCX2mmEFYEAVxOzulmLrKDV/YcVTuxBDxgo8EWwp0tdKSpDTwVs2Tjc3JkdCvyg3YMoT7PAxV0C+j/XgNZIIPR9Y4Vk=@vger.kernel.org, AJvYcCXx3iC9i55be+F0DC8Sx564eZQeYurKLt+x6PBvjE5K8CcF7qlUkfMMEoFspMJqNHHJLOPugYmIKEkf@vger.kernel.org
+X-Gm-Message-State: AOJu0YxGEy3uZd/OR6QHANuTRzOeH/qOd91ISi5DKYr23l6nsUjbrLsD
+	lVAoVCA2/L++mS3lzc7x+SwqtebBdyyF2g9Aw3BWjOAixIAjJNFF
+X-Gm-Gg: ASbGncuBc+IstDX/vyBX+ZXr9XwVa7Ihkzcd3mIm+eh232F5BNFpVfT7ASKKtD8l/d3
+	3FNOKKxQIZRRFx2608aorQpT9NTxIg++fY5RuVcsIs6Miu3A6h6rYcTfbqbDT/bDjPeZ7HmnOnx
+	g6MipZQn7E/slaVA/FMPzh/G2hfNEQFiIYABPXFN1msXeqXW8rDyH6zYUEdZzB+kx4GdxmKrp5e
+	gVd1fG+IHeTxdfJ27ggHw6+huIvvcv+UVpPWUgcgc5byCt7GwR5gic8Boc2GJhLDfkMyK9j8z3h
+	nLFvqA4NC5T35cJe5NCUs1EZgQMI51B4CrSs5GgKPTYzgxLVIWm1nijQeb4=
+X-Google-Smtp-Source: AGHT+IH8pMgz4t35O8oyRIFQxpdE0tnaA9mngLuWrWyOfwIXMudSbWqIktMm891rz72griamnTx0kg==
+X-Received: by 2002:a17:907:3e94:b0:abf:55c8:4cd5 with SMTP id a640c23a62f3a-abf55c85c18mr1332877066b.12.1741084649331;
+        Tue, 04 Mar 2025 02:37:29 -0800 (PST)
+Received: from [192.168.43.21] ([77.85.230.22])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac1ea18e32csm149481966b.137.2025.03.04.02.37.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 04 Mar 2025 02:37:28 -0800 (PST)
+Message-ID: <0b8f71cf-03ee-4b5f-94ba-92811fccb541@gmail.com>
+Date: Tue, 4 Mar 2025 12:37:27 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: VI0PR03MB10400:EE_|GV1PR03MB10575:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4f829123-9f7d-45b6-1ffe-08dd5b088c63
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|1800799024|7416014|376014|52116014|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?fbumdzZotPwvlKdHRctFNHvDhpNvNZdzeGrEbRnw45/TE9+1+QQB3CIPGmrD?=
- =?us-ascii?Q?bbb2eff4MNY1SJrOeXqsLkKDTZXKYf9rgtXublIWz7gNEr0PtdLaCZ5vI5Gy?=
- =?us-ascii?Q?ropyrLs/bYerZsmVyHJoASo4Ze/Y2NjDchrjSsWFNloQN6BB+0qFZ+/5JNTY?=
- =?us-ascii?Q?hJWKsFwW8bNkoEEbmogTglC/I9tme6Pn+/TYyMqF9RF0RKkEmWQAVjvJqof/?=
- =?us-ascii?Q?dtr/5Czp1T9zR5qeOGFXR1OLriRTzcS74MiRTPCVRb9nzqsXr/QY1vbsz4UE?=
- =?us-ascii?Q?AGrceowC+ejuzK/3Z9fWSp/WezyBXqG+MKIHOMvwVeDPx38SFwglEkC0j9se?=
- =?us-ascii?Q?4bUypVn+ehHqEb7/8zedzxVg2sWCyCCITD9gqGqQlPy737JznblQf9r2lTkR?=
- =?us-ascii?Q?i5dqjEdMcGNQbyXx/LCyacaJZgRS2Zy/NrqfcaGc5Nu/+eatwJa/1jAbS/bT?=
- =?us-ascii?Q?QAIGybhGbSWoylz+kBkR+lXv920sN//tLCrbLOO/AJ+C95hRXIk3PlZKNekA?=
- =?us-ascii?Q?34TGg7uIf8uhOazaVCsve/ln1Jqx2RHGO24sJAlcwdxH4Ld3nuuy5TGm+9y1?=
- =?us-ascii?Q?FgugVB3CpOzWZxD723kgcmLbo6z3tNPHtmHr/bLslT9LxMLX3BPGe1mCE2QU?=
- =?us-ascii?Q?lC8AXDZoEIyboqicSrrmPCJgJe6JL7IWrEywf7mpuQlyFJBrhtA5HeWwlbOl?=
- =?us-ascii?Q?Y018y3mTNGkmAnatxKZ5ftS6KWMcUU1wxTFtbNtAAWB3PCjK9okP9DZ3ktfR?=
- =?us-ascii?Q?evAr+2n1U3KliAP6knV/G8Cu9h1YeZ9rabYnAxl1Gt6bShbCjI9F4w1iK9t/?=
- =?us-ascii?Q?Ez4LbLc5KRZfDeqm5LmkYWwbbJyTK4zulT+lFWHlxuka7o+OKt9G6fOtEV5Z?=
- =?us-ascii?Q?E6Y+ogNl2RpX2jnQVitI0wVTUgIQe8dERSFCo0CphIpbcOgGm1xkmdyHnFs8?=
- =?us-ascii?Q?6QS2brj81zLE1GDyVd8Z5WvXowqlDKIV4v9PaRZBBOxcVqCqQPz4D9Lyj24p?=
- =?us-ascii?Q?yj0Wpx6CY+U4/mhGgof1J2aWys+wc1wklPGM8SeY0GhOaXE26MmRePZ1vy3x?=
- =?us-ascii?Q?D4acR91WNjJesjhT4AXbFUADApjiD1pVeebAP2FWf+yMRVov+4LbQwe7FWTj?=
- =?us-ascii?Q?jYU0huvKepjTQksDtkBSBAM+HGHgOzsFQT2xykqAXbzyhow/+6XcElP/4U6J?=
- =?us-ascii?Q?gzKuBJO35Yp6D4vAeiPwV/Ere7NnaswU4+W8zI6fxMlnbUhQ+79KplK632wc?=
- =?us-ascii?Q?WChh/2wrUWQroXLHE/J1v5jvKnGyC1TWgmXHi0QgsnqOKL/Ke0F3tqOiicPt?=
- =?us-ascii?Q?jjWqiYVj+MxhATjwD9tr17xUUJTpeFINvT9YNNthxkEoAqm2ZzM5lEQ2lQ6y?=
- =?us-ascii?Q?pqaWwIYb+K6tFssp/K6AGSDNf5Jx/h4Vm1EGlRrQ6i7v4+Y5UxBF4Wctl50j?=
- =?us-ascii?Q?7hWkGLUfz7AZMB0+hDYciOhw30bqjRZi?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI0PR03MB10400.eurprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014)(52116014)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?DMi8XJ8719F8OD6rpY7bqRwDvp7t/EMEVvyV0sR9D9Q3S70InG+c2py6urb2?=
- =?us-ascii?Q?FcRWwk0D2BySx4tqYs5cbZKqqkEG9Ui9W2cuKBGDuFXEHyBywmgNTjGW3+Wz?=
- =?us-ascii?Q?17ErkSQ+dgonmLk7yD7rVvxR5p2qMYZLMGayZeRGlR/RiTIJcdw37KzNsH3K?=
- =?us-ascii?Q?P14UqwcAgnZxQh7gUUnxrVaBvinPQEu5cGR8tYFzyaf/FMpYNQjGGA+ZeRTW?=
- =?us-ascii?Q?FRmuwTZSBojJ46j6Y09YeBmmXQow48oezgGJ+enaNtsK630QImgrDucKRG3J?=
- =?us-ascii?Q?d/fPinMQCYQVg5zsHc0ZszfplOz3vosDNFHxhsmckPsy27EkKuvSVblXeK9f?=
- =?us-ascii?Q?859Zgs7d1Fvi7XFYyn4vEzATx4wK4JgmG/DuBZceB204PyqHJo9PO32YEDuK?=
- =?us-ascii?Q?gCL7gMG6vdAqeWjHxQpEAgdHeOqkXN7JjB3y+4hxFQe8xfR+BXN8kUT3+j6I?=
- =?us-ascii?Q?48bjtxi+2krXDi5PLdOtr2kl2z+kCpH3RaL0r7lC9SOI7fyGHzZFuETo869k?=
- =?us-ascii?Q?XnfKbuEHARPzFvXlINXektyO3YAlr9mLOtasbdAkOUE9P0B3K9ELjEfY5R01?=
- =?us-ascii?Q?ntUJF6/ImNFFnriWGfwcQ/OLDIgBq9gSfnaSRYxgzOfmJxfadKsU6tEv25aJ?=
- =?us-ascii?Q?f292VjWrHHHdo/clUfkqx3dUTJIgm7DqyaSywUrbNh/yUhAmDDAs4dBdZid9?=
- =?us-ascii?Q?PbauN9XSxXG5d96/UKxlXmksFReXCcMo+yd2xqMIAVIofiwBt2lFPm2sXiAy?=
- =?us-ascii?Q?zZowc/Cw5K12V73YjyVCA0WVwkOr0JkNmu5Cc05V/N1RPsCuy4zd6tQH6i79?=
- =?us-ascii?Q?Ib6k7qCxhkVihbbUoIeT9zRUqXSyp/FTGScvkmtGxjxXMoTCi8kknIuTFfK0?=
- =?us-ascii?Q?RkFkRPYI6W+fAm2N6vQpOv60u+qEejF2oOkOq3jnk0uMcbXONBapEcbvrM0c?=
- =?us-ascii?Q?2920xxDXnBAmeT654bkT5TNYgkPxAQ6GBbE9exZ7OigAw8ItDGdRi+aoxK+u?=
- =?us-ascii?Q?hv7JFxORHpZ7FUL1u6d3jGtJtXACb7QUKmqjJ7doYeb+86sUKtIS0pnZljTY?=
- =?us-ascii?Q?+vsuYV55+iV3nO1xPTKWM398RVcfdwKYazxLoSgdTpt4WeCPjkYj85x+9UK2?=
- =?us-ascii?Q?wN13l+8cIa5CQ+WBYmocvcALAKsXWOdl/uRUsMErkGzicLqJAI70ehoJhSiw?=
- =?us-ascii?Q?l5hKaUHEXcqUU6oajvsGWGitt1HFvvVoVrRm7FO5wmC+eRZwwfP1cDHhX0td?=
- =?us-ascii?Q?NFb9CxDVGOPbVx5Cedq4Lu6DtdPbJXU30/DRRw5R6kgAY8CCc/E8XmcIOruB?=
- =?us-ascii?Q?CkTubF9rZFVVE5159IdmAttyoKaCwJhORR1ylp0H+A1vIPb5G8N65/xpfnp9?=
- =?us-ascii?Q?nFtZcGk+9wPydKFjKspZkYxsrL+BdpNF4ljx/PnVCzcnpB647TPLtnMQgF3l?=
- =?us-ascii?Q?dSlofyqWRn+VpKmZX+7y2OS3xS3ifjr1hwUolE+hUsfOUSKDPClnn2kci8K3?=
- =?us-ascii?Q?NoSBeHS01Cjt1EALToI708TJ5INrU5hBB+UbBx0YJf32FTC0lkCF21/ZmxSj?=
- =?us-ascii?Q?8BO4uKeGomIbxbG5LLOIeO5USBxCnwrrcIUe2WPp?=
-X-OriginatorOrg: mt.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4f829123-9f7d-45b6-1ffe-08dd5b088c63
-X-MS-Exchange-CrossTenant-AuthSource: VI0PR03MB10400.eurprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Mar 2025 10:37:23.2300
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: fb4c0aee-6cd2-482f-a1a5-717e7c02496b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: EiCxJ7sLmwrHHtYbf8eq+5pSlhVb/r5VrGgXEQadCYmRBT/g7BPtN/l6T3/vyCNSA4jBcFcldsfG6qvlYd72cQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV1PR03MB10575
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 3/8] dt-bindings: phy: add
+ samsung,exynos2200-usbcon-phy schema file
+Content-Language: en-US
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I
+ <kishon@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>,
+ Philipp Zabel <p.zabel@pengutronix.de>, Abel Vesa <abel.vesa@linaro.org>,
+ linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-samsung-soc@vger.kernel.org, linux-phy@lists.infradead.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250223122227.725233-1-ivo.ivanov.ivanov1@gmail.com>
+ <20250223122227.725233-4-ivo.ivanov.ivanov1@gmail.com>
+ <20250224-curly-cyber-spaniel-efdc39@krzk-bin>
+ <a4f63721-d094-4eda-b68a-6ef62ff54680@gmail.com>
+ <c8184542-5dab-4403-bee4-867810397ae4@kernel.org>
+ <4502b578-96e6-49e0-8f3b-54f6e5640c55@gmail.com>
+ <354d6100-311f-44d7-b8a5-1fd671b651e3@kernel.org>
+ <9fb63a04-5b3d-40cc-b96f-eb4f297f307e@gmail.com>
+ <027decb4-3fa9-40a5-9cf4-65f9a69b4566@kernel.org>
+ <21460de5-76a0-4576-a7e6-f4873e40de48@gmail.com>
+ <9ec6c2c6-cf99-4c6e-8fc2-871716987c54@kernel.org>
+From: Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>
+In-Reply-To: <9ec6c2c6-cf99-4c6e-8fc2-871716987c54@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi,
+On 3/4/25 12:03, Krzysztof Kozlowski wrote:
+> On 04/03/2025 10:09, Ivaylo Ivanov wrote:
+>> On 3/4/25 09:21, Krzysztof Kozlowski wrote:
+>>> On 03/03/2025 18:18, Ivaylo Ivanov wrote:
+>>>> On 3/3/25 09:24, Krzysztof Kozlowski wrote:
+>>>>> On 02/03/2025 10:16, Ivaylo Ivanov wrote:
+>>>>>> On 2/25/25 10:11, Krzysztof Kozlowski wrote:
+>>>>>>> On 24/02/2025 11:48, Ivaylo Ivanov wrote:
+>>>>>>>> On 2/24/25 10:56, Krzysztof Kozlowski wrote:
+>>>>>>>>> On Sun, Feb 23, 2025 at 02:22:22PM +0200, Ivaylo Ivanov wrote:
+>>>>>>>>>> The Exynos2200 SoC has a USB controller PHY, which acts as an
+>>>>>>>>>> intermediary between a USB controller (typically DWC3) and other PHYs
+>>>>>>>>>> (UTMI, PIPE3). Add a dt-binding schema for it.
+>>>>>>>>>>
+>>>>>>>>>> Signed-off-by: Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>
+>>>>>>>>>> ---
+>>>>>>>>>>  .../phy/samsung,exynos2200-usbcon-phy.yaml    | 76 +++++++++++++++++++
+>>>>>>>>>>  1 file changed, 76 insertions(+)
+>>>>>>>>>>  create mode 100644 Documentation/devicetree/bindings/phy/samsung,exynos2200-usbcon-phy.yaml
+>>>>>>>>> You have undocumented dependencies which prevent merging this file.
+>>>>>>>>> First, dependencies have to be clearly expressed.
+>>>>>>>> They are, in the cover letter.
+>>>>>>> Where? I read it twice. Dependencies is the most important thing and
+>>>>>>> should scream at beginning of the cover letter, so if you bury them
+>>>>>>> somewhere deep it also would not matter - just like they were missing.
+>>>>>>>
+>>>>>>>>> Second, you should
+>>>>>>>>> rather decouple the code from header dependencies, otherwise this cannot
+>>>>>>>>> be merged for current release (just use clocks with long names, without IDs).
+>>>>>>>> Sure
+>>>>>>>>>> diff --git a/Documentation/devicetree/bindings/phy/samsung,exynos2200-usbcon-phy.yaml b/Documentation/devicetree/bindings/phy/samsung,exynos2200-usbcon-phy.yaml
+>>>>>>>>>> new file mode 100644
+>>>>>>>>>> index 000000000..7d879ec8b
+>>>>>>>>>> --- /dev/null
+>>>>>>>>>> +++ b/Documentation/devicetree/bindings/phy/samsung,exynos2200-usbcon-phy.yaml
+>>>>>>>>>> @@ -0,0 +1,76 @@
+>>>>>>>>>> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+>>>>>>>>>> +%YAML 1.2
+>>>>>>>>>> +---
+>>>>>>>>>> +$id: http://devicetree.org/schemas/phy/samsung,exynos2200-usbcon-phy.yaml#
+>>>>>>>>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>>>>>>>>>> +
+>>>>>>>>>> +title: Exynos2200 USB controller PHY
+>>>>>>>>>> +
+>>>>>>>>>> +maintainers:
+>>>>>>>>>> +  - Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>
+>>>>>>>>>> +
+>>>>>>>>>> +description:
+>>>>>>>>>> +  Exynos2200 USB controller PHY is an intermediary between a USB controller
+>>>>>>>>>> +  (typically DWC3) and other PHYs (UTMI, PIPE3).
+>>>>>>>>> Isn't this the same as usbdrd phy? see: samsung,usb3-drd-phy.yaml
+>>>>>>>> It's not (I think). There's a few reasons I've decided to make this separate
+>>>>>>>> from the usb3-drd-phy bindings and exynos5-usbdrd driver:
+>>>>>>>>
+>>>>>>>> 1. This PHY does not provide UTMI and PIPE3 on its own. There's no tuning
+>>>>>>> USBDRD phy does not provide UTMI and PIPE on its own either if you look
+>>>>>>> at diagram - they call it phy controller.
+>>>>>> Ughm. What? So in most exynos cases, there's a combination of multiple phys?
+>>>>>>>> for them, and all that is needed from it is to disable HWACG, assert/
+>>>>>>>> deassert reset and force bvalid/vbusvalid. After that SNPS eUSB2
+>>>>>>>> initialization can be done and USB2 works. If the USBCON phy is not set
+>>>>>>>> up before the eUSB2 one, the device hangs, so there is definitely a
+>>>>>>>> dependancy between them. For PIPE3 we'd need to control the pipe3
+>>>>>>>> attaching/deattaching and then initialize the synopsys USBDP combophy.
+>>>>>>> Does it mean there is no USB DRD phy controller as before?
+>>>>>>>
+>>>>>>> Anyway the problem is you have DWC3 -> PHY -> PHY. Looks one phy too many.
+>>>>>> So...
+>>>>>>
+>>>>>> DWC3 -> USBDRD (USBCON) -> PHYs?
+>>>>> No, drop last phy. You just wrote the same as me - two phys, because
+>>>>> usbdrd is the phy. In all existing designs there is no such controllable
+>>>>> object from the point of view of operating system.
+>>>> What? Per my understanding, the phy property should refer to whatever is
+>>>> is connected to dwc3 UTMI. In this case it's the so-called USBDRD phy (called
+>>>> usbcon in downstream). Considering that the eUSB2 IP definitely also has UTMI
+>>>> that has to be connected to something, doesn't that mean we have clearly
+>>> The entire point is that eUSB2 is connected to DWC3, no? That's exactly
+>>> how it is done for example on Qualcomm SoC. Otherwise you claim that
+>>> DWC3 controls one phy, which controls another phy which controls UTMI...
+>> But where does the USBCON fit? Is it just a side controller? Why's it needed
+>> in the first place? This is what I don't understand.
+> I assume usbcon, so old usbdrd, is the second DWC3's phy, just like qcom
+> qmpphy.
 
-this patch series contains the following bugfix and improvements
-for the MT9M114 camera driver:
+Ugh. For qcoms, does the first phy depend on qmpphy? If we pass it as the second phy,
+I don't know how the linkreset will happen. We also have a usbdp phy, which I
+suspect is used for SS as well since it's a combophy by Synopsys.
 
-Changelog:
-v1 -> v2:
-- Fix the subjects of the patches
-- Dropped PATCH 1 ("Add bypass-pll DT-binding") as it can be automatically
-  detected if the PLL should be bypassed.
-- Renumbered patches accordingly
-- Switch to uint32, add default value and clarify documentation in PATCH 1
-- Add 'Fixes' and 'Cc' tags as suggested in PATCH 6
+https://gitlab.com/Mis012/sm-s908b-linux-source-code/-/blob/s22_restored_history/drivers/phy/samsung/phy-exynos-usbdrd-eusb.c#L1579
 
-Link to v1 discussion:
-https://lore.kernel.org/linux-media/20250226153929.274562-1-mathis.foerst@mt.com/
+Best regards,
+Ivaylo
 
-
-Bugfixes:
-- Fix a deadlock when using the V4L2 pad-ops get/set_frame_interval
-
-Compatibility:
-- Implement the missing get_mbus_config() function to be compatible
-  with the i.MX6 camera framework
-
-New Features:
-- Bypass the internal PLL if EXTCLK matches the configured link_frequency
-- Make the slew-rate of the output pads configurable via DT
-- Allow to change the cropping configuration and the horizontal/vertical
-  flipping while the sensor is in streaming state
-
-Thanks,
-Mathis
-
-Mathis Foerst (7):
-  media: dt-bindings: mt9m114: Add pad-slew-rate DT-binding
-  media: mt9m114: Add get_mbus_config
-  media: mt9m114: Bypass PLL if required
-  media: mt9m114: Factor out mt9m114_configure_pa
-  media: mt9m114: Allow set_selection while streaming
-  media: mt9m114: Fix deadlock in get_frame_interval/set_frame_interval
-  media: mt9m114: Set pad-slew-rate
-
- .../bindings/media/i2c/onnn,mt9m114.yaml      |   9 +
- drivers/media/i2c/mt9m114.c                   | 193 +++++++++++++-----
- 2 files changed, 151 insertions(+), 51 deletions(-)
-
-
-base-commit: ac9c34d1e45a4c25174ced4fc0cfc33ff3ed08c7
--- 
-2.34.1
+>
+>>>> separated hardware blocks? Now, I guess one could argue that this USBCON
+>>>> hardware block could be classified as a syscon. But I don't see the problem
+>>>> with the current binding description, nor the modelling, as it represents
+>>>> how the hardware is (unless I've gotten it completely wrong).
+>>> It is the first time you use argument that it represents how the
+>>> hardware is and this is what we actually disagree. It is not like that.
+>>> You do not have chain of phys. Just look at any USB 3.0 DRD DWC diagram
+>>> from any Samsung SoC: where would you squeeze these two phys in relation
+>>> to what is called there "USB 3.0 PHY" which would be the third phy (!!!).
+>> Yeah, my point was that it was different from any previous design. Now,
+>> I don't know if it's actually theoretically possible to design it like so. It's
+>> hard to just guess how the hardware is designed without having access
+>> to die shots, documentations or even just schematics.
+>>
+>> Let's make it clear now, the changes your request are to document USBCON
+>> in the existing exynos binding, as well as to correct all explanations of how
+>> this block functions, right?
+> No, not necessarily. If USBCON is entirely different device than USBDRD
+> (different register layout, different features), then go ahead with a
+> new binding.
+>
+> I was questioning your chain of PHYs and this should be investigated.
+>
+>
+> Best regards,
+> Krzysztof
 
