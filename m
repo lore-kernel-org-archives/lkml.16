@@ -1,144 +1,271 @@
-Received: from beeline3.cc.itu.edu.tr (beeline3.cc.itu.edu.tr [160.75.25.117])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96033280A50
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 16:57:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=160.75.25.117
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741107453; cv=fail; b=Jpx1bmQ1KcMoHneDkHCF6wOzKI5U/k2YeDNt6m0JHNI/0yP8g1N7uhkmzU7jM97Q3kgW5xwVBHCQg3tgFeZv3z13A5MlUZszDB4pa0QR0wE+ayHgvZg0rfj27L5YzAY2j49ck3JC8xbQcNrP0vT/z729vRpqqSw33eekmmDJC+c=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741107453; c=relaxed/simple;
-	bh=Nz0QSW8xpqBQu9NgpTPdq1gpJYGAwudPcn+IwIuP8mA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bL3kQePxs4PawIB2ZNi/C16YqVLWXVZw9MN2+aNe9TJil665YFWVgfYj/Kc/Mf6iaTLBLFVsEiyY1RfYU0QJqEWJ0CoCnY6UCTY/N0jmF859HVqI7Myh4IMoNMbptg2F07HpNbWGlvOgX+y+1UHZGqqDcm1Sk8XT5jfreBRd4is=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=redhat.com; spf=none smtp.mailfrom=cc.itu.edu.tr; dkim=fail (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=flAqJQ5P reason="signature verification failed"; arc=none smtp.client-ip=170.10.133.124; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; arc=fail smtp.client-ip=160.75.25.117
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=cc.itu.edu.tr
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="flAqJQ5P"
-Received: from lesvatest1.cc.itu.edu.tr (lesvatest1.cc.itu.edu.tr [10.146.128.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits))
-	(No client certificate requested)
-	by beeline3.cc.itu.edu.tr (Postfix) with ESMTPS id C555440D00FE
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 19:57:29 +0300 (+03)
-X-Envelope-From: <root@cc.itu.edu.tr>
-Authentication-Results: lesvatest1.cc.itu.edu.tr;
-	dkim=fail reason="signature verification failed" (1024-bit key, unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=flAqJQ5P
-Received: from lesva1.cc.itu.edu.tr (unknown [160.75.70.79])
-	by lesvatest1.cc.itu.edu.tr (Postfix) with ESMTP id 4Z6gnX53MszG2q2
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 19:17:36 +0300 (+03)
-Received: by le1 (Postfix, from userid 0)
-	id 4CD7342746; Tue,  4 Mar 2025 19:17:27 +0300 (+03)
-Authentication-Results: lesva1.cc.itu.edu.tr;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=flAqJQ5P
-X-Envelope-From: <linux-kernel+bounces-541380-bozkiru=itu.edu.tr@vger.kernel.org>
-Authentication-Results: lesva2.cc.itu.edu.tr;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=flAqJQ5P
-Received: from fgw2.itu.edu.tr (fgw2.itu.edu.tr [160.75.25.104])
-	by le2 (Postfix) with ESMTP id C4462436AC
-	for <bozkiru@itu.edu.tr>; Mon,  3 Mar 2025 13:32:30 +0300 (+03)
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by fgw2.itu.edu.tr (Postfix) with SMTP id 41F182DCE1
-	for <bozkiru@itu.edu.tr>; Mon,  3 Mar 2025 13:32:30 +0300 (+03)
-Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 03E0F169222
-	for <bozkiru@itu.edu.tr>; Mon,  3 Mar 2025 10:32:21 +0000 (UTC)
-Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CFA951F2BA1;
-	Mon,  3 Mar 2025 10:30:44 +0000 (UTC)
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF8A41F1905
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 10:30:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7553A2D4B7E;
+	Tue,  4 Mar 2025 16:57:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740997834; cv=none; b=I5uLvLqFdptlSz+B1FwMiQEW6tkYDmo3BJWuHq6eCxLsr8edTuqXzZTyeaGVg5D+3BUFV4SrmmKQ5DSI9B0Ze94PHzAIVmW4nn37qjgvr98Fex6jEdHRtTOCL+6+WljM+8jnhhu5NT84FqOhIqldNUY0br69WN22zNM9kKs4dpY=
+	t=1741107460; cv=none; b=P0FfW2DMt1Ji6t8Pv8lH9iIPpDl4dZAfmJM+bl5it7SIDKHkFNXB+DzidTlO7pNKMiD+B4JvUkk9WN0gQ084sj4Ft7Cy10WgrmpTIKnjsc3t7YOJ7Z0l/FZ/Pao8bBZaBzKmrAY+t/1kx5xfcC5qfGjJcW2oLvDoVXjKaXPbGAo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740997834; c=relaxed/simple;
-	bh=Xd6jeKSTgIZFdafSVXZ/PdjL+vCFnUo1AZ/RbpdFGNw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Ka07ZgNjog9B2G12Dk48BC397zemyzti4c3PKIXzGBnF1v/PcM91Zy6fJSymKF6QvPnzgOW5G4cLgnReMLR61t/3Xa9793i5JV0wUdxiNni99tHKNTPQ9X0D8NqQcMXW8URHz6WAEQnyKs077i/hm5x3TVBT03vQCWrxeRR5Amw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=flAqJQ5P; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1740997830;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=gR6zLqRG9S1za/uF+nzi2msUOEjaoJGIhx4NU2xJ4k0=;
-	b=flAqJQ5P7bHVRs4k4HIxmVb7ZmmqFL8kFQoUA+kvIrVzsmoDKpolSOwvima/A/sZ8bGO84
-	iURXi4TpwXJesUAzOFH+PQrH4/365xPrDTbYTtMNqBSGYBaWQ+Dh76G1mgTSbIlJq+EL2n
-	TAERKDp157VjIp73e8BSy8KzhK4r3dg=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-194-dbu1oVJVONOrbeNN23fqFQ-1; Mon, 03 Mar 2025 05:30:29 -0500
-X-MC-Unique: dbu1oVJVONOrbeNN23fqFQ-1
-X-Mimecast-MFC-AGG-ID: dbu1oVJVONOrbeNN23fqFQ_1740997828
-Received: by mail-ed1-f71.google.com with SMTP id 4fb4d7f45d1cf-5e4987b2107so4363108a12.0
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Mar 2025 02:30:29 -0800 (PST)
+	s=arc-20240116; t=1741107460; c=relaxed/simple;
+	bh=+l/EjeUA+5d8VX49RYgy4dN7slpwKi8CoheUYsJ1Qpw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=db5nA1o3uSW8thhHJCe9/QOAa8UQ+LFBJRBgTJaT8sJvwPSIaS8V32Y5IzmAF/fV49qObtgldgSso9od8cpZlpX1BZpO39ak+M9RWZqaC+Vs9nv9SrfXM/gqYko3EnmaK8Wla5iJv1n78kBQVj4aRRdDblJhBi5vHdTY8XAR83w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CiFcMxms; arc=none smtp.client-ip=209.85.218.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CiFcMxms"
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-ac202264f9cso94311066b.0;
+        Tue, 04 Mar 2025 08:57:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741107456; x=1741712256; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=kLsMU/gpYkwvzpJkBRFq1iYDiFQreX0pirlkWTeGy6Q=;
+        b=CiFcMxmsMcJP8i1axX8iivkDCe80nIjR3jta5RDI/Z/6Ysg0BX/BcH702E0ZueF2oD
+         Q2jYratk0mmtdWvUjs3hVC24wEoimxl6b3bbeu3jEl8eJsnuK4s/2oTDsBVwYrFPS9eM
+         Mj9NiyF0mOQUc7U6RuKfkEHgBUXRBXDFQX90WX94LRbjiggLErQ2Mg6sf/F52hT79wiy
+         mwUxvcMza85I0SbesQLY29lNxKfA9eSyh9BNA1QiFkWHEWUdLmlQxyiMgaZ/HJtI9j/U
+         llHlncX23HbqCfUAd2125RHU3VroDS3qfwuA9k+fkoMsjJvtP1sSHAt4PX7oiygHkrJY
+         WwBA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740997828; x=1741602628;
+        d=1e100.net; s=20230601; t=1741107456; x=1741712256;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=gR6zLqRG9S1za/uF+nzi2msUOEjaoJGIhx4NU2xJ4k0=;
-        b=MM7CeR36KGirDi87ET2gdDE9nRTdx1maqYtfKboCqd9myRULfihBG4sLrtZ7Bbsb2s
-         1xUSAnERzNSLnBo/1EFJKdqEuujUU2JL6jkneF5Ly+BUv95MFerZ4WL7H5MT9Irjg9pQ
-         7rimjeFoLSo2cimjo6teavZDZ8Qm/CYVkLoLD0jOra/fEkPshYaHE+SGTn/SHB5vjjwg
-         txtaa9FEg1qGqAmWSewOxCqtyDwQ6dYKmO1B1llucBFUFUG/wqffyaoKuYa93SyIsip6
-         BJ8SdQiHSqmuXDRDRg4Rf8v//GuhuzEJajIWLFfJ/BmCNZya6Wa8D25T9f1tqTJ+TRO7
-         TlIQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWZxX5cxkG8387zlBRcwaixvdurnIUsEUgYDaXlg0pGWNKw5ntq8O2LRbFgp/7vmleUS2oJ1iLseht6GL8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwyuJkNhqnho5Pr1lLWVw+DemRyRqzBjYdxyuWzq2tYinPCbD5w
-	H6as+C2i1kutvlXk4CJ40VI7Z21TT7mJabcrlMqgGOx30aefIvLwYl41bfi5Cvlze4fsn/+aBQi
-	HfzsBiHpqqtpu36tJclfyG24d2+/azi871mQODcnhqYlIrZQ2Bop/xhkBmKuAJQ==
-X-Gm-Gg: ASbGncuIVKtj8uEZSm/t0GXmCdbsEY0xrNTzBv1lXdw9zvLMmRblraeL1MHgyFuzetT
-	nWH0q+LW29nyW+desA+7X/f1elGRtLrxmm2sZgT50Eh3/xspODVdAIW6efe6Ycf18uu9DZ01KXB
-	OrCH/5quHOqsKMCaRlIVBSFqGiDRZThhVI/mQ0dh6Ll0ja31fS4lnkg+l6LSm0aVKS9t6s6xBW8
-	VDXBpAKO8o2SOkETEASs9mbXm2WAc/j7k4JUJo43y/yG24eIzTPjXjgzobLD2W6oVdV3SKUXiN6
-	o+yfVb+bK8BKfT20AUWLZjxOGkbU+UvcI5EqfJw7ez4WWichjT3O/n0JOHOJd9Q=
-X-Received: by 2002:a05:6402:528a:b0:5e5:437c:1daf with SMTP id 4fb4d7f45d1cf-5e5437c22a7mr5160410a12.16.1740997827216;
-        Mon, 03 Mar 2025 02:30:27 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFWOtveprrubC5jzCtCbdOt9xXXQloZV5gJJWnE6GooHlcrYwBVrf5NDmW5ksFomjWCc6RdKg==
-X-Received: by 2002:a05:6402:528a:b0:5e5:437c:1daf with SMTP id 4fb4d7f45d1cf-5e5437c22a7mr5160377a12.16.1740997826443;
-        Mon, 03 Mar 2025 02:30:26 -0800 (PST)
-Received: from lbulwahn-thinkpadx1carbongen9.rmtde.csb ([2a02:810d:7e40:14b0:4ce1:e394:7ac0:6905])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5e4c3bb4bd9sm6630165a12.33.2025.03.03.02.30.25
+        bh=kLsMU/gpYkwvzpJkBRFq1iYDiFQreX0pirlkWTeGy6Q=;
+        b=hkR4ojkVmEWbfALbwi0kHTWuyjlc7YJI6vGfzq754uuxCxlKhqnBRmaC+J6GvyyZXH
+         V9MRhicp9ZBmWT/WAMenq21qj9mmTmYNqwWF2LVlGkVt+cU+PcP92rgg0zd4EkKYMczx
+         OBYeYet7b5mdoIxMkEbZL7Wub7aezqSied78OFP6JdYRVdbLzhpOEPRdzu1wNlrp8eMF
+         B7j8P9yCDbYuUvI3vdnsUJ6fV4iLQS+gvct0SKYSoraWFkBrDwNW6GbkaM0PRpBG4pm3
+         qLlPpkZAF+BMGTHCdTVwZOs6Bqyc2gb6PVzCEd5els0KdNTZ4toLQTTrnePZE85CpifA
+         osfw==
+X-Forwarded-Encrypted: i=1; AJvYcCXBB4/KF+91DkqUhlT0itiAv7lsLR3vx2ypEt0aeASyOJL2smT4CFn7H3TkSZtw1HRUPMUDhsCc0hINR/rK@vger.kernel.org, AJvYcCXruLWBjbI2Fw287aWQnmaKKDxKDph7Jt/O4ng0DAUgIBSYJdCY8argSson5jRv4cO3UTlY+IYpkInQ/ER+@vger.kernel.org
+X-Gm-Message-State: AOJu0YwcX4ajUCp3/Z8L9rUyy4nUf9wRsQQJVGhVgr4acxG4LoVkiOFn
+	4QkKyeHlWQqzW7QI+tCJm5gf7n/LCd05DqfvLW+WDtqv+XRJ69af7Kz4nUJ9
+X-Gm-Gg: ASbGncu18mvOakECDockP2Qip0selWpszNUWxY8Some4NsS4fvmRg7gcD6/XFc0Udnb
+	JgPBlQqhp1OYVziGh6zVKfMeI8p80wCN86nRZUD4ctXAWWlYBmkGkNOuq0hyLHHIAhvqGmv9N6B
+	zMA3pHCHzneXa3vVs0LnBmfw30RF9vowVhcuMtCtTqDEUDimqXKBGATrRmIYfOAWK79GiB8rLYJ
+	u3RXKXX50FjHc3iC/47kueqMllVXMCMX/mI/A6Yrs/llL86oTr+Zain+eKBxMtrT5FTJlZVaMsE
+	LJF3qyOwZTnfOJJkRkfMv7ztNTLRRxGHXw4kX4zt6nc2MfqBYn8vWCufnjDv
+X-Google-Smtp-Source: AGHT+IFB5SKAGTk8wLYqM+NjVxEA74LITSloKjBgOg8Ti4DHHLqqSx64hUByZV2SsEp0QhlodEzhAw==
+X-Received: by 2002:a17:907:9690:b0:ac1:e30e:bf5a with SMTP id a640c23a62f3a-ac1e30ec2c1mr673779166b.35.1741107455828;
+        Tue, 04 Mar 2025 08:57:35 -0800 (PST)
+Received: from f.. (cst-prg-71-44.cust.vodafone.cz. [46.135.71.44])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac1e5aff06esm231360266b.130.2025.03.04.08.57.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Mar 2025 02:30:25 -0800 (PST)
-From: Lukas Bulwahn <lbulwahn@redhat.com>
-X-Google-Original-From: Lukas Bulwahn <lukas.bulwahn@redhat.com>
-To: Arnd Bergmann <arnd@arndb.de>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	linux-media@vger.kernel.org
-Cc: kernel-janitors@vger.kernel.org,
+        Tue, 04 Mar 2025 08:57:35 -0800 (PST)
+From: Mateusz Guzik <mjguzik@gmail.com>
+To: brauner@kernel.org,
+	viro@zeniv.linux.org.uk
+Cc: jack@suse.cz,
 	linux-kernel@vger.kernel.org,
-	Lukas Bulwahn <lukas.bulwahn@redhat.com>
-Subject: [PATCH] media: remove STA2x11 media pci driver
-Date: Mon,  3 Mar 2025 11:30:22 +0100
-Message-ID: <20250303103022.374705-1-lukas.bulwahn@redhat.com>
-X-Mailer: git-send-email 2.48.1
-Precedence: bulk
+	linux-fsdevel@vger.kernel.org,
+	Mateusz Guzik <mjguzik@gmail.com>
+Subject: [PATCH v3] vfs: avoid spurious dentry ref/unref cycle on open
+Date: Tue,  4 Mar 2025 17:57:28 +0100
+Message-ID: <20250304165728.491785-1-mjguzik@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-ITU-Libra-ESVA-Information: Please contact Istanbul Teknik Universitesi for more information
-X-ITU-Libra-ESVA-ID: 4Z6gnX53MszG2q2
-X-ITU-Libra-ESVA: No virus found
-X-ITU-Libra-ESVA-From: root@cc.itu.edu.tr
-X-ITU-Libra-ESVA-Watermark: 1741712116.58589@w9x0C/a0hpDHqbGg7AUlXw
-X-ITU-MailScanner-SpamCheck: not spam
-Message-ID: <20250303103022.9KccXBPQf5q-0ljIDw__xvX1RtvRcYFVulSy8CsXNLQ@z>
+Content-Transfer-Encoding: 8bit
 
-From: Lukas Bulwahn <lukas.bulwahn@redhat.com>
+Opening a file grabs a reference on the terminal dentry in
+__legitimize_path(), then another one in do_dentry_open() and finally
+drops the initial reference in terminate_walk().
 
-With commit dcbb01fbb7ae ("x86/pci: Remove old STA2x11 support"), the
-STA2X11 Video Input Port driver is not needed and cannot be built anymore=
+That's 2 modifications which don't need to be there -- do_dentry_open()
+can consume the already held reference instead.
+
+When benchmarking on a 20-core vm using will-it-scale's open3_processes
+("Same file open/close"), the results are (ops/s):
+before: 3087010
+after:  4173977 (+35%)
+
+Signed-off-by: Mateusz Guzik <mjguzik@gmail.com>
+---
+
+Al, while I originally brought this up you objected to my patch, which I
+then rewrote to the form below. You wrote your own more invovled
+variant, but the effort to get this in seem stalled:
+https://lore.kernel.org/linux-fsdevel/20240822003359.GO504335@ZenIV/
+
+(I think there was a bigger git branch somewhere, but now I can't find
+it.)
+
+The lockref thing is increasingly getting in the way of some other stuff
+and is just overhead which is not need to be there.
+
+If you don't have time to finish your patches, how about the variant
+below? This is rebased v2 I sent a while back and which got no feedback.
+
+I am indifferent as to what lands, as long as the extra ref cycle is
+eliminated.
+
+ fs/internal.h |  3 ++-
+ fs/namei.c    | 15 ++++++++++++---
+ fs/open.c     | 44 +++++++++++++++++++++++++++++++++++++++++---
+ 3 files changed, 55 insertions(+), 7 deletions(-)
+
+diff --git a/fs/internal.h b/fs/internal.h
+index 3d05a989e4fa..1d0eb25a7598 100644
+--- a/fs/internal.h
++++ b/fs/internal.h
+@@ -193,7 +193,8 @@ int chmod_common(const struct path *path, umode_t mode);
+ int do_fchownat(int dfd, const char __user *filename, uid_t user, gid_t group,
+ 		int flag);
+ int chown_common(const struct path *path, uid_t user, gid_t group);
+-extern int vfs_open(const struct path *, struct file *);
++int vfs_open_consume(struct path *, struct file *);
++int vfs_open(const struct path *, struct file *);
+ 
+ /*
+  * inode.c
+diff --git a/fs/namei.c b/fs/namei.c
+index d00443e38d3a..8ce8e6038346 100644
+--- a/fs/namei.c
++++ b/fs/namei.c
+@@ -3796,6 +3796,7 @@ static const char *open_last_lookups(struct nameidata *nd,
+ static int do_open(struct nameidata *nd,
+ 		   struct file *file, const struct open_flags *op)
+ {
++	struct vfsmount *mnt;
+ 	struct mnt_idmap *idmap;
+ 	int open_flag = op->open_flag;
+ 	bool do_truncate;
+@@ -3833,11 +3834,17 @@ static int do_open(struct nameidata *nd,
+ 		error = mnt_want_write(nd->path.mnt);
+ 		if (error)
+ 			return error;
++		/*
++		 * We grab an additional reference here because after the call to
++		 * vfs_open_consume() we no longer own the reference in nd->path.mnt
++		 * while we need to undo write access below.
++		 */
++		mnt = mntget(nd->path.mnt);
+ 		do_truncate = true;
+ 	}
+ 	error = may_open(idmap, &nd->path, acc_mode, open_flag);
+ 	if (!error && !(file->f_mode & FMODE_OPENED))
+-		error = vfs_open(&nd->path, file);
++		error = vfs_open_consume(&nd->path, file);
+ 	if (!error)
+ 		error = security_file_post_open(file, op->acc_mode);
+ 	if (!error && do_truncate)
+@@ -3846,8 +3853,10 @@ static int do_open(struct nameidata *nd,
+ 		WARN_ON(1);
+ 		error = -EINVAL;
+ 	}
+-	if (do_truncate)
+-		mnt_drop_write(nd->path.mnt);
++	if (do_truncate) {
++		mnt_drop_write(mnt);
++		mntput(mnt);
++	}
+ 	return error;
+ }
+ 
+diff --git a/fs/open.c b/fs/open.c
+index f2fcfaeb2232..fc1c6118eb30 100644
+--- a/fs/open.c
++++ b/fs/open.c
+@@ -891,6 +891,15 @@ static inline int file_get_write_access(struct file *f)
+ 	return error;
+ }
+ 
++/*
++ * Populate struct file
++ *
++ * NOTE: it assumes f_path is populated and consumes the caller's reference.
++ *
++ * The caller must not path_put on it regardless of the error code -- the
++ * routine will either clean it up on its own or rely on fput, which must
++ * be issued anyway.
++ */
+ static int do_dentry_open(struct file *f,
+ 			  int (*open)(struct inode *, struct file *))
+ {
+@@ -898,7 +907,6 @@ static int do_dentry_open(struct file *f,
+ 	struct inode *inode = f->f_path.dentry->d_inode;
+ 	int error;
+ 
+-	path_get(&f->f_path);
+ 	f->f_inode = inode;
+ 	f->f_mapping = inode->i_mapping;
+ 	f->f_wb_err = filemap_sample_wb_err(f->f_mapping);
+@@ -1042,6 +1050,7 @@ int finish_open(struct file *file, struct dentry *dentry,
+ 	BUG_ON(file->f_mode & FMODE_OPENED); /* once it's opened, it's opened */
+ 
+ 	file->f_path.dentry = dentry;
++	path_get(&file->f_path);
+ 	return do_dentry_open(file, open);
+ }
+ EXPORT_SYMBOL(finish_open);
+@@ -1074,15 +1083,22 @@ char *file_path(struct file *filp, char *buf, int buflen)
+ EXPORT_SYMBOL(file_path);
+ 
+ /**
+- * vfs_open - open the file at the given path
++ * vfs_open_consume - open the file at the given path and consume the reference
+  * @path: path to open
+  * @file: newly allocated file with f_flag initialized
+  */
+-int vfs_open(const struct path *path, struct file *file)
++int vfs_open_consume(struct path *path, struct file *file)
+ {
+ 	int ret;
+ 
+ 	file->f_path = *path;
++	path->mnt = NULL;
++	path->dentry = NULL;
++
++	/*
++	 * do_dentry_open() consumes the reference regardless of its
++	 * return value
++	 */
+ 	ret = do_dentry_open(file, NULL);
+ 	if (!ret) {
+ 		/*
+@@ -1095,6 +1111,27 @@ int vfs_open(const struct path *path, struct file *file)
+ 	return ret;
+ }
+ 
++/**
++ * vfs_open - open the file at the given path
++ * @path: path to open
++ * @file: newly allocated file with f_flag initialized
++ *
++ * See commentary in vfs_open_consume. The difference here is that this routine
++ * grabs its own reference and does not clean up the passed path.
++ */
++int vfs_open(const struct path *path, struct file *file)
++{
++	int ret;
++
++	file->f_path = *path;
++	path_get(&file->f_path);
++	ret = do_dentry_open(file, NULL);
++	if (!ret) {
++		fsnotify_open(file);
++	}
++	return ret;
++}
++
+ struct file *dentry_open(const struct path *path, int flags,
+ 			 const struct cred *cred)
+ {
+@@ -1197,6 +1234,7 @@ struct file *kernel_file_open(const struct path *path, int flags,
+ 		return f;
+ 
+ 	f->f_path = *path;
++	path_get(&f->f_path);
+ 	error = do_dentry_open(f, NULL);
+ 	if (error) {
+ 		fput(f);
+-- 
+2.43.0
+
