@@ -1,65 +1,31 @@
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E85B91FDE3D
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 13:45:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66258201267
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 13:49:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741095922; cv=none; b=RexIH1DaBtVNY2NrP893XXw9HGzVa7XUDXGO4JVZnReV1LH/neNWIeMG8ZwlPQYHE/Jg4XXfJNS8HmmUlkXSaZnGGD0ssprr2B6+LlaVDQ/F8I5M/D1Eb+7U0VnPawnMoeFTQZOC5iuFxtJdxxGi9pgVnci8RZJ7lDb3PmgnlFI=
+	t=1741096168; cv=none; b=uLmLMcUNkSIPl6VA2UVxUYnPB4OB/gWA1FxSQ1TWDIHjfEZ204kYzjuQlrYIpkqWjXYUk3Cp6oVG7VfaTvHt0Uku/VQPOASsz9KZk4dF5oUf56Na8DZ0WqKGZ/GtWe2u2ht9TcoArzVfX13kVZQG15p75CDkaLfP4FFwUgD5E+8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741095922; c=relaxed/simple;
-	bh=NqK0lDxLELOL9DD+GeZsCiZ5LA3cKDL5a44tbt5qZtE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=h+GpPNCytPTuqN5yNjtpSu2l3LUZo3259WpOC1QDyCksk+wAn0Mgo/cpXnTA15762IhR/lr/WwDtD5DTTua2tzvNJ+IdL8JWDh2enBnsgAvt09tugWRJadOmF+Q2R3BhY72aJPeshoZnGvBEGaRUiXp1dW7JdATdVAW4ebUWj4E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=tDN1yHwo; arc=none smtp.client-ip=209.85.221.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tDN1yHwo"
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-390f69f8083so2944018f8f.0
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Mar 2025 05:45:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741095918; x=1741700718; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=jtRRg4J7QV1jyEFxXJ9yQG1POl4I6geC1f76q6WuMIM=;
-        b=tDN1yHwodjOz4V3TRaZu7iziYe2aMoFtxsUtCyMhRwPJNDTehta4eM8HZJhUpLmyAt
-         qhbDdH/VrB4MYIV/Z99sMCVaaFF2iZLgEWWAuP8+B1K9Jc8uOCYmokoyiLqcLl7C3RLs
-         Mab+JuebmUNp/JLd8S2mbpTiPiJJuQcIjxY/QIlOugVZFCzOKgDdabxmEoAKUEsakHW2
-         lY/J+muA+GcXtLvoipL9knf62ZNEF7oifZqmqj9JwhyspGDXq8Twusj0dZE+l+L80Tnn
-         HAFwbLvqqoL24nBma7S6eVVHq1IO1OEkHBHjsY0GIsll/AIeH6cjw2LivZ6ONaCcI6u+
-         muWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741095918; x=1741700718;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jtRRg4J7QV1jyEFxXJ9yQG1POl4I6geC1f76q6WuMIM=;
-        b=ESfDUq0cgsIQlMH46qjh/2Xud1M0bYIfFen9WXBRCoL3LBe/aH/8qSym/EF8t9dih/
-         fNha89bNHUeqoyEP800jlyJVnWwGkc9g7HLPD+ypIb53A0PDWsN3MGkbyOja2bZP7s47
-         wFe4YBWJ3H/HmNL9SnvrS7Yr+BWeUg7tzVPBU3fuf7faN75MnkTsJCbGzFnXVx37Z2hF
-         iFSFcjeizN1Rr/8F9on5UfzXLjb3YfMS9ZoihgzJkmLDr0RPmpg9y3jlB+PT1BW8ri3F
-         IrlUpse3/WEux5qSzdG7IgQvR+FWFU/3Thr0MTjUk89EA8XmD79lURSq6xxJs8Ex3sN4
-         zmTQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVHRfGVGTnrloMrt6C8bXWwG/zqiU+40cYmqF/NlEFXdWJdNmn/jKZxusQp7nvR/PU5UaLSDXU/qFIG5pY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx5+983B5o/4BGYxcHf3O2UIPmE21x1WP2lat+ohX7oIzavrapN
-	ZC+I6jQA+TP4DMdogqx2y1Fdo0mdx+NJwHN0Qt73SW7Sha8kvjbmPzZsnOs4pdk=
-X-Gm-Gg: ASbGncv48AbGzHmS1EhfAP8P0wsByHKh9boXzVI53raMrDdtGmTNPnltPZ98NXbq2ek
-	Ixb1DxyGaXCe68aaNHsw+uH0j5HTtc5RWrti7kuC3w64mOZQyBiHmF2CF9VR731F/VdDGm5PiUN
-	7JqighyPQUTpq0Qj1UJfkKDXb/Ew3Y9YL6jbvROJl/68Pyd4iq8VnsIjm08T9PqZ1cg9L7ZcOIM
-	wPDjUfrziswukM1pvWvLLBm1770K3O+D/7MewzI5R3nSJkeabF90WgECGG8bOmxqwD0EFS1eLrM
-	B93F+94VBQNAe5z8u+z+FcgMENSoQdtfsUzaLsfBMn3AOBYH2Zgx+M7+77l1obrQhzuprPAFYc3
-	BcSILkJRybA==
-X-Google-Smtp-Source: AGHT+IGJ4dtiZRMJMOnqPeHzryVAMSS7yvTZyuTJnVR+H4eCzXwrKiCtheWRCRn+0WfWFlydM7tKCA==
-X-Received: by 2002:a05:6000:1868:b0:390:de58:d7fe with SMTP id ffacd0b85a97d-390eca40e2bmr15866381f8f.51.1741095918174;
-        Tue, 04 Mar 2025 05:45:18 -0800 (PST)
-Received: from [192.168.0.35] (188-141-3-146.dynamic.upc.ie. [188.141.3.146])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-390e485d8e4sm17414305f8f.85.2025.03.04.05.45.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 04 Mar 2025 05:45:17 -0800 (PST)
-Message-ID: <79691e26-cddb-47d2-9112-deae3f9aaee6@linaro.org>
-Date: Tue, 4 Mar 2025 13:45:17 +0000
+	s=arc-20240116; t=1741096168; c=relaxed/simple;
+	bh=zIcjd+GZ4jHLuGDbIL1wO2AAE5TPtRSirf5FTkhQ3LM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=PrMIx1w8qyqEuvaXs8KnXwAXrjNcdn+EPDG7SklmeHFeG6q9RGS16wR9E8ve/nTOvQJ2YjIeITMLzDhPc+oVid4OgvOJpioqVBXVdbmKjG+ftkaEEj8EOXhvyuL7nD6/QFGKX0oA/SlnMoLXf7uvI03YSAFeorR3dlEYfADsHB8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.163])
+	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4Z6cPd6RsSz2Dkbh;
+	Tue,  4 Mar 2025 21:45:09 +0800 (CST)
+Received: from kwepemj200003.china.huawei.com (unknown [7.202.194.15])
+	by mail.maildlp.com (Postfix) with ESMTPS id 6ED1D180214;
+	Tue,  4 Mar 2025 21:49:21 +0800 (CST)
+Received: from [10.67.120.170] (10.67.120.170) by
+ kwepemj200003.china.huawei.com (7.202.194.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Tue, 4 Mar 2025 21:49:20 +0800
+Message-ID: <66470ea1-668a-418a-bcf6-c8702be799ce@huawei.com>
+Date: Tue, 4 Mar 2025 21:49:20 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,110 +33,219 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] media: venus: fix OOB read issue due to double
- read
-To: Vedang Nagar <quic_vnagar@quicinc.com>,
- Stanimir Varbanov <stanimir.k.varbanov@gmail.com>,
- Vikash Garodia <quic_vgarodia@quicinc.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250215-venus-security-fixes-v2-0-cfc7e4b87168@quicinc.com>
- <20250215-venus-security-fixes-v2-1-cfc7e4b87168@quicinc.com>
-Content-Language: en-US
-From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-In-Reply-To: <20250215-venus-security-fixes-v2-1-cfc7e4b87168@quicinc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH 2/3] dma-mapping: benchmark: add support for dma_map_sg
+To: Barry Song <21cnbao@gmail.com>
+CC: yangyicong <yangyicong@huawei.com>, "hch@lst.de" <hch@lst.de>,
+	"iommu@lists.linux.dev" <iommu@lists.linux.dev>, Jonathan Cameron
+	<jonathan.cameron@huawei.com>, "Zengtao (B)" <prime.zeng@hisilicon.com>,
+	"fanghao (A)" <fanghao11@huawei.com>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+References: <20250212022718.1995504-1-xiaqinxin@huawei.com>
+ <20250212022718.1995504-3-xiaqinxin@huawei.com>
+ <CAGsJ_4yDBT4rJyG4-Ow4T3xLq8VujBjG+-uxjnWUm_vW1nzT_A@mail.gmail.com>
+ <43618c9167654c68945ec5e7d9bf69d5@huawei.com>
+ <CAGsJ_4zNTYsMkeBav7z=AKdm5CjB=Y73P1QBzq+9FS--z9t9Cw@mail.gmail.com>
+From: Qinxin Xia <xiaqinxin@huawei.com>
+In-Reply-To: <CAGsJ_4zNTYsMkeBav7z=AKdm5CjB=Y73P1QBzq+9FS--z9t9Cw@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ kwepemj200003.china.huawei.com (7.202.194.15)
 
-On 15/02/2025 17:19, Vedang Nagar wrote:
-> During message queue read, the address is being read twice
-> from the shared memory. The first read is validated against
-> the size of the packet, however the second read is not
-> being validated. Therefore, it's possible for firmware to
-> modify the value to a bigger invalid value which can lead
-> to OOB read access issue while reading the packet.
-> Added fix to reupdate the size of the packet which was
-> read for the first time.
-> 
-> Signed-off-by: Vedang Nagar <quic_vnagar@quicinc.com>
-> ---
->   drivers/media/platform/qcom/venus/hfi_venus.c | 1 +
->   1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/media/platform/qcom/venus/hfi_venus.c b/drivers/media/platform/qcom/venus/hfi_venus.c
-> index f9437b6412b91c2483670a2b11f4fd43f3206404..c124db8ac79d18f32289a690ee82145dc93daee6 100644
-> --- a/drivers/media/platform/qcom/venus/hfi_venus.c
-> +++ b/drivers/media/platform/qcom/venus/hfi_venus.c
-> @@ -298,6 +298,7 @@ static int venus_read_queue(struct venus_hfi_device *hdev,
->   			memcpy(pkt, rd_ptr, len);
->   			memcpy(pkt + len, queue->qmem.kva, new_rd_idx << 2);
->   		}
-> +		*(u32 *)pkt = dwords << 2;
->   	} else {
->   		/* bad packet received, dropping */
->   		new_rd_idx = qhdr->write_idx;
-> 
 
-This is confusing - where is the read
+在 2025/2/22 14:36, Barry Song 写道:
+> On Fri, Feb 21, 2025 at 4:16 PM xiaqinxin <xiaqinxin@huawei.com> wrote:
+>>
+>>
+>> -----邮件原件-----
+>> 发件人: Barry Song <21cnbao@gmail.com>
+>> 发送时间: 2025年2月18日 4:59
+>> 收件人: xiaqinxin <xiaqinxin@huawei.com>
+>> 抄送: chenxiang66@hisilicon.com; yangyicong <yangyicong@huawei.com>; hch@lst.de; iommu@lists.linux.dev; Jonathan Cameron <jonathan.cameron@huawei.com>; Zengtao (B) <prime.zeng@hisilicon.com>; fanghao (A) <fanghao11@huawei.com>; linux-kernel@vger.kernel.org
+>> 主题: Re: [PATCH 2/3] dma-mapping: benchmark: add support for dma_map_sg
+>>
+>> On Wed, Feb 12, 2025 at 3:27 PM Qinxin Xia <xiaqinxin@huawei.com> wrote:
+>>> Support for dma scatter-gather mapping and is intended for testing
+>>> mapping performance. It achieves by introducing the dma_sg_map_param
+>>> structure and related functions, which enable the implementation of
+>>> scatter-gather mapping preparation, mapping, and unmapping operations.
+>>> Additionally, the dma_map_benchmark_ops array is updated to include
+>>> operations for scatter-gather mapping. This commit aims to provide a
+>>> wider range of mapping performance test  to cater to different scenarios.
+>> This benchmark is mainly designed to debug contention issues, such as IOMMU TLB flushes or IOMMU driver bottlenecks. I don't fully understand how SG or single will impact the evaluation of the IOMMU driver, making it unclear if the added complexity is justified.
+>>
+>> Can you add some explanation on why single mode is not sufficient for profiling and improving IOMMU drivers?
+>>
+>> Hello Barry ! 😊
+>> Currently, the HiSilicon accelerator service uses the dma_map_sg interface. We want to evaluate the performance of the entire DMA map process. (including not only the iommu, but also the map framework). In addition, for scatterlist, __iommu_map is executed for each nent. This increases the complexity and time overhead of mapping. The effect of this fragmentation is not obvious in dma_map_single, which only handles a single contiguous block of memory.
+>>
+> Thanks!
+> Please update your editor to ensure it doesn't respond with such long sentences
+> without line breaks in the future :-)
 
-Your previous code
+Hello Barry !
 
-https://lore.kernel.org/lkml/20250104-venus-security-fixes-v1-1-9d0dd4594cb4@quicinc.com/
+Thank you for your advice, I will I'll pay attention. Leon
 
-memcpy(pkt, (u32 *)(queue->qmem.kva + (rd_idx << 2)), sizeof(u32));
+> Can you provide concrete examples or data showing how the newly added mode
+> improves profiling of the entire DMA map process? For instance, what limitations
+> exist without this mode? What performance issues cannot be identified without
+> it?
 
-V1 then would have been:
+You can see this patch 
+:https://lore.kernel.org/all/cover.1738765879.git.leonro@nvidia.com/
 
-if (new_rd_idx < qsize) {
-     memcpy(pkt, rd_ptr, dwords << 2);
-} else {
-     size_t len;
+Leon provides new interface for scatterlist scenarios to improve 
+performance and gives some
 
-     new_rd_idx -= qsize;
-     len = (dwords - new_rd_idx) << 2;
-     memcpy(pkt, rd_ptr, len);
-     memcpy(pkt + len, queue->qmem.kva, new_rd_idx << 2);
-}
+application instance in rdma and vfio. Users can use dma_map_sg 
+benchmark to measure
 
-+ memcpy(pkt, (u32 *)(queue->qmem.kva + (rd_idx << 2)), sizeof(u32));
+the performance improvement of the optimized interface compared with the 
+previous one.
 
-V2 proposed:
+Thanks!
 
-if (new_rd_idx < qsize) {
-     memcpy(pkt, rd_ptr, dwords << 2);
-} else {
-     size_t len;
-
-     new_rd_idx -= qsize;
-     len = (dwords - new_rd_idx) << 2;
-     memcpy(pkt, rd_ptr, len);
-     memcpy(pkt + len, queue->qmem.kva, new_rd_idx << 2);
-}
-
-+ *(u32 *)pkt = dwords << 2;
-
-My comment wasn't about use of memcpy() it was about why we are doing this.
-
-For example if new_rd_idx < qsize is true then we literally do
-
-a) memcpy(pkt, rd_ptr, dwords << 2);
-b) *(u32 *)pkt = dwords << 2;
-
-and the question is why ? That is an unambiguous cast of pkt to the 
-value of dwords << 2;
-
-What is the scope of how the data can change from a to b ?
-
-And why is the data considered potentially invalid @ the memcpy() but 
-valid subsequent the cast ?
-
-Assuming rd_ptr contains the length of dwords << 2 to begin with in the 
-first 4 bytes - why is it necessary to make _really_ _really_ sure by 
-restuffing the data ?
-
-For example if *(u32 *)rd_ptr != dwords << 2 - why shouldn't we just 
-throw the whole frame away as containing junk data ?
-
----
-bod
+>
+>>> Signed-off-by: Qinxin Xia <xiaqinxin@huawei.com>
+>>> ---
+>>>   include/linux/map_benchmark.h |   1 +
+>>>   kernel/dma/map_benchmark.c    | 102 ++++++++++++++++++++++++++++++++++
+>>>   2 files changed, 103 insertions(+)
+>>>
+>>> diff --git a/include/linux/map_benchmark.h
+>>> b/include/linux/map_benchmark.h index 054db02a03a7..a9c1a104ba4f
+>>> 100644
+>>> --- a/include/linux/map_benchmark.h
+>>> +++ b/include/linux/map_benchmark.h
+>>> @@ -17,6 +17,7 @@
+>>>
+>>>   enum {
+>>>          DMA_MAP_SINGLE_MODE,
+>>> +       DMA_MAP_SG_MODE,
+>>>          DMA_MAP_MODE_MAX
+>>>   };
+>>>
+>>> diff --git a/kernel/dma/map_benchmark.c b/kernel/dma/map_benchmark.c
+>>> index d8ec0ce058d8..b5828eeb3db7 100644
+>>> --- a/kernel/dma/map_benchmark.c
+>>> +++ b/kernel/dma/map_benchmark.c
+>>> @@ -17,6 +17,7 @@
+>>>   #include <linux/module.h>
+>>>   #include <linux/pci.h>
+>>>   #include <linux/platform_device.h>
+>>> +#include <linux/scatterlist.h>
+>>>   #include <linux/slab.h>
+>>>   #include <linux/timekeeping.h>
+>>>
+>>> @@ -111,8 +112,109 @@ static struct map_benchmark_ops dma_single_map_benchmark_ops = {
+>>>          .do_unmap = dma_single_map_benchmark_do_unmap,
+>>>   };
+>>>
+>>> +struct dma_sg_map_param {
+>>> +       struct sg_table sgt;
+>>> +       struct device *dev;
+>>> +       void **buf;
+>>> +       u32 npages;
+>>> +       u32 dma_dir;
+>>> +};
+>>> +
+>>> +static void *dma_sg_map_benchmark_prepare(struct map_benchmark_data
+>>> +*map) {
+>>> +       struct scatterlist *sg;
+>>> +       int i = 0;
+>>> +
+>>> +       struct dma_sg_map_param *mparam __free(kfree) = kzalloc(sizeof(*mparam), GFP_KERNEL);
+>>> +       if (!mparam)
+>>> +               return NULL;
+>>> +
+>>> +       mparam->npages = map->bparam.granule;
+>>> +       mparam->dma_dir = map->bparam.dma_dir;
+>>> +       mparam->dev = map->dev;
+>>> +       mparam->buf = kmalloc_array(mparam->npages, sizeof(*mparam->buf),
+>>> +                                   GFP_KERNEL);
+>>> +       if (!mparam->buf)
+>>> +               goto err1;
+>>> +
+>>> +       if (sg_alloc_table(&mparam->sgt, mparam->npages, GFP_KERNEL))
+>>> +               goto err2;
+>>> +
+>>> +       for_each_sgtable_sg(&mparam->sgt, sg, i) {
+>>> +               mparam->buf[i] = (void *)__get_free_page(GFP_KERNEL);
+>>> +               if (!mparam->buf[i])
+>>> +                       goto err3;
+>>> +
+>>> +               if (mparam->dma_dir != DMA_FROM_DEVICE)
+>>> +                       memset(mparam->buf[i], 0x66, PAGE_SIZE);
+>>> +
+>>> +               sg_set_buf(sg, mparam->buf[i], PAGE_SIZE);
+>>> +       }
+>>> +
+>>> +       return_ptr(mparam);
+>>> +
+>>> +err3:
+>>> +       while (i-- > 0)
+>>> +               free_page((unsigned long)mparam->buf[i]);
+>>> +
+>>> +       pr_err("dma_map_sg failed get free page on %s\n", dev_name(mparam->dev));
+>>> +       sg_free_table(&mparam->sgt);
+>>> +err2:
+>>> +       pr_err("dma_map_sg failed alloc sg table on %s\n", dev_name(mparam->dev));
+>>> +       kfree(mparam->buf);
+>>> +err1:
+>>> +       pr_err("dma_map_sg failed alloc mparam buf on %s\n", dev_name(mparam->dev));
+>>> +       return NULL;
+>>> +}
+>>> +
+>>> +static void dma_sg_map_benchmark_unprepare(void *arg) {
+>>> +       struct dma_sg_map_param *mparam = arg;
+>>> +       int i;
+>>> +
+>>> +       for (i = 0; i < mparam->npages; i++)
+>>> +               free_page((unsigned long)mparam->buf[i]);
+>>> +
+>>> +       sg_free_table(&mparam->sgt);
+>>> +
+>>> +       kfree(mparam->buf);
+>>> +       kfree(mparam);
+>>> +}
+>>> +
+>>> +static int dma_sg_map_benchmark_do_map(void *arg) {
+>>> +       struct dma_sg_map_param *mparam = arg;
+>>> +
+>>> +       int sg_mapped = dma_map_sg(mparam->dev, mparam->sgt.sgl,
+>>> +                                  mparam->npages, mparam->dma_dir);
+>>> +       if (!sg_mapped) {
+>>> +               pr_err("dma_map_sg failed on %s\n", dev_name(mparam->dev));
+>>> +               return -ENOMEM;
+>>> +       }
+>>> +
+>>> +       return 0;
+>>> +}
+>>> +
+>>> +static int dma_sg_map_benchmark_do_unmap(void *arg) {
+>>> +       struct dma_sg_map_param *mparam = arg;
+>>> +
+>>> +       dma_unmap_sg(mparam->dev, mparam->sgt.sgl, mparam->npages,
+>>> +                    mparam->dma_dir);
+>>> +
+>>> +       return 0;
+>>> +}
+>>> +
+>>> +static struct map_benchmark_ops dma_sg_map_benchmark_ops = {
+>>> +       .prepare = dma_sg_map_benchmark_prepare,
+>>> +       .unprepare = dma_sg_map_benchmark_unprepare,
+>>> +       .do_map = dma_sg_map_benchmark_do_map,
+>>> +       .do_unmap = dma_sg_map_benchmark_do_unmap, };
+>>> +
+>>>   static struct map_benchmark_ops *dma_map_benchmark_ops[DMA_MAP_MODE_MAX] = {
+>>>          [DMA_MAP_SINGLE_MODE] = &dma_single_map_benchmark_ops,
+>>> +       [DMA_MAP_SG_MODE] = &dma_sg_map_benchmark_ops,
+>>>   };
+>>>
+>>>   static int map_benchmark_thread(void *data)
+>>> --
+>>> 2.33.0
+>>>
+> Thanks
+> Barry
