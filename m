@@ -1,117 +1,102 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A916F29DB8C;
-	Tue,  4 Mar 2025 16:33:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6C35264A91;
+	Tue,  4 Mar 2025 16:35:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741106017; cv=none; b=rpkg3Ljn3JlnH9ksZCJQpiu2PdwzZJRRTj+UxaiIsbDgXpJI5B819zoXO+IG4kqIyTabD1OSH8mSZE75xiejKZTOXFqrjV/N3iyFFXJNcgp14tchsfFFSyFUXh5wsD8hrKE8iImbYX4QVyynrrFZ2GZ+hFXzAC+AWp3ew/UWayQ=
+	t=1741106126; cv=none; b=I8kKy91XM3nYALhz4xEeaBVC9er2mISSqs/DNZ1PobzbUbnGBTkwbLKyOEaGE4JbtfFxCkQRkvKKalCmVX1PPnIQ9f3/MEwyZE1Ql8Gf7AsB5EyOQuQELWpK96Gl+h53fEym0TqW1wbhcEMKoQMjK0Ipkxi6bWbbNNyc8hKMlnQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741106017; c=relaxed/simple;
-	bh=VCOeL991JkwbQRi293YQHFz7wPutL8i9mtZnvqnriTM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=I2sYE8zYOjwGZ/XbGGmaGiAflOpGxZ+Tr+UVvXUTPwqxadIVWYuR1HJP57kb14+Sb9L4Z8tXsZm+OhNdM+DR+nKcQPRcpAcSFSt+Rdu+uvkjCncGyVsCZDvhH4/gD4O5V8r0S0efsXM/8OMsu/k/lWIo3QbOq3v9go3kdCadjCo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kGEdcN1U; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1741106126; c=relaxed/simple;
+	bh=uTZtAcGD27ys5mwl7TA1zFMFkvyG6nq684nffzW7D+0=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=lTs13lHMFnWoIcuyZnLsV8JQaJu27xWQ6fw105kPEytb2HZGDgr6KsGh8s/ezZr4iwuQOxYPDGZ+d4Y7kzLrH+bhR4SqDi5FI1tummcsJdswrTv/wqYcS5WA8ybXFxPllORfl3WlYdF9o77CzBELR9moMxDUrDm++DNYffuGfss=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j7hQIFxO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kGEdcN1U"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741106015; x=1772642015;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=VCOeL991JkwbQRi293YQHFz7wPutL8i9mtZnvqnriTM=;
-  b=kGEdcN1UE3TxWTVNxWhjxt9mL7FcZ8fI9xr2VB9XgPy8WZt7H2pOYHox
-   7QBZt4a8OhWiS04e1xZTEdCPQjLxWZO5J5A52DAssA3bRn6SkkyhOX+2S
-   Eisymyc+JqWHO6VX4Gu/x8H13BVwmFwBN6ebEN6WmJEAyQnhuSTEC52Tu
-   EHKm03JEdalXfgTPrd75IwUdWP1Vgky4fJxaWL2N0xiHY+ggp52PDGFAm
-   +z3//hXgGqFdbogzxVoXp+6xubFSoI5CaeJytpUEOzvGx7fIG7xg5arQW
-   GSMYzylIUiYRdFwIArFKs8YT3fsbfhx957nrhDMR7XG47TRvzLVEL6ZZZ
-   g==;
-X-CSE-ConnectionGUID: HrfXzM0TRqGspAB+6irjDA==
-X-CSE-MsgGUID: z1rTr8WOT7+Ab8yJbbsTrQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11363"; a="52240177"
-X-IronPort-AV: E=Sophos;i="6.14,220,1736841600"; 
-   d="scan'208";a="52240177"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2025 08:33:35 -0800
-X-CSE-ConnectionGUID: ppR4q47NSCelxYxBkNfb9Q==
-X-CSE-MsgGUID: 3iZBu1TlTnSQOAZL0ftwCQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="123627822"
-Received: from lstrano-mobl6.amr.corp.intel.com (HELO [10.125.109.118]) ([10.125.109.118])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2025 08:33:33 -0800
-Message-ID: <3d621fa8-b288-41c4-9ede-233ca9608237@intel.com>
-Date: Tue, 4 Mar 2025 09:33:32 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j7hQIFxO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E38F0C4CEE5;
+	Tue,  4 Mar 2025 16:35:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741106126;
+	bh=uTZtAcGD27ys5mwl7TA1zFMFkvyG6nq684nffzW7D+0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=j7hQIFxOQbVS5TqOYMymW+CSIlJL61wC45Uupjdl3+yzYs5Si4DmYm3zhhYiKmvNk
+	 Du9i+KeqqUG6B5c8UEmr9CzuW/j1eaeEufIMYE2c+WhGLu/EShCtUJuPJ4ex4ZLU5g
+	 XJH/0ypQ8gM6O7oIAFMqPB50BXkSCcrdAQtVW1g4sbnxXz5xmAKgd9CNQkP3QXks90
+	 dHkJZL+n1xuu9rlnAOPWkbFyM0TEupuonsmsycbmnWUcy6u7N8DKfS4yFCG7mxX/y/
+	 shhNPv22SIQEZsKTi7ohoOYETJl+TnnciBHA5z9wmyKoqhts9k9PuLyyYesElH1oTH
+	 KSxJnVonW+v+Q==
+Date: Tue, 4 Mar 2025 08:35:24 -0800
+From: Jakub Kicinski <kuba@kernel.org>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Paolo Abeni <pabeni@redhat.com>, Christoph Hellwig <hch@lst.de>, Marek
+ Szyprowski <m.szyprowski@samsung.com>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Rasesh Mody <rmody@marvell.com>,
+ GR-Linux-NIC-Dev@marvell.com, Andrew Lunn <andrew+netdev@lunn.ch>, "David
+ S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>
+Subject: Re: [PATCH net v1 1/1] bnx2: Fix unused data compilation warning
+Message-ID: <20250304083524.3fe2ced4@kernel.org>
+In-Reply-To: <Z8cC_xMScZ9rq47q@smile.fi.intel.com>
+References: <20250228100538.32029-1-andriy.shevchenko@linux.intel.com>
+	<20250303172114.6004ef32@kernel.org>
+	<Z8bcaR9MS7dk8Q0p@smile.fi.intel.com>
+	<5ec0a2cc-e5f6-42dd-992c-79b1a0c1b9f5@redhat.com>
+	<Z8bq6XJGJNbycmJ9@smile.fi.intel.com>
+	<Z8cC_xMScZ9rq47q@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] cxl/Documentation: Remove 'mixed' from sysfs mode doc
-To: Ira Weiny <ira.weiny@intel.com>, Alejandro Lucero <alucerop@amd.com>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>, Fan Ni <fan.ni@samsung.com>
-Cc: Dan Williams <dan.j.williams@intel.com>, linux-kernel@vger.kernel.org,
- linux-cxl@vger.kernel.org
-References: <20250224-remove-mixed-sysfs-v1-1-a329db313dac@intel.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20250224-remove-mixed-sysfs-v1-1-a329db313dac@intel.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
+On Tue, 4 Mar 2025 15:41:19 +0200 Andy Shevchenko wrote:
+> > > diff --git a/include/linux/dma-mapping.h b/include/linux/dma-mapping.h
+> > > index b79925b1c433..927884f10b0f 100644
+> > > --- a/include/linux/dma-mapping.h
+> > > +++ b/include/linux/dma-mapping.h
+> > > @@ -629,7 +629,7 @@ static inline int dma_mmap_wc(struct device *dev,
+> > >  #else
+> > >  #define DEFINE_DMA_UNMAP_ADDR(ADDR_NAME)
+> > >  #define DEFINE_DMA_UNMAP_LEN(LEN_NAME)
+> > > -#define dma_unmap_addr(PTR, ADDR_NAME)           (0)
+> > > +#define dma_unmap_addr(PTR, ADDR_NAME)           (((PTR)->ADDR_NAME), 0)
+> > >  #define dma_unmap_addr_set(PTR, ADDR_NAME, VAL)  do { } while (0)
+> > >  #define dma_unmap_len(PTR, LEN_NAME)             (0)
+> > >  #define dma_unmap_len_set(PTR, LEN_NAME, VAL)    do { } while (0)
+> > > ---
+> > > 
+> > > Would that work?  
+> 
+> Actually it won't work because the variable is under the same ifdeffery.
+> What will work is to spreading the ifdeffery to the users, but it doesn't any
+> better than __maybe_unsused, which is compact hack (yes, I admit that it is not
+> the nicest solution, but it's spread enough in the kernel).
+
+I meant something more like (untested):
+
+diff --git a/include/linux/dma-mapping.h b/include/linux/dma-mapping.h
+index b79925b1c433..a7ebcede43f6 100644
+--- a/include/linux/dma-mapping.h
++++ b/include/linux/dma-mapping.h
+@@ -629,10 +629,10 @@ static inline int dma_mmap_wc(struct device *dev,
+ #else
+ #define DEFINE_DMA_UNMAP_ADDR(ADDR_NAME)
+ #define DEFINE_DMA_UNMAP_LEN(LEN_NAME)
+-#define dma_unmap_addr(PTR, ADDR_NAME)           (0)
+-#define dma_unmap_addr_set(PTR, ADDR_NAME, VAL)  do { } while (0)
+-#define dma_unmap_len(PTR, LEN_NAME)             (0)
+-#define dma_unmap_len_set(PTR, LEN_NAME, VAL)    do { } while (0)
++#define dma_unmap_addr(PTR, ADDR_NAME)           ({ typeof(PTR) __p __maybe_unused = PTR; 0; )}
++#define dma_unmap_addr_set(PTR, ADDR_NAME, VAL)  do { typeof(PTR) __p __maybe_unused = PTR; } while (0)
++#define dma_unmap_len(PTR, LEN_NAME)             ({ typeof(PTR) __p __maybe_unused = PTR; 0; )}
++#define dma_unmap_len_set(PTR, LEN_NAME, VAL)    do { typeof(PTR) __p __maybe_unused = PTR; } while (0)
+ #endif
+ 
+ #endif /* _LINUX_DMA_MAPPING_H */
 
 
-On 2/24/25 11:29 AM, Ira Weiny wrote:
-> Commit 188e9529a606 ("cxl: Remove the CXL_DECODER_MIXED mistake")
-> removed the mixed mode.
-> 
-> Remove it from the sysfs documentation.
-> 
-> Fixes: 188e9529a606 ("cxl: Remove the CXL_DECODER_MIXED mistake")
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-
-Applied to cxl/next
-
-> ---
->  Documentation/ABI/testing/sysfs-bus-cxl | 15 +++++++--------
->  1 file changed, 7 insertions(+), 8 deletions(-)
-> 
-> diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
-> index 3f5627a1210a16aca7c18d17131a56491048a0c2..3ba551ed10e29f33b9eb873bab9b542c8afb66f0 100644
-> --- a/Documentation/ABI/testing/sysfs-bus-cxl
-> +++ b/Documentation/ABI/testing/sysfs-bus-cxl
-> @@ -321,14 +321,13 @@ KernelVersion:	v6.0
->  Contact:	linux-cxl@vger.kernel.org
->  Description:
->  		(RW) When a CXL decoder is of devtype "cxl_decoder_endpoint" it
-> -		translates from a host physical address range, to a device local
-> -		address range. Device-local address ranges are further split
-> -		into a 'ram' (volatile memory) range and 'pmem' (persistent
-> -		memory) range. The 'mode' attribute emits one of 'ram', 'pmem',
-> -		'mixed', or 'none'. The 'mixed' indication is for error cases
-> -		when a decoder straddles the volatile/persistent partition
-> -		boundary, and 'none' indicates the decoder is not actively
-> -		decoding, or no DPA allocation policy has been set.
-> +		translates from a host physical address range, to a device
-> +		local address range. Device-local address ranges are further
-> +		split into a 'ram' (volatile memory) range and 'pmem'
-> +		(persistent memory) range. The 'mode' attribute emits one of
-> +		'ram', 'pmem', or 'none'. The 'none' indicates the decoder is
-> +		not actively decoding, or no DPA allocation policy has been
-> +		set.
->  
->  		'mode' can be written, when the decoder is in the 'disabled'
->  		state, with either 'ram' or 'pmem' to set the boundaries for the
-> 
-> ---
-> base-commit: 8760c1c0bf7eee63a56b5f9edb42d93737a6a378
-> change-id: 20250224-remove-mixed-sysfs-e3baa7616bcc
-> 
-> Best regards,
-
+I just don't know how much code out there depends on PTR not
+existing if !CONFIG_NEED_DMA_MAP_STATE
