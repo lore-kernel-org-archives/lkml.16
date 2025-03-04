@@ -1,240 +1,108 @@
-Received: from beeline3.cc.itu.edu.tr (beeline3.cc.itu.edu.tr [160.75.25.117])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3728E27F4D1
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 15:29:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=160.75.25.117
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741102175; cv=fail; b=izEoM/rJZXVO8a3FyXCAoQwpejbq31UMt1tRs5h7tJOwt/rLYsNYdeCAbBXcXL91KosUC8M9SMZ+hYL+3Jk1m5bcRoAuHg3gdil5+iqPm4AdnOLKG20PuTC8o7x1Dc9Ik0XtuyBdZrqkRqGgYsou2LtHtcmg1Th5O12pjPYUU/g=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741102175; c=relaxed/simple;
-	bh=U1cpx2HHWKwAOOaL+2CmA6qqaiQQdSvmtVx7NrQM/Y4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=k3x9WlpdY5BAJ6n8MXrZkugX1AZgxyPR/7tc/t3IKrIBPXYGMdfJAoxCFG4ZWyXlQQED2saFESmq68ng2qeNLOQBJKdDjlRPqSvIUo4ttX7lS6ZxAL31o5+WVqxy0vlQPRjOsmHhkiiHUttZoMOtctnXU3uNfH0z2a8oIIAYSMY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=none smtp.mailfrom=cc.itu.edu.tr; dkim=fail (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HbA7VZDt reason="signature verification failed"; arc=none smtp.client-ip=10.30.226.201; arc=fail smtp.client-ip=160.75.25.117
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=cc.itu.edu.tr
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HbA7VZDt"
-Received: from lesvatest1.cc.itu.edu.tr (lesvatest1.cc.itu.edu.tr [10.146.128.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits))
-	(No client certificate requested)
-	by beeline3.cc.itu.edu.tr (Postfix) with ESMTPS id 6CE2D40CEC8B
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 18:29:31 +0300 (+03)
-X-Envelope-From: <root@cc.itu.edu.tr>
-Authentication-Results: lesvatest1.cc.itu.edu.tr;
-	dkim=fail reason="signature verification failed" (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=HbA7VZDt
-Received: from lesva1.cc.itu.edu.tr (unknown [160.75.70.79])
-	by lesvatest1.cc.itu.edu.tr (Postfix) with ESMTP id 4Z6ffl35PzzFyl2
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 18:26:39 +0300 (+03)
-Received: by le1 (Postfix, from userid 0)
-	id 35E2442731; Tue,  4 Mar 2025 18:26:25 +0300 (+03)
-Authentication-Results: lesva1.cc.itu.edu.tr;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HbA7VZDt
-X-Envelope-From: <linux-kernel+bounces-541089-bozkiru=itu.edu.tr@vger.kernel.org>
-Authentication-Results: lesva2.cc.itu.edu.tr;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HbA7VZDt
-Received: from fgw1.itu.edu.tr (fgw1.itu.edu.tr [160.75.25.103])
-	by le2 (Postfix) with ESMTP id 71E6642305
-	for <bozkiru@itu.edu.tr>; Mon,  3 Mar 2025 10:24:39 +0300 (+03)
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by fgw1.itu.edu.tr (Postfix) with SMTP id 0F1BD3063EFE
-	for <bozkiru@itu.edu.tr>; Mon,  3 Mar 2025 10:24:38 +0300 (+03)
-Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 275423AFD82
-	for <bozkiru@itu.edu.tr>; Mon,  3 Mar 2025 07:24:26 +0000 (UTC)
-Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DAA931EB18B;
-	Mon,  3 Mar 2025 07:24:24 +0000 (UTC)
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CE1212B93;
-	Mon,  3 Mar 2025 07:24:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 826FD204C22
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 15:30:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740986661; cv=none; b=rFLgIQ3ah9Y7hYb3lLbMin1wESpjKObR/m/kH9WKOzEMfMivM7FHp2W45S4zlGhzpSYShJn6Px/pNdrtBvGyxnc2tu6xX7z9w0pCgSqhybtb9EaHJDvFjDBpMQrH8VwXTOK7L0lHIgQgRfeFrVUalwBrL/m7x16bC8wJRONaC9k=
+	t=1741102204; cv=none; b=huIEOZ9XPCE4gquWnfeCjusKHJqurcK5of3U6xt9PLxsONmi/EpubeRxCyU4cmUv6ycdV1fmS9DTOvqV0R6Oj9jcn4Grj6WPSEU67lblMqOrGxUBTtW89N9cCqjqM8tUzxc7HwXOt10cXcW1Dn3arwuwmlttrLpzm4pflpm098Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740986661; c=relaxed/simple;
-	bh=VySOvvJYVOXMBNDZlPELZwP+g8cJ/Y6sF/YKn/PvvDk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=efDOi8jLCCqIst4DrtXOy3L7IUWSRDOo0StuYP0ZQDPXXYIKTfZM/eK81y/+wATf/QcglUGlo5og35yxW5o1OJE5V+882EBN/mZ7g0o4hFvvEyffyBhs727MKNMBdxYVtm1377dU1oWNSYw0JFBaEv6VbHzUFulYUxCsa5PP0lY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HbA7VZDt; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4CB72C4CED6;
-	Mon,  3 Mar 2025 07:24:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740986660;
-	bh=VySOvvJYVOXMBNDZlPELZwP+g8cJ/Y6sF/YKn/PvvDk=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=HbA7VZDtl/TNWqG62oFhLMl+naJrz6RHcKCe2eecOjSTmvNSgowWBBPxsqrF0Xutl
-	 Dh+A/xjoB+v7Ap3lvHzUuCe135CCplLe/N1S07bo2GYI6gkcl1AMINuRjrRBxE5//N
-	 j9I48zLi8ourbw6TRjONfcLqJdrhGI03lmYfyk0cy6xI9QGn6ituRFuS2RzH2yBl7b
-	 WWcnGOrM78y2AmOp5XWTzwjEhwuBAXYPo9EIBdC4yIS+8lfVThl/2HnWcYCR8N2m3t
-	 PyiITAnhBIZMCHJYkm99gtdy4ktesE9VcdxGvtqjWuJHQg7BI1X7JHUT+QqLIyL5K7
-	 OfjucJD27eRog==
-Message-ID: <354d6100-311f-44d7-b8a5-1fd671b651e3@kernel.org>
-Date: Mon, 3 Mar 2025 08:24:13 +0100
-Precedence: bulk
+	s=arc-20240116; t=1741102204; c=relaxed/simple;
+	bh=DvT37mlLylWirMmvziApQyMOyXFz2tPHw47pSw/2Ns0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HGJMNk/T12RjIyVSMISzQBAKaiuhCoiU9/WlZIEdgoF6n8CzPTt2+63UjsCnmhz2SOcpVeh1WWAhejS9UsPo01v2nXqn/M+eu9z7P5WgIwn1PwHWkmYW+4Mp0a/O3guedn5d3alExO9s3bcJG58jFkhTClZ6dIPVOWSXu1x3Uqo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=f0qihsw6; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="f0qihsw6"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2234bec7192so97299865ad.2
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Mar 2025 07:30:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1741102202; x=1741707002; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=66psdEYIrVGR86JKMR8+mqBEFxkGfgmcukM2sBzapxc=;
+        b=f0qihsw6h6E1twiuVjL+pwN2kHj+/eIdoqLQS/bM5Pu1Rcst++qQvUyQnyW4fIl3Fw
+         XHmrKq6oSDnN+xGBU+RPFbDbngaZY06NTdSdDc8lixsezuXDonsQtMs1DGPVU1+5o06U
+         geZyewK6D+0sAxdjsYLg23YV+TA2kHt7sp/cAAWt0tKecJxorvOrQFJpAWJlOX6rGtXT
+         aiRCAFZPNplSmEsb20L7Yjy3Oy5aNa4dIG6QvrRILp33DAlP208t+V8sni5oafxqCkrI
+         KowpbOlG9gjuYfBw6xi5OHCkdKYAOqnd31j/Smi9wHgI5RTMl4TKXW0BpSlgeTgElKoe
+         wKNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741102202; x=1741707002;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=66psdEYIrVGR86JKMR8+mqBEFxkGfgmcukM2sBzapxc=;
+        b=oO5Jsv2TAvFaBkcfwBLTo01uA7LDN9e5YaUXXw+m/YgHMVAIG3H7s1JtMKAdT01nOD
+         6or5MCwGQjUQNjv4O59ZDyITnyMaZdtV5xjTtqKW/sWRU75qlGW86hS5N43khyBl+KsL
+         ky/ngbbimvBbWPkfdSts2ImgTLdO9huIzRYQABgD7iDkXVmmlWCLM0k1MGj0+Jt0WPYb
+         zEWA6LJsvCfZxFxAL1RdoIc7HaXH6iAvS5E7eHoeOFMiQdV+GgoGZPeN9qWi0iZcfA/c
+         I9+bn1BkZ8kGxzo06VLpkL0wNfxaOnq4JSAVTJtgN+cIRe5d1pHRdiMt4b5NUWCe9WZe
+         WTXw==
+X-Forwarded-Encrypted: i=1; AJvYcCWh4+Tsrydq97l+YEO+svc/0Zjue6IWi3A9cyUt+7QJ+pF7zOuiguObU7L0iICjXrGJx9rZLpHE39tooRA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzALWIQhXSibNUGpsmkxflcXj+FhzFL27FZbAdz3NTgWiCFBGUV
+	38/CEesUWDAP7HZ4cDzm8u2Ivw370ECTchceQo+9//VVWN83ZEVf8yavZwZhlQ==
+X-Gm-Gg: ASbGnctpmNlYqtYasQ79Urgd69GAg3TCv5ZY4wCpsVWbUGMWi75HvKHRsOIamcdO88c
+	Lll4FazZ+HCZPzTFgEbBj04+6DJ6up8T3v+N7miuhrnvKJhaiI8++zQh04JV6V/D0oUAvta1Gxz
+	Ksq6jKjGmPkgxVzPbEGdYf3X3DS+sTIK0sFs23UwKIUbs3ALfFb2i6IUBaUQrkiCJ3nB9Jeq+/j
+	FHXz3FRAZrvKkFKjSdZBEwpMnmPjyA5by99yA3OSZJGMJuli92rl8rMMCkoZaLy3kDqPLSzWozR
+	X+AANEu8JMI6saZyhjctpARJA3BA7Np33iOfwnkVLbMbDnfgSNusNUs=
+X-Google-Smtp-Source: AGHT+IHDLoudvsE8ThGCBDtv8xpmDC4PMrV1KRLn9yaD488OmdYvS42vvygcsTzqkS+txl9sTFzPNQ==
+X-Received: by 2002:a05:6a20:7348:b0:1ee:be88:f5cf with SMTP id adf61e73a8af0-1f2f4e00bfbmr34435609637.32.1741102202650;
+        Tue, 04 Mar 2025 07:30:02 -0800 (PST)
+Received: from thinkpad ([120.60.51.199])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-aee7de38003sm10265993a12.33.2025.03.04.07.29.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Mar 2025 07:30:01 -0800 (PST)
+Date: Tue, 4 Mar 2025 20:59:52 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+Cc: Shradha Todi <shradha.t@samsung.com>, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org, lpieralisi@kernel.org,
+	robh@kernel.org, bhelgaas@google.com, jingoohan1@gmail.com,
+	Jonathan.Cameron@huawei.com, fan.ni@samsung.com,
+	nifan.cxl@gmail.com, a.manzanares@samsung.com,
+	pankaj.dubey@samsung.com, cassel@kernel.org, 18255117159@163.com,
+	xueshuai@linux.alibaba.com, renyu.zj@linux.alibaba.com,
+	will@kernel.org, mark.rutland@arm.com
+Subject: Re: [PATCH v7 4/5] Add debugfs based error injection support in DWC
+Message-ID: <20250304152952.pal66goo2dwegevh@thinkpad>
+References: <20250221131548.59616-1-shradha.t@samsung.com>
+ <CGME20250221132039epcas5p31913eab0acec1eb5e7874897a084c725@epcas5p3.samsung.com>
+ <20250221131548.59616-5-shradha.t@samsung.com>
+ <20250303095200.GB1065658@rocinante>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/8] dt-bindings: phy: add
- samsung,exynos2200-usbcon-phy schema file
-To: Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>
-Cc: Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I
- <kishon@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>,
- Philipp Zabel <p.zabel@pengutronix.de>, Abel Vesa <abel.vesa@linaro.org>,
- linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-samsung-soc@vger.kernel.org, linux-phy@lists.infradead.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250223122227.725233-1-ivo.ivanov.ivanov1@gmail.com>
- <20250223122227.725233-4-ivo.ivanov.ivanov1@gmail.com>
- <20250224-curly-cyber-spaniel-efdc39@krzk-bin>
- <a4f63721-d094-4eda-b68a-6ef62ff54680@gmail.com>
- <c8184542-5dab-4403-bee4-867810397ae4@kernel.org>
- <4502b578-96e6-49e0-8f3b-54f6e5640c55@gmail.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <4502b578-96e6-49e0-8f3b-54f6e5640c55@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-ITU-Libra-ESVA-Information: Please contact Istanbul Teknik Universitesi for more information
-X-ITU-Libra-ESVA-ID: 4Z6ffl35PzzFyl2
-X-ITU-Libra-ESVA: No virus found
-X-ITU-Libra-ESVA-From: root@cc.itu.edu.tr
-X-ITU-Libra-ESVA-Watermark: 1741706881.12875@uE93wP2Bx1qDcmv1bQGSgw
-X-ITU-MailScanner-SpamCheck: not spam
-Message-ID: <20250303072413.NDbVzj-kuahU7WlwQz68mqlWubhiuWy8pOVRf_yNEUw@z>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250303095200.GB1065658@rocinante>
 
-On 02/03/2025 10:16, Ivaylo Ivanov wrote:
-> On 2/25/25 10:11, Krzysztof Kozlowski wrote:
->> On 24/02/2025 11:48, Ivaylo Ivanov wrote:
->>> On 2/24/25 10:56, Krzysztof Kozlowski wrote:
->>>> On Sun, Feb 23, 2025 at 02:22:22PM +0200, Ivaylo Ivanov wrote:
->>>>> The Exynos2200 SoC has a USB controller PHY, which acts as an
->>>>> intermediary between a USB controller (typically DWC3) and other PH=
-Ys
->>>>> (UTMI, PIPE3). Add a dt-binding schema for it.
->>>>>
->>>>> Signed-off-by: Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>
->>>>> ---
->>>>>  .../phy/samsung,exynos2200-usbcon-phy.yaml    | 76 +++++++++++++++=
-++++
->>>>>  1 file changed, 76 insertions(+)
->>>>>  create mode 100644 Documentation/devicetree/bindings/phy/samsung,e=
-xynos2200-usbcon-phy.yaml
->>>> You have undocumented dependencies which prevent merging this file.
->>>> First, dependencies have to be clearly expressed.
->>> They are, in the cover letter.
->> Where? I read it twice. Dependencies is the most important thing and
->> should scream at beginning of the cover letter, so if you bury them
->> somewhere deep it also would not matter - just like they were missing.
->>
->>>> Second, you should
->>>> rather decouple the code from header dependencies, otherwise this ca=
-nnot
->>>> be merged for current release (just use clocks with long names, with=
-out IDs).
->>> Sure
->>
->>>>> diff --git a/Documentation/devicetree/bindings/phy/samsung,exynos22=
-00-usbcon-phy.yaml b/Documentation/devicetree/bindings/phy/samsung,exynos=
-2200-usbcon-phy.yaml
->>>>> new file mode 100644
->>>>> index 000000000..7d879ec8b
->>>>> --- /dev/null
->>>>> +++ b/Documentation/devicetree/bindings/phy/samsung,exynos2200-usbc=
-on-phy.yaml
->>>>> @@ -0,0 +1,76 @@
->>>>> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
->>>>> +%YAML 1.2
->>>>> +---
->>>>> +$id: http://devicetree.org/schemas/phy/samsung,exynos2200-usbcon-p=
-hy.yaml#
->>>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->>>>> +
->>>>> +title: Exynos2200 USB controller PHY
->>>>> +
->>>>> +maintainers:
->>>>> +  - Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>
->>>>> +
->>>>> +description:
->>>>> +  Exynos2200 USB controller PHY is an intermediary between a USB c=
-ontroller
->>>>> +  (typically DWC3) and other PHYs (UTMI, PIPE3).
->>>> Isn't this the same as usbdrd phy? see: samsung,usb3-drd-phy.yaml
->>> It's not (I think). There's a few reasons I've decided to make this s=
-eparate
->>> from the usb3-drd-phy bindings and exynos5-usbdrd driver:
->>>
->>> 1. This PHY does not provide UTMI and PIPE3 on its own. There's no tu=
-ning
->> USBDRD phy does not provide UTMI and PIPE on its own either if you loo=
-k
->> at diagram - they call it phy controller.
->=20
-> Ughm. What? So in most exynos cases, there's a combination of multiple =
-phys?
+On Mon, Mar 03, 2025 at 06:52:00PM +0900, Krzysztof Wilczyński wrote:
+> Hello,
+> 
+> [...]
+> > +		29) Generates duplicate TLPs - duplicate_dllp
+> > +		30) Generates Nullified TLPs - nullified_tlp
+> 
+> Would the above field called "duplicate_dllp" for duplicate TLPs be
+> a potential typo?  Perhaps this should be called "duplicate_tlp"?
+> 
 
+Looks like a typo. As per Synopsys documentation, there is only 'duplicate TLP'
+field.
 
->=20
->>
->>> for them, and all that is needed from it is to disable HWACG, assert/
->>> deassert reset and force bvalid/vbusvalid. After that SNPS eUSB2
->>> initialization can be done and USB2 works. If the USBCON phy is not s=
-et
->>> up before the eUSB2 one, the device hangs, so there is definitely a
->>> dependancy between them. For PIPE3 we'd need to control the pipe3
->>> attaching/deattaching and then initialize the synopsys USBDP combophy=
+Good catch!
+
+- Mani
+
+-- 
+மணிவண்ணன் சதாசிவம்
