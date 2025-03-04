@@ -1,67 +1,66 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7294E255244;
-	Tue,  4 Mar 2025 19:23:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3278125C6FF;
+	Tue,  4 Mar 2025 19:23:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741116224; cv=none; b=SgxTQN49NIB2yAcwBcJLs0/GkxFKOizj9siMBFjFbw3S2p3CbDlluQ5cKMpClftPaKt7CBqMJBzViObIgEdOLXqAPN28Th39BwfVpJd2zlqvi7S4HELdAzc/DIwQQZ6Hoj6HcRKrAEcrPTqpNZtJHUYXvR4A25vlBzREGqcKOVw=
+	t=1741116224; cv=none; b=QWUE2GNLgDdxnw9h6XDMcseopt5q1P2SHfrJs96/42QK0H3KqCgHx9nKf1g6RDDhV6ti6SR0FH8dWheqJ8ImGedS1/UGK6SKbhniKxduDgZCKH7TpzIYR96zTHunj0uxJY2Orbp3ZyOsrLHCZuBMgmzY6VSYIRwrvLHrlchyhTY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1741116224; c=relaxed/simple;
-	bh=ECy34Gq9VbU3pNiLr/zhUl6oihQzqPecos/y0FC03C8=;
+	bh=4P3Tmn5qjIJGpGjyVRAMZneNBRRknbI10NwFZ7+sCbk=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=Ooa+beRA9GVXKLVfeW20xJUuR0iRWWPc/vzGIYSGzYBCIAf3d1YaFmV3KN67Z2WcW2R/JNCqybIymv+/bmWOSyh06X93dIgyNVHinFXMQCLkfg+v7FpGxDQMP4d/bAA3tWmM+WvDkSdP87YGK+l+6rdk7NcyITFsBxratwPK5j0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=gropIrcf; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=f+egllbR; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=KhHiiQQiDrbzb7Mk+n01cxGXT/mtEiHPNHfYvyLVFCZcmlPDlgO2nx6T2qwtCIuaPwDdVbTkJqxf5N4ef99hHAkFYFNP18YTfUT6Q4oIlrfxe1Kdwdc4MMW5OAe7/p01hc8y8F7LZUdT02PLiK0Ij9SMPsBs1agQNnCOS7bZG3k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=wuCdzSfa; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=jxlMmXlU; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="gropIrcf";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="f+egllbR"
-Date: Tue, 04 Mar 2025 19:23:38 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="wuCdzSfa";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="jxlMmXlU"
+Date: Tue, 04 Mar 2025 19:23:40 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1741116219;
+	s=2020; t=1741116221;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=dYRGUq2j8u/s74u9ZvI4O1PZlDtHWbL5tuQCp8Qf2f0=;
-	b=gropIrcfy4B1SS6xYmmI91NuvWkB1w2G5Gl7vifpEVwr2vftgXqmO89WtUP9je/HVD+vGE
-	kvy2PwqC73x0s815JGwbeOdnT8eTvB7tQ+/mYRMJc6qpR3QNoXb68NSDs5B4rt2PmjI0fz
-	385hw+Fskgiu3VfvMm+qJEjcZ4f2Mohz3pv2aBvijc0MQd2n2T2lGt2DoINb5JSvFsdM6C
-	+Mq3UeDqsVbGi2hrke6spx1JGFpbSQ1xLrq7WUk2Gy2rI8dFQuf6fJ6InK92/TQLvoeSDc
-	R4cq2MN2Awo8s2gOpGAIbUhujAfb0OQJX+nmrKJuW8kBv1RkpM3jna3oUzmp8Q==
+	bh=5DlvDfgGwZ9DuZNLBpRjFkqsIdpmytFmhzqtuKTBNwg=;
+	b=wuCdzSfaIiHv4xQ3jepmZ5+jiN/wYdyOvaZKWK6B0bovH38a3mEZDug3B2+VtTGG4P55SR
+	cvYlJ3kKgkHVd90HFV8DLWhgxEPYHFCpaf1EZ0EeWMhhw+t5ii0dO74st1dt+fUDjRl9CM
+	Ox2JUbSpyaek/ECWZL1jAuesKZrfHHcqIbFeuo+rvcbCEyaGRRCnuXZ7yRmaewgWCIW/tV
+	wWdh1u1qBOAKEcqbhAlVPEz8Zb6q76TKvWgTUQz3S3KKr1HJgWsdl9HzYNeAPpNwLtZ3AQ
+	9GAd3BZP0o+PPc2M1+q3GIbIgyhRwJvNrR/K1JdGlyZD8NJ1jEZ8oAUpQx+k5Q==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1741116219;
+	s=2020e; t=1741116221;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=dYRGUq2j8u/s74u9ZvI4O1PZlDtHWbL5tuQCp8Qf2f0=;
-	b=f+egllbRDKdEJVtBntCZVy7X5xFeFGF2lh2nafrT7Mws+jxuguz+Vib5c+SgHAzcxfFLCJ
-	9UgIJDmVivow3lCw==
+	bh=5DlvDfgGwZ9DuZNLBpRjFkqsIdpmytFmhzqtuKTBNwg=;
+	b=jxlMmXlUBLMU1pnjsj5i+BqUD5+Abm002vkfQACQE6Cfkd3QHbvWsJI+kJOmD2uy7IGgnJ
+	pTljgnMlvswM/YAw==
 From: "tip-bot2 for Uros Bizjak" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/asm] x86/irq/32: Use current_stack_pointer to avoid asm()
- in check_stack_overflow()
+Subject: [tip: x86/asm] x86/irq/32: Use named operands in inline asm
 Cc: Uros Bizjak <ubizjak@gmail.com>, Ingo Molnar <mingo@kernel.org>,
  Andy Lutomirski <luto@kernel.org>, Brian Gerst <brgerst@gmail.com>,
  "H. Peter Anvin" <hpa@zytor.com>,
  Linus Torvalds <torvalds@linux-foundation.org>,
  Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
  linux-kernel@vger.kernel.org
-In-Reply-To: <20250303155446.112769-4-ubizjak@gmail.com>
-References: <20250303155446.112769-4-ubizjak@gmail.com>
+In-Reply-To: <20250303155446.112769-1-ubizjak@gmail.com>
+References: <20250303155446.112769-1-ubizjak@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174111621869.14745.3674256832226611076.tip-bot2@tip-bot2>
+Message-ID: <174111622080.14745.8460888388605912001.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -71,16 +70,16 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the x86/asm branch of tip:
 
-Commit-ID:     1aee47babaa440b92314199963c5ed3395dc4edb
-Gitweb:        https://git.kernel.org/tip/1aee47babaa440b92314199963c5ed3395dc4edb
+Commit-ID:     0ec914707c3ed052ed26eb88f9300109030a7fb2
+Gitweb:        https://git.kernel.org/tip/0ec914707c3ed052ed26eb88f9300109030a7fb2
 Author:        Uros Bizjak <ubizjak@gmail.com>
-AuthorDate:    Mon, 03 Mar 2025 16:54:24 +01:00
+AuthorDate:    Mon, 03 Mar 2025 16:54:21 +01:00
 Committer:     Ingo Molnar <mingo@kernel.org>
 CommitterDate: Tue, 04 Mar 2025 20:12:40 +01:00
 
-x86/irq/32: Use current_stack_pointer to avoid asm() in check_stack_overflow()
+x86/irq/32: Use named operands in inline asm
 
-Make code more readable by using the 'current_stack_pointer' global variable.
+Also use inout "+" constraint modifier where appropriate.
 
 Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
@@ -89,24 +88,55 @@ Cc: Brian Gerst <brgerst@gmail.com>
 Cc: H. Peter Anvin <hpa@zytor.com>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: https://lore.kernel.org/r/20250303155446.112769-4-ubizjak@gmail.com
+Link: https://lore.kernel.org/r/20250303155446.112769-1-ubizjak@gmail.com
 ---
- arch/x86/kernel/irq_32.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+ arch/x86/kernel/irq_32.c | 20 +++++++++-----------
+ 1 file changed, 9 insertions(+), 11 deletions(-)
 
 diff --git a/arch/x86/kernel/irq_32.c b/arch/x86/kernel/irq_32.c
-index f351fa1..2428d66 100644
+index dc1049c..c4719c4 100644
 --- a/arch/x86/kernel/irq_32.c
 +++ b/arch/x86/kernel/irq_32.c
-@@ -31,10 +31,7 @@ int sysctl_panic_on_stackoverflow __read_mostly;
- /* Debugging check for stack overflow: is there less than 1KB free? */
- static int check_stack_overflow(void)
- {
--	long sp;
--
--	__asm__ __volatile__("andl %%esp,%0" :
--			     "=r" (sp) : "0" (THREAD_SIZE - 1));
-+	unsigned long sp = current_stack_pointer & (THREAD_SIZE - 1);
+@@ -54,12 +54,11 @@ static inline void print_stack_overflow(void) { }
  
- 	return sp < (sizeof(struct thread_info) + STACK_WARN);
+ static void call_on_stack(void *func, void *stack)
+ {
+-	asm volatile("xchgl	%%ebx,%%esp	\n"
++	asm volatile("xchgl %[sp], %%esp\n"
+ 		     CALL_NOSPEC
+-		     "movl	%%ebx,%%esp	\n"
+-		     : "=b" (stack)
+-		     : "0" (stack),
+-		       [thunk_target] "D"(func)
++		     "movl %[sp], %%esp"
++		     : [sp] "+b" (stack)
++		     : [thunk_target] "D" (func)
+ 		     : "memory", "cc", "edx", "ecx", "eax");
+ }
+ 
+@@ -71,7 +70,7 @@ static inline void *current_stack(void)
+ static inline int execute_on_irq_stack(int overflow, struct irq_desc *desc)
+ {
+ 	struct irq_stack *curstk, *irqstk;
+-	u32 *isp, *prev_esp, arg1;
++	u32 *isp, *prev_esp;
+ 
+ 	curstk = (struct irq_stack *) current_stack();
+ 	irqstk = __this_cpu_read(pcpu_hot.hardirq_stack_ptr);
+@@ -94,12 +93,11 @@ static inline int execute_on_irq_stack(int overflow, struct irq_desc *desc)
+ 	if (unlikely(overflow))
+ 		call_on_stack(print_stack_overflow, isp);
+ 
+-	asm volatile("xchgl	%%ebx,%%esp	\n"
++	asm volatile("xchgl %[sp], %%esp\n"
+ 		     CALL_NOSPEC
+-		     "movl	%%ebx,%%esp	\n"
+-		     : "=a" (arg1), "=b" (isp)
+-		     :  "0" (desc),   "1" (isp),
+-			[thunk_target] "D" (desc->handle_irq)
++		     "movl %[sp], %%esp"
++		     : "+a" (desc), [sp] "+b" (isp)
++		     : [thunk_target] "D" (desc->handle_irq)
+ 		     : "memory", "cc", "ecx");
+ 	return 1;
  }
