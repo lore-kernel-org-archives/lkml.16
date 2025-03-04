@@ -1,46 +1,46 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6153C1FC7E6;
-	Tue,  4 Mar 2025 07:11:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2ABD01FBEB3;
+	Tue,  4 Mar 2025 07:11:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741072282; cv=none; b=sw5f9wlyk/ibnUBhgRsTCuPx8AG+EPw09Uvt44OUYHnIdFZn2tygF1VIHonNQNWP9P3NJctN+VIIszKAdXhEVy7flqnYPZliO4ywfvcGwSBSS3sPweKVwX5ZWNu8lTVsHJjnhoB2ZOIRhb6f907ZZmVHzij8G9rPkdHdBg9HojM=
+	t=1741072281; cv=none; b=o4i55imxnHIQk+WmdVNC0OAkbJfkuqyZEcmAwMAB67O1ft87ZZ6k3nfhbXwqa9BDAMcLzGm6AfvSPQiO+Zo45HJE9fzLfs6wjfKw3yV094qsKVkVgzStqN8c4iQFJpYeso6NXXg9zXRRKT4iPduJhTa7VWLo8KJLk8A9FXY4gkI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741072282; c=relaxed/simple;
-	bh=KMEkGJFuUv2orA59LI8OnvYt5A2QmizIsPu2s2FpUW0=;
+	s=arc-20240116; t=1741072281; c=relaxed/simple;
+	bh=dS++BGRUZ8SyBKb8wrBLyLZJ16G6+M6eh/EHuTJW21M=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=J5FpFP6xjeLCIQoyIhvuwpwmf572qHIkUtG3X6vBpe1PAD+cSW0lv12I+SED8uJNyGHHVVJZCmdWyXUYkKwVnFa/Yyk6bZ+RqqPOcsrHyvwdIPqudfD8SkjkB8oFHiieJTdzD7BoluNWfumcxxAqq1bkHHVtz8SlEN6VBS3/Ibo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=mB1PwVjc; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Tct/9tTr; arc=none smtp.client-ip=193.142.43.55
+	 In-Reply-To:To:Cc; b=FILU2BDHELybl1os9jgN95VLzWUsb+rmrD/qziBN/dlJcir12P4mFLZ/ZTtDN+WGWpaqK3D9dcnX8Ph5gUt7vGQIWe1xoJB31wo/ZEM88wCZ+TDXK/HhlEhRMx4w8VwCY9+nKR64PIF+5IYEg1bN9WtUidwqRKXqHEsfi0kVoGU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=GHujb//n; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ZV9fPS+c; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="mB1PwVjc";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Tct/9tTr"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="GHujb//n";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ZV9fPS+c"
 From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1741072278;
+	s=2020; t=1741072277;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=cX2Trr3UgHxoCMPiHBlkygN9ZyBF4Oszhks+5ytjR90=;
-	b=mB1PwVjc4rj6ww+/JYqMC+pJfJ+TglHmVBjKLVmLkQAjIKu5dYrCsS8qOEz5aROL9Vidot
-	WjxmCo/g1xXzpeF/3Yr+j1SRKj/pM+73Tp6l3wMxThJuyTBK4XNkQnl4dJWjBHL5Kt5chs
-	4mbbMMkeid/yuLL1Lffggj8WKxToG1gN/L0HAuEuI4iP13EBmok+FBiOYnJ7vCOTVtvq6f
-	fxzowNHSrxkDqMREFDTNvwrPNpOWtnPCfDmUmYq6r6YkilzVHNtNoKkgEtPFrJmcC3lWdd
-	V2tmh96A+QjKmwuj08YyYGqk72waOSx3IuJ9gy8hygWjJs7laoJEvjUEucjaCQ==
+	bh=Mhj9O/bQAXH7Ixrn4zEe0m9E2qHXDCFbSeY2nHcL8ss=;
+	b=GHujb//nwN0ap7Dn8LqsWs/k5aG3Pna/SLGixCpvB1cC2kr35SwS9BbonempJcBAudfB+2
+	VUHI3gc3IDYIxtpgKwxvBG0ztCspy4WjgKxRSA5dTaBPZG/K7U7Unq2E2PC5nmoLRMBxbM
+	WxCp8NaqRtWh8KabK4heu+2RbHFMlTT9b/JZ8NV8fAIl2W3rIjy8Cz66uTMKwnFnoQ1oSE
+	ilGVxMuTH3I0WBnKs5aOzioINBJeGKioOCd6TCTVIe5rbo5xYweX/QgqZp8oIKTieZPSG1
+	rS33PGE2AqRYF3CA/SZXsJZE5paAzTmYHJeeRPlIDr0aejMAZo0ihbGlDkz1sQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1741072278;
+	s=2020e; t=1741072277;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=cX2Trr3UgHxoCMPiHBlkygN9ZyBF4Oszhks+5ytjR90=;
-	b=Tct/9tTrqMqll3Qw5kyCl6Z1sWGBG5Kh5Ekw11mqe5ZIomW+N3XLxWAbY/V5P5L4FNcUiO
-	Kh/FE+teFaD8icDQ==
-Date: Tue, 04 Mar 2025 08:10:50 +0100
-Subject: [PATCH 20/32] tools/nolibc: add setpgrp()
+	bh=Mhj9O/bQAXH7Ixrn4zEe0m9E2qHXDCFbSeY2nHcL8ss=;
+	b=ZV9fPS+caiLrSUiTQmKmqN3euaLYtnBGyaP+lsuZjcpOGWB/5r0VXveMQ0gCsomLnaqnoB
+	6e6kxjHvLb/zbhCg==
+Date: Tue, 04 Mar 2025 08:10:48 +0100
+Subject: [PATCH 18/32] tools/nolibc: add tolower() and toupper()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,7 +49,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250304-nolibc-kselftest-harness-v1-20-adca7cd231e2@linutronix.de>
+Message-Id: <20250304-nolibc-kselftest-harness-v1-18-adca7cd231e2@linutronix.de>
 References: <20250304-nolibc-kselftest-harness-v1-0-adca7cd231e2@linutronix.de>
 In-Reply-To: <20250304-nolibc-kselftest-harness-v1-0-adca7cd231e2@linutronix.de>
 To: Shuah Khan <shuah@kernel.org>, Shuah Khan <skhan@linuxfoundation.org>, 
@@ -57,42 +57,73 @@ To: Shuah Khan <shuah@kernel.org>, Shuah Khan <skhan@linuxfoundation.org>,
  =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
 Cc: linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
  =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1741072266; l=736;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1741072266; l=2172;
  i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
- bh=KMEkGJFuUv2orA59LI8OnvYt5A2QmizIsPu2s2FpUW0=;
- b=DcqVjLqXv+yhhbC7tJKunU4CNfcNSRh2OXY9vAANT7aBedi/N+mmn6T/u+LPTB00MQCcm1bG5
- 6nMx80bKxjVAe8QTrQMKpusGbjprDIHWQhI1h19xmgjamNG0F2tCN14
+ bh=dS++BGRUZ8SyBKb8wrBLyLZJ16G6+M6eh/EHuTJW21M=;
+ b=A0T7CIeiH6BRy9KRrOkb20Zy9rX0C7YMyWvpDQ/nB5nDmMnUdbsKuO7aQUSV2PHgogr/UHYL6
+ 1DaQ1G8VHyKB+UHAo8APcHMrkB+f7teAOj3jr2wNeUy+Ol3vuqM69Lu
 X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
  pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
-setpgrp() is defined to be identical to setpgid(0, 0).
+The kselftest harness uses these functions.
 
 Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
 ---
- tools/include/nolibc/sys.h | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ tools/include/nolibc/string.h                | 17 +++++++++++++++++
+ tools/testing/selftests/nolibc/nolibc-test.c |  5 +++++
+ 2 files changed, 22 insertions(+)
 
-diff --git a/tools/include/nolibc/sys.h b/tools/include/nolibc/sys.h
-index d98515120785223aaf74d1848a0ad68e308d6893..43b1bfa7a582ea926a062ff17fcf3e1b79be187d 100644
---- a/tools/include/nolibc/sys.h
-+++ b/tools/include/nolibc/sys.h
-@@ -1055,6 +1055,16 @@ int setpgid(pid_t pid, pid_t pgid)
- 	return __sysret(sys_setpgid(pid, pgid));
+diff --git a/tools/include/nolibc/string.h b/tools/include/nolibc/string.h
+index ba84ab700e3001a7d105e1c9e40c01bf45db9d8c..f0d335f0e467ec870066811289dfd11e46e60a92 100644
+--- a/tools/include/nolibc/string.h
++++ b/tools/include/nolibc/string.h
+@@ -289,6 +289,23 @@ char *strrchr(const char *s, int c)
+ 	return (char *)ret;
  }
  
-+/*
-+ * pid_t setpgrp(void)
-+ */
-+
 +static __attribute__((unused))
-+pid_t setpgrp(void)
++int tolower(int c)
 +{
-+	return setpgid(0, 0);
++	if (c >= 'A' && c <= 'Z')
++		return c - 'A' + 'a';
++	return c;
 +}
 +
++static __attribute__((unused))
++int toupper(int c)
++{
++	if (c >= 'a' && c <= 'z')
++		return c - 'a' + 'A';
++	return c;
++}
++
++
+ /* make sure to include all global symbols */
+ #include "nolibc.h"
  
- /*
-  * pid_t setsid(void);
+diff --git a/tools/testing/selftests/nolibc/nolibc-test.c b/tools/testing/selftests/nolibc/nolibc-test.c
+index 3c0431e9917acf57e94dc3f7a8347762e6a5335a..7eb7f3fb067553cccefefdaa2ccfc81af281336b 100644
+--- a/tools/testing/selftests/nolibc/nolibc-test.c
++++ b/tools/testing/selftests/nolibc/nolibc-test.c
+@@ -40,6 +40,7 @@
+ #include <stdint.h>
+ #include <unistd.h>
+ #include <limits.h>
++#include <ctype.h>
+ #endif
+ #endif
+ 
+@@ -1264,6 +1265,10 @@ int run_stdlib(int min, int max)
+ 		CASE_TEST(strerror_EINVAL);         EXPECT_STREQ(is_nolibc, strerror(EINVAL), "errno=22"); break;
+ 		CASE_TEST(strerror_int_max);        EXPECT_STREQ(is_nolibc, strerror(INT_MAX), "errno=2147483647"); break;
+ 		CASE_TEST(strerror_int_min);        EXPECT_STREQ(is_nolibc, strerror(INT_MIN), "errno=-2147483648"); break;
++		CASE_TEST(tolower);                 EXPECT_EQ(1, tolower('A'), 'a'); break;
++		CASE_TEST(tolower_noop);            EXPECT_EQ(1, tolower('a'), 'a'); break;
++		CASE_TEST(toupper);                 EXPECT_EQ(1, toupper('a'), 'A'); break;
++		CASE_TEST(toupper_noop);            EXPECT_EQ(1, toupper('A'), 'A'); break;
+ 
+ 		case __LINE__:
+ 			return ret; /* must be last */
 
 -- 
 2.48.1
