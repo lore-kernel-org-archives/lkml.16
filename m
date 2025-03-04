@@ -1,90 +1,155 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D4DB294EF7;
-	Tue,  4 Mar 2025 15:18:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5605424EA93
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 15:18:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741101482; cv=none; b=scRo+KJnMJUSOKsWx0jfsYp4JwVPL0F8in0tKR9ZFpodoxCu6B9cST0ZWZ4GbXg0y0B4roCBfknV3gFHfmkPeqnazomnRnTYxdPUiY6UHTFGoF6i3ShGuSExDaQyoS6zJWucs1m04KoK2nIdBycJYb2sWJtFnQDCH5oepl333DQ=
+	t=1741101507; cv=none; b=GqcL8ZemYRYTFx+TwhX6h1eJSadVypQXWpn3Wn3/ebGcp7ThDilj97d/8h2MzAoSKJ/F6PVNBSa27z+CUvC/h6X9QE+t4bBOfEJ5VFq04d7HCm2WAL55b1SU/86QOw+CvJLVX5P3FyXiTa7/6aImNQl9zqpA4j/Q//INfFu4Vwk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741101482; c=relaxed/simple;
-	bh=SY9RMAoowz8kStVuJuN4tunjUBmeihKNe9Rk0kme8RY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=bttOz9JbK9WgyB1VJ8A6pr+vz6Fs0tn0NuwIrMptREUVhPX1HUf/Z33aD/yG7dm2+e9nDhJ9p7xLk/baN1kHW61lLSEV4kPxEVqHLJ+YRQjFazbXH3sqDjLCJWBEIb9m23r80b8HHeUsKFJun0SiMyFgWAmqEkiAFcIG/A/g98w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=Z92SAcY4; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1741101507; c=relaxed/simple;
+	bh=Nfbb4Q2xiDkH6WLiFI7e76Q6PwRDTA9H9+XvuWdYO9M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JWZ80q9bPQRUjtcj5F/zt9dFUzjGtWm9/RVDh4MtJgHfvIoXTqlNvdgjXrD0Z301VGXMr2mMABWTZfFALfNVxaFKJjr8hBNC55b2mlSsAjHEe+koufw153J/IYdI8bQUkm0D8CcV49mopyISWEt1ClBo5o9WZQjDteGhHq/V8xI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=gBIbM/7U; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="Z92SAcY4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1741101478;
-	bh=SY9RMAoowz8kStVuJuN4tunjUBmeihKNe9Rk0kme8RY=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=Z92SAcY4bic4+jlPkfFqmNjnKibjpBU0DigE/n68ef/7y9WT+bCz6sx9EDbPCkOJU
-	 fv8QYjViZjbkVMhhkNTwAlvmoSZcId47Jupzoqc1Ue0vipUGxLsM4XONcAwg9nzI1k
-	 o1ALC0v3scMS+1EIxeZH7r5p1+bzZ03z+0eJqF26VkgCtI0zVRCRf04jU2mER7l6p+
-	 d4Vqtn0L+cKOBRTW0SMPLQbJYG2ElfhVSrF+d7sngpFaj9owqUACff5xP09WuPEJ1Y
-	 SF40cvUZSujhFrYJbJX1iKeT9d7aCc5y4iYbJwv+rexx4EivLPhifwtyi6Gvu3dsqw
-	 ozOOGYTM/E2BQ==
-Received: from [192.168.0.47] (unknown [IPv6:2804:14c:1a9:53ee::1001])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: nfraprado)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id D0A0D17E0630;
-	Tue,  4 Mar 2025 16:17:53 +0100 (CET)
-From: =?utf-8?q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= <nfraprado@collabora.com>
-Date: Tue, 04 Mar 2025 12:16:01 -0300
-Subject: [PATCH v3 20/20] arm64: defconfig: Enable MT6359 ACCDET
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gBIbM/7U"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-22349bb8605so112120495ad.0
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Mar 2025 07:18:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1741101504; x=1741706304; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=KzhE+tdJAYWvPcPUwSdrS55NblQcSF6sK2zBz4cziEo=;
+        b=gBIbM/7UCn3d+kG8XQQpXgjv6oo4359Az4NnhRvQG+OrZfNy37HWbUI6mXw5KqCHhH
+         TN/VygfvNKNe497X57clJASH+VZQaIHPlbwaiW25ebDH9QtnXib+9HHy7Y7VFEiCJc+0
+         U6ORj5nJcfQTJnuISlGSu2QKJys2DcjF9JWIjL2ZDYXn0GW5v+baNmvKmzUWgSviPKUa
+         +pz2PZJPk1H6e0PFFtX+/9JS+ayLoZlPhgkvw7FqIaZ3vpHaioJX/BrbbMaNU3vxZUKi
+         mA7vfCrejLi428a5pJ8iKs16cicAo9+tgbEkDiktMQHaJK8sJcird1xYiJfZFyBJh/HC
+         0m9w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741101504; x=1741706304;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=KzhE+tdJAYWvPcPUwSdrS55NblQcSF6sK2zBz4cziEo=;
+        b=VuMYzVjYQsTnyySmiERlI+JPil4QmrjUfDpDgNpDpM1xI6LDGEl0Szs6wnQ0eGthFb
+         P28ek87e5K/qTVnzNrf9j4EsohaZtRrdrsZdAoaEPfGFgZgxIiO+iwP7LlckLnmm3kna
+         aA3x1pgKkwklzoinjvwGlRMB7bFIY2nuDpZ5DEFeGdO5WFvxbKpcUoGClr9yfyoxp+9R
+         C/lC/KJztXhV2kzQ72BPokMjOX6RQVUhev4P2wqMsS5f/i90kFoJxRMxgoHc/vtB3Em+
+         a60QpCRA4t422bCTc16Ix+a0gD7drTfDczDofkhfr3fc9WBVkNUNaGoVHOvCG3Dnm5YY
+         TLqg==
+X-Forwarded-Encrypted: i=1; AJvYcCW2B1aExWNwwpwjk6i2024MibJ/h96GQA1sMuSUEV1wZ8AfLn/LrtkD25Vl5AXn3rR7uzTZ7fo9gOa/Wss=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzHJXJ87o8SfIefWdaWRjlxSkkxck7GbrxLMnONPQTGdafhpgJJ
+	ls3hpuKVYZNKsxxgN/LjlR3/VE8HZLS1yl84eyZNjiInPnuSn8W+NhcKbdyPJw==
+X-Gm-Gg: ASbGncvi1CszbJymOtQe0KGtyNd+zVYGKshHFyRL5K+zzSGdhP7PkiNdgIFVxvrIyw8
+	9s0ZT5OO33un95kZQ/sTox1Y2+shzOY6AIf4BNnD95Y3w0VbR/V6O7sjzqndF1kTrR90qKbl1WK
+	vbQm/KlEdmCSXnjWzpZd7h8PkYyRI6CgM9++Ufi8yzVgRwSjWDtY9dBlkSblGKASweC82yK8CQ0
+	QOxAFfQACcDC3neAOxjlR47PAHXA30WAvrZt1R0Tc1Xh9vJxSDrxtSlHhZJvhmenekEYrN1A1kk
+	A7JOKxpY8Cd8tQayGJhHtHv240K8bfCZ+YIW8Fp5SAxT28D7YnqWxok=
+X-Google-Smtp-Source: AGHT+IE5m+vrO6nNhOZDvuax+Cu982tB5v2FtygKBkyOtqqZSXWNrXN1iB/dSPoQj7bI+IrEJ3ckng==
+X-Received: by 2002:a17:902:e752:b0:21f:45d:21fb with SMTP id d9443c01a7336-22368f61965mr234071745ad.3.1741101503081;
+        Tue, 04 Mar 2025 07:18:23 -0800 (PST)
+Received: from thinkpad ([120.60.51.199])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-223504db7a6sm95889145ad.160.2025.03.04.07.18.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Mar 2025 07:18:22 -0800 (PST)
+Date: Tue, 4 Mar 2025 20:48:14 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Fan Ni <nifan.cxl@gmail.com>,
+	Shradha Todi <shradha.t@samsung.com>, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org, lpieralisi@kernel.org,
+	robh@kernel.org, bhelgaas@google.com, jingoohan1@gmail.com,
+	Jonathan.Cameron@huawei.com, a.manzanares@samsung.com,
+	pankaj.dubey@samsung.com, cassel@kernel.org, 18255117159@163.com,
+	xueshuai@linux.alibaba.com, renyu.zj@linux.alibaba.com,
+	will@kernel.org, mark.rutland@arm.com
+Subject: Re: [PATCH v7 3/5] Add debugfs based silicon debug support in DWC
+Message-ID: <20250304151814.6xu7cbpwpqrvcad5@thinkpad>
+References: <20250221131548.59616-1-shradha.t@samsung.com>
+ <CGME20250221132035epcas5p47221a5198df9bf86020abcefdfded789@epcas5p4.samsung.com>
+ <20250221131548.59616-4-shradha.t@samsung.com>
+ <Z8XrYxP_pZr6tFU8@debian>
+ <20250303194647.GC1552306@rocinante>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250304-mt6359-accdet-dts-v3-20-5b0eafc29f5b@collabora.com>
-References: <20250304-mt6359-accdet-dts-v3-0-5b0eafc29f5b@collabora.com>
-In-Reply-To: <20250304-mt6359-accdet-dts-v3-0-5b0eafc29f5b@collabora.com>
-To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Matthias Brugger <matthias.bgg@gmail.com>, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
- Sen Chu <sen.chu@mediatek.com>, Sean Wang <sean.wang@mediatek.com>, 
- Macpaul Lin <macpaul.lin@mediatek.com>, Lee Jones <lee@kernel.org>, 
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
-Cc: kernel@collabora.com, linux-sound@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
- linux-pm@vger.kernel.org, 
- =?utf-8?q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= <nfraprado@collabora.com>
-X-Mailer: b4 0.14.2
+In-Reply-To: <20250303194647.GC1552306@rocinante>
 
-Enable support for the ACCDET block in the MT6359 PMIC, which provides
-jack detection capabilities to MediaTek platforms.
++ Geert (who reported the regression in -next)
 
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Signed-off-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
----
- arch/arm64/configs/defconfig | 1 +
- 1 file changed, 1 insertion(+)
+On Tue, Mar 04, 2025 at 04:46:47AM +0900, Krzysztof Wilczyński wrote:
+> Hello,
+> 
+> [...]
+> > > +int dwc_pcie_debugfs_init(struct dw_pcie *pci)
+> > > +{
+> > > +	char dirname[DWC_DEBUGFS_BUF_MAX];
+> > > +	struct device *dev = pci->dev;
+> > > +	struct debugfs_info *debugfs;
+> > > +	struct dentry *dir;
+> > > +	int ret;
+> > > +
+> > > +	/* Create main directory for each platform driver */
+> > > +	snprintf(dirname, DWC_DEBUGFS_BUF_MAX, "dwc_pcie_%s", dev_name(dev));
+> > > +	dir = debugfs_create_dir(dirname, NULL);
+> > > +	debugfs = devm_kzalloc(dev, sizeof(*debugfs), GFP_KERNEL);
+> > > +	if (!debugfs)
+> > > +		return -ENOMEM;
+> > > +
+> > > +	debugfs->debug_dir = dir;
+> > > +	pci->debugfs = debugfs;
+> > > +	ret = dwc_pcie_rasdes_debugfs_init(pci, dir);
+> > > +	if (ret)
+> > > +		dev_dbg(dev, "RASDES debugfs init failed\n");
+> > 
+> > What will happen if ret != 0? still return 0? 
+> 
+> Given that callers of dwc_pcie_debugfs_init() check for errors,
+> this probably should correctly bubble up any failure coming from
+> dwc_pcie_rasdes_debugfs_init().
+> 
+> I made updates to the code directly on the current branch, have a look:
+> 
+>   https://web.git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/commit/?h=controller/dwc&id=1ff54f4cbaed9ec6994844967c36cf7ada4cbe5e
+> 
+> Let me know if this is OK with you.
+> 
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 3a3706db29822036d25a7228f8936e2ad613b208..d4a6eeec8ba0db110dd831e146716a0e50cc294f 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -1066,6 +1066,7 @@ CONFIG_SND_SOC_WM8978=m
- CONFIG_SND_SOC_WSA881X=m
- CONFIG_SND_SOC_WSA883X=m
- CONFIG_SND_SOC_WSA884X=m
-+CONFIG_SND_SOC_MT6359_ACCDET=m
- CONFIG_SND_SOC_NAU8822=m
- CONFIG_SND_SOC_LPASS_WSA_MACRO=m
- CONFIG_SND_SOC_LPASS_VA_MACRO=m
+If the SoC has no RASDES capability, then this call is bound to fail (which will
+break existing platforms). I'd propose to return 0 if
+dw_pcie_find_rasdes_capability() fails in addition to this change:
+
+diff --git a/drivers/pci/controller/dwc/pcie-designware-debugfs.c b/drivers/pci/controller/dwc/pcie-designware-debugfs.c
+index dca1e9999113..7277a21e30d5 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-debugfs.c
++++ b/drivers/pci/controller/dwc/pcie-designware-debugfs.c
+@@ -471,7 +471,7 @@ static int dwc_pcie_rasdes_debugfs_init(struct dw_pcie *pci, struct dentry *dir)
+        ras_cap = dw_pcie_find_rasdes_capability(pci);
+        if (!ras_cap) {
+                dev_dbg(dev, "no RASDES capability available\n");
+-               return -ENODEV;
++               return 0;
+        }
+ 
+        rasdes_info = devm_kzalloc(dev, sizeof(*rasdes_info), GFP_KERNEL);
+
+This will fix the regressions like the one reported by Geert:
+
+https://lore.kernel.org/linux-pci/CAMuHMdWuCJAd-mCpCoseThureCKnnep4T-Z0h1_WJ1BOf2ZeDg@mail.gmail.com/
+
+- Mani
 
 -- 
-2.48.1
-
+மணிவண்ணன் சதாசிவம்
