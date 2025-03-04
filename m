@@ -1,101 +1,128 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DDFF26F441;
-	Tue,  4 Mar 2025 15:10:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F292424C081
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 15:11:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741101057; cv=none; b=VaPdw6hd+VHvn/4drHTAQ8dRmjxRMxib7p3tqZf+bB0cpeC49KaEOTxFJA5EcUXNlH71Ea8DS0b8cvQXvbAsahwNa1eFOi2Dsn37pcTyIXCMM6Rfv7USI5i1sMEYua66KeHSnoDyNmQCWfLH8xn/tmJYXW/OAJCOUoPD0nlAkYk=
+	t=1741101063; cv=none; b=pwsQyepT5lYrze2bKNDclm2Z+ssNok7SRyrQPbaiIf8TN1LCZ1068bk5K4SyOleIKd8nQz4YTOQcE6mkbWljlbgxX+t02feGQI5JsO9+d8QLA7w/eBfbllNMYHXwvmq8cry69sk8bSq7y8pcFfrCFaTN55Ho7RzJFC91vhUWA70=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741101057; c=relaxed/simple;
-	bh=KRdRud0KKKLKl9c4w5fSpaB1vPlZnIT/TE03lwaFsZE=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Gb3749cKdg8W1lvUB6lJ4PqN6u7sVWFv+D0QS8FYZ8p0/wyY1uLn9KmLGeSlwyPq+ylOGgHfDcWHOX9XpcbYmEjQMRkAZUOQm8iPTcD25QTda4N07qNYrEN2HU0s7J01mZmHkdaQYLPxVn/UtZ9WAAwGRUoRAxva+2am9AHpYB4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA025C4CEF0;
-	Tue,  4 Mar 2025 15:10:55 +0000 (UTC)
-Date: Tue, 4 Mar 2025 10:11:50 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Joel Fernandes <joelagnelf@nvidia.com>
-Cc: Strforexc yn <strforexc@gmail.com>, Lai Jiangshan
- <jiangshanlai@gmail.com>, "Paul E. McKenney" <paulmck@kernel.org>, Josh
- Triplett <josh@joshtriplett.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, rcu@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: KASAN: global-out-of-bounds Read in srcu_gp_start_if_needed
-Message-ID: <20250304101150.0eb83618@gandalf.local.home>
-In-Reply-To: <20250304035732.GA128190@joelnvbox>
-References: <CA+HokZrPb-oHcuZQsc=LZ6_aJfjKy9oMeCBd-tq4b_sX5EG7NQ@mail.gmail.com>
-	<20250303114711.12716d05@gandalf.local.home>
-	<20250304035732.GA128190@joelnvbox>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1741101063; c=relaxed/simple;
+	bh=t4HzfKpGGFlBoc1Etl+XJPQBVdf5gNOWugu+47JC6ps=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=iqgxMd3IQ77mqhK/EFCx0Nas4RDLyfU9lMDvevxVXkJ5doX/u3F7glmJCDw7doyKwr96OMMsQPkA+6WEFy5JSwuWF7KCuxVgjbFJUD2pYeNl5hJSEwxJjLEHFqTIb/kMP25su9kkAgoccnOIuZ4U+0tX3qW0eJloLDyeT9yn9lg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NA+8gknZ; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NA+8gknZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741101062; x=1772637062;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version:content-transfer-encoding;
+  bh=t4HzfKpGGFlBoc1Etl+XJPQBVdf5gNOWugu+47JC6ps=;
+  b=NA+8gknZtbkbgENAk3NdH5G55Ac4lTQhrrHEy4TKSa1kkd21lGRdITZr
+   RltbrMCHRIwaUI6DhPnE3Ikr2X2cdF3U/QFefm9DubcTddkCVbG5CW0K/
+   EVzJOeJn590H/eHAj3bfTgeYRxUy7Iq110Yz0rELG16r6Vi6CojxNDpvY
+   JbCq5CqI9KBkmBRTmPWCNmj0h0oN2WHqBlFkD+oErgS3uy3Ay+9k16VKZ
+   260etIN0SqS1O+pfTxQ+gAZh4ftpaP+EWeq9/eIPeHNKxBrK2VZSWwTB3
+   cq+UZ1tC3f3UKXtZLspdTwh6bPKCzp6hEn5xppINH8KVwc40aJm6dZApJ
+   A==;
+X-CSE-ConnectionGUID: uX24ZAYbT8SzC6/p+PXv9w==
+X-CSE-MsgGUID: h84ZunJPQYCOYhHV71AoSg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11363"; a="41931901"
+X-IronPort-AV: E=Sophos;i="6.14,220,1736841600"; 
+   d="scan'208";a="41931901"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2025 07:11:01 -0800
+X-CSE-ConnectionGUID: 6VMaghNlR+GiLz6Ur7XksA==
+X-CSE-MsgGUID: 2BOmcNboQNCQyeNL4RJSHg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,220,1736841600"; 
+   d="scan'208";a="149187083"
+Received: from bergbenj-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.246.192])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2025 07:10:56 -0800
+From: Jani Nikula <jani.nikula@intel.com>
+To: Aditya Garg <gargaditya08@live.com>, Arnd Bergmann <arnd@kernel.org>
+Cc: Aun-Ali Zaidi <admin@kodeit.net>, Maarten Lankhorst
+ <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
+ Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, Atharva Tiwari <evepolonium@gmail.com>,
+ Kerem Karabay <kekrby@gmail.com>, Arnd Bergmann <arnd@arndb.de>,
+ "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Nathan
+ Chancellor <nathan@kernel.org>
+Subject: Re: [PATCH] drm/tiny: fix printk format string for 32-bit
+In-Reply-To: <05EAF4F2-7DFB-4C80-8D2A-054BCD7A126D@live.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20250304142711.621330-1-arnd@kernel.org>
+ <05EAF4F2-7DFB-4C80-8D2A-054BCD7A126D@live.com>
+Date: Tue, 04 Mar 2025 17:10:52 +0200
+Message-ID: <87bjugzv9f.fsf@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 3 Mar 2025 22:57:32 -0500
-Joel Fernandes <joelagnelf@nvidia.com> wrote:
+On Tue, 04 Mar 2025, Aditya Garg <gargaditya08@live.com> wrote:
+> Hi
+>
+>> On 4 Mar 2025, at 7:57=E2=80=AFPM, Arnd Bergmann <arnd@kernel.org> wrote:
+>>=20
+>> From: Arnd Bergmann <arnd@arndb.de>
+>>=20
+>> A size_t must be printed with the %z modifier instead of %l:
+>>=20
+>> In file included from include/linux/device.h:15,
+>>                 from include/linux/usb.h:19,
+>>                 from drivers/gpu/drm/tiny/appletbdrm.c:19:
+>> drivers/gpu/drm/tiny/appletbdrm.c: In function 'appletbdrm_send_request':
+>> include/drm/drm_print.h:589:54: error: format '%lu' expects argument of =
+type 'long unsigned int', but argument 4 has type 'size_t' {aka 'unsigned i=
+nt'} [-Werror=3Dformat=3D]
+>> drivers/gpu/drm/tiny/appletbdrm.c:170:17: note: in expansion of macro 'd=
+rm_err'
+>>  170 |                 drm_err(drm, "Actual size (%d) doesn't match expe=
+cted size (%lu)\n",
+>>      |                 ^~~~~~~
+>> drivers/gpu/drm/tiny/appletbdrm.c: In function 'appletbdrm_read_response=
+':
+>> include/drm/drm_print.h:589:54: error: format '%lu' expects argument of =
+type 'long unsigned int', but argument 4 has type 'size_t' {aka 'unsigned i=
+nt'} [-Werror=3Dformat=3D]
+>> drivers/gpu/drm/tiny/appletbdrm.c:211:17: note: in expansion of macro 'd=
+rm_err'
+>>  211 |                 drm_err(drm, "Actual size (%d) doesn't match expe=
+cted size (%lu)\n",
+>>      |                 ^~~~~~~
+>>=20
+>> Fixes: 0670c2f56e45 ("drm/tiny: add driver for Apple Touch Bars in x86 M=
+acs")
+>> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+>> =E2=80=94
+>
+> Its the duplicate of:
+>
+> https://lore.kernel.org/dri-devel/20250304-appletbdrm-fix-size_t-specifie=
+r-v1-1-94fe1d2c91f8@kernel.org/
 
-> > 
-> > The lock taken is from the passed in rcu_pending pointer.
-> >   
-> > > [   92.322655][   T28]  rcu_pending_enqueue+0x686/0xd30
-> > > [   92.322676][   T28]  ? __pfx_rcu_pending_enqueue+0x10/0x10
-> > > [   92.322693][   T28]  ? trace_lock_release+0x11a/0x180
-> > > [   92.322708][   T28]  ? bkey_cached_free+0xa3/0x170
-> > > [   92.322725][   T28]  ? lock_release+0x13/0x180
-> > > [   92.322744][   T28]  ? bkey_cached_free+0xa3/0x170
-> > > [   92.322760][   T28]  bkey_cached_free+0xfd/0x170  
-> > 
-> > Which has:
-> > 
-> > static void bkey_cached_free(struct btree_key_cache *bc,
-> >                              struct bkey_cached *ck)
-> > {
-> >         kfree(ck->k);
-> >         ck->k           = NULL;
-> >         ck->u64s        = 0;
-> >                 
-> >         six_unlock_write(&ck->c.lock);
-> >         six_unlock_intent(&ck->c.lock);
-> > 
-> >         bool pcpu_readers = ck->c.lock.readers != NULL;
-> >         rcu_pending_enqueue(&bc->pending[pcpu_readers], &ck->rcu);
-> >         this_cpu_inc(*bc->nr_pending);
-> > }
-> > 
-> > So if that bc->pending[pcpu_readers] gets corrupted in anyway, that could trigger this.  
-> 
-> True, another thing that could corrupt it is if per-cpu global data section
-> section is corrupted, because the crash is happening in this trylock per the
-> above stack:
-> 
->  srcu_gp_start_if_needed ->
-> 	spin_lock_irqsave_sdp_contention(sdp) ->
-> 		spin_trylock(sdp->lock)
-> 
-> 	where sdp is ssp->sda and is allocated from per-cpu storage.
-> 
-> So corruption of the per-cpu global data section can also trigger this, even
-> if the rcu_pending pointer is intact.
+Pushed this one to drm-misc-next.
 
-If there was corruption of the per-cpu section, you would think it would
-have a bigger impact than just this location. As most of the kernel relies
-on the per-cpu section.
+BR,
+Jani.
 
-But it could be corruption of the per-cpu variable that was used. Caused by
-the code that uses it.
+>
+> as well as
+>
+> https://lore.kernel.org/dri-devel/20250304135456.429407-1-jani.nikula@int=
+el.com/
+>
+>
 
-That code is quite complex, and I usually try to rule out the code that is
-used in one location as being the issue before looking at something like
-per-cpu or RCU code which is used all over the place, and if that was
-buggy, it would likely blow up elsewhere outside of bcachefs.
-
-But who knows, perhaps the bcachefs triggered a corner case?
-
--- Steve
+--=20
+Jani Nikula, Intel
