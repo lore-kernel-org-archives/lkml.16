@@ -1,321 +1,247 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fout-a5-smtp.messagingengine.com (fout-a5-smtp.messagingengine.com [103.168.172.148])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 793402E3397;
-	Tue,  4 Mar 2025 18:36:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3D0E1FC7FF;
+	Tue,  4 Mar 2025 18:37:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.148
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741113391; cv=none; b=baY+DpEef6wVf5YM6pGSQU+IRAoRD2Fehg5GadX30AGqGEJ2+K45u0ywZHQBikPD4ogbyjI1uWN+z8ZMbNi7wtnAD1gWhderEsyFc2ALKREe8WMLGr8deUXfFrxLn5w64YBewJZSYRtuc4PU8SQEPt2ZLbt6RCmKAbn2Tt6D6Ao=
+	t=1741113446; cv=none; b=myQtHyFMTiG5AlRbRQxq9HJWT19P/pZbOcTnnwtL06nPoiWFQ/Kh5sU6dsM4S980eUxYGCSuviXaP3ZUc3w/ZijlVtfR6bCwdvLWD0VU+ID1e9/4rdkxDsD/d4+y8NhUK98fCkps7Ab6fBBZFkNVJeeXh2Lnq6izdE7h196pKEM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741113391; c=relaxed/simple;
-	bh=YFAjSFcxHKSK09jHDmexez6pBBSG3imyFyu/hbpWRug=;
+	s=arc-20240116; t=1741113446; c=relaxed/simple;
+	bh=3oTo4HsepLNOrxVRw/IauYMjtUPldg3lclpNkHh/29g=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DlF5QJdIoQqTHB2Yq/MJmc7IrCIoS+1Cb8oyEX783NC9Zc6s5FDPP8uJiY8ZtXrQT+1QezrjknZZGQo7yh+hOABCC6QvMPo65I/ZPc4a6yIKsDP8kW4PvMxqo/8qs0+aN0TxisF9bWJI3HFxwFMrfQWycFa+pPuNltZ6k2wU/QU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aRm8FIc4; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Mqi4mx86+WEk6eq5q6ZDkgME388yS4WHdbBypFcTl4+KQ7qzI//pexlK+OkBrplGj1T9qxfP8/0qNUFyKxLRVqR2p9pbOr7RRs4OoxcLPDMd2gf60ZaRZpCoY7P7RQ/QvWK8LM8ZaLa0zAGeij/spsKAOUtQiLmXvgl31nwNfa4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=queasysnail.net; spf=pass smtp.mailfrom=queasysnail.net; dkim=pass (2048-bit key) header.d=queasysnail.net header.i=@queasysnail.net header.b=qrrWfi+W; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=kLjTaXfd; arc=none smtp.client-ip=103.168.172.148
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=queasysnail.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=queasysnail.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aRm8FIc4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59030C4CEE5;
-	Tue,  4 Mar 2025 18:36:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741113390;
-	bh=YFAjSFcxHKSK09jHDmexez6pBBSG3imyFyu/hbpWRug=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=aRm8FIc4TyTPTOmROjMxwIazcNLGryQbJy956hAtFn5WpaZp33cYXDGERv3Lsn4Wo
-	 Sjz9KlvFz5gXvWXRFnwClIFTVZFSb62lNfxadIb2RgjVHuaHaPznG3BwbeDUoP9Pxs
-	 2OfddvgJyb/aDwIvLoLXiwPuue95k9vToweJJp+YBZX2FbgpAlHmmq5/0FWRBSFjeu
-	 eIJajbB7vTZ30GvBQYr4y0rN4hvvFYfUiRMR6FhNC9LJdeFT13dfIVx5+BdontJbgh
-	 GjXtVr7CDIDTWSrMnr46zNF6AhuKDWBKdx1Cjp6HFnGryMRFoBiW1Zh6ImNVC2UMTM
-	 HJVUi1wuqX2OA==
-Date: Tue, 4 Mar 2025 19:36:24 +0100
-From: Alexey Gladkov <legion@kernel.org>
-To: K Prateek Nayak <kprateek.nayak@amd.com>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Oleg Nesterov <oleg@redhat.com>,
-	Swapnil Sapkal <swapnil.sapkal@amd.com>,
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Jan Kara <jack@suse.cz>, Mateusz Guzik <mjguzik@gmail.com>,
-	Manfred Spraul <manfred@colorfullife.com>,
-	David Howells <dhowells@redhat.com>,
-	WangYuli <wangyuli@uniontech.com>, Hillf Danton <hdanton@sina.com>,
-	"Gautham R. Shenoy" <gautham.shenoy@amd.com>,
-	Neeraj.Upadhyay@amd.com, Ananth.narayan@amd.com
-Subject: Re: [PATCH] fs/pipe: Read pipe->{head,tail} atomically outside
- pipe->mutex
-Message-ID: <Z8dIKGCSRWqUqAEI@example.org>
-References: <CAHk-=wiA-7pdaQm2nV0iv-fihyhWX-=KjZwQTHNKoDqid46F0w@mail.gmail.com>
- <20250304135138.1278-1-kprateek.nayak@amd.com>
+	dkim=pass (2048-bit key) header.d=queasysnail.net header.i=@queasysnail.net header.b="qrrWfi+W";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="kLjTaXfd"
+Received: from phl-compute-12.internal (phl-compute-12.phl.internal [10.202.2.52])
+	by mailfout.phl.internal (Postfix) with ESMTP id 951AF138275A;
+	Tue,  4 Mar 2025 13:37:21 -0500 (EST)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-12.internal (MEProxy); Tue, 04 Mar 2025 13:37:21 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=queasysnail.net;
+	 h=cc:cc:content-type:content-type:date:date:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to; s=fm2; t=1741113441; x=
+	1741199841; bh=BTMdi2sO4qcCbYw3uZrxjQBXPSMDoPBpMctb92eWqz8=; b=q
+	rrWfi+W8kY4+Qu0KjcLo04owoZcz8IHtvpR1fd+B8CDonDFFb/211SJiGDh/5B1z
+	SSpXzu3gXQ+NSuGDHsZwHD91kSlZIwTWsIods8qes37lo13YIhAZtEBUoz6zhu8U
+	T/D8JBmcqDc0gO59Kl0RkB90PuM69mJEyV3+R4iTzbhnrPTMVgMO75ljgnm3+gmJ
+	4jGYCaVDqRhFQ3Ilxr9ZdwoUIlZ6uSEKnoQ4ErDUDmH/PGyvrB4zZGrxGfyqxfR2
+	qqce9aeF0s9NAXYQL4LgOITuFLw244Ht7PC84IKntRBSEBrDjJXwc5Y+8BbKlF/z
+	Ys/TFNP54NlrDmyCP+2EA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
+	1741113441; x=1741199841; bh=BTMdi2sO4qcCbYw3uZrxjQBXPSMDoPBpMct
+	b92eWqz8=; b=kLjTaXfddhk8nLWPNWbM0tORYkhvD99Zqpo6E6arL8tPl7YX13H
+	GGTSl/B59ggDbP5YH4tATYWJvoB0iBkNcZqvW6s2/BecrcyZ577j7ItqkOyGOZw5
+	Kv36LVUX9EJQxXWrsAy5DFH7dOS7oD5KqIHBL0mOE8Xl8Sqh53FODK/+C3pFeTit
+	Gupd36oRZrG9HvdL5or2vIVX8qX1k83SN5RXhbB2P7/704WtkGESMXXij/DD421p
+	adpjO3Sj6barnVPaftHj7o1xmU/2WDOk34g/eCaOUi05vVY9QrpoGyOuTSXGst4o
+	oVF3FcUyn2ycLefaJKkd1dlIEeXYcf+YTkQ==
+X-ME-Sender: <xms:YUjHZzum3ZHEKm4JmCOsGL3SNbLTgqOd3ZYq4otmLqA8TOPEao13aQ>
+    <xme:YUjHZ0flEu_UUsYDpB_SfqGJfdK1vdbKlsjBFMfWZTnHlvms6if-GztaRuD7nz5xs
+    5YiWJsXqOTL7XBW0Ik>
+X-ME-Received: <xmr:YUjHZ2zB3asC5om_GtKOiv-aDyVnGHZkXwHI8FkDOk_9F4SXGa5Sa4N1bpXU>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddutddvjeekucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesthdtredttddt
+    jeenucfhrhhomhepufgrsghrihhnrgcuffhusghrohgtrgcuoehsugesqhhuvggrshihsh
+    hnrghilhdrnhgvtheqnecuggftrfgrthhtvghrnhepuefhhfffgfffhfefueeiudegtdef
+    hfekgeetheegheeifffguedvuefffefgudffnecuvehluhhsthgvrhfuihiivgeptdenuc
+    frrghrrghmpehmrghilhhfrhhomhepshgusehquhgvrghshihsnhgrihhlrdhnvghtpdhn
+    sggprhgtphhtthhopedufedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtoheprghnth
+    honhhiohesohhpvghnvhhpnhdrnhgvthdprhgtphhtthhopehnvghtuggvvhesvhhgvghr
+    rdhkvghrnhgvlhdrohhrghdprhgtphhtthhopegvughumhgriigvthesghhoohhglhgvrd
+    gtohhmpdhrtghpthhtohepkhhusggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehp
+    rggsvghnihesrhgvughhrghtrdgtohhmpdhrtghpthhtohepughonhgrlhgurdhhuhhnth
+    gvrhesghhmrghilhdrtghomhdprhgtphhtthhopehshhhurghhsehkvghrnhgvlhdrohhr
+    ghdprhgtphhtthhopehrhigriigrnhhovhdrshdrrgesghhmrghilhdrtghomhdprhgtph
+    htthhopegrnhgurhgvfidonhgvthguvghvsehluhhnnhdrtghh
+X-ME-Proxy: <xmx:YUjHZyPPpaWNsh9MEPuhpnqZEhCyyjasqHuXrzXz6Igl8_A-ocjqGQ>
+    <xmx:YUjHZz9oOgpyLK7podKYOie9e7NE_aSptL30V2vfQexlaD3aL_pwmA>
+    <xmx:YUjHZyWZgRFkmNaqUpjBlaDW3b9vHPLTv2CciBXfMWlqUUECEn6Igw>
+    <xmx:YUjHZ0cEf5pm_Wc2vALrdXwNPxh64zcW8YjE6jce_VNt_BBaCyqHGg>
+    <xmx:YUjHZ5c4FjKOB-cWWzDdrTbwmBhaY6G0GWj_luoi4Xq4z8NDUh6v7Sto>
+Feedback-ID: i934648bf:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 4 Mar 2025 13:37:20 -0500 (EST)
+Date: Tue, 4 Mar 2025 19:37:18 +0100
+From: Sabrina Dubroca <sd@queasysnail.net>
+To: Antonio Quartulli <antonio@openvpn.net>
+Cc: netdev@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Donald Hunter <donald.hunter@gmail.com>,
+	Shuah Khan <shuah@kernel.org>, ryazanov.s.a@gmail.com,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	Simon Horman <horms@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, Xiao Liang <shaw.leon@gmail.com>
+Subject: Re: [PATCH v21 18/24] ovpn: add support for peer floating
+Message-ID: <Z8dIXjwZ3QmiEcd-@hog>
+References: <20250304-b4-ovpn-tmp-v21-0-d3cbb74bb581@openvpn.net>
+ <20250304-b4-ovpn-tmp-v21-18-d3cbb74bb581@openvpn.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250304135138.1278-1-kprateek.nayak@amd.com>
+In-Reply-To: <20250304-b4-ovpn-tmp-v21-18-d3cbb74bb581@openvpn.net>
 
-On Tue, Mar 04, 2025 at 01:51:38PM +0000, K Prateek Nayak wrote:
-> From: Linus Torvalds <torvalds@linux-foundation.org>
-> 
-> pipe_readable(), pipe_writable(), and pipe_poll() can read "pipe->head"
-> and "pipe->tail" outside of "pipe->mutex" critical section. When the
-> head and the tail are read individually in that order, there is a window
-> for interruption between the two reads in which both the head and the
-> tail can be updated by concurrent readers and writers.
-> 
-> One of the problematic scenarios observed with hackbench running
-> multiple groups on a large server on a particular pipe inode is as
-> follows:
-> 
->     pipe->head = 36
->     pipe->tail = 36
-> 
->     hackbench-118762  [057] .....  1029.550548: pipe_write: *wakes up: pipe not full*
->     hackbench-118762  [057] .....  1029.550548: pipe_write: head: 36 -> 37 [tail: 36]
->     hackbench-118762  [057] .....  1029.550548: pipe_write: *wake up next reader 118740*
->     hackbench-118762  [057] .....  1029.550548: pipe_write: *wake up next writer 118768*
-> 
->     hackbench-118768  [206] .....  1029.55055X: pipe_write: *writer wakes up*
->     hackbench-118768  [206] .....  1029.55055X: pipe_write: head = READ_ONCE(pipe->head) [37]
->     ... CPU 206 interrupted (exact wakeup was not traced but 118768 did read head at 37 in traces)
-> 
->     hackbench-118740  [057] .....  1029.550558: pipe_read:  *reader wakes up: pipe is not empty*
->     hackbench-118740  [057] .....  1029.550558: pipe_read:  tail: 36 -> 37 [head = 37]
->     hackbench-118740  [057] .....  1029.550559: pipe_read:  *pipe is empty; wakeup writer 118768*
->     hackbench-118740  [057] .....  1029.550559: pipe_read:  *sleeps*
-> 
->     hackbench-118766  [185] .....  1029.550592: pipe_write: *New writer comes in*
->     hackbench-118766  [185] .....  1029.550592: pipe_write: head: 37 -> 38 [tail: 37]
->     hackbench-118766  [185] .....  1029.550592: pipe_write: *wakes up reader 118766*
-> 
->     hackbench-118740  [185] .....  1029.550598: pipe_read:  *reader wakes up; pipe not empty*
->     hackbench-118740  [185] .....  1029.550599: pipe_read:  tail: 37 -> 38 [head: 38]
->     hackbench-118740  [185] .....  1029.550599: pipe_read:  *pipe is empty*
->     hackbench-118740  [185] .....  1029.550599: pipe_read:  *reader sleeps; wakeup writer 118768*
-> 
->     ... CPU 206 switches back to writer
->     hackbench-118768  [206] .....  1029.550601: pipe_write: tail = READ_ONCE(pipe->tail) [38]
->     hackbench-118768  [206] .....  1029.550601: pipe_write: pipe_full()? (u32)(37 - 38) >= 16? Yes
->     hackbench-118768  [206] .....  1029.550601: pipe_write: *writer goes back to sleep*
-> 
->     [ Tasks 118740 and 118768 can then indefinitely wait on each other. ]
-> 
-> The unsigned arithmetic in pipe_occupancy() wraps around when
-> "pipe->tail > pipe->head" leading to pipe_full() returning true despite
-> the pipe being empty.
-> 
-> The case of genuine wraparound of "pipe->head" is handled since pipe
-> buffer has data allowing readers to make progress until the pipe->tail
-> wraps too after which the reader will wakeup a sleeping writer, however,
-> mistaking the pipe to be full when it is in fact empty can lead to
-> readers and writers waiting on each other indefinitely.
-> 
-> This issue became more problematic and surfaced as a hang in hackbench
-> after the optimization in commit aaec5a95d596 ("pipe_read: don't wake up
-> the writer if the pipe is still full") significantly reduced the number
-> of spurious wakeups of writers that had previously helped mask the
-> issue.
-> 
-> To avoid missing any updates between the reads of "pipe->head" and
-> "pipe->write", unionize the two with a single unsigned long
-> "pipe->head_tail" member that can be loaded atomically.
-> 
-> Using "pipe->head_tail" to read the head and the tail ensures the
-> lockless checks do not miss any updates to the head or the tail and
-> since those two are only updated under "pipe->mutex", it ensures that
-> the head is always ahead of, or equal to the tail resulting in correct
-> calculations.
-> 
->   [ prateek: commit log, testing on x86 platforms. ]
-> 
-> Reported-and-debugged-by: Swapnil Sapkal <swapnil.sapkal@amd.com>
-> Closes: https://lore.kernel.org/lkml/e813814e-7094-4673-bc69-731af065a0eb@amd.com/
-> Reported-by: Alexey Gladkov <legion@kernel.org>
-> Closes: https://lore.kernel.org/all/Z8Wn0nTvevLRG_4m@example.org/
-> Fixes: 8cefc107ca54 ("pipe: Use head and tail pointers for the ring, not cursor and length")
-> Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-> Tested-by: Swapnil Sapkal <swapnil.sapkal@amd.com>
-> Reviewed-by: Oleg Nesterov <oleg@redhat.com>
-> Signed-off-by: K Prateek Nayak <kprateek.nayak@amd.com>
+2025-03-04, 01:33:48 +0100, Antonio Quartulli wrote:
+> A peer connected via UDP may change its IP address without reconnecting
+> (float).
 
-With this patch, I'm also not reproducing the problem. Thanks!
+Should that trigger a reset of the peer->dst_cache? And same when
+userspace updates the remote address? Otherwise it seems we could be
+stuck with a cached dst that cannot reach the peer.
 
-> ---
-> Changes are based on:
-> 
->   git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git vfs-6.15.pipe
-> 
-> at commit commit ee5eda8ea595 ("pipe: change pipe_write() to never add a
-> zero-sized buffer") but also applies cleanly on top of v6.14-rc5.
-> 
-> The diff from Linus is kept as is except for removing the whitespaces in
-> front of the typedef that checkpatch complained about (the warning on
-> usage of typedef itself has been ignored since I could not think of a
-> better alternative other than #ifdef hackery in pipe_inode_info and the
-> newly introduced pipe_index union.) and the suggestion from Oleg to
-> explicitly initialize the "head_tail" with:
-> 
->     union pipe_index idx = { .head_tail = READ_ONCE(pipe->head_tail) }
-> 
-> I went with commit 8cefc107ca54 ("pipe: Use head and tail pointers for
-> the ring, not cursor and length") for the "Fixes:" tag since pipe_poll()
-> added:
-> 
->     unsigned int head = READ_ONCE(pipe->head);
->     unsigned int tail = READ_ONCE(pipe->tail);
-> 
->     poll_wait(filp, &pipe->wait, wait);
-> 
->     BUG_ON(pipe_occupancy(head, tail) > pipe->ring_size);
-> 
-> and the race described can trigger that BUG_ON() but as Linus pointed
-> out in [1] the commit 85190d15f4ea ("pipe: don't use 'pipe_wait() for
-> basic pipe IO") is probably the one that can cause the writers to
-> sleep on empty pipe since the pipe_wait() used prior did not drop the
-> pipe lock until it called schedule() and prepare_to_wait() was called
-> before pipe_unlock() ensuring no races.
-> 
-> [1] https://lore.kernel.org/all/CAHk-=wh804HX8H86VRUSKoJGVG0eBe8sPz8=E3d8LHftOCSqwQ@mail.gmail.com/
-> 
-> Please let me know if the patch requires any modifications and I'll jump
-> right on it. The changes have been tested on both a 5th Generation AMD
-> EPYC system and on a dual socket Intel Emerald Rapids system with
-> multiple thousand iterations of hackbench for small and large loop
-> counts. Thanks a ton to Swapnil for all the help.
-> ---
->  fs/pipe.c                 | 19 ++++++++-----------
->  include/linux/pipe_fs_i.h | 39 +++++++++++++++++++++++++++++++++++++--
->  2 files changed, 45 insertions(+), 13 deletions(-)
-> 
-> diff --git a/fs/pipe.c b/fs/pipe.c
-> index b0641f75b1ba..780990f307ab 100644
-> --- a/fs/pipe.c
-> +++ b/fs/pipe.c
-> @@ -210,11 +210,10 @@ static const struct pipe_buf_operations anon_pipe_buf_ops = {
->  /* Done while waiting without holding the pipe lock - thus the READ_ONCE() */
->  static inline bool pipe_readable(const struct pipe_inode_info *pipe)
->  {
-> -	unsigned int head = READ_ONCE(pipe->head);
-> -	unsigned int tail = READ_ONCE(pipe->tail);
-> +	union pipe_index idx = { .head_tail = READ_ONCE(pipe->head_tail) };
->  	unsigned int writers = READ_ONCE(pipe->writers);
->  
-> -	return !pipe_empty(head, tail) || !writers;
-> +	return !pipe_empty(idx.head, idx.tail) || !writers;
->  }
->  
->  static inline unsigned int pipe_update_tail(struct pipe_inode_info *pipe,
-> @@ -403,11 +402,10 @@ static inline int is_packetized(struct file *file)
->  /* Done while waiting without holding the pipe lock - thus the READ_ONCE() */
->  static inline bool pipe_writable(const struct pipe_inode_info *pipe)
->  {
-> -	unsigned int head = READ_ONCE(pipe->head);
-> -	unsigned int tail = READ_ONCE(pipe->tail);
-> +	union pipe_index idx = { .head_tail = READ_ONCE(pipe->head_tail) };
->  	unsigned int max_usage = READ_ONCE(pipe->max_usage);
->  
-> -	return !pipe_full(head, tail, max_usage) ||
-> +	return !pipe_full(idx.head, idx.tail, max_usage) ||
->  		!READ_ONCE(pipe->readers);
->  }
->  
-> @@ -649,7 +647,7 @@ pipe_poll(struct file *filp, poll_table *wait)
->  {
->  	__poll_t mask;
->  	struct pipe_inode_info *pipe = filp->private_data;
-> -	unsigned int head, tail;
-> +	union pipe_index idx;
->  
->  	/* Epoll has some historical nasty semantics, this enables them */
->  	WRITE_ONCE(pipe->poll_usage, true);
-> @@ -670,19 +668,18 @@ pipe_poll(struct file *filp, poll_table *wait)
->  	 * if something changes and you got it wrong, the poll
->  	 * table entry will wake you up and fix it.
->  	 */
-> -	head = READ_ONCE(pipe->head);
-> -	tail = READ_ONCE(pipe->tail);
-> +	idx.head_tail = READ_ONCE(pipe->head_tail);
->  
->  	mask = 0;
->  	if (filp->f_mode & FMODE_READ) {
-> -		if (!pipe_empty(head, tail))
-> +		if (!pipe_empty(idx.head, idx.tail))
->  			mask |= EPOLLIN | EPOLLRDNORM;
->  		if (!pipe->writers && filp->f_pipe != pipe->w_counter)
->  			mask |= EPOLLHUP;
->  	}
->  
->  	if (filp->f_mode & FMODE_WRITE) {
-> -		if (!pipe_full(head, tail, pipe->max_usage))
-> +		if (!pipe_full(idx.head, idx.tail, pipe->max_usage))
->  			mask |= EPOLLOUT | EPOLLWRNORM;
->  		/*
->  		 * Most Unices do not set EPOLLERR for FIFOs but on Linux they
-> diff --git a/include/linux/pipe_fs_i.h b/include/linux/pipe_fs_i.h
-> index 8ff23bf5a819..3cc4f8eab853 100644
-> --- a/include/linux/pipe_fs_i.h
-> +++ b/include/linux/pipe_fs_i.h
-> @@ -31,6 +31,33 @@ struct pipe_buffer {
->  	unsigned long private;
->  };
->  
-> +/*
-> + * Really only alpha needs 32-bit fields, but
-> + * might as well do it for 64-bit architectures
-> + * since that's what we've historically done,
-> + * and it makes 'head_tail' always be a simple
-> + * 'unsigned long'.
-> + */
-> +#ifdef CONFIG_64BIT
-> +typedef unsigned int pipe_index_t;
-> +#else
-> +typedef unsigned short pipe_index_t;
-> +#endif
+
+> +void ovpn_peer_endpoints_update(struct ovpn_peer *peer, struct sk_buff *skb)
+> +{
+> +	struct hlist_nulls_head *nhead;
+> +	struct sockaddr_storage ss;
+> +	const u8 *local_ip = NULL;
+> +	struct sockaddr_in6 *sa6;
+> +	struct sockaddr_in *sa;
+> +	struct ovpn_bind *bind;
+> +	size_t salen = 0;
 > +
-> +/*
-> + * We have to declare this outside 'struct pipe_inode_info',
-> + * but then we can't use 'union pipe_index' for an anonymous
-> + * union, so we end up having to duplicate this declaration
-> + * below. Annoying.
-> + */
-> +union pipe_index {
-> +	unsigned long head_tail;
-> +	struct {
-> +		pipe_index_t head;
-> +		pipe_index_t tail;
-> +	};
-> +};
+> +	spin_lock_bh(&peer->lock);
+> +	bind = rcu_dereference_protected(peer->bind,
+> +					 lockdep_is_held(&peer->lock));
+> +	if (unlikely(!bind))
+> +		goto unlock;
 > +
+> +	switch (skb->protocol) {
+> +	case htons(ETH_P_IP):
+> +		/* float check */
+> +		if (unlikely(!ovpn_bind_skb_src_match(bind, skb))) {
+> +			if (bind->remote.in4.sin_family == AF_INET)
+> +				local_ip = (u8 *)&bind->local;
+
+If I'm reading this correctly, we always reuse the existing local
+address when we have to re-create the bind, even if it doesn't match
+the skb? The "local endpoint update" chunk below is doing that, but
+only if we're keeping the same remote? It'll get updated the next time
+we receive a packet and call ovpn_peer_endpoints_update.
+
+That might irritate the RPF check on the other side, if we still use
+our "old" source to talk to the new dest?
+
+> +			sa = (struct sockaddr_in *)&ss;
+> +			sa->sin_family = AF_INET;
+> +			sa->sin_addr.s_addr = ip_hdr(skb)->saddr;
+> +			sa->sin_port = udp_hdr(skb)->source;
+> +			salen = sizeof(*sa);
+> +			break;
+> +		}
+> +
+> +		/* local endpoint update */
+> +		if (unlikely(bind->local.ipv4.s_addr != ip_hdr(skb)->daddr)) {
+> +			net_dbg_ratelimited("%s: learning local IPv4 for peer %d (%pI4 -> %pI4)\n",
+> +					    netdev_name(peer->ovpn->dev),
+> +					    peer->id, &bind->local.ipv4.s_addr,
+> +					    &ip_hdr(skb)->daddr);
+> +			bind->local.ipv4.s_addr = ip_hdr(skb)->daddr;
+> +		}
+> +		break;
+
+[...]
+> +	if (peer->ovpn->mode == OVPN_MODE_MP) {
+> +		spin_lock_bh(&peer->ovpn->lock);
+> +		spin_lock_bh(&peer->lock);
+> +		bind = rcu_dereference_protected(peer->bind,
+> +						 lockdep_is_held(&peer->lock));
+> +		if (unlikely(!bind)) {
+> +			spin_unlock_bh(&peer->lock);
+> +			spin_unlock_bh(&peer->ovpn->lock);
+> +			return;
+> +		}
+> +
+> +		/* his function may be invoked concurrently, therefore another
+
+typo:
+                   ^ This
+
+
+[...]
+> -/* variable name __tbl2 needs to be different from __tbl1
+> - * in the macro below to avoid confusing clang
+> - */
+> -#define ovpn_get_hash_slot(_tbl, _key, _key_len) ({	\
+> -	typeof(_tbl) *__tbl2 = &(_tbl);			\
+> -	jhash(_key, _key_len, 0) % HASH_SIZE(*__tbl2);	\
+> -})
+> -
+> -#define ovpn_get_hash_head(_tbl, _key, _key_len) ({		\
+> -	typeof(_tbl) *__tbl1 = &(_tbl);				\
+> -	&(*__tbl1)[ovpn_get_hash_slot(*__tbl1, _key, _key_len)];\
+> -})
+> -
 >  /**
->   *	struct pipe_inode_info - a linux kernel pipe
->   *	@mutex: mutex protecting the whole thing
-> @@ -58,8 +85,16 @@ struct pipe_buffer {
->  struct pipe_inode_info {
->  	struct mutex mutex;
->  	wait_queue_head_t rd_wait, wr_wait;
-> -	unsigned int head;
-> -	unsigned int tail;
-> +
-> +	/* This has to match the 'union pipe_index' above */
-> +	union {
-> +		unsigned long head_tail;
-> +		struct {
-> +			pipe_index_t head;
-> +			pipe_index_t tail;
-> +		};
-> +	};
-> +
->  	unsigned int max_usage;
->  	unsigned int ring_size;
->  	unsigned int nr_accounted;
-> 
-> base-commit: ee5eda8ea59546af2e8f192c060fbf29862d7cbd
-> -- 
-> 2.34.1
-> 
+>   * ovpn_peer_get_by_vpn_addr4 - retrieve peer by its VPN IPv4 address
+>   * @ovpn: the openvpn instance to search
+> @@ -522,51 +694,6 @@ static void ovpn_peer_remove(struct ovpn_peer *peer,
+>  	llist_add(&peer->release_entry, release_list);
+>  }
+>  
+> -/**
+> - * ovpn_peer_update_local_endpoint - update local endpoint for peer
+> - * @peer: peer to update the endpoint for
+> - * @skb: incoming packet to retrieve the destination address (local) from
+> - */
+> -void ovpn_peer_update_local_endpoint(struct ovpn_peer *peer,
+> -				     struct sk_buff *skb)
+> -{
+> -	struct ovpn_bind *bind;
+> -
+> -	rcu_read_lock();
+> -	bind = rcu_dereference(peer->bind);
+> -	if (unlikely(!bind))
+> -		goto unlock;
+> -
+> -	spin_lock_bh(&peer->lock);
+> -	switch (skb->protocol) {
+> -	case htons(ETH_P_IP):
+> -		if (unlikely(bind->local.ipv4.s_addr != ip_hdr(skb)->daddr)) {
+> -			net_dbg_ratelimited("%s: learning local IPv4 for peer %d (%pI4 -> %pI4)\n",
+> -					    netdev_name(peer->ovpn->dev),
+> -					    peer->id, &bind->local.ipv4.s_addr,
+> -					    &ip_hdr(skb)->daddr);
+> -			bind->local.ipv4.s_addr = ip_hdr(skb)->daddr;
+> -		}
+> -		break;
+> -	case htons(ETH_P_IPV6):
+> -		if (unlikely(!ipv6_addr_equal(&bind->local.ipv6,
+> -					      &ipv6_hdr(skb)->daddr))) {
+> -			net_dbg_ratelimited("%s: learning local IPv6 for peer %d (%pI6c -> %pI6c\n",
+> -					    netdev_name(peer->ovpn->dev),
+> -					    peer->id, &bind->local.ipv6,
+> -					    &ipv6_hdr(skb)->daddr);
+> -			bind->local.ipv6 = ipv6_hdr(skb)->daddr;
+> -		}
+> -		break;
+> -	default:
+> -		break;
+> -	}
+> -	spin_unlock_bh(&peer->lock);
+> -
+> -unlock:
+> -	rcu_read_unlock();
+> -}
+
+I guess you could squash this and the previous patch into one to
+reduce the churn (and get a little bit closer to the 15-patch limit :))
 
 -- 
-Rgrds, legion
-
+Sabrina
