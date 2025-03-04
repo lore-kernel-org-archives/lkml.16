@@ -1,94 +1,120 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB6C61F4703
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 05:20:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6FCD1DC985;
+	Tue,  4 Mar 2025 05:22:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741065605; cv=none; b=A3W3lz9YISmtswxP87AEiHyDPFYFdgQlPsf2U14Nmbio4LttAelyXqkiVeOl/H8bPLSHj1W5BxyWFaT47PzYvTHKplfQDJhzeeTQU96XeM0yBVHHRG0XiRZgzwUvJB/MuMb9BdcNh6s8BI2ykS2geHyAnvWmcKGwHybHCz7lkNE=
+	t=1741065751; cv=none; b=o35E9xkGL7O2GK3Z7/Gs8vmr0vt9BHqGgkBpt+V+rjjoSVakWRvSLhs2OM0A2oTxm6AOtMNsaxTmQYic1BMzCo9MA8Eec0Y40UeSr9L7icCpLQrjGt7FJ0spqSWGdXvTDl5ijKnGIH1nxiNigIZhQURzNBj7s5gjxUQXa+tKoTI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741065605; c=relaxed/simple;
-	bh=mYJSSAXw5nF44zGFCWonQB1kAY5wPI7TG1wREGSaH9g=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=CIDsYtISAg01UlaemxaVzL/dqh87uUB++LQmo5SLG7ZZKPpwGryFCwNabd2LG0uZWDsT29qDfGzk/fK5+5tY55zp/Lii/kZAdT0jAbA3cK9aBkXLNrOpY+XoEIrgurujIDlbepFchbiDvC1XkDNYKMOBibpTHvuiQSFh2vyZLFs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dsqv8id0; arc=none smtp.client-ip=198.175.65.21
+	s=arc-20240116; t=1741065751; c=relaxed/simple;
+	bh=IPlsvJ/wH9LhkF368ELMZRmGKbIn1DHgRW3ZtwACyUE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Jpx877jjGTZx5o6i4r5nRGz+cQFH16L5c5p8P/nnhmObt4MfdNb5A/oh5RaPY9lVq8cBsDkc3767cCpeMTktyCDFDx26R0CUp7MYq8kT1huMJpB4Ob/KlcAu/0b1+sTE3MiDU6Bsk1xrUU0OYxzEdxlUK/oowRCoJwhXnFUM6To=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Lo0xFvW8; arc=none smtp.client-ip=198.175.65.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dsqv8id0"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Lo0xFvW8"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741065604; x=1772601604;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=mYJSSAXw5nF44zGFCWonQB1kAY5wPI7TG1wREGSaH9g=;
-  b=dsqv8id0k6+n1AUN0nMj/bo6L51VJBgXDwCaLbHAEwURFw4YL5ehxAx+
-   6IS9Mc64H/zlg/BnFaXJAcIQpI3sffpqRqVAF5+//lFZUhr7H3EKGaKLv
-   N2e2Agq6G2lnj8O3BVbiCYk32Be+RVvwFa6CFqzwtPZRvsDk+f//wHoXb
-   Y1Ju6nznswdRIr1aY7la2SdaJW+V1pn1nuqCtgzASTVn8/Xpb1JOEj9QM
-   /wkMYPKUjb9/kdUGQtrcD3/XuHBGFwWygW82ebuyTrV7dnWRhWZWPbQ8b
-   C8k1rDbd8aqQbr4VPZBG6qCj1bPmijMsuUCxfnkV5nV9XpTum4vPLvNH3
-   w==;
-X-CSE-ConnectionGUID: 4EDFA+OjSGaSWpWdWBwzEA==
-X-CSE-MsgGUID: iGBPCCtmTuCwpoIywmRBGQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11362"; a="41876077"
+  t=1741065750; x=1772601750;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=IPlsvJ/wH9LhkF368ELMZRmGKbIn1DHgRW3ZtwACyUE=;
+  b=Lo0xFvW8EuY9D29ayoO57zXzmls7PjJmPqDj9AiXLJUt6P0nQ0q4nYY+
+   YR3pBYNXoTqHCjW+jbXidM6OCtbXmqa1yx5Nl6BaLtfu4gabaIXfwCJk1
+   liXNrto1F+1deW0zOCZp3HyDyIalw/7xjyJDd2o0Kp6LzeS1eFvU2wBzh
+   OnIZhiVOKF7LXid4TrajkgXo418UwhUzN8Kfm3S0gCZthkej0Fg8neOhk
+   2GPkuzZ+7ofJBMcc2fyd1HZpe0yWXmnQj4PoUsmdpE/e3bahmnRvV0y/A
+   iMlN80Eadds9cKRmADcVusYht2AtT2j61StbT+vuM2/VdGqlf9bDfUEmU
+   Q==;
+X-CSE-ConnectionGUID: GDwkOwZcSkCjMuGelBmyfA==
+X-CSE-MsgGUID: 7gWZBclsRw6uZT/6GiPy9Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11362"; a="53360406"
 X-IronPort-AV: E=Sophos;i="6.13,331,1732608000"; 
-   d="scan'208";a="41876077"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Mar 2025 21:20:03 -0800
-X-CSE-ConnectionGUID: l7KH9WSOR8Kxo3Ufvv3x1Q==
-X-CSE-MsgGUID: vWkbHxZ0Q/mLbqKSjwepNg==
+   d="scan'208";a="53360406"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Mar 2025 21:22:29 -0800
+X-CSE-ConnectionGUID: t+siOAbfRHeUJ73VGNlfzw==
+X-CSE-MsgGUID: 6TSrAiS8TEeque2+44l3dA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.13,331,1732608000"; 
-   d="scan'208";a="118424428"
-Received: from 9cc2c43eec6b.jf.intel.com ([10.54.77.44])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Mar 2025 21:20:02 -0800
-From: Zide Chen <zide.chen@intel.com>
-To: linux-kernel@vger.kernel.org
-Cc: peterz@infradead.org,
-	artem.bityutskiy@linux.intel.com,
-	rui.zhang@intel.com,
-	Zhenyu Wang <zhenyuw.linux@gmail.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Zide Chen <zide.chen@intel.com>
-Subject: [PATCH] perf/x86/intel/cstate: Add Clearwater Forest support
-Date: Mon,  3 Mar 2025 21:16:18 -0800
-Message-Id: <20250304051618.79198-1-zide.chen@intel.com>
-X-Mailer: git-send-email 2.34.1
+   d="scan'208";a="118279260"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Mar 2025 21:22:27 -0800
+Date: Tue, 4 Mar 2025 07:22:23 +0200
+From: Raag Jadav <raag.jadav@intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: lee@kernel.org, giometti@enneenne.com, gregkh@linuxfoundation.org,
+	raymond.tan@intel.com, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/5] gpio: elkhartlake: depend on
+ MFD_INTEL_EHL_PSE_GPIO
+Message-ID: <Z8aOD7qCzp-a0M1A@black.fi.intel.com>
+References: <20250303044745.268964-3-raag.jadav@intel.com>
+ <Z8VmebNcrH6CjHp6@smile.fi.intel.com>
+ <Z8WUpzDHbhp0aMoN@black.fi.intel.com>
+ <Z8WWNHL1rZKV4c4o@smile.fi.intel.com>
+ <Z8Wc73OytMx3khP_@black.fi.intel.com>
+ <Z8We4_FJvxTxegpN@smile.fi.intel.com>
+ <Z8WkoPVk2SsSj5aR@black.fi.intel.com>
+ <Z8WsfXV1vMlRxzLi@smile.fi.intel.com>
+ <Z8W2R0DUS6lctU8v@black.fi.intel.com>
+ <Z8W6mIl0z1Wxgv4c@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z8W6mIl0z1Wxgv4c@smile.fi.intel.com>
 
-From: Zhenyu Wang <zhenyuw.linux@gmail.com>
+On Mon, Mar 03, 2025 at 04:20:08PM +0200, Andy Shevchenko wrote:
+> On Mon, Mar 03, 2025 at 04:01:43PM +0200, Raag Jadav wrote:
+> > On Mon, Mar 03, 2025 at 03:19:57PM +0200, Andy Shevchenko wrote:
+> > > On Mon, Mar 03, 2025 at 02:46:24PM +0200, Raag Jadav wrote:
+> > > > On Mon, Mar 03, 2025 at 02:21:55PM +0200, Andy Shevchenko wrote:
+> > > > > On Mon, Mar 03, 2025 at 02:13:35PM +0200, Raag Jadav wrote:
+> > > > > > On Mon, Mar 03, 2025 at 01:44:52PM +0200, Andy Shevchenko wrote:
+> > > > > > > On Mon, Mar 03, 2025 at 01:38:15PM +0200, Raag Jadav wrote:
+> > > > > > > > On Mon, Mar 03, 2025 at 10:21:13AM +0200, Andy Shevchenko wrote:
+> > > > > > > > > On Mon, Mar 03, 2025 at 10:17:42AM +0530, Raag Jadav wrote:
+> 
+> ...
+> 
+> > > > > > Better CI coverage?
+> > > > > 
+> > > > > How? I do not see the difference, can you elaborate?
+> > > > > (Assuming that CIs are using the merge_config.sh approach or alike)
+> > > > 
+> > > > That is my understanding of it.
+> > > > 
+> > > > config COMPILE_TEST
+> > > >         bool "Compile also drivers which will not load"
+> > > >         depends on HAS_IOMEM
+> > > >         help
+> > > >           Some drivers can be compiled on a different platform than they are
+> > > >           intended to be run on. Despite they cannot be loaded there (or even
+> > > >           when they load they cannot be used due to missing HW support),
+> > > >           developers still, opposing to distributors, might want to build such
+> > > >           drivers to compile-test them.
+> > > 
+> > > Yes, and how does my suggestion prevent from this happening?
+> > 
+> > Nothing's preventing it, but since we have an opportunity to allow
+> > a wider build test (even without arch or mfd dependency), shouldn't
+> > we allow it?
+> 
+> I don't see much benefit out of this. If MFD is not available, the other
+> drivers may be built, but it won't make any practical sense except build for
+> the sake of build. I think when they are all together, it makes real sense
+> to compile test. MFD driver here is like a subsubsystem dependecy, we don't
+> usually compile the drivers without subsystem being enabled.
 
-Clearwater Forest is based on Darkmont Atom microarchitecture.  From
-the C-states residency profiling's perspetive, it supports the same
-residency counters as Sierra Forrest: CC1/CC6, PC2/PC6 and MC6.
+I thought the point of COMPILE_TEST is to do exactly that, but sure if
+you insist.
 
-Cc: Artem Bityutskiy <artem.bityutskiy@linux.intel.com>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
-Signed-off-by: Zhenyu Wang <zhenyuw.linux@gmail.com>
-Signed-off-by: Zide Chen <zide.chen@intel.com>
----
- arch/x86/events/intel/cstate.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/x86/events/intel/cstate.c b/arch/x86/events/intel/cstate.c
-index ae4ec16156bb..028557210e23 100644
---- a/arch/x86/events/intel/cstate.c
-+++ b/arch/x86/events/intel/cstate.c
-@@ -627,6 +627,7 @@ static const struct x86_cpu_id intel_cstates_match[] __initconst = {
- 	X86_MATCH_VFM(INTEL_ATOM_GRACEMONT,	&adl_cstates),
- 	X86_MATCH_VFM(INTEL_ATOM_CRESTMONT_X,	&srf_cstates),
- 	X86_MATCH_VFM(INTEL_ATOM_CRESTMONT,	&grr_cstates),
-+	X86_MATCH_VFM(INTEL_ATOM_DARKMONT_X,	&srf_cstates),
- 
- 	X86_MATCH_VFM(INTEL_ICELAKE_L,		&icl_cstates),
- 	X86_MATCH_VFM(INTEL_ICELAKE,		&icl_cstates),
--- 
-2.34.1
-
+Raag
