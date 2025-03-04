@@ -1,158 +1,131 @@
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D51F278102;
-	Tue,  4 Mar 2025 21:36:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 375B9278115;
+	Tue,  4 Mar 2025 21:36:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741124167; cv=none; b=CWjsTn6aYlW3xAt8Yv1EYgoW5LP09KcMVImY0w/TewDAHOwzhnuRlq3Z7Blx1nGZULt34Q8+vAHvBosAXuVuifgxUi611w5wXs6A3MbA1u8V2r2wdpH/I4o4K6znWclHO6xOpc/cnJdIG+TxG9TgHXYw1ToZiZa17beUWhhu+Oo=
+	t=1741124169; cv=none; b=MYPolvVu0iLmlPPBua5oJgZod/crrTfHSZK0TWxmp9SdhHCtdjFWDKPBLQP9UHJc4KlVYCEpbjV6d4cX5BD6HsNtS0ND0Wfgb/YH1SoI4870ktA3+q3KU1evI9OaFhEDW8xGwQjEaZ3Jty3br+85yrWBGskklsXsoqPXEVwkwBY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741124167; c=relaxed/simple;
-	bh=wiD8xusbEKsu2Iali+v+Ym0NExRAdbZb3/jT8bMVl0w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CRlGzYdEIkJsqz85CwxlGBTDwNWYHsIYeB8jiR0kVEfsh5jry4sOiI4jW0nzZtAFol4q5mq0T/YsdKI0zQSEmVG7vTOcObuZjkGBlf+RQ5PG9/OELdSKkQVMspyBf4UEsOa9mnDpzMwIu+OVKz7Zl6qVwHTTxsM9JrEvi10zK/E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YWhg11WU; arc=none smtp.client-ip=209.85.208.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741124169; c=relaxed/simple;
+	bh=4t2C0qmVrIi7VnVoEP9H5R8wRYngP71UR0o3cUyGxgU=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=B3/CJgDOfid+lWRBZXtfO3hz+EftA027PBIsOvNv6GoGock79ID/LhvOMLvr2q2Ni+wU9uABuigDULwmKh9p6aKpoGip7bJHGn8rzt0HmDWUA495ox2WLv3yn/YKUdkPKoxo48NSHkABdAe3jZeMAZTIaj7BVt8/PKu0/A6WoGI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=MDz0Q76T; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YWhg11WU"
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5e4b410e48bso9258271a12.0;
-        Tue, 04 Mar 2025 13:36:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741124163; x=1741728963; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Aul07l9GfhwCjHtjGDfD/NfsZREfo2EqSgSJg3nuUF8=;
-        b=YWhg11WUZoYQngX/tfkU5NYVHk/dQvxBGFvfiAxhGeQXUeKTxaIcfldCe1dP7oja0B
-         X9b2z+EsuQBdhcwyR7P3Vp5GeEHIJIbANUl/XKS6HZlN9r83+Jys3fwsj2oTY/kcBv10
-         dqmLqShPMdx1E3dRs0UkTB5Wd/VYw8qLvev1x2aYaWzd0ko9/CN/r7duvEdZif1jfNnf
-         WSnhagj2/zh00G7xu8f0OQcOa5ErXRWjwmHY+pX7ymy++SEw3iX5oktQNjjhV7xATjDL
-         SoG93gMGwq8gSXB0Dx9dJgxaZ4QtGbVblQdZ14M1Me8eV/TsZed8hdoZ3OksGXVJzG/Z
-         K3Xg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741124163; x=1741728963;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Aul07l9GfhwCjHtjGDfD/NfsZREfo2EqSgSJg3nuUF8=;
-        b=e/9xU7qpai/82mDQqCgDdQ7Q2Up8OCXJsxIh7qeJ1VzB8ASB+BedKghMMXtHptPIn9
-         sbhk1poJohBgIU88fobXQM4jCVOMZ4XYD2qnx86i2Q4TA3SEYpRzlJ5fBvC8vT3Pr/Uw
-         QsEUlmJf/0NPBrxSUzJC8JaAmmG4sxrudBN1QV2dhWQA2b9svedzHB9AV4U+I5IbZJL9
-         u6CUTxf9dPFdmFXXZVSJvmSb66FTaMiZiVcdWWj+zwOEgjQlhA/VXI2b7EHmwGXz84IM
-         RfI+THnkRUwCNj7gDMXFU4sIvr0LgSaUeYish6gIGqkcbPDnI1xm4GkXp81ddlRySM4j
-         9YGA==
-X-Forwarded-Encrypted: i=1; AJvYcCUfqob5h5bz+e/CVFdty4aqwuPzoOul7+OpQSGZENb9U2++rci1PhfCxOoYSvFzEK7XNqZYMaEK7ITZtUA=@vger.kernel.org, AJvYcCW/JStkaKj1vS6s1/BwHB6lviIPFIc6XFvla/s4HD8ovWA6Su49UvROgRSRWau6vXHnzWpKCpKaBZm9@vger.kernel.org, AJvYcCWYRb5q42de59b7So+PbPM+APD+BBt42VfJ9ENhkLjHOhY/edvrWqRcU2FqW7umnO8utSEhJBTZ1ieOJLD3@vger.kernel.org
-X-Gm-Message-State: AOJu0YxQFul2yi2Nf4lZlDHCpWAT5r7cDrwZhS/S+KJleB8ets9OVBQx
-	sEzRRXHuj9zdOPK0hJfPjDg9XdAjtKmjBwnf2KWOZ2dONaonyV2K
-X-Gm-Gg: ASbGncungN7CmwufQFQTC3Q+z9YkCCPruI+SEpnkKnry0ns//y61JdF1+YvfVJbkTqI
-	jPEuLBMujZbatPV8wk4sdrI8I5AduNTH4XWPfbIogoi4wk2dAWfA5CCBf4fpM+rrRKMbdQcvoyb
-	E4J0runIBkWF8XX4pfh3VXrbcnTzQmDVgjmPCC57JKK0wRnJsN59qNmNl0c6C7S+BCh3U+vLL8a
-	tTmzCnCilhBV8rEs8+MKDDHhf3pVMvRQV3BJhsYRjIzI682jSYzGXkAmyz5i7F9nZQs8ehSvArt
-	MJy93PbfZqyWSsxETu1P6uyooDu/5Sv1tNKwgMYqBJXJloKDdnUTNnR8jXilch6eYyiEdrNRgQ=
-	=
-X-Google-Smtp-Source: AGHT+IHs7d8BBwbkw8DJDPW9i5mIaZ+Eha2Wmv+f6E90nzjq8XUloML3x2a6rJ4eSQ3DcQCiw+551Q==
-X-Received: by 2002:a05:6402:1e93:b0:5e4:9348:72c3 with SMTP id 4fb4d7f45d1cf-5e59f384ad5mr490926a12.10.1741124163230;
-        Tue, 04 Mar 2025 13:36:03 -0800 (PST)
-Received: from [192.168.1.132] ([82.79.237.110])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5e4c3bc8800sm8943647a12.48.2025.03.04.13.36.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 04 Mar 2025 13:36:02 -0800 (PST)
-Message-ID: <88584d8f-e1cd-4b56-8906-461e1e6d9cc9@gmail.com>
-Date: Tue, 4 Mar 2025 23:35:58 +0200
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="MDz0Q76T"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1741124165;
+	bh=4t2C0qmVrIi7VnVoEP9H5R8wRYngP71UR0o3cUyGxgU=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=MDz0Q76TMWKkRWrrpRzxdHczLynV8ph1OAxaOKkmKJ4tpeaYridqAPIV5OYCtn/b4
+	 3iZmjiJ0XU7JT4xC+gae3mji1D4vfWS9Zbk2FgUMCm5juiTLvfj5PUW+XV2QzJUyb3
+	 sBFZA9sX86olBLl48TyjpfOwKoyOtfJXXMdeh5yuiS/3U4OQrUr0OuhV28dkg3TO+6
+	 hY1UtOo6Bph37vjUM2TI2ktYiFNChu4GEcbzupHIx+gSY9cLhqJC/7OyBZJIL93YbO
+	 c39P0GQvC7jwAXuk5apibQaXcuBC8S1vXeJ9wjGPsG3Fy2s5G1fSdusm3swcXYW1rF
+	 4dAxvQlWRotvw==
+Received: from [192.168.0.47] (unknown [IPv6:2804:14c:1a9:53ee::1001])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: nfraprado)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 93B0217E088C;
+	Tue,  4 Mar 2025 22:36:01 +0100 (CET)
+From: =?utf-8?q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= <nfraprado@collabora.com>
+Date: Tue, 04 Mar 2025 18:35:37 -0300
+Subject: [PATCH v2 2/3] ASoC: mediatek: common: Handle mediatek,accdet
+ property
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 1/3] ASoC: dt-bindings: support imx95's CM7 core
-To: Marco Felsch <m.felsch@pengutronix.de>
-Cc: Mark Brown <broonie@kernel.org>, Daniel Baluta <daniel.baluta@gmail.com>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Shawn Guo <shawnguo@kernel.org>,
- Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
- Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org,
- imx@lists.linux.dev, linux-kernel@vger.kernel.org,
- linux-sound@vger.kernel.org, Pengutronix Kernel Team
- <kernel@pengutronix.de>, linux-arm-kernel@lists.infradead.org
-References: <20250211225808.3050-1-laurentiumihalcea111@gmail.com>
- <20250211225808.3050-2-laurentiumihalcea111@gmail.com>
- <20250212093610.x4ixrackmn3u2xrf@pengutronix.de>
- <CAEnQRZBeQdnC+K92+Udb5awTmom10YHHNt7Ld-pYK4A1i8sr3Q@mail.gmail.com>
- <d66996eb-f49b-448b-9743-d19a3c3eba52@sirena.org.uk>
- <e45411df-1b8b-4f21-878d-d52e1112e62d@gmail.com>
- <20250213064724.kbmxsk5szpxwclj6@pengutronix.de>
-Content-Language: en-US
-From: Laurentiu Mihalcea <laurentiumihalcea111@gmail.com>
-In-Reply-To: <20250213064724.kbmxsk5szpxwclj6@pengutronix.de>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+Message-Id: <20250304-mt8188-accdet-v2-2-27f496c4aede@collabora.com>
+References: <20250304-mt8188-accdet-v2-0-27f496c4aede@collabora.com>
+In-Reply-To: <20250304-mt8188-accdet-v2-0-27f496c4aede@collabora.com>
+To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Matthias Brugger <matthias.bgg@gmail.com>, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+ Trevor Wu <trevor.wu@mediatek.com>, Jaroslav Kysela <perex@perex.cz>, 
+ Takashi Iwai <tiwai@suse.com>
+Cc: kernel@collabora.com, linux-sound@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
+ =?utf-8?q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= <nfraprado@collabora.com>
+X-Mailer: b4 0.14.2
 
+Handle the optional mediatek,accdet property. When present, retrieve the
+sound component from its phandle, so the machine sound driver can use it
+to register the audio jack and initialize the MT6359 ACCDET for jack
+detection.
 
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Signed-off-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
+---
+ sound/soc/mediatek/common/mtk-soc-card.h         |  1 +
+ sound/soc/mediatek/common/mtk-soundcard-driver.c | 15 ++++++++++++++-
+ 2 files changed, 15 insertions(+), 1 deletion(-)
 
-On 2/13/2025 8:47 AM, Marco Felsch wrote:
-> Hi Laurentiu, Daniel,
->
-> On 25-02-12, Laurentiu Mihalcea wrote:
->> On 2/12/2025 2:38 PM, Mark Brown wrote:
->>> On Wed, Feb 12, 2025 at 12:11:49PM +0200, Daniel Baluta wrote:
->>>> On Wed, Feb 12, 2025 at 11:38 AM Marco Felsch <m.felsch@pengutronix.de> wrote:
->>>>> On 25-02-11, Laurentiu Mihalcea wrote:
->>>>>> +    const: fsl,imx95-cm7-sof
->>>>> Albeit Krzysztof already add his Reviewed-by, can I ask why we need to
->>>>> add the -sof suffix instead of -audio or so? SOF is a software project
->>>>> but you can clearly run different software on the audio-copro as well.
->>>> Sure you can run a different software project on the audio DSP but
->>>> you will need a way to distinguish between the different projects.
->>>> There might be different mailbox, memory configurations. So you will  need
->>>> to invent another suffix specific to the new project.
->>>> We can make  const: fsl,imx95-cm7-audio as the one used with SOF
->>>> and think about a different name later for when another project will
->>>> want to use the DSP.
->>> I think the point here was that the DT should stay the same even if the
->>> DSP firwmare changes, just as how changing the main OS shouldn't affect
->>> the DT.
->> It's rather unfortunate but based on the experience from the 8 series
->> (imx8qm, imx8qxp, imx8mp), the programming model can differ quite
->> a bit (e.g: remoteproc vs SOF) even if the core is the same (i.e: DSP core).
->>
->> The different programming models also required different DT configurations
->> (e.g: dif. mboxes as Daniel mentioned, some extra properties (i.e: reg-names), etc...)
->>
->> The "-sof" suffix was chosen here instead of the more generic "-audio" (or whatever else
->> alternative) because the DT configuration is specific to SOF's programming model. Other
->> audio applications running on the same core may have dif. configurations (e.g: use
->> DTCM/ITCM for memory instead of DDR, dif. mbox count, etc...). I suppose this kind of thing
->> is bound to happen to some degree since the DT node doesn't just describe the CM7 core
->> (but, rather, it also encompasses information on the memory, mboxes, etc. used)
->> but perhaps I'm wrong?
-> Time will tell if there will be any other user except for SOF for the
-> DSP but and this is what I wanted to point out: the DTS should abstract
-> the HW. IMHO The CM7-Audio node should contain all properties required
-> to turn power and reset the core (e.g. clocks, reset, pm-domains). I get
-> your point regarding different configs but please have a look at
-> mt8183-kukui.dtsi. Here the rpmsg config is a subnode of the actual
-> system-control-proc. This makes much more sense to me since the HW part
-> is part of the generic core-node and all the software config goes into a
-> separate subnode.
->
-> Regards,
->   Marco
+diff --git a/sound/soc/mediatek/common/mtk-soc-card.h b/sound/soc/mediatek/common/mtk-soc-card.h
+index 3f6e24dd22df13ddb3aef1625a77d2e29e46fccf..a1d2794ac1f717997fb47023d5951a9ac4897788 100644
+--- a/sound/soc/mediatek/common/mtk-soc-card.h
++++ b/sound/soc/mediatek/common/mtk-soc-card.h
+@@ -16,6 +16,7 @@ struct mtk_soc_card_data {
+ 	const struct mtk_sof_priv *sof_priv;
+ 	struct list_head sof_dai_link_list;
+ 	struct mtk_platform_card_data *card_data;
++	struct snd_soc_component *accdet;
+ 	void *mach_priv;
+ };
+ 
+diff --git a/sound/soc/mediatek/common/mtk-soundcard-driver.c b/sound/soc/mediatek/common/mtk-soundcard-driver.c
+index f4314dddc46075d554b4e3f3aae8bcb5498f8ab5..4e1c546a994f5e6b7068f70ac8dc2af7e87d141a 100644
+--- a/sound/soc/mediatek/common/mtk-soundcard-driver.c
++++ b/sound/soc/mediatek/common/mtk-soundcard-driver.c
+@@ -8,6 +8,7 @@
+ 
+ #include <linux/module.h>
+ #include <linux/of.h>
++#include <linux/of_platform.h>
+ #include <sound/soc.h>
+ 
+ #include "mtk-dsp-sof-common.h"
+@@ -192,7 +193,9 @@ EXPORT_SYMBOL_GPL(mtk_soundcard_common_capture_ops);
+ 
+ int mtk_soundcard_common_probe(struct platform_device *pdev)
+ {
+-	struct device_node *platform_node, *adsp_node;
++	struct device_node *platform_node, *adsp_node, *accdet_node;
++	struct snd_soc_component *accdet_comp;
++	struct platform_device *accdet_pdev;
+ 	const struct mtk_soundcard_pdata *pdata;
+ 	struct mtk_soc_card_data *soc_card_data;
+ 	struct snd_soc_dai_link *orig_dai_link, *dai_link;
+@@ -250,6 +253,16 @@ int mtk_soundcard_common_probe(struct platform_device *pdev)
+ 
+ 	soc_card_data->card_data->jacks = jacks;
+ 
++	accdet_node = of_parse_phandle(pdev->dev.of_node, "mediatek,accdet", 0);
++	if (!IS_ERR(accdet_node)) {
++		accdet_pdev = of_find_device_by_node(accdet_node);
++		if (!IS_ERR(accdet_pdev)) {
++			accdet_comp = snd_soc_lookup_component(&accdet_pdev->dev, NULL);
++			if (!IS_ERR(accdet_comp))
++				soc_card_data->accdet = accdet_comp;
++		}
++	}
++
+ 	platform_node = of_parse_phandle(pdev->dev.of_node, "mediatek,platform", 0);
+ 	if (!platform_node)
+ 		return dev_err_probe(&pdev->dev, -EINVAL,
 
-I understand your point but we're dealing with 2 different programming
-models here: SOF and remoteproc as opposed to just remoteproc as it's
-the case for Mediatek.
+-- 
+2.48.1
 
-Going for a similar approach would also mean quite a bit of software
-changes as we'd need to factor out the common bits (most importantly here:
-core operations like start/stop) and placing them in a common driver. This is not
-trivial and I'm not sure it's worth the effort right now given that:
-
-    1) The current way we model the hardware inside the DT is not exactly inaccurate.
-    The core does physically use those memory regions, mailboxes, etc.
-
-    2) Whatever we do, the information in the DT will still depend on the programming model.
-    It's just that you're placing it in a child node, instead of the parent, which is arguably not that
-    big of an improvement?
