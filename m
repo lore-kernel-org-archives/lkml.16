@@ -1,28 +1,28 @@
 Received: from BYAPR05CU005.outbound.protection.outlook.com (mail-westusazon11020105.outbound.protection.outlook.com [52.101.85.105])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 911D0277021
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 22:20:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD525279324
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 22:20:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.85.105
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741126854; cv=fail; b=mC5tYwLeIXc1s9W8TnkqvmgP/jBVWlA9Mml9rfVGc3UwEbhT8VGyYO8nAlNIxIhWAlt/tuKTs/2kR4xh0Tp83iCtXsSzacyvoq4bQZdymc875QViTKzSpFlXblWK0HtxxANUyG/occ24nSaUn2dmmhivqEqfbmgvxEJG1pvgMZw=
+	t=1741126858; cv=fail; b=E3jB1ci5aVnCp1q1nORZZkr3/H1Zo3aMnVLYABXjJ0eahLsLwTpBx9Q7N0AGVjeAVGQhZPefSHk9ON3sGcfHzjeUAN5U3aZlF3l/bfAvD2fWHUa5wNlkdxLmYneFO39H45ZqU3Yf3AY+jveSVBOIxaVC9Xsa5mscCIi48np5Ry0=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741126854; c=relaxed/simple;
-	bh=MwBNOoMi49SwVBX1lc9vJQWTgUM+jk5LJSMfM3iHis4=;
+	s=arc-20240116; t=1741126858; c=relaxed/simple;
+	bh=g0RpaQcNRpqwOKrX8jNZH1ZGfGH/7jzZ1b2Cqb/XTHk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=nUwSZgjUWkKBIotWZ9EqRK/k4Nq6pTEsRpRv2ICR4FqesTmdcQ1DC54HrsHNM0FSrFaXd3UDJ2KHZ+1M9DHYJcUHAj73ZwDEUQF1C9JrHj4i+WzcMEojXQ+M0f1efvIOz8BgOImHkhVuPCjflL+1KvSY81YV8cPmhjsDi+LhyNI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com; spf=pass smtp.mailfrom=os.amperecomputing.com; dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b=l95yYa9U; arc=fail smtp.client-ip=52.101.85.105
+	 Content-Type:MIME-Version; b=tNtI0nUY7wTb2DbhPe6w+eWK3/27y4STLdrnETaqrCqfWykjECFBe4x7rBjZLjDUyHfwT4GxPVmBvgahz786nMq4Yno8RxdWGVfCiMVMXAS4FbyW/la7MGPB3X4GEZwJzWQVimcm2rLQ/IpcmziOAugREYXm4AgmSJYxZJZ8BQA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com; spf=pass smtp.mailfrom=os.amperecomputing.com; dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b=aPFTIeHU; arc=fail smtp.client-ip=52.101.85.105
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=os.amperecomputing.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b="l95yYa9U"
+	dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b="aPFTIeHU"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ctmcsDz28ZWlzGRlPG96/CbChrHM1mmH9vKyvMLxESysPWp5Zof2rbngbx81HEDEH0CwoTSCD+T3SLUsZkpw/eLtoo9fz5aJ/sUGv03URB89Patnaladj/iCtHc64Mxo7/Qd42Qb/3Od0mWeIAeqjALi9dAiR/elDsrizDI5B1R4oe/+Ya1qBpEkFKaZQwNba0aP7HsguTJDugZGxGCbSDnbwinkjMoIMo+oW5tC+Wa6r+DavohzLGmOeRb7ps1CVGpnHG00+y0D+NfRAC8BOMYoaAOYEJj6EATxtGZePmEpAZIVi4ydqpI0zm5zvs7W49AQqtc+KhH1SagCOkm82Q==
+ b=q+PVzPjWEgusvsnqd+pXygerLo6RUJ8oN08vI4lGBvjB7BR12qIWwvj16cAIaiqrXIdevesJDtaCeIBY0MaozsFSFgt5B5NI3DCLbUGM3+Rq78h8TR/MWZyYhlQWxA9ulgF14vwj8imO1giAaLlK/3jyjvbXnULULSl/rVe0EosMmrkVtYCEpWVBlEiGYz52no7mDZhlnT0x39cutE8kq3/DUSINJamkRaZIutmkr+FlbeAkAxJRBpHEc/yMuqHgODYX2dziLh5I3awxtzun97eH8aFGK3CDPr6mc7s3FuIx8ia0sH8Yp3E2VnFhLpYU4M84tpkBXoffUH+C6RPf8Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=bc8S2OTbZME42pyY8V87xNGR1wOTsn5d4wbfYh2jm/s=;
- b=YLxBFJsJVcBCWonl06ZSNwIr7pCuNBey+JcFZMAeYTEtI+afJ1Zgp767YTcANKiuUr014W7tliMtyZ8m99UNYw7r3Egh9vyR1RzXLesYIj2Bk5xASRw/KQnjRcS+iTYTzLgQiWheActcxpZ+6AHybn/kmdLKQKX33KhbrbebBU0tCltQ88y//A6svmLBeqqtABFNeKvKEtIw1p/UNqVYFAmHfJ9HiUQ2zpkfqJLHuyO+wImCb2AeE5BbY0fhA6y/ZJeZWub0JNT8i8H3kuA5RYsEWwq9hx8Tvz0F0bj5OLCwR2lW6/USdAUv9X3EkyjW2rVhAUuXVYgNGOA5RlyxtQ==
+ bh=tkmV7x3mcQBAyxbvWzDtrcqC+7mmWkYjzNradsUNkVU=;
+ b=F8ZQbKOyfNQGKpAK8qJoT1pyxJwd9FhKU7zILrWsACOp4Af4HsUTkBcPeaJAJItF5HQf+Wz4uC5xTj6qQYvRT+Iy3bdmhLdB0gkygma23kAKeqIK1eJg8BAD2AvSB/4ZXeyzH9Bvs6enzX2lfXheJJvXM+KCbNZCg8XCMzLasrPrU2eYXj2O1aL15+zRkD0OSb5xMFrO9ot3iESJJKhwAx2/fMY6Qtm3iuzxeOvqnC1GKEXvv5qhLHqLE7lx2Mal9aXlt1fcEne/Mr9BhY+ymT/Z08dWgnUEIyK2YNPG3EhCaySMNmutaPNxuZDlZE+rN2yVjHFGUsQobyYACT1A/A==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
  header.from=os.amperecomputing.com; dkim=pass
@@ -30,18 +30,18 @@ ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=os.amperecomputing.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bc8S2OTbZME42pyY8V87xNGR1wOTsn5d4wbfYh2jm/s=;
- b=l95yYa9UaEDL7PgaSRZE6SzqrXnVcNVdFBfek0Y2GcSPLHw7mTP6NBB0bcNeywTyqiafUUeN+M4osf8TOJY3o0JUqPATfCypKjVpyUemmbr1BykbjwgD1Z9vG68lwJRcdN0ZsK4IM19973OnJCudEsR9iTpbJKthSqhMwBZnpm4=
+ bh=tkmV7x3mcQBAyxbvWzDtrcqC+7mmWkYjzNradsUNkVU=;
+ b=aPFTIeHUjVx6Oya+l8C1SNhzJsO2iC4+oVaz9ZQwhGZomv7X64szM3xHLPubK5p0FxAtC+7dyXy/5vZMFi4gv2v/MUrth4/5oZW8iVr/RZVYnpxS/fIfndFLcSnBbK0jjQvrqWkXSAoP77Sg4mtQ9IbSThHPVFl2z4KqAPQa5ts=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=os.amperecomputing.com;
 Received: from CH0PR01MB6873.prod.exchangelabs.com (2603:10b6:610:112::22) by
  PH7PR01MB7931.prod.exchangelabs.com (2603:10b6:510:275::6) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8489.26; Tue, 4 Mar 2025 22:20:48 +0000
+ 15.20.8489.26; Tue, 4 Mar 2025 22:20:50 +0000
 Received: from CH0PR01MB6873.prod.exchangelabs.com
  ([fe80::3850:9112:f3bf:6460]) by CH0PR01MB6873.prod.exchangelabs.com
  ([fe80::3850:9112:f3bf:6460%2]) with mapi id 15.20.8489.025; Tue, 4 Mar 2025
- 22:20:48 +0000
+ 22:20:50 +0000
 From: Yang Shi <yang@os.amperecomputing.com>
 To: ryan.roberts@arm.com,
 	will@kernel.org,
@@ -51,9 +51,9 @@ To: ryan.roberts@arm.com,
 	cl@gentwo.org
 Cc: linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org
-Subject: [v3 PATCH 3/6] arm64: mm: make __create_pgd_mapping() and helpers non-void
-Date: Tue,  4 Mar 2025 14:19:28 -0800
-Message-ID: <20250304222018.615808-4-yang@os.amperecomputing.com>
+Subject: [v3 PATCH 5/6] arm64: mm: support split CONT mappings
+Date: Tue,  4 Mar 2025 14:19:30 -0800
+Message-ID: <20250304222018.615808-6-yang@os.amperecomputing.com>
 X-Mailer: git-send-email 2.47.0
 In-Reply-To: <20250304222018.615808-1-yang@os.amperecomputing.com>
 References: <20250304222018.615808-1-yang@os.amperecomputing.com>
@@ -70,393 +70,324 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: CH0PR01MB6873:EE_|PH7PR01MB7931:EE_
-X-MS-Office365-Filtering-Correlation-Id: 72ca7119-25e7-400d-f34e-08dd5b6ad0bd
+X-MS-Office365-Filtering-Correlation-Id: ebf135ca-f1ff-4deb-a5fa-08dd5b6ad226
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|376014|1800799024|52116014|7053199007|38350700014;
+	BCL:0;ARA:13230040|366016|376014|1800799024|52116014|38350700014;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?WmpGZg1mjm2zsnrtHGa1zMKDmaPY8t489ZRZT0AUaVcylGUMneQRI+uYuEq5?=
- =?us-ascii?Q?Ch/rLFwiblQxK0IQnudleXP5h9drxL9s9OKUlaoiIHOl+J2AGqhBEm5yBAY5?=
- =?us-ascii?Q?rwgheAe4wY5zp7W7uxhOQE+hP748C1RFTY83Q6q9tA/NkrICvi0J/CqSkpAh?=
- =?us-ascii?Q?KLtQ/OmvTMDSncHJG7J3J2n3Va8wl+VELdYEpqB4q7FECFtP8bTmQO7rrLiz?=
- =?us-ascii?Q?X6NCupaAaFiA2s+dNJIKdkBrzKPR2zVcX012p9I+XtLfA4cFX9NJmNu8crPf?=
- =?us-ascii?Q?EN0GrZwmYoJtp2GKFL8nSByJZGBTH2jT14W/F/bXEkdPvwugm9dh1RwHDQad?=
- =?us-ascii?Q?Akq5k7eHkuGZnv+6oxMSu55clpr0w2kiNs8pbpr3fudnG0a484UQYDjOhIhR?=
- =?us-ascii?Q?Y8a+HN4vd4Sy0QUXE/TVrK5NHK7eEaqRrtCXBwrbqN6E6L6taTL/Oh5uzyDh?=
- =?us-ascii?Q?lf/1cCWlw8Dz9D8k6A2ZIhf9E3XiRsgrMDVwuRoTjXGIPrqitfmuunwR79iR?=
- =?us-ascii?Q?OeGcfc2VSXIhZKWBBOWWlrXGHpDjngE/+b3+Q1IpmbXD52SagXKAmnKF1zkN?=
- =?us-ascii?Q?Py4jXHAJspc0oYyNbRxq4eO2JzvvTlgw8sLJ/gDD9pxapQXYp6SsIbQeYT4e?=
- =?us-ascii?Q?krBKIuySkTFc/04HLS6GG9ptwT3+3AwNvPLTvvKQps1KXDOYDhovZ2QDe1na?=
- =?us-ascii?Q?4Url6cWdI/6c+7hRfZwiM3ggwatI0HDqlVVRYt9XYQZB6Z8IFCYGjCNeyKBg?=
- =?us-ascii?Q?RM5T6XeHbW9qKfp6Qpu6d+PAEBCc7GyMzXF2yuUq8/TgiYW0fdLyGn17Quut?=
- =?us-ascii?Q?IyGL3DfG5ZiD6c+fwH0iKNkSbcs92F+K9IoJlbbBz3vT/RKcuxd28XgCzXYO?=
- =?us-ascii?Q?7H6fKEjVPw2aETVvGvtF5POgJEZ+atCyz2k8LzRc3vwNyLTiS6jMnXtCSb5j?=
- =?us-ascii?Q?tIJZntcl2u2v7qBJ0m4tILP1e2a0xLWCEK5zSH1Z5hel0qit2dAtvNwp/AbX?=
- =?us-ascii?Q?fHLcYHqfbIcFWMAlX1INeFxc/32sWwqi/N2cgIFhn54dYwy0nIhNBOfG7h2F?=
- =?us-ascii?Q?XaNOlNzzgKip8COmYTahyATCDshqMWpl3kfLX6BQjh4PMnHInSqjkuXQrPnx?=
- =?us-ascii?Q?9SeOzhs3as0wXeLF519vk2deH80fLwJO8lJwhRrP6ZWXHdE6gKtWy7WHeNBm?=
- =?us-ascii?Q?ZcYuIIGNf+TZ4u9GT64Gv0vAffPCEB8yz/MYtNZXD8U1ofUkBJzSh8yUyc1z?=
- =?us-ascii?Q?vYKbiqSjh301rqYKVw2wVmaiaQ9vsrZdX0fFnvrz3ol1LudiqsMd0d6auSuh?=
- =?us-ascii?Q?zggMh370m0wez00gOHjhHTQmf6pJ4DNQbpRZmxPyMaBJMiYLiEXTBX81LsqM?=
- =?us-ascii?Q?0F2DBZRh13JfAbuBdG16vTnnbY84sBygN3OOkP5o/GW2lvtnJ3YPbEk2iUM6?=
- =?us-ascii?Q?QM66r/RQabo=3D?=
+	=?us-ascii?Q?AYrdNVuVE4Zpjm50pgIWQ1cQlC6zH8tELKx5InYgCHuXvh7cJ5XC2LZ0QnKF?=
+ =?us-ascii?Q?56tl3hpsaprsAteEhCcmMBSfkSyYvx7M9pLwxIQwiZTkjK5AQNy0KFZxT+C4?=
+ =?us-ascii?Q?HDQUv07zPQPCxCbNO/ONwgwN79NkZYI+0tCzxn5ZKlgUGHrdwxPuKmx2WcP+?=
+ =?us-ascii?Q?nM1ZtqS1YRdg/ZJDcAveXOfwxUMT6CNUcINhjRwaYKNypbMXNiMRoYPrwr6w?=
+ =?us-ascii?Q?pzm3Z+gAIi+AhNJY5/GpIKcLtoBDo/W02MqsBt+re5pc/1npyECFmTV9w2ku?=
+ =?us-ascii?Q?uZhnxPFstpiZMLuF3HOLbodIMlieU/AbSj+8aHpBfsGhOqvN6o1GRvGSbwFh?=
+ =?us-ascii?Q?bPLzodvl204qejIEEd7UqRoZdvfMnziyPsELAh2Sxm0wMTFmLM5eqOha5q7j?=
+ =?us-ascii?Q?UPNJxgYxFaUiunNYziA/zJw64dNROyGrBQPaAma39FLO54FmXfCPXhe/9pWd?=
+ =?us-ascii?Q?MayT9oOzdCYSrq9eYtu7681PeU+IpH14KSwTVJi7pqYXyaHbC46dfhxj3pVm?=
+ =?us-ascii?Q?bspK+Hm58Vi+P0G2uGmVxcgwTJvLrJREkxwcXpPvel4VQM8kxdZyToH2Tzby?=
+ =?us-ascii?Q?q1RzY31GdZ750LLoDjP/ndoZ0KrsVYpW7AZnj+XmzDa4airhGM5mMPtQO3LK?=
+ =?us-ascii?Q?NOfpobTcCX4ARKM0sBqSiw8KUNdHXcZx7lkDaaAkh35zVmkAWarUuiNsnYq3?=
+ =?us-ascii?Q?MDLFWwQxBYzjpSv0SMGBWC/QBQYM7tgE1JEBn2YtoAmpYpDsDnR8N81/eAwe?=
+ =?us-ascii?Q?HsliBoeP22t8/5r70sEbrfl0yUA/IGhO7jsBJGtiJyNLo8JmZc+YYJ4yvQ8n?=
+ =?us-ascii?Q?B3QBZLfVr4a1x3fp3RIUJPOrUHavzWRxvP79mK9WlqCnWEQSkR/hfwOgJO2S?=
+ =?us-ascii?Q?4yBQIx1OSDUL54lLVcD08nQZrrrtrrsMUniXjCjp9I+3ilZu8/UaF6VqlUcT?=
+ =?us-ascii?Q?lPcKHbZfVNAdzHpW6QgM+qAhWh83G1dGV7vTaGoRuu16TZ66SA4BnQBOf9an?=
+ =?us-ascii?Q?IgmRSRxM4o1OygTohRY+exVgZMgwijBecwIn54K+8zGA/57RVscL9TBdk+US?=
+ =?us-ascii?Q?nmoFV8SglEYEBRn9jor6Sfx3yC2JO2/gThr5Ps31gkEvdGosYZzhon8Svhxv?=
+ =?us-ascii?Q?1aXyrGH1ifKcH7yc0bovjOLPibm6lclANHPtVXbqS4QGGMqcduV+FqY1jzsj?=
+ =?us-ascii?Q?suh4turJk5RdJOGtP8UuOQ7M5xIfo3h3Qc/0wkMEborh8RCFOp7M0bLHKjto?=
+ =?us-ascii?Q?UDqD/BNSl2BSOUsaBY9M96NTVXsWZq1ElvDtyejY8aL8zdt0a6EGBAhBcdEF?=
+ =?us-ascii?Q?UNy2VnnZr7TQnLK1FJ1RbVr8Hx3RRqovKhmcBNFCe4ZCo/J0bANbPEEhnjrq?=
+ =?us-ascii?Q?L8+mcUQG+71XRJvPP50AkGDtdY33puDue57MCmXEp0ResfT0DNajb7HbluBc?=
+ =?us-ascii?Q?bZ5CZgnXdKPqAxWUdhSzrlqJcs/C2Kfb?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH0PR01MB6873.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(52116014)(7053199007)(38350700014);DIR:OUT;SFP:1102;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH0PR01MB6873.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(52116014)(38350700014);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?qgFq6QhRBOQ6J8oeEpGXvr17hwGbtmGHd9Mo2VtoWXQCTwCose8yfu5dPhPP?=
- =?us-ascii?Q?7w+H9a3FRFVOebkwe/XCYNySLhOATkEyl63HjWK/gFIsrMQ1fpfDg03Vd5cT?=
- =?us-ascii?Q?g8Vro333AxSQOERswn+QUmORVWEWBTllgSlES8MrAjWr67idMcGAy1kxqRuE?=
- =?us-ascii?Q?0p+12CYScxrgUvHhVCztOJszFsWjWv6uNh6uK9swBYcx+vfOFrRRo4LS3C9y?=
- =?us-ascii?Q?KILtS0UNCOL/8URjtc6riPkq5UUSUv0lMwXnzfrSQeBmF3/3WI89DxB9tMfE?=
- =?us-ascii?Q?uaZ8O7APffqR45utWDuNFzBR+bV78ypo4PpNmhQDundAQMmon6AwOH5XVxCy?=
- =?us-ascii?Q?33y5zEOo2L3QL8kpw2ua3hJy6JlVLU9PMOS5qta5nOFt423ezdYBtHrd6gxh?=
- =?us-ascii?Q?GtUva/dSFVhD+vtfZPWMOQw2T0gjI14sgcAZHaeAMJ1BEs6pWHVYHjaPEj9d?=
- =?us-ascii?Q?ZVf8xM/UG69xKZZZ9izBocQlEwBrbb+4RLqxmPKIl7E0xy4fx13tskOcvW7F?=
- =?us-ascii?Q?MsNtVoeHroDC0XeouDQF8koGMak09XNLyQZ9lsHTGNWjKwLZbd1P8RjMnraY?=
- =?us-ascii?Q?KQaAW7dbSifDMrGQKe7JX3+FW8dEh4ZEn6/iHeH+MPyiofhjrvebhoBh48I5?=
- =?us-ascii?Q?oIAJ5hFwg8tuNVOjws8NyYflMj06vQSLUJ4nuXapWxOa/smJdjroPIHd0Yw0?=
- =?us-ascii?Q?WZSBrpE7XgQHthqWUpSdaqMCXZsqSUqFksPQ3kP3715Jq+o42kzdnkXHH98j?=
- =?us-ascii?Q?gmmkyZPMJ7+0QOLWIGa9tFxqq5CA0pxnu+4mtsZteH0nQFoPWqDqW/2u/+Id?=
- =?us-ascii?Q?lzPk5m0dc4m7njWL9wLj1VWJdvbRLzEOJ7wVpZR9A1hPObkz8GPuQx6MqJua?=
- =?us-ascii?Q?6yaTyPlAAMgoF7xwBz5fiSLIhnDg0EEenmRjNaq1HppsCnNhrXUqgHvnwGFz?=
- =?us-ascii?Q?KLt/V/Jz5KLr99bEj4aijuVyy+k9eiPbxl58wqeBseyFkI1HxIJzwstSAUfd?=
- =?us-ascii?Q?xVO9Zigvtpm+NPRCL30Pl7lOSSp978UkIK4RPAgau76TqFlcMt758ChalX+Y?=
- =?us-ascii?Q?4C1EumGKrypzq65wh+uF9iOpH/jE/wOtOvzQe0t8vNfCA4tNEZjSxwU+4N3N?=
- =?us-ascii?Q?WOjqUy/ZhKEjtB4yFBpvVXVOmCMCd4EErAGUd7ibn7kN6IyQ3cVGuouNInYc?=
- =?us-ascii?Q?NGYdBEwkHTdU1VPW6dq1FfgJ2Y0UKrOrRkweJd9z2hnf6VjgW1/L1Rb+mhov?=
- =?us-ascii?Q?g9l6TseByEh8fYwhUAIEVxVz2WCb2gh6edsVvH93W3Nd0yy+D68PGe+x9gcZ?=
- =?us-ascii?Q?RKe2hxOc8pc2WVtnCV94/GFOaMWkCijC30HnWeJtFh/2qfIWvAjwKowZazKN?=
- =?us-ascii?Q?JuYW1cO4IYE1VMvIG9fZXgnalYqTsNV7rcp5HGXr0HhgIqQpQ93MqLnXQQfh?=
- =?us-ascii?Q?zAwv/wd2uBiz5+2DUrTooMIvpz/juagGfevKnqaNb690rliq5r+3TN1ZHpEG?=
- =?us-ascii?Q?m31/LpzoiOisaM/Z8cefcbj4dwPHZZ3fR6dJHd0zCKAGd5gTiAfUECCa0WGV?=
- =?us-ascii?Q?0/Oi9ZQkzcm8lBAfDb+X1b0peuPuzw3v3sPi9gSyOOh2NIM2nHryScueVPtC?=
- =?us-ascii?Q?Au6zt/MQ5LqSc2ni0yaIEkE=3D?=
+	=?us-ascii?Q?gDymRz06GBCH3t7cNxtqi5AU7JRs+IAxQPr2pqfnE8DY4RNRy/r0crKBUbG/?=
+ =?us-ascii?Q?7WvHaf2eWT9Qv+wBDR6oCCScoDZJ5p3iuQJ7BkXBGCJ7m05P/ILOc/OaECPP?=
+ =?us-ascii?Q?xcVLkkzNOVDyDCTDG8Y1yL3JnIwdnppY83PdK8EFsEZrm56qMkRRIxAkhlkX?=
+ =?us-ascii?Q?0isr4KjZetu6wm8KSisWcRmz10VdTN5o6Eof2BV6ojFQLGVfSq3QZRPEHP3E?=
+ =?us-ascii?Q?/qeCPMpMrlaFk+aZ9Wh+adTPB6QKrM50ikjonMPYDnDYUvD91cJ/8XHzFofo?=
+ =?us-ascii?Q?+lGVUHI/U9UfQJXDmRUsoSth8UfVD2TdGlZ8KruqYujxD8+5UIaThangFkHN?=
+ =?us-ascii?Q?Q7M86KiUK5m8msH4hVsI9Jb37mNo+YtTRfmfiF45c6WksFC+ZrUobGeVaueG?=
+ =?us-ascii?Q?PIopq7h9y7Oh9Zn0Dee9n01bhocm3xMDEQ2kFkWmmtH1fy7afo4Kt1Nybjj5?=
+ =?us-ascii?Q?D13dVLbKXXP4CbAY4J+QHOqEa6ku4+KV53igl53uEJvFYTaXax3zQbytxnPq?=
+ =?us-ascii?Q?FyeUDvC2gMAEWfLWPR301aI+HNVA/EBoV6RV7Au6nwEXqG2sHLn80NF7tL/Y?=
+ =?us-ascii?Q?NDNShGZ1vFQ8G03wZFY8czVARCkIDFze1I0Pse0ct+0vTO+tlwz7QCyNovoV?=
+ =?us-ascii?Q?kfFpPtkpgDj2Td+j/ULQYIaraTrNH6i605d8ZOroNR7egNwktYgZQn2JL7c+?=
+ =?us-ascii?Q?jYMrWx2m7kcbdjZ+KDb5FO5FPbV0zmnGG+jwzaFU1eBrCdZotrnCFpkET5Sh?=
+ =?us-ascii?Q?akIrK7BJTryLiyI9hZHbrlzQs28KQ2a7bLCFQGw4IC5CJczepBZAEaaPNXwy?=
+ =?us-ascii?Q?QfOlAGpE+MEiaqvtCny61YZwGeyiQmhCqV1JOhhjY4jAsXvgh84BHHPOpi5O?=
+ =?us-ascii?Q?hbBzw33M4TjIHT1XOeClCDUKoq2qC3NXvFqQ0QKVLijVPME5KKbOdsCcs26D?=
+ =?us-ascii?Q?28k23iVwKH6v1P4m8HVH7GwWmV+jGppnuuwGUFqW0mSKpPGOujBxNfF0tC+5?=
+ =?us-ascii?Q?IG+tZqkyaIcIz/YwSy0N0qEqANTp/IuxbreESQ/YryFQCqCcrZO+bIu/VVCy?=
+ =?us-ascii?Q?19j++l8TLy2k2IZkMOgzgWQ65dJCrQ/8/yqQI4bMAjrCwd69PHXan0v9Elto?=
+ =?us-ascii?Q?YIjqwocmlVL6276PjsQU36voEqrGFG7fJqk/Sgd+cO1r74LPcf9pnvwDzEpn?=
+ =?us-ascii?Q?hlPViW5fUxSzKLUZrfsnamGTiWRWPKiIHkaXxC6dIkkSsNfbnUxhFogeZlWM?=
+ =?us-ascii?Q?Jp6x8Ii1KxEkuymG8U3gSsl93oajdgmXsf3fYcjYQJQokY0G2Pxg1f8ZwjIc?=
+ =?us-ascii?Q?Cp+9RQycoP5UgySgThnrCDenxq+AbSUors7hGlmzhk+dqFJdQOK//7yTqAqk?=
+ =?us-ascii?Q?CtsCN5aNkUdqJiWoo+W33/a7G1wm4PnT1dNCDyPp+T4PMeFvq/seuooEBTz6?=
+ =?us-ascii?Q?CpY0WJE/3KPlS3cQ18iCnMwDUfPKCt89FKojYqlbS4qpUsmk4g76VkHvA0TC?=
+ =?us-ascii?Q?rMV/yYwaucMH/oTVkg9y67/7qRabgP9yXMpPgZmul7BvWOy5i58lO1+jtySO?=
+ =?us-ascii?Q?vW9uItKgXRbBoFfhczibNeu+3dREsq1fQe4DufZTPa85V5mc6tY3YGJhe1dz?=
+ =?us-ascii?Q?LHm5wtioYy8eZ7j7V7tV4iE=3D?=
 X-OriginatorOrg: os.amperecomputing.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 72ca7119-25e7-400d-f34e-08dd5b6ad0bd
+X-MS-Exchange-CrossTenant-Network-Message-Id: ebf135ca-f1ff-4deb-a5fa-08dd5b6ad226
 X-MS-Exchange-CrossTenant-AuthSource: CH0PR01MB6873.prod.exchangelabs.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Mar 2025 22:20:48.4636
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Mar 2025 22:20:50.8476
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: PC7AaB4426Opvqc210fk/En2zA+SU+jw5I90ZbzMdiFSN71dOIOt6b3J9FAEGuj34O/67gt+2zprkHjszE2W5kzlSguvJzURS3E8CRyi0w4=
+X-MS-Exchange-CrossTenant-UserPrincipalName: CMDqNUQQ89PmMfJSaW0o0mWFHLBZNZRcmT71Q+8UsEU97T4ZE0Op4C/dtrBcZCWyxLFBtw7PhHSq+Ah9TGuk4xZySwgLJ+wC91BXG0iMmW0=
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR01MB7931
 
-The later patch will enhance __create_pgd_mapping() and related helpers
-to split kernel linear mapping, it requires have return value.  So make
-__create_pgd_mapping() and helpers non-void functions.
+Add split CONT mappings support in order to support CONT mappings for
+direct map.  This should help reduce TLB pressure further.
 
-And move the BUG_ON() out of page table alloc helper since failing
-splitting kernel linear mapping is not fatal and can be handled by the
-callers in the later patch.  Have BUG_ON() after
-__create_pgd_mapping_locked() returns to keep the current callers behavior
-intact.
+When splitting PUD, all PMDs will have CONT bit set since the leaf PUD
+must be naturally aligned.  When splitting PMD, all PTEs will have CONT
+bit set since the leaf PMD must be naturally aligned too, but the PMDs
+in the cont range of split PMD will have CONT bit cleared.  Splitting
+CONT PTEs by clearing CONT bit for all PTEs in the range.
 
-Suggested-by: Ryan Roberts <ryan.roberts@arm.com>
 Signed-off-by: Yang Shi <yang@os.amperecomputing.com>
 ---
- arch/arm64/mm/mmu.c | 127 ++++++++++++++++++++++++++++++--------------
- 1 file changed, 86 insertions(+), 41 deletions(-)
+ arch/arm64/include/asm/pgtable.h |  5 ++
+ arch/arm64/mm/mmu.c              | 82 ++++++++++++++++++++++++++------
+ arch/arm64/mm/pageattr.c         |  2 +
+ 3 files changed, 75 insertions(+), 14 deletions(-)
 
+diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
+index ed2fc1dcf7ae..3c6ef47f5813 100644
+--- a/arch/arm64/include/asm/pgtable.h
++++ b/arch/arm64/include/asm/pgtable.h
+@@ -290,6 +290,11 @@ static inline pmd_t pmd_mkcont(pmd_t pmd)
+ 	return __pmd(pmd_val(pmd) | PMD_SECT_CONT);
+ }
+ 
++static inline pmd_t pmd_mknoncont(pmd_t pmd)
++{
++	return __pmd(pmd_val(pmd) & ~PMD_SECT_CONT);
++}
++
+ static inline pte_t pte_mkdevmap(pte_t pte)
+ {
+ 	return set_pte_bit(pte, __pgprot(PTE_DEVMAP | PTE_SPECIAL));
 diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
-index b4df5bc5b1b8..dccf0877285b 100644
+index ad0f1cc55e3a..d4dfeabc80e9 100644
 --- a/arch/arm64/mm/mmu.c
 +++ b/arch/arm64/mm/mmu.c
-@@ -189,11 +189,11 @@ static void init_pte(pte_t *ptep, unsigned long addr, unsigned long end,
- 	} while (ptep++, addr += PAGE_SIZE, addr != end);
+@@ -167,19 +167,36 @@ static void init_clear_pgtable(void *table)
+ 	dsb(ishst);
  }
  
--static void alloc_init_cont_pte(pmd_t *pmdp, unsigned long addr,
--				unsigned long end, phys_addr_t phys,
--				pgprot_t prot,
--				phys_addr_t (*pgtable_alloc)(int),
--				int flags)
-+static int alloc_init_cont_pte(pmd_t *pmdp, unsigned long addr,
-+			       unsigned long end, phys_addr_t phys,
-+			       pgprot_t prot,
-+			       phys_addr_t (*pgtable_alloc)(int),
-+			       int flags)
++static void split_cont_pte(pte_t *ptep)
++{
++	pte_t *_ptep = PTR_ALIGN_DOWN(ptep, sizeof(*ptep) * CONT_PTES);
++	pte_t _pte;
++	for (int i = 0; i < CONT_PTES; i++, _ptep++) {
++		_pte = READ_ONCE(*_ptep);
++		_pte = pte_mknoncont(_pte);
++		__set_pte_nosync(_ptep, _pte);
++	}
++
++	dsb(ishst);
++	isb();
++}
++
+ static int split_pmd(pmd_t *pmdp, pmd_t pmdval,
+-		     phys_addr_t (*pgtable_alloc)(int))
++		     phys_addr_t (*pgtable_alloc)(int), int flags)
  {
+ 	unsigned long pfn;
+ 	pgprot_t prot;
+ 	phys_addr_t pte_phys;
+ 	pte_t *ptep;
++	bool cont;
++	int i;
+ 
+ 	if (!pmd_leaf(pmdval))
+ 		return 0;
+ 
+ 	pfn = pmd_pfn(pmdval);
+ 	prot = pmd_pgprot(pmdval);
++	cont = pgprot_val(prot) & PTE_CONT;
+ 
+ 	pte_phys = pgtable_alloc(PAGE_SHIFT);
+ 	if (!pte_phys)
+@@ -188,11 +205,27 @@ static int split_pmd(pmd_t *pmdp, pmd_t pmdval,
+ 	ptep = (pte_t *)phys_to_virt(pte_phys);
+ 	init_clear_pgtable(ptep);
+ 	prot = __pgprot(pgprot_val(prot) | PTE_TYPE_PAGE);
+-	for (int i = 0; i < PTRS_PER_PTE; i++, ptep++)
++
++	/* It must be naturally aligned if PMD is leaf */
++	if ((flags & NO_CONT_MAPPINGS) == 0)
++		prot = __pgprot(pgprot_val(prot) | PTE_CONT);
++
++	for (i = 0; i < PTRS_PER_PTE; i++, ptep++)
+ 		__set_pte_nosync(ptep, pfn_pte(pfn + i, prot));
+ 
+ 	dsb(ishst);
+ 
++	/* Clear CONT bit for the PMDs in the range */
++	if (cont) {
++		pmd_t *_pmdp, _pmd;
++		_pmdp = PTR_ALIGN_DOWN(pmdp, sizeof(*pmdp) * CONT_PMDS);
++		for (i = 0; i < CONT_PMDS; i++, _pmdp++) {
++			_pmd = READ_ONCE(*_pmdp);
++			_pmd = pmd_mknoncont(_pmd);
++			set_pmd(_pmdp, _pmd);
++		}
++	}
++
+ 	set_pmd(pmdp, pfn_pmd(__phys_to_pfn(pte_phys),
+ 		__pgprot(PMD_TYPE_TABLE)));
+ 
+@@ -200,7 +233,7 @@ static int split_pmd(pmd_t *pmdp, pmd_t pmdval,
+ }
+ 
+ static int split_pud(pud_t *pudp, pud_t pudval,
+-		     phys_addr_t (*pgtable_alloc)(int))
++		     phys_addr_t (*pgtable_alloc)(int), int flags)
+ {
+ 	unsigned long pfn;
+ 	pgprot_t prot;
+@@ -221,6 +254,11 @@ static int split_pud(pud_t *pudp, pud_t pudval,
+ 
+ 	pmdp = (pmd_t *)phys_to_virt(pmd_phys);
+ 	init_clear_pgtable(pmdp);
++
++	/* It must be naturally aligned if PUD is leaf */
++	if ((flags & NO_CONT_MAPPINGS) == 0)
++		prot = __pgprot(pgprot_val(prot) | PTE_CONT);
++
+ 	for (int i = 0; i < PTRS_PER_PMD; i++, pmdp++) {
+ 		__set_pmd_nosync(pmdp, pfn_pmd(pfn, prot));
+ 		pfn += step;
+@@ -235,11 +273,18 @@ static int split_pud(pud_t *pudp, pud_t pudval,
+ }
+ 
+ static void init_pte(pte_t *ptep, unsigned long addr, unsigned long end,
+-		     phys_addr_t phys, pgprot_t prot)
++		     phys_addr_t phys, pgprot_t prot, int flags)
+ {
+ 	do {
+ 		pte_t old_pte = __ptep_get(ptep);
+ 
++		if (flags & SPLIT_MAPPINGS) {
++			if (pte_cont(old_pte))
++				split_cont_pte(ptep);
++
++			continue;
++		}
++
+ 		/*
+ 		 * Required barriers to make this visible to the table walker
+ 		 * are deferred to the end of alloc_init_cont_pte().
+@@ -266,8 +311,16 @@ static int alloc_init_cont_pte(pmd_t *pmdp, unsigned long addr,
  	unsigned long next;
  	pmd_t pmd = READ_ONCE(*pmdp);
-@@ -208,6 +208,8 @@ static void alloc_init_cont_pte(pmd_t *pmdp, unsigned long addr,
- 			pmdval |= PMD_TABLE_PXN;
- 		BUG_ON(!pgtable_alloc);
- 		pte_phys = pgtable_alloc(PAGE_SHIFT);
-+		if (!pte_phys)
-+			return -ENOMEM;
- 		ptep = pte_set_fixmap(pte_phys);
- 		init_clear_pgtable(ptep);
- 		ptep += pte_index(addr);
-@@ -239,13 +241,16 @@ static void alloc_init_cont_pte(pmd_t *pmdp, unsigned long addr,
- 	 * walker.
- 	 */
- 	pte_clear_fixmap();
+ 	pte_t *ptep;
++	bool split = flags & SPLIT_MAPPINGS;
+ 
+ 	BUG_ON(pmd_sect(pmd));
 +
-+	return 0;
- }
++	if (split) {
++		BUG_ON(pmd_none(pmd));
++		ptep = pte_offset_kernel(pmdp, addr);
++		goto split_pgtable;
++	}
++
+ 	if (pmd_none(pmd)) {
+ 		pmdval_t pmdval = PMD_TYPE_TABLE | PMD_TABLE_UXN | PMD_TABLE_AF;
+ 		phys_addr_t pte_phys;
+@@ -287,6 +340,7 @@ static int alloc_init_cont_pte(pmd_t *pmdp, unsigned long addr,
+ 		ptep = pte_set_fixmap_offset(pmdp, addr);
+ 	}
  
--static void init_pmd(pmd_t *pmdp, unsigned long addr, unsigned long end,
--		     phys_addr_t phys, pgprot_t prot,
--		     phys_addr_t (*pgtable_alloc)(int), int flags)
-+static int init_pmd(pmd_t *pmdp, unsigned long addr, unsigned long end,
-+		    phys_addr_t phys, pgprot_t prot,
-+		    phys_addr_t (*pgtable_alloc)(int), int flags)
- {
- 	unsigned long next;
-+	int ret = 0;
- 
++split_pgtable:
  	do {
- 		pmd_t old_pmd = READ_ONCE(*pmdp);
-@@ -264,22 +269,27 @@ static void init_pmd(pmd_t *pmdp, unsigned long addr, unsigned long end,
- 			BUG_ON(!pgattr_change_is_safe(pmd_val(old_pmd),
- 						      READ_ONCE(pmd_val(*pmdp))));
- 		} else {
--			alloc_init_cont_pte(pmdp, addr, next, phys, prot,
-+			ret = alloc_init_cont_pte(pmdp, addr, next, phys, prot,
- 					    pgtable_alloc, flags);
-+			if (ret)
-+				break;
+ 		pgprot_t __prot = prot;
  
- 			BUG_ON(pmd_val(old_pmd) != 0 &&
- 			       pmd_val(old_pmd) != READ_ONCE(pmd_val(*pmdp)));
- 		}
- 		phys += next - addr;
- 	} while (pmdp++, addr = next, addr != end);
-+
-+	return ret;
- }
- 
--static void alloc_init_cont_pmd(pud_t *pudp, unsigned long addr,
--				unsigned long end, phys_addr_t phys,
--				pgprot_t prot,
--				phys_addr_t (*pgtable_alloc)(int), int flags)
-+static int alloc_init_cont_pmd(pud_t *pudp, unsigned long addr,
-+			       unsigned long end, phys_addr_t phys,
-+			       pgprot_t prot,
-+			       phys_addr_t (*pgtable_alloc)(int), int flags)
- {
- 	unsigned long next;
-+	int ret = 0;
- 	pud_t pud = READ_ONCE(*pudp);
- 	pmd_t *pmdp;
- 
-@@ -295,6 +305,8 @@ static void alloc_init_cont_pmd(pud_t *pudp, unsigned long addr,
- 			pudval |= PUD_TABLE_PXN;
- 		BUG_ON(!pgtable_alloc);
- 		pmd_phys = pgtable_alloc(PMD_SHIFT);
-+		if (!pmd_phys)
-+			return -ENOMEM;
- 		pmdp = pmd_set_fixmap(pmd_phys);
- 		init_clear_pgtable(pmdp);
- 		pmdp += pmd_index(addr);
-@@ -314,21 +326,26 @@ static void alloc_init_cont_pmd(pud_t *pudp, unsigned long addr,
+@@ -297,7 +351,7 @@ static int alloc_init_cont_pte(pmd_t *pmdp, unsigned long addr,
  		    (flags & NO_CONT_MAPPINGS) == 0)
  			__prot = __pgprot(pgprot_val(prot) | PTE_CONT);
  
--		init_pmd(pmdp, addr, next, phys, __prot, pgtable_alloc, flags);
-+		ret = init_pmd(pmdp, addr, next, phys, __prot, pgtable_alloc, flags);
-+		if (ret)
-+			break;
+-		init_pte(ptep, addr, next, phys, __prot);
++		init_pte(ptep, addr, next, phys, __prot, flags);
  
- 		pmdp += pmd_index(next) - pmd_index(addr);
+ 		ptep += pte_index(next) - pte_index(addr);
  		phys += next - addr;
- 	} while (addr = next, addr != end);
+@@ -308,7 +362,8 @@ static int alloc_init_cont_pte(pmd_t *pmdp, unsigned long addr,
+ 	 * ensure that all previous pgtable writes are visible to the table
+ 	 * walker.
+ 	 */
+-	pte_clear_fixmap();
++	if (!split)
++		pte_clear_fixmap();
  
- 	pmd_clear_fixmap();
-+
-+	return ret;
+ 	return 0;
  }
+@@ -327,7 +382,12 @@ static int init_pmd(pmd_t *pmdp, unsigned long addr, unsigned long end,
+ 		next = pmd_addr_end(addr, end);
  
--static void alloc_init_pud(p4d_t *p4dp, unsigned long addr, unsigned long end,
--			   phys_addr_t phys, pgprot_t prot,
--			   phys_addr_t (*pgtable_alloc)(int),
--			   int flags)
-+static int alloc_init_pud(p4d_t *p4dp, unsigned long addr, unsigned long end,
-+			  phys_addr_t phys, pgprot_t prot,
-+			  phys_addr_t (*pgtable_alloc)(int),
-+			  int flags)
- {
- 	unsigned long next;
-+	int ret = 0;
- 	p4d_t p4d = READ_ONCE(*p4dp);
- 	pud_t *pudp;
- 
-@@ -340,6 +357,8 @@ static void alloc_init_pud(p4d_t *p4dp, unsigned long addr, unsigned long end,
- 			p4dval |= P4D_TABLE_PXN;
- 		BUG_ON(!pgtable_alloc);
- 		pud_phys = pgtable_alloc(PUD_SHIFT);
-+		if (!pud_phys)
-+			return -ENOMEM;
- 		pudp = pud_set_fixmap(pud_phys);
- 		init_clear_pgtable(pudp);
- 		pudp += pud_index(addr);
-@@ -369,8 +388,10 @@ static void alloc_init_pud(p4d_t *p4dp, unsigned long addr, unsigned long end,
- 			BUG_ON(!pgattr_change_is_safe(pud_val(old_pud),
- 						      READ_ONCE(pud_val(*pudp))));
- 		} else {
--			alloc_init_cont_pmd(pudp, addr, next, phys, prot,
-+			ret = alloc_init_cont_pmd(pudp, addr, next, phys, prot,
- 					    pgtable_alloc, flags);
+ 		if (split) {
+-			ret = split_pmd(pmdp, old_pmd, pgtable_alloc);
++			ret = split_pmd(pmdp, old_pmd, pgtable_alloc, flags);
 +			if (ret)
 +				break;
- 
- 			BUG_ON(pud_val(old_pud) != 0 &&
- 			       pud_val(old_pud) != READ_ONCE(pud_val(*pudp)));
-@@ -379,14 +400,17 @@ static void alloc_init_pud(p4d_t *p4dp, unsigned long addr, unsigned long end,
- 	} while (pudp++, addr = next, addr != end);
- 
- 	pud_clear_fixmap();
 +
-+	return ret;
- }
++			ret = alloc_init_cont_pte(pmdp, addr, next, phys, prot,
++						  pgtable_alloc, flags);
+ 			if (ret)
+ 				break;
  
--static void alloc_init_p4d(pgd_t *pgdp, unsigned long addr, unsigned long end,
--			   phys_addr_t phys, pgprot_t prot,
--			   phys_addr_t (*pgtable_alloc)(int),
--			   int flags)
-+static int alloc_init_p4d(pgd_t *pgdp, unsigned long addr, unsigned long end,
-+			  phys_addr_t phys, pgprot_t prot,
-+			  phys_addr_t (*pgtable_alloc)(int),
-+			  int flags)
- {
- 	unsigned long next;
-+	int ret = 0;
- 	pgd_t pgd = READ_ONCE(*pgdp);
- 	p4d_t *p4dp;
+@@ -469,7 +529,7 @@ static int alloc_init_pud(p4d_t *p4dp, unsigned long addr, unsigned long end,
+ 		next = pud_addr_end(addr, end);
  
-@@ -398,6 +422,8 @@ static void alloc_init_p4d(pgd_t *pgdp, unsigned long addr, unsigned long end,
- 			pgdval |= PGD_TABLE_PXN;
- 		BUG_ON(!pgtable_alloc);
- 		p4d_phys = pgtable_alloc(P4D_SHIFT);
-+		if (!p4d_phys)
-+			return -ENOMEM;
- 		p4dp = p4d_set_fixmap(p4d_phys);
- 		init_clear_pgtable(p4dp);
- 		p4dp += p4d_index(addr);
-@@ -412,8 +438,10 @@ static void alloc_init_p4d(pgd_t *pgdp, unsigned long addr, unsigned long end,
+ 		if (split) {
+-			ret = split_pud(pudp, old_pud, pgtable_alloc);
++			ret = split_pud(pudp, old_pud, pgtable_alloc, flags);
+ 			if (ret)
+ 				break;
  
- 		next = p4d_addr_end(addr, end);
+@@ -846,9 +906,6 @@ static void __init map_mem(pgd_t *pgdp)
+ 	if (force_pte_mapping())
+ 		flags |= NO_BLOCK_MAPPINGS | NO_CONT_MAPPINGS;
  
--		alloc_init_pud(p4dp, addr, next, phys, prot,
-+		ret = alloc_init_pud(p4dp, addr, next, phys, prot,
- 			       pgtable_alloc, flags);
-+		if (ret)
-+			break;
- 
- 		BUG_ON(p4d_val(old_p4d) != 0 &&
- 		       p4d_val(old_p4d) != READ_ONCE(p4d_val(*p4dp)));
-@@ -422,23 +450,26 @@ static void alloc_init_p4d(pgd_t *pgdp, unsigned long addr, unsigned long end,
- 	} while (p4dp++, addr = next, addr != end);
- 
- 	p4d_clear_fixmap();
-+
-+	return ret;
- }
- 
--static void __create_pgd_mapping_locked(pgd_t *pgdir, phys_addr_t phys,
--					unsigned long virt, phys_addr_t size,
--					pgprot_t prot,
--					phys_addr_t (*pgtable_alloc)(int),
--					int flags)
-+static int __create_pgd_mapping_locked(pgd_t *pgdir, phys_addr_t phys,
-+				       unsigned long virt, phys_addr_t size,
-+				       pgprot_t prot,
-+				       phys_addr_t (*pgtable_alloc)(int),
-+				       int flags)
- {
- 	unsigned long addr, end, next;
- 	pgd_t *pgdp = pgd_offset_pgd(pgdir, virt);
-+	int ret = 0;
- 
+-	if (rodata_full)
+-		flags |= NO_CONT_MAPPINGS;
+-
  	/*
- 	 * If the virtual and physical address don't have the same offset
- 	 * within a page, we cannot map the region as the caller expects.
- 	 */
- 	if (WARN_ON((phys ^ virt) & ~PAGE_MASK))
--		return;
-+		return -EINVAL;
+ 	 * Take care not to create a writable alias for the
+ 	 * read-only text and rodata sections of the kernel image.
+@@ -1547,9 +1604,6 @@ int arch_add_memory(int nid, u64 start, u64 size,
+ 	if (force_pte_mapping())
+ 		flags |= NO_BLOCK_MAPPINGS | NO_CONT_MAPPINGS;
  
- 	phys &= PAGE_MASK;
- 	addr = virt & PAGE_MASK;
-@@ -446,29 +477,38 @@ static void __create_pgd_mapping_locked(pgd_t *pgdir, phys_addr_t phys,
+-	if (rodata_full)
+-		flags |= NO_CONT_MAPPINGS;
+-
+ 	__create_pgd_mapping(swapper_pg_dir, start, __phys_to_virt(start),
+ 			     size, params->pgprot, __pgd_pgtable_alloc,
+ 			     flags);
+diff --git a/arch/arm64/mm/pageattr.c b/arch/arm64/mm/pageattr.c
+index 5d42d87ea7e1..25c068712cb5 100644
+--- a/arch/arm64/mm/pageattr.c
++++ b/arch/arm64/mm/pageattr.c
+@@ -43,6 +43,8 @@ static int change_page_range(pte_t *ptep, unsigned long addr, void *data)
+ 	struct page_change_data *cdata = data;
+ 	pte_t pte = __ptep_get(ptep);
  
- 	do {
- 		next = pgd_addr_end(addr, end);
--		alloc_init_p4d(pgdp, addr, next, phys, prot, pgtable_alloc,
-+		ret = alloc_init_p4d(pgdp, addr, next, phys, prot, pgtable_alloc,
- 			       flags);
-+		if (ret)
-+			break;
- 		phys += next - addr;
- 	} while (pgdp++, addr = next, addr != end);
++	BUG_ON(pte_cont(pte));
 +
-+	return ret;
- }
- 
--static void __create_pgd_mapping(pgd_t *pgdir, phys_addr_t phys,
--				 unsigned long virt, phys_addr_t size,
--				 pgprot_t prot,
--				 phys_addr_t (*pgtable_alloc)(int),
--				 int flags)
-+static int __create_pgd_mapping(pgd_t *pgdir, phys_addr_t phys,
-+				unsigned long virt, phys_addr_t size,
-+				pgprot_t prot,
-+				phys_addr_t (*pgtable_alloc)(int),
-+				int flags)
- {
-+	int ret;
-+
- 	mutex_lock(&fixmap_lock);
--	__create_pgd_mapping_locked(pgdir, phys, virt, size, prot,
-+	ret = __create_pgd_mapping_locked(pgdir, phys, virt, size, prot,
- 				    pgtable_alloc, flags);
-+	BUG_ON(ret);
- 	mutex_unlock(&fixmap_lock);
-+
-+	return ret;
- }
- 
- #ifdef CONFIG_UNMAP_KERNEL_AT_EL0
- extern __alias(__create_pgd_mapping_locked)
--void create_kpti_ng_temp_pgd(pgd_t *pgdir, phys_addr_t phys, unsigned long virt,
--			     phys_addr_t size, pgprot_t prot,
--			     phys_addr_t (*pgtable_alloc)(int), int flags);
-+int create_kpti_ng_temp_pgd(pgd_t *pgdir, phys_addr_t phys, unsigned long virt,
-+			    phys_addr_t size, pgprot_t prot,
-+			    phys_addr_t (*pgtable_alloc)(int), int flags);
- #endif
- 
- static phys_addr_t __pgd_pgtable_alloc(int shift)
-@@ -476,13 +516,17 @@ static phys_addr_t __pgd_pgtable_alloc(int shift)
- 	/* Page is zeroed by init_clear_pgtable() so don't duplicate effort. */
- 	void *ptr = (void *)__get_free_page(GFP_PGTABLE_KERNEL & ~__GFP_ZERO);
- 
--	BUG_ON(!ptr);
-+	if (!ptr)
-+		return 0;
-+
- 	return __pa(ptr);
- }
- 
- static phys_addr_t pgd_pgtable_alloc(int shift)
- {
- 	phys_addr_t pa = __pgd_pgtable_alloc(shift);
-+	if (!pa)
-+		goto out;
- 	struct ptdesc *ptdesc = page_ptdesc(phys_to_page(pa));
- 
- 	/*
-@@ -498,6 +542,7 @@ static phys_addr_t pgd_pgtable_alloc(int shift)
- 	else if (shift == PMD_SHIFT)
- 		BUG_ON(!pagetable_pmd_ctor(ptdesc));
- 
-+out:
- 	return pa;
- }
+ 	pte = clear_pte_bit(pte, cdata->clear_mask);
+ 	pte = set_pte_bit(pte, cdata->set_mask);
  
 -- 
 2.47.1
