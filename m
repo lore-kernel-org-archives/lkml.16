@@ -1,112 +1,111 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0534202F67;
-	Tue,  4 Mar 2025 11:53:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1F292036FE
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 11:54:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741089241; cv=none; b=roR35ELbwdxmLh5AMZMhbLYLp52lUdpXdY2A+0Dm6mwnEdggdczId4QmtXefBDHjh7m1XUhxORBSV7oo+VasWvpHjOvroWq5jeSeGXLni4qD0XJ55khAsIoFcBtZo1yVZ4pmJGnx3mOYECKHJ+9yNvznC8U9Wox6A7oFwtswDyI=
+	t=1741089250; cv=none; b=czr8Qpn3+n9j+WGIE75UBqBkvX12RBAcfQM+J4zf0UR9JhusZRAwLkCRUINrt9WFQw5dOc2kHQ4ZIJLdGb7F0GZM9ZTlKicNS0WSLfltFM+ga8PKPMfDs79ckAfz+bkrb5IE/l0joRZCjiEjvHXkt9tnPfpHTnzteWYGX3M2ycA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741089241; c=relaxed/simple;
-	bh=qq7TZvcZSktmWVe6C6ZIq89UVbAqUNI01Xhm1mJcWnQ=;
+	s=arc-20240116; t=1741089250; c=relaxed/simple;
+	bh=bNS41mNHHi7BXNLXQtonV4XeSMbhOnsgKPrJtmKYSHE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LLOLeDwyTW/uKEF8+e8xAMlqhU5mW3ZhwwE3qJoSoRaubCTOR7JT3sehVCJK1tLvMnF1OnQAj+k/mdNv1cfOwA/v2mzagBpPGEgJtlk2aPKH1M3wA5Pe4dAY7+BL2h9qsJ7iQjfnY3Xta07jHqJIO87Di96HYMgGdy4L6V23lwI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=X/3bW/hH; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=pXJ+deUQKCs649bP4rKhiik6WPEloeOXJeRCCbUwPUSXllqC3nZiyiT5d0pBOWv+NKYFz3wXMTP9ZH4oNItTnduQq4uM4HY+C4fcDkuGwqeiDFZSMn1LlmEZQlQWRmCth1dobWseV6Uqnj9nAASxovW2fW86gwmA9Zq7Gpmj7oc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=B6WyAz0g; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="X/3bW/hH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741089240; x=1772625240;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=qq7TZvcZSktmWVe6C6ZIq89UVbAqUNI01Xhm1mJcWnQ=;
-  b=X/3bW/hHMzh84AXdHNCDWKw289GLJn5Xfcwt2zALu902zSNI03kSI947
-   /baNtvRDY3degselOQuuigYc0nM5a9qoFf/RrU4W3jsvGcB34WG5Ek9Wx
-   KvcgQqh++g0Uoi5vXK157AvlbHEwh8RxW6G+sJ+GEi0WFA9wXnFbuaS0C
-   Nf2pYTT8LC4HFKNjep5whmhB73BYtop66j1G+GeoRRC7ZxhXlb2BxP3ZW
-   P2lCXjdFxvyyYOOzwjRv9eVjLawIrZdKRnso1AS5I8iGJS/6bgMAbiGut
-   afwWI+IhTgrpin0zi3zRlfywW4YCE2ySdU3xd5qbZbuhvmVhARhEEhCrZ
-   w==;
-X-CSE-ConnectionGUID: gzcVkUZpTICISUgYBbqPRg==
-X-CSE-MsgGUID: tDsEVoA8SEeZHxjL/zyhyw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11362"; a="52639899"
-X-IronPort-AV: E=Sophos;i="6.13,331,1732608000"; 
-   d="scan'208";a="52639899"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2025 03:53:59 -0800
-X-CSE-ConnectionGUID: /IUV9+TERLOqCL7vV5ZhRw==
-X-CSE-MsgGUID: 19jezb68TVK8GAei3XrfqQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="122484442"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by fmviesa003.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2025 03:53:57 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1tpQqQ-0000000H76x-24PC;
-	Tue, 04 Mar 2025 13:53:54 +0200
-Date: Tue, 4 Mar 2025 13:53:54 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Inochi Amaoto <inochiama@gmail.com>
-Cc: Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Jan Dabros <jsd@semihalf.com>, Andi Shyti <andi.shyti@kernel.org>,
-	linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Yixun Lan <dlan@gentoo.org>, Longbin Li <looong.bin@gmail.com>
-Subject: Re: [PATCH] i2c: designware: Add ACPI HID for DWAPB I2C controller
- on Sophgo SG2044
-Message-ID: <Z8bp0qRvE0CzF6S_@smile.fi.intel.com>
-References: <20250304070212.350155-3-inochiama@gmail.com>
- <Z8bnX8zcY3yIxh9n@smile.fi.intel.com>
- <53dkcpiewy64hv37kpqhrvpkprr7mgg7bl6f7ofpmpl5utqbe6@yldveipvbisb>
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="B6WyAz0g"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 088B440E0202;
+	Tue,  4 Mar 2025 11:54:06 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id 5eVmiwsvjl6y; Tue,  4 Mar 2025 11:54:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1741089242; bh=8GHG5SrZxrbiSvIE9KJ7OpGdZd2qAT9K/MHNn8uHvMM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=B6WyAz0gzR98rv/PHGB5eUpm8blzgQE1qfpqqd+ZRj721zz1LKmQ0jL+6CrW3ies1
+	 T1pZyPdhgjObE+tC4sw0nDViNtOzAlvgA1/MaNCa7Y4WPgJLoVarl8nqa0fAmUrv/r
+	 GPmq2elRiXvilpNp6OTx4G+5ImYI4G+vEP0hvZExDLsK0/3jSdbgR9cRf97U2c7iUp
+	 VXWAWvQxfi4REUalFPlgNtPL+iKR7l1wraRNQJT09LE/3MGQBZT3lCwuppnwKJMw9G
+	 xd6TtL7h6XEmScV1m1nQEDrP8Y04r6Hb/T6LF14tdwTVLlQdPq05GGoArr7XTOLbvB
+	 tbKX283180w+wWI892XKcLiBw/8546LPsI+4J1cTuFel84Ab0JHT4c5IHo0+RPqWza
+	 QLl8Fq04dLKrZO8p1bg6deBlN+Xn07aF3MX7VHzR1l4GTJBBH/wjvvCo0ys1XXNUih
+	 rQflzTRiRJU3ZtXFfoM1cVJcgtrFNc02Qdq1okmv6NQn6FZWj5HM/EI2ML00317v3V
+	 Tfh11f/+OvRa9lxDt9sN3XXvhLRGZyGFdofNRXRd/tZ18RH/ol8exaDgme7OZMoX0c
+	 JINDDrIiRIKz/GvNJHHn0YLvhe6HNct3ob7EE4NpphdyW8cu2wZI8nQb87yHtNmdF8
+	 mM97U4fGrQSsF5wVyMiQcmLk=
+Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 25AB240E0176;
+	Tue,  4 Mar 2025 11:53:44 +0000 (UTC)
+Date: Tue, 4 Mar 2025 12:53:43 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: Dave Hansen <dave.hansen@intel.com>
+Cc: Rik van Riel <riel@surriel.com>, x86@kernel.org,
+	linux-kernel@vger.kernel.org, peterz@infradead.org,
+	dave.hansen@linux.intel.com, zhengqi.arch@bytedance.com,
+	nadav.amit@gmail.com, thomas.lendacky@amd.com, kernel-team@meta.com,
+	linux-mm@kvack.org, akpm@linux-foundation.org, jackmanb@google.com,
+	jannh@google.com, mhklinux@outlook.com, andrew.cooper3@citrix.com,
+	Manali.Shukla@amd.com, mingo@kernel.org
+Subject: Re: [PATCH v14 13/13] x86/mm: only invalidate final translations
+ with INVLPGB
+Message-ID: <20250304115343.GGZ8bpxwAZo9tksg17@fat_crate.local>
+References: <20250226030129.530345-1-riel@surriel.com>
+ <20250226030129.530345-14-riel@surriel.com>
+ <ffff0bdc-ddf9-4f70-980a-f66eb2a00b18@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <53dkcpiewy64hv37kpqhrvpkprr7mgg7bl6f7ofpmpl5utqbe6@yldveipvbisb>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <ffff0bdc-ddf9-4f70-980a-f66eb2a00b18@intel.com>
 
-On Tue, Mar 04, 2025 at 07:46:09PM +0800, Inochi Amaoto wrote:
-> On Tue, Mar 04, 2025 at 01:43:27PM +0200, Andy Shevchenko wrote:
-> > On Tue, Mar 04, 2025 at 03:02:11PM +0800, Inochi Amaoto wrote:
-> > > Add ACPI ID for DWAPB I2C controller on Sophgo SG2044 so
-> > > the SoC can enumerated the device via ACPI.
-> > 
-> > Same as per UART:
-> > 
-> > ---8<---
-> > 
-> > This is fake ACPI ID. Please work with a vendor to issue the proper one.
-> > Vendor ACPI ID registry has no records on Sophgo:
-> > https://uefi.org/ACPI_ID_List?acpi_search=SophGo
-> > 
-> > NAK.
-> > 
-> > ---8<---
-> > 
-> > But, it might be that is already in the process of getting proper ACPI vendor
-> > ID, please provide an evidence in such a case.
-> > 
-> > Otherwise drag the representative of the vendor to this email thread to answer
-> > the question why the heck they abuse ACPI specification.
+On Mon, Mar 03, 2025 at 02:40:49PM -0800, Dave Hansen wrote:
+> On 2/25/25 19:00, Rik van Riel wrote:
+> >  static inline void __invlpgb_flush_user_nr_nosync(unsigned long pcid,
+> >  						  unsigned long addr,
+> >  						  u16 nr,
+> > -						  bool pmd_stride)
+> > +						  bool pmd_stride,
+> > +						  bool freed_tables)
+> >  {
+> > -	__invlpgb(0, pcid, addr, nr, pmd_stride, INVLPGB_PCID | INVLPGB_VA);
+> > +	u8 flags = INVLPGB_PCID | INVLPGB_VA;
+> > +
+> > +	if (!freed_tables)
+> > +		flags |= INVLPGB_FINAL_ONLY;
+> > +
+> > +	__invlpgb(0, pcid, addr, nr, pmd_stride, flags);
+> >  }
 > 
-> OK, I will ask for the vendor and check whether there is some
-> evidence for it. Now let's pause these patch.
+> I'm not sure this is OK.
 > 
-> Thanks for your info.
+> Think of a hugetlbfs mapping with shared page tables. Say you had a
+> 1GB-sized and 1GB-aligned mapping. It might zap the one PUD that it
+> needs, set tlb->cleared_puds=1 but it never sets ->freed_tables because
+> it didn't actually free the shared page table page.
+> 
+> I'd honestly just throw this patch out of the series for now. All of the
+> other TLB invalidation that the kernel does implicitly toss out the
+> mid-level paging structure caches.
 
-You're welcome! As I already replied in another mail, feel free to contact me
-or give my contacts to the vendor in order to help them to follow the process.
-I will be glad to help.
+Right, I guess we can revisit this later, once the dust settles.
+
+Thx.
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Regards/Gruss,
+    Boris.
 
-
+https://people.kernel.org/tglx/notes-about-netiquette
