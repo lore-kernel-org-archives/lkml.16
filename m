@@ -1,125 +1,298 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from BYAPR05CU005.outbound.protection.outlook.com (mail-westusazon11020105.outbound.protection.outlook.com [52.101.85.105])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0A071F03D7;
-	Tue,  4 Mar 2025 22:20:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741126821; cv=none; b=l9yNZ0ldH+c7p2Gwj1/YK1xwdnUVnFi4q8Hp58wb5hO66Lp3CQf+pN8e8j/lSXTjwTriVdp8cSUzEUTofmgD/PFK6KCsQRloyEffdmI/i8XjiuSeAfETLWTSBcSLlMJZU2iMAyXB9CCZzSMtDmD0YtqOa2fYToD1O8sNGzY+ViQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741126821; c=relaxed/simple;
-	bh=oXS5Xdt897A6IZs5CiSravPHGQiBNv0XA3lzqNjWF4w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lk1s5UYQPbGvp4k6Kmi+yBeEFUWFpQehn5bZW+KiWg3Nx4b/IPJlDfrh8dXx2wo+GW2Bf+6o3xki4X1N7btuIMAFDAiXyFZX2o3naIsnj3hLDGlxr5FczZfS7aiazhKoCbMVUS7jJSS0jODoIKYOpg3YyT2CBTuA/d0Ju2U+Ge8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Hn00f3gf; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67A081FC103
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 22:20:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.85.105
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741126849; cv=fail; b=I/M3HGIBpSSp5Zw7uzIunWwt24K+wIm8q5067zs926oejuhf4f6I08R2osUzGyTz6U4C/VJknCLGDhkIUH5KdQ3Mab525n6Re2S+gMJLXR5XDQVdVxit21BwflzfSCnDUIvbwFE4C/9Y91qqxAFcDX13Ny47zVTlcLKSJpCuyQs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741126849; c=relaxed/simple;
+	bh=EJJrxPVsBwMQKFcPdyNuAz4kijiw/YpMLXq6vdBlJ5A=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=RRaPGiJ1bbd3q++EfRGw/QYq9vSOIxiRPCSCccnH87D9Dfpd5X5qVkTldS+63JLZy3VChPEuI7kMwECuHU9H0ahXyOpmoj/XhsHS9fAz5dxB0Sd658fz8bofanJRG1awhQvHnKqIMdC3GLOgx64juiDOhbEa17v2PP1QG+o3Xhg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com; spf=pass smtp.mailfrom=os.amperecomputing.com; dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b=aQiWPhqB; arc=fail smtp.client-ip=52.101.85.105
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=os.amperecomputing.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Hn00f3gf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741126819; x=1772662819;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=oXS5Xdt897A6IZs5CiSravPHGQiBNv0XA3lzqNjWF4w=;
-  b=Hn00f3gf/l9GayRD7n8uY2kdhXPnQ9F+REihK5Zf4M3iBKFLtRU1+UjK
-   ujxFE2hLcPdB9WH2kNaaskNAyD9Bw3+Z6zTiZMYFAPQTnkPBI3eDLXXKj
-   3ejKYx1Nf4/XmFSC7Afpk0AxHhrd37IiREcdtZ+YoVjnwnd+3bGvtCPp6
-   A2diJAAurtcA9dDykstNzlUWaBGxnAKuP3SY7tTiDEpLzsHu8MVbN7I2Z
-   E/eIJbpCN8d5VhRMX/9ci2+p+sYjAqBbDkVvMe+JYXl+6lzCMT9+GwIEQ
-   pDzdvQt2GYdJPa1nP2U4DQgSUDjl5JJoUZ+f9NfFzQAft+emZRURxuIgR
-   A==;
-X-CSE-ConnectionGUID: pcQvjX07QdCiBAUO3Lr8tQ==
-X-CSE-MsgGUID: 6w9lw0qvTw2N9QZm3Yg4fA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11363"; a="41925300"
-X-IronPort-AV: E=Sophos;i="6.14,221,1736841600"; 
-   d="scan'208";a="41925300"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2025 14:20:13 -0800
-X-CSE-ConnectionGUID: xIvnxSaFTUaMWZmr8c6x1A==
-X-CSE-MsgGUID: ju34oCFzSXuyzKWy4UWzRA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,221,1736841600"; 
-   d="scan'208";a="123511974"
-Received: from kinlongk-mobl1.amr.corp.intel.com (HELO [10.125.109.165]) ([10.125.109.165])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2025 14:20:13 -0800
-Message-ID: <ce5e2f44-144b-47bd-9f7e-02f61abed76a@intel.com>
-Date: Tue, 4 Mar 2025 14:20:31 -0800
+	dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b="aQiWPhqB"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=qptUxtuiyliB0IHBf+YgkI0MorLTDfBnXcTi82Z+W0DMV9Poh+gCuKfrr56sP+69coO8m6qjlRd0oczKtBXR++WvhJb62KJjQI9U6upgZ0aJCgCVz0xxvP8xAu/SoQtNNnYhb6yaNpejMvRu4m4jI/0lP4Gz70hxjd8KG9w2mzZOITsm5ohEcFrxjHuEUgVChZaIi6q/p0iCr8pQyzap3gn0ng0s1ZVX3h2fOzru7vFyMjnErqwvjeRnGP81Qm1uccuH8o1JvM0VITeCdPJ/qCX4ukFGOQcmKJ1vzAQ+7c5gnJvevSR3/mT75WUQqiVw+YldzlLYRzvk5ouJF3HYxg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=OYou3N35PhCOYtx4Ld/uaGKFWQt98y/q2GbA/qZ/5Is=;
+ b=fYXGteuZaPGnfu04u59sHqTDgV0e52KgdkoLtq1JVCrAjs3sACJ9GeEea7+nMJr9jqEpYBJ37voXZY0HXPOssl2rp4lAfJXl0phfmuZ2kGuYUziBB5mbSKNXn1AufqdQtnACyPiiLtcj4U+16awZDV4U67EkZ4R3N8XYoVVGVq5vMaFALXwi7OzDbD+4V4zqMsuPurw7t+6cCK3RJrLL6GcJBbf25+RhVOmgkDwvW2gRyCyeJxzxN33asiV+pWDrxwR9JtxGi7BXB7qEOi8LqQWJ+KbN8vKmCNNCTqpZbDdleoJJkXoPSTACPCA/vJepfZn1rnyMjtq8hpTvF6W7UQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
+ header.from=os.amperecomputing.com; dkim=pass
+ header.d=os.amperecomputing.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=os.amperecomputing.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OYou3N35PhCOYtx4Ld/uaGKFWQt98y/q2GbA/qZ/5Is=;
+ b=aQiWPhqB7AZXPnFz5t5hUBIL6z8QEAbER2ovwVWMPDt4GNukONNpBNtZoc4GxWC2s9aL6P9AK2TsRCsrhPZT+QYCtZWQe6AvZXIQyEqaHkwHqrxZB0shT8IEizi9Hn/VggemNitoKE87eACitXbpuuCuvZjex5dCmRLAjZmY0Xc=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=os.amperecomputing.com;
+Received: from CH0PR01MB6873.prod.exchangelabs.com (2603:10b6:610:112::22) by
+ PH7PR01MB7931.prod.exchangelabs.com (2603:10b6:510:275::6) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8489.26; Tue, 4 Mar 2025 22:20:44 +0000
+Received: from CH0PR01MB6873.prod.exchangelabs.com
+ ([fe80::3850:9112:f3bf:6460]) by CH0PR01MB6873.prod.exchangelabs.com
+ ([fe80::3850:9112:f3bf:6460%2]) with mapi id 15.20.8489.025; Tue, 4 Mar 2025
+ 22:20:44 +0000
+From: Yang Shi <yang@os.amperecomputing.com>
+To: ryan.roberts@arm.com,
+	will@kernel.org,
+	catalin.marinas@arm.com,
+	Miko.Lenczewski@arm.com,
+	scott@os.amperecomputing.com,
+	cl@gentwo.org
+Cc: linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [v3 PATCH 0/6] arm64: support FEAT_BBM level 2 and large block mapping when rodata=full
+Date: Tue,  4 Mar 2025 14:19:25 -0800
+Message-ID: <20250304222018.615808-1-yang@os.amperecomputing.com>
+X-Mailer: git-send-email 2.47.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SN7P222CA0014.NAMP222.PROD.OUTLOOK.COM
+ (2603:10b6:806:124::8) To CH0PR01MB6873.prod.exchangelabs.com
+ (2603:10b6:610:112::22)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/6] x86/fpu/xstate: Always preserve non-user
- xfeatures/flags in __state_perm
-To: Chao Gao <chao.gao@intel.com>, tglx@linutronix.de, x86@kernel.org,
- seanjc@google.com, pbonzini@redhat.com, linux-kernel@vger.kernel.org,
- kvm@vger.kernel.org
-Cc: peterz@infradead.org, rick.p.edgecombe@intel.com, mlevitsk@redhat.com,
- weijiang.yang@intel.com, john.allen@amd.com
-References: <20241126101710.62492-1-chao.gao@intel.com>
- <20241126101710.62492-2-chao.gao@intel.com>
-From: Dave Hansen <dave.hansen@intel.com>
-Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <20241126101710.62492-2-chao.gao@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH0PR01MB6873:EE_|PH7PR01MB7931:EE_
+X-MS-Office365-Filtering-Correlation-Id: 95d43395-a70e-4b3f-d089-08dd5b6ace58
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|376014|1800799024|52116014|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?emNmYUkwNER3L0FDdm1wazdsa3lZTXQ5WG9EY3pKdnI3VWpqd0V2L3NqY2Nn?=
+ =?utf-8?B?eU5vNUcxUHppaVpNV0cvN3lWZFJsSWFoK1o1WTJqUmR4a2toeTA3WVBkVEpo?=
+ =?utf-8?B?dS8yN24yUFhPK0Nmb05Wc01vNUlQUEdaK1JhMHNwNEY1RUJSMzZSWHhQWWFm?=
+ =?utf-8?B?RUdBTDcrYTBxSW1OMFQxSnlETGpCYTZDSVczM0NnanBPMDRHSGh1dEwxOWFH?=
+ =?utf-8?B?L2RIb0FUa3pxcGxhK0ErM3V0Rjh3dzlnaFl4cEpzQy9VZHBJWFdzWXdBWUVn?=
+ =?utf-8?B?VmNIY3hZOUZJZjAxNjRMbGQwME56bkRPdGJiTGRVWUZuMFdUaHZHOUQ0dHVZ?=
+ =?utf-8?B?YTlPdDJmTWJDdHJqN2kzK2Y2MVJtejFlbFJBMS8wMXg5NEIrYjBhdzR1b2I3?=
+ =?utf-8?B?Mk9iaGFkcEcwdSt2TU51OGFrQXYzaW9vUjlMb3BTR0J0VU4rTzAwOFZ4M0p6?=
+ =?utf-8?B?M3p0SHBGd3dodzhHT3dkaFVJcTNTT1JuUFBheWNhc1FubUJCOFREbTUydVlI?=
+ =?utf-8?B?UlplQlA0MFVhZUtud0Vud05mRDRPbW1EVXIwOTRQcS8yVmZZVGJiNDltV2Ra?=
+ =?utf-8?B?MlNzN1hVelIwZlRqYnZwK1ZhUDhveFV2dFZORUZMTEdWd2pCck5HbWlFR1po?=
+ =?utf-8?B?djNKTVpwMVlIQmRPYXVHbEFtbTVCUTRVS1FOKzdmaTE0RHJ2Q215ZXVseUZ1?=
+ =?utf-8?B?dTUySUdyRDhnVk9jeGVacTFPOGhycGVBaE1rYWp0ZzNJRDdqeVV5WDRJZjd2?=
+ =?utf-8?B?cTRydEVxN0tyZHNkb3Mxd243ampPUVJHb2lTaE9tdXQwdE5wU1Vpc3BpL1Rw?=
+ =?utf-8?B?RXVFSURUNmUyNFQ4aTZZKzBkZFlteHVQTXpycktqQXNYYXJmaVZKSy9HNkNx?=
+ =?utf-8?B?eUo3M3dZMjJvMC9oQnlmbzJmdE13MjNFV1hGbS9kRXF3QVkxclZFTkVvd0tr?=
+ =?utf-8?B?TXo0TUo4cGdGN1dUUDVWamtyZy9xa1U1SUR6WlhxOUJQUFlZYm1aaU9yV3dS?=
+ =?utf-8?B?NFNNVDR0Zk85dWZWb0FYd3NFcUZ1RDF5THFKSHlZdHhVemN4NzkySjU4eDFC?=
+ =?utf-8?B?TGpzeEloOWhvS0R6RW8yUVI1SUxQUWVwR0FtRGIzOXpyMXdpQzUxWG9iRGZ4?=
+ =?utf-8?B?YnpKT3dXZmJBdE8yRGc5REtqU2R5S3RzWFRGM1ZKZWFtaWM0RkMrek5ZYTk5?=
+ =?utf-8?B?NUgwTVpRTWhFbDU5N245NnFBekY1d3BWZmxvSStpa0R0ZWJObm1IY3VGYW9x?=
+ =?utf-8?B?SUhiVE9IWW9BeXA2elovRlNyTHRhM3dHYVhNREpsVnd6Skg4YUZXVnZmck9F?=
+ =?utf-8?B?ZUhtdGVmdllBVGZ0NmRlT0h0QTRYc3NRMERqRmRIZEdmdnp3M2xZTVNBQXBp?=
+ =?utf-8?B?SThkSnBrNTE3SitpM2RFdW5GUm5UaVAyanFhaUZYekNIRDhqYllqMGoyTlpn?=
+ =?utf-8?B?dHhaaDZxMlUwemkybVE1V2F5RXdZZnQ3R1NIRDhadUZDWTJTM0ZEVkorRGtC?=
+ =?utf-8?B?NDIvTHZmV0ZpVU81TVplYk9yeTNOMjZGYXBSTHZFY1p5anRoWENmenMrQmdF?=
+ =?utf-8?B?VTN6dTBaeG94b0xRa3ZkeFJvTUgzK2wxSWtjUmpwZk11aG1BZHZUTnpFN3Ir?=
+ =?utf-8?B?MW5jZTQ0eWpYOUpIbFFxN0k1NTgwK21IbVJicEFzREkyWHZjTG9UNHlFTmYw?=
+ =?utf-8?B?ZEtqNnVMbXZ0Y2RRRTVVWG8yMUZFUVJNQ3hDMUJxdlBwMGxVWTlWT3NGYWlJ?=
+ =?utf-8?B?d2RzdlNDaDF3MEVMbDhVdnBId1dleWVSeXFGcU0xNmtkOU5ieC9KMkdpeXE2?=
+ =?utf-8?B?OUI3anEvNFJkaGhJQlV2UmVqWGxwSXY2TUh3NDV6eEZWYjhiSWJrd0wvWEFk?=
+ =?utf-8?B?ZXh5bjM1Tlg1Nm91SHhNbW4wWFpxaUMyR2F3cEVvTFdySmJwMVJEcHVYY2NF?=
+ =?utf-8?Q?tONoScrIdM+qhFLdS6/xQf4djidrUtb+?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH0PR01MB6873.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(52116014)(38350700014);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?cER5OUx0bXd3TWpaZWUzMy9yak91NC94YVlOc0xtYzhTRmxIQ3RqbHF0dWRW?=
+ =?utf-8?B?ZUhOcklmTTRwbnBPbW52RXlZNjkvNTlOaVFNQkZVQzZSQnRBdGZVbHA0K2wv?=
+ =?utf-8?B?YjN3V0tnY0lxVVhHRi9TMERORVlNblBhNEdOdUNXbnROdzk5dkdtek9uQkhj?=
+ =?utf-8?B?L2Zna1VubjBYNUxaODJucUhTWllZaFB4aEdRSzMrVHh2YnYybkxPM0YrWWs0?=
+ =?utf-8?B?TXlKc25KMjYvdlRVV3RDZnVEZGt0R29kMitSWFNpSlBKR21wNEx4OGliOEF4?=
+ =?utf-8?B?WC9kM0Z6d0JodmpxOEU4OG12SmFLSFZpa0xjYkc4anZybFJxSUtsdU1lcy85?=
+ =?utf-8?B?bmY4QnZXa1VsRDI5TEhGTGVodUtkYnFmY0dwVnMzODNlbFV0SGh4OHZnVGd5?=
+ =?utf-8?B?Z3M5VFBhaTRoOHhXQkNQNmt4ZS9iRlpiT2hqeE13amo1UUNYUFFxcU9xR1RI?=
+ =?utf-8?B?U1plYVVGMDR1eEk4aitnYWV5UEMxTExNcjA2dmlIQkY2RUlwTGI5ZmprQ2FU?=
+ =?utf-8?B?TWRjMUFFSFZhL1VQTm5TVlY3TUY4UmxpM3R2QnlwRG5JVVB5dHhET1B3VUZI?=
+ =?utf-8?B?anlBRmFJend3dkhrNS9XUGNUdkRjSjFFS1BrODB0WThuam5lMGpPdnp2Y1lJ?=
+ =?utf-8?B?WkxQcUpVaUd4cHNvYXRrdVNHVWJBMm9oRmh0VERKY3Rpbys1L1RFOHAzZi9o?=
+ =?utf-8?B?YW5TOE81Y1dkSWxWY05pZzk0U01vbmNQMWs4L0FyYUVFL1loemVYS2lSTDlk?=
+ =?utf-8?B?dFBOSDBUUXNTbnpxanU4NmhJb09sN1pMZzJXVzdzWlVnUXhMc1dDRVoyQlZK?=
+ =?utf-8?B?czJXcmlFOGtmWUJUTHhrYlovOGpONndkRUZEc2d2RWY1Q0wwQlZCKytwSXJU?=
+ =?utf-8?B?dDJiOW1TUnIvdUtQbUVQaWxWM09vQ2RlMmp6WTI4ZnNxTEhIdmNZQTE4VGRo?=
+ =?utf-8?B?U01ieUlINC82UjZaV3A5alAzaFp1OWc5S29JaUo2Syt1WXQvYWM1U2h2ZWVk?=
+ =?utf-8?B?YXVPbis0cXZpZzFNM0xObDBSRm9xZ3U0cUJsYUpHWEsvazdnVThiL0JFOUxv?=
+ =?utf-8?B?Ty9ybXVEZE8xK1VhamkrNUpqWEFDci9sQjhKWVVqcCs4cm1HMk56dUJ4bitq?=
+ =?utf-8?B?LzUya04xb2hZLzFQcmVsSU15a3J4ckdFaU4zajhmL1ByTW5XZVZMZUY0Vngz?=
+ =?utf-8?B?V0JEKzFhQ3p6NWowSVo2clIyV29EQzJhQmNDVlJobkZ6VkZCUTV2R3Z3MEts?=
+ =?utf-8?B?R0plaTlBSEY0a0tlN0VwcEswY3phVndESmFpdUNWY0IxSDdjajdrQ3d5clpk?=
+ =?utf-8?B?UGhqOGdLT21Kdmt1SVJFdnQ1Q0dWeDE5UGYwcmVnUzF2VmlFbkxDdWRFM1VT?=
+ =?utf-8?B?TGFqbGxmVEZJaFpxZStydFRXWlhGeTZtU202ZlYyR29DQWFxVDc2SW9wenNm?=
+ =?utf-8?B?emJwTFZkRXhYWDdoQWZjT1E3dnFpVGVJbGE4SWxNVk5TOCtRMkNKMEplTlRm?=
+ =?utf-8?B?UWljdVR2dnBDZmpLaVF3L1E4Z2J4SjJ1ZWU0VmVuUWR5cGh3dkVSYkhsZmVU?=
+ =?utf-8?B?azZYdFhCMTlKYWVKa05wOXRGN2ozQlhvQlRHVHJUaC9kK2d4SnltcThWU0wy?=
+ =?utf-8?B?b3ZpMlpDTFU5ako0b2NrR2orc3FPYW14ZzRPVXk1RU5UWEZNbmtSaFVoZE9E?=
+ =?utf-8?B?bjBHSDdpY1FYdXR2QmR6U2xab0kycFF2WGJ1Z2NhdFZXZ0Nsd3ljcG1IWEN5?=
+ =?utf-8?B?V29SVFg5KzFkc1J1emZMNGxnYnF2M09XdFBHcDR2Wmd1Nm9ncFVaUzRhS3h3?=
+ =?utf-8?B?WCtmVWRHK1RYK2RlbytFQS9BS2lIMHhUV0x5Tlhja3RyUGZ1cS96VU1IMU9v?=
+ =?utf-8?B?Ynh1Vk9GTGtxemhHaGs4TkJyV29vWHZKNm1nY05lWE5NbllGZHZ1bFh6S1ZP?=
+ =?utf-8?B?UDlDbXlzcE1zUER1M2VWNTdWNnZYcTBFamRPMFZ5d3hhVlhTN3pzNE8xeTVk?=
+ =?utf-8?B?ZXp5TmhxSitPV0tMbVRBcDlzVktobTlsUCtxd1FEdXVOTnhlU29pM0VtZDB2?=
+ =?utf-8?B?SjhTWW9YMU5Da2t6MDZvZ3dkeVV2Z3NZL3JRNlBlUEE5aVRzQ0JHbEl1Ylhv?=
+ =?utf-8?B?cDRleVBHTmxqRFF4TWZSd2x6R045L3NGdFdGeDY2L2ZLUDJ6ZWkwdkp5YnJJ?=
+ =?utf-8?Q?KnPPGrHadVOUdNxV0lpBXgo=3D?=
+X-OriginatorOrg: os.amperecomputing.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 95d43395-a70e-4b3f-d089-08dd5b6ace58
+X-MS-Exchange-CrossTenant-AuthSource: CH0PR01MB6873.prod.exchangelabs.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Mar 2025 22:20:44.6202
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: bMbtdK7EqzfsqT1AfHgaHoFvjjRRyhauTqVglsOAY6A7FhrHxptbTFM9gsnigyX0XSeMRSb22ipxv+pa8it7PsbOlCgEEdNr531b/FR/aRo=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR01MB7931
 
-On 11/26/24 02:17, Chao Gao wrote:
-> When granting userspace or a KVM guest access to an xfeature, preserve the
-> entity's existing supervisor and software-defined permissions as tracked
-> by __state_perm, i.e. use __state_perm to track *all* permissions even
-> though all supported supervisor xfeatures are granted to all FPUs and
-> FPU_GUEST_PERM_LOCKED disallows changing permissions.
 
-Should we document what __state_perm contains either in
-fpu_state_perm or xstate_get_group_perm()?
+Changelog
+=========
+v3:
+  * Rebased to v6.14-rc4.
+  * Based on Miko's BBML2 cpufeature patch (https://lore.kernel.org/linux-arm-kernel/20250228182403.6269-3-miko.lenczewski@arm.com/).
+    Also included in this series in order to have the complete patchset.
+  * Enhanced __create_pgd_mapping() to handle split as well per Ryan.
+  * Supported CONT mappings per Ryan.
+  * Supported asymmetric system by splitting kernel linear mapping if such
+    system is detected per Ryan. I don't have such system to test, so the
+    testing is done by hacking kernel to call linear mapping repainting
+    unconditionally. The linear mapping doesn't have any block and cont
+    mappings after booting.
 
-Either way:
+RFC v2:
+  * Used allowlist to advertise BBM lv2 on the CPUs which can handle TLB
+    conflict gracefully per Will Deacon
+  * Rebased onto v6.13-rc5
+  * https://lore.kernel.org/linux-arm-kernel/20250103011822.1257189-1-yang@os.amperecomputing.com/
 
-Acked-by: Dave Hansen <dave.hansen@intel.com>
+RFC v1: https://lore.kernel.org/lkml/20241118181711.962576-1-yang@os.amperecomputing.com/
+
+Description
+===========
+When rodata=full kernel linear mapping is mapped by PTE due to arm's
+break-before-make rule.
+
+A number of performance issues arise when the kernel linear map is using
+PTE entries due to arm's break-before-make rule:
+  - performance degradation
+  - more TLB pressure
+  - memory waste for kernel page table
+
+These issues can be avoided by specifying rodata=on the kernel command
+line but this disables the alias checks on page table permissions and
+therefore compromises security somewhat.
+
+With FEAT_BBM level 2 support it is no longer necessary to invalidate the
+page table entry when changing page sizes.  This allows the kernel to
+split large mappings after boot is complete.
+
+This patch adds support for splitting large mappings when FEAT_BBM level 2
+is available and rodata=full is used. This functionality will be used
+when modifying page permissions for individual page frames.
+
+Without FEAT_BBM level 2 we will keep the kernel linear map using PTEs
+only.
+
+If the system is asymmetric, the kernel linear mapping may be repainted once
+the BBML2 capability is finalized on all CPUs.  See patch #6 for more details.
+
+We saw significant performance increases in some benchmarks with
+rodata=full without compromising the security features of the kernel.
+
+Testing
+=======
+The test was done on AmpereOne machine (192 cores, 1P) with 256GB memory and
+4K page size + 48 bit VA.
+
+Function test (4K/16K/64K page size)
+  - Kernel boot.  Kernel needs change kernel linear mapping permission at
+    boot stage, if the patch didn't work, kernel typically didn't boot.
+  - Module stress from stress-ng. Kernel module load change permission for
+    linear mapping.
+  - A test kernel module which allocates 80% of total memory via vmalloc(),
+    then change the vmalloc area permission to RO, this also change linear
+    mapping permission to RO, then change it back before vfree(). Then launch
+    a VM which consumes almost all physical memory.
+  - VM with the patchset applied in guest kernel too.
+  - Kernel build in VM with guest kernel which has this series applied.
+  - rodata=on. Make sure other rodata mode is not broken.
+  - Boot on the machine which doesn't support BBML2.
+
+Performance
+===========
+Memory consumption
+Before:
+MemTotal:       258988984 kB
+MemFree:        254821700 kB
+
+After:
+MemTotal:       259505132 kB
+MemFree:        255410264 kB
+
+Around 500MB more memory are free to use.  The larger the machine, the
+more memory saved.
+
+Performance benchmarking
+* Memcached
+We saw performance degradation when running Memcached benchmark with
+rodata=full vs rodata=on.  Our profiling pointed to kernel TLB pressure.
+With this patchset we saw ops/sec is increased by around 3.5%, P99
+latency is reduced by around 9.6%.
+The gain mainly came from reduced kernel TLB misses.  The kernel TLB
+MPKI is reduced by 28.5%.
+
+The benchmark data is now on par with rodata=on too.
+
+* Disk encryption (dm-crypt) benchmark
+Ran fio benchmark with the below command on a 128G ramdisk (ext4) with disk
+encryption (by dm-crypt).
+fio --directory=/data --random_generator=lfsr --norandommap --randrepeat 1 \
+    --status-interval=999 --rw=write --bs=4k --loops=1 --ioengine=sync \
+    --iodepth=1 --numjobs=1 --fsync_on_close=1 --group_reporting --thread \
+    --name=iops-test-job --eta-newline=1 --size 100G
+
+The IOPS is increased by 90% - 150% (the variance is high, but the worst
+number of good case is around 90% more than the best number of bad case).
+The bandwidth is increased and the avg clat is reduced proportionally.
+
+* Sequential file read
+Read 100G file sequentially on XFS (xfs_io read with page cache populated).
+The bandwidth is increased by 150%.
+
+
+Mikołaj Lenczewski (1):
+      arm64: Add BBM Level 2 cpu feature
+
+Yang Shi (5):
+      arm64: cpufeature: add AmpereOne to BBML2 allow list
+      arm64: mm: make __create_pgd_mapping() and helpers non-void
+      arm64: mm: support large block mapping when rodata=full
+      arm64: mm: support split CONT mappings
+      arm64: mm: split linear mapping if BBML2 is not supported on secondary CPUs
+
+ arch/arm64/Kconfig                  |  11 +++++
+ arch/arm64/include/asm/cpucaps.h    |   2 +
+ arch/arm64/include/asm/cpufeature.h |  15 ++++++
+ arch/arm64/include/asm/mmu.h        |   4 ++
+ arch/arm64/include/asm/pgtable.h    |  12 ++++-
+ arch/arm64/kernel/cpufeature.c      |  95 +++++++++++++++++++++++++++++++++++++
+ arch/arm64/mm/mmu.c                 | 397 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-------------------
+ arch/arm64/mm/pageattr.c            |  37 ++++++++++++---
+ arch/arm64/tools/cpucaps            |   1 +
+ 9 files changed, 518 insertions(+), 56 deletions(-)
+
