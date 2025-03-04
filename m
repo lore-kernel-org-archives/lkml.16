@@ -1,146 +1,78 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11E78281520;
-	Tue,  4 Mar 2025 17:08:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FFB725F996;
+	Tue,  4 Mar 2025 17:10:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741108081; cv=none; b=JJ0M0wqEOF+kf/+sj4fpTOrhsflWm/YpTd7VatKcEhWwtpCswN7t9qsoN0pUtDMOIr8mNznv57zZYZpars+HLxcl6XyFleM/PK8AxIWmGSjgRGFSXuAFRxevjbSBMy3wpXjos5g/bNyAng4x9vdccLJWzj/+7pJjY3HaWt44lj0=
+	t=1741108200; cv=none; b=MQk/ijIzG69py4rNe4NsMgmK/GgwiVQNn3IlSJKgjozy6QJYeQRFu9WutzXUrIdgCt3SUKvd3b8OUAnNVr9CGDlo3kC6aGHo4SZdhACNqFQvPUiLZSpXhKyfuHw3OZSillAJxbSdVGwcAPuwYH0au7zUr6b4pLJlg+9LfGDf5TM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741108081; c=relaxed/simple;
-	bh=ExQy865opXw6DJMm2Zy8thSEQ2//ZajmzZjhLDdgip8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lNIF2diNE7S7lAZrKhXy2KLBn8+z/VbnN5MS7mW/1cOSm+tt6Q0jblth+YsJpnDOQ7HVZUOLmHUfbzK9iPae6w27UXIVqt+dGG78zB/NQhfrlHuQxr0+wxvwPYwa/p+gaAzi0lBPnIFTqorIbS1YgWS2I0O4cWeY9cBRVm35UWQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U/S/n5mc; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U/S/n5mc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74E9FC4CEE7;
-	Tue,  4 Mar 2025 17:08:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741108080;
-	bh=ExQy865opXw6DJMm2Zy8thSEQ2//ZajmzZjhLDdgip8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=U/S/n5mcWu/UBrYJ+TCBDohmSpkaKpp3W/oYgHiI/KuhAbI9KA2kv7BZLyzpMCfOt
-	 5Wq8oedYv0QjWahN3qmeV3zxSsUGOq2uOUp/yflUURVb/OTCKj8hW7Vxnp8gBESsjC
-	 pc2HyY1m7X1gZDrLSonteoxRMWPrg7RwvOkKcEJgi/fTEGOMeFqPe+AKHrnuCe2evj
-	 4+CGuNjEonQLrRuMQXHebM9/xLHR0V2qQ/ZRWoWxw6hWG9Q2EvGTPOkbjYC976JGta
-	 kmU7BYLOeu+jvgOx9uHuREM5azgdxWj5CcwgpT/+IY6xkW5/rRoQOEqIASs706Ky6i
-	 CHiKZp8kuCXww==
-Date: Tue, 4 Mar 2025 09:07:57 -0800
-From: Kees Cook <kees@kernel.org>
-To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>
-Cc: Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Nicolas Schier <nicolas@fjasle.eu>, llvm@lists.linux.dev,
-	linux-kbuild@vger.kernel.org, David Gow <davidgow@google.com>,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] kbuild: clang: Support building UM with SUBARCH=i386
-Message-ID: <202503040842.1177A1F15B@keescook>
-References: <20250303215240.work.379-kees@kernel.org>
- <05a25510-ab44-4eb1-a878-71e84c8aff0d@t-8ch.de>
- <20250304102536.GB2529736@ax162>
- <e1a1531d-6968-4ae8-a3b5-5ea0547ec4b3@t-8ch.de>
+	s=arc-20240116; t=1741108200; c=relaxed/simple;
+	bh=Vy6aO++eSUX6F1uUf/GKjf51P70zh6k7VBsjfxHU6SU=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=OS1SPN1cuAkjSW4X2FagdrXFkEm8mUz1wAYVttCGbKlmTRdcbXDAW8MSVviA3wJOV7giQNpz9pmWgnVsRPS5gSwywqyl5YuuzWGQPpgtLvn1YRUJCuMeGX/RwTRil2lPXCaRQKhYDRvHb1pipTYPwp1UU1fgP0ir07snCnkyOTE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3020CC4CEE5;
+	Tue,  4 Mar 2025 17:09:59 +0000 (UTC)
+Date: Tue, 4 Mar 2025 12:10:53 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Tomas Glozar <tglozar@redhat.com>
+Cc: Costa Shulyupin <costa.shul@redhat.com>, John Kacur <jkacur@redhat.com>,
+ "Luis Claudio R. Goncalves" <lgoncalv@redhat.com>, Eder Zulian
+ <ezulian@redhat.com>, Dan Carpenter <dan.carpenter@linaro.org>,
+ linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] rtla: Save trace when option `--trace` is specified
+Message-ID: <20250304121053.06b84874@gandalf.local.home>
+In-Reply-To: <CAP4=nvTCVLa5MzBbJVz=S_ZiDoJ2hY-8fM+uRnGgumi0sFivWA@mail.gmail.com>
+References: <20250127170251.744751-1-costa.shul@redhat.com>
+	<20250227200623.60f20571@gandalf.local.home>
+	<CAP4=nvQXaFmemBeW8U3U9zTMK0gVYvp23gfq_6ALsBJPTXt9Uw@mail.gmail.com>
+	<20250303150351.28007ad1@gandalf.local.home>
+	<CAP4=nvQ9pXYtihL7HTTRK=EzUEubtWbxDr78JswksSo-wa7zYw@mail.gmail.com>
+	<CAP4=nvTCVLa5MzBbJVz=S_ZiDoJ2hY-8fM+uRnGgumi0sFivWA@mail.gmail.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <e1a1531d-6968-4ae8-a3b5-5ea0547ec4b3@t-8ch.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Mar 04, 2025 at 03:51:19PM +0100, Thomas Weißschuh wrote:
-> On 2025-03-04 11:25:36+0100, Nathan Chancellor wrote:
-> > On Mon, Mar 03, 2025 at 11:29:58PM +0100, Thomas Weißschuh wrote:
-> > > On 2025-03-03 13:52:41-0800, Kees Cook wrote:
-> 
-> <snip>
-> 
-> > > This is also what exists in tools/testing/selftests/lib.mk.
-> > > Minus the missing CONFIG_FORTIFY_SOURCE on clang x86_32
-> > > and a failure of overflow.DEFINE_FLEX_test (clang 19.1.7).
-> > 
-> > Does Kees's other patch resolve the second issue? It'll obviously fix
-> > the first :P
-> > 
-> > https://lore.kernel.org/20250303214929.work.499-kees@kernel.org/
-> 
-> No, it doesn't.
-> 
-> Running tests with:
-> $ .kunit/linux kunit.filter_glob=overflow.DEFINE_FLEX_test kunit.enable=1 mem=1G console=tty kunit_shutdown=halt
-> [15:48:30] =================== overflow (1 subtest) ===================
-> [15:48:30] # DEFINE_FLEX_test: EXPECTATION FAILED at lib/overflow_kunit.c:1200
-> [15:48:30] Expected __builtin_dynamic_object_size(two_but_zero, 0) == expected_raw_size, but
-> [15:48:30]     __builtin_dynamic_object_size(two_but_zero, 0) == 12 (0xc)
-> [15:48:30]     expected_raw_size == 8 (0x8)
-> [15:48:30] [FAILED] DEFINE_FLEX_test
-> [15:48:30] # module: overflow_kunit
-> [15:48:30] ==================== [FAILED] overflow =====================
-> [15:48:30] ============================================================
-> [15:48:30] Testing complete. Ran 1 tests: failed: 1
-> [15:48:31] Elapsed time: 43.985s total, 0.001s configuring, 43.818s building, 0.133s running
-> 
-> If I force CONFIG_CC_HAS_COUNTED_BY=n then the test succeeds.
-> Clang 19.1.7 from the Arch Linux repos.
+On Tue, 4 Mar 2025 09:16:11 +0100
+Tomas Glozar <tglozar@redhat.com> wrote:
 
-I wasn't seeing with Clang 20 from git:
-ClangBuiltLinux clang version 20.0.0git (git@github.com:llvm/llvm-project.git 72901fe19eb1e55d0ee1c380ab7a9f57d2f187c5)
+> =C3=BAt 4. 3. 2025 v 9:00 odes=C3=ADlatel Tomas Glozar <tglozar@redhat.co=
+m> napsal:
+> >
+> > So we need to stop tracing here, before we save the trace, if we want
+> > to do that. Perhaps combining this with the cleanup patch [1] and
+> > doing the stopping in save_trace_to_file would make sense?
+> > =20
+>=20
+> Also, the patch will also save the trace if running with -a and the
+> threshold was not violated, which is not what one usually wants, e.g.:
+>=20
+> $ rtla osnoise top -c 0 -q -a 10000000 -d 5s
+>                                          Operating System Noise
+>=20
+> duration:   0 00:00:05 | time is in us
+> CPU Period       Runtime        Noise  % CPU Aval   Max Noise   Max
+> Single          HW          NMI          IRQ      Softirq       Threa
+> d
+>  0 #4           4000000        37712    99.05720       10998
+> 555        7624            0         4011           34           2
+> 4
+>  Saving trace to osnoise_trace.txt
+>=20
+> I believe it would be better to add a new option, something like
+> --force-trace, that would be used to save the trace even if there is
+> no threshold violation. -t/--trace and -a could then be used with the
+> same semantics as before.
 
-But I do see the error with ToT Clang:
-ClangBuiltLinux clang version 21.0.0git (git@github.com:llvm/llvm-project.git eee3db5421040cfc3eae6e92ed714650a6f741fa)
+As long is this is what you expect to happen. I just wanted to point out
+that recording the trace while it is active means it may never stop
+recording. If that is OK, then I'm fine with the change.
 
-Clang 17.1: (does not support counted_by)
-
-    # DEFINE_FLEX_test: missing counted_by
-    # DEFINE_FLEX_test: sizeof(two_but_zero): 8
-    # DEFINE_FLEX_test: __struct_size(two_but_zero): 12
-    # DEFINE_FLEX_test: __member_size(two_but_zero): 12
-    # DEFINE_FLEX_test: __member_size(two_but_zero->array): 4
-
-Clang 19.1.1: (actually is _does_ support counted_by, but Linux disables it)
-
-    # DEFINE_FLEX_test: missing counted_by
-    # DEFINE_FLEX_test: sizeof(two_but_zero): 8
-    # DEFINE_FLEX_test: __struct_size(two_but_zero): 12
-    # DEFINE_FLEX_test: __member_size(two_but_zero): 12
-    # DEFINE_FLEX_test: __member_size(two_but_zero->array): 4
-
-GCC 13.3:
-
-    # DEFINE_FLEX_test: missing counted_by
-    # DEFINE_FLEX_test: sizeof(two_but_zero): 8
-    # DEFINE_FLEX_test: __struct_size(two_but_zero): 12
-    # DEFINE_FLEX_test: __member_size(two_but_zero): 12
-    # DEFINE_FLEX_test: __member_size(two_but_zero->array): 4
-
-Clang 21 (ToT):
-
-    # DEFINE_FLEX_test: has counted_by
-    # DEFINE_FLEX_test: sizeof(two_but_zero): 8
-    # DEFINE_FLEX_test: __struct_size(two_but_zero): 12
-    # DEFINE_FLEX_test: __member_size(two_but_zero): 12
-    # DEFINE_FLEX_test: __member_size(two_but_zero->array): 0
-
-GCC 15 (ToT):
-
-    # DEFINE_FLEX_test: has counted_by
-    # DEFINE_FLEX_test: sizeof(two_but_zero): 8
-    # DEFINE_FLEX_test: __struct_size(two_but_zero): 12
-    # DEFINE_FLEX_test: __member_size(two_but_zero): 12
-    # DEFINE_FLEX_test: __member_size(two_but_zero->array): 0
-
-It seems like the on-stack sizes with __bdos all agree now, regardless
-of the used compiler features. It is only the array size calculation
-that now gets masked by counted_by. (i.e. the stack size is overridden
-by the zero "count" for the array elements.)
-
-I'll send a fix for the test...
-
--- 
-Kees Cook
+-- Steve
