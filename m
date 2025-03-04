@@ -1,198 +1,180 @@
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from PNYPR01CU001.outbound.protection.outlook.com (mail-centralindiaazolkn19010001.outbound.protection.outlook.com [52.103.68.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFAAA2755F6
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 14:45:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741099527; cv=none; b=natbhNyw4WVpVD9WSo9ngzvhYwmWY7v8kid7Fmw5mkCsGePYn3YWu/zNMFFyIITFjB4cHqxJlZuIbe2ZSjZGf+ODBTqq/2dHJiSynpykgPXfrsVSermX0hluSUpxIHq+Mwr+oEQu4eXKZi7PPYjt3qKxubMtWlRp2CmO91vQAvs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741099527; c=relaxed/simple;
-	bh=jKdpkROggTpGv8i7lEqCeoDnoMhE9yvTEkBnneKoX/o=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PHB0YKCmNT8lejiLUuvbJ2FE36BhDBogg3+v7g7quW6iCcRzv3Kkh7qrLpAdCzhQAkj2P+xBbeiSSSlp7LjPTwKnrNbu3Dl8YCLluThnmU79YVNFu9lfrrmFJiJuGWeo46zUSnPnzrw7mMH3SOvlKwvcczQ24zLyqm0egGQJszM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=rdj8m4rS; arc=none smtp.client-ip=209.85.208.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9053220A5D6
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 14:46:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.68.1
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741099578; cv=fail; b=W42TeL/AYqo+EoTNJ7sO7pQ2mN9mUCb1jN5oPwCiYPhnLLr38RkeiYdgRp61ePxlTiLIWlEEKaOUuky6DFjuF8uy1ehCG6Rksx/TMYaMOxjMrbpMM1PeIIMzrhqHuoCaNUINJBZtSH4s4cWb37ze4qhmmSsoC6DtDJK90+4e6B8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741099578; c=relaxed/simple;
+	bh=wTIozoS3y1M7Fi7/I6oNlMxHAU5i+Aij1Z2A+0YMHHE=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=U6FwmvH1edGTvJuHEeRzXkw2rtmItxhhRlX1PsjTad3YDOcCuThhne8ne7AqNvNteJ83wTWopVA9tiGlUF1IRA+wLNfkIgyyeUMhZkFLBlivSdHfhS35iBcXX/5wiw/DXCbmykFWr22iCQG3UmM6TX8BvmDV52gGgyfarMx9qLw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=live.com; spf=pass smtp.mailfrom=live.com; dkim=pass (2048-bit key) header.d=live.com header.i=@live.com header.b=iDlqooOW; arc=fail smtp.client-ip=52.103.68.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=live.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=live.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="rdj8m4rS"
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-30795988ebeso61764321fa.3
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Mar 2025 06:45:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1741099522; x=1741704322; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TETrHFzeOASenqMV9S9QwkBZdWbDaJ44vy3Vca6/dVU=;
-        b=rdj8m4rSLSJKTDoGbzAdjQsZ3OS+JQmMqW3laXfGaj2lRh17o2j0JK/1P/RPvSYPj+
-         54VONGuvrWWINZs68Wh3cW4v2/kcYyiW4XxRny9pL3T+ngO/SYK1dTrWE+hRmd8TCW2a
-         Usuwt4U+GghZqCUoRxcNb2iqwq6dTMZP3cc7Tx/ymm5ctquH467NBFazrR9E74AjNTOD
-         dowkJOSNFAR9OOThiCmAmNF5Jdjht0qtuCx9VsrH9n5HpOc1LAxgB4p8IG4yXRRBIHq9
-         MnKm8oC6X1HK5HFIKWVQ9HihrVHHmYoVjN4AohwahRuqkSeaJKWLl4UZdlr/Vk+Nw20t
-         +Hgg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741099522; x=1741704322;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=TETrHFzeOASenqMV9S9QwkBZdWbDaJ44vy3Vca6/dVU=;
-        b=wbUnaQMxmL8Mx1j6l68pb+1WFrzvzHoG5iQIbljLDLOBAj0PTqu86/RTy9chSIxsxk
-         TDafpSc3Ld8jz/eZtCY68PGhKU8iyMRZotNyEAiUJfVu5tE4nPZiP01NDsFCZ1ES7n16
-         RldFtQ2JQAB+3LXUuAlQm+5NF4POPkn5uiW2tOd8bgl/4efqOgjNqVbO6WjQGMPnJEbC
-         i38nuWDwczFqg3Rri9M1WbuxQkdWVUNGHIlrxU8MaS9uCuKZbI0/ef9TgZW5dUAKzdNY
-         nC3f7mrUSD/P8SrPet1Xu5j59/NNLYJj5G0ilUc7He+FmkBLbSzYw3Tnc69K00gQI+6x
-         N7Rg==
-X-Forwarded-Encrypted: i=1; AJvYcCX31uwBFunVhdArXKxw6CJl+oRzAGTQ5G0PBhXxOPathkirb5Y1zjRForat+9B/S+2kREDu/QD9NsYmh/4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YycEnP1VZ4Tuj3rrpmUZUWaup8r6l9uonoK7P77m6KZgaHy3GI3
-	ZNIzY24nRNJzYUKXvtyhbrze75xD8P9zNs/HOtZr6SKGixjSpmSa3uCBBd1JcajAqF8YUfz4lT1
-	2XCxs8JM0lmSs+jSS22MI1PCNNUP0Dozh/yS00w==
-X-Gm-Gg: ASbGncsEIKu3jJPu02bp9InTm6FUoD8DaJuMOTkPzvglRp512hUIdok6LLB1/gaIwPJ
-	y1DDS3TFApCRYjyV7gMPHCa5UOcL6NynG9cPld6WhRYgve1beJ9DG9qOjiILmA6+ITr+dgnotb5
-	ed9w1CVHB84c2DWLyZKdoYLn3n0g==
-X-Google-Smtp-Source: AGHT+IETKuyPMVM5CdYgZm14hIMgbe8X/D5820Fs21Iu8QTNB9GUGUO3MUy3gVkpuL3W82B4uH6iGXTKzY4qdWaX2WU=
-X-Received: by 2002:a2e:91c3:0:b0:30b:9813:b00c with SMTP id
- 38308e7fff4ca-30b9813b714mr64990571fa.27.1741099521825; Tue, 04 Mar 2025
- 06:45:21 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=live.com header.i=@live.com header.b="iDlqooOW"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=bkTkK867dHQ97M4G+HANuBtRX0MX4BHA3KGwYAYSe/190PBlQ4IVmVEoveiYmiY5Bf6PbKW3F6KG4tiqGPiRfVa/PU4BK4mTWYwPxl0wBLDK8Fs7JfZUmcsF53v9rcJsy1q0aDjeZ/dW8pvGnE/Xk2MhMmUKyWgEem4W3H9HdOevmQrGac/ayRHeVkkxv17htCs5Z/xnw1o86hHA6aSyllVh6CwcphmOVLw7PDZfRnLA+MeGZF4YwnLV4MZ6nwoKNYpV4+IW85P8l9vV1wXpgAq4zsd/5f3F6LXxn9cGp4t/CQQnLgBSverr/Em+Evo+2FSbLdVx5NGCtYIhwcIr4A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=wTIozoS3y1M7Fi7/I6oNlMxHAU5i+Aij1Z2A+0YMHHE=;
+ b=iWagGCjt/AfptNtiRifGWWcruh9QeG1arSgJgKjnemY0mORpNZB1golFfp3aNtN1nTfoPneI34axuP5yc2IGE9i7dpMZvV0JQxfdeUy4wirErhRU8/XN6uRt7VU4lC/gCxD3mWvE6YfX1sjNaXOJ4PLdjCaVKiBdrzT2274N+muLYyQqNPNfGKGc/dSahv9Wco1OTr+nMZu2iTFARzYjxOlQ5ZfDUjLiJppdBaoP7/FFmKexxkC9TYRvTkJtMqrYgKrCwuBBDo2u/wuIir3lLwPUDc4pEsnk18j5XGt7fGf/esPsWMjmK4e+Zw5oZrZzbpITK44fqCHk+T8XAL6yMQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=live.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=wTIozoS3y1M7Fi7/I6oNlMxHAU5i+Aij1Z2A+0YMHHE=;
+ b=iDlqooOWv38JJZJ+QiISSx9GcuEypBv3mKX74p/O38LpltRppHIqKQb/ExLgcLgGtk1BUYnAqiTbQc+2hbL5c/f1CgdgeP6uNJ+8S6tM+NWIDyJYmKTifmhqn0AJ42wCKMxmLBWZal9kN5L8u5OGNue3+1O80YY8PN0IZJINX8AIshVf4MHBwRXFABbOCWA1gzARxFMp0pkVrjoP7ia/XHOw5lSj8D+nIirnhxcO+6IvQngyjBtaIGlMmnFMCTrliLb2uoKI50y9oB9d50H2TU+uJDNzKqSgTcHAxIu0aKGoqBa6l5un/uNaAdlJcpTuIIKEoUNBUMILqGk2qdwA+Q==
+Received: from PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM (2603:1096:c01:f7::14)
+ by PN3PR01MB10178.INDPRD01.PROD.OUTLOOK.COM (2603:1096:c01:1e2::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.28; Tue, 4 Mar
+ 2025 14:46:10 +0000
+Received: from PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
+ ([fe80::324:c085:10c8:4e77]) by PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
+ ([fe80::324:c085:10c8:4e77%7]) with mapi id 15.20.8489.028; Tue, 4 Mar 2025
+ 14:46:10 +0000
+From: Aditya Garg <gargaditya08@live.com>
+To: Arnd Bergmann <arnd@kernel.org>
+CC: Aun-Ali Zaidi <admin@kodeit.net>, Maarten Lankhorst
+	<maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>, Jani Nikula <jani.nikula@intel.com>, Atharva
+ Tiwari <evepolonium@gmail.com>, Kerem Karabay <kekrby@gmail.com>, Arnd
+ Bergmann <arnd@arndb.de>, "dri-devel@lists.freedesktop.org"
+	<dri-devel@lists.freedesktop.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, Nathan Chancellor <nathan@kernel.org>
+Subject: Re: [PATCH] drm/tiny: fix printk format string for 32-bit
+Thread-Topic: [PATCH] drm/tiny: fix printk format string for 32-bit
+Thread-Index: AQHbjRGO8BPb/u8fREegT+f5TN7ZSLNjDiQA
+Date: Tue, 4 Mar 2025 14:46:10 +0000
+Message-ID: <05EAF4F2-7DFB-4C80-8D2A-054BCD7A126D@live.com>
+References: <20250304142711.621330-1-arnd@kernel.org>
+In-Reply-To: <20250304142711.621330-1-arnd@kernel.org>
+Accept-Language: en-IN, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: PN3PR01MB9597:EE_|PN3PR01MB10178:EE_
+x-ms-office365-filtering-correlation-id: 366ff1af-5510-42c8-329a-08dd5b2b4da1
+x-microsoft-antispam:
+ BCL:0;ARA:14566002|15080799006|8060799006|8062599003|461199028|19110799003|7092599003|102099032|1602099012|3412199025|440099028|10035399004|4302099013;
+x-microsoft-antispam-message-info:
+ =?utf-8?B?cnJNaDJxR1N3NEljSEN0ZWpDN2cxYVF4RnJRV0pPQTNmNmVoSjIyWElLRlVs?=
+ =?utf-8?B?TENQanBHdU1EN0dkSytYVTZPczNQS2dXZ1A2V2UyZXVYTmVSMmhYeFhsVko3?=
+ =?utf-8?B?Z3lTMGV1VmJDdThyelVubjhiWjR3cXdJWEtCalh2VlVGVERxSlFNbGY5eHdE?=
+ =?utf-8?B?UE9MMGNabE1kTGRnU1gva2cyelN2RlRmNXV1ZVk4MnNrOHJ3WnN3V0VnUG9z?=
+ =?utf-8?B?ek93OUxKS1AwSlVhR2xJeE51YmRkaFRXUTFhSzA5L2xya2o5OEMwS2szS0ZM?=
+ =?utf-8?B?YmhKdTQrQVVYdG9LWXBiTzFTTURnY2VZelFGbXh6bVJBNG84Q0hGSjBjdjV5?=
+ =?utf-8?B?U2IzR0NXTnpmbWJHMWhzTVhLek94YmtKT2JUbWlzT1FrNzAxTEplcXdvT0xH?=
+ =?utf-8?B?UzJ2MzhkNVAzUnVzNEpjUnhaNnZHU1psWm1Ra0lIa0h1THNlalYzakNjNStL?=
+ =?utf-8?B?ak9PV1FTbFFRT0UybU5WRkVYMjhqdHoyd25qRnJOV2xhWVVVQXY4TDdKTnll?=
+ =?utf-8?B?UzRFNEJvK0RiVFR1TDMwS0V3UXRreFcrR3ZEYXhzTEFKRHdubWVNaEJPYm5T?=
+ =?utf-8?B?SGpUZVhhSnluQlE0cjRZS2dvbU5mRDRTVlg0ZWNSeUZyL3pqdE9hbmVyczc5?=
+ =?utf-8?B?T0hWaEw5VXVRNCswMGVVREFZVXNNVEp1NlF2YTRwanA0TGFOdnlvZVdreC9I?=
+ =?utf-8?B?Z0FoL2lpQ25naG1xZndpcmRBWmE3K3FjdlEvUmRWNjcvckxKVGtzelBSdVls?=
+ =?utf-8?B?UWJNV2IzRk01cjdMMnkxOVJjNit2ZkV5WHE1ZFk5MC9ZQWN0MzRaY2tTK0gz?=
+ =?utf-8?B?Vm9uNUxSTG0xNTJoKzV5SVhuRjFNSW1Vcjc1ekNRNktRUTJqUHhwelRIeVB4?=
+ =?utf-8?B?aU8vb3RwSnJiOTI4TTdSQlhCUjFTR3JVaWpIQ0ZDbWlJbldGcFQ1Tmtoa3dn?=
+ =?utf-8?B?em9iUG1WOWpCdUFVaE16U085bW1SNzBLNlFHcDVNc3BLVWVFanc0bUxnWnh1?=
+ =?utf-8?B?WUVyRk9HTk5WMkhabEhyeWpqcW9ZWnRQaHYwYUtuU3htRkRLTXBUVmp2SFQr?=
+ =?utf-8?B?WDh3SE1yKzNROTNzN3E0Vi94VlR4VlBsVnZIOUtaUy9maE5ocWhHZzZKNTVa?=
+ =?utf-8?B?U0RJRTg0ZG1jbERnQk8wbk1HQ0wwTUZQRXBnUGM0M3Qrc0k5dTJKNCs1QUw3?=
+ =?utf-8?B?K1NFQzJKVVc4SElnbkxvQzdkU1hHeTZ1WUd6dG0xUnZiZDlxZGZPcURRRktJ?=
+ =?utf-8?B?YUwvdVNtNDNlbER4TTVHTEsya2ptenlIL3AwTmlxRHppRU9VQmhRVnZOdkZl?=
+ =?utf-8?B?N1dCS2l4REtXZHFxb1d2T0Nxc3JjTVRUckVMbnJsRVR6RWxwajVzTmY0QzBW?=
+ =?utf-8?B?aU1uNmtWM0Z2dWVZUjhNNmovWHhQUnJUWWYraVM4akwza3JJYStRUmZQTmNi?=
+ =?utf-8?B?akVDY2VQZ0VmeWYrcmlGM05PZzdONm9nbFdkUlVQenhETDJDRllJekwrMGs4?=
+ =?utf-8?B?Tm1oL25yRjl0MGMxWVFBQXVzMGxjSkw5Vkk1a2tGcVdMRmRKV3JFMDZMZngz?=
+ =?utf-8?B?dGhnM0VJemFDVk43R2cvRzNDM21vdjkxUEx0aGNYNDltekhqSzhRRlRmMFJB?=
+ =?utf-8?B?Q0pBcWVYbFJDNU5jMnFLQ1BEOUFjeko0YTJqa0NNbUZITkUrMDlRNmtGM0N2?=
+ =?utf-8?Q?XhIfcAtkYSk2/Lpg0CRk?=
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?c0JFNHVEWnNwNnpXc1lDOHBHaWdxeVJEbWhraUNFOFlqYjMvN0xPSnd4SUs4?=
+ =?utf-8?B?M2tEL2pUVytUZ3NTWXhmVjlNL3dUSzlUWGtNbXp4ZVVQd2RlcHpuYWZXNWJo?=
+ =?utf-8?B?ckduVnNpOVBpMzlDM01WekdRcnoxMU5GMzFLWVhrdjMycUlmaHY1NkRJbVhn?=
+ =?utf-8?B?MHNPVDRKQ1NrRG5yKzFGeFdRNmZzaXluL1RuUnhzdFRLY1lwVUZadmYvOHVa?=
+ =?utf-8?B?K1czR2xOZkMwZE9IMDVoVEQ4TCswNzAxbkJSWWllMFhEL2FnV09kR2pXSXox?=
+ =?utf-8?B?alljK3NHaExWQnZYWE1sME5GanpwL3hWSHJpeXhINmluQ0tEdmQ4NUV4WmFp?=
+ =?utf-8?B?alVtWHA4eVpOb3dtQWhDL1lXU2RnOU9rTzNwUG0reStsU1VLWmgrQ3pEUHlS?=
+ =?utf-8?B?a29vVHl1T3RpWmp3WUx3bmNIdmVoODFBRDNEUXoxVC9EbVg4cVM2a2ZzUSt6?=
+ =?utf-8?B?Ulpld1N0emhHMXE0MVZkVmFJbWhWMEEwVHJ0SFlSaEovUmRUTUhhRFlkOXRr?=
+ =?utf-8?B?T0hxTGVwaS9WODhZQ1RtaTRobE9HRjZqM0o5NFp3U25nK3BJTHZMWUNRQWRT?=
+ =?utf-8?B?REtDTEFkMjZ0TXQxLzVYMUdaZ0VRb0ZIc1pLYmVybDA0RzNRODBtK3g2amhM?=
+ =?utf-8?B?VC95ZXFHdWFaOGhnbGJDNEFBYi9YNXM5SXllZEZaT2tzN0YxVEdZbWZoQ0tE?=
+ =?utf-8?B?Q2hSSWRGTm1zd2FUa0M1ZGo2N3V4ZDJHbkZNMmhpYVlGdHAybWNNNEdUV0pP?=
+ =?utf-8?B?bGpkUEVYZ0Z5U1pTZkdKNjZBTmZwSUYxMDU0RmlTS3lReG9qLzcvWkVKNXEr?=
+ =?utf-8?B?eCswSzl6OHRjZjhIeGlRQXNXNWRhYjJlYVZsVnB2cmRROHN0QVpmbHRJY2Jm?=
+ =?utf-8?B?b3RYd2hhQ05tbjg3alhhYlE1V09pbXQ1QnlDa2VjVUpMN2UwRnQ3Qy93bWtL?=
+ =?utf-8?B?clI3STRCWnRsVXBKdmVuOENNdDlNQ28zMjhSTWloTy9XUkJ3aERnSTJSK1BP?=
+ =?utf-8?B?Q1luL2I5Y3NnUGZ2cG9FcVZLU081eEljb2szSm1KbjhiQTA3Z1BkRThiYkpZ?=
+ =?utf-8?B?S3NxNEQ3UmxPbU8zSG1BZ2RuQi9VMUFUVGpyYko0eEtXaG9GbzJyOGhpOWFp?=
+ =?utf-8?B?YktqekU5TTlBbHp0Q1MwU0IyeVRLbFkxVVNMckE3c0E0RDFQNWF1ZkQydGJu?=
+ =?utf-8?B?YnRSRUlXdG5yQTZnZlAxakdIeVRaRXp1K1crWkxEb0VIbVBzTEw5Skl0cURV?=
+ =?utf-8?B?ZTRpWVViaTlzN0hBUXhGK3F0TzhJSFgyRjR0WHdkSnNDd2hpbyt1cU80Z0VU?=
+ =?utf-8?B?RC9MUWdJMWVXVDlVWkRESmUxMGhsR1p6NzBydHh1L2IxZU5SR0ZWUml0dDJU?=
+ =?utf-8?B?ajNNMHRKQjNYbzBHT2NRTGw0bmQ3KzhMUSs0N2RKcXdxWlY4NzRteDhmNURM?=
+ =?utf-8?B?b2MyandaK0RGaENDRlJUUjV4N0F3RmY4L0JVTFhmcXQvV01DZ2hwdmc5OEFh?=
+ =?utf-8?B?UUtQemFZZEZISXJ4MUZ4V0VPakVhWWgxWWZscll1cWp2VmJOTjVnQ2lUQmJ0?=
+ =?utf-8?B?TFRZTWlNbXNheW9GMThaMW1rQ2J3cU9pOWxad0t1ekg2Yk42ZVNpbVdPaWk1?=
+ =?utf-8?B?aFN1M1ZQN3F5djUxOUlnZDdMOFpLT3ZxMjl2bkczZVJCL2duSHVudWw4WnU1?=
+ =?utf-8?B?OFRmL1liWkgya1YyanJ5RU5SMzZDd3pQeHpxbFFsYmRhMlZCNkhIRVV2N2tD?=
+ =?utf-8?Q?QlJ5pwsXDhtFXDvKi8jX22DcEllez1aQ/lWOwsg?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <9A922C28F4145640952CECF1FEAA327A@INDPRD01.PROD.OUTLOOK.COM>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250304-wip-bl-spi-offload-ad7380-v2-0-0fef61f2650a@baylibre.com>
- <20250304-wip-bl-spi-offload-ad7380-v2-2-0fef61f2650a@baylibre.com>
-In-Reply-To: <20250304-wip-bl-spi-offload-ad7380-v2-2-0fef61f2650a@baylibre.com>
-From: David Lechner <dlechner@baylibre.com>
-Date: Tue, 4 Mar 2025 15:45:10 +0100
-X-Gm-Features: AQ5f1JpGYBLGOoxbrmddIe3_7MKUmgER6V4l4XNFfg4pNtoeYf3XgHXjFSF6e-E
-Message-ID: <CAMknhBFfjo_bWZ7=9LD10y02WTVanCYhQpMNk834k8P3iQ_uFw@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] docs: iio: ad7380: add SPI offload support
-To: Angelo Dureghello <adureghello@baylibre.com>
-Cc: Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, 
-	Michael Hennerich <Michael.Hennerich@analog.com>, =?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
-	Jonathan Corbet <corbet@lwn.net>, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-doc@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-OriginatorOrg: sct-15-20-7719-20-msonline-outlook-ae5c4.templateTenant
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 366ff1af-5510-42c8-329a-08dd5b2b4da1
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Mar 2025 14:46:10.0537
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PN3PR01MB10178
 
-On Tue, Mar 4, 2025 at 10:39=E2=80=AFAM Angelo Dureghello
-<adureghello@baylibre.com> wrote:
->
-> Document SPI offload support for the ad7380 driver.
->
-> Signed-off-by: Angelo Dureghello <adureghello@baylibre.com>
-> ---
->  Documentation/iio/ad7380.rst | 54 +++++++++++++++++++++++++++++++++++---=
-------
->  1 file changed, 43 insertions(+), 11 deletions(-)
->
-> diff --git a/Documentation/iio/ad7380.rst b/Documentation/iio/ad7380.rst
-> index cff688bcc2d9601a9faf42d5e9c217486639ca66..e593ab6037b0da4cebfad1483=
-13f21cca7f00fd4 100644
-> --- a/Documentation/iio/ad7380.rst
-> +++ b/Documentation/iio/ad7380.rst
-> @@ -142,21 +142,21 @@ Example for AD7386/7/8 (2 channels parts):
->  .. code-block::
->
->            IIO   | AD7386/7/8
-> -                |         +----------------------------
-> -                |         |     _____        ______
-> -                |         |    |     |      |      |
-> +                |         +----------------------------
-> +                |         |     _____        ______
-> +                |         |    |     |      |      |
->         voltage0 | AinA0 --|--->|     |      |      |
-> -                |         |    | mux |----->| ADCA |---
-> +                |         |    | mux |----->| ADCA |---
->         voltage2 | AinA1 --|--->|     |      |      |
-> -                |         |    |_____|      |_____ |
-> -                |         |     _____        ______
-> -                |         |    |     |      |      |
-> +                |         |    |_____|      |_____ |
-> +                |         |     _____        ______
-> +                |         |    |     |      |      |
->         voltage1 | AinB0 --|--->|     |      |      |
-> -                |         |    | mux |----->| ADCB |---
-> +                |         |    | mux |----->| ADCB |---
->         voltage3 | AinB1 --|--->|     |      |      |
-> -                |         |    |_____|      |______|
-> -                |         |
-> -                |         +----------------------------
-> +                |         |    |_____|      |______|
-> +                |         |
-> +                |         +----------------------------
->
-
-It looks like this is just cleaning up whitespace, so should be in a
-separate patch.
-
->
->  When enabling sequencer mode, the effective sampling rate is divided by =
-two.
-> @@ -169,6 +169,38 @@ gain is selectable from device tree using the ``adi,=
-gain-milli`` property.
->  Refer to the typical connection diagrams section of the datasheet for pi=
-n
->  wiring.
->
-> +
-> +SPI offload support
-> +-------------------
-> +
-> +To be able to achieve the maximum sample rate, the driver can be used wi=
-th the
-> +`AXI SPI Engine`_ to provide SPI offload support.
-> +
-> +.. _AXI SPI Engine: http://analogdevicesinc.github.io/hdl/projects/ad738=
-x_fmc/index.html
-> +
-> +When SPI offload is being used, some attributes will be different.
-> +
-> +* ``in_voltage-voltage_sampling_frequency`` attribute is added for setti=
-ng the
-> +  sample rate.
-> +* ``in_voltage-voltage_sampling_frequency_available`` attribute is added=
- for
-> +  querying the max sample rate.
-> +* ``timestamp`` channel is removed.
-> +* Buffer data format may be different compared to when offload is not us=
-ed,
-> +  e.g. the ``buffer0/in_voltage0-voltage1_type`` and the
-> +  ``buffer0/in_voltage2-voltage3_type`` attributes.
-> +
-> +.. seealso:: `SPI offload support`_
-
-This is referring to the same section, so doesn't make sense here.
-
-> +
-> +Effective sample rate for buffered reads
-> +~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> +
-> +Using SPI offload, the PWM generator drives the starting of the conversi=
-on by
-> +executing the pre-recorded SPI transfer at each PWM cycle, asserting CS =
-and
-> +reading the previous available sample values for all channels.
-> +Default sample rate is set to a quite low frequency, to allow oversampli=
-ng x32,
-> +user is then reponsible to adjust ``in_voltage-voltage_sampling_frequenc=
-y`` for
-
-s/reponsible/responsible/
-
-> +the specific case.
-
-Another important thing to mention here is that for single-ended chips
-where we have 2 banks of simultaneous inputs, if at least one channel
-from each bank is enabled in a buffered read, the effective sample
-rate will be 1/2 of what ``in_voltage-voltage_sampling_frequency``
-says because a separate conversion needs to be done for each bank.
-
-> +
->  Unimplemented features
->  ----------------------
->
->
-> --
-> 2.48.1
->
+SGkNCg0KPiBPbiA0IE1hciAyMDI1LCBhdCA3OjU34oCvUE0sIEFybmQgQmVyZ21hbm4gPGFybmRA
+a2VybmVsLm9yZz4gd3JvdGU6DQo+IA0KPiBGcm9tOiBBcm5kIEJlcmdtYW5uIDxhcm5kQGFybmRi
+LmRlPg0KPiANCj4gQSBzaXplX3QgbXVzdCBiZSBwcmludGVkIHdpdGggdGhlICV6IG1vZGlmaWVy
+IGluc3RlYWQgb2YgJWw6DQo+IA0KPiBJbiBmaWxlIGluY2x1ZGVkIGZyb20gaW5jbHVkZS9saW51
+eC9kZXZpY2UuaDoxNSwNCj4gICAgICAgICAgICAgICAgIGZyb20gaW5jbHVkZS9saW51eC91c2Iu
+aDoxOSwNCj4gICAgICAgICAgICAgICAgIGZyb20gZHJpdmVycy9ncHUvZHJtL3RpbnkvYXBwbGV0
+YmRybS5jOjE5Og0KPiBkcml2ZXJzL2dwdS9kcm0vdGlueS9hcHBsZXRiZHJtLmM6IEluIGZ1bmN0
+aW9uICdhcHBsZXRiZHJtX3NlbmRfcmVxdWVzdCc6DQo+IGluY2x1ZGUvZHJtL2RybV9wcmludC5o
+OjU4OTo1NDogZXJyb3I6IGZvcm1hdCAnJWx1JyBleHBlY3RzIGFyZ3VtZW50IG9mIHR5cGUgJ2xv
+bmcgdW5zaWduZWQgaW50JywgYnV0IGFyZ3VtZW50IDQgaGFzIHR5cGUgJ3NpemVfdCcge2FrYSAn
+dW5zaWduZWQgaW50J30gWy1XZXJyb3I9Zm9ybWF0PV0NCj4gZHJpdmVycy9ncHUvZHJtL3Rpbnkv
+YXBwbGV0YmRybS5jOjE3MDoxNzogbm90ZTogaW4gZXhwYW5zaW9uIG9mIG1hY3JvICdkcm1fZXJy
+Jw0KPiAgMTcwIHwgICAgICAgICAgICAgICAgIGRybV9lcnIoZHJtLCAiQWN0dWFsIHNpemUgKCVk
+KSBkb2Vzbid0IG1hdGNoIGV4cGVjdGVkIHNpemUgKCVsdSlcbiIsDQo+ICAgICAgfCAgICAgICAg
+ICAgICAgICAgXn5+fn5+fg0KPiBkcml2ZXJzL2dwdS9kcm0vdGlueS9hcHBsZXRiZHJtLmM6IElu
+IGZ1bmN0aW9uICdhcHBsZXRiZHJtX3JlYWRfcmVzcG9uc2UnOg0KPiBpbmNsdWRlL2RybS9kcm1f
+cHJpbnQuaDo1ODk6NTQ6IGVycm9yOiBmb3JtYXQgJyVsdScgZXhwZWN0cyBhcmd1bWVudCBvZiB0
+eXBlICdsb25nIHVuc2lnbmVkIGludCcsIGJ1dCBhcmd1bWVudCA0IGhhcyB0eXBlICdzaXplX3Qn
+IHtha2EgJ3Vuc2lnbmVkIGludCd9IFstV2Vycm9yPWZvcm1hdD1dDQo+IGRyaXZlcnMvZ3B1L2Ry
+bS90aW55L2FwcGxldGJkcm0uYzoyMTE6MTc6IG5vdGU6IGluIGV4cGFuc2lvbiBvZiBtYWNybyAn
+ZHJtX2VycicNCj4gIDIxMSB8ICAgICAgICAgICAgICAgICBkcm1fZXJyKGRybSwgIkFjdHVhbCBz
+aXplICglZCkgZG9lc24ndCBtYXRjaCBleHBlY3RlZCBzaXplICglbHUpXG4iLA0KPiAgICAgIHwg
+ICAgICAgICAgICAgICAgIF5+fn5+fn4NCj4gDQo+IEZpeGVzOiAwNjcwYzJmNTZlNDUgKCJkcm0v
+dGlueTogYWRkIGRyaXZlciBmb3IgQXBwbGUgVG91Y2ggQmFycyBpbiB4ODYgTWFjcyIpDQo+IFNp
+Z25lZC1vZmYtYnk6IEFybmQgQmVyZ21hbm4gPGFybmRAYXJuZGIuZGU+DQo+IOKAlA0KDQpJdHMg
+dGhlIGR1cGxpY2F0ZSBvZjoNCg0KaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvZHJpLWRldmVsLzIw
+MjUwMzA0LWFwcGxldGJkcm0tZml4LXNpemVfdC1zcGVjaWZpZXItdjEtMS05NGZlMWQyYzkxZjhA
+a2VybmVsLm9yZy8NCg0KYXMgd2VsbCBhcw0KDQpodHRwczovL2xvcmUua2VybmVsLm9yZy9kcmkt
+ZGV2ZWwvMjAyNTAzMDQxMzU0NTYuNDI5NDA3LTEtamFuaS5uaWt1bGFAaW50ZWwuY29tLw0KDQoN
+Cg==
