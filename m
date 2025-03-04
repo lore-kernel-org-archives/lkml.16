@@ -1,183 +1,134 @@
-Received: from mail-ua1-f47.google.com (mail-ua1-f47.google.com [209.85.222.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19613280CFC;
-	Tue,  4 Mar 2025 15:16:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 595BF255247;
+	Tue,  4 Mar 2025 15:16:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741101405; cv=none; b=ZRNSXFUDAT0oBNAMp+viZROvs2fTG9SfPi2issXa10AT5pADQ9HZEFhfUWDlyLTuWGwWAI4IJaYX2zJe9GnuMknrWTpDdpDDwEBDvFhBpSGVVWDngLiE6lM6dgnEIdi7Eh2JRst0ReYT1YjFXZuq0xk+tiVja+/U7cOTv/Ve+94=
+	t=1741101410; cv=none; b=a/kyvuzCyG/hpLgTJ2TRAUZLwa+a20k/Kc+M7FR9RuEYPKZ8+gr3XV7jkPmhnVUcBXRGpWKZG51o10cXa7DyWTD1NMpUtc/keYaiaN6ZEsKEOUuYJpPM1osxz71HnKJHqJcWBDDXC6M8WMXjbX4EVmr6xuAlNKBEFhYy2ayfBxU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741101405; c=relaxed/simple;
-	bh=Dn4+zLGkSbuBY9M3LhG1oiQATnMWEDzyvJWH0JyJhYE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tp55rsqrzOKs+yW4GA0iH+sSvs52G06InveVz5MxxGE2L4nMoLKUgXCACLXAv9mIHCCl+5O5PSeFfchZUs8t12c75h9BAnzNQNBUpIWnzGbqm0QsWcWNHRJjurNxZHQhYxMvASMajH6cZTHA13ZuF9m7ArWMwpFoTnH2vjJoKGw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZefE7sUr; arc=none smtp.client-ip=209.85.222.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741101410; c=relaxed/simple;
+	bh=pxGZiXC6za5vFQ3V/0fw9IlCjpRVWVwiCZ21S4dEkDI=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=G1LZF0YltAFyMA3DXyYQNGhaAIGrjU/B+sLMcR3zdW6Su/gGIRvFuQH6rvvUnUaeixYLisBadIfBI0ChpKjzbbGh36IWJefuCH9pxANxczUyYETJqE1OuhCxShbcF6FPowipXk6vXaRE30+GgyFQO1R63xxT5zbifmS5t75/9uE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=obk45PT1; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZefE7sUr"
-Received: by mail-ua1-f47.google.com with SMTP id a1e0cc1a2514c-86929964ed3so5112252241.0;
-        Tue, 04 Mar 2025 07:16:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741101401; x=1741706201; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dBExPiSD4X8jOCvNjsvczU6ubS0LpoXpsXfZrpLd6tg=;
-        b=ZefE7sUrmiU+ZyT8b61DzxWaDHR709H+SQ9f4sKgQ3iED4fZgHRRgxPJhUJ2VmKTJE
-         bwADBO++hwKjb7oAWuaKpp1wUhC9fJzor2XmyMGtMKCvLEZgpB1ntxDtTvOlKKbfdF2S
-         WRtH5jxMZ9ndYWE5u0g3a0v313SI4LDiOdQfy1D5BWlfzZw3q6i8UB5beAw6HjiKWrhO
-         QZrtnLTn9KI5x5qvruHNtR0LcL2KKTOyC9tr+B9yhEPjeBx/3qGnN+RhpS83MP+RDsZD
-         Sbr7t7rhW5BIwBCv7rsCWBANJaeuQodQ4fEWexbLIA4WoKTQwMWmb6QbtEPIHKDXbYJP
-         r6lw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741101401; x=1741706201;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=dBExPiSD4X8jOCvNjsvczU6ubS0LpoXpsXfZrpLd6tg=;
-        b=LnXJ3Uya5+IBa5We9o7MCmMKzK87eIBJ86et7KWy0gNLdDL2IgbNzdmOqDYXT5rN90
-         FEELoiPUEjkTNWOZ13mFF5FsqJm6Ym+MH/lNU1u9cHndrqHbJ9+8NV66gIsOUC+hPO7V
-         yJtzVsb9Sse8shghC/IYBpMHZwgWwL9wo2i2m9n0sVjvfi7Fau8DQAOLf6w5AMjLfX5w
-         sTM8vupdGiB3Tcx833DBmFZA8IbHJaTUDYPBxk41eWflOFJTxbtU4qI5u4dpR2QMSXyU
-         R9BYVDkNP2mPjV0sCCb1GqWQGyGQhQuBV27GbqnTxotsgaXqpSwbg17td+s+46KDv4KU
-         AUTg==
-X-Forwarded-Encrypted: i=1; AJvYcCUSjpytGZP/TohHOrQR5I1wH5cTQhPw9YtuiYaARiCOaRpd25iF7rC6APcaPJKwuXJt1nCT02TnINY=@vger.kernel.org, AJvYcCVpIoLxc3061NiTG+L3ErEGmtLE8I+766yWOtkkLgDXPt7IuTJSs9uJzLvBW9yug2VFanbg01RZWiXGDLDr@vger.kernel.org, AJvYcCWE+JmBPWTM97u+/UOQgs1scuHotnCsDp2X/55psnlnEaUMSwnkOluTiA+QqhJYwuqKciDO7kUwrmAMis4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzTPQ/m/Nur7EyCGLutdGw9XcgNle+k0gBHw5LVznaifFqyijnr
-	wsfsQeFr7SfeI0v3yiHtK7KYW6+RZVsRGvmZmfZeJZEHcgM8rnWodsItvLCla7xdnTJFTLxl6Ip
-	UsBJPtxmXWupQCCdZkm6HlR6+KiU=
-X-Gm-Gg: ASbGncuUwE3bVAoVdRFpgY32RYfsWN7ut21fxc4ziCQGxbZSPkWLCjc4pfAZQ6gq2nq
-	XT9hNfQM/fh2uaBWYK2XR57QSIZAKLGbGfXPKNZ8K/aBGBz7M3VMGMMcXNP9+gqaMIEiGKrQKzE
-	46hLE8BANqSzZQOfhMQCtPRGWY
-X-Google-Smtp-Source: AGHT+IGiNXqMGZ/VCHM60oIynHo3ET2jPjUUoug+Y8PqqaIJx18YeTZsTGCb6GlaJbQZW0tfvKrzKsTqVti3TGE7cUI=
-X-Received: by 2002:a05:6102:4189:b0:4c1:a53d:c24b with SMTP id
- ada2fe7eead31-4c1a53dc383mr3854575137.23.1741101400328; Tue, 04 Mar 2025
- 07:16:40 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="obk45PT1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1741101406;
+	bh=pxGZiXC6za5vFQ3V/0fw9IlCjpRVWVwiCZ21S4dEkDI=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=obk45PT1hiFCwR4gOShJURghXzyJM+ZaDykUZb+JuDXWEwxjv2z5kNky2Acb68W6W
+	 x5kqfPgxPrGUUyX8UYsFTFR5YC0LYdKXAqTBHVrlj1nwhBMwqx9wKES+jAuuSmTm85
+	 Q+7B6MSyl/rsClN8FoRGDbJGjgrp2ttBMkWr0QwZY26CfXDbTzY1ZoVc13M3uZKl8V
+	 c8JeCJKv+9G8NagN8krC0H6+rwdNNg2D6xVT4elSQs+hP6nHdL7lH2srzDG0tnx6CD
+	 fw4HA+/I1EEBGq1G+W3TOO3ipEgx1ewsFTrMOGo4uc6HLo5CpmE5gPNG57G/IrdOAs
+	 8w7xdUWinObWw==
+Received: from [192.168.0.47] (unknown [IPv6:2804:14c:1a9:53ee::1001])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: nfraprado)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id A1DEC17E07F8;
+	Tue,  4 Mar 2025 16:16:41 +0100 (CET)
+From: =?utf-8?q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= <nfraprado@collabora.com>
+Date: Tue, 04 Mar 2025 12:15:48 -0300
+Subject: [PATCH v3 07/20] ASoC: mediatek: mt6359-accdet: Drop dead code for
+ EINT/GPIO IRQ handling
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250304-initial-support-for-max77705-sensors-v2-1-58d2207c732b@gmail.com>
- <4e9a2383-108a-4440-8f55-77679a79e36e@roeck-us.net>
-In-Reply-To: <4e9a2383-108a-4440-8f55-77679a79e36e@roeck-us.net>
-From: Dzmitry Sankouski <dsankouski@gmail.com>
-Date: Tue, 4 Mar 2025 18:16:29 +0300
-X-Gm-Features: AQ5f1JqS56tyVOI6OUdCZnIl_32rX0ffxN2S021rHpFmP3HaKf7zWOvDUhUXb1w
-Message-ID: <CABTCjFDsutg-BOKqH++_pYNaeX6SezVL0iyuePVA7m5gXA3Ftw@mail.gmail.com>
-Subject: Re: [PATCH v2] hwmon: (max77705) add initial support
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Jean Delvare <jdelvare@suse.com>, Jonathan Corbet <corbet@lwn.net>, linux-hwmon@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20250304-mt6359-accdet-dts-v3-7-5b0eafc29f5b@collabora.com>
+References: <20250304-mt6359-accdet-dts-v3-0-5b0eafc29f5b@collabora.com>
+In-Reply-To: <20250304-mt6359-accdet-dts-v3-0-5b0eafc29f5b@collabora.com>
+To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Matthias Brugger <matthias.bgg@gmail.com>, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+ Sen Chu <sen.chu@mediatek.com>, Sean Wang <sean.wang@mediatek.com>, 
+ Macpaul Lin <macpaul.lin@mediatek.com>, Lee Jones <lee@kernel.org>, 
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
+Cc: kernel@collabora.com, linux-sound@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
+ linux-pm@vger.kernel.org, 
+ =?utf-8?q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= <nfraprado@collabora.com>
+X-Mailer: b4 0.14.2
 
-=D0=B2=D1=82, 4 =D0=BC=D0=B0=D1=80. 2025=E2=80=AF=D0=B3. =D0=B2 14:38, Guen=
-ter Roeck <linux@roeck-us.net>:
->
-> On 3/4/25 03:08, Dzmitry Sankouski wrote:
-> > Add support for max77705 hwmon. Includes charger input, system bus, and
-> > vbyp measurements.
-> >
-> > Signed-off-by: Dzmitry Sankouski <dsankouski@gmail.com>
-> > ---
-> > Maxim MAX77705 is a Companion Power Management and Type-C interface IC.
-> > It includes charger and fuel gauge blocks, and is capable of measuring
-> > charger input current, system bus volatage and current, and bypass
-> > voltage.
->
-> That makes me wonder if this should be implemented in drivers/power/suppl=
-y/
-> and utilize the power_supply->hwmon bridge. That seems to make more sense
-> to me than implementing a separate hwmon driver.
->
+The ACCDET supports two modes for IRQ generation: PMIC EINT or AP GPIO,
+which in principle could be configured through a DT property. However
+this DT property has no user nor is documented in a binding, and the
+driver only implements the PMIC EINT case, so drop the unused code
+intended to handle both cases.
 
-This chip incorporates charger and fuel gauge, which are modeled as power
-supply class drivers. These measurements, however, doesn't belong to any of
-mentioned drivers. For example, ISYS is the system bus current, but it
-not charger attribute, because charger output is split between battery and
-system bus.
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Signed-off-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
+---
+ sound/soc/codecs/mt6359-accdet.c | 20 +++-----------------
+ 1 file changed, 3 insertions(+), 17 deletions(-)
 
-Powering diagram:
+diff --git a/sound/soc/codecs/mt6359-accdet.c b/sound/soc/codecs/mt6359-accdet.c
+index 1d4481109f6e4f473610e0797c9d3c636bdf12cf..ce8a5e64e0b9ca508124043ca1f93aaa3cc5f9a0 100644
+--- a/sound/soc/codecs/mt6359-accdet.c
++++ b/sound/soc/codecs/mt6359-accdet.c
+@@ -31,9 +31,6 @@
+ #define REGISTER_VAL(x)	((x) - 1)
+ 
+ /* mt6359 accdet capability */
+-#define ACCDET_PMIC_EINT_IRQ		BIT(0)
+-#define ACCDET_AP_GPIO_EINT		BIT(1)
+-
+ #define ACCDET_PMIC_EINT0		BIT(2)
+ #define ACCDET_PMIC_EINT1		BIT(3)
+ #define ACCDET_PMIC_BI_EINT		BIT(4)
+@@ -448,8 +445,7 @@ static void mt6359_accdet_jd_work(struct work_struct *work)
+ 		mt6359_accdet_recover_jd_setting(priv);
+ 	}
+ 
+-	if (priv->caps & ACCDET_PMIC_EINT_IRQ)
+-		recover_eint_setting(priv);
++	recover_eint_setting(priv);
+ 	mutex_unlock(&priv->res_lock);
+ }
+ 
+@@ -580,14 +576,6 @@ static int mt6359_accdet_parse_dt(struct mt6359_accdet *priv)
+ 
+ 	priv->data->hp_eint_high = of_property_read_bool(node, "mediatek,hp-eint-high");
+ 
+-	ret = of_property_read_u32(node, "mediatek,eint-use-ap", &tmp);
+-	if (ret)
+-		tmp = 0;
+-	if (tmp == 0)
+-		priv->caps |= ACCDET_PMIC_EINT_IRQ;
+-	else if (tmp == 1)
+-		priv->caps |= ACCDET_AP_GPIO_EINT;
+-
+ 	ret = of_property_read_u32(node, "mediatek,eint-detect-mode",
+ 				   &priv->data->eint_detect_mode);
+ 	if (ret) {
+@@ -902,10 +890,8 @@ static void mt6359_accdet_init(struct mt6359_accdet *priv)
+ 				   0x3 << RG_ANALOGFDEN_SFT);
+ 	}
+ 
+-	if (priv->caps & ACCDET_PMIC_EINT_IRQ) {
+-		config_eint_init_by_mode(priv);
+-		config_digital_init_by_mode(priv);
+-	}
++	config_eint_init_by_mode(priv);
++	config_digital_init_by_mode(priv);
+ }
+ 
+ int mt6359_accdet_enable_jack_detect(struct snd_soc_component *component,
 
-----------              ---------      ------------      --------------
-|usb port|<--[input]--> |charger| <--> |fuel gauge| <--> |battery pack|
-----------              ---------      ------------      --------------
-                            |
-                            |
-                            |---> [system bus]
+-- 
+2.48.1
 
-See also https://patches.linaro.org/project/linux-leds/patch/20241217-starq=
-ltechn_integration_upstream-v12-2-ed840944f948@gmail.com/#952337
-
-> >
-> > Add support for mentioned measurements.
-> > ---
-> > Changes in v2:
-> > - EDITME: describe what is new in this series revision.
-> > - EDITME: use bulletpoints and terse descriptions.
-> > - Link to v1: https://lore.kernel.org/r/20250225-initial-support-for-ma=
-x77705-sensors-v1-1-2be6467628b0@gmail.com
->
-> ???
->
-
-sorry, I forgot to edit that
-
-(...)
-> > +static umode_t max77705_is_visible(const void *data,
-> > +                                enum hwmon_sensor_types type,
-> > +                                u32 attr, int channel)
-> > +{
-> > +     switch (type) {
-> > +     case hwmon_in:
-> > +             if (channel >=3D ARRAY_SIZE(voltage_channel_desc))
-> > +                     return 0;
-> > +
-> > +             switch (attr) {
-> > +             case hwmon_in_input:
-> > +             case hwmon_in_label:
-> > +                     return 0444;
-> > +             default:
-> > +                     break;
-> > +             }
-> > +             break;
-> > +     case hwmon_curr:
-> > +             if (channel >=3D ARRAY_SIZE(current_channel_desc))
-> > +                     return 0;
-> > +
-> > +             switch (attr) {
-> > +             case hwmon_curr_input:
-> > +             case hwmon_in_label:
-> > +                     return 0444;
-> > +             case hwmon_curr_average:
-> > +                     if (current_channel_desc[channel].avg_reg)
-> > +                             return 0444;
-> > +             default:
-> > +                     break;
-> > +             }
-> > +             break;
->
-> The chip provides temperature measurements. Why not support it ?
->
-
-It provides temperature sensing in the fuel gauge block, so it is handled t=
-here.
-
-> Also, how about limits ? Doesn't the chip support any ? There do
-> seem to be some threshold registers.
->
-
-It has a register in the charger block to limit IIN current. It also has VB=
-YP
-interrupt, but I didn't found how the limit is set. Actually, I have a feel=
-ing
-these measurements are implemented by chip firmware, rather than some IP
-solution.
-
-(...)
-
---=20
-Best regards and thanks for review,
-Dzmitry
