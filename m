@@ -1,128 +1,101 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from fw2.prolan.hu (fw2.prolan.hu [193.68.50.107])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE92A1FCFCC;
-	Tue,  4 Mar 2025 09:56:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DADB242077;
+	Tue,  4 Mar 2025 09:57:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.68.50.107
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741082163; cv=none; b=iklqVengusQBaCe3m+vOcLg9YkfCoUT2E80OrYnJ2aP3Lg8qFn2BVslNOIa+bnwrgPViETlMnawTcX4bFmvZLCbYpyYbVBNZvZ6jheQTQ7IqD5g4U/Y03bK0ihHga4+eSZnADfAom7vruRlVvFa0EfrywA35vES25EBd3gd3xXE=
+	t=1741082237; cv=none; b=kzr+s40nSdKzvRe6xUNLHGiLdIvO/Bk8cwwFjukbI9qzyduJ+euEQVq7i+8rnQFyGm6q4OaKu9qCh/8h07i15iBNaMSPfSuGJqr1GHQqoEX/q54leuz0RF9XYHV8vRy0g6HYihvivZwC8ecQIOwOb87V+z2+0et85z4ARjAZzW0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741082163; c=relaxed/simple;
-	bh=o51jYiIjJ7Hl+a6ZtvtnyQKJHKFVcGivr4VSA+BfR1A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=X9zhnNNVz+ndTDef9LeVdLu42W2s+1YiszfFc/BzbQvFIo2yaJrcYUY/Cyf5vjNm24PNE1EsMGlaJ66zXwDQ5SETZ5hmX0GTLZtmCgts67coIHT8p6CQ6Jhn2qj/R5grOC2nS5xLqEwJ5/jYzQnkh3XIDajkJAw6hK+10ZvAkJM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ps19xneF; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1741082237; c=relaxed/simple;
+	bh=PaNTGi8a1kzuyCrlfcyODv4zfwA4Iq2DyYt1R4ODsq0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=YZfpT3uqMq9l0v3mSMQuNkA+jCZtAZj0u4i1rJEK5CpBWHBlvwbfCf18DIeKvd9XNWBxmWo+gQ4tGTMQXInmUiOes9E3+JRKMnsgeBCehcy+nR7TFEOIBLmORr86bqNv38atF6NOh5FkcH+UaZJl18R9KGT3Amx/CqFp07sUzuw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu; spf=pass smtp.mailfrom=prolan.hu; dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b=gXmHO5nR; arc=none smtp.client-ip=193.68.50.107
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=prolan.hu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ps19xneF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741082162; x=1772618162;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=o51jYiIjJ7Hl+a6ZtvtnyQKJHKFVcGivr4VSA+BfR1A=;
-  b=Ps19xneF4D3M6cdUHBwSS+SYYl53IciSEvEWKQXVYu3aCDUh3RLnS8QY
-   0pe0O5CRMl3UV8eHpPzEUhUu+tfJeALFgFxJIGaoTeuWQtmLBmAE4dhnD
-   DYqvCPd0wuXC71RAsfZ9RWeRos8j2IyewvAZSweg/kUCI7UzQeFzIJzio
-   qPfHnqhypzE3B5BAFB4A6igpEiOAWw3+eeH+M3toUZLrJAA9dpPsAKE2y
-   QyqH+RB4PuBa1LCF90TyZdk9ThVDvY+W3LiEZaWmBDtyM0yylMxsKTsJf
-   APiifh0mzdbtmMuVdy92jM8v3vq9Ymy07dHgRmD6J8I36w9YbjsNlBEvh
-   A==;
-X-CSE-ConnectionGUID: 7pgFDQdxTzmqFAFM+f8FkA==
-X-CSE-MsgGUID: FlAd9TfXS0m4fU0rJSW1lQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11362"; a="45767245"
-X-IronPort-AV: E=Sophos;i="6.13,331,1732608000"; 
-   d="scan'208";a="45767245"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2025 01:56:02 -0800
-X-CSE-ConnectionGUID: 9/id7rMqQ4+3Zhh40VmpKg==
-X-CSE-MsgGUID: ljCGWTOARy6fccCifDPeXg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="118840957"
-Received: from mev-dev.igk.intel.com ([10.237.112.144])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2025 01:55:58 -0800
-Date: Tue, 4 Mar 2025 10:51:57 +0100
-From: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
-To: Leon Romanovsky <leonro@nvidia.com>
-Cc: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>,
-	Tariq Toukan <tariqt@nvidia.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Eric Dumazet <edumazet@google.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	Saeed Mahameed <saeedm@nvidia.com>, Gal Pressman <gal@nvidia.com>,
-	netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next 6/6] net/mlx5e: Properly match IPsec subnet
- addresses
-Message-ID: <Z8bNPRtzOBZ7LdGJ@mev-dev.igk.intel.com>
-References: <20250226114752.104838-1-tariqt@nvidia.com>
- <20250226114752.104838-7-tariqt@nvidia.com>
- <Z8aw1gn5iFNiSxd3@mev-dev.igk.intel.com>
- <20250304080543.GD1955273@unreal>
+	dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b="gXmHO5nR"
+Received: from proxmox-mailgw.intranet.prolan.hu (localhost.localdomain [127.0.0.1])
+	by proxmox-mailgw.intranet.prolan.hu (Proxmox) with ESMTP id 9F867A0391;
+	Tue,  4 Mar 2025 10:57:06 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prolan.hu; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:from:from:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to; s=mail; bh=O7eD0wrs+km6lrs+4i3I
+	I34UDaTR3ANIVNOTTBmkqxM=; b=gXmHO5nR2oYypWDnMoZKH4nKOSeHA36L1egR
+	4SdB5UtMA8/0L+c05ZMZL29MmIuG5kP51lVcgLVcELGIDwhBowTs9g8Ns2sxS9O1
+	fulfKvQHC+mFwI2zQy9ri0A7kQpKy+0PJ1/82Csb44K5VkV80pb34avi686oXReT
+	z1rkeTzjmetXB1veEGDkSuFkspqFGluWWNgvSLsgtNP2d5b7lzQ24CWvlj1mhP6h
+	+OClikhWU5QzDbr8bj5xNRv2yMCO1lXgt+fXwGOxMo+NL1fJ4o3F53iyCOXaYvcz
+	uVg529HwBL01D/XuK0yA0uD6jyF3z2w16Jr0PXO+3NEAGKn84RYoqKjkXAdYkymp
+	NJTnq1udc2M4KHPKdI4EpnOXhNi5B6MuiOU8xoaKv+bcejHdWWuMklw1PDujlYpo
+	FQjs82lWj/bF4uG2cUpLQntjuTshSmDYOpjlz9wKjG1I8vk/pIAatMf02/PkE9OZ
+	ty0vqHXfcVyTUTNrapoVdGZ3Ja++KvuuLRDrFj5KeeC6OA0N2O3f7AN+6CuA+QWJ
+	g8jHhkHJHfsBeD4uP9Ct77MqargS6eEt58bq2zu0Fxh5ipsMKNKsKem6TYhgL0XI
+	Yfw6WWTAFyPpQVebPxcaenimSGSkAFJTUKjCTkwjcVR95SjNdFcWhffaBGXecMY+
+	x2QsKTQ=
+Message-ID: <9fcf9cf4-ba02-4583-9e14-bd650dbe32ee@prolan.hu>
+Date: Tue, 4 Mar 2025 10:57:05 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250304080543.GD1955273@unreal>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 2/3] counter: microchip-tcb-capture: Add IRQ handling
+To: William Breathitt Gray <wbg@kernel.org>
+CC: <linux-arm-kernel@lists.infradead.org>, <linux-iio@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, Kamel Bouhara <kamel.bouhara@bootlin.com>
+References: <20250227144023.64530-1-csokas.bence@prolan.hu>
+ <20250227144023.64530-3-csokas.bence@prolan.hu> <Z8alaOTjZeRuXnUI@ishi>
+Content-Language: en-US, hu-HU
+From: =?UTF-8?B?Q3PDs2vDoXMgQmVuY2U=?= <csokas.bence@prolan.hu>
+In-Reply-To: <Z8alaOTjZeRuXnUI@ishi>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: ATLAS.intranet.prolan.hu (10.254.0.229) To
+ ATLAS.intranet.prolan.hu (10.254.0.229)
+X-EsetResult: clean, is OK
+X-EsetId: 37303A2980D94852637260
 
-On Tue, Mar 04, 2025 at 10:05:43AM +0200, Leon Romanovsky wrote:
-> On Tue, Mar 04, 2025 at 08:50:46AM +0100, Michal Swiatkowski wrote:
-> > On Wed, Feb 26, 2025 at 01:47:52PM +0200, Tariq Toukan wrote:
-> > > From: Leon Romanovsky <leonro@nvidia.com>
-> > > 
-> > > Existing match criteria didn't allow to match whole subnet and
-> > > only by specific addresses only. This caused to tunnel mode do not
-> > > forward such traffic through relevant SA.
-> > > 
-> > > In tunnel mode, policies look like this:
-> > > src 192.169.0.0/16 dst 192.169.0.0/16
-> > >         dir out priority 383615 ptype main
-> > >         tmpl src 192.169.101.2 dst 192.169.101.1
-> > >                 proto esp spi 0xc5141c18 reqid 1 mode tunnel
-> > >         crypto offload parameters: dev eth2 mode packet
-> > > 
-> > > In this case, the XFRM core code handled all subnet calculations and
-> > > forwarded network address to the drivers e.g. 192.169.0.0.
-> > > 
-> > > For mlx5 devices, there is a need to set relevant prefix e.g. 0xFFFF00
-> > > to perform flow steering match operation.
-> > > 
-> > > Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
-> > > Signed-off-by: Tariq Toukan <tariqt@nvidia.com>
-> > > ---
-> > >  .../mellanox/mlx5/core/en_accel/ipsec.c       | 49 +++++++++++++++++++
-> > >  .../mellanox/mlx5/core/en_accel/ipsec.h       |  9 +++-
-> > >  .../mellanox/mlx5/core/en_accel/ipsec_fs.c    | 20 +++++---
-> > >  3 files changed, 69 insertions(+), 9 deletions(-)
-> > > 
-> > 
-> > [...]
-> > 
-> > >  
-> > > +static __be32 word_to_mask(int prefix)
-> > > +{
-> > > +	if (prefix < 0)
-> > > +		return 0;
-> > > +
-> > > +	if (!prefix || prefix > 31)
-> > > +		return cpu_to_be32(0xFFFFFFFF);
-> > > +
-> > > +	return cpu_to_be32(((1U << prefix) - 1) << (32 - prefix));
-> > 
-> > Isn't it GENMASK(31, 32 - prefix)? I don't know if it is preferable to
-> > use this macro in such place.
+Hi,
+
+On 2025. 03. 04. 8:02, William Breathitt Gray wrote:
+> In theory, the error code could be something else if of_irq_get() failed
+> for any other reason. Handle all those error cases at once by checking
+> IS_ERR(priv->irq) rather than just -EPROBE_DEFER. Then you can just
+> return dev_err_probe() with priv->irq for the error code.
+
+Yes, `of_irq_get()` can return an error, for example if the IRQ is not 
+defined in the DT. In these cases, we just don't do IRQ, but still allow 
+the device to probe. -EPROBE_DEFER is special in this case, because it 
+signifies that there *is* an IRQ to set up, just not now.
+
+>> +enum counter_mchp_event_channels {
+>> +	COUNTER_MCHP_EVCHN_CV = 0,
+>> +	COUNTER_MCHP_EVCHN_RA = 0,
+>> +	COUNTER_MCHP_EVCHN_RB,
+>> +	COUNTER_MCHP_EVCHN_RC,
+>> +};
 > 
-> GENMASK(a, b) expects "b" to be const type, see
-> #define GENMASK_INPUT_CHECK(h, l) BUILD_BUG_ON_ZERO(const_true((l) > (h)))
+> These would be better as preprocessor defines in case we need to
+> introduce new events to channel 1 or 2 in the future. That would allow
+> us to insert new events easily to existing channels without having to
+> worry about its actual position in an enum list.
+
+Okay. I personally like the enum interface more, as it is much cleaner, 
+but if there's a good reason to use #define's, then so be it.
+
+> One additional benefit is if we do end up introducing more Counts for
+> the module. In that situation we would have multiple CV and RA/RB/RC per
+> Counter device, but we can easily define a preprocessor macro to
+> calculate the channel offset given the Count index. However, with enum
+> structure we would have to manually add and maintain redundant defines
+> for each Count, which is far less ideal.
 > 
+> William Breathitt Gray
 
-Sorry, I didn't know that, thanks.
+Bence
 
-> Thanks
