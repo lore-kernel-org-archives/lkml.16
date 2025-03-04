@@ -1,79 +1,79 @@
 Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D8C233998
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 23:05:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62F5127816D
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 23:05:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741129510; cv=none; b=bihXwX05VDzt2jIzJRdo8vXOLcniidgiAhTt/lQy62vpHoUZSekTvhlfOp/wLTymgKo0IO/IKQaLOvGrUPeeL6GXkJcb/ULE2jBKT5G2FUpjzflDE+j5SsaTZFv6u1xNqN1B6DVC+tCe/DCUKVHii7/Ct9+PBSlWPa8bG94qWaA=
+	t=1741129513; cv=none; b=meDy85Ra9eDgFa9lFPRuscySFRwwkfWnGWhWNqcssjod6QhPzcfzIUj0w+IC9OyqGlcwUkdCjLNiimW+PdIt9OtCHENVvILO6JNiKik8tSmOaoj679n4YtMqpv3UoZDw/w1ewzZwHgZcpsAfPELRr62gPnu2FfgZv4krNYU1tuo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741129510; c=relaxed/simple;
-	bh=Hm34EcCZY7Nya6IWrGgD3q/+JNM1BPaGd40TDCxo+LM=;
+	s=arc-20240116; t=1741129513; c=relaxed/simple;
+	bh=DNXVnMOqwb8fWB/J/SIbMZJRwIg2Q5PHwQoBAEHkhoQ=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=UbmynSmT6XAU97iOLUqmxWCodD2b9A4yYHjBUkamV5Zduc4gqluTmxHVOtkXtWHbnz/3cdMfw+4RVHOO4kQTGR5rlVh2pxd13qlroVxDy7g5veEUGpSr949nff+U5OWP1dU3QG2jk17P4FYKJjOFhLbNpGZhvA0gay/S0LAbWGA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=cWiRtKWa; arc=none smtp.client-ip=205.220.180.131
+	 MIME-Version; b=bTqyEc2LXm4qyehTMV0MP7KiekfPD7pl5RAbPrCHIzMvEtGiAbzSHltA9ca0vu1lqUTcjRvYvaXrOJCk3w+9Qg6ne7+1WoCUFtVoBtZpwjya7HtQsch2jFqXTKHgB8u0y6f4/cqB746IeRWgc+oL9mejz5MWCAdd2a0hbLzYpkI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=GvqL0/GC; arc=none smtp.client-ip=205.220.180.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="cWiRtKWa"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 524LbPLr005995
-	for <linux-kernel@vger.kernel.org>; Tue, 4 Mar 2025 23:05:07 GMT
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="GvqL0/GC"
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 524L2ML3010345
+	for <linux-kernel@vger.kernel.org>; Tue, 4 Mar 2025 23:05:10 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
 	cc:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=qcppdkim1; bh=/E2f4sNa5dJ
-	1J/+u/sCAiw4E4qFHfywaLempWlQrqbI=; b=cWiRtKWaXT170egx/cfGYPZPCB7
-	sX/WzXJxsY2RmA23d8i7Vg+BXuFSZMK9Hj732aQJm/FuBGXFSPqAGR5/m7XAv0Gy
-	L7xk6IzawjX8nfZRcnc5cHXfBezTZcAZ0jlTDfxM27ZUu8Jlz0jSrq/BdjbUNLQ1
-	r6VSx5mIW6VJeD1bHPCz9H14WohiHRDFyZ5wKlRvzpGrEOoPkRB5NXEbsPV6ss+V
-	1m5mKS5aOedGFvni5JC84mwVVO1SwHF71C5BrQ0rHObOwZXHdCxLGXLPIhx+9LIf
-	YwNCg5T2c51d6f1cGlt/BZAhhD7YB+7nsqBllwrYTlaoXxretRnv0v42/Cg==
-Received: from mail-pl1-f197.google.com (mail-pl1-f197.google.com [209.85.214.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 455p6tkdnd-1
+	:mime-version:references:subject:to; s=qcppdkim1; bh=egiacthqZDG
+	pHiFeoWLEDtn1W1SQg/ufELhmV7ySKG4=; b=GvqL0/GCEbnD1s1N7XYco/JqZoU
+	QtVb3tqbwiSRkA6EYFqAkTtbIfzAy3f+4GjRbXajqp9L3NCDt8JgC5E46bwK2mAi
+	bTk1TnVoIO1iJHIdWgpAvKSPQ7E9TBfYXzhWqnL772uUXjxZo+2ZMzaSOpHWd2z/
+	m4yWSqW6puiAK0Edil0kYWZFpgpuWN/QGko3/688yC5RDptIV+/zI4pdDt2Yjeb+
+	q8Qh4GpCrLNmPp/NkoZ8NDBnd11dzaSOmAFguA4AIsuqnmy1POET2XkXVleXWdKz
+	h15eRtOhRbex8kBu5/YftX9w1vU19qgNpGJL707Wh4UxAhUkOc86xMT524w==
+Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com [209.85.214.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 455p6wkcxe-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Tue, 04 Mar 2025 23:05:07 +0000 (GMT)
-Received: by mail-pl1-f197.google.com with SMTP id d9443c01a7336-22368fafed1so120915535ad.3
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Mar 2025 15:05:07 -0800 (PST)
+	for <linux-kernel@vger.kernel.org>; Tue, 04 Mar 2025 23:05:10 +0000 (GMT)
+Received: by mail-pl1-f200.google.com with SMTP id d9443c01a7336-22328fb6cbfso109777745ad.2
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Mar 2025 15:05:09 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741129506; x=1741734306;
+        d=1e100.net; s=20230601; t=1741129509; x=1741734309;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=/E2f4sNa5dJ1J/+u/sCAiw4E4qFHfywaLempWlQrqbI=;
-        b=HucY+7ivIs9sSiem/m9/SFaO1yoHwBBlQZdEeqY1rZq+fs4pxrHohGJvlfX/ClL630
-         07s4pAlcHA9QLQI0s36hD5lKsQDr5C6gNd82i5WVMFP/uLTye//GZ0aAtORQ71Hu7T7g
-         KiVaKcFHWdX8kMS2FUJMPtJY1tR2bZVgFa3oxAgucIvcmFVodYhHLyZ1E0MaSLDb5FRT
-         H2irVds+n0xTSSOAsU5hZhDbprB2JbJTvB+1ehO7vCBlIktwc+Zvyu/PVfLAMD8FqzhI
-         lsXrACAjV5Mp49VWnREol7+wxCk1Fw7725MfQwMmdKAQrLCtPYdrKB3DN+GVLG/CuOy/
-         F3XA==
-X-Forwarded-Encrypted: i=1; AJvYcCVydkcJeANePI8qLP+yfHGntDXT4L/PKA6e/79AueO6QxKpNevN5B2kyaARMnNZWwZdA/EILTfyHQ3jU7k=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzTI9zN/ToEbmJVpK1XkHiSCHgLV+om5NeUVvvrbrFTDnwUFoOY
-	yCgmSdvS2ugVX03gy3Cxt/cLrAD9pq5o1hDRORmL8JGITrWkEvKCYUGXg5bYFJjcaI1UjCdStRT
-	ezeWnhdzhEJWUkIqONg3qZeVF1h+8mGpfhmnB1tQLF0v0KKmb+SELPGMLWSHWf68=
-X-Gm-Gg: ASbGnct3cDk2eoBb2kie0RHhSY0n4rdxb4qO5PK3F0Zauz1V1PKOGzfM6xwLKRXPMGQ
-	siZRBvVhgPujhgmFGo3MOPqE490OW7p7rL1vcuEx4puX+5eCnZuUlUHhqvYUjH1ANgjynLwNP+O
-	5PWQmUS0Ha9oS5bVLkkMZYN4BIaJxE3qyB3I7XJLb+yO28wcOk33wDnACEyf+9I7IeEvuF7GYLC
-	iiA0jB8R8wfWa/Nntvx28SoIC9x5VM84a31sNhZE4RU0coYJkkn46TdHoqqzs6od6viMXqE6sPI
-	OThO0Mqw8Z1lQE97kRctflWmK0JcKmfoV0Apo7ZwZ4LXv5kmDhFqvZktomuew+tnSiGZeN6A/pL
-	3Rq4=
-X-Received: by 2002:a17:903:1252:b0:21f:564:80a4 with SMTP id d9443c01a7336-223f1d2641dmr11146325ad.33.1741129505751;
-        Tue, 04 Mar 2025 15:05:05 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IF5dQHM+3gLIyGw066Ot+0ZAb8HayBTD5e77YOaWae5RvBWVgFXgTWYoWP7HVE36wOIfNe0rQ==
-X-Received: by 2002:a17:903:1252:b0:21f:564:80a4 with SMTP id d9443c01a7336-223f1d2641dmr11145955ad.33.1741129505362;
-        Tue, 04 Mar 2025 15:05:05 -0800 (PST)
+        bh=egiacthqZDGpHiFeoWLEDtn1W1SQg/ufELhmV7ySKG4=;
+        b=aNSYb/4HPO80G8F36inUPdx906zZMGMW1cbPZOqk+SQ7hn9kv6v+AdTjoofRLWO2Bw
+         InXBsIsyaANyyIJBrkNX/OXXXYBNFZtBGKyRgTCwt77VSKh9QjfIXdoCC+RhM/2F9jDb
+         bYmSVMw9Xmpl5QdpFOiRZ3hVcpwqYTzyHyoh9JUwglkkyF7Y4yO3hJtZfD6Ep4QkHu2x
+         /JfWbmtc+FXSwFqXOf03ORRschnOUBRWsT8A7u1zBisnHyR45pKV0ra7FGHCdxm2mh+o
+         ehtfnZWr1dlheBVup4dig/0NRLwn0Qy8YrkfZ8yR/t1pS3rGx48J0H4pmpmZcW+ssaH4
+         sTDw==
+X-Forwarded-Encrypted: i=1; AJvYcCW9LW0AXBk6VBx4O1ssm8ED3nC0DrQ1jxBA8eZvIuR1zHPvGhdCxPOygaGkcVy18Gx0ZHkj+qMn/Sx3x0U=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy9ld/lAVCumu81zm/kPfKEgfqLbix1pw9rzimIJrl0P09mCLax
+	ZXkwyUeP8uiSA+Q6bQ1W/JqJJh8m7nagRkkeKJ/JLdckoCiEIUnvRB4rGb6xmyDHOn258QKkgpA
+	VlqfqZ2MQRTuQ3D+v13fzf32sdOPPy+2gh4kWY9ev7Tcw418+P43Ad7Qx8RUOCD0=
+X-Gm-Gg: ASbGncsK084djz1FjPGHgbIHlX2EeRy/8lAxEnSl+LYuxc6Pwwkg5ikqhH30NpQxN6T
+	kpGrOUElspdlD9hdXT/qlsb9VZbmATs8UzdJhqLCTa/hJmFxp7IEzXgAgBehoVjP9Lv6O+a8od6
+	P9L25yPH0cjPbA8SKr1EoTtLshhrZvZktpoR3UiZc0a9I8r+BLC33NU0tdf5YINUrSTR3QP52tg
+	rG7Vy45SZxSjtwYCHhA7YuL13UJKADkSgisjf+l66OHK7Xe/ANRrLbId1ic0DX6Xa0p/82NtDRT
+	+ZfXqUaCezkm5F7xqFthQZgJgCUv9mOpxb2dTPWQcJCaejd/59o1rwvvZ51vdExNxGRZr73roi8
+	VocE=
+X-Received: by 2002:a05:6a21:8dc2:b0:1ee:e701:1fab with SMTP id adf61e73a8af0-1f3495bea3amr1756313637.36.1741129508704;
+        Tue, 04 Mar 2025 15:05:08 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFbz+RyBjUh8IVTJNjwpudpriztlUQAAl7x7PmY8XHiOVBwrL7q4emwJnolK8CS8pXOyDaBXQ==
+X-Received: by 2002:a05:6a21:8dc2:b0:1ee:e701:1fab with SMTP id adf61e73a8af0-1f3495bea3amr1756264637.36.1741129508261;
+        Tue, 04 Mar 2025 15:05:08 -0800 (PST)
 Received: from hu-amelende-lv.qualcomm.com (Global_NAT1.qualcomm.com. [129.46.96.20])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7349fe6cfd9sm11492793b3a.76.2025.03.04.15.05.03
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7349fe6cfd9sm11492793b3a.76.2025.03.04.15.05.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Mar 2025 15:05:04 -0800 (PST)
+        Tue, 04 Mar 2025 15:05:07 -0800 (PST)
 From: Anjelique Melendez <anjelique.melendez@oss.qualcomm.com>
 To: amitk@kernel.org, thara.gopinath@gmail.com, rafael@kernel.org,
         daniel.lezcano@linaro.org
 Cc: rui.zhang@intel.com, lukasz.luba@arm.com, david.collins@oss.qualcomm.com,
         linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
         linux-kernel@vger.kernel.org, dmitry.baryshkov@linaro.org
-Subject: [PATCH v3 1/5] thermal: qcom-spmi-temp-alarm: enable stage 2 shutdown when required
-Date: Tue,  4 Mar 2025 15:04:58 -0800
-Message-Id: <20250304230502.1470523-2-anjelique.melendez@oss.qualcomm.com>
+Subject: [PATCH v3 3/5] thermal: qcom-spmi-temp-alarm: Prepare to support additional Temp Alarm subtypes
+Date: Tue,  4 Mar 2025 15:05:00 -0800
+Message-Id: <20250304230502.1470523-4-anjelique.melendez@oss.qualcomm.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250304230502.1470523-1-anjelique.melendez@oss.qualcomm.com>
 References: <20250304230502.1470523-1-anjelique.melendez@oss.qualcomm.com>
@@ -84,119 +84,127 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Authority-Analysis: v=2.4 cv=HZbuTjE8 c=1 sm=1 tr=0 ts=67c78723 cx=c_pps a=cmESyDAEBpBGqyK7t0alAg==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=Vs1iUdzkB0EA:10 a=EUspDBNiAAAA:8 a=q_MlTjK-hrb8HEj9cREA:9 a=RVmHIydaz68A:10 a=1OuFwYUASf3TG4hYMiVC:22
-X-Proofpoint-GUID: XYbixBUIBPbhxJ9R699RIgWyDiLgkuV6
-X-Proofpoint-ORIG-GUID: XYbixBUIBPbhxJ9R699RIgWyDiLgkuV6
+X-Authority-Analysis: v=2.4 cv=EZcyQOmC c=1 sm=1 tr=0 ts=67c78726 cx=c_pps a=IZJwPbhc+fLeJZngyXXI0A==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=Vs1iUdzkB0EA:10 a=EUspDBNiAAAA:8 a=7un5503AD7E7R8fKnWkA:9 a=RVmHIydaz68A:10 a=2kiUGkeb1pZ_ou3T1mbW:22
+ a=uG9DUKGECoFWVXl0Dc02:22
+X-Proofpoint-GUID: PQcQpBJIRHcGbP9Pt0RGgcek5lvSIrLQ
+X-Proofpoint-ORIG-GUID: PQcQpBJIRHcGbP9Pt0RGgcek5lvSIrLQ
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-03-04_09,2025-03-04_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- adultscore=0 mlxscore=0 spamscore=0 clxscore=1015 phishscore=0 bulkscore=0
- priorityscore=1501 impostorscore=0 suspectscore=0 malwarescore=0
- mlxlogscore=999 classifier=spam authscore=0 adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2502100000 definitions=main-2503040184
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 phishscore=0
+ adultscore=0 lowpriorityscore=0 mlxlogscore=999 suspectscore=0 bulkscore=0
+ clxscore=1015 priorityscore=1501 spamscore=0 impostorscore=0
+ malwarescore=0 classifier=spam authscore=0 adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502100000 definitions=main-2503040184
 
-From: David Collins <david.collins@oss.qualcomm.com>
+In preparation to support newer temp alarm subtypes, add the "ops" and
+"configure_trip_temps" references to spmi_temp_alarm_data. This will
+allow for each Temp Alarm subtype to define its own
+thermal_zone_device_ops and properly configure thermal trip temperature.
 
-Certain TEMP_ALARM GEN2 PMIC peripherals need over-temperature
-stage 2 automatic PMIC partial shutdown to be enabled in order to
-avoid repeated faults in the event of reaching over-temperature
-stage 3.  Modify the stage 2 shutdown control logic to ensure that
-stage 2 shutdown is enabled on all affected PMICs.  Read the
-digital major and minor revision registers to identify these
-PMICs.
-
-Signed-off-by: David Collins <david.collins@oss.qualcomm.com>
 Signed-off-by: Anjelique Melendez <anjelique.melendez@oss.qualcomm.com>
 ---
- drivers/thermal/qcom/qcom-spmi-temp-alarm.c | 32 +++++++++++++++++++--
- 1 file changed, 30 insertions(+), 2 deletions(-)
+ drivers/thermal/qcom/qcom-spmi-temp-alarm.c | 38 ++++++++++++++-------
+ 1 file changed, 26 insertions(+), 12 deletions(-)
 
 diff --git a/drivers/thermal/qcom/qcom-spmi-temp-alarm.c b/drivers/thermal/qcom/qcom-spmi-temp-alarm.c
-index c2d59cbfaea9..b2077ff9fe73 100644
+index 1cc9369ca9e1..514772e94a28 100644
 --- a/drivers/thermal/qcom/qcom-spmi-temp-alarm.c
 +++ b/drivers/thermal/qcom/qcom-spmi-temp-alarm.c
-@@ -1,6 +1,7 @@
+@@ -1,7 +1,7 @@
  // SPDX-License-Identifier: GPL-2.0-only
  /*
   * Copyright (c) 2011-2015, 2017, 2020, The Linux Foundation. All rights reserved.
-+ * Copyright (c) 2024, Qualcomm Innovation Center, Inc. All rights reserved.
+- * Copyright (c) 2024, Qualcomm Innovation Center, Inc. All rights reserved.
++ * Copyright (c) 2024-2025, Qualcomm Innovation Center, Inc. All rights reserved.
   */
  
- #include <linux/bitops.h>
-@@ -16,6 +17,7 @@
+ #include <linux/bitfield.h>
+@@ -71,8 +71,10 @@ static const long temp_map_gen2_v1[THRESH_COUNT][STAGE_COUNT] = {
+ struct qpnp_tm_chip;
  
- #include "../thermal_hwmon.h"
+ struct spmi_temp_alarm_data {
++	const struct thermal_zone_device_ops *ops;
+ 	const long (*temp_map)[THRESH_COUNT][STAGE_COUNT];
+ 	int (*get_temp_stage)(struct qpnp_tm_chip *chip);
++	int (*configure_trip_temps)(struct qpnp_tm_chip *chip);
+ };
  
-+#define QPNP_TM_REG_DIG_MINOR		0x00
- #define QPNP_TM_REG_DIG_MAJOR		0x01
- #define QPNP_TM_REG_TYPE		0x04
- #define QPNP_TM_REG_SUBTYPE		0x05
-@@ -71,6 +73,7 @@ struct qpnp_tm_chip {
- 	struct device			*dev;
- 	struct thermal_zone_device	*tz_dev;
- 	unsigned int			subtype;
-+	unsigned int			dig_revision;
- 	long				temp;
- 	unsigned int			thresh;
- 	unsigned int			stage;
-@@ -78,6 +81,7 @@ struct qpnp_tm_chip {
- 	/* protects .thresh, .stage and chip registers */
- 	struct mutex			lock;
- 	bool				initialized;
-+	bool				require_s2_shutdown;
+ struct qpnp_tm_chip {
+@@ -312,18 +314,39 @@ static irqreturn_t qpnp_tm_isr(int irq, void *data)
+ 	return IRQ_HANDLED;
+ }
  
- 	struct iio_channel		*adc;
- 	const long			(*temp_map)[THRESH_COUNT][STAGE_COUNT];
-@@ -255,7 +259,7 @@ static int qpnp_tm_update_critical_trip_temp(struct qpnp_tm_chip *chip,
++static int qpnp_tm_configure_trip_temp(struct qpnp_tm_chip *chip)
++{
++	int crit_temp, ret;
++
++	mutex_unlock(&chip->lock);
++
++	ret = thermal_zone_get_crit_temp(chip->tz_dev, &crit_temp);
++	if (ret)
++		crit_temp = THERMAL_TEMP_INVALID;
++
++	mutex_lock(&chip->lock);
++
++	return qpnp_tm_update_critical_trip_temp(chip, crit_temp);
++}
++
+ static const struct spmi_temp_alarm_data spmi_temp_alarm_data = {
++	.ops = &qpnp_tm_sensor_ops,
+ 	.temp_map = &temp_map_gen1,
++	.configure_trip_temps = qpnp_tm_configure_trip_temp,
+ 	.get_temp_stage = qpnp_tm_gen1_get_temp_stage,
+ };
  
- skip:
- 	reg |= chip->thresh;
--	if (disable_s2_shutdown)
-+	if (disable_s2_shutdown && !chip->require_s2_shutdown)
- 		reg |= SHUTDOWN_CTRL1_OVERRIDE_S2;
+ static const struct spmi_temp_alarm_data spmi_temp_alarm_gen2_data = {
++	.ops = &qpnp_tm_sensor_ops,
+ 	.temp_map = &temp_map_gen1,
++	.configure_trip_temps = qpnp_tm_configure_trip_temp,
+ 	.get_temp_stage = qpnp_tm_gen2_get_temp_stage,
+ };
  
- 	return qpnp_tm_write(chip, QPNP_TM_REG_SHUTDOWN_CTRL1, reg);
-@@ -350,7 +354,7 @@ static int qpnp_tm_probe(struct platform_device *pdev)
+ static const struct spmi_temp_alarm_data spmi_temp_alarm_gen2_rev1_data = {
++	.ops = &qpnp_tm_sensor_ops,
+ 	.temp_map = &temp_map_gen2_v1,
++	.configure_trip_temps = qpnp_tm_configure_trip_temp,
+ 	.get_temp_stage = qpnp_tm_gen2_get_temp_stage,
+ };
+ 
+@@ -336,7 +359,6 @@ static int qpnp_tm_init(struct qpnp_tm_chip *chip)
  {
- 	struct qpnp_tm_chip *chip;
- 	struct device_node *node;
--	u8 type, subtype, dig_major;
-+	u8 type, subtype, dig_major, dig_minor;
- 	u32 res;
- 	int ret, irq;
+ 	int ret;
+ 	u8 reg = 0;
+-	int crit_temp;
  
-@@ -403,6 +407,30 @@ static int qpnp_tm_probe(struct platform_device *pdev)
- 		return dev_err_probe(&pdev->dev, ret,
- 				     "could not read dig_major\n");
+ 	mutex_lock(&chip->lock);
  
-+	ret = qpnp_tm_read(chip, QPNP_TM_REG_DIG_MINOR, &dig_minor);
-+	if (ret < 0) {
-+		dev_err(&pdev->dev, "could not read dig_minor\n");
-+		return ret;
-+	}
-+
-+	chip->dig_revision = (dig_major << 8) | dig_minor;
-+
-+	if (chip->subtype == QPNP_TM_SUBTYPE_GEN2) {
-+		/*
-+		 * Check if stage 2 automatic partial shutdown must remain
-+		 * enabled to avoid potential repeated faults upon reaching
-+		 * over-temperature stage 3.
-+		 */
-+		switch (chip->dig_revision) {
-+		case 0x0001:
-+		case 0x0002:
-+		case 0x0100:
-+		case 0x0101:
-+			chip->require_s2_shutdown = true;
-+			break;
-+		}
-+	}
-+
- 	if (type != QPNP_TM_TYPE || (subtype != QPNP_TM_SUBTYPE_GEN1
- 				     && subtype != QPNP_TM_SUBTYPE_GEN2)) {
- 		dev_err(&pdev->dev, "invalid type 0x%02x or subtype 0x%02x\n",
+@@ -355,15 +377,7 @@ static int qpnp_tm_init(struct qpnp_tm_chip *chip)
+ 	if (chip->stage)
+ 		chip->temp = qpnp_tm_decode_temp(chip, chip->stage);
+ 
+-	mutex_unlock(&chip->lock);
+-
+-	ret = thermal_zone_get_crit_temp(chip->tz_dev, &crit_temp);
+-	if (ret)
+-		crit_temp = THERMAL_TEMP_INVALID;
+-
+-	mutex_lock(&chip->lock);
+-
+-	ret = qpnp_tm_update_critical_trip_temp(chip, crit_temp);
++	ret = chip->data->configure_trip_temps(chip);
+ 	if (ret < 0)
+ 		goto out;
+ 
+@@ -483,7 +497,7 @@ static int qpnp_tm_probe(struct platform_device *pdev)
+ 	 * before the hardware initialization is completed.
+ 	 */
+ 	chip->tz_dev = devm_thermal_of_zone_register(
+-		&pdev->dev, 0, chip, &qpnp_tm_sensor_ops);
++		&pdev->dev, 0, chip, chip->data->ops);
+ 	if (IS_ERR(chip->tz_dev))
+ 		return dev_err_probe(&pdev->dev, PTR_ERR(chip->tz_dev),
+ 				     "failed to register sensor\n");
 -- 
 2.34.1
 
