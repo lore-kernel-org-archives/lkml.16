@@ -1,48 +1,41 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from mail.muc.de (mail.muc.de [193.149.48.3])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88DF51F76A8;
-	Tue,  4 Mar 2025 20:30:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECCFE8633F
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 20:31:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.149.48.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741120248; cv=none; b=bUdYpT2GyEU1C+kl5TEPZfRjDJclu6PZcBaLOtceteD95yREYlujxZXblvDz5KCKTqnOHAldOc359xxtWVw1qnx0XpwInBvxOyUv3GczWbWlJhBmDemCAZ6GZbZUfU8zsKRmmdHVp9HtO2PaNbdCOAcug7vhncjMaakgRTBhsgo=
+	t=1741120268; cv=none; b=i3RzWSKspxdTfftZPqw5ITZLcule6v6Ctj0vTbSIlJW0cks/lADMh0Pgsd9qn4BMGOw4ba4a90Mqk0tNCyXkkE+IwcphS9cQGw+GRSBZslYuJBGsSGoNHYv7DCOyAXEzyPnNxQteH3mxlDa12fm3jlfj/U0IbruxnpVBJhbeTU8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741120248; c=relaxed/simple;
-	bh=sxNbMdW/Iwem01aQj7BDy124mpTa0wLwsYtG42s4gFw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mFW0PoLqJDGp3Db4Ql4FVvn9OD/GlBm4lKr+mZil1t3w5Kd9iQNFwLwL/bHZ6C+rprW5UBIXpxtGm8kupp23n0YjAkqf3W8P7jG/JnEXMTIbr7GTnFaGF+O2nrhuBokuXf91IpCODbSGtfzPfmOY1tl6sYPQQre1i+ED/L10yuE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=5gTZG1K7; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="5gTZG1K7"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=fDJUnsSxZUnWvgAeUJYgf3CYEraX7n7Xpw2M9p7RPCw=; b=5gTZG1K7DjvFhN2kFzi03FICr/
-	I0mRUDdV6TBh8AL+f8V3/JVzqKawTtCV2ipDnjvMCHHNVUsMqPmLu+t2xc0Vv6SAkwtn/cLohau7k
-	vLkg7wMW7i3TOA4RBd8/9+r/mCadLFwRCEdchoZLqEeSJ8duqz6TQB4cbGrKGZmrsEAk=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1tpYuP-002G8S-IC; Tue, 04 Mar 2025 21:30:33 +0100
-Date: Tue, 4 Mar 2025 21:30:33 +0100
-From: Andrew Lunn <andrew@lunn.ch>
-To: dimitri.fedrau@liebherr.com
-Cc: Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Dimitri Fedrau <dima.fedrau@gmail.com>, Marek Vasut <marex@denx.de>,
-	Oleksij Rempel <o.rempel@pengutronix.de>
-Subject: Re: [PATCH net-next v2 1/2] net: phy: tja11xx: add support for
- TJA1102S
-Message-ID: <b7fce5eb-4d85-4ce8-ae78-6dbd942d5f2c@lunn.ch>
-References: <20250304-tja1102s-support-v2-0-cd3e61ab920f@liebherr.com>
- <20250304-tja1102s-support-v2-1-cd3e61ab920f@liebherr.com>
+	s=arc-20240116; t=1741120268; c=relaxed/simple;
+	bh=mzdC7fkkCvMgbcc9+AFuPPSV2MdSt3HX1JwBHsD4cP8=;
+	h=Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To:From; b=mlpweQLYewufRkBwTVwf4NacDznECQvzNwoCh7V2ABzzh88XX/upBTqNOo83S8IAzPaLxNwesYaiV3fXc3hejTS2HxjsxjW1HxWtU/7YYITof8I8LTi66kzgdgRFIZejNqbelbbhXB9CsL1GrGMu/wJ5n0XyEpLlZ5geRXRZZVU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=muc.de; spf=pass smtp.mailfrom=muc.de; arc=none smtp.client-ip=193.149.48.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=muc.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=muc.de
+Received: (qmail 5325 invoked by uid 3782); 4 Mar 2025 21:30:57 +0100
+Received: from muc.de (pd953a22b.dip0.t-ipconnect.de [217.83.162.43]) (using
+ STARTTLS) by colin.muc.de (tmda-ofmipd) with ESMTP;
+ Tue, 04 Mar 2025 21:30:56 +0100
+Received: (qmail 12384 invoked by uid 1000); 4 Mar 2025 20:30:56 -0000
+Date: Tue, 4 Mar 2025 20:30:56 +0000
+To: dri-devel@lists.freedesktop.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+  Jiri Slaby <jirislaby@kernel.org>, Simona Vetter <simona@ffwll.ch>,
+  linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: More than 256/512 glyphs on the Liinux console
+Message-ID: <Z8djAD5WgpyPTnpa@MAC.fritz.box>
+References: <Z7idXzMcDhe_E5oN@MAC.fritz.box>
+ <2025022243-street-joylessly-6dfa@gregkh>
+ <Z7nu7HqKn4o2rMd5@MAC.fritz.box>
+ <2025022355-peroxide-defacing-4fa4@gregkh>
+ <Z7y4yHT0fNYYiPI8@MAC.fritz.box>
+ <d5e05c61-d796-4e5c-9538-a1e068631bba@kernel.org>
+ <Z73sqvjlbJ54FCtH@MAC.fritz.box>
+ <2025022652-uptown-cheating-5df8@gregkh>
+ <Z8BjC_TzuDVaFC_3@MAC.fritz.box>
+ <2025022802-monitor-moneyless-0f84@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,16 +44,52 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250304-tja1102s-support-v2-1-cd3e61ab920f@liebherr.com>
+In-Reply-To: <2025022802-monitor-moneyless-0f84@gregkh>
+X-Submission-Agent: TMDA/1.3.x (Ph3nix)
+From: Alan Mackenzie <acm@muc.de>
+X-Primary-Address: acm@muc.de
 
-On Tue, Mar 04, 2025 at 07:37:26PM +0100, Dimitri Fedrau via B4 Relay wrote:
-> From: Dimitri Fedrau <dimitri.fedrau@liebherr.com>
-> 
-> NXPs TJA1102S is a single PHY version of the TJA1102 in which one of the
-> PHYs is disabled.
-> 
-> Signed-off-by: Dimitri Fedrau <dimitri.fedrau@liebherr.com>
+Hello, dri-devel.
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+The context of the following post is a thread on Linux kernel lists where
+I am proposing to extend the Linux console to handle more than 256/512
+distinct glyphs.
 
-    Andrew
+On Fri, Feb 28, 2025 at 20:24:33 -0800, Greg Kroah-Hartman wrote:
+> On Thu, Feb 27, 2025 at 01:05:15PM +0000, Alan Mackenzie wrote:
+> > Hello, Greg.
+
+> > On Wed, Feb 26, 2025 at 11:09:57 +0100, Greg Kroah-Hartman wrote:
+> > > On Tue, Feb 25, 2025 at 04:15:38PM +0000, Alan Mackenzie wrote:
+> > > > On Mon, Feb 24, 2025 at 21:08:50 +0100, Jiri Slaby wrote:
+
+> > > > > I didn't read the thread, but are you looking e.g. for kmscon?
+
+> > > > No, I wasn't.  I was looking for a drm replacement for the
+> > > > drivers/tty/vt code inside the kernel.  I may have misunderstood
+> > > > Greg when he referred to a replacement which uses drm.
+
+> > > No, this is what I was referring to.  Also maybe we should be
+> > > asking on the drm list?  The developers there were working to get
+> > > rid of CONFIG_VT so I know they have plans for what they see
+> > > replacing it.
+
+Is this (still) the case?  Have people on dri-devel developed a Linux
+console which supersedes the code in drivers/tty/vt, or are they in the
+midst of doing so?
+
+Where can I best inform myself about this, and (possibly) install this
+replacement console on my system for my own use?
+
+Thanks for any information!
+
+[ .... ]
+
+> dri-devel@lists.freedesktop.org is the list.
+
+> thanks,
+
+> greg k-h
+
+-- 
+Alan Mackenzie (Nuremberg, Germany).
