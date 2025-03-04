@@ -1,128 +1,68 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F292424C081
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 15:11:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D161A24C093;
+	Tue,  4 Mar 2025 15:11:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741101063; cv=none; b=pwsQyepT5lYrze2bKNDclm2Z+ssNok7SRyrQPbaiIf8TN1LCZ1068bk5K4SyOleIKd8nQz4YTOQcE6mkbWljlbgxX+t02feGQI5JsO9+d8QLA7w/eBfbllNMYHXwvmq8cry69sk8bSq7y8pcFfrCFaTN55Ho7RzJFC91vhUWA70=
+	t=1741101119; cv=none; b=izd/mMedgMhdFbOo2Sgq6sAgHoOuw56dme0Y/O0c+0cmjryqLN9XPucN8/tlAAIUf9UHeUv0R9mOn9MBhd2dMxE0/AMsxNoCaAWm9suh8MtZEACxToz/0h4A+e0nfOXv35Php3tTd5cSXOtamlSZDlJZUHPPqIB44XWnvAxiKRo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741101063; c=relaxed/simple;
-	bh=t4HzfKpGGFlBoc1Etl+XJPQBVdf5gNOWugu+47JC6ps=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=iqgxMd3IQ77mqhK/EFCx0Nas4RDLyfU9lMDvevxVXkJ5doX/u3F7glmJCDw7doyKwr96OMMsQPkA+6WEFy5JSwuWF7KCuxVgjbFJUD2pYeNl5hJSEwxJjLEHFqTIb/kMP25su9kkAgoccnOIuZ4U+0tX3qW0eJloLDyeT9yn9lg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NA+8gknZ; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1741101119; c=relaxed/simple;
+	bh=4SIBqmrS42kkSMxCMQFChof+F0bMN3x2UOvDWptOUsk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tk0saRSALfHot2T0WLlp1/3QDaiRd8g9IufWj46xkcrDUo1e+ePLpCjGVWVlcl9a67JA3jLS719XVVZU7Dn+6G5zTaPyxDSqBAUOc8eCTKT5+g1f+PoRmK9s1sSCGWHVg+ulr5S47IsE4sP+oaTFjUS0nZbw9cZQxeFxy86xde8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f1RldajX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NA+8gknZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741101062; x=1772637062;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version:content-transfer-encoding;
-  bh=t4HzfKpGGFlBoc1Etl+XJPQBVdf5gNOWugu+47JC6ps=;
-  b=NA+8gknZtbkbgENAk3NdH5G55Ac4lTQhrrHEy4TKSa1kkd21lGRdITZr
-   RltbrMCHRIwaUI6DhPnE3Ikr2X2cdF3U/QFefm9DubcTddkCVbG5CW0K/
-   EVzJOeJn590H/eHAj3bfTgeYRxUy7Iq110Yz0rELG16r6Vi6CojxNDpvY
-   JbCq5CqI9KBkmBRTmPWCNmj0h0oN2WHqBlFkD+oErgS3uy3Ay+9k16VKZ
-   260etIN0SqS1O+pfTxQ+gAZh4ftpaP+EWeq9/eIPeHNKxBrK2VZSWwTB3
-   cq+UZ1tC3f3UKXtZLspdTwh6bPKCzp6hEn5xppINH8KVwc40aJm6dZApJ
-   A==;
-X-CSE-ConnectionGUID: uX24ZAYbT8SzC6/p+PXv9w==
-X-CSE-MsgGUID: h84ZunJPQYCOYhHV71AoSg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11363"; a="41931901"
-X-IronPort-AV: E=Sophos;i="6.14,220,1736841600"; 
-   d="scan'208";a="41931901"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2025 07:11:01 -0800
-X-CSE-ConnectionGUID: 6VMaghNlR+GiLz6Ur7XksA==
-X-CSE-MsgGUID: 2BOmcNboQNCQyeNL4RJSHg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,220,1736841600"; 
-   d="scan'208";a="149187083"
-Received: from bergbenj-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.246.192])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2025 07:10:56 -0800
-From: Jani Nikula <jani.nikula@intel.com>
-To: Aditya Garg <gargaditya08@live.com>, Arnd Bergmann <arnd@kernel.org>
-Cc: Aun-Ali Zaidi <admin@kodeit.net>, Maarten Lankhorst
- <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
- Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>, Atharva Tiwari <evepolonium@gmail.com>,
- Kerem Karabay <kekrby@gmail.com>, Arnd Bergmann <arnd@arndb.de>,
- "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Nathan
- Chancellor <nathan@kernel.org>
-Subject: Re: [PATCH] drm/tiny: fix printk format string for 32-bit
-In-Reply-To: <05EAF4F2-7DFB-4C80-8D2A-054BCD7A126D@live.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <20250304142711.621330-1-arnd@kernel.org>
- <05EAF4F2-7DFB-4C80-8D2A-054BCD7A126D@live.com>
-Date: Tue, 04 Mar 2025 17:10:52 +0200
-Message-ID: <87bjugzv9f.fsf@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f1RldajX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22280C4CEE5;
+	Tue,  4 Mar 2025 15:11:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741101119;
+	bh=4SIBqmrS42kkSMxCMQFChof+F0bMN3x2UOvDWptOUsk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=f1RldajXPHDVDaV8FrXpmlawZekNo7rfjLrH+iZk48PdTNBRRGoGXlRiD1dMOmiOK
+	 hdPWou5HpOvcLRH93nIoXnoYhrybdWjGDoYCEY6KjmM4THfuQMoeypD3sNZR50pLw3
+	 hoDsuVH5UnLQ8II5S35z2YdM3BZzZT84eDNImYf/MQIiBXd4SuOtjuJda3Jn3pHocW
+	 KaBXHJ0twf+ut9bhI+4tIH7Pfpsi4iTEx4VCI6WIuCQ8FpFOOiJSKVwWSaB2APzLFK
+	 oTX5LqnYHQ8rSsOU8Rljk4c76OrwGylKiU8s1/2pdz4l2fXAEK1tjyxpkrT64br/a/
+	 8THTVDr84zQXw==
+Date: Tue, 4 Mar 2025 09:11:57 -0600
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Longbin Li <looong.bin@gmail.com>
+Cc: linux-riscv@lists.infradead.org,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	devicetree@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>, linux-spi@vger.kernel.org,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	linux-kernel@vger.kernel.org, Chen Wang <unicorn_wang@outlook.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, sophgo@lists.linux.dev,
+	Conor Dooley <conor+dt@kernel.org>,
+	Inochi Amaoto <inochiama@gmail.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: spi: add SG2044 SPI NOR controller
+ driver
+Message-ID: <174110111660.2625891.8370014258934747237.robh@kernel.org>
+References: <20250304083548.10101-1-looong.bin@gmail.com>
+ <20250304083548.10101-2-looong.bin@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250304083548.10101-2-looong.bin@gmail.com>
 
-On Tue, 04 Mar 2025, Aditya Garg <gargaditya08@live.com> wrote:
-> Hi
->
->> On 4 Mar 2025, at 7:57=E2=80=AFPM, Arnd Bergmann <arnd@kernel.org> wrote:
->>=20
->> From: Arnd Bergmann <arnd@arndb.de>
->>=20
->> A size_t must be printed with the %z modifier instead of %l:
->>=20
->> In file included from include/linux/device.h:15,
->>                 from include/linux/usb.h:19,
->>                 from drivers/gpu/drm/tiny/appletbdrm.c:19:
->> drivers/gpu/drm/tiny/appletbdrm.c: In function 'appletbdrm_send_request':
->> include/drm/drm_print.h:589:54: error: format '%lu' expects argument of =
-type 'long unsigned int', but argument 4 has type 'size_t' {aka 'unsigned i=
-nt'} [-Werror=3Dformat=3D]
->> drivers/gpu/drm/tiny/appletbdrm.c:170:17: note: in expansion of macro 'd=
-rm_err'
->>  170 |                 drm_err(drm, "Actual size (%d) doesn't match expe=
-cted size (%lu)\n",
->>      |                 ^~~~~~~
->> drivers/gpu/drm/tiny/appletbdrm.c: In function 'appletbdrm_read_response=
-':
->> include/drm/drm_print.h:589:54: error: format '%lu' expects argument of =
-type 'long unsigned int', but argument 4 has type 'size_t' {aka 'unsigned i=
-nt'} [-Werror=3Dformat=3D]
->> drivers/gpu/drm/tiny/appletbdrm.c:211:17: note: in expansion of macro 'd=
-rm_err'
->>  211 |                 drm_err(drm, "Actual size (%d) doesn't match expe=
-cted size (%lu)\n",
->>      |                 ^~~~~~~
->>=20
->> Fixes: 0670c2f56e45 ("drm/tiny: add driver for Apple Touch Bars in x86 M=
-acs")
->> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
->> =E2=80=94
->
-> Its the duplicate of:
->
-> https://lore.kernel.org/dri-devel/20250304-appletbdrm-fix-size_t-specifie=
-r-v1-1-94fe1d2c91f8@kernel.org/
 
-Pushed this one to drm-misc-next.
+On Tue, 04 Mar 2025 16:35:42 +0800, Longbin Li wrote:
+> Add SPI NOR driver for SG2044, including read, write operations.
+> 
+> Signed-off-by: Longbin Li <looong.bin@gmail.com>
+> ---
+>  .../bindings/spi/spi-sg2044-nor.yaml          | 52 +++++++++++++++++++
+>  1 file changed, 52 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/spi/spi-sg2044-nor.yaml
+> 
 
-BR,
-Jani.
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 
->
-> as well as
->
-> https://lore.kernel.org/dri-devel/20250304135456.429407-1-jani.nikula@int=
-el.com/
->
->
-
---=20
-Jani Nikula, Intel
