@@ -1,239 +1,294 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23B6C25FA14;
-	Tue,  4 Mar 2025 20:51:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11B491FBC98
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 20:51:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741121491; cv=none; b=lq7AO9FZNiUMMdY0SvZjI0cNpy7AfcgBCvtZwAA1Jz+crbA0eZAWfqck9cq9uv5RDGvDTOJbgbGjHycpxumdQ+XjghGlHgsa3T3mmORhnex+LySBB9bPKMfF96pnVaI+Fro9l/D49Mlhk2+7KKGMN8wo1kFc+7nyeyy7gRuwBBo=
+	t=1741121492; cv=none; b=IEFU/boIipf/TcFgtdIFvTAFSKCT2h5lhrBoDm9taEhoy6sdwW/ntqgnHluDvAV0gFnksiU10ghbLDvrsdsBppL5DUKCoBxVH9gpoGPCw4F1mcjRqPoF/GcP5OLKGiB/I7ZbEWefOBT0ezN98V6Km/kqezRUIvlrSj2toKXDJuY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741121491; c=relaxed/simple;
-	bh=zEuJDSdpagweCAj4noxSIPPno5NwiCCQ7YIhPEIpUBQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Ht3Pl/kVQyb/ApGJ5hJubBmz3Wv7sFeo1NCl866Ut8ex6iMJXkqAYrPwKzXbMDaZVOJD3Wpq0bimucXctYG3hAOv3DsXpcEFUFcrm3/Qy8KZlGZhlkYOgLkxbm1ICy4GfFOgoueUiWSgI00hIHz0DejPvYn/cInVLWExYEUB7P4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U2gC63my; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741121492; c=relaxed/simple;
+	bh=S4zgskqTby/rdk7TA8HRhjonoTjUJkfCF2UNYsTxXy4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=i1JzhZHsh3wKPauGJc/rF448vpZre/ziv51sObK7IN2uwPJC2++nBIg6MLW6tg54sDOgquhhkrfDjN67hgqPFTo07ydvDsPSN1azc/S9p5y1UTRSVqSfIY1AR5GQozMVwAlk3aV7EpF0GaHr8+33LOH6vNSJWGGP24QeM4EIz/o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Nor27+Xt; arc=none smtp.client-ip=209.85.221.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U2gC63my"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A1FAC4CEE9;
-	Tue,  4 Mar 2025 20:51:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741121490;
-	bh=zEuJDSdpagweCAj4noxSIPPno5NwiCCQ7YIhPEIpUBQ=;
-	h=From:To:Cc:Subject:Date:From;
-	b=U2gC63myUGZYLS5xD7W1svkHmz81fCSW4LR5miX5cTLQp0UZIGQxSuDHxBRuXvkvT
-	 WoTJS+3CM3V3FmemOWYNyjbsZkqmqd8+a1LPUpuSWfkWIJUpQBLlpX3i643MzPdVka
-	 dHME1B3ULfngXsg0Cued2tq964veSWIMy6iJ4aXzLIrdkkJmrvJuXlD7fmaYUQa7of
-	 yOozumFrP2rNSYc9HO8YrNcF/vplYcyhaE8Ds+J6Rg6YfC/BNTLdxsFsa1LKrUC21U
-	 CFDc1o9Yh4SUrDVpdPb7x0UFBsais9a2IU0HgMGoYLE3zVDZx1nCkR3Jyy4rhLbOMG
-	 2gY/rCp3lZjLQ==
-From: Eric Biggers <ebiggers@kernel.org>
-To: x86@kernel.org
-Cc: linux-crypto@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Ben Greear <greearb@candelatech.com>,
-	Xiao Liang <shaw.leon@gmail.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	"Jason A . Donenfeld" <Jason@zx2c4.com>
-Subject: [RFC PATCH v2] x86/fpu: make kernel-mode FPU reliably usable in softirqs
-Date: Tue,  4 Mar 2025 12:49:54 -0800
-Message-ID: <20250304204954.3901-1-ebiggers@kernel.org>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Nor27+Xt"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-38f406e9f80so4621718f8f.2
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Mar 2025 12:51:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1741121488; x=1741726288; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=dqCiUR+VtYZ1iXicg8DOvKaTFhWRMaeKH7BEMD7Z0kU=;
+        b=Nor27+Xt4jpubTEB8uMOqBDzO01Qyklddluq3Lm6dKbRjgitBIDB3wEQkWJzPWXYrg
+         kh/8jHonsDjapHLWP9Cuku9oV5xkselkMCA6sxnhr52huA9InqCPcl2DnZVpakzjm3Wl
+         Loeurx+6+EklAZ6vvwngG5I8iUamLD9EnxZ053Goyc7nkPgZs96C9qcR6IQVGcu0IJC4
+         16Bp7hp7/oYhu3HaqC5CTiPfggE1TufDxp9Y7t1kuMJqETRtuWAf8IZNkaSJrRnQhia3
+         1qeoyP7DoFky2pHOuo9e9cXxrlpxw65NgFqbsbsdfRipx7x1IkRar9wh78GZx4S0p8A1
+         oXGg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741121488; x=1741726288;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=dqCiUR+VtYZ1iXicg8DOvKaTFhWRMaeKH7BEMD7Z0kU=;
+        b=fDEBje9g7Ik97suYitNOX2b90R7iIzSa2aGzPRkG1FkvJXkGhNamwVmY2v3lGxkfSg
+         y50R6ar9hzvmFVxDTmJlkv8d96mABpB3AW4BI9mbrvLlaBzLOI7XgXpYpGeTJB0/34x0
+         HnHVGokNccC+PyvnVp83BYYwhwi7FI8jHP9XSc/nKHI5bCuAVHGhS6WcBtIAQiINpGdG
+         zaUV06GKmpdMoRUKL9G2/dsRHsM74HTqFTlLys21Hkgx0ih0Pce2p3VTANmWyvmakuRy
+         DO/GGx/rTDdbzJKYlcPwcigRQ0iLbzZPjveOyoiYJCoktNQ0KTuOEPmn5W1cyio8GY8/
+         CjxQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUdexE3qr9lQe4I08q9RehbnL4UtZLd6wD2Jp0Is7Gww9wem3YINOZOyP0Z83lEchrSmHE+4ZfEYGEBgZI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywa759ZW2qt/EhR39QsZzeOnv6S8HlyqwiYYiSsPJNXQcleVaJr
+	kUbkNSqPDUX4I6XuBYXWryDry2pb/56P1MqBZ8DZzafOwqKDa7hfn/0JKjtdiQE=
+X-Gm-Gg: ASbGncsyvbVIU9yMX6Co5oMlKW5XsMbT0pfqTyaRlgCLqC1r5uZ3CJ0YrmbdwGWs8fE
+	rD7ccU4kYacHU7UWdHt7pb+E+QrbQomQQf931eHO1yd7vnWxHm2uNwIedhlIyLfeUap9wkOTvkj
+	octUC/+Qo5KkTSrDKTTYRgb0dilQvrIENQwiZn0OG1HT4bINlHDQXQpHG/oTzp5Qqsfoddk6XUC
+	WRMAC8UWqnw0t+E8McIhp4/9PCUCvUKejry7u4MKlc8BLu2cdoOwLZeik7wC+ZrvwuCZsJFSB2U
+	l0hyD0/Dw8M1xoxAB49822KGbVuL6m4pUi9UGTNmVL+xsqxP4mBxsoJyXPQfi9ueQmEy5YyW9I4
+	L4vEg+dGM
+X-Google-Smtp-Source: AGHT+IFEDfBRhDzGXmuKkh231a6HvLL4kF20x4c7He8dKb/Wku1OOVCCY/1L9jtdUl1lMgHRpDPY7g==
+X-Received: by 2002:a5d:59a5:0:b0:390:f1c1:d399 with SMTP id ffacd0b85a97d-3911f7bb9b8mr200990f8f.41.1741121488037;
+        Tue, 04 Mar 2025 12:51:28 -0800 (PST)
+Received: from [192.168.10.46] (146725694.box.freepro.com. [130.180.211.218])
+        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-390e4844a2dsm18831020f8f.72.2025.03.04.12.51.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 04 Mar 2025 12:51:26 -0800 (PST)
+Message-ID: <6511298a-4627-4d5a-a8a0-27f33f6cbea9@linaro.org>
+Date: Tue, 4 Mar 2025 21:51:25 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5] clocksource/drivers/timer-clint: Add T-Head C9xx clint
+To: Jesse Taube <mr.bossman075@gmail.com>, linux-riscv@lists.infradead.org
+Cc: Paul Walmsley <paul.walmsley@sifive.com>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Thomas Gleixner <tglx@linutronix.de>,
+ Samuel Holland <samuel.holland@sifive.com>, Conor Dooley <conor@kernel.org>,
+ Icenowy Zheng <uwu@icenowy.me>, Jisheng Zhang <jszhang@kernel.org>,
+ linux-kernel@vger.kernel.org
+References: <20250117164536.3918949-1-Mr.Bossman075@gmail.com>
+Content-Language: en-US
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+In-Reply-To: <20250117164536.3918949-1-Mr.Bossman075@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-From: Eric Biggers <ebiggers@google.com>
+On 17/01/2025 17:45, Jesse Taube wrote:
+> From: Jisheng Zhang <jszhang@kernel.org>
+> 
+> To use the T-HEAD C9xx clint in RISCV-M NOMMU env, we need to take
+> care two points:
+> 
+> 1.The mtimecmp in T-Head C9xx clint only supports 32bit read/write,
+> implement such support.
+> 
+> 2. As pointed out by commit ca7810aecdba ("lib: utils/timer: mtimer:
+> add a quirk for lacking mtime register") of opensbi:
+> 
+> "T-Head developers surely have a different understanding of time CSR and
+> CLINT's mtime register with SiFive ones, that they did not implement
+> the mtime register at all -- as shown in openC906 source code, their
+> time CSR value is just exposed at the top of their processor IP block
+> and expects an external continous counter, which makes it not
+> overrideable, and thus mtime register is not implemented, even not for
+> reading. However, if CLINTEE is not enabled in T-Head's MXSTATUS
+> extended CSR, these systems still rely on the mtimecmp registers to
+> generate timer interrupts. This makes it necessary to implement T-Head
+> C9xx CLINT support in OpenSBI MTIMER driver, which skips implementing
+> reading mtime register and falls back to default code that reads time
+> CSR."
+> 
+> So, we need to fall back to read time CSR instead of mtime register.
+> Add riscv_csr_time_available static key for this purpose.
+> 
+> Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
+> Signed-off-by: Jesse Taube <Mr.Bossman075@gmail.com>
+> ---
+> Treat this as a completely new patch, as it is mostly rewritten.
+> Original:
+> https://lore.kernel.org/all/20240410142347.964-3-jszhang@kernel.org/
+> V3 -> V4:
+>   - Add riscv,csr-clint
+>   - Allow using of CSRs in S mode
+>   - Change if return else return to if return return
+>   - Change static_branch_likely to static_branch_unlikely
+>   - Fix 32-bit clint_get_cycles64 csr_available check being inverted
+>   - Fix is_c900_clint being uninitialized
+> V4 -> V5:
+>   - Remove riscv,csr-clint
+>   - Remove riscv_csr_time_available
+>   - Replace all static_branch_unlikely(&riscv_csr_time_available) with
+>      riscv_has_extension_likely(RISCV_ISA_EXT_ZICNTR)
+> ---
+>   arch/riscv/include/asm/timex.h    | 12 +++++++-
+>   drivers/clocksource/timer-clint.c | 50 +++++++++++++++++++++++++++----
+>   2 files changed, 56 insertions(+), 6 deletions(-)
+> 
+> diff --git a/arch/riscv/include/asm/timex.h b/arch/riscv/include/asm/timex.h
+> index a06697846e69..d78075351bf4 100644
+> --- a/arch/riscv/include/asm/timex.h
+> +++ b/arch/riscv/include/asm/timex.h
+> @@ -17,17 +17,26 @@ typedef unsigned long cycles_t;
+>   #ifdef CONFIG_64BIT
+>   static inline cycles_t get_cycles(void)
+>   {
+> +	if (riscv_has_extension_likely(RISCV_ISA_EXT_ZICNTR))
+> +		return csr_read(CSR_TIME);
+> +
+>   	return readq_relaxed(clint_time_val);
+>   }
+>   #else /* !CONFIG_64BIT */
+>   static inline u32 get_cycles(void)
+>   {
+> +	if (riscv_has_extension_likely(RISCV_ISA_EXT_ZICNTR))
+> +		return csr_read(CSR_TIME);
+> +
+>   	return readl_relaxed(((u32 *)clint_time_val));
+>   }
+>   #define get_cycles get_cycles
+>   
+>   static inline u32 get_cycles_hi(void)
+>   {
+> +	if (riscv_has_extension_likely(RISCV_ISA_EXT_ZICNTR))
+> +		return csr_read(CSR_TIMEH);
+> +
+>   	return readl_relaxed(((u32 *)clint_time_val) + 1);
+>   }
+>   #define get_cycles_hi get_cycles_hi
+> @@ -40,7 +49,8 @@ static inline u32 get_cycles_hi(void)
+>    */
+>   static inline unsigned long random_get_entropy(void)
+>   {
+> -	if (unlikely(clint_time_val == NULL))
+> +	if (!riscv_has_extension_likely(RISCV_ISA_EXT_ZICNTR) &&
+> +	   (unlikely(clint_time_val == NULL)))
+>   		return random_get_entropy_fallback();
+>   	return get_cycles();
+>   }
+> diff --git a/drivers/clocksource/timer-clint.c b/drivers/clocksource/timer-clint.c
+> index 0bdd9d7ec545..cdf8b33d2dd2 100644
+> --- a/drivers/clocksource/timer-clint.c
+> +++ b/drivers/clocksource/timer-clint.c
+> @@ -39,6 +39,7 @@ static u64 __iomem *clint_timer_cmp;
+>   static u64 __iomem *clint_timer_val;
+>   static unsigned long clint_timer_freq;
+>   static unsigned int clint_timer_irq;
+> +static bool is_c900_clint;
+>   
+>   #ifdef CONFIG_RISCV_M_MODE
+>   u64 __iomem *clint_time_val;
+> @@ -79,6 +80,9 @@ static void clint_ipi_interrupt(struct irq_desc *desc)
+>   #ifdef CONFIG_64BIT
+>   static u64 notrace clint_get_cycles64(void)
+>   {
+> +	if (riscv_has_extension_likely(RISCV_ISA_EXT_ZICNTR))
+> +		return csr_read(CSR_TIME);
+> +
 
-Currently kernel-mode FPU is not always usable in softirq context on
-x86, since softirqs can nest inside a kernel-mode FPU section in task
-context, and nested use of kernel-mode FPU is not supported.
+Given the critical path from where this routine is called, I suggest to 
+create a different function and figure out which one to use when calling 
+sched_clock_register().
 
-Therefore, x86 SIMD-optimized code that can be called in softirq context
-has to sometimes fall back to non-SIMD code.  There are two options for
-the fallback, both of which are pretty terrible:
 
-  (a) Use a scalar fallback.  This can be 10-100x slower than vectorized
-      code because it cannot use specialized instructions like AES, SHA,
-      or carryless multiplication.
+>   	return clint_get_cycles();
+>   }
+>   #else /* CONFIG_64BIT */
+> @@ -86,10 +90,17 @@ static u64 notrace clint_get_cycles64(void)
+>   {
+>   	u32 hi, lo;
+>   
+> -	do {
+> -		hi = clint_get_cycles_hi();
+> -		lo = clint_get_cycles();
+> -	} while (hi != clint_get_cycles_hi());
+> +	if (riscv_has_extension_likely(RISCV_ISA_EXT_ZICNTR)) {
+> +		do {
+> +			hi = csr_read(CSR_TIMEH);
+> +			lo = csr_read(CSR_TIME);
+> +		} while (hi != csr_read(CSR_TIMEH));
+> +	} else {
+> +		do {
+> +			hi = clint_get_cycles_hi();
+> +			lo = clint_get_cycles();
+> +		} while (hi != clint_get_cycles_hi());
+> +	}
 
-  (b) Execute the request asynchronously using a kworker.  In other
-      words, use the "crypto SIMD helper" in crypto/simd.c.
+Same comment here.
 
-Currently most of the x86 en/decryption code (skcipher and aead
-algorithms) uses option (b), since this avoids the slow scalar fallback
-and it is easier to wire up.  But option (b) is still really bad for its
-own reasons:
+>   	return ((u64)hi << 32) | lo;
+>   }
+> @@ -119,6 +130,19 @@ static int clint_clock_next_event(unsigned long delta,
+>   	return 0;
+>   }
+>   
+> +static int c900_clint_clock_next_event(unsigned long delta,
+> +				       struct clock_event_device *ce)
+> +{
+> +	void __iomem *r = clint_timer_cmp +
+> +			  cpuid_to_hartid_map(smp_processor_id());
+> +	u64 val = clint_get_cycles64() + delta;
+> +
+> +	csr_set(CSR_IE, IE_TIE);
+> +	writel_relaxed(val, r);
+> +	writel_relaxed(val >> 32, r + 4);
+> +	return 0;
+> +}
+> +
+>   static DEFINE_PER_CPU(struct clock_event_device, clint_clock_event) = {
+>   	.name		= "clint_clockevent",
+>   	.features	= CLOCK_EVT_FEAT_ONESHOT,
+> @@ -130,6 +154,9 @@ static int clint_timer_starting_cpu(unsigned int cpu)
+>   {
+>   	struct clock_event_device *ce = per_cpu_ptr(&clint_clock_event, cpu);
+>   
+> +	if (is_c900_clint)
+> +		ce->set_next_event = c900_clint_clock_next_event;
+> +
+>   	ce->cpumask = cpumask_of(cpu);
+>   	clockevents_config_and_register(ce, clint_timer_freq, 100, ULONG_MAX);
+>   
+> @@ -161,7 +188,7 @@ static irqreturn_t clint_timer_interrupt(int irq, void *dev_id)
+>   	return IRQ_HANDLED;
+>   }
+>   
+> -static int __init clint_timer_init_dt(struct device_node *np)
+> +static int __init clint_timer_init(struct device_node *np)
+>   {
+>   	int rc;
+>   	u32 i, nr_irqs;
+> @@ -273,5 +300,18 @@ static int __init clint_timer_init_dt(struct device_node *np)
+>   	return rc;
+>   }
+>   
+> +static int __init clint_timer_init_dt(struct device_node *np)
+> +{
+> +	is_c900_clint = false;
+> +	return clint_timer_init(np);
+> +}
+> +
+> +static int __init c900_clint_timer_init_dt(struct device_node *np)
+> +{
+> +	is_c900_clint = true;
+> +	return clint_timer_init(np);
+> +}
+> +
+>   TIMER_OF_DECLARE(clint_timer, "riscv,clint0", clint_timer_init_dt);
+>   TIMER_OF_DECLARE(clint_timer1, "sifive,clint0", clint_timer_init_dt);
+> +TIMER_OF_DECLARE(clint_timer2, "thead,c900-clint", c900_clint_timer_init_dt);
 
-  - Punting the request to a kworker is bad for performance too.
 
-  - It forces the algorithm to be marked as asynchronous
-    (CRYPTO_ALG_ASYNC), preventing it from being used by crypto API
-    users who request a synchronous algorithm.  That's another huge
-    performance problem, which is especially unfortunate for users who
-    don't even do en/decryption in softirq context.
-
-  - It makes all en/decryption operations take a detour through
-    crypto/simd.c.  That involves additional checks and an additional
-    indirect call, which slow down en/decryption for *everyone*.
-
-Fortunately, the skcipher and aead APIs are only usable in task and
-softirq context in the first place.  Thus, if kernel-mode FPU were to be
-reliably usable in softirq context, no fallback would be needed.
-Indeed, other architectures such as arm, arm64, and riscv have already
-done this.
-
-Therefore, this patch updates x86 accordingly to reliably support
-kernel-mode FPU in softirqs.
-
-This is done by just disabling softirq processing in kernel-mode FPU
-sections (when hardirqs are not already disabled), as that prevents the
-nesting that was problematic.
-
-This will delay some softirqs slightly, but only ones that would have
-otherwise been nested inside a task context kernel-mode FPU section.
-Any such softirqs would have taken the slow fallback path before if they
-tried to do any en/decryption.  Now these softirqs will just run at the
-end of the task context kernel-mode FPU section (since local_bh_enable()
-runs pending softirqs) and will no longer take the slow fallback path.
-
-Alternatives considered:
-
-- Make kernel-mode FPU sections fully preemptible.  This would require
-  growing task_struct by another struct fpstate which is more than 2K.
-
-- Make softirqs save/restore the kernel-mode FPU state to a per-CPU
-  struct fpstate when nested use is detected.  Somewhat interesting, but
-  seems unnecessary when a simpler solution exists.
-
-Signed-off-by: Eric Biggers <ebiggers@google.com>
----
-
-Changed in v2:
-    - Retain support for kernel-mode FPU when hardirqs are disabled
-      (needed for system suspend and resume)
-    - Send the x86 patch as a standalone patch.
-
- arch/x86/include/asm/fpu/api.h | 17 +++++++----------
- arch/x86/kernel/fpu/core.c     | 17 +++++++++++++----
- 2 files changed, 20 insertions(+), 14 deletions(-)
-
-diff --git a/arch/x86/include/asm/fpu/api.h b/arch/x86/include/asm/fpu/api.h
-index f86ad3335529d..f42de5f05e7eb 100644
---- a/arch/x86/include/asm/fpu/api.h
-+++ b/arch/x86/include/asm/fpu/api.h
-@@ -14,14 +14,13 @@
- 
- #include <asm/fpu/types.h>
- 
- /*
-  * Use kernel_fpu_begin/end() if you intend to use FPU in kernel context. It
-- * disables preemption so be careful if you intend to use it for long periods
-- * of time.
-- * If you intend to use the FPU in irq/softirq you need to check first with
-- * irq_fpu_usable() if it is possible.
-+ * disables preemption and softirq processing, so be careful if you intend to
-+ * use it for long periods of time.  Kernel-mode FPU cannot be used in all
-+ * contexts -- see irq_fpu_usable() for details.
-  */
- 
- /* Kernel FPU states to initialize in kernel_fpu_begin_mask() */
- #define KFPU_387	_BITUL(0)	/* 387 state will be initialized */
- #define KFPU_MXCSR	_BITUL(1)	/* MXCSR will be initialized */
-@@ -48,25 +47,23 @@ static inline void kernel_fpu_begin(void)
- 	kernel_fpu_begin_mask(KFPU_387 | KFPU_MXCSR);
- #endif
- }
- 
- /*
-- * Use fpregs_lock() while editing CPU's FPU registers or fpu->fpstate.
-- * A context switch will (and softirq might) save CPU's FPU registers to
-- * fpu->fpstate.regs and set TIF_NEED_FPU_LOAD leaving CPU's FPU registers in
-- * a random state.
-+ * Use fpregs_lock() while editing CPU's FPU registers or fpu->fpstate, or while
-+ * using the FPU in kernel mode.  A context switch will (and softirq might) save
-+ * CPU's FPU registers to fpu->fpstate.regs and set TIF_NEED_FPU_LOAD leaving
-+ * CPU's FPU registers in a random state.
-  *
-  * local_bh_disable() protects against both preemption and soft interrupts
-  * on !RT kernels.
-  *
-  * On RT kernels local_bh_disable() is not sufficient because it only
-  * serializes soft interrupt related sections via a local lock, but stays
-  * preemptible. Disabling preemption is the right choice here as bottom
-  * half processing is always in thread context on RT kernels so it
-  * implicitly prevents bottom half processing as well.
-- *
-- * Disabling preemption also serializes against kernel_fpu_begin().
-  */
- static inline void fpregs_lock(void)
- {
- 	if (!IS_ENABLED(CONFIG_PREEMPT_RT))
- 		local_bh_disable();
-diff --git a/arch/x86/kernel/fpu/core.c b/arch/x86/kernel/fpu/core.c
-index 1209c7aebb211..f937329d1aa9c 100644
---- a/arch/x86/kernel/fpu/core.c
-+++ b/arch/x86/kernel/fpu/core.c
-@@ -58,13 +58,20 @@ DEFINE_PER_CPU(struct fpu *, fpu_fpregs_owner_ctx);
- bool irq_fpu_usable(void)
- {
- 	if (WARN_ON_ONCE(in_nmi()))
- 		return false;
- 
--	/* In kernel FPU usage already active? */
--	if (this_cpu_read(in_kernel_fpu))
-+	/*
-+	 * In kernel FPU usage already active?  This detects any explicitly
-+	 * nested usage in task or softirq context, which is unsupported.  It
-+	 * also detects attempted usage in a hardirq that has interrupted a
-+	 * kernel-mode FPU section.
-+	 */
-+	if (this_cpu_read(in_kernel_fpu)) {
-+		WARN_ON_FPU(!in_hardirq());
- 		return false;
-+	}
- 
- 	/*
- 	 * When not in NMI or hard interrupt context, FPU can be used in:
- 	 *
- 	 * - Task context except from within fpregs_lock()'ed critical
-@@ -418,11 +425,12 @@ int fpu_copy_uabi_to_guest_fpstate(struct fpu_guest *gfpu, const void *buf,
- EXPORT_SYMBOL_GPL(fpu_copy_uabi_to_guest_fpstate);
- #endif /* CONFIG_KVM */
- 
- void kernel_fpu_begin_mask(unsigned int kfpu_mask)
- {
--	preempt_disable();
-+	if (!irqs_disabled())
-+		fpregs_lock();
- 
- 	WARN_ON_FPU(!irq_fpu_usable());
- 	WARN_ON_FPU(this_cpu_read(in_kernel_fpu));
- 
- 	this_cpu_write(in_kernel_fpu, true);
-@@ -446,11 +454,12 @@ EXPORT_SYMBOL_GPL(kernel_fpu_begin_mask);
- void kernel_fpu_end(void)
- {
- 	WARN_ON_FPU(!this_cpu_read(in_kernel_fpu));
- 
- 	this_cpu_write(in_kernel_fpu, false);
--	preempt_enable();
-+	if (!irqs_disabled())
-+		fpregs_unlock();
- }
- EXPORT_SYMBOL_GPL(kernel_fpu_end);
- 
- /*
-  * Sync the FPU register state to current's memory register state when the
-
-base-commit: 0ad2507d5d93f39619fc42372c347d6006b64319
 -- 
-2.48.1
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
