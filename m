@@ -1,312 +1,113 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4DFA1280CD2;
-	Tue,  4 Mar 2025 22:26:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4500E27934F
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 22:26:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741127183; cv=none; b=QidxGGvxk5zhBO4FP0v/RcxxRXPErg8Itg1cFGLWEKu8Wldo27oOdS4N3K+NqZlT61RxjQ3zfTvSHj7TEb0UF2HxwtZZGRREkVc1DcrwNwOgSbCqMMwgaZav3Xa3R0FTEUjiGtzdxVtoUBG8fxehRt7DqvlpV17etadkjZMg4hM=
+	t=1741127192; cv=none; b=Bc5XedRngidURwUn4FKrSgzDJGKKklisOPahE16t+aJ5q9uUWGba5p8AMjELFsbE/m/3sGBiFIXgIeq8gwD2gscTVqGx/fvx87A4LPr7sDPWo2n2H0p6pjy/WccRC51ZKN7n80186hq+nnlwir/exKWp3V7cYs7ZPtEx//x67FA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741127183; c=relaxed/simple;
-	bh=X/KyPx860DJ3fFotCfXN9tzq/mkxOSyc8Fd3e9m25fc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=jeR2m66iqgLQA/UD7tZLhn6ESHKOqgs4rTwlgfyiUuliBL/0fm3UEnomoziH/qTJXcW5+U+e/poK2wZSM1wWQtTrSyAXhEuH+FyGMWnl0Hd+YxvYsS53KK2tQ6qshmfItDSmpQMrXdZVvBF2fnvM/STRzcZo7PnNECp7cy2dl/g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AA03F1D31;
-	Tue,  4 Mar 2025 14:26:19 -0800 (PST)
-Received: from localhost.localdomain (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AF2773F5A1;
-	Tue,  4 Mar 2025 14:26:04 -0800 (PST)
-From: Andre Przywara <andre.przywara@arm.com>
-To: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Chen-Yu Tsai <wens@csie.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Samuel Holland <samuel@sholland.org>
-Cc: devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-sunxi@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 15/15] arm64: dts: allwinner: h616: add YuzukiHD Chameleon support
-Date: Tue,  4 Mar 2025 22:23:09 +0000
-Message-ID: <20250304222309.29385-16-andre.przywara@arm.com>
-X-Mailer: git-send-email 2.46.3
-In-Reply-To: <20250304222309.29385-1-andre.przywara@arm.com>
-References: <20250304222309.29385-1-andre.przywara@arm.com>
+	s=arc-20240116; t=1741127192; c=relaxed/simple;
+	bh=J2aPQ9pJiSPkXbgCaQfmssg6cb7xKl3aycuhPq6+/1g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EZk+ssCNPfZUDwIyxfJ2O9jd9vF6jHd8tunJoc6Z6L8IKu3U6roANrkWjcx2MTJ22zmHHUnPAC6SJTwQen+4tjxix69diJSApuCTWdv7xxK4hgHtjqO8M3j+yn2LKdDAo9K7XY0XNGiEz3zhZVJB6yGJPJ+v8aoLAHZQPLZX/uo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YWJ50vCl; arc=none smtp.client-ip=209.85.208.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YWJ50vCl"
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5e539ea490dso4015401a12.0
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Mar 2025 14:26:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741127189; x=1741731989; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=qVnMd/oqLZfPyfZDBXHTLRNY+ue0ydYsWRZpmZ6zrek=;
+        b=YWJ50vClqLB2lyDTt82ryUjQpe/TFYC6a4TVaJcSvmS9XUW7s0B0flGLvvxMIjAjKB
+         CHtJIssNNhR4fWA9chXvvcRYyLdhtkVqltUcvSHuOuM0ikmUfmJuL3L222KYqEUdIrdR
+         JW3VslYpSAYAcggjwwEuQZ/x31HJfw+MrEQt8+rwLdo/AtIJHZJltv5oUHBqWW4h3G9S
+         BawFivkCTxkpcm32871Sl7Wn0+Cevw07aHNgTvEQwP5S9Le2+cdjrD13UInc5FwONwMb
+         qC30JwU4skpkZixSnGysa4U/JO4aF1h12wQp9cOoYSQLYelk2/NWawphxV9895Pb9z6m
+         Enpw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741127189; x=1741731989;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qVnMd/oqLZfPyfZDBXHTLRNY+ue0ydYsWRZpmZ6zrek=;
+        b=igWheeU/ZELFmTZDvd3elr868A1M0Xtw+cDjFpILygUcwat4qSoPUxdISeMuv6QOnw
+         YJrF0XJd7LaolPfvdFEvZNPqNhbwu7Fp8tSo6QqAVLKfpRkXpu/08YkjocLwyf5Ft31H
+         THxrCJnjepcckXSSyizBBPmXKhgxdv5iEy3VKz4HShYKsoGbg+XH9S5Esc67OKwVARsZ
+         0AO8GL6pC9liDK9zZVX/dm2obouo2vxWx/O6HkVvoAonkFo5ybrVYPTbmVYYFwm8owR9
+         hHQPF6lbs75IBPIS91fnUiU/hlVFx+nd9bwf3uVbUNT56sZv+iUCPPkzEiToOjK/0ytb
+         33hQ==
+X-Gm-Message-State: AOJu0Yz/oBg29p899vvHmcz8DPu4dh34Vsn1PQa0IB1bVRy44AZmq3bF
+	B/1lBK3oX9KrAA4+0fWV2rFDmwsYp6trSI3+16JFd2tWjU+eJYk8
+X-Gm-Gg: ASbGncv4rHSydFe7FChkjpH1Ei0tY6ZSQTO4lZyhTMIPZeEaDyzqC8hNIEjc+CUT50O
+	62Mptz/NZ0Mi2mVycZM466I73ig2u5JgyA4hmpCKpWgeMZ9AN1akY14dsm3ESIUBNXDqtGYgUwd
+	Npf1y+7GsaOk3QOINzi2fJiDgaevfkb0ZqwLfVLesMg+Qw1hXKukC0cUTB/p0SnBHl6mOCH3JQS
+	ANo2eNuefbJ7XtWUQYurnzsQO3sn1t+RK6SdvG/Pwjx7q34EkYCrVfIRft/WyLD4EIl4Gr0LLR0
+	xlYaDbmmK7wanuIroXKUvW05DJmf55FFTaC/LOBfqUGTzKH10oD+KlI5Cw==
+X-Google-Smtp-Source: AGHT+IHenKMGha9H+K6y3ePRTEE3Vnrd63SgVWqxmqamEkqF47x5Y4srvqOVGkHgLnpes9J04NiQfA==
+X-Received: by 2002:a05:6402:1d4a:b0:5dc:796f:fc86 with SMTP id 4fb4d7f45d1cf-5e59f3efeefmr1977683a12.16.1741127188981;
+        Tue, 04 Mar 2025 14:26:28 -0800 (PST)
+Received: from f (cst-prg-71-44.cust.vodafone.cz. [46.135.71.44])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abf6e9c6213sm479896466b.136.2025.03.04.14.26.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Mar 2025 14:26:28 -0800 (PST)
+Date: Tue, 4 Mar 2025 23:26:20 +0100
+From: Mateusz Guzik <mjguzik@gmail.com>
+To: Brian Gerst <brgerst@gmail.com>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org, 
+	Ingo Molnar <mingo@kernel.org>, "H . Peter Anvin" <hpa@zytor.com>, 
+	Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, Ard Biesheuvel <ardb@kernel.org>, 
+	Uros Bizjak <ubizjak@gmail.com>
+Subject: Re: [PATCH v6 04/15] x86/pvh: Use fixed_percpu_data for early boot
+ GSBASE
+Message-ID: <tns2rrzk7vs3linnjevr24qyg4sm6hakndsgqvqsowqwwlrdcj@zus5wu6u3ju3>
+References: <20250123190747.745588-1-brgerst@gmail.com>
+ <20250123190747.745588-5-brgerst@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250123190747.745588-5-brgerst@gmail.com>
 
-The Chameleon board is an OpenHardware devboard made by YuzukiTsuru.
-The form factor resembles the Raspberry Pi Model A boards, though it
-differs significantly in its features:
+On Thu, Jan 23, 2025 at 02:07:36PM -0500, Brian Gerst wrote:
+> Instead of having a private area for the stack canary, use
+> fixed_percpu_data for GSBASE like the native kernel.
+> 
+> Signed-off-by: Brian Gerst <brgerst@gmail.com>
+> Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
+> ---
+>  arch/x86/platform/pvh/head.S | 15 +++++++++------
+>  1 file changed, 9 insertions(+), 6 deletions(-)
+> 
+> diff --git a/arch/x86/platform/pvh/head.S b/arch/x86/platform/pvh/head.S
+> index 4733a5f467b8..fa0072e0ca43 100644
+> --- a/arch/x86/platform/pvh/head.S
+> +++ b/arch/x86/platform/pvh/head.S
+> @@ -173,10 +173,15 @@ SYM_CODE_START(pvh_start_xen)
+>  1:
+>  	UNWIND_HINT_END_OF_STACK
+>  
+> -	/* Set base address in stack canary descriptor. */
+> -	mov $MSR_GS_BASE,%ecx
+> -	leal canary(%rip), %eax
+> -	xor %edx, %edx
+> +	/*
+> +	 * Set up GSBASE.
+> +	 * Note that, on SMP, the boot cpu uses init data section until
+> +	 * the per cpu areas are set up.
+> +	 */
+> +	movl $MSR_GS_BASE,%ecx
+> +	leaq INIT_PER_CPU_VAR(fixed_percpu_data)(%rip), %rdx
+> +	movq %edx, %eax
 
-  - Allwinner H618 SoC (4 * Arm Cortex-A53 cores, 1MB L2 cache, 1.4 GHz)
-  - between 512MiB and 2GiB DDR3 DRAM
-  - up to 128 GiB eMMC flash
-  - AXP313a PMIC
-  - 100 Mbit/s Ethernet pins on a header
-  - XR829 WIFI+Bluetooth chip
-  - 4 * USB 2.0 USB-C ports
-  - microSD card slot
-  - 3.5mm A/V port
+	movl
 
-Add the devicetree describing the board's peripherals and their
-connections.
-
-Signed-off-by: Andre Przywara <andre.przywara@arm.com>
----
- arch/arm64/boot/dts/allwinner/Makefile        |   1 +
- .../sun50i-h618-yuzukihd-chameleon.dts        | 222 ++++++++++++++++++
- 2 files changed, 223 insertions(+)
- create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-h618-yuzukihd-chameleon.dts
-
-diff --git a/arch/arm64/boot/dts/allwinner/Makefile b/arch/arm64/boot/dts/allwinner/Makefile
-index 9d5e14695af0b..c15f6a0d8d55a 100644
---- a/arch/arm64/boot/dts/allwinner/Makefile
-+++ b/arch/arm64/boot/dts/allwinner/Makefile
-@@ -48,6 +48,7 @@ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h618-longanpi-3h.dtb
- dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h618-orangepi-zero2w.dtb
- dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h618-orangepi-zero3.dtb
- dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h618-transpeed-8k618-t.dtb
-+dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h618-yuzukihd-chameleon.dtb
- dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h700-anbernic-rg35xx-2024.dtb
- dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h700-anbernic-rg35xx-h.dtb
- dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h700-anbernic-rg35xx-plus.dtb
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h618-yuzukihd-chameleon.dts b/arch/arm64/boot/dts/allwinner/sun50i-h618-yuzukihd-chameleon.dts
-new file mode 100644
-index 0000000000000..eae56908b9b4e
---- /dev/null
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h618-yuzukihd-chameleon.dts
-@@ -0,0 +1,222 @@
-+// SPDX-License-Identifier: (GPL-2.0 OR MIT)
-+/*
-+ * Copyright (C) 2024 Arm Ltd.
-+ */
-+
-+/dts-v1/;
-+
-+#include "sun50i-h616.dtsi"
-+#include "sun50i-h616-cpu-opp.dtsi"
-+
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+/ {
-+	model = "Yuzuki Chameleon";
-+	compatible = "yuzukihd,chameleon", "allwinner,sun50i-h618";
-+
-+	aliases {
-+		ethernet1 = &sdio_wifi;
-+		serial0 = &uart0;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	reg_vcc5v: vcc5v {
-+		/* board wide 5V supply directly from the USB-C socket */
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc-5v";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		regulator-always-on;
-+	};
-+
-+	wifi_pwrseq: pwrseq {
-+		compatible = "mmc-pwrseq-simple";
-+		clocks = <&rtc CLK_OSC32K_FANOUT>;
-+		clock-names = "ext_clock";
-+		pinctrl-0 = <&x32clk_fanout_pin>;
-+		pinctrl-names = "default";
-+		reset-gpios = <&pio 6 11 GPIO_ACTIVE_LOW>; /* PG11 */
-+	};
-+};
-+
-+&codec {
-+	allwinner,audio-routing = "Line Out", "LINEOUT";
-+	status = "okay";
-+};
-+
-+&cpu0 {
-+	cpu-supply = <&reg_dcdc2>;
-+};
-+
-+&ehci0 {
-+	status = "okay";
-+};
-+
-+&ehci1 {
-+	status = "okay";
-+};
-+
-+&ehci2 {
-+	status = "okay";
-+};
-+
-+&ehci3 {
-+	status = "okay";
-+};
-+
-+&mmc0 {
-+	bus-width = <4>;
-+	cd-gpios = <&pio 5 6 GPIO_ACTIVE_LOW>;	/* PF6 */
-+	disable-wp;
-+	vmmc-supply = <&reg_dldo1>;
-+	status = "okay";
-+};
-+
-+&mmc1 {
-+	bus-width = <4>;
-+	mmc-pwrseq = <&wifi_pwrseq>;
-+	non-removable;
-+	vmmc-supply = <&reg_dldo1>;
-+	vqmmc-supply = <&reg_dldo1>;
-+	status = "okay";
-+
-+	sdio_wifi: wifi@1 {
-+		reg = <1>;
-+		interrupt-parent = <&pio>;
-+		interrupts = <6 12 IRQ_TYPE_LEVEL_LOW>;  /* PG12 */
-+		interrupt-names = "host-wake";
-+	};
-+};
-+
-+&mmc2 {
-+	bus-width = <8>;
-+	cap-mmc-hw-reset;
-+	mmc-ddr-3_3v;
-+	non-removable;
-+	vmmc-supply = <&reg_dldo1>;
-+	vqmmc-supply = <&reg_dldo1>;
-+	status = "okay";
-+};
-+
-+&ohci0 {
-+	status = "okay";
-+};
-+
-+&ohci1 {
-+	status = "okay";
-+};
-+
-+&ohci2 {
-+	status = "okay";
-+};
-+
-+&ohci3 {
-+	status = "okay";
-+};
-+
-+&pio {
-+	vcc-pc-supply = <&reg_dldo1>;
-+	vcc-pf-supply = <&reg_dldo1>;	/* via VCC_IO */
-+	vcc-pg-supply = <&reg_dldo1>;
-+	vcc-ph-supply = <&reg_dldo1>;	/* via VCC_IO */
-+	vcc-pi-supply = <&reg_dldo1>;
-+};
-+
-+&r_i2c {
-+	status = "okay";
-+
-+	axp313: pmic@36 {
-+		compatible = "x-powers,axp313a";
-+		reg = <0x36>;
-+		#interrupt-cells = <1>;
-+		interrupt-controller;
-+		interrupt-parent = <&pio>;
-+		interrupts = <2 2 IRQ_TYPE_LEVEL_LOW>;	/* PC2 */
-+
-+		vin1-supply = <&reg_vcc5v>;
-+		vin2-supply = <&reg_vcc5v>;
-+		vin3-supply = <&reg_vcc5v>;
-+
-+		regulators {
-+			/* Supplies VCC-PLL, so needs to be always on. */
-+			reg_aldo1: aldo1 {
-+				regulator-always-on;
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-name = "vcc1v8";
-+			};
-+
-+			/* Supplies VCC-IO, so needs to be always on. */
-+			reg_dldo1: dldo1 {
-+				regulator-always-on;
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-name = "vcc3v3";
-+			};
-+
-+			reg_dcdc1: dcdc1 {
-+				regulator-always-on;
-+				regulator-min-microvolt = <810000>;
-+				regulator-max-microvolt = <990000>;
-+				regulator-name = "vdd-gpu-sys";
-+			};
-+
-+			reg_dcdc2: dcdc2 {
-+				regulator-always-on;
-+				regulator-min-microvolt = <810000>;
-+				regulator-max-microvolt = <1100000>;
-+				regulator-name = "vdd-cpu";
-+			};
-+
-+			reg_dcdc3: dcdc3 {
-+				regulator-always-on;
-+				regulator-min-microvolt = <1500000>;
-+				regulator-max-microvolt = <1500000>;
-+				regulator-name = "vdd-dram";
-+			};
-+		};
-+	};
-+};
-+
-+&uart0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart0_ph_pins>;
-+	status = "okay";
-+};
-+
-+/* Connected to the Bluetooth UART pins of the XR829 Wifi/BT chip. */
-+&uart1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart1_pins>, <&uart1_rts_cts_pins>;
-+	uart-has-rtscts;
-+	status = "okay";
-+};
-+
-+&usbotg {
-+	/*
-+	 * PHY0 pins are connected to a USB-C socket, but a role switch
-+	 * is not implemented: both CC pins are pulled to GND.
-+	 * The VBUS pins power the device, so a fixed peripheral mode
-+	 * is the best choice.
-+	 * The board can be powered via GPIOs, in this case port0 *can*
-+	 * act as a host (with a cable/adapter ignoring CC), as VBUS is
-+	 * then provided by the GPIOs. Any user of this setup would
-+	 * need to adjust the DT accordingly: dr_mode set to "host",
-+	 * enabling OHCI0 and EHCI0.
-+	 */
-+	dr_mode = "peripheral";
-+	status = "okay";
-+};
-+
-+&usbphy {
-+	usb0_id_det-gpios = <&pio 6 18 GPIO_ACTIVE_HIGH>; /* PG18 */
-+	usb0_vbus-supply = <&reg_vcc5v>;
-+	usb1_vbus-supply = <&reg_vcc5v>;
-+	usb2_vbus-supply = <&reg_vcc5v>;
-+	usb3_vbus-supply = <&reg_vcc5v>;
-+	status = "okay";
-+};
--- 
-2.46.3
-
+I'm bisecting perf breakage and landing on this commit breaks the build.
