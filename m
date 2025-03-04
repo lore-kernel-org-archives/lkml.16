@@ -1,491 +1,365 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f74.google.com (mail-ed1-f74.google.com [209.85.208.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4EAB20126A;
-	Tue,  4 Mar 2025 09:25:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0AEF202F71
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 09:25:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741080353; cv=none; b=KVJLw5e47tPZhPZ9eSOBGJddPsIwqp9blrTEfF2aWSKtrjKXasuYOA7Hwe1Oe38FC7fXG7+FDm7I0U8eeKoB8aOe1tJ1RhXGZpfgapZjJTrxT4T7EWRLJIiZIoJSjAZ13fYnOlSWK/wrroGiT/h9EFwQYyb4d+WpZNebqzjYMQc=
+	t=1741080359; cv=none; b=DkYfdMS0ezeKGupKd2tWK8OTsROViTOgFAUAe54iAaBFyWoLr/aeNXzZ775+3DQyZZLlD3fpbzCZPikUrK7r8JzskquwhKpvFFbvCTQDhyQITdlf0QS/LIijFfCXVjBrN7UVHx3K8ZQiFNyp/Nu3JVslZcpWV6YSwO2kwuZ2FGI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741080353; c=relaxed/simple;
-	bh=IYGGzd2iv7ffriZYtqfCxV0m2FT/feC0iBGQEH0feac=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Th8/zrwEGRzJ70ubpOZrgKrCJBsrsmkNMtxHTHDS0NHiQ1FYgAJBEGnp19mk0YZ9ay68JE4Y137QM5GDO0UUpPnjCvQjVumcrI4MyvILa6jJ7qE55DeaSSh8o5btb4ca2dPsqHSgB5hZM3qZdAKSCXVd0e3NHEdTSarEU3vk+sA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rphXP1ni; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741080359; c=relaxed/simple;
+	bh=1SmN40z6kKbC+O8dvQdGpD27kvcZTiGHvP/DQN+09H4=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=PxM+S3vAsVxf6PIn1M9aKjGZLZvsY8s+Fh0aBpV9+dQzC6nqIiiCSJ/K81B/JRS6gzlD3ETP881f5zLQClmdAPOd9QJTGDUFbFgzHL3tbZS/hKk7T68hJ50W6R2wnszu/eZnxp0aFC0BhjYgWHbU2+n1qnEb8GB6LRqYhu2AzZQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--elver.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=3SFaGK9L; arc=none smtp.client-ip=209.85.208.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--elver.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rphXP1ni"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81DEEC4CEEF;
-	Tue,  4 Mar 2025 09:25:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741080352;
-	bh=IYGGzd2iv7ffriZYtqfCxV0m2FT/feC0iBGQEH0feac=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=rphXP1niKEtij+m65KQ/s0IEFyhpQy7BEQU6Y98xxVrnbyUZ6EABXhz0rFZ/DlvrL
-	 2+7woXJRBTK6uJsYWhuMWeehX+r+8StvWU7bir4Oes2HhTbBKlrCBzrZK1dvYp2qBY
-	 Djk4UpyiTv8FoaYGmN1AQNAu+ISKiqzXVfl05JGLO9lr0+q8s7SxhwrJw4VsOFqlWk
-	 yrKEV2riVjDpHMXavpZZiWa5SSzsdx0p0RF21CzmPiay63ha9sZ+ivMEI1NwNjKLfR
-	 NVzk1TgMznSLa08iovVUPYGXmQ5uUrM+Ujbl4iG1ZRnpNecdXTyec/mvnzZ7YgOlvk
-	 AT+ip6OUfYrkg==
-Message-ID: <d3c7d421-566f-4007-b272-650294edd019@kernel.org>
-Date: Tue, 4 Mar 2025 10:25:46 +0100
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="3SFaGK9L"
+Received: by mail-ed1-f74.google.com with SMTP id 4fb4d7f45d1cf-5e54335bf7fso2866832a12.1
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Mar 2025 01:25:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1741080355; x=1741685155; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ezb4DcU7J/tAnP2VeDlPIfb7+eFzdx1whQ0121O6/zI=;
+        b=3SFaGK9LRLwlNLFT/c5cma8UqSuYLMvKhYHr9F4JA14UKIr7ukbOg6thlv9DroPV4b
+         kCFR42USngDGrBKefSB0doNHTpcZWpJwIxKbYyLpxGFTPzL0bq4EnjSO8HgWN70auswC
+         Y6r1RgBIvY11RlkSqnX5eSjm/YvpOqdoAHoQiZvZFZyd4au9f92HN/rWUARgrc7+juO5
+         sPaVUapc9oqrLBkxLQzXjOpEHrAx5pdCwxxuZJkZg/9OaNR7McT4/YBQn7o7yvNdfB6G
+         G4cputwhg2yHS2h9ybV+6Z31TNlyVwtGCKTFaoO1FLuH2yiFN6bkojarOzzGU/HysUp+
+         yRPg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741080355; x=1741685155;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ezb4DcU7J/tAnP2VeDlPIfb7+eFzdx1whQ0121O6/zI=;
+        b=hbFnUV8zZfhrtW+Hc1GXsCChAHojp6cGJ327N3Rlo3u5qCKrdBETm5Puaop7wSVrpL
+         t2K2/DXSgF0Iwgh5mFqIjw9cF3BAfngVxbFjYCLqogbeI6/nqdWAua643YVjxQdidsJx
+         w34UCEAV8ePYVE+XYoJSUQqRgx7Bdds7BFWeNoZXxCNLhEDo54mfIyAvOgP2ldn3LLxf
+         My8Bs37VDyy2Tkana5xj19/FegfmWkezeGJVEVEJ0Rkd8hnj+6bMCPZ0+sZPC1km4Efi
+         h39EtKF3aqx/bRRXiJpJU1vH25806W6QpSin9oSfsqVerQweklcpT2RgphBVfacPo/y3
+         WhSw==
+X-Forwarded-Encrypted: i=1; AJvYcCWCkKZsvAYwOrSuAa8WV+AaIEjxUrm0eAO8XPDlj912pc9lxGWUWwMHGOSUGVsuk3a0Y+iRcimUqNiZjb8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywzzko5fMTUmpjY2qyQWm/PQU1bsiaCsH75pl/QQB1jZUU4H6U+
+	ljZ3sEXZ5cVWg5P2yrqA2aB15TCZPJ8AgD4fzhD9O3xjg1//+q6xGmhHnSq07LquKs46+xCB2g=
+	=
+X-Google-Smtp-Source: AGHT+IEQwbZjdZjN5RppHp55Zz74kJe74FUqiEdr52hms6eJRF3kZ/G4XeCunAHNo+i6Y4TgK/rotcyvNA==
+X-Received: from edbfd14.prod.google.com ([2002:a05:6402:388e:b0:5e4:c2fd:b4ac])
+ (user=elver job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6402:2711:b0:5e0:49e4:2180
+ with SMTP id 4fb4d7f45d1cf-5e4d6b4bc0dmr43845190a12.25.1741080355166; Tue, 04
+ Mar 2025 01:25:55 -0800 (PST)
+Date: Tue,  4 Mar 2025 10:21:16 +0100
+In-Reply-To: <20250304092417.2873893-1-elver@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v10 3/4] page_pool: support unlimited number of
- inflight pages
-To: Yunsheng Lin <linyunsheng@huawei.com>, davem@davemloft.net,
- kuba@kernel.org, pabeni@redhat.com
-Cc: zhangkun09@huawei.com, liuyonglong@huawei.com, fanghaiqing@huawei.com,
- Robin Murphy <robin.murphy@arm.com>,
- Alexander Duyck <alexander.duyck@gmail.com>, IOMMU <iommu@lists.linux.dev>,
- Eric Dumazet <edumazet@google.com>, Simon Horman <horms@kernel.org>,
- Donald Hunter <donald.hunter@gmail.com>,
- Ilias Apalodimas <ilias.apalodimas@linaro.org>,
- Andrew Lunn <andrew+netdev@lunn.ch>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, kernel-team <kernel-team@cloudflare.com>,
- Yan Zhai <yan@cloudflare.com>
-References: <20250226110340.2671366-1-linyunsheng@huawei.com>
- <20250226110340.2671366-4-linyunsheng@huawei.com>
-Content-Language: en-US
-From: Jesper Dangaard Brouer <hawk@kernel.org>
-In-Reply-To: <20250226110340.2671366-4-linyunsheng@huawei.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+References: <20250304092417.2873893-1-elver@google.com>
+X-Mailer: git-send-email 2.48.1.711.g2feabab25a-goog
+Message-ID: <20250304092417.2873893-18-elver@google.com>
+Subject: [PATCH v2 17/34] locking/rwsem: Support Clang's capability analysis
+From: Marco Elver <elver@google.com>
+To: elver@google.com
+Cc: "David S. Miller" <davem@davemloft.net>, Luc Van Oostenryck <luc.vanoostenryck@gmail.com>, 
+	"Paul E. McKenney" <paulmck@kernel.org>, Alexander Potapenko <glider@google.com>, Arnd Bergmann <arnd@arndb.de>, 
+	Bart Van Assche <bvanassche@acm.org>, Bill Wendling <morbo@google.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Dmitry Vyukov <dvyukov@google.com>, Eric Dumazet <edumazet@google.com>, 
+	Frederic Weisbecker <frederic@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Herbert Xu <herbert@gondor.apana.org.au>, Ingo Molnar <mingo@kernel.org>, 
+	Jann Horn <jannh@google.com>, Jiri Slaby <jirislaby@kernel.org>, 
+	Joel Fernandes <joel@joelfernandes.org>, Jonathan Corbet <corbet@lwn.net>, 
+	Josh Triplett <josh@joshtriplett.org>, Justin Stitt <justinstitt@google.com>, 
+	Kees Cook <kees@kernel.org>, Kentaro Takeda <takedakn@nttdata.co.jp>, 
+	Mark Rutland <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Miguel Ojeda <ojeda@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Steven Rostedt <rostedt@goodmis.org>, Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>, 
+	Thomas Gleixner <tglx@linutronix.de>, Uladzislau Rezki <urezki@gmail.com>, Waiman Long <longman@redhat.com>, 
+	Will Deacon <will@kernel.org>, kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org, 
+	llvm@lists.linux.dev, rcu@vger.kernel.org, linux-crypto@vger.kernel.org, 
+	linux-serial@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-(comments requesting changes inlined below)
+Add support for Clang's capability analysis for rw_semaphore.
 
-On 26/02/2025 12.03, Yunsheng Lin wrote:
-> Currently a fixed size of pre-allocated memory is used to
-> keep track of the inflight pages, in order to use the DMA
-> API correctly.
-> 
-> As mentioned [1], the number of inflight pages can be up to
-> 73203 depending on the use cases. Allocate memory dynamically
-> to keep track of the inflight pages when pre-allocated memory
-> runs out.
-> 
-> The overhead of using dynamic memory allocation is about 10ns~
-> 20ns, which causes 5%~10% performance degradation for the test
-> case of time_bench_page_pool03_slow() in [2].
-> 
-> 1. https://lore.kernel.org/all/b8b7818a-e44b-45f5-91c2-d5eceaa5dd5b@kernel.org/
-> 2. https://github.com/netoptimizer/prototype-kernel
-> CC: Robin Murphy <robin.murphy@arm.com>
-> CC: Alexander Duyck <alexander.duyck@gmail.com>
-> CC: IOMMU <iommu@lists.linux.dev>
-> Fixes: f71fec47c2df ("page_pool: make sure struct device is stable")
-> Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
-> ---
->   Documentation/netlink/specs/netdev.yaml | 16 +++++
->   include/net/page_pool/types.h           | 10 ++++
->   include/uapi/linux/netdev.h             |  2 +
->   net/core/page_pool.c                    | 79 ++++++++++++++++++++++++-
->   net/core/page_pool_priv.h               |  2 +
->   net/core/page_pool_user.c               | 39 ++++++++++--
->   tools/net/ynl/samples/page-pool.c       | 11 ++++
->   7 files changed, 154 insertions(+), 5 deletions(-)
-> 
-> diff --git a/Documentation/netlink/specs/netdev.yaml b/Documentation/netlink/specs/netdev.yaml
-> index 36f1152bfac3..7c121d0a5d15 100644
-> --- a/Documentation/netlink/specs/netdev.yaml
-> +++ b/Documentation/netlink/specs/netdev.yaml
-> @@ -162,6 +162,20 @@ attribute-sets:
->           type: uint
->           doc: |
->             Amount of memory held by inflight pages.
-> +      -
-> +        name: item_mem_resident
-> +        type: uint
-> +        doc: |
-> +          Amount of actual memory allocated to track inflight pages.
-> +          memory fragmentation ratio for item memory can be calculated
-> +          using item_mem_resident / item_mem_used.
-> +      -
-> +        name: item_mem_used
-> +        type: uint
-> +        doc: |
-> +          Amount of actual memory used to track inflight pages.
-> +          memory fragmentation ratio for item memory can be calculated
-> +          using item_mem_resident / item_mem_used.
->         -
->           name: detach-time
->           type: uint
-> @@ -602,6 +616,8 @@ operations:
->               - detach-time
->               - dmabuf
->               - io-uring
-> +            - item_mem_resident
-> +            - item_mem_used
->         dump:
->           reply: *pp-reply
->         config-cond: page-pool
-> diff --git a/include/net/page_pool/types.h b/include/net/page_pool/types.h
-> index c131e2725e9a..c8c47ca67f4b 100644
-> --- a/include/net/page_pool/types.h
-> +++ b/include/net/page_pool/types.h
-> @@ -103,6 +103,7 @@ struct page_pool_params {
->    * @waive:	pages obtained from the ptr ring that cannot be added to
->    *		the cache due to a NUMA mismatch
->    * @item_fast_empty: pre-allocated item cache is empty
-> + * @item_slow_failed: failed to allocate memory for item_block
->    */
->   struct page_pool_alloc_stats {
->   	u64 fast;
-> @@ -112,6 +113,7 @@ struct page_pool_alloc_stats {
->   	u64 refill;
->   	u64 waive;
->   	u64 item_fast_empty;
-> +	u64 item_slow_failed;
->   };
->   
->   /**
-> @@ -159,9 +161,16 @@ struct page_pool_item {
->   struct page_pool_item_block {
->   	struct page_pool *pp;
->   	struct list_head list;
-> +	unsigned int flags;
-> +	refcount_t ref;
->   	struct page_pool_item items[];
->   };
->   
-> +struct page_pool_slow_item {
-> +	struct page_pool_item_block *block;
-> +	unsigned int next_to_use;
-> +};
-> +
->   /* Ensure the offset of 'pp' field for both 'page_pool_item_block' and
->    * 'netmem_item_block' are the same.
->    */
-> @@ -191,6 +200,7 @@ struct page_pool {
->   	int cpuid;
->   	u32 pages_state_hold_cnt;
->   	struct llist_head hold_items;
-> +	struct page_pool_slow_item slow_items;
->   
->   	bool has_init_callback:1;	/* slow::init_callback is set */
->   	bool dma_map:1;			/* Perform DMA mapping */
-> diff --git a/include/uapi/linux/netdev.h b/include/uapi/linux/netdev.h
-> index 7600bf62dbdf..9309cbfeb8d2 100644
-> --- a/include/uapi/linux/netdev.h
-> +++ b/include/uapi/linux/netdev.h
-> @@ -103,6 +103,8 @@ enum {
->   	NETDEV_A_PAGE_POOL_DETACH_TIME,
->   	NETDEV_A_PAGE_POOL_DMABUF,
->   	NETDEV_A_PAGE_POOL_IO_URING,
-> +	NETDEV_A_PAGE_POOL_ITEM_MEM_RESIDENT,
-> +	NETDEV_A_PAGE_POOL_ITEM_MEM_USED,
->   
->   	__NETDEV_A_PAGE_POOL_MAX,
->   	NETDEV_A_PAGE_POOL_MAX = (__NETDEV_A_PAGE_POOL_MAX - 1)
-> diff --git a/net/core/page_pool.c b/net/core/page_pool.c
-> index d927c468bc1b..dc9574bd129b 100644
-> --- a/net/core/page_pool.c
-> +++ b/net/core/page_pool.c
-> @@ -64,6 +64,7 @@ static const char pp_stats[][ETH_GSTRING_LEN] = {
->   	"rx_pp_alloc_refill",
->   	"rx_pp_alloc_waive",
->   	"rx_pp_alloc_item_fast_empty",
-> +	"rx_pp_alloc_item_slow_failed",
->   	"rx_pp_recycle_cached",
->   	"rx_pp_recycle_cache_full",
->   	"rx_pp_recycle_ring",
-> @@ -98,6 +99,7 @@ bool page_pool_get_stats(const struct page_pool *pool,
->   	stats->alloc_stats.refill += pool->alloc_stats.refill;
->   	stats->alloc_stats.waive += pool->alloc_stats.waive;
->   	stats->alloc_stats.item_fast_empty += pool->alloc_stats.item_fast_empty;
-> +	stats->alloc_stats.item_slow_failed += pool->alloc_stats.item_slow_failed;
->   
->   	for_each_possible_cpu(cpu) {
->   		const struct page_pool_recycle_stats *pcpu =
-> @@ -144,6 +146,7 @@ u64 *page_pool_ethtool_stats_get(u64 *data, const void *stats)
->   	*data++ = pool_stats->alloc_stats.refill;
->   	*data++ = pool_stats->alloc_stats.waive;
->   	*data++ = pool_stats->alloc_stats.item_fast_empty;
-> +	*data++ = pool_stats->alloc_stats.item_slow_failed;
->   	*data++ = pool_stats->recycle_stats.cached;
->   	*data++ = pool_stats->recycle_stats.cache_full;
->   	*data++ = pool_stats->recycle_stats.ring;
-> @@ -431,6 +434,7 @@ static void page_pool_item_uninit(struct page_pool *pool)
->   					 struct page_pool_item_block,
->   					 list);
->   		list_del(&block->list);
-> +		WARN_ON(refcount_read(&block->ref));
->   		put_page(virt_to_page(block));
->   	}
->   }
-> @@ -514,10 +518,42 @@ static struct page_pool_item *page_pool_fast_item_alloc(struct page_pool *pool)
->   	return llist_entry(first, struct page_pool_item, lentry);
->   }
->   
-> +static struct page_pool_item *page_pool_slow_item_alloc(struct page_pool *pool)
-> +{
-> +	if (unlikely(!pool->slow_items.block ||
-> +		     pool->slow_items.next_to_use >= ITEMS_PER_PAGE)) {
-> +		struct page_pool_item_block *block;
-> +		struct page *page;
-> +
-> +		page = alloc_pages_node(pool->p.nid, GFP_ATOMIC | __GFP_NOWARN |
-> +					__GFP_ZERO, 0);
-> +		if (!page) {
-> +			alloc_stat_inc(pool, item_slow_failed);
-> +			return NULL;
-> +		}
+Signed-off-by: Marco Elver <elver@google.com>
+---
+ .../dev-tools/capability-analysis.rst         |  2 +-
+ include/linux/rwsem.h                         | 56 +++++++++-------
+ lib/test_capability-analysis.c                | 64 +++++++++++++++++++
+ 3 files changed, 97 insertions(+), 25 deletions(-)
 
-I'm missing a counter that I can use to monitor the rate of page
-allocations for these "item" block's.
-In production want to have a metric that shows me a sudden influx of
-that cause code to hit this "item_slow_alloc" case (inflight_slow_alloc)
+diff --git a/Documentation/dev-tools/capability-analysis.rst b/Documentation/dev-tools/capability-analysis.rst
+index 918e35d110df..7e4d94d65043 100644
+--- a/Documentation/dev-tools/capability-analysis.rst
++++ b/Documentation/dev-tools/capability-analysis.rst
+@@ -80,7 +80,7 @@ Supported Kernel Primitives
+ 
+ Currently the following synchronization primitives are supported:
+ `raw_spinlock_t`, `spinlock_t`, `rwlock_t`, `mutex`, `seqlock_t`,
+-`bit_spinlock`, RCU, SRCU (`srcu_struct`).
++`bit_spinlock`, RCU, SRCU (`srcu_struct`), `rw_semaphore`.
+ 
+ For capabilities with an initialization function (e.g., `spin_lock_init()`),
+ calling this function on the capability instance before initializing any
+diff --git a/include/linux/rwsem.h b/include/linux/rwsem.h
+index c8b543d428b0..98aa623ad9bf 100644
+--- a/include/linux/rwsem.h
++++ b/include/linux/rwsem.h
+@@ -45,7 +45,7 @@
+  * reduce the chance that they will share the same cacheline causing
+  * cacheline bouncing problem.
+  */
+-struct rw_semaphore {
++struct_with_capability(rw_semaphore) {
+ 	atomic_long_t count;
+ 	/*
+ 	 * Write owner or one of the read owners as well flags regarding
+@@ -76,11 +76,13 @@ static inline int rwsem_is_locked(struct rw_semaphore *sem)
+ }
+ 
+ static inline void rwsem_assert_held_nolockdep(const struct rw_semaphore *sem)
++	__asserts_cap(sem)
+ {
+ 	WARN_ON(atomic_long_read(&sem->count) == RWSEM_UNLOCKED_VALUE);
+ }
+ 
+ static inline void rwsem_assert_held_write_nolockdep(const struct rw_semaphore *sem)
++	__asserts_cap(sem)
+ {
+ 	WARN_ON(!(atomic_long_read(&sem->count) & RWSEM_WRITER_LOCKED));
+ }
+@@ -119,6 +121,7 @@ do {								\
+ 	static struct lock_class_key __key;			\
+ 								\
+ 	__init_rwsem((sem), #sem, &__key);			\
++	__assert_cap(sem);					\
+ } while (0)
+ 
+ /*
+@@ -136,7 +139,7 @@ static inline int rwsem_is_contended(struct rw_semaphore *sem)
+ 
+ #include <linux/rwbase_rt.h>
+ 
+-struct rw_semaphore {
++struct_with_capability(rw_semaphore) {
+ 	struct rwbase_rt	rwbase;
+ #ifdef CONFIG_DEBUG_LOCK_ALLOC
+ 	struct lockdep_map	dep_map;
+@@ -160,6 +163,7 @@ do {								\
+ 	static struct lock_class_key __key;			\
+ 								\
+ 	__init_rwsem((sem), #sem, &__key);			\
++	__assert_cap(sem);					\
+ } while (0)
+ 
+ static __always_inline int rwsem_is_locked(const struct rw_semaphore *sem)
+@@ -168,11 +172,13 @@ static __always_inline int rwsem_is_locked(const struct rw_semaphore *sem)
+ }
+ 
+ static __always_inline void rwsem_assert_held_nolockdep(const struct rw_semaphore *sem)
++	__asserts_cap(sem)
+ {
+ 	WARN_ON(!rwsem_is_locked(sem));
+ }
+ 
+ static __always_inline void rwsem_assert_held_write_nolockdep(const struct rw_semaphore *sem)
++	__asserts_cap(sem)
+ {
+ 	WARN_ON(!rw_base_is_write_locked(&sem->rwbase));
+ }
+@@ -190,6 +196,7 @@ static __always_inline int rwsem_is_contended(struct rw_semaphore *sem)
+  */
+ 
+ static inline void rwsem_assert_held(const struct rw_semaphore *sem)
++	__asserts_cap(sem)
+ {
+ 	if (IS_ENABLED(CONFIG_LOCKDEP))
+ 		lockdep_assert_held(sem);
+@@ -198,6 +205,7 @@ static inline void rwsem_assert_held(const struct rw_semaphore *sem)
+ }
+ 
+ static inline void rwsem_assert_held_write(const struct rw_semaphore *sem)
++	__asserts_cap(sem)
+ {
+ 	if (IS_ENABLED(CONFIG_LOCKDEP))
+ 		lockdep_assert_held_write(sem);
+@@ -208,47 +216,47 @@ static inline void rwsem_assert_held_write(const struct rw_semaphore *sem)
+ /*
+  * lock for reading
+  */
+-extern void down_read(struct rw_semaphore *sem);
+-extern int __must_check down_read_interruptible(struct rw_semaphore *sem);
+-extern int __must_check down_read_killable(struct rw_semaphore *sem);
++extern void down_read(struct rw_semaphore *sem) __acquires_shared(sem);
++extern int __must_check down_read_interruptible(struct rw_semaphore *sem) __cond_acquires_shared(0, sem);
++extern int __must_check down_read_killable(struct rw_semaphore *sem) __cond_acquires_shared(0, sem);
+ 
+ /*
+  * trylock for reading -- returns 1 if successful, 0 if contention
+  */
+-extern int down_read_trylock(struct rw_semaphore *sem);
++extern int down_read_trylock(struct rw_semaphore *sem) __cond_acquires_shared(true, sem);
+ 
+ /*
+  * lock for writing
+  */
+-extern void down_write(struct rw_semaphore *sem);
+-extern int __must_check down_write_killable(struct rw_semaphore *sem);
++extern void down_write(struct rw_semaphore *sem) __acquires(sem);
++extern int __must_check down_write_killable(struct rw_semaphore *sem) __cond_acquires(0, sem);
+ 
+ /*
+  * trylock for writing -- returns 1 if successful, 0 if contention
+  */
+-extern int down_write_trylock(struct rw_semaphore *sem);
++extern int down_write_trylock(struct rw_semaphore *sem) __cond_acquires(true, sem);
+ 
+ /*
+  * release a read lock
+  */
+-extern void up_read(struct rw_semaphore *sem);
++extern void up_read(struct rw_semaphore *sem) __releases_shared(sem);
+ 
+ /*
+  * release a write lock
+  */
+-extern void up_write(struct rw_semaphore *sem);
++extern void up_write(struct rw_semaphore *sem) __releases(sem);
+ 
+-DEFINE_GUARD(rwsem_read, struct rw_semaphore *, down_read(_T), up_read(_T))
+-DEFINE_GUARD_COND(rwsem_read, _try, down_read_trylock(_T))
+-DEFINE_GUARD_COND(rwsem_read, _intr, down_read_interruptible(_T) == 0)
++DEFINE_LOCK_GUARD_1(rwsem_read, struct rw_semaphore, down_read(_T->lock), up_read(_T->lock))
++DEFINE_LOCK_GUARD_1_COND(rwsem_read, _try, down_read_trylock(_T->lock))
++DEFINE_LOCK_GUARD_1_COND(rwsem_read, _intr, down_read_interruptible(_T->lock) == 0)
+ 
+-DEFINE_GUARD(rwsem_write, struct rw_semaphore *, down_write(_T), up_write(_T))
+-DEFINE_GUARD_COND(rwsem_write, _try, down_write_trylock(_T))
++DEFINE_LOCK_GUARD_1(rwsem_write, struct rw_semaphore, down_write(_T->lock), up_write(_T->lock))
++DEFINE_LOCK_GUARD_1_COND(rwsem_write, _try, down_write_trylock(_T->lock))
+ 
+ /*
+  * downgrade write lock to read lock
+  */
+-extern void downgrade_write(struct rw_semaphore *sem);
++extern void downgrade_write(struct rw_semaphore *sem) __releases(sem) __acquires_shared(sem);
+ 
+ #ifdef CONFIG_DEBUG_LOCK_ALLOC
+ /*
+@@ -264,11 +272,11 @@ extern void downgrade_write(struct rw_semaphore *sem);
+  * lockdep_set_class() at lock initialization time.
+  * See Documentation/locking/lockdep-design.rst for more details.)
+  */
+-extern void down_read_nested(struct rw_semaphore *sem, int subclass);
+-extern int __must_check down_read_killable_nested(struct rw_semaphore *sem, int subclass);
+-extern void down_write_nested(struct rw_semaphore *sem, int subclass);
+-extern int down_write_killable_nested(struct rw_semaphore *sem, int subclass);
+-extern void _down_write_nest_lock(struct rw_semaphore *sem, struct lockdep_map *nest_lock);
++extern void down_read_nested(struct rw_semaphore *sem, int subclass) __acquires_shared(sem);
++extern int __must_check down_read_killable_nested(struct rw_semaphore *sem, int subclass) __cond_acquires_shared(0, sem);
++extern void down_write_nested(struct rw_semaphore *sem, int subclass) __acquires(sem);
++extern int down_write_killable_nested(struct rw_semaphore *sem, int subclass) __cond_acquires(0, sem);
++extern void _down_write_nest_lock(struct rw_semaphore *sem, struct lockdep_map *nest_lock) __acquires(sem);
+ 
+ # define down_write_nest_lock(sem, nest_lock)			\
+ do {								\
+@@ -282,8 +290,8 @@ do {								\
+  * [ This API should be avoided as much as possible - the
+  *   proper abstraction for this case is completions. ]
+  */
+-extern void down_read_non_owner(struct rw_semaphore *sem);
+-extern void up_read_non_owner(struct rw_semaphore *sem);
++extern void down_read_non_owner(struct rw_semaphore *sem) __acquires_shared(sem);
++extern void up_read_non_owner(struct rw_semaphore *sem) __releases_shared(sem);
+ #else
+ # define down_read_nested(sem, subclass)		down_read(sem)
+ # define down_read_killable_nested(sem, subclass)	down_read_killable(sem)
+diff --git a/lib/test_capability-analysis.c b/lib/test_capability-analysis.c
+index 63d81ad1562f..7ccb163ab5b1 100644
+--- a/lib/test_capability-analysis.c
++++ b/lib/test_capability-analysis.c
+@@ -8,6 +8,7 @@
+ #include <linux/build_bug.h>
+ #include <linux/mutex.h>
+ #include <linux/rcupdate.h>
++#include <linux/rwsem.h>
+ #include <linux/seqlock.h>
+ #include <linux/spinlock.h>
+ #include <linux/srcu.h>
+@@ -255,6 +256,69 @@ static void __used test_seqlock_writer(struct test_seqlock_data *d)
+ 	write_sequnlock_irqrestore(&d->sl, flags);
+ }
+ 
++struct test_rwsem_data {
++	struct rw_semaphore sem;
++	int counter __guarded_by(&sem);
++};
++
++static void __used test_rwsem_init(struct test_rwsem_data *d)
++{
++	init_rwsem(&d->sem);
++	d->counter = 0;
++}
++
++static void __used test_rwsem_reader(struct test_rwsem_data *d)
++{
++	down_read(&d->sem);
++	(void)d->counter;
++	up_read(&d->sem);
++
++	if (down_read_trylock(&d->sem)) {
++		(void)d->counter;
++		up_read(&d->sem);
++	}
++}
++
++static void __used test_rwsem_writer(struct test_rwsem_data *d)
++{
++	down_write(&d->sem);
++	d->counter++;
++	up_write(&d->sem);
++
++	down_write(&d->sem);
++	d->counter++;
++	downgrade_write(&d->sem);
++	(void)d->counter;
++	up_read(&d->sem);
++
++	if (down_write_trylock(&d->sem)) {
++		d->counter++;
++		up_write(&d->sem);
++	}
++}
++
++static void __used test_rwsem_assert(struct test_rwsem_data *d)
++{
++	rwsem_assert_held_nolockdep(&d->sem);
++	d->counter++;
++}
++
++static void __used test_rwsem_guard(struct test_rwsem_data *d)
++{
++	{ guard(rwsem_read)(&d->sem); (void)d->counter; }
++	{ guard(rwsem_write)(&d->sem); d->counter++; }
++}
++
++static void __used test_rwsem_cond_guard(struct test_rwsem_data *d)
++{
++	scoped_cond_guard(rwsem_read_try, return, &d->sem) {
++		(void)d->counter;
++	}
++	scoped_cond_guard(rwsem_write_try, return, &d->sem) {
++		d->counter++;
++	}
++}
++
+ struct test_bit_spinlock_data {
+ 	unsigned long bits;
+ 	int counter __guarded_by(__bitlock(3, &bits));
+-- 
+2.48.1.711.g2feabab25a-goog
 
-BTW should this be called "inflight_block" instead of "item_block"?
-
-
-> +
-> +		block = page_address(page);
-> +		block->pp = pool;
-> +		block->flags |= PAGE_POOL_SLOW_ITEM_BLOCK_BIT;
-> +		refcount_set(&block->ref, ITEMS_PER_PAGE);
-> +		pool->slow_items.block = block;
-> +		pool->slow_items.next_to_use = 0;
-> +
-> +		spin_lock_bh(&pool->item_lock);
-> +		list_add(&block->list, &pool->item_blocks);
-> +		spin_unlock_bh(&pool->item_lock);
-> +	}
-> +
-> +	return &pool->slow_items.block->items[pool->slow_items.next_to_use++];
-> +}
-> +
->   static bool page_pool_set_item_info(struct page_pool *pool, netmem_ref netmem)
->   {
->   	struct page_pool_item *item = page_pool_fast_item_alloc(pool);
->   
-> +	if (unlikely(!item))
-> +		item = page_pool_slow_item_alloc(pool);
-> +
->   	if (likely(item)) {
->   		item->pp_netmem = netmem;
->   		page_pool_item_set_used(item);
-> @@ -527,6 +563,37 @@ static bool page_pool_set_item_info(struct page_pool *pool, netmem_ref netmem)
->   	return !!item;
->   }
->   
-> +static void __page_pool_slow_item_free(struct page_pool *pool,
-> +				       struct page_pool_item_block *block)
-> +{
-> +	spin_lock_bh(&pool->item_lock);
-> +	list_del(&block->list);
-> +	spin_unlock_bh(&pool->item_lock);
-> +
-> +	put_page(virt_to_page(block));
-
-Here again I'm missing a counter that I can use to monitor the rate of
-page free events.
-
-In production I want a metric (e.g inflight_slow_free_block) that
-together with "item_slow_alloc" (perhaps named
-inflight_slow_alloc_block), show me if this code path is creating churn,
-that I can correlate/explain some other influx event on the system.
-
-BTW subtracting these (alloc - free) counters gives us the memory used.
-
-> +}
-> +
-> +static void page_pool_slow_item_drain(struct page_pool *pool)
-> +{
-> +	struct page_pool_item_block *block = pool->slow_items.block;
-> +
-> +	if (!block || pool->slow_items.next_to_use >= ITEMS_PER_PAGE)
-> +		return;
-> +
-> +	if (refcount_sub_and_test(ITEMS_PER_PAGE - pool->slow_items.next_to_use,
-> +				  &block->ref))
-> +		__page_pool_slow_item_free(pool, block);
-> +}
-> +
-> +static void page_pool_slow_item_free(struct page_pool *pool,
-> +				     struct page_pool_item_block *block)
-> +{
-> +	if (likely(!refcount_dec_and_test(&block->ref)))
-> +		return;
-> +
-> +	__page_pool_slow_item_free(pool, block);
-> +}
-> +
->   static void page_pool_fast_item_free(struct page_pool *pool,
->   				     struct page_pool_item *item)
->   {
-> @@ -536,13 +603,22 @@ static void page_pool_fast_item_free(struct page_pool *pool,
->   static void page_pool_clear_item_info(struct page_pool *pool, netmem_ref netmem)
->   {
->   	struct page_pool_item *item = netmem_get_pp_item(netmem);
-> +	struct page_pool_item_block *block;
->   
->   	DEBUG_NET_WARN_ON_ONCE(item->pp_netmem != netmem);
->   	DEBUG_NET_WARN_ON_ONCE(page_pool_item_is_mapped(item));
->   	DEBUG_NET_WARN_ON_ONCE(!page_pool_item_is_used(item));
->   	page_pool_item_clear_used(item);
->   	netmem_set_pp_item(netmem, NULL);
-> -	page_pool_fast_item_free(pool, item);
-> +
-> +	block = page_pool_item_to_block(item);
-> +	if (likely(!(block->flags & PAGE_POOL_SLOW_ITEM_BLOCK_BIT))) {
-> +		DEBUG_NET_WARN_ON_ONCE(refcount_read(&block->ref));
-> +		page_pool_fast_item_free(pool, item);
-> +		return;
-> +	}
-> +
-> +	page_pool_slow_item_free(pool, block);
->   }
->   
->   /**
-> @@ -1390,6 +1466,7 @@ void page_pool_destroy(struct page_pool *pool)
->   
->   	page_pool_disable_direct_recycling(pool);
->   	page_pool_free_frag(pool);
-> +	page_pool_slow_item_drain(pool);
->   
->   	if (!page_pool_release(pool))
->   		return;
-> diff --git a/net/core/page_pool_priv.h b/net/core/page_pool_priv.h
-> index a5df5ab14ead..37adfc766c12 100644
-> --- a/net/core/page_pool_priv.h
-> +++ b/net/core/page_pool_priv.h
-> @@ -7,6 +7,8 @@
->   
->   #include "netmem_priv.h"
->   
-> +#define PAGE_POOL_SLOW_ITEM_BLOCK_BIT		BIT(0)
-> +
->   extern struct mutex page_pools_lock;
->   
->   s32 page_pool_inflight(const struct page_pool *pool, bool strict);
-> diff --git a/net/core/page_pool_user.c b/net/core/page_pool_user.c
-> index c82a95beceff..0dc0090257ae 100644
-> --- a/net/core/page_pool_user.c
-> +++ b/net/core/page_pool_user.c
-> @@ -33,7 +33,7 @@ DEFINE_MUTEX(page_pools_lock);
->    *    - user.list: unhashed, netdev: unknown
->    */
->   
-> -typedef int (*pp_nl_fill_cb)(struct sk_buff *rsp, const struct page_pool *pool,
-> +typedef int (*pp_nl_fill_cb)(struct sk_buff *rsp, struct page_pool *pool,
->   			     const struct genl_info *info);
->   
->   static int
-> @@ -111,7 +111,7 @@ netdev_nl_page_pool_get_dump(struct sk_buff *skb, struct netlink_callback *cb,
->   }
->   
->   static int
-> -page_pool_nl_stats_fill(struct sk_buff *rsp, const struct page_pool *pool,
-> +page_pool_nl_stats_fill(struct sk_buff *rsp, struct page_pool *pool,
->   			const struct genl_info *info)
->   {
->   #ifdef CONFIG_PAGE_POOL_STATS
-> @@ -212,8 +212,36 @@ int netdev_nl_page_pool_stats_get_dumpit(struct sk_buff *skb,
->   	return netdev_nl_page_pool_get_dump(skb, cb, page_pool_nl_stats_fill);
->   }
->   
-> +static int page_pool_nl_fill_item_mem_info(struct page_pool *pool,
-> +					   struct sk_buff *rsp)
-> +{
-> +	struct page_pool_item_block *block;
-> +	size_t resident = 0, used = 0;
-> +	int err;
-> +
-> +	spin_lock_bh(&pool->item_lock);
-> +
-> +	list_for_each_entry(block, &pool->item_blocks, list) {
-> +		resident += PAGE_SIZE;
-> +
-> +		if (block->flags & PAGE_POOL_SLOW_ITEM_BLOCK_BIT)
-> +			used += (PAGE_SIZE - sizeof(struct page_pool_item) *
-> +				 refcount_read(&block->ref));
-> +		else
-> +			used += PAGE_SIZE;
-> +	}
-> +
-> +	spin_unlock_bh(&pool->item_lock);
-
-Holding a BH spin_lock can easily create production issues.
-I worry how long time it will take to traverse these lists.
-
-We (Cc Yan) are currently hunting down a number of real production issue
-due to different cases of control-path code querying the kernel that
-takes a _bh lock to read data, hurting the data-path processing.
-
-If we had the stats counters, then this would be less work, right?
-
-
-> +
-> +	err = nla_put_uint(rsp, NETDEV_A_PAGE_POOL_ITEM_MEM_RESIDENT, resident);
-> +	if (err)
-> +		return err;
-> +
-> +	return nla_put_uint(rsp, NETDEV_A_PAGE_POOL_ITEM_MEM_USED, used);
-> +}
-> +
->   static int
-> -page_pool_nl_fill(struct sk_buff *rsp, const struct page_pool *pool,
-> +page_pool_nl_fill(struct sk_buff *rsp, struct page_pool *pool,
->   		  const struct genl_info *info)
->   {
->   	size_t inflight, refsz;
-> @@ -251,6 +279,9 @@ page_pool_nl_fill(struct sk_buff *rsp, const struct page_pool *pool,
->   	if (pool->mp_ops && pool->mp_ops->nl_fill(pool->mp_priv, rsp, NULL))
->   		goto err_cancel;
->   
-> +	if (page_pool_nl_fill_item_mem_info(pool, rsp))
-> +		goto err_cancel;
-> +
->   	genlmsg_end(rsp, hdr);
->   
->   	return 0;
-> @@ -259,7 +290,7 @@ page_pool_nl_fill(struct sk_buff *rsp, const struct page_pool *pool,
->   	return -EMSGSIZE;
->   }
->   
-> -static void netdev_nl_page_pool_event(const struct page_pool *pool, u32 cmd)
-> +static void netdev_nl_page_pool_event(struct page_pool *pool, u32 cmd)
->   {
->   	struct genl_info info;
->   	struct sk_buff *ntf;
-> diff --git a/tools/net/ynl/samples/page-pool.c b/tools/net/ynl/samples/page-pool.c
-> index e5d521320fbf..16c48b6d3c2c 100644
-> --- a/tools/net/ynl/samples/page-pool.c
-> +++ b/tools/net/ynl/samples/page-pool.c
-> @@ -16,6 +16,7 @@ struct stat {
->   	struct {
->   		unsigned int cnt;
->   		size_t refs, bytes;
-> +		size_t item_mem_resident, item_mem_used;
->   	} live[2];
->   
->   	size_t alloc_slow, alloc_fast, recycle_ring, recycle_cache;
-> @@ -52,6 +53,12 @@ static void count(struct stat *s, unsigned int l,
->   		s->live[l].refs += pp->inflight;
->   	if (pp->_present.inflight_mem)
->   		s->live[l].bytes += pp->inflight_mem;
-> +
-> +	if (pp->_present.item_mem_resident)
-> +		s->live[l].item_mem_resident += pp->item_mem_resident;
-> +
-> +	if (pp->_present.item_mem_used)
-> +		s->live[l].item_mem_used += pp->item_mem_used;
->   }
->   
->   int main(int argc, char **argv)
-> @@ -127,6 +134,10 @@ int main(int argc, char **argv)
->   		       s->live[1].refs, s->live[1].bytes,
->   		       s->live[0].refs, s->live[0].bytes);
->   
-> +		printf("\t\titem_mem_resident: %zu item_mem_used: %zu (item_mem_resident: %zu item_mem_used: %zu)\n",
-> +		       s->live[1].item_mem_resident, s->live[1].item_mem_used,
-> +		       s->live[0].item_mem_resident, s->live[0].item_mem_used);
-> +
->   		/* We don't know how many pages are sitting in cache and ring
->   		 * so we will under-count the recycling rate a bit.
->   		 */
