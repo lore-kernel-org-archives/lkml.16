@@ -1,114 +1,89 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E4B3E1F8BCC;
-	Tue,  4 Mar 2025 20:31:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56BB8246335;
+	Tue,  4 Mar 2025 20:31:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741120301; cv=none; b=MHnmmcxeBJSsGqfm42Kqeuq48WxjcDHUQgoSTcXFaE3LfeBXbAlKDB8rOwPbY7QJ5h4k4m0x1F50SMASbHecfVYNa/YaVU2a7LBVjR15o61RtLXhUAsbhpa8TpN8DbMQdD2KnEsVLHUJrW/yzmELzYm/aM4DVDso9WHg9N0CufU=
+	t=1741120308; cv=none; b=ip88h2LLDmvMHqpcFcbL3bazmCLnfFclxPwhzBmXauxTFv3yeBevF/hIIka4z9yBYgmjFZJoRFeF0LAjgbYwAonJXFm4iU6kFMNhu2axcB5NDOT1RvHm35tsGaoOJR53buTm8CtCt2Ab7d3/zbw6dU0wsl8eobHHmT0MqkSBDGI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741120301; c=relaxed/simple;
-	bh=tkxBDC72eU9MCONsFx4EJyrx8Yqu/GC847nibNDT1No=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version; b=l57qzY2wd/otuZquMkThYoEJdCib8W+RqtG4BoDMgAQISV+HKsJnK6DAO/OcyeK5urD4PnBpvlNPd9H930dMP702saEKpYTkc8pV9B3qEq4hWniPRnMco+yKa5pMQiPQP9TukK76aLj7lf40NFBIH6mYMv5rAIMHKVHBcmnTDEI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=XPOvUKPQ; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1741120308; c=relaxed/simple;
+	bh=2cRsyEaRlJFchgyZwhW0xRb74ZHZVckWgHMV1JwiSGk=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=ml+GG5/x3qt2k29CZ4sgbDcEJlE3ykHEqilF6BtoSNIOjW6LgVqFDwQ6sCEXB3Wvbu6dYKg5gnBOySo0aFIhcTUgjS/R9FT0D8NpM8XYGuGPfY5Toc3563EykfcRPnmILK/Br6ddGmkDfM+NB4X4qdlH3boXaP1wI0xB4qFQBJo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aulpz27l; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="XPOvUKPQ"
-Received: from narnia.corp.microsoft.com (unknown [167.220.2.28])
-	by linux.microsoft.com (Postfix) with ESMTPSA id D577C210EAF0;
-	Tue,  4 Mar 2025 12:31:32 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D577C210EAF0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1741120299;
-	bh=+5dln2CDLel2QrL5bi52WY7oDDb4ZKz6Vy7qsxHDPVQ=;
-	h=From:To:Subject:Date:From;
-	b=XPOvUKPQzaFkhGBpmdtBZxuyP8g5ZnF5rEirhMBUB9x231bt6/MNtJSnUfe7DiasU
-	 ije1dsOtNENEybY1JejkjPmD6YbcQv3zui3YoZ74Wv8XaoDkKIefpPpAkmfN3BySjR
-	 st9RsPIGK2l4EkB8pMmzBf7dgKJ/JMeYg33zndAA=
-From: Blaise Boscaccy <bboscaccy@linux.microsoft.com>
-To: Paul Moore <paul@paul-moore.com>,
-	James Morris <jmorris@namei.org>,
-	"Serge E. Hallyn" <serge@hallyn.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	KP Singh <kpsingh@kernel.org>,
-	Stanislav Fomichev <sdf@fomichev.me>,
-	Hao Luo <haoluo@google.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Stephen Smalley <stephen.smalley.work@gmail.com>,
-	Ondrej Mosnacek <omosnace@redhat.com>,
-	linux-security-module@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	bpf@vger.kernel.org,
-	selinux@vger.kernel.org,
-	bboscaccy@linux.microsoft.com
-Subject: [PATCH v4 bpf-next 0/2] security: Propagate caller information in bpf hooks
-Date: Tue,  4 Mar 2025 12:30:48 -0800
-Message-ID: <20250304203123.3935371-1-bboscaccy@linux.microsoft.com>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aulpz27l"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F4E9C4CEE5;
+	Tue,  4 Mar 2025 20:31:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741120307;
+	bh=2cRsyEaRlJFchgyZwhW0xRb74ZHZVckWgHMV1JwiSGk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=aulpz27lXrSJrUS196mpqWya5NAdpRoSyJUpatYVbVeS54gioUXDioLTZnHZa7/l8
+	 zgyvqRt6hXmgqo+P0wEOrrWxLXkqwUzKfDlibklzMXYLSafYRWecUJ8/c4RTH8XWQl
+	 a8LW8bUTdoxRYEPB58Xk+njj/9R+IlxfJNzj2TNPT9Dnb9zdAzQCHxolXT6qv1ayxR
+	 qXAaGY3q2trNb7M8ewp7wsrRXsd+P0E9yvw8FA4lx8UOHyu4prwNrApWn/BFLkK0Qr
+	 89oafOlDZgkEMD92LsswXs1N84gcrYg7FX6h5S4QkiKcsIhSc0nv7VDDjMLxVdzq5k
+	 yVJClIRHBZzCA==
+Date: Tue, 4 Mar 2025 14:31:46 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Frank Li <Frank.li@nxp.com>
+Cc: Jesper Nilsson <jesper.nilsson@axis.com>,
+	Lars Persson <lars.persson@axis.com>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-arm-kernel@axis.com,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org
+Subject: Re: [PATCH RFC NOT TESTED 2/2] PCI: artpec6: Use
+ use_parent_dt_ranges and clean up artpec6_pcie_cpu_addr_fixup()
+Message-ID: <20250304203146.GA256660@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z8dem5gBf3xLxSIT@lizhi-Precision-Tower-5810>
 
-Hello,
+On Tue, Mar 04, 2025 at 03:12:11PM -0500, Frank Li wrote:
+> On Tue, Mar 04, 2025 at 01:08:16PM -0600, Bjorn Helgaas wrote:
+> > On Tue, Mar 04, 2025 at 12:49:36PM -0500, Frank Li wrote:
+> > > Remove artpec6_pcie_cpu_addr_fixup() as the DT bus fabric should provide correct
+> > > address translation. Set use_parent_dt_ranges to allow the DWC core driver to
+> > > fetch address translation from the device tree.
+> >
+> > Shouldn't we be able to detect platforms where DT doesn't describe the
+> > translation correctly?  E.g., by running .cpu_addr_fixup() on a
+> > res.start value and comparing the result to the parent_bus_addr()?
+> > Then we could complain about it if they don't match.
+> 
+> Can't detect because:
+> 
+> There are case, driver have not provide .cpu_addr_fixup, but dts still be
+> wrong. such as
+> 
+> bus@10000000
+> {
+> 	ranges = <0xdeaddead 0x1000000 size>;
+> 	pci@90000000 {
+> 
+> 		reg = <...>, <0xdeaddead>;
+> 		reg-names = <...>, <config>;
+> 	}
+> 
+> };
+> 
+> above dts can work with current driver, but parent bus address 0xdeaddead
+> is totally fake address. We can't detect this case because no
+> .cpu_addr_fixup() at all.
 
-While trying to implement an eBPF gatekeeper program, we ran into an
-issue whereas the LSM hooks are missing some relevant data.
-
-Certain subcommands passed to the bpf() syscall can be invoked from
-either the kernel or userspace. Additionally, some fields in the
-bpf_attr struct contain pointers, and depending on where the
-subcommand was invoked, they could point to either user or kernel
-memory. One example of this is the bpf_prog_load subcommand and its
-fd_array. This data is made available and used by the verifier but not
-made available to the LSM subsystem. This patchset simply exposes that
-information to applicable LSM hooks.
-
-Change list:
-- v3 -> v4
-  - split out selftest changes into a separate patch
-- v2 -> v3
-  - reorder params so that the new boolean flag is the last param
-  - fixup function signatures in bpf selftests
-- v1 -> v2
-  - Pass a boolean flag in lieu of bpfptr_t
-
-Revisions:
-- v3
-  https://lore.kernel.org/bpf/20250303222416.3909228-1-bboscaccy@linux.microsoft.com/
-- v2
-  https://lore.kernel.org/bpf/20250228165322.3121535-1-bboscaccy@linux.microsoft.com/
-- v1
-  https://lore.kernel.org/bpf/20250226003055.1654837-1-bboscaccy@linux.microsoft.com/
-
-
-Blaise Boscaccy (2):
-  security: Propagate caller information in bpf hooks
-  selftests/bpf: Add is_kernel parameter to LSM/bpf test programs
-
- include/linux/lsm_hook_defs.h                     |  6 +++---
- include/linux/security.h                          | 12 ++++++------
- kernel/bpf/syscall.c                              | 10 +++++-----
- security/security.c                               | 15 +++++++++------
- security/selinux/hooks.c                          |  6 +++---
- tools/testing/selftests/bpf/progs/rcu_read_lock.c |  3 ++-
- .../selftests/bpf/progs/test_cgroup1_hierarchy.c  |  4 ++--
- .../selftests/bpf/progs/test_kfunc_dynptr_param.c |  6 +++---
- .../testing/selftests/bpf/progs/test_lookup_key.c |  2 +-
- .../selftests/bpf/progs/test_ptr_untrusted.c      |  2 +-
- .../selftests/bpf/progs/test_task_under_cgroup.c  |  2 +-
- .../selftests/bpf/progs/test_verify_pkcs7_sig.c   |  2 +-
- 12 files changed, 37 insertions(+), 33 deletions(-)
-
--- 
-2.48.1
-
+If there's no .cpu_addr_fixup(), primary-side ATU addresses must be
+identical to CPU addresses.  If the DT parent bus address is
+different, can't we assume the DT is broken?
