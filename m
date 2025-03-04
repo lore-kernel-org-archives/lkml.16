@@ -1,119 +1,169 @@
-Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63C572046BD
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 14:10:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF63517583;
+	Tue,  4 Mar 2025 14:11:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741097462; cv=none; b=R/OAacNYYWt+oRwtOiklwQYMRXrb3W/ik+ODYfCePH+/2AlkztQVoavjexaCm6oJrEAAxMra/f1059/6EI76ezNWwOYiKNVHK8X4vzGo8RJR9ZExHHR80r2E3jE0ffF9f2QpvowhOqXhDTseoNN+VvRLlgg1JDZT8ScEzRQPtH0=
+	t=1741097488; cv=none; b=RkeaNE2Q1gVm5Ecloj2oZzb+/SvCh4thTBs4QuMrkYtcqML5vaWN8Hjo164SIkwmfQ1XFZIVD7tJ5zdPG4QYzO4HXqoPN6do9Vt8ObF6dJer4lZy3RwXgXOrnunY4JmXsoBFKREORLjzePmRNuuje/13iUomicmpCpLTMYdBwo4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741097462; c=relaxed/simple;
-	bh=pdr2yxsFeONcEXQOLnAHfLtWh/hwVBDKivxBC4jE8Ow=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=uZqUXwQHHls+g07gVP6OYI/r+r+ysB3mMTEUQuMlX0d/sChXeqyP5M9HeCkA8wkacxiotCpKzm8XL4OQXxyA/7CHbeNB9ai0UgRBMWVro3NqYQuaM8L0AN/yHqnG3+oeyNcrOGYeFZfMLasgl2e3DEkt1VpQut13KhtfE6nsE1M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.17])
-	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4Z6ctR2c3Gz1ltZw;
-	Tue,  4 Mar 2025 22:06:39 +0800 (CST)
-Received: from kwepemk500005.china.huawei.com (unknown [7.202.194.90])
-	by mail.maildlp.com (Postfix) with ESMTPS id B226C1A0188;
-	Tue,  4 Mar 2025 22:10:50 +0800 (CST)
-Received: from [10.174.179.234] (10.174.179.234) by
- kwepemk500005.china.huawei.com (7.202.194.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Tue, 4 Mar 2025 22:10:48 +0800
-Message-ID: <2c1fa758-c292-aefb-f6e2-cab41f592568@huawei.com>
-Date: Tue, 4 Mar 2025 22:10:47 +0800
+	s=arc-20240116; t=1741097488; c=relaxed/simple;
+	bh=uZAr3o4anHDvD9RQXrKUeVfxL/By4d6vCjGFzZTYNJ0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=P4uyZJg41+j6lKukvh0r/7xABPdYy/Uw5CtJyrKMh8L+COj5GgrNwq0zldKJoQX17HzjtLX/WL7zqJxHAfMf3Fy/h2w11TXcdih7qsfY4CLAM4F/PQlQHmPpdTs0pQmJ0ksZKnIuuPizQJvH8h/Bx/L/H1UmAemoGToXOC0Yqco=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cXcEid9U; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cXcEid9U"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24CAAC4CEE5;
+	Tue,  4 Mar 2025 14:11:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741097487;
+	bh=uZAr3o4anHDvD9RQXrKUeVfxL/By4d6vCjGFzZTYNJ0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=cXcEid9Ufzy2HTrGc7vpehSk3qt9XEZnJuIj0o5jqXiT51j7xjCxC/Rs8SWaMGubz
+	 p6EWZPC3NYKj6sYy3kZRE8CMuSG80bADbm8prImUYIIiZdZ7RBS8q3+qEPwWs0JGy3
+	 xQGlN2ixEzXRvi/6bT21yzJr7RhwRzPos2fFaNifnGPEJkKXnm6MaDAUfHpfm0oiT9
+	 2ZgAGUnrb2cjyNq4oEvpS4wkngjptSYGnrW7VeblRca/T1Sekxxg55j92gS8WndiDa
+	 PDCkeO85jGWgFkv5edfvIQhXXPt/epi1L9N3GUKx8nZfIpaUthb+qHW10km/ijfb4E
+	 RBlLQfoe33FmA==
+Date: Tue, 4 Mar 2025 08:11:25 -0600
+From: Rob Herring <robh@kernel.org>
+To: Andre Przywara <andre.przywara@arm.com>
+Cc: Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Samuel Holland <samuel@sholland.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 04/15] dt-bindings: clk: sunxi-ng: document Allwinner
+ A523 CCU
+Message-ID: <20250304141125.GA2518548-robh@kernel.org>
+References: <20250304012805.28594-1-andre.przywara@arm.com>
+ <20250304012805.28594-5-andre.przywara@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.0
-Subject: Re: [PATCH v13 4/5] arm64: support copy_mc_[user]_highpage()
-To: Catalin Marinas <catalin.marinas@arm.com>
-CC: Mark Rutland <mark.rutland@arm.com>, Jonathan Cameron
-	<Jonathan.Cameron@huawei.com>, Mauro Carvalho Chehab
-	<mchehab+huawei@kernel.org>, Will Deacon <will@kernel.org>, Andrew Morton
-	<akpm@linux-foundation.org>, James Morse <james.morse@arm.com>, Robin Murphy
-	<robin.murphy@arm.com>, Andrey Konovalov <andreyknvl@gmail.com>, Dmitry
- Vyukov <dvyukov@google.com>, Vincenzo Frascino <vincenzo.frascino@arm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
-	Andrey Ryabinin <ryabinin.a.a@gmail.com>, Alexander Potapenko
-	<glider@google.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, Aneesh
- Kumar K.V <aneesh.kumar@kernel.org>, "Naveen N. Rao"
-	<naveen.n.rao@linux.ibm.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo
- Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
-	<dave.hansen@linux.intel.com>, <x86@kernel.org>, "H. Peter Anvin"
-	<hpa@zytor.com>, Madhavan Srinivasan <maddy@linux.ibm.com>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-mm@kvack.org>,
-	<linuxppc-dev@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>,
-	<kasan-dev@googlegroups.com>, <wangkefeng.wang@huawei.com>, Guohanjun
-	<guohanjun@huawei.com>
-References: <20241209024257.3618492-1-tongtiangen@huawei.com>
- <20241209024257.3618492-5-tongtiangen@huawei.com> <Z6zWSXzKctkpyH7-@arm.com>
- <69955002-c3b1-459d-9b42-8d07475c3fd3@huawei.com> <Z698SFVqHjpGeGC0@arm.com>
- <e1d2affb-5c6b-00b5-8209-34bbca36f96b@huawei.com> <Z7NN5Pa-c5PtIbcF@arm.com>
- <3b181285-2ff3-b77a-867b-725f38ea86d3@huawei.com> <Z7TisqB5qCIF5nYI@arm.com>
-From: Tong Tiangen <tongtiangen@huawei.com>
-In-Reply-To: <Z7TisqB5qCIF5nYI@arm.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- kwepemk500005.china.huawei.com (7.202.194.90)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250304012805.28594-5-andre.przywara@arm.com>
 
-Hi,Catalin:
+On Tue, Mar 04, 2025 at 01:27:54AM +0000, Andre Przywara wrote:
+> The Allwinner A523/T527 SoCs have four CCUs, this adds the binding for
+> the main CCU.
+> 
+> The source clock list differs in some annoying details, and folding this
+> into the existing Allwinner CCU clock binding document gets quite
+> unwieldy, so create a new document for these CCUs.
+> Add the new compatible string, along with the required input clock
+> lists. This conditionally describes the input clock list, to make for
+> an easier patch adding the other CCUs.
+> 
+> Also add the DT binding headers, listing all the clocks with their ID
+> numbers.
+> 
+> Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+> ---
+>  .../clock/allwinner,sun55i-a523-ccu.yaml      |  77 +++++++
+>  include/dt-bindings/clock/sun55i-a523-ccu.h   | 189 ++++++++++++++++++
+>  include/dt-bindings/reset/sun55i-a523-ccu.h   |  88 ++++++++
+>  3 files changed, 354 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun55i-a523-ccu.yaml
+>  create mode 100644 include/dt-bindings/clock/sun55i-a523-ccu.h
+>  create mode 100644 include/dt-bindings/reset/sun55i-a523-ccu.h
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/allwinner,sun55i-a523-ccu.yaml b/Documentation/devicetree/bindings/clock/allwinner,sun55i-a523-ccu.yaml
+> new file mode 100644
+> index 0000000000000..2eacaeaeabac7
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/allwinner,sun55i-a523-ccu.yaml
+> @@ -0,0 +1,77 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/clock/allwinner,sun55i-a523-ccu.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Allwinner A523 Clock Control Unit
+> +
+> +maintainers:
+> +  - Andre Przywara <andre.przywara@arm.com>
+> +
+> +properties:
+> +  "#clock-cells":
+> +    const: 1
+> +
+> +  "#reset-cells":
+> +    const: 1
+> +
+> +  compatible:
+> +    enum:
+> +      - allwinner,sun55i-a523-ccu
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    minItems: 4
+> +    maxItems: 4
+> +
+> +  clock-names:
+> +    minItems: 4
+> +    maxItems: 4
+> +
+> +required:
+> +  - "#clock-cells"
+> +  - "#reset-cells"
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +  - clock-names
+> +
+> +if:
 
-Kindly ping ...
+Put this under an allOf and use another 'if' instead of the 'else' 
+clause in the 2nd patch.
 
-Thanks.:)
+> +  properties:
+> +    compatible:
+> +      enum:
+> +        - allwinner,sun55i-a523-ccu
+> +
+> +then:
+> +  properties:
+> +    clocks:
+> +      items:
+> +        - description: High Frequency Oscillator (usually at 24MHz)
+> +        - description: Low Frequency Oscillator (usually at 32kHz)
+> +        - description: Internal Oscillator
+> +        - description: Low Frequency Oscillator fanout
+> +
+> +    clock-names:
+> +      items:
+> +        - const: hosc
+> +        - const: losc
+> +        - const: iosc
+> +        - const: losc-fanout
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    ccu: clock@2001000 {
 
-在 2025/2/19 3:42, Catalin Marinas 写道:
-> On Tue, Feb 18, 2025 at 07:51:10PM +0800, Tong Tiangen wrote:
->>>>>> 在 2025/2/13 1:11, Catalin Marinas 写道:
->>>>>>> On Mon, Dec 09, 2024 at 10:42:56AM +0800, Tong Tiangen wrote:
->>>>>>>> Currently, many scenarios that can tolerate memory errors when copying page
->>>>>>>> have been supported in the kernel[1~5], all of which are implemented by
->>>>>>>> copy_mc_[user]_highpage(). arm64 should also support this mechanism.
->>>>>>>>
->>>>>>>> Due to mte, arm64 needs to have its own copy_mc_[user]_highpage()
->>>>>>>> architecture implementation, macros __HAVE_ARCH_COPY_MC_HIGHPAGE and
->>>>>>>> __HAVE_ARCH_COPY_MC_USER_HIGHPAGE have been added to control it.
->>>>>>>>
->>>>>>>> Add new helper copy_mc_page() which provide a page copy implementation with
->>>>>>>> hardware memory error safe. The code logic of copy_mc_page() is the same as
->>>>>>>> copy_page(), the main difference is that the ldp insn of copy_mc_page()
->>>>>>>> contains the fixup type EX_TYPE_KACCESS_ERR_ZERO_MEM_ERR, therefore, the
->>>>>>>> main logic is extracted to copy_page_template.S. In addition, the fixup of
->>>>>>>> MOPS insn is not considered at present.
->>>>>>>
->>>>>>> Could we not add the exception table entry permanently but ignore the
->>>>>>> exception table entry if it's not on the do_sea() path? That would save
->>>>>>> some code duplication.
-> [...]
->> So we need another way to distinguish the different processing of the
->> same exception type on SEA and non-SEA path.
-> 
-> Distinguishing whether the fault is SEA or non-SEA is already done by
-> the exception handling you are adding. What we don't have though is
-> information about whether the caller invoked copy_highpage() or
-> copy_mc_highpage(). That's where the code duplication comes in handy.
-> 
-> It's a shame we need to duplicate identical functions just to have
-> different addresses to look up in the exception table. We are also short
-> of caller saved registers to track this information (e.g. an extra
-> argument to those functions that the exception handler interprets).
-> 
-> I need to think a bit more, we could in theory get the arm64 memcpy_mc()
-> to return an error code depending on what type of fault it got (e.g.
-> -EHWPOISON for SEA, -EFAULT for non-SEA). copy_mc_highpage() would
-> interpret this one and panic if -EFAULT. But we lose some fault details
-> we normally get on a faulty access like some of the registers.
-> 
-> Well, maybe the simples is still to keep the function duplication. I'll
-> have another look at the series tomorrow.
-> 
+Drop ccu and it's 'clock-controller' not 'clock'.
+
+> +        compatible = "allwinner,sun55i-a523-ccu";
+> +        reg = <0x2001000 0x1000>;
+> +        clocks = <&osc24M>, <&osc32k>, <&iosc>, <&r_ccu 2>;
+> +        clock-names = "hosc", "losc", "iosc", "losc-fanout";
+> +        #clock-cells = <1>;
+> +        #reset-cells = <1>;
+> +    };
+> +
+> +...
