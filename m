@@ -1,161 +1,190 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 808F02040A7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F221C2040B4
 	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 11:11:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741086695; cv=none; b=PogxFgvrGk6c4p2xqKqnkSxihaQKnEF6nCKqx1jezdQzNgcPqOW2v65SSkMNG7VSJy6W/uMitvWA2lBCYd6ATIe+QqJ3dz+CogcDm40TvOzTYBj/243SjGsV24eLj6Lk+wgLFizAASipBoMI/n8l27d75yVeBbS+kM1mGUA18MA=
+	t=1741086696; cv=none; b=bAcO+ENpKgyGvQRZUz7jMSP3wE5b+lCtxSGcCoQLY2Cp/m0YDWrvqA3a0kCOFIbuApHbnXmYWBXRBWmH/c891Cb0xx93qF/FxH/viQ1l3hovmcf6eLD+PxRb2dy0Yk3U3cRqOzflo7jJtmfu3QubBJul6swEHF6EDpgpFZPvL7Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741086695; c=relaxed/simple;
-	bh=B2t+xxZjuCNwy1M5NBnsOVW4uUHehz4b8OJZ5lVSSTY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cyUFmX43nL1WpN02UM9Ri1GtUvY1xw+wUn03qIl+1Xj/tzs3v4YJSxpalTkhOi7AF2LAzINdjeWciCqSbF3hozo+6Vn7EE8YT4ID6prD0Y9tcECednaIfwLj6QpjaV6HjAwaQamf0igXBXWT0An0oM7h98K9pSZhFpDa8IyrsqI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eoCUDu2B; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741086696; c=relaxed/simple;
+	bh=Z8DL/EfDlcq69p6mKKmu1mSIB6ysWUIqx05ZFHNUr4s=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=ialxy87oEHEj4GxbL89mmx8J+Gse42f+TrxG1Hs9MhAcG5nA1yXd5oAWbo12fmgpsjR99F0Ma1XcdyY77Wbe8QOST3NRSdX7eF4JuOtw/lLABP3Mt15hOpgZfdSjUXQo/+NIHPqpsukuNMNKY4Hmr+AwzixjsZYMeGuPMbienPg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ly1nyLrD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eoCUDu2B"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79110C4CEE5;
-	Tue,  4 Mar 2025 11:11:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ly1nyLrD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4BF87C4CEEB;
+	Tue,  4 Mar 2025 11:11:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1741086695;
-	bh=B2t+xxZjuCNwy1M5NBnsOVW4uUHehz4b8OJZ5lVSSTY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=eoCUDu2BNTKud+5wciKp+4VyvbTwHV9N8ZyeNOlb2LgMPlEz6J7OYkkAF8/oBRm6G
-	 NyzAjndCMetgypz4a4cSa3MCPbTIPOri28HkmmyrsshzVTOvvXzg8xHlgXKKa+WvrE
-	 ZJ5Vyg+fewHenZa2tGOQqpIu2ic3mZiqRq9E5RS8gDbjzAS3nQ06I7kYw55En3ClW5
-	 RSxmSPQaWiO1B5WIK6M1f0MdNUZ/9Ek7pirvohbzxtJrT2QaO1rIkRWmHlP3D1xMlP
-	 +M9FI2lI7moh2b12DPzRLPhpq7aiwrgfQpQd2JWH0RwHrAhD0qat1CgNAY7ddIXPPg
-	 9GQrlNZj8MnnA==
-Date: Tue, 4 Mar 2025 12:11:32 +0100
+	bh=Z8DL/EfDlcq69p6mKKmu1mSIB6ysWUIqx05ZFHNUr4s=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=ly1nyLrDnGkVrET4BYRHbmtrvgmh+S2WPZ5NL/jBK7Oha8w+Rr3fGh/reRNMxxuTE
+	 CNJmpD+MDaybtEtN7y3EULD33pBRnAvsRi9XGtcRd6PEAHyk2txTbHZTZIs35S/ITB
+	 49Bbo2+A1nCeYaecgIF33v3ZFpwWZxvUyV0IZUkULw/IdH18gJ0WIx5NNhljgkuX6T
+	 rqURrLy6kuv17Tiekr3/nWBCxVcHGYBnVmFI/2v4t+mRylZ2Z3NOKQ1qheh3Jb04wc
+	 yJFoOnxu3U8uu+TVai9TZ6ENqtRH5U4UdVThPqOezv4mtwtzn9yA/oLnLvc5HrxsiE
+	 WIAI4ov3k7PxQ==
 From: Maxime Ripard <mripard@kernel.org>
-To: Herve Codina <herve.codina@bootlin.com>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, Andrzej Hajda <andrzej.hajda@intel.com>, 
-	Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
-	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, Douglas Anderson <dianders@chromium.org>, 
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Simona Vetter <simona.vetter@ffwll.ch>
-Subject: Re: [PATCH v4 00/15] drm/bridge: Various quality of life improvements
-Message-ID: <20250304-warping-flying-bumblebee-db6c80@houat>
-References: <20250225-bridge-connector-v4-0-7ecb07b09cad@kernel.org>
- <20250227120004.77814e09@bootlin.com>
- <20250303-urban-trout-of-vastness-f8d0e7@houat>
- <20250303143404.623a3178@bootlin.com>
- <20250303-idealistic-camouflaged-mandrill-4fb5f8@houat>
- <20250303175011.3f79a8c0@bootlin.com>
+Date: Tue, 04 Mar 2025 12:10:55 +0100
+Subject: [PATCH v5 12/16] drm/bridge: cdns-csi: Switch to atomic helpers
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha384;
-	protocol="application/pgp-signature"; boundary="qtiotlkwwox7wqzm"
-Content-Disposition: inline
-In-Reply-To: <20250303175011.3f79a8c0@bootlin.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250304-bridge-connector-v5-12-aacf461d2157@kernel.org>
+References: <20250304-bridge-connector-v5-0-aacf461d2157@kernel.org>
+In-Reply-To: <20250304-bridge-connector-v5-0-aacf461d2157@kernel.org>
+To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
+ Simona Vetter <simona@ffwll.ch>, Andrzej Hajda <andrzej.hajda@intel.com>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
+ Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
+ Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+ Douglas Anderson <dianders@chromium.org>
+Cc: Herve Codina <herve.codina@bootlin.com>, 
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+ Maxime Ripard <mripard@kernel.org>, 
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4929; i=mripard@kernel.org;
+ h=from:subject:message-id; bh=Z8DL/EfDlcq69p6mKKmu1mSIB6ysWUIqx05ZFHNUr4s=;
+ b=owGbwMvMwCmsHn9OcpHtvjLG02pJDOnH7h/MP5b65GOQ192beeF6FUkuDLsysvTmdD8QmMq6x
+ icqb/m6jqksDMKcDLJiiixPZMJOL29fXOVgv/IHzBxWJpAhDFycAjARzwrGhksdsaxXlS7G3lxx
+ /OIzXxYWj/MGRYLncy9bn0rUb/ytOHXZw+WXTrbZ/BZMTC97+fNqJWO91wQl5q1KVg0vqtqair5
+ de1EU4Dmr4brU5dOeE/yE1qx4JnpQZOOEH5f3LFgfIsXuvMUSAA==
+X-Developer-Key: i=mripard@kernel.org; a=openpgp;
+ fpr=BE5675C37E818C8B5764241C254BCFC56BF6CE8D
 
+The Cadence DSI driver follows the drm_encoder->crtc pointer that is
+deprecated and shouldn't be used by atomic drivers.
 
---qtiotlkwwox7wqzm
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v4 00/15] drm/bridge: Various quality of life improvements
-MIME-Version: 1.0
+Fortunately, the atomic hooks provide the drm_atomic_state and we can
+access our current CRTC from that, going from the bridge to its encoder,
+to its connector, and to its CRTC.
 
-On Mon, Mar 03, 2025 at 05:50:11PM +0100, Herve Codina wrote:
-> On Mon, 3 Mar 2025 16:00:33 +0100
-> Maxime Ripard <mripard@kernel.org> wrote:
->=20
-> > On Mon, Mar 03, 2025 at 02:34:04PM +0100, Herve Codina wrote:
-> > > Hi Maxime,
-> > >=20
-> > > On Mon, 3 Mar 2025 14:11:05 +0100
-> > > Maxime Ripard <mripard@kernel.org> wrote:
-> > >  =20
-> > > > On Thu, Feb 27, 2025 at 12:00:04PM +0100, Herve Codina wrote: =20
-> > > > > Hi Maxime,
-> > > > >=20
-> > > > > On Tue, 25 Feb 2025 17:43:48 +0100
-> > > > > Maxime Ripard <mripard@kernel.org> wrote:
-> > > > >    =20
-> > > > > > Hi,
-> > > > > >=20
-> > > > > > Here's a series of changes after to the KMS helpers and bridge =
-API
-> > > > > > following a bunch of reviews I did.
-> > > > > >=20
-> > > > > > It's mostly centered across providing an easier time to deal wi=
-th bridge
-> > > > > > states, and a somewhat consistent with the other entities API.
-> > > > > >=20
-> > > > > > It's build tested only, with arm64 allmodconfig.
-> > > > > >=20
-> > > > > > Maxime
-> > > > > >=20
-> > > > > > Signed-off-by: Maxime Ripard <mripard@kernel.org>
-> > > > > > ---   =20
-> > > > >=20
-> > > > > I Tried to test this series on my system but I've got a compilati=
-on issue.
-> > > > >      depmod: ERROR: Cycle detected: drm -> drm_kms_helper -> drm
-> > > > >      depmod: ERROR: Found 2 modules in dependency cycles!
-> > > > >=20
-> > > > > CONFIG_DRM=3Dm in my configuration.   =20
-> > > >=20
-> > > > Could you share your configuration? it doesn't happen with allmodco=
-nfig.
-> > > >  =20
-> > >=20
-> > > Here is a defconfig that leads to the issue on my side: =20
-> >=20
-> > I still can't reproduce it, sorry. Is this based on linux-next /
-> > drm-misc-next, or a private branch?
-> >=20
-> > Maxime
->=20
-> Got it with this git history (based on 72d0af4accd9 available in
-> drm-misc-next):
->=20
-> f86431f9d3fc (HEAD -> test_maxime_series_drm_next_clean_v4) drm/bridge: t=
-i-sn65dsi86: Use bridge_state crtc pointer
-> 27b49a4a713f drm/bridge: tc358768: Convert to atomic helpers
-> f3f203c823e3 drm/bridge: tc358768: Stop disabling when failing to enable
-> 89f4b115b1ca drm/bridge: tc358775: Switch to atomic commit
-> 142be5c7910a drm/bridge: cdns-csi: Switch to atomic helpers
-> e6db675d871a drm/bridge: Introduce drm_bridge_is_atomic() helper
-> 1745511b7394 drm/bridge: ti-sn65dsi83: Switch to drm_bridge_reset_crtc
-> e44654d4c9bd drm/tests: bridge: Provide tests for drm_bridge_reset_crtc
-> 671a94f57f99 drm/bridge: Add helper to reset bridge pipeline
-> bcf02dc7fb61 drm/tests: Create tests for drm_atomic
-> f7b479b6f283 drm/atomic: Introduce helper to lookup connector by encoder
-> 56d9fa19b833 drm/tests: Add kunit tests for bridges
-> 9c86d5205422 drm/bridge: Provide a helper to retrieve current bridge state
-> 3e0010915240 drm/bridge: Add encoder parameter to drm_bridge_funcs.attach
-> 72d0af4accd9 (upstream_drm/for-linux-next, upstream_drm/drm-misc-next) dr=
-m/msm/dp: Add support for LTTPR handling
-> 6dcc3c5121b7 drm/i915/dp: Use the generic helper to control LTTPR transpa=
-rent mode
-> 226a0baf9098 drm/nouveau/dp: Use the generic helper to control LTTPR tran=
-sparent mode
-> ...
+Let's convert this bridge driver to atomic so we can get rid of the
+drm_encoder->crtc dereference.
 
-Yeah, I found it. It doesn't happen during compilation but during
-modules_install. It's fixed now, thanks!
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Signed-off-by: Maxime Ripard <mripard@kernel.org>
+---
+ drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c | 31 ++++++++++++++++++--------
+ 1 file changed, 22 insertions(+), 9 deletions(-)
 
-Maxime
+diff --git a/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c b/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
+index 8f54c034ac4f3e82c38607a0e52d4745654b571f..99d43944fb8fc685520b78732cd1181175ff7cc9 100644
+--- a/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
++++ b/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
+@@ -654,11 +654,12 @@ cdns_dsi_bridge_mode_valid(struct drm_bridge *bridge,
+ 		return MODE_BAD;
+ 
+ 	return MODE_OK;
+ }
+ 
+-static void cdns_dsi_bridge_disable(struct drm_bridge *bridge)
++static void cdns_dsi_bridge_atomic_disable(struct drm_bridge *bridge,
++					   struct drm_atomic_state *state)
+ {
+ 	struct cdns_dsi_input *input = bridge_to_cdns_dsi_input(bridge);
+ 	struct cdns_dsi *dsi = input_to_dsi(input);
+ 	u32 val;
+ 
+@@ -674,11 +675,12 @@ static void cdns_dsi_bridge_disable(struct drm_bridge *bridge)
+ 		dsi->platform_ops->disable(dsi);
+ 
+ 	pm_runtime_put(dsi->base.dev);
+ }
+ 
+-static void cdns_dsi_bridge_post_disable(struct drm_bridge *bridge)
++static void cdns_dsi_bridge_atomic_post_disable(struct drm_bridge *bridge,
++						struct drm_atomic_state *state)
+ {
+ 	struct cdns_dsi_input *input = bridge_to_cdns_dsi_input(bridge);
+ 	struct cdns_dsi *dsi = input_to_dsi(input);
+ 
+ 	pm_runtime_put(dsi->base.dev);
+@@ -751,17 +753,21 @@ static void cdns_dsi_init_link(struct cdns_dsi *dsi)
+ 	writel(val, dsi->regs + MCTL_MAIN_EN);
+ 
+ 	dsi->link_initialized = true;
+ }
+ 
+-static void cdns_dsi_bridge_enable(struct drm_bridge *bridge)
++static void cdns_dsi_bridge_atomic_enable(struct drm_bridge *bridge,
++					  struct drm_atomic_state *state)
+ {
+ 	struct cdns_dsi_input *input = bridge_to_cdns_dsi_input(bridge);
+ 	struct cdns_dsi *dsi = input_to_dsi(input);
+ 	struct cdns_dsi_output *output = &dsi->output;
++	struct drm_connector_state *conn_state;
++	struct drm_crtc_state *crtc_state;
+ 	struct drm_display_mode *mode;
+ 	struct phy_configure_opts_mipi_dphy *phy_cfg = &output->phy_opts.mipi_dphy;
++	struct drm_connector *connector;
+ 	unsigned long tx_byte_period;
+ 	struct cdns_dsi_cfg dsi_cfg;
+ 	u32 tmp, reg_wakeup, div;
+ 	int nlanes;
+ 
+@@ -769,11 +775,14 @@ static void cdns_dsi_bridge_enable(struct drm_bridge *bridge)
+ 		return;
+ 
+ 	if (dsi->platform_ops && dsi->platform_ops->enable)
+ 		dsi->platform_ops->enable(dsi);
+ 
+-	mode = &bridge->encoder->crtc->state->adjusted_mode;
++	connector = drm_atomic_get_new_connector_for_encoder(state, bridge->encoder);
++	conn_state = drm_atomic_get_new_connector_state(state, connector);
++	crtc_state = drm_atomic_get_new_crtc_state(state, conn_state->crtc);
++	mode = &crtc_state->adjusted_mode;
+ 	nlanes = output->dev->lanes;
+ 
+ 	WARN_ON_ONCE(cdns_dsi_check_conf(dsi, mode, &dsi_cfg, false));
+ 
+ 	cdns_dsi_hs_init(dsi);
+@@ -891,11 +900,12 @@ static void cdns_dsi_bridge_enable(struct drm_bridge *bridge)
+ 
+ 	tmp = readl(dsi->regs + MCTL_MAIN_EN) | IF_EN(input->id);
+ 	writel(tmp, dsi->regs + MCTL_MAIN_EN);
+ }
+ 
+-static void cdns_dsi_bridge_pre_enable(struct drm_bridge *bridge)
++static void cdns_dsi_bridge_atomic_pre_enable(struct drm_bridge *bridge,
++					      struct drm_atomic_state *state)
+ {
+ 	struct cdns_dsi_input *input = bridge_to_cdns_dsi_input(bridge);
+ 	struct cdns_dsi *dsi = input_to_dsi(input);
+ 
+ 	if (WARN_ON(pm_runtime_get_sync(dsi->base.dev) < 0))
+@@ -906,14 +916,17 @@ static void cdns_dsi_bridge_pre_enable(struct drm_bridge *bridge)
+ }
+ 
+ static const struct drm_bridge_funcs cdns_dsi_bridge_funcs = {
+ 	.attach = cdns_dsi_bridge_attach,
+ 	.mode_valid = cdns_dsi_bridge_mode_valid,
+-	.disable = cdns_dsi_bridge_disable,
+-	.pre_enable = cdns_dsi_bridge_pre_enable,
+-	.enable = cdns_dsi_bridge_enable,
+-	.post_disable = cdns_dsi_bridge_post_disable,
++	.atomic_disable = cdns_dsi_bridge_atomic_disable,
++	.atomic_pre_enable = cdns_dsi_bridge_atomic_pre_enable,
++	.atomic_enable = cdns_dsi_bridge_atomic_enable,
++	.atomic_post_disable = cdns_dsi_bridge_atomic_post_disable,
++	.atomic_reset = drm_atomic_helper_bridge_reset,
++	.atomic_duplicate_state = drm_atomic_helper_bridge_duplicate_state,
++	.atomic_destroy_state = drm_atomic_helper_bridge_destroy_state,
+ };
+ 
+ static int cdns_dsi_attach(struct mipi_dsi_host *host,
+ 			   struct mipi_dsi_device *dev)
+ {
 
---qtiotlkwwox7wqzm
-Content-Type: application/pgp-signature; name="signature.asc"
+-- 
+2.48.1
 
------BEGIN PGP SIGNATURE-----
-
-iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCZ8bf4wAKCRAnX84Zoj2+
-dqtjAX0b+5DA1W7wglK1ljdeHAnBtWSJORkxaT5j7vMy2Y9fwH9sPSPRu9LJK3UG
-qYewERkBf1ysNhlaBYBZDzKqFZFEQaMcdxi0qr8xxrH+Z8n5xuYO4sSO/jagk5m+
-IupeNokL+g==
-=LzJ1
------END PGP SIGNATURE-----
-
---qtiotlkwwox7wqzm--
