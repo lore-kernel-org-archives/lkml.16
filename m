@@ -1,175 +1,148 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0356F29CB35
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 16:30:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 186E229B204;
+	Tue,  4 Mar 2025 16:30:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741105833; cv=none; b=eE0pb1iYBAgg8iPxQF3S/BxoZ+RmVxP7+OEnkhPxeDWE6pecq4TIC7Nfd0pyelibdqVzaNQo5z6gGHvc8vykbKj7qW0Cp5c4nbNs/a3MSERPafnnxg/aXyb6Ex+vsr+akAaKwQdruBmdLprrYSoxWva0qTMkAF8kICLQjQzZvjM=
+	t=1741105849; cv=none; b=I6x2QuHKxU4SCAJuhcXEKesOeJ2jZCBApMCujGjmnUhGuKdLRyeaVytnck1ZzqI+PXd6Wm4wSKkf1QWW+EuLrl3P5j+jviJ+QE/KKFo5cYZRn0IKE23y/oNY5p+CRtoMIxXWGg24MlxD39FMGIMWnFJZwCKEtDAdSKJMAkf+p4c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741105833; c=relaxed/simple;
-	bh=1peCX6R7h30DTJOxD1LU6DMIih5rffyXOoAucAoALe0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=vCZ79V36DkUzHzunAsZhR//Gq/wP0/L10qBbux+Dv0IVgypcnS1c5NJ/HBGfUW2FrR3Dj0LIVV0rOXRM+ci1R9lqHo1DRBQye9Rwba0Y2oq75Aqen3RTB3EF9HFHl+M+feQjlaXf1T7vuEtjvkFEa1IxHAVOArz6jkOLAH3kH9g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZQDiBMWJ; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1741105849; c=relaxed/simple;
+	bh=7SSmhJywGvGXc8ZpfXpgY0nfMFXwgP1l6sL+dAYzJYA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bpHvQohRkggWMY+7Izmpwc7VByFy5s3nVXUQJesDaUgi2xq53eQ092oFxonyIwXdYl49YEXOAnxrobzFQabbINdcRREEFWZ+vDDjRdZLxaOi5pt/Z5VX/U0brmeBvEf11mlpN3D1jypoKckBycuArdWvec25L9+9XS/eiw8z0Cg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LXs8xEwP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZQDiBMWJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1741105830;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=uPv451Hu7Di4D/sapxzf/F2GAAzWxvqZ/lL0oqguUyU=;
-	b=ZQDiBMWJSe3c3tu4fgcAHA4fSsBngTUV314HkVIbTQtRI2aSaAb5t+wpUa8s73JU0rlJE9
-	Z7GrLZVuH0kwnr02Q+PprXgsVE0HFQrXXmN9u9fliT/x+3MU0ve77ShFJ436+Qxa4IYkJP
-	pYuEK52cNaK5hBKQ9SL/PxqXC3HOTog=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-421-cJtD5uTSNymyu3fSiwrJRA-1; Tue,
- 04 Mar 2025 11:30:26 -0500
-X-MC-Unique: cJtD5uTSNymyu3fSiwrJRA-1
-X-Mimecast-MFC-AGG-ID: cJtD5uTSNymyu3fSiwrJRA_1741105825
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A3FEE1801A10;
-	Tue,  4 Mar 2025 16:30:24 +0000 (UTC)
-Received: from jbrnak-thinkpadx1carbongen9.tpbc.com (unknown [10.44.33.176])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 26D23300018D;
-	Tue,  4 Mar 2025 16:30:18 +0000 (UTC)
-From: Jakub Brnak <jbrnak@redhat.com>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	kan.liang@linux.intel.com,
-	mpetlan@redhat.com,
-	tglozar@redhat.com,
-	jbrnak@redhat.com
-Subject: [PATCH] perf tests probe_vfs_getname: Skip if no suitable line detected
-Date: Tue,  4 Mar 2025 17:30:15 +0100
-Message-ID: <20250304163015.969720-1-jbrnak@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LXs8xEwP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90BA3C4CEE9;
+	Tue,  4 Mar 2025 16:30:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741105848;
+	bh=7SSmhJywGvGXc8ZpfXpgY0nfMFXwgP1l6sL+dAYzJYA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=LXs8xEwPWUgdhyjLjpvHxsFPl+SiYytOtTnhGS7Hg+YqfKsElI3/5JEjyuQ79hX1e
+	 MYYvB+NUnklV63UQclOVXfwzBhWU4GIJLbTB2NRo7tjjjQlg+ugSxUywpRly289oSa
+	 UqcCCgsNBpfs5TryeYPiDFh6SL/8XdqYvc5ddJE6+EM5NsfQXVM6Ftgy5bKwXPe7nM
+	 6c1X6ywJ6ISq5a6kCan/bcToHzW0eVQ/GXutQhyS/p4eB0G9E4XJwwKZO0nCnpY76P
+	 IdSeRWHgJXzUXHEnxU1zqf+h3BNecf8cFWAIqxW9Rjrm77qL15kB00hHFYU0yNock+
+	 YiAHhFsphxHmw==
+Message-ID: <bdca9e9f-7e0d-4ca7-8e8b-f27ea8bb3b54@kernel.org>
+Date: Tue, 4 Mar 2025 17:30:40 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC] leds: rgb: leds-qcom-lpg: Compute PWM value based on
+ period instead
+To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+Cc: Abel Vesa <abel.vesa@linaro.org>, Lee Jones <lee@kernel.org>,
+ Pavel Machek <pavel@kernel.org>,
+ Anjelique Melendez <anjelique.melendez@oss.qualcomm.com>,
+ Kamal Wadhwa <quic_kamalw@quicinc.com>,
+ Jishnu Prakash <jishnu.prakash@oss.qualcomm.com>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>, Johan Hovold <johan@kernel.org>,
+ Sebastian Reichel <sre@kernel.org>, Pavel Machek <pavel@ucw.cz>,
+ linux-leds@vger.kernel.org, linux-pwm@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250303-leds-qcom-lpg-compute-pwm-value-using-period-v1-1-833e729e3da2@linaro.org>
+ <ylnkjxnukss7askv7ip5htrb4tyjzhpw7jim2se6rloleq5h6w@ngk7lbk26hxj>
+ <dbfb17df-90e2-4a7c-9921-9dff5e9382f4@kernel.org>
+ <ovnmhbzwwimil3opuv6e2ayyntlx7upxfkzm5qdfskx2x7hl7x@wmtul33ttow5>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <ovnmhbzwwimil3opuv6e2ayyntlx7upxfkzm5qdfskx2x7hl7x@wmtul33ttow5>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-In some cases when calling function add_probe_vfs_getname, line number
-can't be detected by perf probe -L getname_flags:
+On 04/03/2025 17:03, Uwe Kleine-König wrote:
+> Hello Krzysztof,
+> 
+> On Tue, Mar 04, 2025 at 10:53:53AM +0100, Krzysztof Kozlowski wrote:
+>> On 04/03/2025 07:24, Uwe Kleine-KÃ¶nig wrote:
+>>> instead which gives you a more exact result. The challenge here however
+>>> is that the multiplication might overflow. If you know that the result
+>>> fits into a u64, mul_u64_u64_div_u64() is the function that gets this
+>>> right for you.
+>>>
+>>>>  	chan->pwm_value = min(val, max);
+>>>>  }
+>>>> [...]
+>>>> ---
+>>>> base-commit: 0067a4b21c9ab441bbe6bf3635b3ddd21f6ca7c3
+>>>
+>>> My git repo doesn't know that commit. Given that you said your patch
+>>> bases on that other series, this isn't surprising. Please use a publicly
+>>> available commit as base parameter, otherwise you (and I) don't benefit
+>>> from the armada of build bots because they just silently fail to test in
+>>
+>> As you can easily see in the signature, this patchset was generated by
+>> b4 and such tag was added automatically. No point in stripping it even
+>> if it is not useful (life, happens).
+> 
+> My request was not about stripping it, but making it useful. I don't
+> know the b4 patch sending side, but git send-email has the capability to
+> make it more useful in this scenario. I didn't check, but
+> `b4 --edit-deps` which Abel mentioned sounds about right.
+> 
+> The relevant documentation for the git side is the paragraph "BASE TREE
+> INFORMATION" in git-format-patch(1).
 
-  78         atomic_set(&result->refcnt, 1);
+Useful how? The dependency is on the lists, so there is no base-commit
+you would know.
 
-	     // one of the following lines should have line number
-	     // but sometimes it does not because of optimization
-	     result->uptr = filename;
-             result->aname = NULL;
+And regardless of edit-deps, that base-commit tag is standard from b4,
+so what do you expect from all submitters even if this was not RFC?
+Always base on known commit? But for most of the cases this is
+irrelevant. I can have intermediate commit between linux-next tip and my
+patch, thus base-commit will be bogus for you, but it does not matter
+for the patch - it's based on linux-next.
 
-  81         audit_getname(result);
-
-To prevent false failures, skip the affected tests
-if no suitable line numbers can be detected.
-
-Signed-off-by: Jakub Brnak <jbrnak@redhat.com>
----
- tools/perf/tests/shell/lib/probe_vfs_getname.sh           | 8 +++++++-
- tools/perf/tests/shell/probe_vfs_getname.sh               | 8 +++++++-
- tools/perf/tests/shell/record+script_probe_vfs_getname.sh | 8 +++++++-
- tools/perf/tests/shell/trace+probe_vfs_getname.sh         | 8 +++++++-
- 4 files changed, 28 insertions(+), 4 deletions(-)
-
-diff --git a/tools/perf/tests/shell/lib/probe_vfs_getname.sh b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
-index 5c33ec7a5a63..89f72a4c818c 100644
---- a/tools/perf/tests/shell/lib/probe_vfs_getname.sh
-+++ b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
-@@ -19,8 +19,14 @@ add_probe_vfs_getname() {
- 			result_aname_re="[[:space:]]+([[:digit:]]+)[[:space:]]+result->aname = NULL;"
- 			line=$(perf probe -L getname_flags 2>&1 | grep -E "$result_aname_re" | sed -r "s/$result_aname_re/\1/")
- 		fi
-+
-+		if [ -z "$line" ] ; then
-+			echo "Could not find probeable line"
-+			return 2
-+		fi
-+
- 		perf probe -q       "vfs_getname=getname_flags:${line} pathname=result->name:string" || \
--		perf probe $add_probe_verbose "vfs_getname=getname_flags:${line} pathname=filename:ustring"
-+		perf probe $add_probe_verbose "vfs_getname=getname_flags:${line} pathname=filename:ustring" || return 1
- 	fi
- }
- 
-diff --git a/tools/perf/tests/shell/probe_vfs_getname.sh b/tools/perf/tests/shell/probe_vfs_getname.sh
-index 0c5aacc446b3..9e99647fc61a 100755
---- a/tools/perf/tests/shell/probe_vfs_getname.sh
-+++ b/tools/perf/tests/shell/probe_vfs_getname.sh
-@@ -12,7 +12,13 @@ skip_if_no_perf_probe || exit 2
- # shellcheck source=lib/probe_vfs_getname.sh
- . "$(dirname $0)"/lib/probe_vfs_getname.sh
- 
--add_probe_vfs_getname || skip_if_no_debuginfo
-+add_probe_vfs_getname
- err=$?
-+
-+if [[ $err -ne 0 && $err -ne 2 ]]; then
-+    skip_if_no_debuginfo
-+    err=$?
-+fi
-+
- cleanup_probe_vfs_getname
- exit $err
-diff --git a/tools/perf/tests/shell/record+script_probe_vfs_getname.sh b/tools/perf/tests/shell/record+script_probe_vfs_getname.sh
-index 5940fdc1df37..2724adc23e8f 100755
---- a/tools/perf/tests/shell/record+script_probe_vfs_getname.sh
-+++ b/tools/perf/tests/shell/record+script_probe_vfs_getname.sh
-@@ -34,8 +34,14 @@ perf_script_filenames() {
- 	grep -E " +touch +[0-9]+ +\[[0-9]+\] +[0-9]+\.[0-9]+: +probe:vfs_getname[_0-9]*: +\([[:xdigit:]]+\) +pathname=\"${file}\""
- }
- 
--add_probe_vfs_getname || skip_if_no_debuginfo
-+add_probe_vfs_getname
- err=$?
-+
-+if [[ $err -ne 0 && $err -ne 2 ]]; then
-+    skip_if_no_debuginfo
-+    err=$?
-+fi
-+
- if [ $err -ne 0 ] ; then
- 	exit $err
- fi
-diff --git a/tools/perf/tests/shell/trace+probe_vfs_getname.sh b/tools/perf/tests/shell/trace+probe_vfs_getname.sh
-index 708a13f00635..f5cc59225cf1 100755
---- a/tools/perf/tests/shell/trace+probe_vfs_getname.sh
-+++ b/tools/perf/tests/shell/trace+probe_vfs_getname.sh
-@@ -25,8 +25,14 @@ trace_open_vfs_getname() {
- }
- 
- 
--add_probe_vfs_getname || skip_if_no_debuginfo
-+add_probe_vfs_getname
- err=$?
-+
-+if [[ $err -ne 0 && $err -ne 2 ]]; then
-+    skip_if_no_debuginfo
-+    err=$?
-+fi
-+
- if [ $err -ne 0 ] ; then
- 	exit $err
- fi
--- 
-2.48.1
-
+Best regards,
+Krzysztof
