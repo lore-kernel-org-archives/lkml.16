@@ -1,65 +1,64 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7515F1FBC86;
-	Tue,  4 Mar 2025 09:37:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 318491FC7F6;
+	Tue,  4 Mar 2025 09:37:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741081035; cv=none; b=Oxns/oiFCdMNoeyvdbzDWb1vaUY0IW+sh2ZCNXnUIsOwhU9gsuoicEKc/XWlXhKaBFraCT0Jn91uvrTKMsWlX4FlQmaAKiefG7uzvECz5wbpakOIGEuG971Z9HC/wZcBTFOX7W4liDuOwStppljzM9dK/U4SjEnebYL+alfgjcM=
+	t=1741081043; cv=none; b=Q1lg0aeBb1E09zw5M9jfzrsIMZEnhvNd0fn8FD44LntxMFSEVoFLFKUMpu/Y2h7pMh/H/+GZ53A4/nHqrervzYgZSbvUHTS0NLWYYYk0+Nn0bOQt0nHUA9M8xo1CbTuiGj3SKL6AH4rkKODReSxPxKy4249F8ClzStYNTfuuCQU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741081035; c=relaxed/simple;
-	bh=BExQIW5Idw2RZDIWUNyNS/LjsEZBFx+5RvSwsk9JmxM=;
+	s=arc-20240116; t=1741081043; c=relaxed/simple;
+	bh=113PVFaPa4+TzerInU4d2BPqT/JisSb1AvqesKdyC3Y=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=IUbV1C6LxXtyf6pU5p2mGE6x0YvUL1fOM7fJN5TLrz3OOR+VTGK23lwDXw80vTsmFPUxaVBah+5Ck0Xbc7dWMhwCsY+PxR5UCaGvFcRF9jirRvIDdEAcV+8TJx/1IXNsPeZ07IaE4agzixyz9Hmne43x5tsoinx4vcCMX9a8jmk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=uBSe+r/y; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=9MIKoHP5; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=KTq9CJuKoGa+WuxEHq0nGbAwGT8F1Xr3qKlFVo10zmQUruVR/PRGvyl2vPNFd5zRcRxVV7kBTLZ5DFPEYf0h/A36L+yl4LJiokf6AdOQPI7sOQXK9+0CGDB1adaTKSZNYT7eqKPiBm6zoOLhhPcb0uXwu7G2WAuBKTaySfZDmUg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=NthV14LY; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Ad4TYRdP; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="uBSe+r/y";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="9MIKoHP5"
-Date: Tue, 04 Mar 2025 09:37:07 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="NthV14LY";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Ad4TYRdP"
+Date: Tue, 04 Mar 2025 09:37:18 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1741081031;
+	s=2020; t=1741081039;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=sY86d2fB/QrWGzLttTjreYawmeDhOH0ocX7MK3Sbz0c=;
-	b=uBSe+r/yclPKnD2ZWH6FvvqncZg/gAeHnRhJa/S6XdqmaD8fkeBUO3kXUc0m8wujfQfGV0
-	5pc6xQAe/vjXkgLB+56XvAuNZtgdoe+wJGgUxHzU8hVPGGwquRp6z8xHXS9SWK6QcEcozJ
-	R4UHOG80n280TjPUkHN2yGn9WR+RblkzLWsVXtpet79mizhc4MkRmFFPPfFID12avzgMRJ
-	bbfcuTBkyvx4cK+6wwU8ES9adPm7LOeTpnBMzoOOy9tyW7+NgFaQO70nMEcAyi5evis5WW
-	KHMZ/tPIvUEsc/l7aep0c0YrS/YXTU2JJLvPFfhIj3V9dhGD/ku9Km4MoOFpkQ==
+	bh=jmzX5en/CfvRSkr8JFMxbx+HqYHmUwj/LgDUtf5FKBM=;
+	b=NthV14LY/qH1oLXF/5oPylWqUMPju2Dti+Yo8DqzKqFO06wWrEyCQBloanuSWhIlLxBf2u
+	ZKuJ3acRQsS24dor6bBF3E8P0pVvPWXrq+C3lZPHEo42Cz9NOxvPvJufysz5dbNHvbskP/
+	wmoqGFVjX93MKFBvODuYKdaCCHapG1I2Eqa8wIrCWzIVZp1XI8xU7lTMAm89o1nrv5Xk09
+	oYNBm//9f99K2knUaTZy5NBpgP7OtB0n616VNCTdu6mop29aMo9prJ1dXf2hmsJFifBMv/
+	9UuzrJrbW/qU95GCxeIuSlRiux3vuM6wDuIAqy1xOAYHyBXqM+rITQpJQAn9XQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1741081031;
+	s=2020e; t=1741081039;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=sY86d2fB/QrWGzLttTjreYawmeDhOH0ocX7MK3Sbz0c=;
-	b=9MIKoHP5+FSAe3fwV0PKi462D1Ab65VV+vXyUFTgglNwAmE8OhaMs3+Ikr3mjWVfzANVE/
-	cloTEv+eVllRHYDQ==
-From: "tip-bot2 for Ahmed S. Darwish" <tip-bot2@linutronix.de>
+	bh=jmzX5en/CfvRSkr8JFMxbx+HqYHmUwj/LgDUtf5FKBM=;
+	b=Ad4TYRdP1aFgDx981fTlUSgTUIYua/RY9ReGsGFAPBvzMoqM5YgYVFoTb/dMi11xL61Z6o
+	iTkB37zp/PxyvjBw==
+From: "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
 Subject:
- [tip: x86/urgent] x86/cpu: Properly parse CPUID leaf 0x2 TLB descriptor 0x63
-Cc: "Ahmed S. Darwish" <darwi@linutronix.de>, Ingo Molnar <mingo@kernel.org>,
- stable@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
- Linus Torvalds <torvalds@linux-foundation.org>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <20250304085152.51092-4-darwi@linutronix.de>
-References: <20250304085152.51092-4-darwi@linutronix.de>
+ [tip: x86/cpu] x86/cpu: Get rid of the smp_store_cpu_info() indirection
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+ "Ahmed S. Darwish" <darwi@linutronix.de>, Ingo Molnar <mingo@kernel.org>,
+ x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250304085152.51092-9-darwi@linutronix.de>
+References: <20250304085152.51092-9-darwi@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174108102793.14745.1134264045093147465.tip-bot2@tip-bot2>
+Message-ID: <174108103883.14745.3512782926989212177.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -67,120 +66,152 @@ Precedence: bulk
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 
-The following commit has been merged into the x86/urgent branch of tip:
+The following commit has been merged into the x86/cpu branch of tip:
 
-Commit-ID:     f6bdaab79ee4228a143ee1b4cb80416d6ffc0c63
-Gitweb:        https://git.kernel.org/tip/f6bdaab79ee4228a143ee1b4cb80416d6ffc0c63
-Author:        Ahmed S. Darwish <darwi@linutronix.de>
-AuthorDate:    Tue, 04 Mar 2025 09:51:14 +01:00
+Commit-ID:     1419833d3c2de8ad648d053f230a7f3dcf4fa973
+Gitweb:        https://git.kernel.org/tip/1419833d3c2de8ad648d053f230a7f3dcf4fa973
+Author:        Thomas Gleixner <tglx@linutronix.de>
+AuthorDate:    Tue, 04 Mar 2025 09:51:19 +01:00
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Tue, 04 Mar 2025 09:59:14 +01:00
+CommitterDate: Tue, 04 Mar 2025 10:15:24 +01:00
 
-x86/cpu: Properly parse CPUID leaf 0x2 TLB descriptor 0x63
+x86/cpu: Get rid of the smp_store_cpu_info() indirection
 
-CPUID leaf 0x2's one-byte TLB descriptors report the number of entries
-for specific TLB types, among other properties.
+smp_store_cpu_info() is just a wrapper around identify_secondary_cpu()
+without further value.
 
-Typically, each emitted descriptor implies the same number of entries
-for its respective TLB type(s).  An emitted 0x63 descriptor is an
-exception: it implies 4 data TLB entries for 1GB pages and 32 data TLB
-entries for 2MB or 4MB pages.
+Move the extra bits from smp_store_cpu_info() into identify_secondary_cpu()
+and remove the wrapper.
 
-For the TLB descriptors parsing code, the entry count for 1GB pages is
-encoded at the intel_tlb_table[] mapping, but the 2MB/4MB entry count is
-totally ignored.
+[ darwi: Make it compile and fix up the xen/smp_pv.c instance ]
 
-Update leaf 0x2's parsing logic 0x2 to account for 32 data TLB entries
-for 2MB/4MB pages implied by the 0x63 descriptor.
-
-Fixes: e0ba94f14f74 ("x86/tlb_info: get last level TLB entry number of CPU")
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Signed-off-by: Ahmed S. Darwish <darwi@linutronix.de>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: stable@kernel.org
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Link: https://lore.kernel.org/r/20250304085152.51092-4-darwi@linutronix.de
+Link: https://lore.kernel.org/r/20250304085152.51092-9-darwi@linutronix.de
 ---
- arch/x86/kernel/cpu/intel.c | 50 ++++++++++++++++++++++++------------
- 1 file changed, 34 insertions(+), 16 deletions(-)
+ arch/x86/include/asm/processor.h |  2 +-
+ arch/x86/include/asm/smp.h       |  2 --
+ arch/x86/kernel/cpu/common.c     | 11 +++++++++--
+ arch/x86/kernel/smpboot.c        | 24 ++----------------------
+ arch/x86/xen/smp_pv.c            |  2 +-
+ 5 files changed, 13 insertions(+), 28 deletions(-)
 
-diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
-index 2a3716a..134368a 100644
---- a/arch/x86/kernel/cpu/intel.c
-+++ b/arch/x86/kernel/cpu/intel.c
-@@ -635,26 +635,37 @@ static unsigned int intel_size_cache(struct cpuinfo_x86 *c, unsigned int size)
+diff --git a/arch/x86/include/asm/processor.h b/arch/x86/include/asm/processor.h
+index 0ea227f..d5d9a07 100644
+--- a/arch/x86/include/asm/processor.h
++++ b/arch/x86/include/asm/processor.h
+@@ -229,7 +229,7 @@ static inline unsigned long long l1tf_pfn_limit(void)
+ void init_cpu_devs(void);
+ void get_cpu_vendor(struct cpuinfo_x86 *c);
+ extern void early_cpu_init(void);
+-extern void identify_secondary_cpu(struct cpuinfo_x86 *);
++extern void identify_secondary_cpu(unsigned int cpu);
+ extern void print_cpu_info(struct cpuinfo_x86 *);
+ void print_cpu_msr(struct cpuinfo_x86 *);
+ 
+diff --git a/arch/x86/include/asm/smp.h b/arch/x86/include/asm/smp.h
+index 1d3b11e..128e06a 100644
+--- a/arch/x86/include/asm/smp.h
++++ b/arch/x86/include/asm/smp.h
+@@ -120,8 +120,6 @@ void native_smp_send_reschedule(int cpu);
+ void native_send_call_func_ipi(const struct cpumask *mask);
+ void native_send_call_func_single_ipi(int cpu);
+ 
+-void smp_store_cpu_info(int id);
+-
+ asmlinkage __visible void smp_reboot_interrupt(void);
+ __visible void smp_reschedule_interrupt(struct pt_regs *regs);
+ __visible void smp_call_function_interrupt(struct pt_regs *regs);
+diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
+index 3a1a957..5f81c55 100644
+--- a/arch/x86/kernel/cpu/common.c
++++ b/arch/x86/kernel/cpu/common.c
+@@ -1997,9 +1997,15 @@ static __init void identify_boot_cpu(void)
+ 	lkgs_init();
  }
- #endif
  
--#define TLB_INST_4K	0x01
--#define TLB_INST_4M	0x02
--#define TLB_INST_2M_4M	0x03
-+#define TLB_INST_4K		0x01
-+#define TLB_INST_4M		0x02
-+#define TLB_INST_2M_4M		0x03
- 
--#define TLB_INST_ALL	0x05
--#define TLB_INST_1G	0x06
-+#define TLB_INST_ALL		0x05
-+#define TLB_INST_1G		0x06
- 
--#define TLB_DATA_4K	0x11
--#define TLB_DATA_4M	0x12
--#define TLB_DATA_2M_4M	0x13
--#define TLB_DATA_4K_4M	0x14
-+#define TLB_DATA_4K		0x11
-+#define TLB_DATA_4M		0x12
-+#define TLB_DATA_2M_4M		0x13
-+#define TLB_DATA_4K_4M		0x14
- 
--#define TLB_DATA_1G	0x16
-+#define TLB_DATA_1G		0x16
-+#define TLB_DATA_1G_2M_4M	0x17
- 
--#define TLB_DATA0_4K	0x21
--#define TLB_DATA0_4M	0x22
--#define TLB_DATA0_2M_4M	0x23
-+#define TLB_DATA0_4K		0x21
-+#define TLB_DATA0_4M		0x22
-+#define TLB_DATA0_2M_4M		0x23
- 
--#define STLB_4K		0x41
--#define STLB_4K_2M	0x42
-+#define STLB_4K			0x41
-+#define STLB_4K_2M		0x42
+-void identify_secondary_cpu(struct cpuinfo_x86 *c)
++void identify_secondary_cpu(unsigned int cpu)
+ {
+-	BUG_ON(c == &boot_cpu_data);
++	struct cpuinfo_x86 *c = &cpu_data(cpu);
 +
-+/*
-+ * All of leaf 0x2's one-byte TLB descriptors implies the same number of
-+ * entries for their respective TLB types.  The 0x63 descriptor is an
-+ * exception: it implies 4 dTLB entries for 1GB pages 32 dTLB entries
-+ * for 2MB or 4MB pages.  Encode descriptor 0x63 dTLB entry count for
-+ * 2MB/4MB pages here, as its count for dTLB 1GB pages is already at the
-+ * intel_tlb_table[] mapping.
-+ */
-+#define TLB_0x63_2M_4M_ENTRIES	32
++	/* Copy boot_cpu_data only on the first bringup */
++	if (!c->initialized)
++		*c = boot_cpu_data;
++	c->cpu_index = cpu;
++
+ 	identify_cpu(c);
+ #ifdef CONFIG_X86_32
+ 	enable_sep_cpu();
+@@ -2010,6 +2016,7 @@ void identify_secondary_cpu(struct cpuinfo_x86 *c)
+ 		update_gds_msr();
  
- static const struct _tlb_table intel_tlb_table[] = {
- 	{ 0x01, TLB_INST_4K,		32,	" TLB_INST 4 KByte pages, 4-way set associative" },
-@@ -676,7 +687,8 @@ static const struct _tlb_table intel_tlb_table[] = {
- 	{ 0x5c, TLB_DATA_4K_4M,		128,	" TLB_DATA 4 KByte and 4 MByte pages" },
- 	{ 0x5d, TLB_DATA_4K_4M,		256,	" TLB_DATA 4 KByte and 4 MByte pages" },
- 	{ 0x61, TLB_INST_4K,		48,	" TLB_INST 4 KByte pages, full associative" },
--	{ 0x63, TLB_DATA_1G,		4,	" TLB_DATA 1 GByte pages, 4-way set associative" },
-+	{ 0x63, TLB_DATA_1G_2M_4M,	4,	" TLB_DATA 1 GByte pages, 4-way set associative"
-+						" (plus 32 entries TLB_DATA 2 MByte or 4 MByte pages, not encoded here)" },
- 	{ 0x6b, TLB_DATA_4K,		256,	" TLB_DATA 4 KByte pages, 8-way associative" },
- 	{ 0x6c, TLB_DATA_2M_4M,		128,	" TLB_DATA 2 MByte or 4 MByte pages, 8-way associative" },
- 	{ 0x6d, TLB_DATA_1G,		16,	" TLB_DATA 1 GByte pages, fully associative" },
-@@ -776,6 +788,12 @@ static void intel_tlb_lookup(const unsigned char desc)
- 		if (tlb_lld_4m[ENTRIES] < intel_tlb_table[k].entries)
- 			tlb_lld_4m[ENTRIES] = intel_tlb_table[k].entries;
- 		break;
-+	case TLB_DATA_1G_2M_4M:
-+		if (tlb_lld_2m[ENTRIES] < TLB_0x63_2M_4M_ENTRIES)
-+			tlb_lld_2m[ENTRIES] = TLB_0x63_2M_4M_ENTRIES;
-+		if (tlb_lld_4m[ENTRIES] < TLB_0x63_2M_4M_ENTRIES)
-+			tlb_lld_4m[ENTRIES] = TLB_0x63_2M_4M_ENTRIES;
-+		fallthrough;
- 	case TLB_DATA_1G:
- 		if (tlb_lld_1g[ENTRIES] < intel_tlb_table[k].entries)
- 			tlb_lld_1g[ENTRIES] = intel_tlb_table[k].entries;
+ 	tsx_ap_init();
++	c->initialized = true;
+ }
+ 
+ void print_cpu_info(struct cpuinfo_x86 *c)
+diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
+index 5746084..8ecf1bf 100644
+--- a/arch/x86/kernel/smpboot.c
++++ b/arch/x86/kernel/smpboot.c
+@@ -190,7 +190,7 @@ static void ap_starting(void)
+ 	apic_ap_setup();
+ 
+ 	/* Save the processor parameters. */
+-	smp_store_cpu_info(cpuid);
++	identify_secondary_cpu(cpuid);
+ 
+ 	/*
+ 	 * The topology information must be up to date before
+@@ -215,7 +215,7 @@ static void ap_calibrate_delay(void)
+ {
+ 	/*
+ 	 * Calibrate the delay loop and update loops_per_jiffy in cpu_data.
+-	 * smp_store_cpu_info() stored a value that is close but not as
++	 * identify_secondary_cpu() stored a value that is close but not as
+ 	 * accurate as the value just calculated.
+ 	 *
+ 	 * As this is invoked after the TSC synchronization check,
+@@ -315,26 +315,6 @@ static void notrace start_secondary(void *unused)
+ 	cpu_startup_entry(CPUHP_AP_ONLINE_IDLE);
+ }
+ 
+-/*
+- * The bootstrap kernel entry code has set these up. Save them for
+- * a given CPU
+- */
+-void smp_store_cpu_info(int id)
+-{
+-	struct cpuinfo_x86 *c = &cpu_data(id);
+-
+-	/* Copy boot_cpu_data only on the first bringup */
+-	if (!c->initialized)
+-		*c = boot_cpu_data;
+-	c->cpu_index = id;
+-	/*
+-	 * During boot time, CPU0 has this setup already. Save the info when
+-	 * bringing up an AP.
+-	 */
+-	identify_secondary_cpu(c);
+-	c->initialized = true;
+-}
+-
+ static bool
+ topology_same_node(struct cpuinfo_x86 *c, struct cpuinfo_x86 *o)
+ {
+diff --git a/arch/x86/xen/smp_pv.c b/arch/x86/xen/smp_pv.c
+index 6863d3d..688ff59 100644
+--- a/arch/x86/xen/smp_pv.c
++++ b/arch/x86/xen/smp_pv.c
+@@ -70,7 +70,7 @@ static void cpu_bringup(void)
+ 		xen_enable_syscall();
+ 	}
+ 	cpu = smp_processor_id();
+-	smp_store_cpu_info(cpu);
++	identify_secondary_cpu(cpu);
+ 	set_cpu_sibling_map(cpu);
+ 
+ 	speculative_store_bypass_ht_init();
