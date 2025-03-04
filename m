@@ -1,156 +1,213 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFFB71F8AC0
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 08:51:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C8601FBCBF
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 08:52:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741078293; cv=none; b=GezkNmcYAgS54Gvh7G+GyjBiX5GXFFy5bj/jJOX02t6TQNCtC5wttrVRebcbydPObCrxY3lZg21xuewdKw7R4b/Kfe3S/pclGdxsmXAGeE99dF0N+fARe87pmMFjKY7IceZXxUAVF7W/9qD+P5XG0vsCh85KoVXC59Z45sz1urQ=
+	t=1741078338; cv=none; b=pX6XekrwaL7dL9eH4Fdi0Wyq1bMicDHEn9csmD1WRv2beg1HtgCw8g9G9yk8ftM/OJmaGopc5BZTkgBtQbt6THZbg+099OpMJs1NLZWtOfSI7oLzw1qq7X4zUwCz1oErYjfi/ffX5h0mQ7CNrHtS8ESWaO1vz9yT/n6BKv3mPYc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741078293; c=relaxed/simple;
-	bh=DzcwyW1s2Qh52TtFRwqotEDcRzSij+QevL5cGblPvRs=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=G5MbtRdMT+N2pNN2/GRfXcLNsoqX5Ps/DZlvYxeF6ZLPOVeObRJ3pXnUnwUba357HtfVVA4HJLnGh3hK1DunRkCk9tll0jWy00qiJuqc7i1lAY9LtrgW8a7vm46KyVK790poQkzUQCA7cEw2kS/yMJAZkpbu0a9GEwP0lQdh4NU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=nBtLru4u; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1741078338; c=relaxed/simple;
+	bh=LTNq1PAvvMwaaiCEIAQDrT7cmsiR7iZxBEs3QUOwm0w=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YXOh3uHRhrKa8OcbUXaZUPohRzL/9zh61BKfCX6tw+UDxaY9TeWN6R7TEAB6OTJlzEghGvFI+kp860NSjOZnuDnOyl+ohnGdf9hsOivQ+D3mverGBFa3Ljpx1C8GkQC4gCp/UW2zf6pNNHyulKmtBTINAJp9RdoJovrvDPB1qjM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=3taF5hyo; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=C50YVNwf; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="nBtLru4u"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 523NcERN025569
-	for <linux-kernel@vger.kernel.org>; Tue, 4 Mar 2025 08:51:31 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=OLRCuCe47x5UYRcZUJUbMd2a
-	1rwUyvqY0uLF/SHitw4=; b=nBtLru4uRPcGx2Mn7PiW90o4PRddVASupV+VlQHZ
-	2q/uivYxEZorUj/9Af5dMUC84W9Oa8vKUAxmSK81jCJv6aAlTIYA5mS07gwXo/72
-	zvCyaflpNRd/uFplcFDvg7czBmg/pjStpzXUJtiAQINUKqPGIRtb9cm4X8EnbO79
-	v/HMVjPvkKz84WjZUnejDYjXKnlCufz2ehnLAkYVxOHncNgR2d7bfBmycOekpuoG
-	5GIbK0q9vuZyOynSdfnWT+dXg2JyNEy2RLwy+9jcxnOmVQYcZU7/E17/d1t5hvrk
-	2QLGr5azciPC3CY0u21MiAHikq+siipA/8UsA8Vx5iXFMw==
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com [209.85.219.69])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 455p931896-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Tue, 04 Mar 2025 08:51:30 +0000 (GMT)
-Received: by mail-qv1-f69.google.com with SMTP id 6a1803df08f44-6e8c4f5f3b4so54341726d6.1
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Mar 2025 00:51:30 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741078289; x=1741683089;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OLRCuCe47x5UYRcZUJUbMd2a1rwUyvqY0uLF/SHitw4=;
-        b=OT7vHg2rxgxYfxDNjqM5kJXd5erS6xov++wYtjaFkufoKNTieS407KRg5fezClaJNu
-         FyjMbIiN5XUXXp3kHspfJVsGuWCCatwtjLJOm6jK8ITxJSjIi1eRYC5B5/v7PWckDMv1
-         vl2AO5t7XigcKbCghghIjQ2ItrVKPgufMg53mfEgLIeOp8EZy5LT+OQBZofilLs8rkkG
-         pKbRrZUaNqDaovyI6vBZ7ljoALniIQqs9wn2zYOBOVuVR9Lu3eIL3JaieByWDUL73WKZ
-         BejAUSpL8jA6d/qGLEgn3JaVOWltxnMfQK0Y15WkUMB7W1uulB5kT5zRXPJGnENk15ip
-         nBxg==
-X-Forwarded-Encrypted: i=1; AJvYcCUTVnu76fqbO9cU6IlRZWFiHjjIbBvV6URu/+9pwkvcsONUHDsa36avzI3STAB50qpGjIDuj7slJwAyim0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwsPg+lzwZxSuwfvemOQwPk2Nu1bU2N1wcmPtq4CRkK00z6JdVa
-	O5mGjJSkatDewlRPrm5sofE0d3jwSYGZ1nNtWa3pBs0bSfR7oIjnOO04jr+7MUXtROv5PiwQauK
-	8jots5f0MFvo2j4BLcBOnugFBk4LJyNWrxXtfD0EeOz9KhPmf53hS6O0ghPXje8I=
-X-Gm-Gg: ASbGncvZ/ANaHJAGUPo+a0v+9WD/Ng7mtwOIRwpleT7WJ9YuSFrIt6WGrOtjHgauo6M
-	89B1BdwV3QcwaRrTO6Je66oAs2erONu/Xj9fuNobH5dQvVMC2K4qXhvsqXbUkRaVVOL8bNBEAUn
-	P0bSctY2akXVKCdBccJrT/2jiIYjADpy9zXH+P5mN1EciYvBYA8BLmAYEzAJjlwjDxjlMRCWWUx
-	85ZGa577N8r0gLxwtkqPxBf/W+99RD3IXGA1HQF0jkTu0KWoYBbxHjfAJE04B9QHSc+kddK8KuV
-	+5l6OcVhWlkOvyUp6jiza/WUzF1vL8CAGQHZq4W4vKBoo3in
-X-Received: by 2002:a05:6214:500f:b0:6e8:9c3b:af08 with SMTP id 6a1803df08f44-6e8a0d6d748mr233513886d6.30.1741078289590;
-        Tue, 04 Mar 2025 00:51:29 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEXXONIdl74iWtM0enyp5EVNCNlqClOTgbZD6KGhlRFyfxAGkoiqep7Ikq28VZER+zvu5VL7Q==
-X-Received: by 2002:a05:6214:500f:b0:6e8:9c3b:af08 with SMTP id 6a1803df08f44-6e8a0d6d748mr233513566d6.30.1741078289278;
-        Tue, 04 Mar 2025 00:51:29 -0800 (PST)
-Received: from trex (54.red-79-144-194.dynamicip.rima-tde.net. [79.144.194.54])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43aba5393e5sm216342135e9.20.2025.03.04.00.51.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Mar 2025 00:51:28 -0800 (PST)
-From: Jorge Ramirez <jorge.ramirez@oss.qualcomm.com>
-X-Google-Original-From: Jorge Ramirez <JorgeRamirez-Ortiz>
-Date: Tue, 4 Mar 2025 09:51:26 +0100
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Jorge Ramirez <jorge.ramirez@oss.qualcomm.com>,
-        Vikram Sharma <quic_vikramsa@quicinc.com>, rfoss@kernel.org,
-        todor.too@gmail.com, bryan.odonoghue@linaro.org, mchehab@kernel.org,
-        robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
-        andersson@kernel.org, konradybcio@kernel.org, hverkuil-cisco@xs4all.nl,
-        cros-qcom-dts-watchers@chromium.org, catalin.marinas@arm.com,
-        will@kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Konrad Dybcio <konrad.dybcio@linaro.org>
-Subject: Re: [PATCH v14 2/2] arm64: dts: qcom:
- qcs6490-rb3gen2-vision-mezzanine: Add vision mezzanine
-Message-ID: <Z8a/Dk7zjZ7RQT2/@trex>
-References: <20250208225143.2868279-1-quic_vikramsa@quicinc.com>
- <20250208225143.2868279-3-quic_vikramsa@quicinc.com>
- <ca8e6569-b466-4f83-83af-38c51891d395@kernel.org>
- <Z8a7cMmxJuHIhgjo@trex>
- <baae2a56-5299-486f-acf1-14fe13fd2f81@kernel.org>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="3taF5hyo";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="C50YVNwf"
+From: "Ahmed S. Darwish" <darwi@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1741078333;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=Zqz2NcPjvHOOoFXSqS0gay6vWbSKLIetdKM7cXiSBcY=;
+	b=3taF5hyo2H+wd/vzxlsxkDCpxlndZ6tvo/sF3yTwi2CH1ObvZGpZZepTOmmtAu6sK2ZzPq
+	pOp3Vvyqt0rCCfaqsQpefdMzVsQ/aRV0/KuEvKMLnSwFUuNaNIePVfyfoLm6u/A6bX6hGV
+	B3l6ZVeY2TJZVV3bBxSOMN4yk6QLtP5eYbz1Wbe6Ixk09HZVSs7i6UCkCNKmR6R7UWv2Mc
+	czAZ5fbgPIbZHUkTdA/5+5kzpzxQGxElcH/LTKlrVaTUt8FLDt78uYkpqrHtsudU+ZKtC8
+	AwZzmrrvF6Py8hF7soOz/t/DCONHRk5W65D3BSzIL422UPpwuwwjZtzA8GuuyA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1741078333;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=Zqz2NcPjvHOOoFXSqS0gay6vWbSKLIetdKM7cXiSBcY=;
+	b=C50YVNwfgvsouc7ks22zHgPWHVf6rA8pYSd/MusrC4phOelQCMn1ZtaJ/zEEtMvDeZO9Cf
+	kwfDjJEG5TxkfFDw==
+To: Borislav Petkov <bp@alien8.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+	John Ogness <john.ogness@linutronix.de>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Andrew Cooper <andrew.cooper3@citrix.com>,
+	x86@kernel.org,
+	x86-cpuid@lists.linux.dev,
+	LKML <linux-kernel@vger.kernel.org>,
+	"Ahmed S. Darwish" <darwi@linutronix.de>
+Subject: [PATCH v1 00/40] x86: Leaf 0x2 and leaf 0x4 refactorings
+Date: Tue,  4 Mar 2025 09:51:11 +0100
+Message-ID: <20250304085152.51092-1-darwi@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <baae2a56-5299-486f-acf1-14fe13fd2f81@kernel.org>
-X-Authority-Analysis: v=2.4 cv=Me2Wu4/f c=1 sm=1 tr=0 ts=67c6bf12 cx=c_pps a=wEM5vcRIz55oU/E2lInRtA==:117 a=cl0az7d0LwC7qAhl51RXhA==:17 a=kj9zAlcOel0A:10 a=Vs1iUdzkB0EA:10 a=EIL0MzI05wtt13IUXDMA:9 a=CjuIK1q_8ugA:10 a=OIgjcC2v60KrkQgK7BGD:22
-X-Proofpoint-GUID: y4h4kdI2pz1p-wGZEJOB2G_rkBvVdDnP
-X-Proofpoint-ORIG-GUID: y4h4kdI2pz1p-wGZEJOB2G_rkBvVdDnP
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-04_04,2025-03-03_04,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 clxscore=1015
- suspectscore=0 mlxscore=0 malwarescore=0 phishscore=0 spamscore=0
- adultscore=0 lowpriorityscore=0 mlxlogscore=999 priorityscore=1501
- impostorscore=0 classifier=spam authscore=0 adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2502100000 definitions=main-2503040074
+Content-Transfer-Encoding: 8bit
 
-On 04/03/25 09:40:21, Krzysztof Kozlowski wrote:
-> On 04/03/2025 09:36, Jorge Ramirez wrote:
-> > On 03/03/25 18:13:20, Krzysztof Kozlowski wrote:
-> >> On 08/02/2025 23:51, Vikram Sharma wrote:
-> >>> The Vision Mezzanine for the Qualcomm RB3 Gen 2 ships with an imx577
-> >>> camera sensor. Enable IMX577 on the vision mezzanine.
-> >>>
-> >>> An example media-ctl pipeline for the imx577 is:
-> >>>
-> >>> media-ctl --reset
-> >>> media-ctl -V '"imx577 '17-001a'":0[fmt:SRGGB10/4056x3040 field:none]'
-> >>
-> >> AFAIU, camss does not support SRGGB10, but only SRGGB10P.
-> >>
-> >> Based on tests reported on IRC I think this might not have been tested
-> >> correctly.
-> > 
-> > I acquired SRGGB10P (10 bit packed) frames from the camera despite the
-> > pipeline being set to SRGGB10 (16 bit) samples.
-> > 
-> > so something does not add up.
-> 
-> Then the commands are actually correct, just the camss or media behave
-> here a bit unexpected?
->
+Hi,
 
-setting the pipeline (CSI) as SRGGB10 (16 bit samples) as per below
+As part of the onging x86-cpuid work [*], we've found that the handling
+of leaf 0x2 and leaf 0x4 code paths is difficult to work with in its
+current state.  This was mostly due to the organic growth of the x86/cpu
+and x86/cacheinfo logic since its very early Linux days.
 
-media-ctl --reset
-media-ctl -v -V '"imx577 '19-001a'":0[fmt:SRGGB10/4056x3040 field:none]'
-media-ctl -V '"msm_csiphy3":0[fmt:SRGGB10/4056x3040]'
-media-ctl -V '"msm_csid0":0[fmt:SRGGB10/4056x3040]'
-media-ctl -V '"msm_vfe0_rdi0":0[fmt:SRGGB10/4056x3040]'
-media-ctl -l '"msm_csiphy3":1->"msm_csid0":0[1]'
-media-ctl -l '"msm_csid0":1->"msm_vfe0_rdi0":0[1]'
+This series cleans up and refactors these code paths in preparation for
+the new x86-cpuid model.
 
-allows to capture SRGGB10P samples (frames-xxxx.bin files contain 10 bit samples for the size)
+Summary:
 
- ==> yavta -B capture-mplane -c -I -n 5 -f SRGGB10P -s 4056x3040 -F /dev/video0
+- Patches 1 to 3 are independent bugfixes that were discovered during
+  this refactoring work.
 
+- Patches 4 to 10 are x86/cpu refactorings for code size and
+  readability.
 
-shouldnt the CSI need to be set to SRGGB10P instead?
+- Patch 10 adds standardized and kernel-doc documented logic for
+  accessing leaf 0x2 one byte descriptors.
 
+  This makes the leaf 0x2 sanitization logic centralized in one place.
+  x86/cpu and x86/cacheinfo is modified to use such macros afterwards.
 
-> Best regards,
-> Krzysztof
+- Patches 11 to 28 refactors the x86/cacheinfo code.
 
+  Beside readability, some of the unrelated logic (e.g. AMD northbridge
+  cache_disable sysfs code) was first splitted from the generic leaf 0x4
+  code paths, at the structure relationships level, then gutted-out into
+  their own files.
+
+- Patches 29 to 31 consolidate the existing (loop-based lookup) leaf 0x2
+  cache and TLB descriptor tables into one hash-based lookup table.
+  This reduces code size while still keeping rodata size in check.
+
+  Standardized macros for accessing this consolidated table are also
+  added.  Call sites can now just do:
+
+	const struct leaf_0x2_table *entry;
+	union leaf_0x2_regs regs;
+	u8 *ptr;
+
+	get_leaf_0x2_regs(&regs);
+	for_each_leaf_0x2_entry(regs, ptr, entry) {
+		switch (entry->c_type) {
+			...
+		}
+	}
+
+  without need to worry about sanitizing registers, skipping certain
+  descriptors, etc.
+
+- Patches 32 and 33 uses the consolidated table above for x86/cpu and
+  x86/cacheinfo.
+
+- Patches 34 to 40 provide the final set of x86/refactorings.
+
+This series is based on -rc5.  It also applies cleanly on top of
+tip/x86/core.
+
+Note, testing was done by comparing below files:
+
+	/proc/cpuinfo
+	/sys/devices/system/cpu/
+	/sys/kernel/debug/x86/topo/
+	dmesg --notime | grep 'Last level [id]TLB entries'
+
+before and after on various old and new x86 machine configurations.
+
+[*] https://gitlab.com/x86-cpuid.org/x86-cpuid-db
+    https://x86-cpuid.org
+
+8<-----
+
+Ahmed S. Darwish (33):
+  x86/cacheinfo: Validate cpuid leaf 0x2 EDX output
+  x86/cpu: Validate cpuid leaf 0x2 EDX output
+  x86/cpu: Properly parse leaf 0x2 TLB descriptor 0x63
+  x86/cpuid: Include linux/build_bug.h
+  x86/cpu: Remove unnecessary headers and reorder the rest
+  x86/cpu: Use max() for leaf 0x2 TLB descriptors parsing
+  x86/cpu: Simplify TLB entry count storage
+  x86/cpu: Remove leaf 0x2 parsing loop and add helpers
+  x86/cacheinfo: Remove unnecessary headers and reorder the rest
+  x86/cacheinfo: Use cpuid leaf 0x2 parsing helpers
+  x86/cacheinfo: Constify _cpuid4_info_regs instances
+  x86/cacheinfo: Align ci_info_init() assignment expressions
+  x86/cacheinfo: Standardize _cpuid4_info_regs instance naming
+  x86: treewide: Introduce x86_vendor_amd_or_hygon()
+  x86/cacheinfo: Consolidate AMD/Hygon leaf 0x8000001d calls
+  x86/cacheinfo: Separate amd_northbridge from _cpuid4_info_regs
+  x86/cacheinfo: Move AMD cache_disable_0/1 handling to separate file
+  x86/cacheinfo: Use sysfs_emit() for sysfs attributes show()
+  x86/cacheinfo: Separate Intel and AMD leaf 0x4 code paths
+  x86/cacheinfo: Rename _cpuid4_info_regs to _cpuid4_info
+  x86/cacheinfo: Clarify type markers for leaf 0x2 cache descriptors
+  x86/cacheinfo: Use enums for cache descriptor types
+  x86/cpu: Use enums for TLB descriptor types
+  sizes.h: Cover all possible x86 cpu cache sizes
+  x86/cacheinfo: Use consolidated leaf 0x2 descriptor table
+  x86/cpu: Use consolidated leaf 0x2 descriptor table
+  x86/cacheinfo: Separate leaf 0x2 handling and post-processing logic
+  x86/cacheinfo: Separate intel leaf 0x4 handling
+  x86/cacheinfo: Extract out cache level topology ID calculation
+  x86/cacheinfo: Extract out cache self-snoop checks
+  x86/cacheinfo: Relocate leaf 0x4 cache_type mapping
+  x86/cacheinfo: Introduce amd_hygon_cpu_has_l3_cache()
+  x86/cacheinfo: Apply maintainer-tip coding style fixes
+
+Thomas Gleixner (7):
+  x86/cpu: Get rid of smp_store_cpu_info() indirection
+  x86/cpu: Remove unused TLB strings
+  x86/cacheinfo: Remove the P4 trace leftovers for real
+  x86/cacheinfo: Refactor leaf 0x2 cache descriptor lookup
+  x86/cacheinfo: Properly name amd_cpuid4()'s first parameter
+  x86/cacheinfo: Use proper name for cacheinfo instances
+  x86/cpu: Consolidate CPUID leaf 0x2 tables
+
+ arch/x86/events/amd/uncore.c            |    3 +-
+ arch/x86/events/rapl.c                  |    3 +-
+ arch/x86/include/asm/cpuid.h            |    1 +
+ arch/x86/include/asm/cpuid/types.h      |  173 ++++
+ arch/x86/include/asm/processor.h        |   26 +-
+ arch/x86/include/asm/smp.h              |    2 -
+ arch/x86/kernel/amd_nb.c                |   16 +-
+ arch/x86/kernel/cpu/Makefile            |    5 +-
+ arch/x86/kernel/cpu/amd.c               |   18 +-
+ arch/x86/kernel/cpu/amd_cache_disable.c |  301 +++++++
+ arch/x86/kernel/cpu/bugs.c              |   12 +-
+ arch/x86/kernel/cpu/cacheinfo.c         | 1062 +++++++----------------
+ arch/x86/kernel/cpu/common.c            |   31 +-
+ arch/x86/kernel/cpu/cpu.h               |   17 +-
+ arch/x86/kernel/cpu/cpuid_0x2_table.c   |  128 +++
+ arch/x86/kernel/cpu/hygon.c             |   16 +-
+ arch/x86/kernel/cpu/intel.c             |  208 ++---
+ arch/x86/kernel/cpu/mce/core.c          |    4 +-
+ arch/x86/kernel/cpu/mce/severity.c      |    3 +-
+ arch/x86/kernel/cpu/mtrr/cleanup.c      |    3 +-
+ arch/x86/kernel/smpboot.c               |   27 +-
+ arch/x86/kvm/svm/svm.c                  |    3 +-
+ arch/x86/pci/amd_bus.c                  |    3 +-
+ arch/x86/xen/enlighten.c                |   15 +-
+ arch/x86/xen/pmu.c                      |    3 +-
+ arch/x86/xen/smp_pv.c                   |    2 +-
+ include/linux/sizes.h                   |    8 +
+ 27 files changed, 1076 insertions(+), 1017 deletions(-)
+ create mode 100644 arch/x86/include/asm/cpuid/types.h
+ create mode 100644 arch/x86/kernel/cpu/amd_cache_disable.c
+ create mode 100644 arch/x86/kernel/cpu/cpuid_0x2_table.c
+
+base-commit: 7eb172143d5508b4da468ed59ee857c6e5e01da6
+--
+2.48.1
