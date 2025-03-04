@@ -1,95 +1,94 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A15D624C070;
-	Tue,  4 Mar 2025 15:19:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D30624C087
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 15:19:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741101552; cv=none; b=q89KvCt8S3I9HeNlKLsQeDxHDGEC++F6gjMwy+igaR0MyhuRpp/D7fZ3CZO1u/SDX1Mv4K3aMPg2sfFMUwBoP8iAo5BkwgpXgfWGtsjJyteOjW1I+yKYGjlQRQr3D3to8IorMnKcoRMwGSPkopItcOqTXLK1P8uFVrxRb1f/g58=
+	t=1741101554; cv=none; b=V/JHkfaP6hAvGxmCEh2jkUTwJaZYM1PCj+Qe59+IaZZDwCXCmpcU+SPjwORilMgXTmpjTJvXtmhjlluv+wkYhzAnNdd2Wyd45C5nn4dN6HFLo7NvdKe8YPPSo8dyoa/F5tTGD5mcZbIxGMZkBsHqWzNQRcm+kU1tKrrbiUzgnRU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741101552; c=relaxed/simple;
-	bh=TzxuSWykCCc/zxAzz6e9wDWVq4eBwpwInfgT/Rd5cVA=;
+	s=arc-20240116; t=1741101554; c=relaxed/simple;
+	bh=PvY7iupp/OELeEU1fL4FkgUAsKdFpjTPxjRFBe5QNyw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=D9levfJpwAKINJDGedEej3DbUYXpRjgb3bVr55cLlO/5lWzXrLj2NXbK623GG0+ldYE/TObBFRHviNssZe9eBE86PX23URa8ROiRMIqONXO4O1CVINIAA4DvACClZ4OdbX2mzBauB4K6JAtVoK9LFaxynbd9cujuMey1jFP0iKA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mvrcpjjs; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=DX03ILW4qIzahVdc9jl2shykwEXQTllfbnB5f6rOicDbgc9oLM/7WRqRLCp6JGUPncVlp1PyyMlBp5DxIY1QcX8cd5O/RqCFESSvM1kCrNQukSBLqTqsYfuZaVq2GbHaorGOreG95gNPO6M+xBlBKw3VzXCZg3ojYEoVUZKZgus=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=V/cF4w3m; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mvrcpjjs"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741101551; x=1772637551;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=TzxuSWykCCc/zxAzz6e9wDWVq4eBwpwInfgT/Rd5cVA=;
-  b=mvrcpjjswNQanF0R68jvuiQoExwt68ElFTL5coqK+BbXbo68gE7Xeo10
-   jCr3zzG9J3sGXkpFm+4us7rGoQDUo7GdN2NcJUxv29ljeh4YjEcwcA98L
-   VQ2sd4bp/nknw9rz3Oixzwc6kEcDUSDoZ3KRe18iiqQ3n+3ny+k6kV9Cy
-   cGaXTCLP+n1tqk2uJR5tP6AoKv6X/0xwH6l8FKmGq0ZfihnQ6aseUTP/6
-   HSr4XPSG36RoqLXeyzRj5itD6fdFeUlUYD7SEMyLmW6PUX8nea3nPELz3
-   L0lJiO8fxKhyEluzPMjpvmySm13MZCCV5CqTLxT/iBKftj8pAyYo7YDsT
-   g==;
-X-CSE-ConnectionGUID: isLqEi6KQumqg12eFDivdg==
-X-CSE-MsgGUID: HN7Qq3COSoqu0Hi1FIq/PQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11363"; a="41934152"
-X-IronPort-AV: E=Sophos;i="6.14,220,1736841600"; 
-   d="scan'208";a="41934152"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2025 07:19:10 -0800
-X-CSE-ConnectionGUID: DjwoaqNfT3a2wvxB52yuLg==
-X-CSE-MsgGUID: G9CiivFQRg2FKPKgQ48YfQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,220,1736841600"; 
-   d="scan'208";a="149188835"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa002.jf.intel.com with ESMTP; 04 Mar 2025 07:19:08 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 0AA4118F; Tue, 04 Mar 2025 17:19:06 +0200 (EET)
-Date: Tue, 4 Mar 2025 17:19:06 +0200
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Inochi Amaoto <inochiama@gmail.com>
-Cc: Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Yixun Lan <dlan@gentoo.org>,
-	Longbin Li <looong.bin@gmail.com>
-Subject: Re: [PATCH] spi: dw: Add ACPI ID for the Sophgo SG2044 SoC SPI
-Message-ID: <Z8cZ6jXFBnFRK7SE@black.fi.intel.com>
-References: <20250304070212.350155-2-inochiama@gmail.com>
- <nvym76w7ezhsugmno65m6jnt54ts5at7jcnn3jfrhlorayjlya@jyl536p2435u>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="V/cF4w3m"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1741101551;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=PvY7iupp/OELeEU1fL4FkgUAsKdFpjTPxjRFBe5QNyw=;
+	b=V/cF4w3myPa7wH6LtD6srcOysaS7XyVofebub5jeYQf3XVkXyKUK2GIuPF4ESrPz2vRJL3
+	03CJm6bjDsKTyNYLK9XblLdC/8Usyi2DAFHCzcWdiBjZv99FYgBVp3A1bQm1FRHnlpjov2
+	KTUpj/iieWXQeph9vaYyxp+/cQSSHuQ=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-356-bC7wrayBNBqo0jzR62nHuQ-1; Tue,
+ 04 Mar 2025 10:19:09 -0500
+X-MC-Unique: bC7wrayBNBqo0jzR62nHuQ-1
+X-Mimecast-MFC-AGG-ID: bC7wrayBNBqo0jzR62nHuQ_1741101547
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 384CA180099D;
+	Tue,  4 Mar 2025 15:19:07 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.225.246])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id CA9591800352;
+	Tue,  4 Mar 2025 15:19:03 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Tue,  4 Mar 2025 16:18:37 +0100 (CET)
+Date: Tue, 4 Mar 2025 16:18:32 +0100
+From: Oleg Nesterov <oleg@redhat.com>
+To: Mateusz Guzik <mjguzik@gmail.com>
+Cc: torvalds@linux-foundation.org, brauner@kernel.org, mingo@redhat.com,
+	peterz@infradead.org, rostedt@goodmis.org,
+	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH 1/3] pipe: drop an always true check in anon_pipe_write()
+Message-ID: <20250304151832.GA5756@redhat.com>
+References: <20250303230409.452687-1-mjguzik@gmail.com>
+ <20250303230409.452687-2-mjguzik@gmail.com>
+ <20250304140726.GD26141@redhat.com>
+ <CAGudoHG260oJkBPXwe13YqeC_si8RVUAHdMU1wMhNnXrZUFvPQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <nvym76w7ezhsugmno65m6jnt54ts5at7jcnn3jfrhlorayjlya@jyl536p2435u>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAGudoHG260oJkBPXwe13YqeC_si8RVUAHdMU1wMhNnXrZUFvPQ@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-On Tue, Mar 04, 2025 at 07:48:42PM +0800, Inochi Amaoto wrote:
-> On Tue, Mar 04, 2025 at 03:02:10PM +0800, Inochi Amaoto wrote:
-> > The Sophgo SG2044 SoC can enumerated its SPI device via ACPI.
-> > Add ACPI ID for it.
+On 03/04, Mateusz Guzik wrote:
+>
+> On Tue, Mar 4, 2025 at 3:08 PM Oleg Nesterov <oleg@redhat.com> wrote:
+> >
+> > It seems that we can also remove the unnecessary signal_pending()
+> > check, but I need to recheck and we need to cleanup the poll_usage
+> > logic first.
+> >
+> > This will also remove the unnecessary wakeups when the writer is
+> > interrupted by signal/
+> >
+>
+> There are many touch ups to do here, I don't have an opinion about this diff.
 
 ...
 
-> >  static const struct acpi_device_id dw_spi_mmio_acpi_match[] = {
-> >  	{"HISI0173", (kernel_ulong_t)dw_spi_pssi_init},
-> > +	{"SOPHO004", (kernel_ulong_t)dw_spi_pssi_init},
-> >  	{},
-> >  };
+> Thus I would argue someone(tm) should do it in Linux, but I don't have
+> immediate plans. Perhaps you would be happy to do it? :)
 
-> Drop this patch for now as the ACPI id is not registed.
+Probably. In any case this needs a separate patch, sorry for confusion.
 
-Right, more details are in another thread:
-https://lore.kernel.org/r/20250304070212.350155-3-inochiama@gmail.com
-
-And here is a formal NAK from me.
-
-Thanks, Inochi, to take this into account!
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+Oleg.
 
