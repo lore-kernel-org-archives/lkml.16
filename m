@@ -1,113 +1,113 @@
-Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A07924C08E
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 17:39:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76D7E299B2D;
+	Tue,  4 Mar 2025 17:40:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741109991; cv=none; b=b8tiGVZqFpxkgY1AF8CG2eRH1u3zbbdTikpfkLcOa19hsfB58JgdHdhoIr/yuZw+Eh9EnE73PXG4HD4BrYJ3/5+f2tzQFGmM9EPfnPORxIFi18SmGtSvu/hmq6NqK0s5ay2+NWDeyr4vUvB9rgWU9bhf5wGB7zwXGv/wLduRXYM=
+	t=1741110037; cv=none; b=hwvrlY2UIChpJ9F5OjVQbyz1UasfxmhgV3nvF6GptuMKyy5lljfpo5Iw2XcQEGr4CFL7KUE6gEcXzSPkPcU2ig8b9kWQNhue6FYcy+pJHpeDgffp5w2bo9CGauBf6nO4ELDPYxuoaT7mr9if5pk8+sbXTWnJFeobdsXR27lfAG8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741109991; c=relaxed/simple;
-	bh=i50rufOwf6vwyAuooSNBHw4J8VhV9XZ8F0ZF8cluBGI=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=EPeLMhTXH5S18Fbk9WKkt5YaZinrEiQAIot/+T++39VAQmGlz2AjiHBA0wJVVhNrHTDsPCYJjuUHKq0blKPmJKYvXJwzMkC1hSYfOkmS4NucPj1JXjdCe1zdKVR+Y80c379iAu4RKBw3oQoAzgHAxkDAjM7K57g3eE/1eqLlRI4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=S1AETnw5; arc=none smtp.client-ip=209.85.214.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1741110037; c=relaxed/simple;
+	bh=9FU/7m3L6w46a3y3tZQoZf0uV5nbJVVfFNXKFyOuXOs=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=loOoMHaCAJLtKzyXY6UTpHKjmPYKuCFQWa8hmbU2AUFXAKcx83ZHregqgMTykgarhCrQ1NwTu9WZBKoDA4sibW49cdfLv1obkKqd0eOD/S8k5WaUfc0Sp1f58KOKBAegrNFX/dHmuM6WBIogfez6+SzlMEzoieIeCrJ8OCo/kiQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=ciaWwtKr; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="S1AETnw5"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-22379af38e0so61862455ad.2
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Mar 2025 09:39:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1741109989; x=1741714789; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=TI3FoVeE0Ra2glCU+l7ZrrB58ecOTFnnVt+cs3oYhCA=;
-        b=S1AETnw51w0WuOIgCd7ijY4cpBbnjkCH28O29UXQu3oR8WFMcQgAIGPsI5rVuF82U/
-         M32QftimTnv0VZWK527Xk/qCS7ON3xukIkuPSrw33nclYI9VohbEX2qQ4ZaQCTy0xa3b
-         CAXxmNBg9sG4y2bEeEoIvMDkj2zXcJ8MBqd3tULM7NO/fO2Gwlf51e5Zkkn0oenofbqE
-         mndhv5BXCt0QcgtgL+9XnTImnv1QS2EsX4uj4EuuoElioCnCTzPxqxE64C+RS2MG4zyU
-         /QuY/NkZJaGXbnPYskJ3y13LG5s4pF/OYPaScAya5ZuduK2pR/k3Crku6mo1VJ5oE3VQ
-         Dydw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741109989; x=1741714789;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=TI3FoVeE0Ra2glCU+l7ZrrB58ecOTFnnVt+cs3oYhCA=;
-        b=Agjwl3YCPukBlrChhShl/GqcG1eAT2aWgS+mXb5B25DdaC0D7r/TQ44b1/TYO8JJLm
-         ESTVBT5jfpPbvfcfXMgb4r/EWmOux4DIGyX0nfPmgoT4yYldBVMMcti5/M8zLFHUJb/C
-         t3SIQHi8O2ycICEazDxzn99rq5E7cmA512PkBiycUIcSFxhA1gtlU/7EXEjlva7qRz2Q
-         8NbOuxN19nsCWECO7jr7pSyobtf7JT64dgfKjeiRJgafg0qjd+mrd9Z2OwDyXXLhow8A
-         ucSX+Dnbu8AlVywO3TBhyv4Z1f2uyQPgh5VhWgKTLMAjw5FQMtQqBqtv8WiMSGDQzWjB
-         XiKA==
-X-Forwarded-Encrypted: i=1; AJvYcCUlzhiU33AfpBLM/I9fRi1MSMoXUnaGYu19tZtnYAH65VVx5X//9olxHZ/gJ+2uMeIvRp+7/m0LEnRMAJs=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywmb82Dr52j4Civtcqt2I3Jdd4m7xTzT88mAer+qBPMSmGTt1ia
-	B6yvLbwPBuU1CJPph2MHs+JCO9N8ziu3ETRGoKkycCd2UW/ZhWC19FujvKquo+p6Zkx1ZmyiJeL
-	53Q==
-X-Google-Smtp-Source: AGHT+IGZddoSY2oyJ60dCyqtZiF8YnS+v36sYEMEslkao7NI/8RRXlf38IKWdXRybiMidO4JcJg+/iNohU8=
-X-Received: from pfbfw3.prod.google.com ([2002:a05:6a00:61c3:b0:730:76c4:7144])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:734b:b0:1ee:d418:f758
- with SMTP id adf61e73a8af0-1f2f4cdb421mr28532451637.17.1741109988705; Tue, 04
- Mar 2025 09:39:48 -0800 (PST)
-Date: Tue, 4 Mar 2025 09:39:47 -0800
-In-Reply-To: <SN6PR02MB41576973AC66F8515F6C81F0D4C82@SN6PR02MB4157.namprd02.prod.outlook.com>
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="ciaWwtKr"
+Received: from pps.filterd (m0369458.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 524FmvcA027790;
+	Tue, 4 Mar 2025 18:40:00 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	HPWXN7XU6ij/VILhA4L2prDYWt4HSSzxWCxw+iSrXQ4=; b=ciaWwtKrwneppsvy
+	zsVpYRBHP59MOu5LloMTD7vh+ij+6BcxWhXqOaeNRVk+1M5onSLbmpnT4y/CSpuW
+	dNjH9RZoPm6Ey6HtKpbERnCkjZ12PAHDGp0GsragIXxqxDqk7mKu+wAI0srv7klP
+	vyodYxGDnm9xY8VU7jOgoJ3yzxIuDJcWJa8XyhrRsL+1AxPzE4BnSQ/FCnrFLNxO
+	u+Q+tl0ZAW+7o78k6TGIkXOtH7R42zH4atBJB3xMfi9E3ihSIVAZ6NZvN5MjfoSP
+	ykqlUhKMXiN6JfTZufWtgkadJDu/W/EIFcuyDvecPAqeio3fTk6+HKctknyVoC8i
+	i4VMkw==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 454cp8fgcb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 04 Mar 2025 18:40:00 +0100 (CET)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 391A6400A8;
+	Tue,  4 Mar 2025 18:38:45 +0100 (CET)
+Received: from Webmail-eu.st.com (eqndag1node5.st.com [10.75.129.134])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 11C15594FBC;
+	Tue,  4 Mar 2025 18:32:51 +0100 (CET)
+Received: from SAFDAG1NODE1.st.com (10.75.90.17) by EQNDAG1NODE5.st.com
+ (10.75.129.134) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 4 Mar
+ 2025 18:32:50 +0100
+Received: from localhost (10.252.16.143) by SAFDAG1NODE1.st.com (10.75.90.17)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 4 Mar
+ 2025 18:32:51 +0100
+From: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
+To: <lee@kernel.org>, <ukleinek@kernel.org>, <alexandre.torgue@foss.st.com>,
+        <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+        <jic23@kernel.org>, <daniel.lezcano@linaro.org>, <tglx@linutronix.de>
+CC: <catalin.marinas@arm.com>, <will@kernel.org>, <devicetree@vger.kernel.org>,
+        <wbg@kernel.org>, <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <linux-iio@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
+        <olivier.moysan@foss.st.com>, <fabrice.gasnier@foss.st.com>
+Subject: [PATCH v2 6/8] arm64: defconfig: enable STM32 LP timer clockevent driver
+Date: Tue, 4 Mar 2025 18:32:27 +0100
+Message-ID: <20250304173229.3215445-7-fabrice.gasnier@foss.st.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20250304173229.3215445-1-fabrice.gasnier@foss.st.com>
+References: <20250304173229.3215445-1-fabrice.gasnier@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250227021855.3257188-1-seanjc@google.com> <20250227021855.3257188-9-seanjc@google.com>
- <SN6PR02MB41576973AC66F8515F6C81F0D4C82@SN6PR02MB4157.namprd02.prod.outlook.com>
-Message-ID: <Z8c641D3AuWNXGVB@google.com>
-Subject: Re: [PATCH v2 08/38] clocksource: hyper-v: Register sched_clock
- save/restore iff it's necessary
-From: Sean Christopherson <seanjc@google.com>
-To: Michael Kelley <mhklinux@outlook.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, "x86@kernel.org" <x86@kernel.org>, 
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, Paolo Bonzini <pbonzini@redhat.com>, 
-	Juergen Gross <jgross@suse.com>, "K. Y. Srinivasan" <kys@microsoft.com>, 
-	Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
-	Dexuan Cui <decui@microsoft.com>, Ajay Kaher <ajay.kaher@broadcom.com>, 
-	Jan Kiszka <jan.kiszka@siemens.com>, Andy Lutomirski <luto@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, 
-	John Stultz <jstultz@google.com>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"linux-coco@lists.linux.dev" <linux-coco@lists.linux.dev>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, 
-	"virtualization@lists.linux.dev" <virtualization@lists.linux.dev>, 
-	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>, 
-	"xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>, Tom Lendacky <thomas.lendacky@amd.com>, 
-	Nikunj A Dadhania <nikunj@amd.com>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SAFDAG1NODE1.st.com
+ (10.75.90.17)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-04_07,2025-03-03_04,2024-11-22_01
 
-On Tue, Mar 04, 2025, Michael Kelley wrote:
-> From: Sean Christopherson <seanjc@google.com> Sent: Wednesday, February 26, 2025 6:18 PM
-> > 
-> > Register the Hyper-V timer callbacks or saving/restoring its PV sched_clock
-> 
-> s/or/for/
-> 
-> > if and only if the timer is actually being used for sched_clock.
-> > Currently, Hyper-V overrides the save/restore hooks if the reference TSC
-> > available, whereas the Hyper-V timer code only overrides sched_clock if
-> > the reference TSC is available *and* it's not invariant.  The flaw is
-> > effectively papered over by invoking the "old" save/restore callbacks as
-> > part of save/restore, but that's unnecessary and fragile.
-> 
-> The Hyper-V specific terminology here isn't quite right.  There is a
-> PV "Hyper-V timer", but it is loaded by the guest OS with a specific value
-> and generates an interrupt when that value is reached.  In Linux, it is used
-> for clockevents, but it's not a clocksource and is not used for sched_clock.
-> The correct Hyper-V term is "Hyper-V reference counter" (or "refcounter"
-> for short).  The refcounter behaves like the TSC -- it's a monotonically
-> increasing value that is read-only, and can serve as the sched_clock.
-> 
-> And yes, both the Hyper-V timer and Hyper-V refcounter code is in a
-> source file with a name containing "timer" but not "refcounter". But
-> that seems to be the pattern for many of the drivers in
-> drivers/clocksource. :-)
+Enable the STM32 LP timer MFD core and clockevent drivers used on
+STM32MP257F-EV1 board, for PSCI OSI.
 
-Heh, wading through misleading naming is basically a right of passage in the kernel.
+Signed-off-by: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
+---
+Changes in v2:
+- dropped unused IIO trigger, PWM and counter driver unused on upstream
+board currently, as advised by Krzysztof
+---
+ arch/arm64/configs/defconfig | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Thanks for the reviews and testing!  I'll fixup all the changelogs.
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index 1f25423de383..b29b2350ae27 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -775,6 +775,7 @@ CONFIG_MFD_TI_LP873X=m
+ CONFIG_MFD_TPS65219=y
+ CONFIG_MFD_TPS6594_I2C=m
+ CONFIG_MFD_ROHM_BD718XX=y
++CONFIG_MFD_STM32_LPTIMER=m
+ CONFIG_MFD_WCD934X=m
+ CONFIG_MFD_KHADAS_MCU=m
+ CONFIG_REGULATOR_FIXED_VOLTAGE=y
+@@ -1401,6 +1402,7 @@ CONFIG_CLK_RENESAS_VBATTB=m
+ CONFIG_HWSPINLOCK=y
+ CONFIG_HWSPINLOCK_QCOM=y
+ CONFIG_TEGRA186_TIMER=y
++CONFIG_CLKSRC_STM32_LP=y
+ CONFIG_RENESAS_OSTM=y
+ CONFIG_ARM_MHU=y
+ CONFIG_IMX_MBOX=y
+-- 
+2.25.1
+
