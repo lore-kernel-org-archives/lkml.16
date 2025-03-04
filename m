@@ -1,78 +1,168 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82884204F7F
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 14:06:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 786D02054F7;
+	Tue,  4 Mar 2025 14:06:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741097214; cv=none; b=AIz7nx3W4M+0L1MdCcNTMn5Tcpdj0FjKcGMTWUWWk9Y9YJIaQRu0rQnqOFWTwvfp/PKimYiXZwnBZAOhgifahovvnYS1+wqgCHuciTHaIVzNqVxVZVQpRP09mtK1YhtrxewXI4awm1+RebFS0yQEPDEuP1UdotAsBg42RAPIuEo=
+	t=1741097219; cv=none; b=Tb+JHhua23oS6PWngYEfhtgki/GfLov62vKTCaj7fxVYi9RSQHNyEGeLDqHf+IsKxEVyWU9bCABrlU+w73FJvKfewaYvTMcxnuWTN64bLscCeJckk8NAqyTJaM/ANZpPJic/tV0llHxlQfRrenIn7hzPOLjd6vtkcyQ+Fz5lMNY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741097214; c=relaxed/simple;
-	bh=nTtHJoZTZLFRcTSvqqKeIPLsJ4F+Gi2YfEeiFa2+3Ow=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=WKviJ4i69LmbFeEOFGUknAZ/DG9m4lSr2S0ls2QQOQ2TzZJKsAIcalQ69rB0b0FTH3cpdKUljVoW5GNAUI2RKAvn2BYGxh4g/bviBh9oV010AQuYI0NDE/QIh9mVPBQ/JuQf/8ZvLULFF/2DbW3YKEhgN7snFVoMAULJHEV6y0c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Ms9xl1bl; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=kLvPDIwV; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1741097219; c=relaxed/simple;
+	bh=JrdF0vtV0pwL5L590faoWin/GHpdb7YheXDBmCQex+0=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 Mime-Version:Content-Type; b=TEMebxWFdPEFT506AK9f0xCrE46WdORHpnWDSj7C6mJLE/yuZ+A8q6UhV5QWQ3pbXxEtU6rN4t1RLZr7beklladon7VQ8FYzq4SBQeTB+4w+0dmlKqsj4kjQVYiL1RH18CQbH8GI2DtyWq2BV/azb6CDE65bWOBzoxxwxAY4k9o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BOHXvAn/; arc=none smtp.client-ip=209.85.222.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Ms9xl1bl";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="kLvPDIwV"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1741097210;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=nTtHJoZTZLFRcTSvqqKeIPLsJ4F+Gi2YfEeiFa2+3Ow=;
-	b=Ms9xl1bl39txeF6xPTvYn9bXjYMEXCnXG/xMddZuU5sbmB0NQ/D5o6QMTR7+FTmIOgGxda
-	8zyu4MOOhMyMIL04JUAB+n/FJzqg42AX1msyifwaXEDKK3nyn7R03OBNXFTSTGREFJ+d0P
-	k3+LkI7/hP6xPc1vgv7pTFTMGAy+XNVf/91WPS1Rc8tgu7wP1kJyiitUX1WewR1vaIud0N
-	a0yS9wqqqTt49gMUssAK52/Uu4/F/7o6L999ain3PYivUIuKXiys54I5NkMSsMOhHwzD2s
-	03NenMZoO0Z5yvzDo0+jVjQsC/9fiFuFFi9pZ6pWZ+q3Phnh4mcmzggQ47Ge1Q==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1741097210;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=nTtHJoZTZLFRcTSvqqKeIPLsJ4F+Gi2YfEeiFa2+3Ow=;
-	b=kLvPDIwVRBH9j6+THD+6EPgLC4ILX6IPU5a20JGIQxDE9L+Icmo+ZzsLdADJBR8lzrYbbH
-	gLrlRoU0nC76lfDA==
-To: Pavel Tikhomirov <ptikhomirov@virtuozzo.com>, LKML
- <linux-kernel@vger.kernel.org>
-Cc: Anna-Maria Behnsen <anna-maria@linutronix.de>, Frederic Weisbecker
- <frederic@kernel.org>, Benjamin Segall <bsegall@google.com>, Eric Dumazet
- <edumazet@google.com>, Andrey Vagin <avagin@openvz.org>, Peter Zijlstra
- <peterz@infradead.org>
-Subject: Re: [patch V2 08/17] posix-timers: Rework timer removal
-In-Reply-To: <b6e7766c-3e9c-4d65-8b6b-3e19140cb572@virtuozzo.com>
-References: <20250302185753.311903554@linutronix.de>
- <20250302193627.416552300@linutronix.de>
- <3e38af8c-1d06-49bd-aa30-f4e8b0263492@virtuozzo.com>
- <b6e7766c-3e9c-4d65-8b6b-3e19140cb572@virtuozzo.com>
-Date: Tue, 04 Mar 2025 15:06:49 +0100
-Message-ID: <878qpk7uva.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BOHXvAn/"
+Received: by mail-qk1-f177.google.com with SMTP id af79cd13be357-7c2303a56d6so603774485a.3;
+        Tue, 04 Mar 2025 06:06:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741097216; x=1741702016; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=I1Muupcpy+OM9bjik9PXq7Ryx61fO0zb5gU8UKxppt8=;
+        b=BOHXvAn/wgFYzHF/EoT8ifAF9R/Ce8Qgd/cIRx566dT1BBmrCjQeoCRPOS/J67Coh3
+         IAoDmwUw2JJoe55mzplzGcIKZrFSCrK+/uPwoS+0JBToJdGLak7UdvwC1jWtRjd1T2Xd
+         s64sHL67ztLTqjiAQCY5Eg5F9x76ddJMO6yFb/IOqC6SMKagaBixdt2za6KfptJgN0HE
+         aYZu/RwB+TF1dQ+IVAheoPRJ6KBn9oDloeYuRLmG8Q6YxPreptcsN8ffNCjZrIrmVYD9
+         tdYgrpFAQWKEz3QPIHODjiBJkgWkK7PwwU7gcM/cD5Z5wxI2j7VPt5jK9ZsXWeGfHGFk
+         aniw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741097216; x=1741702016;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=I1Muupcpy+OM9bjik9PXq7Ryx61fO0zb5gU8UKxppt8=;
+        b=geO1JbCHLz65KWHpHGpqJKlArzDJZ5WYoqKpgOB42RWrnf54vcT3pxnDJvTouKEXHM
+         nhLI/fttR+xLRgbr07y5ehmtq6P3RqrtrzBv6nBZo15NlLWzYZ3kkiF7FPqgx6F/AZri
+         bUAmcYsXujuSxY4ytUOf/WWfNMVyOKQY8o2Td1iOlxh75chIeT+fBjX8MrZ2SxkgUZR1
+         mLpUVtEqZEneGXYkJBT89J2QdPuXaNTdJ7jJVGZhT250mE1qMlQqRdaxSVzlmKUy6xZ2
+         lVSBopZBF2hCbBKa1tsZSEh3xu7wRyPlrmw04KhVJZ8LW5FkLUMHiyRdi7sQE5Cdw3Kh
+         KoMQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUsi7dhd3jyjprwl3oyRyrH3Xy3NTVCAyN8tT4onX5vy+AAyvN3kRFWewEQfaTjPRlyS5K4ZYlx@vger.kernel.org, AJvYcCWCQaAfRGTG9uffXl+ViRRNaYu7wr7dU44aJhQV4FlvAkVqqBqvjs22NaOca0M0yLVenJGKn5UO5Xu4RJ/U91v5HLY5yWq1@vger.kernel.org, AJvYcCXucF26VwCuatPgQMDhOZSgymjF3pgfOfIc9PBGkLwmMWC+syEvliXm7SnwUfLpPlzGkMa3CVAhmeiSoEU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyf5jHMVKKaIjtIe8OEzuk6CTm3jhLi0KRGc9/TzaN9vLHS3Okr
+	CZwtdJRfZGT8ov9QMhTRUik2Zvr9AI3JSae/xgaaviljAcs10wlQ
+X-Gm-Gg: ASbGncsYUi0PIEQ+3mabcWAEjUYIIeJz1aqoGiaerwuhFROrzU9QIwkqyLgyWBmyRMt
+	2t365XU224SyMB8lIvfYEdDyeGa0ubxTOH2BYeG45/JJbAH7jaq2wia8zF3365R9YyVe7uCu95W
+	CVsrED3TLX8Y8yZVGWjvZpVanUYA0lkQGnKc2WF7kgFSfdjxjwi0jD6HtZJY5FNZK75LdNCxF0l
+	EmdxJPJj76JK/mOSeqlguLbs7WX9eooIa1epW1UID8ddt9oq/rdvsXJnGJ7rvLDo4DxlTE3zksP
+	id1gmIq1ecf+EUq2wA0VbJcqyYQrcTRisgY74QM2nrpkbsL8PYvxJ+OSzc607T9C/dNrbRFYVnG
+	gKw1IjdhmiW2jev7HJCijqw==
+X-Google-Smtp-Source: AGHT+IGApDbbAFIVP4UAhuK4gruOfc1K42rEtfDe0QgRcGiarlFw8FydgN2j9mXLeJC52LhY80Pv6w==
+X-Received: by 2002:a05:620a:424e:b0:7c0:c1d0:d0b4 with SMTP id af79cd13be357-7c39c60ea81mr2948041985a.40.1741097216179;
+        Tue, 04 Mar 2025 06:06:56 -0800 (PST)
+Received: from localhost (234.207.85.34.bc.googleusercontent.com. [34.85.207.234])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e8976cca94sm66581446d6.77.2025.03.04.06.06.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Mar 2025 06:06:55 -0800 (PST)
+Date: Tue, 04 Mar 2025 09:06:55 -0500
+From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+To: =?UTF-8?B?Q2hyaXN0aWFuIEfDtnR0c2NoZQ==?= <cgoettsche@seltendoof.de>
+Cc: =?UTF-8?B?Q2hyaXN0aWFuIEfDtnR0c2NoZQ==?= <cgzones@googlemail.com>, 
+ Serge Hallyn <serge@hallyn.com>, 
+ Jan Kara <jack@suse.com>, 
+ Julia Lawall <Julia.Lawall@inria.fr>, 
+ Nicolas Palix <nicolas.palix@imag.fr>, 
+ linux-kernel@vger.kernel.org, 
+ linux-security-module@vger.kernel.org, 
+ cocci@inria.fr, 
+ "David S. Miller" <davem@davemloft.net>, 
+ Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>, 
+ Simon Horman <horms@kernel.org>, 
+ Willem de Bruijn <willemb@google.com>, 
+ Mina Almasry <almasrymina@google.com>, 
+ Pavel Begunkov <asml.silence@gmail.com>, 
+ Sebastian Andrzej Siewior <bigeasy@linutronix.de>, 
+ Christian Hopps <chopps@labn.net>, 
+ Alexander Lobakin <aleksander.lobakin@intel.com>, 
+ netdev@vger.kernel.org
+Message-ID: <67c708ff63eac_257ad92942d@willemb.c.googlers.com.notmuch>
+In-Reply-To: <20250302160657.127253-9-cgoettsche@seltendoof.de>
+References: <20250302160657.127253-1-cgoettsche@seltendoof.de>
+ <20250302160657.127253-9-cgoettsche@seltendoof.de>
+Subject: Re: [PATCH v2 10/11] skbuff: reorder capability check last
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Mime-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Mar 04 2025 at 18:20, Pavel Tikhomirov wrote:
-> On 3/4/25 18:10, Pavel Tikhomirov wrote:
->>> +=C2=A0=C2=A0=C2=A0 while (timer->kclock->timer_del(timer) =3D=3D TIMER=
-_RETRY) {
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 guard(rcu)();
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 spin_unlock_irq(&timer->it_=
-lock);
->>=20
->> Maybe "guard(spinlock_irq)(&timer->it_lock);", since we already use=20
->> guard constructions everywhere else?
->
-> Sorry I'm just stupid. Please ignore.
+Christian G=C3=B6ttsche wrote:
+> From: Christian G=C3=B6ttsche <cgzones@googlemail.com>
+> =
 
-You're not the first one to trip over this :)
+> capable() calls refer to enabled LSMs whether to permit or deny the
+> request.  This is relevant in connection with SELinux, where a
+> capability check results in a policy decision and by default a denial
+> message on insufficient permission is issued.
+> It can lead to three undesired cases:
+>   1. A denial message is generated, even in case the operation was an
+>      unprivileged one and thus the syscall succeeded, creating noise.
+>   2. To avoid the noise from 1. the policy writer adds a rule to ignore=
+
+>      those denial messages, hiding future syscalls, where the task
+>      performs an actual privileged operation, leading to hidden limited=
+
+>      functionality of that task.
+>   3. To avoid the noise from 1. the policy writer adds a rule to permit=
+
+>      the task the requested capability, while it does not need it,
+>      violating the principle of least privilege.
+> =
+
+> Signed-off-by: Christian G=C3=B6ttsche <cgzones@googlemail.com>
+> Reviewed-by: Serge Hallyn <serge@hallyn.com>
+
+Similar to Paolo's response to patch 7: these networking patches
+should probably go through net-next.
+
+> ---
+>  net/core/skbuff.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> =
+
+> diff --git a/net/core/skbuff.c b/net/core/skbuff.c
+> index b1c81687e9d8..7ed538e15b56 100644
+> --- a/net/core/skbuff.c
+> +++ b/net/core/skbuff.c
+> @@ -1566,7 +1566,7 @@ int mm_account_pinned_pages(struct mmpin *mmp, si=
+ze_t size)
+>  	unsigned long max_pg, num_pg, new_pg, old_pg, rlim;
+>  	struct user_struct *user;
+>  =
+
+> -	if (capable(CAP_IPC_LOCK) || !size)
+> +	if (!size || capable(CAP_IPC_LOCK))
+>  		return 0;
+
+Not sure that this case is relevant:
+
+Unlike most other capable checks, this does not protect a privileged
+operation and returns with error for unprivileged users.
+
+It offers a shortcut to privileged users to avoid memory accounting,
+but continues in the comon case that the user is not privileged.
+
+So the common case here is to generate denial messages when LSMs are
+enabled. size 0 is not likely, so swapping the order is unlikely to
+significantly change the number of denial messages.
+
+>  =
+
+>  	rlim =3D rlimit(RLIMIT_MEMLOCK);
+> -- =
+
+> 2.47.2
+> =
+
+
+
