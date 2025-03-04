@@ -1,639 +1,229 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED55C1FBCB2;
-	Tue,  4 Mar 2025 08:36:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741077408; cv=none; b=IvNnz5HqqnBrBbHDL1M7v8Ly/MIPRXOn2ez4Lde/LRjjuixUxa4vX6iNmncb2530HM2e3h5033khSxbzyKvdIUNRfqcrvk7IH60NmRIqNlhE+tGe+6+o7I7rnVsYREN/2dR8KoznrKBdlisjOs3izGEn88HpAp5+flu1HqRTzGA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741077408; c=relaxed/simple;
-	bh=q4+eCauqW17EST8bv6FaDswBHcheaYEpE/R+t+QjLRE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Q0wM8TLlXywxi7+YWeGxadK4vcWGG2BFfXDB9YJIhizd3F3NRvNNVZD2YwMnA0eUCw29MJu8qDymXoM3kB9Qyw2SEFLBT1H8gu+7fSqhPSB5/UE+Hqsgb7MhbFWubkZI83gv0VmrLvuAvjrmA2IjqGRMTCbMYrqtr6sySOS2mmY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VZu0W82b; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83ED61DFD8B;
+	Tue,  4 Mar 2025 08:37:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=60.244.123.138
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741077459; cv=fail; b=DZ+4TyawWRLgwT6b/lbk9vzJxQwFcRx5lGwGndFwa8YarNhoN5RkB6GR5KbN/7O8FT1/InosbeagI8qcAH3byVEQf0Ce9WGV+bXgTzUEEgqL6aevCD4UJk8pQ5kabw3zURncrtRCoA2ZPOGHD5vX6CgkMHKG2s06A2WkpbUCyEU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741077459; c=relaxed/simple;
+	bh=kIeRtdNKIn42i4pVgjjZwBuXmLUr/uVDd/aXavNpnjE=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=Z1s81GMqA+Gz1KTjfbzpszEEMFgjmRmnssjSa8K0Pd26dhfJVb+ssJvvp380tZQt0d/U3Tzx2PfxBZBJ/JvFYgFPPTUnwYkxw1tPJFZ/YkJFENSMWbod+uXmevNtcpcfRFbl5ky0HBb88DF+l12+cKteBHIj7efttgqMHKvBuB0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=kUdfruif; dkim=pass (1024-bit key) header.d=mediateko365.onmicrosoft.com header.i=@mediateko365.onmicrosoft.com header.b=ouHCZ5Hf; arc=fail smtp.client-ip=60.244.123.138
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VZu0W82b"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2238d965199so43525925ad.2;
-        Tue, 04 Mar 2025 00:36:46 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="kUdfruif";
+	dkim=pass (1024-bit key) header.d=mediateko365.onmicrosoft.com header.i=@mediateko365.onmicrosoft.com header.b="ouHCZ5Hf"
+X-UUID: e95fb2a0f8d311efaae1fd9735fae912-20250304
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+	h=MIME-Version:Content-Transfer-Encoding:Content-ID:Content-Type:In-Reply-To:References:Message-ID:Date:Subject:CC:To:From; bh=kIeRtdNKIn42i4pVgjjZwBuXmLUr/uVDd/aXavNpnjE=;
+	b=kUdfruifWXtfI4ltZgGtz0cuulVKIOs+BvCqEToLI9/dlhc1SB6lKNg8jNIPEIxMst+BQWkAtVqf0cLV+zaXnCaCe86rrTFjAZPsRNE88pB6LUx1s+wKjCNZYO9zj8UEyFc+lI0XXeNtowsp0jYn+fbKKW0+Q9M1KN9/Ecyoy/U=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.2.1,REQID:153417d8-0cbf-4c48-8db3-f2e96d7b509b,IP:0,UR
+	L:0,TC:0,Content:-5,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:-5
+X-CID-META: VersionHash:0ef645f,CLOUDID:af5ad3b5-a2a1-4ef3-9ef9-e116773da0a7,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:80|81|82|83|102,TC:nil,Content:0|50,
+	EDM:-3,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OS
+	A:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-UUID: e95fb2a0f8d311efaae1fd9735fae912-20250304
+Received: from mtkmbs13n1.mediatek.inc [(172.21.101.193)] by mailgw01.mediatek.com
+	(envelope-from <zoie.lin@mediatek.com>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 1789193544; Tue, 04 Mar 2025 16:37:30 +0800
+Received: from mtkmbs10n2.mediatek.inc (172.21.101.183) by
+ MTKMBS09N2.mediatek.inc (172.21.101.94) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.28; Tue, 4 Mar 2025 16:37:29 +0800
+Received: from HK2PR02CU002.outbound.protection.outlook.com (172.21.101.237)
+ by mtkmbs10n2.mediatek.inc (172.21.101.183) with Microsoft SMTP Server id
+ 15.2.1258.28 via Frontend Transport; Tue, 4 Mar 2025 16:37:29 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=yaX6rzRC6MS3i3yOUi9DgT20ebOGPEqyh5AJOWVwp9WZD+X5NQHrA5e3x7LWL7E1M6AU5+08lNx6I2YsWXC8lohF2fQT0Vr/EtHvDY1UQtyRTHhOhB5CmIQf1LoIEwt0+feeb2d1wwfWRgFRZTAtHLeJwZNiuLcbgMLN+JSaTIcmw00QzJ1SSZ0oe5fgetZOTg3egl1wUJa+JDT5gt/4b8MT9zbOxnD72dGmleigumXzaLFz2IeIjmMEXsoclicTdYRMh4Oy2wNXII2zHeJq/guQ0ce5I/iaJv7/p+VI2GEFUnY9rNOi8w6a8JH+9e9HBnV3eOF76taI+FmJQSjXNw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=kIeRtdNKIn42i4pVgjjZwBuXmLUr/uVDd/aXavNpnjE=;
+ b=ePuREawIRdiXmPzWMClvfVOBSBp5gg+et4Fv2CgQGv3ltMjNtjs+MZpHG9k2UU/e/p9uqC5weewq9qLL/A5KyZV4ZQ1au8Y28++8MF0+2ycM/dR0DXlg9GihanaFPffK1HSs7eaK2s64A/IneFUH+kz817gcohj5Y4yoVTzI/xGgkPht2UU/eIw1VVXa5XUc15FFHD/QfD6tSL2suRZK9HLX7dVmBi/0PUba48SLfsEg/F/JPR6RFxTa4nMh/2HFECTksrYGmhY5SBpIANbtHMTqke5RtSgQq5/nGh40O6bUYtvnOVAHOLl/jR6tVvo2qv9ZhN5399rsfxB+WRbZ/A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mediatek.com; dmarc=pass action=none header.from=mediatek.com;
+ dkim=pass header.d=mediatek.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741077406; x=1741682206; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7VSXb4VkUGXDziqmui1PJlF3peJdsLjgXlezDaswlB4=;
-        b=VZu0W82b2X6UxXLZWq8mqwS8App4k1oLluwEmLKGEdxsCr3aXd3TfqbkuyZM9Cw6YB
-         02YhfvDyagGdW0H2kDpo1vhWX3J2H2v6QtuCzHSI4yaRixY3Ro/UVsxqr9USpwqFIwus
-         E/WCBFqt952nKo0VBzM8kB0RzCWfzNENG65Vl8qjHZ05vGmKM6pYLzvGMITdt2stkLJp
-         EE+kLBGyfcjKeGcoZvXLG1BEWtz4BMivCFK76fGgtzcHx/wUSn4GgTCEckuYeuWW3E1w
-         HyMvY3L8GCCf0SGkiVBJBw9tzKRn/aA4Wuy4gj4ki1zEVO/Tl5W44gTmjf2nezkIFEGc
-         LW0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741077406; x=1741682206;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7VSXb4VkUGXDziqmui1PJlF3peJdsLjgXlezDaswlB4=;
-        b=JvdMqIVLdJnU5cxYXzQ4pOhrFSLZimpNwF6JK7iSL1u3LSyzA0ckpgpvLICpCIZIKs
-         cTPRzup98+94sCFzJG5F7Jby7pE/REV2MILch+6i6Jk7yPNTl9HMYmW/UMpm9IU2qGB0
-         3kGl5cz7V78c+rns49j/Sn1BG8EMxLUeQZpmETQkuUEa0y6E7A7q3EJUAYmwXoQDbAWS
-         yI5aBHX9ehSLy6M3p5W36X4Rw9ld/GB8F1VgcDLtGayI59n7lS6OdFehHEAarl34RTxw
-         6vhV0kKhkTgSz5x4h5an+Eyj73hivQGa13DLPiA8VkVa043ttQhPajzTAdym8sTd/87w
-         pKUg==
-X-Forwarded-Encrypted: i=1; AJvYcCUoW5dD/gs33wbIZvDUrHMVF2FoyjjBV9N8qxHnzZytPIOjZk3KBZhXpf4BwAEpGadKIUO4jlNCv5AU@vger.kernel.org, AJvYcCVkxzChehfIgwtyOdT/up+Xchtocgj5e+JECvAVzbzY7QrmZjuK3u44k8jg41ZzRRuOScajdX6X3zXbmtXq@vger.kernel.org, AJvYcCXUc6+uvCyQG7j59KjhIUIQtxRjTON9xqvwEP4buwTdGg05O9WjxM2wqVTNXymKS8bGbrwxgF0mg3AF@vger.kernel.org
-X-Gm-Message-State: AOJu0YwBA13qOx0MQZIZnsMLTE9jt8GHPODsSLGCCcw6fibZY58srBwQ
-	cQh9a9buZdW1nXfAGHzVRR+oesRhn6V798mGatN1C35h8KVpwXPH
-X-Gm-Gg: ASbGnctfJTtRbTXKadA7sV7DinHLtnk+vHfEfudcSWdQS9zIZotOVhEnSZk7keuFLHS
-	Jrkky74kql98Hm2kojgCYPLU9AL1qNLoHOY7gpOCijFdecrBQG/g+K/NvkFJ4dAYCXlRUzazmfx
-	fQEX32iBSu1IUa5F9q8lvRD3zO2npRnQOYpiH7boyfN6VvFjI/XHK8uM93Pu18gW9TNGlgk7ES1
-	cE4CxUYbhoWKEjY0zQiiA3UEFJYiekSGcCPRrB4IwMyzYUTGCFXc62h6D38j29j7NYFPZOm1ZoT
-	bKxnNErnvDmPD1libZvI4R5KzM7li174HoNEQGY=
-X-Google-Smtp-Source: AGHT+IESbh2MWB5ZthrDA4qD4tVSFOXwtgkXKslXehESIPna5DXJJgt5rxs4kSh/5aU7kjgz7qRDCw==
-X-Received: by 2002:a17:903:2990:b0:223:39ae:a98 with SMTP id d9443c01a7336-22368fce70emr268726475ad.22.1741077406081;
-        Tue, 04 Mar 2025 00:36:46 -0800 (PST)
-Received: from cu.. ([2001:19f0:ac00:4eb8:5400:5ff:fe30:7df3])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-223504dc3b7sm90597735ad.173.2025.03.04.00.36.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Mar 2025 00:36:45 -0800 (PST)
-From: Longbin Li <looong.bin@gmail.com>
-To: Mark Brown <broonie@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Chen Wang <unicorn_wang@outlook.com>,
-	Inochi Amaoto <inochiama@gmail.com>
-Cc: Longbin Li <looong.bin@gmail.com>,
-	linux-spi@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	sophgo@lists.linux.dev
-Subject: [PATCH v2 2/2] spi: sophgo: add SG2044 SPI NOR controller driver
-Date: Tue,  4 Mar 2025 16:35:43 +0800
-Message-ID: <20250304083548.10101-3-looong.bin@gmail.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250304083548.10101-1-looong.bin@gmail.com>
-References: <20250304083548.10101-1-looong.bin@gmail.com>
+ d=mediateko365.onmicrosoft.com; s=selector2-mediateko365-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=kIeRtdNKIn42i4pVgjjZwBuXmLUr/uVDd/aXavNpnjE=;
+ b=ouHCZ5Hfj7RSpJA7zHtSbw0XwNtxRW9hMoFsrI2YctQnGx8QqaIDukMv3+8aj5P4SNgmXsckLC9/3vN7g/vYFFwJWeghbAEtJvDFaa6upPAqZ7y4IEA7Kn5rbvRXL75oYlg7T6nTSSWRmTcITwuSzILIdAWeQc0AnWwSiALSiNE=
+Received: from TY0PR03MB6369.apcprd03.prod.outlook.com (2603:1096:400:149::5)
+ by KL1PR03MB6975.apcprd03.prod.outlook.com (2603:1096:820:ba::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.29; Tue, 4 Mar
+ 2025 08:37:27 +0000
+Received: from TY0PR03MB6369.apcprd03.prod.outlook.com
+ ([fe80::5be6:4966:bde3:3508]) by TY0PR03MB6369.apcprd03.prod.outlook.com
+ ([fe80::5be6:4966:bde3:3508%6]) with mapi id 15.20.8489.025; Tue, 4 Mar 2025
+ 08:37:27 +0000
+From: =?utf-8?B?Wm9pZSBMaW4gKOael+emueWmoSk=?= <Zoie.Lin@mediatek.com>
+To: =?utf-8?B?UWlpIFdhbmcgKOeOi+eQqik=?= <Qii.Wang@mediatek.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	"matthias.bgg@gmail.com" <matthias.bgg@gmail.com>, "andi.shyti@kernel.org"
+	<andi.shyti@kernel.org>
+CC: =?utf-8?B?VGVkZHkgQ2hlbiAo6Zmz5Lm+5YWDKQ==?= <Teddy.Chen@mediatek.com>,
+	Project_Global_Chrome_Upstream_Group
+	<Project_Global_Chrome_Upstream_Group@mediatek.com>,
+	=?utf-8?B?U2h1bmNoYW5nIFdhbmcgKOeOi+iInOaYjCk=?=
+	<ot_shunchang.wang@mediatek.com>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>,
+	=?utf-8?B?Sm9zZXBoLUNDIENoYW5nICjlvLXmrL3mtLIp?=
+	<Joseph-CC.Chang@mediatek.com>, "linux-mediatek@lists.infradead.org"
+	<linux-mediatek@lists.infradead.org>, "linux-i2c@vger.kernel.org"
+	<linux-i2c@vger.kernel.org>, =?utf-8?B?TGVpbGsgTGl1ICjliJjno4op?=
+	<Leilk.Liu@mediatek.com>
+Subject: Re: [PATCH v4 0/1] i2c: mediatek: add runtime PM operations and bus
+ regulator control
+Thread-Topic: [PATCH v4 0/1] i2c: mediatek: add runtime PM operations and bus
+ regulator control
+Thread-Index: AQHbfJLszj2qf0eqTEG6vEp9/t0xa7NFI78AgB2kawA=
+Date: Tue, 4 Mar 2025 08:37:27 +0000
+Message-ID: <ec77bb9478cd86a6737b92135170064970925b3c.camel@mediatek.com>
+References: <20250211144016.488001-1-zoie.lin@mediatek.com>
+	 <46621db1-6096-46af-b021-c919c1cae7ef@collabora.com>
+In-Reply-To: <46621db1-6096-46af-b021-c919c1cae7ef@collabora.com>
+Accept-Language: zh-TW, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=mediatek.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: TY0PR03MB6369:EE_|KL1PR03MB6975:EE_
+x-ms-office365-filtering-correlation-id: 7468be5e-df8f-40c7-6e52-08dd5af7cb71
+x-ld-processed: a7687ede-7a6b-4ef6-bace-642f677fbe31,ExtAddr
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|366016|1800799024|376014|38070700018;
+x-microsoft-antispam-message-info: =?utf-8?B?ZlFrNUFiZitiWHBzSjgvdjJaZGFJb1FTdkJkVERtd05mMFhrUHZTOXdRMzF5?=
+ =?utf-8?B?LytHMCtXOERKNmg3cEdMS003UGQrcGVuOW9DZERWTEJIeSs0Qk5hTmNLY1Ur?=
+ =?utf-8?B?QnV1OTYybnRiWkpCcHIyWVY0eEZsZktwSmdldG5RY1dIbHNEQnExNy8yU1Iv?=
+ =?utf-8?B?bjZpRmVyRVNQMzdLa2xKVmN0ZWsrMHhVRGpaVGxmUzQ0NWpMTUZPUm1xSC9l?=
+ =?utf-8?B?VFV5azI0bkkrNmVHMEl5STZNSVNtQ2RPaXV5MklpN2tldGVDZ0NtWW03bDFV?=
+ =?utf-8?B?UW9IRE5qZW1hRzZySzcrOXgwVERVNDNvanJOK3VXSi80Ukp1U1ZqcVNQamFD?=
+ =?utf-8?B?YVdLWktTa2pLVmpkcVZaTVVtcUNaVGpQaWRPM1dPeXFGK2ZJelFMMUIzd2Qy?=
+ =?utf-8?B?TzlabVEvaTNSeVhEVUExKzRnUm82U0FWNFlEbnZLZXM2VFFMSm9vZklTSkhE?=
+ =?utf-8?B?VkFBTTJ5VERNdEM3NVBMREJkUkczMEM1blNSb2t5Sk1Yb3p4eUFRclZPTFlI?=
+ =?utf-8?B?d09ITlJMSVFYRmN1L09VdjRuaHcvb1VLY2EzMGZZL2FHQitjR3V2OEtEdTJr?=
+ =?utf-8?B?eVVreXpBWS9hbmg3SFNMUDNvR0JGZ3A3S3VBZnhZSE9WU1ZDUFg1eGZvS3pv?=
+ =?utf-8?B?WmNFMVFuQnVRb0wrK1h0WVNzZ1M1WlRIUnQvZndEUE8xQTV0ODVid3BkUnVl?=
+ =?utf-8?B?S0pUdHp3WlpYTGQxemN5OU16cFduUTJBNXlPWmIyQUFlQXBJa2hvYjI1dDdz?=
+ =?utf-8?B?d1RzdXBSSzdGSFg2SWNNenlLUXF0d1NKSlhBVGJYMVVpbFpaVmZQbGFyMHla?=
+ =?utf-8?B?MkM5ak8vSXM5WGhHWGhPVWhFWHlUMEpzYmlYVTFjNGR2RDdBMkhEKzVkVFMy?=
+ =?utf-8?B?aE9IRG55dlNaeDNkWURCUlVnWUlCUjRJQXlkVkFkWFNwa0p2OVdvTFFrYjdS?=
+ =?utf-8?B?K2tMWTV3ZmNjTWZXTVB6VDR3eVFDTzRUYjBvMDJVbGJqY2QyT282VG5haEVy?=
+ =?utf-8?B?eXdyWW40TEY2YXRuNVloSmJaOEtJVTBmOW5uSm01aGo4ay92VzhOVjM0dTZa?=
+ =?utf-8?B?ekpzV3Nsa2p5dUJlNVgyN2sxdU0zN3BORHZSZTR1Tms0OU80T2VCZnAvUTBj?=
+ =?utf-8?B?aHhvVllWVmJOOUFZMGZVZnM0MHhySHhYSHVjMDVURm5uVkU3L05PZE5KM0M4?=
+ =?utf-8?B?Q1dHWlZTaS9zTnFxc3F5OGI4YVZUMlZyRWY2bmVFZnRwRlVqb3I1YUJLWnJH?=
+ =?utf-8?B?eEU4U1grbnMxQW9LSlQrVnpQMEs2VnhNa3I3a0NITHBOdG1Vc2JXMm8xNExF?=
+ =?utf-8?B?MWdvVnlQUXpEZnpwL09vS0k1aUZvY3ZMSUF3OUZKZytvRlQvY2k5em5PTlNp?=
+ =?utf-8?B?NmZwOEVUS0Z3T3BKNzdYdVN4a3ZFbnNBQis4KysxMWJYN2pxYlpneTA5aEFK?=
+ =?utf-8?B?S2tQN1lGbnF5M2RoUXR1UFo0cG9TWFZPNlF6MDh6U3o4TjdxWmtkbW1JWHht?=
+ =?utf-8?B?Kzg5cDNvdTdXZVpkdG5IUU5NV0dKaFJMRmpROTZjRTh1dlZ0enpDZzBsQUNK?=
+ =?utf-8?B?TDdKZzBiMWs2QVRmWFlSNTlsb2FpTEpGMDRVM3VkMmJSYlZ0VjNLS0RwOWpX?=
+ =?utf-8?B?cjhNc2JkcFlKVmozMFdsWDhubGVGSENTdmFwd1ZiaXFIMERyaEV0SzZ6OVl6?=
+ =?utf-8?B?K0pnK1hHZkhVTVZLTzgwTTRtbzdBcjJnVWhUT2tZaVRIanM5RlQ2a0JPSlZ1?=
+ =?utf-8?B?aHBabFF1MXpzVHVmZ1o2Y01uajJsSFUrMFlWTWRtOC9aTkZhWHFsdDJSVHVm?=
+ =?utf-8?B?R1dnanNvdUNMdWR2WlZseUNqM2QyL2U2a3RSeGl5NzIxV1dZUU9hSzZ1Yy9I?=
+ =?utf-8?B?Zy9ZSWNWNlJ2dzdVenkxanI2Q0hYcDlSTWZIL3RwSnhPNk9JSjBaTkZxdmpi?=
+ =?utf-8?Q?FoZz/H+rlJ9rPrU4+03XrQ9BZ7SSb+oo?=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY0PR03MB6369.apcprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?ejlWOGMxVGprVVdDT0NzRGgydEw2dzREUEJPYzFqdkJ2bU0vWmphRERyL2NR?=
+ =?utf-8?B?aE4vZE1yYTNMdVk4N0RFSjBwT1JPRjlnWGV3aXlWZE1JS2VwR3lYaVFmSTJU?=
+ =?utf-8?B?VkVXcE1LaGJnK0hFVXR2eXRIQ0gzMVpKSEdNSnJmMmR2UVFCRGRwUXFnb3lX?=
+ =?utf-8?B?VTdXdDlMOTJVU0d6Nk12WUJYV2FibkxZZWYwbTRacHUzVXlYY2JFT2czUG5a?=
+ =?utf-8?B?dEwwdkVGK0syMmdSSmx4L3k4ZGRqQUN5b084dFJxRVJBMU9WNWpDU2JaeTRV?=
+ =?utf-8?B?OEVvd3orVm5CdUI3SmZSa3FmMHZZdEhhT21DMmFDdmpBazdmZXpDL2dOY3lq?=
+ =?utf-8?B?bmRwNzF4MndlRGhEU3hUV0VHdTF1RUsvTEV5WVZvVXMvWnF4aFZLMDBQK0hu?=
+ =?utf-8?B?eStqQjA1WnZJMlhDMGg5cVB4VDVjZTJqT2xZTUJhdXdRR3E0SW8xZkhEMmE3?=
+ =?utf-8?B?U2p1cnplbWxCNkZBS3FVbkRzZC9RWkp5eFliRXFYR2dHQXRRMGxmWTZDb05y?=
+ =?utf-8?B?WHlOM1NGM0EvWjdlek5IcUx5UmRaTGdnbVpka0tGZW1NaXNoaHRhQjcyUTNB?=
+ =?utf-8?B?cllIZTVoZkg3Qnk3MCsrZzhPWmZtZ2dVVnA3MkdLR1RDa1V0VTQwd092a3o2?=
+ =?utf-8?B?Q2dyKzJHcG1NQVJsMTcreTBpcDdOMVdVMDZ4NzhGbDJWQklMT3VFZ0U5a3J5?=
+ =?utf-8?B?L2JqNFUrVWsxL1YvUG5yZDhCUWlUWVgySGpPdU1VUmFEMHBjWHFqcTAvRGxD?=
+ =?utf-8?B?Q09kWFg0WFpTd05vcXdReTNVVkc1OGNBOU8yZ1cyeXZucXlDSjIvUHZ2WEtB?=
+ =?utf-8?B?bUJqV1Zyb2k0UVMxajc5VmRFUE54endscnowUDdGNWVBdklrZ1V6L3FvdWgy?=
+ =?utf-8?B?UGRBT3BHcXB4TFpoNnozekVySUVYalhzMmNyeE81OW1EMDQwOUJKcjhhc3pY?=
+ =?utf-8?B?ejFpeHJFMkxLVlN5TE9GMWFCeDhiTEN0MXk3ZjBsTGM0bHZERjVJdExNbUpa?=
+ =?utf-8?B?d2hkWGdIMlF6NHlzc0t1MWZlVGp1L2FiM1JBVnc5anFxdkZQeUp0cHFHZUp6?=
+ =?utf-8?B?MHU5eTAyZGNOWGRUVnZTZE4xMXpQTWxJUmVRQ1JMUnpIeW0ra2ovVjJINThR?=
+ =?utf-8?B?M0NpL0s4WGVPTjJWaTZRWXNRNnBUUnBNQmozbjFCaGRteDg0OGRHRlhxOENF?=
+ =?utf-8?B?N0l3TitveGRjQmpTWWlhRnoweHVBQXNYQzNQb1hMRnBCdklybjFVVVZjWGNv?=
+ =?utf-8?B?b0l1TkFKcitsWEJUSktHSFBDWlhwaG52ZERISFNnVzc3Y0NsSE1vc0RKK05j?=
+ =?utf-8?B?MGNHQkduMTNqYTBTeFNKWk9uQkkzMUUzb1RYV3F0NEMrRGZSa2t2TnVqWFpD?=
+ =?utf-8?B?TGN0MWdCQS9lY2NTdTR1THBYY1l3STh4RHl4VmNIQnpqYVhQYXVZa1dPZUZZ?=
+ =?utf-8?B?Z295VndCWk81U0Vmd2xSQkVNeE9MbUkxajF0SVVDY0cxa2ZQcG1kL2xDMXgv?=
+ =?utf-8?B?ai9ocm1UUVRkNkc1TlE1emlQZ04rMjc0QjA1Z25CMkwzVTdmLzUydjkzMk92?=
+ =?utf-8?B?akVReXNyWGJQcURlZG5zUjRNM3Y2Nnp3dVNSaTU4cGVDVFdoU3pnRGNuUFVk?=
+ =?utf-8?B?VlZmdlBCUGsya1Y1ek1oMmQ5aXlUUHUxNEMzMW9DdXJWbXhRODk1S0lZM1BF?=
+ =?utf-8?B?ZS95emxxN25MSXR3ZmpUd1AyUmdlVWI5SEVMeFBMSzQ2Mmt1QmRVS3BvTFAw?=
+ =?utf-8?B?ZTQrWUdXUWdzK3VOUDhaUVU3VUJoMVZ3NU5SanZtUE9pUnppUG5JK3pxTWhp?=
+ =?utf-8?B?S1BrcFdBZ3BMZFdOWGpGcVBnVzk3TEc5cVV2UUxIL3cva2ZtRTFxdC9BRnRH?=
+ =?utf-8?B?WWlSVXlhRGNPR1ZNQXpJUmxHWVd2czZYR3diVFpKZTZlUGJhNG9NZVN0cmlG?=
+ =?utf-8?B?dFozcVpxYUEzOHU1aFYrYjNPQ0NpRktzc3I0U1Jxd2cwZ2pIOW9CNjVPK3Zl?=
+ =?utf-8?B?azErZ3JaSXJYNWlCeGV5TnU3Vkxyd1E3TmlvSHZkUE56bkxNbHFRUTJnTlg2?=
+ =?utf-8?B?MmI0MEovc1U3aC9ZZ0t5MmhlVGwzZDZnWnU3ekdnNDZwNVhEdDlJWVplLzlJ?=
+ =?utf-8?B?SE9kVnFTcyt5VWVZVTZsckxQeUh2dWdFS2pzVXVUdlRpSDV1Z05UMWlibDY2?=
+ =?utf-8?B?QUE9PQ==?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <D5CB8BEEAEFEDD4D8BD318A169DC341D@apcprd03.prod.outlook.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: TY0PR03MB6369.apcprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7468be5e-df8f-40c7-6e52-08dd5af7cb71
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Mar 2025 08:37:27.2964
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a7687ede-7a6b-4ef6-bace-642f677fbe31
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ctYKuBFajS01T7gNLHWYMmtKnfmfCWq6yXTQsxiEXvUC9mLHhjfYjTOz6fnvUpN4HN4QBA15B2NLPJIG5ico2A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: KL1PR03MB6975
 
-Add support for SG2044 SPI NOR controller in Sophgo SoC.
-
-Signed-off-by: Longbin Li <looong.bin@gmail.com>
----
- drivers/spi/Kconfig          |   9 +
- drivers/spi/Makefile         |   1 +
- drivers/spi/spi-sg2044-nor.c | 500 +++++++++++++++++++++++++++++++++++
- 3 files changed, 510 insertions(+)
- create mode 100644 drivers/spi/spi-sg2044-nor.c
-
-diff --git a/drivers/spi/Kconfig b/drivers/spi/Kconfig
-index ea8a31032927..281310178734 100644
---- a/drivers/spi/Kconfig
-+++ b/drivers/spi/Kconfig
-@@ -1021,6 +1021,15 @@ config SPI_SN_F_OSPI
- 	  for connecting an SPI Flash memory over up to 8-bit wide bus.
- 	  It supports indirect access mode only.
-
-+config SPI_SG2044_NOR
-+	tristate "SG2044 SPI NOR Controller"
-+	depends on ARCH_SOPHGO || COMPILE_TEST
-+	help
-+	  This enables support for the SG2044 SPI NOR controller,
-+	  which supports Dual/Qual read and write operations while
-+	  also supporting 3Byte address devices and 4Byte address
-+	  devices.
-+
- config SPI_SPRD
- 	tristate "Spreadtrum SPI controller"
- 	depends on ARCH_SPRD || COMPILE_TEST
-diff --git a/drivers/spi/Makefile b/drivers/spi/Makefile
-index 9db7554c1864..c7a46fd61903 100644
---- a/drivers/spi/Makefile
-+++ b/drivers/spi/Makefile
-@@ -134,6 +134,7 @@ obj-$(CONFIG_SPI_SH_SCI)		+= spi-sh-sci.o
- obj-$(CONFIG_SPI_SIFIVE)		+= spi-sifive.o
- obj-$(CONFIG_SPI_SLAVE_MT27XX)          += spi-slave-mt27xx.o
- obj-$(CONFIG_SPI_SN_F_OSPI)		+= spi-sn-f-ospi.o
-+obj-$(CONFIG_SPI_SG2044_NOR)	+= spi-sg2044-nor.o
- obj-$(CONFIG_SPI_SPRD)			+= spi-sprd.o
- obj-$(CONFIG_SPI_SPRD_ADI)		+= spi-sprd-adi.o
- obj-$(CONFIG_SPI_STM32) 		+= spi-stm32.o
-diff --git a/drivers/spi/spi-sg2044-nor.c b/drivers/spi/spi-sg2044-nor.c
-new file mode 100644
-index 000000000000..454153a63b42
---- /dev/null
-+++ b/drivers/spi/spi-sg2044-nor.c
-@@ -0,0 +1,500 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * SG2044 SPI NOR controller driver
-+ *
-+ * Copyright (c) 2025 Longbin Li <looong.bin@gmail.com>
-+ */
-+
-+#include <linux/bitfield.h>
-+#include <linux/clk.h>
-+#include <linux/iopoll.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/spi/spi-mem.h>
-+
-+/* Hardware register definitions */
-+#define SPIFMC_CTRL				0x00
-+#define SPIFMC_CTRL_CPHA			BIT(12)
-+#define SPIFMC_CTRL_CPOL			BIT(13)
-+#define SPIFMC_CTRL_HOLD_OL			BIT(14)
-+#define SPIFMC_CTRL_WP_OL			BIT(15)
-+#define SPIFMC_CTRL_LSBF			BIT(20)
-+#define SPIFMC_CTRL_SRST			BIT(21)
-+#define SPIFMC_CTRL_SCK_DIV_SHIFT		0
-+#define SPIFMC_CTRL_FRAME_LEN_SHIFT		16
-+#define SPIFMC_CTRL_SCK_DIV_MASK		0x7FF
-+
-+#define SPIFMC_CE_CTRL				0x04
-+#define SPIFMC_CE_CTRL_CEMANUAL			BIT(0)
-+#define SPIFMC_CE_CTRL_CEMANUAL_EN		BIT(1)
-+
-+#define SPIFMC_DLY_CTRL				0x08
-+#define SPIFMC_CTRL_FM_INTVL_MASK		0x000f
-+#define SPIFMC_CTRL_FM_INTVL			BIT(0)
-+#define SPIFMC_CTRL_CET_MASK			0x0f00
-+#define SPIFMC_CTRL_CET				BIT(8)
-+
-+#define SPIFMC_DMMR				0x0c
-+
-+#define SPIFMC_TRAN_CSR				0x10
-+#define SPIFMC_TRAN_CSR_TRAN_MODE_MASK		GENMASK(1, 0)
-+#define SPIFMC_TRAN_CSR_TRAN_MODE_RX		BIT(0)
-+#define SPIFMC_TRAN_CSR_TRAN_MODE_TX		BIT(1)
-+#define SPIFMC_TRAN_CSR_FAST_MODE		BIT(3)
-+#define SPIFMC_TRAN_CSR_BUS_WIDTH_1_BIT		(0x00 << 4)
-+#define SPIFMC_TRAN_CSR_BUS_WIDTH_2_BIT		(0x01 << 4)
-+#define SPIFMC_TRAN_CSR_BUS_WIDTH_4_BIT		(0x02 << 4)
-+#define SPIFMC_TRAN_CSR_DMA_EN			BIT(6)
-+#define SPIFMC_TRAN_CSR_MISO_LEVEL		BIT(7)
-+#define SPIFMC_TRAN_CSR_ADDR_BYTES_MASK		GENMASK(10, 8)
-+#define SPIFMC_TRAN_CSR_ADDR_BYTES_SHIFT	8
-+#define SPIFMC_TRAN_CSR_WITH_CMD		BIT(11)
-+#define SPIFMC_TRAN_CSR_FIFO_TRG_LVL_MASK	GENMASK(13, 12)
-+#define SPIFMC_TRAN_CSR_FIFO_TRG_LVL_1_BYTE	(0x00 << 12)
-+#define SPIFMC_TRAN_CSR_FIFO_TRG_LVL_2_BYTE	(0x01 << 12)
-+#define SPIFMC_TRAN_CSR_FIFO_TRG_LVL_4_BYTE	(0x02 << 12)
-+#define SPIFMC_TRAN_CSR_FIFO_TRG_LVL_8_BYTE	(0x03 << 12)
-+#define SPIFMC_TRAN_CSR_GO_BUSY			BIT(15)
-+#define SPIFMC_TRAN_CSR_ADDR4B_SHIFT		20
-+#define SPIFMC_TRAN_CSR_CMD4B_SHIFT		21
-+
-+#define SPIFMC_TRAN_NUM				0x14
-+#define SPIFMC_FIFO_PORT			0x18
-+#define SPIFMC_FIFO_PT				0x20
-+
-+#define SPIFMC_INT_STS				0x28
-+#define SPIFMC_INT_TRAN_DONE			BIT(0)
-+#define SPIFMC_INT_RD_FIFO			BIT(2)
-+#define SPIFMC_INT_WR_FIFO			BIT(3)
-+#define SPIFMC_INT_RX_FRAME			BIT(4)
-+#define SPIFMC_INT_TX_FRAME			BIT(5)
-+
-+#define SPIFMC_INT_EN				0x2c
-+#define SPIFMC_INT_TRAN_DONE_EN			BIT(0)
-+#define SPIFMC_INT_RD_FIFO_EN			BIT(2)
-+#define SPIFMC_INT_WR_FIFO_EN			BIT(3)
-+#define SPIFMC_INT_RX_FRAME_EN			BIT(4)
-+#define SPIFMC_INT_TX_FRAME_EN			BIT(5)
-+
-+#define SPIFMC_OPT				0x030
-+#define SPIFMC_OPT_DISABLE_FIFO_FLUSH		BIT(1)
-+
-+#define SPIFMC_MAX_FIFO_DEPTH			8
-+
-+#define SPIFMC_MAX_READ_SIZE			0x10000
-+
-+struct sg2044_spifmc {
-+	struct spi_controller *ctrl;
-+	void __iomem *io_base;
-+	struct device *dev;
-+	struct mutex lock;
-+	struct clk *clk;
-+};
-+
-+static int sg2044_spifmc_wait_int(struct sg2044_spifmc *spifmc, u8 int_type)
-+{
-+	u32 stat;
-+
-+	return readl_poll_timeout(spifmc->io_base + SPIFMC_INT_STS, stat,
-+				  (stat & int_type), 0, 1000000);
-+}
-+
-+static int sg2044_spifmc_wait_xfer_size(struct sg2044_spifmc *spifmc,
-+					int xfer_size)
-+{
-+	u8 stat;
-+
-+	return readl_poll_timeout(spifmc->io_base + SPIFMC_FIFO_PT, stat,
-+				  ((stat & 0xf) == xfer_size), 1, 1000000);
-+}
-+
-+static u32 sg2044_spifmc_init_reg(struct sg2044_spifmc *spifmc)
-+{
-+	u32 reg;
-+
-+	reg = readl(spifmc->io_base + SPIFMC_TRAN_CSR);
-+	reg &= ~(SPIFMC_TRAN_CSR_TRAN_MODE_MASK |
-+		 SPIFMC_TRAN_CSR_FAST_MODE |
-+		 SPIFMC_TRAN_CSR_BUS_WIDTH_2_BIT |
-+		 SPIFMC_TRAN_CSR_BUS_WIDTH_4_BIT |
-+		 SPIFMC_TRAN_CSR_DMA_EN |
-+		 SPIFMC_TRAN_CSR_ADDR_BYTES_MASK |
-+		 SPIFMC_TRAN_CSR_WITH_CMD |
-+		 SPIFMC_TRAN_CSR_FIFO_TRG_LVL_MASK);
-+
-+	writel(reg, spifmc->io_base + SPIFMC_TRAN_CSR);
-+
-+	return reg;
-+}
-+
-+static ssize_t sg2044_spifmc_read_64k(struct sg2044_spifmc *spifmc,
-+				      const struct spi_mem_op *op, loff_t from,
-+				      size_t len, u_char *buf)
-+{
-+	int xfer_size, offset;
-+	u32 reg;
-+	int ret;
-+	int i;
-+
-+	reg = sg2044_spifmc_init_reg(spifmc);
-+	reg |= (op->addr.nbytes + op->dummy.nbytes) << SPIFMC_TRAN_CSR_ADDR_BYTES_SHIFT;
-+	reg |= SPIFMC_TRAN_CSR_FIFO_TRG_LVL_8_BYTE;
-+	reg |= SPIFMC_TRAN_CSR_WITH_CMD;
-+	reg |= SPIFMC_TRAN_CSR_TRAN_MODE_RX;
-+
-+	writel(0, spifmc->io_base + SPIFMC_FIFO_PT);
-+	writeb(op->cmd.opcode, spifmc->io_base + SPIFMC_FIFO_PORT);
-+
-+	for (i = op->addr.nbytes - 1; i >= 0; i--)
-+		writeb((from >> i * 8) & 0xff, spifmc->io_base + SPIFMC_FIFO_PORT);
-+
-+	for (i = 0; i < op->dummy.nbytes; i++)
-+		writeb(0xff, spifmc->io_base + SPIFMC_FIFO_PORT);
-+
-+	writel(len, spifmc->io_base + SPIFMC_TRAN_NUM);
-+	writel(0, spifmc->io_base + SPIFMC_INT_STS);
-+	reg |= SPIFMC_TRAN_CSR_GO_BUSY;
-+	writel(reg, spifmc->io_base + SPIFMC_TRAN_CSR);
-+
-+	ret = sg2044_spifmc_wait_int(spifmc, SPIFMC_INT_RD_FIFO);
-+	if (ret < 0)
-+		return ret;
-+
-+	offset = 0;
-+	while (offset < len) {
-+		xfer_size = min_t(size_t, SPIFMC_MAX_FIFO_DEPTH, len - offset);
-+
-+		ret = sg2044_spifmc_wait_xfer_size(spifmc, xfer_size);
-+		if (ret < 0)
-+			return ret;
-+
-+		for (i = 0; i < xfer_size; i++)
-+			buf[i + offset] = readb(spifmc->io_base + SPIFMC_FIFO_PORT);
-+
-+		offset += xfer_size;
-+	}
-+
-+	ret = sg2044_spifmc_wait_int(spifmc, SPIFMC_INT_TRAN_DONE);
-+	if (ret < 0)
-+		return ret;
-+
-+	writel(0, spifmc->io_base + SPIFMC_FIFO_PT);
-+
-+	return len;
-+}
-+
-+static ssize_t sg2044_spifmc_read(struct sg2044_spifmc *spifmc,
-+				  const struct spi_mem_op *op)
-+{
-+	size_t xfer_size;
-+	size_t offset;
-+	loff_t from = op->addr.val;
-+	size_t len = op->data.nbytes;
-+	int ret;
-+	u8 *din = op->data.buf.in;
-+
-+	offset = 0;
-+	while (offset < len) {
-+		xfer_size = min_t(size_t, SPIFMC_MAX_READ_SIZE, len - offset);
-+
-+		ret = sg2044_spifmc_read_64k(spifmc, op, from, xfer_size, din);
-+		if (ret < 0)
-+			return ret;
-+
-+		offset += xfer_size;
-+		din += xfer_size;
-+		from += xfer_size;
-+	}
-+
-+	return 0;
-+}
-+
-+static ssize_t sg2044_spifmc_write(struct sg2044_spifmc *spifmc,
-+				   const struct spi_mem_op *op)
-+{
-+	size_t xfer_size;
-+	const u8 *dout = op->data.buf.out;
-+	int i, offset;
-+	size_t ret;
-+	u32 reg;
-+
-+	reg = sg2044_spifmc_init_reg(spifmc);
-+	reg |= (op->addr.nbytes + op->dummy.nbytes) << SPIFMC_TRAN_CSR_ADDR_BYTES_SHIFT;
-+	reg |= SPIFMC_TRAN_CSR_FIFO_TRG_LVL_8_BYTE;
-+	reg |= SPIFMC_TRAN_CSR_WITH_CMD;
-+	reg |= SPIFMC_TRAN_CSR_TRAN_MODE_TX;
-+
-+	writel(0, spifmc->io_base + SPIFMC_FIFO_PT);
-+	writeb(op->cmd.opcode, spifmc->io_base + SPIFMC_FIFO_PORT);
-+
-+	for (i = op->addr.nbytes - 1; i >= 0; i--)
-+		writeb((op->addr.val >> i * 8) & 0xff, spifmc->io_base + SPIFMC_FIFO_PORT);
-+
-+	for (i = 0; i < op->dummy.nbytes; i++)
-+		writeb(0xff, spifmc->io_base + SPIFMC_FIFO_PORT);
-+
-+	writel(0, spifmc->io_base + SPIFMC_INT_STS);
-+	writel(op->data.nbytes, spifmc->io_base + SPIFMC_TRAN_NUM);
-+	reg |= SPIFMC_TRAN_CSR_GO_BUSY;
-+	writel(reg, spifmc->io_base + SPIFMC_TRAN_CSR);
-+
-+	ret = sg2044_spifmc_wait_xfer_size(spifmc, 0);
-+	if (ret < 0)
-+		return ret;
-+
-+	writel(0, spifmc->io_base + SPIFMC_FIFO_PT);
-+
-+	offset = 0;
-+	while (offset < op->data.nbytes) {
-+		xfer_size = min_t(size_t, SPIFMC_MAX_FIFO_DEPTH, op->data.nbytes - offset);
-+
-+		ret = sg2044_spifmc_wait_xfer_size(spifmc, 0);
-+		if (ret < 0)
-+			return ret;
-+
-+		for (i = 0; i < xfer_size; i++)
-+			writeb(dout[i + offset], spifmc->io_base + SPIFMC_FIFO_PORT);
-+
-+		offset += xfer_size;
-+	}
-+
-+	ret = sg2044_spifmc_wait_int(spifmc, SPIFMC_INT_TRAN_DONE);
-+	if (ret < 0)
-+		return ret;
-+
-+	writel(0, spifmc->io_base + SPIFMC_FIFO_PT);
-+
-+	return 0;
-+}
-+
-+static ssize_t sg2044_spifmc_tran_cmd(struct sg2044_spifmc *spifmc,
-+				      const struct spi_mem_op *op)
-+{
-+	int i, ret;
-+	u32 reg;
-+
-+	reg = sg2044_spifmc_init_reg(spifmc);
-+	reg |= (op->addr.nbytes + op->dummy.nbytes) << SPIFMC_TRAN_CSR_ADDR_BYTES_SHIFT;
-+	reg |= SPIFMC_TRAN_CSR_FIFO_TRG_LVL_1_BYTE;
-+	reg |= SPIFMC_TRAN_CSR_WITH_CMD;
-+
-+	writel(0, spifmc->io_base + SPIFMC_FIFO_PT);
-+	writeb(op->cmd.opcode, spifmc->io_base + SPIFMC_FIFO_PORT);
-+
-+	for (i = op->addr.nbytes - 1; i >= 0; i--)
-+		writeb((op->addr.val >> i * 8) & 0xff, spifmc->io_base + SPIFMC_FIFO_PORT);
-+
-+	for (i = 0; i < op->dummy.nbytes; i++)
-+		writeb(0xff, spifmc->io_base + SPIFMC_FIFO_PORT);
-+
-+	writel(0, spifmc->io_base + SPIFMC_INT_STS);
-+	reg |= SPIFMC_TRAN_CSR_GO_BUSY;
-+	writel(reg, spifmc->io_base + SPIFMC_TRAN_CSR);
-+
-+	ret = sg2044_spifmc_wait_int(spifmc, SPIFMC_INT_TRAN_DONE);
-+	if (ret < 0)
-+		return ret;
-+
-+	writel(0, spifmc->io_base + SPIFMC_FIFO_PT);
-+
-+	return 0;
-+}
-+
-+static void sg2044_spifmc_trans(struct sg2044_spifmc *spifmc,
-+				const struct spi_mem_op *op)
-+{
-+	if (op->data.dir == SPI_MEM_DATA_IN)
-+		sg2044_spifmc_read(spifmc, op);
-+	else if (op->data.dir == SPI_MEM_DATA_OUT)
-+		sg2044_spifmc_write(spifmc, op);
-+	else
-+		sg2044_spifmc_tran_cmd(spifmc, op);
-+}
-+
-+static ssize_t sg2044_spifmc_trans_reg(struct sg2044_spifmc *spifmc,
-+				       const struct spi_mem_op *op)
-+{
-+	const u8 *dout = NULL;
-+	u8 *din = NULL;
-+	size_t len = op->data.nbytes;
-+	int ret, i;
-+	u32 reg;
-+
-+	if (op->data.dir == SPI_MEM_DATA_IN)
-+		din = op->data.buf.in;
-+	else
-+		dout = op->data.buf.out;
-+
-+	reg = sg2044_spifmc_init_reg(spifmc);
-+	reg |= SPIFMC_TRAN_CSR_FIFO_TRG_LVL_1_BYTE;
-+	reg |= SPIFMC_TRAN_CSR_WITH_CMD;
-+
-+	if (din) {
-+		reg |= SPIFMC_TRAN_CSR_BUS_WIDTH_1_BIT;
-+		reg |= SPIFMC_TRAN_CSR_TRAN_MODE_RX;
-+		reg |= SPIFMC_TRAN_CSR_TRAN_MODE_TX;
-+
-+		writel(SPIFMC_OPT_DISABLE_FIFO_FLUSH, spifmc->io_base + SPIFMC_OPT);
-+	} else {
-+		/*
-+		 * If write values to the Status Register,
-+		 * configure TRAN_CSR register as the same as
-+		 * sg2044_spifmc_read_reg.
-+		 */
-+		if (op->cmd.opcode == 0x01) {
-+			reg |= SPIFMC_TRAN_CSR_TRAN_MODE_RX;
-+			reg |= SPIFMC_TRAN_CSR_TRAN_MODE_TX;
-+			writel(len, spifmc->io_base + SPIFMC_TRAN_NUM);
-+		}
-+	}
-+
-+	writel(0, spifmc->io_base + SPIFMC_FIFO_PT);
-+	writeb(op->cmd.opcode, spifmc->io_base + SPIFMC_FIFO_PORT);
-+
-+	for (i = 0; i < len; i++) {
-+		if (din)
-+			writeb(0xff, spifmc->io_base + SPIFMC_FIFO_PORT);
-+		else
-+			writeb(dout[i], spifmc->io_base + SPIFMC_FIFO_PORT);
-+	}
-+
-+	writel(0, spifmc->io_base + SPIFMC_INT_STS);
-+	writel(len, spifmc->io_base + SPIFMC_TRAN_NUM);
-+	reg |= SPIFMC_TRAN_CSR_GO_BUSY;
-+	writel(reg, spifmc->io_base + SPIFMC_TRAN_CSR);
-+
-+	ret = sg2044_spifmc_wait_int(spifmc, SPIFMC_INT_TRAN_DONE);
-+	if (ret < 0)
-+		return ret;
-+
-+	if (din) {
-+		while (len--)
-+			*din++ = readb(spifmc->io_base + SPIFMC_FIFO_PORT);
-+	}
-+
-+	writel(0, spifmc->io_base + SPIFMC_FIFO_PT);
-+
-+	return 0;
-+}
-+
-+static int sg2044_spifmc_exec_op(struct spi_mem *mem,
-+				 const struct spi_mem_op *op)
-+{
-+	struct sg2044_spifmc *spifmc;
-+
-+	spifmc = spi_controller_get_devdata(mem->spi->controller);
-+
-+	mutex_lock(&spifmc->lock);
-+
-+	if (op->addr.nbytes == 0)
-+		sg2044_spifmc_trans_reg(spifmc, op);
-+	else
-+		sg2044_spifmc_trans(spifmc, op);
-+
-+	mutex_unlock(&spifmc->lock);
-+
-+	return 0;
-+}
-+
-+static const struct spi_controller_mem_ops sg2044_spifmc_mem_ops = {
-+	.exec_op = sg2044_spifmc_exec_op,
-+};
-+
-+static void sg2044_spifmc_init(struct sg2044_spifmc *spifmc)
-+{
-+	u32 tran_csr;
-+	u32 reg;
-+
-+	writel(0, spifmc->io_base + SPIFMC_DMMR);
-+
-+	reg = readl(spifmc->io_base + SPIFMC_CTRL);
-+	reg |= SPIFMC_CTRL_SRST;
-+	reg &= ~(SPIFMC_CTRL_SCK_DIV_MASK);
-+	reg |= 1;
-+	writel(reg, spifmc->io_base + SPIFMC_CTRL);
-+
-+	writel(0, spifmc->io_base + SPIFMC_CE_CTRL);
-+
-+	tran_csr = readl(spifmc->io_base + SPIFMC_TRAN_CSR);
-+	tran_csr |= (0 << SPIFMC_TRAN_CSR_ADDR_BYTES_SHIFT);
-+	tran_csr |= SPIFMC_TRAN_CSR_FIFO_TRG_LVL_4_BYTE;
-+	tran_csr |= SPIFMC_TRAN_CSR_WITH_CMD;
-+	writel(tran_csr, spifmc->io_base + SPIFMC_TRAN_CSR);
-+}
-+
-+static int sg2044_spifmc_probe(struct platform_device *pdev)
-+{
-+	struct spi_controller *ctrl;
-+	struct sg2044_spifmc *spifmc;
-+	void __iomem *base;
-+	int ret;
-+
-+	ctrl = devm_spi_alloc_host(&pdev->dev, sizeof(*spifmc));
-+	if (!ctrl)
-+		return -ENOMEM;
-+
-+	spifmc = spi_controller_get_devdata(ctrl);
-+	dev_set_drvdata(&pdev->dev, ctrl);
-+
-+	spifmc->clk = devm_clk_get_enabled(&pdev->dev, NULL);
-+	if (IS_ERR(spifmc->clk))
-+		return dev_err_probe(&pdev->dev, PTR_ERR(spifmc->clk),
-+				     "%s: Cannot get and enable AHB clock\n",
-+				     __func__);
-+
-+	spifmc->dev = &pdev->dev;
-+	spifmc->ctrl = ctrl;
-+
-+	spifmc->io_base = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(base))
-+		return PTR_ERR(base);
-+
-+	ctrl->num_chipselect = 1;
-+	ctrl->dev.of_node = pdev->dev.of_node;
-+	ctrl->bits_per_word_mask = SPI_BPW_MASK(8);
-+	ctrl->auto_runtime_pm = false;
-+	ctrl->mem_ops = &sg2044_spifmc_mem_ops;
-+	ctrl->mode_bits = SPI_RX_DUAL | SPI_TX_DUAL | SPI_RX_QUAD | SPI_TX_QUAD;
-+
-+	mutex_init(&spifmc->lock);
-+
-+	sg2044_spifmc_init(spifmc);
-+	sg2044_spifmc_init_reg(spifmc);
-+
-+	ret = devm_spi_register_controller(&pdev->dev, ctrl);
-+	if (ret) {
-+		mutex_destroy(&spifmc->lock);
-+		dev_err(&pdev->dev, "spi_register_controller failed\n");
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static void sg2044_spifmc_remove(struct platform_device *pdev)
-+{
-+	struct sg2044_spifmc *spifmc = platform_get_drvdata(pdev);
-+
-+	mutex_destroy(&spifmc->lock);
-+}
-+
-+static const struct of_device_id sg2044_spifmc_match[] = {
-+	{ .compatible = "sophgo,sg2044-spifmc-nor" },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, sg2044_spifmc_match);
-+
-+static struct platform_driver sg2044_nor_driver = {
-+	.driver = {
-+		.name = "sg2044,spifmc-nor",
-+		.of_match_table = sg2044_spifmc_match,
-+	},
-+	.probe = sg2044_spifmc_probe,
-+	.remove = sg2044_spifmc_remove,
-+};
-+module_platform_driver(sg2044_nor_driver);
-+
-+MODULE_DESCRIPTION("SG2044 SPI NOR controller driver");
-+MODULE_AUTHOR("Longbin Li <looong.bin@gmail.com>");
-+MODULE_LICENSE("GPL");
---
-2.48.1
+DQpIaSBBbmdlbG8sDQoNClRoYW5rIHlvdSBmb3IgeW91ciBzdWdnZXN0aW9ucyByZWdhcmRpbmcg
+dGhlIGF1dG9zdXNwZW5kIGRlbGF5Lg0KDQpXZSB1bmRlcnN0YW5kIHRoZSBpbXBvcnRhbmNlIG9m
+IGJhbGFuY2luZyBwb3dlciBlZmZpY2llbmN5IGFuZA0KcmVzcG9uc2l2ZW5lc3MuIEdpdmVuIHRo
+ZSBkaXZlcnNpdHkgb2YgSTJDIGRldmljZXMgY29ubmVjdGVkDQp1bmRlciBlYWNoIHBsYXRmb3Jt
+LCBpdCBpcyBpbmRlZWQgY2hhbGxlbmdpbmcgdG8gZXN0aW1hdGUgYW4NCmFwcHJvcHJpYXRlIGRl
+bGF5IHRpbWUgZm9yIHRlc3RpbmcuDQoNClRoZXJlZm9yZSwgd2Ugd291bGQgbGlrZSB0byBwcm9j
+ZWVkIHdpdGggeW91ciBpbml0aWFsIHN1Z2dlc3Rpb24NCmFuZCBzZXQgdGhlIGF1dG9zdXNwZW5k
+IGRlbGF5IHRvIDI1MG1zLiBCYXNlZCBvbiBvdXIgcHJlbGltaW5hcnkNCnRlc3RzLCB0aGlzIGFk
+anVzdG1lbnQgYXBwZWFycyB0byBiZSBhIHByYWN0aWNhbCBzb2x1dGlvbiBhY3Jvc3MgDQpvdXIg
+ZXhpc3RpbmcgcGxhdGZvcm1zLg0KDQpUaGFuayB5b3UuDQoNCkJlc3QgcmVnYXJkcywNClpvaWUN
+Cg0KDQpPbiBUaHUsIDIwMjUtMDItMTMgYXQgMTI6NTcgKzAxMDAsIEFuZ2Vsb0dpb2FjY2hpbm8g
+RGVsIFJlZ25vIHdyb3RlOg0KPiANCj4gDQo+IFR1cm5pbmcgb24gYW5kIG9mZiByZWd1bGF0b3Jz
+IGF0IHN0YXJ0IG9mIHRyYW5zZmVyIGFuZCBlbmQgb2YNCj4gdHJhbnNmZXIgcmVzcGVjdGl2ZWx5
+DQo+IGlzIHZlcnkgZXhwZW5zaXZlIGFuZCwgd2hpbGUgaXQgbWFrZXMgc2Vuc2UgZm9yIHBvd2Vy
+IGVmZmljaWVuY3kgb2YNCj4gdGhlIGNvbnRyb2xsZXIsDQo+IGl0IGRvZXNuJ3QgbWFrZSBzZW5z
+ZSBmb3I6DQo+IA0KPiDCoCAxLiBSZXNwb25zaXZlbmVzcyAobGF0ZW5jeSk7IGFuZA0KPiDCoCAy
+LiBQbGF0Zm9ybSBwb3dlciBlZmZpY2llbmN5IGF0IGEgd2hvbGUuDQo+IA0KPiBBcyBhIHN0YXJ0
+LCBqdXN0IHNldCB0aGUgYXV0b3N1c3BlbmQgZGVsYXkgdG8gMjUwbXM7IHRoaXMgZ2l2ZXMgeW91
+DQo+IGF0IGxlYXN0IHRpbWUNCj4gdG8gYnJpbmcgdXAgY2xvY2tzIGFuZCByZWd1bGF0b3JzIGFu
+ZCB1c3VhbGx5IGZpbmlzaCBhIHRyYW5zZmVyIGF0DQo+IDQwMEtIeiwgZ2l2aW5nDQo+IHlvdSB0
+aGUgY2hhbmNlIHRvIGFsc28gZ2V0IHNvbWUgbW9yZSByZXF1ZXN0cyBiZWZvcmUgYXV0b3N1c3Bl
+bmQNCj4gZGVjaWRlcyB0bywgd2VsbCwNCj4gYXV0by4uc3VzcGVuZCB0aGUgZGV2aWNlLg0KPiAN
+Cj4gVGhlIHJpZ2h0IHdheSBvZiBjaG9vc2luZyBhbiBhdXRvc3VzcGVuZCBkZWxheSBhIGJpdCBt
+b3JlIHByZWNpc2VseSwNCj4gdGhvdWdoLCBmb3INCj4gdGhpcyBkZXZpY2UsIHdvdWxkIGJlIHRv
+IGNoZWNrIHRoZSBidXMgc3BlZWQgYW5kIGNhbGN1bGF0ZSB0aGUNCj4gYXV0b3N1c3BlbmQgdGlt
+ZQ0KPiBhY2NvcmRpbmdseS4NCj4gDQo+IENoZWVycywNCj4gQW5nZWxvDQo+IA0KPiANCj4gDQoN
+Cg==
