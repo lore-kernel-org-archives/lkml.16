@@ -1,117 +1,234 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBC27202977;
-	Tue,  4 Mar 2025 13:19:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 42509202F68
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 13:20:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.235.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741094377; cv=none; b=apzfgJQ+b/TdAl3KEaRmfAp8kRxs4Zts69MfSSER+LJQrvMYH7W8UwRJed7qQn4nFnwVaWdbrVhYRTSbV4HDyCPzXhPAG+H9qAFVTh5dNtVFxxL826/UptW8m6qzN6TfJDtnk0a+bvNP9ZiQWw//+Ahgs4kdhVw8D+9kYSwxkI0=
+	t=1741094406; cv=none; b=N9ciFJH+l9HEaIBrcqmA2eMNwFYEG/XvMSkhFh+gIzNsGmfu4I8Ra0T2t21/k7hD+eTcrwPfxSwBcE2M9kZPEtoA3v8PcPXHUpydqKB+752Srl9MF/H4s5+h5zWQAkJAFaDVO9PWfkwBM2HwrOrndqcRB5ZAj9Ft6k+0yLYyvS4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741094377; c=relaxed/simple;
-	bh=D9U5wSLXcGoXFicNQjhFQpJvDTOL9WtTvIIjU/ZDEfk=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=c6L7apNscsGm9rQd2ogfGiIxJR+Art2zhsiVN20AQjb77jPS1qA2mOxIDSjKcRynMbsmDD9V3we6st1mCvKhMgTtH23+Fl198hcV8YI2e9RUY+EAhgP6owY/vjFxZOq6WG+pfQreGY4i1BOXXCFTwgEJF6EGdeZj+v538xZzijw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DW/VXPNU; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DW/VXPNU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8058C4CEE5;
-	Tue,  4 Mar 2025 13:19:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741094376;
-	bh=D9U5wSLXcGoXFicNQjhFQpJvDTOL9WtTvIIjU/ZDEfk=;
-	h=From:Date:Subject:To:Cc:From;
-	b=DW/VXPNUpSwsAOd4EvyEBTE4zbF1xH6ykt0jsnAt8TNngYAFP82iF7TF0wT2vQVFt
-	 Gg2G1LJEwJgbBrG5AzEiC5h2V6UQs82q3mZ73c1ab/CJASOXtZUJjLt8zmJTDBbH4a
-	 nuOSe+pUrh3qmr9Gu4wvAXoJWSIQ6qxqeaRL54DKCeRgLeFlBNYtvNe0QtTMQs6Cdt
-	 aRKnw+ypEWn86Jv/DrRpq+dOsrAUU5FK2xcg/ifj8fG5dl2W1Z0cVyOq9QsT75y/PR
-	 SDs5bqaggjcuV3G3oNBctOzaAcosXlSEsI4kPU1MgUWVVVrVSe+8Qm7fT+XxDUwUMN
-	 24xSnBEBXJqsg==
-From: Nathan Chancellor <nathan@kernel.org>
-Date: Tue, 04 Mar 2025 14:19:21 +0100
-Subject: [PATCH] drm/appletbdrm: Fix format specifier for size_t variables
+	s=arc-20240116; t=1741094406; c=relaxed/simple;
+	bh=m9Je7f6LGEVPu9cjBmXbrgZ/ibfBq4qHWPcQbiitp5Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=RSVtCskhTkZw5accwsOKBDKqcthM1+hWzydFE9wgnt7spjBGJUtwgiynbq5TyaUUX6LPcszrzGtKdlQ9DSUxjClWW5JQT7goFbHDK0EwAn5QjcUA1UQvuItpSGwhxkV3zHCzAGW5Xn5NeEcNJWw10z/IZ+q6Ll0+ONO9W9BVxi4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.235.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
+Received: from localhost (mailhub3.si.c-s.fr [172.26.127.67])
+	by localhost (Postfix) with ESMTP id 4Z6bYB4Jp9z9ssM;
+	Tue,  4 Mar 2025 14:06:38 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from pegase2.c-s.fr ([172.26.127.65])
+	by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id bALd6RdimFkt; Tue,  4 Mar 2025 14:06:38 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+	by pegase2.c-s.fr (Postfix) with ESMTP id 4Z6bYB3FN1z9ssL;
+	Tue,  4 Mar 2025 14:06:38 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 5AC468B773;
+	Tue,  4 Mar 2025 14:06:38 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+	with ESMTP id QXxqVrulQ7mE; Tue,  4 Mar 2025 14:06:38 +0100 (CET)
+Received: from [192.168.235.99] (unknown [192.168.235.99])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id E49218B763;
+	Tue,  4 Mar 2025 14:06:37 +0100 (CET)
+Message-ID: <c4fe2f76-e6b8-4445-84b0-8509235e1fef@csgroup.eu>
+Date: Tue, 4 Mar 2025 14:06:35 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250304-appletbdrm-fix-size_t-specifier-v1-1-94fe1d2c91f8@kernel.org>
-X-B4-Tracking: v=1; b=H4sIANj9xmcC/x2NUQrCMBAFr1L224WYNJR6FRFpk1e7oDXsFhFL7
- 97g58Aws5FBBUaXZiPFR0zeS4XzqaE0D8sDLLkyeeejC67loZQn1jHriyf5sskP95WtIMkkUM4
- hxbaL3oeup1opiur9D9fbvh91zE23cQAAAA==
-X-Change-ID: 20250304-appletbdrm-fix-size_t-specifier-d3c547522379
-To: Aun-Ali Zaidi <admin@kodeit.net>, Aditya Garg <gargaditya08@live.com>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>
-Cc: Atharva Tiwari <evepolonium@gmail.com>, 
- Kerem Karabay <kekrby@gmail.com>, dri-devel@lists.freedesktop.org, 
- linux-kernel@vger.kernel.org, patches@lists.linux.dev, 
- Nathan Chancellor <nathan@kernel.org>
-X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2653; i=nathan@kernel.org;
- h=from:subject:message-id; bh=D9U5wSLXcGoXFicNQjhFQpJvDTOL9WtTvIIjU/ZDEfk=;
- b=owGbwMvMwCUmm602sfCA1DTG02pJDOnH/j7TmSfmtTWD3Th3pu5Nz5fzg3dWFuhGf5mTF7gmR
- d9feZVuRykLgxgXg6yYIkv1Y9XjhoZzzjLeODUJZg4rE8gQBi5OAZjIT2OG/15pJ1YwOyyZeKiT
- /b5r8eqAB+ea/u2a/9cnUfvcpFwVAweG/2XuHfV8V6NmvPr2R25C3r5Tm3LnPNhyQObi1INvF+l
- M5+IHAA==
-X-Developer-Key: i=nathan@kernel.org; a=openpgp;
- fpr=2437CB76E544CB6AB3D9DFD399739260CB6CB716
+User-Agent: Mozilla Thunderbird
+Subject: Re: Build Warnings at arch/powerpc/
+To: Madhavan Srinivasan <maddy@linux.ibm.com>,
+ Venkat Rao Bagalkote <venkat88@linux.ibm.com>,
+ linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+ Stephen Rothwell <sfr@canb.auug.org.au>,
+ Michael Ellerman <mpe@ellerman.id.au>
+References: <8c4c3fc2-2bd7-4148-af68-2f504d6119e0@linux.ibm.com>
+ <47aa8b75-96b6-4e37-bb62-ad758b414076@linux.ibm.com>
+ <8ba544e7-cf2a-4807-a056-683115805721@csgroup.eu>
+ <bfcce9ce-bc26-4088-8d27-0797fc0d22d3@linux.ibm.com>
+ <fe937273-d81a-4f6c-9eba-b96b711b4644@linux.ibm.com>
+Content-Language: fr-FR
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
+In-Reply-To: <fe937273-d81a-4f6c-9eba-b96b711b4644@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-When building for a 32-bit platform, there are some warnings (or errors
-with CONFIG_WERROR=y) due to an incorrect specifier for 'size_t'
-variables, which is typedef'd as 'unsigned int' for these architectures:
 
-  drivers/gpu/drm/tiny/appletbdrm.c:171:17: error: format specifies type 'unsigned long' but the argument has type 'size_t' (aka 'unsigned int') [-Werror,-Wformat]
-    170 |                 drm_err(drm, "Actual size (%d) doesn't match expected size (%lu)\n",
-        |                                                                             ~~~
-        |                                                                             %zu
-    171 |                         actual_size, size);
-        |                                      ^~~~
-  ...
-  drivers/gpu/drm/tiny/appletbdrm.c:212:17: error: format specifies type 'unsigned long' but the argument has type 'size_t' (aka 'unsigned int') [-Werror,-Wformat]
-    211 |                 drm_err(drm, "Actual size (%d) doesn't match expected size (%lu)\n",
-        |                                                                             ~~~
-        |                                                                             %zu
-    212 |                         actual_size, size);
-        |                                      ^~~~
 
-Use '%zu' as suggested, clearing up the warnings.
+Le 04/03/2025 à 13:38, Madhavan Srinivasan a écrit :
+> 
+> 
+> On 3/4/25 4:58 PM, Madhavan Srinivasan wrote:
+>>
+>>
+>> On 3/4/25 2:26 PM, Christophe Leroy wrote:
+>>>
+>>>
+>>> Le 04/03/2025 à 07:13, Madhavan Srinivasan a écrit :
+>>>>
+>>>>
+>>>> On 3/4/25 10:42 AM, Venkat Rao Bagalkote wrote:
+>>>>> Greetings!!
+>>>>>
+>>>>>
+>>>>> Observing build warnings with linux-next and powerpc repo's. Issue is currently not seen on mainline yet.
+>>>>>
+>>>>> PPC Repo: https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fgit.kernel.org%2Fpub%2Fscm%2Flinux%2Fkernel%2Fgit%2Fpowerpc%2Flinux.git&data=05%7C02%7Cchristophe.leroy%40csgroup.eu%7C48de41657f8341b927e708dd5b198b84%7C8b87af7d86474dc78df45f69a2011bb5%7C0%7C0%7C638766887458137690%7CUnknown%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=P9JQJ7joMFHGDws1H0iaxpj6blYAqsh4ATzrmB1A8Yc%3D&reserved=0 merge branch
+>>>>>
+>>>>> PPC Kernel Version: 6.14.0-rc4-g1304f486dbf1
+>>>>> next Repo: https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fgit.kernel.org%2Fpub%2Fscm%2Flinux%2Fkernel%2Fgit%2Fnext%2Flinux-next.git&data=05%7C02%7Cchristophe.leroy%40csgroup.eu%7C48de41657f8341b927e708dd5b198b84%7C8b87af7d86474dc78df45f69a2011bb5%7C0%7C0%7C638766887458152652%7CUnknown%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=ZVQdCx62Z3ekoXOrWoE6SdHv4RvgjDFSE9CHPPJ%2FiyI%3D&reserved=0 master branch
+>>>>>
+>>>>> next Kernel Version: 6.14.0-rc5-next-20250303
+>>>>>
+>>>>>
+>>>>> On linux-next kernel issue got introduced b/w next-20250227 and next-20250303
+>>>>>
+>>>>>
+>>>>> Build Warnings:
+>>>>>
+>>>>> arch/powerpc/kvm/book3s_hv_rmhandlers.o: warning: objtool: .text+0xe84: intra_function_call not a direct call
+>>>>> arch/powerpc/crypto/ghashp8-ppc.o: warning: objtool: .text+0x22c: unannotated intra-function call
+>>>>> arch/powerpc/kernel/switch.o: warning: objtool: .text+0x4: intra_function_call not a direct call
+>>>>>
+>>>>>
+>>>>
+>>>> Can you please specific the compiler and compiler version you found this issue with
+>>>>
+>>>
+>>> Can you also tell which defconfig you are using or provide your .config
+>>>
+>>> It might also be helpfull if you can provide a disassembly of the three file.o around the warned address.
+>>
+>> I could recreate the issue with gcc 11.4.1 20231218 with today's linux-next (but could not recreate with gcc 14 or gcc 11.3.0)
+>>
+>> (20d5c66e1810 (HEAD -> master, tag: next-20250304, origin/master, origin/HEAD) Add linux-next specific files for 20250304)
+>>
+>> warning for one of the switch.S file :
+>>
+>>    CC      arch/powerpc/kernel/syscalls.o
+>>    AS      arch/powerpc/kernel/switch.o
+>> arch/powerpc/kernel/switch.o: warning: objtool: .text+0x4: intra_function_call not a direct call
+> 
+> I guess this is becos, for bl .+4, we recently added in the arch_decode_instruction (decode.c) to set the type as INSN_OTHER
+> 
+>          case 18: /* b[l][a] */
+>                  if (ins == 0x48000005)  /* bl .+4 */
+>                          typ = INSN_OTHER;
+> 
+> Which I think is the issue here, changing it to INSN_CALL from INSN_OTHER fixes the warning
 
-Fixes: 0670c2f56e45 ("drm/tiny: add driver for Apple Touch Bars in x86 Macs")
-Signed-off-by: Nathan Chancellor <nathan@kernel.org>
----
- drivers/gpu/drm/tiny/appletbdrm.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Yes indeed I ended up with the same conclusion. However if you change it 
+back to INSN_CALL you just bring back the issue with clang using bl .+4 
+for relocatable code.
 
-diff --git a/drivers/gpu/drm/tiny/appletbdrm.c b/drivers/gpu/drm/tiny/appletbdrm.c
-index f5d177e234e4..394c8f9bd41a 100644
---- a/drivers/gpu/drm/tiny/appletbdrm.c
-+++ b/drivers/gpu/drm/tiny/appletbdrm.c
-@@ -167,7 +167,7 @@ static int appletbdrm_send_request(struct appletbdrm_device *adev,
- 	}
- 
- 	if (actual_size != size) {
--		drm_err(drm, "Actual size (%d) doesn't match expected size (%lu)\n",
-+		drm_err(drm, "Actual size (%d) doesn't match expected size (%zu)\n",
- 			actual_size, size);
- 		return -EIO;
- 	}
-@@ -208,7 +208,7 @@ static int appletbdrm_read_response(struct appletbdrm_device *adev,
- 	}
- 
- 	if (actual_size != size) {
--		drm_err(drm, "Actual size (%d) doesn't match expected size (%lu)\n",
-+		drm_err(drm, "Actual size (%d) doesn't match expected size (%zu)\n",
- 			actual_size, size);
- 		return -EBADMSG;
- 	}
+The warning is from here:
 
----
-base-commit: 95a5c9d197bb22a506913acb330a926d4e51aa95
-change-id: 20250304-appletbdrm-fix-size_t-specifier-d3c547522379
+static int __annotate_ifc(struct objtool_file *file, int type, struct 
+instruction *insn)
+{
+	unsigned long dest_off;
 
-Best regards,
--- 
-Nathan Chancellor <nathan@kernel.org>
+	if (type != ANNOTYPE_INTRA_FUNCTION_CALL)
+		return 0;
+
+	if (insn->type != INSN_CALL) {
+		WARN_INSN(insn, "intra_function_call not a direct call");
+		return -1;
+	}
+
+
+Now that arch_decode_instruction() does not consider bl .+4 an INSN_CALL 
+anymore, we have to remove the ANNOTATE_INTRA_FUNCTION_CALL annotations 
+here:
+
+arch/powerpc/kernel/switch.S:42:        ANNOTATE_INTRA_FUNCTION_CALL
+arch/powerpc/kvm/book3s_hv_rmhandlers.S:1527:   ANNOTATE_INTRA_FUNCTION_CALL
+arch/powerpc/kvm/book3s_hv_rmhandlers.S:1534:   ANNOTATE_INTRA_FUNCTION_CALL
+
+The one in arch/powerpc/kexec/relocate_32.S is not a problem at the 
+moment but it looks buggy and that "bl 1f" should be replaced by a 
+branch to the "bcl 20,31,$+4"
+
+I will try to cook a couple patches for all that.
+
+The last one from the report is:
+
+arch/powerpc/crypto/ghashp8-ppc.o: warning: objtool: .text+0x22c: 
+unannotated intra-function call
+
+That one is different, we need to reproduce it to understand what it is.
+
+Christophe
+
+
+> 
+> diff --git a/tools/objtool/arch/powerpc/decode.c b/tools/objtool/arch/powerpc/decode.c
+> index 26d5050424a9..ffd63a61a585 100644
+> --- a/tools/objtool/arch/powerpc/decode.c
+> +++ b/tools/objtool/arch/powerpc/decode.c
+> @@ -56,7 +56,7 @@ int arch_decode_instruction(struct objtool_file *file, const struct section *sec
+>          switch (opcode) {
+>          case 18: /* b[l][a] */
+>                  if (ins == 0x48000005)  /* bl .+4 */
+> -                       typ = INSN_OTHER;
+> +                       typ = INSN_CALL;
+>                  else if (ins & 1)       /* bl[a] */
+>                          typ = INSN_CALL;
+>                  else            /* b[a] */
+> 
+> 
+> Maddy
+> 
+>>    CC      arch/powerpc/kernel/irq.o
+>>    CC      arch/powerpc/kernel/align.o
+>>    CC      arch/powerpc/kernel/signal_64.o
+>>
+>> Objdump of switch.o:
+>> arch/powerpc/kernel/switch.o:     file format elf64-powerpcle
+>>
+>> Disassembly of section .text:
+>>
+>> 0000000000000000 <flush_branch_caches>:
+>>         0:	a6 02 28 7d 	mflr    r9
+>>         4:	05 00 00 48 	bl      8 <flush_branch_caches+0x8>
+>>         8:	05 00 00 48 	bl      c <flush_branch_caches+0xc>
+>>         c:	05 00 00 48 	bl      10 <flush_branch_caches+0x10>
+>>        10:	05 00 00 48 	bl      14 <flush_branch_caches+0x14>
+>>        14:	05 00 00 48 	bl      18 <flush_branch_caches+0x18>
+>>        18:	05 00 00 48 	bl      1c <flush_branch_caches+0x1c>
+>>        1c:	05 00 00 48 	bl      20 <flush_branch_caches+0x20>
+>>        20:	05 00 00 48 	bl      24 <flush_branch_caches+0x24>
+>>        24:	05 00 00 48 	bl      28 <flush_branch_caches+0x28>
+>>        28:	05 00 00 48 	bl      2c <flush_branch_caches+0x2c>
+>>
+>>
+>> arch/powerpc/kernel/switch.S failing src section:
+>>
+>> .balign 32
+>> .global flush_branch_caches
+>> flush_branch_caches:
+>>          /* Save LR into r9 */
+>>          mflr    r9
+>>
+>>          // Flush the link stack
+>>          .rept 64
+>>          ANNOTATE_INTRA_FUNCTION_CALL
+>>          bl      .+4
+>>          .endr
+>>          b       1f
+>>          nops    6
+>>
+>> Maddy
+>>
+>>
+>>>
+>>> Christophe
+>>
+>>
+> 
 
