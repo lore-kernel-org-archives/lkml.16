@@ -1,151 +1,319 @@
-Received: from beeline1.cc.itu.edu.tr (beeline1.cc.itu.edu.tr [160.75.25.115])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F86F204879
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 14:57:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=160.75.25.115
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741100227; cv=fail; b=KZPVYHqW8nCwpt3kMTu1hcrKdY6GcWVlUrLpwSAy+RqJvOEmlYjrn8yoPfO6tv9KRAosKIP7JESJ5pGlrxtshW3c9tNIuxnAJ4UUnCBqaX1VvLvrouSTjq1QWr/4D/bS3C5pQrlBYX+imvK+s1O0D3bBJngUB7X4dEJ1DK4CB5Y=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741100227; c=relaxed/simple;
-	bh=0xL0F9rdElvB+NQbmj2NrRU9PnlyhTsMf4tikqFVt+Q=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=KLc/XHiC3tygB4nLrfFE6Lga3q3AnFY/f9k6c52wyA7rSqAqm6cwgEf3N8qrm3BRjctGMnzl79RWVNUjOz5IfzCuA608DCA+ONJcgXyTBnIuUVKR5r0PKv8Sfs9pPtXUx8IMLfqeP+gBnSR7UtnuHyDGBJi06qHNh6AAPRGM/ew=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linutronix.de; spf=none smtp.mailfrom=cc.itu.edu.tr; dkim=fail (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Y5uWwxgC reason="signature verification failed"; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=txGhQuO8; arc=none smtp.client-ip=193.142.43.55; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; arc=fail smtp.client-ip=160.75.25.115
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=cc.itu.edu.tr
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Y5uWwxgC";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="txGhQuO8"
-Received: from lesvatest1.cc.itu.edu.tr (lesvatest1.cc.itu.edu.tr [10.146.128.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits))
-	(No client certificate requested)
-	by beeline1.cc.itu.edu.tr (Postfix) with ESMTPS id 4986F40D4DF2
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 17:57:04 +0300 (+03)
-X-Envelope-From: <root@cc.itu.edu.tr>
-Authentication-Results: lesvatest1.cc.itu.edu.tr;
-	dkim=fail reason="signature verification failed" (2048-bit key, unprotected) header.d=linutronix.de header.i=@linutronix.de header.a=rsa-sha256 header.s=2020 header.b=Y5uWwxgC;
-	dkim=fail reason="signature verification failed" header.d=linutronix.de header.i=@linutronix.de header.a=ed25519-sha256 header.s=2020e header.b=txGhQuO8
-Received: from lesva1.cc.itu.edu.tr (unknown [160.75.70.79])
-	by lesvatest1.cc.itu.edu.tr (Postfix) with ESMTP id 4Z6dz10jjWzFxwr
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 17:55:41 +0300 (+03)
-Received: by le1 (Postfix, from userid 0)
-	id 9662942752; Tue,  4 Mar 2025 17:55:31 +0300 (+03)
-Authentication-Results: lesva1.cc.itu.edu.tr;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Y5uWwxgC;
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=txGhQuO8
-X-Envelope-From: <linux-kernel+bounces-541542-bozkiru=itu.edu.tr@vger.kernel.org>
-Authentication-Results: lesva2.cc.itu.edu.tr;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Y5uWwxgC;
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=txGhQuO8
-Received: from fgw1.itu.edu.tr (fgw1.itu.edu.tr [160.75.25.103])
-	by le2 (Postfix) with ESMTP id 4035F42889
-	for <bozkiru@itu.edu.tr>; Mon,  3 Mar 2025 14:20:55 +0300 (+03)
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by fgw1.itu.edu.tr (Postfix) with SMTP id E8D523063EFC
-	for <bozkiru@itu.edu.tr>; Mon,  3 Mar 2025 14:20:54 +0300 (+03)
-Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0FAB3173213
-	for <bozkiru@itu.edu.tr>; Mon,  3 Mar 2025 11:17:57 +0000 (UTC)
-Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF9161FF1A4;
-	Mon,  3 Mar 2025 11:11:25 +0000 (UTC)
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1ABEE1FC7E6;
-	Mon,  3 Mar 2025 11:11:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AB9223A9AB;
+	Tue,  4 Mar 2025 14:57:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741000282; cv=none; b=Zi+D3d0iZttAkMhQst4RROjAuRLie0ZnOXgv5EVRQROUOjJo0IWNvnkFEsWJHMsWXxH289nd5Qv7Cgljb4Yiz3I2lBKo8vdDZHJhasR++kgqJBn7ifLcxAKppUag9EChKNQzaUpLP472hbGoYYD0KPUR18xO25w8qHUYnKhOIBw=
+	t=1741100235; cv=none; b=JHwYdG3WzV//ZuVkACqVKp0iVgVZTrmD1Gb/3Eb1YJxPyPkd435t2PN+j0cOgXL3SPEw/7LpNB3uKEZpAWAgaSh9sa8NfVNFW9eqofsOliiHWTB61fLg/LLX9WuqwrDirwx87Rs0aVYrOwcCIS9oWPknTrzxdaCxzy4jU7NaWmU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741000282; c=relaxed/simple;
-	bh=4W0/ux5EhNgOnsFPnNp1J2/rUjYoy2NJ0USEfInHEWs=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=XLwr27VZxeI46HcHHaMXNTFZ3bL4cQKaqZ6ZfZbENKXOSBtNFoCHOBHe0+V9baptg7VU59yRnpfxXKilx/4ZReYXfa/g81MEWbezAWyXGan2Uz2PNHUhunOIlaCm9DYBrLFfmVfjNHjFEB/L5biCvAEVx8LHgix2MPPChmAgSS4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Y5uWwxgC; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=txGhQuO8; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1741000277;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UUFxaeOa8MxkhoOaa265B/ccj1bobA8YN971cVAYoCE=;
-	b=Y5uWwxgCwKEcrzJAENfdOv9giYLmvYx0m8BkwnRw3rjkGWNDqwO1mi2jZBcU076us9cfpe
-	NlIJ+nVEMz8yi0rHBd2d+N1S4xFgN9job+iswQJ+t+uhFMk8qoKYgI0iSixGv80eQRpXZJ
-	T36BOlunSnevhikVuciu604kS6m0N/R5WbRALLYbB5QZOKmvkFiWAkJh7ziL6RjXpn1LI0
-	NPQ9hz2VV6MqBqjoTxM8BFjYhcUmtPMQBsqvXjWlP8lFjQvInRUewL3iTuYV8Nn0z8aVSp
-	FH8tcof86vHWIUGIYK9ADtOe7Q/94P1alvifw6OqsiOaWgUFrp7XuzLhxC0M7g==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1741000277;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UUFxaeOa8MxkhoOaa265B/ccj1bobA8YN971cVAYoCE=;
-	b=txGhQuO8g6BysurNHcVyDXbTp4j02hmRD4DuL7Zh74mFtq1/JxyrjKsLn/OMUI10Pa7IKC
-	QoVL79GgITZAauCg==
-Date: Mon, 03 Mar 2025 12:11:18 +0100
-Subject: [PATCH 16/19] arm64/vdso: Prepare introduction of struct
- vdso_clock
-Precedence: bulk
+	s=arc-20240116; t=1741100235; c=relaxed/simple;
+	bh=Qual+ve5thf+vI/agmYtffTam++x2ApTEKb+DhHDAno=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=A7pDTWAlEdvNE2NIKB0YAks5M+x2dTZM6SB2pXHyeIf2A8re4cZRmeu7D8bi0BoCK8GWF8EgfnEvVf1zWVa+NSALNvBb6MY3DpmEzKx7aHvFEGjpmL7TM6FnBHJ0PMQ13Pj5uvZDnADL2qBE9cFEKIbwUXcx+Qg0decAaAvO+Xw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VoKOa/gi; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VoKOa/gi"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741100234; x=1772636234;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=Qual+ve5thf+vI/agmYtffTam++x2ApTEKb+DhHDAno=;
+  b=VoKOa/gio4yfFki/W2+VFymhP/XToQnI76OLunUvzk/DsAEQA4KZxYNv
+   CT43qyK3uvkD7hvwqQ06cBcB22FXGKWYM1hfCTcAFe4QWyM37kzIwSjnD
+   IBWCMFnYIs8Kll5OB5BIlPR2fNGja68gqehGi1yb71hPv4/zdYouH7iIP
+   d1fDb6Wq+e0U9Nr8tKkGr2YRko35jBUUc4ykOMso5otQaSIx/jXTd0tO1
+   1Prnt9zmIj2n6tWj/ewZSQ1yJqui1nYbrCpiWSKGvhsjA/ytLEuLBHN6+
+   PSU8TMeO2jpdFcNaWE3r9b7+t5E2rsQWUjgtRSeJ3e2Z6IZeVFxJKmY1R
+   A==;
+X-CSE-ConnectionGUID: kPDth2jHQW6vQu7VDUaQFg==
+X-CSE-MsgGUID: vN4M6CfURTCyMBfzOifYhQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11363"; a="45671327"
+X-IronPort-AV: E=Sophos;i="6.14,220,1736841600"; 
+   d="scan'208";a="45671327"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2025 06:57:13 -0800
+X-CSE-ConnectionGUID: 24oyge/hTxGFJr/pHYDaQQ==
+X-CSE-MsgGUID: NSsGcZaDTcSMQimrsVZmOA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,220,1736841600"; 
+   d="scan'208";a="123328484"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.220])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2025 06:57:11 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 4 Mar 2025 16:57:07 +0200 (EET)
+To: Tadeu Marchese <marchese.kdev@gmail.com>
+cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>, Tadeu Marchese <marchese@hp.com>
+Subject: Re: platform/x86/hp-bioscfg: Fix buffer alignment and conversion
+In-Reply-To: <20250304062319.86270-1-marchese@hp.com>
+Message-ID: <3c30721a-cc1f-2d4a-d5df-f9cdec0af5e8@linux.intel.com>
+References: <20250304062319.86270-1-marchese@hp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Message-ID: <20250303-vdso-clock-v1-16-c1b5c69a166f@linutronix.de>
-References: <20250303-vdso-clock-v1-0-c1b5c69a166f@linutronix.de>
-In-Reply-To: <20250303-vdso-clock-v1-0-c1b5c69a166f@linutronix.de>
-To: Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
- Vincenzo Frascino <vincenzo.frascino@arm.com>, 
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
- Anna-Maria Behnsen <anna-maria@linutronix.de>, 
- Frederic Weisbecker <frederic@kernel.org>, Ingo Molnar <mingo@redhat.com>, 
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
- x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
- Madhavan Srinivasan <maddy@linux.ibm.com>, 
- Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
- Christophe Leroy <christophe.leroy@csgroup.eu>, 
- Naveen N Rao <naveen@kernel.org>, Heiko Carstens <hca@linux.ibm.com>, 
- Vasily Gorbik <gor@linux.ibm.com>, 
- Alexander Gordeev <agordeev@linux.ibm.com>, 
- Christian Borntraeger <borntraeger@linux.ibm.com>, 
- Sven Schnelle <svens@linux.ibm.com>, Arnd Bergmann <arnd@arndb.de>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, 
- linux-arch@vger.kernel.org, Nam Cao <namcao@linutronix.de>, 
- =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1741000267; l=1512;
- i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
- bh=L7kK/MCZMD7r1X/TTNdxBJdzqOQW5bJywl2DJquziWk=;
- b=fJgzjZCc5WkxvrFlLjxD+BfXszci8Y3cDqbkKCkbvF2kHXyYJjhzAfWZAte2yMP84uv4/uX+e
- gS1QU3HJXulDpcBrLb18rkXvBchGsQOAZLb+5338gjRvJQush6GNM2G
-X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
- pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
-Content-Transfer-Encoding: quoted-printable
-X-ITU-Libra-ESVA-Information: Please contact Istanbul Teknik Universitesi for more information
-X-ITU-Libra-ESVA-ID: 4Z6dz10jjWzFxwr
-X-ITU-Libra-ESVA: No virus found
-X-ITU-Libra-ESVA-From: root@cc.itu.edu.tr
-X-ITU-Libra-ESVA-Watermark: 1741704970.92191@HHHmISR9k81e5A9eGpNS9A
-X-ITU-MailScanner-SpamCheck: not spam
-Message-ID: <20250303111118.oSNSRh_nwGeguib5qtMxU7bSbppEAJjC1IRhsgvyBog@z>
+Content-Type: text/plain; charset=US-ASCII
 
-From: Nam Cao <namcao@linutronix.de>
+On Tue, 4 Mar 2025, Tadeu Marchese wrote:
 
-To support multiple PTP clocks, the VDSO data structure needs to be
-reworked. All clock specific data will end up in struct vdso_clock and in
-struct vdso_time_data there will be array of it. By now, vdso_clock is
-simply a define which maps vdso_clock to vdso_time_data.
+> Use PTR_ALIGN to access buffer in hp_get_string_from_buffer().
+> Remove code that escapes characters with backslashes.
+> Use kstrtouint() for unsigned string-to-integer conversion.
+> Increase the string_data buffer size by defining MAX_STRING_BUFF_SIZE.
+> 
+> Signed-off-by: Tadeu Marchese <marchese@hp.com>
+> ---
+> This patch ensures proper alignment when reading the string size from the 
+> buffer and simplifies Unicode-to-UTF-8 conversion by removing 
+> unnecessary character escaping.
+> 
+> Issues fixed at the module initialization:
+> [  433.823905] hp_bioscfg: Prerequisites size value exceeded the maximum 
+>   number of elements supported or data may be malformed
+> [  433.837747] Unable to convert string to integer: 4294967295
+> 
+> The buffer size was too small for string attributes such as 
+> 'HP_Disk0MapForUefiBootOrder'.
+> 
+>  drivers/platform/x86/hp/hp-bioscfg/bioscfg.c  | 82 ++++++-------------
+>  drivers/platform/x86/hp/hp-bioscfg/bioscfg.h  |  6 +-
+>  .../x86/hp/hp-bioscfg/int-attributes.c        |  8 +-
+>  3 files changed, 33 insertions(+), 63 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c b/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
+> index 0b277b7e37dd..b537fbaac15e 100644
+> --- a/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
+> +++ b/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
+> @@ -51,19 +51,21 @@ int hp_get_integer_from_buffer(u8 **buffer, u32 *buffer_size, u32 *integer)
+>  
+>  int hp_get_string_from_buffer(u8 **buffer, u32 *buffer_size, char *dst, u32 dst_size)
+>  {
 
-To prepare for the rework of the data structures, replace the struct
-vdso_time_data pointer with struct vdso_clock pointer whenever applicable=
+Oh great, thanks for looking into this! I recall raising this custom 
+string conversion madness during review but back then the patch got 
+applied without my comments being addressed.
+
+> -	u16 *src = (u16 *)*buffer;
+> +	u16 *src = PTR_ALIGN((u16 *)*buffer, sizeof(u16));
+
+What happens here if the PTR_ALIGN() actually aligns the pointer by 
+skipping over the first character?? Is the string going to get read 
+out-of-sync with the true character boundaries??
+
+>  	u16 src_size;
+>  
+> -	u16 size;
+> -	int i;
+> +	u16 length;
+>  	int conv_dst_size;
+> +	int result;
+>  
+>  	if (*buffer_size < sizeof(u16))
+>  		return -EINVAL;
+>  
+> +	/* String size is in the first two bytes of the buffer */
+>  	src_size = *(src++);
+> -	/* size value in u16 chars */
+> -	size = src_size / sizeof(u16);
+> +
+> +	/* Get the string length considering it is u16 */
+> +	length = src_size / sizeof(u16);
+>  
+>  	/* Ensure there is enough space remaining to read and convert
+>  	 * the string
+> @@ -71,54 +73,22 @@ int hp_get_string_from_buffer(u8 **buffer, u32 *buffer_size, char *dst, u32 dst_
+>  	if (*buffer_size < src_size)
+>  		return -EINVAL;
+>  
+> -	for (i = 0; i < size; i++)
+> -		if (src[i] == '\\' ||
+> -		    src[i] == '\r' ||
+> -		    src[i] == '\n' ||
+> -		    src[i] == '\t')
+> -			size++;
+> -
+> -	/*
+> -	 * Conversion is limited to destination string max number of
+> -	 * bytes.
+> -	 */
+> -	conv_dst_size = size;
+> -	if (size > dst_size)
+> -		conv_dst_size = dst_size - 1;
+> +	conv_dst_size = length;
+> +	if (dst_size < conv_dst_size)
+> +		return -EINVAL;
+>  
+>  	/*
+> -	 * convert from UTF-16 unicode to ASCII
+> +	 * Convert from UTF-16 unicode to UTF-8 and ensure
+> +	 * the string is null terminated
+>  	 */
+> -	utf16s_to_utf8s(src, src_size, UTF16_HOST_ENDIAN, dst, conv_dst_size);
+> -	dst[conv_dst_size] = 0;
+> -
+> -	for (i = 0; i < conv_dst_size; i++) {
+> -		if (*src == '\\' ||
+> -		    *src == '\r' ||
+> -		    *src == '\n' ||
+> -		    *src == '\t') {
+> -			dst[i++] = '\\';
+> -			if (i == conv_dst_size)
+> -				break;
+> -		}
+> -
+> -		if (*src == '\r')
+> -			dst[i] = 'r';
+> -		else if (*src == '\n')
+> -			dst[i] = 'n';
+> -		else if (*src == '\t')
+> -			dst[i] = 't';
+> -		else if (*src == '"')
+> -			dst[i] = '\'';
+> -		else
+> -			dst[i] = *src;
+> -		src++;
+> -	}
+> +	result = utf16s_to_utf8s(src, src_size, UTF16_HOST_ENDIAN, dst, conv_dst_size);
+> +	dst[result] = 0;
+>  
+> -	*buffer = (u8 *)src;
+> -	*buffer_size -= size * sizeof(u16);
+> +	/* Update buffer to point to the next position */
+> +	*buffer = (u8 *)src + src_size;
+> +	*buffer_size -= src_size;
+>  
+> -	return size;
+> +	return result;
+>  }
+>  
+>  int hp_get_common_data_from_buffer(u8 **buffer_ptr, u32 *buffer_size,
+> @@ -999,37 +969,37 @@ static int __init hp_init(void)
+>  	 */
+>  	ret = create_attributes_level_sysfs_files();
+>  	if (ret)
+> -		pr_debug("Failed to create sysfs level attributes\n");
+> +		pr_warn("Failed to create sysfs level attributes\n");
+
+This patch should be split into a series with each patch doing a single 
+thing as you seem to have include changes that look independent of the 
+string conversion cleanup.
+
+>  
+>  	ret = hp_init_bios_attributes(HPWMI_STRING_TYPE, HP_WMI_BIOS_STRING_GUID);
+>  	if (ret)
+> -		pr_debug("Failed to populate string type attributes\n");
+> +		pr_warn("Failed to populate string type attributes\n");
+>  
+>  	ret = hp_init_bios_attributes(HPWMI_INTEGER_TYPE, HP_WMI_BIOS_INTEGER_GUID);
+>  	if (ret)
+> -		pr_debug("Failed to populate integer type attributes\n");
+> +		pr_warn("Failed to populate integer type attributes\n");
+>  
+>  	ret = hp_init_bios_attributes(HPWMI_ENUMERATION_TYPE, HP_WMI_BIOS_ENUMERATION_GUID);
+>  	if (ret)
+> -		pr_debug("Failed to populate enumeration type attributes\n");
+> +		pr_warn("Failed to populate enumeration type attributes\n");
+>  
+>  	ret = hp_init_bios_attributes(HPWMI_ORDERED_LIST_TYPE, HP_WMI_BIOS_ORDERED_LIST_GUID);
+>  	if (ret)
+> -		pr_debug("Failed to populate ordered list object type attributes\n");
+> +		pr_warn("Failed to populate ordered list object type attributes\n");
+>  
+>  	ret = hp_init_bios_attributes(HPWMI_PASSWORD_TYPE, HP_WMI_BIOS_PASSWORD_GUID);
+>  	if (ret)
+> -		pr_debug("Failed to populate password object type attributes\n");
+> +		pr_warn("Failed to populate password object type attributes\n");
+>  
+>  	bioscfg_drv.spm_data.attr_name_kobj = NULL;
+>  	ret = hp_add_other_attributes(HPWMI_SECURE_PLATFORM_TYPE);
+>  	if (ret)
+> -		pr_debug("Failed to populate secure platform object type attribute\n");
+> +		pr_warn("Failed to populate secure platform object type attribute\n");
+>  
+>  	bioscfg_drv.sure_start_attr_kobj = NULL;
+>  	ret = hp_add_other_attributes(HPWMI_SURE_START_TYPE);
+>  	if (ret)
+> -		pr_debug("Failed to populate sure start object type attribute\n");
+> +		pr_warn("Failed to populate sure start object type attribute\n");
+>  
+>  	return 0;
+>  
+> diff --git a/drivers/platform/x86/hp/hp-bioscfg/bioscfg.h b/drivers/platform/x86/hp/hp-bioscfg/bioscfg.h
+> index 3166ef328eba..99a95c709061 100644
+> --- a/drivers/platform/x86/hp/hp-bioscfg/bioscfg.h
+> +++ b/drivers/platform/x86/hp/hp-bioscfg/bioscfg.h
+> @@ -17,11 +17,11 @@
+>  
+>  #define DRIVER_NAME		"hp-bioscfg"
+>  
+> +#define MAX_STRING_BUFF_SIZE	1024
+>  #define MAX_BUFF_SIZE		512
+>  #define MAX_KEY_MOD_SIZE	256
+>  #define MAX_PASSWD_SIZE		64
+>  #define MAX_PREREQUISITES_SIZE	20
+> -#define MAX_REQ_ELEM_SIZE	128
+>  #define MAX_VALUES_SIZE		16
+>  #define MAX_ENCODINGS_SIZE	16
+>  #define MAX_ELEMENTS_SIZE	16
+> @@ -131,8 +131,8 @@ struct common_data {
+>  struct string_data {
+>  	struct common_data common;
+>  	struct kobject *attr_name_kobj;
+> -	u8 current_value[MAX_BUFF_SIZE];
+> -	u8 new_value[MAX_BUFF_SIZE];
+> +	u8 current_value[MAX_STRING_BUFF_SIZE];
+> +	u8 new_value[MAX_STRING_BUFF_SIZE];
+>  	u32 min_length;
+>  	u32 max_length;
+>  };
+> diff --git a/drivers/platform/x86/hp/hp-bioscfg/int-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/int-attributes.c
+> index 6c7f4d5fa9cb..3e8f99b4174d 100644
+> --- a/drivers/platform/x86/hp/hp-bioscfg/int-attributes.c
+> +++ b/drivers/platform/x86/hp/hp-bioscfg/int-attributes.c
+> @@ -38,7 +38,7 @@ static int validate_integer_input(int instance_id, char *buf)
+>  	if (integer_data->common.is_readonly)
+>  		return -EIO;
+>  
+> -	ret = kstrtoint(buf, 10, &in_val);
+> +	ret = kstrtouint(buf, 10, &in_val);
+>  	if (ret < 0)
+>  		return ret;
+>  
+> @@ -55,7 +55,7 @@ static void update_integer_value(int instance_id, char *attr_value)
+>  	int ret;
+>  	struct integer_data *integer_data = &bioscfg_drv.integer_data[instance_id];
+>  
+> -	ret = kstrtoint(attr_value, 10, &in_val);
+> +	ret = kstrtouint(attr_value, 10, &in_val);
+>  	if (ret == 0)
+>  		integer_data->current_value = in_val;
+>  	else
+> @@ -185,7 +185,7 @@ static int hp_populate_integer_elements_from_package(union acpi_object *integer_
+>  		/* Assign appropriate element value to corresponding field*/
+>  		switch (eloc) {
+>  		case VALUE:
+> -			ret = kstrtoint(str_value, 10, &int_value);
+> +			ret = kstrtouint(str_value, 10, &int_value);
+>  			if (ret)
+>  				continue;
+>  
+> @@ -328,7 +328,7 @@ static int hp_populate_integer_elements_from_buffer(u8 *buffer_ptr, u32 *buffer_
+>  	integer_data->current_value = 0;
+>  
+>  	hp_get_string_from_buffer(&buffer_ptr, buffer_size, dst, dst_size);
+> -	ret = kstrtoint(dst, 10, &integer_data->current_value);
+> +	ret = kstrtouint(dst, 10, &integer_data->current_value);
+>  	if (ret)
+>  		pr_warn("Unable to convert string to integer: %s\n", dst);
+>  	kfree(dst);
+> 
+
+-- 
+ i.
+
