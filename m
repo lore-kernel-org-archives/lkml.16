@@ -1,64 +1,114 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C2B027CCFA;
-	Tue,  4 Mar 2025 18:23:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D67C27FE62;
+	Tue,  4 Mar 2025 18:23:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741112601; cv=none; b=ryQOO2tNn4JH+CvfJw8LmCE37jwv0DdYv5Py6cihTfHlhdmbHYMBLOwYn4ZvIJ0mvXPOgJbJvpBrEwLIz6OLVP0iC/MfRkbTszUC0Gbgk9Ch5Kbe89vYZEQVJRhIeyRe18Et4mJtmGabVPj8RURWR35GArmTxgrUeVguhjoDt1Y=
+	t=1741112603; cv=none; b=YGzr6+JUXXF7BDWAhMMNsp5U4GHupeYWzI0UTpSRXVxytUtr3CVwvj5CkyoOgO3EDrf/KQlEiYX5TG0fH/TCWG4lBs6HVYUkryASnDDiMOA9weVPlXAJp0oo0Vd2ZD33C0bSy+Vaiqmj3KLOsJJgDdcxhndZ9gpbKCAJA4Ce5iE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741112601; c=relaxed/simple;
-	bh=yqSfurqo9uz0GCjH+gfSO/8lIK5tXDomfIJ4KbPJeF0=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=RX5oNaMqWUiR/zRPOZS9QxY1/160ryVmjGMSSL2njSgiJlaUNStsvYVyDMtp700os2DIK45YVIF6d7cmqQC/p8ysQ7UBWb90Equg7BBIqrjzgq4QoGvVrWzPOf2XMHNnXBjVWjZSQRGEiKM887/v196supEFxkROiiKJs/IIFvs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dasi1DrL; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741112603; c=relaxed/simple;
+	bh=nJxN0OF+NV+pP7a2nHlRBnE7O4eJYLZXYsG9b6RtaTI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=sySyiY/8bvypovragC7xFGZMmFqqf8BGR+Ve6UtVfuAtySKZum+EjkRt70vvt7Pb4WQSQoJ0GxTpbJqunSDM2yPxzZBmxUjsmAG3JQKexAX375L9jlSNoi2h3COwfuqvLIE07sU09j76fuVVk5AV+h4aEQfHIFqFAU7/KJNUixE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=rWcVsqAv; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dasi1DrL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8166C4CEE5;
-	Tue,  4 Mar 2025 18:23:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741112599;
-	bh=yqSfurqo9uz0GCjH+gfSO/8lIK5tXDomfIJ4KbPJeF0=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=dasi1DrLByD/0irFoemo5gkRbMbNLub054uhf7FbhUymKZb759Oou7hBYnUuGON7F
-	 JMyzIpHAVV1KVJoTfBUe0nOxc7aRbXwcLV92BcoDSSCNLyjGv8VnVNJsDb/Slv5pP2
-	 T4LcLIB3peAls+r4aDM4IxgOJcJTdCqg7yV11q2BN864crpZK/VZg9KC3Ilwy3m/8E
-	 bcA6SdJKAdiXl6O+LC9Vd4TGiBZ+y8i+sgVMBGWE63IqmqzeWqmrBD5eUtam8zg52H
-	 hAfyoK69ihCNTVKp/7T07X8fczA0QXP0OPZsXI3phVc0zUjBVKNzPgumcciq6qnMEq
-	 rQXrpJ3YgrLuA==
-From: Niklas Cassel <cassel@kernel.org>
-To: Damien Le Moal <dlemoal@kernel.org>, Daniel Kral <d.kral@proxmox.com>
-Cc: linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250304092030.37108-1-d.kral@proxmox.com>
-References: <20250304092030.37108-1-d.kral@proxmox.com>
-Subject: Re: [PATCH] ahci: add PCI ID for Marvell 88SE9215 SATA Controller
-Message-Id: <174111259844.42927.10776968712314293712.b4-ty@kernel.org>
-Date: Tue, 04 Mar 2025 19:23:18 +0100
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="rWcVsqAv"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 524GEPW1023631;
+	Tue, 4 Mar 2025 18:23:15 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=cHkOY2aFm4MBzD9JOYJEt0kX6l/PwwLDRWhBCbIyP
+	Jw=; b=rWcVsqAvuhYPPQMCtF3PiFidkTRiYPl5mYXOgNZY057CSSHfEVsXEHRgw
+	uQFmGj4XNgckstFTOYiUadjamqmFppjF3UAIuvgyXVwRX3FaE3ZpjpAPL+jxKsAW
+	5h5C10vpMp2NKggGYjOHXDzMWfXL2OLH5co0AYnwZFGu2yF9B/U4Ken4Ml1C4l/M
+	JTtglu/VAmo9WCmBIfuvc8eYFs57RYrAzxsyp4ax93HR/sxyj2wKExcaujUw9ISL
+	yXKHS+5xu7Kxt2Re18RzoCYOSZWsUI0mOy8U00y32h7pi9QEvooZATNvjyJxG71b
+	gWpmDxEkV1MgBrfYYus/mW1PBk83Q==
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 455ku55ke7-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 04 Mar 2025 18:23:14 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 524GlFiP020800;
+	Tue, 4 Mar 2025 18:23:14 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 454esjxgmj-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 04 Mar 2025 18:23:14 +0000
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 524INA0q30737108
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 4 Mar 2025 18:23:10 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 66E8920043;
+	Tue,  4 Mar 2025 18:23:10 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 9E5B120040;
+	Tue,  4 Mar 2025 18:23:09 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.171.33.201])
+	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Tue,  4 Mar 2025 18:23:09 +0000 (GMT)
+From: Claudio Imbrenda <imbrenda@linux.ibm.com>
+To: kvm@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        frankja@linux.ibm.com, borntraeger@de.ibm.com, david@redhat.com,
+        nrb@linux.ibm.com, seiden@linux.ibm.com, nsg@linux.ibm.com,
+        schlameuss@linux.ibm.com, hca@linux.ibm.com
+Subject: [PATCH v4 0/1] KVM: s390: fix a newly introduced bug
+Date: Tue,  4 Mar 2025 19:23:03 +0100
+Message-ID: <20250304182304.178746-1-imbrenda@linux.ibm.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.2
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: xu9pspZucWmZHK1_7WqZYEpn6K7X8ZOd
+X-Proofpoint-GUID: xu9pspZucWmZHK1_7WqZYEpn6K7X8ZOd
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-04_07,2025-03-03_04,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 adultscore=0
+ clxscore=1015 mlxscore=0 suspectscore=0 impostorscore=0 bulkscore=0
+ mlxlogscore=649 lowpriorityscore=0 spamscore=0 phishscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502100000 definitions=main-2503040144
 
-On Tue, 04 Mar 2025 10:20:30 +0100, Daniel Kral wrote:
-> Add support for Marvell Technology Group Ltd. 88SE9215 SATA 6 Gb/s
-> controller, which is e.g. used in the DAWICONTROL DC-614e RAID bus
-> controller and was not automatically recognized before.
-> 
-> Tested with a DAWICONTROL DC-614e RAID bus controller.
-> 
-> 
-> [...]
+Fix race when making a page secure (hold pte lock again)
 
-Applied to libata/linux.git (for-6.15), thanks!
+This should fix the issues I have seen, which I think/hope are also the same
+issues that David found.
 
-[1/1] ahci: add PCI ID for Marvell 88SE9215 SATA Controller
-      https://git.kernel.org/libata/linux/c/885251dc
+v3->v4:
+* move and rename s390_wiggle_split_folio() to fix a compile issue when
+  KVM is not selected
+* removed obsolete reference to __() from comments
 
-Kind regards,
-Niklas
+v2->v3:
+* added check for pte_write() in make_hva_secure() [thanks David]
+
+v1->v2:
+* major refactoring
+* walk the page tables only once
+* when importing, manually fault in pages if needed
+
+Claudio Imbrenda (1):
+  KVM: s390: pv: fix race when making a page secure
+
+ arch/s390/include/asm/gmap.h |   1 -
+ arch/s390/include/asm/uv.h   |   3 +-
+ arch/s390/kernel/uv.c        | 135 +++++++++++++++++++++++++++++++++--
+ arch/s390/kvm/gmap.c         | 101 ++------------------------
+ arch/s390/kvm/kvm-s390.c     |  25 ++++---
+ arch/s390/mm/gmap.c          |  28 --------
+ 6 files changed, 153 insertions(+), 140 deletions(-)
+
+-- 
+2.48.1
 
