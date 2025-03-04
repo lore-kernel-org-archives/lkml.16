@@ -1,270 +1,252 @@
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A8DF250C16
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 16:37:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11A36266561;
+	Tue,  4 Mar 2025 16:38:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741106251; cv=none; b=JTM9RyXjoC3aDwWK44Dg2+4G3zeCkaN0jWe+WqRW3kVEhtR7bLWG4T54pR0AU3hCJ9tdr+0lRS/tv4S49CJ3X+NUgk6gq7oqzdR8hDucEVaUABv5AONfYqjRgEh3r1YNchDNZAMe9Lgwuf51KtIsCxWxuWLOO3Lzox9Wiz5N22A=
+	t=1741106299; cv=none; b=HBMFi+wezY321xpVcqz2zmug6pKDUJr0dqLroQ7GEKs8jcNlkjMmSUFyUhXkArMmTmiQNSucx25gv4uxmg4RALVXEIAXPRW9JSPAyxMF8GOnKouKbrd6hR0xnb+Ahz947ntaAvs9n4EB8FtojpHWlezMukZuMzoJvGwOEuNWlbQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741106251; c=relaxed/simple;
-	bh=+jVRnvA1XKyfqd79kglStpzynVwiEIfUUKHpPv0jL6I=;
+	s=arc-20240116; t=1741106299; c=relaxed/simple;
+	bh=xOBqQU1/wBdBKF+hOUQI10NBZHd2K9ykweBVZqgwYKM=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TeKXGvWzhhMnbJ4pyEMdeLe4THPft/XJy2lwt6g7YJgZqmOifgeVAuFJJkOKIGnllgrS5laYklRsBw3GBbqLmSLEJ+/W08tXEQpaPtyw1bpNJ+p1Pk1K318WSsR7lNXYgGVblUPdjixZ9mJPq9nlX2KsjjbyI6gEEfj6qTflvU8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=ZHdAJOq2; arc=none smtp.client-ip=209.85.167.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+	 To:Cc:Content-Type; b=advCMsHOdlC0W699E2NthW+EKE6f8z2KFSLRZanHp4opl5TN7+l1u6LrYaTZvjNIbjEz04YQogLzK9vIgXEpAh6O8MLdj/H3DNhqoZ24jomzMKm8X7TwpJmxqCGP0Qwq30iXTtdCeiDyWjPPa3I/tKZaTGnCUa6vnoWp0XZeT9s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fl/RLT8+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="ZHdAJOq2"
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-54964f8ce4bso2560616e87.2
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Mar 2025 08:37:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1741106247; x=1741711047; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=KviZHwrcnwb0O7UNJL3mHRBydG/R9yxKM9RuzPeM1jk=;
-        b=ZHdAJOq2lggJ1E7gGJhwayrWABxRO8ef8EIuSWw6OEhS5FPjTGVOrO6WvKLKR61tiV
-         TGo4k6Xk2dqa4JoTsREp09UQKujH+enLNUA/aa4XhSOc+nA7QENRvmgj1hFpNqy5Qyry
-         76ibhlRGRdvBdsC0+M0ECXIoFolxKa+6W1RhM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741106247; x=1741711047;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=KviZHwrcnwb0O7UNJL3mHRBydG/R9yxKM9RuzPeM1jk=;
-        b=kaKePbqWjaxjqx98okSHI9qZROZvoiVOEzWHM9+Imf/g/P2BabSScIaxBjW7jc9KQy
-         1bIwHWrkkgvw0Wi1KQqgdFuS+L7dK49ZpinL/hWoJZQDjG3BMMyztZdB61jRVNXVbex6
-         vuJqefefS/e7u186nUQgrGEraWBSRDHQ8xcTLplP+8mYFFDcR+mT30Ez/eSOFF5P/QNc
-         P8y+6whrLb+PaYWimmXOcGxJ2mPVlIw/IK6h1fp00QfysncCpVKfh+e/yC1lrY47Fs3m
-         sCjCfb9cO+erf2BLDL3VlE3Is27dU/Y6QRkTVdCsFf+JseR/EnRe4bVgrdrP42YWSElb
-         ZB/g==
-X-Forwarded-Encrypted: i=1; AJvYcCVe+dOqfQ7uiYxzPSJq0/qOaW8t8xDUlkC8Ay6/NUz6dSScJQJ7GyEkIZe06LKhq4vQ4kCxr4s8/Wa4wJQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzgSIatIRR3ne0treQxcz0AniVbPLuEdbfUB7s5lqWWDauPYFsK
-	pNmYL2MKm//1cCptlb1d+UXOmJeokKx+/cpQweUXx9TwcNeJUQopGhpJZHB8gOdjzsVixiRMHbc
-	D6vti9KtoSnIiIjcRi16NTLlgTDUroRL0CmVP
-X-Gm-Gg: ASbGnctmMysY1RXt3Ok5+y39Q7yNGM3jkMyOLpfnGzggd4K8+MsSEVpBEc3ElVtjhUm
-	ToV3qelJUj5azAIv9eVdZuV0P0qy/1wv5Y/KdrIoFqhoz2Q14Zg8u26WT243GeUqdgdJdQWy+DM
-	gQRXLZeTAOS133G8oZai1fKzii4yg=
-X-Google-Smtp-Source: AGHT+IHEb3b277xqRqJp1ckXeMWGDMg96uWTLb8EGKjCHmqIIwAU2IJecSHrorpEE4OQnRbhgkR81FtwP8+B3es+W0U=
-X-Received: by 2002:ac2:499d:0:b0:549:5769:6adc with SMTP id
- 2adb3069b0e04-54957696d10mr3992327e87.2.1741106247262; Tue, 04 Mar 2025
- 08:37:27 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fl/RLT8+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE116C4CEEB;
+	Tue,  4 Mar 2025 16:38:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741106298;
+	bh=xOBqQU1/wBdBKF+hOUQI10NBZHd2K9ykweBVZqgwYKM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=fl/RLT8+SH6U5FcsYMizhYNwOFPKh2pnMtRJ8LqLRYztUAP6Ah3LWeOK0yb7lQYFd
+	 8ZLQCbGzyTu4SxwZ6f8Ftf/S+uaQ0ifI2OfH4voAFPTo3F196LHfTv6wcAEuK6uIbN
+	 NYW5ljY3Ql5FDAiPrJtFjQeYbcMn4IdkWfLU9IrV3HNNFB/BnCgOBwPspY54Nr59tC
+	 SP7jVp8VvgI2js4Icd/gb2kWNi6u0krw0PFq1WmaZO8P9gyavUfEPQb9rpfYjwCDGw
+	 ZMceWjyq84T+6YshAGGRM2hjSqGCvMihvX7UTsWZMl2nvTv6CioAFkgh2pgSFfKIXf
+	 S0B40y08ZAlQg==
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-abf615d5f31so569740766b.2;
+        Tue, 04 Mar 2025 08:38:18 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCU6to/WPUMLO+vkDXk+RyKBqlRb0Oj/7xJTpOOxfpUOBe/p31ANpCW8urMLOv5G/DEG+shJwLlbhdpI@vger.kernel.org, AJvYcCVAI0Mbw8pXsSCsnMf3YRimprdCerMeJjvIIYzRvzQF5NgmbIVKJKFOzaDhJFL/sCxO+k6hSOH8mrRWyRM4@vger.kernel.org, AJvYcCX8cRQxPdC3G3BmJNewFIFeXLlpArH+gonybhHw3kZRo55hS+kCDj0Xso3rufKr1+E6krXQe/2d59hk7Ittew==@vger.kernel.org
+X-Gm-Message-State: AOJu0YwP8uFso5J3rZpZkf9gfBS6UAYmUsRPcP6QOooQDTIjJl4LJ6dS
+	PmBVrYA1Hw80+0qx2znnbFp445ZKupz/ti9gE2wAJNATjXKgypT1cxFMZrTo7bUdsfVIaDNOTgX
+	9Pbtg8cXAYqQgyoq/b8iCcrvOGA==
+X-Google-Smtp-Source: AGHT+IEw+X5joqLWCPWv0VGQNAmhXwfbVOK9kqhQQdx1rRlbl9aTYNRL5ii4DIWF7RvyE9RZ769TVeWAWpvYjsaHw8g=
+X-Received: by 2002:a17:906:dc8f:b0:abf:777e:79e5 with SMTP id
+ a640c23a62f3a-abf777e7cfbmr954338266b.9.1741106297250; Tue, 04 Mar 2025
+ 08:38:17 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250214173944.47506-1-james.quinlan@broadcom.com>
- <20250214173944.47506-7-james.quinlan@broadcom.com> <20250304150838.23ca5qbhm4yrpa3h@thinkpad>
-In-Reply-To: <20250304150838.23ca5qbhm4yrpa3h@thinkpad>
-From: Jim Quinlan <james.quinlan@broadcom.com>
-Date: Tue, 4 Mar 2025 11:37:14 -0500
-X-Gm-Features: AQ5f1JoW5XA69R5P5HEW4xQGcq_X8yLC_V13WSo-ryXSh-szOfdBDP--_8F-yck
-Message-ID: <CA+-6iNzOWU1qLfmSiThdYXX0v5RkbUYtf52yk6KXm6yDDNRUnw@mail.gmail.com>
-Subject: Re: [PATCH v2 6/8] PCI: brcmstb: Use same constant table for config
- space access
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: linux-pci@vger.kernel.org, Nicolas Saenz Julienne <nsaenz@kernel.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, 
-	Cyril Brulebois <kibi@debian.org>, Stanimir Varbanov <svarbanov@suse.de>, 
-	bcm-kernel-feedback-list@broadcom.com, jim2101024@gmail.com, 
-	Florian Fainelli <florian.fainelli@broadcom.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
-	Rob Herring <robh@kernel.org>, 
-	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-rpi-kernel@lists.infradead.org>, 
-	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, 
-	open list <linux-kernel@vger.kernel.org>
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-	boundary="00000000000069152a062f86e337"
-
---00000000000069152a062f86e337
+References: <20241129-topic-sl7_feat2-v2-0-fb6cf5660cfc@oss.qualcomm.com> <20241129-topic-sl7_feat2-v2-3-fb6cf5660cfc@oss.qualcomm.com>
+In-Reply-To: <20241129-topic-sl7_feat2-v2-3-fb6cf5660cfc@oss.qualcomm.com>
+From: Rob Herring <robh@kernel.org>
+Date: Tue, 4 Mar 2025 10:38:05 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJVVJD91Q=xG_gkuFXg5mq-EQReUGVbyy7HZ+YQm1EAiw@mail.gmail.com>
+X-Gm-Features: AQ5f1JpY0Y8giIR5-SdVrOf21k37EMiWJTHMP4VfoTckpgm1PsiQyNH9qk-Zj7Y
+Message-ID: <CAL_JsqJVVJD91Q=xG_gkuFXg5mq-EQReUGVbyy7HZ+YQm1EAiw@mail.gmail.com>
+Subject: Re: [PATCH v2 3/3] arm64: dts: qcom: x1e80100-romulus: Set up PS8830s
+To: Konrad Dybcio <konradybcio@kernel.org>
+Cc: Bjorn Andersson <andersson@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Marijn Suijten <marijn.suijten@somainline.org>, 
+	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, 
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Mar 4, 2025 at 10:08=E2=80=AFAM Manivannan Sadhasivam
-<manivannan.sadhasivam@linaro.org> wrote:
+On Fri, Nov 29, 2024 at 11:20=E2=80=AFAM Konrad Dybcio <konradybcio@kernel.=
+org> wrote:
 >
-> On Fri, Feb 14, 2025 at 12:39:34PM -0500, Jim Quinlan wrote:
-> > The constants EXT_CFG_DATA and EXT_CFG_INDEX vary by SOC. One of the
-> > map_bus methods used these constants, the other used different constant=
-s.
-> > Fortunately there was no problem because the SoCs that used the latter
-> > map_bus method all had the same register constants.
-> >
-> > Remove the redundant constants and adjust the code to use them.  In
-> > addition, update EXT_CFG_DATA to use the 4k-page based config space acc=
-ess
-> > system, which is what the second map_bus method was already using.
-> >
+> From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 >
-> What is the effect of this change? Why is it required? Sounds like it got
-> sneaked in.
-
-Hello,
-There is no functional difference with this commit -- the code will
-behave the same.  A previous commit set up the "EXT_CFG_DATA" and
-"EXT_CFG_INDEX" constants in the offset table but one of the map_bus()
-methods did not use them, instead it relied on old generic #define
-constants.  This commit uses them and gets rid of the old #defines.
-
-I didn't add a "Fixes" line because there is no functional change but
-I can if you want.
-
-Regards,
-Jim Quinlan
-Broadcom STB/CM
-
+> The Laptop 7 features two USB-C ports, each one sporting a PS8830 USB-C
+> retimer/mux. Wire them up.
 >
-> > Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
-> > ---
-> >  drivers/pci/controller/pcie-brcmstb.c | 14 ++++++--------
-> >  1 file changed, 6 insertions(+), 8 deletions(-)
-> >
-> > diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/contro=
-ller/pcie-brcmstb.c
-> > index e1059e3365bd..923ac1a03f85 100644
-> > --- a/drivers/pci/controller/pcie-brcmstb.c
-> > +++ b/drivers/pci/controller/pcie-brcmstb.c
-> > @@ -150,9 +150,6 @@
-> >  #define  MSI_INT_MASK_SET            0x10
-> >  #define  MSI_INT_MASK_CLR            0x14
-> >
-> > -#define PCIE_EXT_CFG_DATA                            0x8000
-> > -#define PCIE_EXT_CFG_INDEX                           0x9000
-> > -
-> >  #define  PCIE_RGR1_SW_INIT_1_PERST_MASK                      0x1
-> >  #define  PCIE_RGR1_SW_INIT_1_PERST_SHIFT             0x0
-> >
-> > @@ -727,8 +724,8 @@ static void __iomem *brcm_pcie_map_bus(struct pci_b=
-us *bus,
-> >
-> >       /* For devices, write to the config space index register */
-> >       idx =3D PCIE_ECAM_OFFSET(bus->number, devfn, 0);
-> > -     writel(idx, pcie->base + PCIE_EXT_CFG_INDEX);
-> > -     return base + PCIE_EXT_CFG_DATA + PCIE_ECAM_REG(where);
-> > +     writel(idx, base + IDX_ADDR(pcie));
-> > +     return base + DATA_ADDR(pcie) + PCIE_ECAM_REG(where);
-> >  }
-> >
-> >  static void __iomem *brcm7425_pcie_map_bus(struct pci_bus *bus,
-> > @@ -1711,7 +1708,7 @@ static void brcm_pcie_remove(struct platform_devi=
-ce *pdev)
-> >  static const int pcie_offsets[] =3D {
-> >       [RGR1_SW_INIT_1]        =3D 0x9210,
-> >       [EXT_CFG_INDEX]         =3D 0x9000,
-> > -     [EXT_CFG_DATA]          =3D 0x9004,
-> > +     [EXT_CFG_DATA]          =3D 0x8000,
-> >       [PCIE_HARD_DEBUG]       =3D 0x4204,
-> >       [PCIE_INTR2_CPU_BASE]   =3D 0x4300,
-> >  };
-> > @@ -1719,7 +1716,7 @@ static const int pcie_offsets[] =3D {
-> >  static const int pcie_offsets_bcm7278[] =3D {
-> >       [RGR1_SW_INIT_1]        =3D 0xc010,
-> >       [EXT_CFG_INDEX]         =3D 0x9000,
-> > -     [EXT_CFG_DATA]          =3D 0x9004,
-> > +     [EXT_CFG_DATA]          =3D 0x8000,
-> >       [PCIE_HARD_DEBUG]       =3D 0x4204,
-> >       [PCIE_INTR2_CPU_BASE]   =3D 0x4300,
-> >  };
-> > @@ -1733,8 +1730,9 @@ static const int pcie_offsets_bcm7425[] =3D {
-> >  };
-> >
-> >  static const int pcie_offsets_bcm7712[] =3D {
-> > +     [RGR1_SW_INIT_1]        =3D 0x9210,
-> >       [EXT_CFG_INDEX]         =3D 0x9000,
-> > -     [EXT_CFG_DATA]          =3D 0x9004,
-> > +     [EXT_CFG_DATA]          =3D 0x8000,
-> >       [PCIE_HARD_DEBUG]       =3D 0x4304,
-> >       [PCIE_INTR2_CPU_BASE]   =3D 0x4400,
-> >  };
-> > --
-> > 2.43.0
-> >
+> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+> ---
+>  .../boot/dts/qcom/x1e80100-microsoft-romulus.dtsi  | 282 +++++++++++++++=
++++++-
+>  1 file changed, 276 insertions(+), 6 deletions(-)
 >
-> --
-> =E0=AE=AE=E0=AE=A3=E0=AE=BF=E0=AE=B5=E0=AE=A3=E0=AF=8D=E0=AE=A3=E0=AE=A9=
-=E0=AF=8D =E0=AE=9A=E0=AE=A4=E0=AE=BE=E0=AE=9A=E0=AE=BF=E0=AE=B5=E0=AE=AE=
-=E0=AF=8D
+> diff --git a/arch/arm64/boot/dts/qcom/x1e80100-microsoft-romulus.dtsi b/a=
+rch/arm64/boot/dts/qcom/x1e80100-microsoft-romulus.dtsi
+> index 80fbcaea5d83e1147a74dd3320ae8fe8c953db57..2236095023a135d8fb1baaede=
+111a34be54d160c 100644
+> --- a/arch/arm64/boot/dts/qcom/x1e80100-microsoft-romulus.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/x1e80100-microsoft-romulus.dtsi
+> @@ -124,7 +124,15 @@ port@1 {
+>                                         reg =3D <1>;
+>
+>                                         pmic_glink_ss0_ss_in: endpoint {
+> -                                               remote-endpoint =3D <&usb=
+_1_ss0_qmpphy_out>;
+> +                                               remote-endpoint =3D <&ret=
+imer_ss0_ss_out>;
+> +                                       };
+> +                               };
+> +
+> +                               port@2 {
+> +                                       reg =3D <2>;
+> +
+> +                                       pmic_glink_ss0_con_sbu_in: endpoi=
+nt {
+> +                                               remote-endpoint =3D <&ret=
+imer_ss0_con_sbu_out>;
+>                                         };
+>                                 };
+>                         };
+> @@ -153,7 +161,15 @@ port@1 {
+>                                         reg =3D <1>;
+>
+>                                         pmic_glink_ss1_ss_in: endpoint {
+> -                                               remote-endpoint =3D <&usb=
+_1_ss1_qmpphy_out>;
+> +                                               remote-endpoint =3D <&ret=
+imer_ss1_ss_out>;
+> +                                       };
+> +                               };
+> +
+> +                               port@2 {
+> +                                       reg =3D <2>;
+> +
+> +                                       pmic_glink_ss1_con_sbu_in: endpoi=
+nt {
+> +                                               remote-endpoint =3D <&ret=
+imer_ss1_con_sbu_out>;
+>                                         };
+>                                 };
+>                         };
+> @@ -185,6 +201,109 @@ vreg_edp_3p3: regulator-edp-3p3 {
+>                 regulator-boot-on;
+>         };
+>
+> +       vreg_rtmr0_1p15: regulator-rtmr0-1p15 {
+> +               compatible =3D "regulator-fixed";
+> +
+> +               regulator-name =3D "VREG_RTMR0_1P15";
+> +
+> +               regulator-min-microvolt =3D <1150000>;
+> +               regulator-max-microvolt =3D <1150000>;
+> +
+> +               gpio =3D <&pmc8380_5_gpios 8 GPIO_ACTIVE_HIGH>;
+> +               enable-active-high;
+> +
+> +               pinctrl-0 =3D <&rtmr0_1p15_reg_en>;
+> +               pinctrl-names =3D "default";
+> +
+> +               regulator-boot-on;
+> +       };
+> +
+> +       vreg_rtmr0_1p8: regulator-rtmr0-1p8 {
+> +               compatible =3D "regulator-fixed";
+> +
+> +               regulator-name =3D "VREG_RTMR0_1P8";
+> +
+> +               regulator-min-microvolt =3D <1800000>;
+> +               regulator-max-microvolt =3D <1800000>;
+> +
+> +               gpio =3D <&pm8550ve_9_gpios 8 GPIO_ACTIVE_HIGH>;
+> +               enable-active-high;
+> +
+> +               pinctrl-0 =3D <&rtmr0_1p8_reg_en>;
+> +               pinctrl-names =3D "default";
+> +
+> +               regulator-boot-on;
+> +       };
+> +
+> +       vreg_rtmr0_3p3: regulator-rtmr0-3p3 {
+> +               compatible =3D "regulator-fixed";
+> +
+> +               regulator-name =3D "VREG_RTMR0_3P3";
+> +
+> +               regulator-min-microvolt =3D <3300000>;
+> +               regulator-max-microvolt =3D <3300000>;
+> +
+> +               gpio =3D <&pm8550_gpios 11 GPIO_ACTIVE_HIGH>;
+> +               enable-active-high;
+> +
+> +               pinctrl-0 =3D <&rtmr0_3p3_reg_en>;
+> +               pinctrl-names =3D "default";
+> +
+> +               regulator-boot-on;
+> +       };
+> +
+> +       vreg_rtmr1_1p15: regulator-rtmr1-1p15 {
+> +               compatible =3D "regulator-fixed";
+> +
+> +               regulator-name =3D "VREG_RTMR1_1P15";
+> +
+> +               regulator-min-microvolt =3D <1150000>;
+> +               regulator-max-microvolt =3D <1150000>;
+> +
+> +               gpio =3D <&tlmm 188 GPIO_ACTIVE_HIGH>;
+> +               enable-active-high;
+> +
+> +               pinctrl-0 =3D <&rtmr1_1p15_reg_en>;
+> +               pinctrl-names =3D "default";
+> +
+> +               regulator-boot-on;
+> +       };
+> +
+> +       vreg_rtmr1_1p8: regulator-rtmr1-1p8 {
+> +               compatible =3D "regulator-fixed";
+> +
+> +               regulator-name =3D "VREG_RTMR1_1P8";
+> +
+> +               regulator-min-microvolt =3D <1800000>;
+> +               regulator-max-microvolt =3D <1800000>;
+> +
+> +               gpio =3D <&tlmm 175 GPIO_ACTIVE_HIGH>;
+> +               enable-active-high;
+> +
+> +               pinctrl-0 =3D <&rtmr1_1p8_reg_en>;
+> +               pinctrl-names =3D "default";
+> +
+> +               regulator-boot-on;
+> +       };
+> +
+> +       vreg_rtmr1_3p3: regulator-rtmr1-3p3 {
+> +               compatible =3D "regulator-fixed";
+> +
+> +               regulator-name =3D "VREG_RTMR1_3P3";
+> +
+> +               regulator-min-microvolt =3D <3300000>;
+> +               regulator-max-microvolt =3D <3300000>;
+> +
+> +               gpio =3D <&tlmm 186 GPIO_ACTIVE_HIGH>;
+> +               enable-active-high;
+> +
+> +               pinctrl-0 =3D <&rtmr1_3p3_reg_en>;
+> +               pinctrl-names =3D "default";
+> +
+> +               regulator-boot-on;
+> +       };
+> +
+> +
+>         vreg_nvme: regulator-nvme {
+>                 compatible =3D "regulator-fixed";
+>
+> @@ -665,7 +784,59 @@ &i2c3 {
+>
+>         status =3D "okay";
+>
+> -       /* PS8830 USB retimer @8 */
+> +       /* Left-side rear port */
+> +       typec-mux@8 {
+> +               compatible =3D "parade,ps8830";
+> +               reg =3D <0x8>;
+> +
+> +               reset-gpios =3D <&pm8550_gpios 10 GPIO_ACTIVE_LOW>;
+> +
+> +               clocks =3D <&rpmhcc RPMH_RF_CLK3>;
+> +               clock-names =3D "xo";
 
---00000000000069152a062f86e337
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
+clock-names is not part of the binding.
 
-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
-mOAplh6h3nMZUZxBguxG3g2p3iD4EgibUYneEzqOQafIQB/naf2uetKb8y9jKgWJxq2Y4y8Jqg2u
-uVIO1AyOJjWwqdgN+QhuIlat+qZd03P48Gim9ZPEMDUCAwEAAaOCAdswggHXMA4GA1UdDwEB/wQE
-AwIFoDCBowYIKwYBBQUHAQEEgZYwgZMwTgYIKwYBBQUHMAKGQmh0dHA6Ly9zZWN1cmUuZ2xvYmFs
-c2lnbi5jb20vY2FjZXJ0L2dzZ2NjcjNwZXJzb25hbHNpZ24yY2EyMDIwLmNydDBBBggrBgEFBQcw
-AYY1aHR0cDovL29jc3AuZ2xvYmFsc2lnbi5jb20vZ3NnY2NyM3BlcnNvbmFsc2lnbjJjYTIwMjAw
-TQYDVR0gBEYwRDBCBgorBgEEAaAyASgKMDQwMgYIKwYBBQUHAgEWJmh0dHBzOi8vd3d3Lmdsb2Jh
-bHNpZ24uY29tL3JlcG9zaXRvcnkvMAkGA1UdEwQCMAAwSQYDVR0fBEIwQDA+oDygOoY4aHR0cDov
-L2NybC5nbG9iYWxzaWduLmNvbS9nc2djY3IzcGVyc29uYWxzaWduMmNhMjAyMC5jcmwwJQYDVR0R
-BB4wHIEaamFtZXMucXVpbmxhbkBicm9hZGNvbS5jb20wEwYDVR0lBAwwCgYIKwYBBQUHAwQwHwYD
-VR0jBBgwFoAUljPR5lgXWzR1ioFWZNW+SN6hj88wHQYDVR0OBBYEFGx/E27aeGBP2eJktrILxlhK
-z8f6MA0GCSqGSIb3DQEBCwUAA4IBAQBdQQukiELsPfse49X4QNy/UN43dPUw0I1asiQ8wye3nAuD
-b3GFmf3SZKlgxBTdWJoaNmmUFW2H3HWOoQBnTeedLtV9M2Tb9vOKMncQD1f9hvWZR6LnZpjBIlKe
-+R+v6CLF07qYmBI6olvOY/Rsv9QpW9W8qZYk+2RkWHz/fR5N5YldKlJHP0NDT4Wjc5fEzV+mZC8A
-AlT80qiuCVv+IQP08ovEVSLPhUp8i1pwsHT9atbWOfXQjbq1B/ditFIbPzwmwJPuGUc7n7vpmtxB
-75sSFMj27j4JXl5W9vORgHR2YzuPBzfzDJU1ul0DIofSWVF6E1dx4tZohRED1Yl/T/ZGMYICbTCC
-AmkCAQEwazBbMQswCQYDVQQGEwJCRTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1zYTExMC8GA1UE
-AxMoR2xvYmFsU2lnbiBHQ0MgUjMgUGVyc29uYWxTaWduIDIgQ0EgMjAyMAIMSO43VW7D5NP1X/KD
-MA0GCWCGSAFlAwQCAQUAoIHUMC8GCSqGSIb3DQEJBDEiBCClhG6MzNY6mGOktkUm/RNVlbGvThVK
-IK6zb+Hm5tgnZzAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0yNTAz
-MDQxNjM3MjdaMGkGCSqGSIb3DQEJDzFcMFowCwYJYIZIAWUDBAEqMAsGCWCGSAFlAwQBFjALBglg
-hkgBZQMEAQIwCgYIKoZIhvcNAwcwCwYJKoZIhvcNAQEKMAsGCSqGSIb3DQEBBzALBglghkgBZQME
-AgEwDQYJKoZIhvcNAQEBBQAEggEASgxgNllxtglxds2W0y4hiS1iyUqcdT57Abpo2FAHg4IQFpwP
-d31QIR7HvbwWUzGaUQ3MHdSFixYZ3+zXJ6ILztZ2DA2jooV88spLsS9RNTzHbPlCHDQICbw2FJg8
-rugJbIq2crRE2ZdT0pOQXttMpN8iEobOARwaBNbYi5WHOPQ5xj12jAcJkXjexisjNohvo97KL260
-kZ248gy+zI08MEyQCM4+yWk8o619TBZXdreiCiQOfGcVgm3NRUI26GkGz0XQRFWnL2CFjFC99oM/
-/cPQQsv47lJr18gzEKK6qWnbdeLgi2AueRlwdTY2jpi97XPox9rEZ9Ewnq5zWgPFVw==
---00000000000069152a062f86e337--
+Rob
