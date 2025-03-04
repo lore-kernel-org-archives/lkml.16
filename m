@@ -1,93 +1,189 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2089.outbound.protection.outlook.com [40.107.93.89])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 948B8280A2F;
-	Tue,  4 Mar 2025 16:07:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741104423; cv=none; b=MMrnqbje8xx34WjJJQok7TdxwOGAqTk9MSCFdXmkon+ofnnaojzU2cBVCaoiXyje0w+jRCAf0SruiEvVTYR4AWfDQ0q2mbjJhssytyEwP6oYAAAUjtPA6KrLTNK61aiPJonLqgi+Ua+j5mw863MG1ZlDcAUVRTpsOvERO9JOBnA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C8B9278175;
+	Tue,  4 Mar 2025 16:07:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.89
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741104423; cv=fail; b=jM4DNR4I13kg55bE+QDlfbev47wpUD+PJ0g7Woi+8oyoJsDfcGkcqI4r66fQX9LiMciw213nwxydsI3fHoo84c+mQGePUsrwqfHg+C49w/6mfmBzyFJAHtatgt0+Zweb9yPep45JFoK4CRTa4ajiTCLCstHbmPJvvPRcXQBvG7E=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1741104423; c=relaxed/simple;
-	bh=PWSYk1eyFl+4AhEp5rPIWKXzxn1GiTQ5ddVtL6TfLq0=;
-	h=From:To:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=SJ9rcc33l8jAR5Q6Dmn0Fd9gB1sdSwyK2N/A2d5KBk/xN1nOtNV0XfTmFcSqFbkOqqyoY6YQnatjgPLocLXZG79LB9q17w8lwa47OFr4TDyk9lsecVF333/UpOiuT42qAKyqgvsKEWTwe8o7qbbkaOqM6cHuc2z2edPZrdbR+g8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=j1pfoTLO; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	bh=h04KYfo7IA662PJfAt6zE9bIY6RolFmn442P0cPK02I=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=UDu4baB4r0f0a/X7DTEcG/NL/YdisWSV7/+wjSeE6u77m4ySdO+vtyJ428PYbP4mR0Ua6kwpimo4CCke2m9g63A0fS9ac4xwq/6zzsJlHDx6PtYGz2nWMqTqIhhApvVQbmNi18ta+ZIgreXtoHUw/8gXqmLfLxoUmGzjv3l4VSI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=rbcDCoU6; arc=fail smtp.client-ip=40.107.93.89
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="j1pfoTLO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741104422; x=1772640422;
-  h=from:to:subject:date:message-id:in-reply-to:references:
-   mime-version:content-transfer-encoding;
-  bh=PWSYk1eyFl+4AhEp5rPIWKXzxn1GiTQ5ddVtL6TfLq0=;
-  b=j1pfoTLOyiaOOHxoQtgnnkUESQF7kIdeUJbw6y1C7OGUheq8yZQJVdtV
-   vMNckscoW0AS4VDOZfVSqyOCpUOlXOGCHqcieMG9O/bEeHb1p6o39NSbz
-   8cMopRS4o7oHlPFp13zcjmxiDMWoOThNmcN84c9DuUESNqlTsqrTAwfQ2
-   VY3BYNHEfgc2QM2d5LNUcYGFzhNcIjF6cjsENrcRYwRBfeFzBC3OiUQJc
-   lWVrXvxMRRfjX+KJtdjuyhbY2lPmn/fc9G1Iu4gi64b2g6XX24tl316Un
-   Tvr7pnBjXvwQZXG39Pe1aiTqw9Fvn967Tb+7lvSvVpjstIwv86KYlc3d1
-   g==;
-X-CSE-ConnectionGUID: 4v97JDJWSLyJmryuHwf42w==
-X-CSE-MsgGUID: oxPRzCyyQNmWNLBn1vivWw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11363"; a="42154182"
-X-IronPort-AV: E=Sophos;i="6.14,220,1736841600"; 
-   d="scan'208";a="42154182"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2025 08:07:01 -0800
-X-CSE-ConnectionGUID: oSkf78dxSCGOsbLipRKnAw==
-X-CSE-MsgGUID: SmC9qriDTvy9DTMGwpcqFg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,220,1736841600"; 
-   d="scan'208";a="123017573"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.220])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2025 08:06:58 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Hans de Goede <hdegoede@redhat.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] platform/x86: dell-uart-backlight: Make dell_uart_bl_serdev_driver static
-Date: Tue,  4 Mar 2025 18:06:39 +0200
-Message-Id: <20250304160639.4295-2-ilpo.jarvinen@linux.intel.com>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250304160639.4295-1-ilpo.jarvinen@linux.intel.com>
-References: <20250304160639.4295-1-ilpo.jarvinen@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="rbcDCoU6"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=yc2DEql1hNwuRqZO/3GlYBu7q2EfT4wt4ivfSBtIv5XbGFLdxTCiH4ywe0gnMIHjQohTvyQlvVtevBry287gHlsg0X+meik4rfOMzCDgiybHc/qIJzxqK+Wg40F8Y2/k46Wn43YO5Iu4OxOpy4zRG3YgwbVljsPLPORpmS4aR587jXR+SwO+hjeeKqsV3ZGgOcpD20Vp+kAZcouplHAOUDHoW0tCUAngiMThfsj1quEqUulC8TRNr9HGaGEn9XfROgOvC7iGZBGv6YRtAeVinNflg/xVgJgSIRWohb9ddxEFsmRKtsV6HJwYan3C93N1pHzSFMG8CfCJWGdCblASfQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=S2siwFWjeFWuewdZwNSQjV0XTk8BHyZuIgrxMH9MEno=;
+ b=M4sdOuHR8lgIhCziMnnC+gLkhqp42nn6wJSzzyAcBkj5qFJ4iimDANvFkAyV5+gWhkSN7IKSAt4B4NNQ1/fo3OurIoFO9x4Y6KuF126kQLn2esTft9msmPPIcROGrpsw2Mb2T+DVm0MeXSCXiR/Y76jyx/aVVwCgvvVfakAlq66bc0meTQFDhoALP+H+Rlt/I1o4FAkSXCW5ZNUx8ZO4pm/hNld1yrHD0DNd+j3+rpFTsIECXhjXN7rtrd9EOiJLdeE3T0781QMarYfKQPAIc3UZMPuiCMh4BWj2yDqLOMN+VZA5mZ92RqSPO8lFKNo7nr/hEiUd1IrEPU/uZTXX3Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.160) smtp.rcpttodomain=davemloft.net smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=S2siwFWjeFWuewdZwNSQjV0XTk8BHyZuIgrxMH9MEno=;
+ b=rbcDCoU6A6zpg5HV1Rukfsqz8im8cM2/dJeBrZmKVGmw3+vKlYeUSkrSDH7fcdmDIRa7+AhxgbwKVBVEFv/7u4eywbMq0HYajM0/oOCZ95nEUmBie5M/oVSfVzO/srrN1SL2pc7hv0B1/Brvsh/TJsHMU4yhj0bahMxakv8Vg4qrYUFSDVRDWlo1kBUM0dTSu5SGXQdexSZeppbdnIktys2XoRi/gmbyFkv6Mc82q9s88dHtoMIarr7+aE6dXfyayHRQRql53MkSU97SYOgBUonlxDA5iZvo9YdEzq+/EQU3L9V6ijjd+Rv3TMETxlzY5HPM6bMS1CRQBiGw7h7nRA==
+Received: from SA0PR11CA0130.namprd11.prod.outlook.com (2603:10b6:806:131::15)
+ by IA1PR12MB7592.namprd12.prod.outlook.com (2603:10b6:208:428::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.25; Tue, 4 Mar
+ 2025 16:06:58 +0000
+Received: from SN1PEPF000252A1.namprd05.prod.outlook.com
+ (2603:10b6:806:131:cafe::e2) by SA0PR11CA0130.outlook.office365.com
+ (2603:10b6:806:131::15) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8511.16 via Frontend Transport; Tue,
+ 4 Mar 2025 16:06:58 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.160) by
+ SN1PEPF000252A1.mail.protection.outlook.com (10.167.242.8) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8511.15 via Frontend Transport; Tue, 4 Mar 2025 16:06:57 +0000
+Received: from rnnvmail202.nvidia.com (10.129.68.7) by mail.nvidia.com
+ (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Tue, 4 Mar 2025
+ 08:06:41 -0800
+Received: from rnnvmail202.nvidia.com (10.129.68.7) by rnnvmail202.nvidia.com
+ (10.129.68.7) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Tue, 4 Mar
+ 2025 08:06:40 -0800
+Received: from vdi.nvidia.com (10.127.8.10) by mail.nvidia.com (10.129.68.7)
+ with Microsoft SMTP Server id 15.2.1544.14 via Frontend Transport; Tue, 4 Mar
+ 2025 08:06:37 -0800
+From: Tariq Toukan <tariqt@nvidia.com>
+To: "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>, Eric Dumazet <edumazet@google.com>, "Andrew
+ Lunn" <andrew+netdev@lunn.ch>
+CC: Saeed Mahameed <saeedm@nvidia.com>, Gal Pressman <gal@nvidia.com>, "Leon
+ Romanovsky" <leonro@nvidia.com>, Michal Swiatkowski
+	<michal.swiatkowski@linux.intel.com>, Leon Romanovsky <leon@kernel.org>,
+	Tariq Toukan <tariqt@nvidia.com>, <netdev@vger.kernel.org>,
+	<linux-rdma@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH net-next V2 0/6] mlx5 misc enhancements 2025-03-04
+Date: Tue, 4 Mar 2025 18:06:14 +0200
+Message-ID: <20250304160620.417580-1-tariqt@nvidia.com>
+X-Mailer: git-send-email 2.45.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-NV-OnPremToCloud: AnonymousSubmission
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SN1PEPF000252A1:EE_|IA1PR12MB7592:EE_
+X-MS-Office365-Filtering-Correlation-Id: 630df9a7-9ff0-4f4a-5313-08dd5b3696f2
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|82310400026|1800799024|7416014|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?/OWj23Tt+yZy7Btr/tkwOjblKOHQ92Lq3HsnRbqoTDDIVvlZKG3TxtGwpY2q?=
+ =?us-ascii?Q?ayAjrDqjZshdYEftxqSQNG4bkkba+MMEGkuXIDzZILDIA+hvqFRnH9/mC8k4?=
+ =?us-ascii?Q?CG1sebrB68Ih8YmDmlkriX4tkavBfWdE8RwS7spDCgeFjcxSfKL4S4bItBiK?=
+ =?us-ascii?Q?WCDRkfKqNh2D4YFL+ThbW50cFwVWkRpF9xbwihMwXALXxFs8x609Fz54RokK?=
+ =?us-ascii?Q?0U8J3KZioR29bSAoXlVIoivCL0cGuHqaEPG1eX72Q1DHlGQ+F3f4DdmSLeLx?=
+ =?us-ascii?Q?DwJSFTeRBDXvpl0bdSLHhp2Hn6yjiUih4Iw12e/98j4+oi4oLQaQuqU0g6fg?=
+ =?us-ascii?Q?YCsUa9BYlIjxqA0USY43C3uArlMYSu1dH+rBAg1ZkOEyjfPYg7GeBNOeEtf5?=
+ =?us-ascii?Q?xcgvVmVIrP9epKnjjDnxvLGVxo1vLbUbgwxMfW4UZCFCvXrZ/ynDBtxNaU37?=
+ =?us-ascii?Q?Vkk04sVOz2geVMkfMoaJt9yEvmxRUUnAMCGBwb4GYv6XcGyOHe3IceuUUt6V?=
+ =?us-ascii?Q?RyV7KZaMjz5Z435gq8GREs0I2ngm+qP1mVh1ZDUxxuYYYZEE+Yqx7gGP0b74?=
+ =?us-ascii?Q?ORXAr1e/W1UWde9Pkoaj68Xbh7yoYNAS8wUxBj9UObLJj2UfF4VS0hrEsh5N?=
+ =?us-ascii?Q?YIgRTMTG+Ylp71Z8qNV2XDsuJ17+F52jQky5pma0Q17zNi5KMCq5bqXkAbpG?=
+ =?us-ascii?Q?RfFJo0Qjps06FsOznnnu9fApbfDW7PZtAmNC2bEXRXfid5/AtmivPStApMSz?=
+ =?us-ascii?Q?gZtNWPg7tdT7zuZ2eSeALHRH8VHr/MUmw5qHOQt3SkM/PKwbypNJu5mGvFr7?=
+ =?us-ascii?Q?w3g1yrLXmIzlVdDQB0s3UrUJSQqK4EXWPb9VdpVSvXUJbAgPNMpgcjj+FiY/?=
+ =?us-ascii?Q?Hm1i4+CTdofvstChloSe8/c5HQ6D9jioL+JVfWRnRK0NSaIlQuQqcMnt9Pyo?=
+ =?us-ascii?Q?HVGd7jfWJ2L7ntJG0m1VBhpbX0TtoMDS9o4SPPgANlIhs9+siHq15UhSfnOa?=
+ =?us-ascii?Q?Lo6MQorKFif5k6gcxrHEKCONmj1N6sMQM9EWr0vqEPrAr60/blY8OCIE5V0p?=
+ =?us-ascii?Q?6qx88/DJV0roG+Q6dSdpVXY7XqII4LO6Iz2clbZ8ukyjq0iQ1uP9PB3+YPF+?=
+ =?us-ascii?Q?THy72U3TqZUTTZZLuJ8cLeeay9s69zKjNn62N8s+k9R84ZSUl5GpqXKONBV7?=
+ =?us-ascii?Q?+5N208zHUOkF/n+QaEuvsE6sjKciU4JuaRND4wRIpX58uNaMor9HR35ZR8XJ?=
+ =?us-ascii?Q?xFpyWHl3aFeqFqsqUDaM1diX+QVTJndlm+yAeE/6DS4VoIziIkuO/k6C8gTN?=
+ =?us-ascii?Q?4EHHWaHtqjODk0Sm0qkCUI8XOtHyl+eLhaZBcErDVKy9HNHp3aw2+oDoqTkU?=
+ =?us-ascii?Q?srzGHItHsGkr48VcuWkZ8NX0WMpyjU6G0MTFN1vyKqsfXZWBYSwxYSafEtDd?=
+ =?us-ascii?Q?6JKDkzl9aBBIY22sQJMwlwMLC8xxsrFWAeHZPM32JfsPCKpb2e4DtHp7AWdq?=
+ =?us-ascii?Q?b23j5C8pPOOQmQQ=3D?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230040)(36860700013)(82310400026)(1800799024)(7416014)(376014);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Mar 2025 16:06:57.3740
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 630df9a7-9ff0-4f4a-5313-08dd5b3696f2
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SN1PEPF000252A1.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB7592
 
-Sparse reports:
+Hi,
 
-dell-uart-backlight.c:328:29: warning: symbol
-'dell_uart_bl_serdev_driver' was not declared. Should it be static?
+This is V2.
+Find initial version here:
+https://lore.kernel.org/lkml/20250226114752.104838-1-tariqt@nvidia.com/
 
-Fix it by making the symbol static.
+This series introduces enhancements to the mlx5 core and Eth drivers.
 
-Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
----
- drivers/platform/x86/dell/dell-uart-backlight.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Patches 1-3 by Shahar introduce support for configuring lanes alongside
+speed when autonegotiation is disabled. The combination of speed and the
+number of lanes corresponds to a specific link mode (in the extended
+mask typically used in newer hardware), allowing the user to select a
+precise link mode when autonegotiation is off, instead of just choosing
+the speed.
 
-diff --git a/drivers/platform/x86/dell/dell-uart-backlight.c b/drivers/platform/x86/dell/dell-uart-backlight.c
-index 50002ef13d5d..8f868f845350 100644
---- a/drivers/platform/x86/dell/dell-uart-backlight.c
-+++ b/drivers/platform/x86/dell/dell-uart-backlight.c
-@@ -325,7 +325,7 @@ static int dell_uart_bl_serdev_probe(struct serdev_device *serdev)
- 	return PTR_ERR_OR_ZERO(dell_bl->bl);
- }
- 
--struct serdev_device_driver dell_uart_bl_serdev_driver = {
-+static struct serdev_device_driver dell_uart_bl_serdev_driver = {
- 	.probe = dell_uart_bl_serdev_probe,
- 	.driver = {
- 		.name = KBUILD_MODNAME,
+Patch 4 by Amir extends the multi-port LAG support.
+
+Patches 5-6 by Leon enhance IPsec matching logic.
+
+Regards,
+Tariq
+
+V2:
+- Added Reviewed-by tags.
+- Addressed comments on patch #3 (Jakub).
+
+Amir Tzin (1):
+  net/mlx5: Lag, Enable Multiport E-Switch offloads on 8 ports LAG
+
+Leon Romanovsky (2):
+  net/mlx5e: Separate address related variables to be in struct
+  net/mlx5e: Properly match IPsec subnet addresses
+
+Shahar Shitrit (3):
+  net/mlx5: Relocate function declarations from port.h to mlx5_core.h
+  net/mlx5: Refactor link speed handling with mlx5_link_info struct
+  net/mlx5e: Enable lanes configuration when auto-negotiation is off
+
+ .../net/ethernet/mellanox/mlx5/core/en/port.c |   9 +-
+ .../mellanox/mlx5/core/en_accel/ipsec.c       |  81 +++++++--
+ .../mellanox/mlx5/core/en_accel/ipsec.h       |  35 ++--
+ .../mellanox/mlx5/core/en_accel/ipsec_fs.c    |  95 +++++-----
+ .../ethernet/mellanox/mlx5/core/en_ethtool.c  |  47 ++---
+ .../ethernet/mellanox/mlx5/core/lag/mpesw.c   |   4 -
+ .../ethernet/mellanox/mlx5/core/mlx5_core.h   |  92 ++++++++++
+ .../net/ethernet/mellanox/mlx5/core/port.c    | 168 ++++++++----------
+ include/linux/mlx5/port.h                     |  85 +--------
+ 9 files changed, 342 insertions(+), 274 deletions(-)
+
+
+base-commit: 05ec5c085eb7ae044d49e04a3cff194a0b2a3251
 -- 
-2.39.5
+2.45.0
 
