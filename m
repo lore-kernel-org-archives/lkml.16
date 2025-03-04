@@ -1,178 +1,93 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5566925F793
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 19:55:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F896252915;
+	Tue,  4 Mar 2025 19:56:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741118148; cv=none; b=GZ8UkqLVShVUNcqJFI7bEzNny4reJLhD2L+pMSsToBAsF3c7fe9/gw91qEpSJJHFsQoQ6IWqwmDDfU1Vzpq34e5lbGvEyiLoJLKahw/eI3EFOVP0LqOCE/8vglvJaf0AxsTijasI9DZy0MrwHAVdI6usaEV3h9PuJ66V1QP/BAU=
+	t=1741118187; cv=none; b=nqtL2SEdR0MI9/hn6NaQuyfuvDgh+tbWJ6iNeG/xUJH/kASQqsaMk/GP25p83zeGyj8L3h4C/6Eg/b/nWs7NIPqBTHwNVQJJwEKAyg3EsUaPAeMWdibIimxny/eqq92+fpn5fQLH/bYUeQvvAm3A6Y6gBeQYcRk5RjvMdgf0XzY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741118148; c=relaxed/simple;
-	bh=7DDZL7LAromsNlnP26LRIbH95SSy/NcW7GywAci+0l8=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=EnB1231pP+DVpbJ/RXqmB15ry5Th8N1QqWOI/kGzz7GEiHccXksAruGG4OVJvQRg6+i4fV5wH5BZtBiWdghrmkMrZu6LV+slmnIwhYsPJkw6yIUDQ0EAxNMpcVjJ42jC9gM0w/ocabxYwV618t3Lg44M+czRKK2srQLVFWzxzCU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=isQeERTm; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1741118187; c=relaxed/simple;
+	bh=I/Z/NqwW9Tm8BBSL1NLMaIkQepTGpxleKiOj1RmEuk0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gLY4asZc6u9KJr1Ib+L/5uNC4x5IBbicVQHYV0WLE2j7zL6iPXxpY5sSxUoJJdttfwRwr31qkGyOWeiw7uH2xD4YbSSklGUk0m67zifvxS6k2rouyqqwZL2epoH+N1HwRZ63gYRk9vF4egR69UWpqtmlpJNYDZZ9wYKslbqEr8o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sTVypOhV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="isQeERTm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741118145; x=1772654145;
-  h=date:from:to:cc:subject:message-id;
-  bh=7DDZL7LAromsNlnP26LRIbH95SSy/NcW7GywAci+0l8=;
-  b=isQeERTmD43nfjTfvLIxDANFWXwkQiEL9ChgqTodplB/6qRKnaZnYiaN
-   oyZHIkkAoAa9kyeQCs2y5GtkhzqT4fSc3ROKPndaFfzDuF3Pifz9Oeo+6
-   +86Bg7c9yOVtyZ738+h2/saSUFE+Jaw7/ltd7i4Z80Eu1DMrRz2PfVH40
-   WTVnlD51mDJ+f7LKa4lfAiwoYV087j7Ds3e0MOSEgy2dheRSstxXCBuIr
-   J0NX78dMt4rc6uIaKq6ZmWiirkWiweYJs/d9XmVmxy3Te93GQ2vOxns3W
-   /PzF2YD0p/f91BetFWHtXDBaRVlxAHv/Z+B6Zulp8jsZJ0XLCBtTmjAnW
-   g==;
-X-CSE-ConnectionGUID: GObgKFlcQmK25750/BKnzA==
-X-CSE-MsgGUID: SBj4A1DJQ2a5/RFq8mYb/Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11363"; a="53456317"
-X-IronPort-AV: E=Sophos;i="6.14,220,1736841600"; 
-   d="scan'208";a="53456317"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2025 11:55:44 -0800
-X-CSE-ConnectionGUID: +WP0kluNTny/ayFJ4D8Lpg==
-X-CSE-MsgGUID: 6MAzRThCS0utyV24qbMWlQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="118369351"
-Received: from lkp-server02.sh.intel.com (HELO 76cde6cc1f07) ([10.239.97.151])
-  by orviesa010.jf.intel.com with ESMTP; 04 Mar 2025 11:55:43 -0800
-Received: from kbuild by 76cde6cc1f07 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tpYMe-000KDj-25;
-	Tue, 04 Mar 2025 19:55:40 +0000
-Date: Wed, 05 Mar 2025 03:55:09 +0800
-From: kernel test robot <lkp@intel.com>
-To: "x86-ml" <x86@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: [tip:locking/core] BUILD SUCCESS
- 21a889e8a41ebc45deca87e73b825064a7ccc3c5
-Message-ID: <202503050303.crvJp4va-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sTVypOhV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBA95C4CEE5;
+	Tue,  4 Mar 2025 19:56:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741118187;
+	bh=I/Z/NqwW9Tm8BBSL1NLMaIkQepTGpxleKiOj1RmEuk0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=sTVypOhVGjvM43D/ALfau9C5zjbZ3/S7fsJXMVKj2GsLssh0iIfFEy0XDyDRe+uX7
+	 zbfBdTlEed6R8C6ApwLSdOXNJwpH7JebjrT0YCSyeaBGSVBz79rKT98s976kCLF8mh
+	 U4kLRLUobZ31HdqvZNCRt1md5UsujsJg4cwwWJcHyedYKHWSW3oUk03sd6yjaZ/xmN
+	 tKaHE2m0WAQlnjT2WNIxa55Wk3N/A2ep9bwtJ1JUGnEU5Z3A5R4X5Sona467mfOveu
+	 +mAmX0ckk1sgfl1OUnLnViP9YJECJU+CjiONdxnc5BSlUlhNf/OutqJsblQ3Cu+7/k
+	 MEvOO7BrsT2Og==
+Date: Tue, 4 Mar 2025 11:56:25 -0800
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-tip-commits@vger.kernel.org,
+	"Peter Zijlstra (Intel)" <peterz@infradead.org>,
+	Brian Gerst <brgerst@gmail.com>, "H. Peter Anvin" <hpa@zytor.com>,
+	x86@kernel.org
+Subject: Re: [tip: x86/asm] x86/asm: Make ASM_CALL_CONSTRAINT conditional on
+ frame pointers
+Message-ID: <20250304195625.qcxvtv63fqqk6fx4@jpoimboe>
+References: <174099976188.10177.7153571701278544000.tip-bot2@tip-bot2>
+ <CAHk-=wjSwqJhvzAT-=AY88+7QmN=U0A121cGr286ZpuNdC+yaw@mail.gmail.com>
+ <Z8a66_DbMbP-V5mi@gmail.com>
+ <CAHk-=wjRsMfndBGLZzkq7DOU7JOVZLsUaXnfjFvOcEw_Kd6h5g@mail.gmail.com>
+ <CAHk-=wjc8jnsOkLq1YfmM0eQqceyTunLEcfpXcm1EBhCDaLLgg@mail.gmail.com>
+ <20250304182132.fcn62i4ry5ndli7l@jpoimboe>
+ <CAHk-=wjgGD1p2bOCOeTjikNKmyDJ9zH8Fxiv5A+ts3JYacD3fA@mail.gmail.com>
+ <CAHk-=whqPZjtH6VwLT3vL5-b3ONL2F83yEzxMMco+uFXe8CdKg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAHk-=whqPZjtH6VwLT3vL5-b3ONL2F83yEzxMMco+uFXe8CdKg@mail.gmail.com>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git locking/core
-branch HEAD: 21a889e8a41ebc45deca87e73b825064a7ccc3c5  Merge tag 'lockdep-for-tip.2025.02.25' of git://git.kernel.org/pub/scm/linux/kernel/git/boqun/linux into locking/core
+On Tue, Mar 04, 2025 at 08:57:13AM -1000, Linus Torvalds wrote:
+> On Tue, 4 Mar 2025 at 08:48, Linus Torvalds
+> <torvalds@linux-foundation.org> wrote:
+> >
+> > Random ugly code, untested, special versions for different config options.
+> >
+> > __builtin_frame_address() is much more complex than just the old "use
+> > a register variable".
+> 
+> On the gcc bugzilla that hpa opened, I also note that Pinski said that
+> the __builtin_frame_address() is likely to just work by accident.
+> 
+> Exactly like the %rsp case.
 
-elapsed time: 1451m
+Right, so they're equally horrible in that sense.
 
-configs tested: 101
-configs skipped: 4
+> I'd be much more inclined to look for whether marking the asm
+> 'volatile' would be a more reliable model. Or adding a memory clobber
+> or similar.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Believe me, I've tried those and they don't work.
 
-tested configs:
-alpha                             allnoconfig    gcc-14.2.0
-alpha                            allyesconfig    gcc-14.2.0
-arc                              allmodconfig    gcc-13.2.0
-arc                               allnoconfig    gcc-13.2.0
-arc                              allyesconfig    gcc-13.2.0
-arc                   randconfig-001-20250304    gcc-13.2.0
-arc                   randconfig-002-20250304    gcc-13.2.0
-arm                              allmodconfig    gcc-14.2.0
-arm                               allnoconfig    clang-17
-arm                              allyesconfig    gcc-14.2.0
-arm                   randconfig-001-20250304    clang-21
-arm                   randconfig-002-20250304    gcc-14.2.0
-arm                   randconfig-003-20250304    clang-21
-arm                   randconfig-004-20250304    gcc-14.2.0
-arm64                            allmodconfig    clang-18
-arm64                             allnoconfig    gcc-14.2.0
-arm64                 randconfig-001-20250304    clang-21
-arm64                 randconfig-002-20250304    gcc-14.2.0
-arm64                 randconfig-003-20250304    gcc-14.2.0
-arm64                 randconfig-004-20250304    gcc-14.2.0
-csky                              allnoconfig    gcc-14.2.0
-csky                  randconfig-001-20250304    gcc-14.2.0
-csky                  randconfig-002-20250304    gcc-14.2.0
-hexagon                          allmodconfig    clang-21
-hexagon                           allnoconfig    clang-21
-hexagon                          allyesconfig    clang-18
-hexagon               randconfig-001-20250304    clang-21
-hexagon               randconfig-002-20250304    clang-21
-i386                             allmodconfig    gcc-12
-i386                              allnoconfig    gcc-12
-i386                             allyesconfig    gcc-12
-i386        buildonly-randconfig-001-20250304    clang-19
-i386        buildonly-randconfig-002-20250304    clang-19
-i386        buildonly-randconfig-003-20250304    gcc-12
-i386        buildonly-randconfig-004-20250304    gcc-11
-i386        buildonly-randconfig-005-20250304    gcc-11
-i386        buildonly-randconfig-006-20250304    gcc-12
-i386                                defconfig    clang-19
-loongarch                         allnoconfig    gcc-14.2.0
-loongarch             randconfig-001-20250304    gcc-14.2.0
-loongarch             randconfig-002-20250304    gcc-14.2.0
-m68k                             allmodconfig    gcc-14.2.0
-m68k                              allnoconfig    gcc-14.2.0
-m68k                             allyesconfig    gcc-14.2.0
-microblaze                        allnoconfig    gcc-14.2.0
-mips                              allnoconfig    gcc-14.2.0
-nios2                             allnoconfig    gcc-14.2.0
-nios2                 randconfig-001-20250304    gcc-14.2.0
-nios2                 randconfig-002-20250304    gcc-14.2.0
-openrisc                          allnoconfig    gcc-14.2.0
-openrisc                         allyesconfig    gcc-14.2.0
-openrisc                            defconfig    gcc-14.2.0
-parisc                           allmodconfig    gcc-14.2.0
-parisc                            allnoconfig    gcc-14.2.0
-parisc                           allyesconfig    gcc-14.2.0
-parisc                              defconfig    gcc-14.2.0
-parisc                randconfig-001-20250304    gcc-14.2.0
-parisc                randconfig-002-20250304    gcc-14.2.0
-powerpc                           allnoconfig    gcc-14.2.0
-powerpc               randconfig-001-20250304    gcc-14.2.0
-powerpc               randconfig-002-20250304    gcc-14.2.0
-powerpc               randconfig-003-20250304    clang-21
-powerpc64             randconfig-001-20250304    gcc-14.2.0
-powerpc64             randconfig-002-20250304    gcc-14.2.0
-powerpc64             randconfig-003-20250304    clang-21
-riscv                             allnoconfig    gcc-14.2.0
-riscv                 randconfig-001-20250304    gcc-14.2.0
-riscv                 randconfig-002-20250304    gcc-14.2.0
-s390                             allmodconfig    clang-19
-s390                              allnoconfig    clang-15
-s390                             allyesconfig    gcc-14.2.0
-s390                  randconfig-001-20250304    clang-15
-s390                  randconfig-002-20250304    clang-15
-sh                               allmodconfig    gcc-14.2.0
-sh                                allnoconfig    gcc-14.2.0
-sh                               allyesconfig    gcc-14.2.0
-sh                    randconfig-001-20250304    gcc-14.2.0
-sh                    randconfig-002-20250304    gcc-14.2.0
-sparc                            allmodconfig    gcc-14.2.0
-sparc                             allnoconfig    gcc-14.2.0
-sparc                 randconfig-001-20250304    gcc-14.2.0
-sparc                 randconfig-002-20250304    gcc-14.2.0
-sparc64               randconfig-001-20250304    gcc-14.2.0
-sparc64               randconfig-002-20250304    gcc-14.2.0
-um                               allmodconfig    clang-21
-um                                allnoconfig    clang-18
-um                               allyesconfig    gcc-12
-um                    randconfig-001-20250304    gcc-12
-um                    randconfig-002-20250304    gcc-12
-x86_64                            allnoconfig    clang-19
-x86_64                           allyesconfig    clang-19
-x86_64      buildonly-randconfig-001-20250304    clang-19
-x86_64      buildonly-randconfig-002-20250304    gcc-12
-x86_64      buildonly-randconfig-003-20250304    gcc-12
-x86_64      buildonly-randconfig-004-20250304    gcc-12
-x86_64      buildonly-randconfig-005-20250304    gcc-12
-x86_64      buildonly-randconfig-006-20250304    gcc-12
-x86_64                              defconfig    gcc-11
-xtensa                            allnoconfig    gcc-14.2.0
-xtensa                randconfig-001-20250304    gcc-14.2.0
-xtensa                randconfig-002-20250304    gcc-14.2.0
+> Those kinds of solutions would also hopefully not need different
+> sequences for different config options. Because
+> __builtin_frame_address() really *is* fundamentally fragile, and the
+> fact that frame pointers change behavior is a pretty big symptom of
+> that fragility.
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+While that may be theoretically true, the reality is that it produces
+better code for Clang.
+
+If the main argument is that it needs more testing, then sure, let's go
+test more compiler versions.
+
+-- 
+Josh
