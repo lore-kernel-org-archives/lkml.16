@@ -1,103 +1,211 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A8D4202F96
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 12:52:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 33F961FF605;
+	Tue,  4 Mar 2025 12:53:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741092775; cv=none; b=LF/OiMConbRt2Ytqz36s8gMXgqR0uyj1awAbEHc6Do2vAktLZnSwFRAdXsK8gHs+l4MJ7XzxJ+WnVvRsW1O0OMWYHtrxXT7xZ7mPizLW30qGlYVX1a166rx7mcG0VzdwvGXfF+uoSVlxvE+ONaykzik71wwH4BLZ5/FSbsLysNw=
+	t=1741092807; cv=none; b=eFuk/PTEBDDQmHC++qMETrtFKcDFgx9GB3AEq9ZiWbwyoDpSk6+kfEzzsRcDgK6r5Ot6Irt2vcSN6K0AwPtrrSRHHpfPlexvOF+LSaJ3AK+InvaXqdayHeOJUVyPJCjK4TcaqF4aT/qQbJKthIS9ZifOA1U8NkyjrGu2TvjuIoc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741092775; c=relaxed/simple;
-	bh=SJXxPUs13IRqlByKgT0V2/LliPxpQNBHnmyeRj7UDLs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GcNPm4Zh9b1qz30s7imGEmhDgZUZ+zjCRGsFqlf8Q5TpOcwwicqIVHg1nSniWgv3duve+GZYKFEornXOClhsPGABy6zXUmzXF12B5IkYWiPcI3K+ROsVPRInqHKwHrXZueo0l7elx4F/FGA3YeWDIK8WAF2sNM+9es728PkrnXk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pZTVjlAI; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pZTVjlAI"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-43ba8a87643so55015e9.0
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Mar 2025 04:52:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1741092772; x=1741697572; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ORxBw0PzcDq8GlEftap7G0yXu9YcrPKoI2IIyzWUg2w=;
-        b=pZTVjlAI064MEOQoO2H5DgpHKBN6Ye5VqGmZlBg3dYgNm++XMWRZUzgMC0WUbNOUOq
-         hZV1evWYACDCG8gFA36trf8nDqISxj2Lm5ztqt6r3LUnULX2dEu91FcoehcX2eDO1giT
-         gIYoEOS+kpK4O9/3EeG6iupncwghWpKoo+ElniiMrRHTn9Pyaf9wAUwPRj4zxZfQUsCx
-         qP/OZ6caFlkYJy0Ommxqgjz32+LaNmaKH7qQDbVpL4CAXAxpKCMfHSBnk1tTJHeCScs1
-         iNnkL3I18vP4lI/8Z/VRzVxZxrxJK8T5cBHWcTXkS38piqa4F9vZz6rq3MwuuWmJLSRl
-         2e3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741092772; x=1741697572;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ORxBw0PzcDq8GlEftap7G0yXu9YcrPKoI2IIyzWUg2w=;
-        b=MJX4vTcK+jEBIQO62secuKrRYQjIoqGcCDLM/P2XvURveTf3SJ15QUfz8LH67NrU8E
-         EYYI2DLtoOiEKFs0uxYBlyNwu1c3Qn6QNg6HbASBhX5o4nV32z7kVjaAeYeNMb5AxSUF
-         V8YpfYhJaaol4Jv1jHDxwVBBb/pHGy5FYxbqbC8K3/69PnPAoUuCgdJoDwp7n4Z/hb3n
-         ETAoMn+ITVMOTJKyYAqaIe9byHJAligFQ1DUTssqHAGCIcrBoNZLx6XRxCYQQkYSwkUw
-         N0/KTdfc2zmLWO1Ne4szdDemuvjYN7DEyi58u1C8Ebu494TRQi/8ViuXdGtIpHmU7DPO
-         unFA==
-X-Forwarded-Encrypted: i=1; AJvYcCUk3TcfmrsEkxQU3Vd2GovMurSJB+uIw+LdFmHa3SGm1oXlllLSTzifJWuuJuAy1oMYQE6rJaYUHLrqvAk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy1s5KS3lny1u3Wo/YAIWHrIiv42cd7xdVCI4Hxb0+ruNwNrDfQ
-	RwFoP5xQb6cUNe5srEIy4cB8bWOQVOabPhNjConFblvS7jyl/CTkbWTELdephS1i4wYutFt/5kV
-	MBL8O
-X-Gm-Gg: ASbGncuqONc1jVnvZWOo1eX70NQX6+OwrOZ1oOeK7xiLGzcTLsFyZ3QAiL/LNTrMyWZ
-	pD+IZ/YHXeDkf9hfrPkm9hLG8R0ORUsN4Bu0h5dZh9pSMvGS0Ug14wJ1DXUsvAeCXMwCW9htOLc
-	YhYzyE/LHXRWyr3+uQOBERvLzDU3tBToZhdukVvNLyjuD/QEgMNreuFyHOH2KPyug88Zms2Lunn
-	d+D6wxrUUpCNMUWLDUCTORQY3J4Fhg4WbVO9mx9DKq7sd0MzhbwBahMKHDecUFYIQBsFVHZl8V4
-	FqlpuSkkXhKvKC6/CEEcx8hEnzj/3OkgB2V/Bjf/ZcK1IZ0Iv//lyaxHiPSo1t/WSW7I/snkf6N
-	cy+f0
-X-Google-Smtp-Source: AGHT+IHmOuSlJRLEt9nfeW0/RxV6Q5K3gZHdZus2MWdEAqPnJ+xAmtrsdSBktkrjD4il5L0UWkyemQ==
-X-Received: by 2002:a05:600c:4791:b0:43b:bf3f:9664 with SMTP id 5b1f17b1804b1-43bcbe28d25mr958045e9.5.1741092771539;
-        Tue, 04 Mar 2025 04:52:51 -0800 (PST)
-Received: from google.com (44.232.78.34.bc.googleusercontent.com. [34.78.232.44])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-390e47b6ce3sm17286057f8f.43.2025.03.04.04.52.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Mar 2025 04:52:51 -0800 (PST)
-Date: Tue, 4 Mar 2025 12:52:47 +0000
-From: Brendan Jackman <jackmanb@google.com>
-To: Dave Hansen <dave.hansen@intel.com>
-Cc: Borislav Petkov <bp@alien8.de>, Rik van Riel <riel@surriel.com>,
-	x86@kernel.org, linux-kernel@vger.kernel.org, peterz@infradead.org,
-	dave.hansen@linux.intel.com, zhengqi.arch@bytedance.com,
-	nadav.amit@gmail.com, thomas.lendacky@amd.com, kernel-team@meta.com,
-	linux-mm@kvack.org, akpm@linux-foundation.org, jannh@google.com,
-	mhklinux@outlook.com, andrew.cooper3@citrix.com,
-	Manali.Shukla@amd.com, mingo@kernel.org
-Subject: Re: [PATCH v14 11/13] x86/mm: do targeted broadcast flushing from
- tlbbatch code
-Message-ID: <Z8b3n85dpkz_-2ci@google.com>
-References: <20250226030129.530345-1-riel@surriel.com>
- <20250226030129.530345-12-riel@surriel.com>
- <20250303114618.GBZ8WWihMDjf-oy8P0@fat_crate.local>
- <7e1ca8c7-6f3e-44dc-9dd8-bd273a03a83e@intel.com>
+	s=arc-20240116; t=1741092807; c=relaxed/simple;
+	bh=k7rFah0C8AqcVxALjvT6enFaV3UT2iSy6VtvbL4WNsc=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=Fi3nPBo+JGo/EjPymAJi3p4P9s+lUZXcTOakinuQVpqIpNUdI9T6KExENYM26zoNrMlyqHax2YpDkdOeM4etS6xPIzv5fHahk0SVLHZHsIRj4K8Un0R4a+yIw4Cp2WXeTfIlbjI8BAxsUU9PQ0hLArbFLOGRaf5dt560fJq4ZA0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-3c9ff7000001d7ae-95-67c6f7bab570
+Message-ID: <b049e0d8-a9d2-456f-aa97-148f4a6d8071@sk.com>
+Date: Tue, 4 Mar 2025 21:53:13 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7e1ca8c7-6f3e-44dc-9dd8-bd273a03a83e@intel.com>
+User-Agent: Mozilla Thunderbird
+Cc: kernel_team@skhynix.com, gourry@gourry.net, harry.yoo@oracle.com,
+ ying.huang@linux.alibaba.com, gregkh@linuxfoundation.org, rakie.kim@sk.com,
+ akpm@linux-foundation.org, rafael@kernel.org, lenb@kernel.org,
+ dan.j.williams@intel.com, Jonathan.Cameron@huawei.com, dave.jiang@intel.com,
+ horen.chuang@linux.dev, hannes@cmpxchg.org, linux-kernel@vger.kernel.org,
+ linux-acpi@vger.kernel.org, linux-mm@kvack.org, kernel-team@meta.com,
+ yunjeong.mun@sk.com
+Subject: Re: [PATCH 2/2 v6] mm/mempolicy: Don't create weight sysfs for
+ memoryless nodes
+To: Joshua Hahn <joshua.hahnjy@gmail.com>
+References: <20250303215638.317539-1-joshua.hahnjy@gmail.com>
+Content-Language: ko
+From: Honggyu Kim <honggyu.kim@sk.com>
+In-Reply-To: <20250303215638.317539-1-joshua.hahnjy@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrNIsWRmVeSWpSXmKPExsXC9ZZnoe6u78fSDTYcFrGYs34Nm8X0qRcY
+	LU7cbGSz+Hn3OLtF8+L1bBarN/la3F/2jMXidv85VotVC6+xWRzfOo/dYt9FoIadD9+yWSzf
+	189ocXnXHDaLe2v+s1rM/TKV2WL1mgwHQY/Db94ze+ycdZfdo7vtMrtHy5G3rB6L97xk8ti0
+	qpPNY9OnSeweJ2b8ZvHY+dDSY2HDVGaP/XPXsHucu1jh8fHpLRaPz5vkAviiuGxSUnMyy1KL
+	9O0SuDK+HT3HVLBRo+Jvzz6WBsblCl2MnBwSAiYSGx+sZ4Gx/9z5yQxi8wpYSsy+f58NxGYR
+	UJF4tu8EC0RcUOLkzCdgtqiAvMT9WzPYuxi5OJgFzjJLnJ67hwkkISwQJbHz1V8wW0RAU+JE
+	6ySwoUICthLzHr4As5kFRCRmd7aB2WwCahJXXk4Cqufg4BSwk9jwVxGixEyia2sXI4QtL9G8
+	dTYzyC4JgUvsEqdWTGOCOFpS4uCKGywTGAVnIblvFpIVs5DMmoVk1gJGllWMQpl5ZbmJmTkm
+	ehmVeZkVesn5uZsYgVG8rPZP9A7GTxeCDzEKcDAq8fCeWHA0XYg1say4MvcQowQHs5IIr+nn
+	Y+lCvCmJlVWpRfnxRaU5qcWHGKU5WJTEeY2+lacICaQnlqRmp6YWpBbBZJk4OKUaGCeopwXX
+	bH79cSlnVt7M5sw9s/4qLNmn+Dhi1ppFSgVam8XnTHqkzf6rQ2GlGdduTfcpVaxT6wwfvmq7
+	W3Dn1VOx1MBtv33y3v9881cwa+O3eM09d/3b9uq/WOIVxfTg1ZzfTiKRa62Z7s+dJnn5Piv/
+	wyalLPNNLvY8JSITXqkwd05TzPNY812JpTgj0VCLuag4EQC5tL5S3gIAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrPIsWRmVeSWpSXmKPExsXCNUNLT3fX92PpBmsLLOasX8NmMX3qBUaL
+	Ezcb2Sx+3j3ObtG8eD2bxepNvhb3lz1jsbjdf47VYtXCa2wWx7fOY7fYdxGo4fDck6wWOx++
+	ZbNYvq+f0eLyrjlsFvfW/Ge1mPtlKrPFoWvPWS1Wr8mw+L1tBZuDiMfhN++ZPXbOusvu0d12
+	md2j5chbVo/Fe14yeWxa1cnmsenTJHaPEzN+s3jsfGjpsbBhKrPH/rlr2D3OXazw+Pj0FovH
+	t9seHotffGDy+LxJLkAgissmJTUnsyy1SN8ugSvj29FzTAUbNSr+9uxjaWBcrtDFyMkhIWAi
+	8efOT2YQm1fAUmL2/ftsIDaLgIrEs30nWCDighInZz4Bs0UF5CXu35rB3sXIxcEscJZZ4vTc
+	PUwgCWGBKImdr/6C2SICmhInWieBDRUSsJWY9/AFmM0sICIxu7MNzGYTUJO48nISUD0HB6eA
+	ncSGv4oQJWYSXVu7GCFseYnmrbOZJzDyzUJyxiwkk2YhaZmFpGUBI8sqRpHMvLLcxMwcU73i
+	7IzKvMwKveT83E2MwGhdVvtn4g7GL5fdDzEKcDAq8fAa3D2WLsSaWFZcmXuIUYKDWUmE1/Qz
+	UIg3JbGyKrUoP76oNCe1+BCjNAeLkjivV3hqgpBAemJJanZqakFqEUyWiYNTqoGRW2eWgGO8
+	/J7yRfkuK84J5Ot+Krl+bRXDo2eiAqKSXl11RSbx15cpFMaxLaxj/q64/Sv/83WfP7oe/aN/
+	OFzeTu+ditqp9rfvwxdcvsc/8aPyjNDdbk9sdzlrJZZfq+o70FYlEcJh3uAUZagh5flK8/kM
+	jfP3Xl/8dcFr0TLBl/4tN86LL1JRYinOSDTUYi4qTgQAHB2/vdICAAA=
+X-CFilter-Loop: Reflected
 
-On Mon, Mar 03, 2025 at 01:47:42PM -0800, Dave Hansen wrote:
-> >  static void broadcast_tlb_flush(struct flush_tlb_info *info)
-> >  {
-> >  	bool pmd = info->stride_shift == PMD_SHIFT;
-> > @@ -790,6 +821,8 @@ void switch_mm_irqs_off(struct mm_struct *unused, struct mm_struct *next,
-> >  	if (IS_ENABLED(CONFIG_PROVE_LOCKING))
-> >  		WARN_ON_ONCE(!irqs_disabled());
-> >  
-> > +	tlbsync();
+Hi Joshua,
+
+On 3/4/2025 6:56 AM, Joshua Hahn wrote:
+> On Thu, 27 Feb 2025 12:20:03 +0900 Honggyu Kim <honggyu.kim@sk.com> wrote:
 > 
-> This one is in dire need of comments.
+> Hi Honggyu, thank you for taking time to review my patch, as always!
 
-I have been advocating to move this to a place where it's clearer. I
-also think it needs comments:
+My pleasure!
 
-https://lore.kernel.org/all/CA+i-1C31TrceZiizC_tng_cc-zcvKsfXLAZD_XDftXnp9B2Tdw@mail.gmail.com/
+> I thought I had sent this, but it seems like it was left in my draft
+> without being sent.
+> 
+> I will follow Gregory's advice and we will drop the patch from this series,
+> and send the first patch only (with Yunjeong's changes). Thanks again!
+
+It'd be great if you could add her with the following.
+Co-developed-by: Yunjeong Mun <yunjeong.mun@sk.com>
+
+> 
+>>
+>> On 2/27/2025 11:32 AM, Honggyu Kim wrote:
+>>> Hi Joshua,
+>>>
+>>> On 2/27/2025 6:35 AM, Joshua Hahn wrote:
+>>>> We should never try to allocate memory from a memoryless node. Creating a
+>>>> sysfs knob to control its weighted interleave weight does not make sense,
+>>>> and can be unsafe.
+>>>>
+>>>> Only create weighted interleave weight knobs for nodes with memory.
+>>>>
+>>>> Signed-off-by: Joshua Hahn <joshua.hahnjy@gmail.com>
+>>>> ---
+>>>>    mm/mempolicy.c | 2 +-
+>>>>    1 file changed, 1 insertion(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/mm/mempolicy.c b/mm/mempolicy.c
+>>>> index 4cc04ff8f12c..50cbb7c047fa 100644
+>>>> --- a/mm/mempolicy.c
+>>>> +++ b/mm/mempolicy.c
+>>>> @@ -3721,7 +3721,7 @@ static int add_weighted_interleave_group(struct
+>>>> kobject *root_kobj)
+>>>>            return err;
+>>>>        }
+>>>> -    for_each_node_state(nid, N_POSSIBLE) {
+>>>
+>>> Actually, we're aware of this issue and currently trying to fix this.
+>>> In our system, we've attached 4ch of CXL memory for each socket as
+>>> follows.
+>>>
+>>>           node0             node1
+>>>         +-------+   UPI   +-------+
+>>>         | CPU 0 |-+-----+-| CPU 1 |
+>>>         +-------+         +-------+
+>>>         | DRAM0 |         | DRAM1 |
+>>>         +---+---+         +---+---+
+>>>             |                 |
+>>>         +---+---+         +---+---+
+>>>         | CXL 0 |         | CXL 4 |
+>>>         +---+---+         +---+---+
+>>>         | CXL 1 |         | CXL 5 |
+>>>         +---+---+         +---+---+
+>>>         | CXL 2 |         | CXL 6 |
+>>>         +---+---+         +---+---+
+>>>         | CXL 3 |         | CXL 7 |
+>>>         +---+---+         +---+---+
+>>>           node2             node3
+>>>
+>>> The 4ch of CXL memory are detected as a single NUMA node in each socket,
+>>> but it shows as follows with the current N_POSSIBLE loop.
+>>>
+>>> $ ls /sys/kernel/mm/mempolicy/weighted_interleave/
+>>> node0 node1 node2 node3 node4 node5
+>>> node6 node7 node8 node9 node10 node11
+
+FYI, we used to set node2 and node3 only for weights for CXL memory here
+and ignored node{4-11}.  That sounds silly but it worked.
+
+> 
+> I see. For my education, would you mind explaining how the numbering works
+> here? I am not very familiar with this setup, and not sure how you would
+> figure out what node is which, just by looking at the numbering.
+
+Regarding the numbering, I'm not 100% sure, but I guess there could be a
+logical NUMA node that combines 4ch of CXL memory and 4 nodes for CXL 
+memory so in total 5 nodes per socket.
+
+I don't have much knowledge on this but maybe this is related to PXM
+(Proximity Domain).
+
+> 
+>>>> +    for_each_node_state(nid, N_MEMORY) {
+>>
+>> Thinking it again, we can leave it as a separate patch but add our patch
+>> on top of it.
+> 
+> That sounds good to me.
+> 
+>> The only concern I have is having only N_MEMORY patch hides weight
+>> setting knobs for CXL memory and it makes there is no way to set weight
+>> values to CXL memory in my system.
+> 
+> You can use weighted interleave auto-tuning : -)
+
+Not possible because using N_MEMORY doesn't provide "node" knobs for CXL
+memory at all as follows.
+
+$ ls /sys/kernel/mm/mempolicy/weighted_interleave/
+node0 node1
+
+We need node2 and node3 for CXL memory here.
+
+> In all seriousness, this makes sense. It seems pretty problematic that
+> the knobs aren't created for the CXL channels,
+
+Yeah, it's even worse than the current status.
+
+> and I'm not sure that hiding> it is the correct approach here (it was not my intent, either).
+
+It isn't your problem but we shouldn't hide those nodes until it is
+correctly fixed with hot plugging event handler.
+
+> 
+>> IMHO, this and our patch is better to be submitted together.
+> 
+> That sounds good. We can hold off on this patch then, and just consider
+> the first patch of this series. Thank you for letting me know!
+
+The N_POSSIBLE and N_MEMORY stuffs should had been fixed earlier than
+this work. I will take a few days if we can submit it together.
+
+> 
+> Thank you for always reviewing my patches. Have a great day!
+> Joshua
+
+Thanks for your work and have a great day you too!
+
+Kind regards,
+Honggyu
+
+> 
+> Sent using hkml (https://github.com/sjp38/hackermail)
+> 
+
