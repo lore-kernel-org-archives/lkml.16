@@ -1,109 +1,84 @@
-Received: from esa2.hc1455-7.c3s2.iphmx.com (esa2.hc1455-7.c3s2.iphmx.com [207.54.90.48])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F4B31EB5E9;
-	Tue,  4 Mar 2025 04:35:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.54.90.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1DEE1EB9EB;
+	Tue,  4 Mar 2025 04:35:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741062940; cv=none; b=e9r+yBgQd0Kp2yz1BG3+X9GTLjjG6Dk9HUBQ/1Mwp+Xh7ZeDIcC3Z/kOeY364uLLbMjNHpfY3ws1NWkLRXEEH1T2LGoLRlhOLO8fqmSjiRWgMYDhYeuezMJJ/4p0FVNTTE9F9Xbdbe5ahYivPxOZ9Xo6RlloYDk/PJUVza7GtYI=
+	t=1741062948; cv=none; b=lxihvh09Z8ECZeHLbXGqJuKU+kh9NlBGRT/mMzNy9iF0YjcktHXBrEX7bZMjhW3WrcJyGm7KsGiPpCKtmY7oBzEgmY3l5up1AbeJ3HHaOoFHsP8kr82EmzVUZRSvpQlk+LS1aDhHBMP6ecXuCPGTfGQy6oe5kZDZUN9frisdqFY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741062940; c=relaxed/simple;
-	bh=gYBY0hZtBx51WKtIGPm5uQcaBCRVh+AkWb1F+ZYyODA=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=mE9+swKztZ3SjbvARDyYX3+lXhXlfx2cZ0z+LfibtoyO+zoICBN9VMsmsIZdIv8uiI5qORw622dpIfuOX39hfOfBMvnkX3Cs3UjPARgHg7wgF9j0DeErwTdYpvTC1PYy+qn3wSljxJ4iCKJ9wqzSGGLwZL2GHbJCDxaAcC4u/Rc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=XEh47JHX; arc=none smtp.client-ip=207.54.90.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
+	s=arc-20240116; t=1741062948; c=relaxed/simple;
+	bh=wLKCi+34PCFVopTTjtuTSC8bOYg5d08vbk4yE5BTZW4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PhEMI37joENbY9dtPp1yGrh65X9nUvP2jp/tkUs+ipdUACubDmiCHrNASIuwLyZZDB+g5M5fQ2K3ebHsg9TlN8yVLbPeBc24xnXHLkxsgkd9vCBkZs9SgLG4kecDRbY9Cy+mdwgJ48Jmy2wS68EUBLi/vftz/7byVHGdGWlEF0A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KwlkoO7z; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="XEh47JHX"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj2;
-  t=1741062939; x=1772598939;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=gYBY0hZtBx51WKtIGPm5uQcaBCRVh+AkWb1F+ZYyODA=;
-  b=XEh47JHXWRJ1nDSsHZXJNlbcjeMF6ctRWz8OctU9rmmwFn+HEY/qbaX8
-   0QWWWfnlKWs0SxPJugL8mQm2nWJ+S/vectAY9twSjE2fGk2XYf3zOwC3X
-   DMQVWR8nSrFU6ZpnqdFfxmVFd2//8kT2T289bDxXoWo8oLicNGYfsVbaI
-   zT5Bx9FyfxX+yHIrcauXzxoK2RQGyNa62e/vjptNZ+vR0HloG3yitfaPv
-   9P8E3zH+6zLnjIoD/gjshLcNgjlA/1nxHuIXby3nsw0Z2s4QYnAsXZ5rJ
-   fm8EiJYWQzBHHUm4qoiZsplTVrsBdgkhiSPgC3K7WJq4nnLTmftfrK1Mi
-   Q==;
-X-CSE-ConnectionGUID: fYK0OVvVT/morF69C1S9ig==
-X-CSE-MsgGUID: 04GlfqwwTguLRzxRtnbyNA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11362"; a="191879144"
-X-IronPort-AV: E=Sophos;i="6.13,331,1732546800"; 
-   d="scan'208";a="191879144"
-Received: from unknown (HELO oym-r1.gw.nic.fujitsu.com) ([210.162.30.89])
-  by esa2.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2025 13:34:26 +0900
-Received: from oym-m4.gw.nic.fujitsu.com (oym-nat-oym-m4.gw.nic.fujitsu.com [192.168.87.61])
-	by oym-r1.gw.nic.fujitsu.com (Postfix) with ESMTP id 77A9DD480D;
-	Tue,  4 Mar 2025 13:34:24 +0900 (JST)
-Received: from edo.cn.fujitsu.com (edo.cn.fujitsu.com [10.167.33.5])
-	by oym-m4.gw.nic.fujitsu.com (Postfix) with ESMTP id 38407D4BC8;
-	Tue,  4 Mar 2025 13:34:24 +0900 (JST)
-Received: from iaas-rpma.. (unknown [10.167.135.44])
-	by edo.cn.fujitsu.com (Postfix) with ESMTP id 79C301A0078;
-	Tue,  4 Mar 2025 12:34:22 +0800 (CST)
-From: Li Zhijian <lizhijian@fujitsu.com>
-To: linux-kernel@vger.kernel.org
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	ilpo.jarvinen@linux.intel.com,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Ying Huang <huang.ying.caritas@gmail.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	linux-cxl@vger.kernel.org,
-	Li Zhijian <lizhijian@fujitsu.com>
-Subject: [PATCH] resource: Fix resource leak in get_free_mem_region()
-Date: Tue,  4 Mar 2025 12:34:15 +0800
-Message-Id: <20250304043415.610286-1-lizhijian@fujitsu.com>
-X-Mailer: git-send-email 2.31.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KwlkoO7z"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AFF89C4CEE5;
+	Tue,  4 Mar 2025 04:35:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741062948;
+	bh=wLKCi+34PCFVopTTjtuTSC8bOYg5d08vbk4yE5BTZW4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=KwlkoO7zry3ZDBAUlJf2W0lYRXR/y175Ag6lnunipGNBs2hZNNm3mCtnFDwER7OEO
+	 7B2JuFiDW1pG4blCgsWAyHdFtfedL2ynz37new4yqwYKQHWgvgHOZO/JUb8G6JaVhn
+	 yUt8KsBHVCAXrP9ahKgeJWqK/DFUzfOHB3R1LMNo6EHbYWelCHUcICLbEhv462KTkB
+	 MwNPJ0SypkTCZF41HfOWEPmrQdJNrpYSYxH9350X3q/ihhJTLL2un5rNSEIJafLkGj
+	 MNmLvIl/HOnDdjen2U+cIvDb/g0AAkrjP+f7xNjg8UcsuXn5TNru3ASIlnKma3QxPO
+	 hanYt/hMjZ7uA==
+Date: Mon, 3 Mar 2025 22:35:46 -0600
+From: Bjorn Andersson <andersson@kernel.org>
+To: Viken Dadhaniya <quic_vdadhani@quicinc.com>
+Cc: konradybcio@kernel.org, robh@kernel.org, krzk+dt@kernel.org, 
+	conor+dt@kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, quic_msavaliy@quicinc.com, quic_anupkulk@quicinc.com
+Subject: Re: [PATCH v1] arm64: dts: qcom: sa8775p: Add default pin
+ configurations for QUP SEs
+Message-ID: <keszvik5mrobfkdpgdz5rnl5l7tihgbpyd4en3dflmaflyl7io@d4my7wdrtkyg>
+References: <20250225154136.3052757-1-quic_vdadhani@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250225154136.3052757-1-quic_vdadhani@quicinc.com>
 
-The leak is detected by the kernel memory leak detector (`kmemleak`)
-following a `cxl create-region` failure:
+On Tue, Feb 25, 2025 at 09:11:36PM +0530, Viken Dadhaniya wrote:
+> Default pinctrl configurations for all QUP (Qualcomm Universal Peripheral)
+> Serial Engines (SEs) are missing in the SoC device tree. These
+> configurations are required by client teams when enabling any SEs as I2C,
+> SPI, or Serial protocols.
+> 
+> Add default pin configurations for Serial Engines (SEs) for all supported
+> protocols, including I2C, SPI, and UART, to the sa8775p device tree.  This
+> change facilitates slave device driver clients to enable usecase with
+> minimal modifications.
+> 
+> Additionally, move default pin configurations from target-specific files to
+> the SoC device tree file, as all possible pin configurations are now
+> comprehensively included in the SoC device tree, similar to other SoCs.
+> 
+> Signed-off-by: Viken Dadhaniya <quic_vdadhani@quicinc.com>
+> ---
+>  arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi |  88 --
+>  arch/arm64/boot/dts/qcom/sa8775p.dtsi      | 908 +++++++++++++++++++++
+>  2 files changed, 908 insertions(+), 88 deletions(-)
+> 
+[..]
+> diff --git a/arch/arm64/boot/dts/qcom/sa8775p.dtsi b/arch/arm64/boot/dts/qcom/sa8775p.dtsi
+[..]
+> +			qup_i2c0_default: qup-i2c0-state {
+> +				pins = "gpio20", "gpio21";
+> +				function = "qup0_se0";
+> +				drive-strength = <2>;
+> +				bias-pull-up;
 
- cxl_acpi ACPI0017:00: decoder0.0: created region2
- cxl region2: HPA allocation error (-34) for size:0x0000000100000000 in CXL Window 0 [mem 0xa90000000-0x1a8fffffff flags 0x200]
- kmemleak: 1 new suspected memory leaks (see /sys/kernel/debug/kmemleak)
+Look at other examples, such as sc7280.dtsi, and you will see that
+drive-strength and bias are considered board-specific properties and
+should thereby not go in the soc.dtsi file.
 
-    __kmalloc_cache_noprof+0x28c/0x350
-    get_free_mem_region+0x45/0x380
-    alloc_free_mem_region+0x1d/0x30
-    size_store+0x180/0x290 [cxl_core]
-    kernfs_fop_write_iter+0x13f/0x1e0
-    vfs_write+0x37c/0x540
-    ksys_write+0x68/0xe0
-    do_syscall_64+0x6e/0x190
-    entry_SYSCALL_64_after_hwframe+0x76/0x7e
-
-Fixes: 14b80582c43e ("resource: Introduce alloc_free_mem_region()")
-Signed-off-by: Li Zhijian <lizhijian@fujitsu.com>
----
- kernel/resource.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/kernel/resource.c b/kernel/resource.c
-index 12004452d999..aa0b1da143eb 100644
---- a/kernel/resource.c
-+++ b/kernel/resource.c
-@@ -2000,6 +2000,8 @@ get_free_mem_region(struct device *dev, struct resource *base,
- 		devres_free(dr);
- 	} else if (dev)
- 		devm_release_action(dev, remove_free_mem_region, res);
-+	else
-+		free_resource(res);
- 
- 	return ERR_PTR(-ERANGE);
- }
--- 
-2.47.0
-
+Thanks,
+Bjorn
