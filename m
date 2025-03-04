@@ -1,46 +1,48 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4FFB18D65F;
-	Tue,  4 Mar 2025 04:09:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A18801F4161;
+	Tue,  4 Mar 2025 04:09:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741061359; cv=none; b=hPSynG6R/TIhR/73XY+oxVt584/oJpnnfvj10rEEUpQ974Yxs7y6otyhr+eYmf3EXB5mAcgpdLRdMno3OBzxuH9JG429GXp1HxKHeSqpYREgKTIMygJunqss8cpVcmu64cnuitoe03N6ocEz1xWt/mZIeREf3ER5heWqPSr+WZU=
+	t=1741061361; cv=none; b=hWkwc+aedh/LeXOFhjUqRH3psVZYKytS5TxomARocvITSDnXWI+pkrcqfw9tcv0iiPZAgPCPLbS0woSz2c+jKWbGd1iDNUIdn4hEkiTBloVJnW6oHomU2nuEe0wPl7K/bvw4N0ilLjoLYlERkXsF+k9OurLtEfZK6yRk7AydYgk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741061359; c=relaxed/simple;
-	bh=Ar3o2+9Hpy2WmpR5PZtdlLrJFBTlnKkLwvleGHEkfDI=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lgujE/Xye4e3WucZYp9qg45SJAHNdwjg/RaMH8CpJwfMDZM6OWyMHTsSeNTLp1YWnB2weRiSoxxWTRh0vhKQlD6CM2/CiIoG4RRdMEPLE3f+szngf5HKodhYsSTj0oXBISf9xFMyDum++gdyvzPZjbX2W6e9Uymwh8xiBibf6CQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KQ37B62Y; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741061361; c=relaxed/simple;
+	bh=bsQPXXCCjGVJZ5dkWrd5NllEN/Zgl7X98JItl6lgNoM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=oBROw72GPZSv86PYBncOxl8ZT2USoV6LZj7cbLwjKHg6SUreTctx5UI95PRcz8+UevKX7GnVkjliVlvaqNoU0Fjn7CJWSY40pAHz84RRIWtKqQFdBupcJrYIyXQJv6khBv1sXnqs5kvMuv1jFl5LiPpu3Rv7lsLpaDbJ7t6NXPk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YmIVy6WF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KQ37B62Y"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1989C4CEE7;
-	Tue,  4 Mar 2025 04:09:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YmIVy6WF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6585BC4CEEA;
+	Tue,  4 Mar 2025 04:09:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741061358;
-	bh=Ar3o2+9Hpy2WmpR5PZtdlLrJFBTlnKkLwvleGHEkfDI=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=KQ37B62Ydm6UrJ/TTwdIhkC6VCbsOOm4eGtu9Mk2bAue1/a7bNV4V86NNOsqwjOd7
-	 3l3OQpA72upyD9p65Z+CqfpwPfZZWMV3APEdp5qPK3hkCLxkkakI/cyOOgVIoOPDxl
-	 MmuE7abtRw8tHnyEqwFXmHGXfcINnT9ahj5XoLZsjwi+44N9NFgD2DX+paljRIwPye
-	 QxL41Zhbvxlv93xVdrvIinzgoSLoKMwCi0yaVu8r98VreXqKtk2RiSWpzWNolL7OhD
-	 TSRrc1+5jaiy6luKs1QTBLhgeIoQETApUfXUF5jjslxGpR9Y9T0pJA+8yeutYRENnk
-	 Zg5dOSAVExwvQ==
+	s=k20201202; t=1741061360;
+	bh=bsQPXXCCjGVJZ5dkWrd5NllEN/Zgl7X98JItl6lgNoM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=YmIVy6WFgt7ldYru/6odnu5DYMAyih6dCZb+f/0qlAChD6FzUlboxB6vfhFQ2yoMA
+	 KX5GEhx7Ok4n5rXbjDLdKvGd1WyWH6/TCjlUQmEBnb8LBIw0wzTb52yKcwvZrvj+QY
+	 d90wa6Fy7L8Xm0h5Q5GyasNF2RIKKxBkm+cSiY3lO9hXJdjbnPTg6R91w7R6rbAJ9U
+	 yN/2dwX5XX4pPQKSAkg53EhVtiXBOmfjkyW+3cS3DKkwIvB+ujf8uFVjlhyn4Y/Q0T
+	 L37QiaJd+6BNKoBDZ75uIchPHUCf6F5kK0HDk5SSzheVAU1QW7GmTX2cFc1gOdVnku
+	 30oqEi83Dg6lQ==
 From: Bjorn Andersson <andersson@kernel.org>
 To: Konrad Dybcio <konradybcio@kernel.org>,
 	Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	Neil Armstrong <neil.armstrong@linaro.org>
+Cc: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
 	linux-arm-msm@vger.kernel.org,
 	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: Re: (subset) [PATCH 1/2] arm64: dts: qcom: sa8775p: Partially revert "arm64: dts: qcom: sa8775p: add QCrypto nodes"
-Date: Mon,  3 Mar 2025 22:09:13 -0600
-Message-ID: <174106135203.690218.17919051354058479651.b4-ty@kernel.org>
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 0/2] dt-bindings: display: qcom,sm8[56]50-mdss: properly document the interconnect paths
+Date: Mon,  3 Mar 2025 22:09:15 -0600
+Message-ID: <174106135204.690218.18053860461752631665.b4-ty@kernel.org>
 X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250128115333.95021-1-krzysztof.kozlowski@linaro.org>
-References: <20250128115333.95021-1-krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20250227-topic-sm8x50-mdss-interconnect-bindings-fix-v5-0-bf6233c6ebe5@linaro.org>
+References: <20250227-topic-sm8x50-mdss-interconnect-bindings-fix-v5-0-bf6233c6ebe5@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,24 +53,24 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
 
-On Tue, 28 Jan 2025 12:53:32 +0100, Krzysztof Kozlowski wrote:
-> Partially revert commit 7ff3da43ef44 ("arm64: dts: qcom: sa8775p: add
-> QCrypto nodes") by dropping the untested QCE device node.  Devicetree
-> bindings test failures were reported on mailing list on 16th of January
-> and after two weeks still no fixes:
+On Thu, 27 Feb 2025 10:00:31 +0100, Neil Armstrong wrote:
+> The mdp1-mem is not supported on the SM8550 & SM8650 SoCs, so properly document
+> the mdp0-mem and cpu-cfg interconnect entries.
 > 
->   sa8775p-ride.dtb: crypto@1dfa000: compatible: 'oneOf' conditional failed, one must be fixed:
->     ...
->     'qcom,sa8775p-qce' is not one of ['qcom,ipq4019-qce', 'qcom,sm8150-qce']
+> This fixes the following errors:
+> display-subsystem@ae00000: interconnects: [[200, 3, 7, 32, 1, 7]] is too short
+>         from schema $id: http://devicetree.org/schemas/display/msm/qcom,sm8650-mdss.yaml#
+> display-subsystem@ae00000: interconnect-names: ['mdp0-mem'] is too short
+>         from schema $id: http://devicetree.org/schemas/display/msm/qcom,sm8650-mdss.yaml#
 > 
 > [...]
 
 Applied, thanks!
 
-[1/2] arm64: dts: qcom: sa8775p: Partially revert "arm64: dts: qcom: sa8775p: add QCrypto nodes"
-      commit: 92979f12a201c54ea94b8b3c9f0737c33bb45e23
-[2/2] arm64: dts: qcom: qcs8300: Partially revert "arm64: dts: qcom: qcs8300: add QCrypto nodes"
-      commit: cdc117c40537c5babfa7f261360d5a98e434d59e
+[1/2] arm64: dts: qcom: sm8550: add missing cpu-cfg interconnect path in the mdss node
+      commit: 327d489d1ecaf16182952f079cc21f04cf83f967
+[2/2] arm64: dts: qcom: sm8650: add missing cpu-cfg interconnect path in the mdss node
+      commit: f22be5c1dd3e12519e3f3b80c14d10b90be2c2fc
 
 Best regards,
 -- 
