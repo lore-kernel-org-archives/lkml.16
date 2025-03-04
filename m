@@ -1,156 +1,99 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E561A481C4
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 09:47:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D7861FC7DF
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 09:48:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741081670; cv=none; b=BRkL7ekiUxNTQfZa+uMC9NXpl3+RslHCpCJUSLcStrWMEBKkqIb19KdhoXCIj+aMrLgfhfK8bYBYpTZubVQEXQ534WpVSaHw9MKqjyalQ9UWUt8iG3WmWR3PuvxsmwYEzp326tZ3y24Ismw49QsrCk6ZWwkhsERQOf0H9TxRylc=
+	t=1741081680; cv=none; b=o2fCII+r4Pf1rwdhAd/vc0w9cV+bAkajRRRj13j0L0K6/x5EnDBCq0Ew7MPq4xHPnEmoe1AWuF6KWHnAix8vZQrPW/pCYcT5IXWJti7eboOb3S35K91vqUPjHvG3dVFmMOGKivKjx/morCXW/ZBYVI4Ib41v5z9eYeKLXvJBJzg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741081670; c=relaxed/simple;
-	bh=jM+khpR6kSrzXPpnRYBzaNBVw13oVxCaP+gD5x4MJis=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bsURHiIbL31qRuvbFqTKdTO/yV09tb7j+AaKq67AFAGGp7fSH8noPcNMI8dGdTKzk2oOJUphCT3uC1f5WvMLDPO6J6aA2IO4UlG+IgDaNpJXle9otDC1dm7qWLBLGdg7Yf6MvTrG9UDSFYT0p0AxbC7Y2hNWE5+s1oochrrWKsE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=IcqVUBiS; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1741081680; c=relaxed/simple;
+	bh=gImyvTcexP/lyuRhXSKmdWAlzArXGEKyRMwPNGsBXew=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cdMVNvWk4Qov6HGu2QzBpzrK/96PONjSeRAz5d6WcudrwKynwYSLrpcTR25Tk2Uq2bAOBFLZAxyBR/Eh1xTM4BW629UuH8nl5Lm4qEKRlerj4w+rlpBUjsu387R7/J54vLSDgTH69iECl6NqBW9VrhPq6qaXpnWsYXGY8nmd0Zg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hdNN2Fnz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IcqVUBiS"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-43690d4605dso34664205e9.0
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Mar 2025 01:47:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741081667; x=1741686467; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=qSm1lg2/FkL1yWeHeKV4bekvslQt2WvmtVqn6o+tUnQ=;
-        b=IcqVUBiSEsldwLum6i7goXFnHY5PQQoIAs7IH1jZYokVylwIVObVHdSZgT8W/0CYle
-         cFti+mk+DD5KnGfDUrhSBDRh0w6JCJ/VOlDvyr4wj51jSD+08/QC7mwpkYtEF9/amLd2
-         1Z5eeFOpW2LzYRTGb6zIRCrCpRjzha/B9mG34c9ORjz0YkDnMTRXTwnZ4xzYDn5hy0kH
-         EEkFp3gQrVi1x7jMHuAuzU+YHN3ibcQH5ChuH6hCQoyunsv8ilRWqJX4nbJ1GaRij/zg
-         /nPhKxqnEbDvIMJPweVfiYSzECCzo08DijOGcQv3I0ePo1ZLqx4KcXF2Lkf4Zc3L/6G+
-         V2lw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741081667; x=1741686467;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qSm1lg2/FkL1yWeHeKV4bekvslQt2WvmtVqn6o+tUnQ=;
-        b=jgEPSgS83SdFsPhpp0c7bjRRjSryTR2jxIuMWApUiZvLa5kpGb5JuRVMEuPl0NbgHV
-         Lg2K6TH9j7DnVcoArSXJrIeDVVi39xlFiaA+9pAsETB8xHOuPm6ufSEstjSBjzeJhnTY
-         IPFFFFvCG6fMhrEWH8kzHH8vJ8/mu3k/zl1FvATuK4AbpBrBIiqdtShyN1pjRyuWPMjJ
-         iIWlmjq5BTYYl176M7Spcl6cir2N2arD8iCvWko26zciLl/F4K0cRz3O3KrzhYOYcdPf
-         KbkRRItQgFsCsg+mf4w4DdQVhMM/FJnE4CUfC+2RQxoCbG3vqNUOFhRa2rEj/wukx9Fu
-         2hfA==
-X-Forwarded-Encrypted: i=1; AJvYcCWBGW8TBD5D4PLGK6keHxakzTI4Yp1Eyoe402q0/7yCe/UPc1CLw8AWkbglrQFokcIPIgqLhRuQkboXNt8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyjtx9nbKLpwTDCEnjWPOStP0fwIWSWDn93qgi8ZQcX7M5j5mGX
-	l6b/TBTTHWlMeG4HB3NWzNRdmDAJ9XSVflDks0Xa+HpIAV8CR5QxH5J6yp9mt5w=
-X-Gm-Gg: ASbGncvu9Gv9WRL9useW46TWj90DTDVqo9t5FwR0FKYR9p4Ee52L63ciTq82wMVPyMG
-	BDOjqhmPfe+EtH5qeM3WIA2yD8cpXtTL5OHwHqZO9/BqzTcv53Vzlak4W7UAr8PE8FEVMFztfBc
-	3zsGCAO4UeVMC60t+07bUIIyd8I7Y2qOaV0jC+Zdbzr2ZQ7cfp2VRt+z8BojcWJ+ud7nVDSNQ7z
-	U6urVTsXohrfIluqBCGmg+kd+PXNZgcI+XuDFEzsHCgTzCyJc/xgpvM4VwBLBO6GE93WCH9V6Vw
-	kihp/M0l66nn6gP1lWYu1aWA5j5vj4u51PfhROknrYqvDGFNfXA2hok+Gih6WV9vvnwnF7QzAGO
-	Ok8/Agkcttg==
-X-Google-Smtp-Source: AGHT+IFDmnK5YYmULhWYfPkCzV4REgmiXkQRXkNfOTnHTpTo4USjUT1kKhF/sQF1HrBw+vy8AZd5Qw==
-X-Received: by 2002:a05:600c:a03:b0:439:9b19:9e2d with SMTP id 5b1f17b1804b1-43ba6702becmr158936035e9.16.1741081667192;
-        Tue, 04 Mar 2025 01:47:47 -0800 (PST)
-Received: from [192.168.0.35] (188-141-3-146.dynamic.upc.ie. [188.141.3.146])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-390e485e13fsm16964961f8f.100.2025.03.04.01.47.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 04 Mar 2025 01:47:46 -0800 (PST)
-Message-ID: <f5c2044e-e78e-4839-9c29-63610ff406e2@linaro.org>
-Date: Tue, 4 Mar 2025 09:47:44 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hdNN2Fnz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F8E3C4CEE5;
+	Tue,  4 Mar 2025 09:47:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741081680;
+	bh=gImyvTcexP/lyuRhXSKmdWAlzArXGEKyRMwPNGsBXew=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=hdNN2FnzsvyeIABCCxwJeiBdVllrUGb7laCdugyYt5y7xuk+2jR42xwl3XS9Ez2Dj
+	 oaYhrn4fw/4YJX56p+vnLw7+0JagxVO9ygOsxRIy/DhxRoQWS+8cQtWcxMd0PWXiuG
+	 pjObbp6d2QKesd5Lqk+f5V00sJkel6n7RQYBTi4LtMxzpYVPBXlRMo9yuIt9RcXFTI
+	 GfWhFMa5JOEQy1yLlBT3LXr1adAW698CfV3bRd4g1qnIkJSNzHn8jfC4wGVZ8niZB5
+	 jtxZ8EPGeCz+x0Vu/Kd4rEg9bH67OGkH02onAEWuOi2uNFGiak1ubgBbOFTCb6cJyl
+	 oKFJDhIWAH05Q==
+Date: Tue, 4 Mar 2025 10:47:54 +0100
+From: Ingo Molnar <mingo@kernel.org>
+To: Brian Gerst <brgerst@gmail.com>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Borislav Petkov <bp@alien8.de>, Ard Biesheuvel <ardb@kernel.org>,
+	Uros Bizjak <ubizjak@gmail.com>,
+	Linus Torvalds <torvalds@linuxfoundation.org>,
+	Andy Lutomirski <luto@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH v3 00/11] Add a percpu subsection for cache hot data
+Message-ID: <Z8bMSr8JrDZtqwK8@gmail.com>
+References: <20250303165246.2175811-1-brgerst@gmail.com>
+ <Z8YTYWs-DeDHal1Q@gmail.com>
+ <CAMzpN2iB4Gv0Fq1pNtk7bpa2z6eYwQGYXT0=p=_wWDBE9Uxa7w@mail.gmail.com>
+ <Z8a-NVJs-pm5W-mG@gmail.com>
+ <CAMzpN2gpHRtOtRuCJF_TKOFbEJ2xkksndCH+MfntfDuZHC0O1w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v14 2/2] arm64: dts: qcom:
- qcs6490-rb3gen2-vision-mezzanine: Add vision mezzanine
-To: Jorge Ramirez <jorge.ramirez@oss.qualcomm.com>,
- Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Vikram Sharma <quic_vikramsa@quicinc.com>, rfoss@kernel.org,
- todor.too@gmail.com, mchehab@kernel.org, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, andersson@kernel.org,
- konradybcio@kernel.org, hverkuil-cisco@xs4all.nl,
- cros-qcom-dts-watchers@chromium.org, catalin.marinas@arm.com,
- will@kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- Konrad Dybcio <konrad.dybcio@linaro.org>
-References: <20250208225143.2868279-1-quic_vikramsa@quicinc.com>
- <20250208225143.2868279-3-quic_vikramsa@quicinc.com>
- <ca8e6569-b466-4f83-83af-38c51891d395@kernel.org> <Z8a7cMmxJuHIhgjo@trex>
- <baae2a56-5299-486f-acf1-14fe13fd2f81@kernel.org> <Z8a/Dk7zjZ7RQT2/@trex>
-Content-Language: en-US
-From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-In-Reply-To: <Z8a/Dk7zjZ7RQT2/@trex>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMzpN2gpHRtOtRuCJF_TKOFbEJ2xkksndCH+MfntfDuZHC0O1w@mail.gmail.com>
 
-On 04/03/2025 08:51, Jorge Ramirez wrote:
-> On 04/03/25 09:40:21, Krzysztof Kozlowski wrote:
->> On 04/03/2025 09:36, Jorge Ramirez wrote:
->>> On 03/03/25 18:13:20, Krzysztof Kozlowski wrote:
->>>> On 08/02/2025 23:51, Vikram Sharma wrote:
->>>>> The Vision Mezzanine for the Qualcomm RB3 Gen 2 ships with an imx577
->>>>> camera sensor. Enable IMX577 on the vision mezzanine.
->>>>>
->>>>> An example media-ctl pipeline for the imx577 is:
->>>>>
->>>>> media-ctl --reset
->>>>> media-ctl -V '"imx577 '17-001a'":0[fmt:SRGGB10/4056x3040 field:none]'
->>>>
->>>> AFAIU, camss does not support SRGGB10, but only SRGGB10P.
->>>>
->>>> Based on tests reported on IRC I think this might not have been tested
->>>> correctly.
->>>
->>> I acquired SRGGB10P (10 bit packed) frames from the camera despite the
->>> pipeline being set to SRGGB10 (16 bit) samples.
->>>
->>> so something does not add up.
->>
->> Then the commands are actually correct, just the camss or media behave
->> here a bit unexpected?
->>
-> 
-> setting the pipeline (CSI) as SRGGB10 (16 bit samples) as per below
-> 
-> media-ctl --reset
-> media-ctl -v -V '"imx577 '19-001a'":0[fmt:SRGGB10/4056x3040 field:none]'
-> media-ctl -V '"msm_csiphy3":0[fmt:SRGGB10/4056x3040]'
-> media-ctl -V '"msm_csid0":0[fmt:SRGGB10/4056x3040]'
-> media-ctl -V '"msm_vfe0_rdi0":0[fmt:SRGGB10/4056x3040]'
-> media-ctl -l '"msm_csiphy3":1->"msm_csid0":0[1]'
-> media-ctl -l '"msm_csid0":1->"msm_vfe0_rdi0":0[1]'
-> 
-> allows to capture SRGGB10P samples (frames-xxxx.bin files contain 10 bit samples for the size)
-> 
->   ==> yavta -B capture-mplane -c -I -n 5 -f SRGGB10P -s 4056x3040 -F /dev/video0
-> 
-> 
-> shouldnt the CSI need to be set to SRGGB10P instead?
-> 
-> 
->> Best regards,
->> Krzysztof
-> 
 
-No an internal media bus format MEDIA_BUS_FMT_THING is used
+* Brian Gerst <brgerst@gmail.com> wrote:
 
-See
+> On Tue, Mar 4, 2025 at 3:47 AM Ingo Molnar <mingo@kernel.org> wrote:
+> >
+> >
+> > * Brian Gerst <brgerst@gmail.com> wrote:
+> >
+> > > >
+> > > > -       PERCPU_SECTION(INTERNODE_CACHE_BYTES)
+> > > > +       PERCPU_SECTION(L1_CACHE_BYTES)
+> > > >         ASSERT(__per_cpu_hot_end - __per_cpu_hot_start <= 64, "percpu cache hot section too large")
+> > > >
+> > > >         RUNTIME_CONST_VARIABLES
+> > > >
+> > >
+> > > That is probably the right call.  The initial percpu section is just
+> > > used by the boot cpu early and as a template for the dynamically
+> > > allocated percpu memory, which should account for the proper
+> > > alignment for NUMA.
+> >
+> > Okay.
+> >
+> > Randconfig testing found another corner case with the attached config:
+> >
+> >     KSYMS   .tmp_vmlinux0.kallsyms.S
+> >     AS      .tmp_vmlinux0.kallsyms.o
+> >     LD      .tmp_vmlinux1
+> >   ld: percpu cache hot section too large
+> >   make[2]: *** [scripts/Makefile.vmlinux:77: vmlinux] Error 1
+> >
+> > (I haven't figured out the root cause yet.)
+> 
+> CONFIG_MPENTIUM4 sets X86_L1_CACHE_SHIFT to 7 (128 bytes).
 
-87889f1b7ea40d2544b49c62092e6ef2792dced7
-5480b0c67f120a6c293cc5eff72fa1d6a74de504
-3c1dfb5a69cf836f513a2a49113ee946a4b9d95d
+Hm, to resolve this I'd go for the easy out of explicitly using '64' as 
+the size limit - like we did it in the C space.
 
-Yavta is specifying a v4l2 pixel format SRGGB10P which then gets 
-translated into a media bus format MEDIA_BUS_FMT_SRGGB10_1X10.
+Thanks,
 
-I'm not sure what the historical reasons for that are, probably good ones.
-
----
-bod
+	Ingo
