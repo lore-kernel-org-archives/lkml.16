@@ -1,91 +1,115 @@
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF44E1F4264;
-	Tue,  4 Mar 2025 06:01:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 344951F3FCB
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 06:03:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741068109; cv=none; b=ZBbgqvtUosaFsxMDqF1Nb6PR2WXrcE5fC3wrbN4wp0WcLQwtnEUPVxHe05zhZgts/unrjG/Z0nCyxE+7P6loUlVFk71bNKs1DpH0SpWNzFVFXIG2YIQ/QouU8jlvNgGYaA7nWqVnnsX6BN2sox4TA/vMSwp9VrTAvi7yfbVT2ng=
+	t=1741068198; cv=none; b=ecl8B6vRU6lNC6IoWGFY9LuhBBpvCsGxSZOFDnBYyY0TyZojsdPAxpvMQsa5L9o86WtvPplGxLsuFgvciK4jLn0UmAkX2h1j7ZkR+WklNYOfl2EJhqqCtcNWsr19IwsIAk3s36pwHir1q/e/AjXSvsov5iQXmfngvrYVHxmhaKU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741068109; c=relaxed/simple;
-	bh=M8f3XUCGhLEqewiDBod1VFbj1G6E8rBSx/l2zcFt65U=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=iEeHfnZQ2w1b/y/MBXXGfpYfA7JRjJ/Qku1WCWDBh7gRkTDv2HqyTrhTywqVL6Bt+/A/fbWAfMPsY3IBdfJMgPlnYoHnrftVElpaMW5zLa8X3bZTU2xVc6H5JipesJS4epMqVjXYnx23Ta35m/+vtRjtMzqaWOHhngzEvmYCct0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GuyKfwRJ; arc=none smtp.client-ip=209.85.208.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741068198; c=relaxed/simple;
+	bh=yzDD33Es1OjfbExLpccU0Xk3cqZvakHg4nxFLrMGGCw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AzTAOBvDaqlCfHU1oqIdPuPdbO1cna71gomQ0tdaew+8GHuPqbMQ8YQFStedYfrseD/KRonPg2tBV0E9Fv+rU5zb5rvBZrkhy6k/alrqd4drTHyaFTRCtpoy9EoUyE/zvbKEQ9hYbO92bIzw9DG4pqZ5D3lURrEJ/RHfbQjLzDk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Dg1QdK/+; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GuyKfwRJ"
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5e51e3274f1so5292176a12.0;
-        Mon, 03 Mar 2025 22:01:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741068106; x=1741672906; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=M8f3XUCGhLEqewiDBod1VFbj1G6E8rBSx/l2zcFt65U=;
-        b=GuyKfwRJ7KjQ/Q8G1yf5LmDiTKgLIzFrQ7S1HoWCc0vZ38TWM1Bdw5tRJSPLR0zyjq
-         Z6PC0vMu5EuB9Rj+ElnehTlGGqnP5xnLUFLzmpJZZiaXisgfjrSItuPCrgrE2Q4nEP5m
-         j+0diUAzZ/k5Gp/ZIJAQozDm3ti89x9klVV07DMbyFdihgPKHzlK3aqW37CBWGbxui68
-         SQktDybDd0/rbswf8ROJ5z2fNcYhjAtlRQA8tNbl5olNLtfN6uFS08dwRCcylWenQfCu
-         i9miSFQxmlBPM8IXOVq4J/omX0agLI9PbW9D0i4KFMb5L/fIF5AuehHoZg2llY5LcZgN
-         UYiQ==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Dg1QdK/+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1741068196;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=nYQ+hp2BxThyEpl72nHuJbwMjHhQjin3JtMynxdNsGU=;
+	b=Dg1QdK/+3d+GieAnPr5xcSqZOxbnysApE4LDYBss2BN/u4rdE+KNhjS3dwyXb2McaruzdW
+	qd/r6MKjeFD0SAjlwYl0IRELROEewAPKmYl8+Mv/YED9B620RowAzMGHCuxDWz0MGovtJP
+	JuteqgaPE8svVy0ew5cGE/QTGtb36jI=
+Received: from mail-pl1-f198.google.com (mail-pl1-f198.google.com
+ [209.85.214.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-354-sb2PPT-UPke5fQEhIU5yiQ-1; Tue, 04 Mar 2025 01:02:55 -0500
+X-MC-Unique: sb2PPT-UPke5fQEhIU5yiQ-1
+X-Mimecast-MFC-AGG-ID: sb2PPT-UPke5fQEhIU5yiQ_1741068174
+Received: by mail-pl1-f198.google.com with SMTP id d9443c01a7336-2234c09241fso155727865ad.2
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Mar 2025 22:02:55 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741068106; x=1741672906;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=M8f3XUCGhLEqewiDBod1VFbj1G6E8rBSx/l2zcFt65U=;
-        b=LhQwfT4ULGKzybO3BX7KuUsd17gRLwMuPMmnA+EMeZrr3X0QpSnpATNFseVKs8ypBJ
-         QW3vcr5UO6dUaR6VyzlEldEpKxty4l9ShdrR1lqGcd/N4HKhKpsi4/bhpXtta54ch7xf
-         JuxWbHHw+FJ14E77Xnbb2ZShQ1Qh94RLltGzkZxXA0R8yWpzc1P2zjX49+InYmMwwcKd
-         XCUfTJhydJR4bkdJDmb7L8+SXrOgfGXqHSilQ7XQrXfccJ0o1uuk1xjUTSaB7c92TT/Y
-         i8iVU4LsiBHT3zOCND7o2gQFYUsqf0j8akMC3UispwDGw62c/uj4NyVsms9xtJY6XOCA
-         V03g==
-X-Forwarded-Encrypted: i=1; AJvYcCUNRDolpAfZU/8HzWD5cuncS1QVdtrNxgPXNhwMY2X9sAH2w7F05zkYbTPqr9k28UQb+DZteLUfgVa+EDg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxwdh/kjq3l1qX5ItSfHx8LYWl47JsTt4Yl8kJsgEClx+9rMUGq
-	r6836wSuovtYpNGSnFCQbshlFJtY42/Tb2SAy/8stxcGifpfDdFBPmKZBJiq/ns/DW+z+A7qXQQ
-	OUph/1KRDm7RQLcumDhcgO0hjGEc=
-X-Gm-Gg: ASbGncuwxSfHemPFtlN7EHFH1D6CfRI/ceTimyHCZobgIO/BtP7wsJHWrckWuSrLYpl
-	Sk1L80utqs03vSpHMUphcAmS0Bxk038IYa/z534yV5C/WmmRRVL4Mc2ka7YtQF5sK4FnD7Zq/CI
-	Ik6vwoqgV9shxlNCdexuigrzH4UA==
-X-Google-Smtp-Source: AGHT+IFmSHDaW+D8y9mLaAEaFXmeW/xzgvtHJ4EobvOHYC2UVdyDaTlljcJs1/wxeyqh/u/uFz0j1ht26OhGEnDZwec=
-X-Received: by 2002:a17:907:1c90:b0:abf:663b:22c2 with SMTP id
- a640c23a62f3a-abf663b273cmr1079907566b.51.1741068106121; Mon, 03 Mar 2025
- 22:01:46 -0800 (PST)
+        d=1e100.net; s=20230601; t=1741068174; x=1741672974;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=nYQ+hp2BxThyEpl72nHuJbwMjHhQjin3JtMynxdNsGU=;
+        b=YEDtTVDcxIcuTJcRL3K8m7pS4TfDFZDxnsEZsn+d/pUaIT0xhi5aXsUdY/8outsukr
+         ZLHbzW/l8DY36sZRvYKDgwet40tENWPjkGW94noEd8B0owIn7HBaMquGmigRLL86ZID/
+         wRKZr5DQblfDMNiu/4pqMjW96YKm/mqoSAAZoN0a5RgICNiJSotmXlolb/3XHE/0oiQG
+         c7SQICLYy5S07+9X+dYpAlR6zryV/MBYgmZEbQY7WmFKsc1bGI4cHmTXslk52nJvPjfP
+         uLPNvsrcV9J8HnXO+FKZeEbVO8mb464t6GnMJlrZ1n/TNYcI+U7fizMpM6fzGL9QmNyW
+         LI2A==
+X-Forwarded-Encrypted: i=1; AJvYcCUeEWRktsei0a5IHJ8iBb5Tu0fsqoqmX6FKwx/zq0n422RO677WfOwX/F+Yq3n0mv/a6AwBwhy1kcYmuA0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwBwo04IV1uKnWobyQKDVcGV/OPpsHxDqV3VRNd4Nuwbg+m6mcq
+	8/8r/kHYXvR198tBQFO/vn+tlA20pE//MxYQOR2AHNlQm3i8tkyyTzgFvN/VoUTnWZ+FEWbt+2h
+	bLcLyP/X7id8g3ymM/V3Iy4sY1dcv0nj67SyIqyY51Z8tyDxTXsK0du2wex74Jg==
+X-Gm-Gg: ASbGnctX8BqJogsI0vJXw+SQQtjShEFSfQi/ZlfG3FZlwNMEwpyRBK0l/iIXZLkuAUd
+	/YLk3xbk3EEK35nwtuRUQaq91TP0DKWLOmLwFFck3vwC1410g+QPDuk8tV/Eo7ikFfhGbh5B1rh
+	rxFnGgErlGW3Q3qVu1saGIDyhHg0A8bWRyyJZute7bSiRqkGlBq0qjAwzjfZoeeFTetbXLmwNTT
+	ovS3fByBATDzgk95IhaSSGNX4a7XnjFqWk/iZ4NyhGdUoA1bQhGy5mSO3oL+7SpBmjXqDkpF4N5
+	YlC+AQHQ8J6DXw8C1g==
+X-Received: by 2002:a17:902:e84a:b0:220:c143:90a0 with SMTP id d9443c01a7336-223690e0257mr268865415ad.24.1741068174603;
+        Mon, 03 Mar 2025 22:02:54 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IF17jp+SvVB8oKouybsWd/JrJXK2VcB5np1hjZzRt0dKWL0IvRPywYjYwGiuuPFEXE57B3yZw==
+X-Received: by 2002:a17:902:e84a:b0:220:c143:90a0 with SMTP id d9443c01a7336-223690e0257mr268864905ad.24.1741068174278;
+        Mon, 03 Mar 2025 22:02:54 -0800 (PST)
+Received: from [192.168.68.55] ([180.233.125.164])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2234fdb5b02sm87962675ad.0.2025.03.03.22.02.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 03 Mar 2025 22:02:53 -0800 (PST)
+Message-ID: <5587ca83-bb19-42ae-8297-676588502e5e@redhat.com>
+Date: Tue, 4 Mar 2025 16:02:45 +1000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250304035447.3138221-1-adamsimonelli@gmail.com> <20250304035447.3138221-2-adamsimonelli@gmail.com>
-In-Reply-To: <20250304035447.3138221-2-adamsimonelli@gmail.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Tue, 4 Mar 2025 08:01:10 +0200
-X-Gm-Features: AQ5f1JqymILfGcNEM4X4di_XTN-xfSkevWbj_Z43am5oV1UXemdjFSPi4H6R-r4
-Message-ID: <CAHp75VdYOWkDj0VTa5H9V7jV=Sr5O4=L-1TN55MJU=ownOAJ1Q@mail.gmail.com>
-Subject: Re: [PATCH v6 1/3] ttynull: Always initialize console index to -1
-To: adamsimonelli@gmail.com
-Cc: linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Jiri Slaby <jirislaby@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Steven Rostedt <rostedt@goodmis.org>, John Ogness <john.ogness@linutronix.de>, 
-	Sergey Senozhatsky <senozhatsky@chromium.org>, Petr Mladek <pmladek@suse.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 29/45] arm64: rme: Allow checking SVE on VM instance
+To: Steven Price <steven.price@arm.com>, kvm@vger.kernel.org,
+ kvmarm@lists.linux.dev
+Cc: Suzuki K Poulose <suzuki.poulose@arm.com>,
+ Catalin Marinas <catalin.marinas@arm.com>, Marc Zyngier <maz@kernel.org>,
+ Will Deacon <will@kernel.org>, James Morse <james.morse@arm.com>,
+ Oliver Upton <oliver.upton@linux.dev>, Zenghui Yu <yuzenghui@huawei.com>,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ Joey Gouly <joey.gouly@arm.com>, Alexandru Elisei
+ <alexandru.elisei@arm.com>, Christoffer Dall <christoffer.dall@arm.com>,
+ Fuad Tabba <tabba@google.com>, linux-coco@lists.linux.dev,
+ Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>,
+ Shanker Donthineni <sdonthineni@nvidia.com>, Alper Gun
+ <alpergun@google.com>, "Aneesh Kumar K . V" <aneesh.kumar@kernel.org>
+References: <20250213161426.102987-1-steven.price@arm.com>
+ <20250213161426.102987-30-steven.price@arm.com>
+Content-Language: en-US
+From: Gavin Shan <gshan@redhat.com>
+In-Reply-To: <20250213161426.102987-30-steven.price@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Mar 4, 2025 at 5:55=E2=80=AFAM <adamsimonelli@gmail.com> wrote:
->
-> From: Adam Simonelli <adamsimonelli@gmail.com>
+On 2/14/25 2:14 AM, Steven Price wrote:
+> From: Suzuki K Poulose <suzuki.poulose@arm.com>
+> 
+> Given we have different types of VMs supported, check the
+> support for SVE for the given instance of the VM to accurately
+> report the status.
+> 
+> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> Signed-off-by: Steven Price <steven.price@arm.com>
+> ---
+>   arch/arm64/include/asm/kvm_rme.h | 2 ++
+>   arch/arm64/kvm/arm.c             | 5 ++++-
+>   arch/arm64/kvm/rme.c             | 5 +++++
+>   3 files changed, 11 insertions(+), 1 deletion(-)
+> 
 
-In general we do not accept empty commit messages (yes, it was done in
-the past and in some exceptional cases, but should be taken as a very
-bad practice).
+Reviewed-by: Gavin Shan <gshan@redhat.com>
 
-Should it also have Suggested-by: ?
-
-> Signed-off-by: Adam Simonelli <adamsimonelli@gmail.com>
-
---=20
-With Best Regards,
-Andy Shevchenko
