@@ -1,282 +1,267 @@
-Received: from mail-vk1-f172.google.com (mail-vk1-f172.google.com [209.85.221.172])
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 250A92045B3;
-	Tue,  4 Mar 2025 13:26:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1D8128691
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 13:30:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741094820; cv=none; b=lsrpLz6znll47WEpZ7N9EPFbqh+fZDIQvyHd91eAByGKUGuX/xynJyBtUyJfL0RaU7A4vGwnppwlQTjYCE24zPPLdUge5SoxmzEXpm3O8CTMfwYqmjy6TWpUUtyebKViRqY5pCX3WjbO65FkrATzQh7S0JeB0GcF89b8gR+uB8k=
+	t=1741095050; cv=none; b=R8QGr8/d3/8fOYZcoNH2K/OQMhNRSVCt+REkiOnNB86VK4ClIzkCuUGMU1qj5q/MiAkbiJWsLRHIbviwu36IA3UrQMFTvWjO5H8ZTDMTO20AyQOWUb02um7HRBmIo6gKcJ12ufg2K0u72NVn/p4UW125YKs+qWG3QIbCTzQyfGQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741094820; c=relaxed/simple;
-	bh=Dbh0yWnJ9wNGOeGtfH9NE1eZNuNZSiESIwromLOHGNY=;
-	h=Mime-Version:Content-Type:Date:Message-Id:From:To:Cc:Subject:
-	 References:In-Reply-To; b=Sfz/4aEiJxQ27EQsVRScc2wDeN5gGs6bSAUAsefNa7bYdsinAIIH5uQiyQm+EpZImNjQ8ZOfpimHuTMd1cATDu/BDs/N28FGEShX3XA3FPd3ejZch9xK4Go2sJ7TZtOHHtAkV6MkhSUuEGbqKuRHeUOdT1FYQrP6oNn3jVvkQo4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bHyI1SuD; arc=none smtp.client-ip=209.85.221.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741095050; c=relaxed/simple;
+	bh=l9lXDrDNrHAfcVmXVwpacyTM635qmGlztuUUxkTz08A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CR+bPCMAv+WjSIF1Fp9r8K5Feswh5sNtxbFw2Dd1+/aT5hr/XJ9MwhGxv14rZD4aE8QxNkEOulzRPNqcqDsmE6Zo+cb3uZCrTvVT4ERFaILecMktPQGviOwcz+9G51Qwf+Pdyx9qc7n2NApVHgpFAaXEZSjvO2gZGKwcC7OII8U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rxTBHNwm; arc=none smtp.client-ip=209.85.221.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bHyI1SuD"
-Received: by mail-vk1-f172.google.com with SMTP id 71dfb90a1353d-52367fd5af5so1659543e0c.3;
-        Tue, 04 Mar 2025 05:26:56 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rxTBHNwm"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-38a8b17d7a7so3321165f8f.2
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Mar 2025 05:30:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741094816; x=1741699616; darn=vger.kernel.org;
-        h=in-reply-to:references:subject:cc:to:from:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vL3fp9Q7jjBrH7sjWaqesrfVNl8ZcjvkllY5xGeMDnY=;
-        b=bHyI1SuDnAK8zJcwJoFNk23L08bM8nwUD5zbyDkBt9LrTpm8bBNfm+DhOVZ5H5komq
-         IhIQaHVx9BtnQ/j/SbIUAJ51C9zE1tJCIwkE9A0d3XnGJr2jB260s0nwYfiD7CRPknlh
-         3FNcf/nHm7f0g1Yceoekbfqk20qkkrr4m6NCucDzea6biOq0AjJKYMQHuDZ1wFd/p3J9
-         XTs22uYSKO3v9uMOWDGm2R8D7Q3qsyt3aIimE+afMyoONlqt92CXMlvjvespsYSuxCaT
-         tQunBY8ZI606abvTAVl3YAdKYiiCyMd2kGvOcpwd66bgV4LqwAWO7ZGZYts3n6BALnTq
-         ze2w==
+        d=linaro.org; s=google; t=1741095047; x=1741699847; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Dcg5N+PdgvPQdcsjlM3pvDkqAIBRju0oFl7LWXNSYlY=;
+        b=rxTBHNwmEg49Og2ux3GeSV2CAEOKUCS8xXpLZ5VoQktMUHiqe6Pz06lvXcgoxu/M+W
+         mue5QsHjmt8w+mdgFMmc5XnKJ86nK2Nw3DR4FN2pG90QvtzzWTAFjCl99RA5dzBpMsDy
+         /EfJS3yOwiKFDTAIaln95ybtLwxQVnKXAibUZT8S3Nrbrni/ftGYa634oFd9lGLJDItz
+         wWGfMEVvQBJZ9kvEpmGc6NfdWeoHB8kRo4m3vJi9NiOUJb6wsR4m5VAx4nz3dY9jrAzC
+         1/ZSDtnG5LoEckGXwRzSQNdNMLm8qG7Foqs2GcmXcw+7WjqQ3W95SMzSAgflS3NOHyl8
+         /Dow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741094816; x=1741699616;
-        h=in-reply-to:references:subject:cc:to:from:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=vL3fp9Q7jjBrH7sjWaqesrfVNl8ZcjvkllY5xGeMDnY=;
-        b=w0HLQ18SJfbyVCXtqxFyddtkVhYoO6BUmQ/zLHnaUoSPCfAd8IhOI7uBtY6g1u3zd5
-         YBq1BzLwvFrP1vRXk9mB1uEfyOZYfZ59WmjiNKLWuISpbfuDNYLiQkP/DUla0fX9MAA8
-         EvEBjVunqZ4UEoE96kET1b7GpqYeRCbtAquTeTwiCD7Np7i6QijzMxtGN8h8wFoLWoPK
-         3nspFq6paHT8yYLafzb6fWJnfjHcEbz1l7sybNlztanELpwOXzsm0jaMIlCV9JMoJ+Qm
-         4r6lGSvII4JuB+ztjl8tbNBcCqe37ZoqWT4S9JFUqYkC57INuC5w16qbI3jHX6gW2gcJ
-         2tuA==
-X-Forwarded-Encrypted: i=1; AJvYcCUkthwephSbJrwi56AvR21yfyZmq3f6tQCHiUw6gcEn4+TY8MthYhL2Evgkh1jr+XxkeT3u718Q2v5O@vger.kernel.org, AJvYcCWEtufZolN1Y0cyAl4Grw/aI5qjGZF4azWf0e/kv6Jy6Udup0gPE4PhXD+3KCt0DHJgEvfCN1TkVdeXYCOZ@vger.kernel.org, AJvYcCX56vKqPw1u7Cxrl9DcwcIZ4tevgRzHzyb1hEt4cE2GO90vupm2V9b4dOdfK0ipzyoFioybT17fxKNuJlwzUml13Y5fnw==@vger.kernel.org
-X-Gm-Message-State: AOJu0YyXcavQqHLh7Y+SJgp/qP49YiLhn5EWirICBpnjvseVDTpA2k80
-	0ofD1uRbmz0ypMC2NfUVMR57C6TNTenw+wL8pmcvqc+Y8nexphcC
-X-Gm-Gg: ASbGncs1JqfTcK38MC8z8bbetSXTucLKk9JwZ2QwqIfVgZtVPybqxnGCmAjAvnn0hDx
-	nYRI3TgRJ7xrxT2irOWCNrZ5J+AALXyOj83rums0AsA74xNmz8ntfxpHUffse4fB/dfzLCNl4nw
-	4dt521XTNj3HUJ7cZ0XliUvdtgZX9qhWsHW0M60XZEk4f0ZOluxmWA7eZqd81wmxlM8g8HjlQkf
-	RsXNTgjGTwc9l4mq3BzSJYRLF0vDevEoYrhqHjRgTJ30YqgH5pAm+kEbuIew6s4mqelNn2i7e24
-	iJpaYJTTmPJ+AZZCevIi5L6RjPl1H31aTSVU
-X-Google-Smtp-Source: AGHT+IGeE0DtxbZy0AS94tKp3ljhVZFbmqT5dQpu9xx62aCvOcS2kduSwj9MwYhFItAiqqWKahL88w==
-X-Received: by 2002:a05:6122:d10:b0:51f:405e:866e with SMTP id 71dfb90a1353d-5235b7e1aa7mr9063404e0c.1.1741094815809;
-        Tue, 04 Mar 2025 05:26:55 -0800 (PST)
-Received: from localhost ([2800:bf0:82:3d2:9e61:1a62:1a8c:3e62])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-5234c08c5b6sm2139336e0c.36.2025.03.04.05.26.53
+        d=1e100.net; s=20230601; t=1741095047; x=1741699847;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Dcg5N+PdgvPQdcsjlM3pvDkqAIBRju0oFl7LWXNSYlY=;
+        b=ItCk6/g4ExZGMAchNZDwOpSzsJvOz18eMEZTQAF+bKr8nMZ1h6/fUc92nVPkU4nG+u
+         q6Tl88v+IPNweS20nSCfS8gMxGYMaMHSGjrmxs1BXU6xpFBHwdYZQ5ciYdL4/u25vbBU
+         1ugpaBDiiA8W3mlR6NHIdX2+W4AYtOcql0TAPjGIeww9wcWeOCKEKn7t32cNck/KTNOT
+         avePtQU+b9IjQZq43POHa7/tk12ymKAv9lfkJ7uqrDpq9ywKGmI2SILr1uFIs5p2DJs7
+         ZfpFfrqr0OFXJmt/5kPreigs++83mMMoy2b+3Q4+AI7/gn+roAZ/vpElGTqVmTvUp7Up
+         /vyw==
+X-Forwarded-Encrypted: i=1; AJvYcCX5ktfRvgs3sVKNpmc3eQURNTRNULaBqucr/FlCO+5Saw15bEM0Lbx+41CkPe5vdOCCZWH6Sxd54seRTDM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzkNF/GMWkZJJhxNfllWtzahexh4A+NAQuwhpEYl40N95rCRMai
+	1vjxQXgoy93n36490MTpP7wF33NBwtikia+L3Dl+mT34O/Z4a4ZX2M0MoC8FsMg=
+X-Gm-Gg: ASbGncvi4obkckdoinxX1raDF1RHOF+8qMFow6XPDLn7Pr7kPnJfaLWnfDo15oQVEOc
+	R3Lzy7kSMo1Cmn2RoIRouFiEXR561UL7Pvg8OKYYShxpiF836zBlNNt6oltBlh+mwG9CGONhjfd
+	V/OfX03DsN2uwcKTSbDONKs4mYJr8/EWnKDqA9Pji97Xb4W2EfeOBVUIutq+zFq2H4Tg1OBtVr1
+	hcwSol1u6j8dj93FNMHvoTr+G0KiihHn6vw1r1U1rsCJM3pDsCp3TX55EYywQsZb4Eeg1RnxZGw
+	RwLHRM2RDH/m/C3izZr0HRze1glxSZ6+zOU/VfwCnS0YIHNm85XK86t8bRh3ro+NvGo70Dt1NMu
+	F6YHFLvqkMA==
+X-Google-Smtp-Source: AGHT+IE7AebVHvoAywAZFYapD4vBmjcHVSOFlPx5VikfNNWX7mnHXDCD7bbvF9PrIS1vf2KegbOKUQ==
+X-Received: by 2002:a5d:6489:0:b0:390:f641:d8bb with SMTP id ffacd0b85a97d-390f641d990mr11651186f8f.36.1741095047165;
+        Tue, 04 Mar 2025 05:30:47 -0800 (PST)
+Received: from [192.168.0.35] (188-141-3-146.dynamic.upc.ie. [188.141.3.146])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-390e4795983sm17582091f8f.6.2025.03.04.05.30.46
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 04 Mar 2025 05:26:54 -0800 (PST)
+        Tue, 04 Mar 2025 05:30:46 -0800 (PST)
+Message-ID: <f7f7923e-c5ee-4f47-8eba-972bf7f08c9d@linaro.org>
+Date: Tue, 4 Mar 2025 13:30:46 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Tue, 04 Mar 2025 08:26:52 -0500
-Message-Id: <D87ILMWSRUPG.3FHTWG38N2IFJ@gmail.com>
-From: "Kurt Borja" <kuurtb@gmail.com>
-To: "Mario Limonciello" <superm1@kernel.org>, "Antheas Kapenekakis"
- <lkml@antheas.dev>
-Cc: "Shyam Sundar S K" <Shyam-sundar.S-k@amd.com>, "Rafael J . Wysocki"
- <rafael@kernel.org>, "Hans de Goede" <hdegoede@redhat.com>,
- =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, "Luke D .
- Jones" <luke@ljones.dev>, "Mark Pearson" <mpearson-lenovo@squebb.ca>, "open
- list:AMD PMF DRIVER" <platform-driver-x86@vger.kernel.org>, "open list"
- <linux-kernel@vger.kernel.org>, "open list:ACPI"
- <linux-acpi@vger.kernel.org>, "Derek J . Clark"
- <derekjohn.clark@gmail.com>, <me@kylegospodneti.ch>, "Denis Benato"
- <benato.denis96@gmail.com>, "Mario Limonciello" <mario.limonciello@amd.com>
-Subject: Re: [PATCH v2 1/1] ACPI: platform_profile: Treat quiet and low
- power the same
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a
-References: <20250304064745.1073770-1-superm1@kernel.org>
- <20250304064745.1073770-2-superm1@kernel.org>
- <CAGwozwHniWGQ7qK6FYD_WK5zNjkro7-Q1nTcFPAuWDt9UQ+noA@mail.gmail.com>
- <23d6c735-e94f-4d43-87b0-ff119941fcac@kernel.org>
-In-Reply-To: <23d6c735-e94f-4d43-87b0-ff119941fcac@kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 0/2] venus driver fixes to avoid possible OOB read
+ access
+To: Vikash Garodia <quic_vgarodia@quicinc.com>,
+ Vedang Nagar <quic_vnagar@quicinc.com>,
+ Stanimir Varbanov <stanimir.k.varbanov@gmail.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250215-venus-security-fixes-v2-0-cfc7e4b87168@quicinc.com>
+ <c3b27e55-f627-417c-bb62-3189f248fb99@linaro.org>
+ <7bf1aeaa-e1bd-412b-90fc-eda30b5f5b37@quicinc.com>
+ <19109672-2856-457f-b1f6-305abc6c4434@linaro.org>
+ <ba1e7a20-2f68-15e0-bc4a-fe52bc4036cc@quicinc.com>
+ <2ac68f21-cea8-400c-8a61-3638e545bac8@linaro.org>
+ <e64ff5f0-8dc5-fec6-ae9b-98076016365f@quicinc.com>
+Content-Language: en-US
+From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+In-Reply-To: <e64ff5f0-8dc5-fec6-ae9b-98076016365f@quicinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi all,
+On 03/03/2025 15:01, Vikash Garodia wrote:
+> 
+> On 3/3/2025 8:26 PM, Bryan O'Donoghue wrote:
+>> On 03/03/2025 13:12, Vikash Garodia wrote:
+>>>
+>>> On 3/2/2025 9:26 PM, Bryan O'Donoghue wrote:
+>>>> On 02/03/2025 11:58, Vedang Nagar wrote:
+>>>>>>
+>>>>>> The basic question : what is the lifetime of the data from RX interrupt to
+>>>>>> consumption by another system agent, DSP, userspace, whatever ?
+>>>>> As mentioned in [1], With the regular firmware, after RX interrupt the data
+>>>>> can be considered as valid until next interrupt is raised, but with the rouge
+>>>>> firmware, data can get invalid during the second read and our intention is to
+>>>>> avoid out of bound access read because of such issues.
+>>>>
+>>>> This is definitely the part I don't compute.
+>>>>
+>>>> 1. RX interrupt
+>>>> 2. Frame#0 Some amount of time data is always valid
+>>> This is not correct. Its not the amount of time which determines the validity of
+>>> the data, its the possibility of rogue firmware which, if incase, puts up the
+>>> date in shared queue, would always be invalid, irrespective of time.
+>>>
+>>>> 3. RX interrupt - new data
+>>>> 4. Frame#1 new data delivered into a buffer
+>>>>
+>>>> Are you describing a case between RX interrupts 1-3 or a case after 1-4?
+>>>>
+>>>> Why do we need to write code for rouge firmware anyway ?
+>>> It is a way to prevent any possibility of OOB, similar to how any API does check
+>>> for validity of any arguments passed to it, prior to processing.
+>>>>
+>>>> And the real question - if the data can be invalidated in the 1-3 window above
+>>>> when is the safe time to snapshot that data ?
+>>>>
+>>>> We seem to have alot of submissions to deal with 'rouge' firmware without I
+>>>> think properly describing the problem of the _expected_ data lifetime.
+>>>>
+>>>> So
+>>>>
+>>>> a) What is the expected data lifetime of an RX buffer between one
+>>>>      RX IRQ and the next ?
+>>>>      I hope the answer to this is - APSS owns the buffer.
+>>>>      This is BTW usually the case in these types of asymmetric setups
+>>>>      with a flag or some other kind of semaphore that indicates which
+>>>>      side of the data-exchange owns the buffer.
+>>>>
+>>>> b) In this rouge - buggy - firmware case what is the scope of the
+>>>>      potential race condition ?
+>>>>
+>>>>      What I'd really like to know here is why we have to seemingly
+>>>>      memcpy() again and again in seemingly incongrous and not
+>>>>      immediately obvious places in the code.
+>>>>
+>>>>      Would we not be better advised to do a memcpy() of the entire
+>>>>      RX frame in the RX IRQ handler path if as you appear to me
+>>>>      suggesting - the firmware can "race" with the APSS
+>>>>      i.e. the data-buffer ownership flag either doesn't work
+>>>>      or isn't respected by one side in the data-exchange.
+>>>>
+>>>> Can we please have a detailed description of the race condition here ?
+>>> Below is the report which the reporter reported leading to OOB, let me know if
+>>> you are unable to deduce the trail leading to OOB here.
+>>>
+>>> OOB read issue is in function event_seq_changed, please reference below code
+>>> snippet:
+>>>
+>>> Buggy code snippet:
+>>>
+>>> static void event_seq_changed(struct venus_core *core, struct venus_inst *inst,
+>>>           struct hfi_msg_event_notify_pkt *pkt)
+>>> ...
+>>> num_properties_changed = pkt->event_data2; //num_properties_changed is from
+>>> message and is not validated.
+>>> ...
+>>> data_ptr = (u8 *)&pkt->ext_event_data[0];
+>>> do {
+>>>    ptype = *((u32 *)data_ptr);
+>>>    switch (ptype) {
+>>>    case HFI_PROPERTY_PARAM_FRAME_SIZE:
+>>>     data_ptr += sizeof(u32);
+>>>     frame_sz = (struct hfi_framesize *)data_ptr;
+>>>     event.width = frame_sz->width;
+>>> ...
+>>>    }
+>>>    num_properties_changed--;
+>>> } while (num_properties_changed > 0);
+>>> ```
+>>> There is no validation against `num_properties_changed = pkt->event_data2`, so
+>>> OOB read occurs.
+>>>>
+>>>> I don't doubt the new memcpy() makes sense to you but without this detailed
+>>>> understanding of the underlying problem its virtually impossible to debate the
+>>>> appropriate remediation - perhaps this patch you've submitted - or some other
+>>>> solution.
+>>>>
+>>>> Sorry to dig into my trench here but, way more detail is needed.
+>>>>
+>>>>> [1]: https://lore.kernel.org/lkml/4cfc1fe1-2fab-4256-9ce2-
+>>>>> b4a0aad1069e@linaro.org/T/#m5f1737b16e68f8b8fc1d75517356b6566d0ec619
+>>>>>>
+>>>>>> Why is it in this small specific window that the data can change but not
+>>>>>> later ? What is the mechanism the data can change and how do the changes you
+>>>>>> propose here address the data lifetime problem ?
+>>>>> Currently this issue has been discovered by external researchers at this
+>>>>> point, but if any such OOB issue is discovered at later point as well then we
+>>>>> shall fix them as well.
+>>>>
+>>>> Right but, I'm looking for a detailed description of the problem.
+>>>>
+>>>> Can you describe from RX interrupt again what the expected data lifetime of the
+>>>> RX frame is, which I hope we agree is until the next RX interrupt associated
+>>>> with a given buffer with an ownership flag shared between firmware and APSS -
+>>>> and then under what circumstances that "software contract" is being violated.
+>>>>
+>>>>> Also, with rougue firmware we cannot fix the data lifetime problem in my
+>>>>> opinion, but atleast we can fix the out of bound issues.
+>>>>>>
+>>>>>> Without that context, I don't believe it is really possible to validate an
+>>>>>> additional memcpy() here and there in the code as fixing anything.
+>>>>> There is no additional memcpy() now in the v2 patch, but as part of the fix,
+>>>>> we are just trying to retain the length of the packet which was being read in
+>>>>> the first memcpy() to avoid the OOB read access.
+>>>>
+>>>> I can't make a suggestion because - personally speaking I still don't quite
+>>>> understand the data-race you are describing.
+>>> Go through the reports from the reporter, it was quite evident in leading upto
+>>> OOB case.
+>>> Putting up the sequence for you to go over the interrupt handling and message
+>>> queue parsing of the packets from firmware
+>>> 1.
+>>> https://elixir.bootlin.com/linux/v6.14-rc4/source/drivers/media/platform/qcom/venus/hfi_venus.c#L1082
+>>> 2.
+>>> https://elixir.bootlin.com/linux/v6.14-rc4/source/drivers/media/platform/qcom/venus/hfi_msgs.c#L816
+>>> 3. event handling (this particular case)
+>>> https://elixir.bootlin.com/linux/v6.14-rc4/source/drivers/media/platform/qcom/venus/hfi_msgs.c#L658
+>>> 4.
+>>> https://elixir.bootlin.com/linux/v6.14-rc4/source/drivers/media/platform/qcom/venus/hfi_msgs.c#L22
+>>>
+>>> the "struct hfi_msg_event_notify_pkt *pkt" pkt here is having the data read from
+>>> shared queue.
+>>>
+>>>>
+>>>> I get that you say the firmware is breaking the contract but, without more
+>>>> detail on _how_ it breaks that contract I don't think it's really possible to
+>>>> validate your fix here, fixes anything.
+>>>>
+>>>> ---
+>>>> bod
+>>>
+>>> Regards,
+>>> Vikash
+>>
+>> I'll go through all of these links given here, thanks.
+> I would request you to go through the description putup by the reporter of this
+> OOB as well, i added in my earlier response. It provided a good background of
+> how the firmware response can led to this particular OOB, atleast that was the
+> source of OOB info for us.
+> Regards,
+> Vikash
+>>
+>> Whatever the result of the review, this detail needs to go into the commit log
+>> so that a reviewer can reasonably read the problem description and evaluate
+>> against submitted code as a fix.
+>>
+>> ---
+>> bod
 
-On Tue Mar 4, 2025 at 7:49 AM -05, Mario Limonciello wrote:
->
->
-> On 3/4/25 02:38, Antheas Kapenekakis wrote:
->> On Tue, 4 Mar 2025 at 07:48, Mario Limonciello <superm1@kernel.org> wrot=
-e:
->>>
->>> From: Mario Limonciello <mario.limonciello@amd.com>
->>>
->>> When two drivers don't support all the same profiles the legacy interfa=
-ce
->>> only exports the common profiles.
->>>
->>> This causes problems for cases where one driver uses low-power but anot=
-her
->>> uses quiet because the result is that neither is exported to sysfs.
->>>
->>> If one platform profile handler supports quiet and the other
->>> supports low power treat them as the same for the purpose of
->>> the sysfs interface.
->>>
->>> Fixes: 688834743d67 ("ACPI: platform_profile: Allow multiple handlers")
->>> Reported-by: Antheas Kapenekakis <lkml@antheas.dev>
->>> Closes: https://lore.kernel.org/platform-driver-x86/e64b771e-3255-42ad-=
-9257-5b8fc6c24ac9@gmx.de/T/#mc068042dd29df36c16c8af92664860fc4763974b
->>> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
->>> ---
->>>   drivers/acpi/platform_profile.c | 38 ++++++++++++++++++++++++++++++--=
--
->>>   1 file changed, 35 insertions(+), 3 deletions(-)
->>>
->>> diff --git a/drivers/acpi/platform_profile.c b/drivers/acpi/platform_pr=
-ofile.c
->>> index 2ad53cc6aae53..d9a7cc5891734 100644
->>> --- a/drivers/acpi/platform_profile.c
->>> +++ b/drivers/acpi/platform_profile.c
->>> @@ -73,8 +73,20 @@ static int _store_class_profile(struct device *dev, =
-void *data)
->>>
->>>          lockdep_assert_held(&profile_lock);
->>>          handler =3D to_pprof_handler(dev);
->>> -       if (!test_bit(*bit, handler->choices))
->>> -               return -EOPNOTSUPP;
->>> +       if (!test_bit(*bit, handler->choices)) {
->>> +               switch (*bit) {
->>> +               case PLATFORM_PROFILE_QUIET:
->>> +                       *bit =3D PLATFORM_PROFILE_LOW_POWER;
->>> +                       break;
->>> +               case PLATFORM_PROFILE_LOW_POWER:
->>> +                       *bit =3D PLATFORM_PROFILE_QUIET;
->>> +                       break;
->>> +               default:
->>> +                       return -EOPNOTSUPP;
->>> +               }
->>> +               if (!test_bit(*bit, handler->choices))
->>> +                       return -EOPNOTSUPP;
->>> +       }
->>>
->>>          return handler->ops->profile_set(dev, *bit);
->>>   }
->>> @@ -252,8 +264,16 @@ static int _aggregate_choices(struct device *dev, =
-void *data)
->>>          handler =3D to_pprof_handler(dev);
->>>          if (test_bit(PLATFORM_PROFILE_LAST, aggregate))
->>>                  bitmap_copy(aggregate, handler->choices, PLATFORM_PROF=
-ILE_LAST);
->>> -       else
->>> +       else {
->>> +               /* treat quiet and low power the same for aggregation p=
-urposes */
->>> +               if (test_bit(PLATFORM_PROFILE_QUIET, handler->choices) =
-&&
->>> +                   test_bit(PLATFORM_PROFILE_LOW_POWER, aggregate))
->>> +                       set_bit(PLATFORM_PROFILE_QUIET, aggregate);
->>> +               else if (test_bit(PLATFORM_PROFILE_LOW_POWER, handler->=
-choices) &&
->>> +                        test_bit(PLATFORM_PROFILE_QUIET, aggregate))
->>> +                       set_bit(PLATFORM_PROFILE_LOW_POWER, aggregate);
->>>                  bitmap_and(aggregate, handler->choices, aggregate, PLA=
-TFORM_PROFILE_LAST);
->>> +       }
->>=20
->> So you end up showing both? If that's the case, isn't it equivalent to
->> just make amd-pmf show both quiet and low-power?
->>=20
->> I guess it is not ideal for framework devices. But if asus devices end
->> up showing both, then it should be ok for framework devices to show
->> both.
->>=20
->> I like the behavior of the V1 personally.
->
-> No; this doesn't cause it to show both.  It only causes one to show up.=
-=20
-> I confirmed it with a contrived situation on my laptop that forced=20
-> multiple profile handlers that supported a mix.
->
->
-> # cat /sys/firmware/acpi/platform_profile*
-> low-power
-> low-power balanced performance
->
-> # cat /sys/class/platform-profile/platform-profile-*/profile
-> quiet
-> quiet
-> quiet
-> quiet
-> quiet
-> quiet
-> quiet
-> quiet
-> quiet
-> quiet
-> quiet
-> quiet
-> quiet
-> quiet
-> quiet
-> quiet
-> quiet
-> quiet
-> quiet
-> quiet
-> quiet
-> quiet
-> quiet
-> quiet
-> low-power
->
->>=20
->>>          return 0;
->>>   }
->>> @@ -305,6 +325,13 @@ static int _aggregate_profiles(struct device *dev,=
- void *data)
->>>          if (err)
->>>                  return err;
->>>
->>> +       /* treat low-power and quiet as the same */
->>> +       if ((*profile =3D=3D PLATFORM_PROFILE_LOW_POWER &&
->>> +            val =3D=3D PLATFORM_PROFILE_QUIET) ||
->>> +           (*profile =3D=3D PLATFORM_PROFILE_QUIET &&
->>> +            val =3D=3D PLATFORM_PROFILE_LOW_POWER))
->>> +               *profile =3D val;
->>> +
->>>          if (*profile !=3D PLATFORM_PROFILE_LAST && *profile !=3D val)
->>>                  *profile =3D PLATFORM_PROFILE_CUSTOM;
->>>          else
->>> @@ -531,6 +558,11 @@ struct device *platform_profile_register(struct de=
-vice *dev, const char *name,
->>>                  dev_err(dev, "Failed to register platform_profile clas=
-s device with empty choices\n");
->>>                  return ERR_PTR(-EINVAL);
->>>          }
->>> +       if (test_bit(PLATFORM_PROFILE_QUIET, pprof->choices) &&
->>> +           test_bit(PLATFORM_PROFILE_LOW_POWER, pprof->choices)) {
->>> +               dev_err(dev, "Failed to register platform_profile class=
- device with both quiet and low-power\n");
->>> +               return ERR_PTR(-EINVAL);
->>> +       }
->>=20
->> Can you avoid failing here? It caused a lot of issues in the past (the
->> WMI driver bails). a dev_err should be enough. Since you do not fail
->> maybe it can be increased to dev_crit.
->>=20
->> There is at least one driver that implements both currently, and a fix
->> would have to precede this patch.
->
-> Oh, acer-wmi?  Kurt; can you please comment?  Are both simultaneous?
+Replied to the wrong patch.
 
-There are a few laptops supported by alienware-wmi that definitely have
-both (including mine). The acer-wmi and the samsung-galaxybook drivers
-also probe for available choices dynamically, so some of those devices
-may be affected by this too.
+There is no memcpy() in this patch - there was in patch #1 which has 
+subsequently been dropped.
 
-So yes, we shouldn't fail registration here.
+Anyway I'll address my comment there.
 
-Anyway, I like this approach more than v1. What do you think about
-constraining this fix to the legacy interface?
-
---=20
- ~ Kurt
-
->
->>=20
->>>
->>>          guard(mutex)(&profile_lock);
->>>
->>> --
->>> 2.43.0
->>>
-
+---
+bod
