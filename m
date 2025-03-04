@@ -1,95 +1,121 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1275628F4;
-	Tue,  4 Mar 2025 00:09:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81AB81F92A;
+	Tue,  4 Mar 2025 00:09:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741046984; cv=none; b=JmLgN2PRFGS7XdyfG2+km/vGv3PKzJo1c7QTb//60RtqCygUgF9URGgY8SptzuIxeVyOU2LNaCCLl9b20lR2lSx5ilXEd4opsg40G9UgSUOxxbKGj6RxXmmu2ZCFHnbjp4Cod4gEqa8WnBGIHfdoCuYE162bfY+inljU9NwB2NY=
+	t=1741046991; cv=none; b=Jrc4hszOHWLLMJ18bqCa0DObidmhKIdLfpXo9jb+EdLH4qWAb/wbPiBXXhGCROEFpUtpgzpgg+LafJWtRoxOS6StlqVIwVE11tdVE3+rXlVlf0+pduiFEvZsfHCGwNxw+8r0IJmOEgklBYyNxEqf8x2PKFOq6iS0UNCUY5uu4Bo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741046984; c=relaxed/simple;
-	bh=8QTX0gSTcUhFewuiZj/6AB6PoOE/TdhC/NsZANgtDsA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hXhutcVn6HpK8WuLNtCitIoty7qHKUrGaW1u4sbXL4ahoIy6BexXQA07XE3FY7vTpt+m1uUiA9qZmGq+fG6F4FpxfX7LZCm4PT0H/GM6ygWdW92IeMGvWN9Qsu02Fhcka0XA3sU0kPyYYp91fQWwf/JZZm0DcyeqQk3IZRXzap8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=lnoXGO27; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1741046991; c=relaxed/simple;
+	bh=HYDy0V16CbXKV+Z0Ebwz9QqNroH1o7OVsMOOPFZOv8o=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=NjypXU5gyzx8AbixocZWMiNSVRsmFe12eXEUFlnphTNgla63GMO2goH6ZGz2TG8izyseh6Vdea+z+SBAqZo7BJ14QPBt+8ViRtI97B6mao3blSzhDdKdkBPctO/B7C/jaWcLHB7YH7WRZEAkieYGGCKHaQ68ObyM1Qb8nxb/+nY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F8rweL6z; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="lnoXGO27"
-Received: from romank-3650.corp.microsoft.com (unknown [131.107.160.188])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 6F81F2110499;
-	Mon,  3 Mar 2025 16:09:42 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 6F81F2110499
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1741046982;
-	bh=wKyL8JEg7oY2WkvOaVvvBUT+gAUjHPmQCOIZqydTSq0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=lnoXGO27ng0PwYk+yFV08K1fTS4bNhSC1XthXWzebLKWXY0nFsCA2dpMUVmQKH0vo
-	 VlwrasqA8aD2eEVMWs4nob8oG/I014MwB9GYptttpTwD+dVuBfmoomr88mhojRN3QO
-	 KBzJt6AbSLmMKYhSpxCMX/DM6hMyb/hCOf3xSoRY=
-From: Roman Kisel <romank@linux.microsoft.com>
-To: eahariha@linux.microsoft.com,
-	mhklinux@outlook.com,
-	kys@microsoft.com,
-	haiyangz@microsoft.com,
-	wei.liu@kernel.org,
-	decui@microsoft.com,
-	James.Bottomley@HansenPartnership.com,
-	martin.petersen@oracle.com,
-	linux-hyperv@vger.kernel.org,
-	linux-scsi@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: apais@microsoft.com,
-	benhill@microsoft.com,
-	sunilmut@microsoft.com
-Subject: [PATCH hyperv-next v2 1/1] scsi: storvsc: Don't report the host packet status as the hv status
-Date: Mon,  3 Mar 2025 16:09:40 -0800
-Message-ID: <20250304000940.9557-2-romank@linux.microsoft.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250304000940.9557-1-romank@linux.microsoft.com>
-References: <20250304000940.9557-1-romank@linux.microsoft.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F8rweL6z"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E92D3C4CEE4;
+	Tue,  4 Mar 2025 00:09:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741046990;
+	bh=HYDy0V16CbXKV+Z0Ebwz9QqNroH1o7OVsMOOPFZOv8o=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=F8rweL6z8sb03sGNJu6P+EjwBBwv8zF1+YLwXCWEPWym0DdxXODtNhIrVss7pzQuF
+	 ht+XrUeCTypcwk4Sf5/2Dzy7AVdsJsTxvhL/IkCKRAu6Ih7aKaE37UZHC8fEo9Y8Dz
+	 +xTRikR0XQQ68mdX1zTebYrZ2ZOM02sYc3MLzCMH2FUmX+WtyUK/DE3YH7UjKlDSU5
+	 xsrniPbzjCkDbNHZ6AGjVKAqTJjXlhnUyXVj77GzEnLIBqi5tRmNIQL9dWUr4NzSvy
+	 zv+ZZz1iKxkpvYuIQLcpoeYNw4i1AbeSiCYNa8YmfH69T6sR9PHknK3KcJOXUvt8zg
+	 bVqlAq6dyNbaw==
+Date: Tue, 4 Mar 2025 00:09:31 +0000
+From: Jonathan Cameron <jic23@kernel.org>
+To: Jishnu Prakash <jishnu.prakash@oss.qualcomm.com>
+Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ agross@kernel.org, andersson@kernel.org, dmitry.baryshkov@linaro.org,
+ konradybcio@kernel.org, daniel.lezcano@linaro.org, sboyd@kernel.org,
+ amitk@kernel.org, thara.gopinath@gmail.com, lee@kernel.org,
+ rafael@kernel.org, subbaraman.narayanamurthy@oss.qualcomm.com,
+ david.collins@oss.qualcomm.com, anjelique.melendez@oss.qualcomm.com,
+ quic_kamalw@quicinc.com, rui.zhang@intel.com, lukasz.luba@arm.com,
+ lars@metafoo.de, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-pm@vger.kernel.org, cros-qcom-dts-watchers@chromium.org,
+ quic_skakitap@quicinc.com, neil.armstrong@linaro.org
+Subject: Re: [PATCH V5 4/5] iio: adc: Add support for QCOM PMIC5 Gen3 ADC
+Message-ID: <20250304000931.5be25de1@jic23-huawei>
+In-Reply-To: <449712bb-961e-4ccf-bf74-50dd55315abc@oss.qualcomm.com>
+References: <20250131183242.3653595-1-jishnu.prakash@oss.qualcomm.com>
+	<20250131183242.3653595-5-jishnu.prakash@oss.qualcomm.com>
+	<20250201121134.53040aae@jic23-huawei>
+	<9e14f58f-e345-4bae-b14e-de25fc28d9a8@oss.qualcomm.com>
+	<20250301032519.16e77288@jic23-huawei>
+	<449712bb-961e-4ccf-bf74-50dd55315abc@oss.qualcomm.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-The log statement reports the packet status code as the hv
-status code which causes confusion when debugging as "hv"
-might refer to a hypervisor, and sometimes to the host part
-of the Hyper-V virtualization stack.
+On Mon, 3 Mar 2025 19:26:37 +0530
+Jishnu Prakash <jishnu.prakash@oss.qualcomm.com> wrote:
 
-Fix the name of the datum being logged to clearly indicate
-the component reporting the error. Also log it in hexadecimal
-everywhere for consistency.
+> Hi Jonathan,
+> 
+> On 3/1/2025 8:55 AM, Jonathan Cameron wrote:
+> > On Wed, 26 Feb 2025 14:22:05 +0530
+> > Jishnu Prakash <jishnu.prakash@oss.qualcomm.com> wrote:
+> >   
+> ...
+> >>>> +void adc5_take_mutex_lock(struct device *dev, bool lock)
+> >>>> +{
+> >>>> +	struct iio_dev *indio_dev = dev_get_drvdata(dev->parent);
+> >>>> +	struct adc5_chip *adc = iio_priv(indio_dev);
+> >>>> +
+> >>>> +	if (lock)
+> >>>> +		mutex_lock(&adc->lock);
+> >>>> +	else
+> >>>> +		mutex_unlock(&adc->lock);
+> >>>> +}
+> >>>> +EXPORT_SYMBOL_NS_GPL(adc5_take_mutex_lock, "QCOM_SPMI_ADC5_GEN3");    
+> >>>
+> >>> This is potentially going to make a mess for sparse.  Might be better to split
+> >>> it in two so you can had __acquires and __releases markings.
+> >>>
+> >>> If you don't get any warnings with sparse then I guess we are fine.
+> >>>     
+> >>
+> >> I had tried building with sparse in my local workspace and I did not get any errors in this file. Do you think I can keep this unchanged?
+> >> Also, would any kernel bots run sparse later on this patch, if it's not already done?  
+> > 
+> > Problems around this tend to turn up a bit late in build tests as requires
+> > particular combinations of features.  Here you may not see problems because
+> > sparse can't see far enough to understand the locking.
+> > 
+> > I would still split this into lock / unlock as that matches better
+> > with common syntax for locks.  We can then add markings
+> > as necessary later.
+> >   
+> 
+> OK, I can split this into separate lock and unlock functions.
+> And for markings, you mean I should add these:
+> 
+>     __acquires(&adc->lock)
+>     __releases(&adc->lock)
+> 
+> under the lock and unlock functions respectively?
+yes
 
-Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
----
- drivers/scsi/storvsc_drv.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/scsi/storvsc_drv.c b/drivers/scsi/storvsc_drv.c
-index a8614e54544e..35db061ae3ec 100644
---- a/drivers/scsi/storvsc_drv.c
-+++ b/drivers/scsi/storvsc_drv.c
-@@ -776,7 +776,7 @@ static void  handle_multichannel_storage(struct hv_device *device, int max_chns)
- 
- 	if (vstor_packet->operation != VSTOR_OPERATION_COMPLETE_IO ||
- 	    vstor_packet->status != 0) {
--		dev_err(dev, "Failed to create sub-channel: op=%d, sts=%d\n",
-+		dev_err(dev, "Failed to create sub-channel: op=%d, host=0x%x\n",
- 			vstor_packet->operation, vstor_packet->status);
- 		return;
- 	}
-@@ -1183,7 +1183,7 @@ static void storvsc_on_io_completion(struct storvsc_device *stor_device,
- 			STORVSC_LOGGING_WARN : STORVSC_LOGGING_ERROR;
- 
- 		storvsc_log_ratelimited(device, loglevel,
--			"tag#%d cmd 0x%x status: scsi 0x%x srb 0x%x hv 0x%x\n",
-+			"tag#%d cmd 0x%x status: scsi 0x%x srb 0x%x host 0x%x\n",
- 			scsi_cmd_to_rq(request->cmd)->tag,
- 			stor_pkt->vm_srb.cdb[0],
- 			vstor_packet->vm_srb.scsi_status,
--- 
-2.43.0
+> 
+> Thanks,
+> Jishnu
+> 
+> >>>> +/*    
+> >>>
+> >>> Looks like valid kernel doc, so /** and check it builds fine
+> >>> with the kernel-doc script.
+> >>>     
+> 
 
