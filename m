@@ -1,55 +1,55 @@
-Received: from mail-ed1-f73.google.com (mail-ed1-f73.google.com [209.85.208.73])
+Received: from mail-ej1-f73.google.com (mail-ej1-f73.google.com [209.85.218.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DA442046B5
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 09:26:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E21AB1FE472
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 09:26:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741080373; cv=none; b=G/yg/sR9ZnnyaNeaiJAlaMVr6lQHMITqrZpLkrCmLsdfjwS3yyhpZuGGc0aSibL2nbNk+vKmkwPLKLACMZweO9SI7jqfaK5laqtWVDrBhQmclA+gBTr7YfbCn6+avfZ7kSnW3oicnDU0jF5Ga14ZE3d1GEr3bOR0wM35unetM/0=
+	t=1741080378; cv=none; b=uveYjW6yfWpLdALutfSRJTWKA9M87dG6KwlGB9aF6oIB/TYJWNwjTzIoSr02hZvkWjph4e4mswDcOT9utr1p0fkjs0EqFDrY+dIJB1grchsUlocm5X1BEQzHkoXHVJoK0URogw7D7EpwNwL/d6TaoVQfSKw9rAY9FpehXoFdEw4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741080373; c=relaxed/simple;
-	bh=66LwKwEvJHI65yeM4c4uuHM5+PNXrLfUMMtHzKvNEjk=;
+	s=arc-20240116; t=1741080378; c=relaxed/simple;
+	bh=ErRP0TLkHTSoiO9G/KD7SlUWq7CmBmFj0LpWE3kApQU=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=f4ZmqeNR1tTVjgIL2wlm9tu3vGt9c7z/fnL8R/T+mJmoSz5YL3TNZ+KwgX0tAQzWH2Pbhka9vGmTZJlYIdj1IZpYFxN49FyEpucHmPtTHQ5kwG0ydMdWMfTFDssRfSRrDlmwldEAKU6OxoELa5W1JT8xg9wVxtOmKr8nQ/07S7c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--elver.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jrff2QmO; arc=none smtp.client-ip=209.85.208.73
+	 To:Cc:Content-Type; b=LuBgMrGv7vUEVKiJjMVGxEr3PSWbOT5JsziCOC7CK7vmSLP4j2kqVviP5wC1T2OX/6+HIeFQfWAl/HsVPX1fF2sRrsiPeM03+KhUWOjmZJ0mtLFPToIh61Uxfh3SvsG23TKsoqH+eYSpTGEcqGP5NZiQPqBrI0zI6swb1+vpleE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--elver.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=GW7XU3T+; arc=none smtp.client-ip=209.85.218.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--elver.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jrff2QmO"
-Received: by mail-ed1-f73.google.com with SMTP id 4fb4d7f45d1cf-5e550e71d33so2000753a12.1
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Mar 2025 01:26:10 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GW7XU3T+"
+Received: by mail-ej1-f73.google.com with SMTP id a640c23a62f3a-abb8f65af3dso528826166b.1
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Mar 2025 01:26:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1741080369; x=1741685169; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1741080374; x=1741685174; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=P1I/GQ+v/3j1AzYCm6S00P34ezPJ7HmSy44l1ZDIovo=;
-        b=jrff2QmOX09Vy9y2pZk0o7LchsLxoJOP9E9rI6e5XzkUWMWKTzpXUuBYk2p2tvTlk9
-         LUeJaIc3J2KbvZWbl9FVyAvUz8iyJQ3i/WJt0e1LBLe49cjrwGSJod33vW7GKlAK9kY7
-         w4fpglkHCuFbuvAdc3by5IxmaTrmO9Q2UCPbDbOmfAHUa24PlNyyZD/QhYolzcs8VE+M
-         GsLVhtbVDalUOCHMmlFBTukJfu4bX2SWg2CiddjZi335NlQ8Bc5vj/PqVkeBZkfu49bj
-         ui+NUcid/uMs7f0TrmhroQNdc8cQf+xcmyNH0kbvqEEaVZXpX190bMzw0vwUAhAL+iXv
-         4nfg==
+        bh=lSVagzG7gv+v/g8zzR4ILNSARzsQANzMJVGDI4EywE8=;
+        b=GW7XU3T+X2Xp7LEgzH1U3qI9ZjywWJ3zpeAmHijuD+TIuQ1bOTIATIC9yOpFKPQLCw
+         wWk4KV0o6pqRuSfL0KsoR5r6gx2Wobw2gH2lu3+pAezhvGJkbAcMn4AS2In1YC1L/0Gg
+         HaZbwLExngOtwLQU90RevUsmACy0LvWIGSn945PxWYLrkOHDt55z9N6rMNuhLu5YIVoO
+         1IIW38Diggwct0P0VYwIOp+R9GHD7YazBO7iWu2HpeeN60RsoydhDpQdrag9nc4Izuu9
+         lZjnxriN521TKqw5KB/wAxIrMva8xWjrUdzrMuuMojYRUrb8cooJAvqyWzTH6zNPDvGN
+         Rjsw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741080369; x=1741685169;
+        d=1e100.net; s=20230601; t=1741080374; x=1741685174;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=P1I/GQ+v/3j1AzYCm6S00P34ezPJ7HmSy44l1ZDIovo=;
-        b=NVoO1hxy4KtRqCu4/ugMUz2z5lwtz8dEbTomMPK7qSlO21rL/+WWSf0O06XUNzXOkA
-         plbRKRo0hYw++XVFSpV7adMwiAx6SBihnfHWS+fDoNLfVAy8wB5DqlFpJW+lSvr0qYVr
-         Tk2EwA1oVuxsUIJpYi8OEUZwc5veXKP9G2dsbL9NO33kts5f+hsx/9osrmQgYT71kEjr
-         pz0dsSGtDQgjB7y/qUNmV3xDD4Y6qE2byD993DdMW4VkjR2Wb2Ah8lotRZzE3UgY8w+B
-         w4BuiZN1S7lG8RYguh17XVWgBWnJuE67M57eQaB8KpXlC92/pfElD+xNse6dDPxZWY5Q
-         ONGw==
-X-Forwarded-Encrypted: i=1; AJvYcCWt49UM3Umhid4M+9UnfvRaAj39iljZmQP2zgezDf7EPg72XYm6SgXdjuoo+1k6nCcOyVddOXmdgFkjR4A=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzVoyvbIlT0zTSfXc7xNilc59LWPj/K6mmIFkiA/tkawEEys365
-	zzESKzernQKElWhPKN7Vyst8UkNajyZp3ZkD/rf8P4rJvA7OjXCjAOcmsRnk+bYu/iZMW/2Xug=
+        bh=lSVagzG7gv+v/g8zzR4ILNSARzsQANzMJVGDI4EywE8=;
+        b=g+ZTv1vk9OZvPra6jRIUmpD8dsJGuM1KyS72Xnwk4lheW2F2s7De7mXApOpVYiNv2F
+         uvLk/xXTuoHlrtD1tL1w/4Onlbxqp7SmA6i+PytBMeTpg4xCd4L83I7Hje1D9lQgyi93
+         GcGS9lT7Xk7jpXgIIuuX97QMGHFMgOv+ppERiUiBKeN9SXCaZRAJC/w0fGvqsNinK5RD
+         RkoKOamzJt42IV2ajLjsMvbNOjX1tArh5sutJakQr1WB3p9hljZ/FzQuXmVVCZopx6xB
+         t3H8OqioliIgsNuSCkx9L4fmbAwivt6YciCaQRGLd6YgMFT24tRWp8ZMsxjDa+k+Y6qj
+         ec7A==
+X-Forwarded-Encrypted: i=1; AJvYcCVRqZ2Hd+bz3Zm9rYW+bcjq9bdOs5P+Tt2sRA6fJTR87GE1tmCSTE9aR3jlTpja+MAkq7KaUUaIMJxON2Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwySzXjPE0b4qxN6nfC8qnmsmfYqcMccZ9K53hKbrjNhDWe0XqV
+	EcUYNUBSZfOWx61xxN+NV2x0WobaQziNvc5wfqXXdn4msRcBkyy2bx54+rOyeGCWAxijC2C4dw=
 	=
-X-Google-Smtp-Source: AGHT+IFLim8eecum5uVex3hryFlz3FCAz5xVOg59Qt47EZvr2+Y6KQcxBittVbQ9kTNcN1THrZHhGDAhXQ==
-X-Received: from edbet14.prod.google.com ([2002:a05:6402:378e:b0:5e5:762:2c87])
- (user=elver job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6402:4407:b0:5dc:a44d:36a9
- with SMTP id 4fb4d7f45d1cf-5e4d6af158dmr16857891a12.14.1741080368800; Tue, 04
- Mar 2025 01:26:08 -0800 (PST)
-Date: Tue,  4 Mar 2025 10:21:21 +0100
+X-Google-Smtp-Source: AGHT+IFJBP4Tcx72apFD1gIfXnldoSVXluGG30wLL1iAY+mX9Im8gCUaP5MoJwpojqCBSSTJQMcMwqY6Fw==
+X-Received: from ejcvb9.prod.google.com ([2002:a17:907:d049:b0:ac1:f9fe:d27b])
+ (user=elver job=prod-delivery.src-stubby-dispatcher) by 2002:a17:906:880e:b0:abf:4521:eb2a
+ with SMTP id a640c23a62f3a-abf4521edabmr1374674266b.49.1741080374222; Tue, 04
+ Mar 2025 01:26:14 -0800 (PST)
+Date: Tue,  4 Mar 2025 10:21:23 +0100
 In-Reply-To: <20250304092417.2873893-1-elver@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250304092417.2873893-1-elver@google.com>
 X-Mailer: git-send-email 2.48.1.711.g2feabab25a-goog
-Message-ID: <20250304092417.2873893-23-elver@google.com>
-Subject: [PATCH v2 22/34] compiler-capability-analysis: Remove Sparse support
+Message-ID: <20250304092417.2873893-25-elver@google.com>
+Subject: [PATCH v2 24/34] compiler-capability-analysis: Introduce header suppressions
 From: Marco Elver <elver@google.com>
 To: elver@google.com
 Cc: "David S. Miller" <davem@davemloft.net>, Luc Van Oostenryck <luc.vanoostenryck@gmail.com>, 
@@ -83,256 +83,123 @@ Cc: "David S. Miller" <davem@davemloft.net>, Luc Van Oostenryck <luc.vanoostenry
 	linux-serial@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Remove Sparse support as discussed at [1].
+While we can opt in individual subsystems which add the required
+annotations, such subsystems inevitably include headers from other
+subsystems which may not yet have the right annotations, which then
+result in false positive warnings.
 
-The kernel codebase is still scattered with numerous places that try to
-appease Sparse's context tracking ("annotation for sparse", "fake out
-sparse", "work around sparse", etc.). Eventually, as more subsystems
-enable Clang's capability analysis, these places will show up and need
-adjustment or removal of the workarounds altogether.
+Making compatible by adding annotations across all common headers
+currently requires an excessive number of __no_capability_analysis
+annotations, or carefully analyzing non-trivial cases to add the correct
+annotations. While this is desirable long-term, providing an incremental
+path causes less churn and headaches for maintainers not yet interested
+in dealing with such warnings.
 
-Link: https://lore.kernel.org/all/20250207083335.GW7145@noisy.programming.kicks-ass.net/ [1]
-Link: https://lore.kernel.org/all/Z6XTKTo_LMj9KmbY@elver.google.com/ [2]
-Cc: "Luc Van Oostenryck" <luc.vanoostenryck@gmail.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
+Rather than clutter headers unnecessary and mandate all subsystem
+maintainers to keep their headers working with capability analysis,
+suppress all -Wthread-safety warnings in headers. Explicitly opt in
+headers with capability-enabled primitives.
+
+This bumps the required Clang version to version 20+.
+
+With this in place, we can start enabling the analysis on more complex
+subsystems in subsequent changes.
+
 Signed-off-by: Marco Elver <elver@google.com>
 ---
-v2:
-* New patch.
----
- Documentation/dev-tools/sparse.rst           | 19 -------
- include/linux/compiler-capability-analysis.h | 56 ++++++--------------
- include/linux/rcupdate.h                     | 15 +-----
- 3 files changed, 17 insertions(+), 73 deletions(-)
+ .../dev-tools/capability-analysis.rst         |  2 ++
+ lib/Kconfig.debug                             |  4 ++-
+ scripts/Makefile.capability-analysis          |  4 +++
+ scripts/capability-analysis-suppression.txt   | 32 +++++++++++++++++++
+ 4 files changed, 41 insertions(+), 1 deletion(-)
+ create mode 100644 scripts/capability-analysis-suppression.txt
 
-diff --git a/Documentation/dev-tools/sparse.rst b/Documentation/dev-tools/sparse.rst
-index dc791c8d84d1..37b20170835d 100644
---- a/Documentation/dev-tools/sparse.rst
-+++ b/Documentation/dev-tools/sparse.rst
-@@ -53,25 +53,6 @@ sure that bitwise types don't get mixed up (little-endian vs big-endian
- vs cpu-endian vs whatever), and there the constant "0" really _is_
- special.
+diff --git a/Documentation/dev-tools/capability-analysis.rst b/Documentation/dev-tools/capability-analysis.rst
+index d11e88ab9882..5c87d7659995 100644
+--- a/Documentation/dev-tools/capability-analysis.rst
++++ b/Documentation/dev-tools/capability-analysis.rst
+@@ -17,6 +17,8 @@ features. To enable for Clang, configure the kernel with::
  
--Using sparse for lock checking
--------------------------------
--
--The following macros are undefined for gcc and defined during a sparse
--run to use the "context" tracking feature of sparse, applied to
--locking.  These annotations tell sparse when a lock is held, with
--regard to the annotated function's entry and exit.
--
--__must_hold - The specified lock is held on function entry and exit.
--
--__acquires - The specified lock is held on function exit, but not entry.
--
--__releases - The specified lock is held on function entry, but not exit.
--
--If the function enters and exits without the lock held, acquiring and
--releasing the lock inside the function in a balanced way, no
--annotation is needed.  The three annotations above are for cases where
--sparse would otherwise report a context imbalance.
--
- Getting sparse
- --------------
+     CONFIG_WARN_CAPABILITY_ANALYSIS=y
  
-diff --git a/include/linux/compiler-capability-analysis.h b/include/linux/compiler-capability-analysis.h
-index 832727fea140..741f88e1177f 100644
---- a/include/linux/compiler-capability-analysis.h
-+++ b/include/linux/compiler-capability-analysis.h
-@@ -231,30 +231,8 @@
- 	extern const struct __capability_##cap *name
++The feature requires Clang 20 or later.
++
+ The analysis is *opt-in by default*, and requires declaring which modules and
+ subsystems should be analyzed in the respective `Makefile`::
  
- /*
-- * Common keywords for static capability analysis. Both Clang's capability
-- * analysis and Sparse's context tracking are currently supported.
-+ * Common keywords for static capability analysis.
-  */
--#ifdef __CHECKER__
--
--/* Sparse context/lock checking support. */
--# define __must_hold(x)		__attribute__((context(x,1,1)))
--# define __must_not_hold(x)
--# define __acquires(x)		__attribute__((context(x,0,1)))
--# define __cond_acquires(ret, x) __attribute__((context(x,0,-1)))
--# define __releases(x)		__attribute__((context(x,1,0)))
--# define __acquire(x)		__context__(x,1)
--# define __release(x)		__context__(x,-1)
--# define __cond_lock(x, c)	((c) ? ({ __acquire(x); 1; }) : 0)
--/* For Sparse, there's no distinction between exclusive and shared locks. */
--# define __must_hold_shared	__must_hold
--# define __acquires_shared	__acquires
--# define __cond_acquires_shared __cond_acquires
--# define __releases_shared	__releases
--# define __acquire_shared	__acquire
--# define __release_shared	__release
--# define __cond_lock_shared	__cond_acquire
--
--#else /* !__CHECKER__ */
+diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+index 8abaf7dab3f8..8b13353517a9 100644
+--- a/lib/Kconfig.debug
++++ b/lib/Kconfig.debug
+@@ -605,7 +605,7 @@ config DEBUG_FORCE_WEAK_PER_CPU
  
- /**
-  * __must_hold() - function attribute, caller must hold exclusive capability
-@@ -263,7 +241,7 @@
-  * Function attribute declaring that the caller must hold the given capability
-  * instance @x exclusively.
-  */
--# define __must_hold(x)		__requires_cap(x)
-+#define __must_hold(x)		__requires_cap(x)
+ config WARN_CAPABILITY_ANALYSIS
+ 	bool "Compiler capability-analysis warnings"
+-	depends on CC_IS_CLANG && $(cc-option,-Wthread-safety -fexperimental-late-parse-attributes)
++	depends on CC_IS_CLANG && $(cc-option,-Wthread-safety -fexperimental-late-parse-attributes --warning-suppression-mappings=/dev/null)
+ 	# Branch profiling re-defines "if", which messes with the compiler's
+ 	# ability to analyze __cond_acquires(..), resulting in false positives.
+ 	depends on !TRACE_BRANCH_PROFILING
+@@ -619,6 +619,8 @@ config WARN_CAPABILITY_ANALYSIS
+ 	  the original name of the feature; it was later expanded to be a
+ 	  generic "Capability Analysis" framework.
  
- /**
-  * __must_not_hold() - function attribute, caller must not hold capability
-@@ -272,7 +250,7 @@
-  * Function attribute declaring that the caller must not hold the given
-  * capability instance @x.
-  */
--# define __must_not_hold(x)	__excludes_cap(x)
-+#define __must_not_hold(x)	__excludes_cap(x)
++	  Requires Clang 20 or later.
++
+ 	  Produces warnings by default. Select CONFIG_WERROR if you wish to
+ 	  turn these warnings into errors.
  
- /**
-  * __acquires() - function attribute, function acquires capability exclusively
-@@ -281,7 +259,7 @@
-  * Function attribute declaring that the function acquires the given
-  * capability instance @x exclusively, but does not release it.
-  */
--# define __acquires(x)		__acquires_cap(x)
-+#define __acquires(x)		__acquires_cap(x)
+diff --git a/scripts/Makefile.capability-analysis b/scripts/Makefile.capability-analysis
+index b7b36cca47f4..2a3e493a9d06 100644
+--- a/scripts/Makefile.capability-analysis
++++ b/scripts/Makefile.capability-analysis
+@@ -4,4 +4,8 @@ capability-analysis-cflags := -DWARN_CAPABILITY_ANALYSIS	\
+ 	-fexperimental-late-parse-attributes -Wthread-safety	\
+ 	$(call cc-option,-Wthread-safety-pointer)
  
- /*
-  * Clang's analysis does not care precisely about the value, only that it is
-@@ -308,7 +286,7 @@
-  *
-  * @ret may be one of: true, false, nonzero, 0, nonnull, NULL.
-  */
--# define __cond_acquires(ret, x) __cond_acquires_impl_##ret(x)
-+#define __cond_acquires(ret, x) __cond_acquires_impl_##ret(x)
- 
- /**
-  * __releases() - function attribute, function releases a capability exclusively
-@@ -317,7 +295,7 @@
-  * Function attribute declaring that the function releases the given capability
-  * instance @x exclusively. The capability must be held on entry.
-  */
--# define __releases(x)		__releases_cap(x)
-+#define __releases(x)		__releases_cap(x)
- 
- /**
-  * __acquire() - function to acquire capability exclusively
-@@ -325,7 +303,7 @@
-  *
-  * No-op function that acquires the given capability instance @x exclusively.
-  */
--# define __acquire(x)		__acquire_cap(x)
-+#define __acquire(x)		__acquire_cap(x)
- 
- /**
-  * __release() - function to release capability exclusively
-@@ -333,7 +311,7 @@
-  *
-  * No-op function that releases the given capability instance @x.
-  */
--# define __release(x)		__release_cap(x)
-+#define __release(x)		__release_cap(x)
- 
- /**
-  * __cond_lock() - function that conditionally acquires a capability
-@@ -352,7 +330,7 @@
-  *
-  *	#define spin_trylock(l) __cond_lock(&lock, _spin_trylock(&lock))
-  */
--# define __cond_lock(x, c)	__try_acquire_cap(x, c)
-+#define __cond_lock(x, c)	__try_acquire_cap(x, c)
- 
- /**
-  * __must_hold_shared() - function attribute, caller must hold shared capability
-@@ -361,7 +339,7 @@
-  * Function attribute declaring that the caller must hold the given capability
-  * instance @x with shared access.
-  */
--# define __must_hold_shared(x)	__requires_shared_cap(x)
-+#define __must_hold_shared(x)	__requires_shared_cap(x)
- 
- /**
-  * __acquires_shared() - function attribute, function acquires capability shared
-@@ -370,7 +348,7 @@
-  * Function attribute declaring that the function acquires the given
-  * capability instance @x with shared access, but does not release it.
-  */
--# define __acquires_shared(x)	__acquires_shared_cap(x)
-+#define __acquires_shared(x)	__acquires_shared_cap(x)
- 
- /**
-  * __cond_acquires_shared() - function attribute, function conditionally
-@@ -384,7 +362,7 @@
-  *
-  * @ret may be one of: true, false, nonzero, 0, nonnull, NULL.
-  */
--# define __cond_acquires_shared(ret, x) __cond_acquires_impl_##ret(x, _shared)
-+#define __cond_acquires_shared(ret, x) __cond_acquires_impl_##ret(x, _shared)
- 
- /**
-  * __releases_shared() - function attribute, function releases a
-@@ -394,7 +372,7 @@
-  * Function attribute declaring that the function releases the given capability
-  * instance @x with shared access. The capability must be held on entry.
-  */
--# define __releases_shared(x)	__releases_shared_cap(x)
-+#define __releases_shared(x)	__releases_shared_cap(x)
- 
- /**
-  * __acquire_shared() - function to acquire capability shared
-@@ -403,7 +381,7 @@
-  * No-op function that acquires the given capability instance @x with shared
-  * access.
-  */
--# define __acquire_shared(x)	__acquire_shared_cap(x)
-+#define __acquire_shared(x)	__acquire_shared_cap(x)
- 
- /**
-  * __release_shared() - function to release capability shared
-@@ -412,7 +390,7 @@
-  * No-op function that releases the given capability instance @x with shared
-  * access.
-  */
--# define __release_shared(x)	__release_shared_cap(x)
-+#define __release_shared(x)	__release_shared_cap(x)
- 
- /**
-  * __cond_lock_shared() - function that conditionally acquires a capability
-@@ -426,8 +404,6 @@
-  * access, if the boolean expression @c is true. The result of @c is the return
-  * value, to be able to create a capability-enabled interface.
-  */
--# define __cond_lock_shared(x, c) __try_acquire_shared_cap(x, c)
--
--#endif /* __CHECKER__ */
-+#define __cond_lock_shared(x, c) __try_acquire_shared_cap(x, c)
- 
- #endif /* _LINUX_COMPILER_CAPABILITY_ANALYSIS_H */
-diff --git a/include/linux/rcupdate.h b/include/linux/rcupdate.h
-index ef8875c4e621..75a2e8c30a3f 100644
---- a/include/linux/rcupdate.h
-+++ b/include/linux/rcupdate.h
-@@ -1183,20 +1183,7 @@ rcu_head_after_call_rcu(struct rcu_head *rhp, rcu_callback_t f)
- extern int rcu_expedited;
- extern int rcu_normal;
- 
--DEFINE_LOCK_GUARD_0(rcu,
--	do {
--		rcu_read_lock();
--		/*
--		 * sparse doesn't call the cleanup function,
--		 * so just release immediately and don't track
--		 * the context. We don't need to anyway, since
--		 * the whole point of the guard is to not need
--		 * the explicit unlock.
--		 */
--		__release(RCU);
--	} while (0),
--	rcu_read_unlock())
--
-+DEFINE_LOCK_GUARD_0(rcu, rcu_read_lock(), rcu_read_unlock())
- DECLARE_LOCK_GUARD_0_ATTRS(rcu, __acquires_shared(RCU), __releases_shared(RCU));
- 
- #endif /* __LINUX_RCUPDATE_H */
++ifndef CONFIG_WARN_CAPABILITY_ANALYSIS_ALL
++capability-analysis-cflags += --warning-suppression-mappings=$(srctree)/scripts/capability-analysis-suppression.txt
++endif
++
+ export CFLAGS_CAPABILITY_ANALYSIS := $(capability-analysis-cflags)
+diff --git a/scripts/capability-analysis-suppression.txt b/scripts/capability-analysis-suppression.txt
+new file mode 100644
+index 000000000000..0a5392fee710
+--- /dev/null
++++ b/scripts/capability-analysis-suppression.txt
+@@ -0,0 +1,32 @@
++# SPDX-License-Identifier: GPL-2.0
++#
++# The suppressions file should only match common paths such as header files.
++# For individual subsytems use Makefile directive CAPABILITY_ANALYSIS := [yn].
++#
++# The suppressions are ignored when CONFIG_WARN_CAPABILITY_ANALYSIS_ALL is
++# selected.
++
++[thread-safety]
++src:*arch/*/include/*
++src:*include/acpi/*
++src:*include/asm-generic/*
++src:*include/linux/*
++src:*include/net/*
++
++# Opt-in headers:
++src:*include/linux/bit_spinlock.h=emit
++src:*include/linux/cleanup.h=emit
++src:*include/linux/kref.h=emit
++src:*include/linux/list*.h=emit
++src:*include/linux/local_lock*.h=emit
++src:*include/linux/lockdep.h=emit
++src:*include/linux/mutex*.h=emit
++src:*include/linux/rcupdate.h=emit
++src:*include/linux/refcount.h=emit
++src:*include/linux/rhashtable.h=emit
++src:*include/linux/rwlock*.h=emit
++src:*include/linux/rwsem.h=emit
++src:*include/linux/seqlock*.h=emit
++src:*include/linux/spinlock*.h=emit
++src:*include/linux/srcu.h=emit
++src:*include/linux/ww_mutex.h=emit
 -- 
 2.48.1.711.g2feabab25a-goog
 
