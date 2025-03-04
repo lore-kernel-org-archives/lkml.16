@@ -1,55 +1,55 @@
-Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
+Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C3B02040B0
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 11:51:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8295B20469B
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 11:51:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741089118; cv=none; b=OTe5sXd1xaHWGYyvDhTYfZ9DphpcXSj8ODrMTAN1u4aS51aPyXfB615UmtZ0FmQ1z4w//UGnck1dJ67ipnGOK2jLBGBA0W4G/Wx0rLK3LylKWnTvZIusmDfyLA2cRyntgz6UmTMF5cXaWP6cVNe8W80sn/w7DJtbnp5STP8DTI4=
+	t=1741089121; cv=none; b=oSXC97ER7Uk784yvpD8uL3/eCVt7rdfASsKdDM4heCY+vsv5n/Xu7JB6Hx3c39nHBc+7eViqmcHqjj+sRV461VevRALJ+0fIVKyW/kn82qYXBN55MP8rM4PNVde0a7EYYpilpmXv44vRIjVyzS6xHMaSUiQnuhBIsCYXEesiFYA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741089118; c=relaxed/simple;
-	bh=6ix7Yh05nsg0+BRkgBinynB7537OSvluG9ZV2/ywotA=;
+	s=arc-20240116; t=1741089121; c=relaxed/simple;
+	bh=pfYrJhYmXOmoMeg4sKWMdZszxN5nxDKSyeUBka7g/x0=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=gVUCv51uWTbzjPl/2prJms+iMbKFIxmtXqmOSEgCUGqJwL+u9qmsA2+H/asGuQKWJCBREcY9CP9ZKwfWHssLEMgyFx+xnuYkri30vRj05Lo9uwv1dUgw5gOOKJNZY3JeeInPjzJOJj79BMh3tUd4lbCYGrP42PWQFFd1YuVlstQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=W5/Qsoj8; arc=none smtp.client-ip=209.85.128.74
+	 To:Cc:Content-Type; b=k008qJoREx9RDTF0oIIH2qbbnMp70z9V8xudvOvGWPetAgpUTURQdQ1fsyG8fosxoiDE9lo+894UZWjKR1taAY6XU1EILHTHe4kTWpC4DWi0txAAAvEjTbYxP7B5xGkZzw8id48F5kpR+nXbDZpwZ8Rzcv6AIDGgo035n5XZdmg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Lh82+CRX; arc=none smtp.client-ip=209.85.128.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="W5/Qsoj8"
-Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-43bc1aa0673so9839765e9.2
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Mar 2025 03:51:54 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Lh82+CRX"
+Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-43ba50406fbso42499825e9.2
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Mar 2025 03:51:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1741089113; x=1741693913; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1741089118; x=1741693918; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=FL6QF1vf/aSpNg0U7JqjgxuXk5Djy4reKV1N7d1McJg=;
-        b=W5/Qsoj8Acu0QNuG5LC8o8uu314wtsjXnqJKqgfiGagaBc0dkI8HAQBKuaFY0wdvX3
-         XrlrKJInXT5ejGgbJ9sQk5Yk81FHOvFiYCrAiqowiySTqiRrnI4fTUwaw6gasGA/3Nxb
-         ic6KS6s7WL7Qp50fbpVnTwpwDw5X0J8zG+4W8z0dVMn6u2PywrfCBFepJmuUTHReL4/D
-         MB8qDZONxSGVVGddYT2PiHehaX4KqOlCOP2rN+l0sB96vDNifUt3BZ1bKlPZEsGfZnOk
-         RR1zcAdrZHf2gyNfL/YeZ+Meb+b5uAtEt/WyB7Vtdp/E5wlmmqDVRRpdIC7WseejAXVS
-         eJbg==
+        bh=4xQ8U/jop7C2IhA5DV1Cut5nWSl9HZJMjEE/uQKJi8g=;
+        b=Lh82+CRXuAlRGF1Pb+RacfGY0iY3pwpvDQtexxwmt8jcZWhr2D2Q4Glh7f4Br/ByqX
+         NHFRSWogtA1amAr6ngosOMfB+CalIL+Zhjq2FTfLB5XnQe2PAtyxZcCDnMWYcnNfXybp
+         4RY8aV6qRd/yTv6xfXB1Ny9PqOaTOPwdtsbIck8ef4sz2ha8yV1S9awHfJAzMM26nY0n
+         1aYKxA7xiIM/H5lEI8r/FBIckw3e9T5WnxzJuL+1H+sVKW+QoFN+LQW53THgkv1nQQQl
+         vf6L0vAUebsgx7uY53IAHOkFYirQieE2QDGZ+uWQzC0tPN/fEhVGNBdrUbHnMb8RGLbd
+         8Z2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741089113; x=1741693913;
+        d=1e100.net; s=20230601; t=1741089118; x=1741693918;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=FL6QF1vf/aSpNg0U7JqjgxuXk5Djy4reKV1N7d1McJg=;
-        b=EhO7bwgTD5pgpMhaEV1z1fXTY517hqSaW/AhzN197HjuC08x165s+4WiMHbsNIYTqO
-         2LvgGLYOxmF6I/J1+x4A4PKHas0wdA2sS/w7ZKsTtJ2Z/+2FFwMgy/o/4ccuk0AWZtOA
-         hblH0Pu2k4zaWCnfbmo7pvwDD0DqbLzFewIX2Gn1Jeq4Dzvo/nleBdk0XyU/kueSA0zN
-         eyIGp/ow3O6gc0Pb9zeYh6vEwCLBZBmszw7WZUHHwNVbj18E/RqSpcp4AfXl0gPWOfsx
-         sx59U34Gqwo7u0i+rA4sTXqxfO4AlYGBKMbt2etfpuroUklR1JFnPIysll51AU2bgWPZ
-         5+rw==
-X-Forwarded-Encrypted: i=1; AJvYcCXoQx2qE6J7MQPtUYlbZ9sJWnJzfIYK3Sg1moLjBh3GJ3GHjG1/e2nmasBhFKYuXVwoD55YjwIGyZpx1+k=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywm5DNwDwniEEyBbIDmvm0jvSiGt8gduE7U8DoR1cNeK/vpvrnB
-	hcprvTy32lPqdGKFBArry9rVJmM0XphlHX3eXbbopYSVCIFRYW5muGuIGqY4HYwptxaURphU8xv
-	d68nDv5cNKQ3emg==
-X-Google-Smtp-Source: AGHT+IGmelcITCLSxHDM+ol2aAuW+SX1n24peFVEH2jDRbxRitIa4L9bodIVhVTmWM6MYSThFc/JIyzqdk61KPY=
-X-Received: from wmsp23.prod.google.com ([2002:a05:600c:1d97:b0:43b:c59f:5eb4])
+        bh=4xQ8U/jop7C2IhA5DV1Cut5nWSl9HZJMjEE/uQKJi8g=;
+        b=CjAe/7TEHZzTBdeJ35Uh3d+Ryof+3f0rgdX970OzBnOy9F3mCxJ77m/UN2+b0d+s6z
+         Nb4MuxKJmUAEu0uGj3NwGXFCixvppfZkAFUOOIE5+kvXaJRGAU+RBvYkEzIP4IF9PY7P
+         AS9lnImUSBF6WP07aN5xkssC9XMWWMoJjp+0jIkgaH8VlkDCnUSZSVsB7pmhJJtvAcTU
+         SzqsP5Zm6cFun1epaWW9oLJ0YtxPf9yRs9iekneDQpAt439okSm6U0QlMgiAnMRh2YGD
+         92vEqsgan9n/l99mAMkVLysb7+G7tjJM3FwMQ9c2qNS0qz2OhakiSjrEe9tibndjm0g/
+         SLGw==
+X-Forwarded-Encrypted: i=1; AJvYcCU96G3UbQAmkphMTd1/vsLXTgM5M6LPrDjdktSAqHzKvNmqSsy353tKVsASld4S6/IJWOUqWscP6HyQPy8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyOABey1rjpmfBEVyFNSqcWSXZX6/3QmhToaT1eTvlhbDqWWNgk
+	DFhFhru58LRp4UCej52fGx5NfdVsJyYyIa2Y7WtfNAdSODxoly3pX8u0E3kjYaQ9F4tYBBi9zWC
+	lCBXAyga55YW6Xw==
+X-Google-Smtp-Source: AGHT+IG2AMKbWFBJdIDE/KQqr7FWEBjtkYhI8RMcgWJbZq3RCOLTY4UH5ylub+jcjaVg9xtq9tEKZxH8Zpsb0+c=
+X-Received: from wmsp7.prod.google.com ([2002:a05:600c:1d87:b0:439:88bc:d27d])
  (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:511e:b0:439:6017:6689 with SMTP id 5b1f17b1804b1-43ba66e0bf5mr134523075e9.9.1741089113515;
- Tue, 04 Mar 2025 03:51:53 -0800 (PST)
-Date: Tue, 04 Mar 2025 11:49:58 +0000
+ 2002:a05:600c:4f88:b0:43b:cac6:afed with SMTP id 5b1f17b1804b1-43bcac6b01amr26242355e9.19.1741089118021;
+ Tue, 04 Mar 2025 03:51:58 -0800 (PST)
+Date: Tue, 04 Mar 2025 11:50:00 +0000
 In-Reply-To: <20250304-vma-v15-0-5c641b31980a@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,22 +59,22 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250304-vma-v15-0-5c641b31980a@google.com>
 X-Developer-Key: i=aliceryhl@google.com; a=openpgp; fpr=49F6C1FAA74960F43A5B86A1EE7A392FDE96209F
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4010; i=aliceryhl@google.com;
- h=from:subject:message-id; bh=6ix7Yh05nsg0+BRkgBinynB7537OSvluG9ZV2/ywotA=;
- b=owEBbQKS/ZANAwAKAQRYvu5YxjlGAcsmYgBnxulG4bX1vws8nKbvRQGg/HqDRGItXCMIy067J
- UtrjP8bcg2JAjMEAAEKAB0WIQSDkqKUTWQHCvFIvbIEWL7uWMY5RgUCZ8bpRgAKCRAEWL7uWMY5
- Ri5ND/4qzKj39WFiIJmDQtStg/DTeOLhovy/f+nq4dxxKjIfPkCXN7mCBwdVuyaZ9IzpZiig/Pr
- JjlUejmUYiv7GpXNwQ5fevvLnl2gcsS1Ww7K77rmGyLn0NSzhVvcqZcao+XO/4XJt6+XVtvMz1V
- WBioMluf2e0EYFq9tTgyMbxs30d2OPKQTdMBKNpgYFXQT8S/Ce2+TokcsxSrswN6WzxBaSXwFs4
- vRooNosfXpQ9rl/CMycHIVLQyQ5+Jt7zL6o/RMAu+HbDp97x7c3D0vNJ8COJNYSNkfQyjRZOH+u
- F8SnH4QGOnzt/WmfwjdLOWZZAMqop2kISubcoSUSqZjRykmfS/498SXFXeXyeaUaVWHDH4qcZX9
- A+xW9AB1b1Pwo1yR2dF1KkC668o9aBCnVWc+OC68hEn7PoO3wGTMwMjr/Dy48ASSh5hmdk0yVJU
- R2KomJV44m9VI3/5Xh8pJWvqS3z0BqUe4Kav9e4WepTAk4ez1a7Kr/jk9guvCkT/EuW9+kf3vqO
- lEMYpTjt8VuhMEqFGnTSDh3AiPQCgKVDPpLIaRdvE+uPl9AvDfpkrtdwg14IX3dnHQYUDC1L20f
- 74KnV/YeVER1hTZMagxWLY/LsEtTbKcOy/w81SF+BaH/9ihcVLAzKHC+ETYboYoKrzb64CNSBdM TUDoUxIAgm/EwsA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1378; i=aliceryhl@google.com;
+ h=from:subject:message-id; bh=pfYrJhYmXOmoMeg4sKWMdZszxN5nxDKSyeUBka7g/x0=;
+ b=owEBbQKS/ZANAwAKAQRYvu5YxjlGAcsmYgBnxulI1cTJusWcBTCMCV8E308MKzphWs+XSbM1l
+ Hz1AqO5grqJAjMEAAEKAB0WIQSDkqKUTWQHCvFIvbIEWL7uWMY5RgUCZ8bpSAAKCRAEWL7uWMY5
+ RkUdD/9S9VVPwCSO26UGmBZ/OmG3EriY6UTnIBpk5NPvullTUYJY3Zlp/66cdtLbu8WTJOZ9szF
+ XQT5s3mUTicmHQZAlsZwsyVIplAmPfNn3p63oOfleS79W8OwjfHtXGNsWp8DHvBvdDvpf7/ukq7
+ lzFLV2niaQGAoJiiANGIyc6RYiCKyVEOvgvmU+Okr1f0B3CPFhY1KdGGXWfVLuhl8jrC3JO1Ey4
+ FXVkkDLN997uTyiju1T4tt553y3A3FQNf2lG7rOMTImAkyGMUFGYdKdieVySgTAUHKLgjhEihw0
+ mIX5VTQeHPctQKzQNuKpdXYQzbmNz0iAg6QNRiuE66wdEavAlrlP8HwyfkfQUPcwHV3l2HDh7+G
+ bV/mjic1RKMA0XRIlOhVixB1m3zhn+ESLpcKdYL21xZ+V9LsskTmDOldn9A2HgI+BmLgqUj2JO9
+ k89eJj+FlozF6ZKeGtmz8Ho8oUGSiPX4zZP1lkSUKPC4qwLJtKRZXmE1mV8QV/ojeIgwh98PsgZ
+ dieETycPZZZ1w3bBgEG27qWiL4XJjML5GSpcZX+jRI2k/fT/Ch6FGWmu1kezWeJpeQn9UV5OoFZ
+ +C4B3gRwEl+V5T0OifW6SwxuruC2sQOzyMdFHkj0VehR1/uqazg/zwi7ucgp5iY12K6EDvBITxS Zm7tfasNdodcx5Q==
 X-Mailer: b4 0.14.2
-Message-ID: <20250304-vma-v15-7-5c641b31980a@google.com>
-Subject: [PATCH v15 7/9] rust: miscdevice: add mmap support
+Message-ID: <20250304-vma-v15-9-5c641b31980a@google.com>
+Subject: [PATCH v15 9/9] mm: rust: add MEMORY MANAGEMENT [RUST]
 From: Alice Ryhl <aliceryhl@google.com>
 To: Miguel Ojeda <ojeda@kernel.org>, Matthew Wilcox <willy@infradead.org>, 
 	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, 
@@ -90,97 +90,44 @@ Cc: Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>,
 	Alice Ryhl <aliceryhl@google.com>
 Content-Type: text/plain; charset="utf-8"
 
-Add the ability to write a file_operations->mmap hook in Rust when using
-the miscdevice abstraction. The `vma` argument to the `mmap` hook uses
-the `VmaNew` type from the previous commit; this type provides the
-correct set of operations for a file_operations->mmap hook.
+We have introduced Rust bindings for core mm abstractions as part of
+this series, so add an entry in MAINTAINERS to be explicit about who
+maintains this.
 
-Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Acked-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Acked-by: Liam R. Howlett <Liam.Howlett@Oracle.com>
-Reviewed-by: Andreas Hindborg <a.hindborg@kernel.org>
-Reviewed-by: Gary Guo <gary@garyguo.net>
+Patches are anticipated to be taken through the mm tree as usual with
+other mm code.
+
+Link: https://rust-for-linux.com/rust-kernel-policy#how-is-rust-introduced-in-a-subsystem
+Link: https://lore.kernel.org/all/33e64b12-aa07-4e78-933a-b07c37ff1d84@lucifer.local/
 Signed-off-by: Alice Ryhl <aliceryhl@google.com>
 ---
- rust/kernel/miscdevice.rs | 44 ++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 44 insertions(+)
+ MAINTAINERS | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/rust/kernel/miscdevice.rs b/rust/kernel/miscdevice.rs
-index e14433b2ab9d8fa391474b2ad7e3ed55c64b4d91..e4a2c599683243ac955b7c95e0645b8c1010b25f 100644
---- a/rust/kernel/miscdevice.rs
-+++ b/rust/kernel/miscdevice.rs
-@@ -14,6 +14,7 @@
-     error::{to_result, Error, Result, VTABLE_DEFAULT_ERROR},
-     ffi::{c_int, c_long, c_uint, c_ulong},
-     fs::File,
-+    mm::virt::VmaNew,
-     prelude::*,
-     seq_file::SeqFile,
-     str::CStr,
-@@ -119,6 +120,22 @@ fn release(device: Self::Ptr, _file: &File) {
-         drop(device);
-     }
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 25c86f47353de25c88291cc7fd6c4e9bfb12d5c4..3f610b3ab66ed5e502261deb867099fec6e4ab17 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -15196,6 +15196,19 @@ F:	tools/mm/
+ F:	tools/testing/selftests/mm/
+ N:	include/linux/page[-_]*
  
-+    /// Handle for mmap.
-+    ///
-+    /// This function is invoked when a user space process invokes the `mmap` system call on
-+    /// `file`. The function is a callback that is part of the VMA initializer. The kernel will do
-+    /// initial setup of the VMA before calling this function. The function can then interact with
-+    /// the VMA initialization by calling methods of `vma`. If the function does not return an
-+    /// error, the kernel will complete initialization of the VMA according to the properties of
-+    /// `vma`.
-+    fn mmap(
-+        _device: <Self::Ptr as ForeignOwnable>::Borrowed<'_>,
-+        _file: &File,
-+        _vma: &VmaNew,
-+    ) -> Result {
-+        kernel::build_error!(VTABLE_DEFAULT_ERROR)
-+    }
++MEMORY MANAGEMENT [RUST]
++M:	Alice Ryhl <aliceryhl@google.com>
++R:	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
++R:	Liam R. Howlett <Liam.Howlett@oracle.com>
++L:	linux-mm@kvack.org
++L:	rust-for-linux@vger.kernel.org
++S:	Maintained
++W:	http://www.linux-mm.org
++T:	git git://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm
++F:	rust/helpers/mm.c
++F:	rust/kernel/mm.rs
++F:	rust/kernel/mm/
 +
-     /// Handler for ioctls.
-     ///
-     /// The `cmd` argument is usually manipulated using the utilties in [`kernel::ioctl`].
-@@ -176,6 +193,7 @@ impl<T: MiscDevice> VtableHelper<T> {
-         const VTABLE: bindings::file_operations = bindings::file_operations {
-             open: Some(fops_open::<T>),
-             release: Some(fops_release::<T>),
-+            mmap: maybe_fn(T::HAS_MMAP, fops_mmap::<T>),
-             unlocked_ioctl: maybe_fn(T::HAS_IOCTL, fops_ioctl::<T>),
-             #[cfg(CONFIG_COMPAT)]
-             compat_ioctl: if T::HAS_COMPAT_IOCTL {
-@@ -257,6 +275,32 @@ impl<T: MiscDevice> VtableHelper<T> {
-     0
- }
- 
-+/// # Safety
-+///
-+/// `file` must be a valid file that is associated with a `MiscDeviceRegistration<T>`.
-+/// `vma` must be a vma that is currently being mmap'ed with this file.
-+unsafe extern "C" fn fops_mmap<T: MiscDevice>(
-+    file: *mut bindings::file,
-+    vma: *mut bindings::vm_area_struct,
-+) -> c_int {
-+    // SAFETY: The mmap call of a file can access the private data.
-+    let private = unsafe { (*file).private_data };
-+    // SAFETY: This is a Rust Miscdevice, so we call `into_foreign` in `open` and `from_foreign` in
-+    // `release`, and `fops_mmap` is guaranteed to be called between those two operations.
-+    let device = unsafe { <T::Ptr as ForeignOwnable>::borrow(private) };
-+    // SAFETY: The caller provides a vma that is undergoing initial VMA setup.
-+    let area = unsafe { VmaNew::from_raw(vma) };
-+    // SAFETY:
-+    // * The file is valid for the duration of this call.
-+    // * There is no active fdget_pos region on the file on this thread.
-+    let file = unsafe { File::from_raw_file(file) };
-+
-+    match T::mmap(device, file, area) {
-+        Ok(()) => 0,
-+        Err(err) => err.to_errno(),
-+    }
-+}
-+
- /// # Safety
- ///
- /// `file` must be a valid file that is associated with a `MiscDeviceRegistration<T>`.
+ MEMORY MAPPING
+ M:	Andrew Morton <akpm@linux-foundation.org>
+ M:	Liam R. Howlett <Liam.Howlett@oracle.com>
 
 -- 
 2.48.1.711.g2feabab25a-goog
