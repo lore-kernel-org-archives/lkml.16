@@ -1,261 +1,212 @@
-Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
+Received: from DU2PR03CU002.outbound.protection.outlook.com (mail-northeuropeazon11012039.outbound.protection.outlook.com [52.101.66.39])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B53F742077
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 09:43:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741081401; cv=none; b=g3rW4WkgW7AbNLHeGyC1vxFeN2S3+KUP9NVYuMqN1g6283R3GGYWQdxPWuMGxsnHRGTNa43jkno8LAezl8Ekz1KD7l8IYvjXo0T5ueUXRKoDD/NPlHU/hJju79zXruTOP7GqIIzz9sIw9mzXHjWAHGKJPsSPGcB73AStpQ/Lv+U=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741081401; c=relaxed/simple;
-	bh=hcspPf0gx13/5AFsQEtXlf4Qjf3Mk8zVNuddd2SiYl8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=L4oOFIER0ojBhyW2VpYrSc76AYlIkjTkyZjGf3Hhb8/XNgN1CHkCMQ1eWFgTbU30RUmt4MK1JguSyBxchCGEQFLraTC8GT4vxaEdqOF/QNhCnHbSmC7nXOQXW0wNlkPQVINtkSyqv5uBwtb353Ahux+TAXRhrvfvVA3HaBdEWv8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=GaO7AbEY; arc=none smtp.client-ip=217.70.183.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A2561FC0F0
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 09:44:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.66.39
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741081452; cv=fail; b=kskGm75mnz04J82/fZbgZbP0FdaNYKrp1gPHXrALGPlMhyGXt6btVuWoJ4maMwKbDdpflM07uPuhmaBm/Wk5NhJ3HK6uWyhJiPzKOqDUGzApLFzc09hKQW/qNdXnftFBamtrWMKly76cvp4EBy/G1Zp00gKFpnR8wkNj9VqSZxQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741081452; c=relaxed/simple;
+	bh=5OsHPE5V8BHGmOYJyP90+vg7T5YeL1FX+R9mwvqhRUI=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=k2JiyX0S+nOsQUnj5WAQwFIKMBcJ6unMN3u5u0WA5i1DA3Rxa0s81Ix2fEtW6U747h4zXcmCb9EJ1zEBTdcXcssn6p7F7PRfdU0QX4uA58F3o9D3EIBwgpW3F3jJXBUDeWD1IGaBO4p2LPe9Mfs9y5zaUOKDMicYMLH45STNvtQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=lBT1mA7F; arc=fail smtp.client-ip=52.101.66.39
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="GaO7AbEY"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 9D44F43284;
-	Tue,  4 Mar 2025 09:43:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1741081394;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=crDLL2GXtfOejp4EJCkj3Z+BGJtGWzuSVXp69qOLGpQ=;
-	b=GaO7AbEYOeiUDuSiSsVS7uVhRNfDBhQaULG7tETydzqI9b3y8pW6mc1tRjycRKQlM63aLN
-	QtCtho6hWsLr9Z0p8Ze05LooMxEr+kgM5oFbVEoBu5dohWWUapGxXvk1D9aE0Utz9jdmF1
-	ay1WQgnyrG9AJJk8sP3R+WN3jGusUo6r8OevFlfnysvk5FbsM1evf3kSy6iEu/DiWKNwqT
-	p93z0NKdOYRbAsj4cBcoigac/cmdVugx4TDgGmM8BUQDL+DVGy3cfVkdF6pfCu4RA36/HT
-	tB1KAu/KMHLpIydYEvSa2kluWapfySVfp+Jp3SxwZG1e9iKN6ts/FxHItv4MZQ==
-Message-ID: <36c37aae-244f-48f8-8f88-c46b58a9e8b1@bootlin.com>
-Date: Tue, 4 Mar 2025 10:43:12 +0100
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="lBT1mA7F"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=ymXKIsqzgynuf75LL9uQgKlulKB7HsmbWO34s/R7Ui/jNXcIa3yihNt0/Iiwd/ZAaaogH1ZvWsytJkgLSh+sjNKOSoofAOzKWAB9JDpnvm5Xltd+53KpjpEjH78xFQww0QLOVeFYJcSA2w1F1bdlKscCrJV8zk6Im9PHDBGD5LWaU1EBgZZlxePH/fa9yO2yZAJjeAliktQhGa782mEyNSXAcOm6nJMrC1e6lgKq+M9sE/SqRtYRYR3s5GvK1X8GbwOA4sDB0IsPt/Bh2m3JW0BeuGaa8XHJT8vsg6CuR5Xt4Q9YlTww5kaolEA0chXy2kBL7Rx40Yxl6cY2Ryqzqw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=x2kHQuxdz+r0X5OHCy7CZo+O//quVVETxPoj980sC+E=;
+ b=arxu7Wnw3Q+2yUK9LGR2qrY+HlDfK54dOlFR42OQVexWfLEZn+DDZttQDjVzhcwh1TZktbrScNQfJKMF0XW+NlyVRbxGbTAZFjUESKZwLQQteGA0xCmdTtcGU3i3ZdBtoSosGJkawkYuXDqfATfAax3QJy1cXzAnQw3IGcfK7uUqmz2IC2nLAHdOC4Zdx5YaWKIFvSjAaHdGNiroVF/ZmLTDYtaNKl/dyGRDDFm82ICfq95p4wjHgbYE9TkJqNvw2gHKCIRESRAzpM2VrI/fPSogvP9Pi/QgyTT3Ve3Np/zE8p+O9YecBlrDtHbZIOx6JuWHoPWhs5NbrE+ee/DwjA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=x2kHQuxdz+r0X5OHCy7CZo+O//quVVETxPoj980sC+E=;
+ b=lBT1mA7Fswf9jRHmxfkvJBQ4mZiBMtzvW1fru3SH8GIpWr9W1BR89EBcl/a8RdXDA+iYpiiOxUc4WZQIuacqq2/CiQugE9qJRmS6W93iJYnmlNx799LG7rT2vgnVM67//I0oN/hIHxJbg5MejMgFSChBiXAoTTBm+O5wkAxW5eygc22hI0cHUmuCv3iCFXy76wCvQYe8vxRNkUZfi+GiKDGsY70NfBqvl5MiqFvRAWaBrJnlXLYeg7viybd1OJ96CNX+GtO1OUlaZIKdfk7GOB9zNsOLSVbN8JpoiX+9R86voeGDkJzNbAGZmsTMhmM7W119ZDs6LYl/XuutrqR+Qw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from AS8PR04MB8642.eurprd04.prod.outlook.com (2603:10a6:20b:429::24)
+ by VI1PR04MB9977.eurprd04.prod.outlook.com (2603:10a6:800:1d9::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.28; Tue, 4 Mar
+ 2025 09:44:07 +0000
+Received: from AS8PR04MB8642.eurprd04.prod.outlook.com
+ ([fe80::50d3:c32a:2a83:34bb]) by AS8PR04MB8642.eurprd04.prod.outlook.com
+ ([fe80::50d3:c32a:2a83:34bb%7]) with mapi id 15.20.8489.025; Tue, 4 Mar 2025
+ 09:44:07 +0000
+From: Jacky Bai <ping.bai@nxp.com>
+To: tglx@linutronix.de,
+	shawnguo@kernel.org,
+	s.hauer@pengutronix.de
+Cc: kernel@pengutronix.de,
+	festevam@gmail.com,
+	linux-kernel@vger.kernel.org,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	aisheng.dong@nxp.com,
+	peng.fan@nxp.com,
+	frank.li@nxp.com,
+	shengjiu.wang@nxp.com
+Subject: [PATCH] irq: imx-irqsteer: irq_count can larger than registered irq
+Date: Tue,  4 Mar 2025 17:45:13 +0800
+Message-Id: <20250304094513.1964356-1-ping.bai@nxp.com>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SG2PR04CA0161.apcprd04.prod.outlook.com (2603:1096:4::23)
+ To AS8PR04MB8642.eurprd04.prod.outlook.com (2603:10a6:20b:429::24)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 00/14] drm/vkms: Allow to configure device
-To: =?UTF-8?B?Sm9zw6kgRXhww7NzaXRv?= <jose.exposito89@gmail.com>
-Cc: hamohammed.sa@gmail.com, simona@ffwll.ch, melissa.srw@gmail.com,
- maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de,
- airlied@gmail.com, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org
-References: <20250218101214.5790-1-jose.exposito89@gmail.com>
-Content-Language: en-US
-From: Louis Chauvet <louis.chauvet@bootlin.com>
-Autocrypt: addr=louis.chauvet@bootlin.com; keydata=
- xsFNBGCG5KEBEAD1yQ5C7eS4rxD0Wj7JRYZ07UhWTbBpbSjHjYJQWx/qupQdzzxe6sdrxYSY
- 5K81kIWbtQX91pD/wH5UapRF4kwMXTAqof8+m3XfYcEDVG31Kf8QkJTG/gLBi1UfJgGBahbY
- hjP40kuUR/mr7M7bKoBP9Uh0uaEM+DuKl6bSXMSrJ6fOtEPOtnfBY0xVPmqIKfLFEkjh800v
- jD1fdwWKtAIXf+cQtC9QWvcdzAmQIwmyFBmbg+ccqao1OIXTgu+qMAHfgKDjYctESvo+Szmb
- DFBZudPbyTAlf2mVKpoHKMGy3ndPZ19RboKUP0wjrF+Snif6zRFisHK7D/mqpgUftoV4HjEH
- bQO9bTJZXIoPJMSb+Lyds0m83/LYfjcWP8w889bNyD4Lzzzu+hWIu/OObJeGEQqY01etOLMh
- deuSuCG9tFr0DY6l37d4VK4dqq4Snmm87IRCb3AHAEMJ5SsO8WmRYF8ReLIk0tJJPrALv8DD
- lnLnwadBJ9H8djZMj24+GC6MJjN8dDNWctpBXgGZKuCM7Ggaex+RLHP/+14Vl+lSLdFiUb3U
- ljBXuc9v5/9+D8fWlH03q+NCa1dVgUtsP2lpolOV3EE85q1HdMyt5K91oB0hLNFdTFYwn1bW
- WJ2FaRhiC1yV4kn/z8g7fAp57VyIb6lQfS1Wwuj5/53XYjdipQARAQABzSlMb3VpcyBDaGF1
- dmV0IDxsb3Vpcy5jaGF1dmV0QGJvb3RsaW4uY29tPsLBlAQTAQgAPgIbAwULCQgHAgYVCgkI
- CwIEFgIDAQIeAQIXgBYhBItxBK6aJy1mk/Un8uwYg/VeC0ClBQJmlnw+BQkH8MsdAAoJEOwY
- g/VeC0ClyhwP/Ra6H+5F2NEW6/IMVHeXmhuly8CcZ3kyoKeGNowghIcTBo59dFh0atGCvr+y
- K9YD5Pyg9aX4Ropw1R1RVIMrWoUNZUKebRTu6iNHkE6tmURJaKLzR+9la+789jznQvbV+9gM
- YTBppX4/0cWY58jiDiDV4aJ77JDo7aWNK4hz8mZsB+Y7ezMuS4jy2r4b7dZ+YL/T9/k3/emO
- PkAuFkVhkNhytMEyOBsT7SjL4IUBeYWvOw9MIaXEl4qW/5HLGtMuNhS94NsviDXZquoOHOby
- 2uuRAI0bLz1qcsnY90yyPlDJ0pMuJHbi0DBzPTIYkyuwoyplfWxnUPp1wfsjiy/B6mRKTbdE
- a/K6jNzdVC1LLjTD4EjwnCE8IZBRWH1NVC1suOkw3Sr1FYcHFSYqNDrrzO+RKtR1JMrIe8/3
- Xhe2/UNUhppsK3SaFaIsu98mVQY3bA/Xn9wYcuAAzRzhEHgrbp8LPzYdi6Qtlqpt4HcPV3Ya
- H9BkCacgyLHcdeQbBXaup9JbF5oqbdtwev3waAmNfhWhrQeqQ0tkrpJ46l9slEGEdao5Dcct
- QDRjmJz7Gx/rKJngQrbboOQz+rhiHPoJc/n75lgOqtHRePNEf9xmtteHYpiAXh/YNooXJvdA
- tgR1jAsCsxuXZnW2DpVClm1WSHNfLSWona8cTkcoSTeYCrnXzsFNBGCG6KUBEADZhvm9TZ25
- JZa7wbKMOpvSH36K8wl74FhuVuv7ykeFPKH2oC7zmP1oqs1IF1UXQQzNkCHsBpIZq+TSE74a
- mG4sEhZP0irrG/w3JQ9Vbxds7PzlQzDarJ1WJvS2KZ4AVnwc/ucirNuxinAuAmmNBUNF8w6o
- Y97sdgFuIZUP6h972Tby5bu7wmy1hWL3+2QV+LEKmRpr0D9jDtJrKfm25sLwoHIojdQtGv2g
- JbQ9Oh9+k3QG9Kh6tiQoOrzgJ9pNjamYsnti9M2XHhlX489eXq/E6bWOBRa0UmD0tuQKNgK1
- n8EDmFPW3L0vEnytAl4QyZEzPhO30GEcgtNkaJVQwiXtn4FMw4R5ncqXVvzR7rnEuXwyO9RF
- tjqhwxsfRlORo6vMKqvDxFfgIkVnlc2KBa563qDNARB6caG6kRaLVcy0pGVlCiHLjl6ygP+G
- GCNfoh/PADQz7gaobN2WZzXbsVS5LDb9w/TqskSRhkgXpxt6k2rqNgdfeyomlkQnruvkIIjs
- Sk2X68nwHJlCjze3IgSngS2Gc0NC/DDoUBMblP6a2LJwuF/nvaW+QzPquy5KjKUO2UqIO9y+
- movZqE777uayqmMeIy4cd/gg/yTBBcGvWVm0Dh7dE6G6WXJUhWIUtXCzxKMmkvSmZy+gt1rN
- OyCd65HgUXPBf+hioCzGVFSoqQARAQABwsOyBBgBCAAmAhsuFiEEi3EErponLWaT9Sfy7BiD
- 9V4LQKUFAmaWfGYFCQfwx0ECQAkQ7BiD9V4LQKXBdCAEGQEIAB0WIQRPj7g/vng8MQxQWQQg
- rS7GWxAs4gUCYIbopQAKCRAgrS7GWxAs4gfGEACcA0XVNesbVIyvs5SJpJy+6csrH4yy233o
- GclX2P7pcCls55wiV6ywCtRaXWFjztYmklQieaZ/zq+pUuUDtBZo95rUP20E56gYV2XFB18W
- YeekTwH5d2d/j++60iHExWTB+sgMEv3CEGikUBj7iaMX2KtaB1k9K+3K6dx/s1KWxOClFkbJ
- EV/tmeq7Ta8LiytQM9b4yY550tzC0pEEeFcLFXo1m5KcJauYnAqrlOVY48NFpFUd9oAZf/Pz
- p3oEs+zn/8zK2PBrZZCD6AhrbotRy7irE5eimhxcsFm1+MG5ufnaQUWHrRYXVuFhvkSoqZ8j
- GPgPEpFor4NjRyX/PMLglQ7S5snkvKcr3Lun44aybXEHq/1FTzW2kOh6kFHFFOPbMv1voJKM
- IzrmDoDS+xANt/La7OwpCylCgF6t9oHHTTGfAfwtfYZbiepC66FDe/Jt/QLwkIXeIoeSS1O4
- 6rJdGWG2kHthUM+uIbUbaRJW8AkJpzP1Mz7TieR/9jO4YPeUm9tGL5kP2yyNtzFilcoOeox1
- NSFNAPz+zPcovVmxAaSDGcSzhQVJVlk8xPib8g4fnI8qJ3Gj7xyw8D9dzxhCR2DIFmZL84En
- N7Rj+k4VIGY7M/cVvxL81jlbMGMERMmb96Cua9z1ROviGA1He2gbHOcp6qmLNu3nprleG8PL
- ZRNdEAC0iZapoyiXlVCKLFIwUPnxUz5iarqIfQU8sa1VXYYd/AAAFI6Wv3zfNtGicjgHP8rN
- CIegqm2Av1939XXGZJVI9f3hEoUn04rvxCgcDcUvn7I0WTZ4JB9G5qAGvQLXeXK6Byu77qTx
- eC7PUIIEKN3X47e8xTSj2reVTlanDr8yeqZhxpKHaS0laF8RbD85geZtAK67qEByX2KC9DUo
- eHBFuXpYMzGQnf2SG105ePI2f4h5iAfbTW9VWH989fx4f2hVlDwTe08/NhPdwq/Houov9f/+
- uPpYEMlHCNwE8GRV7aEjd/dvu87PQPm4zFtC3jgQaUKCbYYlHmYYRlrLQenX3QSorrQNPbfz
- uQkNLDVcjgD2fxBpemT7EhHYBz+ugsfbtdsH+4jVCo5WLb/HxE6o5zvSIkXknWh1DhFj/qe9
- Zb9PGmfp8T8Ty+c/hjE5x6SrkRCX8qPXIvfSWLlb8M0lpcpFK+tB+kZlu5I3ycQDNLTk3qmf
- PdjUMWb5Ld21PSyCrtGc/hTKwxMoHsOZPy6UB8YJ5omZdsavcjKMrDpybguOfxUmGYs2H3MJ
- ghIUQMMOe0267uQcmMNDPRueGWTLXcuyz0Tpe62Whekc3gNMl0JrNz6Gty8OBb/ETijfSHPE
- qGHYuyAZJo9A/IazHuJ+4n+gm4kQl1WLfxoRMzYHCA==
-In-Reply-To: <20250218101214.5790-1-jose.exposito89@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddutddujedtucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthekredttddvjeenucfhrhhomhepnfhouhhishcuvehhrghuvhgvthcuoehlohhuihhsrdgthhgruhhvvghtsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeefleejleelhfeiuddvveeikeevudekgffhkeeggfdukeetgfetleetuefgudeuueenucffohhmrghinhepkhgvrhhnvghlrdhorhhgpdhgihhthhhusgdrtghomhdpfhhrvggvuggvshhkthhophdrohhrghdpsghoohhtlhhinhdrtghomhenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplgduledvrdduieekrddtrddvtdgnpdhmrghilhhfrhhomheplhhouhhishdrtghhrghuvhgvthessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepuddtpdhrtghpthhtohepjhhoshgvrdgvgihpohhsihhtohekleesghhmrghilhdrtghomhdprhgtphhtthhopehhrghmohhhrghmmhgvugdrshgrsehgmhgrihhlrdgtohhmpdhrtghpthhtohepshhimhhonhgrsehffhiflhhlrdgth
- hdprhgtphhtthhopehmvghlihhsshgrrdhsrhifsehgmhgrihhlrdgtohhmpdhrtghpthhtohepmhgrrghrthgvnhdrlhgrnhhkhhhorhhstheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehmrhhiphgrrhgusehkvghrnhgvlhdrohhrghdprhgtphhtthhopehtiihimhhmvghrmhgrnhhnsehsuhhsvgdruggvpdhrtghpthhtoheprghirhhlihgvugesghhmrghilhdrtghomh
-X-GND-Sasl: louis.chauvet@bootlin.com
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AS8PR04MB8642:EE_|VI1PR04MB9977:EE_
+X-MS-Office365-Filtering-Correlation-Id: 76a37bf9-780d-431d-1f04-08dd5b011b0a
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|52116014|376014|366016|1800799024|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?bFlHQeIwIMEybSjKE+5ucdgzJl3qmd+SfaP4csMLwLrCk6UIK2NPM656jtIw?=
+ =?us-ascii?Q?xfXUWLMByWWY8UMOHaEQEmmF+TYL90SRG5r1gPCCAeeUrROLGz1wZ7UpFT0I?=
+ =?us-ascii?Q?TYmbUNL0I/PQH7d/8oWboCpYJ//7oyIxupjx4eBsuCbGrV46rVsQdKaKvRzc?=
+ =?us-ascii?Q?N8CNTlwqPCXckyWqLtYSLYA3rSRyK6s3LA2LM3KOcuWZIwZSI7DF2xVDo1l3?=
+ =?us-ascii?Q?l1R1zCEKIC006UGYniGAfkGFde5QBTK/xYeKkspk50mEcilroU7AvRtWfUcJ?=
+ =?us-ascii?Q?V7tHVtoHQH1E+p4MgWzdcvgB6UoUNtLqVxzca7kHZcofdVAAyeuCMpRLdROl?=
+ =?us-ascii?Q?Q+yzusPv74yXLhJoOoPOUsQX/jAD1TdYGhm8uB+vMxhAp2Q83zI7MnOtiUNt?=
+ =?us-ascii?Q?tUgch387ijwwGRohTvG73NiH75sFhtfnCh5bXSEmgqWBD6JhsuRYY3fcYb3T?=
+ =?us-ascii?Q?SercgY3fDHMh690KECkAk63mOqfEoR/9qjbst1L2iH2VBj7jhOrKyA8Y8Gsk?=
+ =?us-ascii?Q?ZrWMCNZNFLkJfnm3MJoI2katTwRIOUU7jybkeZZ6vAGKKgrMcKEOjBZniOaB?=
+ =?us-ascii?Q?VAf3lckAO9kD1R8DLUPyzb+P/KeaLqETt3pSH1qtxU6gm2D4kCh/4jLM7U3E?=
+ =?us-ascii?Q?CuP4bjOCmkm2C5y5YK7D3LVBa75pmEnokrF4HPyzRq5OPXoqEBcRAHuim4uo?=
+ =?us-ascii?Q?bI+kRdlriG6FjfKHukcmgbeFqOU5slpRwn+14JsSR7I3Gj7iYx4rc8Hu/NCn?=
+ =?us-ascii?Q?P0c4ReuBQx8gj8Q5cLNt3B/Z0brpYyexCA6Lklqn30RFTYR+CRmnO5++1bRl?=
+ =?us-ascii?Q?vVqatEW7BfZBJwTk41Sz0fgJX1aE9kg9CVFtT8ZI79Yh31+aBn5yPwcHMWwg?=
+ =?us-ascii?Q?oMV6hheZ4Q3Cp0ThQys+LCA2TxkJmirCgUJBVFI1uIBmy/I5rKOn5edlHaeB?=
+ =?us-ascii?Q?FIFPJrzKecHmFgOj0QQr6R3c3G1O3sP5zztTTqZlebCJNLlaJFJ3YVfrwfn2?=
+ =?us-ascii?Q?wNFC8Jt1VlpILQ1+PepoXNvhZaF65O1/Jl3/aMrwDS0cRZHu6OlE8kpYD7r6?=
+ =?us-ascii?Q?+52+P1tQ5YgWRPWzRVU2sutwzIukRhOT4IVHXu3rNxiAnaqcLAzfX2Z0XGWH?=
+ =?us-ascii?Q?yaeO6dfVAHthWLPclZ0XzTdsvsYc/oqs1ZvU9BNlTgyi1vogBh86JS6W4U6b?=
+ =?us-ascii?Q?9aSRggMSlHXzvHFuez8CDsCZyLcmEBbIbQ9MK3Rcn6cy9LUsaRZ8rYerzRcV?=
+ =?us-ascii?Q?0bsBTEAzLplxBbGyb1U5zLbd4Lh7CFPvL5yfwdFL8Qn9IUozVPl0QhJKi2xO?=
+ =?us-ascii?Q?bh6I9EqN2+fiW2V9oJOnP5iSCkX25M/Ee4e3BJaYX1KGwB6GZiJI3LXDMRBl?=
+ =?us-ascii?Q?uvHkeuMZIc+Q5QuNK6kOfB32JDzikZQUvWWewv0DdVd7x9NO3bHMAcKvkFVi?=
+ =?us-ascii?Q?4HxhBWJP4ii3d6jpOkZpwcuErMiEbbBP?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR04MB8642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(52116014)(376014)(366016)(1800799024)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?eWvhYflcCxH/us/MG/MtTmTToJZN096o1XIvHCw0YcBXdkHqRkKim/EvVVgm?=
+ =?us-ascii?Q?NeGI5A77X8rOp9FzP5aUPC9DKlvD8luA/KRA+hlOS4duIuLvrhG1r/yxYOlh?=
+ =?us-ascii?Q?1DMhW4Gv98xqV7RXuIya0gwV3gcEg+o0rBEF0nMgHurhPAasBNGqFia+4zzm?=
+ =?us-ascii?Q?mQ8rN4TrXCvoTtB6hY786TcdxOooCIIq0UuJ8cE+Hw5QWWSGlnTcilI2vnW8?=
+ =?us-ascii?Q?WeHb2i7nUd+CVxRd5vRsACpwU/6C8uLfvDqMQwEY7qONcuYPRxa2/z8TEbWH?=
+ =?us-ascii?Q?bHiuJjCG8jsa1Z0je7yNioPOdQ0IE14YyYI6wIwS+4kaA+Dtq+FPIq93VJyK?=
+ =?us-ascii?Q?2On7zcBKRq4ZJMG39ZWndnu/lUm8PSoBorSdAJ4dPldcXSK/JB/K4TRFyV0b?=
+ =?us-ascii?Q?tLlpbCMigpgnaVnBQoe32ST3aqcslaEjNorGVuFITtmQIi7CB3DlvRXrZtpk?=
+ =?us-ascii?Q?a18OyJ1ZNkN0pjvrxPkLjec6ewVUB3vYAkkjNSIPw/R1YDgjuMD850e0NbDW?=
+ =?us-ascii?Q?usFyq+MAyLAZxAR8y50ljfcWazDZ4Lf46XFtkJv6BwjbwavdPEq+Lgg6Zd9T?=
+ =?us-ascii?Q?t1hIHYOgUlE7+pT51tSCyp+0rHlHSvAhkEt5tWy9KX5IB0zRFdj2Ocwkeaak?=
+ =?us-ascii?Q?F1Ofcod1IQBav5eZvlda7TOlrwHpQXGuieDHUjvP82N0zvTcXeFOm7JdmIAB?=
+ =?us-ascii?Q?GAiNHbQaTX7fx7HWV+xfYzX5JnOwg7xdpZwRjlby5tzP3QdMB48dCR5zL2oA?=
+ =?us-ascii?Q?ifdfd7/7HDV2tkZkf5KpUud8TpsSKc6eTWhnYSnkFRllx9iYiUe3VdVyxnWB?=
+ =?us-ascii?Q?5V18T5jSMKxSUZ+PfV7EspA+BpVfxsLyjTI4uBkhh/c7DGzxbtTgEXZNyk7R?=
+ =?us-ascii?Q?B2/kqNXY3lyRFdxwQ/XLiA3CGdUq/m96j/nkPGWx/QzoX8QZh6qvtFNrMy0Q?=
+ =?us-ascii?Q?SDaztvqsBAnum8enD2vVzOPnIDx3FsUdg4FvTAmlzGfWb5rHTKrjEXn8K612?=
+ =?us-ascii?Q?yChBttR99LPSRmolNAbw2p7aKFeonzvrD7owQHm5B43RjljjYRjd4wHopHpJ?=
+ =?us-ascii?Q?ViY1fxWV+PKR03wL6aE+86ys/T0yHh44+WtqUmd2zl19oEzr09tSsJ++mqrp?=
+ =?us-ascii?Q?iRTh6W/tnJw2scG0GEPqb6ldfv9R7+VCkJU1qPcHIdv8ZJC0m9TlXrAE7c4q?=
+ =?us-ascii?Q?DD0vNs4AQ50zwxdKooRQwgUxV38HdLtUaj7+KnwUFSVhsuHlc37bAKRvqKaf?=
+ =?us-ascii?Q?T7wxCbd1eOww11MGoEIJuZebsbPeKGqqwPWBRhYe/Y1EnVqiGkRY5l03lMFL?=
+ =?us-ascii?Q?WqIMZ6FEmfiQ5b/sEb/dvrYyETQNjLqnzZiRmhQ0J1ERK3shRQJnPAq0Z5vZ?=
+ =?us-ascii?Q?mVJ+rqyngrphTPyUo5CZo07Bj2tcHvxXVr7WALg8rQkQRJmTVePbC4qmSGxj?=
+ =?us-ascii?Q?8bzONxY1yOtdBsGZm1FlPRfhbCRI9w/zSJ03Qr0OGvG8j0pWcHlvgozCvPHX?=
+ =?us-ascii?Q?hO0XPJBdXQc/4FxvtmcXm9F5n+CVDzy4qiPtTLWPBgZRB0gbfGBQgwVzRYlG?=
+ =?us-ascii?Q?JjKl3vnxRzZ6B42IPiMAxDw8h1Hn9xqdLpMdRAiv?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 76a37bf9-780d-431d-1f04-08dd5b011b0a
+X-MS-Exchange-CrossTenant-AuthSource: AS8PR04MB8642.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Mar 2025 09:44:07.0472
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: UU8Lbvwp2x+0HQVUKXtXe3rhgqCmDm2iDsMbGj8rnisDGNhDsS99QwLPqdqVxSR/0Qfz+kmxhe4H+UNgyfT05Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB9977
 
+From: Shengjiu Wang <shengjiu.wang@nxp.com>
 
+The irqsteer IP itself can support up to 5 channels and each
+channel can support max 960 IRQs per. The actual number of
+channels and IRQ per channel implemented in HW is SoC related.
 
-Le 18/02/2025 à 11:12, José Expósito a écrit :
-> Hi everyone,
-> 
-> In preparation for ConfigFS support, a flexible way to configure VKMS device(s)
-> is required.
-> This series adds the required APIs to create a configuration, the code changes
-> required to apply it and KUnit test validating the changes.
-> 
-> Louis Chauvet and I are working on ConfigFS support. In this series I tried to
-> merge his changes [1] with mine [2].
-> I kept his Signed-off-by to reflect that, even if I show up as the author of
-> some/most of the patches, this was a joint effort.
-> 
-> I'll send the ConfigFS code [3] and its IGT tests [4] code this week.
-> Meanwhile, the IGT tests also exercise this series and can be used for
-> additional test coverage.
-> 
-> Best wishes,
-> José Expósito
+For previous i.MX SoCs, normally only one channel and max 512
+IRQ is implemented, But for i.MX94, the irqsteer HW is implemented
+for 960 IRQs, even it only has 384 IRQs connected.
 
-Hi all,
+That means on i.MX94, the 'irq_number' is 6 but the 'irq_count' is
+15, so we need to increase the CHAN_MAX_OUTPUT_INT to 0xF(960 / 64)
+to make sure the irqsteer can work correctly on i.MX94.
 
-I am trying to apply this series but I am encountering some issues. Most 
-of the patches have the following trailers:
+Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+Signed-off-by: Jacky Bai <ping.bai@nxp.com>
+Reviewed-by: Ye Li <ye.li@nxp.com>
+Reviewed-by: Peng Fan <peng.fan@nxp.com>
+Reviewed-by: Frank Li <Frank.Li@nxp.com>
+---
+ drivers/irqchip/irq-imx-irqsteer.c | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
-Co-developed-by: Louis Chauvet
-Signed-off-by: Louis Chauvet
-Signed-off-by: José Exposito
-
-When I use dim b4-shazam, the result is:
-
-Co-developed-by: Louis Chauvet
-Signed-off-by: José Exposito
-Signed-off-by: Louis Chauvet
-
-However, checkpatch is not happy with this because it removes my 
-Signed-off-by line immediately after Co-developed-by.
-
-I then tried to add it myself:
-
-Co-developed-by: Louis Chauvet
-Signed-off-by: Louis Chauvet
-Signed-off-by: José Exposito
-Signed-off-by: Louis Chauvet
-
-But this time, checkpatch complains that I have my Signed-off-by line twice.
-
-And if I don't add the last Signed-off-by, checkpatch is indeed not 
-happy too:
-
-Co-developed-by: Louis Chauvet
-Signed-off-by: Louis Chauvet
-Signed-off-by: José Exposito
-
-How should I proceed in this situation? Should I ignore some warnings? 
-If so, what are the expected trailers?
-
-Thanks!
-
-> [1] https://patchwork.kernel.org/project/dri-devel/cover/20250121-google-remove-crtc-index-from-parameter-v3-0-cac00a3c3544@bootlin.com/
-> [2] https://patchwork.kernel.org/project/dri-devel/cover/20240813105134.17439-1-jose.exposito89@gmail.com/
-> [3] https://github.com/JoseExposito/linux/commits/patch-vkms-configfs/
-> [4] https://gitlab.freedesktop.org/jexposit/igt-gpu-tools/-/commits/vkms-configfs
-> 
-> Changes in v4:
-> 
->    - Applied review comments by Louis Chauvet: (thanks!!)
->      - Do not access "private" struct fields in tests
->      - Reviewed-by in all patches
->    - Rebased on top of drm-misc-next
->    - Link to v3: https://lore.kernel.org/dri-devel/20250217100120.7620-1-jose.exposito89@gmail.com/T/
-> 
-> Changes in v3:
-> 
->    - Applied review comments by Louis Chauvet:
->      - Moved drm_vblank_init(..., vkms_config_get_num_crtcs()) to a different patch
->      - Improved error handling in vkms_config_*_attach_*() functions
->      - Fixed compilation errors when CONFIG_DRM_VKMS_KUNIT_TEST=m
->      - Used for_each iterators in vkms_config_test_default_config(). A leftover
->        from the removed connector hot-add code
->      - Validated that vkms_config.dev wasn't NULL before calling drm_info()
->      - Kept vkms_device.config as a const pointer (at the cost of casting in
->        list_count_nodes())
->    - Renamed "CONFIG_DRM_VKMS_KUNIT_TESTS" to "CONFIG_DRM_VKMS_KUNIT_TEST" for
->      consistency with other options
->    - Rebased on top of drm-misc-next
->    - Link to v2: https://lore.kernel.org/all/20250211110912.15409-1-jose.exposito89@gmail.com/
-> 
-> Changes in v2:
-> 
->    - Applied review comments by Louis Chauvet:
->      - Added Co-developped-by tags where required
->      - Split the first patch in 2: vkms_connector.h/c creation and struct
->        vkms_connector creation
->      - Fixes a user after free/double free bug. The bug is already present
->        in drm-misc-next and the fix could be merged independently
->      - Implemented for_each macros for the config
->      - Other naming fixes
->    - Link to v1: https://lore.kernel.org/all/20250129110059.12199-1-jose.exposito89@gmail.com/
-> 
-> José Expósito (13):
->    drm/vkms: Extract vkms_connector header
->    drm/vkms: Create vkms_connector struct
->    drm/vkms: Add KUnit test scaffolding
->    drm/vkms: Extract vkms_config header
->    drm/vkms: Move default_config creation to its own function
->    drm/vkms: Set device name from vkms_config
->    drm/vkms: Allow to configure multiple planes
->    drm/vkms: Allow to configure multiple CRTCs
->    drm/vkms: Allow to attach planes and CRTCs
->    drm/vkms: Allow to configure multiple encoders
->    drm/vkms: Allow to attach encoders and CRTCs
->    drm/vkms: Allow to configure multiple connectors
->    drm/vkms: Allow to attach connectors and encoders
-> 
-> Louis Chauvet (1):
->    drm/vkms: Add a validation function for VKMS configuration
-> 
->   .clang-format                                 |   7 +
->   drivers/gpu/drm/vkms/Kconfig                  |  15 +
->   drivers/gpu/drm/vkms/Makefile                 |   5 +-
->   drivers/gpu/drm/vkms/tests/.kunitconfig       |   4 +
->   drivers/gpu/drm/vkms/tests/Makefile           |   3 +
->   drivers/gpu/drm/vkms/tests/vkms_config_test.c | 951 ++++++++++++++++++
->   drivers/gpu/drm/vkms/vkms_config.c            | 640 ++++++++++++
->   drivers/gpu/drm/vkms/vkms_config.h            | 437 ++++++++
->   drivers/gpu/drm/vkms/vkms_connector.c         |  61 ++
->   drivers/gpu/drm/vkms/vkms_connector.h         |  26 +
->   drivers/gpu/drm/vkms/vkms_drv.c               |  45 +-
->   drivers/gpu/drm/vkms/vkms_drv.h               |  17 +-
->   drivers/gpu/drm/vkms/vkms_output.c            | 176 ++--
->   13 files changed, 2246 insertions(+), 141 deletions(-)
->   create mode 100644 drivers/gpu/drm/vkms/tests/.kunitconfig
->   create mode 100644 drivers/gpu/drm/vkms/tests/Makefile
->   create mode 100644 drivers/gpu/drm/vkms/tests/vkms_config_test.c
->   create mode 100644 drivers/gpu/drm/vkms/vkms_config.c
->   create mode 100644 drivers/gpu/drm/vkms/vkms_config.h
->   create mode 100644 drivers/gpu/drm/vkms/vkms_connector.c
->   create mode 100644 drivers/gpu/drm/vkms/vkms_connector.h
-> 
-
+diff --git a/drivers/irqchip/irq-imx-irqsteer.c b/drivers/irqchip/irq-imx-irqsteer.c
+index b0e9788c0045..afbfcce3b1e3 100644
+--- a/drivers/irqchip/irq-imx-irqsteer.c
++++ b/drivers/irqchip/irq-imx-irqsteer.c
+@@ -24,7 +24,7 @@
+ #define CHAN_MINTDIS(t)		(CTRL_STRIDE_OFF(t, 3) + 0x4)
+ #define CHAN_MASTRSTAT(t)	(CTRL_STRIDE_OFF(t, 3) + 0x8)
+ 
+-#define CHAN_MAX_OUTPUT_INT	0x8
++#define CHAN_MAX_OUTPUT_INT	0xF
+ 
+ struct irqsteer_data {
+ 	void __iomem		*regs;
+@@ -228,10 +228,8 @@ static int imx_irqsteer_probe(struct platform_device *pdev)
+ 
+ 	for (i = 0; i < data->irq_count; i++) {
+ 		data->irq[i] = irq_of_parse_and_map(np, i);
+-		if (!data->irq[i]) {
+-			ret = -EINVAL;
+-			goto out;
+-		}
++		if (!data->irq[i])
++			break;
+ 
+ 		irq_set_chained_handler_and_data(data->irq[i],
+ 						 imx_irqsteer_irq_handler,
+@@ -254,9 +252,13 @@ static void imx_irqsteer_remove(struct platform_device *pdev)
+ 	struct irqsteer_data *irqsteer_data = platform_get_drvdata(pdev);
+ 	int i;
+ 
+-	for (i = 0; i < irqsteer_data->irq_count; i++)
++	for (i = 0; i < irqsteer_data->irq_count; i++) {
++		if (!irqsteer_data->irq[i])
++			break;
++
+ 		irq_set_chained_handler_and_data(irqsteer_data->irq[i],
+ 						 NULL, NULL);
++	}
+ 
+ 	irq_domain_remove(irqsteer_data->domain);
+ 
 -- 
-Louis Chauvet, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.34.1
 
