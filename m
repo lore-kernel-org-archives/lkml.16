@@ -1,300 +1,129 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57F63204C1E;
-	Tue,  4 Mar 2025 13:11:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E88971E9B28;
+	Tue,  4 Mar 2025 13:13:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741093912; cv=none; b=cf7PBcFWKsDD5Xvfzr7yIa/WE/1g7AyX2wFSEIhMW+EODUT5ACvfw7z0vG/eeFdlx0jtT/NkxG8OiToLeYrgPR+j+etg2Ed3t4RFSyM3009uyIuKpx7MMZWcPgIVo5CyJnDpOgvywWDSnB1VZEj2mA1MeRITtBCWzBm+/h9XbIM=
+	t=1741093989; cv=none; b=Gk7MhDCZBdeuWB06OT70uY71ijoPY+BwvKZT7u+z0ezD/niaMo27UXmsmt7n9ls7tz1qxdVkbsYg+tGXM3hU3DGjEkjWXgInh2uqS6Lee8VOysuy0vUiTSrltV4Obu0JXZQjm3I2pH4xacCJ4R053+rOZc7PAVGEdLDYlX+x+Q4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741093912; c=relaxed/simple;
-	bh=CVNUGFCMu8pB9FIblXe0H3eHuWlR9XEnZTlypbRs3rU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=nObE9Urku7aG+tl9wo5f2/HaLOgs/rHcyDODRAfSwGFR+JBArl/CPWALwKWndWi8VWMFXn1WQvRnH6KTG3juXt4qruGdD5X43amV6djc+1d5TmNSNb4ry4cMQRLH1obRzB6EwzEu0r8YYHLxel5GECiO7sFv17CLm2l4BSl2CPQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Umx4xlsM; arc=none smtp.client-ip=209.85.214.177
+	s=arc-20240116; t=1741093989; c=relaxed/simple;
+	bh=9nIyrpqzNV/OSz0veM7DHdi0wUUDdJMwdBqkrgqty70=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=Bqtwr2+kanNRz668lR76xcGllnh4MoooHyR74u6uA19bddiq+H2e51jqAiQCGvh6hcV5pEOxxOXb8mWRDKQwgFbjV3sVRQYyGhyz19M7341kIffkQoAIsU3MZtoFEpXM8b8+BXgDOlur6kfze3YX90AtxtybOv25QFwcWP2PiuE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OvplTE3Z; arc=none smtp.client-ip=209.85.208.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Umx4xlsM"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-22349dc31bcso96959365ad.3;
-        Tue, 04 Mar 2025 05:11:50 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OvplTE3Z"
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5e4d50ed90aso6418867a12.0;
+        Tue, 04 Mar 2025 05:13:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741093909; x=1741698709; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1741093986; x=1741698786; darn=vger.kernel.org;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=e/wzkrlUs9VbfhOoJaGuLKCbDq4g35qaZwr6L+mmw+E=;
-        b=Umx4xlsMmGrnaNJuRrin5vi8ZAt2w883ENa/opm5Ef1E2b5FCGMRuI80/nNjvxxje+
-         AnLrqhGu/leSnSjl8jSbImGreK5/nIfZsTXlB+CU6XhtIUKJaRQOZYQv4hys7dlfyINa
-         vu5MTzKTRwJ59XwvjdbVwrIAqITsAs0HMGHqDFz3y583jbr5M6xNDv1TtDkscpGF7Xb2
-         bQvCYvBGRjTzdR6/FKxwuY+rIoADtGliOmsJQMMchtwBqkc1XLBZJe91g8jnSdqd5YqG
-         5A9WP0uKdMgrhEV4NMQ1FN/Kmme/p/ir1qAIihXoVwdm+wu5kCXLDvjE8eT1Q0WdQBQ6
-         Pulw==
+        bh=mLbCdf5ydhGRwAPCjiKPFxPNXbtTOCnpAyz9+gFbv3Y=;
+        b=OvplTE3ZSc11YZagaTiBQn5T0CHA4q0m6qRx1O1qkdVFwGwUTl9ljHvFuATim2gWRt
+         FsSpq65Ol7CHiVmwtPEELAT3s25PglrUQ2B9yNEnLL6OSZYamjnJ2ABcR3RbLofiMbYR
+         yGAdUIoPPMa4dP3Hh/JaEPcw8W6P0Y6Ct1ilpaXmMpfLh0JrpntXQ1vNxYITbe4wh6Ew
+         L+H61g4FeC4VrOhc2QVX/LhLD+sDCAVCoXo6ziUA8V5qm/6Srip9zri04ig0Va69e3h0
+         GQybH6uHAyo/6uaZK/Afpnc+4BzRWDz8hvYURSbHkVuSBynRxDs44Q+B6Lkx7G4EaU+A
+         4aQg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741093909; x=1741698709;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1741093986; x=1741698786;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=e/wzkrlUs9VbfhOoJaGuLKCbDq4g35qaZwr6L+mmw+E=;
-        b=C5jfnGFO81nvtt4ct78pMATQkDcRmhdhmVVtKVSUg16gg6KXP1I036FY3zZwM7L/uK
-         Uq+vD7WtEDdWJ5P9z1K5b5ovLtXguDtp37VsN4LSTZYFzdHen6eXT+v9Pg2e/6ymvBSJ
-         1YYzxW0MJn356N5iHzisje+Bn9czUpzGSaHu3Q6xkofT3Td14pzkJK0Yffx0CyjQU7ih
-         glYE+PPTMd9WpsqyoDnfh/QPk54PAou4AcPvzmY+VZ2PGjdnkDV52CT2vN5QKO13GpCM
-         Q2CoDmQIS+x823Biq99MhSrMfmH+Lh3OQsJMkKbN3c4UM+0wuXUCzBPKxoJm+gajv3ge
-         MHvA==
-X-Forwarded-Encrypted: i=1; AJvYcCWe1ID/rFDeg3PWH70IGGr/pDtcUgFr3bljjeATIR6qXJMewftK3TCKcJ7f1mm2Njc3re/BcaNYLmwFxrB2Huvl@vger.kernel.org, AJvYcCXT5dudQoiYWJquUMjbhL7dFlsn1mghXZu80eRliAU/aqdqyQttuXt+W0v/ca0VEeuQBDQvZnqF1udJDTc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzhdQ9BmOTDh5gTiHNuI1F8EsSMbf8g3tmwTTM7K/0ZyQiiFyBB
-	S9uvl3xuNeA6h8fnlVXUV1fNAoeH1OJICAf4LTzzKgPgt96pvpazOhwmgVqun2Qo6Q==
-X-Gm-Gg: ASbGncsK+DpUXnnwofic7SG/1KTaumH9MKObL6vcLs1BNnlJjoQv/u2jRAHDF+uhahw
-	y7BDw8y7fzx1X01Q+cnDyYUbwJv5AnF9UcZsZgBegHTxEHEwxf+Vam+Fb5NFy3cbM6IG2vD6lEA
-	ebirlpxs08QUlzCN+uhCdpQpI2ERX0Bf3F3DeZyT05KAMC94OclQWVGtQqpljXrQnzRvA1mhuxC
-	WLlQaTGPGr1Ak/ldcAXkNsPfsnl4MfNNYa9QJDsGSG/tJtU6KDGd0rHmED5RMS3RCIqRk7DcIaw
-	Eb4rNXkOovBu8eVUfBk9ELGvUBSIOSsvocRxC1H2ESRDwDRnuvMYpm4MmWRI7P1z
-X-Google-Smtp-Source: AGHT+IHe8Mh/cx2X8WKXOhydai9XajBG4/GGVd21BbCnkpbCoVM9apiwu2b/ffJQSIAjHk4+KoolSQ==
-X-Received: by 2002:aa7:88c7:0:b0:736:5486:781d with SMTP id d2e1a72fcca58-73654867c2fmr11847921b3a.19.1741093909312;
-        Tue, 04 Mar 2025 05:11:49 -0800 (PST)
-Received: from fedora.dns.podman ([43.228.180.230])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7349fe2a668sm10824199b3a.30.2025.03.04.05.11.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Mar 2025 05:11:48 -0800 (PST)
-From: Hangbin Liu <liuhangbin@gmail.com>
-To: netdev@vger.kernel.org
-Cc: Jay Vosburgh <jv@jvosburgh.net>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Nikolay Aleksandrov <razor@blackwall.org>,
-	Simon Horman <horms@kernel.org>,
-	Shuah Khan <shuah@kernel.org>,
-	Tariq Toukan <tariqt@nvidia.com>,
-	Jianbo Liu <jianbol@nvidia.com>,
-	Jarod Wilson <jarod@redhat.com>,
-	Steffen Klassert <steffen.klassert@secunet.com>,
-	Cosmin Ratiu <cratiu@nvidia.com>,
-	Petr Machata <petrm@nvidia.com>,
-	linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Hangbin Liu <liuhangbin@gmail.com>
-Subject: [PATCHv4 net 3/3] selftests: bonding: add ipsec offload test
-Date: Tue,  4 Mar 2025 13:11:20 +0000
-Message-ID: <20250304131120.31135-4-liuhangbin@gmail.com>
-X-Mailer: git-send-email 2.46.0
-In-Reply-To: <20250304131120.31135-1-liuhangbin@gmail.com>
-References: <20250304131120.31135-1-liuhangbin@gmail.com>
+        bh=mLbCdf5ydhGRwAPCjiKPFxPNXbtTOCnpAyz9+gFbv3Y=;
+        b=EKY6/y+GgbzS91N5LMyhw3wclaBk29T+h+6WldtZIH4aIfUaK+2zga18NkLVx65yzx
+         rmuWOI9Pdl1X50DnSMtLz/s4xN/aMKdZ3NJYxlCqfCP3wTv4CGPUkOZPiR7RGfGWlZL6
+         uKyVXrLenYM6n8Px0LLq/ikrrP0Z0QDlUsaiQjFph33YLJmOhFva7wVtzGfNmETPCSd9
+         9GvA4nQIlfGdoT+z2enelvS7iLkbH/XHgOgM3kv0t1FNu9Yrw+7Fan7VapXmDEPSVj2o
+         8TwNe2rQ68/1X8M8SCIcKYZsaisWhLsoq61xvlli5+p3kq4BoRnOLV0sC3X4ak7xoWfy
+         FZIw==
+X-Forwarded-Encrypted: i=1; AJvYcCULW3wv80ZKevf0yazhb2UZNTbqdyi0ABRmN0t3IudiRTBeM7smk103rZKHIdx3fqZ0K8tAngG1ols3vQ9D@vger.kernel.org, AJvYcCX7vUwGbd4DLut1e7J4aa0oGeS28K8Hny6ADhnwzQpuyyc6aUkEfdaPfF9oX8+0ZqYAS7ljKUowtFCY@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxn3tJd/a1U/iXXXZq6gdISycZ46Y+hMtWbIzkwjXwuAPkQhBwE
+	W4CHpIPrKIFIqvPUjRERPiZderhjGe4vFeXaAwh7tmZ6bfkK2oeRBgN2pQ==
+X-Gm-Gg: ASbGncualbrGnPs1ey0Eqif+oF8I1A9ninXa9Oz5nT2iC9C9GRAKPUW0/P6gwNcPDiw
+	c6HN42N83l5mR1oX9g+bI+/XM9gdVMTOFEuI49WbJzcBursxmp1+tm5W+O3WMmBGzopPY9kksZa
+	TxNgFljyKw+SLaR0czKVtszhDlQtOMuOQ3w7Wgat3griOGVVT0eP4dz8pvKGHyTQHde6mtvIAir
+	gBG71HIRXyUBfa6CR7SxjQoSncwbQzK84kkCc1fwpioaPl19vKXen6RW3aDBFRImF9JValMNWQl
+	zsQACDexWMQumxUsjH+ejDlgdH5aPghwE6wkvcjjm7hys4zs42F4n8w+0FBy4RrYY1RZGqK0gp/
+	+fvk7A/BqEl1r7ej8MbzqEbCLGw==
+X-Google-Smtp-Source: AGHT+IFoaUg9Nkh97ooIflZaTgzJMVg2UFR+7WPJFlk7BUC+KoSF3yd0IR8of6FOHQwHK0CM0VOg2A==
+X-Received: by 2002:a17:906:6a24:b0:ab7:6fa9:b0a9 with SMTP id a640c23a62f3a-abf25d94191mr2160998666b.11.1741093985833;
+        Tue, 04 Mar 2025 05:13:05 -0800 (PST)
+Received: from smtpclient.apple (89-66-237-154.dynamic.chello.pl. [89.66.237.154])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5e4c2f408cdsm8118489a12.0.2025.03.04.05.13.02
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 04 Mar 2025 05:13:04 -0800 (PST)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.400.131.1.6\))
+Subject: Re: [PATCH 0/6] Add support for RK3588 DisplayPort Controller
+From: Piotr Oniszczuk <piotr.oniszczuk@gmail.com>
+X-Priority: 3
+In-Reply-To: <7b8767fc.3607.19551aa5f74.Coremail.andyshrk@163.com>
+Date: Tue, 4 Mar 2025 14:12:50 +0100
+Cc: heiko@sntech.de,
+ neil.armstrong@linaro.org,
+ sebastian.reichel@collabora.com,
+ devicetree@vger.kernel.org,
+ hjc@rock-chips.com,
+ mripard@kernel.org,
+ linux-kernel@vger.kernel.org,
+ linux-rockchip@lists.infradead.org,
+ yubing.zhang@rock-chips.com,
+ dri-devel@lists.freedesktop.org,
+ Andy Yan <andy.yan@rock-chips.com>,
+ krzk+dt@kernel.org,
+ robh@kernel.org,
+ linux-arm-kernel@lists.infradead.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <047EECFC-7E55-44EC-896F-13FE04333E4D@gmail.com>
+References: <20250223113036.74252-1-andyshrk@163.com>
+ <AC3DE87B-64B1-4C34-8E1B-3900E2C53AA3@gmail.com>
+ <7b8767fc.3607.19551aa5f74.Coremail.andyshrk@163.com>
+To: Andy Yan <andyshrk@163.com>
+X-Mailer: Apple Mail (2.3826.400.131.1.6)
 
-This introduces a test for IPSec offload over bonding, utilizing netdevsim
-for the testing process, as veth interfaces do not support IPSec offload.
-The test will ensure that the IPSec offload functionality remains operational
-even after a failover event occurs in the bonding configuration.
 
-Here is the test result:
 
-TEST: bond_ipsec_offload (active_slave eth0)                        [ OK ]
-TEST: bond_ipsec_offload (active_slave eth1)                        [ OK ]
+> Wiadomo=C5=9B=C4=87 napisana przez Andy Yan <andyshrk@163.com> w dniu =
+1 mar 2025, o godz. 13:24:
+>=20
+>=20
+> Hi Piotr,
+>=20
+>>=20
+>> is it worth to play with this or it is too early?
+>=20
+> I think you could give it a try if it using the Standard DP=EF=BC=88non-=
+ALT mode=EF=BC=89 port for output.=20
+> Since I don't currently have a development board with DP1 output =
+available, I haven't been
+> able to test it yet. As for the Type-C Alternate Mode output, some =
+patches are still required=20
+> I'll  send it with V2 tomorrow or next week.
+> Feel free to let me know if If you encounter any issues=E3=80=82
+>=20
 
-Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
----
- .../selftests/drivers/net/bonding/Makefile    |   3 +-
- .../drivers/net/bonding/bond_ipsec_offload.sh | 154 ++++++++++++++++++
- .../selftests/drivers/net/bonding/config      |   4 +
- 3 files changed, 160 insertions(+), 1 deletion(-)
- create mode 100755 tools/testing/selftests/drivers/net/bonding/bond_ipsec_offload.sh
+Andy,
+I added dp1 enablement in rock5 itx like this: =
+https://gist.github.com/warpme/bddf75912193f57724c49216d5d85d4a
+Unfortunately it not works.
+For /sys/kernel/debug/dri/0/state - pls see above link=E2=80=A6
+I=E2=80=99m not sure: do i missed something in dt or rather issue issue  =
+is in dp code...
 
-diff --git a/tools/testing/selftests/drivers/net/bonding/Makefile b/tools/testing/selftests/drivers/net/bonding/Makefile
-index 2b10854e4b1e..d5a7de16d33a 100644
---- a/tools/testing/selftests/drivers/net/bonding/Makefile
-+++ b/tools/testing/selftests/drivers/net/bonding/Makefile
-@@ -10,7 +10,8 @@ TEST_PROGS := \
- 	mode-2-recovery-updelay.sh \
- 	bond_options.sh \
- 	bond-eth-type-change.sh \
--	bond_macvlan_ipvlan.sh
-+	bond_macvlan_ipvlan.sh \
-+	bond_ipsec_offload.sh
- 
- TEST_FILES := \
- 	lag_lib.sh \
-diff --git a/tools/testing/selftests/drivers/net/bonding/bond_ipsec_offload.sh b/tools/testing/selftests/drivers/net/bonding/bond_ipsec_offload.sh
-new file mode 100755
-index 000000000000..4b19949a4c33
---- /dev/null
-+++ b/tools/testing/selftests/drivers/net/bonding/bond_ipsec_offload.sh
-@@ -0,0 +1,154 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-2.0
-+
-+# IPsec over bonding offload test:
-+#
-+#  +----------------+
-+#  |     bond0      |
-+#  |       |        |
-+#  |  eth0    eth1  |
-+#  +---+-------+----+
-+#
-+# We use netdevsim instead of physical interfaces
-+#-------------------------------------------------------------------
-+# Example commands
-+#   ip x s add proto esp src 192.0.2.1 dst 192.0.2.2 \
-+#            spi 0x07 mode transport reqid 0x07 replay-window 32 \
-+#            aead 'rfc4106(gcm(aes))' 1234567890123456dcba 128 \
-+#            sel src 192.0.2.1/24 dst 192.0.2.2/24
-+#            offload dev bond0 dir out
-+#   ip x p add dir out src 192.0.2.1/24 dst 192.0.2.2/24 \
-+#            tmpl proto esp src 192.0.2.1 dst 192.0.2.2 \
-+#            spi 0x07 mode transport reqid 0x07
-+#
-+#-------------------------------------------------------------------
-+
-+lib_dir=$(dirname "$0")
-+source "$lib_dir"/../../../net/lib.sh
-+algo="aead rfc4106(gcm(aes)) 0x3132333435363738393031323334353664636261 128"
-+srcip=192.0.2.1
-+dstip=192.0.2.2
-+ipsec0=/sys/kernel/debug/netdevsim/netdevsim0/ports/0/ipsec
-+ipsec1=/sys/kernel/debug/netdevsim/netdevsim0/ports/1/ipsec
-+active_slave=""
-+
-+active_slave_changed()
-+{
-+        local old_active_slave=$1
-+        local new_active_slave=$(ip -n ${ns} -d -j link show bond0 | \
-+				 jq -r ".[].linkinfo.info_data.active_slave")
-+        [ "$new_active_slave" != "$old_active_slave" -a "$new_active_slave" != "null" ]
-+}
-+
-+test_offload()
-+{
-+	# use ping to exercise the Tx path
-+	ip netns exec $ns ping -I bond0 -c 3 -W 1 -i 0 $dstip >/dev/null
-+
-+	active_slave=$(ip -n ${ns} -d -j link show bond0 | \
-+		       jq -r ".[].linkinfo.info_data.active_slave")
-+
-+	if [ $active_slave = $nic0 ]; then
-+		sysfs=$ipsec0
-+	elif [ $active_slave = $nic1 ]; then
-+		sysfs=$ipsec1
-+	else
-+		check_err 1 "bond_ipsec_offload invalid active_slave $active_slave"
-+	fi
-+
-+	# The tx/rx order in sysfs may changed after failover
-+	grep -q "SA count=2 tx=3" $sysfs && grep -q "tx ipaddr=$dstip" $sysfs
-+	check_err $? "incorrect tx count with link ${active_slave}"
-+
-+	log_test bond_ipsec_offload "active_slave ${active_slave}"
-+}
-+
-+setup_env()
-+{
-+	if ! mount | grep -q debugfs; then
-+		mount -t debugfs none /sys/kernel/debug/ &> /dev/null
-+		defer umount /sys/kernel/debug/
-+
-+	fi
-+
-+	# setup netdevsim since dummy/veth dev doesn't have offload support
-+	if [ ! -w /sys/bus/netdevsim/new_device ] ; then
-+		modprobe -q netdevsim
-+		if [ $? -ne 0 ]; then
-+			echo "SKIP: can't load netdevsim for ipsec offload"
-+			exit $ksft_skip
-+		fi
-+		defer modprobe -r netdevsim
-+	fi
-+
-+	setup_ns ns
-+	defer cleanup_ns $ns
-+}
-+
-+setup_bond()
-+{
-+	ip -n $ns link add bond0 type bond mode active-backup miimon 100
-+	ip -n $ns addr add $srcip/24 dev bond0
-+	ip -n $ns link set bond0 up
-+
-+	ifaces=$(ip netns exec $ns bash -c '
-+		sysfsnet=/sys/bus/netdevsim/devices/netdevsim0/net/
-+		echo "0 2" > /sys/bus/netdevsim/new_device
-+		while [ ! -d $sysfsnet ] ; do :; done
-+		udevadm settle
-+		ls $sysfsnet
-+	')
-+	nic0=$(echo $ifaces | cut -f1 -d ' ')
-+	nic1=$(echo $ifaces | cut -f2 -d ' ')
-+	ip -n $ns link set $nic0 master bond0
-+	ip -n $ns link set $nic1 master bond0
-+
-+	# we didn't create a peer, make sure we can Tx by adding a permanent
-+	# neighbour this need to be added after enslave
-+	ip -n $ns neigh add $dstip dev bond0 lladdr 00:11:22:33:44:55
-+
-+	# create offloaded SAs, both in and out
-+	ip -n $ns x p add dir out src $srcip/24 dst $dstip/24 \
-+	    tmpl proto esp src $srcip dst $dstip spi 9 \
-+	    mode transport reqid 42
-+
-+	ip -n $ns x p add dir in src $dstip/24 dst $srcip/24 \
-+	    tmpl proto esp src $dstip dst $srcip spi 9 \
-+	    mode transport reqid 42
-+
-+	ip -n $ns x s add proto esp src $srcip dst $dstip spi 9 \
-+	    mode transport reqid 42 $algo sel src $srcip/24 dst $dstip/24 \
-+	    offload dev bond0 dir out
-+
-+	ip -n $ns x s add proto esp src $dstip dst $srcip spi 9 \
-+	    mode transport reqid 42 $algo sel src $dstip/24 dst $srcip/24 \
-+	    offload dev bond0 dir in
-+
-+	# does offload show up in ip output
-+	lines=`ip -n $ns x s list | grep -c "crypto offload parameters: dev bond0 dir"`
-+	if [ $lines -ne 2 ] ; then
-+		check_err 1 "bond_ipsec_offload SA offload missing from list output"
-+	fi
-+}
-+
-+trap defer_scopes_cleanup EXIT
-+setup_env
-+setup_bond
-+
-+# start Offload testing
-+test_offload
-+
-+# do failover and re-test
-+ip -n $ns link set $active_slave down
-+slowwait 5 active_slave_changed $active_slave
-+test_offload
-+
-+# make sure offload get removed from driver
-+ip -n $ns x s flush
-+ip -n $ns x p flush
-+line0=$(grep -c "SA count=0" $ipsec0)
-+line1=$(grep -c "SA count=0" $ipsec1)
-+[ $line0 -ne 1 -o $line1 -ne 1 ]
-+check_fail $? "bond_ipsec_offload SA not removed from driver"
-+
-+exit $EXIT_STATUS
-diff --git a/tools/testing/selftests/drivers/net/bonding/config b/tools/testing/selftests/drivers/net/bonding/config
-index dad4e5fda4db..054fb772846f 100644
---- a/tools/testing/selftests/drivers/net/bonding/config
-+++ b/tools/testing/selftests/drivers/net/bonding/config
-@@ -9,3 +9,7 @@ CONFIG_NET_CLS_FLOWER=y
- CONFIG_NET_SCH_INGRESS=y
- CONFIG_NLMON=y
- CONFIG_VETH=y
-+CONFIG_INET_ESP=y
-+CONFIG_INET_ESP_OFFLOAD=y
-+CONFIG_XFRM_USER=m
-+CONFIG_NETDEVSIM=m
--- 
-2.46.0
+FYI: schematic: =
+https://dl.radxa.com/rock5/5itx/v1110/radxa_rock_5itx_v1110_schematic.pdf
+
+
 
