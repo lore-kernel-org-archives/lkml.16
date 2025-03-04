@@ -1,79 +1,123 @@
-Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E1791FCCEA;
-	Tue,  4 Mar 2025 10:57:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 051211FCF60
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 10:57:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741085872; cv=none; b=Vo7dlzEPH3Qu1kn7m3yTpRfVUHKW8ZlLEG+RqCzA2xVQqFRpIS0zIYinIaorvI57TqB60CLUV8rKp8n9qajXkEkmKgKmD7CI07LodL8vyQUQ5GQPl3DX+qmDMPajN8A9rtFKBwbKJtlHr8eIcOp/TuVIf5IgAp6Vu5EnQUbmpZM=
+	t=1741085875; cv=none; b=i+sfAikH+WG/cCfeD4O+zFPt4UDtICVcE1NG8tS7qpgBlZ/v6HSiM+I1VEY29LMPOVtdhHeEsNab+q2avH30ISnIt0sOTg3AybhxohHKwEZ6n3H0W+KLfRXvrLkwhnP+/quSvJDYj9c8vktBcT8sPmQ9mW93CjwbuVo3luxuMzY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741085872; c=relaxed/simple;
-	bh=hHi+DwXG7UY1lv/g3bg0cqOZrXqu9QgvgEgWrYe2IQU=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=NUUftWYnSBbAH+biFBz317EzS1dIxnuxLS5ZPWkrVgiv5BmAADdk49Oae0wUd86RDEZC5oqYvSFtDQFMiSek+EAUMxtR3ZjT8pkzyujashG0/Z3dfWaoDOXuQCW7DKBXpRuwZR8SdtOhJR3J8qMrhjrAkfPz1a01NP1bf+u2NEQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Us5aj1z2; arc=none smtp.client-ip=217.70.183.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1741085875; c=relaxed/simple;
+	bh=n2UkKVPrXqYPJwFRJJ5cSjNwsrOJN1CW2qj0tohsSrw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=YQQSOaHAl75zCrlr4zhrlN2O8dkERrKByy+0LNUTjpOxi2Z2bZHkOJBPqQmweElFf0DN9Pih5HSfMUvIi1kV1ZxHB+j2duJg+M7XRts6PfURQjVbUpfkBPPxgvsHhWkouMxnFPfY1VWTHxx53uKZShT9UzKTdDY4cW0WJ5G6+l0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ZlhqEZon; arc=none smtp.client-ip=209.85.208.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Us5aj1z2"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 874EA43292;
-	Tue,  4 Mar 2025 10:57:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1741085868;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=fSbJA+yNi3J5I6jliaV/COu/d+wQ6yPnmnbAhuYtN4c=;
-	b=Us5aj1z2NVdXZ+AQFLhrUFulk/YiLOQDxY90slcpX2HvvfYBomzJBuuUGIB6cANN2+sINv
-	wlGFk3elUTwPZMc+ra+RIC5LVUGtpKg1I1cDOIR8Evn3LPIfkbCAn8GMRbso6NuoFWAmDU
-	o2qav7grSATWc5I1Ttlti0tbpB/Z5x5N7jzSuz/TM8Xof6hogBLQOYoHJVoeyoA8zQnExN
-	FAANNKa4srCXPFG+JtJOTpQ1cb5D+DypbyPkD+IkZRbBYKanw41UjgbT4/A2ivg/8jv6Qt
-	wUh7YYXXNPSoR3pVc+QV+EuxsyfkualDQmL33sF/vnj64QSIjsKzgVB67yzJ0g==
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-To: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Boris Brezillon <boris.brezillon@collabora.com>,  Cheng Ming Lin
- <chengminglin@mxic.com.tw>,  Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>,  Linux Next Mailing List
- <linux-next@vger.kernel.org>
-Subject: Re: linux-next: build failure after merge of the nand tree
-In-Reply-To: <20250304132821.57c8d996@canb.auug.org.au> (Stephen Rothwell's
-	message of "Tue, 4 Mar 2025 13:28:21 +1100")
-References: <20250304132821.57c8d996@canb.auug.org.au>
-User-Agent: mu4e 1.12.7; emacs 29.4
-Date: Tue, 04 Mar 2025 11:57:45 +0100
-Message-ID: <878qpl2hcm.fsf@bootlin.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZlhqEZon"
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5e4d3f92250so7395942a12.1
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Mar 2025 02:57:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1741085870; x=1741690670; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=QDU4rmBFIHbrSxk1aZkGu1FGzrjcXWe5kWg/s6z9WeE=;
+        b=ZlhqEZonxpc9u+Y7JA7Zz1Z3mWFgciPJsGf6mustvAIKdwwc+baJwD+JZCa5HaAiPQ
+         CLKsCWE9KHf8JgHVZ9CsAu6IbVVvDh1iB8PoVsZlXBo1dNzbjuL/2VM7QzWqXpSTTOvs
+         wPFCf05GmfrKOnKRGpWA21C3Qi0uda5TRY1kid7cd/akh5iCI+vndkXW/FDdJuraK/2W
+         /U6imfLO1DPF4iz5n4NsA8gNdP7YoJKY13HIvwe4Nnf+Xb/XMVWx7Jvj2pxQHwlnr1Sd
+         jRfpEELSQpstFpTVi+TzWQsflkliLw9cJKvGZWWtyo5FIHGkhHyJyLM8gjAfstlsngZb
+         nSnA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741085870; x=1741690670;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=QDU4rmBFIHbrSxk1aZkGu1FGzrjcXWe5kWg/s6z9WeE=;
+        b=osw8MeOWTDSDggf7oNdHv4oqxF4tDfMCuTgs+yETSF1IJYmYAfGSvn+w1hQJc29/i9
+         udQM/C1HOQw0u4K1pXYMgxGs9qA1blvtOR2YNGMK3cal7UOyT+MvltacyFcalu2GQP/x
+         VlAOr7I5Y9oxHjZZqGxhuTGnJlwUMy8VdfkkkpTfzx4ZTivQ3bEZplZkxB9Tf0US5uOo
+         /pnFmFqIWVSqAVlarF5MMv5yZztFi4f2059TVz4HSkfc6EVCHP0FU32FTV07uqD92G8j
+         iDORr+tH2T7Q2KyhyYqjZUrgvv+KrIn29x3Q9qkx/A7vuXLKv2O2mKopk4QEgRGznmQ3
+         Of+g==
+X-Forwarded-Encrypted: i=1; AJvYcCXroyOYEH45st8VK9ytbuRr9MMX+YPsbquoptKihhSqwPIiDlSHnz/ITMjRQIZV1KMBzPyIQp1H4TKxYLw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwIQoYODaHA2ODNKiH3LBy2jhfsAYf+t1EaTs49Cf+ReZJc5QsF
+	jeA/huszkGTvunMI5ruSob5sj9bq6EaF1SShLtmCtmFDcF1VSU1B5RK/Rx4mRJM=
+X-Gm-Gg: ASbGncvSISeiacBaz8mg8Wp6E+ig1B8sy6o+Y0rJ6+SGfFFvxWZjL3pGkoml6lIqetc
+	fT0+4qAqq1z6/clAHBrIpLyKVzPfQR2IPpbo0/LGNg/sWjnUeAxYzA/76Akh2EBGc9yidLRSSE9
+	Cfcikhj+ISFWV7ogziC4bCCSRerVR3kZX8g8Iq8r98TdJhJ9A9VZjVEznmjMSFutalszdGs4znn
+	OFei1XbOGNJKhhRaQOUmGz+NPtlg/Dv402v0TokWvqIZFdklNUHN9hMlBcA8xymfkfAFZy+NEte
+	99Gx0sUlDAWjoeOcXJkUGKPpDv4uZF/RkFavTOacOGVGIhzQzO1Ob/O8ujCHYz3vTQ3q4Q==
+X-Google-Smtp-Source: AGHT+IEb0GcLCgpBn4DBHJjLz9lM9L+RwrbPgXxAPm7l8NYpXStBAnU1h8ujrhg4rzG0gewdQBsjcQ==
+X-Received: by 2002:a17:906:6a25:b0:abf:5eeb:6af0 with SMTP id a640c23a62f3a-abf5eeb989emr1170917366b.18.1741085870210;
+        Tue, 04 Mar 2025 02:57:50 -0800 (PST)
+Received: from localhost.localdomain ([5.133.47.210])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5e4c43a5acdsm8002966a12.77.2025.03.04.02.57.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Mar 2025 02:57:49 -0800 (PST)
+From: srinivas.kandagatla@linaro.org
+To: broonie@kernel.org
+Cc: perex@perex.cz,
+	tiwai@suse.com,
+	krzysztof.kozlowski@linaro.org,
+	linux-sound@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	dmitry.baryshkov@linaro.org,
+	johan+linaro@kernel.org,
+	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: [PATCH v3 0/6] ASoC: q6apm: fix under runs and fragment sizes
+Date: Tue,  4 Mar 2025 10:57:17 +0000
+Message-Id: <20250304105723.10579-1-srinivas.kandagatla@linaro.org>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddutddukeehucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufgjfhgffffkgggtgfesthhqredttderjeenucfhrhhomhepofhiqhhuvghlucftrgihnhgrlhcuoehmihhquhgvlhdrrhgrhihnrghlsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeffgefhjedtfeeigeduudekudejkedtiefhleelueeiueevheekvdeludehiedvfeenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehmihhquhgvlhdrrhgrhihnrghlsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeehpdhrtghpthhtohepshhfrhestggrnhgsrdgruhhughdrohhrghdrrghupdhrtghpthhtohepsghorhhishdrsghrvgiiihhllhhonhestgholhhlrggsohhrrgdrtghomhdprhgtphhtthhopegthhgvnhhgmhhinhhglhhinhesmhigihgtrdgtohhmrdhtfidprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhnvgigt
- hesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-GND-Sasl: miquel.raynal@bootlin.com
+Content-Transfer-Encoding: 8bit
 
-Hello Stephen,
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 
-Thanks for the report.
+On Qualcomm Audioreach setup, some of the audio artifacts are seen in
+both recording and playback. These patches fix issues by
+1. Adjusting the fragment size that dsp can service.
+2. schedule available playback buffers in time for dsp to not hit under runs 
+3. remove some of the manual calculations done to get hardware pointer.
 
-> After merging the nand tree, today's linux-next build (x86_64
-> allmodconfig) failed like this:
->
-> In file included from drivers/mtd/nand/spi/macronix.c:11:
-> drivers/mtd/nand/spi/macronix.c:190:63: error: expected expression before=
- ',' token
->   190 |                      SPINAND_CONT_READ(macronix_set_cont_read),
->       |                                                               ^
+With these patches, am able to see Audio quality improvements.
 
-I fixed the commit and pushed -f to fix the build failure.
+Any testing would be appreciated.
 
-The fix I made is not super nice so I will send a follow-up patch to
-improve the style as the mistake comes from another unrelated patch.
+thanks,
+Srini
 
-Thanks,
-Miqu=C3=A8l
+Changes since v2:
+	- dropped patch which is causing regression with pluseaudio.
+	- setup period sizes only for capture path
+	- fix underruns/overruns in dsp pipelines.
+	- add fixes tag
+	- add patch to fix buffer alignment
+
+Changes since v1:
+	- added new patches to fix the fragment size, pointer
+	  calculations
+	- updated to schedule only available buffers.
+
+Srinivas Kandagatla (6):
+  ASoC: q6apm-dai: schedule all available frames to avoid dsp under-runs
+  ASoC: q6apm: add q6apm_get_hw_pointer helper
+  ASoC: q6apm-dai: make use of q6apm_get_hw_pointer
+  ASoC: qdsp6: q6apm-dai: set correct period and buffer alignment.
+  ASoC: qdsp6: q6apm-dai: fix capture pipeline overruns.
+  ASoC: qdsp6: q6apm-dai: fix playback dsp pipeline underruns
+
+ sound/soc/qcom/qdsp6/q6apm-dai.c | 63 +++++++++++++++++---------------
+ sound/soc/qcom/qdsp6/q6apm.c     | 18 ++++++++-
+ sound/soc/qcom/qdsp6/q6apm.h     |  3 ++
+ 3 files changed, 53 insertions(+), 31 deletions(-)
+
+-- 
+2.39.5
+
