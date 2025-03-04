@@ -1,65 +1,65 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFFDB202C4A;
-	Tue,  4 Mar 2025 10:36:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50EDB202F65;
+	Tue,  4 Mar 2025 10:36:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741084598; cv=none; b=R4Qgp1FmSI/qEzJj6TsrZHA1WgeXiZHCgPMuAZGGkqhNmuTQ5sGTfD5Jalb/5ZRRWwiJ8zqamqvf8Bpcc6qyae7kXaSeKV4aD2Jl5GATeBXYfXjL4sbWH2Ein4/OHkRAKxH1upYAHLPlTPDv2HhC/H7UJnwFb2r3tiwOk39RgKM=
+	t=1741084599; cv=none; b=E2khrxS7ho2n5FNINcctZWVnvAYagjssOsaHMjMMMAEAumywSZoRAmI4Hn64EJNbzrO58s6tQnB5IZb/y2VVEvffuI+foro+bU5FbzJgq71g2Imk+4kGyUOb2W68iwD69xE6Q+joaBDgnumr4ea0MXmI70X93qw9Be/yHnMLlQA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741084598; c=relaxed/simple;
-	bh=KCNrWtDzNhagRzqdwl/XknmgEv8EcVHj34UISUTER/U=;
+	s=arc-20240116; t=1741084599; c=relaxed/simple;
+	bh=cVLrw44xjJRSaEzFEAyiT1rNyrU2ZSOnINtE9hkR/3c=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=hiuR3BpIMLmTaOIATb9LmMkJ0RhzO/zbJCr4Cw0GcM85l5ojh82Y0DiOLO8tzMVbqLyBWOwFwcjItTCqtg0gfpGL4KJ5yxytBok0zIdj6qHLViXc4g5NT0BPqdGnbD+4TDRml/g+nHNbjj4YCmMuPuzvy52SIo7SlKLjH+1Pcyc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=3CVQd2rm; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=RbIM0Z66; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=WrTCB2GmL2djyqg/eqJ1vupzI05Rumndl/+twJCrwLbUphNSbPzIeJlz/SxNzzFGbCEvRwjzudQHGMw3spNv/sjCoUI1TvHQ0tzKoJMaIJh6OnRE1WGqCW3zhfpG/PAA+P+xTN3SPndmNz7G/mw+RxjhWJdqYEInMh1YCGXjSXk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=d0fuCrH7; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=3oEcuID3; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="3CVQd2rm";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="RbIM0Z66"
-Date: Tue, 04 Mar 2025 10:36:33 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="d0fuCrH7";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="3oEcuID3"
+Date: Tue, 04 Mar 2025 10:36:34 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1741084594;
+	s=2020; t=1741084596;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=/ZPqdGNw88uvambnG9ho/TtErgaigerzgxQT9pdpYWw=;
-	b=3CVQd2rmhf5M4vRPZmzaXm8GDNNj2Nv2mH8vPX8ix7euwGr3SxSJO0NWy1HH/N8eAm3ADc
-	tula+OgxmijAeM+WXNZ7lYP7wQ+t2sQXOd199zUsBmaA0sjf0zSJOV0p3bf3mPinq9Vs8G
-	hY/ed7i9VXgl7BU9V+koNySZ2boqDFqDLnO9yDJUO55bIsifk3445Uv6mbqlygPQVbmgiq
-	eHxKC4O6FNbAdMLGv7xt5KU/6ZiUCqDeBoeZI3seTnolTceCUjdo3fr7tBcvviP6Evx/Zs
-	KWTnlRAx0tUC47wGi9ZZuoo4SVukfkaWKsj4b6iwnMKNMGAplp1NvWsUVGldFg==
+	bh=2Msj3Ve0LTQaTUUUvd5PBNfNinjh8Q/wsxezn7Nm5X4=;
+	b=d0fuCrH755YQRY+YIhE5lY6Cn9i8nhJxYf41/wOFzVJ/vXknUkSoLbY8cGyk35zAtV/mg4
+	FtYgnVdpqwUpH1K0XA2jsexUid6k/n5h4WuBTmmkZDCRl0OT/SpBNs933ipXuQsOu2ODvb
+	Xd0+HruFImoAokdTB/i3WQWkA35PilZb2c5WCLkEStYCTj89oZO3ZwO5qvGwZHvhq7yLxe
+	NG+T9yb+M+D4kZqUX2UJbIdJuzKgHwkC20JJ6lFHETbHIhvOLmtOHT5OKAoFjRRqQKlfdk
+	JzehfaoKHmanY75Nlvowv5t/4De0dKypPag4gKvYOzLCau2CIKZd5sl2sw5Eyg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1741084594;
+	s=2020e; t=1741084596;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=/ZPqdGNw88uvambnG9ho/TtErgaigerzgxQT9pdpYWw=;
-	b=RbIM0Z66PA0CxTWl9n0bLulAfagLvoubbztlXVu8ZrZK5ZTYhkG1EE8tRrRLpbgyHb2Gyd
-	TIo04WjRVGXmsYCw==
+	bh=2Msj3Ve0LTQaTUUUvd5PBNfNinjh8Q/wsxezn7Nm5X4=;
+	b=3oEcuID3PT9cWsVpSqwfvp9OztGOrhJjWIhOoUwa5WHvmtlzbM9rBkBlLtBwhe9id163Mg
+	lRR7gZlkV/+vfDBw==
 From: "tip-bot2 for Brian Gerst" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/core] x86/preempt: Move preempt count to percpu hot section
+Subject: [tip: x86/core] percpu: Introduce percpu hot section
 Cc: Brian Gerst <brgerst@gmail.com>, Ingo Molnar <mingo@kernel.org>,
  Uros Bizjak <ubizjak@gmail.com>,
  Linus Torvalds <torvalds@linux-foundation.org>,
  Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
  linux-kernel@vger.kernel.org
-In-Reply-To: <20250303165246.2175811-4-brgerst@gmail.com>
-References: <20250303165246.2175811-4-brgerst@gmail.com>
+In-Reply-To: <20250303165246.2175811-2-brgerst@gmail.com>
+References: <20250303165246.2175811-2-brgerst@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174108459372.14745.18321945286331530242.tip-bot2@tip-bot2>
+Message-ID: <174108459478.14745.16503190698513195117.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -69,173 +69,90 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the x86/core branch of tip:
 
-Commit-ID:     8887199b22241c5bbc7d79e502155b35546405ce
-Gitweb:        https://git.kernel.org/tip/8887199b22241c5bbc7d79e502155b35546405ce
+Commit-ID:     120df9cb53f01237fdc4bfc8798d51442fe82311
+Gitweb:        https://git.kernel.org/tip/120df9cb53f01237fdc4bfc8798d51442fe82311
 Author:        Brian Gerst <brgerst@gmail.com>
-AuthorDate:    Mon, 03 Mar 2025 11:52:38 -05:00
+AuthorDate:    Mon, 03 Mar 2025 11:52:36 -05:00
 Committer:     Ingo Molnar <mingo@kernel.org>
 CommitterDate: Tue, 04 Mar 2025 11:24:28 +01:00
 
-x86/preempt: Move preempt count to percpu hot section
+percpu: Introduce percpu hot section
 
-No functional change.
+Add a subsection to the percpu data for frequently accessed variables
+that should remain cached on each processor.  These varables should not
+be accessed from other processors to avoid cacheline bouncing.
+
+This will replace the pcpu_hot struct on x86, and open up similar
+functionality to other architectures and the kernel core.
 
 Signed-off-by: Brian Gerst <brgerst@gmail.com>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Acked-by: Uros Bizjak <ubizjak@gmail.com>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: https://lore.kernel.org/r/20250303165246.2175811-4-brgerst@gmail.com
+Link: https://lore.kernel.org/r/20250303165246.2175811-2-brgerst@gmail.com
 ---
- arch/x86/include/asm/current.h |  1 -
- arch/x86/include/asm/preempt.h | 25 +++++++++++++------------
- arch/x86/kernel/cpu/common.c   |  4 +++-
- include/linux/preempt.h        |  1 +
- 4 files changed, 17 insertions(+), 14 deletions(-)
+ include/asm-generic/vmlinux.lds.h | 11 +++++++++++
+ include/linux/percpu-defs.h       | 13 +++++++++++++
+ 2 files changed, 24 insertions(+)
 
-diff --git a/arch/x86/include/asm/current.h b/arch/x86/include/asm/current.h
-index 60bc66e..46a736d 100644
---- a/arch/x86/include/asm/current.h
-+++ b/arch/x86/include/asm/current.h
-@@ -14,7 +14,6 @@ struct task_struct;
+diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
+index b32e453..c4e8fac 100644
+--- a/include/asm-generic/vmlinux.lds.h
++++ b/include/asm-generic/vmlinux.lds.h
+@@ -385,6 +385,11 @@ defined(CONFIG_AUTOFDO_CLANG) || defined(CONFIG_PROPELLER_CLANG)
+ 	. = ALIGN(PAGE_SIZE);						\
+ 	__nosave_end = .;
  
- struct pcpu_hot {
- 	struct task_struct	*current_task;
--	int			preempt_count;
- 	int			cpu_number;
- #ifdef CONFIG_MITIGATION_CALL_DEPTH_TRACKING
- 	u64			call_depth;
-diff --git a/arch/x86/include/asm/preempt.h b/arch/x86/include/asm/preempt.h
-index 7e83482..a1748b4 100644
---- a/arch/x86/include/asm/preempt.h
-+++ b/arch/x86/include/asm/preempt.h
-@@ -4,10 +4,11 @@
- 
- #include <asm/rmwcc.h>
- #include <asm/percpu.h>
--#include <asm/current.h>
- 
- #include <linux/static_call_types.h>
- 
-+DECLARE_PER_CPU_CACHE_HOT(int, __preempt_count);
++#define CACHE_HOT_DATA(align)						\
++	. = ALIGN(align);						\
++	*(SORT_BY_ALIGNMENT(.data..hot.*))				\
++	. = ALIGN(align);
 +
- /* We use the MSB mostly because its available */
- #define PREEMPT_NEED_RESCHED	0x80000000
- 
-@@ -23,18 +24,18 @@
-  */
- static __always_inline int preempt_count(void)
- {
--	return raw_cpu_read_4(pcpu_hot.preempt_count) & ~PREEMPT_NEED_RESCHED;
-+	return raw_cpu_read_4(__preempt_count) & ~PREEMPT_NEED_RESCHED;
- }
- 
- static __always_inline void preempt_count_set(int pc)
- {
- 	int old, new;
- 
--	old = raw_cpu_read_4(pcpu_hot.preempt_count);
-+	old = raw_cpu_read_4(__preempt_count);
- 	do {
- 		new = (old & PREEMPT_NEED_RESCHED) |
- 			(pc & ~PREEMPT_NEED_RESCHED);
--	} while (!raw_cpu_try_cmpxchg_4(pcpu_hot.preempt_count, &old, new));
-+	} while (!raw_cpu_try_cmpxchg_4(__preempt_count, &old, new));
- }
- 
- /*
-@@ -43,7 +44,7 @@ static __always_inline void preempt_count_set(int pc)
- #define init_task_preempt_count(p) do { } while (0)
- 
- #define init_idle_preempt_count(p, cpu) do { \
--	per_cpu(pcpu_hot.preempt_count, (cpu)) = PREEMPT_DISABLED; \
-+	per_cpu(__preempt_count, (cpu)) = PREEMPT_DISABLED; \
- } while (0)
+ #define PAGE_ALIGNED_DATA(page_align)					\
+ 	. = ALIGN(page_align);						\
+ 	*(.data..page_aligned)						\
+@@ -1065,6 +1070,11 @@ defined(CONFIG_AUTOFDO_CLANG) || defined(CONFIG_PROPELLER_CLANG)
+ 	. = ALIGN(PAGE_SIZE);						\
+ 	*(.data..percpu..page_aligned)					\
+ 	. = ALIGN(cacheline);						\
++	__per_cpu_hot_start = .;					\
++	*(SORT_BY_ALIGNMENT(.data..percpu..hot.*))			\
++	__per_cpu_hot_pad = .;						\
++	. = ALIGN(cacheline);						\
++	__per_cpu_hot_end = .;						\
+ 	*(.data..percpu..read_mostly)					\
+ 	. = ALIGN(cacheline);						\
+ 	*(.data..percpu)						\
+@@ -1112,6 +1122,7 @@ defined(CONFIG_AUTOFDO_CLANG) || defined(CONFIG_PROPELLER_CLANG)
+ 		INIT_TASK_DATA(inittask)				\
+ 		NOSAVE_DATA						\
+ 		PAGE_ALIGNED_DATA(pagealigned)				\
++		CACHE_HOT_DATA(cacheline)				\
+ 		CACHELINE_ALIGNED_DATA(cacheline)			\
+ 		READ_MOSTLY_DATA(cacheline)				\
+ 		DATA_DATA						\
+diff --git a/include/linux/percpu-defs.h b/include/linux/percpu-defs.h
+index 40d34e0..0fcacb9 100644
+--- a/include/linux/percpu-defs.h
++++ b/include/linux/percpu-defs.h
+@@ -113,6 +113,19 @@
+ 	DEFINE_PER_CPU_SECTION(type, name, "")
  
  /*
-@@ -57,17 +58,17 @@ static __always_inline void preempt_count_set(int pc)
- 
- static __always_inline void set_preempt_need_resched(void)
- {
--	raw_cpu_and_4(pcpu_hot.preempt_count, ~PREEMPT_NEED_RESCHED);
-+	raw_cpu_and_4(__preempt_count, ~PREEMPT_NEED_RESCHED);
- }
- 
- static __always_inline void clear_preempt_need_resched(void)
- {
--	raw_cpu_or_4(pcpu_hot.preempt_count, PREEMPT_NEED_RESCHED);
-+	raw_cpu_or_4(__preempt_count, PREEMPT_NEED_RESCHED);
- }
- 
- static __always_inline bool test_preempt_need_resched(void)
- {
--	return !(raw_cpu_read_4(pcpu_hot.preempt_count) & PREEMPT_NEED_RESCHED);
-+	return !(raw_cpu_read_4(__preempt_count) & PREEMPT_NEED_RESCHED);
- }
- 
- /*
-@@ -76,12 +77,12 @@ static __always_inline bool test_preempt_need_resched(void)
- 
- static __always_inline void __preempt_count_add(int val)
- {
--	raw_cpu_add_4(pcpu_hot.preempt_count, val);
-+	raw_cpu_add_4(__preempt_count, val);
- }
- 
- static __always_inline void __preempt_count_sub(int val)
- {
--	raw_cpu_add_4(pcpu_hot.preempt_count, -val);
-+	raw_cpu_add_4(__preempt_count, -val);
- }
- 
- /*
-@@ -91,7 +92,7 @@ static __always_inline void __preempt_count_sub(int val)
-  */
- static __always_inline bool __preempt_count_dec_and_test(void)
- {
--	return GEN_UNARY_RMWcc("decl", __my_cpu_var(pcpu_hot.preempt_count), e,
-+	return GEN_UNARY_RMWcc("decl", __my_cpu_var(__preempt_count), e,
- 			       __percpu_arg([var]));
- }
- 
-@@ -100,7 +101,7 @@ static __always_inline bool __preempt_count_dec_and_test(void)
-  */
- static __always_inline bool should_resched(int preempt_offset)
- {
--	return unlikely(raw_cpu_read_4(pcpu_hot.preempt_count) == preempt_offset);
-+	return unlikely(raw_cpu_read_4(__preempt_count) == preempt_offset);
- }
- 
- #ifdef CONFIG_PREEMPTION
-diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
-index f00870b..a9d6153 100644
---- a/arch/x86/kernel/cpu/common.c
-+++ b/arch/x86/kernel/cpu/common.c
-@@ -2066,12 +2066,14 @@ __setup("setcpuid=", setup_setcpuid);
- 
- DEFINE_PER_CPU_CACHE_HOT(struct pcpu_hot, pcpu_hot) = {
- 	.current_task	= &init_task,
--	.preempt_count	= INIT_PREEMPT_COUNT,
- 	.top_of_stack	= TOP_OF_INIT_STACK,
- };
- EXPORT_PER_CPU_SYMBOL(pcpu_hot);
- EXPORT_PER_CPU_SYMBOL(const_pcpu_hot);
- 
-+DEFINE_PER_CPU_CACHE_HOT(int, __preempt_count) = INIT_PREEMPT_COUNT;
-+EXPORT_PER_CPU_SYMBOL(__preempt_count);
++ * Declaration/definition used for per-CPU variables that are frequently
++ * accessed and should be in a single cacheline.
++ *
++ * For use only by architecture and core code.  Only use scalar or pointer
++ * types to maximize density.
++ */
++#define DECLARE_PER_CPU_CACHE_HOT(type, name)				\
++	DECLARE_PER_CPU_SECTION(type, name, "..hot.." #name)
 +
- #ifdef CONFIG_X86_64
- static void wrmsrl_cstar(unsigned long val)
- {
-diff --git a/include/linux/preempt.h b/include/linux/preempt.h
-index ca86235..4c1af9b 100644
---- a/include/linux/preempt.h
-+++ b/include/linux/preempt.h
-@@ -319,6 +319,7 @@ do { \
- #ifdef CONFIG_PREEMPT_NOTIFIERS
- 
- struct preempt_notifier;
-+struct task_struct;
- 
- /**
-  * preempt_ops - notifiers called when a task is preempted and rescheduled
++#define DEFINE_PER_CPU_CACHE_HOT(type, name)				\
++	DEFINE_PER_CPU_SECTION(type, name, "..hot.." #name)
++
++/*
+  * Declaration/definition used for per-CPU variables that must be cacheline
+  * aligned under SMP conditions so that, whilst a particular instance of the
+  * data corresponds to a particular CPU, inefficiencies due to direct access by
