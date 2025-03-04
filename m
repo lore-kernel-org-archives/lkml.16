@@ -1,157 +1,118 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAF992512F9
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 17:00:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 443FD2857F3
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 17:03:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741107656; cv=none; b=JV18/SBdHAzdku1wliwiyuc4519/uIdqT5mEmVnRezkBrak4HLKbL1f2sWPXn+Y5kxnRPwwi6O05Yjm742yaOaK8VtyjEq3elifR0INzHUwF8z1ecmv4vwHe+QyRn8tvqL6rkAxWJY5qbKO7P3IO8Gog8Or0T3+rlWIYY2sXvy8=
+	t=1741107798; cv=none; b=OI1RT5zVbd/ui/iPffyKboRumZcdFEu4EdGuLuz4bDrS1x8feOrH/+vbgKg+QgeXjpcYH2TJ2keHa2p/NJjVP3YBldEIpqmEK2hCW+mVuba8m8yqpVAbzMCeTXjCboKxGKXbPSRL95G5DekwXD7TgGgNnwqo3yl8/sUXAmWlsXA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741107656; c=relaxed/simple;
-	bh=j9SCKW2LGg5Re5BYb5IhFyKIVKbLI4c9Bb5/Yb45mJc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=CLTCo01fGp/iZzzorBaSFkIhQogyLQZq/jbVOIwHvpG+AmQwdq5eEDlYZeZo0Bct9stSK347m2lmXpWhpz5P83lOqDqFDn6zjlhRfZBjl1AKT+jNalM/vG7b00ndIRtNg8wHhh4rejftW8si6POeT9IBrpW1aH4OW0YbPzCGwQs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=b8YwQbcw; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1741107798; c=relaxed/simple;
+	bh=T94NuQPBHRq+7RffbHPtggg4RzXeb+StCo1orI07SVU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Zsp60a4sjyBGiL3Z6TbHqpVeFGgx3IqCbC1mePfmz1POZIwY9ebBXpMikVsWEHrdS2guefL4UR+4CB3JaOj8ZppeUEfWRRv8jA13v0g74rwVJ4FTjfHMXcnK2kB+LfZd/J8GdGiMWz3H9Tu/kJBhMPNx1x4LnhuqlTD2mc86c+Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=LsA4KZb4; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="b8YwQbcw"
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 524ERac7021572;
-	Tue, 4 Mar 2025 17:00:16 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=pp1; bh=vYBlr1yOdsZTrIvHZP2kD050kBqaPLdQ06HNcLLnz
-	SA=; b=b8YwQbcwFEPzBX7WK4wvE4i5boXdTiasBUJ3/hFkRjuv6NfBJLKnRwLl7
-	Q/uQNxzfr/UxTaaPPrUFFi3OeO+tOywEO3Z5oDLY/Ssijel7474bmSrSypzc6/3L
-	MYL2PkAJmkRabJjJCON0IPIQz03RC0MAU92mtMkCzRXTG+waXAMvQhnp5QWG10Ht
-	Pg0KGSyKKnIKkxZq4ppdVDGZ1h72f89vYO0+zEDrlOp8e49GTkUCGAHpZOg1dQ8n
-	y+C0bP3A3b1kbVQVCg+5qwwt1jAYiqxahWvl0/yAwh9/qj4zvEhuGnkUTLQutxyP
-	sOid4hV43vCqIQYNIGk3rf4e4hE9Q==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 455sw7kqww-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 04 Mar 2025 17:00:16 +0000 (GMT)
-Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 524GvKdX008706;
-	Tue, 4 Mar 2025 17:00:15 GMT
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 455sw7kqwr-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 04 Mar 2025 17:00:15 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 524FP4VO020936;
-	Tue, 4 Mar 2025 17:00:14 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 454djneefj-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 04 Mar 2025 17:00:14 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 524H0C8k32112950
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 4 Mar 2025 17:00:12 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 0DDA62004D;
-	Tue,  4 Mar 2025 17:00:12 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id E72DD20043;
-	Tue,  4 Mar 2025 17:00:08 +0000 (GMT)
-Received: from li-c18b6acc-24ee-11b2-a85c-81492619bda1.ibm.com.com (unknown [9.124.216.210])
-	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue,  4 Mar 2025 17:00:08 +0000 (GMT)
-From: Aboorva Devarajan <aboorvad@linux.ibm.com>
-To: mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, riel@surriel.com
-Cc: dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
-        mgorman@suse.de, vschneid@redhat.com, odin@uged.al,
-        linux-kernel@vger.kernel.org, aboorvad@linux.ibm.com
-Subject: [PATCH 1/1] sched/fair: Fix invalid pointer dereference in child_cfs_rq_on_list()
-Date: Tue,  4 Mar 2025 22:30:07 +0530
-Message-ID: <20250304170007.245261-1-aboorvad@linux.ibm.com>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="LsA4KZb4"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5249rdrg006166
+	for <linux-kernel@vger.kernel.org>; Tue, 4 Mar 2025 17:03:16 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	XfjJKhXYnPoz5V9fgo7qXBxn3xFBcrjNrs2Q0WyjUis=; b=LsA4KZb4AS/+Md+V
+	OZePmJc2XdO/jOCsGCxdkI0psRnyIwyERLG0/CLdg86caI1CW5PcHfmasP/4wIbi
+	vaTnDG9RjvQutRrBMmRsmJp3fJMhE3nET47Gv8iP+8W0rm/DrKiqryGb1/7SSTYI
+	HaEwGUTDMO1ydcOXnsaZmzMvwLzYT4dEkYuZyx3tQ6wVF4q5WKFWFUaNELMCF5Ow
+	W+OouFcWFV5a9TjmrZuBvTp45oiRQOX1MMLI2XViNqYuv/iMt5YnkJVhXFw+KZSX
+	V5OdHweoK/+Xfy4cWPOPdQEIDRCby7yLYwqAps1xU+D7D/pohho0fbk3xa9S8LYF
+	b9+dCA==
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com [209.85.160.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 455p6tjj8c-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Tue, 04 Mar 2025 17:03:15 +0000 (GMT)
+Received: by mail-qt1-f197.google.com with SMTP id d75a77b69052e-474e26f2daaso7881341cf.1
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Mar 2025 09:03:15 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741107795; x=1741712595;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=XfjJKhXYnPoz5V9fgo7qXBxn3xFBcrjNrs2Q0WyjUis=;
+        b=toqxmAjQba78oVi/feRHCrdUlLRC6mnfMTI/xTBXvDOwdyeScKOvU5HcSy5YEODlhC
+         N4LAszSBsKTjXiVndnHbzATJKWMPrqBPS7Ejwy2V3tG6A7MVjMuYAoPdSA0indiIToy0
+         G8IxGwXSvAmBCjhJaJIMdD0GotWvF9DUpUiRxIKRyK/T28auC95tNO35DNAxRySFWb60
+         PR/zQpe/wMcgiMPHytBCFBl+0UoSB6FO6dfQHqKPIxXZPjDboJTB6/KWZJWto4Q54X3L
+         +B30RUKWZUTmo00lU4kjHtn7hV3RkqUuGviv3daukKCOp2uUOQk0gVNLXdJymDV3sP4T
+         0Dxw==
+X-Forwarded-Encrypted: i=1; AJvYcCXG6HscEGznrLu5ZbIDP7SC8c4LnPxyNdkaZjG26lBg2lv3nTCjAAVLTwSv8d6Rjd963FbUJSMgIBjaUSE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxYdsckl9DQnPhe+TF32DI/yrzC9eGeeHjMRzpKe+gN2SDWzGHy
+	KPgkmanspKr67xEKaIv21w6EhEONc4dAlHwZJHZhskkkF+knvKMptCYml5FWSaiNEC7Yl//FhS5
+	9rLv11PvH+fDlhtaVPWIHSbExE89lJs2zINu6b5vLQ6yDMdZGdVbdl5pPSJwL8c0=
+X-Gm-Gg: ASbGncsenYO4T7DlbXSlV4hpPszuy5fT8HeOyIe1m7EHQzdnJ+Eby1+oODQ0D9tytlB
+	3xAoWFg0bbyK4HsMarfity2km2+5A+bkDZLjUkC1sBbFFUqR+cIdA8qF6HsasVQFK3/r8kD5p8P
+	P+1EuMWLbT95QW0OfLV5It+9NbtQl0umJwpqU2L/LkVvOV+L0yW4NTDFA03DFttXbc+SM7I63R7
+	Tb1y2F9g429Plv2UzCxCVVxK7U93B/mbdpqvi8ZiIg+5ZuWu6E53jgGFj0wulo5Mq9nz1phZpMv
+	IKcrHHotuEEBe2YEqATb/7eDhHFtCeW/n/fmPIklPJPjr2nm1s/WTjfik+YIGia4xcQpAw==
+X-Received: by 2002:a05:622a:3c6:b0:472:7a2:c3ca with SMTP id d75a77b69052e-474fcf22ee1mr17698141cf.7.1741107795108;
+        Tue, 04 Mar 2025 09:03:15 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IF6X4OkNe5Y1A2PTdo9agkkM4vxYz+sQ46VBxO8LchjgkPfcte+pqKgPp5rIaC4TGjWHNZHEA==
+X-Received: by 2002:a05:622a:3c6:b0:472:7a2:c3ca with SMTP id d75a77b69052e-474fcf22ee1mr17697881cf.7.1741107794757;
+        Tue, 04 Mar 2025 09:03:14 -0800 (PST)
+Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5e4c3bb4bd9sm8384553a12.33.2025.03.04.09.03.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 04 Mar 2025 09:03:14 -0800 (PST)
+Message-ID: <887ca307-b0fe-47a4-9a72-7fc720319343@oss.qualcomm.com>
+Date: Tue, 4 Mar 2025 18:03:11 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: UdIElj5Muh3b3mLc-AGWl1p7jJtoI-97
-X-Proofpoint-GUID: Nh5Wd0B9hdIs5PJf8NBdmMfdPjocepcP
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 4/8] arm64: dts: qcom: x1e80100-dell-xps13-9345: mark l12b
+ and l15b always-on
+To: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>,
+        Johan Hovold <johan+linaro@kernel.org>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+ <conor+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+References: <20250227081357.25971-1-johan+linaro@kernel.org>
+ <20250227081357.25971-5-johan+linaro@kernel.org>
+ <CAMcHhXp2im-55KxwSUj0pV_hmrg-HaV5RYB4jvPOoqOYjJuCYw@mail.gmail.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <CAMcHhXp2im-55KxwSUj0pV_hmrg-HaV5RYB4jvPOoqOYjJuCYw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Authority-Analysis: v=2.4 cv=HZbuTjE8 c=1 sm=1 tr=0 ts=67c73253 cx=c_pps a=EVbN6Ke/fEF3bsl7X48z0g==:117 a=FpWmc02/iXfjRdCD7H54yg==:17 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=VwQbUJbxAAAA:8 a=iuD-kgW1Kdg19m1uaYAA:9 a=QEXdDO2ut3YA:10
+ a=a_PwQJl-kcHnX1M80qC6:22
+X-Proofpoint-GUID: ZDaJZkGn3Tnv9ymIFaMVr-MFDodcQPq_
+X-Proofpoint-ORIG-GUID: ZDaJZkGn3Tnv9ymIFaMVr-MFDodcQPq_
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-03-04_07,2025-03-03_04,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- phishscore=0 mlxlogscore=464 mlxscore=0 adultscore=0 bulkscore=0
- malwarescore=0 lowpriorityscore=0 suspectscore=0 clxscore=1011 spamscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502100000 definitions=main-2503040136
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ adultscore=0 mlxscore=0 spamscore=0 clxscore=1015 phishscore=0 bulkscore=0
+ priorityscore=1501 impostorscore=0 suspectscore=0 malwarescore=0
+ mlxlogscore=728 classifier=spam authscore=0 adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2502100000 definitions=main-2503040137
 
-In child_cfs_rq_on_list(), leaf_cfs_rq_list.prev is expected to point to
-a valid cfs_rq->leaf_cfs_rq_list in the hierarchy. However, when accessed
-from the first node in a list, leaf_cfs_rq_list.prev can incorrectly point
-back to the list head (rq->leaf_cfs_rq_list) instead of another
-cfs_rq->leaf_cfs_rq_list.
+On 2.03.2025 11:04 PM, Aleksandrs Vinarskis wrote:
+> On Thu, 27 Feb 2025 at 09:15, Johan Hovold <johan+linaro@kernel.org> wrote:
+>>
+>> The l12b and l15b supplies are used by components that are not (fully)
+>> described (and some never will be) and must never be disabled.
+> 
+> Out of curiosity, what are these components?
 
-The function does not handle this case, leading to incorrect pointer
-calculations and unintended memory accesses, which can result in a kernel
-crash.
+Mainly dumb onboard electronic components, it seems like
 
-A recent attempt to reorder fields in struct rq exposed this issue by
-modifying memory offsets and affecting how pointer computations are
-resolved. While the problem existed before, it was previously masked by
-specific field arrangement. The reordering caused erroneous pointer
-accesses, leading to a NULL dereference and a crash, as seen in the
-following trace:
-
-[    2.152852] Call Trace:
-[    2.152855] __update_blocked_fair+0x45c/0x6a0 (unreliable)
-[    2.152862] sched_balance_update_blocked_averages+0x11c/0x24c
-[    2.152869] sched_balance_softirq+0x60/0x9c
-[    2.152876] handle_softirqs+0x148/0x3b4
-[    2.152884] do_softirq_own_stack+0x40/0x54
-[    2.152891] __irq_exit_rcu+0x18c/0x1b4
-[    2.152897] irq_exit+0x20/0x38
-[    2.152903] timer_interrupt+0x174/0x30c
-[    2.152910] decrementer_common_virt+0x28c/0x290
-[    2.059873] systemd[1]: Hostname set to ...
-[    2.152682] BUG: Unable to handle kernel data access on read at 0x100000125
-[    2.152717] Faulting instruction address: 0xc0000000001c0270
-[    2.152724] Oops: Kernel access of bad area, sig: 7 [#1]
-..
-
-To fix this, introduce a check to detect when prev points to the list head
-(&rq->leaf_cfs_rq_list). If this condition is met, return early to prevent
-the use of an invalid prev_cfs_rq.
-
-Fixes: fdaba61ef8a2 ("sched/fair: Ensure that the CFS parent is added after unthrottling")
-Signed-off-by: Aboorva Devarajan <aboorvad@linux.ibm.com>
----
- kernel/sched/fair.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
-
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 1c0ef435a7aa..a4daa7a9af0b 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -4045,12 +4045,15 @@ static inline bool child_cfs_rq_on_list(struct cfs_rq *cfs_rq)
- {
- 	struct cfs_rq *prev_cfs_rq;
- 	struct list_head *prev;
-+	struct rq *rq;
-+
-+	rq = rq_of(cfs_rq);
- 
- 	if (cfs_rq->on_list) {
- 		prev = cfs_rq->leaf_cfs_rq_list.prev;
-+		if (prev == &rq->leaf_cfs_rq_list)
-+			return false;
- 	} else {
--		struct rq *rq = rq_of(cfs_rq);
--
- 		prev = rq->tmp_alone_branch;
- 	}
- 
--- 
-2.43.5
-
+Konrad
