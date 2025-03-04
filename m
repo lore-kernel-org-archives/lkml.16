@@ -1,105 +1,95 @@
-Received: from rudorff.com (rudorff.com [193.31.26.27])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A441A203704
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 21:08:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.31.26.27
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 673921C84DB;
+	Tue,  4 Mar 2025 21:10:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741122527; cv=none; b=LwRBtW/38rwM7w+29CFKbNsbwtFuXp7pqcv7fPUQ00x4rleHDpZlGTyyITuphyohyU5me+zBiMTAwepdAJXa/28svKc/NQIdtrpziUgv0Nv4CBvureeVXvfyxFonEnUPQgvdB7vKF992PZzPoKiut5l3OH97PJBTPuVbP+0+xrY=
+	t=1741122616; cv=none; b=ovk8qwdv0gkEvsuSKUujCOepAuPtwcCO5mISKNL3ATzp+F6czUYJTKaXtYD0leSyfL76KqEn0LAXPeNgCuSJb+GzJcx00+cupl4skDovLifVcVttmnIXYuOSqtjW5wNMTKDye5N1cXTGFS6vVeaigOfNDB+oqRFXivrXIw7HYC8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741122527; c=relaxed/simple;
-	bh=ULr4MECwJ/XrhUKr7X65hWSM7QCs171QCPElAAKAZ9U=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=GpZGKvR4pBkHSbqQ/bmibZjO+5UTf5AyWNWvmxtZGJBwwaSVnwV/lFY2S/zJOUVTnTAr5k5vDJbGVjieavaOP0BFjp7p0O40dlsIZQFJgqow8F71K95Y6sSHoQSWwni/4l/O/+OdSfKlhd5P4UMawwBEi0JEEJqtcjJjAww8SBw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rudorff.com; spf=pass smtp.mailfrom=rudorff.com; arc=none smtp.client-ip=193.31.26.27
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rudorff.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rudorff.com
-Received: from [127.0.0.1] (dynamic-2a02-3102-8418-1620-0000-0000-0000-04cc.310.pool.telefonica.de [IPv6:2a02:3102:8418:1620::4cc])
-	by rudorff.com (Postfix) with ESMTPSA id 06AF5406E5;
-	Tue,  4 Mar 2025 22:08:40 +0100 (CET)
-From: "chr[]" <chris@rudorff.com>
-Date: Tue, 04 Mar 2025 22:08:19 +0100
-Subject: [PATCH] drm/nouveau: fix hibernate on disabled GPU
+	s=arc-20240116; t=1741122616; c=relaxed/simple;
+	bh=2Z9ExiESYGPkHbDyTxWla2kp5aMJQiIVZir7zENRQV0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rF6QswFMVmvNungBwhKdaNfOuCeCViNkbNCugXOO2AXAu1H1qdwHoMOHvXA4fcLl1xjW4fQHenjqKAxzmUEIGY0NszR9KUN8D/sbQi2UIM0UkwD/HBm5Nl3EmzyPTXJHiP4BH+DIvPDfXfs1WWA3GmIIsVJn7ZPXxgvJ1AWPdZc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mktH5nY4; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mktH5nY4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741122614; x=1772658614;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=2Z9ExiESYGPkHbDyTxWla2kp5aMJQiIVZir7zENRQV0=;
+  b=mktH5nY4ed3PZdNbqtQ/qINfFgcnpyn4YLihDrbqp9xNEFw2ZRYbSFRH
+   L04mNwnmvZDMtgJ7LFljs+i1+9aTRJZ3JgDK3V91m3EAvfXS0wKpc4UXt
+   nCusZL7Uft3AHiG1W3ShgtPHKar8XiJibZO31evt6W0ZFTmPm/qxsOpQ8
+   8ggNq/+qPHY3sN+30+Ip0QqvXzg2R7xb22w2tJiO0jjgIqY197vCYnCfy
+   dZensdUDRPf1xSMtXrpiCKqBpqA5ff0sN1uGtcjimIZHay5a4y5ennHF0
+   +XKON4dcX6mmtmY8o5lPsS/t0rLhNGMtlgpyg4I/OSOs/jMCI8i/quCtH
+   A==;
+X-CSE-ConnectionGUID: utcp0CNBReCiDLHJAONo0A==
+X-CSE-MsgGUID: gX1do/EZR9Ss8pT/DRPc/A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11363"; a="41243011"
+X-IronPort-AV: E=Sophos;i="6.14,221,1736841600"; 
+   d="scan'208";a="41243011"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2025 13:10:13 -0800
+X-CSE-ConnectionGUID: QIfkK/b4QMC/CbzzhPTorA==
+X-CSE-MsgGUID: HJUvxuN8QKWP4KVRkzZmEA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,221,1736841600"; 
+   d="scan'208";a="119173075"
+Received: from jbfryman-mobl9.amr.corp.intel.com (HELO aschofie-mobl2.lan) ([10.125.109.168])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2025 13:10:13 -0800
+Date: Tue, 4 Mar 2025 13:10:11 -0800
+From: Alison Schofield <alison.schofield@intel.com>
+To: "Koralahalli Channabasappa, Smita" <Smita.KoralahalliChannabasappa@amd.com>
+Cc: linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-cxl@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Yazen Ghannam <yazen.ghannam@amd.com>,
+	Terry Bowman <terry.bowman@amd.com>
+Subject: Re: [PATCH v7 2/2] cxl/pci: Add trace logging for CXL PCIe Port RAS
+ errors
+Message-ID: <Z8dsM1hJm7H3ddgj@aschofie-mobl2.lan>
+References: <20250226221157.149406-1-Smita.KoralahalliChannabasappa@amd.com>
+ <20250226221157.149406-3-Smita.KoralahalliChannabasappa@amd.com>
+ <Z8dM80wy5Q8UQomz@aschofie-mobl2.lan>
+ <19fd5db5-cc52-4f05-8ecc-64a4eea3b9a1@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250304-nouveau-fix-hibernate-v1-1-ee4433546030@rudorff.com>
-X-B4-Tracking: v=1; b=H4sIAMJrx2cC/x2MSQqAMAwAvyI5G6ixrl8RD61GzaVKa0UQ/27xO
- DAzDwT2wgH67AHPlwTZXYIiz2DajFsZZU4MpKhSpdLo9nixibjIjZtY9s6cjKS7lupZU2MtpPb
- wnIT/O4zv+wFYq6LKZwAAAA==
-X-Change-ID: 20250304-nouveau-fix-hibernate-249826d427bb
-To: Lyude Paul <lyude@redhat.com>, Danilo Krummrich <dakr@kernel.org>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
-Cc: dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
- linux-kernel@vger.kernel.org
-X-Mailer: b4 0.14.2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <19fd5db5-cc52-4f05-8ecc-64a4eea3b9a1@amd.com>
 
-Hibernate bricks the machine if a discrete GPU was disabled via
+On Tue, Mar 04, 2025 at 12:33:56PM -0800, Koralahalli Channabasappa, Smita wrote:
+snip
+> > > +TRACE_EVENT(cxl_port_aer_uncorrectable_error,
+> > > +	TP_PROTO(struct device *dev, u32 status, u32 fe, u32 *hl),
+> > > +	TP_ARGS(dev, status, fe, hl),
+> > > +	TP_STRUCT__entry(
+> > > +		__string(devname, dev_name(dev))
+> > > +		__string(parent, dev_name(dev->parent))
+> > 
+> > Above devname, parent
+> 
+> Ok I'm planning to keep as device and parent. Let me know if wording "host"
+> is preferred over "parent".
 
-echo IGD > /sys/kernel/debug/vgaswitcheroo/switch
+Take a look at these in the same file that use memdev, 'host'.
+Maybe you want to be similar.
 
-The freeze and thaw handler lacks checking the GPU power state,
-as suspend and resume do.
+TRACE_EVENT(cxl_aer_uncorrectable_error,
+TRACE_EVENT(cxl_aer_correctable_error,
 
-This patch add the checks and fix this issue.
-
-Signed-off-by: chr[] <chris@rudorff.com>
----
-I got an old MacBook having a defective nvidia GPU
-
-So I put this in the initrd scripts to turn it off asap:
-
-mount -t debugfs none /sys/kernel/debug
-echo IGD > /sys/kernel/debug/vgaswitcheroo/switch
-
-which powers down the nouveau.
-
-Suspend and resume works,
-but hibernate locks up the machine.
-
-The handlers are not checking the GPU state.
-
-Signed-off-by:
----
- drivers/gpu/drm/nouveau/nouveau_drm.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/drivers/gpu/drm/nouveau/nouveau_drm.c b/drivers/gpu/drm/nouveau/nouveau_drm.c
-index 5664c4c71faf1ced30f38d9874244db80d58194a..0958d1b940c2533bfadc29e098045db6f0170c79 100644
---- a/drivers/gpu/drm/nouveau/nouveau_drm.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_drm.c
-@@ -1079,6 +1079,10 @@ nouveau_pmops_freeze(struct device *dev)
- {
- 	struct nouveau_drm *drm = dev_get_drvdata(dev);
- 
-+	if (drm->dev->switch_power_state == DRM_SWITCH_POWER_OFF ||
-+	    drm->dev->switch_power_state == DRM_SWITCH_POWER_DYNAMIC_OFF)
-+		return 0;
-+
- 	return nouveau_do_suspend(drm, false);
- }
- 
-@@ -1087,6 +1091,10 @@ nouveau_pmops_thaw(struct device *dev)
- {
- 	struct nouveau_drm *drm = dev_get_drvdata(dev);
- 
-+	if (drm->dev->switch_power_state == DRM_SWITCH_POWER_OFF ||
-+	    drm->dev->switch_power_state == DRM_SWITCH_POWER_DYNAMIC_OFF)
-+		return 0;
-+
- 	return nouveau_do_resume(drm, false);
- }
- 
-
----
-base-commit: 7eb172143d5508b4da468ed59ee857c6e5e01da6
-change-id: 20250304-nouveau-fix-hibernate-249826d427bb
-
-Best regards,
--- 
-chr[] <chris@rudorff.com>
-
+snip
+> 
