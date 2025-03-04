@@ -1,220 +1,108 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 836032857F7;
-	Tue,  4 Mar 2025 15:24:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99837290BB0;
+	Tue,  4 Mar 2025 15:25:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741101887; cv=none; b=Um2n30CBOkX16uR4mWgkwlnOiqag+UvDao8qSReMmHM0YnAGp5LlrJYvJCUfgLNTvkaGfFhqGidDQCOtLuqVXJd/E4E2dLp/BxJJ6FuKZiVoihxyZhOWUid9r5JWKnw+Ov3WmIYOe8DUdFu7tloM5XcLLPqjvFA5ihK2KOx2s1s=
+	t=1741101907; cv=none; b=Jm9vKz1y/HEebPYrJAjoteMNW3FSNh2GSBunhkxzzZnZh1X3Zbszz+r5c9KET00Dr8TR8RTPLrlXk9QFX/T1UV8JD1EeOoEah9i+Mccp6uPlkhIrG6hvkCkOIIwfmukQHe5Bo9uVngkqoJrcd/oiUriN+fso2xYPBylww5fz8UM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741101887; c=relaxed/simple;
-	bh=ABsY5XgRcgeEP6+FXmOJWUnUDTS6uiYJHqYyliIEXx4=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=l5sOCfPW13m5K3W/u78xRu7M9uMnU+K5mPRq+nr2WmdeIjnAS2rKRGgbm7+nrziRIUmVyTxtLQMTOwK8rQHIS4NIwf56eFKZ6KPsY4ClpRK5PGRu50nbAoWRw/Sz6iL40DpUMkvuWTboGM0MJOdnAvrB9YDZaYl1zEqNxTCVRNo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=U6cIJ/ic; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741101907; c=relaxed/simple;
+	bh=6ZMR3JRh3hbKzX58+/zvS7DWCMOYY0gMB6+P65b4ncA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dZfa+QrwQFlEkcDuwgZf+9kgz+Ipjf5MCY0Qw8TtdMqn2MhPuWjrcJ0VLe/6ZgvRAjGilJwzpBb2bFvHVKrlAndjhjwFUtjJjRsqt0FV71a1CS6d6zzuHb6PqhKp/yRIYB1wMlH6gG0U7RYQqmTcF3HgdA1bFfVUI+SKNsh0HbY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=S1G6t6PA; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U6cIJ/ic"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-223378e2b0dso84507635ad.0;
-        Tue, 04 Mar 2025 07:24:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741101885; x=1741706685; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:references
-         :in-reply-to:user-agent:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=LbqxPGR12fcL9QYAK4wiktOpz1xvQ8QwMI4lirCtmzs=;
-        b=U6cIJ/icYUWQ07l3I5e4WVoatX8sN0Z0KNf22PImlUEfV7rWzIUKaHDXlC7Knz4lGT
-         OK7regS4Ug7h5VrlBh+hL/gZfQc3/kwG71F95zZwQ23v4kJCXlyZnIp/XabebFrL0S6/
-         ds9KKHiE3nbl/gpa8jMvWfCP5EEOFaWdCPgh4SiOm5RyPsm/39aw9mJfsO2LHxQQoTtr
-         Utfc1395gV8ZvB+7vlJdq8SGb8ab35JQY643ve+9Z53899R4TuTHwNsNNXSRMhhZpYj6
-         Sbbpgd0JqdNfX+BdwMTcreTlQe5d5xN10LXDwPPmtJpQNE3ASj/5tVlECQZkEZ7+5smY
-         HfLA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741101885; x=1741706685;
-        h=content-transfer-encoding:mime-version:message-id:references
-         :in-reply-to:user-agent:subject:cc:to:from:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=LbqxPGR12fcL9QYAK4wiktOpz1xvQ8QwMI4lirCtmzs=;
-        b=h09HqPp9ILX3eJJQCaAa7BvG+rmiQVDMZGjABOBqNZuFWSgk2OIjMThKMZFXvHfHX3
-         YMc61bwdVPIogwQdpWGm0Oh1DFGSUd79RbJyZj7S4Z5vOvh5Sv2MH+6LWVxZWCH0BzGy
-         kpH649GjK6K4d9Eudll+XQT9TjYZIu2PRuB4abQtdBgXSJirxBSEX5ELJ4u/EiOBVN/1
-         q7cF32Jktu+gPFRXr09jQLMspxWXB/7pguKN3xoGc8m+EV+rklNm2EECGIt/fdZvInWt
-         ALhvHcFe0EqIOLnJcdZM6o2LiWMktnHb/U0zwBcw/oq3TU9D/k6cDKC8Mb8jdMzW/fEG
-         46ow==
-X-Forwarded-Encrypted: i=1; AJvYcCUehYcv7d/LTKaRGZgA8hP0GlLhnReJXJE22o6mBnUNyBpvgTl0ha2vq30zZ8GylVRbyKlN070kojC9PkEB@vger.kernel.org, AJvYcCUkBsSzqri1EtBiP2aG24lVZiyHpiEC4aEqCQlU4VxqtmqBQXjdTdVnsrQEheemy7Ro1L9f/fcEt6gD@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy1h12R+6F/NmxIgYbf9u7Kl+giNeY3VNmj3vh0apLLiZ3w12wx
-	bG159epKP6qO8UyQf8eLpmfqWJ8F1htu+yyHKOMiATCs4oa6Xj24
-X-Gm-Gg: ASbGncthCrfE+WzomroeJz9lX3WUp9ZrGPTWjpzRqrGAB5v1MYLpuNGVeqeac7FypkC
-	SXgtc1S90ws5qKmmQrqcq10udrdRLaQBapbObA51K3M+9Y8m7/FWzAstCM7cU0dzbEgZ8bDrgOP
-	OEycWsJXxq3O88xtqZfTtxUAUnflMdzITWfHW2HqkN1xUehyBiZyqn3JwKb6k0p0xOBdd239fTG
-	5cGNWdwTH5XX50StJnKwgHcqeVZxKvyPyFWFN+QMrPTXTTuP4BkrKH5jhPimEbylL7BS2Ex6kfE
-	w8dvSGu4trQVXBlZLvLVQSJipEqCvyOeryOsX302raH1cRVAhV2c
-X-Google-Smtp-Source: AGHT+IEJkVOFKokXwRAO1g/Ggmz6uxvxks/eteYAlfwhMO6Hk77pkPer6+CJnEHd2si0nxiQ8+XeZg==
-X-Received: by 2002:a05:6a20:72a8:b0:1f2:f1aa:3322 with SMTP id adf61e73a8af0-1f2f4c9c65amr31672259637.1.1741101884671;
-        Tue, 04 Mar 2025 07:24:44 -0800 (PST)
-Received: from ?IPv6:::1? ([2607:fb90:8f63:4381:ad2:b852:51e2:f9da])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-734a003dcedsm11014911b3a.125.2025.03.04.07.24.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 04 Mar 2025 07:24:44 -0800 (PST)
-Date: Tue, 04 Mar 2025 07:24:40 -0800
-From: "Derek J. Clark" <derekjohn.clark@gmail.com>
-To: Mario Limonciello <superm1@kernel.org>,
- Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
- "Rafael J . Wysocki" <rafael@kernel.org>,
- Hans de Goede <hdegoede@redhat.com>,
- =?ISO-8859-1?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- "Luke D . Jones" <luke@ljones.dev>, Mark Pearson <mpearson-lenovo@squebb.ca>
-CC: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-acpi@vger.kernel.org, Antheas Kapenekakis <lkml@antheas.dev>,
- me@kylegospodneti.ch, Denis Benato <benato.denis96@gmail.com>,
- Mario Limonciello <mario.limonciello@amd.com>
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v2_1/1=5D_ACPI=3A_platform=5Fprof?=
- =?US-ASCII?Q?ile=3A_Treat_quiet_and_low_power_the_same?=
-User-Agent: Thunderbird for Android
-In-Reply-To: <20250304064745.1073770-2-superm1@kernel.org>
-References: <20250304064745.1073770-1-superm1@kernel.org> <20250304064745.1073770-2-superm1@kernel.org>
-Message-ID: <CA379804-AD18-4B93-A5D3-2BA4A799D33F@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="S1G6t6PA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741101906; x=1772637906;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=6ZMR3JRh3hbKzX58+/zvS7DWCMOYY0gMB6+P65b4ncA=;
+  b=S1G6t6PAYiQMhjG4BMXurHDSRVu5+A1yz/JHfZNHMTNuyjpfquN6ABH3
+   49DKF/rNKftKdSDLG52vzdqvTMuaLLzLzGNIxVxqsSOhm3NPiOsZ8rtET
+   dhuJnD/3TPFtaefWmDBOF7NA1WbbHwVb+GMn8O6rtncXEMwf3doaReUFW
+   XjfdB2bcOFxwckTOmxdKOB6NwyWnL4rt9mfg5WHxUHj0R4fUJU5vAA1dp
+   CvvNeaSLYaMefy4nX1O6rj5TOj97PVyCCC6yuCes1dsfNkzP9fwfQciUL
+   5FsHE971mt9XJtV+EwJRjKZCQ9Vk3n+SBKRcm+vxlKAemzDiKPiOD8KvF
+   g==;
+X-CSE-ConnectionGUID: LNnQwVSCT/22MTLFI5nkvg==
+X-CSE-MsgGUID: S12lcTcOT36QoCL/i34Mpw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11363"; a="53419958"
+X-IronPort-AV: E=Sophos;i="6.14,220,1736841600"; 
+   d="scan'208";a="53419958"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2025 07:25:05 -0800
+X-CSE-ConnectionGUID: 5LUeupubTcym07sCUcY9Gg==
+X-CSE-MsgGUID: UeGbvbhSRGaCqLepIhePSw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="155600115"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa001.jf.intel.com with ESMTP; 04 Mar 2025 07:25:03 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id 0103818F; Tue, 04 Mar 2025 17:25:01 +0200 (EET)
+Date: Tue, 4 Mar 2025 17:25:01 +0200
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Conor Dooley <conor.dooley@microchip.com>
+Cc: linux-spi@vger.kernel.org, stable@vger.kernel.org,
+	Daire McNamara <daire.mcnamara@microchip.com>,
+	Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] spi: microchip-core: prevent RX overflows when
+ transmit size > FIFO size
+Message-ID: <Z8cbTc7zdT58J4Br@black.fi.intel.com>
+References: <20250303-veal-snooper-712c1dfad336@wendy>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250303-veal-snooper-712c1dfad336@wendy>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+
+On Mon, Mar 03, 2025 at 10:47:40AM +0000, Conor Dooley wrote:
+> When the size of a transfer exceeds the size of the FIFO (32 bytes), RX
+> overflows will be generated and receive data will be corrupted and
+> warnings will be produced. For example, here's an error generated by a
+> transfer of 36 bytes:
+> 
+>   spi_master spi0: mchp_corespi_interrupt: RX OVERFLOW: rxlen: 4, txlen: 0
+> 
+> The driver is currently split between handling receiving in the
+> interrupt handler, and sending outside of it. Move all handling out of
+> the interrupt handling, and explicitly link the number of bytes read of
+> of the RX FIFO to the number written into the TX one. This both resolves
+> the overflow problems as well as simplifying the flow of the driver.
+
+...
+
+> +static inline void mchp_corespi_read_fifo(struct mchp_corespi *spi, int fifo_max)
+>  {
+> +	for (int i = 0; i < fifo_max; i++) {
+> +		u32 data;
+
+> +		while (mchp_corespi_read(spi, REG_STATUS) & STATUS_RXFIFO_EMPTY)
+> +			;
+
+What may go wrong with this code? :-)
+I think limiting the infinite loop by a timeout is a good thing to have.
+
+> +		data = mchp_corespi_read(spi, REG_RX_DATA);
+>  
+>  		spi->rx_len -= spi->n_bytes;
+>  
+
+>  	mchp_corespi_write(spi, REG_FRAMESUP, len);
+>  }
+
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
-
-On March 3, 2025 10:47:45 PM PST, Mario Limonciello <superm1@kernel=2Eorg>=
- wrote:
->From: Mario Limonciello <mario=2Elimonciello@amd=2Ecom>
->
->When two drivers don't support all the same profiles the legacy interface
->only exports the common profiles=2E
->
->This causes problems for cases where one driver uses low-power but anothe=
-r
->uses quiet because the result is that neither is exported to sysfs=2E
->ion yet
->If one platform profile handler supports quiet and the other
->supports low power treat them as the same for the purpose of
->the sysfs interface=2E
-
-Hi Mario,
-
-I haven't tested this version yet but from an initial glance I do have som=
-e concerns=2E In v1 there was handling of balanaced_perfomance, and that is=
-n't present here, which would affect my in progress driver=2E This also doe=
-sn't cover the cool -> low_power option (though I'm not sure where/if that =
-is an actual concern in any drivers at the moment)=2E I'm concerned that if=
- we take the v2 approach that we'll eventually be aliasing a majority of th=
-e profiles, further adding ambiguity on what each one actually means=2E=20
-
-In my driver balanced_perfomance is closer to amd_pmf's performance, if sh=
-own, whereas in others it might be closer to balanced=2E Since that is esse=
-ntially implementation specific I currently am doubtful there is a clean un=
-iversal approach to aliasing=2E
-
-The real issue appears to me at that the enabled profiles need to be conte=
-xt aware=2E Because of that I think something closer to v1 and the hidden o=
-ptions method provides a better way to implement those aliases within any s=
-pecific driver, allowing the maintainers to determine the "best alias" so t=
-o speak=2E If we put the control into the "primary" driver of how those ali=
-ases work and somehow provide context to amd_pmf of the "best match", we ca=
-n then allow amd_pmf to present all options when more than one low end prof=
-ile is valid, or only the matching ones if they are just aliased=2E
-
-- Derek
-
->Fixes: 688834743d67 ("ACPI: platform_profile: Allow multiple handlers")
->Reported-by: Antheas Kapenekakis <lkml@antheas=2Edev>
->Closes: https://lore=2Ekernel=2Eorg/platform-driver-x86/e64b771e-3255-42a=
-d-9257-5b8fc6c24ac9@gmx=2Ede/T/#mc068042dd29df36c16c8af92664860fc4763974b
->Signed-off-by: Mario Limonciello <mario=2Elimonciello@amd=2Ecom>
->---
-> drivers/acpi/platform_profile=2Ec | 38 ++++++++++++++++++++++++++++++---
-> 1 file changed, 35 insertions(+), 3 deletions(-)
->
->diff --git a/drivers/acpi/platform_profile=2Ec b/drivers/acpi/platform_pr=
-ofile=2Ec
->index 2ad53cc6aae53=2E=2Ed9a7cc5891734 100644
->--- a/drivers/acpi/platform_profile=2Ec
->+++ b/drivers/acpi/platform_profile=2Ec
->@@ -73,8 +73,20 @@ static int _store_class_profile(struct device *dev, vo=
-id *data)
->=20
-> 	lockdep_assert_held(&profile_lock);
-> 	handler =3D to_pprof_handler(dev);
->-	if (!test_bit(*bit, handler->choices))
->-		return -EOPNOTSUPP;
->+	if (!test_bit(*bit, handler->choices)) {
->+		switch (*bit) {
->+		case PLATFORM_PROFILE_QUIET:
->+			*bit =3D PLATFORM_PROFILE_LOW_POWER;
->+			break;
->+		case PLATFORM_PROFILE_LOW_POWER:
->+			*bit =3D PLATFORM_PROFILE_QUIET;
->+			break;
->+		default:
->+			return -EOPNOTSUPP;
->+		}
->+		if (!test_bit(*bit, handler->choices))
->+			return -EOPNOTSUPP;
->+	}
->=20
-> 	return handler->ops->profile_set(dev, *bit);
-> }
->@@ -252,8 +264,16 @@ static int _aggregate_choices(struct device *dev, vo=
-id *data)
-> 	handler =3D to_pprof_handler(dev);
-> 	if (test_bit(PLATFORM_PROFILE_LAST, aggregate))
-> 		bitmap_copy(aggregate, handler->choices, PLATFORM_PROFILE_LAST);
->-	else
->+	else {
->+		/* treat quiet and low power the same for aggregation purposes */
->+		if (test_bit(PLATFORM_PROFILE_QUIET, handler->choices) &&
->+		    test_bit(PLATFORM_PROFILE_LOW_POWER, aggregate))
->+			set_bit(PLATFORM_PROFILE_QUIET, aggregate);
->+		else if (test_bit(PLATFORM_PROFILE_LOW_POWER, handler->choices) &&
->+			 test_bit(PLATFORM_PROFILE_QUIET, aggregate))
->+			set_bit(PLATFORM_PROFILE_LOW_POWER, aggregate);
-> 		bitmap_and(aggregate, handler->choices, aggregate, PLATFORM_PROFILE_LA=
-ST);
->+	}
->=20
-> 	return 0;
-> }
->@@ -305,6 +325,13 @@ static int _aggregate_profiles(struct device *dev, v=
-oid *data)
-> 	if (err)
-> 		return err;
->=20
->+	/* treat low-power and quiet as the same */
->+	if ((*profile =3D=3D PLATFORM_PROFILE_LOW_POWER &&
->+	     val =3D=3D PLATFORM_PROFILE_QUIET) ||
->+	    (*profile =3D=3D PLATFORM_PROFILE_QUIET &&
->+	     val =3D=3D PLATFORM_PROFILE_LOW_POWER))
->+		*profile =3D val;
->+
-> 	if (*profile !=3D PLATFORM_PROFILE_LAST && *profile !=3D val)
-> 		*profile =3D PLATFORM_PROFILE_CUSTOM;
-> 	else
->@@ -531,6 +558,11 @@ struct device *platform_profile_register(struct devi=
-ce *dev, const char *name,
-> 		dev_err(dev, "Failed to register platform_profile class device with em=
-pty choices\n");
-> 		return ERR_PTR(-EINVAL);
-> 	}
->+	if (test_bit(PLATFORM_PROFILE_QUIET, pprof->choices) &&
->+	    test_bit(PLATFORM_PROFILE_LOW_POWER, pprof->choices)) {
->+		dev_err(dev, "Failed to register platform_profile class device with bo=
-th quiet and low-power\n");
->+		return ERR_PTR(-EINVAL);
->+	}
->=20
-> 	guard(mutex)(&profile_lock);
->=20
-
-- Derek
