@@ -1,240 +1,178 @@
-Received: from EUR02-VI1-obe.outbound.protection.outlook.com (mail-vi1eur02on2040.outbound.protection.outlook.com [40.107.241.40])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 111122C2CAA;
-	Tue,  4 Mar 2025 16:14:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.241.40
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741104873; cv=fail; b=kx9axl43CR+zJR5yNki+WWX0gttG3E9C0HgMzEtZq6jsYqdSO9fHLGn82hF/2MMpgHx35wO9Iu72xWBCDWIa5SiaIPm1/ENK1TEomVCigNbt76pcM5a2GuiHeh9Gsh4R8Seeip0zpfDuU+gazvdOklbxjvIoILWUqmYLvIS/X+Y=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741104873; c=relaxed/simple;
-	bh=bTnRvzA6T7HRFpDUmqXd1DdDRaDDpRQ08fUOmygjB9M=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=eNQfKxDEM3z/fOr39swj8A0finEfEnKHIf2MuuPNoFo/b9GoP98Z1f/HCguPUwz2/6mMsgjZ3PKeXhzfUb8RRGvp2g2fFuweIZCd/VfVYxZG48KBEcqIWu+m/H1J5QEWxd+7lonE23L69pX/iZf/NmFGurN65Q6IK5FCdQmeIGE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=Ec0yN36j; arc=fail smtp.client-ip=40.107.241.40
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0687E2D1F41
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 16:15:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.177
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741104913; cv=none; b=FQTSdmsByOvIby+wt1u+5Ca9QpIi/F5vlmueiIVzJLSDcLH7fnoUo4tbEm1BxqepSLSpepwIC6IPCDE0A4vgfl0VXZ4M+wXwYyKqw1/qsoIqZzgRiM2SZtfEJWyBto/jJJzw+LfdD1p1gb0Bfs7JxGTy06VIMIpCWkQS6nS3uQo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741104913; c=relaxed/simple;
+	bh=HoUdEEUij4AowK9YlSYz+ODggQby4SqBMMaaeIy+IZo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NtV20klUaKACmv28UIBF9TbijopOSTG+snWSm+ZKRMCCJ+DA96b4nmzvSUPGbRxd4Gjdw587fblkDIgrd7p7BxompRPK3JwuRqgDrwLsvTQmyhuEfhdfyu6OVg/ab5heo2TQSpnUXryUhKR5rKOLZHerdgrtcLYTLJY9SRG+xlQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toxicpanda.com; spf=none smtp.mailfrom=toxicpanda.com; dkim=pass (2048-bit key) header.d=toxicpanda-com.20230601.gappssmtp.com header.i=@toxicpanda-com.20230601.gappssmtp.com header.b=Dfnn7tAZ; arc=none smtp.client-ip=209.85.160.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toxicpanda.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toxicpanda.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="Ec0yN36j"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=m6ybHjbiI0Zr1RQZCzMCuTaANl0N3rZ0ZjQ/R4s/ztoFiQdMqEjVjjfi2gP84pKGGMIX2gMdTqax0C4lC1ubEecg8LSREV1Blg3pKyeBho22RDezDUdCAdu1avmnW3R0EHnIRdE7HQyiBNLCmxIQlC3Q21+sRrC9OsyQqHLS1imw2ErpDbCIG7HbW1DfcGJ1Y3SL7kXZVAncsO3qaCRnuqE3YdU0HoRRBAhhZNU9PaIdHbUIo6mPOHbgo/Jx633ChK0cAxupEg4haoZm5lGnf369dzlm/rpcEIUuGN0Lq2Ch/pyUIZ36Qewsy0p3tLCo9WaX1rvQb0CVK0y4dUjuuQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=bZ9VSB9xT2b/qG8qHQbtvbJrR1seitoepvz5LJqLVZQ=;
- b=eG4QsW0O6MxGYEqfnpaU6cJzi6leFcgW0oB/9Nys+MvGjZ6nufPMcyP9a1H1MTFSemWpsrFEeAEQ74DDD3G4RE1x06/L0iQwDzvHLHr6HmIEjKkgJvbnDJnbYO/dTWdS9ufya17JkQacB2dodA6q6O8JumTFWMwIHdkLbV4jFbC5ECPTGVjxEX6jFe23gzhmOQnLsYTdTybj8xsZlrY2dX/SHznykUAZPTegO35ZDvXnnijnUg5K/0tHzGMxijktRt2plNLqsAEuhrw2nrQsBb4p12rFAdxUOx5Mxy36cQoCVeo/fHIYCKcfj8oeYi02vgjpATdAxBZiP8JfUrPZaw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector1-NXP1-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bZ9VSB9xT2b/qG8qHQbtvbJrR1seitoepvz5LJqLVZQ=;
- b=Ec0yN36juzzPa0JNoywXcc0kXQzw9P4lk9Q/Vg8GqX/4255rN4zD/SgPcionxZaPUCgYg0yMmCyIFd2+DdWXqmANWYQ06cg84Bm3zJK3JKidfv6g4w4cG0A/wuvHPIcz1OaRj+08+f5EWYU0XSvzVhP9wWT+mdU8M/Rrm0ZUvItJ6l6B28Z3kB6KU9vOCHwpOa4V3S83UkRHJIvrlXlN++1plqPafS7xGxgzyQH10ZfiAvVJcTSwBZezhfQ7hyukkHYiXFy/eAISVk6U+hFYR2SPPFs3LtN/sLlM9htSVxSJqtkjfFaKjliXDCBQiKZ5PTN+w+Y2duUyhfaC8jH5JA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=oss.nxp.com;
-Received: from DU7PR04MB11163.eurprd04.prod.outlook.com (2603:10a6:10:5b3::14)
- by DU4PR04MB11080.eurprd04.prod.outlook.com (2603:10a6:10:587::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.25; Tue, 4 Mar
- 2025 16:14:29 +0000
-Received: from DU7PR04MB11163.eurprd04.prod.outlook.com
- ([fe80::3a74:80e4:4144:62db]) by DU7PR04MB11163.eurprd04.prod.outlook.com
- ([fe80::3a74:80e4:4144:62db%4]) with mapi id 15.20.8489.028; Tue, 4 Mar 2025
- 16:14:29 +0000
-From: florin.leotescu@oss.nxp.com
-To: Jean Delvare <jdelvare@suse.com>,
-	Guenter Roeck <linux@roeck-us.net>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Michael Shych <michaelsh@nvidia.com>,
-	linux-hwmon@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: viorel.suman@nxp.com,
-	carlos.song@nxp.com,
-	linux-arm-kernel@lists.infradead.org,
-	imx@lists.linux.dev,
-	festevam@gmail.com,
-	Florin Leotescu <florin.leotescu@nxp.com>
-Subject: [PATCH v3 3/3] hwmon: emc2305: Use devm_thermal_of_cooling_device_register
-Date: Tue,  4 Mar 2025 18:21:36 +0200
-Message-Id: <20250304162136.1963384-4-florin.leotescu@oss.nxp.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250304162136.1963384-1-florin.leotescu@oss.nxp.com>
-References: <20250304162136.1963384-1-florin.leotescu@oss.nxp.com>
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: AM0PR05CA0096.eurprd05.prod.outlook.com
- (2603:10a6:208:136::36) To DU7PR04MB11163.eurprd04.prod.outlook.com
- (2603:10a6:10:5b3::14)
+	dkim=pass (2048-bit key) header.d=toxicpanda-com.20230601.gappssmtp.com header.i=@toxicpanda-com.20230601.gappssmtp.com header.b="Dfnn7tAZ"
+Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-47509ac80cbso850521cf.0
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Mar 2025 08:15:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=toxicpanda-com.20230601.gappssmtp.com; s=20230601; t=1741104911; x=1741709711; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=Yn/mVNLBd6udkX5JiXXuHWAdMeM57oaufTToD3WukKw=;
+        b=Dfnn7tAZ/Sxotj5vmOnH7uB1/z34MJBlvcJ4RethG9Xo4c1rYRWSkp8N+q+O7gntpy
+         0ubuCoxTlP6/wwkrIyM0UbTMGjD12pCEDeDm4pYpPIRxUxzHALdlBSlMonzTQd1Xb4sf
+         qRl16sVK/oZ2dnSIHyQ3eKqwiUzyF52fgAFdvYLGb5xFHV06YLG2+h5FXtyMXws8Vdqi
+         xoOdT8hCmVJjBoAW9dJq7GUwr26/sAEnf04Oz1RMN2Z67S054yi68XJkH1pFBhUWVWTO
+         ahGf7PQpjJeOSuGY1rL+Z5F+GpU3deOYiGad00ifwEuxg71NtgcN5spHuIs5ul2m+FRN
+         OC9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741104911; x=1741709711;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Yn/mVNLBd6udkX5JiXXuHWAdMeM57oaufTToD3WukKw=;
+        b=SP+2esG+R/E33KxmbrzbjBvq+PWrSstbB3A2Ivvw5riESg2kOu5nzmWdwrvHoMN3aY
+         xdqB6k8G/QAXcqZPZiFMLdy8MSgpkFoEZkoePtL8Eh1hS5Iitr/1Sf7YnzlFfe19Qwil
+         LRrN7GV+wEGPBzGCERsf03Q/i+F2NIvMk3iFWOsrrl+1EmTrcgfuZtrrESE5HZDrkUKH
+         RY2M2TQBUxzTFfHzX2nzglR0PxMleBnHYfyp0mii5OfpqVYxYyE5Y+vgjrlK31nBZhV7
+         dYBQ1wcmtPzDYBmzWNIaw2UHi3sBJ5Qv9FKtm/zWPn0IP2K3XICPc2mv+q2fTdPX95DU
+         E5Fw==
+X-Forwarded-Encrypted: i=1; AJvYcCXhfNIDiljZyfKlYmIkRZqREuHcSU+R+5spR0vIo+jvQ9HmppQcoBlbAC/LA+YoVG42QOgkJ7Q+bdjnPRA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YydJQ5AofDlseJIaRXDgpcHTNT1NhtQXtG6WYdvniU2AGrmbv0n
+	8QeeyV8ZOTe+ELgRDgYzyHCjnS1y5o6wIk/S7TzS1A+MlI1Y7Rl037iB3eKjObc=
+X-Gm-Gg: ASbGnctbsLKCXWaUGkjryJjtDXBTgJQoqeWsfRoB6dOIziqcPKIOxXLU0bBWbDyTWzE
+	3yK9diNm5McLYQrOrCYBnpRcp7M4slXYf4q2SjgBsRedR2ntWVgyrgIr0qGn6prVhKcJ4W4ptCL
+	yUuPOzZRhPuZU8qBYhpLi1WJpHsleos0wIccip6ejHgWxX79PD6sFNq6j3yo9P0lfKWBrm2BdM+
+	uJ9xHDqsuncOgSTICNhB8b9EEMOJ0UMyUjjDC9E9psjI9yErU9hyYnBIroCdtOH0EwVRdcWsISY
+	L1IMeFrNLS17+qbQqeECuoahxoQmCvjYFfQPkYBz+n6syJszdyUpv6i8Kq/g8OQaQfVHrJUmC2j
+	2wpUpgw==
+X-Google-Smtp-Source: AGHT+IET7KPbwwaDJPgxaLzaAdHSOjh+Hip5XZIqRDysdxQdHiaEvAFtjPuu1+nbA8r6dL+tqRwBGA==
+X-Received: by 2002:ac8:5a49:0:b0:471:a523:6ac1 with SMTP id d75a77b69052e-474bc0558bcmr281954941cf.6.1741104910839;
+        Tue, 04 Mar 2025 08:15:10 -0800 (PST)
+Received: from localhost (syn-076-182-020-124.res.spectrum.com. [76.182.20.124])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-47503d688f7sm5731921cf.56.2025.03.04.08.15.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Mar 2025 08:15:10 -0800 (PST)
+Date: Tue, 4 Mar 2025 11:15:09 -0500
+From: Josef Bacik <josef@toxicpanda.com>
+To: Amir Goldstein <amir73il@gmail.com>
+Cc: Jan Kara <jack@suse.cz>,
+	syzbot <syzbot+7229071b47908b19d5b7@syzkaller.appspotmail.com>,
+	akpm@linux-foundation.org, axboe@kernel.dk, brauner@kernel.org,
+	cem@kernel.org, chandan.babu@oracle.com, djwong@kernel.org,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org, linux-xfs@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [xfs?] WARNING in fsnotify_file_area_perm
+Message-ID: <20250304161509.GA4047943@perftesting>
+References: <67a487f7.050a0220.19061f.05fc.GAE@google.com>
+ <67c4881e.050a0220.1dee4d.0054.GAE@google.com>
+ <7ehxrhbvehlrjwvrduoxsao5k3x4aw275patsb3krkwuq573yv@o2hskrfawbnc>
+ <CAOQ4uxjf5H_vj-swF7wEvUkPobEuxs2q6jfO9jFsx4pqxtJMMg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DU7PR04MB11163:EE_|DU4PR04MB11080:EE_
-X-MS-Office365-Filtering-Correlation-Id: 88f2c751-fea6-45e1-e482-08dd5b37a3f3
-X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|7416014|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?iso-8859-1?Q?TBIl8/nDFO928rWeRjFzo8EHeb3tYxHCok4V0/XuFW72fPPgfV/pedSGCg?=
- =?iso-8859-1?Q?dT6epkfA9NYRuYmPLdAaNkpUq+uSU1dmU8GqAJ+7gOaqVS58f0jSCXWM2O?=
- =?iso-8859-1?Q?rPkw3YAgG57L1FgABBYraUUUsdDepDVuZ3Sd8DVXfRC+beyHxa+fHrGyr3?=
- =?iso-8859-1?Q?B/quHR2Z3fuwgy8aUygcZjrx1zT6uX4YjINSHBv0JTGptK7hkyah2AMy6i?=
- =?iso-8859-1?Q?e9GhHrhjT7VxGKhzLPRAg1oPYzBLc9qNBhHHlN5U9VtDgVzYBvqxOQCVDG?=
- =?iso-8859-1?Q?edlN0TNviMCihSk160YRdcAKL7dVcobgM1i6Gtrwmc6o9t97GuBRQZsQDi?=
- =?iso-8859-1?Q?n26xlQBYXe1TyJClpL3N4vGvaAdhVfSJz1K19piKM9Zx659PT9b0Z4rFHl?=
- =?iso-8859-1?Q?OVfJO/FIMae81C2dlx8H34vsTXZK+q/bvTcuVSeeMhYjotx9XTZVBm0POR?=
- =?iso-8859-1?Q?x8wvgKn9t8BTMUNMhzpG0PxO2qudA9bZrSZm1GM/VsGtI81loealCZSb24?=
- =?iso-8859-1?Q?gvcxtG4FtWmPihXODtmQHFD72RWp+sVusocFB1Lj4akCy3/O+HdDtXTZwF?=
- =?iso-8859-1?Q?Bmw4ULUyVzKvu1dV64jJjdF6qCBmDjOrElvgVS18pqiSJYXkbA78H9dAEC?=
- =?iso-8859-1?Q?S9EWTD8P6ln4r4IiIgZZQPBfMfu/d/kPA6kdo4zhFw7ig/6l+5UyDSHx7M?=
- =?iso-8859-1?Q?ctC0x3mzETX1ODk51LjL4oLpVPQ0u76Ib5NyKbnIKohoHU6Ny97fwZlk3Z?=
- =?iso-8859-1?Q?tQFML0g4eCQ32T9L2+50cn/KQr8lWKGZOduJZ03hP33eqMvRTEGuVLDc6X?=
- =?iso-8859-1?Q?n79cgMNHEe3cajmbyIpb73gL9xdzIhqAJmKx9thtOIBD5ZdnYgYZe8U9Sf?=
- =?iso-8859-1?Q?LRfiM8NqUDys8zBxbA3u13sZulDQcwEfi7n+X9RuFMXiD9chxaTzuA94vi?=
- =?iso-8859-1?Q?YIU3zpnSSYUX2JcuSjaIVckWCxkSNK+iA2Z+wyHy88VOxT76dYgsqOcVqy?=
- =?iso-8859-1?Q?EawZrE2vBc4w1InMaPl7e0kAhd/n5H4UkMUyaxSRS2gojodOmXhMe57Oe1?=
- =?iso-8859-1?Q?c9zo1gQkqUO0z9AKmL1I6aEJVeFsgpA6bLe71IrKE9Cctob98Z7ZsGPcWI?=
- =?iso-8859-1?Q?GPgD7N6u5bc84rQdyAh/LLtHdO4WySfc72We3B/tvz+rgq8rdR8rtTXych?=
- =?iso-8859-1?Q?Fn8Cza6CRau8f3LK3ulHrtdgftNcCRwYxlJGCqKaP1c9fTWPGDWkbFvdAU?=
- =?iso-8859-1?Q?LTCXrNavgsX5Ib+lGDdX2mAs9WVzzkXh70DpdwU13J+ZHhOkIK6YhKFEu9?=
- =?iso-8859-1?Q?2F9Y+1aeIxMcsvHXnpog+IMl2hl1DEBHsODu6iuj9AiM7vhnC+UxetlskG?=
- =?iso-8859-1?Q?2tUGdvOr7M5mHBlomb0vB1hRWKoIwKrsZcLAZXsmnDuIGx1Q7p4nnUgM7/?=
- =?iso-8859-1?Q?RVHhoxBDybTWfUVI?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU7PR04MB11163.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?iso-8859-1?Q?6+1sL8lrFJ94eM8LF9o0GUalvfWKKk7MuAd26pxZFg0XvDPHV3fEAoIEUe?=
- =?iso-8859-1?Q?P7B57aO33sxZ3gjiLlKK2re9FkPs3Vcden9Tud+iY+Vzf7D+gVp7vtK4hz?=
- =?iso-8859-1?Q?QbO4akxeULXjR5EAhyn2RZorTbV72d590On0n+7LD6uiVQB/MhflWll2ZY?=
- =?iso-8859-1?Q?n4ODmut8w5yf/0sNwCesVpjuOaXcyHGRPlMnFmmc6nixEqtbHnC1TfPgEG?=
- =?iso-8859-1?Q?+lepZvRYjonRXbarSbityvMMh0/qB5jXnRj9QXwsHHpe73ZcIUhR7yg67S?=
- =?iso-8859-1?Q?/7VNu4vPuTEuKGEGegxxvEdiqpXwZGPwi1wKt5FbUHZhSfTxDUthfgncPC?=
- =?iso-8859-1?Q?bVYGRBAHjJz12rgheHQDLMhorqEwgqtkxHSlbOTUMppeshC1vIxwP8mdJx?=
- =?iso-8859-1?Q?GIYObFxvbQhHjLcXUGDPXOuDwDsOWqWvPu7Z7HSTMTabfcaD9N/CePR0O7?=
- =?iso-8859-1?Q?DspWgF33D3aVSmCkIoEnCkbrA/JwgB2pEiDM3cDVAXNRJxA5Kp7KYY10Y+?=
- =?iso-8859-1?Q?5nIKLqCQr69kR+M18qtTK2trmrEKmSCzJjR1lvgpwl9vLYAxZXP1jU/mWk?=
- =?iso-8859-1?Q?7xG2ITfFyL24rw4uvc3yBYV4VN3KRGwZjGzdN5Pbgj6jruzJEavY8VeZok?=
- =?iso-8859-1?Q?X/B57p4kLE/waBsTgMu7cHwNoQetmBT+HnemBIC3Booo0hLq+z2B5NHS0O?=
- =?iso-8859-1?Q?e2jouekJrYiv0K4LirvelmdSvD9Ct4ZUDIcsr40hV+YSsKdMN4xTaqyNwp?=
- =?iso-8859-1?Q?7kMmsXUUvi84n00V+13+BQJL7Hyxt5TUE9goFPi2I8Lc6YNb3OLPUTId59?=
- =?iso-8859-1?Q?4rYi/trfZ+oyjIse6MGhVDVgPRi1L/ujQIVB1WC8ybtqZui7vG/RateH1R?=
- =?iso-8859-1?Q?vUuHXbLQgYIZhhT35+cd0C4P/YQEZRrpO6qii9/NKxI2yiEeThcjDMrEPo?=
- =?iso-8859-1?Q?KhI4W5HlYFNAJWL8qJCELakDZmIAppGuRjyXSJf9JRsVja8q4CSXRF66/0?=
- =?iso-8859-1?Q?aYTdAtukFASGzyzWVNRehJBjlR3R6uTt3AiWQjMJhrO8sDBgTSc0j+vWaA?=
- =?iso-8859-1?Q?N6NqVZ6XROBcBq7jobcTVTqQQu4ML6GjsjE0iyxSfADzRPjSHgPY6JHWaW?=
- =?iso-8859-1?Q?TGD40AC8kJ3QdxKCUzrCAhSDLPLQlQpDBplxbXauxaYMEV/RgCTc3bzFtF?=
- =?iso-8859-1?Q?2Jpro2Y0y4MKMh1NsugX1ynojAj3EtaZobmzjLHDZoreNcFDouHIqgSvoi?=
- =?iso-8859-1?Q?SKIf8RV4TJCidMyGu59Mz1j8wBwF3esH9Fj+RTyiIjBgzoY+Gk65tBN9DY?=
- =?iso-8859-1?Q?+hK0OOTGg98uS+yxToDnpocET8nWAUMYrVURjMoYYoNr0IPKkhIpMPTbic?=
- =?iso-8859-1?Q?tFTcgDRSXmSTSBx74tDN/lVYOUNwhf3BKmce+eDOS5TARY+K/a4LZapfPC?=
- =?iso-8859-1?Q?PgUxI7tN//r8x9CjtHJROZZKBX4xFYUM/S5wsFJWfqJvK0Kml4zbm3Niog?=
- =?iso-8859-1?Q?/FTLzdi4UjE0HGlHnj4LIiWp3dSizGF647hp3oeYq1TcQmzS9Zr9yHQzHO?=
- =?iso-8859-1?Q?bc2enWaRljkyPrIxbppVh6F4yhcTN9NhpTwg1O5bAsXgTV4ndUvwzJKyR6?=
- =?iso-8859-1?Q?0S1vDY0DJL+Hq378oLlY7/eA66zW797IEO?=
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 88f2c751-fea6-45e1-e482-08dd5b37a3f3
-X-MS-Exchange-CrossTenant-AuthSource: DU7PR04MB11163.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Mar 2025 16:14:29.0281
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: SQLTIdhybw0Qc3VkNoNJJtHlpNyyQmbz99eI7stOGktcStZP+QKY4tDkr5+TOdSW8gtW1aBW7zfGWAQ7V2kMbg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU4PR04MB11080
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAOQ4uxjf5H_vj-swF7wEvUkPobEuxs2q6jfO9jFsx4pqxtJMMg@mail.gmail.com>
 
-From: Florin Leotescu <florin.leotescu@nxp.com>
+On Tue, Mar 04, 2025 at 04:09:16PM +0100, Amir Goldstein wrote:
+> On Tue, Mar 4, 2025 at 12:06 PM Jan Kara <jack@suse.cz> wrote:
+> >
+> > Josef, Amir,
+> >
+> > this is indeed an interesting case:
+> >
+> > On Sun 02-03-25 08:32:30, syzbot wrote:
+> > > syzbot has found a reproducer for the following issue on:
+> > ...
+> > > ------------[ cut here ]------------
+> > > WARNING: CPU: 1 PID: 6440 at ./include/linux/fsnotify.h:145 fsnotify_file_area_perm+0x20c/0x25c include/linux/fsnotify.h:145
+> > > Modules linked in:
+> > > CPU: 1 UID: 0 PID: 6440 Comm: syz-executor370 Not tainted 6.14.0-rc4-syzkaller-ge056da87c780 #0
+> > > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 12/27/2024
+> > > pstate: 80400005 (Nzcv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+> > > pc : fsnotify_file_area_perm+0x20c/0x25c include/linux/fsnotify.h:145
+> > > lr : fsnotify_file_area_perm+0x20c/0x25c include/linux/fsnotify.h:145
+> > > sp : ffff8000a42569d0
+> > > x29: ffff8000a42569d0 x28: ffff0000dcec1b48 x27: ffff0000d68a1708
+> > > x26: ffff0000d68a16c0 x25: dfff800000000000 x24: 0000000000008000
+> > > x23: 0000000000000001 x22: ffff8000a4256b00 x21: 0000000000001000
+> > > x20: 0000000000000010 x19: ffff0000d68a16c0 x18: ffff8000a42566e0
+> > > x17: 000000000000e388 x16: ffff800080466c24 x15: 0000000000000001
+> > > x14: 1fffe0001b31513c x13: 0000000000000000 x12: 0000000000000000
+> > > x11: 0000000000000001 x10: 0000000000ff0100 x9 : 0000000000000000
+> > > x8 : ffff0000c6d98000 x7 : 0000000000000000 x6 : 0000000000000000
+> > > x5 : 0000000000000020 x4 : 0000000000000000 x3 : 0000000000001000
+> > > x2 : ffff8000a4256b00 x1 : 0000000000000001 x0 : 0000000000000000
+> > > Call trace:
+> > >  fsnotify_file_area_perm+0x20c/0x25c include/linux/fsnotify.h:145 (P)
+> > >  filemap_fault+0x12b0/0x1518 mm/filemap.c:3509
+> > >  xfs_filemap_fault+0xc4/0x194 fs/xfs/xfs_file.c:1543
+> > >  __do_fault+0xf8/0x498 mm/memory.c:4988
+> > >  do_read_fault mm/memory.c:5403 [inline]
+> > >  do_fault mm/memory.c:5537 [inline]
+> > >  do_pte_missing mm/memory.c:4058 [inline]
+> > >  handle_pte_fault+0x3504/0x57b0 mm/memory.c:5900
+> > >  __handle_mm_fault mm/memory.c:6043 [inline]
+> > >  handle_mm_fault+0xfa8/0x188c mm/memory.c:6212
+> > >  do_page_fault+0x570/0x10a8 arch/arm64/mm/fault.c:690
+> > >  do_translation_fault+0xc4/0x114 arch/arm64/mm/fault.c:783
+> > >  do_mem_abort+0x74/0x200 arch/arm64/mm/fault.c:919
+> > >  el1_abort+0x3c/0x5c arch/arm64/kernel/entry-common.c:432
+> > >  el1h_64_sync_handler+0x60/0xcc arch/arm64/kernel/entry-common.c:510
+> > >  el1h_64_sync+0x6c/0x70 arch/arm64/kernel/entry.S:595
+> > >  __uaccess_mask_ptr arch/arm64/include/asm/uaccess.h:169 [inline] (P)
+> > >  fault_in_readable+0x168/0x310 mm/gup.c:2234 (P)
+> > >  fault_in_iov_iter_readable+0x1dc/0x22c lib/iov_iter.c:94
+> > >  iomap_write_iter fs/iomap/buffered-io.c:950 [inline]
+> > >  iomap_file_buffered_write+0x490/0xd54 fs/iomap/buffered-io.c:1039
+> > >  xfs_file_buffered_write+0x2dc/0xac8 fs/xfs/xfs_file.c:792
+> > >  xfs_file_write_iter+0x2c4/0x6ac fs/xfs/xfs_file.c:881
+> > >  new_sync_write fs/read_write.c:586 [inline]
+> > >  vfs_write+0x704/0xa9c fs/read_write.c:679
+> >
+> > The backtrace actually explains it all. We had a buffered write whose
+> > buffer was mmapped file on a filesystem with an HSM mark. Now the prefaulting
+> > of the buffer happens already (quite deep) under the filesystem freeze
+> > protection (obtained in vfs_write()) which breaks assumptions of HSM code
+> > and introduces potential deadlock of HSM handler in userspace with filesystem
+> > freezing. So we need to think how to deal with this case...
+> 
+> Ouch. It's like the splice mess all over again.
+> Except we do not really care to make this use case work with HSM
+> in the sense that we do not care to have to fill in the mmaped file content
+> in this corner case - we just need to let HSM fail the access if content is
+> not available.
+> 
+> If you remember, in one of my very early version of pre-content events,
+> the pre-content event (or maybe it was FAN_ACCESS_PERM itself)
+> carried a flag (I think it was called FAN_PRE_VFS) to communicate to
+> HSM service if it was safe to write to fs in the context of event handling.
+> 
+> At the moment, I cannot think of any elegant way out of this use case
+> except annotating the event from fault_in_readable() as "unsafe-for-write".
+> This will relax the debugging code assertion and notify the HSM service
+> (via an event flag) that it can ALLOW/DENY, but it cannot fill the file.
+> Maybe we can reuse the FAN_ACCESS_PERM event to communicate
+> this case to HSM service.
+> 
+> WDYT?
 
-This prepares emc2305 driver to use configuration from Device Tree nodes.
-Using devm_thermal_of_cooling_device_register also simplifies cleanup
-procedure, so we are able to remove the emc2305_unset_tz and emc2305_remove
-functions which are no longer used.
+I think that mmap was a mistake.
 
-Signed-off-by: Florin Leotescu <florin.leotescu@nxp.com>
----
- drivers/hwmon/emc2305.c | 28 +++-------------------------
- 1 file changed, 3 insertions(+), 25 deletions(-)
+Is there a way to tell if we're currently in a path that is under fsfreeze
+protection?  Just denying this case would be a simpler short term solution while
+we come up with a long term solution. I think your solution is fine, but I'd be
+just as happy with a simpler "this isn't allowed" solution. Thanks,
 
-diff --git a/drivers/hwmon/emc2305.c b/drivers/hwmon/emc2305.c
-index a236f27c75bc..5f3f06308826 100644
---- a/drivers/hwmon/emc2305.c
-+++ b/drivers/hwmon/emc2305.c
-@@ -112,8 +112,6 @@ static char *emc2305_fan_name[] = {
- 	"emc2305_fan5",
- };
- 
--static void emc2305_unset_tz(struct device *dev);
--
- static int emc2305_get_max_channel(const struct emc2305_data *data)
- {
- 	return data->pwm_num;
-@@ -293,8 +291,9 @@ static int emc2305_set_single_tz(struct device *dev, int idx)
- 	pwm = data->pwm_min[cdev_idx];
- 
- 	data->cdev_data[cdev_idx].cdev =
--		thermal_cooling_device_register(emc2305_fan_name[idx], data,
--						&emc2305_cooling_ops);
-+		devm_thermal_of_cooling_device_register(dev, dev->of_node,
-+							emc2305_fan_name[idx], data,
-+							&emc2305_cooling_ops);
- 
- 	if (IS_ERR(data->cdev_data[cdev_idx].cdev)) {
- 		dev_err(dev, "Failed to register cooling device %s\n", emc2305_fan_name[idx]);
-@@ -337,21 +336,9 @@ static int emc2305_set_tz(struct device *dev)
- 	return 0;
- 
- thermal_cooling_device_register_fail:
--	emc2305_unset_tz(dev);
- 	return ret;
- }
- 
--static void emc2305_unset_tz(struct device *dev)
--{
--	struct emc2305_data *data = dev_get_drvdata(dev);
--	int i;
--
--	/* Unregister cooling device. */
--	for (i = 0; i < EMC2305_PWM_MAX; i++)
--		if (data->cdev_data[i].cdev)
--			thermal_cooling_device_unregister(data->cdev_data[i].cdev);
--}
--
- static umode_t
- emc2305_is_visible(const void *data, enum hwmon_sensor_types type, u32 attr, int channel)
- {
-@@ -599,14 +586,6 @@ static int emc2305_probe(struct i2c_client *client)
- 	return 0;
- }
- 
--static void emc2305_remove(struct i2c_client *client)
--{
--	struct device *dev = &client->dev;
--
--	if (IS_REACHABLE(CONFIG_THERMAL))
--		emc2305_unset_tz(dev);
--}
--
- static const struct of_device_id of_emc2305_match_table[] = {
- 	{ .compatible = "microchip,emc2301", },
- 	{ .compatible = "microchip,emc2302", },
-@@ -622,7 +601,6 @@ static struct i2c_driver emc2305_driver = {
- 		.of_match_table = of_emc2305_match_table,
- 	},
- 	.probe = emc2305_probe,
--	.remove	  = emc2305_remove,
- 	.id_table = emc2305_ids,
- };
- 
--- 
-2.34.1
-
+Josef
