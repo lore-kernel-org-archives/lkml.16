@@ -1,171 +1,96 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4C11202F90;
-	Tue,  4 Mar 2025 13:59:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA5932036E9
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 13:59:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741096769; cv=none; b=a60Kwwr8/Fi4YI2uFajAyb+fpyWipBUvSYh+jbPR4HhyhWjbqSeGzS1sl0GztyU2i1MBckZ9Pzzo0owDEjFuZjpGU5zA20mL48rbi4cDDfqNaoAKV9bKBOeaHwfmOzOOTs7fytRk6c1cex7BopRle4NGMUGpKI7IdW16k4Ac/ZI=
+	t=1741096796; cv=none; b=NTydMWZLdbgGSOpSqiT1zy4s6qLtG97GxJ8GtEeJmXu+/Mkvt4CpXKCFPJlvDqJJJjciGY3eHjWI5rKzr6msZ9EsuO1i9Egcjmrc4YQUkUpY/MWgrouez9P7qhPQNa/D7J/MaAz5xIqtRXxM2pTbGXTM+5b1Po1lM6KtbpD6Rio=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741096769; c=relaxed/simple;
-	bh=EQqcHu83LSODXEmE1HAvgCk/Pej/5geFDZJy8+/PWg4=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=u7AJKT1J1DEY15nCxlKJKB9XGu5m89sAxRlW1nmnPuDOo71iVULdl1AOaRlcpLj8LnlrQ+j4vgIP/ESHyUSGZAxh31v4NWdlmuKxqsRTCVMhPsCZ3jUvUUlge0+DIc3HXyHHzNkqtaXFA0d73QGPzXJcIqWslWOQOl3PXkFqIZA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lw6KPDFa; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741096796; c=relaxed/simple;
+	bh=QKqzclx7vyvEXdb8FIs/X9WNp7zoMBpg2QvGJE5UpqU=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=YAN9M6nth3uZ22Vo43/gM2arbzYqQGLhgubRoWXOEMFu2F4fl5jKWIXUcUZI6lmadCdy8OqzZxD0BxXvpYn6v+NYi/m9VpDyh4+4bEmkEcUjKDnN17QliTyOdAFjKPQYnY8FQwZBZwnobdFNCDuJ8pnusUUm3Zf2CQodlKSUpMo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=EY3yfec7; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Oi3kjdkT; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lw6KPDFa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B505C4CEE5;
-	Tue,  4 Mar 2025 13:59:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741096769;
-	bh=EQqcHu83LSODXEmE1HAvgCk/Pej/5geFDZJy8+/PWg4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=lw6KPDFaOyM5pw7Cq+bPY/pEPmHgxCLFOXjcaBpJBFm1cT2NRZuFCtEwJPDKEIbAg
-	 a0Sq8v5+2A0zsw8u7DmuWRowhMT22ybgMVarYyABlr+SuOQLQagljUafPuKY8b4iAi
-	 B/FyxFt42KU2gcRuDru8QGrHo3i1naZIOp6jtO77Ph2u/PdpXPGLd6QJTzGcO2MDEn
-	 GhAUxWgc/3U2MrZ+W5Uw3Qix/ajqWR3czlwfPH136Z9rCvGgNCzWtYdLS4or9HNRSB
-	 5nRE4nolSPRBxm22vM8CPuzXlkiTIB71XxQ6SLFRRPsqXJu+VrOquMKOnEYfaabMOD
-	 /2NimGTH/gDSQ==
-Date: Tue, 4 Mar 2025 13:59:17 +0000
-From: Jonathan Cameron <jic23@kernel.org>
-To: Lothar Rubusch <l.rubusch@gmail.com>
-Cc: lars@metafoo.de, Michael.Hennerich@analog.com,
- linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
- eraretuya@gmail.com
-Subject: Re: [PATCH v3 14/15] iio: accel: adxl345: add coupling detection
- for activity/inactivity
-Message-ID: <20250304135917.39ef0071@jic23-huawei>
-In-Reply-To: <20250220104234.40958-15-l.rubusch@gmail.com>
-References: <20250220104234.40958-1-l.rubusch@gmail.com>
-	<20250220104234.40958-15-l.rubusch@gmail.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="EY3yfec7";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Oi3kjdkT"
+From: John Ogness <john.ogness@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1741096792;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jPEg1gU8jsF4TvlTeMBD+//bwSjW/iMFwJE56K1FiQ4=;
+	b=EY3yfec7C5Scw3xNRLzIXZl70LOI1yPCk4M7epZMRyegeZ107RFeeqvtq3QhXr7eh3KWVV
+	HDD6K71KnhKX4TR/zGgMRJZljgpk9w0bPTc8370op4jH1YRoMkNmt8jt9i+UonUrGdqRlC
+	Bw5n3fx3dNuXduHaHh/QMV+x0fK+tC3Q/g0d8CpVlQh+gxhCgfua5+3ITTSvffEhcUFafN
+	gwmPJzHkoHPEQY7vNozgmEfJCVoOdqbriKUkIvhNpajfDSJ3//RbzSa1bib4i7gMMzgL68
+	5h2xP+ZInWbX3mMocXfFklK5aEfTvK6vdaKAeHH+shmdMSXzvjYkrddu8rf9qA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1741096792;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jPEg1gU8jsF4TvlTeMBD+//bwSjW/iMFwJE56K1FiQ4=;
+	b=Oi3kjdkTYmO/gSv59d+h7n70S/Ifb80Z5w3X55Dd9oQXA8A3OtXuoOSxfGTeEer6pInghk
+	8J0Tr29xzL8zIKAA==
+To: Petr Mladek <pmladek@suse.com>
+Cc: Donghyeok Choe <d7271.choe@samsung.com>, linux-kernel@vger.kernel.org,
+ takakura@valinux.co.jp, youngmin.nam@samsung.com, hajun.sung@samsung.com,
+ seungh.jung@samsung.com, jh1012.choi@samsung.com
+Subject: Re: printk: selective deactivation of feature ignoring non panic
+ cpu's messages
+In-Reply-To: <Z8b-ljGnw57GpJb0@pathway>
+References: <CGME20250226031756epcas2p3674cccc82687effb40575aa5fa2956e0@epcas2p3.samsung.com>
+ <20250226031628.GB592457@tiffany> <84ikoxxrfy.fsf@jogness.linutronix.de>
+ <Z78eGNIuG_-CVOGl@pathway.suse.cz> <8434fytakt.fsf@jogness.linutronix.de>
+ <Z8b-ljGnw57GpJb0@pathway>
+Date: Tue, 04 Mar 2025 15:05:52 +0106
+Message-ID: <84ikoorj53.fsf@jogness.linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 
-On Thu, 20 Feb 2025 10:42:33 +0000
-Lothar Rubusch <l.rubusch@gmail.com> wrote:
+On 2025-03-04, Petr Mladek <pmladek@suse.com> wrote:
+> I mean something like:
+>
+> --- a/kernel/printk/printk_ringbuffer.c
+> +++ b/kernel/printk/printk_ringbuffer.c
+> @@ -2143,7 +2143,9 @@ static bool _prb_read_valid(struct printk_ringbuffer *rb, u64 *seq,
+>  			 * But it would have the sequence number returned
+>  			 * by "prb_next_reserve_seq() - 1".
+>  			 */
+> -			if (this_cpu_in_panic() && ((*seq + 1) < prb_next_reserve_seq(rb)))
+> +			if (this_cpu_in_panic() &&
+> +			    (!printk_debug_non_panic_cpus || legacy_allow_panic_sync) &&
+> +			    ((*seq + 1) < prb_next_reserve_seq(rb)))
+>  				(*seq)++;
+>  			else
+>  				return false;
 
-> Add coupling activity/inactivity detection by the AC/DC bit. This is an
-> addititional enhancement for the detection of activity states and
-> completes the activity / inactivity feature of the ADXL345.
-> 
-> Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com>
-> @@ -337,6 +356,69 @@ static int adxl345_write_act_axis(struct adxl345_state *st,
->  	return 0;
->  }
->  
-> +static int adxl345_is_act_inact_ac(struct adxl345_state *st,
-> +				   enum adxl345_activity_type type, bool *ac)
-> +{
-> +	unsigned int regval;
-> +	int ret;
-> +
-> +	ret = regmap_read(st->regmap, ADXL345_REG_ACT_INACT_CTRL, &regval);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (type == ADXL345_ACTIVITY)
-> +		*ac = (FIELD_GET(ADXL345_REG_ACT_ACDC_MSK, regval) > 0) ? true : false;
-> +	else
-> +		*ac = (FIELD_GET(ADXL345_REG_INACT_ACDC_MSK, regval) > 0) ? true : false;
-> +
-Why the ternaries? 
-		*ac = FIELD_GET() > 0;
-is a boolean right hand side anyway.
+Ah, OK. Thanks for the clarification
 
-> +	return 0;
-> +}
-> +
-> +static int adxl345_set_act_inact_ac(struct adxl345_state *st,
-> +				    enum adxl345_activity_type type, bool ac)
-> +{
-> +	unsigned int act_inact_ac = ac ? 0xff : 0x00;
-> +
-> +	/*
-> +	 * A setting of 0 selects dc-coupled operation, and a setting of 1
-false and true rather than 0 / 1?
-> +	 * enables ac-coupled operation. In dc-coupled operation, the current
-> +	 * acceleration magnitude is compared directly with
-> +	 * ADXL345_REG_THRESH_ACT and ADXL345_REG_THRESH_INACT to determine
-> +	 * whether activity or inactivity is detected.
-...
->  static int adxl345_is_act_inact_en(struct adxl345_state *st,
->  				   enum adxl345_activity_type type, bool *en)
->  {
-> @@ -695,6 +777,11 @@ static int adxl345_set_odr(struct adxl345_state *st, enum adxl345_odr odr)
->  	if (ret)
->  		return ret;
->  
-> +	/* update inactivity time by ODR */
-> +	ret = adxl345_set_inact_time_s(st, 0);
-> +	if (ret)
-> +		return ret;
-> +
->  	return 0;
+> OK, I propose the following changes:
+>
+>   + rename the option to "printk_debug_non_panic_cpus"
+>
+>   + do not skip the messages in _prb_read_valid() when this option
+>     is used before the non-panic CPUs are stopped.
 
-return adxl345_set_inact_time_s()
+And of course:
 
->  }
->  
-> @@ -718,14 +805,54 @@ static int adxl345_find_range(struct adxl345_state *st, int val, int val2,
->  
->  static int adxl345_set_range(struct adxl345_state *st, enum adxl345_range range)
->  {
-> +	unsigned int act_threshold, inact_threshold;
-> +	unsigned int range_old;
-> +	unsigned int regval;
->  	int ret;
->  
-> +	ret = regmap_read(st->regmap, ADXL345_REG_DATA_FORMAT, &regval);
-> +	if (ret)
-> +		return ret;
-> +	range_old = FIELD_GET(ADXL345_DATA_FORMAT_RANGE, regval);
-> +
-> +	ret = regmap_read(st->regmap,
-> +			  adxl345_act_thresh_reg[ADXL345_ACTIVITY],
-> +			  &act_threshold);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = regmap_read(st->regmap,
-> +			  adxl345_act_thresh_reg[ADXL345_INACTIVITY],
-> +			  &inact_threshold);
-> +	if (ret)
-> +		return ret;
-> +
->  	ret = regmap_update_bits(st->regmap, ADXL345_REG_DATA_FORMAT,
->  				 ADXL345_DATA_FORMAT_RANGE,
->  				 FIELD_PREP(ADXL345_DATA_FORMAT_RANGE, range));
->  	if (ret)
->  		return ret;
->  
-> +	act_threshold = act_threshold
-> +		* adxl345_range_factor_tbl[range_old]
-> +		/ adxl345_range_factor_tbl[range];
-> +	act_threshold = min(255, max(1, inact_threshold));
-> +
-> +	inact_threshold = inact_threshold
-> +		* adxl345_range_factor_tbl[range_old]
-> +		/ adxl345_range_factor_tbl[range];
-> +	inact_threshold = min(255, max(1, inact_threshold));
-> +
-> +	ret = regmap_write(st->regmap, adxl345_act_thresh_reg[ADXL345_ACTIVITY],
-> +			   act_threshold);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = regmap_write(st->regmap, adxl345_act_thresh_reg[ADXL345_INACTIVITY],
-> +			   inact_threshold);
-> +	if (ret)
-> +		return ret;
-return regmap_write()
-> +
->  	return 0;
->  }
+    + allow non-panic CPUs in panic to store messages when this option
+      is set
 
+I would also keep the dump_stack_lvl() implementation as it is, even if
+it could lead to interweaving of backtraces. Anyone using
+printk_debug_non_panic_cpus should have CONFIG_PRINTK_CALLER enabled.
+
+John
