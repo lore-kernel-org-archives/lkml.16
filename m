@@ -1,23 +1,23 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9582113AA2F;
-	Tue,  4 Mar 2025 01:30:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9575513AA2F;
+	Tue,  4 Mar 2025 01:30:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741051846; cv=none; b=aR2EL5jIFVv3B1s7Ugrs/Hl+94GrTUhjJv/NMrPY+lPRqeZqLOiAT195rG4DRyz5zIeI41vSKTMEEs9uSTbSY4tPYgWMznnsZqM9gves28R/q20SRXRKRjdLESQVFLu1KYW5GcyGocLuIoO7PHJDTn/M/oViYLTR3tK8QahcIxo=
+	t=1741051850; cv=none; b=DO9JP6KRPzq1ED+rp4XrnbaRFaUdjgl3GGKypUg3rBUyCiYhx4ayTq45s8/IaYIe5rYtrp22vYrijEcZZ80HvMeYztkHhsLWY8PotaZfm0mxNrefEN3zVLQPg/QmpTKuCEIVULXAefw/LlXn8XWxyel0qJux1HZ2nRPB60Ngrv8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741051846; c=relaxed/simple;
-	bh=6FRj0IQoQLhrlXw0PbzI3/6i+POXVHewBQ07zrvOUJg=;
+	s=arc-20240116; t=1741051850; c=relaxed/simple;
+	bh=LDGzPYIsaKKojsVlTcd33q1rNEQOK8VRe43j9jWl8oc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=nsRKVpxybQXhcyomBdMJCBI0MbB9ltsLCdzF0Nwg73jfjmQ64W5TGVvaUVZyvT5x5XfpJH/U3wf794y4lz9gXj58YrTqH9Ibwqt7RXVNQtow+JQH9PHX/4VCJAsf03Y7CFr3b+10FZSzyHH3B+U5WFMk3DVwcszvCqp1KHf8HM4=
+	 MIME-Version; b=EonUSDRZclC+KwQQzMTNmZet90FAWV1+DGgicBC3M2dU9JkLDhqCpFWoPVMROZi4ZSeTT1X1JjHHMRRY2vSPgerwnyOiZvDmc4yXbTwN48YK1UjCblt7kn/oa2LZ88EwyIJGND8i6faIf9kTfVH/cNeMKXD0qPd70Co61LPAmDk=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E4274FEC;
-	Mon,  3 Mar 2025 17:30:57 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 227DDFEC;
+	Mon,  3 Mar 2025 17:31:02 -0800 (PST)
 Received: from localhost.localdomain (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2FA8A3F673;
-	Mon,  3 Mar 2025 17:30:42 -0800 (PST)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6208A3F673;
+	Mon,  3 Mar 2025 17:30:46 -0800 (PST)
 From: Andre Przywara <andre.przywara@arm.com>
 To: Michael Turquette <mturquette@baylibre.com>,
 	Stephen Boyd <sboyd@kernel.org>,
@@ -33,9 +33,9 @@ Cc: Philipp Zabel <p.zabel@pengutronix.de>,
 	linux-arm-kernel@lists.infradead.org,
 	linux-sunxi@lists.linux.dev,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 05/15] dt-bindings: clk: sunxi-ng: add compatible for the A523 PRCM-CCU
-Date: Tue,  4 Mar 2025 01:27:55 +0000
-Message-ID: <20250304012805.28594-6-andre.przywara@arm.com>
+Subject: [PATCH v3 07/15] clk: sunxi-ng: a523: Add support for bus clocks
+Date: Tue,  4 Mar 2025 01:27:57 +0000
+Message-ID: <20250304012805.28594-8-andre.przywara@arm.com>
 X-Mailer: git-send-email 2.46.3
 In-Reply-To: <20250304012805.28594-1-andre.przywara@arm.com>
 References: <20250304012805.28594-1-andre.przywara@arm.com>
@@ -47,148 +47,81 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The Allwinner A523/T527 SoCs have four CCUs, this adds the binding for
-the PRCM R_CCU.
-
-Add the new compatible string, along with the required input clock
-lists. There is now an extra input clock (PLL_AUDIO), so add this to the
-list of allowed clocks and required it for the A523 PRCM CCU.
-Also add the DT binding headers, listing all the clocks with their ID
-numbers.
+Add the basic bus clocks for the Allwinner A523 and T527 SoCs.
+This covers the AHB, APB0 and APB1 clocks. Linux is not supposed to
+change those clocks, but they are needed as parents for many other mod
+clocks.
 
 Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+Reviewed-by: Jernej Skrabec <jernej.skrabec@gmail.com>
 ---
- .../clock/allwinner,sun55i-a523-ccu.yaml      | 23 +++++++++++-
- include/dt-bindings/clock/sun55i-a523-r-ccu.h | 37 +++++++++++++++++++
- include/dt-bindings/reset/sun55i-a523-r-ccu.h | 25 +++++++++++++
- 3 files changed, 83 insertions(+), 2 deletions(-)
- create mode 100644 include/dt-bindings/clock/sun55i-a523-r-ccu.h
- create mode 100644 include/dt-bindings/reset/sun55i-a523-r-ccu.h
+ drivers/clk/sunxi-ng/ccu-sun55i-a523.c | 39 ++++++++++++++++++++++++++
+ 1 file changed, 39 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/clock/allwinner,sun55i-a523-ccu.yaml b/Documentation/devicetree/bindings/clock/allwinner,sun55i-a523-ccu.yaml
-index 2eacaeaeabac7..a64a35b423736 100644
---- a/Documentation/devicetree/bindings/clock/allwinner,sun55i-a523-ccu.yaml
-+++ b/Documentation/devicetree/bindings/clock/allwinner,sun55i-a523-ccu.yaml
-@@ -19,17 +19,18 @@ properties:
-   compatible:
-     enum:
-       - allwinner,sun55i-a523-ccu
-+      - allwinner,sun55i-a523-r-ccu
+diff --git a/drivers/clk/sunxi-ng/ccu-sun55i-a523.c b/drivers/clk/sunxi-ng/ccu-sun55i-a523.c
+index 455bca0c344bc..c8a96b642bb1e 100644
+--- a/drivers/clk/sunxi-ng/ccu-sun55i-a523.c
++++ b/drivers/clk/sunxi-ng/ccu-sun55i-a523.c
+@@ -331,6 +331,39 @@ static CLK_FIXED_FACTOR_HW(pll_npu_2x_clk, "pll-npu-2x",
+ static CLK_FIXED_FACTOR_HW(pll_npu_1x_clk, "pll-npu-1x",
+ 			   &pll_npu_4x_clk.common.hw, 4, 1, 0);
  
-   reg:
-     maxItems: 1
++
++/**************************************************************************
++ *                           bus clocks                                   *
++ **************************************************************************/
++
++static const struct clk_parent_data ahb_apb0_parents[] = {
++	{ .fw_name = "hosc" },
++	{ .fw_name = "losc" },
++	{ .fw_name = "iosc" },
++	{ .hw = &pll_periph0_600M_clk.hw },
++};
++
++static SUNXI_CCU_M_DATA_WITH_MUX(ahb_clk, "ahb", ahb_apb0_parents, 0x510,
++				 0, 5,		/* M */
++				 24, 2,		/* mux */
++				 0);
++static SUNXI_CCU_M_DATA_WITH_MUX(apb0_clk, "apb0", ahb_apb0_parents, 0x520,
++				 0, 5,		/* M */
++				 24, 2,	/* mux */
++				 0);
++
++static const struct clk_parent_data apb1_parents[] = {
++	{ .fw_name = "hosc" },
++	{ .fw_name = "losc" },
++	{ .fw_name = "iosc" },
++	{ .hw = &pll_periph0_600M_clk.hw },
++	{ .hw = &pll_periph0_480M_clk.common.hw },
++};
++static SUNXI_CCU_M_DATA_WITH_MUX(apb1_clk, "apb1", apb1_parents, 0x524,
++				 0, 5,		/* M */
++				 24, 3,		/* mux */
++				 0);
++
+ /*
+  * Contains all clocks that are controlled by a hardware register. They
+  * have a (sunxi) .common member, which needs to be initialised by the common
+@@ -358,6 +391,9 @@ static struct ccu_common *sun55i_a523_ccu_clks[] = {
+ 	&pll_ve_clk.common,
+ 	&pll_audio0_4x_clk.common,
+ 	&pll_npu_4x_clk.common,
++	&ahb_clk.common,
++	&apb0_clk.common,
++	&apb1_clk.common,
+ };
  
-   clocks:
-     minItems: 4
--    maxItems: 4
-+    maxItems: 5
+ static struct clk_hw_onecell_data sun55i_a523_hw_clks = {
+@@ -403,6 +439,9 @@ static struct clk_hw_onecell_data sun55i_a523_hw_clks = {
+ 		[CLK_PLL_NPU_4X]	= &pll_npu_4x_clk.common.hw,
+ 		[CLK_PLL_NPU_2X]	= &pll_npu_2x_clk.hw,
+ 		[CLK_PLL_NPU]		= &pll_npu_1x_clk.hw,
++		[CLK_AHB]		= &ahb_clk.common.hw,
++		[CLK_APB0]		= &apb0_clk.common.hw,
++		[CLK_APB1]		= &apb1_clk.common.hw,
+ 	},
+ };
  
-   clock-names:
-     minItems: 4
--    maxItems: 4
-+    maxItems: 5
- 
- required:
-   - "#clock-cells"
-@@ -61,6 +62,24 @@ then:
-         - const: iosc
-         - const: losc-fanout
- 
-+else:
-+  properties:
-+    clocks:
-+      items:
-+        - description: High Frequency Oscillator (usually at 24MHz)
-+        - description: Low Frequency Oscillator (usually at 32kHz)
-+        - description: Internal Oscillator
-+        - description: Peripherals PLL
-+        - description: Audio PLL
-+
-+    clock-names:
-+      items:
-+        - const: hosc
-+        - const: losc
-+        - const: iosc
-+        - const: pll-periph
-+        - const: pll-audio
-+
- additionalProperties: false
- 
- examples:
-diff --git a/include/dt-bindings/clock/sun55i-a523-r-ccu.h b/include/dt-bindings/clock/sun55i-a523-r-ccu.h
-new file mode 100644
-index 0000000000000..365647499b9ab
---- /dev/null
-+++ b/include/dt-bindings/clock/sun55i-a523-r-ccu.h
-@@ -0,0 +1,37 @@
-+/* SPDX-License-Identifier: (GPL-2.0-only OR MIT) */
-+/*
-+ * Copyright (C) 2024 Arm Ltd.
-+ */
-+
-+#ifndef _DT_BINDINGS_CLK_SUN55I_A523_R_CCU_H_
-+#define _DT_BINDINGS_CLK_SUN55I_A523_R_CCU_H_
-+
-+#define CLK_R_AHB		0
-+#define CLK_R_APB0		1
-+#define CLK_R_APB1		2
-+#define CLK_R_TIMER0		3
-+#define CLK_R_TIMER1		4
-+#define CLK_R_TIMER2		5
-+#define CLK_BUS_R_TIMER		6
-+#define CLK_BUS_R_TWD		7
-+#define CLK_R_PWMCTRL		8
-+#define CLK_BUS_R_PWMCTRL	9
-+#define CLK_R_SPI		10
-+#define CLK_BUS_R_SPI		11
-+#define CLK_BUS_R_SPINLOCK	12
-+#define CLK_BUS_R_MSGBOX	13
-+#define CLK_BUS_R_UART0		14
-+#define CLK_BUS_R_UART1		15
-+#define CLK_BUS_R_I2C0		16
-+#define CLK_BUS_R_I2C1		17
-+#define CLK_BUS_R_I2C2		18
-+#define CLK_BUS_R_PPU0		19
-+#define CLK_BUS_R_PPU1		20
-+#define CLK_BUS_R_CPU_BIST	21
-+#define CLK_R_IR_RX		22
-+#define CLK_BUS_R_IR_RX		23
-+#define CLK_BUS_R_DMA		24
-+#define CLK_BUS_R_RTC		25
-+#define CLK_BUS_R_CPUCFG	26
-+
-+#endif /* _DT_BINDINGS_CLK_SUN55I_A523_R_CCU_H_ */
-diff --git a/include/dt-bindings/reset/sun55i-a523-r-ccu.h b/include/dt-bindings/reset/sun55i-a523-r-ccu.h
-new file mode 100644
-index 0000000000000..dd6fbb372e190
---- /dev/null
-+++ b/include/dt-bindings/reset/sun55i-a523-r-ccu.h
-@@ -0,0 +1,25 @@
-+/* SPDX-License-Identifier: (GPL-2.0-only OR MIT) */
-+/*
-+ * Copyright (C) 2024 Arm Ltd.
-+ */
-+
-+#ifndef _DT_BINDINGS_RST_SUN55I_A523_R_CCU_H_
-+#define _DT_BINDINGS_RST_SUN55I_A523_R_CCU_H_
-+
-+#define RST_BUS_R_TIMER		0
-+#define RST_BUS_R_TWD		1
-+#define RST_BUS_R_PWMCTRL	2
-+#define RST_BUS_R_SPI		3
-+#define RST_BUS_R_SPINLOCK	4
-+#define RST_BUS_R_MSGBOX	5
-+#define RST_BUS_R_UART0		6
-+#define RST_BUS_R_UART1		7
-+#define RST_BUS_R_I2C0		8
-+#define RST_BUS_R_I2C1		9
-+#define RST_BUS_R_I2C2		10
-+#define RST_BUS_R_PPU1		11
-+#define RST_BUS_R_IR_RX		12
-+#define RST_BUS_R_RTC		13
-+#define RST_BUS_R_CPUCFG	14
-+
-+#endif /* _DT_BINDINGS_RST_SUN55I_A523_R_CCU_H_ */
 -- 
 2.46.3
 
