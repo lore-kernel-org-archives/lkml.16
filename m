@@ -1,304 +1,176 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFF7620469F;
-	Tue,  4 Mar 2025 13:44:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E85B91FDE3D
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 13:45:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741095851; cv=none; b=PSMa1cTiX9kIe6sHI/3xYg4qfsxYLHQ4DR3gupOaae3BLK2i8qrCfMCL1tJQ1cs2iJbfKmYyYjhLsjvV/kqFEG9TDI4bCr+sP/tZmMET4J5FlkzZKMvXpk2pHXL9guFDihhFyYbs4Qke+HxCqKVyuNIzNmRp1Ejc1r7juWgjx+U=
+	t=1741095922; cv=none; b=RexIH1DaBtVNY2NrP893XXw9HGzVa7XUDXGO4JVZnReV1LH/neNWIeMG8ZwlPQYHE/Jg4XXfJNS8HmmUlkXSaZnGGD0ssprr2B6+LlaVDQ/F8I5M/D1Eb+7U0VnPawnMoeFTQZOC5iuFxtJdxxGi9pgVnci8RZJ7lDb3PmgnlFI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741095851; c=relaxed/simple;
-	bh=yniI/zUBKnpp3li+eEXmoILiIoVM6nSrypH9r4g1WLI=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=np/64Wko7nTn+SIJBsGC/gCl3N686eQX0hT/TDvOLaZ/Ijeey/XCqPUPuHi2PdFpJHfcGUjog41tZcb5uP7MWaZvFV/3Le66aAJ5Y7P6poSb0LczkGjq/SONpHbc8MpiDja3JKKT6G/P4ISI8/rRkSXGCvRoOcNY1nI+Ist+DiY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KIWXcXBm; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741095922; c=relaxed/simple;
+	bh=NqK0lDxLELOL9DD+GeZsCiZ5LA3cKDL5a44tbt5qZtE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=h+GpPNCytPTuqN5yNjtpSu2l3LUZo3259WpOC1QDyCksk+wAn0Mgo/cpXnTA15762IhR/lr/WwDtD5DTTua2tzvNJ+IdL8JWDh2enBnsgAvt09tugWRJadOmF+Q2R3BhY72aJPeshoZnGvBEGaRUiXp1dW7JdATdVAW4ebUWj4E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=tDN1yHwo; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KIWXcXBm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8DB9CC4AF09;
-	Tue,  4 Mar 2025 13:44:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741095850;
-	bh=yniI/zUBKnpp3li+eEXmoILiIoVM6nSrypH9r4g1WLI=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=KIWXcXBmPFmvT2w+szLK0UrGdej1WC+U4IV3Npemn8RpctAF1OpWvuzCzcysdA/Tv
-	 0b1NkCEohVwnhRw3jG7kCUR4te/XrvjIzvLbicHjBV9Smz5ezaC5CkqaYaKh6nnviB
-	 RWyp3e8hN2WqJmFNeSoOUgMHkBez2Wi7USqJOMkRMblVNY40jKxjqMfDduaegO9c+K
-	 e5RwtbOijrnNvTtuHp4IKZKYujwVgBoMl0t9jwdVPmFB5oT3f6yl6MhyTwtCTnpBh2
-	 pD7rQnPwt2s5uDyrm+s6f359g3F7TAk9GhfXCBM/WM6QynJGtnkKeBZVbuWk/jRhMl
-	 ziwKYuOPxg+6w==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-To: "Daniel Almeida" <daniel.almeida@collabora.com>
-Cc: <ojeda@kernel.org>,  <alex.gaynor@gmail.com>,  <boqun.feng@gmail.com>,
-  <gary@garyguo.net>,  <bjorn3_gh@protonmail.com>,
-  <benno.lossin@proton.me>,  <tmgross@umich.edu>,
-  <rust-for-linux@vger.kernel.org>,  <linux-kernel@vger.kernel.org>,
-  "Alice Ryhl" <aliceryhl@google.com>
-Subject: Re: [PATCH v2] rust: irq: add support for request_irq()
-In-Reply-To: <20250122163932.46697-1-daniel.almeida@collabora.com> (Daniel
-	Almeida's message of "Wed, 22 Jan 2025 13:39:30 -0300")
-References: <u-vC1KbeOK3Fd2PClzinb8LmqS_dntOW-pOSmZIFWotCZeTOg30xR_GYUc4oReAKZeuuu7ZaXWzfeTkpGMlr0A==@protonmail.internalid>
-	<20250122163932.46697-1-daniel.almeida@collabora.com>
-User-Agent: mu4e 1.12.7; emacs 29.4
-Date: Tue, 04 Mar 2025 14:43:20 +0100
-Message-ID: <87cyewhpxj.fsf@kernel.org>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tDN1yHwo"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-390f69f8083so2944018f8f.0
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Mar 2025 05:45:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1741095918; x=1741700718; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=jtRRg4J7QV1jyEFxXJ9yQG1POl4I6geC1f76q6WuMIM=;
+        b=tDN1yHwodjOz4V3TRaZu7iziYe2aMoFtxsUtCyMhRwPJNDTehta4eM8HZJhUpLmyAt
+         qhbDdH/VrB4MYIV/Z99sMCVaaFF2iZLgEWWAuP8+B1K9Jc8uOCYmokoyiLqcLl7C3RLs
+         Mab+JuebmUNp/JLd8S2mbpTiPiJJuQcIjxY/QIlOugVZFCzOKgDdabxmEoAKUEsakHW2
+         lY/J+muA+GcXtLvoipL9knf62ZNEF7oifZqmqj9JwhyspGDXq8Twusj0dZE+l+L80Tnn
+         HAFwbLvqqoL24nBma7S6eVVHq1IO1OEkHBHjsY0GIsll/AIeH6cjw2LivZ6ONaCcI6u+
+         muWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741095918; x=1741700718;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=jtRRg4J7QV1jyEFxXJ9yQG1POl4I6geC1f76q6WuMIM=;
+        b=ESfDUq0cgsIQlMH46qjh/2Xud1M0bYIfFen9WXBRCoL3LBe/aH/8qSym/EF8t9dih/
+         fNha89bNHUeqoyEP800jlyJVnWwGkc9g7HLPD+ypIb53A0PDWsN3MGkbyOja2bZP7s47
+         wFe4YBWJ3H/HmNL9SnvrS7Yr+BWeUg7tzVPBU3fuf7faN75MnkTsJCbGzFnXVx37Z2hF
+         iFSFcjeizN1Rr/8F9on5UfzXLjb3YfMS9ZoihgzJkmLDr0RPmpg9y3jlB+PT1BW8ri3F
+         IrlUpse3/WEux5qSzdG7IgQvR+FWFU/3Thr0MTjUk89EA8XmD79lURSq6xxJs8Ex3sN4
+         zmTQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVHRfGVGTnrloMrt6C8bXWwG/zqiU+40cYmqF/NlEFXdWJdNmn/jKZxusQp7nvR/PU5UaLSDXU/qFIG5pY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx5+983B5o/4BGYxcHf3O2UIPmE21x1WP2lat+ohX7oIzavrapN
+	ZC+I6jQA+TP4DMdogqx2y1Fdo0mdx+NJwHN0Qt73SW7Sha8kvjbmPzZsnOs4pdk=
+X-Gm-Gg: ASbGncv48AbGzHmS1EhfAP8P0wsByHKh9boXzVI53raMrDdtGmTNPnltPZ98NXbq2ek
+	Ixb1DxyGaXCe68aaNHsw+uH0j5HTtc5RWrti7kuC3w64mOZQyBiHmF2CF9VR731F/VdDGm5PiUN
+	7JqighyPQUTpq0Qj1UJfkKDXb/Ew3Y9YL6jbvROJl/68Pyd4iq8VnsIjm08T9PqZ1cg9L7ZcOIM
+	wPDjUfrziswukM1pvWvLLBm1770K3O+D/7MewzI5R3nSJkeabF90WgECGG8bOmxqwD0EFS1eLrM
+	B93F+94VBQNAe5z8u+z+FcgMENSoQdtfsUzaLsfBMn3AOBYH2Zgx+M7+77l1obrQhzuprPAFYc3
+	BcSILkJRybA==
+X-Google-Smtp-Source: AGHT+IGJ4dtiZRMJMOnqPeHzryVAMSS7yvTZyuTJnVR+H4eCzXwrKiCtheWRCRn+0WfWFlydM7tKCA==
+X-Received: by 2002:a05:6000:1868:b0:390:de58:d7fe with SMTP id ffacd0b85a97d-390eca40e2bmr15866381f8f.51.1741095918174;
+        Tue, 04 Mar 2025 05:45:18 -0800 (PST)
+Received: from [192.168.0.35] (188-141-3-146.dynamic.upc.ie. [188.141.3.146])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-390e485d8e4sm17414305f8f.85.2025.03.04.05.45.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 04 Mar 2025 05:45:17 -0800 (PST)
+Message-ID: <79691e26-cddb-47d2-9112-deae3f9aaee6@linaro.org>
+Date: Tue, 4 Mar 2025 13:45:17 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/2] media: venus: fix OOB read issue due to double
+ read
+To: Vedang Nagar <quic_vnagar@quicinc.com>,
+ Stanimir Varbanov <stanimir.k.varbanov@gmail.com>,
+ Vikash Garodia <quic_vgarodia@quicinc.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250215-venus-security-fixes-v2-0-cfc7e4b87168@quicinc.com>
+ <20250215-venus-security-fixes-v2-1-cfc7e4b87168@quicinc.com>
+Content-Language: en-US
+From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+In-Reply-To: <20250215-venus-security-fixes-v2-1-cfc7e4b87168@quicinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-"Daniel Almeida" <daniel.almeida@collabora.com> writes:
+On 15/02/2025 17:19, Vedang Nagar wrote:
+> During message queue read, the address is being read twice
+> from the shared memory. The first read is validated against
+> the size of the packet, however the second read is not
+> being validated. Therefore, it's possible for firmware to
+> modify the value to a bigger invalid value which can lead
+> to OOB read access issue while reading the packet.
+> Added fix to reupdate the size of the packet which was
+> read for the first time.
+> 
+> Signed-off-by: Vedang Nagar <quic_vnagar@quicinc.com>
+> ---
+>   drivers/media/platform/qcom/venus/hfi_venus.c | 1 +
+>   1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/media/platform/qcom/venus/hfi_venus.c b/drivers/media/platform/qcom/venus/hfi_venus.c
+> index f9437b6412b91c2483670a2b11f4fd43f3206404..c124db8ac79d18f32289a690ee82145dc93daee6 100644
+> --- a/drivers/media/platform/qcom/venus/hfi_venus.c
+> +++ b/drivers/media/platform/qcom/venus/hfi_venus.c
+> @@ -298,6 +298,7 @@ static int venus_read_queue(struct venus_hfi_device *hdev,
+>   			memcpy(pkt, rd_ptr, len);
+>   			memcpy(pkt + len, queue->qmem.kva, new_rd_idx << 2);
+>   		}
+> +		*(u32 *)pkt = dwords << 2;
+>   	} else {
+>   		/* bad packet received, dropping */
+>   		new_rd_idx = qhdr->write_idx;
+> 
 
-> Add support for registering IRQ handlers in Rust.
->
-> IRQ handlers are extensively used in drivers when some peripheral wants to
-> obtain the CPU attention. Registering a handler will make the system invoke the
-> passed-in function whenever the chosen IRQ line is triggered.
->
-> Both regular and threaded IRQ handlers are supported through a Handler (or
-> ThreadedHandler) trait that is meant to be implemented by a type that:
->
-> a) provides a function to be run by the system when the IRQ fires and,
->
-> b) holds the shared data (i.e.: `T`) between process and IRQ contexts.
->
-> The requirement that T is Sync derives from the fact that handlers might run
-> concurrently with other processes executing the same driver, creating the
-> potential for data races.
->
-> Ideally, some interior mutability must be in place if T is to be mutated. This
-> should usually be done through the in-flight SpinLockIrq type.
->
-> Co-developed-by: Alice Ryhl <aliceryhl@google.com>
-> Signed-off-by: Alice Ryhl <aliceryhl@google.com>
-> Signed-off-by: Daniel Almeida <daniel.almeida@collabora.com>
+This is confusing - where is the read
 
-What is the base commit to apply this patch to? I am getting some
-compiler errors when trying it out:
+Your previous code
 
-    error[E0308]: mismatched types
-      --> /home/aeh/src/linux-rust/linux/rust/kernel/irq/request.rs:240:21
-        |
-    237 |                 bindings::request_irq(
-        |                 --------------------- arguments to this function are incorrect
-    ...
-    240 |                     flags.0,
-        |                     ^^^^^^^ expected `usize`, found `u64`
-        |
+https://lore.kernel.org/lkml/20250104-venus-security-fixes-v1-1-9d0dd4594cb4@quicinc.com/
 
-[...]
+memcpy(pkt, (u32 *)(queue->qmem.kva + (rd_idx << 2)), sizeof(u32));
 
-> diff --git a/rust/kernel/irq.rs b/rust/kernel/irq.rs
-> new file mode 100644
-> index 000000000000..3ab83c5bdb83
-> --- /dev/null
-> +++ b/rust/kernel/irq.rs
-> @@ -0,0 +1,6 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +//! IRQ abstractions
+V1 then would have been:
 
-We could do with a longer story here. Also, missing a period.
+if (new_rd_idx < qsize) {
+     memcpy(pkt, rd_ptr, dwords << 2);
+} else {
+     size_t len;
 
-> +
-> +/// IRQ allocation and handling
-> +pub mod request;
-> diff --git a/rust/kernel/irq/request.rs b/rust/kernel/irq/request.rs
-> new file mode 100644
-> index 000000000000..61e7d4a8f555
-> --- /dev/null
-> +++ b/rust/kernel/irq/request.rs
-> @@ -0,0 +1,517 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +// SPDX-FileCopyrightText: Copyright 2025 Collabora ltd.
-> +
-> +//! IRQ allocation and handling
-> +
-> +use core::marker::PhantomPinned;
-> +use core::ptr::addr_of_mut;
-> +
-> +use init::pin_init_from_closure;
-> +
-> +use crate::error::to_result;
-> +use crate::prelude::*;
-> +use crate::str::CStr;
-> +
-> +/// Flags to be used when registering IRQ handlers.
-> +///
-> +/// They can be combined with the operators `|`, `&`, and `!`.
-> +///
-> +/// Values can be used from the [`flags`] module.
-> +#[derive(Clone, Copy)]
-> +pub struct Flags(u64);
-> +
-> +impl core::ops::BitOr for Flags {
-> +    type Output = Self;
-> +    fn bitor(self, rhs: Self) -> Self::Output {
-> +        Self(self.0 | rhs.0)
-> +    }
-> +}
-> +
-> +impl core::ops::BitAnd for Flags {
-> +    type Output = Self;
-> +    fn bitand(self, rhs: Self) -> Self::Output {
-> +        Self(self.0 & rhs.0)
-> +    }
-> +}
-> +
-> +impl core::ops::Not for Flags {
-> +    type Output = Self;
-> +    fn not(self) -> Self::Output {
-> +        Self(!self.0)
-> +    }
-> +}
-> +
-> +/// The flags that can be used when registering an IRQ handler.
-> +pub mod flags {
-> +    use super::Flags;
-> +
-> +    use crate::bindings;
-> +
-> +    /// Use the interrupt line as already configured.
-> +    pub const TRIGGER_NONE: Flags = Flags(bindings::IRQF_TRIGGER_NONE as _);
+     new_rd_idx -= qsize;
+     len = (dwords - new_rd_idx) << 2;
+     memcpy(pkt, rd_ptr, len);
+     memcpy(pkt + len, queue->qmem.kva, new_rd_idx << 2);
+}
 
-What is the reason for the `as _` in all these? Should the flag type be
-something else?
++ memcpy(pkt, (u32 *)(queue->qmem.kva + (rd_idx << 2)), sizeof(u32));
 
-> +
-> +    /// The interrupt is triggered when the signal goes from low to high.
-> +    pub const TRIGGER_RISING: Flags = Flags(bindings::IRQF_TRIGGER_RISING as _);
-> +
-> +    /// The interrupt is triggered when the signal goes from high to low.
-> +    pub const TRIGGER_FALLING: Flags = Flags(bindings::IRQF_TRIGGER_FALLING as _);
-> +
-> +    /// The interrupt is triggered while the signal is held high.
-> +    pub const TRIGGER_HIGH: Flags = Flags(bindings::IRQF_TRIGGER_HIGH as _);
-> +
-> +    /// The interrupt is triggered while the signal is held low.
-> +    pub const TRIGGER_LOW: Flags = Flags(bindings::IRQF_TRIGGER_LOW as _);
-> +
-> +    /// Allow sharing the irq among several devices.
-> +    pub const SHARED: Flags = Flags(bindings::IRQF_SHARED as _);
-> +
-> +    /// Set by callers when they expect sharing mismatches to occur.
+V2 proposed:
 
-What is a sharing mismatch?
+if (new_rd_idx < qsize) {
+     memcpy(pkt, rd_ptr, dwords << 2);
+} else {
+     size_t len;
 
-> +    pub const PROBE_SHARED: Flags = Flags(bindings::IRQF_PROBE_SHARED as _);
-> +
-> +    /// Flag to mark this interrupt as timer interrupt.
+     new_rd_idx -= qsize;
+     len = (dwords - new_rd_idx) << 2;
+     memcpy(pkt, rd_ptr, len);
+     memcpy(pkt + len, queue->qmem.kva, new_rd_idx << 2);
+}
 
-The "Flag to ..." strikes me as odd when most of the other descriptions
-have a different wording.
++ *(u32 *)pkt = dwords << 2;
 
-> +    pub const TIMER: Flags = Flags(bindings::IRQF_TIMER as _);
-> +
-> +    /// Interrupt is per cpu.
-> +    pub const PERCPU: Flags = Flags(bindings::IRQF_PERCPU as _);
-> +
-> +    /// Flag to exclude this interrupt from irq balancing.
-> +    pub const NOBALANCING: Flags = Flags(bindings::IRQF_NOBALANCING as _);
-> +
-> +    /// Interrupt is used for polling (only the interrupt that is registered
-> +    /// first in a shared interrupt is considered for performance reasons).
-> +    pub const IRQPOLL: Flags = Flags(bindings::IRQF_IRQPOLL as _);
-> +
-> +    /// Interrupt is not reenabled after the hardirq handler finished. Used by
-> +    /// threaded interrupts which need to keep the irq line disabled until the
-> +    /// threaded handler has been run.
-> +    pub const ONESHOT: Flags = Flags(bindings::IRQF_ONESHOT as _);
-> +
-> +    /// Do not disable this IRQ during suspend. Does not guarantee that this
-> +    /// interrupt will wake the system from a suspended state.
-> +    pub const NO_SUSPEND: Flags = Flags(bindings::IRQF_NO_SUSPEND as _);
-> +
-> +    /// Force enable it on resume even if [`NO_SUSPEND`] is set.
+My comment wasn't about use of memcpy() it was about why we are doing this.
 
-Perhaps: Force enable the interrupt even if ...
+For example if new_rd_idx < qsize is true then we literally do
 
-> +    pub const FORCE_RESUME: Flags = Flags(bindings::IRQF_FORCE_RESUME as _);
-> +
-> +    /// Interrupt cannot be threaded.
-> +    pub const NO_THREAD: Flags = Flags(bindings::IRQF_NO_THREAD as _);
-> +
-> +    /// Resume IRQ early during syscore instead of at device resume time.
-> +    pub const EARLY_RESUME: Flags = Flags(bindings::IRQF_EARLY_RESUME as _);
-> +
-> +    /// If the IRQ is shared with a NO_SUSPEND user, execute this interrupt
+a) memcpy(pkt, rd_ptr, dwords << 2);
+b) *(u32 *)pkt = dwords << 2;
 
-Please link `NO_SUSPEND`.
+and the question is why ? That is an unambiguous cast of pkt to the 
+value of dwords << 2;
 
-> +    /// handler after suspending interrupts. For system wakeup devices users
-> +    /// need to implement wakeup detection in their interrupt handlers.
-> +    pub const COND_SUSPEND: Flags = Flags(bindings::IRQF_COND_SUSPEND as _);
-> +
-> +    /// Don't enable IRQ or NMI automatically when users request it. Users will
-> +    /// enable it explicitly by `enable_irq` or `enable_nmi` later.
-> +    pub const NO_AUTOEN: Flags = Flags(bindings::IRQF_NO_AUTOEN as _);
-> +
-> +    /// Exclude from runnaway detection for IPI and similar handlers, depends on
-> +    /// `PERCPU`.
-> +    pub const NO_DEBUG: Flags = Flags(bindings::IRQF_NO_DEBUG as _);
-> +}
-> +
-> +/// The value that can be returned from an IrqHandler or a ThreadedIrqHandler.
-> +pub enum IrqReturn {
+What is the scope of how the data can change from a to b ?
 
-I learned recently that if you choose the right representation here, you
-don't need to cast here and when you call `Handler::handle_irq`. I think
-`#[repr(u32)]` is the one to use here.
+And why is the data considered potentially invalid @ the memcpy() but 
+valid subsequent the cast ?
 
-> +    /// The interrupt was not from this device or was not handled.
-> +    None = bindings::irqreturn_IRQ_NONE as _,
-> +
-> +    /// The interrupt was handled by this device.
-> +    Handled = bindings::irqreturn_IRQ_HANDLED as _,
-> +}
-> +
-> +/// Callbacks for an IRQ handler.
-> +pub trait Handler: Sync {
-> +    /// The actual handler function. As usual, sleeps are not allowed in IRQ
-> +    /// context.
-> +    fn handle_irq(&self) -> IrqReturn;
-> +}
+Assuming rd_ptr contains the length of dwords << 2 to begin with in the 
+first 4 bytes - why is it necessary to make _really_ _really_ sure by 
+restuffing the data ?
 
-What is the reason for moving away from the following:
+For example if *(u32 *)rd_ptr != dwords << 2 - why shouldn't we just 
+throw the whole frame away as containing junk data ?
 
-
-    pub trait Handler {
-        /// The context data associated with and made available to the handler.
-        type Data: ForeignOwnable;
-
-        /// Called from interrupt context when the irq happens.
-        fn handle_irq(data: <Self::Data as ForeignOwnable>::Borrowed<'_>) -> Return;
-    }
-
-
-I think we will run into problems if we want to pass `Arc<Foo>` as the
-handler. I don't think we can `impl Handler for Arc<Foo>` in a driver
-crate, since both `Handler` and `Arc` are defined in external crates
-
-
-[...]
-
-> +#[pin_data(PinnedDrop)]
-> +pub struct ThreadedRegistration<T: ThreadedHandler> {
-> +    irq: u32,
-> +    #[pin]
-> +    handler: T,
-> +    #[pin]
-> +    /// Pinned because we need address stability so that we can pass a pointer
-> +    /// to the callback.
-> +    _pin: PhantomPinned,
-> +}
-
-As others have mentioned, I wonder if we can avoid the code duplication
-that makes up most of the rest of this patch.
-
-
-Best regards,
-Andreas Hindborg
-
-
+---
+bod
