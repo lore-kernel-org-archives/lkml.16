@@ -1,99 +1,82 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68A4729DB8C
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 15:49:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E38D825F789;
+	Tue,  4 Mar 2025 15:49:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741103348; cv=none; b=WiykHNf1CvvzwsEVBxe4OxwVjX02vtr0g8c7zCxi6ntc/svMAbbLImXomIzBwKqHZp+Z9IXALvi5giYKU+zCQNXjxLNO+ec4PBY9HSZyOsEfqNTDb2DB7kXwSJBbX+kFiVldnYTyZaAr4vnqym/nfqxPvyM/BrXWMwToJi/3vP0=
+	t=1741103386; cv=none; b=WmgiRd1gGdR8l0/9Xg6lS8DL/RcYEaSZv1eknxIJRShG87f2Lxa+q2G35XbZrvWYlQ/a1vZpYxRZWiEirC/EhTqwETwnGU3Om6A7NSCxoxZhkM5ZS26mKNfx75d5ewfdZMsIyyx6qOE0qj0c8VhcQ5UYr9ZRVcokb+E0SRwXFdE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741103348; c=relaxed/simple;
-	bh=Ah9D1oaYdgLAYU43bf6vQIZvtJeF1OpFbII7FyU6mlU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=lrklmz+nW++iA13a9s621k8mhZrvRsFLcS0/xuo+K8DxMjwPkdV8VRwjygelbuKjR8btDQk7MbCCZhZ9iVJgJSv7CHQDQAR8usdDtuZuDCAYBGLTl7KdAan9LqK48S1WoQ05UCy22FuFia9i0Ohu06jcdI+TxIl44mD2diRKB/M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UfBxpJe1; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1741103386; c=relaxed/simple;
+	bh=IZVtyHAG93XJVToieMuxGIEaIhkUm3s79JumsH2atio=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rvt34SeYeEPW5z3lKcrSNBIHfsAvdM+qQnNkQyYx+dDkgTrN++r5+BcVbTd+6eeq/cvpiOXGLWFybBL1XhzMag3HNkxpUy6fV1Pd14i++9j47oW44d+uGx3ki5e7wMQPlFCwJVAAb5jKivHgoK5f7mx1+rKsLNkTcmhqVX/61W4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=ZAJmH9ma; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=PJ+RHd0k reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UfBxpJe1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1741103345;
+	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="ZAJmH9ma";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="PJ+RHd0k"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1741103382; x=1772639382;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=V/cWI6jCuZn3fcy5zPp0Q323xNqJa1S74loek1ZBh4w=;
+  b=ZAJmH9mar+mV2VqPDLb8zSS5DXU0LfY0oUxjSg3EhVIjKtQhNdKv1VX8
+   F2J82wkTZRukDdbZnqvYb1637rrMYa+vwlLkomBNrkAsvjOt5bgBYNewX
+   PGbD6Lv62aHEuTg0cN9tGywBgUz8fNTxDB8daHnL7gnxtGjj/Q9zS5Oxc
+   zr94REA82Z937NNfkTPjAu+ehWDqEUguy9EhSF//Y6v6q2rrNFt02o2el
+   aLAsa1ES80vk3hrVCfVo3ZJD8V+6BapfO7X2F3k3164YU5RoxnmFUTFCv
+   BRMwExgYdEJhDdITZXorYfK/ca/bvLAY3usfT33RZQvwYWvxLuj0zFTVD
+   Q==;
+X-CSE-ConnectionGUID: 5RRrExnVSsyHBiZxymnz2g==
+X-CSE-MsgGUID: W9sN2wF4TCe9QgLpWzcDKQ==
+X-IronPort-AV: E=Sophos;i="6.14,220,1736809200"; 
+   d="scan'208";a="42272726"
+X-URL-LookUp-ScanningError: 1
+Received: from vmailcow01.tq-net.de ([10.150.86.48])
+  by mx1.tq-group.com with ESMTP; 04 Mar 2025 16:49:39 +0100
+X-CheckPoint: {67C72113-5-2417938-F0170C2B}
+X-MAIL-CPID: 1B5DD4582515C3582BD7AD615B33C118_2
+X-Control-Analysis: str=0001.0A006369.67C72116.0066,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id B3DFC16156A;
+	Tue,  4 Mar 2025 16:49:32 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
+	s=dkim; t=1741103374;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ffON9SnaOWg9oFQtm+MueKUsNfzxra0dWfxUL8seX24=;
-	b=UfBxpJe1uXfrul9A9aXrqFX49eXvgsgAQibV76CrxxyJ9/ZxvOgcNtTBkfpepF/bF12Qwf
-	fgrEP7eD1lO90d1tY2D3H5ryg3YGQc1dWq8plOzjNdBlKFPYc/e+nCryvW9rczwNnpafan
-	UCQD7k+yJl3HCk8iY3kUGTd0aU58B4w=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-3-pvYxw9kuPDKHlUtIo1Xh-Q-1; Tue, 04 Mar 2025 10:48:54 -0500
-X-MC-Unique: pvYxw9kuPDKHlUtIo1Xh-Q-1
-X-Mimecast-MFC-AGG-ID: pvYxw9kuPDKHlUtIo1Xh-Q_1741103333
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-43bcb061704so5291345e9.0
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Mar 2025 07:48:54 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741103333; x=1741708133;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ffON9SnaOWg9oFQtm+MueKUsNfzxra0dWfxUL8seX24=;
-        b=DkTuHu0RqAGfzQCsbY+DkV5XBpAD9lSEN2lwdxx8YoDSOya5V1p7rZrp1YOAB1hqgT
-         QHCZb9cZSa64f1XeLdW5/sWK4S+29cUWuhIg8ykQwgCaYc+/r45vLJA5qoSdzkuKpC1L
-         l66WTPWaX/RKPHQONviv2HxI7Hsf2qxkdNiY1+wxjtNld7IdpWNynGne+E6rVU/olMFN
-         Vsvf9/bMcV/Vl7dob60yLMDCu6cf2HMyHTp3UaeR8jODrDQo8LVib6eKe5e/9MJ45+XF
-         KjNcTg0F/ddPb8V4r0R/Uip3/67BiiMACzwDFpPDBm4wkn7uscwCaomN6UMeZrTgjBzG
-         sGoA==
-X-Gm-Message-State: AOJu0Yw77w8dWG541reo1ODL1uW1ejsBxjqFv9qRoMYqN4uvfGFB52oo
-	tymjzWLq8lsROjsFRT0bhB5Yhl+VVRPsH7+EvPOtA5Ciw8T2FJ33m3rW4sOezFFLcenY3gPXWBS
-	Z4LtsPvoPkw6HuAK7s90Vib2ZOXZ0WEL6mKccQsUxz/VcUfYY+Tk9hxUkLI2Bw5hLFnp0Gh17W5
-	YOQA02BbsHbtNcVwW9QZdTpiW9SAyDIVu8rJmCR4p1COIF
-X-Gm-Gg: ASbGncvB8w3WY1dXK0w/oPkMMzxxrW0z6JUx1q+Eom0XkH8EFQTs1v/WJowTjsD0g7S
-	QbWJIeMg2G2EzBMMx4VQ3+tvjE2nYyA72Iq/iAjbVe32HscpalP4DdDJCLmMEHMYMcuoN0OUmSn
-	8NsvsPlvasEHT+MYq8nAwkzto/x+/Ouhf1DbroNcxbIiLP/sjX/KmQF7PMdhjvvTHVJP09h5Bbe
-	Z8rot3AXMbl2ysSZ65zi17XOGIKWfq79fb2QJOTgZhUv0Pa8FU3G+Ys3unQEQmN+cEQ2fPtYIfb
-	ZCLUTqYqfxdyGS+co5ovBdlx4LCCcnX3T7s28SViWHAfTXY1BdKgJwQEXQj2vYzOuTUgoZWYvFQ
-	D
-X-Received: by 2002:a05:600c:3c9d:b0:439:8a62:db42 with SMTP id 5b1f17b1804b1-43ba66e19d9mr153515945e9.8.1741103333183;
-        Tue, 04 Mar 2025 07:48:53 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IH4Gjl+jrn0ypwJ4W8O9mKURosa8cKWKJgfr05HkBSuQdnMp7DSreUXUU7A6eFr/8nx/dTcdQ==
-X-Received: by 2002:a05:600c:3c9d:b0:439:8a62:db42 with SMTP id 5b1f17b1804b1-43ba66e19d9mr153515575e9.8.1741103332777;
-        Tue, 04 Mar 2025 07:48:52 -0800 (PST)
-Received: from localhost (p200300cbc73610009e302a8acd3d419c.dip0.t-ipconnect.de. [2003:cb:c736:1000:9e30:2a8a:cd3d:419c])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-43bca26676esm43128935e9.8.2025.03.04.07.48.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 04 Mar 2025 07:48:52 -0800 (PST)
-From: David Hildenbrand <david@redhat.com>
-To: linux-kernel@vger.kernel.org
-Cc: linux-mm@kvack.org,
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=V/cWI6jCuZn3fcy5zPp0Q323xNqJa1S74loek1ZBh4w=;
+	b=PJ+RHd0k47M0p3Gvk5Gol0p05nmuw6+Wfy0Nb1JicPvJJ/gO0toelssg9xise111CADyl7
+	k9XiBKVmJUl8TFfjhQS90zCTMEdVC43H++eqnMUJEnca8KIzLieiJzO2rqdWaTnWM0gZhn
+	kIgCkD+cTdqOV5VUqNELxJd7KpUBhbIRymV2BaR1mwwBQFOjP06NQAtuYUFoomLYTYw9f2
+	gPkwMdefX3QnbzpT7hTcQgVa5AvH4DsRkW3nzpFF3bR9UMaxrUl5GZpRfF+CKDSGYfk4XK
+	qx2B3/aCSatZ0vafCGj8FNiGbpf14hMuks/v5cnwwooOrtYAMoJu1UDbXkvhyw==
+From: Alexander Stein <alexander.stein@ew.tq-group.com>
+To: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Abel Vesa <abelvesa@kernel.org>,
+	Peng Fan <peng.fan@nxp.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Alexander Stein <alexander.stein@ew.tq-group.com>,
+	devicetree@vger.kernel.org,
+	imx@lists.linux.dev,
 	linux-arm-kernel@lists.infradead.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	David Hildenbrand <david@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	Russell King <linux@armlinux.org.uk>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Oleg Nesterov <oleg@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Tong Tiangen <tongtiangen@huawei.com>
-Subject: [PATCH -next v1 2/3] kernel/events/uprobes: pass VMA to set_swbp(), set_orig_insn() and uprobe_write_opcode()
-Date: Tue,  4 Mar 2025 16:48:45 +0100
-Message-ID: <20250304154846.1937958-3-david@redhat.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250304154846.1937958-1-david@redhat.com>
-References: <20250304154846.1937958-1-david@redhat.com>
+	linux-kernel@vger.kernel.org,
+	linux@ew.tq-group.com,
+	linux-clk@vger.kernel.org,
+	linux-pm@vger.kernel.org
+Subject: [PATCH v3 0/6] TQMa93xx on MBa93xxLA/CA LVDS support
+Date: Tue,  4 Mar 2025 16:49:19 +0100
+Message-ID: <20250304154929.1785200-1-alexander.stein@ew.tq-group.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -101,154 +84,75 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Last-TLS-Session-Version: TLSv1.3
 
-We already have the VMA, no need to look it up using
-get_user_page_vma_remote(). We can now switch to
-get_user_pages_remote().
+Hi,
 
-Signed-off-by: David Hildenbrand <david@redhat.com>
----
- arch/arm/probes/uprobes/core.c |  4 ++--
- include/linux/uprobes.h        |  6 +++---
- kernel/events/uprobes.c        | 33 +++++++++++++++++----------------
- 3 files changed, 22 insertions(+), 21 deletions(-)
+this is v3 for the LVDS support on TQMa93xx module series.
 
-diff --git a/arch/arm/probes/uprobes/core.c b/arch/arm/probes/uprobes/core.c
-index f5f790c6e5f89..885e0c5e8c20d 100644
---- a/arch/arm/probes/uprobes/core.c
-+++ b/arch/arm/probes/uprobes/core.c
-@@ -26,10 +26,10 @@ bool is_swbp_insn(uprobe_opcode_t *insn)
- 		(UPROBE_SWBP_ARM_INSN & 0x0fffffff);
- }
- 
--int set_swbp(struct arch_uprobe *auprobe, struct mm_struct *mm,
-+int set_swbp(struct arch_uprobe *auprobe, struct vm_area_struct *vma,
- 	     unsigned long vaddr)
- {
--	return uprobe_write_opcode(auprobe, mm, vaddr,
-+	return uprobe_write_opcode(auprobe, vma, vaddr,
- 		   __opcode_to_mem_arm(auprobe->bpinsn));
- }
- 
-diff --git a/include/linux/uprobes.h b/include/linux/uprobes.h
-index a40efdda9052b..4da3bce5e062d 100644
---- a/include/linux/uprobes.h
-+++ b/include/linux/uprobes.h
-@@ -186,13 +186,13 @@ struct uprobes_state {
- };
- 
- extern void __init uprobes_init(void);
--extern int set_swbp(struct arch_uprobe *aup, struct mm_struct *mm, unsigned long vaddr);
--extern int set_orig_insn(struct arch_uprobe *aup, struct mm_struct *mm, unsigned long vaddr);
-+extern int set_swbp(struct arch_uprobe *aup, struct vm_area_struct *vma, unsigned long vaddr);
-+extern int set_orig_insn(struct arch_uprobe *aup, struct vm_area_struct *vma, unsigned long vaddr);
- extern bool is_swbp_insn(uprobe_opcode_t *insn);
- extern bool is_trap_insn(uprobe_opcode_t *insn);
- extern unsigned long uprobe_get_swbp_addr(struct pt_regs *regs);
- extern unsigned long uprobe_get_trap_addr(struct pt_regs *regs);
--extern int uprobe_write_opcode(struct arch_uprobe *auprobe, struct mm_struct *mm, unsigned long vaddr, uprobe_opcode_t);
-+extern int uprobe_write_opcode(struct arch_uprobe *auprobe, struct vm_area_struct *vma, unsigned long vaddr, uprobe_opcode_t);
- extern struct uprobe *uprobe_register(struct inode *inode, loff_t offset, loff_t ref_ctr_offset, struct uprobe_consumer *uc);
- extern int uprobe_apply(struct uprobe *uprobe, struct uprobe_consumer *uc, bool);
- extern void uprobe_unregister_nosync(struct uprobe *uprobe, struct uprobe_consumer *uc);
-diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-index 991aacc80d0e0..0276defd6fbfa 100644
---- a/kernel/events/uprobes.c
-+++ b/kernel/events/uprobes.c
-@@ -474,19 +474,19 @@ static int update_ref_ctr(struct uprobe *uprobe, struct mm_struct *mm,
-  *
-  * uprobe_write_opcode - write the opcode at a given virtual address.
-  * @auprobe: arch specific probepoint information.
-- * @mm: the probed process address space.
-+ * @vma: the probed virtual memory area.
-  * @vaddr: the virtual address to store the opcode.
-  * @opcode: opcode to be written at @vaddr.
-  *
-  * Called with mm->mmap_lock held for read or write.
-  * Return 0 (success) or a negative errno.
-  */
--int uprobe_write_opcode(struct arch_uprobe *auprobe, struct mm_struct *mm,
--			unsigned long vaddr, uprobe_opcode_t opcode)
-+int uprobe_write_opcode(struct arch_uprobe *auprobe, struct vm_area_struct *vma,
-+		unsigned long vaddr, uprobe_opcode_t opcode)
- {
-+	struct mm_struct *mm = vma->vm_mm;
- 	struct uprobe *uprobe;
- 	struct page *old_page, *new_page;
--	struct vm_area_struct *vma;
- 	int ret, is_register, ref_ctr_updated = 0;
- 	bool orig_page_huge = false;
- 	unsigned int gup_flags = FOLL_FORCE;
-@@ -498,9 +498,9 @@ int uprobe_write_opcode(struct arch_uprobe *auprobe, struct mm_struct *mm,
- 	if (is_register)
- 		gup_flags |= FOLL_SPLIT_PMD;
- 	/* Read the page with vaddr into memory */
--	old_page = get_user_page_vma_remote(mm, vaddr, gup_flags, &vma);
--	if (IS_ERR(old_page))
--		return PTR_ERR(old_page);
-+	ret = get_user_pages_remote(mm, vaddr, 1, gup_flags, &old_page, NULL);
-+	if (ret != 1)
-+		return ret;
- 
- 	ret = verify_opcode(old_page, vaddr, &opcode);
- 	if (ret <= 0)
-@@ -590,30 +590,31 @@ int uprobe_write_opcode(struct arch_uprobe *auprobe, struct mm_struct *mm,
- /**
-  * set_swbp - store breakpoint at a given address.
-  * @auprobe: arch specific probepoint information.
-- * @mm: the probed process address space.
-+ * @vma: the probed virtual memory area.
-  * @vaddr: the virtual address to insert the opcode.
-  *
-  * For mm @mm, store the breakpoint instruction at @vaddr.
-  * Return 0 (success) or a negative errno.
-  */
--int __weak set_swbp(struct arch_uprobe *auprobe, struct mm_struct *mm, unsigned long vaddr)
-+int __weak set_swbp(struct arch_uprobe *auprobe, struct vm_area_struct *vma,
-+		unsigned long vaddr)
- {
--	return uprobe_write_opcode(auprobe, mm, vaddr, UPROBE_SWBP_INSN);
-+	return uprobe_write_opcode(auprobe, vma, vaddr, UPROBE_SWBP_INSN);
- }
- 
- /**
-  * set_orig_insn - Restore the original instruction.
-- * @mm: the probed process address space.
-+ * @vma: the probed virtual memory area.
-  * @auprobe: arch specific probepoint information.
-  * @vaddr: the virtual address to insert the opcode.
-  *
-  * For mm @mm, restore the original opcode (opcode) at @vaddr.
-  * Return 0 (success) or a negative errno.
-  */
--int __weak
--set_orig_insn(struct arch_uprobe *auprobe, struct mm_struct *mm, unsigned long vaddr)
-+int __weak set_orig_insn(struct arch_uprobe *auprobe,
-+		struct vm_area_struct *vma, unsigned long vaddr)
- {
--	return uprobe_write_opcode(auprobe, mm, vaddr,
-+	return uprobe_write_opcode(auprobe, vma, vaddr,
- 			*(uprobe_opcode_t *)&auprobe->insn);
- }
- 
-@@ -1153,7 +1154,7 @@ static int install_breakpoint(struct uprobe *uprobe, struct vm_area_struct *vma,
- 	if (first_uprobe)
- 		set_bit(MMF_HAS_UPROBES, &mm->flags);
- 
--	ret = set_swbp(&uprobe->arch, mm, vaddr);
-+	ret = set_swbp(&uprobe->arch, vma, vaddr);
- 	if (!ret)
- 		clear_bit(MMF_RECALC_UPROBES, &mm->flags);
- 	else if (first_uprobe)
-@@ -1168,7 +1169,7 @@ static int remove_breakpoint(struct uprobe *uprobe, struct vm_area_struct *vma,
- 	struct mm_struct *mm = vma->vm_mm;
- 
- 	set_bit(MMF_RECALC_UPROBES, &mm->flags);
--	return set_orig_insn(&uprobe->arch, mm, vaddr);
-+	return set_orig_insn(&uprobe->arch, vma, vaddr);
- }
- 
- struct map_info {
+It consists of three parts:
+1. New PLL configuration for 477.4 MHz
+2. LVDS support for imx93
+3. LVDS platform support for tqma9352-mba93xxla & tqma9352-mba93xxca
+
+Patch 1 adds a video PLL configuration for 477.4MHz
+Patch 2 is the imx93 equivalent of commit 1cb0c87d27dc ("dt-bindings:
+  soc: imx8mp-media-blk-ctrl: Add LDB subnode into schema and example")
+Patch 3 is the imx93 equivalent of commit 9cb6d1b39a8f ("soc: imx:
+  imx8m-blk-ctrl: Scan subnodes and bind drivers to them")
+Patch 4 is the imx93 equivalent of commit 94e6197dadc9 ("arm64: dts:
+  imx8mp: Add LCDIF2 & LDB nodes")
+Patch 5 adds LVDS DT overlay for tqma9352-mba93xxla platform
+Patch 6 adds LVDS DT overlay for tqma9352-mba93xxca platform
+
+Changes in v3:
+* Collected Peng's R-b
+* Fixed subject prefix in patch 3/6
+* Fix 'ranges' property both in bindings example and .dtsi
+
+Changes in v2:
+* Rebased to next-20250221
+* Reordered patches
+* Added 'ranges' to bindings
+* Use subnode constraint styles as suggested by Rob Herring
+* Use IMX93_CLK_SYS_PLL_PFD0 as parent for IMX93_CLK_MEDIA_AXI
+* Use 333MHz for IMX93_CLK_MEDIA_AXI
+* Do not set board compatible in orverlays
+* Add MBa93xxCA platform as well
+
+I skipped the support for dynamic PLL configuration for now. This is a
+separate task, see [2].
+
+Best regards,
+Alexander
+
+v2:
+* https://lore.kernel.org/all/20250224142831.485159-1-alexander.stein@ew.tq-group.com/
+v1:
+* https://lore.kernel.org/all/20231020130019.665853-1-alexander.stein@ew.tq-group.com/
+
+Alexander Stein (6):
+  clk: imx: clk-fracn-gppll: Add 477.4MHz config for video pll
+  dt-bindings: soc: imx93-media-blk-ctrl: Add LDB subnode into schema
+    and example
+  pmdomain: imx93-blk-ctrl: Scan subnodes and bind drivers to them
+  arm64: dts: imx93: Add LCDIF & LDB nodes
+  arm64: dts: tqma9352-mba93xxla: Add LVDS overlay
+  arm64: dts: tqma9352-mba93xxca: Add LVDS overlay
+
+ .../soc/imx/fsl,imx93-media-blk-ctrl.yaml     | 51 ++++++++++++
+ arch/arm64/boot/dts/freescale/Makefile        |  5 ++
+ ...3-tqma9352-mba93xxca-lvds-tm070jvhg33.dtso | 40 ++++++++++
+ .../freescale/imx93-tqma9352-mba93xxca.dts    | 27 +++++++
+ ...3-tqma9352-mba93xxla-lvds-tm070jvhg33.dtso | 40 ++++++++++
+ .../freescale/imx93-tqma9352-mba93xxla.dts    | 27 +++++++
+ arch/arm64/boot/dts/freescale/imx93.dtsi      | 77 +++++++++++++++++++
+ drivers/clk/imx/clk-fracn-gppll.c             |  1 +
+ drivers/pmdomain/imx/imx93-blk-ctrl.c         |  7 ++
+ 9 files changed, 275 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/freescale/imx93-tqma9352-mba93xxca-lvds-tm070jvhg33.dtso
+ create mode 100644 arch/arm64/boot/dts/freescale/imx93-tqma9352-mba93xxla-lvds-tm070jvhg33.dtso
+
 -- 
-2.48.1
+2.43.0
 
