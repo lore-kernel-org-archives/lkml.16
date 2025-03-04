@@ -1,67 +1,90 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2097.outbound.protection.outlook.com [40.107.237.97])
+Received: from EUR03-VI1-obe.outbound.protection.outlook.com (mail-vi1eur03on2054.outbound.protection.outlook.com [40.107.103.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C65BF2777F4
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 22:21:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.97
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BA471FC103;
+	Tue,  4 Mar 2025 22:21:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.103.54
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741126868; cv=fail; b=QoYya3bygSNBmG9DUraObqrTS+E4KEQWjaTPw4RUzpkkQEsQwjY/TUeIhoHZgThv5zV5PnaUmdv0+x24xMGPFmd4XMqvYLqs2jNQTwLQpahCQITj/sFlVrTDHUnBgeL0BAOeO9jm3WqCdNIHuIz9Mh4KPYYpE73XHd9cYVGWeZo=
+	t=1741126905; cv=fail; b=XbaFzMol/jMARof1i8g98m7PWiWg/cjQyAUbE3N9KtpHWxDJZiRUvyAiizTdqCraY4srHj64vYuvM2pWbn1X8Uv4GDCKGmyUX7Vg6wwO5MTQbRC7orMuVbwwvIgVGKPhvkULnNv1bGBbfprEKVV+JdAKKyG94NndOLFJWpdXvtA=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741126868; c=relaxed/simple;
-	bh=cG1TXKK0riDKhVoG+eoOzE9JMATvhkIfBb1VchdO88w=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=i5T861aOzSfmeEQSbosdD2gbkZRuVGKZb8cJlJOTaYIkqRWJ1iscEEq5lm0Dxmvy43XGCs9dAohp/4UlCALdFA5SXtO8QfXyGy4nPGxtBKLb5gHzxhmnGi7Ii+wsa0FCtSkZmwTaTre3xBOi3I2fz18NBm+68NOApSKzQJdmN28=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com; spf=pass smtp.mailfrom=os.amperecomputing.com; dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b=ZDBsuHd+; arc=fail smtp.client-ip=40.107.237.97
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=os.amperecomputing.com
+	s=arc-20240116; t=1741126905; c=relaxed/simple;
+	bh=7nl+Z7XhO6ODE+DpzdByO9PygNj6KaUrYfgcL2P1qFs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=KB4YCVArTypev2F8BfEJ3FaCKx9W6AEaCQgQzM3DhFnH08thURa4nUS78k0M7schPzZcYBXuQ7UIMkUuNWX/O6TP89dT2mkqQqkb+GqRWfDw6Y0HtaVhjKOgV2zLh1zgZ8HNpHVI1cU3xZ425dHV8VpDyhzxmrBWQZYoVFoQiOg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=nz2OKGDz; arc=fail smtp.client-ip=40.107.103.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b="ZDBsuHd+"
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="nz2OKGDz"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Xvfe0MqKb51Je9wLEh1TiPUjnzHUTGLw1uGIOZ/1CXK8WQ0Fd9x9l6q+vKVSp9LV++KWfJU1cI/NeZCP+PmWCQ/dc/+MQ7VTKO4gmqtxFS3bu//emHO5K351RCcUHNVe7/ugOCfbcHZ+dbzecbdNnM4DCL2a4UNntXqde57+e/TLMRPRETdH3UTe3aFI3tAhL+zGUisYzBTGnCqyjwlMqn3R083KMBH9QLhAoFTFsYr+SCsHaag/vZoexprAfPHISl7/wGAU4tnwm7oIJqzjp+v6H61iG4dWflNAnceqQGp8wUR7Rfn3qA2xcMHWmfb4U91M1nFJO3tGudWKBqIEtw==
+ b=xlv8phTpSndoCVhWC+iP3CtC9e+MeUBv/FYtoaL3cY8qymhYNWUIbjrKQjVjtoZm3eJZGaUAO2Ru/PAFloOXIxwetk+MW7/NHruxXxGCIOqT/s+WRcQZI4VLeNEikP/jR6dp3ryb52LYAGO+KkEegsKs1snMpGbYebu8w1XhTY5g6WRIPJJkKQkKpoIfER803Up/ttgoIJPz3a9538JQDJ2eVGAAE5ERAXfo85qpi1YL2ekq/F1IkxRF+0iXDVRvvRF9yuxBryKXoJylH80vH3O8xeWlspEBeuilYckncGGOEVVWXxuoTvI5mDWfQFrP4OoBfm+9EyvBVLoUlwbEPg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=/KDHg9m5RQuafqimCOTWucTmGtJk6oGY9o9n630bLHs=;
- b=qno18n2StlAoHY9zoZbZoxZf2Ww9hQrIo2naxABDfzFSj3eOL+Me5h7ohyktT9lbe76x4qwZGaR696lyraRk89XrxOoSZtZcQ3KJfvSSRIsrqdQUTYYSYG+qItE139CYMFv+oKmsK9+FZe5L0xEA3heG0QbjOXLJmfsLeXaH2rCSPV3HibJ87P/dEFyzSXBRIR4Y802wqoJ1z1miesm65WbteKEzDzmm20Dv5NqxrPoI16SEfI4NrWNet880uGpm61oXhRbTG1Z3yYHKvTdwOh/dg/CsesT/f37PT3TQNwEd6CipiH4gLwUklvGXs6W4NC2/Jlsx/Y7uQwLbRGLecw==
+ bh=w3xBByBRQj/ZIftPN0FMSdUzrOisbK7+nb9lekmNlXs=;
+ b=Y3nGwoTZAt4vP1zb7WHvNvMxusHywxZKWfmTeh7XsZBIxrU7hoaHK7rBaDwLJF/OwZU9CJV1Wu3TyBgyajJQvK1lcaiA6n51SGp3taTZxiWa9BsEhAuu8rxf2OSmn9Gp3wrACB+WrMce3alGpFwMJ5yISgWKsPsYqXKlIdZ4gSeS+g4zNFPVCi8l6VLTTXOGMbDvEFVMxbrwyRT7tHBx8ItXDKjlEQb5VDqkIXvh3NSGNdTva3k6K/p50b6up469FRQNdZt8+7omszpDSr0ko3NJrlLOA3F6jCi2Rusop/fg+VXWdcCfT8cRb4D4jQCsft2uCD38blRoAJbhDKdF6w==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
- header.from=os.amperecomputing.com; dkim=pass
- header.d=os.amperecomputing.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=os.amperecomputing.com; s=selector2;
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/KDHg9m5RQuafqimCOTWucTmGtJk6oGY9o9n630bLHs=;
- b=ZDBsuHd+Lx9aHQ25KfjeHLQ34nBSj05D4Z0L4oMyMYUXczme1Rxy5j2le1EQsLX6qZXLOCY2CzVlDkfTSZAI9Tw/+D49JOjJvH6EXhIn8rIk6F3EaE4a0JUuFoqxAcVuNsIDntrG/CCQVGWMM3G15mZKjbjI8q/05PdVMyxtlPM=
+ bh=w3xBByBRQj/ZIftPN0FMSdUzrOisbK7+nb9lekmNlXs=;
+ b=nz2OKGDzH3qdO15yqPLktPETbrl7EnJoGglho60q1VRmdB0pB+AdLg5FnZZoLjmR9/y/RhqTZVegqYpdecfyMQaZk8Imy3Ph8eU6GXYWm7t6hco62z1BQAegdhDsfTLt2jM4or9HTa4EMXJEbHwK+hRfxEGCe585SPFz8zVhfPj0b12Igk72fyR3V0X4Z3QFpvSKPW4XgogrA7Jyw+FSmQBohrti2Zy5eVeKz9/Ca4PvYIki0jqQ7ZkFbPiZgjUZHM3cykCDP5JtIxLqo1QDLd+hHPo6LKFWnHJYluBZxWcjlJ4AKwsjUms42PzsEtcK7QlYoBuzQkIvKrBpriKwCg==
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=os.amperecomputing.com;
-Received: from CH0PR01MB6873.prod.exchangelabs.com (2603:10b6:610:112::22) by
- MN0PR01MB7803.prod.exchangelabs.com (2603:10b6:208:37e::16) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8511.17; Tue, 4 Mar 2025 22:20:52 +0000
-Received: from CH0PR01MB6873.prod.exchangelabs.com
- ([fe80::3850:9112:f3bf:6460]) by CH0PR01MB6873.prod.exchangelabs.com
- ([fe80::3850:9112:f3bf:6460%2]) with mapi id 15.20.8489.025; Tue, 4 Mar 2025
- 22:20:52 +0000
-From: Yang Shi <yang@os.amperecomputing.com>
-To: ryan.roberts@arm.com,
-	will@kernel.org,
-	catalin.marinas@arm.com,
-	Miko.Lenczewski@arm.com,
-	scott@os.amperecomputing.com,
-	cl@gentwo.org
-Cc: linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [v3 PATCH 6/6] arm64: mm: split linear mapping if BBML2 is not supported on secondary CPUs
-Date: Tue,  4 Mar 2025 14:19:31 -0800
-Message-ID: <20250304222018.615808-7-yang@os.amperecomputing.com>
-X-Mailer: git-send-email 2.47.0
-In-Reply-To: <20250304222018.615808-1-yang@os.amperecomputing.com>
-References: <20250304222018.615808-1-yang@os.amperecomputing.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SN7P222CA0014.NAMP222.PROD.OUTLOOK.COM
- (2603:10b6:806:124::8) To CH0PR01MB6873.prod.exchangelabs.com
- (2603:10b6:610:112::22)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from AM8PR04MB7779.eurprd04.prod.outlook.com (2603:10a6:20b:24b::14)
+ by GVXPR04MB9927.eurprd04.prod.outlook.com (2603:10a6:150:118::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.28; Tue, 4 Mar
+ 2025 22:21:27 +0000
+Received: from AM8PR04MB7779.eurprd04.prod.outlook.com
+ ([fe80::7417:d17f:8d97:44d2]) by AM8PR04MB7779.eurprd04.prod.outlook.com
+ ([fe80::7417:d17f:8d97:44d2%6]) with mapi id 15.20.8489.025; Tue, 4 Mar 2025
+ 22:21:27 +0000
+Date: Wed, 5 Mar 2025 00:21:22 +0200
+From: Vladimir Oltean <vladimir.oltean@nxp.com>
+To: Faizal Rahim <faizal.abdul.rahim@linux.intel.com>
+Cc: Tony Nguyen <anthony.l.nguyen@intel.com>,
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Simon Horman <horms@kernel.org>,
+	Russell King <linux@armlinux.org.uk>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Jesper Dangaard Brouer <hawk@kernel.org>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Furong Xu <0x1207@gmail.com>,
+	Russell King <rmk+kernel@armlinux.org.uk>,
+	Serge Semin <fancer.lancer@gmail.com>,
+	Xiaolei Wang <xiaolei.wang@windriver.com>,
+	Suraj Jaiswal <quic_jsuraj@quicinc.com>,
+	Kory Maincent <kory.maincent@bootlin.com>,
+	Gal Pressman <gal@nvidia.com>,
+	Jesper Nilsson <jesper.nilsson@axis.com>,
+	Andrew Halaney <ahalaney@redhat.com>,
+	Choong Yong Liang <yong.liang.choong@linux.intel.com>,
+	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+	Vinicius Costa Gomes <vinicius.gomes@intel.com>,
+	intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org, bpf@vger.kernel.org
+Subject: Re: [PATCH iwl-next v7 1/9] net: ethtool: mm: extract stmmac
+ verification logic into common library
+Message-ID: <20250304222122.67bjes6jzbiveqfk@skbuf>
+References: <20250303102658.3580232-1-faizal.abdul.rahim@linux.intel.com>
+ <20250303102658.3580232-2-faizal.abdul.rahim@linux.intel.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250303102658.3580232-2-faizal.abdul.rahim@linux.intel.com>
+X-ClientProxiedBy: VI1PR06CA0101.eurprd06.prod.outlook.com
+ (2603:10a6:803:8c::30) To AM8PR04MB7779.eurprd04.prod.outlook.com
+ (2603:10a6:20b:24b::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,262 +92,211 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH0PR01MB6873:EE_|MN0PR01MB7803:EE_
-X-MS-Office365-Filtering-Correlation-Id: 31ef06aa-5cf6-4201-e18a-08dd5b6ad2f8
+X-MS-TrafficTypeDiagnostic: AM8PR04MB7779:EE_|GVXPR04MB9927:EE_
+X-MS-Office365-Filtering-Correlation-Id: 13f48dd7-1890-400a-2b27-08dd5b6ae7c8
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|1800799024|52116014|376014|38350700014;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|1800799024|366016|376014;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?ZyhBeGBfy9khsjwEAStR8dKkd13Ad2jf+MJHqxQvTqH7Xj6LaA3PFpgRmLey?=
- =?us-ascii?Q?uxQL+xkaFR0boyY2dXQoa+8zCIk9rv4swsH6NIDfhW+tRx0R7f+5vbDBcj7j?=
- =?us-ascii?Q?wzEB9buABmL1Go65ZTFY96uM/mygr/+YCZA5d/kbKmtL3I8a3F9BQA3rwhJO?=
- =?us-ascii?Q?q3L5dTROkUlodYsXX373/RKUKwq9thIfWuJsdohruhrSqkzg7pJtQFS7ikuo?=
- =?us-ascii?Q?yGqsBZfdoZXW/u8FKJiQ+xhQYW5Wbkuxs67PzclkJK7SD/KTsrrFLKQ1JXwr?=
- =?us-ascii?Q?WioIXUMb6yT2dr9ltA5FwqKDKDyMBIAecdWqu5oAcGBVzZ9dhpxqrYOyJY5M?=
- =?us-ascii?Q?+zqmtNXGZukYXaknj1IpVIWstl1UWlfN1HPVjERrNvUJiKh4YzTYsjgFKmY2?=
- =?us-ascii?Q?yP+B3DjUdEDuTzwwzMuoa5RaD8uYCF/bOszX8vXF77YQr5t9srXSfEi7b1gV?=
- =?us-ascii?Q?9Ufz1eAihCfCWiONwmzV72xcEm2YU3buPrrhBduJdHqIVF7ZHdrG4cbTtKKm?=
- =?us-ascii?Q?UqUexaXQU/vKxvEwM2QWSG2XEneexvmKAJYJ6+PTUV9dHlgYNY5FwpqzyUCj?=
- =?us-ascii?Q?fEFFuL2JpawuXz/5REHMr2a3RqIQe+eNwaKPYxrSRuoiPhN6OEu0Ggcxm2bF?=
- =?us-ascii?Q?HYTK57vIThKJVf5GsOrU09WI7TviOSfwDU6tKbNGFgfCPoQiJFNTrkn0tiLI?=
- =?us-ascii?Q?BKa+Ndua6SeiW90+Wx739Z/KwhDyhgOxxFmD+0ZAMTtWBIz8vE7sNUUKPW7i?=
- =?us-ascii?Q?74CQuD0HHFsTpRRMXCDHIjc7uA72vz0QUw65nW5rKJK46cJO93LQun7PhTcG?=
- =?us-ascii?Q?jqBV6KsY9F8rbRW3pcdfaP5MObLAfw+gOHWhnPqFHL4zafGswFAL3Z5+VtqJ?=
- =?us-ascii?Q?CleH23/KOMZH5SfLd3LlKYpPHzvnwxyiW1uYFNSgnqY7DHyRKAC8+l6TklEv?=
- =?us-ascii?Q?fD7AEwLbsWEpE+BhwS1yi4CzJLxAE2T+i1ovEgL+QqoqU/g0POaaKDxI7+Zv?=
- =?us-ascii?Q?o3hf5HkUTqc6+1BgzhlnQxiAVb97QIBu3+WHYDRAHdlHXKVID2m6z1PuToHc?=
- =?us-ascii?Q?zv5ezVUHbqsMooHgC5nL5B7MRpZTsCFVeQj8ClodUK5GU+HH8CyjfVLBKV5N?=
- =?us-ascii?Q?oWsgThvd99r5ixtVmoTlOGpt0ZlVGw9BxJ+kZfaAeK1DHEvoq40bfuyNUKe0?=
- =?us-ascii?Q?UUu4LZeHy5lgoBBx9jwxtCSP8+ihsLnA+XBHuXAbQkwpH2u23WMFSIKzwX0C?=
- =?us-ascii?Q?BIy4VBEVqBAhfO/5MlRq0LFoUmx6BdhYFmj0uyXBLPHyTtA52BTCaivoWjPt?=
- =?us-ascii?Q?6F2bkt5ofmO0PRsSth6gAUZXmV3NVoSyDPzemNOWMZzrXo+PbVr20AIDJJFX?=
- =?us-ascii?Q?TbhQ94V+J4FKP6m/9KBwqOzQ5AHL5mMTjrfcAn7OCL07Im9AY26V+KFJbKRH?=
- =?us-ascii?Q?HzjVlWZUh1C9w8PQCZzpxBwda9XnZ1mB?=
+	=?us-ascii?Q?xYVSqn6YC3ZhCVcGTnG8jgw2PIqGBm1grr2/dOvtSJvXJPmKfQ4V+MeQS26s?=
+ =?us-ascii?Q?BDoDKG9mndqrHWNqhWURO8utgR+ukXqwLjRJke6y1BEuWxbvAeAyjta3MqeB?=
+ =?us-ascii?Q?VfPpR4sJYObmM0SBZQ4lvLJCNjAfGq3vCgjaqZNTAlnB9kAFOK1bSRtxK2Yl?=
+ =?us-ascii?Q?y3bU8VxyxDU9KPmYcUQV+pkXYrcjiVFHat51/3jGx4D3elBIyfaJckPbbYr7?=
+ =?us-ascii?Q?n7gpUCObzsUXmkDBXgrixtPyvreFgAfrf3zo082yvYXGCc5oIcSokPeuewgF?=
+ =?us-ascii?Q?161DOyOaw1sdpvQkg8TncOCCyjOT4qL4z55jDjdvDaH6PN6zzZgc7GHmPgl7?=
+ =?us-ascii?Q?ZMsevLqumS7Qybo9e6SGeUo7jyk4al2aT5prtLmejxZ6jUBg4ic8pvpx70Z2?=
+ =?us-ascii?Q?cRWE26z2RJgFU18B7m5qnZsWuzx1lrchWyY74bsvvR8Yv2eGMe7edp05HQ9A?=
+ =?us-ascii?Q?W2IuA2kQBXfnwOcRcMkt4Z2E3Ly04PLaAGZoJKv24nXVc6v+TA7eb0W7gUjT?=
+ =?us-ascii?Q?IBcmQDLWke3mwy2711L4QjUo5Oqf4ihGWZ+xYiti6R46YFWDXZA2uUO927tx?=
+ =?us-ascii?Q?qyyFYjJFXfYHPHe46xIbZODTIETKHsKYDfSYcrHacSCh6H9ywKJO+B970Asy?=
+ =?us-ascii?Q?WSd1NJJPYeQO8Gs0jc53e7jKD7AgmyX6mPYz+9rqH2a1rcygTNnaLA4KoeC+?=
+ =?us-ascii?Q?ATf9arSNGNYbz+enBhLynWSIlh94i4k4YsYmfC9QAn2YBoqevLTIEdMdjXEM?=
+ =?us-ascii?Q?V4HZkc1cUbBgq7/tBvpIGpJUk2+YdXzs5CjgkxqlSlhmHVALN31RcCdMtcXH?=
+ =?us-ascii?Q?4TBiqDGRP02pWUktQwzPgwGRN4qrRXShK0eDmJPu7trINYEF70HoUcbvr9ne?=
+ =?us-ascii?Q?xQD8kfPA627X77RrO8+Z8nPuIQm8X+DkSrlor2GXxDyLLkmDoTCe7jHJiqXx?=
+ =?us-ascii?Q?W2Zghqa9sGm4To0w2Lf4VNCdgKEcqXT0UXsJOSDy2RBA2R1BH7wxUYcTqErp?=
+ =?us-ascii?Q?isHlBEJjZuJFAfhAFEqQecExFJDZ4ZFynZxbTm4Y8n1IjDEh93CagvTRsw2V?=
+ =?us-ascii?Q?mqVNE9JSuXRYIj9tzqwPJE+KKSJtAMedsdCmd6K1T5rDfvnnq5pvW07vhwfN?=
+ =?us-ascii?Q?kZhdqQoAnIHRafHWEpEWlL3tOFC/agMeC+KtjLQJMcNqwlYJztGE1lcT0gtZ?=
+ =?us-ascii?Q?055HKCACBsFgGlfnKm+pZxgnLS5qNsO0Bu77J6w+icFO7EPXViOkJlLXA22E?=
+ =?us-ascii?Q?SxrHA9ywoyPHAYaQhW7P3qpPv9R0LIsonz8I5qQhwaCabwDnoIu+agtdRSck?=
+ =?us-ascii?Q?pu4xbe/M2oNuTC1SiDKNIdSDT2xQYzn4TIlYJgk+hQHXjdscm1IVP2SysvjD?=
+ =?us-ascii?Q?KX43lrmay7zWfPuhVpYtyuexTRdi?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH0PR01MB6873.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(52116014)(376014)(38350700014);DIR:OUT;SFP:1102;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM8PR04MB7779.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(1800799024)(366016)(376014);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?TpBIXw8L9Fv3jCzNUeeVOphRXwzzEZ45VAt7M21AgjkJ6EcdSJma/N8yPDKl?=
- =?us-ascii?Q?YgXTpz9bYkgQj6jsL+rDifeLYs/xO89RLNXEmRlSf8fekJv/cW/cSIi07ADB?=
- =?us-ascii?Q?4LLOJadqZ+yMEEfwTYSxcDdrtox4HuEDImggoZS3+AGjptBKeLWs8nlH8/UD?=
- =?us-ascii?Q?ZTqEER9PkIinTMtgcqAWRGgT13zDUAt51oLe99x3GMZ7t+oYwrhS+btMM0z2?=
- =?us-ascii?Q?4vz14Ted+JjkbvksEBKbwWbYPDEn7+yx7K8Vcs+JnJJN9lQgrB+VHubG3LZp?=
- =?us-ascii?Q?0c0wLgCT/rkydPXhrwrEJoPEPjueJ5v90agfW9gZi+f8WyZuDnsGr0Tjd7tc?=
- =?us-ascii?Q?QdDR8h1k5/IDMe12C8KFVa1cR2mUY/YXLX44YzqmjhNYHEEjO9KGJF6uxHHl?=
- =?us-ascii?Q?ftDy5h4zqdphNYwSp6m4X1cjhPstGfJkhrePyeJMAyPjxFbpYf3Coj4KXwOI?=
- =?us-ascii?Q?JLAqUrTwyRPFIl4Kcr6Tpx6vM2sCjQ3tKAyZr3tvfSrsU5Zwdea/gCaoT54P?=
- =?us-ascii?Q?fG7aAaq0Fqto8auyUQ8x8oMrMN/JOrFSCP8rNI8M1NSpIhWSMoJPo++1VUgA?=
- =?us-ascii?Q?3JJxhbnGPB1mnxv0x9aCZbcxZoEARLfjUzzVwkUbQrP6oqnY3DTpew4jbpHe?=
- =?us-ascii?Q?FMIprLhNPnMjJHH9sdnThHPwVYphiyfkCPAYfLK8f7N+XdQAmSnJB32xONer?=
- =?us-ascii?Q?S4qvClBHiteXMe7jMxPHkJ0dzi+63zKj4Iq8DnANCJO2cNTkl2Lq6tvjuJcT?=
- =?us-ascii?Q?EAOY2feJfoyQ501cRNHPL/g4W3WxvSFjcExOF82+qF0yaLPR22VBUaHSZFbq?=
- =?us-ascii?Q?CTo/FKJ6dx1KLrUgYWQkNYixU0OfHSUkowfnCuRiA2kdtOE1X4O74jautW7f?=
- =?us-ascii?Q?tkQd6d9ve/qcdRNet0g7nwJbd6zNAREP1AKlPmJTyz8put+FMLtePL1Xtdpk?=
- =?us-ascii?Q?UHGGfcQNTB2MbUdLVGFQEsyGwJC52kjsSeQPuI2rP3TpQn/rw5o8NuiMt+pw?=
- =?us-ascii?Q?Aw8Y/NxuJrQCIGyyJz0i0RTGvCZtil5Y0UcfL5T+G+fbwJUlTZFcGYr7j9Gp?=
- =?us-ascii?Q?VKqXmo4zSJGa7RejAiQGkRcV3bxPsiX7NL1KXKzx7LvfN9kjJWH3CZ3SlsLL?=
- =?us-ascii?Q?dg04zkjp0rGaF8WbE79DibXr/CxWcxl78Xl3YD1XuJS0hDiZIZ/mU6Rq1lK2?=
- =?us-ascii?Q?a6SkNP0szaj61iCbni27vhKFCdf2VLxtmoHznryVPNonySUiu7831j41xJEv?=
- =?us-ascii?Q?+U/JxyicYZalPeClAfOGD17CLL5PfmWzL2zuzVz/y8xsL65v33QIEnfbcHaB?=
- =?us-ascii?Q?0JZBGuQjUZ1GznTag5aRFRZMygiWFctlJlnGAYnktUskXkJDcjLBzYeddz0W?=
- =?us-ascii?Q?VqCYAXNQHnkgj6pSFjtQAB74O65oQL22RpRFyEJsYnN8hxYoQC8Anl+795Oi?=
- =?us-ascii?Q?Hig5vvUQtS+whGWX9TE5yv1y511PgoS4wxA2FzSNedFvIpG5eRDg0vPyxAZJ?=
- =?us-ascii?Q?Xch9CGc3tCpMVSqO9bKPDTAzDRPFoTbgZCyQ91jE4r+wo+DxLhBZ+5IfWj4J?=
- =?us-ascii?Q?8b5SXwIBlO+0maZzybMzNi9OW+64XYK0RZxyIk81n//xd+EgXa+d31uF0Gdl?=
- =?us-ascii?Q?tPvwHbXDVt1WEApxai7BHmI=3D?=
-X-OriginatorOrg: os.amperecomputing.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 31ef06aa-5cf6-4201-e18a-08dd5b6ad2f8
-X-MS-Exchange-CrossTenant-AuthSource: CH0PR01MB6873.prod.exchangelabs.com
+	=?us-ascii?Q?sGnHZ05owoly0t+Gtud7nzh0V+Bs1jimrc8F4iHbH2Qs3dpyGuqbbdDlUQb2?=
+ =?us-ascii?Q?hHibm3TOA9U57wOkOFHtT5hHmGAxmKxnqdrP3VUKWzN7EYlDKLH4jeZNKOUr?=
+ =?us-ascii?Q?lsVZ/+gH0YGo1OMab4JQ3cJ9gY7jbsohIk3457sSwS+Ne+7U9jZe01K7cYHJ?=
+ =?us-ascii?Q?quOvNw+c5AbS4pZIMhnHQuFrI6UZ08Q4vm6heyCRHtQh+Pmtxsn0JVNW2cEH?=
+ =?us-ascii?Q?bjBdZ6BF7ox0GXCzS3z2Kl+FKbNC7GEq0UyaS0aWweKHDLdq2nGru6j3VcbS?=
+ =?us-ascii?Q?JGe93glwPBHtnp1SNOn+gWsx9uRIsmxTCOBYR4omF8nrt2FsE7NjkHXQDnX4?=
+ =?us-ascii?Q?NqPCCK/wr4csSeUEI33cht6sDeHWqlCdMPQ8WVMtY6gUiVgapFHCW27EUzE0?=
+ =?us-ascii?Q?JC9Jvh128G+N0CM5zkU7NhcKaxbCzlQ+l/CB8PHjTtWcUXiCH4ACobLb0jx/?=
+ =?us-ascii?Q?ucN9bHG+jY2/9AiSDRpM79jsTfloVBeYUsjBw/ux9HUJujes2GwwMVGb93IH?=
+ =?us-ascii?Q?thviJXNO7q70p48TkxbeimgvPa97YiZPLFgcHHQdupL5P+ipSesAhiejdhSA?=
+ =?us-ascii?Q?qq9SLyOcz+l3NrUlAH8J0CjWaCIg8qsamnocS10QmjQr6KAGmWNTNDef7aVF?=
+ =?us-ascii?Q?JPtNG98fGwYM5WcI0/8B0dudwr5tnTosfQ53nuLuXC18spg03JwnPEr8d9Sn?=
+ =?us-ascii?Q?AIXFnV+oOpzdZIf4BrQPS9wZ9ROihfcxbcMc1iXAuHFQiaOr6uhva8ddWXvG?=
+ =?us-ascii?Q?Cb5NwfKfiA8fZLEg7HTbFx3OUn2tAPOJq7nYPOOsJxPdNOa6Ld1zB2SFsHUJ?=
+ =?us-ascii?Q?BPRkvO4hOapqQPpQK2X06E873NCwB5r3pGi1ZhnTVSJfJ7jnPnOcAAh+t+2q?=
+ =?us-ascii?Q?f9VT7zLfgGFazJr7e0o3peBnZw0e5ti+ObdS1poAgmeAoRs8U7Hop8qJ1HIA?=
+ =?us-ascii?Q?4ZCIM5sdXCgOg0VjVeByawXnH18gT6yGBcNHg+tIRTT/rCYX6oCk7bDaYMS7?=
+ =?us-ascii?Q?Q+JwZrL4FpefioVx4TMMOde3xuNG/ca8+ePvy8CynvFqIMZJ+AfeEFteBAG0?=
+ =?us-ascii?Q?byZ8VxwZ6CU13TScPG7Ld8BZlQHZUbjjEBECfaJWZN8NeRXe0qnIxtXJ8EW2?=
+ =?us-ascii?Q?+uJy6vz90TwLyKMIpece2bfYl7KTwCig94Ns6fHco/T0BttbF/ThCVPurhob?=
+ =?us-ascii?Q?IhAo21TgkLj+Yh4koSWYX3miiWZJqIQspCTpvCqBzPtMh47QlDK3x91/f6IF?=
+ =?us-ascii?Q?ODVAZyIPlHImNtNeTnMI/RnXsOZp0a9bltNcJUWU+ZA5Otxka4w/zliyH1TZ?=
+ =?us-ascii?Q?/IULpdP+eGoFw3UT4fCdDqPvMfwI9VLR9gv6p45ah5IbxVtnYKXs3EBcJM3F?=
+ =?us-ascii?Q?PWcTjIaYOxyB4UtoP9suoH2/Np86nExu7MBAa2ydW+fCRwzfyrfYWdW6XujP?=
+ =?us-ascii?Q?k0IarELcnHbY+sxZRNRkDP6z3z8BC0TKT8eyzl1VYxRoaPAE4QNwnaE4MTU0?=
+ =?us-ascii?Q?be3sLOB6Z3KBi8ZNuJchy8kOafO2IJOC+hyHQU+N/pi4sPuIAStTBoX3Ft2j?=
+ =?us-ascii?Q?fjBBP1ReLdUgHNlTxmRPerYNYpETxd5rxwAfBRf0hgKgl3XtgUIvpxec+UiQ?=
+ =?us-ascii?Q?fg=3D=3D?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 13f48dd7-1890-400a-2b27-08dd5b6ae7c8
+X-MS-Exchange-CrossTenant-AuthSource: AM8PR04MB7779.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Mar 2025 22:20:52.2224
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Mar 2025 22:21:27.1745
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 9Ye4M2usk+FDas2CIrPhWIR2rlctS3n02VF3DoPUAPmyY3VbMGNc78aBOTnJ9ULh0zSr/tXfNXDiTF+bKo6mPkem1hV1fLkpXmz5EWYzt4I=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR01MB7803
+X-MS-Exchange-CrossTenant-UserPrincipalName: uIDN80nZm015n7UyXEgqJ29349z/snF7/XiepI2jyo/QfZ3Rufa+Q7tK6uo30x5euQiyWZyN96ND+oSZjJjpLQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: GVXPR04MB9927
 
-The kernel linear mapping is painted in very early stage of system boot.
-The cpufeature has not been finalized yet at this point.  So the linear
-mapping is determined by the capability of boot CPU.  If the boot CPU
-supports BBML2, large block mapping will be used for linear mapping.
+On Mon, Mar 03, 2025 at 05:26:50AM -0500, Faizal Rahim wrote:
+> +/**
+> + * ethtool_mmsv_link_state_handle() - Inform MAC Merge Software Verification
+> + *				      of link state changes
+> + * @mmsv: MAC Merge Software Verification state
+> + * @up: True if device carrier is up and able to pass verification packets
+> + *
+> + * Calling context is expected to be from a task, interrupts enabled.
+> + */
+> +void ethtool_mmsv_link_state_handle(struct ethtool_mmsv *mmsv, bool up)
+> +{
+> +	unsigned long flags;
+> +
+> +	ethtool_mmsv_stop(mmsv);
+> +
+> +	spin_lock_irqsave(&mmsv->lock, flags);
+> +
+> +	if (up && mmsv->pmac_enabled) {
+> +		/* VERIFY process requires pMAC enabled when NIC comes up */
+> +		ethtool_mmsv_configure_pmac(mmsv, true);
+> +
+> +		/* New link => maybe new partner => new verification process */
+> +		ethtool_mmsv_apply(mmsv);
+> +	} else {
+> +		/* Reset the reported verification state while the link is down */
+> +		if (mmsv->verify_enabled)
+> +			mmsv->status = ETHTOOL_MM_VERIFY_STATUS_INITIAL;
 
-But the secondary CPUs may not support BBML2, so repaint the linear mapping
-if large block mapping is used and the secondary CPUs don't support BBML2
-once cpufeature is finalized on all CPUs.
+As requested in v5, please make this a separate patch. It represents a
+functional change for stmmac, and I don't want somebody who bisects it
+to find a code movement commit and search for a needle through a haystack.
 
-If the boot CPU doesn't support BBML2 or the secondary CPUs have the
-same BBML2 capability with the boot CPU, repainting the linear mapping
-is not needed.
+> +
+> +		/* No link or pMAC not enabled */
+> +		ethtool_mmsv_configure_pmac(mmsv, false);
+> +		ethtool_mmsv_configure_tx(mmsv, false);
+> +	}
+> +
+> +	spin_unlock_irqrestore(&mmsv->lock, flags);
+> +}
+> +EXPORT_SYMBOL_GPL(ethtool_mmsv_link_state_handle);
+> diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_ethtool.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_ethtool.c
+> index 918a32f8fda8..25533d6a3175 100644
+> --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_ethtool.c
+> +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_ethtool.c
+> @@ -1210,37 +1210,17 @@ static int stmmac_get_mm(struct net_device *ndev,
+>  			 struct ethtool_mm_state *state)
+>  {
+>  	struct stmmac_priv *priv = netdev_priv(ndev);
+> -	unsigned long flags;
+>  	u32 frag_size;
+>  
+>  	if (!stmmac_fpe_supported(priv))
+>  		return -EOPNOTSUPP;
+>  
+> -	spin_lock_irqsave(&priv->fpe_cfg.lock, flags);
+> +	ethtool_mmsv_get_mm(&priv->fpe_cfg.mmsv, state);
+>  
+> -	state->max_verify_time = STMMAC_FPE_MM_MAX_VERIFY_TIME_MS;
+> -	state->verify_enabled = priv->fpe_cfg.verify_enabled;
+> -	state->pmac_enabled = priv->fpe_cfg.pmac_enabled;
+> -	state->verify_time = priv->fpe_cfg.verify_time;
+> -	state->tx_enabled = priv->fpe_cfg.tx_enabled;
+> -	state->verify_status = priv->fpe_cfg.status;
+>  	state->rx_min_frag_size = ETH_ZLEN;
+> -
+> -	/* FPE active if common tx_enabled and
+> -	 * (verification success or disabled(forced))
+> -	 */
+> -	if (state->tx_enabled &&
+> -	    (state->verify_status == ETHTOOL_MM_VERIFY_STATUS_SUCCEEDED ||
+> -	     state->verify_status == ETHTOOL_MM_VERIFY_STATUS_DISABLED))
+> -		state->tx_active = true;
+> -	else
+> -		state->tx_active = false;
+> -
+>  	frag_size = stmmac_fpe_get_add_frag_size(priv);
+>  	state->tx_min_frag_size = ethtool_mm_frag_size_add_to_min(frag_size);
+>  
+> -	spin_unlock_irqrestore(&priv->fpe_cfg.lock, flags);
+> -
+>  	return 0;
+>  }
+>  
+> @@ -1248,8 +1228,6 @@ static int stmmac_set_mm(struct net_device *ndev, struct ethtool_mm_cfg *cfg,
+>  			 struct netlink_ext_ack *extack)
+>  {
+>  	struct stmmac_priv *priv = netdev_priv(ndev);
+> -	struct stmmac_fpe_cfg *fpe_cfg = &priv->fpe_cfg;
+> -	unsigned long flags;
+>  	u32 frag_size;
+>  	int err;
+>  
+> @@ -1258,23 +1236,8 @@ static int stmmac_set_mm(struct net_device *ndev, struct ethtool_mm_cfg *cfg,
+>  	if (err)
+>  		return err;
+>  
+> -	/* Wait for the verification that's currently in progress to finish */
+> -	timer_shutdown_sync(&fpe_cfg->verify_timer);
+> -
+> -	spin_lock_irqsave(&fpe_cfg->lock, flags);
+> -
+> -	fpe_cfg->verify_enabled = cfg->verify_enabled;
+> -	fpe_cfg->pmac_enabled = cfg->pmac_enabled;
+> -	fpe_cfg->verify_time = cfg->verify_time;
+> -	fpe_cfg->tx_enabled = cfg->tx_enabled;
+> -
+> -	if (!cfg->verify_enabled)
+> -		fpe_cfg->status = ETHTOOL_MM_VERIFY_STATUS_DISABLED;
+> -
+>  	stmmac_fpe_set_add_frag_size(priv, frag_size);
 
-Signed-off-by: Yang Shi <yang@os.amperecomputing.com>
----
- arch/arm64/include/asm/mmu.h   |  3 +++
- arch/arm64/kernel/cpufeature.c | 24 +++++++++++++++++++
- arch/arm64/mm/mmu.c            | 43 +++++++++++++++++++++++++++++++++-
- 3 files changed, 69 insertions(+), 1 deletion(-)
+This is another change in behavior which unfortunately I am noticing
+only now: stmmac_fpe_set_add_frag_size() and stmmac_fpe_get_add_frag_size()
+used to execute under &fpe_cfg->lock, and now run outside of what
+eventually became the mmsv->lock (but still under rtnl_lock() protection).
 
-diff --git a/arch/arm64/include/asm/mmu.h b/arch/arm64/include/asm/mmu.h
-index d658a33df266..181649424317 100644
---- a/arch/arm64/include/asm/mmu.h
-+++ b/arch/arm64/include/asm/mmu.h
-@@ -56,6 +56,8 @@ typedef struct {
-  */
- #define ASID(mm)	(atomic64_read(&(mm)->context.id) & 0xffff)
- 
-+extern bool block_mapping;
-+
- static inline bool arm64_kernel_unmapped_at_el0(void)
- {
- 	return alternative_has_cap_unlikely(ARM64_UNMAP_KERNEL_AT_EL0);
-@@ -72,6 +74,7 @@ extern void create_pgd_mapping(struct mm_struct *mm, phys_addr_t phys,
- extern void *fixmap_remap_fdt(phys_addr_t dt_phys, int *size, pgprot_t prot);
- extern void mark_linear_text_alias_ro(void);
- extern int split_linear_mapping(unsigned long start, unsigned long end);
-+extern int __repaint_linear_mappings(void *__unused);
- 
- /*
-  * This check is triggered during the early boot before the cpufeature
-diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
-index d39637d5aeab..ffb797bc2dba 100644
---- a/arch/arm64/kernel/cpufeature.c
-+++ b/arch/arm64/kernel/cpufeature.c
-@@ -85,6 +85,7 @@
- #include <asm/insn.h>
- #include <asm/kvm_host.h>
- #include <asm/mmu_context.h>
-+#include <asm/mmu.h>
- #include <asm/mte.h>
- #include <asm/processor.h>
- #include <asm/smp.h>
-@@ -1972,6 +1973,28 @@ static int __init __kpti_install_ng_mappings(void *__unused)
- 	return 0;
- }
- 
-+static void __init repaint_linear_mappings(void)
-+{
-+	struct cpumask bbml2_cpus;
-+
-+	if (!block_mapping)
-+		return;
-+
-+	if (!rodata_full)
-+		return;
-+
-+	if (system_supports_bbml2_noabort())
-+		return;
-+
-+	/*
-+	 * Need to guarantee repainting linear mapping is called on the
-+	 * boot CPU since boot CPU supports BBML2.
-+	 */
-+	cpumask_clear(&bbml2_cpus);
-+	cpumask_set_cpu(smp_processor_id(), &bbml2_cpus);
-+	stop_machine(__repaint_linear_mappings, NULL, &bbml2_cpus);
-+}
-+
- static void __init kpti_install_ng_mappings(void)
- {
- 	/* Check whether KPTI is going to be used */
-@@ -3814,6 +3837,7 @@ void __init setup_system_features(void)
- {
- 	setup_system_capabilities();
- 
-+	repaint_linear_mappings();
- 	kpti_install_ng_mappings();
- 
- 	sve_setup();
-diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
-index d4dfeabc80e9..015b30567ad1 100644
---- a/arch/arm64/mm/mmu.c
-+++ b/arch/arm64/mm/mmu.c
-@@ -209,6 +209,8 @@ static int split_pmd(pmd_t *pmdp, pmd_t pmdval,
- 	/* It must be naturally aligned if PMD is leaf */
- 	if ((flags & NO_CONT_MAPPINGS) == 0)
- 		prot = __pgprot(pgprot_val(prot) | PTE_CONT);
-+	else
-+		prot = __pgprot(pgprot_val(prot) & ~PTE_CONT);
- 
- 	for (i = 0; i < PTRS_PER_PTE; i++, ptep++)
- 		__set_pte_nosync(ptep, pfn_pte(pfn + i, prot));
-@@ -258,6 +260,8 @@ static int split_pud(pud_t *pudp, pud_t pudval,
- 	/* It must be naturally aligned if PUD is leaf */
- 	if ((flags & NO_CONT_MAPPINGS) == 0)
- 		prot = __pgprot(pgprot_val(prot) | PTE_CONT);
-+	else
-+		prot = __pgprot(pgprot_val(prot) & ~PTE_CONT);
- 
- 	for (int i = 0; i < PTRS_PER_PMD; i++, pmdp++) {
- 		__set_pmd_nosync(pmdp, pfn_pmd(pfn, prot));
-@@ -806,6 +810,37 @@ void __init mark_linear_text_alias_ro(void)
- 			    PAGE_KERNEL_RO);
- }
- 
-+int __init __repaint_linear_mappings(void *__unused)
-+{
-+	phys_addr_t kernel_start = __pa_symbol(_stext);
-+	phys_addr_t kernel_end = __pa_symbol(__init_begin);
-+	phys_addr_t start, end;
-+	unsigned long vstart, vend;
-+	u64 i;
-+	int ret;
-+
-+	memblock_mark_nomap(kernel_start, kernel_end - kernel_start);
-+	/* Split the whole linear mapping */
-+	for_each_mem_range(i, &start, &end) {
-+		if (start >= end)
-+			return -EINVAL;
-+
-+		vstart = __phys_to_virt(start);
-+		vend = __phys_to_virt(end);
-+		ret = __create_pgd_mapping_locked(init_mm.pgd, start,
-+					vstart, (end - start), __pgprot(0),
-+					__pgd_pgtable_alloc,
-+					NO_CONT_MAPPINGS | SPLIT_MAPPINGS);
-+		if (ret)
-+			panic("Failed to split linear mappings\n");
-+
-+		flush_tlb_kernel_range(vstart, vend);
-+	}
-+	memblock_clear_nomap(kernel_start, kernel_end - kernel_start);
-+
-+	return 0;
-+}
-+
- #ifdef CONFIG_KFENCE
- 
- bool __ro_after_init kfence_early_init = !!CONFIG_KFENCE_SAMPLE_INTERVAL;
-@@ -860,6 +895,8 @@ static inline void arm64_kfence_map_pool(phys_addr_t kfence_pool, pgd_t *pgdp) {
- 
- #endif /* CONFIG_KFENCE */
- 
-+bool block_mapping;
-+
- static inline bool force_pte_mapping(void)
- {
- 	/*
-@@ -888,6 +925,8 @@ static void __init map_mem(pgd_t *pgdp)
- 	int flags = NO_EXEC_MAPPINGS;
- 	u64 i;
- 
-+	block_mapping = true;
-+
- 	/*
- 	 * Setting hierarchical PXNTable attributes on table entries covering
- 	 * the linear region is only possible if it is guaranteed that no table
-@@ -903,8 +942,10 @@ static void __init map_mem(pgd_t *pgdp)
- 
- 	early_kfence_pool = arm64_kfence_alloc_pool();
- 
--	if (force_pte_mapping())
-+	if (force_pte_mapping()) {
-+		block_mapping = false;
- 		flags |= NO_BLOCK_MAPPINGS | NO_CONT_MAPPINGS;
-+	}
- 
- 	/*
- 	 * Take care not to create a writable alias for the
--- 
-2.47.1
+I am not seeing a need for the additional fragment size to be covered
+by the mmsv->lock (the mmsv has no business with this parameter), and
+rtnl_lock() should be sufficient to serialize stmmac_get_mm() with
+stmmac_set_mm(). So I guess I am ok with the code structure, but again,
+please move stmmac_fpe_set_add_frag_size() and stmmac_fpe_get_add_frag_size()
+outside of the spin_lock_irqsave(&fpe_cfg->lock) context (essentially to
+their current positions) as a preliminary separate patch. Again, it is
+best for a "git blame" caused by a behavior change here to not point to
+a commit that moves code from one file to another.
 
+> -	stmmac_fpe_apply(priv);
+> -
+> -	spin_unlock_irqrestore(&fpe_cfg->lock, flags);
+> +	ethtool_mmsv_set_mm(&priv->fpe_cfg.mmsv, cfg);
+>  
+>  	return 0;
+>  }
