@@ -1,86 +1,99 @@
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96CA51FC0FE
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 08:45:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0550518A6A9
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 08:45:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741077905; cv=none; b=h8Q0sLt7VnFk7zlZHhXSxF6oWLRsbuVkX9la3P5PtFtmZBnjX8GX2oHafIpcfJ5a3IP9KzroKcUZngro7+LiczLt7cgv+jNUoSkw2YW8+QGN350vC1NL/2f77XC3nbvQitaYlg/CHfLwbkfx9r09FUT/X7V0unQP5/F/BFFQUHk=
+	t=1741077921; cv=none; b=efY9tERspHjt5UJ3Gwtsn0IlucxIyq+TwktSwvcKGeeZdwJBzi9sdQu+TWHKc2iYc6wuHxREaUIxyCc0iTuryhQpSAaAxA5PzaAuEw6g6tzDZNLsyhnm1EPUT7PRnXM+FPajvKKh8c1aj5WP4uMmC6jrLQAx+rh0QZB1Ya2aTlI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741077905; c=relaxed/simple;
-	bh=pR+bRfGQlzWx7gBjcdSucJAnN3K9ea1LhqswU3jkQrg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AB8KSLHnMyEe35cTDQqxmPb9KKu18bIos8y5BwbKAgWJYetFVZfDkovtE/k8hs6u69FwkcDS/fuooVkGe9UoeWSDiPnRmtSgAqfCJzPgBzA0QQpaE7imrLQszdzN+QFy9i0TaKZs3gN3QUABGztKrBNfl5cU+bXUAD7KXiG3rU4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=IpNCNxz5; arc=none smtp.client-ip=209.85.208.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IpNCNxz5"
-Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-30baa27b209so24336511fa.0
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Mar 2025 00:45:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741077902; x=1741682702; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pR+bRfGQlzWx7gBjcdSucJAnN3K9ea1LhqswU3jkQrg=;
-        b=IpNCNxz5DWjg1NDjK+v9sQWobdNY0C7VexzWIoUdOBkB1jFTE7ulKywoIiL2dOlQil
-         uMI0qxKIqgLP6VrX8//TPapY41dzYjzkd9gQ4rMCjMVP85q2mH8z6877+AhpkEnJDDgb
-         TZlA29t2oloimwJNjngCRPWYQXzpSBCNs7nlbDtLYPqa42OUYDi3t7SPidoVXG46KTch
-         Qqk9WkXgv0WOh9R9yGcQd6J89IdvYMHd3SqZmj3owU8RFGRQku5/V5mn/KWdXWhFXTxo
-         giRGuE60LvK5+rxuMlhjroZKiIF8/LIRvTbWY95ROtvhGZPRRoHIVE/397F23lFlAOwT
-         6Fqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741077902; x=1741682702;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=pR+bRfGQlzWx7gBjcdSucJAnN3K9ea1LhqswU3jkQrg=;
-        b=p7gtgBQQL9su+/+Rk8bFMgTwtt0oHzy5jrpkbUDwVv/t8bjk210qxA9iSpZ4F0nNeE
-         mEzevZW3+3QMaVmMkANj1OjM+xUBjQI4xmSdvuh4R1seYbputzdqz5rt8TKOKt/5ENsi
-         /uBSV1+1J/E4pKi/6In4niszhQWs6zMcyoPcr3O3h6dgw4BfYE9H4+nMbW4J/JwS1Mzb
-         foqVCHDc/wBjcXfqerfeWRiYP8scjmbibRub5t83Igww6YgjPs4txjWhj+nlBIh8oEqs
-         C4LIMCe0QkegxAHLQkrmNEjTfClJWTROD4s923XBtuLU1rgLoTwFIg/FUVVUXet8tqUh
-         XqGw==
-X-Forwarded-Encrypted: i=1; AJvYcCUjvKU/CLwpisZSu2PX8HgDHTjW22sHehPp6/x+uCjyeZLmNLcPsdgkD60iQ41klGb2dbagTzEg5OVBHhQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy5trHDfdQafVQefbtwWlJda5TOhyubI4HEEwVIyKIqiuSeFk0l
-	wnR+fb6NIopc07d4iyNKMt7+pf+wZ9y1nntc9lBHCgky8yArRYEKWrO4lpijIZU05ZFc91pDP4Y
-	r261twujkwUovOtxPJpbbWsQ6kr9+xOJ4gN2F3w==
-X-Gm-Gg: ASbGncuT4NHdvMxF3I8wdiJL6ZQ1+9yg5sJweOWbW0EryKZX2OTJD1xX+ESF1v+gOpU
-	2wkPtVIX1rejq9MrJdul9dzOFggmH5B2nlT3yrG9aE85n1SEWWii1YLlaIAyyLL23IJPRjuVJjH
-	zDGPF4HlNOoDAeVZ3cHInlXDvzFg==
-X-Google-Smtp-Source: AGHT+IGgRiH2oS22RGfJxg7aIwVmCJWTNc+/r77/fuTgsqtE4Ux8/GK0e63mEvBxg75vsi2ow2K3BDFTL4IZbFj8pc8=
-X-Received: by 2002:a05:651c:1546:b0:30b:d35c:4754 with SMTP id
- 38308e7fff4ca-30bd35c5025mr120331fa.10.1741077901727; Tue, 04 Mar 2025
- 00:45:01 -0800 (PST)
+	s=arc-20240116; t=1741077921; c=relaxed/simple;
+	bh=T0XZhJk4MqTL5uAYswjs6o+aqFdWtuT3pYWcqL1HNG8=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=QnvpUEs9Po94rUnglGRYD4skK+h+i3bxNzOeye0RHDKIVriVC2MhvZP2FX8J6KQ0nzMEp1DNTMVH5x7NZ89O+iT6S1H2/s0Gwn5DAhAir5CuX/wqDfoIaU7zPyv6inBVJQ48vPykhuMQc2+HZnUkQ+BESueHxJKRKbn9pT2UgXk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.105])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4Z6TgC0k1SzvWqS;
+	Tue,  4 Mar 2025 16:41:27 +0800 (CST)
+Received: from kwepemg200013.china.huawei.com (unknown [7.202.181.64])
+	by mail.maildlp.com (Postfix) with ESMTPS id 1F663140158;
+	Tue,  4 Mar 2025 16:45:14 +0800 (CST)
+Received: from huawei.com (10.175.113.32) by kwepemg200013.china.huawei.com
+ (7.202.181.64) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Tue, 4 Mar
+ 2025 16:45:13 +0800
+From: Liu Shixin <liushixin2@huawei.com>
+To: Muchun Song <muchun.song@linux.dev>, Andrew Morton
+	<akpm@linux-foundation.org>, David Hildenbrand <david@redhat.com>, Barry Song
+	<song.bao.hua@hisilicon.com>, Kefeng Wang <wangkefeng.wang@huawei.com>, Peter
+ Xu <peterx@redhat.com>
+CC: <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>, Liu Shixin
+	<liushixin2@huawei.com>
+Subject: [PATCH v2] mm/hugetlb: update nr_huge_pages and surplus_huge_pages together
+Date: Tue, 4 Mar 2025 16:38:41 +0800
+Message-ID: <20250304083841.283159-1-liushixin2@huawei.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250303160341.1322640-1-andriy.shevchenko@linux.intel.com> <20250303160341.1322640-2-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20250303160341.1322640-2-andriy.shevchenko@linux.intel.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Tue, 4 Mar 2025 09:44:50 +0100
-X-Gm-Features: AQ5f1JpGA_-UhNoTPJmPBEBi7eNV4b_GKZenv7aPR3Dmi6S0SC42FWEfJP36qBc
-Message-ID: <CACRpkdZ3E9J3+P3ANK-+NDidnsoZG-8UWP_G98Oai-dp6fk6Xw@mail.gmail.com>
-Subject: Re: [PATCH v1 1/3] gpiolib: Align FLAG_* definitions in the struct gpio_desc
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, linux-gpio@vger.kernel.org, 
-	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Mika Westerberg <westeri@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>, Kent Gibson <warthog618@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ kwepemg200013.china.huawei.com (7.202.181.64)
 
-On Mon, Mar 3, 2025 at 5:03=E2=80=AFPM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
+In alloc_surplus_hugetlb_folio(), we increase nr_huge_pages and
+surplus_huge_pages separately. In the middle window, if we set
+nr_hugepages to smaller and satisfy count < persistent_huge_pages(h),
+the surplus_huge_pages will be increased by adjust_pool_surplus().
 
-> Align FLAG_* definitions in the struct gpio_desc for better readability.
->
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+After adding delay in the middle window, we can reproduce the problem
+easily by following step:
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+ 1. echo 3 > /proc/sys/vm/nr_overcommit_hugepages
+ 2. mmap two hugepages. When nr_huge_pages=2 and surplus_huge_pages=1,
+    goto step 3.
+ 3. echo 0 > /proc/sys/vm/nr_huge_pages
 
-Yours,
-Linus Walleij
+Finally, nr_huge_pages is less than surplus_huge_pages.
+
+To fix the problem, call only_alloc_fresh_hugetlb_folio() instead and
+move down __prep_account_new_huge_page() into the hugetlb_lock.
+
+Fixes: 0c397daea1d4 ("mm, hugetlb: further simplify hugetlb allocation API")
+Signed-off-by: Liu Shixin <liushixin2@huawei.com>
+---
+ mm/hugetlb.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
+
+diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+index 9faa1034704ff..0b02ea1c39e63 100644
+--- a/mm/hugetlb.c
++++ b/mm/hugetlb.c
+@@ -2253,11 +2253,19 @@ static struct folio *alloc_surplus_hugetlb_folio(struct hstate *h,
+ 		goto out_unlock;
+ 	spin_unlock_irq(&hugetlb_lock);
+ 
+-	folio = alloc_fresh_hugetlb_folio(h, gfp_mask, nid, nmask);
++	folio = only_alloc_fresh_hugetlb_folio(h, gfp_mask, nid, nmask, NULL);
+ 	if (!folio)
+ 		return NULL;
+ 
++	hugetlb_vmemmap_optimize_folio(h, folio);
++
+ 	spin_lock_irq(&hugetlb_lock);
++	/*
++	 * Update nr_huge_pages and surplus_huge_pages together,
++	 * otherwise it might confuse persistent_huge_pages() momentarily.
++	 */
++	__prep_account_new_huge_page(h, nid);
++
+ 	/*
+ 	 * We could have raced with the pool size change.
+ 	 * Double check that and simply deallocate the new page
+-- 
+2.34.1
+
