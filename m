@@ -1,165 +1,161 @@
-Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33A6C1754B
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 01:39:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B53E5137923;
+	Tue,  4 Mar 2025 01:39:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741052362; cv=none; b=U9ykCfxeQRgqI0SxivrbjbmyTGFKxM94lDVIuYGyulIBS7a7o6RKkXic6D8bwc8hry5ZgeUUwOX6wH/pBoMN1FVQt7DV6ZQchpD2lFvJDRSVcpqxY8UDOprq+tpfRYaNs1+JiDmg4WXjCHJJd6igPp5DEl2y9v/GPaRIwSEAc4A=
+	t=1741052369; cv=none; b=WJTatFzwgtTW2NckcKn3AcUnPFWF74JzoBG3LuP/Lw3PRvi3ltND0P5WzknAa2imYLWn1MTLgSuqgo6JLu6WkaEVRhtmaBW838cc1RVBmv70KYHBQ4wcO5AOgoRvDHvw7giIKsZKE8J5n+CaA4F8xKy47O5H4j4+0GJ0ncVAkME=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741052362; c=relaxed/simple;
-	bh=ojJcx8PjLXoEZC9FDO1R3bRo2y1vdh6SRPTkxfXuyW0=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:In-Reply-To:
-	 Content-Type:References; b=czo0S3hk87P7ENVldl0+s4d3Gjq9qIHih46F08Zv9KycXjMCJOeG4DjSP+L5s6IrZIapSOXC/F2NegsGKt+iPgE05Tw6CJtBrEkgi8/eQnsvvtdr30AE+YIUiDjOARd834jKByP/kxqzigMpEBUxPFcbXV2Iv1P7pkmwSTajd1A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=vcP27uJj; arc=none smtp.client-ip=203.254.224.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1741052369; c=relaxed/simple;
+	bh=zrZv3vV9jJm1D8ekGuxLw32tz/A467tuDzGpCfD3QfM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jlTCvEyG/h4DwXDK6QFQfd02kD7aVgnI6gDWF7K+l3qS0Y5S/JqSVTyo4/9pKa/6qWz6T76zbGJRh2YO5OGbtdUCJw2U8R9JmMi8zRrixuzKm72X4hNgu9cg1mXu2OnQMVJ/VgHrVu0EYMOsdxVG0r3z/AJE3sMdDrtjYuVPQCk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XfYylDbT; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="vcP27uJj"
-Received: from epcas2p4.samsung.com (unknown [182.195.41.56])
-	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20250304013916epoutp03dbca3a4d8d6b4332d4599bcf7193cd94~pdeTnqBWQ0306403064epoutp03r
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 01:39:16 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20250304013916epoutp03dbca3a4d8d6b4332d4599bcf7193cd94~pdeTnqBWQ0306403064epoutp03r
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1741052356;
-	bh=WzVIasWSNBcOuq6okEIYOlGRLphFTZ6q35ajcfpcLno=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=vcP27uJjIqjO9bSaQIsb80Dh3BSKobvdLcbeXg4o8iSjhfAMQpJd5uRAxUt49e/++
-	 JINayB9MmRSPmUVUevex70LaaoXuOuLu0sIZtNfJZn70VB11/EsKi+xIxWLNZzgVH7
-	 3wIT7pJa+mYJeKvLpjvBGActNCuUhK5j+3/1N/AQ=
-Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
-	epcas2p1.samsung.com (KnoxPortal) with ESMTP id
-	20250304013916epcas2p1c3fc29ec27298e8c1a0dcc75bce4a747~pdeS2KMqr1780917809epcas2p1l;
-	Tue,  4 Mar 2025 01:39:16 +0000 (GMT)
-Received: from epsmges2p1.samsung.com (unknown [182.195.36.102]) by
-	epsnrtp1.localdomain (Postfix) with ESMTP id 4Z6JJ33Nt6z4x9Q3; Tue,  4 Mar
-	2025 01:39:15 +0000 (GMT)
-Received: from epcas2p3.samsung.com ( [182.195.41.55]) by
-	epsmges2p1.samsung.com (Symantec Messaging Gateway) with SMTP id
-	4E.00.23368.2C956C76; Tue,  4 Mar 2025 10:39:14 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-	epcas2p1.samsung.com (KnoxPortal) with ESMTPA id
-	20250304013914epcas2p1de7e76960cdf41aa0ea3f54726171206~pdeRA1edj2265022650epcas2p1u;
-	Tue,  4 Mar 2025 01:39:14 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20250304013914epsmtrp17ae171ef24522904060d10a91b62011e~pdeRADW600514605146epsmtrp1P;
-	Tue,  4 Mar 2025 01:39:14 +0000 (GMT)
-X-AuditID: b6c32a45-db1ed70000005b48-3c-67c659c2185e
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-	epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	BA.E4.18949.1C956C76; Tue,  4 Mar 2025 10:39:13 +0900 (KST)
-Received: from tiffany (unknown [10.229.95.142]) by epsmtip2.samsung.com
-	(KnoxPortal) with ESMTPA id
-	20250304013913epsmtip203bb47ab3ebc483e381a8edfe6704dd6~pdeQxDTHT2648626486epsmtip2-;
-	Tue,  4 Mar 2025 01:39:13 +0000 (GMT)
-Date: Tue, 4 Mar 2025 10:37:43 +0900
-From: Hyesoo Yu <hyesoo.yu@samsung.com>
-To: Vlastimil Babka <vbabka@suse.cz>
-Cc: Harry Yoo <harry.yoo@oracle.com>, janghyuck.kim@samsung.com, Christoph
-	Lameter <cl@linux.com>, Pekka Enberg <penberg@kernel.org>, David Rientjes
-	<rientjes@google.com>, Joonsoo Kim <iamjoonsoo.kim@lge.com>, Andrew Morton
-	<akpm@linux-foundation.org>, Roman Gushchin <roman.gushchin@linux.dev>,
-	Hyeonggon Yoo <42.hyeyoo@gmail.com>, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 0/2] mm: slub: Enhanced debugging in slub error
-Message-ID: <20250304013743.GA3859715@tiffany>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XfYylDbT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741052368; x=1772588368;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=zrZv3vV9jJm1D8ekGuxLw32tz/A467tuDzGpCfD3QfM=;
+  b=XfYylDbTMJLXIyAD36aMTPcbgwGJkUMrQOMtKQ0PrhQHYgPKQA9Q3ZVp
+   zD7RsmFxX7ecwe0T5DsaHzcZ9HOX1Ij4SctIGFgSzVQ9X0Wft/DCJKMo5
+   gCBfT2n+LysfmBDIy34EWkFPVO05BxzApFlxas2mksFu9HG/KvYGbRSx2
+   O1kRVPfGQD95Qemv4F9cvWudMMFr9v12EC4XAlGt6L9AxMuDsXsCEts4C
+   rFvzpdX54KfGjzEpHVLaiH0ig8hicF/zgwVtHlGFFSATqbJkpBS8uFT2o
+   259DxZyIQOHdlhR1v8anvNRPhLfa3zmSAFwJpB0g1A0yXQuEgIhq/GKb4
+   A==;
+X-CSE-ConnectionGUID: jyknJCbnQL6zmhDAh5lv1g==
+X-CSE-MsgGUID: JD9j/Rj8R+SfCLavwGDLWA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11362"; a="41197903"
+X-IronPort-AV: E=Sophos;i="6.13,331,1732608000"; 
+   d="scan'208";a="41197903"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Mar 2025 17:39:27 -0800
+X-CSE-ConnectionGUID: 60ERKnysRbmJQYhbUH/5kQ==
+X-CSE-MsgGUID: 7QtDB9adRY+zzZqgK0F4Fg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,331,1732608000"; 
+   d="scan'208";a="123166323"
+Received: from tfalcon-desk.amr.corp.intel.com (HELO tfalcon-desk.attlocal.net) ([10.124.221.194])
+  by orviesa003.jf.intel.com with ESMTP; 03 Mar 2025 17:39:24 -0800
+From: Thomas Falcon <thomas.falcon@intel.com>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>
+Cc: linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Thomas Falcon <thomas.falcon@intel.com>,
+	Kan Liang <kan.liang@intel.com>
+Subject: [PATCH v5] perf script: Fix output type for dynamically allocated core PMU's
+Date: Mon,  3 Mar 2025 19:39:06 -0600
+Message-ID: <20250304013906.1393102-1-thomas.falcon@intel.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <af14d7c4-cb12-4b48-be67-5dcfc50aec09@suse.cz>
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrCJsWRmVeSWpSXmKPExsWy7bCmue6hyGPpBnfvaVpM7DGwmLN+DZvF
-	9W9vGC3uL3vGYrGyu5nNYvOcYovLu+awWdxb85/Vou3zPyCxZCOTxcQ1ohazG/sYHXg8ds66
-	y+6xYFOpx6ZVnWwemz5NYvfoenuFyePEjN8sHk+uTGfyWNgwldnj49NbLB59W1YxepxZcITd
-	4/MmuQCeqGybjNTElNQihdS85PyUzLx0WyXv4HjneFMzA0NdQ0sLcyWFvMTcVFslF58AXbfM
-	HKDzlRTKEnNKgUIBicXFSvp2NkX5pSWpChn5xSW2SqkFKTkF5gV6xYm5xaV56Xp5qSVWhgYG
-	RqZAhQnZGX2/2hgLznBX9C7WamA8xtnFyMkhIWAi8ebRK+YuRi4OIYEdjBKrJp5lBUkICXxi
-	lPh3OQUi8Y1R4vTXLcwwHX8+rGOCSOxllGjcNJcRwnnKKLG3YQsLSBWLgIrEw2uHmEBsNgF1
-	iRNbljGC2CJA8UcbjrKCNDALtDNLfDt1AqxBWMBN4tS1D2C7eQX0JI4/nssGYQtKnJz5BKyG
-	U8Ba4tDey2wgzRICBzgkfmx/wQhxk4vEvj0XmSBsYYlXx7ewQ9hSEi/726DsYoltiw8zQTQ3
-	MEps7rgP9ZCxxKxn7WCDmAUyJSae3QXUwAEUV5Y4cosFIswn0XH4L1SYV6KjTQiiU1li/7J5
-	LBC2pMSjte2sELaHxL1359kgobKbSaL10iPWCYxys5D8MwvJNghbR2LB7k9ss4BWMAtISyz/
-	xwFhakqs36W/gJF1FaNYakFxbnpqsVGBITyGk/NzNzGCk7OW6w7GyW8/6B1iZOJgPMQowcGs
-	JMJ7q/1ouhBvSmJlVWpRfnxRaU5q8SFGU2DsTGSWEk3OB+aHvJJ4QxNLAxMzM0NzI1MDcyVx
-	3uodLelCAumJJanZqakFqUUwfUwcnFINTBE84suNbJaH7i1/qDb5RWn3tPD9oss05/0+fnxL
-	2rzLrTqKfVm/1i/3Yj5r+vPuK5NpEnMWrfjz7nTAnhCxrJPqQtteXXCtFov88/PX1gMys7yn
-	rFHxKt4w0cf0Q+Gt35U5r8vqebletD7RLe007b8274zBNqH+39stbMMS854t/O26QviBbPpH
-	zRn/sgqlzJXLJj8/YVz8VF78XvHeV/WaP8XTyxdN3is6JSmqN/p/g1YDQ7eVcPnKUwZCn17J
-	hS04+Lmgfd7qQJ74ezPyv09XvBuvdH7FG+MnkxIaDzWbq8udW2r8o7+Ne9Z5BcOkjyl/ko96
-	t1rGL7J93xM15+Sjcu8zP94qJR36LJnpvUWJpTgj0VCLuag4EQB5QN0LVwQAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupikeLIzCtJLcpLzFFi42LZdlhJXvdQ5LF0g2XhFhN7DCzmrF/DZnH9
-	2xtGi/vLnrFYrOxuZrPYPKfY4vKuOWwW99b8Z7Vo+/wPSCzZyGQxcY2oxezGPkYHHo+ds+6y
-	eyzYVOqxaVUnm8emT5PYPbreXmHyODHjN4vHkyvTmTwWNkxl9vj49BaLR9+WVYweZxYcYff4
-	vEkugCeKyyYlNSezLLVI3y6BK+P3+32MBZ2cFV+Ov2VsYJzD3sXIySEhYCLx58M6pi5GLg4h
-	gd2MEn3njrNBJCQlZn0+yQRhC0vcbznCClH0mFHi/pJlYEUsAioSD68dAitiE1CXOLFlGSOI
-	LQIUf7ThKFgDs0A3s8Stzf9ZQRLCAm4Sp659ALN5BfQkjj+eywYxdS+TxLm/E5khEoISJ2c+
-	YQGxmQW0JG78ewm0gQPIlpZY/o8DJMwpYC1xaO9ltgmMArOQdMxC0jELoWMBI/MqRsnUguLc
-	9NxiwwKjvNRyveLE3OLSvHS95PzcTYzg6NLS2sG4Z9UHvUOMTByMhxglOJiVRHhvtR9NF+JN
-	SaysSi3Kjy8qzUktPsQozcGiJM777XVvipBAemJJanZqakFqEUyWiYNTqoFJtdLrYCjHl6fn
-	n/cyr3BfZ7lZMOlK8vpfhqHp5o0srHWX8v4m3P9SNWHRFK+LdSc53j7sXHZYm2tyxPXzpX/u
-	K9U+dTq9b0ljTXP3TKXA9Gotva5f8klTQxcdDsk7up6BRYJrR7up20NW/0uiapN7NbddzEtJ
-	F5f4H89d8DBIIHL6XPtrXC/+WFtEPGH7OqnjaVbMIy4uwWftOfnlP3c126vsmJWoeJx7dfil
-	xQEhE+akJ66dfadIsDXUhc3XlDP4scyfvpk+RyfO8JpkmrN4gu/nXRxcWvzyMVzeC1XLdzyL
-	TZnKnhwnKWU+XXZD5N4/n8pn/tonz3AyNbo1jNtVSWLpNzmrs/VZT2YGfFJiKc5INNRiLipO
-	BABU0wktHQMAAA==
-X-CMS-MailID: 20250304013914epcas2p1de7e76960cdf41aa0ea3f54726171206
-X-Msg-Generator: CA
-Content-Type: multipart/mixed;
-	boundary="----m7PZ4BT1ldTQPVcONAqyTj2Zy1CXq_CO7oNb.DekQ57E.lpM=_17f50c_"
-X-Sendblock-Type: AUTO_CONFIDENTIAL
-CMS-TYPE: 102P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20250226081354epcas2p44c2f53d569296ac2e5f8a7b01f4552fa
-References: <CGME20250226081354epcas2p44c2f53d569296ac2e5f8a7b01f4552fa@epcas2p4.samsung.com>
-	<20250226081206.680495-1-hyesoo.yu@samsung.com>
-	<c1db529b-f16c-4195-8832-8f2cecd84ece@suse.cz>
-	<a206637e-f63b-432a-aaa2-2e947ae5f4d8@suse.cz> <Z8GwbynIs1N_GeE6@harry>
-	<af14d7c4-cb12-4b48-be67-5dcfc50aec09@suse.cz>
+Content-Transfer-Encoding: 8bit
 
-------m7PZ4BT1ldTQPVcONAqyTj2Zy1CXq_CO7oNb.DekQ57E.lpM=_17f50c_
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
+This patch was originally posted here:
 
-On Fri, Feb 28, 2025 at 05:02:00PM +0100, Vlastimil Babka wrote:
-> On 2/28/25 13:47, Harry Yoo wrote:
-> > On Thu, Feb 27, 2025 at 05:26:26PM +0100, Vlastimil Babka wrote:
-> >> ---8<---
-> >> From c38dadde6293cacdb91f95afc3615c22dec5830a Mon Sep 17 00:00:00 2001
-> >> From: Vlastimil Babka <vbabka@suse.cz>
-> >> Date: Thu, 27 Feb 2025 16:05:46 +0100
-> >> Subject: [PATCH] mm, slab: cleanup slab_bug() parameters
-> >> 
-> >> slab_err() has variadic printf arguments but instead of passing them to
-> >> slab_bug() it does vsnprintf() to a buffer and passes %s, buf.
-> >> 
-> >> To allow passing them directly, turn slab_bug() to __slab_bug() with a
-> >> va_list parameter, and slab_bug() a wrapper with fmt, ... parameters.
-> >> Then slab_err() can call __slab_bug() without the intermediate buffer.
-> >> 
-> >> Also constify fmt everywhere, which also simplifies object_err()'s
-> >> call to slab_bug().
-> >> 
-> >> Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
-> >> ---
-> > 
-> > Looks good to me.
-> > 
-> > FWIW,
-> > Reviewed-by: Harry Yoo <harry.yoo@oracle.com>
-> 
-> Thanks, adding to slab/for-next
-> 
-> 
+https://lore.kernel.org/all/20241213215421.661139-1-thomas.falcon@intel.com/
 
-Looks good to me.
-Thanks! 
+I have rebased on top of Arnaldo's patch here:
 
-------m7PZ4BT1ldTQPVcONAqyTj2Zy1CXq_CO7oNb.DekQ57E.lpM=_17f50c_
-Content-Type: text/plain; charset="utf-8"
+https://lore.kernel.org/all/Z2XCi3PgstSrV0SE@x1/
 
+The original commit message:
+"
+perf script output may show different fields on different core PMU's
+that exist on heterogeneous platforms. For example,
 
-------m7PZ4BT1ldTQPVcONAqyTj2Zy1CXq_CO7oNb.DekQ57E.lpM=_17f50c_--
+perf record -e "{cpu_core/mem-loads-aux/,cpu_core/event=0xcd,\
+umask=0x01,ldlat=3,name=MEM_UOPS_RETIRED.LOAD_LATENCY/}:upp"\
+-c10000 -W -d -a -- sleep 1
+
+perf script:
+
+chromium-browse   46572 [002] 544966.882384:      10000 	cpu_core/MEM_UOPS_RETIRED.LOAD_LATENCY/: 7ffdf1391b0c     10268100142 \
+ |OP LOAD|LVL L1 hit|SNP None|TLB L1 or L2 hit|LCK No|BLK    N/A    5   7    0   7fad7c47425d [unknown] (/usr/lib64/libglib-2.0.so.0.8000.3)
+
+perf record -e cpu_atom/event=0xd0,umask=0x05,ldlat=3,\
+name=MEM_UOPS_RETIRED.LOAD_LATENCY/upp -c10000 -W -d -a -- sleep 1
+
+perf script:
+
+gnome-control-c  534224 [023] 544951.816227:      10000 cpu_atom/MEM_UOPS_RETIRED.LOAD_LATENCY/:   7f0aaaa0aae0  [unknown] (/usr/lib64/libglib-2.0.so.0.8000.3)
+
+Some fields, such as data_src, are not included by default.
+
+The cause is that while one PMU may be assigned a type such as
+PERF_TYPE_RAW, other core PMU's are dynamically allocated at boot time.
+If this value does not match an existing PERF_TYPE_X value,
+output_type(perf_event_attr.type) will return OUTPUT_TYPE_OTHER.
+
+Instead search for a core PMU with a matching perf_event_attr type
+and, if one is found, return PERF_TYPE_RAW to match output of other
+core PMU's.
+"
+
+Suggested-by: Kan Liang <kan.liang@intel.com>
+Signed-off-by: Thomas Falcon <thomas.falcon@intel.com>
+---
+v2: restrict pmu lookup to platforms with more than one core pmu
+v3: only scan core pmu list
+v4: rebase on top of Arnaldo's patch
+v5: update based on Namhyung's feedback here
+https://lore.kernel.org/lkml/Z8YcOidenzGofq7R@google.com/
+---
+ tools/perf/builtin-script.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
+
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index d797cec4f054..4d2764df48a0 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -385,6 +385,19 @@ static int evsel_script__fprintf(struct evsel_script *es, FILE *fp)
+ 		       st.st_size / 1024.0 / 1024.0, es->filename, es->samples);
+ }
+ 
++static bool is_core_pmu_type(unsigned int type)
++{
++	struct perf_pmu *pmu = NULL;
++
++	if (perf_pmus__num_core_pmus() > 1) {
++		while ((pmu = perf_pmus__scan_core(pmu)) != NULL) {
++			if (pmu->type == type)
++				return true;
++		}
++	}
++	return type == PERF_TYPE_RAW;
++}
++
+ static inline int output_type(unsigned int type)
+ {
+ 	switch (type) {
+@@ -395,6 +408,9 @@ static inline int output_type(unsigned int type)
+ 			return type;
+ 	}
+ 
++	if (is_core_pmu_type(type))
++		return PERF_TYPE_RAW;
++
+ 	return OUTPUT_TYPE_OTHER;
+ }
+ 
+-- 
+2.48.1
+
