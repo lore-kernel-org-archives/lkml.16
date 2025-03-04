@@ -1,144 +1,168 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1351C28D05F
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 15:09:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 447F3239579
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 15:09:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741100974; cv=none; b=M1XD3MQQzTjtqUxfIvMylp0qAeLaoD3MQAzVJxqO64ounH6RXSzojLhXi3+VaJJqMw/d+LMKFYfEZo01ae1k6oejkYa0phYMr+51V2DRYe5qtXscqmKQdBJk+apAiM46Kwshs0veFqBHMFQxeLK9OPuORj9g7RCNvfHPOlGm56Q=
+	t=1741100998; cv=none; b=MzzFmumKRR96VylTSH9O+g5ToDpksGEmVuAOoyEhC3S64VCZzNMLxVR+4kOb6vpZKDMJ1tl9P1AK0be+ozT9vxnCLj8IjEDkpkg+NMi1Zue0/zX2LmoqN5JYA3GWYGeF8LnZEW4sTToMU1Zxx1yBDmceD0wfmdWwGrhRy1Qscfg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741100974; c=relaxed/simple;
-	bh=3Z8B5l+iGfg+3kk25clByLiUXRRdAkqAhwjlHnti/yM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=q8lefXkHE/+FY2eE/7hrW4XmttOhBaliiqUK2WRFwzcw962kUvdPMOOExeEQSp8bQGP/DcOXVk8tCwgOdhC9SaAxOx0fAvAmq5uoOXqoPExXuoNwL3jMbV3iOVmIxwfnOAtrKe/Izq+2FhOEEQJg4Oupz4YOmY3/qlQSE0waInY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rYNYEgjm; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1741100998; c=relaxed/simple;
+	bh=opmnGSMl5a3rw4PfYRN77P+Mh1CbJMCOLTe7ToepzFw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GswbOJ8fB+fXv9xGkSwOaT6yTbKCWbv8gSB1c0Yp7gT6H6wL5Jeh70yLts9M8/rlV4fO0F+Pxg+zj41bcPQubK3pzPk86ZX37axMFypkMwxdyBeT5vQ8xVq6SYN4lWOk6EEit/Qb3DZIDEC8Q8hJqj6nEVZI189vw4DA65esHMA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ExPMUZPs; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rYNYEgjm"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-22339936bbfso85437595ad.1
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Mar 2025 07:09:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741100972; x=1741705772; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=eXtflJVWFreoh2RfRDMWyYTeNxkucDM+/OLgGz1etxI=;
-        b=rYNYEgjmNfR2rgmVIuRYciPeCnlBtOZeDqnagTDD8wiA4kpc2QQMiu7j1dsA0QigQI
-         wxdTOpuyhmI3Gr/7LbYiicYkAmqAeFWRscw6pe3K5HrvzrGuSfVfCJiBWAna0gT/1Sod
-         jMWoZepAdPfPDijsCjIBJcRopuYMvV++fFFSwC8nrNTjrMe0OHnaQJOeqtp5anlBw2gE
-         GAPlpqjArgSfUYb1u0ZldfhpsAAOYOEPhzhA1Vx3NT8zHUC79YTnRIMH5QV6SRv2nCvY
-         UM+KP3KNiBHtxoKhFlF28V/X8jMYpetZ6brGFB2LebCox5V0r5TyOE0q4AbS9AK4jTAR
-         gx9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741100972; x=1741705772;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=eXtflJVWFreoh2RfRDMWyYTeNxkucDM+/OLgGz1etxI=;
-        b=vCMdcFo9Q3LJSLw+yVEdoS51BnNz6t/RpActvaXRpYNqMTgNLlrRxRAyleg48T6Zpz
-         KbOZTTXmx0A/jkAyfJwVUzl8MKqw9d68+xN1KHHFgQ9/Nxyu4SvD5WHank+gVjBoQ9TB
-         /6ifx6j6G7+xS2JtJBUgdwaJXNPb34nlu8mYvblJGWTdKj+IyM6AT2izApMgtUXqk0fi
-         TlfQxbaV/O5+omSe+OkEMqooWlbp/I4AOCh0BS/5ORZpeYvjuo7gZ/1CqMNg7m1hsZ23
-         6G5R4uJ0kyKiWpjqkHT2ciTLV3q+YtP2+QSAm1ObB8gIso3i2LtOLr4xfIJDc4OrBOSM
-         Q6Gg==
-X-Forwarded-Encrypted: i=1; AJvYcCXl1OI6OkY4WHIa85p5ZNS5U0rGxrXblQhcFCAn8/xQM/iPs7qAzwPKoabu4RVwL5dnTxwRk1ozmPP5b3M=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxuErB9Ly7PdTnw05BOdMX72nLXyhGWQqoHYMa+qdaqJzT0Mi0K
-	FtR27cl3u/UyfXZqkvgkBrbMxay4DbOU1mg24dKGf8TaOVz5sk9HZUWJXq1Iig==
-X-Gm-Gg: ASbGncuVJE4INZJCSGmi4LhbE0S328a6xVffywPA4mKvHjOhjY3KrKrtd31zM5wa0rQ
-	hKs1tKE5kB0RRprEasL9GtsjbYs9P2zhBv9WE+MF+v3qX2Yt/4eUnS1+RrL8hS+biS3EV1mU3j8
-	d9KqqwA0D13RhCLxJzV2trvZJ9uroxL4FNfQmxEBspk4vY56zMctNKszCFWvoqU+ioroGLdnn7A
-	NL1hT08SLi6s8V8S8Ty0MenS8m8dbE9VKWVSMcSerjfRCl1etrQbw9TsgYszsq1CyFP9yXjiXHZ
-	5RaPqBfaYVz0VUBNrl7pBrWMtR837TeV8LHupteHc1sggJorqL85T0Q=
-X-Google-Smtp-Source: AGHT+IHH3kAeBAzG7ggYHAxEuKnNP4t+N+bzoJzUJ161LlHrI1a78f2EZCVwmMROqGLsC4q+42HbGQ==
-X-Received: by 2002:a05:6a20:4310:b0:1ee:c8e7:203c with SMTP id adf61e73a8af0-1f2f4d2edf8mr31762576637.24.1741100972347;
-        Tue, 04 Mar 2025 07:09:32 -0800 (PST)
-Received: from thinkpad ([120.60.51.199])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-aee7de1a49esm10249081a12.17.2025.03.04.07.09.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Mar 2025 07:09:31 -0800 (PST)
-Date: Tue, 4 Mar 2025 20:39:24 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Jim Quinlan <james.quinlan@broadcom.com>
-Cc: linux-pci@vger.kernel.org, Nicolas Saenz Julienne <nsaenz@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-	Cyril Brulebois <kibi@debian.org>,
-	Stanimir Varbanov <svarbanov@suse.de>,
-	bcm-kernel-feedback-list@broadcom.com, jim2101024@gmail.com,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>,
-	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-rpi-kernel@lists.infradead.org>,
-	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>,
-	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 7/8] PCI: brcmstb: Make two changes in MDIO register
- fields
-Message-ID: <20250304150924.a6ygwzca3lwgpt7h@thinkpad>
-References: <20250214173944.47506-1-james.quinlan@broadcom.com>
- <20250214173944.47506-8-james.quinlan@broadcom.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ExPMUZPs"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741100996; x=1772636996;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=opmnGSMl5a3rw4PfYRN77P+Mh1CbJMCOLTe7ToepzFw=;
+  b=ExPMUZPs754CB68mklRAaJkBgRbqgc6Ft5M5U6ZGj4gaGe7LTguWAB6y
+   zKSfLVexmHCMHMfWjkPXukeR2kzflwwFkyweZSBq4s+g/aXttoWAC2KEN
+   0LQ2cuEK/8zKxL4Ms9VDb27hMjDJTXIgWIBIbkKH37/2h4A43zqxIla3F
+   9QLiM1y8dX9IAp2RTqJ71V5J4RK0p1cGq0/VcCBeaYvEJtUoiGlt+diCH
+   nGjdS0P+WGZTzh14A46ahoNGO4iFGi+HDwwTbQIwS6g5P786FBlBli5ND
+   5PQSlzjBOSz7/suVWrtfStjOde3QKOX9zweXUsUnK2My5Pw1YpugzpEuY
+   A==;
+X-CSE-ConnectionGUID: Wy9RbGzWS2q6EG8bJXxL7Q==
+X-CSE-MsgGUID: eA7+tcrvTCiNDaaCT8jRHg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11363"; a="42216272"
+X-IronPort-AV: E=Sophos;i="6.14,220,1736841600"; 
+   d="scan'208";a="42216272"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2025 07:09:56 -0800
+X-CSE-ConnectionGUID: Sg0R8AiqRrqT13SZRdhoQA==
+X-CSE-MsgGUID: WdUDCJMiSBafbrn400eNuQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,220,1736841600"; 
+   d="scan'208";a="118404768"
+Received: from kinlongk-desk.amr.corp.intel.com (HELO [10.125.109.94]) ([10.125.109.94])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2025 07:09:54 -0800
+Message-ID: <ec7247d0-0379-487d-a2d7-21b81dcd0c38@intel.com>
+Date: Tue, 4 Mar 2025 07:10:13 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250214173944.47506-8-james.quinlan@broadcom.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v14 03/13] x86/mm: add INVLPGB support code
+To: Borislav Petkov <bp@alien8.de>
+Cc: Rik van Riel <riel@surriel.com>, x86@kernel.org,
+ linux-kernel@vger.kernel.org, peterz@infradead.org,
+ dave.hansen@linux.intel.com, zhengqi.arch@bytedance.com,
+ nadav.amit@gmail.com, thomas.lendacky@amd.com, kernel-team@meta.com,
+ linux-mm@kvack.org, akpm@linux-foundation.org, jackmanb@google.com,
+ jannh@google.com, mhklinux@outlook.com, andrew.cooper3@citrix.com,
+ Manali.Shukla@amd.com, mingo@kernel.org
+References: <20250226030129.530345-1-riel@surriel.com>
+ <20250226030129.530345-4-riel@surriel.com>
+ <20250228194734.GGZ8IS1iFVpPzmEyYl@fat_crate.local>
+ <30c721e0-338d-4172-989c-5226d584bcbc@intel.com>
+ <34b80474-a309-493b-81e9-3a7d4de8a369@intel.com>
+ <20250304110032.GEZ8bdUOg2WLUrhMcm@fat_crate.local>
+From: Dave Hansen <dave.hansen@intel.com>
+Content-Language: en-US
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <20250304110032.GEZ8bdUOg2WLUrhMcm@fat_crate.local>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Feb 14, 2025 at 12:39:35PM -0500, Jim Quinlan wrote:
-> The HW team has decided to "tighten" some field definitions in the MDIO
-> packet format.  Fortunately these two changes may be made in a backwards
-> compatible manner.
+On 3/4/25 03:00, Borislav Petkov wrote:
+> On Mon, Mar 03, 2025 at 11:23:58AM -0800, Dave Hansen wrote:
+>> Here's a plain diff if you just want to squish it in.
 > 
-> The CMD field used to be 12 bits and now is one.  This change is backwards
-> compatible because the field's starting bit position is unchanged and the
-> only commands we've used have values 0 and 1.
+>> diff --git a/arch/x86/include/asm/tlb.h b/arch/x86/include/asm/tlb.h
+>> index 5375145eb9596..3bd617c204346 100644
+>> --- a/arch/x86/include/asm/tlb.h
+>> +++ b/arch/x86/include/asm/tlb.h
+>> @@ -28,6 +28,11 @@ static inline void invlpg(unsigned long addr)
+>>  	asm volatile("invlpg (%0)" ::"r" (addr) : "memory");
+>>  }
+>>  
+>> +enum invlpgb_stride {
 > 
-> The PORT field's width has been changed from four to five bits.  When
-> written, the new bit is not contiguous with the other four.  Fortunately,
-> this change is backwards compatible because we have never used anything
-> other than 0 for the port field's value.
+> Right, this is an address stride, as the text calls it.
 > 
-> Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
+>> +	NO_STRIDE  = 0,
+>> +	PTE_STRIDE = 0,
+> 
+> Ok, so those are confusing. No stride is PTE stride so let's just zap
+> NO_STRIDE.
 
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Passing "PTE_STRIDE" to an operation that doesn't have a stride is
+pretty confusing too.
 
-- Mani
+...
+>  /* Flush all mappings, including globals, for all PCIDs. */
+> @@ -117,21 +126,21 @@ static inline void invlpgb_flush_all(void)
+>  	 * as it is cheaper.
+>  	 */
+>  	guard(preempt)();
+> -	__invlpgb(0, 0, 0, 1, 0, INVLPGB_INCLUDE_GLOBAL);
+> +	__invlpgb(0, 0, 0, 1, PTE_STRIDE, INVLPGB_FLAG_INCLUDE_GLOBAL);
+>  	__tlbsync();
+>  }
 
-> ---
->  drivers/pci/controller/pcie-brcmstb.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-> index 923ac1a03f85..cb897d4b2579 100644
-> --- a/drivers/pci/controller/pcie-brcmstb.c
-> +++ b/drivers/pci/controller/pcie-brcmstb.c
-> @@ -175,8 +175,9 @@
->  #define MDIO_PORT0			0x0
->  #define MDIO_DATA_MASK			0x7fffffff
->  #define MDIO_PORT_MASK			0xf0000
-> +#define MDIO_PORT_EXT_MASK		0x200000
->  #define MDIO_REGAD_MASK			0xffff
-> -#define MDIO_CMD_MASK			0xfff00000
-> +#define MDIO_CMD_MASK			0x00100000
->  #define MDIO_CMD_READ			0x1
->  #define MDIO_CMD_WRITE			0x0
->  #define MDIO_DATA_DONE_MASK		0x80000000
-> @@ -327,6 +328,7 @@ static u32 brcm_pcie_mdio_form_pkt(int port, int regad, int cmd)
->  {
->  	u32 pkt = 0;
->  
-> +	pkt |= FIELD_PREP(MDIO_PORT_EXT_MASK, port >> 4);
->  	pkt |= FIELD_PREP(MDIO_PORT_MASK, port);
->  	pkt |= FIELD_PREP(MDIO_REGAD_MASK, regad);
->  	pkt |= FIELD_PREP(MDIO_CMD_MASK, cmd);
-> -- 
-> 2.43.0
-> 
+This one, for example. It's not flushing PTEs an doesn't have a start
+address or nr>0.
 
--- 
-மணிவண்ணன் சதாசிவம்
+So, we could have the enum be totally divorced from the hardware type:
+
+	NO_STRIDE,
+	PTE_STRIDE,
+	PMD_STRIDE
+
+and decode it at the end:
+
+	if (stride == PMD_STRIDE)
+		foo | PMD_STRIDE_BIT;
+
