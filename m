@@ -1,317 +1,174 @@
-Received: from mail-ua1-f53.google.com (mail-ua1-f53.google.com [209.85.222.53])
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 364BC202F79;
-	Tue,  4 Mar 2025 13:54:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADED0204C18
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 13:54:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741096445; cv=none; b=Xm2l7KkJ053wG1+G3a0QUsCIntcScpkd9rUzdWvmktbCe0eGt8BsbGM4ohtonk+d72AQ6QALcFbxigQSNnCmEfs3DOK3nMAWYUEMfFyC8IncjzyI6jJigA8APLJLubwWRXd6sIedvgnNhju95FrhNMaABEAfO9rs9an+B1IcsfM=
+	t=1741096451; cv=none; b=a/MRIYPslwMKHcQ0/Tl4sgXNtcmgpp2ZMA1jieYV30oMZh6U1mqA49XgNiYzi/1ye6dkSUbMY+yEREO+sBtVyEJXVF/98+ShTzbCy8QFhibDDd0xQoqRRbGoKb3PiW5xhcWjMJQbiCDfWofWZYIRNHCjDuwANOlgvZjoe3MZFSg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741096445; c=relaxed/simple;
-	bh=fqkgvHjPswFAMvaE5kReX52SACWPZ9WhJfUporlkjBs=;
-	h=Mime-Version:Content-Type:Date:Message-Id:From:To:Cc:Subject:
-	 References:In-Reply-To; b=saSR2Cn1VMsaECMTTIaDry47oafx76uvDm5S63Mbxy2D6si+VDbymAbS+bVfIg0DE/HbcyC/JPGekpjdu1J9zc15G8PGi0vPIX9JF6w+wQYhwDFCWGiDljsUjUBVUAJPnJV+cFLnjeofhXGAR/i6Bko9K4oaTUgGcTxmWKFivyo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=E+hIQATt; arc=none smtp.client-ip=209.85.222.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741096451; c=relaxed/simple;
+	bh=zeH16qUQgun19UqozJUeAy3+MM8xqv07ZUw+BZ2QSyw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LRKxr7TtvcnXJN64u068DLyg5O7YKIoKlFOhZqE9MQ4UzisvFWYnIITwK8nIXoT3V6WxKQ+7S22+R2j98NYgfEB8oU5mBwp2VNJPBCmQoJpj/okzTwqyGYEgwIcJP5iEQ6bD6WlNLJtfX7PyUqfxdmMvLkrACYQSubEvq2rt6EU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Zf8pxSNy; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E+hIQATt"
-Received: by mail-ua1-f53.google.com with SMTP id a1e0cc1a2514c-86b0899ad8bso2177117241.0;
-        Tue, 04 Mar 2025 05:54:03 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Zf8pxSNy"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-4393dc02b78so36757965e9.3
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Mar 2025 05:54:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741096443; x=1741701243; darn=vger.kernel.org;
-        h=in-reply-to:references:subject:cc:to:from:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=D1lRAoDM8LwgraF/afnpgCSOZyx5bcbveUqB2scrlYM=;
-        b=E+hIQATtLp/+pVbQhWI6kVtK+1V0qP9IgbabgwjkTmOCKqkqYPv2w6qV2wbI2BA1zK
-         qkPPXGqRwqAjoSYCbDBzH/BTygkxZOSIC6rIqoJgpUdDEF7RmC8RUOMpt1p9P5rSx0en
-         1fkDtheZwsv9XVpwpj3GMD/rsyT3VAmQEe6P9Eh6IBTwMiC3uKxvkhY5KQIw4bKgM97I
-         XQ5zDkQQTyZpPnrETidOO0gnqncTNEkXHuEZqMzQ/U+yMKJ2xU8x9sucOjZ4BJSDLRnW
-         8DGrsqJa1SNvVxbdCaeaPaYvgVBWuqWRsfBH3GR6tin7gXXvvCkBGN7kSPHTyhMkkxFu
-         8YGw==
+        d=linaro.org; s=google; t=1741096448; x=1741701248; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Z6ET8MYxAHAqXMFH0yBJKC2mR8XDHbGjevdrSyQ6aJc=;
+        b=Zf8pxSNyKmgxdsWSGw2kL0WPEz//1ylBUb3/h/yatywqUtoksWzTBLJpKvzHR7ojUC
+         iIexVX2m8FuG5I8hLcRkD4kIOyvBB8s2kH2QhY9CBjza8t1v7EsT/Rn/hDSkGygzY9sB
+         Im/YoFwsDNYGjJyLyWiqMmKfWXTWKqO8S4wA/2oLzMXbtGftEIGLN9uEoilv/kTol26d
+         pVRmPt971bBwIJPu6UnKacUEYVVjhi0EzX7vEN6hfO3/q5DwUBpJlI1DW+MO5LgGDXJN
+         JQ6ENdsWcLgn+XVy0Iycm8CLtZATZD9+cDTrGZkr4o7GTcO2CPm86OpTJo9+6QM9n+13
+         aGpQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741096443; x=1741701243;
-        h=in-reply-to:references:subject:cc:to:from:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=D1lRAoDM8LwgraF/afnpgCSOZyx5bcbveUqB2scrlYM=;
-        b=L0ARj/kZ3F09rNhAd46ZZ0hj8rqXldmDW7RabMhl82zSQ4KG9DeMtN2D0G7LHNqYSH
-         XN17cLExSZJp0kcEYQuQ9IdTkajpN7WuSe7fo7FLHSdgaIZhoG+w3/E+hVqfayK2UyHg
-         LU3T39QlIdv6U1ohFh4JW0ESOugOKzF9u2KlPU4yr9SRpAme0aMWqY3w7JKrfz9DoDRG
-         qcD+e7jZxXqPE6S9U5IdAKYa6JVClf1LGo5tDjbLztaFXmhg2z0QydjPcUnlh1j+u/pQ
-         pkLzlPFF1vPkvWOSS3QHskx2/OUdr9XlkpYkgDOkdXlwW5ACBYIIFrt54KKxhWKGdK4D
-         trIA==
-X-Forwarded-Encrypted: i=1; AJvYcCUerqb1VH762E5I80HoLxKmWIlxz+gmgDR6gLmkhPgxg/KL/ne/USiaEMY0P1g9XBCMUOAj1hwZyc3C@vger.kernel.org, AJvYcCUewhO7t1JBBugBeafZzLxcr0kUjR6ReRKfxcWqbie3nxe7po60seWmJ7i05wdfy7VHG/tvYS7XcEmZLh67BzR55zcM7g==@vger.kernel.org, AJvYcCUyO1t4QKTbZBx+9f6q6fI9GRWVLwa8eaHKghToV15EUVm20k71kDc3ktLwpidgc4//MbCDh5kk2Tr3ugp7@vger.kernel.org
-X-Gm-Message-State: AOJu0YwG+OfPjDmjE2sRTyIZX+P3rl58RtoySmixSUiJSNocSPMVkJ/b
-	tLOTjX3ieuFvOJlgd5m6rRSp9jepyV8OjF6kSV+QAaYAxoF9v72C
-X-Gm-Gg: ASbGnctkdII8S9nD4H122Nq0HvZpJEAaALjf8mtsgbL2Yy8QENdJuKRpvK0iA0OSlQP
-	XxZPGFrS2W1IxbckDebwsL0sAfQxDacx783DTQcmhPJa7NXO/+5SH8Sw8FIYqGOvX2PplvgMaW9
-	q3bsStIU/Hq4FpFFR29nafnDwMeYulQhTfrWrQhekpjgHkQrIJxmJAp9RO/C9OpTNK8BjQ3+9E3
-	XuB+F18QEoE65+nxo+WHC3ZQ9Ei6kwNV6c5zGKW/gBPEUSLgxtSFcavkr5gVNYqBCPkGOa8TO1R
-	evbG5G/YAiL1yfAs5wRlhkMKdnZvQ6/rjqk3
-X-Google-Smtp-Source: AGHT+IEmOSsLfZwMbSUmujd2VobQKPKffA1MxlWqFJZua7YydsrISWQUTjDBmQQVurvETyeZkh4MsQ==
-X-Received: by 2002:a05:6102:918:b0:4c1:9536:523c with SMTP id ada2fe7eead31-4c195365578mr5207709137.24.1741096442934;
-        Tue, 04 Mar 2025 05:54:02 -0800 (PST)
-Received: from localhost ([2800:bf0:82:3d2:9e61:1a62:1a8c:3e62])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-86b3dd048f6sm1928400241.21.2025.03.04.05.54.00
+        d=1e100.net; s=20230601; t=1741096448; x=1741701248;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Z6ET8MYxAHAqXMFH0yBJKC2mR8XDHbGjevdrSyQ6aJc=;
+        b=Ei/tZCHSri1qy+BDAuUMab76iJqvWEzJTW6bUhB7esfCMcdm5kccHUVZCCXlCpQLwy
+         mcRtADTHloIW+1SQFKMDmc8hxl3QgK58BK+MqprrASnTT+09ErHnb4D5hBK9HwUvefdO
+         UYemN+4xk6uymNSgdDay5tyLj9gPdNqu0ZuqaTOcgbZ4k7UbjTXEwXY8ugPr1axvGqKu
+         ir2IcSXUcrxrHXx01fQI2FRqJhMWeayW/cRDDxd9p26KsCYS5JEUDCO5cpbOnSzOSrAf
+         l7eExDK+ojDw/C8zYSJ/fC9+zNXoZBiKWX51ftjcrS0Nn2lkNtg1hrDMET1aZtpQuo7n
+         kY4A==
+X-Forwarded-Encrypted: i=1; AJvYcCVSkqOoNWD3/IxoCzZ2UJESDQUG2vREzykwgWtnakqgp3m+YQrBXK2kcqUGMl6UxUIwNqIbzNmh9/+jpso=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxMm61T6LpZWcqwsw3kGrhAeNI8edD1wg/MSwKZM55uuPR5Jrre
+	nXml3lFxptHmbNTXoGOigbUmZnsf68tHZXKtmASJrs+aHG/r7q+CHnMa86332WQ=
+X-Gm-Gg: ASbGncsipA2bLxQEfwTT/ItNDKGqQ3xLTHy94SjxDIWhhBF3CG+nBMzCmjJxfjEAR+/
+	4JwDbwYiGDSEHlU7RvYOQw+NbivwFYJT/CLbrZYafyziSq8MOYyP+5KAX+HvYt8gviX9PYjvdma
+	W8eQpc0vILIa/vdLuHZhouesbwliEIm7e8mgML8pYeVDbhjoKGD8vEN4tBN+A0wW9cAYuIMVLkc
+	kLW4TZxYErLpGhA3AaHp5q9iQCWhUVv1+n83ER1+Jz/c/uMbElPEw62YJnRFOSk7G1wPtWSe+98
+	WbnqCtdgS0a74YXsL+ERFOsM09sP2TYWF+eUL8wIrn5hgdSn+9xNbq4=
+X-Google-Smtp-Source: AGHT+IFHlRbmRv8rbhJ5XKKfhGPa/iDq0l5JnEEMy/k3BPLKE+6aVxU2AZ65AeORq+30N2372lL66Q==
+X-Received: by 2002:a05:600c:4693:b0:439:88bb:d017 with SMTP id 5b1f17b1804b1-43ba66da7aamr137510265e9.6.1741096447926;
+        Tue, 04 Mar 2025 05:54:07 -0800 (PST)
+Received: from [192.168.1.247] ([209.198.129.225])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43aba58720esm231475695e9.40.2025.03.04.05.54.06
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 04 Mar 2025 05:54:02 -0800 (PST)
+        Tue, 04 Mar 2025 05:54:07 -0800 (PST)
+Message-ID: <65268cde-cefc-4c29-9ffc-7d85492ab125@linaro.org>
+Date: Tue, 4 Mar 2025 13:54:05 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Tue, 04 Mar 2025 08:53:59 -0500
-Message-Id: <D87J6E7DFLS0.1BY00BAZFWEH7@gmail.com>
-From: "Kurt Borja" <kuurtb@gmail.com>
-To: "Antheas Kapenekakis" <lkml@antheas.dev>
-Cc: "Mario Limonciello" <superm1@kernel.org>, "Shyam Sundar S K"
- <Shyam-sundar.S-k@amd.com>, "Rafael J . Wysocki" <rafael@kernel.org>, "Hans
- de Goede" <hdegoede@redhat.com>, =?utf-8?q?Ilpo_J=C3=A4rvinen?=
- <ilpo.jarvinen@linux.intel.com>, "Luke D . Jones" <luke@ljones.dev>, "Mark
- Pearson" <mpearson-lenovo@squebb.ca>, "open list:AMD PMF DRIVER"
- <platform-driver-x86@vger.kernel.org>, "open list"
- <linux-kernel@vger.kernel.org>, "open list:ACPI"
- <linux-acpi@vger.kernel.org>, "Derek J . Clark"
- <derekjohn.clark@gmail.com>, <me@kylegospodneti.ch>, "Denis Benato"
- <benato.denis96@gmail.com>, "Mario Limonciello" <mario.limonciello@amd.com>
-Subject: Re: [PATCH v2 1/1] ACPI: platform_profile: Treat quiet and low
- power the same
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a
-References: <20250304064745.1073770-1-superm1@kernel.org>
- <20250304064745.1073770-2-superm1@kernel.org>
- <CAGwozwHniWGQ7qK6FYD_WK5zNjkro7-Q1nTcFPAuWDt9UQ+noA@mail.gmail.com>
- <23d6c735-e94f-4d43-87b0-ff119941fcac@kernel.org>
- <D87ILMWSRUPG.3FHTWG38N2IFJ@gmail.com>
- <CAGwozwHXd6frhGCOrm8_tg2=M4sHCu_JBmqodWdKUF+AuL2TNw@mail.gmail.com>
-In-Reply-To: <CAGwozwHXd6frhGCOrm8_tg2=M4sHCu_JBmqodWdKUF+AuL2TNw@mail.gmail.com>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v2] perf Documentation: Describe the PMU naming
+ convention
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Ian Rogers <irogers@google.com>, Robin.Murphy@arm.com
+Cc: Robin Murphy <robin.murphy@arm.com>,
+ "Liang, Kan" <kan.liang@linux.intel.com>,
+ Randy Dunlap <rdunlap@infradead.org>,
+ Tuan Phan <tuanphan@os.amperecomputing.com>,
+ Thomas Richter <tmricht@linux.ibm.com>,
+ Bhaskara Budiredla <bbudiredla@marvell.com>,
+ Bharat Bhushan <bbhushan2@marvell.com>, Peter Zijlstra
+ <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ James Clark <james.clark@arm.com>, Ravi Bangoria <ravi.bangoria@amd.com>,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Will Deacon <will@kernel.org>, Stephane Eranian <eranian@google.com>
+References: <20240606044959.335715-1-irogers@google.com>
+ <c7d6eedb-7c5e-4411-a83f-4328dc75ec46@linux.intel.com>
+ <CAP-5=fXY2Ofr_GRc7Mq7BfoR+2150o8e1JeyGctcGPRG70DqPg@mail.gmail.com>
+ <060b220d-f7d6-4594-9b2b-e878a2ba98c6@arm.com>
+ <CAP-5=fU+pigNLi+cTFwEmyG5tO+JHTGDgWh1sYbCiX5TppdLnQ@mail.gmail.com>
+ <CAP-5=fVBsCxHbqQkEbG2zzATDYfN8bP6mN9ixkae7o9eNB5w+Q@mail.gmail.com>
+ <Z2XIitYfFaZJltul@x1>
+Content-Language: en-US
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <Z2XIitYfFaZJltul@x1>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Tue Mar 4, 2025 at 8:32 AM -05, Antheas Kapenekakis wrote:
-> On Tue, 4 Mar 2025 at 14:28, Kurt Borja <kuurtb@gmail.com> wrote:
->>
->> Hi all,
->>
->> On Tue Mar 4, 2025 at 7:49 AM -05, Mario Limonciello wrote:
->> >
->> >
->> > On 3/4/25 02:38, Antheas Kapenekakis wrote:
->> >> On Tue, 4 Mar 2025 at 07:48, Mario Limonciello <superm1@kernel.org> w=
-rote:
->> >>>
->> >>> From: Mario Limonciello <mario.limonciello@amd.com>
->> >>>
->> >>> When two drivers don't support all the same profiles the legacy inte=
-rface
->> >>> only exports the common profiles.
->> >>>
->> >>> This causes problems for cases where one driver uses low-power but a=
-nother
->> >>> uses quiet because the result is that neither is exported to sysfs.
->> >>>
->> >>> If one platform profile handler supports quiet and the other
->> >>> supports low power treat them as the same for the purpose of
->> >>> the sysfs interface.
->> >>>
->> >>> Fixes: 688834743d67 ("ACPI: platform_profile: Allow multiple handler=
-s")
->> >>> Reported-by: Antheas Kapenekakis <lkml@antheas.dev>
->> >>> Closes: https://lore.kernel.org/platform-driver-x86/e64b771e-3255-42=
-ad-9257-5b8fc6c24ac9@gmx.de/T/#mc068042dd29df36c16c8af92664860fc4763974b
->> >>> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
->> >>> ---
->> >>>   drivers/acpi/platform_profile.c | 38 +++++++++++++++++++++++++++++=
-+---
->> >>>   1 file changed, 35 insertions(+), 3 deletions(-)
->> >>>
->> >>> diff --git a/drivers/acpi/platform_profile.c b/drivers/acpi/platform=
-_profile.c
->> >>> index 2ad53cc6aae53..d9a7cc5891734 100644
->> >>> --- a/drivers/acpi/platform_profile.c
->> >>> +++ b/drivers/acpi/platform_profile.c
->> >>> @@ -73,8 +73,20 @@ static int _store_class_profile(struct device *de=
-v, void *data)
->> >>>
->> >>>          lockdep_assert_held(&profile_lock);
->> >>>          handler =3D to_pprof_handler(dev);
->> >>> -       if (!test_bit(*bit, handler->choices))
->> >>> -               return -EOPNOTSUPP;
->> >>> +       if (!test_bit(*bit, handler->choices)) {
->> >>> +               switch (*bit) {
->> >>> +               case PLATFORM_PROFILE_QUIET:
->> >>> +                       *bit =3D PLATFORM_PROFILE_LOW_POWER;
->> >>> +                       break;
->> >>> +               case PLATFORM_PROFILE_LOW_POWER:
->> >>> +                       *bit =3D PLATFORM_PROFILE_QUIET;
->> >>> +                       break;
->> >>> +               default:
->> >>> +                       return -EOPNOTSUPP;
->> >>> +               }
->> >>> +               if (!test_bit(*bit, handler->choices))
->> >>> +                       return -EOPNOTSUPP;
->> >>> +       }
->> >>>
->> >>>          return handler->ops->profile_set(dev, *bit);
->> >>>   }
->> >>> @@ -252,8 +264,16 @@ static int _aggregate_choices(struct device *de=
-v, void *data)
->> >>>          handler =3D to_pprof_handler(dev);
->> >>>          if (test_bit(PLATFORM_PROFILE_LAST, aggregate))
->> >>>                  bitmap_copy(aggregate, handler->choices, PLATFORM_P=
-ROFILE_LAST);
->> >>> -       else
->> >>> +       else {
->> >>> +               /* treat quiet and low power the same for aggregatio=
-n purposes */
->> >>> +               if (test_bit(PLATFORM_PROFILE_QUIET, handler->choice=
-s) &&
->> >>> +                   test_bit(PLATFORM_PROFILE_LOW_POWER, aggregate))
->> >>> +                       set_bit(PLATFORM_PROFILE_QUIET, aggregate);
->> >>> +               else if (test_bit(PLATFORM_PROFILE_LOW_POWER, handle=
-r->choices) &&
->> >>> +                        test_bit(PLATFORM_PROFILE_QUIET, aggregate)=
-)
->> >>> +                       set_bit(PLATFORM_PROFILE_LOW_POWER, aggregat=
-e);
->> >>>                  bitmap_and(aggregate, handler->choices, aggregate, =
-PLATFORM_PROFILE_LAST);
->> >>> +       }
->> >>
->> >> So you end up showing both? If that's the case, isn't it equivalent t=
-o
->> >> just make amd-pmf show both quiet and low-power?
->> >>
->> >> I guess it is not ideal for framework devices. But if asus devices en=
-d
->> >> up showing both, then it should be ok for framework devices to show
->> >> both.
->> >>
->> >> I like the behavior of the V1 personally.
->> >
->> > No; this doesn't cause it to show both.  It only causes one to show up=
-.
->> > I confirmed it with a contrived situation on my laptop that forced
->> > multiple profile handlers that supported a mix.
->> >
->> >
->> > # cat /sys/firmware/acpi/platform_profile*
->> > low-power
->> > low-power balanced performance
->> >
->> > # cat /sys/class/platform-profile/platform-profile-*/profile
->> > quiet
->> > quiet
->> > quiet
->> > quiet
->> > quiet
->> > quiet
->> > quiet
->> > quiet
->> > quiet
->> > quiet
->> > quiet
->> > quiet
->> > quiet
->> > quiet
->> > quiet
->> > quiet
->> > quiet
->> > quiet
->> > quiet
->> > quiet
->> > quiet
->> > quiet
->> > quiet
->> > quiet
->> > low-power
->> >
->> >>
->> >>>          return 0;
->> >>>   }
->> >>> @@ -305,6 +325,13 @@ static int _aggregate_profiles(struct device *d=
-ev, void *data)
->> >>>          if (err)
->> >>>                  return err;
->> >>>
->> >>> +       /* treat low-power and quiet as the same */
->> >>> +       if ((*profile =3D=3D PLATFORM_PROFILE_LOW_POWER &&
->> >>> +            val =3D=3D PLATFORM_PROFILE_QUIET) ||
->> >>> +           (*profile =3D=3D PLATFORM_PROFILE_QUIET &&
->> >>> +            val =3D=3D PLATFORM_PROFILE_LOW_POWER))
->> >>> +               *profile =3D val;
->> >>> +
->> >>>          if (*profile !=3D PLATFORM_PROFILE_LAST && *profile !=3D va=
-l)
->> >>>                  *profile =3D PLATFORM_PROFILE_CUSTOM;
->> >>>          else
->> >>> @@ -531,6 +558,11 @@ struct device *platform_profile_register(struct=
- device *dev, const char *name,
->> >>>                  dev_err(dev, "Failed to register platform_profile c=
-lass device with empty choices\n");
->> >>>                  return ERR_PTR(-EINVAL);
->> >>>          }
->> >>> +       if (test_bit(PLATFORM_PROFILE_QUIET, pprof->choices) &&
->> >>> +           test_bit(PLATFORM_PROFILE_LOW_POWER, pprof->choices)) {
->> >>> +               dev_err(dev, "Failed to register platform_profile cl=
-ass device with both quiet and low-power\n");
->> >>> +               return ERR_PTR(-EINVAL);
->> >>> +       }
->> >>
->> >> Can you avoid failing here? It caused a lot of issues in the past (th=
-e
->> >> WMI driver bails). a dev_err should be enough. Since you do not fail
->> >> maybe it can be increased to dev_crit.
->> >>
->> >> There is at least one driver that implements both currently, and a fi=
-x
->> >> would have to precede this patch.
->> >
->> > Oh, acer-wmi?  Kurt; can you please comment?  Are both simultaneous?
->>
->> There are a few laptops supported by alienware-wmi that definitely have
->> both (including mine). The acer-wmi and the samsung-galaxybook drivers
->> also probe for available choices dynamically, so some of those devices
->> may be affected by this too.
->>
->> So yes, we shouldn't fail registration here.
->>
->> Anyway, I like this approach more than v1. What do you think about
->> constraining this fix to the legacy interface?
->
-> AFAIK new interface is ok and should not be modified. None of the
-> previous solutions touched it (well, changing quiet to low-power did).
-> But I still expect the legacy interface to work the same way on 6.14.
 
-This patch also permanently alias quiet and low-power for the new
-interface, if either one is not available.
 
->
-> What happens if there is one handler that does low-power and one that
-> does quiet? Is one choice preferred? And then are writes accepted in
-> both?
->
-> I cannot have the same device requiring low-power and quiet depending
-> on kernel version or boot. I do tdp controls per manufacturer.
-
-I'm not sure what you mean here.
-
---=20
- ~ Kurt
-
->
->> --
->>  ~ Kurt
+On 20/12/2024 7:42 pm, Arnaldo Carvalho de Melo wrote:
+> On Fri, Dec 20, 2024 at 11:16:46AM -0800, Ian Rogers wrote:
+>> On Wed, Oct 23, 2024 at 9:21 AM Ian Rogers <irogers@google.com> wrote:
+>>>
+>>> On Wed, Oct 23, 2024 at 2:34 AM Robin Murphy <robin.murphy@arm.com> wrote:
+>>>>
+>>>> On 2024-10-23 5:06 am, Ian Rogers wrote:
+>>>>> On Thu, Jun 6, 2024 at 11:15 AM Liang, Kan <kan.liang@linux.intel.com> wrote:
+>>>>>>
+>>>>>>
+>>>>>>
+>>>>>> On 2024-06-06 12:49 a.m., Ian Rogers wrote:
+>>>>>>> It is an existing convention to use suffixes with PMU names. Try to
+>>>>>>> capture that convention so that future PMU devices may adhere to it.
+>>>>>>>
+>>>>>>> The name of the file and date within the file try to follow existing
+>>>>>>> conventions, particularly sysfs-bus-event_source-devices-events.
+>>>>>>>
+>>>>>>> Signed-off-by: Ian Rogers <irogers@google.com>
+>>>>>>> Reviewed-by: Randy Dunlap <rdunlap@infradead.org>
+>>>>>>> ---
+>>>>>>>    .../testing/sysfs-bus-event_source-devices    | 24 +++++++++++++++++++
+>>>>>>>    1 file changed, 24 insertions(+)
+>>>>>>>    create mode 100644 Documentation/ABI/testing/sysfs-bus-event_source-devices
+>>>>>>>
+>>>>>>
+>>>>>> Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
+>>>>>
+>>>>> Thanks for all the reviews. Could we land this?
+>>>>
+>>>> Hmm, it's not always going to be strictly true as written though - we
+>>>> will also have cases where multiple PMU instances owned by the same
+>>>> driver don't all support the same events/filters/etc., and/or are
+>>>> entirely unrelated such that the same event encoding may mean completely
+>>>> different things. I've just landed a driver where not only are the
+>>>> instances going to be heterogeneous (since it's for arbitrary bits of
+>>>> interconnect), but for hierarchy reasons the most logical place to put
+>>>> the instance ID in the name wasn't even at the end :(
+>>>
+>>> Right, I was trying to capture what the tool is doing and trying to
+>>> encompass the problems hex suffix create. Another example of that
+>>> problem recently burning us is ARM's PMU naming of armv8_pmuv3_a53
+>>> means the a53 looks like a hex suffix. When ARM release a model with a
+>>> 3 digit number will the naming break? Wrt filters, I wonder if there
+>>> should be testing, bugs, etc. The wildcard matching will likely do its
+>>> thing and I think the failures should be predictable and descriptive,
+>>> like an event used a format that a PMU doesn't support, but I'm not
+>>> sure if we should do improvements in `perf list` where we try to
+>>> deduplicate PMUs. Perhaps the deduplication should be smarter.
+>>>
+>>>
+>>>> FWIW I think if we want to nail down a strict ABI, it would seem more
+>>>> robust to have an explicit attribute to describe underlying PMU
+>>>> properties like whether instances do represent identical "slices" or
+>>>> not. The hex suffix thing is already proving how fragile names alone are
+>>>> liable to be.
+>>>
+>>> Agreed. Does this mean we shouldn't land this? I worry that LKML is
+>>> the home of bike shedding conversations and we're likely to bike shed
+>>> trying to achieve 'perfect' while something 'good' would have value
+>>> today.
 >>
->> >
->> >>
->> >>>
->> >>>          guard(mutex)(&profile_lock);
->> >>>
->> >>> --
->> >>> 2.43.0
->> >>>
->>
+>> Ping.
+> 
+> Thanks, applied to perf-tools-next,
+> 
+> - Arnaldo
+> 
+
+Just commenting to tie this into some related ideas that I put in the 
+cover letter here: 
+https://lore.kernel.org/linux-perf-users/20250304-james-perf-hybrid-list-v1-0-a363ffac283c@linaro.org/T/#m44b5da77819baa249d34bc5b2c7f10b65d3d7360
 
