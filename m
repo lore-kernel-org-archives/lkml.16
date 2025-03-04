@@ -1,136 +1,169 @@
-Received: from out02.mta.xmission.com (out02.mta.xmission.com [166.70.13.232])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BFFC2376EC;
-	Tue,  4 Mar 2025 19:16:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.70.13.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E5D1237180;
+	Tue,  4 Mar 2025 19:17:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741115810; cv=none; b=NOz7L9vrki8Iadqdan0HrIQUfFlDU2ky/D2NkLqa44UagQiZtUhqYgKCgW/yCDjuIYR9XAo3WTYn5fU3JZqjHwYLw+/Zb/H7o6jjhDkHIWn6Nzs8X6js0epPH6I1hx816o4V3O+NWHhTH99etjh+CDDzVMfL09MxtzOfgShcD+E=
+	t=1741115835; cv=none; b=Voku5Zp9etGFG4Xt6tiEOdiijJleyzqOHxKhgh8OlqBPAJoKSV48SN0wI5AkReN6oh7b61KOvVSmAiSAYR/7G4hiq8xpxT0rUukgXfRPcoYW/AlGbXmXjIWPBxmZDztrwDaMaH59ZY3MLZqep2ynBLrRI94OhfjpO1N0/bohEA0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741115810; c=relaxed/simple;
-	bh=pOWLXes4uWQgjfo1TJ9f6OtmzhBGnF2YDRXOGUxK9lo=;
-	h=From:To:Cc:References:Date:In-Reply-To:Message-ID:MIME-Version:
-	 Content-Type:Subject; b=nm7NIl6n3Byh3gW2Vn5mMudj2mJRH1il953fokbd6wmyrspGj5YETbJixFsG7CcFOY7VCny2rmUwMW3D/ch3KvJVis+CE98SctxP+6Pgr8YNRtNB1mWNMtHb6CYSAZ6xHuNo9gVZgouiYWuNCTGX2XYE10Kb7xMhlkGYJvyrINQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xmission.com; spf=pass smtp.mailfrom=xmission.com; arc=none smtp.client-ip=166.70.13.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xmission.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xmission.com
-Received: from in02.mta.xmission.com ([166.70.13.52]:41330)
-	by out02.mta.xmission.com with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.93)
-	(envelope-from <ebiederm@xmission.com>)
-	id 1tpXL4-003CrC-Sf; Tue, 04 Mar 2025 11:49:58 -0700
-Received: from ip72-198-198-28.om.om.cox.net ([72.198.198.28]:43810 helo=email.froward.int.ebiederm.org.xmission.com)
-	by in02.mta.xmission.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.93)
-	(envelope-from <ebiederm@xmission.com>)
-	id 1tpXL3-009qdL-OE; Tue, 04 Mar 2025 11:49:58 -0700
-From: "Eric W. Biederman" <ebiederm@xmission.com>
-To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Cc: akpm@linux-foundation.org,  Dave Hansen <dave.hansen@intel.com>,
-  Baoquan He <bhe@redhat.com>,  "Kirill A. Shutemov"
- <kirill@shutemov.name>,  kexec@lists.infradead.org,  Yan Zhao
- <yan.y.zhao@intel.com>,  linux-kernel@vger.kernel.org,
-  linux-coco@lists.linux.dev,  x86@kernel.org,  rick.p.edgecombe@intel.com,
-  security@kernel.org
-References: <20241213094930.748-1-yan.y.zhao@intel.com>
-	<xgycziy2o56hnom3oau7sbqed3meoni3razc6njj7ujatldnmm@s7odbl4splbn>
-	<Z4T1G4dwzo7qdwSP@MiWiFi-R3L-srv>
-	<87zfjuoj3i.fsf@email.froward.int.ebiederm.org>
-	<f38f1b56-a5df-4644-be59-56c70499ed92@intel.com>
-	<fslhdizolr4twqm4ixevzj6ai5l5qg6mxky25jasn3yctsnvt4@hpwphlmfs5cp>
-	<4599571f-804b-40d8-b5c8-e19478a3ad18@intel.com>
-	<wk7tfjqtpzgmsvilgszlgqnqjgm5kg2vfxboaspd3qyfs6uqb3@nbgacwb3kcb6>
-Date: Tue, 04 Mar 2025 12:49:15 -0600
-In-Reply-To: <wk7tfjqtpzgmsvilgszlgqnqjgm5kg2vfxboaspd3qyfs6uqb3@nbgacwb3kcb6>
-	(Kirill A. Shutemov's message of "Tue, 4 Mar 2025 10:41:56 +0200")
-Message-ID: <87o6ygskb8.fsf@email.froward.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
+	s=arc-20240116; t=1741115835; c=relaxed/simple;
+	bh=PMboUH21QxSZynvmqYXTsJlCbDsI3wUH1QQCqbJpVC0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ItyCo3NgCdoax2kft9IA3z5X4Sfd1fn4XFQMssMjJizNbXQp0BpvX0MICzpBZPnCTOcaDRl6ohS+LhlG5wW37oBtfmbR6bThoAiZ9UP+FHGMEp7wPpaE63gK0IowX3SNTRhUDoZ+lWyLfpHhEWIlNLQSci1OyDicLWiUYI+pLDE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=irJ7QdaR; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="irJ7QdaR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4DEB2C4CEE5;
+	Tue,  4 Mar 2025 19:17:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741115835;
+	bh=PMboUH21QxSZynvmqYXTsJlCbDsI3wUH1QQCqbJpVC0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=irJ7QdaR0K0c04nUp9b2wT+j89G4yrbHif+hu8lFO/egIAVdxMP+68HZBNcVhAMHn
+	 553GEYa/+Ppt5fcaxYJZ+jysAIxz7DNKriXV9R7mF1UFoFFGOvm2SicSkZYdK3GFKv
+	 hEAEg+m+bSXQQrCt/lrjDaRsbdtWmpLSnnJFCvu6RHx1nmBNpzctDhvx+b/x4dBSh0
+	 6/n3Uv+kvpFYtCW0XCXTp6HyhthA5/jBPGZ8vz/J3/ZkjYOk77t5IzWNubNl4Exr9k
+	 oV6k2bNSI/Iad/IPd+AWmbx7KHy7rwxVdd9igchCOuWhAkHqkJVD1oSE8muqq2z7CX
+	 ZBbbYaYOgTZWg==
+Date: Tue, 4 Mar 2025 21:17:10 +0200
+From: Jarkko Sakkinen <jarkko@kernel.org>
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: airlied@gmail.com, simona@ffwll.ch, corbet@lwn.net,
+	maarten.lankhorst@linux.intel.com, mripard@kernel.org,
+	tzimmermann@suse.de, ajanulgu@redhat.com, lyude@redhat.com,
+	pstanner@redhat.com, zhiw@nvidia.com, cjia@nvidia.com,
+	jhubbard@nvidia.com, bskeggs@nvidia.com, acurrid@nvidia.com,
+	ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com,
+	gary@garyguo.net, bjorn3_gh@protonmail.com, benno.lossin@proton.me,
+	a.hindborg@kernel.org, aliceryhl@google.com, tmgross@umich.edu,
+	gregkh@linuxfoundation.org, mcgrof@kernel.org,
+	russ.weight@linux.dev, dri-devel@lists.freedesktop.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	nouveau@lists.freedesktop.org, rust-for-linux@vger.kernel.org
+Subject: Re: [PATCH v5 3/5] rust: firmware: add `module_firmware!` macro
+Message-ID: <Z8dRtiUaS_Yrv8-K@kernel.org>
+References: <20250304173555.2496-1-dakr@kernel.org>
+ <20250304173555.2496-4-dakr@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1tpXL3-009qdL-OE;;;mid=<87o6ygskb8.fsf@email.froward.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=72.198.198.28;;;frm=ebiederm@xmission.com;;;spf=pass
-X-XM-AID: U2FsdGVkX1+GBcBx8IrnL69HP7CI9T5d+uij0wQ3VeY=
-X-Spam-Level: *
-X-Spam-Report: 
-	* -1.0 ALL_TRUSTED Passed through trusted hosts only via SMTP
-	*  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
-	*      [score: 0.4999]
-	*  0.7 XMSubLong Long Subject
-	*  0.0 T_TM2_M_HEADER_IN_MSG BODY: No description available.
-	* -0.0 DCC_CHECK_NEGATIVE Not listed in DCC
-	*      [sa07 1397; Body=1 Fuz1=1 Fuz2=1]
-	*  0.2 XM_B_SpammyWords One or more commonly used spammy words
-	*  0.4 FVGT_m_MULTI_ODD Contains multiple odd letter combinations
-	*  0.0 T_TooManySym_01 4+ unique symbols in subject
-X-Spam-DCC: XMission; sa07 1397; Body=1 Fuz1=1 Fuz2=1 
-X-Spam-Combo: *;"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-X-Spam-Relay-Country: 
-X-Spam-Timing: total 480 ms - load_scoreonly_sql: 0.06 (0.0%),
-	signal_user_changed: 10 (2.0%), b_tie_ro: 8 (1.7%), parse: 1.03 (0.2%),
-	 extract_message_metadata: 12 (2.6%), get_uri_detail_list: 1.67 (0.3%),
-	 tests_pri_-2000: 13 (2.6%), tests_pri_-1000: 2.7 (0.6%),
-	tests_pri_-950: 1.26 (0.3%), tests_pri_-900: 1.02 (0.2%),
-	tests_pri_-90: 166 (34.5%), check_bayes: 164 (34.1%), b_tokenize: 8
-	(1.6%), b_tok_get_all: 8 (1.7%), b_comp_prob: 3.1 (0.7%),
-	b_tok_touch_all: 141 (29.4%), b_finish: 0.89 (0.2%), tests_pri_0: 258
-	(53.8%), check_dkim_signature: 0.53 (0.1%), check_dkim_adsp: 2.8
-	(0.6%), poll_dns_idle: 0.57 (0.1%), tests_pri_10: 2.2 (0.5%),
-	tests_pri_500: 10 (2.0%), rewrite_mail: 0.00 (0.0%)
-Subject: Re: [PATCH v2 0/1] Accept unaccepted kexec segments' destination
- addresses
-X-SA-Exim-Connect-IP: 166.70.13.52
-X-SA-Exim-Rcpt-To: security@kernel.org, rick.p.edgecombe@intel.com, x86@kernel.org, linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org, yan.y.zhao@intel.com, kexec@lists.infradead.org, kirill@shutemov.name, bhe@redhat.com, dave.hansen@intel.com, akpm@linux-foundation.org, kirill.shutemov@linux.intel.com
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-X-SA-Exim-Scanned: No (on out02.mta.xmission.com); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250304173555.2496-4-dakr@kernel.org>
 
-"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com> writes:
+On Tue, Mar 04, 2025 at 06:34:50PM +0100, Danilo Krummrich wrote:
+> Analogous to the `module!` macro `module_firmware!` adds additional
+> firmware path strings to the .modinfo section.
+> 
+> In contrast to `module!`, where path strings need to be string literals,
+> path strings can be composed with the `firmware::ModInfoBuilder`.
+> 
+> Some drivers require a lot of firmware files (such as nova-core) and
+> hence benefit from more flexibility composing firmware path strings.
+> 
+> Signed-off-by: Danilo Krummrich <dakr@kernel.org>
+> ---
+>  rust/kernel/firmware.rs | 79 +++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 79 insertions(+)
+> 
+> diff --git a/rust/kernel/firmware.rs b/rust/kernel/firmware.rs
+> index 6e6972d94597..5d1ac8287171 100644
+> --- a/rust/kernel/firmware.rs
+> +++ b/rust/kernel/firmware.rs
+> @@ -116,6 +116,85 @@ unsafe impl Send for Firmware {}
+>  // be used from any thread.
+>  unsafe impl Sync for Firmware {}
+>  
+> +/// Create firmware .modinfo entries.
+> +///
+> +/// This macro is the counterpart of the C macro `MODULE_FIRMWARE()`, but instead of taking a
+> +/// simple string literals, which is already covered by the `firmware` field of
+> +/// [`crate::prelude::module!`], it allows the caller to pass a builder type (e.g.
+> +/// [`ModInfoBuilder`]) which can create the firmware modinfo strings in a more flexible way.
+> +///
+> +/// Drivers should extend the [`ModInfoBuilder`] with their own driver specific builder type.
+> +///
+> +/// The `builder` argument must be a type which implements the following function.
+> +///
+> +/// `const fn create(module_name: &'static CStr) -> ModInfoBuilder`
+> +///
+> +/// `create` should pass the `module_name` to the [`ModInfoBuilder`] and, with the help of
+> +/// it construct the corresponding firmware modinfo.
+> +///
+> +/// Typically, such contracts would be enforced by a trait, however traits do not (yet) support
+> +/// const functions.
+> +///
+> +/// # Example
+> +///
+> +/// ```
+> +/// # mod module_firmware_test {
+> +/// # use kernel::firmware;
+> +/// # use kernel::prelude::*;
+> +/// #
+> +/// # struct MyModule;
+> +/// #
+> +/// # impl kernel::Module for MyModule {
+> +/// #     fn init(_module: &'static ThisModule) -> Result<Self> {
+> +/// #         Ok(Self)
+> +/// #     }
+> +/// # }
+> +/// #
+> +/// #
+> +/// struct Builder<const N: usize>;
+> +///
+> +/// impl<const N: usize> Builder<N> {
+> +///     const fn create(module_name: &'static kernel::str::CStr) -> firmware::ModInfoBuilder<N> {
+> +///         firmware::ModInfoBuilder::new(module_name)
+> +///             .prepare()
+> +///             .push("vendor/foo.bin")
+> +///             .prepare()
+> +///             .push("vendor/bar.bin")
+> +///     }
+> +/// }
+> +///
+> +/// module! {
+> +///    type: MyModule,
+> +///    name: "module_firmware_test",
+> +///    author: "Rust for Linux",
+> +///    description: "module_firmware! test module",
+> +///    license: "GPL",
+> +/// }
+> +///
+> +/// kernel::module_firmware!(Builder);
+> +/// # }
+> +/// ```
+> +#[macro_export]
+> +macro_rules! module_firmware {
+> +    ($($builder:tt)*) => {
+> +
+> +        #[cfg(not(MODULE))]
+> +        const fn __module_name() -> &'static kernel::str::CStr {
+> +            <LocalModule as kernel::ModuleMetadata>::NAME
+> +        }
+> +
+> +        #[cfg(MODULE)]
+> +        const fn __module_name() -> &'static kernel::str::CStr {
+> +            kernel::c_str!("")
+> +        }
+> +
+> +        #[link_section = ".modinfo"]
+> +        #[used]
+> +        static __MODULE_FIRMWARE: [u8; $($builder)*::create(__module_name()).build_length()] =
+> +            $($builder)*::create(__module_name()).build();
+> +    };
+> +}
+> +
+>  /// Builder for firmware module info.
+>  ///
+>  /// [`ModInfoBuilder`] is a helper component to flexibly compose firmware paths strings for the
+> -- 
+> 2.48.1
+> 
+> 
+Acked-by: Jarkko Sakkinen <jarkko@kernel.org>
 
-> On Fri, Feb 14, 2025 at 08:20:07AM -0800, Dave Hansen wrote:
->> On 2/14/25 05:46, Kirill A. Shutemov wrote:
->> >> It sounds like you're advocating for the "slow guest boot" option.
->> >> Kirill, can you remind us how fast a guest boots to the shell for
->> >> modestly-sized (say 256GB) memory with "accept_memory=eager" versus
->> >> "accept_memory=lazy"? IIRC, it was a pretty remarkable difference.
->> > I only have 128GB machine readily available and posted some number on
->> > other thread[1]:
->> > 
->> >   On single vCPU it takes about a minute to accept 90GiB of memory.
->> > 
->> >   It improves a bit with number of vCPUs. It is 40 seconds with 4 vCPU, but
->> >   it doesn't scale past that in my setup.
->> > 
->> > I've mentioned it before in other thread:
->> > 
->> > [1] https://lore.kernel.org/all/ihzvi5pwn5hrn4ky2ehjqztjxoixaiaby4igmeihqfehy2vrii@tsg6j5qvmyrm
->> 
->> Oh, wow, from that other thread, you've been trying to get this crash
->> fix accepted since November?
->> 
->> From the looks of it, Eric stopped responding to that thread. I _think_
->> you gave a reasonable explanation of why memory acceptance is slow. He
->> then popped back up last month raising security concerns. But I don't
->> see anyone that shares those concerns.
->> 
->> The unaccepted memory stuff is also _already_ touching the page
->> allocator. If it's a dumb idea, then we should be gleefully ripping it
->> out of the page allocator, not rejecting a 2-line kexec patch.
->> 
->> Baoquan has also said this looks good to him.
->> 
->> I'm happy to give Eric another week to respond in case he's on vacation
->> or something, but I'm honestly not seeing a good reason to hold this bug
->> fix up.
->> 
->> Andrew, is this the kind of thing you can stick into mm and hold on to
->> for a bit while we give Eric time to respond?
->
-> Andrew, Eric, can we get this patch in?
-
-How goes the work to fix this horrifically slow firmware interface?
-
-Eric
-
+BR, Jarkko
