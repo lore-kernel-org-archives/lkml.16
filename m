@@ -1,108 +1,103 @@
-Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.forwardemail.net (smtp.forwardemail.net [121.127.44.59])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 467A725F7A8;
-	Tue,  4 Mar 2025 18:13:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04C7027E1A5
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Mar 2025 18:13:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=121.127.44.59
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741111996; cv=none; b=uQ1MyBFtnz7DTxCeC7n52T3svTzZManUkNWwOFLyBJKv/Br1hhudoWCT+jqgc13+IUws05rcVzgybCH+UB/QL97A+RpIsvkeUnQPO/SkBpDU+ijXcU/JDBtP2aZSHyKlkMInaq7H9i2Oy2CzNyuZfg8b2oJ/hkCpvD1E9+9GKhs=
+	t=1741112007; cv=none; b=YUzPV4xWEIPFC+tISDKVecZn7CMh4maW8kuyGHtpyMK66EY5y64gCOjJUjI8NyFIm+lNPYxmhBy5LkC8qRMTka4Ho9PFTzoC0Rp7p2FPMfkPzu+XInvHUbdoBYGI8MpAe00YB87h+hxM7cVFXaXS5V8HcGVrP1g8kcnK30q9Ob4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741111996; c=relaxed/simple;
-	bh=k250k5iWybCa1wkP+YKQpFlJjVQ7GgntMVMffR/LSUA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=P0/lBezR9V0Q6pHNe7+Y0z5BAEXfAmxqXcarbEBV/VC0/bk2Ujn9A5H1rFD3uh6UXlkn803dYrgklWcheqXJZ0G6yEJuLRA47VbjydSJO+VFxp+psB4bvn0pcakn9/6EwRyth/KqXK+fCZ3Dk2kTBKKz00N1n3FPe5KyMKStpYY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=lak/FVUi; arc=none smtp.client-ip=178.60.130.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	s=arc-20240116; t=1741112007; c=relaxed/simple;
+	bh=ypPytUNQebnWYDRP7fpFEAJF942EcMHF5lireOs6gk8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BsKNBKkbnFurYB/oavhQ+UrwxQMhOd4h0SkPKlCKdV6DWmLNqE3Xm7kRYMfL0DoHuQtvbDJ6YDJe4pv7MxZqfzI+ApVb/on96oyheX2pZ8jvDywOAZRHjnjCAj8uu9vfvnr6YiHnDAjOY1qXI7zT7ktZB7iXkHpAyc8fxVhU7gw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se; dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b=KqEYbZrk; arc=none smtp.client-ip=121.127.44.59
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="lak/FVUi"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=3Lx/8uaGq/ePxcQT7EdGKpzZUVOF43Fgxz10C6z4MHs=; b=lak/FVUiTYK7QAQbtJ+wELgdHo
-	ZHuWSqpysQFLxSTn+fuCmNVLZF3JCi6DH7usTnw7qdd1oOlk8EYXCmOy0ZDyvIZXr9VxBe3HceJAL
-	Ttc/ath5/wDzyZ+ohQuqGUHLW2NdIz1AK/15ysR6i/J8fTCcszFo5C4nY2MpRDV7vOx8N790zezHF
-	QH3I26pApal7zeAUprQkGVB7FvitbeVIkTuL4uGnbP2xl+dSbAy6hwqrlyzaV3mXjXBoRSpsZl9o2
-	IQWs/eejq+mf4Ks8V3ipHX3Y3lhDzNfj7F7hNqkTxt379XXn9L7njqkjBWm8xs8rKN7i16H+jr8bo
-	n+sfdnNQ==;
-Received: from d162-157-58-14.abhsia.telus.net ([162.157.58.14] helo=maloca.localdomain)
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
-	id 1tpWlA-003qIS-NE; Tue, 04 Mar 2025 19:12:58 +0100
-Date: Tue, 4 Mar 2025 11:12:52 -0700
-From: Rodrigo Siqueira <siqueira@igalia.com>
-To: Ethan Carter Edwards <ethan@ethancedwards.com>, 
-	Alex Hung <alex.hung@amd.com>, Aurabindo Pillai <aurabindo.pillai@amd.com>, 
-	Roman Li <Roman.Li@amd.com>
-Cc: Harry Wentland <harry.wentland@amd.com>, Leo Li <sunpeng.li@amd.com>, 
-	Alex Deucher <alexander.deucher@amd.com>, Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, amd-gfx@lists.freedesktop.org, 
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 0/4] drm/amd/display: move from kzalloc(size * nr, ...)
- to kcalloc(nr, size, ...)
-Message-ID: <rhmsb6pxlblxzaviawfuomm6vrvkenmskau63oxfdhdlsa7gbg@qbpznssr6al6>
-References: <20250227-amd-display-v1-0-52a060a78d08@ethancedwards.com>
+	dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="KqEYbZrk"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiboo.se;
+ h=Content-Transfer-Encoding: Content-Type: In-Reply-To: From: References:
+ Cc: To: Subject: MIME-Version: Date: Message-ID; q=dns/txt;
+ s=fe-e1b5cab7be; t=1741111998;
+ bh=xjqXCgfra637s+rpk4UdFAWQVXX9B5blSLtqx3MNrXQ=;
+ b=KqEYbZrkYoM2a8EOqYL75O4oNNU42Kt0WKaWvm7j2fCvgIPr74ds292+aIPClYWBAVZvSQxMv
+ subtPZ3tfDvUPKez4iqIOcww3Poe7DOQLndRCjjwbYUcYFvCqZUUTLMJKJHqpdHfU0ExX0QcZut
+ vKE0VZr4uXpH+gV1mI/7CD9/XcQrgjXYbCY0rK4fTIBKAo2IjjQa2P1RcxwDiJHJBHPMpXzN+aM
+ ve9G/NOw2zrATDFkenq7mHgD4WRolVhoY8I+9sGZC+J9LkNi9yg2WI++0Bmpl8geUFcDoLN4Gok
+ QLNfjNB7QcPIE+BmI1xfUqAmN1VOroxMoO5viz/pgzQA==
+X-Forward-Email-ID: 67c742bb2e5baeec949f6b1e
+X-Forward-Email-Sender: rfc822; jonas@kwiboo.se, smtp.forwardemail.net,
+ 121.127.44.59
+X-Forward-Email-Version: 0.4.40
+X-Forward-Email-Website: https://forwardemail.net
+X-Complaints-To: abuse@forwardemail.net
+X-Report-Abuse: abuse@forwardemail.net
+X-Report-Abuse-To: abuse@forwardemail.net
+Message-ID: <03c34bdf-d470-4c99-bb06-0eb7496465a3@kwiboo.se>
+Date: Tue, 4 Mar 2025 19:13:10 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250227-amd-display-v1-0-52a060a78d08@ethancedwards.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: (subset) [PATCH 0/7] rockchip: Add support for leds and user
+ button on Radxa E20C
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Linus Walleij
+ <linus.walleij@linaro.org>, Yao Zi <ziyao@disroot.org>,
+ linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
+ linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+References: <20250228064024.3200000-1-jonas@kwiboo.se>
+ <174108970986.65436.4272591414898454986.b4-ty@sntech.de>
+Content-Language: en-US
+From: Jonas Karlman <jonas@kwiboo.se>
+In-Reply-To: <174108970986.65436.4272591414898454986.b4-ty@sntech.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 02/27, Ethan Carter Edwards wrote:
-> We are trying to get rid of all multiplications from allocation
-> functions to prevent integer overflows. Here the multiplications are
-> probably safe, but using kcalloc() is more appropriate and improves
-> readability. It is also safer. This series contains a few patches
-> with these fixes.
+Hi Heiko,
+
+On 2025-03-04 13:02, Heiko Stuebner wrote:
 > 
-> Part of the Kernel Self Protection Project efforts. Links below have
-> more details.
+> On Fri, 28 Feb 2025 06:40:06 +0000, Jonas Karlman wrote:
+>> The Radxa E20C has three gpio leds and one gpio button.
+>>
+>> This series adds dt-binding, driver support, DT node in SoC .dtsi and
+>> gpio-keys and gpio-leds nodes in board DT to support the leds and user
+>> button.
+>>
+>> This series builds on top of the "rockchip: Add support for maskrom
+>> button on Radxa E20C" series [1].
+>>
+>> [...]
 > 
-> Link: https://github.com/KSPP/linux/issues/162
-> Link: https://www.kernel.org/doc/html/next/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments
+> Applied, thanks!
 > 
-> Signed-off-by: Ethan Carter Edwards <ethan@ethancedwards.com>
-> ---
-> Ethan Carter Edwards (4):
->       drm/amd/display: change kzalloc to kcalloc in dcn30_validate_bandwidth()
->       drm/amd/display: change kzalloc to kcalloc in dcn31_validate_bandwidth()
->       drm/amd/display: change kzalloc to kcalloc in dcn314_validate_bandwidth()
->       drm/amd/display: change kzalloc to kcalloc in dml1_validate()
+> [1/7] dt-bindings: soc: rockchip: Add RK3528 ioc grf syscon
+>       commit: ac32ad07a97648eb8330b2c4cb840b0ef46903ae
+> [4/7] arm64: dts: rockchip: Add pinctrl and gpio nodes for RK3528
+>       commit: a31fad19ae39ea27b5068e3b02bcbf30a905339b
+> [5/7] arm64: dts: rockchip: Add uart0 pinctrl to Radxa E20C
+>       commit: 0d2312f0d3e4ce74af0977c1519a07dfc71a82ac
 > 
->  drivers/gpu/drm/amd/display/dc/resource/dcn30/dcn30_resource.c   | 3 ++-
->  drivers/gpu/drm/amd/display/dc/resource/dcn31/dcn31_resource.c   | 3 ++-
->  drivers/gpu/drm/amd/display/dc/resource/dcn314/dcn314_resource.c | 3 ++-
->  drivers/gpu/drm/amd/display/dc/resource/dcn32/dcn32_resource.c   | 3 ++-
->  4 files changed, 8 insertions(+), 4 deletions(-)
-> ---
-> base-commit: be5c7bbb3a64baf884481a1ba0c2f8fb2f93f7c3
-> change-id: 20250227-amd-display-a8342c55a9a0
+> Patches 6+7 depend on the parallel saradc support series and thus
+> do not apply - and need too much rework to safely apply.
+
+Do you want me to rebase/reorder and send an updated version with
+remaining patches? Look like the iio saradc patches [2] is pending apply
+so maybe not needed?
+
+[2] https://lore.kernel.org/all/20250304144648.29f376f9@jic23-huawei/
+
+Regards,
+Jonas
+
+> 
 > 
 > Best regards,
-> -- 
-> Ethan Carter Edwards <ethan@ethancedwards.com>
->
 
-Hi,
-
-This series LGTM,
-
-Reviewed-by: Rodrigo Siqueira <siqueira@igalia.com>
-
-To Display folks,
-(Cc some other devs)
-
-If possible, try to include this series in this week's promotion tests,
-or check the IGT test in the CI just to be safe.
-
-Thanks
-
--- 
-Rodrigo Siqueira
