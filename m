@@ -1,108 +1,80 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A03A1FFC68;
-	Tue,  4 Mar 2025 11:59:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB5D6200B9F;
+	Tue,  4 Mar 2025 11:59:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741089585; cv=none; b=D/k94OBhUusstm0ulZKrd2pesMPab75p9KpRkoe7NwjOhzQ7ANi/7bXUCuo6spyMAU690dku0udS6h4P4vmgMAAVbxEtLV9LXPeYFAwy6VmMRAyY1zZScHezXf7ABW1q4Hm1MlMWqQpaSBmbsWO9MG1XB1xnmWXwLkOLGKmNi2I=
+	t=1741089600; cv=none; b=b4ZKUDCevOptJ7Cqk+7fTZNnaCFMHdItjGZXMnJknqWtM2BP6O2eAbb5NEf0hh6fw/3lr0F9p2vosjLUzZCd3GN9j6n3c6Xtu5zv4otwZiDNddFpijP1x084E2AlYFywtadzuBB8TVfe4kFGCpJ+XrEsGXdKYYee/y1BIhjwcE4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741089585; c=relaxed/simple;
-	bh=m5bq3Xf/xvV68SMVybU/9ISlIyZAHVSbtdVtn0t/d3g=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Lpf/WU9X07wgkv4NAuoUqtC5l2YkiFT8ElIAlv6Rea8zL44i731ia4+BedoyvD5aia6Wgo/z7fJfnCjrxyruTCq67nKCpV2hphUGLGq7Rv38pG9tPx8RSMo+iol6cYbYL0WisXnZWqH/etQidoiWVTo4efwgJuOhOpt1S2R61ek=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TBVXUo/y; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741089600; c=relaxed/simple;
+	bh=E08SB6Z1syo3up7Ty9PycPv45+p3/R0MzAJU2jZucfw=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=sFrB1gJiq0JD2dcwPuABqUMWNKqD8KH1zigxVangHXeLpvmlerx96iwXl/aLROsEhHy6e1zbxXl3dRInjsA/IKAIbsj0ATNdBqEt4C2h825OAmfGCIbWiFy22z0YGKJv0Ghspos2YIQxOrpW5ZMZxLblv7u9y5Z+z+D1G+xC/7c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gbV2yebA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TBVXUo/y"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 790D1C4CEE5;
-	Tue,  4 Mar 2025 11:59:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gbV2yebA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63AA9C4CEE5;
+	Tue,  4 Mar 2025 11:59:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741089584;
-	bh=m5bq3Xf/xvV68SMVybU/9ISlIyZAHVSbtdVtn0t/d3g=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=TBVXUo/y1SMGgl9VJVdCQWdPuJUpANtODXJriLe+xWjFkxtSmC4Ye3P5SLtVpMeCs
-	 XbZw74R1ZAwrxyAngwliAcddxiJZvzGlpyskJUgRQZJur+sssdJsfXHIjOqPEo/EhW
-	 VC1vSV77IMoW+vkhQvJH/0w84N/gcj+RFAO1CUqxEZGC2mxNNhNPrgd63pKSe263xm
-	 5aNhKA5+nj9xFiJAKnBQ3Fxc+bmcSKME83HfoCEg5df1mOEmKiV7AIyCh/1s2DKQMZ
-	 6y45YLLdK2t0BboTuWn+IhYtnhw/u7E2rlFd3hn3fwMUUEqJcQn0S6e+JWmnjHvmm8
-	 U1DkbK+4bjVYA==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-To: "Guilherme Giacomo Simoes" <trintaeoitogc@gmail.com>
-Cc: <alex.gaynor@gmail.com>,  <aliceryhl@google.com>,  <apw@canonical.com>,
-  <arnd@arndb.de>,  <aswinunni01@gmail.com>,  <axboe@kernel.dk>,
-  <benno.lossin@proton.me>,  <bhelgaas@google.com>,
-  <bjorn3_gh@protonmail.com>,  <boqun.feng@gmail.com>,  <dakr@kernel.org>,
-  <dwaipayanray1@gmail.com>,  <ethan.twardy@gmail.com>,
-  <fujita.tomonori@gmail.com>,  <gary@garyguo.net>,
-  <gregkh@linuxfoundation.org>,  <joe@perches.com>,
-  <lukas.bulwahn@gmail.com>,  <ojeda@kernel.org>,  <pbonzini@redhat.com>,
-  <tmgross@umich.edu>,  <walmeida@microsoft.com>,
-  <rust-for-linux@vger.kernel.org>,  <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH V6 0/2] author field in module! macro should be a array
-In-Reply-To: <20250223174205.48404-1-trintaeoitogc@gmail.com> (Guilherme
-	Giacomo Simoes's message of "Sun, 23 Feb 2025 14:42:03 -0300")
-References: <GQqgXevDlPrbDVqybjdBe8eWBr-bsr56Nmbydqom2kJLDE2mrH7hfWC0ORBSY3Qz7yaBd3mIoy9TcKjNz96hzA==@protonmail.internalid>
-	<20250223174205.48404-1-trintaeoitogc@gmail.com>
-User-Agent: mu4e 1.12.7; emacs 29.4
-Date: Tue, 04 Mar 2025 12:59:34 +0100
-Message-ID: <875xkphuqh.fsf@kernel.org>
+	s=k20201202; t=1741089599;
+	bh=E08SB6Z1syo3up7Ty9PycPv45+p3/R0MzAJU2jZucfw=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=gbV2yebAA3pFFb9zE6BpbIMHN2CfXiVrp7DiVEOWUK0SyX2/3ur5Up++4ycn73XdL
+	 OfwQLTUmMw8Kxy/AuU6l72TFo2I37wEJZ4edFL2wELJcWknWeb9Q50HdLkNlhqNxWf
+	 8EbACsuCBAtXDAJlDBv1JRkvgx5nA1Ji5BotEnRhnT5gQiorfGLP5CuWx8APSBKDui
+	 +dF0LuXq4sLgpfxrgYbPa2XzlmmBPk/v0PsMnW8uUtgwhZ5vylV/XA0Leo5Bh9UvOx
+	 FQ2n/OJZEI+7L6uNPQEvjGnfDqbvqEJLpPNy7J4DG2qsKcLxMgrG3ecqWrENwIA9d0
+	 Zi84gcNjbLxyw==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 713E4380AA7F;
+	Tue,  4 Mar 2025 12:00:33 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net] net: hns3: make sure ptp clock is unregister and freed if
+ hclge_ptp_get_cycle returns an error
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174108963218.113455.4268912693343662541.git-patchwork-notify@kernel.org>
+Date: Tue, 04 Mar 2025 12:00:32 +0000
+References: <20250228105258.1243461-1-shaojijie@huawei.com>
+In-Reply-To: <20250228105258.1243461-1-shaojijie@huawei.com>
+To: Jijie Shao <shaojijie@huawei.com>
+Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+ pabeni@redhat.com, andrew+netdev@lunn.ch, horms@kernel.org,
+ shenjian15@huawei.com, wangpeiyang1@huawei.com, liuyonglong@huawei.com,
+ chenhao418@huawei.com, jonathan.cameron@huawei.com,
+ shameerali.kolothum.thodi@huawei.com, salil.mehta@huawei.com,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org
 
-"Guilherme Giacomo Simoes" <trintaeoitogc@gmail.com> writes:
+Hello:
 
-> In the module! macro, the author field is currently of type String.
-> Since modules can have multiple authors, this limitation prevents
-> specifying more than one.
->
-> - Change the author field to Option<Vec<String>> to allow creating
->   modules with multiple authors.
->
-> - rename the field from author to authors to make it explicit that it
->   can refer to multiple authors.
->
-> - In modules that use the author field, update its value to an array of
->   strings, and also rename it from author to authors.
->
-> - Change the checkpatch.pl to find poorly formatted arrays in the macro
->   module!
->
-> ---
-> v6 changes
-> - Use consistent style in warn messages
-> - Improved the commit title for checkpatch changes
-> ---
->
-> Guilherme Giacomo Simoes (2):
->   rust: module: change author to an array
->   checkpatch: check format of Vec<String> in modules
->
->  drivers/block/rnull.rs               |  2 +-
->  drivers/net/phy/ax88796b_rust.rs     |  2 +-
->  drivers/net/phy/qt2025.rs            |  2 +-
->  rust/kernel/net/phy.rs               |  4 +--
->  rust/kernel/pci.rs                   |  2 +-
->  rust/kernel/platform.rs              |  2 +-
->  rust/macros/lib.rs                   |  6 ++--
->  rust/macros/module.rs                | 12 ++++----
->  samples/rust/rust_driver_faux.rs     |  2 +-
->  samples/rust/rust_driver_pci.rs      |  2 +-
->  samples/rust/rust_driver_platform.rs |  2 +-
->  samples/rust/rust_minimal.rs         |  2 +-
->  samples/rust/rust_misc_device.rs     |  2 +-
->  samples/rust/rust_print_main.rs      |  2 +-
->  scripts/checkpatch.pl                | 43 ++++++++++++++++++++++++++++
->  15 files changed, 66 insertions(+), 21 deletions(-)
+This patch was applied to netdev/net.git (main)
+by Paolo Abeni <pabeni@redhat.com>:
 
-What is the base commit for this one?
+On Fri, 28 Feb 2025 18:52:58 +0800 you wrote:
+> From: Peiyang Wang <wangpeiyang1@huawei.com>
+> 
+> During the initialization of ptp, hclge_ptp_get_cycle might return an error
+> and returned directly without unregister clock and free it. To avoid that,
+> call hclge_ptp_destroy_clock to unregist and free clock if
+> hclge_ptp_get_cycle failed.
+> 
+> [...]
 
+Here is the summary with links:
+  - [net] net: hns3: make sure ptp clock is unregister and freed if hclge_ptp_get_cycle returns an error
+    https://git.kernel.org/netdev/net/c/b7365eab3983
 
-Best regards,
-Andreas Hindborg
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
 
