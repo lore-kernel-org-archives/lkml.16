@@ -1,137 +1,187 @@
-Received: from out203-205-221-235.mail.qq.com (out203-205-221-235.mail.qq.com [203.205.221.235])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5320413F434
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 13:50:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.235
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78E6D1D540
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 13:52:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741182632; cv=none; b=iy6ENUyXxMZR5MSwjghxeuJ8nHByLJtwvs7Jgh9Txq/12F45jWrqrwwGBYumGJWHA2HpdCUAKGD1WFAMF29RkS3EZ6hQU91B6WvLxrP6y8XDzI1pGKD8v1qn9JIZKJ8rLoHRxZM3W+G7+GFY7K0YXAZv7eSjIjMRtsxb//aH2X0=
+	t=1741182772; cv=none; b=SdP4hLgg7DnROLDm3Cvwg7TPam+K5pGaxfdWUoa1adUTPn4MSVKdJODDFnwlMeRB4OFb9ycY8X1syclhgWLHky5kFCyk3zEhJfp8nZ3r0FLdlrZccz3cm76W9GTTHsAibY/Nw3EfhF+euSuoO7K6HprbLRi8R9r0iL57CFbgE+Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741182632; c=relaxed/simple;
-	bh=Z78A2Ut63ccQctrfEqo/o8QkPvu7dQSsf3z6DlR2STY=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=nFv7Ah0+tVq42OlcBnCt91pFUiqTSLABmfUrAv/VKVEq6Gw1Zd/9Nm3x6wkTSb3Ts+pPlAVfI+HCdDGudDrshyiJxokSIyIOXFNvS5xGg7SVZ3oIJRJA8cjOqDLAeoM+FzePmpfFP+88NNk14KQPhjSLIXZGBiz/7YupmJlultE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=Y7JdlIeC; arc=none smtp.client-ip=203.205.221.235
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1741182772; c=relaxed/simple;
+	bh=ZpJyRqvzV7w2VCR5R7CDaKrnoXiO/aMQpyH7eigEDqw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MRoxTDD4HWG64JB+9tJJLwheyT2dPKzVcn+fPy6vtGjjtsT4Qe29et501JcadzTCM0eUWv+/AW9u+NCW3kjfY/SyNvU5Sm7l/ihYEEXOXs0UpB0fVqQ5hzk1/Z3cp+EMuF1msWlMUFRBBZbLuC39fGmv5K87KA88m2yexbxyEH0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Wq29/xTW; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="Y7JdlIeC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1741182324; bh=ccq0Av38nSs+iwKBCGzoZ5cXsA3RMZ/QqLCdQ+42KWw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=Y7JdlIeCw9NsMpDrzQaNSv2o+aWcJbRWY6IdEhPdkGQbxfg+8tHAyS8NaqaQisLY5
-	 dDY035BHoK0YbvgQFvhB7Pkiv1Q+ZEvtV+QqkN36nqlAmXIVKFANu/RURbmyRmcFOn
-	 kbl1UVYRHshELROpl2IH+w6Dm2cHa6z+GNxqP3pY=
-Received: from pek-lxu-l1.wrs.com ([114.244.57.157])
-	by newxmesmtplogicsvrszgpua8-1.qq.com (NewEsmtp) with SMTP
-	id B569CC67; Wed, 05 Mar 2025 21:45:22 +0800
-X-QQ-mid: xmsmtpt1741182322t02ur8g1f
-Message-ID: <tencent_CF336E8362896EE3B7C45CB77E976686D505@qq.com>
-X-QQ-XMAILINFO: N0jQ/i/W/QNTLe2SDmV1OE5LlP0DhzLTKi9/e+zAlGUTrLnS6rILSmuVnzmmuR
-	 oYmfUwKfBrJr7JrwmHLZBJi1AG5QXXpflS2Xy535RpkED5gYHTPA9odGjMmJU9Jrr71oAFTZjExh
-	 jOJdK+h4w4uWX+IehDVKHkT70klEPW8GvRPdisvjpc+ViOQWyJbjukPyOwaAdLbirHutYeIOnkhG
-	 oMHpuLnlTBr7fwfW+IDlU4J3q1VIuFrVYEcgbFV0Kdgl/I69MagQklb5MALOTyY6TtiEBVXLSJoB
-	 hjtsOB7gj8s1Hpg6heS8f7yqfBxCMzMq3n4yPtsQayyeuP5Wp7SqdXGH96Ridj4TgfwvXP5E18vI
-	 ivvlZyYIX5LKIn6fA7yETXoigwOgsOeusV7J2ycqVWVOdXLu1xyBg8DrMwRbOBAmmSO7mQ1RpBjl
-	 VfxB57W7UWqGerB8wkcSZCWHuK77Zw+3W0YoUdt5hmhQyJf7nqeeF1TJPeLCzErso0HhB6yb9iIe
-	 txsZPbM24TrgLOORChJIkzgfJWQXTFs2gVhOFUxMhfP+i87/QUyg94VdfNSN7GJol3tnZ9JjHIIL
-	 vhc6DVQ6i4eXO2nc67C+i1xWQ5pu0T8xukN+txlCbTVODVvozjclc5VjAjLaugBVfStAD0OsQNQX
-	 6fvWfWLhsNtWcRpitnsum9whl5FZ0fINN0r2K2RCX4+x+FXe/Oqlgzom8YzY8xzbfcIaMWy3XAzp
-	 v9gZ3dQPjbTcPX90W4/gBdrF7MKOyCI9Qi88XzD+L2ECmr9DP8J+TdsSkAKuvuNcTgmpRPT6W7e9
-	 ykPxsDixjIots6fATOlYAPXhKXi2uIkl02dfWJDqFHTD9XdxdzSrRgPwChVIYPsqJnsaNHylWkms
-	 JtgMJlnvVIz28SfdW8bi1msR0G/sBqOzup1wqHu1asI/SA5CuD3+k=
-X-QQ-XMRINFO: Mp0Kj//9VHAxr69bL5MkOOs=
-From: Edward Adam Davis <eadavis@qq.com>
-To: syzbot+8f9f411152c9539f4e59@syzkaller.appspotmail.com
-Cc: linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [xfs?] [mm?] WARNING: bad unlock balance in __mm_populate
-Date: Wed,  5 Mar 2025 21:45:23 +0800
-X-OQ-MSGID: <20250305134522.1522377-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <67c49230.050a0220.55417.04d5.GAE@google.com>
-References: <67c49230.050a0220.55417.04d5.GAE@google.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Wq29/xTW"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-43bc4b1603fso21364105e9.0
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Mar 2025 05:52:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1741182768; x=1741787568; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=S6j1u5Jf2C5SefjcHLkuoR9oF+Ietx4rrZSc7vUCYjk=;
+        b=Wq29/xTWIlNyIy5EsSDCtKXEtpIKYIuHDaa6LxYzelj5IVSsRW5JFuQ901kOxZF4fv
+         6fTF9+FSaC2LALC8+7I/cQAQxoDU4XVKcjYQ/K0knrnMS74RQ1CwGTmWcd9/nGE+KBIZ
+         YhdYzCxMb+kUswq+QwP0X++4CakGHzyQVI3Li2Yk5lgCa+GS4EaRwk+axkDxMDS7/JTa
+         ddqB4MzC3HEGiF99nyw4W5fgGGHNCia1bl+tgVrBe5fyLppfOydQlnqQcXI+TvsP1s2A
+         jm2GBdK/JNDaZwc2LytD1DNyGQ2VnRSzLlUn9LkctLr3ajv+4kO1rOPkpXVt3rDWYcN/
+         zxdg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741182768; x=1741787568;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=S6j1u5Jf2C5SefjcHLkuoR9oF+Ietx4rrZSc7vUCYjk=;
+        b=s+OQU9L1/gKs6dOnaOjamvN11w9YBAFpiy/BZ0seJnmlmPDdPJKJYm+rMVaknqWl8E
+         JR7z5NcecEgZw7eGQw64VgXOqRv9oaHCWXLSr8MYundHNz8O0IfCOpnatuvXWHiwZfRq
+         lRGHmtmowL+5IEOzqhJQ7pD3BTukGziDtvYJ05F/tKUTs9E4LEgrLbStIvzsFeUy3Pgq
+         zTpFi2eMu8kNdM4d4gGJcHQIEMuy+SK1+8+S/pgQ4IO8PBqULO+dhC+JDh+/IYtsQksZ
+         8O/S4RQBuP1lNfAdEtJM6wiDRqyWmPqMOKp8HbvgxHwsC3y27EyJXZNQyR9LkgVHxL6b
+         xfbw==
+X-Forwarded-Encrypted: i=1; AJvYcCWhkIadjKg/0o/u9OVcUOPHeSh4khCU1Eq8T5mUw2mfu3iwtzZJF/qA+S57ucGJwL8hK/vvtVbCDufbQWk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzlKtdMm1S1L2t/81pIJ8go6BaR5o+JzKwfwvryg92t6lz0Am0i
+	RbV1Soz5htxnWtg6O9ytIJ+aTg135gpQ7OYUapm6cziV6+TfeOfSX0H+g3uIlFU=
+X-Gm-Gg: ASbGncuCDObtVqFLDGylUE4Y1dUEEftTvWK3n8OmzqWGso5m0Dj7XTAiIm/TRc/6xB5
+	z6dwfuqJbwGDxFci+KDggGVgld7512lcwSX6Zq4ZRR+HWsQvKO4eF/q3xX7JFaBWCtXiWj6U38O
+	U65gDqEnd3QlM8eyBtmW/JYks/6G7ArmiGkX0NgLPRLQsgJOmdPgJTmoUSYS/DnmyRGqdjiIt5w
+	4PHDql0CNqV9Qmp8DekA3PJsFEPi7weno3ax8uICn84jBj0PGVI4gfWHChJSN1jk7mqBEclt/2Z
+	UsOgfyYp99nYzKr0x4DlC97r+KOytv/mB5X3YSpWXH9IpM0CWfhfEC0=
+X-Google-Smtp-Source: AGHT+IGNwGXre2668VQaI30m9O+IxSUr+emK+omtD1NUQBDyo+CUvESLBwBEmYF+kbGkg+9EZo3PhQ==
+X-Received: by 2002:a5d:6d0d:0:b0:390:de66:cc0c with SMTP id ffacd0b85a97d-3911f7c750fmr2590694f8f.46.1741182768584;
+        Wed, 05 Mar 2025 05:52:48 -0800 (PST)
+Received: from [192.168.1.247] ([209.198.129.225])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-390e47b6ceesm20813720f8f.45.2025.03.05.05.52.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 05 Mar 2025 05:52:48 -0800 (PST)
+Message-ID: <67c484d7-6929-4a65-b89c-f3fb85682028@linaro.org>
+Date: Wed, 5 Mar 2025 13:52:46 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] coresight: Add a KUnit test for
+ coresight_find_default_sink()
+To: Leo Yan <leo.yan@arm.com>
+Cc: coresight@lists.linaro.org, scclevenger@os.amperecomputing.com,
+ yeoreum.yun@arm.com, Mike Leach <mike.leach@linaro.org>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <20241217171132.834943-1-james.clark@linaro.org>
+ <20250305114211.GG13418@e132581.arm.com>
+Content-Language: en-US
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <20250305114211.GG13418@e132581.arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-#syz test
 
-diff --git a/mm/gup.c b/mm/gup.c
-index 3883b307780e..c32c0854dd4f 100644
---- a/mm/gup.c
-+++ b/mm/gup.c
-@@ -1194,6 +1194,7 @@ static int faultin_page(struct vm_area_struct *vma,
- 	}
- 
- 	ret = handle_mm_fault(vma, address, fault_flags, NULL);
-+	printk("1mm: %p, map held lock: %d, vma: %p, %s\n", vma->vm_mm, lockdep_is_held(&vma->vm_mm->mmap_lock), vma, __func__);
- 
- 	if (ret & VM_FAULT_COMPLETED) {
- 		/*
-@@ -1216,8 +1217,11 @@ static int faultin_page(struct vm_area_struct *vma,
- 	if (ret & VM_FAULT_ERROR) {
- 		int err = vm_fault_to_errno(ret, flags);
- 
--		if (err)
-+		printk("mm: %p, map held lock: %d, vma: %p, err: %d, %s\n", vma->vm_mm, lockdep_is_held(&vma->vm_mm->mmap_lock), vma, err, __func__);
-+		if (err) {
-+			*locked = err != -EFAULT;
- 			return err;
-+		}
- 		BUG();
- 	}
- 
-@@ -1487,6 +1491,7 @@ static long __get_user_pages(struct mm_struct *mm,
- 		cond_resched();
- 
- 		page = follow_page_mask(vma, start, gup_flags, &ctx);
-+		printk("<after resched and follow page mask> mm: %p, map lock held: %d, %s\n", mm, lockdep_is_held(&mm->mmap_lock), __func__);
- 		if (!page || PTR_ERR(page) == -EMLINK) {
- 			ret = faultin_page(vma, start, gup_flags,
- 					   PTR_ERR(page) == -EMLINK, locked);
-@@ -1500,6 +1505,7 @@ static long __get_user_pages(struct mm_struct *mm,
- 			case -EFAULT:
- 			case -ENOMEM:
- 			case -EHWPOISON:
-+				printk("mm2: %p, map held lock: %d, vma: %p, ret: %d, %s\n", mm, lockdep_is_held(&mm->mmap_lock), vma, ret, __func__);
- 				goto out;
- 			}
- 			BUG();
-@@ -2029,7 +2035,12 @@ int __mm_populate(unsigned long start, unsigned long len, int ignore_errors)
- 		 * double checks the vma flags, so that it won't mlock pages
- 		 * if the vma was already munlocked.
- 		 */
-+		printk("1mm: %p, vma: %p, mmap lock held: %d, locked: %d, vma is acc: %d, %s\n",
-+			mm, vma, lockdep_is_held(&mm->mmap_lock), locked, vma_is_accessible(vma), __func__);
- 		ret = populate_vma_page_range(vma, nstart, nend, &locked);
-+		printk("mm: %p, vma: %p, mmap lock held: %d, locked: %d, ret: %ld, mm addr is valid: %d, %s\n",
-+			mm, vma, lockdep_is_held(&mm->mmap_lock), locked, ret, virt_addr_valid((void*)mm), __func__);
-+
- 		if (ret < 0) {
- 			if (ignore_errors) {
- 				ret = 0;
-diff --git a/mm/memory.c b/mm/memory.c
-index b4d3d4893267..43e35a0c2841 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -6206,10 +6206,14 @@ vm_fault_t handle_mm_fault(struct vm_area_struct *vma, unsigned long address,
- 
- 	lru_gen_enter_fault(vma);
- 
-+	printk("mm: %p, map held lock: %d, vma: %p, is vm hugetlb page: %d, %s\n",
-+		vma->vm_mm, lockdep_is_held(&vma->vm_mm->mmap_lock), vma, is_vm_hugetlb_page(vma), __func__);
- 	if (unlikely(is_vm_hugetlb_page(vma)))
- 		ret = hugetlb_fault(vma->vm_mm, vma, address, flags);
- 	else
- 		ret = __handle_mm_fault(vma, address, flags);
-+	printk("2mm: %p, map held lock: %d, vma: %p, is vm hugetlb page: %d, %s\n",
-+		vma->vm_mm, lockdep_is_held(&vma->vm_mm->mmap_lock), vma, is_vm_hugetlb_page(vma), __func__);
- 
- 	/*
- 	 * Warning: It is no longer safe to dereference vma-> after this point,
+
+On 05/03/2025 11:42 am, Leo Yan wrote:
+> On Tue, Dec 17, 2024 at 05:11:31PM +0000, James Clark wrote:
+>>
+>> Add a test to confirm that default sink selection skips over an ETF
+>> and returns an ETR even if it's further away.
+>>
+>> This also makes it easier to add new unit tests in the future.
+>>
+>> Signed-off-by: James Clark <james.clark@linaro.org>
+>> ---
+>>   drivers/hwtracing/coresight/Kconfig           |  9 ++
+>>   drivers/hwtracing/coresight/Makefile          |  1 +
+>>   drivers/hwtracing/coresight/coresight-core.c  |  1 +
+>>   .../coresight/coresight-kunit-tests.c         | 90 +++++++++++++++++++
+>>   4 files changed, 101 insertions(+)
+>>   create mode 100644 drivers/hwtracing/coresight/coresight-kunit-tests.c
+>>
+>> diff --git a/drivers/hwtracing/coresight/Kconfig b/drivers/hwtracing/coresight/Kconfig
+>> index 06f0a7594169..056d04bc540a 100644
+>> --- a/drivers/hwtracing/coresight/Kconfig
+>> +++ b/drivers/hwtracing/coresight/Kconfig
+>> @@ -247,4 +247,13 @@ config CORESIGHT_DUMMY
+>>
+>>            To compile this driver as a module, choose M here: the module will be
+>>            called coresight-dummy.
+>> +
+>> +config CORESIGHT_KUNIT_TESTS
+>> +         tristate "Enable Coresight unit tests"
+>> +         depends on KUNIT
+>> +         default KUNIT_ALL_TESTS
+>> +         help
+>> +           Enable Coresight unit tests. Only useful for development and not
+>> +           intended for production.
+>> +
+>>   endif
+>> diff --git a/drivers/hwtracing/coresight/Makefile b/drivers/hwtracing/coresight/Makefile
+>> index 4ba478211b31..c170a41b3056 100644
+>> --- a/drivers/hwtracing/coresight/Makefile
+>> +++ b/drivers/hwtracing/coresight/Makefile
+>> @@ -51,3 +51,4 @@ coresight-cti-y := coresight-cti-core.o       coresight-cti-platform.o \
+>>                     coresight-cti-sysfs.o
+>>   obj-$(CONFIG_ULTRASOC_SMB) += ultrasoc-smb.o
+>>   obj-$(CONFIG_CORESIGHT_DUMMY) += coresight-dummy.o
+>> +obj-$(CONFIG_CORESIGHT_KUNIT_TESTS) += coresight-kunit-tests.o
+>> diff --git a/drivers/hwtracing/coresight/coresight-core.c b/drivers/hwtracing/coresight/coresight-core.c
+>> index ea38ecf26fcb..ce63b68d5503 100644
+>> --- a/drivers/hwtracing/coresight/coresight-core.c
+>> +++ b/drivers/hwtracing/coresight/coresight-core.c
+>> @@ -869,6 +869,7 @@ coresight_find_default_sink(struct coresight_device *csdev)
+>>          }
+>>          return csdev->def_sink;
+>>   }
+>> +EXPORT_SYMBOL_GPL(coresight_find_default_sink);
+>>
+>>   static int coresight_remove_sink_ref(struct device *dev, void *data)
+>>   {
+>> diff --git a/drivers/hwtracing/coresight/coresight-kunit-tests.c b/drivers/hwtracing/coresight/coresight-kunit-tests.c
+>> new file mode 100644
+>> index 000000000000..d022bacc8357
+>> --- /dev/null
+>> +++ b/drivers/hwtracing/coresight/coresight-kunit-tests.c
+>> @@ -0,0 +1,90 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +
+>> +#include <kunit/test.h>
+>> +#include <kunit/device.h>
+>> +#include <linux/coresight.h>
+>> +
+>> +#include "coresight-priv.h"
+>> +
+>> +static struct coresight_device *coresight_test_device(struct device *dev)
+>> +{
+>> +       struct coresight_device *csdev = devm_kcalloc(dev, 1,
+>> +                                                    sizeof(struct coresight_device),
+>> +                                                    GFP_KERNEL);
+>> +       csdev->pdata = devm_kcalloc(dev, 1,
+>> +                                  sizeof(struct coresight_platform_data),
+>> +                                  GFP_KERNEL);
+>> +       return csdev;
+>> +}
+>> +
+>> +static void coresight_free_test_device(struct device *dev,
+>> +                                      struct coresight_device *csdev)
+>> +{
+>> +       devm_kfree(dev, csdev->pdata->out_conns);
+> 
+> It will lead memory leaking if we don't release connections pointed by
+> 'out_conns' pointer array.  Something like:
+> 
+>            for (i = 0; i < csdev->pdata->nr_outconns; i++)
+>                 devm_kfree(dev, csdev->pdata->out_conns[i]);
+>            devm_kfree(dev, csdev->pdata->out_conns);
+> 
+> Otherwise, it looks good to me.
+> 
+> Thanks,
+> Leo
+> 
+
+Ah yeah, I'll just free the whole device instead of the individual 
+kfrees then and let devm handle it.
 
