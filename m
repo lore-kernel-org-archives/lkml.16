@@ -1,93 +1,95 @@
-Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BBF113633F;
-	Wed,  5 Mar 2025 12:47:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56CFE13633F;
+	Wed,  5 Mar 2025 12:48:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741178869; cv=none; b=g9Cuf/wjlY0/cbMopc4KWRLbBJ82SU1wL4yhpSAbQUIoX0XRNtH5CSPlJdbIKbOKiU6MYeZnOp7WFPXlPbdEP18dukRfmfVFtwYBXNptxdSAp2/4SeqNMZspW9IglD5QgJIjxTfmams6dpysFFSNdI5Wc4GS3JnNWEgVvuYdZ8s=
+	t=1741178914; cv=none; b=EDbI6UQB3TO3xHls/l23ZDI0VJYvj1ZEwqLExC6RhpHNWGCb6J8EogzTlRPd+Q+Ziis/+QGVvb0xosNs5fiuO0PS46vTBU8dsL245dTXvPthCuWVDgJoV7Oik9N7ENBP6xQCtFB2OpsexxP6HvCkqNvNKszinzCCASBQ5JARakQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741178869; c=relaxed/simple;
-	bh=XfXFTTGp1QVFV98VxMX0zwHYNo/nftzqQspqCemC3fk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KKl+qDaYnAmfO1yPyyDrVtELcZ1OJxM4UhSyd/IFZ+fCFGCMjE42jAVsukySZUTAzX+l3L89cMTaw95qI2JxEdgaVH17/+iVrA+goJuIFr3/umSNlamfwWinUk7f0fptw1BfsDnnEpMnYI2Ut5OKUemjvpS1zaISqXWHrSOgLXY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PyBpq2w6; arc=none smtp.client-ip=209.85.216.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741178914; c=relaxed/simple;
+	bh=gOoonUpRqPNjkNQ4QpxIoYxN7kGTACv6RWczqVQsTyA=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=PHTh8qDhmrWUlyd5QH91bILV9HUpoyfrXF56KOuv8Mo7T9C2gNoXoc20O6MG2aQGgxxBix52/OG/lOih14U3BsUkJcPQ+wXTGKxpM8nOu1Db4c0MTvVhjxZNock6H80JL+Y1hCaZsIU1GzKf01nwNQUtSdwE0BdQJi9qx+Nxss0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Tw78+aD2; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=fmJ56wTB; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PyBpq2w6"
-Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-2fee688b474so861633a91.3;
-        Wed, 05 Mar 2025 04:47:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741178868; x=1741783668; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XfXFTTGp1QVFV98VxMX0zwHYNo/nftzqQspqCemC3fk=;
-        b=PyBpq2w6WoXsptN67xAYeRJya/ycZiDE6I3z/HWCblUWDz7dx169XkQElZPwOdblqE
-         2lU5urN8nmFhmDoBtykq9Bxa/XMWF1WaW3/WcfZD8TCHf/i+qIsRJzEnu+ExEfKzGhaM
-         8vZZgQlMedgO2U0II5Chnkw4iBBoQz6BiBNN7kWxaZUYAptTJe98lVUvmg+skl1gDb7M
-         PCq52au+KYtvDTqZW5i5VYMASpwz/4ekw96QHjpaV7BjZ/bSjoTJEvdV2cwJTDkG5xAC
-         Ne8+Coqbq3iL6dvshm6/ITMzN5bxCtzDTjOVEWVVZ+dVcCoybeJ5ku3Rt2LRku1taUch
-         teVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741178868; x=1741783668;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=XfXFTTGp1QVFV98VxMX0zwHYNo/nftzqQspqCemC3fk=;
-        b=hseUyHSoLTtFwv3UCg031EzIVmuS6At82HsjNTODE2ofCQT5UHIbOJJXaLDdKep4mv
-         Q1TpxkcznqEKbnfUfFf5RIcR0r06EThViJbhKUCflqlJMgLDOevx68mdse32ZniceyDu
-         Id1LLVZnt8yRzHXP79prQHc5qePqE1wqPnWzEPQtggDvWn5c6dPLYfly1R5INrUUs2PZ
-         Qz8bLYrWSFuoucoJ4ZFLdTNHi7sNY5lwPYBfZ6N3fDWA6z7JWuquKIiHzdZhH/cNVHh7
-         wQvXfPlWZFFZlwaro7fQRY4ndwsI7IPknzI2HH4Pj5Ks7R6RSrEjm+4pP7WQxTkpaFAw
-         735w==
-X-Forwarded-Encrypted: i=1; AJvYcCVLYIS5L/AjoCMNj0ngdfkjdU6wxOuP/iZ/8c4BQFOsRx8sJceTjX8fQHGXEM5uDxIrSZTD4t3aCi6UZhF7@vger.kernel.org, AJvYcCVwjmTGAkbgZO/UG60lDtCCqWVcB6+6Pe3QyYvKHAQDCsg3mHIi7sh66fLF632kGd/0j+yDbgFwPJnin30=@vger.kernel.org, AJvYcCW9IYVDGXuuNcV3bQEueheMdboGVvqIReR5TsYcodpeIOWUinmWsLjyD2XIgrz+UMtzTh4htPJ/T7cBlcWUSVQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyY54FVg1WAmjivWDEzy1TsceiJq0EWrb5SuWZDoaL/FSRLsP6n
-	3mlqrl5fmp+SzgsdYSNEFfinpbpOocf4jKYWBsGBmaWD5XgaIpKIXMxSfHx6v0eU7MtX218xc96
-	apDkbGdM6fD6lOJohhSvCHOwobUw=
-X-Gm-Gg: ASbGnctgs82nnFy5HLF3jBS++DfCcjLmQKvtQUfbdsYAuXZLuqkY5I/nkuOWum38py2
-	tlHcQSt52EgdmcdtG9kp//w1A73KijCurg7XzAcuiiLRdrtfrbjeXWyXvLbshYwzoBLQq8uS/IN
-	PJnHevMzJNm476Fsz7n7hYxNFBNw==
-X-Google-Smtp-Source: AGHT+IHR6wKMB4APddqt0jTu3j3PDlKIsQUgPx7zctPz/rbSum8GUWLgU6G0Oqw4f3Kok/VN9N6g+KQ774Dx5rxv9H8=
-X-Received: by 2002:a17:90b:4c0b:b0:2fe:957c:1146 with SMTP id
- 98e67ed59e1d1-2ff497c4309mr2030809a91.6.1741178867659; Wed, 05 Mar 2025
- 04:47:47 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Tw78+aD2";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="fmJ56wTB"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1741178911;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gOoonUpRqPNjkNQ4QpxIoYxN7kGTACv6RWczqVQsTyA=;
+	b=Tw78+aD2h4Q9bJxkPET5ggTa0QOFh7B77Nmks06j5mAbVWcNFNVap3iMchhvravH5Q91wO
+	apwsgFcp/8WB1IoHmJRjs+C9AZSgjweHdzptvazFiOEABNKOImRQBgejoMiRr9eQAjg89I
+	csJ6iv+lD26eTKcCm5TNs9rBCDsI6UxsGMedLoPiDEr2GKAppOqZOlgz1bBK8YKwENu5LK
+	8q6ixkDUbCoRZGmMOcv8obqfEcB+s3Nnx6gzyFm9/JhX4JTWwYDFP3Wo9Q3nZYBhVZhDSl
+	ND4dGQQDWXEKfsb3XbTw8AiwGnxLckKAY86xlUcypC0c1mSwmWNm78bDWl7bHw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1741178911;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gOoonUpRqPNjkNQ4QpxIoYxN7kGTACv6RWczqVQsTyA=;
+	b=fmJ56wTB1MtRovyNVQEoH5tvswtVy3ruIssA+yqjmGNDv4QDUm3QYMDYGjoIwmnB0Uf4Zp
+	2Kuaj9lNmt0kEXAQ==
+To: Valentin Schneider <vschneid@redhat.com>,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-rt-users@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Mike Galbraith <efault@gmx.de>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Peter Collingbourne <pcc@google.com>, Neeraj Upadhyay
+ <neeraj.upadhyay@kernel.org>, Thiago Jung Bauermann
+ <thiago.bauermann@linaro.org>, Mark Brown <broonie@kernel.org>, Kristina
+ Martsenko <kristina.martsenko@arm.com>, Sebastian Andrzej Siewior
+ <bigeasy@linutronix.de>, Petr Tesarik <ptesarik@suse.com>, Jinjie Ruan
+ <ruanjinjie@huawei.com>, Juri Lelli <juri.lelli@redhat.com>, Phil Auld
+ <pauld@redhat.com>
+Subject: Re: [PATCH 1/1] arm64: enable PREEMPT_LAZY
+In-Reply-To: <20250305104925.189198-2-vschneid@redhat.com>
+References: <20250305104925.189198-1-vschneid@redhat.com>
+ <20250305104925.189198-2-vschneid@redhat.com>
+Date: Wed, 05 Mar 2025 13:48:30 +0100
+Message-ID: <87cyev63tt.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250304225245.2033120-1-benno.lossin@proton.me>
- <jpQp16UCJ00pInqOI-QFULU6-FKl2bBtAlmnxtXWLgXPVb7gy6d727nr7THeyks3ERF5Yqu3R6bikD0OK4mqXA==@protonmail.internalid>
- <20250304225245.2033120-15-benno.lossin@proton.me> <87h647d6xg.fsf@kernel.org>
-In-Reply-To: <87h647d6xg.fsf@kernel.org>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Wed, 5 Mar 2025 13:47:35 +0100
-X-Gm-Features: AQ5f1JrgLZHECIWbeIOwHVWTYGSTQpRk2veZ6sZwRLC6m5QNriP5yQ5LLd3onWQ
-Message-ID: <CANiq72mrxwuRJDQ4D0v4-LpdokDt4eLjfQu_QjvE9s0uBjegiA@mail.gmail.com>
-Subject: Re: [PATCH 14/22] rust: add pin-init crate build infrastructure
-To: Andreas Hindborg <a.hindborg@kernel.org>
-Cc: Benno Lossin <benno.lossin@proton.me>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>, Masahiro Yamada <masahiroy@kernel.org>, 
-	Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, linux-kernel@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org, linux-kbuild@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 
-On Wed, Mar 5, 2025 at 12:59=E2=80=AFPM Andreas Hindborg <a.hindborg@kernel=
-.org> wrote:
+On Wed, Mar 05 2025 at 11:49, Valentin Schneider wrote:
+> From: Mark Rutland <mark.rutland@arm.com>
 >
-> If it's not too much hassle, why not add them in the kernel as well? I
-> would rather not have to go fetch the user space repo from github, in
-> the event that I ever need to patch pin-init.
+> For an architecture to enable CONFIG_ARCH_HAS_RESCHED_LAZY, two things are
+> required:
+> 1) Adding a TIF_NEED_RESCHED_LAZY flag definition
+> 2) Checking for TIF_NEED_RESCHED_LAZY in the appropriate locations
+>
+> 2) is handled in a generic manner by CONFIG_GENERIC_ENTRY, which isn't
+> (yet) implemented for arm64. However, outside of core scheduler code,
+> TIF_NEED_RESCHED_LAZY only needs to be checked on a kernel exit, meaning:
+> o return/entry to userspace.
+> o return/entry to guest.
+>
+> The return/entry to a guest is all handled by xfer_to_guest_mode_handle_work()
+> which already does the right thing, so it can be left as-is.
+>
+> arm64 doesn't use common entry's exit_to_user_mode_prepare(), so update its
+> return to user path to check for TIF_NEED_RESCHED_LAZY and call into
+> schedule() accordingly.
+>
+> Link: https://lore.kernel.org/linux-rt-users/20241216190451.1c61977c@mordecai.tesarici.cz/
+> Link: https://lore.kernel.org/all/xhsmh4j0fl0p3.mognet@vschneid-thinkpadt14sgen2i.remote.csb/
+> Signed-off-by: Mark Rutland <mark.rutland@arm.com>
+> [testdrive, _TIF_WORK_MASK fixlet and changelog.]
+> Signed-off-by: Mike Galbraith <efault@gmx.de>
+> [Another round of testing; changelog faff]
+> Signed-off-by: Valentin Schneider <vschneid@redhat.com>
 
-If you need to patch it, then you should generally do so upstream --
-this is supposed to be a vendored/sync'd library.
-
-Cheers,
-Miguel
+Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
