@@ -1,181 +1,128 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from fw2.prolan.hu (fw2.prolan.hu [193.68.50.107])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2510020D500
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 10:50:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C6F021577C;
+	Wed,  5 Mar 2025 10:50:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.68.50.107
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741171828; cv=none; b=iDf5jsm/TqyH3zHqyXGuwkNPl2mXHykHrXb7ZQP67uok4y2bu0IvjxnTtaC54Cv2Xwq6IBvj919KyvK/rYwKKe9KbcEzV4j5TjTPpsm6mud2+jJ/RS3+1XPalDMoSH07APDHlA9watX61v4VAOs5Od327XcXds5H0NBSizBCS+I=
+	t=1741171840; cv=none; b=b+NQfEti2orWdMknc2WEH6bQ2WMgDiSXX8O/+n8N/wsaH5wIAnQ++M34oa18AR2mmGi3FMNJ6GByiod8ZT4KdhQhCq+qNCx3lNm5lhK5iztAHHQxjO3pJgpN+4KyjslmS+JnYKUiVm51Ov9FfEtQA5bnLV3fQFg80GXkeVkdWAc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741171828; c=relaxed/simple;
-	bh=cmsthhp8/NkuQQkP9C3knJn41ySXxSSKRF4QmJN5Az8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=c58lkKbglL4CK8/1Rd3C9vONixHv4RpY5DXE7W0IABotrAv/67rWk3iNhb4gxIab1iKwwiUaRYaHMXzDfLkIOTB0K4QBMS9tJxmrbxMHQ2BNif8TpCQPWZM5ZW0F2TKP5EDxGa3gYlZsHy9mB3DOKvOeQ2Yt3y2gf/EppYXXRho=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=iMEOw1se; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1741171840; c=relaxed/simple;
+	bh=y6IQTm/wFI3JULHY3gyjeTxFRdN7WOA8P4kaewwA7HI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=O58LA6yY8+u2xiDcN3mnGwV9GTpjr45migxzfyD4ZGgzNvwFwom0oOOGfvd2LF0LVFauo7SHdepkMT4/NeoDDu+qVp2cLDZ2rHXv9AikhJFqkDzgSiJryWrYfYVQWt51YJ0WJnS15vi6cBfMyvt6Q8vcQCW72dbfWNPqkj1oLx4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu; spf=pass smtp.mailfrom=prolan.hu; dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b=cdOFHZh9; arc=none smtp.client-ip=193.68.50.107
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=prolan.hu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iMEOw1se"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1741171826;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=JwAi6CpDFg+u1P0N2HGLBY5NxvRDUXxSPSsLQo91qeg=;
-	b=iMEOw1seceze+OxI6bXlTnERrReqLdwiHSlipi+csjsFGh6CVw2GKzZ/wqb1nEuvCGGE7Q
-	QI1k7VnM9/odGcVFSYsXrpRVebeVnWRJBBiXl6Lr0x45acstlFB1SorIqXGg5aopmRMRKy
-	zSy3TIDI6fdLzMxc39jNPdTRX+mszLY=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-235-4h_oXHHUPiatPH2cj0OVUQ-1; Wed,
- 05 Mar 2025 05:50:07 -0500
-X-MC-Unique: 4h_oXHHUPiatPH2cj0OVUQ-1
-X-Mimecast-MFC-AGG-ID: 4h_oXHHUPiatPH2cj0OVUQ_1741171806
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 3770118001CE;
-	Wed,  5 Mar 2025 10:50:05 +0000 (UTC)
-Received: from vschneid-thinkpadt14sgen2i.remote.csb (unknown [10.44.32.95])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 8526B1954B32;
-	Wed,  5 Mar 2025 10:49:58 +0000 (UTC)
-From: Valentin Schneider <vschneid@redhat.com>
-To: linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-rt-users@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>,
-	Mike Galbraith <efault@gmx.de>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Peter Collingbourne <pcc@google.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
-	Thiago Jung Bauermann <thiago.bauermann@linaro.org>,
-	Mark Brown <broonie@kernel.org>,
-	Kristina Martsenko <kristina.martsenko@arm.com>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Petr Tesarik <ptesarik@suse.com>,
-	Jinjie Ruan <ruanjinjie@huawei.com>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Phil Auld <pauld@redhat.com>
-Subject: [PATCH 1/1] arm64: enable PREEMPT_LAZY
-Date: Wed,  5 Mar 2025 11:49:25 +0100
-Message-ID: <20250305104925.189198-2-vschneid@redhat.com>
-In-Reply-To: <20250305104925.189198-1-vschneid@redhat.com>
-References: <20250305104925.189198-1-vschneid@redhat.com>
+	dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b="cdOFHZh9"
+Received: from proxmox-mailgw.intranet.prolan.hu (localhost.localdomain [127.0.0.1])
+	by proxmox-mailgw.intranet.prolan.hu (Proxmox) with ESMTP id 6033EA0A17;
+	Wed,  5 Mar 2025 11:50:28 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prolan.hu; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:from:from:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to; s=mail; bh=T7un43lbel7mKoax4H54
+	SGCUpO7TSRceePp36dvszoA=; b=cdOFHZh99rGVM1sM8QuDv5R3kyaOh7HarjnF
+	2Uk3GvTuA6nMgAvWverUak1vcWMlNSQuVoat5zyNOWSIY/aLVLWJYgLrf0wiMZeK
+	R+FMUq+YoLHkRsRmpZF8qMgDcQ0W20fxzkOedgvKH3Pgubfm0sQaE8reTq1ZaFRd
+	HLsiF00eoatIpkjREbC+xM7EIFZsSlSKyEYE5ri0dhyxL1QmRCEQRlzi5/yArL0y
+	03Q0aXQqCBPW5pXT8T1uwrpztTZC8g8+tRBGAg8Xh2ABH3duLXPWW2VbD/ZE8Dar
+	gE73ZZEPWU7yEjTGMcgxruJj7rUDqzLTP4i1EqnT72MdMb68mXcjYrRg7pUOO2f8
+	ETByJwjviTWH/P0EsFCM/NSuyk+bdwuxQ9ZaFy9LCLTGB5rMGHl0WZpzWbIGOC0o
+	4LUillFcFmL3nE/mZtRkXpEd+SLzBSEqVWXxXqmUa44OyGW3t+Q5roexu8Y8Bhul
+	K1jZ1e+NrlxBsK3miDLoBtAUy3f5Lu/Pt0PzZ/2mjax4zpaLUBIGxJW4XJsuKyWu
+	BrxhY5CgZ79SUlhZG+3wZNefo/j/bmiIhosSIa0u1twFf/t+pznyhXuxmTp7YH/7
+	KXmRSa2wizhO/r1lUXcO615G32hiQK4wTbY1T79Sp4lXi9TivMGzgBDvQxv7J5vW
+	Qu6SEeE=
+Message-ID: <93ce1511-53f6-42a3-b1a5-b6732105e87d@prolan.hu>
+Date: Wed, 5 Mar 2025 11:50:27 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] counter: microchip-tcb-capture: Fix undefined counter
+ channel state on probe
+To: William Breathitt Gray <wbg@kernel.org>, Kamel Bouhara
+	<kamel.bouhara@bootlin.com>
+CC: <linux-arm-kernel@lists.infradead.org>, <linux-iio@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+References: <20250305-preset-capture-mode-microchip-tcb-capture-v1-1-632c95c6421e@kernel.org>
+Content-Language: en-US, hu-HU
+From: =?UTF-8?B?Q3PDs2vDoXMgQmVuY2U=?= <csokas.bence@prolan.hu>
+In-Reply-To: <20250305-preset-capture-mode-microchip-tcb-capture-v1-1-632c95c6421e@kernel.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
+X-ClientProxiedBy: ATLAS.intranet.prolan.hu (10.254.0.229) To
+ ATLAS.intranet.prolan.hu (10.254.0.229)
+X-EsetResult: clean, is OK
+X-EsetId: 37303A2980D94852637D66
 
-From: Mark Rutland <mark.rutland@arm.com>
+Hi,
 
-For an architecture to enable CONFIG_ARCH_HAS_RESCHED_LAZY, two things are
-required:
-1) Adding a TIF_NEED_RESCHED_LAZY flag definition
-2) Checking for TIF_NEED_RESCHED_LAZY in the appropriate locations
+thanks for fixing this up!
 
-2) is handled in a generic manner by CONFIG_GENERIC_ENTRY, which isn't
-(yet) implemented for arm64. However, outside of core scheduler code,
-TIF_NEED_RESCHED_LAZY only needs to be checked on a kernel exit, meaning:
-o return/entry to userspace.
-o return/entry to guest.
+On 2025. 03. 05. 11:01, William Breathitt Gray wrote:
+> Hardware initialize of the timer counter channel does not occur on probe
+> thus leaving the Count in an undefined state until the first
+> function_write() callback is executed. Fix this by performing the proper
+> hardware initialization during probe.
+> 
+> Fixes: 106b104137fd ("counter: Add microchip TCB capture counter")
+> Reported-by: Csókás Bence <csokas.bence@prolan.hu>
+> Closes: https://lore.kernel.org/all/bfa70e78-3cc3-4295-820b-3925c26135cb@prolan.hu/
+> Signed-off-by: William Breathitt Gray <wbg@kernel.org>
+> ---
+> This should fix the issue where a user needs to set the count function
+> before they can use the counter. I don't have this hardware in person,
+> so please test this patch and let me know whether it works for you.
+> ---
+>   drivers/counter/microchip-tcb-capture.c | 19 +++++++++++++++++++
+>   1 file changed, 19 insertions(+)
+> 
+> diff --git a/drivers/counter/microchip-tcb-capture.c b/drivers/counter/microchip-tcb-capture.c
+> index 2f096a5b973d18edf5de5a2b33f2f72571deefb7..c391ac38b990939c6764a9120a4bd03289f68469 100644
+> --- a/drivers/counter/microchip-tcb-capture.c
+> +++ b/drivers/counter/microchip-tcb-capture.c
+> @@ -368,6 +368,25 @@ static int mchp_tc_probe(struct platform_device *pdev)
+>   			channel);
+>   	}
+>   
+> +	/* Disable Quadrature Decoder and position measure */
+> +	ret = regmap_update_bits(regmap, ATMEL_TC_BMR, ATMEL_TC_QDEN | ATMEL_TC_POSEN, 0);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* Setup the period capture mode */
+> +	ret = regmap_update_bits(regmap, ATMEL_TC_REG(priv->channel[0], CMR),
+> +				 ATMEL_TC_WAVE | ATMEL_TC_ABETRG | ATMEL_TC_CMR_MASK |
+> +				 ATMEL_TC_TCCLKS,
+> +				 ATMEL_TC_CMR_MASK);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* Enable clock and trigger counter */
+> +	ret = regmap_write(regmap, ATMEL_TC_REG(priv->channel[0], CCR),
+> +			   ATMEL_TC_CLKEN | ATMEL_TC_SWTRG);
+> +	if (ret)
+> +		return ret;
+> +
 
-The return/entry to a guest is all handled by xfer_to_guest_mode_handle_work()
-which already does the right thing, so it can be left as-is.
+This duplicates a lot of `mchp_tc_count_function_write()`. I'd much 
+rather have this code in a separate function called something like 
+`mchp_tc_setup_channels()`, that, depending on `priv->qdec_mode`, sets 
+up the BMR, CCR and CMRs, and then have both probe() and 
+function_write() call it. Or alternatively, have probe() call 
+function_write() at the end, but that's not as nice.
 
-arm64 doesn't use common entry's exit_to_user_mode_prepare(), so update its
-return to user path to check for TIF_NEED_RESCHED_LAZY and call into
-schedule() accordingly.
+> ---
+> base-commit: 8744dcd4fc7800de2eb9369410470bb2930d4c14
+> change-id: 20250305-preset-capture-mode-microchip-tcb-capture-fa31550ef594
+> 
+> Best regards,
 
-Link: https://lore.kernel.org/linux-rt-users/20241216190451.1c61977c@mordecai.tesarici.cz/
-Link: https://lore.kernel.org/all/xhsmh4j0fl0p3.mognet@vschneid-thinkpadt14sgen2i.remote.csb/
-Signed-off-by: Mark Rutland <mark.rutland@arm.com>
-[testdrive, _TIF_WORK_MASK fixlet and changelog.]
-Signed-off-by: Mike Galbraith <efault@gmx.de>
-[Another round of testing; changelog faff]
-Signed-off-by: Valentin Schneider <vschneid@redhat.com>
----
- arch/arm64/Kconfig                   |  1 +
- arch/arm64/include/asm/thread_info.h | 16 +++++++++-------
- arch/arm64/kernel/entry-common.c     |  2 +-
- 3 files changed, 11 insertions(+), 8 deletions(-)
-
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index fcdd0ed3eca89..7789d7fb6f191 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -41,6 +41,7 @@ config ARM64
- 	select ARCH_HAS_NMI_SAFE_THIS_CPU_OPS
- 	select ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
- 	select ARCH_HAS_NONLEAF_PMD_YOUNG if ARM64_HAFT
-+	select ARCH_HAS_PREEMPT_LAZY
- 	select ARCH_HAS_PTE_DEVMAP
- 	select ARCH_HAS_PTE_SPECIAL
- 	select ARCH_HAS_HW_PTE_YOUNG
-diff --git a/arch/arm64/include/asm/thread_info.h b/arch/arm64/include/asm/thread_info.h
-index 1114c1c3300a1..4443ef2789758 100644
---- a/arch/arm64/include/asm/thread_info.h
-+++ b/arch/arm64/include/asm/thread_info.h
-@@ -59,11 +59,12 @@ void arch_setup_new_exec(void);
- 
- #define TIF_SIGPENDING		0	/* signal pending */
- #define TIF_NEED_RESCHED	1	/* rescheduling necessary */
--#define TIF_NOTIFY_RESUME	2	/* callback before returning to user */
--#define TIF_FOREIGN_FPSTATE	3	/* CPU's FP state is not current's */
--#define TIF_UPROBE		4	/* uprobe breakpoint or singlestep */
--#define TIF_MTE_ASYNC_FAULT	5	/* MTE Asynchronous Tag Check Fault */
--#define TIF_NOTIFY_SIGNAL	6	/* signal notifications exist */
-+#define TIF_NEED_RESCHED_LAZY	2	/* Lazy rescheduling needed */
-+#define TIF_NOTIFY_RESUME	3	/* callback before returning to user */
-+#define TIF_FOREIGN_FPSTATE	4	/* CPU's FP state is not current's */
-+#define TIF_UPROBE		5	/* uprobe breakpoint or singlestep */
-+#define TIF_MTE_ASYNC_FAULT	6	/* MTE Asynchronous Tag Check Fault */
-+#define TIF_NOTIFY_SIGNAL	7	/* signal notifications exist */
- #define TIF_SYSCALL_TRACE	8	/* syscall trace active */
- #define TIF_SYSCALL_AUDIT	9	/* syscall auditing */
- #define TIF_SYSCALL_TRACEPOINT	10	/* syscall tracepoint for ftrace */
-@@ -85,6 +86,7 @@ void arch_setup_new_exec(void);
- 
- #define _TIF_SIGPENDING		(1 << TIF_SIGPENDING)
- #define _TIF_NEED_RESCHED	(1 << TIF_NEED_RESCHED)
-+#define _TIF_NEED_RESCHED_LAZY	(1 << TIF_NEED_RESCHED_LAZY)
- #define _TIF_NOTIFY_RESUME	(1 << TIF_NOTIFY_RESUME)
- #define _TIF_FOREIGN_FPSTATE	(1 << TIF_FOREIGN_FPSTATE)
- #define _TIF_SYSCALL_TRACE	(1 << TIF_SYSCALL_TRACE)
-@@ -100,10 +102,10 @@ void arch_setup_new_exec(void);
- #define _TIF_NOTIFY_SIGNAL	(1 << TIF_NOTIFY_SIGNAL)
- #define _TIF_TSC_SIGSEGV	(1 << TIF_TSC_SIGSEGV)
- 
--#define _TIF_WORK_MASK		(_TIF_NEED_RESCHED | _TIF_SIGPENDING | \
-+#define _TIF_WORK_MASK		(_TIF_NEED_RESCHED | _TIF_NEED_RESCHED_LAZY | \
- 				 _TIF_NOTIFY_RESUME | _TIF_FOREIGN_FPSTATE | \
- 				 _TIF_UPROBE | _TIF_MTE_ASYNC_FAULT | \
--				 _TIF_NOTIFY_SIGNAL)
-+				 _TIF_NOTIFY_SIGNAL | _TIF_SIGPENDING)
- 
- #define _TIF_SYSCALL_WORK	(_TIF_SYSCALL_TRACE | _TIF_SYSCALL_AUDIT | \
- 				 _TIF_SYSCALL_TRACEPOINT | _TIF_SECCOMP | \
-diff --git a/arch/arm64/kernel/entry-common.c b/arch/arm64/kernel/entry-common.c
-index b260ddc4d3e9a..7993fab0cab4c 100644
---- a/arch/arm64/kernel/entry-common.c
-+++ b/arch/arm64/kernel/entry-common.c
-@@ -132,7 +132,7 @@ static void do_notify_resume(struct pt_regs *regs, unsigned long thread_flags)
- 	do {
- 		local_irq_enable();
- 
--		if (thread_flags & _TIF_NEED_RESCHED)
-+		if (thread_flags & (_TIF_NEED_RESCHED | _TIF_NEED_RESCHED_LAZY))
- 			schedule();
- 
- 		if (thread_flags & _TIF_UPROBE)
--- 
-2.43.0
+Bence
 
