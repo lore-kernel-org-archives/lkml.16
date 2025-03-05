@@ -1,44 +1,44 @@
-Received: from sender3-pp-f112.zoho.com (sender3-pp-f112.zoho.com [136.143.184.112])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 098981FECB6;
-	Wed,  5 Mar 2025 21:25:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.184.112
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDC08200BB4;
+	Wed,  5 Mar 2025 21:25:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741209947; cv=pass; b=IzijJi/72b1/+994URzIey1+iIkPqBYDGhpJDB7wv6eYzHO0VQNp5zdjEn5kG2+cCl+P8wJWwpuSwddcbklImSwy5l9BEP7xJBxcx6Xr9UCHswBloAFu/yTZZ0R2D2ajxwq9lY/MlprLNF2bvv0xxwp5RsY2whG7L5vLUYQ+giQ=
+	t=1741209952; cv=pass; b=RHi2OU3Pd4Os1XJgX9QOT9VwzkvYuPirQzlr2s9DhvL4qX3C2jLNbzkEjWpU8RCot35AWNeevVTY/NxfE3XMFRmTyOcwTfJ1KW6n59giKVSHGGo2/bpFa9cLNyOFYUwY57yvsIN80tm7HTmdN7DRzj9hK+axwb6hJa63+CU8tqo=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741209947; c=relaxed/simple;
-	bh=mRLnkAz/3/zFzBA/+9f1bG1mPVpDkzNwvXb+dTiCRbM=;
+	s=arc-20240116; t=1741209952; c=relaxed/simple;
+	bh=b2iNJs6opHelDXadc6DXveA/k71zv2V/1l5HuasIuL8=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=CeqETwDaENNpfoa5WDK7GBsDAvgRB6y+FD+FWusT0N5BzWxSfvr8U6yJtpIKIlg9/20XID1fRjzpmOvnoWZx0O+lUvSKhxruRLYnz25DaDWC5dBMxwL5xEvdcSJhZSXOpm60XX5oVOyrMJxb7x8NIyeRkYimrqw/Gk4J7Fi2iAA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=afSO5S9M; arc=pass smtp.client-ip=136.143.184.112
+	 In-Reply-To:To:Cc; b=WciMpLc5Q5RusXVGZoN0aM+RVwMhviwqrwfLbVx9n+vB62out2wbKnY3S7HJMW/fjqlIJB7J2jpb+HIqHczr8Od+srQ786OzHG2CE5Z+f7NvhQqMK6ziyZ9QW1fQSdSt16TOzt7Vu6Ifk1x+IjbJVcloHzJhR9gC4xzQoTzKNoo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=ad24r2D9; arc=pass smtp.client-ip=136.143.188.112
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="afSO5S9M"
-ARC-Seal: i=1; a=rsa-sha256; t=1741209907; cv=none; 
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="ad24r2D9"
+ARC-Seal: i=1; a=rsa-sha256; t=1741209923; cv=none; 
 	d=zohomail.com; s=zohoarc; 
-	b=QsMYAxnFjRwP0TMPlg0/OFGq9tLFB/MXY0UeMOUT+PihlLKALi3hZN8umCkrLj7Mf94f3K8UYpTHEtgPpoyrQSN2U6nM+RDVygSSlctPT0rdHojZSC4WnH62WwTcaA1+9dy3K4+sxoqEoI2kSkOz6IBvg5p+rxdv5a1R9I5uH/w=
+	b=OEelxNAApT7vS6/Kz/HpU+OruTv1o+SEspOSAHXYeb+k+M8FtMIrnJseIuWePt7Ww3zgTMJiPsNImxQxIvXpPtXrLhNcfBELn+e7NfC6vqC4PBBbhMn2PQib2lwZGUxRg6izhz5V3DwwJMITw2Ehr6iZxh20jjkyjheAzgaXjcg=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1741209907; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=tkhunWzeT1J1bjdMLmmRSm+eqBFEg4KtTqCIoKPHFw4=; 
-	b=MjpBCV/9JmjoWNSj2+XXe5c0RRCxiDTVi1VQ6RKwK9rTYggF3BT5d3FRxemh8I/c5NIVAUT1tdIrnUWz3m6qc2knmO2SSjxEYY7qjAKUYFuO3/+dCaGmS71lALS7hXU6QcaUG9CfcRVCANI+lj7KimatHjRLKUs+kdpD2ysg5yg=
+	t=1741209923; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=3Jlaf/j3jeSFOP0bpJXJWNf3t/93dYT2IY3rNJ9zTBg=; 
+	b=NjiQwR3nqHSAGjONVa5oBcMek5op0frTVizzP+zzlRSh30bLNmYDAbY3NNRKOrJw3vK1Vnb4VEcY/gZjBbESwv/5MVznBCeY0UTjh3fl5OZE9NAdNGG5c9fl5uHh89BU0kUj6/+OfdgQeHVxWnODTjDOF0j7s03gPspJDY6Uslo=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
 	dkim=pass  header.i=collabora.com;
 	spf=pass  smtp.mailfrom=nicolas.frattaroli@collabora.com;
 	dmarc=pass header.from=<nicolas.frattaroli@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1741209907;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1741209923;
 	s=zohomail; d=collabora.com; i=nicolas.frattaroli@collabora.com;
 	h=From:From:Date:Date:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Message-Id:References:In-Reply-To:To:To:Cc:Cc:Reply-To;
-	bh=tkhunWzeT1J1bjdMLmmRSm+eqBFEg4KtTqCIoKPHFw4=;
-	b=afSO5S9MSGQURQrMeTAUJORZ7WyxaJRCxHH4Rw65OIsoOCPjCb3a4EuFcgK8kIDF
-	9U8crzWCz+JOWEgpt66UNTIr17N6I5d7LcvkOyX7zF2sEhTz3wKbUOn6ZIa6cMtvb6J
-	e0A4EuuDqKgMzf6iAmDJr/DQmcSQKBRO7PZJxIbk=
-Received: by mx.zohomail.com with SMTPS id 1741209905068926.4403017565099;
-	Wed, 5 Mar 2025 13:25:05 -0800 (PST)
+	bh=3Jlaf/j3jeSFOP0bpJXJWNf3t/93dYT2IY3rNJ9zTBg=;
+	b=ad24r2D9OWGQGChRJqlugVz6q0q4YBndCylEOz7E90Dvu/wKY76zIRNbuvl8YJhR
+	sb4awhQY1wVvKsvsN5NMKl8Wbm8uxa0pwdMMP9Tuar5EQ95L2xKMFoVkr8dSFQ1SI01
+	96I7vy1/ZlaOBvp6xklDcPsBa1QTZMkvaAkFbYE8=
+Received: by mx.zohomail.com with SMTPS id 174120992258066.36353357994255;
+	Wed, 5 Mar 2025 13:25:22 -0800 (PST)
 From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-Date: Wed, 05 Mar 2025 22:24:22 +0100
-Subject: [PATCH 2/7] clk: rockchip: add support for GRF gated clocks
+Date: Wed, 05 Mar 2025 22:24:25 +0100
+Subject: [PATCH 5/7] arm64: dts: rockchip: Add RK3576 SAI nodes
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,7 +47,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250305-rk3576-sai-v1-2-64e6cf863e9a@collabora.com>
+Message-Id: <20250305-rk3576-sai-v1-5-64e6cf863e9a@collabora.com>
 References: <20250305-rk3576-sai-v1-0-64e6cf863e9a@collabora.com>
 In-Reply-To: <20250305-rk3576-sai-v1-0-64e6cf863e9a@collabora.com>
 To: Michael Turquette <mturquette@baylibre.com>, 
@@ -67,516 +67,238 @@ Cc: Luca Ceresoli <luca.ceresoli@bootlin.com>,
  Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
 X-Mailer: b4 0.14.2
 
-Certain Rockchip SoCs, the RK3576 in particular, have some clocks that
-are essentially gated behind an additional GRF write. Downstream uses an
-additional entirely separate clock driver that maps over the same
-address range as ioc_grf in the DT.
+The RK3576 SoC has 10 SAI controllers in total. Five of them are in the
+video output power domains, and are used for digital audio output along
+with the video signal of those, e.g. HDMI audio.
 
-Instead, this implementation introduces a new gate type, GRF gates.
-These gates function quite like regular gates. In effect, this means
-they'll only be enabled if the clock is used, which I feel is a more
-appropriate way to describe this compared to doing it in, say, pinctrl,
-or even in the drivers of the respective clock consumers such as SAI.
-
-It should be noted that RK3588 has similar GRF-gated clocks, but has
-gotten away with not having to deal with any of this because the clocks
-are ungated by the hardware's register reset value by default. The
-RK3576 is not so lucky, and the hardware's reset value gates them
-instead, which means we'll have to ungate them somewhere.
-
-In order to facilitate the GRF gating on RK3576, we introduce the
-concept of auxiliary GRFs. The RK3576 has several defined GRF nodes, and
-so far it could get away with just using one for MUXGRF by reassigning
-the clock provider's grf member.
-
-However, with the IOC GRF gated clocks, we now also need access to the
-IOC GRF, so we can't get away with this anymore. Instead, we add a
-hashtable to the clock provider struct, keyed by a grf type enum. The
-clock branches can then specify through the use of a new member of that
-enum's type (with corresponding changes to relevant macros) which GRF
-range they would like to use.
-
-The SoC-specific clk_init can then populate the hashtable with the GRFs
-that it needs. This way, GRF-dependent clock branches don't have to be
-registered in a different step than everything else, as they would need
-to be had I extended the branch struct to instead take a pointer to a
-GRF, which isn't available at the time most of our branches are defined.
+The other five, SAI0 through SAI4, are exposed externally. SAI0 and SAI1
+are capable of 8-channel audio, whereas SAI2, SAI3 and SAI4 are limited
+to two channels. These five are in the audio power domain.
 
 Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
 ---
- drivers/clk/rockchip/Makefile     |   1 +
- drivers/clk/rockchip/clk-rk3328.c |   6 +--
- drivers/clk/rockchip/clk-rk3568.c |   2 +-
- drivers/clk/rockchip/clk-rk3576.c |  59 +++++++++++++++++----
- drivers/clk/rockchip/clk.c        |  24 ++++++++-
- drivers/clk/rockchip/clk.h        |  49 +++++++++++++++++-
- drivers/clk/rockchip/gate-grf.c   | 105 ++++++++++++++++++++++++++++++++++++++
- 7 files changed, 230 insertions(+), 16 deletions(-)
+ arch/arm64/boot/dts/rockchip/rk3576.dtsi | 194 +++++++++++++++++++++++++++++++
+ 1 file changed, 194 insertions(+)
 
-diff --git a/drivers/clk/rockchip/Makefile b/drivers/clk/rockchip/Makefile
-index e8ece20aebfdeffbdc5bfffd2c6f35f2cfcf74f6..f0e0b2c6e876a84610fb3ecf33cc1935b10058d9 100644
---- a/drivers/clk/rockchip/Makefile
-+++ b/drivers/clk/rockchip/Makefile
-@@ -14,6 +14,7 @@ clk-rockchip-y += clk-mmc-phase.o
- clk-rockchip-y += clk-muxgrf.o
- clk-rockchip-y += clk-ddr.o
- clk-rockchip-y += gate-link.o
-+clk-rockchip-y += gate-grf.o
- clk-rockchip-$(CONFIG_RESET_CONTROLLER) += softrst.o
+diff --git a/arch/arm64/boot/dts/rockchip/rk3576.dtsi b/arch/arm64/boot/dts/rockchip/rk3576.dtsi
+index 8591065b575223a5eb2da70f723f16969aa2ecf7..2691efea02a3852babfdeb25c490f9309356c3b7 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3576.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3576.dtsi
+@@ -1010,6 +1010,38 @@ vop_mmu: iommu@27d07e00 {
+ 			status = "disabled";
+ 		};
  
- obj-$(CONFIG_CLK_PX30)          += clk-px30.o
-diff --git a/drivers/clk/rockchip/clk-rk3328.c b/drivers/clk/rockchip/clk-rk3328.c
-index cf60fcf2fa5cde4ef97a05852f071763a4ccee40..cd5f65b6cdf55074c753f1dee96972c2a589c260 100644
---- a/drivers/clk/rockchip/clk-rk3328.c
-+++ b/drivers/clk/rockchip/clk-rk3328.c
-@@ -677,9 +677,9 @@ static struct rockchip_clk_branch rk3328_clk_branches[] __initdata = {
- 			RK3328_CLKSEL_CON(27), 15, 1, MFLAGS, 8, 5, DFLAGS,
- 			RK3328_CLKGATE_CON(3), 5, GFLAGS),
- 	MUXGRF(SCLK_MAC2IO, "clk_mac2io", mux_mac2io_src_p, CLK_SET_RATE_NO_REPARENT,
--			RK3328_GRF_MAC_CON1, 10, 1, MFLAGS),
-+			RK3328_GRF_MAC_CON1, 10, 1, MFLAGS, grf_type_sys),
- 	MUXGRF(SCLK_MAC2IO_EXT, "clk_mac2io_ext", mux_mac2io_ext_p, CLK_SET_RATE_NO_REPARENT,
--			RK3328_GRF_SOC_CON4, 14, 1, MFLAGS),
-+			RK3328_GRF_SOC_CON4, 14, 1, MFLAGS, grf_type_sys),
++		sai5: sai@27d40000 {
++			compatible = "rockchip,rk3576-sai";
++			reg = <0x0 0x27d40000 0x0 0x1000>;
++			interrupts = <GIC_SPI 192 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cru MCLK_SAI5_8CH>, <&cru HCLK_SAI5_8CH>;
++			clock-names = "mclk", "hclk";
++			dmas = <&dmac2 3>;
++			dma-names = "rx";
++			power-domains = <&power RK3576_PD_VO0>;
++			resets = <&cru SRST_M_SAI5_8CH>, <&cru SRST_H_SAI5_8CH>;
++			reset-names = "m", "h";
++			#sound-dai-cells = <0>;
++			sound-name-prefix = "SAI5";
++			status = "disabled";
++		};
++
++		sai6: sai@27d50000 {
++			compatible = "rockchip,rk3576-sai";
++			reg = <0x0 0x27d50000 0x0 0x1000>;
++			interrupts = <GIC_SPI 193 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cru MCLK_SAI6_8CH>, <&cru HCLK_SAI6_8CH>;
++			clock-names = "mclk", "hclk";
++			dmas = <&dmac2 4>, <&dmac2 5>;
++			dma-names = "tx", "rx";
++			power-domains = <&power RK3576_PD_VO0>;
++			resets = <&cru SRST_M_SAI6_8CH>, <&cru SRST_H_SAI6_8CH>;
++			reset-names = "m", "h";
++			#sound-dai-cells = <0>;
++			sound-name-prefix = "SAI6";
++			status = "disabled";
++		};
++
+ 		hdmi: hdmi@27da0000 {
+ 			compatible = "rockchip,rk3576-dw-hdmi-qp";
+ 			reg = <0x0 0x27da0000 0x0 0x20000>;
+@@ -1050,6 +1082,54 @@ hdmi_out: port@1 {
+ 			};
+ 		};
  
- 	COMPOSITE(SCLK_MAC2PHY_SRC, "clk_mac2phy_src", mux_2plls_p, 0,
- 			RK3328_CLKSEL_CON(26), 7, 1, MFLAGS, 0, 5, DFLAGS,
-@@ -692,7 +692,7 @@ static struct rockchip_clk_branch rk3328_clk_branches[] __initdata = {
- 			RK3328_CLKSEL_CON(26), 8, 2, DFLAGS,
- 			RK3328_CLKGATE_CON(9), 2, GFLAGS),
- 	MUXGRF(SCLK_MAC2PHY, "clk_mac2phy", mux_mac2phy_src_p, CLK_SET_RATE_NO_REPARENT,
--			RK3328_GRF_MAC_CON2, 10, 1, MFLAGS),
-+			RK3328_GRF_MAC_CON2, 10, 1, MFLAGS, grf_type_sys),
++		sai7: sai@27ed0000 {
++			compatible = "rockchip,rk3576-sai";
++			reg = <0x0 0x27ed0000 0x0 0x1000>;
++			interrupts = <GIC_SPI 194 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cru MCLK_SAI7_8CH>, <&cru HCLK_SAI7_8CH>;
++			clock-names = "mclk", "hclk";
++			dmas = <&dmac2 19>;
++			dma-names = "tx";
++			power-domains = <&power RK3576_PD_VO1>;
++			resets = <&cru SRST_M_SAI7_8CH>, <&cru SRST_H_SAI7_8CH>;
++			reset-names = "m", "h";
++			#sound-dai-cells = <0>;
++			sound-name-prefix = "SAI7";
++			status = "disabled";
++		};
++
++		sai8: sai@27ee0000 {
++			compatible = "rockchip,rk3576-sai";
++			reg = <0x0 0x27ee0000 0x0 0x1000>;
++			interrupts = <GIC_SPI 372 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cru MCLK_SAI8_8CH>, <&cru HCLK_SAI8_8CH>;
++			clock-names = "mclk", "hclk";
++			dmas = <&dmac1 7>;
++			dma-names = "tx";
++			power-domains = <&power RK3576_PD_VO1>;
++			resets = <&cru SRST_M_SAI8_8CH>, <&cru SRST_H_SAI8_8CH>;
++			reset-names = "m", "h";
++			#sound-dai-cells = <0>;
++			sound-name-prefix = "SAI8";
++			status = "disabled";
++		};
++
++		sai9: sai@27ef0000 {
++			compatible = "rockchip,rk3576-sai";
++			reg = <0x0 0x27ef0000 0x0 0x1000>;
++			interrupts = <GIC_SPI 373 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cru MCLK_SAI9_8CH>, <&cru HCLK_SAI9_8CH>;
++			clock-names = "mclk", "hclk";
++			dmas = <&dmac0 26>;
++			dma-names = "tx";
++			power-domains = <&power RK3576_PD_VO1>;
++			resets = <&cru SRST_M_SAI9_8CH>, <&cru SRST_H_SAI9_8CH>;
++			reset-names = "m", "h";
++			#sound-dai-cells = <0>;
++			sound-name-prefix = "SAI9";
++			status = "disabled";
++		};
++
+ 		qos_hdcp1: qos@27f02000 {
+ 			compatible = "rockchip,rk3576-qos", "syscon";
+ 			reg = <0x0 0x27f02000 0x0 0x20>;
+@@ -1436,6 +1516,120 @@ log_leakage: log-leakage@22 {
+ 			};
+ 		};
  
- 	FACTOR(0, "xin12m", "xin24m", 0, 1, 2),
- 
-diff --git a/drivers/clk/rockchip/clk-rk3568.c b/drivers/clk/rockchip/clk-rk3568.c
-index 7d9279291e7692c5ebdda16563fd09f87732e6d1..5f250bb8260ca0447f7249f212a49597c6c54887 100644
---- a/drivers/clk/rockchip/clk-rk3568.c
-+++ b/drivers/clk/rockchip/clk-rk3568.c
-@@ -590,7 +590,7 @@ static struct rockchip_clk_branch rk3568_clk_branches[] __initdata = {
- 			RK3568_CLKSEL_CON(9), 6, 2, MFLAGS, 0, 5, DFLAGS,
- 			RK3568_CLKGATE_CON(4), 0, GFLAGS),
- 	MUXGRF(CLK_DDR1X, "clk_ddr1x", clk_ddr1x_p, CLK_SET_RATE_PARENT,
--			RK3568_CLKSEL_CON(9), 15, 1, MFLAGS),
-+			RK3568_CLKSEL_CON(9), 15, 1, MFLAGS, grf_type_sys),
- 
- 	COMPOSITE_NOMUX(CLK_MSCH, "clk_msch", "clk_ddr1x", CLK_IGNORE_UNUSED,
- 			RK3568_CLKSEL_CON(10), 0, 2, DFLAGS,
-diff --git a/drivers/clk/rockchip/clk-rk3576.c b/drivers/clk/rockchip/clk-rk3576.c
-index be703f250197af2097fa591837de03accb8c51da..1e269490ac7f6b56ed4e53a711c7d4d922b6e149 100644
---- a/drivers/clk/rockchip/clk-rk3576.c
-+++ b/drivers/clk/rockchip/clk-rk3576.c
-@@ -15,6 +15,7 @@
- 
- #define RK3576_GRF_SOC_STATUS0		0x600
- #define RK3576_PMU0_GRF_OSC_CON6	0x18
-+#define RK3576_VCCIO_IOC_MISC_CON0	0x6400
- 
- enum rk3576_plls {
- 	bpll, lpll, vpll, aupll, cpll, gpll, ppll,
-@@ -1481,6 +1482,14 @@ static struct rockchip_clk_branch rk3576_clk_branches[] __initdata = {
- 			RK3576_CLKGATE_CON(10), 0, GFLAGS),
- 	GATE(CLK_SAI0_MCLKOUT, "clk_sai0_mclkout", "mclk_sai0_8ch", 0,
- 			RK3576_CLKGATE_CON(10), 1, GFLAGS),
-+	GATE_GRF(CLK_SAI0_MCLKOUT_TO_IO, "mclk_sai0_to_io", "clk_sai0_mclkout",
-+			0, RK3576_VCCIO_IOC_MISC_CON0, 0, GFLAGS, grf_type_ioc),
-+	GATE_GRF(CLK_SAI1_MCLKOUT_TO_IO, "mclk_sai1_to_io", "clk_sai1_mclkout",
-+			0, RK3576_VCCIO_IOC_MISC_CON0, 1, GFLAGS, grf_type_ioc),
-+	GATE_GRF(CLK_SAI2_MCLKOUT_TO_IO, "mclk_sai2_to_io", "clk_sai2_mclkout",
-+			0, RK3576_VCCIO_IOC_MISC_CON0, 2, GFLAGS, grf_type_ioc),
-+	GATE_GRF(CLK_SAI3_MCLKOUT_TO_IO, "mclk_sai3_to_io", "clk_sai3_mclkout",
-+			0, RK3576_VCCIO_IOC_MISC_CON0, 3, GFLAGS, grf_type_ioc),
- 
- 	/* sdgmac */
- 	COMPOSITE_NODIV(HCLK_SDGMAC_ROOT, "hclk_sdgmac_root", mux_200m_100m_50m_24m_p, 0,
-@@ -1678,13 +1687,13 @@ static struct rockchip_clk_branch rk3576_clk_branches[] __initdata = {
- 
- 	/* phy ref */
- 	MUXGRF(CLK_PHY_REF_SRC, "clk_phy_ref_src", clk_phy_ref_src_p,  0,
--			RK3576_PMU0_GRF_OSC_CON6, 4, 1, MFLAGS),
-+			RK3576_PMU0_GRF_OSC_CON6, 4, 1, MFLAGS, grf_type_pmu0),
- 	MUXGRF(CLK_USBPHY_REF_SRC, "clk_usbphy_ref_src", clk_usbphy_ref_src_p,  0,
--			RK3576_PMU0_GRF_OSC_CON6, 2, 1, MFLAGS),
-+			RK3576_PMU0_GRF_OSC_CON6, 2, 1, MFLAGS, grf_type_pmu0),
- 	MUXGRF(CLK_CPLL_REF_SRC, "clk_cpll_ref_src", clk_cpll_ref_src_p,  0,
--			RK3576_PMU0_GRF_OSC_CON6, 1, 1, MFLAGS),
-+			RK3576_PMU0_GRF_OSC_CON6, 1, 1, MFLAGS, grf_type_pmu0),
- 	MUXGRF(CLK_AUPLL_REF_SRC, "clk_aupll_ref_src", clk_aupll_ref_src_p,  0,
--			RK3576_PMU0_GRF_OSC_CON6, 0, 1, MFLAGS),
-+			RK3576_PMU0_GRF_OSC_CON6, 0, 1, MFLAGS, grf_type_pmu0),
- 
- 	/* secure ns */
- 	COMPOSITE_NODIV(ACLK_SECURE_NS, "aclk_secure_ns", mux_350m_175m_116m_24m_p, CLK_IS_CRITICAL,
-@@ -1727,17 +1736,26 @@ static void __init rk3576_clk_init(struct device_node *np)
- 	struct rockchip_clk_provider *ctx;
- 	unsigned long clk_nr_clks;
- 	void __iomem *reg_base;
--	struct regmap *grf;
-+	struct rockchip_aux_grf *ioc_grf_e;
-+	struct rockchip_aux_grf *pmu0_grf_e;
-+	struct regmap *ioc_grf;
-+	struct regmap *pmu0_grf;
- 
- 	clk_nr_clks = rockchip_clk_find_max_clk_id(rk3576_clk_branches,
- 					ARRAY_SIZE(rk3576_clk_branches)) + 1;
- 
--	grf = syscon_regmap_lookup_by_compatible("rockchip,rk3576-pmu0-grf");
--	if (IS_ERR(grf)) {
-+	pmu0_grf = syscon_regmap_lookup_by_compatible("rockchip,rk3576-pmu0-grf");
-+	if (IS_ERR(pmu0_grf)) {
- 		pr_err("%s: could not get PMU0 GRF syscon\n", __func__);
- 		return;
- 	}
- 
-+	ioc_grf = syscon_regmap_lookup_by_compatible("rockchip,rk3576-ioc-grf");
-+	if (IS_ERR(ioc_grf)) {
-+		pr_err("%s: could not get IOC GRF syscon\n", __func__);
-+		return;
-+	}
++		sai0: sai@2a600000 {
++			compatible = "rockchip,rk3576-sai";
++			reg = <0x0 0x2a600000 0x0 0x1000>;
++			interrupts = <GIC_SPI 187 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cru MCLK_SAI0_8CH>, <&cru HCLK_SAI0_8CH>;
++			clock-names = "mclk", "hclk";
++			dmas = <&dmac0 0>, <&dmac0 1>;
++			dma-names = "tx", "rx";
++			power-domains = <&power RK3576_PD_AUDIO>;
++			resets = <&cru SRST_M_SAI0_8CH>, <&cru SRST_H_SAI0_8CH>;
++			reset-names = "m", "h";
++			pinctrl-names = "default";
++			pinctrl-0 = <&sai0m0_lrck
++				&sai0m0_sclk
++				&sai0m0_sdi0
++				&sai0m0_sdi1
++				&sai0m0_sdi2
++				&sai0m0_sdi3
++				&sai0m0_sdo0
++				&sai0m0_sdo1
++				&sai0m0_sdo2
++				&sai0m0_sdo3>;
++			#sound-dai-cells = <0>;
++			sound-name-prefix = "SAI0";
++			status = "disabled";
++		};
 +
- 	reg_base = of_iomap(np, 0);
- 	if (!reg_base) {
- 		pr_err("%s: could not map cru region\n", __func__);
-@@ -1747,11 +1765,24 @@ static void __init rk3576_clk_init(struct device_node *np)
- 	ctx = rockchip_clk_init(np, reg_base, clk_nr_clks);
- 	if (IS_ERR(ctx)) {
- 		pr_err("%s: rockchip clk init failed\n", __func__);
--		iounmap(reg_base);
--		return;
-+		goto err_unmap;
- 	}
- 
--	ctx->grf = grf;
-+	pmu0_grf_e = kzalloc(sizeof(*pmu0_grf_e), GFP_KERNEL);
-+	if (!pmu0_grf_e)
-+		goto err_unmap;
++		sai1: sai@2a610000 {
++			compatible = "rockchip,rk3576-sai";
++			reg = <0x0 0x2a610000 0x0 0x1000>;
++			interrupts = <GIC_SPI 188 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cru MCLK_SAI1_8CH>, <&cru HCLK_SAI1_8CH>;
++			clock-names = "mclk", "hclk";
++			dmas = <&dmac0 2>, <&dmac0 3>;
++			dma-names = "tx", "rx";
++			power-domains = <&power RK3576_PD_AUDIO>;
++			resets = <&cru SRST_M_SAI1_8CH>, <&cru SRST_H_SAI1_8CH>;
++			reset-names = "m", "h";
++			pinctrl-names = "default";
++			pinctrl-0 = <&sai1m0_lrck
++				&sai1m0_sclk
++				&sai1m0_sdi0
++				&sai1m0_sdo0
++				&sai1m0_sdo1
++				&sai1m0_sdo2
++				&sai1m0_sdo3>;
++			#sound-dai-cells = <0>;
++			sound-name-prefix = "SAI1";
++			status = "disabled";
++		};
 +
-+	pmu0_grf_e->grf = pmu0_grf;
-+	pmu0_grf_e->type = grf_type_pmu0;
-+	hash_add(ctx->aux_grf_table, &pmu0_grf_e->node, grf_type_pmu0);
++		sai2: sai@2a620000 {
++			compatible = "rockchip,rk3576-sai";
++			reg = <0x0 0x2a620000 0x0 0x1000>;
++			interrupts = <GIC_SPI 189 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cru MCLK_SAI2_2CH>, <&cru HCLK_SAI2_2CH>;
++			clock-names = "mclk", "hclk";
++			dmas = <&dmac1 0>, <&dmac1 1>;
++			dma-names = "tx", "rx";
++			power-domains = <&power RK3576_PD_AUDIO>;
++			resets = <&cru SRST_M_SAI2_2CH>, <&cru SRST_H_SAI2_2CH>;
++			reset-names = "m", "h";
++			pinctrl-names = "default";
++			pinctrl-0 = <&sai2m0_lrck
++				&sai2m0_sclk
++				&sai2m0_sdi
++				&sai2m0_sdo>;
++			#sound-dai-cells = <0>;
++			sound-name-prefix = "SAI2";
++			status = "disabled";
++		};
 +
-+	ioc_grf_e = kzalloc(sizeof(*ioc_grf_e), GFP_KERNEL);
-+	if (!ioc_grf_e)
-+		goto err_free_pmu0;
++		sai3: sai@2a630000 {
++			compatible = "rockchip,rk3576-sai";
++			reg = <0x0 0x2a630000 0x0 0x1000>;
++			interrupts = <GIC_SPI 190 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cru MCLK_SAI3_2CH>, <&cru HCLK_SAI3_2CH>;
++			clock-names = "mclk", "hclk";
++			dmas = <&dmac1 2>, <&dmac1 3>;
++			dma-names = "tx", "rx";
++			power-domains = <&power RK3576_PD_AUDIO>;
++			resets = <&cru SRST_M_SAI3_2CH>, <&cru SRST_H_SAI3_2CH>;
++			reset-names = "m", "h";
++			pinctrl-names = "default";
++			pinctrl-0 = <&sai3m0_lrck
++				&sai3m0_sclk
++				&sai3m0_sdi
++				&sai3m0_sdo>;
++			#sound-dai-cells = <0>;
++			sound-name-prefix = "SAI3";
++			status = "disabled";
++		};
 +
-+	ioc_grf_e->grf = ioc_grf;
-+	ioc_grf_e->type = grf_type_ioc;
-+	hash_add(ctx->aux_grf_table, &ioc_grf_e->node, grf_type_ioc);
- 
- 	rockchip_clk_register_plls(ctx, rk3576_pll_clks,
- 				   ARRAY_SIZE(rk3576_pll_clks),
-@@ -1774,6 +1805,14 @@ static void __init rk3576_clk_init(struct device_node *np)
- 	rockchip_register_restart_notifier(ctx, RK3576_GLB_SRST_FST, NULL);
- 
- 	rockchip_clk_of_add_provider(np, ctx);
++		sai4: sai@2a640000 {
++			compatible = "rockchip,rk3576-sai";
++			reg = <0x0 0x2a640000 0x0 0x1000>;
++			interrupts = <GIC_SPI 191 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cru MCLK_SAI4_2CH>, <&cru HCLK_SAI4_2CH>;
++			clock-names = "mclk", "hclk";
++			dmas = <&dmac2 0>, <&dmac2 1>;
++			dma-names = "tx", "rx";
++			power-domains = <&power RK3576_PD_AUDIO>;
++			resets = <&cru SRST_M_SAI4_2CH>, <&cru SRST_H_SAI4_2CH>;
++			reset-names = "m", "h";
++			pinctrl-names = "default";
++			pinctrl-0 = <&sai4m0_lrck
++				&sai4m0_sclk
++				&sai4m0_sdi
++				&sai4m0_sdo>;
++			#sound-dai-cells = <0>;
++			sound-name-prefix = "SAI4";
++			status = "disabled";
++		};
 +
-+	return;
-+
-+err_free_pmu0:
-+	kfree(pmu0_grf_e);
-+err_unmap:
-+	iounmap(reg_base);
-+	return;
- }
- 
- CLK_OF_DECLARE(rk3576_cru, "rockchip,rk3576-cru", rk3576_clk_init);
-diff --git a/drivers/clk/rockchip/clk.c b/drivers/clk/rockchip/clk.c
-index cbf93ea119a9e25c037607ded1f6f358918e8656..8e035b08697eb5bf193ddb9ab4c6154332eb3af1 100644
---- a/drivers/clk/rockchip/clk.c
-+++ b/drivers/clk/rockchip/clk.c
-@@ -382,6 +382,8 @@ static struct rockchip_clk_provider *rockchip_clk_init_base(
- 	ctx->cru_node = np;
- 	spin_lock_init(&ctx->lock);
- 
-+	hash_init(ctx->aux_grf_table);
-+
- 	ctx->grf = syscon_regmap_lookup_by_phandle(ctx->cru_node,
- 						   "rockchip,grf");
- 
-@@ -496,6 +498,8 @@ void rockchip_clk_register_branches(struct rockchip_clk_provider *ctx,
- 				    struct rockchip_clk_branch *list,
- 				    unsigned int nr_clk)
- {
-+	struct regmap *grf = ctx->grf;
-+	struct rockchip_aux_grf *agrf;
- 	struct clk *clk;
- 	unsigned int idx;
- 	unsigned long flags;
-@@ -504,6 +508,17 @@ void rockchip_clk_register_branches(struct rockchip_clk_provider *ctx,
- 		flags = list->flags;
- 		clk = NULL;
- 
-+		/* for GRF-dependant branches, choose the right grf first */
-+		if ((list->branch_type == branch_muxgrf || list->branch_type == branch_grf_gate) &&
-+				list->grf_type != grf_type_sys) {
-+			hash_for_each_possible(ctx->aux_grf_table, agrf, node, list->grf_type) {
-+				if (agrf->type == list->grf_type) {
-+					grf = agrf->grf;
-+					break;
-+				}
-+			}
-+		}
-+
- 		/* catch simple muxes */
- 		switch (list->branch_type) {
- 		case branch_mux:
-@@ -526,7 +541,7 @@ void rockchip_clk_register_branches(struct rockchip_clk_provider *ctx,
- 		case branch_muxgrf:
- 			clk = rockchip_clk_register_muxgrf(list->name,
- 				list->parent_names, list->num_parents,
--				flags, ctx->grf, list->muxdiv_offset,
-+				flags, grf, list->muxdiv_offset,
- 				list->mux_shift, list->mux_width,
- 				list->mux_flags);
- 			break;
-@@ -573,6 +588,13 @@ void rockchip_clk_register_branches(struct rockchip_clk_provider *ctx,
- 				ctx->reg_base + list->gate_offset,
- 				list->gate_shift, list->gate_flags, &ctx->lock);
- 			break;
-+		case branch_grf_gate:
-+			flags |= CLK_SET_RATE_PARENT;
-+			clk = rockchip_clk_register_gate_grf(list->name,
-+				list->parent_names[0], flags, grf,
-+				list->gate_offset, list->gate_shift,
-+				list->gate_flags);
-+			break;
- 		case branch_composite:
- 			clk = rockchip_clk_register_branch(list->name,
- 				list->parent_names, list->num_parents,
-diff --git a/drivers/clk/rockchip/clk.h b/drivers/clk/rockchip/clk.h
-index df2b2d706450f38dfe2b3c7762763c5e832b9892..ebaed429a30dc2c41c866f973f8cf78b32136311 100644
---- a/drivers/clk/rockchip/clk.h
-+++ b/drivers/clk/rockchip/clk.h
-@@ -19,6 +19,7 @@
- 
- #include <linux/io.h>
- #include <linux/clk-provider.h>
-+#include <linux/hashtable.h>
- 
- struct clk;
- 
-@@ -440,12 +441,35 @@ enum rockchip_pll_type {
- 	.k = _k,						\
- }
- 
-+enum rockchip_grf_type {
-+	grf_type_sys = 0,
-+	grf_type_pmu0,
-+	grf_type_pmu1,
-+	grf_type_ioc,
-+};
-+
-+/* ceil(sqrt(enums in rockchip_grf_type - 1)) */
-+#define GRF_HASH_ORDER 2
-+
-+/**
-+ * struct rockchip_aux_grf - entry for the aux_grf_table hashtable
-+ * @grf: pointer to the grf this entry references
-+ * @type: what type of GRF this is
-+ * @node: hlist node
-+ */
-+struct rockchip_aux_grf {
-+	struct regmap *grf;
-+	enum rockchip_grf_type type;
-+	struct hlist_node node;
-+};
-+
- /**
-  * struct rockchip_clk_provider - information about clock provider
-  * @reg_base: virtual address for the register base.
-  * @clk_data: holds clock related data like clk* and number of clocks.
-  * @cru_node: device-node of the clock-provider
-  * @grf: regmap of the general-register-files syscon
-+ * @aux_grf_table: hashtable of auxiliary GRF regmaps, indexed by grf_type
-  * @lock: maintains exclusion between callbacks for a given clock-provider.
-  */
- struct rockchip_clk_provider {
-@@ -453,6 +477,7 @@ struct rockchip_clk_provider {
- 	struct clk_onecell_data clk_data;
- 	struct device_node *cru_node;
- 	struct regmap *grf;
-+	DECLARE_HASHTABLE(aux_grf_table, GRF_HASH_ORDER);
- 	spinlock_t lock;
- };
- 
-@@ -622,6 +647,11 @@ struct clk *rockchip_clk_register_muxgrf(const char *name,
- 				int flags, struct regmap *grf, int reg,
- 				int shift, int width, int mux_flags);
- 
-+struct clk *rockchip_clk_register_gate_grf(const char *name,
-+				const char *parent_name, unsigned long flags,
-+				struct regmap *regmap, unsigned int reg,
-+				unsigned int shift, u8 gate_flags);
-+
- #define PNAME(x) static const char *const x[] __initconst
- 
- enum rockchip_clk_branch_type {
-@@ -631,6 +661,7 @@ enum rockchip_clk_branch_type {
- 	branch_divider,
- 	branch_fraction_divider,
- 	branch_gate,
-+	branch_grf_gate,
- 	branch_linked_gate,
- 	branch_mmc,
- 	branch_inverter,
-@@ -660,6 +691,7 @@ struct rockchip_clk_branch {
- 	u8				gate_shift;
- 	u8				gate_flags;
- 	unsigned int			linked_clk_id;
-+	enum rockchip_grf_type		grf_type;
- 	struct rockchip_clk_branch	*child;
- };
- 
-@@ -900,7 +932,7 @@ struct rockchip_clk_branch {
- 		.mux_table	= mt,				\
- 	}
- 
--#define MUXGRF(_id, cname, pnames, f, o, s, w, mf)		\
-+#define MUXGRF(_id, cname, pnames, f, o, s, w, mf, gt)		\
- 	{							\
- 		.id		= _id,				\
- 		.branch_type	= branch_muxgrf,		\
-@@ -913,6 +945,7 @@ struct rockchip_clk_branch {
- 		.mux_width	= w,				\
- 		.mux_flags	= mf,				\
- 		.gate_offset	= -1,				\
-+		.grf_type	= gt,				\
- 	}
- 
- #define DIV(_id, cname, pname, f, o, s, w, df)			\
-@@ -958,6 +991,20 @@ struct rockchip_clk_branch {
- 		.gate_flags	= gf,				\
- 	}
- 
-+#define GATE_GRF(_id, cname, pname, f, o, b, gf, gt)		\
-+	{							\
-+		.id		= _id,				\
-+		.branch_type	= branch_grf_gate,		\
-+		.name		= cname,			\
-+		.parent_names	= (const char *[]){ pname },	\
-+		.num_parents	= 1,				\
-+		.flags		= f,				\
-+		.gate_offset	= o,				\
-+		.gate_shift	= b,				\
-+		.gate_flags	= gf,				\
-+		.grf_type	= gt,				\
-+	}
-+
- #define GATE_LINK(_id, cname, pname, linkedclk, f, o, b, gf)	\
- 	{							\
- 		.id		= _id,				\
-diff --git a/drivers/clk/rockchip/gate-grf.c b/drivers/clk/rockchip/gate-grf.c
-new file mode 100644
-index 0000000000000000000000000000000000000000..8122f471f39134a7298be8daf0718cfa4f8852a7
---- /dev/null
-+++ b/drivers/clk/rockchip/gate-grf.c
-@@ -0,0 +1,105 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * Copyright (c) 2025 Collabora Ltd.
-+ * Author: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-+ *
-+ * Certain clocks on Rockchip are "gated" behind an additional register bit
-+ * write in a GRF register, such as the SAI MCLKs on RK3576. This code
-+ * implements a clock driver for these types of gates, based on regmaps.
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/clk-provider.h>
-+#include <linux/regmap.h>
-+#include <linux/slab.h>
-+#include "clk.h"
-+
-+struct rockchip_gate_grf {
-+	struct clk_hw		hw;
-+	struct regmap		*regmap;
-+	unsigned int		reg;
-+	unsigned int		shift;
-+	u8			flags;
-+};
-+
-+#define to_gate_grf(_hw) container_of(_hw, struct rockchip_gate_grf, hw)
-+
-+static int rockchip_gate_grf_enable(struct clk_hw *hw)
-+{
-+	struct rockchip_gate_grf *gate = to_gate_grf(hw);
-+	u32 val = !(gate->flags & CLK_GATE_SET_TO_DISABLE) ? BIT(gate->shift) : 0;
-+	u32 hiword = ((gate->flags & CLK_GATE_HIWORD_MASK) ? 1 : 0) << (gate->shift + 16);
-+	int ret;
-+
-+	ret = regmap_update_bits(gate->regmap, gate->reg,
-+				 hiword | BIT(gate->shift), hiword | val);
-+
-+	return ret;
-+}
-+
-+static void rockchip_gate_grf_disable(struct clk_hw *hw)
-+{
-+	struct rockchip_gate_grf *gate = to_gate_grf(hw);
-+	u32 val = !(gate->flags & CLK_GATE_SET_TO_DISABLE) ? 0 : BIT(gate->shift);
-+	u32 hiword = ((gate->flags & CLK_GATE_HIWORD_MASK) ? 1 : 0) << (gate->shift + 16);
-+
-+	regmap_update_bits(gate->regmap, gate->reg,
-+			   hiword | BIT(gate->shift), hiword | val);
-+}
-+
-+static int rockchip_gate_grf_is_enabled(struct clk_hw *hw)
-+{
-+	struct rockchip_gate_grf *gate = to_gate_grf(hw);
-+	bool invert = !!(gate->flags & CLK_GATE_SET_TO_DISABLE);
-+	int ret;
-+
-+	ret = regmap_test_bits(gate->regmap, gate->reg, BIT(gate->shift));
-+	if (ret < 0)
-+		ret = 0;
-+
-+	return invert ? 1 - ret : ret;
-+
-+}
-+
-+static const struct clk_ops rockchip_gate_grf_ops = {
-+	.enable = rockchip_gate_grf_enable,
-+	.disable = rockchip_gate_grf_disable,
-+	.is_enabled = rockchip_gate_grf_is_enabled,
-+};
-+
-+struct clk *rockchip_clk_register_gate_grf(const char *name,
-+		const char *parent_name, unsigned long flags,
-+		struct regmap *regmap, unsigned int reg, unsigned int shift,
-+		u8 gate_flags)
-+{
-+	struct rockchip_gate_grf *gate;
-+	struct clk_init_data init;
-+	struct clk *clk;
-+
-+	if (IS_ERR(regmap)) {
-+		pr_err("%s: regmap not available\n", __func__);
-+		return ERR_PTR(-EOPNOTSUPP);
-+	}
-+
-+	gate = kzalloc(sizeof(*gate), GFP_KERNEL);
-+	if (!gate)
-+		return ERR_PTR(-ENOMEM);
-+
-+	init.name = name;
-+	init.flags = flags;
-+	init.num_parents = parent_name ? 1 : 0;
-+	init.parent_names = parent_name ? &parent_name : NULL;
-+	init.ops = &rockchip_gate_grf_ops;
-+
-+	gate->hw.init = &init;
-+	gate->regmap = regmap;
-+	gate->reg = reg;
-+	gate->shift = shift;
-+	gate->flags = gate_flags;
-+
-+	clk = clk_register(NULL, &gate->hw);
-+	if (IS_ERR(clk))
-+		kfree(gate);
-+
-+	return clk;
-+}
+ 		gic: interrupt-controller@2a701000 {
+ 			compatible = "arm,gic-400";
+ 			reg = <0x0 0x2a701000 0 0x10000>,
 
 -- 
 2.48.1
