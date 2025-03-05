@@ -1,172 +1,136 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEE5E20B1E4
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 10:42:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C70CE20C46C
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 10:44:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741171373; cv=none; b=gm1is1vXy3HM7gqu3uNIsCNOzq3dJllRGMWioCYtVba9omddazpHqecjuHk/lKUp36jFAN2ZbpMr7Doc6taOO0ezNzblXVLeDjCSnhrJnPt7XClEv5g77IlOVhly8mPBXUTrs7WCX/PZdH4Xnlo60yORTD4HyzSi+nTSpo9pIQQ=
+	t=1741171448; cv=none; b=EcQ13Q0LVGuaqHCiSnZvMX3wxBRzE5+mAGWhAAuECJPricps2CB/+YkIiqfl/HhbJpmy89THaPl7e+oSf9MGrKHiWUtYDRRg5OBcJDRatQHrQvoRRtU8Gb7qRbCuh6RtHNHHm5BQJ+cKAlp8ZKoEdYhBi+dcoPae0OVAZ6krHhQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741171373; c=relaxed/simple;
-	bh=q+P1kxlxk9nhHGxz1YAHbBytE232Dzrq0K9V62hixoA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VDFVryQo2TByiIR2k62wJfU+I1eGNvfN2aba1ytw7nAfleycdh8SNVlyyDkEzzhNjdFisnNqEljsWEkyco1PUOJ+cJTxEKTdxZzhPA24dbE7EdrijnvpvIvD9ugEO37bgdTaeRSMkcnawAEjRFt0maReHiUZBTxG50aSwdRxm2A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from ptz.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::77] helo=[127.0.0.1])
-	by metis.whiteo.stw.pengutronix.de with esmtp (Exim 4.92)
-	(envelope-from <a.fatoum@pengutronix.de>)
-	id 1tpmCM-00054k-Ob; Wed, 05 Mar 2025 11:41:58 +0100
-Message-ID: <43fb0965-04b7-41dc-ae3f-54676eefdbb5@pengutronix.de>
-Date: Wed, 5 Mar 2025 11:41:49 +0100
+	s=arc-20240116; t=1741171448; c=relaxed/simple;
+	bh=pnb1XIoRVPvlKMtRz+d0FdZ4RSoph+8TZDhNZ6cm7q4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ByUL372tVYFU+XLvoYH4g/RHG3SLvTErNfd8s0UPqQ7Rr3ykHhd8x45kNWv2Sja4snQ7TuiocQvXvgI6LxksLoTXPnpsfaxhNZ5x21T/kH8zqMqP9UTU1ninRogmEcwWCP4deRltr5Yh3yTfHA7GVAeIX3bToMOmEbGB+3KPxYg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=aODQPCWp; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aODQPCWp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1741171445;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=d+3VZ7mTjx3GCM+QoBE9ZjOyMpVhYxq40Dj4O52FkRI=;
+	b=aODQPCWpV/fqqICaEoQgkcMQ4lfH4FIU3wEl6IHubZS+X+al8+DFUPn+9iPKob6FyqbSlS
+	9HOkzL8O8MedIR4hjJtw19KUeuzxY3A8CpKN47ak0/oVKHZC+gXae1nDfuPoe45AsLidas
+	Y2aj6RWJlS5J3/C41tP2huQodnlPVRY=
+Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
+ [209.85.219.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-511-55TctnptOq6h9ORIL89eBg-1; Wed, 05 Mar 2025 05:43:59 -0500
+X-MC-Unique: 55TctnptOq6h9ORIL89eBg-1
+X-Mimecast-MFC-AGG-ID: 55TctnptOq6h9ORIL89eBg_1741171439
+Received: by mail-qv1-f72.google.com with SMTP id 6a1803df08f44-6e897598070so143623926d6.0
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Mar 2025 02:43:59 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741171439; x=1741776239;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=d+3VZ7mTjx3GCM+QoBE9ZjOyMpVhYxq40Dj4O52FkRI=;
+        b=ENLuXvCla+gsQ1aqqRKo6mex9DlW3RaHtGYvFkZq24QYvfUBB1BsUZxrmDgwhpPb2n
+         1nLtYu2PAZIM474YcRJ4H5cYi73KWlerx/Zlfp3oGAPId1MCATfkTR2ALL1P3YJ3vhwZ
+         3GiHevf4Lr/zaK8iVBOOzdU4jWJDMa45ybPGUqMK1EVYaBUQ4anmMXHlhQZs4xKsOni4
+         muw3JH3OZzRTeene7VZ+gp/NOS+tOGW2vu57k+1Y1JkHf2GoZbHA/4Bwpdwrs4ulJWmI
+         vKcbwF+G9Zs4kslWmzv6DV2/DUCNFStnDUOcpPdipq4q+ACzJ0A48vQ/trJ7G0BXhtFK
+         n0zw==
+X-Forwarded-Encrypted: i=1; AJvYcCUOnc+vlXrT7XFMkWBXGmoBJqAPFLcpNtD0+doJb5AMOiHI/5jI+2L432oqKIXAGrsPeqPD/tnUxoZ90+I=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxkGpqK46KZzcpsvpSIlrQuVlhJMYq6eZJ94udyVdOU3B1pAKmd
+	3rrtzreax0RUH6K5vzO5RPrCusZ9PAYGvlGU4gXNqrskwTvsqlijVaISu6U8prluyAYX8D/K3me
+	r3hiMcNNrRr2gJyiAvOJ5v+0Muj+iKxUJ6ppdGXNGW6i+kaKwP+cezOihLiJJXw==
+X-Gm-Gg: ASbGncucZq1LWXRKWvTLfAtKKKcTQ7OTBNHtCXpdztm81K5F/Tr8mTvSKTCoNc8Z2tG
+	OZdXn9cMoptvWspSpDUwt/Vb4+A0HtwKiG+qtbXlf97OoAWsI4KKMj9thIQH/+g/hwdVERRjaJ9
+	9rmamxP0uJdyaVNGH3TXLhrt41mTovhm6/D8Za4Lg1DeEb45oXUI8IEytx8kpM76azpUsMEXTho
+	RhfqnoE5/3an6VmcTKI+jzZMzogPCdR7Q08STc9OfMe3grXHwX1DBNUAOpcp6fiO3RnQ7zAg2AT
+	EplxmAqj5by/4iydMu55gR8wGosp+C+8/+esrvlFOOJdZmrILGgwDE+YDb2GTDon6DnLXqOxWHv
+	hFqX6
+X-Received: by 2002:a05:6214:2122:b0:6e8:9b55:b0ab with SMTP id 6a1803df08f44-6e8e6cc7655mr37526316d6.4.1741171438988;
+        Wed, 05 Mar 2025 02:43:58 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGdlHjzz7+7wDbWNIybVn4Volb3Dg5cZdQXTOpT7OoT7JX+QAw9eiw2fXX/FzYzQ1jmLHgwkQ==
+X-Received: by 2002:a05:6214:2122:b0:6e8:9b55:b0ab with SMTP id 6a1803df08f44-6e8e6cc7655mr37526166d6.4.1741171438699;
+        Wed, 05 Mar 2025 02:43:58 -0800 (PST)
+Received: from jlelli-thinkpadt14gen4.remote.csb (host-89-240-117-139.as13285.net. [89.240.117.139])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e8976d9fb8sm77893696d6.94.2025.03.05.02.43.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Mar 2025 02:43:57 -0800 (PST)
+Date: Wed, 5 Mar 2025 10:43:53 +0000
+From: Juri Lelli <juri.lelli@redhat.com>
+To: Harshit Agarwal <harshit@nutanix.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	Jon Kohler <jon@nutanix.com>,
+	Gauri Patwardhan <gauri.patwardhan@nutanix.com>,
+	Rahul Chunduru <rahul.chunduru@nutanix.com>,
+	Will Ton <william.ton@nutanix.com>,
+	"stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: Re: [PATCH v3] sched/rt: Fix race in push_rt_task
+Message-ID: <Z8gq6bWNPDtnUYsW@jlelli-thinkpadt14gen4.remote.csb>
+References: <20250225180553.167995-1-harshit@nutanix.com>
+ <Z8bEyxZCf8Y_JReR@jlelli-thinkpadt14gen4.remote.csb>
+ <20250304103001.0f89e953@gandalf.local.home>
+ <Z8cnwcHxDxz1TmfL@jlelli-thinkpadt14gen4.remote.csb>
+ <9688E172-585C-423B-ACF6-8E8DEAE3AB59@nutanix.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 0/2] Add stop_on_panic support for watchdog
-To: George Cherian <george.cherian@marvell.com>, linux@roeck-us.net,
- wim@linux-watchdog.org, jwerner@chromium.org, evanbenn@chromium.org,
- kabel@kernel.org, krzk@kernel.org, mazziesaccount@gmail.com,
- thomas.richard@bootlin.com, lma@chromium.org, bleung@chromium.org,
- support.opensource@diasemi.com, shawnguo@kernel.org, s.hauer@pengutronix.de,
- kernel@pengutronix.de, festevam@gmail.com, andy@kernel.org,
- paul@crapouillou.net, alexander.usyskin@intel.com, andreas.werner@men.de,
- daniel@thingy.jp, romain.perier@gmail.com, avifishman70@gmail.com,
- tmaimon77@gmail.com, tali.perry1@gmail.com, venture@google.com,
- yuenn@google.com, benjaminfair@google.com, maddy@linux.ibm.com,
- mpe@ellerman.id.au, npiggin@gmail.com, christophe.leroy@csgroup.eu,
- naveen@kernel.org, mwalle@kernel.org, xingyu.wu@starfivetech.com,
- ziv.xu@starfivetech.com, hayashi.kunihiko@socionext.com, mhiramat@kernel.org
-Cc: chrome-platform@lists.linux.dev, linux-watchdog@vger.kernel.org,
- imx@lists.linux.dev, patches@opensource.cirrus.com,
- openbmc@lists.ozlabs.org, linux-mips@vger.kernel.org,
- linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- linux-arm-kernel@lists.infradead.org
-References: <20250305101025.2279951-1-george.cherian@marvell.com>
-Content-Language: en-US
-From: Ahmad Fatoum <a.fatoum@pengutronix.de>
-In-Reply-To: <20250305101025.2279951-1-george.cherian@marvell.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:900:1d::77
-X-SA-Exim-Mail-From: a.fatoum@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <9688E172-585C-423B-ACF6-8E8DEAE3AB59@nutanix.com>
 
-Hi George,
+On 04/03/25 18:37, Harshit Agarwal wrote:
+> Thanks Juri for pointing this out.
+> I can send the fix for deadline as well. 
+> Is it okay if I do it in a separate patch?
 
-On 05.03.25 11:10, George Cherian wrote:
-> This series adds a new kernel command line option to watchdog core to
-> stop the watchdog on panic. This is useul in certain systems which prevents
-> successful loading of kdump kernel due to watchdog reset.
-> 
-> Some of the watchdog drivers stop function could sleep. For such
-> drivers the stop_on_panic is not valid as the notifier callback happens
-> in atomic context. Introduce WDIOF_STOP_MAYSLEEP flag to watchdog_info
-> options to indicate whether the stop function would sleep.
+Yes, we would need a separate patch.
 
-Did you consider having a reset_on_panic instead, which sets a user-specified
-timeout on panic? This would make the mechanism useful also for watchdogs
-that can't be disabled and would protect against system lock up:
-Consider a memory-corruption bug (perhaps externally via DMA), which partially
-overwrites both main and kdump kernel. With a disabled watchdog, the system
-may not be able to recover on its own.
+> From taking a quick look at the code, I can see that the same fix won’t 
+> apply as is in case of deadline since it has two different callers for
+> find_lock_later_rq.
 
-If you did consider it, what made you decide against it?
+Right, indeed.
+
+> One is push_dl_task for which we can call pick_next_pushable_dl_task
+> and make sure it is at the head. This is where we have the bug.
+
+OK.
+
+> Another one is dl_task_offline_migration which gets the task from
+> dl_task_timer which in turn gets it from sched_dl_entity.
+> I haven’t gone through the deadline code thoroughly but I think this race
+> shouldn’t exist for the offline task (2nd) case. If that is true then the fix
+> could be to check in push_dl_task if the task returned by find_lock_later_rq
+> is still at the head of the queue or not.
+
+I believe that won't work as dl_task_offline_migration() gets called in
+case the replenishment timer for a task fires (to unthrottle it) and it
+finds the old rq the task was running on has been offlined in the
+meantime. The task is still throttled at this point and so it is not
+enqueued in the dl_rq nor in the pushable task list/tree, so the check
+you are adding won't work I am afraid. Maybe we can use dl_se->dl_throttled
+to differentiate this different case.
 
 Thanks,
-Ahmad
+Juri
 
-> 
-> 
-> Changelog:
-> v1 -> v2
-> - Remove the per driver flag setting option
-> - Take the parameter via kernel command-line parameter to watchdog_core.
-> 
-> v2 -> v3
-> - Remove the helper function watchdog_stop_on_panic() from watchdog.h.
-> - There are no users for this. 
-> 
-> v3 -> v4
-> - Since the panic notifier is in atomic context, watchdog functions
->   which sleep can't be called. 
-> - Add an options flag WDIOF_STOP_MAYSLEEP to indicate whether stop
->   function sleeps.
-> - Simplify the stop_on_panic kernel command line parsing.
-> - Enable the panic notiffier only if the watchdog stop function doesn't
->   sleep
-> 
-> George Cherian (2):
->   watchdog: Add a new flag WDIOF_STOP_MAYSLEEP
->   drivers: watchdog: Add support for panic notifier callback
-> 
->  drivers/watchdog/advantech_ec_wdt.c |  3 ++-
->  drivers/watchdog/arm_smc_wdt.c      |  3 ++-
->  drivers/watchdog/armada_37xx_wdt.c  |  2 +-
->  drivers/watchdog/asm9260_wdt.c      |  2 +-
->  drivers/watchdog/bcm47xx_wdt.c      |  3 ++-
->  drivers/watchdog/bd9576_wdt.c       |  2 +-
->  drivers/watchdog/bd96801_wdt.c      |  2 +-
->  drivers/watchdog/cgbc_wdt.c         |  2 +-
->  drivers/watchdog/cros_ec_wdt.c      |  5 ++++-
->  drivers/watchdog/da9052_wdt.c       |  3 ++-
->  drivers/watchdog/da9055_wdt.c       |  4 +++-
->  drivers/watchdog/da9062_wdt.c       |  4 +++-
->  drivers/watchdog/da9063_wdt.c       |  4 +++-
->  drivers/watchdog/db8500_wdt.c       |  5 ++++-
->  drivers/watchdog/dw_wdt.c           |  5 +++--
->  drivers/watchdog/f71808e_wdt.c      |  3 ++-
->  drivers/watchdog/gpio_wdt.c         |  2 +-
->  drivers/watchdog/i6300esb.c         |  5 ++++-
->  drivers/watchdog/imx_sc_wdt.c       |  2 +-
->  drivers/watchdog/intel-mid_wdt.c    |  5 ++++-
->  drivers/watchdog/it87_wdt.c         |  5 ++++-
->  drivers/watchdog/jz4740_wdt.c       |  5 ++++-
->  drivers/watchdog/kempld_wdt.c       |  3 ++-
->  drivers/watchdog/lenovo_se10_wdt.c  |  5 ++++-
->  drivers/watchdog/max77620_wdt.c     |  5 ++++-
->  drivers/watchdog/mei_wdt.c          |  3 ++-
->  drivers/watchdog/menf21bmc_wdt.c    |  4 +++-
->  drivers/watchdog/mlx_wdt.c          |  2 +-
->  drivers/watchdog/msc313e_wdt.c      |  5 ++++-
->  drivers/watchdog/npcm_wdt.c         |  3 ++-
->  drivers/watchdog/omap_wdt.c         |  5 ++++-
->  drivers/watchdog/pm8916_wdt.c       |  5 +++--
->  drivers/watchdog/pseries-wdt.c      |  2 +-
->  drivers/watchdog/rave-sp-wdt.c      |  5 ++++-
->  drivers/watchdog/renesas_wdt.c      |  7 ++++--
->  drivers/watchdog/retu_wdt.c         |  5 ++++-
->  drivers/watchdog/rn5t618_wdt.c      |  6 +++--
->  drivers/watchdog/rzg2l_wdt.c        |  5 ++++-
->  drivers/watchdog/rzv2h_wdt.c        |  5 ++++-
->  drivers/watchdog/shwdt.c            |  6 +++--
->  drivers/watchdog/sl28cpld_wdt.c     |  5 ++++-
->  drivers/watchdog/softdog.c          |  5 ++++-
->  drivers/watchdog/sp805_wdt.c        |  5 ++++-
->  drivers/watchdog/starfive-wdt.c     |  3 ++-
->  drivers/watchdog/stpmic1_wdt.c      |  5 ++++-
->  drivers/watchdog/ts4800_wdt.c       |  5 ++++-
->  drivers/watchdog/twl4030_wdt.c      |  5 ++++-
->  drivers/watchdog/uniphier_wdt.c     |  3 ++-
->  drivers/watchdog/w83627hf_wdt.c     |  5 ++++-
->  drivers/watchdog/watchdog_core.c    | 35 +++++++++++++++++++++++++++++
->  drivers/watchdog/wm831x_wdt.c       |  5 ++++-
->  drivers/watchdog/wm8350_wdt.c       |  5 ++++-
->  drivers/watchdog/xen_wdt.c          |  5 ++++-
->  drivers/watchdog/ziirave_wdt.c      |  5 ++++-
->  include/linux/watchdog.h            |  2 ++
->  include/uapi/linux/watchdog.h       |  1 +
->  56 files changed, 198 insertions(+), 58 deletions(-)
-> 
-
-
--- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
