@@ -1,65 +1,69 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D363E205E00;
-	Wed,  5 Mar 2025 09:53:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF2E0205E00;
+	Wed,  5 Mar 2025 09:53:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741168389; cv=none; b=OzHQFrre+un9VAe5sy+pe2CZ9w/KBu3if/nts17nAHd7FB28/FTmeqJj0wZz7vbUONWxSYLuGwC8Qwl6r9cuKTfxmSos+l8+RGzOJUXTyt9I/xc/1JdI4yv/LCTpnI0K+/O5HK7Q2lj+fX7wjxy21c34mMzi0R3zo/jYkPtZiAI=
+	t=1741168391; cv=none; b=RlyDVTQ7PyGCEgwty0pfO3AYvAcffBRBbLbGG+yQD2/w3Mb+SX17PakF46YB+7/Z2qrb3aUCYD+uA3BLVcAO/P6kyxuI9mIh7Iw2eprzuM2BwsMTjCuWR8oSQ5XU1i21MykcrOilNAyXsjjh/IOLeuGzCJf/0Sn2pguZ1NUjESA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741168389; c=relaxed/simple;
-	bh=s2oJi5OGtytvWKh8J+5v3jAYAjZvG6ci4Mk+QuIm++E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nszwZTca1n771Us56dCepub+3VvHF5P6sxno5cka1m1DGQVNe+SnrHiM/CfOGdKFTWBortMXlzY3pDK29jU0a5ds8DN1dllN5n88QUlhqeDQPViXrZ2y8hQ5Q8KwrMsITHgBmZz04O5mgdTWW+uV88LcabhTixLdYGEzsdBmgwE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 91E66FEC;
-	Wed,  5 Mar 2025 01:53:20 -0800 (PST)
-Received: from localhost (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C98553F673;
-	Wed,  5 Mar 2025 01:53:06 -0800 (PST)
-Date: Wed, 5 Mar 2025 09:53:04 +0000
-From: Leo Yan <leo.yan@arm.com>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	James Clark <james.clark@linaro.org>,
-	Mike Leach <mike.leach@linaro.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Will Deacon <will@kernel.org>,
-	Graham Woodward <graham.woodward@arm.com>, Paschalis.Mpeis@arm.com,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v3 00/12] perf script: Refactor branch flags for Arm SPE
-Message-ID: <20250305095304.GF13418@e132581.arm.com>
-References: <20250217195908.176207-1-leo.yan@arm.com>
- <20250303093853.GG2157064@e132581.arm.com>
- <Z8YYY2Q_ZPIaZ74g@google.com>
- <20250304113350.GK2157064@e132581.arm.com>
- <Z8dJ00nIeVqMMncD@google.com>
+	s=arc-20240116; t=1741168391; c=relaxed/simple;
+	bh=ORz+k9E937zUXxSM6Mdl+BAqe5cpwM14R43zz4VgLrY=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=uRKBD5Un8vmEk5j47p+Fbdd7BHEjsGZ/IIKZPEjl8doYwNPOKhxHEWix7tCsEzUwiv6LgRqyJVEw/atPuSqI9asMCe3T3gPYH2CeCtGaYxAHkFVEqTQz8x6GBcQOMR1rQO5zgW6RvgSwFyysdQM2kUOmYnpdgs4dlWsBcS9bcJI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iKB1NeDW; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iKB1NeDW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC9CAC4CEE9;
+	Wed,  5 Mar 2025 09:53:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741168390;
+	bh=ORz+k9E937zUXxSM6Mdl+BAqe5cpwM14R43zz4VgLrY=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=iKB1NeDWNmuScpb3n5W1BaQ8klO8hyfRkGYytMV56R0mYtC7DHOTCx10SN2kLXxwM
+	 ZK6so1KgWXrF/EBqsQdPYdIyFNyU3nYsytmf9vbx/Cqv3RxYi5FHwcpZ8rP9/dS1Se
+	 /IMQl7o9vbrJtv179VkUkinuX46JF4l9E33iYJP+o4o9dqTrfD7mM6oiCDxl/I+r3v
+	 fN93lTd2BQPLrn+YHgCng4m5TzwsMqBR/lxxLggYuLRH6vH8BPanZyEsjDGCAUcfhp
+	 aX1+8b2Z/qWhA145O3IvSXgco/xoHyBnweNEgCSqd5l0xDpuchD30FQDuAbuqh46ut
+	 yJPcq41B045TQ==
+From: Andreas Hindborg <a.hindborg@kernel.org>
+To: "Benno Lossin" <benno.lossin@proton.me>
+Cc: "Miguel Ojeda" <ojeda@kernel.org>,  "Alex Gaynor"
+ <alex.gaynor@gmail.com>,  "Boqun Feng" <boqun.feng@gmail.com>,  "Gary Guo"
+ <gary@garyguo.net>,  =?utf-8?Q?Bj=C3=B6rn?= Roy Baron
+ <bjorn3_gh@protonmail.com>,  "Alice
+ Ryhl" <aliceryhl@google.com>,  "Trevor Gross" <tmgross@umich.edu>,
+  "Danilo Krummrich" <dakr@kernel.org>,  <linux-kernel@vger.kernel.org>,
+  <rust-for-linux@vger.kernel.org>
+Subject: Re: [PATCH 03/22] rust: add extensions to the pin-init crate and
+ move relevant documentation there
+In-Reply-To: <20250304225245.2033120-4-benno.lossin@proton.me> (Benno Lossin's
+	message of "Tue, 04 Mar 2025 22:53:26 +0000")
+References: <20250304225245.2033120-1-benno.lossin@proton.me>
+	<WfFbEdgY77_F8Av10-sYEt67FhgZBBdxKadOSC-iOzAoK2YvI9JSuaOBybuOyZT-nzpRubp2llVQcXbmE_Ffow==@protonmail.internalid>
+	<20250304225245.2033120-4-benno.lossin@proton.me>
+User-Agent: mu4e 1.12.7; emacs 29.4
+Date: Wed, 05 Mar 2025 10:11:00 +0100
+Message-ID: <87eczbg7vf.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z8dJ00nIeVqMMncD@google.com>
+Content-Type: text/plain
 
-On Tue, Mar 04, 2025 at 10:43:31AM -0800, Namhyung Kim wrote:
+"Benno Lossin" <benno.lossin@proton.me> writes:
 
-[...]
+> In preparation of splitting off the pin-init crate from the kernel
+> crate, move all kernel-specific documentation from pin-init back into
+> the kernel crate.
 
-> > Please consider picking the latest change (either the whole v4 series or
-> > just the updated patch 01 would be fine).
-> 
-> Sure, I'll add v4 to the tmp branch soon.
+This patch **moves** very few lines. The additions to init.rs seem
+either copied or new additions.
 
-Thanks, Namhyung!  Also thanks Adrian's review for v4!
 
-Leo
+Best regards,
+Andreas Hindborg
+
+
