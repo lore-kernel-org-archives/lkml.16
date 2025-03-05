@@ -1,113 +1,93 @@
-Received: from ksmg01.maxima.ru (ksmg01.maxima.ru [81.200.124.38])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC2F7230274
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 11:20:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=81.200.124.38
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C68F23717D;
+	Wed,  5 Mar 2025 11:21:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741173659; cv=none; b=AI8Y7nhsSlJVrTzn8Yg6M0yFGLFtWxm0DmyZ5kdmSBf/qyXI0f3XJ4NMJ4RGQ0JxAZYuah2E1VNoYf/2X5ouhGTCYB1BYNW7jeestS15si/H8DVXjCnoCuHE9D2VGwZg7CuJ/Xw+flLnDvmAOuWMBakOdDQ8hogejYvwId8LcS0=
+	t=1741173663; cv=none; b=AQbnRmMflZ1m9Pnwo3hohs3JQYdbx7OSjBbT/tXB4FUMe/ZsCjpp8l5KN5Ecaei0iPXJUbzZ31bur1lPeFaEBFY2LNnxAdI0zT8oRvtUw7KGXewq2cf4hjXb1b610abdCBhR4/4g9RLvzIUb3f9qP/G8N+lSdIQ3e+pJDFv7toM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741173659; c=relaxed/simple;
-	bh=jFhZ/zyUSVLSaQigU27srs+qbHtTWp1g3/LyJ3cpEHI=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=XMc5OnCnqzwoL45lskMDEbTgqRMvHMciU1KkyVfExUp6h3LPdv1DnDUu9408kIp9uzbQ7b0WEBUfkU8BPzxlEMpjGyvMta3voFyTpr1CQ+x7e+KBLDhBKajMw4KSClbyFnlpUvBFTz1/0JoPsvcsiacXMOo6jDvnSo7Hn09NfMw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mt-integration.ru; spf=pass smtp.mailfrom=mt-integration.ru; dkim=pass (2048-bit key) header.d=mt-integration.ru header.i=@mt-integration.ru header.b=qGvzD8SY; arc=none smtp.client-ip=81.200.124.38
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mt-integration.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mt-integration.ru
+	s=arc-20240116; t=1741173663; c=relaxed/simple;
+	bh=vyRxcS57ZvnzwUa+x+EWVuX/n8bdy00KR20m21ZjHlY=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=gIlNBYKJy4UwdSGytBbgLlTPhnM4uVmPvHlLfGuzGWnWOHeoBi8CezKbCotafgPvv0j54rM2aK399zGPXkyPqY10ff0n4eewQxVWmmcWJ6LfswxqpnfchnkfNguHyeuzWxdL1v0i4dMrrf+9dpdtZu68Ibhugg9wRzf7vDrV9P8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oe204XPs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mt-integration.ru header.i=@mt-integration.ru header.b="qGvzD8SY"
-Received: from ksmg01.maxima.ru (localhost [127.0.0.1])
-	by ksmg01.maxima.ru (Postfix) with ESMTP id A3D94C001C;
-	Wed,  5 Mar 2025 14:20:52 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 ksmg01.maxima.ru A3D94C001C
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mt-integration.ru;
-	s=sl; t=1741173652; bh=n/KI5uq203cxGaXCTBoOYd74pMZghtHUgweaiwsP5CM=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
-	b=qGvzD8SYK1o2oZhlbWPxGIX3jPXDzxyVFHTOdtIIKrdYnn1B2VjCnJjJemm7i6BwK
-	 YleXo1DnHkWlFt3rC3xOwG6/lPtOXewRVCHYOvw95Nb2/omM+JAcgaxnvGMwWRgC6t
-	 MM3VRWK/e0j9S+x/Km5WKtazi/H/XFh6nhqbGOxI6FdPR++bkVBe9Fp5S6LinUEOXO
-	 F+OfYIotAj2hH9ymrNG9yW8+b/+cVz6265dRzDwMSdF8KIFre+onEPftpP0Oh2qSC1
-	 5A/r033cWvOmyrnSJmfqmdX1Q+5YaycBeK9e3aSFwpjX4V7CRB1bumctKCIzYBGtMa
-	 toJJP97cr/DbA==
-Received: from ksmg01.maxima.ru (autodiscover.maxima.ru [81.200.124.61])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(Client CN "*.maxima.ru", Issuer "GlobalSign GCC R3 DV TLS CA 2020" (verified OK))
-	by ksmg01.maxima.ru (Postfix) with ESMTPS;
-	Wed,  5 Mar 2025 14:20:52 +0300 (MSK)
-Received: from saturerate.maximatelecom.ru (10.0.247.123) by
- mmail-p-exch01.mt.ru (81.200.124.61) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.2.1544.4; Wed, 5 Mar 2025 14:20:50 +0300
-From: Ivan Abramov <i.abramov@mt-integration.ru>
-To: Patrik Jakobsson <patrik.r.jakobsson@gmail.com>
-CC: Ivan Abramov <i.abramov@mt-integration.ru>, Maarten Lankhorst
-	<maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>, Bjorn Helgaas <helgaas@kernel.org>, Sinan
- Kaya <okaya@codeaurora.org>, <dri-devel@lists.freedesktop.org>,
-	<linux-kernel@vger.kernel.org>, <lvc-project@linuxtesting.org>
-Subject: [PATCH] drm/gma500: Add NULL check for pci_gfx_root in mid_get_vbt_data()
-Date: Wed, 5 Mar 2025 14:20:37 +0300
-Message-ID: <20250305112038.43852-1-i.abramov@mt-integration.ru>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oe204XPs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C39AC4CEE2;
+	Wed,  5 Mar 2025 11:20:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741173662;
+	bh=vyRxcS57ZvnzwUa+x+EWVuX/n8bdy00KR20m21ZjHlY=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=oe204XPsQS9p3T+rnJLPN1tCuKZ38FsaFusXLZ8EXRxLJhpF7/2ff/juP/+673PU5
+	 r7BqIYgRSOPmO2vJxXJLjHKkUUndrQjz2W3sKVnkEywZQbGBTXb1Mk4Iym+z9ORTvv
+	 OYuF+Alc6M9Vpg32ct0kNNMLzf9gU9JRJIItWAT7i2oFBrLYVdyX2t7AvNZG8K0AbC
+	 5HjHCYVjsP0o+nzRvZVBNOGVxpds9EGpV4uSqMFmz0YFubVnW6zRX/ARR+ow7WW9ZN
+	 y7m9l0/3Z2WMeAlIcd3/n2eZfyaW1sbkHeXfPOosWdl3gS9XAq8F6W1kKxRKmHDPnT
+	 IihSAujqJ75CA==
+From: Andreas Hindborg <a.hindborg@kernel.org>
+To: "Benno Lossin" <benno.lossin@proton.me>
+Cc: "Danilo Krummrich" <dakr@kernel.org>,  "Miguel Ojeda"
+ <ojeda@kernel.org>,  "Alex Gaynor" <alex.gaynor@gmail.com>,  "Boqun Feng"
+ <boqun.feng@gmail.com>,  "Gary Guo" <gary@garyguo.net>,  =?utf-8?Q?Bj?=
+ =?utf-8?Q?=C3=B6rn?= Roy Baron
+ <bjorn3_gh@protonmail.com>,  "Alice Ryhl" <aliceryhl@google.com>,  "Trevor
+ Gross" <tmgross@umich.edu>,  <rust-for-linux@vger.kernel.org>,
+  <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 08/22] rust: pin-init: move `InPlaceInit` and impls of
+ `InPlaceWrite` into the kernel crate
+In-Reply-To: <20250304225245.2033120-9-benno.lossin@proton.me> (Benno Lossin's
+	message of "Tue, 04 Mar 2025 22:54:16 +0000")
+References: <20250304225245.2033120-1-benno.lossin@proton.me>
+	<iamkKusKoPQ37SKTEy2SbZjH0szdD4f3Zss6AcRF5jAkltpuR9blYqQ3Qc0Vd_gJBwPbefblnClu4okTA-TLLg==@protonmail.internalid>
+	<20250304225245.2033120-9-benno.lossin@proton.me>
+User-Agent: mu4e 1.12.7; emacs 29.4
+Date: Wed, 05 Mar 2025 12:18:39 +0100
+Message-ID: <87frjrene8.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: mt-exch-01.mt.ru (91.220.120.210) To mmail-p-exch01.mt.ru
- (81.200.124.61)
-X-KSMG-AntiPhishing: NotDetected
-X-KSMG-AntiSpam-Auth: dmarc=none header.from=mt-integration.ru;spf=none smtp.mailfrom=mt-integration.ru;dkim=none
-X-KSMG-AntiSpam-Envelope-From: i.abramov@mt-integration.ru
-X-KSMG-AntiSpam-Info: LuaCore: 51 0.3.51 68896fb0083a027476849bf400a331a2d5d94398, {rep_avail}, {Tracking_from_domain_doesnt_match_to}, mt-integration.ru:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;127.0.0.199:7.1.2;81.200.124.61:7.1.2;ksmg01.maxima.ru:7.1.1, FromAlignment: s, ApMailHostAddress: 81.200.124.61
-X-KSMG-AntiSpam-Interceptor-Info: scan successful
-X-KSMG-AntiSpam-Lua-Profiles: 191499 [Mar 05 2025]
-X-KSMG-AntiSpam-Method: none
-X-KSMG-AntiSpam-Rate: 0
-X-KSMG-AntiSpam-Status: not_detected
-X-KSMG-AntiSpam-Version: 6.1.1.11
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.1.1.8310, bases: 2025/03/05 09:56:00 #27614020
-X-KSMG-AntiVirus-Status: NotDetected, skipped
-X-KSMG-LinksScanning: NotDetected
-X-KSMG-Message-Action: skipped
-X-KSMG-Rule-ID: 7
 
-Since pci_get_domain_bus_and_slot() can return NULL, add NULL check for
-pci_gfx_root in the mid_get_vbt_data().
+"Benno Lossin" <benno.lossin@proton.me> writes:
 
-This change is similar to the checks implemented in mid_get_fuse_settings()
-and mid_get_pci_revID(), which were introduced by commit 0cecdd818cd7
-("gma500: Final enables for Oaktrail") as "additional minor
-bulletproofing".
+> In order to make pin-init a standalone crate, move kernel-specific code
+> directly into the kernel crate. This includes the `InPlaceInit<T>`
+> trait, its implementations and the implementations of `InPlaceWrite` for
+> `Arc` and `UniqueArc`. All of these use the kernel's error type which
+> will become unavailable in pin-init.
+>
+> Signed-off-by: Benno Lossin <benno.lossin@proton.me>
+> ---
+>  rust/kernel/alloc/kbox.rs |   3 +-
+>  rust/kernel/init.rs       |  55 +++++++++++++++++
+>  rust/kernel/prelude.rs    |   3 +-
+>  rust/kernel/sync/arc.rs   |  65 +++++++++++++++++++-
+>  rust/pin-init/src/lib.rs  | 125 ++------------------------------------
+>  5 files changed, 127 insertions(+), 124 deletions(-)
+>
 
-Found by Linux Verification Center (linuxtesting.org) with SVACE.
+[...]
 
-Fixes: ba99d8348864 ("drm/gma500: Deprecate pci_get_bus_and_slot()")
+> --- a/rust/pin-init/src/lib.rs
+> +++ b/rust/pin-init/src/lib.rs
+> @@ -10,7 +10,7 @@
+>  //! To initialize a `struct` with an in-place constructor you will need two things:
+>  //! - an in-place constructor,
+>  //! - a memory location that can hold your `struct` (this can be the [stack], an [`Arc<T>`],
+> -//!   [`UniqueArc<T>`], [`KBox<T>`] or any other smart pointer that implements [`InPlaceInit`]).
+> +//!   [`KBox<T>`] or any other smart pointer that supports this library).
 
-Signed-off-by: Ivan Abramov <i.abramov@mt-integration.ru>
----
- drivers/gpu/drm/gma500/mid_bios.c | 5 +++++
- 1 file changed, 5 insertions(+)
+Would you not want to remove references to `KBox` here as well? Even
+though you don't have to move the impl, I don't imagine `KBox` exist in
+user space?
 
-diff --git a/drivers/gpu/drm/gma500/mid_bios.c b/drivers/gpu/drm/gma500/mid_bios.c
-index 7e76790c6a81..cba97d7db131 100644
---- a/drivers/gpu/drm/gma500/mid_bios.c
-+++ b/drivers/gpu/drm/gma500/mid_bios.c
-@@ -279,6 +279,11 @@ static void mid_get_vbt_data(struct drm_psb_private *dev_priv)
- 					    0, PCI_DEVFN(2, 0));
- 	int ret = -1;
- 
-+	if (pci_gfx_root == NULL) {
-+		WARN_ON(1);
-+		return;
-+	}
-+
- 	/* Get the address of the platform config vbt */
- 	pci_read_config_dword(pci_gfx_root, 0xFC, &addr);
- 	pci_dev_put(pci_gfx_root);
--- 
-2.48.1
+
+Best regards,
+Andreas Hindborg
+
 
