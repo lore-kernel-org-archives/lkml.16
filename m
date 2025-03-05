@@ -1,102 +1,139 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out.smtpout.orange.fr (out-66.smtpout.orange.fr [193.252.22.66])
+	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4237A24C68D
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 15:00:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32E5F24BBF7
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 15:01:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.252.22.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741186841; cv=none; b=DltbsSQO4BXTnYdMfvFBVTuAeLOpF9UzsMXvs4V0gEtAO43ab4NEbth2hJlDhAPbHF2o28UmCtJG7MNR4pXSW2gOnFFOdNEeK1FLm21cMBCzTlAHTiT4nc74Ax/0Ga1J3dkpIHcO7dC/UyuaCfglcszTVlPEzeQMoBobG948d2E=
+	t=1741186880; cv=none; b=FO2g5bgNxjgi07Sjq1MzsLeWCAwpzTAZil8dfgW4IIW1tSxdasGv5saapkmmYwkXe6EZKN+6i/l27sGafi/zwzt7E2C1l0k0c0VknoQY+I/LYJjMqUH3WLwnNCPm9rCxAukfAk3vMKiZDX7UodWbSzuMoQxcSk2gKMjRcvWURGc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741186841; c=relaxed/simple;
-	bh=bzbnqVocaCxfmALbCmAFbfMJej/qbh3rRgH5YqAiY6s=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=fOIY7I7uwfPr+YeHCBx1HfEJZnLpDQchLo5kP8gAtKhlxYNhHL6kPOl/xGS8ovA1VZ3GRqMlXh4Mgy2kHESokzF6L+JJILQPoxwLVOkI1kN1mx3Z1j9HBDDrbACvPwZI+GU7nNrgX11QopwHuScmK8dxclTAns/veo7mKbyuKJA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=d7wjWBGn; arc=none smtp.client-ip=209.85.221.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1741186880; c=relaxed/simple;
+	bh=W+tboB6IgFEjPGx3WkSzqgQIUHHEdFH9Cj4qkUkDilM=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=W44PL9MQ3o3o2Xnvo3r4RgU/Nfjm/Wbx9+6ReME/DOr4hmhImIvPqf3xGjR/bK7wxgccuadKoT6vhLMqOfsl+v2TxJ/638NLAyTpzA67xr0CF+v6o3OskEGRcE8S9WaytvfKu6KorDpbaLUykS8T3lFG4AUKGrdpASCCYLMA24A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=fUNemUP7; arc=none smtp.client-ip=193.252.22.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="d7wjWBGn"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-390ec7c2d40so5155971f8f.1
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Mar 2025 07:00:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741186837; x=1741791637; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ZANWTEPPVCS7kbn+yeIU+DKraUb8OGsxxymaQwr00e0=;
-        b=d7wjWBGnWEfdZMQX83pknwfXpvJb9TOzUAXH+ePFdPLwwbRRDJhWLNzuR4vtL2nvj9
-         Z5hwOxP+MFBb4oZphkrzRBYjrswbIpIgjcGkJfDZHos9Bb4GaPNe2B+PEBTszF1+sfmD
-         aPpqH7vPNeto+CPUlpPUj2J9agfHAzaLQy8aNRx+/J3JCnqdTgIelrhtqtq0NW53IatX
-         wOlIc7loNNok0ADehUxn+DR4xroTuOR7/zN5QEc4hubRrfXhldUdEDrlqI2bO4QsgtqJ
-         qENvTi/iGebdCBgs/AhK7KHYKj/x5L3Tmlw25f5PPx9ZpSQ9KnQF+9zyIj9qNFq/+Tpu
-         ZDlw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741186837; x=1741791637;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZANWTEPPVCS7kbn+yeIU+DKraUb8OGsxxymaQwr00e0=;
-        b=pg0wd8Zjp5+ypRKUlCWOrL6PRDF0KjN/44x8e4eYoADEdSCIHxpkgHIJV4n2iXkpOT
-         1wgh1i2OGNCi/s6A2e0is+AaaO+eiMI1VG+p9w0QQ0Z/aB0vluDMyf9/XGh9xNWIsNSi
-         yOIyMZtQADSDQNkYiOtwo/AhhpmB2GcUjAdbvi88iPFwhvTRNbJ8lCcEg8wTYHVnmmnS
-         HCyJbVQmNHIZoUqSy1bjKV6HBeafuOGKcVVLb443URFHo2WPA7CkU4fUWS0MViSnfX8E
-         tirir9W4xWUhN/B0wKzYF7rcurvjvsIO6YYWhfzlQt/viPXO/JGXBGlt34R7M6WuKmnR
-         0l4g==
-X-Forwarded-Encrypted: i=1; AJvYcCV2N/JCObWjvTdOep8vdzZf6nOw2mcgSWXjimRPqKOGQzV4+mjo9YzXTNMSyucN0WrV7FTMZ6zD+TUaCIg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyHwSlK2Y8QVWt4Bas5BC0utmRkSL4p2EbOzFq9aN8sWsR2CvI/
-	ek6sXMsU8dQ8x3wJvKWbfKz7cL31R7Dk1y2R+2I2Nj8bwaukvM1615nlCmHGwWU=
-X-Gm-Gg: ASbGncsD+laSu7HTWmw5iy/S08ULKtbp9mJTi9kEbwG8BP7ope3BCt0/jmgECHVIwJp
-	y52iUOmS1kX+FbCbOPRTjdfy007/9GIdE70OmxFCseB025P4XToG1ch188USZiEJ3diiLf6SLs3
-	nKPvETr10aeg61a9FpgN5IpJ+38wG8WxEh5aUEpGmq/7mWbzaTjMr0k/O4NMG3Rqn2ZgRrcVktT
-	RYGSu24x270LZepmEK3gaqFPEGLS+QGax0Kr6cFQJSkgDQtYsKJlJQNP9B5uAvCDiPW35n0zdCU
-	NP1ro4o93/lsalM1STSE61tHqhmZiS7I/jH2Sa2S+WgrCMxhJA==
-X-Google-Smtp-Source: AGHT+IHaXShFpWUZrnjuQ9xahJkrprzqmBEW+AnaFKuI1m235GQthfy1Zavq4gvhC9Eeze/MbuNM3w==
-X-Received: by 2002:a5d:6d07:0:b0:38f:3224:660b with SMTP id ffacd0b85a97d-3911f7377fdmr2631065f8f.22.1741186837476;
-        Wed, 05 Mar 2025 07:00:37 -0800 (PST)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-390e485e61csm21592653f8f.98.2025.03.05.07.00.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Mar 2025 07:00:36 -0800 (PST)
-Date: Wed, 5 Mar 2025 18:00:32 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: David Howells <dhowells@redhat.com>
-Cc: Marc Dionne <marc.dionne@auristor.com>, linux-afs@lists.infradead.org,
-	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: [PATCH next] afs: Fix error code in afs_alloc_cell()
-Message-ID: <26a4651e-b56c-4350-8f9a-e0e2a2a3b452@stanley.mountain>
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="fUNemUP7"
+Received: from [172.16.82.72] ([124.33.176.97])
+	by smtp.orange.fr with ESMTPA
+	id pqDptJzz8mAhYpqE8tuPKl; Wed, 05 Mar 2025 16:00:07 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1741186807;
+	bh=aZ1JmONzMcP89ngQ1BiwOhPd9zDte7irRWei57QsOWo=;
+	h=From:Date:Subject:MIME-Version:Message-Id:To;
+	b=fUNemUP7GZeBHer6ykuQ2XeX0p5tS3qcFd5LH+i/IshFTPxC/f9ZmEm8zPxT/PHzY
+	 wR9fmOyO5nY71RHxLioTcs7Que6kWJp8P14vigbKKgfiz1Xs3AM08lRJHMIiArSmVu
+	 nMjaCjUYTuRtZJbgS7CZCGsGUESjBFTU5CjHOEeSIGxc0dv+LZr7yWEP42nIdFD+v8
+	 HTVbrWXwk10Wjmor+QexdjIdBRNjEYcTEgjBxIANVUEPk+bgtqRFBxWZP9+gkmgTZ8
+	 E8hcsHfW5yFsx1//hKXFyM/VOyv3S42rsErCzr2FSWisov+AJtBY5n1R4LhVrLwNxT
+	 h7ykJr4oO2v2A==
+X-ME-Helo: [172.16.82.72]
+X-ME-Auth: bWFpbGhvbC52aW5jZW50QHdhbmFkb28uZnI=
+X-ME-Date: Wed, 05 Mar 2025 16:00:07 +0100
+X-ME-IP: 124.33.176.97
+From: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
+Date: Wed, 05 Mar 2025 23:59:32 +0900
+Subject: [PATCH] treewide: fix typo 'unsigned __init128' -> 'unsigned
+ __int128'
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Mailer: git-send-email haha only kidding
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250305-fix_init128_typo-v1-1-cbe5b8e54e7d@wanadoo.fr>
+X-B4-Tracking: v=1; b=H4sIANNmyGcC/x2MQQqAIBAAvyJ7TnCVIPtKhERutRcTlSikvycdB
+ 2amQqbElGEUFRJdnPkMDbATsB5L2Emybwxa6V4Z1cuNb8eBC+rBlSee0i7KE6K31qzQspioOf9
+ ymt/3A+xiBChiAAAA
+X-Change-ID: 20250305-fix_init128_typo-9a0de11d993c
+To: Yury Norov <yury.norov@gmail.com>, 
+ Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc: linux-kernel@vger.kernel.org, 
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+ Vincent Mailhol <mailhol.vincent@wanadoo.fr>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3058;
+ i=mailhol.vincent@wanadoo.fr; h=from:subject:message-id;
+ bh=W+tboB6IgFEjPGx3WkSzqgQIUHHEdFH9Cj4qkUkDilM=;
+ b=owGbwMvMwCV2McXO4Xp97WbG02pJDOkn0t4+X8GqmZ8jH2S+eoZr51tDm9SNW+6dNXsVs5bX2
+ OtS+8P1HaUsDGJcDLJiiizLyjm5FToKvcMO/bWEmcPKBDKEgYtTACZy4gYjQ0/HPYHSFv0rBg3f
+ Gd6kP7PiLMiKlMx3EA/qO+y/rNwwn5HhcXskw49PsUdyNr8Sm6u979Z0oa8nn8vf3hL0Qfo9X4A
+ 2JwA=
+X-Developer-Key: i=mailhol.vincent@wanadoo.fr; a=openpgp;
+ fpr=ED8F700574E67F20E574E8E2AB5FEB886DBB99C2
 
-Return the error code if idr_alloc_cyclic() fails.  Currently it
-potentially could return either -ENOMEM or an uninitialized variable.
+"int" was misspelled as "init" the code comments in the bits.h and
+const.h files. Fix the typo.
 
-Fixes: 72c52e46a517 ("afs: Change dynroot to create contents on demand")
-Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+Signed-off-by: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
 ---
- fs/afs/cell.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ include/linux/bits.h             | 2 +-
+ include/uapi/linux/const.h       | 2 +-
+ tools/include/linux/bits.h       | 2 +-
+ tools/include/uapi/linux/const.h | 2 +-
+ 4 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/fs/afs/cell.c b/fs/afs/cell.c
-index 9f6b7718836c..dc56b0203b53 100644
---- a/fs/afs/cell.c
-+++ b/fs/afs/cell.c
-@@ -200,8 +200,10 @@ static struct afs_cell *afs_alloc_cell(struct afs_net *net,
- 	atomic_inc(&net->cells_outstanding);
- 	cell->dynroot_ino = idr_alloc_cyclic(&net->cells_dyn_ino, cell,
- 					     2, INT_MAX / 2, GFP_KERNEL);
--	if ((int)cell->dynroot_ino < 0)
-+	if ((int)cell->dynroot_ino < 0) {
-+		ret = cell->dynroot_ino;
- 		goto error;
-+	}
- 	cell->debug_id = atomic_inc_return(&cell_debug_id);
- 
- 	trace_afs_cell(cell->debug_id, 1, 0, afs_cell_trace_alloc);
+diff --git a/include/linux/bits.h b/include/linux/bits.h
+index 61a75d3f294bfa96267383b5e2fd2a5d4593fcee..14fd0ca9a6cd17339dd2f69e449558312a8a001b 100644
+--- a/include/linux/bits.h
++++ b/include/linux/bits.h
+@@ -40,7 +40,7 @@
+  * Missing asm support
+  *
+  * __GENMASK_U128() depends on _BIT128() which would not work
+- * in the asm code, as it shifts an 'unsigned __init128' data
++ * in the asm code, as it shifts an 'unsigned __int128' data
+  * type instead of direct representation of 128 bit constants
+  * such as long and unsigned long. The fundamental problem is
+  * that a 128 bit constant will get silently truncated by the
+diff --git a/include/uapi/linux/const.h b/include/uapi/linux/const.h
+index e16be0d37746e14b9eedcdb38be7d11f29b5113a..b8f629ef135f356f552b9aa9dd73356167503134 100644
+--- a/include/uapi/linux/const.h
++++ b/include/uapi/linux/const.h
+@@ -33,7 +33,7 @@
+  * Missing asm support
+  *
+  * __BIT128() would not work in the asm code, as it shifts an
+- * 'unsigned __init128' data type as direct representation of
++ * 'unsigned __int128' data type as direct representation of
+  * 128 bit constants is not supported in the gcc compiler, as
+  * they get silently truncated.
+  *
+diff --git a/tools/include/linux/bits.h b/tools/include/linux/bits.h
+index 60044b6088172b3f26aa3f17cdaede9786863dae..8de2914e65101463667de45db7ade17c4a72ff40 100644
+--- a/tools/include/linux/bits.h
++++ b/tools/include/linux/bits.h
+@@ -41,7 +41,7 @@
+  * Missing asm support
+  *
+  * __GENMASK_U128() depends on _BIT128() which would not work
+- * in the asm code, as it shifts an 'unsigned __init128' data
++ * in the asm code, as it shifts an 'unsigned __int128' data
+  * type instead of direct representation of 128 bit constants
+  * such as long and unsigned long. The fundamental problem is
+  * that a 128 bit constant will get silently truncated by the
+diff --git a/tools/include/uapi/linux/const.h b/tools/include/uapi/linux/const.h
+index e16be0d37746e14b9eedcdb38be7d11f29b5113a..b8f629ef135f356f552b9aa9dd73356167503134 100644
+--- a/tools/include/uapi/linux/const.h
++++ b/tools/include/uapi/linux/const.h
+@@ -33,7 +33,7 @@
+  * Missing asm support
+  *
+  * __BIT128() would not work in the asm code, as it shifts an
+- * 'unsigned __init128' data type as direct representation of
++ * 'unsigned __int128' data type as direct representation of
+  * 128 bit constants is not supported in the gcc compiler, as
+  * they get silently truncated.
+  *
+
+---
+base-commit: d082ecbc71e9e0bf49883ee4afd435a77a5101b6
+change-id: 20250305-fix_init128_typo-9a0de11d993c
+
+Best regards,
 -- 
-2.47.2
+Vincent Mailhol <mailhol.vincent@wanadoo.fr>
 
