@@ -1,138 +1,123 @@
-Received: from mail-yb1-f178.google.com (mail-yb1-f178.google.com [209.85.219.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A97F1EB36
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 00:47:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07DBF4D8D1;
+	Wed,  5 Mar 2025 00:54:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741135635; cv=none; b=sorSUvj8ESq3t58ZsZGU5Ar+l0YRzWYG27LXt6ZOhzNex8UhQjFt8n3kSNU/hl+Gnq5Ccj2P21NY2s3u1M5TwYG+EYeaojkH6iOW8FhDHrJq6ZZ5jWq8rtTga5bkoso7a1/cTKzd5vWCdDGHTktOqAXiAiBbaOPSwHy5oKzu0kg=
+	t=1741136049; cv=none; b=o+kHk5m0Q8A8B2za0bYoWrwSfimb1oHLWEJrmUC++FSWYh3AGrZNqycy0wo9M9o45vDh/O4LK6uYe1rWN/nhUcuefw90mNOl8TbecfCbVzT/oJN2jino5ehqQPMmO1NIal93WLiw4+h7VNtywNqhdVuF0Ca1C9uoL/f8uFyOcy0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741135635; c=relaxed/simple;
-	bh=KrZPhWHQh1C/FXJrXVtu/3D6Cl4fRehYGt6yzWML13w=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mBuMwFBbnPABKxioubzikf+rOlmZhUOEdP9kMcSs/o/KrUebxI3Ikn0IJ/fLdQj07XzRm8hYihJJlDjnPAfqjXU6AAsJgCDOUIIi1UCVbE0517vLRrftA5Nqnnz96il61yJKIVoOCriXDBZcxPOJ/Jfct4YmK2gbFVwpp7GPewI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=HXB4NY93; arc=none smtp.client-ip=209.85.219.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
+	s=arc-20240116; t=1741136049; c=relaxed/simple;
+	bh=tIhOLNOlcINBx0UYhFOL+x8Q07QOhFjHXPWnR8anXHc=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=eHRaqa/3mmQ6TZQel+azFKoRLffi+BWjPpzUQm8XC+dMNYb7xjEzl3qo/X8y+7DGBVFukVk1M07EWuBjNNiDhueT2E0eLRbKzgRuCVe/eHg2zx+2o0JXIn4sD74Iz7Cfh7INXq3sM9r2mereiT1Rq0677/rhK7tRUV3phROTO3w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=megvsH4n; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="HXB4NY93"
-Received: by mail-yb1-f178.google.com with SMTP id 3f1490d57ef6-e461015fbd4so4460693276.2
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Mar 2025 16:47:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore.com; s=google; t=1741135632; x=1741740432; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=U0JWW3fTWBnh7K7+SqgqWW2WjvJa1HaPLK+y4schvYw=;
-        b=HXB4NY93Mv1adQF0nefzgX5in0YyUQcM/o+PkBcaO7bqYOxJV/KVJFxA+mvnP2H7bX
-         VbKy8zMjropMV2M/CPD5wR5DrGxGM/Wu3ZIleI2llwqDr1hz+mTSTmwAqEZgsfUGt6vN
-         uHb8/+P6o6TyY+jexQQgFVBWgfxCuU59AwEo6C5f5obqM/StUqEYlSsrxVIwhm5pQvXJ
-         xFbpa7Wb2BDwK/JrutICXsHbEnbUKUPWOhUoCg78SuLFB1GN02/Q+4wlN3MUiAEOs13D
-         ioHwP8xsFgI7jqstQXGv66HiJSczlVm8cOAXeP8fKGqAmLXcgYWuC5wE2q1wn73fTD5K
-         b/vQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741135632; x=1741740432;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=U0JWW3fTWBnh7K7+SqgqWW2WjvJa1HaPLK+y4schvYw=;
-        b=ZySyVdOiDGD37EHxejgEqdO0jMBF+OM1PDfhSdPJ62Hw0E7ihyOXCI92WZYAO3tRQ0
-         GX/sYBQiCtSN/fozVO6A/2jCT6K2ZMDSFk7BKMcdzTMk1QRm5cJrV9ZJvlCCFu7smL0P
-         vbjX+pAjfvIGmTRLvFUSuH4w2POF0UrYWsW86xtEYBFC4hdjOb2NO7+vLBBImwZMcizH
-         at39IHdOxABjt2MSR7pZzPjsVkC2UqFeoevh5ns+TGCFJUH5x0wcEeChDdv390NlAePQ
-         OT+Ue0LXXhbD4ePrc+cZWIwxejO65gB4x2bXQQzblCiciW432jmMUWuL4aXKZCWJQHcA
-         Ke+g==
-X-Forwarded-Encrypted: i=1; AJvYcCX178qLDymPmxIMj4E0yMZD4ALLY6arG3Ux82OUyIJ0Yd8CPpLrFj6tIvPMO4dGljIMH6S3j78XHJnS3UM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz6zcB3mrjZe/bgpHxbTr4bgG8LtDQZbrtj8pFUq3y/bC+5cU5I
-	vEF3xgXpWlCSTmQn5YFPB9kIjLuUO+no47EfgRFK7apEmUEj2pIQHuBI0NHE6XFCStQYcIKdXCY
-	O2qBbx/p/RcryiW/aGyr7DUSTPcbVhCB/06E6
-X-Gm-Gg: ASbGncsexnECss/5t4XWyZVGomp31BU9dnyEx3wLs0xkDi1F9qLNbls5zZMWrrPyL34
-	oiy3j7eTrxatRuBf3+qfvgcNU2YUbpO/rz8TFEy8JAqpE5owmZrnJ4rze4XQwv3Fa5SNAyER7uP
-	yeNh6Pr75hC2oDRzeNSYmT8t3GcA==
-X-Google-Smtp-Source: AGHT+IFsin2dnAoII47KpfiYxuCKNvaOHTWGt38UM0/AeWRCKVn6GpsI/Mpf2AghCcvXGb4Vk3GRSbaU2mFwSKGkBmg=
-X-Received: by 2002:a05:6902:124c:b0:e5b:248a:bf3a with SMTP id
- 3f1490d57ef6-e611e305897mr1727393276.30.1741135629678; Tue, 04 Mar 2025
- 16:47:09 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="megvsH4n"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 79100C4CEE5;
+	Wed,  5 Mar 2025 00:54:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741136048;
+	bh=tIhOLNOlcINBx0UYhFOL+x8Q07QOhFjHXPWnR8anXHc=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=megvsH4nDF0tbmb/hI2xW8hK1FKeG48lIfpOU6BdOMgXZVZW3S72zzM8CWP45Vb6d
+	 ucCGPUDa4S9oCP+8GUTMmksFH1hZxR+RRXMKDhO8ZN1hKxpzdgsNu/NdqxY/GV3y/y
+	 1s9YcCOzD7SMrhoBl3cpMW7xBbYgf7L021wpH0SRBkOw+Klqq4a+2XNg0NRMm5OJsi
+	 JSFgdoSA4Pt85aJp6ukEoi9pp++X36gKHA0bSTP6VnJPJN7bkX8pEPUxdpQjNrz16J
+	 Ks9AYlr3UtArAtHD/acu/srL6/oYppecsq8zd37bvMD/AU5okL+ubodrfcEDobVKUb
+	 6eDeUQdViwY5w==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62276C282D0;
+	Wed,  5 Mar 2025 00:54:08 +0000 (UTC)
+From: Satish Kharat via B4 Relay <devnull+satishkh.cisco.com@kernel.org>
+Subject: [PATCH net-next v2 0/8] enic:enable 32, 64 byte cqes and get max
+ rx/tx ring size from hw
+Date: Tue, 04 Mar 2025 19:56:36 -0500
+Message-Id: <20250304-enic_cleanup_and_ext_cq-v2-0-85804263dad8@cisco.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250304203123.3935371-1-bboscaccy@linux.microsoft.com> <20250304203123.3935371-2-bboscaccy@linux.microsoft.com>
-In-Reply-To: <20250304203123.3935371-2-bboscaccy@linux.microsoft.com>
-From: Paul Moore <paul@paul-moore.com>
-Date: Tue, 4 Mar 2025 19:46:58 -0500
-X-Gm-Features: AQ5f1JpLlLzJjcKMPOWcUJShk8j8ocFRlSTUH6_R8CutO6bLPL3P9GSwEAw9ZLk
-Message-ID: <CAHC9VhQ+R1nxsp6aPDqH9trjcPadb6yPsj+fEv47mYQqZ50yeQ@mail.gmail.com>
-Subject: Re: [PATCH v4 bpf-next 1/2] security: Propagate caller information in
- bpf hooks
-To: Blaise Boscaccy <bboscaccy@linux.microsoft.com>
-Cc: James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, 
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	John Fastabend <john.fastabend@gmail.com>, Andrii Nakryiko <andrii@kernel.org>, 
-	Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>, 
-	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Stephen Smalley <stephen.smalley.work@gmail.com>, Ondrej Mosnacek <omosnace@redhat.com>, 
-	linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	bpf@vger.kernel.org, selinux@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAEShx2cC/3WNwQ6CMBBEf4Xs2Zq2iqAn/8OQhi6LbKIttpVgC
+ P9ug2ePkzfzZoFIgSnCpVgg0MSRvctB7wrAoXV3EtzlDFrqUmpVC3KMBh/UuvdoWtcZmpPBl+g
+ zPNXWdiQryOsxUM/zZr6BoyRcLkKTycAx+fDZLie18Z9dV3/tkxJS4EEd+3NZK23tFTmi36N/Q
+ rOu6xd4r76syAAAAA==
+X-Change-ID: 20250218-enic_cleanup_and_ext_cq-f21868bbde07
+To: Christian Benvenuti <benve@cisco.com>, 
+ Andrew Lunn <andrew+netdev@lunn.ch>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Satish Kharat <satishkh@cisco.com>, Nelson Escobar <neescoba@cisco.com>, 
+ John Daley <johndale@cisco.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1741136202; l=2463;
+ i=satishkh@cisco.com; s=20250226; h=from:subject:message-id;
+ bh=tIhOLNOlcINBx0UYhFOL+x8Q07QOhFjHXPWnR8anXHc=;
+ b=BZwIfK2gawRr7sIDLP7RnxjDXPXKTC56P8ilZ8yA2qgJ0K6GIEknAIO+BcAeFHSv+uhsU1UT5
+ SjBo+UGe2KEC0FrE6MxOGWW1kwoQ37c3tVoYxqtBI4LaAdg4U9VXgPi
+X-Developer-Key: i=satishkh@cisco.com; a=ed25519;
+ pk=lkxzORFYn5ejiy0kzcsfkpGoXZDcnHMc4n3YK7jJnJo=
+X-Endpoint-Received: by B4 Relay for satishkh@cisco.com/20250226 with
+ auth_id=351
+X-Original-From: Satish Kharat <satishkh@cisco.com>
+Reply-To: satishkh@cisco.com
 
-On Tue, Mar 4, 2025 at 3:31=E2=80=AFPM Blaise Boscaccy
-<bboscaccy@linux.microsoft.com> wrote:
->
-> Certain bpf syscall subcommands are available for usage from both
-> userspace and the kernel. LSM modules or eBPF gatekeeper programs may
-> need to take a different course of action depending on whether or not
-> a BPF syscall originated from the kernel or userspace.
->
-> Additionally, some of the bpf_attr struct fields contain pointers to
-> arbitrary memory. Currently the functionality to determine whether or
-> not a pointer refers to kernel memory or userspace memory is exposed
-> to the bpf verifier, but that information is missing from various LSM
-> hooks.
->
-> Here we augment the LSM hooks to provide this data, by simply passing
-> a boolean flag indicating whether or not the call originated in the
-> kernel, in any hook that contains a bpf_attr struct that corresponds
-> to a subcommand that may be called from the kernel.
->
-> Signed-off-by: Blaise Boscaccy <bboscaccy@linux.microsoft.com>
-> Acked-by: Song Liu <song@kernel.org>
-> ---
->  include/linux/lsm_hook_defs.h |  6 +++---
->  include/linux/security.h      | 12 ++++++------
->  kernel/bpf/syscall.c          | 10 +++++-----
->  security/security.c           | 15 +++++++++------
->  security/selinux/hooks.c      |  6 +++---
->  5 files changed, 26 insertions(+), 23 deletions(-)
+This series enables using the max rx and tx ring sizes read from hw.
+For newer hw that can be up to 16k entries. This requires bigger
+completion entries for rx queues. This series enables the use of the
+32 and 64 byte completion queues entries for enic rx queues on
+supported hw versions. This is in addition to the exiting (default)
+16 byte rx cqes.
 
-...
+Signed-off-by: Satish Kharat <satishkh@cisco.com>
+---
+Changes in v2:
+- Added net-next to the subject line.
+- Removed inlines from function defs in .c file.
+- Fixed function local variable style issues.
+- Added couple of helper functions to common code.
+- Fixed checkpatch errors and warnings.
+- Link to v1: https://lore.kernel.org/r/20250227-enic_cleanup_and_ext_cq-v1-0-c314f95812bb@cisco.com
 
-> diff --git a/security/security.c b/security/security.c
-> index 143561ebc3e89..38c977091a7fd 100644
-> --- a/security/security.c
-> +++ b/security/security.c
-> @@ -5627,6 +5627,7 @@ int security_audit_rule_match(struct lsm_prop *prop=
-, u32 field, u32 op,
->   * @cmd: command
->   * @attr: bpf attribute
->   * @size: size
-> + * @is_kernel: whether or not call originated from kernel
+---
+Satish Kharat (8):
+      enic: Move function from header file to c file
+      enic: enic rq code reorg
+      enic: enic rq extended cq defines
+      enic: enable rq extended cq support
+      enic : remove unused function cq_enet_wq_desc_dec
+      enic : added enic_wq.c and enic_wq.h
+      enic : cleanup of enic wq request completion path
+      enic : get max rq & wq entries supported by hw, 16K queues
 
-This is really nitpicky so please only make this change if you are
-respinning the patchset for another reason (it looks like you may need
-to do so for other reasons, so I mentioning it), but please change
-"is_kernel" to just "kernel" in all the LSM hooks you're updating so
-it is more consistent with the other LSM hook boolean parameter flags.
+ drivers/net/ethernet/cisco/enic/Makefile       |   2 +-
+ drivers/net/ethernet/cisco/enic/cq_desc.h      |  25 +--
+ drivers/net/ethernet/cisco/enic/cq_enet_desc.h | 142 ++++++---------
+ drivers/net/ethernet/cisco/enic/enic.h         |  13 ++
+ drivers/net/ethernet/cisco/enic/enic_ethtool.c |  12 +-
+ drivers/net/ethernet/cisco/enic/enic_main.c    |  69 ++-----
+ drivers/net/ethernet/cisco/enic/enic_res.c     |  87 +++++++--
+ drivers/net/ethernet/cisco/enic/enic_res.h     |  11 +-
+ drivers/net/ethernet/cisco/enic/enic_rq.c      | 240 ++++++++++++++++++++++---
+ drivers/net/ethernet/cisco/enic/enic_rq.h      |   6 +-
+ drivers/net/ethernet/cisco/enic/enic_wq.c      | 117 ++++++++++++
+ drivers/net/ethernet/cisco/enic/enic_wq.h      |   7 +
+ drivers/net/ethernet/cisco/enic/vnic_cq.h      |  45 +----
+ drivers/net/ethernet/cisco/enic/vnic_devcmd.h  |  19 ++
+ drivers/net/ethernet/cisco/enic/vnic_enet.h    |   5 +
+ drivers/net/ethernet/cisco/enic/vnic_rq.h      |   2 +-
+ drivers/net/ethernet/cisco/enic/vnic_wq.h      |   2 +-
+ 17 files changed, 545 insertions(+), 259 deletions(-)
+---
+base-commit: de7a88b639d488607352a270ef2e052c4442b1b3
+change-id: 20250218-enic_cleanup_and_ext_cq-f21868bbde07
 
-Regardless of the above, this looks good to me.  My ACK is below in
-case the BPF folks want to merge this, but I'm also happy to take this
-via the LSM tree once the selftest changes are resolved and ACK'd.
+Best regards,
+-- 
+Satish Kharat <satishkh@cisco.com>
 
-Acked-by: Paul Moore <paul@paul-moore.com>
 
---=20
-paul-moore.com
