@@ -1,166 +1,201 @@
-Received: from fout-b2-smtp.messagingengine.com (fout-b2-smtp.messagingengine.com [202.12.124.145])
+Received: from mx0b-0016f401.pphosted.com (mx0b-0016f401.pphosted.com [67.231.156.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4EC71E2847;
-	Wed,  5 Mar 2025 10:11:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.145
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82A8F13AC1;
+	Wed,  5 Mar 2025 10:11:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.156.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741169506; cv=none; b=PxDWLI/TFcky9lRNyLB4AUFFZXKTXUNAVx45EVl0W9ZqEERr7gWykTNGbx3kzl1F4NvMUXmBrwhuUbmrVCxpR7ATVrjJ1T5OwUqgLML5HZnLqxbdGXJDpk1kK2ELCs4dPwYfgc+lwn/evBmYpEJLT3u8vUXpgfRGtHvVURW9j3Q=
+	t=1741169508; cv=none; b=lONXO2gSPlX1gi5d110+dmZZT0PumYmTjWIey6yTfFjk0rMtFALsXhqdBuIi3GoMNe9qf/YoG0/TyaPAHdFJVo9Clfswq3o21vZQIIpgXnzUGjdWIIjCXwwKofzT2osg2OWUshgPWex97puANgkHNbiCTmISqwQQcfn2cqjn0h8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741169506; c=relaxed/simple;
-	bh=u8nSbs0xTwX5BtGNGGk1U4xJg451vP+0nM368luQfKs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tj/HLeiRDTNYJ7HnIHyXj6pFMbsVN1cMsneRTCIHmGPlIBaTJoUX78nYwy0c9EKYM7XTKDsU9mmHwP0kB7vOA8vz2eg3O+iA6UiFoyB4a+Ormrse4eFCbtTbKMQ09g/i3KMbzbEBmhjhQzKbCWGs+7PLkh0Vhi/DjIpshXNGf40=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=queasysnail.net; spf=pass smtp.mailfrom=queasysnail.net; dkim=pass (2048-bit key) header.d=queasysnail.net header.i=@queasysnail.net header.b=f4PMkdPd; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=W+pTjfBM; arc=none smtp.client-ip=202.12.124.145
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=queasysnail.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=queasysnail.net
+	s=arc-20240116; t=1741169508; c=relaxed/simple;
+	bh=DCfwg8n6Rd6DlSKf/k7fXD3X4GH1VxcfQ3j4yYNkI00=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=t3XFxmfeLXtVEos38KJkYkg9C4XLbl39P3IOPLlwEadOLadr9o7py0MGTIRmW7RN4kPE8VprBJG4e0rOGAcXjcBXsnjWACXqAcCejk42d2qc0eZaVMqmeq+1eUkT982Q1GI00JYOKgEa3rSxlRGbSQkahk5M1shjE0G/EnvfKXU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=Qd8524oJ; arc=none smtp.client-ip=67.231.156.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=queasysnail.net header.i=@queasysnail.net header.b="f4PMkdPd";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="W+pTjfBM"
-Received: from phl-compute-04.internal (phl-compute-04.phl.internal [10.202.2.44])
-	by mailfout.stl.internal (Postfix) with ESMTP id ABD2011400C7;
-	Wed,  5 Mar 2025 05:11:43 -0500 (EST)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-04.internal (MEProxy); Wed, 05 Mar 2025 05:11:44 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=queasysnail.net;
-	 h=cc:cc:content-type:content-type:date:date:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=fm2; t=1741169503; x=
-	1741255903; bh=FgqevE7dp9jIfFGQb8KyY7Usp35oeBUE8Vi5Z6q1pgo=; b=f
-	4PMkdPdzhOAgVvNaujf/h2UbyV/FUe0m26HKbbJl0/sQYut7W1336g8bsGMM6UbS
-	LGQOowu62xtfd7P1aNtmKsR4G7PMHr9p/7lbQxUxouzQt7UtARkWx5dGK5xsjsMO
-	Q0/iDzlkMTqdQX1G4/jIWmxxJb7D2mJTRfPPcG7uN3P6Bwew7sxtI3tZnUOGc0MC
-	7TKX9ZKMjZBFYUfyhF9Qc2Pg4dPqYudHS2MYjWxd+f5DcJjWj0wjACUqU8k0nJFT
-	vOZDquu+pbrKYmrnmSlLeMob2DT7clhOj8dIfREzVY6SFKJYPuHwLqnj55Zq8WsU
-	+q/ykWUEl7pj25bLW0+gg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
-	1741169503; x=1741255903; bh=FgqevE7dp9jIfFGQb8KyY7Usp35oeBUE8Vi
-	5Z6q1pgo=; b=W+pTjfBMAKYVc5L3Ldg6L+dO1hz2jiJ/AZWtyPf9BJHRWNDdkIm
-	5E+svGGsu0CdiU2OSYVeMBHWvGl6C6Sq9aeFsYVHLLmZ7oyXJF7Ocdaw3SKkeIM3
-	oa0x+42YCpA61Bg+j/ItbjuN+Brrz0YrcehV3JYwOK36jpPMJIMEjCGAtDZPsvpq
-	suLw1AiaNua7nVzVy8osPm6BRcfti/cqf46w6heqfJnMC3SjebG/O/mfA4ZJ/WLM
-	hY3ZU5R6XIxtrbpwT0qhopsHfq1+VObXNLLzYYknpHePAd9luRrA7EX+eoTM7yiR
-	lZ9qKhoJozyo9wbTsNjCsbLOlG5g7wwAzdQ==
-X-ME-Sender: <xms:XyPIZ-m5w2fvBjED8u53ZLNp-yxFM5lfPSP_Nuh9uIAB8k7ikIq0-g>
-    <xme:XyPIZ12aH8BJIAKCBSbS1TMM_mmD3axiaYG9UdPrRVJUGPLnTVdo02J4LJTz6U_a0
-    Yc0F5v5Fzmk_-fy0bo>
-X-ME-Received: <xmr:XyPIZ8qfQB1PHBpRr9PMQvOYGihyBbOGsECUwMkc6kyoWP2o6Q4E_ohvvuyJ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddutdegheegucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesthdtredttddt
-    jeenucfhrhhomhepufgrsghrihhnrgcuffhusghrohgtrgcuoehsugesqhhuvggrshihsh
-    hnrghilhdrnhgvtheqnecuggftrfgrthhtvghrnhepgefhffdtvedugfekffejvdeiieel
-    hfetffeffefghedvvefhjeejvdekfeelgefgnecuffhomhgrihhnpehkvghrnhgvlhdroh
-    hrghenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehs
-    ugesqhhuvggrshihshhnrghilhdrnhgvthdpnhgspghrtghpthhtohepudefpdhmohguvg
-    epshhmthhpohhuthdprhgtphhtthhopegrnhhtohhnihhosehophgvnhhvphhnrdhnvght
-    pdhrtghpthhtohepnhgvthguvghvsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpth
-    htohepvgguuhhmrgiivghtsehgohhoghhlvgdrtghomhdprhgtphhtthhopehkuhgsrges
-    khgvrhhnvghlrdhorhhgpdhrtghpthhtohepphgrsggvnhhisehrvgguhhgrthdrtghomh
-    dprhgtphhtthhopeguohhnrghlugdrhhhunhhtvghrsehgmhgrihhlrdgtohhmpdhrtghp
-    thhtohepshhhuhgrhheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhihrgiirghnoh
-    hvrdhsrdgrsehgmhgrihhlrdgtohhmpdhrtghpthhtoheprghnughrvgifodhnvghtuggv
-    vheslhhunhhnrdgthh
-X-ME-Proxy: <xmx:XyPIZynxLkMwU1dS3B3gmluF7RqutfIl5jCYp0RrBR1x7m6hISL4QQ>
-    <xmx:XyPIZ81It-Om4u5CkzG0BdXTKUlku7sSKcocsG7yXMXm0flW67P2sQ>
-    <xmx:XyPIZ5vJVAS0zyQppNYiSCfRVbkxT74JW-hz9C2d8lNyi7QM-Nyltg>
-    <xmx:XyPIZ4WqvLyEr6N5ubGlWp_GA70lVuB6lHKoYGHdw6b2-tMDbItinA>
-    <xmx:XyPIZ32a6YS_g4zYcQrOEzp-A-FWLjUNpRMSLH4ACUe-ECxL99PgSUUW>
-Feedback-ID: i934648bf:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 5 Mar 2025 05:11:42 -0500 (EST)
-Date: Wed, 5 Mar 2025 11:11:40 +0100
-From: Sabrina Dubroca <sd@queasysnail.net>
-To: Antonio Quartulli <antonio@openvpn.net>
-Cc: netdev@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Donald Hunter <donald.hunter@gmail.com>,
-	Shuah Khan <shuah@kernel.org>, ryazanov.s.a@gmail.com,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	Simon Horman <horms@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, Xiao Liang <shaw.leon@gmail.com>
-Subject: Re: [PATCH v21 20/24] ovpn: implement key add/get/del/swap via
- netlink
-Message-ID: <Z8gjXLepPcRByLTZ@hog>
-References: <20250304-b4-ovpn-tmp-v21-0-d3cbb74bb581@openvpn.net>
- <20250304-b4-ovpn-tmp-v21-20-d3cbb74bb581@openvpn.net>
- <Z8braoc3yeBY7lcE@hog>
- <07c73e1d-3c9c-46c7-92cd-28d728929d18@openvpn.net>
- <Z8eIJH1LtTtfljSj@hog>
- <71c1db26-f147-4578-89ae-c5b95da0ec9a@openvpn.net>
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="Qd8524oJ"
+Received: from pps.filterd (m0431383.ppops.net [127.0.0.1])
+	by mx0b-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5258qqsa019244;
+	Wed, 5 Mar 2025 02:10:37 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pfpt0220; bh=P
+	LDLKL4Yt/5sxQy9ArLCJTWD0J80wY4ItfCHJOLMcoY=; b=Qd8524oJlQz3b9R5a
+	u6mNn9qbNbz7OjRUIYKsqHf1VxMyZvy2Njgbd/Q/BtVGIaEBWGY3kayn1M3obh0K
+	A+6Ng10Oeg/vG2bjKY5SnfNpk00Vstu3sSBVrJnnrsKcGtho8DYfkTUja3o0ttLa
+	77a3Fp3QSbKwi/7zSZCbmhE+IKS2AKPeybGweL2Y+9MvPZmLg7vYFCV3fBWS8iKm
+	X/ne+fmKINe1sGjom3D6oKrOtXH7X/HdUu9DRq7PlNUr1/vD0tOuCXNYe1NgD6Jc
+	uBn/Z/QDMOmD0n+wvW0UJ3Xyz42Fss7lq0PsUPnhdzsX4a9a3q0NxVUO6lQy6yyZ
+	hqm5Q==
+Received: from dc6wp-exch02.marvell.com ([4.21.29.225])
+	by mx0b-0016f401.pphosted.com (PPS) with ESMTPS id 456kg184rh-2
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 05 Mar 2025 02:10:37 -0800 (PST)
+Received: from DC6WP-EXCH02.marvell.com (10.76.176.209) by
+ DC6WP-EXCH02.marvell.com (10.76.176.209) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.4; Wed, 5 Mar 2025 02:10:36 -0800
+Received: from maili.marvell.com (10.69.176.80) by DC6WP-EXCH02.marvell.com
+ (10.76.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
+ Transport; Wed, 5 Mar 2025 02:10:36 -0800
+Received: from tx2-sever.caveonetworks.com (unknown [10.110.141.15])
+	by maili.marvell.com (Postfix) with ESMTP id F024D5B6929;
+	Wed,  5 Mar 2025 02:10:35 -0800 (PST)
+From: George Cherian <george.cherian@marvell.com>
+To: <linux@roeck-us.net>, <wim@linux-watchdog.org>, <jwerner@chromium.org>,
+        <evanbenn@chromium.org>, <kabel@kernel.org>, <krzk@kernel.org>,
+        <mazziesaccount@gmail.com>, <thomas.richard@bootlin.com>,
+        <lma@chromium.org>, <bleung@chromium.org>,
+        <support.opensource@diasemi.com>, <shawnguo@kernel.org>,
+        <s.hauer@pengutronix.de>, <kernel@pengutronix.de>,
+        <festevam@gmail.com>, <andy@kernel.org>, <paul@crapouillou.net>,
+        <alexander.usyskin@intel.com>, <andreas.werner@men.de>,
+        <daniel@thingy.jp>, <romain.perier@gmail.com>,
+        <avifishman70@gmail.com>, <tmaimon77@gmail.com>,
+        <tali.perry1@gmail.com>, <venture@google.com>, <yuenn@google.com>,
+        <benjaminfair@google.com>, <maddy@linux.ibm.com>, <mpe@ellerman.id.au>,
+        <npiggin@gmail.com>, <christophe.leroy@csgroup.eu>,
+        <naveen@kernel.org>, <mwalle@kernel.org>, <xingyu.wu@starfivetech.com>,
+        <ziv.xu@starfivetech.com>, <hayashi.kunihiko@socionext.com>,
+        <mhiramat@kernel.org>
+CC: <linux-watchdog@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <chrome-platform@lists.linux.dev>, <imx@lists.linux.dev>,
+        <linux-mips@vger.kernel.org>, <openbmc@lists.ozlabs.org>,
+        <linuxppc-dev@lists.ozlabs.org>, <patches@opensource.cirrus.com>,
+        George Cherian <george.cherian@marvell.com>
+Subject: [PATCH v4 2/2] drivers: watchdog: Add support for panic notifier callback
+Date: Wed, 5 Mar 2025 10:10:25 +0000
+Message-ID: <20250305101025.2279951-3-george.cherian@marvell.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250305101025.2279951-1-george.cherian@marvell.com>
+References: <20250305101025.2279951-1-george.cherian@marvell.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <71c1db26-f147-4578-89ae-c5b95da0ec9a@openvpn.net>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-ORIG-GUID: hTGQaz5SSlFM3i8596GAtQh984SP-LDu
+X-Proofpoint-GUID: hTGQaz5SSlFM3i8596GAtQh984SP-LDu
+X-Authority-Analysis: v=2.4 cv=E7k3pbdl c=1 sm=1 tr=0 ts=67c8231d cx=c_pps a=gIfcoYsirJbf48DBMSPrZA==:117 a=gIfcoYsirJbf48DBMSPrZA==:17 a=Vs1iUdzkB0EA:10 a=M5GUcnROAAAA:8 a=nrZ1DTJrTwF-UHMnxCAA:9 a=jEgSlwDUfglsTIS4Y9Cu:22 a=OBjm3rFKGHvpk9ecZwUJ:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-05_04,2025-03-05_01,2024-11-22_01
 
-2025-03-05, 02:00:21 +0100, Antonio Quartulli wrote:
-> On 05/03/2025 00:09, Sabrina Dubroca wrote:
-> > 2025-03-04, 13:11:28 +0100, Antonio Quartulli wrote:
-> > > On 04/03/2025 13:00, Sabrina Dubroca wrote:
-> > > > 2025-03-04, 01:33:50 +0100, Antonio Quartulli wrote:
-> > > > >    int ovpn_nl_key_new_doit(struct sk_buff *skb, struct genl_info *info)
-> > > > >    {
-> > > > ...
-> > > > > +	pkr.slot = nla_get_u8(attrs[OVPN_A_KEYCONF_SLOT]);
-> > > > > +	pkr.key.key_id = nla_get_u16(attrs[OVPN_A_KEYCONF_KEY_ID]);
-> > > > > +	pkr.key.cipher_alg = nla_get_u16(attrs[OVPN_A_KEYCONF_CIPHER_ALG]);
-> > > > 
-> > > > 
-> > > > [...]
-> > > > > +static int ovpn_nl_send_key(struct sk_buff *skb, const struct genl_info *info,
-> > > > > +			    u32 peer_id, enum ovpn_key_slot slot,
-> > > > > +			    const struct ovpn_key_config *keyconf)
-> > > > > +{
-> > > > ...
-> > > > > +	if (nla_put_u32(skb, OVPN_A_KEYCONF_SLOT, slot) ||
-> > > > > +	    nla_put_u32(skb, OVPN_A_KEYCONF_KEY_ID, keyconf->key_id) ||
-> > > > > +	    nla_put_u32(skb, OVPN_A_KEYCONF_CIPHER_ALG, keyconf->cipher_alg))
-> > > > 
-> > > > That's a bit inconsistent. nla_put_u32 matches the generated policy,
-> > > > but the nla_get_u{8,16} don't (and nla_get_u16 also doesn't match "u8
-> > > > key_id" it's getting stored into).
-> > > > 
-> > > > [also kind of curious that the policy/spec uses U32 with max values of 1/2/7]
-> > > 
-> > >  From https://www.kernel.org/doc/html/next/userspace-api/netlink/specs.html#fix-width-integer-types
-> > > 
-> > > "Note that types smaller than 32 bit should be avoided as using them does
-> > > not save any memory in Netlink messages (due to alignment)."
-> > > 
-> > > Hence I went for u32 attributes, although values stored into them are much
-> > > smaller.
-> > 
-> > Right.
-> 
-> What's wrong with key_id being u8 tough?
+Watchdog is not turned off in kernel panic situation.
+In certain systems this might prevent the successful loading
+of kdump kernel. The kdump kernel might hit a watchdog reset
+while it is booting.
 
-Nothing. It would make a little bit more sense to use nla_get_u16 if
-key_id was u16 (even with OVPN_A_KEYCONF_KEY_ID defined as U32), or to
-use nla_get_u8 for u8, but here it was just 3 different int sizes and
-that triggered my "uh? what?" :)
+To avoid such scenarios add a panic notifier call back function
+which can stop the watchdog. This provision can be enabled by
+passing watchdog.stop_on_panic=1 via kernel command-line parameter.
 
-> I am a bit reluctant to change all key_id fields/variables to u32, just
-> because the netlink APIs prefers using u32 instead of u8.
-> 
-> Keeping variables/fields u8 allows to understand what values we're going to
-> store internally.
+Signed-off-by: George Cherian <george.cherian@marvell.com>
+---
+ drivers/watchdog/watchdog_core.c | 35 ++++++++++++++++++++++++++++++++
+ include/linux/watchdog.h         |  2 ++
+ 2 files changed, 37 insertions(+)
 
-Sure.
-
-> And thanks to the netlink policy we know that no larger value will be
-> attempted to be saved, even if the field is actually u32.
-
-Yes.
-
+diff --git a/drivers/watchdog/watchdog_core.c b/drivers/watchdog/watchdog_core.c
+index d46d8c8c01f2..f0006d90da92 100644
+--- a/drivers/watchdog/watchdog_core.c
++++ b/drivers/watchdog/watchdog_core.c
+@@ -34,6 +34,7 @@
+ #include <linux/idr.h>		/* For ida_* macros */
+ #include <linux/err.h>		/* For IS_ERR macros */
+ #include <linux/of.h>		/* For of_get_timeout_sec */
++#include <linux/panic_notifier.h> /* For panic handler */
+ #include <linux/suspend.h>
+ 
+ #include "watchdog_core.h"	/* For watchdog_dev_register/... */
+@@ -47,6 +48,9 @@ static int stop_on_reboot = -1;
+ module_param(stop_on_reboot, int, 0444);
+ MODULE_PARM_DESC(stop_on_reboot, "Stop watchdogs on reboot (0=keep watching, 1=stop)");
+ 
++static bool stop_on_panic;
++module_param(stop_on_panic, bool, 0444);
++MODULE_PARM_DESC(stop_on_panic, "Stop watchdogs on panic (0=keep watching, 1=stop)");
+ /*
+  * Deferred Registration infrastructure.
+  *
+@@ -155,6 +159,23 @@ int watchdog_init_timeout(struct watchdog_device *wdd,
+ }
+ EXPORT_SYMBOL_GPL(watchdog_init_timeout);
+ 
++static int watchdog_panic_notify(struct notifier_block *nb,
++				 unsigned long action, void *data)
++{
++	struct watchdog_device *wdd;
++
++	wdd = container_of(nb, struct watchdog_device, panic_nb);
++	if (watchdog_active(wdd)) {
++		int ret;
++
++		ret = wdd->ops->stop(wdd);
++		if (ret)
++			return NOTIFY_BAD;
++	}
++
++	return NOTIFY_DONE;
++}
++
+ static int watchdog_reboot_notifier(struct notifier_block *nb,
+ 				    unsigned long code, void *data)
+ {
+@@ -334,6 +355,17 @@ static int ___watchdog_register_device(struct watchdog_device *wdd)
+ 				wdd->id, ret);
+ 	}
+ 
++	if (stop_on_panic) {
++		if (wdd->ops->stop && !(wdd->info->options & WDIOF_STOP_MAYSLEEP)) {
++			wdd->panic_nb.notifier_call = watchdog_panic_notify;
++			atomic_notifier_chain_register(&panic_notifier_list,
++						       &wdd->panic_nb);
++			set_bit(WDOG_STOP_ON_PANIC, &wdd->status);
++		} else {
++			pr_warn("watchdog%d: stop_on_panic not supported\n", wdd->id);
++		}
++	}
++
+ 	return 0;
+ }
+ 
+@@ -390,6 +422,9 @@ static void __watchdog_unregister_device(struct watchdog_device *wdd)
+ 	if (test_bit(WDOG_STOP_ON_REBOOT, &wdd->status))
+ 		unregister_reboot_notifier(&wdd->reboot_nb);
+ 
++	if (test_bit(WDOG_STOP_ON_PANIC, &wdd->status))
++		atomic_notifier_chain_unregister(&panic_notifier_list,
++						 &wdd->panic_nb);
+ 	watchdog_dev_unregister(wdd);
+ 	ida_free(&watchdog_ida, wdd->id);
+ }
+diff --git a/include/linux/watchdog.h b/include/linux/watchdog.h
+index 99660197a36c..ef6f1136a4c5 100644
+--- a/include/linux/watchdog.h
++++ b/include/linux/watchdog.h
+@@ -108,6 +108,7 @@ struct watchdog_device {
+ 	struct notifier_block reboot_nb;
+ 	struct notifier_block restart_nb;
+ 	struct notifier_block pm_nb;
++	struct notifier_block panic_nb;
+ 	void *driver_data;
+ 	struct watchdog_core_data *wd_data;
+ 	unsigned long status;
+@@ -118,6 +119,7 @@ struct watchdog_device {
+ #define WDOG_HW_RUNNING		3	/* True if HW watchdog running */
+ #define WDOG_STOP_ON_UNREGISTER	4	/* Should be stopped on unregister */
+ #define WDOG_NO_PING_ON_SUSPEND	5	/* Ping worker should be stopped on suspend */
++#define WDOG_STOP_ON_PANIC	6	/* Should be stopped on panic for loading kdump kernels */
+ 	struct list_head deferred;
+ };
+ 
 -- 
-Sabrina
+2.34.1
+
