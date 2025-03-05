@@ -1,148 +1,84 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A9F224FBFF;
-	Wed,  5 Mar 2025 14:44:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DC792505A3;
+	Wed,  5 Mar 2025 14:44:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741185855; cv=none; b=utjceKNDTDyFjcIBBIMdpp5eDCH4M7GhCX2JFiYltiU9pgPt/3nq8izAtZXXDFfIfTxLIPbLpCN9K1vBDeKza4MDVvILckW3t/yqjGDCPrAmPVhA4P9PaUCNg71FvCuKCiSt9tCzRpP3YymTIoutlqs1/oBAzCVR1FphFprZqII=
+	t=1741185858; cv=none; b=shF5yICROgrAKPAJ1ypI6j6ydme4bu+FJAIvMO13YqAwRrHXjzwNd9qIqHcTL2LqfyZGnimqwIUcrW9XorDjXnPwRE+MRtmWd+oP49Y7Dc84p+oYMIZ9MHh4Fz2lktZ0Gw8H9ZV87ze9rhzY9zZBVTCpjE+iMcm31Jqc3Qgeeqs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741185855; c=relaxed/simple;
-	bh=8YPkqmU4X8iTIjEGD6+u3qjdqvLAhcHfMt6fUOhJLtM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RaiSLW2C5Zt73r8mUN/MocRCOnu15Zjaz9l2tmcu+Nd3ZWZRb3j3r17Yb+EbTVkK4xVz15syd3elkK0lo1FDn5ORRW8SJjWEjOBZE9z6ssBqm5rVEI0Bgmphhjygbnx51mckeBZE9o+c5AIGAtw6Btsr2r4XjxSrJwjjHw9DFfE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CVwPIcCr; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741185858; c=relaxed/simple;
+	bh=HDAKKlonGba8rX1tjbow73YK4MXTBgC+sezxw2K7eec=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Oh4kob52hejA/1PIIsGJBVJ/RQLskKkGqluc4eZAzfvjkVU+J7Ld5+AFgv/nPlqVAWo6rMVYdvXCyJIh4HNVktimp9zcQekq9eZL+e2cgGV0h6GBijEO6P0gq6q32AwBfWGdMFAgXlwS2LWQ+aNCzyJwrds8cXbyGcclEpS2GJg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=jW9wJ7/p; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CVwPIcCr"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-43948021a45so62821255e9.1;
-        Wed, 05 Mar 2025 06:44:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741185852; x=1741790652; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gNwIlbvFX4QRldBXaIs5/RL9LSC9AEjKyZahDbOst8Q=;
-        b=CVwPIcCrsyAlLoV29YpftDIttE/vnozdzs7MTAg5idVEI1s9yQqyiLPHop5u4NjjoE
-         vyOVfIaD/JwYeeVO1x8MdpdKnw3AZP1uVVcHuqjfd/cvGVB2ClaJ4yX9mXh7FEB/sPqW
-         tcJOXcNFoce0nPzIHyIr0WnK+THlvn6+no0KQBPFrSzdCocsS+MxSY1Hil5chAF930PI
-         J9/tqQ6o4Q7nSeuGkHcrcA8ZcaGdXUTxu+KtZYAowFT/tHc8RHw3ol86e/LBLMnsA3xR
-         3/m8q380CJrAEMgEHxEUGS/o3epOGKzJB3/LLeaKiE16xpxbXwO4nF2UqDUgx0drlgMS
-         DE4Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741185852; x=1741790652;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=gNwIlbvFX4QRldBXaIs5/RL9LSC9AEjKyZahDbOst8Q=;
-        b=sAeyAwnC76hcPgE8USzf/vMCEyc75WJfxEGiOpGaF8BHttfaKUlrk60X8G6xsTCv4O
-         0/8R1bJpfk8OwpzHCAVFVJbsYsAUCPa+QV2B5QtmJa7tHUkjCNYkjgIHiAB8GmNxXZBw
-         B84DP/7liIu6HsSFNkA2QohT3bGW2POP0x+lid8O3Hbs+gNCGgi5OA6x9810HkFUBo5m
-         3jcyWh/exG5Rvq3U/gJ3vWIn8+Io7RpSeUanGW+Pha/ei+DOutIRQ1V3a0pQs004ZVjG
-         R+4dP8RVWVABCIt6qHiCVnrv1DBvjO5Lj3QGZRAaa3hW49QB/cOhc9ddKgNSZfIl0sPc
-         9mzQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUxwicMoCga04bmqXii8vur1iZGAEDZyDCqvq7oINrw/IvW4Y20UzYzbys1jiQPFSj/9OxzSfKc@vger.kernel.org, AJvYcCXipwupwsQmZYERhDskMMr5kO5uq7sgsyDHJrw5XRzJcYyZpe0/xytPbDrr3db/GdZzmwv7PjLlKLmLKHg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyjCV8YX3AXRzHZjVy/3NNl7Su/fTPGMO6LLmQW4bhGH1Z2fwmJ
-	dNPmoHJeCTdwzhr6HhdZF9aapfPd5aa9A8Xt7743X9F31OMAdRoH
-X-Gm-Gg: ASbGncsGjAYIoe6GgLzXEvBHAm0AshgG7ca/62c2pHd5i9blHmPnZ7/PgXil4HkSodz
-	63rpktiv/KM9g86kZhex/UiGW4Um/DoWzQnl8GaeRT0nrJjaQhjVst10z0zLvdFjx6CAtyAT6bI
-	jiz8j5/lxTBMfLGIEHdudIGxumbkYjLACK8Haz9t9AffJX9TVe1oCEYIvX0r/ox0xwvPnHq1EJ9
-	nEgXs2GlNSwi5Va1v1NLj5f0Czxoubb0JTDQ7pyNDlIvWdpvtiIAV/T4ChsFWRjD6LGvb5D6YWm
-	h67CO4qLfXyTR/5EJnNKZMox0qB/i42ELve1iMhsGgwpzRCs
-X-Google-Smtp-Source: AGHT+IFJVniNBPju7U0+Zkvo7cT0yiY6E+Oe3yG3cuVYvnJhnTUke2U3Jt13V/c1QPsHTlV77FcZzw==
-X-Received: by 2002:a05:600c:1c94:b0:439:7c0b:13f6 with SMTP id 5b1f17b1804b1-43bd2ae52d7mr27450545e9.31.1741185851384;
-        Wed, 05 Mar 2025 06:44:11 -0800 (PST)
-Received: from eichest-laptop.. ([178.197.169.96])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43bd435cd8csm19314375e9.40.2025.03.05.06.44.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Mar 2025 06:44:11 -0800 (PST)
-From: Stefan Eichenberger <eichest@gmail.com>
-To: vkoul@kernel.org,
-	kishon@kernel.org,
-	shawnguo@kernel.org,
-	s.hauer@pengutronix.de,
-	kernel@pengutronix.de,
-	festevam@gmail.com,
-	p.zabel@pengutronix.de,
-	tharvey@gateworks.com,
-	hongxing.zhu@nxp.com,
-	francesco.dolcini@toradex.com
-Cc: linux-phy@lists.infradead.org,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Stefan Eichenberger <stefan.eichenberger@toradex.com>,
-	stable@vger.kernel.org
-Subject: [PATCH v2 2/2] phy: freescale: imx8m-pcie: assert phy reset and perst in power off
-Date: Wed,  5 Mar 2025 15:43:16 +0100
-Message-ID: <20250305144355.20364-3-eichest@gmail.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250305144355.20364-1-eichest@gmail.com>
-References: <20250305144355.20364-1-eichest@gmail.com>
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="jW9wJ7/p"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=ezfHGj2cBWaEtzI2GUJQGGe0pXWbLGhCMJSGAb0XXr4=; b=jW9wJ7/ppvRin+Y4JUSWXTLaM1
+	yehJW1Smm4DGYwEuwb5ZvnlCk/wtdsusMLbKAZjT74M3C2oeSJFjV1z67c8sepbl0eBldOJOSZQdq
+	JShkPG3qy+eEoQwya185JoDQGas0okfzmC29Q6E+26u5/JB4hlyr6S5VfDe9Ch25F8I4Prf86oI2G
+	T7OAdYOsXBDpahK2sJya6ri14yku28ZMfZ2PIEqjK0tfSFMvKSDAUdxE3d3nqbI9oi+Qg8e/SAtY2
+	pS8pI8x/yJhA8HBfvyDWjao6InfAmpX3NHEWmFtK97D06F3vJMQd+CAkQPfOy5VeVYS6rNCf6tRCg
+	0A+NQqJw==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:45016)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1tppyZ-0004Sc-2H;
+	Wed, 05 Mar 2025 14:43:59 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1tppyS-0005rB-2p;
+	Wed, 05 Mar 2025 14:43:52 +0000
+Date: Wed, 5 Mar 2025 14:43:52 +0000
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Swathi K S <swathi.ks@samsung.com>
+Cc: krzk+dt@kernel.org, andrew+netdev@lunn.ch, davem@davemloft.net,
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+	robh@kernel.org, conor+dt@kernel.org, richardcochran@gmail.com,
+	mcoquelin.stm32@gmail.com, alexandre.torgue@foss.st.com,
+	netdev@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	pankaj.dubey@samsung.com, ravi.patel@samsung.com,
+	gost.dev@samsung.com
+Subject: Re: [PATCH v8 2/2] net: stmmac: dwc-qos: Add FSD EQoS support
+Message-ID: <Z8hjKI1ZqU19nrTP@shell.armlinux.org.uk>
+References: <20250305091246.106626-1-swathi.ks@samsung.com>
+ <CGME20250305091856epcas5p4228c09989c7acfe45a99541eef01fbcd@epcas5p4.samsung.com>
+ <20250305091246.106626-3-swathi.ks@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250305091246.106626-3-swathi.ks@samsung.com>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-From: Stefan Eichenberger <stefan.eichenberger@toradex.com>
+On Wed, Mar 05, 2025 at 02:42:46PM +0530, Swathi K S wrote:
+> The FSD SoC contains two instance of the Synopsys DWC ethernet QOS IP core.
+> The binding that it uses is slightly different from existing ones because
+> of the integration (clocks, resets).
+> 
+> Signed-off-by: Swathi K S <swathi.ks@samsung.com>
 
-Ensure the PHY reset and perst is asserted during power-off to
-guarantee it is in a reset state upon repeated power-on calls. This
-resolves an issue where the PHY may not properly initialize during
-subsequent power-on cycles. Power-on will deassert the reset at the
-appropriate time after tuning the PHY parameters.
+This looks much better!
 
-During suspend/resume cycles, we observed that the PHY PLL failed to
-lock during resume when the CPU temperature increased from 65C to 75C.
-The observed errors were:
-  phy phy-32f00000.pcie-phy.3: phy poweron failed --> -110
-  imx6q-pcie 33800000.pcie: waiting for PHY ready timeout!
-  imx6q-pcie 33800000.pcie: PM: dpm_run_callback(): genpd_resume_noirq+0x0/0x80 returns -110
-  imx6q-pcie 33800000.pcie: PM: failed to resume noirq: error -110
+Reviewed-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
 
-This resulted in a complete CPU freeze, which is resolved by ensuring
-the PHY is in reset during power-on, thus preventing PHY PLL failures.
+Thanks!
 
-Cc: stable@vger.kernel.org
-Fixes: 1aa97b002258 ("phy: freescale: pcie: Initialize the imx8 pcie standalone phy driver")
-Signed-off-by: Stefan Eichenberger <stefan.eichenberger@toradex.com>
----
- drivers/phy/freescale/phy-fsl-imx8m-pcie.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
-
-diff --git a/drivers/phy/freescale/phy-fsl-imx8m-pcie.c b/drivers/phy/freescale/phy-fsl-imx8m-pcie.c
-index 5b505e34ca364..7355d9921b646 100644
---- a/drivers/phy/freescale/phy-fsl-imx8m-pcie.c
-+++ b/drivers/phy/freescale/phy-fsl-imx8m-pcie.c
-@@ -156,6 +156,16 @@ static int imx8_pcie_phy_power_on(struct phy *phy)
- 	return ret;
- }
- 
-+static int imx8_pcie_phy_power_off(struct phy *phy)
-+{
-+	struct imx8_pcie_phy *imx8_phy = phy_get_drvdata(phy);
-+
-+	reset_control_assert(imx8_phy->reset);
-+	reset_control_assert(imx8_phy->perst);
-+
-+	return 0;
-+}
-+
- static int imx8_pcie_phy_init(struct phy *phy)
- {
- 	struct imx8_pcie_phy *imx8_phy = phy_get_drvdata(phy);
-@@ -176,6 +186,7 @@ static const struct phy_ops imx8_pcie_phy_ops = {
- 	.init		= imx8_pcie_phy_init,
- 	.exit		= imx8_pcie_phy_exit,
- 	.power_on	= imx8_pcie_phy_power_on,
-+	.power_off	= imx8_pcie_phy_power_off,
- 	.owner		= THIS_MODULE,
- };
- 
 -- 
-2.45.2
-
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
