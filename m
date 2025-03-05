@@ -1,85 +1,60 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from secure.elehost.com (secure.elehost.com [185.209.179.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 034FF13D26B
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 01:05:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56DF413D279;
+	Wed,  5 Mar 2025 01:05:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.209.179.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741136748; cv=none; b=mY7dMTaHddMcgGlxA51q7GnjEjr7+K/sW/YQNeorDln4SQBF/0kyWSMX3YklciYvKjLN/DjCONfSw3huDsRZNfFGAoj+yW6ZRfwGxVihlt7dabWrLqMxtrWfQgXYFZY7dSKcUu2rFOVzf2EzWfZ/9udnS1c9mPpo8F5d2VGERAc=
+	t=1741136749; cv=none; b=IU5F1z69qURL0gnEve08djQ5fP7460VBO9Z198pjGTV2x1KPhq5X0vE3wGAcufJTPuyRvNh11CA8TJP8jLjp0ZUjIhbKOw3CSaUPh90jTpNkYRXZvth0W/1ij+ORIl1I6IFi7pxAWQTjwyYPLRJ7T6SiyEXGQcXGAczMWzw16uM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741136748; c=relaxed/simple;
-	bh=+MuQymkPvSHXZsgm1lXYQi7Jvrv7xbuEriYb3Z+IedU=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=DIDkA1oZa/+WAr4D4560edLbmR5NYc0MbqnN30zIQe6fKozMX3zCMp5t2GJ8g0LeFS7WAvt0LYhwswoDmAim35NHB5dugewIETyXTHYqi5z65oMS556gGa3UMbKMehBfNMZIdj5NJ1LYQD6wyHLHIGQVLkUHeToYy9LqtfQCpMM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vTBHuufH; arc=none smtp.client-ip=209.85.216.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vTBHuufH"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2fe8de1297eso670200a91.0
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Mar 2025 17:05:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1741136746; x=1741741546; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=NNX6vH12pYMK3VyoT3q3MRD9hVixADS4zVQV9SN8avY=;
-        b=vTBHuufHoDkxBi+/JeiCfMhqKI75H46nIcGPMxi+Ku1QURbUPerdG4DoT/1cv+ZY4L
-         /oyTOgWmfqBRk8S0ydjbBTBymhWvB3yFsKkNPNoBz4v9/CRJK9q1J2DJ2uAd5EN+m/pp
-         NpQC9pJdkriCZMhQftU6WCzpmfw8qiyJ256m6MSfpjPHHFUvSCNCB+nnFeaHDN03hWGo
-         ioIfeiunLXCunkFl1g2wb1o1DTSiTRz/SzA75xFj4PdqXtk0aSCqpsXDyeneK0T+iNjv
-         /dILGDQjPl+H5p7fTQvpSX183rF/LoUGcK0iFnhOSqDcfA52XhLmgg+Tk/kFb/ZQgekz
-         kA0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741136746; x=1741741546;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=NNX6vH12pYMK3VyoT3q3MRD9hVixADS4zVQV9SN8avY=;
-        b=BHtPgy1OpAUaG6oYwa65Pt+wJJdK+ZZm8fAeY5BPYA0REGwrnqtQJZeaLhllER1oi/
-         qB3lv1ont/2vhjUX1GUzVwIYgcdRc/TJ3sfjEr96RB18morNahhenximTBFvyf93K0nf
-         nmxQSP3uPXaISqYNr09jWXzW8zPpvuVIsmV45ngvBxACd6nNwUFOQ/4Eqm/pfvrZHMe3
-         bObgh8Fm8SsAiTwiOiSSuyWIVzHAnKYKLCMc3wiY94CLM6pHy1oQjKLMo+TWRETxAGZQ
-         GRWnSkeyG8BXih8T6jY7Cm0LVRPUS7M14b7Us46YCQLBTyBs0hhk+AS42MNA/4f4r9Sg
-         RxWA==
-X-Forwarded-Encrypted: i=1; AJvYcCWgtsRPAOfESMa3U3G1wSFMNpVWE09opJdX7BkYqg9zc90Jo636enhderjHA2COhu4CdRf1fNs/n4slTVw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzUXURRhIbYnRNriIAB7pkGj0MLt9G8mPNCJLpCHdpUGJA+sNUp
-	rWEHTlTu/zqo52cocqyMz22k5m4nE6OA18BJS799t3I9qOJYdH4/6LzgnFJUGrqGBfd3ouxEBDl
-	4Dw==
-X-Google-Smtp-Source: AGHT+IEQQzqVhfJxOgHOkMbN4KViM02emhSFsqxk/o7BP+xd9QQa4Wlrdd5/eK4O2MhvjeCbxbYdiDp43lE=
-X-Received: from pjbph16.prod.google.com ([2002:a17:90b:3bd0:b0:2f9:e05f:187f])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:5684:b0:2fb:fe21:4841
- with SMTP id 98e67ed59e1d1-2ff33b937f1mr9676522a91.8.1741136746296; Tue, 04
- Mar 2025 17:05:46 -0800 (PST)
-Date: Tue,  4 Mar 2025 17:05:14 -0800
-In-Reply-To: <20250224174156.2362059-1-seanjc@google.com>
+	s=arc-20240116; t=1741136749; c=relaxed/simple;
+	bh=u9X0uTuMD5xXXkNo9+ZowwFWWsSLP1ihHn6blmLs2XI=;
+	h=From:To:Cc:References:In-Reply-To:Subject:Date:Message-ID:
+	 MIME-Version:Content-Type; b=OEq3M47xgylBJRGMSl1vVq5TWeTTtuHfE9I3PLorF6LCWZ9SDAzQrkR6DzGqhnKy2mYY4FKedezXvx7ZSObdP5u5opSFhsavsc1PlFBmigFUlpNgyU9LuCVf3+LTUq70VWiorDF9/auao0TlP6My4z5JtcbmJ1BztQE2hikBFMY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nexbridge.com; spf=pass smtp.mailfrom=nexbridge.com; arc=none smtp.client-ip=185.209.179.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nexbridge.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nexbridge.com
+X-Virus-Scanned: Debian amavisd-new at secure.elehost.com
+Received: from Mazikeen (pool-99-228-67-183.cpe.net.cable.rogers.com [99.228.67.183])
+	(authenticated bits=0)
+	by secure.elehost.com (8.15.2/8.15.2/Debian-22ubuntu3) with ESMTPSA id 52515a3P572794
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 5 Mar 2025 01:05:36 GMT
+Reply-To: <rsbecker@nexbridge.com>
+From: <rsbecker@nexbridge.com>
+To: "'Junio C Hamano'" <gitster@pobox.com>, <git@vger.kernel.org>
+Cc: "'Linux Kernel'" <linux-kernel@vger.kernel.org>,
+        <git-packagers@googlegroups.com>
+References: <xmqqjz94r8p0.fsf@gitster.g>
+In-Reply-To: <xmqqjz94r8p0.fsf@gitster.g>
+Subject: RE: [ANNOUNCE] Git v2.49.0-rc1
+Date: Tue, 4 Mar 2025 20:05:31 -0500
+Organization: Nexbridge Inc.
+Message-ID: <001e01db8d6a$b4480470$1cd80d50$@nexbridge.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250224174156.2362059-1-seanjc@google.com>
-X-Mailer: git-send-email 2.48.1.711.g2feabab25a-goog
-Message-ID: <174078620474.3857606.12481651463517277322.b4-ty@google.com>
-Subject: Re: [PATCH] KVM: x86: Always set mp_state to RUNNABLE on wakeup from HLT
-From: Sean Christopherson <seanjc@google.com>
-To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Type: text/plain;
+	charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQIhUqYUUR69MpQbjmD+IdO9yTIAhLLYL9Tg
+Content-Language: en-ca
+X-Antivirus: Norton (VPS 250304-10, 3/4/2025), Outbound message
+X-Antivirus-Status: Clean
 
-On Mon, 24 Feb 2025 09:41:56 -0800, Sean Christopherson wrote:
-> When emulating HLT and a wake event is already pending, explicitly mark
-> the vCPU RUNNABLE (via kvm_set_mp_state()) instead of assuming the vCPU is
-> already in the appropriate state.  Barring a KVM bug, it should be
-> impossible for the vCPU to be in a non-RUNNABLE state, but there is no
-> advantage to relying on that to hold true, and ensuring the vCPU is made
-> RUNNABLE avoids non-deterministic behavior with respect to pv_unhalted.
-> 
-> [...]
+On March 4, 2025 12:46 PM, Junio C Hamano wrote:
+>A release candidate Git v2.49.0-rc1 is now available for testing at the =
+usual places.
+>It is comprised of 367 non-merge commits since v2.48.0, contributed by =
+68 people,
+>17 of which are new faces [*].
 
-Applied to kvm-x86 misc, thanks!
+Rc1 looks good with OpenSSL 3.4 on NonStop.
 
-[1/1] KVM: x86: Always set mp_state to RUNNABLE on wakeup from HLT
-      https://github.com/kvm-x86/linux/commit/2a289aed3fcd
+Thanks,
+Randall
 
---
-https://github.com/kvm-x86/linux/tree/next
