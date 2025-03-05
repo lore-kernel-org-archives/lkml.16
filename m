@@ -1,287 +1,212 @@
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CA0E250C00;
-	Wed,  5 Mar 2025 15:59:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FF772512F0
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 15:59:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741190388; cv=none; b=uQaYBD+ijeB/914o2aEy2BFcqL+uskfBufjFHZlZMqIRgNo+P12a8yhHToRKNSU3ztGy7BqXX9isqMTgX5vRtEPHfKyCem4RfC3tn6DwF9pS/ZXIYtT6oDCWfn6DRW/qCP+VS/yoXo1CfihHymzqi4oZAnHWuipPNsNjnUE+t9k=
+	t=1741190399; cv=none; b=Xv2nr4XTUKubHR++i+cDmjjizg8IFKB2D2YLlnBWgp3onbVEqDyn99zW4PX3R3ZP7yd91O0pfQ4y7V7yU655craBHrJzawZBNqFPSkZYgkwTZt7owjjSlfc3OXtnlavjygEvBFWVYfbVnhPkAxbNdSeB7Q5a5QavtrZSJBn1p1E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741190388; c=relaxed/simple;
-	bh=8Lry4w9TtWnkMmRqsKKK53yfuSzcXmAgYv1wuSz41hE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MYdzjji0fpqj6EKzazJM0MQzVhs2z9pLk6hqFHiv3GoWkCfFUEkIwqOiBz1k6bjEEeE+Z6bZGBtFwCKf9i2fl8/3BZ4n99mGH9G+3JSjfLHInuC+M3y4GPPZGpf8G9q9XymAy/q6GYZsIqsSUBlqyaQPiQgszgae6Og+OoBxBlQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FHDbr9f1; arc=none smtp.client-ip=209.85.218.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741190399; c=relaxed/simple;
+	bh=cz3+XxTJM2/BYXYonEq1KyZnXWcGubYg5hz1llP1qHo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MtCKH5gLR+XqrESCFKSFKo5oBqMT1slhJI3SohBxsULx/79cJRw/Ty3zPmqjmXtG9WwpAo+LeikJSWO/hN43fpzLiRuaJkPUazpUBWxYiWAAJIEqOK06Np4Y87ZxXg5mk27UysIlAOAB1cKtBWeIxup4xCLRL3eB2/NOmwPuWJ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=E9UwVKc+; arc=none smtp.client-ip=209.85.221.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FHDbr9f1"
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-abf4802b242so832926466b.1;
-        Wed, 05 Mar 2025 07:59:45 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="E9UwVKc+"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-38f403edb4eso4229150f8f.3
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Mar 2025 07:59:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741190384; x=1741795184; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=tNHkJmXM07+1xGaDRSJ0A5BITf+LecZD5bdaeHjapZk=;
-        b=FHDbr9f18utWU61jHtKmjL03Ct4pykYFVDdzHls4YJ3eDBsJtnrXDiahLUeYIUKI1W
-         UWSyJ4VhgXi1iC4xDMSiAiPkwF+BY5DJQJFnQeZlM9UqmuhqCJjcr1gReC6BEKL6pTFA
-         0aB07Hwztvg0dppVlhXhsxCwptHKJJItM+/b7/ApTlyZamXb71WWn+MY1rJ6nBqlAyl2
-         nwjfx9LJh3+TWlauSnUKheOcx0agbHZ2OpmEX+zuK3qkUIvC71EgeWiILRYiX3GN4ts2
-         waIvA6Y2AVCZV19sOqbW3VObYsQJ1+1hd3TIMOuUNQNfDBw4EbVvyJvshit5V6mcJTQw
-         vyOg==
+        d=linaro.org; s=google; t=1741190394; x=1741795194; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=UW43fnkCZr/QVnDgsr+/5Aw8cadepol9ZOCnWhJ8+4s=;
+        b=E9UwVKc+mWeMQQrRCmF2Epnca63MZtaSlFQq9qnaln8mhQrKlRH9AOzGxPhzeIJVM5
+         Q9it8cBgFpUk7Zml9KPAmnO71kqR2mMF5yyqO2nPlzV73wvoRN2VSfkIqMr0ckIMLNsJ
+         An4/5OShVxzC3nao/unFBY4AXjFnANM9wZayEXKZOBemkdcO6xHT6DtDdRyQs8rLYdFS
+         jIAPa49ffdvfLPuMv8u3gFYTbdyGvL9N0/D/LlItDQY9dmlYwHqLxwqUENLdfGsM5BT/
+         RUAMD4jFR5siej8if9vfH6Zu6NH3WnIiBuXuB1TIptdmve/PgbmWpEhEg1hqeQk0UOUQ
+         gYfw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741190384; x=1741795184;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=tNHkJmXM07+1xGaDRSJ0A5BITf+LecZD5bdaeHjapZk=;
-        b=epn2+ijPC71klyvx8zl/R2vZo7avZLn3O/EivWQnQv+cFlzP/mOzzlRBDut/zpwUQK
-         SSK8EoHrWBdmCfxqZwo7RYEmGUHYPiR6r3jPh0YxDvLu+1VRaLToTnxfoA+XawWCWobq
-         aa/GJCpBaMWsnlfknBmw9j34YvwjovfTLoWndeAvDQNQ8X9WYlapbz2oMGQ1NNSzjY3p
-         qgYhkBjqniE8yNTi5oVEBkJhBl8Im1Kybsz/UXGwX2T9nwgfEnGD3CA+M4FATy0fPeGp
-         LGpnhY/+/IoJKFNVk7dwyWElRIwIKBO07nD9v/Ur1CnbzddZpulCcxwQ+noidla0gNW+
-         PUew==
-X-Forwarded-Encrypted: i=1; AJvYcCUGY/o8WGgZALR5X43vkIEQhS1j4QMTue9pcT+greh+Q9CtWjP1D4A1TsQa/DTZmgH/UQCjHZ8VgtbfATc=@vger.kernel.org, AJvYcCUoVbiQXakDpIFpkMKm+i4FzK0lSNSLOsR0EFKAAVMqbjBevq4fCUWdO86hjkp+zRjYI5rjDGb/Jgzy3UX54yiTM7I=@vger.kernel.org, AJvYcCVgzLZG7J03VQF7l2MMw9IEDSF1M1brgADKmJuWJYmvEwAUsAvo4LeZukPHNgeIiLB09Av2uXJLzNU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwCzNm3hG/KkVCU16skJUuZ9vv3wjXOB+rHv/KtpJekz5hH9xXi
-	hlIsPBMMfKXUuPqIaBhyMizKKOBNFPhWqCVqCX/Gn5YjM6Csttktnqx6veDrYStCmCDNZlui4+n
-	5lC8RZzLqYNLiXbDMm5v4hAQGBhw=
-X-Gm-Gg: ASbGncv1ctRvBYhgr7SJHoahOF6/vKW03DFC+DO3fnVwnqBa6MP2Qpjr+yRujCKt/o7
-	dW07E9nlFzw0Xy0YFoeiU3YwusPcwBNv4d8RC8d6Y/yfqAnQe5iEA88Cu8sw8jGLjcff2EqrZUu
-	5beVmsdV3+oGXYTQZ9RPOnGXYObw==
-X-Google-Smtp-Source: AGHT+IEQsE+pLAIU3v/ec4405Kg+m90JUNpfZqni22hhxiIr9/+iCpzkVrVUlAcAB0YbRMMiuvNnCzik/ivWF3/YwMM=
-X-Received: by 2002:a17:907:da6:b0:ac1:fa0d:756 with SMTP id
- a640c23a62f3a-ac20d943124mr375609766b.34.1741190384124; Wed, 05 Mar 2025
- 07:59:44 -0800 (PST)
+        d=1e100.net; s=20230601; t=1741190394; x=1741795194;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=UW43fnkCZr/QVnDgsr+/5Aw8cadepol9ZOCnWhJ8+4s=;
+        b=qUIUO0/eHQAAMuoO3HGZQYI1DLQGT6RVfjXFzL8dsMWtetNwTAzJ4Cbbzl8kqqS9BQ
+         PyEMePhqwSw28nXBi3nwmipZhyhkprw1Eb9T4IgIBDH86w6ao8oWrF1Oh1wzqZgWCW3o
+         5mQVJClvEvM0nr0sH2Ss9xmNQ9ORjH1FyF6gcUCr4IsQR/1c/nbH4pKhTECj7Hjs76cl
+         QOVPXSV1jLgTqbbTkhT2CThugSLnngu/YFSqzXjfycwCSTA0eD3LfMjd5+XCV4SOW/Y3
+         ki6lNEgFgBlYVt0663KeR+Xvcl2Caa4K0dw5pAFy6X4HHicVDgWiX84JpbI7MjIl6Jg2
+         CdBg==
+X-Forwarded-Encrypted: i=1; AJvYcCWIC/UG1LJp2LZMEscOqnQp1+Us0uJBxfmvfVHvDubxw0zOcoqQo2onRTXqI+RCr8nstQdl3A8aSt4yeKo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzzZMLTMRNNaRmdUPmYUHA7tIfwDE9rBiXOTgAchAsmWWlQ+qQV
+	4lZn/C2ZAO8l1atew4COWd7ajWzcT0jB7UOwVMENB42OqoBdovK0s8hIrWXAZcI=
+X-Gm-Gg: ASbGnctjEqrZbgzs8Mv23tTGHu91Y4Ga94q5Su5dGl0Yu1e9dsmrYj2OhqMacjRS35n
+	Tb9YFj/HS37hKsV+SVxLJByDp15Aw3nCt3WY94PziuuWaZ53jccI2QF6/hg3PjdV/YKHMllrMmP
+	mEyrpzd4hk6wMIWb16GvG6sNLlUu8IFFhGXaNng22y/dhR/3+B3uehIhTEGJV3OMDl5vj0gFq+e
+	X6x6yuINi8S5X2SuW3u3VciDSxQ2Z3C6IYT/LETrY/qvD6dydQetHlTcwMVXWfnRRJN2jB18rRw
+	/4nw6QOeOh2C8d+GzeiCD/ATQ1v2dBmEqyAVWh4H+PVs/GNJxKCILbg=
+X-Google-Smtp-Source: AGHT+IHAQX1QLcPBiImLmVkMJHbP/s0nNOFVUx5c/xHikuVLp++eIhtXxami9jflK3oLSnWSKvMzDQ==
+X-Received: by 2002:a5d:64cb:0:b0:390:df75:ddc4 with SMTP id ffacd0b85a97d-3911f7cba2amr3644307f8f.44.1741190394405;
+        Wed, 05 Mar 2025 07:59:54 -0800 (PST)
+Received: from [192.168.1.247] ([209.198.129.225])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-390e4796084sm21779835f8f.19.2025.03.05.07.59.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 05 Mar 2025 07:59:54 -0800 (PST)
+Message-ID: <3ef6fd45-ee37-4d31-96ba-3df83f350b79@linaro.org>
+Date: Wed, 5 Mar 2025 15:59:52 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250216195850.5352-1-linux.amoon@gmail.com> <20250216195850.5352-5-linux.amoon@gmail.com>
- <f44efd1a-1f6e-456d-9395-de2a55ef2279@arm.com> <CANAwSgTpV_kGFEU-ND0N+OEtT6+j4ceq37xAoLyC7iHPWAuLjg@mail.gmail.com>
- <CANAwSgSWf_YxSi-pzWPaRoiJx7RLrWUz+HTWx5hf+E2x1ZGmoQ@mail.gmail.com> <7a1cac10-b065-4b4c-b048-10d6b4132f3d@arm.com>
-In-Reply-To: <7a1cac10-b065-4b4c-b048-10d6b4132f3d@arm.com>
-From: Anand Moon <linux.amoon@gmail.com>
-Date: Wed, 5 Mar 2025 21:29:27 +0530
-X-Gm-Features: AQ5f1JppO4fhzc2dkKI1ZBSO1ZKK5PQ7WMoG06FmWIv-xqH6vpAXgcWpPGM7iIg
-Message-ID: <CANAwSgQErDnKfaBOkpEwpJsoyUMhNTC2TJNW-eQYHgHu46poCA@mail.gmail.com>
-Subject: Re: [PATCH v3 4/4] drivers/thermal/exymos: Use guard notation when
- acquiring mutex
-To: Lukasz Luba <lukasz.luba@arm.com>
-Cc: Bartlomiej Zolnierkiewicz <bzolnier@gmail.com>, 
-	"open list:SAMSUNG THERMAL DRIVER" <linux-samsung-soc@vger.kernel.org>, 
-	"open list:SAMSUNG THERMAL DRIVER" <linux-pm@vger.kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>, 
-	Daniel Lezcano <daniel.lezcano@linaro.org>, open list <linux-kernel@vger.kernel.org>, 
-	"moderated list:ARM/SAMSUNG S3C, S5P AND EXYNOS ARM ARCHITECTURES" <linux-arm-kernel@lists.infradead.org>, Zhang Rui <rui.zhang@intel.com>, 
-	Krzysztof Kozlowski <krzk@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 2/2] perf parse-events: Corrections to topdown sorting
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ Kan Liang <kan.liang@linux.intel.com>,
+ Dominique Martinet <asmadeus@codewreck.org>, Andi Kleen
+ <ak@linux.intel.com>, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Dapeng Mi <dapeng1.mi@linux.intel.com>,
+ Thomas Falcon <thomas.falcon@intel.com>
+References: <20250305083735.393333-1-irogers@google.com>
+ <20250305083735.393333-2-irogers@google.com>
+ <e2ea3776-12d2-41c2-9b7b-836c7c249c45@linaro.org>
+ <CAP-5=fW0LESRaZkGv-UCZGU_ttYi6kdF=dxJZP8KmVTiTwBM+Q@mail.gmail.com>
+Content-Language: en-US
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <CAP-5=fW0LESRaZkGv-UCZGU_ttYi6kdF=dxJZP8KmVTiTwBM+Q@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi Lukasz,
 
-On Wed, 5 Mar 2025 at 14:12, Lukasz Luba <lukasz.luba@arm.com> wrote:
->
->
->
-> On 3/4/25 12:20, Anand Moon wrote:
-> > Hi Lukasz,
-> >
-> > On Sat, 1 Mar 2025 at 00:06, Anand Moon <linux.amoon@gmail.com> wrote:
-> >>
-> >> Hi Lukasz,
-> >>
-> >> On Fri, 28 Feb 2025 at 22:58, Lukasz Luba <lukasz.luba@arm.com> wrote:
-> >>>
-> >>>
-> >>>
-> >>> On 2/16/25 19:58, Anand Moon wrote:
-> >>>> Using guard notation makes the code more compact and error handling
-> >>>> more robust by ensuring that mutexes are released in all code paths
-> >>>> when control leaves critical section.
-> >>>>
-> >>>> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
-> >>>> ---
-> >>>> v3: new patch
-> >>>> ---
-> >>>>    drivers/thermal/samsung/exynos_tmu.c | 21 +++++++--------------
-> >>>>    1 file changed, 7 insertions(+), 14 deletions(-)
-> >>>>
-> >>>> diff --git a/drivers/thermal/samsung/exynos_tmu.c b/drivers/thermal/samsung/exynos_tmu.c
-> >>>> index fe090c1a93ab..a34ba3858d64 100644
-> >>>> --- a/drivers/thermal/samsung/exynos_tmu.c
-> >>>> +++ b/drivers/thermal/samsung/exynos_tmu.c
-> >>>> @@ -256,7 +256,7 @@ static int exynos_tmu_initialize(struct platform_device *pdev)
-> >>>>        unsigned int status;
-> >>>>        int ret = 0;
-> >>>>
-> >>>> -     mutex_lock(&data->lock);
-> >>>> +     guard(mutex)(&data->lock);
-> >>>>        clk_enable(data->clk);
-> >>>>        clk_enable(data->clk_sec);
-> >>>>
-> >>>> @@ -270,7 +270,6 @@ static int exynos_tmu_initialize(struct platform_device *pdev)
-> >>>>
-> >>>>        clk_disable(data->clk_sec);
-> >>>>        clk_disable(data->clk);
-> >>>> -     mutex_unlock(&data->lock);
-> >>>>
-> >>>>        return ret;
-> >>>>    }
-> >>>> @@ -292,13 +291,12 @@ static int exynos_thermal_zone_configure(struct platform_device *pdev)
-> >>>>                return ret;
-> >>>>        }
-> >>>>
-> >>>> -     mutex_lock(&data->lock);
-> >>>> +     guard(mutex)(&data->lock);
-> >>>>        clk_enable(data->clk);
-> >>>>
-> >>>>        data->tmu_set_crit_temp(data, temp / MCELSIUS);
-> >>>>
-> >>>>        clk_disable(data->clk);
-> >>>> -     mutex_unlock(&data->lock);
-> >>>>
-> >>>>        return 0;
-> >>>>    }
-> >>>> @@ -325,12 +323,11 @@ static void exynos_tmu_control(struct platform_device *pdev, bool on)
-> >>>>    {
-> >>>>        struct exynos_tmu_data *data = platform_get_drvdata(pdev);
-> >>>>
-> >>>> -     mutex_lock(&data->lock);
-> >>>> +     guard(mutex)(&data->lock);
-> >>>>        clk_enable(data->clk);
-> >>>>        data->tmu_control(pdev, on);
-> >>>>        data->enabled = on;
-> >>>>        clk_disable(data->clk);
-> >>>> -     mutex_unlock(&data->lock);
-> >>>>    }
-> >>>>
-> >>>>    static void exynos_tmu_update_bit(struct exynos_tmu_data *data, int reg_off,
-> >>>> @@ -645,7 +642,7 @@ static int exynos_get_temp(struct thermal_zone_device *tz, int *temp)
-> >>>>                 */
-> >>>>                return -EAGAIN;
-> >>>>
-> >>>> -     mutex_lock(&data->lock);
-> >>>> +     guard(mutex)(&data->lock);
-> >>>>        clk_enable(data->clk);
-> >>>>
-> >>>>        value = data->tmu_read(data);
-> >>>> @@ -655,7 +652,6 @@ static int exynos_get_temp(struct thermal_zone_device *tz, int *temp)
-> >>>>                *temp = code_to_temp(data, value) * MCELSIUS;
-> >>>>
-> >>>>        clk_disable(data->clk);
-> >>>> -     mutex_unlock(&data->lock);
-> >>>>
-> >>>>        return ret;
-> >>>>    }
-> >>>> @@ -720,11 +716,10 @@ static int exynos_tmu_set_emulation(struct thermal_zone_device *tz, int temp)
-> >>>>        if (temp && temp < MCELSIUS)
-> >>>>                goto out;
-> >>>>
-> >>>> -     mutex_lock(&data->lock);
-> >>>> +     guard(mutex)(&data->lock);
-> >>>>        clk_enable(data->clk);
-> >>>>        data->tmu_set_emulation(data, temp);
-> >>>>        clk_disable(data->clk);
-> >>>> -     mutex_unlock(&data->lock);
-> >>>>        return 0;
-> >>>>    out:
-> >>>>        return ret;
-> >>>> @@ -760,14 +755,13 @@ static irqreturn_t exynos_tmu_threaded_irq(int irq, void *id)
-> >>>>
-> >>>>        thermal_zone_device_update(data->tzd, THERMAL_EVENT_UNSPECIFIED);
-> >>>>
-> >>>> -     mutex_lock(&data->lock);
-> >>>> +     guard(mutex)(&data->lock);
-> >>>>        clk_enable(data->clk);
-> >>>>
-> >>>>        /* TODO: take action based on particular interrupt */
-> >>>>        data->tmu_clear_irqs(data);
-> >>>>
-> >>>>        clk_disable(data->clk);
-> >>>> -     mutex_unlock(&data->lock);
-> >>>>
-> >>>>        return IRQ_HANDLED;
-> >>>>    }
-> >>>> @@ -987,7 +981,7 @@ static int exynos_set_trips(struct thermal_zone_device *tz, int low, int high)
-> >>>>    {
-> >>>>        struct exynos_tmu_data *data = thermal_zone_device_priv(tz);
-> >>>>
-> >>>> -     mutex_lock(&data->lock);
-> >>>> +     guard(mutex)(&data->lock);
-> >>>>        clk_enable(data->clk);
-> >>>>
-> >>>>        if (low > INT_MIN)
-> >>>> @@ -1000,7 +994,6 @@ static int exynos_set_trips(struct thermal_zone_device *tz, int low, int high)
-> >>>>                data->tmu_disable_high(data);
-> >>>>
-> >>>>        clk_disable(data->clk);
-> >>>> -     mutex_unlock(&data->lock);
-> >>>>
-> >>>>        return 0;
-> >>>>    }
-> >>
-> >> Thanks for your review comments.
-> >>>
-> >>> IMO you should be able to even use something like we have
-> >>> core framework:
-> >>>
-> >>> guard(thermal_zone)(tz);
-> >>>
-> >>> Your mutex name is simply 'lock' in the struct exynos_tmu_data
-> >>> so you should be able to leverage this by:
-> >>>
-> >>> guard(exynos_tmu_data)(data);
-> >>>
-> >
-> > If I introduce the guard it creates a compilation error
-> >
-> > amoon@anand-m920q:~/mainline/linux-exynos-6.y-devel$ vi
-> > drivers/thermal/samsung/exynos_tmu.c +306
-> > amoon@anand-m920q:~/mainline/linux-exynos-6.y-devel$ make -j$(nproc)
-> > ARCH=arm CROSS_COMPILE=arm-none-eabi- LOCALVERSION=-u3ml dtbs zImage
-> > modules
-> >    CALL    scripts/checksyscalls.sh
-> >    CHK     kernel/kheaders_data.tar.xz
-> >    CC      drivers/thermal/samsung/exynos_tmu.o
-> >    CC [M]  drivers/md/raid10.o
-> > In file included from ./include/linux/irqflags.h:17,
-> >                   from ./arch/arm/include/asm/bitops.h:28,
-> >                   from ./include/linux/bitops.h:68,
-> >                   from ./include/linux/kernel.h:23,
-> >                   from ./include/linux/clk.h:13,
-> >                   from drivers/thermal/samsung/exynos_tmu.c:14:
-> > drivers/thermal/samsung/exynos_tmu.c: In function 'exynos_tmu_update_bit':
-> > ./include/linux/cleanup.h:258:9: error: unknown type name
-> > 'class_exynos_tmu_data_t'
-> >    258 |         class_##_name##_t var
-> > __cleanup(class_##_name##_destructor) =   \
-> >        |         ^~~~~~
-> > ./include/linux/cleanup.h:309:9: note: in expansion of macro 'CLASS'
-> >    309 |         CLASS(_name, __UNIQUE_ID(guard))
-> >        |         ^~~~~
-> > drivers/thermal/samsung/exynos_tmu.c:338:9: note: in expansion of macro 'guard'
-> >    338 |         guard(exynos_tmu_data)(data);
-> >        |         ^~~~~
-> > drivers/thermal/samsung/exynos_tmu.c:338:9: error: cleanup argument
-> > not a function
->
-> [snip]
->
-> Right, you're missing the definition at the begging, like:
->
-> DEFINE_GUARD(exynos_tmu_data, struct exynos_tmu_data *,
-> mutex_lock(&_T->lock),
->               mutex_unlock(&_T->lock))
->
-> below the struct exynos_tmu_data definition.
->
-> Also, make sure you include the cleanup.h (it might not complain,
-> but it would be explicit and more clear)
 
-Thanks for this tip.
-However, incorporating guard(exynos_tmu_data)(data); results
-in a recursive deadlock with the mutex during initialization, as this
-data structure is common to all the code configurations of Exynos TMU
+On 05/03/2025 2:06 pm, Ian Rogers wrote:
+> On Wed, Mar 5, 2025 at 5:44 AM James Clark <james.clark@linaro.org> wrote:
+>>
+>>
+>>
+>> On 05/03/2025 8:37 am, Ian Rogers wrote:
+>>> In the case of '{instructions,slots},faults,topdown-retiring' the
+>>> first event that must be grouped, slots, is ignored causing the
+>>> topdown-retiring event not to be adjacent to the group it needs to be
+>>> inserted into. Don't ignore the group members when computing the
+>>> force_grouped_index.
+>>>
+>>> Make the force_grouped_index be for the leader of the group it is
+>>> within and always use it first rather than a group leader index so
+>>> that topdown events may be sorted from one group into another.
+>>>
+>>> Reported-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+>>> Closes: https://lore.kernel.org/lkml/20250224083306.71813-2-dapeng1.mi@linux.intel.com/
+>>> Signed-off-by: Ian Rogers <irogers@google.com>
+>>
+>> Testing on Arm seems ok, but presumably this doesn't change anything
+>> there because arch_evsel__must_be_in_group() is always false.
+>>
+>> On x86 I ran into the topdown metrics not opening on cpu_core at all, so
+>> I'm not sure if I'm able to test that the original issue is fixed on my
+>> machine. From looking at the link the issue is that the ungrouped
+>> topdown event is "<not supported>", but I always see that regardless of
+>> grouping despite perf list saying it exists:
+>>
+>>    $ perf list --unit cpu_core | grep -i topdown
+>>     topdown-bad-spec OR cpu_core/topdown-bad-spec/     [Kernel PMU event]
+>>     topdown-be-bound OR cpu_core/topdown-be-bound/     [Kernel PMU event]
+>>     topdown-br-mispredict OR cpu_core/topdown-br-mispredict/[Kernel PMU
+>> event]
+>>     topdown-fe-bound OR cpu_core/topdown-fe-bound/     [Kernel PMU event]
+>>     topdown-fetch-lat OR cpu_core/topdown-fetch-lat/   [Kernel PMU event]
+>>     topdown-heavy-ops OR cpu_core/topdown-heavy-ops/   [Kernel PMU event]
+>>     topdown-mem-bound OR cpu_core/topdown-mem-bound/   [Kernel PMU event]
+>>     topdown-retiring OR cpu_core/topdown-retiring/     [Kernel PMU event]
+>>     topdown.backend_bound_slots
+>>     topdown.bad_spec_slots
+>>     topdown.br_mispredict_slots
+>>     topdown.memory_bound_slots
+>>          [TOPDOWN.MEMORY_BOUND_SLOTS. Unit: cpu_core]
+>>
+>>
+>>    $ sudo perf stat -e topdown-retiring -- true
+>>    Performance counter stats for 'true':
+>>        <not counted>   cpu_atom/topdown-retiring/           (0.00%)
+>>      <not supported>   cpu_core/topdown-retiring/
+>>
+>>
+>>    $ sudo perf stat -e topdown-retiring -vvv -- true
+>> Control descriptor is not initialized
+>> Opening: topdown-retiring
+>> ------------------------------------------------------------
+>> perf_event_attr:
+>>     type                             10 (cpu_atom)
+>>     size                             136
+>>     config                           0xc2 (topdown-retiring)
+>>     sample_type                      IDENTIFIER
+>>     read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING
+>>     disabled                         1
+>>     inherit                          1
+>>     enable_on_exec                   1
+>> ------------------------------------------------------------
+>> sys_perf_event_open: pid 151404  cpu -1  group_fd -1  flags 0x8 = 3
+>> Opening: topdown-retiring
+>> ------------------------------------------------------------
+>> perf_event_attr:
+>>     type                             4 (cpu_core)
+>>     size                             136
+>>     config                           0x8000 (topdown-retiring)
+>>     sample_type                      IDENTIFIER
+>>     read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING
+>>     disabled                         1
+>>     inherit                          1
+>>     enable_on_exec                   1
+>> ------------------------------------------------------------
+>> sys_perf_event_open: pid 151404  cpu -1  group_fd -1  flags 0x8
+>> sys_perf_event_open failed, error -22
+>> switching off exclude_guest for PMU cpu_core
+>> Using PERF_SAMPLE_READ / :S modifier is not compatible with inherit,
+>> falling back to no-inherit.
+>> Warning:
+>> topdown-retiring event is not supported by the kernel.
+> 
+> Yep, unfortunately there is a requirement that a topdown event like
+> topdown-retiring is always programmed with slots on performance cores.
+> The slots event must be the group leader. You can see in metrics the
+> slots event as "+ 0 * slots":
+> https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/pmu-events/arch/x86/alderlake/adl-metrics.json?h=perf-tools-next#n754
+> ```
+>          "MetricExpr": "topdown\\-be\\-bound / (topdown\\-fe\\-bound +
+> topdown\\-bad\\-spec + topdown\\-retiring + topdown\\-be\\-bound) + 0
+> * slots",
+> ```
+> and making it the group leader is done by the sorting:
+> https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/arch/x86/util/evlist.c?h=perf-tools-next#n67
+> 
+> We could probably add something to
+> parse_events__sort_events_and_fix_groups to inject the slots event,
+> but this hasn't been done yet.
+> 
+> My main concern with this change is there is some sensitivity to the
+> event ordering when parsing them in scripts. There's some context in:
+> https://lore.kernel.org/all/20230719001836.198363-1-irogers@google.com/
+> This change makes the topdown events appear first in the group always,
+> but as you say you only see that if you use those events, otherwise
+> things are unchanged.
+> 
+> Thanks for testing!
+> Ian
 
-Thanks
--Anand
+Ah ok got it. Yeah it works with slots in the group, and the topdown 
+metrics work out of the box. I didn't realize there was that slots 
+limitation.
+
+Tested-by: James Clark <james.clark@linaro.org>
+
