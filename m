@@ -1,200 +1,250 @@
-Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2083.outbound.protection.outlook.com [40.107.22.83])
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2040.outbound.protection.outlook.com [40.107.244.40])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 949AE1D6DD4;
-	Wed,  5 Mar 2025 22:58:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.22.83
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 749B02E337F;
+	Wed,  5 Mar 2025 23:00:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.40
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741215492; cv=fail; b=glthxS7sM9CQgmGEGpnMx0hM/txT5ROqMJVhJXJAoHi70Q1PW3BgDewr3I39HA3IRyb/aTtexA9PgkLYQGBeLuhEcHxPJnXmiyScGLJM82AsuYn+eqTE1vrYaJSHrmfAv/+vVL8v+JtWa0L2WaPahzroIGftBsonaIP/VW4Fgvg=
+	t=1741215626; cv=fail; b=TFVr4wQKT0Up/8UAT2bW9MiDocp2Y/UCwunWEMicHs/qi71WUK8nkvrBJxLq8jNilE1h2r3sUOLbEBWvnbuhApJxf4UzpBxmk26WaIYsG4D/ynnQzFU+PgHbBgjdONyDbvaR25n/FqeGVdUMuVLH2+fwzawrDBUopFDASKbdk9Y=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741215492; c=relaxed/simple;
-	bh=UXtr9ayWZF1wGILiCnd9C64Nd9w8vU/FTvX28v9+S/I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=UgvabhX9KrAku4+05Pak87AK3Mf3sArzwDgzxZKbCSDPfcAWETQhgkEVSNd0RWWL4518eSptb22bTWuUc7gnlux/YaY5TxeTc+RSc8ABTYYk+dp9xia9Bl0ROBlDeMAWieH9sK1cSlm9ylIhYfGyYDYUk5t0WRzEERox+zCwP4k=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=mIs+mReP; arc=fail smtp.client-ip=40.107.22.83
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	s=arc-20240116; t=1741215626; c=relaxed/simple;
+	bh=Ld2EK9b1QKSfWFJN4YROc5FLb6ZnjEgFxoQWDLfbJqA=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=U4iK3xjEBjeC8TOWtdGRmyg3KenrHVyrW7p5DovSmJUyRfXfFZD0HR6hJsrFyw6u6uOp8PD0QnkWuKK96vpva1eeSME+wMcCgQEW5F3O6E0wzdnmBltF/jauIukPsTa+2jkrT9lMF6IOtgxyMdsrBF4U5mgaZeqqocH/H/tFBls=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=iOVJofYy; arc=fail smtp.client-ip=40.107.244.40
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="mIs+mReP"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="iOVJofYy"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=DRABUvtC/qc6gN9Gq/lnz5mNF/1D7wXy4vb/I5yVlHLHZDuXHfqO2y+smnSW2IZ8mllJV14uEVBZE767lFrDKqDiC+hZJ4I6yD0EZerJwSfEJMWMg0hgHbvzPjNxfQXop5q0OrVtDAAyH7+yTLllTK//RKbsa0kbyBVpxEzDKptTV2faEcm9oUbExSM/yqvdUsHt+qPUfUJhcK5TR/+DWrGV1Vrpn6hCmxvVoMQ+aWM6+XdAAaoglK8T/WnkoztR/h06cqcA7sw5931T4HMaZ5GVM2DXTZsbExbZxQ+v4HNnL57OVpw4zuP/Q/u53LlaAFM9EJeEtaXCIJj25c+2gw==
+ b=USPaOuRYB6037LvCizlNDL58eZCgUSip9iPrDCLbwU+CVQS4bplcxKjuZ12+2nb+bQUMwMJSfuc2lUSCwFnN4g7URxHABIlwyFz9HLuLz14SGNRIOBlYOJuAb7ZNYnKEo4Beer8EMGaT222V4YquJOyvW8JR6f7+RLbOmEmPoTSFgrruHvKfxazMjkZUcxgWm0vy6BFmEc+RZBAcTIIgySdmqJ15980/6dgE3lAodtpeKaoOKAc6EdxFG/sIn/fBeoQJ+IRbwlYiyccVwxrRyEtNouW0dkq5ztf0t1FrcRQ+kE+fAUr8zWJKEGN+p9JSi0khVmv/plCmp2R4yt+Czw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=FGa4gn8d+dne3qhBeOlV5GNtqaKjv9ENIqtJ2YslewE=;
- b=LXS6X7epTmAYdsUvWtfPgwTcRMS8QsUnTJevmHIYZSo14+OLGZL7BIqzEF0srSAU2Bm9eOeea0GEBbYOIb8vYAjYVDvjtZKN7s2JC4CY+qIkSLsgftEwXCGCt80+gGzuweOb+eH4n38kfqwKiUYGB+vE4vC5qbb70xWYGwWJ7X85utyMy4kv64G5MbnFvRGTopqLxhY0c7FV4IezMYRE2hQuP+otgGyN61j+qGy6zzgg7cZFasOzL+yjQPkF+XRHSCwORBfciaHQ6HGjOvs5l/zzJJJlY0vUPEK8M0zxCxHzzqGYwBVbFunUiTjr+zVfSG2jGj0HshQLhLJ8c0CPfA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ bh=zefVbbJxct/7OPK4dczgpZt66ypwD8vLHohwakMeWzk=;
+ b=cF1kGbZpJ4u2ELIRKHWFju4fWdGQClWSJpUESwTHDhjdSv4OgX4Xwq+LdWSrFhCh4tk2WphG0UOuWWplCgNgxqmZ2oyUm49gDUYepNgr6+9q3UcMCv6GLJT8oJhDDm5knGQYrzQcFfuoWpGcb/BcbZ09t500EMohUmhPz9SDMBC7mK17a4sXf3ey9wiTS++JJqpoQo+QjFJyUwiSf33rscdf9TmiVSLdni3eoQJ7O+x3BWyUYCkQ70m+ILg0f4FYQhTCcGnjNj9JhQg+bnqokhV1aHEqMYoTMWr9UPlQ1MOBuCc3vCH9AhXx4tk5w6nv1NfcNgy2mZZeusxM7lwnPw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FGa4gn8d+dne3qhBeOlV5GNtqaKjv9ENIqtJ2YslewE=;
- b=mIs+mRePy3ZdAqQyYVvB3GnK0UXJwA96F2MVhpkp2YfZURnBDIL9npwN1A0yPqVg0BnGbQmWtTeM7+HLvGlm/VWVU05yVt+En7EiJySHK8IegFpjWjc0VrCvFnmPh3itIJzvhGuxML8d2nqBBtNMfo5zhCXfOX3TQ8q2HDymBnQwYov5IULwEgTe0Afv4tynUyBDwzBiTrDqaxKe8YIQRaPshztGriFG1BLd9uFlAGIV4gX+ZwWhhaFND/yAn9z6DX09i7b2CF+DJlXj0viTF6ZXqTEyJ59dtCiLVEJT3NswYoZqAuV71LZB7bwYDoWZRrbf8z+Zh3iGe/l09B7Afg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from AM8PR04MB7779.eurprd04.prod.outlook.com (2603:10a6:20b:24b::14)
- by PA1PR04MB10468.eurprd04.prod.outlook.com (2603:10a6:102:448::12) with
+ bh=zefVbbJxct/7OPK4dczgpZt66ypwD8vLHohwakMeWzk=;
+ b=iOVJofYyTBeNyduSu44MF0KYf9SQ4/P0Oe7evBBtXeawkHU1lum2jEsSWn+ta43gewhSUChTuQyh1L3dRN5Lh1MwE8hr2NP4a3wQqq/OAaaT+UolZG+NCnQej27epJhcrHsO3ajWYkzYvYyBt3rlrKi0Vozf+UMWGScJbj0yT+4=
+Received: from MW4PR03CA0149.namprd03.prod.outlook.com (2603:10b6:303:8c::34)
+ by CH3PR12MB9283.namprd12.prod.outlook.com (2603:10b6:610:1cd::22) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.28; Wed, 5 Mar
- 2025 22:58:08 +0000
-Received: from AM8PR04MB7779.eurprd04.prod.outlook.com
- ([fe80::7417:d17f:8d97:44d2]) by AM8PR04MB7779.eurprd04.prod.outlook.com
- ([fe80::7417:d17f:8d97:44d2%6]) with mapi id 15.20.8511.017; Wed, 5 Mar 2025
- 22:58:08 +0000
-Date: Thu, 6 Mar 2025 00:58:03 +0200
-From: Vladimir Oltean <vladimir.oltean@nxp.com>
-To: Faizal Rahim <faizal.abdul.rahim@linux.intel.com>
-Cc: Tony Nguyen <anthony.l.nguyen@intel.com>,
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Simon Horman <horms@kernel.org>,
-	Russell King <linux@armlinux.org.uk>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Jesper Dangaard Brouer <hawk@kernel.org>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Furong Xu <0x1207@gmail.com>,
-	Russell King <rmk+kernel@armlinux.org.uk>,
-	Serge Semin <fancer.lancer@gmail.com>,
-	Xiaolei Wang <xiaolei.wang@windriver.com>,
-	Suraj Jaiswal <quic_jsuraj@quicinc.com>,
-	Kory Maincent <kory.maincent@bootlin.com>,
-	Gal Pressman <gal@nvidia.com>,
-	Jesper Nilsson <jesper.nilsson@axis.com>,
-	Choong Yong Liang <yong.liang.choong@linux.intel.com>,
-	Chwee-Lin Choong <chwee.lin.choong@intel.com>,
-	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-	Vinicius Costa Gomes <vinicius.gomes@intel.com>,
-	intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org, bpf@vger.kernel.org
-Subject: Re: [PATCH iwl-next v8 06/11] igc: set the RX packet buffer size for
- TSN mode
-Message-ID: <20250305225803.kozn26ilnrnjrgbz@skbuf>
-References: <20250305130026.642219-1-faizal.abdul.rahim@linux.intel.com>
- <20250305130026.642219-7-faizal.abdul.rahim@linux.intel.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250305130026.642219-7-faizal.abdul.rahim@linux.intel.com>
-X-ClientProxiedBy: VI1PR09CA0111.eurprd09.prod.outlook.com
- (2603:10a6:803:78::34) To AM8PR04MB7779.eurprd04.prod.outlook.com
- (2603:10a6:20b:24b::14)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.16; Wed, 5 Mar
+ 2025 23:00:15 +0000
+Received: from MWH0EPF000989E8.namprd02.prod.outlook.com
+ (2603:10b6:303:8c:cafe::7c) by MW4PR03CA0149.outlook.office365.com
+ (2603:10b6:303:8c::34) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8511.16 via Frontend Transport; Wed,
+ 5 Mar 2025 23:00:15 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ MWH0EPF000989E8.mail.protection.outlook.com (10.167.241.135) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8511.15 via Frontend Transport; Wed, 5 Mar 2025 23:00:14 +0000
+Received: from zenon.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 5 Mar
+ 2025 17:00:11 -0600
+From: "Pratik R. Sampat" <prsampat@amd.com>
+To: <linux-kernel@vger.kernel.org>, <x86@kernel.org>, <kvm@vger.kernel.org>,
+	<linux-kselftest@vger.kernel.org>
+CC: <seanjc@google.com>, <pbonzini@redhat.com>, <thomas.lendacky@amd.com>,
+	<tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
+	<dave.hansen@linux.intel.com>, <shuah@kernel.org>, <pgonda@google.com>,
+	<ashish.kalra@amd.com>, <nikunj@amd.com>, <pankaj.gupta@amd.com>,
+	<michael.roth@amd.com>, <sraithal@amd.com>, <prsampat@amd.com>
+Subject: [PATCH v8 00/10] Basic SEV-SNP Selftests
+Date: Wed, 5 Mar 2025 16:59:50 -0600
+Message-ID: <20250305230000.231025-1-prsampat@amd.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AM8PR04MB7779:EE_|PA1PR04MB10468:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2ba8d6ce-f410-4265-dc06-08dd5c393201
+X-MS-TrafficTypeDiagnostic: MWH0EPF000989E8:EE_|CH3PR12MB9283:EE_
+X-MS-Office365-Filtering-Correlation-Id: b65793b8-4e22-4c13-775c-08dd5c397d98
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|7416014|366016|1800799024|7053199007;
+	BCL:0;ARA:13230040|376014|1800799024|7416014|36860700013|82310400026;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?BBGVyJaPvFasckEp0S6DxFHt+1rKKJxvwY3+5waXAwlX8WexFGiLcS3hoJIE?=
- =?us-ascii?Q?O3AZDWEm3S4u87BXIVUhJD1aevdQRxkxxvUxsukmGyun2BeGdWiy3Qviijx2?=
- =?us-ascii?Q?+fl7nFDn1lccwRvk1VAUOaJT8zfOYGxHf3+Rd2oo7Wksvl49DC2jbex+yDYc?=
- =?us-ascii?Q?9RPYQseceTcW8TMAVBheVP5msgwl4eShK0a8EQP2+lVqNeUr3IL9fUBtpBKG?=
- =?us-ascii?Q?mAZWW4OnjkU4XxavkjmCI5sDAkza06TSzjXersqh/YlXQpMWaB0S5xCuk7cU?=
- =?us-ascii?Q?1f5zsQ7itxDKk4h1fUPdQ4EgbEFWWQXy2WJYZU9l/kzAt/cYWnjDipJ3taDG?=
- =?us-ascii?Q?INtdYFVFM3WfiMSVAMQHV0yKw4KXWEURbNVs5ptGr53f0Xin1E9PJbxv8IgX?=
- =?us-ascii?Q?oG/6OJF/SagsOrh3QakzwOkKzEAiP8ksStnoKf5Z3+MqQgUJrY+zcmd1C6Bs?=
- =?us-ascii?Q?DecxKo6qQsiAYJ4p0l2l+4t5GrFKUJjrbfH+w/mRuwWg1QcDsjZ2UV5XsLbB?=
- =?us-ascii?Q?aot3Fu/W1HMi/1fkcPpEONq7vn8rBBjwp9thpcyMSVDEZnTBW/biwiWwepWG?=
- =?us-ascii?Q?LVGVfYngY5gNODdphxUHSUtLi9ekJ7sU9KFjdZMcG0puilwS5FboWQOYE8Q9?=
- =?us-ascii?Q?QfA8d+mBJj1FJRefNY+fJLJnZCndqXaRE4AHsS9L0b6eNVwiqotPhahGMIjH?=
- =?us-ascii?Q?UqlyYc73gXf4Xy7U8z/XAgG/tY0U01Gd7DsmTOxURfT5N4xn5gjoXFw/ipC8?=
- =?us-ascii?Q?6V42lEulMHzTmi4KrBIFiTu61NGL5OyPn+61cQU4TOgtBXDEy51hvy8Xw0sF?=
- =?us-ascii?Q?AyZFCtmLVFrE8d5/MP8u9RrNCKfN4HP8jJ5p0vfflTY3YQfN9/a1vRbBEW3p?=
- =?us-ascii?Q?qWm6LfoNy7Mq350PN6Exdvtqxm+n92Pt9Lxn+6vIHZw8GwBd5MZg4Qt23KQG?=
- =?us-ascii?Q?cNEbjqIYQvO/V+YJgjrWKD/oehC08v+hs7f6bQtHbYtPgkVKkqs/35RGxavF?=
- =?us-ascii?Q?vOjNvtrGmn6HpJkYbINrTuUYrTCabrwtOj6dVQXPiNwp6TQQ+8Gx44grK/9B?=
- =?us-ascii?Q?AiMx7bwHt16bIHHR46cszNAOgeBTlN13j0FHpmMIQxKbWRL1Sfp8E/dAhr4C?=
- =?us-ascii?Q?gPD8QIpF85ksudfoFwNrcnzFd9bGLgPOjc3pwvGgQkUBlvgSStWqfPdVe1RU?=
- =?us-ascii?Q?6HdkGcnFfC5HCsX1EdbnLkoW6xmI4V/CgILqWvcMKF+cmnax4FZu0favJvXG?=
- =?us-ascii?Q?xahZzaiq8rT2eKbAE8Cy1tr2R67CKo2/1DBNbPhnplwq+WiEmIat0eFcNMZ7?=
- =?us-ascii?Q?X3KyT4EhqAgBBcRHsfAbJv/YBhXtkwir3ji2RevD3j76dmqZoi7cbzgitgva?=
- =?us-ascii?Q?GxkNGb4D7E42/30QI+o4aV73G6kH?=
+	=?us-ascii?Q?3pPmNIjf5u4fAQ48Yd/voQaaH1qihD/OJRt+c3McVHwk0STCXS9tDd+e0I+k?=
+ =?us-ascii?Q?EEzVKPwQEsV2Qf+dNGbrgcuCeWf/pjgZR1jW2UUC5Sx2wpsk0dLHdtKKoHDt?=
+ =?us-ascii?Q?7Muchb97JD89//OxPrmwlTWA+UI9jI8yWwH18a0E6X0MPHxwS0HLABT1izZD?=
+ =?us-ascii?Q?2wZ3DnPjGoKTLVyk0egwmw2A4MJCCv/PRYcrnwEM+qduO1PNOPjaCpkYd1Kq?=
+ =?us-ascii?Q?6MZvCPqOx7qdpgENfgNI/R4srP6ATEsVBBOZZNQXsgGGXS8B7RxbRimXERXL?=
+ =?us-ascii?Q?JfYLRJZYrfnjoH48herMGKp1/1lGYbp6OqbBWOlMlakCae4Iq76sa559NH5x?=
+ =?us-ascii?Q?Nw5wUfXjNYemnJk3pMvtG0G7UzAuf8T0YI2xLw/8+z/Jzq/lvdXPCraoU2Qy?=
+ =?us-ascii?Q?0LcgLDaU2btEnMHMHCHk+16zWjC5i0J8kj/tW3nn8CVUoMM6ZdsPunEwgj3k?=
+ =?us-ascii?Q?K5xU1prtVdTHFJELTLYhrdIhKRHTbBlEw+1UJ1JLvF/FxPJkZvpW2cdM4Vth?=
+ =?us-ascii?Q?q8hSRSItCDpK2D5CAVou5x4dIuM83AX3JEUW59JgWBd2Z0j3yvRlfkoS4kww?=
+ =?us-ascii?Q?9Bl5c91ynqm8IF/HVfINqraYyecwaoJS1jhO8/OnEwHukgiB8QfQeYfD8TrU?=
+ =?us-ascii?Q?0QH4AcXIsRfRETM7FY+BchgLEjJ4HdNsTnNbDrKOmyNAM6bROzFJyhiqJA3U?=
+ =?us-ascii?Q?rwKNJcqf6MZix+1KwR8Ur2GT0XY3X/asPhRZfxXWy3hNHgn7iII6rxypkN1d?=
+ =?us-ascii?Q?dQGc2KiAt/VU7CVVjQf22/LSYsK6N1gW1xZWxnzYpRdAs3H++cm1UHW3yEIT?=
+ =?us-ascii?Q?eeMwseS9v8Z37mfdeCLitGW2Mt70Fg36G3ghpXjSlg7K/Kqe/1fbfJMSdLNu?=
+ =?us-ascii?Q?svtdIZSYbPL1P2LcQq/DzKFniqqBBcJIBr6150VCB/GFoZkek+UkbODlK6JV?=
+ =?us-ascii?Q?XaSCovxF6S9g3x+dyheoBcCYa13glC9cpjG+MR3X0TMMeIvqKb4EsILYl/cH?=
+ =?us-ascii?Q?gN2JvTHNt834vtya6FhiuX7B/VQnRD6ayl7L71xVna3/qtWwGnrSDczZBTc8?=
+ =?us-ascii?Q?fzf0bVvKt+Tbj09RBTDGW7fkuvySecTJbA7EFpX7sXjIS+s3rPZCeRzynlhb?=
+ =?us-ascii?Q?HkZBjbNo0bpUjOwP4HP6mjpXv1/KQlrsMqE8bBJbbgJxKF1zr+XhKMQ/M2ip?=
+ =?us-ascii?Q?/JnyfoeytxJbDFyhkr901S/qj+8NCf5pKE1KDTUPPFaeiygBg6El5orqSDDA?=
+ =?us-ascii?Q?vJ/mHgzGpz2Av88bIosuzHY6dIYVmASa5v0WP6vsCRhKTDDJgs80SFIPN5iv?=
+ =?us-ascii?Q?fwSyeJZkU99R/wUfPvVSG1DYNYLYF+HTdN5OsAjcXAMuDNoljMROToz20GMR?=
+ =?us-ascii?Q?rm4S2CI22LLm9P7yl6pzeWUOTq9qJMO1U+rU4vEW4RJ0rfw94yqga9X/4TZb?=
+ =?us-ascii?Q?a+SPJe5use708hEOCaU4TL8w58a1qbzB?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM8PR04MB7779.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?D0eNkINfQtwM8hSrsriiIi4IY6igSiZk9NJMXooNPYw7/GkpX3fN5uLnLQmO?=
- =?us-ascii?Q?npYQ+BKJ5zPkfjBIhwXQa1uoiBZDv9SK2WMvVNHNoPvPvcNFWj9bXtbHDNXh?=
- =?us-ascii?Q?u3nosdzrKa6oXlruTpcSg2T9L9ODNjKFx3yUNq345FkK/xU0Sl1j0dcp2Zp5?=
- =?us-ascii?Q?5AR8eeuhuQV4uR7V7+HmWdgipzkZpx2XCIc+KnrdriwmJVbGXByHlLn/jzHC?=
- =?us-ascii?Q?7opqD/yDrKoAnLpuE35rUtr91h9tM2FVrdBeMTjOtzDba7pubVmpTGJ1KCPK?=
- =?us-ascii?Q?GWJnHRWpGFF9uyyCMyGg02QH0DiSZ4URTTp6Scf6THLnBFnMlXhwFSEh2Afz?=
- =?us-ascii?Q?8Q6W/IEEhiyWNaxp140aPAfsnaewr4a9+qkOvTvijYIMh2CunA2E/3Ut8qs0?=
- =?us-ascii?Q?B/iOxwwubetbvnwQbdgP8+eJ1qZ9dw5a8FS1kLf5nJwGm0c8+M8fC+6mYR7w?=
- =?us-ascii?Q?DCGEw3Sz1k5c6NbAu9D49pPv7YWnSlWIMRTliqoChCKtAHtSjGxPgByGEvuI?=
- =?us-ascii?Q?013bkkSmaJpv6WMc81narxdApH4SqyXiRWPnuVq/KKU1fY0MikroC3bTDN6P?=
- =?us-ascii?Q?9Ug7BwjW7QSaDMYnV5t6jKQ9m4wKF4XJTPQOKwjwaXvuBYLaVWPfCAOWhCUx?=
- =?us-ascii?Q?RXnOY66lR1qOO7Qq0NtTcUQjx6AGpeU6hdBaphh5c45LaTUXglnKAYsviD/+?=
- =?us-ascii?Q?Q0hO4pk60qXdgUVXvYqaozbSvL8KRuVNhTzBdYhjYjJJwbEoG6kP7t/ES7li?=
- =?us-ascii?Q?p25FGc03igHg9g06Cfu3bawaPU/r7S4nCvMtBdE/VmPRQke3bLrmNZtFYj0T?=
- =?us-ascii?Q?q/cruPECft0KC7oYPJ0M8zqIBlOSHMemifTdgpRJPv39EgnKEXS7KwcCXLuT?=
- =?us-ascii?Q?IpTgNsdIyGOQdLLIDyJSWY5fjxtclCJenbzQkGJhPkGEyOjd9UXuYyLzEmMP?=
- =?us-ascii?Q?E7VRpFxkFfONlp6d+JL4taPQ81TTmsyFOW+KwT5uq8AMTTSxWBbaFMiXI9Lj?=
- =?us-ascii?Q?OAhjrgolCDrlSrhoTqdvqtv+lIfi2X3hlo8KBz8EpoEOQR8Wh/gIitEE8G6X?=
- =?us-ascii?Q?xB9L4aB542cF3qxvq15Uxgir2MRCxk49qfyLNTjBtQp46WikzqyAPjVJFwl6?=
- =?us-ascii?Q?Wkk1uKrmgn9oJMr9fTnZlHUglzeDGgQ8CWx+OgnQzigpWIP3Zye5LaFjyyku?=
- =?us-ascii?Q?RtIOFPRzbRtGp/DfYLM6ShVsobwHqzTJYmJiwabpa3VcKInVJPqbk7hXfYOC?=
- =?us-ascii?Q?bx2BKFVeZw8d/kJaM1sj8XCA+6CwXreI13DbZZ86ws02rKGbH85cBISVFdqj?=
- =?us-ascii?Q?64T0rnlXUGWTJJ73Z6KO+E3kvi72MiemO9yjIsCnNs++UQU4GSeUgTKxvkz5?=
- =?us-ascii?Q?PU7StpjOXIRcvAuO0lp96dPAdsO/vAaW4lT0nKr4NM2ECXyXNiyUHaBt/iFX?=
- =?us-ascii?Q?+PgVJuBChxidKJh36T91ebWMxvqPSvRmtHbwc1uPnlz/n76g7HusZVFH08nD?=
- =?us-ascii?Q?XVhYyY5g/8fRlILRWJpgBCbC74fnv8CPjC7DOhvsgY7Z3H4kn58Y8wQHhCVt?=
- =?us-ascii?Q?aQVD48SQFacjZj+xh8nZkxxvoP1+LBRqU48Rt4MBeXWrmU7sRqZ01m7YeUTL?=
- =?us-ascii?Q?YA=3D=3D?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2ba8d6ce-f410-4265-dc06-08dd5c393201
-X-MS-Exchange-CrossTenant-AuthSource: AM8PR04MB7779.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Mar 2025 22:58:07.9717
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(1800799024)(7416014)(36860700013)(82310400026);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Mar 2025 23:00:14.4794
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: O90YsSiuajvxCDKTolMhKn1TGtID3V/aWv4wp4+kQPgh3RKaxak2+zxrxNdv+T9cpRF98tqC7lPnTz0tmaJstA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA1PR04MB10468
+X-MS-Exchange-CrossTenant-Network-Message-Id: b65793b8-4e22-4c13-775c-08dd5c397d98
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	MWH0EPF000989E8.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB9283
 
-On Wed, Mar 05, 2025 at 08:00:21AM -0500, Faizal Rahim wrote:
-> In preparation for supporting frame preemption, when entering TSN mode
-> set the receive packet buffer to 16KB for the Express MAC, 16KB for
-> the Preemptible MAC and 2KB for the BMC, according to the datasheet
-> section 7.1.3.2.
-> 
-> Co-developed-by: Vinicius Costa Gomes <vinicius.gomes@intel.com>
-> Signed-off-by: Vinicius Costa Gomes <vinicius.gomes@intel.com>
-> Signed-off-by: Faizal Rahim <faizal.abdul.rahim@linux.intel.com>
-> ---
->  drivers/net/ethernet/intel/igc/igc_defines.h |  3 +++
->  drivers/net/ethernet/intel/igc/igc_tsn.c     | 13 +++++++++++--
->  2 files changed, 14 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/intel/igc/igc_defines.h b/drivers/net/ethernet/intel/igc/igc_defines.h
-> index 516ef70c98e9..b19ac6f30dac 100644
-> --- a/drivers/net/ethernet/intel/igc/igc_defines.h
-> +++ b/drivers/net/ethernet/intel/igc/igc_defines.h
-> @@ -402,6 +402,9 @@
->  
->   /* 7KB bytes buffer for each tx queue (total 4 queues) + 4KB for BMC*/
->  #define IGC_TXPBSIZE_TSN	0x041c71c7
-> +/* 15KB for EXP + 15KB for BE + 2KB for BMC */
-> +#define IGC_RXPBSIZE_TSN	0x0000f08f
-> +#define IGC_RXPBSIZE_SIZE_MASK	0x0001FFFF
+This patch series extends the sev_init2 and the sev_smoke test to
+exercise the SEV-SNP VM launch workflow.
 
-Does 0x0000f08f have any further meaning, does it represent anything
-bitwise? (similar question for IGC_TXPBSIZE_TSN in the previous patch).
-I don't see the correlation between the values mentioned in the comment
-and the magic constant. If RXPBPSIZE has a bitwise meaning, maybe you
-could rewrite the magic value with macros for each field.
+Primarily, it introduces the architectural defines, its support in the
+SEV library and extends the tests to interact with the SEV-SNP ioctl()
+wrappers.
+
+Patch 1  - Do not advertise SNP on initialization failure
+Patch 2  - SNP test for KVM_SEV_INIT2
+Patch 3  - Add vmgexit helper
+Patch 4  - Add SMT control interface helper
+Patch 5  - Replace assert() with TEST_ASSERT_EQ()
+Patch 6  - Introduce SEV+ VM type check
+Patch 7  - SNP iotcl() plumbing for the SEV library
+Patch 8  - Force set GUEST_MEMFD for SNP
+Patch 9  - Cleanups of smoke test - Decouple policy from type
+Patch 10 - SNP smoke test
+
+The series is based on
+        git.kernel.org/pub/scm/virt/kvm/kvm.git next
+
+v7..v8:
+* Dropped exporting the SNP initialized API from ccp to KVM. Instead
+  call SNP_PLATFORM_STATUS within KVM to query the initialization. (Tom)
+  
+  While it may be cheaper to query sev->snp_initialized from ccp, making
+  the SNP platform call within KVM does away with any dependencies.
+
+v6..v7:
+https://lore.kernel.org/kvm/20250221210200.244405-7-prsampat@amd.com/
+Based on comments from Sean -
+* Replaced FW check with sev->snp_initialized
+* Dropped the patch which removes SEV+ KVM advertisement if INIT fails.
+  This should be now be resolved by the combination of the patches [1,2]
+  from Ashish.
+* Change vmgexit to an inline function
+* Export SMT control parsing interface to kvm_util
+  Note: hyperv_cpuid KST only compile tested
+* Replace assert() with TEST_ASSERT_EQ() within SEV library
+* Define KVM_SEV_PAGE_TYPE_INVALID for SEV call of encrypt_region()
+* Parameterize encrypt_region() to include privatize_region()
+* Deduplication of sev test calls between SEV,SEV-ES and SNP
+* Removed FW version tests for SNP
+* Included testing of SNP_POLICY_DBG
+* Dropped most tags from patches that have been changed or indirectly
+  affected
+
+[1] https://lore.kernel.org/all/d6d08c6b-9602-4f3d-92c2-8db6d50a1b92@amd.com
+[2] https://lore.kernel.org/all/f78ddb64087df27e7bcb1ae0ab53f55aa0804fab.1739226950.git.ashish.kalra@amd.com
+
+v5..v6:
+https://lore.kernel.org/kvm/ab433246-e97c-495b-ab67-b0cb1721fb99@amd.com/
+* Rename is_sev_platform_init to sev_fw_initialized (Nikunj)
+* Rename KVM CPU feature X86_FEATURE_SNP to X86_FEATURE_SEV_SNP (Nikunj)
+* Collected Tags from Nikunj, Pankaj, Srikanth.
+
+v4..v5:
+https://lore.kernel.org/kvm/8e7d8172-879e-4a28-8438-343b1c386ec9@amd.com/
+* Introduced a check to disable advertising support for SEV, SEV-ES
+  and SNP when platform initialization fails (Nikunj)
+* Remove the redundant SNP check within is_sev_vm() (Nikunj)
+* Cleanup of the encrypt_region flow for better readability (Nikunj)
+* Refactor paths to use the canonical $(ARCH) to rebase for kvm/next
+
+v3..v4:
+https://lore.kernel.org/kvm/20241114234104.128532-1-pratikrajesh.sampat@amd.com/
+* Remove SNP FW API version check in the test and ensure the KVM
+  capability advertises the presence of the feature. Retain the minimum
+  version definitions to exercise these API versions in the smoke test
+* Retained only the SNP smoke test and SNP_INIT2 test
+* The SNP architectural defined merged with SNP_INIT2 test patch
+* SNP shutdown merged with SNP smoke test patch
+* Add SEV VM type check to abstract comparisons and reduce clutter
+* Define a SNP default policy which sets bits based on the presence of
+  SMT
+* Decouple privatization and encryption for it to be SNP agnostic
+* Assert for only positive tests using vm_ioctl()
+* Dropped tested-by tags
+
+In summary - based on comments from Sean, I have primarily reduced the
+scope of this patch series to focus on breaking down the SNP smoke test
+patch (v3 - patch2) to first introduce SEV-SNP support and use this
+interface to extend the sev_init2 and the sev_smoke test.
+
+The rest of the v3 patchset that introduces ioctl, pre fault, fallocate
+and negative tests, will be re-worked and re-introduced subsequently in
+future patch series post addressing the issues discussed.
+
+v2..v3:
+https://lore.kernel.org/kvm/20240905124107.6954-1-pratikrajesh.sampat@amd.com/
+* Remove the assignments for the prefault and fallocate test type
+  enums.
+* Fix error message for sev launch measure and finish.
+* Collect tested-by tags [Peter, Srikanth]
+
+Pratik R. Sampat (10):
+  KVM: SEV: Disable SEV-SNP support on initialization failure
+  KVM: selftests: SEV-SNP test for KVM_SEV_INIT2
+  KVM: selftests: Add vmgexit helper
+  KVM: selftests: Add SMT control state helper
+  KVM: selftests: Replace assert() with TEST_ASSERT_EQ()
+  KVM: selftests: Introduce SEV VM type check
+  KVM: selftests: Add library support for interacting with SNP
+  KVM: selftests: Force GUEST_MEMFD flag for SNP VM type
+  KVM: selftests: Abstractions for SEV to decouple policy from type
+  KVM: selftests: Add a basic SEV-SNP smoke test
+
+ arch/x86/include/uapi/asm/kvm.h               |  1 +
+ arch/x86/kvm/svm/sev.c                        | 30 +++++-
+ tools/arch/x86/include/uapi/asm/kvm.h         |  1 +
+ .../testing/selftests/kvm/include/kvm_util.h  | 35 +++++++
+ .../selftests/kvm/include/x86/processor.h     |  1 +
+ tools/testing/selftests/kvm/include/x86/sev.h | 42 ++++++++-
+ tools/testing/selftests/kvm/lib/kvm_util.c    |  7 +-
+ .../testing/selftests/kvm/lib/x86/processor.c |  4 +-
+ tools/testing/selftests/kvm/lib/x86/sev.c     | 93 +++++++++++++++++--
+ .../testing/selftests/kvm/x86/hyperv_cpuid.c  | 19 ----
+ .../selftests/kvm/x86/sev_init2_tests.c       | 13 +++
+ .../selftests/kvm/x86/sev_smoke_test.c        | 75 +++++++++------
+ 12 files changed, 261 insertions(+), 60 deletions(-)
+
+-- 
+2.43.0
+
