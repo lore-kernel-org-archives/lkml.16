@@ -1,140 +1,138 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7495218FC90
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 15:57:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD961230BC6
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 15:58:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741190250; cv=none; b=rknR0j9785UQLseOnfTQUCMiFf1uqK85HIqeTNoQEZYTzwskRgzwuYakLskdcJt/IUsHZNND1Vv9/d5VvGfUDc3n0GWGjQhfqFhUTf8g0sXPHbVFJMqqVaXeGSMdaYT1aQpZiQcSlRK8EPOibt4KoLipri40/7X/JPkO9Z/GQ5w=
+	t=1741190301; cv=none; b=XBU3G5SE0QWPp5to765NIQl2OH5RskfzSiSCMx7vStwHPrGe9qOVuE7sVFyAy0ifLzu6amfATDH4KP1IsuuJYupP0wqM6Y5EKctAK64Kpfa7B+hmbe0z0h0NcsZCYLWeGc7zAf2L2kjAOfiZyIIKpfSAWiWOFyVp5ONVvU56jeg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741190250; c=relaxed/simple;
-	bh=rm0St075dWDOE0wO9ICObW1pv94kcsYVDUSel8Aq/W8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pF7oseuPNz+e2nTP5AnPGMv5tvNcyQ23kLSIX2cJpZBuQMl4EgfaXnKhitsJzm2vvDcdYmg2kcP+drBlEy8i6P4BxXqob1SomtOKYWObLGVQVn9ewnJm+SL4eqKokTS4BNlip3WrFt7886cnTsvZRaWAg1atlrIgde8wHZjnEO4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DEzTjKoL; arc=none smtp.client-ip=209.85.221.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741190301; c=relaxed/simple;
+	bh=bYuWvTnxcH9cu35HRFKPtJkB8o67RKS5wYWWIeSxv70=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=YLmKP2ZXjaZX/M2il1N2Gak92hQCWgPxSGv+8j2eFlY8+ciLBp3OgLRQnbFneMJ9YeXICeFS6UGICsj4M9riDoMBcDRBpmuVF3NoRqmLlkEsvCALIqH8T0vQLb7M9aY5PKZZBnlTCXBFJq0sBXo+M8jAq69YpWB1kwu8Stg+Wvk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=Y2gqTApg; arc=none smtp.client-ip=209.85.216.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DEzTjKoL"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-38dcac27bcbso703249f8f.0
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Mar 2025 07:57:28 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="Y2gqTApg"
+Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-2fe9fd5e7f8so1971603a91.3
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Mar 2025 07:58:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741190246; x=1741795046; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=XI41wk7TJF7vmtgJL7omJXUR4bG71r2Wzk7v83CVjD0=;
-        b=DEzTjKoL9kyI6yvpo9oayVrnEc/SU7GsMsHNtGCXWp6hYBNl4cuuEXTopyeFtdKIez
-         ARbqBLAWQdpLKJ7jhM7EQfI00ZuwHobRKsux66nmVJd/TooZRJ9mJt07rvRrrrMQD9r5
-         yKJYHQ/stOwajgfntidtG8fK1Xl2qyBNj5rykg8dCVyI4yN1VHHxsKPaMEgepmJKmYG1
-         MVruv+IKdEcRr0dukFE96s019pn2BmEJvOx7msBfscok9DHsZ4ov9G2YyvlubsOOlcsr
-         Zr6+SFNbrFQhItuVr9JYNXUn90e6f1h+eRwryQH37lgJWEIoJhOhYqNpJ8Qwfgmqllrr
-         NnZw==
+        d=purestorage.com; s=google2022; t=1741190299; x=1741795099; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YYMU1ONvumZN07XPBCtkjUrstfEAtCPPddr7Hfo9Atk=;
+        b=Y2gqTApgoVu023lcE28ic24Z/iILnnSBvedaOlwJ+l4XsHdOMokBtTFXwUg7lFmMvO
+         BwQM2Ors3A7bASOcF6yaOmn6M+1J0OYG1lMVm7untLeN0EwJFC2qhFjypaoxzXvlxgEi
+         KqegLmZaTWnHmYMfwEOFmjAfFecqwcXbA5LBKvIfIz6A1FxDDV9TSt9l9eFXKSS1iLjE
+         plJmFsB2LKf5QBQMDjkf1t0T1SCGd3ukHFu0ySIyJyK58F6DmpRv68TOD0sVw5KH/JFo
+         hV/GYN9rZiLvnZThK3WRZEQ/QTm2K3JESfSjc41U24NGLI8a13bfJtoS0/HQ9gIyxhXQ
+         Z7oQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741190246; x=1741795046;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=XI41wk7TJF7vmtgJL7omJXUR4bG71r2Wzk7v83CVjD0=;
-        b=MSv/Ju+3di8qcyVlzxSxRJNfLoT+FDHTd70VAyIASnRCjXDqCdc8WNrR9J38MF0gsT
-         NsDmkGH0bbE027kg7qTVN9sRAbT5F5jA4OcmVYI7+6yIb6fgblFee9H5QmoTIe2LT4Sh
-         zaTEuquMl/Zi0wK+PI10Y8kM+3gnRUh0+tbObUCCIqbGyyvFy9S7w3Ox7eie/osQS/lO
-         RiktC2rVG19/MljgvJh/s9usj7vwd3IPN84N6amfGM6JyxoWCTumdfZRG6AjnDweHMCY
-         EQlfpawrm/yD2eVZ9towXdNV4YUTbXMFLApH/s/BnD0Vg/2kTo1Y42WNvKc17ih5aM3i
-         WD/g==
-X-Forwarded-Encrypted: i=1; AJvYcCWXltZK2XHIkLY/lNqPbPDqT97YREyX0UcsumWqsVjZF+0tImNH4F5IjmMNvit1Hwc6pv8bhPOHiUXZP+8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxD53AsrHM3veqaNBvhY3tNsWIeo+oiIGewdEuhNqLiginkSito
-	W4eofBOKxQ1cFl6lz22iPQovWSrivsigEBNVwNnAQKuWa5KC0zZ7
-X-Gm-Gg: ASbGncusvPZBLwzrfr/jQvXKX6GkPWX+HjiuSd1NsY1X0JhkjwbDfvrrzpdP/fdGC9b
-	FXu4CzQEgkJtjVOecAc4MxFOiyZyBogGqhnkOdrP80jZEx5LKj7pXhl99z/O8jvHChfhNTrNsAO
-	1U4Fubew9hD+dwW9p0b1/+CKfxauiOVttzn7Q7U5ogq+psHCekPU/1oNo4sBTDqQhTyJjBFLmix
-	mom9dln4m+fm8EaY/lT/tYQII/1GX3waJi+qw+Y9lpFgJACGduzjPbD2J1UzJBbvYtaXGDBclwC
-	uE3Nu0mJ/KmNTQ8o5qT2Bnen+eB2yau6sJEoPIYugNDrlr6CzJ1LWT5ofMRMjMgzgsy0x/01tA=
-	=
-X-Google-Smtp-Source: AGHT+IG8pXdepBcJ1AR4MauBkYvzdHDIviuaQyGBb5FOBK8tpHOPFUi2Wq2zbnf73b21vVo0+XSzYA==
-X-Received: by 2002:a5d:64cf:0:b0:385:faf5:ebb8 with SMTP id ffacd0b85a97d-3911e9df687mr3609690f8f.7.1741190244836;
-        Wed, 05 Mar 2025 07:57:24 -0800 (PST)
-Received: from [10.254.108.83] (munvpn.amd.com. [165.204.72.6])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-390e47a7b88sm21222369f8f.40.2025.03.05.07.57.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 05 Mar 2025 07:57:24 -0800 (PST)
-Message-ID: <f54b78d8-2f10-484f-a1a9-4659aac2b251@gmail.com>
-Date: Wed, 5 Mar 2025 16:57:22 +0100
+        d=1e100.net; s=20230601; t=1741190299; x=1741795099;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=YYMU1ONvumZN07XPBCtkjUrstfEAtCPPddr7Hfo9Atk=;
+        b=w/+Sc1cLRuO8Y9lXv/vyj+P/G9p6i7Jnrob/6j50cJqJ54Q9Cg6CpHvu6r7Uh6wPpf
+         n8gYIhpQnoMCaNpoMbtC/n8uX4JcIs4PiVgjANtFKnzxsYOTIb9HhZFGb+sDcyzJMgDV
+         xr8uzJ8C6dpEkupeUnNST7Dsf5tX0FYpWisg0CSTHk2QU2UhQIqGV6/yQc2Vexmoi6pF
+         0uIBWWr543IshwvEx69p3VbC3nLX7HkKOS8UsPMFg7Awu8GBy3vQ82LWjCERGOsQOcnG
+         Q4of1l5B/sZJxf2Pzw6qhSbxqtDNvOkJyPKdg+0kZCUsuGXKO7Sim8I1U3rQCj7w7whj
+         +UpA==
+X-Forwarded-Encrypted: i=1; AJvYcCXp2X5h003MGHWopmOk6LC0ONRwItyhidoq14BSlzLhzCVlR/i83oJY3UQ1i+ur5K1cBnzMXrFLUCA9pRE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyPwfuRLNQkeMmqpE4F9hhVnDbzaPrYPqY3gscehptswdgxZyEC
+	5PvY/9C9gBgu2lMKh2RE8rZTaS0ZBMQCVPw6f6C4c85M7tp16TCLhliGBq6q00tHR+tki5GfSRS
+	ZzIeNSilQEfVtXTsHYODbtcbCV9eC3PqixziHUQ==
+X-Gm-Gg: ASbGnctJIqd71cGsMrkiiAaZMhxpsLD3yMDIskKaJDDHCz6g6qk1ufv9i/8a5MCYSGl
+	Y5uOTKRxNNGuWZegAdWvRWvXF+6R7js6lKBqDAamH35RPBlBPoO4lOURHiELofM8hZswardH3qD
+	4SzbMDbefUlnoxqlQyx29xxxVrQzc=
+X-Google-Smtp-Source: AGHT+IE039RKehIzWkPoz9Pwq8myqyy+FZsujwKtDDyBFn8FwGJVt10BuBtMIRgg7fWx3zw0WYibWGpIpl/Q2cToPds=
+X-Received: by 2002:a17:90b:3848:b0:2ff:4e90:3c47 with SMTP id
+ 98e67ed59e1d1-2ff4e9041aamr1711334a91.4.1741190299046; Wed, 05 Mar 2025
+ 07:58:19 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] drm/sched: drm_sched_job_cleanup(): correct false doc
-To: Philipp Stanner <phasta@kernel.org>,
- Matthew Brost <matthew.brost@intel.com>, Danilo Krummrich <dakr@kernel.org>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Tvrtko Ursulin <tvrtko.ursulin@igalia.com>
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-References: <20250304141346.102683-2-phasta@kernel.org>
-Content-Language: en-US
-From: =?UTF-8?Q?Christian_K=C3=B6nig?= <ckoenig.leichtzumerken@gmail.com>
-In-Reply-To: <20250304141346.102683-2-phasta@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <d3661d33-096a-45e3-8304-1123fd031527@stanley.mountain>
+In-Reply-To: <d3661d33-096a-45e3-8304-1123fd031527@stanley.mountain>
+From: Caleb Sander Mateos <csander@purestorage.com>
+Date: Wed, 5 Mar 2025 07:58:07 -0800
+X-Gm-Features: AQ5f1JpSLtbPYSGimhA0YnzX_t62kjsBmHrLeI4W_9M3JJL8fO_onDsebrkT6Ww
+Message-ID: <CADUfDZphhneo1g7TSpCh4iNW_PjgyuM52Nm3mVQrG5PSzDUnnw@mail.gmail.com>
+Subject: Re: [PATCH v2] nvme-tcp: fix signedness bug in nvme_tcp_init_connection()
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>, 
+	Sagi Grimberg <sagi@grimberg.me>, Hannes Reinecke <hare@suse.de>, linux-nvme@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Am 04.03.25 um 15:13 schrieb Philipp Stanner:
-> drm_sched_job_cleanup()'s documentation claims that calling
-> drm_sched_job_arm() is a "point of no return", implying that afterwards
-> a job cannot be cancelled anymore.
+On Wed, Mar 5, 2025 at 7:53=E2=80=AFAM Dan Carpenter <dan.carpenter@linaro.=
+org> wrote:
 >
-> This is not correct, as proven by the function's code itself, which
-> takes a previous call to drm_sched_job_arm() into account. In truth, the
-> decisive factors are whether fences have been shared (e.g., with other
-> processes) and if the job has been submitted to an entity already.
+> The kernel_recvmsg() function returns an int which could be either
+> negative error codes or the number of bytes received.  The problem is
+> that the condition:
 >
-> Correct the wrong docstring.
+>         if (ret < sizeof(*icresp)) {
 >
-> Signed-off-by: Philipp Stanner <phasta@kernel.org>
-> Reviewed-by: Tvrtko Ursulin <tvrtko.ursulin@igalia.com>
-
-Reviewed-by: Christian König <christian.koenig@amd.com>
-
+> is type promoted to type unsigned long and negative values are treated
+> as high positive values which is success, when they should be treated as
+> failure.  Handle invalid positive returns separately from negative
+> error codes to avoid this problem.
+>
+> Fixes: 578539e09690 ("nvme-tcp: fix connect failure on receiving partial =
+ICResp PDU")
+> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+> Reviewed-by: Caleb Sander Mateos <csander@purestorage.com>
+> Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
+> Reviewed-by: Chaitanya Kulkarni <kch@nvidia.com>
 > ---
-> Changes in v2:
->   - Also adjust comment about arm inside function's body. (Tvrtko)
-> ---
->  drivers/gpu/drm/scheduler/sched_main.c | 12 +++++++-----
->  1 file changed, 7 insertions(+), 5 deletions(-)
->
-> diff --git a/drivers/gpu/drm/scheduler/sched_main.c b/drivers/gpu/drm/scheduler/sched_main.c
-> index c634993f1346..7e71e89cea89 100644
-> --- a/drivers/gpu/drm/scheduler/sched_main.c
-> +++ b/drivers/gpu/drm/scheduler/sched_main.c
-> @@ -1013,11 +1013,13 @@ EXPORT_SYMBOL(drm_sched_job_has_dependency);
->   * Cleans up the resources allocated with drm_sched_job_init().
->   *
->   * Drivers should call this from their error unwind code if @job is aborted
-> - * before drm_sched_job_arm() is called.
-> + * before it was submitted to an entity with drm_sched_entity_push_job().
->   *
-> - * After that point of no return @job is committed to be executed by the
-> - * scheduler, and this function should be called from the
-> - * &drm_sched_backend_ops.free_job callback.
-> + * Since calling drm_sched_job_arm() causes the job's fences to be initialized,
-> + * it is up to the driver to ensure that fences that were exposed to external
-> + * parties get signaled. drm_sched_job_cleanup() does not ensure this.
-> + *
-> + * This function must also be called in &struct drm_sched_backend_ops.free_job
->   */
->  void drm_sched_job_cleanup(struct drm_sched_job *job)
->  {
-> @@ -1028,7 +1030,7 @@ void drm_sched_job_cleanup(struct drm_sched_job *job)
->  		/* drm_sched_job_arm() has been called */
->  		dma_fence_put(&job->s_fence->finished);
->  	} else {
-> -		/* aborted job before committing to run it */
-> +		/* aborted job before arming */
->  		drm_sched_fence_free(job->s_fence);
->  	}
->  
+> v2: Change the style.  Add the Reviewed-by tags.  (I will feel really bad
+>     if I introduced a bug in between v1 and v2 and cause everyone
+>     embarrassment with the R-b tags.)
 
+Still looks good to me.
+Reviewed-by: Caleb Sander Mateos <csander@purestorage.com>
+
+>
+>  drivers/nvme/host/tcp.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/nvme/host/tcp.c b/drivers/nvme/host/tcp.c
+> index 8a9131c95a3d..b23ce31df97d 100644
+> --- a/drivers/nvme/host/tcp.c
+> +++ b/drivers/nvme/host/tcp.c
+> @@ -1495,11 +1495,11 @@ static int nvme_tcp_init_connection(struct nvme_t=
+cp_queue *queue)
+>         msg.msg_flags =3D MSG_WAITALL;
+>         ret =3D kernel_recvmsg(queue->sock, &msg, &iov, 1,
+>                         iov.iov_len, msg.msg_flags);
+> -       if (ret < sizeof(*icresp)) {
+> +       if (ret >=3D 0 && ret < sizeof(*icresp))
+> +               ret =3D -ECONNRESET;
+> +       if (ret < 0) {
+>                 pr_warn("queue %d: failed to receive icresp, error %d\n",
+>                         nvme_tcp_queue_id(queue), ret);
+
+This log line is slightly less informative now if a partial PDU is
+received, since it will log -ECONNRESET instead of the number of bytes
+received before the connection was closed. But I think that's fine.
+
+Best,
+Caleb
+
+> -               if (ret >=3D 0)
+> -                       ret =3D -ECONNRESET;
+>                 goto free_icresp;
+>         }
+>         ret =3D -ENOTCONN;
+> --
+> 2.47.2
+>
