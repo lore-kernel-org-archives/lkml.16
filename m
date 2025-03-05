@@ -1,60 +1,55 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DC792505A3;
-	Wed,  5 Mar 2025 14:44:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8F8A248885;
+	Wed,  5 Mar 2025 14:45:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741185858; cv=none; b=shF5yICROgrAKPAJ1ypI6j6ydme4bu+FJAIvMO13YqAwRrHXjzwNd9qIqHcTL2LqfyZGnimqwIUcrW9XorDjXnPwRE+MRtmWd+oP49Y7Dc84p+oYMIZ9MHh4Fz2lktZ0Gw8H9ZV87ze9rhzY9zZBVTCpjE+iMcm31Jqc3Qgeeqs=
+	t=1741185901; cv=none; b=izJ+1BERUQ5ZSLjYmQgp7XcklutbPlU7E35wRpO8gqFux8Qa0XMKZTqvXlYicQP4Q8y86VGqPGkiaKOIp1Y38p/4/GNYekKIAhqetjFTPfeK7dcDxhUD7u7c17Y21OYjH6SIfkvahOIVKr1eTY6Dh35f52dG2JmYCSNI5CzY+ZE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741185858; c=relaxed/simple;
-	bh=HDAKKlonGba8rX1tjbow73YK4MXTBgC+sezxw2K7eec=;
+	s=arc-20240116; t=1741185901; c=relaxed/simple;
+	bh=7ASHfawryKHf3PEPpBd0pHmfcg7rVi91rbNSa2ZTzBA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Oh4kob52hejA/1PIIsGJBVJ/RQLskKkGqluc4eZAzfvjkVU+J7Ld5+AFgv/nPlqVAWo6rMVYdvXCyJIh4HNVktimp9zcQekq9eZL+e2cgGV0h6GBijEO6P0gq6q32AwBfWGdMFAgXlwS2LWQ+aNCzyJwrds8cXbyGcclEpS2GJg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=jW9wJ7/p; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	 Content-Type:Content-Disposition:In-Reply-To; b=VLi9WWh1Nyw9zk0M8Nm8bp6Si8IP/N+8j65fKKrg0oKgJaR6t38SiSah48DRVakVM4oEmkfvSFwZmuOWD1pI8OjmXFxc5Jl78d/t/xV7SQ5nPY0AWtC0OSpyztPczWSE6BHwNTECR2MfocYwL24gFOMHzDiZaFEqYzSzpztvlGE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SAGrGH9O; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="jW9wJ7/p"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=ezfHGj2cBWaEtzI2GUJQGGe0pXWbLGhCMJSGAb0XXr4=; b=jW9wJ7/ppvRin+Y4JUSWXTLaM1
-	yehJW1Smm4DGYwEuwb5ZvnlCk/wtdsusMLbKAZjT74M3C2oeSJFjV1z67c8sepbl0eBldOJOSZQdq
-	JShkPG3qy+eEoQwya185JoDQGas0okfzmC29Q6E+26u5/JB4hlyr6S5VfDe9Ch25F8I4Prf86oI2G
-	T7OAdYOsXBDpahK2sJya6ri14yku28ZMfZ2PIEqjK0tfSFMvKSDAUdxE3d3nqbI9oi+Qg8e/SAtY2
-	pS8pI8x/yJhA8HBfvyDWjao6InfAmpX3NHEWmFtK97D06F3vJMQd+CAkQPfOy5VeVYS6rNCf6tRCg
-	0A+NQqJw==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:45016)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1tppyZ-0004Sc-2H;
-	Wed, 05 Mar 2025 14:43:59 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1tppyS-0005rB-2p;
-	Wed, 05 Mar 2025 14:43:52 +0000
-Date: Wed, 5 Mar 2025 14:43:52 +0000
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Swathi K S <swathi.ks@samsung.com>
-Cc: krzk+dt@kernel.org, andrew+netdev@lunn.ch, davem@davemloft.net,
-	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
-	robh@kernel.org, conor+dt@kernel.org, richardcochran@gmail.com,
-	mcoquelin.stm32@gmail.com, alexandre.torgue@foss.st.com,
-	netdev@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	pankaj.dubey@samsung.com, ravi.patel@samsung.com,
-	gost.dev@samsung.com
-Subject: Re: [PATCH v8 2/2] net: stmmac: dwc-qos: Add FSD EQoS support
-Message-ID: <Z8hjKI1ZqU19nrTP@shell.armlinux.org.uk>
-References: <20250305091246.106626-1-swathi.ks@samsung.com>
- <CGME20250305091856epcas5p4228c09989c7acfe45a99541eef01fbcd@epcas5p4.samsung.com>
- <20250305091246.106626-3-swathi.ks@samsung.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SAGrGH9O"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4061C4CED1;
+	Wed,  5 Mar 2025 14:45:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741185901;
+	bh=7ASHfawryKHf3PEPpBd0pHmfcg7rVi91rbNSa2ZTzBA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=SAGrGH9ObtVWKX3e7bD2yu25LK/nLOfizTQ/iTNjT19pub2TX11fojTHUclJi0Maw
+	 XiShJOndCK3ebVQNwkDAdBHkuY7oXVOC1kZMOrzpN6QnkFuFEF5U8LomKPSJ5KY/v1
+	 iqu3cPbA4Q+WuUKgCITReQabZcnF/Q6b+BKIkgTXKsceR09scb9ykO+1jItzYskhcl
+	 38XzwEzzpjkcgqJpLPkmGqFWsZrHyBSxzImdXrr9roAFUu+WmW6WK8Z6sBHDP4o9Xn
+	 mST6U9k7/MWqfRPPOw2Pa0sJYTdE5jLJxi7VH+noKRBRKxC1CwWrTy8RRDaz7q301K
+	 j0XVvbAwwtzgQ==
+Date: Wed, 5 Mar 2025 15:44:56 +0100
+From: Joel Granados <joel.granados@kernel.org>
+To: "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc: Nicolas Bouchinet <nicolas.bouchinet@clip-os.org>, 
+	linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org, linux-scsi@vger.kernel.org, 
+	codalist@coda.cs.cmu.edu, linux-nfs@vger.kernel.org, 
+	Nicolas Bouchinet <nicolas.bouchinet@ssi.gouv.fr>, Joel Granados <j.granados@samsung.com>, 
+	Clemens Ladisch <clemens@ladisch.de>, Arnd Bergmann <arnd@arndb.de>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jason Gunthorpe <jgg@ziepe.ca>, 
+	Leon Romanovsky <leon@kernel.org>, "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, 
+	Jan Harkes <jaharkes@cs.cmu.edu>, Chuck Lever <chuck.lever@oracle.com>, 
+	Jeff Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>, 
+	Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, 
+	Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
+	Bart Van Assche <bvanassche@acm.org>, Zhu Yanjun <yanjun.zhu@linux.dev>, 
+	Al Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>
+Subject: Re: [PATCH v2 4/6] sysctl: Fixes scsi_logging_level bounds
+Message-ID: <oy2jkeisvm7edg7zrohp6iipvnktj5o3sw5hxksoxgorppoj6r@hubn7cifqdxl>
+References: <20250224095826.16458-1-nicolas.bouchinet@clip-os.org>
+ <20250224095826.16458-5-nicolas.bouchinet@clip-os.org>
+ <yq1y0xubz40.fsf@ca-mkp.ca.oracle.com>
+ <0a9869e0-d091-4568-a6e7-8d7d72b296a9@clip-os.org>
+ <rgh2ffvmp2wlyupv6vw5s3qexuipgu6vdr2qsitgnbn6syk6ye@ln74xh26jdwp>
+ <yq134ftv8h4.fsf@ca-mkp.ca.oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,22 +58,34 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250305091246.106626-3-swathi.ks@samsung.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+In-Reply-To: <yq134ftv8h4.fsf@ca-mkp.ca.oracle.com>
 
-On Wed, Mar 05, 2025 at 02:42:46PM +0530, Swathi K S wrote:
-> The FSD SoC contains two instance of the Synopsys DWC ethernet QOS IP core.
-> The binding that it uses is slightly different from existing ones because
-> of the integration (clocks, resets).
+On Mon, Mar 03, 2025 at 09:24:43PM -0500, Martin K. Petersen wrote:
 > 
-> Signed-off-by: Swathi K S <swathi.ks@samsung.com>
+> Joel,
+> 
+> > 1. Having the upper bound be SYSCTL_INT_MAX is not necessary (as it is
+> >    silently capped by proc_dointvec_minmax, but it is good to have as it
+> >    adds to the understanding on what the range of the values are.
+> >
+> > 2. Having the lower bound capped by SYSCTL_ZERO is needed as it will
+> >    prevent ppl trying to assigning negative values to the unsigned integer
+> >
+> > Let me know if you take this through the scsi subsystem so I know to
+> > drop it from sysctl 
+> 
+> Applied to 6.15/scsi-staging, thanks!
+Thx!!
 
-This looks much better!
+@Nicolas: Please take this out of your next version as it is already
+going upstream.
 
-Reviewed-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
+Best
 
-Thanks!
+> 
+> -- 
+> Martin K. Petersen	Oracle Linux Engineering
 
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+
+Joel Granados
