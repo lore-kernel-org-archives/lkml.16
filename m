@@ -1,133 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E62891957FC;
-	Wed,  5 Mar 2025 17:07:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A842519C542;
+	Wed,  5 Mar 2025 17:07:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.149.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741194446; cv=none; b=DrTSImQnWIgjaxazvX6RQ3ZM5s+UUzRD3x2j3PIa8hWYMMV0ybs7wo/bsTmtncZkCg1GSHcbS/LjphjQoF3PrLxpk28J5WCtLEtn33OQ7OdG6viDcedm0RuLxMDtKh7RtSJo1YQx5BaRSs5S/6wejanToRREaqantLBollPFDDE=
+	t=1741194456; cv=none; b=H+AR3kKoF569VI87xIrYLB1POmAkFqV/fO9VD5pJTm2N1M5UizmJbDPXGbjnCGYq52yWnu4ydwEYBW8H2Q+yhgKFnik88FTQtzThFb1D0CnF/SiRS4QMKf603b+2r5RUqYQFbTFADZ0sSDM4SiCjogtAFZGX2fTBcpP+7ngZzmM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741194446; c=relaxed/simple;
-	bh=bLNqQdLWuR0xn/KW0CPq8vI0e4EX5wAgnKJpoztWMHg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EwL9l5pJzEYENKAIv453bVKrwanDPdBFGQqRCtFxLnqV/Mnf58UjOZ3ESULBKze2Egmnb0qJik7iO2A8FhGKWCBgORXcig4gv+v5rNS87Cx8+LjNisTEu+4IE4e+6ZN6dIjtFKax93HlSEWJju3J07hNr+5BxQIAwArlvM8kL1U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eRcZL88m; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741194456; c=relaxed/simple;
+	bh=Cf9Su65OOL7VoNJnfHbWtGD6FKCNpxQSrSD/5v0DbrE=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=oSjTe4uFKUNyDd+J8j2QB04/s9wFdapCurCbHYEs/+qL+J2ZUVgfedbfQfnqwxpofJrgxrC+PuE1ZSCbEnqAoun04Ahd/UlUXuB5qnTUcimsr8z5/UbzVyrjxwra3cW1CpBQsB8u1os+g4DyKI5pRqPC14oF3UM7EaKO8YLkjHg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=j84aIEQE; arc=none smtp.client-ip=67.231.149.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eRcZL88m"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23704C4CED1;
-	Wed,  5 Mar 2025 17:07:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741194445;
-	bh=bLNqQdLWuR0xn/KW0CPq8vI0e4EX5wAgnKJpoztWMHg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=eRcZL88mboMBgd/Z6RV1twdyEVm5uiwvcj4bZ5HeqWq3rGDvMJj272ouZcy8jt696
-	 Gt6I0vBWZSsLLK9oLqRWGhS8PmCY9yy3lTLffYrpI1tGcVn++96k/4Zg61hguEDlpn
-	 TNiFw5QnMMsVfifjFKcedAr2rZJyOoTzWKcwMLoUTDNywAMJf1JNfO3Ao9lYy7TPVu
-	 BmrhSupwkTUtu51i7rYMxSqU2WGejx1ENCuAH8+40TAv2W1lBBjF+G/R06Q+Bn2lv9
-	 0LqmyGGqNMOz0WmjEsZwBaNxN3SMt+t7HJcWwxYxV2dfJY+PjLFOX3ML5q8jS196f7
-	 9WkRotH9uWkgQ==
-Date: Wed, 5 Mar 2025 11:07:23 -0600
-From: Rob Herring <robh@kernel.org>
-To: Conor Dooley <conor@kernel.org>
-Cc: xianwei.zhao@amlogic.com, Thomas Gleixner <tglx@linutronix.de>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Kevin Hilman <khilman@baylibre.com>,
-	Jerome Brunet <jbrunet@baylibre.com>,
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-amlogic@lists.infradead.org
-Subject: Re: [PATCH v3 1/4] dt-bindings: interrupt-controller: Add support
- for Amlogic A4 and A5 SoCsy
-Message-ID: <20250305170723.GA2143418-robh@kernel.org>
-References: <20250305-irqchip-gpio-a4-a5-v3-0-1eec70352fea@amlogic.com>
- <20250305-irqchip-gpio-a4-a5-v3-1-1eec70352fea@amlogic.com>
- <20250305-corral-unfair-a7f25abbfd64@spud>
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="j84aIEQE"
+Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
+	by mx0a-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5255t9ox015744;
+	Wed, 5 Mar 2025 11:07:27 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=
+	PODMain02222019; bh=XkiwuTZrY4kR4w+rQfEQPHy9rSYeTkZT3Ficm6ME/JE=; b=
+	j84aIEQENFxnO5b3Tf0VHUZds7kbrIXgzgRfDdsJaMBMSrUo4xVdVhOQZHqMVcsv
+	XLuQdgHqhHajjVS97pe3lpWspGaoDD7D1ZJZZf0C+QLDG2zCnEVmds0j/TtYQzda
+	r/1GK34b2cQGsq0rWqxJ3lMblsuGwh5UvfWYQk9vz6825SC5P8g7zj2XIo74maTt
+	ZoMCjBgGib4Ee1d/lvlN8u29xETJO+ttkbPij6IS6Yr6tn2Slo23fLnUjtHv64EJ
+	CW9B2EZZe5JJSx05N6CGcJH0mbMhRI6PP61uo+2FDtQwJspWYJ318Lzr/J6JX7Lm
+	8uu9UK4GTr9HGkjwUKw49g==
+Received: from ediex02.ad.cirrus.com ([84.19.233.68])
+	by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 455fyymvp8-3
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 05 Mar 2025 11:07:27 -0600 (CST)
+Received: from ediex01.ad.cirrus.com (198.61.84.80) by ediex02.ad.cirrus.com
+ (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Wed, 5 Mar
+ 2025 17:07:20 +0000
+Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
+ anon-ediex01.ad.cirrus.com (198.61.84.80) with Microsoft SMTP Server id
+ 15.2.1544.14 via Frontend Transport; Wed, 5 Mar 2025 17:07:20 +0000
+Received: from lonswws02.ad.cirrus.com (lonswws02.ad.cirrus.com [198.90.188.42])
+	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id 9E13882026B;
+	Wed,  5 Mar 2025 17:07:20 +0000 (UTC)
+From: Stefan Binding <sbinding@opensource.cirrus.com>
+To: Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
+CC: <linux-sound@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <patches@opensource.cirrus.com>,
+        Stefan Binding
+	<sbinding@opensource.cirrus.com>
+Subject: [PATCH v1 5/7] ALSA: hda/realtek: Add support for ASUS B3405 and B3605 Laptops using CS35L41 HDA
+Date: Wed, 5 Mar 2025 17:06:49 +0000
+Message-ID: <20250305170714.755794-6-sbinding@opensource.cirrus.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250305170714.755794-1-sbinding@opensource.cirrus.com>
+References: <20250305170714.755794-1-sbinding@opensource.cirrus.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250305-corral-unfair-a7f25abbfd64@spud>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-GUID: KpIAYz20GdgjixwUktFLvNChOcUIHuz-
+X-Proofpoint-ORIG-GUID: KpIAYz20GdgjixwUktFLvNChOcUIHuz-
+X-Authority-Analysis: v=2.4 cv=DaftqutW c=1 sm=1 tr=0 ts=67c884cf cx=c_pps a=uGhh+3tQvKmCLpEUO+DX4w==:117 a=uGhh+3tQvKmCLpEUO+DX4w==:17 a=Vs1iUdzkB0EA:10 a=w1d2syhTAAAA:8 a=jGPTKsGrLOcs8PsYLxUA:9 a=YXXWInSmI4Sqt1AkVdoW:22
+X-Proofpoint-Spam-Reason: safe
 
-On Wed, Mar 05, 2025 at 04:28:16PM +0000, Conor Dooley wrote:
-> On Wed, Mar 05, 2025 at 06:02:56PM +0800, Xianwei Zhao via B4 Relay wrote:
-> > From: Xianwei Zhao <xianwei.zhao@amlogic.com>
-> > 
-> > Update dt-binding document for GPIO interrupt controller
-> > of Amlogic A4 and A5 SoCs
-> > 
-> > Signed-off-by: Xianwei Zhao <xianwei.zhao@amlogic.com>
-> > ---
-> >  .../amlogic,meson-gpio-intc.yaml                    | 21 +++++++++++++++++++--
-> >  1 file changed, 19 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/interrupt-controller/amlogic,meson-gpio-intc.yaml b/Documentation/devicetree/bindings/interrupt-controller/amlogic,meson-gpio-intc.yaml
-> > index a93744763787..3c5853c71efa 100644
-> > --- a/Documentation/devicetree/bindings/interrupt-controller/amlogic,meson-gpio-intc.yaml
-> > +++ b/Documentation/devicetree/bindings/interrupt-controller/amlogic,meson-gpio-intc.yaml
-> > @@ -35,6 +35,9 @@ properties:
-> >                - amlogic,meson-sm1-gpio-intc
-> >                - amlogic,meson-a1-gpio-intc
-> >                - amlogic,meson-s4-gpio-intc
-> > +              - amlogic,a4-gpio-intc
-> > +              - amlogic,a4-gpio-ao-intc
-> > +              - amlogic,a5-gpio-intc
-> >                - amlogic,c3-gpio-intc
-> >                - amlogic,t7-gpio-intc
-> >            - const: amlogic,meson-gpio-intc
-> > @@ -49,8 +52,6 @@ properties:
-> >  
-> >    amlogic,channel-interrupts:
-> >      description: Array with the upstream hwirq numbers
-> > -    minItems: 8
-> > -    maxItems: 12
-> 
-> Please leave the widest constraints here, and let the more restricted
-> ones in your if/else below.
-> 
-> >      $ref: /schemas/types.yaml#/definitions/uint32-array
-> >  
-> >  required:
-> > @@ -60,6 +61,22 @@ required:
-> >    - "#interrupt-cells"
-> >    - amlogic,channel-interrupts
-> >  
-> > +if:
-> > +  properties:
-> > +    compatible:
-> > +      contains:
-> > +        const: amlogic,a4-gpio-ao-intc
-> > +then:
-> > +  properties:
-> > +    amlogic,channel-interrupts:
-> > +      minItems: 2
-> > +      maxItems: 12
+Add support for ASUS B3405CCA / P3405CCA, B3605CCA / P3605CCA,
+B3405CCA, B3605CCA.
 
-And then you don't need this clause as 2-12 is the full range.
+Laptops use 2 CS35L41 Amps with HDA, using Internal boost, with SPI
 
-> > +else:
-> > +  properties:
-> > +    amlogic,channel-interrupts:
-> > +      minItems: 8
-> > +      maxItems: 12
+Signed-off-by: Stefan Binding <sbinding@opensource.cirrus.com>
+---
+ sound/pci/hda/patch_realtek.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-And 12 is already the max, so you only need 'minItems: 8'.
-
-> > +
-> >  additionalProperties: false
-> >  
-> >  examples:
-> > 
-> > -- 
-> > 2.37.1
-> > 
-> > 
-
+diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
+index d616dcdb3b49..dc1d9beeaa2b 100644
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -10655,6 +10655,7 @@ static const struct hda_quirk alc269_fixup_tbl[] = {
+ 	SND_PCI_QUIRK(0x1043, 0x12a0, "ASUS X441UV", ALC233_FIXUP_EAPD_COEF_AND_MIC_NO_PRESENCE),
+ 	SND_PCI_QUIRK(0x1043, 0x12a3, "Asus N7691ZM", ALC269_FIXUP_ASUS_N7601ZM),
+ 	SND_PCI_QUIRK(0x1043, 0x12af, "ASUS UX582ZS", ALC245_FIXUP_CS35L41_SPI_2),
++	SND_PCI_QUIRK(0x1043, 0x12b4, "ASUS B3405CCA / P3405CCA", ALC245_FIXUP_CS35L41_SPI_2),
+ 	SND_PCI_QUIRK(0x1043, 0x12e0, "ASUS X541SA", ALC256_FIXUP_ASUS_MIC),
+ 	SND_PCI_QUIRK(0x1043, 0x12f0, "ASUS X541UV", ALC256_FIXUP_ASUS_MIC),
+ 	SND_PCI_QUIRK(0x1043, 0x1313, "Asus K42JZ", ALC269VB_FIXUP_ASUS_MIC_NO_PRESENCE),
+@@ -10741,7 +10742,10 @@ static const struct hda_quirk alc269_fixup_tbl[] = {
+ 	SND_PCI_QUIRK(0x1043, 0x1fb3, "ASUS ROG Flow Z13 GZ302EA", ALC287_FIXUP_CS35L41_I2C_2),
+ 	SND_PCI_QUIRK(0x1043, 0x3011, "ASUS B5605CVA", ALC245_FIXUP_CS35L41_SPI_2),
+ 	SND_PCI_QUIRK(0x1043, 0x3030, "ASUS ZN270IE", ALC256_FIXUP_ASUS_AIO_GPIO2),
++	SND_PCI_QUIRK(0x1043, 0x3061, "ASUS B3405CCA", ALC245_FIXUP_CS35L41_SPI_2),
++	SND_PCI_QUIRK(0x1043, 0x30c1, "ASUS B3605CCA / P3605CCA", ALC245_FIXUP_CS35L41_SPI_2),
+ 	SND_PCI_QUIRK(0x1043, 0x31d0, "ASUS Zen AIO 27 Z272SD_A272SD", ALC274_FIXUP_ASUS_ZEN_AIO_27),
++	SND_PCI_QUIRK(0x1043, 0x31f1, "ASUS B3605CCA", ALC245_FIXUP_CS35L41_SPI_2),
+ 	SND_PCI_QUIRK(0x1043, 0x3a20, "ASUS G614JZR", ALC285_FIXUP_ASUS_SPI_REAR_SPEAKERS),
+ 	SND_PCI_QUIRK(0x1043, 0x3a30, "ASUS G814JVR/JIR", ALC285_FIXUP_ASUS_SPI_REAR_SPEAKERS),
+ 	SND_PCI_QUIRK(0x1043, 0x3a40, "ASUS G814JZR", ALC285_FIXUP_ASUS_SPI_REAR_SPEAKERS),
+-- 
+2.43.0
 
