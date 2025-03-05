@@ -1,272 +1,655 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01C731C6FFE;
-	Wed,  5 Mar 2025 17:58:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8618250C07;
+	Wed,  5 Mar 2025 17:58:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741197494; cv=none; b=sf494lFG57a84BXWmRGyyWAEjshU120NahyhUjbk9zOe1vT1KbUOeEhVbTMrXS6S7gwAEVp4g+ymkABl3RK+JTASKVPhgxsijF8Sw7+Zkgs8ORLoyBMzdbP11s0C9vE6dvKvt/E/q2o6SGtGNo6e1bq3MaTyuH9w241/wZl4muE=
+	t=1741197522; cv=none; b=glg2kGO8j6osg9YUuxKsmJDb8KmaGpMsiOpBlS/Nk52pG5VfP6sJ+RQFW0kYAhHTdgqyvfTXVQW8o18PcSuO4i8s1QpYi66cHMwATa0UGyjRGWcWrHneOIYAFvdzZbljNy9OReJuMRE6tob1gGBLvyhLJhNipwFtmc2U15cPhDE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741197494; c=relaxed/simple;
-	bh=/6xHPLL6GhXalpIRi3UgVjQ+8XkBGM2Q/FIQre3NnhY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=COiSOGAfoD6CxUhCXsoOaJAyfkDTIb7+0GEwLHgaXoU/kKJF4p3VcVNYZOzph11RwWgMSS4jU1OUNB5hHamCkOdyv72wKCjOkVqhBaHCgf4bh1WR4qz0bqkfuXJ9khAZlPsKRGEqVsRfGfy2xYEmiZ3qUAeKz59AN/m0uWU2c+s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=ccXFIVh4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741197522; c=relaxed/simple;
+	bh=LLoRr6xaOOfcqHISg7krPtpGKuFi7O7J0LZ1pJNelIc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=u9E332lGnUaGW9BOc6FAo7AmJeb+T0Br27OAjamtZqSsiQSHd7Jwpuqv4VT955UXbizCu+xSsWgSz+690d0FTzxhjkGAsmoj979wwGXMzOBwUmAUx5YjA9M58sr4lls9qDqacmnhN45p+HHhpistl0z2z4m3POh0otE/gcCbW7E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=jrzhTFR6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="ccXFIVh4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4BD9BC4CED1;
-	Wed,  5 Mar 2025 17:58:13 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="jrzhTFR6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14217C4CED1;
+	Wed,  5 Mar 2025 17:58:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1741197493;
-	bh=/6xHPLL6GhXalpIRi3UgVjQ+8XkBGM2Q/FIQre3NnhY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ccXFIVh48eiBCWqpU+6gEsuWw7UWwZknfNWHJZ924RvmY4kw3/FnV5KYhnr/KarsS
-	 4MeCoEwqC1nUg4PKI8Oodpxrk8HzVSmrK03hL1EuYxmicUhsizfhptgPrzfYMOu16Q
-	 jcX4KRP3PIKfCWDg5feWUkXxSRV8YeJtZz6zpikI=
+	s=korg; t=1741197522;
+	bh=LLoRr6xaOOfcqHISg7krPtpGKuFi7O7J0LZ1pJNelIc=;
+	h=From:To:Cc:Subject:Date:From;
+	b=jrzhTFR6eAew86phx+Qt0KhCwPIccP52lGNKs/bNGSMbfBQGh8i3zviaWUPvNQy0h
+	 +6FCLgu9ww1k+5RvckKwHpvhDIL3IkiE346c7Q9vUgx0cTaJN2RTP3VNOvXIAl9Bj9
+	 uG8JuiyMIZJD3HnsnkL2lVUQjbmfPmyZYd3qJ520=
 From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To: stable@vger.kernel.org
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	patches@lists.linux.dev,
-	David Howells <dhowells@redhat.com>,
-	Christoph Hellwig <hch@infradead.org>,
-	David Hildenbrand <david@redhat.com>,
-	Lorenzo Stoakes <lstoakes@gmail.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Jens Axboe <axboe@kernel.dk>,
-	Al Viro <viro@zeniv.linux.org.uk>,
-	Matthew Wilcox <willy@infradead.org>,
-	Jan Kara <jack@suse.cz>,
-	Jeff Layton <jlayton@kernel.org>,
-	Jason Gunthorpe <jgg@nvidia.com>,
-	Logan Gunthorpe <logang@deltatee.com>,
-	Hillf Danton <hdanton@sina.com>,
-	Christian Brauner <brauner@kernel.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	linux-fsdevel@vger.kernel.org,
-	linux-block@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	Christoph Hellwig <hch@lst.de>,
-	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 143/176] mm: Dont pin ZERO_PAGE in pin_user_pages()
-Date: Wed,  5 Mar 2025 18:48:32 +0100
-Message-ID: <20250305174511.186748725@linuxfoundation.org>
+	torvalds@linux-foundation.org,
+	akpm@linux-foundation.org,
+	linux@roeck-us.net,
+	shuah@kernel.org,
+	patches@kernelci.org,
+	lkft-triage@lists.linaro.org,
+	pavel@denx.de,
+	jonathanh@nvidia.com,
+	f.fainelli@gmail.com,
+	sudipm.mukherjee@gmail.com,
+	srw@sladewatkins.net,
+	rwarsow@gmx.de,
+	conor@kernel.org,
+	hargar@microsoft.com,
+	broonie@kernel.org
+Subject: [PATCH 6.6 000/142] 6.6.81-rc1 review
+Date: Wed,  5 Mar 2025 18:46:59 +0100
+Message-ID: <20250305174500.327985489@linuxfoundation.org>
 X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250305174505.437358097@linuxfoundation.org>
-References: <20250305174505.437358097@linuxfoundation.org>
-User-Agent: quilt/0.68
-X-stable: review
-X-Patchwork-Hint: ignore
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: quilt/0.68
+X-stable: review
+X-Patchwork-Hint: ignore
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.6.81-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-6.6.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 6.6.81-rc1
+X-KernelTest-Deadline: 2025-03-07T17:45+00:00
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-6.1-stable review patch.  If anyone has any objections, please let me know.
+This is the start of the stable review cycle for the 6.6.81 release.
+There are 142 patches in this series, all will be posted as a response
+to this one.  If anyone has any issues with these being applied, please
+let me know.
 
-------------------
+Responses should be made by Fri, 07 Mar 2025 17:44:26 +0000.
+Anything received after that time might be too late.
 
-From: David Howells <dhowells@redhat.com>
+The whole patch series can be found in one patch at:
+	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.6.81-rc1.gz
+or in the git tree and branch at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.6.y
+and the diffstat can be found below.
 
-[ Upstream commit c8070b78751955e59b42457b974bea4a4fe00187 ]
+thanks,
 
-Make pin_user_pages*() leave a ZERO_PAGE unpinned if it extracts a pointer
-to it from the page tables and make unpin_user_page*() correspondingly
-ignore a ZERO_PAGE when unpinning.  We don't want to risk overrunning a
-zero page's refcount as we're only allowed ~2 million pins on it -
-something that userspace can conceivably trigger.
+greg k-h
 
-Add a pair of functions to test whether a page or a folio is a ZERO_PAGE.
+-------------
+Pseudo-Shortlog of commits:
 
-Signed-off-by: David Howells <dhowells@redhat.com>
-cc: Christoph Hellwig <hch@infradead.org>
-cc: David Hildenbrand <david@redhat.com>
-cc: Lorenzo Stoakes <lstoakes@gmail.com>
-cc: Andrew Morton <akpm@linux-foundation.org>
-cc: Jens Axboe <axboe@kernel.dk>
-cc: Al Viro <viro@zeniv.linux.org.uk>
-cc: Matthew Wilcox <willy@infradead.org>
-cc: Jan Kara <jack@suse.cz>
-cc: Jeff Layton <jlayton@kernel.org>
-cc: Jason Gunthorpe <jgg@nvidia.com>
-cc: Logan Gunthorpe <logang@deltatee.com>
-cc: Hillf Danton <hdanton@sina.com>
-cc: Christian Brauner <brauner@kernel.org>
-cc: Linus Torvalds <torvalds@linux-foundation.org>
-cc: linux-fsdevel@vger.kernel.org
-cc: linux-block@vger.kernel.org
-cc: linux-kernel@vger.kernel.org
-cc: linux-mm@kvack.org
-Reviewed-by: Lorenzo Stoakes <lstoakes@gmail.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Acked-by: David Hildenbrand <david@redhat.com>
-Link: https://lore.kernel.org/r/20230526214142.958751-2-dhowells@redhat.com
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Stable-dep-of: bddf10d26e6e ("uprobes: Reject the shared zeropage in uprobe_write_opcode()")
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- Documentation/core-api/pin_user_pages.rst |  6 +++++
- include/linux/mm.h                        | 26 +++++++++++++++++--
- mm/gup.c                                  | 31 ++++++++++++++++++++++-
- 3 files changed, 60 insertions(+), 3 deletions(-)
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    Linux 6.6.81-rc1
 
-diff --git a/Documentation/core-api/pin_user_pages.rst b/Documentation/core-api/pin_user_pages.rst
-index b18416f4500fe..7995ce2b9676a 100644
---- a/Documentation/core-api/pin_user_pages.rst
-+++ b/Documentation/core-api/pin_user_pages.rst
-@@ -113,6 +113,12 @@ pages:
- This also leads to limitations: there are only 31-10==21 bits available for a
- counter that increments 10 bits at a time.
- 
-+* Because of that limitation, special handling is applied to the zero pages
-+  when using FOLL_PIN.  We only pretend to pin a zero page - we don't alter its
-+  refcount or pincount at all (it is permanent, so there's no need).  The
-+  unpinning functions also don't do anything to a zero page.  This is
-+  transparent to the caller.
-+
- * Callers must specifically request "dma-pinned tracking of pages". In other
-   words, just calling get_user_pages() will not suffice; a new set of functions,
-   pin_user_page() and related, must be used.
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 971186f0b7b07..03357c196e0ba 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -1610,6 +1610,28 @@ static inline bool page_needs_cow_for_dma(struct vm_area_struct *vma,
- 	return page_maybe_dma_pinned(page);
- }
- 
-+/**
-+ * is_zero_page - Query if a page is a zero page
-+ * @page: The page to query
-+ *
-+ * This returns true if @page is one of the permanent zero pages.
-+ */
-+static inline bool is_zero_page(const struct page *page)
-+{
-+	return is_zero_pfn(page_to_pfn(page));
-+}
-+
-+/**
-+ * is_zero_folio - Query if a folio is a zero page
-+ * @folio: The folio to query
-+ *
-+ * This returns true if @folio is one of the permanent zero pages.
-+ */
-+static inline bool is_zero_folio(const struct folio *folio)
-+{
-+	return is_zero_page(&folio->page);
-+}
-+
- /* MIGRATE_CMA and ZONE_MOVABLE do not allow pin pages */
- #ifdef CONFIG_MIGRATION
- static inline bool is_longterm_pinnable_page(struct page *page)
-@@ -1620,8 +1642,8 @@ static inline bool is_longterm_pinnable_page(struct page *page)
- 	if (mt == MIGRATE_CMA || mt == MIGRATE_ISOLATE)
- 		return false;
- #endif
--	/* The zero page may always be pinned */
--	if (is_zero_pfn(page_to_pfn(page)))
-+	/* The zero page can be "pinned" but gets special handling. */
-+	if (is_zero_page(page))
- 		return true;
- 
- 	/* Coherent device memory must always allow eviction. */
-diff --git a/mm/gup.c b/mm/gup.c
-index e31d00443c4e6..b1daaa9d89aab 100644
---- a/mm/gup.c
-+++ b/mm/gup.c
-@@ -51,7 +51,8 @@ static inline void sanity_check_pinned_pages(struct page **pages,
- 		struct page *page = *pages;
- 		struct folio *folio = page_folio(page);
- 
--		if (!folio_test_anon(folio))
-+		if (is_zero_page(page) ||
-+		    !folio_test_anon(folio))
- 			continue;
- 		if (!folio_test_large(folio) || folio_test_hugetlb(folio))
- 			VM_BUG_ON_PAGE(!PageAnonExclusive(&folio->page), page);
-@@ -128,6 +129,13 @@ struct folio *try_grab_folio(struct page *page, int refs, unsigned int flags)
- 	else if (flags & FOLL_PIN) {
- 		struct folio *folio;
- 
-+		/*
-+		 * Don't take a pin on the zero page - it's not going anywhere
-+		 * and it is used in a *lot* of places.
-+		 */
-+		if (is_zero_page(page))
-+			return page_folio(page);
-+
- 		/*
- 		 * Can't do FOLL_LONGTERM + FOLL_PIN gup fast path if not in a
- 		 * right zone, so fail and let the caller fall back to the slow
-@@ -177,6 +185,8 @@ struct folio *try_grab_folio(struct page *page, int refs, unsigned int flags)
- static void gup_put_folio(struct folio *folio, int refs, unsigned int flags)
- {
- 	if (flags & FOLL_PIN) {
-+		if (is_zero_folio(folio))
-+			return;
- 		node_stat_mod_folio(folio, NR_FOLL_PIN_RELEASED, refs);
- 		if (folio_test_large(folio))
- 			atomic_sub(refs, folio_pincount_ptr(folio));
-@@ -217,6 +227,13 @@ bool __must_check try_grab_page(struct page *page, unsigned int flags)
- 	if (flags & FOLL_GET)
- 		folio_ref_inc(folio);
- 	else if (flags & FOLL_PIN) {
-+		/*
-+		 * Don't take a pin on the zero page - it's not going anywhere
-+		 * and it is used in a *lot* of places.
-+		 */
-+		if (is_zero_page(page))
-+			return 0;
-+
- 		/*
- 		 * Similar to try_grab_folio(): be sure to *also*
- 		 * increment the normal page refcount field at least once,
-@@ -3149,6 +3166,9 @@ EXPORT_SYMBOL_GPL(get_user_pages_fast);
-  *
-  * FOLL_PIN means that the pages must be released via unpin_user_page(). Please
-  * see Documentation/core-api/pin_user_pages.rst for further details.
-+ *
-+ * Note that if a zero_page is amongst the returned pages, it will not have
-+ * pins in it and unpin_user_page() will not remove pins from it.
-  */
- int pin_user_pages_fast(unsigned long start, int nr_pages,
- 			unsigned int gup_flags, struct page **pages)
-@@ -3225,6 +3245,9 @@ EXPORT_SYMBOL_GPL(pin_user_pages_fast_only);
-  *
-  * FOLL_PIN means that the pages must be released via unpin_user_page(). Please
-  * see Documentation/core-api/pin_user_pages.rst for details.
-+ *
-+ * Note that if a zero_page is amongst the returned pages, it will not have
-+ * pins in it and unpin_user_page*() will not remove pins from it.
-  */
- long pin_user_pages_remote(struct mm_struct *mm,
- 			   unsigned long start, unsigned long nr_pages,
-@@ -3260,6 +3283,9 @@ EXPORT_SYMBOL(pin_user_pages_remote);
-  *
-  * FOLL_PIN means that the pages must be released via unpin_user_page(). Please
-  * see Documentation/core-api/pin_user_pages.rst for details.
-+ *
-+ * Note that if a zero_page is amongst the returned pages, it will not have
-+ * pins in it and unpin_user_page*() will not remove pins from it.
-  */
- long pin_user_pages(unsigned long start, unsigned long nr_pages,
- 		    unsigned int gup_flags, struct page **pages,
-@@ -3282,6 +3308,9 @@ EXPORT_SYMBOL(pin_user_pages);
-  * pin_user_pages_unlocked() is the FOLL_PIN variant of
-  * get_user_pages_unlocked(). Behavior is the same, except that this one sets
-  * FOLL_PIN and rejects FOLL_GET.
-+ *
-+ * Note that if a zero_page is amongst the returned pages, it will not have
-+ * pins in it and unpin_user_page*() will not remove pins from it.
-  */
- long pin_user_pages_unlocked(unsigned long start, unsigned long nr_pages,
- 			     struct page **pages, unsigned int gup_flags)
--- 
-2.39.5
+Borislav Petkov (AMD) <bp@alien8.de>
+    x86/microcode/AMD: Load only SHA256-checksummed patches
 
+Borislav Petkov (AMD) <bp@alien8.de>
+    x86/microcode/AMD: Add get_patch_level()
+
+Borislav Petkov (AMD) <bp@alien8.de>
+    x86/microcode/AMD: Get rid of the _load_microcode_amd() forward declaration
+
+Borislav Petkov (AMD) <bp@alien8.de>
+    x86/microcode/AMD: Merge early_apply_microcode() into its single callsite
+
+Borislav Petkov (AMD) <bp@alien8.de>
+    x86/microcode/AMD: Have __apply_microcode_amd() return bool
+
+Nikolay Borisov <nik.borisov@suse.com>
+    x86/microcode/AMD: Make __verify_patch_size() return bool
+
+Nikolay Borisov <nik.borisov@suse.com>
+    x86/microcode/AMD: Return bool from find_blobs_in_containers()
+
+Borislav Petkov (AMD) <bp@alien8.de>
+    x86/microcode/AMD: Flush patch buffer mapping after application
+
+Chang S. Bae <chang.seok.bae@intel.com>
+    x86/microcode/intel: Remove unnecessary cache writeback and invalidation
+
+Borislav Petkov (AMD) <bp@alien8.de>
+    x86/microcode/AMD: Split load_microcode_amd()
+
+Borislav Petkov (AMD) <bp@alien8.de>
+    x86/microcode/AMD: Pay attention to the stepping dynamically
+
+Borislav Petkov <bp@alien8.de>
+    x86/microcode/AMD: Use the family,model,stepping encoded in the patch ID
+
+Borislav Petkov (AMD) <bp@alien8.de>
+    x86/microcode/intel: Set new revision only after a successful update
+
+Borislav Petkov (AMD) <bp@alien8.de>
+    x86/microcode: Rework early revisions reporting
+
+Thomas Gleixner <tglx@linutronix.de>
+    x86/microcode: Prepare for minimal revision check
+
+Thomas Gleixner <tglx@linutronix.de>
+    x86/microcode: Handle "offline" CPUs correctly
+
+Thomas Gleixner <tglx@linutronix.de>
+    x86/apic: Provide apic_force_nmi_on_cpu()
+
+Thomas Gleixner <tglx@linutronix.de>
+    x86/microcode: Protect against instrumentation
+
+Thomas Gleixner <tglx@linutronix.de>
+    x86/microcode: Rendezvous and load in NMI
+
+Thomas Gleixner <tglx@linutronix.de>
+    x86/microcode: Replace the all-in-one rendevous handler
+
+Thomas Gleixner <tglx@linutronix.de>
+    x86/microcode: Provide new control functions
+
+Thomas Gleixner <tglx@linutronix.de>
+    x86/microcode: Add per CPU control field
+
+Thomas Gleixner <tglx@linutronix.de>
+    x86/microcode: Add per CPU result state
+
+Thomas Gleixner <tglx@linutronix.de>
+    x86/microcode: Sanitize __wait_for_cpus()
+
+Thomas Gleixner <tglx@linutronix.de>
+    x86/microcode: Clarify the late load logic
+
+Thomas Gleixner <tglx@linutronix.de>
+    x86/microcode: Handle "nosmt" correctly
+
+Thomas Gleixner <tglx@linutronix.de>
+    x86/microcode: Clean up mc_cpu_down_prep()
+
+Thomas Gleixner <tglx@linutronix.de>
+    x86/microcode: Get rid of the schedule work indirection
+
+Thomas Gleixner <tglx@linutronix.de>
+    x86/microcode: Mop up early loading leftovers
+
+Thomas Gleixner <tglx@linutronix.de>
+    x86/microcode/amd: Use cached microcode for AP load
+
+Thomas Gleixner <tglx@linutronix.de>
+    x86/microcode/amd: Cache builtin/initrd microcode early
+
+Thomas Gleixner <tglx@linutronix.de>
+    x86/microcode/amd: Cache builtin microcode too
+
+Thomas Gleixner <tglx@linutronix.de>
+    x86/microcode/amd: Use correct per CPU ucode_cpu_info
+
+Thomas Gleixner <tglx@linutronix.de>
+    x86/microcode: Remove pointless apply() invocation
+
+Thomas Gleixner <tglx@linutronix.de>
+    x86/microcode/intel: Rework intel_find_matching_signature()
+
+Thomas Gleixner <tglx@linutronix.de>
+    x86/microcode/intel: Reuse intel_cpu_collect_info()
+
+Thomas Gleixner <tglx@linutronix.de>
+    x86/microcode/intel: Rework intel_cpu_collect_info()
+
+Thomas Gleixner <tglx@linutronix.de>
+    x86/microcode/intel: Unify microcode apply() functions
+
+Thomas Gleixner <tglx@linutronix.de>
+    x86/microcode/intel: Switch to kvmalloc()
+
+Thomas Gleixner <tglx@linutronix.de>
+    x86/microcode/intel: Save the microcode only after a successful late-load
+
+Thomas Gleixner <tglx@linutronix.de>
+    x86/microcode/intel: Simplify early loading
+
+Thomas Gleixner <tglx@linutronix.de>
+    x86/microcode/intel: Cleanup code further
+
+Thomas Gleixner <tglx@linutronix.de>
+    x86/microcode/intel: Simplify and rename generic_load_microcode()
+
+Thomas Gleixner <tglx@linutronix.de>
+    x86/microcode/intel: Simplify scan_microcode()
+
+Ashok Raj <ashok.raj@intel.com>
+    x86/microcode/intel: Rip out mixed stepping support for Intel CPUs
+
+Thomas Gleixner <tglx@linutronix.de>
+    x86/microcode/32: Move early loading after paging enable
+
+Lukasz Czechowski <lukasz.czechowski@thaumatec.com>
+    arm64: dts: rockchip: Disable DMA for uart5 on px30-ringneck
+
+Thomas Gleixner <tglx@linutronix.de>
+    intel_idle: Handle older CPUs, which stop the TSC in deeper C states, correctly
+
+Joshua Washington <joshwash@google.com>
+    gve: set xdp redirect target only when it is available
+
+chr[] <chris@rudorff.com>
+    amdgpu/pm/legacy: fix suspend/resume issues
+
+Tomas Glozar <tglozar@redhat.com>
+    rtla/timerlat_top: Set OSNOISE_WORKLOAD for kernel threads
+
+Tomas Glozar <tglozar@redhat.com>
+    rtla/timerlat_hist: Set OSNOISE_WORKLOAD for kernel threads
+
+Tomas Glozar <tglozar@redhat.com>
+    Revert "rtla/timerlat_hist: Set OSNOISE_WORKLOAD for kernel threads"
+
+Tomas Glozar <tglozar@redhat.com>
+    Revert "rtla/timerlat_top: Set OSNOISE_WORKLOAD for kernel threads"
+
+Yong-Xuan Wang <yongxuan.wang@sifive.com>
+    riscv: signal: fix signal frame size
+
+Andreas Schwab <schwab@suse.de>
+    riscv/futex: sign extend compare value in atomic cmpxchg
+
+Stafford Horne <shorne@gmail.com>
+    rseq/selftests: Fix riscv rseq_offset_deref_addv inline asm
+
+Arthur Simchaev <arthur.simchaev@sandisk.com>
+    scsi: ufs: core: bsg: Fix crash when arpmb command fails
+
+Thomas Gleixner <tglx@linutronix.de>
+    sched/core: Prevent rescheduling when interrupts are disabled
+
+Thomas Gleixner <tglx@linutronix.de>
+    rcuref: Plug slowpath race in rcuref_put()
+
+Ard Biesheuvel <ardb@kernel.org>
+    vmlinux.lds: Ensure that const vars with relocations are mapped R/O
+
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
+    mptcp: reset when MPTCP opts are dropped after join
+
+Paolo Abeni <pabeni@redhat.com>
+    mptcp: always handle address removal under msk socket lock
+
+Kaustabh Chakraborty <kauschluss@disroot.org>
+    phy: exynos5-usbdrd: fix MPLL_MULTIPLIER and SSC_REFCLKSEL masks in refclk
+
+BH Hsieh <bhsieh@nvidia.com>
+    phy: tegra: xusb: reset VBUS & ID OVERRIDE
+
+Wei Fang <wei.fang@nxp.com>
+    net: enetc: fix the off-by-one issue in enetc_map_tx_tso_buffs()
+
+Wei Fang <wei.fang@nxp.com>
+    net: enetc: correct the xdp_tx statistics
+
+Wei Fang <wei.fang@nxp.com>
+    net: enetc: update UDP checksum when updating originTimestamp field
+
+Wei Fang <wei.fang@nxp.com>
+    net: enetc: keep track of correct Tx BD count in enetc_map_tx_tso_buffs()
+
+Wei Fang <wei.fang@nxp.com>
+    net: enetc: fix the off-by-one issue in enetc_map_tx_buffs()
+
+Nikita Zhandarovich <n.zhandarovich@fintech.ru>
+    usbnet: gl620a: fix endpoint checking in genelink_bind()
+
+Binbin Zhou <zhoubinbin@loongson.cn>
+    i2c: ls2x: Fix frequency division register access
+
+Tyrone Ting <kfting@nuvoton.com>
+    i2c: npcm: disable interrupt enable bit before devm_request_irq
+
+Roman Li <Roman.Li@amd.com>
+    drm/amd/display: Fix HPD after gpu reset
+
+Tom Chung <chiahsuan.chung@amd.com>
+    drm/amd/display: Disable PSR-SU on eDP panels
+
+Kan Liang <kan.liang@linux.intel.com>
+    perf/core: Fix low freq setting via IOC_PERIOD
+
+Kan Liang <kan.liang@linux.intel.com>
+    perf/x86: Fix low freqency setting issue
+
+Breno Leitao <leitao@debian.org>
+    perf/core: Add RCU read lock protection to perf_iterate_ctx()
+
+Adrien Vergé <adrienverge@gmail.com>
+    ALSA: hda/realtek: Fix microphone regression on ASUS N705UD
+
+Dmitry Panchenko <dmitry@d-systems.ee>
+    ALSA: usb-audio: Re-add sample rate quirk for Pioneer DJM-900NXS2
+
+Nikolay Kuratov <kniv@yandex-team.ru>
+    ftrace: Avoid potential division by zero in function_stat_show()
+
+Steven Rostedt <rostedt@goodmis.org>
+    tracing: Fix bad hist from corrupting named_triggers list
+
+Andrew Jones <ajones@ventanamicro.com>
+    riscv: KVM: Fix SBI TIME error generation
+
+Andrew Jones <ajones@ventanamicro.com>
+    riscv: KVM: Fix SBI IPI error generation
+
+Andrew Jones <ajones@ventanamicro.com>
+    riscv: KVM: Fix hart suspend status check
+
+Yong-Xuan Wang <yongxuan.wang@sifive.com>
+    RISCV: KVM: Introduce mp_state_lock to avoid lock inversion
+
+Chukun Pan <amadeus@jmu.edu.cn>
+    phy: rockchip: naneng-combphy: compatible reset with old DT
+
+Russell Senior <russell@personaltelco.net>
+    x86/CPU: Fix warm boot hang regression on AMD SC1100 SoC systems
+
+Pavel Begunkov <asml.silence@gmail.com>
+    io_uring/net: save msg_control for compat
+
+Tong Tiangen <tongtiangen@huawei.com>
+    uprobes: Reject the shared zeropage in uprobe_write_opcode()
+
+Luo Gengkun <luogengkun@huaweicloud.com>
+    perf/core: Order the PMU list to fix warning about unordered pmu_ctx_list
+
+Meghana Malladi <m-malladi@ti.com>
+    net: ti: icss-iep: Reject perout generation request
+
+Diogo Ivo <diogo.ivo@siemens.com>
+    net: ti: icss-iep: Remove spinlock-based synchronization
+
+Justin Iurman <justin.iurman@uliege.be>
+    net: ipv6: fix dst ref loop on input in rpl lwt
+
+Justin Iurman <justin.iurman@uliege.be>
+    net: ipv6: rpl_iptunnel: mitigate 2-realloc issue
+
+Justin Iurman <justin.iurman@uliege.be>
+    net: ipv6: fix dst ref loop on input in seg6 lwt
+
+Justin Iurman <justin.iurman@uliege.be>
+    net: ipv6: seg6_iptunnel: mitigate 2-realloc issue
+
+Justin Iurman <justin.iurman@uliege.be>
+    include: net: add static inline dst_dev_overhead() to dst.h
+
+Shay Drory <shayd@nvidia.com>
+    net/mlx5: IRQ, Fix null string in debug print
+
+Harshal Chaudhari <hchaudhari@marvell.com>
+    net: mvpp2: cls: Fixed Non IP flow, with vlan tag flow defination.
+
+Mohammad Heib <mheib@redhat.com>
+    net: Clear old fragment checksum value in napi_reuse_skb
+
+Wang Hai <wanghai38@huawei.com>
+    tcp: Defer ts_recent changes until req is owned
+
+Marcin Szycik <marcin.szycik@linux.intel.com>
+    ice: Fix deinitializing VF in error path
+
+Paul Greenwalt <paul.greenwalt@intel.com>
+    ice: add E830 HW VF mailbox message limit support
+
+Paul Greenwalt <paul.greenwalt@intel.com>
+    ice: Add E830 device IDs, MAC type and registers
+
+Takashi Iwai <tiwai@suse.de>
+    ALSA: hda/realtek: Fix wrong mic setup for ASUS VivoBook 15
+
+Stefan Binding <sbinding@opensource.cirrus.com>
+    ALSA: hda/realtek: Add quirks for ASUS ROG 2023 models
+
+Richard Fitzgerald <rf@opensource.cirrus.com>
+    firmware: cs_dsp: Remove async regmap writes
+
+Philo Lu <lulie@linux.alibaba.com>
+    ipvs: Always clear ipvs_property flag in skb_scrub_packet()
+
+Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+    ASoC: es8328: fix route from DAC to output
+
+Sean Anderson <sean.anderson@linux.dev>
+    net: cadence: macb: Synchronize stats calculations
+
+Eric Dumazet <edumazet@google.com>
+    ipvlan: ensure network headers are in skb linear part
+
+Guillaume Nault <gnault@redhat.com>
+    ipvlan: Prepare ipvlan_process_v4_outbound() to future .flowi4_tos conversion.
+
+Guillaume Nault <gnault@redhat.com>
+    ipv4: Convert ip_route_input() to dscp_t.
+
+Guillaume Nault <gnault@redhat.com>
+    ipv4: Convert icmp_route_lookup() to dscp_t.
+
+Ido Schimmel <idosch@nvidia.com>
+    ipvlan: Unmask upper DSCP bits in ipvlan_process_v4_outbound()
+
+Ido Schimmel <idosch@nvidia.com>
+    ipv4: icmp: Unmask upper DSCP bits in icmp_route_lookup()
+
+Ido Schimmel <idosch@nvidia.com>
+    ipv4: icmp: Pass full DS field to ip_route_input()
+
+Peilin He <he.peilin@zte.com.cn>
+    net/ipv4: add tracepoint for icmp_send
+
+Jiri Slaby (SUSE) <jirislaby@kernel.org>
+    net: set the minimum for net_hotdata.netdev_budget_usecs
+
+Ido Schimmel <idosch@nvidia.com>
+    net: loopback: Avoid sending IP packets without an Ethernet header
+
+David Howells <dhowells@redhat.com>
+    afs: Fix the server_list to unuse a displaced server rather than putting it
+
+David Howells <dhowells@redhat.com>
+    afs: Make it possible to find the volumes that are using a server
+
+David Howells <dhowells@redhat.com>
+    rxrpc: rxperf: Fix missing decoding of terminal magic cookie
+
+Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
+    Bluetooth: L2CAP: Fix L2CAP_ECRED_CONN_RSP response
+
+Takashi Iwai <tiwai@suse.de>
+    ALSA: usb-audio: Avoid dropping MIDI events at closing multiple ports
+
+Arnd Bergmann <arnd@arndb.de>
+    sunrpc: suppress warnings for unused procfs functions
+
+Patrisious Haddad <phaddad@nvidia.com>
+    RDMA/mlx5: Fix bind QP error cleanup flow
+
+Ye Bin <yebin10@huawei.com>
+    scsi: core: Clear driver private data when retrying request
+
+Patrisious Haddad <phaddad@nvidia.com>
+    RDMA/mlx5: Fix AH static rate parsing
+
+Or Har-Toov <ohartoov@nvidia.com>
+    IB/core: Add support for XDR link speed
+
+Benjamin Coddington <bcodding@redhat.com>
+    SUNRPC: Handle -ETIMEDOUT return from tlshd
+
+Trond Myklebust <trond.myklebust@hammerspace.com>
+    SUNRPC: Prevent looping due to rpc_signal_task() races
+
+Stephen Brennan <stephen.s.brennan@oracle.com>
+    SUNRPC: convert RPC_TASK_* constants to enum
+
+Vasiliy Kovalev <kovalev@altlinux.org>
+    ovl: fix UAF in ovl_dentry_update_reval by moving dput() in ovl_link_up
+
+Bart Van Assche <bvanassche@acm.org>
+    scsi: ufs: core: Fix ufshcd_is_ufs_dev_busy() and ufshcd_eh_timed_out()
+
+Avri Altman <avri.altman@wdc.com>
+    scsi: ufs: core: Prepare to introduce a new clock_gating lock
+
+Avri Altman <avri.altman@wdc.com>
+    scsi: ufs: core: Introduce ufshcd_has_pending_tasks()
+
+Bean Huo <beanhuo@micron.com>
+    scsi: ufs: core: Add UFS RTC support
+
+Bean Huo <beanhuo@micron.com>
+    scsi: ufs: core: Add ufshcd_is_ufs_dev_busy()
+
+Konstantin Taranov <kotaranov@microsoft.com>
+    RDMA/mana_ib: Allocate PAGE aligned doorbell index
+
+Mark Zhang <markzhang@nvidia.com>
+    IB/mlx5: Set and get correct qp_num for a DCT QP
+
+
+-------------
+
+Diffstat:
+
+ Documentation/admin-guide/kernel-parameters.txt    |   5 +
+ Makefile                                           |   4 +-
+ arch/arm64/boot/dts/rockchip/px30-ringneck.dtsi    |   5 +
+ arch/riscv/include/asm/futex.h                     |   2 +-
+ arch/riscv/include/asm/kvm_host.h                  |   8 +-
+ arch/riscv/kernel/signal.c                         |   6 -
+ arch/riscv/kvm/vcpu.c                              |  48 +-
+ arch/riscv/kvm/vcpu_sbi.c                          |   7 +-
+ arch/riscv/kvm/vcpu_sbi_hsm.c                      |  45 +-
+ arch/riscv/kvm/vcpu_sbi_replace.c                  |  15 +-
+ arch/x86/Kconfig                                   |  26 +-
+ arch/x86/events/core.c                             |   2 +-
+ arch/x86/include/asm/apic.h                        |   5 +-
+ arch/x86/include/asm/cpu.h                         |  20 +-
+ arch/x86/include/asm/microcode.h                   |  18 +-
+ arch/x86/kernel/apic/apic_flat_64.c                |   2 +
+ arch/x86/kernel/apic/ipi.c                         |   8 +
+ arch/x86/kernel/apic/x2apic_cluster.c              |   1 +
+ arch/x86/kernel/apic/x2apic_phys.c                 |   1 +
+ arch/x86/kernel/cpu/common.c                       |  12 -
+ arch/x86/kernel/cpu/cyrix.c                        |   4 +-
+ arch/x86/kernel/cpu/microcode/amd.c                | 648 ++++++++++++------
+ arch/x86/kernel/cpu/microcode/amd_shas.c           | 444 +++++++++++++
+ arch/x86/kernel/cpu/microcode/core.c               | 723 +++++++++++++--------
+ arch/x86/kernel/cpu/microcode/intel.c              | 706 ++++++--------------
+ arch/x86/kernel/cpu/microcode/internal.h           |  49 +-
+ arch/x86/kernel/head32.c                           |   3 +
+ arch/x86/kernel/head_32.S                          |  10 -
+ arch/x86/kernel/nmi.c                              |   9 +-
+ arch/x86/kernel/smpboot.c                          |  12 +-
+ drivers/firmware/cirrus/cs_dsp.c                   |  24 +-
+ .../gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_irq.c  |  14 +
+ .../gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_psr.c  |   3 +-
+ drivers/gpu/drm/amd/pm/legacy-dpm/kv_dpm.c         |  25 +-
+ drivers/gpu/drm/amd/pm/legacy-dpm/legacy_dpm.c     |   8 +-
+ drivers/gpu/drm/amd/pm/legacy-dpm/si_dpm.c         |  26 +-
+ drivers/i2c/busses/i2c-ls2x.c                      |  16 +-
+ drivers/i2c/busses/i2c-npcm7xx.c                   |   7 +
+ drivers/idle/intel_idle.c                          |   4 +
+ drivers/infiniband/core/sysfs.c                    |   4 +
+ drivers/infiniband/core/uverbs_std_types_device.c  |   3 +-
+ drivers/infiniband/core/verbs.c                    |   3 +
+ drivers/infiniband/hw/mana/main.c                  |   2 +-
+ drivers/infiniband/hw/mlx5/ah.c                    |   3 +-
+ drivers/infiniband/hw/mlx5/counters.c              |   8 +-
+ drivers/infiniband/hw/mlx5/qp.c                    |  10 +-
+ drivers/infiniband/hw/mlx5/qp.h                    |   1 +
+ drivers/net/ethernet/cadence/macb.h                |   2 +
+ drivers/net/ethernet/cadence/macb_main.c           |  12 +-
+ drivers/net/ethernet/freescale/enetc/enetc.c       | 100 ++-
+ drivers/net/ethernet/google/gve/gve.h              |  10 +
+ drivers/net/ethernet/google/gve/gve_main.c         |   6 +-
+ drivers/net/ethernet/intel/ice/ice.h               |   1 +
+ drivers/net/ethernet/intel/ice/ice_common.c        |  65 +-
+ drivers/net/ethernet/intel/ice/ice_devids.h        |  10 +-
+ drivers/net/ethernet/intel/ice/ice_ethtool_fdir.c  |  24 +-
+ drivers/net/ethernet/intel/ice/ice_hw_autogen.h    |  55 +-
+ drivers/net/ethernet/intel/ice/ice_lib.c           |   3 +
+ drivers/net/ethernet/intel/ice/ice_main.c          |  37 +-
+ drivers/net/ethernet/intel/ice/ice_sriov.c         |   4 +-
+ drivers/net/ethernet/intel/ice/ice_type.h          |   3 +-
+ drivers/net/ethernet/intel/ice/ice_vf_lib.c        |  34 +-
+ .../net/ethernet/intel/ice/ice_vf_lib_private.h    |   1 +
+ drivers/net/ethernet/intel/ice/ice_vf_mbx.c        |  32 +
+ drivers/net/ethernet/intel/ice/ice_vf_mbx.h        |   9 +
+ drivers/net/ethernet/intel/ice/ice_virtchnl.c      |   8 +-
+ drivers/net/ethernet/intel/ice/ice_virtchnl_fdir.c |  29 +-
+ drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.c     |   2 +-
+ drivers/net/ethernet/mellanox/mlx5/core/pci_irq.c  |   2 +-
+ drivers/net/ethernet/ti/icssg/icss_iep.c           |  35 +-
+ drivers/net/ipvlan/ipvlan_core.c                   |  24 +-
+ drivers/net/loopback.c                             |  14 +
+ drivers/net/usb/gl620a.c                           |   4 +-
+ drivers/phy/rockchip/phy-rockchip-naneng-combphy.c |   5 +-
+ drivers/phy/samsung/phy-exynos5-usbdrd.c           |  12 +-
+ drivers/phy/tegra/xusb-tegra186.c                  |  11 +
+ drivers/platform/x86/intel/ifs/load.c              |   8 +-
+ drivers/scsi/scsi_lib.c                            |  14 +-
+ drivers/ufs/core/ufs_bsg.c                         |   6 +-
+ drivers/ufs/core/ufshcd.c                          | 112 +++-
+ fs/afs/cell.c                                      |   1 +
+ fs/afs/internal.h                                  |  23 +-
+ fs/afs/server.c                                    |   1 +
+ fs/afs/server_list.c                               | 114 +++-
+ fs/afs/vl_alias.c                                  |   2 +-
+ fs/afs/volume.c                                    |  36 +-
+ fs/overlayfs/copy_up.c                             |   2 +-
+ include/asm-generic/vmlinux.lds.h                  |   2 +-
+ include/linux/rcuref.h                             |   9 +-
+ include/linux/sunrpc/sched.h                       |  17 +-
+ include/net/dst.h                                  |   9 +
+ include/net/ip.h                                   |   5 +
+ include/net/route.h                                |   5 +-
+ include/rdma/ib_verbs.h                            |   2 +
+ include/trace/events/icmp.h                        |  67 ++
+ include/trace/events/sunrpc.h                      |   3 +-
+ include/uapi/rdma/ib_user_ioctl_verbs.h            |   3 +-
+ include/ufs/ufs.h                                  |  13 +
+ include/ufs/ufshcd.h                               |   4 +
+ io_uring/net.c                                     |   4 +-
+ kernel/events/core.c                               |  31 +-
+ kernel/events/uprobes.c                            |   5 +
+ kernel/sched/core.c                                |   2 +-
+ kernel/trace/ftrace.c                              |  27 +-
+ kernel/trace/trace_events_hist.c                   |  34 +-
+ lib/rcuref.c                                       |   5 +-
+ net/bluetooth/l2cap_core.c                         |   9 +-
+ net/bridge/br_netfilter_hooks.c                    |   8 +-
+ net/core/gro.c                                     |   1 +
+ net/core/skbuff.c                                  |   2 +-
+ net/core/sysctl_net_core.c                         |   3 +-
+ net/ipv4/icmp.c                                    |  24 +-
+ net/ipv4/ip_options.c                              |   3 +-
+ net/ipv4/tcp_minisocks.c                           |  10 +-
+ net/ipv6/ip6_tunnel.c                              |   4 +-
+ net/ipv6/rpl_iptunnel.c                            |  58 +-
+ net/ipv6/seg6_iptunnel.c                           |  97 ++-
+ net/mptcp/pm_netlink.c                             |   5 -
+ net/mptcp/subflow.c                                |  15 +-
+ net/rxrpc/rxperf.c                                 |  12 +
+ net/sunrpc/cache.c                                 |  10 +-
+ net/sunrpc/sched.c                                 |   2 -
+ net/sunrpc/xprtsock.c                              |  10 +-
+ sound/pci/hda/patch_realtek.c                      |  32 +-
+ sound/soc/codecs/es8328.c                          |  15 +-
+ sound/usb/midi.c                                   |   2 +-
+ sound/usb/quirks.c                                 |   1 +
+ tools/testing/selftests/rseq/rseq-riscv-bits.h     |   6 +-
+ tools/testing/selftests/rseq/rseq-riscv.h          |   2 +-
+ tools/tracing/rtla/src/timerlat_hist.c             |   2 +-
+ tools/tracing/rtla/src/timerlat_top.c              |   2 +-
+ 131 files changed, 2896 insertions(+), 1568 deletions(-)
 
 
