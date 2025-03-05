@@ -1,128 +1,75 @@
-Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FA6317C21C;
-	Wed,  5 Mar 2025 02:32:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 94F4915DBA3;
+	Wed,  5 Mar 2025 02:32:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741141943; cv=none; b=UlAmhOekuLBAZ3rxrgmTgZR2c+5QYvu7K/3YYENyE56z6Nh5vknsyPdEtgEROTuUziZPGQ8VeNIQCBPcYFiwJ5ItphXEL0AFIiAlhnYm+Al4TN8PlvBUufyr669qcZQK7GXgOnWwwIuB02ihlH7EwYpP7ABL+InDH02H0l7AlNU=
+	t=1741141950; cv=none; b=dDIWXl+vmKnjROzAfMBgOREc2mVXnuyNwUtXph4Mfi0oeODCobCb3p55mAyGKRzp6rftZK+PoDY+NxG+S81Ja8lDbHrtVfH9IUHwFIfi+Ox/WV7A6y92x3Y3fU1M25lU8n1UHhubQeOg1Z6W0+479VWkajCMdNmB7rI9HUjjYNc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741141943; c=relaxed/simple;
-	bh=gtY9+UCrKfBAYr3VbGghd4UuT5UYq3r4nfVQ+LcpLg4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WnUpQGyAnE0ZdIJg+OiJJTwJ+EJKDx2Pnh0gHzuQvq/IF0gulTaGs3kOv4ha2ZLdPBQPxf0aXXohHG61BD2b+Mpm/mgjLeXw5Z14+in4OpqWdwo74ScNPq3NSPjhoHeNHybB3UdUeOoUbpwV4GT3cmWr/Z3gzegHa9XkU65has8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=LlkwqTaV; arc=none smtp.client-ip=46.235.229.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
+	s=arc-20240116; t=1741141950; c=relaxed/simple;
+	bh=VFHlaOkps4gELsNG93bMey9hkOJsRA3mqrGKinS7NNw=;
+	h=Date:From:To:Cc:Subject:Content-Type:MIME-Version:Message-ID; b=Uzpo4LuSLPDKDfOftsRCA9qDNwdb/IlFm33/aIPIk9HtWkIIzenyC3XFYylSU7LgwDc8DoHvXK+1o+ZTuRK4PrI5tvbxvzsdKKFdC07phWzjSs6dZ8Fdf+7qVhKnky6LaeelUmERkwERDQ6AhrixPi1/+mgBa0Fb3D/5L0jLitY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=fail (1024-bit key) header.d=163.com header.i=@163.com header.b=oTDXhF0a reason="signature verification failed"; arc=none smtp.client-ip=220.197.31.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="LlkwqTaV"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
-	; s=bytemarkmx; h=MIME-Version:Message-ID:Date:Subject:From:Content-Type:From
-	:Subject; bh=XrjNBrn8ne791SZzERKUz4fcgRlN8A9ah5iqdRUk17Y=; b=LlkwqTaVMANh09bY
-	tSioio6jmnt49G9pGnoJHNA0MlSxvXDKqlt8IQMJXz9Z4kuw0flxk9CiTKGrCQ7tiOwQvKNLhkUA2
-	t7CT4kpAYQrY+goVI+8AEoJ32+gf9jM0iOnDAg75Xyq8+LM5V3KDq5ihG/63OR11Pvqemm6tgAVos
-	Esu8ku3J5tz6SilYkKnr+fvLpEeOstyD9haWiPNlUpCo064J7ewjpZAtwntPn1LUAuYeXbfpFGs8W
-	cP5ADL+72ib+AobPj2Utmt6TY6F+N+3WJu4WYlw3ubJVAKIsLiUFsIc1vy+VkyDq+itW2Q8VHUIhz
-	LLvkQ/Niaf01PKJxCg==;
-Received: from localhost ([127.0.0.1] helo=dalek.home.treblig.org)
-	by mx.treblig.org with esmtp (Exim 4.96)
-	(envelope-from <linux@treblig.org>)
-	id 1tpeXl-002ic7-0t;
-	Wed, 05 Mar 2025 02:31:33 +0000
-From: linux@treblig.org
-To: irogers@google.com,
-	mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	adrian.hunter@intel.com,
-	kan.liang@linux.intel.com,
-	namhyung@kernel.org
-Cc: peterz@infradead.org,
-	mingo@redhat.com,
-	acme@kernel.org,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	"Dr. David Alan Gilbert" <linux@treblig.org>
-Subject: [PATCH 5/6] perf util: Remove unused perf_pmus__default_pmu_name
-Date: Wed,  5 Mar 2025 02:31:19 +0000
-Message-ID: <20250305023120.155420-6-linux@treblig.org>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250305023120.155420-1-linux@treblig.org>
-References: <20250305023120.155420-1-linux@treblig.org>
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="oTDXhF0a"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Date:From:Subject:Content-Type:MIME-Version:
+	Message-ID; bh=UOhnFF01l7HOjYg5x6uMcW+B9fbrcWjnbUnMIBSb6g4=; b=o
+	TDXhF0ao8rGr8j8jqZSvZyPwCn4bRtMbMUqolB3b0d33NLVtg8Do+zE4hoqyKSPc
+	zOJuUqn0UDL/56pNMjEk7XWHy1TvHLbfex2UCxGVCdwMmtrpxuop+RhsFVrPw0Fo
+	ipgMP4wcY2oyQyyBZFmm/QVjGPIMLLCZxeuxv5CPHg=
+Received: from andyshrk$163.com ( [58.22.7.114] ) by
+ ajax-webmail-wmsvr-40-118 (Coremail) ; Wed, 5 Mar 2025 10:30:55 +0800 (CST)
+Date: Wed, 5 Mar 2025 10:30:55 +0800 (CST)
+From: "Andy Yan" <andyshrk@163.com>
+To: "Piotr Oniszczuk" <piotr.oniszczuk@gmail.com>
+Cc: heiko@sntech.de, neil.armstrong@linaro.org,
+	sebastian.reichel@collabora.com, devicetree@vger.kernel.org,
+	hjc@rock-chips.com, mripard@kernel.org, linux-kernel@vger.kernel.org,
+	linux-rockchip@lists.infradead.org, yubing.zhang@rock-chips.com,
+	dri-devel@lists.freedesktop.org,
+	"Andy Yan" <andy.yan@rock-chips.com>, krzk+dt@kernel.org,
+	robh@kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re:Re: [PATCH 0/6] Add support for RK3588 DisplayPort Controller
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20240801(9da12a7b)
+ Copyright (c) 2002-2025 www.mailtech.cn 163com
+X-NTES-SC: AL_Qu2fA/2fvkAu4yiaZukfmkcVgOw9UcO5v/Qk3oZXOJF8jDDp2ycwUUJSDXLaweO0FQ+OmgmGXTtC9/R7f4VTVaQNuZe6Rui3nVzOCdmFQHxStA==
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Message-ID: <25401bfa.291d.19564244e54.Coremail.andyshrk@163.com>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID:digvCgD3Xw5ft8dn2jd2AA--.4215W
+X-CM-SenderInfo: 5dqg52xkunqiywtou0bp/xtbBkAMHXmfHsp5IAwACsP
+X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
 
-From: "Dr. David Alan Gilbert" <linux@treblig.org>
-
-perf_pmus__default_pmu_name() last use was removed by 2023's
-commit e3edd6cf6399 ("perf pmu-events: Reduce processed events by passing
-PMU")
-
-Remove it.
-
-Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
----
- tools/perf/util/pmus.c | 29 -----------------------------
- tools/perf/util/pmus.h |  1 -
- 2 files changed, 30 deletions(-)
-
-diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
-index dd7c2ffdab38..9b5a63ecb249 100644
---- a/tools/perf/util/pmus.c
-+++ b/tools/perf/util/pmus.c
-@@ -714,35 +714,6 @@ bool perf_pmus__supports_extended_type(void)
- 	return perf_pmus__do_support_extended_type;
- }
- 
--char *perf_pmus__default_pmu_name(void)
--{
--	int fd;
--	struct io_dir dir;
--	struct io_dirent64 *dent;
--	char *result = NULL;
--
--	if (!list_empty(&core_pmus))
--		return strdup(list_first_entry(&core_pmus, struct perf_pmu, list)->name);
--
--	fd = perf_pmu__event_source_devices_fd();
--	if (fd < 0)
--		return strdup("cpu");
--
--	io_dir__init(&dir, fd);
--
--	while ((dent = io_dir__readdir(&dir)) != NULL) {
--		if (!strcmp(dent->d_name, ".") || !strcmp(dent->d_name, ".."))
--			continue;
--		if (is_pmu_core(dent->d_name)) {
--			result = strdup(dent->d_name);
--			break;
--		}
--	}
--
--	close(fd);
--	return result ?: strdup("cpu");
--}
--
- struct perf_pmu *evsel__find_pmu(const struct evsel *evsel)
- {
- 	struct perf_pmu *pmu = evsel->pmu;
-diff --git a/tools/perf/util/pmus.h b/tools/perf/util/pmus.h
-index a0cb0eb2ff97..8def20e615ad 100644
---- a/tools/perf/util/pmus.h
-+++ b/tools/perf/util/pmus.h
-@@ -27,7 +27,6 @@ void perf_pmus__print_raw_pmu_events(const struct print_callbacks *print_cb, voi
- bool perf_pmus__have_event(const char *pname, const char *name);
- int perf_pmus__num_core_pmus(void);
- bool perf_pmus__supports_extended_type(void);
--char *perf_pmus__default_pmu_name(void);
- 
- struct perf_pmu *perf_pmus__add_test_pmu(int test_sysfs_dirfd, const char *name);
- struct perf_pmu *perf_pmus__add_test_hwmon_pmu(int hwmon_dir,
--- 
-2.48.1
-
+CkhpIFBpb3RyLAoK5ZyoIDIwMjUtMDMtMDQgMjE6MTI6NTDvvIwiUGlvdHIgT25pc3pjenVrIiA8
+cGlvdHIub25pc3pjenVrQGdtYWlsLmNvbT4g5YaZ6YGT77yaCj4KPgo+PiBXaWFkb21vxZvEhyBu
+YXBpc2FuYSBwcnpleiBBbmR5IFlhbiA8YW5keXNocmtAMTYzLmNvbT4gdyBkbml1IDEgbWFyIDIw
+MjUsIG8gZ29kei4gMTM6MjQ6Cj4+IAo+PiAKPj4gSGkgUGlvdHIsCj4+IAo+Pj4gCj4+PiBpcyBp
+dCB3b3J0aCB0byBwbGF5IHdpdGggdGhpcyBvciBpdCBpcyB0b28gZWFybHk/Cj4+IAo+PiBJIHRo
+aW5rIHlvdSBjb3VsZCBnaXZlIGl0IGEgdHJ5IGlmIGl0IHVzaW5nIHRoZSBTdGFuZGFyZCBEUO+8
+iG5vbi1BTFQgbW9kZe+8iSBwb3J0IGZvciBvdXRwdXQuIAo+PiBTaW5jZSBJIGRvbid0IGN1cnJl
+bnRseSBoYXZlIGEgZGV2ZWxvcG1lbnQgYm9hcmQgd2l0aCBEUDEgb3V0cHV0IGF2YWlsYWJsZSwg
+SSBoYXZlbid0IGJlZW4KPj4gYWJsZSB0byB0ZXN0IGl0IHlldC4gQXMgZm9yIHRoZSBUeXBlLUMg
+QWx0ZXJuYXRlIE1vZGUgb3V0cHV0LCBzb21lIHBhdGNoZXMgYXJlIHN0aWxsIHJlcXVpcmVkIAo+
+PiBJJ2xsICBzZW5kIGl0IHdpdGggVjIgdG9tb3Jyb3cgb3IgbmV4dCB3ZWVrLgo+PiBGZWVsIGZy
+ZWUgdG8gbGV0IG1lIGtub3cgaWYgSWYgeW91IGVuY291bnRlciBhbnkgaXNzdWVz44CCCj4+IAo+
+Cj5BbmR5LAo+SSBhZGRlZCBkcDEgZW5hYmxlbWVudCBpbiByb2NrNSBpdHggbGlrZSB0aGlzOiBo
+dHRwczovL2dpc3QuZ2l0aHViLmNvbS93YXJwbWUvYmRkZjc1OTEyMTkzZjU3NzI0YzQ5MjE2ZDVk
+ODVkNGEKPlVuZm9ydHVuYXRlbHkgaXQgbm90IHdvcmtzLgo+Rm9yIC9zeXMva2VybmVsL2RlYnVn
+L2RyaS8wL3N0YXRlIC0gcGxzIHNlZSBhYm92ZSBsaW5r4oCmCj5J4oCZbSBub3Qgc3VyZTogZG8g
+aSBtaXNzZWQgc29tZXRoaW5nIGluIGR0IG9yIHJhdGhlciBpc3N1ZSBpc3N1ZSAgaXMgaW4gZHAg
+Y29kZS4uLgoKSSBvbmx5IHNlZSB0aGUgSERNSSBjb25uZWN0b3IgZnJvbSB5b3VyIGRyaS9zdGF0
+ZSA7IHNvIGl0IGFwcGVhcnMgdGhlIERQIGRyaXZlciBoYXNuJ3QgYmVlbiBzdWNjZXNzZnVsbHkK
+aW5pdGlhbGl6ZWTvvIhJIHRoaW5rIGtlcm5lbCBkbWVzZyBjYW4gdGVsbCB0aGF077yJLiAKSGF2
+ZSB5b3UgZW5hYmxlZCBDT05GSUdfUk9DS0NISVBfRFdfRFAgPyBUaGlzIGlzIG5lZWRlZC4KCgo+
+Cj5GWUk6IHNjaGVtYXRpYzogaHR0cHM6Ly9kbC5yYWR4YS5jb20vcm9jazUvNWl0eC92MTExMC9y
+YWR4YV9yb2NrXzVpdHhfdjExMTBfc2NoZW1hdGljLnBkZgo+Cj4KPgo=
