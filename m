@@ -1,172 +1,164 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4648318A6B5;
-	Wed,  5 Mar 2025 16:25:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F337518CBEC;
+	Wed,  5 Mar 2025 16:26:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741191926; cv=none; b=lsC5+5Cs9BSqAVf6/DRYw2hIvIdy44Wl6p3ZXuh++HaGFaeTPBG4JOjYp6pn28DoasHCIbJww0OdSrAloMBPmFjMdJm3aCWLEuYaNmA3Fph2cnMyGQ/gVo+RCg5K3ki8BGHDuHywN2FWqWt5/NO4nQQXxL8etTtEn9USCW+3PS8=
+	t=1741192016; cv=none; b=X8KAHrKhZCCu8QmbL5XEHj7giGmIW64MO6CjBjQD+uFKKwRq/YqnH1MiYNxx/EAoOlxRCuH8Z2UnQObcMMbDWw1baICB14sdvmdtdYKTssJC2cfJri9QpyosTV2vAoKcfm0xdARsRdN5pxTzBTWzvxyZP+R9uEfRuFlLYpATZPE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741191926; c=relaxed/simple;
-	bh=K+K6DmUC+Wxvngt/uU7W1IItHbJf0lWSGmSE11WgMBc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HKprgePh14EbWjMV2x8CGcz09i90dqUSI+qE2NtBKiQG0oSUDpX2bmOf6uecehUrVaaiupQfbJB9vPkOqJFIXaw6mNxZCiYkhiItsGP1LPcNwXMa6vHzdEX5rMP+AOrQyqqqYZ1fSUwKNVrdkPS/yKC7nVVzax85OtS3TmeBSM0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D5D60FEC;
-	Wed,  5 Mar 2025 08:25:36 -0800 (PST)
-Received: from [10.57.67.16] (unknown [10.57.67.16])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1FB763F5A1;
-	Wed,  5 Mar 2025 08:25:18 -0800 (PST)
-Message-ID: <ea9bb982-cf31-4079-8fea-dc39e91a975b@arm.com>
-Date: Wed, 5 Mar 2025 16:25:17 +0000
+	s=arc-20240116; t=1741192016; c=relaxed/simple;
+	bh=P7WBpNfMWlkeZYLPtMXBm6r4j5jCxaC3zCPq/3d6pBI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Vg0eQIxPOQwdnAmEY3rS4bv6RyeQ5QJ81MpqHCydD0Vr4vPMnV2mFNz0Fa9MwOVcG0w9kcej5q/bxEtHeFzXW72FsgiUFHXeguRXsU0YVeOxLxqDo0pJc1HhWEtbjqjcbRoZoM9uDuh/InJk1fkrkkqwGJM4H59rJvWDTklegIE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o8cpBsyK; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o8cpBsyK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8094C4CED1;
+	Wed,  5 Mar 2025 16:26:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741192015;
+	bh=P7WBpNfMWlkeZYLPtMXBm6r4j5jCxaC3zCPq/3d6pBI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=o8cpBsyKq0KWzty8WIz0ZECACHDD0hJZNy6ivB3XuBrSfrbv7XRJX5DnqvxpF/QVM
+	 9c9KRqhoO9nnx307sdv+2o4gXrBtSGi2ccKSt2P10446LpEyCEvX9Ag2DWNYO9+Bke
+	 +ZkriwCOfQ9Iboj8hd1ppr4i1KyZ71CtE4Ry4Nypg2TTPe/wsILjTj3wu1LpTUtNz9
+	 d/MZiFmzSbO1Ybq9Q/ScRcx4G4s0bcsGL4w49b0qAjgxFkDo3XILbC/4PNrG0knFUJ
+	 XOSEb3zMX8M3JrMphwJK6kVJEBKq+9n/2z59Z/Wve4e1YaKuSlHB884AWDCZ1I9a6k
+	 0y/EzFzqvXgvA==
+Date: Wed, 5 Mar 2025 16:26:50 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Prabhakar <prabhakar.csengg@gmail.com>
+Cc: Philipp Zabel <p.zabel@pengutronix.de>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Magnus Damm <magnus.damm@gmail.com>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+	Biju Das <biju.das.jz@bp.renesas.com>,
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: reset: Document RZ/V2H(P) USB2PHY
+ Control
+Message-ID: <20250305-cesspool-headlock-4d28a2a1333e@spud>
+References: <20250305123915.341589-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20250305123915.341589-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 09/45] kvm: arm64: Expose debug HW register numbers for
- Realm
-To: Gavin Shan <gshan@redhat.com>, kvm@vger.kernel.org, kvmarm@lists.linux.dev
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>,
- Catalin Marinas <catalin.marinas@arm.com>, Marc Zyngier <maz@kernel.org>,
- Will Deacon <will@kernel.org>, James Morse <james.morse@arm.com>,
- Oliver Upton <oliver.upton@linux.dev>, Zenghui Yu <yuzenghui@huawei.com>,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- Joey Gouly <joey.gouly@arm.com>, Alexandru Elisei
- <alexandru.elisei@arm.com>, Christoffer Dall <christoffer.dall@arm.com>,
- Fuad Tabba <tabba@google.com>, linux-coco@lists.linux.dev,
- Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>,
- Shanker Donthineni <sdonthineni@nvidia.com>, Alper Gun
- <alpergun@google.com>, "Aneesh Kumar K . V" <aneesh.kumar@kernel.org>
-References: <20250213161426.102987-1-steven.price@arm.com>
- <20250213161426.102987-10-steven.price@arm.com>
- <cec600f2-2ddc-4c71-9bab-0a0403132b43@redhat.com>
-From: Steven Price <steven.price@arm.com>
-Content-Language: en-GB
-In-Reply-To: <cec600f2-2ddc-4c71-9bab-0a0403132b43@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="NLNEO0YrE4Ah9DUx"
+Content-Disposition: inline
+In-Reply-To: <20250305123915.341589-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-Hi Gavin,
 
-On 03/03/2025 04:48, Gavin Shan wrote:
-> On 2/14/25 2:13 AM, Steven Price wrote:
->> From: Suzuki K Poulose <suzuki.poulose@arm.com>
->>
->> Expose VM specific Debug HW register numbers.
+--NLNEO0YrE4Ah9DUx
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Looking at this now, this patch description is garbage. Probably the
-patch has changed over time - so I suspect it's my fault not Suzuki's.
-We're not exposing anything new here. This is purely about telling the
-VMM that a realm cannot (currently) be debugged. Something like the
-below would be more accurate:
+On Wed, Mar 05, 2025 at 12:39:13PM +0000, Prabhakar wrote:
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>=20
+> Add device tree binding document for the Renesas RZ/V2H(P) USB2PHY Control
+> Device. It mainly controls reset and power down of the USB2.0 PHY (for
+> both host and function).
+>=20
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> ---
+>  .../reset/renesas,rzv2h-usb2phy-ctrl.yaml     | 56 +++++++++++++++++++
+>  1 file changed, 56 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/reset/renesas,rzv2h=
+-usb2phy-ctrl.yaml
+>=20
+> diff --git a/Documentation/devicetree/bindings/reset/renesas,rzv2h-usb2ph=
+y-ctrl.yaml b/Documentation/devicetree/bindings/reset/renesas,rzv2h-usb2phy=
+-ctrl.yaml
+> new file mode 100644
+> index 000000000000..ed156a1d3eb3
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/reset/renesas,rzv2h-usb2phy-ctrl.=
+yaml
+> @@ -0,0 +1,56 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/reset/renesas,rzv2h-usb2phy-ctrl.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Renesas RZ/V2H(P) USB2PHY Control
+> +
+> +maintainers:
+> +  - Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> +
+> +description:
+> +  The RZ/V2H(P) USB2PHY Control mainly controls reset and power down of =
+the
+> +  USB2.0 PHY.
+> +
+> +properties:
+> +  compatible:
+> +    const: renesas,r9a09g057-usb2phy-ctrl  # RZ/V2H(P)
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  resets:
+> +    maxItems: 1
+> +
+> +  power-domains:
+> +    maxItems: 1
+> +
+> +  '#reset-cells':
+> +    const: 0
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +  - resets
+> +  - power-domains
+> +  - '#reset-cells'
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/renesas,r9a09g057-cpg.h>
+> +
+> +    usbphy-ctrl@15830000 {
 
-"""
-kvm: arm64: Don't expose debug capabilities for realm guests
+How come your nodename isn't "reset-controller"?
+Otherwise,
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
 
-RMM v1.0 provides no mechanism for the host to perform debug operations
-on the guest. So don't expose KVM_CAP_SET_GUEST_DEBUG and report 0
-breakpoints and 0 watch points.
-"""
+> +        compatible =3D "renesas,r9a09g057-usb2phy-ctrl";
+> +        reg =3D <0x15830000 0x10000>;
+> +        clocks =3D <&cpg CPG_MOD 0xb6>;
+> +        resets =3D <&cpg 0xaf>;
+> +        power-domains =3D <&cpg>;
+> +        #reset-cells =3D <0>;
+> +    };
+> --=20
+> 2.43.0
+>=20
 
->> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
->> Signed-off-by: Steven Price <steven.price@arm.com>
->> ---
->>   arch/arm64/kvm/arm.c | 24 +++++++++++++++++++++---
->>   1 file changed, 21 insertions(+), 3 deletions(-)
->>
-> 
-> Documentation/virt/kvm/api.rst needs to be updated accordingly.
+--NLNEO0YrE4Ah9DUx
+Content-Type: application/pgp-signature; name="signature.asc"
 
-I don't think (with the above clarification) there's anything to update
-in the API documentation. There's nothing new being added, just
-capabilities being hidden where the functionality isn't available.
+-----BEGIN PGP SIGNATURE-----
 
-And eventually we hope to add support for this (in a later RMM spec) - I
-don't yet know exactly what form this will take, but I hope to keep the
-interfaces as close as possible to what we already have so that existing
-tooling can be used.
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZ8h7SgAKCRB4tDGHoIJi
+0pjxAQCCM+leBdMKpufCfk6z+36Rw9aGaaFu6WHxaQTUt/L7pgEA7gE3pIUyynXQ
+pzmBA0RbkLKXinQRSP/AMvk6kDFlRQg=
+=bDXW
+-----END PGP SIGNATURE-----
 
-Thanks,
-Steve
-
->> diff --git a/arch/arm64/kvm/arm.c b/arch/arm64/kvm/arm.c
->> index b8fa82be251c..df6eb5e9ca96 100644
->> --- a/arch/arm64/kvm/arm.c
->> +++ b/arch/arm64/kvm/arm.c
->> @@ -78,6 +78,22 @@ bool is_kvm_arm_initialised(void)
->>       return kvm_arm_initialised;
->>   }
->>   +static u32 kvm_arm_get_num_brps(struct kvm *kvm)
->> +{
->> +    if (!kvm_is_realm(kvm))
->> +        return get_num_brps();
->> +    /* Realm guest is not debuggable. */
->> +    return 0;
->> +}
->> +
->> +static u32 kvm_arm_get_num_wrps(struct kvm *kvm)
->> +{
->> +    if (!kvm_is_realm(kvm))
->> +        return get_num_wrps();
->> +    /* Realm guest is not debuggable. */
->> +    return 0;
->> +}
->> +
-> 
-> The above two comments "Realm guest is not debuggable." can be dropped
-> since
-> the code is self-explanatory, and those two functions are unnecessary to be
-> kept in that way, for example:
-> 
->     case KVM_CAP_GUEST_DEBUG_HW_BPS:
->         return kvm_is_realm(kvm) ? 0 : get_num_brps();
->     case KVM_CAP_GUEST_DEBUG_HW_WRPS:
->         return kvm_is_realm(kvm) ? 0 : get_num_wrps();
-> 
-> 
->>   int kvm_arch_vcpu_should_kick(struct kvm_vcpu *vcpu)
->>   {
->>       return kvm_vcpu_exiting_guest_mode(vcpu) == IN_GUEST_MODE;
->> @@ -323,7 +339,6 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm,
->> long ext)
->>       case KVM_CAP_ARM_IRQ_LINE_LAYOUT_2:
->>       case KVM_CAP_ARM_NISV_TO_USER:
->>       case KVM_CAP_ARM_INJECT_EXT_DABT:
->> -    case KVM_CAP_SET_GUEST_DEBUG:
->>       case KVM_CAP_VCPU_ATTRIBUTES:
->>       case KVM_CAP_PTP_KVM:
->>       case KVM_CAP_ARM_SYSTEM_SUSPEND:
->> @@ -331,6 +346,9 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm,
->> long ext)
->>       case KVM_CAP_COUNTER_OFFSET:
->>           r = 1;
->>           break;
->> +    case KVM_CAP_SET_GUEST_DEBUG:
->> +        r = !kvm_is_realm(kvm);
->> +        break;
->>       case KVM_CAP_SET_GUEST_DEBUG2:
->>           return KVM_GUESTDBG_VALID_MASK;
->>       case KVM_CAP_ARM_SET_DEVICE_ADDR:
->> @@ -376,10 +394,10 @@ int kvm_vm_ioctl_check_extension(struct kvm
->> *kvm, long ext)
->>           r = cpus_have_final_cap(ARM64_HAS_32BIT_EL1);
->>           break;
->>       case KVM_CAP_GUEST_DEBUG_HW_BPS:
->> -        r = get_num_brps();
->> +        r = kvm_arm_get_num_brps(kvm);
->>           break;
->>       case KVM_CAP_GUEST_DEBUG_HW_WPS:
->> -        r = get_num_wrps();
->> +        r = kvm_arm_get_num_wrps(kvm);
->>           break;
->>       case KVM_CAP_ARM_PMU_V3:
->>           r = kvm_arm_support_pmu_v3();
-> 
-> Thanks,
-> Gavin
-> 
-
+--NLNEO0YrE4Ah9DUx--
