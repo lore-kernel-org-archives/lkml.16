@@ -1,324 +1,126 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3DDE1A76AC;
-	Wed,  5 Mar 2025 16:46:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3156E1A5BBF;
+	Wed,  5 Mar 2025 16:46:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741193170; cv=none; b=fYrCZeq0WApleAEqDhf7Sr26TVob+AC2RtV1tXU2PDXevcbfRvE90xcwu+JcaJu0PS9AdtfEKGQ6Ubalil1VM9mZIeskBGp24jtuVLBbKqMH3RrVjTc5E4/vt/z4R6E/n3HHB5Y9I9wIQ1oTV/dOiy+OzYawyyUGaOCGD3hED6Y=
+	t=1741193190; cv=none; b=sKO1ptEoDUIgnCXIFOBAAyM09377+7zhJxRqoTkfV7jeqPrzxsTggTzYmzOmMMUAsKyPy+rRhjHg2mEY67DDIH7cjG5Wi7qJPMuQDNbncMxl1VknK43gWngYDGB6K4EHsXEQ8X/tKS1G/Ns1L+y0743h5f85/UD8Aw4X3UdiIx0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741193170; c=relaxed/simple;
-	bh=+pX1gMgFVhiYDpDOaO5vdjapYrXDwiJ96vHZL+mGq4I=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=YOasamMh78KnBIxR0nze22x2vMEojLsNkzNK6958h9umDCJB7W/eKtM1a17YOLEFyEamMAYdJ1tNQgdjSI7YKtCXZOIR3FnS5+jxnp+fMvxNRi87yRtVvydmTH8P2OSz3iisi2NjG3DMBB/nlVDY02hUg7dLJgQAVm3CSQh6gLU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ADFE6C4CED1;
-	Wed,  5 Mar 2025 16:46:09 +0000 (UTC)
-Received: from rostedt by gandalf with local (Exim 4.98)
-	(envelope-from <rostedt@goodmis.org>)
-	id 1tprsm-0000000D0wT-3x9P;
-	Wed, 05 Mar 2025 11:46:08 -0500
-Message-ID: <20250305164608.792722274@goodmis.org>
-User-Agent: quilt/0.68
-Date: Wed, 05 Mar 2025 11:45:43 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH v4 4/8] tracing: Have persistent trace instances save KASLR offset
-References: <20250305164539.379008535@goodmis.org>
+	s=arc-20240116; t=1741193190; c=relaxed/simple;
+	bh=5R+bfCWSs0CHr+4SSHK1pIvtQQhw4GPWfj0W69fAkXs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rLVDeivjKpEyMyDGcQ9LnqvfxmbpfSYDMWLb/3d+0OoPROZBwJCF5WXQNGmKKJoSjTavQJWhEWNoBZlzaOZ8yH8j7TunPMyncA4V3f82JtVIFvwRutKvneqRcTecX3xTYgXdEF5vvOzk6UgRak32U1+rIxjjPQ3e/JvGOMI8AJ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tjjbyQHS; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tjjbyQHS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80768C4CED1;
+	Wed,  5 Mar 2025 16:46:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741193189;
+	bh=5R+bfCWSs0CHr+4SSHK1pIvtQQhw4GPWfj0W69fAkXs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=tjjbyQHSEB3yA22fSpVSJRaEeGXTbXrmkP5/dCpYJnECMFDRectCzrJEh7nPQgMbJ
+	 /QWKDpAXRo8VKVQvNvwhypmWNoyb5v8Z2WgolFKvD6ULWtEeSOIyrAYb79XorXJtGk
+	 XiOMotXGo5WZO9WZzcA8S8c7D3gbgMFvV2ej1DJW1FF3KOCuld8iLldC1Wrch0M2Vf
+	 kRnb2p4pNr3WYUqbmg/ZmWHmRsGmwUnZmEOiQy7YSAPTuJgemH4vXPXvjfdeB+Eijl
+	 UcNJdISBztpd9R7sw8tuXb6GGIRlYIaOcxtQ/gKvFwn8xqzK/C+DxsvN8R9d4+ps/r
+	 5Z9gQFbpix4gw==
+Date: Wed, 5 Mar 2025 10:46:27 -0600
+From: Rob Herring <robh@kernel.org>
+To: Jjian Zhou <jjian.zhou@mediatek.com>
+Cc: Jassi Brar <jassisinghbrar@gmail.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org,
+	Project_Global_Chrome_Upstream_Group@mediatek.com,
+	Jason-ch Chen <jason-ch.chen@mediatek.com>
+Subject: Re: [PATCH RFC 3/3] dt-bindings: mailbox: mtk,vcp-mbox: add mtk
+ vcp-mbox document
+Message-ID: <20250305164627.GA2117924-robh@kernel.org>
+References: <20250305082047.15746-1-jjian.zhou@mediatek.com>
+ <20250305082047.15746-4-jjian.zhou@mediatek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250305082047.15746-4-jjian.zhou@mediatek.com>
 
-From: Steven Rostedt <rostedt@goodmis.org>
+On Wed, Mar 05, 2025 at 04:20:40PM +0800, Jjian Zhou wrote:
+> This patch adds document for mediatek vcp mbox.
+> 
+> Signed-off-by: Jjian Zhou <jjian.zhou@mediatek.com>
+> ---
+>  .../bindings/mailbox/mtk,vcp-mbox.yaml        | 49 +++++++++++++++++++
+>  1 file changed, 49 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mailbox/mtk,vcp-mbox.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/mailbox/mtk,vcp-mbox.yaml b/Documentation/devicetree/bindings/mailbox/mtk,vcp-mbox.yaml
+> new file mode 100644
+> index 000000000000..d5afe295af14
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mailbox/mtk,vcp-mbox.yaml
+> @@ -0,0 +1,49 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/mailbox/mtk,vcp-mbox.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: MediaTek Video Companion Processor (VCP) mailbox
+> +
+> +maintainers:
+> +  - Jjian Zhou <Jjian.Zhou@mediatek.com>
+> +
+> +description: |
 
-There's no reason to save the KASLR offset for the ring buffer itself.
-That is used by the tracer. Now that the tracer has a way to save data in
-the persistent memory of the ring buffer, have the tracing infrastructure
-take care of the saving of the KASLR offset.
+Don't need '|' if no formatting
 
-Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- include/linux/ring_buffer.h |  1 -
- kernel/trace/ring_buffer.c  | 59 +++++++------------------------------
- kernel/trace/trace.c        | 37 +++++++++++++++++++----
- kernel/trace/trace.h        |  6 ++--
- 4 files changed, 46 insertions(+), 57 deletions(-)
-
-diff --git a/include/linux/ring_buffer.h b/include/linux/ring_buffer.h
-index 019b59a0bbc9..56e27263acf8 100644
---- a/include/linux/ring_buffer.h
-+++ b/include/linux/ring_buffer.h
-@@ -95,7 +95,6 @@ struct trace_buffer *__ring_buffer_alloc_range(unsigned long size, unsigned flag
- 					       unsigned long scratch_size,
- 					       struct lock_class_key *key);
- 
--bool ring_buffer_last_boot_delta(struct trace_buffer *buffer, unsigned long *kaslr_addr);
- void *ring_buffer_meta_scratch(struct trace_buffer *buffer, unsigned int *size);
- 
- /*
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index bff199d31df3..649724efd1be 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -55,7 +55,6 @@ struct ring_buffer_meta {
- };
- 
- struct ring_buffer_cpu_meta {
--	unsigned long	kaslr_addr;
- 	unsigned long	first_buffer;
- 	unsigned long	head_buffer;
- 	unsigned long	commit_buffer;
-@@ -557,8 +556,6 @@ struct trace_buffer {
- 
- 	struct ring_buffer_meta		*meta;
- 
--	unsigned long			kaslr_addr;
--
- 	unsigned int			subbuf_size;
- 	unsigned int			subbuf_order;
- 	unsigned int			max_data_size;
-@@ -1949,15 +1946,6 @@ static void rb_meta_validate_events(struct ring_buffer_per_cpu *cpu_buffer)
- 	}
- }
- 
--static void rb_meta_init_text_addr(struct ring_buffer_cpu_meta *meta)
--{
--#ifdef CONFIG_RANDOMIZE_BASE
--	meta->kaslr_addr = kaslr_offset();
--#else
--	meta->kaslr_addr = 0;
--#endif
--}
--
- static void rb_range_meta_init(struct trace_buffer *buffer, int nr_pages, int scratch_size)
- {
- 	struct ring_buffer_cpu_meta *meta;
-@@ -1990,7 +1978,6 @@ static void rb_range_meta_init(struct trace_buffer *buffer, int nr_pages, int sc
- 			meta->first_buffer += delta;
- 			meta->head_buffer += delta;
- 			meta->commit_buffer += delta;
--			buffer->kaslr_addr = meta->kaslr_addr;
- 			continue;
- 		}
- 
-@@ -2007,7 +1994,6 @@ static void rb_range_meta_init(struct trace_buffer *buffer, int nr_pages, int sc
- 		subbuf = rb_subbufs_from_meta(meta);
- 
- 		meta->first_buffer = (unsigned long)subbuf;
--		rb_meta_init_text_addr(meta);
- 
- 		/*
- 		 * The buffers[] array holds the order of the sub-buffers
-@@ -2549,35 +2535,22 @@ struct trace_buffer *__ring_buffer_alloc_range(unsigned long size, unsigned flag
- 			    scratch_size, key);
- }
- 
--/**
-- * ring_buffer_last_boot_delta - return the delta offset from last boot
-- * @buffer: The buffer to return the delta from
-- * @text: Return text delta
-- * @data: Return data delta
-- *
-- * Returns: The true if the delta is non zero
-- */
--bool ring_buffer_last_boot_delta(struct trace_buffer *buffer, unsigned long *kaslr_addr)
--{
--	if (!buffer)
--		return false;
--
--	if (!buffer->kaslr_addr)
--		return false;
--
--	*kaslr_addr = buffer->kaslr_addr;
--
--	return true;
--}
--
- void *ring_buffer_meta_scratch(struct trace_buffer *buffer, unsigned int *size)
- {
-+	struct ring_buffer_meta *meta;
-+	void *ptr;
-+
- 	if (!buffer || !buffer->meta)
- 		return NULL;
- 
--	*size = PAGE_SIZE - sizeof(*buffer->meta);
-+	meta = buffer->meta;
- 
--	return (void *)buffer->meta + sizeof(*buffer->meta);
-+	ptr = (void *)ALIGN((unsigned long)meta + sizeof(*meta), sizeof(long));
-+
-+	if (size)
-+		*size = (void *)meta + meta->buffers_offset - ptr;
-+
-+	return ptr;
- }
- 
- /**
-@@ -6144,7 +6117,6 @@ static void reset_disabled_cpu_buffer(struct ring_buffer_per_cpu *cpu_buffer)
- void ring_buffer_reset_cpu(struct trace_buffer *buffer, int cpu)
- {
- 	struct ring_buffer_per_cpu *cpu_buffer = buffer->buffers[cpu];
--	struct ring_buffer_cpu_meta *meta;
- 
- 	if (!cpumask_test_cpu(cpu, buffer->cpumask))
- 		return;
-@@ -6163,11 +6135,6 @@ void ring_buffer_reset_cpu(struct trace_buffer *buffer, int cpu)
- 	atomic_dec(&cpu_buffer->record_disabled);
- 	atomic_dec(&cpu_buffer->resize_disabled);
- 
--	/* Make sure persistent meta now uses this buffer's addresses */
--	meta = rb_range_meta(buffer, 0, cpu_buffer->cpu);
--	if (meta)
--		rb_meta_init_text_addr(meta);
--
- 	mutex_unlock(&buffer->mutex);
- }
- EXPORT_SYMBOL_GPL(ring_buffer_reset_cpu);
-@@ -6182,7 +6149,6 @@ EXPORT_SYMBOL_GPL(ring_buffer_reset_cpu);
- void ring_buffer_reset_online_cpus(struct trace_buffer *buffer)
- {
- 	struct ring_buffer_per_cpu *cpu_buffer;
--	struct ring_buffer_cpu_meta *meta;
- 	int cpu;
- 
- 	/* prevent another thread from changing buffer sizes */
-@@ -6210,11 +6176,6 @@ void ring_buffer_reset_online_cpus(struct trace_buffer *buffer)
- 
- 		reset_disabled_cpu_buffer(cpu_buffer);
- 
--		/* Make sure persistent meta now uses this buffer's addresses */
--		meta = rb_range_meta(buffer, 0, cpu_buffer->cpu);
--		if (meta)
--			rb_meta_init_text_addr(meta);
--
- 		atomic_dec(&cpu_buffer->record_disabled);
- 		atomic_sub(RESET_BIT, &cpu_buffer->resize_disabled);
- 	}
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 69dcd7edaf26..12a359c293c6 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -5988,8 +5988,14 @@ ssize_t tracing_resize_ring_buffer(struct trace_array *tr,
- 	return __tracing_resize_ring_buffer(tr, size, cpu_id);
- }
- 
-+struct trace_scratch {
-+	unsigned long		kaslr_addr;
-+};
-+
- static void update_last_data(struct trace_array *tr)
- {
-+	struct trace_scratch *tscratch;
-+
- 	if (!(tr->flags & TRACE_ARRAY_FL_LAST_BOOT))
- 		return;
- 
-@@ -6004,6 +6010,17 @@ static void update_last_data(struct trace_array *tr)
- 	/* Using current data now */
- 	tr->text_delta = 0;
- 
-+	if (!tr->scratch)
-+		return;
-+
-+	tscratch = tr->scratch;
-+
-+	/* Set the persistent ring buffer meta data to this address */
-+#ifdef CONFIG_RANDOMIZE_BASE
-+	tscratch->kaslr_addr = kaslr_offset();
-+#else
-+	tscratch->kaslr_addr = 0;
-+#endif
- 	tr->flags &= ~TRACE_ARRAY_FL_LAST_BOOT;
- }
- 
-@@ -6817,6 +6834,7 @@ static ssize_t
- tracing_last_boot_read(struct file *filp, char __user *ubuf, size_t cnt, loff_t *ppos)
- {
- 	struct trace_array *tr = filp->private_data;
-+	struct trace_scratch *tscratch = tr->scratch;
- 	struct seq_buf seq;
- 	char buf[64];
- 
-@@ -6829,8 +6847,8 @@ tracing_last_boot_read(struct file *filp, char __user *ubuf, size_t cnt, loff_t
- 	 * Otherwise it shows the KASLR address from the previous boot which
- 	 * should not be the same as the current boot.
- 	 */
--	if (tr->flags & TRACE_ARRAY_FL_LAST_BOOT)
--		seq_buf_printf(&seq, "%lx\t[kernel]\n", tr->kaslr_addr);
-+	if (tscratch && (tr->flags & TRACE_ARRAY_FL_LAST_BOOT))
-+		seq_buf_printf(&seq, "%lx\t[kernel]\n", tscratch->kaslr_addr);
- 	else
- 		seq_buf_puts(&seq, "# Current\n");
- 
-@@ -9206,6 +9224,8 @@ static int
- allocate_trace_buffer(struct trace_array *tr, struct array_buffer *buf, int size)
- {
- 	enum ring_buffer_flags rb_flags;
-+	struct trace_scratch *tscratch;
-+	unsigned int scratch_size;
- 
- 	rb_flags = tr->trace_flags & TRACE_ITER_OVERWRITE ? RB_FL_OVERWRITE : 0;
- 
-@@ -9214,12 +9234,19 @@ allocate_trace_buffer(struct trace_array *tr, struct array_buffer *buf, int size
- 	if (tr->range_addr_start && tr->range_addr_size) {
- 		buf->buffer = ring_buffer_alloc_range(size, rb_flags, 0,
- 						      tr->range_addr_start,
--						      tr->range_addr_size, 0);
-+						      tr->range_addr_size,
-+						      sizeof(*tscratch));
-+
-+		tscratch = ring_buffer_meta_scratch(buf->buffer, &scratch_size);
-+		if (tscratch) {
-+			tr->scratch = tscratch;
-+			tr->scratch_size = scratch_size;
- 
- #ifdef CONFIG_RANDOMIZE_BASE
--		if (ring_buffer_last_boot_delta(buf->buffer, &tr->kaslr_addr))
--			tr->text_delta = kaslr_offset() - tr->kaslr_addr;
-+			if (tscratch->kaslr_addr)
-+				tr->text_delta = kaslr_offset() - tscratch->kaslr_addr;
- #endif
-+		}
- 		/*
- 		 * This is basically the same as a mapped buffer,
- 		 * with the same restrictions.
-diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index abe8169c3e87..3a020fb82a34 100644
---- a/kernel/trace/trace.h
-+++ b/kernel/trace/trace.h
-@@ -348,8 +348,11 @@ struct trace_array {
- 	unsigned int		mapped;
- 	unsigned long		range_addr_start;
- 	unsigned long		range_addr_size;
--	unsigned long		kaslr_addr;
- 	long			text_delta;
-+	void			*scratch; /* pointer in persistent memory */
-+	int			scratch_size;
-+
-+	int			buffer_disabled;
- 
- 	struct trace_pid_list	__rcu *filtered_pids;
- 	struct trace_pid_list	__rcu *filtered_no_pids;
-@@ -367,7 +370,6 @@ struct trace_array {
- 	 * CONFIG_TRACER_MAX_TRACE.
- 	 */
- 	arch_spinlock_t		max_lock;
--	int			buffer_disabled;
- #ifdef CONFIG_FTRACE_SYSCALLS
- 	int			sys_refcount_enter;
- 	int			sys_refcount_exit;
--- 
-2.47.2
-
-
+> +  The MTK VCP mailbox enables the SoC to communicate with the VCP by passing
+> +  messages through 64 32-bit wide registers. It has 32 interrupt vectors in
+> +  either direction for signalling purposes.
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - mediatek,mt8196-vcp-mbox
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  "#mbox-cells":
+> +    const: 0
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - "#mbox-cells"
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +
+> +    vcp_mailbox0: mailbox@31b80000 {
+> +        compatible = "mediatek,mt8196-vcp-mbox";
+> +        reg = <0x31b80000 0x1000>;
+> +        interrupts = <GIC_SPI 789 IRQ_TYPE_LEVEL_HIGH 0>;
+> +        #mbox-cells = <0>;
+> +    };
+> -- 
+> 2.45.2
+> 
