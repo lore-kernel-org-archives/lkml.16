@@ -1,65 +1,85 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EFD21FC7FE;
-	Wed,  5 Mar 2025 10:18:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C0C6205E2B;
+	Wed,  5 Mar 2025 10:19:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741169915; cv=none; b=oBwk1RqoimHICqT4N3oJ372i+51rExMqql982SW+yAXFkpbof9/SSiRK3qmc8riFHWVevekTO7kErnJgHyljJ0oTjvzurroeHkLCHgvicUF3YZM320G8GMxgp7igCThXbqCRtMZA7L9QpcaEfopjVv1pTDOgo2daGh0H/vH52s0=
+	t=1741169973; cv=none; b=LtUyORVMJlfjISV567k5Pe43rLEZ+TPDx9MopLJt48y/9YlPd8/jK9mA91TuDRWxDzjVBkX6e/QJFwY/bcrprWDa3q5A0M1t94CnbreasrB5KJa+Mniv+J3Nb2lT7AuSC3qEmZLKX32xAm4aJiPS7lOj8dbfYtvR3Qv0ieUTdDw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741169915; c=relaxed/simple;
-	bh=4Vo3qOOAEBPswAqRgvzNrNkT7zw+CqURid5oS8C0xpo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=T50t8sazHtyJ/gmwr+/yGC47PXKEbuKjoRwVosij+VidKt/gpXoEfg25xtxH/R4wzHwCa6fM3GIAGahdjKGXRWh4g9kG/776tR/wT94VsYgxfcCdm135IVTJaMksoMEAN+ov/Iyb8ZLdWLmYTj1Hm8KO+yr+dEtTwxJ4zPSquJc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JVElypjc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741169973; c=relaxed/simple;
+	bh=61ymXQdkyM8TiJOiqN4HS+dcLaY0P3zrpsvRC7rw1oE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=H6U3d68MrAUWVFNh0w60OaxnsZGkC5kFAA58bl4TxQzBN3rviDQaRzQVpKAG7IpzedCRK+I5DRUsZaeuLpa52CLkWh3f9gwSAfIayG8Wff/AGKAkzjDzGnnj5gsrrl3M5Djrd9TKctSFDB0ZJtAWLjBEH2YpML46nkDCl6F2yy0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=hZOpA3k3; arc=none smtp.client-ip=220.197.31.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JVElypjc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4705FC4CEE2;
-	Wed,  5 Mar 2025 10:18:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741169915;
-	bh=4Vo3qOOAEBPswAqRgvzNrNkT7zw+CqURid5oS8C0xpo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=JVElypjcaIYX5rKtiv06hcSXy4HstFjKOeRhShpFjk2Jel2eSkA/O0uK8Wninv5/a
-	 hI5Ui+51QY9Sc5wOaelsMqqEki8iPKL/7clrg37rGARtPtuO5FAtalmSz/cR624zt9
-	 twTkQB6/0FugO2QSLBDkRJ1MULKIVW+tzVSg6Ccu0iGgHjhAUJfebciXlktocUXdn0
-	 bbIXddxhOqHs7IDCCnaG84EzsvIT+/+FsZux9DQ1iCMoMbwVVWuwRuT4u+s9e3MuJC
-	 lkrQutRMyjpWtEs6QOIxSX4h5Qvjsi5oAAXmBv854hriyofgHQ/0kVmCe+F7yX5KZc
-	 9wpnC/K5XUGSQ==
-Date: Wed, 5 Mar 2025 11:18:23 +0100
-From: Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>
-To: George Cherian <george.cherian@marvell.com>
-Cc: linux@roeck-us.net, wim@linux-watchdog.org, jwerner@chromium.org, 
-	evanbenn@chromium.org, krzk@kernel.org, mazziesaccount@gmail.com, 
-	thomas.richard@bootlin.com, lma@chromium.org, bleung@chromium.org, 
-	support.opensource@diasemi.com, shawnguo@kernel.org, s.hauer@pengutronix.de, 
-	kernel@pengutronix.de, festevam@gmail.com, andy@kernel.org, paul@crapouillou.net, 
-	alexander.usyskin@intel.com, andreas.werner@men.de, daniel@thingy.jp, romain.perier@gmail.com, 
-	avifishman70@gmail.com, tmaimon77@gmail.com, tali.perry1@gmail.com, venture@google.com, 
-	yuenn@google.com, benjaminfair@google.com, maddy@linux.ibm.com, mpe@ellerman.id.au, 
-	npiggin@gmail.com, christophe.leroy@csgroup.eu, naveen@kernel.org, 
-	mwalle@kernel.org, xingyu.wu@starfivetech.com, ziv.xu@starfivetech.com, 
-	hayashi.kunihiko@socionext.com, mhiramat@kernel.org, linux-watchdog@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	chrome-platform@lists.linux.dev, imx@lists.linux.dev, linux-mips@vger.kernel.org, 
-	openbmc@lists.ozlabs.org, linuxppc-dev@lists.ozlabs.org, patches@opensource.cirrus.com
-Subject: Re: [PATCH v4 1/2] watchdog: Add a new flag WDIOF_STOP_MAYSLEEP
-Message-ID: <irmewriceyzxr6jvbiao5vqrvelpftbjalmheodx5w63zi6k2y@dg3wlvs6zryd>
-References: <20250305101025.2279951-1-george.cherian@marvell.com>
- <20250305101025.2279951-2-george.cherian@marvell.com>
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="hZOpA3k3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=NNmP0
+	RcY0fndOAtXq39WcaveUgBAnm+T/Ou7U5DaClg=; b=hZOpA3k39JXxEDK/0xPwy
+	W+HbwClXLbYmNrcqiO2IJw2SRBa6Ccg1i7QaN7PKDzWgs/3DYUZg8wIVqQcePQ6u
+	7zVeGAeK4/MWUJy3wwtIqnM4GK8G3ujevCfoXG60fYP73GTj4L9X6jcv9KE1cTmC
+	uLDH3iKwyCikKzuO7kPc/w=
+Received: from icess-ProLiant-DL380-Gen10.. (unknown [])
+	by gzga-smtp-mtada-g0-3 (Coremail) with SMTP id _____wD3nFr5JMhnCYXoPg--.46709S4;
+	Wed, 05 Mar 2025 18:18:34 +0800 (CST)
+From: Haoxiang Li <haoxiang_li2024@163.com>
+To: shshaikh@marvell.com,
+	manishc@marvell.com,
+	GR-Linux-NIC-Dev@marvell.com,
+	andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	jiasheng@iscas.ac.cn
+Cc: netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Haoxiang Li <haoxiang_li2024@163.com>,
+	stable@vger.kernel.org
+Subject: [PATCH] qlcnic: fix a memory leak in __qlcnic_pci_sriov_enable()
+Date: Wed,  5 Mar 2025 18:18:31 +0800
+Message-Id: <20250305101831.4003106-1-haoxiang_li2024@163.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250305101025.2279951-2-george.cherian@marvell.com>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wD3nFr5JMhnCYXoPg--.46709S4
+X-Coremail-Antispam: 1Uf129KBjvdXoW7Jw4kAFyxXry3Jw1DtF17trb_yoWDZFb_CF
+	15Zr1fX3y5CFyDKw43trnrZ342g3ZrW3WfZ3W0gay3tr4DGFW8Jr12qF93JrnrW3y09ryD
+	G3Way345A34xAjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7sRNtxhDUUUUU==
+X-CM-SenderInfo: xkdr5xpdqjszblsqjki6rwjhhfrp/xtbB0gAHbmfIHmKogQAAsB
 
-Hi George,
+Add qlcnic_sriov_free_vlans() to free the memory allocated by
+qlcnic_sriov_alloc_vlans() if qlcnic_sriov_alloc_vlans() fails.
 
-why is armada_37xx_wdt also here?
-The stop function in that driver may not sleep.
+Fixes: 60ec7fcfe768 ("qlcnic: potential dereference null pointer of rx_queue->page_ring")
+Cc: stable@vger.kernel.org
+Signed-off-by: Haoxiang Li <haoxiang_li2024@163.com>
+---
+ drivers/net/ethernet/qlogic/qlcnic/qlcnic_sriov_pf.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Marek
+diff --git a/drivers/net/ethernet/qlogic/qlcnic/qlcnic_sriov_pf.c b/drivers/net/ethernet/qlogic/qlcnic/qlcnic_sriov_pf.c
+index 8dd7aa08ecfb..b8a9e0e2907e 100644
+--- a/drivers/net/ethernet/qlogic/qlcnic/qlcnic_sriov_pf.c
++++ b/drivers/net/ethernet/qlogic/qlcnic/qlcnic_sriov_pf.c
+@@ -598,8 +598,10 @@ static int __qlcnic_pci_sriov_enable(struct qlcnic_adapter *adapter,
+ 		goto del_flr_queue;
+ 
+ 	err = qlcnic_sriov_alloc_vlans(adapter);
+-	if (err)
++	if (err) {
++		qlcnic_sriov_free_vlans(adapter);
+ 		goto del_flr_queue;
++	}
+ 
+ 	return err;
+ 
+-- 
+2.25.1
+
