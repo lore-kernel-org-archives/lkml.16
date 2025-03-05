@@ -1,125 +1,245 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2085.outbound.protection.outlook.com [40.107.20.85])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1DF0205AAA
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 09:56:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741168567; cv=none; b=pt4UAFsc1nYS1jVYDNDBE6Zp9YVKPzb563cAMzqev4V00xuF0he8UeQdj78HSlAVDswwGyB9eufrSHQkf/uAzKqLYrH3QkfkRJoed6VyeqZ4n1sshHEYAMZiYK8M+bcImYULleKMNZH/jZqACdQ2JV/5FKynuh53zpbZ1ng7mKc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741168567; c=relaxed/simple;
-	bh=lKqS/mAvx4HVq33Hmdz699WevQkr9nXw23GBMPTSQaw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kd8CDRTHMs5kt9w1X9A+ogplvL4hxaxBNgBWN4EK95UqIcaRJTmxx8GFfXGgRMpGOdGSlPeJDGTt6r3fJ4tCWAb+sWSxkygEIUZuDwKjvQ77AHfyVjWuTQhLOX8jOWj7OAUIr3mE1H02WvZSrIvsw9Eda7wwbStirczMng8rn8Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Ay0jmRYT; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 775801C8612;
+	Wed,  5 Mar 2025 09:59:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.20.85
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741168797; cv=fail; b=dixMbn+ksx+v9SEDaTZXr8XB2clT2otNZL8rcFsUylmw/OjbekjvxB3VUAieDrB26TwrAp3uGEPfQJfd55mJ+01OAJAJ54SOTEO6jogUAhC6YnXGU7dmW9XO30xtASvaH1e8av4kAuwtUk/UrqaaBg7UVJyZO5FOtSGhTyrq/yA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741168797; c=relaxed/simple;
+	bh=Ypcn1ZXYLUABHRafSKJCeZCrayEFQTrNvRDa46yGG+U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=rFWkGfUpkCZDJKVJ6/orwKyxUqq1Q4WbG0AmpL4DMjbPjYIpOHzLBAdPCdSS2STjMCEn1gkW2KOGjKMAljdNp6Z22J7F/yekkqDmUkwLfBmWbpZl7mzAkfTwU8gdz86q+7Bgw9+ATRADQevpV/TZLan1qAozoi547y5YH5M6Yww=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mt.com; spf=pass smtp.mailfrom=mt.com; dkim=pass (2048-bit key) header.d=mt.com header.i=@mt.com header.b=MdE/YNJX; arc=fail smtp.client-ip=40.107.20.85
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mt.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mt.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Ay0jmRYT"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-4394a823036so60658665e9.0
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Mar 2025 01:56:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1741168564; x=1741773364; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Pkxl4a4YQVJ31Qn6F9vVuT6sik+nqtnuunl+H2yyS6k=;
-        b=Ay0jmRYTWrsl4EYGmT2NWlDmaxS2LENcQf3c6N1UV//uwak0kMRe9fBbxXnaEXnjAB
-         MIC+2nvZAOR256+ZlA+uJAj9pe1aB4GmP0iusOBKRZuCaxsbyTyd738N5fAnvYTnse8Q
-         LjF384av2iHSOp6e/HAOe6iAI48zxCTKuG5I94LGIeCIA5Z2h1AlHQcOAJccNvjYXzQ+
-         6yyjgndL8gtq09OZPyU7o9Zvjqeem5ttUjHUEoWN/HVvqayS9t2JrhrjoYmHE7kU4xUN
-         +a2Ocl3Za1WNRDMie1mukCL8ZALNnN2f/WJvw9isvN2t6eKbeJGF5DhhxfUr5WHQVg0L
-         Nnuw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741168564; x=1741773364;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Pkxl4a4YQVJ31Qn6F9vVuT6sik+nqtnuunl+H2yyS6k=;
-        b=m/BGpV1gaUSnF5jEhj+3qPq//MZccaD5aYfosqGo1+7FGl0dq9B8c2GPKYlXRWj4Bc
-         bDjxDzKmb06PsB+pYKYSyOk0Cvjs/ZE4m6zbxsHMftItwmSEQXSHaw79H62XksqiD6L/
-         upBICrXF6sCzAZGvU0smMrWc8TP4WAvr5EmJApzLgJ7war5q+97GyDkQmkqi0bnJymXR
-         UTKjndDUBYRfMIYxcUmsGobfnLC3EhAXGr4JmDtO67KiW0MT55UryrwLhjaIVRymfMkh
-         2zr+obQEhyKAThhlHmgfxjftDN9zdA0zM3f+thEuEPNqK2i6Sgkqlq66uyClo9h1XW8k
-         L8pQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXah9jSOlFAxAJgaPKDqcTiEfWKRLXrFIzx6vsUwN7fRL/lLSDhXTvHU2qjc/O9JXuGdUC00PfLNtz3plg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy6WNKhDK0hY8cRKYVmqrA9SOljGkL7YmGROek/aq8FzYwxsbRU
-	TDS501e+OgB1o2ogP7Zd7qcLCRpKJVEnO67qet+VZb2YRWuD5ysYxGs/9KLpktw/hULnIp8wbHW
-	1
-X-Gm-Gg: ASbGncukh0JqzhkLDE4+ovupf1BdNDm4nm74FiZtBFrSfOCvNufciRX+2tVZJK0kV9h
-	1gPoJ0KH+1BTPM+yRYI8ZP1n4BTAXoLZZY0gFhQgwP4xnD4v8vzaeh10Y8D2zG6OH+ErBzGO9Ad
-	FPTACrcuxwXdx98go39wI6Z3XepE3ESpl9q3jBFqnBIJdy2ABGydZwflVqqVotSqnmjO2hfPV9l
-	dQHDIXOYPRRqM+/yC947X+iUwxY5ZlpLTZ4ElxDjeA7VmGrfHm/hWMpeL5thEJl10Pr9qWREzsk
-	qRWSYJsPqDe3tkzDZJYWG+3afDMCBdYVcrxl3puchrOitFU=
-X-Google-Smtp-Source: AGHT+IFavas8h9Jpgn+Nt6h5D6vRmK+7QGtc1IeskIoqBgpTaq4AuCMVrXevu5HZeem2ji3RiSe5Tg==
-X-Received: by 2002:a05:600c:190f:b0:43b:cbe2:ec03 with SMTP id 5b1f17b1804b1-43bd2aeaa86mr15746195e9.27.1741168563908;
-        Wed, 05 Mar 2025 01:56:03 -0800 (PST)
-Received: from pathway.suse.cz ([176.114.240.130])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-390e4844c0dsm20059607f8f.80.2025.03.05.01.56.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Mar 2025 01:56:03 -0800 (PST)
-Date: Wed, 5 Mar 2025 10:56:01 +0100
-From: Petr Mladek <pmladek@suse.com>
-To: Tamir Duberstein <tamird@gmail.com>
-Cc: David Gow <davidgow@google.com>, Steven Rostedt <rostedt@goodmis.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Shuah Khan <shuah@kernel.org>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v8 1/4] scanf: implicate test line in failure messages
-Message-ID: <Z8gfsd5V9wrPKkiA@pathway.suse.cz>
-References: <20250214-scanf-kunit-convert-v8-0-5ea50f95f83c@gmail.com>
- <20250214-scanf-kunit-convert-v8-1-5ea50f95f83c@gmail.com>
+	dkim=pass (2048-bit key) header.d=mt.com header.i=@mt.com header.b="MdE/YNJX"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Yadd5pg/zuTfkQEWZ3YaGNIxhcf/4EmCkg4kg3NEdJRPjbHeoNui8sRxT/G5v9109gOiAF6WyvIge2jM+A/7UrqmJYkfA+OuIQekNBoJw6rkhx2yCLbh2YoebAi7VPL0at7k4c9oFp1tPiJp3r8yyZuuLSlVjMUF1rHkgYqUsGiGPR6BQ5BFOZkYjWaJGO8ElKrT6v9S4GBSnqaorORIWzpmAAMpJpSbBx5me3+bqMZO1XuS4oAUgwOkPHw3cvS+UbbQHi5Dos2whpgNLEMohbkU7gk8B+XcX7xo8KVNoSXbvBUWlBlR6c4/giPlH6fx9yytxIIken4zGugVSguSDw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=oxlP4M7ZCzgDrl2K4Rw6JE8KP6M8sjrHYWqmiS+x8UI=;
+ b=WYhieZ0PokatfE+m0GTRLjpopGPQEwwTWD9qYucALNZOYC8ADBCWRCa9sx/dVOekvEtvY9FaTYZqSRZX1PhU6xxGkEejSol/NUmc6AZ+3tZ6Phw9VMjqDjlmpSXslfnVBl7c968e2sVp++oWeIllRkO1ofRuwuiHcEbvemrJgIKYtDUPGwPkk12BKL9r6OvaZbX1R6Ytml8OWkeeiWjA255x+n3LZzzm0VW5UBCzRsidHrn9kHG2b4wYul8VHlaqBb9Ytbv2a+0qlANmrU45Tyt09jGuD7vpumjrTgzw56KTS9q8kTPp67eBvfkocGOUkXntffG0tRMc2gZbX9kXTw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mt.com; dmarc=pass action=none header.from=mt.com; dkim=pass
+ header.d=mt.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mt.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=oxlP4M7ZCzgDrl2K4Rw6JE8KP6M8sjrHYWqmiS+x8UI=;
+ b=MdE/YNJXI5u8YrJl2va52rIkVpkHXY65Zp3ZVTZuiMfYGGAwXXpTBeEPQxf6hfpAifTtevzo0JGEEfbmGNBVlWbHFQTv+9RhGMEv5yVbKm090bIJcwuQW4tQxi5H/8rUUobpXyv/FU9ezGoXeilAuU/gT5nIhSKACTNV/hbsIue7mLHAmd3EIooKI18VR1u+YT4uEqKsAIk9rJ7hmNGHrwKh8UXy4ax8UpejKrlGhfWQ2UBGb5MEB8mbuSGWjaqqDB+u3esDogT+lFyBupKaBGZiRklY0avof0l/Zrmv1jETFBXa8Bmb0S0b++DtrVt73D+AS+BrzvvlZK1WU25x+g==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=mt.com;
+Received: from DBBPR03MB10396.eurprd03.prod.outlook.com (2603:10a6:10:53a::11)
+ by VI1PR03MB6381.eurprd03.prod.outlook.com (2603:10a6:800:192::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.18; Wed, 5 Mar
+ 2025 09:59:50 +0000
+Received: from DBBPR03MB10396.eurprd03.prod.outlook.com
+ ([fe80::ee3c:c9be:681:c0bf]) by DBBPR03MB10396.eurprd03.prod.outlook.com
+ ([fe80::ee3c:c9be:681:c0bf%7]) with mapi id 15.20.8511.015; Wed, 5 Mar 2025
+ 09:59:50 +0000
+Date: Wed, 5 Mar 2025 10:59:27 +0100
+From: Mathis Foerst <mathis.foerst@mt.com>
+To: Conor Dooley <conor@kernel.org>
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>,
+	linux-kernel@vger.kernel.org,
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	MauroCarvalhoChehab@mt.com, mchehab@kernel.org,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, linux-media@vger.kernel.org,
+	devicetree@vger.kernel.org, manuel.traut@mt.com
+Subject: Re: [PATCH v1 2/8] MT9M114: Add pad-slew-rate DT-binding
+Message-ID: <Z8ggf4wXX6HAoCpS@mt.com>
+References: <20250226153929.274562-1-mathis.foerst@mt.com>
+ <20250226153929.274562-3-mathis.foerst@mt.com>
+ <Z8A66l02Et4J7hj4@kekkonen.localdomain>
+ <20250228-helpless-delivery-42162772caa3@spud>
+ <Z8boqvxEAhx7rG9Q@mt.com>
+ <20250304-expend-isotope-cea613f4e9d5@spud>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250304-expend-isotope-cea613f4e9d5@spud>
+X-ClientProxiedBy: ZR2P278CA0036.CHEP278.PROD.OUTLOOK.COM
+ (2603:10a6:910:47::14) To DBBPR03MB10396.eurprd03.prod.outlook.com
+ (2603:10a6:10:53a::11)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250214-scanf-kunit-convert-v8-1-5ea50f95f83c@gmail.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DBBPR03MB10396:EE_|VI1PR03MB6381:EE_
+X-MS-Office365-Filtering-Correlation-Id: ccf03427-58c4-4d57-1b30-08dd5bcc7821
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|1800799024|376014|52116014|7416014|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?SjdbBjMVUTn68CigJq+R3AOJWCtixNDMLkj+Eur/0bgVqOUxNWy0one91RiJ?=
+ =?us-ascii?Q?h5SZv+NVr/gFVWzqJ3AxuVTW+ucuerbkkdFuZxjAXn4DvIav2Oxfcm1DnI+6?=
+ =?us-ascii?Q?DkvvQMnmAJpFnabhlLch9NSf8SVKq4Xp8h5EZurmI3BIEXnuHxTh0TZCNb8r?=
+ =?us-ascii?Q?NZTtvLuh0JVOQqDFELqy/lscpPUF8F4hRdqSMo3As1Uo/5IWpQlXpLuRPAMn?=
+ =?us-ascii?Q?yRb8REvIPdTqvLzeljZl1viWXWP3Ck23bs1CbIkjYn9rds6H8ShwD0UqIl9n?=
+ =?us-ascii?Q?aIclnFxCUFOSdAARBrCQo9KeRZeDdlPaq/tXwgptArkHuG9xI8tYX5PyZajg?=
+ =?us-ascii?Q?qbjDhfmCgBOR8VSSWuJiIEgirvAp2gqIKvBWAuul83b3+2WVWOhvSY8ZJ1uF?=
+ =?us-ascii?Q?c1+g4KjX82ipaXf8M/VVWFCaVSY75tvx8hvvDb51UjyLhHh/pMVFhVeXtGH9?=
+ =?us-ascii?Q?3UuYRzB1Al3lhnQMd9kXGg35WiPvBMECcg+SOTW30mFxR6lUxXc12iPRkmZL?=
+ =?us-ascii?Q?ffWQrj7JgtQX1jTc5jut61LxWyfcNTqZlyX+M264d/2Itv7dzcUEAEhKaIwV?=
+ =?us-ascii?Q?2zctYg8iCIXHEH3LhAV7vMNSdxBnxcvfeNgVL5E2mxhN9f76jey6L7gIBqq0?=
+ =?us-ascii?Q?EkLcOJpTw0BqvqD94bqpHUhuC29rX5y4Y/4kkEpZsGj8Vf+lh+i3jEoWpSSl?=
+ =?us-ascii?Q?hd63NOgeTGDY9fSQhD4LikI3+GgjK3lDJmIunYBKxWOjTcYtKLdJrM8Nqv+r?=
+ =?us-ascii?Q?eU5kHfiwpBh57738GhtKGAXZD3mgAKslUg/hKn8zzt8I85VOZqpALb7UyjCI?=
+ =?us-ascii?Q?huoVPaBvg7Iq55Be9963LSG/vf9Ib1CcpGjbkAOeTWTcTBiym2TYipG4/bkC?=
+ =?us-ascii?Q?GTbISKcBP8DdXldnxcRHaotmmF/hnqmrTQ/Z3Ra7Rxmz5ql9RE9ukJPaVN70?=
+ =?us-ascii?Q?uhGOwRuKVIpxKdw/1K9wrzoTaje+w0Vqv2MtRjVbbCUJrqwcd3pxPXpRYj3s?=
+ =?us-ascii?Q?Iy7PXLvknrE4q3ngPMUQjhxcmBe5T5JO7yPjrieTnbnLLiiB7XfKmjgu0w04?=
+ =?us-ascii?Q?zzjnjHTQO46GqPO2E8JLZqOqscrlihB4/aDAIqU5bFfEzssNuOHfHMHmlr7C?=
+ =?us-ascii?Q?5smxTCfJ+boldfhJdRCf7R1Y81paphPCmVDcr+e4C5JfEg956WyiddZQ4WGb?=
+ =?us-ascii?Q?+S+ijYL3dxrqDG/w8N2/zaLIO+NzNPb2XFiM52MBEqa31QbDuO8oEIMNQiqy?=
+ =?us-ascii?Q?WLacppXWR70JR/xe6XSQVUDRv12tiN4TdhM40IS4P5BruD2j1SdZFYGgC7rp?=
+ =?us-ascii?Q?AvgwACBz530iJ6uLIV2z0dRz4wwjf7aXfPY7sJUEwW42/8viKzsWgRV6CxY/?=
+ =?us-ascii?Q?R6LYlzxMz3zYk/EEQrFYv0aNgjSIHFRpjLJad3R0Vkz0MoA4gwbhAprHkNBR?=
+ =?us-ascii?Q?wklHqHRh/gLPpGsVjeRH2YQDPul4M2b+?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DBBPR03MB10396.eurprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(52116014)(7416014)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?VaxYntRTotnIovXhoHXt64bmyTw6Ks6CAxtw7m5MRESU8p0nH5GQlcUpW8b6?=
+ =?us-ascii?Q?lVxM24O3zk4pQkpG+DpJxv5BY46PUkQ6QlOmX/ghYRqBDQ4W84KRFIp8qvtr?=
+ =?us-ascii?Q?sFDbLwDdoUh/mHyD29Q+mDIEfChPxBHX07hKmS6M3o3jMn3bb2pKCo3rAF9s?=
+ =?us-ascii?Q?m3WOtwASnxOtPaXvEOIpqDCt6nRWCJ1h4kEvh+45KuqgkayFsiS9h3qBt2iY?=
+ =?us-ascii?Q?BfuO+VEKDboLjHxnN5jQKoi8db9W2teVxbbTEtwDDVhXFDgNzIUIcVPuCrJV?=
+ =?us-ascii?Q?cpEQUu5dR7TY+fPTzBCzTf3hxCNdTAO69LPwyGKwFaLUUAkYMNpFH5G2FPmC?=
+ =?us-ascii?Q?dTDl/WuUTJqk4S6bvOloFe8vNYK7r8+MtVf+b5VQ+vnENtk2V9anJubWRVbD?=
+ =?us-ascii?Q?Vp3p/ombz/RPqmjF2+JhCkddk8csZZxxpTP/0toP4JyQEW4jKw4YJcEzb6II?=
+ =?us-ascii?Q?KneD//Jw4b7oI7Harx8aBYQdfOuzpLulRVKHtfSGG+ONlr7lMVDKFTABERbt?=
+ =?us-ascii?Q?nP9GRM/pxihjaY0AtMc5zSpWhBqzRuxlI60XdMWuxc9k9d5AhnSrmCCzs/O1?=
+ =?us-ascii?Q?dSikpbZ/sG1zN1U9oup/BCF4l0bkPjaELudBAzUu7rT/5WOq+EJMrVdPLaGI?=
+ =?us-ascii?Q?R53PAs0nAK9U8dsblRfsKumyEosS7Gm6v7riHzJqc4azXk7vj0EqMjVwuPVv?=
+ =?us-ascii?Q?zJzNG6kOqoMIdrJHMd7pIchkvu48xeI6v+T8aL7E7/UBzECZiZae5Auto08S?=
+ =?us-ascii?Q?0OQuZrNKpLVJ46KMcJAn1qiYn9ULeMGNl2+UACFxaobyaDtAc3sqsn20hRoc?=
+ =?us-ascii?Q?qyykxZEoLOn/82NuMjwfJOp4n04mSsqouUt7PK9doGXMJmfg6As/76mjbbN7?=
+ =?us-ascii?Q?aqCzpY7ZMSFX78BQzRjrl2w8Oj6eGW2hC1B+jNNhIKaUFC90C2ZJr+rNjLGY?=
+ =?us-ascii?Q?ZKAwJS/yXcs+yLhzvP3f8SJoZX+1jOBsf6G0IWJnAPTkQijEqglG+AgDVOPV?=
+ =?us-ascii?Q?XHF0a1JjfcFu3wVapXGk73XztQOuywa68MPinJZ8mx+KcwovXhwQZ8TC0RfO?=
+ =?us-ascii?Q?eUWZFfJSOh0Y2kDhKhr91oqK+LVsfVczQZin1WUPo+4Z9RH7qqstOoK74W3l?=
+ =?us-ascii?Q?Hc4f2rGZnfC6x6mbMAspQ61syju3Jb58U3sT3QHu4SPS1/KrEtmCcSeB8hYb?=
+ =?us-ascii?Q?DbmZGU6sKyfxhyXJkHk8L67pdrtYFTyTTfqT6ldtRMwEseTCRFXjqJsZesWJ?=
+ =?us-ascii?Q?kVndDAjU2sEdH+dnfKH+b3FP4z8szQnQqlq9C2I39QaYSF6alLgmeEb2E9Sw?=
+ =?us-ascii?Q?1+WYKTGTomTomiiOBoSzOufkjy0w9yS1py17iroogKb4VBaf1dJuZSEdImDb?=
+ =?us-ascii?Q?BY8Pj86X4PjTJ26xju78QYc4CHeVjguyMnRf+q94/kAsIqk7IXis7d0B9V+C?=
+ =?us-ascii?Q?jUT2RxMXngLK47r8TWclZQY5w2dQNI1yN426HL0B1nzxSarJDWCtdh69WShL?=
+ =?us-ascii?Q?H3EB/QVqoC3WcZw7BYAv2ZMzCXcD6oaiTi9cCwF40RktbBWO7Kn1uHpeE/Bq?=
+ =?us-ascii?Q?SeLfYnYSE8EmCge6gwXzDDzywnQsk09BnG82nJXI?=
+X-OriginatorOrg: mt.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ccf03427-58c4-4d57-1b30-08dd5bcc7821
+X-MS-Exchange-CrossTenant-AuthSource: DBBPR03MB10396.eurprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Mar 2025 09:59:50.5668
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: fb4c0aee-6cd2-482f-a1a5-717e7c02496b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 21TD1f6c566vjMNTIFsLzKFobYIxe1+LmAm+IlGmdoilI3zJoxIsNj0BW/WzSHK+K3aDpuhrp9elz4p5BR3Ohg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR03MB6381
 
-On Fri 2025-02-14 11:19:58, Tamir Duberstein wrote:
-> This improves the failure output by pointing to the failing line at the
-> top level of the test.
+On Tue, Mar 04, 2025 at 04:39:34PM +0000, Conor Dooley wrote:
+> On Tue, Mar 04, 2025 at 12:48:58PM +0100, Mathis Foerst wrote:
+> > Hi Conor, Hi Sakari,
+> > 
+> > On Fri, Feb 28, 2025 at 07:11:31PM +0000, Conor Dooley wrote:
+> > > On Thu, Feb 27, 2025 at 10:14:02AM +0000, Sakari Ailus wrote:
+> > > > Hi Mathis,
+> > > > 
+> > > > On Wed, Feb 26, 2025 at 04:39:23PM +0100, Mathis Foerst wrote:
+> > > > > The MT9M114 supports the different slew rates (0 to 7) on the output pads.
+> > > > 
+> > > > "the output pads" probably means pixel data interface (DVP or CSI-2)
+> > > > signals in this cases? I suppose this is about clock modulation?
+> > > > It'd be good to say that.
+> > 
+> > The slew rate defines the slope of the voltage flanks on the output pads (how fast
+> > the pads go from LOW to HIGH or vice versa). I tried to clarify the description.
+> > 
+> > > > 
+> > > > > At the moment, this is hardcoded to 7 (the fastest rate).
+> > > > > The user might want to change this values due to EMC requirements.
+> > > > > 
+> > > > > Add the 'pad-slew-rate' property to the MT9M114 DT-bindings for selecting
+> > > > > the desired slew rate.
+> > > > > 
+> > > > > Signed-off-by: Mathis Foerst <mathis.foerst@mt.com>
+> > > > > ---
+> > > > >  .../devicetree/bindings/media/i2c/onnn,mt9m114.yaml         | 6 ++++++
+> > > > >  1 file changed, 6 insertions(+)
+> > > > > 
+> > > > > diff --git a/Documentation/devicetree/bindings/media/i2c/onnn,mt9m114.yaml b/Documentation/devicetree/bindings/media/i2c/onnn,mt9m114.yaml
+> > > > > index 72e258d57186..666afe10c538 100644
+> > > > > --- a/Documentation/devicetree/bindings/media/i2c/onnn,mt9m114.yaml
+> > > > > +++ b/Documentation/devicetree/bindings/media/i2c/onnn,mt9m114.yaml
+> > > > > @@ -74,6 +74,12 @@ properties:
+> > > > >      description: Bypass the internal PLL of the sensor to use EXTCLK directly as SYSCLK.
+> > > > >      type: boolean
+> > > > >  
+> > > > > +  onnn,slew-rate:
+> > > > > +    $ref: /schemas/types.yaml#/definitions/uint8
+> > > > 
+> > > > No need to make this 8-bit (i.e. just use 32 bits).
+> > 
+> > Okay, I thought 8-bit would fit the small value range [0,7]. Changed it to 32 bits.
+> > 
+> > > > 
+> > > > > +    description: Slew rate ot the output pads DOUT[7:0], LINE_VALID, FRAME_VALID and PIXCLK
+> > > > 
+> > > > Please wrap at 80 characters.
+> > > > 
+> > > > Is there more information on the effect than 7 is the fastest?
+> > 
+> > There is no more information about the exact meaning of the values.
+> > As described above, the higher the value, the steeper the voltage flanks.
+> > 
+> > > > 
+> > > > > +    minimum: 0
+> > > > > +    maximum: 7
+> > > > 
+> > > > Please also add a default.
+> > 
+> > Sure, I added the default value 7 that matches the currently hardcoded 
+> > value in the driver.
+> > 
+> > > 
+> > > It'd also be great (IMO) if it were given in terms of actual units, not
+> > > nebulous values that I assume to be the register values.
+> > 
+> > I agree, but the documentation does not provide further details about the
+> > unit of the value. So using the register value is my best-effort approach.
 > 
-> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
-> ---
->  lib/test_scanf.c | 66 ++++++++++++++++++++++++++++----------------------------
->  1 file changed, 33 insertions(+), 33 deletions(-)
-> 
-> diff --git a/lib/test_scanf.c b/lib/test_scanf.c
-> index 44f8508c9d88..d1664e0d0138 100644
-> --- a/lib/test_scanf.c
-> +++ b/lib/test_scanf.c
-> @@ -24,12 +24,12 @@ static char *test_buffer __initdata;
->  static char *fmt_buffer __initdata;
->  static struct rnd_state rnd_state __initdata;
->  
-> -typedef int (*check_fn)(const void *check_data, const char *string,
-> -			const char *fmt, int n_args, va_list ap);
-> +typedef int (*check_fn)(const char *file, const int line, const void *check_data,
-> +			const char *string, const char *fmt, int n_args, va_list ap);
->  
-> -static void __scanf(4, 6) __init
-> -_test(check_fn fn, const void *check_data, const char *string, const char *fmt,
-> -	int n_args, ...)
-> +static void __scanf(6, 0) __init
+> If they don't provide em, how is anyone meant to calculate what's
+> correct? Trial and error?
 
-This should be:
+The correct slew-rate is a trade-off:
 
-static void __scanf(6, 8) __init
+You would usually start with the fastest slew-rate as it leads to an
+output signal that's as close as possible to a perfect square-wave.
+On higher link frequencies a too slow slew rate can cause the signal to
+not reach the HIGH voltage level before going to LOW again s.t. the
+reveiver cannot interpret the digital signal correctly.
 
-The zero (0) is used when the parameters are passed via the va_list.
-The value must be the position of the first parameter when they are passed
-via the variable list of parameters, aka (...).
+But steeper voltage flanks lead to higher electromagnetic emissions s.t.
+a device might not pass the electromagnetic compatibility (EMC)
+certification with the high slew rate.
+In this case you would lower the slew rate until your emissions are
+within the allowed range.
 
-Otherwise, it triggers the warnings reported by the lkp@intel.com
-kernel test robot, see
-https://lore.kernel.org/r/202502160245.KUrryBJR-lkp@intel.com
+The actual emissions depend on many factors like the PCB layout, the
+length and shielding of cables etc. This makes it hard to fully simulate
+them.
+So even if would know the exact unit of the configured slew rate of the
+camera sensor, it would not fully allow us to calculate the correct value
+for it.
 
-Best Regards,
-Petr
