@@ -1,254 +1,77 @@
-Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42F801FC7D1;
-	Wed,  5 Mar 2025 09:02:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3000E1FC7D1
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 09:02:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741165348; cv=none; b=t5ULx4n6ZcTSlo0zH5myketOKdmO64TMObgGSonG+LepUGXRNJBxDD6SJcytoJrhvO7D02ayCasNYvZBb5p1BTI5hVdA17kbHTE/UOgstzX/TnSzyynPlro7ngoD6da95P/Mwbp54gpjfP3KyRRNNiGYWVKD25c3CL6pLszjmz8=
+	t=1741165362; cv=none; b=Jgnl9TAHjbqMzTWarbEu8OMAvUBvArjH87f6k6u9d08+ARe2gkGX1j79r3onTSBWMw5yY74ZKpymGf7s+5oZPFlOFv6NpgUkTN6vgFw6wkc1xdy0dvHcho1SAZhUxSIxlln789PWCeJlO+34vzgie6xhw/b0ejZ2NyiY77bb38o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741165348; c=relaxed/simple;
-	bh=7BZUuY0NVXBKg5hilWvkKI6gUrRsdS6N+7BHvgE6STY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LOQhZYf9zer4jky7LpeJtklNWuuK7NBDBp/F3Zs7YqpPZsZs2Kc8HyaCg2NOd3DPJT0j4AaVLq6p4/QYS1QLaHY7RxsTEVVk3xCQMdHrlTR2IXQkStlZ4PgAHYImnyHoC7AUEOPcGVXhc4MKwUHHyYOEruPUPhpw/r6UL5akVuE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=FGEdSHsJ; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=qzcWgjDG reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
+	s=arc-20240116; t=1741165362; c=relaxed/simple;
+	bh=/55WYkTyMJhM1DoK8DRZUOaqBCB7yJjGbAuaGgYFSB0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iSh7r/cQ/a9k+x3Hdmapn6/47nBNwpCghGMiPJzBNteUqrPfA4BtAx6he2VcFSGrC3Xzzxy1sWdKv/StqOK/Bs35iySFBQ9qlMxsY9rJRFJW++8xSA+rq7ecCGLLFcM0utyLNOY8R0EHQu9ohZg5APcXQxOdKmZX38hVio2c7y0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=qFkZkqOB; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=9732khKQ; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="FGEdSHsJ";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="qzcWgjDG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1741165346; x=1772701346;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=vqA7WR0bg0u4G+HAomrK/aLC9+18x4n+S7IKkNThfiM=;
-  b=FGEdSHsJUzdScXTdYhZDaxdAawHc2qDZosoNyGgeUVrIIunht89aqQqJ
-   HbUFHh48AM65l+XSXqsGhMG9kuBuNclOfyJOb6cJVCMoEll6EDKETj/OH
-   jbdIelhBCxMNFMdTse2GCSiSzcYRvC/ukcGFFmT1KzbJ6SScr756bTxD2
-   4X2TT9k8TUoH3/Vf7vAgXx/kMNl3nO1ma7HamU/roKjhhF4f1fOGyc5nE
-   th+OlHdXuqXo5zwZGT4noy59M1frVRKYYf5yCSt4SJuqEP+v66pLAvPVr
-   +39vEol0TS7h4+Txq3T3sL3fkuax/hlRo99rFeytb+WN0uJz7CaxMlNDK
-   g==;
-X-CSE-ConnectionGUID: IH657TY3Tl23yR3Vv1dR/A==
-X-CSE-MsgGUID: cgkFUMvxRU6w9KHMn9F1ow==
-X-IronPort-AV: E=Sophos;i="6.14,222,1736809200"; 
-   d="scan'208";a="42301885"
-Received: from vmailcow01.tq-net.de ([10.150.86.48])
-  by mx1.tq-group.com with ESMTP; 05 Mar 2025 10:02:22 +0100
-X-CheckPoint: {67C8131E-23-7141A0B0-E6EDEC14}
-X-MAIL-CPID: 0BDC1C9894ABA85FF037DCAB1A11A9B5_3
-X-Control-Analysis: str=0001.0A00636C.67C8131F.010A,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id A72F3170EA5;
-	Wed,  5 Mar 2025 10:02:16 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
-	s=dkim; t=1741165338;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qFkZkqOB";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="9732khKQ"
+Date: Wed, 5 Mar 2025 10:02:37 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1741165359;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=vqA7WR0bg0u4G+HAomrK/aLC9+18x4n+S7IKkNThfiM=;
-	b=qzcWgjDGS6jWPY+RITIk8yBviKpMKL0y16KSXMlshqTDttq6zKFd8uRh0rjbusm21alLLO
-	0zncE1o54zqa2PkjSbvWyACMubP8NqizUU7F39NtdEyf8B7h5zWhZ3ivT6X25sqtCFjSSc
-	Bq3JpoZAEKG0N2u2vqMbhZJRAtcHkfgPLIvm7R5McponzskDZSRi22nXnOhJg1CUW3KHx/
-	aVeSFRyy4/ATHnHp/9XUjp3UP5VCYqp6++6rG5zw1KmH82cgRaFpKEHzJKR3F3q1GHoDJc
-	hgimR61srqwk7i5wU9S6wvO15O4FIatNLRGINZRrOvbwgrcOGQlB24ojz6hXxA==
-From: Alexander Stein <alexander.stein@ew.tq-group.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
- Sascha Hauer <s.hauer@pengutronix.de>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>, Abel Vesa <abelvesa@kernel.org>,
- Peng Fan <peng.fan@nxp.com>, Michael Turquette <mturquette@baylibre.com>,
- Stephen Boyd <sboyd@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>,
- devicetree@vger.kernel.org, imx@lists.linux.dev,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux@ew.tq-group.com, linux-clk@vger.kernel.org, linux-pm@vger.kernel.org
-Subject:
- Re: [PATCH v3 2/6] dt-bindings: soc: imx93-media-blk-ctrl: Add LDB subnode
- into schema and example
-Date: Wed, 05 Mar 2025 10:02:16 +0100
-Message-ID: <4414669.ejJDZkT8p0@steina-w>
-Organization: TQ-Systems GmbH
-In-Reply-To: <20250305-dandelion-axolotl-of-excitement-05fa70@krzk-bin>
-References:
- <20250304154929.1785200-1-alexander.stein@ew.tq-group.com>
- <20250304154929.1785200-3-alexander.stein@ew.tq-group.com>
- <20250305-dandelion-axolotl-of-excitement-05fa70@krzk-bin>
+	bh=/55WYkTyMJhM1DoK8DRZUOaqBCB7yJjGbAuaGgYFSB0=;
+	b=qFkZkqOBhxBEC/VDil3wkpOejAYsG7xsfuzAHj+8n19uiiz7qYmK3TvjAkFdZ7PSSPQNUE
+	UQvXyyw1kaPnkzsSnhAbASA5p2OoSBEAyFZPz+DAyU4/al0OD81QFU0N7U6WrPU/YhFkU3
+	nvRvTr6H0vLM6a94jvxkXUqezVasUAScq299jGBIKop6pJ3W8K4JIhMuMUy9gOgzJNNKEH
+	KiWYahXMgpJ1WmnBVPHPaxtdCWWpnep8gnhP5JAvmpO619XdF/6YmItrktd/oa51s2SSm0
+	VgR0URIpN4Re8yDIox1qu5n4m/CB+OECQPxfLiFCH7H/84YwmMCdquksTuZJuw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1741165359;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/55WYkTyMJhM1DoK8DRZUOaqBCB7yJjGbAuaGgYFSB0=;
+	b=9732khKQwy8mHehA8LNEGagcp0F6Txdq+mIOMkKMHjUtl42UcWrOIbJNGF/PgpoTkTWpn8
+	N8Fg9dKv7U59pbCA==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: linux-kernel@vger.kernel.org,
+	=?utf-8?B?QW5kcsOp?= Almeida <andrealmeid@igalia.com>,
+	Darren Hart <dvhart@infradead.org>,
+	Davidlohr Bueso <dave@stgolabs.net>, Ingo Molnar <mingo@redhat.com>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Waiman Long <longman@redhat.com>
+Subject: Re: [PATCH v9 00/11] futex: Add support task local hash maps.
+Message-ID: <20250305090237.2Q9GwRA1@linutronix.de>
+References: <20250225170914.289358-1-bigeasy@linutronix.de>
+ <20250303105416.GY11590@noisy.programming.kicks-ass.net>
+ <20250303141753.tF-FoCm1@linutronix.de>
+ <20250303164015.HHfy1Ibj@linutronix.de>
+ <20250304145837.a8g07J-k@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"
-X-Last-TLS-Session-Version: TLSv1.3
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250304145837.a8g07J-k@linutronix.de>
 
-Hi,
+On 2025-03-04 15:58:39 [+0100], To Peter Zijlstra wrote:
+> hash. That is why I had the `released' member.
 
-Am Mittwoch, 5. M=E4rz 2025, 08:13:04 CET schrieb Krzysztof Kozlowski:
-> On Tue, Mar 04, 2025 at 04:49:21PM +0100, Alexander Stein wrote:
-> > Document the LDB bridge subnode and add the subnode into the example.
-> > For the subnode to work, the block control must scan its subnodes and
->=20
-> Don't describe drivers, but describe the hardware.
+The box was still alive this morning so it did survive >12h testing. I
+would bring back the `released' member back unless you have other
+preferences.
+Depending on those I could fold the fixes directly into the patches and
+repost the whole thing or prepare you patches that can be folded back
+and send those.
 
-Thanks, I'll rephrase to describe the hardware better regarding LVDS.
-
->=20
-> > bind drivers to them, do not misuse either simple-bus or simple-mfd
-> > here.
->=20
-> I don't understand that simple-bus or simple-mfd statement. There are no
-> such compatibles here.
-
-Same as above, the wording stems from 1cb0c87d27dcc ("dt-bindings: soc:
-imx8mp-media-blk-ctrl: Add LDB subnode into schema and example").
-I'll drop it to avoid confusion.
-
->=20
-> >=20
-> > Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
-> > ---
-> >  .../soc/imx/fsl,imx93-media-blk-ctrl.yaml     | 51 +++++++++++++++++++
-> >  1 file changed, 51 insertions(+)
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/soc/imx/fsl,imx93-media-=
-blk-ctrl.yaml b/Documentation/devicetree/bindings/soc/imx/fsl,imx93-media-b=
-lk-ctrl.yaml
-> > index b3554e7f9e76d..cd785111928bf 100644
-> > --- a/Documentation/devicetree/bindings/soc/imx/fsl,imx93-media-blk-ctr=
-l.yaml
-> > +++ b/Documentation/devicetree/bindings/soc/imx/fsl,imx93-media-blk-ctr=
-l.yaml
-> > @@ -24,6 +24,14 @@ properties:
-> >    reg:
-> >      maxItems: 1
-> > =20
-> > +  ranges: true
-> > +
-> > +  '#address-cells':
-> > +    const: 1
-> > +
-> > +  '#size-cells':
-> > +    const: 1
-> > +
-> >    '#power-domain-cells':
-> >      const: 1
-> > =20
-> > @@ -46,9 +54,20 @@ properties:
-> >        - const: csi
-> >        - const: dsi
-> > =20
-> > +  bridge@20:
->=20
-> @20 looks wrong. Use 'ranges;' and try again your DTS...
->=20
-> Binding is supposed to be complete. We have several examples when people
-> added children one-by-one, everytime with different reasoning about
-> child addressing.
->=20
-> So please confirm: this is complete and no other children will ever be
-> added here... or you are 100% sure that all future children will be
-> unit-addressable (will have unit address and appropriate properties).
-
-This block control is a collection of registers for different purposes:
-* MIPI-DSI
-* MIPI-CSI
-* Parallel camera
-* LVDS
-* CAMERA_MUX
-
-At lease for parallel camera, another subnode is expected ([1]).
-
-[1] https://lore.kernel.org/all/20240819024001.850065-1-victor.liu@nxp.com/
-
-> BTW, I don't quite get why this is both syscon and has translation for
-> child addresses. Does it mean your child does not use the same MMIO as
-> parent, thus leading to unsynchronized reg access?
-
-I'm not sure what the best practices are. This LDB has two registers
-inside this block. So it seems reasonable to me to indicate this using
-a reg property. On the other hand, access is solely done by accessing
-via syscon, so unsynchronized reg access is not an issue.
-
-What I am getting from your comments this node should not have 'reg'
-property, as it uses syscon anyway.
-
-> > +    type: object
-> > +    additionalProperties: true
-> > +    properties:
-> > +      compatible:
-> > +        contains:
-> > +          const: fsl,imx93-ldb
-> > +
-> >  required:
-> >    - compatible
-> >    - reg
-> > +  - ranges
-> > +  - '#address-cells'
-> > +  - '#size-cells'
-> >    - power-domains
-> >    - clocks
-> >    - clock-names
-> > @@ -77,4 +96,36 @@ examples:
-> >                 clock-names =3D "apb", "axi", "nic", "disp", "cam",
-> >                               "pxp", "lcdif", "isi", "csi", "dsi";
-> >        #power-domain-cells =3D <1>;
-> > +      #address-cells =3D <1>;
-> > +      #size-cells =3D <1>;
-> > +      ranges =3D <0x0 0x4ac10000 0x10000>;
-> > +
-> > +      bridge@20 {
-> > +          compatible =3D "fsl,imx93-ldb";
-> > +          reg =3D <0x20 0x4>, <0x24 0x4>;
-> > +          reg-names =3D "ldb", "lvds";
-> > +          clocks =3D <&clk IMX93_CLK_LVDS_GATE>;
-> > +          clock-names =3D "ldb";
-> > +
-> > +          ports {
-> > +              #address-cells =3D <1>;
-> > +              #size-cells =3D <0>;
-> > +
-> > +              port@0 {
-> > +                  reg =3D <0>;
-> > +
-> > +                  ldb_from_lcdif2: endpoint {
-> > +                      remote-endpoint =3D <&lcdif2_to_ldb>;
-> > +                  };
-> > +              };
-> > +
-> > +              port@1 {
-> > +                  reg =3D <1>;
-> > +
-> > +                  ldb_lvds: endpoint {
-> > +                      remote-endpoint =3D <&ldb_to_panel>;
-> > +                  };
-> > +              };
-> > +          };
->=20
-> Messed indentation.
-
-This is already from the original binding. I'll fix in a separate commit.
-
-Best regards,
-Alexander
-
->=20
-> > +        };
->=20
-> Best regards,
-> Krzysztof
->=20
->=20
-
-
-=2D-=20
-TQ-Systems GmbH | M=FChlstra=DFe 2, Gut Delling | 82229 Seefeld, Germany
-Amtsgericht M=FCnchen, HRB 105018
-Gesch=E4ftsf=FChrer: Detlef Schneider, R=FCdiger Stahl, Stefan Schneider
-http://www.tq-group.com/
-
-
+Sebastian
