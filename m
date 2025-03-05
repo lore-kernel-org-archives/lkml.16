@@ -1,49 +1,25 @@
-Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34C15202969;
-	Wed,  5 Mar 2025 09:24:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 948D52040A9
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 09:24:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741166645; cv=none; b=gqkguHY0iSZN3ETSPUCusyasuQB3+hAjLsDr8BBoMP1wYDyFm8fqQJggLdxzkCMih6XPwGxZwPNW1200OD4PigFIEcHSx0doy5E3ef1t/XBj3tbXMTr4X2otYC/oJ4qGDr/XishURLYCLOx5psZwFWbJee59K0ZKg6oA4UxhaVI=
+	t=1741166648; cv=none; b=esz8WFnxXdgO35TZbvb7O71J1LRjBkqSflR6RoXL1xyXn49/ToZ3d/Z6T5srUSy3Z3L3qkBFLsca49zV+DJqd6u3wofaw5Tw27jb3wOaJP6t8rP6lPKYtX18RM3HMOyF3lAK9ICnlBq4w9p+p+dHAF5XtcM8lTZR2NoWCrp7COQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741166645; c=relaxed/simple;
-	bh=e9IpE0SGBvr7XdB1PmYTB+n+O/yPUsQGkJTr/yP4p20=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=NKj2Wun1gVzv3qMVxekwcSoNZ0ol35oJw+vL0MFfAm7KgvbSm/lsd7SeMfHwQx0IgzEy9NTmY2vEhBEojRlp4yfj5MmRzgc+ayCqdyhdCnNwJSRsWPZgua8Bu8f5JBcw1Lwu5hFSfYYCxlpNFeNoBti9Neap4f5n1k9UnNkCROY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=IdH9WHlI; arc=none smtp.client-ip=198.47.19.245
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="IdH9WHlI"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 5259NFLA3262869
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 5 Mar 2025 03:23:15 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1741166595;
-	bh=Z5/W8wdKEN5TGq6ACfVJI7RQYE+f+XWAUXgCuHkULso=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=IdH9WHlIAXAT3d1R8hRkJzkWi8CWZL2syf2CHxChgi8SfA7NLD8s/AdPEfIXn3XHl
-	 jZKg9wPMq4FKO/RT6gpiLY8pcd1tjfW+pAfWyZq/Q+JAT+yEssjTQF7lyX+lR5fbDQ
-	 JhL4jrsqYPcdbeqpXT6n0b9p7fCiufEri48wcNbc=
-Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 5259NF0R048075
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Wed, 5 Mar 2025 03:23:15 -0600
-Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 5
- Mar 2025 03:23:14 -0600
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE110.ent.ti.com
- (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Wed, 5 Mar 2025 03:23:14 -0600
-Received: from [172.24.31.59] (lt9560gk3.dhcp.ti.com [172.24.31.59])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 5259N7TW044885;
-	Wed, 5 Mar 2025 03:23:08 -0600
-Message-ID: <fd989751-e7f6-40bb-a0bf-058c752cc7bc@ti.com>
-Date: Wed, 5 Mar 2025 14:53:07 +0530
+	s=arc-20240116; t=1741166648; c=relaxed/simple;
+	bh=UmY0T/Mbt1Sjuam6l7DCpjDOFDwzesP2bbeFqXrsEf0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=shbaO+GHuXLEsc9U5gqFkFrBUnRfw2IDOGvFNF7Z3I/Ij13P0oB8CPyAA+y29Xd5KeugyT6C5vqpxwdzUKZpLbhP8s0+Fr+Y6Bo42O3aFvGOs4Juczl5AZQVrh3MnDv9yKU8WChXdT0Zd7I6BrGqNlbb5aoeeUvB+e1BLKaGnas=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 31DABFEC;
+	Wed,  5 Mar 2025 01:24:19 -0800 (PST)
+Received: from [192.168.178.6] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 171743F66E;
+	Wed,  5 Mar 2025 01:24:03 -0800 (PST)
+Message-ID: <f1bf21e6-4fd3-4f97-b28f-b0e8dc37ff91@arm.com>
+Date: Wed, 5 Mar 2025 10:23:51 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,113 +27,107 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [EXTERNAL] Re: [PATCH net-next v3 3/3] net: ti: icssg-prueth: Add
- XDP support
-To: Dan Carpenter <dan.carpenter@linaro.org>
-CC: <rogerq@kernel.org>, <danishanwar@ti.com>, <pabeni@redhat.com>,
-        <kuba@kernel.org>, <edumazet@google.com>, <davem@davemloft.net>,
-        <andrew+netdev@lunn.ch>, <bpf@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <u.kleine-koenig@baylibre.com>,
-        <matthias.schiffer@ew.tq-group.com>, <schnelle@linux.ibm.com>,
-        <diogo.ivo@siemens.com>, <glaroque@baylibre.com>, <macro@orcam.me.uk>,
-        <john.fastabend@gmail.com>, <hawk@kernel.org>, <daniel@iogearbox.net>,
-        <ast@kernel.org>, <srk@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>
-References: <20250224110102.1528552-1-m-malladi@ti.com>
- <20250224110102.1528552-4-m-malladi@ti.com>
- <d362a527-88cf-4cd5-a22f-7eeb938d4469@stanley.mountain>
- <21f21dfb-264b-4e01-9cb3-8d0133b5b31b@ti.com>
- <2c0c1a4f-95d4-40c9-9ede-6f92b173f05d@stanley.mountain>
- <40ce8ed3-b36c-4d5f-b75a-7e0409beb713@ti.com>
- <61117a07-35b5-48c0-93d9-f97db8e15503@stanley.mountain>
+Subject: Re: [PATCH 1/1] sched/fair: Fix invalid pointer dereference in
+ child_cfs_rq_on_list()
+To: Vincent Guittot <vincent.guittot@linaro.org>,
+ Aboorva Devarajan <aboorvad@linux.ibm.com>
+Cc: mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
+ riel@surriel.com, rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+ vschneid@redhat.com, odin@uged.al, linux-kernel@vger.kernel.org
+References: <20250304170007.245261-1-aboorvad@linux.ibm.com>
+ <CAKfTPtCJKkwFeMKUrD3o224Nz4N+1qjtq0LvL945k9tJ8t8h-g@mail.gmail.com>
+From: Dietmar Eggemann <dietmar.eggemann@arm.com>
 Content-Language: en-US
-From: "Malladi, Meghana" <m-malladi@ti.com>
-In-Reply-To: <61117a07-35b5-48c0-93d9-f97db8e15503@stanley.mountain>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+In-Reply-To: <CAKfTPtCJKkwFeMKUrD3o224Nz4N+1qjtq0LvL945k9tJ8t8h-g@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Dan,
+On 05/03/2025 09:21, Vincent Guittot wrote:
+> On Tue, 4 Mar 2025 at 18:00, Aboorva Devarajan <aboorvad@linux.ibm.com> wrote:
+>>
+>> In child_cfs_rq_on_list(), leaf_cfs_rq_list.prev is expected to point to
+>> a valid cfs_rq->leaf_cfs_rq_list in the hierarchy. However, when accessed
+>> from the first node in a list, leaf_cfs_rq_list.prev can incorrectly point
+>> back to the list head (rq->leaf_cfs_rq_list) instead of another
+>> cfs_rq->leaf_cfs_rq_list.
+>>
+>> The function does not handle this case, leading to incorrect pointer
+>> calculations and unintended memory accesses, which can result in a kernel
+>> crash.
+>>
+>> A recent attempt to reorder fields in struct rq exposed this issue by
+>> modifying memory offsets and affecting how pointer computations are
+>> resolved. While the problem existed before, it was previously masked by
+>> specific field arrangement. The reordering caused erroneous pointer
+>> accesses, leading to a NULL dereference and a crash, as seen in the
 
-On 3/3/2025 7:38 PM, Dan Carpenter wrote:
-> What I mean is just compile the .o file with and without the unlikely(). 
-> $ md5sum drivers/net/ethernet/ti/icssg/icssg_common. o* 
-> 2de875935222b9ecd8483e61848c4fc9 drivers/net/ethernet/ti/icssg/ 
-> icssg_common. o. annotation 2de875935222b9ecd8483e61848c4fc9
-> ZjQcmQRYFpfptBannerStart
-> This message was sent from outside of Texas Instruments.
-> Do not click links or open attachments unless you recognize the source 
-> of this email and know the content is safe.
-> Report Suspicious
-> <https://us-phishalarm-ewt.proofpoint.com/EWT/v1/G3vK! 
-> uldq3TevVoc7KuXEXHnDf- 
-> TXtuZ0bON9iO0jTE7PyIS1jjfs_CzpvIiMi93PVt0MVDzjHGQSK__vY_-6rO7q86rFmBMGW4SSqK5pvNE$>
-> ZjQcmQRYFpfptBannerEnd
+I'm running tip/sched/core on arm64 and I still only see the wrong
+pointer for 'prev_cfs_rq->tg->parent' in the 'prev ==
+&rq->leaf_cfs_rq_list' case?
+
+...
+cpu=5 prev_cfs_rq->tg=ffff00097efb63a0 parent=0000000000000010
+cfs_rq->tg=ffff000802084000
+...
+
+>> following trace:
+>>
+>> [    2.152852] Call Trace:
+>> [    2.152855] __update_blocked_fair+0x45c/0x6a0 (unreliable)
+>> [    2.152862] sched_balance_update_blocked_averages+0x11c/0x24c
+>> [    2.152869] sched_balance_softirq+0x60/0x9c
+>> [    2.152876] handle_softirqs+0x148/0x3b4
+>> [    2.152884] do_softirq_own_stack+0x40/0x54
+>> [    2.152891] __irq_exit_rcu+0x18c/0x1b4
+>> [    2.152897] irq_exit+0x20/0x38
+>> [    2.152903] timer_interrupt+0x174/0x30c
+>> [    2.152910] decrementer_common_virt+0x28c/0x290
+>> [    2.059873] systemd[1]: Hostname set to ...
+>> [    2.152682] BUG: Unable to handle kernel data access on read at 0x100000125
+>> [    2.152717] Faulting instruction address: 0xc0000000001c0270
+>> [    2.152724] Oops: Kernel access of bad area, sig: 7 [#1]
+>> ..
+>>
+>> To fix this, introduce a check to detect when prev points to the list head
+>> (&rq->leaf_cfs_rq_list). If this condition is met, return early to prevent
+>> the use of an invalid prev_cfs_rq.
+>>
+>> Fixes: fdaba61ef8a2 ("sched/fair: Ensure that the CFS parent is added after unthrottling")
+>> Signed-off-by: Aboorva Devarajan <aboorvad@linux.ibm.com>
+>> ---
+>>  kernel/sched/fair.c | 7 +++++--
+>>  1 file changed, 5 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+>> index 1c0ef435a7aa..a4daa7a9af0b 100644
+>> --- a/kernel/sched/fair.c
+>> +++ b/kernel/sched/fair.c
+>> @@ -4045,12 +4045,15 @@ static inline bool child_cfs_rq_on_list(struct cfs_rq *cfs_rq)
+>>  {
+>>         struct cfs_rq *prev_cfs_rq;
+>>         struct list_head *prev;
+>> +       struct rq *rq;
+>> +
+>> +       rq = rq_of(cfs_rq);
+>>
+>>         if (cfs_rq->on_list) {
+>>                 prev = cfs_rq->leaf_cfs_rq_list.prev;
+>> +               if (prev == &rq->leaf_cfs_rq_list)
+>> +                       return false;
 > 
-> What I mean is just compile the .o file with and without the unlikely().
-> 
-> $ md5sum drivers/net/ethernet/ti/icssg/icssg_common.o*
-> 2de875935222b9ecd8483e61848c4fc9  drivers/net/ethernet/ti/icssg/icssg_common.o.annotation
-> 2de875935222b9ecd8483e61848c4fc9  drivers/net/ethernet/ti/icssg/icssg_common.o.no_anotation
-> 
-> Generally the rule is that you should leave likely/unlikely() annotations
-> out unless it's going to make a difference on a benchmark.  I'm not going
-> to jump down people's throat about this, and if you want to leave it,
-> it's fine.  But it just struct me as weird so that's why I commented on
-> it.
-> 
+> what about the else case below , prev can also point to rq->leaf_cfs_rq_list
 
-I have done some performance tests to see if unlikely() is gonna make 
-any impact and I see around ~9000 pps and 6Mbps drop without unlikely() 
-for small packet sizes (60 Bytes)
+Should be the same issue IMHO. I'm not seeing it on my machine  during
+startup or while doing simple taskgroup tests though, 'cfs_rq->on_list'
+is always 1 so far.
 
-You can see summary of the tests here:
-
-packet size   with unlikely(pps)  without unlikely(pps)   regression
-
-       60        462377                453251                 9126
-
-       80        403020                399372                 3648
-
-       96        402059                396881                 5178
-
-      120        392725                391312                 4413
-
-      140        327706                327099                 607
-
-packet size  with unlikely(Mbps)  without unlikely(Mbps)  regression
-
-      60         311                   305                    6
-
-      80         335                   332                    3
-
-      96         386                   381                    5
-
-      120        456                   451                    5
-
-      140        430                   429                    1
-
-For more details on the logs, please 
-refer:https://gist.github.com/MeghanaMalladiTI/cc6cc7709791376cb486eb1222de67be
-
-Regards,
-Meghana Malladi
-
-> regards,
-> dan carpenter
-> 
-> diff --git a/drivers/net/ethernet/ti/icssg/icssg_common.c b/drivers/net/ethernet/ti/icssg/icssg_common.c
-> index 34d16e00c2ec..3db5bae44e61 100644
-> --- a/drivers/net/ethernet/ti/icssg/icssg_common.c
-> +++ b/drivers/net/ethernet/ti/icssg/icssg_common.c
-> @@ -672,7 +672,7 @@ static int emac_run_xdp(struct prueth_emac *emac, struct xdp_buff *xdp,
->   	case XDP_TX:
->   		/* Send packet to TX ring for immediate transmission */
->   		xdpf = xdp_convert_buff_to_frame(xdp);
-> -		if (unlikely(!xdpf))
-> +		if (!xdpf)
->   			goto drop;
->   
->   		q_idx = smp_processor_id() % emac->tx_ch_num;
-> 
+>>         } else {
+>> -               struct rq *rq = rq_of(cfs_rq);
+>> -
+>>                 prev = rq->tmp_alone_branch;
+>>         }
+>>
+>> --
+>> 2.43.5
+>>
 
