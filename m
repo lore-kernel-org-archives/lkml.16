@@ -1,75 +1,34 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 997A714A09A
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 14:37:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E93A2E3396;
+	Wed,  5 Mar 2025 14:38:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741185480; cv=none; b=R39XzfUeg7pRAKcDg0nwymqCUHqaMW1Yjb+kXpZ5lsTiBo1hJJ1ptNJoXa44TY06zbux+cFJyZfGweHQuLquNBjyiZbEJuhSgHdHhJWKZwsMSONUDcrWedfhJN+0t05hbmdssgEFJLT4cYTprWYfBmSDRl3HkKYu4LGy9vmaPus=
+	t=1741185500; cv=none; b=Y+UKb09XCMVqazxhRlSyXiB9juSnz7dGZnAJwEZvOOqN2L6HDGVdnDIWuomFSOWjHHlTKA1EYBbF5FbjTR16yUDfY77BbTM3tWnxhedHdgDTaqiiHJ6xyjQr+i8gAyqWpm/886kV86xQYWLDYIb9WVJj1vefd2o5k0XVmwynrFA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741185480; c=relaxed/simple;
-	bh=CSy21FFYCfkrs1Vebz77But+YBdPWb0R0yTM3O4u1EQ=;
+	s=arc-20240116; t=1741185500; c=relaxed/simple;
+	bh=BMmoQzW3AxNTdMe7/ngjvFv9EZpOVEFkw2pwJFHMUq8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nN1SU1HGZw8vL1ZNU++ceMV5bnCjdMFSKG+E6LEYGzgJJl93ePNLIIwiVZHIS6gthKe69Cui5JXiKu06aIJbADwEe6haLT8dm7DmxhB7YCRlGg54k0C8p+nTRjZ1ZA83Q4JAUNOKAtCukQp9n4vHijd2AXsC4PgZkg/ewwHUtdI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MkyQhRRb; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MkyQhRRb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741185479; x=1772721479;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=CSy21FFYCfkrs1Vebz77But+YBdPWb0R0yTM3O4u1EQ=;
-  b=MkyQhRRbGYeqsqbCAlcP6CCPDuIsAwMq1+2oSTocrslkoWuBuOw7hSOu
-   3jIovb/vMpcOAPuZ8DR4ZEX28XH9Y29jOsh+dJ7hgIQQE0qHGeju6s76W
-   at8E5olK4YRqMiS5+QzGySLu+S3ABARGekVhV6D9NsvJ4/Zy2kZ5UplK2
-   eJGth1pRaVIvkNRq3CplQ0wrKZp/MQTnhsbM7ilYYx4HT/dNhJ+bHVnYf
-   nfcU4KnIxLFcpEIwyS/tfa4pD4xPjNeNXmbpOK0Ar7Qp1rowbz2g6sfJZ
-   Lq1B/VkYmeRAAeDB2cDb5hFnOaMGCqVssWb8ibYiQGLVHp3i3dN5o2Tqh
-   g==;
-X-CSE-ConnectionGUID: 4zYksdVrQra0k+2vs+xOHQ==
-X-CSE-MsgGUID: RnR1kQ1TTgmJJg43fr6vFw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11363"; a="42350773"
-X-IronPort-AV: E=Sophos;i="6.14,223,1736841600"; 
-   d="scan'208";a="42350773"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Mar 2025 06:37:58 -0800
-X-CSE-ConnectionGUID: yba5WHXCRs6NCv7yprlgGg==
-X-CSE-MsgGUID: /XxRzxeSShWGF56o44N/DA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,223,1736841600"; 
-   d="scan'208";a="118526770"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by fmviesa006.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Mar 2025 06:37:54 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1tppsc-0000000HRDU-3UrN;
-	Wed, 05 Mar 2025 16:37:50 +0200
-Date: Wed, 5 Mar 2025 16:37:50 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: mailhol.vincent@wanadoo.fr
-Cc: Yury Norov <yury.norov@gmail.com>,
-	Lucas De Marchi <lucas.demarchi@intel.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Jani Nikula <jani.nikula@linux.intel.com>,
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Tvrtko Ursulin <tursulin@ursulin.net>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
-	Andi Shyti <andi.shyti@linux.intel.com>,
-	David Laight <David.Laight@aculab.com>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	Jani Nikula <jani.nikula@intel.com>
-Subject: Re: [PATCH v4 5/8] drm/i915: Convert REG_GENMASK* to fixed-width
- GENMASK_*
-Message-ID: <Z8hhvovVmX-xLStQ@smile.fi.intel.com>
-References: <20250305-fixed-type-genmasks-v4-0-1873dcdf6723@wanadoo.fr>
- <20250305-fixed-type-genmasks-v4-5-1873dcdf6723@wanadoo.fr>
+	 Content-Type:Content-Disposition:In-Reply-To; b=MdDs5pWYBX3ftc/FZTIqMN6BVek7m+WOfJt8CvnlqTRkXFQ2Hx/WoZ7crKTuLDcYj9/9xS0en2bnh+Yxlz+DVulhzR2D8I7n+f6hWY8K+QYvGPYHG54TZ0zYUJMpGnu7w0kMGxoWFfQ0WyWuHAy5IQLV40tkkS1c+xhC+xH73pI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id 49E3568AFE; Wed,  5 Mar 2025 15:38:14 +0100 (CET)
+Date: Wed, 5 Mar 2025 15:38:14 +0100
+From: Christoph Hellwig <hch@lst.de>
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: Christoph Hellwig <hch@lst.de>,
+	Caleb Sander Mateos <csander@purestorage.com>,
+	Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>,
+	Sagi Grimberg <sagi@grimberg.me>, Hannes Reinecke <hare@suse.de>,
+	linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] nvme-tcp: fix signedness bug in
+ nvme_tcp_init_connection()
+Message-ID: <20250305143814.GA18852@lst.de>
+References: <0f3be9ff-81a1-4c33-8960-75de2c239ae0@stanley.mountain> <20250305142554.GA18330@lst.de> <739d3443-61c4-4b69-866b-142efde59062@stanley.mountain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -78,26 +37,21 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250305-fixed-type-genmasks-v4-5-1873dcdf6723@wanadoo.fr>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <739d3443-61c4-4b69-866b-142efde59062@stanley.mountain>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 
-On Wed, Mar 05, 2025 at 10:00:17PM +0900, Vincent Mailhol via B4 Relay wrote:
-> From: Lucas De Marchi <lucas.demarchi@intel.com>
+On Wed, Mar 05, 2025 at 05:37:15PM +0300, Dan Carpenter wrote:
+> > 	if (ret >= 0 && ret < sizeof(*icresp))
+> > 		ret = -ECONNRESET;
+> > 	if (ret < 0) {
+> > 		...
 > 
-> Now that include/linux/bits.h implements fixed-width GENMASK_*, use them
+> Sure, I can do that.
+> 
+> I don't love casts either.  I normally have tried to write these as
+> "if (ret < 0 || ret < sizeof(*icresp)) {" and people don't love that.
 
-GENMASK_*()
-
-and in the Subject
-
-REG_GENMASK*()
-
-> to implement the i915/xe specific macros. Converting each driver to use
-> the generic macros are left for later, when/if other driver-specific
-> macros are also generalized.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+I can see why people don't like it as it's really counterintuitive.
+These kinds of interfaces just suck given the type promotion rules
+unfortunately.
 
