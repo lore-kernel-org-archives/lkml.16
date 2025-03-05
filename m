@@ -1,111 +1,102 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FE882571AB;
-	Wed,  5 Mar 2025 18:59:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4A02257424;
+	Wed,  5 Mar 2025 18:59:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741201187; cv=none; b=V4eQORlwApU7A91fCCdFeLDzEwNxZtjemFMWguiojgkC8oXTeUZ3Y+SIUYNmlSUq8zVI1RwIn6Ql/qsHt2aqbUsBW+4jUeZV8xo0DqCG8si8YnnFvxMSgCAmElwIMRdLlOMo/FkeYW0BqmkfFkZswl9R9fGz+TpKOmxAc+bo9II=
+	t=1741201188; cv=none; b=bbrrL2gHcDeEedLXObzdg9phWIkOlEXdO1ouEegD8oMgl2Z3P54l7LkGtkJ+BucTPEIPWO0MT1ykR8tDH7j5/qHRpwSgcTc8sEDSEQ7J0rw0Zb2Xi10K6LXPhvSZVtYg8QkTg5eef6jzERChIyYzhuGZb92Vqv3/XXAToHOMD4Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741201187; c=relaxed/simple;
-	bh=lix1WOppoHxLTu8lRo8ZOELVqyyGO52750g+3jKAaYw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=rEVhC9vZuhpUJtJWGKZNdr2Wqug3W0elzuEnPAYIiNWF0Q88wChMcoT8S1LXbg3+0OqlcgY875DwYeNDl9gvdB7W5l69fRIVa1vC9CnRVMkgzQhp+3Cvd77H2Jcu4KTIR348iA6ofgJjJa1SX6s0AnQp5rNE+jL0Ry1HjyLRr/I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=CoIUP5Vw; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="CoIUP5Vw"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1741201183;
-	bh=lix1WOppoHxLTu8lRo8ZOELVqyyGO52750g+3jKAaYw=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=CoIUP5VwwBV5tif8gKDEdiKkhVFH1jDrE32RoRJfxre0TjDsJszxrVSk1cZ0pRXsz
-	 N3Wo5lBzowIfdBlS1u6R4vbWrYSk91AnR2LleCyb+8iUYyNbutLTGeddtDub/sUI64
-	 th5sNwCHjSO3JKbYOfI7PVZ7ZrIUNUIEF42ybhAH40OOpfBR+Gx1ZrnlxWmTnwIcao
-	 8mBK8khE2pCneFE9+RM8ZITh6PFSAHOqpB/kb+ovT+AmSXG/xM8YQkgdYT3GSNP2ZU
-	 47YVpWd2TcNKRW8J9KVYw+jomYilS+2HmJQh8VMHKn3iSMD08Q1BvVDyUJEMRU2zm9
-	 2UzyuZnype0DA==
-Received: from [192.168.0.47] (unknown [IPv6:2804:14c:1a9:53ee::1004])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: nfraprado)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 80E8B17E0147;
-	Wed,  5 Mar 2025 19:59:38 +0100 (CET)
-From: =?utf-8?q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= <nfraprado@collabora.com>
-Date: Wed, 05 Mar 2025 15:58:19 -0300
-Subject: [PATCH v4 04/19] ASoC: mediatek: mt6359-accdet: Handle
- hp-eint-high property
+	s=arc-20240116; t=1741201188; c=relaxed/simple;
+	bh=KOntfY2GF79iwDM2QQoQy22zDcX3Cb1Ne2iCHZjE6+w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jnUssadkE74NfTaj+dTB858lFyM45hCkVYpowxWmufb9bZ/z2uyp2iAxhCheQLvXNkbUzpCKu9Z+npOVisV4QeZYA8TUDBt7rZEVu/GsMo4HiijtVtcYaHjD9VuEdfN/eGUia7O4VBa/WTi6x3cFNIg2HKDi6CDsH2TGVEz0SO0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5ADD8C4CED1;
+	Wed,  5 Mar 2025 18:59:45 +0000 (UTC)
+Date: Wed, 5 Mar 2025 18:59:43 +0000
+From: Catalin Marinas <catalin.marinas@arm.com>
+To: Zhenhua Huang <quic_zhenhuah@quicinc.com>
+Cc: anshuman.khandual@arm.com, david@redhat.com, will@kernel.org,
+	ardb@kernel.org, ryan.roberts@arm.com, mark.rutland@arm.com,
+	joey.gouly@arm.com, dave.hansen@linux.intel.com,
+	akpm@linux-foundation.org, chenfeiyang@loongson.cn,
+	chenhuacai@kernel.org, linux-mm@kvack.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	quic_tingweiz@quicinc.com, stable@vger.kernel.org
+Subject: Re: [PATCH v9] arm64: mm: Populate vmemmap at the page level if not
+ section aligned
+Message-ID: <Z8ifH6HILN_7sZDk@arm.com>
+References: <20250304072700.3405036-1-quic_zhenhuah@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20250305-mt6359-accdet-dts-v4-4-e5ffa5ee9991@collabora.com>
-References: <20250305-mt6359-accdet-dts-v4-0-e5ffa5ee9991@collabora.com>
-In-Reply-To: <20250305-mt6359-accdet-dts-v4-0-e5ffa5ee9991@collabora.com>
-To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Matthias Brugger <matthias.bgg@gmail.com>, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
- Sen Chu <sen.chu@mediatek.com>, Sean Wang <sean.wang@mediatek.com>, 
- Macpaul Lin <macpaul.lin@mediatek.com>, Lee Jones <lee@kernel.org>, 
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
-Cc: kernel@collabora.com, linux-sound@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
- linux-pm@vger.kernel.org, 
- =?utf-8?q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= <nfraprado@collabora.com>
-X-Mailer: b4 0.14.2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250304072700.3405036-1-quic_zhenhuah@quicinc.com>
 
-Now that the dt-binding was introduced, the property that governs the
-eint polarity is a boolean called mediatek,hp-eint-high, while the
-current code handles a u32 property called mediatek,eint-level-pol.
-Update the driver handling accordingly.
+On Tue, Mar 04, 2025 at 03:27:00PM +0800, Zhenhua Huang wrote:
+> On the arm64 platform with 4K base page config, SECTION_SIZE_BITS is set
+> to 27, making one section 128M. The related page struct which vmemmap
+> points to is 2M then.
+> Commit c1cc1552616d ("arm64: MMU initialisation") optimizes the
+> vmemmap to populate at the PMD section level which was suitable
+> initially since hot plug granule is always one section(128M). However,
+> commit ba72b4c8cf60 ("mm/sparsemem: support sub-section hotplug")
+> introduced a 2M(SUBSECTION_SIZE) hot plug granule, which disrupted the
+> existing arm64 assumptions.
+> 
+> The first problem is that if start or end is not aligned to a section
+> boundary, such as when a subsection is hot added, populating the entire
+> section is wasteful.
+> 
+> The next problem is if we hotplug something that spans part of 128 MiB
+> section (subsections, let's call it memblock1), and then hotplug something
+> that spans another part of a 128 MiB section(subsections, let's call it
+> memblock2), and subsequently unplug memblock1, vmemmap_free() will clear
+> the entire PMD entry which also supports memblock2 even though memblock2
+> is still active.
+> 
+> Assuming hotplug/unplug sizes are guaranteed to be symmetric. Do the
+> fix similar to x86-64: populate to pages levels if start/end is not aligned
+> with section boundary.
+> 
+> Cc: <stable@vger.kernel.org> # v5.4+
+> Fixes: ba72b4c8cf60 ("mm/sparsemem: support sub-section hotplug")
+> Acked-by: David Hildenbrand <david@redhat.com>
+> Signed-off-by: Zhenhua Huang <quic_zhenhuah@quicinc.com>
+> ---
+>  arch/arm64/mm/mmu.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
 
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Signed-off-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
----
- sound/soc/codecs/mt6359-accdet.c | 5 +----
- sound/soc/codecs/mt6359-accdet.h | 2 +-
- 2 files changed, 2 insertions(+), 5 deletions(-)
+Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
 
-diff --git a/sound/soc/codecs/mt6359-accdet.c b/sound/soc/codecs/mt6359-accdet.c
-index 9bbd4497e8d481ee125693be2fc576b439574b39..ca3be59d2d0ecaadccd9ba399649ba93f20490c4 100644
---- a/sound/soc/codecs/mt6359-accdet.c
-+++ b/sound/soc/codecs/mt6359-accdet.c
-@@ -578,10 +578,7 @@ static int mt6359_accdet_parse_dt(struct mt6359_accdet *priv)
- 	if (!ret)
- 		memcpy(priv->data->pwm_deb, pwm_deb, sizeof(pwm_deb));
- 
--	ret = of_property_read_u32(node, "mediatek,eint-level-pol",
--				   &priv->data->eint_pol);
--	if (ret)
--		priv->data->eint_pol = 8;
-+	priv->data->hp_eint_high = of_property_read_bool(node, "mediatek,hp-eint-high");
- 
- 	ret = of_property_read_u32(node, "mediatek,eint-use-ap", &tmp);
- 	if (ret)
-diff --git a/sound/soc/codecs/mt6359-accdet.h b/sound/soc/codecs/mt6359-accdet.h
-index c234f2f4276a12853a6fe0b13c4198dfc551b6b4..a54a328bdf3797ce642da446c0cc6792f72ec939 100644
---- a/sound/soc/codecs/mt6359-accdet.h
-+++ b/sound/soc/codecs/mt6359-accdet.h
-@@ -86,7 +86,7 @@ struct dts_data {
- 	unsigned int mic_vol;
- 	unsigned int mic_mode;
- 	unsigned int plugout_deb;
--	unsigned int eint_pol;
-+	bool hp_eint_high;
- 	struct pwm_deb_settings *pwm_deb;
- 	struct three_key_threshold three_key;
- 	struct four_key_threshold four_key;
+Will, another bug that has been around for ages. Do you want to take it
+as a fix?
+
+> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+> index b4df5bc5b1b8..1dfe1a8efdbe 100644
+> --- a/arch/arm64/mm/mmu.c
+> +++ b/arch/arm64/mm/mmu.c
+> @@ -1177,8 +1177,11 @@ int __meminit vmemmap_populate(unsigned long start, unsigned long end, int node,
+>  		struct vmem_altmap *altmap)
+>  {
+>  	WARN_ON((start < VMEMMAP_START) || (end > VMEMMAP_END));
+> +	/* [start, end] should be within one section */
+> +	WARN_ON_ONCE(end - start > PAGES_PER_SECTION * sizeof(struct page));
+>  
+> -	if (!IS_ENABLED(CONFIG_ARM64_4K_PAGES))
+> +	if (!IS_ENABLED(CONFIG_ARM64_4K_PAGES) ||
+> +	    (end - start < PAGES_PER_SECTION * sizeof(struct page)))
+>  		return vmemmap_populate_basepages(start, end, node, altmap);
+>  	else
+>  		return vmemmap_populate_hugepages(start, end, node, altmap);
+> -- 
+> 2.25.1
+> 
 
 -- 
-2.48.1
-
+Catalin
