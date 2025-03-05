@@ -1,77 +1,124 @@
-Received: from ssh248.corpemail.net (ssh248.corpemail.net [210.51.61.248])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EDB5155342
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 08:49:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.51.61.248
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B49F1FC7D1
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 08:50:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741164569; cv=none; b=AYrDcNor9LfQo30nl92X4PZEQE/kF6/+vFR4myY+1OOCsG8QVKNpQhKCqLJSEaHlTSVT9nGUEXasxu310dUudu0yxAI+E4xvOAmY23KHiE0x/TzCpFKGVSJHmxmzyk9S//rRLzNZ6w1Rh2np3HSxm6gCJtA6U6invL+m9foDphk=
+	t=1741164630; cv=none; b=W9780OtG1dpEqpFoujma1AuT8Ud5LiQyiiIVahw4QQTnGl6Pg/rp4VPGorxTgoSwYlk4IyC72CAtnian4MwzBJD6ZMKpu1E5joO9iIPujNUJuky0F1h7Uz8j1wIeZ4s6IzrKmWl6R38Tpqy2ssBx5f9yyjcEZFxa84+bYxlwPG4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741164569; c=relaxed/simple;
-	bh=yfFBnLn+fuD3/41VczLm6o4ptlqda7y5AWJitbLBqDI=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=JMht9QBz6I37ASVNPa2u2OH5gtRW8fdveSqIWYz5RBKCXTBMiy5xtuyKcNlEPe3wbFXJTmG0Q2rc/O8NHB+9zFDVeEraf7u39QUexKfhwGRSwGtcDerSJigDC/95/SKj1idHzizA/rrH/AT/HUb+5BrsM1vydG6J3bUZhA7RRHI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inspur.com; spf=pass smtp.mailfrom=inspur.com; arc=none smtp.client-ip=210.51.61.248
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inspur.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inspur.com
-Received: from jtjnmail201603.home.langchao.com
-        by ssh248.corpemail.net ((D)) with ASMTP (SSL) id 202503051649121107;
-        Wed, 05 Mar 2025 16:49:12 +0800
-Received: from jtjnmail201607.home.langchao.com (10.100.2.7) by
- jtjnmail201603.home.langchao.com (10.100.2.3) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Wed, 5 Mar 2025 16:49:14 +0800
-Received: from locahost.localdomain (10.94.3.63) by
- jtjnmail201607.home.langchao.com (10.100.2.7) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Wed, 5 Mar 2025 16:49:13 +0800
-From: Charles Han <hanchunchao@inspur.com>
-To: <patrik.r.jakobsson@gmail.com>, <maarten.lankhorst@linux.intel.com>,
-	<mripard@kernel.org>, <tzimmermann@suse.de>, <airlied@gmail.com>,
-	<simona@ffwll.ch>
-CC: <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
-	"Charles Han" <hanchunchao@inspur.com>
-Subject: [PATCH] drm/gma500: fix inconsistent indenting warning
-Date: Wed, 5 Mar 2025 16:49:11 +0800
-Message-ID: <20250305084911.6394-1-hanchunchao@inspur.com>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1741164630; c=relaxed/simple;
+	bh=9yMqqJpFRl1mhJQIRFycG3q2J7bCAVjeeOJl0b7GFFg=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=fRkprcwzgXXhTnqpbzspqR09fyWMeBEm6karL+CuuXaIhLTEdRZi2ixpRviNKpeOUEo0TVzZufDpWTcxWI8LzzDs+7qUaWzeSUBvJ2TR6Ic63W110o6lRMPxeOzxfLmvdBjPfLkauDHnV+NSGwEX50KJM1QfgY1sHks7vvqrFfg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Z75mV2Phgz6K9RV;
+	Wed,  5 Mar 2025 16:48:10 +0800 (CST)
+Received: from frapeml100008.china.huawei.com (unknown [7.182.85.131])
+	by mail.maildlp.com (Postfix) with ESMTPS id 3AECE14011D;
+	Wed,  5 Mar 2025 16:50:25 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (7.182.85.71) by
+ frapeml100008.china.huawei.com (7.182.85.131) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Wed, 5 Mar 2025 09:50:17 +0100
+Received: from frapeml500008.china.huawei.com ([7.182.85.71]) by
+ frapeml500008.china.huawei.com ([7.182.85.71]) with mapi id 15.01.2507.039;
+ Wed, 5 Mar 2025 09:50:17 +0100
+From: Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>
+To: Nicolin Chen <nicolinc@nvidia.com>, "will@kernel.org" <will@kernel.org>,
+	"robin.murphy@arm.com" <robin.murphy@arm.com>, "jgg@nvidia.com"
+	<jgg@nvidia.com>
+CC: "joro@8bytes.org" <joro@8bytes.org>,
+	"linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "iommu@lists.linux.dev"
+	<iommu@lists.linux.dev>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v1 1/4] iommu/arm-smmu-v3: Pass in vmid to
+ arm_smmu_make_s2_domain_ste()
+Thread-Topic: [PATCH v1 1/4] iommu/arm-smmu-v3: Pass in vmid to
+ arm_smmu_make_s2_domain_ste()
+Thread-Index: AQHbjYw6xgWAQwMkG0OYeMfm+TEXTLNkOtMw
+Date: Wed, 5 Mar 2025 08:50:17 +0000
+Message-ID: <a95b39a55c324907a7001d3a2cdf076b@huawei.com>
+References: <cover.1741150594.git.nicolinc@nvidia.com>
+ <214b10db02f1046efdc70e2c4803111357f60070.1741150594.git.nicolinc@nvidia.com>
+In-Reply-To: <214b10db02f1046efdc70e2c4803111357f60070.1741150594.git.nicolinc@nvidia.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: Jtjnmail201613.home.langchao.com (10.100.2.13) To
- jtjnmail201607.home.langchao.com (10.100.2.7)
-tUid: 2025305164912164124181fdacdef9f62b883ff43a2aa
-X-Abuse-Reports-To: service@corp-email.com
-Abuse-Reports-To: service@corp-email.com
-X-Complaints-To: service@corp-email.com
-X-Report-Abuse-To: service@corp-email.com
 
-Fix below inconsistent indenting smatch warning.
-smatch warnings:
-drivers/gpu/drm/gma500/cdv_device.c:218 cdv_errata() warn: inconsistent indenting
+Hi Nicolin,
 
-Signed-off-by: Charles Han <hanchunchao@inspur.com>
----
- drivers/gpu/drm/gma500/cdv_device.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thanks for sending out this series. This might as well help me to rework my=
+ pinned KVM
+VMID series here,
+https://lore.kernel.org/linux-iommu/20240208151837.35068-1-shameerali.kolot=
+hum.thodi@huawei.com/
 
-diff --git a/drivers/gpu/drm/gma500/cdv_device.c b/drivers/gpu/drm/gma500/cdv_device.c
-index 3e83299113e3..718d45891fc7 100644
---- a/drivers/gpu/drm/gma500/cdv_device.c
-+++ b/drivers/gpu/drm/gma500/cdv_device.c
-@@ -215,7 +215,7 @@ static void cdv_errata(struct drm_device *dev)
- 	 *	Bonus Launch to work around the issue, by degrading
- 	 *	performance.
- 	 */
--	 CDV_MSG_WRITE32(pci_domain_nr(pdev->bus), 3, 0x30, 0x08027108);
-+	CDV_MSG_WRITE32(pci_domain_nr(pdev->bus), 3, 0x30, 0x08027108);
- }
- 
- /**
--- 
-2.43.0
+
+> -----Original Message-----
+> From: Nicolin Chen <nicolinc@nvidia.com>
+> Sent: Wednesday, March 5, 2025 5:04 AM
+> To: will@kernel.org; robin.murphy@arm.com; jgg@nvidia.com
+> Cc: joro@8bytes.org; linux-arm-kernel@lists.infradead.org;
+> iommu@lists.linux.dev; linux-kernel@vger.kernel.org; Shameerali Kolothum
+> Thodi <shameerali.kolothum.thodi@huawei.com>
+> Subject: [PATCH v1 1/4] iommu/arm-smmu-v3: Pass in vmid to
+> arm_smmu_make_s2_domain_ste()
+>=20
+> An stage-2 STE requires a vmid that has been so far allocated per domain,
+> so arm_smmu_make_s2_domain_ste() has been extracting the vmid from
+> the S2
+> domain.
+>=20
+> To share an S2 parent domain across vSMMUs in the same VM, a vmid will
+> be
+> no longer allocated for nor stored in the S2 domain, but per vSMMU, which
+> means the arm_smmu_make_s2_domain_ste() can get a vmid either from
+> an S2
+> domain (non nesting parent) or a vSMMU.
+>=20
+> Allow to pass in vmid explicitly to arm_smmu_make_s2_domain_ste(),
+> giving
+> its callers a chance to pick the vmid between a domain or a vSMMU.
+>=20
+> Signed-off-by: Nicolin Chen <nicolinc@nvidia.com>
+> ---
+>  drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h         | 2 +-
+>  drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-iommufd.c | 6 ++++--
+>  drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-test.c    | 3 ++-
+>  drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c         | 6 +++---
+>  4 files changed, 10 insertions(+), 7 deletions(-)
+>=20
+> diff --git a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h
+> b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h
+> index bd9d7c85576a..e08c4ede4b2d 100644
+> --- a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h
+> +++ b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h
+> @@ -887,7 +887,7 @@ struct arm_smmu_entry_writer_ops {
+>  void arm_smmu_make_abort_ste(struct arm_smmu_ste *target);
+>  void arm_smmu_make_s2_domain_ste(struct arm_smmu_ste *target,
+>  				 struct arm_smmu_master *master,
+> -				 struct arm_smmu_domain *smmu_domain,
+> +				 struct arm_smmu_domain *smmu_domain,
+> u16 vmid,
+>  				 bool ats_enabled);
+
+Now that vmid is an input, do we need some kind of validation here as
+at least vmid =3D 0 is reserved I guess for bypass STEs.
+
+Thanks,
+Shameer
 
