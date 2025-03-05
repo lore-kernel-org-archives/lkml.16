@@ -1,47 +1,47 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD58C20A5DC
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 23:05:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5DE91A5BB2
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 23:06:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741215947; cv=none; b=H2SXRnbgrG1FAdSACoiY2ziJmxJujr+rA+1iedABjt3YHi4DK0ef1RyZ2snBhGnaYTRc5Lbvsor08hRd4i+P9J8osjhDYaOQQElYjY0ugbPcLRko/aOrwiAM5s1n4yYh60s3G1vHKpiarRFjmdKMZKHUo2V8geUnZALd5Ueprp0=
+	t=1741215969; cv=none; b=M7t4OTg5/fesfhO3icS7OArewlwK6/iauRt+U5FDAWSg5rIHGMYFvnrAUDjd5vRno70071kB2BhS3QiAcqnv9cw+7qeuixbxAu5H+FO9Ri1GyfFtZ3HIeMmVNH2xHzNzXEO9TuSXpZMQ9H1m7DcfgboaL4qYuUk/U2fkmOSDnJI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741215947; c=relaxed/simple;
-	bh=z2giNv3BaUWW3KnHjECC/5uyb6hKM0V7uM22zmIxhuc=;
+	s=arc-20240116; t=1741215969; c=relaxed/simple;
+	bh=wXdRvD9RVoL/20e9N8RG7TIk6vR62xBL1e5ehXXkOH0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SeXW5GBkm5kiSMEDX/maHBe1Rv10kzL9oKgCGV3Ydj2+Jur/KJeZkilXFiiAD0AcVVcVMvBDeCR5J6WDjE6swsBjamlImA0ff/rkXeI3LJXrJI9jfoiKoc9NeaEztJoTIdp7nmY3SDgg7dtNPd5qctQs4WD1mpIs+JBJODlIly4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LmGQVwzL; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version; b=SN3Tth5Wq8ES0jlKzZWKcW4r6uPg8Xzccp2klQ3nt9vjPgSZz3/6DLAVTj3K4T2f7hsitGpoB0yMqLl7LIocyQs7BlEuGtlIK/IPo/CpcG2f29tEqtc0adscQXPxiSlFpRLLiw5ZSFGKm3NxJG+7EL6uMsnZs3FWQuQWQqcCFjo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KdKvhLiz; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LmGQVwzL"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KdKvhLiz"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1741215943;
+	s=mimecast20190719; t=1741215966;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=mGO5kh/FxYY4WW0hhW60ooUs3kL6mfXtdUoujsd3eU4=;
-	b=LmGQVwzLRFwnU+3XEoajX2FHM5+LB0bdFE8X1aujuSBmi9fWEqOaRPr3/7G3WH5RNmSb2U
-	/ux85jChYxY7QwspPqGXHE3HOQErm1RtSc1bKusVpfg6KQ63YQ4tNCZRzdkFJx60A7CgzM
-	AmfiBvVm0KKe5dyDFUkUsDF0+vL2rBw=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+	bh=OnVLYW2FIG18ZU9j87EnxxPDzjwGXevU3H0JDILigMI=;
+	b=KdKvhLiz/jITuXQAe9+EFaWL5QQWsEB39zpsJUoz8v+h+PhqUwaDaziJ/8unGih0wYZPrT
+	HWMKg+R//QR9O5jxA3Bo1qwTnnt3pksurlN5VEpDeAAykujQVtzMbIeWEeUXTqjLYM+ctU
+	VV9IjxpSLJWvUR0r6YlC08Wz1hoFSfA=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-362-vsZp3jOhPpaF8m1PkZoR5Q-1; Wed,
- 05 Mar 2025 18:05:39 -0500
-X-MC-Unique: vsZp3jOhPpaF8m1PkZoR5Q-1
-X-Mimecast-MFC-AGG-ID: vsZp3jOhPpaF8m1PkZoR5Q_1741215937
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-80-iYOOLzw8P96mzlZ7Xt0KiQ-1; Wed,
+ 05 Mar 2025 18:05:57 -0500
+X-MC-Unique: iYOOLzw8P96mzlZ7Xt0KiQ-1
+X-Mimecast-MFC-AGG-ID: iYOOLzw8P96mzlZ7Xt0KiQ_1741215954
 Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id EAE8E1801A00;
-	Wed,  5 Mar 2025 23:05:36 +0000 (UTC)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 2AACB1955DCD;
+	Wed,  5 Mar 2025 23:05:54 +0000 (UTC)
 Received: from chopper.redhat.com (unknown [10.22.88.81])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id C3072300019E;
-	Wed,  5 Mar 2025 23:05:32 +0000 (UTC)
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 133B7300019E;
+	Wed,  5 Mar 2025 23:05:49 +0000 (UTC)
 From: Lyude Paul <lyude@redhat.com>
 To: dri-devel@lists.freedesktop.org,
 	rust-for-linux@vger.kernel.org
@@ -62,9 +62,9 @@ Cc: Danilo Krummrich <dakr@kernel.org>,
 	Asahi Lina <lina@asahilina.net>,
 	Wedson Almeida Filho <wedsonaf@gmail.com>,
 	linux-kernel@vger.kernel.org (open list)
-Subject: [RFC v3 07/33] rust: drm/kms: Add drm_encoder bindings
-Date: Wed,  5 Mar 2025 17:59:23 -0500
-Message-ID: <20250305230406.567126-8-lyude@redhat.com>
+Subject: [RFC v3 09/33] rust: drm/kms: Add DriverConnector::get_mode callback
+Date: Wed,  5 Mar 2025 17:59:25 -0500
+Message-ID: <20250305230406.567126-10-lyude@redhat.com>
 In-Reply-To: <20250305230406.567126-1-lyude@redhat.com>
 References: <20250305230406.567126-1-lyude@redhat.com>
 Precedence: bulk
@@ -76,392 +76,295 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-The last thing we need to be able to register a KMS driver is the ability
-to create DRM encoders, so let's add bindings for that. Again, these
-bindings follow the same general pattern as CRTCs, planes, and connector
-with one difference: encoders don't have an atomic state.
+Next up is filling out some of the basic connector hotplugging callbacks -
+which we'll need for setting up the fbdev helpers for KMS devices. Note
+that connector hotplugging in DRM follows a BFL scheme: pretty much all
+probing is protected under the mighty drm_device->mode_config.lock, which
+of course is a bit counter-intuitive to rust's locking schemes where data
+is always associated with its lock.
 
-Note that not having an atomic state doesn't mean there aren't plenty of
-valid usecases for a driver to stick private data within a DRM encoder,
-hence why we reuse the aforementioned pattern.
+Since that lock is embedded in an FFI type and not a rust type, we need to
+introduce our own wrapper type that acts as a lock acquisition for this.
+This brings us to introducing a few new types:
+
+* ModeConfigGuard - the most basic lock guard, as long as this object is
+  alive we are guaranteed to be holding drm_device->mode_config.lock. This
+  object doesn't do much else on its own currently.
+* ConnectorGuard - an object which corresponds to a specific typed DRM
+  connector. This can only be acquired with a ModeConfigGuard, and will be
+  used to allow calling methods that are only safe to call with
+  drm_device->mode_config.lock held. Since it implements
+  Deref<Target=Connector<T>> as well, it can also be used for any other
+  operations that would normally be available on a DRM connector.
+
+And finally, we add the DriverConnector::get_modes() trait method which
+drivers can use to implement the drm_connector_helper_funcs.get_modes
+callback. Note that while we make this trait method mandatory, we only do
+so for the time being since VKMS doesn't do very much with DRM connectors -
+and as such we have no need yet to implement alternative connector probing
+schemes outside of get_modes().
 
 Signed-off-by: Lyude Paul <lyude@redhat.com>
 
 ---
-
 V3:
-* Add safety comments for ModeObject implementation
-* Make AsRawEncoder unsafe so that we have a guarantee that `as_raw()`
-  always returns a valid pointer.
-* Introduce UnregisteredEncoder type
-* Don't have AsRawEncoder be a supertrait of StaticModeObject. We don't want
-  Unregistered mode object variants to be able to return a pointer to the
-  DRM device since that would break the UnregisteredKmsDevice pattern.
-* Turn all of the encoder type IDs into an enum using a new macro
-* Use addr_of_mut!() instead of &mut for accessing C struct fields
+* Document uses of ManuallyDrop
+* Use addr_of_mut!() instead of &mut
+* Add some missing invariant comments
 
 Signed-off-by: Lyude Paul <lyude@redhat.com>
 ---
- rust/bindings/bindings_helper.h |   1 +
- rust/kernel/drm/kms.rs          |   1 +
- rust/kernel/drm/kms/encoder.rs  | 324 ++++++++++++++++++++++++++++++++
- 3 files changed, 326 insertions(+)
- create mode 100644 rust/kernel/drm/kms/encoder.rs
+ rust/bindings/bindings_helper.h  |  1 +
+ rust/kernel/drm/kms.rs           | 90 +++++++++++++++++++++++++++++++-
+ rust/kernel/drm/kms/connector.rs | 62 ++++++++++++++++++++--
+ 3 files changed, 147 insertions(+), 6 deletions(-)
 
 diff --git a/rust/bindings/bindings_helper.h b/rust/bindings/bindings_helper.h
-index 551ddcf02ea0e..a6735f6fba947 100644
+index a6735f6fba947..27828dd36d4f2 100644
 --- a/rust/bindings/bindings_helper.h
 +++ b/rust/bindings/bindings_helper.h
-@@ -13,6 +13,7 @@
- #include <drm/drm_crtc.h>
- #include <drm/drm_device.h>
- #include <drm/drm_drv.h>
-+#include <drm/drm_encoder.h>
- #include <drm/drm_file.h>
- #include <drm/drm_fbdev_dma.h>
- #include <drm/drm_fbdev_shmem.h>
+@@ -21,6 +21,7 @@
+ #include <drm/drm_gem_framebuffer_helper.h>
+ #include <drm/drm_gem_shmem_helper.h>
+ #include <drm/drm_plane.h>
++#include <drm/drm_probe_helper.h>
+ #include <drm/drm_ioctl.h>
+ #include <kunit/test.h>
+ #include <linux/blk-mq.h>
 diff --git a/rust/kernel/drm/kms.rs b/rust/kernel/drm/kms.rs
-index f8d6d522c9d96..f0044d396e1eb 100644
+index f0044d396e1eb..7935e935f9975 100644
 --- a/rust/kernel/drm/kms.rs
 +++ b/rust/kernel/drm/kms.rs
-@@ -4,6 +4,7 @@
- 
- pub mod connector;
- pub mod crtc;
-+pub mod encoder;
+@@ -8,15 +8,20 @@
  pub mod plane;
  
  use crate::{
-diff --git a/rust/kernel/drm/kms/encoder.rs b/rust/kernel/drm/kms/encoder.rs
-new file mode 100644
-index 0000000000000..2e4e88055c890
---- /dev/null
-+++ b/rust/kernel/drm/kms/encoder.rs
-@@ -0,0 +1,324 @@
-+// SPDX-License-Identifier: GPL-2.0 OR MIT
-+
-+//! DRM encoders.
-+//!
-+//! C header: [`include/drm/drm_encoder.h`](srctree/include/drm/drm_encoder.h)
-+
-+use super::{KmsDriver, ModeObject, StaticModeObject, UnregisteredKmsDevice};
-+use crate::{
-+    alloc::KBox,
-+    drm::device::Device,
-+    error::to_result,
-+    init::Zeroable,
-+    prelude::*,
-+    private::Sealed,
-+    types::{NotThreadSafe, Opaque},
-+};
-+use bindings;
+-    device,
++    container_of, device,
+     drm::{device::Device, drv::Driver},
+     error::to_result,
+     prelude::*,
+     private::Sealed,
++    sync::{Mutex, MutexGuard},
+     types::*,
+ };
+ use bindings;
+-use core::{marker::PhantomData, ops::Deref, ptr::NonNull};
 +use core::{
-+    marker::*,
-+    mem,
++    marker::PhantomData,
 +    ops::Deref,
-+    ptr::{addr_of_mut, null},
++    ptr::{self, addr_of_mut, NonNull},
 +};
-+use macros::paste;
+ 
+ /// The C vtable for a [`Device`].
+ ///
+@@ -191,6 +196,23 @@ pub struct ModeConfigInfo {
+     pub preferred_fourcc: Option<u32>,
+ }
+ 
++impl<T: KmsDriver> Device<T> {
++    /// Retrieve a pointer to the mode_config mutex
++    #[inline]
++    pub(crate) fn mode_config_mutex(&self) -> &Mutex<()> {
++        // SAFETY: This lock is initialized for as long as `Device<T>` is exposed to users
++        unsafe { Mutex::from_raw(addr_of_mut!((*self.as_raw()).mode_config.mutex)) }
++    }
 +
-+/// A macro for generating our type ID enumerator.
-+macro_rules! declare_encoder_types {
-+    ($( $oldname:ident as $newname:ident ),+) => {
-+        #[repr(i32)]
-+        #[non_exhaustive]
-+        #[derive(Copy, Clone, PartialEq, Eq)]
-+        /// An enumerator for all possible [`Encoder`] type IDs.
-+        pub enum Type {
-+            // Note: bindgen defaults the macro values to u32 and not i32, but DRM takes them as an
-+            // i32 - so just do the conversion here
-+            $(
-+                #[doc = concat!("The encoder type ID for a ", stringify!($newname), " encoder.")]
-+                $newname = paste!(crate::bindings::[<DRM_MODE_ENCODER_ $oldname>]) as i32
-+            ),+
-+        }
-+    };
++    /// Acquire the [`mode_config.mutex`] for this [`Device`].
++    #[inline]
++    pub fn mode_config_lock(&self) -> ModeConfigGuard<'_, T> {
++        // INVARIANT: We're locking mode_config.mutex, fulfilling our invariant that this lock is
++        // held throughout ModeConfigGuard's lifetime.
++        ModeConfigGuard(self.mode_config_mutex().lock(), PhantomData)
++    }
 +}
 +
-+declare_encoder_types! {
-+    NONE     as None,
-+    DAC      as Dac,
-+    TMDS     as Tmds,
-+    LVDS     as Lvds,
-+    VIRTUAL  as Virtual,
-+    DSI      as Dsi,
-+    DPMST    as DpMst,
-+    DPI      as Dpi
-+}
+ /// A modesetting object in DRM.
+ ///
+ /// This is any type of object where the underlying C object contains a [`struct drm_mode_object`].
+@@ -314,3 +336,67 @@ unsafe fn dec_ref(obj: NonNull<Self>) {
+         unsafe { bindings::drm_mode_object_put(obj.as_ref().raw_mode_obj()) }
+     }
+ }
 +
-+/// The main trait for implementing the [`struct drm_encoder`] API for [`Encoder`].
++/// A mode config guard.
 +///
-+/// Any KMS driver should have at least one implementation of this type, which allows them to create
-+/// [`Encoder`] objects. Additionally, a driver may store driver-private data within the type that
-+/// implements [`DriverEncoder`] - and it will be made available when using a fully typed
-+/// [`Encoder`] object.
++/// This is an exclusive primitive that represents when [`drm_device.mode_config.mutex`] is held - as
++/// some modesetting operations (particularly ones related to [`connectors`](connector)) are still
++/// protected under this single lock. The lock will be dropped once this object is dropped.
 +///
 +/// # Invariants
 +///
-+/// - Any C FFI callbacks generated using this trait are guaranteed that passed-in
-+///   [`struct drm_encoder`] pointers are contained within a [`Encoder<Self>`].
++/// - `self.0` is contained within a [`struct drm_mode_config`], which is contained within a
++///   [`struct drm_device`].
++/// - The [`KmsDriver`] implementation of that [`struct drm_device`] is always `T`.
++/// - This type proves that [`drm_device.mode_config.mutex`] is acquired.
 +///
-+/// [`struct drm_encoder`]: srctree/include/drm/drm_encoder.h
-+#[vtable]
-+pub trait DriverEncoder: Send + Sync + Sized {
-+    /// The generated C vtable for this [`DriverEncoder`] implementation.
-+    #[unique]
-+    const OPS: &'static DriverEncoderOps = &DriverEncoderOps {
-+        funcs: bindings::drm_encoder_funcs {
-+            reset: None,
-+            destroy: Some(encoder_destroy_callback::<Self>),
-+            late_register: None,
-+            early_unregister: None,
-+            debugfs_init: None,
-+        },
-+        helper_funcs: bindings::drm_encoder_helper_funcs {
-+            dpms: None,
-+            mode_valid: None,
-+            mode_fixup: None,
-+            prepare: None,
-+            mode_set: None,
-+            commit: None,
-+            detect: None,
-+            enable: None,
-+            disable: None,
-+            atomic_check: None,
-+            atomic_enable: None,
-+            atomic_disable: None,
-+            atomic_mode_set: None,
-+        },
-+    };
++/// [`struct drm_mode_config`]: (srctree/include/drm/drm_device.h)
++/// [`drm_device.mode_config.mutex`]: (srctree/include/drm/drm_device.h)
++/// [`struct drm_device`]: (srctree/include/drm/drm_device.h)
++pub struct ModeConfigGuard<'a, T: KmsDriver>(MutexGuard<'a, ()>, PhantomData<T>);
 +
-+    /// The parent driver for this drm_encoder implementation
-+    type Driver: KmsDriver;
-+
-+    /// The type to pass to the `args` field of [`UnregisteredEncoder::new`].
-+    ///
-+    /// This type will be made available in in the `args` argument of [`Self::new`]. Drivers which
-+    /// don't need this can simply pass [`()`] here.
-+    type Args;
-+
-+    /// The constructor for creating a [`Encoder`] using this [`DriverEncoder`] implementation.
-+    ///
-+    /// Drivers may use this to instantiate their [`DriverEncoder`] object.
-+    fn new(device: &Device<Self::Driver>, args: Self::Args) -> impl PinInit<Self, Error>;
-+}
-+
-+/// The generated C vtable for a [`DriverEncoder`].
-+///
-+/// This type is created internally by DRM.
-+pub struct DriverEncoderOps {
-+    funcs: bindings::drm_encoder_funcs,
-+    helper_funcs: bindings::drm_encoder_helper_funcs,
-+}
-+
-+/// A trait implemented by any type that acts as a [`struct drm_encoder`] interface.
-+///
-+/// This is implemented internally by DRM.
-+///
-+/// # Safety
-+///
-+/// [`as_raw()`] must always return a valid pointer to a [`struct drm_encoder`].
-+///
-+/// [`struct drm_encoder`]: srctree/include/drm/drm_encoder.h
-+/// [`as_raw()`]: AsRawEncoder::as_raw()
-+pub unsafe trait AsRawEncoder {
-+    /// Return the raw `bindings::drm_encoder` for this DRM encoder.
-+    ///
-+    /// Drivers should never use this directly
-+    fn as_raw(&self) -> *mut bindings::drm_encoder;
-+
-+    /// Convert a raw `bindings::drm_encoder` pointer into an object of this type.
++impl<'a, T: KmsDriver> ModeConfigGuard<'a, T> {
++    /// Construct a new [`ModeConfigGuard`].
 +    ///
 +    /// # Safety
 +    ///
-+    /// Callers promise that `ptr` points to a valid instance of this type
-+    unsafe fn from_raw<'a>(ptr: *mut bindings::drm_encoder) -> &'a Self;
-+}
-+
-+/// The main interface for a [`struct drm_encoder`].
-+///
-+/// This type is the main interface for dealing with DRM encoders. In addition, it also allows
-+/// immutable access to whatever private data is contained within an implementor's
-+/// [`DriverEncoder`] type.
-+///
-+/// # Invariants
-+///
-+/// - `encoder` and `inner` are initialized for as long as this object is made available to users.
-+/// - The data layout of this structure begins with [`struct drm_encoder`].
-+///
-+/// [`struct drm_encoder`]: srctree/include/drm/drm_encoder.h
-+#[repr(C)]
-+#[pin_data]
-+pub struct Encoder<T: DriverEncoder> {
-+    /// The FFI drm_encoder object
-+    encoder: Opaque<bindings::drm_encoder>,
-+    /// The driver's private inner data
-+    #[pin]
-+    inner: T,
-+    #[pin]
-+    _p: PhantomPinned,
-+}
-+
-+impl<T: DriverEncoder> Sealed for Encoder<T> {}
-+
-+// SAFETY: DRM expects this to be zero-initialized
-+unsafe impl Zeroable for bindings::drm_encoder {}
-+
-+// SAFETY: Our interface is thread-safe.
-+unsafe impl<T: DriverEncoder> Send for Encoder<T> {}
-+// SAFETY: Our interface is thread-safe.
-+unsafe impl<T: DriverEncoder> Sync for Encoder<T> {}
-+
-+// SAFETY: We don't expose Encoder<T> to users before `base` is initialized in ::new(), so
-+// `raw_mode_obj` always returns a valid pointer to a bindings::drm_mode_object.
-+unsafe impl<T: DriverEncoder> ModeObject for Encoder<T> {
-+    type Driver = T::Driver;
-+
-+    fn drm_dev(&self) -> &Device<Self::Driver> {
-+        // SAFETY: DRM encoders exist for as long as the device does, so this pointer is always
-+        // valid
-+        unsafe { Device::borrow((*self.encoder.get()).dev) }
-+    }
-+
-+    fn raw_mode_obj(&self) -> *mut bindings::drm_mode_object {
-+        // SAFETY: We don't expose Encoder<T> to users before it's initialized, so `base` is always
-+        // initialized
-+        unsafe { addr_of_mut!((*self.encoder.get()).base) }
-+    }
-+}
-+
-+// SAFETY: Encoders do not have a refcount
-+unsafe impl<T: DriverEncoder> StaticModeObject for Encoder<T> {}
-+
-+impl<T: DriverEncoder> Deref for Encoder<T> {
-+    type Target = T;
-+
-+    fn deref(&self) -> &Self::Target {
-+        &self.inner
-+    }
-+}
-+
-+// SAFETY:
-+// - Via our type invariants our data layout starts with `drm_encoder`.
-+// - Since we don't expose `Encoder` to users befre it has been initialized, this and our data
-+//   layout ensure that `as_raw()` always returns a valid pointer to a `drm_encoder`.
-+unsafe impl<T: DriverEncoder> AsRawEncoder for Encoder<T> {
-+    fn as_raw(&self) -> *mut bindings::drm_encoder {
-+        self.encoder.get()
-+    }
-+
-+    unsafe fn from_raw<'a>(ptr: *mut bindings::drm_encoder) -> &'a Self {
-+        // SAFETY: Our data layout is starts with to `bindings::drm_encoder`
-+        unsafe { &*ptr.cast() }
-+    }
-+}
-+
-+/// A [`Encoder`] that has not yet been registered with userspace.
-+///
-+/// KMS registration is single-threaded, so this object is not thread-safe.
-+///
-+/// # Invariants
-+///
-+/// - This object can only exist before its respective KMS device has been registered.
-+/// - Otherwise, it inherits all invariants of [`Encoder`] and has an identical data layout.
-+pub struct UnregisteredEncoder<T: DriverEncoder>(Encoder<T>, NotThreadSafe);
-+
-+// SAFETY: We inherit all relevant invariants of `Encoder`
-+unsafe impl<T: DriverEncoder> AsRawEncoder for UnregisteredEncoder<T> {
-+    fn as_raw(&self) -> *mut bindings::drm_encoder {
-+        self.0.as_raw()
-+    }
-+
-+    unsafe fn from_raw<'a>(ptr: *mut bindings::drm_encoder) -> &'a Self {
-+        // SAFETY: This is another from_raw() call, so this function shares the same safety contract
-+        let encoder = unsafe { Encoder::<T>::from_raw(ptr) };
-+
-+        // SAFETY: Our data layout is identical via our type invariants.
-+        unsafe { mem::transmute(encoder) }
-+    }
-+}
-+
-+impl<T: DriverEncoder> Deref for UnregisteredEncoder<T> {
-+    type Target = T;
-+
-+    fn deref(&self) -> &Self::Target {
-+        &self.0.inner
-+    }
-+}
-+
-+impl<T: DriverEncoder> UnregisteredEncoder<T> {
-+    /// Construct a new [`UnregisteredEncoder`].
++    /// The caller must ensure that [`drm_device.mode_config.mutex`] is acquired.
 +    ///
-+    /// A driver may use this from their [`KmsDriver::create_objects`] callback in order to
-+    /// construct new [`UnregisteredEncoder`] objects.
-+    ///
-+    /// [`KmsDriver::create_objects`]: kernel::drm::kms::KmsDriver::create_objects
-+    pub fn new<'a, 'b: 'a>(
-+        dev: &'a UnregisteredKmsDevice<'a, T::Driver>,
-+        type_: Type,
-+        possible_crtcs: u32,
-+        possible_clones: u32,
-+        name: Option<&CStr>,
-+        args: T::Args,
-+    ) -> Result<&'b Self> {
-+        let this: Pin<KBox<Encoder<T>>> = KBox::try_pin_init(
-+            try_pin_init!(Encoder::<T> {
-+                encoder: Opaque::new(bindings::drm_encoder {
-+                    helper_private: &T::OPS.helper_funcs,
-+                    possible_crtcs,
-+                    possible_clones,
-+                    ..Default::default()
-+                }),
-+                inner <- T::new(dev, args),
-+                _p: PhantomPinned
-+            }),
-+            GFP_KERNEL,
-+        )?;
++    /// [`drm_device.mode_config.mutex`]: (srctree/include/drm/drm_device.h)
++    pub(crate) unsafe fn new(drm: &'a Device<T>) -> Self {
++        // SAFETY: Our safety contract fulfills the requirements of `MutexGuard::new()`
++        // INVARIANT: And our safety contract ensures that this type proves that
++        // `drm_device.mode_config.mutex` is acquired.
++        Self(
++            unsafe { MutexGuard::new(drm.mode_config_mutex(), ()) },
++            PhantomData,
++        )
++    }
 +
++    /// Return the [`Device`] that this [`ModeConfigGuard`] belongs to.
++    pub fn drm_dev(&self) -> &'a Device<T> {
 +        // SAFETY:
-+        // - `dev` is responsible for destroying the encoder and thus outlives us.
-+        // - as_raw() returns valid pointers for each type here
-+        // - This initializes `this`
-+        // - Our type is proof that this is being called before KMS device registration
-+        // - `name` is optional and will be auto-generated by DRM if passed as NULL
-+        to_result(unsafe {
-+            bindings::drm_encoder_init(
-+                dev.as_raw(),
-+                this.as_raw(),
-+                &T::OPS.funcs,
-+                type_ as _,
-+                name.map_or(null(), |n| n.as_char_ptr()),
-+            )
-+        })?;
++        // - `self` is embedded within a `drm_mode_config` via our type invariants
++        // - `self.0.lock` has an equivalent data type to `mutex` via its type invariants.
++        let mode_config = unsafe { container_of!(self.0.lock, bindings::drm_mode_config, mutex) };
 +
-+        // SAFETY: We don't move anything
-+        let this = unsafe { Pin::into_inner_unchecked(this) };
++        // SAFETY: And that `drm_mode_config` lives in a `drm_device` via type invariants.
++        unsafe {
++            Device::borrow(container_of!(
++                mode_config,
++                bindings::drm_device,
++                mode_config
++            ))
++        }
++    }
 +
-+        // We'll re-assemble the box in encoder_destroy_callback()
-+        let this = KBox::into_raw(this);
++    /// Assert that the given device is the owner of this mode config guard.
++    ///
++    /// # Panics
++    ///
++    /// Panics if `dev` is different from the owning device for this mode config guard.
++    #[inline]
++    pub(crate) fn assert_owner(&self, dev: &Device<T>) {
++        assert!(ptr::eq(self.drm_dev(), dev));
++    }
++}
+diff --git a/rust/kernel/drm/kms/connector.rs b/rust/kernel/drm/kms/connector.rs
+index 6fe0a7517bd55..14de3b0529f89 100644
+--- a/rust/kernel/drm/kms/connector.rs
++++ b/rust/kernel/drm/kms/connector.rs
+@@ -4,7 +4,7 @@
+ //!
+ //! C header: [`include/drm/drm_connector.h`](srctree/include/drm/drm_connector.h)
+ 
+-use super::{encoder::*, KmsDriver, ModeObject, RcModeObject};
++use super::{encoder::*, KmsDriver, ModeConfigGuard, ModeObject, RcModeObject};
+ use crate::{
+     alloc::KBox,
+     bindings,
+@@ -17,7 +17,7 @@
+ };
+ use core::{
+     marker::*,
+-    mem,
++    mem::{self, ManuallyDrop},
+     ops::*,
+     ptr::{addr_of_mut, null_mut},
+     stringify,
+@@ -106,7 +106,7 @@ pub trait DriverConnector: Send + Sync + Sized {
+             destroy: Some(connector_destroy_callback::<Self>),
+             force: None,
+             detect: None,
+-            fill_modes: None,
++            fill_modes: Some(bindings::drm_helper_probe_single_connector_modes),
+             debugfs_init: None,
+             oob_hotplug_event: None,
+             atomic_duplicate_state: Some(atomic_duplicate_state_callback::<Self::State>),
+@@ -114,7 +114,7 @@ pub trait DriverConnector: Send + Sync + Sized {
+         helper_funcs: bindings::drm_connector_helper_funcs {
+             mode_valid: None,
+             atomic_check: None,
+-            get_modes: None,
++            get_modes: Some(get_modes_callback::<Self>),
+             detect_ctx: None,
+             enable_hpd: None,
+             disable_hpd: None,
+@@ -145,6 +145,12 @@ pub trait DriverConnector: Send + Sync + Sized {
+     ///
+     /// Drivers may use this to instantiate their [`DriverConnector`] object.
+     fn new(device: &Device<Self::Driver>, args: Self::Args) -> impl PinInit<Self, Error>;
 +
-+        // UnregisteredEncoder has an equivalent data layout
-+        let this: *mut Self = this.cast();
-+
-+        // SAFETY: We just allocated the encoder above, so this pointer must be valid
-+        Ok(unsafe { &*this })
++    /// Retrieve a list of available display modes for this [`Connector`].
++    fn get_modes<'a>(
++        connector: ConnectorGuard<'a, Self>,
++        guard: &ModeConfigGuard<'a, Self::Driver>,
++    ) -> i32;
+ }
+ 
+ /// The generated C vtable for a [`DriverConnector`].
+@@ -196,6 +202,21 @@ fn deref(&self) -> &Self::Target {
+     }
+ }
+ 
++impl<T: DriverConnector> Connector<T> {
++    /// Acquire a [`ConnectorGuard`] for this connector from a [`ModeConfigGuard`].
++    ///
++    /// This verifies using the provided reference that the given guard is actually for the same
++    /// device as this connector's parent.
++    ///
++    /// # Panics
++    ///
++    /// Panics if `guard` is not a [`ModeConfigGuard`] for this connector's parent [`Device`].
++    pub fn guard<'a>(&'a self, guard: &ModeConfigGuard<'a, T::Driver>) -> ConnectorGuard<'a, T> {
++        guard.assert_owner(self.drm_dev());
++        ConnectorGuard(self)
 +    }
 +}
 +
-+unsafe extern "C" fn encoder_destroy_callback<T: DriverEncoder>(
-+    encoder: *mut bindings::drm_encoder,
-+) {
-+    // SAFETY: DRM guarantees that `encoder` points to a valid initialized `drm_encoder`.
-+    unsafe { bindings::drm_encoder_cleanup(encoder) };
+ /// A trait implemented by any type that acts as a [`struct drm_connector`] interface.
+ ///
+ /// This is implemented internally by DRM.
+@@ -392,6 +413,39 @@ pub fn attach_encoder(&self, encoder: &impl AsRawEncoder) -> Result {
+     drop(unsafe { KBox::from_raw(connector as *mut Connector<T>) });
+ }
+ 
++unsafe extern "C" fn get_modes_callback<T: DriverConnector>(
++    connector: *mut bindings::drm_connector,
++) -> core::ffi::c_int {
++    // SAFETY: This is safe via `DriverConnector`s type invariants.
++    let connector = unsafe { Connector::<T>::from_raw(connector) };
 +
-+    // SAFETY:
-+    // - DRM guarantees we are now the only one with access to this [`drm_encoder`].
-+    // - This cast is safe via `DriverEncoder`s type invariants.
-+    unsafe { drop(KBox::from_raw(encoder as *mut Encoder<T>)) };
++    // SAFETY: This FFI callback is only called while `mode_config.lock` is held
++    // We use ManuallyDrop here to prevent the lock from being released after the callback
++    // completes, as that should be handled by DRM.
++    let guard = ManuallyDrop::new(unsafe { ModeConfigGuard::new(connector.drm_dev()) });
++
++    T::get_modes(connector.guard(&guard), &guard)
 +}
++
++/// A privileged [`Connector`] obtained while holding a [`ModeConfigGuard`].
++///
++/// This provides access to various methods for [`Connector`] that must happen under lock, such as
++/// setting resolution preferences and adding display modes.
++///
++/// # Invariants
++///
++/// Shares the invariants of [`ModeConfigGuard`].
++#[derive(Copy, Clone)]
++pub struct ConnectorGuard<'a, T: DriverConnector>(&'a Connector<T>);
++
++impl<T: DriverConnector> Deref for ConnectorGuard<'_, T> {
++    type Target = Connector<T>;
++
++    fn deref(&self) -> &Self::Target {
++        self.0
++    }
++}
++
+ // SAFETY: DRM expects this struct to be zero-initialized
+ unsafe impl Zeroable for bindings::drm_connector_state {}
+ 
 -- 
 2.48.1
 
