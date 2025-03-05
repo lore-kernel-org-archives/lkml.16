@@ -1,978 +1,262 @@
-Received: from mx0b-0016f401.pphosted.com (mx0b-0016f401.pphosted.com [67.231.156.173])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5921213AC1;
-	Wed,  5 Mar 2025 10:12:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.156.173
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741169542; cv=none; b=MY1rerG1l0oBYcTl/en0aBMo2BLyK4J6oay6Bn/18B/+4sQw/kx5LbkMcZr8IjNmRJT4a/uf6fBK92UCIIjkD8nVlJLE80242DgIbADRtdJt3AOOA1bhyMFX3tI0/fGQN7iGxoeOuP11yEPAPP3YpS/y7HYBQncNC1s4kAfbpnw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741169542; c=relaxed/simple;
-	bh=c+M8Nv0H132hjSLLC04qSr5AkOixyzaNpfOGgPnXyoM=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Ca1D6+r4WpqGidJUhxMb5aZOsZO6oK1ZanZwQijmqdycG9Fut2SW8evUTOYze9iXyUjAiBGjvCX+jf50KuhaXTfYV4oWwuHaDz5wnLW+RO1WHHeIH9FEHwPdd4OMqufEB4rm31ac+Mu8mGLpj4WdCnPG2o5OA7Lee5ScfcTkhIY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=OK5kLWPk; arc=none smtp.client-ip=67.231.156.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7D6413AC1
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 10:14:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.17
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741169671; cv=fail; b=Da9NhdOHkw4r/y2XqQYfQVbNLkyH2g8EENypD3pZuiEiqwOYQcQkNeqJyWDVa+w+9kTH3CLMVyyXsu8IvNOIc7WCz7kG2KawkKpgPKNbEpinIW9orXuBnoyUHwOLSNthuSHpELdL+fadoSIvwchomuwLgvIDhTe/OnsHWxVLzlM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741169671; c=relaxed/simple;
+	bh=N2I4a2NrLqadckFRmSMZ9TU2EJ0Bw/pfk8JMNohMy/M=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=FKFF/vG6W5nEwk1aFzHLBvmx+0K0V7kfi4NFdGAm2dYkQoqA5wk2UskkqpOig856i/oG2AwCqi2NNHWGtfCr0nnrxIo1ULxS30N/co18USBYgtX7swgDGJOXe23OGTrG4weQ3/5CjV8JrF/XFXx5i+gs3XFDLLD76ynLLYr7SKY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mrqynyN5; arc=fail smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="OK5kLWPk"
-Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
-	by mx0b-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5259YRxA026718;
-	Wed, 5 Mar 2025 02:10:42 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pfpt0220; bh=F
-	9e0Cb9tLaOb1T60Zu9e6cfaCnCvXd/FfDedhqg7p3c=; b=OK5kLWPkcHTed7Kxr
-	JC6lpRPbeUDHT91fhfAj+JW0VyYxIDjT9LkSKcDFxa/FuJs9tPmp7L23bD05gjLb
-	UvE5Iijy6sRxEnhcz9eODpj7X4JHEKSkURG78PdF40hfbsE1vPO/hKUVY/OdRG2i
-	Zewv65UEoWaRcSkO/RdD1+Ye2WnUteVHPDuQy2iBTcnj13FXjE9fIUbWjfxc+ARo
-	E3nKk8kk2DniMmsZtNe/0EYYXiGfvHUeTj8TbGX2NBAyYTZYmVSLFg12o3khacP6
-	lnz0YlpuYV6KeRisxrVkn+MelzbaPAMl+vykdLu/1Vl2QiXSQAte4arvaMYIX3N6
-	UVR0w==
-Received: from dc5-exch05.marvell.com ([199.233.59.128])
-	by mx0b-0016f401.pphosted.com (PPS) with ESMTPS id 456m36r21u-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 05 Mar 2025 02:10:41 -0800 (PST)
-Received: from DC5-EXCH05.marvell.com (10.69.176.209) by
- DC5-EXCH05.marvell.com (10.69.176.209) with Microsoft SMTP Server
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mrqynyN5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741169669; x=1772705669;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=N2I4a2NrLqadckFRmSMZ9TU2EJ0Bw/pfk8JMNohMy/M=;
+  b=mrqynyN5rC3n50AoMqfqghXzkh5w5zb8KLLTslBBtqkLLd6zr7O4B/Nn
+   6UzwVh0YtD8dKiVRLfPexVIyOZm+k8w0di41Ttu+Bk0Ao1pf0fLKaxzIQ
+   BezZlz0AuphUsmf58V4sqqaxQ6A90uu9q5v8ezA9VEmvH9hw41OgSZLrH
+   6UP0dKKbvtCW3wiiMd8/98wkXdZTcxDw1OdqeO0kBxhFXbK4zFnWM+L9t
+   3RCrS6D9N6qXbjoVRf+vdjJTafEXICVjnCIlCI2I96QlKyxItWOctuBSc
+   Nf0b6QpUHQGRlk4OQ5aRRrYuxEthweNvHUzAcVLYWlUEWybwXMKztXyJ6
+   Q==;
+X-CSE-ConnectionGUID: Jmovm5R4SSajcYNp+/xWTg==
+X-CSE-MsgGUID: vwJ/tmciRWK0s7haHUP13Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11363"; a="42015275"
+X-IronPort-AV: E=Sophos;i="6.14,222,1736841600"; 
+   d="scan'208";a="42015275"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Mar 2025 02:14:29 -0800
+X-CSE-ConnectionGUID: xz14gJzwQ2qci24h1+bnwQ==
+X-CSE-MsgGUID: ldO2BZlaTpq9e5HzfZtsgg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,222,1736841600"; 
+   d="scan'208";a="123670055"
+Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
+  by orviesa004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Mar 2025 02:14:28 -0800
+Received: from orsmsx603.amr.corp.intel.com (10.22.229.16) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.2.1544.14; Wed, 5 Mar 2025 02:14:28 -0800
+Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
+ orsmsx603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44 via Frontend Transport; Wed, 5 Mar 2025 02:14:28 -0800
+Received: from NAM02-SN1-obe.outbound.protection.outlook.com (104.47.57.42) by
+ edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.4; Wed, 5 Mar 2025 02:10:36 -0800
-Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH05.marvell.com
- (10.69.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
- Transport; Wed, 5 Mar 2025 02:10:35 -0800
-Received: from tx2-sever.caveonetworks.com (unknown [10.110.141.15])
-	by maili.marvell.com (Postfix) with ESMTP id 913C55B6925;
-	Wed,  5 Mar 2025 02:10:35 -0800 (PST)
-From: George Cherian <george.cherian@marvell.com>
-To: <linux@roeck-us.net>, <wim@linux-watchdog.org>, <jwerner@chromium.org>,
-        <evanbenn@chromium.org>, <kabel@kernel.org>, <krzk@kernel.org>,
-        <mazziesaccount@gmail.com>, <thomas.richard@bootlin.com>,
-        <lma@chromium.org>, <bleung@chromium.org>,
-        <support.opensource@diasemi.com>, <shawnguo@kernel.org>,
-        <s.hauer@pengutronix.de>, <kernel@pengutronix.de>,
-        <festevam@gmail.com>, <andy@kernel.org>, <paul@crapouillou.net>,
-        <alexander.usyskin@intel.com>, <andreas.werner@men.de>,
-        <daniel@thingy.jp>, <romain.perier@gmail.com>,
-        <avifishman70@gmail.com>, <tmaimon77@gmail.com>,
-        <tali.perry1@gmail.com>, <venture@google.com>, <yuenn@google.com>,
-        <benjaminfair@google.com>, <maddy@linux.ibm.com>, <mpe@ellerman.id.au>,
-        <npiggin@gmail.com>, <christophe.leroy@csgroup.eu>,
-        <naveen@kernel.org>, <mwalle@kernel.org>, <xingyu.wu@starfivetech.com>,
-        <ziv.xu@starfivetech.com>, <hayashi.kunihiko@socionext.com>,
-        <mhiramat@kernel.org>
-CC: <linux-watchdog@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <chrome-platform@lists.linux.dev>, <imx@lists.linux.dev>,
-        <linux-mips@vger.kernel.org>, <openbmc@lists.ozlabs.org>,
-        <linuxppc-dev@lists.ozlabs.org>, <patches@opensource.cirrus.com>,
-        George Cherian <george.cherian@marvell.com>
-Subject: [PATCH v4 1/2] watchdog: Add a new flag WDIOF_STOP_MAYSLEEP
-Date: Wed, 5 Mar 2025 10:10:24 +0000
-Message-ID: <20250305101025.2279951-2-george.cherian@marvell.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250305101025.2279951-1-george.cherian@marvell.com>
-References: <20250305101025.2279951-1-george.cherian@marvell.com>
+ 15.1.2507.44; Wed, 5 Mar 2025 02:14:27 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=avjnVsLg0ypd81EQfAfOftRNFhvACgyD3F71CsrUkk2X7Zi2IzL7EuLXOV25bjCB3n8tX4JFf02aeOqPHMDtmb7WBTmoAgH795iGHkZYkUD+Btn//zWKNj0OlMGbsVQuCOLNSpvAMIHEzOzijtDMEFrJ/cEZud6IM20VcnvuwZo9ebG09NKdvYpZNPySxbO81hnp/+J4d/GeudPFAOvbgzGaQaxbS0Cuh0LnaOY/DIyIRjNEl1sdH2wEcScCbSSyCtbxBz7F63eQtnHj5usarXhJSiQEv5LHoeE8qBZOeJJMZSCGljvBxLoCQ/SspOWQcw9IfEjJCmgbG9ywlkpM+g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=N2I4a2NrLqadckFRmSMZ9TU2EJ0Bw/pfk8JMNohMy/M=;
+ b=x8pP11u4BcSfCK1jHGq6ON0S446dyuurG5BT+RtGb5yJfNO9VQUNeApldq2xptEylmZBN1bXqVinYlo7668LlisbR09VQoxuzz0Hb0PXG9522o4T1NqT6ZRlZxBtgOIGl9AhFUEh4HIjsc0mkBSTqMgwY7yXNL4xA2+bqEzLfo8SYzfbJTmkOQQt1Idi/wX5AvYijRstWrTdwq7kOrtfPsqcVene6wyensRxnxepPknf8GhV0u+EKGm7dsqknymQgYRXssuH+KKjGREJ4nyq1XzPTjiENXIzZyBKULQwNBEVAFux0mrdVYXRRmmbIj86flBPGv+ghWt/VQITXlUrng==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from SJ0PR11MB5866.namprd11.prod.outlook.com (2603:10b6:a03:429::10)
+ by CY8PR11MB7009.namprd11.prod.outlook.com (2603:10b6:930:57::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.28; Wed, 5 Mar
+ 2025 10:13:56 +0000
+Received: from SJ0PR11MB5866.namprd11.prod.outlook.com
+ ([fe80::265f:31c0:f775:c25b]) by SJ0PR11MB5866.namprd11.prod.outlook.com
+ ([fe80::265f:31c0:f775:c25b%4]) with mapi id 15.20.8489.025; Wed, 5 Mar 2025
+ 10:13:56 +0000
+From: "Loktionov, Aleksandr" <aleksandr.loktionov@intel.com>
+To: Kyungwook Boo <bookyungwook@gmail.com>, "Nguyen, Anthony L"
+	<anthony.l.nguyen@intel.com>, "Kitszel, Przemyslaw"
+	<przemyslaw.kitszel@intel.com>
+CC: "intel-wired-lan@lists.osuosl.org" <intel-wired-lan@lists.osuosl.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [Intel-wired-lan] MMIO write access to an invalid page in
+ i40e_clear_hw()
+Thread-Topic: [Intel-wired-lan] MMIO write access to an invalid page in
+ i40e_clear_hw()
+Thread-Index: AQHbjFeboY2QFMlphk6AK6PA+x/DLLNkVFvw
+Date: Wed, 5 Mar 2025 10:13:56 +0000
+Message-ID: <SJ0PR11MB5866F240386177564F78E8AEE5CB2@SJ0PR11MB5866.namprd11.prod.outlook.com>
+References: <ffc91764-1142-4ba2-91b6-8c773f6f7095@gmail.com>
+In-Reply-To: <ffc91764-1142-4ba2-91b6-8c773f6f7095@gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SJ0PR11MB5866:EE_|CY8PR11MB7009:EE_
+x-ms-office365-filtering-correlation-id: 6c9878dd-e95a-4e2e-1b22-08dd5bce7036
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|366016|1800799024|376014|38070700018;
+x-microsoft-antispam-message-info: =?utf-8?B?cFoyTzJDR2NybWQxeUVYaG1sK1hHbWFqS2RvbS85d1h6M2VSZWZIeFpGVDJM?=
+ =?utf-8?B?WE9jcW9razVJWHB1RlZPZXBFZU0vbU83WUdRMTF2VFpSa0QxM2JtWE9HSDRv?=
+ =?utf-8?B?SWJoeFVic21rUkY4VkpQbmx3OGh4SDl1THpHRGZzQTFCUHdhMVE4NU9TaHN2?=
+ =?utf-8?B?OFZTbW9IL2JIWnZQcVU1SHEwckMybUpybStRTVdmTzFCbUdocVNVRHlsNmJN?=
+ =?utf-8?B?MERCdVpUTGxhQ3dOaVBkNnhRSEF2ZHlxdzZEL0g3ZDFQVWErbFdNQ0ZjTVcv?=
+ =?utf-8?B?MGZnaSthOHgrL0hqNkN4RUxDOVBTVHREUkM2WkhjK2p1dXFob01NSmpaV3Q1?=
+ =?utf-8?B?b0ZSNGdjdk1vQUtDYUR4MnhlQmo2TGtuQ2hOR1luWXl2dzgvU3l4MXk2MlRv?=
+ =?utf-8?B?WVk2SXBPeXBiejNBOFRvTDVSWmFqMGhtdVNFUk9nMTNiLzRNTktjMElEUTY5?=
+ =?utf-8?B?M1kwdE1PZ3psd3VxMEJ3VW0xMDBDdlhNaFUydDNhY1o5Q0ZFZDNwQWdKS1Q5?=
+ =?utf-8?B?Yll4djRyM0hUcXQ2d3lwREtoelJacEVhWGk3cUhwb1huZjRsbkk4THlNdm5D?=
+ =?utf-8?B?bFc4WlhWNHBRTmFqaEtMZ2JvYWFhckNhWXRNbjg1d2Z4WUxFZGlkbU45SVlY?=
+ =?utf-8?B?OVpIbzJqemtRdWREamV2VzhSY1VTUkxoNVU3MHJMRFBna2gyNElCTlgzUmhp?=
+ =?utf-8?B?SWlBQzBXZnREL05Jb3pRWHlxN2VxZzNzU21GNjJYSi82TVNhSjNVSVdtdFZT?=
+ =?utf-8?B?Q1RZbnVPQUhQQTVUYlhuUnoyVWgyaGE1WjFBcEhuakd2b1cxVE5zWDkvbFJo?=
+ =?utf-8?B?SFBpVHgrMmd3cmxVY3BSaElQZDdOaVg5VnlIU3U1dGw3ZFhkdWs4RDY3Q1Yv?=
+ =?utf-8?B?U3h2Q0ZyOGdhSmpBVVVZM3I2RDhmMmVMNEFGZ3ZBS3lKYkZLTC9qRVFOeE11?=
+ =?utf-8?B?QWIrZ3kvdlNCTnd6emgyV0Frd0hJaElxbFBTTWVTMlphZkIxMEdMZXJGcERz?=
+ =?utf-8?B?L0t4bGlKL3BwT1IwZjhBS0FlK1lkYXBla1dqWldGWU5SbmgyWnFraDFXVjJh?=
+ =?utf-8?B?VDdXMk0zVUxoQjJzSDdEYkgvanhmY0haT2JQYjlLNkhodUYxbFgwK283Rk9n?=
+ =?utf-8?B?Z1NlWjVDSk8zS3VEK2c5aHhIaFpBYTVvQTdsN0JMNlA5UUpBZDFjZlo2QUJy?=
+ =?utf-8?B?cWFvQWQ0Q2pTMkxDZXlMSkMyZFlZQUt2NHg2YWRxaVlaRlFyY3F3c3hLQWNw?=
+ =?utf-8?B?eEFsWW9KK2VEdTBXWDJWTVJtdXVpZXMzbDZFZzg3ei95b0RyVFRwUlY3RkZV?=
+ =?utf-8?B?bkRmSDZua3M0c0ZwaGlLV3pOK1cyUVkxUUt5QVBVT1loK3lFUk04TkRwSnBS?=
+ =?utf-8?B?Y0NWSGxJZzhIL1lIdXZGQ3ZyblhQeVFscFduWE0vSHlSb2MvL1FwMmw5NzhW?=
+ =?utf-8?B?WW9OcXo4aVNoamwyYjJtQkJiUGNWay8xNDdIVVNBelFUSzM1QmRFSGFMK3dV?=
+ =?utf-8?B?SGVBSGE0VzRsSlJNd0hsOE41UnR3Q3pJTklKdy9KN1Zleml5MDZQaUFnQkxw?=
+ =?utf-8?B?U09adXIrN2lNcmVaZm5kUHdzYlkzcHd1Y0FxTW5Fa3BIUkQ5aTNMU0N2cmtk?=
+ =?utf-8?B?L0ljSzFBZ0R0b05mTmRSeGs1OUdLRTZkMmRuMkUveEZKT3RXMG9Bb20vVUFJ?=
+ =?utf-8?B?V2ZtR2o1cTRYTnF2WDhITHhGZ3hXeTBsUXg0VktWcCt5TkRMb2dzdzUxVCtE?=
+ =?utf-8?B?SldxM3lSWlJCd3hQQnBweDBFNGhJWEh0bmY5eXlFNjl1MWZnYUM5MUVvZkp3?=
+ =?utf-8?B?dEdEc3lWNUdsN2hpU3dOL21zSkhZcjNqNXgremRWZGZnRGFid3lZRVRTTmVq?=
+ =?utf-8?B?eVlmRXBwZmpFRFZIakZTOVdnLzc4WFc2SzVjUkhOVHFjc3JRU2E5cjE2aWlW?=
+ =?utf-8?Q?ocxpvjxGmbLkmwaPgL7jUiw5qIa+ohIv?=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR11MB5866.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?VUtidS9tY0EyK1ZYQ1ozc2I3L0NFekY1SE55am1YcHAzdlJoc29PRktsbzNy?=
+ =?utf-8?B?YmlXM1c3cVNzS2IrMHFqK3JGL2hVVEVra3VlZzR0RDUwQUkyOTczV1hXSjMv?=
+ =?utf-8?B?OU56Q3BRdjk2Zzh6S0xxU3ZNZy93dW8xV09iMDZ4Y1BjV1BkYnZndXdTRDdi?=
+ =?utf-8?B?Tjcxem5weW4reTgvQVR4eHhPdytWOFFoQXMxdjhOUXBjRjY2ckJKeTAwSyt3?=
+ =?utf-8?B?TlJGcGJVWnkzWFZveW9ubmdseWJyS3g1WjYvWGZBditVYVgyeGxNVUlxZ1JU?=
+ =?utf-8?B?SityKzN1VTRnOEZqclNhaXIrZjdQbFQ5bWVYTHN0blh0OGRIWTVyOWJPOTA3?=
+ =?utf-8?B?dUt6OEJTeHNoOW42QkFIdjB2Y3FTUUhIOVk0bitKYndDM1hOZURoMm5odTRZ?=
+ =?utf-8?B?dG4yQ1VZbHlhaEpMT05hZmRBT3RWZlNxcGNnZDJYZWVML1dQRTVTWE5SKzNR?=
+ =?utf-8?B?MDF3c0h2L0FsdEtJY3Nva04wVUNLd3dJMXgyZnlrNDBLS21JajBsNGZ3N1Ri?=
+ =?utf-8?B?VmhDMURlN3h6c29OUHVWb21qcXFxZmZNNmdwclBGZEk3YXBRRVh4TnU0ZlYz?=
+ =?utf-8?B?VTd6aE5uL1poUjBDeXVOYlFaWWhIcGU2WkJiV0ZoQTVYdk1xUDg2TlhpN1Zr?=
+ =?utf-8?B?QTdwQzZJUUoxbUQ1MG1ia3RsZHRBbnN3OHQ4NGNqelg2MGNSRkZlR2RVa1dp?=
+ =?utf-8?B?ZkxXek4rMWR4YjBwSHUwMzE1SEJQZU4yck51TDFYVzdUeXdiQWVvdDRzZmNG?=
+ =?utf-8?B?V0cyVDhzcXdhdWd1eXVmQjloVUpRcStGWGpscWNXN0xEMlp2ZHppQmZkSExj?=
+ =?utf-8?B?S05kUk5YSERvT3dyb1o4K3lVY0xvNzNISUx4MmxWYXVzTmxWV3dsa1FZUDRI?=
+ =?utf-8?B?SG9kT25WNm5lQnljVFZVSUZtbDlMSDNzSUVyQUdZUHlIYmFWY3ZIckRHZE9v?=
+ =?utf-8?B?bngvM1EvdjVRaGQvMGNadjVPbkd5ZUI2RmJha2pJSUZRSnhEMlpJeGJpVUhi?=
+ =?utf-8?B?TEJJOUtzRGpVRVBWd0hMZTFuc0lLeWNOVk5ESjZjaEpLbW10SGF1a0JKbVZK?=
+ =?utf-8?B?WjhiL2lnSGlkV0hJb0lxemJVZWQ5YXBJZmFBRzA1VEowbkFRQk8zZzFqVVNm?=
+ =?utf-8?B?aUdRcDAvSVhXaW96RmNWWC82L3VrRURiN3RKeHQ1SjJhVTkvWFdGdHdmYWJP?=
+ =?utf-8?B?YWhKalBrWjZUVDRlaEgwS2l1dWhNbS9NazREOXRJQWo5TThEdDRHbUpYSXYx?=
+ =?utf-8?B?NjNTbHVRUWZ2bTV1VEdCTXpMOTMxcmNnY0l4N1lOR0FUQ0oraXYxb05RblMz?=
+ =?utf-8?B?Q1B2MTdLbTVxL3VnQldUYm1Id3BiYWpyYzEwcjZuTTYxcE56cDlTelZpL3VV?=
+ =?utf-8?B?U1FFbFQ5SWNPNDF6ejhMT3ZBc2xWL2o0Q01Zd0RSdERxM3IzMzdsYnliS1lG?=
+ =?utf-8?B?NENYOUhOdStjVWY5cFRGTEdVRDMwSFdEb0FsT1RUZlgzWHkrc2cxbXJVVlFj?=
+ =?utf-8?B?Mk5PeGx3RlM4cU5lREtnQmxnVEJ3d1VMc3ZLNU0xcVVtNjExSlFPWlBLV3Bp?=
+ =?utf-8?B?a2dCT3pHZ3U1aHhEejNISG5BVkI2YmZLc1IxMmZVVFBtUnFhTDRGVGE0b2V4?=
+ =?utf-8?B?aUNGWkd4TWtlT2w3dDRjbzFwT09yc2hHQitVTjUvSXhERVZ5VnYzd2dYZks5?=
+ =?utf-8?B?SWlTSkZhbjZQTjJJZGpmM2JvQW44UjA1NmhLQ2pjb3o4YngxbVpZZS85czUy?=
+ =?utf-8?B?cmV3dE42bW1QUU5COTJFQ2IybTV1UkUxWEsrenBpTWNiNHFFbEFiTzlDMTA5?=
+ =?utf-8?B?M0xyMURxMU1ETmlFb2Z5SzJDQWpFSlBBaE95d2Q5SVRBT2tZYy9FZ0xSY0lj?=
+ =?utf-8?B?VVlJbGRwNjJDeDIvRk0wb2cyb2lZdUdUa2lrTC9NVzJxYWdSMCtDcUFuQkFo?=
+ =?utf-8?B?SVo1bUZqbURhbzFWVENOTWRORmJ4M3ZCM3E3WkwzQmN4dFRYNFlFa2hXUVFL?=
+ =?utf-8?B?eHZEMzc3cEVIQ0NjbERSMFJWT0lJRW5NWVpxT2E3M2J3WnpZMkRHSjdwMTJD?=
+ =?utf-8?B?VE5oeWNiUW1SeFZmVkFVSnJIV3h5eDg5aFNxWlZ5UVY2Ykd2WEFkemJ3R0VZ?=
+ =?utf-8?B?aGwreWczaGN4QWVRdEY3YjhMbXZFUVNidS9VRkwzREtlaHB1bUl0UnlScHF5?=
+ =?utf-8?B?TEE9PQ==?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Authority-Analysis: v=2.4 cv=MPeamNZl c=1 sm=1 tr=0 ts=67c82322 cx=c_pps a=rEv8fa4AjpPjGxpoe8rlIQ==:117 a=rEv8fa4AjpPjGxpoe8rlIQ==:17 a=Vs1iUdzkB0EA:10 a=M5GUcnROAAAA:8 a=X7iFPl28lcXy_p1_oFgA:9 a=OBjm3rFKGHvpk9ecZwUJ:22
-X-Proofpoint-GUID: Dwjdb9jXf7HKGoz3EIqWJP7grkdWKQKD
-X-Proofpoint-ORIG-GUID: Dwjdb9jXf7HKGoz3EIqWJP7grkdWKQKD
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-05_03,2025-03-05_01,2024-11-22_01
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SJ0PR11MB5866.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6c9878dd-e95a-4e2e-1b22-08dd5bce7036
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Mar 2025 10:13:56.0413
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 1jNZPCQoOGuRDmwuTnDQMhc9+/H+ITe8SpkfO7n4nbul+kd6dzaEW3aqWu8Cispxu3pnZHya7lshULf1I0oiEEpsQJx30qpn6bc8umbd+S0=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR11MB7009
+X-OriginatorOrg: intel.com
 
-A new option flag is added to watchdog_info. This helps the watchdog
-core to check whether stop functions would sleep or not.
-The option flags of individual drivers are also updated accordingly.
-
-Signed-off-by: George Cherian <george.cherian@marvell.com>
----
- drivers/watchdog/advantech_ec_wdt.c | 3 ++-
- drivers/watchdog/arm_smc_wdt.c      | 3 ++-
- drivers/watchdog/armada_37xx_wdt.c  | 2 +-
- drivers/watchdog/asm9260_wdt.c      | 2 +-
- drivers/watchdog/bcm47xx_wdt.c      | 3 ++-
- drivers/watchdog/bd9576_wdt.c       | 2 +-
- drivers/watchdog/bd96801_wdt.c      | 2 +-
- drivers/watchdog/cgbc_wdt.c         | 2 +-
- drivers/watchdog/cros_ec_wdt.c      | 5 ++++-
- drivers/watchdog/da9052_wdt.c       | 3 ++-
- drivers/watchdog/da9055_wdt.c       | 4 +++-
- drivers/watchdog/da9062_wdt.c       | 4 +++-
- drivers/watchdog/da9063_wdt.c       | 4 +++-
- drivers/watchdog/db8500_wdt.c       | 5 ++++-
- drivers/watchdog/dw_wdt.c           | 5 +++--
- drivers/watchdog/f71808e_wdt.c      | 3 ++-
- drivers/watchdog/gpio_wdt.c         | 2 +-
- drivers/watchdog/i6300esb.c         | 5 ++++-
- drivers/watchdog/imx_sc_wdt.c       | 2 +-
- drivers/watchdog/intel-mid_wdt.c    | 5 ++++-
- drivers/watchdog/it87_wdt.c         | 5 ++++-
- drivers/watchdog/jz4740_wdt.c       | 5 ++++-
- drivers/watchdog/kempld_wdt.c       | 3 ++-
- drivers/watchdog/lenovo_se10_wdt.c  | 5 ++++-
- drivers/watchdog/max77620_wdt.c     | 5 ++++-
- drivers/watchdog/mei_wdt.c          | 3 ++-
- drivers/watchdog/menf21bmc_wdt.c    | 4 +++-
- drivers/watchdog/mlx_wdt.c          | 2 +-
- drivers/watchdog/msc313e_wdt.c      | 5 ++++-
- drivers/watchdog/npcm_wdt.c         | 3 ++-
- drivers/watchdog/omap_wdt.c         | 5 ++++-
- drivers/watchdog/pm8916_wdt.c       | 5 +++--
- drivers/watchdog/pseries-wdt.c      | 2 +-
- drivers/watchdog/rave-sp-wdt.c      | 5 ++++-
- drivers/watchdog/renesas_wdt.c      | 7 +++++--
- drivers/watchdog/retu_wdt.c         | 5 ++++-
- drivers/watchdog/rn5t618_wdt.c      | 6 ++++--
- drivers/watchdog/rzg2l_wdt.c        | 5 ++++-
- drivers/watchdog/rzv2h_wdt.c        | 5 ++++-
- drivers/watchdog/shwdt.c            | 6 ++++--
- drivers/watchdog/sl28cpld_wdt.c     | 5 ++++-
- drivers/watchdog/softdog.c          | 5 ++++-
- drivers/watchdog/sp805_wdt.c        | 5 ++++-
- drivers/watchdog/starfive-wdt.c     | 3 ++-
- drivers/watchdog/stpmic1_wdt.c      | 5 ++++-
- drivers/watchdog/ts4800_wdt.c       | 5 ++++-
- drivers/watchdog/twl4030_wdt.c      | 5 ++++-
- drivers/watchdog/uniphier_wdt.c     | 3 ++-
- drivers/watchdog/w83627hf_wdt.c     | 5 ++++-
- drivers/watchdog/wm831x_wdt.c       | 5 ++++-
- drivers/watchdog/wm8350_wdt.c       | 5 ++++-
- drivers/watchdog/xen_wdt.c          | 5 ++++-
- drivers/watchdog/ziirave_wdt.c      | 5 ++++-
- include/uapi/linux/watchdog.h       | 1 +
- 54 files changed, 161 insertions(+), 58 deletions(-)
-
-diff --git a/drivers/watchdog/advantech_ec_wdt.c b/drivers/watchdog/advantech_ec_wdt.c
-index 7c380f90ca58..5b62c675c2cb 100644
---- a/drivers/watchdog/advantech_ec_wdt.c
-+++ b/drivers/watchdog/advantech_ec_wdt.c
-@@ -131,7 +131,8 @@ static const struct watchdog_info adv_ec_wdt_info = {
- 	.identity =	DRIVER_NAME,
- 	.options =	WDIOF_SETTIMEOUT |
- 			WDIOF_MAGICCLOSE |
--			WDIOF_KEEPALIVEPING,
-+			WDIOF_KEEPALIVEPING |
-+			WDIOF_STOP_MAYSLEEP,
- };
- 
- static const struct watchdog_ops adv_ec_wdt_ops = {
-diff --git a/drivers/watchdog/arm_smc_wdt.c b/drivers/watchdog/arm_smc_wdt.c
-index 8f3d0c3a005f..794cf0086912 100644
---- a/drivers/watchdog/arm_smc_wdt.c
-+++ b/drivers/watchdog/arm_smc_wdt.c
-@@ -90,7 +90,8 @@ static const struct watchdog_info smcwd_info = {
- 	.identity	= DRV_NAME,
- 	.options	= WDIOF_SETTIMEOUT |
- 			  WDIOF_KEEPALIVEPING |
--			  WDIOF_MAGICCLOSE,
-+			  WDIOF_MAGICCLOSE |
-+			  WDIOF_STOP_MAYSLEEP,
- };
- 
- static const struct watchdog_ops smcwd_ops = {
-diff --git a/drivers/watchdog/armada_37xx_wdt.c b/drivers/watchdog/armada_37xx_wdt.c
-index a17a7911771a..4e5ed9e1ed90 100644
---- a/drivers/watchdog/armada_37xx_wdt.c
-+++ b/drivers/watchdog/armada_37xx_wdt.c
-@@ -232,7 +232,7 @@ static int armada_37xx_wdt_stop(struct watchdog_device *wdt)
- }
- 
- static const struct watchdog_info armada_37xx_wdt_info = {
--	.options = WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING | WDIOF_MAGICCLOSE,
-+	.options = WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING | WDIOF_MAGICCLOSE | WDIOF_STOP_MAYSLEEP,
- 	.identity = "Armada 37xx Watchdog",
- };
- 
-diff --git a/drivers/watchdog/asm9260_wdt.c b/drivers/watchdog/asm9260_wdt.c
-index 45047e514b8e..24402206659b 100644
---- a/drivers/watchdog/asm9260_wdt.c
-+++ b/drivers/watchdog/asm9260_wdt.c
-@@ -181,7 +181,7 @@ static int asm9260_restart(struct watchdog_device *wdd, unsigned long action,
- 
- static const struct watchdog_info asm9260_wdt_ident = {
- 	.options          =     WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING
--				| WDIOF_MAGICCLOSE,
-+				| WDIOF_MAGICCLOSE | WDIOF_STOP_MAYSLEEP,
- 	.identity         =	"Alphascale asm9260 Watchdog",
- };
- 
-diff --git a/drivers/watchdog/bcm47xx_wdt.c b/drivers/watchdog/bcm47xx_wdt.c
-index 06a54c7de40b..93771f12895e 100644
---- a/drivers/watchdog/bcm47xx_wdt.c
-+++ b/drivers/watchdog/bcm47xx_wdt.c
-@@ -162,7 +162,8 @@ static const struct watchdog_info bcm47xx_wdt_info = {
- 	.identity	= DRV_NAME,
- 	.options	= WDIOF_SETTIMEOUT |
- 				WDIOF_KEEPALIVEPING |
--				WDIOF_MAGICCLOSE,
-+				WDIOF_MAGICCLOSE |
-+				WDIOF_STOP_MAYSLEEP,
- };
- 
- static const struct watchdog_ops bcm47xx_wdt_soft_ops = {
-diff --git a/drivers/watchdog/bd9576_wdt.c b/drivers/watchdog/bd9576_wdt.c
-index f00ea1b4e40b..876ac9636f32 100644
---- a/drivers/watchdog/bd9576_wdt.c
-+++ b/drivers/watchdog/bd9576_wdt.c
-@@ -68,7 +68,7 @@ static int bd9576_wdt_stop(struct watchdog_device *wdd)
- 
- static const struct watchdog_info bd957x_wdt_ident = {
- 	.options	= WDIOF_MAGICCLOSE | WDIOF_KEEPALIVEPING |
--			  WDIOF_SETTIMEOUT,
-+			  WDIOF_SETTIMEOUT | WDIOF_STOP_MAYSLEEP,
- 	.identity	= "BD957x Watchdog",
- };
- 
-diff --git a/drivers/watchdog/bd96801_wdt.c b/drivers/watchdog/bd96801_wdt.c
-index 12b74fd2bc05..4985a4724a6b 100644
---- a/drivers/watchdog/bd96801_wdt.c
-+++ b/drivers/watchdog/bd96801_wdt.c
-@@ -89,7 +89,7 @@ static int bd96801_wdt_stop(struct watchdog_device *wdt)
- 
- static const struct watchdog_info bd96801_wdt_info = {
- 	.options	= WDIOF_MAGICCLOSE | WDIOF_KEEPALIVEPING |
--			  WDIOF_SETTIMEOUT,
-+			  WDIOF_SETTIMEOUT | WDIOF_STOP_MAYSLEEP,
- 	.identity	= "BD96801 Watchdog",
- };
- 
-diff --git a/drivers/watchdog/cgbc_wdt.c b/drivers/watchdog/cgbc_wdt.c
-index 702b055ba6f4..3ec2d53bb8e0 100644
---- a/drivers/watchdog/cgbc_wdt.c
-+++ b/drivers/watchdog/cgbc_wdt.c
-@@ -151,7 +151,7 @@ static int cgbc_wdt_set_timeout(struct watchdog_device *wdd,
- static const struct watchdog_info cgbc_wdt_info = {
- 	.identity	= "CGBC Watchdog",
- 	.options	= WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING |
--		WDIOF_MAGICCLOSE | WDIOF_PRETIMEOUT
-+		WDIOF_MAGICCLOSE | WDIOF_PRETIMEOUT | WDIOF_STOP_MAYSLEEP,
- };
- 
- static const struct watchdog_ops cgbc_wdt_ops = {
-diff --git a/drivers/watchdog/cros_ec_wdt.c b/drivers/watchdog/cros_ec_wdt.c
-index ba045e29f9a5..5cefeb388ef5 100644
---- a/drivers/watchdog/cros_ec_wdt.c
-+++ b/drivers/watchdog/cros_ec_wdt.c
-@@ -107,7 +107,10 @@ static int cros_ec_wdt_set_timeout(struct watchdog_device *wdd, unsigned int t)
- }
- 
- static const struct watchdog_info cros_ec_wdt_ident = {
--	.options          = WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING | WDIOF_MAGICCLOSE,
-+	.options          = WDIOF_SETTIMEOUT |
-+			    WDIOF_KEEPALIVEPING |
-+			    WDIOF_MAGICCLOSE |
-+			    WDIOF_STOP_MAYSLEEP,
- 	.firmware_version = 0,
- 	.identity         = DRV_NAME,
- };
-diff --git a/drivers/watchdog/da9052_wdt.c b/drivers/watchdog/da9052_wdt.c
-index 77039f2f0be5..ac6980342fcd 100644
---- a/drivers/watchdog/da9052_wdt.c
-+++ b/drivers/watchdog/da9052_wdt.c
-@@ -139,7 +139,8 @@ static const struct watchdog_info da9052_wdt_info = {
- 			WDIOF_KEEPALIVEPING |
- 			WDIOF_CARDRESET |
- 			WDIOF_OVERHEAT |
--			WDIOF_POWERUNDER,
-+			WDIOF_POWERUNDER |
-+			WDIOF_STOP_MAYSLEEP,
- 	.identity	= "DA9052 Watchdog",
- };
- 
-diff --git a/drivers/watchdog/da9055_wdt.c b/drivers/watchdog/da9055_wdt.c
-index 9d5a2009466f..dbfe02647a62 100644
---- a/drivers/watchdog/da9055_wdt.c
-+++ b/drivers/watchdog/da9055_wdt.c
-@@ -105,7 +105,9 @@ static int da9055_wdt_stop(struct watchdog_device *wdt_dev)
- }
- 
- static const struct watchdog_info da9055_wdt_info = {
--	.options	= WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING,
-+	.options	= WDIOF_SETTIMEOUT |
-+			  WDIOF_KEEPALIVEPING |
-+			  WDIOF_STOP_MAYSLEEP,
- 	.identity	= "DA9055 Watchdog",
- };
- 
-diff --git a/drivers/watchdog/da9062_wdt.c b/drivers/watchdog/da9062_wdt.c
-index 426962547df1..06507af68f79 100644
---- a/drivers/watchdog/da9062_wdt.c
-+++ b/drivers/watchdog/da9062_wdt.c
-@@ -180,7 +180,9 @@ static int da9062_wdt_restart(struct watchdog_device *wdd, unsigned long action,
- }
- 
- static const struct watchdog_info da9062_watchdog_info = {
--	.options = WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING,
-+	.options = WDIOF_SETTIMEOUT |
-+		   WDIOF_KEEPALIVEPING |
-+		   WDIOF_STOP_MAYSLEEP,
- 	.identity = "DA9062 WDT",
- };
- 
-diff --git a/drivers/watchdog/da9063_wdt.c b/drivers/watchdog/da9063_wdt.c
-index 92e1b78ff481..ac7f5f14a21d 100644
---- a/drivers/watchdog/da9063_wdt.c
-+++ b/drivers/watchdog/da9063_wdt.c
-@@ -198,7 +198,9 @@ static int da9063_wdt_restart(struct watchdog_device *wdd, unsigned long action,
- }
- 
- static const struct watchdog_info da9063_watchdog_info = {
--	.options = WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING,
-+	.options = WDIOF_SETTIMEOUT |
-+		   WDIOF_KEEPALIVEPING |
-+		   WDIOF_STOP_MAYSLEEP,
- 	.identity = "DA9063 Watchdog",
- };
- 
-diff --git a/drivers/watchdog/db8500_wdt.c b/drivers/watchdog/db8500_wdt.c
-index 97148ac0aa54..dfcb671f1a3e 100644
---- a/drivers/watchdog/db8500_wdt.c
-+++ b/drivers/watchdog/db8500_wdt.c
-@@ -61,7 +61,10 @@ static int db8500_wdt_set_timeout(struct watchdog_device *wdd,
- }
- 
- static const struct watchdog_info db8500_wdt_info = {
--	.options = WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING | WDIOF_MAGICCLOSE,
-+	.options = WDIOF_SETTIMEOUT |
-+		   WDIOF_KEEPALIVEPING |
-+		   WDIOF_MAGICCLOSE |
-+		   WDIOF_STOP_MAYSLEEP,
- 	.identity = "DB8500 WDT",
- 	.firmware_version = 1,
- };
-diff --git a/drivers/watchdog/dw_wdt.c b/drivers/watchdog/dw_wdt.c
-index 26efca9ae0e7..74cd691cf900 100644
---- a/drivers/watchdog/dw_wdt.c
-+++ b/drivers/watchdog/dw_wdt.c
-@@ -336,13 +336,14 @@ static unsigned int dw_wdt_get_timeleft(struct watchdog_device *wdd)
- 
- static const struct watchdog_info dw_wdt_ident = {
- 	.options	= WDIOF_KEEPALIVEPING | WDIOF_SETTIMEOUT |
--			  WDIOF_MAGICCLOSE,
-+			  WDIOF_MAGICCLOSE | WDIOF_STOP_MAYSLEEP,
- 	.identity	= "Synopsys DesignWare Watchdog",
- };
- 
- static const struct watchdog_info dw_wdt_pt_ident = {
- 	.options	= WDIOF_KEEPALIVEPING | WDIOF_SETTIMEOUT |
--			  WDIOF_PRETIMEOUT | WDIOF_MAGICCLOSE,
-+			  WDIOF_PRETIMEOUT | WDIOF_MAGICCLOSE |
-+			  WDIOF_STOP_MAYSLEEP,
- 	.identity	= "Synopsys DesignWare Watchdog",
- };
- 
-diff --git a/drivers/watchdog/f71808e_wdt.c b/drivers/watchdog/f71808e_wdt.c
-index 6a16d3d0bb1e..4f47023d1992 100644
---- a/drivers/watchdog/f71808e_wdt.c
-+++ b/drivers/watchdog/f71808e_wdt.c
-@@ -469,7 +469,8 @@ static int fintek_wdt_probe(struct platform_device *pdev)
- 	wd->ident.options = WDIOF_SETTIMEOUT
- 			| WDIOF_MAGICCLOSE
- 			| WDIOF_KEEPALIVEPING
--			| WDIOF_CARDRESET;
-+			| WDIOF_CARDRESET
-+			| WDIOF_STOP_MAYSLEEP;
- 
- 	snprintf(wd->ident.identity,
- 		sizeof(wd->ident.identity), "%s watchdog",
-diff --git a/drivers/watchdog/gpio_wdt.c b/drivers/watchdog/gpio_wdt.c
-index a7b814ea740b..fc5143b14553 100644
---- a/drivers/watchdog/gpio_wdt.c
-+++ b/drivers/watchdog/gpio_wdt.c
-@@ -93,7 +93,7 @@ static int gpio_wdt_stop(struct watchdog_device *wdd)
- 
- static const struct watchdog_info gpio_wdt_ident = {
- 	.options	= WDIOF_MAGICCLOSE | WDIOF_KEEPALIVEPING |
--			  WDIOF_SETTIMEOUT,
-+			  WDIOF_SETTIMEOUT | WDIOF_STOP_MAYSLEEP,
- 	.identity	= "GPIO Watchdog",
- };
- 
-diff --git a/drivers/watchdog/i6300esb.c b/drivers/watchdog/i6300esb.c
-index a30835f547b3..ccbfd610a1a8 100644
---- a/drivers/watchdog/i6300esb.c
-+++ b/drivers/watchdog/i6300esb.c
-@@ -190,7 +190,10 @@ static int esb_timer_set_heartbeat(struct watchdog_device *wdd,
- 
- static struct watchdog_info esb_info = {
- 	.identity = ESB_MODULE_NAME,
--	.options = WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING | WDIOF_MAGICCLOSE,
-+	.options = WDIOF_SETTIMEOUT |
-+		   WDIOF_KEEPALIVEPING |
-+		   WDIOF_MAGICCLOSE |
-+		   WDIOF_STOP_MAYSLEEP,
- };
- 
- static const struct watchdog_ops esb_ops = {
-diff --git a/drivers/watchdog/imx_sc_wdt.c b/drivers/watchdog/imx_sc_wdt.c
-index 1280b9b1ec2a..2b5e9db39528 100644
---- a/drivers/watchdog/imx_sc_wdt.c
-+++ b/drivers/watchdog/imx_sc_wdt.c
-@@ -172,7 +172,7 @@ static const struct watchdog_ops imx_sc_wdt_ops = {
- static struct watchdog_info imx_sc_wdt_info = {
- 	.identity	= "i.MX SC watchdog timer",
- 	.options	= WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING |
--			  WDIOF_MAGICCLOSE,
-+			  WDIOF_MAGICCLOSE | WDIOF_STOP_MAYSLEEP,
- };
- 
- static int imx_sc_wdt_probe(struct platform_device *pdev)
-diff --git a/drivers/watchdog/intel-mid_wdt.c b/drivers/watchdog/intel-mid_wdt.c
-index 756d262dc580..2f8446c8643a 100644
---- a/drivers/watchdog/intel-mid_wdt.c
-+++ b/drivers/watchdog/intel-mid_wdt.c
-@@ -112,7 +112,10 @@ static irqreturn_t mid_wdt_irq(int irq, void *dev_id)
- 
- static const struct watchdog_info mid_wdt_info = {
- 	.identity = "Intel MID SCU watchdog",
--	.options = WDIOF_KEEPALIVEPING | WDIOF_SETTIMEOUT | WDIOF_MAGICCLOSE,
-+	.options = WDIOF_KEEPALIVEPING |
-+		   WDIOF_SETTIMEOUT |
-+		   WDIOF_MAGICCLOSE |
-+		   WDIOF_STOP_MAYSLEEP,
- };
- 
- static const struct watchdog_ops mid_wdt_ops = {
-diff --git a/drivers/watchdog/it87_wdt.c b/drivers/watchdog/it87_wdt.c
-index a1e23dce8810..e4ce51978a8b 100644
---- a/drivers/watchdog/it87_wdt.c
-+++ b/drivers/watchdog/it87_wdt.c
-@@ -265,7 +265,10 @@ static const struct dmi_system_id it87_quirks[] = {
- };
- 
- static const struct watchdog_info ident = {
--	.options = WDIOF_SETTIMEOUT | WDIOF_MAGICCLOSE | WDIOF_KEEPALIVEPING,
-+	.options = WDIOF_SETTIMEOUT |
-+		   WDIOF_MAGICCLOSE |
-+		   WDIOF_KEEPALIVEPING |
-+		   WDIOF_STOP_MAYSLEEP,
- 	.firmware_version = 1,
- 	.identity = WATCHDOG_NAME,
- };
-diff --git a/drivers/watchdog/jz4740_wdt.c b/drivers/watchdog/jz4740_wdt.c
-index 395bde79e292..4cfdc367b7c2 100644
---- a/drivers/watchdog/jz4740_wdt.c
-+++ b/drivers/watchdog/jz4740_wdt.c
-@@ -112,7 +112,10 @@ static int jz4740_wdt_restart(struct watchdog_device *wdt_dev,
- }
- 
- static const struct watchdog_info jz4740_wdt_info = {
--	.options = WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING | WDIOF_MAGICCLOSE,
-+	.options = WDIOF_SETTIMEOUT |
-+		   WDIOF_KEEPALIVEPING |
-+		   WDIOF_MAGICCLOSE |
-+		   WDIOF_STOP_MAYSLEEP,
- 	.identity = "jz4740 Watchdog",
- };
- 
-diff --git a/drivers/watchdog/kempld_wdt.c b/drivers/watchdog/kempld_wdt.c
-index e6c7a2906680..b1b8cc588d49 100644
---- a/drivers/watchdog/kempld_wdt.c
-+++ b/drivers/watchdog/kempld_wdt.c
-@@ -419,7 +419,8 @@ static const struct watchdog_info kempld_wdt_info = {
- 	.options	= WDIOF_SETTIMEOUT |
- 			WDIOF_KEEPALIVEPING |
- 			WDIOF_MAGICCLOSE |
--			WDIOF_PRETIMEOUT
-+			WDIOF_PRETIMEOUT |
-+			WDIOF_STOP_MAYSLEEP,
- };
- 
- static const struct watchdog_ops kempld_wdt_ops = {
-diff --git a/drivers/watchdog/lenovo_se10_wdt.c b/drivers/watchdog/lenovo_se10_wdt.c
-index cd0500e5080b..be5e27d4aa28 100644
---- a/drivers/watchdog/lenovo_se10_wdt.c
-+++ b/drivers/watchdog/lenovo_se10_wdt.c
-@@ -140,7 +140,10 @@ static int wdt_ping(struct watchdog_device *wdog)
- }
- 
- static const struct watchdog_info wdt_info = {
--	.options = WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING | WDIOF_MAGICCLOSE,
-+	.options = WDIOF_SETTIMEOUT |
-+		   WDIOF_KEEPALIVEPING |
-+		   WDIOF_MAGICCLOSE |
-+		   WDIOF_STOP_MAYSLEEP,
- 	.identity = "Lenovo SE10 Watchdog",
- };
- 
-diff --git a/drivers/watchdog/max77620_wdt.c b/drivers/watchdog/max77620_wdt.c
-index d3ced783a5f4..b6ed7f52c1c3 100644
---- a/drivers/watchdog/max77620_wdt.c
-+++ b/drivers/watchdog/max77620_wdt.c
-@@ -144,7 +144,10 @@ static int max77620_wdt_set_timeout(struct watchdog_device *wdt_dev,
- 
- static const struct watchdog_info max77620_wdt_info = {
- 	.identity = "max77620-watchdog",
--	.options = WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING | WDIOF_MAGICCLOSE,
-+	.options = WDIOF_SETTIMEOUT |
-+		   WDIOF_KEEPALIVEPING |
-+		   WDIOF_MAGICCLOSE |
-+		   WDIOF_STOP_MAYSLEEP,
- };
- 
- static const struct watchdog_ops max77620_wdt_ops = {
-diff --git a/drivers/watchdog/mei_wdt.c b/drivers/watchdog/mei_wdt.c
-index c7a7235e6224..691df89d90b1 100644
---- a/drivers/watchdog/mei_wdt.c
-+++ b/drivers/watchdog/mei_wdt.c
-@@ -315,7 +315,8 @@ static struct watchdog_info wd_info = {
- 	.identity = INTEL_AMT_WATCHDOG_ID,
- 	.options  = WDIOF_KEEPALIVEPING |
- 		    WDIOF_SETTIMEOUT |
--		    WDIOF_ALARMONLY,
-+		    WDIOF_ALARMONLY |
-+		    WDIOF_STOP_MAYSLEEP,
- };
- 
- /**
-diff --git a/drivers/watchdog/menf21bmc_wdt.c b/drivers/watchdog/menf21bmc_wdt.c
-index 81ebdfc371f4..589313d82a16 100644
---- a/drivers/watchdog/menf21bmc_wdt.c
-+++ b/drivers/watchdog/menf21bmc_wdt.c
-@@ -99,7 +99,9 @@ static int menf21bmc_wdt_ping(struct watchdog_device *wdt)
- }
- 
- static const struct watchdog_info menf21bmc_wdt_info = {
--	.options = WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING,
-+	.options = WDIOF_SETTIMEOUT |
-+		   WDIOF_KEEPALIVEPING |
-+		   WDIOF_STOP_MAYSLEEP,
- 	.identity = DEVNAME,
- };
- 
-diff --git a/drivers/watchdog/mlx_wdt.c b/drivers/watchdog/mlx_wdt.c
-index 5dc69363f06a..38452f97b79f 100644
---- a/drivers/watchdog/mlx_wdt.c
-+++ b/drivers/watchdog/mlx_wdt.c
-@@ -24,7 +24,7 @@
- #define MLXREG_WDT_MAX_TIMEOUT_TYPE3	65535
- #define MLXREG_WDT_MIN_TIMEOUT		1
- #define MLXREG_WDT_OPTIONS_BASE (WDIOF_KEEPALIVEPING | WDIOF_MAGICCLOSE | \
--				 WDIOF_SETTIMEOUT)
-+				 WDIOF_SETTIMEOUT | WDIOF_STOP_MAYSLEEP)
- 
- /**
-  * struct mlxreg_wdt - wd private data:
-diff --git a/drivers/watchdog/msc313e_wdt.c b/drivers/watchdog/msc313e_wdt.c
-index 90171431fc59..532f575f48bd 100644
---- a/drivers/watchdog/msc313e_wdt.c
-+++ b/drivers/watchdog/msc313e_wdt.c
-@@ -77,7 +77,10 @@ static int msc313e_wdt_settimeout(struct watchdog_device *wdev, unsigned int new
- 
- static const struct watchdog_info msc313e_wdt_ident = {
- 	.identity = "MSC313e watchdog",
--	.options = WDIOF_MAGICCLOSE | WDIOF_KEEPALIVEPING | WDIOF_SETTIMEOUT,
-+	.options = WDIOF_MAGICCLOSE |
-+		   WDIOF_KEEPALIVEPING |
-+		   WDIOF_SETTIMEOUT |
-+		   WDIOF_STOP_MAYSLEEP,
- };
- 
- static const struct watchdog_ops msc313e_wdt_ops = {
-diff --git a/drivers/watchdog/npcm_wdt.c b/drivers/watchdog/npcm_wdt.c
-index a5dd1c230137..4988be7db94c 100644
---- a/drivers/watchdog/npcm_wdt.c
-+++ b/drivers/watchdog/npcm_wdt.c
-@@ -176,7 +176,8 @@ static const struct watchdog_info npcm_wdt_info = {
- 	.identity	= KBUILD_MODNAME,
- 	.options	= WDIOF_SETTIMEOUT
- 			| WDIOF_KEEPALIVEPING
--			| WDIOF_MAGICCLOSE,
-+			| WDIOF_MAGICCLOSE
-+			| WDIOF_STOP_MAYSLEEP,
- };
- 
- static const struct watchdog_ops npcm_wdt_ops = {
-diff --git a/drivers/watchdog/omap_wdt.c b/drivers/watchdog/omap_wdt.c
-index d523428a8d22..7b0a2b7c3694 100644
---- a/drivers/watchdog/omap_wdt.c
-+++ b/drivers/watchdog/omap_wdt.c
-@@ -213,7 +213,10 @@ static unsigned int omap_wdt_get_timeleft(struct watchdog_device *wdog)
- }
- 
- static const struct watchdog_info omap_wdt_info = {
--	.options = WDIOF_SETTIMEOUT | WDIOF_MAGICCLOSE | WDIOF_KEEPALIVEPING,
-+	.options = WDIOF_SETTIMEOUT |
-+		   WDIOF_MAGICCLOSE |
-+		   WDIOF_KEEPALIVEPING |
-+		   WDIOF_STOP_MAYSLEEP,
- 	.identity = "OMAP Watchdog",
- };
- 
-diff --git a/drivers/watchdog/pm8916_wdt.c b/drivers/watchdog/pm8916_wdt.c
-index 007ed139ab96..d384803f0fab 100644
---- a/drivers/watchdog/pm8916_wdt.c
-+++ b/drivers/watchdog/pm8916_wdt.c
-@@ -117,14 +117,15 @@ static irqreturn_t pm8916_wdt_isr(int irq, void *arg)
- 
- static const struct watchdog_info pm8916_wdt_ident = {
- 	.options = WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING | WDIOF_MAGICCLOSE |
--		   WDIOF_OVERHEAT | WDIOF_CARDRESET | WDIOF_POWERUNDER,
-+		   WDIOF_OVERHEAT | WDIOF_CARDRESET | WDIOF_POWERUNDER |
-+		   WDIOF_STOP_MAYSLEEP,
- 	.identity = "QCOM PM8916 PON WDT",
- };
- 
- static const struct watchdog_info pm8916_wdt_pt_ident = {
- 	.options = WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING | WDIOF_MAGICCLOSE |
- 		   WDIOF_OVERHEAT | WDIOF_CARDRESET | WDIOF_POWERUNDER |
--		   WDIOF_PRETIMEOUT,
-+		   WDIOF_PRETIMEOUT | WDIOF_STOP_MAYSLEEP,
- 	.identity = "QCOM PM8916 PON WDT",
- };
- 
-diff --git a/drivers/watchdog/pseries-wdt.c b/drivers/watchdog/pseries-wdt.c
-index 7f53b5293409..7f0b7a111e38 100644
---- a/drivers/watchdog/pseries-wdt.c
-+++ b/drivers/watchdog/pseries-wdt.c
-@@ -133,7 +133,7 @@ static int pseries_wdt_stop(struct watchdog_device *wdd)
- static struct watchdog_info pseries_wdt_info = {
- 	.identity = DRV_NAME,
- 	.options = WDIOF_KEEPALIVEPING | WDIOF_MAGICCLOSE | WDIOF_SETTIMEOUT
--	    | WDIOF_PRETIMEOUT,
-+	    | WDIOF_PRETIMEOUT | WDIOF_STOP_MAYSLEEP,
- };
- 
- static const struct watchdog_ops pseries_wdt_ops = {
-diff --git a/drivers/watchdog/rave-sp-wdt.c b/drivers/watchdog/rave-sp-wdt.c
-index 5d1c2176d445..3b366196a1ca 100644
---- a/drivers/watchdog/rave-sp-wdt.c
-+++ b/drivers/watchdog/rave-sp-wdt.c
-@@ -211,7 +211,10 @@ static int rave_sp_wdt_ping(struct watchdog_device *wdd)
- }
- 
- static const struct watchdog_info rave_sp_wdt_info = {
--	.options = WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING | WDIOF_MAGICCLOSE,
-+	.options = WDIOF_SETTIMEOUT |
-+		   WDIOF_KEEPALIVEPING |
-+		   WDIOF_MAGICCLOSE |
-+		   WDIOF_STOP_MAYSLEEP,
- 	.identity = "RAVE SP Watchdog",
- };
- 
-diff --git a/drivers/watchdog/renesas_wdt.c b/drivers/watchdog/renesas_wdt.c
-index c0b2a9c5250d..e328f0b6915e 100644
---- a/drivers/watchdog/renesas_wdt.c
-+++ b/drivers/watchdog/renesas_wdt.c
-@@ -158,8 +158,11 @@ static int rwdt_restart(struct watchdog_device *wdev, unsigned long action,
- }
- 
- static const struct watchdog_info rwdt_ident = {
--	.options = WDIOF_MAGICCLOSE | WDIOF_KEEPALIVEPING | WDIOF_SETTIMEOUT |
--		WDIOF_CARDRESET,
-+	.options = WDIOF_MAGICCLOSE |
-+		   WDIOF_KEEPALIVEPING |
-+		   WDIOF_SETTIMEOUT |
-+		   WDIOF_CARDRESET |
-+		   WDIOF_STOP_MAYSLEEP,
- 	.identity = "Renesas WDT Watchdog",
- };
- 
-diff --git a/drivers/watchdog/retu_wdt.c b/drivers/watchdog/retu_wdt.c
-index 2b9017e1cd91..1ff740a97d96 100644
---- a/drivers/watchdog/retu_wdt.c
-+++ b/drivers/watchdog/retu_wdt.c
-@@ -87,7 +87,10 @@ static int retu_wdt_set_timeout(struct watchdog_device *wdog,
- }
- 
- static const struct watchdog_info retu_wdt_info = {
--	.options = WDIOF_SETTIMEOUT | WDIOF_MAGICCLOSE | WDIOF_KEEPALIVEPING,
-+	.options = WDIOF_SETTIMEOUT |
-+		   WDIOF_MAGICCLOSE |
-+		   WDIOF_KEEPALIVEPING |
-+		   WDIOF_STOP_MAYSLEEP,
- 	.identity = "Retu watchdog",
- };
- 
-diff --git a/drivers/watchdog/rn5t618_wdt.c b/drivers/watchdog/rn5t618_wdt.c
-index 87d06d210ac9..db56540e5d94 100644
---- a/drivers/watchdog/rn5t618_wdt.c
-+++ b/drivers/watchdog/rn5t618_wdt.c
-@@ -125,8 +125,10 @@ static int rn5t618_wdt_ping(struct watchdog_device *wdt_dev)
- }
- 
- static const struct watchdog_info rn5t618_wdt_info = {
--	.options	= WDIOF_SETTIMEOUT | WDIOF_MAGICCLOSE |
--			  WDIOF_KEEPALIVEPING,
-+	.options	= WDIOF_SETTIMEOUT |
-+			  WDIOF_MAGICCLOSE |
-+			  WDIOF_KEEPALIVEPING |
-+			  WDIOF_STOP_MAYSLEEP,
- 	.identity	= DRIVER_NAME,
- };
- 
-diff --git a/drivers/watchdog/rzg2l_wdt.c b/drivers/watchdog/rzg2l_wdt.c
-index 11bbe48160ec..b3569c881abe 100644
---- a/drivers/watchdog/rzg2l_wdt.c
-+++ b/drivers/watchdog/rzg2l_wdt.c
-@@ -219,7 +219,10 @@ static int rzg2l_wdt_restart(struct watchdog_device *wdev,
- }
- 
- static const struct watchdog_info rzg2l_wdt_ident = {
--	.options = WDIOF_MAGICCLOSE | WDIOF_KEEPALIVEPING | WDIOF_SETTIMEOUT,
-+	.options = WDIOF_MAGICCLOSE |
-+		   WDIOF_KEEPALIVEPING |
-+		   WDIOF_SETTIMEOUT |
-+		   WDIOF_STOP_MAYSLEEP,
- 	.identity = "Renesas RZ/G2L WDT Watchdog",
- };
- 
-diff --git a/drivers/watchdog/rzv2h_wdt.c b/drivers/watchdog/rzv2h_wdt.c
-index 8defd0241213..8c96e872e2a2 100644
---- a/drivers/watchdog/rzv2h_wdt.c
-+++ b/drivers/watchdog/rzv2h_wdt.c
-@@ -135,7 +135,10 @@ static int rzv2h_wdt_stop(struct watchdog_device *wdev)
- }
- 
- static const struct watchdog_info rzv2h_wdt_ident = {
--	.options = WDIOF_MAGICCLOSE | WDIOF_KEEPALIVEPING | WDIOF_SETTIMEOUT,
-+	.options = WDIOF_MAGICCLOSE |
-+		   WDIOF_KEEPALIVEPING |
-+		   WDIOF_SETTIMEOUT |
-+		   WDIOF_STOP_MAYSLEEP,
- 	.identity = "Renesas RZ/V2H WDT Watchdog",
- };
- 
-diff --git a/drivers/watchdog/shwdt.c b/drivers/watchdog/shwdt.c
-index 7f0150c39421..246ff99af3be 100644
---- a/drivers/watchdog/shwdt.c
-+++ b/drivers/watchdog/shwdt.c
-@@ -194,8 +194,10 @@ static void sh_wdt_ping(struct timer_list *t)
- }
- 
- static const struct watchdog_info sh_wdt_info = {
--	.options		= WDIOF_KEEPALIVEPING | WDIOF_SETTIMEOUT |
--				  WDIOF_MAGICCLOSE,
-+	.options		= WDIOF_KEEPALIVEPING |
-+				  WDIOF_SETTIMEOUT |
-+				  WDIOF_MAGICCLOSE |
-+				  WDIOF_STOP_MAYSLEEP,
- 	.firmware_version	= 1,
- 	.identity		= "SH WDT",
- };
-diff --git a/drivers/watchdog/sl28cpld_wdt.c b/drivers/watchdog/sl28cpld_wdt.c
-index 8630c29818f2..bee1f597615c 100644
---- a/drivers/watchdog/sl28cpld_wdt.c
-+++ b/drivers/watchdog/sl28cpld_wdt.c
-@@ -104,7 +104,10 @@ static int sl28cpld_wdt_set_timeout(struct watchdog_device *wdd,
- }
- 
- static const struct watchdog_info sl28cpld_wdt_info = {
--	.options = WDIOF_MAGICCLOSE | WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING,
-+	.options = WDIOF_MAGICCLOSE |
-+		   WDIOF_SETTIMEOUT |
-+		   WDIOF_KEEPALIVEPING |
-+		   WDIOF_STOP_MAYSLEEP,
- 	.identity = "sl28cpld watchdog",
- };
- 
-diff --git a/drivers/watchdog/softdog.c b/drivers/watchdog/softdog.c
-index 7a1096265f18..4cc481157a5d 100644
---- a/drivers/watchdog/softdog.c
-+++ b/drivers/watchdog/softdog.c
-@@ -162,7 +162,10 @@ static int softdog_stop(struct watchdog_device *w)
- 
- static struct watchdog_info softdog_info = {
- 	.identity = "Software Watchdog",
--	.options = WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING | WDIOF_MAGICCLOSE,
-+	.options = WDIOF_SETTIMEOUT |
-+		   WDIOF_KEEPALIVEPING |
-+		   WDIOF_MAGICCLOSE |
-+		   WDIOF_STOP_MAYSLEEP,
- };
- 
- static const struct watchdog_ops softdog_ops = {
-diff --git a/drivers/watchdog/sp805_wdt.c b/drivers/watchdog/sp805_wdt.c
-index c2125f204a13..fed64b4ba991 100644
---- a/drivers/watchdog/sp805_wdt.c
-+++ b/drivers/watchdog/sp805_wdt.c
-@@ -214,7 +214,10 @@ static int wdt_disable(struct watchdog_device *wdd)
- }
- 
- static const struct watchdog_info wdt_info = {
--	.options = WDIOF_MAGICCLOSE | WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING,
-+	.options = WDIOF_MAGICCLOSE |
-+		   WDIOF_SETTIMEOUT |
-+		   WDIOF_KEEPALIVEPING |
-+		   WDIOF_STOP_MAYSLEEP,
- 	.identity = MODULE_NAME,
- };
- 
-diff --git a/drivers/watchdog/starfive-wdt.c b/drivers/watchdog/starfive-wdt.c
-index 355918d62f63..46aebeeca2ee 100644
---- a/drivers/watchdog/starfive-wdt.c
-+++ b/drivers/watchdog/starfive-wdt.c
-@@ -409,7 +409,8 @@ static int starfive_wdt_set_timeout(struct watchdog_device *wdd,
- 	return 0;
- }
- 
--#define STARFIVE_WDT_OPTIONS (WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING | WDIOF_MAGICCLOSE)
-+#define STARFIVE_WDT_OPTIONS (WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING | \
-+				WDIOF_MAGICCLOSE | WDIOF_STOP_MAYSLEEP)
- 
- static const struct watchdog_info starfive_wdt_info = {
- 	.options = STARFIVE_WDT_OPTIONS,
-diff --git a/drivers/watchdog/stpmic1_wdt.c b/drivers/watchdog/stpmic1_wdt.c
-index 45d0c543466f..2783ebd74a54 100644
---- a/drivers/watchdog/stpmic1_wdt.c
-+++ b/drivers/watchdog/stpmic1_wdt.c
-@@ -67,7 +67,10 @@ static int pmic_wdt_set_timeout(struct watchdog_device *wdd,
- }
- 
- static const struct watchdog_info pmic_watchdog_info = {
--	.options = WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING | WDIOF_MAGICCLOSE,
-+	.options = WDIOF_SETTIMEOUT |
-+		   WDIOF_KEEPALIVEPING |
-+		   WDIOF_MAGICCLOSE |
-+		   WDIOF_STOP_MAYSLEEP,
- 	.identity = "STPMIC1 PMIC Watchdog",
- };
- 
-diff --git a/drivers/watchdog/ts4800_wdt.c b/drivers/watchdog/ts4800_wdt.c
-index 24b1ad52102e..2a3b917be46a 100644
---- a/drivers/watchdog/ts4800_wdt.c
-+++ b/drivers/watchdog/ts4800_wdt.c
-@@ -100,7 +100,10 @@ static const struct watchdog_ops ts4800_wdt_ops = {
- };
- 
- static const struct watchdog_info ts4800_wdt_info = {
--	.options = WDIOF_SETTIMEOUT | WDIOF_MAGICCLOSE | WDIOF_KEEPALIVEPING,
-+	.options = WDIOF_SETTIMEOUT |
-+		   WDIOF_MAGICCLOSE |
-+		   WDIOF_KEEPALIVEPING |
-+		   WDIOF_STOP_MAYSLEEP,
- 	.identity = "TS-4800 Watchdog",
- };
- 
-diff --git a/drivers/watchdog/twl4030_wdt.c b/drivers/watchdog/twl4030_wdt.c
-index 8c80d04811e4..b80098bf23f7 100644
---- a/drivers/watchdog/twl4030_wdt.c
-+++ b/drivers/watchdog/twl4030_wdt.c
-@@ -45,7 +45,10 @@ static int twl4030_wdt_set_timeout(struct watchdog_device *wdt,
- }
- 
- static const struct watchdog_info twl4030_wdt_info = {
--	.options = WDIOF_SETTIMEOUT | WDIOF_MAGICCLOSE | WDIOF_KEEPALIVEPING,
-+	.options = WDIOF_SETTIMEOUT |
-+		   WDIOF_MAGICCLOSE |
-+		   WDIOF_KEEPALIVEPING |
-+		   WDIOF_STOP_MAYSLEEP,
- 	.identity = "TWL4030 Watchdog",
- };
- 
-diff --git a/drivers/watchdog/uniphier_wdt.c b/drivers/watchdog/uniphier_wdt.c
-index 8e9242c23022..b2e7840c0f61 100644
---- a/drivers/watchdog/uniphier_wdt.c
-+++ b/drivers/watchdog/uniphier_wdt.c
-@@ -168,7 +168,8 @@ static const struct watchdog_info uniphier_wdt_info = {
- 	.options	= WDIOF_SETTIMEOUT |
- 			  WDIOF_KEEPALIVEPING |
- 			  WDIOF_MAGICCLOSE |
--			  WDIOF_OVERHEAT,
-+			  WDIOF_OVERHEAT |
-+			  WDIOF_STOP_MAYSLEEP,
- };
- 
- static const struct watchdog_ops uniphier_wdt_ops = {
-diff --git a/drivers/watchdog/w83627hf_wdt.c b/drivers/watchdog/w83627hf_wdt.c
-index bc33b63c5a5d..139adb8eee7a 100644
---- a/drivers/watchdog/w83627hf_wdt.c
-+++ b/drivers/watchdog/w83627hf_wdt.c
-@@ -314,7 +314,10 @@ static unsigned int wdt_get_time(struct watchdog_device *wdog)
-  */
- 
- static const struct watchdog_info wdt_info = {
--	.options = WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING | WDIOF_MAGICCLOSE,
-+	.options = WDIOF_SETTIMEOUT |
-+		   WDIOF_KEEPALIVEPING |
-+		   WDIOF_MAGICCLOSE |
-+		   WDIOF_STOP_MAYSLEEP,
- 	.identity = "W83627HF Watchdog",
- };
- 
-diff --git a/drivers/watchdog/wm831x_wdt.c b/drivers/watchdog/wm831x_wdt.c
-index d96ad8f38bd2..a7ce9c797725 100644
---- a/drivers/watchdog/wm831x_wdt.c
-+++ b/drivers/watchdog/wm831x_wdt.c
-@@ -156,7 +156,10 @@ static int wm831x_wdt_set_timeout(struct watchdog_device *wdt_dev,
- }
- 
- static const struct watchdog_info wm831x_wdt_info = {
--	.options = WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING | WDIOF_MAGICCLOSE,
-+	.options = WDIOF_SETTIMEOUT |
-+		   WDIOF_KEEPALIVEPING |
-+		   WDIOF_MAGICCLOSE |
-+		   WDIOF_STOP_MAYSLEEP,
- 	.identity = "WM831x Watchdog",
- };
- 
-diff --git a/drivers/watchdog/wm8350_wdt.c b/drivers/watchdog/wm8350_wdt.c
-index c82c1b77d91b..476a6e8dcf7d 100644
---- a/drivers/watchdog/wm8350_wdt.c
-+++ b/drivers/watchdog/wm8350_wdt.c
-@@ -117,7 +117,10 @@ static int wm8350_wdt_ping(struct watchdog_device *wdt_dev)
- }
- 
- static const struct watchdog_info wm8350_wdt_info = {
--	.options = WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING | WDIOF_MAGICCLOSE,
-+	.options = WDIOF_SETTIMEOUT |
-+		   WDIOF_KEEPALIVEPING |
-+		   WDIOF_MAGICCLOSE |
-+		   WDIOF_STOP_MAYSLEEP,
- 	.identity = "WM8350 Watchdog",
- };
- 
-diff --git a/drivers/watchdog/xen_wdt.c b/drivers/watchdog/xen_wdt.c
-index b343f421dc72..0248d9c8c451 100644
---- a/drivers/watchdog/xen_wdt.c
-+++ b/drivers/watchdog/xen_wdt.c
-@@ -99,7 +99,10 @@ static unsigned int xen_wdt_get_timeleft(struct watchdog_device *wdd)
- 
- static struct watchdog_info xen_wdt_info = {
- 	.identity = DRV_NAME,
--	.options = WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING | WDIOF_MAGICCLOSE,
-+	.options = WDIOF_SETTIMEOUT |
-+		   WDIOF_KEEPALIVEPING |
-+		   WDIOF_MAGICCLOSE |
-+		   WDIOF_STOP_MAYSLEEP,
- };
- 
- static const struct watchdog_ops xen_wdt_ops = {
-diff --git a/drivers/watchdog/ziirave_wdt.c b/drivers/watchdog/ziirave_wdt.c
-index fcc1ba02e75b..ee42099c8b46 100644
---- a/drivers/watchdog/ziirave_wdt.c
-+++ b/drivers/watchdog/ziirave_wdt.c
-@@ -417,7 +417,10 @@ static int ziirave_firm_upload(struct watchdog_device *wdd,
- }
- 
- static const struct watchdog_info ziirave_wdt_info = {
--	.options = WDIOF_SETTIMEOUT | WDIOF_MAGICCLOSE | WDIOF_KEEPALIVEPING,
-+	.options = WDIOF_SETTIMEOUT |
-+		   WDIOF_MAGICCLOSE |
-+		   WDIOF_KEEPALIVEPING |
-+		   WDIOF_STOP_MAYSLEEP,
- 	.identity = "RAVE Switch Watchdog",
- };
- 
-diff --git a/include/uapi/linux/watchdog.h b/include/uapi/linux/watchdog.h
-index b15cde5c9054..83b6407c712f 100644
---- a/include/uapi/linux/watchdog.h
-+++ b/include/uapi/linux/watchdog.h
-@@ -48,6 +48,7 @@ struct watchdog_info {
- #define	WDIOF_PRETIMEOUT	0x0200  /* Pretimeout (in seconds), get/set */
- #define	WDIOF_ALARMONLY		0x0400	/* Watchdog triggers a management or
- 					   other external alarm not a reboot */
-+#define WDIOF_STOP_MAYSLEEP	0x0800  /* Watchdog Stop may sleep */
- #define	WDIOF_KEEPALIVEPING	0x8000	/* Keep alive ping reply */
- 
- #define	WDIOS_DISABLECARD	0x0001	/* Turn off the watchdog timer */
--- 
-2.34.1
-
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogSW50ZWwtd2lyZWQtbGFu
+IDxpbnRlbC13aXJlZC1sYW4tYm91bmNlc0Bvc3Vvc2wub3JnPiBPbiBCZWhhbGYgT2YNCj4gS3l1
+bmd3b29rIEJvbw0KPiBTZW50OiBNb25kYXksIE1hcmNoIDMsIDIwMjUgMTE6MjAgQU0NCj4gVG86
+IE5ndXllbiwgQW50aG9ueSBMIDxhbnRob255Lmwubmd1eWVuQGludGVsLmNvbT47IEtpdHN6ZWws
+IFByemVteXNsYXcNCj4gPHByemVteXNsYXcua2l0c3plbEBpbnRlbC5jb20+DQo+IENjOiBpbnRl
+bC13aXJlZC1sYW5AbGlzdHMub3N1b3NsLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9y
+Zw0KPiBTdWJqZWN0OiBbSW50ZWwtd2lyZWQtbGFuXSBNTUlPIHdyaXRlIGFjY2VzcyB0byBhbiBp
+bnZhbGlkIHBhZ2UgaW4NCj4gaTQwZV9jbGVhcl9odygpDQo+IA0KUGxlYXNlIHN0YXJ0IGNvbW1p
+dCB0aXRsZSB3aXRoICdmaXgnIHRvIGV4cGxpY2l0bHkgdGVsbCB3aGF0IHlvdXIgcGF0Y2ggZG8g
+aS5lLiA6DQpJY2U6IGZpeCBNTUlPIHdyaXRlIGFjY2VzcyB0byBhbiBpbnZhbGlkIHBhZ2UgaW4g
+IGk0MGVfY2xlYXJfaHcNCg0KDQo+IEhlbGxvLA0KPiANCj4gSXQgc2VlbXMgdGhhdCB0aGVyZSBh
+cmUgaW52YWxpZCBwYWdlIE1NSU8gd3JpdGUgYWNjZXNzIGluIGk0MGVfY2xlYXJfaHcoKSBkdWUN
+Cj4gdG8gYW4gaW50ZWdlciB1bmRlcmZsb3cgZnJvbSBudW1fcGZfaW50KGFsc28gbnVtX3ZmX2lu
+dCBzZWVtcyBwb3NzaWJsZSkuDQo+IA0KPiBUaGUgZm9sbG93aW5nIGlzIGEgc2FtcGxlIGNvZGUg
+aW4gaTQwZV9jbGVhcl9odygpOg0KPiANCj4gdmFsID0gcmQzMihodywgSTQwRV9HTFBDSV9DTkYy
+KTsgLy8gKDEpDQo+IG51bV9wZl9pbnQgPSBGSUVMRF9HRVQoSTQwRV9HTFBDSV9DTkYyX01TSV9Y
+X1BGX05fTUFTSywgdmFsKTsgLy8gKDIpDQo+IG51bV92Zl9pbnQgPSBGSUVMRF9HRVQoSTQwRV9H
+TFBDSV9DTkYyX01TSV9YX1ZGX05fTUFTSywgdmFsKTsgLi4uDQo+IGZvciAoaSA9IDA7IGkgPCBu
+dW1fcGZfaW50IC0gMjsgaSsrKSAgICAgIC8vICgzKQ0KPiAJd3IzMihodywgSTQwRV9QRklOVF9E
+WU5fQ1RMTihpKSwgdmFsKTsgIC8vICg0KSAuLi4NCj4gZm9yIChpID0gMDsgaSA8IG51bV9wZl9p
+bnQgLSAyOyBpKyspCQkJLy8gKDUpDQo+IAl3cjMyKGh3LCBJNDBFX1BGSU5UX0xOS0xTVE4oaSks
+IHZhbCk7DQo+IC4uLg0KPiBmb3IgKGkgPSAwOyBpIDwgbnVtX3ZmX2ludCAtIDI7IGkrKykJCQkv
+LyAoNikNCj4gCXdyMzIoaHcsIEk0MEVfVlBJTlRfTE5LTFNUTihpKSwgdmFsKTsNCj4gDQo+IEFu
+IGV4YW1wbGUgc2NlbmFyaW8gZm9yIG51bV9wZl9pbnQ6DQo+ICgxKSB2YWwgPSAwIChpZiBNTUlP
+IHJlYWQgdmFsdWUgd2FzIDApDQo+ICgyKSBudW1fcGZfaW50ID0gMCAoYWxzbyB6ZXJvIGFmdGVy
+IGJpdCBmaWVsZCBleHRyYWN0aW9uIGZyb20gdmFsKQ0KPiAoMykgQW4gaW50ZWdlciB1bmRlcmZs
+b3cgb2NjdXJzIChudW1fcGZfaW50IC0gMiA9PSAweGZmZmZmZmZlKQ0KPiAoNCkgT3V0LW9mLWJv
+dW5kcyBNTUlPIHdyaXRlIGFjY2VzcyBpZiBhY2Nlc3MgYWRkcmVzcyBleGNlZWRzIHRoZSBleHBl
+Y3RlZA0KPiByYW5nZS4NCj4gDQo+IEZyb20gYWJvdmUgZXhhbXBsZSBzY2VuYXJpbywgdGhlIG1h
+eGltdW0gYWNjZXNzIG9mZnNldCB2YWx1ZSBjYW4gYmUNCj4gYXJvdW5kDQo+IDB4NDAwMDM0N2Y4
+KD0xNzJHKSB3aGljaCBzZWVtcyBsaWtlIHRoaXMgdW5kZXJmbG93IGlzIG5vdCBpbnRlbmRlZChh
+bHNvDQo+IHRoZXJlIGFyZSBtYXNraW5nIG9wZXJhdGlvbnMgbGlrZSAoMikgZm9yIG51bV9wZl9p
+bnQpLCBzbyBJIHJlcG9ydCB0aGlzIGlzc3VlLg0KPiANCj4gSSB0aGluayBzaW1pbGFyIGlzc3Vl
+IGFsc28gY291bGQgaGFwcGVuIGF0ICg1KSBhbmQgKDYpLg0KPiANCj4gVGhlIGZvbGxvd2luZyBp
+cyB0aGUgcGF0Y2ggbWV0aG9kIEkgcHJvcG9zZToNCj4gDQpQbGVhc2UgYWRkIEZpeGVzOiB0YWcg
+IGh0dHBzOi8vd3d3Lmtlcm5lbC5vcmcvZG9jL2h0bWwvbGF0ZXN0L3Byb2Nlc3Mvc3VibWl0dGlu
+Zy1wYXRjaGVzLmh0bWwNCg0KDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL25ldC9ldGhlcm5ldC9p
+bnRlbC9pNDBlL2k0MGVfY29tbW9uLmMNCj4gYi9kcml2ZXJzL25ldC9ldGhlcm5ldC9pbnRlbC9p
+NDBlL2k0MGVfY29tbW9uLmMNCj4gaW5kZXggMzcwYjRiZGRlZTQ0Li45N2VmNzliZTM5YjMgMTAw
+NjQ0DQo+IC0tLSBhL2RyaXZlcnMvbmV0L2V0aGVybmV0L2ludGVsL2k0MGUvaTQwZV9jb21tb24u
+Yw0KPiArKysgYi9kcml2ZXJzL25ldC9ldGhlcm5ldC9pbnRlbC9pNDBlL2k0MGVfY29tbW9uLmMN
+Cj4gQEAgLTg0OCwxOSArODQ4LDI1IEBAIHZvaWQgaTQwZV9jbGVhcl9odyhzdHJ1Y3QgaTQwZV9o
+dyAqaHcpDQo+ICAJLyogc3RvcCBhbGwgdGhlIGludGVycnVwdHMgKi8NCj4gIAl3cjMyKGh3LCBJ
+NDBFX1BGSU5UX0lDUjBfRU5BLCAwKTsNCj4gIAl2YWwgPSAweDMgPDwgSTQwRV9QRklOVF9EWU5f
+Q1RMTl9JVFJfSU5EWF9TSElGVDsNCj4gLQlmb3IgKGkgPSAwOyBpIDwgbnVtX3BmX2ludCAtIDI7
+IGkrKykNCj4gLQkJd3IzMihodywgSTQwRV9QRklOVF9EWU5fQ1RMTihpKSwgdmFsKTsNCj4gKwlp
+ZiAobnVtX3BmX2ludCA+IDEpIHsNCj4gKwkJZm9yIChpID0gMDsgaSA8IG51bV9wZl9pbnQgLSAy
+OyBpKyspDQo+ICsJCQl3cjMyKGh3LCBJNDBFX1BGSU5UX0RZTl9DVExOKGkpLCB2YWwpOw0KPiAr
+CX0NCj4gDQo+ICAJLyogU2V0IHRoZSBGSVJTVFFfSU5EWCBmaWVsZCB0byAweDdGRiBpbiBQRklO
+VF9MTktMU1R4ICovDQo+ICAJdmFsID0gZW9sIDw8IEk0MEVfUEZJTlRfTE5LTFNUMF9GSVJTVFFf
+SU5EWF9TSElGVDsNCj4gIAl3cjMyKGh3LCBJNDBFX1BGSU5UX0xOS0xTVDAsIHZhbCk7DQo+IC0J
+Zm9yIChpID0gMDsgaSA8IG51bV9wZl9pbnQgLSAyOyBpKyspDQo+IC0JCXdyMzIoaHcsIEk0MEVf
+UEZJTlRfTE5LTFNUTihpKSwgdmFsKTsNCj4gKwlpZiAobnVtX3BmX2ludCA+IDEpIHsNCj4gKwkJ
+Zm9yIChpID0gMDsgaSA8IG51bV9wZl9pbnQgLSAyOyBpKyspDQo+ICsJCQl3cjMyKGh3LCBJNDBF
+X1BGSU5UX0xOS0xTVE4oaSksIHZhbCk7DQo+ICsJfQ0KQ2FuIHlvdSBjb25zaWRlciBtb3Zpbmcg
+dGhpcyBpZiB1cHBlciBhbmQgdXNlIGl0IG9uY2UgaW5zdGVhZCBvZiBkdXBsaWNhdGluZyB0aGUg
+Y29kZT8NCkkgdGhpbmsgaXQgY2FuIGhlbHAgdG8gbWFpbnRhaW4gdGhlIGNvZGUuIFdoYXQgZG8g
+eW91IHRoaW5rPw0KDQo+ICAJdmFsID0gZW9sIDw8IEk0MEVfVlBJTlRfTE5LTFNUMF9GSVJTVFFf
+SU5EWF9TSElGVDsNCj4gIAlmb3IgKGkgPSAwOyBpIDwgbnVtX3ZmczsgaSsrKQ0KPiAgCQl3cjMy
+KGh3LCBJNDBFX1ZQSU5UX0xOS0xTVDAoaSksIHZhbCk7DQo+IC0JZm9yIChpID0gMDsgaSA8IG51
+bV92Zl9pbnQgLSAyOyBpKyspDQo+IC0JCXdyMzIoaHcsIEk0MEVfVlBJTlRfTE5LTFNUTihpKSwg
+dmFsKTsNCj4gKwlpZiAobnVtX3ZmX2ludCA+IDEpIHsNCj4gKwkJZm9yIChpID0gMDsgaSA8IG51
+bV92Zl9pbnQgLSAyOyBpKyspDQo+ICsJCQl3cjMyKGh3LCBJNDBFX1ZQSU5UX0xOS0xTVE4oaSks
+IHZhbCk7DQo+ICsJfQ0KPiANCj4gIAkvKiB3YXJuIHRoZSBIVyBvZiB0aGUgY29taW5nIFR4IGRp
+c2FibGVzICovDQo+ICAJZm9yIChpID0gMDsgaSA8IG51bV9xdWV1ZXM7IGkrKykgew0KPiANCj4g
+DQo+IENvdWxkIHlvdSBjaGVjayB0aGlzPw0KPiANCj4gQmVzdCByZWdhcmRzLA0KPiBLeXVuZ3dv
+b2sgQm9vDQo=
