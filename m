@@ -1,212 +1,184 @@
-Received: from OSPPR02CU001.outbound.protection.outlook.com (mail-norwayeastazon11013007.outbound.protection.outlook.com [40.107.159.7])
+Received: from out-186.mta1.migadu.com (out-186.mta1.migadu.com [95.215.58.186])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08C1F1DDA18;
-	Wed,  5 Mar 2025 06:18:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.159.7
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741155490; cv=fail; b=RvwoPv56/UkI1CHO+JvtvqQw6k0DXli4tkYsEAB20HVs1JJ35NzVEvLkDR2SJissbNNOTV42eaokogG/aSz9FSOXAda2ShOclfNkSr5EmPXaP3Ygye1qm4rzC4TU6GZt9C/bNbiTUy7LfLbutR+mD3CYWm9t41/APcWprxXWPXU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741155490; c=relaxed/simple;
-	bh=aai5RhG84M4b8/fM0MHJt6ycWux3//dAs1jZxkxbnKs=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=OG3F0EZ950HN/MxBNiMa4fuEZrw+i4n4L8mNwYqd+R2G4ZvUH78QxMIzbAnPZbN9PlY3WLNzQSzAkq6j9V2pEZdX2dbxIW32TOhisHUU6Onu4qpgppBtlwYE/irhIMWfPWSvgqEH46fJHzuZM5aW1GPQqKG2YcYaGnp3uKFh7FA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=WZIeYG/r; arc=fail smtp.client-ip=40.107.159.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 358951078F
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 06:20:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.186
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741155632; cv=none; b=utqPTQE7G7/CcjKxNTTLqDyV1z2e0krN/9YYp+zPZP3t5Ow70pBu/3Vl2K4MetSlpAxzZQg7xfLcPuPkmc8VCYKqCvLUYtV/eVgqZPUJMwhgbB6LyIPUBPwRYscK9oPWhoGIoCVZlVvFHRKIaumDONgRIaf2IayCRk5DOobgK10=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741155632; c=relaxed/simple;
+	bh=O0mbpCp1l7uilnWQeQS48zmxUFS4ExnbRfRLBzRTlJc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Zk5vUt37QeM21yROagjkkNFFcxnGfEYPgeFpK00nnbK6w+zC6sI0fopFzZfxf2S5EeR6EVkb8KXjL7FZxoojYw8IngDs8MMdJevrxWodCDCOrpbaPsr9uFx4cd5TN9/RBOLo8AD2y49smVRJYa5LVPdxiQqnNP5lm5ww2Qjj57A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=C3G39o1I; arc=none smtp.client-ip=95.215.58.186
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="WZIeYG/r"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=i73x+jtrUgXDOuTS4/263ugIWTcRu2UJL2L09oSIV3a0CvEhfMbMg4DxoNcMfU32O8jqPJf8/K1TYPFqjLxP5OIufCncTaCY3o8m6a6M1v0VN1YUWR4wpJX+Is1NFv94i5rPm2KvFd7f7WYTi7vmxL9uDKtpscdMnOQsJL2fXgX0ATwru86ItIDAg6TYICXxYeQR84v4ROHrNFt5fwC3i37DRdXTfwdgKdAzeYiwR8aebqNrIGwAAVNRpapVHuu7N5zM3vnK6jKcF2NVLJFZkS4zHImLzONjp3h/nQpGAsQQclTGkq52xND01IiggpGAhMN9nQE8QwB5rAOjYCD1rg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ozJ8R4Xwr04jpqaB6Hwnep1TcUUF6f7IBkP+gO09pfs=;
- b=IqtHQP7+zPl9zoUGkbWQeL8RyKVIpuNPAOrV+3CiodwasWQscCgvytp1HuJ80fiEGBQCBE1Sa3essNDVrFt36FbpDX0N+EcqBHXdDkvWbIoLA3NJJvz9M54Iy9S3ODhIxndeprxk03+dsikytKn/1iloeNQPLLs3/dn6+6CMQW7iPgv5B1osiVVmd1eSagaDK+QoWdIx2R2ypWLIZ0q0dfwYaEt43IXlG4oHl5x4Ab1x8bHnl6UGECcsHe6t/FP81XcNgFH5kvTWBNKRM5sg6BUVdJBrOhO5vSbt5i/uP4Z0DFNYQSRivP724KgeG6KokGlBVAIAM/ADVfB+AUlJfQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector1-NXP1-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ozJ8R4Xwr04jpqaB6Hwnep1TcUUF6f7IBkP+gO09pfs=;
- b=WZIeYG/rzwzv4FXAIwMaJbNmrgI530TZ8MQXz7UtnnwK6IDtCtht/eMzgDO6i1XCg82D44z4wPelSIAACbE5qJEwvpl9Dlvka+OIk3T/oOK6h4RZpSUlh1rVWwwUNSp6gG8jPEa1/HCRNhzJobY0CbwlJPlhTvBOJy1boePTDxEO1SsoFv6KIuYxUd6rd6uBtQYK24fIKzv4qqvLNSbvLH3sVgwqVN0wRmMnYiEfuQJ7u3vnua1TRtj1zzqB4gdfwvfN7gddfY43ebpgeMMALJ88RDClHo2xWA+bB8hCUUK9arKsOX+CkqLJDlgSckCteyl75EkiH5gXEhVzyD0wPA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=oss.nxp.com;
-Received: from PAXPR04MB8254.eurprd04.prod.outlook.com (2603:10a6:102:1cd::24)
- by PA1PR04MB10721.eurprd04.prod.outlook.com (2603:10a6:102:489::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.17; Wed, 5 Mar
- 2025 06:18:05 +0000
-Received: from PAXPR04MB8254.eurprd04.prod.outlook.com
- ([fe80::2755:55ac:5d6f:4f87]) by PAXPR04MB8254.eurprd04.prod.outlook.com
- ([fe80::2755:55ac:5d6f:4f87%6]) with mapi id 15.20.8511.015; Wed, 5 Mar 2025
- 06:18:05 +0000
-From: ming.qian@oss.nxp.com
-To: mchehab@kernel.org,
-	hverkuil-cisco@xs4all.nl
-Cc: nicolas@ndufresne.ca,
-	sebastian.fricke@collabora.com,
-	shawnguo@kernel.org,
-	s.hauer@pengutronix.de,
-	kernel@pengutronix.de,
-	festevam@gmail.com,
-	linux-imx@nxp.com,
-	xiahong.bao@nxp.com,
-	eagle.zhou@nxp.com,
-	imx@lists.linux.dev,
-	linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v3 2/2] media: amphion: Add a frame flush mode for decoder
-Date: Wed,  5 Mar 2025 14:26:30 +0800
-Message-Id: <20250305062630.2329032-2-ming.qian@oss.nxp.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250305062630.2329032-1-ming.qian@oss.nxp.com>
-References: <20250305062630.2329032-1-ming.qian@oss.nxp.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: AS4P189CA0040.EURP189.PROD.OUTLOOK.COM
- (2603:10a6:20b:5dd::9) To PAXPR04MB8254.eurprd04.prod.outlook.com
- (2603:10a6:102:1cd::24)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="C3G39o1I"
+Date: Wed, 5 Mar 2025 06:20:10 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1741155618;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=iR/IlkhcEw6NgMhu7KhhR6WGEh8XFGtm9E89QfE35YY=;
+	b=C3G39o1I0j9jQAPxpjXulwIhGLoe1PbaasSp2BD/CSmoLLXXjnEKkTuUXS19Mjt+5Ddp0c
+	FkyxVuehX4I44rC8srKKiL+Poalu+EUnT5j3jQObmCjOfgDBbAf0gUKVhnakjg40leqTRW
+	76AD5EhQPxXqU7EPObuwmCss+mxHz8s=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Yosry Ahmed <yosry.ahmed@linux.dev>
+To: Maxim Levitsky <mlevitsk@redhat.com>
+Cc: Sean Christopherson <seanjc@google.com>,
+	Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 07/13] KVM: nSVM: Handle INVLPGA interception
+ correctly
+Message-ID: <Z8ftGvcQrR_B1Ds1@google.com>
+References: <20250205182402.2147495-1-yosry.ahmed@linux.dev>
+ <20250205182402.2147495-8-yosry.ahmed@linux.dev>
+ <330b0214680efacf15cf18d70788b9feab2b68b0.camel@redhat.com>
+ <Z8YnjhfwHM_0HBNx@google.com>
+ <f34c5ab727d2e0b6f064ddd11d596fb1841b75b3.camel@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB8254:EE_|PA1PR04MB10721:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8bad1b7b-47b1-4d73-f72b-08dd5bad7dc2
-X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|52116014|7416014|376014|366016|1800799024|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?x5clcK+pRnFfQSeyQf6Ux7HUD/GqxIuhCClE2X8vEi8IFyCU9dzhLwiVfL9W?=
- =?us-ascii?Q?TKu9r2uUlqu68tSYmxsFYqaciOK4+WnNAy4QDMiNgOseG4sNq0gHvAwi7ePK?=
- =?us-ascii?Q?c91OXscOFcz7NYxoP8uOmQwDNHj1GN7JxLWnKmRCSbIhfWac17C0VtZQ7B3N?=
- =?us-ascii?Q?LgrzIXI3oGqIkPUz8LcthzYNbNTE8ekB5kumuild5kp1RF26KNlqxNAZPs6v?=
- =?us-ascii?Q?zYRaYtXMhAliNOo7XE6uBTRm2iehtKpl+d3rQip/kEsZUtBrPvE0rl3w8fwS?=
- =?us-ascii?Q?17xjbNv9aIoJvV3IZQpuWs3tYo4YfqCTxu4Wb4eRbEShonHg6b2oNQiZxzwm?=
- =?us-ascii?Q?i0UEa7J1o99qJAz24XTW83xwkGiLXAtGWg3HcM36YS7EcyGzd6n8iFQ8hZ1+?=
- =?us-ascii?Q?peBSMGzGsv/eUig9fOmHQ44fmuDjz4pCY/2rDLC+EehouI3g0NWwwmlQalvJ?=
- =?us-ascii?Q?21pOJ25dTGAOrQDOAk1tnk1aipfW4wIB90zDBu6+mwBngmM3b7LkykZUvW/Q?=
- =?us-ascii?Q?DMIaur+8foKRSX0eHXjULiv63+lhpBmp8hCrLnfnpQV2vQImIvSK8/fj8NKe?=
- =?us-ascii?Q?oNnNoshbHcZ9/kMr4v/CV3SRMDkN9fNgMhB6hulesYTQ7UsdIbYQPSCN6mgW?=
- =?us-ascii?Q?e8E3zM4c95JjYuKYr8v5f9HwFwe2Rg0hX/fkkYroxyhtTSgb68tir7M/1vbk?=
- =?us-ascii?Q?c6AOI7v++C3kKfnRX7aTAS/7c1KOBmF+1lKvQG0WpjhwPAr/ifv88FNlEoae?=
- =?us-ascii?Q?FUtIxsXxtq7Qi4UkCd0feasMU/jTWbLTfbHMeC2nHnUIxCIm6or9azGLNBUZ?=
- =?us-ascii?Q?SdiF+aZptpnSz3WFhtL8KsoHAFpkRiLmd7hQP1ZkrhvD2QVCOdyER3O6SQ91?=
- =?us-ascii?Q?ixLPSf1Ak5JsuJbLG676F6OSriFa50EBniCaEj+90N6Bn81vtgJHoZLoNbtU?=
- =?us-ascii?Q?JQ5DwmuosQbgAPro7zfsAS7qzbuzEMKXzRXqtueiOFjBumXhCGe+V2vXuscR?=
- =?us-ascii?Q?xQ/Pun54LBcQfWAFJzZZKINEMYSha+LtHs5IvhlnM4ZzO9z52R/ugIi1SNWQ?=
- =?us-ascii?Q?l56DR1m/hcQ3Best4y/vjwCGPgbgI/xyOrztFFhG3hdGiUtxCsWUNNfEeYDE?=
- =?us-ascii?Q?nMOQAuSO9RunNe19aBVLzJTB01Q3RR+A3/PogWf4zBK2tRLLnq7bbpNOK3Cx?=
- =?us-ascii?Q?dW3nL0KXt+xsgelZ4gFSf86wwT9cJTlh2Q2sRfFsXiaq9V+jn7owYX2X9bSh?=
- =?us-ascii?Q?lzm4u0TNCKiFgNKneAhWcz4rs+lDjqs2sT5C/4tbfcd4T9KGzDHddPk3s+l/?=
- =?us-ascii?Q?zCkWfOTQlCdTvSwFvOUo433df0XoOkGYb7Cl7zk2h/35CRtarQzUrox9eUuw?=
- =?us-ascii?Q?SUY3jzA5aMH8hAdthIAGLs5WLI0cjAiCEkVk9fAvyHVMEDGy8tyX9ELUafDR?=
- =?us-ascii?Q?noB4ikeH1QVwD+afACFP2NvV6lLqCxdt?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB8254.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(52116014)(7416014)(376014)(366016)(1800799024)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?+aRD98L+H5ZVZuhHNUHz09AoOdCHH/Sh/BhVP+qgYZi3Fo0u5JVeEyidS8S8?=
- =?us-ascii?Q?T/tQFRv+yUmfguK+6HwqwetDq9BOxcJGEimak4Nv0e7odF8Iqg/MxH5hftKE?=
- =?us-ascii?Q?io/lirB0O1LVik9FbCbA94n8PG+JZARlGkbRTP4ytu7IAlWrjAXA/d58OSVE?=
- =?us-ascii?Q?OTXQBWaXLnfLurjiP9piHRhx8nTiQ51CldUgDt4bfzBePz02WYzYNRTzlv75?=
- =?us-ascii?Q?0i2vMtCieYt0r2zS7fLNklmt0nkKOeFshwUzHwWJIrTOHYPuUON4HVikmbPQ?=
- =?us-ascii?Q?napQ3NkXUjLNpO/kRUUgiOCOmVZIQAk/CA+C5QhHF0akbyz2k2WWu6wRh+87?=
- =?us-ascii?Q?oji2HtbAkAWbK0CYAMwsiWRUMfEl+j1QcdHLyZ+5O3H17MdPZ4jnlqz5buiq?=
- =?us-ascii?Q?8aUgAQxk5Uw7rXsNwafTyKIW9y0rFvaiUsMk1B8yoGqYBL0pxlcj3lW4g/ST?=
- =?us-ascii?Q?SXfCmIZ//tEIwyVSR3+7F8pORfM7H8kdan56JDOs3CyyceZnF8MVVmCjTux4?=
- =?us-ascii?Q?aUXG6SNrN3IuK6B9IW8JcrkkkgQgxifwj2cKQeg1JM/Tcgc9SAIOMSNQYEJd?=
- =?us-ascii?Q?Zp+UtengWKiCRG4KyPmfwh3HtmXvjvNFr7h+MhRfcr21XYCihk04zvIXglHr?=
- =?us-ascii?Q?Gq2o/8tu30XQAptbfykxMof2Z1ed9MYEOHq7nAbYyz4qSYQAFgSSM5+IJTlA?=
- =?us-ascii?Q?PZ3yLBp+D8OS7RpA2AqS95ddi1/BX1RYfQmvEWWwy97dRo0i9tCKer13WRlh?=
- =?us-ascii?Q?dW0VulRkL1OT8ew/QdAnlLu3jarAahsmfAJQ/kQrYhOpb+SlK7q4NW/3RXPz?=
- =?us-ascii?Q?4DVTl40HOjHDZseaWNLE2/IqBSZBW0mev2eU5a1YLRk2MrZ9k9ZnctCnE+se?=
- =?us-ascii?Q?m3Lcc8a69xE+/2OlSjln7BIe5hli8wee72zRo3AAUq/aoU4mNRiX0ar7MrVp?=
- =?us-ascii?Q?e3a22pIEqAQoXxPNz9oOq3soWLRjs7OulUgM3rXsojk1fufDNt2P0TccukSo?=
- =?us-ascii?Q?vOB0gOuvnBqpoMhaJsRwvuYO+bPuPYNTraOnLHri86l3I3Bwj0zqpXZhS0eD?=
- =?us-ascii?Q?7VHIQYPwSFW3UDdL+1Jjl7fII6/+WnS5hSpRcWeLxIpXtOoYbgspDL76juCx?=
- =?us-ascii?Q?hFZnURlOrYj0pn4uetGLekz8G3QJK2GMy50hDwVed+ML8B0a9ZVzfxmuHOj2?=
- =?us-ascii?Q?Ke3jEh3hznjIs+eeJIrZS3e4p1JMc0KjPiBR6jYG6K8Phc5HzCYGcb9+1Gzi?=
- =?us-ascii?Q?7haJpFGiPMqp/GqHgBonVAU39gcE68gDOh+6E0PBChA2tP2tIVl6bsHYzNdn?=
- =?us-ascii?Q?1MOuVbLU0mnyN+o5VgvVJHvBkwuWIBm6+PV6Bzvvgq+qEIXK444wTw3s9ZAt?=
- =?us-ascii?Q?vYuX547IqHTlM6d67XTNB5J62QNmdkB/neXD2L6uy6t6BbdZbtmm4e+AV0Y3?=
- =?us-ascii?Q?zh1f/GLficE0ZeLiqf0z4kSm5qX7ng8krChwthpuecs2xbuaaVm1ZxQiDtya?=
- =?us-ascii?Q?6FeYp8UgDiJTjYlWO0zMCMlqz2lsgUeMQ91WF0uoHuiqhnZAhVW3OSQetqWz?=
- =?us-ascii?Q?vplyyvZNar9VPUKRb2nSAWh7555/mHVQuuzQjAt5?=
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8bad1b7b-47b1-4d73-f72b-08dd5bad7dc2
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB8254.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Mar 2025 06:18:05.7715
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: lcXGLW6dtlsHyKUD2iMckZnyEfoSCJop/OdVX/2Z3F4xV+MciBG2ymI+/KC9j7EobmJGcWZol3NUhfzOswnm1g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA1PR04MB10721
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f34c5ab727d2e0b6f064ddd11d596fb1841b75b3.camel@redhat.com>
+X-Migadu-Flow: FLOW_OUT
 
-From: Ming Qian <ming.qian@oss.nxp.com>
+On Tue, Mar 04, 2025 at 09:54:54PM -0500, Maxim Levitsky wrote:
+> On Mon, 2025-03-03 at 22:05 +0000, Yosry Ahmed wrote:
+> > On Fri, Feb 28, 2025 at 08:55:18PM -0500, Maxim Levitsky wrote:
+> > > On Wed, 2025-02-05 at 18:23 +0000, Yosry Ahmed wrote:
+> > > > Currently, INVPLGA interception handles it like INVLPG, which flushes
+> > > > L1's TLB translations for the address. It was implemented in this way
+> > > > because L1 and L2 shared an ASID. Now, L1 and L2 have separate ASIDs. It
+> > > > is still harmless to flush L1's translations, but it's only correct
+> > > > because all translations are flushed on nested transitions anyway.
+> > > > 
+> > > > In preparation for stopping unconditional flushes on nested transitions,
+> > > > handle INVPLGA interception properly. If L1 specified zero as the ASID,
+> > > > this is equivalent to INVLPG, so handle it as such. Otherwise, use
+> > > > INVPLGA to flush the translations of the appropriate ASID tracked by
+> > > > KVM, if any. Sync the shadow MMU as well, as L1 invalidated L2's
+> > > > mappings.
+> > > > 
+> > > > Opportunistically update svm_flush_tlb_gva() to use
+> > > > svm->current_vmcb->asid instead of svm->vmcb->control.asid for
+> > > > consistency. The two should always be in sync except when KVM allocates
+> > > > a new ASID in pre_svm_run(), and they are shortly brought back in sync
+> > > > in svm_vcpu_run(). However, if future changes add more code paths where
+> > > > KVM allocates a new ASID, flushing the potentially old ASID in
+> > > > svm->vmcb->control.asid would be unnecessary overhead (although probably
+> > > > not much different from flushing the newly allocated ASID).
+> > > > 
+> > > > Signed-off-by: Yosry Ahmed <yosry.ahmed@linux.dev>
+> > > > ---
+> > > >  arch/x86/include/asm/kvm_host.h |  2 ++
+> > > >  arch/x86/kvm/mmu/mmu.c          |  5 +++--
+> > > >  arch/x86/kvm/svm/svm.c          | 40 ++++++++++++++++++++++++++++++---
+> > > >  3 files changed, 42 insertions(+), 5 deletions(-)
+> > > > 
+> > > > diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+> > > > index 5193c3dfbce15..1e147bb2e560f 100644
+> > > > --- a/arch/x86/include/asm/kvm_host.h
+> > > > +++ b/arch/x86/include/asm/kvm_host.h
+> > > > @@ -2213,6 +2213,8 @@ int kvm_mmu_page_fault(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa, u64 error_code,
+> > > >  		       void *insn, int insn_len);
+> > > >  void kvm_mmu_print_sptes(struct kvm_vcpu *vcpu, gpa_t gpa, const char *msg);
+> > > >  void kvm_mmu_invlpg(struct kvm_vcpu *vcpu, gva_t gva);
+> > > > +void __kvm_mmu_invalidate_addr(struct kvm_vcpu *vcpu, struct kvm_mmu *mmu,
+> > > > +			       u64 addr, unsigned long roots, bool gva_flush);
+> > > >  void kvm_mmu_invalidate_addr(struct kvm_vcpu *vcpu, struct kvm_mmu *mmu,
+> > > >  			     u64 addr, unsigned long roots);
+> > > >  void kvm_mmu_invpcid_gva(struct kvm_vcpu *vcpu, gva_t gva, unsigned long pcid);
+> > > > diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+> > > > index ac133abc9c173..f5e0d2c8f4bbe 100644
+> > > > --- a/arch/x86/kvm/mmu/mmu.c
+> > > > +++ b/arch/x86/kvm/mmu/mmu.c
+> > > > @@ -6158,8 +6158,8 @@ static void kvm_mmu_invalidate_addr_in_root(struct kvm_vcpu *vcpu,
+> > > >  	write_unlock(&vcpu->kvm->mmu_lock);
+> > > >  }
+> > > >  
+> > > > -static void __kvm_mmu_invalidate_addr(struct kvm_vcpu *vcpu, struct kvm_mmu *mmu,
+> > > > -				      u64 addr, unsigned long roots, bool gva_flush)
+> > > > +void __kvm_mmu_invalidate_addr(struct kvm_vcpu *vcpu, struct kvm_mmu *mmu,
+> > > > +			       u64 addr, unsigned long roots, bool gva_flush)
+> > > >  {
+> > > >  	int i;
+> > > >  
+> > > > @@ -6185,6 +6185,7 @@ static void __kvm_mmu_invalidate_addr(struct kvm_vcpu *vcpu, struct kvm_mmu *mmu
+> > > >  			kvm_mmu_invalidate_addr_in_root(vcpu, mmu, addr, mmu->prev_roots[i].hpa);
+> > > >  	}
+> > > >  }
+> > > > +EXPORT_SYMBOL_GPL(__kvm_mmu_invalidate_addr);
+> > > >  
+> > > >  void kvm_mmu_invalidate_addr(struct kvm_vcpu *vcpu, struct kvm_mmu *mmu,
+> > > >  			     u64 addr, unsigned long roots)
+> > > > diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
+> > > > index a2d601cd4c283..9e29f87d3bd93 100644
+> > > > --- a/arch/x86/kvm/svm/svm.c
+> > > > +++ b/arch/x86/kvm/svm/svm.c
+> > > > @@ -2483,6 +2483,7 @@ static int clgi_interception(struct kvm_vcpu *vcpu)
+> > > >  
+> > > >  static int invlpga_interception(struct kvm_vcpu *vcpu)
+> > > >  {
+> > > > +	struct vcpu_svm *svm = to_svm(vcpu);
+> > > >  	gva_t gva = kvm_rax_read(vcpu);
+> > > >  	u32 asid = kvm_rcx_read(vcpu);
+> > > >  
+> > > > @@ -2492,8 +2493,41 @@ static int invlpga_interception(struct kvm_vcpu *vcpu)
+> > > >  
+> > > >  	trace_kvm_invlpga(to_svm(vcpu)->vmcb->save.rip, asid, gva);
+> > > >  
+> > > > -	/* Let's treat INVLPGA the same as INVLPG (can be optimized!) */
+> > > > -	kvm_mmu_invlpg(vcpu, gva);
+> > > > +	/*
+> > > > +	 * APM is silent about using INVLPGA to flush the host ASID (i.e. 0).
+> > > > +	 * Do the logical thing and handle it like INVLPG.
+> > > > +	 */
+> > > > +	if (asid == 0) {
+> > > > +		kvm_mmu_invlpg(vcpu, gva);
+> > > > +		return kvm_skip_emulated_instruction(vcpu);
+> > > > +	}
+> > > > +
+> > > > +	/*
+> > > > +	 * Check if L1 specified the L2 ASID we are currently tracking. If it
+> > > > +	 * isn't, do nothing as we have to handle the TLB flush when switching
+> > > > +	 * to the new ASID anyway. APM mentions that INVLPGA is typically only
+> > > > +	 * meaningful with shadow paging, so also do nothing if L1 is using
+> > > > +	 * nested NPT.
+> > > > +	 */
+> > > > +	if (!nested_npt_enabled(svm) && asid == svm->nested.last_asid)
+> > > > +		invlpga(gva, svm->nested.vmcb02.asid);
+> > > 
+> > > Hi, 
+> > > 
+> > > IMHO we can't just NOP the INVLPGA because it is not useful in nested NPT case.
+> > > 
+> > > If I understand the APM correctly, the CPU will honor the INVLPGA
+> > > request, even when NPT is enabled, and so KVM must do this as well.
+> > > 
+> > > It is not useful for the hypervisor because it needs GVA, which in case of NPT,
+> > > the hypervisor won't usually track, but we can't completely rule out that some
+> > > hypervisor uses this in some cases.
+> > 
+> > Yeah I knew this was going to be a contention point, was mainly waiting
+> > to see what others think here.
+> > 
+> > I guess we can just map the ASID passed by L1 to the actual ASID we use
+> > for L2 and execute the INVLPGA as-is with the gva passed by L1.
+> 
+> 
+> If I understand correctly, we in essence support only 2 nested ASIDs: 0 and the one that
+> L1 used last time. Anything else will get flushed on next VM entry.
+>  
+> So, if I understand this correctly all we need to do is to drop the 
+> 'nested_npt_enabled(svm)' check above, and it should work.
 
-By default the amphion decoder will pre-parse 3 frames before starting
-to decode the first frame. Alternatively, a block of flush padding data
-can be appended to the frame, which will ensure that the decoder can
-start decoding immediately after parsing the flush padding data, thus
-potentially reducing decoding latency.
-
-This mode was previously only enabled, when the display delay was set to
-0. Allow the user to manually toggle the use of that mode via a module
-parameter called frame_flush_mode, which enables the mode without
-changing the display order.
-
-Signed-off-by: Ming Qian <ming.qian@oss.nxp.com>
----
-v3
-- Improve commit message as recommended
-- Add some comments to avoid code looks cryptic
-
- drivers/media/platform/amphion/vpu_malone.c | 14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/media/platform/amphion/vpu_malone.c b/drivers/media/platform/amphion/vpu_malone.c
-index 1d9e10d9bec1..4ef9810d8142 100644
---- a/drivers/media/platform/amphion/vpu_malone.c
-+++ b/drivers/media/platform/amphion/vpu_malone.c
-@@ -25,6 +25,10 @@
- #include "vpu_imx8q.h"
- #include "vpu_malone.h"
- 
-+static bool frame_flush_mode;
-+module_param(frame_flush_mode, bool, 0644);
-+MODULE_PARM_DESC(frame_flush_mode, "Set low latency flush mode: 0 (disable) or 1 (enable)");
-+
- #define CMD_SIZE			25600
- #define MSG_SIZE			25600
- #define CODEC_SIZE			0x1000
-@@ -1579,7 +1583,15 @@ static int vpu_malone_input_frame_data(struct vpu_malone_str_buffer __iomem *str
- 
- 	vpu_malone_update_wptr(str_buf, wptr);
- 
--	if (disp_imm && !vpu_vb_is_codecconfig(vbuf)) {
-+	/*
-+	 * Enable the low latency flush mode if display delay is set to 0
-+	 * or parameter frame_flush_mode is set to 1.
-+	 * The low latency flush mode requires some padding data to be appended after each frame,
-+	 * but don't put it in between the sequence header and frame.
-+	 * Only H264 and HEVC decoder support this module yet,
-+	 * for other formats, vpu_malone_add_scode() will return 0.
-+	 */
-+	if ((disp_imm || frame_flush_mode) && !vpu_vb_is_codecconfig(vbuf)) {
- 		ret = vpu_malone_add_scode(inst->core->iface,
- 					   inst->id,
- 					   &inst->stream_buffer,
--- 
-2.43.0-rc1
-
+That's exactly what I did in my local tree.
