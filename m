@@ -1,40 +1,58 @@
-Received: from ssh248.corpemail.net (ssh248.corpemail.net [210.51.61.248])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7882C13AC1
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 10:21:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.51.61.248
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 153A92066FC
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 10:21:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741170077; cv=none; b=sR5h7U+cGVE8zbluES4uxKewVc2tq7tmIOQrjSorglR49hwKVNd4BcwLKfn6SdKU28qEft9bIefHn5FL8DK2rGV8WU7s7UtUQivZg34w+AE/snFKqNoCgarBhOl8nK9vfzWAHyASdObMjbL3d/nnwP6nfPFWiqDcBk9kf+MrG1Y=
+	t=1741170084; cv=none; b=RsS+vdAUX9NuE9bB8YLADIy+clIix6HCFnGtgUxCBo+n39anroBlH1H86jJ5xoja0fPIGnPWcJrHSceeBUDf8I79Act7fc5IK0xikCrFkox0a021g6guYycyvsxidIaGcgqvNYxTGqLgpxvXxv8+nGOjfF1WuPCc6HVIU9SARK0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741170077; c=relaxed/simple;
-	bh=5PEk+JDQsfLzMycFsSiNa9hy6CLK/qnFNELdqsC06r0=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=BnpAqgpjONP+HtHgL21Ep1/omSA5dfoT9p49/QUZA+8Y3l/LaXRcsY0KV/+PmKpjHZj/1/K8MK27s+KVaR9nMaJO//q5hRSt0YG9FWDGOLMiHxkoOoU5Q/Sn+uZxJSOGpVCkIbdQOXymFvBDfE0y6lwRi3m59D7Ii+CvmbJeGKw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inspur.com; spf=pass smtp.mailfrom=inspur.com; arc=none smtp.client-ip=210.51.61.248
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inspur.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inspur.com
-Received: from jtjnmail201610.home.langchao.com
-        by ssh248.corpemail.net ((D)) with ASMTP (SSL) id 202503051821078543;
-        Wed, 05 Mar 2025 18:21:07 +0800
-Received: from jtjnmail201607.home.langchao.com (10.100.2.7) by
- jtjnmail201610.home.langchao.com (10.100.2.10) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Wed, 5 Mar 2025 18:21:09 +0800
-Received: from locahost.localdomain (10.94.12.149) by
- jtjnmail201607.home.langchao.com (10.100.2.7) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Wed, 5 Mar 2025 18:21:08 +0800
-From: Charles Han <hanchunchao@inspur.com>
-To: <mripard@kernel.org>, <dave.stevenson@raspberrypi.com>,
-	<mcanal@igalia.com>, <kernel-list@raspberrypi.com>,
-	<maarten.lankhorst@linux.intel.com>, <tzimmermann@suse.de>,
-	<airlied@gmail.com>, <simona@ffwll.ch>
-CC: <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
-	"Charles Han" <hanchunchao@inspur.com>
-Subject: [PATCH] drm/vc4: plane: fix inconsistent indenting warning
-Date: Wed, 5 Mar 2025 18:21:07 +0800
-Message-ID: <20250305102107.2595-1-hanchunchao@inspur.com>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1741170084; c=relaxed/simple;
+	bh=ZLQoky3yjpt7pM6OOkVF3liAyIt7/16tRfOlHnxaqTQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=kuVntkhDtfGJZzu07aJSV+7/dlx6t5kG4nIEoqpvCiClOn8gaEQCrYhGP1cb1xitO2G0sZhntG/VSlHy1Nm+plibTO1yhUkqvGTNR/0i7gMcYUzrOTsZAre58xHaF2vIs0K3fIUyL4r6/KRBLvHONL2OjuH3pm3qkLtlZPzAHVM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ore@pengutronix.de>)
+	id 1tplsA-0001n3-K3; Wed, 05 Mar 2025 11:21:06 +0100
+Received: from dude04.red.stw.pengutronix.de ([2a0a:edc0:0:1101:1d::ac])
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <ore@pengutronix.de>)
+	id 1tpls8-0047xk-1x;
+	Wed, 05 Mar 2025 11:21:04 +0100
+Received: from ore by dude04.red.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ore@pengutronix.de>)
+	id 1tpls8-0050hS-1h;
+	Wed, 05 Mar 2025 11:21:04 +0100
+From: Oleksij Rempel <o.rempel@pengutronix.de>
+To: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Woojung Huh <woojung.huh@microchip.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>
+Cc: Oleksij Rempel <o.rempel@pengutronix.de>,
+	kernel@pengutronix.de,
+	linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com
+Subject: [PATCH v4 2/4] dt-bindings: arm: stm32: Add Plymovent AQM board
+Date: Wed,  5 Mar 2025 11:21:01 +0100
+Message-Id: <20250305102103.1194277-3-o.rempel@pengutronix.de>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250305102103.1194277-1-o.rempel@pengutronix.de>
+References: <20250305102103.1194277-1-o.rempel@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,37 +60,37 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: Jtjnmail201615.home.langchao.com (10.100.2.15) To
- jtjnmail201607.home.langchao.com (10.100.2.7)
-tUid: 2025305182107940427e00671b9a07b4e530dba967011
-X-Abuse-Reports-To: service@corp-email.com
-Abuse-Reports-To: service@corp-email.com
-X-Complaints-To: service@corp-email.com
-X-Report-Abuse-To: service@corp-email.com
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-Fix below inconsistent indenting smatch warning.
-smatch warnings:
-drivers/gpu/drm/vc4/vc4_plane.c:2083 vc6_plane_mode_set() warn: inconsistent indenting
+Add support for the Plymovent AQM board based on the ST STM32MP151 SoC
+to the STM32 devicetree bindings.
 
-Signed-off-by: Charles Han <hanchunchao@inspur.com>
+Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 ---
- drivers/gpu/drm/vc4/vc4_plane.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+changes v4:
+- add Reviewed-by: Rob...
+changes v3:
+- fix alphabetical order
+---
+ Documentation/devicetree/bindings/arm/stm32/stm32.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/gpu/drm/vc4/vc4_plane.c b/drivers/gpu/drm/vc4/vc4_plane.c
-index c5e84d3494d2..056d344c5411 100644
---- a/drivers/gpu/drm/vc4/vc4_plane.c
-+++ b/drivers/gpu/drm/vc4/vc4_plane.c
-@@ -2080,7 +2080,7 @@ static int vc6_plane_mode_set(struct drm_plane *plane,
- 			/* HPPF plane 1 */
- 			vc4_dlist_write(vc4_state, kernel);
- 			/* VPPF plane 1 */
--				vc4_dlist_write(vc4_state, kernel);
-+			vc4_dlist_write(vc4_state, kernel);
- 		}
- 	}
+diff --git a/Documentation/devicetree/bindings/arm/stm32/stm32.yaml b/Documentation/devicetree/bindings/arm/stm32/stm32.yaml
+index 2cea166641c5..734c4b8ac881 100644
+--- a/Documentation/devicetree/bindings/arm/stm32/stm32.yaml
++++ b/Documentation/devicetree/bindings/arm/stm32/stm32.yaml
+@@ -65,6 +65,7 @@ properties:
+               - prt,prtt1a   # Protonic PRTT1A
+               - prt,prtt1c   # Protonic PRTT1C
+               - prt,prtt1s   # Protonic PRTT1S
++              - ply,plyaqm   # Plymovent AQM board
+           - const: st,stm32mp151
  
+       - description: DH STM32MP135 DHCOR SoM based Boards
 -- 
-2.43.0
+2.39.5
 
