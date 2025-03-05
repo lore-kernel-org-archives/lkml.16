@@ -1,145 +1,125 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from fhigh-a2-smtp.messagingengine.com (fhigh-a2-smtp.messagingengine.com [103.168.172.153])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05AD82E3377;
-	Wed,  5 Mar 2025 11:13:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4965320DD6D;
+	Wed,  5 Mar 2025 11:14:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.153
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741173212; cv=none; b=BbRazYiUfTismVwaW8MLzz37zRk3161/2wnpE4lkwvnQzTaNrerbNZgrwZrAV0WFnzn7NUOgdRD8OqIkh2z0gkqjTs37zk4btnFAOgba+6TXuc/LOpZvTsxrEOGsRJ6D6tYoo9+3xlMTSG+YiKaX1gBK8XXzNH4OHZZAlhC1Ruw=
+	t=1741173244; cv=none; b=gL18zIReYejnVM9inLbRmuSGBm84igInsRwM0d/AY2TKhgwsNqAZp0WFFDSq+F7q9iC2yPAaO/rQ2w8zUcCzK4ezYu3j41DD1lhYqXFew6Zpdov3NrqvaeQMuj1bKBC9X91lxhZN7N9pGBAzRWSnRJlzb73yg2Cdetvo7pCD9NM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741173212; c=relaxed/simple;
-	bh=RGJcaalCEarW5jwI3J/1uzxBnyofX9WJFnHBzN1I0u4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=k/LpDT2Ehls+McMYYsuw9wq+/NLHQrZi2MmQ37bbG2v67jt+Fy4KDvPvVXND8HElHe+epZHH+QmnfQmHhetp9tMazzpcfOVpXPe53VWs0rqAgVyxG4hLWx0f2XsuNCgpS2a1qtUYZNVoj5kJJKq8XkcYOl3kVvnp9tnfbOSrj+0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=Ca+GaY1N; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1741173244; c=relaxed/simple;
+	bh=qvW7Pwf0BHUfLdz4/ffzDft+TDlxo8yRzDf7LYcSjBs=;
+	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JCTEI9HXxARe7RXRN3jbjCcqyl92FAFGL/1lJg+phqAEUd+vdw1nso6beytanz2P8zwA4HpnB/QxXnWnvUnrV4hkNOB10QDvR99PNSqQMu0zqKiwkMHafXRLHPsTOEZ9KVOTNWTr4La5qOVydY//SEET1h4eWGfx85lzPjRlC1c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sakamocchi.jp; spf=pass smtp.mailfrom=sakamocchi.jp; dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b=aWrZ8EOC; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=hyD82Zjq; arc=none smtp.client-ip=103.168.172.153
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sakamocchi.jp
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sakamocchi.jp
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="Ca+GaY1N"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1741172600;
-	bh=RGJcaalCEarW5jwI3J/1uzxBnyofX9WJFnHBzN1I0u4=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Ca+GaY1NHRG821pXxcN2YgQThJ4wozNyL5ewinAdLGmBBu63gQ4riKGjkQoaXPy1h
-	 eQsSYsnKtxuH2MRuR2tF4y/rz1OBlc8q1pp9rsyBnCFu5jp5LEo3f+0cE7D5AG0PoP
-	 1NqkHaf481Ivk35YPtiZybbVokgSfncR19+jtcHfh8PKwfhCb1dsZnu0j0ELO0QfRx
-	 +U880/O+Uxtq1Rjpz/ef54E3OVaFFjIo3ePswS8+azo/gVyuPNmx4bB7SOTsa3qtLf
-	 5Z6c7ceG9rRTfPt7bRyt90UtUc7SLVunx9GHUUzETVutemstvWn1oDcI8Yh8MXiL6B
-	 C4rVCXAnzNf+Q==
-Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 9C09017E0343;
-	Wed,  5 Mar 2025 12:03:19 +0100 (CET)
-Message-ID: <8203317e-7f99-4ea5-bda0-fcd791602a9f@collabora.com>
-Date: Wed, 5 Mar 2025 12:03:18 +0100
+	dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b="aWrZ8EOC";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="hyD82Zjq"
+Received: from phl-compute-12.internal (phl-compute-12.phl.internal [10.202.2.52])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 3810D11401A0;
+	Wed,  5 Mar 2025 06:14:00 -0500 (EST)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-12.internal (MEProxy); Wed, 05 Mar 2025 06:14:00 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sakamocchi.jp;
+	 h=cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm1; t=1741173240; x=1741259640; bh=N7EyxBWyLy
+	ajrG4+9lXdCeKumGTXiAwsgiBLJZor9Cw=; b=aWrZ8EOC+RieG3O+SaJvHntFdP
+	aWuLIDSDSs51YA7BIgut+4JUr0QziAtOEDsStpO5P2PcKC17StOwTnvMlA3kza/1
+	DJUAI/B55g1foagX9u6pbFNin1f7mbPdqUM39Kh59pZ3AEnFYiFRDI7SdtC+JbZU
+	L+IRHgfOVb+0aESCK+vObDZSD7I1RfIFhPO/ir2PxF9c6k8xe+JD+4oCFh6GxzvV
+	hwjsF0KO2fiI6/+FpVy2I5paKFTP7jejJfcCv2zMPhMqv7dFsEx91BzJNOaMdars
+	/vb0THG8IVj90o/953ajBq+kqWJ67FPrpG9c09Svy0kjp+nUCd5lQH7c71oA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
+	1741173240; x=1741259640; bh=N7EyxBWyLyajrG4+9lXdCeKumGTXiAwsgiB
+	LJZor9Cw=; b=hyD82ZjqGGBxAT50kQ+JdEuzR64zcpMQcNAwlRMNy3K8sTtzoY9
+	vsDfERzKSeFggASzD5CxDsxyNe/RzzmcO9/KZRz0a284CQYvyn0Yk7i6cFe1BOvh
+	I8EIFrAhDe727en3iZoi6n7hqM/cNqMJhIPutnZOP7zmdns75MBLZQcNG6/Lmi7s
+	ucfXbeV6xZ5lW4a4IsF/DK5xakHk5hzbb+Lm2XiNNaCT3JXtnwAk6Nf3Nlelgp1I
+	BA4V8Fq/Fi4x9WFsbAOp1Ka6QA6yE9tHQmihtdIj0+YXmuL0FcnEHR2yJZW6mgw3
+	qYa/6zN5ELeFHoXtGaiF89QsJLfiC07tv7A==
+X-ME-Sender: <xms:9zHIZ3PZ2R2SjXmY10CFjU_jjEJgAZpRCPLq2XvAS_4fzyUQwCbfDA>
+    <xme:9zHIZx8EGec3GHlnT1xJUFb1U9RezQ-9acsdTNBgUqnvqfIObe04qDAyz6ue3t_01
+    s8BCfKb5Z79bhy1iQk>
+X-ME-Received: <xmr:9zHIZ2TzToUAh_ktBodC_iCb9yvJOcU6QKod7TEHroIka6cqYLsIjpI7kUZKZYlTuDL_Esvc-DNPiqRY3CftuQehZg76OqBPRV0>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddutdegieeiucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepfffhvffukfhfgggtuggjsehttdertddttddv
+    necuhfhrohhmpefvrghkrghshhhiucfurghkrghmohhtohcuoehoqdhtrghkrghshhhise
+    hsrghkrghmohgttghhihdrjhhpqeenucggtffrrghtthgvrhhnpeejgeeifeeuveeufeei
+    geegjeelvdfgjeegffejgfdvkeelhefgtdefteejleekjeenucffohhmrghinhepkhgvrh
+    hnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhf
+    rhhomhepohdqthgrkhgrshhhihesshgrkhgrmhhotggthhhirdhjphdpnhgspghrtghpth
+    htohephedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepmhgthhgvhhgrsgdohhhu
+    rgifvghisehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdguohgtsehvgh
+    gvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheptghorhgsvghtsehlfihnrdhnvght
+    pdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorh
+    hgpdhrtghpthhtoheplhhinhhugidufeelgedquggvvhgvlheslhhishhtshdrshhouhhr
+    tggvfhhorhhgvgdrnhgvth
+X-ME-Proxy: <xmx:9zHIZ7vlXA4cHOGuY_Qfi0GPXXKwYMkab50FI_C6aG1eVqZ0svdaxg>
+    <xmx:9zHIZ_eWm8JQxNMzqVpBmL8ldeeeE15ygXvImEuCnl3-87aIKzx23g>
+    <xmx:9zHIZ33Ne4R2-e44jbY_DmGf0XABMUbE1UGHmS0fWwWd4bd6OsCWZQ>
+    <xmx:9zHIZ79dLutUTnROV69x7zShglQrEDtYebtnKBUY_TfgQg2RsQfQWQ>
+    <xmx:-DHIZwFa71z7HJNY6SaamS-uL37tUjTTzEJPXlG9SY5ujxrgoRqPhpmc>
+Feedback-ID: ie8e14432:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 5 Mar 2025 06:13:58 -0500 (EST)
+Date: Wed, 5 Mar 2025 20:13:55 +0900
+From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+	Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org,
+	linux1394-devel@lists.sourceforge.net
+Subject: Re: [PATCH 03/27] drivers: firewire: firewire-cdev.h: fix identation
+ on a kernel-doc markup
+Message-ID: <20250305111355.GA143843@workstation.local>
+Mail-Followup-To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+	Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org,
+	linux1394-devel@lists.sourceforge.net
+References: <cover.1739952783.git.mchehab+huawei@kernel.org>
+ <56d88f897214cbfc4593b4bb4b2a04d0168865d7.1739952783.git.mchehab+huawei@kernel.org>
+ <20250220050313.GA414097@workstation.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 4/8] soc: mediatek: mtk-cmdq: Add pa_base parsing for
- unsupported subsys ID hardware
-To: =?UTF-8?B?SmFzb24tSkggTGluICjmnpfnnb/npaUp?= <Jason-JH.Lin@mediatek.com>,
- "robh@kernel.org" <robh@kernel.org>, "krzk+dt@kernel.org"
- <krzk+dt@kernel.org>, "conor+dt@kernel.org" <conor+dt@kernel.org>,
- "mchehab@kernel.org" <mchehab@kernel.org>,
- "chunkuang.hu@kernel.org" <chunkuang.hu@kernel.org>,
- "jassisinghbrar@gmail.com" <jassisinghbrar@gmail.com>
-Cc: "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
- =?UTF-8?B?U2lyaXVzIFdhbmcgKOeOi+eak+aYsSk=?= <Sirius.Wang@mediatek.com>,
- =?UTF-8?B?TW91ZHkgSG8gKOS9leWul+WOnyk=?= <Moudy.Ho@mediatek.com>,
- =?UTF-8?B?TmFuY3kgTGluICjmnpfmrKPonqIp?= <Nancy.Lin@mediatek.com>,
- =?UTF-8?B?WGlhbmRvbmcgV2FuZyAo546L5YWI5YasKQ==?=
- <Xiandong.Wang@mediatek.com>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- Project_Global_Chrome_Upstream_Group
- <Project_Global_Chrome_Upstream_Group@mediatek.com>,
- "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
- "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
- "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
- "fshao@chromium.org" <fshao@chromium.org>,
- =?UTF-8?B?U2luZ28gQ2hhbmcgKOW8teiIiOWciyk=?= <Singo.Chang@mediatek.com>,
- "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>,
- =?UTF-8?B?WGF2aWVyIENoYW5nICjlvLXnjbvmlocp?= <Xavier.Chang@mediatek.com>,
- "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
- "treapking@chromium.org" <treapking@chromium.org>
-References: <20250218054405.2017918-1-jason-jh.lin@mediatek.com>
- <20250218054405.2017918-5-jason-jh.lin@mediatek.com>
- <581fc075-25d8-4104-a4ee-8c97e1a017e6@collabora.com>
- <03c523e66fd56442f49c38456476cf18be59e8fb.camel@mediatek.com>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Content-Language: en-US
-In-Reply-To: <03c523e66fd56442f49c38456476cf18be59e8fb.camel@mediatek.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250220050313.GA414097@workstation.local>
 
-Il 05/03/25 10:46, Jason-JH Lin (林睿祥) ha scritto:
-> On Tue, 2025-03-04 at 10:35 +0100, AngeloGioacchino Del Regno wrote:
->>
->> External email : Please do not click links or open attachments until
->> you have verified the sender or the content.
->>
->>
->> Il 18/02/25 06:41, Jason-JH Lin ha scritto:
->>> When GCE executes instructions, the corresponding hardware register
->>> can be found through the subsys ID. For hardware that does not
->>> support
->>> subsys ID, its subsys ID will be set to invalid value and its
->>> physical
->>> address needs to be used to generate GCE instructions.
->>>
->>> This commit adds a pa_base parsing flow to the cmdq_client_reg
->>> structure
->>> for these unsupported subsys ID hardware.
->>>
->>
->> Does this work only for the MMINFRA located GCEs, or does this work
->> also for
->> the legacy ones in MT8173/83/88/92/95 // MT6795/6893/etc?
->>
->> In order to actually review and decide, I do need to know :-)
->>
+Hi,
+
+On Thu, Feb 20, 2025 at 02:03:13PM +0900, Takashi Sakamoto wrote:
+> Hi,
 > 
-> Yes, it's for the SoCs without subsys ID, it's not related to the
-> MMINFRA.
+> On Wed, Feb 19, 2025 at 09:32:19AM +0100, Mauro Carvalho Chehab wrote:
+> > The description of @tstamp parameter has one line that starts at the
+> > beginning. This moves such line to the description, which is not the
+> > intent here.
+> > 
+> > Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> > ---
+> >  include/uapi/linux/firewire-cdev.h | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
 > 
-> This can also work on MT8173/83/92/95 // MT6795/6893/etc.
-> You can remove the `mediatek,gce-client-reg` properties in their dtsi
-> and cherry-pick this series to verify it. :-)
-> 
+> Applied to for-next branch.
 
-This is curious - and that brings more questions to the table (for curiosity
-more than anything else at this point).
+I dropped the patch from for-next branch since it already exists in
+jc_docs tree.
 
-Since this is a way to make use of the CMDQ for address ranges that are not tied
-to any subsys id (hence no gce-client-reg and just physical address parsing for
-generating instructions), do you know what are the performance implications of
-using this, instead of subsys IDs on SoCs that do support them?
-
-Being clear: if we were to migrate a SoC like MT8195 to using this globally
-instead of using subsys ids, would the performance be degraded?
-And if yes, do you know by how much?
-
-What you're proposing almost looks like being too good to be true - and makes
-me wonder, at this point, why the subsys id was used in the first place :-)
-
-Cheers!
-Angelo
-
-> Regards,
-> Jason-JH Lin
-> 
->> Thanks,
->> Angelo
->>
->>
-> 
+https://lore.kernel.org/lkml/20250305135637.51f92f44@canb.auug.org.au/
 
 
+Regards
 
+Takashi Sakamoto
