@@ -1,104 +1,103 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19C88244EAB;
-	Wed,  5 Mar 2025 12:34:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2F7320551D;
+	Wed,  5 Mar 2025 12:34:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741178058; cv=none; b=jN4sRw3kOu4OpAheNIuXjBG2f4eBHo19D8Hp5C/KcYSN92l+sahMnRhJylU6zv0E5hqIl7kwovW0/Rkzoo+eKFaOSsrVrAVcm/CWg0QJJ6+w+qbUZONzYl4awfTzKD/Z+JG9039jNOTQn/euI+N3Fd0dHfnMg4L3riNOl0Dh7lQ=
+	t=1741178069; cv=none; b=jKKMIcjV70lFZaLqKPjrt5Uz0KV+q9sCAgZxWdXJDhFDwG0KUZDNDurd8ftMrhJp0JGYi4gg/rJQgqNJBKkIbDJ18nGse8hsHPLZ5POjB7qfkYFWJLrAXlzixiI7DAM8gvgqjEUttYvgzhKrt3DbShT2d43019qnDqts2tQLLWI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741178058; c=relaxed/simple;
-	bh=16uSByWLg025WnpH3q9e76OHGQdq4UuQLT0RSk+r/Jw=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Ul99ZH5rfAXaqqzkKtA2K40NgVz8co1ibSmH1xwGJQ62FzZEMkqMSdoCe8uqVr2pUQlA3Bp83DQywJVeVUWt19gFJg2LLs2XQk7sf5UDluBVVRkIyIn4C74rWju/VOQ47/e0kcR9Z7pXdCanOUWGKLHHAA96hIbcGCMhiGDOE28=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Mt/LR+7K; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741178069; c=relaxed/simple;
+	bh=cOl0I3/cH0eRw0BhDrssA5OJL4SDNbydbLyFqtxZWgA=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=pQ9cFBG5zSxjQcbMo0XljphzUhIDtVg93NwVuViWo8k+1M+yqBx3KLL7ipvNQ7vyKSaSf0tC+/fgbX1pfiO2/V7gMdFgLbnuV+PtvcNrW98S0QZ8XlWLWbIno65Tig76h/R51ymY3gclfub6yj8NCiBKkAqbVb1iIMV0emYQn/4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mot1R8g0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Mt/LR+7K"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D629C4CEE7;
-	Wed,  5 Mar 2025 12:34:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mot1R8g0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 191E2C4CEE2;
+	Wed,  5 Mar 2025 12:34:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741178056;
-	bh=16uSByWLg025WnpH3q9e76OHGQdq4UuQLT0RSk+r/Jw=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=Mt/LR+7KvlmKcLWsX3w9K1Yt1tDVvjNTkBldwk8//XjC4uMiFiyhJVAOuxDJ16TJ4
-	 W986iNTkUkyZld2DmjdTqrX8FpMiOd99/8h3Y41WOKX2LFMPYzuldykffDiJ2BlVUF
-	 uLxba1uuv+f0sH6yDwNFRvfwbLvzrSyugsyb5NqdYGedwhYHdafl/Us4WsFumfL8mu
-	 Ph7XUuetARr6366eqR1BNaVfhA7uMWYUJi0Ez3w5QP/4THlhzxnAEhTlZhtbpjTpxn
-	 3nFwkGPifyL6h7aaGIVispo9EWz2rCsRbodVGljVppxPP8xgU1GhAw+N7Q/e41YX4X
-	 iD3Zvhbh64sqQ==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-To: "Benno Lossin" <benno.lossin@proton.me>
-Cc: "Danilo Krummrich" <dakr@kernel.org>,  "Miguel Ojeda"
- <ojeda@kernel.org>,  "Alex Gaynor" <alex.gaynor@gmail.com>,  "Boqun Feng"
- <boqun.feng@gmail.com>,  "Gary Guo" <gary@garyguo.net>,  =?utf-8?Q?Bj?=
- =?utf-8?Q?=C3=B6rn?= Roy Baron
- <bjorn3_gh@protonmail.com>,  "Alice Ryhl" <aliceryhl@google.com>,  "Trevor
- Gross" <tmgross@umich.edu>,  <rust-for-linux@vger.kernel.org>,
-  <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 08/22] rust: pin-init: move `InPlaceInit` and impls of
- `InPlaceWrite` into the kernel crate
-In-Reply-To: <D88BIUUNXQK5.3BFLFUBWAS0H2@proton.me> (Benno Lossin's message of
-	"Wed, 05 Mar 2025 12:06:52 +0000")
-References: <20250304225245.2033120-1-benno.lossin@proton.me>
-	<iamkKusKoPQ37SKTEy2SbZjH0szdD4f3Zss6AcRF5jAkltpuR9blYqQ3Qc0Vd_gJBwPbefblnClu4okTA-TLLg==@protonmail.internalid>
-	<20250304225245.2033120-9-benno.lossin@proton.me>
-	<87frjrene8.fsf@kernel.org>
-	<yOvQB5qHfHQi6IYDiDOUtboOxQ-0xzUQZNt63_wDaqGcBbQeUy87JtAW-euoLQvXgZYu9JbaqpsDGyGaZXRJCw==@protonmail.internalid>
-	<D88BIUUNXQK5.3BFLFUBWAS0H2@proton.me>
-User-Agent: mu4e 1.12.7; emacs 29.4
-Date: Wed, 05 Mar 2025 13:28:31 +0100
-Message-ID: <87r03bbr0w.fsf@kernel.org>
+	s=k20201202; t=1741178069;
+	bh=cOl0I3/cH0eRw0BhDrssA5OJL4SDNbydbLyFqtxZWgA=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=mot1R8g0Bq6HJHmLbShpe0RIfR7Oq6SFDLlA1K5ZsnCqe7w7gZhwJJgjFaucGGqo6
+	 RI+s7zzzmGQJBSCLytJmqFBDtY6I/H0Nn+G01GcLNyuUb9m54opc2Z5XcEaGn8QfdE
+	 0tXaPadHffc6pTRkmtX1aVKJkoodcPU+krgK5PDT+90A8dDB51h6+iCoXp7I9DppN7
+	 1sDzCE2dcf43i3axrQVvq86FSHfdaH02p/vwQGzglACHaqtNnisi57HQNFL2Gi6DIF
+	 KGq7Qa91S3hT5/04dgmI4AG1qw/zqu+K6wh9NmA83CEw1w3c1QrqzVPA0JjzDnvIKe
+	 7MVwx7ZxQ3CSQ==
+Date: Wed, 05 Mar 2025 06:34:27 -0600
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-
-"Benno Lossin" <benno.lossin@proton.me> writes:
-
-> On Wed Mar 5, 2025 at 12:18 PM CET, Andreas Hindborg wrote:
->> "Benno Lossin" <benno.lossin@proton.me> writes:
->>
->>> In order to make pin-init a standalone crate, move kernel-specific code
->>> directly into the kernel crate. This includes the `InPlaceInit<T>`
->>> trait, its implementations and the implementations of `InPlaceWrite` for
->>> `Arc` and `UniqueArc`. All of these use the kernel's error type which
->>> will become unavailable in pin-init.
->>>
->>> Signed-off-by: Benno Lossin <benno.lossin@proton.me>
->>> ---
->>>  rust/kernel/alloc/kbox.rs |   3 +-
->>>  rust/kernel/init.rs       |  55 +++++++++++++++++
->>>  rust/kernel/prelude.rs    |   3 +-
->>>  rust/kernel/sync/arc.rs   |  65 +++++++++++++++++++-
->>>  rust/pin-init/src/lib.rs  | 125 ++------------------------------------
->>>  5 files changed, 127 insertions(+), 124 deletions(-)
->>>
->>
->> [...]
->>
->>> --- a/rust/pin-init/src/lib.rs
->>> +++ b/rust/pin-init/src/lib.rs
->>> @@ -10,7 +10,7 @@
->>>  //! To initialize a `struct` with an in-place constructor you will need two things:
->>>  //! - an in-place constructor,
->>>  //! - a memory location that can hold your `struct` (this can be the [stack], an [`Arc<T>`],
->>> -//!   [`UniqueArc<T>`], [`KBox<T>`] or any other smart pointer that implements [`InPlaceInit`]).
->>> +//!   [`KBox<T>`] or any other smart pointer that supports this library).
->>
->> Would you not want to remove references to `KBox` here as well? Even
->> though you don't have to move the impl, I don't imagine `KBox` exist in
->> user space?
->
-> Yes, this is done in "rust: pin-init: fix documentation links".
-
-Yea, maybe I should have read the entire thing before firing off emails.
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ "David S. Miller" <davem@davemloft.net>, 
+ Woojung Huh <woojung.huh@microchip.com>, Eric Dumazet <edumazet@google.com>, 
+ Paolo Abeni <pabeni@redhat.com>, Andrew Lunn <andrew+netdev@lunn.ch>, 
+ devicetree@vger.kernel.org, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+ Conor Dooley <conor+dt@kernel.org>, kernel@pengutronix.de, 
+ netdev@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>, 
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>
+To: Oleksij Rempel <o.rempel@pengutronix.de>
+In-Reply-To: <20250305102103.1194277-2-o.rempel@pengutronix.de>
+References: <20250305102103.1194277-1-o.rempel@pengutronix.de>
+ <20250305102103.1194277-2-o.rempel@pengutronix.de>
+Message-Id: <174117806721.1245382.8322491579922154490.robh@kernel.org>
+Subject: Re: [PATCH v4 1/4] dt-bindings: sound: convert ICS-43432 binding
+ to YAML
 
 
-Best regards,
-Andreas Hindborg
+On Wed, 05 Mar 2025 11:21:00 +0100, Oleksij Rempel wrote:
+> Convert the ICS-43432 MEMS microphone device tree binding from text format
+> to YAML.
+> 
+> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+> Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+> ---
+> changes v4:
+> - add Reviewed-by: Rob...
+> changes v3:
+> - add maintainer
+> - remove '|' after 'description:'
+> changes v2:
+> - use "enum" instead "oneOf + const"
+> ---
+>  .../devicetree/bindings/sound/ics43432.txt    | 19 -------
+>  .../bindings/sound/invensense,ics43432.yaml   | 51 +++++++++++++++++++
+>  2 files changed, 51 insertions(+), 19 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/sound/ics43432.txt
+>  create mode 100644 Documentation/devicetree/bindings/sound/invensense,ics43432.yaml
+> 
 
+My bot found errors running 'make dt_binding_check' on your patch:
 
+yamllint warnings/errors:
+
+dtschema/dtc warnings/errors:
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/sound/invensense,ics43432.yaml: maintainers:0: 'N/A' does not match '@'
+	from schema $id: http://devicetree.org/meta-schemas/base.yaml#
+
+doc reference errors (make refcheckdocs):
+
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250305102103.1194277-2-o.rempel@pengutronix.de
+
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
 
