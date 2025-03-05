@@ -1,120 +1,96 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 877A3191F75;
-	Wed,  5 Mar 2025 08:55:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68ECB1FDA84
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 08:55:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741164931; cv=none; b=RwEl5AOFSDP/IgyXlLP/a7nIKdMN7l4mdfE0p9cMa8vlt4llpW+NJThH8Gj2vb8lG0OL0Gf07nXiftPx98VySu0FhXElEn/mU9bCRwUftF3FHJlmgXK1TGLxsVTbHrUtD4UUV3UcQ0LlfmcaImWQyqHNL2sdD1mzV7Z0+1MKkFw=
+	t=1741164941; cv=none; b=MYl/y4Gh27OFM/HEvM6Tf6awqiPsKchVArtbdR9Sux8EKlidF/nGvAG4WAYqFNDoFJI0m7eolYWZIO6UoI/mrpars0dVSix0+vhSJH3T6fVj+tsIkSZ3NI5OP84Pldo8y8ZBx5yEZ2GBn5Lnt+6rQHkoPGRZaYi1y2ImgsN5BPo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741164931; c=relaxed/simple;
-	bh=OM8ChbKKXrcPJaC9Ogl1hi3hRqVPXbPVF1zrPZvCzKA=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=HX29Gsj+XkNkj9GaXDmvL5Lp5w/ZNa5wPlHt/+1NaIKRp7+n+JnwYD8xO5nVYdh9BjgJVf6BBya/c0D+g+iMXtt77KZ4PBi7nu3PXacybbQL/QNpgfsKMiSdzB3qTUC09R+Ze0HXj8URAklo4wgAIUvL0SidZjQeD5Pn92GeKIo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=kmCe/jJR; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=LZEldiNR; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1741164941; c=relaxed/simple;
+	bh=1tt5ib69iMzXY4LA74Vkmxm0BW7B+0tgn09acyb+eME=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kP3xby5ZEt7Sz672LsKewGqqD3lPcj/elyl2nY6BTo6bU06sYEdkir7GLykL1BJZf2Njf6kjtApNa12QrT0gIprHxsjJYT1yvfz+H61GtbaOhHK7dgGemcif3cfDHZpB5Ccnrh90b4iqu92ZAGCrY+TA3r2oOFyIuRqPbbNiIXM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=aRhsMa91; arc=none smtp.client-ip=209.85.221.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="kmCe/jJR";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="LZEldiNR"
-Date: Wed, 05 Mar 2025 08:55:22 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1741164927;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SmIrqAGww47OaMggdhUBSr7EwqX9cMQ/T6aEaeVpL2o=;
-	b=kmCe/jJRjH88oFA+hgmS2zGt0EfNrt+sNCk1IF0GvwKuNLxhvVaWfnRL+ZteZUu9ux1x9l
-	AAlen8SLfxpW4MOekeqYmB2A9kJYUX3KU3m0yQ6NWjBwYdhuSaD6X+hIAof3FF105SzvN4
-	6E/CT3729Owh00whQ4dQK/CNmgFtKTBMUGjHZvRLSBJQcEjxfmgc+W+1SDUFlAYYlRplp8
-	F7w1VkBnBv4gvz/nEsD3+kUcbnBtCCTky1yCPLU5L+0O/iLR+1CkLcU75FAIAaZQJuCyJT
-	UcLX8oL0Jw+uQht9iucx8BVvf+pkTviG+kezFt2q9agP+gya5mvIJXqo1GG1MQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1741164927;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SmIrqAGww47OaMggdhUBSr7EwqX9cMQ/T6aEaeVpL2o=;
-	b=LZEldiNRfAmuGIeEh/ZicX/0obLHYWDtuOjs4UREy3TqUkS85NNSXCCxT59zq2CchWKZi5
-	x67G62NizArfqcDQ==
-From: "tip-bot2 for Jarkko Sakkinen" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/urgent] x86/sgx: Fix size overflows in sgx_encl_create()
-Cc: Dan Carpenter <dan.carpenter@linaro.org>,
- Jarkko Sakkinen <jarkko@kernel.org>, Ingo Molnar <mingo@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>, "H. Peter Anvin" <hpa@zytor.com>,
- x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250305050006.43896-1-jarkko@kernel.org>
-References: <20250305050006.43896-1-jarkko@kernel.org>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="aRhsMa91"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-390cf7458f5so6018256f8f.2
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Mar 2025 00:55:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1741164937; x=1741769737; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=YLtjA+wzwLnIjfOlPYyCZCKUn7sRpgky3D8g389O2dg=;
+        b=aRhsMa91PlBsjSkESsdzsPB/p7pXyAa+5KY9l/zHgBVDWKTrapQjxvc/DQWDPNoWbg
+         AjqfEOHPYGawTeZpMz8fVf+cDK4GtNh1uU7/HgDf2xWN1zNsct/DLfkdUR7HKIo3XiFq
+         hGUZIHepalt61kV0M2+Sw5uojL/zN4jP5klFtcTkRDnC3O+V3MNdtviwa2uwx7kMRhsu
+         hhjS6MqRbw6SZdUUsL+dxYBBh4SEBVYcpAS71G45h/5nwOozQ0hRsmix4EKi6cALSAiK
+         Jxvn0N1q+6AABRpWMPRyToDFYhjmwSqrGYQ3XQcY1Deaq+WmgGNvTg1lgTFs9EM8xAFr
+         DJYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741164937; x=1741769737;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YLtjA+wzwLnIjfOlPYyCZCKUn7sRpgky3D8g389O2dg=;
+        b=S+z751fkpnWPOidECXb6yBw85JzCFSJa352khqxuLAnjri2Sn5Cg2Jm8PAxeGulSIE
+         q1u+OCLLLWvf3FvsKz/lEYfzgGb49CwC+5PX1WQWlrNU4K3RQ92eI0xFI8cYHjD39Iiw
+         EjpBEMMAwrKZu/kZPjf5u3NX0SZYFskqqaPxPlaYFnORU46lL+xUDuYoqP0apGKTR3PS
+         WTNsXzV15OsgS4Wim82xP1UIFeAV6/sZEt9Tp6OZnGbSkm/sBiHYsRRgb7OjxWvr4sxC
+         TnRmcFn+Mam2CPNmTGzsWDCNv5wt+8ksWW4zJZ1BX855tRgB6SyWkOKmpsgGRUqYn2ad
+         zQ8A==
+X-Forwarded-Encrypted: i=1; AJvYcCVkDbXTqCuo4q+OhKgPBRFob4YUmi8EoOqHnB8u0ggkY0Fx+imkOEaJhAQev6ccRqYXbuN5OA8nXZ/xwng=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyxHOrsOF1Gre4hFHMMFO7RW35T1gobp7oBTq+Pve8NI0t0ACc7
+	cFQqsL1M9mvvfKA8xWIRd6wspr5AyIQ1z/fIHNNg9U5+0rgxX37VZq/qK3drW8Q=
+X-Gm-Gg: ASbGnctcX2P6f9SSOE7tZ0WZ4cPjfXeDF11r2PKf2UMK9WECvtWyiD8G4EGRqMto0h1
+	PZlCK43oNvvSWASqpYl1G131VIJpYuhMCZxguVY4VFJjJF3vC16/95xjzWUfPKatbwmpgWXnFF2
+	AQ/6It79K3LgU+DjD2t0dsZU3EWOMl0sGqvzVyxQtMPtlOMJyMUXD2MYlMAuGvuclDULU/qEPOT
+	ltvq++j+QNU2W7o6WmKSbSSizNy6X+2cKYcepojaEfekxOopelOrQqvOBCC47hUzIm6VUbMrnYj
+	6b3GCxFS40LOAiMsd6ANSbJofcRUsoZg3GOw6Lg2lAQXdhE=
+X-Google-Smtp-Source: AGHT+IEOjRqlCNucxZnWpFSu0mZSzPF3tEADkDKCagU2Hig2+iE7cTPN1i5PvOoBL6qL6HQEoP6zng==
+X-Received: by 2002:a05:6000:186b:b0:390:e1e0:1300 with SMTP id ffacd0b85a97d-3911f75a93emr1731801f8f.33.1741164937517;
+        Wed, 05 Mar 2025 00:55:37 -0800 (PST)
+Received: from pathway.suse.cz ([176.114.240.130])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-390e47a6d17sm20007131f8f.28.2025.03.05.00.55.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Mar 2025 00:55:36 -0800 (PST)
+Date: Wed, 5 Mar 2025 09:55:35 +0100
+From: Petr Mladek <pmladek@suse.com>
+To: Tamir Duberstein <tamird@gmail.com>
+Cc: David Gow <davidgow@google.com>, Steven Rostedt <rostedt@goodmis.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Shuah Khan <shuah@kernel.org>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v8 1/4] scanf: implicate test line in failure messages
+Message-ID: <Z8gRh5wtzbpiV8JM@pathway.suse.cz>
+References: <20250214-scanf-kunit-convert-v8-0-5ea50f95f83c@gmail.com>
+ <20250214-scanf-kunit-convert-v8-1-5ea50f95f83c@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174116492272.14745.2721064032310702580.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250214-scanf-kunit-convert-v8-1-5ea50f95f83c@gmail.com>
 
-The following commit has been merged into the x86/urgent branch of tip:
+On Fri 2025-02-14 11:19:58, Tamir Duberstein wrote:
+> This improves the failure output by pointing to the failing line at the
+> top level of the test.
+> 
+> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
 
-Commit-ID:     31d20f8f6c419b5e818aff2a2a0819a2a1d65003
-Gitweb:        https://git.kernel.org/tip/31d20f8f6c419b5e818aff2a2a0819a2a1d65003
-Author:        Jarkko Sakkinen <jarkko@kernel.org>
-AuthorDate:    Wed, 05 Mar 2025 07:00:05 +02:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Wed, 05 Mar 2025 09:49:44 +01:00
+I like it. It helps a lot to locate the failing test.
 
-x86/sgx: Fix size overflows in sgx_encl_create()
+Reviewed-by: Petr Mladek <pmladek@suse.com>
+Tested-by: Petr Mladek <pmladek@suse.com>
 
-The total size calculated for EPC can overflow u64 given the added up page
-for SECS.  Further, the total size calculated for shmem can overflow even
-when the EPC size stays within limits of u64, given that it adds the extra
-space for 128 byte PCMD structures (one for each page).
-
-Address this by pre-evaluating the micro-architectural requirement of
-SGX: the address space size must be power of two. This is eventually
-checked up by ECREATE but the pre-check has the additional benefit of
-making sure that there is some space for additional data.
-
-Fixes: 888d24911787 ("x86/sgx: Add SGX_IOC_ENCLAVE_CREATE")
-Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-Signed-off-by: Jarkko Sakkinen <jarkko@kernel.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Link: https://lore.kernel.org/r/20250305050006.43896-1-jarkko@kernel.org
-
-Closes: https://lore.kernel.org/linux-sgx/c87e01a0-e7dd-4749-a348-0980d3444f04@stanley.mountain/
----
- arch/x86/kernel/cpu/sgx/ioctl.c | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/arch/x86/kernel/cpu/sgx/ioctl.c b/arch/x86/kernel/cpu/sgx/ioctl.c
-index b65ab21..776a201 100644
---- a/arch/x86/kernel/cpu/sgx/ioctl.c
-+++ b/arch/x86/kernel/cpu/sgx/ioctl.c
-@@ -64,6 +64,13 @@ static int sgx_encl_create(struct sgx_encl *encl, struct sgx_secs *secs)
- 	struct file *backing;
- 	long ret;
- 
-+	/*
-+	 * ECREATE would detect this too, but checking here also ensures
-+	 * that the 'encl_size' calculations below can never overflow.
-+	 */
-+	if (!is_power_of_2(secs->size))
-+		return -EINVAL;
-+
- 	va_page = sgx_encl_grow(encl, true);
- 	if (IS_ERR(va_page))
- 		return PTR_ERR(va_page);
+Best Regards,
+Petr
