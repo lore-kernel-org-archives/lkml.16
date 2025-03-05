@@ -1,110 +1,134 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f180.google.com (mail-vk1-f180.google.com [209.85.221.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3E6B19ABA3;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F1F719C542;
 	Wed,  5 Mar 2025 16:38:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741192687; cv=none; b=jrjMpNHQpXuQXr3+xaG+bt4Wb9m8NKWfMBL7sWmiyE3h6PKk+4MOwxrzPPpx4749fSy31tgJoho/L9JSlRTR7zpbX6nB67mV0hQ+lFkDc5u2q4uXXF4FNSjag9fYOIr4NZR+TjI6z9zlNREm2z9LfQX9AdGy7eLmWeAmADuCXas=
+	t=1741192689; cv=none; b=J8HMZB32aFr3MunKFkSOKyful/Dt/MzgrEXYbsnodN7yXLKQJuXt6yEuCOq0E9mExWxvVEL/kZxU7vIfCG+Vw6rGnm6kQRT/0wIoaQx8WY11tf9oo9JEGGIf0BBUNM13xfCem7vaPXaWM+IIpxpQbv4HfdINF/4Ni4lcXDZ5RM8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741192687; c=relaxed/simple;
-	bh=sL6HKnFMuXDXenCBceEoHD1TmQX+6oJO6AlNMpLGC5I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Slpxc8G5dNQD/rAfOueNKxhqYmfWVAmG4bXOI3So4rKmVBkbmsvNt1Uv/BC8oAHeT6zKrVtaNGgGf2m3xulbdnt+eUK9xintA1CpeCWTFfF0q9KBd5OMwHWiT8hfBQiLY5ew9IT79ME/EXvQKEUH9J9l1IxkFGxNSHXHyKve5dU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N4Ut2cNz; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741192689; c=relaxed/simple;
+	bh=OwvDDv+rB+cBd+3VHKU2o92ijTiJPiX8okF4jWElzEI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gODYSQ3JcV0kpleOoeVJTGqliKPcJMzVMcHTwW75VEn5+QvUiTJLyyG1uCPsGcJVXazUvLrfJs+3pvWYuLNntCf3+1F/ql+K1+QGxhgLvJCP2C3KJKP8cwZVpD7orJhwQnVNQikKmYRr/NsW5IHT0DcxGl2E/uw1DVSMlBb9mZ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ajS6v5Yu; arc=none smtp.client-ip=209.85.221.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N4Ut2cNz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1DD7DC4CED1;
-	Wed,  5 Mar 2025 16:38:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741192687;
-	bh=sL6HKnFMuXDXenCBceEoHD1TmQX+6oJO6AlNMpLGC5I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=N4Ut2cNzPxw/19HWcA9q6UtjX96+MvXtTOt/spQ3Kaa+W2/+8jLSKzmKdQfqq784h
-	 iXyfpjwvj2pTl+oH/pXFQUSIATsV9GDQUrPpY1XGGg5K2Ec3lSimClooKk4ynyGvUT
-	 r1PicB+2aVmGYeq5t8RYER35rZsdl0FcxkOhZOQIMiqVhIJjGkFPyBk/REwuohhG/d
-	 euKrDtjZjx1dIMBrkGYX5ZMNE1iPMHZ8ZJuJ6YZr+yGG2ppJvpgHbjVU81Ljc4A8Cq
-	 w+kRXk2NJVka0QLj05JGXMw/DRAN7bWAq46yGtSnJIxDDewUcFooFOLbAD+mTsOL1F
-	 droruHgs3mybQ==
-Date: Wed, 5 Mar 2025 10:38:05 -0600
-From: Rob Herring <robh@kernel.org>
-To: Alexander Stein <alexander.stein@ew.tq-group.com>
-Cc: Liu Ying <victor.liu@nxp.com>, dri-devel@lists.freedesktop.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org, andrzej.hajda@intel.com,
-	neil.armstrong@linaro.org, rfoss@kernel.org,
-	Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se,
-	jernej.skrabec@gmail.com, maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com,
-	simona@ffwll.ch
-Subject: Re: [PATCH 3/5] dt-bindings: display: simple-bridge: Document DPI
- color encoder
-Message-ID: <20250305163805.GA2071011-robh@kernel.org>
-References: <20250304101530.969920-1-victor.liu@nxp.com>
- <20250304101530.969920-4-victor.liu@nxp.com>
- <20250304152320.GA2630063-robh@kernel.org>
- <1891036.atdPhlSkOF@steina-w>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ajS6v5Yu"
+Received: by mail-vk1-f180.google.com with SMTP id 71dfb90a1353d-5235db99207so2664708e0c.2;
+        Wed, 05 Mar 2025 08:38:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741192686; x=1741797486; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IQlxiO/tzlizWCcvMOMLmTMjvNekxRADNnpIKuwzvg8=;
+        b=ajS6v5YuU6m6gjGJJb9IryCAodLzr0pg0AUj8rGPYvY2WrOKNhQc3LCM9QhnTKVpy5
+         FkYNIrm2OcPttE5fNQaoQ9DssnLfXgRrvTrEmuo4fOEIZO7MuLcy31wxzADXHS9Epb9f
+         +Ps/GONqoF4ugFshIOjX1lZdTrVPrcQYkUuo6vRnrzR551ivNd7isVyE1cmq+rjqJtF8
+         MfHZquHElV7SUxvWLHRrKR+aVN/la/xq/kzRxsgTazCAMgolu5OmZfRfcFzq5p5kToTF
+         IeGORVqJVch2XUZLglTbHfYDg2aMnTIFk7ahFZrlfryOWceWlB/dLh+ZsFu/ugqtCkhv
+         P0bA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741192686; x=1741797486;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=IQlxiO/tzlizWCcvMOMLmTMjvNekxRADNnpIKuwzvg8=;
+        b=tOJSyh2r2yQ7A/qpix1hPis8shiRxmy3+eiaNYlGpDTOl5mtw6nZJxUBQKhUDhwPnX
+         NPuoKfoFFFFdfdo0Fb3PLcZ+riueEzRkVGZ21uIdkHbpOP0TW8JNbrJ3KC41TY+bUkrd
+         cyROWlWpSPpJ1a6xLafg9GtoxPxtJvIVFT2hhBU54l70UxttxDvkVxrz/3QIO6ul6syy
+         Joh4lT1f/ax3JDwbiOxwRBYXndKONDCcvFY8GXhznzZsh5Zgaeg99x//ObAtSe4FRfIc
+         pHHphBEk9IrircGzT3rcJq+Pc54eEJuxKc24lxhb6Lp55uogQ9RzVHMhjZ2QWS5L447E
+         8ZNg==
+X-Forwarded-Encrypted: i=1; AJvYcCU1auik6tsK4coreIltJpqwZ7Fm1XKLUN7UDYUhBUvnJ/c5BjQVsnYh+B8piV9Z1KFpkTyacl5XNKirU9j91Jtk8Vk=@vger.kernel.org, AJvYcCVhp7GKS92oCDO1Q3NSR4FstQJIiDxmMMpvuQsqfOpiIxqKWD+TttEpGtjk64Kpv7utnGndKwi884A=@vger.kernel.org, AJvYcCXayg1tzZFZpME2QqDL0Qa7OfGbgmp7zDQWrRrwb1eASB7bzXpPpUNafgjGOIwHtZdV2fC/I4nPNSWdQafZ@vger.kernel.org
+X-Gm-Message-State: AOJu0Yww3jreR1xk0VhEw/3iCrdPew/IWk9au1TTZDsWpLJnqWW8zqJe
+	QPWzPkKMzi+q6GNHwNLFNxPAwJhHcHGXmPqkGbo7rtbuK+7KGjKXrHGtYAMgbvAgkb/janZh+dl
+	n8v+TYQL//PqLCwgzY3Urb2HfCAdau+bw
+X-Gm-Gg: ASbGnctVHvKLntfr/oOi5mT8MnQQVSMY1bdPo8BARGXwnVKUcWjQOrLjcO8eBV6CUAu
+	MhQAT71Rz1pHtqcrMo+PJS3yxVnSDdZlNH1HyZTC00VX2by6Y3Hr+66U7b7N/OalGSYedzmQjyB
+	Gx35TNWNgybVMz3SQBYHkM+40O6g==
+X-Google-Smtp-Source: AGHT+IGgP6P7tbPAFmk1OoR674ND19doqpjBCUa83A+ACGXwxElzV5jy1FoNKcrR2VQhDnBQk89neEvY/Mh21OU2Byg=
+X-Received: by 2002:a05:6122:3186:b0:50b:e9a5:cd7b with SMTP id
+ 71dfb90a1353d-523c628826bmr2411542e0c.9.1741192686457; Wed, 05 Mar 2025
+ 08:38:06 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1891036.atdPhlSkOF@steina-w>
+References: <20250218114353.406684-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20250218114353.406684-2-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdVwVemQfrDFH48n9Csp6=KtFs5MpZ6e+wLWSnEuh2gdvg@mail.gmail.com>
+In-Reply-To: <CAMuHMdVwVemQfrDFH48n9Csp6=KtFs5MpZ6e+wLWSnEuh2gdvg@mail.gmail.com>
+From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date: Wed, 5 Mar 2025 16:37:40 +0000
+X-Gm-Features: AQ5f1Jq9xGloZE_BIWzi9jwUpv744jv1tl6VmpAdYxsk-Ac88E_TEIGJLuTaN6c
+Message-ID: <CA+V-a8sj-jEu8y_qPv-KvVCu_YQCQ1MDK9zrRB93LjfhmB_qfQ@mail.gmail.com>
+Subject: Re: [PATCH 1/3] clk: renesas: rzv2h-cpg: Move PLL access macros to
+ source file
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Mar 05, 2025 at 10:35:26AM +0100, Alexander Stein wrote:
-> Hi,
-> 
-> Am Dienstag, 4. März 2025, 16:23:20 CET schrieb Rob Herring:
-> > On Tue, Mar 04, 2025 at 06:15:28PM +0800, Liu Ying wrote:
-> > > A DPI color encoder, as a simple display bridge, converts input DPI color
-> > > coding to output DPI color coding, like Adafruit Kippah DPI hat[1] which
-> > > converts input 18-bit pixel data to 24-bit pixel data(with 2 low padding
-> > > bits in every color component though). Document the DPI color encoder.
-> > 
-> > Why do we need a node for this? Isn't this just wired how it is wired 
-> > and there's nothing for s/w to see or do? I suppose if you are trying to 
-> > resolve the mode with 24-bit on one end and 18-bit on the other end, you 
-> > need to allow that and not require an exact match. You still might need 
-> > to figure out which pins the 18-bit data comes out on, but you have that 
-> > problem with an 18-bit panel too. IOW, how is this any different if you 
-> > have an 18-bit panel versus 24-bit panel?
-> 
-> Especially panel-simple.c has a fixed configuration for each display, such as:
-> > .bus_format = MEDIA_BUS_FMT_RGB666_1X18
-> 
-> How would you allow or even know it should be addressed as
-> MEDIA_BUS_FMT_RGB888_1X24 instead? I see different ways:
-> 1. Create a new display setting/compatible
-> 2. Add an overwrite property to the displays
-> 3. Use a (transparent) bridge (this series)
-> 
-> Number 1 is IMHO out of question. 
+Hi Geert,
 
-Agreed.
+Thank you for the review.
 
-> I personally don't like number 2 as this
-> feels like adding quirks to displays, which they don't have.
+On Wed, Mar 5, 2025 at 4:19=E2=80=AFPM Geert Uytterhoeven <geert@linux-m68k=
+.org> wrote:
+>
+> Hi Prabhakar,
+>
+> On Tue, 18 Feb 2025 at 12:44, Prabhakar <prabhakar.csengg@gmail.com> wrot=
+e:
+> > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> >
+> > Move the `PLL_CLK_ACCESS()`, `PLL_CLK1_OFFSET()`, and `PLL_CLK2_OFFSET(=
+)`
+> > macros from `rzv2h-cpg.h` to `rzv2h-cpg.c`, as they are not intended fo=
+r
+> > use by SoC-specific CPG drivers.
+> >
+> > Additionally, update `PLL_CLK1_OFFSET()` and `PLL_CLK2_OFFSET()` to use
+> > the `FIELD_GET()` macro for better readability and simplify the
+> > `PLL_CLK_ACCESS()` macro.
+> >
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>
+> Thanks for your patch!
+>
+> The changes look correct to me, so
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> but I still have some comments...
+>
+> > --- a/drivers/clk/renesas/rzv2h-cpg.c
+> > +++ b/drivers/clk/renesas/rzv2h-cpg.c
+> > @@ -56,6 +56,10 @@
+> >
+> >  #define CPG_CLKSTATUS0         (0x700)
+> >
+> > +#define PLL_CLK_ACCESS(n)      (!!((n) & BIT(31)))
+>
+> OK
+>
+> > +#define PLL_CLK1_OFFSET(n)     FIELD_GET(GENMASK(15, 0), (n))
+> > +#define PLL_CLK2_OFFSET(n)     (PLL_CLK1_OFFSET(n) + (0x4))
+>
+> IMO, the original versions are more readable, as they clearly show
+> the symmetry between encoding and decoding.
+>
+> Perhaps a good alternative would be a structure with bitfields and
+> a PACK() macro, like is used for DDIV and SMUX?
+>
+Sure, I'll do that. Is it OK if I make that change on top of this
+series or do you want me to rework and send a v2?
 
-This is what I would do except apply it to the controller side. We know 
-the panel side already. This is a board variation, so a property makes 
-sense. I don't think you need any more than knowing what's on each end. 
-
-> Number 3 actually describe the hardware connection. The only impact for
-> software is to know which bus format it should use.
-
-I'm not opposed to this, but only if it provides *something* that option 
-2 does not. I'm not seeing what that is.
-
-Node or not, either case needs a format property. We already have a 
-variety of bus/pixel format related properties. I've rejected new ones 
-because we need something common here that's flexible enough to handle 
-any situation. That's either something that can describe any bit layout 
-or something enumerating the formats (as MEDIA_BUS_FMT_* does). The 
-former is hard to get right and there's always something else you can't 
-handle. I'm not opposed to just reusing MEDIA_BUS_FMT_ if that works.
-
-Rob
+Cheers,
+Prabhakar
