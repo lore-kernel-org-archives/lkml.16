@@ -1,152 +1,240 @@
-Received: from smtpbg151.qq.com (smtpbg151.qq.com [18.169.211.239])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 448542E336F;
-	Wed,  5 Mar 2025 03:35:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.169.211.239
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 035DE2E336F;
+	Wed,  5 Mar 2025 03:36:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741145747; cv=none; b=hJIx5h7CLweHOFFO/8RFOBJhc9DJxZdCrtdZ7La/jdG/LfgzIVisV2jSRTtYidhC6pP47Gw88JSHBoAIXts7y3xhGHedM8L0KHORTiSBz7Fp5raK+P6gXHrZDW6B0JjY/uONevd2umbP0ockqlEfhKRYsevQRk5C0JQGkChgR3w=
+	t=1741145785; cv=none; b=U+wbCUpzYIjhLABVvQNTV5TLBsJHm6oEagQAkE8PBj46WU1uI9j38AXWuyZw+bwFUcfTxHvSx12OrMQwmOPZvHhg+/dv7EyrRUlA3eUbj4J82rbi8tZw2q4YVAjcnHisKnzEt2m5JDCyQ20VP1xjK9FM19NdUp17V4WURkbZYXU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741145747; c=relaxed/simple;
-	bh=YhpqESCa7X4qwClnGLmcs2LQkm+0kkpH8+h/yk2a08Q=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=EubB7cMDiq6hdieULOpTo/U1+F0yLoES8Y1vigxXzHonDI0QkiiAq9vld0yBZfhZ+N5ivpbkYYaX+qH1p+G6MgkLfezS/a9IDchn2OzbXS9PUbMb40j+gE16D5PlFE3W5sknfy9dHAZdwLmu4MBg6OqWVvZuDBA6+eQ1XMv9pD0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=SoSyO24H; arc=none smtp.client-ip=18.169.211.239
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+	s=arc-20240116; t=1741145785; c=relaxed/simple;
+	bh=FAdIKs12OIOAXa8pI/oADgOqCxGO3VcDJM8ZKpW4Qpw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=Z+NQM5YICdOPDwfu6aJxIpOaIIYwvoUGQDXTdjbDEm8r+LaH2uGAfpnRek8ybcGd1gNf4zwoRyDqbNcyrCvv3RYIp1iVLv+HCSEbttyXUysw9wexv3SK7guWFGsaWAOMq9GSj1zpJWCbSmpA3MewGo7kjgCbCMfDVCYlaIRtDkM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=HwUTOWsR; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="SoSyO24H"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1741145727;
-	bh=HFXDpVRoV7fVpwf1jPiqDZoScxJygDs+OZNWRACrGd4=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=SoSyO24HkHnX2kcaIVW0m4YkGfcfiqunnNxAHWg0uR5WGRdQIrP3hI9EaZq0W6wsx
-	 AI5fdyZv8XMC65C72oqtDjYNmdbesLmh4THSvSRiMHUhNImHrqeMQ70ItAZFZQrHus
-	 tBVnF5XNuElzVhmiOH+Iz/nYxGv3rau7pjrxhY6k=
-X-QQ-mid: bizesmtpip2t1741145681t6cfh9f
-X-QQ-Originating-IP: EbXEJ32OK2QiKly+s5QYaHysf8TpMgxAm8Yl+7ozglI=
-Received: from localhost.localdomain ( [localhost])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Wed, 05 Mar 2025 11:34:39 +0800 (CST)
-X-QQ-SSF: 0002000000000000000000000000000
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 8366188937216395239
-From: WangYuli <wangyuli@uniontech.com>
-To: macro@orcam.me.uk,
-	tsbogend@alpha.franken.de
-Cc: linux-mips@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	zhanjun@uniontech.com,
-	niecheng1@uniontech.com,
-	guanwentao@uniontech.com,
-	chenlinxuan@uniontech.com,
-	WangYuli <wangyuli@uniontech.com>
-Subject: [PATCH v2] MIPS: dec: Remove dec_irq_dispatch()
-Date: Wed,  5 Mar 2025 11:34:36 +0800
-Message-ID: <303EFD6BFBDAC7C8+20250305033436.31214-1-wangyuli@uniontech.com>
-X-Mailer: git-send-email 2.47.2
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="HwUTOWsR"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 524NAsXQ008881;
+	Wed, 5 Mar 2025 03:36:18 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	qGlyt/X/wwAgJXkcM5Q6jmBwjUTmlJa6H1clN4lhgY4=; b=HwUTOWsR4ZGcdOWL
+	wU2iYcXearOTPKyCvSJ15tMW2+b368FJ/s6c98kQTE8jZI8gXiVKOjUpVhbItAtL
+	bKOGidyrg62Ce7k53yhvK0BASsG15dDbFrlUxq/Bh0EfBp8T6Fh5QbY4r/m1GXX/
+	J3gA+2NtTQiUL7Zasj7sW9L2v2rZe0fGdam51gVfoVtq/SmdlWatHEVQXaPxR1gh
+	IYAf2NvTbnPWvcBHbP81WcnbFrookDhAjAYci4gBC+0csR3H/JqDnZW0N8pFGZcK
+	lbABHG77p1AWJxuFXFxbrMepG1+LurQLlDYpsICcPeaHZFp4q7BvCTtckajf0ap0
+	D2h0/w==
+Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 455p6v3ygt-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 05 Mar 2025 03:36:18 +0000 (GMT)
+Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
+	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5253aHF1012134
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 5 Mar 2025 03:36:17 GMT
+Received: from [10.216.10.45] (10.80.80.8) by nasanex01a.na.qualcomm.com
+ (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 4 Mar 2025
+ 19:36:13 -0800
+Message-ID: <3dae6b0c-1f03-80c5-f2e6-b66aa2b522f6@quicinc.com>
+Date: Wed, 5 Mar 2025 09:06:09 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
-X-QQ-XMAILINFO: MauZFeUCNtAMjs4gQDc9KQ/B4cEYkJBUcLhRhOhmA0XYp6leWuxfWiH/
-	tA7iclm/teD7yL9MBgjnpEcN+i60K3Ly/HAjA16r7mynotH+9vhS2s3myHFxO3hypTHi7Yn
-	9G7xNHcEdtXuKF+bPEvVgW1EZVQxJwUHi4Zacj2zmwhQhmw16V8LvtmuNlsk0H6fw/C2Rkj
-	Y6hDRwQqBh9RpaTXp7peChBP4aafJYTvlRsWTRwxmrVkMmkHSAnhDv3Dr/6IptkFOGZt2vu
-	iTfiLGHQC0XBhPnRUdpzXjDtf6QpmETM38NKCSdWnbOBcgI4BvtTiFGkUFDRoW0UTM6sO/a
-	0vSYVlHHJvVyayeyzje1csLhe9sCanGkIbWeKOCTCLHNJ+g1ArCmZBCK2iPF3OhtaNFAYqn
-	g5VY7BjxsxQbdEyuN0Qy7mXb5H3fhJuNOZlXJ01G5jhB2APFKzYKMdcLRRY+7k8IGvYtRtg
-	VN34boPsCB7hxIFRPHS2CE+16idwjw/EFHIh3HzOm4wMbaFMqKl838QdYYVHx64UW1JfnVN
-	dyh0uKPRQU+9RIL5QD7KMqMmg7OanpUixtz5whF1zZG83a/ZbSsMgUIMjJCrx1JpY//Dtvx
-	yt9979Rzvf6ilzmDE/c0jiLWVfCcQmxVYuP4oNRMU929fovKgjk4OilJ7cDq2iAQeGBemK2
-	1z9WfoLViux1SR2mbwFiXHwZSyI3B0V758lc/o2aC0FmE6W9GOUleHeypWSAy/PfAjA9OZE
-	bcKLtH8srce+6e+RDFsNV8iNwXAkn+K9Tft0MB5Vy5m4uK0VsQAIOUwOBJD/2eq7rlTR5N6
-	83fBPNeWlIEEjULSl1hnXyCNNf5g55OWDC5fD/psLf+mdMDMxvg/f7NsZpQxP0LUnNQXgv6
-	2Kray41Y7Gx3xi5XTHRy0YBWJO1x139H9eXNJPqv+uI97Wbd9yDLJnvPWRCq7Mm56sz4MJX
-	YkcqyfuXweA0KkPM8HaKla9BkJx27PEBd8GtOoeBMgf0PAXIX9uzf6uatW7WVNg9C9o7wpm
-	uqveQtCXBgIYsADku/
-X-QQ-XMRINFO: M/715EihBoGSf6IYSX1iLFg=
-X-QQ-RECHKSPAM: 0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH 1/8] media: dt-bindings: Document SC8280XP/SM8350 Venus
+Content-Language: en-US
+To: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+        Stanimir Varbanov
+	<stanimir.k.varbanov@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>
+CC: <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Johan Hovold
+	<johan+linaro@kernel.org>
+References: <20250304-b4-linux-media-comitters-sc8280xp-venus-v1-0-279c7ea55493@linaro.org>
+ <20250304-b4-linux-media-comitters-sc8280xp-venus-v1-1-279c7ea55493@linaro.org>
+From: Vikash Garodia <quic_vgarodia@quicinc.com>
+In-Reply-To: <20250304-b4-linux-media-comitters-sc8280xp-venus-v1-1-279c7ea55493@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01a.na.qualcomm.com (10.52.223.231)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: o1zKbYKGtmarEgjafm6a5fYA-e8hVLs0
+X-Proofpoint-ORIG-GUID: o1zKbYKGtmarEgjafm6a5fYA-e8hVLs0
+X-Authority-Analysis: v=2.4 cv=fatXy1QF c=1 sm=1 tr=0 ts=67c7c6b2 cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=VwQbUJbxAAAA:8 a=KKAkSRfTAAAA:8 a=gEfo2CItAAAA:8
+ a=GN-lJdo5b5kOjZEooHoA:9 a=QEXdDO2ut3YA:10 a=cvBusfyB2V15izCimMoJ:22 a=sptkURWiP4Gy88Gu7hUp:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-05_02,2025-03-04_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 bulkscore=0
+ spamscore=0 priorityscore=1501 malwarescore=0 impostorscore=0
+ lowpriorityscore=0 mlxlogscore=999 mlxscore=0 adultscore=0 suspectscore=0
+ phishscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2502100000
+ definitions=main-2503050025
 
-Commit 187933f23679 ("[MIPS] do_IRQ cleanup") introduced dec_irq_dispatch()
-function. But Subsequent to commit 8f99a1626535 ("MIPS: Tracing: Add
-IRQENTRY_EXIT section for MIPS"), the dec_irq_dispatch() function is
-rendered superfluous. Remove it to eradicate compilation warnings.
 
-[ Quoting Maciej W. Rozycki: ]
-
-    It always has been, since its inception, see commit 187933f23679
-  ("[MIPS] do_IRQ cleanup").
-
-    Up to commit 8f99a16265353 ("MIPS: Tracing: Add IRQENTRY_EXIT section
-  for MIPS") `do_IRQ' used to be a macro, that's why.  At the time `do_IRQ'
-  was converted to a macro `dec_irq_dispatch' was created and previously
-  this place used to call `do_IRQ' too.
-
-    This cleanup should have been made along with commit 8f99a16265353, so
-  it's pretty old a technical debt being sorted here.
-
-[ Fix follow error with gcc-14 when -Werror: ]
-
-arch/mips/dec/setup.c:780:25: error: no previous prototype for ‘dec_irq_dispatch’ [-Werror=missing-prototypes]
-  780 | asmlinkage unsigned int dec_irq_dispatch(unsigned int irq)
-      |                         ^~~~~~~~~~~~~~~~
-cc1: all warnings being treated as errors
-make[7]: *** [scripts/Makefile.build:207: arch/mips/dec/setup.o] Error 1
-make[6]: *** [scripts/Makefile.build:465: arch/mips/dec] Error 2
-make[5]: *** [scripts/Makefile.build:465: arch/mips] Error 2
-make[5]: *** Waiting for unfinished jobs....
-make[4]: *** [Makefile:1992: .] Error 2
-make[3]: *** [debian/rules:74: build-arch] Error 2
-dpkg-buildpackage: error: make -f debian/rules binary subprocess returned exit status 2
-make[2]: *** [scripts/Makefile.package:126: bindeb-pkg] Error 2
-make[1]: *** [/mnt/83364c87-f5ee-4ae8-b862-930f1bd74feb/Projects/CommitUpstream/LinuxKernel/Temp/linux/Makefile:1625: bindeb-pkg] Error 2
-make: *** [Makefile:251: __sub-make] Error 2
-
-Link: https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=187933f23679c413706030aefad9e85e79164c44
-Link: https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=8f99a162653531ef25a3dd0f92bfb6332cd2b295
-Link: https://lore.kernel.org/all/alpine.DEB.2.21.2502220019210.65342@angie.orcam.me.uk/
-Signed-off-by: WangYuli <wangyuli@uniontech.com>
----
-Changelog:
- *v1->v2: More detailed commit message.
----
- arch/mips/dec/int-handler.S | 2 +-
- arch/mips/dec/setup.c       | 6 ------
- 2 files changed, 1 insertion(+), 7 deletions(-)
-
-diff --git a/arch/mips/dec/int-handler.S b/arch/mips/dec/int-handler.S
-index 011d1d678840..a0b439c90488 100644
---- a/arch/mips/dec/int-handler.S
-+++ b/arch/mips/dec/int-handler.S
-@@ -277,7 +277,7 @@
- 		 srlv	t3,t1,t2
- 
- handle_it:
--		j	dec_irq_dispatch
-+		j	do_IRQ
- 		 nop
- 
- #if defined(CONFIG_32BIT) && defined(CONFIG_MIPS_FP_SUPPORT)
-diff --git a/arch/mips/dec/setup.c b/arch/mips/dec/setup.c
-index 6b100c7d0633..affae92f1918 100644
---- a/arch/mips/dec/setup.c
-+++ b/arch/mips/dec/setup.c
-@@ -771,9 +771,3 @@ void __init arch_init_irq(void)
- 			pr_err("Failed to register halt interrupt\n");
- 	}
- }
--
--asmlinkage unsigned int dec_irq_dispatch(unsigned int irq)
--{
--	do_IRQ(irq);
--	return 0;
--}
--- 
-2.47.2
-
+On 3/4/2025 6:37 PM, Bryan O'Donoghue wrote:
+> From: Konrad Dybcio <konradybcio@kernel.org>
+> 
+> Both of these SoCs implement an IRIS2 block, with SC8280XP being able
+> to clock it a bit higher.
+> 
+> Document it.
+> 
+> Signed-off-by: Konrad Dybcio <konradybcio@kernel.org>
+> Link: https://lore.kernel.org/r/20230731-topic-8280_venus-v1-1-8c8bbe1983a5@linaro.org
+> Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
+> [ bod: dropped dts video-encoder/video-decoder ]
+> Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+> ---
+>  .../bindings/media/qcom,sm8350-venus.yaml          | 119 +++++++++++++++++++++
+>  1 file changed, 119 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/media/qcom,sm8350-venus.yaml b/Documentation/devicetree/bindings/media/qcom,sm8350-venus.yaml
+> new file mode 100644
+> index 0000000000000..352ad85ae50cd
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/qcom,sm8350-venus.yaml
+> @@ -0,0 +1,119 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/media/qcom,sm8350-venus.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Qualcomm SM8350 Venus video encode and decode accelerators
+Again, what is the need to introduce a new bindings for sm8350 and how different
+is this with sm8250 ?
+> +
+> +maintainers:
+> +  - Konrad Dybcio <konradybcio@kernel.org>
+> +
+> +description: |
+> +  The Venus Iris2 IP is a video encode and decode accelerator present
+> +  on Qualcomm platforms
+> +
+> +allOf:
+> +  - $ref: qcom,venus-common.yaml#
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - qcom,sc8280xp-venus
+> +      - qcom,sm8350-venus
+> +
+> +  clocks:
+> +    maxItems: 3
+> +
+> +  clock-names:
+> +    items:
+> +      - const: iface
+> +      - const: core
+> +      - const: vcodec0_core
+> +
+> +  resets:
+> +    maxItems: 1
+> +
+> +  reset-names:
+> +    items:
+> +      - const: core
+> +
+> +  power-domains:
+> +    maxItems: 3
+> +
+> +  power-domain-names:
+> +    items:
+> +      - const: venus
+> +      - const: vcodec0
+> +      - const: mx
+> +
+> +  interconnects:
+> +    maxItems: 3
+> +
+> +  interconnect-names:
+> +    items:
+> +      - const: cpu-cfg
+> +      - const: video-mem
+> +      - const: video-llcc
+> +
+> +  operating-points-v2: true
+> +  opp-table:
+> +    type: object
+> +
+> +  iommus:
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - power-domain-names
+> +  - iommus
+> +
+> +unevaluatedProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    #include <dt-bindings/clock/qcom,gcc-sm8350.h>
+> +    #include <dt-bindings/clock/qcom,sm8350-videocc.h>
+> +    #include <dt-bindings/interconnect/qcom,icc.h>
+> +    #include <dt-bindings/interconnect/qcom,sm8350.h>
+> +    #include <dt-bindings/power/qcom-rpmpd.h>
+> +
+> +    venus: video-codec@aa00000 {
+> +        compatible = "qcom,sm8350-venus";
+> +        reg = <0x0aa00000 0x100000>;
+> +        interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
+> +
+> +        clocks = <&gcc GCC_VIDEO_AXI0_CLK>,
+> +                 <&videocc VIDEO_CC_MVS0C_CLK>,
+> +                 <&videocc VIDEO_CC_MVS0_CLK>;
+> +        clock-names = "iface",
+> +                      "core",
+> +                      "vcodec0_core";
+> +
+> +        resets = <&gcc GCC_VIDEO_AXI0_CLK_ARES>;
+> +        reset-names = "core";
+> +
+> +        power-domains = <&videocc MVS0C_GDSC>,
+> +                        <&videocc MVS0_GDSC>,
+> +                        <&rpmhpd SM8350_MX>;
+> +        power-domain-names = "venus",
+> +                             "vcodec0",
+> +                             "mx";
+> +
+> +        interconnects = <&gem_noc MASTER_APPSS_PROC QCOM_ICC_TAG_ACTIVE_ONLY
+> +                         &config_noc SLAVE_VENUS_CFG QCOM_ICC_TAG_ACTIVE_ONLY>,
+> +                        <&mmss_noc MASTER_VIDEO_P0 QCOM_ICC_TAG_ALWAYS
+> +                         &mc_virt SLAVE_EBI1 QCOM_ICC_TAG_ALWAYS>,
+> +                        <&mmss_noc MASTER_VIDEO_P0 QCOM_ICC_TAG_ALWAYS
+> +                         &gem_noc SLAVE_LLCC QCOM_ICC_TAG_ALWAYS>;
+> +        interconnect-names = "cpu-cfg",
+> +                             "video-mem",
+> +                             "video-llcc";
+> +
+> +        operating-points-v2 = <&venus_opp_table>;
+> +        iommus = <&apps_smmu 0x2100 0x400>;
+> +        memory-region = <&pil_video_mem>;
+> +
+> +        status = "disabled";
+> +    };
+> 
+Regards,
+Vikash
