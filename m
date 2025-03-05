@@ -1,46 +1,51 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69108567D;
-	Wed,  5 Mar 2025 17:05:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E62891957FC;
+	Wed,  5 Mar 2025 17:07:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741194314; cv=none; b=sH2S3X8RSPQd0Dwde1NvFKv1fHaCJ0gmUCJJArmUkwhkHZ7rqB+p5b3SW1eA5X3lxPHfwZ1WwEKRfXJhLnpW/Skq8rEzJXxUib7VVUaccyoNEl4d9ARHooGoxGO0yhiIGHbSBxqJ+NIWjrQAfjkdScXl0CuNKxFVhwZbV/wOnAY=
+	t=1741194446; cv=none; b=DrTSImQnWIgjaxazvX6RQ3ZM5s+UUzRD3x2j3PIa8hWYMMV0ybs7wo/bsTmtncZkCg1GSHcbS/LjphjQoF3PrLxpk28J5WCtLEtn33OQ7OdG6viDcedm0RuLxMDtKh7RtSJo1YQx5BaRSs5S/6wejanToRREaqantLBollPFDDE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741194314; c=relaxed/simple;
-	bh=p6cofDzPIQiKAYp7OGenUHqpdHR3so20s8ogwouuNbY=;
+	s=arc-20240116; t=1741194446; c=relaxed/simple;
+	bh=bLNqQdLWuR0xn/KW0CPq8vI0e4EX5wAgnKJpoztWMHg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fR/1nHfOs3pDrNIBxJcf51Oj6TO5ZeeInLmvJQz33RfKPEKLkz/SLtp3yFi8MM6LszunxrYiMklw82gT9qN5fulY4esyNQBR4D+ETaxLLV3+GeWMOipul0EuJ/ScW4GiHpAHWAQn4i6/ksYuXrYv22zu8+nmmkk5YjQ7lxDocUk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NTJy7o6q; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=EwL9l5pJzEYENKAIv453bVKrwanDPdBFGQqRCtFxLnqV/Mnf58UjOZ3ESULBKze2Egmnb0qJik7iO2A8FhGKWCBgORXcig4gv+v5rNS87Cx8+LjNisTEu+4IE4e+6ZN6dIjtFKax93HlSEWJju3J07hNr+5BxQIAwArlvM8kL1U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eRcZL88m; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NTJy7o6q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6D1EC4CEE0;
-	Wed,  5 Mar 2025 17:05:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eRcZL88m"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23704C4CED1;
+	Wed,  5 Mar 2025 17:07:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741194313;
-	bh=p6cofDzPIQiKAYp7OGenUHqpdHR3so20s8ogwouuNbY=;
+	s=k20201202; t=1741194445;
+	bh=bLNqQdLWuR0xn/KW0CPq8vI0e4EX5wAgnKJpoztWMHg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NTJy7o6qXZ7IrKZqtSqLl535xzsKZ6kjGHgHiI8Ua5NDQ2QE+3JD5oMZe8MKTh1bm
-	 TQkEjy4i04Ee2KpgKOFmcL+XttXAbeuVZgEGO3MAU47PqrQZ4KmeR+OLBQOuBdl5uT
-	 SFj8gi5t1DrURR/XAMcBTEWzxXJh6raeQVyd3J10Qz7LqSCY3V0iWT0Cwp9IdVPZVU
-	 g8Avky9dRX6qBwj8+9rv0b8KJh+VeiSn7af484bDqbzHK6Nwgp+SYFFjQxWTrv//S0
-	 0sBZ+xSfcE/ApOddlsAGvlpHbZhFz2O4/56bxtUKZaqUyaYLGhbLCeW9llLvciYJqe
-	 PlBj+R8PNmjkA==
-Date: Wed, 5 Mar 2025 11:05:12 -0600
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Daniel Baluta <daniel.baluta@nxp.com>
-Cc: linux-remoteproc@vger.kernel.org, andersson@kernel.org,
-	devicetree@vger.kernel.org, shawnguo@kernel.org,
-	s.hauer@pengutronix.de, conor+dt@kernel.org, iuliana.prodan@nxp.com,
-	Frank.Li@nxp.com, linux-arm-kernel@lists.infradead.org,
-	imx@lists.linux.dev, p.zabel@pengutronix.de, krzk+dt@kernel.org,
-	laurentiu.mihalcea@nxp.com, linux-kernel@vger.kernel.org,
-	mathieu.poirier@linaro.org, shengjiu.wang@nxp.com,
-	kernel@pengutronix.de, peng.fan@nxp.com, festevam@gmail.com
-Subject: Re: [PATCH v4 2/8] dt-bindings: dsp: fsl,dsp: Add resets property
-Message-ID: <174119431164.2143223.3829886855063677866.robh@kernel.org>
-References: <20250305100037.373782-1-daniel.baluta@nxp.com>
- <20250305100037.373782-3-daniel.baluta@nxp.com>
+	b=eRcZL88mboMBgd/Z6RV1twdyEVm5uiwvcj4bZ5HeqWq3rGDvMJj272ouZcy8jt696
+	 Gt6I0vBWZSsLLK9oLqRWGhS8PmCY9yy3lTLffYrpI1tGcVn++96k/4Zg61hguEDlpn
+	 TNiFw5QnMMsVfifjFKcedAr2rZJyOoTzWKcwMLoUTDNywAMJf1JNfO3Ao9lYy7TPVu
+	 BmrhSupwkTUtu51i7rYMxSqU2WGejx1ENCuAH8+40TAv2W1lBBjF+G/R06Q+Bn2lv9
+	 0LqmyGGqNMOz0WmjEsZwBaNxN3SMt+t7HJcWwxYxV2dfJY+PjLFOX3ML5q8jS196f7
+	 9WkRotH9uWkgQ==
+Date: Wed, 5 Mar 2025 11:07:23 -0600
+From: Rob Herring <robh@kernel.org>
+To: Conor Dooley <conor@kernel.org>
+Cc: xianwei.zhao@amlogic.com, Thomas Gleixner <tglx@linutronix.de>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Kevin Hilman <khilman@baylibre.com>,
+	Jerome Brunet <jbrunet@baylibre.com>,
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-amlogic@lists.infradead.org
+Subject: Re: [PATCH v3 1/4] dt-bindings: interrupt-controller: Add support
+ for Amlogic A4 and A5 SoCsy
+Message-ID: <20250305170723.GA2143418-robh@kernel.org>
+References: <20250305-irqchip-gpio-a4-a5-v3-0-1eec70352fea@amlogic.com>
+ <20250305-irqchip-gpio-a4-a5-v3-1-1eec70352fea@amlogic.com>
+ <20250305-corral-unfair-a7f25abbfd64@spud>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,36 +54,80 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250305100037.373782-3-daniel.baluta@nxp.com>
+In-Reply-To: <20250305-corral-unfair-a7f25abbfd64@spud>
 
+On Wed, Mar 05, 2025 at 04:28:16PM +0000, Conor Dooley wrote:
+> On Wed, Mar 05, 2025 at 06:02:56PM +0800, Xianwei Zhao via B4 Relay wrote:
+> > From: Xianwei Zhao <xianwei.zhao@amlogic.com>
+> > 
+> > Update dt-binding document for GPIO interrupt controller
+> > of Amlogic A4 and A5 SoCs
+> > 
+> > Signed-off-by: Xianwei Zhao <xianwei.zhao@amlogic.com>
+> > ---
+> >  .../amlogic,meson-gpio-intc.yaml                    | 21 +++++++++++++++++++--
+> >  1 file changed, 19 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/interrupt-controller/amlogic,meson-gpio-intc.yaml b/Documentation/devicetree/bindings/interrupt-controller/amlogic,meson-gpio-intc.yaml
+> > index a93744763787..3c5853c71efa 100644
+> > --- a/Documentation/devicetree/bindings/interrupt-controller/amlogic,meson-gpio-intc.yaml
+> > +++ b/Documentation/devicetree/bindings/interrupt-controller/amlogic,meson-gpio-intc.yaml
+> > @@ -35,6 +35,9 @@ properties:
+> >                - amlogic,meson-sm1-gpio-intc
+> >                - amlogic,meson-a1-gpio-intc
+> >                - amlogic,meson-s4-gpio-intc
+> > +              - amlogic,a4-gpio-intc
+> > +              - amlogic,a4-gpio-ao-intc
+> > +              - amlogic,a5-gpio-intc
+> >                - amlogic,c3-gpio-intc
+> >                - amlogic,t7-gpio-intc
+> >            - const: amlogic,meson-gpio-intc
+> > @@ -49,8 +52,6 @@ properties:
+> >  
+> >    amlogic,channel-interrupts:
+> >      description: Array with the upstream hwirq numbers
+> > -    minItems: 8
+> > -    maxItems: 12
+> 
+> Please leave the widest constraints here, and let the more restricted
+> ones in your if/else below.
+> 
+> >      $ref: /schemas/types.yaml#/definitions/uint32-array
+> >  
+> >  required:
+> > @@ -60,6 +61,22 @@ required:
+> >    - "#interrupt-cells"
+> >    - amlogic,channel-interrupts
+> >  
+> > +if:
+> > +  properties:
+> > +    compatible:
+> > +      contains:
+> > +        const: amlogic,a4-gpio-ao-intc
+> > +then:
+> > +  properties:
+> > +    amlogic,channel-interrupts:
+> > +      minItems: 2
+> > +      maxItems: 12
 
-On Wed, 05 Mar 2025 12:00:30 +0200, Daniel Baluta wrote:
-> Assert and deassert functionality of the DSP found on i.MX8MP is
-> realized by combining control bits from two modules: Audio Block
-> Control and Debug Access Port.
-> 
-> Audio block control bits are used to Run/Stall the DSP core
-> while the DAP bits are used for software reset the core.
-> 
-> The original plan was to use fsl,dsp-ctrl property and to refer the
-> audiomix bits via syscon interface. This proposal received NACK from
-> community we shouldn't abuse the syscon interface [1].
-> 
-> So remove fsl,dsp-ctrl property for i.MX8MP and use reset control
-> interface instead.
-> 
-> Example dts node only uses runstall control now, but softreset will
-> be added in the future when we will convert the softreset functionality
-> to use reset controller API.
-> 
-> [1] https://patchwork.kernel.org/project/imx/patch/20250212085222.107102-6-daniel.baluta@nxp.com/
-> 
-> Reviewed-by: Frank Li <Frank.Li@nxp.com>
-> Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
-> ---
->  .../devicetree/bindings/dsp/fsl,dsp.yaml      | 24 ++++++++++++++++++-
->  1 file changed, 23 insertions(+), 1 deletion(-)
-> 
+And then you don't need this clause as 2-12 is the full range.
 
-Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+> > +else:
+> > +  properties:
+> > +    amlogic,channel-interrupts:
+> > +      minItems: 8
+> > +      maxItems: 12
+
+And 12 is already the max, so you only need 'minItems: 8'.
+
+> > +
+> >  additionalProperties: false
+> >  
+> >  examples:
+> > 
+> > -- 
+> > 2.37.1
+> > 
+> > 
+
 
