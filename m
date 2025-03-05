@@ -1,30 +1,31 @@
 Received: from smtp.forwardemail.net (smtp.forwardemail.net [121.127.44.59])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21C3C25BAD1
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 21:41:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8302525C702
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 21:41:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=121.127.44.59
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741210890; cv=none; b=qE0D/3RBjaGTFoX3TS5KoiPCcm+8i6nL8LMBvTjcARx1px7QKKjFUGXNB+m3HENoAkUkjunKzqsfhv1dYJxPTkg4bIHcghEmvV4uNomkTMvtbMc3hRhE+vHDObwCviN1Ut0PJ7xmJ7hbQGER838kgGhJQvXyaiWTsMRA6tvT70o=
+	t=1741210892; cv=none; b=YGxlrgJZuq1l1fjBgGjk4pfM/ZicOakCvD1eVAeVT69jHHVOYfsMdpJB9ovQFLqTvhy3wMUKOpTsZJRSVp1jdL0ecgTmRGpZtgFgtxC/qLZt3qqHH4ZuL5GYFyRuoKzi/qCewSJP9uHMKKW/7IC7B8zyYVr+unZQZb28dxjP9Hc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741210890; c=relaxed/simple;
-	bh=WWTRVJuyzpdI59DPD8jMGqY0GuaQoshgyrwbY2RUU1Q=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BMHfT3DFms6qON1r+C8YCt9NaLx5PGX7H2tMkvJzLtXWRvUk8j9SY4nL8VefORvwEiWyQgJQsnDiEapDn91ksyN6zfU+T52z3iMaOwRvJwBcKMirytlovm6rvFpOHEIodJWnWHYuMwpKYrC2CLNRJmuQLn+RUlCx+YQfvZrbCyQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se; dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b=C/3NoK1C; arc=none smtp.client-ip=121.127.44.59
+	s=arc-20240116; t=1741210892; c=relaxed/simple;
+	bh=gpaeu0tUxQ2w4OgfcPYCDp9NVi+VNcPLQfeSN8MIcPQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=bv+EQbN57uNZF9gFD/GKF7TQclgDC7a09tNPqNLIqBsHGjLYcm5myfjCChy/q/NgYOih/ZZ1FHYoGmF6Ep1hOtVEjyjw3icvS4laD8wWzydcWMPGTcamOiP3Qp446LnZEalTKppkSSB45HDH1vsDf3djcDX5r+ELvmVTptvRji0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se; dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b=wtzHAwpH; arc=none smtp.client-ip=121.127.44.59
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="C/3NoK1C"
+	dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="wtzHAwpH"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiboo.se;
- h=Content-Transfer-Encoding: MIME-Version: Message-ID: Date: Subject: Cc:
- To: From; q=dns/txt; s=fe-e1b5cab7be; t=1741210881;
- bh=innxyVjkg+mq6x4IGX11r7TVyyqnex8mH7N+cCGoDio=;
- b=C/3NoK1CkHNOiiCGT1hqMCnoNv6iZVK/+bJN/tbN8kVpSm2o+kNWiRsFJlU6whXO1Rl8hr7/u
- MmMpNt742FKHF3OCvLmm7Vi1rQJH9n7+dFx4XPKsah09R1pDBkSr9/+TCvAALYZ3fD41e5Zt6fD
- P/x6349yaDWHtCTgmd94JBo2PG4Jpzg6ofltbvuUDuYCZDtEnEcWUD19+X6WT5PUSoycJdPvDtC
- XPYoBawzWGhjRQzjKX3itsKYF8gFFOZbWmvxjI6UtUqBBKDIBfmGOoK8eNtTFoX2XY0rYh28T64
- U03sra4HNxb8nmqu7fU0OHFSRpsQf5Ng3gfaAnRUrAKw==
-X-Forward-Email-ID: 67c8c4f988fb7bbab4530f30
+ h=Content-Transfer-Encoding: MIME-Version: References: In-Reply-To:
+ Message-ID: Date: Subject: Cc: To: From; q=dns/txt; s=fe-e1b5cab7be;
+ t=1741210889; bh=WqE1n99NX7sDOMxvh/YQ7fTw02JcT3CgFfPo9BuRBnY=;
+ b=wtzHAwpHgwuX4JMrh+kU8cgAHomqBz93uu5HUzeExNyFs6wyxFzcZP/8+D/utDbZuqURaF5kT
+ e/oRwLIx0k8xbEd+pbbGrQ1j9oN+mg5s+I1F8TjfuZyIWfQJJir3QkYeOMDsOVjiiPFC5vsfq8z
+ 1hcBh7+P4jtUasrg0vvHOoA8Bx9zjsMWZz5RFHCSordJrzFajx/VRdfAPOpLcQnjC2cMz4pwJu5
+ 4Z03EXwFeqIFnOibbObQZ6j+CzxryxcjFMJphBuSY5JxH8pZZo987yxUBacoYPQcjXtzaaX5U6y
+ IyDwcdDe8zWJZLznxJaQ9mNdOqp6f30Vhb002GOsdO+w==
+X-Forward-Email-ID: 67c8c50588fb7bbab4530f6f
 X-Forward-Email-Sender: rfc822; jonas@kwiboo.se, smtp.forwardemail.net,
  121.127.44.59
 X-Forward-Email-Version: 0.4.40
@@ -45,10 +46,12 @@ Cc: Yao Zi <ziyao@disroot.org>,
 	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	Jonas Karlman <jonas@kwiboo.se>
-Subject: [PATCH 0/3] rockchip: Add support for onboard eMMC on Radxa E20C
-Date: Wed,  5 Mar 2025 21:41:01 +0000
-Message-ID: <20250305214108.1327208-1-jonas@kwiboo.se>
+Subject: [PATCH 3/3] arm64: dts: rockchip: Enable onboard eMMC on Radxa E20C
+Date: Wed,  5 Mar 2025 21:41:04 +0000
+Message-ID: <20250305214108.1327208-4-jonas@kwiboo.se>
 X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250305214108.1327208-1-jonas@kwiboo.se>
+References: <20250305214108.1327208-1-jonas@kwiboo.se>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -59,52 +62,43 @@ Content-Transfer-Encoding: 8bit
 
 The Radxa E20C may come with an onboard eMMC (8GB / 16GB / 32GB / 64GB).
 
-This series add dt-binding and SoC DT node for the SDHCI controller
-and enable use of the SDCHI controller on the Radxa E20C.
+Enable support for the onboard eMMC on Radxa E20C.
 
-This series add support for the onboard eMMC on Radxa E20C.
+Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
+---
+ arch/arm64/boot/dts/rockchip/rk3528-radxa-e20c.dts | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-Driver changes to use different delay and tap num is needed to be able
-to support HS400 modes, something for a future series. With this HS200
-mode should work:
-
-  mmc0: SDHCI controller on ffbf0000.mmc [ffbf0000.mmc] using ADMA
-  mmc0: new HS200 MMC card at address 0001
-  mmcblk0: mmc0:0001 TLi16G 14.7 GiB
-   mmcblk0: p1 p2 p3
-  mmcblk0boot0: mmc0:0001 TLi16G 4.00 MiB
-  mmcblk0boot1: mmc0:0001 TLi16G 4.00 MiB
-  mmcblk0rpmb: mmc0:0001 TLi16G 4.00 MiB, chardev (499:0)
-
-  ~ # cat /sys/kernel/debug/mmc0/ios
-  clock:          200000000 Hz
-  actual clock:   198000000 Hz
-  vdd:            21 (3.3 ~ 3.4V)
-  bus mode:       2 (push-pull)
-  chip select:    0 (don't care)
-  power mode:     2 (on)
-  bus width:      3 (8bits)
-  timing spec:    9 (mmc HS200)
-  signal voltage: 1 (1.80 V)
-  driver type:    0 (driver type B)
-
-  ~ # hdparm -t /dev/mmcblk0p1
-  /dev/mmcblk0p1:
-  Timing buffered disk reads:   64 MB in 0.37 seconds = 173154 kB/s
-
-This series depends on v2 of the "Support SD/SDIO controllers on RK3528"
-series for a clean apply.
-
-Jonas Karlman (3):
-  dt-bindings: mmc: sdhci-of-dwcmhsc: Add compatible string for RK3528
-  arm64: dts: rockchip: Add SDHCI controller for RK3528
-  arm64: dts: rockchip: Enable onboard eMMC on Radxa E20C
-
- .../bindings/mmc/snps,dwcmshc-sdhci.yaml      |  4 +++-
- .../boot/dts/rockchip/rk3528-radxa-e20c.dts   | 12 ++++++++++
- arch/arm64/boot/dts/rockchip/rk3528.dtsi      | 24 +++++++++++++++++++
- 3 files changed, 39 insertions(+), 1 deletion(-)
-
+diff --git a/arch/arm64/boot/dts/rockchip/rk3528-radxa-e20c.dts b/arch/arm64/boot/dts/rockchip/rk3528-radxa-e20c.dts
+index a52a7924bb75..a511e2a2d4a5 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3528-radxa-e20c.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3528-radxa-e20c.dts
+@@ -16,6 +16,7 @@ / {
+ 	compatible = "radxa,e20c", "rockchip,rk3528";
+ 
+ 	aliases {
++		mmc0 = &sdhci;
+ 		mmc1 = &sdmmc;
+ 	};
+ 
+@@ -155,6 +156,17 @@ &saradc {
+ 	status = "okay";
+ };
+ 
++&sdhci {
++	bus-width = <8>;
++	cap-mmc-highspeed;
++	no-sd;
++	no-sdio;
++	non-removable;
++	vmmc-supply = <&vcc_3v3>;
++	vqmmc-supply = <&vcc_1v8>;
++	status = "okay";
++};
++
+ &sdmmc {
+ 	bus-width = <4>;
+ 	cap-mmc-highspeed;
 -- 
 2.48.1
 
