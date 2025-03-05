@@ -1,163 +1,169 @@
-Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02on2041.outbound.protection.outlook.com [40.107.212.41])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A92981A317A
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 17:44:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.212.41
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741196700; cv=fail; b=AwjEOxSgD+WJMkotuKd9g1ncpZ7qkVWysANs4Fe5glxydICOHP3HJczdvIcMASuRtOMpIK21aoDXtFHvLx80Ag/cmNHI6Y98maiOqgGWrZMqg7CTdnEHTYPA80WZmRT6DK5/lZgHIrZhwEBrTE7wfeFgz7/0+xZvNaJyO5W8Dis=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741196700; c=relaxed/simple;
-	bh=Rnq18rLPB0a4aAC2ElQAsF8g8B1edR0uWwzL2BcxtRo=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DcWMYCAp+3kNqgFVosSr1VYxfbRvf5r0k7XBricQAr/zErJnstIt/Jml0yO4XFxNYAa96fBbrxoOdDs2YNZsLobsghZhr7vlF5+r3BN+0wSBAVn7SXykfq0fKNownpjMzb+++V2i6qOGQTLv7QRm9r2hdLVQA5MKyQXwJeVpsrA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=Hj6Oz7Hr; arc=fail smtp.client-ip=40.107.212.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34EF818DF8D;
+	Wed,  5 Mar 2025 17:45:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741196724; cv=none; b=Ati04LTUwfLABSXHr+bCUVJt3rJYmp8dM3/rPwAl39DwKcLO7YXjmi0O1YuXHbNBWuGKbruq4h5UGy1k0p6XLrF3yvjGoqfs6+MCdk5fIfyq73smTcdIazOM8yFqFjqe3fm6I06pb9+FP4Jjc6ZxKHJb8jb9Y8AJ6jX04j66hbw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741196724; c=relaxed/simple;
+	bh=ZUhCuM8H0R253y8eMtAf0airPgJTVO1TO4CiN5J2T4s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uzyozQ+PDiU5FKTKrGgPj9YT1lNeYIPER4zEFsi8vWGdBm6XKerGYnr07+As+halyqxEHKDwjJERQG23fr0/qb7MgAsM1LFsK8s2GFhvvJkvlx6TxhwSGFGcwjmhjRNDOQsxHsl/G8LeCIZ3BjhlbpNCRCJCULqmDOe1bcE3koM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WQiTZrKq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="Hj6Oz7Hr"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=dwWYxWqERKvVsOkqkZzK0aIzUBXvc7ekAA5InKkQAxT1Wi7WTY9/z4OkAiQO0PCbFIraU84zZs2JIXTFXPKGzYg8yybQzRR6dY6aYEVRT4+/T8EDghQUrx2AyqsADQggnF8mDw83ftiYdZ/XekgfJtW037+JGT6IgwW//ea5PvCHlO5YRYTaaPs7qNt8uyFGtIBqvVeegYyj1LxIep1YGSLJdlp3aAw67UQuNZmOWRsMiyNQIVy+P9Tml2LW0cvFYFwccgR393L+pBQVRfF6YiVVTiNQqAgMBO517g6wNLATgRfZ3TfS2cR4tLnjxWWPC+tIhoS5ytjDJaA/7wSn3g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=RjXAoNMzuAcfI1hZx3jUBgtCyTm0EsfKMlVxDBxLMUw=;
- b=P0/8c8kRtU8pOmvi3soK5Vj16V91JdCoQrIWPbOng4gsHD5z0cYf/MARVxMBXZnlnn8sg9nJHZCD4ySvwbopYBEb0SlCHhugLbKhtqhtAtT6dItRjvIQ7m21rLscg0R5tnYOamfN7xS+JHJQsZQmlm57/Q5grzmWbchiFLyU6XrtA8ZWrU37WDZICB43gp653DnsY/XYqmrsSCwBoc3lZF04fPtuAbXfwi+ZTuBdG1j1Kgmlpzw2xFgfW2VuxGued/RBC+vvBY8C+7+++E2sB9mj6wKDvaukkFhJKAy/kcQJ5AUOI69RihmvsxRKS5zUEk+UAB0wC1knN31g5HkXfQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.161) smtp.rcpttodomain=huawei.com smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RjXAoNMzuAcfI1hZx3jUBgtCyTm0EsfKMlVxDBxLMUw=;
- b=Hj6Oz7HrLWViixNc15YgZAeMWKlz09MITi4TncyGne/jKeerAPLFn3tB41hiUkb/WaUwjQqQfAUoDzMQcj+8+Ng06phuJsUWyU6btmGo6yt7TNFpv/qzCsxtSopYReEW2OI4vhpeluPZ2mEZuLN5coQOdjqZT8C5D3zEExE4QXs941z1XJ/GrY2rrB+xOTnA+Ejhy59eDGHoNk/8EPv5DUztQ2lmk3PaTEBcS0aRsBKWgfhQaQ1nS90EwsgjjrfZNv6cyXuyHLL9V8Gaj5cr6BSvOjNZfvNeOwZ7cB/SY/eHsAFF2KAQNuaEBzZp6TQEbOFKIIP33FRZ/p3+zXtwoA==
-Received: from PH7P220CA0098.NAMP220.PROD.OUTLOOK.COM (2603:10b6:510:32d::9)
- by IA1PR12MB6577.namprd12.prod.outlook.com (2603:10b6:208:3a3::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.25; Wed, 5 Mar
- 2025 17:44:54 +0000
-Received: from SN1PEPF0002529D.namprd05.prod.outlook.com
- (2603:10b6:510:32d:cafe::e6) by PH7P220CA0098.outlook.office365.com
- (2603:10b6:510:32d::9) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8511.19 via Frontend Transport; Wed,
- 5 Mar 2025 17:44:53 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.161) by
- SN1PEPF0002529D.mail.protection.outlook.com (10.167.242.4) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8511.15 via Frontend Transport; Wed, 5 Mar 2025 17:44:51 +0000
-Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
- (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Wed, 5 Mar 2025
- 09:44:32 -0800
-Received: from rnnvmail202.nvidia.com (10.129.68.7) by rnnvmail201.nvidia.com
- (10.129.68.8) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Wed, 5 Mar
- 2025 09:44:32 -0800
-Received: from Asurada-Nvidia (10.127.8.12) by mail.nvidia.com (10.129.68.7)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14 via Frontend
- Transport; Wed, 5 Mar 2025 09:44:31 -0800
-Date: Wed, 5 Mar 2025 09:44:30 -0800
-From: Nicolin Chen <nicolinc@nvidia.com>
-To: Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>
-CC: "will@kernel.org" <will@kernel.org>, "robin.murphy@arm.com"
-	<robin.murphy@arm.com>, "jgg@nvidia.com" <jgg@nvidia.com>, "joro@8bytes.org"
-	<joro@8bytes.org>, "linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "iommu@lists.linux.dev"
-	<iommu@lists.linux.dev>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1 1/4] iommu/arm-smmu-v3: Pass in vmid to
- arm_smmu_make_s2_domain_ste()
-Message-ID: <Z8iNfnZ9N5Lczxmq@Asurada-Nvidia>
-References: <cover.1741150594.git.nicolinc@nvidia.com>
- <214b10db02f1046efdc70e2c4803111357f60070.1741150594.git.nicolinc@nvidia.com>
- <a95b39a55c324907a7001d3a2cdf076b@huawei.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WQiTZrKq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 123D4C4CED1;
+	Wed,  5 Mar 2025 17:45:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741196723;
+	bh=ZUhCuM8H0R253y8eMtAf0airPgJTVO1TO4CiN5J2T4s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=WQiTZrKqj4+5GycZ1ZfH2pNAbCwF6tBpCADknMpLcL350XnvX7qiL+qPjOBZCLOYB
+	 rV//65NFg3HFBWUT3E2jdnwd9mD23qbfwSGGd+XlnTr+/uvgru0mV4YfLi4Xvg/QiE
+	 IlRFb0RB2YlBoLeT4xotwUttvjJSWijSH8wOfPvu5oeB09cNu5dfhMACVGbfrCwKlL
+	 AiniUKY9jLyfT1L51HTCLvAQ5zAnMrqWInNhZfTzwvaWJfeK7BZbrDcIUAJhcvT0hl
+	 T/ylRl57Y3/2Oglcnx67qlvblm5g43Ii58F3idRyWr0/jBhvZ358k2JhRf8xJdTDD1
+	 S+sWJFROJGJzw==
+Date: Wed, 5 Mar 2025 14:45:19 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 2/4] perf test: Skip perf probe tests when running as
+ non-root
+Message-ID: <Z8iNr0Lh61o_GZgg@x1>
+References: <20250301040252.1586750-1-namhyung@kernel.org>
+ <20250301040252.1586750-3-namhyung@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <a95b39a55c324907a7001d3a2cdf076b@huawei.com>
-X-NV-OnPremToCloud: AnonymousSubmission
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN1PEPF0002529D:EE_|IA1PR12MB6577:EE_
-X-MS-Office365-Filtering-Correlation-Id: 709fd8f4-1fdd-4b83-da82-08dd5c0d6eb9
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|1800799024|82310400026|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?V4MaDxWokNhFgnn4mxEleYCfUJ2/LxUM/pruLIui3IXjyT223JdiP8BLARfy?=
- =?us-ascii?Q?xZ0ogKqleNzS79+yihFijhwYtMSZQPQP/Tiaetb0gQPSbBYUmZ/mqnqQG17b?=
- =?us-ascii?Q?WkkNHxFuwyuZI5P/ORJzcoGmkEbB23JMBozZr936jKgwWVvmOQizyXMeDvpl?=
- =?us-ascii?Q?bovaHObkmfjFLX4F8p2FLvAOCbM/ou+OpWY8awUg1U/8jrzKCfp+vjIxX1hv?=
- =?us-ascii?Q?UepvR+tGR4N3wtPTL8TuF9Kth+KXTORICZ2G0XCPJiDeHqaHSnS8IBtk9UKp?=
- =?us-ascii?Q?jRXJbXNl1tVqfspLwbJY5Zik6m8PtiKsE9q0wLGXfl+pRwNmHGpZreRu/f0I?=
- =?us-ascii?Q?3lLQTcdtALYCeJYRkDNvMdpmCFO2ehi+CkXXVZqFuwUO/phFup8ncm5P3VDN?=
- =?us-ascii?Q?pDr9A3xEptX7p6qtTeAPviMgISqUArLULBB/ZIBTtQKHBhq+AFcUavXE/2d0?=
- =?us-ascii?Q?uUBFDrNJQpCscRGSBk012tmp4AqK75G+k2jxXLb/FBgH1QPXnEOEzwuk6Qe8?=
- =?us-ascii?Q?lWfjro0nuHdeNOArAVdyPN2bB0oQ4fTSAbzMIvbyojvYxf418ri4LdxbnsPb?=
- =?us-ascii?Q?N3RSA93jPUdhuOwkQz/ccu+UgMNnJTs8YUsVRsSjtth8Nllag0z5Y58KE8hU?=
- =?us-ascii?Q?8wbZHVsSCau0alhUNrm04zJzrMRb/lH99p4lsM5992Lh5fabqNdCjjgssw7y?=
- =?us-ascii?Q?w/5JtWO9DO09yFChyWMtAyj3jyLbac4TOLHrm7+v+J7rp4EEihufZVbK/0c6?=
- =?us-ascii?Q?RjXEO/D++kJ9cRmmhrTPBD5P0SaAox0r97S9AT6GEd2chPCVrOdC0YRzFKPL?=
- =?us-ascii?Q?FWqvukZwxq0xPBtD53shf0QHLKd+P3g22AiL9mX1aUFERqYnhL9xFVdTj8A+?=
- =?us-ascii?Q?BVlI86qsLku+gkGT/Hwfd49xTwLbjW4ZgrbgongdUiZT0Imtbcq3jCmj/xEM?=
- =?us-ascii?Q?QYFrqtIIaFhtIvI1xu+bfqaimqzL6ff+/HORmtaHFGkKZdWtFdzQsoJ2irW4?=
- =?us-ascii?Q?lm3yG7zUICLysnWDnLMILknVIXYcDPDQX5YA60gy/vPm31l/B1etIoQbVlJw?=
- =?us-ascii?Q?grr4Yvh2S2fZYcyAFJyP5MTJFNBKcviQZrggXZ0N9Antl4MU7QRuxyFxy6sE?=
- =?us-ascii?Q?pHUrTV42KbfTHVQ0QeXybLq7FRHV4s+4REKtZozt51uSbRbJP09HY5ezA8lJ?=
- =?us-ascii?Q?HvU6rOr93Oh+CPFkHb9IW2cQEELlBpPCSNtT6P1VqzZX7tYw2Sv3JRsowXzo?=
- =?us-ascii?Q?71Ln1c7U9N8a2PxtqdATTFuQ2W1k9zcWDRuNXMdplY8+jQklaYgb549wMQdp?=
- =?us-ascii?Q?9zKU9GSY0BoLtvmpJWP6NCghtayzAbYMGuxEwTrDStFPy5Gjw/FV2F1TALAa?=
- =?us-ascii?Q?YvkjGzwmbWD3myT42soF2nS0U0SnCv/m+AK3F/0quDI/dA5UAqwM8Y3bs6oK?=
- =?us-ascii?Q?YZCTHlCQvF8tRfE1aNCucw+3zYUmBXFm4H9PdWBXgXJeC5VG9qrYRKYvCxA/?=
- =?us-ascii?Q?H7g6Uesrpb2t7g4=3D?=
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230040)(36860700013)(1800799024)(82310400026)(376014);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Mar 2025 17:44:51.7076
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 709fd8f4-1fdd-4b83-da82-08dd5c0d6eb9
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SN1PEPF0002529D.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB6577
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250301040252.1586750-3-namhyung@kernel.org>
 
-On Wed, Mar 05, 2025 at 08:50:17AM +0000, Shameerali Kolothum Thodi wrote:
-> > diff --git a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h
-> > b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h
-> > index bd9d7c85576a..e08c4ede4b2d 100644
-> > --- a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h
-> > +++ b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h
-> > @@ -887,7 +887,7 @@ struct arm_smmu_entry_writer_ops {
-> >  void arm_smmu_make_abort_ste(struct arm_smmu_ste *target);
-> >  void arm_smmu_make_s2_domain_ste(struct arm_smmu_ste *target,
-> >  				 struct arm_smmu_master *master,
-> > -				 struct arm_smmu_domain *smmu_domain,
-> > +				 struct arm_smmu_domain *smmu_domain,
-> > u16 vmid,
-> >  				 bool ats_enabled);
+On Fri, Feb 28, 2025 at 08:02:50PM -0800, Namhyung Kim wrote:
+> perf trace requires root because it needs to use [ku]probes.
+> Skip those test when it's not run as root.
 > 
-> Now that vmid is an input, do we need some kind of validation here as
-> at least vmid = 0 is reserved I guess for bypass STEs.
+> Before:
+>   $ perf test probe
+>    47: Probe SDT events                                                : Ok
+>   104: test perf probe of function from different CU                   : FAILED!
+>   115: perftool-testsuite_probe                                        : FAILED!
+>   117: Add vfs_getname probe to get syscall args filenames             : FAILED!
+>   118: probe libc's inet_pton & backtrace it with ping                 : FAILED!
+>   119: Use vfs_getname probe to get syscall args filenames             : FAILED!
 
-Perhaps it should do a WARN_ON_ONCE(!vmid), as it doesn't make
-sense for a caller to make an S2-bypass STE with this function.
+Do you have ShellCheck installed?
 
-Thanks
-Nicolin
+  TEST    /tmp/build/perf-tools-next/tests/shell/probe_vfs_getname.sh.shellcheck_log
+  TEST    /tmp/build/perf-tools-next/tests/shell/record+probe_libc_inet_pton.sh.shellcheck_log
+  TEST    /tmp/build/perf-tools-next/tests/shell/record+script_probe_vfs_getname.sh.shellcheck_log
+
+In tests/shell/probe_vfs_getname.sh line 11:
+[ "$(id -u)" == 0 ] || exit 2
+             ^-- SC3014 (warning): In POSIX sh, == in place of = is undefined.
+
+For more information:
+  https://www.shellcheck.net/wiki/SC3014 -- In POSIX sh, == in place of = is ...
+
+In tests/shell/record+script_probe_vfs_getname.sh line 16:
+[ "$(id -u)" == 0 ] || exit 2
+             ^-- SC3014 (warning): In POSIX sh, == in place of = is undefined.
+
+For more information:
+  https://www.shellcheck.net/wiki/SC3014 -- In POSIX sh, == in place of = is ...
+make[4]: *** [tests/Build:91: /tmp/build/perf-tools-next/tests/shell/probe_vfs_getname.sh.shellcheck_log] Error 1
+make[4]: *** Waiting for unfinished jobs....
+make[4]: *** [tests/Build:91: /tmp/build/perf-tools-next/tests/shell/record+script_probe_vfs_getname.sh.shellcheck_log] Error 1
+
+In tests/shell/record+probe_libc_inet_pton.sh line 108:
+[ "$(id -u)" == 0 ] || exit 2
+             ^-- SC3014 (warning): In POSIX sh, == in place of = is undefined.
+
+For more information:
+  https://www.shellcheck.net/wiki/SC3014 -- In POSIX sh, == in place of = is ...
+make[4]: *** [tests/Build:91: /tmp/build/perf-tools-next/tests/shell/record+probe_libc_inet_pton.sh.shellcheck_log] Error 1
+make[3]: *** [/home/acme/git/perf-tools-next/tools/build/Makefile.build:138: tests] Error 2
+make[2]: *** [Makefile.perf:810: /tmp/build/perf-tools-next/perf-test-in.o] Error 2
+make[2]: *** Waiting for unfinished jobs....
+make[1]: *** [Makefile.perf:321: sub-make] Error 2
+make: *** [Makefile:119: install-bin] Error 2
+make: Leaving directory '/home/acme/git/perf-tools-next/tools/perf'
+⬢ [acme@toolbox perf-tools-next]$
+
+The patch below seems to make it happy.
+
+But since it seems to be mixed up, i.e. its not a string comparision, so
+why the quotes?
+
+Probably it should be
+
+[ $(id -u) -eq 0 ] || exit 2
+
+?
+
+It all works with bash, but ShellCheck being installed stops the build
+with that POSIX error.
+
+⬢ [acme@toolbox perf-tools-next]$ [ "$(id -u)" == 1000 ] && echo bla
+bla
+⬢ [acme@toolbox perf-tools-next]$ [ "$(id -u)" = 1000 ] && echo bla
+bla
+⬢ [acme@toolbox perf-tools-next]$ [ $(id -u) -eq 1000 ] && echo bla
+bla
+⬢ [acme@toolbox perf-tools-next]$ id
+uid=1000(acme) gid=1000(acme) groups=1000(acme),10(wheel)
+⬢ [acme@toolbox perf-tools-next]
+
+- Arnaldo
+
+diff --git a/tools/perf/tests/shell/probe_vfs_getname.sh b/tools/perf/tests/shell/probe_vfs_getname.sh
+index b8e53a9d8473bf6b..c51a32931af6313e 100755
+--- a/tools/perf/tests/shell/probe_vfs_getname.sh
++++ b/tools/perf/tests/shell/probe_vfs_getname.sh
+@@ -8,7 +8,7 @@
+ . "$(dirname $0)"/lib/probe.sh
+ 
+ skip_if_no_perf_probe || exit 2
+-[ "$(id -u)" == 0 ] || exit 2
++[ "$(id -u)" = 0 ] || exit 2
+ 
+ # shellcheck source=lib/probe_vfs_getname.sh
+ . "$(dirname $0)"/lib/probe_vfs_getname.sh
+diff --git a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
+index 07a1527c5c03b93d..c4bab5b5cc59f0b3 100755
+--- a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
++++ b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
+@@ -105,7 +105,7 @@ delete_libc_inet_pton_event() {
+ 
+ # Check for IPv6 interface existence
+ ip a sh lo | grep -F -q inet6 || exit 2
+-[ "$(id -u)" == 0 ] || exit 2
++[ "$(id -u)" = 0 ] || exit 2
+ 
+ skip_if_no_perf_probe && \
+ add_libc_inet_pton_event && \
+diff --git a/tools/perf/tests/shell/record+script_probe_vfs_getname.sh b/tools/perf/tests/shell/record+script_probe_vfs_getname.sh
+index 0af3af90a8dcc742..fd5b10d469158b65 100755
+--- a/tools/perf/tests/shell/record+script_probe_vfs_getname.sh
++++ b/tools/perf/tests/shell/record+script_probe_vfs_getname.sh
+@@ -13,7 +13,7 @@
+ . "$(dirname "$0")/lib/probe.sh"
+ 
+ skip_if_no_perf_probe || exit 2
+-[ "$(id -u)" == 0 ] || exit 2
++[ "$(id -u)" = 0 ] || exit 2
+ 
+ # shellcheck source=lib/probe_vfs_getname.sh
+ . "$(dirname "$0")/lib/probe_vfs_getname.sh"
