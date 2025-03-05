@@ -1,171 +1,115 @@
-Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E92D61A5BB0;
-	Wed,  5 Mar 2025 16:46:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97FCC151992;
+	Wed,  5 Mar 2025 16:47:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741193189; cv=none; b=i6nxtYlnhmAFCagW5dybiHgnvWksPhVjPbn98mCLYD/WPiJKWDBBYc2Mqp0h6N2Bj3OixdnCYtW8rbHlEc0uKyTE82ltJlkkOAixJAc4sBDB4oqRO5fUHNh/Hm8bc+krM+oZeGTPSVneO2vTBsdcb0YyG6j7EwFPMoYHh75Gbek=
+	t=1741193251; cv=none; b=gzMKKS0MF9VWAiQMn5ArRjR0vKM0AKT6Dxq0uRqeT+L5rM08GMiibMH8QjdN7Um9uc3W9BjrzgDfsA5DuvIULX41Bj2vuFD8g6RTR6S2YXcqbr9xlM18yo0Ld95Bs8wBGuq8mnzkwH2VFUG1xBM5ac8jPjWCXy8myuVy945xTEo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741193189; c=relaxed/simple;
-	bh=NenO5w4NxdLbkqYFrXeKv2KqYAGzxEEgxcF1Rx//Fbk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=G/sjVxjvG+vCDJGgJ2JJGfcZQ3XnV7f5d1m9KpFwOCMQiBcOKuNQ2YNrw74M5dv3ZFeUOEq2NBkZkdcAUsfeE7PUBrgMRmZTwk6joflZ5aG+E2G5h8irQsD5V60+Dmh9JYyUFL10A5ngvuuXuwRcS41xOFhKsxeWQOCRDvx/bsg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IIdgrFH8; arc=none smtp.client-ip=209.85.219.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741193251; c=relaxed/simple;
+	bh=FVJPWoDeq4yoPcniFg6Kb7tfVkR3gpEbRqN0N/KxiTQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=riCdjZje1vguBatfH+p3/R3MH2nkZVKaLQlWQFptRGhwSs/uAxd5sDiaxLU10xjJjOAkFqN6PkcK4Hi4krwn6mcnSxbW9UIC04rSi5sh0gJ+UrFcriweiaPS2WQhL/UF5aaUauoet+DxBm3LZ6Qy6+KQE3fB6VEgRfu1VRCWOwI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lwKyc4iG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IIdgrFH8"
-Received: by mail-qv1-f45.google.com with SMTP id 6a1803df08f44-6e894b81678so35193306d6.0;
-        Wed, 05 Mar 2025 08:46:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741193187; x=1741797987; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :feedback-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=OcvdklEHsV9rwsQUlk2/UUT196cpbtOdI2b0X4kIbaE=;
-        b=IIdgrFH88kqy4og8ThcIqEJBDeKcVOmnwd563QgdcipCH8XZ7KAjs05VKnXk8rmsHW
-         6n2ZONjKJbv1EX2T1iaXpEEnQHiKN3oV5LsPgXfA5KFCNkdq6GCHgA44iyefvDSwmZRq
-         y1ZDjTUpSA3D3UfxmQvXeweeP/i1KztF5/1PwSDoU7GiFtXWupTKpXLpaRXDX9g7JyOX
-         nv9+Mv+DZyWqSNaKOENP8RKo7TMZzvFMmK72RpQ7S4xFRKXJIZUqFnj7Cr9JBwQf9K3J
-         6zV1AiyAGH6PeL6PBNm6qhmZO7f59aE0pAs90wC4mj8cHq0bEpSNQHkp0RSPq+oKvKOR
-         n25g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741193187; x=1741797987;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :feedback-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=OcvdklEHsV9rwsQUlk2/UUT196cpbtOdI2b0X4kIbaE=;
-        b=kUWAfBqHftX0f9UG/h/zrsQkjEYhnCWUvXcdS1KYlYXXCecHqxs+E+1CN37e4+HFsZ
-         fkj7kvPubjab7uETZo45ehEpWwlqnqVLrAnsWZxfTiJwbEiFnzthC2XaGuhj+/jI7QbD
-         o5Lugw2d2DZnOwXHTFqfy8ugwy8JHxXneIafrms9CWD9oki/BqT3Fb5bhgHyeoccD1eP
-         tga5seYHMOGXyDNq4wGQhIZlQq58zVVTLRqPcTSde8fKGN9dSjlaW62xvpef5hxssgvc
-         V/zZyuLn/8GPbsj2fD5Z+8ph6ttCpMZXDaci7R9QdWes3lfGwmbGA44Z/hCTKU18zAjJ
-         1TPQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUaFDDtIDJ/jOyuDH0PL4TmVanaQ3p/hy7bYXM5ZAnHsCvFPi02368Y1FrvwdzScxkeLOA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyfSTIcoiIpYoHVZalkH9PKuLs1IiIPrc5Jye53oMnWs2N/59H4
-	d7BSUYB+4UvJv7NO2jOq2y2Cj/fW5nsBsLZVNlI3j0UXaibW3+UE
-X-Gm-Gg: ASbGncsosa28YFGvaJn9DqL8IoJH4cfdTBZ1kiS2OMO+3mte6/vUAPRuuOyC7Dd1XGZ
-	b2LRBHBvDb2bb38XLWurYwOhr3zsJVqHdIxTVL7oP+6VA7tnguQp3xmInUipWCV5+AnE7Mh8Viz
-	5NE29Qz2GI5PiLUpLlSLUyzQoEo9fhkbpIjzrWCuMA8LpSi+2NOvARF5qG5KUPp+WVYTJfAsi6C
-	NEXgimJzmpOPOdp8I3KBKPKGM3P8yN3BzP3tJ1pmJnZqzW30qd2eFW3erbnVSxm8/rOeU2XyP83
-	0DdfdlehSSUSuv4hp3W7KauAyLfdvwY2Z9Js1/FSUIvdEZG69nzkeLS4mmC+L1zWZ3b/BlM38wM
-	+oh4YqNpvM52YfcxH4wh7OmzBrnZPfTxaltk=
-X-Google-Smtp-Source: AGHT+IFCVsysGWNjLkZxA+lQfYV2JMq0o9EU0cgnQO+p3xPZvYgsdOwAlDNiT4tsCznAT2ywAT1CGg==
-X-Received: by 2002:ad4:5f0a:0:b0:6e2:43d1:5fd0 with SMTP id 6a1803df08f44-6e8e6d446c9mr62238226d6.31.1741193186683;
-        Wed, 05 Mar 2025 08:46:26 -0800 (PST)
-Received: from fauth-a1-smtp.messagingengine.com (fauth-a1-smtp.messagingengine.com. [103.168.172.200])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e8976cc891sm82538216d6.81.2025.03.05.08.46.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Mar 2025 08:46:26 -0800 (PST)
-Received: from phl-compute-01.internal (phl-compute-01.phl.internal [10.202.2.41])
-	by mailfauth.phl.internal (Postfix) with ESMTP id F38491200068;
-	Wed,  5 Mar 2025 11:46:25 -0500 (EST)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-01.internal (MEProxy); Wed, 05 Mar 2025 11:46:26 -0500
-X-ME-Sender: <xms:4X_IZzS50ePURHmeKjWZG7ZR3TU6_NpqVd6gI7AagjoXdpI9CoF1Sw>
-    <xme:4X_IZ0yvlohTXfqss1qjlncu3zaEwirUbgvYesPYN0Wnl-RTCmHVcPLkCg49JnOUP
-    n-GOqMd_eQ73spr1Q>
-X-ME-Received: <xmr:4X_IZ41DFwMpZ5pmYMaLJlcZKWj7xzwx08fIKOvGzqhRGXmP8bDHhV4CQw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddutdehfeegucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggugfgjsehtqhertddt
-    tddvnecuhfhrohhmpeeuohhquhhnucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrg
-    hilhdrtghomheqnecuggftrfgrthhtvghrnhepvdefgffgieejleetueettdeiieegledt
-    vedvgedvjeefieevgeethedtveelueffnecuvehluhhsthgvrhfuihiivgeptdenucfrrg
-    hrrghmpehmrghilhhfrhhomhepsghoqhhunhdomhgvshhmthhprghuthhhphgvrhhsohhn
-    rghlihhthidqieelvdeghedtieegqddujeejkeehheehvddqsghoqhhunhdrfhgvnhhgpe
-    epghhmrghilhdrtghomhesfhhigihmvgdrnhgrmhgvpdhnsggprhgtphhtthhopedutddp
-    mhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepjhhovghlrghgnhgvlhhfsehnvhhiug
-    hirgdrtghomhdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghr
-    nhgvlhdrohhrghdprhgtphhtthhopehjihgrnhhgshhhrghnlhgrihesghhmrghilhdrtg
-    homhdprhgtphhtthhopehprghulhhmtghksehkvghrnhgvlhdrohhrghdprhgtphhtthho
-    pehjohhshhesjhhoshhhthhrihhplhgvthhtrdhorhhgpdhrtghpthhtoheprhhoshhtvg
-    guthesghhoohgumhhishdrohhrghdprhgtphhtthhopehmrghthhhivghurdguvghsnhho
-    higvrhhssegvfhhfihgtihhoshdrtghomhdprhgtphhtthhopehnvggvrhgrjhdruhhprg
-    guhhihrgihsegrmhgurdgtohhmpdhrtghpthhtoheprhgtuhesvhhgvghrrdhkvghrnhgv
-    lhdrohhrgh
-X-ME-Proxy: <xmx:4X_IZzDddwiMHJfwwr5Cq9DpkXb73IrcD9-34KrUfTL59QE8atOXdg>
-    <xmx:4X_IZ8gRRhDKQHjOEsQ9ihHZY7pV5QsuT_VYmkWQg5pJFyk8F3wMFw>
-    <xmx:4X_IZ3reFTew1NVsJ4yIkP12mvX1KYST1rjobRydeSMg1iMkkm-0lA>
-    <xmx:4X_IZ3jnRnEsF-I58eiWUWoJF0Ed6l6VQrJFbQvNqkzEaL5_vjDlkA>
-    <xmx:4X_IZ_Qqd2rhxl_2WLbVM5GNYHBnDugQaE44Mx60H3BASJ2JDW8PU5v1>
-Feedback-ID: iad51458e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 5 Mar 2025 11:46:25 -0500 (EST)
-Date: Wed, 5 Mar 2025 08:46:23 -0800
-From: Boqun Feng <boqun.feng@gmail.com>
-To: Joel Fernandes <joelagnelf@nvidia.com>
-Cc: linux-kernel@vger.kernel.org, Lai Jiangshan <jiangshanlai@gmail.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Josh Triplett <josh@joshtriplett.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>, rcu@vger.kernel.org
-Subject: Re: [PATCH v2 -rcu] srcu: Use rcu_seq_done_exact() for polling API
-Message-ID: <Z8h_3xQWGNjIw7Uh@tardis>
-References: <20250219124309.463702-1-joelagnelf@nvidia.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lwKyc4iG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 503E6C4CED1;
+	Wed,  5 Mar 2025 16:47:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741193251;
+	bh=FVJPWoDeq4yoPcniFg6Kb7tfVkR3gpEbRqN0N/KxiTQ=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=lwKyc4iGceXUQFa+aEJKbz7AwCTxCGiyJhie1W7FTYe09DktSjv0DxTDhX0xK2rLj
+	 IunfijjltiFwFmFBBFK4YqsIoNPOaAk1xWH8oGgNFJR8Zh/1cboCoXf69BUuMvqYHO
+	 32r3xG0ypJoGNcyZ2te46UqBN9EEyWNtprDZPsZceqM+xlXb9nPBtyUlXf5OWsH7y3
+	 ZO/3/SP/TVK/E/vZ3XbK3cj8l9Y16CZ15rBKn2zqGr/U2fGfDUqqnfk2A8B5d6wOaG
+	 0boRlrYj2uQorEm2dx7PKuTtFLR+sQ0yziqIfDRAyN/XaJRdmWlOsj63i4flFbU3Qr
+	 PsHLb5M2saP7w==
+Message-ID: <db186c37-e8f3-4a7d-8024-48832b1208f6@kernel.org>
+Date: Wed, 5 Mar 2025 17:47:21 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20250219124309.463702-1-joelagnelf@nvidia.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 0/6] Enable IPQ5018 PCI support
+To: George Moussalem <george.moussalem@outlook.com>,
+ linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-pci@vger.kernel.org, linux-phy@lists.infradead.org,
+ andersson@kernel.org, bhelgaas@google.com, conor+dt@kernel.org,
+ devicetree@vger.kernel.org, dmitry.baryshkov@linaro.org, kishon@kernel.org,
+ konradybcio@kernel.org, krzk+dt@kernel.org, kw@linux.com,
+ lpieralisi@kernel.org, manivannan.sadhasivam@linaro.org,
+ p.zabel@pengutronix.de, quic_nsekar@quicinc.com, robh@kernel.org,
+ robimarko@gmail.com, vkoul@kernel.org
+Cc: quic_srichara@quicinc.com
+References: <DS7PR19MB8883BC190797BECAA78EC50F9DCB2@DS7PR19MB8883.namprd19.prod.outlook.com>
+Content-Language: en-US
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <DS7PR19MB8883BC190797BECAA78EC50F9DCB2@DS7PR19MB8883.namprd19.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Feb 19, 2025 at 07:43:08AM -0500, Joel Fernandes wrote:
-> poll_state_synchronize_srcu() uses rcu_seq_done() unlike
-> poll_state_synchronize_rcu() which uses rcu_seq_done_exact().
->=20
-> The  rcu_seq_done_exact() makes more sense for polling API, as with
-> this API, there is a higher chance that there is a significant delay
-> between the get_state..() and poll_state..() calls since a cookie
-> can be stored and reused at a later time. During such a delay, if
-> the gp_seq counter progresses more than ULONG_MAX/2 distance, then
-> poll_state..() may return false for a long time unwantedly.
->=20
-> Fix by using the more accurate rcu_seq_done_exact() API which is
-> exactly what straight RCU's polling does.
->=20
-> It may make sense, as future work, to add debug code here as well, where
-> we compare a physical timestamp between get_state..() and poll_state()
-> calls and yell if significant time has past but the grace period has
-> still not progressed.
->=20
-> Reviewed-by: Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>
-> Signed-off-by: Joel Fernandes <joelagnelf@nvidia.com>
+On 05/03/2025 14:41, George Moussalem wrote:
+> From: Sricharan Ramabadhran <quic_srichara@quicinc.com>
+> 
+> This patch series adds the relevant phy and controller
+> DT configurations for enabling PCI gen2 support
+> on IPQ5018. IPQ5018 has two phys and two controllers, 
+> one dual-lane and one single-lane.
+> 
+> Last patch series (v2) submitted dates back to August 27, 2024.
+> As I've worked to add IPQ5018 platform support in OpenWrt, I'm
+> continuing the efforts to add Linux kernel support.
 
-Queued for further tests and reviews, thank you all.
+Why is this changelog separate? We talked about this 5 revisions ago and
+you keep doing the same mistakes.
 
-Regards,
-Boqun
-
-> ---
-> v1->v2: Resend with Neeraj review tag. Rebased on rcu/dev.
->=20
->  kernel/rcu/srcutree.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/kernel/rcu/srcutree.c b/kernel/rcu/srcutree.c
-> index d2a694944553..591371d62e89 100644
-> --- a/kernel/rcu/srcutree.c
-> +++ b/kernel/rcu/srcutree.c
-> @@ -1589,7 +1589,7 @@ EXPORT_SYMBOL_GPL(start_poll_synchronize_srcu);
->  bool poll_state_synchronize_srcu(struct srcu_struct *ssp, unsigned long =
-cookie)
->  {
->  	if (cookie !=3D SRCU_GET_STATE_COMPLETED &&
-> -	    !rcu_seq_done(&ssp->srcu_sup->srcu_gp_seq, cookie))
-> +	    !rcu_seq_done_exact(&ssp->srcu_sup->srcu_gp_seq, cookie))
->  		return false;
->  	// Ensure that the end of the SRCU grace period happens before
->  	// any subsequent code that the caller might execute.
-> --=20
-> 2.34.1
->=20
->=20
+Best regards,
+Krzysztof
