@@ -1,76 +1,59 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5909722A4DF;
-	Wed,  5 Mar 2025 10:57:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A81691F03C1
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 11:01:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741172228; cv=none; b=ctKLFBYTXWqSNtnpO9x1LBGDncbhcTLtg3CDpPGBtH+oHIgUcmw2Di9a4bIwWju8RShYSa+1awn+ugdC7D9gHL9AjfdVrWBdRzTCzo6Kq4FvbqdCJmufi+Vk8wN3SvwXoI8SECcvq+KTS+cb5lQCP10gHHtn6KfAa5VDdOq9TFI=
+	t=1741172493; cv=none; b=WCXuSMP2MAinwwS+GHVU3OwOZqhBtrwzJyPYKYgIg8pB2CDR0cBzwNMWwFpPigrrC/oFruuQLtvFL4EbsJUDwOJ1E3fzJUuB03a39YNNGXNrJhKClr+yfMG0c6ZfZ2JsoHoi7O3tqWcbehdSBRO5+Mo37h7DgBcJaAhjSQ6layk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741172228; c=relaxed/simple;
-	bh=4mWiSaWYOBSBHZ9umfa/gZfpmXrkDhdbnk2oA30pHHE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=CkgxQLb/kKTz3Gi2wILapkzpt8PfEL0d57BR7hfvNsleC+r2WoucEb+mlgZX2wWh4zdx6bzkzP1o0z+tOrFv2Y/4q7dOTIocxtsFGgq2jn4tzndShbST9ZAwlV5KqBs3k+XjXns8ODpTQoK+eOJztltWrMq4t7O+s6XMpKt7pkg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=er8CLQyT; arc=none smtp.client-ip=198.175.65.15
+	s=arc-20240116; t=1741172493; c=relaxed/simple;
+	bh=GpRp9L00DRuTC3CdDytrwHek71bCCrqaSgJl3vTeZ5g=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kFaSLGLankgDioOwfIvJA+znUcklvXUv/klKYpTW8IFCPOFHMiAFRxDr+IwRHFR8po0q2qRascDqoN5QVrgeXU45aFHkiC/YUjP+AI2hBDm6zWgak4DB4DmKCg/ZzOfhyTdMNdmw2FlUOFwjDiYPwrUPSezuVHWLDZSSHRTCbSs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=b5A+PoQ9; arc=none smtp.client-ip=192.198.163.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="er8CLQyT"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="b5A+PoQ9"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741172227; x=1772708227;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=4mWiSaWYOBSBHZ9umfa/gZfpmXrkDhdbnk2oA30pHHE=;
-  b=er8CLQyTvMNhcpnAn1WYg5mwPobTT4oMT8FyVLwWFN0gANGzRrSkw2p7
-   FcGXaqpg3pNwI1SVasfzj0K5/kWT5rsO/ticRFItcp62H88+qLifdgXex
-   r9eS2BKD0QNRhAgyGwLaWPoSOGs2hA93c0e/Vo/HTUt0X3endP+MbH0hI
-   4Vi5hUYKHHbUmPCpfFwmo5ug7g8UdUWp3kDKVaGCkyPGWNXEk5IcyE3hv
-   YFxyzMD/saSVdcFNcmIdxpu8w/1fCnoJAw7zLyoDiS6/lgjLhQ5bvqhpf
-   irNjqpMxSCtgH6jMFia5CNlGw9repEi45zMaxSWPRlwiwshecNAaDqbdE
+  t=1741172491; x=1772708491;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=GpRp9L00DRuTC3CdDytrwHek71bCCrqaSgJl3vTeZ5g=;
+  b=b5A+PoQ9YL/a6S86xbjSfEJFOmzRe+WyDL4mr1wm5jXskIiNJvMW0cOl
+   lOCDFgfxO69+uYDGyZap3AXQBKZn02CM1TfOq4v8BDTKEqW8QkIF2kcfB
+   ERuh1HVpwm7s6kCw5cOD1xVMjwcMnGdLkCbkioi0sV2EZof5iTUR42rOq
+   6T1VuVDjGHYrNiQqxjzo9Pz50FpebtWVh3DRGiouDJ/CduM19MMKyAUTb
+   lmuqaE0MOeTuAeai5Hm771pysVU50l26cpvTfDBkLv8IYQ9/IQt+HWgnn
+   Yqpc44cx5xp9KYiu961mEpU8cq7baxKFKvMcG0pnI5hgPUQht669rFCZi
    Q==;
-X-CSE-ConnectionGUID: QjBeELr5ReuYCX/2qubWlQ==
-X-CSE-MsgGUID: Bp4bxZTZQC6OiAcUUfZTiw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11363"; a="45783928"
+X-CSE-ConnectionGUID: WOV6vDIpSWiy7psTlYiUqg==
+X-CSE-MsgGUID: UZHVnacVSsCN0kwB2Qk4NA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11363"; a="42375625"
 X-IronPort-AV: E=Sophos;i="6.14,222,1736841600"; 
-   d="scan'208";a="45783928"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Mar 2025 02:57:04 -0800
-X-CSE-ConnectionGUID: YdFP/EZ3RLi2eaiBqmj98g==
-X-CSE-MsgGUID: 7P8XXUEXQyKZmFetVQl47g==
+   d="scan'208";a="42375625"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Mar 2025 03:01:30 -0800
+X-CSE-ConnectionGUID: D7Vq9gXiSKeOefM5s4LZgg==
+X-CSE-MsgGUID: 3p2sJt5lSiquD+2kXPAsVw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.14,222,1736841600"; 
-   d="scan'208";a="123245749"
+   d="scan'208";a="141911060"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa005.fm.intel.com with ESMTP; 05 Mar 2025 02:56:58 -0800
+  by fmviesa002.fm.intel.com with ESMTP; 05 Mar 2025 03:01:29 -0800
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id A218B2CA; Wed, 05 Mar 2025 12:56:57 +0200 (EET)
+	id 5763B21F; Wed, 05 Mar 2025 13:01:28 +0200 (EET)
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	linux-wpan@vger.kernel.org,
-	netdev@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Alexander Aring <alex.aring@gmail.com>,
-	Stefan Schmidt <stefan@datenfreihafen.org>
-Subject: [PATCH net-next v4 3/4] ieee802154: ca8210: Switch to using gpiod API
-Date: Wed,  5 Mar 2025 12:55:36 +0200
-Message-ID: <20250305105656.2133487-4-andriy.shevchenko@linux.intel.com>
+To: Ofir Bitton <obitton@habana.ai>,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org
+Cc: Oded Gabbay <ogabbay@kernel.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v3 1/1] accel/habanalabs: Switch to use %ptTs
+Date: Wed,  5 Mar 2025 13:00:25 +0200
+Message-ID: <20250305110126.2134307-1-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250305105656.2133487-1-andriy.shevchenko@linux.intel.com>
-References: <20250305105656.2133487-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -79,162 +62,75 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This updates the driver to gpiod API, and removes yet another use of
-of_get_named_gpio().
+Use %ptTs instead of open-coded variant to print contents of time64_t type
+in human readable form.
 
-With this, invert the logic of the reset pin which is active-low
-and add a quirk for the legacy and incorrect device tree descriptions.
+This changes N/A output to 1970-01-01 00:00:00 for zero timestamps,
+but it's used only in the dev_err() output and won't break anything.
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Reviewed-by: Miquel Raynal <miquel.raynal@bootlin.com>
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/gpio/gpiolib-of.c       |  9 ++++++
- drivers/net/ieee802154/ca8210.c | 57 +++++++++++----------------------
- 2 files changed, 28 insertions(+), 38 deletions(-)
 
-diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
-index a7370fa48556..280d56736844 100644
---- a/drivers/gpio/gpiolib-of.c
-+++ b/drivers/gpio/gpiolib-of.c
-@@ -203,6 +203,15 @@ static void of_gpio_try_fixup_polarity(const struct device_node *np,
- 		 */
- 		{ "qi,lb60",		"rb-gpios",	true },
- #endif
-+#if IS_ENABLED(CONFIG_IEEE802154_CA8210)
-+		/*
-+		 * According to the datasheet, the NRST pin 27 is an active-low
-+		 * signal. However, the device tree schema and admittedly
-+		 * the out-of-tree implementations have been used for a long
-+		 * time incorrectly by describing reset GPIO as active-high.
-+		 */
-+		{ "cascoda,ca8210",	"reset-gpio",	false },
-+#endif
- #if IS_ENABLED(CONFIG_PCI_LANTIQ)
- 		/*
- 		 * According to the PCI specification, the RST# pin is an
-diff --git a/drivers/net/ieee802154/ca8210.c b/drivers/net/ieee802154/ca8210.c
-index 65f042c8734b..ebc4f1b18e7b 100644
---- a/drivers/net/ieee802154/ca8210.c
-+++ b/drivers/net/ieee802154/ca8210.c
-@@ -52,12 +52,10 @@
- #include <linux/debugfs.h>
- #include <linux/delay.h>
- #include <linux/gpio/consumer.h>
--#include <linux/gpio.h>
- #include <linux/ieee802154.h>
- #include <linux/io.h>
- #include <linux/kfifo.h>
- #include <linux/of.h>
--#include <linux/of_gpio.h>
- #include <linux/module.h>
- #include <linux/mutex.h>
- #include <linux/poll.h>
-@@ -350,8 +348,8 @@ struct work_priv_container {
-  * @extclockenable: true if the external clock is to be enabled
-  * @extclockfreq:   frequency of the external clock
-  * @extclockgpio:   ca8210 output gpio of the external clock
-- * @gpio_reset:     gpio number of ca8210 reset line
-- * @gpio_irq:       gpio number of ca8210 interrupt line
-+ * @reset_gpio:     ca8210 reset GPIO descriptor
-+ * @irq_gpio:       ca8210 interrupt GPIO descriptor
-  * @irq_id:         identifier for the ca8210 irq
-  *
-  */
-@@ -359,8 +357,8 @@ struct ca8210_platform_data {
- 	bool extclockenable;
- 	unsigned int extclockfreq;
- 	unsigned int extclockgpio;
--	int gpio_reset;
--	int gpio_irq;
-+	struct gpio_desc *reset_gpio;
-+	struct gpio_desc *irq_gpio;
- 	int irq_id;
- };
+v3: explained the difference for N/A cases (Jani)
+v2: fixed the parameters to be the pointers
+
+ drivers/accel/habanalabs/common/device.c | 25 +++---------------------
+ 1 file changed, 3 insertions(+), 22 deletions(-)
+
+diff --git a/drivers/accel/habanalabs/common/device.c b/drivers/accel/habanalabs/common/device.c
+index 68eebed3b050..80fa08bf57bd 100644
+--- a/drivers/accel/habanalabs/common/device.c
++++ b/drivers/accel/habanalabs/common/device.c
+@@ -1066,28 +1066,11 @@ static bool is_pci_link_healthy(struct hl_device *hdev)
+ 	return (device_id == hdev->pdev->device);
+ }
  
-@@ -632,10 +630,10 @@ static void ca8210_reset_send(struct spi_device *spi, unsigned int ms)
- 	struct ca8210_priv *priv = spi_get_drvdata(spi);
- 	long status;
- 
--	gpio_set_value(pdata->gpio_reset, 0);
-+	gpiod_set_value(pdata->reset_gpio, 1);
- 	reinit_completion(&priv->ca8210_is_awake);
- 	msleep(ms);
--	gpio_set_value(pdata->gpio_reset, 1);
-+	gpiod_set_value(pdata->reset_gpio, 0);
- 	priv->promiscuous = false;
- 
- 	/* Wait until wakeup indication seen */
-@@ -2788,24 +2786,14 @@ static int ca8210_reset_init(struct spi_device *spi)
- {
- 	struct device *dev = &spi->dev;
- 	struct ca8210_platform_data *pdata = dev_get_platdata(dev);
--	int ret;
- 
--	pdata->gpio_reset = of_get_named_gpio(
--		spi->dev.of_node,
--		"reset-gpio",
--		0
--	);
+-static void stringify_time_of_last_heartbeat(struct hl_device *hdev, char *time_str, size_t size,
+-						bool is_pq_hb)
+-{
+-	time64_t seconds = is_pq_hb ? hdev->heartbeat_debug_info.last_pq_heartbeat_ts
+-					: hdev->heartbeat_debug_info.last_eq_heartbeat_ts;
+-	struct tm tm;
 -
--	ret = gpio_direction_output(pdata->gpio_reset, 1);
--	if (ret < 0) {
--		dev_crit(
--			&spi->dev,
--			"Reset GPIO %d did not set to output mode\n",
--			pdata->gpio_reset
--		);
-+	pdata->reset_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_LOW);
-+	if (IS_ERR(pdata->reset_gpio)) {
-+		dev_crit(dev, "Reset GPIO did not set to output mode\n");
-+		return PTR_ERR(pdata->reset_gpio);
- 	}
+-	if (!seconds)
+-		return;
+-
+-	time64_to_tm(seconds, 0, &tm);
+-
+-	snprintf(time_str, size, "%ld-%02d-%02d %02d:%02d:%02d (UTC)",
+-		tm.tm_year + 1900, tm.tm_mon, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
+-}
+-
+ static bool hl_device_eq_heartbeat_received(struct hl_device *hdev)
+ {
+ 	struct eq_heartbeat_debug_info *heartbeat_debug_info = &hdev->heartbeat_debug_info;
+ 	u32 cpu_q_id = heartbeat_debug_info->cpu_queue_id, pq_pi_mask = (HL_QUEUE_LENGTH << 1) - 1;
+ 	struct asic_fixed_properties *prop = &hdev->asic_prop;
+-	char pq_time_str[64] = "N/A", eq_time_str[64] = "N/A";
  
--	return ret;
-+	return 0;
- }
+ 	if (!prop->cpucp_info.eq_health_check_supported)
+ 		return true;
+@@ -1095,17 +1078,15 @@ static bool hl_device_eq_heartbeat_received(struct hl_device *hdev)
+ 	if (!hdev->eq_heartbeat_received) {
+ 		dev_err(hdev->dev, "EQ heartbeat event was not received!\n");
  
- /**
-@@ -2820,20 +2808,15 @@ static int ca8210_interrupt_init(struct spi_device *spi)
- 	struct ca8210_platform_data *pdata = dev_get_platdata(dev);
- 	int ret;
+-		stringify_time_of_last_heartbeat(hdev, pq_time_str, sizeof(pq_time_str), true);
+-		stringify_time_of_last_heartbeat(hdev, eq_time_str, sizeof(eq_time_str), false);
+ 		dev_err(hdev->dev,
+-			"EQ: {CI %u, HB counter %u, last HB time: %s}, PQ: {PI: %u, CI: %u (%u), last HB time: %s}\n",
++			"EQ: {CI %u, HB counter %u, last HB time: %ptTs}, PQ: {PI: %u, CI: %u (%u), last HB time: %ptTs}\n",
+ 			hdev->event_queue.ci,
+ 			heartbeat_debug_info->heartbeat_event_counter,
+-			eq_time_str,
++			&hdev->heartbeat_debug_info.last_eq_heartbeat_ts,
+ 			hdev->kernel_queues[cpu_q_id].pi,
+ 			atomic_read(&hdev->kernel_queues[cpu_q_id].ci),
+ 			atomic_read(&hdev->kernel_queues[cpu_q_id].ci) & pq_pi_mask,
+-			pq_time_str);
++			&hdev->heartbeat_debug_info.last_pq_heartbeat_ts);
  
--	pdata->gpio_irq = of_get_named_gpio(
--		spi->dev.of_node,
--		"irq-gpio",
--		0
--	);
-+	pdata->irq_gpio = devm_gpiod_get(dev, "irq", GPIOD_IN);
-+	if (IS_ERR(pdata->irq_gpio)) {
-+		dev_crit(dev, "Could not retrieve IRQ GPIO\n");
-+		return PTR_ERR(pdata->irq_gpio);
-+	}
+ 		hl_eq_dump(hdev, &hdev->event_queue);
  
--	pdata->irq_id = gpio_to_irq(pdata->gpio_irq);
-+	pdata->irq_id = gpiod_to_irq(pdata->irq_gpio);
- 	if (pdata->irq_id < 0) {
--		dev_crit(
--			&spi->dev,
--			"Could not get irq for gpio pin %d\n",
--			pdata->gpio_irq
--		);
--		gpio_free(pdata->gpio_irq);
-+		dev_crit(dev, "Could not get irq for IRQ GPIO\n");
- 		return pdata->irq_id;
- 	}
- 
-@@ -2844,10 +2827,8 @@ static int ca8210_interrupt_init(struct spi_device *spi)
- 		"ca8210-irq",
- 		spi_get_drvdata(spi)
- 	);
--	if (ret) {
-+	if (ret)
- 		dev_crit(&spi->dev, "request_irq %d failed\n", pdata->irq_id);
--		gpio_free(pdata->gpio_irq);
--	}
- 
- 	return ret;
- }
 -- 
 2.47.2
 
