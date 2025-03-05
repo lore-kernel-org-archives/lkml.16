@@ -1,366 +1,473 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 303DD255236;
-	Wed,  5 Mar 2025 18:55:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3613E2561BA;
+	Wed,  5 Mar 2025 18:55:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741200958; cv=none; b=Pdn0jzbU+K1WOsxN/3+8Dj6xGASy58FFaGUNB1BE+q4NS8n1noIIkoTje/G4oZLR6X6xZTcwq3Iwe7bvD2DnSXwV5T+c9OR1QxofmcPidHBXM/C7o/GKnhIbK1xnELWiMsMYwXOtymdWPnO/Bbr7yLxK2KH69wmlmmE8peKX19Y=
+	t=1741200962; cv=none; b=t/MSOex/mldyCnXwHyypvrntPYI7ofqSGX1/t63SkJM5qiLpeYweD99EIOdWN4gt2tEEaIEVyJw2vcneMGxgniyXZeSm3Yyt/sSDPGt6UxKfp7f/8N3IoyHRMNl349W7+7gqFgzVsCmlqbQi8HWiTxohomEM/Lqy8pOMvelpQpU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741200958; c=relaxed/simple;
-	bh=k/O2Fs5hdDD2ASkJHxJ8jZyCTGpPOxK8D6WOShmYodg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nUfrPR4PJv9IwXzZ/91h7xNBEy8RC3O4an7ma5QTjeWhdxB/U4lxPxPBSWqva6pQxpQvoje2qZrsXjqg8qZWW1TbiI8HV3xLP4N4IBvYMar96FstCxRqNQQXaudImEXmFFYBa08Y8s7Fz3ywcHVh5t3SxZIZEoo7l5SyR/dx23o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VXyFV9Ws; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1741200962; c=relaxed/simple;
+	bh=tvXGG0DIrVKk8YMmY4EbTVTJbQJ+fcBTTsRtEHq8IMo=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=qwBZXMla56GopVJQyv2ccFmGxobhe1lNL4m6t18++U99t2lLMnGvW5a5L94qQR5+wBp3EvDp3C3B58PzSQxelwPMsmlFQuhjD4HycNmtU11PGvT0jc+vQ4SGd9xSkxHe6l6Rbyunu9rHv7/+g5sFpt/v/1sVkKJtXF+85PzEVaQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=jR9fJ3Lk; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VXyFV9Ws"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741200956; x=1772736956;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=k/O2Fs5hdDD2ASkJHxJ8jZyCTGpPOxK8D6WOShmYodg=;
-  b=VXyFV9WsQ1kl6QtgyQ/Lp7gxkKf02TvDB9h/uAQvKg1XGLA5l5YLAZ/o
-   4xodEUOVJbZXgYfm45CYsW0ZeSHPUh685ShJexYLJ+HwIVzYJKZs6vAoR
-   st83DLgzWLJKsrfOLxSiGy8TzPh44XPEacxt9WFSAMZGZZuTegWQw1kAA
-   WgQsADcmptujac5AzBAWrLuJr7CtKTeABdQzZbxexH6JswfpcaLmm13+c
-   lO2OEPYgtDmDzmcJnqBJ26jaNv9eNFnASO/7QziiGuKCaFqENd5gU3Fyr
-   iALqrjALfZM5GrI/KgZJqT3HiDMX0NKEbRXEVK3UK4ooAQAiQ7jvtYhNv
-   A==;
-X-CSE-ConnectionGUID: bJwldS7MSu+TMiVqOxuo8g==
-X-CSE-MsgGUID: MvU17HTpQUWBlN1cdjh2yQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11363"; a="44988713"
-X-IronPort-AV: E=Sophos;i="6.14,223,1736841600"; 
-   d="scan'208";a="44988713"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Mar 2025 10:55:56 -0800
-X-CSE-ConnectionGUID: P5FoCfm3QN2nho3zYAGL1Q==
-X-CSE-MsgGUID: TzIhC3hGQ2e6rtfsmmJLzQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,223,1736841600"; 
-   d="scan'208";a="118947364"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO [10.245.244.76]) ([10.245.244.76])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Mar 2025 10:55:50 -0800
-Message-ID: <e78ba805-ce83-4df1-87b5-fa5ac6bb9742@intel.com>
-Date: Wed, 5 Mar 2025 18:55:48 +0000
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="jR9fJ3Lk"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 525AcJXn031396;
+	Wed, 5 Mar 2025 18:55:53 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	paeUxdtEap98ulA2M9qXU7Rwz535AKstZwhO2nhD3dw=; b=jR9fJ3LksOsKpg/2
+	KSanygdez+Smi5vklRkuD+QFMwSHCf9nADzE61LikoSZ7EJDDWq7bfl8iZeIbnN1
+	YptbFsb8jOf2zYXzUZcIYdhWn49qp878lnFjM7Jv5SO8Xm1pyFIXD/MhXQxf3Wg7
+	ctnPGSKgjs6koSz6MDWZ+NmmiZCsVKXQaDBNfhoNetVTyPaJfypDjSTx5yWIB68X
+	3pntlwiXu6xHAosOIW4Y4m5MP7IddjtU0uqK0SN0QuvvHWq1nk3OB7o1oW0Cp81T
+	jZS4vv69XQgw5a8lh+qbafqDHI6uNYYmEuTxNW+BSE2MLPtBl4EDX8Rxn69cGOb2
+	TIkEbg==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 455p6t6ewf-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 05 Mar 2025 18:55:52 +0000 (GMT)
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 525Itqer002031
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 5 Mar 2025 18:55:52 GMT
+Received: from hu-rajkbhag-blr.qualcomm.com (10.80.80.8) by
+ nalasex01b.na.qualcomm.com (10.47.209.197) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Wed, 5 Mar 2025 10:55:48 -0800
+From: Raj Kumar Bhagat <quic_rajkbhag@quicinc.com>
+To: <ath12k@lists.infradead.org>
+CC: Johannes Berg <johannes@sipsolutions.net>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>, Jeff Johnson <jjohnson@kernel.org>,
+        <linux-wireless@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        "Raj Kumar
+ Bhagat" <quic_rajkbhag@quicinc.com>,
+        Vasanthakumar Thiagarajan
+	<vasanthakumar.thiagarajan@oss.qualcomm.com>
+Subject: [PATCH ath-next v9 07/13] wifi: ath12k: add support for fixed QMI firmware memory
+Date: Thu, 6 Mar 2025 00:24:55 +0530
+Message-ID: <20250305185501.2400888-8-quic_rajkbhag@quicinc.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250305185501.2400888-1-quic_rajkbhag@quicinc.com>
+References: <20250305185501.2400888-1-quic_rajkbhag@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/5] drm/xe/bo: fix alignment with non-4K kernel page
- sizes
-To: Matthew Brost <matthew.brost@intel.com>
-Cc: Lucas De Marchi <lucas.demarchi@intel.com>, jeffbai@aosc.io,
- =?UTF-8?Q?Thomas_Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
- Rodrigo Vivi <rodrigo.vivi@intel.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- =?UTF-8?Q?Jos=C3=A9_Roberto_de_Souza?= <jose.souza@intel.com>,
- Francois Dugast <francois.dugast@intel.com>,
- Alan Previn <alan.previn.teres.alexis@intel.com>,
- Zhanjun Dong <zhanjun.dong@intel.com>, Matt Roper
- <matthew.d.roper@intel.com>, Mateusz Naklicki <mateusz.naklicki@intel.com>,
- Mauro Carvalho Chehab <mauro.chehab@linux.intel.com>,
- =?UTF-8?Q?Zbigniew_Kempczy=C5=84ski?= <zbigniew.kempczynski@intel.com>,
- intel-xe@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org, Kexy Biscuit <kexybiscuit@aosc.io>,
- Shang Yatsen <429839446@qq.com>, stable@vger.kernel.org,
- Haien Liang <27873200@qq.com>, Shirong Liu <lsr1024@qq.com>,
- Haofeng Wu <s2600cw2@126.com>
-References: <20250226-xe-non-4k-fix-v1-0-80f23b5ee40e@aosc.io>
- <20250226-xe-non-4k-fix-v1-1-80f23b5ee40e@aosc.io>
- <wcfp3i6jbsmvpokvbvs5n2yxffhrgu6jyoan3e3m6tb7wbjaq6@tbsit7ignlef>
- <Z76WIgGvvhlbYl/j@lstrano-desk.jf.intel.com>
- <af689d4b-204d-495b-a7e8-0f7632b43153@intel.com>
- <Z78vTt8Ph9opzJmf@lstrano-desk.jf.intel.com>
- <cc402132-2e82-41d2-8981-f1b9a795c1a1@intel.com>
- <Z8ibh7DIIexKQGuX@lstrano-desk.jf.intel.com>
-Content-Language: en-GB
-From: Matthew Auld <matthew.auld@intel.com>
-In-Reply-To: <Z8ibh7DIIexKQGuX@lstrano-desk.jf.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: VteGPZIQ9F3F3Qj8WL2nPqoxeH6XhMPz
+X-Authority-Analysis: v=2.4 cv=KfMosRYD c=1 sm=1 tr=0 ts=67c89e38 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=Vs1iUdzkB0EA:10 a=COk6AnOGAAAA:8 a=EUspDBNiAAAA:8 a=szl3tP_wlCkQoreKIoEA:9
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: VteGPZIQ9F3F3Qj8WL2nPqoxeH6XhMPz
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-05_07,2025-03-05_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 lowpriorityscore=0
+ spamscore=0 suspectscore=0 phishscore=0 malwarescore=0 clxscore=1015
+ priorityscore=1501 impostorscore=0 mlxlogscore=999 adultscore=0
+ bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2502100000
+ definitions=main-2503050145
 
-On 05/03/2025 18:44, Matthew Brost wrote:
-> On Wed, Feb 26, 2025 at 06:05:55PM +0000, Matthew Auld wrote:
->> On 26/02/2025 15:12, Matthew Brost wrote:
->>> On Wed, Feb 26, 2025 at 10:38:40AM +0000, Matthew Auld wrote:
->>>> On 26/02/2025 04:18, Matthew Brost wrote:
->>>>> On Tue, Feb 25, 2025 at 09:13:09PM -0600, Lucas De Marchi wrote:
->>>>>> On Wed, Feb 26, 2025 at 10:00:18AM +0800, Mingcong Bai via B4 Relay wrote:
->>>>>>> From: Mingcong Bai <jeffbai@aosc.io>
->>>>>>>
->>>>>>> The bo/ttm interfaces with kernel memory mapping from dedicated GPU
->>>>>>> memory. It is not correct to assume that SZ_4K would suffice for page
->>>>>>> alignment as there are a few hardware platforms that commonly uses non-4K
->>>>>>> pages - for instance, currently, Loongson 3A5000/6000 devices (of the
->>>>>>> LoongArch architecture) commonly uses 16K kernel pages.
->>>>>>>
->>>>>>> Per my testing Intel Xe/Arc families of GPUs works on at least
->>>>>>> Loongson 3A6000 platforms so long as "Above 4G Decoding" and "Resizable
->>>>>>> BAR" were enabled in the EFI firmware settings. I tested this patch series
->>>>>>> on my Loongson XA61200 (3A6000) motherboard with an Intel Arc A750 GPU.
->>>>>>>
->>>>>>> Without this fix, the kernel will hang at a kernel BUG():
->>>>>>>
->>>>>>> [    7.425445] ------------[ cut here ]------------
->>>>>>> [    7.430032] kernel BUG at drivers/gpu/drm/drm_gem.c:181!
->>>>>>> [    7.435330] Oops - BUG[#1]:
->>>>>>> [    7.438099] CPU: 0 UID: 0 PID: 102 Comm: kworker/0:4 Tainted: G            E      6.13.3-aosc-main-00336-g60829239b300-dirty #3
->>>>>>> [    7.449511] Tainted: [E]=UNSIGNED_MODULE
->>>>>>> [    7.453402] Hardware name: Loongson Loongson-3A6000-HV-7A2000-1w-V0.1-EVB/Loongson-3A6000-HV-7A2000-1w-EVB-V1.21, BIOS Loongson-UDK2018-V4.0.05756-prestab
->>>>>>> [    7.467144] Workqueue: events work_for_cpu_fn
->>>>>>> [    7.471472] pc 9000000001045fa4 ra ffff8000025331dc tp 90000001010c8000 sp 90000001010cb960
->>>>>>> [    7.479770] a0 900000012a3e8000 a1 900000010028c000 a2 000000000005d000 a3 0000000000000000
->>>>>>> [    7.488069] a4 0000000000000000 a5 0000000000000000 a6 0000000000000000 a7 0000000000000001
->>>>>>> [    7.496367] t0 0000000000001000 t1 9000000001045000 t2 0000000000000000 t3 0000000000000000
->>>>>>> [    7.504665] t4 0000000000000000 t5 0000000000000000 t6 0000000000000000 t7 0000000000000000
->>>>>>> [    7.504667] t8 0000000000000000 u0 90000000029ea7d8 s9 900000012a3e9360 s0 900000010028c000
->>>>>>> [    7.504668] s1 ffff800002744000 s2 0000000000000000 s3 0000000000000000 s4 0000000000000001
->>>>>>> [    7.504669] s5 900000012a3e8000 s6 0000000000000001 s7 0000000000022022 s8 0000000000000000
->>>>>>> [    7.537855]    ra: ffff8000025331dc ___xe_bo_create_locked+0x158/0x3b0 [xe]
->>>>>>> [    7.544893]   ERA: 9000000001045fa4 drm_gem_private_object_init+0xcc/0xd0
->>>>>>> [    7.551639]  CRMD: 000000b0 (PLV0 -IE -DA +PG DACF=CC DACM=CC -WE)
->>>>>>> [    7.557785]  PRMD: 00000004 (PPLV0 +PIE -PWE)
->>>>>>> [    7.562111]  EUEN: 00000000 (-FPE -SXE -ASXE -BTE)
->>>>>>> [    7.566870]  ECFG: 00071c1d (LIE=0,2-4,10-12 VS=7)
->>>>>>> [    7.571628] ESTAT: 000c0000 [BRK] (IS= ECode=12 EsubCode=0)
->>>>>>> [    7.577163]  PRID: 0014d000 (Loongson-64bit, Loongson-3A6000-HV)
->>>>>>> [    7.583128] Modules linked in: xe(E+) drm_gpuvm(E) drm_exec(E) drm_buddy(E) gpu_sched(E) drm_suballoc_helper(E) drm_display_helper(E) loongson(E) r8169(E) cec(E) rc_core(E) realtek(E) i2c_algo_bit(E) tpm_tis_spi(E) led_class(E) hid_generic(E) drm_ttm_helper(E) ttm(E) drm_client_lib(E) drm_kms_helper(E) sunrpc(E) la_ow_syscall(E) i2c_dev(E)
->>>>>>> [    7.613049] Process kworker/0:4 (pid: 102, threadinfo=00000000bc26ebd1, task=0000000055480707)
->>>>>>> [    7.621606] Stack : 0000000000000000 3030303a6963702b 000000000005d000 0000000000000000
->>>>>>> [    7.629563]         0000000000000001 0000000000000000 0000000000000000 8e1bfae42b2f7877
->>>>>>> [    7.637519]         000000000005d000 900000012a3e8000 900000012a3e9360 0000000000000000
->>>>>>> [    7.645475]         ffffffffffffffff 0000000000000000 0000000000022022 0000000000000000
->>>>>>> [    7.653431]         0000000000000001 ffff800002533660 0000000000022022 9000000000234470
->>>>>>> [    7.661386]         90000001010cba28 0000000000001000 0000000000000000 000000000005c300
->>>>>>> [    7.669342]         900000012a3e8000 0000000000000000 0000000000000001 900000012a3e8000
->>>>>>> [    7.677298]         ffffffffffffffff 0000000000022022 900000012a3e9498 ffff800002533a14
->>>>>>> [    7.685254]         0000000000022022 0000000000000000 900000000209c000 90000000010589e0
->>>>>>> [    7.693209]         90000001010cbab8 ffff8000027c78c0 fffffffffffff000 900000012a3e8000
->>>>>>> [    7.701165]         ...
->>>>>>> [    7.703588] Call Trace:
->>>>>>> [    7.703590] [<9000000001045fa4>] drm_gem_private_object_init+0xcc/0xd0
->>>>>>> [    7.712496] [<ffff8000025331d8>] ___xe_bo_create_locked+0x154/0x3b0 [xe]
->>>>>>> [    7.719268] [<ffff80000253365c>] __xe_bo_create_locked+0x228/0x304 [xe]
->>>>>>> [    7.725951] [<ffff800002533a10>] xe_bo_create_pin_map_at_aligned+0x70/0x1b0 [xe]
->>>>>>> [    7.733410] [<ffff800002533c7c>] xe_managed_bo_create_pin_map+0x34/0xcc [xe]
->>>>>>> [    7.740522] [<ffff800002533d58>] xe_managed_bo_create_from_data+0x44/0xb0 [xe]
->>>>>>> [    7.747807] [<ffff80000258d19c>] xe_uc_fw_init+0x3ec/0x904 [xe]
->>>>>>> [    7.753814] [<ffff80000254a478>] xe_guc_init+0x30/0x3dc [xe]
->>>>>>> [    7.759553] [<ffff80000258bc04>] xe_uc_init+0x20/0xf0 [xe]
->>>>>>> [    7.765121] [<ffff800002542abc>] xe_gt_init_hwconfig+0x5c/0xd0 [xe]
->>>>>>> [    7.771461] [<ffff800002537204>] xe_device_probe+0x240/0x588 [xe]
->>>>>>> [    7.777627] [<ffff800002575448>] xe_pci_probe+0x6c0/0xa6c [xe]
->>>>>>> [    7.783540] [<9000000000e9828c>] local_pci_probe+0x4c/0xb4
->>>>>>> [    7.788989] [<90000000002aa578>] work_for_cpu_fn+0x20/0x40
->>>>>>> [    7.794436] [<90000000002aeb50>] process_one_work+0x1a4/0x458
->>>>>>> [    7.800143] [<90000000002af5a0>] worker_thread+0x304/0x3fc
->>>>>>> [    7.805591] [<90000000002bacac>] kthread+0x114/0x138
->>>>>>> [    7.810520] [<9000000000241f64>] ret_from_kernel_thread+0x8/0xa4
->>>>>>> [    7.816489]
->>>>>>> [    7.817961] Code: 4c000020  29c3e2f9  53ff93ff <002a0001> 0015002c  03400000  02ff8063  29c04077  001500f7
->>>>>>> [    7.827651]
->>>>>>> [    7.829140] ---[ end trace 0000000000000000 ]---
->>>>>>>
->>>>>>> Revise all instances of `SZ_4K' with `PAGE_SIZE' and revise the call to
->>>>>>> `drm_gem_private_object_init()' in `*___xe_bo_create_locked()' (last call
->>>>>>> before BUG()) to use `size_t aligned_size' calculated from `PAGE_SIZE' to
->>>>>>> fix the above error.
->>>>>>>
->>>>>>> Cc: <stable@vger.kernel.org>
->>>>>>> Fixes: 4e03b584143e ("drm/xe/uapi: Reject bo creation of unaligned size")
->>>>>>> Fixes: dd08ebf6c352 ("drm/xe: Introduce a new DRM driver for Intel GPUs")
->>>>>>> Tested-by: Mingcong Bai <jeffbai@aosc.io>
->>>>>>> Tested-by: Haien Liang <27873200@qq.com>
->>>>>>> Tested-by: Shirong Liu <lsr1024@qq.com>
->>>>>>> Tested-by: Haofeng Wu <s2600cw2@126.com>
->>>>>>> Link: https://github.com/FanFansfan/loongson-linux/commit/22c55ab3931c32410a077b3ddb6dca3f28223360
->>>>>>> Co-developed-by: Shang Yatsen <429839446@qq.com>
->>>>>>> Signed-off-by: Shang Yatsen <429839446@qq.com>
->>>>>>> Signed-off-by: Mingcong Bai <jeffbai@aosc.io>
->>>>>>> ---
->>>>>>> drivers/gpu/drm/xe/xe_bo.c | 8 ++++----
->>>>>>> 1 file changed, 4 insertions(+), 4 deletions(-)
->>>>>>>
->>>>>>> diff --git a/drivers/gpu/drm/xe/xe_bo.c b/drivers/gpu/drm/xe/xe_bo.c
->>>>>>> index 3f5391d416d469c636d951dd6f0a2b3b5ae95dab..dd03c581441f352eff51d0eafe1298fca7d9653d 100644
->>>>>>> --- a/drivers/gpu/drm/xe/xe_bo.c
->>>>>>> +++ b/drivers/gpu/drm/xe/xe_bo.c
->>>>>>> @@ -1441,9 +1441,9 @@ struct xe_bo *___xe_bo_create_locked(struct xe_device *xe, struct xe_bo *bo,
->>>>>>> 		flags |= XE_BO_FLAG_INTERNAL_64K;
->>>>>>> 		alignment = align >> PAGE_SHIFT;
->>>>>>> 	} else {
->>>>>
->>>>> } else if (type == ttm_bo_type_device) {
->>>>> 	new code /w PAGE_SIZE
->>>>> } else {
->>>>> 	old code /w SZ_4K (or maybe XE_PAGE_SIZE now)?
->>>>> }
->>>>>
->>>>> See below for further explaination.
->>>>>
->>>>>>> -		aligned_size = ALIGN(size, SZ_4K);
->>>>>>> +		aligned_size = ALIGN(size, PAGE_SIZE);
->>>>>>
->>>>>> in the very beginning of the driver we were set to use XE_PAGE_SIZE
->>>>>> for things like this. It seems thing went side ways though.
->>>>>>
->>>>>> Thanks for fixing these. XE_PAGE_SIZE is always 4k, but I think we should
->>>>>> uxe XE_PAGE_SIZE for clarity.  For others in Cc...  any thoughts?
->>>>>>
->>>>>
->>>>> It looks like you have a typo here, Lucas. Could you please clarify?
->>>>>
->>>>> However, XE_PAGE_SIZE should always be 4k, as it refers to the GPU page
->>>>> size, which is fixed.
->>>>>
->>>>> I think using PAGE_SIZE makes sense in some cases. See my other
->>>>> comments.
->>>>>
->>>>>>> 		flags &= ~XE_BO_FLAG_INTERNAL_64K;
->>>>>>> -		alignment = SZ_4K >> PAGE_SHIFT;
->>>>>>> +		alignment = PAGE_SIZE >> PAGE_SHIFT;
->>>>>>> 	}
->>>>>>>
->>>>>>> 	if (type == ttm_bo_type_device && aligned_size != size)
->>>>>>> @@ -1457,7 +1457,7 @@ struct xe_bo *___xe_bo_create_locked(struct xe_device *xe, struct xe_bo *bo,
->>>>>>>
->>>>>>> 	bo->ccs_cleared = false;
->>>>>>> 	bo->tile = tile;
->>>>>>> -	bo->size = size;
->>>>>>> +	bo->size = aligned_size;
->>>>>>
->>>>>> the interface of this function is that the caller needs to pass the
->>>>>> correct size, it's not really expected the function will adjust it and
->>>>>> the check is there to gurantee to return the appropriate error. There
->>>>>
->>>>> Let me expand further on Lucas's comment. We reject user BOs that are
->>>>> unaligned here in ___xe_bo_create_locked.
->>>>>
->>>>> 1490         if (type == ttm_bo_type_device && aligned_size != size)
->>>>> 1491                 return ERR_PTR(-EINVAL);
->>>>>
->>>>> What we allow are kernel BOs (!= ttm_bo_type_device), which are never
->>>>> mapped to the CPU or the PPGTT (user GPU mappings), to be a smaller
->>>>> size. Examples of this include memory for GPU page tables, LRC state,
->>>>> etc. Memory for GPU page tables is always allocated in 4k blocks, so
->>>>> changing the allocation to the CPU page size of 16k or 64k would be
->>>>> wasteful.
->>>>>
->>>>> AFAIK, kernel memory is always a VRAM allocation, so we don't have any
->>>>> CPU page size requirements. If this is not true (I haven't checked), or
->>>>> perhaps just to future-proof, change the snippet in my first comment to:
->>>>>
->>>>> } else if (type == ttm_bo_type_device || flags & XE_BO_FLAG_SYSTEM)) {
->>>>> 	new code /w PAGE_SIZE
->>>>> } else {
->>>>> 	old code /w SZ_4K
->>>>> }
->>>>>
->>>>> Then change BO assignment size too:
->>>>>
->>>>> bo->size = flags & XE_BO_FLAG_SYSTEM ? aligned_size : size;
->>>>>
->>>>> This should enable kernel VRAM allocations to be smaller than the CPU
->>>>> page size (I think). Can you try out this suggestion and see if the Xe
->>>>> boots with non-4k pages?
->>>>
->>>> The vram allocator chunk size is PAGE_SIZE so that would also need some
->>>> attention, I think.
->>>>
->>>
->>> Agree. So I think __xe_ttm_vram_mgr_init should be called with
->>> s/PAGE_SIZE/SZ_4K?
->>
->> Should be fine from allocator pov. But also need to update the upper layers
->> in the VRAM manager itself, I think.
->>
-> 
-> Right. A lot of pfn logic is based on PAGE_SIZE/SHIFT and that would
-> likely need to be updated too.
-> 
->>>
->>>> But I think we also then need to deal with the assert in: https://elixir.bootlin.com/linux/v6.14-rc4/source/drivers/gpu/drm/drm_gem.c#L181.
->>>>
->>>
->>> Yep. I think that would need to be adjusted as well to be bypassed if we
->>> are never going to CPU map the BO—specifically, CPU map it to user space
->>> or if the BO is not in VRAM. For kernel VRAM mapping, this resolves to
->>> an offset within an existing large PCIe BAR mapping, so allocations
->>> unaligned to PAGE_SIZE should work.
->>
->> Yeah, agree. I thinks it's possible.
->>
-> 
-> Yes, might be a little more difficult than I originally thought though.
-> 
->>>
->>> Maybe export __drm_gem_private_object_init, which skips the BUG_ON, and
->>> call this in Xe to avoid interfering with other drivers' expectations?
->>
->> Some other places I spotted are the VRAM manager, and stuff like
->> xe_bo_vmap() and then into TTM itself. So it might be quite widespread.
->>
-> 
-> Ok, so maybe for initial merge we drop this idea and circle back given
-> the complexity as we'd just be wasting memory for things like PTEs?
+IPQ5332 firmware supports only fixed QMI firmware memory.
 
-Yeah, makes sense. Series is a big improvement already as-is.
+Hence, add support to read reserved fixed memory region from
+device-tree and provide the reserved memory segments for
+firmware to use during QMI firmware memory request.
 
-> 
-> Matt
->   
->>>
->>> Matt
->>>
->>>>>
->>>>> Also others in Cc... thoughts / double check my input?
->>>>>
->>>>>> are other places that would need some additional fixes leading to this
->>>>>> function. Example:
->>>>>>
->>>>>> xe_gem_create_ioctl()
->>>>>> {
->>>>>> 	...
->>>>>> 	if (XE_IOCTL_DBG(xe, args->size & ~PAGE_MASK))
->>>>>> 		return -EINVAL;
->>>>>
->>>>> This actually looks right, the minimum allocation size for user BOs
->>>>> should be PAGE_SIZE aligned. The last patch in the series fixes the
->>>>> query for this.
->>>>>
->>>>> Matt
->>>>>
->>>>>> 	...
->>>>>> }
->>>>>> 	
->>>>>>
->>>>>> Lucas De Marchi
->>>>>>
->>>>>>> 	bo->flags = flags;
->>>>>>> 	bo->cpu_caching = cpu_caching;
->>>>>>> 	bo->ttm.base.funcs = &xe_gem_object_funcs;
->>>>>>> @@ -1468,7 +1468,7 @@ struct xe_bo *___xe_bo_create_locked(struct xe_device *xe, struct xe_bo *bo,
->>>>>>> #endif
->>>>>>> 	INIT_LIST_HEAD(&bo->vram_userfault_link);
->>>>>>>
->>>>>>> -	drm_gem_private_object_init(&xe->drm, &bo->ttm.base, size);
->>>>>>> +	drm_gem_private_object_init(&xe->drm, &bo->ttm.base, aligned_size);
->>>>>>>
->>>>>>> 	if (resv) {
->>>>>>> 		ctx.allow_res_evict = !(flags & XE_BO_FLAG_NO_RESV_EVICT);
->>>>>>>
->>>>>>> -- 
->>>>>>> 2.48.1
->>>>>>>
->>>>>>>
->>>>
->>
+Note that the ability to set the fixed memory will be introduced in
+a subsequent patch. Currently, the flag remains unset by default,
+ensuring that existing chipsets are unaffected.
+
+Tested-on: IPQ5332 hw1.0 AHB WLAN.WBE.1.3.1-00130-QCAHKSWPL_SILICONZ-1
+Tested-on: QCN9274 hw2.0 PCI WLAN.WBE.1.1.1-00210-QCAHKSWPL_SILICONZ-1
+
+Signed-off-by: Raj Kumar Bhagat <quic_rajkbhag@quicinc.com>
+Reviewed-by: Vasanthakumar Thiagarajan <vasanthakumar.thiagarajan@oss.qualcomm.com>
+---
+ drivers/net/wireless/ath/ath12k/core.c |  25 ++++
+ drivers/net/wireless/ath/ath12k/core.h |   4 +
+ drivers/net/wireless/ath/ath12k/hw.c   |   4 +
+ drivers/net/wireless/ath/ath12k/hw.h   |   1 +
+ drivers/net/wireless/ath/ath12k/qmi.c  | 182 ++++++++++++++++++++++---
+ 5 files changed, 200 insertions(+), 16 deletions(-)
+
+diff --git a/drivers/net/wireless/ath/ath12k/core.c b/drivers/net/wireless/ath/ath12k/core.c
+index 0b2dec081c6e..5bd852f9572b 100644
+--- a/drivers/net/wireless/ath/ath12k/core.c
++++ b/drivers/net/wireless/ath/ath12k/core.c
+@@ -612,6 +612,31 @@ u32 ath12k_core_get_max_num_tids(struct ath12k_base *ab)
+ 	return TARGET_NUM_TIDS(SINGLE);
+ }
+ 
++struct reserved_mem *ath12k_core_get_reserved_mem(struct ath12k_base *ab,
++						  int index)
++{
++	struct device *dev = ab->dev;
++	struct reserved_mem *rmem;
++	struct device_node *node;
++
++	node = of_parse_phandle(dev->of_node, "memory-region", index);
++	if (!node) {
++		ath12k_dbg(ab, ATH12K_DBG_BOOT,
++			   "failed to parse memory-region for index %d\n", index);
++		return NULL;
++	}
++
++	rmem = of_reserved_mem_lookup(node);
++	of_node_put(node);
++	if (!rmem) {
++		ath12k_dbg(ab, ATH12K_DBG_BOOT,
++			   "unable to get memory-region for index %d\n", index);
++		return NULL;
++	}
++
++	return rmem;
++}
++
+ static void ath12k_core_stop(struct ath12k_base *ab)
+ {
+ 	ath12k_core_stopped(ab);
+diff --git a/drivers/net/wireless/ath/ath12k/core.h b/drivers/net/wireless/ath/ath12k/core.h
+index 85f0cdce774e..398f76a9d2e4 100644
+--- a/drivers/net/wireless/ath/ath12k/core.h
++++ b/drivers/net/wireless/ath/ath12k/core.h
+@@ -14,6 +14,7 @@
+ #include <linux/dmi.h>
+ #include <linux/ctype.h>
+ #include <linux/firmware.h>
++#include <linux/of_reserved_mem.h>
+ #include <linux/panic_notifier.h>
+ #include <linux/average.h>
+ #include "qmi.h"
+@@ -239,6 +240,7 @@ enum ath12k_dev_flags {
+ 	ATH12K_FLAG_EXT_IRQ_ENABLED,
+ 	ATH12K_FLAG_QMI_FW_READY_COMPLETE,
+ 	ATH12K_FLAG_FTM_SEGMENTED,
++	ATH12K_FLAG_FIXED_MEM_REGION,
+ };
+ 
+ struct ath12k_tx_conf {
+@@ -1220,6 +1222,8 @@ u32 ath12k_core_get_max_peers_per_radio(struct ath12k_base *ab);
+ u32 ath12k_core_get_max_num_tids(struct ath12k_base *ab);
+ 
+ void ath12k_core_hw_group_set_mlo_capable(struct ath12k_hw_group *ag);
++struct reserved_mem *ath12k_core_get_reserved_mem(struct ath12k_base *ab,
++						  int index);
+ 
+ static inline const char *ath12k_scan_state_str(enum ath12k_scan_state state)
+ {
+diff --git a/drivers/net/wireless/ath/ath12k/hw.c b/drivers/net/wireless/ath/ath12k/hw.c
+index 91aecca566a4..b4d5651973b7 100644
+--- a/drivers/net/wireless/ath/ath12k/hw.c
++++ b/drivers/net/wireless/ath/ath12k/hw.c
+@@ -1322,6 +1322,7 @@ static const struct ath12k_hw_params ath12k_hw_params[] = {
+ 
+ 		.ce_ie_addr = NULL,
+ 		.ce_remap = NULL,
++		.bdf_addr_offset = 0,
+ 	},
+ 	{
+ 		.name = "wcn7850 hw2.0",
+@@ -1406,6 +1407,7 @@ static const struct ath12k_hw_params ath12k_hw_params[] = {
+ 
+ 		.ce_ie_addr = NULL,
+ 		.ce_remap = NULL,
++		.bdf_addr_offset = 0,
+ 	},
+ 	{
+ 		.name = "qcn9274 hw2.0",
+@@ -1486,6 +1488,7 @@ static const struct ath12k_hw_params ath12k_hw_params[] = {
+ 
+ 		.ce_ie_addr = NULL,
+ 		.ce_remap = NULL,
++		.bdf_addr_offset = 0,
+ 	},
+ 	{
+ 		.name = "ipq5332 hw1.0",
+@@ -1561,6 +1564,7 @@ static const struct ath12k_hw_params ath12k_hw_params[] = {
+ 
+ 		.ce_ie_addr = &ath12k_ce_ie_addr_ipq5332,
+ 		.ce_remap = &ath12k_ce_remap_ipq5332,
++		.bdf_addr_offset = 0xC00000,
+ 	},
+ };
+ 
+diff --git a/drivers/net/wireless/ath/ath12k/hw.h b/drivers/net/wireless/ath/ath12k/hw.h
+index 6a75af093f31..5123d2f51865 100644
+--- a/drivers/net/wireless/ath/ath12k/hw.h
++++ b/drivers/net/wireless/ath/ath12k/hw.h
+@@ -229,6 +229,7 @@ struct ath12k_hw_params {
+ 
+ 	const struct ce_ie_addr *ce_ie_addr;
+ 	const struct ce_remap *ce_remap;
++	u32 bdf_addr_offset;
+ };
+ 
+ struct ath12k_hw_ops {
+diff --git a/drivers/net/wireless/ath/ath12k/qmi.c b/drivers/net/wireless/ath/ath12k/qmi.c
+index 6978200fb79a..7df6c6eebed6 100644
+--- a/drivers/net/wireless/ath/ath12k/qmi.c
++++ b/drivers/net/wireless/ath/ath12k/qmi.c
+@@ -11,6 +11,8 @@
+ #include "debug.h"
+ #include <linux/of.h>
+ #include <linux/firmware.h>
++#include <linux/of_address.h>
++#include <linux/ioport.h>
+ 
+ #define SLEEP_CLOCK_SELECT_INTERNAL_BIT	0x02
+ #define HOST_CSTATE_BIT			0x04
+@@ -2378,7 +2380,8 @@ int ath12k_qmi_respond_fw_mem_request(struct ath12k_base *ab)
+ 	 * failure to firmware and firmware then request multiple blocks of
+ 	 * small chunk size memory.
+ 	 */
+-	if (ab->qmi.target_mem_delayed) {
++	if (!test_bit(ATH12K_FLAG_FIXED_MEM_REGION, &ab->dev_flags) &&
++	    ab->qmi.target_mem_delayed) {
+ 		delayed = true;
+ 		ath12k_dbg(ab, ATH12K_DBG_QMI, "qmi delays mem_request %d\n",
+ 			   ab->qmi.mem_seg_count);
+@@ -2442,6 +2445,7 @@ static void ath12k_qmi_free_mlo_mem_chunk(struct ath12k_base *ab,
+ {
+ 	struct ath12k_hw_group *ag = ab->ag;
+ 	struct target_mem_chunk *mlo_chunk;
++	bool fixed_mem;
+ 
+ 	lockdep_assert_held(&ag->mutex);
+ 
+@@ -2453,8 +2457,13 @@ static void ath12k_qmi_free_mlo_mem_chunk(struct ath12k_base *ab,
+ 		return;
+ 	}
+ 
++	fixed_mem = test_bit(ATH12K_FLAG_FIXED_MEM_REGION, &ab->dev_flags);
+ 	mlo_chunk = &ag->mlo_mem.chunk[idx];
+-	if (mlo_chunk->v.addr) {
++
++	if (fixed_mem && mlo_chunk->v.ioaddr) {
++		iounmap(mlo_chunk->v.ioaddr);
++		mlo_chunk->v.ioaddr = NULL;
++	} else if (mlo_chunk->v.addr) {
+ 		dma_free_coherent(ab->dev,
+ 				  mlo_chunk->size,
+ 				  mlo_chunk->v.addr,
+@@ -2464,7 +2473,10 @@ static void ath12k_qmi_free_mlo_mem_chunk(struct ath12k_base *ab,
+ 
+ 	mlo_chunk->paddr = 0;
+ 	mlo_chunk->size = 0;
+-	chunk->v.addr = NULL;
++	if (fixed_mem)
++		chunk->v.ioaddr = NULL;
++	else
++		chunk->v.addr = NULL;
+ 	chunk->paddr = 0;
+ 	chunk->size = 0;
+ }
+@@ -2475,19 +2487,24 @@ static void ath12k_qmi_free_target_mem_chunk(struct ath12k_base *ab)
+ 	int i, mlo_idx;
+ 
+ 	for (i = 0, mlo_idx = 0; i < ab->qmi.mem_seg_count; i++) {
+-		if (!ab->qmi.target_mem[i].v.addr)
+-			continue;
+-
+ 		if (ab->qmi.target_mem[i].type == MLO_GLOBAL_MEM_REGION_TYPE) {
+ 			ath12k_qmi_free_mlo_mem_chunk(ab,
+ 						      &ab->qmi.target_mem[i],
+ 						      mlo_idx++);
+ 		} else {
+-			dma_free_coherent(ab->dev,
+-					  ab->qmi.target_mem[i].prev_size,
+-					  ab->qmi.target_mem[i].v.addr,
+-					  ab->qmi.target_mem[i].paddr);
+-			ab->qmi.target_mem[i].v.addr = NULL;
++			if (test_bit(ATH12K_FLAG_FIXED_MEM_REGION, &ab->dev_flags) &&
++			    ab->qmi.target_mem[i].v.ioaddr) {
++				iounmap(ab->qmi.target_mem[i].v.ioaddr);
++				ab->qmi.target_mem[i].v.ioaddr = NULL;
++			} else {
++				if (!ab->qmi.target_mem[i].v.addr)
++					continue;
++				dma_free_coherent(ab->dev,
++						  ab->qmi.target_mem[i].prev_size,
++						  ab->qmi.target_mem[i].v.addr,
++						  ab->qmi.target_mem[i].paddr);
++				ab->qmi.target_mem[i].v.addr = NULL;
++			}
+ 		}
+ 	}
+ 
+@@ -2640,6 +2657,130 @@ static int ath12k_qmi_alloc_target_mem_chunk(struct ath12k_base *ab)
+ 	return ret;
+ }
+ 
++static int ath12k_qmi_assign_target_mem_chunk(struct ath12k_base *ab)
++{
++	struct reserved_mem *rmem;
++	size_t avail_rmem_size;
++	int i, idx, ret;
++
++	for (i = 0, idx = 0; i < ab->qmi.mem_seg_count; i++) {
++		switch (ab->qmi.target_mem[i].type) {
++		case HOST_DDR_REGION_TYPE:
++			rmem = ath12k_core_get_reserved_mem(ab, 0);
++			if (!rmem) {
++				ret = -ENODEV;
++				goto out;
++			}
++
++			avail_rmem_size = rmem->size;
++			if (avail_rmem_size < ab->qmi.target_mem[i].size) {
++				ath12k_dbg(ab, ATH12K_DBG_QMI,
++					   "failed to assign mem type %u req size %u avail size %zu\n",
++					   ab->qmi.target_mem[i].type,
++					   ab->qmi.target_mem[i].size,
++					   avail_rmem_size);
++				ret = -EINVAL;
++				goto out;
++			}
++
++			ab->qmi.target_mem[idx].paddr = rmem->base;
++			ab->qmi.target_mem[idx].v.ioaddr =
++				ioremap(ab->qmi.target_mem[idx].paddr,
++					ab->qmi.target_mem[i].size);
++			if (!ab->qmi.target_mem[idx].v.ioaddr) {
++				ret = -EIO;
++				goto out;
++			}
++			ab->qmi.target_mem[idx].size = ab->qmi.target_mem[i].size;
++			ab->qmi.target_mem[idx].type = ab->qmi.target_mem[i].type;
++			idx++;
++			break;
++		case BDF_MEM_REGION_TYPE:
++			rmem = ath12k_core_get_reserved_mem(ab, 0);
++			if (!rmem) {
++				ret = -ENODEV;
++				goto out;
++			}
++
++			avail_rmem_size = rmem->size - ab->hw_params->bdf_addr_offset;
++			if (avail_rmem_size < ab->qmi.target_mem[i].size) {
++				ath12k_dbg(ab, ATH12K_DBG_QMI,
++					   "failed to assign mem type %u req size %u avail size %zu\n",
++					   ab->qmi.target_mem[i].type,
++					   ab->qmi.target_mem[i].size,
++					   avail_rmem_size);
++				ret = -EINVAL;
++				goto out;
++			}
++			ab->qmi.target_mem[idx].paddr =
++				rmem->base + ab->hw_params->bdf_addr_offset;
++			ab->qmi.target_mem[idx].v.ioaddr =
++				ioremap(ab->qmi.target_mem[idx].paddr,
++					ab->qmi.target_mem[i].size);
++			if (!ab->qmi.target_mem[idx].v.ioaddr) {
++				ret = -EIO;
++				goto out;
++			}
++			ab->qmi.target_mem[idx].size = ab->qmi.target_mem[i].size;
++			ab->qmi.target_mem[idx].type = ab->qmi.target_mem[i].type;
++			idx++;
++			break;
++		case CALDB_MEM_REGION_TYPE:
++			/* Cold boot calibration is not enabled in Ath12k. Hence,
++			 * assign paddr = 0.
++			 * Once cold boot calibration is enabled add support to
++			 * assign reserved memory from DT.
++			 */
++			ab->qmi.target_mem[idx].paddr = 0;
++			ab->qmi.target_mem[idx].v.ioaddr = NULL;
++			ab->qmi.target_mem[idx].size = ab->qmi.target_mem[i].size;
++			ab->qmi.target_mem[idx].type = ab->qmi.target_mem[i].type;
++			idx++;
++			break;
++		case M3_DUMP_REGION_TYPE:
++			rmem = ath12k_core_get_reserved_mem(ab, 1);
++			if (!rmem) {
++				ret = -EINVAL;
++				goto out;
++			}
++
++			avail_rmem_size = rmem->size;
++			if (avail_rmem_size < ab->qmi.target_mem[i].size) {
++				ath12k_dbg(ab, ATH12K_DBG_QMI,
++					   "failed to assign mem type %u req size %u avail size %zu\n",
++					   ab->qmi.target_mem[i].type,
++					   ab->qmi.target_mem[i].size,
++					   avail_rmem_size);
++				ret = -EINVAL;
++				goto out;
++			}
++
++			ab->qmi.target_mem[idx].paddr = rmem->base;
++			ab->qmi.target_mem[idx].v.ioaddr =
++				ioremap(ab->qmi.target_mem[idx].paddr,
++					ab->qmi.target_mem[i].size);
++			if (!ab->qmi.target_mem[idx].v.ioaddr) {
++				ret = -EIO;
++				goto out;
++			}
++			ab->qmi.target_mem[idx].size = ab->qmi.target_mem[i].size;
++			ab->qmi.target_mem[idx].type = ab->qmi.target_mem[i].type;
++			idx++;
++			break;
++		default:
++			ath12k_warn(ab, "qmi ignore invalid mem req type %u\n",
++				    ab->qmi.target_mem[i].type);
++			break;
++		}
++	}
++	ab->qmi.mem_seg_count = idx;
++
++	return 0;
++out:
++	ath12k_qmi_free_target_mem_chunk(ab);
++	return ret;
++}
++
+ /* clang stack usage explodes if this is inlined */
+ static noinline_for_stack
+ int ath12k_qmi_request_target_cap(struct ath12k_base *ab)
+@@ -3483,11 +3624,20 @@ static void ath12k_qmi_msg_mem_request_cb(struct qmi_handle *qmi_hdl,
+ 			   msg->mem_seg[i].type, msg->mem_seg[i].size);
+ 	}
+ 
+-	ret = ath12k_qmi_alloc_target_mem_chunk(ab);
+-	if (ret) {
+-		ath12k_warn(ab, "qmi failed to alloc target memory: %d\n",
+-			    ret);
+-		return;
++	if (test_bit(ATH12K_FLAG_FIXED_MEM_REGION, &ab->dev_flags)) {
++		ret = ath12k_qmi_assign_target_mem_chunk(ab);
++		if (ret) {
++			ath12k_warn(ab, "failed to assign qmi target memory: %d\n",
++				    ret);
++			return;
++		}
++	} else {
++		ret = ath12k_qmi_alloc_target_mem_chunk(ab);
++		if (ret) {
++			ath12k_warn(ab, "qmi failed to alloc target memory: %d\n",
++				    ret);
++			return;
++		}
+ 	}
+ 
+ 	ath12k_qmi_driver_event_post(qmi, ATH12K_QMI_EVENT_REQUEST_MEM, NULL);
+-- 
+2.34.1
 
