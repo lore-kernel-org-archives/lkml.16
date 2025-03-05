@@ -1,104 +1,127 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4F10D241132;
-	Wed,  5 Mar 2025 14:52:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA22624CEED
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 14:53:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741186323; cv=none; b=jJKVeaLrd5cp4N3JS2geIPTz6V0MayTjDAGOoK1pxhzSQYVpTh4sCf3tf9HG/HOpKk5Wj0mth4QB5u3/xASmbLrwvMnzIE7DsYYnhCCIYKvx3MiESE8CyN3KDSSX/gdTh5VZ7vCrTqmSgRU7PMvsrqHQXO5f7OSKx+/5TvtZwKc=
+	t=1741186403; cv=none; b=p3YV5K9mMRh2Sor0yD5hou2gJaYFULOWgqz8Z7MxbkJ2QtRWTzcL1789H6hNoJe1e3cay3hxPnKLSbrCTGSAtMutH8tsZtzszHAfKykEu0YUgRdO5Dn1N5FknnHQQEtzcVkxD/OHZl2TjomAZ2pLzdPtc5J3loVCA4mnYZNb1lw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741186323; c=relaxed/simple;
-	bh=knYV42bhXwD1ks5Zmll1o+tHVVCzKfXDlss+8WojsR4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XFeKTMu/aKzBz7cHjTcQA5ps9Y7qs/Q+GXu1c8wVzux+2plkvRNoz+X7ud9ZIwhrPgcKlgwlc0URtoT+jC5md/tebz/RfrJf2DCJFTu2bjiGH1fltlRuuhn/rjXsMMDJLnQ7Wtd+3fgXHM0BBTiHJZlcfiFU+WytK+eH0U77yVw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E76BFFEC;
-	Wed,  5 Mar 2025 06:52:14 -0800 (PST)
-Received: from [10.57.64.200] (unknown [10.57.64.200])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8F12B3F673;
-	Wed,  5 Mar 2025 06:51:59 -0800 (PST)
-Message-ID: <1796a9c5-4eb4-4120-a1fb-be773aace202@arm.com>
-Date: Wed, 5 Mar 2025 14:51:57 +0000
+	s=arc-20240116; t=1741186403; c=relaxed/simple;
+	bh=PGeG/E7ja4XGWHxNzROzI7h2oCS+EH16SyURg4QxoA0=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=qGHuYiAaTRYo4x/r1wCEMTMSWcJ+EAzTVAoqgCsE5UGrcEBtywq8jKbiexwl0Za/2O2vrxZrfFzPyTkOZ6xvStlNh38iOFKOV3CYiOYrfZfG1J+Hhfcu0HAmi/Uqh40jvdTjqfxAl1HwC5WSjhO708YJZDBRdHKAmDa8EcYvX8Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=PUdDf9Vm; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PUdDf9Vm"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2fe870bc003so1882100a91.1
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Mar 2025 06:53:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1741186401; x=1741791201; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Qu1YW5U539CmDNjnWklLjoJJJx5nCfEh8QEnX9CfqX8=;
+        b=PUdDf9VmsQH1kjJuTP65L0FGZs1tbmboqC27fUONrdmB8SZ+1JitK1plNTkO5zfo0S
+         qiLlO4LZr8TKCMbEz5W/f22y6w0cVuZRLRoe1j3cBT7hiExC9+8ff9mPUwbuFMDgWfLZ
+         SnOXVKWfnKWOpq9iuYp0QwFBJOC5Ebf2HMnnYEBHwq7kJTvju0gJYiTQg4BMZXXZy0aV
+         QbHZFjWppEyvhDtua1Lk+GjYZy+Sv+Avjke6dnqVmAC5msZg+US0xp3jQtpwSsJ3A29Q
+         S2BFO/wM81HjaiH8dTCSmD/+q10WMLYMsqiJQZzt+2KOauzzt1SkyshqQ7AIxs2kbl9v
+         xzFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741186401; x=1741791201;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Qu1YW5U539CmDNjnWklLjoJJJx5nCfEh8QEnX9CfqX8=;
+        b=nKiiR1Q1p9aQS6JglLwzHeLWKqAx0etqzwpSW81dv7BMMHqUakFSWpPu9HGXidDZMf
+         FZLlY0O19EPvoYA5kPUWE8Rv5ZsgT7Np2jTlKs0jrY++EvqonPqwOlEBbl0uAI3gbL6W
+         j8U21gGPyHiqfERTFEuTxX+B1EMGv5c/5x7fzVakeSbsooDVv+wmY32WG97BVg1+OSwi
+         NHhQrKps7k+GvisGgOoHDol7Gg1c90JP3vL6NKDVTlGr7d8O0wbAhjXmgodUn0pByvyq
+         C0uBztTA45xv2W4fqQGbYn4EYjWbRyjoN+D80tHsPv+ev5vPc1PeFad+57d5YVkgPX/q
+         cxwg==
+X-Forwarded-Encrypted: i=1; AJvYcCViSFkqn5ANEQy03ULBIpgwjhp2Di9hWOKmmr+niWnYj+2d0NpS4AgTq/9k8Nc8ppJmKexABoMW1wUK1P4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz2UtQ6smWwEFzpnFUPofIHXr80ONMs52extfa1HiYWkhk0PCwg
+	SCgqBYn5dwmWN8oRe88fyt5tmNvVjargyFxX1oxtnsLUDzUel8xYyafdqiTG2G4lXuZDwGoA+kA
+	+Rg==
+X-Google-Smtp-Source: AGHT+IHAYzQscJ8h7qg5HkSjPcaVcG06YIt5n669L2SaCaC2sybvLMQURj9aN7SRU326Fz9IYsQdsLpJF/s=
+X-Received: from pfbft1.prod.google.com ([2002:a05:6a00:81c1:b0:730:9146:35ec])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:1f84:b0:2fa:1d9f:c80
+ with SMTP id 98e67ed59e1d1-2ff33c2129amr12121356a91.17.1741186401066; Wed, 05
+ Mar 2025 06:53:21 -0800 (PST)
+Date: Wed, 5 Mar 2025 06:53:19 -0800
+In-Reply-To: <2025030516-scoured-ethanol-6540@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/2] dt-bindings: thermal: generic-adc: Add optional
- io-channel-cells property
-To: Svyatoslav Ryhel <clamor95@gmail.com>
-Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
- Laxman Dewangan <ldewangan@nvidia.com>, Conor Dooley <conor+dt@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Rob Herring <robh@kernel.org>,
- Zhang Rui <rui.zhang@intel.com>, Daniel Lezcano <daniel.lezcano@linaro.org>,
- linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rafael@kernel.org>
-References: <20250303122151.91557-1-clamor95@gmail.com>
- <20250303122151.91557-2-clamor95@gmail.com>
- <08f305fa-0dbe-4ed9-bec5-cf8b5bbecfdb@arm.com>
- <CAPVz0n0G+0_f3MONV0Y-tYAb1KOwkUNiY2Pms8CZ6ZGtxRmFFA@mail.gmail.com>
-Content-Language: en-US
-From: Lukasz Luba <lukasz.luba@arm.com>
-In-Reply-To: <CAPVz0n0G+0_f3MONV0Y-tYAb1KOwkUNiY2Pms8CZ6ZGtxRmFFA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+References: <20250112095527.434998-4-pbonzini@redhat.com> <DDEA8D1B-0A0F-4CF3-9A73-7762FFEFD166@xenosoft.de>
+ <2025030516-scoured-ethanol-6540@gregkh>
+Message-ID: <Z8hlXzQZwVEH11fB@google.com>
+Subject: Re: [Kernel 6.12.17] [PowerPC e5500] KVM HV compilation error
+From: Sean Christopherson <seanjc@google.com>
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: Christian Zigotzky <chzigotzky@xenosoft.de>, Paolo Bonzini <pbonzini@redhat.com>, 
+	linux-kernel@vger.kernel.org, kvm@vger.kernel.org, 
+	linuxppc-dev@lists.ozlabs.org, regressions@lists.linux.dev, 
+	Trevor Dickinson <rtd2@xtra.co.nz>, mad skateman <madskateman@gmail.com>, hypexed@yahoo.com.au, 
+	Darren Stevens <darren@stevens-zone.net>
+Content-Type: text/plain; charset="us-ascii"
 
-
-
-On 3/5/25 10:03, Svyatoslav Ryhel wrote:
-> ср, 5 бер. 2025 р. о 12:00 Lukasz Luba <lukasz.luba@arm.com> пише:
->>
->>
->>
->> On 3/3/25 12:21, Svyatoslav Ryhel wrote:
->>> This implements a mechanism to derive temperature values from an existing ADC IIO
->>> channel, effectively creating a temperature IIO channel. This approach avoids adding
->>> a new sensor and its associated conversion table, while providing IIO-based temperature
->>> data for devices that may not utilize hwmon.
->>>
->>> Signed-off-by: Svyatoslav Ryhel <clamor95@gmail.com>
->>> ---
->>>    .../devicetree/bindings/thermal/generic-adc-thermal.yaml      | 4 ++++
->>>    1 file changed, 4 insertions(+)
->>>
->>> diff --git a/Documentation/devicetree/bindings/thermal/generic-adc-thermal.yaml b/Documentation/devicetree/bindings/thermal/generic-adc-thermal.yaml
->>> index 12e6418dc24d..4bc2cff0593c 100644
->>> --- a/Documentation/devicetree/bindings/thermal/generic-adc-thermal.yaml
->>> +++ b/Documentation/devicetree/bindings/thermal/generic-adc-thermal.yaml
->>> @@ -30,6 +30,9 @@ properties:
->>>      io-channel-names:
->>>        const: sensor-channel
->>>
->>> +  '#io-channel-cells':
->>> +    const: 1
->>> +
->>>      temperature-lookup-table:
->>>        description: |
->>>          Lookup table to map the relation between ADC value and temperature.
->>> @@ -60,6 +63,7 @@ examples:
->>>            #thermal-sensor-cells = <0>;
->>>            io-channels = <&ads1015 1>;
->>>            io-channel-names = "sensor-channel";
->>> +        #io-channel-cells = <1>;
->>>            temperature-lookup-table = <
->>>                  (-40000) 2578
->>>                  (-39000) 2577
->>
->> Do we really need this change in the DT?
->> Won't the code in the thermal driver that registers a new iio device
->> would just be enough?
->>
->> I agree with Rob that it looks odd.
+On Wed, Mar 05, 2025, Greg KH wrote:
+> On Wed, Mar 05, 2025 at 03:14:13PM +0100, Christian Zigotzky wrote:
+> > Hi All,
+> > 
+> > The stable long-term kernel 6.12.17 cannot compile with KVM HV support for e5500 PowerPC machines anymore.
+> > 
+> > Bug report: https://github.com/chzigotzky/kernels/issues/6
+> > 
+> > Kernel config: https://github.com/chzigotzky/kernels/blob/6_12/configs/x5000_defconfig
+> > 
+> > Error messages:
+> > 
+> > arch/powerpc/kvm/e500_mmu_host.c: In function 'kvmppc_e500_shadow_map':
+> > arch/powerpc/kvm/e500_mmu_host.c:447:9: error: implicit declaration of function '__kvm_faultin_pfn' [-Werror=implicit-function-declaration]
+> >    pfn = __kvm_faultin_pfn(slot, gfn, FOLL_WRITE, NULL, &page);
+> >          ^~~~~~~~~~~~~~~~~
+> >   CC      kernel/notifier.o
+> > arch/powerpc/kvm/e500_mmu_host.c:500:2: error: implicit declaration of function 'kvm_release_faultin_page'; did you mean 'kvm_read_guest_page'? [-Werror=implicit-function-declaration]
+> >   kvm_release_faultin_page(kvm, page, !!ret, writable);
+> > 
+> > After that, I compiled it without KVM HV support.
+> > 
+> > Kernel config: https://github.com/chzigotzky/kernels/blob/6_12/configs/e5500_defconfig
+> > 
+> > Please check the error messages.
 > 
-> Building tree will complain on missing cells property if you try to
-> bind it. It is not in required category anyway.
+> Odd, what commit caused this problem?  Any hint as to what commit is
+> missing to fix it?
 
-Fair enough, then I will leave it to DT folks.
+833f69be62ac.  It most definitely should be reverted.  The "dependency" for commit
+87ecfdbc699c ("KVM: e500: always restore irqs") is a superficial code conflict.
 
-For me it's looks OK-ish, assuming you add this property with the
-comment describing it like Rob asked.
+Oof.  The same buggy patch was queue/proposed for all stable trees from 5.4 onward,
+but it look like it only landed in 6.1, 6.6, and 6.12.  I'll send reverts.
 
-UUIC it will always be only 1 channel - with that temperature,
-so shouldn't harm much the design in DT.
+commit 833f69be62ac366b5c23b4a6434389e470dd5c7f
+Author:     Sean Christopherson <seanjc@google.com>
+AuthorDate: Thu Oct 10 11:23:56 2024 -0700
+Commit:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CommitDate: Mon Feb 17 10:04:56 2025 +0100
+
+    KVM: PPC: e500: Use __kvm_faultin_pfn() to handle page faults
+    
+    [ Upstream commit 419cfb983ca93e75e905794521afefcfa07988bb ]
+    
+    Convert PPC e500 to use __kvm_faultin_pfn()+kvm_release_faultin_page(),
+    and continue the inexorable march towards the demise of
+    kvm_pfn_to_refcounted_page().
+    
+    Signed-off-by: Sean Christopherson <seanjc@google.com>
+    Tested-by: Dmitry Osipenko <dmitry.osipenko@collabora.com>
+    Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+    Message-ID: <20241010182427.1434605-55-seanjc@google.com>
+    Stable-dep-of: 87ecfdbc699c ("KVM: e500: always restore irqs")
+    Signed-off-by: Sasha Levin <sashal@kernel.org>
