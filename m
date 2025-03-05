@@ -1,38 +1,82 @@
-Received: from Atcsqr.andestech.com (60-248-80-70.hinet-ip.hinet.net [60.248.80.70])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AD6B192D66
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 03:44:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.248.80.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E443192D6B;
+	Wed,  5 Mar 2025 03:44:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741146291; cv=none; b=VyRmTrlZwLC9EJ1KtqKVJZvsufrgGYu6k6OMhTLRashgTTAcCNf5AbbgpW/DZDp75P0aUo9aB9sCdq090VFrk3RLF5Gc2SXxhLgUOiuagX5Ct2Bsu4BUexIj2RrDEXQe+7ZMf4Mt5O1N4sP4CRq9ysEzf3BPgyvGESY1leh8VEw=
+	t=1741146290; cv=none; b=UNThTrZ2pF6EbMmZ0PdM64wJRJzGDnGcOt6iSYKgyW8K04F8aD3u+Sr36gc9YGaKRhZuPzbhGnxSuu3Ld7IGTDmjFrCcPQHvH6qwP1kyIYJYIzx/0wXQVtlr4X6+H+0GTiqJXMjsFPDd6PrEgwLOXn7u18q3patyalePdpQtoHM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741146291; c=relaxed/simple;
-	bh=Kxw5q7MmoTFUeL04KoNKBYZ1TdMikpytf6XZ/pIbaeA=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=gq3apYPY7aIVGAD/AiWBRKreC3YQX3T8kaD46kE5G9ZOJlEilVFcwu9m6sIcAhvxFR4qK0gZSwKlt0L1OeBHIUz6NeP6cH03SRR6iSyTNkgoj2BMn7asLNC/Sqv0+IitT2g4CVKQyU+FnXcFuBL7E+URo1qsMy21pKDipHDZbX4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=andestech.com; spf=pass smtp.mailfrom=andestech.com; arc=none smtp.client-ip=60.248.80.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=andestech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=andestech.com
-Received: from Atcsqr.andestech.com (localhost [127.0.0.2] (may be forged))
-	by Atcsqr.andestech.com with ESMTP id 5253643h021869
-	for <linux-kernel@vger.kernel.org>; Wed, 5 Mar 2025 11:06:04 +0800 (+08)
-	(envelope-from ben717@andestech.com)
-Received: from mail.andestech.com (ATCPCS31.andestech.com [10.0.1.89])
-	by Atcsqr.andestech.com with ESMTPS id 52535S3d021717
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 5 Mar 2025 11:05:28 +0800 (+08)
-	(envelope-from ben717@andestech.com)
-Received: from swlinux02.andestech.com (10.0.15.183) by ATCPCS31.andestech.com
- (10.0.1.89) with Microsoft SMTP Server id 14.3.498.0; Wed, 5 Mar 2025
- 11:05:28 +0800
-From: Ben Zong-You Xie <ben717@andestech.com>
-To: <linux-riscv@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-CC: <paul.walmsley@sifive.com>, <palmer@dabbelt.com>, <aou@eecs.berkeley.edu>,
-        <alex@ghiti.fr>, Ben Zong-You Xie <ben717@andestech.com>
-Subject: [PATCH] riscv: add Andes SoC family Kconfig support
-Date: Wed, 5 Mar 2025 11:05:26 +0800
-Message-ID: <20250305030526.1986062-1-ben717@andestech.com>
+	s=arc-20240116; t=1741146290; c=relaxed/simple;
+	bh=mIk0IRH1OW9MDPjRzX0QhIQFS2iXhEpe42K081Z5Vxc=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=AsCHftMfWJW2pyNqDb0/uJHzX92FXpHYFuFmpa+3wlceWRX+zlMPHKPXrMmy8tymjvUGSpIhBoFplMYEgpWYNVTUQj7lHOhrSfXGwlPYDJNrPfo1Z3ht8/j8gnjjV6EKH0EVqq796jZJk/OG93AErP5q8ljAWQfAhSx6/hoTxrQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=To067iNB; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="To067iNB"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-22349bb8605so122797105ad.0;
+        Tue, 04 Mar 2025 19:44:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741146288; x=1741751088; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rWiOwn7nT5PFN7bTmIow5wbcXHHUl8L4grOIfv03884=;
+        b=To067iNBBLYIgHQnrLXQS9rjKlrCFAE+bsFvJRlJDNwDBW4a99VJWSqaVL+ZNlz2K9
+         b+XJQgYo+NLYq/X2I6o29Jtn/fOdGgDY5HENOPUWzm+X/ED85BqrNBNTwJYkkv36P2II
+         zRc09igp+BxDPuFXM0izaz5zc+LpMFfVxUR9sUqgRzwJu3oaMOOR/DvJMcT8HBffVFuQ
+         hGkyKG7SeZOyvxqauXUvzGE3X63IyTHWNfkFMZyY8WTk2Y+R/Nq2RyYzdBePYcgNxMmM
+         GZH6zs0QeIe3lXU/TMtBdBX6AMmGQSwLGRpGqFaOVB+gNwx0KGnkIzpUwTR99HbsvdKZ
+         hz7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741146288; x=1741751088;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rWiOwn7nT5PFN7bTmIow5wbcXHHUl8L4grOIfv03884=;
+        b=ZPCQ5qcZI6dvP1rGR3xK1yjAsgec4W/7eHtWyXOIkoctEvXhW6FIKOEuOUaQ0GlZ8i
+         I/dWLRw2GZir+y7uIyesFWE2n/qmH6AWlsbFUrtDeqe3nR4KhI4Zltz66g8fOWmMJGEJ
+         NNgIGG0wQ6UPqD20dTzRUCep/3HDxuqhMCnzh+w2uhtacGIXMfo49DAZDrDy/pOIVKzU
+         K6u5SSOwB068G2RWgGwxIp9JesIkG1YjCPeJh1D7moH/NMEl7tGeLqjnRjuLrn4xPh6l
+         +zdzYlNNBKG/2MZZpr5v30Rzb8/d49+6F+hK5H8eJMiwO3M5ui5Q4b2dIbVXGaZEpNLP
+         rfmQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU0d+6roE4UjyOxJD4KN4wg2hP0i5uCbv585uD9MbZAiG8eCRt2b262h64KPQry+Dw7Qtzr50mauZxE@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxy9W0yQsvdGlOoF5F7H3ugi7cGmQnS+CoXCo/80KXlzMqmJUmX
+	Odaeb9sUYA+Lylfb8O3BRi10zHZg5olKKebdlADGXyztj61gK09e
+X-Gm-Gg: ASbGncsNVP90iB0Z9QAPHemud52tGMX7iLzc6uyPiiIDTM3jtuyD1xe6exzkKTc4jAb
+	7SmW83STuqqeKuKG/mtlkmU6hrm2qObjzyb7gENOt0YffclrA4dsgo3wLT8a48BYWHxKj4j2+qy
+	VbYmsmg0RGbvXkP0LH/F2z5Sp1KvntXxFVR/rVGNiR6RiODJK04/98upXKE6ET+RnkqEgmnew6t
+	10LQUi1cWftXO4x48/JIMSfEVClgAZ7pdo0xVOgv5fSUn7S0WsYvN/kAGdCGYWEkjepa4CVJ+D6
+	8olRGAoBbfuevfMad9E1vJpma0dOTBMU3I269/KBgY+0J8Tb+pMsra8=
+X-Google-Smtp-Source: AGHT+IF6e7ShP+dFYnCi3KFWoYYWdUXK08szUlSs8mu7o0gUCi5hQ15jqTxbMjAROfk9XAz/T2tSVg==
+X-Received: by 2002:a17:903:2312:b0:21f:9c48:254b with SMTP id d9443c01a7336-223f1c9945amr28241945ad.24.1741146288312;
+        Tue, 04 Mar 2025 19:44:48 -0800 (PST)
+Received: from cs20-buildserver.lan ([2403:c300:d305:9d26:2e0:4cff:fe68:863])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-223504c5c37sm102734335ad.133.2025.03.04.19.44.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Mar 2025 19:44:48 -0800 (PST)
+From: Stanley Chu <stanley.chuys@gmail.com>
+X-Google-Original-From: Stanley Chu <yschu@nuvoton.com>
+To: frank.li@nxp.com,
+	miquel.raynal@bootlin.com,
+	alexandre.belloni@bootlin.com,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	linux-i3c@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	tomer.maimon@nuvoton.com,
+	kwliu@nuvoton.com,
+	yschu@nuvoton.com
+Subject: [PATCH v6 4/5] i3c: master: svc: Fix npcm845 invalid slvstart event
+Date: Wed,  5 Mar 2025 11:44:13 +0800
+Message-Id: <20250305034414.2246870-5-yschu@nuvoton.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250305034414.2246870-1-yschu@nuvoton.com>
+References: <20250305034414.2246870-1-yschu@nuvoton.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,57 +84,66 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-DKIM-Results: atcpcs31.andestech.com; dkim=none;
-X-DNSRBL: 
-X-SPAM-SOURCE-CHECK: pass
-X-MAIL:Atcsqr.andestech.com 5253643h021869
 
-The first SoC in the Andes series is QiLai. It includes a high-performance
-quad-core RISC-V AX45MP cluster and one NX27V vector processor.
+From: Stanley Chu <yschu@nuvoton.com>
 
-For further information, refer to [1].
+I3C HW may generate an invalid SlvStart event when emitting a STOP.
+If it is a true SlvStart, the MSTATUS state is SLVREQ. Check the
+MSTATUS state to ignore the false event.
 
-[1] https://www.andestech.com/en/products-solutions/andeshape-platforms/qilai-chip/
-
-Signed-off-by: Ben Zong-You Xie <ben717@andestech.com>
+Reviewed-by: Frank Li <Frank.Li@nxp.com>
+Signed-off-by: Stanley Chu <yschu@nuvoton.com>
 ---
- arch/riscv/Kconfig.errata | 2 +-
- arch/riscv/Kconfig.socs   | 9 +++++++++
- 2 files changed, 10 insertions(+), 1 deletion(-)
+ drivers/i3c/master/svc-i3c-master.c | 15 ++++++++++++++-
+ 1 file changed, 14 insertions(+), 1 deletion(-)
 
-diff --git a/arch/riscv/Kconfig.errata b/arch/riscv/Kconfig.errata
-index e318119d570d..be76883704a6 100644
---- a/arch/riscv/Kconfig.errata
-+++ b/arch/riscv/Kconfig.errata
-@@ -12,7 +12,7 @@ config ERRATA_ANDES
+diff --git a/drivers/i3c/master/svc-i3c-master.c b/drivers/i3c/master/svc-i3c-master.c
+index 46b032b61f3c..5c29912e0a69 100644
+--- a/drivers/i3c/master/svc-i3c-master.c
++++ b/drivers/i3c/master/svc-i3c-master.c
+@@ -58,6 +58,7 @@
+ #define SVC_I3C_MSTATUS      0x088
+ #define   SVC_I3C_MSTATUS_STATE(x) FIELD_GET(GENMASK(2, 0), (x))
+ #define   SVC_I3C_MSTATUS_STATE_DAA(x) (SVC_I3C_MSTATUS_STATE(x) == 5)
++#define   SVC_I3C_MSTATUS_STATE_SLVREQ(x) (SVC_I3C_MSTATUS_STATE(x) == 1)
+ #define   SVC_I3C_MSTATUS_STATE_IDLE(x) (SVC_I3C_MSTATUS_STATE(x) == 0)
+ #define   SVC_I3C_MSTATUS_BETWEEN(x) FIELD_GET(BIT(4), (x))
+ #define   SVC_I3C_MSTATUS_NACKED(x) FIELD_GET(BIT(5), (x))
+@@ -143,6 +144,12 @@
+  * Fill the FIFO in advance to prevent FIFO from becoming empty.
+  */
+ #define SVC_I3C_QUIRK_FIFO_EMPTY	BIT(0)
++/*
++ * SVC_I3C_QUIRK_FLASE_SLVSTART:
++ * I3C HW may generate an invalid SlvStart event when emitting a STOP.
++ * If it is a true SlvStart, the MSTATUS state is SLVREQ.
++ */
++#define SVC_I3C_QUIRK_FALSE_SLVSTART	BIT(1)
  
- config ERRATA_ANDES_CMO
- 	bool "Apply Andes cache management errata"
--	depends on ERRATA_ANDES && ARCH_R9A07G043
-+	depends on ERRATA_ANDES && (ARCH_R9A07G043 || ARCH_ANDES)
- 	select RISCV_DMA_NONCOHERENT
- 	default y
- 	help
-diff --git a/arch/riscv/Kconfig.socs b/arch/riscv/Kconfig.socs
-index 1916cf7ba450..b89b6e0d1bc9 100644
---- a/arch/riscv/Kconfig.socs
-+++ b/arch/riscv/Kconfig.socs
-@@ -1,5 +1,14 @@
- menu "SoC selection"
+ struct svc_i3c_cmd {
+ 	u8 addr;
+@@ -586,6 +593,11 @@ static irqreturn_t svc_i3c_master_irq_handler(int irq, void *dev_id)
+ 	/* Clear the interrupt status */
+ 	writel(SVC_I3C_MINT_SLVSTART, master->regs + SVC_I3C_MSTATUS);
  
-+config ARCH_ANDES
-+	bool "Andes SoCs"
-+	depends on MMU && !XIP_KERNEL
-+	select ERRATA_ANDES
-+	select ERRATA_ANDES_CMO
-+	select AX45MP_L2_CACHE
-+	help
-+	  This enables support for Andes SoC platform hardware.
++	/* Ignore the false event */
++	if (svc_has_quirk(master, SVC_I3C_QUIRK_FALSE_SLVSTART) &&
++	    !SVC_I3C_MSTATUS_STATE_SLVREQ(active))
++		return IRQ_HANDLED;
 +
- config ARCH_MICROCHIP_POLARFIRE
- 	def_bool ARCH_MICROCHIP
+ 	svc_i3c_master_disable_interrupts(master);
  
+ 	/* Handle the interrupt in a non atomic context */
+@@ -2018,7 +2030,8 @@ static const struct dev_pm_ops svc_i3c_pm_ops = {
+ };
+ 
+ const struct svc_i3c_drvdata npcm845_drvdata = {
+-	.quirks = SVC_I3C_QUIRK_FIFO_EMPTY,
++	.quirks = SVC_I3C_QUIRK_FIFO_EMPTY |
++		SVC_I3C_QUIRK_FALSE_SLVSTART,
+ };
+ 
+ const struct svc_i3c_drvdata svc_default_drvdata = {};
 -- 
 2.34.1
 
