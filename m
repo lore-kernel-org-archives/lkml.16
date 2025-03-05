@@ -1,28 +1,28 @@
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2062.outbound.protection.outlook.com [40.107.93.62])
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2069.outbound.protection.outlook.com [40.107.93.69])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B00FB43AB7
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 05:05:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.62
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15E931A317A
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 05:05:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.69
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741151129; cv=fail; b=eCCjxi2D5znFtNf9qMPlz++4Cw8Y/QxyAVSrw6zlTyDSScQ0FsZuLwdNLxJ935NJNZX/kihiD5MIQvN8mxcOBt7nCmht6bsyv2tL8f2q+wNzBzFBytFCtyakKcw8AfEpf74ftUpFpcuBfQCWkt/QUXP+WDvrSexhL5QooPR6iVE=
+	t=1741151130; cv=fail; b=Tjmx21IsvuXlZkTD3aeccB/Y8tNYn5YjasiiN2JzSRX+qHocq0feO0Ud973TFTfIzHFaTpU7fEeJM+Ur+43+Rkqbm3CEqHwmfO62vtR/5/jkCDsLSa1Yn34BuQJoeFDgex/jCQ9lu55+xNtwUrL5U8OqOhqewiWLd/5+ztjxBi0=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741151129; c=relaxed/simple;
-	bh=TfiRdHafv2cuGdmtYC9j1n7g7lGWNSqBaQr87UMK2Kw=;
+	s=arc-20240116; t=1741151130; c=relaxed/simple;
+	bh=VvBUXS/1abVkq1nDwwtZopAEtK+XQoyz8ogJY2DHArg=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BpgbNpe5mhU53J04w6SLV24JJw5RDbjVruz8RRRO4o0+DRlBG6ToQvePf5h3Gu3l7QomibT8ch/wYoy66i6UQkWf+p0GKoNn1O3VshBxJWe835xii6szsPGB0msWR9T9swKbU7y6wUhKRKRS+JBnxK6dvtCxSKTjvuBOiNs5Vkc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=swkZfCW1; arc=fail smtp.client-ip=40.107.93.62
+	 MIME-Version:Content-Type; b=ony8JqV+VMAk92mBvKnpq1v7+UDOr+fY651bOsuP+/a57YpKxU1oFIoxir+wwZm2LVujKG0jYyMiZ7KVq2f/uXn9LGpPqle+UpdYa0YC9zVkQ4IvqXIeinwruiirTBq8my8+oBYOHoBTEGspMo/F3hAm0QlB15PUA3bZWF78UdI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=Hl6aKA0q; arc=fail smtp.client-ip=40.107.93.69
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="swkZfCW1"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="Hl6aKA0q"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=E8qPjeEv4xzXFbmfrGdtgX0hCpJ9FulJKY+lDZHMRj4gGZZDHcd705nT8EtlXUFjB1IGeMt/Iin/To8czX/MICzdtyWgFhz19OcNVGTsj14nrP3Ax06XfTWE530C/8NytWgFfwHsymi4xIu1AVkbhbqJhZfVOLj0BCG+Fi4tbR6RWN3S+Oty3lRUV9G4f8Zo3fDeM4A2gY+AA8ZPyENUsrYl4ZGX4MbhIrW6jk7hhlqsY2jZW6IMyyi0zQ+1TOTD7vbPQl64/Hwp2TVQWlmRqP3tF18P9jB3lN7Lm4vBuJCqwpH6Qvv7yqoPOtnkqujD1DKQPlQMbVH6B2N4yzAMVw==
+ b=pin9F/0w/rMODB4Z51RsbgN5KnsEatQnVHglZJCXKRd6iwylhSDMxiFLwnv+NSBYrrdTD3BCSLUvd/oVdXqGmjKOJJ4YVrIlDOpZURHh7MfW5RszrlpGo+hg7VGxNHPAHO6M7ngN8lNsADtMDDPUd1X6NIzjg2vCh9gj6qhCdgWA+blXdzBRJDOuLYTO/3jdizzJ/x6mZWW6iI/krIiXVu+l9AsWBRmFekWbnpR4hjEg5Gnh/cbDYHVMI89A1muEZtaftqat872iHaqSiRYD0yWCfkfH+9r3eMVZsEJvYwXF20RK80CsALaDiniQYmxNrdR6ZPr3qtaGXsO98hGvew==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=bZ/ZHj6ooYmdyVrpdOUn5MDJjwanAD+IPlSgRaMfWg8=;
- b=ua2HNYFh3CUmDU1z7KtAqw1Umo8/RjFzn7smsK35T5vNvU59zQL/iqo8MQ3lXl9UBaSQ+TyjwQBVHzBOIQtk1UJenj0lZJNtXqqXddK0O+j5mJ9PYfJqU/bHaQydnLyCwsKKdbMoLpzeWj2EOIIyL9xxVetF35yuz4rAqpUV2HDMHSzUjXM0a5AxhaD5i7XWI+5izLhSom2XDUm3x8Na3beQw3s+qZNq9vA2YoN1Nj3pVDXPsXZwFze8CIgMItrYKQJOK14e/3ni1eZ+f5kmGDzO1CuEb2hXiMQhWbGE111rjeMy4AkvGng1Km8VVQR6ZRZipdPfw7SNsAskDGH5+Q==
+ bh=SS8bHMbgVHP4hr481XNUufLfvliCKe47cyu10MwFhos=;
+ b=mFKpZHaH+DWbSlnKXl+sVm4MX4Z4BWjuvfhhzWy5crz71EoKyltIifTMvEumH+ubhKyEqoVIaX7TFB7xTVn4pU5tD+eG/0/99Mh4I3ZZ8P5OkqsWPr5rVi5f9i5sVbNVo/UpkwU0FxFtSokK+DKVSsRfR+7tTMGm6WU6qg9T7Wtkg5qEB1Ctl4Ild8jkRqegfgBFd6vNIJsjqaoEHLxVaLk3sU2aqkB29zMDFKGidDysdkW6rc1AuG5mOM7N/Chf9GQgCGI3LzpCpneqepWpgcV7YfDHUp9hNd400fEQXVJXIgneomKgvEXwr+OqaV7RVMgFxas5MTXjbykE+4tGTA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  216.228.117.160) smtp.rcpttodomain=kernel.org smtp.mailfrom=nvidia.com;
  dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
@@ -30,18 +30,18 @@ ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bZ/ZHj6ooYmdyVrpdOUn5MDJjwanAD+IPlSgRaMfWg8=;
- b=swkZfCW14dW4l1qa8BY5hZInEpzgab+lEHdhzX2GfdPKmzinSyWDBVXlxy5avHPbYRQrtfSB1cdfaTQTQaO+GOmuSIdYnLD9QA7ijZp34NurDZ+dMNB2rJb+CqryNt46inhWRcMpCtub3N4Q+tJcL39x3eAg3RNl92LB1bRChLT2OyxTHHwbG7Hfo4H5rdjEe+7aSR9Ckmlfjf12mXD+SjuhBTVZJMXjlRX9mqIp8HkCmiYOQer4vkhE/wCkal9WvIe7acVYbUsRg6i4IZikKtOabYiQnkNEYb1hfttsePCTDH2jO9KJwOhu1TbkRRYRnGuNyWcqZYVC3aWRQeujyw==
-Received: from BN9PR03CA0144.namprd03.prod.outlook.com (2603:10b6:408:fe::29)
- by PH7PR12MB6610.namprd12.prod.outlook.com (2603:10b6:510:212::22) with
+ bh=SS8bHMbgVHP4hr481XNUufLfvliCKe47cyu10MwFhos=;
+ b=Hl6aKA0q7CzWjFmiIz2qWRq9hqnJNVLX95UCRcsS/5dSoD3SgJMaMm9iEQQ1+FasMlJVlb/LNFv9kULrq3ysCqjkvDlK5nnvXkuIhi5hG6suZKoPYoiB/aVVvmlTSaXNsRLQk2xOKB0yczkXt+62/ULzksQGp7pi/mSGe4URbKWLWU/dF3p6W+qnVzFJS7aKGU1huPTgOXVtFTVjwDSpX6UpwZ47m8aPIqX+tyq7K0Phap/ZzAkB5n+m5ZMgifCjIus8j8WotlM4rIqDa7qP1MI+EIxtZoFxok3d9gOl2D0UJv0s7MdheC5I1WhdS3qvLkxHQ36fhBeQ3LwKCOql9Q==
+Received: from MN0P222CA0019.NAMP222.PROD.OUTLOOK.COM (2603:10b6:208:531::25)
+ by DS0PR12MB7654.namprd12.prod.outlook.com (2603:10b6:8:11d::17) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.17; Wed, 5 Mar
- 2025 05:05:22 +0000
-Received: from BN2PEPF000044AB.namprd04.prod.outlook.com
- (2603:10b6:408:fe:cafe::c6) by BN9PR03CA0144.outlook.office365.com
- (2603:10b6:408:fe::29) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8511.16 via Frontend Transport; Wed,
- 5 Mar 2025 05:05:22 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.29; Wed, 5 Mar
+ 2025 05:05:26 +0000
+Received: from BN2PEPF000044A9.namprd04.prod.outlook.com
+ (2603:10b6:208:531:cafe::4a) by MN0P222CA0019.outlook.office365.com
+ (2603:10b6:208:531::25) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8489.28 via Frontend Transport; Wed,
+ 5 Mar 2025 05:05:26 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
  smtp.mailfrom=nvidia.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=nvidia.com;
@@ -49,28 +49,28 @@ Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
  216.228.117.160 as permitted sender) receiver=protection.outlook.com;
  client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
 Received: from mail.nvidia.com (216.228.117.160) by
- BN2PEPF000044AB.mail.protection.outlook.com (10.167.243.106) with Microsoft
+ BN2PEPF000044A9.mail.protection.outlook.com (10.167.243.103) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8511.15 via Frontend Transport; Wed, 5 Mar 2025 05:05:22 +0000
+ 15.20.8511.15 via Frontend Transport; Wed, 5 Mar 2025 05:05:25 +0000
 Received: from rnnvmail205.nvidia.com (10.129.68.10) by mail.nvidia.com
  (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Tue, 4 Mar 2025
- 21:05:09 -0800
+ 21:05:12 -0800
 Received: from rnnvmail201.nvidia.com (10.129.68.8) by rnnvmail205.nvidia.com
  (10.129.68.10) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Tue, 4 Mar
- 2025 21:05:08 -0800
+ 2025 21:05:11 -0800
 Received: from Asurada-Nvidia.nvidia.com (10.127.8.12) by mail.nvidia.com
  (10.129.68.8) with Microsoft SMTP Server id 15.2.1544.14 via Frontend
- Transport; Tue, 4 Mar 2025 21:05:08 -0800
+ Transport; Tue, 4 Mar 2025 21:05:11 -0800
 From: Nicolin Chen <nicolinc@nvidia.com>
 To: <will@kernel.org>, <robin.murphy@arm.com>, <jgg@nvidia.com>
 CC: <joro@8bytes.org>, <linux-arm-kernel@lists.infradead.org>,
 	<iommu@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
 	<shameerali.kolothum.thodi@huawei.com>
-Subject: [PATCH v1 1/4] iommu/arm-smmu-v3: Pass in vmid to arm_smmu_make_s2_domain_ste()
-Date: Tue, 4 Mar 2025 21:04:00 -0800
-Message-ID: <214b10db02f1046efdc70e2c4803111357f60070.1741150594.git.nicolinc@nvidia.com>
+Subject: [PATCH v1 4/4] iommu/arm-smmu-v3-iommufd: Allow a shared s2_parent to allocate vSMMU
+Date: Tue, 4 Mar 2025 21:04:03 -0800
+Message-ID: <564eda8dee4bbf4c6e1d1dd9ed6bd40cc1a2df26.1741150594.git.nicolinc@nvidia.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <cover.1741150594.git.nicolinc@nvidia.com>
 References: <cover.1741150594.git.nicolinc@nvidia.com>
@@ -85,157 +85,79 @@ Content-Type: text/plain
 X-NV-OnPremToCloud: AnonymousSubmission
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN2PEPF000044AB:EE_|PH7PR12MB6610:EE_
-X-MS-Office365-Filtering-Correlation-Id: ad65fe9e-ac1c-4603-7ef6-08dd5ba35536
+X-MS-TrafficTypeDiagnostic: BN2PEPF000044A9:EE_|DS0PR12MB7654:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4d8dd552-195d-413f-a3a5-08dd5ba35741
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|376014|36860700013|1800799024|30052699003;
+	BCL:0;ARA:13230040|376014|82310400026|1800799024|36860700013;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?LKOubk2EL9+5UC3BGh7HjYEdM2RAs/HaNVIMT5RiLeY+VBtrel42J1Pc+6q9?=
- =?us-ascii?Q?+Rf/vcryYRzTT9OOgtUbSg1Ig6vOutVyrF+QOlzAIGWIoDzxuv/kxjq7GuqR?=
- =?us-ascii?Q?2Ilu6STD1MNbU/QsBDWyOPZ3cQ83lwB5GLv9AHnME3qxyDtLvE/VOmuaOSyf?=
- =?us-ascii?Q?o5+9Hq+1YseLkYsEmRNOXtMprS+rHNz6KLJNhUcb8g8bJo/V4FIau5UABq4k?=
- =?us-ascii?Q?bs4yqU8cLIGckU8Qr0wHONXslx6n8xOZKrUCTeynb9+ciPsw5FFuc3XC1jos?=
- =?us-ascii?Q?7kvwzhnrgc6+VQSXXK6cHFWdy/pLTnMf9APsbrI5O3zfD7XkpXD0Ul2KD3bR?=
- =?us-ascii?Q?Du6mJ4qEt745ZnQuk4RMDjW5a+tLFddccODJNfnIsoG+e94znx5sWshqEeKj?=
- =?us-ascii?Q?GqPBoOhZKUKnbZVQjg4VkPH0+Wt+3VUr0dKRqB3GGAh+A5oV5Y5/6o4WOYM6?=
- =?us-ascii?Q?PHFK3OLQ7ZnjevuGkcOkRQYfRfFd/BtXdCeNMt5+ZgvqXQ2eMF80VSwmL1Xq?=
- =?us-ascii?Q?fsMCObv9PsOmemvezPFJFWMtR+g9E1D6iLF1u1WcwvH7KhtdIBe0NseLvdDq?=
- =?us-ascii?Q?9f46GE+yAWDB/U99/I2IUqlI6llMaHLCPsrUrky3VNZw5ubb96vMeU+clhFq?=
- =?us-ascii?Q?ub3oZpifKVnY8PaPRN9xZXt4pVZerLRr4o5Z4keEofhCJRi9D7FKimu4SqhN?=
- =?us-ascii?Q?fFXoW/o3AbnS4hWxjlxG7ufuA+KDcjxj1vWG8shALkZhY4Lc2zv4rGa4whAl?=
- =?us-ascii?Q?qs06tpF3ekLhErEyOlqw2sRF3NiI80rum8hgdOSU+2d11Clo1pyqUJSyo4aE?=
- =?us-ascii?Q?R6zyw4c0H/04sA9Bb2xGL52tfmr8bQZbAQN1l13usdYUWLalS8SX/pe4AYFx?=
- =?us-ascii?Q?6orB9uOv1kKFPon0SyORZtHybz3q//C5zmWDPl5iGJ3Sr8xOHW4NhIqwp5xw?=
- =?us-ascii?Q?YF/mFdZrratYw0rhAW0xRx9DxDnWrjqSHZMHZ0e3DR8Zur537KB2smEXWplX?=
- =?us-ascii?Q?LpiJnKnm+YoCK11samMx0I55sKoNu5Q3vuHoVxcLsn5yvKFZ0qlhn/wqf2Ys?=
- =?us-ascii?Q?LbV71JbwYG7Rat0I1cNFpdA/bTOEWAsMRxavYjml8N//r2GtA7POVPb7ekoS?=
- =?us-ascii?Q?vsghdSlJXIZz5RSL9yZxVULSBKgRtFve0PaisUJCMFufdYS+5cr3AIs8LTZd?=
- =?us-ascii?Q?if0xgjaqF1g4yiSNjss5knDgRwvxVl2/kHW42zRjbfhAXzko78QotZb5Kfik?=
- =?us-ascii?Q?w8xNW+ht+j0i2fAUz/0QjN35okn20Dc+7RqMRQzJIQ2hh9MjUe2Ni70uR76H?=
- =?us-ascii?Q?nPMza1foOMUgAJmrIl86Rp5HqDoGNB0Hg5bufVSPm9sPhs6eLXy2ftSD4YE/?=
- =?us-ascii?Q?TZnzOA11ZqoI1zYpmKnNKsBZOTI5d91jGwF499mHbKGCnjWCNT2I8cGkqFnQ?=
- =?us-ascii?Q?h1MvEOy7P1Brz1kxZO0UoFUKouA5dmsJO2syBnob0j2TPdQNBca5iTqiHD7X?=
- =?us-ascii?Q?f7GMkVI3nx7+XwQ=3D?=
+	=?us-ascii?Q?PsWcfjzQHYbqoPXZAhdg291YaL51M/vx0l5vzNbwPJxer2QiSkL4JAcDOAcq?=
+ =?us-ascii?Q?PyU9hzQZwhxA86bpS+vO+cq58QHE22lqrzTqYs30xfHbzWEf2bRMdByvFRfH?=
+ =?us-ascii?Q?hV807KAdr9UqLzE+oB607d7+8QH9b3LSeVa7w32ynwqojQk/vP7XdXShivj2?=
+ =?us-ascii?Q?giGgat7dLhYZG3X4YM5WpXlIvyUsyUlmKhL9jDIlLkOt32jIkG/EPR3/68TD?=
+ =?us-ascii?Q?ntQyChDz080CZUIKnYRWNlw3u1SAStyRJWLYZVmEMKC4KwQu2DHsIVfuP9d4?=
+ =?us-ascii?Q?gK7Ea2BTB/wctEhc+piHMq98vecDERo52aFn2dIiJbrshNXyqeCFpkiQxTBW?=
+ =?us-ascii?Q?tPvPTsA3bi8RcBY7xKSNNdrxbymJAQehelfu4b1/yEDZ0410vAKKEGNDNs9p?=
+ =?us-ascii?Q?wciXNkXX8/qF4PEkzEfTemsBZrI2KDQkpQre36Es3PLnJvIxGWAhy/37Zcnk?=
+ =?us-ascii?Q?m23S/egbEH1j3o8SgDRIfkY7LpSKGVkYKgZXnBmpPY8n5O0hV7sANz0iGcCY?=
+ =?us-ascii?Q?fRhFLwak+SMbz6w8e9A5iuDLqIUTXpzxBZv1bWIwTYg1CyFYE5SLdv+kMyiD?=
+ =?us-ascii?Q?nCORoRbljDngit8nm8WYVmqhkue/D8lEb288bJK4DcgxtQkSu3FDWfw3t1yN?=
+ =?us-ascii?Q?BWdhO/2dp816Nqbf9VA+bBrIipGzjEfGtjp445PzvVeieUju08+HDCZ5X/87?=
+ =?us-ascii?Q?oN53DJOYlW56rY8bBFkjxsiRQuATK32XmVF4+724bKJTpo02g3dLlo6qCgoz?=
+ =?us-ascii?Q?pyi6SZox1MbBt11nCSK1anJQ7kDUMAigSrEc+z9qnIEvtTdyBGEynyLnxMyr?=
+ =?us-ascii?Q?9spCgp2BqpL1ZGJoV7kWdDCPL/+dk5HCVvnTjOOGD2vGoc2G38uyOTXZEq4B?=
+ =?us-ascii?Q?tlaR7h11D9OGOuwRlwML3GnJqSR/vuOg7wG8MAvbH9wWBNaVhUO3Ok3P9zgm?=
+ =?us-ascii?Q?4JJIe/HpWl4en2xKX9DNdtxaIgC2CWOqiG1T3OvduMoM+Taiw43buwElrJa2?=
+ =?us-ascii?Q?Z7SF99tsLtuLd7pV5EnNU2adK4zZL6SrQD8pHTtNCytbzZ7ffLF2Y94Umrfk?=
+ =?us-ascii?Q?apy5EeteYf3gnMH5qU8pQtdOkaJpnp0lS9Nojk4d6uUnQe3P+6dBMyFU4+OZ?=
+ =?us-ascii?Q?dKX2GYvAjn4fe6G9RszvIsfYe0Xv8gntclUR0n4VrWkrb9W340UdhV1sEErI?=
+ =?us-ascii?Q?2HdGxCT/dpcGOhmAZD2GvLti+oGbTx0+W0uAI5oxVbjdFlYExWb21KTE5Pas?=
+ =?us-ascii?Q?U+SaqoeY9y0rUquB/xPe4ZLoXlRlCGk9vkhdo6OewvCDZ6uqVx8xM1Kc8sA6?=
+ =?us-ascii?Q?1bbHdIkojfqkXGKxfaQtk8xFgRCGE14EHSxcAPFylMkpNWemvbyC9eaNZZrZ?=
+ =?us-ascii?Q?QfiXF6Mu28gb66p0OJ7P3/OcqwMw1G5pfo/ZmG5ConCw90PfZ3X5wnbzPdlR?=
+ =?us-ascii?Q?Hsp5dk7GgvLpwwqa6SZzZLA0MrG/9tcXML8dnYTS2dXq2ecuQtHNKwnik7gM?=
+ =?us-ascii?Q?9vBdIsXhvZgTn3g=3D?=
 X-Forefront-Antispam-Report:
-	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230040)(82310400026)(376014)(36860700013)(1800799024)(30052699003);DIR:OUT;SFP:1101;
+	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230040)(376014)(82310400026)(1800799024)(36860700013);DIR:OUT;SFP:1101;
 X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Mar 2025 05:05:22.1878
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Mar 2025 05:05:25.6163
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: ad65fe9e-ac1c-4603-7ef6-08dd5ba35536
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4d8dd552-195d-413f-a3a5-08dd5ba35741
 X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	BN2PEPF000044AB.namprd04.prod.outlook.com
+	BN2PEPF000044A9.namprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB6610
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB7654
 
-An stage-2 STE requires a vmid that has been so far allocated per domain,
-so arm_smmu_make_s2_domain_ste() has been extracting the vmid from the S2
-domain.
+Now, vmids are stored in vSMMU objects. So all vSMMUs assigned to the same
+VM can share a s2_parent domain. This means a vIOMMU allocation per device
+behind one SMMU can be given with a s2_parent domain that's allocated per
+another device behind another SMMU, i.e. s2_parent->smmu != master->smmu.
 
-To share an S2 parent domain across vSMMUs in the same VM, a vmid will be
-no longer allocated for nor stored in the S2 domain, but per vSMMU, which
-means the arm_smmu_make_s2_domain_ste() can get a vmid either from an S2
-domain (non nesting parent) or a vSMMU.
-
-Allow to pass in vmid explicitly to arm_smmu_make_s2_domain_ste(), giving
-its callers a chance to pick the vmid between a domain or a vSMMU.
+Remove the validation line to allow this use case.
 
 Signed-off-by: Nicolin Chen <nicolinc@nvidia.com>
 ---
- drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h         | 2 +-
- drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-iommufd.c | 6 ++++--
- drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-test.c    | 3 ++-
- drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c         | 6 +++---
- 4 files changed, 10 insertions(+), 7 deletions(-)
+ drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-iommufd.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h
-index bd9d7c85576a..e08c4ede4b2d 100644
---- a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h
-+++ b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h
-@@ -887,7 +887,7 @@ struct arm_smmu_entry_writer_ops {
- void arm_smmu_make_abort_ste(struct arm_smmu_ste *target);
- void arm_smmu_make_s2_domain_ste(struct arm_smmu_ste *target,
- 				 struct arm_smmu_master *master,
--				 struct arm_smmu_domain *smmu_domain,
-+				 struct arm_smmu_domain *smmu_domain, u16 vmid,
- 				 bool ats_enabled);
- 
- #if IS_ENABLED(CONFIG_KUNIT)
 diff --git a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-iommufd.c b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-iommufd.c
-index 5aa2e7af58b4..ff8b550159f2 100644
+index 2c5a9d0abed5..9bfa5fa5bafa 100644
 --- a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-iommufd.c
 +++ b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-iommufd.c
-@@ -34,8 +34,9 @@ static void arm_smmu_make_nested_cd_table_ste(
- 	struct arm_smmu_ste *target, struct arm_smmu_master *master,
- 	struct arm_smmu_nested_domain *nested_domain, bool ats_enabled)
- {
--	arm_smmu_make_s2_domain_ste(
--		target, master, nested_domain->vsmmu->s2_parent, ats_enabled);
-+	arm_smmu_make_s2_domain_ste(target, master,
-+				    nested_domain->vsmmu->s2_parent,
-+				    nested_domain->vsmmu->vmid, ats_enabled);
+@@ -378,9 +378,6 @@ struct iommufd_viommu *arm_vsmmu_alloc(struct device *dev,
+ 	if (!(smmu->features & ARM_SMMU_FEAT_NESTING))
+ 		return ERR_PTR(-EOPNOTSUPP);
  
- 	target->data[0] = cpu_to_le64(STRTAB_STE_0_V |
- 				      FIELD_PREP(STRTAB_STE_0_CFG,
-@@ -76,6 +77,7 @@ static void arm_smmu_make_nested_domain_ste(
- 	case STRTAB_STE_0_CFG_BYPASS:
- 		arm_smmu_make_s2_domain_ste(target, master,
- 					    nested_domain->vsmmu->s2_parent,
-+					    nested_domain->vsmmu->vmid,
- 					    ats_enabled);
- 		break;
- 	case STRTAB_STE_0_CFG_ABORT:
-diff --git a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-test.c b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-test.c
-index d2671bfd3798..7fac5a112c5c 100644
---- a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-test.c
-+++ b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-test.c
-@@ -316,7 +316,8 @@ static void arm_smmu_test_make_s2_ste(struct arm_smmu_ste *ste,
- 	io_pgtable.cfg.arm_lpae_s2_cfg.vtcr.sl = 3;
- 	io_pgtable.cfg.arm_lpae_s2_cfg.vtcr.tsz = 4;
- 
--	arm_smmu_make_s2_domain_ste(ste, &master, &smmu_domain, ats_enabled);
-+	arm_smmu_make_s2_domain_ste(ste, &master, &smmu_domain,
-+				    smmu_domain.s2_cfg.vmid, ats_enabled);
- }
- 
- static void arm_smmu_v3_write_ste_test_s2_to_abort(struct kunit *test)
-diff --git a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
-index 358072b4e293..310bb4109ec9 100644
---- a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
-+++ b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
-@@ -1656,10 +1656,9 @@ EXPORT_SYMBOL_IF_KUNIT(arm_smmu_make_cdtable_ste);
- 
- void arm_smmu_make_s2_domain_ste(struct arm_smmu_ste *target,
- 				 struct arm_smmu_master *master,
--				 struct arm_smmu_domain *smmu_domain,
-+				 struct arm_smmu_domain *smmu_domain, u16 vmid,
- 				 bool ats_enabled)
- {
--	struct arm_smmu_s2_cfg *s2_cfg = &smmu_domain->s2_cfg;
- 	const struct io_pgtable_cfg *pgtbl_cfg =
- 		&io_pgtable_ops_to_pgtable(smmu_domain->pgtbl_ops)->cfg;
- 	typeof(&pgtbl_cfg->arm_lpae_s2_cfg.vtcr) vtcr =
-@@ -1690,7 +1689,7 @@ void arm_smmu_make_s2_domain_ste(struct arm_smmu_ste *target,
- 		   FIELD_PREP(STRTAB_STE_2_VTCR_S2TG, vtcr->tg) |
- 		   FIELD_PREP(STRTAB_STE_2_VTCR_S2PS, vtcr->ps);
- 	target->data[2] = cpu_to_le64(
--		FIELD_PREP(STRTAB_STE_2_S2VMID, s2_cfg->vmid) |
-+		FIELD_PREP(STRTAB_STE_2_S2VMID, vmid) |
- 		FIELD_PREP(STRTAB_STE_2_VTCR, vtcr_val) |
- 		STRTAB_STE_2_S2AA64 |
- #ifdef __BIG_ENDIAN
-@@ -2969,6 +2968,7 @@ static int arm_smmu_attach_dev(struct iommu_domain *domain, struct device *dev)
- 	}
- 	case ARM_SMMU_DOMAIN_S2:
- 		arm_smmu_make_s2_domain_ste(&target, master, smmu_domain,
-+					    smmu_domain->s2_cfg.vmid,
- 					    state.ats_enabled);
- 		arm_smmu_install_ste_for_dev(master, &target);
- 		arm_smmu_clear_cd(master, IOMMU_NO_PASID);
+-	if (s2_parent->smmu != master->smmu)
+-		return ERR_PTR(-EINVAL);
+-
+ 	/*
+ 	 * FORCE_SYNC is not set with FEAT_NESTING. Some study of the exact HW
+ 	 * defect is needed to determine if arm_vsmmu_cache_invalidate() needs
 -- 
 2.43.0
 
