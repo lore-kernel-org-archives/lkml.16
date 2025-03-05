@@ -1,174 +1,214 @@
-Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 966B52451C3
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 12:57:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01C3A2459C5;
+	Wed,  5 Mar 2025 12:57:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741179451; cv=none; b=Jc00PUekCMQzezneBeppuAhPqjQPPJp5o4Yp2blmh28kWqYjvvwChlU7juvz1LEP9m23alNj24wMO0QSFp9BMt4qQYWZNwZM1sZA9vElNQV20cjlpMfkA2Bae+5hjPahvblWpLIS64ZSInsMUYxG+U0oXgk540hrQzhddvkNQzc=
+	t=1741179453; cv=none; b=gjXhSW/TnztPUbl00DpLScGp9G/wLKtt9VeET7902XDisz/suBccnF4kVk51SGzHyxKdY2xKddmbREtGBj3/iTokikvdIjywfbdhkFUpH5KqvlO21HpQSlw7M/1XhGu5qLw8CwGLIwYI6Z/6/ReLwEWSKuVkOvxO2dVLDvdPmro=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741179451; c=relaxed/simple;
-	bh=qjSF8jIRsyMelV93W+KQ/HryVro6SXDF1wbUHAP7BD4=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:References; b=ky1CqYysCczm4ITTBrm3twDQZgzM31sHGkBAnWE5i9aGIWtpez5tNZo5TvV4JFOuen8NrZTM+biVv1p3x8FHjdzywoSELXt8JWSGtcSt4pfsBclNs9Qo+48FYC3GD5fuuCkBkw+0yCS9Jvt2wEqzvKm8kCuoRfhD2ZB7iJFU1q0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=TrEiBR+q; arc=none smtp.client-ip=203.254.224.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1741179453; c=relaxed/simple;
+	bh=Ljvfdb0OsdRdRE+6YawQZ3FbQxKnmX+JvjYq/i/gwvI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Uzb4zPINriQgb9mMWQ17hV4sL60Qbdm7DhPZbGT2THuVkwEz1CoxdeIyv1Bj7tzWq69WXvi0FgXtBCWTh3380ePDfZ8mBe/1qsJqvowWFakZhw7QQS3aRLrElQ9ETc/LWb2K5h8s+m3ivBCJ6e2Ju8KI5DUoSPhYKeJXmAEVNs8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gBrBCpG/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="TrEiBR+q"
-Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
-	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20250305125721epoutp04ecf19f8aaec60cd9d59ec2902ad8bd37~p6Xol-Zm31635916359epoutp04L
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 12:57:21 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20250305125721epoutp04ecf19f8aaec60cd9d59ec2902ad8bd37~p6Xol-Zm31635916359epoutp04L
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1741179441;
-	bh=gJTqKRJTpfqMnnraspq+3qUtcX/v+MUuDyp6qyCY7XA=;
-	h=From:To:Cc:Subject:Date:References:From;
-	b=TrEiBR+qekez73eASU67U0y/yDFMf9a4B4QZ3x2gWgV0ONTppcAoHtEfS4b+vhCIr
-	 yjSHEhyC/Hk8BH9UnmjgtLufHxOv3Ckq7Hg0K2GbkrNtgkyVCix1SDv1WR+Zv0/NNV
-	 jKKFO1T8AEeadxxhDl67y7LVgx4pZTb7LSou6ysM=
-Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
-	epcas5p4.samsung.com (KnoxPortal) with ESMTP id
-	20250305125721epcas5p498e06039d06bb7590aa3a595aeb93c36~p6Xn8tLwm1019510195epcas5p4U;
-	Wed,  5 Mar 2025 12:57:21 +0000 (GMT)
-Received: from epsmges5p1new.samsung.com (unknown [182.195.38.176]) by
-	epsnrtp3.localdomain (Postfix) with ESMTP id 4Z7CHz2Cztz4x9Pr; Wed,  5 Mar
-	2025 12:57:19 +0000 (GMT)
-Received: from epcas5p4.samsung.com ( [182.195.41.42]) by
-	epsmges5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	35.23.20052.F2A48C76; Wed,  5 Mar 2025 21:57:19 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-	epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
-	20250305091845epcas5p1689eda3ba03572377997897271636cfd~p3YwvyTxk0290502905epcas5p1W;
-	Wed,  5 Mar 2025 09:18:45 +0000 (GMT)
-Received: from epsmgmc1p1new.samsung.com (unknown [182.195.42.40]) by
-	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20250305091845epsmtrp13ce4349a0492a94ea7ad1411fede4ade~p3YwtnWv21941319413epsmtrp1Q;
-	Wed,  5 Mar 2025 09:18:45 +0000 (GMT)
-X-AuditID: b6c32a49-3fffd70000004e54-31-67c84a2fd74c
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-	epsmgmc1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	2E.0F.23488.4F618C76; Wed,  5 Mar 2025 18:18:44 +0900 (KST)
-Received: from cheetah.samsungds.net (unknown [107.109.115.53]) by
-	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20250305091842epsmtip281fe6bc11cada4780d723a78c6d42ca6~p3Yt_mHXc1556215562epsmtip2x;
-	Wed,  5 Mar 2025 09:18:42 +0000 (GMT)
-From: Swathi K S <swathi.ks@samsung.com>
-To: krzk+dt@kernel.org, andrew+netdev@lunn.ch, davem@davemloft.net,
-	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, robh@kernel.org,
-	conor+dt@kernel.org, richardcochran@gmail.com, mcoquelin.stm32@gmail.com,
-	alexandre.torgue@foss.st.com
-Cc: rmk+kernel@armlinux.org.uk, swathi.ks@samsung.com,
-	netdev@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	pankaj.dubey@samsung.com, ravi.patel@samsung.com, gost.dev@samsung.com
-Subject: [PATCH v8 0/2] net: stmmac: dwc-qos: Add FSD EQoS support
-Date: Wed,  5 Mar 2025 14:42:44 +0530
-Message-Id: <20250305091246.106626-1-swathi.ks@samsung.com>
-X-Mailer: git-send-email 2.17.1
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrBJsWRmVeSWpSXmKPExsWy7bCmlq6+14l0g7OzeC1+vpzGaLH8wQ5W
-	izV7zzFZzDnfwmIx/8g5Vounxx6xW9w8sJPJ4uWse2wWF7b1sVpsenyN1eLyrjlsFl3XnrBa
-	zPu7ltXi2AIxi2+n3zBaLNr6hd3i4Yc97BZHzrxgtrjUP5HJ4v+eHewWXzbeZHcQ9bh87SKz
-	x5aVN5k8nvZvZffYOesuu8eCTaUem1Z1snlsXlLvsXPHZyaP9/uusnn0bVnF6HFwn6HH501y
-	ATxR2TYZqYkpqUUKqXnJ+SmZeem2St7B8c7xpmYGhrqGlhbmSgp5ibmptkouPgG6bpk5QL8q
-	KZQl5pQChQISi4uV9O1sivJLS1IVMvKLS2yVUgtScgpMCvSKE3OLS/PS9fJSS6wMDQyMTIEK
-	E7IzZr44yF7QIlDx7tJhpgbGybxdjJwcEgImEjdWTGDqYuTiEBLYzSjxcM58KOcTo8TNtX1s
-	EM43RokvT18ydjFygLXc/mIP0i0ksJdR4uD6QIiaL4wS+x9dZQRJsAloSFxfsZ0dJCEi8ItR
-	4sOk08wgDrPAciaJ0w+uMINUCQs4STw7tQ3MZhFQlfhx8QaYzStgLXF58z02iAPlJVZvOMAM
-	YZ/gkHh0WxXCdpG4cf0YE4QtLPHq+BZ2CFtK4mV/G5QdL7G67yoLhJ0hcffXRKiZ9hIHrsxh
-	AfmGWUBTYv0ufYiwrMTUU+vARjIL8En0/n4CNZ5XYsc8GFtZ4u/ra1AjJSW2LX0PtcpDYu7f
-	g8yQUImVODXxPOsERtlZCBsWMDKuYpRMLSjOTU8tNi0wzEsth0dUcn7uJkZwEtby3MF498EH
-	vUOMTByMhxglOJiVRHhfnzqeLsSbklhZlVqUH19UmpNafIjRFBhkE5mlRJPzgXkgryTe0MTS
-	wMTMzMzE0tjMUEmct3lnS7qQQHpiSWp2ampBahFMHxMHp1QD07aiRjcOzdlXPn18OllKd5H4
-	0v6L2xsPG05Riw/Ve7cofZLu1OR1YTL/TNbvYKi8qMKiEXZcPU387B/TqAkTHmioHN971sA/
-	//zNtT6vTjXoNJfzu2hb35zbqRkRF73TLib60Ymy1d/805i9So8/khJd88hak/VQWAu3zqHM
-	ZAkdw10lZ0JkP85Ry61cvC0/Zu2UooptT7kf7OJVnMal78lj33e3bEdb7Ebfz9/jS2bM3+G6
-	bh17ufnWL7Ln9gWvmOm5JqD6dMOxg1bHoic5/JvAeWjfE9/VwempHZNM8vX2Jj6JY1hfElyX
-	VOhVsK7ntkpj3dopBa4tSS2Ojja181taI9aLJGc7zj9ovWKpEktxRqKhFnNRcSIASn7S80sE
-	AAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrMLMWRmVeSWpSXmKPExsWy7bCSvO4XsRPpBkubbSx+vpzGaLH8wQ5W
-	izV7zzFZzDnfwmIx/8g5Vounxx6xW9w8sJPJ4uWse2wWF7b1sVpsenyN1eLyrjlsFl3XnrBa
-	zPu7ltXi2AIxi2+n3zBaLNr6hd3i4Yc97BZHzrxgtrjUP5HJ4v+eHewWXzbeZHcQ9bh87SKz
-	x5aVN5k8nvZvZffYOesuu8eCTaUem1Z1snlsXlLvsXPHZyaP9/uusnn0bVnF6HFwn6HH501y
-	ATxRXDYpqTmZZalF+nYJXBkzXxxkL2gRqHh36TBTA+Nk3i5GDg4JAROJ21/suxg5OYQEdjNK
-	NDxmBLElBCQlPjVPZYWwhSVW/nvODlHziVHiwnkREJtNQEPi+ortQHEuDhGBDiaJPVNPMoM4
-	zAIbmSSOXdoM1iEs4CTx7NQ2ZhCbRUBV4sfFG2A2r4C1xOXN99ggNshLrN5wgHkCI88CRoZV
-	jJKpBcW56bnJhgWGeanlesWJucWleel6yfm5mxjB8aClsYPx3bcm/UOMTByMhxglOJiVRHhf
-	nzqeLsSbklhZlVqUH19UmpNafIhRmoNFSZx3pWFEupBAemJJanZqakFqEUyWiYNTqoEpoHCC
-	ttuC1inW+vJHT15hdnzD0/jeamL8ktfhk5JzeBebJ594adLZ8OOA6/IUd91dJSm/WGSvXlFZ
-	X+PE/9Gk4zDja7tzV9nyXgteuXiyq9HzXmuc8ucFvEcLbzWvvxHKcixb1e2r1+qN/zk/tH4W
-	WHd5/qFdh69MPZAttyhphw37t2WBraf357Qwv3X9YPFiFqf8g6cee0RqOWUzK5bWddseZIvu
-	Dy05No+J+bOFNpeK6imuOb8D9h/nEjC/YvtV8r/29qtPH2VEbW97dXtrTPihIqlXHRNlN755
-	31nRncIXH75veqLB5f2rXzX9bp1dVxnf3z3p24rOlFNFSvr/127OUd2lcelzGqvR9q/JSizF
-	GYmGWsxFxYkAIH1Iw/YCAAA=
-X-CMS-MailID: 20250305091845epcas5p1689eda3ba03572377997897271636cfd
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20250305091845epcas5p1689eda3ba03572377997897271636cfd
-References: <CGME20250305091845epcas5p1689eda3ba03572377997897271636cfd@epcas5p1.samsung.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gBrBCpG/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B18B9C4CEE7;
+	Wed,  5 Mar 2025 12:57:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741179452;
+	bh=Ljvfdb0OsdRdRE+6YawQZ3FbQxKnmX+JvjYq/i/gwvI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=gBrBCpG/iSg6fOVDefcq0ifue0Bnw+h3Bhgt2Daiyb48AVpjDDsYF9oEb0ZBh4RbP
+	 bJ+mglNsFOI37wx0ghPu9VUMD5x5ZL7xMOaf9BH9wLpKNBhBM5saCHdryYnPgMeTrZ
+	 R7+0x+qehwQgjXZIJOGJVwgDfyhgaNTJIgApXhDzV59XX8mH/gXLZhWyBXQg7epcEu
+	 WcOHGPi/P4n09VESMF80rVi/8CeLBNirh45pXAu6vMpKi3dwaaHFlz+LRn7FpfRnoF
+	 eu547QqsPzxQFljudQ8OwPAmxBN7Fadfmg7NEhiqQcu3B0lKiVVmXtCP15QHA/WYY5
+	 IvvDYXFyIfJLA==
+Date: Wed, 5 Mar 2025 13:57:26 +0100
+From: Carlos Maiolino <cem@kernel.org>
+To: brauner@kernel.org
+Cc: brauner@kernel.org, djwong@kernel.org, linux-xfs@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, ojaswin@linux.ibm.com, 
+	ritesh.list@gmail.com, martin.petersen@oracle.com, tytso@mit.edu, 
+	linux-ext4@vger.kernel.org
+Subject: Re: [PATCH v4 02/12] iomap: Rename IOMAP_ATOMIC -> IOMAP_ATOMIC_HW
+Message-ID: <mefv3axgsk567xwwwuoonvo7bncvdgu547ycvin5zjlztslotm@qu4fxqi3fave>
+References: <20250303171120.2837067-1-john.g.garry@oracle.com>
+ <UQF0E8blbU4wMo9RdB7-nRkNAIJHtPkzDsTrQEOkNRLjG2CGbKe97G8XenXN1DSkhoWhipJrN956Enqgk9Ewkg==@protonmail.internalid>
+ <20250303171120.2837067-3-john.g.garry@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250303171120.2837067-3-john.g.garry@oracle.com>
 
-FSD platform has two instances of EQoS IP, one is in FSYS0 block and
-another one is in PERIC block. This patch series add required DT binding
-and platform driver specific changes for the same.
+Hi Christian,
+On Mon, Mar 03, 2025 at 05:11:10PM +0000, John Garry wrote:
+> In future xfs will support a SW-based atomic write, so rename
+> IOMAP_ATOMIC -> IOMAP_ATOMIC_HW to be clear which mode is being used.
+> 
+> Also relocate setting of IOMAP_ATOMIC_HW to the write path in
+> __iomap_dio_rw(), to be clear that this flag is only relevant to writes.
+> 
+> Reviewed-by: "Darrick J. Wong" <djwong@kernel.org>
+> Signed-off-by: John Garry <john.g.garry@oracle.com>
 
-Changes since v1:
-1. Updated dwc_eqos_setup_rxclock() function as per the review comments
-given by Andrew.
+I pushed the patches in this series into this branch:
+git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git xfs-6.15-atomicwrites
 
-Changes since v2:
-1. Addressed all the review comments suggested by Krzysztof with respect to
-DT binding file.
-2. Added SOB Swathi.
+Do you plan to send the iomap patches in this series yourself or is it ok with
+you if they go through xfs tree?
 
-Changes since v3:
-1. Avoided using alias-id to configure the HW.
-2. Modified the clock implementation.
+Cheers,
+Carlos
 
-Changes since v4:
-1. Avoided switching between internal and external clocks for every open/
-close.
-2. Addressed the review comments on DT bindings
-
-Changes since v5:
-1. Addressed the review comment on correcting the intendation.
-2. Corrected the compatible name in dt-binding file.
-3. Listed and described the clocks in dt-binding.
-4. Modified FSD probe as per the changes in the refactoring patch given
-below: https://lore.kernel.org/netdev/20250207121849.55815-1-swathi.ks@samsung.com/
-
-Changes since v6:
-1. Addressed review comments by Krzysztof on dt-binding file regarding
-clock-names property
-2. Corrected indentation issue in dt-binding
-3. Addressed Andrew's comment on listing phy-modes.
-
-Changes since v7:
-1. Modified the example given in DT binding as per Russell's review
-comment on setting clock tree in DT
-2. Removed FSD probe since clock tree setting would be done via DT.
-
-Here is the link to v7 patches for reference:
-https://lore.kernel.org/netdev/20250220043712.31966-1-swathi.ks@samsung.com/
-
-Swathi K S (2):
-  dt-bindings: net: Add FSD EQoS device tree bindings
-  net: stmmac: dwc-qos: Add FSD EQoS support
-
- .../devicetree/bindings/net/snps,dwmac.yaml   |   5 +-
- .../bindings/net/tesla,fsd-ethqos.yaml        | 118 ++++++++++++++++++
- .../stmicro/stmmac/dwmac-dwc-qos-eth.c        |   8 +-
- 3 files changed, 128 insertions(+), 3 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/net/tesla,fsd-ethqos.yaml
-
--- 
-2.17.1
-
+> ---
+>  Documentation/filesystems/iomap/operations.rst |  4 ++--
+>  fs/ext4/inode.c                                |  2 +-
+>  fs/iomap/direct-io.c                           | 18 +++++++++---------
+>  fs/iomap/trace.h                               |  2 +-
+>  include/linux/iomap.h                          |  2 +-
+>  5 files changed, 14 insertions(+), 14 deletions(-)
+> 
+> diff --git a/Documentation/filesystems/iomap/operations.rst b/Documentation/filesystems/iomap/operations.rst
+> index d1535109587a..0b9d7be23bce 100644
+> --- a/Documentation/filesystems/iomap/operations.rst
+> +++ b/Documentation/filesystems/iomap/operations.rst
+> @@ -514,8 +514,8 @@ IOMAP_WRITE`` with any combination of the following enhancements:
+>     if the mapping is unwritten and the filesystem cannot handle zeroing
+>     the unaligned regions without exposing stale contents.
+> 
+> - * ``IOMAP_ATOMIC``: This write is being issued with torn-write
+> -   protection.
+> + * ``IOMAP_ATOMIC_HW``: This write is being issued with torn-write
+> +   protection based on HW-offload support.
+>     Only a single bio can be created for the write, and the write must
+>     not be split into multiple I/O requests, i.e. flag REQ_ATOMIC must be
+>     set.
+> diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
+> index 7c54ae5fcbd4..ba2f1e3db7c7 100644
+> --- a/fs/ext4/inode.c
+> +++ b/fs/ext4/inode.c
+> @@ -3467,7 +3467,7 @@ static inline bool ext4_want_directio_fallback(unsigned flags, ssize_t written)
+>  		return false;
+> 
+>  	/* atomic writes are all-or-nothing */
+> -	if (flags & IOMAP_ATOMIC)
+> +	if (flags & IOMAP_ATOMIC_HW)
+>  		return false;
+> 
+>  	/* can only try again if we wrote nothing */
+> diff --git a/fs/iomap/direct-io.c b/fs/iomap/direct-io.c
+> index e1e32e2bb0bf..c696ce980796 100644
+> --- a/fs/iomap/direct-io.c
+> +++ b/fs/iomap/direct-io.c
+> @@ -317,7 +317,7 @@ static int iomap_dio_zero(const struct iomap_iter *iter, struct iomap_dio *dio,
+>   * clearing the WRITE_THROUGH flag in the dio request.
+>   */
+>  static inline blk_opf_t iomap_dio_bio_opflags(struct iomap_dio *dio,
+> -		const struct iomap *iomap, bool use_fua, bool atomic)
+> +		const struct iomap *iomap, bool use_fua, bool atomic_hw)
+>  {
+>  	blk_opf_t opflags = REQ_SYNC | REQ_IDLE;
+> 
+> @@ -329,7 +329,7 @@ static inline blk_opf_t iomap_dio_bio_opflags(struct iomap_dio *dio,
+>  		opflags |= REQ_FUA;
+>  	else
+>  		dio->flags &= ~IOMAP_DIO_WRITE_THROUGH;
+> -	if (atomic)
+> +	if (atomic_hw)
+>  		opflags |= REQ_ATOMIC;
+> 
+>  	return opflags;
+> @@ -340,8 +340,8 @@ static int iomap_dio_bio_iter(struct iomap_iter *iter, struct iomap_dio *dio)
+>  	const struct iomap *iomap = &iter->iomap;
+>  	struct inode *inode = iter->inode;
+>  	unsigned int fs_block_size = i_blocksize(inode), pad;
+> +	bool atomic_hw = iter->flags & IOMAP_ATOMIC_HW;
+>  	const loff_t length = iomap_length(iter);
+> -	bool atomic = iter->flags & IOMAP_ATOMIC;
+>  	loff_t pos = iter->pos;
+>  	blk_opf_t bio_opf;
+>  	struct bio *bio;
+> @@ -351,7 +351,7 @@ static int iomap_dio_bio_iter(struct iomap_iter *iter, struct iomap_dio *dio)
+>  	u64 copied = 0;
+>  	size_t orig_count;
+> 
+> -	if (atomic && length != fs_block_size)
+> +	if (atomic_hw && length != fs_block_size)
+>  		return -EINVAL;
+> 
+>  	if ((pos | length) & (bdev_logical_block_size(iomap->bdev) - 1) ||
+> @@ -428,7 +428,7 @@ static int iomap_dio_bio_iter(struct iomap_iter *iter, struct iomap_dio *dio)
+>  			goto out;
+>  	}
+> 
+> -	bio_opf = iomap_dio_bio_opflags(dio, iomap, use_fua, atomic);
+> +	bio_opf = iomap_dio_bio_opflags(dio, iomap, use_fua, atomic_hw);
+> 
+>  	nr_pages = bio_iov_vecs_to_alloc(dio->submit.iter, BIO_MAX_VECS);
+>  	do {
+> @@ -461,7 +461,7 @@ static int iomap_dio_bio_iter(struct iomap_iter *iter, struct iomap_dio *dio)
+>  		}
+> 
+>  		n = bio->bi_iter.bi_size;
+> -		if (WARN_ON_ONCE(atomic && n != length)) {
+> +		if (WARN_ON_ONCE(atomic_hw && n != length)) {
+>  			/*
+>  			 * This bio should have covered the complete length,
+>  			 * which it doesn't, so error. We may need to zero out
+> @@ -652,9 +652,6 @@ __iomap_dio_rw(struct kiocb *iocb, struct iov_iter *iter,
+>  	if (iocb->ki_flags & IOCB_NOWAIT)
+>  		iomi.flags |= IOMAP_NOWAIT;
+> 
+> -	if (iocb->ki_flags & IOCB_ATOMIC)
+> -		iomi.flags |= IOMAP_ATOMIC;
+> -
+>  	if (iov_iter_rw(iter) == READ) {
+>  		/* reads can always complete inline */
+>  		dio->flags |= IOMAP_DIO_INLINE_COMP;
+> @@ -689,6 +686,9 @@ __iomap_dio_rw(struct kiocb *iocb, struct iov_iter *iter,
+>  			iomi.flags |= IOMAP_OVERWRITE_ONLY;
+>  		}
+> 
+> +		if (iocb->ki_flags & IOCB_ATOMIC)
+> +			iomi.flags |= IOMAP_ATOMIC_HW;
+> +
+>  		/* for data sync or sync, we need sync completion processing */
+>  		if (iocb_is_dsync(iocb)) {
+>  			dio->flags |= IOMAP_DIO_NEED_SYNC;
+> diff --git a/fs/iomap/trace.h b/fs/iomap/trace.h
+> index 9eab2c8ac3c5..69af89044ebd 100644
+> --- a/fs/iomap/trace.h
+> +++ b/fs/iomap/trace.h
+> @@ -99,7 +99,7 @@ DEFINE_RANGE_EVENT(iomap_dio_rw_queued);
+>  	{ IOMAP_FAULT,		"FAULT" }, \
+>  	{ IOMAP_DIRECT,		"DIRECT" }, \
+>  	{ IOMAP_NOWAIT,		"NOWAIT" }, \
+> -	{ IOMAP_ATOMIC,		"ATOMIC" }
+> +	{ IOMAP_ATOMIC_HW,	"ATOMIC_HW" }
+> 
+>  #define IOMAP_F_FLAGS_STRINGS \
+>  	{ IOMAP_F_NEW,		"NEW" }, \
+> diff --git a/include/linux/iomap.h b/include/linux/iomap.h
+> index ea29388b2fba..87cd7079aaf3 100644
+> --- a/include/linux/iomap.h
+> +++ b/include/linux/iomap.h
+> @@ -189,7 +189,7 @@ struct iomap_folio_ops {
+>  #else
+>  #define IOMAP_DAX		0
+>  #endif /* CONFIG_FS_DAX */
+> -#define IOMAP_ATOMIC		(1 << 9)
+> +#define IOMAP_ATOMIC_HW		(1 << 9)
+>  #define IOMAP_DONTCACHE		(1 << 10)
+> 
+>  struct iomap_ops {
+> --
+> 2.31.1
+> 
