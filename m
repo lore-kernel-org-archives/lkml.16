@@ -1,420 +1,203 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CB108632B;
-	Wed,  5 Mar 2025 00:54:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 397331EB36;
+	Wed,  5 Mar 2025 00:55:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741136049; cv=none; b=uKuhUKr4JYH7rAlXAAQiinMsIi4a5QrMnexNvCdylT8utZ7PoA976x03kRqaAbcUg0zN5sNFWtM5eU1f6XTNiKXu/6cVRRkdMK83uWves0lzXi4D+x8FQkiJLh+rNMzq+F3dQdlwozL9E2iq2YPFCQ46oQGU8Gd2ab0B2dIELNs=
+	t=1741136135; cv=none; b=JQ1vw2v7kxAhrMcZ68XnLNE45kGSHy5gFoFoMu0djMMvHdQa7RhjOScLp1+FFsa7F/6VsYW7ON6YIDvPiONG3TatGiXZUQQy1/KxJCpW9VoVt8MdRwZ8L5D1Qa73v1GPEEnB2n7fAks0uhOC5suvxf/RBrJs0RpLKWZMPsys/R4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741136049; c=relaxed/simple;
-	bh=XR4PI1LN4kdyU5wqIxlgJic4+Ln46gfPI8gNjamQjQU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=sbUqy15j7MuDAejQCihnEXuCpBOHMtI7VU5zMORDwKLg4uf7tQl2O41S7Cw1XH3uvwXd3yI6dH2K1+B1Q8Iid8EuvkMvOIiWUJte+tyULNXj8XZNbSacBB3iU2wpqjnDEkV73Vi4x1PjROwiN3YWhaql/fTnvEsqprFTX6PMJ6A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BVzLtR64; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741136135; c=relaxed/simple;
+	bh=iPV4w7owvHfPr5ZNWrsGQO/OhGEdz3OAJY0g6rOy6bg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=C51QXSYb4eKlWcKsCTpNmUbIMy2RCZxlO31KLOFIXluFoVutTPRX4rIWfFVgChlxn8mmlZYV1w+NOk+k2xL6AJceH+h9BkRN70IINkADDoXuz0J2FBYOiSnzaccly78+yhrFMDCEy8XQTpNcxx5X7tKGSLsgvxj/pcCchmnyqhE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=Q5XbfO3s; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BVzLtR64"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id A5C48C4CEEE;
-	Wed,  5 Mar 2025 00:54:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741136048;
-	bh=XR4PI1LN4kdyU5wqIxlgJic4+Ln46gfPI8gNjamQjQU=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=BVzLtR64AYEeV4tRZetm6S+LpRw17yX5/Du//S84meBNVfDNTURcb0glT6A2yC62T
-	 w55Wrd7U85R8x0KfSLjYVRyDY0olvjrbE31Slj6TJ8HZLpI2nq0RaF2KAYdoXQPrPp
-	 sUUNMjEHhFWYnA2u8ishc15uvmdx3xPrvOhsDgqzq+f+WZTLBcvI60GrvLZ6dSki9n
-	 ntErabFVXmAu72360IHgZ+2wOKNfwvmMJdQcQJoA1v2wVusYwySo3IBRxzkUg/NlgL
-	 6LU5Xzd9m5NR9sFgNojm6pQZyGzIw+PcThpxPpE5O3B54gVBkUaFieZR8O8wHBR9s3
-	 mT5LA0Xz5o0lw==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C365C282D0;
-	Wed,  5 Mar 2025 00:54:08 +0000 (UTC)
-From: Satish Kharat via B4 Relay <devnull+satishkh.cisco.com@kernel.org>
-Date: Tue, 04 Mar 2025 19:56:40 -0500
-Subject: [PATCH net-next v2 4/8] enic: enable rq extended cq support
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Q5XbfO3s"
+Received: from [10.17.64.124] (unknown [131.107.8.124])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 719E5210EAF8;
+	Tue,  4 Mar 2025 16:55:33 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 719E5210EAF8
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1741136133;
+	bh=H4AhP6jMEhJGpBHUcIilmpOFGmGyNrWrR7ArRzfcffA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Q5XbfO3sQRMPEjEjiuHvgPgBodNGY9XthIiuorr4yo2BWztHbo7TU63BQ8w7hPZnQ
+	 focqn8ATU2iMizxoVlxHtYUpW2DsOmqrbxT0QCRLf6NmOBplG8GXSEPGPGycsQfZZL
+	 a+8Ce6g6xdDS8kmqEjzyXwphUdimgHHXpZnKQBKc=
+Message-ID: <97c27a30-a5ee-4825-ab7e-82dcddedd688@linux.microsoft.com>
+Date: Tue, 4 Mar 2025 16:55:32 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v9 2/7] kexec: define functions to map and unmap segments
+To: Jarkko Sakkinen <jarkko@kernel.org>
+Cc: zohar@linux.ibm.com, stefanb@linux.ibm.com,
+ roberto.sassu@huaweicloud.com, roberto.sassu@huawei.com,
+ eric.snowberg@oracle.com, ebiederm@xmission.com, paul@paul-moore.com,
+ code@tyhicks.com, bauermann@kolabnow.com, linux-integrity@vger.kernel.org,
+ kexec@lists.infradead.org, linux-security-module@vger.kernel.org,
+ linux-kernel@vger.kernel.org, madvenka@linux.microsoft.com,
+ nramas@linux.microsoft.com, James.Bottomley@hansenpartnership.com,
+ bhe@redhat.com, vgoyal@redhat.com, dyoung@redhat.com
+References: <20250304190351.96975-1-chenste@linux.microsoft.com>
+ <20250304190351.96975-3-chenste@linux.microsoft.com>
+ <Z8d9RvRWPOADOgsx@kernel.org>
+Content-Language: en-US
+From: steven chen <chenste@linux.microsoft.com>
+In-Reply-To: <Z8d9RvRWPOADOgsx@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250304-enic_cleanup_and_ext_cq-v2-4-85804263dad8@cisco.com>
-References: <20250304-enic_cleanup_and_ext_cq-v2-0-85804263dad8@cisco.com>
-In-Reply-To: <20250304-enic_cleanup_and_ext_cq-v2-0-85804263dad8@cisco.com>
-To: Christian Benvenuti <benve@cisco.com>, 
- Andrew Lunn <andrew+netdev@lunn.ch>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Satish Kharat <satishkh@cisco.com>, Nelson Escobar <neescoba@cisco.com>, 
- John Daley <johndale@cisco.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1741136202; l=12808;
- i=satishkh@cisco.com; s=20250226; h=from:subject:message-id;
- bh=4QdHHiaBhEaGz+aozi+RNm0r9jFQ8UxgwC9RRxuvcdU=;
- b=dgB028ZgSQPNStT4/reCGrIpy7xp1n7lNIOjOs9CFYIyxeskNFaySdeCTQWnJegCxpLt+XO7W
- QiiDiK9FZHUCpEITOhuQDE1tJ9e+OHS/rEr53GzFyr7VJ9JrRf+Pyzb
-X-Developer-Key: i=satishkh@cisco.com; a=ed25519;
- pk=lkxzORFYn5ejiy0kzcsfkpGoXZDcnHMc4n3YK7jJnJo=
-X-Endpoint-Received: by B4 Relay for satishkh@cisco.com/20250226 with
- auth_id=351
-X-Original-From: Satish Kharat <satishkh@cisco.com>
-Reply-To: satishkh@cisco.com
 
-From: Satish Kharat <satishkh@cisco.com>
+On 3/4/2025 2:23 PM, Jarkko Sakkinen wrote:
+> On Tue, Mar 04, 2025 at 11:03:46AM -0800, steven chen wrote:
+>> The content of memory segments carried over to the new kernel during the
+>> kexec systemcall can be changed at kexec 'execute' stage, but the size of
+>> the memory segments cannot be changed at kexec 'execute' stage.
+>>
+>> To copy IMA measurement logs during the kexec operation, IMA needs to
+>> allocate memory at the kexec 'load' stage and map the segments to the
+>> kimage structure. The mapped address will then be used to copy IMA
+>> measurements during the kexec 'execute' stage.
+>>
+>> Currently, the mechanism to map and unmap segments to the kimage
+>> structure is not available to subsystems outside of kexec.
+> How does IMA work with kexec without having this? Just interested
+> (and confused).
+Currently, all IMA-related operations during a soft reboot, such as 
+memory allocation and IMA log list copy, are handled in the kexec 'load' 
+stage, so the map/unmap mechanism is not required.
 
-Enables getting from hw all the supported rq cq sizes and
-uses the highest supported cq size.
+The new design separates these two operations into different stages: 
+memory allocation remains in the kexec 'load' stage, while the IMA log 
+list copy is moved to the kexec 'execute' stage. Therefore, the 
+map/unmap mechanism is introduced.
 
-Co-developed-by: Nelson Escobar <neescoba@cisco.com>
-Signed-off-by: Nelson Escobar <neescoba@cisco.com>
-Co-developed-by: John Daley <johndale@cisco.com>
-Signed-off-by: John Daley <johndale@cisco.com>
-Signed-off-by: Satish Kharat <satishkh@cisco.com>
----
- drivers/net/ethernet/cisco/enic/cq_desc.h   |   3 +
- drivers/net/ethernet/cisco/enic/enic.h      |   9 +++
- drivers/net/ethernet/cisco/enic/enic_main.c |   4 ++
- drivers/net/ethernet/cisco/enic/enic_res.c  |  58 ++++++++++++++-
- drivers/net/ethernet/cisco/enic/enic_rq.c   | 105 +++++++++++++++++++++-------
- 5 files changed, 150 insertions(+), 29 deletions(-)
+Please refer to "[PATCH v9 0/7] ima: kexec: measure events between kexec 
+load and execute" for the reason why to add this.
 
-diff --git a/drivers/net/ethernet/cisco/enic/cq_desc.h b/drivers/net/ethernet/cisco/enic/cq_desc.h
-index 462c5435a206b4cc93b3734fdc96a2192b53a235..8fc313b6ed0434bd55b8e10bf3086ef848acbdf1 100644
---- a/drivers/net/ethernet/cisco/enic/cq_desc.h
-+++ b/drivers/net/ethernet/cisco/enic/cq_desc.h
-@@ -40,6 +40,9 @@ struct cq_desc {
- #define CQ_DESC_COMP_NDX_BITS    12
- #define CQ_DESC_COMP_NDX_MASK    ((1 << CQ_DESC_COMP_NDX_BITS) - 1)
- 
-+#define CQ_DESC_32_FI_MASK (BIT(0) | BIT(1))
-+#define CQ_DESC_64_FI_MASK (BIT(0) | BIT(1))
-+
- static inline void cq_desc_dec(const struct cq_desc *desc_arg,
- 	u8 *type, u8 *color, u16 *q_number, u16 *completed_index)
- {
-diff --git a/drivers/net/ethernet/cisco/enic/enic.h b/drivers/net/ethernet/cisco/enic/enic.h
-index 305ed12aa0311ca6cc53bfbffcc300182a8011a7..d60e55accafd0e4f83728524da4f167a474d6213 100644
---- a/drivers/net/ethernet/cisco/enic/enic.h
-+++ b/drivers/net/ethernet/cisco/enic/enic.h
-@@ -31,6 +31,13 @@
- 
- #define ENIC_AIC_LARGE_PKT_DIFF	3
- 
-+enum ext_cq {
-+	ENIC_RQ_CQ_ENTRY_SIZE_16,
-+	ENIC_RQ_CQ_ENTRY_SIZE_32,
-+	ENIC_RQ_CQ_ENTRY_SIZE_64,
-+	ENIC_RQ_CQ_ENTRY_SIZE_MAX,
-+};
-+
- struct enic_msix_entry {
- 	int requested;
- 	char devname[IFNAMSIZ + 8];
-@@ -228,6 +235,7 @@ struct enic {
- 	struct enic_rfs_flw_tbl rfs_h;
- 	u8 rss_key[ENIC_RSS_LEN];
- 	struct vnic_gen_stats gen_stats;
-+	enum ext_cq ext_cq;
- };
- 
- static inline struct net_device *vnic_get_netdev(struct vnic_dev *vdev)
-@@ -349,5 +357,6 @@ int enic_is_valid_vf(struct enic *enic, int vf);
- int enic_is_dynamic(struct enic *enic);
- void enic_set_ethtool_ops(struct net_device *netdev);
- int __enic_set_rsskey(struct enic *enic);
-+void enic_ext_cq(struct enic *enic);
- 
- #endif /* _ENIC_H_ */
-diff --git a/drivers/net/ethernet/cisco/enic/enic_main.c b/drivers/net/ethernet/cisco/enic/enic_main.c
-index 080234ef4c2bb53c19e26601ca9bb38d26a738b7..d716514366dfc56b4e08260d18d78fddd23f6253 100644
---- a/drivers/net/ethernet/cisco/enic/enic_main.c
-+++ b/drivers/net/ethernet/cisco/enic/enic_main.c
-@@ -2192,6 +2192,7 @@ static void enic_reset(struct work_struct *work)
- 	enic_init_vnic_resources(enic);
- 	enic_set_rss_nic_cfg(enic);
- 	enic_dev_set_ig_vlan_rewrite_mode(enic);
-+	enic_ext_cq(enic);
- 	enic_open(enic->netdev);
- 
- 	/* Allow infiniband to fiddle with the device again */
-@@ -2218,6 +2219,7 @@ static void enic_tx_hang_reset(struct work_struct *work)
- 	enic_init_vnic_resources(enic);
- 	enic_set_rss_nic_cfg(enic);
- 	enic_dev_set_ig_vlan_rewrite_mode(enic);
-+	enic_ext_cq(enic);
- 	enic_open(enic->netdev);
- 
- 	/* Allow infiniband to fiddle with the device again */
-@@ -2592,6 +2594,8 @@ static int enic_dev_init(struct enic *enic)
- 
- 	enic_get_res_counts(enic);
- 
-+	enic_ext_cq(enic);
-+
- 	err = enic_alloc_enic_resources(enic);
- 	if (err) {
- 		dev_err(dev, "Failed to allocate enic resources\n");
-diff --git a/drivers/net/ethernet/cisco/enic/enic_res.c b/drivers/net/ethernet/cisco/enic/enic_res.c
-index 1261251998330c8b8363c4dd2db1ccc25847476c..a7179cc4b5296cfbce137c54a9e17e6b358a19ae 100644
---- a/drivers/net/ethernet/cisco/enic/enic_res.c
-+++ b/drivers/net/ethernet/cisco/enic/enic_res.c
-@@ -312,6 +312,7 @@ void enic_init_vnic_resources(struct enic *enic)
- int enic_alloc_vnic_resources(struct enic *enic)
- {
- 	enum vnic_dev_intr_mode intr_mode;
-+	int rq_cq_desc_size;
- 	unsigned int i;
- 	int err;
- 
-@@ -326,6 +327,24 @@ int enic_alloc_vnic_resources(struct enic *enic)
- 		intr_mode == VNIC_DEV_INTR_MODE_MSIX ? "MSI-X" :
- 		"unknown");
- 
-+	switch (enic->ext_cq) {
-+	case ENIC_RQ_CQ_ENTRY_SIZE_16:
-+		rq_cq_desc_size = 16;
-+		break;
-+	case ENIC_RQ_CQ_ENTRY_SIZE_32:
-+		rq_cq_desc_size = 32;
-+		break;
-+	case ENIC_RQ_CQ_ENTRY_SIZE_64:
-+		rq_cq_desc_size = 64;
-+		break;
-+	default:
-+		dev_err(enic_get_dev(enic),
-+			"Unable to determine rq cq desc size: %d",
-+			enic->ext_cq);
-+		err = -ENODEV;
-+		goto err_out;
-+	}
-+
- 	/* Allocate queue resources
- 	 */
- 
-@@ -348,8 +367,8 @@ int enic_alloc_vnic_resources(struct enic *enic)
- 	for (i = 0; i < enic->cq_count; i++) {
- 		if (i < enic->rq_count)
- 			err = vnic_cq_alloc(enic->vdev, &enic->cq[i], i,
--				enic->config.rq_desc_count,
--				sizeof(struct cq_enet_rq_desc));
-+					enic->config.rq_desc_count,
-+					rq_cq_desc_size);
- 		else
- 			err = vnic_cq_alloc(enic->vdev, &enic->cq[i], i,
- 				enic->config.wq_desc_count,
-@@ -380,6 +399,39 @@ int enic_alloc_vnic_resources(struct enic *enic)
- 
- err_out_cleanup:
- 	enic_free_vnic_resources(enic);
--
-+err_out:
- 	return err;
- }
-+
-+/*
-+ * CMD_CQ_ENTRY_SIZE_SET can fail on older hw generations that don't support
-+ * that command
-+ */
-+void enic_ext_cq(struct enic *enic)
-+{
-+	u64 a0 = CMD_CQ_ENTRY_SIZE_SET, a1 = 0;
-+	int wait = 1000;
-+	int ret;
-+
-+	spin_lock_bh(&enic->devcmd_lock);
-+	ret = vnic_dev_cmd(enic->vdev, CMD_CAPABILITY, &a0, &a1, wait);
-+	if (ret || a0) {
-+		dev_info(&enic->pdev->dev,
-+			 "CMD_CQ_ENTRY_SIZE_SET not supported.");
-+		enic->ext_cq = ENIC_RQ_CQ_ENTRY_SIZE_16;
-+		goto out;
-+	}
-+	a1 &= VNIC_RQ_CQ_ENTRY_SIZE_ALL_BIT;
-+	enic->ext_cq = fls(a1) - 1;
-+	a0 = VNIC_RQ_ALL;
-+	a1 = enic->ext_cq;
-+	ret = vnic_dev_cmd(enic->vdev, CMD_CQ_ENTRY_SIZE_SET, &a0, &a1, wait);
-+	if (ret) {
-+		dev_info(&enic->pdev->dev, "CMD_CQ_ENTRY_SIZE_SET failed.");
-+		enic->ext_cq = ENIC_RQ_CQ_ENTRY_SIZE_16;
-+	}
-+out:
-+	spin_unlock_bh(&enic->devcmd_lock);
-+	dev_info(&enic->pdev->dev, "CQ entry size set to %d bytes",
-+		 16 << enic->ext_cq);
-+}
-diff --git a/drivers/net/ethernet/cisco/enic/enic_rq.c b/drivers/net/ethernet/cisco/enic/enic_rq.c
-index 842b273c2e2a59e81a7c1423449b023d646f5e81..ccbf5c9a21d0ffe33c7c74042d5425497ea0f9dc 100644
---- a/drivers/net/ethernet/cisco/enic/enic_rq.c
-+++ b/drivers/net/ethernet/cisco/enic/enic_rq.c
-@@ -21,24 +21,76 @@ static void enic_intr_update_pkt_size(struct vnic_rx_bytes_counter *pkt_size,
- 		pkt_size->small_pkt_bytes_cnt += pkt_len;
- }
- 
--static void enic_rq_cq_desc_dec(struct cq_enet_rq_desc *desc, u8 *type,
-+static void enic_rq_cq_desc_dec(void *cq_desc, u8 cq_desc_size, u8 *type,
- 				u8 *color, u16 *q_number, u16 *completed_index)
- {
- 	/* type_color is the last field for all cq structs */
--	u8 type_color = desc->type_color;
-+	u8 type_color;
-+
-+	switch (cq_desc_size) {
-+	case VNIC_RQ_CQ_ENTRY_SIZE_16: {
-+		struct cq_enet_rq_desc *desc =
-+			(struct cq_enet_rq_desc *)cq_desc;
-+		type_color = desc->type_color;
-+
-+		/* Make sure color bit is read from desc *before* other fields
-+		 * are read from desc.  Hardware guarantees color bit is last
-+		 * bit (byte) written.  Adding the rmb() prevents the compiler
-+		 * and/or CPU from reordering the reads which would potentially
-+		 * result in reading stale values.
-+		 */
-+		rmb();
- 
--	/* Make sure color bit is read from desc *before* other fields
--	 * are read from desc.  Hardware guarantees color bit is last
--	 * bit (byte) written.  Adding the rmb() prevents the compiler
--	 * and/or CPU from reordering the reads which would potentially
--	 * result in reading stale values.
--	 */
--	rmb();
-+		*q_number = le16_to_cpu(desc->q_number_rss_type_flags) &
-+			    CQ_DESC_Q_NUM_MASK;
-+		*completed_index = le16_to_cpu(desc->completed_index_flags) &
-+				   CQ_DESC_COMP_NDX_MASK;
-+		break;
-+	}
-+	case VNIC_RQ_CQ_ENTRY_SIZE_32: {
-+		struct cq_enet_rq_desc_32 *desc =
-+			(struct cq_enet_rq_desc_32 *)cq_desc;
-+		type_color = desc->type_color;
-+
-+		/* Make sure color bit is read from desc *before* other fields
-+		 * are read from desc.  Hardware guarantees color bit is last
-+		 * bit (byte) written.  Adding the rmb() prevents the compiler
-+		 * and/or CPU from reordering the reads which would potentially
-+		 * result in reading stale values.
-+		 */
-+		rmb();
-+
-+		*q_number = le16_to_cpu(desc->q_number_rss_type_flags) &
-+			    CQ_DESC_Q_NUM_MASK;
-+		*completed_index = le16_to_cpu(desc->completed_index_flags) &
-+				   CQ_DESC_COMP_NDX_MASK;
-+		*completed_index |= (desc->fetch_index_flags & CQ_DESC_32_FI_MASK) <<
-+				CQ_DESC_COMP_NDX_BITS;
-+		break;
-+	}
-+	case VNIC_RQ_CQ_ENTRY_SIZE_64: {
-+		struct cq_enet_rq_desc_64 *desc =
-+			(struct cq_enet_rq_desc_64 *)cq_desc;
-+		type_color = desc->type_color;
-+
-+		/* Make sure color bit is read from desc *before* other fields
-+		 * are read from desc.  Hardware guarantees color bit is last
-+		 * bit (byte) written.  Adding the rmb() prevents the compiler
-+		 * and/or CPU from reordering the reads which would potentially
-+		 * result in reading stale values.
-+		 */
-+		rmb();
-+
-+		*q_number = le16_to_cpu(desc->q_number_rss_type_flags) &
-+			    CQ_DESC_Q_NUM_MASK;
-+		*completed_index = le16_to_cpu(desc->completed_index_flags) &
-+				   CQ_DESC_COMP_NDX_MASK;
-+		*completed_index |= (desc->fetch_index_flags & CQ_DESC_64_FI_MASK) <<
-+				CQ_DESC_COMP_NDX_BITS;
-+		break;
-+	}
-+	}
- 
--	*q_number = le16_to_cpu(desc->q_number_rss_type_flags) &
--		CQ_DESC_Q_NUM_MASK;
--	*completed_index = le16_to_cpu(desc->completed_index_flags) &
--	CQ_DESC_COMP_NDX_MASK;
- 	*color = (type_color >> CQ_DESC_COLOR_SHIFT) & CQ_DESC_COLOR_MASK;
- 	*type = type_color & CQ_DESC_TYPE_MASK;
- }
-@@ -113,6 +165,10 @@ static void enic_rq_set_skb_flags(struct vnic_rq *vrq, u8 type, u32 rss_hash,
- 	}
- }
- 
-+/*
-+ * cq_enet_rq_desc accesses section uses only the 1st 15 bytes of the cq which
-+ * is identical for all type (16,32 and 64 byte) of cqs.
-+ */
- static void cq_enet_rq_desc_dec(struct cq_enet_rq_desc *desc, u8 *ingress_port,
- 				u8 *fcoe, u8 *eop, u8 *sop, u8 *rss_type,
- 				u8 *csum_not_calc, u32 *rss_hash,
-@@ -258,9 +314,8 @@ void enic_free_rq_buf(struct vnic_rq *rq, struct vnic_rq_buf *buf)
- }
- 
- static void enic_rq_indicate_buf(struct enic *enic, struct vnic_rq *rq,
--				 struct vnic_rq_buf *buf,
--				 struct cq_enet_rq_desc *cq_desc, u8 type,
--				 u16 q_number, u16 completed_index)
-+				 struct vnic_rq_buf *buf, void *cq_desc,
-+				 u8 type, u16 q_number, u16 completed_index)
- {
- 	struct sk_buff *skb;
- 	struct vnic_cq *cq = &enic->cq[enic_cq_rq(enic, rq->index)];
-@@ -277,7 +332,7 @@ static void enic_rq_indicate_buf(struct enic *enic, struct vnic_rq *rq,
- 
- 	rqstats->packets++;
- 
--	cq_enet_rq_desc_dec(cq_desc, &ingress_port,
-+	cq_enet_rq_desc_dec((struct cq_enet_rq_desc *)cq_desc, &ingress_port,
- 			    &fcoe, &eop, &sop, &rss_type, &csum_not_calc,
- 			    &rss_hash, &bytes_written, &packet_error,
- 			    &vlan_stripped, &vlan_tci, &checksum, &fcoe_sof,
-@@ -329,8 +384,8 @@ static void enic_rq_indicate_buf(struct enic *enic, struct vnic_rq *rq,
- 	}
- }
- 
--static void enic_rq_service(struct enic *enic, struct cq_enet_rq_desc *cq_desc,
--			    u8 type, u16 q_number, u16 completed_index)
-+static void enic_rq_service(struct enic *enic, void *cq_desc, u8 type,
-+			    u16 q_number, u16 completed_index)
- {
- 	struct enic_rq_stats *rqstats = &enic->rq[q_number].stats;
- 	struct vnic_rq *vrq = &enic->rq[q_number].vrq;
-@@ -357,14 +412,12 @@ unsigned int enic_rq_cq_service(struct enic *enic, unsigned int cq_index,
- 				unsigned int work_to_do)
- {
- 	struct vnic_cq *cq = &enic->cq[cq_index];
--	struct cq_enet_rq_desc *cq_desc;
-+	void *cq_desc = vnic_cq_to_clean(cq);
- 	u16 q_number, completed_index;
- 	unsigned int work_done = 0;
- 	u8 type, color;
- 
--	cq_desc = (struct cq_enet_rq_desc *)vnic_cq_to_clean(cq);
--
--	enic_rq_cq_desc_dec(cq_desc,  &type, &color, &q_number,
-+	enic_rq_cq_desc_dec(cq_desc, enic->ext_cq, &type, &color, &q_number,
- 			    &completed_index);
- 
- 	while (color != cq->last_color) {
-@@ -374,9 +427,9 @@ unsigned int enic_rq_cq_service(struct enic *enic, unsigned int cq_index,
- 		if (++work_done >= work_to_do)
- 			break;
- 
--		cq_desc = (struct cq_enet_rq_desc *)vnic_cq_to_clean(cq);
--		enic_rq_cq_desc_dec(cq_desc, &type, &color, &q_number,
--				    &completed_index);
-+		cq_desc = vnic_cq_to_clean(cq);
-+		enic_rq_cq_desc_dec(cq_desc, enic->ext_cq, &type, &color,
-+				    &q_number, &completed_index);
- 	}
- 
- 	return work_done;
+Steven
 
--- 
-2.48.1
+>> Implement kimage_map_segment() to enable IMA to map measurement log list to
+>> the kimage structure during kexec 'load' stage.  This function takes a kimage
+>> pointer, a memory address, and a size, then gathers the
+>> source pages within the specified address range, creates an array of page
+>> pointers, and maps these to a contiguous virtual address range.  The
+>> function returns the start virtual address of this range if successful, or NULL on
+>> failure.
+>>
+>> Implement kimage_unmap_segment() for unmapping segments
+>> using vunmap().
+>>
+>> From: Tushar Sugandhi <tusharsu@linux.microsoft.com>
+>> Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
+>> Cc: Eric Biederman <ebiederm@xmission.com>
+>> Cc: Baoquan He <bhe@redhat.com>
+>> Cc: Vivek Goyal <vgoyal@redhat.com>
+>> Cc: Dave Young <dyoung@redhat.com>
+>> Signed-off-by: steven chen <chenste@linux.microsoft.com>
+>> ---
+>>   include/linux/kexec.h |  6 +++++
+>>   kernel/kexec_core.c   | 54 +++++++++++++++++++++++++++++++++++++++++++
+>>   2 files changed, 60 insertions(+)
+>>
+>> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+>> index f0e9f8eda7a3..7d6b12f8b8d0 100644
+>> --- a/include/linux/kexec.h
+>> +++ b/include/linux/kexec.h
+>> @@ -467,13 +467,19 @@ extern bool kexec_file_dbg_print;
+>>   #define kexec_dprintk(fmt, arg...) \
+>>           do { if (kexec_file_dbg_print) pr_info(fmt, ##arg); } while (0)
+>>   
+>> +extern void *kimage_map_segment(struct kimage *image, unsigned long addr, unsigned long size);
+>> +extern void kimage_unmap_segment(void *buffer);
+>>   #else /* !CONFIG_KEXEC_CORE */
+>>   struct pt_regs;
+>>   struct task_struct;
+>> +struct kimage;
+>>   static inline void __crash_kexec(struct pt_regs *regs) { }
+>>   static inline void crash_kexec(struct pt_regs *regs) { }
+>>   static inline int kexec_should_crash(struct task_struct *p) { return 0; }
+>>   static inline int kexec_crash_loaded(void) { return 0; }
+>> +static inline void *kimage_map_segment(struct kimage *image, unsigned long addr, unsigned long size)
+>> +{ return NULL; }
+>> +static inline void kimage_unmap_segment(void *buffer) { }
+>>   #define kexec_in_progress false
+>>   #endif /* CONFIG_KEXEC_CORE */
+>>   
+>> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+>> index c0bdc1686154..63e4d16b6023 100644
+>> --- a/kernel/kexec_core.c
+>> +++ b/kernel/kexec_core.c
+>> @@ -867,6 +867,60 @@ int kimage_load_segment(struct kimage *image,
+>>   	return result;
+>>   }
+>>   
+>> +void *kimage_map_segment(struct kimage *image,
+>> +			 unsigned long addr, unsigned long size)
+>> +{
+>> +	unsigned long eaddr = addr + size;
+>> +	unsigned long src_page_addr, dest_page_addr;
+>> +	unsigned int npages;
+>> +	struct page **src_pages;
+>> +	int i;
+>> +	kimage_entry_t *ptr, entry;
+>> +	void *vaddr = NULL;
+>> +
+>> +	/*
+>> +	 * Collect the source pages and map them in a contiguous VA range.
+>> +	 */
+>> +	npages = PFN_UP(eaddr) - PFN_DOWN(addr);
+>> +	src_pages = kmalloc_array(npages, sizeof(*src_pages), GFP_KERNEL);
+>> +	if (!src_pages) {
+>> +		pr_err("Could not allocate ima pages array.\n");
+>> +		return NULL;
+>> +	}
+>> +
+>> +	i = 0;
+>> +	for_each_kimage_entry(image, ptr, entry) {
+>> +		if (entry & IND_DESTINATION) {
+>> +			dest_page_addr = entry & PAGE_MASK;
+>> +		} else if (entry & IND_SOURCE) {
+>> +			if (dest_page_addr >= addr && dest_page_addr < eaddr) {
+>> +				src_page_addr = entry & PAGE_MASK;
+>> +				src_pages[i++] =
+>> +					virt_to_page(__va(src_page_addr));
+>> +				if (i == npages)
+>> +					break;
+>> +				dest_page_addr += PAGE_SIZE;
+>> +			}
+>> +		}
+>> +	}
+>> +
+>> +	/* Sanity check. */
+>> +	WARN_ON(i < npages);
+>> +
+>> +	vaddr = vmap(src_pages, npages, VM_MAP, PAGE_KERNEL);
+>> +	kfree(src_pages);
+>> +
+>> +	if (!vaddr)
+>> +		pr_err("Could not map ima buffer.\n");
+>> +
+>> +	return vaddr;
+>> +}
+>> +
+>> +void kimage_unmap_segment(void *segment_buffer)
+>> +{
+>> +	vunmap(segment_buffer);
+>> +}
+>> +
+>>   struct kexec_load_limit {
+>>   	/* Mutex protects the limit count. */
+>>   	struct mutex mutex;
+>> -- 
+>> 2.25.1
+>>
+>>
+> BR, Jarkko
 
 
