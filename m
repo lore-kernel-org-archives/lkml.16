@@ -1,158 +1,321 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78EFA24889C;
-	Wed,  5 Mar 2025 14:21:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 262D1C2ED;
+	Wed,  5 Mar 2025 14:21:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741184463; cv=none; b=bo3DSmDMqhzbDE2JUkxhjj3HxnZXWRNucJSAy8Nkfnydj7T7Ev8xhv/A/jLSm/BZWJjmfGhSDQieVLXYD6SqZ5cVC4mM/giia+E6xUllDFJR9ORIEmAJlr2ed/5UUZtTVBc8AxV+4EzCBNsE1CXel5lYmkPWqz7ZQtkyJv4l4ns=
+	t=1741184496; cv=none; b=C2LwAdMF0LmChy6EYemKNtJi/1GsOIcm0cxEDmBe2hJcksruUkuIkJRA/Aj8tWtfwv7U1AX3NfSKHJi4V+ikWP9NygZDCHwWQeOoZU/QFC6SoT7PNEQ//68ZnU4iAdMY0WQPTDLBjC5pIGJY0vqTbrx2gMFzY/g5Kepitx2WV08=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741184463; c=relaxed/simple;
-	bh=g9ktS8K7rRoujwZfqZdfcH5n9clfO1z5LX6Sxgf2RCs=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Tw6mJcmQrqHW67gFLRaN+koJTPlNuG7Ypx84vhwSVj6dVF1RyAgcZ4eRmZ8uT0CspBIc8mz2iIon0GPtl1eKHuKzI/oxUnFI4vVNRXeQnixa/dxSZxUpdza3p23EkQ8PixLi10KAKVhsswa6jqzk5EjfCE+fFmYkkhxsgxmXeIo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ipGjJ/CD; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741184496; c=relaxed/simple;
+	bh=jvmchGdxVGZyNaODpuI7O279K1I8sOZ+LNSQ2rbqPXI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=DRP8Zg50Sol8i+i+qxzXdu3KdnuzKcUg32bUr0xvJSqRUq/J/PYi3q/mZsx1JjgFvBAmxc0UT4rgqc+GGlF5BExvvt+puJJqb9QFwSy5pfi9xmbsmb8VoASE84Rd/qdiVWeNX18udC/IxpRoeL4reUGoqG2TVLdv3UlwdhNjgEY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HFdDkeg8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ipGjJ/CD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4537C4CED1;
-	Wed,  5 Mar 2025 14:20:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HFdDkeg8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93567C4CED1;
+	Wed,  5 Mar 2025 14:21:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741184462;
-	bh=g9ktS8K7rRoujwZfqZdfcH5n9clfO1z5LX6Sxgf2RCs=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=ipGjJ/CDS553s7hCyO5v/E+vJZlgFG9NmHvjPEPf8pwx3dNVMg6flc/QnRXE3B+sh
-	 Xfq2cR8sCeDWINY8+XaAivWuEe1Toa4f1bWbfJGEL6351o1A+bZQV/nrHMguyToUww
-	 Oth2H+nrmhEhcWZD5kner56fcVNsu9vYAorn9n1dFHtuPKeN+sFxWmlyjdk32mVTcw
-	 Boo14ca5igGp7sKnEVJS4vjx72ZiBypv1T+KjVJmbRplXVj82xc9tPw6+g6qAHGE6e
-	 Awgr1VM4GXzX4BzP5/0oQ/b2gTM9VagRP7xgQ3GvxvFOjA5yAwjQo6DCsHNy6Qx7OQ
-	 s4UTUJ8HR9k/w==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-To: "Benno Lossin" <benno.lossin@proton.me>
-Cc: "Miguel Ojeda" <ojeda@kernel.org>,  "Alex Gaynor"
- <alex.gaynor@gmail.com>,  "Boqun Feng" <boqun.feng@gmail.com>,  "Gary Guo"
- <gary@garyguo.net>,  =?utf-8?Q?Bj=C3=B6rn?= Roy Baron
- <bjorn3_gh@protonmail.com>,  "Alice
- Ryhl" <aliceryhl@google.com>,  "Trevor Gross" <tmgross@umich.edu>,
-  "Danilo Krummrich" <dakr@kernel.org>,  "Greg Kroah-Hartman"
- <gregkh@linuxfoundation.org>,  "Rafael J. Wysocki" <rafael@kernel.org>,
-  "Peter Zijlstra" <peterz@infradead.org>,  "Ingo Molnar"
- <mingo@redhat.com>,  "Will Deacon" <will@kernel.org>,  "Waiman Long"
- <longman@redhat.com>,  <linux-kernel@vger.kernel.org>,
-  <rust-for-linux@vger.kernel.org>,  <linux-block@vger.kernel.org>
-Subject: Re: [PATCH 15/22] rust: make pin-init its own crate
-In-Reply-To: <D88DIE85YT01.11H51NPNE3HP6@proton.me> (Benno Lossin's message of
-	"Wed, 05 Mar 2025 13:40:19 +0000")
-References: <20250304225245.2033120-1-benno.lossin@proton.me>
-	<LBAOJwgDK3vs6V-k9Olh9PVQ69a3qCaCgLZctAshaNi73epZNKVgY4rKa-81-5us0Tpj3m3U_W3pCHFTKlIbVQ==@protonmail.internalid>
-	<20250304225245.2033120-16-benno.lossin@proton.me>
-	<87bjufd6bj.fsf@kernel.org>
-	<p2Xt1iMJJIRI9ZD65zucf5N-1vUDxFzg2l66bCD-rZNCrBdZwPi8iu9rKdmEUMlh-gEWESr5rEOuejJGRNF4pw==@protonmail.internalid>
-	<D88DIE85YT01.11H51NPNE3HP6@proton.me>
-User-Agent: mu4e 1.12.7; emacs 29.4
-Date: Wed, 05 Mar 2025 15:20:49 +0100
-Message-ID: <8734fra79a.fsf@kernel.org>
+	s=k20201202; t=1741184494;
+	bh=jvmchGdxVGZyNaODpuI7O279K1I8sOZ+LNSQ2rbqPXI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=HFdDkeg8z5rr3Fue3DZgzCahgYCn6+S26dFM/oXCROCNHPq/q4QHiu/STez0WcVGD
+	 EZxO1pqBuJTu7AXJuUGu3Eo130kDAidx0qZws1ccSkINkdh7dQ30Bqy3VW3CU4xv6Z
+	 0tE2GFISgDSCEUyzMJgYmvea7fJEu1mxtk+9JNNkoGT79M2mHrru0fvjx6eWjUg1Hp
+	 nhjFiap1xObsb5SVhb87A6p5aZy9k0S8MqFxjPUUa0thQuRTOKaowGBLtim179vGFH
+	 hyZUTk0t+JyF9jlNzl1RNh70anXLVTto8XukqbucLkHMtsBgYkq7ONY/kpgKQLJeHe
+	 1X7wkY1bDnu1A==
+Date: Wed, 5 Mar 2025 14:21:22 +0000
+From: Jonathan Cameron <jic23@kernel.org>
+To: Claudiu <claudiu.beznea@tuxon.dev>
+Cc: prabhakar.mahadev-lad.rj@bp.renesas.com, lars@metafoo.de,
+ linux-iio@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Claudiu Beznea
+ <claudiu.beznea.uj@bp.renesas.com>, gregkh@linuxfoundation.org, Dmitry
+ Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH v3 1/2] iio: adc: rzg2l_adc: Open a devres group
+Message-ID: <20250305142122.626336c3@jic23-huawei>
+In-Reply-To: <20250224120608.1769039-2-claudiu.beznea.uj@bp.renesas.com>
+References: <20250224120608.1769039-1-claudiu.beznea.uj@bp.renesas.com>
+	<20250224120608.1769039-2-claudiu.beznea.uj@bp.renesas.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-"Benno Lossin" <benno.lossin@proton.me> writes:
+On Mon, 24 Feb 2025 14:06:06 +0200
+Claudiu <claudiu.beznea@tuxon.dev> wrote:
 
-> On Wed Mar 5, 2025 at 1:12 PM CET, Andreas Hindborg wrote:
->> "Benno Lossin" <benno.lossin@proton.me> writes:
->>
->>> Rename relative paths inside of the crate to still refer to the same
->>> items, also rename paths inside of the kernel crate and adjust the build
->>> system to build the crate.
->>>
->>> Signed-off-by: Benno Lossin <benno.lossin@proton.me>
->>> ---
->>
->> [...]
->>
->>> diff --git a/rust/macros/lib.rs b/rust/macros/lib.rs
->>> index 7ff82c82ce0c..8e116e266524 100644
->>> --- a/rust/macros/lib.rs
->>> +++ b/rust/macros/lib.rs
->>> @@ -2,23 +2,20 @@
->>>
->>>  //! Crate for all kernel procedural macros.
->>>
->>> +#![feature(lint_reasons)]
->>
->> Commit message should probably say something about this.
->
-> Done.
->
->>> +
->>>  // When fixdep scans this, it will find this string `CONFIG_RUSTC_VERS=
-ION_TEXT`
->>>  // and thus add a dependency on `include/config/RUSTC_VERSION_TEXT`, w=
-hich is
->>>  // touched by Kconfig when the version string from the compiler change=
-s.
->>>
->>>  #[macro_use]
->>> +#[expect(unused_macros)]
->>>  mod quote;
->>>  mod concat_idents;
->>>  mod helpers;
->>>  mod module;
->>>  mod paste;
->>> -#[path =3D "../pin-init/internal/src/pin_data.rs"]
->>> -mod pin_data;
->>> -#[path =3D "../pin-init/internal/src/pinned_drop.rs"]
->>> -mod pinned_drop;
->>>  mod vtable;
->>> -#[path =3D "../pin-init/internal/src/zeroable.rs"]
->>> -mod zeroable;
->>>
->>>  use proc_macro::TokenStream;
->>>
->>> @@ -374,5 +371,3 @@ pub fn paste(input: TokenStream) -> TokenStream {
->>>      paste::expand(&mut tokens);
->>>      tokens.into_iter().collect()
->>>  }
->>> -
->>> -include!("../pin-init/internal/src/lib.rs");
->>> diff --git a/rust/macros/module.rs b/rust/macros/module.rs
->>> index cdf94f4982df..bdd94c79b0d4 100644
->>> --- a/rust/macros/module.rs
->>> +++ b/rust/macros/module.rs
->>> @@ -236,7 +236,7 @@ impl kernel::ModuleMetadata for {type_} {{
->>>              mod __module_init {{
->>>                  mod __module_init {{
->>>                      use super::super::{type_};
->>> -                    use kernel::init::PinInit;
->>> +                    use pin_init::PinInit;
->>>
->>>                      /// The \"Rust loadable module\" mark.
->>>                      //
->>> diff --git a/rust/macros/quote.rs b/rust/macros/quote.rs
->>> index 33a199e4f176..11d241b85ac3 100644
->>> --- a/rust/macros/quote.rs
->>> +++ b/rust/macros/quote.rs
->>> @@ -2,6 +2,7 @@
->>>
->>>  use proc_macro::{TokenStream, TokenTree};
->>>
->>> +#[allow(dead_code)]
->>
->> #[expect(dead_code)] ?
->
-> `expect` can't be used here, since `quote.rs` is imported in
-> `pin-init/internal/src/lib.rs` and used in that crate. But it is unused
-> in the `macros` crate, hence we need to allow it.
+> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+> 
+> On all systems where the rzg2l_adc driver is used, the ADC clocks are part
+> of a PM domain. The code that implements the PM domains support is in
+> drivers/clk/renesas/rzg2l-cpg.c, the functions of interest for this commit
+> being rzg2l_cpg_attach_dev() and rzg2l_cpg_deattach_dev(). The PM
+> domains support is registered with GENPD_FLAG_PM_CLK which, according to
+> the documentation, instructs genpd to use the PM clk framework while
+> powering on/off attached devices.
+> 
+> During probe, the ADC device is attached to the PM domain
+> controlling the ADC clocks. Similarly, during removal, the ADC device is
+> detached from the PM domain.
+> 
+> The detachment call stack is as follows:
+> 
+> device_driver_detach() ->
+>   device_release_driver_internal() ->
+>     __device_release_driver() ->
+>       device_remove() ->
+>         platform_remove() ->
+>           dev_pm_domain_detach()
+> 
+> During driver unbind, after the ADC device is detached from its PM domain,
+> the device_unbind_cleanup() function is called, which subsequently invokes
+> devres_release_all(). This function handles devres resource cleanup.
+> 
+> If runtime PM is enabled via devm_pm_runtime_enable(), the cleanup process
+> triggers the action or reset function for disabling runtime PM. This
+> function is pm_runtime_disable_action(), which leads to the following call
+> stack of interest when called:
+> 
+> pm_runtime_disable_action() ->
+>   pm_runtime_dont_use_autosuspend() ->
+>     __pm_runtime_use_autosuspend() ->
+>       update_autosuspend() ->
+>         rpm_idle()
+> 
+> The rpm_idle() function attempts to runtime resume the ADC device. However,
+> at the point it is called, the ADC device is no longer part of the PM
+> domain (which manages the ADC clocks). Since the rzg2l_adc runtime PM
+> APIs directly modifies hardware registers, the
+> rzg2l_adc_pm_runtime_resume() function is invoked without the ADC clocks
+> being enabled. This is because the PM domain no longer resumes along with
+> the ADC device. As a result, this leads to system aborts.
+> 
+> Open a devres group in the driver probe and release it in the driver
+> remove. This ensures the runtime PM is disabled (though the devres group)
+> after the rzg2l_adc_remove() finishes its execution avoiding the described
+> scenario.
+> 
+> Fixes: 89ee8174e8c8 ("iio: adc: rzg2l_adc: Simplify the runtime PM code")
+> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 
-Got it =F0=9F=91=8D
++CC Greg KH given the in driver suggestion was his and I think
+this discussion is not necessarily over!  Also Dmitry for his info.
 
+> ---
+> 
+> Changes in v3:
+> - open a devres group in probe and release it in remove; the failure
+>   path of probe() was also updated to close the devres group
+> - dropped Ulf's Rb tag as the patch is different now
+> - updated the patch description to match the new approach
+> 
+> Note: a generic approach was proposed in [1] to have this in the platform
+> bus itself but wasn't seen acceptable.
+> 
+> [1] https://lore.kernel.org/all/20250215130849.227812-1-claudiu.beznea.uj@bp.renesas.com/
+> 
 
-Best regards,
-Andreas Hindborg
+I missed this entirely sorry!  Travelling and far too much unread email
+at the moment :(
 
+Anyhow, I don't 'love' this solution but it can be made neater and perhaps
+there is a mid way point using a new generic helper that will do the job.
+> Changes in v2:
+> - collected Ulf's tag
+> - add a comment above pm_runtime_enable() explaining the reason
+>   it shouldn't be converted to devres
+> - drop devres calls that request IRQ and register IIO device
+>   as proposed in the review process: Ulf, I still kept you Rb
+>   tag; please let me know otherwise
+> 
+>  drivers/iio/adc/rzg2l_adc.c | 88 ++++++++++++++++++++++++++++---------
+>  1 file changed, 67 insertions(+), 21 deletions(-)
+> 
+> diff --git a/drivers/iio/adc/rzg2l_adc.c b/drivers/iio/adc/rzg2l_adc.c
+> index 883c167c0670..7db04416e1cf 100644
+> --- a/drivers/iio/adc/rzg2l_adc.c
+> +++ b/drivers/iio/adc/rzg2l_adc.c
+> @@ -85,6 +85,7 @@ struct rzg2l_adc {
+>  	struct reset_control *adrstn;
+>  	const struct rzg2l_adc_data *data;
+>  	const struct rzg2l_adc_hw_params *hw_params;
+> +	void *devres_group_id;
+>  	struct completion completion;
+>  	struct mutex lock;
+>  	u16 last_val[RZG2L_ADC_MAX_CHANNELS];
+> @@ -429,60 +430,88 @@ static int rzg2l_adc_probe(struct platform_device *pdev)
+In cases like this easiest path (and cleanest code) is
+to rename probe to __rzg2l_adc_probe() or similar and...
+>  	struct device *dev = &pdev->dev;
+>  	struct iio_dev *indio_dev;
+>  	struct rzg2l_adc *adc;
+> +	void *devres_group_id;
+>  	int ret;
+>  	int irq;
+>  
+> -	indio_dev = devm_iio_device_alloc(dev, sizeof(*adc));
+> -	if (!indio_dev)
+Have this code in an outer wrapper rzg2l_adc_probe()
+> +	/*
+> +	 * Open a devres group to allow using devm_pm_runtime_enable()
+> +	 * w/o interfeering with dev_pm_genpd_detach() in the platform bus
+> +	 * remove. Otherwise, durring repeated unbind/bind operations,
+> +	 * the ADC may be runtime resumed when it is not part of its power
+> +	 * domain, leading to accessing ADC registers without its clocks
+> +	 * being enabled and its PM domain being turned on.
+> +	 */
+> +	devres_group_id = devres_open_group(dev, NULL, GFP_KERNEL);
+> +	if (!devres_group_id)
+>  		return -ENOMEM;
+>  
+That then calls __rzg2l_adc_probe() here and if there is an error
+release the groups.  That's the minimum change I'd suggest here.
 
+Thinking forwards about what to do if we need to do this a lot.
+Maybe we can provide a platform device specific helper for this case
+that takes the 'actual probe' - here the __rzg2l_adc_probe() as
+a parameter and handles the devres groups stuff.  That would
+probably need a suitable devres_group_id in platform device you had
+in your platform bus code proposal or some more fiddly code
+not stash it in the driver specific structures that with the
+iio_priv() dance in IIO would become IIO specific unless we
+put one in struct iio_dev.  It might also be possible to write
+a complex macro that would create the relevant probe/remove()
+when passed both the internal __probe() and __remove and
+a snippet that accesses ((struct bob *)iio_priv(x))->devres_group_id.
+
+Anyhow that's a job for when we have several instances of this.
+
+> +	indio_dev = devm_iio_device_alloc(dev, sizeof(*adc));
+> +	if (!indio_dev) {
+> +		ret = -ENOMEM;
+> +		goto release_group;
+> +	}
+> +
+>  	adc = iio_priv(indio_dev);
+>  
+> +	adc->devres_group_id = devres_group_id;
+
+With above scheme of a wrapper around original probe, this line would need
+to move to the wrapper.
+
+>  	adc->hw_params = device_get_match_data(dev);
+> -	if (!adc->hw_params || adc->hw_params->num_channels > RZG2L_ADC_MAX_CHANNELS)
+> -		return -EINVAL;
+> +	if (!adc->hw_params || adc->hw_params->num_channels > RZG2L_ADC_MAX_CHANNELS) {
+> +		ret = -EINVAL;
+> +		goto release_group;
+> +	}
+>  
+>  	ret = rzg2l_adc_parse_properties(pdev, adc);
+>  	if (ret)
+> -		return ret;
+> +		goto release_group;
+>  
+>  	mutex_init(&adc->lock);
+>  
+>  	adc->base = devm_platform_ioremap_resource(pdev, 0);
+> -	if (IS_ERR(adc->base))
+> -		return PTR_ERR(adc->base);
+> +	if (IS_ERR(adc->base)) {
+> +		ret = PTR_ERR(adc->base);
+> 	+		goto release_group;
+> +	}
+>  
+>  	adc->adrstn = devm_reset_control_get_exclusive_deasserted(dev, "adrst-n");
+> -	if (IS_ERR(adc->adrstn))
+> -		return dev_err_probe(dev, PTR_ERR(adc->adrstn),
+> -				     "failed to get/deassert adrst-n\n");
+> +	if (IS_ERR(adc->adrstn)) {
+> +		ret = dev_err_probe(dev, PTR_ERR(adc->adrstn),
+> +				    "failed to get/deassert adrst-n\n");
+> +		goto release_group;
+> +	}
+>  
+>  	adc->presetn = devm_reset_control_get_exclusive_deasserted(dev, "presetn");
+> -	if (IS_ERR(adc->presetn))
+> -		return dev_err_probe(dev, PTR_ERR(adc->presetn),
+> -				     "failed to get/deassert presetn\n");
+> +	if (IS_ERR(adc->presetn)) {
+> +		ret = dev_err_probe(dev, PTR_ERR(adc->presetn),
+> +				    "failed to get/deassert presetn\n");
+> +		goto release_group;
+> +	}
+>  
+>  	pm_runtime_set_autosuspend_delay(dev, 300);
+>  	pm_runtime_use_autosuspend(dev);
+>  	ret = devm_pm_runtime_enable(dev);
+>  	if (ret)
+> -		return ret;
+> +		goto release_group;
+>  
+>  	platform_set_drvdata(pdev, indio_dev);
+>  
+>  	ret = rzg2l_adc_hw_init(dev, adc);
+> -	if (ret)
+> -		return dev_err_probe(&pdev->dev, ret,
+> -				     "failed to initialize ADC HW\n");
+> +	if (ret) {
+> +		ret = dev_err_probe(&pdev->dev, ret,
+> +				    "failed to initialize ADC HW\n");
+> +		goto release_group;
+> +	}
+>  
+>  	irq = platform_get_irq(pdev, 0);
+> -	if (irq < 0)
+> -		return irq;
+> +	if (irq < 0) {
+> +		ret = irq;
+> +		goto release_group;
+> +	}
+>  
+>  	ret = devm_request_irq(dev, irq, rzg2l_adc_isr,
+>  			       0, dev_name(dev), adc);
+>  	if (ret < 0)
+> -		return ret;
+> +		goto release_group;
+>  
+>  	init_completion(&adc->completion);
+>  
+> @@ -492,7 +521,23 @@ static int rzg2l_adc_probe(struct platform_device *pdev)
+>  	indio_dev->channels = adc->data->channels;
+>  	indio_dev->num_channels = adc->data->num_channels;
+>  
+> -	return devm_iio_device_register(dev, indio_dev);
+> +	ret = devm_iio_device_register(dev, indio_dev);
+> +	if (ret)
+> +		goto release_group;
+> +
+> +	return 0;
+> +
+> +release_group:
+> +	devres_release_group(dev, devres_group_id);
+> +	return ret;
+> +}
+> +
+> +static void rzg2l_adc_remove(struct platform_device *pdev)
+> +{
+> +	struct iio_dev *indio_dev = platform_get_drvdata(pdev);
+> +	struct rzg2l_adc *adc = iio_priv(indio_dev);
+> +
+> +	devres_release_group(&pdev->dev, adc->devres_group_id);
+>  }
+>  
+>  static const struct rzg2l_adc_hw_params rzg2l_hw_params = {
+> @@ -614,6 +659,7 @@ static const struct dev_pm_ops rzg2l_adc_pm_ops = {
+>  
+>  static struct platform_driver rzg2l_adc_driver = {
+>  	.probe		= rzg2l_adc_probe,
+> +	.remove		= rzg2l_adc_remove,
+>  	.driver		= {
+>  		.name		= DRIVER_NAME,
+>  		.of_match_table = rzg2l_adc_match,
 
