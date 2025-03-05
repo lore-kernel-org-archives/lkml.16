@@ -1,91 +1,142 @@
-Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out.smtpout.orange.fr (out-13.smtpout.orange.fr [193.252.22.13])
+	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E200024A051
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 14:49:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3710024E01A
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 14:49:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.252.22.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741186171; cv=none; b=tO4/vTQ3FVBGgL5vXyeBJtJgnnH9mLrcdo/XWHjFRTWhexEM/oL6qDZfpTwa0N/yCsaPQm5TUsM6b9BhM8sRjGX26tj+hS/WshiyldBastJfZHz4Qzih6jBr756f8MQ2oVOFWJNd+rXrAVuwRAuL/UZGUd62jIW7jj1v7xtX8Uc=
+	t=1741186174; cv=none; b=Ezla9qRtt8a4mpvqo7Gn/+O+SY2iFSrEbjfnM90ypZ1KeFjywbXqMIsmL9MsV8AT3xW7udWzw+EZEyxZVwUVtbmb26Tt9RV47NETSn/1iwzncgyCAHWJHCp5PXITvdKLl4VmPiA3Yf0j8SGGw+irQsJCiu/Z3v8RKCe0J9OjpLo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741186171; c=relaxed/simple;
-	bh=mJEXACtJJKE9hfASIiaItd/yrAoWR6SIqY7FEDakImQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OlsTuaCCs/PPkQLK5dihR+wFem+yVlzToi4JeifgS8RgDRdGIQ9f7bLtzeSi+Yw6g+qQ/x4N+j7onAH6+kO7mhZNI3n26C2whNnpRTLaES1U+sqldneN+zVr2ITfbfyZIESldv5qb7Adge13Kr1yj+5UgepGfrk7hj6SOmeEWYs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=dapvFczM; arc=none smtp.client-ip=209.85.219.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
+	s=arc-20240116; t=1741186174; c=relaxed/simple;
+	bh=CdZEXDdmycGNnqgioi99HXlao+olh8It264ntQrW6VY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=t6Et1f+HQ3c27tiCeMi8LT5LfjzmG6DC319jNh1TsRMFdajjjlTUiua6QINQ+nWpf6FMjqCd60z4pD7FwPEwHUlQBnuNVbBUinVp5SlJiGiaPhR30c7I3AYq0roj0LZ2LwSG+nqsjfSPTucIuQgH3J4gHVu3RtdwFCGvUBwbvlw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=oQcqbkBE; arc=none smtp.client-ip=193.252.22.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="dapvFczM"
-Received: by mail-qv1-f41.google.com with SMTP id 6a1803df08f44-6e894b81678so34259466d6.0
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Mar 2025 06:49:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1741186167; x=1741790967; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=7Rjno7BmkI/tfrolSaliBAaOStc/W9LN80z3rGIlnEo=;
-        b=dapvFczMlikl8wEMIxqtFgcwwk2VH9d4/nsr+RLNAD6O3klopgE4WHQud0SgFVdqDH
-         jqTmVoZErRuNVOGiFIdDzlCNU78Dk3DaM/3uoOEKF5DMgQ93rU9k5i2qa9aW5EeELB5c
-         dQVtq0qM/7i2q5CbohW9qPowRNoqUV7ESnl+ZMQOk7Y8APd28VuMBTc0Sr8lMevy81pA
-         9OtWRE+GU2Zy0SsgTDxrv1wJRYzmBPcFn0cAFx9WPSUWeJatJpKwtNZLcWmN0r0wlATl
-         RdITE6SHovlAiDbvnGrf0cBhBw399Vipi3tCp1i/4/LbLAZhUuAGG1RKCPI+omr9i0wM
-         kHoQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741186167; x=1741790967;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7Rjno7BmkI/tfrolSaliBAaOStc/W9LN80z3rGIlnEo=;
-        b=sXtk7aZvURfgkM1rJ9Wk7g+oIj+IKuIETP/AAaGpRJSq3L/3a/Y2Ss0o8I28S0uuPB
-         /dYEcBlBhcrMaiJtoZY0gGMcJIBLUyIFaHXhhSDvRSYjXXZoBKq57l6tGttvJCMFvzh5
-         yGWkNzL2tw4VXeEbrK2nwi3gDJy78zYGbzR1pXqlJEAN73wvxH3AFPrjIGx5lbrit4Oz
-         JiE0FptVRl4HpgTAoUi8Xfrm4KbdDiZZOqFSWX0krWcF5BGwhHfwrYzkcaeKrTHIeDW/
-         3+07fZ2L6rg9HMXZrTOq6bj/VsnLTJinF6nr+YeT8Gv1LAvoB1QJN59wcATifQWz8i++
-         gicg==
-X-Forwarded-Encrypted: i=1; AJvYcCVXeftfA5mF/mcVCBit0rT87/qtvziIN7rqVwpCl+DmhQRNcFbmW6hj2TSVdO1C36T3R9OwrC7YOXGZUdw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzecqarNXaO9SlXON6QEqPuLO00mpAT9PLp3Hg6+mZlF8dwzlnG
-	bcaetWWWM8sGAOx6HoVlnxkClla7SwrqnIPDFFACgZ0PZLOPVaHpCSD7RpTFyHM=
-X-Gm-Gg: ASbGnctHwjH4QTKAznxPKKKi8B5AzGnJjrHBXnG+RbDl8aUV07C+0OIrI22V1tV+Bln
-	C+TRmLEVC1RplIXFiyBOdsGRaSbFoeFiZRspNcuh52qxfKUWS+nGdlIIq9RUdCrPDSp3QqY0U7z
-	QKSWLVAExvGvCMe7HN/hM/pv2oXD6a1GOFB8l7ZgOvcs+gzOQ5luK1NmFTXB9MZ3Oe1KvHx+a4z
-	GFr/WhP3ZACTTugtP78zEJ0ZJSfXGGy6KZYtZGIWy4SAWqhNCmOGJEexwa2JQPmt4M/hgj4gX9e
-	lV4SJac0dSEYm3COdF+RTLA5dI8Gf83v2W6T7XSyywU=
-X-Google-Smtp-Source: AGHT+IEh40c1fP8s3ecae2i4XFiJVm9EMriTA5J7Oj9VZq9Az7S5iDaLD4nyxicX2EPTjgnrnyjDzA==
-X-Received: by 2002:a05:6214:2504:b0:6d8:8a60:ef2c with SMTP id 6a1803df08f44-6e8e6cc5b2bmr58784106d6.2.1741186167610;
-        Wed, 05 Mar 2025 06:49:27 -0800 (PST)
-Received: from localhost ([2603:7000:c01:2716:da5e:d3ff:fee7:26e7])
-        by smtp.gmail.com with UTF8SMTPSA id d75a77b69052e-47505a370acsm17639491cf.69.2025.03.05.06.49.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Mar 2025 06:49:26 -0800 (PST)
-Date: Wed, 5 Mar 2025 09:49:25 -0500
-From: Johannes Weiner <hannes@cmpxchg.org>
-To: Yosry Ahmed <yosry.ahmed@linux.dev>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Nhat Pham <nphamcs@gmail.com>,
-	Chengming Zhou <chengming.zhou@linux.dev>,
-	Minchan Kim <minchan@kernel.org>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Peter Zijlstra <peterz@infradead.org>, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH mm-unstable 3/5] mm: zpool: Remove object mapping APIs
-Message-ID: <20250305144925.GC185622@cmpxchg.org>
-References: <20250305061134.4105762-1-yosry.ahmed@linux.dev>
- <20250305061134.4105762-4-yosry.ahmed@linux.dev>
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="oQcqbkBE"
+Received: from [172.16.82.72] ([124.33.176.97])
+	by smtp.orange.fr with ESMTPA
+	id pq2dtPvcTgWbapq2htQk0O; Wed, 05 Mar 2025 15:48:22 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1741186102;
+	bh=3RcUUtJiVQIxZzOfKMrWa4tzRtxjWdXUh2HCxF6cfvM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From;
+	b=oQcqbkBEl+UgQi3Rr0ez6Ckv1SOIbEYh7API3Jf6hBUllX0xuBTJh6r8Cf9qGqd/u
+	 aS8Fbd2QKZImx/ILnJHSjpW3GuB9NAG/OfXXiNisriLhgcsNFE/4IRvuOjTL94XsAZ
+	 luNP+vlrQkN2DrSL2CD+alqysspVK2wC7QsaBEjY932I+CplGBHlr3218gx6GpEwya
+	 ilVUXKiOtsSoZ5cCeoH+VNzVZ5hJoo9ej6TMpHJoo9UVvvax9m4YrR8cgpD+8HHFBk
+	 FU6JChb2VY1Gc1e5vaf0op62DUYeL/yFOeG0gtOy4sQ7mlcq99zjgBTB60KkzqZKO+
+	 SKXWpnYX6mUnA==
+X-ME-Helo: [172.16.82.72]
+X-ME-Auth: bWFpbGhvbC52aW5jZW50QHdhbmFkb28uZnI=
+X-ME-Date: Wed, 05 Mar 2025 15:48:22 +0100
+X-ME-IP: 124.33.176.97
+Message-ID: <d7f3150d-0167-44be-90b2-17f8a050687c@wanadoo.fr>
+Date: Wed, 5 Mar 2025 23:48:10 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250305061134.4105762-4-yosry.ahmed@linux.dev>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 4/8] bits: introduce fixed-type BIT
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Yury Norov <yury.norov@gmail.com>,
+ Lucas De Marchi <lucas.demarchi@intel.com>,
+ Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+ Jani Nikula <jani.nikula@linux.intel.com>,
+ Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+ Rodrigo Vivi <rodrigo.vivi@intel.com>, Tvrtko Ursulin
+ <tursulin@ursulin.net>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, Andrew Morton <akpm@linux-foundation.org>,
+ linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org,
+ dri-devel@lists.freedesktop.org, Andi Shyti <andi.shyti@linux.intel.com>,
+ David Laight <David.Laight@aculab.com>,
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+ Jani Nikula <jani.nikula@intel.com>
+References: <20250305-fixed-type-genmasks-v4-0-1873dcdf6723@wanadoo.fr>
+ <20250305-fixed-type-genmasks-v4-4-1873dcdf6723@wanadoo.fr>
+ <Z8hgqOB5Ym-GGykS@smile.fi.intel.com>
+Content-Language: en-US
+From: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
+Autocrypt: addr=mailhol.vincent@wanadoo.fr; keydata=
+ xjMEZluomRYJKwYBBAHaRw8BAQdAf+/PnQvy9LCWNSJLbhc+AOUsR2cNVonvxhDk/KcW7FvN
+ LFZpbmNlbnQgTWFpbGhvbCA8bWFpbGhvbC52aW5jZW50QHdhbmFkb28uZnI+wrIEExYKAFoC
+ GwMFCQp/CJcFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AWIQTtj3AFdOZ/IOV06OKrX+uI
+ bbuZwgUCZx41XhgYaGtwczovL2tleXMub3BlbnBncC5vcmcACgkQq1/riG27mcIYiwEAkgKK
+ BJ+ANKwhTAAvL1XeApQ+2NNNEwFWzipVAGvTRigA+wUeyB3UQwZrwb7jsQuBXxhk3lL45HF5
+ 8+y4bQCUCqYGzjgEZx4y8xIKKwYBBAGXVQEFAQEHQJrbYZzu0JG5w8gxE6EtQe6LmxKMqP6E
+ yR33sA+BR9pLAwEIB8J+BBgWCgAmFiEE7Y9wBXTmfyDldOjiq1/riG27mcIFAmceMvMCGwwF
+ CQPCZwAACgkQq1/riG27mcJU7QEA+LmpFhfQ1aij/L8VzsZwr/S44HCzcz5+jkxnVVQ5LZ4B
+ ANOCpYEY+CYrld5XZvM8h2EntNnzxHHuhjfDOQ3MAkEK
+In-Reply-To: <Z8hgqOB5Ym-GGykS@smile.fi.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, Mar 05, 2025 at 06:11:31AM +0000, Yosry Ahmed wrote:
-> zpool_map_handle(), zpool_unmap_handle(), and zpool_can_sleep_mapped()
-> are no longer used. Remove them with the underlying driver callbacks.
+On 05/03/2025 at 23:33, Andy Shevchenko wrote:
+> On Wed, Mar 05, 2025 at 10:00:16PM +0900, Vincent Mailhol via B4 Relay wrote:
+>> From: Lucas De Marchi <lucas.demarchi@intel.com>
+>>
+>> Implement fixed-type BIT to help drivers add stricter checks, like was
 > 
-> Signed-off-by: Yosry Ahmed <yosry.ahmed@linux.dev>
+> Here and in the Subject I would use BIT_Uxx().
+> 
+>> done for GENMASK().
+> 
+> ...
+> 
+>> +/*
+>> + * Fixed-type variants of BIT(), with additional checks like GENMASK_t(). The
+> 
+> GENMASK_t() is not a well named macro.
 
-Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+Ack. I will rename to GENMASK_TYPE().
+
+>> + * following examples generate compiler warnings due to shift-count-overflow:
+>> + *
+>> + * - BIT_U8(8)
+>> + * - BIT_U32(-1)
+>> + * - BIT_U32(40)
+>> + */
+>> +#define BIT_INPUT_CHECK(type, b) \
+>> +	BUILD_BUG_ON_ZERO(const_true((b) >= BITS_PER_TYPE(type)))
+>> +
+>> +#define BIT_U8(b) (BIT_INPUT_CHECK(u8, b) + (unsigned int)BIT(b))
+>> +#define BIT_U16(b) (BIT_INPUT_CHECK(u16, b) + (unsigned int)BIT(b))
+> 
+> Why not u8 and u16? This inconsistency needs to be well justified.
+
+Because of the C integer promotion rules, if casted to u8 or u16, the
+expression will immediately become a signed integer as soon as it is get
+used. For example, if casted to u8
+
+  BIT_U8(0) + BIT_U8(1)
+
+would be a signed integer. And that may surprise people.
+
+David also pointed this in the v3:
+
+https://lore.kernel.org/intel-xe/d42dc197a15649e69d459362849a37f2@AcuMS.aculab.com/
+
+and I agree with his comment.
+
+I explained this in the changelog below the --- cutter, but it is
+probably better to make the explanation more visible. I will add a
+comment in the code to explain this.
+
+>> +#define BIT_U32(b) (BIT_INPUT_CHECK(u32, b) + (u32)BIT(b))
+>> +#define BIT_U64(b) (BIT_INPUT_CHECK(u64, b) + (u64)BIT_ULL(b))
+> 
+> Can you also use a TAB between the parentheses for better readability?
+> E.g.,
+> 
+> #define BIT_U64(b)r	(BIT_INPUT_CHECK(u64, b) + (u64)BIT_ULL(b))
+
+Sure. I prefer it with space, but no strong opinion. I will put tab in v5.
+
+Yours sincerely,
+Vincent Mailhol
+
