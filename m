@@ -1,141 +1,198 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B86FD24A050;
-	Wed,  5 Mar 2025 13:12:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1EDA24BC12
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 13:12:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741180331; cv=none; b=Va1whWMs78U4CRbLeAaJs64jql9dRi8VCpjXQf8kS+3YZNtAraMX9/Zmqdi4lDUobzI69zdRS+UIxXhotjIguk5GSjrUiBaCHo7f9Dvcg2TMoLF5jjCDCucO+9OKiOzbMM8wRgz6TNNiIEQQCm4f1gYNzICBzlSUSQWIbaZAE18=
+	t=1741180361; cv=none; b=aqsQ0W2RBfKTVkLhCvTA2iqgnMFrDpBlrGNpbzW3jzzzi7Q6EkyqPCkforQqlrEaI2VeP7/YdGjqjXJqUD/w3+koh7ynBtfEJrq61GOqvpCMjA1rC7ELlPgJ4R8tlfqkoIE4crvwoW23VvSbNHVuG1BvfyD662EtXTldCdLDovs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741180331; c=relaxed/simple;
-	bh=snliCsDPTTk2KnOn4QOAc1BAaok3Yakz9rge7Oo2jpI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CD/6dAKYtJF1v3T9ADr1A9VNXErtgAibcKZBTdfHhyhkau93W2kCj8JSN/nIf4NelVYA53rkB927wflSv7luKqWVyLGWvS1pN4T47sLliD4rJMWPdcxM4m5jp/SJBX5HsKxfl5dMsyezsV4moKch2faUyTIOlcJ2PsYQe2utrXI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=Z5QI6nQu; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1741180361; c=relaxed/simple;
+	bh=niOkZ3yknjy6O15SgZEu1bTRkBCDN86QkzY45J5nUU4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=LPY9N4XtNzh7UgsHN/NLgFG0EVRX8ZG6KaSUCdpkLLL8D/eiGUmvFm5gl6jUblTuEyxOxGqqPA+TgvyndugQRX9e6/PV1FboC4O8gBYeoAwwizyZ4Tw+6+xzC5WHwXeu6Rm9p3tLmUXnTyaQDNi+aXO8XhPdLDCGgAj80nfXrvA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bQnGzWp1; arc=none smtp.client-ip=209.85.160.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="Z5QI6nQu"
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 13EBBE29;
-	Wed,  5 Mar 2025 14:10:35 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1741180235;
-	bh=snliCsDPTTk2KnOn4QOAc1BAaok3Yakz9rge7Oo2jpI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Z5QI6nQulsRME7jSEkhyJAM2n4kUUNxHNWowOcNTCa2eG/vXHN5rih0QbdLu1Tez7
-	 8E0Z4bBV+tE/t6WB18uCm0s4qxpQw4LNfzgm23LaEBbA2aKSRBEXMRwOCQdJOGt+mP
-	 lh3XXBw2mFE/qiEI4bXaus413HLW8ySqF12rzyMU=
-Date: Wed, 5 Mar 2025 15:11:45 +0200
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Ricardo Ribalda <ribalda@chromium.org>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] media: uvcvideo: Enable full UVC metadata for all devices
-Message-ID: <20250305131145.GC31618@pendragon.ideasonboard.com>
-References: <20250226-uvc-metadata-v1-1-6cd6fe5ec2cb@chromium.org>
- <c6ab8640-d96c-4a71-929a-a4ad6bb2647d@redhat.com>
- <20250303151346.GC32048@pendragon.ideasonboard.com>
- <1436dc95-68a6-456d-ab5d-117c7791ec48@redhat.com>
- <20250303161059.GA23684@pendragon.ideasonboard.com>
- <CANiDSCux1whD3yF+mPayajU6imE4t8yjtzeAjrpLPhqyLRc4OA@mail.gmail.com>
- <2897ce12-bb32-4445-b7ed-0a835e089f03@redhat.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bQnGzWp1"
+Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-474e1b8c935so265561cf.0
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Mar 2025 05:12:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1741180358; x=1741785158; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=iOdrgfnKDo0adnIeWCzGbGdt+czcdG3OGWY151PLQj4=;
+        b=bQnGzWp1S5Lnz9b7S+X9iWyT1enphmYxyeyJwj5VVMYJnObuLGzhvMkG9uBL3XQ78b
+         Zo3JrmBI4ko2x+OO+iOQpQBqfBgjcS472wlJfVY900sBa3almRwnfbIdcWBcdXKwsieo
+         7k0oWhWF732whbIyH4GNsIMNo9o7b80aqltg+jU0O65LkiOSm3+oSVpH3YoRptaQnRij
+         NWBaZfEqos2npnT6v52bnbTpKCy19r6KPYKzleLdok7ZrEkR9SnnqDT5T6ABVfKQ+2Iz
+         NKN7Fajx9PPEYnKJdu5XQV9dDUNkJGUpIwD5ACAowRHjrTqUH64V59DpzL+Y1S7JzlY8
+         4rYw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741180358; x=1741785158;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=iOdrgfnKDo0adnIeWCzGbGdt+czcdG3OGWY151PLQj4=;
+        b=Yo1LbSpuS24evfuqxDFpBG4ri6szekqHnpREa8lkjF+MzncYXaCigd/v3Pz2DDXVxo
+         ViHr1I7vDOvbcltidoLblz3dI2u84YpcBHJatQyc126yeaAQyM0zYdeUMPZoamd83qHm
+         AJy7sOrY/ZwOuhki4IF4obQwPcSTQ/JlGkt9Wf5sKveb4kGof0c0SCFewHgApGUWApbl
+         E8iZlSStfViIYmqDg/XqwkDSFSe+VGtA7PEZd+LOizjOg/p0raovXIlasxl160nU5RW6
+         h0ovBFKIhxOw11WxwdZnY51od5pPSBEKWDsSwSfk+o4tq5TAND9QchRQ64dBoPnZPllO
+         nxdQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUkPWo3n7Tk9GqtjQ6ekofJODLOZisuM0A9Tb9S8r2dK+PgFnVoFuKFb4lVyATUFf2dOdFWrvG/UPZpFUo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywe7ZEXvM3omtpIdfYZNI8mV8W2H6MJMOcyynD7VdWe++TFMxPB
+	bBauefsQ3UuPxrLeuJq8dyeXYS4UpPnHqsYB0aUia7W1yWgIi1HzjjGFFc6dcvgw7/BaMeuLZgx
+	KCjiHgm/j9haIWOysLSIHzn8hzXAMeTIJ/Bdf
+X-Gm-Gg: ASbGncuKkkYJDJfpl3sMJOFApzIRQwzV2a+GnOSe4ECQ/IpWhSWxfC0OgV8hHXsNGAS
+	ObcfXasa0utUhEL6ARthsIizFtia6IpYUs4VW6PjPGIQZgjYODbePd+dpQQyyROOqJ48ACmfTB4
+	W9H9PH9nwneFF2jiBMea0kjDsoVrHQ+ABdXgqrrv4ZFEZyLgbP8BK9FUzN
+X-Google-Smtp-Source: AGHT+IFIn6b7M1PNu9NZZ9KBzOuRO4deZPOixhL9M73rMvQkDHUtfUtYPha+8DdwHlmaLHcT+urAybKKpNAnQK1YFdU=
+X-Received: by 2002:a05:622a:110b:b0:471:f560:27dc with SMTP id
+ d75a77b69052e-4750cae2127mr2406081cf.27.1741180357471; Wed, 05 Mar 2025
+ 05:12:37 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <2897ce12-bb32-4445-b7ed-0a835e089f03@redhat.com>
+References: <20250110-asi-rfc-v2-v2-0-8419288bc805@google.com>
+ <20250110-asi-rfc-v2-v2-2-8419288bc805@google.com> <Z8K2B3WJoICVbDj3@kernel.org>
+In-Reply-To: <Z8K2B3WJoICVbDj3@kernel.org>
+From: Brendan Jackman <jackmanb@google.com>
+Date: Wed, 5 Mar 2025 14:12:25 +0100
+X-Gm-Features: AQ5f1JrEWoe__i5J-gwzMxiuWZ9pJYk4XLPMWAQuPYUSu5vOhjZQNejm22RSyYE
+Message-ID: <CA+i-1C06Sunj0BmFON=MbWBK6ZDt_=K4P3BHChRBYyxXqEkQ2g@mail.gmail.com>
+Subject: Re: [PATCH RFC v2 02/29] x86: Create CONFIG_MITIGATION_ADDRESS_SPACE_ISOLATION
+To: Mike Rapoport <rppt@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
+	Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Richard Henderson <richard.henderson@linaro.org>, Matt Turner <mattst88@gmail.com>, 
+	Vineet Gupta <vgupta@kernel.org>, Russell King <linux@armlinux.org.uk>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Guo Ren <guoren@kernel.org>, 
+	Brian Cain <bcain@quicinc.com>, Huacai Chen <chenhuacai@kernel.org>, 
+	WANG Xuerui <kernel@xen0n.name>, Geert Uytterhoeven <geert@linux-m68k.org>, 
+	Michal Simek <monstr@monstr.eu>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+	Dinh Nguyen <dinguyen@kernel.org>, Jonas Bonn <jonas@southpole.se>, 
+	Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>, Stafford Horne <shorne@gmail.com>, 
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
+	Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
+	Christophe Leroy <christophe.leroy@csgroup.eu>, Naveen N Rao <naveen@kernel.org>, 
+	Madhavan Srinivasan <maddy@linux.ibm.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
+	Alexander Gordeev <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
+	Sven Schnelle <svens@linux.ibm.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, 
+	Rich Felker <dalias@libc.org>, John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, 
+	"David S. Miller" <davem@davemloft.net>, Andreas Larsson <andreas@gaisler.com>, 
+	Richard Weinberger <richard@nod.at>, Anton Ivanov <anton.ivanov@cambridgegreys.com>, 
+	Johannes Berg <johannes@sipsolutions.net>, Chris Zankel <chris@zankel.net>, 
+	Max Filippov <jcmvbkbc@gmail.com>, Arnd Bergmann <arnd@arndb.de>, 
+	Andrew Morton <akpm@linux-foundation.org>, Juri Lelli <juri.lelli@redhat.com>, 
+	Vincent Guittot <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, 
+	Valentin Schneider <vschneid@redhat.com>, Uladzislau Rezki <urezki@gmail.com>, 
+	Christoph Hellwig <hch@infradead.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@linux.com>, 
+	Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, 
+	Ard Biesheuvel <ardb@kernel.org>, Josh Poimboeuf <jpoimboe@kernel.org>, 
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, x86@kernel.org, 
+	linux-kernel@vger.kernel.org, linux-alpha@vger.kernel.org, 
+	linux-snps-arc@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
+	linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org, 
+	loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org, 
+	linux-mips@vger.kernel.org, linux-openrisc@vger.kernel.org, 
+	linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
+	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org, 
+	linux-sh@vger.kernel.org, sparclinux@vger.kernel.org, 
+	linux-um@lists.infradead.org, linux-arch@vger.kernel.org, linux-mm@kvack.org, 
+	linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	kvm@vger.kernel.org, linux-efi@vger.kernel.org, 
+	Junaid Shahid <junaids@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, Mar 05, 2025 at 02:03:58PM +0100, Hans de Goede wrote:
-> On 3-Mar-25 5:22 PM, Ricardo Ribalda wrote:
-> > On Mon, 3 Mar 2025 at 17:11, Laurent Pinchart wrote:
-> >> On Mon, Mar 03, 2025 at 04:43:50PM +0100, Hans de Goede wrote:
-> >>> On 3-Mar-25 16:13, Laurent Pinchart wrote:
-> >>>> On Mon, Mar 03, 2025 at 03:47:51PM +0100, Hans de Goede wrote:
-> >>>>> On 26-Feb-25 14:00, Ricardo Ribalda wrote:
-> >>>>>> The UVC driver provides two metadata types V4L2_META_FMT_UVC, and
-> >>>>>> V4L2_META_FMT_D4XX. The only difference between the two of them is that
-> >>>>>> V4L2_META_FMT_UVC only copies PTS, SCR, size and flags, and
-> >>>>>> V4L2_META_FMT_D4XX copies the whole metadata section.
-> >>>>>>
-> >>>>>> Now we only enable V4L2_META_FMT_D4XX for the Intel D4xx family of
-> >>>>>> devices, but it is useful for any device where vendors include other
-> >>>>>> metadata, such as the one described by Microsoft:
-> >>>>>> - https://learn.microsoft.com/en-us/windows-hardware/drivers/stream/mf-capture-metadata
-> >>>>>>
-> >>>>>> This patch removes the UVC_INFO_META macro and enables
-> >>>>>> V4L2_META_FMT_D4XX for every device. It also updates the documentation
-> >>>>>> to reflect the change.
-> >>>>>>
-> >>>>>> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
-> >>>>>
-> >>>>> Thanks, patch looks good to me:
-> >>>>>
-> >>>>> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-> >>>>
-> >>>> I don't quite agree, sorry.
-> >>>>
-> >>>> The reason why the current mechanism has been implemented this way is to
-> >>>> ensure we have documentation for the metadata format of devices that
-> >>>> expose metadata to userspace.
-> >>>>
-> >>>> If you want to expose the MS metadata, you can create a new metadata
-> >>>> format for that, and enable it on devices that implement it.
-> >>>
-> >>> Looking at the long list of quirks this removes just for the D4xx
-> >>> cameras I do not believe that having quirked based relaying of
-> >>> which metadata fmt is used to userspace is something which scales
-> >>> on the long term. Given the large amount of different UVC cameras
-> >>> I really think we should move the USB VID:PID -> metadata format
-> >>> mapping out of the kernel.
-> >>
-> >> If we can find a solution to ensure the metadata format gets documented,
-> >> sure.
-> > 
-> > MS default metadata is already documented:
-> > https://learn.microsoft.com/en-us/windows-hardware/drivers/stream/mf-capture-metadata
-> > 
-> > I would not worry too much about vendors abusing the metadata for
-> > custom magic if that is your concern.
-> > This would not work with Windows default driver, and that is what most
-> > camera modules are tested against.
-> > 
-> >> When it comes to the MS metadata format, if I recall correctly, Ricardo
-> >> said there's an XU with a known GUID to detect the metadata format. We
-> >> therefore wouldn't need quirks.
-> > 
-> > There is MXSU control 	
-> > https://learn.microsoft.com/en-us/windows-hardware/drivers/stream/uvc-extensions-1-5
-> > But not all the vendors use it.
-> 
-> Right so I actually already checked:
-> 
-> https://learn.microsoft.com/en-us/windows-hardware/drivers/stream/uvc-extensions-1-5
-> 
-> yesterday before my udev hwdb suggestion I was wondering if there was a way
-> to just get if MSmetadata was used from the camera itself. What I found was this:
-> 
-> "UVC metadata is opt-in. Every IHV/OEM that needs metadata support must be enabled through a custom INF file."
-> 
-> which lead me to the udev + hwdb suggestion.
-> 
-> It is good to know that some cameras have a a way to fet this from a known XU GUID,
-> but the official way seems to be to have per camera info in .inf files. So for Linux
-> that would translate to having a list of vid:pid combinations somewhere.
-> 
-> The question then becomes where do we put the vid:pid list and IMHO hwdb is much
-> better (easier to maintain / update) then hardcoding this in the kernel.
+On Sat, Mar 01, 2025 at 09:23:51AM +0200, Mike Rapoport wrote:
+> Hi Brendan,
+>
+> On Fri, Jan 10, 2025 at 06:40:28PM +0000, Brendan Jackman wrote:
+> > Currently a nop config. Keeping as a separate commit for easy review of
+> > the boring bits. Later commits will use and enable this new config.
+> >
+> > This config is only added for non-UML x86_64 as other architectures do
+> > not yet have pending implementations. It also has somewhat artificial
+> > dependencies on !PARAVIRT and !KASAN which are explained in the Kconfig
+> > file.
+> >
+> > Co-developed-by: Junaid Shahid <junaids@google.com>
+> > Signed-off-by: Junaid Shahid <junaids@google.com>
+> > Signed-off-by: Brendan Jackman <jackmanb@google.com>
+> > ---
+> >  arch/alpha/include/asm/Kbuild      |  1 +
+> >  arch/arc/include/asm/Kbuild        |  1 +
+> >  arch/arm/include/asm/Kbuild        |  1 +
+> >  arch/arm64/include/asm/Kbuild      |  1 +
+> >  arch/csky/include/asm/Kbuild       |  1 +
+> >  arch/hexagon/include/asm/Kbuild    |  1 +
+> >  arch/loongarch/include/asm/Kbuild  |  3 +++
+> >  arch/m68k/include/asm/Kbuild       |  1 +
+> >  arch/microblaze/include/asm/Kbuild |  1 +
+> >  arch/mips/include/asm/Kbuild       |  1 +
+> >  arch/nios2/include/asm/Kbuild      |  1 +
+> >  arch/openrisc/include/asm/Kbuild   |  1 +
+> >  arch/parisc/include/asm/Kbuild     |  1 +
+> >  arch/powerpc/include/asm/Kbuild    |  1 +
+> >  arch/riscv/include/asm/Kbuild      |  1 +
+> >  arch/s390/include/asm/Kbuild       |  1 +
+> >  arch/sh/include/asm/Kbuild         |  1 +
+> >  arch/sparc/include/asm/Kbuild      |  1 +
+> >  arch/um/include/asm/Kbuild         |  2 +-
+> >  arch/x86/Kconfig                   | 14 ++++++++++++++
+> >  arch/xtensa/include/asm/Kbuild     |  1 +
+> >  include/asm-generic/asi.h          |  5 +++++
+> >  22 files changed, 41 insertions(+), 1 deletion(-)
+>
+> I don't think this all is needed. You can put asi.h with stubs used outside
+> of arch/x86 in include/linux and save you the hassle of updating every
+> architecture.
 
-Additional questions: where do we store documentation for the metadata
-format, how do we convey what format is supported to applications, and
-how do we enable metadata capture when a device is listed in the DB ?
+...
 
--- 
-Regards,
+> If you expect other architectures might implement ASI the config would better
+> fit into init/Kconfig or mm/Kconfig and in arch/x86/Kconfig will define
+> ARCH_HAS_MITIGATION_ADDRESS_SPACE_ISOLATION.
 
-Laurent Pinchart
+...
+
+> > +++ b/include/asm-generic/asi.h
+> > @@ -0,0 +1,5 @@
+> > +/* SPDX-License-Identifier: GPL-2.0 */
+> > +#ifndef __ASM_GENERIC_ASI_H
+> > +#define __ASM_GENERIC_ASI_H
+> > +
+> > +#endif
+>
+> IMHO it should be include/linux/asi.h, with something like
+>
+> #infdef __LINUX_ASI_H
+> #define __LINUX_ASI_H
+>
+> #ifdef CONFIG_MITIGATION_ADDRESS_SPACE_ISOLATION
+>
+> #include <asm/asi.h>
+>
+> #else /* CONFIG_MITIGATION_ADDRESS_SPACE_ISOLATION */
+>
+> /* stubs for functions used outside arch/ */
+>
+> #endif /* CONFIG_MITIGATION_ADDRESS_SPACE_ISOLATION */
+>
+> #endif /* __LINUX_ASI_H */
+
+Thanks Mike! That does indeed look way tidier. I'll try to adopt it.
