@@ -1,164 +1,103 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2071.outbound.protection.outlook.com [40.107.223.71])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E97320764A;
-	Wed,  5 Mar 2025 23:02:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.71
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741215738; cv=fail; b=WmWm/Hoo8v5hZxnE7U7S82Huya09Zy239HOJpg8WjLNKdIrekKYmtux9RqDEdQCPbXxOXJarmJEnAeyAeb94VMdRYDGpLrKGP7HeaLl8Cv05f8oIM1J7mUhmR8TvZxOkpvR9FEc6vVXuD/ZVGSyq1XwnEt7C9gPOjSdKH9lDQB8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741215738; c=relaxed/simple;
-	bh=8Zm+saQvm3iQHWzwa0AFasdrYzPnqdivK+SQZq6xe0E=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GYaAadahDPU27iLwqD9Dl7MtawwKr2ccNA5cy8/6C1OmhRYSSBto5zbqfHn2BtWM+tVOnn3OhDPrQDEmyWzS3E6IpHukYfc9Zq1HJG8EVC9S+vPd0p+sOPA/EvyAWNdV5W2xB3wrmtTZF90axk3aSx6jrgoxca9Jny15jhISGqM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=f9cFY8Rv; arc=fail smtp.client-ip=40.107.223.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEB7420A5D3;
+	Wed,  5 Mar 2025 23:02:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741215743; cv=none; b=fCz9CdQjdYD/3l/I5tVu9Qzn2D8e3SnlK3sBCqIykXQ6wl2ks/qt8+ARstV0kL9w7iEGGmquijxkJttLnNNvunMrelobIZOI6Vfc6RG7ZGS9XVj9WAamTRJpnxAi6B7hQzAh4SqcmM+9HG56PVUA03Ikahm+zZro6mcLE55qxks=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741215743; c=relaxed/simple;
+	bh=CrS8Z2lH5l661WpjSYOQYpm59vMadX9D3uzoIiDzEQ8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=EaA4nCocdKMgm9y+zTPgmn7KszCXeICFJ7oNWttq14jxtkyxAMyGUj/jFE3Q3nj62sFqXmlMr6KDlgm52VH6t3F7f3bqriE3PKPgEUBek2IVYvILFYnV3NlaDyusxl6j2a9w+ddScMOsP/pn/8/vAsRd9xqa2GToOW2M7/kHFD8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MGQFbKaH; arc=none smtp.client-ip=209.85.216.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="f9cFY8Rv"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Q9YMZUzAum6z2Qbb0lqlSB1EHkfasJ1LuF4xzG4Kx/g5Th7haUH+g80L6wmOR2jCMDVAS6bsCJNTfaz0eALtWwyGxUvDzM+kZ6vvGJhAv9fHzydzRo9Ylg3sukoDSm81dILO71STppCoZ8KwcnhAfnn85yImKsxYAHmntrTa+3tE+OFEGiUL8WMWa4bAFO+xNg1iELfomukiU8q/RuOniLQyGNpqOeoKEQ/txUmrepfZpuut6CpN8URehJ0cCZvlc2n35pU4nHxkk6m4XjFBGlcIZTvx1QNcE1df07+jEC53GMRX3MsDV/K7s05b2+M+MK2iq5BOo/va4Q+Ed4rExA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=hECz9pFVz/suIaR60vbxBLgnenR1cmtTB1A+tesJQlg=;
- b=gkMjiYxF/y4jkSYc4HxslKFQeJle0Aj/veHwa+NNXNg5rt8WfdSzz1ZaABDu3vzrYa1aXRS/CcDYUMke81KAleQi2hp5xvN0v+pwdJG1NFGpDs6nr2BNraFDNkNLApHRs+p4wLZoay4XkqgNl78pSFvQ+ExNba5XrhEQYi/olXxiBm1SrEoFm3h49EaITCrysr/0pkZWupmWv57rjhbV7NnAt0SY9HnK6fBt1STFXOH56LWoPCHKAFNXgFhQJO9462oX8o+8YtwhY0YYHpDfOCXij5zPP3nkb7NWSIMmcGEs/tWyeTjjTTRCckmbG8uM4EK1SvmIsmbALowtGbk/4Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hECz9pFVz/suIaR60vbxBLgnenR1cmtTB1A+tesJQlg=;
- b=f9cFY8RvGv4rrOxi2n/ac8PtoZcf2s2XQcf4adBfXZxsudB7tDNO6xnCTLli9v6Ur0MH7EFbFCSqPWus0GnmKrDrJNG4rBxzYV4Eja0fqztdtGnS/OpulXIe4C06y/vxrcSf8artEHigswB4NmFpZiGuGOxSyJpvpcujjNOIwfk=
-Received: from MN2PR05CA0012.namprd05.prod.outlook.com (2603:10b6:208:c0::25)
- by DM6PR12MB4467.namprd12.prod.outlook.com (2603:10b6:5:2a8::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.19; Wed, 5 Mar
- 2025 23:02:12 +0000
-Received: from MN1PEPF0000F0DF.namprd04.prod.outlook.com
- (2603:10b6:208:c0:cafe::c) by MN2PR05CA0012.outlook.office365.com
- (2603:10b6:208:c0::25) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8511.15 via Frontend Transport; Wed,
- 5 Mar 2025 23:02:11 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- MN1PEPF0000F0DF.mail.protection.outlook.com (10.167.242.37) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8511.15 via Frontend Transport; Wed, 5 Mar 2025 23:02:11 +0000
-Received: from zenon.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 5 Mar
- 2025 17:02:09 -0600
-From: "Pratik R. Sampat" <prsampat@amd.com>
-To: <linux-kernel@vger.kernel.org>, <x86@kernel.org>, <kvm@vger.kernel.org>,
-	<linux-kselftest@vger.kernel.org>
-CC: <seanjc@google.com>, <pbonzini@redhat.com>, <thomas.lendacky@amd.com>,
-	<tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
-	<dave.hansen@linux.intel.com>, <shuah@kernel.org>, <pgonda@google.com>,
-	<ashish.kalra@amd.com>, <nikunj@amd.com>, <pankaj.gupta@amd.com>,
-	<michael.roth@amd.com>, <sraithal@amd.com>, <prsampat@amd.com>
-Subject: [PATCH v8 08/10] KVM: selftests: Force GUEST_MEMFD flag for SNP VM type
-Date: Wed, 5 Mar 2025 16:59:58 -0600
-Message-ID: <20250305230000.231025-9-prsampat@amd.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250305230000.231025-1-prsampat@amd.com>
-References: <20250305230000.231025-1-prsampat@amd.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MGQFbKaH"
+Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-2ff5544af03so23084a91.1;
+        Wed, 05 Mar 2025 15:02:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741215740; x=1741820540; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DU0JYgz8loA5MWXHcsC5YAnENw3ohHfJ8gchwQ4NDqk=;
+        b=MGQFbKaHKVnMQ+iTFVWlPy+IhJBiFAyklnxyzzT0LL0aI0pPizaqvtn0jV0bq0Qp2j
+         QQYdIMbK+5NjeYZrg67wW4Y5uEjaOBowzCJc3+4/9TcL8t1nqQ9N6oSnixRfcBTLei5n
+         SMftv4cOxGtNCuTJTjryQh8HFg/nwoWk9JwS6gSMpoYEXYdeLSyUYS15+U8ZAvy95ECa
+         oiPeM11zXP8Ur+htp0wiG/hYUAopqoR0jGXErm8vQzWUaWpF+Htcek6UB6iHwm4Nn45B
+         1CXEEgxqgEI26439hDlVOZGP7pxDMhvDcBcyuSkNqxSRFjY8yqb/AaYx23MJKPOtofwH
+         meXw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741215740; x=1741820540;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=DU0JYgz8loA5MWXHcsC5YAnENw3ohHfJ8gchwQ4NDqk=;
+        b=YIg42L/zi2mvYBRkiDflv3dHvdFBD9Y5vX3/I2KwO71KADBxdvLLbUBj4gjJro9T2S
+         Wr9cmTN6KKAoV2Mko/BgXiV2/hbGB8tjAAmONmQ/nYf9gitUkdJbL/yOxGTEUrc9b2Fl
+         vBQasu/MmhfkTyBmINaJCUgmbS8fuFQCIe8Bcwwbw9hlyC6TzP6ug5JQj+pSVz9+WZZd
+         YhQYMtgE52zCpEv7UBPFeow2trp8uswh5EGqA5htQx5wgyL2l4vMLY0vApCS6tle4uec
+         Cms3UWGx9vTAHbpCLe0dVVtbnl/wJr2z3F1jzioozVsth7rIAfu+lkl/xQCw/c0TgSzN
+         lTBQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUl2lCp8Pe/qDakHbWTsj23EucF4BxOGV91lS4NmDsNupd33VFZLhGIuI9/gwjVsTIiMXuoQVG4P1JvhKE=@vger.kernel.org, AJvYcCWRB1PWwU9GQX2SX6NlY4N6uvr3ilL0aYdVevK1FkFT/SudR7FipR/dmjKfMMJl6IzgwNt1kxsDsIRpQt1MD4w=@vger.kernel.org, AJvYcCXosqGfV5Fim60CmAKQKLobys03foAW1J3GxQ1qptZRqTfAbGa9PxP7cxPK557MFgQPrRGZnOQqJ0nJ@vger.kernel.org
+X-Gm-Message-State: AOJu0YyPUTUbiNTkUQakLoeJC5XQYW+RgsDjbqY2BYJ6Q3pnrzCkP86N
+	8m4Tpp9EpWSmTDlcjZYmz8+Y+MlvRdNQcCgpu+EG8VfSUxjA+frwOx87mdXOL0FfFgyb0k5pf3R
+	w/s7pPbNdoGa9x1iMc3N1g+0Id4o=
+X-Gm-Gg: ASbGncuoSOd8WucLxixcwFa0YfSRFCe4j5n/Z4Pme0WwFQCL6EQQjNcQhmEiVR+lMOs
+	/6SHL3olse6F6lyP1pAdYcru5Ww64dsc9hgF1PuZUlRrQwd1hyOzkfCpKDOLPadXqNczMhzX4ez
+	Kybol7jjoCwhIktGGe4BvFTFucpA==
+X-Google-Smtp-Source: AGHT+IFVBDqZbEwRQ9Ywp34UPpcuUXspouep8Y78Gvm7RN1qbm3xmglctYZE8Nva4ApJBxvQskOIEVu0LMqHKJWkOXI=
+X-Received: by 2002:a17:90b:4b4e:b0:2fc:25b3:6a91 with SMTP id
+ 98e67ed59e1d1-2ff497c18e3mr3223253a91.5.1741215739863; Wed, 05 Mar 2025
+ 15:02:19 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN1PEPF0000F0DF:EE_|DM6PR12MB4467:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4b35c14d-64d6-48d9-e6cd-08dd5c39c377
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|1800799024|376014|82310400026|7416014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?3liftS6auFeKJkTP9Ub5Ll71JKVuKwpRkC71fIs5tF6L0wUWjKaAnFnumUIx?=
- =?us-ascii?Q?dAoKBwpzeJSwOJ4PSV2Jc06MunAp8oR3cZes47n/jX4n0/bVC60moSxQn2cM?=
- =?us-ascii?Q?SX79wl4rzRDkkdXQjj0uAYPvMu5gQ374iZc000Yxzh4ake3kP/v44aSPjpJV?=
- =?us-ascii?Q?fwH38Zg8qGcfcAesfgEsGrtsMx4xQAWOj0SWRpgoiukNbKNPtctKWsH1AHWw?=
- =?us-ascii?Q?g+IDmAMOwph1LmFujTT86pQr+aTvC9Irz0Dhe6VjKZGd1R4Z+hVenhi3sRC+?=
- =?us-ascii?Q?bByZbp6MPaz6HunoeiayjaqfV8KxIo4I/7vG7kdS9Ce5hcDJ+uDzIrMk96QQ?=
- =?us-ascii?Q?maiuId313ndbzaWc9DI05Vv6+j1B5BqeW6s44P81+uF8ErttRRJWFxFkc2Pw?=
- =?us-ascii?Q?uQNbeO7Meulxiq3m1rRDysr2egUE2Q/1wCGPgiqj5lninasNMbWRIoipkcmi?=
- =?us-ascii?Q?ZENU3XxhPxAp9kHwz7VtlmPZGQgU8+wqk7vXFODDL25bOZ389dXGtigI2GjP?=
- =?us-ascii?Q?KglDmmz8kgTrLkDX1e+6PU6gDbM/++n2oVTZTpbDbU6aV1eihjPx85z5nfYH?=
- =?us-ascii?Q?mI4z8Yms+2VHRxbadQI2chjJOpR0U6rAL4WCQBn0uWfBjmKVmdEfl2uBqDVc?=
- =?us-ascii?Q?tF7jez9eLN4XxgIBHc9wngcYQkh4CmFsfczdZP0EJfQqgXBJWZnlD9WYk7r4?=
- =?us-ascii?Q?EyTGHc01NO/pLPsNk7NLM7I4KNubW09ECp4JtLNJBFsdtCqDF2nDJO4pSLCd?=
- =?us-ascii?Q?azBwzqlwh5BO8R95WS7kM9o1CCzn+jUKyYUfwAnWeuWzDC7oRJWBMR13Iv21?=
- =?us-ascii?Q?Kygmd5P4KVYuvltScAdOdKzZxRktvs0pycvISJXYSdIqOzsHMvrISaZpwa+z?=
- =?us-ascii?Q?9biN6BcjAusSWQt3ferlbY322WTw6ja3C8pT7t+zMzHpI0WNY0b1wgkV7nke?=
- =?us-ascii?Q?mvWPwsp1ZC6dVk2IBFBpU7HU0eC4i+MlhI1aLGKh+4TBUcBxhfCwAgDvkPJ0?=
- =?us-ascii?Q?6mxlLYbjJ/jrf9KvTfGcBCnVb7le/ZPe7oshMhvbfw59zziPBmSv4Hlhi5bp?=
- =?us-ascii?Q?SsCrZbWcAStgyRRa2bnv4SyQXl2yqMkLXg0Yo58yUrnWUPS5zY54p4feREpy?=
- =?us-ascii?Q?qH7qvIq3j2CJ5EMVMyPLTOgQCzeje4qWzNXff+nYXRS7T1XxGQp4iRBK98Mq?=
- =?us-ascii?Q?2Lbh2uyPFYFw8MOyZU65Cg+Manx3XOslfxsvYdx43gtwAN4Zy6Ps8W6BZ3Yq?=
- =?us-ascii?Q?VvwkO7NZk9MRqUEtIDB8wvsW0VdJ2EqxRXFF/wnY05oLUeX/x/MLskx/gCaF?=
- =?us-ascii?Q?eYvl9Kslbd8yb4hfj7Px8k/0qMfSzi6xg0ZZpZJq7eEKMvmWDyE/5FNPGumL?=
- =?us-ascii?Q?XEzjtWc7j2cxk5EcuFHvtJO2JzeGG+/DuP11bTk8jWqJDGrhs/x258Y8x7BG?=
- =?us-ascii?Q?xNmPIpUQp4kqCv1uzB81m3IZLXTrTS8y2l1X7Mu9gzbBA8Kfs/Bhvw=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(1800799024)(376014)(82310400026)(7416014);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Mar 2025 23:02:11.8315
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4b35c14d-64d6-48d9-e6cd-08dd5c39c377
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	MN1PEPF0000F0DF.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4467
+References: <20250213-aligned-alloc-v7-1-d2a2d0be164b@gmail.com>
+In-Reply-To: <20250213-aligned-alloc-v7-1-d2a2d0be164b@gmail.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Thu, 6 Mar 2025 00:02:05 +0100
+X-Gm-Features: AQ5f1JrS4W1LclZjnsUx9LBTl9i9YRM8HAgFLPtAtQHt9lipfjoQYxpBRnKjLf8
+Message-ID: <CANiq72=FhaZrgMTBSTXOQvg8jrAR+pbdUjt2gL2npjBh8881jw@mail.gmail.com>
+Subject: Re: [PATCH v7] rust: alloc: satisfy POSIX alignment requirement
+To: Tamir Duberstein <tamird@gmail.com>
+Cc: Danilo Krummrich <dakr@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, DJ Delorie <dj@redhat.com>, 
+	Eric Blake <eblake@redhat.com>, Paul Eggert <eggert@cs.ucla.edu>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, rust-for-linux@vger.kernel.org, 
+	linux-man@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Force the SEV-SNP VM type to set the KVM_MEM_GUEST_MEMFD flag for the
-creation of private memslots.
+On Thu, Feb 13, 2025 at 12:34=E2=80=AFPM Tamir Duberstein <tamird@gmail.com=
+> wrote:
+>
+> ISO C's `aligned_alloc` is partially implementation-defined; on some
+> systems it inherits stricter requirements from POSIX's `posix_memalign`.
+>
+> This causes the call added in commit dd09538fb409 ("rust: alloc:
+> implement `Cmalloc` in module allocator_test") to fail on macOS because
+> it doesn't meet the requirements of `posix_memalign`.
+>
+> Adjust the call to meet the POSIX requirement and add a comment. This
+> fixes failures in `make rusttest` on macOS.
+>
+> Acked-by: Danilo Krummrich <dakr@kernel.org>
+> Fixes: dd09538fb409 ("rust: alloc: implement `Cmalloc` in module allocato=
+r_test")
+> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
 
-Signed-off-by: Pratik R. Sampat <prsampat@amd.com>
----
- tools/testing/selftests/kvm/lib/kvm_util.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+Applied to `rust-fixes` -- thanks everyone!
 
-diff --git a/tools/testing/selftests/kvm/lib/kvm_util.c b/tools/testing/selftests/kvm/lib/kvm_util.c
-index 33fefeb3ca44..089488e2eaf6 100644
---- a/tools/testing/selftests/kvm/lib/kvm_util.c
-+++ b/tools/testing/selftests/kvm/lib/kvm_util.c
-@@ -413,14 +413,17 @@ struct kvm_vm *__vm_create(struct vm_shape shape, uint32_t nr_runnable_vcpus,
- 						 nr_extra_pages);
- 	struct userspace_mem_region *slot0;
- 	struct kvm_vm *vm;
--	int i;
-+	int i, flags = 0;
- 
- 	pr_debug("%s: mode='%s' type='%d', pages='%ld'\n", __func__,
- 		 vm_guest_mode_string(shape.mode), shape.type, nr_pages);
- 
- 	vm = ____vm_create(shape);
- 
--	vm_userspace_mem_region_add(vm, VM_MEM_SRC_ANONYMOUS, 0, 0, nr_pages, 0);
-+	if (shape.type == KVM_X86_SNP_VM)
-+		flags |=  KVM_MEM_GUEST_MEMFD;
-+
-+	vm_userspace_mem_region_add(vm, VM_MEM_SRC_ANONYMOUS, 0, 0, nr_pages, flags);
- 	for (i = 0; i < NR_MEM_REGIONS; i++)
- 		vm->memslots[i] = 0;
- 
--- 
-2.43.0
+    [ Added Cc: stable. - Miguel ]
 
+Cheers,
+Miguel
