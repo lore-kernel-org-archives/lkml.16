@@ -1,60 +1,58 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AF3B24BD1A
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 14:05:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B298E24C66A
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 14:06:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741183559; cv=none; b=o2XwaUNdNAUg2PufEDfHAVg2xW+cvb0h2uL6GM4UBaAYhcgon/WUqx4+nUTq277yMsglY3mS02AkXaWd3Uc9DMijYapc66drjcIBLWyFpmvzZaVtRTrKl3eFJEGk4MOyHflHbg8wuaayJbNFMyKObJYG52cWfLJL5qW5x1NCXeg=
+	t=1741183563; cv=none; b=pVCRxcfMES+vIo1Q7VLH6X2PW5d0cdDJYs/H+J6c+w2/m9GC9J0PjRjK18DF+uReXuLdpp7mzexthkkqq5jDbR/DJcExUbET4X6dciEh4ka6UpJbSeqE2Xa8YIgsA/bwSZ8LoQ5nNgOCZNvJOTngKP7MI6k/Oct0LF2Cdsa7kh4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741183559; c=relaxed/simple;
-	bh=8E0z+xBwGcR/UNVfkDxrm/jDH9u0mqaDikfGuOws3X0=;
+	s=arc-20240116; t=1741183563; c=relaxed/simple;
+	bh=+L/G9ZYml07rE7xcoMc1XI178hR7JR3O+4eZS6nC3hs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Cu1Zw7xkignQc44h+N0kP+Ai996GnMFnlmPVfaiwUzmxWNvCN/AYI8D0aXtA66o67ijnx/tXBV4N9IxxCngFaqf7lynLsKXEXt3j1lyAtjq2ZR/X6k0RwZL6DERvjw9VNO2JWm4IaoyHwAq1/hYXANDXkaUF4uhF1OfVtRMuBqA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dc947MxI; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version; b=g//vTmfYg0nlmH+APz8cKzjMdaxiPEEXeVsWXa/WcXGYrTyZCMx3C6XicDRCNi+7ik5mw4v+Zizqh/wIbc67Yhc6roDVqrX6if3tMq8ji88HkIhyaETOVH/Th5ULTDbMkJ39VpIbMGymFdUVdKrZ39afrDhnAfh01fTe2PqpklU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=elRnZgNX; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dc947MxI"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="elRnZgNX"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1741183556;
+	s=mimecast20190719; t=1741183560;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=ea6O7Knc7qjPjroV8vOO4NXOWXgbpWm1Jrqs8kULx0g=;
-	b=dc947MxIAmNGy4NMv14C8msZtpOPEBr6NoFtVv65s7KtgSFQVk0PHb9gfF3UTbi5F5Q3p+
-	+ii7+qAiYygbtGIqfoP+0ZuE07n1lscIWqz57HL0+Y4BT+t4t85Q9k3c/fZ9L+lVfnS9un
-	tJjHVGMojJrBs0T43dm6F24oV9M28wU=
+	bh=veJYqIZhZwJMarbagx/aKK/mQbHDV25wxXH1xL62AG8=;
+	b=elRnZgNXIHL9PjTicvpH218om3pB/D/X/DVzFsd8rvAJYZUdi14V7kH4dCHcb4KTxhbFjX
+	YyETBJeW33pj260GaP7k56RwCV7TwR5un1Dgu8WnHBLj+WfJPbKLO/PTQvvMcooGsPEbcN
+	JS3BTxCkigQVOJELwTiEYwBrvaqtcsk=
 Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-171-HPlgrCdCNm2WzzZYmJfLSQ-1; Wed,
- 05 Mar 2025 09:05:38 -0500
-X-MC-Unique: HPlgrCdCNm2WzzZYmJfLSQ-1
-X-Mimecast-MFC-AGG-ID: HPlgrCdCNm2WzzZYmJfLSQ_1741183537
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-54-LgViCI6fM5C_cm0npJmdlA-1; Wed,
+ 05 Mar 2025 09:05:57 -0500
+X-MC-Unique: LgViCI6fM5C_cm0npJmdlA-1
+X-Mimecast-MFC-AGG-ID: LgViCI6fM5C_cm0npJmdlA_1741183556
 Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 1DA50187B16D;
-	Wed,  5 Mar 2025 14:04:52 +0000 (UTC)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 074BD1809CA5;
+	Wed,  5 Mar 2025 14:05:11 +0000 (UTC)
 Received: from gmonaco-thinkpadt14gen3.rmtit.com (unknown [10.45.226.192])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 6761F300070B;
-	Wed,  5 Mar 2025 14:04:48 +0000 (UTC)
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 3E90E3000708;
+	Wed,  5 Mar 2025 14:05:06 +0000 (UTC)
 From: Gabriele Monaco <gmonaco@redhat.com>
 To: linux-kernel@vger.kernel.org,
-	Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
 	Steven Rostedt <rostedt@goodmis.org>,
 	linux-trace-kernel@vger.kernel.org
 Cc: Gabriele Monaco <gmonaco@redhat.com>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	John Kacur <jkacur@redhat.com>,
-	Clark Williams <williams@redhat.com>
-Subject: [PATCH v5 3/9] rv: Add sco and tss per-cpu monitors
-Date: Wed,  5 Mar 2025 15:03:56 +0100
-Message-ID: <20250305140406.350227-4-gmonaco@redhat.com>
+	Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>
+Subject: [PATCH v5 7/9] verification/dot2k: Add support for nested monitors
+Date: Wed,  5 Mar 2025 15:04:00 +0100
+Message-ID: <20250305140406.350227-8-gmonaco@redhat.com>
 In-Reply-To: <20250305140406.350227-1-gmonaco@redhat.com>
 References: <20250305140406.350227-1-gmonaco@redhat.com>
 Precedence: bulk
@@ -66,511 +64,316 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-Add 2 per-cpu monitors as part of the sched model:
+RV now supports nested monitors, this functionality requires a container
+monitor, which has virtually no functionality besides holding other
+monitors, and nested monitors, that have a container as parent.
 
-* sco: scheduling context operations
-    Monitor to ensure sched_set_state happens only in thread context
-* tss: task switch while scheduling
-    Monitor to ensure sched_switch happens only in scheduling context
+Add the -p flag to pass a parent to a monitor, this sets it up while
+registering the monitor and adds necessary includes and configurations.
+Add the -c flag to create a container, since containers are empty, we
+don't allow supplying a dot model or a monitor type, the template is
+also different since functions to enable and disable the monitor are not
+defined, nor any tracepoint. The generated header file only allows to
+include the rv_monitor structure in children monitors.
 
-To: Ingo Molnar <mingo@redhat.com>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Juri Lelli <juri.lelli@redhat.com>
-Cc: John Kacur <jkacur@redhat.com>
-Cc: Clark Williams <williams@redhat.com>
 Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
 ---
- kernel/trace/rv/Kconfig                  |  2 +
- kernel/trace/rv/Makefile                 |  2 +
- kernel/trace/rv/monitors/sco/Kconfig     | 14 ++++
- kernel/trace/rv/monitors/sco/sco.c       | 88 +++++++++++++++++++++++
- kernel/trace/rv/monitors/sco/sco.h       | 47 ++++++++++++
- kernel/trace/rv/monitors/sco/sco_trace.h | 15 ++++
- kernel/trace/rv/monitors/tss/Kconfig     | 14 ++++
- kernel/trace/rv/monitors/tss/tss.c       | 91 ++++++++++++++++++++++++
- kernel/trace/rv/monitors/tss/tss.h       | 47 ++++++++++++
- kernel/trace/rv/monitors/tss/tss_trace.h | 15 ++++
- kernel/trace/rv/rv_trace.h               |  2 +
- tools/verification/models/sched/sco.dot  | 18 +++++
- tools/verification/models/sched/tss.dot  | 18 +++++
- 13 files changed, 373 insertions(+)
- create mode 100644 kernel/trace/rv/monitors/sco/Kconfig
- create mode 100644 kernel/trace/rv/monitors/sco/sco.c
- create mode 100644 kernel/trace/rv/monitors/sco/sco.h
- create mode 100644 kernel/trace/rv/monitors/sco/sco_trace.h
- create mode 100644 kernel/trace/rv/monitors/tss/Kconfig
- create mode 100644 kernel/trace/rv/monitors/tss/tss.c
- create mode 100644 kernel/trace/rv/monitors/tss/tss.h
- create mode 100644 kernel/trace/rv/monitors/tss/tss_trace.h
- create mode 100644 tools/verification/models/sched/sco.dot
- create mode 100644 tools/verification/models/sched/tss.dot
+ tools/verification/dot2/dot2k                 | 27 ++++---
+ tools/verification/dot2/dot2k.py              | 79 +++++++++++++++----
+ .../verification/dot2/dot2k_templates/Kconfig |  1 +
+ .../verification/dot2/dot2k_templates/main.c  |  4 +-
+ .../dot2/dot2k_templates/main_container.c     | 38 +++++++++
+ .../dot2/dot2k_templates/main_container.h     |  3 +
+ 6 files changed, 125 insertions(+), 27 deletions(-)
+ create mode 100644 tools/verification/dot2/dot2k_templates/main_container.c
+ create mode 100644 tools/verification/dot2/dot2k_templates/main_container.h
 
-diff --git a/kernel/trace/rv/Kconfig b/kernel/trace/rv/Kconfig
-index 84c98a5327f3e..961ac1e487df1 100644
---- a/kernel/trace/rv/Kconfig
-+++ b/kernel/trace/rv/Kconfig
-@@ -28,6 +28,8 @@ menuconfig RV
- source "kernel/trace/rv/monitors/wip/Kconfig"
- source "kernel/trace/rv/monitors/wwnr/Kconfig"
- source "kernel/trace/rv/monitors/sched/Kconfig"
-+source "kernel/trace/rv/monitors/tss/Kconfig"
-+source "kernel/trace/rv/monitors/sco/Kconfig"
- # Add new monitors here
+diff --git a/tools/verification/dot2/dot2k b/tools/verification/dot2/dot2k
+index 559ba191a1f6d..767064f415e76 100644
+--- a/tools/verification/dot2/dot2k
++++ b/tools/verification/dot2/dot2k
+@@ -11,22 +11,30 @@
+ if __name__ == '__main__':
+     from dot2.dot2k import dot2k
+     import argparse
+-    import ntpath
+-    import os
+-    import platform
+     import sys
  
- config RV_REACTORS
-diff --git a/kernel/trace/rv/Makefile b/kernel/trace/rv/Makefile
-index 1c784df03b9a7..ef2a084ff3102 100644
---- a/kernel/trace/rv/Makefile
-+++ b/kernel/trace/rv/Makefile
-@@ -6,6 +6,8 @@ obj-$(CONFIG_RV) += rv.o
- obj-$(CONFIG_RV_MON_WIP) += monitors/wip/wip.o
- obj-$(CONFIG_RV_MON_WWNR) += monitors/wwnr/wwnr.o
- obj-$(CONFIG_RV_MON_SCHED) += monitors/sched/sched.o
-+obj-$(CONFIG_RV_MON_TSS) += monitors/tss/tss.o
-+obj-$(CONFIG_RV_MON_SCO) += monitors/sco/sco.o
- # Add new monitors here
- obj-$(CONFIG_RV_REACTORS) += rv_reactors.o
- obj-$(CONFIG_RV_REACT_PRINTK) += reactor_printk.o
-diff --git a/kernel/trace/rv/monitors/sco/Kconfig b/kernel/trace/rv/monitors/sco/Kconfig
-new file mode 100644
-index 0000000000000..097c96cccdd7d
---- /dev/null
-+++ b/kernel/trace/rv/monitors/sco/Kconfig
-@@ -0,0 +1,14 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+#
-+config RV_MON_SCO
-+	depends on RV
-+	depends on RV_MON_SCHED
-+	default y
-+	select DA_MON_EVENTS_IMPLICIT
-+	bool "sco monitor"
-+	help
-+	  Monitor to ensure sched_set_state happens only in thread context.
-+	  This monitor is part of the sched monitors collection.
++    def is_container():
++        """Should work even before parsing the arguments"""
++        return "-c" in sys.argv or "--container" in sys.argv
 +
-+	  For further information, see:
-+	    Documentation/trace/rv/monitor_sched.rst
-diff --git a/kernel/trace/rv/monitors/sco/sco.c b/kernel/trace/rv/monitors/sco/sco.c
+     parser = argparse.ArgumentParser(description='transform .dot file into kernel rv monitor')
+-    parser.add_argument('-d', "--dot", dest="dot_file", required=True)
+-    parser.add_argument('-t', "--monitor_type", dest="monitor_type", required=True)
+-    parser.add_argument('-n', "--model_name", dest="model_name", required=False)
++    parser.add_argument('-d', "--dot", dest="dot_file", required=not is_container())
++    parser.add_argument('-t', "--monitor_type", dest="monitor_type", required=not is_container(),
++                        help=f"Available options: {', '.join(dot2k.monitor_types.keys())}")
++    parser.add_argument('-n', "--model_name", dest="model_name", required=is_container())
+     parser.add_argument("-D", "--description", dest="description", required=False)
+     parser.add_argument("-a", "--auto_patch", dest="auto_patch",
+                         action="store_true", required=False,
+                         help="Patch the kernel in place")
++    parser.add_argument("-p", "--parent", dest="parent",
++                        required=False, help="Create a monitor nested to parent")
++    parser.add_argument("-c", "--container", dest="container",
++                        action="store_true", required=False,
++                        help="Create an empty monitor to be used as a container")
+     params = parser.parse_args()
+ 
+-    print("Opening and parsing the dot file %s" % params.dot_file)
++    if not is_container():
++        print("Opening and parsing the dot file %s" % params.dot_file)
+     try:
+         monitor=dot2k(params.dot_file, params.monitor_type, vars(params))
+     except Exception as e:
+@@ -37,8 +45,9 @@ if __name__ == '__main__':
+     print("Writing the monitor into the directory %s" % monitor.name)
+     monitor.print_files()
+     print("Almost done, checklist")
+-    print("  - Edit the %s/%s.c to add the instrumentation" % (monitor.name, monitor.name))
+-    print(monitor.fill_tracepoint_tooltip())
++    if not is_container():
++        print("  - Edit the %s/%s.c to add the instrumentation" % (monitor.name, monitor.name))
++        print(monitor.fill_tracepoint_tooltip())
+     print(monitor.fill_makefile_tooltip())
+     print(monitor.fill_kconfig_tooltip())
+     print(monitor.fill_monitor_tooltip())
+diff --git a/tools/verification/dot2/dot2k.py b/tools/verification/dot2/dot2k.py
+index 153cc14bcca45..745d35a4a3791 100644
+--- a/tools/verification/dot2/dot2k.py
++++ b/tools/verification/dot2/dot2k.py
+@@ -19,16 +19,31 @@ class dot2k(Dot2c):
+     monitor_type = "per_cpu"
+ 
+     def __init__(self, file_path, MonitorType, extra_params={}):
+-        super().__init__(file_path, extra_params.get("model_name"))
+-
+-        self.monitor_type = self.monitor_types.get(MonitorType)
+-        if self.monitor_type is None:
+-            raise ValueError("Unknown monitor type: %s" % MonitorType)
+-
+-        self.monitor_type = MonitorType
++        self.container = extra_params.get("container")
++        self.parent = extra_params.get("parent")
+         self.__fill_rv_templates_dir()
+-        self.main_c = self.__read_file(self.monitor_templates_dir + "main.c")
+-        self.trace_h = self.__read_file(self.monitor_templates_dir + "trace.h")
++
++        if self.container:
++            if file_path:
++                raise ValueError("A container does not require a dot file")
++            if MonitorType:
++                raise ValueError("A container does not require a monitor type")
++            if self.parent:
++                raise ValueError("A container cannot have a parent")
++            self.name = extra_params.get("model_name")
++            self.events = []
++            self.states = []
++            self.main_c = self.__read_file(self.monitor_templates_dir + "main_container.c")
++            self.main_h = self.__read_file(self.monitor_templates_dir + "main_container.h")
++        else:
++            super().__init__(file_path, extra_params.get("model_name"))
++
++            self.monitor_type = self.monitor_types.get(MonitorType)
++            if self.monitor_type is None:
++                raise ValueError("Unknown monitor type: %s" % MonitorType)
++            self.monitor_type = MonitorType
++            self.main_c = self.__read_file(self.monitor_templates_dir + "main.c")
++            self.trace_h = self.__read_file(self.monitor_templates_dir + "trace.h")
+         self.kconfig = self.__read_file(self.monitor_templates_dir + "Kconfig")
+         self.enum_suffix = "_%s" % self.name
+         self.description = extra_params.get("description", self.name) or "auto-generated"
+@@ -105,6 +120,14 @@ class dot2k(Dot2c):
+     def fill_monitor_type(self):
+         return self.monitor_type.upper()
+ 
++    def fill_parent(self):
++        return "&rv_%s" % self.parent if self.parent else "NULL"
++
++    def fill_include_parent(self):
++        if self.parent:
++            return "#include <monitors/%s/%s.h>\n" % (self.parent, self.parent)
++        return ""
++
+     def fill_tracepoint_handlers_skel(self):
+         buff = []
+         for event in self.events:
+@@ -146,6 +169,8 @@ class dot2k(Dot2c):
+         tracepoint_handlers = self.fill_tracepoint_handlers_skel()
+         tracepoint_attach = self.fill_tracepoint_attach_probe()
+         tracepoint_detach = self.fill_tracepoint_detach_helper()
++        parent = self.fill_parent()
++        parent_include = self.fill_include_parent()
+ 
+         main_c = main_c.replace("%%MONITOR_TYPE%%", monitor_type)
+         main_c = main_c.replace("%%MIN_TYPE%%", min_type)
+@@ -155,6 +180,8 @@ class dot2k(Dot2c):
+         main_c = main_c.replace("%%TRACEPOINT_ATTACH%%", tracepoint_attach)
+         main_c = main_c.replace("%%TRACEPOINT_DETACH%%", tracepoint_detach)
+         main_c = main_c.replace("%%DESCRIPTION%%", self.description)
++        main_c = main_c.replace("%%PARENT%%", parent)
++        main_c = main_c.replace("%%INCLUDE_PARENT%%", parent_include)
+ 
+         return main_c
+ 
+@@ -216,6 +243,14 @@ class dot2k(Dot2c):
+         buff.append("	     TP_ARGS(%s)" % tp_args_c)
+         return self.__buff_to_string(buff)
+ 
++    def fill_monitor_deps(self):
++        buff = []
++        buff.append("	# XXX: add dependencies if there")
++        if self.parent:
++            buff.append("	depends on RV_MON_%s" % self.parent.upper())
++            buff.append("	default y")
++        return self.__buff_to_string(buff)
++
+     def fill_trace_h(self):
+         trace_h = self.trace_h
+         monitor_class = self.fill_monitor_class()
+@@ -233,12 +268,19 @@ class dot2k(Dot2c):
+     def fill_kconfig(self):
+         kconfig = self.kconfig
+         monitor_class_type = self.fill_monitor_class_type()
++        monitor_deps = self.fill_monitor_deps()
+         kconfig = kconfig.replace("%%MODEL_NAME%%", self.name)
+         kconfig = kconfig.replace("%%MODEL_NAME_UP%%", self.name.upper())
+         kconfig = kconfig.replace("%%MONITOR_CLASS_TYPE%%", monitor_class_type)
+         kconfig = kconfig.replace("%%DESCRIPTION%%", self.description)
++        kconfig = kconfig.replace("%%MONITOR_DEPS%%", monitor_deps)
+         return kconfig
+ 
++    def fill_main_container_h(self):
++        main_h = self.main_h
++        main_h = main_h.replace("%%MODEL_NAME%%", self.name)
++        return main_h
++
+     def __patch_file(self, file, marker, line):
+         file_to_patch = os.path.join(self.rv_dir, file)
+         content = self.__read_file(file_to_patch)
+@@ -324,19 +366,24 @@ obj-$(CONFIG_RV_MON_%s) += monitors/%s/%s.o
+ 
+     def print_files(self):
+         main_c = self.fill_main_c()
+-        model_h = self.fill_model_h()
+ 
+         self.__create_directory()
+ 
+         path = "%s.c" % self.name
+         self.__create_file(path, main_c)
+ 
+-        path = "%s.h" % self.name
+-        self.__create_file(path, model_h)
+-
+-        trace_h = self.fill_trace_h()
+-        path = "%s_trace.h" % self.name
+-        self.__create_file(path, trace_h)
++        if self.container:
++            main_h = self.fill_main_container_h()
++            path = "%s.h" % self.name
++            self.__create_file(path, main_h)
++        else:
++            model_h = self.fill_model_h()
++            path = "%s.h" % self.name
++            self.__create_file(path, model_h)
++
++            trace_h = self.fill_trace_h()
++            path = "%s_trace.h" % self.name
++            self.__create_file(path, trace_h)
+ 
+         kconfig = self.fill_kconfig()
+         self.__create_file("Kconfig", kconfig)
+diff --git a/tools/verification/dot2/dot2k_templates/Kconfig b/tools/verification/dot2/dot2k_templates/Kconfig
+index 03100eda17075..291b29ea28db3 100644
+--- a/tools/verification/dot2/dot2k_templates/Kconfig
++++ b/tools/verification/dot2/dot2k_templates/Kconfig
+@@ -2,6 +2,7 @@
+ #
+ config RV_MON_%%MODEL_NAME_UP%%
+ 	depends on RV
++%%MONITOR_DEPS%%
+ 	select %%MONITOR_CLASS_TYPE%%
+ 	bool "%%MODEL_NAME%% monitor"
+ 	help
+diff --git a/tools/verification/dot2/dot2k_templates/main.c b/tools/verification/dot2/dot2k_templates/main.c
+index 9605ca994416b..83044a20c89aa 100644
+--- a/tools/verification/dot2/dot2k_templates/main.c
++++ b/tools/verification/dot2/dot2k_templates/main.c
+@@ -15,7 +15,7 @@
+  * #include <trace/events/sched.h>
+  */
+ #include <rv_trace.h>
+-
++%%INCLUDE_PARENT%%
+ /*
+  * This is the self-generated part of the monitor. Generally, there is no need
+  * to touch this section.
+@@ -74,7 +74,7 @@ static struct rv_monitor rv_%%MODEL_NAME%% = {
+ 
+ static int __init register_%%MODEL_NAME%%(void)
+ {
+-	rv_register_monitor(&rv_%%MODEL_NAME%%);
++	rv_register_monitor(&rv_%%MODEL_NAME%%, %%PARENT%%);
+ 	return 0;
+ }
+ 
+diff --git a/tools/verification/dot2/dot2k_templates/main_container.c b/tools/verification/dot2/dot2k_templates/main_container.c
 new file mode 100644
-index 0000000000000..4cff59220bfc7
+index 0000000000000..89fc17cf8958e
 --- /dev/null
-+++ b/kernel/trace/rv/monitors/sco/sco.c
-@@ -0,0 +1,88 @@
++++ b/tools/verification/dot2/dot2k_templates/main_container.c
+@@ -0,0 +1,38 @@
 +// SPDX-License-Identifier: GPL-2.0
-+#include <linux/ftrace.h>
-+#include <linux/tracepoint.h>
 +#include <linux/kernel.h>
 +#include <linux/module.h>
 +#include <linux/init.h>
 +#include <linux/rv.h>
-+#include <rv/instrumentation.h>
-+#include <rv/da_monitor.h>
 +
-+#define MODULE_NAME "sco"
++#define MODULE_NAME "%%MODEL_NAME%%"
 +
-+#include <trace/events/sched.h>
-+#include <rv_trace.h>
-+#include <monitors/sched/sched.h>
++#include "%%MODEL_NAME%%.h"
 +
-+#include "sco.h"
++struct rv_monitor rv_%%MODEL_NAME%%;
 +
-+static struct rv_monitor rv_sco;
-+DECLARE_DA_MON_PER_CPU(sco, unsigned char);
-+
-+static void handle_sched_set_state(void *data, struct task_struct *tsk, int state)
-+{
-+	da_handle_start_event_sco(sched_set_state_sco);
-+}
-+
-+static void handle_schedule_entry(void *data, bool preempt, unsigned long ip)
-+{
-+	da_handle_event_sco(schedule_entry_sco);
-+}
-+
-+static void handle_schedule_exit(void *data, bool is_switch, unsigned long ip)
-+{
-+	da_handle_start_event_sco(schedule_exit_sco);
-+}
-+
-+static int enable_sco(void)
-+{
-+	int retval;
-+
-+	retval = da_monitor_init_sco();
-+	if (retval)
-+		return retval;
-+
-+	rv_attach_trace_probe("sco", sched_set_state_tp, handle_sched_set_state);
-+	rv_attach_trace_probe("sco", sched_entry_tp, handle_schedule_entry);
-+	rv_attach_trace_probe("sco", sched_exit_tp, handle_schedule_exit);
-+
-+	return 0;
-+}
-+
-+static void disable_sco(void)
-+{
-+	rv_sco.enabled = 0;
-+
-+	rv_detach_trace_probe("sco", sched_set_state_tp, handle_sched_set_state);
-+	rv_detach_trace_probe("sco", sched_entry_tp, handle_schedule_entry);
-+	rv_detach_trace_probe("sco", sched_exit_tp, handle_schedule_exit);
-+
-+	da_monitor_destroy_sco();
-+}
-+
-+static struct rv_monitor rv_sco = {
-+	.name = "sco",
-+	.description = "scheduling context operations.",
-+	.enable = enable_sco,
-+	.disable = disable_sco,
-+	.reset = da_monitor_reset_all_sco,
++struct rv_monitor rv_%%MODEL_NAME%% = {
++	.name = "%%MODEL_NAME%%",
++	.description = "%%DESCRIPTION%%",
++	.enable = NULL,
++	.disable = NULL,
++	.reset = NULL,
 +	.enabled = 0,
 +};
 +
-+static int __init register_sco(void)
++static int __init register_%%MODEL_NAME%%(void)
 +{
-+	rv_register_monitor(&rv_sco, &rv_sched);
++	rv_register_monitor(&rv_%%MODEL_NAME%%, NULL);
 +	return 0;
 +}
 +
-+static void __exit unregister_sco(void)
++static void __exit unregister_%%MODEL_NAME%%(void)
 +{
-+	rv_unregister_monitor(&rv_sco);
++	rv_unregister_monitor(&rv_%%MODEL_NAME%%);
 +}
 +
-+module_init(register_sco);
-+module_exit(unregister_sco);
++module_init(register_%%MODEL_NAME%%);
++module_exit(unregister_%%MODEL_NAME%%);
 +
 +MODULE_LICENSE("GPL");
-+MODULE_AUTHOR("Gabriele Monaco <gmonaco@redhat.com>");
-+MODULE_DESCRIPTION("sco: scheduling context operations.");
-diff --git a/kernel/trace/rv/monitors/sco/sco.h b/kernel/trace/rv/monitors/sco/sco.h
++MODULE_AUTHOR("dot2k: auto-generated");
++MODULE_DESCRIPTION("%%MODEL_NAME%%: %%DESCRIPTION%%");
+diff --git a/tools/verification/dot2/dot2k_templates/main_container.h b/tools/verification/dot2/dot2k_templates/main_container.h
 new file mode 100644
-index 0000000000000..7a4c1f2d5ca1c
+index 0000000000000..0f6883ab4bcc7
 --- /dev/null
-+++ b/kernel/trace/rv/monitors/sco/sco.h
-@@ -0,0 +1,47 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Automatically generated C representation of sco automaton
-+ * For further information about this format, see kernel documentation:
-+ *   Documentation/trace/rv/deterministic_automata.rst
-+ */
-+
-+enum states_sco {
-+	thread_context_sco = 0,
-+	scheduling_context_sco,
-+	state_max_sco
-+};
-+
-+#define INVALID_STATE state_max_sco
-+
-+enum events_sco {
-+	sched_set_state_sco = 0,
-+	schedule_entry_sco,
-+	schedule_exit_sco,
-+	event_max_sco
-+};
-+
-+struct automaton_sco {
-+	char *state_names[state_max_sco];
-+	char *event_names[event_max_sco];
-+	unsigned char function[state_max_sco][event_max_sco];
-+	unsigned char initial_state;
-+	bool final_states[state_max_sco];
-+};
-+
-+static const struct automaton_sco automaton_sco = {
-+	.state_names = {
-+		"thread_context",
-+		"scheduling_context"
-+	},
-+	.event_names = {
-+		"sched_set_state",
-+		"schedule_entry",
-+		"schedule_exit"
-+	},
-+	.function = {
-+		{     thread_context_sco, scheduling_context_sco,          INVALID_STATE },
-+		{          INVALID_STATE,          INVALID_STATE,     thread_context_sco },
-+	},
-+	.initial_state = thread_context_sco,
-+	.final_states = { 1, 0 },
-+};
-diff --git a/kernel/trace/rv/monitors/sco/sco_trace.h b/kernel/trace/rv/monitors/sco/sco_trace.h
-new file mode 100644
-index 0000000000000..b711cd9024ec4
---- /dev/null
-+++ b/kernel/trace/rv/monitors/sco/sco_trace.h
-@@ -0,0 +1,15 @@
++++ b/tools/verification/dot2/dot2k_templates/main_container.h
+@@ -0,0 +1,3 @@
 +/* SPDX-License-Identifier: GPL-2.0 */
 +
-+/*
-+ * Snippet to be included in rv_trace.h
-+ */
-+
-+#ifdef CONFIG_RV_MON_SCO
-+DEFINE_EVENT(event_da_monitor, event_sco,
-+	     TP_PROTO(char *state, char *event, char *next_state, bool final_state),
-+	     TP_ARGS(state, event, next_state, final_state));
-+
-+DEFINE_EVENT(error_da_monitor, error_sco,
-+	     TP_PROTO(char *state, char *event),
-+	     TP_ARGS(state, event));
-+#endif /* CONFIG_RV_MON_SCO */
-diff --git a/kernel/trace/rv/monitors/tss/Kconfig b/kernel/trace/rv/monitors/tss/Kconfig
-new file mode 100644
-index 0000000000000..479f86f52e60d
---- /dev/null
-+++ b/kernel/trace/rv/monitors/tss/Kconfig
-@@ -0,0 +1,14 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+#
-+config RV_MON_TSS
-+	depends on RV
-+	depends on RV_MON_SCHED
-+	default y
-+	select DA_MON_EVENTS_IMPLICIT
-+	bool "tss monitor"
-+	help
-+	  Monitor to ensure sched_switch happens only in scheduling context.
-+	  This monitor is part of the sched monitors collection.
-+
-+	  For further information, see:
-+	    Documentation/trace/rv/monitor_sched.rst
-diff --git a/kernel/trace/rv/monitors/tss/tss.c b/kernel/trace/rv/monitors/tss/tss.c
-new file mode 100644
-index 0000000000000..542787e6524fc
---- /dev/null
-+++ b/kernel/trace/rv/monitors/tss/tss.c
-@@ -0,0 +1,91 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <linux/ftrace.h>
-+#include <linux/tracepoint.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/init.h>
-+#include <linux/rv.h>
-+#include <rv/instrumentation.h>
-+#include <rv/da_monitor.h>
-+
-+#define MODULE_NAME "tss"
-+
-+#include <trace/events/sched.h>
-+#include <rv_trace.h>
-+#include <monitors/sched/sched.h>
-+
-+#include "tss.h"
-+
-+static struct rv_monitor rv_tss;
-+DECLARE_DA_MON_PER_CPU(tss, unsigned char);
-+
-+static void handle_sched_switch(void *data, bool preempt,
-+				struct task_struct *prev,
-+				struct task_struct *next,
-+				unsigned int prev_state)
-+{
-+	da_handle_event_tss(sched_switch_tss);
-+}
-+
-+static void handle_schedule_entry(void *data, bool preempt, unsigned long ip)
-+{
-+	da_handle_event_tss(schedule_entry_tss);
-+}
-+
-+static void handle_schedule_exit(void *data, bool is_switch, unsigned long ip)
-+{
-+	da_handle_start_event_tss(schedule_exit_tss);
-+}
-+
-+static int enable_tss(void)
-+{
-+	int retval;
-+
-+	retval = da_monitor_init_tss();
-+	if (retval)
-+		return retval;
-+
-+	rv_attach_trace_probe("tss", sched_switch, handle_sched_switch);
-+	rv_attach_trace_probe("tss", sched_entry_tp, handle_schedule_entry);
-+	rv_attach_trace_probe("tss", sched_exit_tp, handle_schedule_exit);
-+
-+	return 0;
-+}
-+
-+static void disable_tss(void)
-+{
-+	rv_tss.enabled = 0;
-+
-+	rv_detach_trace_probe("tss", sched_switch, handle_sched_switch);
-+	rv_detach_trace_probe("tss", sched_entry_tp, handle_schedule_entry);
-+	rv_detach_trace_probe("tss", sched_exit_tp, handle_schedule_exit);
-+
-+	da_monitor_destroy_tss();
-+}
-+
-+static struct rv_monitor rv_tss = {
-+	.name = "tss",
-+	.description = "task switch while scheduling.",
-+	.enable = enable_tss,
-+	.disable = disable_tss,
-+	.reset = da_monitor_reset_all_tss,
-+	.enabled = 0,
-+};
-+
-+static int __init register_tss(void)
-+{
-+	rv_register_monitor(&rv_tss, &rv_sched);
-+	return 0;
-+}
-+
-+static void __exit unregister_tss(void)
-+{
-+	rv_unregister_monitor(&rv_tss);
-+}
-+
-+module_init(register_tss);
-+module_exit(unregister_tss);
-+
-+MODULE_LICENSE("GPL");
-+MODULE_AUTHOR("Gabriele Monaco <gmonaco@redhat.com>");
-+MODULE_DESCRIPTION("tss: task switch while scheduling.");
-diff --git a/kernel/trace/rv/monitors/tss/tss.h b/kernel/trace/rv/monitors/tss/tss.h
-new file mode 100644
-index 0000000000000..f0a36fda1b873
---- /dev/null
-+++ b/kernel/trace/rv/monitors/tss/tss.h
-@@ -0,0 +1,47 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Automatically generated C representation of tss automaton
-+ * For further information about this format, see kernel documentation:
-+ *   Documentation/trace/rv/deterministic_automata.rst
-+ */
-+
-+enum states_tss {
-+	thread_tss = 0,
-+	sched_tss,
-+	state_max_tss
-+};
-+
-+#define INVALID_STATE state_max_tss
-+
-+enum events_tss {
-+	sched_switch_tss = 0,
-+	schedule_entry_tss,
-+	schedule_exit_tss,
-+	event_max_tss
-+};
-+
-+struct automaton_tss {
-+	char *state_names[state_max_tss];
-+	char *event_names[event_max_tss];
-+	unsigned char function[state_max_tss][event_max_tss];
-+	unsigned char initial_state;
-+	bool final_states[state_max_tss];
-+};
-+
-+static const struct automaton_tss automaton_tss = {
-+	.state_names = {
-+		"thread",
-+		"sched"
-+	},
-+	.event_names = {
-+		"sched_switch",
-+		"schedule_entry",
-+		"schedule_exit"
-+	},
-+	.function = {
-+		{     INVALID_STATE,         sched_tss,     INVALID_STATE },
-+		{         sched_tss,     INVALID_STATE,        thread_tss },
-+	},
-+	.initial_state = thread_tss,
-+	.final_states = { 1, 0 },
-+};
-diff --git a/kernel/trace/rv/monitors/tss/tss_trace.h b/kernel/trace/rv/monitors/tss/tss_trace.h
-new file mode 100644
-index 0000000000000..4619dbb50cc06
---- /dev/null
-+++ b/kernel/trace/rv/monitors/tss/tss_trace.h
-@@ -0,0 +1,15 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+
-+/*
-+ * Snippet to be included in rv_trace.h
-+ */
-+
-+#ifdef CONFIG_RV_MON_TSS
-+DEFINE_EVENT(event_da_monitor, event_tss,
-+	     TP_PROTO(char *state, char *event, char *next_state, bool final_state),
-+	     TP_ARGS(state, event, next_state, final_state));
-+
-+DEFINE_EVENT(error_da_monitor, error_tss,
-+	     TP_PROTO(char *state, char *event),
-+	     TP_ARGS(state, event));
-+#endif /* CONFIG_RV_MON_TSS */
-diff --git a/kernel/trace/rv/rv_trace.h b/kernel/trace/rv/rv_trace.h
-index 5e65097423ba4..f49e85ca97a1f 100644
---- a/kernel/trace/rv/rv_trace.h
-+++ b/kernel/trace/rv/rv_trace.h
-@@ -58,6 +58,8 @@ DECLARE_EVENT_CLASS(error_da_monitor,
- );
- 
- #include <monitors/wip/wip_trace.h>
-+#include <monitors/tss/tss_trace.h>
-+#include <monitors/sco/sco_trace.h>
- // Add new monitors based on CONFIG_DA_MON_EVENTS_IMPLICIT here
- 
- #endif /* CONFIG_DA_MON_EVENTS_IMPLICIT */
-diff --git a/tools/verification/models/sched/sco.dot b/tools/verification/models/sched/sco.dot
-new file mode 100644
-index 0000000000000..20b0e3b449a6b
---- /dev/null
-+++ b/tools/verification/models/sched/sco.dot
-@@ -0,0 +1,18 @@
-+digraph state_automaton {
-+	center = true;
-+	size = "7,11";
-+	{node [shape = plaintext] "scheduling_context"};
-+	{node [shape = plaintext, style=invis, label=""] "__init_thread_context"};
-+	{node [shape = ellipse] "thread_context"};
-+	{node [shape = plaintext] "thread_context"};
-+	"__init_thread_context" -> "thread_context";
-+	"scheduling_context" [label = "scheduling_context"];
-+	"scheduling_context" -> "thread_context" [ label = "schedule_exit" ];
-+	"thread_context" [label = "thread_context", color = green3];
-+	"thread_context" -> "scheduling_context" [ label = "schedule_entry" ];
-+	"thread_context" -> "thread_context" [ label = "sched_set_state" ];
-+	{ rank = min ;
-+		"__init_thread_context";
-+		"thread_context";
-+	}
-+}
-diff --git a/tools/verification/models/sched/tss.dot b/tools/verification/models/sched/tss.dot
-new file mode 100644
-index 0000000000000..7dfa1d9121bbd
---- /dev/null
-+++ b/tools/verification/models/sched/tss.dot
-@@ -0,0 +1,18 @@
-+digraph state_automaton {
-+	center = true;
-+	size = "7,11";
-+	{node [shape = plaintext] "sched"};
-+	{node [shape = plaintext, style=invis, label=""] "__init_thread"};
-+	{node [shape = ellipse] "thread"};
-+	{node [shape = plaintext] "thread"};
-+	"__init_thread" -> "thread";
-+	"sched" [label = "sched"];
-+	"sched" -> "sched" [ label = "sched_switch" ];
-+	"sched" -> "thread" [ label = "schedule_exit" ];
-+	"thread" [label = "thread", color = green3];
-+	"thread" -> "sched" [ label = "schedule_entry" ];
-+	{ rank = min ;
-+		"__init_thread";
-+		"thread";
-+	}
-+}
++extern struct rv_monitor rv_%%MODEL_NAME%%;
 -- 
 2.48.1
 
