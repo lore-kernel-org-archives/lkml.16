@@ -1,100 +1,179 @@
-Received: from mout.web.de (mout.web.de [212.227.17.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f65.google.com (mail-wm1-f65.google.com [209.85.128.65])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 720B21A316B
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 17:09:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 818721A841A
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 17:09:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741194568; cv=none; b=r6rdbe8svlAU1ABZHkpmSgDhCm3wHQJg4iLzZIVD7mo0lru+10XvAJ6UB6qRkBoxyCBhj3p1QpquTL4ieR28hQ9FIp87EDT0uvQLTnp3NaWm8EYjdn/TP3RUIGiI3uVYmlH6OQhnD1u/7uzAkP3YBX/26R8XL73hxDtkdR4FqI8=
+	t=1741194582; cv=none; b=DcgTBS8GE5DMoM812ao6N6MJHx8XJGhj9/i2eM/qI/dDWQTrp4wnAv7SWUSJk31zFVKaZ107KFdx0ZUjH3Be6mM0KI+xrquMVBPXUybhOfvehyNd+BCs20exJLBdCmLi0ruEWfgdviTzn/tG9saWKPtB5cuhe+9mIppU7KifR08=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741194568; c=relaxed/simple;
-	bh=YaS7Vw61tpQIxWBhHvbHuS/DKddYZcONhrC4ZkkXjrE=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=mFBhXpJCn7VSjDRI/RSHtLsAdgEpJOmp03m9XFyCscQ1TahC/W9SFBxjSxArDAhqK9WkIig0afKEPdRHxQsSuirY78cw98/7H+oHg19Fuz65gYRkT+vykfyJozjiQQCYMq6cOQZIHtTqo0mXjfSxHhN5Gk7pLGAcSSoN8Mz3j38=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=L76yi27o; arc=none smtp.client-ip=212.227.17.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1741194582; c=relaxed/simple;
+	bh=irFcCVMJ+YoW6k8byXnRJIVW9wTUS4yGDTwhsoaB6Ak=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=I2gGiM9WdvoC0vM5LePqwWfNmfDTZP2Ky7fH2Qj175KSsHpZSdnFAKHmRPG2s8xPDgoBSf6lk2Q05xWIUKrhnyx0Qp+BlWcXGeSWd5pGX7Hqdkgvd7Tk/RKhSz4dPdYuVsWILioeb+YROiAEoFMDRI/COzkx+YkiTtadnFWotB0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=P1p3UOO0; arc=none smtp.client-ip=209.85.128.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="L76yi27o"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1741194541; x=1741799341; i=markus.elfring@web.de;
-	bh=YaS7Vw61tpQIxWBhHvbHuS/DKddYZcONhrC4ZkkXjrE=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=L76yi27oBcT7j0UHkfzV8BEww0ObdYF4xYtqm/n/lkFEtavF8Tly6AGTymodmoUE
-	 hs8lqZ0xyZzF4P8HhHD2TS1YjxmIX2DPPr2UA+yKI5Slt6yF1ZVH4q72AXqi9NDRo
-	 CCmH1D1PmU8wTQrv4trt0UFCZVdwQvIT0d6Z+zh77BMnSsKgIGj8Yxtv+1HaaKUfR
-	 khz00VN2JfEyKOSKRtHeO8EFtuIMzfmC6xJI3dOsTJUzoMUVswYSMNe3LsTKs3x4x
-	 o08hZnuz7H4cD984gZexT98aiOdGu6e7bEHiWrcGwrH0u7EOwJdjxZiELAf5GzkbI
-	 ZvRha1ll/N36pae7gQ==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.70.10]) by smtp.web.de (mrweb105
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1MlLE7-1tOYE43K61-00kWWL; Wed, 05
- Mar 2025 18:09:01 +0100
-Message-ID: <851bef96-245b-4f5c-8390-ab94dbc04063@web.de>
-Date: Wed, 5 Mar 2025 18:08:57 +0100
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="P1p3UOO0"
+Received: by mail-wm1-f65.google.com with SMTP id 5b1f17b1804b1-43bbc8b7c65so41438075e9.0
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Mar 2025 09:09:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1741194579; x=1741799379; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=8Xwduz/qNPiyy4RhwG9d9PScJsmgmVdCqCQSC6jOGw4=;
+        b=P1p3UOO0b9YDJTFpWR4YE+ZSKZf6Xcn52yudVG+sPHwyBxBtardW009r9baCZcBeB4
+         4YrBwUNx2JnWKUZCwE8P5GXIHIEPQ0jNvCevdy2YOChbqBHkzpHt/1wzFn5RYouw4lg7
+         Ubnyj/AmJTt084JQMIhTcWp0jpVFjR0Xndt2RDe864mTy2ddPAAr0onst3U6rKkFxD45
+         H0M4bgWyKxC98MlJmxb9oAlG/J9F2VNQt4FJxc+tUtjyiDfKCDHtPn8v130bldZUxkdd
+         1L/Pie03mBgGdJDVfupW8ScDCv5mNHuWB5VmdaSSZ68xZEXatoTBkzENiNCy/KsCr8T5
+         oqQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741194579; x=1741799379;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=8Xwduz/qNPiyy4RhwG9d9PScJsmgmVdCqCQSC6jOGw4=;
+        b=ktBpBQa+TKudCas7iZ1VDcl49Ka5pMu9/t+FkGN5PaC0L8y7d7ezelwquKrR+hvzeu
+         EmfZcr17rXnvxyM8QbtME5aXengHm5n8wWddTxxDknamtQr25HCKnm4q/uA6OpfUmb+C
+         1yPtNAshsvTxWp3FucT9NF+3hunzz/EENTVy8m1YTn7L9Ab99+NNnG9ZEwameD0RdX5T
+         X3eYwL1fe9A6KnVIdYOubhh/XJU7TwokCT8s6rOQlUr///lPNfBsTfpNonT60Fw7DcTB
+         6S71G/QuI2NJWOB6MqtwO65crxJWgxePBka4fy2JjpNYF/fjrZcKYcekybvU+nimO/La
+         fCzQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV+nzsR9lRy9dCekAmbiloEBiQyBEE8cGwu2qdojChzEW/Cim8t5Y8qPFN08kQ+wDKw4JlBbZeRHYdls1U=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzKxrLyyt9GY3xJyliit/4LLwgaWFa63NNjTWdN6KO//++cgMNW
+	iQkjtczcrjwxMH6MsKrR36IBl3VOxQlm653pT84Tz1ivgupbyCrIWGUJVhq6r3c=
+X-Gm-Gg: ASbGncuL8VZ2SH7UWgCHAzuZBA08sZqIS+SsQvDnTCrriewyNfqW8K8iDN9SAA0noe0
+	vZtBGP0cqe4N1TB7OKWFP6Y2LPhnaiUSuFPZBo5xKW53l6P6bibUqD9EgMzcF7cXG2jmOoyrUcM
+	iIb7cgRbhfCeDtjVOa9BrfFkneaMNiL3zJKNL7zytuCBL4xma/B6ut1JzJzM+LRGFvJMYzgUygM
+	7hO3iHYY2tZ5MOAhEY1UODr+uq6CtyRK/NAX2D8+hmTJA0A6vT8eVcdWeQbiITISUbSynNupiZz
+	zthbaBe9ypfT2y0DDLVPpqpQt95cA7aaye2pPxMxmpHrLX4=
+X-Google-Smtp-Source: AGHT+IHtALOlZRY8OEkAfMy/8LP4eO3WEczzKfPhSQDmbP+zhNlJTZUTR0mJ/R+5FMnzK/l5vhD0mw==
+X-Received: by 2002:a05:600c:1d01:b0:43b:cf12:2ca6 with SMTP id 5b1f17b1804b1-43bd292e1cemr28484335e9.1.1741194578635;
+        Wed, 05 Mar 2025 09:09:38 -0800 (PST)
+Received: from blackdock.suse.cz ([193.86.92.181])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-390e47b6ceesm21323862f8f.45.2025.03.05.09.09.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Mar 2025 09:09:38 -0800 (PST)
+From: =?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>
+To: netfilter-devel@vger.kernel.org,
+	coreteam@netfilter.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Pablo Neira Ayuso <pablo@netfilter.org>,
+	Jozsef Kadlecsik <kadlec@netfilter.org>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	cgroups@vger.kernel.org,
+	Jan Engelhardt <ej@inai.de>,
+	Florian Westphal <fw@strlen.de>,
+	=?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>
+Subject: [PATCH v2] netfilter: Make xt_cgroup independent from net_cls
+Date: Wed,  5 Mar 2025 18:09:35 +0100
+Message-ID: <20250305170935.80558-1-mkoutny@suse.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Ryosuke Yasuoka <ryasuoka@redhat.com>, dri-devel@lists.freedesktop.org,
- linux-mm@kvack.org, virtualization@lists.linux.dev,
- Andrew Morton <akpm@linux-foundation.org>, Chia-I Wu <olvaffe@gmail.com>,
- Christoph Hellwig <hch@infradead.org>,
- Dmitry Osipenko <dmitry.osipenko@collabora.com>,
- David Airlie <airlied@gmail.com>, Gerd Hoffmann <kraxel@redhat.com>,
- Gurchetan Singh <gurchetansingh@chromium.org>,
- Jocelyn Falempe <jfalempe@redhat.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Simona Vetter <simona@ffwll.ch>,
- Thomas Zimmermann <tzimmermann@suse.de>, Uladzislau Rezki <urezki@gmail.com>
-Cc: LKML <linux-kernel@vger.kernel.org>
-References: <20250305152555.318159-2-ryasuoka@redhat.com>
-Subject: Re: [PATCH drm-next 1/2] vmalloc: Add atomic_vmap
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20250305152555.318159-2-ryasuoka@redhat.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:vEp7fO8OsXvltY+7oiG0U4Qokb3J1idWk083MmpQMlGUeIwHTKL
- jRh7hs+24rFyD+jl09lH+ncvGeCwbtWg961JToNhl4VKePRb7+aYCgPFENm1vRX8pbHDA4i
- zxnOW+aDPcsXlw3NruQ/sLB2XxT7g5LpG8UHpGYjNpIoMcPvKStEF6y8FzzgWuO0EICoJKb
- vXAbMLOSUS+c/O6ilBHGw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:YxuzAM20H38=;gHkRljwq/KV5WGk1op49fkFicqc
- 9+hDF7PwhqCqW2f4kk5i/KcpduA11TJaBjXWyLI4L3VpqOzUiHb0XPmfXJCVmm7I+3fQmHoP9
- DDnopOS6pVWYYhLTpJOL9Y/GMavuuRRvCio5xTqQLKw+WzCFxa2r2kgj4ptckTwDu8I5dOokT
- BjkuEjAB8Stv2pLpATxO64dtcZSQ0LIZdpevZXtonOkZKTdMp3QemYaudoA+dD92uRF7h2Hs1
- ijSZhc9apGr3TirahGb3XO1jnLgb9HIz3I/L1Q8T82JLKCb94hBs5a34lVWmuG6IC45ajiS/W
- QXsIn2Qn1IkIDTik6ZpLzMq7wBIrMUeYuhx7GIPbe9nRuLzWGPzgbtw9UcuBXCiyAb7LHYSYo
- /JsqOTvvJ9uCVvcjBK45KWxXqfz+fg2wa+OM48FfL3bd9O3N37+BgtGONVz87jkoH8ZVDx3P8
- /EUJo4g4x8buFuGXnIq+dO5lNNRzfgs3l7QZnAt9PjlEPIP5LffA0kj+TqYLhge1Nl6qhyA6V
- NXHOjPYArqM1zOkmjLmj2GfLwvxhpbrWEBlVFcetLW737LEASU2EBCKKLkTkncL7kCWbCHBeC
- rf5TQD0sE+J2Faqq4hU0u6XBP4q4Uxaeyo3hLULVzFLHvJQQSU/f+iN2RLowoTxYk5q4V2qBV
- xt10vUJahfgn3zh3C1ZCxPydJt5vPVOsqEAHOJ2tJ9h8KLgBzvhTnJUYpXDmi5QYfLxDu7eNb
- 67xd0Qii2mwZxGLJ2QLdAMH/8ep0o28WvNEchYkqgEUFf7Vy18Yxg3b7dkpazHS/+vlJNR1fx
- C//4EctTNRkqW5SJohwa6tSR6r2yZe+BmPzR1glbxoxiXLVI6emBXs+66x8/XVCFgKqzttxZe
- dDpP1CV7fKQEF2UNNrzPTjCECsPQImiQNBjW4vmeioM2/Il3M+lC2MiBB7GTRTx2+DaQq/dDZ
- jhx/N3t9ITztPm2Mbi1diyRRd8iRt+CaSkPbH6AwJUjH/eCVlZwNy/cqT7vgMkOa4Ys5JpIp3
- A5bFO+O1DKofWhyf7vhJ+QcJ9SbHZqwQ2fiYB8HS5KirYR3kN8hXSelgRQcYDr7nHafgc8dsn
- D/NOp/0wwL5OnO9FuABzFnHWIZr5UMkRDVJJPL9qDYD8fs1BhL5gI640Lv+PiEk8iczDhgRBM
- JsHuPXZ5dmII8/gulPYM9EDdJdGOkE8zoPNZljZ4n8PtOJ3P0WYlApOLCFbZzbhCeL66vNxLy
- bQ2gWuCZfKwyWhCNEtUmUtBY3m9dcwIDB4OBhbxh5q0/C+Njt/cq7dYONtJJFNZqVaOvnZxlL
- n/Hem3o5coHPuAH0UUSCz+WpXNpOoyCm+WpnzYJYplznBNhMSZDWMoWOINx2w+l+7sevpSShH
- MoyxcTY+fRffbMemiXvtoU0Ny+AcsrQ0SrYWJjm6E3cA7xr2+qAXLbJn8rmENw87JXrsIOgTc
- 3hNdO/NPSGU+8NUDlEtV1UdHFCro=
+Content-Transfer-Encoding: 8bit
 
-> Some drivers can use vmap in drm_panic, however, vmap is sleepable and
-> takes locks. Since drm_panic will vmap in panic handler, atomic_vmap
-> requests pages with GFP_ATOMIC and maps KVA without locks and sleep.
+The xt_group matching supports the default hierarchy since commit
+c38c4597e4bf3 ("netfilter: implement xt_cgroup cgroup2 path match").
+The cgroup v1 matching (based on clsid) and cgroup v2 matching (based on
+path) are rather independent. Downgrade the Kconfig dependency to
+mere CONFIG_SOCK_GROUP_DATA so that xt_group can be built even without
+CONFIG_NET_CLS_CGROUP for path matching.
+Also add a message for users when they attempt to specify any
+non-trivial clsid.
 
-See also:
-https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst?h=v6.14-rc5#n94
+Link: https://lists.opensuse.org/archives/list/kernel@lists.opensuse.org/thread/S23NOILB7MUIRHSKPBOQKJHVSK26GP6X/
+Signed-off-by: Michal Koutný <mkoutny@suse.com>
+---
+ net/netfilter/Kconfig     |  2 +-
+ net/netfilter/xt_cgroup.c | 22 ++++++++++++++++++++++
+ 2 files changed, 23 insertions(+), 1 deletion(-)
 
-Regards,
-Markus
+Changes from v1 (https://lore.kernel.org/r/20250228165216.339407-1-mkoutny@suse.com)
+- terser guard (Jan)
+- verboser message (Florian)
+- better select !CGROUP_BPF (kernel test robot)
+
+diff --git a/net/netfilter/Kconfig b/net/netfilter/Kconfig
+index df2dc21304efb..346ac2152fa18 100644
+--- a/net/netfilter/Kconfig
++++ b/net/netfilter/Kconfig
+@@ -1180,7 +1180,7 @@ config NETFILTER_XT_MATCH_CGROUP
+ 	tristate '"control group" match support'
+ 	depends on NETFILTER_ADVANCED
+ 	depends on CGROUPS
+-	select CGROUP_NET_CLASSID
++	select SOCK_CGROUP_DATA
+ 	help
+ 	Socket/process control group matching allows you to match locally
+ 	generated packets based on which net_cls control group processes
+diff --git a/net/netfilter/xt_cgroup.c b/net/netfilter/xt_cgroup.c
+index c0f5e9a4f3c65..c3055e74aa0ea 100644
+--- a/net/netfilter/xt_cgroup.c
++++ b/net/netfilter/xt_cgroup.c
+@@ -23,6 +23,13 @@ MODULE_DESCRIPTION("Xtables: process control group matching");
+ MODULE_ALIAS("ipt_cgroup");
+ MODULE_ALIAS("ip6t_cgroup");
+ 
++#define NET_CLS_CLASSID_INVALID_MSG "xt_cgroup: classid invalid without net_cls cgroups\n"
++
++static bool possible_classid(u32 classid)
++{
++	return IS_ENABLED(CONFIG_CGROUP_NET_CLASSID) || classid == 0;
++}
++
+ static int cgroup_mt_check_v0(const struct xt_mtchk_param *par)
+ {
+ 	struct xt_cgroup_info_v0 *info = par->matchinfo;
+@@ -30,6 +37,11 @@ static int cgroup_mt_check_v0(const struct xt_mtchk_param *par)
+ 	if (info->invert & ~1)
+ 		return -EINVAL;
+ 
++	if (!possible_classid(info->id)) {
++		pr_info(NET_CLS_CLASSID_INVALID_MSG);
++		return -EINVAL;
++	}
++
+ 	return 0;
+ }
+ 
+@@ -51,6 +63,11 @@ static int cgroup_mt_check_v1(const struct xt_mtchk_param *par)
+ 		return -EINVAL;
+ 	}
+ 
++	if (!possible_classid(info->classid)) {
++		pr_info(NET_CLS_CLASSID_INVALID_MSG);
++		return -EINVAL;
++	}
++
+ 	info->priv = NULL;
+ 	if (info->has_path) {
+ 		cgrp = cgroup_get_from_path(info->path);
+@@ -83,6 +100,11 @@ static int cgroup_mt_check_v2(const struct xt_mtchk_param *par)
+ 		return -EINVAL;
+ 	}
+ 
++	if (info->has_classid && !possible_classid(info->classid)) {
++		pr_info(NET_CLS_CLASSID_INVALID_MSG);
++		return -EINVAL;
++	}
++
+ 	info->priv = NULL;
+ 	if (info->has_path) {
+ 		cgrp = cgroup_get_from_path(info->path);
+
+base-commit: dd83757f6e686a2188997cb58b5975f744bb7786
+-- 
+2.48.1
+
