@@ -1,186 +1,162 @@
-Received: from EUR02-VI1-obe.outbound.protection.outlook.com (mail-vi1eur02on2067.outbound.protection.outlook.com [40.107.241.67])
+Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 090212E3375;
-	Wed,  5 Mar 2025 22:30:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.241.67
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741213848; cv=fail; b=mQhbTRn6G7FKWDK98EiFHWs84e8xUMqrhT5drEDx53bq9o5j0hpOHq444KaZRILZY9U8gDfatNdH6mCqyuroiRCzRutehx0rCzsDvKl4OfkXv/vpfgfG/UJSc55q8zgOeF0R47AV/ZrznbgqkdFwHg5KlXec/ZHQXGmni1dTIT4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741213848; c=relaxed/simple;
-	bh=VrMEpwHI3a17AtIkmmOvGAongCcV1fsKJ7OaYMF2fTU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=nb3+vwXaCW+eNTPwvGBNGkKDdTlSjOpvDpnV1qH3T4xlVzOdRh8PPai1IcT4xywDwXH5VD7CL+uI5i0LxQa7VzUTf859lo13jAK/1tLnuVaRl0Tf50Y7RO3WgYw4S3idvfmxUOvOuM9r1PkjvcK9amkk1Yx30IvzcopeJZEJqj4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=PdTshvaK; arc=fail smtp.client-ip=40.107.241.67
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BB29266F03;
+	Wed,  5 Mar 2025 22:30:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741213854; cv=none; b=Pg8Cttvb5TaiEwEgwbqYGuT3YV7JwkR0XdE1aoe2uYvqCvydxZhNdiZ+CMeIV438Hlry0d+gxXmqqRjGlaPPofGeSlhUQB0lRo7J2SPEhNlC8+6BTM2IJ97KojIXO2b7qC6y+4wPTVYMb1+J598TLVQraIlyrPaSrws9r55vHVg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741213854; c=relaxed/simple;
+	bh=jIbhpdAu56/1q1bMu6qwe0wIwmWzbhWIw8DRF5eEJto=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=ML0GYsdtpDlb6wnJA4ntb+EmJIAigl1GiOBCUxLq2uBwg52kCgOudWok2PEcTc1skdvM+7FgLRenvJO5rxLeQO1F98jL0itIgDu7TROTTI9wDRZHC3WxCl0O6b5zL82RNsMYniNZ5d1431AU/kBVMhUE2rd3JVmqV4YtQMdve3Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=ayMv7PO4; arc=none smtp.client-ip=198.47.19.246
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="PdTshvaK"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=owfs3C3RFMkZyv7Fc/0kwwQV7uiQEUJPe0GtAogQiBpRWtylwx5p9Ka2VHFxXa6H+9Jo0Ps68ReweoDFVVQGRZa6Mr3kTkiZ+l/6Ji8Y45g3DYk6Remd2Xtw4ci/mHypaPSZhoz5806jEYViYBY07lWue/+Lg5tL1iMs0a1qUz1NcNhi2uu73sQ1OmWIsJr9zPE1RZR90xXB959fA5f3lN5GQjUXhVR3GQ9yuGVw4wOPhcsokQwSg8kjSfyA1xvMvLeKDU640B+YRGb01FUYUoTyYrC4Gl8ZcgnCqcBfm0RRDTw0HHFmpPCx8gdbx64xjWaAn+sb0yVPeq3wwF5/rA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=p7f8NKm8ADmcOQ5G2oL61+72mQaCQVW3ugjgyMpWZRY=;
- b=P3Au1EhLPPiX+m6ZeeQhDjXG4r2AInRFWToUXwvc5Vz79QxURrUnooc5lsgQ5KDgO1Ov43JYKqwYiasl49D80yxnvPzBBKkL71qU9zmGvU7KmhrFXUlCbMD/JgWZfqe7QWDzqeG9LG1dFKvRV5vTfqnxJ/qh2Ve0Ra0k7TscWbmPEQHExknXamygwHp8orBk/Zc1H29IlCYSKubkypGUdk6AYqQJdMbWfCTEVrEb0moqsxPHx2JB/sft99yC/WCRm22fuiqZAYBvvy5vVPG/zqKBriNERTaxQ74N+0s/xE7hDO3KJr2mSQvSvLziwfg3xf8C/Bhk9ytU6XozEcNEnw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=p7f8NKm8ADmcOQ5G2oL61+72mQaCQVW3ugjgyMpWZRY=;
- b=PdTshvaKxf/FTTCP1GYpYBLxG82O2cRx6CHryUrkNP+XLSO0gbZDnz1+3WdhRqGLXvRCVOvHmDma542GhywutDwAOS2MyPrvH2I9oH7OW92+HNNutdX9aTrw1Byzkma9jSjwa7mV9rQ/ZrkI134rG096ygcLTKH+ucVpUUmhvyXKN9eit8qgOaJOEU5U1QUUjZQxtecaVVPRacQnGT9eoU3b1yUxxSXXJ7RHbtmoksLbcFv1/qZXEqThLrIb4up8wbrjIgj8xRLXwNS9fFr0sALjziiqATlJXXX9c7CHXcTFAD9eWXdI6e5irCB3OZseLb+6Ikx+8ozUNQR02BlD4g==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from AM8PR04MB7779.eurprd04.prod.outlook.com (2603:10a6:20b:24b::14)
- by PA2PR04MB10309.eurprd04.prod.outlook.com (2603:10a6:102:41f::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.25; Wed, 5 Mar
- 2025 22:30:39 +0000
-Received: from AM8PR04MB7779.eurprd04.prod.outlook.com
- ([fe80::7417:d17f:8d97:44d2]) by AM8PR04MB7779.eurprd04.prod.outlook.com
- ([fe80::7417:d17f:8d97:44d2%6]) with mapi id 15.20.8511.017; Wed, 5 Mar 2025
- 22:30:34 +0000
-Date: Thu, 6 Mar 2025 00:30:29 +0200
-From: Vladimir Oltean <vladimir.oltean@nxp.com>
-To: Faizal Rahim <faizal.abdul.rahim@linux.intel.com>
-Cc: Tony Nguyen <anthony.l.nguyen@intel.com>,
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Simon Horman <horms@kernel.org>,
-	Russell King <linux@armlinux.org.uk>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Jesper Dangaard Brouer <hawk@kernel.org>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Furong Xu <0x1207@gmail.com>,
-	Russell King <rmk+kernel@armlinux.org.uk>,
-	Serge Semin <fancer.lancer@gmail.com>,
-	Xiaolei Wang <xiaolei.wang@windriver.com>,
-	Suraj Jaiswal <quic_jsuraj@quicinc.com>,
-	Kory Maincent <kory.maincent@bootlin.com>,
-	Gal Pressman <gal@nvidia.com>,
-	Jesper Nilsson <jesper.nilsson@axis.com>,
-	Choong Yong Liang <yong.liang.choong@linux.intel.com>,
-	Chwee-Lin Choong <chwee.lin.choong@intel.com>,
-	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-	Vinicius Costa Gomes <vinicius.gomes@intel.com>,
-	intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org, bpf@vger.kernel.org
-Subject: Re: [PATCH iwl-next v8 01/11] net: stmmac: move frag_size handling
- out of spin_lock
-Message-ID: <20250305223029.yh3fglyq5isncjni@skbuf>
-References: <20250305130026.642219-1-faizal.abdul.rahim@linux.intel.com>
- <20250305130026.642219-1-faizal.abdul.rahim@linux.intel.com>
- <20250305130026.642219-2-faizal.abdul.rahim@linux.intel.com>
- <20250305130026.642219-2-faizal.abdul.rahim@linux.intel.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250305130026.642219-2-faizal.abdul.rahim@linux.intel.com>
- <20250305130026.642219-2-faizal.abdul.rahim@linux.intel.com>
-X-ClientProxiedBy: VI1PR0502CA0013.eurprd05.prod.outlook.com
- (2603:10a6:803:1::26) To AM8PR04MB7779.eurprd04.prod.outlook.com
- (2603:10a6:20b:24b::14)
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ayMv7PO4"
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 525MUjxj3981899
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 5 Mar 2025 16:30:45 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1741213845;
+	bh=4kewPcEMUmFbsbrupfxd01igsHD0J5ywgLnA98niNvw=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=ayMv7PO4YzQUptJId8unXR0ZzDqG3IhsOz0eokbedD4ho/0uPtwo/iH6R64lWK6AT
+	 XSR58tqfRDIO7Nvbc0I2/JAw2oLr8QMeTITV1jyeUU6Zn1hQ6dFw8GDMWmqdPAUhq1
+	 KtbdK0ES+DmbzrTXvLNJuRKDN+xUoEdsq+QL9S38=
+Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 525MUjHw085149
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Wed, 5 Mar 2025 16:30:45 -0600
+Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 5
+ Mar 2025 16:30:44 -0600
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Wed, 5 Mar 2025 16:30:44 -0600
+Received: from [10.250.148.85] ([10.250.148.85])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 525MUc9c086007;
+	Wed, 5 Mar 2025 16:30:40 -0600
+Message-ID: <b6fdfe6e-dbd3-4dc8-acf2-f2983f150df1@ti.com>
+Date: Thu, 6 Mar 2025 04:00:37 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AM8PR04MB7779:EE_|PA2PR04MB10309:EE_
-X-MS-Office365-Filtering-Correlation-Id: 14303434-503a-4e75-605f-08dd5c355830
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|366016|7416014|376014|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?YRUk/zEjmEWmSoH1K8VQXkEGWucRSkUOSyGKmE0Dlk6hXNwHe7u8vlfD6Dfw?=
- =?us-ascii?Q?tJOsS8EAqd/U+ox5fNZjkP/D4R7DF++QMPaBO3FCuzN8sZM6IFD41M/DK8VV?=
- =?us-ascii?Q?IJp6gsa5sGtpN+Acc5Xl1fJW8sfWZEBuAGNIEP6gEDqguVps2JmhvhqJassV?=
- =?us-ascii?Q?AlbXpzSta6Rkd4nkjw40poGG3qg3w2qYvsVGqKDgXHcQd9IKyo9RwW6jfkPb?=
- =?us-ascii?Q?knmjXpZeSm18RSFYpr0aoSURdCl9/5WF21atx5g0yQtndD86LdMJ7BGRdCXI?=
- =?us-ascii?Q?Rk+aiBLHJG59T2ixAZzr0BoHe65HS88ikQ8lku+sTmDckndIKHoSizMXnvI0?=
- =?us-ascii?Q?aIXYrA2HhcTqhRhMcDlFPCZ5PHdR5HVOr8MCfK5renEBUCg416zwzSR3GHoa?=
- =?us-ascii?Q?Q7z04pDI/PTZP4/HV5M97Hn6daWGFTw+e4ZPP5zLxXlfKGVWbPdSq7Ah3jqv?=
- =?us-ascii?Q?VYVeB4+BhFNeLFlhH88KPncjlwcr5WjdRqNMALdb8tTPXTEHNeRxZ4G5G8KI?=
- =?us-ascii?Q?ZG0hG01l23khDraN5AKHjhCn2B4vlP9cCp31k2JFbI0jIiXXUGPLWiT3tddK?=
- =?us-ascii?Q?ivH4BX2LwTujSzY5fxrdvb+/PJYETcJ0twWeymjZS2SL65UqgL1qwv6+grC7?=
- =?us-ascii?Q?4ackTgBWPvfYCfSr3ik65rnlo1xza+tzaw5al0k+y7brsGpDR9FlfzD3l9Jz?=
- =?us-ascii?Q?FSIrbdHj8F/iqoVNZHRHx6A5BJuMW7FMd+H7ptRL0RFV9Uf+6PbiuX8X38Rh?=
- =?us-ascii?Q?qZd73mzu8OWE2ghHTSANNrT940btEruA6bNz6qmo6Uxf9lu9OKyek2HMmEPf?=
- =?us-ascii?Q?M7UtkYcqzM5SnHe7TImnhdCneh//2zH5c6s0EGMqvYQe7WciLXlVz4E+Piri?=
- =?us-ascii?Q?zoNvN/ahvnLjlFFgSpofrDfG1GVQuaGo8Drd4MsDpzzgD2Orn3UMlxz4kTZq?=
- =?us-ascii?Q?j+JzhRNbsJURsrRKov89Ll4f3GmwBTIYhqB3ai3/1yy19GQ2cStbjuhKbQ57?=
- =?us-ascii?Q?ZWrdZ6HfmNKEESqCB/zK3mBLg4ZBat63Uo7C8scPkQrCpuW9li4Gnfm8Baa1?=
- =?us-ascii?Q?ZozTRTF7TixR4NYW67NXOj9IM4kGSmJdITdycwpn9UZWGrAHI8jL2+9rKmwu?=
- =?us-ascii?Q?lxkqkQz158aDBI66alJXtND1Qi9fLXZQ7cTfG3VNrONrnE46Z152sr6N0+bk?=
- =?us-ascii?Q?pif+9+1/AsmAUoswyrgTshROnBkhMmuLqbphdiPlWakMtfqGhdow3GcNQksw?=
- =?us-ascii?Q?lNudhYfiLTD8wFLM5XLVvQaOVku+R4DYGOwqPvB7SmqMHpiVJyglKqR/wl9F?=
- =?us-ascii?Q?UMjzTw38Ge3vZusQp6MKtt8ykcLus745enMNZjpDHg3973DC+C4B3Uhtl05B?=
- =?us-ascii?Q?k5NBOtYSgvBzZQxszt+yr2hTkWKF?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM8PR04MB7779.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?DvD3bY7hKp6e6Ibk8msCJL6Surs2F0MXVWEd2p1+YSFm/M+PgU5XRrG8qN7Z?=
- =?us-ascii?Q?HjYJQJUOqeGPYIkVzJr7m24Rtt1DnkjkiquYQOd1rJyDUxbtV+t1HX6KVV5D?=
- =?us-ascii?Q?o2fhdJOSpZVp2GatoYL4lZ3Ihc495uNbnWG8H5wwucQXd6LD4r9Bixo0wvl5?=
- =?us-ascii?Q?ZFk7ZhEsGsCXRwlO/TYvI69/VXS2/tTmeSjOQb5PkRJpFSvCUNXowV+6vGSi?=
- =?us-ascii?Q?2YduLpWCXbKzif0Gf1yFWkZSOevu+E04AT6TNGGUWlfprWGkWarT2NykOcLB?=
- =?us-ascii?Q?sDUyhAqBKBe4kr7Z4DXwyl/6FoY/ngwYVGWnb3QD+0wDowuSl3SzLm8KOeNL?=
- =?us-ascii?Q?bqDTuCe976QYKhpyNh8Vg5S/3FjeqjOyhPt8bNzSt6A/h1i8GLypM5CdKTdJ?=
- =?us-ascii?Q?pUJ5IaBti1jSttTPnUhVhzLXiDCL8Jrf1+MLsyoSrU0lOhHgGY8kLPy3T1Hi?=
- =?us-ascii?Q?DuEhpIZJ8PvKgy+TeYysxDobW9LxBeFZBGl7QWZl2P+c103woEGegbzr2Ca/?=
- =?us-ascii?Q?lAJSXCLTyVwx2S/qOJHLoqKAALtVs5XZI9F/sCeMOxYw2gMyOvOdJlnxm9eC?=
- =?us-ascii?Q?xGnoCFdMXyRvw5B4pWxAu/Ec4w4JsAwMrtOuGGZOt+9xi1KZId23fdAs3mwq?=
- =?us-ascii?Q?qjNmV+8veFwIgqzUNxaM1WQxRTgeT6iJ7pqKzkuTSAqAx00f34niexs2YZE9?=
- =?us-ascii?Q?kKmcT4OY1EsC2z3wCNk5pCIz1XUJKfiiJS+AmIG5eGoqRu5MlhRytsvoGYNt?=
- =?us-ascii?Q?6aFWFqG9HsdoBYPCT6bd2ppwyNhOPTTh46P9VFTITDpR6gx/j8jw1vn3nQDB?=
- =?us-ascii?Q?zIq+rG3uQyETfYJxun1oBaFLWG/dpoBgY3g+ZYwnRCnHggovtwljzbxkloIY?=
- =?us-ascii?Q?3GrR+OpDvKK8xkp+2O5uPhmADHDVYBtc8NvVYIQl28YOvPwbQ43/NlyzBthj?=
- =?us-ascii?Q?cQK0oeNLW/2vpASRjqP75GiDj7ekYT4UuNmIKcWdbZuec73NsoygGaGSIZA5?=
- =?us-ascii?Q?cHNM7fT7wJBmK7dLpGI7F+HUirZPoRZaYouj+pxyuyHxOjc0zn0hZUyaNFZY?=
- =?us-ascii?Q?cI9qSMA54bg78MURGBJNAv+8EP81K0h6ZeNcxor9b9J6sc99RqALVUh3RWut?=
- =?us-ascii?Q?22raBDF6kYJdiZCIFUfDwBXaIU2GsjJYNLXSW4BWiynWONJHLteo7nVP/5QC?=
- =?us-ascii?Q?TevZvmfaOQ8nbMv5PNhaJRsmEM/nftTUj1e4gG8ES6FdY8nBlCZcweTANfLe?=
- =?us-ascii?Q?vhlLd3S50XYdvybQd3w+8hPWVt/vfGWyvt0QxzN/QcQzpd9ilGijLcrhC4C6?=
- =?us-ascii?Q?QxK7ENAelvENV8/0dKDAT4Su8+6COycIoCpE+WG+bE9Wl3aYS10qpuw92roS?=
- =?us-ascii?Q?FZea8MjBnnq93WnvsR/4kUbtMHgOsGGg55QUBnOsEiAB59MmolS13xjmzo3f?=
- =?us-ascii?Q?mEomwJMjFAimhShKq6//csf01NMceBPnQ41II577L/RSNVScV/r64BgC3Jwx?=
- =?us-ascii?Q?TsAxwuvSj+nwcy5cOo/CQoHEV2M/M7cPoqocGYufO4Pk7umquAD/tKCbmfZS?=
- =?us-ascii?Q?yVCzAAZCWqEvN31gdEBe+9RmBHCfI/OMYmkzx1nwV8PH1vOKzpszIr9euaY+?=
- =?us-ascii?Q?7g=3D=3D?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 14303434-503a-4e75-605f-08dd5c355830
-X-MS-Exchange-CrossTenant-AuthSource: AM8PR04MB7779.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Mar 2025 22:30:34.5527
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ci7JeZwoNs9cmJH/SXmCjk4nPXEB/dGVHvs7MwTKEevUJZySUfK+Q11DZrZfN/jl6qMjiRKuTKXAXewB6Wblrw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA2PR04MB10309
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v2 1/2] devicetree: bindings: mux: reg-mux: Update
+ bindings for reg-mux for new property
+To: Rob Herring <robh@kernel.org>
+CC: Conor Dooley <conor+dt@kernel.org>,
+        Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,
+        Peter Rosin <peda@axentia.se>, <s-vadapalli@ti.com>,
+        <danishanwar@ti.com>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, Vignesh Raghavendra <vigneshr@ti.com>,
+        Nishanth
+ Menon <nm@ti.com>
+References: <20250304102306.2977836-1-c-vankar@ti.com>
+ <20250304102306.2977836-2-c-vankar@ti.com>
+ <20250304153959.GA2654372-robh@kernel.org>
+ <66283781-69d6-4d0a-ada4-3a6bf4744a37@ti.com>
+ <CAL_Jsq++DUv5_LHg7sPNXDJZ84JtS94Rwr-WAb9hDWp6rJqZLQ@mail.gmail.com>
+ <11982b12-a359-467a-a6fc-e39adccca413@ti.com>
+ <CAL_JsqLb5hrYD_-dqW5ELtbXohd8a1UL7nOuP2a9ZhE+3+f=eA@mail.gmail.com>
+Content-Language: en-US
+From: "Vankar, Chintan" <c-vankar@ti.com>
+In-Reply-To: <CAL_JsqLb5hrYD_-dqW5ELtbXohd8a1UL7nOuP2a9ZhE+3+f=eA@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Wed, Mar 05, 2025 at 08:00:16AM -0500, Faizal Rahim wrote:
-> The upcoming patch will extract verification logic into a new module,
-> MMSV (MAC Merge Software Verification). MMSV will handle most FPE fields,
-> except frag_size. It introduces its own lock (mmsv->lock), replacing
-> fpe_cfg->lock.
-> 
-> Since frag_size handling remains in the driver, the existing rtnl_lock()
-> is sufficient. Move frag_size handling out of spin_lock_irq_save() to keep
-> the upcoming patch a pure refactoring without behavior changes.
-> 
-> Signed-off-by: Faizal Rahim <faizal.abdul.rahim@linux.intel.com>
-> ---
+Hello Rob,
 
-Reviewed-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+On 3/6/2025 3:44 AM, Rob Herring wrote:
+> On Wed, Mar 5, 2025 at 3:43 PM Vankar, Chintan <c-vankar@ti.com> wrote:
+>>
+>> Hello Rob,
+>>
+>> On 3/5/2025 2:10 AM, Rob Herring wrote:
+>>> On Tue, Mar 4, 2025 at 1:03 PM Vankar, Chintan <c-vankar@ti.com> wrote:
+>>>>
+>>>> Hello Rob,
+>>>>
+>>>> On 3/4/2025 9:09 PM, Rob Herring wrote:
+>>>>> On Tue, Mar 04, 2025 at 03:53:05PM +0530, Chintan Vankar wrote:
+>>>>>> DT-binding of reg-mux is defined in such a way that one need to provide
+>>>>>> register offset and mask in a "mux-reg-masks" property and corresponding
+>>>>>> register value in "idle-states" property. This constraint forces to define
+>>>>>> these values in such a way that "mux-reg-masks" and "idle-states" must be
+>>>>>> in sync with each other. This implementation would be more complex if
+>>>>>> specific register or set of registers need to be configured which has
+>>>>>> large memory space. Introduce a new property "mux-reg-masks-state" which
+>>>>>> allow to specify offset, mask and value as a tuple in a single property.
+>>>>>
+>>>>> Maybe in hindsight that would have been better, but having 2 ways to
+>>>>> specify the same thing that we have to maintain forever is not an
+>>>>> improvement.
+>>>>>
+>>>>> No one is making you use this binding. If you have a large number of
+>>>>> muxes, then maybe you should use a specific binding.
+>>>>>
+>>>>
+>>>> Thank you for reviewing the patch. The reason behind choosing mux
+>>>> subsystem is working and implementation of mmio driver. As we can see
+>>>> that implementing this new property in mux-controller is almost
+>>>> identical to mmio driver, and it would make it easier to define and
+>>>> extend mux-controller's functionality. If we introduce the new driver
+>>>> than that would be most likely a clone of mmio driver.
+>>>
+>>> I'm talking about the binding, not the driver. They are independent.
+>>> Generic drivers are great. I love them. Generic bindings, not so much.
+>>>
+>>>> Let me know if implementation would be accepted by adding a new
+>>>> compatible for it.
+>>>
+>>> Adding a new compatible to the mmio driver? Certainly. That happens
+>>> all the time.
+>>>
+>>> I also didn't say don't use this binding as-is. That's fine too.
+>>>
+>>
+>> Can you please review the following binding:
+>>
+>> oneOf:
+>>     - required: [ mux-reg-masks ]
+>>     - required: [ mux-reg-masks-state ]
+>>
+>> allOf:
+>>     - if:
+>>         required:
+>>           - mux-reg-masks-state
+>>       then:
+>>         properties:
+>>           idle-states: false
+>>
+>> required:
+>>     - compatible
+>>     - '#mux-control-cells'
+>>
+>> I think it won't disturb the current bindings and keep backward
+>> compatibility with existing implementation.
+> 
+> Wasn't that the case before? There's nothing really different here.
+> 
+
+No, the binding before was not considering "mux-reg-masks" as required
+property which was breaking actual dt-binding. In this binding, one of
+the properties from "mux-reg-masks" or "mux-reg-masks-state" is required
+which keeps the binding as it is unless someone wants to use
+"mux-reg-masks-state".
+
+Regards,
+Chintan.
+
+> Rob
