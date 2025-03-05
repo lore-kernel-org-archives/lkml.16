@@ -1,104 +1,144 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.2])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A0EB586340;
-	Wed,  5 Mar 2025 10:10:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.2
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BD9E2063F3;
+	Wed,  5 Mar 2025 10:10:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741169444; cv=none; b=PGBO+J4eD2BypOl9uYOc1GKi/tioCDHQCOF18aW5nQHPi7aWF7c2/WQPMC5ClPusTgl7IlZKuyr1m9XNggH6excohLx2sq/nek9iWn3Y+Dhiovqu0p36h/FWgKIB7HVfGaROhgCstHvJD5Ks1f0QUmUAWcYchVeDZZpnDNd/kgE=
+	t=1741169450; cv=none; b=F4KjqKgznYnqCmS/XXIo6jm/3heVXZmBzoNLLVJP22B/BxY3pPxIgHnIOQb2KwKQv9vWSAg8vzTNPShIOnwTw+TcS1agG6AusiraWqWN89WTbaSG5ipUZ1XXOlNvUG0Bnmz2lmzrGdCZwGXdHP9MqvqElDZ5Tmt+oEcyTKJoyg4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741169444; c=relaxed/simple;
-	bh=p7qCmbn7qh8IoaNpypSjjh8REnQqe2JM+GRz9TM9Dek=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=BP66su3c7m497yNxhsS8L3OLWkW/yKBFJ491sCkoiqNgaGzfKguCb/W/+NGfxsstkHLQcEDa3/ML1tcsjBwzjc6NVxgYK8rcTlmivrly4jUoXQoFV9rf69iFHt9ajZ2GNqzt5clyOpDqCMRFbRF+1CfwEV3ZCqdTTPaejEdX/d8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=VEtUkFYf; arc=none smtp.client-ip=117.135.210.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1741169450; c=relaxed/simple;
+	bh=llg0domLWIKPFm2rb3BZir48nLFe6AvnxeCjrY+USvs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WgfTCvd3ohTdnRw3ply+zcygiVo/sbPy2Nt9my2VhgQ4BDe37fCeSgbEnxw1MTU7tJBhtQ6NfmSa7f0NNK0Lybib1gYn9nWc5+SCq6vHLeqsfQQ98dG/Yg2NJ2BDbYjJf9JFmqep/xyo9NwbJxSvkyyFSrHR9YvlL4EgWYRzB7g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=f4u7LmwU; arc=none smtp.client-ip=209.85.208.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="VEtUkFYf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=luJmq
-	zW3D/PHhjjmaO84ghpqEdiImWkNJgLVp6gRUTA=; b=VEtUkFYffxFzvHLt+hcDo
-	JGgjbhLHIJPu+hpxz4JaEO4TjYLKnwk+mjovJMGdNoqnwVqrMoQarfq5PS1BGanC
-	ZJm0VVD/CPvAsNz/nFKXBI8ZD3928rjiLIqfQ8IAqHMkIGm/cYW+CO5ySgCcK06T
-	gG0As/Wn6zwyWZPmFX8SNM=
-Received: from icess-ProLiant-DL380-Gen10.. (unknown [])
-	by gzga-smtp-mtada-g0-0 (Coremail) with SMTP id _____wCXviTwIshncgV_Qg--.37440S4;
-	Wed, 05 Mar 2025 18:09:53 +0800 (CST)
-From: Haoxiang Li <haoxiang_li2024@163.com>
-To: shshaikh@marvell.com,
-	manishc@marvell.com,
-	GR-Linux-NIC-Dev@marvell.com,
-	andrew+netdev@lunn.ch,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	rajesh.borundia@qlogic.com,
-	sucheta.chakraborty@qlogic.com
-Cc: netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Haoxiang Li <haoxiang_li2024@163.com>,
-	stable@vger.kernel.org
-Subject: [PATCH v2] qlcnic: fix a memory leak in qlcnic_sriov_set_guest_vlan_mode()
-Date: Wed,  5 Mar 2025 18:09:50 +0800
-Message-Id: <20250305100950.4001113-1-haoxiang_li2024@163.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f4u7LmwU"
+Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-30bbc83fc35so6757531fa.0;
+        Wed, 05 Mar 2025 02:10:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741169447; x=1741774247; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=k6sJPgBFhipyGWeJK1GttBGiwRcJZd7KKopxjGpBJHY=;
+        b=f4u7LmwU/e69q6neZRFGqAyNqJhKpq8wp06EQvGmwUYZsWYuEX7DJ3jM1mE+1ytnPV
+         ZiwbEeBRBQ+NKCKpOljw4GAASN+8S5eHuBC5TGEJ66OAYfZDw6mvEW4OPPmAgFRW8PEZ
+         4McbFB1ILKOm6XHQVbMyaP0TTHVX7n5TV0CNqICmJ4qxpkDeIwL3EHC2RPNMLWg3F7cP
+         ycZraJ76E36uzJadaWbsonrbCd0p/edEkrK7z1FGTaHrgrdGZ8JYr0ZIn5EbLdvmWUdL
+         zxIAaqYTvxrT9is2X+u7WDCwmtHr2raigr6dvi9o9K2QtOQ9FhstPKnIESDGsxE92/dh
+         E21g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741169447; x=1741774247;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=k6sJPgBFhipyGWeJK1GttBGiwRcJZd7KKopxjGpBJHY=;
+        b=rrEsPmYL2oVg8A2dro212P89Q6puaXtuVsH36CewgdOL098AgIAaFmSAgkY1SLX7FG
+         VvigqaUfGY0ZhkyioqqGgd47nT6Hxt5vx2Nj5Xxkpo8jRpnY7hl5wCv3A22LO3IEIE1O
+         ZB7hLA7deSmlhueqicr5t6k7YOcRoEvVBKnwm97kh7h86gAXU+LrlhZxjvWR2vvKIJMn
+         aYqGFS4Vy9lYEGsPmQaxb/77C9JuD1/pIQaAiy9Bop+jESyr0b/ZUNFDmT/Dnvbp7bE7
+         lSXAL9W7XdG9bJUujVKaPXWas22mCvsK+BY09h59rYbkTmLmKv2X/I1bPWmcRPJAdOXb
+         abkQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVQvkuLtu63PKpI4HrOIz7N48yxMfHnEV4ih1tQqbqpeUZCIigX30rRmwHtNQqrNmOdmPJrC4JUAuhciRk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw5iIroRRsnMk3ltiAcjk2c7PtGvdtodmWfKS+dn1fx4OVG/vcD
+	1h4uc2Fy9YGsK4nsf+qXvxonvDur+DPIPWVnFQZztoqbgDY21lJb61Rz3RwqvzpXEel65DP7n07
+	MfWw4lIBoCfT6vvQ3Bsd9kBLT6BQ=
+X-Gm-Gg: ASbGncvZbdmums+J60g7Xj6ifApgdaXMUE7hYaPf+yfMz/ERRQok115xYKobfZAxtDm
+	4F4M6Jq0AekWCISId2G2KRul9JPBw0nzp79TZ3fk81n396cEhqYwPLZH9jBmfh5dyHVRmhCUQBf
+	OosJp97c1eo6pWqQKtalorXG4iVA==
+X-Google-Smtp-Source: AGHT+IEURqWpoFonECBt8ISCyOLd+8RPbOZV7uLgtcPcEzt6+VvkWezBr6q5FXj/MkUUIbpTM4yfNKzX8SLCGwJcBkA=
+X-Received: by 2002:a05:651c:2207:b0:30b:c3ce:ea51 with SMTP id
+ 38308e7fff4ca-30bd7cd5c0cmr6897361fa.15.1741169446164; Wed, 05 Mar 2025
+ 02:10:46 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wCXviTwIshncgV_Qg--.37440S4
-X-Coremail-Antispam: 1Uf129KBjvJXoW7CFW8uF48Ww13Jw1DCr4kZwb_yoW8WFykpF
-	47ZFyUWr95JF4jkws5Zwn2yrZ8C39Fy3sruF9xW393u34Utr4xGw1DArnIgrn0yr95GFW8
-	tr1DZ3W5XFn8A3JanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0pimhF7UUUUU=
-X-CM-SenderInfo: xkdr5xpdqjszblsqjki6rwjhhfrp/xtbB0hQHbmfIHmJ4MQAAs1
+References: <20250304213216.108925-1-ebiggers@kernel.org>
+In-Reply-To: <20250304213216.108925-1-ebiggers@kernel.org>
+From: Uros Bizjak <ubizjak@gmail.com>
+Date: Wed, 5 Mar 2025 11:10:40 +0100
+X-Gm-Features: AQ5f1JoL3EYBkezeivq6kAevMSsSR0Ei1buWNTADmjgUBeYw4D_is9BtgZdT5AU
+Message-ID: <CAFULd4Y8=zov8Yov3n4rhwT7JO0YxaEQJ56hq1Hd7TB=yQjWQw@mail.gmail.com>
+Subject: Re: [PATCH] x86/crc32: optimize tail handling for crc32c short inputs
+To: Eric Biggers <ebiggers@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Bill Wendling <morbo@google.com>, 
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H . Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Justin Stitt <justinstitt@google.com>, 
+	David Laight <david.laight.linux@gmail.com>, linux-crypto@vger.kernel.org, 
+	llvm@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add qlcnic_sriov_free_vlans() to free the memory allocated by
-qlcnic_sriov_alloc_vlans() if qlcnic_sriov_alloc_vlans() fails
-or "sriov->allowed_vlans" fails to be allocated.
+On Wed, Mar 5, 2025 at 10:26=E2=80=AFAM Eric Biggers <ebiggers@kernel.org> =
+wrote:
+>
+> From: Eric Biggers <ebiggers@google.com>
+>
+> For handling the 0 <=3D len < sizeof(unsigned long) bytes left at the end=
+,
+> do a 4-2-1 step-down instead of a byte-at-a-time loop.  This allows
+> taking advantage of wider CRC instructions.  Note that crc32c-3way.S
+> already uses this same optimization too.
+>
+> crc_kunit shows an improvement of about 25% for len=3D127.
+>
+> Suggested-by: H. Peter Anvin <hpa@zytor.com>
+> Signed-off-by: Eric Biggers <ebiggers@google.com>
 
-Fixes: 91b7282b613d ("qlcnic: Support VLAN id config.")
-Cc: stable@vger.kernel.org
-Signed-off-by: Haoxiang Li <haoxiang_li2024@163.com>
----
-Changes in v2:
-- Add qlcnic_sriov_free_vlans() if qlcnic_sriov_alloc_vlans() fails.
-- Modify the patch description.
-vf_info was allocated by kcalloc, no need to do more checks cause
-kfree(NULL) is safe. Thanks, Paolo! 
----
- drivers/net/ethernet/qlogic/qlcnic/qlcnic_sriov_common.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+LGTM.
 
-diff --git a/drivers/net/ethernet/qlogic/qlcnic/qlcnic_sriov_common.c b/drivers/net/ethernet/qlogic/qlcnic/qlcnic_sriov_common.c
-index f9dd50152b1e..0dd9d7cb1de9 100644
---- a/drivers/net/ethernet/qlogic/qlcnic/qlcnic_sriov_common.c
-+++ b/drivers/net/ethernet/qlogic/qlcnic/qlcnic_sriov_common.c
-@@ -446,16 +446,20 @@ static int qlcnic_sriov_set_guest_vlan_mode(struct qlcnic_adapter *adapter,
- 		 sriov->num_allowed_vlans);
- 
- 	ret = qlcnic_sriov_alloc_vlans(adapter);
--	if (ret)
-+	if (ret) {
-+		qlcnic_sriov_free_vlans(adapter);
- 		return ret;
-+	}
- 
- 	if (!sriov->any_vlan)
- 		return 0;
- 
- 	num_vlans = sriov->num_allowed_vlans;
- 	sriov->allowed_vlans = kcalloc(num_vlans, sizeof(u16), GFP_KERNEL);
--	if (!sriov->allowed_vlans)
-+	if (!sriov->allowed_vlans) {
-+		qlcnic_sriov_free_vlans(adapter);
- 		return -ENOMEM;
-+	}
- 
- 	vlans = (u16 *)&cmd->rsp.arg[3];
- 	for (i = 0; i < num_vlans; i++)
--- 
-2.25.1
+Acked-by: Uros Bizjak <ubizjak@gmail.com>
 
+Thanks,
+Uros.
+
+> ---
+>
+> This applies to
+> https://web.git.kernel.org/pub/scm/linux/kernel/git/ebiggers/linux.git/lo=
+g/?h=3Dcrc-next
+>
+>  arch/x86/lib/crc32-glue.c | 10 +++++++++-
+>  1 file changed, 9 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/x86/lib/crc32-glue.c b/arch/x86/lib/crc32-glue.c
+> index 4b4721176799a..e3f93b17ac3f1 100644
+> --- a/arch/x86/lib/crc32-glue.c
+> +++ b/arch/x86/lib/crc32-glue.c
+> @@ -55,11 +55,19 @@ u32 crc32c_arch(u32 crc, const u8 *p, size_t len)
+>
+>         for (num_longs =3D len / sizeof(unsigned long);
+>              num_longs !=3D 0; num_longs--, p +=3D sizeof(unsigned long))
+>                 asm(CRC32_INST : "+r" (crc) : ASM_INPUT_RM (*(unsigned lo=
+ng *)p));
+>
+> -       for (len %=3D sizeof(unsigned long); len; len--, p++)
+> +       if (sizeof(unsigned long) > 4 && (len & 4)) {
+> +               asm("crc32l %1, %0" : "+r" (crc) : ASM_INPUT_RM (*(u32 *)=
+p));
+> +               p +=3D 4;
+> +       }
+> +       if (len & 2) {
+> +               asm("crc32w %1, %0" : "+r" (crc) : ASM_INPUT_RM (*(u16 *)=
+p));
+> +               p +=3D 2;
+> +       }
+> +       if (len & 1)
+>                 asm("crc32b %1, %0" : "+r" (crc) : ASM_INPUT_RM (*p));
+>
+>         return crc;
+>  }
+>  EXPORT_SYMBOL(crc32c_arch);
+>
+> base-commit: 13f3d13d88b5dcba104a204fcbee61c75f8407d0
+> --
+> 2.48.1
+>
