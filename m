@@ -1,103 +1,126 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0643820D508;
-	Wed,  5 Mar 2025 11:03:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84D6C20D508
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 11:03:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741172581; cv=none; b=j66qhNe5BBr+j0TUGfqeyITvx81SA9DOeKRSoLkSwU+yJyVhOw6wt4VIdNP65191BxYx1rrtQZLjbtbLp1cARlpFTSciw8cs2Y32ZkUR9Q9yZeFHH5w7M+JI/mlny6mUD2dQHAhDn7CA0ARYOzdt99+qpc/mi374hgjUr+jyZLc=
+	t=1741172587; cv=none; b=s9zkV0jiKmpL5qJw7XFxyd4qvvCezf3tysOHOkF8n8Q0gmCsW/8+41EB79ROb57+NfFrwica88tQ4VZbPn8ZPloMr6LLpOpkPkfVGUkhKQ4DlKP4QW9guiZQ/qZd6gcUMPc+1uU98zYk4pTKP/VrlC9NFZt75kcSOd4iA7cVLAc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741172581; c=relaxed/simple;
-	bh=rGJv2pMYOWgOkuJv/QdJlZWmnY/QX+rPMnbrawdSm8M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=J3WJC2N47eZ9EGRJ5f1UOzsOpasNz3mdfvteu9sqwox/oFb1quEtB9csFxPXyQurjYQPmO6IJ1D+prlQ3GK8DXGhPlaPj/DJ+kLB/GDDGdJnIdiP3vHDnm8fnwvd5zcxQddukStceb43WgzWI60S3EyPA2AtlNVuAY9ZhgM4LqI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t+W0SDdm; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t+W0SDdm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB79AC4CEE2;
-	Wed,  5 Mar 2025 11:02:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741172580;
-	bh=rGJv2pMYOWgOkuJv/QdJlZWmnY/QX+rPMnbrawdSm8M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=t+W0SDdmuFH/fy2F4X2vmwmZmw8TLa3gGMQdlozWhJ39ZicCwr2e5witl5Yy8K15K
-	 5UiUXkCqUnSOEwLX3PSQDNZQf/CmNcaRBdbzXx7JJEiS9XvG+I7jsVvP7VlCDuGRmf
-	 GPuh4/D7ReBU7J3IMKMShLnjNTEuYSlQ/+ZMK8cVexYeYTY8alHVZNDdie1Tshpw26
-	 BF1NfocQFIMrRMbyg8JARr3JMNx9aODQKuZ1F8VGCekQi4AYKb3WmA9weTqsNxJ+pd
-	 /5Bjo0ilP70Z8CrlyYL8fP5uqV86aFNuVFFYrTvuMHl2zCZ/lyZFdh7Oig7RJBp1wS
-	 cIozVZQZkwNgA==
-Date: Wed, 5 Mar 2025 12:02:56 +0100
-From: Ingo Molnar <mingo@kernel.org>
-To: Thorsten Blum <thorsten.blum@linux.dev>
-Cc: linux-kernel@vger.kernel.org, linux-tip-commits@vger.kernel.org,
-	Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [tip: perf/core] perf/x86: Annotate struct bts_buffer with
- __counted_by()
-Message-ID: <Z8gvYIYXMHRC-btB@gmail.com>
-References: <20250304183056.78920-2-thorsten.blum@linux.dev>
- <174111554764.14745.14213573362217486017.tip-bot2@tip-bot2>
- <Z8gW1rihV0aIp8Oo@gmail.com>
- <04A79410-77DA-40F9-8904-44DC2DE1E810@linux.dev>
+	s=arc-20240116; t=1741172587; c=relaxed/simple;
+	bh=JAUm4+VWC+SmkWP2S8QleEY91rM70SFeEbmpI/d5+Fo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VaISIvrrCSvM2GGnANBmebjORo/KMryo2+xglr9pt3ZEaYI78DtNBRpkaN4h/K6VAU5ah5y++51Ktgg7wgD6B1ImHdmdW9jroQ0uUuPsqISzRRsr7kXbv2p/ShGb3Ce+MDQ7phDiE6BTlm5KFSo9b0IzNDYB10qibJP+vsRFos0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from ptz.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::77] helo=[127.0.0.1])
+	by metis.whiteo.stw.pengutronix.de with esmtp (Exim 4.92)
+	(envelope-from <a.fatoum@pengutronix.de>)
+	id 1tpmVq-0008LI-3s; Wed, 05 Mar 2025 12:02:06 +0100
+Message-ID: <7ac2b8db-22c7-4168-b1b7-4f9f0ab10531@pengutronix.de>
+Date: Wed, 5 Mar 2025 12:01:53 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <04A79410-77DA-40F9-8904-44DC2DE1E810@linux.dev>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 1/2] watchdog: Add a new flag WDIOF_STOP_MAYSLEEP
+To: George Cherian <gcherian@marvell.com>,
+ "linux@roeck-us.net" <linux@roeck-us.net>
+Cc: "wim@linux-watchdog.org" <wim@linux-watchdog.org>,
+ "jwerner@chromium.org" <jwerner@chromium.org>,
+ "evanbenn@chromium.org" <evanbenn@chromium.org>,
+ "krzk@kernel.org" <krzk@kernel.org>,
+ "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
+ "thomas.richard@bootlin.com" <thomas.richard@bootlin.com>,
+ "lma@chromium.org" <lma@chromium.org>,
+ "bleung@chromium.org" <bleung@chromium.org>,
+ "support.opensource@diasemi.com" <support.opensource@diasemi.com>,
+ "shawnguo@kernel.org" <shawnguo@kernel.org>,
+ "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+ "kernel@pengutronix.de" <kernel@pengutronix.de>,
+ "festevam@gmail.com" <festevam@gmail.com>, "andy@kernel.org"
+ <andy@kernel.org>, "paul@crapouillou.net" <paul@crapouillou.net>,
+ "alexander.usyskin@intel.com" <alexander.usyskin@intel.com>,
+ "andreas.werner@men.de" <andreas.werner@men.de>,
+ "daniel@thingy.jp" <daniel@thingy.jp>,
+ "romain.perier@gmail.com" <romain.perier@gmail.com>,
+ "avifishman70@gmail.com" <avifishman70@gmail.com>,
+ "tmaimon77@gmail.com" <tmaimon77@gmail.com>,
+ "tali.perry1@gmail.com" <tali.perry1@gmail.com>,
+ "venture@google.com" <venture@google.com>,
+ "yuenn@google.com" <yuenn@google.com>,
+ "benjaminfair@google.com" <benjaminfair@google.com>,
+ "maddy@linux.ibm.com" <maddy@linux.ibm.com>,
+ "mpe@ellerman.id.au" <mpe@ellerman.id.au>,
+ "npiggin@gmail.com" <npiggin@gmail.com>,
+ "christophe.leroy@csgroup.eu" <christophe.leroy@csgroup.eu>,
+ "naveen@kernel.org" <naveen@kernel.org>,
+ "mwalle@kernel.org" <mwalle@kernel.org>,
+ "xingyu.wu@starfivetech.com" <xingyu.wu@starfivetech.com>,
+ "ziv.xu@starfivetech.com" <ziv.xu@starfivetech.com>,
+ "hayashi.kunihiko@socionext.com" <hayashi.kunihiko@socionext.com>,
+ "mhiramat@kernel.org" <mhiramat@kernel.org>,
+ "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>,
+ "chrome-platform@lists.linux.dev" <chrome-platform@lists.linux.dev>,
+ "imx@lists.linux.dev" <imx@lists.linux.dev>,
+ "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+ "openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>,
+ "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+ "patches@opensource.cirrus.com" <patches@opensource.cirrus.com>,
+ =?UTF-8?Q?Marek_Beh=C3=BAn?= <kabel@kernel.org>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>
+References: <20250305101025.2279951-1-george.cherian@marvell.com>
+ <20250305101025.2279951-2-george.cherian@marvell.com>
+ <irmewriceyzxr6jvbiao5vqrvelpftbjalmheodx5w63zi6k2y@dg3wlvs6zryd>
+ <PH8PR18MB538122CE6706872B8A836A94C5CB2@PH8PR18MB5381.namprd18.prod.outlook.com>
+Content-Language: en-US
+From: Ahmad Fatoum <a.fatoum@pengutronix.de>
+In-Reply-To: <PH8PR18MB538122CE6706872B8A836A94C5CB2@PH8PR18MB5381.namprd18.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:900:1d::77
+X-SA-Exim-Mail-From: a.fatoum@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
+Hi George,
+Hi Guenter,
 
-* Thorsten Blum <thorsten.blum@linux.dev> wrote:
-
-> On 5. Mar 2025, at 10:18, Ingo Molnar wrote:
-> > Actually, on a second thought:
-> > 
-> >> - buf = kzalloc_node(offsetof(struct bts_buffer, buf[nbuf]), GFP_KERNEL, node);
-> >> + buf = kzalloc_node(struct_size(buf, buf, nbuf), GFP_KERNEL, node);
-> > 
-> > Firstly, in what world is 'buf, buf' more readable? One is a member of 
-> > a structure, the other is the name of the structure - and they match, 
-> > which shows that this function's naming conventions are a mess.
-> > 
-> > Which should be fixed first ...
+On 05.03.25 11:34, George Cherian wrote:
+>> why is armada_37xx_wdt also here?
+>> The stop function in that driver may not sleep.
+> Marek,
 > 
-> Yes, I noticed this too, but since buf->buf[] is used all over the place
-> (also in other functions), I didn't rename it in this patch.
+> Thanks for reviewing.
+> Since the stop function has a regmap_write(), I thought it might sleep.
+> Now that you pointed it out, I assume that it is an MMIO based regmap being used for armada.
+> I will update the same in the next version
+
+Failure to add WDIOF_STOP_MAYSLEEP when it's needed can lead to
+kernel hanging. Failure to add an alternative WDIOF_STOP_ATOMIC
+would lead to the kernel option being a no-op.
+
+I think a no-op stop_on_panic (or reset_on_panic) is a saner default.
+
+Cheers,
+Ahmad
+
 > 
-> We could just keep offsetof(struct bts_buffer, buf[nbuf]), or use
-> struct_size_t(struct bts_buffer, buf, nbuf) and still benefit from
-> additional compile-time checks, or rename the local variable to struct
-> bts_buffer *bts and use struct_size(bts, buf, nbuf), for example. Any
-> preferences or other ideas?
-
-To clean up this code before changing it, so that the changes become 
-obvious to review.
-
-Please also split out the annotation for instrumentation, it's separate 
-from any struct_size() changes, right?
-
-> > I'm also not sure the code is correct ...
+>>
+>> Marek
 > 
-> Which part of it?
+> -George
 
-The size calculation. On a second reading I *think* it's correct, but 
-it's unnecessarily confusing due to the buf<->buf aliasing.
 
-So in a cleaned up version of the code:
-
-  - If we name 'struct bts_buffer' objects 'bb'
-  - and bb:buf[] is the var-array
-  - and we rename 'nbuf' to 'nr_buf' (the number of bb:buf[] elements)
-
-then the code right now does:
-
-        bb = kzalloc_node(offsetof(struct bts_buffer, bb[nr_buf]), GFP_KERNEL, node);
-
-... which looks correct.
-
-Thanks,
-
-	Ingo
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
