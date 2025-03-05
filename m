@@ -1,123 +1,111 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f48.google.com (mail-oo1-f48.google.com [209.85.161.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82D98245038;
-	Wed,  5 Mar 2025 12:40:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD2F1205AB0;
+	Wed,  5 Mar 2025 12:42:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741178449; cv=none; b=UkLcB/t/XRvOuWvvr/+MGSRY3MdLmZpOqB50hQmJUTUGGp5ApgZoPjPMvYkkGfTRJvZ0cLag+8S6itgIydey6GLqx6S2T2YFVmG8WATUSDyJJ8OZSAjjT6gzjoda8kMXeWMAhVsomUM+MTK/mPq+Kj+BeU19TSm9WdRXsfhlVhE=
+	t=1741178555; cv=none; b=E5zS58wOU5nMqbdiZQpT6oQMBQf86igEmvKLPPzAH6qlA6jIbq6WxQ+oDgAVV6WMy3PDRgg1C+Ndvj46t79JpN/V++/E1K7kDBIu6uxCJj509TSNcg+ef3mvmlzsOMaKcWLvCCr7fdyuqABNNQkqRbTQ8ewFYWi4x3mfHQ/8I+8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741178449; c=relaxed/simple;
-	bh=qYXYZ5+C3bWKtUv+GMDQRy1mJAMki6MHE1s1+CzN1kE=;
+	s=arc-20240116; t=1741178555; c=relaxed/simple;
+	bh=DRGtcUD1Vbpa16JP3K2UzI5c9GSYi1XK9xSUmDdu/xk=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kOfT+8eFOceniE55n3DGT34RdJyHxASwuH6c6Hwgvsu1zWExrV5dY0RD9AdKxs8FcYkqP7UWY73FRtTj7xVuBeWe4w7bcMk0zRHlG5cUm/dnBqPmaS7wttAyTszs1UjriSeZWBNWVALgLvQWnJYEFefpQKCixQ0O3fBzTz6XYk8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DU/dDzrT; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=TatZt/9vkEG/I7UIbNJOm+A7RimV/2GDY1GADhD4Cp8s5E3TWWevNcqYIx5iWnryFfiIpzcsaSBFWQgBgcaJjE4QlNq8VSaO5J4TXazRSKFfSR16AMVgxXFKKuuw8OMWHCdhWkU/pMBVwRYiWuMBRIP+vBndNpMrt5opOWzdY3k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=I2P9I5Bk; arc=none smtp.client-ip=209.85.161.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DU/dDzrT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A3A1C4AF09;
-	Wed,  5 Mar 2025 12:40:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741178449;
-	bh=qYXYZ5+C3bWKtUv+GMDQRy1mJAMki6MHE1s1+CzN1kE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=DU/dDzrTCPZy0mWbn61tZuYtpSggbgzwRK1KSMLHPD7Zi+LoqG1a/YnDh8+9ZgfVX
-	 pCrzNWjclu0zWXUd1X3DmW2aG7rC9MNgOZKKg77G4k7/saYE/8tfEFg67M1Csph/Wk
-	 nmWrv7rzvQq74RK3B/LrJVkIjBpvPuuOPKh5TMI+bnkUE+2+/AxKfeCIqbDUD4dxsF
-	 TZwpa/12zhQdXDDjyqBiGEjwWg+8icUv+tWlgiw6GPWdM07x7AGzDKc1YT20lUUPXz
-	 pJPNrMyx0rnnUf3xipECE28nhcrdtFDLIbp9AORZjXIPbs6paEJsJpchVtsuGriqS5
-	 5ryh5FOcNFYKg==
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-5495c63bdc0so4482010e87.1;
-        Wed, 05 Mar 2025 04:40:48 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXEHWMyR71EDcErqJIWU22dzc7SoCujYX3msMFniBOqdVXIR4X05YILixcHgxCtb4vU5eVTUok/fvDhWBo=@vger.kernel.org, AJvYcCXQrz3zBRGLd+MkqAfdJOYm7Td0u6x5GCprw4yo79VXklbpo2zhup2ZqjMpqFliox0q2yHcDJEDcnCQKrxJ@vger.kernel.org
-X-Gm-Message-State: AOJu0YyE2z2+Y7pc3ocU5COkmc/B86cpWMCgh/aBToBhgn6NE6N8jMpA
-	GBFQyKzb3agiwCCJccqd2unxLe2SxFcxUhlT+SDJzvxbXN8+pAv9b7SzappvGLpopIWeho8DcWi
-	/xEHBTTqh6DNrtLeTR7liyW5qCUE=
-X-Google-Smtp-Source: AGHT+IHzYBJZlDCLDiJbAYfiaennarwwjhdCKf/5q+hLH3er5IRtsl3gW1laWVC/vL5WUTQUNO7L4DtOnyMte0JHF9g=
-X-Received: by 2002:a05:6512:220a:b0:549:5f62:74ca with SMTP id
- 2adb3069b0e04-5497d3838b9mr1063773e87.53.1741178447669; Wed, 05 Mar 2025
- 04:40:47 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I2P9I5Bk"
+Received: by mail-oo1-f48.google.com with SMTP id 006d021491bc7-6003b679812so40880eaf.3;
+        Wed, 05 Mar 2025 04:42:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741178553; x=1741783353; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DRGtcUD1Vbpa16JP3K2UzI5c9GSYi1XK9xSUmDdu/xk=;
+        b=I2P9I5BkupfAk+4q3fk5x/PDslC+3DhVXzvO0JbOm0fRi5Jo+Fgnn91BnSSBlzMMtZ
+         2Z/WeLmQCQD9Ab9l06whe16TB7g1icmIBAob+uawtcQ6QkMYkQYTh8gVDaA+de3//2d+
+         +fQhUFI50BEAg16UWdqb66U7XNtydB9gIE0Tu7k3vk+x4Oqh9XgSncD+/UYs5oD4uqCd
+         P6uac5byM2X1eEUKDyKaguGEoolLMwOGq68KWvvNeJM6d6Ybx8vuJ0eq7xGuXHw3dBSY
+         E88jXCbNb5PJElmg1BaKll2SR0Yhq/3Jr/C5p53Z6ABMQUJgb+0e5Xl4lbBD77PhV8Bd
+         a/6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741178553; x=1741783353;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=DRGtcUD1Vbpa16JP3K2UzI5c9GSYi1XK9xSUmDdu/xk=;
+        b=m7zpmjPxMGEUYnMWAUwyhZHvVP83gFWkEI8S+pwMVawmpagBG6QMitfdzREEY5RNjK
+         XmbsrHwXLStv+BTcMwreOgx3AGJY3c/wLw8U826v11UScN/dxrdVzsi2SYQ4NeKkoiXg
+         YtuXOJtORMaLUnS186yiRMA4nesoRMqdKp2621dyebNU0Ags5YH+8hP8RZdCLTfzgVAn
+         0VFLr5fIrTl0YcXSS7wi7pzqBUN+wZBiCRWoLj2xiN9tfJAO6LuqzTTD4AjDkCV/AboM
+         lUgBJTRWj0uswhOQcKtW47VYTYGR2XMeaNpQTQvCuhy9wB8iCO1I7iQUfXUwNyfkF7M1
+         yR+g==
+X-Forwarded-Encrypted: i=1; AJvYcCU/KtTOzcLkY4iYo4JxOdT1qMbN1irOxFgVknOmlsGHufmSGSyDgN9oi9Ze2thwKu2Kb8uLjt7rWc0YNhNT@vger.kernel.org, AJvYcCVgAzxnS1fK5N2t2rdgR7d/NMDeCAT1sqe0ahqoRr2fMliOh61fr7AT6u+TYEorQhVcjZ9wrUwsiDlBV++m@vger.kernel.org
+X-Gm-Message-State: AOJu0YxHWLKiX3mv8E3yVURrQqIQOgG0ABbVrWhqPW8HxwIvl8oHuEHx
+	yB/UD3I1EoojCHVduxXR4xmkrraHAbJ91u8QMjcpqBR9jOUNno/eSVTkF3bVwg95xkAx8aM43NC
+	rpj8L5I18il2A/pXEJp6132opdwc=
+X-Gm-Gg: ASbGnctY47ygbUvZVaRY7HPRsUQVkVlbDLMlfqjmwh6ydBJ8Ev7KkMSlXXj7j/C/Q04
+	1lZPyJHUE3Jc56s5KpqFlV29IQ6xzxnPR5X67M4GtI3VBWDigevgzDTbxM73+uFxuljLhLhLF0a
+	Gc1QnBvcIGP5qzhU7Cu7ahURi2
+X-Google-Smtp-Source: AGHT+IH8lsrvrDzJqM8aKTieKvcsW2tjj+X12MGd0Mu9B+u7+BJpXj5gYOm5oxOXNtz1vB0FMjVdey/z5l6+DQPZSw0=
+X-Received: by 2002:a05:6870:9111:b0:2b7:7abf:df6b with SMTP id
+ 586e51a60fabf-2c21cdb2988mr1638765fac.26.1741178552643; Wed, 05 Mar 2025
+ 04:42:32 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250223011944.902904-1-inochiama@gmail.com>
-In-Reply-To: <20250223011944.902904-1-inochiama@gmail.com>
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Wed, 5 Mar 2025 21:40:09 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATurBBTtm-6+iEoLiUtgD4iy9efbzGgp6HbuSiV-YF9mg@mail.gmail.com>
-X-Gm-Features: AQ5f1JoEqAhZmYo9HCIzq3lQLEKVnh0WkqFF6iKFynH0Ee_ap4wazTmVER9anwo
-Message-ID: <CAK7LNATurBBTtm-6+iEoLiUtgD4iy9efbzGgp6HbuSiV-YF9mg@mail.gmail.com>
-Subject: Re: [PATCH] kbuild: install-extmod-build: Fix build when specifying KBUILD_OUTPUT
-To: Inochi Amaoto <inochiama@gmail.com>
-Cc: Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, linux-kbuild@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Yixun Lan <dlan@gentoo.org>, 
-	Longbin Li <looong.bin@gmail.com>
+References: <20250304183506.498724-1-mjguzik@gmail.com> <20250305-sofern-visite-70a6134399cb@brauner>
+In-Reply-To: <20250305-sofern-visite-70a6134399cb@brauner>
+From: Mateusz Guzik <mjguzik@gmail.com>
+Date: Wed, 5 Mar 2025 13:42:16 +0100
+X-Gm-Features: AQ5f1JqUDRpjSlGsw8z1UTF2NdDIUgAPkfZ2OhchQYB9wAP2J7YgZJTvrMvNtyo
+Message-ID: <CAGudoHFQioKFuxXesPbfHbjdWpqTs-_J2Ss0dVrr218ih0XPtQ@mail.gmail.com>
+Subject: Re: [RFC PATCH v v2 0/4] avoid the extra atomic on a ref when closing
+ a fd
+To: Christian Brauner <brauner@kernel.org>
+Cc: viro@zeniv.linux.org.uk, jack@suse.cz, linux-kernel@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sun, Feb 23, 2025 at 10:20=E2=80=AFAM Inochi Amaoto <inochiama@gmail.com=
-> wrote:
+On Wed, Mar 5, 2025 at 11:38=E2=80=AFAM Christian Brauner <brauner@kernel.o=
+rg> wrote:
 >
-> Since commit 5f73e7d0386d ("kbuild: refactor cross-compiling
-> linux-headers package"), the linux-headers pacman package fails
-> to build when "O=3D" is set. The build system complains:
+> On Tue, Mar 04, 2025 at 07:35:02PM +0100, Mateusz Guzik wrote:
+> > The stock kernel transitioning the file to no refs held penalizes the
+> > caller with an extra atomic to block any increments.
+> >
+> > For cases where the file is highly likely to be going away this is
+> > easily avoidable.
+> >
+> > In the open+close case the win is very modest because of the following
+> > problems:
+> > - kmem and memcg having terrible performance
 >
-> /mnt/chroot/linux/scripts/Makefile.build:41: mnt/chroots/linux-mainline/p=
-acman/linux-upstream/pkg/linux-upstream-headers/usr//lib/modules/6.14.0-rc3=
--00350-g771dba31fffc/build/scripts/Makefile: No such file or directory
+> I thought that was going to be addressed by Vlastimil, i.e., the mm guys
+> to provide a new memcg api.
+
+afaics this is for kmem only, no memcg support.
+
+There is an old patch which sped up memcg, but got reverted and it is
+on the table to bring it back, but Vlastimil is dragging his foot.
+
+> > vast majority of last fputs are from remove_vma. I think that code want=
+s
+> > to be patched to batch them (as in something like fput_many should be
+> > added -- something for later).
 >
-> This is because the "srcroot" variable is set to "." and the
-> "build" variable is set to the absolute path. This makes the
-> "src" variables point to wrong directory.
->
-> Change the "build" variable to a relative path to "." to
-> fix build.
->
-> Fixes: 5f73e7d0386d ("kbuild: refactor cross-compiling linux-headers pack=
-age")
-> Signed-off-by: Inochi Amaoto <inochiama@gmail.com>
-> ---
->  scripts/package/install-extmod-build | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/scripts/package/install-extmod-build b/scripts/package/insta=
-ll-extmod-build
-> index 2966473b4660..c0357ba2ff72 100755
-> --- a/scripts/package/install-extmod-build
-> +++ b/scripts/package/install-extmod-build
-> @@ -63,7 +63,7 @@ if [ "${CC}" !=3D "${HOSTCC}" ]; then
->         # Clear VPATH and srcroot because the source files reside in the =
-output
->         # directory.
->         # shellcheck disable=3DSC2016 # $(MAKE) and $(build) will be expa=
-nded by Make
-> -       "${MAKE}" run-command KBUILD_RUN_COMMAND=3D'+$(MAKE) HOSTCC=3D'"$=
-{CC}"' VPATH=3D srcroot=3D. $(build)=3D'"${destdir}"/scripts
-> +       "${MAKE}" run-command KBUILD_RUN_COMMAND=3D'+$(MAKE) HOSTCC=3D'"$=
-{CC}"' VPATH=3D srcroot=3D. $(build)=3D'"$(realpath --relative-base=3D. ${d=
-estdir})"/scripts
-
-
-Looks good to me, but a nit.
-
-This will introduce a new shellcheck warning:
-
-  C2086 (info): Double quote to prevent globbing and word splitting.
-
-Please keep the double-quotes around ${destdir}
-
-"$(realpath --relative-base=3D. "${destdir}")"
-
-
->         rm -f "${destdir}/scripts/Kbuild"
->  fi
-> --
-> 2.48.1
+> We used to have that for io_uring and got rid of it. The less fput()
+> primitives the better tbh. But let's see.
 >
 
+I would say a _many (or whatever) variant is pretty idiomatic, but I'm
+not going to insist. This is a side remark to the patchset.
 
---
-Best Regards
-Masahiro Yamada
+--=20
+Mateusz Guzik <mjguzik gmail.com>
