@@ -1,182 +1,226 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65D7024C062
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 19:49:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741204170; cv=none; b=C+LPWk7X8cIdHIll1S3OrcAWOeSvqMmTwow7xlEuaz5fUcUhLBP3pKDnd0qRvKoGGj6yJfR6gDT9p044fggbH2sgwLW2A6HIKVU63fLwHO/zWVX+k57RHgHH3KhQySIJ1QuVUZlc8P8buHJOUOvoyUiFt3hScXcr0iBsvSEoiG0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741204170; c=relaxed/simple;
-	bh=Hk1Ju+6+lnMPErwaMCbnFHDb0WcrpE4WwWYUxrm7PCc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tCXVb8L9odYbHKzz20p0rOCl5HFexkiGyTpwOdLjbuFR2Vm7S4h9tsahB8/u1YoRMKprFEcUdi03PQc2C8Z6TAzN6c6H1aXXtQIKKrlJZSdPjRsF3xlgt/KPXxwmCr0X1PT4K7x4RZM3ugVS5FtidQRtumjrOaofIMvhDBgB6aQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KBDmC7Ud; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9194524C07D
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 19:50:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741204221; cv=fail; b=Exm0961abv4gzWpDLBJ3KHAMSqnbZPqoHwkHjeWVnZ5jV8HZ2SOhgpehocjCrKt4i61apiGvtRleRIZnJAMAidIiSw9q30GqO26YKvjVAKmBurmUGWqdsZtDTCFFlV+jgRy8q5LpWXrNDfDqacfhr16c/ouK9PGPkPN2/reozcc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741204221; c=relaxed/simple;
+	bh=23SNkHqkWViNafAy9mXfWNOrNgnvrDEp4XdXFaCfqu0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=OUSX+k6hYpzuuMCQGd5YDUEPMey6+oTHJSiseUfT2BGpEfgz5f7SjpvdCAtLZg4Co8c55Wjfr7yWDZ2df23wzcrTv+Ngb1hTcDdsCYVr+VD2GUzLXJ3h8P8af6ApssPSgql40aD1zHeltMqcKrMtbndBLSQVjVky4TvZ1JYryZY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=JEOpdwYd; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=FKQV44Qo; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KBDmC7Ud"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1741204168;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=03yN7yH51hsHUzMn2+esz4Pv4dir90wQl0oFMfmdQtc=;
-	b=KBDmC7Udrl7hAh915R3SicnfsNNNdw6auls9miXJ6vio4w1JV6GXlKdg4MU2ugzUUfjNIc
-	7PsWGvNnKxpirjtLiG4ozfJ8lyMSFkmgbvG6aNDENChdVAP7suC0OlDKxu5Q9+EoBA9pOv
-	sM8aj5fzzFGQoaNy6JMSsIR1eey1Oz0=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-647-yBEH8jxONg6xyod59flq8A-1; Wed, 05 Mar 2025 14:49:22 -0500
-X-MC-Unique: yBEH8jxONg6xyod59flq8A-1
-X-Mimecast-MFC-AGG-ID: yBEH8jxONg6xyod59flq8A_1741204156
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-43bcd9a46feso10123405e9.2
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Mar 2025 11:49:16 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741204156; x=1741808956;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=03yN7yH51hsHUzMn2+esz4Pv4dir90wQl0oFMfmdQtc=;
-        b=H+K0B8wS20GWuHkLuu5QOG95+VZh5RbpBxoGxefiFIxoiQWQy6cr5TMy84QOZAjshi
-         bQseTpHHIYiXnf53RoZGAw4xSDDh3HouT4so/230upe9+xPgD7fR7MsfW5ZbbeC/U5Qe
-         /QxMAqfrn3WDD9O539hO+vO/AobdXJL6EavCNHMr6D+QVj8yKi5lM12hPObUi87AwXCU
-         YTHrrMHmT7E3QoScs2SLxuqg8HuKuzcYdp3t8Uxpx5MR+BqfbXPyjVuDVGwv+ZlpaUGX
-         NB134Bs7V2V/pwk0ytgNa88qUXafbwnProR0TK0J5wKXIB7yKznSV6wsWvki0C2592q7
-         HMqg==
-X-Forwarded-Encrypted: i=1; AJvYcCUbUh9XWCxLqKfpIuRTnf1LTea4/Z8A6BLhoYSVLPFqK90TgOEHhWbMXqLa4UPTLkIM4uzUtVenbYelk1g=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwNLv0twqD+mLm51cG+8+r/uUfzSadU41n6MVrDdpY4qvciqAjQ
-	GkljHuiqdJjErQl5ALRcQKBv705wFw65yEGfHFHuWMaJVcPElfIw5gewhvkE+sSVrgDUbz7lsk0
-	9INVVxgzkZPoTg+MQdZj66aKtRN/LCLHIKZFVWVjjQluzvzpVA1xWMeH+nkhVjg==
-X-Gm-Gg: ASbGnctG19l+yq4u/ywZ+XN0oXqvALyZ5jUhBCNlp2225ajLjhSHEHHeaffO7Dp6AB4
-	GCPEZwuPQmxmty+25HNp2SrkOLl9XKADIhnzk4Yawf1urlX+9yJt6qW23xN9CFo5HsZT/77XNOz
-	tnUwCFcZJIwZdRdm36PyOwWypUSkHO3d2RbcVQ7KyaGJ75X0X9kNktBfKrP1IcRaMlwpShhlAgT
-	Nf4MeMSjva21E0dHmCGA5/pq4OBZBTomwMpagm7YTDKzWIQXCgGWUXLevlRqeYMFXCmn8afzoRD
-	mqzo/KS9d6c/q/i67yswHfQzVa9OYtPjrSdn8aMboiRMChZ3AyArx4NnbR2Cuk1oIZOq9bkm50R
-	8lvbuOYqm+qHJVgyedtUkHz314L8liG7HyxpYR2DWx7g=
-X-Received: by 2002:a05:600c:35d4:b0:439:9f42:c137 with SMTP id 5b1f17b1804b1-43bd298f9fbmr41869685e9.11.1741204155842;
-        Wed, 05 Mar 2025 11:49:15 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHaclzLgfCSRWemIkkhnUP4/0u1OqlT3G4gkm4XEO0QvHJdU5h97AT9npPILhWPM591bWsdJQ==
-X-Received: by 2002:a05:600c:35d4:b0:439:9f42:c137 with SMTP id 5b1f17b1804b1-43bd298f9fbmr41869485e9.11.1741204155413;
-        Wed, 05 Mar 2025 11:49:15 -0800 (PST)
-Received: from ?IPV6:2003:cb:c739:5b00:84f2:50f3:bdc8:d500? (p200300cbc7395b0084f250f3bdc8d500.dip0.t-ipconnect.de. [2003:cb:c739:5b00:84f2:50f3:bdc8:d500])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43bd91338cesm14038955e9.7.2025.03.05.11.49.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 05 Mar 2025 11:49:15 -0800 (PST)
-Message-ID: <7e151e6b-3f81-4e37-b314-c6e9f19c1b82@redhat.com>
-Date: Wed, 5 Mar 2025 20:49:13 +0100
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="JEOpdwYd";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="FKQV44Qo"
+Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 525IMfnG019618;
+	Wed, 5 Mar 2025 19:49:56 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=corp-2023-11-20; bh=hEeykiBbJ7MiMNOPUm
+	V6GyPzH//QX/c7TfO6oAgzLiM=; b=JEOpdwYderozb8tF7z81Pzzu71xGF5+DBp
+	lHHibmFPqBhipmzlGFXBotiv5XywhQouH4MXpppOc7PSHrUxeE0L8WiQkJh04M8u
+	zf8yx2wjtZuCehPKaWnvKRGrM/aRmj4v8iab0ftO4N1+ULuiZphjsGXFGf6swe0D
+	ysTQWnJEnVjuIFki1esREuinoDjekgHihFE6PcwMUDznLwgdUHCRp3cUSMcC/Qg8
+	QXk+0/UAN9dXXvAbi4YjRStdUpKGr+0Nie5ajBdNGLrbkHhukqo67/tHy1+x3UTQ
+	uT6qIXKOb6KiXfUD5SL0uJNCsborgAuPtmg9l2ES218WHMjdRk1w==
+Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 453ub78h2t-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 05 Mar 2025 19:49:56 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 525JiCmP021940;
+	Wed, 5 Mar 2025 19:49:55 GMT
+Received: from nam12-mw2-obe.outbound.protection.outlook.com (mail-mw2nam12lp2044.outbound.protection.outlook.com [104.47.66.44])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 453rwwuumg-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 05 Mar 2025 19:49:55 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=HRPJnhT41p0Fv5/5UrCZcHjbX14L+bASKZrZaLIzBvACuiljMPBC7OhZ+66ahfecrf7wP3liHHyr0Bl6L8M9HF6haL1K/4H+O6a5Xt8nTWnigCbUDTQJmm4y0El4MinVincObgsNYBbjJMNLUv4WwBGRhlzPUKYaoKrYKfbhGb8q2zJucKSD5rmPPrvnVRJxBJgxf/WXIeeFHdB3g113UWuPvomFqJnUA6GLznK1Kq/c0O9P+OGJdz+CQYIU5bHM/7YKR9fo270WZPdox6YfnH3dqrX6FzP7sunA4I14gjMxJyVXSE5t+iv/RJ/usFirlvf1BIhb4wLxspA9Gr09pw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=hEeykiBbJ7MiMNOPUmV6GyPzH//QX/c7TfO6oAgzLiM=;
+ b=BZXfVDn0vJ0rBSpPmwEZ2RUWqpNZoysHlKuNA3b14o1190pEjO0vEMUkV5qHrI+xkU20M5qX/LFNzI3Ul+DOhK2ySxrSOUkhMlr42oSwF/+y59o1aB5ekFWoAqDNLr4cFdnbUO2ruNulSLLW9Mfy+MH04P+s6avyV+kCPo0rqxckAz5sasZW/yDXe3fZOz5PYYFbXqGIm3JKhASphv9NCYt7ZBZoquJsbyJQig+QSCG2phfw2pnlmv+cGu/Kce9uHauFL0wfUXnXr0UnpIQb0xBuA7FFWFNDq71ZffQrVZDaTQlRmMldOmlCM4/FRCKmjwImXAgkieZoBEXDVtFbbg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hEeykiBbJ7MiMNOPUmV6GyPzH//QX/c7TfO6oAgzLiM=;
+ b=FKQV44QoFRTEk9Ch2UccgTDW81LU4864wUpEz15ez2pjy882zQCety+opeUvSorxCNzRnHdK1m3aWdXtU0LcOxIFliD4Fk3p2YVuzWx1oW8/vqN2KZr/5eRfvSI57AfukQ88QN4bu2G32L2AOHc39L3jaKGZntw8/NQNlwwaWyk=
+Received: from MN2PR10MB4112.namprd10.prod.outlook.com (2603:10b6:208:11e::33)
+ by DM6PR10MB4220.namprd10.prod.outlook.com (2603:10b6:5:221::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.22; Wed, 5 Mar
+ 2025 19:49:52 +0000
+Received: from MN2PR10MB4112.namprd10.prod.outlook.com
+ ([fe80::3256:3c8c:73a9:5b9c]) by MN2PR10MB4112.namprd10.prod.outlook.com
+ ([fe80::3256:3c8c:73a9:5b9c%7]) with mapi id 15.20.8489.025; Wed, 5 Mar 2025
+ 19:49:52 +0000
+Date: Wed, 5 Mar 2025 19:49:50 +0000
+From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+To: Shakeel Butt <shakeel.butt@linux.dev>
+Cc: David Hildenbrand <david@redhat.com>, Matthew Wilcox <willy@infradead.org>,
+        SeongJae Park <sj@kernel.org>, "Liam R. Howlett" <howlett@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>, kernel-team@meta.com,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [RFC PATCH 00/16] mm/madvise: batch tlb flushes for
+ MADV_DONTNEED and MADV_FREE
+Message-ID: <815d1f2d-4bc0-40da-ba07-42593ae7ee45@lucifer.local>
+References: <20250305181611.54484-1-sj@kernel.org>
+ <Z8ieZVFEa6vAouvu@casper.infradead.org>
+ <46960f37-0d12-4cfd-a214-1ddae2495665@redhat.com>
+ <snby4wevysj2hr6rmqcwezcujhwmjgtby6ogkrc4wmqnzcqcsv@tu23rsyltc2m>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <snby4wevysj2hr6rmqcwezcujhwmjgtby6ogkrc4wmqnzcqcsv@tu23rsyltc2m>
+X-ClientProxiedBy: LO4P123CA0367.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:18e::12) To MN2PR10MB4112.namprd10.prod.outlook.com
+ (2603:10b6:208:11e::33)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 00/16] mm/madvise: batch tlb flushes for MADV_DONTNEED
- and MADV_FREE
-To: Shakeel Butt <shakeel.butt@linux.dev>
-Cc: Matthew Wilcox <willy@infradead.org>, SeongJae Park <sj@kernel.org>,
- "Liam R. Howlett" <howlett@gmail.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- Vlastimil Babka <vbabka@suse.cz>, kernel-team@meta.com,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org
-References: <20250305181611.54484-1-sj@kernel.org>
- <Z8ieZVFEa6vAouvu@casper.infradead.org>
- <46960f37-0d12-4cfd-a214-1ddae2495665@redhat.com>
- <snby4wevysj2hr6rmqcwezcujhwmjgtby6ogkrc4wmqnzcqcsv@tu23rsyltc2m>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
- dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
- QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
- XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
- Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
- PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
- WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
- UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
- jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
- B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABzSREYXZpZCBIaWxk
- ZW5icmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT7CwZgEEwEIAEICGwMGCwkIBwMCBhUIAgkKCwQW
- AgMBAh4BAheAAhkBFiEEG9nKrXNcTDpGDfzKTd4Q9wD/g1oFAl8Ox4kFCRKpKXgACgkQTd4Q
- 9wD/g1oHcA//a6Tj7SBNjFNM1iNhWUo1lxAja0lpSodSnB2g4FCZ4R61SBR4l/psBL73xktp
- rDHrx4aSpwkRP6Epu6mLvhlfjmkRG4OynJ5HG1gfv7RJJfnUdUM1z5kdS8JBrOhMJS2c/gPf
- wv1TGRq2XdMPnfY2o0CxRqpcLkx4vBODvJGl2mQyJF/gPepdDfcT8/PY9BJ7FL6Hrq1gnAo4
- 3Iv9qV0JiT2wmZciNyYQhmA1V6dyTRiQ4YAc31zOo2IM+xisPzeSHgw3ONY/XhYvfZ9r7W1l
- pNQdc2G+o4Di9NPFHQQhDw3YTRR1opJaTlRDzxYxzU6ZnUUBghxt9cwUWTpfCktkMZiPSDGd
- KgQBjnweV2jw9UOTxjb4LXqDjmSNkjDdQUOU69jGMUXgihvo4zhYcMX8F5gWdRtMR7DzW/YE
- BgVcyxNkMIXoY1aYj6npHYiNQesQlqjU6azjbH70/SXKM5tNRplgW8TNprMDuntdvV9wNkFs
- 9TyM02V5aWxFfI42+aivc4KEw69SE9KXwC7FSf5wXzuTot97N9Phj/Z3+jx443jo2NR34XgF
- 89cct7wJMjOF7bBefo0fPPZQuIma0Zym71cP61OP/i11ahNye6HGKfxGCOcs5wW9kRQEk8P9
- M/k2wt3mt/fCQnuP/mWutNPt95w9wSsUyATLmtNrwccz63XOwU0EVcufkQEQAOfX3n0g0fZz
- Bgm/S2zF/kxQKCEKP8ID+Vz8sy2GpDvveBq4H2Y34XWsT1zLJdvqPI4af4ZSMxuerWjXbVWb
- T6d4odQIG0fKx4F8NccDqbgHeZRNajXeeJ3R7gAzvWvQNLz4piHrO/B4tf8svmRBL0ZB5P5A
- 2uhdwLU3NZuK22zpNn4is87BPWF8HhY0L5fafgDMOqnf4guJVJPYNPhUFzXUbPqOKOkL8ojk
- CXxkOFHAbjstSK5Ca3fKquY3rdX3DNo+EL7FvAiw1mUtS+5GeYE+RMnDCsVFm/C7kY8c2d0G
- NWkB9pJM5+mnIoFNxy7YBcldYATVeOHoY4LyaUWNnAvFYWp08dHWfZo9WCiJMuTfgtH9tc75
- 7QanMVdPt6fDK8UUXIBLQ2TWr/sQKE9xtFuEmoQGlE1l6bGaDnnMLcYu+Asp3kDT0w4zYGsx
- 5r6XQVRH4+5N6eHZiaeYtFOujp5n+pjBaQK7wUUjDilPQ5QMzIuCL4YjVoylWiBNknvQWBXS
- lQCWmavOT9sttGQXdPCC5ynI+1ymZC1ORZKANLnRAb0NH/UCzcsstw2TAkFnMEbo9Zu9w7Kv
- AxBQXWeXhJI9XQssfrf4Gusdqx8nPEpfOqCtbbwJMATbHyqLt7/oz/5deGuwxgb65pWIzufa
- N7eop7uh+6bezi+rugUI+w6DABEBAAHCwXwEGAEIACYCGwwWIQQb2cqtc1xMOkYN/MpN3hD3
- AP+DWgUCXw7HsgUJEqkpoQAKCRBN3hD3AP+DWrrpD/4qS3dyVRxDcDHIlmguXjC1Q5tZTwNB
- boaBTPHSy/Nksu0eY7x6HfQJ3xajVH32Ms6t1trDQmPx2iP5+7iDsb7OKAb5eOS8h+BEBDeq
- 3ecsQDv0fFJOA9ag5O3LLNk+3x3q7e0uo06XMaY7UHS341ozXUUI7wC7iKfoUTv03iO9El5f
- XpNMx/YrIMduZ2+nd9Di7o5+KIwlb2mAB9sTNHdMrXesX8eBL6T9b+MZJk+mZuPxKNVfEQMQ
- a5SxUEADIPQTPNvBewdeI80yeOCrN+Zzwy/Mrx9EPeu59Y5vSJOx/z6OUImD/GhX7Xvkt3kq
- Er5KTrJz3++B6SH9pum9PuoE/k+nntJkNMmQpR4MCBaV/J9gIOPGodDKnjdng+mXliF3Ptu6
- 3oxc2RCyGzTlxyMwuc2U5Q7KtUNTdDe8T0uE+9b8BLMVQDDfJjqY0VVqSUwImzTDLX9S4g/8
- kC4HRcclk8hpyhY2jKGluZO0awwTIMgVEzmTyBphDg/Gx7dZU1Xf8HFuE+UZ5UDHDTnwgv7E
- th6RC9+WrhDNspZ9fJjKWRbveQgUFCpe1sa77LAw+XFrKmBHXp9ZVIe90RMe2tRL06BGiRZr
- jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <snby4wevysj2hr6rmqcwezcujhwmjgtby6ogkrc4wmqnzcqcsv@tu23rsyltc2m>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MN2PR10MB4112:EE_|DM6PR10MB4220:EE_
+X-MS-Office365-Filtering-Correlation-Id: a376ae97-7465-46d7-f87b-08dd5c1ee526
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|7416014|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?PJGwD+B1GBTDH/IP5F3bZ3liiVowEU4+rJgZiQhGTK0+5dzYAxwTKIRar26R?=
+ =?us-ascii?Q?QdpngeyMBLGdZs5p8FLi4jOc+1mS91gL2e6ukBRCuwgBbDnU7hCPsHQFfbzP?=
+ =?us-ascii?Q?UAnitYA18g7+nIh7giQ/e88zaLMo3kPNfpwfkuQ3w/l4LpmXPYGHuFQdiKsH?=
+ =?us-ascii?Q?ZKLLrbSOacr+kptxXedWjUBN/FZ1yyaTWMExJCjjO27yGrIuFPuzPjOIxAjg?=
+ =?us-ascii?Q?WVptaRl7OHJjXpMd7zXHP07uRPP28qs04hRfOxTzs+5p83R9Qng9mFX9f4rS?=
+ =?us-ascii?Q?XxnhepK7lR/KQwJyydJdEa3ICuNONCuiqw+EB4fBLzaNRYeClnqNmRf+S3x7?=
+ =?us-ascii?Q?JC3n8WJNE340TZaXez5HwuyjDPRm1MPv7PKxnVWuUAVXN53E8ClJdLfz+702?=
+ =?us-ascii?Q?eAYivVDYEl6tIeaOaNPdtFPhkTCiyqVaiscf2iyTMQI4k/st3SXyAsT4zZbw?=
+ =?us-ascii?Q?vMbeBBga+nRmb25sdrosR3xa9PI7zgR7uU9hJ+yxMunDw8PTqssIEfC9u3QT?=
+ =?us-ascii?Q?o7hj98DAJiBV4TZwALRxcq9p1rOr3XwwHjPlsiRXCb2JqXru9B6tQoqinYom?=
+ =?us-ascii?Q?EEK4gjtndmXtBEkn7oiYRO1g9xTFB8pAkqx//fky9mIUizew4X7qB5/UQL0w?=
+ =?us-ascii?Q?0FPBwGriuLt7EedEzu2yviXM1YgVnne+GHA+PW1Jy7rhfsyqgSfsVBf+CcSY?=
+ =?us-ascii?Q?ZXY1fB+lHmblY1ok6ptR+/EXwGLDHuPAqq+nexoGFq1fGqqqgIIWGAv6sTm7?=
+ =?us-ascii?Q?X9MmB2cVXSiMcK+P76G4bOQZvaJsRZqsZ/ae6yqSxTUVFMfANTmHhFTu8p4m?=
+ =?us-ascii?Q?qfQ2sOl/3AynZDF8P2kEw0q6Jlcip1ZelE5YGnim9Xqn/bHs2uoObB88fj+e?=
+ =?us-ascii?Q?w8YhfVLAjCglPJu0ci9YxCP3zGmMbYvgxLQXU7PVcY5Vjbfd98EFa7qF+mk7?=
+ =?us-ascii?Q?JQD4uWusTYHXlbdp6TSw/LYwzhW2s0aHZoxlM8GfFD/YA7dtGqUpiBqcIAb9?=
+ =?us-ascii?Q?JVGWMEym5+AiL8YRIXVPi41CoCk4yv9LOkQXf8F7qCx3TVIxgp2DE2o3JsUo?=
+ =?us-ascii?Q?ArMbQc6upNhD2KgxiBFYOeT0y3W2+LGXpK1lhz87th7Nj7JBlJSCY1wzLztG?=
+ =?us-ascii?Q?qfarA9heyFfxjNrBAVaxK2t5X8hhVl3aQDm6O8QCajaIIgtJ848qkbuLrOqz?=
+ =?us-ascii?Q?ebl0Jh9PIzRgzsZJzNCgSmPfqEMqFX9UVb2I7AqKMQM093XWiskkuTWdF3UH?=
+ =?us-ascii?Q?Hs9p6ntmJnIf25ZXahx+18/VdgIv0yh1P9cSdZng0pON6qX3KUPL1pozaHRC?=
+ =?us-ascii?Q?rj7AoQnIhA0CWGzB4BFnYsUkAvTgDPgr3rdahS6dSRuR1JwujFOMDkqsTClp?=
+ =?us-ascii?Q?vnHlH8iTEJaCh0RXI0gX04CnBFHi?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR10MB4112.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?aJYitp+l3xqR3GzvXqsXXXUWNebWgXjwwBfQo0mn+8EK8CMTPz5AaV7W2ezw?=
+ =?us-ascii?Q?/b40Twn6yqm7ZvFZsVCaiifIX+PaBsZJ/x4/BOOTu4xYZxRotw7bwQqdHzVv?=
+ =?us-ascii?Q?8nTuUfJkyiAG89Znpdae+51apzFUwA21bR+pYH+SIG8T+mdeo7455oQfaaDL?=
+ =?us-ascii?Q?uGUKJPlyrjq9WNgxVxkSjq7SDysb36Krs3rqmxcOMcWvS04LyZZBEjXwCuZW?=
+ =?us-ascii?Q?AmqCpX0HWgeMG9gKI7XUsxmPOJ+UinYE1xK4ppsGEsdQuemUH/jB/Y+th7Fc?=
+ =?us-ascii?Q?3t/gWo4vZ8ApnP8jpr+I1thztgOIgwI/gIWkLOVccn3MhpBGFRqCJGCh3xDD?=
+ =?us-ascii?Q?nfWFP+DG0+AACQLlCvGLep4kkQB7Fudnux1Gj1LBAamtrvj/bzBJPEbrZxBO?=
+ =?us-ascii?Q?2eaPV2Jbw9W7O9Srm5oBpLgmJvs3KEeXxJ5Cq0WaPYcQOtgdM6MeXzm6ADrp?=
+ =?us-ascii?Q?yMLrThY2ERfoHxR3PotCIjopJ4GK+9nJv/w8+rNjqwRUySN5SLllqvwVl7qM?=
+ =?us-ascii?Q?y1knhkKMezb86NQmMItAR35Svpk0QvKQUDETMOAxpO2sbxo/558RUN/t0gea?=
+ =?us-ascii?Q?KtU6JiOfWA60EsIGQ/k4VIfgtHpR/HsNtnv3qg1fvJY2qdYh1lot0ohHbJAL?=
+ =?us-ascii?Q?mwziRKLqgYuGuOi/bAt6Fh3zrF7uvOzIc+WpVDL68v4/dFP3seZZ07k9JGMz?=
+ =?us-ascii?Q?6sbjCx7yAkP/B1VE7Zcrc/mHKZEC/mIkSrfWvcxlqthnjY4Jz8pj2SasO/Hn?=
+ =?us-ascii?Q?dnbRp1X2kIFoNR/ofq59b2/zLEzH2Bak19jhKygd9GvdtP4CMtAt5e8qIOvq?=
+ =?us-ascii?Q?w4sr1g8swvFVr7rI2oSLe5p7mFQw/oijw7qTE1ySA9vroxdZcQ3VsrNRAi/P?=
+ =?us-ascii?Q?1wE31QD9ArTcRGo9XOlAvzVP12j1aZ4sOVrzCv09x9G825KU4YCzY9O/wyu6?=
+ =?us-ascii?Q?+7UgNre2JfyUqDCLzXxdOSQ2/mDH4hssx1YV8K9Soe8C6O3q25DMHyoZY4We?=
+ =?us-ascii?Q?WCWMMH8Yug946Tg3cG8+06T5HBXpgfHFcViK5rIC8OJamaI1lCb50R+IqV/D?=
+ =?us-ascii?Q?hJ6O06cnHN83GdwIOefa/U+8GdScl3iMd5ozHPWhliVh5GGEl65ShGz1bUu/?=
+ =?us-ascii?Q?CsiMebHZVAQBBU8o4SFz49i+EW/SRZ4o3IApj6QwfxSNVvy9y2WMp9vIxfsL?=
+ =?us-ascii?Q?UZBm2BWEe1fKMGFJSmMFIOaL8eGyigwrO4SbRVh23TDLAWt3tm8GqaS/ac5P?=
+ =?us-ascii?Q?mbHA6KtZk9eKqVrjNknBc3Aumhcg96biax3H3jGZHX3/aXN6H+qqWsOhvFnV?=
+ =?us-ascii?Q?XJF/8ISJyUv42ZR1BIg0OrwHsU1RttsNIyyYDGDFMWx+1PBwv6FdfXMETIDC?=
+ =?us-ascii?Q?PNTUnA83Wh67Wna+ZUejxIf3fKzrSHJhdEybjOMQAfbZyLV9Wrp1XIuvHoi5?=
+ =?us-ascii?Q?NECSrozzXK7nCaT+AqkPE8WmlKENxIPZRxDqc2TxBrBTg5ZNe9JYpPkmyhHG?=
+ =?us-ascii?Q?GnBNlue9x8G89cmYTYJHNOgLfXOpzvcgZVZZTleo2CUYcg/vJL5U9DXptkW5?=
+ =?us-ascii?Q?Ikb1Kv0E+clRVQrjiqHcL4u44x5YJJjvoUqijtO7ovDHT0Jv4lcqdfvkHaA4?=
+ =?us-ascii?Q?Sg=3D=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	k1kD4lZdLZDkK0N58bh0BHrrKZhTfq0G+EeME3apjbkvxci+lnSTCHZxs4NcA3y9nnLaINbrGthiDSUqwxTlFPm3BHti1Ptg3Yy4xsAy6+cj1h6fKRHY2Vg03AITxzgQFz3urkQ2CWEEyEszGVHhayF9/q7A/8J94nO/VB+pnXxZG7X1OIoXhw7jkdVN2oQg/bOKGTY1df3lvEfh9/fEXJXo7mGDPgdQH8cEfNe0tjOQDlCZhK5Mnp/4p92lmBVWx0HZ2Mw4Z+1P7vg7uIQR6gy4TEY7R68y7icZTMOUc/OxkYV4g/Vep3NwvxOyWwp7lSI9LJtzSB/GgP7pWVflYmzdR0Tl4oy4I3nuescwjWqfCC3ApltKM5KTcuNU5RhBZbEuqbHUk2D5ZkslNW/OITZyW2sVzIfMPMZO+TYoAE0TGdHSS/hfUmVhgd803WPSrv/LUXmXjtYPAqEVT1deuE/YPHdLYi6hQp14+Fl2nv37lo3eR3TMAcbuTOuQtvUntENXhoIJpVUfuQvHmmd57a8WFOW/Uh6BHj0+SD0tjrerxtuk6/03twEtRWwgmoBmGalzzU6zJCjtKp/1ZcK12U3MZ+zI91jNKNl5Qdv3JlU=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a376ae97-7465-46d7-f87b-08dd5c1ee526
+X-MS-Exchange-CrossTenant-AuthSource: MN2PR10MB4112.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Mar 2025 19:49:52.0712
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: VwgiS8B+aKYmcQLcugUSYD8kW3iMi6PGQaRehbdZ0PzZQBxDLZuTkC+eiVzlfVxNXb6ET5i9iXpnLY3R5QsxvjlYW0HolBMcBgZDrx2xy0c=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR10MB4220
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-05_08,2025-03-05_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=863 malwarescore=0
+ bulkscore=0 adultscore=0 suspectscore=0 spamscore=0 phishscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2502100000 definitions=main-2503050151
+X-Proofpoint-GUID: fLIRxChwzkMqn496qp1cl_LNDC2vJECr
+X-Proofpoint-ORIG-GUID: fLIRxChwzkMqn496qp1cl_LNDC2vJECr
 
-On 05.03.25 20:46, Shakeel Butt wrote:
+On Wed, Mar 05, 2025 at 11:46:31AM -0800, Shakeel Butt wrote:
 > On Wed, Mar 05, 2025 at 08:19:41PM +0100, David Hildenbrand wrote:
->> On 05.03.25 19:56, Matthew Wilcox wrote:
->>> On Wed, Mar 05, 2025 at 10:15:55AM -0800, SeongJae Park wrote:
->>>> For MADV_DONTNEED[_LOCKED] or MADV_FREE madvise requests, tlb flushes
->>>> can happen for each vma of the given address ranges.  Because such tlb
->>>> flushes are for address ranges of same process, doing those in a batch
->>>> is more efficient while still being safe.  Modify madvise() and
->>>> process_madvise() entry level code path to do such batched tlb flushes,
->>>> while the internal unmap logics do only gathering of the tlb entries to
->>>> flush.
->>>
->>> Do real applications actually do madvise requests that span multiple
->>> VMAs?  It just seems weird to me.  Like, each vma comes from a separate
->>> call to mmap [1], so why would it make sense for an application to
->>> call madvise() across a VMA boundary?
->>
->> I had the same question. If this happens in an app, I would assume that a
->> single MADV_DONTNEED call would usually not span multiples VMAs, and if it
->> does, not that many (and that often) that we would really care about it.
-> 
+> > On 05.03.25 19:56, Matthew Wilcox wrote:
+> > > On Wed, Mar 05, 2025 at 10:15:55AM -0800, SeongJae Park wrote:
+> > > > For MADV_DONTNEED[_LOCKED] or MADV_FREE madvise requests, tlb flushes
+> > > > can happen for each vma of the given address ranges.  Because such tlb
+> > > > flushes are for address ranges of same process, doing those in a batch
+> > > > is more efficient while still being safe.  Modify madvise() and
+> > > > process_madvise() entry level code path to do such batched tlb flushes,
+> > > > while the internal unmap logics do only gathering of the tlb entries to
+> > > > flush.
+> > >
+> > > Do real applications actually do madvise requests that span multiple
+> > > VMAs?  It just seems weird to me.  Like, each vma comes from a separate
+> > > call to mmap [1], so why would it make sense for an application to
+> > > call madvise() across a VMA boundary?
+> >
+> > I had the same question. If this happens in an app, I would assume that a
+> > single MADV_DONTNEED call would usually not span multiples VMAs, and if it
+> > does, not that many (and that often) that we would really care about it.
+>
 > IMHO madvise() is just an add-on and the real motivation behind this
 > series is your next point.
-> 
->>
->> OTOH, optimizing tlb flushing when using a vectored MADV_DONTNEED version
->> would make more sense to me. I don't recall if process_madvise() allows for
->> that already, and if it does, is this series primarily tackling optimizing
->> that?
-> 
+>
+> >
+> > OTOH, optimizing tlb flushing when using a vectored MADV_DONTNEED version
+> > would make more sense to me. I don't recall if process_madvise() allows for
+> > that already, and if it does, is this series primarily tackling optimizing
+> > that?
+>
 > Yes process_madvise() allows that and that is what SJ has benchmarked
 > and reported in the cover letter. In addition, we are adding
 > process_madvise() support in jemalloc which will land soon.
+>
 
-Makes a lot of sense to me!
+Feels like me adjusting that to allow for batched usage for guard regions
+has opened up unexpected avenues, which is really cool to see :)
 
--- 
-Cheers,
+I presume the usage is intended for PIDFD_SELF usage right?
 
-David / dhildenb
+At some point we need to look at allowing larger iovec size. This was
+something I was planning to look at at some point, but my workload is
+really overwhelming + that's low priority for me so happy for you guys to
+handle that if you want.
 
+Can discuss at lsf if you guys will be there also :)
