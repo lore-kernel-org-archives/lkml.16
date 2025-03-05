@@ -1,40 +1,40 @@
-Received: from out.smtpout.orange.fr (out-11.smtpout.orange.fr [193.252.22.11])
-	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 001EC567D
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 17:18:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.252.22.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD2621A3160;
+	Wed,  5 Mar 2025 17:18:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741195124; cv=none; b=JUjvFHVOMHKf9MM8FDtm8y/6qiZ2faEOkkut6z82uNk8FVWyEf9FK02aBFsvSs75fvoimkMfla6bjlQdhmSMlEcrSCkxdr4nyEcJPToLyKuGTdcpYgh6gndFF2zhnjAjFMi2M/MlnLboOOwOqXAs9ZHvjUaTxnrMHfS2YHKfcdE=
+	t=1741195127; cv=none; b=n22xYoplFx/5vouB4OynpMkyrj6a7BRWRrm8hISWjnGGOUzHrg6ph1ze/N/fF/1uCeKHV1OiSVuFl1v87Wft1M+KC6aytbrSEGLXsd2trFWzLyEC4P9Iz3GI2df48j899gPLqGgVkrOrWCR4VQeUgNAq1+CesEa7AI7N98Hpsmk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741195124; c=relaxed/simple;
-	bh=S4c+Zjbnc/RFWyEaa7V9IsOeL7RkBBVUWBlY4CuP05M=;
+	s=arc-20240116; t=1741195127; c=relaxed/simple;
+	bh=VLo1VfKrncc62HR3H2AUBFVFZ8nlgV/Ud1MBfjGjdvc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=b+LyLicGwwyaU8C/++vXUiq61QJvH6UwOw4kiHWMN/rNIKTOZDHP4ZQfj19Tbrkj4SLs+Nshl6EynzDijqvZOO6lo4MuI6qeuhsR8zdigjoial24zyUiMw5NqyS2gLyx6gBrLZFDlcN//CHOKUWdaMP3I+Cl0p71icmBYTVJN3E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=N12n9sYK; arc=none smtp.client-ip=193.252.22.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	 In-Reply-To:Content-Type; b=hVMvaD+D3os09f6Be8vSzyxCC88DJYajb07ARVyaxvQ11LtmJmSkJaY5CT74GpBB0SE9NDjAFqOl7X4GiENGCZ3JbfMBmALK0U+bqkVRuFxYLRCMz3qbFJJBJ6ZD4sc0JtgZOlXzFauP0eQn7cWvQSilPxn+TgkfVCGs3btSMLY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=aTA7Zklj; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="N12n9sYK"
-Received: from [172.16.82.72] ([124.33.176.97])
-	by smtp.orange.fr with ESMTPA
-	id psMxtJc0ArlYrpsN1tsZVO; Wed, 05 Mar 2025 18:17:32 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1741195052;
-	bh=mjKe+ryvw34j4ffHLP7uzkbmqMNR5Softa/w5p2heeM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From;
-	b=N12n9sYK2XIy4AYRo4rRhIwr7fT5AxTN7msq3Aa/Puc4i5eGtI5VqdUd571MJ2Rok
-	 Bw1jd+GZgxVoRYcSEIhIiKYzoeTJVuOpHjqTP1J1Ks8OD+CpPMWJ7Kqc354mmcOoAc
-	 Bx/0vzUcS3zi4rwzji5ULu5KS4DIkpsf1q7SwDTLBkHTvCeYwvQbymkdhldUZj6d/o
-	 y+WI5YV1t2qCsElAqFsSKbekM/RhApTwKMPbvIWrZdw+3zKW+DeFl/jN2C/psOxBmd
-	 7XzifnbrXUq+xwoSIbcw0OTn6crTlcUFnGUzDzE5jGPlcpjZuqyuHu+y1XR18noflQ
-	 bsof5v0HxwwqA==
-X-ME-Helo: [172.16.82.72]
-X-ME-Auth: bWFpbGhvbC52aW5jZW50QHdhbmFkb28uZnI=
-X-ME-Date: Wed, 05 Mar 2025 18:17:32 +0100
-X-ME-IP: 124.33.176.97
-Message-ID: <824dc1d1-14f0-433e-aa3f-679527b87077@wanadoo.fr>
-Date: Thu, 6 Mar 2025 02:17:18 +0900
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="aTA7Zklj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1741195122;
+	bh=VLo1VfKrncc62HR3H2AUBFVFZ8nlgV/Ud1MBfjGjdvc=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=aTA7ZkljZ0mv/kvuFSL6iNhvjnFmepeIqml6cipt78WQCD8DVBYT4ayvgJNa8bDxZ
+	 9eyAoRiJFFSLFDUWN/eYHS4iFF6gG1x21l6eC4OVpNq/LxPxUV3Kag5RH38TpsPS/D
+	 Tj9X1QpmSv3XQOhFpvb0ppJ+71rYZJYxdGx3fjlIjSJoyRErnnPsUJr4+UABm9pOsV
+	 zvkQTu++r3FyH99pMIh36+wrVRM2D62KYLydeDBpxWVRFPd9abf/Yrr0CpuM1WqXDZ
+	 9TzubIlTg/b9ZFaTPbSF20cGG5fT6j1ItwO37jslD/R4XNdUZWZvBK9rMQE+SSp8PI
+	 FpzVtRGmCqe2w==
+Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id DB02417E0599;
+	Wed,  5 Mar 2025 18:18:41 +0100 (CET)
+Message-ID: <59d0d382-1d15-46c4-b9e4-b66c32c188d3@collabora.com>
+Date: Wed, 5 Mar 2025 18:18:41 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,131 +42,90 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 4/8] bits: introduce fixed-type BIT
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Yury Norov <yury.norov@gmail.com>,
- Lucas De Marchi <lucas.demarchi@intel.com>,
- Rasmus Villemoes <linux@rasmusvillemoes.dk>,
- Jani Nikula <jani.nikula@linux.intel.com>,
- Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
- Rodrigo Vivi <rodrigo.vivi@intel.com>, Tvrtko Ursulin
- <tursulin@ursulin.net>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>, Andrew Morton <akpm@linux-foundation.org>,
- linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org,
- dri-devel@lists.freedesktop.org, Andi Shyti <andi.shyti@linux.intel.com>,
- David Laight <David.Laight@aculab.com>,
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
- Jani Nikula <jani.nikula@intel.com>
-References: <20250305-fixed-type-genmasks-v4-0-1873dcdf6723@wanadoo.fr>
- <20250305-fixed-type-genmasks-v4-4-1873dcdf6723@wanadoo.fr>
- <Z8hgqOB5Ym-GGykS@smile.fi.intel.com>
- <d7f3150d-0167-44be-90b2-17f8a050687c@wanadoo.fr>
- <Z8hyNXVZxLzhEzNy@smile.fi.intel.com>
+Subject: Re: [PATCH v2 3/3] ASoC: mediatek: mt8188-mt6359: Add accdet headset
+ jack detect support
+To: =?UTF-8?B?TsOtY29sYXMgRi4gUi4gQS4gUHJhZG8=?= <nfraprado@collabora.com>,
+ Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Matthias Brugger
+ <matthias.bgg@gmail.com>, Trevor Wu <trevor.wu@mediatek.com>,
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
+Cc: kernel@collabora.com, linux-sound@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ Zoran Zhan <zoran.zhan@mediatek.com>
+References: <20250304-mt8188-accdet-v2-0-27f496c4aede@collabora.com>
+ <20250304-mt8188-accdet-v2-3-27f496c4aede@collabora.com>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 Content-Language: en-US
-From: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
-Autocrypt: addr=mailhol.vincent@wanadoo.fr; keydata=
- xjMEZluomRYJKwYBBAHaRw8BAQdAf+/PnQvy9LCWNSJLbhc+AOUsR2cNVonvxhDk/KcW7FvN
- LFZpbmNlbnQgTWFpbGhvbCA8bWFpbGhvbC52aW5jZW50QHdhbmFkb28uZnI+wrIEExYKAFoC
- GwMFCQp/CJcFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AWIQTtj3AFdOZ/IOV06OKrX+uI
- bbuZwgUCZx41XhgYaGtwczovL2tleXMub3BlbnBncC5vcmcACgkQq1/riG27mcIYiwEAkgKK
- BJ+ANKwhTAAvL1XeApQ+2NNNEwFWzipVAGvTRigA+wUeyB3UQwZrwb7jsQuBXxhk3lL45HF5
- 8+y4bQCUCqYGzjgEZx4y8xIKKwYBBAGXVQEFAQEHQJrbYZzu0JG5w8gxE6EtQe6LmxKMqP6E
- yR33sA+BR9pLAwEIB8J+BBgWCgAmFiEE7Y9wBXTmfyDldOjiq1/riG27mcIFAmceMvMCGwwF
- CQPCZwAACgkQq1/riG27mcJU7QEA+LmpFhfQ1aij/L8VzsZwr/S44HCzcz5+jkxnVVQ5LZ4B
- ANOCpYEY+CYrld5XZvM8h2EntNnzxHHuhjfDOQ3MAkEK
-In-Reply-To: <Z8hyNXVZxLzhEzNy@smile.fi.intel.com>
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <20250304-mt8188-accdet-v2-3-27f496c4aede@collabora.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-On 06/03/2025 at 00:48, Andy Shevchenko wrote:
-> On Wed, Mar 05, 2025 at 11:48:10PM +0900, Vincent Mailhol wrote:
->> On 05/03/2025 at 23:33, Andy Shevchenko wrote:
->>> On Wed, Mar 05, 2025 at 10:00:16PM +0900, Vincent Mailhol via B4 Relay wrote:
+Il 04/03/25 22:35, Nícolas F. R. A. Prado ha scritto:
+> Enable headset jack detection for MT8188 platforms that use the MT6359
+> ACCDET block for it, indicated by the mediatek,accdet property in DT.
+> For those platforms, register a jack and initialize the ACCDET block to
+> report jack events through it.
 > 
-> ...
+> Co-developed-by: Zoran Zhan <zoran.zhan@mediatek.com>
+> Signed-off-by: Zoran Zhan <zoran.zhan@mediatek.com>
+> Signed-off-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
+
+We chatted about the issue that I raised before with mt8188_headset_jack_pins[],
+it's fine to have it for now, as whatever we do with that would still duplicate
+things and there's no way around that for now.
+
+The sound card driver should get a bigger cleanup anyway, and it's not really
+possible even because otherwise we'd break UCM2 confs, so it is what it is.
+
+> ---
+>   sound/soc/mediatek/Kconfig                |  1 +
+>   sound/soc/mediatek/mt8188/mt8188-mt6359.c | 43 +++++++++++++++++++++++++++++++
+>   2 files changed, 44 insertions(+)
 > 
->>>> +#define BIT_U8(b) (BIT_INPUT_CHECK(u8, b) + (unsigned int)BIT(b))
->>>> +#define BIT_U16(b) (BIT_INPUT_CHECK(u16, b) + (unsigned int)BIT(b))
->>>
->>> Why not u8 and u16? This inconsistency needs to be well justified.
->>
->> Because of the C integer promotion rules, if casted to u8 or u16, the
->> expression will immediately become a signed integer as soon as it is get
->> used. For example, if casted to u8
->>
->>   BIT_U8(0) + BIT_U8(1)
->>
->> would be a signed integer. And that may surprise people.
-> 
-> Yes, but wouldn't be better to put it more explicitly like
-> 
-> #define BIT_U8(b)	(BIT_INPUT_CHECK(u8, b) + (u8)BIT(b) + 0 + UL(0)) // + ULL(0) ?
+> diff --git a/sound/soc/mediatek/Kconfig b/sound/soc/mediatek/Kconfig
+> index 3033e2d3fe16840631a465dd967da77f7a6ff43c..64155ea7965a1cc50593fef442ce90761836f328 100644
+> --- a/sound/soc/mediatek/Kconfig
+> +++ b/sound/soc/mediatek/Kconfig
+> @@ -237,6 +237,7 @@ config SND_SOC_MT8188_MT6359
+>   	select SND_SOC_NAU8825
+>   	select SND_SOC_RT5682S
+>   	select SND_SOC_ES8326
+> +	select SND_SOC_MT6359_ACCDET
 
-OK, the final result would be unsigned. But, I do not follow how this is
-more explicit.
+The only remaining complaint that I have is that this driver shouldn't really
+add a select SND_SOC_MT6359_ACCDET.
 
-Also, why doing:
+Instead, the mt6359-accdet.h header should be modified to stub-ify the accdet
+driver functions in the case in which it's not built in, or not available as a
+module anyway.
 
-  (u8)BIT(b) + 0 + UL(0)
+This is because the accdet driver is not *mandatory* for this driver to work,
+and being it an optional peripheral, adding a dependency doesn't really make
+a lot of sense as it'd only force in bloat when not wanted.
 
-and not just:
+So...
 
-  (u8)BIT(b) + UL(0)
+Get to that mt6359-accdet.h header and:
 
-?
+#if IS_ENABLED(CONFIG_SND_SOC_MT6359_ACCDET)
 
-What is that intermediary '+ 0' for?
+function signatures
 
-I am sorry, but I am having a hard time understanding how casting to u8
-and then doing an addition with an unsigned long is more explicit than
-directly doing a cast to the desired type.
+#else
 
-As I mentioned in my answer to Yuri, I have a slight preference for the
-unsigned int cast, but I am OK to go back to the u8/u16 cast as it was
-in v3.
+static .... { return -EINVAL; (or whatever else) }
 
-However, I really do not see how that '+ 0 + UL(0)' would be an improvement.
+#endif
 
-> Also, BIT_Uxx() gives different type at the end, shouldn't they all be promoted
-> to unsigned long long at the end? Probably it won't work in real assembly.
-> Can you add test cases which are written in assembly? (Yes, I understand that it will
-> be architecture dependent, but still.)
+That said, for the future v3 of this commit, after removing the select
+SND_SOC_MT6359_ACCDET (and granted that the proposed header fix is in place),
+you can add my
 
-No. I purposely guarded the definition of the BIT_Uxx() by a
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 
-  #if !defined(__ASSEMBLY__)
+Cheers,
+Angelo
 
-so that these are never visible in assembly. I actually put a comment to
-explain why the GENMASK_U*() are not available in assembly. I can copy
-paste the same comment to explain why why BIT_U*() are not made
-available either:
-
-  /*
-   * Missing asm support
-   *
-   * BIT_U*() depends on BITS_PER_TYPE() which would not work in the asm
-   * code as BITS_PER_TYPE() relies on sizeof(), something not available
-   * in asm.  Nethertheless, the concept of fixed width integers is a C
-   * thing which does not apply to assembly code.
-   */
-
-I really believe that it would be a mistake to make the GENMASK_U*() or
-the BIT_U*() available to assembly.
-
->> David also pointed this in the v3:
->>
->> https://lore.kernel.org/intel-xe/d42dc197a15649e69d459362849a37f2@AcuMS.aculab.com/
->>
->> and I agree with his comment.
->>
->> I explained this in the changelog below the --- cutter, but it is
->> probably better to make the explanation more visible. I will add a
->> comment in the code to explain this.
->>
->>>> +#define BIT_U32(b) (BIT_INPUT_CHECK(u32, b) + (u32)BIT(b))
->>>> +#define BIT_U64(b) (BIT_INPUT_CHECK(u64, b) + (u64)BIT_ULL(b))
-> 
-
-Yours sincerely,
-Vincent Mailhol
 
