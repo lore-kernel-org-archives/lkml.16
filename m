@@ -1,78 +1,112 @@
-Received: from ixit.cz (ip-89-177-23-149.bb.vodafone.cz [89.177.23.149])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 482A91EF0BC
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 08:24:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.177.23.149
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DDB31EF0BC;
+	Wed,  5 Mar 2025 08:25:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741163089; cv=none; b=PD2aklHc1LHq87uDYMF7MrkgUP79U7HKrwsxPqu8JkGn6hCPnBiKHuO1GaRItxJYjDlYQs/YK+svfJvh6KeYIFxrVSgCh8SYrLxuFNZzS2MJ890EMC5w69BDkjg+o5uBwWezyAQwX4QaEmHnpZoQhwx3lkRPlFSR9+o86tezW/Y=
+	t=1741163117; cv=none; b=Du0cGG39zs7I4brl/YyyuRKpCroOjuKJVZV6rgtcO7blFQgcScNRnUmv2EOheOx2qSc5nCvKvlCDCrsZ3OjO/gH77UVucx9Eo7dSGci7Ba0uDBUUHVJdOYl3zlI8ixMyuVB+ClDj9muvZRvtE3fg2zdU5P7zBuiMQLizySiH+3o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741163089; c=relaxed/simple;
-	bh=SUlXVlYIW5qTTMDOoeZryT71CD0diYOGFhDZkXZgYEw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=SYvQ7MCjyzJzjZuptlQ9f5DM3Biv4Hjb5qIDaJ7CDQ8zMePiTRfWxKfyzn4jBCMyAQfDi5gGSVUcHlczyuYcuIwO2pVryUtXCIbwU8LvSCsRpnL2/rmAV1AT06C9Jr7H3qT4olc3wCM1bmy8SOwPRZEngRYPBhymXSHMiXifW18=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ixit.cz; spf=pass smtp.mailfrom=ixit.cz; dkim=pass (1024-bit key) header.d=ixit.cz header.i=@ixit.cz header.b=OxY4WVQB; arc=none smtp.client-ip=89.177.23.149
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ixit.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ixit.cz
+	s=arc-20240116; t=1741163117; c=relaxed/simple;
+	bh=xjCV87QS9rWKgqppFDXKt0vI9eyLO6QuERActP80ONM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=T+E/kRQmZIxUdSkgXn8dSzDYuPgtSRdkF3ttSXSJvDhatEFLkx0gBBkTKqWi0NhkBltby+sJ3sZx7Yy6hSDJFmWd4ND4Moi0MlzzAWxLzS8gBhgkKvxNTttdsCAvGgYNHiOynUK2u9UjsHqvQhyDA02sYUT6pZPlW7/NtnsZdMs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HLBoavu4; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ixit.cz header.i=@ixit.cz header.b="OxY4WVQB"
-Received: from localhost.localdomain (office.icewarp.com [82.113.48.146])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by ixit.cz (Postfix) with ESMTPSA id 0412E1665C2;
-	Wed,  5 Mar 2025 09:24:38 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ixit.cz; s=dkim;
-	t=1741163079;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=vLo8gFl/MA2O78aDwF72s8ar+yjNlqf/DNiF5u0a+jg=;
-	b=OxY4WVQBz9BhBOOd/sCRYTTvcJqkLFQCiwRnwWLqg7mfSzC1VbGG5K3Zg9bwu9uBhGmDPx
-	REBOHMESZllrlU/NfsbCFDotwLEC0Fs0RtAWApboRZVNXMD3TiP9g1g9AsVQ3M2Ezjf5pF
-	ntoML2azYpOTFo+hrkwgXo/VRWbJyrE=
-From: David Heidelberg <david@ixit.cz>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	David Heidelberg <david@ixit.cz>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	=?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>,
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: kernel test robot <lkp@intel.com>,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HLBoavu4"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-223959039f4so74390495ad.3;
+        Wed, 05 Mar 2025 00:25:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741163114; x=1741767914; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=OAy0yRAMT7Smqg+BRU5KQgKll8wiYK//bScug3inKX8=;
+        b=HLBoavu4sl8NWzMf+ZVvTaSfzND2IIqwVvNqZYS5+GRhwEsY2UgnWWyHjfrAEG16wY
+         BsfbIpyTda6MBoOOyi8uF8kJSAq04idBaZM+RRlmWfbzBhvYEqh1/IXDDHx/rRl+cwlt
+         3crdcuHTkTHQ7gAv0M5ZDo1//gdQxu7jeOsRAAl8Q2uHXJ2gkhMxxr4IRICq/Zh7Dkgj
+         rbqindMSOfMOviheTYxftKV5Ux+zWVm9Ty8VF1YMEkvIDECYKpda70ozyMXymZs66Zcp
+         Oa4PFjZhG1YhSeeLEX3QraD3JhzZDnMySwfJhEG3reflH3cnEgdznhoESR0UmMyXttBG
+         Fqpg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741163114; x=1741767914;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OAy0yRAMT7Smqg+BRU5KQgKll8wiYK//bScug3inKX8=;
+        b=FzRwD9SxQW47HZv2OHA9fTPNeP78psWM+tM/zquUGPIso4W6jzRmW6JNsvDJWoSaHz
+         osXp2D5GPtmDDtIRQzsjVSZI9FxS4kdLiDyeCl/XuJA2i/UMWBDOMkh1vdGNOZH6+aj/
+         +HJQ4fNSj457OZDw0Ot7pyKC/Is+4lpyAjshvl6E1LrFY1KIcwfQK46TlELhcBOVFGud
+         36Byn9Hoi7HiUptfJX2SsIDLczAVYTZXLUPl6AGaqYmeMWWlZVv8xW7/yY1pGDDNEaIH
+         gurG4ScrphYME5VSrRTXXeHJn2blRn14FZ482zNzLXpAhE0rfWmIcYJQqhpoqyjJKShs
+         wz6Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUIC7e9g0f9IDPA/vU6QDAHtZlJNaZ5VT/jLcZJtL3uXzb/6h8350TdKQW40mi7A8+CiRegsMQpS5UWaIlEScHe@vger.kernel.org, AJvYcCWmOG07egnlLPe3D290aQruJv3BQsAJHFN5+7eNs5hghUs/tUQRqFw7wAfiAfCYn+FzLrFaIbEO@vger.kernel.org, AJvYcCXvcE6D6v6L0LqNooDvgp255LB8JGbwYFPigra1LN/ILlveM5I2dKZTOL1DHKtrYhL762N8QhRuA8Jl3is=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwRJSL2UD9fkBKy+bfHaLxwVt5ySt12wDeVxYmE88whHfpwqrE+
+	l3p76+O7X7KFJa4Cd3EQMAfhO5pxEOqbEYGx7JP2ktkGqPWg/Xn8
+X-Gm-Gg: ASbGnctvnuiOxBxqTIAXwMEEVrfqhKyXbFjw8RqOTFI4e69LwHKuvcdf3SYZqybeEeN
+	8LcaFdmfOYaQ+Y5KyxwdvbQy+cDfAu37rYnzu0gqxDiDE2GMQYhAXUtAt3tNyx/wu7l2sjIe9NC
+	a4KnZAcl4xGysInyZgjjZ1J5LruGBGQMP9X59HlnnxuHY3tiI70ZthiSu8LTMO6Czpmzzo71oOf
+	WK42gyNUKDCpSwEz7+Q1uAn+xa3jjH2bXI9L0Kj7wK8K/PKGxBHrRhPDQ6reVdKedsMn6uWt6vL
+	olpRD1uSnfRDfUeDLxHPbdaVh089ykWdrRFUjDECLbPvoJuIMQ==
+X-Google-Smtp-Source: AGHT+IEut6J9FI4nbFHnxEVhs0CR48OzGreX689CQaBRcgMg7yHEPcx5k0ExcEptJCVyddHSOWAMVA==
+X-Received: by 2002:a17:902:d482:b0:221:7e04:d791 with SMTP id d9443c01a7336-223f1c9b5d4mr29996435ad.31.1741163114516;
+        Wed, 05 Mar 2025 00:25:14 -0800 (PST)
+Received: from fedora ([43.228.180.230])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-223501d5247sm107558115ad.26.2025.03.05.00.25.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Mar 2025 00:25:13 -0800 (PST)
+Date: Wed, 5 Mar 2025 08:25:07 +0000
+From: Hangbin Liu <liuhangbin@gmail.com>
+To: "David S. Miller" <davem@davemloft.net>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+Cc: Jay Vosburgh <jv@jvosburgh.net>, Andrew Lunn <andrew+netdev@lunn.ch>,
+	Eric Dumazet <edumazet@google.com>,
+	Nikolay Aleksandrov <razor@blackwall.org>,
+	Simon Horman <horms@kernel.org>, Jianbo Liu <jianbol@nvidia.com>,
+	Boris Pismenny <borisp@nvidia.com>,
+	Tariq Toukan <tariqt@nvidia.com>, Shuah Khan <shuah@kernel.org>,
+	netdev@vger.kernel.org, linux-kselftest@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH] media: MAINTAINERS: correct docs filepath ov7670 after rename
-Date: Wed,  5 Mar 2025 09:24:27 +0100
-Message-ID: <20250305082432.54573-1-david@ixit.cz>
-X-Mailer: git-send-email 2.47.2
+Subject: Re: [PATCHv3 net 0/2] bonding: fix incorrect mac address setting
+Message-ID: <Z8gKYzpJw_DoYEMx@fedora>
+References: <20250207092920.543458-1-liuhangbin@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250207092920.543458-1-liuhangbin@gmail.com>
 
-File was renamed.
+Hi David,
 
-Fixes: bcf999e34bc7 ("media: dt-bindings: media: i2c: align filenames format with standard")
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202503050359.6DYrXi6o-lkp@intel.com/
-Signed-off-by: David Heidelberg <david@ixit.cz>
----
- MAINTAINERS | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+This patch set was marked as "Changes Requested" due to my initial reply.
+The series has now been approved by Jay and Nikolay.
 
-diff --git ./MAINTAINERS ./MAINTAINERS
-index 06152b9425b5a..71f1ba8c87fd3 100644
---- ./MAINTAINERS
-+++ ./MAINTAINERS
-@@ -17506,7 +17506,7 @@ OMNIVISION OV7670 SENSOR DRIVER
- L:	linux-media@vger.kernel.org
- S:	Orphan
- T:	git git://linuxtv.org/media.git
--F:	Documentation/devicetree/bindings/media/i2c/ov7670.txt
-+F:	Documentation/devicetree/bindings/media/i2c/ovti,ov7670.txt
- F:	drivers/media/i2c/ov7670.c
- 
- OMNIVISION OV772x SENSOR DRIVER
--- 
-2.47.2
+Could you help process it, or should I re-post it?
 
+Thanks
+Hangbin
+
+On Fri, Feb 07, 2025 at 09:29:18AM +0000, Hangbin Liu wrote:
+> The mac address on backup slave should be convert from Solicited-Node
+> Multicast address, not from bonding unicast target address.
+> 
+> v3: also fix the mac setting for slave_set_ns_maddr. (Jay)
+>     Add function description for slave_set_ns_maddr/slave_set_ns_maddrs (Jay)
+> v2: fix patch 01's subject
+> 
+> Hangbin Liu (2):
+>   bonding: fix incorrect MAC address setting to receive NS messages
+>   selftests: bonding: fix incorrect mac address
+> 
+>  drivers/net/bonding/bond_options.c            | 55 ++++++++++++++++---
+>  .../drivers/net/bonding/bond_options.sh       |  4 +-
+>  2 files changed, 49 insertions(+), 10 deletions(-)
+> 
+> -- 
+> 2.46.0
+> 
