@@ -1,27 +1,27 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C82825486F;
-	Wed,  5 Mar 2025 16:39:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D00B24F5A6;
+	Wed,  5 Mar 2025 16:39:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741192755; cv=none; b=R1OBmHvisQoEAOUyIQ7pS49W/qC0XZQAH17mvEf+ZP4cpiU1b241PdipNiKDDHwNMt1DY0qFYJaZ6/tr9IyGvKWB2JOb8lgvQr9Ivmmf4bRHbQkPX49KbEM+sW2OVOYwFuqvYZubigzypgjU4eHWXXFbmkulpWu3jfPbuOqaG7I=
+	t=1741192759; cv=none; b=XHiz0TqYVu/FJIM4FEEyMoJmaM4wHbLlQgPqPuzjoA4s5nJC73TMzuKLDv0QjBILc2xZYqRj8oNEFE79kwOIMYd9PlaQRzc25i6TK4Quo+gEJzfV3rVu8qfj31pXzz5NB0NxZ8i9j+XB0SuBLWbXz3OPRP/2nriWrHu86pwXcSo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741192755; c=relaxed/simple;
-	bh=MfSTY+8Javma4iMKIMRIP5AOm3S32ksYO4b7JbopmcE=;
+	s=arc-20240116; t=1741192759; c=relaxed/simple;
+	bh=tFkBXBO/atiCQgL+I5PaOZGXAVe1jBN5O3xNDo6yR1U=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ZKEcN2XFyYasAm0sjVH/mqOqhPVUuXz0tNCAJtKNwFn0Q3N6gfHLbaJQ30zybx7XnTP6VwB3fy+pzkUKZFAgp0JGUeyTuIp1awk3bME0zsmoue6k48EblEUo8VNeDH0DpWBxctCBMqAORP5+lDNZZlQPeJ+Q65mPqd0vWXZi8IY=
+	 In-Reply-To:To:Cc; b=ByJPRs8PGFWtWq6eXh0uK571ANsnlRq40UHOho/5p1tTJ5kHv1IkYrqDH5JH/BNl4ByH3LL1XFJ0L5hOPFOge5bJlLh4AFA/NDbz3sVhSbpB0Oe73l3OT8y9Gpe+1EqgVOthDGJV47JYggtw1XHqtLeyEN4rSoz0MevuZFr+auc=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A1AC51007;
-	Wed,  5 Mar 2025 08:39:26 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2D00E1007;
+	Wed,  5 Mar 2025 08:39:30 -0800 (PST)
 Received: from e133711.arm.com (e133711.arm.com [10.1.196.55])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E6B5E3F5A1;
-	Wed,  5 Mar 2025 08:39:11 -0800 (PST)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 95BC23F5A1;
+	Wed,  5 Mar 2025 08:39:15 -0800 (PST)
 From: Sudeep Holla <sudeep.holla@arm.com>
-Date: Wed, 05 Mar 2025 16:38:14 +0000
-Subject: [PATCH v2 10/13] i2c: xgene-slimpro: Simplify PCC shared memory
- region handling
+Date: Wed, 05 Mar 2025 16:38:16 +0000
+Subject: [PATCH v2 12/13] ACPI: PCC: Simplify PCC shared memory region
+ handling
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -30,36 +30,36 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250305-pcc_fixes_updates-v2-10-1b1822bc8746@arm.com>
+Message-Id: <20250305-pcc_fixes_updates-v2-12-1b1822bc8746@arm.com>
 References: <20250305-pcc_fixes_updates-v2-0-1b1822bc8746@arm.com>
 In-Reply-To: <20250305-pcc_fixes_updates-v2-0-1b1822bc8746@arm.com>
 To: linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc: Sudeep Holla <sudeep.holla@arm.com>, 
  Jassi Brar <jassisinghbrar@gmail.com>, Huisong Li <lihuisong@huawei.com>, 
  Adam Young <admiyo@os.amperecomputing.com>, 
- Robbie King <robbiek@xsightlabs.com>, Andi Shyti <andi.shyti@kernel.org>, 
- linux-i2c@vger.kernel.org
+ Robbie King <robbiek@xsightlabs.com>, 
+ "Rafael J. Wysocki" <rafael@kernel.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3735; i=sudeep.holla@arm.com;
- h=from:subject:message-id; bh=MfSTY+8Javma4iMKIMRIP5AOm3S32ksYO4b7JbopmcE=;
- b=owEBbQKS/ZANAwAIAQBBurwxfuKYAcsmYgBnyH4fuQ/p52TMxH4kREmbxc+kI+v0j0xs9/n7J
- 5SYxHwMSY+JAjMEAAEIAB0WIQS6ceUSBvMeskPdk+EAQbq8MX7imAUCZ8h+HwAKCRAAQbq8MX7i
- mEP2D/9cWzppq3ezDm0HK2NUFbba9LDVfpaeSSrXX3TJS9Ap4RFjYJp5LzBRGDHPRRP/lemSb7h
- szcfRa62vnzQ5GIewqbwjQ56SF7FevbCdRwlM72Uzji85XjFSaO/SxKUuhyL9ykO2CV1MZ4Mj7T
- WEkdR/uTqugGKZYc3HU6zQqrkLp+R5GTleH1uUZ/9wXa0XKzYUx1fi/IOXet6oKhGZFtdpjb51Q
- iLbNfMQHQJRr6P4ylIxqfoga2hkeAUN1+8qcznMYo5DYqJiBLKifBhXXegx6r9b9y/lmzB5geL7
- slxVB80clkZD0m8sQ4PMXOmpHTE4bdy+Th0apQw54sIt2IZpXQo9qX8BJ9mLrMTZnAyDbhyw9FD
- TFHj9mIGIIRzVw0fkY8TGJfYDE0Pb0m1N/TBJyLeW7wXjKZp12YJ3aGl7KC063+NQ5eQXIrtevs
- l03USS6us51zDUA+Q+xwQ8mmofRtKFvs5iAWVLuhKiLr9utT2w0W1RAgDw4+dWCItt7+kHmpTX2
- oCRiV9NTMUqT+6BZ/n7ln2ajXNdq3mj1lvjt34OJNR6G5TplSC+P6IZI9WyqW8K56x/Uf9evuND
- 8yv+T4JH9/pRBnjsGeft+4iq5dT4xNiXv+vpxaQlTf+BmKMkyc0b1pnGc+zuP1YBlR8ZP+na09s
- zXz3oGWOahB9T7w==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2287; i=sudeep.holla@arm.com;
+ h=from:subject:message-id; bh=tFkBXBO/atiCQgL+I5PaOZGXAVe1jBN5O3xNDo6yR1U=;
+ b=owEBbQKS/ZANAwAIAQBBurwxfuKYAcsmYgBnyH4fBs6KUn9ck2ci3zzCHWjTUV5jpju76ILak
+ Mj7PGqwh6OJAjMEAAEIAB0WIQS6ceUSBvMeskPdk+EAQbq8MX7imAUCZ8h+HwAKCRAAQbq8MX7i
+ mGH2EACASilhQ00UNq1paOOrLBKFTnZALt72kTxJlFX/+vRI4ihGJsufAbyKpAB3bdUMfhlhUhq
+ rOwTvRomIYPPAU+ysqHN2KeH5EZpKkr2k2Bk2u1iz7Ic8hhY7cn2B+WzHXkvEpeAZiEy2MPsmJr
+ 1yp58cNVXxldEYc7MHbgBY1ztBDkkrdQs1mwCYD0JTYMxSvWgp11Om6CcdeOedqpBfdVBDxP1yJ
+ uTrB6spoy1CXDvwiE8nTWeDkegyX2ifHzDsM10F+Eg2GDvBfvjBTb5DMJgfir0vXKoLaI/bhQWA
+ YiQBAYOlnVepdmnYSxPG7Z4Z1FyNvei0mRxfruf6EScKbJzDet3NjuVz7GkxtYxYhqpgwAXjgOA
+ 4OjISuYixUN/8ikNKw7UP9EsETVUIAFHAEcoiz4tQ1PynusQo1QaHyAHNtQXZidc+YRSSi7dJZJ
+ s8RLG3eHfAF5NS54xvpZvwCLJt9mgCluoRCDuEqzIsFacfAj3n4pse13vfWdcl3ZtPxjjqDiFzB
+ Y9NJ5oOZ6boSgOV9qAdtAY7rZeFqJ8Dbq4PfJzkOH34qhg4GAsyPzDpxxWpmXN2U/JhE496DQcr
+ YgBxMmo40FRtQ3QB2E71v0BDnlc0Hajo1LDdXSecO1HNmV9spgnlaCODFHSAeqmN8qt+HXxKi5O
+ F+nTyEf6UDZZUYg==
 X-Developer-Key: i=sudeep.holla@arm.com; a=openpgp;
  fpr=7360A21742ADF5A11767C1C139CFD4755FE2D5B4
 
 The PCC driver now handles mapping and unmapping of shared memory
 areas as part of pcc_mbox_{request,free}_channel(). Without these before,
-this xgene-slimpro I2C driver did handling of those mappings like several
+this ACPI PCC opregion driver did handling of those mappings like several
 other PCC mailbox client drivers.
 
 There were redundant operations, leading to unnecessary code. Maintaining
@@ -69,97 +69,57 @@ of shmem.
 Just use the mapped shmem and remove all redundant operations from this
 driver.
 
-Cc: Andi Shyti <andi.shyti@kernel.org>
-Cc: linux-i2c@vger.kernel.org
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>
 Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
 ---
- drivers/i2c/busses/i2c-xgene-slimpro.c | 39 ++++------------------------------
- 1 file changed, 4 insertions(+), 35 deletions(-)
+ drivers/acpi/acpi_pcc.c | 13 ++-----------
+ 1 file changed, 2 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/i2c/busses/i2c-xgene-slimpro.c b/drivers/i2c/busses/i2c-xgene-slimpro.c
-index 663fe5604dd64b80e57f906e1f7430dcf6d5e95b..a0880f4a056d2b8abbac9f58416215a7fc9b130e 100644
---- a/drivers/i2c/busses/i2c-xgene-slimpro.c
-+++ b/drivers/i2c/busses/i2c-xgene-slimpro.c
-@@ -101,8 +101,6 @@ struct slimpro_i2c_dev {
- 	struct completion rd_complete;
- 	u8 dma_buffer[I2C_SMBUS_BLOCK_MAX + 1]; /* dma_buffer[0] is used for length */
- 	u32 *resp_msg;
--	phys_addr_t comm_base_addr;
--	void *pcc_comm_addr;
- };
+diff --git a/drivers/acpi/acpi_pcc.c b/drivers/acpi/acpi_pcc.c
+index 07a034a53acac1e8307265bcc5572054d34d971f..97064e943768ad9f1704effa13dddbc0876a9452 100644
+--- a/drivers/acpi/acpi_pcc.c
++++ b/drivers/acpi/acpi_pcc.c
+@@ -31,7 +31,6 @@
  
- #define to_slimpro_i2c_dev(cl)	\
-@@ -148,7 +146,8 @@ static void slimpro_i2c_rx_cb(struct mbox_client *cl, void *mssg)
- static void slimpro_i2c_pcc_rx_cb(struct mbox_client *cl, void *msg)
- {
- 	struct slimpro_i2c_dev *ctx = to_slimpro_i2c_dev(cl);
--	struct acpi_pcct_shared_memory *generic_comm_base = ctx->pcc_comm_addr;
-+	struct acpi_pcct_shared_memory __iomem *generic_comm_base =
-+							ctx->pcc_chan->shmem;
- 
- 	/* Check if platform sends interrupt */
- 	if (!xgene_word_tst_and_clr(&generic_comm_base->status,
-@@ -169,7 +168,8 @@ static void slimpro_i2c_pcc_rx_cb(struct mbox_client *cl, void *msg)
- 
- static void slimpro_i2c_pcc_tx_prepare(struct slimpro_i2c_dev *ctx, u32 *msg)
- {
--	struct acpi_pcct_shared_memory *generic_comm_base = ctx->pcc_comm_addr;
-+	struct acpi_pcct_shared_memory __iomem *generic_comm_base =
-+							ctx->pcc_chan->shmem;
- 	u32 *ptr = (void *)(generic_comm_base + 1);
- 	u16 status;
- 	int i;
-@@ -464,15 +464,12 @@ static int xgene_slimpro_i2c_probe(struct platform_device *pdev)
- 	} else {
- 		struct pcc_mbox_chan *pcc_chan;
- 		const struct acpi_device_id *acpi_id;
--		int version = XGENE_SLIMPRO_I2C_V1;
- 
- 		acpi_id = acpi_match_device(pdev->dev.driver->acpi_match_table,
- 					    &pdev->dev);
- 		if (!acpi_id)
- 			return -EINVAL;
- 
--		version = (int)acpi_id->driver_data;
--
- 		if (device_property_read_u32(&pdev->dev, "pcc-channel",
- 					     &ctx->mbox_idx))
- 			ctx->mbox_idx = MAILBOX_I2C_INDEX;
-@@ -494,34 +491,6 @@ static int xgene_slimpro_i2c_probe(struct platform_device *pdev)
- 			goto mbox_err;
- 		}
- 
--		/*
--		 * This is the shared communication region
--		 * for the OS and Platform to communicate over.
--		 */
--		ctx->comm_base_addr = pcc_chan->shmem_base_addr;
--		if (ctx->comm_base_addr) {
--			if (version == XGENE_SLIMPRO_I2C_V2)
--				ctx->pcc_comm_addr = memremap(
--							ctx->comm_base_addr,
--							pcc_chan->shmem_size,
--							MEMREMAP_WT);
--			else
--				ctx->pcc_comm_addr = memremap(
--							ctx->comm_base_addr,
--							pcc_chan->shmem_size,
--							MEMREMAP_WB);
--		} else {
--			dev_err(&pdev->dev, "Failed to get PCC comm region\n");
--			rc = -ENOENT;
--			goto mbox_err;
--		}
--
--		if (!ctx->pcc_comm_addr) {
--			dev_err(&pdev->dev,
--				"Failed to ioremap PCC comm region\n");
--			rc = -ENOMEM;
--			goto mbox_err;
--		}
+ struct pcc_data {
+ 	struct pcc_mbox_chan *pcc_chan;
+-	void __iomem *pcc_comm_addr;
+ 	struct completion done;
+ 	struct mbox_client cl;
+ 	struct acpi_pcc_info ctx;
+@@ -81,14 +80,6 @@ acpi_pcc_address_space_setup(acpi_handle region_handle, u32 function,
+ 		ret = AE_SUPPORT;
+ 		goto err_free_channel;
  	}
- 	rc = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(64));
- 	if (rc)
+-	data->pcc_comm_addr = acpi_os_ioremap(pcc_chan->shmem_base_addr,
+-					      pcc_chan->shmem_size);
+-	if (!data->pcc_comm_addr) {
+-		pr_err("Failed to ioremap PCC comm region mem for %d\n",
+-		       ctx->subspace_id);
+-		ret = AE_NO_MEMORY;
+-		goto err_free_channel;
+-	}
+ 
+ 	*region_context = data;
+ 	return AE_OK;
+@@ -113,7 +104,7 @@ acpi_pcc_address_space_handler(u32 function, acpi_physical_address addr,
+ 	reinit_completion(&data->done);
+ 
+ 	/* Write to Shared Memory */
+-	memcpy_toio(data->pcc_comm_addr, (void *)value, data->ctx.length);
++	memcpy_toio(data->pcc_chan->shmem, (void *)value, data->ctx.length);
+ 
+ 	ret = mbox_send_message(data->pcc_chan->mchan, NULL);
+ 	if (ret < 0)
+@@ -134,7 +125,7 @@ acpi_pcc_address_space_handler(u32 function, acpi_physical_address addr,
+ 
+ 	mbox_chan_txdone(data->pcc_chan->mchan, ret);
+ 
+-	memcpy_fromio(value, data->pcc_comm_addr, data->ctx.length);
++	memcpy_fromio(value, data->pcc_chan->shmem, data->ctx.length);
+ 
+ 	return AE_OK;
+ }
 
 -- 
 2.34.1
