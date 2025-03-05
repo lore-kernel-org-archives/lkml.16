@@ -1,113 +1,86 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32A8B1F4720
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 08:17:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 328091EEA4E
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 08:18:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741162664; cv=none; b=pmdroII/ypDw3UC+xiVgeHj++1CelJ5kUAnIc2kj/OZfkVW/yZHkkNd+KbjOteMPtHNYPhjoeXraVzF6Nxb2gB4OUNDpuVHIMwjT/Wmf6oy1KYuEvOLcNsmL9CxAIjDLZWVfSrw1+OqWNzIpg1RafMQur/ZUTmFpQo7uGRACmwU=
+	t=1741162700; cv=none; b=gPNV1E3RiVVwbqY9bcscMrN+TItufn9qpheULu4n8RkjRpIlznutiYOjOjdBmB3fmIgEhEdiz6CLfddr5DVMYm5QTrP6FUo+DOf3cPATpwArRltFpcf0BAoH+M+iXkScG2yuDLPfsdGcZ0gqmbZleX8XpgJJkAzu1N38q2unEbY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741162664; c=relaxed/simple;
-	bh=vcGEIoc9wmDs79ktQAByYkrcB1clkMgF+0QKb1CD3bE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dq+KYnIM3Gfbb3qiJwza8zeOoTi1jY4iN6zodICbhil0cNF+7eopHU6j6pZij4KDuC4OvXSVepOavjd64iziMXm1ZHe9pk9EpyfiZIT34F5jc0ZdtFNcGiiwCZ8jgoCm06q3yn5HVdZzoILWCb3CXSSBJQh5oAqHxB9fd5MA0gA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=lEOTnVJJ; arc=none smtp.client-ip=209.85.218.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1741162700; c=relaxed/simple;
+	bh=prW4yK9dU5e9fujxy/Vv+3OWUNr+IDhYq+KjKGev3zg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hgUY6VW7gicJfMWxhnPEMQG+iNml/bKrzwUHsqN67Zhn4hL3dpt4uzjgwpkG/balQGJXR0Vtu2Lr48XWANQQiYKEl/2phnfwCAaSYQfoeaf5pM+sRuSK4tUfGgGhGzOhz79AifLFbIlib9XK6bv8nDZHicoRUxP+tsEdwwc4QGI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=EMcjlekW; arc=none smtp.client-ip=209.85.216.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lEOTnVJJ"
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-abf628d653eso560741166b.0
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Mar 2025 00:17:41 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="EMcjlekW"
+Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-2feae794508so9459619a91.0
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Mar 2025 00:18:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741162660; x=1741767460; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vcGEIoc9wmDs79ktQAByYkrcB1clkMgF+0QKb1CD3bE=;
-        b=lEOTnVJJ4JT7hVtbcV/cOW6oiBDHVoltJeerSZhHmZ38u9u432NciyIZ0EJkWpmkQA
-         HFi3WHkiHUZ3nBpMlMRgvPrHTq9TprRUIiNYWOqPBUUqh6JOQQ0BOelnrvKeXXpLlN7b
-         u+56pO9PTSBA0ic79zvLSPHKnsaMAs5It5n9ex7Dgxsp6grgVTJWU9vzeHnnsV4cZI8M
-         EG93gjWHHwCEt6UW0XlQlc5W2UZLwkjQuNiQA2aOctBhm37dqtm3Dzk3ywC73o5qgdvA
-         l34FJcFvdYasgEXsG30ttougTc8WtEF0ftSAY14Pp/wOXMmFTQdB1ksMH6LB8y1Y0j4b
-         W1KA==
+        d=chromium.org; s=google; t=1741162697; x=1741767497; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=mYXSTZfU8jvWfwROI6VDUWkSch8pirw8SYysFkzl71Y=;
+        b=EMcjlekWYj8y1s0JXapO/8NboqpjBMAk//QASsEt6Dsd0XdHoMEWNw2eTOLosuQrxh
+         rFVG/ssFdU0LQuB/9QCuGHx4uLrkmxCt+9QssYFtw2y6rKQNdUrRvBF5L4ww2jZVNO6N
+         4CDnqJzdniSMm7jrv1Xix4AAczJdeuO7B5iQo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741162660; x=1741767460;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=vcGEIoc9wmDs79ktQAByYkrcB1clkMgF+0QKb1CD3bE=;
-        b=MXBcfwH5roLx/kdwCwcN1Nqh4MTiaVrf3mlA0ni4hU7qND4sJC+yz7bHiN1z9jmNVR
-         EEN1Uo923zndUlslmo79hyFMPpqpp6di/0URWpSScFpYSdIyhfW9yTtFyvVmdNMnf1Z+
-         7DYmKeozPgtDh3fnAc8lCyt4wBHXMnZusAhEaoGcIiPMlksJR8p4mjfIIcjmnclXM8uj
-         H0kJJEApOmekcZ2F4lYY4vqJnG4ajnhwkZrT3VldFVOOePu9XMonRVgZ/SSDRCGoxL49
-         LgkswBhNwEDXapSZ2e3c51SbSZDZbSt9OyqBi0Vymz/Fz/PRe7IF4MpacGmOuyo/U4It
-         14GA==
-X-Forwarded-Encrypted: i=1; AJvYcCXWLIM0HO6A/RRHtA7pNDt3Q8jLS6zCxfwvnDQTEvi6T9bt7k0WZ3uHXc751lh0s2RtdAM9HlrAoL0+qCY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxEKggJRQbx+QFLQBZIi3c+/wKUfDk0RX8YGQM/OzGyOsSJmC/z
-	IJXdiiuuU8d9xA89/o4BOeRTljORVwimvNNkOQQjcE6wfiANyjR5MCfOjI6msKYqdXzIvSryGWv
-	JC3u8SA96qOfWz5X0O9FiWMAEzCnjUEro5OuWAA==
-X-Gm-Gg: ASbGnctV9oLN/bQnDpphaerWHaV3dgDN1bU1ByOiGQv792jUu0rCuCB9guNpnOZRF/n
-	rXOl8x5cQR4mTJDfgorcWgb7vwNFYW9wF+beYXz1zYH0E6cYRutCzGUy6SsAwmbHB8d4G66abg3
-	nIJiYCeCGMSSUM04Qj+gXwcwW+ZCfjtqpU5kI1/98S0EHtc8MfqCqcCjU=
-X-Google-Smtp-Source: AGHT+IEwZ0V5j3sfTjf4uAsJrKtaGmo6/U3Ly5JasGKZTobPzrL9CMjyuO0uUfW8rk1IdcKtFLT5R5LYh+TMgFOTlKQ=
-X-Received: by 2002:a17:906:478f:b0:abf:6f87:670e with SMTP id
- a640c23a62f3a-ac20d8c833cmr176738166b.22.1741162660345; Wed, 05 Mar 2025
- 00:17:40 -0800 (PST)
+        d=1e100.net; s=20230601; t=1741162697; x=1741767497;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mYXSTZfU8jvWfwROI6VDUWkSch8pirw8SYysFkzl71Y=;
+        b=eUyRE14KQ1K9mckRdwfmmA4wNIL1zB+e/9ecUUZ3VLuqNyERUDXDh29ZAlmJ3DZGI1
+         CfpN6mWcg8c4S+n1TG9z8C7JRn+4N2Aa7w1ja9IswJt4+NTUCVHGt1Ps7YMR2P4FVlxe
+         qPg9p2Py2qPF3NafglhgBS7FfXu+/T23wmMvd5Ud/njNRSf5mUoZtRieWZV7sKc6nbkk
+         v7/WCXC6AHb1GXkvfKyX21HCpk+6oir2KZEWZRSKSQDxPzgibAAFwK44OY1V65oGeiat
+         JXwSqwhKwTVcJpMnUxYjKT3NFYVLkLsOIJV6ANICnRYx/fipSjlcQNHRTmzhm+pkljnD
+         zAdA==
+X-Forwarded-Encrypted: i=1; AJvYcCUy1659wvOuwGqzHzCrjq78nx8WvLnabGq92FH/PGtKYPTv6/eTuWBp2qwnlulJL+ei/NoXne5jFm9gnyQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwmSobAKMnYvrYZnDsRDmoMOi825X+VrAYGT0qnjM18SMF+7R4K
+	5tvaD7nD+b7O2x2oHurHg5Ictv3E2NvrXwDH9urF0N4VIXkPXPJp0HcX64EEMQ==
+X-Gm-Gg: ASbGncsBRogL4HOtCVMm5zWBmt9G4qSQrYbJxYMGnlkojRKlX955eS9uTjx2tO0LXXj
+	XKCgvc8JikR9tj7m3yIExoz7SxZi2M8Qo923M+354GZdTzeQ1vlfW6c9rJXGv+FfNVpkWIbkgNo
+	zqSNs5//6h5m+vE9Z9gtjp4uknh9J8PWXCDPrTtBhIdgyoJmG+BiTZEumL2dNe4/GDv4W2uEK9a
+	+BKtK54K2uoXoB7uJvadBTiFJ7Vw6K0pg98Yb0sLa+jmMG2WyCRKby2GtFmD+onCPCd6jWmwoBj
+	/Zl7J30btMZcGSJNfP3i21L+qSjVqVSYbuy2hfEn7nRgP/o=
+X-Google-Smtp-Source: AGHT+IED2NT/goKWKJHxIaufdCqG12N6ysMMMAj3MMY974Ty3BkD/tjsWdsiukocFdDOhMwMjTQ0gA==
+X-Received: by 2002:a17:90a:d644:b0:2f6:d266:f467 with SMTP id 98e67ed59e1d1-2ff49856dccmr3306672a91.34.1741162697515;
+        Wed, 05 Mar 2025 00:18:17 -0800 (PST)
+Received: from google.com ([2401:fa00:8f:203:5a4:b795:7bd9:7ab7])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2ff4e773c7csm749395a91.15.2025.03.05.00.18.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Mar 2025 00:18:17 -0800 (PST)
+Date: Wed, 5 Mar 2025 17:18:11 +0900
+From: Sergey Senozhatsky <senozhatsky@chromium.org>
+To: Yosry Ahmed <yosry.ahmed@linux.dev>
+Cc: Andrew Morton <akpm@linux-foundation.org>, 
+	Johannes Weiner <hannes@cmpxchg.org>, Nhat Pham <nphamcs@gmail.com>, 
+	Chengming Zhou <chengming.zhou@linux.dev>, Minchan Kim <minchan@kernel.org>, 
+	Sergey Senozhatsky <senozhatsky@chromium.org>, Herbert Xu <herbert@gondor.apana.org.au>, 
+	Thomas Gleixner <tglx@linutronix.de>, Peter Zijlstra <peterz@infradead.org>, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH mm-unstable 1/5] mm: zpool: Add interfaces for object
+ read/write APIs
+Message-ID: <zt5ebs5co7pyjh4sxqjdl47moorpvz2gkm4zo7yhnokdrrwk3p@hedthqhux77n>
+References: <20250305061134.4105762-1-yosry.ahmed@linux.dev>
+ <20250305061134.4105762-2-yosry.ahmed@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250303105241.17251-1-xuewen.yan@unisoc.com> <20250303120021.GA11590@noisy.programming.kicks-ass.net>
- <CAB8ipk-pmSGoaxtMGhcvn7MmSEibvQDbCDgjp9iEDTzG5=_L7g@mail.gmail.com>
-In-Reply-To: <CAB8ipk-pmSGoaxtMGhcvn7MmSEibvQDbCDgjp9iEDTzG5=_L7g@mail.gmail.com>
-From: Vincent Guittot <vincent.guittot@linaro.org>
-Date: Wed, 5 Mar 2025 09:17:28 +0100
-X-Gm-Features: AQ5f1Jrs6iZ7BhBSuUeLE4Rx-MSwcPVFCqJAcOSm5AMzjIeeAWygEAU7LH-nobg
-Message-ID: <CAKfTPtBahSErKvd5y698v7+EZYGkT95dbO0LumZAWD=ut1vj3Q@mail.gmail.com>
-Subject: Re: [RFC PATCH V2 0/3] sched/fair: Fix nr-running vs delayed-dequeue
-To: Xuewen Yan <xuewen.yan94@gmail.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Xuewen Yan <xuewen.yan@unisoc.com>, mingo@redhat.com, 
-	juri.lelli@redhat.com, dietmar.eggemann@arm.com, rostedt@goodmis.org, 
-	bsegall@google.com, mgorman@suse.de, vschneid@redhat.com, 
-	linux-kernel@vger.kernel.org, ke.wang@unisoc.com, di.shen@unisoc.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250305061134.4105762-2-yosry.ahmed@linux.dev>
 
-On Tue, 4 Mar 2025 at 02:56, Xuewen Yan <xuewen.yan94@gmail.com> wrote:
->
-> Hi Peter
->
-> On Mon, Mar 3, 2025 at 8:00=E2=80=AFPM Peter Zijlstra <peterz@infradead.o=
-rg> wrote:
-> >
-> > On Mon, Mar 03, 2025 at 06:52:38PM +0800, Xuewen Yan wrote:
-> > > Delayed dequeued feature keeps a sleeping sched_entitiy enqueued unti=
-l its
-> > > lag has elapsed. As a result, it stays also visible in rq->nr_running=
-.
-> > > However, sometimes when using nr-running, we should not consider
-> > > sched-delayed tasks.
-> > > This serie fixes those by adding a helper function which return the
-> > > number of sched-delayed tasks. And when we should get the real runnab=
-le
-> > > tasks, we sub the nr-delayed tasks.
-> > >
-> >
-> > Is there an actual performance improvement? Because when a runqueue
-> > looses competition, delayed tasks very quickly dissipate.
->
-> At the moment, I don't have very detailed test data. I've been
-> studying delay-dequeue carefully recently, and these are the issues I
-> feel might need modification as I go through the code.
+On (25/03/05 06:11), Yosry Ahmed wrote:
+> Zsmalloc introduce new APIs to read/write objects besides mapping them.
+> Add the necessary zpool interfaces.
+> 
+> Signed-off-by: Yosry Ahmed <yosry.ahmed@linux.dev>
 
-Patch 1 makes sense for me but I'm less convinced by patch 2 and 3. As
-Peter also mentioned, the state where cpu_rq(cpu)->nr_running =3D=3D
-cfs_h_nr_delayed(cpu_rq(cpu)) is really transient as they will be
-picked as soon as the last runnable task will be dequeued
-
->
-> Thanks!
->
-> BR
+Reviewed-by: Sergey Senozhatsky <senozhatsky@chromium.org>
