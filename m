@@ -1,86 +1,136 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5C9720127B
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 09:02:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D1A21FCFE6
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 09:03:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741165369; cv=none; b=Fkd7ga36H11NzN3carrIToGy1zctrs2PcTmcDub97VOqVdOlOVd8/3iHSQ4PTH/ThdvHnw+q9YXiWGwQOt9w7LDyYLkdNmo51ugp9wdWO1ThM4bhY0UbWWrTlcA/gDyabw6SJDGDqbJ8VPnGpL2zCqMuTgp1nnB00yqteueTUvw=
+	t=1741165389; cv=none; b=gtDquyIsVB7x8xhyyzluELNoDOGYNFJFZ+Fx1G6UXoT5Ly9k7qJj6TJ4tpVpKc35qwZlPXULltOlzOCib9+nSoONiaj4H2Nfhoma2KaIa0gVikly9evBhlRCiKl8uPgFy5d9l5B9l4n3YWYcpNWj3BsSqfGtOHCv4rTT2amWJfw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741165369; c=relaxed/simple;
-	bh=tMbrss0O9Q9l5VIwni02MAgNIswQGbYHXs5QyXp+Fv0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JOR/CoyOAquKgs1sc3wnce535T1wupCZNwzIzuCnOLB8lFfWV2WB0J4ssZCogcdb1P81w05iMpOHw8R6DjPzZGzzYYMxCXgudwdvA3rwStws3yprAadpCUcLMSduoxwCsxAAUFC0gfytj1Lw7b0nS0SJYscxsCHdJhQvSzuA6dE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EHjZwvEX; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1741165389; c=relaxed/simple;
+	bh=OQ/3sc5DysD/5W6k0zs3RrGx5Cp8e7MoJKbSSXk129o=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=OPK6O2KnNR5jbItZ6ab0mFKKtiDsq549YQnqaEbIF3Tje2OIFSF84qLf47cRg3FEOqqW7pE7Rv2BwXTCcP35ODU4hbQD5NwH6XtODNaUg5O+mT/CZvl3+7v8wzszCf5QEWH1Hco/aXvbFGguuxvdu5Lt2uZA65yRaxt1yg5HnQQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=idXzb7jg; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EHjZwvEX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741165368; x=1772701368;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=tMbrss0O9Q9l5VIwni02MAgNIswQGbYHXs5QyXp+Fv0=;
-  b=EHjZwvEXylCoyzSuw+2EfzNP5JtORPIp5HlMx50dT9f6r1JDIXZo2j4q
-   GxsWbWSqLTq6RFtVNAoJ5+f0mr1ubSSfCCFeoDh7Qcc+ze1AkPS5+o1gw
-   T1wSvIg2gGWS8FoE/iR/KiIfuGGyd89IZed+4Xwe03jHDUVaHzTuP1YSO
-   +dfjbwgjUudjCtchoVdpu5yTLt+UiLtl192SMYx4FoNWHtxh9u+xHK6oE
-   6wtyoofBinzZH3d+rTQvxKbBQsymW6keutNjEPNOfjZQZdHJLoJ4ho9Ls
-   NItlAwEdiT2XRg3yHGJSKBVSUsQ+YYRg7+q5GyWKt92myB68zE8kPwcz5
-   g==;
-X-CSE-ConnectionGUID: 6xZomqHaR0+zjVndrAzQFw==
-X-CSE-MsgGUID: bs9fJBNTTgSs9WS1OJBBFQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11363"; a="52318517"
-X-IronPort-AV: E=Sophos;i="6.14,222,1736841600"; 
-   d="scan'208";a="52318517"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Mar 2025 01:02:47 -0800
-X-CSE-ConnectionGUID: zfmHqCZqTvWB0bgyOYZtUA==
-X-CSE-MsgGUID: 2gnJD4FFQjuw7au8jTHLAQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,222,1736841600"; 
-   d="scan'208";a="118357932"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa009.jf.intel.com with ESMTP; 05 Mar 2025 01:02:45 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1000)
-	id C51E71FD; Wed, 05 Mar 2025 11:02:42 +0200 (EET)
-Date: Wed, 5 Mar 2025 11:02:42 +0200
-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-To: Arnd Bergmann <arnd@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
-	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, Rick Edgecombe <rick.p.edgecombe@intel.com>, 
-	Tom Lendacky <thomas.lendacky@amd.com>, Arnd Bergmann <arnd@arndb.de>, "H. Peter Anvin" <hpa@zytor.com>, 
-	"Jason A. Donenfeld" <Jason@zx2c4.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] x86: coco: mark cc_mask as __maybe_unused
-Message-ID: <lpkdubngmzv4vwmkykh7vl37jxwhfdnqwnahumwk3ualctv5bx@eka4www55vki>
-References: <20250304143340.928503-1-arnd@kernel.org>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="idXzb7jg"
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5258fDFP008325;
+	Wed, 5 Mar 2025 09:02:46 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=n1z2e9mVbdazKv/D+7yQN/ZVbR7ipkcxFW+oD3l7R
+	jw=; b=idXzb7jgXBXuYsVeJaUSaDwesp7bkOuVKlFflWDLVQE0v3VlGp4pMrW/K
+	A8ba3gCk4MOS4Avf9JhpocEc7A5EZsvAdcf+UN2izFKnplbH5s8W8RKbZ8+DWlc5
+	5WiWygaRdYk75hWB9z9Gilv7+GZe3QJgZZs2VaF/HYZKp0KKWCYMYsoBaO7JpL1X
+	tj9i3UZ54p+awFkROvBWeOfi4UrfTkJvn6Uewo6Bg+Aj1si0xo3ZJEHVG3Ar35Ve
+	ohD+ufGw8rwbiBTobeiwnXYrHA7zJzjokErbPyUMpMIfC98QESyIokSCBNx/SKJf
+	zdZos9SL0L5HGny92XYHJcH0OdUlw==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4568ppahp9-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 05 Mar 2025 09:02:46 +0000 (GMT)
+Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 5258vqXG029793;
+	Wed, 5 Mar 2025 09:02:46 GMT
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4568ppahp6-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 05 Mar 2025 09:02:45 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5257gU36013776;
+	Wed, 5 Mar 2025 09:02:45 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 454e2ksvth-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 05 Mar 2025 09:02:45 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 52592fPf24773228
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 5 Mar 2025 09:02:41 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 5396820040;
+	Wed,  5 Mar 2025 09:02:41 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 8AD1A20043;
+	Wed,  5 Mar 2025 09:02:39 +0000 (GMT)
+Received: from li-c6426e4c-27cf-11b2-a85c-95d65bc0de0e.in.ibm.com (unknown [9.204.206.66])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Wed,  5 Mar 2025 09:02:39 +0000 (GMT)
+From: Gautam Menghani <gautam@linux.ibm.com>
+To: maddy@linux.ibm.com, mpe@ellerman.id.au, npiggin@gmail.com,
+        christophe.leroy@csgroup.eu, naveen@kernel.org
+Cc: Gautam Menghani <gautam@linux.ibm.com>, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org, vaibhav@linux.ibm.com
+Subject: [PATCH] powerpc/pseries/msi: Avoid reading PCI device registers in reduced power states
+Date: Wed,  5 Mar 2025 14:32:36 +0530
+Message-ID: <20250305090237.294633-1-gautam@linux.ibm.com>
+X-Mailer: git-send-email 2.47.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250304143340.928503-1-arnd@kernel.org>
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: XMEYmXGLWR-uqDp97woI17Cud8XvfrSk
+X-Proofpoint-ORIG-GUID: qBkNYmHN-zrEB8W6tWAMSOdOUG5YmdZY
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-05_03,2025-03-05_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 phishscore=0
+ bulkscore=0 lowpriorityscore=0 suspectscore=0 clxscore=1015 malwarescore=0
+ mlxscore=0 impostorscore=0 adultscore=0 priorityscore=1501 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2502100000
+ definitions=main-2503050071
 
-On Tue, Mar 04, 2025 at 03:33:34PM +0100, Arnd Bergmann wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
-> 
-> When extra warnings are enabled, the cc_mask definition in asm/coco.h
-> causes a build failure with gcc:
-> 
-> arch/x86/include/asm/coco.h:28:18: error: 'cc_mask' defined but not used [-Werror=unused-const-variable=]
->    28 | static const u64 cc_mask = 0;
-> 
-> Mark this one as __maybe_unused.
-> 
-> Fixes: a0a8d15a798b ("x86/tdx: Preserve shared bit on mprotect()")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+When a system is being suspended to RAM, the PCI devices are also
+suspended and the PPC code ends up calling pseries_msi_compose_msg() and
+this triggers the BUG_ON() in __pci_read_msi_msg() because the device at
+this point is in reduced power state. In reduced power state, the memory
+mapped registers of the PCI device are not accessible.
 
-Reviewed-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+To replicate the bug:
+1. Make sure deep sleep is selected
+	# cat /sys/power/mem_sleep
+	s2idle [deep]
 
+2. Make sure console is not suspended (so that dmesg logs are visible)
+	echo N > /sys/module/printk/parameters/console_suspend
+
+3. Suspend the system
+	echo mem > /sys/power/state
+
+To fix this behaviour, read the cached msi message of the device when the
+device is not in PCI_D0 power state instead of touching the hardware.
+
+Fixes: a5f3d2c17b07 ("powerpc/pseries/pci: Add MSI domains")
+Cc: stable@vger.kernel.org # v5.15+
+Signed-off-by: Gautam Menghani <gautam@linux.ibm.com>
+---
+ arch/powerpc/platforms/pseries/msi.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/arch/powerpc/platforms/pseries/msi.c b/arch/powerpc/platforms/pseries/msi.c
+index fdc2f7f38dc9..458d95c8c755 100644
+--- a/arch/powerpc/platforms/pseries/msi.c
++++ b/arch/powerpc/platforms/pseries/msi.c
+@@ -525,7 +525,12 @@ static struct msi_domain_info pseries_msi_domain_info = {
+ 
+ static void pseries_msi_compose_msg(struct irq_data *data, struct msi_msg *msg)
+ {
+-	__pci_read_msi_msg(irq_data_get_msi_desc(data), msg);
++	struct pci_dev *dev = msi_desc_to_pci_dev(irq_data_get_msi_desc(data));
++
++	if (dev->current_state == PCI_D0)
++		__pci_read_msi_msg(irq_data_get_msi_desc(data), msg);
++	else
++		get_cached_msi_msg(data->irq, msg);
+ }
+ 
+ static struct irq_chip pseries_msi_irq_chip = {
 -- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+2.47.0
+
