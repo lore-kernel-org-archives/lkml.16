@@ -1,67 +1,50 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93A732E3362;
-	Wed,  5 Mar 2025 16:54:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A958119F121;
+	Wed,  5 Mar 2025 16:54:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741193673; cv=none; b=hYxJheKsINMzVPMrM8ueWFfajvG6piA1goTgoQoW2ukYMeLWuXhXA4/y1l519cynnsPEv8K67L8dDT7MAw7OPRedoljHqIcxWj4yFy+pci4XR30l6yw+dMa6WVgocNadysYhO2CfrmO9m/lxbCTMull37JWF7CGLYxhW3jRdgUU=
+	t=1741193695; cv=none; b=oVtsXSMHDaoIsaNTnWPs9ACYrX5CnJbI6ClSz9Xza0PAX2U/8cxgZFLJ3DcxX9Oe+ctxFB44EcaPkN1WXlmPoBAInsT3Ciez2AVUDeoyMtJLVTS/gukUMvwIokyc/pfk2ErutFUDVI3zuACSNZLbl2HhYmS12aDp7+JrbsRGm5U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741193673; c=relaxed/simple;
-	bh=mNYCIaC/TiQFcye4zOvTyd+zkhijqrF9hc5gPlQ6OiQ=;
+	s=arc-20240116; t=1741193695; c=relaxed/simple;
+	bh=by9CUytUjedo8xlzZB67O5RkiEv4zNflkG0tNZJ7ezw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nZb0bWhK29BpnvlBPV+aNPtdftwByQjZE1/UeNalnkw8LN1ydc3yvB5i8SbRXRoevAQoghuV2qRSUoR6IvotL6nykpFC5j6yRcTVaGg07QYdR5p/ZzxPvCjwErgQqXsiLifFtKWfO5OffE+5KE9R5E9Qd1oqkZe3dXA52MxDlS4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WpZIAwj2; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 In-Reply-To:Content-Type; b=nCQtGsPOorYH4z8USWrfYXE87ejbNDiKpK+PnlBufdcpQmIfoC5DeuRqCbk11Yqq3n68PHcYL7gsluJoBtSlcMLQnWgf7QAt8hp4zcrHWHJr0LgrtQnNx7RTx/qwWKUIbOyvE8qHheluZAdQYYk1A1TF2CdbgjdYFABRE14R7q8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cW2L5KRv; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WpZIAwj2"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-22359001f1aso162709735ad.3;
-        Wed, 05 Mar 2025 08:54:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741193670; x=1741798470; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=qjVsQnSqRQBd2D93xCfGrKX4ZhGOSg4lpjeYRuVrhMg=;
-        b=WpZIAwj2oMp4qeNElOjErGp/80j4B66U3Rm18FJBPm0+DXWCmKVmpgUmCB1FB/WOy6
-         l+x1dEtQvssuaMOKHXHGiDR+0ojqlMn9NWMbliw/ius7j9IMRZZLWJo9wEmg4MqLL0Ml
-         J+P7XvDrevLefyGl1W4h//s1hoIIxSSU8YRtWhfxXWuv5MINKFawMNLIwBVNmqGS8UFA
-         VtgG2Em2JOpGn2ivGXnhSCV5MB56aOElvs9AQYwFtpHO8cNnQ+NXARahdGplynm0PYIn
-         HKqj1hujX30gJUjQ0KwTJfwy+N1UqUPSnoYp6LpbTN9WlBSh7S7NXqE6QjWV5cg1bm6H
-         EONQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741193670; x=1741798470;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qjVsQnSqRQBd2D93xCfGrKX4ZhGOSg4lpjeYRuVrhMg=;
-        b=FZtZJDcC1WyJKoOpUJWmDJk8pNOLzuwHEuZesfMpQcFtu4q+yag2NnZcEQPv4g5PC3
-         fNh0JbFH5j7lRtbpgROv+pLlMJorPzQB3aRhzX2oQ5GXvREQozZRtK+epKsNxE4fw0eV
-         FORaqGNz1h0X/xLABtnWJqGfkqU9VQ1uuXHKSlwAyrKItSjxTW/IyVWBORbl7NbPhzd8
-         ycKBekCNMraQg1XYFk8daCCWAAIz+ObRij4+T3nfvUW8Ofgssv4vIGdeHj9olfL2+BnT
-         63glM9/jrCCyKQR2ZE4B/UM1OQvP+uCIBlYdxGUdD2qsFvFSpnX+A5f8ILkEfzbrTkzH
-         JehQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVBYtaR4ASIM1D4PBqXaWVFuFWhakcToRZrrH4MnUlSEUUjnY7TYOWpyZayO6Dqg+2ED1yTNI91JotcT1EZ@vger.kernel.org, AJvYcCXk+HTkGowRX/Es0kdHxF3Fd7g5oF6dYGtEkYzixy0NXbqnDpUukkrk2L1Ta/OFlfXssV6aSLeSJumW@vger.kernel.org, AJvYcCXtCNvpsbHS1bFu12CMQdaX46d2XhI0Shslh6bxamXz+Q9ch50NU/FoHMllKbCNrYwd0vupIt+QjzcXa9g=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz2nE+G/iSsy/bdMVrDHONs4ZZ8AuGzwnti9mK0sD4O+TvkhmVG
-	GQ9BfWWrjAeX5EMytFNyoZTkvOSp45Iq/zf742nO0AvEfrT9xh5B
-X-Gm-Gg: ASbGnctTzafu8u2iJtVefHIGwX5hO6xZL0o2rbLgjUfQ/LjAsy0EUU2Wkv+xtpk4QNm
-	VT27EjemGEfyskEz3lZal9g7GGpTd1p8S07iTGvgUTlE6b+1PYT5spnDifGMJw7qtV93jz/pECB
-	WszXeqGmmQd4s0sz/ZXF9kDpbGHOCxTZn/tXZ7VgeCpFgfxebZl5xR7swDmpE2oB8Cr2VV3V9rF
-	Y/eyhrDmoNjCeRGkG5X8EOGHw3lrrJqvHQsoabA8pCLDbU2q6TtXi6JQJCjEMGh7YJpjFBZJgfF
-	PiLKsXrN8tjpZlHDp04lsmvBLkU3dmHz+pNzr8QvRcJwjAe6IGUPrFL512205o9/iBhn9nc2MBz
-	YO27ph0o2rKt23J+9bA==
-X-Google-Smtp-Source: AGHT+IELUYOiv9nEvMo6emFh85nrbdMhcJOVKHgtRdU/NVg8mbP4tsGNtdZVd7IcFJrPh5kmFt3Caw==
-X-Received: by 2002:a17:902:f693:b0:223:6455:8752 with SMTP id d9443c01a7336-223f1d39301mr66361165ad.43.1741193669541;
-        Wed, 05 Mar 2025 08:54:29 -0800 (PST)
-Received: from ?IPV6:2600:1700:e321:62f0:da43:aeff:fecc:bfd5? ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-223501f9e46sm115772545ad.53.2025.03.05.08.54.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 05 Mar 2025 08:54:28 -0800 (PST)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Message-ID: <23608097-f226-471b-b070-d3834e5c129b@roeck-us.net>
-Date: Wed, 5 Mar 2025 08:54:27 -0800
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cW2L5KRv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741193694; x=1772729694;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=by9CUytUjedo8xlzZB67O5RkiEv4zNflkG0tNZJ7ezw=;
+  b=cW2L5KRv/A05P8JFQUfOoy0fYYEungEcmyO6QXqSoyLiFCadkaGsl8cu
+   nJsJSaMchQ66drlQfdGTVcjTtPyRfhVN5Sa1mG9aH49a5Wz1k+L8Epy7I
+   fl3CszXYtkegcIxENdcAAo+/6d2tQAPfsgH3qxCgMcsJu+n9dnlXKDEDp
+   p0oLuc1Qha6greIuUv+SYWeQlS2+jgsRZOrty0B+dGXuU8i1+bDYCE1Xp
+   4I23OHw427w3Sj62tQVTDWk7JwzRTQtXnOq84EK9I1sdMtHCis9kon4fc
+   ipeUT6t7VqymoTZ2Fp+DyhmbQda7L9gIkPzVh2BibDSN2j1AEZqZwjhov
+   Q==;
+X-CSE-ConnectionGUID: uvq4lCxGSmK3pXGcgtyRkw==
+X-CSE-MsgGUID: F/tkcDIsTwuJ3IZ1vtSEfg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11363"; a="52806738"
+X-IronPort-AV: E=Sophos;i="6.14,223,1736841600"; 
+   d="scan'208";a="52806738"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Mar 2025 08:54:53 -0800
+X-CSE-ConnectionGUID: 4bY42/ZWT3mud0h6ff0LEg==
+X-CSE-MsgGUID: pe0aydXnQTmUdrIQGld36g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="155958796"
+Received: from kcaccard-desk.amr.corp.intel.com (HELO [10.125.109.196]) ([10.125.109.196])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Mar 2025 08:54:53 -0800
+Message-ID: <b6a80f6d-8469-429d-b03a-8fa71a33046b@intel.com>
+Date: Wed, 5 Mar 2025 08:55:12 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,152 +52,80 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 3/3] hwmon: emc2305: Use
- devm_thermal_of_cooling_device_register
-To: florin.leotescu@oss.nxp.com, Jean Delvare <jdelvare@suse.com>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Michael Shych <michaelsh@nvidia.com>,
- linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Cc: viorel.suman@nxp.com, carlos.song@nxp.com,
- linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev,
- festevam@gmail.com, Florin Leotescu <florin.leotescu@nxp.com>
-References: <20250304162136.1963384-1-florin.leotescu@oss.nxp.com>
- <20250304162136.1963384-4-florin.leotescu@oss.nxp.com>
+Subject: Re: [RFC PATCH v2] x86/fpu: make kernel-mode FPU reliably usable in
+ softirqs
+To: Ingo Molnar <mingo@kernel.org>, Eric Biggers <ebiggers@kernel.org>
+Cc: x86@kernel.org, linux-crypto@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
+ Ben Greear <greearb@candelatech.com>, Xiao Liang <shaw.leon@gmail.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ Andy Lutomirski <luto@kernel.org>, "Jason A . Donenfeld" <Jason@zx2c4.com>,
+ "Bae, Chang Seok" <chang.seok.bae@intel.com>
+References: <20250304204954.3901-1-ebiggers@kernel.org>
+ <Z8gUYamgBr4M5ZaB@gmail.com>
 Content-Language: en-US
-From: Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-In-Reply-To: <20250304162136.1963384-4-florin.leotescu@oss.nxp.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: Dave Hansen <dave.hansen@intel.com>
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <Z8gUYamgBr4M5ZaB@gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 3/4/25 08:21, florin.leotescu@oss.nxp.com wrote:
-> From: Florin Leotescu <florin.leotescu@nxp.com>
+On 3/5/25 01:07, Ingo Molnar wrote:>> Alternatives considered:
+>> - Make kernel-mode FPU sections fully preemptible.  This would require
+>>   growing task_struct by another struct fpstate which is more than 2K.
 > 
-> This prepares emc2305 driver to use configuration from Device Tree nodes.
-> Using devm_thermal_of_cooling_device_register also simplifies cleanup
-> procedure, so we are able to remove the emc2305_unset_tz and emc2305_remove
-> functions which are no longer used.
-> 
-> Signed-off-by: Florin Leotescu <florin.leotescu@nxp.com>
-> ---
->   drivers/hwmon/emc2305.c | 28 +++-------------------------
->   1 file changed, 3 insertions(+), 25 deletions(-)
-> 
-> diff --git a/drivers/hwmon/emc2305.c b/drivers/hwmon/emc2305.c
-> index a236f27c75bc..5f3f06308826 100644
-> --- a/drivers/hwmon/emc2305.c
-> +++ b/drivers/hwmon/emc2305.c
-> @@ -112,8 +112,6 @@ static char *emc2305_fan_name[] = {
->   	"emc2305_fan5",
->   };
->   
-> -static void emc2305_unset_tz(struct device *dev);
-> -
->   static int emc2305_get_max_channel(const struct emc2305_data *data)
->   {
->   	return data->pwm_num;
-> @@ -293,8 +291,9 @@ static int emc2305_set_single_tz(struct device *dev, int idx)
->   	pwm = data->pwm_min[cdev_idx];
->   
->   	data->cdev_data[cdev_idx].cdev =
-> -		thermal_cooling_device_register(emc2305_fan_name[idx], data,
-> -						&emc2305_cooling_ops);
-> +		devm_thermal_of_cooling_device_register(dev, dev->of_node,
-> +							emc2305_fan_name[idx], data,
-> +							&emc2305_cooling_ops);
->   
->   	if (IS_ERR(data->cdev_data[cdev_idx].cdev)) {
->   		dev_err(dev, "Failed to register cooling device %s\n", emc2305_fan_name[idx]);
-> @@ -337,21 +336,9 @@ static int emc2305_set_tz(struct device *dev)
->   	return 0;
->   
->   thermal_cooling_device_register_fail:
+> So that's something that will probably happen once the kernel is built 
+> using APX anyway?
 
-This label is no longer necessary. Instead, any goto can be replaced with
-an immediate return statement.
+I was expecting that building the kernel with APX would be very
+different than a kernel_fpu_begin(). We don't just need *one* more save
+area for APX registers: we need a stack, just like normal GPRs.
 
-> -	emc2305_unset_tz(dev);
->   	return ret;
->   }
->   
-> -static void emc2305_unset_tz(struct device *dev)
-> -{
-> -	struct emc2305_data *data = dev_get_drvdata(dev);
-> -	int i;
-> -
-> -	/* Unregister cooling device. */
-> -	for (i = 0; i < EMC2305_PWM_MAX; i++)
-> -		if (data->cdev_data[i].cdev)
-> -			thermal_cooling_device_unregister(data->cdev_data[i].cdev);
-> -}
-> -
->   static umode_t
->   emc2305_is_visible(const void *data, enum hwmon_sensor_types type, u32 attr, int channel)
->   {
-> @@ -599,14 +586,6 @@ static int emc2305_probe(struct i2c_client *client)
->   	return 0;
->   }
->   
-> -static void emc2305_remove(struct i2c_client *client)
-> -{
-> -	struct device *dev = &client->dev;
-> -
-> -	if (IS_REACHABLE(CONFIG_THERMAL))
-> -		emc2305_unset_tz(dev);
-> -}
-> -
->   static const struct of_device_id of_emc2305_match_table[] = {
->   	{ .compatible = "microchip,emc2301", },
->   	{ .compatible = "microchip,emc2302", },
-> @@ -622,7 +601,6 @@ static struct i2c_driver emc2305_driver = {
->   		.of_match_table = of_emc2305_match_table,
->   	},
->   	.probe = emc2305_probe,
-> -	.remove	  = emc2305_remove,
->   	.id_table = emc2305_ids,
->   };
->   
+We'd effectively need to enlarge pt_regs and fix up things like
+PUSH_AND_CLEAR_REGS to save the APX registers in addition to the good
+old GPRs before calling C code.
 
+That's what I was thinking at least. Did folks have more clever ideas?
