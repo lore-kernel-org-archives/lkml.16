@@ -1,47 +1,47 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A521620A5D7
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 23:07:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1771420A5E4
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 23:07:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741216049; cv=none; b=Wj04fLR38zscRI7xswjNGj6SoE7gobDpUZe1iJSKNMCjqp7h6NQf33e0chiBYw7YZMlx5LrlQZ9gvfK9QA5g423VlymIftZKjnW35Lv9aca2qRXKQVx/wK4Wgv/9+vtg6GpgXWJe7ljGeboIjTTeOyISyFhxrs7jSOmokonpZLw=
+	t=1741216059; cv=none; b=JXAbmMJmtVPAAW5M4QcLHqH4ZtBKa8lkdhUDUQ8/jptwQlELc6bcVJ+T4GhO0FMVBC/kHjAUv8UF0Bc2PBomluocjavbNXpu5TFgJy1nQKg6Wke92oQeyqQkf29EGR8IF+eBBAoBtb3UN/UszoCtdv3rluHXl+ne8UU0YIMB7rc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741216049; c=relaxed/simple;
-	bh=NbZ0bdhl/7igkfFfMYHwQymMyd27aYPm/3bnZLXn7+0=;
+	s=arc-20240116; t=1741216059; c=relaxed/simple;
+	bh=RO7morsVhdWti3RNbDAHomncnUIseu+Uz+5FNxcsq+A=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=CeO4HshUfAnoaBdFbRALAx9Q8Boet4dqc3igQB/RwqMjav2ws9Ni6U1C607NKaE9x9+KfT6mqCYxm8RYJxEYMkkf5OezKQTC4jazhZr/V7dUicOO6pX9HF4WtdAxAUa8mOoMoE784yRs8dzTQNI6yCNU1B59iQ4zeoRj44ao12w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HIFwK2Ct; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version; b=s2ep7HkYlg8FPbzL1I0AmIBMyESjKU5gTj4/Oq6yKpioGQIa4btYr6i3pjAqLEvFAOk7yuTRQ409JHbOqU5sBFIXS4uK6EkJ/vApb1LW9ziTB0i1QBj3BLPrZn4s+PNs5A/L7aB3ZnElHf46BF/KJNnVhvTm95WS/AbypdUMGKE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=eovD6Cjg; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HIFwK2Ct"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eovD6Cjg"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1741216046;
+	s=mimecast20190719; t=1741216057;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=ebrZLCn49Ar/u+hhgDqOxZKPNPiNI29a3OC6pvuCf4w=;
-	b=HIFwK2Ct8puG2QLig8zcM74GlYxNeIPyMnuga8UXEkFUq+Q2pJ2Yn1pbZt8BrgZDPC7jfn
-	zDbAaAz0p7HTwkyEC8RDHRZlCI/DIEGN9o+RntPNXy3m0+vmxiKo3zu4mnQnsf6W6xiRzY
-	ke0YPOAnqlfDohdaarDZtCG/LxjowrI=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+	bh=j/D4SEgwMMDnFfsGfNIexwP9lfVhLyJ7Nk/oo5mITW4=;
+	b=eovD6Cjg+acTleAssDRzozt2ja7XGToxw1hAgKcVZu3PquWNdlRF+qgM9wdLn9OLzcpxXT
+	oFt0cdNVHLy3FbUz60y//XN4fuX1uqIO+u9VrmFOS5sSshyl335FVTbhyDjWrUb/mLNL5u
+	AVgYjdpxLnOVpG/nl5zcJGbjqsOMrr8=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-653-XgmrCJ5TNj6LdSlFvAzo0Q-1; Wed,
- 05 Mar 2025 18:05:46 -0500
-X-MC-Unique: XgmrCJ5TNj6LdSlFvAzo0Q-1
-X-Mimecast-MFC-AGG-ID: XgmrCJ5TNj6LdSlFvAzo0Q_1741215944
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-251-oPRhXijONZ-enFPmMxsMWA-1; Wed,
+ 05 Mar 2025 18:07:29 -0500
+X-MC-Unique: oPRhXijONZ-enFPmMxsMWA-1
+X-Mimecast-MFC-AGG-ID: oPRhXijONZ-enFPmMxsMWA_1741216046
 Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 2F9A51956087;
-	Wed,  5 Mar 2025 23:05:44 +0000 (UTC)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id BB960180025B;
+	Wed,  5 Mar 2025 23:07:26 +0000 (UTC)
 Received: from chopper.redhat.com (unknown [10.22.88.81])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 5A2A130001A1;
-	Wed,  5 Mar 2025 23:05:40 +0000 (UTC)
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id A13EB30001A1;
+	Wed,  5 Mar 2025 23:07:22 +0000 (UTC)
 From: Lyude Paul <lyude@redhat.com>
 To: dri-devel@lists.freedesktop.org,
 	rust-for-linux@vger.kernel.org
@@ -60,9 +60,9 @@ Cc: Danilo Krummrich <dakr@kernel.org>,
 	Andreas Hindborg <a.hindborg@kernel.org>,
 	Trevor Gross <tmgross@umich.edu>,
 	linux-kernel@vger.kernel.org (open list)
-Subject: [RFC v3 08/33] rust: drm/kms: Add UnregisteredConnector::attach_encoder()
-Date: Wed,  5 Mar 2025 17:59:24 -0500
-Message-ID: <20250305230406.567126-9-lyude@redhat.com>
+Subject: [RFC v3 19/33] rust: drm/kms: Add DriverCrtc::atomic_check()
+Date: Wed,  5 Mar 2025 17:59:35 -0500
+Message-ID: <20250305230406.567126-20-lyude@redhat.com>
 In-Reply-To: <20250305230406.567126-1-lyude@redhat.com>
 References: <20250305230406.567126-1-lyude@redhat.com>
 Precedence: bulk
@@ -74,63 +74,123 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-This adds a simple binding for completing the last step of creating a DRM
-connector - attaching its encoder. This function should only be called
-before the connector is registered, and DRM should enforce this itself by
-returning an error if a driver tries to add an encoder to an
-already-registered DRM connector.
-
-Note that unlike most of the methods we'll be adding to DRM mode objects,
-this is directly implemented on the Connector<T> type since I don't really
-think it would make sense for us to allow this operation on an
-OpaqueConnector (a DRM connector without a known DriverConnector
-implementation, something we'll be adding in the next few commits).
+An optional trait method for implementing a CRTC's atomic state check.
 
 Signed-off-by: Lyude Paul <lyude@redhat.com>
 
 ---
-
 V3:
-* Move to UnregisteredConnector interface
-* Improve safety comments
+* Document uses of ManuallyDrop
 
 Signed-off-by: Lyude Paul <lyude@redhat.com>
 ---
- rust/kernel/drm/kms/connector.rs | 14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
+ rust/kernel/drm/kms/atomic.rs |  1 -
+ rust/kernel/drm/kms/crtc.rs   | 55 +++++++++++++++++++++++++++++++++--
+ 2 files changed, 52 insertions(+), 4 deletions(-)
 
-diff --git a/rust/kernel/drm/kms/connector.rs b/rust/kernel/drm/kms/connector.rs
-index ed65c06ece627..6fe0a7517bd55 100644
---- a/rust/kernel/drm/kms/connector.rs
-+++ b/rust/kernel/drm/kms/connector.rs
-@@ -4,7 +4,7 @@
- //!
- //! C header: [`include/drm/drm_connector.h`](srctree/include/drm/drm_connector.h)
- 
--use super::{KmsDriver, ModeObject, RcModeObject};
-+use super::{encoder::*, KmsDriver, ModeObject, RcModeObject};
- use crate::{
+diff --git a/rust/kernel/drm/kms/atomic.rs b/rust/kernel/drm/kms/atomic.rs
+index 3d5c70dbc4274..e0a1b5b860d6f 100644
+--- a/rust/kernel/drm/kms/atomic.rs
++++ b/rust/kernel/drm/kms/atomic.rs
+@@ -274,7 +274,6 @@ impl<T: KmsDriver> AtomicStateComposer<T> {
+     /// # Safety
+     ///
+     /// The caller guarantees that `ptr` points to a valid instance of `drm_atomic_state`.
+-    #[allow(dead_code)]
+     pub(crate) unsafe fn new(ptr: NonNull<bindings::drm_atomic_state>) -> Self {
+         // SAFETY: see `AtomicStateMutator::from_raw()`
+         Self(unsafe { AtomicStateMutator::new(ptr) })
+diff --git a/rust/kernel/drm/kms/crtc.rs b/rust/kernel/drm/kms/crtc.rs
+index 3b9c9d97fcf24..50f5b68f4a3fe 100644
+--- a/rust/kernel/drm/kms/crtc.rs
++++ b/rust/kernel/drm/kms/crtc.rs
+@@ -12,7 +12,7 @@
      alloc::KBox,
      bindings,
-@@ -362,6 +362,18 @@ pub fn new<'a>(
-         // SAFETY: We just allocated the connector above, so this pointer must be valid
-         Ok(unsafe { &*this })
-     }
+     drm::device::Device,
+-    error::to_result,
++    error::{from_result, to_result},
+     init::Zeroable,
+     prelude::*,
+     private::Sealed,
+@@ -21,7 +21,7 @@
+ use core::{
+     cell::{Cell, UnsafeCell},
+     marker::*,
+-    mem,
++    mem::{self, ManuallyDrop},
+     ops::{Deref, DerefMut},
+     ptr::{addr_of_mut, null, null_mut, NonNull},
+ };
+@@ -78,7 +78,11 @@ pub trait DriverCrtc: Send + Sync + Sized {
+         helper_funcs: bindings::drm_crtc_helper_funcs {
+             atomic_disable: None,
+             atomic_enable: None,
+-            atomic_check: None,
++            atomic_check: if Self::HAS_ATOMIC_CHECK {
++                Some(atomic_check_callback::<Self>)
++            } else {
++                None
++            },
+             dpms: None,
+             commit: None,
+             prepare: None,
+@@ -113,6 +117,21 @@ pub trait DriverCrtc: Send + Sync + Sized {
+     ///
+     /// Drivers may use this to instantiate their [`DriverCrtc`] object.
+     fn new(device: &Device<Self::Driver>, args: &Self::Args) -> impl PinInit<Self, Error>;
 +
-+    /// Attach an encoder to this [`Connector`].
-+    #[must_use]
-+    pub fn attach_encoder(&self, encoder: &impl AsRawEncoder) -> Result {
-+        // SAFETY:
-+        // - Both as_raw() calls are guaranteed to return a valid pointer
-+        // - We're guaranteed this connector is not registered via our type invariants, thus this
-+        //   function is safe to call
-+        to_result(unsafe {
-+            bindings::drm_connector_attach_encoder(self.as_raw(), encoder.as_raw())
-+        })
++    /// The optional [`drm_crtc_helper_funcs.atomic_check`] hook for this crtc.
++    ///
++    /// Drivers may use this to customize the atomic check phase of their [`Crtc`] objects. The
++    /// result of this function determines whether the atomic check passed or failed.
++    ///
++    /// [`drm_crtc_helper_funcs.atomic_check`]: srctree/include/drm/drm_modeset_helper_vtables.h
++    fn atomic_check(
++        _crtc: &Crtc<Self>,
++        _old_state: &CrtcState<Self::State>,
++        _new_state: CrtcStateMutator<'_, CrtcState<Self::State>>,
++        _state: &AtomicStateComposer<Self::Driver>,
++    ) -> Result {
++        build_error::build_error("This should not be reachable")
 +    }
  }
  
- unsafe extern "C" fn connector_destroy_callback<T: DriverConnector>(
+ /// The generated C vtable for a [`DriverCrtc`].
+@@ -859,3 +878,33 @@ fn vtable(&self) -> *const Self::Vtable {
+     // SAFETY: DRM takes ownership of the state from here, and will never move it
+     unsafe { bindings::__drm_atomic_helper_crtc_reset(crtc.as_raw(), KBox::into_raw(new).cast()) };
+ }
++
++unsafe extern "C" fn atomic_check_callback<T: DriverCrtc>(
++    crtc: *mut bindings::drm_crtc,
++    state: *mut bindings::drm_atomic_state,
++) -> i32 {
++    // SAFETY:
++    // - We're guaranteed `crtc` is of type `Crtc<T>` via type invariants.
++    // - We're guaranteed by DRM that `crtc` is pointing to a valid initialized state.
++    let crtc = unsafe { Crtc::from_raw(crtc) };
++
++    // SAFETY: DRM guarantees `state` points to a valid `drm_atomic_state`
++    // We use a ManuallyDrop here to avoid AtomicStateComposer dropping an owned reference we never
++    // acquired.
++    let state =
++        unsafe { ManuallyDrop::new(AtomicStateComposer::new(NonNull::new_unchecked(state))) };
++
++    // SAFETY: Since we are in the atomic update callback, we're guaranteed by DRM that both the old
++    // and new atomic state are present within `state`
++    let (old_state, new_state) = unsafe {
++        (
++            state.get_old_crtc_state(crtc).unwrap_unchecked(),
++            state.get_new_crtc_state(crtc).unwrap_unchecked(),
++        )
++    };
++
++    from_result(|| {
++        T::atomic_check(crtc, old_state, new_state, &state)?;
++        Ok(0)
++    })
++}
 -- 
 2.48.1
 
