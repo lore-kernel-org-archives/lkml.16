@@ -1,68 +1,107 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06C351EEA33;
-	Wed,  5 Mar 2025 07:41:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69EC01FBCB4;
+	Wed,  5 Mar 2025 07:41:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741160489; cv=none; b=lWwPmUMa2/Ea5oUrhAI98vYrBvhOC/ngK/jJoSO3TVykXX1brNLYAzpi46XoBLY8Qs28NtaKljn14M0Yr3qJsc02KtbZBXYcgNJSOUZCjycbUHyKh63v/ly/cecpr1HolAVhZruKJ64q10JTpLWFypiLNWGZ4diKyEhBBoh/YeI=
+	t=1741160492; cv=none; b=gd2Py/CmllPsW8kwxVF8VHVEc4/ik50qeuo/XSy+rEWmM1ZoNAq0XccVkfaTcu7Zw77SqZle31mvtJyGH0XYKGtmebmXDd12XGMFkeN1spvSgQLjYKmFoCuTvPQhodLggdsL9N36lSMNIDWxmKJCQ1RRqmtoWNXhm+M0DIduR4Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741160489; c=relaxed/simple;
-	bh=UuyCdAeL82f1TOp2yggcFOeln/rSj3JTG5r77qmxK/M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hjF6Cc2kqP5C0AlSAJtGC6sLPwzQEBnG5sV2mqtlFv6z4F7XCQh7DIFC5JPduHzrj5+Km6PAKaklecpFYqA7UKDdwV/toNTXHoQECiXlcGX3JwMjfWtZE7j5jHE9HDh9dMok/wFX7GBArW/GcYjDqyjO6WWN7EKYbmUADGpIPQ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PeInuU8E; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741160492; c=relaxed/simple;
+	bh=U6821Tp0iLqJP+cP8sHBGHgpzXEMWoYaLFAQuW2Xw7U=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=O+6zprHCZhBurObDnmCdkXXQ7yXuuJbhfhfgffnAPoQZPLWM4foReNHMcd2MoZzehf7aR/6i3N96EwwWz23wQhVggjtCvRhUyEaoWVU7oIT/u/rJjFS3OW5IVkavhRhGvjZu4fRgxka8asFccPIe9cddCqxprRHfHq6+i+ovsJY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=wRnvota9; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=O5/sYCjs; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PeInuU8E"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 996FFC4CEE2;
-	Wed,  5 Mar 2025 07:41:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741160488;
-	bh=UuyCdAeL82f1TOp2yggcFOeln/rSj3JTG5r77qmxK/M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=PeInuU8ERkePr17howrYPFxignmA/MsTwZ4u8d9jO1tVpwezDDFSoQZpIOA/TgDgk
-	 P+9yMOtNFsBwaqdPYdHA40mfnQnjnKTyeWyIS9bj+prPV2FNUkzV+3mT0bVEk64rHK
-	 uaRo8YUBglpG2OgVqzUvRI4Hvto8dpVi9qZMs643jj2Nea56dwhBh+F4kq+fo4u/k1
-	 ZAiyYYuwHNk2nw5hZUxIFDWNSP2HrjIfLGzmqt5o/mNBJF8U/QGTbO40M8/MiBVcJU
-	 +beHC6obrfIQlYHfbIM+dKzKR0SMiyXWM9kD6o+V9muHhkLOHPjZlYMbXABIi2aHcJ
-	 1nwB7/ID7D3LQ==
-Date: Wed, 5 Mar 2025 08:41:24 +0100
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Andre Przywara <andre.przywara@arm.com>
-Cc: Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, devicetree@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 10/15] dt-bindings: arm: sunxi: Add new board names
- for A523 generation
-Message-ID: <20250305-gigantic-dinosaur-of-perspective-c3acad@krzk-bin>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="wRnvota9";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="O5/sYCjs"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1741160489;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ZNEnQU0pyTN9ytzfEL7xzUn8SaDvuW5mh+YI69rPvmk=;
+	b=wRnvota9OxP8xA8c4n68M1q9AT72rhK/58Yok3x+y85pGa908DBegMj2nJxQ4kSVyF2cHo
+	AmndPcaKCUpf+7+Dn+lo9cNEP0OrCllnvnyZUnHrJd0Xhy6Q/5BrdAAym6nLTQZX23ZjnG
+	2GfGhKPvGx9zk4Dse2MnbeRCZiBWTjSaZQKHlv47mB9C37HW3T7Nm/Q6TEtrE3uROhP/fp
+	rnkmTqt9RA+hDyX2j6IDddORmoiLKjiVL3sR0m+xsIxJTBM1aVehJQWI3Qr0gAM9JE1ncA
+	eocvkWisPEJHF5sLZABO7ANGW3NTry92s6WKaa4aiBZ+5ZqI8MlljbrDlbxyOQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1741160489;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ZNEnQU0pyTN9ytzfEL7xzUn8SaDvuW5mh+YI69rPvmk=;
+	b=O5/sYCjs8JjfUP5tkNS7SuXKdmW5bHio0KtEOf/d0fiKUUfJ8mrn4p7DZ76aeZYncwG0E+
+	PhcVVpXm90lX9rDg==
+To: Andre Przywara <andre.przywara@arm.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec
+ <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 06/15] irqchip/sunxi-nmi: Support Allwinner A523 NMI
+ controller
+In-Reply-To: <20250304222309.29385-7-andre.przywara@arm.com>
 References: <20250304222309.29385-1-andre.przywara@arm.com>
- <20250304222309.29385-11-andre.przywara@arm.com>
+ <20250304222309.29385-7-andre.przywara@arm.com>
+Date: Wed, 05 Mar 2025 08:41:28 +0100
+Message-ID: <87frjr6i1j.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250304222309.29385-11-andre.przywara@arm.com>
+Content-Type: text/plain
 
-On Tue, Mar 04, 2025 at 10:23:04PM +0000, Andre Przywara wrote:
-> The new Allwinner A523 SoC family comes in different packages, though
-> they all share the same die, and so the devicetree bindings.
-> 
-> Add three board names that use a version from this SoC family:
-> - The Avaota A1: an Open Source hardware router board.
-> - The Radxa Cubie A5E: a typical development board
-> - The X96QPro+: a TV box
-> 
-> Add their compatible name to the list.
-> 
-> Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+On Tue, Mar 04 2025 at 22:23, Andre Przywara wrote:
+>  
+> -struct sunxi_sc_nmi_reg_offs {
+> +struct sunxi_sc_nmi_data {
+>  	u32 ctrl;
+>  	u32 pend;
+>  	u32 enable;
+> +	u32 enable_val;
 
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+The data structure name and the corresponding variable/argument name
+were making the code pretty obvious, but now this is opaque and
+incomprehensible.
 
-Best regards,
-Krzysztof
+data::ctrl does not even give the slightest hint what this is about. You
+need to read up in the code to figure out what it means. Something like:
 
+struct sunxi_sc_nmi_data {
+	u32	reg_offs_ctrl;
+  	u32	reg_offs_pend;
+  	u32	reg_offs_enable;
+	u32	enable_val;
+};
+
+or even better:
+
+struct sunxi_sc_nmi_data {
+	struct {
+		u32	ctrl;
+  		u32	pend;
+  		u32	enable;
+        } reg_offs;
+	u32		enable_val;
+};
+
+makes it clear and obvious, no?
+
+> +static const struct sunxi_sc_nmi_data sun55i_a523_data __initconst = {
+> +	.ctrl	= SUN9I_NMI_CTRL,
+> +	.pend	= SUN9I_NMI_PENDING,
+> +	.enable	= SUN9I_NMI_ENABLE,
+> +	.enable_val = BIT(31),
+
+https://www.kernel.org/doc/html/latest/process/maintainer-tip.html#struct-declarations-and-initializers
+
+Thanks,
+
+        tglx
