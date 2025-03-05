@@ -1,123 +1,184 @@
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2178A1591E3;
-	Wed,  5 Mar 2025 19:22:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BF7324BD14
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 19:23:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741202565; cv=none; b=GbSkFY5UNAuXU/eKiM8HVW5NAuk5p4w4A8SFZZbmOw1OBVV9ViA4n/5M4hc1av/+II52SjGS8+OjD0a24tjhOpyjkiF01zFAngAKFz4QFgZs6FulkG3HL/YnMQ4QHwG5eubPTihJDo8Coi+TirDyuaHBVR0juCDSXmdnEr1I5KQ=
+	t=1741202586; cv=none; b=EOynYmpSnfToiYkm+o8HkXSgCr+jT+xE1C0E86lEvXHQX982KGUK/sjnx0/Wk8QnYroEzbNWKpNkTSKLigNQJtVV7sTYy0NeILElcbKGLiE5vEqZdtKJdjHBgr89Ff/tE0TtwP6jEoEqi94FfJwPWfJuvJ5KkC+eJTpueueFCkc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741202565; c=relaxed/simple;
-	bh=26RbaMAa8kT/2tcaTLRxOJBys6A4hO5+OiAFswQhDZw=;
+	s=arc-20240116; t=1741202586; c=relaxed/simple;
+	bh=u9bmhx1yHi5hXoDwtEMkKLqFy6j05cYMYLINTzYnCnc=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HUrck1HA7njYD42FBTlHqWqF1silo76I4LOjEcU+c6d4uSXm5xEt24+k0ZsGmC1s7SVErt5XbwIzaoZTMPQiZyL8cxMxTj+JAwzP2Krb8xS3xHZF7sJI/1USPqdxgg6axFklG7i9VDybi3RmgaJZjNHAbBfZUrC7yn5Npww2iSg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PGfgZKbH; arc=none smtp.client-ip=209.85.208.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=J3LJqrlDrg94D3xZ3hl/WijJemk0Li8KhJSsK1WtktruwnAp9I6DudCizwgyhh5dJnMqeb3zx/wMP8zi4etmZww6X8dubOmOg6PCKAu15Z0s+E1jmq+3DXXHQr79Ux4DIzpbZJjGq3Hqwej/ngC1CCCNhGBZtKf4GmeyURDjAvg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qopDXm1s; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PGfgZKbH"
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-5e4ad1d67bdso11406683a12.2;
-        Wed, 05 Mar 2025 11:22:43 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qopDXm1s"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-2237a32c03aso16715ad.1
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Mar 2025 11:23:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741202562; x=1741807362; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1741202584; x=1741807384; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=8BxyIguz4rFyaCvdc6aubFwusQJviCL1i6QXLcS/YFk=;
-        b=PGfgZKbH+eWPVVHUtHtzkmrAJVpyxE4GbPnKyC5fqS01Agck1iS4wKegx8kzeNluXK
-         3FNXWJCsV1sp+zIfxGYaUecmeLNJ9VIFWNkCkAqXo/ZzQxTy9UCqNzgCGWT4F3pD4GLf
-         1ZXeoe9EFKzQvIJMPBGbDxLgY84Etl3gf5fpUbK4gnCwTR/rJLZZo7ovFGTloElqMCdW
-         KYg3US+rHb+FdxSzLhY7/J/tjsHPc5rdCKNSQI33GCtUwhQ0WpI5d0WXOfQ1GeoH1xHE
-         ppYjkT1sszzkTf25imcLj0lV8UAYK+zrd9gCAVmKz6xRN8QQuhA+yb1Y7hr7egR6oVjN
-         xWXg==
+        bh=LGyJKu/nD+Qnf5N+NTMUyE4lAVhr8I4DP7eKOo06iYc=;
+        b=qopDXm1sX6qzmgDADFtyPi/SOhsNWG1SoI8FwQf1GD9UVS48qCYz4mAZKnIpejlOlD
+         jMdRlyKYSNdSCHJ1iZw/lh1EX1ihxH7zOCYzMzsjMgQVqxDEWufasi3URP41V5kJd3kO
+         jd8Xb1UgKNp9YNAUFuBx7J76G3r/PzmGG5EKi/Fi7t0Ob9zrhp2IQG2MdZwS7y5YVhQ3
+         jYAn9iRP1sgpZrRX2MzcqUDSXIXKB7s6s5LHmZgN5iE5FOInTKdGCS9d/0KDmeHxnG1L
+         GxUYYCKYUA0DVeSv8FA4v9YEVGqG04bQx4sYdFTzsW5RXcRmaBZ4Z40JdNK8gMky3OdS
+         UUUg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741202562; x=1741807362;
+        d=1e100.net; s=20230601; t=1741202584; x=1741807384;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=8BxyIguz4rFyaCvdc6aubFwusQJviCL1i6QXLcS/YFk=;
-        b=R2cANNF4FcTqlYZsB3G3tH0mkhF3ygIJV8G9UwcrtspNRrLDXpipXapMbFULFvMXjW
-         mE1P83j5n7SWnZgLyrVW8QYqYcvdTXDPVxg4vpwUWhrdQQ3cGCuiXn/9HfJkZVTUGZIe
-         EqGDBJcSTRT0bJDLcyhNl5fgYsaNbnIPJilknas1Uc1ng+g8ki0ZScoKaK9zUGlIWyK8
-         KdwmTpxAnXIuZv6HeSAecdtKO/6dATHFxEC06GL7A+Gi3lb8Fpn+elzkQopuQF2rCSHw
-         vlUOAhP/z20W9NCWXF5+T6XTWLL0TvIXkQIudMs3eRPto3dmJF3CvatMJO1EYlhkj3sC
-         /tEA==
-X-Forwarded-Encrypted: i=1; AJvYcCU05ZQE+N5x7kDZNT5lu5RluNHOIzEOlriyZKvqJClnXTNXROIVkK2SSfYSUSHt7LITh1jgpD5mFZw5kGI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwXByyFkboytcMyWJAGAIMJHK5CxYuBUnhWocHD1k2rRAi16rUD
-	uZjkj7B5EluYZhHWv03VLmVS/zO198J8l+7yA7ZkVzn3ZSSlA+vGwIgRtIhxux1cPhkNORK9dow
-	KTALXShV7wvw0+QVK0c3NJet6SCs=
-X-Gm-Gg: ASbGnctk2uLTPEgfUKXziD2rkxCJYs+k0hNzCZwq9aSGG+ZhLkh9YQGoyO9vP/CZZBc
-	a+3IvLMZ663/6q8VgGLx6EfMCQ5bARxWYbYSF/4Aj9vF4bkN+qPjxHetn602NZ3s8StI8ZwOClp
-	WEfyDxJ3tD3MtAXrx6Zpvf7WIBfwFI
-X-Google-Smtp-Source: AGHT+IGlUZ6C9qCYg1gc6PfUQhojmvoQtlUdsWmN2P8WPB2amUwheTXZlFA2mOeN9Bh05Tc6tAD+WcrSIRivSgmgjxI=
-X-Received: by 2002:a17:906:6a27:b0:ac0:6e7d:cd0b with SMTP id
- a640c23a62f3a-ac20d951583mr442488466b.34.1741202562018; Wed, 05 Mar 2025
- 11:22:42 -0800 (PST)
+        bh=LGyJKu/nD+Qnf5N+NTMUyE4lAVhr8I4DP7eKOo06iYc=;
+        b=WaZMJYoinjDywwHZzrVx7TWsFCL35Zk57iXx3V+vbfHgZOnPVWS2viNBurjWOs60Nu
+         B8CkXFcV61BpFCcL6ickah2eLRR3jZcE4yNOFnTdRQsDhF1Ap7FRw8YAvJsGe09U5eyv
+         htvutJh09Z1Cz+GmN8D8DWOCPMDqlUXb7y4QAUvv2wix9++OYxse8iTwtVE2KiLwBn+k
+         EDfhJDdqvL+Njw3WTngQJdJzGlgi3s3Ed8WmuKcIRn+MmooUWVSM/mh+njgrcPLYwj+k
+         8C6BNc4cCe57U7DvY/AG7WmG301WZLvPhYctiqd8MD49pUG1LnH6xesvNsvWjNXxmYRq
+         7tMw==
+X-Forwarded-Encrypted: i=1; AJvYcCURmCLN20N/9JD7Q1z5H4/nakibG+o1D+quVd1zxxheaXGJt2vdabiAjszWer1qLlwbzc+Qcmr55ciQz8w=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyPeSq0LLB3XNt+FzDhcKbfIuSpkSuTvL/QsRl5+EiTxlvCODzF
+	g4KsXrszY1mdM2AF9UxkBIrtixiNosjbha0nW61u19OU7cMjs3kiudTqN0lFQNxbbMvFPXQAs/k
+	mHp5c+86urwIbEWqkjNC64wVtvHlUROKtmLt3
+X-Gm-Gg: ASbGnct3odiuqElolFNb+xFhKYctmCCPXb/AUhYf98F73ISh8ns9QEMN/OAB0KSg+lS
+	K7eJP/AupR1SJI9EEFKyNHsoa69tash5B+wSkFki0bzc8x+VYL5NhtRbsJA8lm3ge2Ro9as/HUT
+	k/gtIKgqoQzxLCTPPbEHOh8UNkqnF4kA3iJn5UPzEL3FiwAFYxi32m0HA=
+X-Google-Smtp-Source: AGHT+IEO7wzY0By+C1nypMF3yAchYa0V90ZDe2pSWoIuySujENNQdXsNBn0UqC+ZNzGUmzLGqKsUMXJZ90xEb9bHD7c=
+X-Received: by 2002:a17:902:d481:b0:220:c905:689f with SMTP id
+ d9443c01a7336-2240b626059mr117635ad.25.1741202584090; Wed, 05 Mar 2025
+ 11:23:04 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250305042930.3453265-1-adamsimonelli@gmail.com> <20250305042930.3453265-4-adamsimonelli@gmail.com>
-In-Reply-To: <20250305042930.3453265-4-adamsimonelli@gmail.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Wed, 5 Mar 2025 21:22:06 +0200
-X-Gm-Features: AQ5f1Jr9CT8d0VR1B8A5PdW5GUuBVSxR6hCDvQ3AJ7TYWCBwor9DwnJ86RMR3bM
-Message-ID: <CAHp75Ve02Ma1EswjnsxiV5uyh3A9NU0B90QLFGS13ifr594QFw@mail.gmail.com>
-Subject: Re: [PATCH v7 3/3] tty: Change order of ttynull to be linked sooner
- if enabled as a console.
-To: adamsimonelli@gmail.com
-Cc: linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Jiri Slaby <jirislaby@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Steven Rostedt <rostedt@goodmis.org>, John Ogness <john.ogness@linutronix.de>, 
-	Sergey Senozhatsky <senozhatsky@chromium.org>, Petr Mladek <pmladek@suse.com>
+References: <20250305163935.1605312-1-thomas.falcon@intel.com>
+In-Reply-To: <20250305163935.1605312-1-thomas.falcon@intel.com>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 5 Mar 2025 11:22:53 -0800
+X-Gm-Features: AQ5f1JohZr7JNZCeP4T_8zyJCiixX7hgqXkMKA_FZqWI4pdVtM_nR5v_7c5EuY0
+Message-ID: <CAP-5=fUb0yhDHKxsMjqYTtJUfA-Me7kFHE66XRxQ+-OUSGsmLQ@mail.gmail.com>
+Subject: Re: [PATCH v6] perf script: Fix output type for dynamically allocated
+ core PMU's
+To: Thomas Falcon <thomas.falcon@intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	Kan Liang <kan.liang@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Mar 5, 2025 at 6:30=E2=80=AFAM <adamsimonelli@gmail.com> wrote:
+On Wed, Mar 5, 2025 at 8:39=E2=80=AFAM Thomas Falcon <thomas.falcon@intel.c=
+om> wrote:
 >
-> From: Adam Simonelli <adamsimonelli@gmail.com>
+> This patch was originally posted here:
 >
-> If CONFIG_NULL_TTY_DEFAULT_CONSOLE is enabled, and CONFIG_VT is disabled,
-> ttynull will become the default primary console device, based on the link
-> order.
+> https://lore.kernel.org/all/20241213215421.661139-1-thomas.falcon@intel.c=
+om/
 >
-> Many distributions ship with CONFIG_VT enabled. On tested desktop hardwar=
-e
-> if CONFIG_VT is disabled, the default console device falls back to
-> /dev/ttyS0 instead of /dev/tty.
+> I have rebased on top of Arnaldo's patch here:
 >
-> This could cause issues in user space, and hardware problems:
+> https://lore.kernel.org/all/Z2XCi3PgstSrV0SE@x1/
 >
-> 1. The user space issues include the case where  /dev/ttyS0 is
-> disconnected, and the TCGETS ioctl, which some user space libraries use
-> as a probe to determine if a file is a tty, is called on /dev/console and
-> fails. Programs that call isatty() on /dev/console and get an incorrect
-> false value may skip expected logging to /dev/console.
+> The original commit message:
+> "
+> perf script output may show different fields on different core PMU's
+> that exist on heterogeneous platforms. For example,
 >
-> 2. The hardware issues include the case if a user has a science instrumen=
-t
-> or other device connected to the /dev/ttyS0 port, and they were to upgrad=
-e
-> to a kernel that is disabling the CONFIG_VT option, kernel logs will then=
- be
-> sent to the device connected to /dev/ttyS0 unless they edit their kernel
-> command line manually.
+> perf record -e "{cpu_core/mem-loads-aux/,cpu_core/event=3D0xcd,\
+> umask=3D0x01,ldlat=3D3,name=3DMEM_UOPS_RETIRED.LOAD_LATENCY/}:upp"\
+> -c10000 -W -d -a -- sleep 1
 >
-> The new CONFIG_NULL_TTY_CONSOLE option will give users and distribution
-> maintainers an option to avoid this. Disabling CONFIG_VT and enabling
-> CONFIG_NULL_TTY_CONSOLE will ensure the default kernel console behavior
-> is not dependant on hardware configuration by default, and avoid
-> unexpected new behavior on devices connected to the /dev/ttyS0 serial
-> port.
+> perf script:
+>
+> chromium-browse   46572 [002] 544966.882384:      10000         cpu_core/=
+MEM_UOPS_RETIRED.LOAD_LATENCY/: 7ffdf1391b0c     10268100142 \
+>  |OP LOAD|LVL L1 hit|SNP None|TLB L1 or L2 hit|LCK No|BLK    N/A    5   7=
+    0   7fad7c47425d [unknown] (/usr/lib64/libglib-2.0.so.0.8000.3)
+>
+> perf record -e cpu_atom/event=3D0xd0,umask=3D0x05,ldlat=3D3,\
+> name=3DMEM_UOPS_RETIRED.LOAD_LATENCY/upp -c10000 -W -d -a -- sleep 1
+>
+> perf script:
+>
+> gnome-control-c  534224 [023] 544951.816227:      10000 cpu_atom/MEM_UOPS=
+_RETIRED.LOAD_LATENCY/:   7f0aaaa0aae0  [unknown] (/usr/lib64/libglib-2.0.s=
+o.0.8000.3)
+>
+> Some fields, such as data_src, are not included by default.
+>
+> The cause is that while one PMU may be assigned a type such as
+> PERF_TYPE_RAW, other core PMU's are dynamically allocated at boot time.
+> If this value does not match an existing PERF_TYPE_X value,
+> output_type(perf_event_attr.type) will return OUTPUT_TYPE_OTHER.
+>
+> Instead search for a core PMU with a matching perf_event_attr type
+> and, if one is found, return PERF_TYPE_RAW to match output of other
+> core PMU's.
+> "
+>
+> Suggested-by: Kan Liang <kan.liang@intel.com>
+> Suggested-by: Ian Rogers <irogers@google.com>
+> Signed-off-by: Thomas Falcon <thomas.falcon@intel.com>
 
-...
+Reviewed-by: Ian Rogers <irogers@google.com>
 
-Since it touches the link order only under drivers/tty the commit
-message should mention what the effect will be on the consoles drivers
-for which are located elsewhere.
+Thanks,
+Ian
 
---=20
-With Best Regards,
-Andy Shevchenko
+> ---
+> v2: restrict pmu lookup to platforms with more than one core pmu
+> v3: only scan core pmu list
+> v4: rebase on top of Arnaldo's patch
+> v5: update based on Namhyung's feedback here
+> https://lore.kernel.org/lkml/Z8YcOidenzGofq7R@google.com/
+> v6: update based on Ian's feedback here
+> https://lore.kernel.org/linux-perf-users/CAP-5=3DfVwrG5ZViysO7qKYUw0326WF=
+fa7nOzwe70drYfHq=3DAXhA@mail.gmail.com/
+> ---
+>
+>  tools/perf/builtin-script.c | 16 +++++++++++++---
+>  1 file changed, 13 insertions(+), 3 deletions(-)
+>
+> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+> index d797cec4f054..253c4ca395e1 100644
+> --- a/tools/perf/builtin-script.c
+> +++ b/tools/perf/builtin-script.c
+> @@ -400,10 +400,20 @@ static inline int output_type(unsigned int type)
+>
+>  static inline int evsel__output_type(struct evsel *evsel)
+>  {
+> -       if (evsel->script_output_type =3D=3D OUTPUT_TYPE_UNSET)
+> -               evsel->script_output_type =3D output_type(evsel->core.att=
+r.type);
+> +       int type =3D evsel->script_output_type;
+>
+> -       return evsel->script_output_type;
+> +       if (type =3D=3D OUTPUT_TYPE_UNSET) {
+> +               type =3D output_type(evsel->core.attr.type);
+> +               if (type =3D=3D OUTPUT_TYPE_OTHER) {
+> +                       struct perf_pmu *pmu =3D evsel__find_pmu(evsel);
+> +
+> +                       if (pmu && pmu->is_core)
+> +                               type =3D PERF_TYPE_RAW;
+> +               }
+> +               evsel->script_output_type =3D type;
+> +       }
+> +
+> +       return type;
+>  }
+>
+>  static bool output_set_by_user(void)
+> --
+> 2.48.1
+>
