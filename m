@@ -1,95 +1,106 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B78924F5A5;
-	Wed,  5 Mar 2025 15:53:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59C5B2505C2
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 15:53:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741189994; cv=none; b=Z8CUVq1c7tmAW4ed+J5a1E2gL66/ZJ3R4Pwz6wmIwV7ydm2qNdvBpFqrKA5DLW6QRcTJk4cLErWJDXpO1yeina9f3+3KFXim5U/wmFijY7qCuCr86xR9Einj34fRNV3wxTcDPKWPYRxfsg1ZY2wI10pLmMeJimtv3LQoHFkOSrk=
+	t=1741190014; cv=none; b=W9XqNpdSuix4VMDGwQbXvfoVf3OaeNCEG9qloN6BezFfer4iZuLSiUJ1fuvMMBQF4T3RroJkIjzvH7xRm6A2d+dURdPkYqb5jUJS2XuVUeS9CxFk39EwBSO1UVwvgB42Oecve5J0f8u8yay2HW4ScMj5B1WHfJXza66EtJ1ErqI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741189994; c=relaxed/simple;
-	bh=ppZQlzfaKB/X4mxJWRT1PkAJjs2HSRd6l+gBVbjxM7k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lSrN98EwvQ7L27BGsqcbATj3wIlXWpevIlKO7qobMAMDe7vAPR3p9mTiK4M0w9nC0eJVRXzsjjXE8gkOeLmdmv7zjTgREqsTGQvHI2kT6Eto5yHP+1BRVqk4HVgkLia5aoGjptLghTHUVT+vqEdCQ1R2Mv61ox5TbnIkoJq4Ouc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2235189adaeso19466725ad.0;
-        Wed, 05 Mar 2025 07:53:12 -0800 (PST)
+	s=arc-20240116; t=1741190014; c=relaxed/simple;
+	bh=7pugq9Q0HrD0WFy5Cy7xHVcUHRDsYuQl+Ilp5KZtAgE=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=NW4x6NXQtFW3NmomXKjIRXPAFYi2HApXXUdT2YBErmWX3YG2lhah0sDQX5AP1NS365k53OT0mKt730bBvo5Sa6XJFpKeN7+ioxzYaEISY4uS0a/xLHzerr5ZYBf88wtjPJte9g4BZ/wcwv6241wdhuXXF5mN7cpYssFx6rd2rDw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rFCUIxZj; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rFCUIxZj"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-43bbc8b7c65so40344575e9.0
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Mar 2025 07:53:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1741190009; x=1741794809; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=95chebkxx5uPpuk8Hf/uN1bb/WBC6Ds7j8DqJcXx7/c=;
+        b=rFCUIxZjwzGncw+CJ8ac0yOnBxwosI+HlPG4hdlWTffVVOJ2Y9HKgp/qgGnFUDUwRE
+         CB8w+WHFjdGDAJoXgep8bFA0Yw40X8jbbjQ0+SVzMn9MaQ8WVSwEW9CwUCTKvIgvFHsl
+         7Wxc7WCH80enkOsVwm1RJ8Q8eL8OlvDMReiHYr14RfWCZb+IJGZbaHx7NMO5fC4LbnSk
+         o2gLZrHAS00uk2UHuhlfhBazO4AjzZHswfxQW39OQhLhNScoVY3ruSNJ2byJGN/I4W95
+         Pv4+KPOnBjRmw8cjxm5JWY+MaYe5RuBkXVHnpLJUJdphZqzG+e1tLK0PjY3ASL5h6oMO
+         pbXw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741189992; x=1741794792;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
+        d=1e100.net; s=20230601; t=1741190009; x=1741794809;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=coCinc3sJhA0k0wF2b7abKlgXemlBKbg8/eDdOfqRJ0=;
-        b=FQVDWOc27Dn1V04qmpNMnaMYQMz2o8USd58htK1Gj+yRPkvRBxrIjPRLBk9VCc1+Tx
-         4t8IUos0jaknNlP6WrCdWR2E0lPK8jdsI7SVsGhka1DP788Z1EztZ9N4ilsZie/rGwtM
-         HR6bavO67w3aPXhwJco7FcOCB/OrwvJdl9kYxRf+v9iiXL37BX/bva9hM/lyBPMR3kE9
-         J5Z+AQs5wMoE2Um+mxp5da9uql6sv2pKBzShhHYjn37OrAMumYmTT8Zg/UT8NkFwNkoc
-         87/5/+TsH4ZraWchO7gr0sCHwK8ySfu8l6+/iJuBjyfwo0N+1UJLxjI/clBUQPPSA93n
-         e5aQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVA9SX6E3efJqejWTFwasLbHrKFp7a5CDiTwD+lAwDYeuxhCY0K1285Elj6OoPd4c/OfITvH+8kQ++9GyxSqmQ=@vger.kernel.org, AJvYcCVftmNYOAdzyi4ntuJMlRZF0cLB54hn/I+93wcj4ehS0sEYHuslK0rvQUOQKeg8hXtz6TIzciaUTPv2op1e@vger.kernel.org, AJvYcCXvem+7l4qe3nLdVcpDh4sYLJNwdsXq8EvvPcGYGcUEHGtDhvwa/Vl4H+595VPIUH0+HWKvfTNZY0Qt@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxdo0ddMErl/f9KTR/mLKy9EMeC7iiKMWZ6oSfIGgA4AZqiz9Os
-	wWg3OiOKXCNwE/Rsed7aEhEURqsAXSMidq/yBIZY5AH+AEXG6FsY
-X-Gm-Gg: ASbGncuo+At9avjQPM1ycn2tkRzXjaRIms7pc3XDZWF5juGfulTi6NuXiCT+z54hL4U
-	l1eGu2p5aL0xK+dUXH5Vq0Ckupg9FGTlMC03SshTvUvMRyvybtN1ACiM1Gb3yXI5jYaZGV8J3Bj
-	Fw1BV6MhevSlM2bLdIHLv/OtKn4toybvde2mgMJDl97XIs+OYg+f1VcbaAnpFpcQeiF50qdpESA
-	tlDdzggnpXHhSQPLIUtMJSnHTqdqhHwiE07nwO+s6HEASgl5o0RhUjHOjLxXLAM+ypKXQEfh8zy
-	s3+1ME/KaO+T2Sjt3gs5u8npXDE1wtQdssw9w+Od+XwIZOV3PgQ6JY1tOS3PT+Ukg0qHw+SusD9
-	LVQY=
-X-Google-Smtp-Source: AGHT+IHm3pCCuGfdEnUWjyWaHdgQ/lVnz80Qp+Z3x7kMtg+uofWAN2w8A7InbEh1tbA8ZUzXfJ0sgg==
-X-Received: by 2002:a17:903:2407:b0:223:517a:d4ed with SMTP id d9443c01a7336-223f1d6a9e4mr60879475ad.15.1741189991761;
-        Wed, 05 Mar 2025 07:53:11 -0800 (PST)
-Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
-        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-2240725fc74sm1944895ad.60.2025.03.05.07.53.11
+        bh=95chebkxx5uPpuk8Hf/uN1bb/WBC6Ds7j8DqJcXx7/c=;
+        b=JHpQAQWmyWFFPrsh/oq+L3cZJVCdfQxaOGSTKF3UjFjZX3tILztVeimILsbNoUniWo
+         u9G/04lthi7oOMR8TiO8G4FjBvNIq0eVgseazKUMgZ8iRPrgPqL5JR8fVEvf83pysGMp
+         yFAe99WVKbU6Fc6m+r/WkSe/q6t67bPVF0uYfuVrAEQ+CTB7Xl3If4HXCMstaSOLguGs
+         7hf8Ny9TkF/RzqwJr5iDJPvpbgjz2cHnfsmEDFm/I3phhV6pbEa3STundmWLqg1/HjvC
+         hFlTB0mvfjANiUmA4RZLEstcXa5Njz1HS2IghY2kq/oHJ+zzu/hqktNGLT3RDsmKPxY0
+         UK4g==
+X-Forwarded-Encrypted: i=1; AJvYcCVkzR76s9DHzuOMjW/jkUNKSdiQrKdY0bldm2e1mnc/URrIrGmsLkxu/3pHeI4R4P/2cdqJrD5LufzpOoQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzG06Pu+BnVoQxyHsBQQrlHjCYLi+N5w3HR5qtbJh4FeSaQYKy6
+	GGD1/mY5FoIkfV15pNPVkBf6QGLDJQrQe2nJQBLmpmnGZ7gNpVhzUHz5zA0FuMA=
+X-Gm-Gg: ASbGncvsqsNFRsetrSE922LDLgrMpEySsd4uCfKzcjUEO3vdRBUiplhCKIwX7VvBt0E
+	cH0+0d4QHuYStz+mleh3/LPklxLMLaEZH4JjTZw9hh1ENnLDmS4Wew7Bu033fGVAEGMfLAG1iRs
+	3JoPl2wgEtaPfy/Rd6loIsg1qzAyj7V96fBZE+WAiomHhPDeDnnS9NyLHxBgf0OkmKtoomue3Se
+	BzTWy1SGoKsXHZTwtTqgQts7QcfrfJchnFu2BT8GrdDpNAa1xir9FFvmp6m3p2qoh8RYjY0yC35
+	AkPswhbr65gLaInIjTexEsGUIIQkBzpFtjq4xRU0Te729HR9oQ==
+X-Google-Smtp-Source: AGHT+IG46qG9NZg5asWLlzpx5UNbKVYGM9zYolGfR5W2sKaY9Lf5cmP+PeNKMAFOBaBivIz2363Meg==
+X-Received: by 2002:a05:600c:198f:b0:439:9ee1:86bf with SMTP id 5b1f17b1804b1-43bd294309bmr36486625e9.7.1741190009583;
+        Wed, 05 Mar 2025 07:53:29 -0800 (PST)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-43bd4291ffbsm21180345e9.15.2025.03.05.07.53.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Mar 2025 07:53:11 -0800 (PST)
-Date: Thu, 6 Mar 2025 00:53:09 +0900
-From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Jingoo Han <jingoohan1@gmail.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Vidya Sagar <vidyas@nvidia.com>, Frank Li <Frank.Li@nxp.com>,
-	Niklas Cassel <cassel@kernel.org>, linux-pci@vger.kernel.org,
+        Wed, 05 Mar 2025 07:53:29 -0800 (PST)
+Date: Wed, 5 Mar 2025 18:53:26 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Jeff Hugo <jeff.hugo@oss.qualcomm.com>
+Cc: Carl Vanderlip <quic_carlv@quicinc.com>,
+	Oded Gabbay <ogabbay@kernel.org>,
+	Jacek Lawrynowicz <jacek.lawrynowicz@linux.intel.com>,
+	Stanislaw Gruszka <stanislaw.gruszka@linux.intel.com>,
+	linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
 	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] PCI: dwc: ep: Return -ENOMEM for allocation failures
-Message-ID: <20250305155309.GH847772@rocinante>
-References: <36dcb6fc-f292-4dd5-bd45-a8c6f9dc3df7@stanley.mountain>
+Subject: [PATCH] accel/qaic: Fix integer overflow in qaic_validate_req()
+Message-ID: <820aed99-4417-4e4b-bf80-fd23c7a09dbb@stanley.mountain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <36dcb6fc-f292-4dd5-bd45-a8c6f9dc3df7@stanley.mountain>
+X-Mailer: git-send-email haha only kidding
 
-Hello,
+These are u64 variables that come from the user via
+qaic_attach_slice_bo_ioctl().  Ensure that the math doesn't have an
+integer wrapping bug.
 
-> If the bitmap allocations fail then dw_pcie_ep_init_registers() currently
-> returns success.  Return -ENOMEM instead.
-[...]
-> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> @@ -908,6 +908,7 @@ int dw_pcie_ep_init_registers(struct dw_pcie_ep *ep)
->  	if (ret)
->  		return ret;
->  
-> +	ret = -ENOMEM;
->  	if (!ep->ib_window_map) {
->  		ep->ib_window_map = devm_bitmap_zalloc(dev, pci->num_ib_windows,
->  						       GFP_KERNEL);
+Cc: stable@vger.kernel.org
+Fixes: ff13be830333 ("accel/qaic: Add datapath")
+Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+---
+ drivers/accel/qaic/qaic_data.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Nice catch!
+diff --git a/drivers/accel/qaic/qaic_data.c b/drivers/accel/qaic/qaic_data.c
+index c20eb63750f5..cd5a31edba66 100644
+--- a/drivers/accel/qaic/qaic_data.c
++++ b/drivers/accel/qaic/qaic_data.c
+@@ -563,7 +563,8 @@ static int qaic_validate_req(struct qaic_device *qdev, struct qaic_attach_slice_
+ 		      invalid_sem(&slice_ent[i].sem2) || invalid_sem(&slice_ent[i].sem3))
+ 			return -EINVAL;
+ 
+-		if (slice_ent[i].offset + slice_ent[i].size > total_size)
++		if (slice_ent[i].offset > U64_MAX - slice_ent[i].size ||
++		    slice_ent[i].offset + slice_ent[i].size > total_size)
+ 			return -EINVAL;
+ 	}
+ 
+-- 
+2.47.2
 
-This will cover subsequent calls to devm_bitmap_zalloc() and devm_kcalloc().
-
-Reviewed-by: Krzysztof Wilczyński <kw@linux.com>
-
-Thank you!
-
-	Krzysztof
