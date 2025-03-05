@@ -1,126 +1,71 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from mail-10629.protonmail.ch (mail-10629.protonmail.ch [79.135.106.29])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84D6C20D508
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 11:03:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E53B1F63F0;
+	Wed,  5 Mar 2025 11:03:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.29
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741172587; cv=none; b=s9zkV0jiKmpL5qJw7XFxyd4qvvCezf3tysOHOkF8n8Q0gmCsW/8+41EB79ROb57+NfFrwica88tQ4VZbPn8ZPloMr6LLpOpkPkfVGUkhKQ4DlKP4QW9guiZQ/qZd6gcUMPc+1uU98zYk4pTKP/VrlC9NFZt75kcSOd4iA7cVLAc=
+	t=1741172604; cv=none; b=DIW4Kn9CGufckBgiOV624XpWWO5NPr83BBqANhMRQMyn3v9VnTwcoiD3BAjuS4LHcTRq3AbMrA+q0Bq9c5ly9qrxlHEbHKycUmNaaXblmJYGJYvaDsR8oSueSG4l/4iWuV/xXng7//j4MDZde0I3gcj54Wn9P5Z2CjAi2Wt+1Sc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741172587; c=relaxed/simple;
-	bh=JAUm4+VWC+SmkWP2S8QleEY91rM70SFeEbmpI/d5+Fo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VaISIvrrCSvM2GGnANBmebjORo/KMryo2+xglr9pt3ZEaYI78DtNBRpkaN4h/K6VAU5ah5y++51Ktgg7wgD6B1ImHdmdW9jroQ0uUuPsqISzRRsr7kXbv2p/ShGb3Ce+MDQ7phDiE6BTlm5KFSo9b0IzNDYB10qibJP+vsRFos0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from ptz.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::77] helo=[127.0.0.1])
-	by metis.whiteo.stw.pengutronix.de with esmtp (Exim 4.92)
-	(envelope-from <a.fatoum@pengutronix.de>)
-	id 1tpmVq-0008LI-3s; Wed, 05 Mar 2025 12:02:06 +0100
-Message-ID: <7ac2b8db-22c7-4168-b1b7-4f9f0ab10531@pengutronix.de>
-Date: Wed, 5 Mar 2025 12:01:53 +0100
+	s=arc-20240116; t=1741172604; c=relaxed/simple;
+	bh=OZ46ynppKxTqP5Nv9R7SbLqE97iWRgo6BATZZbJ5iP4=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=B4LbJH0Tpyc2uXp4TOGLIN9q79RJeBnZC3h2yNSFNHDq6MOoXhe8ArwZ93D29hDqaJWqNWa+YuGIfrJe3/FZ8lwD4S3lCJycAAI3Ad56T8thRw8JTgz+UDmupEBRCXt68Wif6TaYkaLsXvvTxn8QyDeri0b4DXggx5YNXnaIy8U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=O0SiKX++; arc=none smtp.client-ip=79.135.106.29
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="O0SiKX++"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=hrjhzq6vkzc2bn7yrbkgmgfb4e.protonmail; t=1741172600; x=1741431800;
+	bh=OZ46ynppKxTqP5Nv9R7SbLqE97iWRgo6BATZZbJ5iP4=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
+	b=O0SiKX++8Qm/x5Jq+LjoY2GHqvb7h7pwAhS0XHZ0UAVWaK5MwC8+/8j1pTRNf1/xQ
+	 fTsJfBNSmWsyVSLvaTZvexYEOoKUiSFhut6QtWYdMol/cEWZuh/JqHpjArFtPfeolg
+	 l4ZVE3ySp18qaf07aeCbYcHPqt21DJrOIGPsB6GdkNXfkAFcqlbl+GDDhOu6DwxcHp
+	 dYDeou3UdE5UlxsTNJTAdqg0qXLKHWfSP95pOILuXayxWRQIb7fz/9GoucdI7gA+1U
+	 qenmtxb6KAEI5AE6YDwqw9klK/iAjOne8ZVzrjNm2I+tyDgDkjcl3FtbkmhK+Lmydn
+	 SujcpIx4SuHEw==
+Date: Wed, 05 Mar 2025 11:03:14 +0000
+To: Andreas Hindborg <a.hindborg@kernel.org>
+From: Benno Lossin <benno.lossin@proton.me>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org
+Subject: Re: [PATCH 03/22] rust: add extensions to the pin-init crate and move relevant documentation there
+Message-ID: <D88A66HC772Y.3SKD6JTURFLUZ@proton.me>
+In-Reply-To: <87eczbg7vf.fsf@kernel.org>
+References: <20250304225245.2033120-1-benno.lossin@proton.me> <WfFbEdgY77_F8Av10-sYEt67FhgZBBdxKadOSC-iOzAoK2YvI9JSuaOBybuOyZT-nzpRubp2llVQcXbmE_Ffow==@protonmail.internalid> <20250304225245.2033120-4-benno.lossin@proton.me> <87eczbg7vf.fsf@kernel.org>
+Feedback-ID: 71780778:user:proton
+X-Pm-Message-ID: e10f1a76ab060a99ff84e415ed237ee69c295140
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 1/2] watchdog: Add a new flag WDIOF_STOP_MAYSLEEP
-To: George Cherian <gcherian@marvell.com>,
- "linux@roeck-us.net" <linux@roeck-us.net>
-Cc: "wim@linux-watchdog.org" <wim@linux-watchdog.org>,
- "jwerner@chromium.org" <jwerner@chromium.org>,
- "evanbenn@chromium.org" <evanbenn@chromium.org>,
- "krzk@kernel.org" <krzk@kernel.org>,
- "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
- "thomas.richard@bootlin.com" <thomas.richard@bootlin.com>,
- "lma@chromium.org" <lma@chromium.org>,
- "bleung@chromium.org" <bleung@chromium.org>,
- "support.opensource@diasemi.com" <support.opensource@diasemi.com>,
- "shawnguo@kernel.org" <shawnguo@kernel.org>,
- "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
- "kernel@pengutronix.de" <kernel@pengutronix.de>,
- "festevam@gmail.com" <festevam@gmail.com>, "andy@kernel.org"
- <andy@kernel.org>, "paul@crapouillou.net" <paul@crapouillou.net>,
- "alexander.usyskin@intel.com" <alexander.usyskin@intel.com>,
- "andreas.werner@men.de" <andreas.werner@men.de>,
- "daniel@thingy.jp" <daniel@thingy.jp>,
- "romain.perier@gmail.com" <romain.perier@gmail.com>,
- "avifishman70@gmail.com" <avifishman70@gmail.com>,
- "tmaimon77@gmail.com" <tmaimon77@gmail.com>,
- "tali.perry1@gmail.com" <tali.perry1@gmail.com>,
- "venture@google.com" <venture@google.com>,
- "yuenn@google.com" <yuenn@google.com>,
- "benjaminfair@google.com" <benjaminfair@google.com>,
- "maddy@linux.ibm.com" <maddy@linux.ibm.com>,
- "mpe@ellerman.id.au" <mpe@ellerman.id.au>,
- "npiggin@gmail.com" <npiggin@gmail.com>,
- "christophe.leroy@csgroup.eu" <christophe.leroy@csgroup.eu>,
- "naveen@kernel.org" <naveen@kernel.org>,
- "mwalle@kernel.org" <mwalle@kernel.org>,
- "xingyu.wu@starfivetech.com" <xingyu.wu@starfivetech.com>,
- "ziv.xu@starfivetech.com" <ziv.xu@starfivetech.com>,
- "hayashi.kunihiko@socionext.com" <hayashi.kunihiko@socionext.com>,
- "mhiramat@kernel.org" <mhiramat@kernel.org>,
- "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>,
- "chrome-platform@lists.linux.dev" <chrome-platform@lists.linux.dev>,
- "imx@lists.linux.dev" <imx@lists.linux.dev>,
- "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
- "openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>,
- "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
- "patches@opensource.cirrus.com" <patches@opensource.cirrus.com>,
- =?UTF-8?Q?Marek_Beh=C3=BAn?= <kabel@kernel.org>,
- Pengutronix Kernel Team <kernel@pengutronix.de>
-References: <20250305101025.2279951-1-george.cherian@marvell.com>
- <20250305101025.2279951-2-george.cherian@marvell.com>
- <irmewriceyzxr6jvbiao5vqrvelpftbjalmheodx5w63zi6k2y@dg3wlvs6zryd>
- <PH8PR18MB538122CE6706872B8A836A94C5CB2@PH8PR18MB5381.namprd18.prod.outlook.com>
-Content-Language: en-US
-From: Ahmad Fatoum <a.fatoum@pengutronix.de>
-In-Reply-To: <PH8PR18MB538122CE6706872B8A836A94C5CB2@PH8PR18MB5381.namprd18.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:900:1d::77
-X-SA-Exim-Mail-From: a.fatoum@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Hi George,
-Hi Guenter,
+On Wed Mar 5, 2025 at 10:11 AM CET, Andreas Hindborg wrote:
+> "Benno Lossin" <benno.lossin@proton.me> writes:
+>
+>> In preparation of splitting off the pin-init crate from the kernel
+>> crate, move all kernel-specific documentation from pin-init back into
+>> the kernel crate.
+>
+> This patch **moves** very few lines. The additions to init.rs seem
+> either copied or new additions.
 
-On 05.03.25 11:34, George Cherian wrote:
->> why is armada_37xx_wdt also here?
->> The stop function in that driver may not sleep.
-> Marek,
-> 
-> Thanks for reviewing.
-> Since the stop function has a regmap_write(), I thought it might sleep.
-> Now that you pointed it out, I assume that it is an MMIO based regmap being used for armada.
-> I will update the same in the next version
+Yes git's `--color-moved` only shows a few moved lines, but all
+documentation lines that are removed from `rust/pin-init/src/lib.rs` are
+added into `init.rs`. The example is "new", as it is copied from the
+user-space version [1]. I can update the commit message with more
+information.=20
 
-Failure to add WDIOF_STOP_MAYSLEEP when it's needed can lead to
-kernel hanging. Failure to add an alternative WDIOF_STOP_ATOMIC
-would lead to the kernel option being a no-op.
+[1]: https://github.com/Rust-for-Linux/pin-init/blob/main/src/lib.rs#L160
 
-I think a no-op stop_on_panic (or reset_on_panic) is a saner default.
-
+---
 Cheers,
-Ahmad
+Benno
 
-> 
->>
->> Marek
-> 
-> -George
-
-
--- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
