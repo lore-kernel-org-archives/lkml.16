@@ -1,92 +1,114 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1ABF24EF7E;
-	Wed,  5 Mar 2025 14:19:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE68C24EAAA;
+	Wed,  5 Mar 2025 14:19:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741184391; cv=none; b=B55jfXNFGWB/MaoUdJeb7d0890E8lpDXSJwmfgmmHSDo0yHqGVQUc8Yd0LxZCDNRBTlC/I0j8BwP6SfDhXYmER8oOPxhLM8XwN5y2IZEODr0Kf5SsJBh+OSrrjOMhzVyf+UtEnplF9idM8kL1OBTJwmHGVKy3taRtStauWIwbTU=
+	t=1741184392; cv=none; b=j5FdOXNGR91EP3zKagHw9OquNqR3k0U6AHyGOZZquUczv1vgnNMm2IVZucDkxswW4KGjtJ0caF/pDtaOx/nj6ZNwF3YKx6rynBYQQWz0as3tr6YYfwBhWMFlG4WEDyUfnHN99cNLLhcxpGYmZGFYMOj+CXsf18w2iUqfsZivIQ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741184391; c=relaxed/simple;
-	bh=0l441pr90rzEMH5F4wcsMjav/46G6mCwscD7MDFRGIw=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=QZ7ZkeQMAmLAkuMq3jIsSpPlLgnD1B3BaoQQ8KVWsJVDXvQhommpE7OH3j1uzQsFcnR9CmqlfnIVuH96C72m8ayDjVCICdrR0UKROb/4yJX6euv9oLgMZjh0Tb+TuWejr/qvGCzXzX3kzxVwzA40jenXoVWDwIhgPAFEjmZr1Vk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sSxM59Hs; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741184392; c=relaxed/simple;
+	bh=WyIXdMpNK4GEJ0DYzGITV5H/zjEEBgsM1xMcXw8II/U=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=DdF/gpc0SIl+448qwvXZvYDLoVeB1C5p127M12jQYvCpvfNpO5p/dEyxq0cSEQWsQ4Uxf7fZYKVQIREUT+4UEEfvDynASAxa+co+kGo9LJpBTxgiwgUqBhugxesOd4eN1XiNG9i938oVSJdYvyPsz5L2YA0sYzSuOwKWfQnEhL0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=f939CQ8O; arc=none smtp.client-ip=217.70.183.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sSxM59Hs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C3BBC4CEE2;
-	Wed,  5 Mar 2025 14:19:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741184391;
-	bh=0l441pr90rzEMH5F4wcsMjav/46G6mCwscD7MDFRGIw=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=sSxM59HsTjZXoDy/ACPrO7P7UxlCUR+pKPK6Pzb4dMTS5so36XW9JT1PSqOfAm981
-	 PudC78oLV+67xGWMmmojxoyMqbAspNyCfREioT5xyTze8ljpRXWuVwE7BfkOSWmtFh
-	 lcDugb/O03KG97IgZdJXjroeuQqGyeJGjPama2kROC3JDwvTJeZwOgvZmLs+gf/nFe
-	 JRmSIZjNJ17FA//P8v3fq+d0t56YV4k0e6JGSCIUDsGXLlbdK5j306bdPxwo5U71CF
-	 OnU2kJRS25BS9eMiPwKcTiojX3tzzhQQnpO8CtNcQzNrv0LKReIAHWVv8yWVnTZPYi
-	 3sL7EvOXnywVQ==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-To: "Miguel Ojeda" <miguel.ojeda.sandonis@gmail.com>
-Cc: "Benno Lossin" <benno.lossin@proton.me>,  "Miguel Ojeda"
- <ojeda@kernel.org>,  "Alex Gaynor" <alex.gaynor@gmail.com>,  "Boqun Feng"
- <boqun.feng@gmail.com>,  "Gary Guo" <gary@garyguo.net>,  =?utf-8?Q?Bj?=
- =?utf-8?Q?=C3=B6rn?= Roy Baron
- <bjorn3_gh@protonmail.com>,  "Alice Ryhl" <aliceryhl@google.com>,  "Trevor
- Gross" <tmgross@umich.edu>,  "Danilo Krummrich" <dakr@kernel.org>,
-  "Masahiro Yamada" <masahiroy@kernel.org>,  "Nathan Chancellor"
- <nathan@kernel.org>,  "Nicolas Schier" <nicolas@fjasle.eu>,
-  <linux-kernel@vger.kernel.org>,  <rust-for-linux@vger.kernel.org>,
-  <linux-kbuild@vger.kernel.org>
-Subject: Re: [PATCH 14/22] rust: add pin-init crate build infrastructure
-In-Reply-To: <CANiq72k=KiYhKr9XHU38==Rx0df4rERyOL1abRG_cDo+4NNa0g@mail.gmail.com>
- (Miguel
-	Ojeda's message of "Wed, 05 Mar 2025 13:50:36 +0100")
-References: <20250304225245.2033120-1-benno.lossin@proton.me>
-	<jpQp16UCJ00pInqOI-QFULU6-FKl2bBtAlmnxtXWLgXPVb7gy6d727nr7THeyks3ERF5Yqu3R6bikD0OK4mqXA==@protonmail.internalid>
-	<20250304225245.2033120-15-benno.lossin@proton.me>
-	<87h647d6xg.fsf@kernel.org>
-	<cdfBMmuIl8Wl-KpI-koNDQJOCGBr9z9dOi5fxQvFbgNWQHHw6JtMizaMMbMniNlE841-9b7TdLuZ9Xh_hFsf7w==@protonmail.internalid>
-	<D88BLHENDH8Y.HQUKEXN1XB7C@proton.me> <87ldtjbqw2.fsf@kernel.org>
-	<okP1iZelIm5t6CfgoFyh0m8LiVEQW3ULUroZHdSQ97ul_BmPr47HBpB3RgHDMtm_2jzF4sTJszuUACsCGBEXcQ==@protonmail.internalid>
-	<CANiq72k=KiYhKr9XHU38==Rx0df4rERyOL1abRG_cDo+4NNa0g@mail.gmail.com>
-User-Agent: mu4e 1.12.7; emacs 29.4
-Date: Wed, 05 Mar 2025 15:19:42 +0100
-Message-ID: <878qpja7b5.fsf@kernel.org>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="f939CQ8O"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 1B7FC44120;
+	Wed,  5 Mar 2025 14:19:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1741184389;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+x958E8fd59wo0+S7PShlBqxAJBPIungIQ5oX/0I4ho=;
+	b=f939CQ8ODCi0F1EgpvuCG5vlwN9oysZaONqaeSoRBnPbwZQGnWdCvB0wUjjNzQUkmAauMu
+	OZ6ZpOpDQfMcl3sgdrT4M0YJrbP3IIK8o4WUVefYrd5uXESoxQZtOc0sSFHCT6FnD1/QeA
+	n7hjVqLyoki1LvC3iHDeoyxMsyQCFkydryywx9ljuIQqi9E43Fy3XFsG4tiKe4i4hF1t+B
+	lByFw/HCTvLPH7YS6miQBLm84BJ0XwfmJkDIpxGHkS+W1GcK1466Aby0/qZH1WK2edAq9u
+	WC9DWydSGN7kLst1CVNkO6Djme1flLbqc972QhiWiq3l0B46CzpT7+NzkpUr9g==
+From: Maxime Chevallier <maxime.chevallier@bootlin.com>
+To: davem@davemloft.net,
+	Andrew Lunn <andrew@lunn.ch>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Eric Dumazet <edumazet@google.com>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Heiner Kallweit <hkallweit1@gmail.com>
+Cc: Maxime Chevallier <maxime.chevallier@bootlin.com>,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	thomas.petazzoni@bootlin.com,
+	linux-arm-kernel@lists.infradead.org,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Herve Codina <herve.codina@bootlin.com>,
+	Florian Fainelli <f.fainelli@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Vladimir Oltean <vladimir.oltean@nxp.com>,
+	=?UTF-8?q?K=C3=B6ry=20Maincent?= <kory.maincent@bootlin.com>,
+	Oleksij Rempel <o.rempel@pengutronix.de>,
+	Simon Horman <horms@kernel.org>,
+	Romain Gantois <romain.gantois@bootlin.com>,
+	Piergiorgio Beruto <piergiorgio.beruto@gmail.com>
+Subject: [PATCH net-next 6/7] net: ethtool: plca: Use per-PHY DUMP operations
+Date: Wed,  5 Mar 2025 15:19:36 +0100
+Message-ID: <20250305141938.319282-7-maxime.chevallier@bootlin.com>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250305141938.319282-1-maxime.chevallier@bootlin.com>
+References: <20250305141938.319282-1-maxime.chevallier@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddutdehtdegucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpeforgigihhmvgcuvehhvghvrghllhhivghruceomhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepveegtdffleffleevueellefgjeefvedvjefhheegfefgffdvfeetgeevudetffdtnecukfhppedvrgdtudemtggsudelmeekugegtgemlehftddtmegstgdvudemkeekleelmeehgedttgemvgehlegvnecuvehluhhsthgvrhfuihiivgepvdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgduleemkegugegtmeelfhdttdemsggtvddumeekkeelleemheegtdgtmegvheelvgdphhgvlhhopehfvgguohhrrgdrhhhomhgvpdhmrghilhhfrhhomhepmhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepvddupdhrtghpthhtohepuggrvhgvmhesuggrvhgvmhhlohhfthdrnhgvthdprhgtphhtthhopegrnhgurhgvfieslhhunhhnrdgthhdprhgtphhtthhopehkuhgsrgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepvgguuhhmr
+ giivghtsehgohhoghhlvgdrtghomhdprhgtphhtthhopehprggsvghnihesrhgvughhrghtrdgtohhmpdhrtghpthhtohephhhkrghllhifvghithdusehgmhgrihhlrdgtohhmpdhrtghpthhtohepmhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomhdprhgtphhtthhopehnvghtuggvvhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-GND-Sasl: maxime.chevallier@bootlin.com
 
-"Miguel Ojeda" <miguel.ojeda.sandonis@gmail.com> writes:
+Leverage the per-phy ethnl DUMP helpers in case we have more that one
+PLCA-able PHY on the link.
 
-> On Wed, Mar 5, 2025 at 1:34=E2=80=AFPM Andreas Hindborg <a.hindborg@kerne=
-l.org> wrote:
->>
->> I _really_ think that the ability to run the tests should be present in
->> the kernel repository. But I also do not want to block this series on it,
->> if it is something that will be easier to achieve with the build system
->> overhaul that is in the pipeline.
->
-> No, that is not the plan. Even with the new build system, this is
-> supposed to be developed upstream as far as I understand, so you will
-> need to run them there anyway.
->
-> Unless there is a reason we could catch more bugs here, that is.
+This is done for both PLCA status and PLCA config.
 
-I guess it would be no different than `syn`. But I think it is a shame
-that we move something that people could contribute to via the kernel
-development flow - out of the kernel development flow.
+Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
+---
+ net/ethtool/plca.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-Ultimately I guess this is for the maintainer to decide, and I don't
-have to like the decision.
-
-
-Best regards,
-Andreas Hindborg
-
+diff --git a/net/ethtool/plca.c b/net/ethtool/plca.c
+index e1f7820a6158..2148ff607561 100644
+--- a/net/ethtool/plca.c
++++ b/net/ethtool/plca.c
+@@ -191,6 +191,12 @@ const struct ethnl_request_ops ethnl_plca_cfg_request_ops = {
+ 
+ 	.set			= ethnl_set_plca,
+ 	.set_ntf_cmd		= ETHTOOL_MSG_PLCA_NTF,
++
++	.dump_start		= ethnl_dump_start_perphy,
++	.dump_one_dev		= ethnl_dump_one_dev_perphy,
++	.dump_done		= ethnl_dump_done_perphy,
++
++	.allow_pernetdev_dump	= true,
+ };
+ 
+ // PLCA get status message -------------------------------------------------- //
+@@ -268,4 +274,10 @@ const struct ethnl_request_ops ethnl_plca_status_request_ops = {
+ 	.prepare_data		= plca_get_status_prepare_data,
+ 	.reply_size		= plca_get_status_reply_size,
+ 	.fill_reply		= plca_get_status_fill_reply,
++
++	.dump_start		= ethnl_dump_start_perphy,
++	.dump_one_dev		= ethnl_dump_one_dev_perphy,
++	.dump_done		= ethnl_dump_done_perphy,
++
++	.allow_pernetdev_dump	= true,
+ };
+-- 
+2.48.1
 
