@@ -1,38 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D45413D279;
-	Wed,  5 Mar 2025 01:59:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94A8F1547C5;
+	Wed,  5 Mar 2025 02:00:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741139976; cv=none; b=fLzFs80lbF1+6LW0rCDauyMt67zN6h/zEPfhnQFuxhoJ8UX7IroM9jHV7Dwsb0+g5E1hXbV40ZSwKz6lr4u6nm9D7hHfmOPL59U06lXoBte560onSWgjluQ458reuvyngGU92D1Ne2rpUO/dYJ/NjLW1N3tNomC0lzBxNiQLIrU=
+	t=1741140001; cv=none; b=Hh1ECnvWFdeXd8Py9DmQSKfRQ9MjjGqlRJfrcwrq5XtypEoPk0t9fZS4Hmm0/1V9roFSVMwfXI2l04LXdtOK9aME08yH87f8fOqf82nuG/d5ID/0ldYG/nGdmLHw6fLBFcwBigFShraSeXBPUz/RZnl3z0hRmvuJomYjVxLbeP4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741139976; c=relaxed/simple;
-	bh=b+4wjE2F7I/nJo45/YZe39pt2WvC8qcPajk0/I8YCAM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nNNhOX+6+Do8k0X7J27boB7c5L/GXOMf5+1W34Zef0ERMIy/mAtbH5e9E6NnDkaNkbWaVPNZmIiFl5lbh3Ww8H+ytPWHRl7tRtchcIBJlwLCynH6/MiLjp8iOwFqrWRKamXEw/Jf1fyPmaP6RMt8QnOotAz+i5RPs4k9sXW6C2Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kVRHOzWA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741140001; c=relaxed/simple;
+	bh=DAmK5+WOR87/AUFgh4Alv9+JRF5ekJjC1q0zBCvDMjU=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=CNF/8+yGqeza4RhKpeNUDhejKbmWe304PgwchdU+l0Io1+7a9vOq7ImbQbV//cBtu7POBhZvouof1bhfifNP5GbGlUAMJ+Xo2qrmo1+RHFSj82oB4awE72ffSJmh4VCjIcGFV6uUApdyNztVKZrREWx5AABzsjzz8gg642NMrkM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XrYGr+e+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kVRHOzWA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8061EC4CEED;
-	Wed,  5 Mar 2025 01:59:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XrYGr+e+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD393C4CEEF;
+	Wed,  5 Mar 2025 02:00:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741139975;
-	bh=b+4wjE2F7I/nJo45/YZe39pt2WvC8qcPajk0/I8YCAM=;
-	h=From:To:Cc:Subject:Date:From;
-	b=kVRHOzWAJsCziv3SRI4CfDZYobzj2255VYslS/llqsxeMnCZEVvnQp25zhPBNdx7F
-	 Jgj9pjPVAyHiMwvTEpAzOb1aY8x4aygBYq54Q7Pn6I/heY08O4i59/RsFFtJ9FUxZg
-	 3dOXXExdIQS8QwWiYvIsQ8EdVzoGfNUDDcrLkJsgHlCU4QgC8zGb8R5xMNccdb0Y26
-	 zgp5sRfZ9ZWBqez0ErdPB6u+gs/eEO/1jZxRltx4NZkmItKxTx2PNc21VJTP+VOSPa
-	 U6aux1s9F9TYIEazKfLsaA2euObrIzGkiKII/AbxC6WffNl2k8wuhjxnzE4dr1FwMM
-	 ohWuOQ4gc12Tg==
-From: Eric Biggers <ebiggers@kernel.org>
-To: linux-kernel@vger.kernel.org
-Cc: linux-crypto@vger.kernel.org,
-	Ard Biesheuvel <ardb@kernel.org>
-Subject: [PATCH] lib/crc_kunit.c: update comment in crc_benchmark()
-Date: Tue,  4 Mar 2025 17:58:30 -0800
-Message-ID: <20250305015830.37813-1-ebiggers@kernel.org>
-X-Mailer: git-send-email 2.48.1
+	s=k20201202; t=1741140001;
+	bh=DAmK5+WOR87/AUFgh4Alv9+JRF5ekJjC1q0zBCvDMjU=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=XrYGr+e+BzBWWxHDzukI4d1cyYDFLu6keWc4kJjUqcZIJrri3cxtECfza/ahuRpPc
+	 fmHb8e+R48BY+rQvuRmquFj8zbA0Vos/9t1YCP7k7quJlI96vWjdSnAcGBRRIaOxLZ
+	 dMLuB3Nq0w4ctFCJ2noBe44sK+zmI6vy0rKUoj9CADQ70d4uKyaRxTkOeUbGMTPa7+
+	 B79tU4toGCiqzQusYvNp8gbisIDo66MOpH6r9IZbP1M7UjGtbe6I9UhcVo3nD+LLLh
+	 2eBzFJSnr9MfuY/VF2kgw0P2GWrNraE0nzVfdPw6JZakjiH1ZLfCiPfcRybgh+6nEg
+	 dUu51t6dTGs1Q==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id AE35C380CFEB;
+	Wed,  5 Mar 2025 02:00:34 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,41 +37,42 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next] net: cadence: macb: Synchronize standard stats
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174114003352.368364.16564391709152136650.git-patchwork-notify@kernel.org>
+Date: Wed, 05 Mar 2025 02:00:33 +0000
+References: <20250303231832.1648274-1-sean.anderson@linux.dev>
+In-Reply-To: <20250303231832.1648274-1-sean.anderson@linux.dev>
+To: Sean Anderson <sean.anderson@linux.dev>
+Cc: nicolas.ferre@microchip.com, claudiu.beznea@tuxon.dev,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org, andrew+netdev@lunn.ch,
+ kuba@kernel.org, pabeni@redhat.com, davem@davemloft.net, edumazet@google.com
 
-From: Eric Biggers <ebiggers@google.com>
+Hello:
 
-None of the CRC library functions use __pure anymore, so the comment in
-crc_benchmark() is outdated.  But the comment was not really correct
-anyway, since the CRC computation could (in principle) be optimized out
-regardless of __pure.  Update the comment to have a proper explanation.
+This patch was applied to netdev/net-next.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
-Signed-off-by: Eric Biggers <ebiggers@google.com>
----
- lib/crc_kunit.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+On Mon,  3 Mar 2025 18:18:32 -0500 you wrote:
+> The new stats calculations add several additional calls to
+> macb/gem_update_stats() and accesses to bp->hw_stats. These are
+> protected by a spinlock since commit fa52f15c745c ("net: cadence: macb:
+> Synchronize stats calculations"), which was applied in parallel. Add
+> some locking now that the net has been merged into net-next.
+> 
+> Fixes: f6af690a295a ("net: cadence: macb: Report standard stats")
+> Signed-off-by: Sean Anderson <sean.anderson@linux.dev>
+> 
+> [...]
 
-diff --git a/lib/crc_kunit.c b/lib/crc_kunit.c
-index 40b4b41f2184..d5a5045fd9ab 100644
---- a/lib/crc_kunit.c
-+++ b/lib/crc_kunit.c
-@@ -222,12 +222,13 @@ crc_benchmark(struct kunit *test,
- 	static const size_t lens_to_test[] = {
- 		1, 16, 64, 127, 128, 200, 256, 511, 512, 1024, 3173, 4096, 16384,
- 	};
- 	size_t len, i, j, num_iters;
- 	/*
--	 * Some of the CRC library functions are marked as __pure, so use
--	 * volatile to ensure that all calls are really made as intended.
-+	 * The CRC value that this function computes in a series of calls to
-+	 * crc_func is never actually used, so use volatile to ensure that the
-+	 * computations are done as intended and don't all get optimized out.
- 	 */
- 	volatile u64 crc = 0;
- 	u64 t;
- 
- 	if (!IS_ENABLED(CONFIG_CRC_BENCHMARK))
+Here is the summary with links:
+  - [net-next] net: cadence: macb: Synchronize standard stats
+    https://git.kernel.org/netdev/net-next/c/b9564ca3a2c8
 
-base-commit: 13f3d13d88b5dcba104a204fcbee61c75f8407d0
+You are awesome, thank you!
 -- 
-2.48.1
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
