@@ -1,93 +1,141 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 371A8219310;
-	Wed,  5 Mar 2025 10:55:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741172120; cv=pass; b=BYR8T2tkjoDi6/Q4yCEYe1oLN7lqS/vOENT6y6/WP/BPakBfebKhp2lkHk8oOg6UsgD4/9RSDQt9U6pAX0aF0lTiRiSbW+B//+43P8tZ/XkIjjKc12oSoHo2WrW8unEtXbv5F3B/YTdDDADTypoFkX/omt1z/zE8toZQkXFAB9s=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741172120; c=relaxed/simple;
-	bh=GYN5w2MzWMmFwGQEgpnu8NbUznqwQSMrIGSbADvQp/0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=aYrLhPGNBGLRuv7zkJMkeog2uynFqnnla+bLswhQN74veGtC5SW2q0g+nk+nub/3gZvUbcOnrTXbdurEuWVZIG6MR5CgyMyD5jde/T8oL4uVYBy9cCKOY8zLydTe3QTj8jA9Jf2a8VWkQWg2r6PPNb7rWplh0LvtJy/MsEmDit0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b=NER7FOob; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE544221F1B
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 10:55:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741172122; cv=none; b=qw1ut2BOs3mnGYwIklT+NSXg0pGSssnUGR63T7fAyP+wHz1aXvwQTEcJigxnA/2dseowWQ0VeTkqbtGv2hfSL+INPIqPRQrp/hboaX/jtCAYqsiJVKSQ9yJmgIYPmv3jZRij+2L2oXT5E6I2cd78EGmPz6f9Ku4/2UiumrVrj2E=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741172122; c=relaxed/simple;
+	bh=4Z26Vif/aLrAcH6THndljTALT5UsksrHmQWG/Qss53M=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=fa82CP3SbLp5ODvzi8XZNIOuD9dwIchfe/WPuG+Ycut0pGQ9+bJR2LzvR/d4e5lu7PoYSVOqJoUnOO30phJjyDLRKfIyuuj/gvlJIfszmf5bjLEQes2EuSUe2cWT2W5sy9EMMSDv/kAjESb/e59kAFxBcvMUGcZMvRnJbzHek4I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=eihXWYMQ; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=3Ox8Dgbr; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=eihXWYMQ; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=3Ox8Dgbr; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b="NER7FOob"
-ARC-Seal: i=1; a=rsa-sha256; t=1741172021; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=BiJghRD32/9FYVLs2P+J6fdCaN/zWK2c6LsW9GDhkmnrTrn1F8t+JSlVmTEu5YcwX+0dg5OkcD8GstwF2BLIHiCLWE90e6j2x8ntlKYRPLd6iHeY+EIvfdTBwlkRkM2LbFa1oHEBhZQNlVrvEuknvYR27ChTUxB+c2iJRA6s1qM=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1741172021; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=dRMz26do/txZBi10Mcoz5fXmESW0PSVQ9DKG49HFVjY=; 
-	b=dC4JJlkhKTXyRwbwtv3Gvyx0h1v3ETJftoZo6tjE2HwirDOxjj2U6uInf1BfNELhHaTpgYaw4ME+GSG3mg3GYASzUFJuk2SNH3WN/hWlfXhhq+joPk2QFVP9+Qr7Evcf9xh3JD5TFWlr6tzuHk1YaxJAEX52zqcCUEkz5fNpQY0=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=dmitry.osipenko@collabora.com;
-	dmarc=pass header.from=<dmitry.osipenko@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1741172021;
-	s=zohomail; d=collabora.com; i=dmitry.osipenko@collabora.com;
-	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=dRMz26do/txZBi10Mcoz5fXmESW0PSVQ9DKG49HFVjY=;
-	b=NER7FOobCE625v+5FstETaN/ynlDtm8YWSnCb1UekBY6fC6tzgxYHiZE4muEc6xC
-	KAar5OSGfLCjt1BOtWqzI9ENXU2A1Y5/n54JIsxY4RjWhkWwagN0jDzC7z0ecxgvEmm
-	nzuYnJZMkz4j2YRWFcFab0lOoGOg6eXYz9MLZzL8=
-Received: by mx.zohomail.com with SMTPS id 1741172020269320.1572108278864;
-	Wed, 5 Mar 2025 02:53:40 -0800 (PST)
-Message-ID: <077b7bbb-8ef9-4dcd-9b91-90af4653851b@collabora.com>
-Date: Wed, 5 Mar 2025 13:53:34 +0300
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="eihXWYMQ";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="3Ox8Dgbr";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="eihXWYMQ";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="3Ox8Dgbr"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 180DC21197;
+	Wed,  5 Mar 2025 10:55:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1741172119; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zoSrOB8+uoMpops6QDXFLLwXLeVYc8uZptIC6rmNHGE=;
+	b=eihXWYMQE7yWm8Ckrn+PeKUx/zgLjBvONFy7DGM+U71y7Q0nbj5oXvftb5xMVHPXbR91bQ
+	4R2axuuBf6+zFlTYyidLakugL1I4Nt4QDt7V0DP9p+BoznQl2+j1ltTrFgUVLTjM2U6/FF
+	Qiwd20y7KEQJXnLmH1wV1e4vELCvbm4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1741172119;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zoSrOB8+uoMpops6QDXFLLwXLeVYc8uZptIC6rmNHGE=;
+	b=3Ox8DgbrTHEeUZ8eTs8AKIcgxEWlTS6fISSh5oO8vD/e7JWExdYkDSYAEBw9+AtKYDG6st
+	jRfGiSQq21XrlRAw==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1741172119; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zoSrOB8+uoMpops6QDXFLLwXLeVYc8uZptIC6rmNHGE=;
+	b=eihXWYMQE7yWm8Ckrn+PeKUx/zgLjBvONFy7DGM+U71y7Q0nbj5oXvftb5xMVHPXbR91bQ
+	4R2axuuBf6+zFlTYyidLakugL1I4Nt4QDt7V0DP9p+BoznQl2+j1ltTrFgUVLTjM2U6/FF
+	Qiwd20y7KEQJXnLmH1wV1e4vELCvbm4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1741172119;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zoSrOB8+uoMpops6QDXFLLwXLeVYc8uZptIC6rmNHGE=;
+	b=3Ox8DgbrTHEeUZ8eTs8AKIcgxEWlTS6fISSh5oO8vD/e7JWExdYkDSYAEBw9+AtKYDG6st
+	jRfGiSQq21XrlRAw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 52A4513939;
+	Wed,  5 Mar 2025 10:55:17 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id oS3iApUtyGdjCQAAD6G6ig
+	(envelope-from <ddiss@suse.de>); Wed, 05 Mar 2025 10:55:17 +0000
+Date: Wed, 5 Mar 2025 21:55:06 +1100
+From: David Disseldorp <ddiss@suse.de>
+To: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Christian Brauner <brauner@kernel.org>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: Re: linux-next: build warnings after merge of the vfs-brauner tree
+Message-ID: <20250305215506.1f34f920.ddiss@suse.de>
+In-Reply-To: <20250305210702.66402528@canb.auug.org.au>
+References: <20250305210702.66402528@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v13 0/6] Add Synopsys DesignWare HDMI RX Controller
-To: Tim Surber <me@timsurber.de>, Hans Verkuil <hverkuil@xs4all.nl>,
- Shreeya Patel <shreeya.patel@collabora.com>, Heiko Stuebner
- <heiko@sntech.de>, Mauro Carvalho Chehab <mchehab@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, jose.abreu@synopsys.com,
- nelson.costa@synopsys.com, shawn.wen@rock-chips.com,
- nicolas.dufresne@collabora.com,
- Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc: kernel@collabora.com, linux-media@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-rockchip@lists.infradead.org,
- Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
- Diederik de Haas <didi.debian@cknow.org>
-References: <20250304085819.108067-1-dmitry.osipenko@collabora.com>
- <78ff36f6-01a7-4df4-b653-c4509fb93af4@timsurber.de>
- <1039aca7-89b9-44ef-9775-e7852e956362@timsurber.de>
- <9b4b1e65-127d-422b-a359-a1d8e25652f9@xs4all.nl>
- <88054acf-3051-414c-aef7-4c0f085d5182@collabora.com>
- <47e022f4-1c1b-43c4-8f6c-bc1ff23ad39f@collabora.com>
- <e0e144be-5cf9-4a79-a602-2ab2b7cd9aa1@timsurber.de>
-From: Dmitry Osipenko <dmitry.osipenko@collabora.com>
-Content-Language: en-US
-In-Reply-To: <e0e144be-5cf9-4a79-a602-2ab2b7cd9aa1@timsurber.de>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-ZohoMailClient: External
+X-Spam-Level: 
+X-Spamd-Result: default: False [-3.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_THREE(0.00)[4];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_DN_ALL(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid]
+X-Spam-Score: -3.30
+X-Spam-Flag: NO
 
-On 3/5/25 13:41, Tim Surber wrote:
-> Hi,
-> 
-> so the 4:4:4 issue was just a gstreamer bug and it worked when I applied
-> an experimental fix [1].
-> 
-> So everything works for me using the default EDID now.
-> 
-> Tested-by: Tim Surber <me@timsurber.de>
-> 
-> [1]: https://gitlab.freedesktop.org/gstreamer/gstreamer/-/
-> merge_requests/8534
+Hi Stephen,
 
-Awesome! Glad this has been resolved, thanks for the testing.
+On Wed, 5 Mar 2025 21:07:02 +1100, Stephen Rothwell wrote:
 
--- 
-Best regards,
-Dmitry
+> Hi all,
+> 
+> After merging the vfs-brauner tree, today's linux-next build (powerpc
+> allyesconfig) produced these warnings:
+> 
+> WARNING: modpost: vmlinux: section mismatch in reference: initramfs_test_cases+0x0 (section: .data) -> initramfs_test_extract (section: .init.text)
+> WARNING: modpost: vmlinux: section mismatch in reference: initramfs_test_cases+0x30 (section: .data) -> initramfs_test_fname_overrun (section: .init.text)
+> WARNING: modpost: vmlinux: section mismatch in reference: initramfs_test_cases+0x60 (section: .data) -> initramfs_test_data (section: .init.text)
+> WARNING: modpost: vmlinux: section mismatch in reference: initramfs_test_cases+0x90 (section: .data) -> initramfs_test_csum (section: .init.text)
+> WARNING: modpost: vmlinux: section mismatch in reference: initramfs_test_cases+0xc0 (section: .data) -> initramfs_test_hardlink (section: .init.text)
+> WARNING: modpost: vmlinux: section mismatch in reference: initramfs_test_cases+0xf0 (section: .data) -> initramfs_test_many (section: .init.text)
+> 
+> Introduced by commit
+> 
+>   b6736cfccb58 ("initramfs_test: kunit tests for initramfs unpacking")
+
+The new warnings are being discussed in a thread at:
+https://lore.kernel.org/linux-kselftest/20250305114701.28c0ee0b.ddiss@suse.de/T/#u
+
+Thanks, David
