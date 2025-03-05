@@ -1,110 +1,222 @@
-Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CFFA1C6FF6;
-	Wed,  5 Mar 2025 04:30:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFF401B532F
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 04:30:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741149022; cv=none; b=F+IThzSbemfzs6omCHpOeGoAgto0ylZdFK5wNR8IT61iRtsfp0mQ8U7AhyQab+Zya/hrt4OAAxi1+o+ch5Ei7nV49CXYP1kHYavxWmc1fbDobOaE51MHSepbBQk2CXJwQ2J1LqYFBn0apb4plxEEFhpSA9szxDcRDmGW1SOXwMY=
+	t=1741149022; cv=none; b=q9noO+FvpEtnjXnd7tQGic3iXOKS2s7SzAD8N3wEHI1DCWQCnQ9ciyTzKl8SGJVUIalzMZbgE8k3Co06U1uRDT/pt+iBG9/XBqvyeUHtnHCpZm6n4jatMZy1f5O7hY9nG/dXnlWnRO/t5mNW4/jqBXBn1piJaS/JmxFvlFeACXE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1741149022; c=relaxed/simple;
-	bh=gRv7CV35Y+wxD8+twcYg9frzBTRq/XFnU65egWn7k6c=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=b/FvMPiTOh+1LMRyOmh2kQMIh3JEyJ4+243/7Vg+ASmVufOhLBQ2SDKkyzlPAQpezAduluGLL3034pqxx/tezYh+BpQgSHo7EXCi4oUNetYE23vccw8Um2Af/NPpFIx0gJyujvqoQwtgZPgnCnr6+9yxP1kNw1bKLYcm+qDUMrE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mwT32YtR; arc=none smtp.client-ip=209.85.222.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	bh=O6/s2m8RxEllylHpZfEA1JZvaM68FhhtYDbILLNNmqk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PyXKU0mkpDICmf7HqK3Z05GkoN2Y5/pvLBbNAQq50/XgQ7kdqZIw0+xy8hVgmV30sBSppt8l+avHe3Re9WKWam3s8WMa61yn0MXWPkXAQYy9vh7I+lkvUma8HKM/UlOimST8bBC5PWaISS9wlcYKkrkzAKLuBdumkGDjQJ18RUQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=na/RtRd7; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mwT32YtR"
-Received: by mail-qk1-f170.google.com with SMTP id af79cd13be357-7c3b63dfebfso314966185a.3;
-        Tue, 04 Mar 2025 20:30:19 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="na/RtRd7"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-2237a32c03aso60895ad.1
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Mar 2025 20:30:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741149018; x=1741753818; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=google.com; s=20230601; t=1741149020; x=1741753820; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=lcg5+dUnqHObtyvwEawYvLNi2iYwLJnPZJ0YScHoNmg=;
-        b=mwT32YtRsCkV8ccMrIy1WveoREqBVRQgWn8vdnoUVbLsyax2NfAWcXtte5MYmaZJ89
-         iDyiO1SGxtvwKzVIldAPNBTc4aLBkzK6anhIQhTdvYdFGj8BO48OwMcxDOWBKiE2uIyC
-         /6aoNW4U8WdMe7yQwSEP3yF4P8p7eBvgpxBuFX6qNSkNE0x5m87kEgS+1NFk+W2u2s4Y
-         39CSbM74/Ue+QZ6EA5OtKsi6oxNKFXYGC5bzUhkZBUMelWDWaRJlXjE5tcQ7VG7D23Fd
-         ZaAgjOt5i1vhNxWnEwwCRHbkpdnUTeeZtjTN5+aYiUI3+g9c2lk6kWZYjc1yvCcHnkcw
-         c+/w==
+        bh=AqAVkWXON7xuHQOFv96KRGgH0wCs+/tXGGMj9KqfDeI=;
+        b=na/RtRd7tqfTjZRtK3g/RDptCGtcsO7XHnCbqKDG9kGIfqiMMIs+EG9mr4ktRpaNDX
+         c9ozLYEb69BUU7EDQvrGm4sQiuAoAyfyYCiV8Q3NjQziLMa6fz15fFUAbhocjnqRtShj
+         bt/FZhBuHtWCoqTdHkYNaW2cyvOxqRcIe6Jl6m3BxTkHiJYImuyymJ0oVISu9k4fwSfz
+         Q7Vp7fbeZVkAuQqA9dHtVb+XnDO5Gh/I1O6XttIPq7usUfusdw3RjbWGej+N+Kv2DEfD
+         CN5lfL/ztNS1LCR+vS/uAxy6MIlmxAyBjalC+M9XF3CwbvC8tijUsOXTAzTllKzp6sRg
+         T85Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741149018; x=1741753818;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1741149020; x=1741753820;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=lcg5+dUnqHObtyvwEawYvLNi2iYwLJnPZJ0YScHoNmg=;
-        b=G1YYplDBtaycTRJEahtPwmo9Gg90HedvKd9mnO/7trVysn7h5rz/xhcf/+PHJ7cI/t
-         CblVQfR+U7Ip/Gi3ByqU0bxXoJcRnCVOq9zODWTpWlwrcEJ2uKEt5WKQaSeAdGYreFRN
-         KrQ2TqMsO/8GtvQ94s07fcxxoQlOEETXhL9XOE25ymSVskw/GSSXau0ucVqw3gIDtTNu
-         OgDThJ14udQr60tiFlUiEbu9zW1GW8UyVbuoffLwQve0uArLjpYKUlMgYSx5AdbGyjmy
-         uyBjXHjMG0SEyKd7ASBiD0/+ygsu43bTfzInkxJszXdsAnTvu6rUN3Caon1LdZ8VXY14
-         DdNg==
-X-Forwarded-Encrypted: i=1; AJvYcCV/8Y6oZ4SlKvjX8EUv1VToulGXnJSdT95dZco4KylIJJXDo4CG2m6D7Z4XFbO6V7gxG7eYA7swP8YfqMQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyYWl8xnT2TixoN/KLZkjuLGO1Ey9Nd+VI/ouVohqel6HksBsbZ
-	4F/bYjIXx0AgCope/2iS8Kwy2HFRuySUhLwdEVoOHp1i/7IE/X3utWc7jR3F
-X-Gm-Gg: ASbGncsriP3c2tkfoAfPRhmT52Vwy8BUfSRayIy5+U4rtl2ErDjJeUoeRHQGcUfjTZw
-	Si5/yPrG6FwpyX6QpqR8T0uqt0w74f4UTSbZQUBEHL6mABOY0HiyJ5VZxfgUu5QAHvCojOIQWoj
-	ByEJffN9WiFyZGQB95Ovab7VKa0u+4Y4Tq9pu9BNHqrD8fg/x9uwlfAoO+bGX4GKKUMOArzw+U6
-	T7O0a7zNmsMSna0QuWT3DbUd5xsita+7oJ6sRlJfzx/+ZhsLTUCeAjXv0lBCMvqZTbcIcffem3/
-	tcprBeWDpVFoaAGcaECMxIohF6opPMZytFp5VZoNX0OiRJmPDZ+XtLbqQuSz/vt3u73Gab+8j+q
-	kvntBlpw=
-X-Google-Smtp-Source: AGHT+IF8N0NTRr6Ym77rQ/OGR9PWcy55U0ei0cNEhjSrmW9NbsJLsCiFF+iQ4Sbm5xWterLY2TrNDA==
-X-Received: by 2002:a05:620a:6285:b0:7c3:d32a:2b6d with SMTP id af79cd13be357-7c3d8e66d8cmr340642585a.21.1741149018595;
-        Tue, 04 Mar 2025 20:30:18 -0800 (PST)
-Received: from nerdopolis2.mynetworksettings.com ([2600:4040:5e66:a800:a5b9:4b66:4113:9357])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c36fee8b4dsm834060785a.15.2025.03.04.20.30.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Mar 2025 20:30:17 -0800 (PST)
-From: adamsimonelli@gmail.com
-To: linux-serial@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Jiri Slaby <jirislaby@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Andy Shevchenko <andy.shevchenko@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	John Ogness <john.ogness@linutronix.de>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Petr Mladek <pmladek@suse.com>
-Cc: Adam Simonelli <adamsimonelli@gmail.com>
-Subject: [PATCH v7 1/3] ttynull: Always initialize console index to -1
-Date: Tue,  4 Mar 2025 23:29:28 -0500
-Message-ID: <20250305042930.3453265-2-adamsimonelli@gmail.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250305042930.3453265-1-adamsimonelli@gmail.com>
-References: <20250305042930.3453265-1-adamsimonelli@gmail.com>
+        bh=AqAVkWXON7xuHQOFv96KRGgH0wCs+/tXGGMj9KqfDeI=;
+        b=gWe2p97LhVeKntNmacF9y6aO+DkATd4zwSoulVs3BhnrgGZGtdH4MUBpU0MSkiUF1s
+         g5xSLldvo2cKIYlmDtONJmeoLvQKXD193AAmELB+ryIQ/T9M/2xc3ty2Eg37FLOEz4AJ
+         ZMTVKbncoknE/TLA9/uzwqQVqgpyGu4MPgRF96VDpxNf3vS5ZQe+Wr72lWnCrjOC486u
+         IUOZ9bula+m6T3SbJsRwfquFw1ScMuni4YhC7CCiT2XkrS9gsYoTxXFXh4bGI4ZwUCyR
+         3WHUPhUVM4yD7C6l7kNvFRQm/E10rU1P9HWRZBzdqcOHoSzAIQPhc1AARb3YJ1rgKEem
+         rShg==
+X-Forwarded-Encrypted: i=1; AJvYcCXmwORzZTADn42gI1DXlCKHpWOtWNyL63s49oCbF1WOed3tgMMzUlVGImV3dHTERmpR3IJ5Nsei8L6AOsg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YznSzivlLp9HRdFZaVN6a51s22brV89GQkmt3lAxiY81Bfa7BxQ
+	PtvBcT5Apq/SC6q+1XiFsiV5y+qW1r6LPcujoiBBKoWV5bCwXfea1VF6ip7cw127ADiv58NhvQr
+	UpWDGGxXiMURTZj9IVR+UAfKKW1h+CvMSN2SC
+X-Gm-Gg: ASbGnctJ9cFaZ8l9JOFFS+RzLMdFPuge5gRnmk8LwLjJrs4K7NhYuikTRoOD5iaO0Iy
+	S6vRplo54IW2tMcjLmoGipcQN64GU+JSetBJcWF9SWT3Y7eyUkdKUkTIayfdnXTbZVkqS0ZJ/8E
+	nup0lpYqbN5+BqZL/pkRwiM22cL9c=
+X-Google-Smtp-Source: AGHT+IFXOo/mmL5SJ31wQtNHPUkm4JMIE8sOGmsWeE1gasbzoqgQCyR5uJ8DMXe8kraJhOzM+x9J4sLkrHLc+hRvljY=
+X-Received: by 2002:a17:903:3291:b0:212:26e:1b46 with SMTP id
+ d9443c01a7336-223f452ff4bmr1032645ad.23.1741149019562; Tue, 04 Mar 2025
+ 20:30:19 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250304013906.1393102-1-thomas.falcon@intel.com>
+In-Reply-To: <20250304013906.1393102-1-thomas.falcon@intel.com>
+From: Ian Rogers <irogers@google.com>
+Date: Tue, 4 Mar 2025 20:30:07 -0800
+X-Gm-Features: AQ5f1JrWW7mThi0-TdrkenDRcxOAjqehVtorC0CaIsHnJ3yQ2cnbxhzMHLItUls
+Message-ID: <CAP-5=fVwrG5ZViysO7qKYUw0326WFfa7nOzwe70drYfHq=AXhA@mail.gmail.com>
+Subject: Re: [PATCH v5] perf script: Fix output type for dynamically allocated
+ core PMU's
+To: Thomas Falcon <thomas.falcon@intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	Kan Liang <kan.liang@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Adam Simonelli <adamsimonelli@gmail.com>
+On Mon, Mar 3, 2025 at 5:39=E2=80=AFPM Thomas Falcon <thomas.falcon@intel.c=
+om> wrote:
+>
+> This patch was originally posted here:
+>
+> https://lore.kernel.org/all/20241213215421.661139-1-thomas.falcon@intel.c=
+om/
+>
+> I have rebased on top of Arnaldo's patch here:
+>
+> https://lore.kernel.org/all/Z2XCi3PgstSrV0SE@x1/
+>
+> The original commit message:
+> "
+> perf script output may show different fields on different core PMU's
+> that exist on heterogeneous platforms. For example,
+>
+> perf record -e "{cpu_core/mem-loads-aux/,cpu_core/event=3D0xcd,\
+> umask=3D0x01,ldlat=3D3,name=3DMEM_UOPS_RETIRED.LOAD_LATENCY/}:upp"\
+> -c10000 -W -d -a -- sleep 1
+>
+> perf script:
+>
+> chromium-browse   46572 [002] 544966.882384:      10000         cpu_core/=
+MEM_UOPS_RETIRED.LOAD_LATENCY/: 7ffdf1391b0c     10268100142 \
+>  |OP LOAD|LVL L1 hit|SNP None|TLB L1 or L2 hit|LCK No|BLK    N/A    5   7=
+    0   7fad7c47425d [unknown] (/usr/lib64/libglib-2.0.so.0.8000.3)
+>
+> perf record -e cpu_atom/event=3D0xd0,umask=3D0x05,ldlat=3D3,\
+> name=3DMEM_UOPS_RETIRED.LOAD_LATENCY/upp -c10000 -W -d -a -- sleep 1
+>
+> perf script:
+>
+> gnome-control-c  534224 [023] 544951.816227:      10000 cpu_atom/MEM_UOPS=
+_RETIRED.LOAD_LATENCY/:   7f0aaaa0aae0  [unknown] (/usr/lib64/libglib-2.0.s=
+o.0.8000.3)
+>
+> Some fields, such as data_src, are not included by default.
+>
+> The cause is that while one PMU may be assigned a type such as
+> PERF_TYPE_RAW, other core PMU's are dynamically allocated at boot time.
+> If this value does not match an existing PERF_TYPE_X value,
+> output_type(perf_event_attr.type) will return OUTPUT_TYPE_OTHER.
+>
+> Instead search for a core PMU with a matching perf_event_attr type
+> and, if one is found, return PERF_TYPE_RAW to match output of other
+> core PMU's.
+> "
+>
+> Suggested-by: Kan Liang <kan.liang@intel.com>
+> Signed-off-by: Thomas Falcon <thomas.falcon@intel.com>
+> ---
+> v2: restrict pmu lookup to platforms with more than one core pmu
+> v3: only scan core pmu list
+> v4: rebase on top of Arnaldo's patch
+> v5: update based on Namhyung's feedback here
+> https://lore.kernel.org/lkml/Z8YcOidenzGofq7R@google.com/
+> ---
+>  tools/perf/builtin-script.c | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+>
+> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+> index d797cec4f054..4d2764df48a0 100644
+> --- a/tools/perf/builtin-script.c
+> +++ b/tools/perf/builtin-script.c
+> @@ -385,6 +385,19 @@ static int evsel_script__fprintf(struct evsel_script=
+ *es, FILE *fp)
+>                        st.st_size / 1024.0 / 1024.0, es->filename, es->sa=
+mples);
+>  }
+>
+> +static bool is_core_pmu_type(unsigned int type)
+> +{
+> +       struct perf_pmu *pmu =3D NULL;
+> +
+> +       if (perf_pmus__num_core_pmus() > 1) {
 
-This allows ttynull to be considered in console selection.
+On ARM it isn't a given that if there is 1 core PMU the type will be
+PERF_TYPE_RAW, on x86 this is normally the case.
 
-Suggested-by: Petr Mladek <pmladek@suse.com>
-Signed-off-by: Adam Simonelli <adamsimonelli@gmail.com>
----
- drivers/tty/ttynull.c | 1 +
- 1 file changed, 1 insertion(+)
+> +               while ((pmu =3D perf_pmus__scan_core(pmu)) !=3D NULL) {
+> +                       if (pmu->type =3D=3D type)
+> +                               return true;
+> +               }
+> +       }
+> +       return type =3D=3D PERF_TYPE_RAW;
+> +}
+> +
+>  static inline int output_type(unsigned int type)
+>  {
+>         switch (type) {
+> @@ -395,6 +408,9 @@ static inline int output_type(unsigned int type)
+>                         return type;
+>         }
+>
+> +       if (is_core_pmu_type(type))
 
-diff --git a/drivers/tty/ttynull.c b/drivers/tty/ttynull.c
-index 6b2f7208b564..d8b51edde628 100644
---- a/drivers/tty/ttynull.c
-+++ b/drivers/tty/ttynull.c
-@@ -57,6 +57,7 @@ static struct tty_driver *ttynull_device(struct console *c, int *index)
- static struct console ttynull_console = {
- 	.name = "ttynull",
- 	.device = ttynull_device,
-+	.index = -1,
- };
- 
- static int __init ttynull_init(void)
--- 
-2.45.2
+Given this is called by evsel__output_type I think you can do:
+```
+static inline int output_type(unsigned int type)
+{
+       switch (type) {
+       case PERF_TYPE_SYNTH:
+               return OUTPUT_TYPE_SYNTH;
+       default:
+               if (type < PERF_TYPE_MAX)
+                       return type;
+       }
 
+       return OUTPUT_TYPE_OTHER;
+}
+
+static inline int evsel__output_type(struct evsel *evsel)
+{
+       int output_type =3D evsel->script_output_type;
+
+       if (output_type =3D=3D OUTPUT_TYPE_UNSET) {
+               output_type =3D output_type(evsel->core.attr.type);
+               if (output_type =3D=3D OUTPUT_TYPE_OTHER) {
+                      struct perf_pmu *pmu =3D evsel__find_pmu(evsel);
+
+                      if (pmu && pmu->is_core)
+                             output_type =3D PERF_TYPE_RAW;
+               }
+               evsel->script_output_type =3D output_type;
+
+       return output_type;
+}
+```
+The evsel__find_pmu will cache the PMU for future callers.
+
+Thanks,
+Ian
+
+> +               return PERF_TYPE_RAW;
+> +
+>         return OUTPUT_TYPE_OTHER;
+>  }
+>
+> --
+> 2.48.1
+>
