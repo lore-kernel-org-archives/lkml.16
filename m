@@ -1,106 +1,126 @@
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5031FA95C
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 17:35:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D1CF2A95C;
+	Wed,  5 Mar 2025 17:36:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741196133; cv=none; b=CFQy1AoeMxal6ntJcf+ybO0u5qQ3pBCN7dQf7lTQJwbQGkOJT5dHqtkZXFGmGS9PPdRz28s3cP1XDE/uY2VBj8L/OVyciKMxNTz9fLrpXMKVTPxInJVWINzK77Mbc2HO7qja4NTNULfP/ufmzyFe82CpwLlgPDgPqVKF88sPSho=
+	t=1741196182; cv=none; b=Uhl3WkDb2xL0RoSY/XU9O0vV8Rw7G10SfR6lZLsGKSgmvVzxn7VaGdaxSG7xNxWcm+QeRRXsjLEcUvAbtU48NPQEWRt9Lkvkr7cTBmuvWJa0/cvM7yW4A7d8g+d+cFVugaLyCoWrnDE8xeS44pKVEGlFGTSgK/AHr++xN2dLCQE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741196133; c=relaxed/simple;
-	bh=pHTYXfPrj8V8AbHEsvsY+SiWSQhwTD7mKEix6kuTEp4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bgBBARRWQn9q1xsJvf7FFvnHslHq4GlVftMbGy+i7gA8gHpllsQBSZyD1kVlTDh5NswQ3LS56nSem7/FKALQ0jzdQgNxML5W6uobZ2ctO/qn4J2gvDs0kp1h6f2UbvcDKKyO6Q/mVIhUNs7BpWkhZImZ4zf9cd8ExcGAvGgfFz0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=IHxYOIn3; arc=none smtp.client-ip=209.85.208.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="IHxYOIn3"
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5e535d16180so5299598a12.1
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Mar 2025 09:35:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1741196129; x=1741800929; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=SM8bR6f4jLNAYKl22df1LLHJ43Y/HeDR/Ded9gUNkcw=;
-        b=IHxYOIn3cwrCs86XEl45AYoavl6RiKxO4AKuZwtRfufZkWsR4CeDQlM3Cs/pO1tGTf
-         RjSs3gD3eDp39+dVpWuA8kTk+qSVallfsD/hrJSNe5U5pK9BugIV33q9oIIYjepZw2aD
-         dM4zsDaV64sWy8i5hEeaTklKwg13EnLIGFUao=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741196129; x=1741800929;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=SM8bR6f4jLNAYKl22df1LLHJ43Y/HeDR/Ded9gUNkcw=;
-        b=xMfwhidaOVju1/pDzaYXoDNNkgYhnMlsIiKVmIoBg8h/IpduWkOHPdgnF7TZC7J+5X
-         yhXWHo5r20RwD6j/cXwpwPuMQQdDluoypKelRd1iMaYK3R5aqR/K6KfSfYZNrTmldH65
-         Sa0WOHiG8gMsHwieD0zqJrMuvL/Uc9gLrFRgiq0MlDVYNSlv/cWPh7f2oLLPRHI6U98D
-         +n6NqTmfXJO02WWlFLP/wWLPuuGKifagJz/Uerl54URXUYX5QBEZbnUXtcYxsDfuqgD+
-         /zzccF3XpRghhAc4feu9WdOkeT0ib9NFzMoev31CfWec/QNd18zfuAk9XG2kDx9JY38s
-         oz3Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUTaN9kKC14GNZX8QrtKVpqcnwdzafmkVAGwcg/KO8Sbatp+xyQ6uKWmnaxo7al8YyGB3TrJ2RznHfdZvw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxfn/JXRP+UWjj3xnM8pGnyWpdGzVd2DTlSgfaKm10eHR0/NxwM
-	Zme7Sd/Q4TSTQFJiVUu+l8Aby9TaeoNJi6QSpeIm1AxvUGcaN9KWk30aH7nqYZ/GEc4AIdZRE5q
-	8gH2Prw==
-X-Gm-Gg: ASbGnctM4Pt1l9CwAieXV2nEUpqTuL5EzlIhvm/atl5DZf+XsFSWXJKHZHwcOSv+sSJ
-	qTz8Jql8Q+96z+r3Vuc2L94Xyp6K4cVwxSQVV/eRbqBqnAluK71aSPSUsRHrxOdp1uf52T7tDMQ
-	yzIxyJnY7Z0zU2SYLHbwlDJPh938bumkKLIAKxXiILnSHGEQz3TMDu8p5gJYYQJ69bHyKfkj+ka
-	nslZn9/5dicrNZ6Lpb8bTUlLnsM1seGv2pCcc96RBP6/zMHH0ikcK8yJMy9p5IMQJnMsvgb5D0F
-	C9qCRBX6eHv+ZmY+Dr0TAF2T0tFIdv1zIuTNN0gM0a3YdSICtnyeF1tFQDO1CBK0zrk+g7rWt5i
-	FTMqMA8EEojh99nUH/8g=
-X-Google-Smtp-Source: AGHT+IGl5CThi90QVbC7Po/FDzmL65eTG4ZVhU2Dd9qiq7SAPHzMiFFK7kQFbh+P5PhW96J7lmnExA==
-X-Received: by 2002:a05:6402:274d:b0:5e0:49e4:2180 with SMTP id 4fb4d7f45d1cf-5e59f47cdc3mr8386810a12.25.1741196129035;
-        Wed, 05 Mar 2025 09:35:29 -0800 (PST)
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com. [209.85.128.46])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac1e382a04bsm418377366b.163.2025.03.05.09.35.28
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 05 Mar 2025 09:35:28 -0800 (PST)
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-43bbb440520so41965085e9.2
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Mar 2025 09:35:28 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCV8xW6NnjkzGb6pxbJjIRc6XqOqsYDjE2Pr0uZU89l1m9OnRLZFbBNhzQ/rCsSNxEZnyrnbvs4JfU6kxN8=@vger.kernel.org
-X-Received: by 2002:a5d:598d:0:b0:391:158f:3d59 with SMTP id
- ffacd0b85a97d-3911f74088bmr3981462f8f.15.1741196127813; Wed, 05 Mar 2025
- 09:35:27 -0800 (PST)
+	s=arc-20240116; t=1741196182; c=relaxed/simple;
+	bh=WJc7RLlXNUDvCMFCecKZTWhzNFrOu3CwEitjOEKnO6c=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Efd7ZPcsyJuhXbU/NKsvx+hhFC8yu9RHow2OgBH6nxebMdjCbZdggQdcqOFF54Tv4EH2dzX9UwU2cbXvF5dA6uGVWVNtdIaVOquW/ytfCcVIjH5pYk0mzcPMFYSn8YXHqnYh24q69S7EJiCKmarif2BVySeZncMWyxvoy4yMr9Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8190EFEC;
+	Wed,  5 Mar 2025 09:36:33 -0800 (PST)
+Received: from beelzebub.ast.arm.com (u203013-lin.austin.arm.com [10.118.29.240])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 030EE3F66E;
+	Wed,  5 Mar 2025 09:36:19 -0800 (PST)
+From: Stuart Yoder <stuart.yoder@arm.com>
+To: linux-integrity@vger.kernel.org,
+	jarkko@kernel.org,
+	peterhuewe@gmx.de,
+	jgg@ziepe.ca,
+	sudeep.holla@arm.com,
+	rafael@kernel.org,
+	lenb@kernel.org
+Cc: linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v6 0/5] Add support for the TPM FF-A start method
+Date: Wed,  5 Mar 2025 11:36:06 -0600
+Message-Id: <20250305173611.74548-1-stuart.yoder@arm.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250305204609.5e64768e@canb.auug.org.au> <20250305112301.2897-1-kprateek.nayak@amd.com>
-In-Reply-To: <20250305112301.2897-1-kprateek.nayak@amd.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Wed, 5 Mar 2025 07:35:10 -1000
-X-Gmail-Original-Message-ID: <CAHk-=whuh+f8C4u+gCkxRZyrt7Gw_FFw_pKn-2SnTovZOvEKmg@mail.gmail.com>
-X-Gm-Features: AQ5f1JpVncbQJB8CMWOiHCOAk_h_Z8i-dDxgl5v-NmRX9Bj6aemi-yO_tNgOHd0
-Message-ID: <CAHk-=whuh+f8C4u+gCkxRZyrt7Gw_FFw_pKn-2SnTovZOvEKmg@mail.gmail.com>
-Subject: Re: [PATCH] include/linux/pipe_fs_i: Add htmldoc annotation for
- "head_tail" member
-To: K Prateek Nayak <kprateek.nayak@amd.com>
-Cc: Oleg Nesterov <oleg@redhat.com>, Stephen Rothwell <sfr@canb.auug.org.au>, linux-kernel@vger.kernel.org, 
-	Linux Next Mailing List <linux-next@vger.kernel.org>, Swapnil Sapkal <swapnil.sapkal@amd.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-On Wed, 5 Mar 2025 at 01:24, K Prateek Nayak <kprateek.nayak@amd.com> wrote:
->
-> Add htmldoc annotation for the newly introduced "head_tail" member
-> describing it to be a union of the pipe_inode_info's @head and @tail
-> members.
+Firmware Framework for Arm A-profile (FF-A) is a messaging framework
+for Arm-based systems, and in the context of the TPM CRB driver is used
+to signal 'start' to a CRB-based TPM service which is hosted in an
+FF-A secure partition running in TrustZone.
 
-Applied.
+These patches add support for the CRB FF-A start method defined
+in the TCG ACPI specification v1.4 and the FF-A ABI defined
+in the Arm TPM Service CRB over FF-A (DEN0138) specification:
+https://developer.arm.com/documentation/den0138/latest/
 
-I also committed the pipe_occupancy() fix for 32-bit, but did so
-without testing - it was ObviouslyCorrect(tm), but considering that
-everybody missed it in the original patch, "obvious" is all relative.
+The first patch adds an FF-A driver to handle the FF-A messaging when
+communicating with a CRB-based TPM secure partition built on FF-A.
+The driver is probed when the TPM secure partition is discovered by
+the Linux FF-A infrastructure.
 
-And it turns out my worry about pipe_discard_from() was unnecessary.
-Yes, the code is buggy. But no, it doesn't matter. Why? There are no
-callers of that function ;)
+The second patch consolidates the check for idle support in the CRB
+driver to one place.
 
-That said, I still hope people will take a look at the code and see if
-there's anything else I missed.
+The third patch defines the new ACPI start method enumeration for
+CRB over FF-A.
 
-Oh, and testing. Testing would be good.
+The fourth patch adds support for the FF-A ACPI start method to
+the TPM crb driver.
 
-        Linus
+The fifth patch adds documentation explaining how the CRB driver
+and FF-A relate.
+
+Version 6
+-in tpm_crb removed unnecessary brackets from if statement and
+ fixed comment style
+-noticed and fixed bug in patch 2, polarity of return value
+ from tpm_crb_has_idle() was wrong and wasn't caught in past
+ testing
+-added Reviewed-by tag to patches 2 and 5
+
+Version 5
+-tpm_ffa_crb patch: removed module version
+-tpm_ffa_crb patch: fixed module description
+-tpm_ffa_crb patch: updated comment on mutex declaration
+-reworded commit message for patch 2 as per Jarkko's 
+ suggestion
+-added Acked tag by Sudeep to patch 1 for FF-A changes 
+-added Reviewed-by tag to patches 3 and 4
+
+Version 4
+-fix warning from kernel test robot in patch 1
+-fix warnings from checkpatch.pl --strict
+-clean up unnecessary parenthesis usage
+-update variable declaration to be reverse tree order
+-document exported functions in tpm_crb_ffa driver
+-remove unnecessary author and maintainer info in tpm_crb_ffa driver
+-fix declaration of variables to be in reverse tree order
+
+Version 3
+-changed prefixes used throughout patch series to tpm_crb_ffa*
+
+Version 2
+-updates to cover letter to define FF-A
+-added new patch with documentation
+-created pull request in ACPIA and added link to the patch
+ updating actbl3.h
+-added tpm_ prefix to the FF-A CRB driver
+
+Stuart Yoder (5):
+  tpm_crb: implement driver compliant to CRB over FF-A
+  tpm_crb: clean-up and refactor check for idle support
+  ACPICA: add start method for Arm FF-A
+  tpm_crb: add support for the Arm FF-A start method
+  Documentation: tpm: add documentation for the CRB FF-A interface
+
+ Documentation/security/tpm/tpm_ffa_crb.rst |  65 ++++
+ drivers/char/tpm/Kconfig                   |   9 +
+ drivers/char/tpm/Makefile                  |   1 +
+ drivers/char/tpm/tpm_crb.c                 | 105 +++++--
+ drivers/char/tpm/tpm_crb_ffa.c             | 348 +++++++++++++++++++++
+ drivers/char/tpm/tpm_crb_ffa.h             |  25 ++
+ include/acpi/actbl3.h                      |   1 +
+ 7 files changed, 535 insertions(+), 19 deletions(-)
+ create mode 100644 Documentation/security/tpm/tpm_ffa_crb.rst
+ create mode 100644 drivers/char/tpm/tpm_crb_ffa.c
+ create mode 100644 drivers/char/tpm/tpm_crb_ffa.h
+
+-- 
+2.34.1
+
