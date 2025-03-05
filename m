@@ -1,47 +1,34 @@
-Received: from out-187.mta0.migadu.com (out-187.mta0.migadu.com [91.218.175.187])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AA5C2512EB
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 18:46:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E7951A5BB7;
+	Wed,  5 Mar 2025 18:48:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741200393; cv=none; b=FWZvsebZopmfJ2rYhdyy5KAD1w89WMZyqbJiRcIQ18oGzWcMvo2QxdcMm0RpGKjygBdvLR4tdqX5y1yg+VUThNXL8PxxvSOuZpPVMPy+4jYuIiP5pBc59wxlBdbpMTzN0xgk43slrDnPaeutGP7bRyGdJ5blnNkRKlN04Q1tAAM=
+	t=1741200506; cv=none; b=XYsXAUb0PltZEk57k+dEWoziFULGuBO3s+YlONvdKoBFz9xTYucR6XEJeB5lBTwhLwnPsp4Ex/pXqIA835aiwZx4r6bE/uHKrxDBAqA6T4OL1ysJi6Le4BAZlRKk8QzlvZM9qCjziNjJQsFCewm15L1/WtO1YULFAzWRatoAoWU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741200393; c=relaxed/simple;
-	bh=EfO+eU+9ipz1OTtI4xWsRlg5Bq7v+cDR8kd0D6VZ/60=;
+	s=arc-20240116; t=1741200506; c=relaxed/simple;
+	bh=4Jo28D0D/+VynJE9hqj9lJ05PZTxswCglwzTgDRosFk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dinSufmavwtUpiktVEfbn7DRatmNBdfm1vDZDOnK7dJthT9nRH+D998krJTRoSERarFu0ZuxLaF/I/2jAObjw0xsxrMifyNrdEKzjzv2lbLqK30Jj+9ZmPJ1S8ltVfvbKxK/a84Vdq9SRvhweNDKJThHAgvg9/0q9QweF2O+Nes=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=CgSQZKTY; arc=none smtp.client-ip=91.218.175.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="CgSQZKTY"
-Date: Wed, 5 Mar 2025 18:46:08 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1741200384;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Ucfgsix0oowqP24fIT+M10+ojZiyuKkeB730wJpBX2Y=;
-	b=CgSQZKTYf3TtLNgJK3W72xUGYPzZ7wlIVY/rEvUnO/Rm5xxaFryuAt1j5h0wcnmVOUVezh
-	9Q90TZY7PAn8rJ31PeCw8OuSrXCsMxLDYy25NeWgpff8/IrUYxOdqBnS7nXNP1D+banfdy
-	OdOAFukMdf8QEJ+96dLXYOzQzF5W6NQ=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Yosry Ahmed <yosry.ahmed@linux.dev>
-To: Arnd Bergmann <arnd@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	Arnd Bergmann <arnd@arndb.de>, Vlastimil Babka <vbabka@suse.cz>,
-	Jann Horn <jannh@google.com>,
-	Pedro Falcato <pedro.falcato@gmail.com>,
-	David Hildenbrand <david@redhat.com>,
-	Kefeng Wang <wangkefeng.wang@huawei.com>,
-	Jeff Xu <jeffxu@chromium.org>, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm/mremap: fix uninitialized return code
-Message-ID: <Z8ib8K9bPTbes0vn@google.com>
-References: <20250305172800.3465120-1-arnd@kernel.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=f/vS/XuoqZyZc69IST4s8v7sAraVSrPuM11KTpuXVvUmS+GEhe6hW+SMFj2RMQp/KS/WDPct5VadWHK3jGENBivNAorpTvhE0MTsfDrUutwpvqlLp2sMFdKyYdHpEWRs6WGtXshu5hjaEghcPSgRrBBOThXbaxEc5BtJe23xLh0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A70DCC4CED1;
+	Wed,  5 Mar 2025 18:48:22 +0000 (UTC)
+Date: Wed, 5 Mar 2025 18:48:19 +0000
+From: Catalin Marinas <catalin.marinas@arm.com>
+To: Piotr Jaroszynski <pjaroszynski@nvidia.com>
+Cc: Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org,
+	Robin Murphy <robin.murphy@arm.com>,
+	Alistair Popple <apopple@nvidia.com>,
+	Raghavendra Rao Ananta <rananta@google.com>,
+	SeongJae Park <sj@kernel.org>, Jason Gunthorpe <jgg@nvidia.com>,
+	John Hubbard <jhubbard@nvidia.com>,
+	Nicolin Chen <nicolinc@nvidia.com>, iommu@lists.linux.dev,
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: Re: [PATCH] [arm64/tlb] Fix mmu notifiers for range-based invalidates
+Message-ID: <Z8iccxCo7tkqvE_p@arm.com>
+References: <20250304085127.2238030-1-pjaroszynski@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,43 +37,107 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250305172800.3465120-1-arnd@kernel.org>
-X-Migadu-Flow: FLOW_OUT
+In-Reply-To: <20250304085127.2238030-1-pjaroszynski@nvidia.com>
 
-On Wed, Mar 05, 2025 at 06:27:56PM +0100, Arnd Bergmann wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
+On Tue, Mar 04, 2025 at 12:51:27AM -0800, Piotr Jaroszynski wrote:
+> Update the __flush_tlb_range_op macro not to modify its parameters as
+> these are unexepcted semantics. In practice, this fixes the call to
+> mmu_notifier_arch_invalidate_secondary_tlbs() in
+> __flush_tlb_range_nosync() to use the correct range instead of an empty
+> range with start=end. The empty range was (un)lucky as it results in
+> taking the invalidate-all path that doesn't cause correctness issues,
+> but can certainly result in suboptimal perf.
 > 
-> The 'err' variable is set in a conditinal branch and is not
-> set otherwise:
-> 
-> mm/mremap.c:1017:7: error: variable 'err' is used uninitialized whenever 'if' condition is false [-Werror,-Wsometimes-uninitialized]
->  1017 |                 if (vma->vm_start != old_addr)
-> 
-> Set it to zero before the initial value is set.
-> 
-> Fixes: 3129f7896afb ("mm/mremap: initial refactor of move_vma()")
+> This has been broken since commit 6bbd42e2df8f ("mmu_notifiers: call
+> invalidate_range() when invalidating TLBs") when the call to the
+> notifiers was added to __flush_tlb_range(). It predates the addition of
+> the __flush_tlb_range_op() macro from commit 360839027a6e ("arm64: tlb:
+> Refactor the core flush algorithm of __flush_tlb_range") that made the
+> bug hard to spot.
 
-I think Andrew already fixed this:
-https://lore.kernel.org/lkml/20250304151556.635d9041a7ca36f1960fe664@linux-foundation.org/
+That's the problem with macros.
 
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
+
+Will, do you want to take this as a fix? It's only a performance
+regression, though you never know how it breaks the callers of the macro
+at some point.
+
+> Fixes: 6bbd42e2df8f ("mmu_notifiers: call invalidate_range() when invalidating TLBs")
+> 
+> Signed-off-by: Piotr Jaroszynski <pjaroszynski@nvidia.com>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Robin Murphy <robin.murphy@arm.com>
+> Cc: Alistair Popple <apopple@nvidia.com>
+> Cc: Raghavendra Rao Ananta <rananta@google.com>
+> Cc: SeongJae Park <sj@kernel.org>
+> Cc: Jason Gunthorpe <jgg@nvidia.com>
+> Cc: John Hubbard <jhubbard@nvidia.com>
+> Cc: Nicolin Chen <nicolinc@nvidia.com>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: iommu@lists.linux.dev
+> Cc: linux-mm@kvack.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: stable@vger.kernel.org
 > ---
->  mm/mremap.c | 1 +
->  1 file changed, 1 insertion(+)
+>  arch/arm64/include/asm/tlbflush.h | 22 ++++++++++++----------
+>  1 file changed, 12 insertions(+), 10 deletions(-)
 > 
-> diff --git a/mm/mremap.c b/mm/mremap.c
-> index 456849b9e7bd..9c51a2360d84 100644
-> --- a/mm/mremap.c
-> +++ b/mm/mremap.c
-> @@ -1014,6 +1014,7 @@ static unsigned long prep_move_vma(struct vma_remap_struct *vrm)
->  		return -ENOMEM;
->  
->  	if (vma->vm_ops && vma->vm_ops->may_split) {
-> +		err = 0;
->  		if (vma->vm_start != old_addr)
->  			err = vma->vm_ops->may_split(vma, old_addr);
->  		if (!err && vma->vm_end != old_addr + old_len)
+> diff --git a/arch/arm64/include/asm/tlbflush.h b/arch/arm64/include/asm/tlbflush.h
+> index bc94e036a26b..8104aee4f9a0 100644
+> --- a/arch/arm64/include/asm/tlbflush.h
+> +++ b/arch/arm64/include/asm/tlbflush.h
+> @@ -396,33 +396,35 @@ static inline void arch_tlbbatch_flush(struct arch_tlbflush_unmap_batch *batch)
+>  #define __flush_tlb_range_op(op, start, pages, stride,			\
+>  				asid, tlb_level, tlbi_user, lpa2)	\
+>  do {									\
+> +	typeof(start) __flush_start = start;				\
+> +	typeof(pages) __flush_pages = pages;				\
+>  	int num = 0;							\
+>  	int scale = 3;							\
+>  	int shift = lpa2 ? 16 : PAGE_SHIFT;				\
+>  	unsigned long addr;						\
+>  									\
+> -	while (pages > 0) {						\
+> +	while (__flush_pages > 0) {					\
+>  		if (!system_supports_tlb_range() ||			\
+> -		    pages == 1 ||					\
+> -		    (lpa2 && start != ALIGN(start, SZ_64K))) {		\
+> -			addr = __TLBI_VADDR(start, asid);		\
+> +		    __flush_pages == 1 ||				\
+> +		    (lpa2 && __flush_start != ALIGN(__flush_start, SZ_64K))) {	\
+> +			addr = __TLBI_VADDR(__flush_start, asid);	\
+>  			__tlbi_level(op, addr, tlb_level);		\
+>  			if (tlbi_user)					\
+>  				__tlbi_user_level(op, addr, tlb_level);	\
+> -			start += stride;				\
+> -			pages -= stride >> PAGE_SHIFT;			\
+> +			__flush_start += stride;			\
+> +			__flush_pages -= stride >> PAGE_SHIFT;		\
+>  			continue;					\
+>  		}							\
+>  									\
+> -		num = __TLBI_RANGE_NUM(pages, scale);			\
+> +		num = __TLBI_RANGE_NUM(__flush_pages, scale);		\
+>  		if (num >= 0) {						\
+> -			addr = __TLBI_VADDR_RANGE(start >> shift, asid, \
+> +			addr = __TLBI_VADDR_RANGE(__flush_start >> shift, asid, \
+>  						scale, num, tlb_level);	\
+>  			__tlbi(r##op, addr);				\
+>  			if (tlbi_user)					\
+>  				__tlbi_user(r##op, addr);		\
+> -			start += __TLBI_RANGE_PAGES(num, scale) << PAGE_SHIFT; \
+> -			pages -= __TLBI_RANGE_PAGES(num, scale);	\
+> +			__flush_start += __TLBI_RANGE_PAGES(num, scale) << PAGE_SHIFT; \
+> +			__flush_pages -= __TLBI_RANGE_PAGES(num, scale);\
+>  		}							\
+>  		scale--;						\
+>  	}								\
+> 
+> base-commit: 99fa936e8e4f117d62f229003c9799686f74cebc
 > -- 
-> 2.39.5
-> 
-> 
+> 2.22.1.7.gac84d6e93c.dirty
+
+-- 
+Catalin
