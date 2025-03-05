@@ -1,106 +1,162 @@
-Received: from out-189.mta0.migadu.com (out-189.mta0.migadu.com [91.218.175.189])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A03E92512EF
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 16:40:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56E8119884C
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 16:41:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741192817; cv=none; b=CrlLLyOl1xjdDKa8qJuUfpEHTpWJLaK5ctbnDAXtb/F01LYlBnF7XWKovnMD2tZQgguTzpYI0th8q8yDybO7NHoZ3mZBX5HMbwzmxHmmXYtUxtL9K0vTyn1EIxTZGhOI2Sy5DzuAysOXDU/z0CDwjd8NzuccPsEb/mo7cBQOmcE=
+	t=1741192862; cv=none; b=WUjoTjgUdAZ4+sZv/hajZ8CBy+XJ048gQvbRlsPEf3qTV0Bv4epY4+iBFDXe/aslWuxOObCv4uThz5WC+p8mufxA9uT5+++r3taJiD1RrJYkz38LBU9rfCwzYaVlfNDwsKSK6URos34wIavdQlKxikwTA3ZBdfwyT3MkSoS62Gw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741192817; c=relaxed/simple;
-	bh=IQV0Yy/1k1IBFJFocoUYByRRAozlm7jKeZVmuUQRG8s=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=tayi1OnLZ5aLASNhdW/LjyM3O2zrRrl5m14Vv/jATBygFedBBCkgfgc8TI52g88/+IUfcklI10j8iBcPpAWRXIRovMf2G/B4vqAep2edPGq5WfvsCgFZejp1EgZcsBLKMV24djMw7txe0TO8oGWiOe5/N6BDiBbgBcqoD6vNE34=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=iencinas.com; spf=pass smtp.mailfrom=iencinas.com; dkim=pass (2048-bit key) header.d=iencinas.com header.i=@iencinas.com header.b=veW3wVRx; arc=none smtp.client-ip=91.218.175.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=iencinas.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iencinas.com
+	s=arc-20240116; t=1741192862; c=relaxed/simple;
+	bh=GIZj5nXeV43qZLaLKVSZeSCAfiZ1aV247XMQYfCpLOI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=XcQBHGsZeQUhaFOpregvnaC0nsNhU770gXjNjjjV51a/O3UlS4P2mB13D8/RSvFF6WlwuhK8Pw9DhMBCHVbl7wQAUuSiuegrk3Gc1TEis8TokK+kVTwsRegSMwQi47tm+GBNL1c3zB/+czqqw2mVsWDEShj32L1qyC2uzxllVj8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=LL8O6rfE; arc=none smtp.client-ip=209.85.208.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=iencinas.com header.i=@iencinas.com header.b="veW3wVRx"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=iencinas.com;
-	s=key1; t=1741192812;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=jdlcaeLgpRGJb4WYxQLcnWtC/c9dZ1uqwhfx8n90Igk=;
-	b=veW3wVRx/5NFTXbzOGBD5dHeuKAc9xZrmmidqKHhtwZ8eqxAQZizfNIZflx2AxELm4Sy55
-	tPvi19YwvxMctpqHZUZ+vbo95LC1Owaj0S/nyM0bY5QNucCJAL+V1KgUjssvd0UejzXTrA
-	gCvbJEf+CtzD/4lxRc5Kw6PPtYO4m0itXLcmCVMs1zKY61hKQJwScPCtBdgdK+CnD3DPLm
-	8GKFQ7v+V9/E8UNMT4wXtZKbnIjpai0+b5MQJdW2SJwqyqKTUjRYP4Rb+KRTphNMQYh7lT
-	Ko/AK9ZQXPe3ugMsSRT5sKB2/EwnPeoz7vbPh3Z1HAInmM2osu2rAOl+lkSm/A==
-From: Ignacio Encinas <ignacio@iencinas.com>
-Date: Wed, 05 Mar 2025 17:39:28 +0100
-Subject: [PATCH] selftests: riscv: fix v_exec_initval_nolibc.c
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="LL8O6rfE"
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5e5b56fc863so815250a12.3
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Mar 2025 08:40:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1741192858; x=1741797658; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=bcj+FL6rUqtMKI8ucbJjAqXrCeckB3SlFcAWKVcfex4=;
+        b=LL8O6rfEcEjX6ljXVha1OzPX06D6aMqGyFtSrUZrduv97mfafIUPu04Q5UnjU/D3lC
+         H477pbltdUtZy7ktlrIQBvURdyBhD5u9jDl0D2O0nCnMvlZ3u82Kx03qXQiMBSCA9387
+         uwjt41CZ5AWmcTlzoURb7J7cxNgEsdz4jIuho=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741192858; x=1741797658;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=bcj+FL6rUqtMKI8ucbJjAqXrCeckB3SlFcAWKVcfex4=;
+        b=FebmHdW9VjeaUEvxyvEyiVpMeIf5CAKyU8e5vr8p1Fy7DoatRr+LSyH0NDqkOj49CG
+         73YmfmQCvWuHXm/D7l0iiqBPbrY6HDkXpYo+qAqVW02gW7lJnDTG2dxPBbxBy022hjsa
+         UhvADuebj8qgVn9BYXSXjeebX80qWE9lX7Fd5j9qOIkPi1LqoJk7WmZTlmthkjh2Fw4s
+         r4IU5sjZOOsg9kQkkP54dJzEEpM7jZ+oZNP37Ij0D6bGf5vElXK5rAr4Z/4M4wCz/cbj
+         qatF1aJ+RdSewf1JS+tVIwI11H/8shArF2fuUabRjTgzyJslIL4N/iEs0GffcvGY3bOU
+         GCiA==
+X-Forwarded-Encrypted: i=1; AJvYcCWkMGvtMBWRoqN4Tz9sKjYhzWMyW79S9fzFdOW2MhWWwpPNYn1Tx8ZHIIPslkyjI6gRO++MMQ5E5us2ayI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzv+W/KdU23vcyHrBBj1Y+N5Q3HtY8GuFDUarD9cllYmA7hZVKe
+	cpNM02KHM+MwlscXP6Q8Hh+hbBFRcOR/eK5uTGGDAUH0ZtGYvdwu3+1+ZdGMbYZhJ2SteKOWqPw
+	OinLnvQ==
+X-Gm-Gg: ASbGncsRlWyQ2RmL2dFDl0LZg5GIRmhN9Ih46y9tL1qjzeLOmCTQSYO3sjlENpTv8xk
+	4NqOJOFcNqO5t3wFLtNUwJT1KTfERiGjhwpR1SvizEN8oIB3ua4pLvwI5/DLX52WeMrQ/Q52+r1
+	CdlX+FMOCJ/2c5gAfJMPuyGbKXxvoHuAM/6W/EFw0Q56dfziFoo2sIf6yhzRenwxV8VtPEdU9En
+	FUUzy4CqItXzG3QkWIpQznFHxcB6rCHtehBJ1w/4YPWnQZD4fxiL5hpcoTCN1Atx9YNwM9xeZFA
+	XA7UhvKa9bKPEbcd4X1rCQuGZuc8eHwtwlvBzXQzBLos2+TMtYiIGuLk0TJdwWDj1bdOVehcQvr
+	O2LaK0nVWjppuFpKMcXY=
+X-Google-Smtp-Source: AGHT+IHvJAVVwBDJaW0CZjWFJ5geMTQODPradPhOlZWlSIEP56IEzN7SzOTtlcVqc3q/TgmzKBqNnQ==
+X-Received: by 2002:a05:6402:3819:b0:5e5:9a2b:167a with SMTP id 4fb4d7f45d1cf-5e59f3e9216mr3696718a12.17.1741192858045;
+        Wed, 05 Mar 2025 08:40:58 -0800 (PST)
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com. [209.85.218.45])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5e4c3fb5927sm9739211a12.53.2025.03.05.08.40.55
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 05 Mar 2025 08:40:56 -0800 (PST)
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-aaf900cc7fbso1294171366b.3
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Mar 2025 08:40:55 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVKdg0Tgx/Q7WfboIXeAs/7r8EDd73oWAvpSxb+TF7ShZeSaDyEGF/e4ARJJ4NWxK/iintrSOHtOJpNMLg=@vger.kernel.org
+X-Received: by 2002:a17:907:7290:b0:abf:615d:58c2 with SMTP id
+ a640c23a62f3a-ac20d92d6c5mr406399766b.34.1741192855487; Wed, 05 Mar 2025
+ 08:40:55 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250305-fix-v_exec_initval_nolibc-v1-1-b87b60e43002@iencinas.com>
-X-B4-Tracking: v=1; b=H4sIAD9+yGcC/x2MWwqAIBAArxL7nWDa+yoRYrrVQlhoSBDePelzY
- GZeCOgJA4zFCx4jBTpdhqoswOzabcjIZgbBRcMlr9hKD4sKHzSKHN1RH8qdBy2G1UNvh641shM
- Wcn95zPL/nuaUPqBdQ0lrAAAA
-X-Change-ID: 20250301-fix-v_exec_initval_nolibc-498d976c372d
-To: linux-kernel-mentees@lists.linux.dev, skhan@linuxfoundation.org, 
- Paul Walmsley <paul.walmsley@sifive.com>, 
- Palmer Dabbelt <palmer@dabbelt.com>, Alexandre Ghiti <alex@ghiti.fr>, 
- Charlie Jenkins <charlie@rivosinc.com>
-Cc: linux-kselftest@vger.kernel.org, linux-riscv@lists.infradead.org, 
- linux-kernel@vger.kernel.org, Ignacio Encinas <ignacio@iencinas.com>
-X-Migadu-Flow: FLOW_OUT
+References: <20250228143049.GA17761@redhat.com> <20250228163347.GB17761@redhat.com>
+ <03a1f4af-47e0-459d-b2bf-9f65536fc2ab@amd.com> <CAGudoHHA7uAVUmBWMy4L50DXb4uhi72iU+nHad=Soy17Xvf8yw@mail.gmail.com>
+ <CAGudoHE_M2MUOpqhYXHtGvvWAL4Z7=u36dcs0jh3PxCDwqMf+w@mail.gmail.com>
+ <741fe214-d534-4484-9cf3-122aabe6281e@amd.com> <3jnnhipk2at3f7r23qb7fvznqg6dqw4rfrhajc7h6j2nu7twi2@wc3g5sdlfewt>
+ <CAHk-=whuLzj37umjCN9CEgOrZkOL=bQPFWA36cpb24Mnm3mgBw@mail.gmail.com>
+ <CAGudoHG2PuhHte91BqrnZi0VbhLBfZVsrFYmYDVrmx4gaLUX3A@mail.gmail.com>
+ <CAHk-=whVfFhEq=Hw4boXXqpnKxPz96TguTU5OfnKtCXo0hWgVw@mail.gmail.com>
+ <20250303202735.GD9870@redhat.com> <CAHk-=wiA-7pdaQm2nV0iv-fihyhWX-=KjZwQTHNKoDqid46F0w@mail.gmail.com>
+In-Reply-To: <CAHk-=wiA-7pdaQm2nV0iv-fihyhWX-=KjZwQTHNKoDqid46F0w@mail.gmail.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Wed, 5 Mar 2025 06:40:38 -1000
+X-Gmail-Original-Message-ID: <CAHk-=wjyHsGLx=rxg6PKYBNkPYAejgo7=CbyL3=HGLZLsAaJFQ@mail.gmail.com>
+X-Gm-Features: AQ5f1Jp0qXBcEd52erShw3zCywhVPd7l8QG-JqnvkqqMzAhLfYEXemeEXbrVY6s
+Message-ID: <CAHk-=wjyHsGLx=rxg6PKYBNkPYAejgo7=CbyL3=HGLZLsAaJFQ@mail.gmail.com>
+Subject: Re: [PATCH] pipe_read: don't wake up the writer if the pipe is still full
+To: Oleg Nesterov <oleg@redhat.com>
+Cc: Mateusz Guzik <mjguzik@gmail.com>, K Prateek Nayak <kprateek.nayak@amd.com>, 
+	"Sapkal, Swapnil" <swapnil.sapkal@amd.com>, Manfred Spraul <manfred@colorfullife.com>, 
+	Christian Brauner <brauner@kernel.org>, David Howells <dhowells@redhat.com>, 
+	WangYuli <wangyuli@uniontech.com>, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, 
+	"Shenoy, Gautham Ranjal" <gautham.shenoy@amd.com>, Neeraj.Upadhyay@amd.com, Ananth.narayan@amd.com
+Content-Type: text/plain; charset="UTF-8"
 
-Vector registers are zero initialized by the kernel. Stop accepting
-"all ones" as a clean value.
+On Mon, 3 Mar 2025 at 10:46, Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> ENTIRELY UNTESTED, but it seems to generate ok code. It might even
+> generate better code than what we have now.
 
-Note that this was not working as expected given that
-	value == 0xff
-can be assumed to be always false by the compiler as value's range is
-[-128, 127]. Both GCC (-Wtype-limits) and clang
-(-Wtautological-constant-out-of-range-compare) warn about this.
+Bah. This patch - which is now committed - was actually completely broken.
 
-Signed-off-by: Ignacio Encinas <ignacio@iencinas.com>
----
-I tried looking why "all ones" was previously deemed a "clean" value but
-couldn't find any information. It looks like the kernel always 
-zero-initializes the vector registers.
+And the reason that complete breakage didn't show up in testing is
+that I suspect nobody really tested or thought about the 32-bit case.
 
-If "all ones" is still acceptable for any reason, my intention is to 
-spin a v2 changing the types of `value` and `prev_value` to unsigned 
-char.
----
- tools/testing/selftests/riscv/vector/v_exec_initval_nolibc.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+That whole "use 16-bit indexes on 32-bit" is all fine and well, but I
+woke up in the middle of the night and realized that it doesn't
+actually work.
 
-diff --git a/tools/testing/selftests/riscv/vector/v_exec_initval_nolibc.c b/tools/testing/selftests/riscv/vector/v_exec_initval_nolibc.c
-index 35c0812e32de0c82a54f84bd52c4272507121e35..b712c4d258a6cb045aa96de4a75299714866f5e6 100644
---- a/tools/testing/selftests/riscv/vector/v_exec_initval_nolibc.c
-+++ b/tools/testing/selftests/riscv/vector/v_exec_initval_nolibc.c
-@@ -6,7 +6,7 @@
-  * the values. To further ensure consistency, this file is compiled without
-  * libc and without auto-vectorization.
-  *
-- * To be "clean" all values must be either all ones or all zeroes.
-+ * To be "clean" all values must be all zeroes.
-  */
- 
- #define __stringify_1(x...)	#x
-@@ -46,7 +46,7 @@ int main(int argc, char **argv)
- 			: "=r" (value));					\
- 		if (first) {							\
- 			first = 0;						\
--		} else if (value != prev_value || !(value == 0x00 || value == 0xff)) { \
-+		} else if (value != prev_value || value != 0x00) {              \
- 			printf("Register " __stringify(register)		\
- 				" values not clean! value: %u\n", value);	\
- 			exit(-1);						\
+Because now "pipe_occupancy()" is getting *entirely* the wrong
+answers. It just does
 
----
-base-commit: 03d38806a902b36bf364cae8de6f1183c0a35a67
-change-id: 20250301-fix-v_exec_initval_nolibc-498d976c372d
+        return head - tail;
 
-Best regards,
--- 
-Ignacio Encinas <ignacio@iencinas.com>
+but that only worked when the arithmetic was done modulo the size of
+the indexes. And now it isn't.
 
+So I still haven't *tested* this, but at an absolute minimum, we need
+something like this:
+
+  --- a/include/linux/pipe_fs_i.h
+  +++ b/include/linux/pipe_fs_i.h
+  @@ -192,7 +192,7 @@
+    */
+   static inline unsigned int pipe_occupancy(unsigned int head,
+unsigned int tail)
+   {
+  -       return head - tail;
+  +       return (pipe_index_t)(head - tail);
+   }
+
+   /**
+
+and there might be other cases where the pipe_index_t size might matter.
+
+For example, we should add a check to pipe_resize_ring() that the new
+size is smaller than the index size. Yes, in practice 'pipe_max_size'
+already ends up being that limit (the value is 256 pages), even for
+16-bit indices, but we should do this properly.
+
+And then, *while* looking at this, I also noticed that we had a very
+much related bug in this area that was pre-existing and not related to
+the 16-bit change: pipe_discard_from() is doing the wrong thing for
+overflows even in the old 'unsigned int' type, and the whole
+
+        while (pipe->head > old_head)
+
+is bogus, because 'pipe->head' may have wrapped around, so the whole
+"is it bigger" test doesn't work like that at all.
+
+Of course, in practice it never hits (and would only hit more easily
+with the new 16-bit thing), but it's very very wrong and can result in
+a memory leak.
+
+Are there other cases like this? I don't know. I've been looking
+around a bit, but those were the only ones I found immediately when I
+started thinking about the whole wrap-around issue.
+
+I'd love it if other people tried to think about this too (and maybe
+even test the 32-bit case - gasp!)
+
+                         Linus
