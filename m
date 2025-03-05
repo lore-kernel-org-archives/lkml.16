@@ -1,244 +1,126 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7920519258E;
-	Wed,  5 Mar 2025 04:21:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB95119258E;
+	Wed,  5 Mar 2025 04:25:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741148511; cv=none; b=BpKtxzlMGcN/Vn3FSQxHdD04tMr6S/YaCeGuynOyRUnUAXyrkaNSoI6P6mj9wLPJf6xZzPTEZMFUs64pIeQbyYoAojp89V4JlSZ9QAq/ltKtbFrW4CpyzdbkzXjpPFiybXmsiUgs1jynNGNHWGHAxa8D3wlGHE8lbOesu445V/A=
+	t=1741148726; cv=none; b=q+WyIaoo/x1t/3xFJbdRHIFlyppXOERxLnEFK0iTkvxxt2r995Zw62aaZz3Lzrgrrht/y/xfM2QeidtRdl6eJauRPUyESVIkUxRr4cGHRyfeP0MwyOSvLxBZBwzqOgUCTLewcpseZKh1Cuf2YQzoNF8fznsJthOhh9ItZYT2Bdg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741148511; c=relaxed/simple;
-	bh=r39igoZl7dgIk8L4GFCd6S0dc7M/x4ffj5p5QjTfUF4=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:Message-ID:References; b=GmWzc66O+Sa8OCCrBZmX7vynV4rGU/qMNaRHpA3uY3d4xRXwq+RMojHBzCnpZVfTTo05cUD2spoeFmM12AjxN8WqWmOZhJDM98uFNMLUwsy/yrSfCUffEDg9PEu/pwZz0zEgTf1RfoJZ3OA3yf6a1nGCj7Qk/swnT/S9oGUAV+8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CDqIJiBT; arc=none smtp.client-ip=209.85.214.176
+	s=arc-20240116; t=1741148726; c=relaxed/simple;
+	bh=xVXj5uNuDprrX9NgzeSzCIaye5vTwhTZ/RbbjSMwxv8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=X8w0z3CJQakcaY+NLaMOPKA6hw2TlLPJ02j0GVa0je1KAbmBA3The0fw/jsGV7r26E4zXKDkH15dxhmIszGKYTPmRjY8vnxNNs5CMkAF1iJkx5kM8uxY9qiJs/PhNgfeQrifMm8vqpw/ID21BZKILQIoR452Z+hPq8k9TB3c2Sk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=faH+v/k0; arc=none smtp.client-ip=209.85.219.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CDqIJiBT"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-22328dca22fso95343565ad.1;
-        Tue, 04 Mar 2025 20:21:49 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="faH+v/k0"
+Received: by mail-qv1-f46.google.com with SMTP id 6a1803df08f44-6e8e6dee861so4738226d6.1;
+        Tue, 04 Mar 2025 20:25:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741148509; x=1741753309; darn=vger.kernel.org;
-        h=references:message-id:date:in-reply-to:subject:cc:to:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=UAh53tm7x5vjG0oU8skw4hzinBeRfI2F4BZXkPhkiXk=;
-        b=CDqIJiBTVhkGpz/E9qeX8d07Iiw6i0IH54q+deXERLqIkcYWWYlgdjEYJ54YdJbD4g
-         a6dBcJvaSfCMlVPOY1M/9BC0eU9XyttXv9TFkI2/lKVJC4UvLc9dPRn98leDUg2QdQes
-         S6Hpsx+HerpbTNXjDB2i/v8BnfWwCz0QRqVotV/v+Q4seOt2VN5M/Phl/y064400Y4a7
-         NFAD8R1FLfI+F2V+o+aCNZwFvUJZd2ivLxeZv+AfDiIrjOmPJS6spCiuqgCzKbq3hS4B
-         7MZ0zkPCkPdjShoVQjgzY+xPDxR2Q5NlQKHJsNWPxiGly6RFROUlz/dwp5dwMP9wwQrm
-         KYUQ==
+        d=gmail.com; s=20230601; t=1741148723; x=1741753523; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=+h56XZ364MGW+3FBcMIihUk2DOAx7HjP417UZqMWYwo=;
+        b=faH+v/k0c6gT7vu2CexVFI0yEpf86TzC/8s06zQm8Qd6yW3aN5XizvDjXaflYTKwn2
+         ajGKqfmEI2N/jOe3P83hsfqzvLUP8WvL80rWB/FqaHNODYkdwp6BiykvSxGA4xejMXuH
+         yohQAPWcnPsur2rum43mOLH1X5EgyyiNr3RmyhEoIzuje/BkoVJmimuByXrUb6IsoLfF
+         Yye6ILDRA2nQiLE/jJDfXPsT635dPhqW2xTHtIBixzWUDWfu2sIU1ASeaeycPhlYGX7S
+         o+DvIyE9vrJJgmgoyY0pFsL374nw2PziOR85UsKswF5u3lFCOQW2MR+iVBztoWBfgJUk
+         VjJg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741148509; x=1741753309;
-        h=references:message-id:date:in-reply-to:subject:cc:to:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=UAh53tm7x5vjG0oU8skw4hzinBeRfI2F4BZXkPhkiXk=;
-        b=hC5AlkpfGRkrO+DPjLnE0H+AB86sNm3LxxDrWVfOaAnq6fO5SlbkFsTEVuv/3y+ztD
-         KUHP/Ty/LDtbGT7Qtp1c3ORxNM+SUpXu0FqihLMuuoy17CyH/wxzRjvVPA9vf/slXmv+
-         5mNpD8v7zuqPXzBBGrPB+Sb6kxPw7EbuSsA6nfl7gBHpoKp5nc79t+JGcJAzUThLrX82
-         18uRS4wfJQBjfggECeT4PW2fS3buq8Bgts/c7/2h7uWM4KRtAc74frEQgRGbbd1SIY+R
-         x0oIM9GZkkoFYK3AmuVY1QJh36qlwyi1tTloJAizw+nKtLNi6IxL5Z4ExxlxjSQEZ0iO
-         dSCA==
-X-Forwarded-Encrypted: i=1; AJvYcCUowd9ltnSVymET3XFCtZ7fdRpuF9S4XE2+IrN2Mr1wIB65l3BbI73r5JNcDd+mfZDxRx61tbmzmgmK@vger.kernel.org, AJvYcCX+gF0Ua3yHb6z6yaXYZkAUTdOoi/yw1IMNDkEdat9iFGkS8YAJdgdJlQ8b1KXQMpjQB5XtvVbg1g21H9nc@vger.kernel.org
-X-Gm-Message-State: AOJu0YxWNivlLNgNAQCD4kMeBlhbMzEFobd3I2K/ypPYANWjkDB9l5S+
-	dKkvCll367l7k1uRdO0seQiFCrSgwMU4mVJfsD8t+/i4EXXI0gTs
-X-Gm-Gg: ASbGncuuOvg1bjqWp7wUmiB/July+q+kuyibaN38nOckViZeSMNJnX0R4xCgb8MCSua
-	cdWNTUdlv3FvSIimSOTW2bMktI+kIu31Hsl1nfdgxwxSanSwe6Set1CTTiOYoeMAb+5EmNZEQe4
-	11n7EuHV+xTAi6Y75XtCWvNcK8PilKiGP2slVmH1KTbKSRkTr5AEJBTDs2omYdTRcvD3yWW1N13
-	MecBTcCHI3UO4IlPBXkmUngFb1L5bLHPPKnAN2hZpbpmd+R39mFa1/2VGjtXdH2eNvgnCkD8jwK
-	BKeD+jV6c/iO4VlYJw5xtFUhgDgUDTc+WIk8bg==
-X-Google-Smtp-Source: AGHT+IGoBkcH/43EbZ0MvtYc8TWxOHbWCha9H3ge0TtLf882lJlPh2lYjS+JuhCtecXTELqXJbjQJA==
-X-Received: by 2002:a05:6a00:244f:b0:736:5c8e:bab8 with SMTP id d2e1a72fcca58-73682b5510amr2833593b3a.3.1741148508594;
-        Tue, 04 Mar 2025 20:21:48 -0800 (PST)
-Received: from dw-tp ([171.76.80.250])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-734a003ebe7sm12244010b3a.134.2025.03.04.20.21.45
+        d=1e100.net; s=20230601; t=1741148723; x=1741753523;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+h56XZ364MGW+3FBcMIihUk2DOAx7HjP417UZqMWYwo=;
+        b=RiE0DUV97axgVpmosX/prkiyxcjtMgmTanGDslXfrH9hxPiuGxF8dQA2UFqZifUmb6
+         LuW2JaEpncF/IzGCOrjXbQQ0BGtJ/DYwCKsiNMg1wbNgXki7nJEgbtf9Y8GxsAJW7WIW
+         Z9NazcIlrX7N49MX3xoZ0uWEAcPDF4xwF7d12OXpwbC+/H6XIjIw8U/io1fwnefmipw8
+         CZ7pyoHr7DXd0L8a1ud9PGZkDSGMT0MkuDV087caYareuTS0k2A1ourSZxhFD2SFAg1P
+         +cH57m7uVLlbg/g1KwBJh99boCBwmuCfJYqhdPCR3ucSS29PWeIdUurvelW+BGfJmEyS
+         vYVQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWq+poLsbfhmCcMPZ6O5FL1pdXFqu79zB3Gb995J1URSK0CjfQcJ6bz4ayMkgt3KC7YyonxFaWzYIY=@vger.kernel.org, AJvYcCXAiR1/zeMtDbFt4NTyjQa2W69oR3tCf5JddWHnfqTqUvt6RXPHm3X8R50SFRekLpASunllwJHOhOPX2JTP@vger.kernel.org
+X-Gm-Message-State: AOJu0YxbdUSgcyzn/QjdLeR/TzmabgKu6UsGqstp30LQCISpRpXmX2pM
+	K68MX8VLJp2Yu1aBSVM+MfBKchRFCOGsqj5sVRq2SHGSO4IAfXFcoCvAvA==
+X-Gm-Gg: ASbGncuDRQ+JhG+gM9Xfd8PBgbK7MngnPw477kbhAXw0k+OwzWxNQnlAkhsUfLIwzFv
+	x1pvqn42cKGbJsienUNxfBVXeHmVwe3BMMRcRRpiRRTg2fAVC31cfx3lRguk4x9FIO2tha4fuVI
+	oFYP5xlpIMvYgsRwzG6GwLPRZYcugXnhkbgZf7335fOPrfhgtxx50nEHyYKHrgd1olczOr2tnpl
+	/ZUvVXQhnExKEHBXj4ZrvsE5NUDa2fb+TbEpaJ9VF0DiteZTooSoLTWeHHAeH/cXKI8HqlxgB0I
+	rjeSJUrvnvvFHfRGU+kaLV8ve0CWvImFiJTaPliHOHgOlFFvr5nogspbNR3Up0JDK0CcZ5Y=
+X-Google-Smtp-Source: AGHT+IGAPdtnN/1ww52BZxy2q3tJ/zxTSHjHpKdJIPhjRDZ9WGwwJYaXC02FCoZF9ORBkR5++0QBkQ==
+X-Received: by 2002:a05:6214:da5:b0:6e6:646d:7550 with SMTP id 6a1803df08f44-6e8e6f8fdd9mr31367416d6.19.1741148723432;
+        Tue, 04 Mar 2025 20:25:23 -0800 (PST)
+Received: from VM-Arch (ool-1826d901.dyn.optonline.net. [24.38.217.1])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e8c0b4a49fsm42033556d6.67.2025.03.04.20.25.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Mar 2025 20:21:47 -0800 (PST)
-From: Ritesh Harjani (IBM) <ritesh.list@gmail.com>
-To: Jan Kara <jack@suse.cz>, Ojaswin Mujoo <ojaswin@linux.ibm.com>
-Cc: Jan Kara <jack@suse.cz>, linux-ext4@vger.kernel.org, Theodore Ts'o <tytso@mit.edu>, linux-kernel@vger.kernel.org, Mahesh Kumar <maheshkumar657g@gmail.com>
-Subject: Re: [PATCH 1/2] ext4: only defer sb update on error if SB_ACTIVE
-In-Reply-To: <mpm3x7uonxoc73lgva72vaiydc76cmr5niapm45ipk6ts5voab@e7zundhoui6i>
-Date: Wed, 05 Mar 2025 09:44:54 +0530
-Message-ID: <87eczc6rlt.fsf@gmail.com>
-References: <cover.1740212945.git.ojaswin@linux.ibm.com> <da8af2e5170f0d94031b812d7d50c6ec1967db1b.1740212945.git.ojaswin@linux.ibm.com> <jnxpphuradrsf73cxfmohfu7wwwckihtulw6ovsitddgt5pqkg@2uoejkr66qnl> <Z8BKdo5IAHJRdMkp@li-dc0c254c-257c-11b2-a85c-98b6c1322444.ibm.com> <mpm3x7uonxoc73lgva72vaiydc76cmr5niapm45ipk6ts5voab@e7zundhoui6i>
+        Tue, 04 Mar 2025 20:25:22 -0800 (PST)
+Date: Tue, 4 Mar 2025 23:25:20 -0500
+From: Alex Lanzano <lanzano.alex@gmail.com>
+To: Gustavo Silva <gustavograzs@gmail.com>
+Cc: Jonathan Cameron <jic23@kernel.org>, 
+	Lars-Peter Clausen <lars@metafoo.de>, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] iio: imu: bmi270: fix initial sampling frequency
+ configuration
+Message-ID: <xvk32vz66mjl46rmrowfb3zxcbuw7e57pn2eh3kvqv5vk3jmuh@45p5qzyl5ljr>
+References: <20250304-bmi270-odr-fix-v1-1-384dbcd699fb@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250304-bmi270-odr-fix-v1-1-384dbcd699fb@gmail.com>
 
-Jan Kara <jack@suse.cz> writes:
+On Tue, Mar 04, 2025 at 03:01:02PM -0300, Gustavo Silva wrote:
+> In the bmi270_configure_imu() function, the accelerometer and gyroscope
+> configuration registers are incorrectly written with the mask
+> BMI270_PWR_CONF_ADV_PWR_SAVE_MSK, which is unrelated to these registers.
+> 
+> As a result, the accelerometer's sampling frequency is set to 200 Hz
+> instead of the intended 100 Hz.
+> 
+> Remove the mask to ensure the correct bits are set in the configuration
+> registers.
+> 
+> Signed-off-by: Gustavo Silva <gustavograzs@gmail.com>
+> ---
+>  drivers/iio/imu/bmi270/bmi270_core.c | 6 ++----
+>  1 file changed, 2 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/iio/imu/bmi270/bmi270_core.c b/drivers/iio/imu/bmi270/bmi270_core.c
+> index a86be5af5ccb1f010f2282ee31c47f284c1bcc86..2e4469f30d538ca3e9eb9ef8bbc6eaa8b6a144b8 100644
+> --- a/drivers/iio/imu/bmi270/bmi270_core.c
+> +++ b/drivers/iio/imu/bmi270/bmi270_core.c
+> @@ -918,8 +918,7 @@ static int bmi270_configure_imu(struct bmi270_data *data)
+>  			      FIELD_PREP(BMI270_ACC_CONF_ODR_MSK,
+>  					 BMI270_ACC_CONF_ODR_100HZ) |
+>  			      FIELD_PREP(BMI270_ACC_CONF_BWP_MSK,
+> -					 BMI270_ACC_CONF_BWP_NORMAL_MODE) |
+> -			      BMI270_PWR_CONF_ADV_PWR_SAVE_MSK);
+> +					 BMI270_ACC_CONF_BWP_NORMAL_MODE));
+>  	if (ret)
+>  		return dev_err_probe(dev, ret, "Failed to configure accelerometer");
+>  
+> @@ -927,8 +926,7 @@ static int bmi270_configure_imu(struct bmi270_data *data)
+>  			      FIELD_PREP(BMI270_GYR_CONF_ODR_MSK,
+>  					 BMI270_GYR_CONF_ODR_200HZ) |
+>  			      FIELD_PREP(BMI270_GYR_CONF_BWP_MSK,
+> -					 BMI270_GYR_CONF_BWP_NORMAL_MODE) |
+> -			      BMI270_PWR_CONF_ADV_PWR_SAVE_MSK);
+> +					 BMI270_GYR_CONF_BWP_NORMAL_MODE));
+>  	if (ret)
+>  		return dev_err_probe(dev, ret, "Failed to configure gyroscope");
+>  
+> 
+> ---
+> base-commit: 8cca9edca867350e5f8dc65b71e7a6ef4157981e
+> change-id: 20250304-bmi270-odr-fix-620e7f8daa7a
+> 
 
-> On Thu 27-02-25 16:50:22, Ojaswin Mujoo wrote:
->> On Mon, Feb 24, 2025 at 03:52:00PM +0100, Jan Kara wrote:
->> > On Sat 22-02-25 14:10:22, Ojaswin Mujoo wrote:
->> > > Presently we always BUG_ON if trying to start a transaction on a journal
->> > > marked with JBD2_UNMOUNT, since this should never happen. However while
->> > > running stress tests it was observed that in case of some error handling
->> > > paths, it is possible for update_super_work to start a transaction after
->> > > the journal is destroyed eg:
->> > > 
->> > > (umount)
->> > > ext4_kill_sb
->> > >   kill_block_super
->> > >     generic_shutdown_super
->> > >       sync_filesystem /* commits all txns */
->> > >       evict_inodes
->> > >         /* might start a new txn */
->> > >       ext4_put_super
->> > > 	flush_work(&sbi->s_sb_upd_work) /* flush the workqueue */
->> > >         jbd2_journal_destroy
->> > >           journal_kill_thread
->> > >             journal->j_flags |= JBD2_UNMOUNT;
->> > >           jbd2_journal_commit_transaction
->> > >             jbd2_journal_get_descriptor_buffer
->> > >               jbd2_journal_bmap
->> > >                 ext4_journal_bmap
->> > >                   ext4_map_blocks
->> > >                     ...
->> > >                     ext4_inode_error
->> > >                       ext4_handle_error
->> > >                         schedule_work(&sbi->s_sb_upd_work)
->> > > 
->> > >                                                /* work queue kicks in */
->> > >                                                update_super_work
->> > >                                                  jbd2_journal_start
->> > >                                                    start_this_handle
->> > >                                                      BUG_ON(journal->j_flags &
->> > >                                                             JBD2_UNMOUNT)
->> > > 
->> > > Hence, make sure we only defer the update of ext4 sb if the sb is still
->> > > active.  Otherwise, just fallback to an un-journaled commit.
->> > > 
->> > > The important thing to note here is that we must only defer sb update if
->> > > we have not yet flushed the s_sb_update_work queue in umount path else
->> > > this race can be hit (point 1 below). Since we don't have a direct way
->> > > to check for that we use SB_ACTIVE instead. The SB_ACTIVE check is a bit
->> > > subtle so adding some notes below for future reference:
->> > > 
->> > > 1. Ideally we would want to have a something like (flags & JBD2_UNMOUNT
->> > > == 0) however this is not correct since we could end up scheduling work
->> > > after it has been flushed:
->> > > 
->> > >  ext4_put_super
->> > >   flush_work(&sbi->s_sb_upd_work)
->> > > 
->> > >                            **kjournald2**
->> > >                            jbd2_journal_commit_transaction
->> > >                            ...
->> > >                            ext4_inode_error
->> > >                              /* JBD2_UNMOUNT not set */
->> > >                              schedule_work(s_sb_upd_work)
->> > > 
->> > >    jbd2_journal_destroy
->> > >     journal->j_flags |= JBD2_UNMOUNT;
->> > > 
->> > >                                       **workqueue**
->> > >                                       update_super_work
->> > >                                        jbd2_journal_start
->> > >                                         start_this_handle
->> > >                                           BUG_ON(JBD2_UNMOUNT)
->> > > 
->> > > Something like the above doesn't happen with SB_ACTIVE check because we
->> > > are sure that the workqueue would be flushed at a later point if we are
->> > > in the umount path.
->> > > 
->> > > 2. We don't need a similar check in ext4_grp_locked_error since it is
->> > > only called from mballoc and AFAICT it would be always valid to schedule
->> > > work here.
->> > > 
->> > > Fixes: 2d01ddc86606 ("ext4: save error info to sb through journal if available")
->> > > Reported-by: Mahesh Kumar <maheshkumar657g@gmail.com>
->> > > Suggested-by: Ritesh Harjani <ritesh.list@gmail.com>
->> > > Signed-off-by: Ojaswin Mujoo <ojaswin@linux.ibm.com>
->> > 
->> > Good catch! But I think the solution will have to be slightly different.
->> > Basing the check on SB_ACTIVE has the problem that you can have racing
->> > updates of the sb in the still running transaction and in your direct
->> > update leading to inconsistencies after a crash (that was the reason why
->> > we've created the s_sb_upd_work in the first place).
->> > 
->> > I would solve this by implementing something like
->> > ext4_update_sb_destroy_journal() which will set a flag in sbi, flush the
->> > workqueue, and then destroy the journal. And ext4_handle_error() will check
->> > for the sbi flag.
->> > 
->> > 								Honza
->> 
->> Hey Jan,
->> 
->> Thanks for the review. So earlier I did go through different code paths to see
->> if we will have a direct sb write clash with a journalled one it wouldn't but,
->> relooking at it, seems like we might have a scenario as follows:
->> 
->> generic_super_shutdown
->>  sync_filesytems
->>   /* running txns committed. executing ext4_journal_commit_callback */
->>   ext4_maybe_update_superblock
->>    /* schedules work */
->>    schedule_work(&sbi->s_sb_upd_work)
->>                                           update_super_work
->>                                           /* start a txn and add sb to it */
->>  sb->s_flags &= ~SB_ACTIVE;
->>  evict_inode
->>    ext4_evict_inode
->>     ext4_std_error
->>      ext4_handle_error
->>       /* direct commit of sb (Not good!) */
->> 
+Good catch!
 
-Ohk. So even after clearing SB_ACTIVE flag, we still have FS operations
-running like ext4_evict_inode which can race with the super block update
-work starting a txn. 
-
-Thanks for catching that scenario.
-
-
->> 
->> Now with the 'setting the flag in sbi' approach, I'm not sure if that will be
->> enough to handle this as well. For example, if we add a flag like
->> sbi->s_journal_destroying, then:
->> 
->> ext4_put_super
->>  sbi->s_journal_destroying = true
->>  flush_workqueue()
->>   /* sb is now journalled */
->>  jbd2_journal_destory
->>   jbd2_journal_commit_transaction
->>    /* add tag for sb in descriptor and add buffer to wbufs[] */
->>    /* Later from some other buffer in the txn: */
->>    jbd2_journal_next_log_block
->>     /* hits error in ext4_journal_bmap */
->>     ext4_handle_error
->>       sbi->s_journal_destroying == true
->>       /* update and commit sb directly causing a checksum mismatch b/w entry in descriptor */
->>    jbd2_journal_abort
->>    /* after abort everything in wbufs[] is written to journal */
->> 
->> In the above we will have a checksum mismatch but then maybe its not really
->> an issue. Maybe since we never commit the txn it is understood that the contents
->> can't be trusted and it should be fine to have a mismatch b/w the decriptor tag
->> and the actual super block contents? In which case the sbi flag approach should
->> be fine.
->> 
->> Does my understanding sound correct?
->
-> Yes. Since the transaction does not get committed, its contents will be
-> (and must be) ignored. So although you are correct that the superblock
-> content in the transaction need to match the content we write directly, it
-> does not matter because whatever is in the uncommitted transaction must
-> never be written to the final position on disk.
->
-> 								Honza
-
-Thanks Jan for the suggestion. I now see what you meant by having an sbi
-flag. Since that is local to ext4, we can set it just before flushing
-the workqueue and we know that there won't be any update super block
-work which can start a txn after flushing is complete. This flag can
-then be used to check in any of the error handling paths to decide on
-whether to schedule a new update work or not for updating sb.
-
-This makes sense. Thanks for the review!
-
--ritesh
+Reviewed-by: Alex Lanzano <lanzano.alex@gmail.com>
