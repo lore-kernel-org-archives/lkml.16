@@ -1,80 +1,110 @@
-Received: from relmlie6.idc.renesas.com (relmlor2.renesas.com [210.160.252.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6F6951AAE2E;
-	Wed,  5 Mar 2025 16:38:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3E6B19ABA3;
+	Wed,  5 Mar 2025 16:38:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741192687; cv=none; b=VGQBwevjiSIqPxkBOFjyxQZgKznlkvCpzyscGxDYp5V7GYxFm5EYP1n+UrgRDDWIR+O3aWUGbalBGcMBXPJS8q4BBLB/1LvfW2X0EGUmNN55daVEvMFxNvK1fHOGfaPTkyUDTC0iRzKRtlYLfoqaIpSOrnG+qyYPk6lCAfxLqVQ=
+	t=1741192687; cv=none; b=jrjMpNHQpXuQXr3+xaG+bt4Wb9m8NKWfMBL7sWmiyE3h6PKk+4MOwxrzPPpx4749fSy31tgJoho/L9JSlRTR7zpbX6nB67mV0hQ+lFkDc5u2q4uXXF4FNSjag9fYOIr4NZR+TjI6z9zlNREm2z9LfQX9AdGy7eLmWeAmADuCXas=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1741192687; c=relaxed/simple;
-	bh=k2M3/q/adRFyhot2mgf/CMtxVEr7FsGvmTY6Z+hgrGk=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=udL2jY7tr1v0DiZjsZU0XogNePoWLkdwgfxYGNzJSb8+YXwvSGs6P51mTD8KUhGC9HfCt5fjbloXb3QrpazN0T6dctYnCUpJ7tJY+ZrTLh4fLGBrpJY6qL/yF7JTftI4reC7lTNtgB6OkLumnFT4vXy4gki7cIURqXzgBSX4ers=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com; spf=pass smtp.mailfrom=renesas.com; arc=none smtp.client-ip=210.160.252.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=renesas.com
-X-CSE-ConnectionGUID: ny+nymeWSVWinr3KFTNOpw==
-X-CSE-MsgGUID: ktDably4RyCY4HY6FxBxvA==
-Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie6.idc.renesas.com with ESMTP; 06 Mar 2025 01:38:03 +0900
-Received: from mulinux.home (unknown [10.226.92.17])
-	by relmlir5.idc.renesas.com (Postfix) with ESMTP id B365D4017975;
-	Thu,  6 Mar 2025 01:38:00 +0900 (JST)
-From: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	Simon Horman <horms+renesas@verge.net.au>,
-	Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Biju Das <biju.das.jz@bp.renesas.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-	linux-renesas-soc@vger.kernel.org
-Subject: [PATCH 1/4] gpio: rcar: Fix missing of_node_put() call
-Date: Wed,  5 Mar 2025 16:37:50 +0000
-Message-Id: <20250305163753.34913-2-fabrizio.castro.jz@renesas.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250305163753.34913-1-fabrizio.castro.jz@renesas.com>
-References: <20250305163753.34913-1-fabrizio.castro.jz@renesas.com>
+	bh=sL6HKnFMuXDXenCBceEoHD1TmQX+6oJO6AlNMpLGC5I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Slpxc8G5dNQD/rAfOueNKxhqYmfWVAmG4bXOI3So4rKmVBkbmsvNt1Uv/BC8oAHeT6zKrVtaNGgGf2m3xulbdnt+eUK9xintA1CpeCWTFfF0q9KBd5OMwHWiT8hfBQiLY5ew9IT79ME/EXvQKEUH9J9l1IxkFGxNSHXHyKve5dU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N4Ut2cNz; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N4Ut2cNz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1DD7DC4CED1;
+	Wed,  5 Mar 2025 16:38:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741192687;
+	bh=sL6HKnFMuXDXenCBceEoHD1TmQX+6oJO6AlNMpLGC5I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=N4Ut2cNzPxw/19HWcA9q6UtjX96+MvXtTOt/spQ3Kaa+W2/+8jLSKzmKdQfqq784h
+	 iXyfpjwvj2pTl+oH/pXFQUSIATsV9GDQUrPpY1XGGg5K2Ec3lSimClooKk4ynyGvUT
+	 r1PicB+2aVmGYeq5t8RYER35rZsdl0FcxkOhZOQIMiqVhIJjGkFPyBk/REwuohhG/d
+	 euKrDtjZjx1dIMBrkGYX5ZMNE1iPMHZ8ZJuJ6YZr+yGG2ppJvpgHbjVU81Ljc4A8Cq
+	 w+kRXk2NJVka0QLj05JGXMw/DRAN7bWAq46yGtSnJIxDDewUcFooFOLbAD+mTsOL1F
+	 droruHgs3mybQ==
+Date: Wed, 5 Mar 2025 10:38:05 -0600
+From: Rob Herring <robh@kernel.org>
+To: Alexander Stein <alexander.stein@ew.tq-group.com>
+Cc: Liu Ying <victor.liu@nxp.com>, dri-devel@lists.freedesktop.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, andrzej.hajda@intel.com,
+	neil.armstrong@linaro.org, rfoss@kernel.org,
+	Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se,
+	jernej.skrabec@gmail.com, maarten.lankhorst@linux.intel.com,
+	mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com,
+	simona@ffwll.ch
+Subject: Re: [PATCH 3/5] dt-bindings: display: simple-bridge: Document DPI
+ color encoder
+Message-ID: <20250305163805.GA2071011-robh@kernel.org>
+References: <20250304101530.969920-1-victor.liu@nxp.com>
+ <20250304101530.969920-4-victor.liu@nxp.com>
+ <20250304152320.GA2630063-robh@kernel.org>
+ <1891036.atdPhlSkOF@steina-w>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <1891036.atdPhlSkOF@steina-w>
 
-of_parse_phandle_with_fixed_args() requires its caller to
-call into of_node_put() on the node pointer from the output
-structure, but such a call is currently missing.
+On Wed, Mar 05, 2025 at 10:35:26AM +0100, Alexander Stein wrote:
+> Hi,
+> 
+> Am Dienstag, 4. März 2025, 16:23:20 CET schrieb Rob Herring:
+> > On Tue, Mar 04, 2025 at 06:15:28PM +0800, Liu Ying wrote:
+> > > A DPI color encoder, as a simple display bridge, converts input DPI color
+> > > coding to output DPI color coding, like Adafruit Kippah DPI hat[1] which
+> > > converts input 18-bit pixel data to 24-bit pixel data(with 2 low padding
+> > > bits in every color component though). Document the DPI color encoder.
+> > 
+> > Why do we need a node for this? Isn't this just wired how it is wired 
+> > and there's nothing for s/w to see or do? I suppose if you are trying to 
+> > resolve the mode with 24-bit on one end and 18-bit on the other end, you 
+> > need to allow that and not require an exact match. You still might need 
+> > to figure out which pins the 18-bit data comes out on, but you have that 
+> > problem with an 18-bit panel too. IOW, how is this any different if you 
+> > have an 18-bit panel versus 24-bit panel?
+> 
+> Especially panel-simple.c has a fixed configuration for each display, such as:
+> > .bus_format = MEDIA_BUS_FMT_RGB666_1X18
+> 
+> How would you allow or even know it should be addressed as
+> MEDIA_BUS_FMT_RGB888_1X24 instead? I see different ways:
+> 1. Create a new display setting/compatible
+> 2. Add an overwrite property to the displays
+> 3. Use a (transparent) bridge (this series)
+> 
+> Number 1 is IMHO out of question. 
 
-Call into of_node_put() to rectify that.
+Agreed.
 
-Fixes: 159f8a0209af ("gpio-rcar: Add DT support")
-Signed-off-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
----
- drivers/gpio/gpio-rcar.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+> I personally don't like number 2 as this
+> feels like adding quirks to displays, which they don't have.
 
-diff --git a/drivers/gpio/gpio-rcar.c b/drivers/gpio/gpio-rcar.c
-index 2ecee3269a0c..7208739cd2d4 100644
---- a/drivers/gpio/gpio-rcar.c
-+++ b/drivers/gpio/gpio-rcar.c
-@@ -468,7 +468,12 @@ static int gpio_rcar_parse_dt(struct gpio_rcar_priv *p, unsigned int *npins)
- 	p->info = *info;
- 
- 	ret = of_parse_phandle_with_fixed_args(np, "gpio-ranges", 3, 0, &args);
--	*npins = ret == 0 ? args.args[2] : RCAR_MAX_GPIO_PER_BANK;
-+	if (ret) {
-+		*npins = RCAR_MAX_GPIO_PER_BANK;
-+	} else {
-+		*npins = args.args[2];
-+		of_node_put(args.np);
-+	}
- 
- 	if (*npins == 0 || *npins > RCAR_MAX_GPIO_PER_BANK) {
- 		dev_warn(p->dev, "Invalid number of gpio lines %u, using %u\n",
--- 
-2.34.1
+This is what I would do except apply it to the controller side. We know 
+the panel side already. This is a board variation, so a property makes 
+sense. I don't think you need any more than knowing what's on each end. 
 
+> Number 3 actually describe the hardware connection. The only impact for
+> software is to know which bus format it should use.
+
+I'm not opposed to this, but only if it provides *something* that option 
+2 does not. I'm not seeing what that is.
+
+Node or not, either case needs a format property. We already have a 
+variety of bus/pixel format related properties. I've rejected new ones 
+because we need something common here that's flexible enough to handle 
+any situation. That's either something that can describe any bit layout 
+or something enumerating the formats (as MEDIA_BUS_FMT_* does). The 
+former is hard to get right and there's always something else you can't 
+handle. I'm not opposed to just reusing MEDIA_BUS_FMT_ if that works.
+
+Rob
