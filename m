@@ -1,144 +1,157 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f193.google.com (mail-yb1-f193.google.com [209.85.219.193])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26DF161FFE
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 17:43:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 279EC18D65C;
+	Wed,  5 Mar 2025 17:44:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741196591; cv=none; b=F68l2gT/bVxeC4+kJ+ddGvXBUYWY2MteDZitdV3MXsSuP4INAbu2LeTln/IzIkV15FxLlRDIK5HDzA4nvPrlKwG7OiuserspwIeOhvs4SrmtwOv0LEd3aVjGvetXdDVf+VRob1M0fvbMYHob0ZGVqXmh+Dx7JiT6DIZ8F7U36vI=
+	t=1741196698; cv=none; b=KJgv3HSctZCYzRaKJ2bEPC6KrX5jtu9rwCUXl5s10uTcrnC/oWw9ROettlNAqV+zH5+EuP0KwD5323SIS1rTQl0jJ+3JBmwIX3OxcMw48Rx/V6KCQDoP0COXwbQvjOcf29B2GIlBV/4K5zxlVaVm8eY3RhGbWzAD8Udz9Cm0qj8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741196591; c=relaxed/simple;
-	bh=G+e6+D8oZKd+mzrIJuax07EDHsOLu98NekRGvxRXWHo=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=Mz7C+Hj20hkxg/CT/Fvrx2nSjy3+MqE9iQ+6d71Q77ph7afEKsCDY5ZXuA/E04+w0/zoZw0iAE2PTuPBeCfq3y9dNGGpBQRS98nmCCBhRSREdAJyR0y1Sx6uuoM3JmDWqBAuAq5O6YGcg9JN9VdgzRP229ONXFa/skyvFR36TNA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aCOW695T; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741196698; c=relaxed/simple;
+	bh=eru01qJPLZRma4cwnw7amedWbYee+QZrkhjm7vs2p94=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lfTdVI4jJIC9XAj2uLpYRej+vA08GE4uq1bdfpBu48MkJqcWTRga8v12yZsz8Fwcp3yAa0ZG/sutJujvccMsf3btXTi/tLhX+ng+wJqL/J726H81CqhenrlpcpBWiV2Y+8Z2CQdRzSPBRveoHfJHhLvRPahqaRjG5rnYjoFHkbg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=g0UNO2f/; arc=none smtp.client-ip=209.85.219.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aCOW695T"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7910DC4CED1;
-	Wed,  5 Mar 2025 17:43:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741196590;
-	bh=G+e6+D8oZKd+mzrIJuax07EDHsOLu98NekRGvxRXWHo=;
-	h=Date:From:To:Cc:Subject:Reply-To:From;
-	b=aCOW695TfHiMlg5GKYUWrGI3E+XoaoMo0oop+pd20iFSduE9GHYn37X3ULri+xLQ1
-	 t7gdO7uDu90S42sMOS+/sehJ3XQ1HORmuOO58TLjM72YIBuBr8ZzR4qnU+0TEEB18x
-	 caTIQFvnA71JkIp5sJ9WnremF2ROvsUF2F8H1JrGzY11FkymNrV7c/pk+Seukw/t+C
-	 0ML60Snwl4ITkmCrWY4sqgxjMF+UBmV8Zvf9+J5wSd7wUezmEP01DNLD/uzyVnG+QB
-	 Jaen4tAJsH2pN+BQixDwxn3Y4knmqpLn6Kk7iv5X8H974va4+6sb1eV7jiluchjGT8
-	 nX3GrOi+6GKIQ==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 0DD1BCE0546; Wed,  5 Mar 2025 09:43:10 -0800 (PST)
-Date: Wed, 5 Mar 2025 09:43:10 -0800
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: linux-kernel@vger.kernel.org
-Cc: jstultz@google.com, tglx@linutronix.de, sboyd@kernel.org,
-	christian@heusel.eu, kernel-team@meta.com
-Subject: [PATCH clocksource] Defer marking clocksources unstable to kthread
-Message-ID: <f6bb6dd3-7183-42db-8e7e-c9103c0bd5ff@paulmck-laptop>
-Reply-To: paulmck@kernel.org
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g0UNO2f/"
+Received: by mail-yb1-f193.google.com with SMTP id 3f1490d57ef6-e62d132a6a7so561477276.3;
+        Wed, 05 Mar 2025 09:44:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741196696; x=1741801496; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=IrPArySxWj0hN/u8syEF3HrRazPbso2JNukCorkCFeI=;
+        b=g0UNO2f/vAY+O/HrXcS9LLKQgmLA33JRacSA5zFR/vdVD+cVDtOQKWkDYLEv9V6AxK
+         nPnRb72kl4JxHPh/VDidEnPAoB7MxWd5qOzAfcIU4Tp1M8cdjsbFKFQeX7sdZnBeyy1/
+         A7TTCZmtgzLFu4h1SLE6kKa4Xs9xf0f+J/06f+yS2ZPEN8LH8mec2LDxYl2DfjPPUdaH
+         IJCINNVDd25JPqlif7IWVYpTv9rEii0+Cs0zfxVWIZOG0MioP/G8hpJ4xEUGN7MzgUWi
+         LVmXsdn2cmOXOQQJs8fFWOmvxA7AoNVCInjpr6kOumR0XnN7z/ZAEjJeNOMxZLlr/BDO
+         xhCw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741196696; x=1741801496;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=IrPArySxWj0hN/u8syEF3HrRazPbso2JNukCorkCFeI=;
+        b=CGDuosTP9gA7CmguUktN2horHXhMucc70wev4YQVFiWBnpTvI/780gkEgDMqzZspiT
+         3Ed7RJbHy6yrqwYsspY3nkPOzvhs79rBMxKgsCfKrUgVcr8Zi3+n9GgMyR+M9PUTb2DX
+         tvFgvi2yl2hVX6wRx3ccYMpMAmrJUr2ma9xGZ5gV2zi+hBXVhhkMkqxQYqG+5fNr87SX
+         qwKGOLxyV/TyOwTUN+HakWj362vP/Lk94BO2/vAYZg2PQV+Jt/Wuowef9dSIbOo7+mvo
+         6gZTAmWyKQKDmpAZA6tG3u3UdoN3zv5IICCV4yVaXEzWBloguYlp4u9wDP2WVIW+jO8T
+         fWBg==
+X-Forwarded-Encrypted: i=1; AJvYcCXsUnHRRxm3MI4lECa/i6aQPaIcbRqVxKogY6UIEhg10I9z61jHecnM8K6ucJdBH5BD032Y0gAY3z/EhnQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxn1vPLYw42+pI+v6UYP8y+pIn46Fz5F2yVHQwc8RXMGczvBoQa
+	Sy5VdHZelZATP8YGzc+8MFPXfo7t7Rl5rknMH+2QLB3/0X5btuar
+X-Gm-Gg: ASbGncuVYZbQnqgUeKa+eQ/rjeH6XhxsujvD/ql2CPUvXfz1vb1hBjrpSDHRYkfNk4b
+	xUsGx+n/UJA+dhxvyhxqYnFbDDroNDuOUB3qPE53rVDCZYmNpC25UC3aZ8Q8NfjgiBgxzbDysgN
+	gqwLygPu+fNFHVwIFPRmXq28sIwxU4a/3sftUUk+NjZ9L0dFRuFv3JJ1kryy93k2HKp0Ey5X1BR
+	YQCHmA5qdW7JsclfAUtj9VxnJfDlR523TELZzrth3rOyNPtB62hc2OeDFwbr4jtSEk2pG6ndISe
+	sfTG4DQyDusgjcxtHuekHhL+m96WZhw/n7Jf+T5epdhjXa9ku9T/5UXX708tFVkNY5U=
+X-Google-Smtp-Source: AGHT+IEGqb6bMX99bdb48p+jlKdXJzi/Nxp56tDcGRzsT9dJZPEMisMbuuQK7XQwD8kll+UdneF4ZA==
+X-Received: by 2002:a05:6902:1b12:b0:e60:c10f:c6b9 with SMTP id 3f1490d57ef6-e611e1b7408mr5441603276.15.1741196695636;
+        Wed, 05 Mar 2025 09:44:55 -0800 (PST)
+Received: from [10.102.6.66] ([208.97.243.82])
+        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e60a3ab0251sm4419617276.49.2025.03.05.09.44.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 05 Mar 2025 09:44:55 -0800 (PST)
+Message-ID: <669d9f33-e861-482a-8fd1-849fc3d22cd2@gmail.com>
+Date: Wed, 5 Mar 2025 12:44:54 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net] net: dsa: mv88e6xxx: Verify after ATU Load ops
+To: Andrew Lunn <andrew@lunn.ch>, Joseph Huang <Joseph.Huang@garmin.com>
+Cc: netdev@vger.kernel.org, Vladimir Oltean <olteanv@gmail.com>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Guenter Roeck <linux@roeck-us.net>, linux-kernel@vger.kernel.org
+References: <20250304235352.3259613-1-Joseph.Huang@garmin.com>
+ <2ea7cde2-2aa1-4ef4-a3ea-9991c1928d68@lunn.ch>
+Content-Language: en-US
+From: Joseph Huang <joseph.huang.2024@gmail.com>
+In-Reply-To: <2ea7cde2-2aa1-4ef4-a3ea-9991c1928d68@lunn.ch>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-The clocksource watchdog marks clocksources unstable from within a timer
-handler.  On x86, this marking involves an on_each_cpu_cond_mask(),
-which in turn invokes smp_call_function_many_cond(), which may not be
-invoked from a timer handler.  Doing so results in:
+On 3/5/2025 10:14 AM, Andrew Lunn wrote:
+> On Tue, Mar 04, 2025 at 06:53:51PM -0500, Joseph Huang wrote:
+>> ATU Load operations could fail silently if there's not enough space
+>> on the device to hold the new entry.
+>>
+>> Do a Read-After-Write verification after each fdb/mdb add operation
+>> to make sure that the operation was really successful, and return
+>> -ENOSPC otherwise.
+> 
+> Please could you add a description of what the user sees when the ATU
+> is full. What makes this a bug which needs fixing? I would of thought
+> at least for unicast addresses, the switch has no entry for the
+> destination, so sends the packet to the CPU. The CPU will then
+> software bridge it out the correct port. Reporting ENOSPC will not
+> change that.
 
-WARNING: CPU: 3 PID: 0 at kernel/smp.c:815 smp_call_function_many_cond+0x46b/0x4c0
+Hi Andrew,
 
-Fix this by deferring the marking to the clocksource watchdog kthread.
-Note that marking unstable is already deferred, so deferring it a bit
-more should be just fine.
+What the user will see when the ATU table is full depends on the unknown 
+flood setting. If a user has unknown multicast flood disabled, what the 
+user will see is that multicast packets are dropped when the ATU table 
+is full. In other words, IGMP snooping is broken when the ATU Load 
+operation fails silently.
 
-Reported-by: Christian Heusel <christian@heusel.eu>
-Closes: https://lore.kernel.org/all/46a200b4-1293-413c-8b73-37f7b50abd1a@heusel.eu/
-Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-Cc: John Stultz <jstultz@google.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Stephen Boyd <sboyd@kernel.org>
+Even if the packet is kicked up to the CPU and the CPU intends to 
+forward the packet out via the software bridge, the forwarding attempt 
+is going to be blocked due to the 'offload_fwd_mark' flag in 
+nbp_switchdev_allowed_egress(). Even if that somehow worked, we will not 
+be fully utilizing the hardware's switching capability and will be 
+relying on the CPU to do the forwarding, which will likely result in 
+lower throughput.
 
----
- include/linux/clocksource.h |    1 +
- kernel/time/clocksource.c   |   16 ++++++++++++----
- 2 files changed, 13 insertions(+), 4 deletions(-)
+Reporting -ENOSPC will not change the fact that the ATU table is full, 
+however it does give switchdev a chance to notify the user and then the 
+user can take some further action accordingly. If nothing else, at least 
+'bridge monitor' will now report that the entries are not offloaded.
 
-diff --git a/include/linux/clocksource.h b/include/linux/clocksource.h
-index 65b7c41471c39..a5317a4c07990 100644
---- a/include/linux/clocksource.h
-+++ b/include/linux/clocksource.h
-@@ -149,6 +149,7 @@ struct clocksource {
- #define CLOCK_SOURCE_SUSPEND_NONSTOP		0x80
- #define CLOCK_SOURCE_RESELECT			0x100
- #define CLOCK_SOURCE_VERIFY_PERCPU		0x200
-+#define CLOCK_SOURCE_DEFERRED_UNSTABLE		0x400
- /* simplify initialization of mask field */
- #define CLOCKSOURCE_MASK(bits) GENMASK_ULL((bits) - 1, 0)
- 
-diff --git a/kernel/time/clocksource.c b/kernel/time/clocksource.c
-index 7304d7cf47f2d..60ace6f64c761 100644
---- a/kernel/time/clocksource.c
-+++ b/kernel/time/clocksource.c
-@@ -201,7 +201,8 @@ static void clocksource_change_rating(struct clocksource *cs, int rating)
- 
- static void __clocksource_unstable(struct clocksource *cs)
- {
--	cs->flags &= ~(CLOCK_SOURCE_VALID_FOR_HRES | CLOCK_SOURCE_WATCHDOG);
-+	cs->flags &= ~(CLOCK_SOURCE_VALID_FOR_HRES | CLOCK_SOURCE_WATCHDOG |
-+		       CLOCK_SOURCE_DEFERRED_UNSTABLE);
- 	cs->flags |= CLOCK_SOURCE_UNSTABLE;
- 
- 	/*
-@@ -215,6 +216,11 @@ static void __clocksource_unstable(struct clocksource *cs)
- 
- 	if (cs->mark_unstable)
- 		cs->mark_unstable(cs);
-+}
-+
-+static void __clocksource_deferred_unstable(struct clocksource *cs)
-+{
-+	cs->flags |= CLOCK_SOURCE_DEFERRED_UNSTABLE;
- 
- 	/* kick clocksource_watchdog_kthread() */
- 	if (finished_booting)
-@@ -236,7 +242,7 @@ void clocksource_mark_unstable(struct clocksource *cs)
- 	if (!(cs->flags & CLOCK_SOURCE_UNSTABLE)) {
- 		if (!list_empty(&cs->list) && list_empty(&cs->wd_list))
- 			list_add(&cs->wd_list, &watchdog_list);
--		__clocksource_unstable(cs);
-+		__clocksource_deferred_unstable(cs);
- 	}
- 	spin_unlock_irqrestore(&watchdog_lock, flags);
- }
-@@ -453,7 +459,7 @@ static void clocksource_watchdog(struct timer_list *unused)
- 
- 		if (read_ret == WD_READ_UNSTABLE) {
- 			/* Clock readout unreliable, so give it up. */
--			__clocksource_unstable(cs);
-+			__clocksource_deferred_unstable(cs);
- 			continue;
- 		}
- 
-@@ -538,7 +544,7 @@ static void clocksource_watchdog(struct timer_list *unused)
- 				pr_warn("                      '%s' (not '%s') is current clocksource.\n", curr_clocksource->name, cs->name);
- 			else
- 				pr_warn("                      No current clocksource.\n");
--			__clocksource_unstable(cs);
-+			__clocksource_deferred_unstable(cs);
- 			continue;
- 		}
- 
-@@ -703,6 +709,8 @@ static int __clocksource_watchdog_kthread(void)
- 
- 	spin_lock_irqsave(&watchdog_lock, flags);
- 	list_for_each_entry_safe(cs, tmp, &watchdog_list, wd_list) {
-+		if (cs->flags & CLOCK_SOURCE_DEFERRED_UNSTABLE)
-+			__clocksource_unstable(cs);
- 		if (cs->flags & CLOCK_SOURCE_UNSTABLE) {
- 			list_del_init(&cs->wd_list);
- 			clocksource_change_rating(cs, 0);
+Some other DSA drivers are reporting -ENOSPC as well when the table is 
+full (at least b53 and ocelot).
+
+> 
+>> @@ -2845,7 +2866,8 @@ static int mv88e6xxx_port_fdb_add(struct dsa_switch *ds, int port,
+>>   
+>>   	mv88e6xxx_reg_lock(chip);
+>>   	err = mv88e6xxx_port_db_load_purge(chip, port, addr, vid,
+>> -					   MV88E6XXX_G1_ATU_DATA_STATE_UC_STATIC);
+>> +					   MV88E6XXX_G1_ATU_DATA_STATE_UC_STATIC,
+>> +					   true);
+>>   	mv88e6xxx_reg_unlock(chip);
+>>   
+>>   	return err;
+> 
+>> @@ -6613,7 +6635,8 @@ static int mv88e6xxx_port_mdb_add(struct dsa_switch *ds, int port,
+>>   
+>>   	mv88e6xxx_reg_lock(chip);
+>>   	err = mv88e6xxx_port_db_load_purge(chip, port, mdb->addr, mdb->vid,
+>> -					   MV88E6XXX_G1_ATU_DATA_STATE_MC_STATIC);
+>> +					   MV88E6XXX_G1_ATU_DATA_STATE_MC_STATIC,
+>> +					   true);
+>>   	mv88e6xxx_reg_unlock(chip);
+> 
+> This change seems bigger than what it needs to be. Rather than modify
+> mv88e6xxx_port_db_load_purge(), why not perform the lookup just in
+> these two functions via a helper?
+> 
+>      Andrew
+
+I will make that change. Thanks for the review.
+
+Thanks,
+Joseph
+> 
+> ---
+> pw-bot: cr
+
