@@ -1,117 +1,317 @@
-Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 829BE802
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 00:04:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 92DFCBA27;
+	Wed,  5 Mar 2025 00:04:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741133071; cv=none; b=vAHcuH6gJKZ//JInENEaaSyGr02QcTuprWGalOjF3QjJZOISp8RdBpPq8eZYwmzRfk/9rmc/7PzfJzMjpD5MC2FIls4HxqDHzB8fD5T4BoS+JkiYfXm8QHP+KO7VaGZSBtjTFs1OE0juaT0oL3E6E+8Wilh9LttVsW7ZL6ik++M=
+	t=1741133089; cv=none; b=cdjTzfpm/TihjoNflUyRUtNwlBBul7EXk+FvRJ+yzrJHaJ1IQjvDVx2uz+dOjryBuyrNizFJyE2Re8t9IFu8YITGCRMARxA7NhQn/gGcmWYIWZXcEopJ1r45ClqDN2iBQSvl12Zjjh9XSf6DxHwdSDMjB+GqcVHGU78el+109zE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741133071; c=relaxed/simple;
-	bh=obB0h8AHDTv9/LrRGXUTQqWYXLHGR7G5bwHes9VJzA0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QZWTFhtJsxb7RGM+JrpwBcVlnD1qKeYTb7+0KaGL2Wf/lY4ox1hkM6iuvU0O2C/ZxMVeix9ZQ8xGehbqWbw1uRg686aXuMTAuNkN1zNPbI9eClsBCNIhix7TgPfcdJzs0lJnS38dBybApo2qEziRylaWGOwYx97MaRktVYEOiac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=gm6eIZ0T; arc=none smtp.client-ip=209.85.216.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1741133089; c=relaxed/simple;
+	bh=J0pIpJ4/doq2EqpH2y440K4ULKMCrVgpt986B+G+AxQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=pg9D83iofU+eqWslIXkx+A4F/Obhz1oMf8QqHpecgAJ2LXMSyXkw4jjYghVWPi1WZVj20/4mUTSdSxDI781SEVmyc+nGs2Uxwy9iTy3tawqm6yBVexiQRy9Nmhz9Gdb2J2gSDm1+IAMb/vvb6NvOrKvesODT01lrTslygOk9eGg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=IB/F023T; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gm6eIZ0T"
-Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-2fa8ac56891so9922343a91.2
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Mar 2025 16:04:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1741133069; x=1741737869; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=LM4+VbDeQgzb/55NI3t+9R4dHqP/5jKcZhBFBtOBqBA=;
-        b=gm6eIZ0Tz5znH7+Y+X9dk2eBqkHgynYAWQfqsjqVyBF8ETXt8cfDR5xgZFJguu+liJ
-         8UrZjVBOhKjFgaGTiE+fgb4SQaOud+QtD4LgHwdAiGikppuFoTcKHFMfO7FErBFvaOU3
-         k7sjNIM6Uvw7qe3QlkyhhLQJ2lwbReohwIgL/nuslOM2fdpVaDluJvOh/xKa0L+TxjTV
-         Pso6g6MXXTeFjIF3p7rkDHtr/bXIdwR+4YgGLM5Eku29aAb4yxRgjWxEaz4qSFq1NmKI
-         USzp48uboOzSHTV5WDm5h6VFxJ65E5qX4Z/cChJ/SLJ2Eine6Bnymdhnynz0ryQFnLOU
-         SWWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741133069; x=1741737869;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=LM4+VbDeQgzb/55NI3t+9R4dHqP/5jKcZhBFBtOBqBA=;
-        b=D1bqSm67WV1sBv8W/yLxW2/XxZYdY4MeWMbWoadQEObryn+DcXCAJt2Rg+WSKX59b/
-         yDaZAHIkt09snv2XyKp8HbByTjQUhYfqrhFswowaZe8ZZ5LEaFYrbd6kKcgzLxfWvtlP
-         XzA8lB52g4FKsVAtN572wEqeU6bj85W9lRGYWBY0nuP2YMXSpt0syG0Bt20GKKuF7tdJ
-         zw1FxY0FCZzIDZd3SXmCfPrSWkGOfEFhKxfnA7CWwco1Es6dfBZdK5sKIwvQasQGz614
-         FxlHjcd/u2sfqVg8WOJS1V9oHgBt+cEv4N5GDh3+jLLMB+4IY0eFGeGtl5y/Eu6RwXKK
-         CLyA==
-X-Forwarded-Encrypted: i=1; AJvYcCUWbRmoC8b6ej4I0ulr8ztx2w/jklfz2K/iuzDBR5qDJ4P4NdYGD1018Nw3orCfMnWEuBXlq+VDOAOQ8M4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzdzJ0DjYV/jq16JuOQR505zcWtKTkBcvptp04t4kZCq+o9h44T
-	JnAYdwFApBU4bO3zYFQboW+hpQjAGNis/Xo0q2iwmYnIJEBG84iEjNqnm2nFGlhKCuusqqRU6FY
-	gX5noPsadwyyNEKIGzw/v7/vyUFIRuTLH6Rcd
-X-Gm-Gg: ASbGncva5BRMbhObvZ6rgW4eDPK5NUEw+ElaqRm4BThi2f9dNvOlQMpKohcnyX5E/Yc
-	m7gzeffIV/Ylox+TGz7WhDRicNGn2Ae64Cdv8e96s5Wihh4rKTE60qCdIOFtAm7utG7DSWYSi/W
-	56ON0QmY7dh37cz82rJ08NF54zzfIlbKS9sd2hieck9UXDtL08s1cLk0j6
-X-Google-Smtp-Source: AGHT+IEtISi7Tlt5kX4zmOO9FEZtWXEEe9J/QPKTHvSqVUkwchS3k7u+aPOlcVNfd6t4Doh8lMUn/x9+fE5ZVoRcpzI=
-X-Received: by 2002:a17:90b:4ad1:b0:2f4:423a:8fb2 with SMTP id
- 98e67ed59e1d1-2ff497cce8emr1999183a91.20.1741133068525; Tue, 04 Mar 2025
- 16:04:28 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="IB/F023T"
+Received: from [100.70.97.150] (unknown [172.172.34.12])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 33A6A210EAF7;
+	Tue,  4 Mar 2025 16:04:46 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 33A6A210EAF7
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1741133087;
+	bh=Vm+eyPErdPTdzOz2sqKWlY+x6xwan8UqSWEnD6po9JI=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=IB/F023TM9NNY/2sQ4a92vO1kCg3LyhufTJgUdcHLSSf1Li25DXfjZQDazrnfZeAe
+	 XHZwm8EuaW5Wmn3xXEUOFWrhCifHH+fYoUM/zCDubAndqBQkKgqkkSsPKFjSDGeoR4
+	 Z3kK37ruT1ItKmUcA+YtWxx0/keUmVTxiDWQZEyI=
+Message-ID: <0a5e586a-9b55-4905-8663-6ef0112aa32d@linux.microsoft.com>
+Date: Tue, 4 Mar 2025 16:04:43 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250304092417.2873893-1-elver@google.com> <20250304092417.2873893-4-elver@google.com>
- <41a14b09-9f09-4abe-8caa-89cfe2687562@acm.org>
-In-Reply-To: <41a14b09-9f09-4abe-8caa-89cfe2687562@acm.org>
-From: Marco Elver <elver@google.com>
-Date: Wed, 5 Mar 2025 01:03:51 +0100
-X-Gm-Features: AQ5f1Jpv14gcn7aAs4yWXHhRLBF4i5EQTdXxL-iYYKY2gY0B-tX3E5j-KtDZzBU
-Message-ID: <CANpmjNMYoRTj3F1L9UCp2gHVbVZw0ieNnk0xPZ8Q--BhFCy7Ww@mail.gmail.com>
-Subject: Re: [PATCH v2 03/34] compiler-capability-analysis: Add test stub
-To: Bart Van Assche <bvanassche@acm.org>
-Cc: "David S. Miller" <davem@davemloft.net>, Luc Van Oostenryck <luc.vanoostenryck@gmail.com>, 
-	"Paul E. McKenney" <paulmck@kernel.org>, Alexander Potapenko <glider@google.com>, Arnd Bergmann <arnd@arndb.de>, 
-	Bill Wendling <morbo@google.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Dmitry Vyukov <dvyukov@google.com>, Eric Dumazet <edumazet@google.com>, 
-	Frederic Weisbecker <frederic@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Herbert Xu <herbert@gondor.apana.org.au>, Ingo Molnar <mingo@kernel.org>, 
-	Jann Horn <jannh@google.com>, Jiri Slaby <jirislaby@kernel.org>, 
-	Joel Fernandes <joel@joelfernandes.org>, Jonathan Corbet <corbet@lwn.net>, 
-	Josh Triplett <josh@joshtriplett.org>, Justin Stitt <justinstitt@google.com>, 
-	Kees Cook <kees@kernel.org>, Kentaro Takeda <takedakn@nttdata.co.jp>, 
-	Mark Rutland <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Miguel Ojeda <ojeda@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Steven Rostedt <rostedt@goodmis.org>, Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>, 
-	Thomas Gleixner <tglx@linutronix.de>, Uladzislau Rezki <urezki@gmail.com>, Waiman Long <longman@redhat.com>, 
-	Will Deacon <will@kernel.org>, kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org, 
-	llvm@lists.linux.dev, rcu@vger.kernel.org, linux-crypto@vger.kernel.org, 
-	linux-serial@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] ipe: add errno field to IPE policy load auditing
+To: Fan Wu <wufan@kernel.org>
+Cc: audit@vger.kernel.org, corbet@lwn.net, eparis@redhat.com,
+ jmorris@namei.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-security-module@vger.kernel.org, paul@paul-moore.com
+References: <CAKtyLkFyqFCcqUi7TPn9niUwYcHwv8nVq-joKc8kd8tFg58p-Q@mail.gmail.com>
+ <1740784265-19829-1-git-send-email-jasjivsingh@linux.microsoft.com>
+ <CAKtyLkGV4cGJzbvVUAeLBp=evc_QAWPD8FsskHNVvx-1UZJB-A@mail.gmail.com>
+Content-Language: en-US
+From: Jasjiv Singh <jasjivsingh@linux.microsoft.com>
+In-Reply-To: <CAKtyLkGV4cGJzbvVUAeLBp=evc_QAWPD8FsskHNVvx-1UZJB-A@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, 5 Mar 2025 at 00:52, Bart Van Assche <bvanassche@acm.org> wrote:
->
-> On 3/4/25 1:21 AM, Marco Elver wrote:
-> > +#include <linux/build_bug.h>
-> > +
-> > +/*
-> > + * Test that helper macros work as expected.
-> > + */
-> > +static void __used test_common_helpers(void)
-> > +{
-> > +     BUILD_BUG_ON(capability_unsafe(3) != 3); /* plain expression */
-> > +     BUILD_BUG_ON(capability_unsafe((void)2; 3;) != 3); /* does not swallow semi-colon */
-> > +     BUILD_BUG_ON(capability_unsafe((void)2, 3) != 3); /* does not swallow commas */
-> > +     capability_unsafe(do { } while (0)); /* works with void statements */
-> > +}
->
-> Is it guaranteed that <linux/build_bug.h> includes the header file that
-> defines capability_unsafe() or should that header file perhaps be
-> included explicitly?
 
-It doesn't come in via build_bug.h, but via:
 
-  scripts/Makefile.lib -> "-include
-$(srctree)/include/linux/compiler_types.h" (all TUs) ->
-compiler-capability-analysis.h.
+On 3/3/2025 2:11 PM, Fan Wu wrote:
+> On Fri, Feb 28, 2025 at 3:11 PM Jasjiv Singh
+> <jasjivsingh@linux.microsoft.com> wrote:
+>>
+>> Users of IPE require a way to identify when and why an operation fails,
+>> allowing them to both respond to violations of policy and be notified
+>> of potentially malicious actions on their systems with respect to IPE.
+>>
+>> This patch introduces a new error field to the AUDIT_IPE_POLICY_LOAD event
+>> to log policy loading failures. Currently, IPE only logs successful policy
+>> loads, but not failures. Tracking failures is crucial to detect malicious
+>> attempts and ensure a complete audit trail for security events.
+>>
+>> The new error field will capture the following error codes:
+>>
+>> * 0: no error
+>> * -EPERM: Insufficient permission
+>> * -EEXIST: Same name policy already deployed
+>> * -EBADMSG: policy is invalid
+>> * -ENOMEM: out of memory (OOM)
+>> * -ERANGE: policy version number overflow
+>> * -EINVAL: policy version parsing error
+>>
+> 
+> These error codes are not exhaustive. We recently introduced the
+> secondary keyring and platform keyring to sign policy so the policy
+> loading could return -ENOKEY or -EKEYREJECT. And also the update
+> policy can return -ESTALE when the policy version is old.
+> This is my fault that I forgot we should also update the documentation
+> of the newly introduced error codes. Could you please go through the
+> whole loading code and find all possible error codes?  Also this is a
+> good chance to update the current stale function documents.
+> 
+> ...
+> 
 
-The things pulled in via compiler_types.h are treated a bit like
-builtins available everywhere implicitly.
+So, I looked into error codes when the policy loads. In ipe_new_policy, 
+the verify_pkcs7_signature can return a lot of errno codes (ex: ENOKEY, 
+EKEYREJECTED, EBADMSG, etc.) while parsing the pkcs7 and other functions 
+as well. Also, In ipe_new_policyfs_node used in new_policy(), I see the same 
+issue with securityfs_create_dir and securityfs_create_file as they 
+return the errno directly from API to. So, what should we return?
+
+For other functions: I have complied the errno list: 
+
+* -ENOENT: Policy is not found while updating
+* -EEXIST: Same name policy already deployed
+* -ERANGE: Policy version number overflow
+* -EINVAL: Policy version parsing error
+* -EPERM: Insufficient permission
+* -ESTALE: Policy version is old
+* -ENOMEM: Out of memory (OOM)
+* -EBADMSG: Policy is invalid
+
+- Jasjiv
+
+>>
+>> Signed-off-by: Jasjiv Singh <jasjivsingh@linux.microsoft.com>
+>> ---
+>>  Documentation/admin-guide/LSM/ipe.rst | 19 ++++++++++++++-----
+>>  security/ipe/audit.c                  | 15 ++++++++++++---
+>>  security/ipe/fs.c                     | 16 +++++++++++-----
+>>  security/ipe/policy_fs.c              | 18 +++++++++++++-----
+>>  4 files changed, 50 insertions(+), 18 deletions(-)
+>>
+>> diff --git a/Documentation/admin-guide/LSM/ipe.rst b/Documentation/admin-guide/LSM/ipe.rst
+>> index f93a467db628..5dbf54471fab 100644
+>> --- a/Documentation/admin-guide/LSM/ipe.rst
+>> +++ b/Documentation/admin-guide/LSM/ipe.rst
+>> @@ -423,7 +423,7 @@ Field descriptions:
+>>
+>>  Event Example::
+>>
+>> -   type=1422 audit(1653425529.927:53): policy_name="boot_verified" policy_version=0.0.0 policy_digest=sha256:820EEA5B40CA42B51F68962354BA083122A20BB846F26765076DD8EED7B8F4DB auid=4294967295 ses=4294967295 lsm=ipe res=1
+>> +   type=1422 audit(1653425529.927:53): policy_name="boot_verified" policy_version=0.0.0 policy_digest=sha256:820EEA5B40CA42B51F68962354BA083122A20BB846F26765076DD8EED7B8F4DB auid=4294967295 ses=4294967295 lsm=ipe res=1 errno=0
+>>     type=1300 audit(1653425529.927:53): arch=c000003e syscall=1 success=yes exit=2567 a0=3 a1=5596fcae1fb0 a2=a07 a3=2 items=0 ppid=184 pid=229 auid=4294967295 uid=0 gid=0 euid=0 suid=0 fsuid=0 egid=0 sgid=0 fsgid=0 tty=pts0 ses=4294967295 comm="python3" exe="/usr/bin/python3.10" key=(null)
+>>     type=1327 audit(1653425529.927:53): PROCTITLE proctitle=707974686F6E3300746573742F6D61696E2E7079002D66002E2E
+>>
+>> @@ -436,11 +436,11 @@ Field descriptions:
+>>  +----------------+------------+-----------+---------------------------------------------------+
+>>  | Field          | Value Type | Optional? | Description of Value                              |
+>>  +================+============+===========+===================================================+
+>> -| policy_name    | string     | No        | The policy_name                                   |
+>> +| policy_name    | string     | Yes       | The policy_name                                   |
+>>  +----------------+------------+-----------+---------------------------------------------------+
+>> -| policy_version | string     | No        | The policy_version                                |
+>> +| policy_version | string     | Yes       | The policy_version                                |
+>>  +----------------+------------+-----------+---------------------------------------------------+
+>> -| policy_digest  | string     | No        | The policy hash                                   |
+>> +| policy_digest  | string     | Yes       | The policy hash                                   |
+>>  +----------------+------------+-----------+---------------------------------------------------+
+>>  | auid           | integer    | No        | The login user ID                                 |
+>>  +----------------+------------+-----------+---------------------------------------------------+
+>> @@ -450,7 +450,16 @@ Field descriptions:
+>>  +----------------+------------+-----------+---------------------------------------------------+
+>>  | res            | integer    | No        | The result of the audited operation(success/fail) |
+>>  +----------------+------------+-----------+---------------------------------------------------+
+>> -
+>> +| errno          | integer    | No        | The result of the policy error as follows:        |
+>> +|                |            |           |                                                   |
+>> +|                |            |           | +  0: no error                                    |
+>> +|                |            |           | +  -EPERM: Insufficient permission                |
+>> +|                |            |           | +  -EEXIST: Same name policy already deployed     |
+>> +|                |            |           | +  -EBADMSG: policy is invalid                    |
+>> +|                |            |           | +  -ENOMEM: out of memory (OOM)                   |
+>> +|                |            |           | +  -ERANGE: policy version number overflow        |
+>> +|                |            |           | +  -EINVAL: policy version parsing error          |
+>> ++----------------+------------+-----------+---------------------------------------------------+
+>>
+> 
+> Might be better to create another table to list all potential erronos.
+> Also please keep the capitalization of sentences consistent.
+> 
+>>  1404 AUDIT_MAC_STATUS
+>>  ^^^^^^^^^^^^^^^^^^^^^
+>> diff --git a/security/ipe/audit.c b/security/ipe/audit.c
+>> index f05f0caa4850..8df307bb2bab 100644
+>> --- a/security/ipe/audit.c
+>> +++ b/security/ipe/audit.c
+>> @@ -21,6 +21,8 @@
+>>
+>>  #define AUDIT_POLICY_LOAD_FMT "policy_name=\"%s\" policy_version=%hu.%hu.%hu "\
+>>                               "policy_digest=" IPE_AUDIT_HASH_ALG ":"
+>> +#define AUDIT_POLICY_LOAD_FAIL_FMT "policy_name=? policy_version=? "\
+>> +                                  "policy_digest=?"
+>>  #define AUDIT_OLD_ACTIVE_POLICY_FMT "old_active_pol_name=\"%s\" "\
+>>                                     "old_active_pol_version=%hu.%hu.%hu "\
+>>                                     "old_policy_digest=" IPE_AUDIT_HASH_ALG ":"
+>> @@ -254,16 +256,23 @@ void ipe_audit_policy_activation(const struct ipe_policy *const op,
+>>  void ipe_audit_policy_load(const struct ipe_policy *const p)
+>>  {
+> 
+> The documentation of this function should also be updated since it is
+> also auditing errors now.
+> 
+>>         struct audit_buffer *ab;
+>> +       int err = 0;
+>>
+>>         ab = audit_log_start(audit_context(), GFP_KERNEL,
+>>                              AUDIT_IPE_POLICY_LOAD);
+>>         if (!ab)
+>>                 return;
+>>
+>> -       audit_policy(ab, AUDIT_POLICY_LOAD_FMT, p);
+>> -       audit_log_format(ab, " auid=%u ses=%u lsm=ipe res=1",
+>> +       if (!IS_ERR(p)) {
+>> +               audit_policy(ab, AUDIT_POLICY_LOAD_FMT, p);
+>> +       } else {
+>> +               audit_log_format(ab, AUDIT_POLICY_LOAD_FAIL_FMT);
+>> +               err = PTR_ERR(p);
+>> +       }
+>> +
+>> +       audit_log_format(ab, " auid=%u ses=%u lsm=ipe res=%d errno=%d",
+>>                          from_kuid(&init_user_ns, audit_get_loginuid(current)),
+>> -                        audit_get_sessionid(current));
+>> +                        audit_get_sessionid(current), !err, err);
+>>
+>>         audit_log_end(ab);
+>>  }
+>> diff --git a/security/ipe/fs.c b/security/ipe/fs.c
+>> index 5b6d19fb844a..da51264a1d0f 100644
+>> --- a/security/ipe/fs.c
+>> +++ b/security/ipe/fs.c
+>> @@ -141,12 +141,16 @@ static ssize_t new_policy(struct file *f, const char __user *data,
+>>         char *copy = NULL;
+>>         int rc = 0;
+>>
+>> -       if (!file_ns_capable(f, &init_user_ns, CAP_MAC_ADMIN))
+>> -               return -EPERM;
+>> +       if (!file_ns_capable(f, &init_user_ns, CAP_MAC_ADMIN)) {
+>> +               rc = -EPERM;
+>> +               goto out;
+>> +       }
+>>
+>>         copy = memdup_user_nul(data, len);
+>> -       if (IS_ERR(copy))
+>> -               return PTR_ERR(copy);
+>> +       if (IS_ERR(copy)) {
+>> +               rc = PTR_ERR(copy);
+>> +               goto out;
+>> +       }
+>>
+>>         p = ipe_new_policy(NULL, 0, copy, len);
+>>         if (IS_ERR(p)) {
+>> @@ -161,8 +165,10 @@ static ssize_t new_policy(struct file *f, const char __user *data,
+>>         ipe_audit_policy_load(p);
+>>
+>>  out:
+>> -       if (rc < 0)
+>> +       if (rc < 0) {
+>>                 ipe_free_policy(p);
+>> +               ipe_audit_policy_load(ERR_PTR(rc));
+>> +       }
+>>         kfree(copy);
+>>         return (rc < 0) ? rc : len;
+>>  }
+> 
+> In case of memdup fail, the kfree(copy) will be called with the error
+> pointer. Also how about refactor the code like
+> 
+>         ipe_audit_policy_load(p);
+>         kfree(copy);
+> 
+>         return len;
+> err:
+>         ipe_audit_policy_load(ERR_PTR(rc));
+>         ipe_free_policy(p);
+> 
+>         return rc;
+> 
+>> diff --git a/security/ipe/policy_fs.c b/security/ipe/policy_fs.c
+>> index 3bcd8cbd09df..5f4a8e92bdcf 100644
+>> --- a/security/ipe/policy_fs.c
+>> +++ b/security/ipe/policy_fs.c
+>> @@ -12,6 +12,7 @@
+>>  #include "policy.h"
+>>  #include "eval.h"
+>>  #include "fs.h"
+>> +#include "audit.h"
+>>
+>>  #define MAX_VERSION_SIZE ARRAY_SIZE("65535.65535.65535")
+>>
+>> @@ -292,21 +293,28 @@ static ssize_t update_policy(struct file *f, const char __user *data,
+>>         char *copy = NULL;
+>>         int rc = 0;
+>>
+>> -       if (!file_ns_capable(f, &init_user_ns, CAP_MAC_ADMIN))
+>> -               return -EPERM;
+>> +       if (!file_ns_capable(f, &init_user_ns, CAP_MAC_ADMIN)) {
+>> +               rc = -EPERM;
+>> +               goto out;
+>> +       }
+>>
+>>         copy = memdup_user(data, len);
+>> -       if (IS_ERR(copy))
+>> -               return PTR_ERR(copy);
+>> +       if (IS_ERR(copy)) {
+>> +               rc = PTR_ERR(copy);
+>> +               goto out;
+>> +       }
+>>
+>>         root = d_inode(f->f_path.dentry->d_parent);
+>>         inode_lock(root);
+>>         rc = ipe_update_policy(root, NULL, 0, copy, len);
+>>         inode_unlock(root);
+>>
+>> +out:
+>>         kfree(copy);
+>> -       if (rc)
+>> +       if (rc) {
+>> +               ipe_audit_policy_load(ERR_PTR(rc));
+>>                 return rc;
+>> +       }
+>>
+> 
+> The above comments also apply to here.
+> 
+> -Fan
+> 
+>>         return len;
+>>  }
+>> --
+>> 2.34.1
+>>
+
