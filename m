@@ -1,60 +1,169 @@
-Received: from gimli.kloenk.de (gimli.kloenk.de [49.12.72.200])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00E9820127B;
-	Wed,  5 Mar 2025 09:24:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=49.12.72.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3289A1CD21C;
+	Wed,  5 Mar 2025 09:25:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741166673; cv=none; b=g67itnMoMg8Fr5PuQZD7YiIPeZQTAPDlJNoyESazU8vgOjw29coOyi+ivDkDLfQOFr1+2CTKUf+1LaOybNHI+ZYyhheo2nYlWChySFss4miOXyKFB+/HzdFE0e5RpKq1UP2Mx2zYlswcRVrH4Ea93OHHP0oaG/WBpkhBH/9ix9E=
+	t=1741166728; cv=none; b=dbq8GH1FJnEDtIVDuADzC5TKgzHIdHZRpnACBVUrwfbYHZbf2FWabhV2Bs7pbQCbKWfAH7AXlxNnD1vkAyKTo/aoRXLjDSKtheT5kpb2RgnRMVaUAUC/TUbzGDFUwTGO45vTETU0qFpQQACAahY2w4tDO6CoGuQtdaK4c14bxK0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741166673; c=relaxed/simple;
-	bh=6Dueg+2Uh89sCdGWEFbTAs4vQ/frbcNjEkOb9fEQdnM=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=MhE9U+ODJaIfzCHpDZF0jRmxV5x3ObYQFg/zbndD5K9HNTwYC1ZO0Et5YAeaenZVhxbd61+zfg7H4VvjRwz5lzZcVmSRmhSe2yelDf8PNMg+NjG3tjRy2JXJ0o7oPp+b8NArmRiNjb70hcCKNkuhZYMqzLJ1H2qs38/tYT5x1X0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kloenk.dev; spf=pass smtp.mailfrom=kloenk.dev; dkim=pass (1024-bit key) header.d=kloenk.dev header.i=@kloenk.dev header.b=o2JMilfB; arc=none smtp.client-ip=49.12.72.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kloenk.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kloenk.dev
+	s=arc-20240116; t=1741166728; c=relaxed/simple;
+	bh=xhlx2MiJq8nYuUcx9JIk8rw8O4jgX6l1eI6LXGFmacE=;
+	h=Content-Type:MIME-Version:In-Reply-To:References:Subject:From:Cc:
+	 To:Date:Message-ID; b=orLkUztILF+ZyZZuu3DZKvHQs3ioO8GPLWZcwWCsgoFr7hoTDy/PDJ8mZpeL09ljnIelGIib0eZWpaJOJxJoj+pFUJcGyjzugCb5W4EuyEQNdUV5qhwZWTuHrb/WElMsvac6PKRF0bAQAJ1hqdw9tpgSd5IK3GVLu76h6kd95dA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=tYIHersJ; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=kloenk.dev header.i=@kloenk.dev header.b="o2JMilfB"
-From: Fiona Behrens <me@kloenk.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kloenk.dev; s=mail;
-	t=1741166670; bh=6Dueg+2Uh89sCdGWEFbTAs4vQ/frbcNjEkOb9fEQdnM=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date;
-	b=o2JMilfBJnkhN2G218kqWioBEY03/YwN3nx/IZ1ln5kTopf5+FNbsy/9+arBoc0iE
-	 Rq6P1AiNeb1y3JQCY5efsR8O5v/VOv14veSmLlGI/7Y/8SFT6S2O/qN7ZPyBlRCGc1
-	 q5ZVPinrNAhOxCCGZPOcQNif0klUAsB8e5Q8AQ8k=
-To: Benno Lossin <benno.lossin@proton.me>
-Cc: Danilo Krummrich <dakr@kernel.org>,  Miguel Ojeda <ojeda@kernel.org>,
-  Alex Gaynor <alex.gaynor@gmail.com>,  Boqun Feng <boqun.feng@gmail.com>,
-  Gary Guo <gary@garyguo.net>,  =?utf-8?Q?Bj=C3=B6rn?= Roy Baron
- <bjorn3_gh@protonmail.com>,
-  Andreas Hindborg <a.hindborg@kernel.org>,  Alice Ryhl
- <aliceryhl@google.com>,  Trevor Gross <tmgross@umich.edu>,
-  rust-for-linux@vger.kernel.org,  linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 09/22] rust: pin-init: move impl `Zeroable` for `Opaque`
- and `Option<KBox<T>>` into the kernel crate
-In-Reply-To: <20250304225245.2033120-10-benno.lossin@proton.me> (Benno
-	Lossin's message of "Tue, 04 Mar 2025 22:54:23 +0000")
-References: <20250304225245.2033120-1-benno.lossin@proton.me>
-	<20250304225245.2033120-10-benno.lossin@proton.me>
-Date: Wed, 05 Mar 2025 10:24:29 +0100
-Message-ID: <m2frjrhlte.fsf@kloenk.dev>
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="tYIHersJ"
+Received: from pendragon.ideasonboard.com (cpc89244-aztw30-2-0-cust6594.18-1.cable.virginm.net [86.31.185.195])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 8304C63F;
+	Wed,  5 Mar 2025 10:23:51 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1741166631;
+	bh=xhlx2MiJq8nYuUcx9JIk8rw8O4jgX6l1eI6LXGFmacE=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+	b=tYIHersJn8pAKNlvbR4JxMCLipGnD/eLj6ZscuGGuI5XCKtZtjPfQWUMn/5EntCie
+	 yjZP7UGai3q7wvpLV0DgAWIZHMw25a3Ik007TWiHmkPxYOVddrU1dCv6MCeHpZf/dX
+	 hf4UNPLg7nYn3QCZaETVFYY2s3VJQTUyuKsT++bY=
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20250305061309.17911-2-tarang.raval@siliconsignals.io>
+References: <20250305061309.17911-1-tarang.raval@siliconsignals.io> <20250305061309.17911-2-tarang.raval@siliconsignals.io>
+Subject: Re: [PATCH v2 1/2] media: i2c: imx219: switch to {enable,disable}_streams
+From: Kieran Bingham <kieran.bingham@ideasonboard.com>
+Cc: Tarang Raval <tarang.raval@siliconsignals.io>, Dave Stevenson <dave.stevenson@raspberrypi.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Tarang Raval <tarang.raval@siliconsignals.io>, sakari.ailus@linux.intel.com
+Date: Wed, 05 Mar 2025 09:25:21 +0000
+Message-ID: <174116672182.2914008.912215873023431841@ping.linuxembedded.co.uk>
+User-Agent: alot/0.10
 
-Benno Lossin <benno.lossin@proton.me> writes:
+Quoting Tarang Raval (2025-03-05 06:13:08)
+> Switch from s_stream to enable_streams and disable_streams callbacks.
+>=20
+> Signed-off-by: Tarang Raval <tarang.raval@siliconsignals.io>
+> ---
+>  drivers/media/i2c/imx219.c | 43 +++++++++++++++-----------------------
+>  1 file changed, 17 insertions(+), 26 deletions(-)
+>=20
+> diff --git a/drivers/media/i2c/imx219.c b/drivers/media/i2c/imx219.c
+> index f662c9d75511..75d3123d47b4 100644
+> --- a/drivers/media/i2c/imx219.c
+> +++ b/drivers/media/i2c/imx219.c
+> @@ -723,12 +723,17 @@ static int imx219_configure_lanes(struct imx219 *im=
+x219)
+>                                   ARRAY_SIZE(imx219_4lane_regs), NULL);
+>  };
+> =20
+> -static int imx219_start_streaming(struct imx219 *imx219,
+> -                                 struct v4l2_subdev_state *state)
+> +static int imx219_enable_streams(struct v4l2_subdev *sd,
+> +                                struct v4l2_subdev_state *state, u32 pad,
+> +                                u64 streams_mask)
+>  {
+> +       struct imx219 *imx219 =3D to_imx219(sd);
+>         struct i2c_client *client =3D v4l2_get_subdevdata(&imx219->sd);
+>         int ret;
+> =20
+> +       if (pad !=3D 0)
+> +               return -EINVAL;
+> +
+>         ret =3D pm_runtime_resume_and_get(&client->dev);
+>         if (ret < 0)
+>                 return ret;
+> @@ -767,10 +772,6 @@ static int imx219_start_streaming(struct imx219 *imx=
+219,
+>         if (ret)
+>                 goto err_rpm_put;
+> =20
+> -       /* vflip and hflip cannot change during streaming */
+> -       __v4l2_ctrl_grab(imx219->vflip, true);
+> -       __v4l2_ctrl_grab(imx219->hflip, true);
+> -
 
-> In order to make pin-init a standalone crate, move kernel-specific code
-> directly into the kernel crate. Since `Opaque<T>` and `KBox<T>` are part
-> of the kernel, move their `Zeroable` implementation into the kernel
-> crate.
+Why do you drop these lines? It's not mentioned in the commit message.
+Are these handled somewhere else now ?
+
+--
+Kieran
+
+
+>         return 0;
+> =20
+>  err_rpm_put:
+> @@ -778,37 +779,25 @@ static int imx219_start_streaming(struct imx219 *im=
+x219,
+>         return ret;
+>  }
+> =20
+> -static void imx219_stop_streaming(struct imx219 *imx219)
+> +static int imx219_disable_streams(struct v4l2_subdev *sd,
+> +                                 struct v4l2_subdev_state *state, u32 pa=
+d,
+> +                                 u64 streams_mask)
+>  {
+> +       struct imx219 *imx219 =3D to_imx219(sd);
+>         struct i2c_client *client =3D v4l2_get_subdevdata(&imx219->sd);
+>         int ret;
+> =20
+> +       if (pad !=3D 0)
+> +               return -EINVAL;
+> +
+>         /* set stream off register */
+>         ret =3D cci_write(imx219->regmap, IMX219_REG_MODE_SELECT,
+>                         IMX219_MODE_STANDBY, NULL);
+>         if (ret)
+>                 dev_err(&client->dev, "%s failed to set stream\n", __func=
+__);
+> =20
+> -       __v4l2_ctrl_grab(imx219->vflip, false);
+> -       __v4l2_ctrl_grab(imx219->hflip, false);
+> -
+>         pm_runtime_put(&client->dev);
+> -}
+> -
+> -static int imx219_set_stream(struct v4l2_subdev *sd, int enable)
+> -{
+> -       struct imx219 *imx219 =3D to_imx219(sd);
+> -       struct v4l2_subdev_state *state;
+> -       int ret =3D 0;
+> -
+> -       state =3D v4l2_subdev_lock_and_get_active_state(sd);
+> -
+> -       if (enable)
+> -               ret =3D imx219_start_streaming(imx219, state);
+> -       else
+> -               imx219_stop_streaming(imx219);
+> =20
+> -       v4l2_subdev_unlock_state(state);
+>         return ret;
+>  }
+> =20
+> @@ -992,7 +981,7 @@ static int imx219_init_state(struct v4l2_subdev *sd,
+>  }
+> =20
+>  static const struct v4l2_subdev_video_ops imx219_video_ops =3D {
+> -       .s_stream =3D imx219_set_stream,
+> +       .s_stream =3D v4l2_subdev_s_stream_helper,
+>  };
+> =20
+>  static const struct v4l2_subdev_pad_ops imx219_pad_ops =3D {
+> @@ -1001,6 +990,8 @@ static const struct v4l2_subdev_pad_ops imx219_pad_o=
+ps =3D {
+>         .set_fmt =3D imx219_set_pad_format,
+>         .get_selection =3D imx219_get_selection,
+>         .enum_frame_size =3D imx219_enum_frame_size,
+> +       .enable_streams =3D imx219_enable_streams,
+> +       .disable_streams =3D imx219_disable_streams,
+>  };
+> =20
+>  static const struct v4l2_subdev_ops imx219_subdev_ops =3D {
+> --=20
+> 2.34.1
 >
-> Signed-off-by: Benno Lossin <benno.lossin@proton.me>
-
-Reviewed-by: Fiona Behrens <me@kloenk.dev>
-
