@@ -1,38 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37BE684037;
-	Wed,  5 Mar 2025 00:54:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D160770E2;
+	Wed,  5 Mar 2025 00:54:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741136049; cv=none; b=NjGbgwZcC2BjuXpjR1mfRmi/fGM9siTzEg30dE2iesTtxVJq7YLg0AFNbZFGAarwOBT43h8Rt5uEiVqFYaCwVuwdHPMU9sHX5VXIvYT0RqeGTbxgVNv1D4FtUD6Vmkv0V/Yi4pypdfsjisABGgj2p3jRIpIOekfZyArue4wvikk=
+	t=1741136049; cv=none; b=PPwdaadfvsjtsua8l7Ae7vumW/vxHM2eSQOH2jPWrR7IztIn70dW5nYaQsOqttskpYDhU4EZCk7Xe9VuMaN0KPCXY5J/8JAkif5uGXse/r20yxxjH1GJx/DnnJTl7+qjGBFvAFY25BYeoSfU+0byYA3uKaSpY6k2nxdt85ZvRpc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1741136049; c=relaxed/simple;
-	bh=VPFdxfcc5XmMC0rq47TrQ4GMe47DtBuOVDWUIMyBaa8=;
+	bh=KwzqVNQ/LxOFE9lZkWbvcHponjUKYCapTArWFogQfNk=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ftDSDytBixGvPJaH1487O5L+uEO+9y6yBK1bZJIKy0jMcEETFEx4DoDj1whCk8Oy5LuD2ULh0cnKD2BE0cu54tMJi7aMgYpW/C8WtpFs1QsYqiEBY815LEZXv5XG+70yGgNQzJa9hvz9PNu247eTrkm7e8arHn8zKbuzdHA6Mr4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YTUth3H4; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=O4LT/Jx9tS0CzMpdnS+xMK2aryCzrSe0G34Txun8X7HMG64CyyBR5nzBpLqkWxgGsqIyuspUa7LEKpBGvFiZPM2DiwrzAmsWs/ebFA5vk9hbn3u7SiY4Ej5Aud5TuvJypR7rsbrgPN1i+wbouSuivXw54NrxF29w++XSz2l7SIY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ELo+1BJP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YTUth3H4"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id D4040C4CEF4;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ELo+1BJP"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 94587C4CEEB;
 	Wed,  5 Mar 2025 00:54:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1741136048;
-	bh=VPFdxfcc5XmMC0rq47TrQ4GMe47DtBuOVDWUIMyBaa8=;
+	bh=KwzqVNQ/LxOFE9lZkWbvcHponjUKYCapTArWFogQfNk=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=YTUth3H4Saw7uXxPGVsfUoPnJHodR9VI9gp8y3s64s/2bTSTITLIYKxEYDBc3E8JR
-	 inNLS1uMu5bqbjCffMgfTGVAj3kQs8/GqjeM+Dgi/CORkCXfAB6BkEOdPKyigiZW/j
-	 QQrt8KiPC4COwERPbWocwYiRbt1tPqLplJPJ/fuq5so/gVqIjOOTRXW3aY6+tP/kM7
-	 Ubu6tAxiSIOsD7ZtrPzYf4L/bykqc0KtK8SMLVQnW6g7yYIrnt21ynAqjrSwGwK5Ki
-	 sxFwBjHItQOlP/dfrE8o8JjssCV2NZR2gVwBt7CQp+Is5UW3l9JUPRbQSw1gFq6jc6
-	 rwG22Jdt4kk6w==
+	b=ELo+1BJPj8JNr41fL7OE8VY3hHa+P3eaiiAehsqYbc0WPJtKOBGx+loC2VNf9iCvw
+	 bQLzOeQPK9r3AwrNFO3NtA1SzvawFFuBSgOQJ+EXmfDOBhtfmoe1wjKNkdFhbeWH6S
+	 XSCOGnGQlV4lhWw091Bbqzd/HtYGh3/Spbnq0qWwc5TIYHjU2FQfNxZi/VYyHa1JyI
+	 RFFc5UGuc+AgSToJcCZsCzTUuh6i7RDpUwWw7aOIW/mMHbVGxvZRlgfYA9fQOYSlVP
+	 eI9Z+5VpVhji0SEvN/H40Z9JBa0geqZSGzPJzmwd2Mok0c6VAqbVFtItge1v/CpEgp
+	 uI3KEzPXqjc/A==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C908BC282D0;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8134AC282E3;
 	Wed,  5 Mar 2025 00:54:08 +0000 (UTC)
 From: Satish Kharat via B4 Relay <devnull+satishkh.cisco.com@kernel.org>
-Date: Tue, 04 Mar 2025 19:56:43 -0500
-Subject: [PATCH net-next v2 7/8] enic : cleanup of enic wq request
- completion path
+Date: Tue, 04 Mar 2025 19:56:38 -0500
+Subject: [PATCH net-next v2 2/8] enic: enic rq code reorg
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,7 +40,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250304-enic_cleanup_and_ext_cq-v2-7-85804263dad8@cisco.com>
+Message-Id: <20250304-enic_cleanup_and_ext_cq-v2-2-85804263dad8@cisco.com>
 References: <20250304-enic_cleanup_and_ext_cq-v2-0-85804263dad8@cisco.com>
 In-Reply-To: <20250304-enic_cleanup_and_ext_cq-v2-0-85804263dad8@cisco.com>
 To: Christian Benvenuti <benve@cisco.com>, 
@@ -52,11 +51,11 @@ Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
  Satish Kharat <satishkh@cisco.com>, Nelson Escobar <neescoba@cisco.com>, 
  John Daley <johndale@cisco.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1741136202; l=7106;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1741136202; l=10123;
  i=satishkh@cisco.com; s=20250226; h=from:subject:message-id;
- bh=LSUtWjfYnz6LTQxQS0/89Gz5g5ZA5PtHf5hkoJHWnVM=;
- b=EmeDT45hr5Ljoz1n0OocDR6OXc00Z2g+L9B7aBgFOGoblkV3wjzoOJe5yDFktTvfjwGK2y+Y8
- l5iQABoq4SLCLb6cJWyNH5gE9pTkSPjR6p6pZKc9hqdr9nCr/oF5Bu0
+ bh=usLTTlOTavjszE6uI3ZNF/H1lQeYn6GzIK95AM6KJz0=;
+ b=cwjAREwrWp/HKKvDpOdM9stNgBHu0ESdY2EWRzLSNmnihjKVeF+X7zfrvdY19CoauXloDBlYN
+ /VOBkhohZ2gD8+eDC6jiNV7T7sLbHcJ1mCY2N4Hrf/ef8wWffQxxilO
 X-Developer-Key: i=satishkh@cisco.com; a=ed25519;
  pk=lkxzORFYn5ejiy0kzcsfkpGoXZDcnHMc4n3YK7jJnJo=
 X-Endpoint-Received: by B4 Relay for satishkh@cisco.com/20250226 with
@@ -66,8 +65,10 @@ Reply-To: satishkh@cisco.com
 
 From: Satish Kharat <satishkh@cisco.com>
 
-Cleans up the enic wq request completion path needed for 16k wq size
-support.
+Separates enic rx path from generic vnic api. Removes some
+complexity of doign enic callbacks through vnic api in rx.
+This is in preparation for enabling enic extended cq which
+applies only to enic rx path.
 
 Co-developed-by: Nelson Escobar <neescoba@cisco.com>
 Signed-off-by: Nelson Escobar <neescoba@cisco.com>
@@ -75,189 +76,247 @@ Co-developed-by: John Daley <johndale@cisco.com>
 Signed-off-by: John Daley <johndale@cisco.com>
 Signed-off-by: Satish Kharat <satishkh@cisco.com>
 ---
- drivers/net/ethernet/cisco/enic/enic_main.c |  7 +--
- drivers/net/ethernet/cisco/enic/enic_wq.c   | 95 ++++++++++++++---------------
- drivers/net/ethernet/cisco/enic/enic_wq.h   | 11 +---
- 3 files changed, 52 insertions(+), 61 deletions(-)
+ drivers/net/ethernet/cisco/enic/enic_main.c |   6 +-
+ drivers/net/ethernet/cisco/enic/enic_rq.c   | 119 ++++++++++++++++++++--------
+ drivers/net/ethernet/cisco/enic/enic_rq.h   |   6 +-
+ drivers/net/ethernet/cisco/enic/vnic_cq.h   |  14 ++++
+ 4 files changed, 106 insertions(+), 39 deletions(-)
 
 diff --git a/drivers/net/ethernet/cisco/enic/enic_main.c b/drivers/net/ethernet/cisco/enic/enic_main.c
-index 52174843f02f1fecc75666367ad5034cbbcf8f07..54aa3953bf7b6ed4fdadd7b9871ee7bbcf6614ea 100644
+index f24fd29ea2071f88b3fa79e7768238a24384970e..080234ef4c2bb53c19e26601ca9bb38d26a738b7 100644
 --- a/drivers/net/ethernet/cisco/enic/enic_main.c
 +++ b/drivers/net/ethernet/cisco/enic/enic_main.c
-@@ -1332,8 +1332,7 @@ static int enic_poll(struct napi_struct *napi, int budget)
- 	unsigned int  work_done, rq_work_done = 0, wq_work_done;
- 	int err;
- 
--	wq_work_done = vnic_cq_service(&enic->cq[cq_wq], wq_work_to_do,
--				       enic_wq_service, NULL);
-+	wq_work_done = enic_wq_cq_service(enic, cq_wq, wq_work_to_do);
+@@ -1386,8 +1386,7 @@ static int enic_poll(struct napi_struct *napi, int budget)
+ 				       enic_wq_service, NULL);
  
  	if (budget > 0)
- 		rq_work_done = enic_rq_cq_service(enic, cq_rq, rq_work_to_do);
-@@ -1435,8 +1434,8 @@ static int enic_poll_msix_wq(struct napi_struct *napi, int budget)
- 	wq_irq = wq->index;
- 	cq = enic_cq_wq(enic, wq_irq);
- 	intr = enic_msix_wq_intr(enic, wq_irq);
--	wq_work_done = vnic_cq_service(&enic->cq[cq], wq_work_to_do,
--				       enic_wq_service, NULL);
-+
-+	wq_work_done = enic_wq_cq_service(enic, cq, wq_work_to_do);
+-		rq_work_done = vnic_cq_service(&enic->cq[cq_rq],
+-			rq_work_to_do, enic_rq_service, NULL);
++		rq_work_done = enic_rq_cq_service(enic, cq_rq, rq_work_to_do);
  
- 	vnic_intr_return_credits(&enic->intr[intr], wq_work_done,
- 				 0 /* don't unmask intr */,
-diff --git a/drivers/net/ethernet/cisco/enic/enic_wq.c b/drivers/net/ethernet/cisco/enic/enic_wq.c
-index 59b02906a1f91f695757c649e74e3f6f117abab3..2a5ddad512e388bf4f42fddaafd9242e20a30fe5 100644
---- a/drivers/net/ethernet/cisco/enic/enic_wq.c
-+++ b/drivers/net/ethernet/cisco/enic/enic_wq.c
-@@ -6,8 +6,12 @@
- #include "enic.h"
- #include "enic_wq.h"
+ 	/* Accumulate intr event credits for this polling
+ 	 * cycle.  An intr event is the completion of a
+@@ -1516,8 +1515,7 @@ static int enic_poll_msix_rq(struct napi_struct *napi, int budget)
+ 	 */
  
--static void cq_desc_dec(const struct cq_desc *desc_arg, u8 *type, u8 *color,
--			u16 *q_number, u16 *completed_index)
-+#define ENET_CQ_DESC_COMP_NDX_BITS 14
-+#define ENET_CQ_DESC_COMP_NDX_MASK GENMASK(ENET_CQ_DESC_COMP_NDX_BITS - 1, 0)
-+
-+static void enic_wq_cq_desc_dec(const struct cq_desc *desc_arg, bool ext_wq,
-+				u8 *type, u8 *color, u16 *q_number,
-+				u16 *completed_index)
- {
- 	const struct cq_desc *desc = desc_arg;
- 	const u8 type_color = desc->type_color;
-@@ -25,48 +29,13 @@ static void cq_desc_dec(const struct cq_desc *desc_arg, u8 *type, u8 *color,
+ 	if (budget > 0)
+-		work_done = vnic_cq_service(&enic->cq[cq],
+-			work_to_do, enic_rq_service, NULL);
++		work_done = enic_rq_cq_service(enic, cq, work_to_do);
  
- 	*type = type_color & CQ_DESC_TYPE_MASK;
- 	*q_number = le16_to_cpu(desc->q_number) & CQ_DESC_Q_NUM_MASK;
--	*completed_index = le16_to_cpu(desc->completed_index) &
--		CQ_DESC_COMP_NDX_MASK;
--}
--
--unsigned int vnic_cq_service(struct vnic_cq *cq, unsigned int work_to_do,
--			     int (*q_service)(struct vnic_dev *vdev,
--					      struct cq_desc *cq_desc, u8 type,
--					      u16 q_number, u16 completed_index,
--					      void *opaque), void *opaque)
--{
--	struct cq_desc *cq_desc;
--	unsigned int work_done = 0;
--	u16 q_number, completed_index;
--	u8 type, color;
--
--	cq_desc = (struct cq_desc *)((u8 *)cq->ring.descs +
--		   cq->ring.desc_size * cq->to_clean);
--	cq_desc_dec(cq_desc, &type, &color,
--		    &q_number, &completed_index);
--
--	while (color != cq->last_color) {
--		if ((*q_service)(cq->vdev, cq_desc, type, q_number,
--				 completed_index, opaque))
--			break;
--
--		cq->to_clean++;
--		if (cq->to_clean == cq->ring.desc_count) {
--			cq->to_clean = 0;
--			cq->last_color = cq->last_color ? 0 : 1;
--		}
--
--		cq_desc = (struct cq_desc *)((u8 *)cq->ring.descs +
--			cq->ring.desc_size * cq->to_clean);
--		cq_desc_dec(cq_desc, &type, &color,
--			    &q_number, &completed_index);
- 
--		work_done++;
--		if (work_done >= work_to_do)
--			break;
--	}
--
--	return work_done;
-+	if (ext_wq)
-+		*completed_index = le16_to_cpu(desc->completed_index) &
-+			ENET_CQ_DESC_COMP_NDX_MASK;
-+	else
-+		*completed_index = le16_to_cpu(desc->completed_index) &
-+			CQ_DESC_COMP_NDX_MASK;
+ 	/* Return intr event credits for this polling
+ 	 * cycle.  An intr event is the completion of a
+diff --git a/drivers/net/ethernet/cisco/enic/enic_rq.c b/drivers/net/ethernet/cisco/enic/enic_rq.c
+index 7360799326e8bd8ac8f102c3e3b3b4814f66b97f..842b273c2e2a59e81a7c1423449b023d646f5e81 100644
+--- a/drivers/net/ethernet/cisco/enic/enic_rq.c
++++ b/drivers/net/ethernet/cisco/enic/enic_rq.c
+@@ -21,14 +21,26 @@ static void enic_intr_update_pkt_size(struct vnic_rx_bytes_counter *pkt_size,
+ 		pkt_size->small_pkt_bytes_cnt += pkt_len;
  }
  
- void enic_free_wq_buf(struct vnic_wq *wq, struct vnic_wq_buf *buf)
-@@ -94,15 +63,15 @@ static void enic_wq_free_buf(struct vnic_wq *wq, struct cq_desc *cq_desc,
- 	enic_free_wq_buf(wq, buf);
- }
- 
--int enic_wq_service(struct vnic_dev *vdev, struct cq_desc *cq_desc, u8 type,
+-int enic_rq_service(struct vnic_dev *vdev, struct cq_desc *cq_desc, u8 type,
 -		    u16 q_number, u16 completed_index, void *opaque)
-+static void enic_wq_service(struct vnic_dev *vdev, struct cq_desc *cq_desc,
-+			    u8 type, u16 q_number, u16 completed_index)
++static void enic_rq_cq_desc_dec(struct cq_enet_rq_desc *desc, u8 *type,
++				u8 *color, u16 *q_number, u16 *completed_index)
  {
- 	struct enic *enic = vnic_dev_priv(vdev);
- 
- 	spin_lock(&enic->wq[q_number].lock);
- 
- 	vnic_wq_service(&enic->wq[q_number].vwq, cq_desc,
--			completed_index, enic_wq_free_buf, opaque);
-+			completed_index, enic_wq_free_buf, NULL);
- 
- 	if (netif_tx_queue_stopped(netdev_get_tx_queue(enic->netdev, q_number))
- 	    && vnic_wq_desc_avail(&enic->wq[q_number].vwq) >=
-@@ -112,7 +81,37 @@ int enic_wq_service(struct vnic_dev *vdev, struct cq_desc *cq_desc, u8 type,
- 	}
- 
- 	spin_unlock(&enic->wq[q_number].lock);
+-	struct enic *enic = vnic_dev_priv(vdev);
 -
+-	vnic_rq_service(&enic->rq[q_number].vrq, cq_desc, completed_index,
+-			VNIC_RQ_RETURN_DESC, enic_rq_indicate_buf, opaque);
 -	return 0;
++	/* type_color is the last field for all cq structs */
++	u8 type_color = desc->type_color;
++
++	/* Make sure color bit is read from desc *before* other fields
++	 * are read from desc.  Hardware guarantees color bit is last
++	 * bit (byte) written.  Adding the rmb() prevents the compiler
++	 * and/or CPU from reordering the reads which would potentially
++	 * result in reading stale values.
++	 */
++	rmb();
++
++	*q_number = le16_to_cpu(desc->q_number_rss_type_flags) &
++		CQ_DESC_Q_NUM_MASK;
++	*completed_index = le16_to_cpu(desc->completed_index_flags) &
++	CQ_DESC_COMP_NDX_MASK;
++	*color = (type_color >> CQ_DESC_COLOR_SHIFT) & CQ_DESC_COLOR_MASK;
++	*type = type_color & CQ_DESC_TYPE_MASK;
  }
  
-+unsigned int enic_wq_cq_service(struct enic *enic, unsigned int cq_index,
+ static void enic_rq_set_skb_flags(struct vnic_rq *vrq, u8 type, u32 rss_hash,
+@@ -101,10 +113,9 @@ static void enic_rq_set_skb_flags(struct vnic_rq *vrq, u8 type, u32 rss_hash,
+ 	}
+ }
+ 
+-static void cq_enet_rq_desc_dec(struct cq_enet_rq_desc *desc, u8 *type,
+-				u8 *color, u16 *q_number, u16 *completed_index,
+-				u8 *ingress_port, u8 *fcoe, u8 *eop, u8 *sop,
+-				u8 *rss_type, u8 *csum_not_calc, u32 *rss_hash,
++static void cq_enet_rq_desc_dec(struct cq_enet_rq_desc *desc, u8 *ingress_port,
++				u8 *fcoe, u8 *eop, u8 *sop, u8 *rss_type,
++				u8 *csum_not_calc, u32 *rss_hash,
+ 				u16 *bytes_written, u8 *packet_error,
+ 				u8 *vlan_stripped, u16 *vlan_tci,
+ 				u16 *checksum, u8 *fcoe_sof,
+@@ -117,9 +128,6 @@ static void cq_enet_rq_desc_dec(struct cq_enet_rq_desc *desc, u8 *type,
+ 	u16 q_number_rss_type_flags;
+ 	u16 bytes_written_flags;
+ 
+-	cq_desc_dec((struct cq_desc *)desc, type,
+-		    color, q_number, completed_index);
+-
+ 	completed_index_flags = le16_to_cpu(desc->completed_index_flags);
+ 	q_number_rss_type_flags =
+ 		le16_to_cpu(desc->q_number_rss_type_flags);
+@@ -249,37 +257,33 @@ void enic_free_rq_buf(struct vnic_rq *rq, struct vnic_rq_buf *buf)
+ 	buf->os_buf = NULL;
+ }
+ 
+-void enic_rq_indicate_buf(struct vnic_rq *rq, struct cq_desc *cq_desc,
+-			  struct vnic_rq_buf *buf, int skipped, void *opaque)
++static void enic_rq_indicate_buf(struct enic *enic, struct vnic_rq *rq,
++				 struct vnic_rq_buf *buf,
++				 struct cq_enet_rq_desc *cq_desc, u8 type,
++				 u16 q_number, u16 completed_index)
+ {
+-	struct enic *enic = vnic_dev_priv(rq->vdev);
+ 	struct sk_buff *skb;
+ 	struct vnic_cq *cq = &enic->cq[enic_cq_rq(enic, rq->index)];
+ 	struct enic_rq_stats *rqstats = &enic->rq[rq->index].stats;
+ 	struct napi_struct *napi;
+ 
+-	u8 type, color, eop, sop, ingress_port, vlan_stripped;
++	u8 eop, sop, ingress_port, vlan_stripped;
+ 	u8 fcoe, fcoe_sof, fcoe_fc_crc_ok, fcoe_enc_error, fcoe_eof;
+ 	u8 tcp_udp_csum_ok, udp, tcp, ipv4_csum_ok;
+ 	u8 ipv6, ipv4, ipv4_fragment, fcs_ok, rss_type, csum_not_calc;
+ 	u8 packet_error;
+-	u16 q_number, completed_index, bytes_written, vlan_tci, checksum;
++	u16 bytes_written, vlan_tci, checksum;
+ 	u32 rss_hash;
+ 
+ 	rqstats->packets++;
+-	if (skipped) {
+-		rqstats->desc_skip++;
+-		return;
+-	}
+ 
+-	cq_enet_rq_desc_dec((struct cq_enet_rq_desc *)cq_desc, &type, &color,
+-			    &q_number, &completed_index, &ingress_port, &fcoe,
+-			    &eop, &sop, &rss_type, &csum_not_calc, &rss_hash,
+-			    &bytes_written, &packet_error, &vlan_stripped,
+-			    &vlan_tci, &checksum, &fcoe_sof, &fcoe_fc_crc_ok,
+-			    &fcoe_enc_error, &fcoe_eof, &tcp_udp_csum_ok, &udp,
+-			    &tcp, &ipv4_csum_ok, &ipv6, &ipv4, &ipv4_fragment,
+-			    &fcs_ok);
++	cq_enet_rq_desc_dec(cq_desc, &ingress_port,
++			    &fcoe, &eop, &sop, &rss_type, &csum_not_calc,
++			    &rss_hash, &bytes_written, &packet_error,
++			    &vlan_stripped, &vlan_tci, &checksum, &fcoe_sof,
++			    &fcoe_fc_crc_ok, &fcoe_enc_error, &fcoe_eof,
++			    &tcp_udp_csum_ok, &udp, &tcp, &ipv4_csum_ok, &ipv6,
++			    &ipv4, &ipv4_fragment, &fcs_ok);
+ 
+ 	if (enic_rq_pkt_error(rq, packet_error, fcs_ok, bytes_written))
+ 		return;
+@@ -324,3 +328,56 @@ void enic_rq_indicate_buf(struct vnic_rq *rq, struct cq_desc *cq_desc,
+ 		rqstats->pkt_truncated++;
+ 	}
+ }
++
++static void enic_rq_service(struct enic *enic, struct cq_enet_rq_desc *cq_desc,
++			    u8 type, u16 q_number, u16 completed_index)
++{
++	struct enic_rq_stats *rqstats = &enic->rq[q_number].stats;
++	struct vnic_rq *vrq = &enic->rq[q_number].vrq;
++	struct vnic_rq_buf *vrq_buf = vrq->to_clean;
++	int skipped;
++
++	while (1) {
++		skipped = (vrq_buf->index != completed_index);
++		if (!skipped)
++			enic_rq_indicate_buf(enic, vrq, vrq_buf, cq_desc, type,
++					     q_number, completed_index);
++		else
++			rqstats->desc_skip++;
++
++		vrq->ring.desc_avail++;
++		vrq->to_clean = vrq_buf->next;
++		vrq_buf = vrq_buf->next;
++		if (!skipped)
++			break;
++	}
++}
++
++unsigned int enic_rq_cq_service(struct enic *enic, unsigned int cq_index,
 +				unsigned int work_to_do)
 +{
 +	struct vnic_cq *cq = &enic->cq[cq_index];
++	struct cq_enet_rq_desc *cq_desc;
 +	u16 q_number, completed_index;
 +	unsigned int work_done = 0;
-+	struct cq_desc *cq_desc;
 +	u8 type, color;
-+	bool ext_wq;
 +
-+	ext_wq = cq->ring.size > ENIC_MAX_WQ_DESCS;
++	cq_desc = (struct cq_enet_rq_desc *)vnic_cq_to_clean(cq);
 +
-+	cq_desc = (struct cq_desc *)vnic_cq_to_clean(cq);
-+	enic_wq_cq_desc_dec(cq_desc, ext_wq, &type, &color,
-+			    &q_number, &completed_index);
++	enic_rq_cq_desc_dec(cq_desc,  &type, &color, &q_number,
++			    &completed_index);
 +
 +	while (color != cq->last_color) {
-+		enic_wq_service(cq->vdev, cq_desc, type, q_number,
-+				completed_index);
-+
++		enic_rq_service(enic, cq_desc, type, q_number, completed_index);
 +		vnic_cq_inc_to_clean(cq);
 +
 +		if (++work_done >= work_to_do)
 +			break;
 +
-+		cq_desc = (struct cq_desc *)vnic_cq_to_clean(cq);
-+		enic_wq_cq_desc_dec(cq_desc, ext_wq, &type, &color,
-+				    &q_number, &completed_index);
++		cq_desc = (struct cq_enet_rq_desc *)vnic_cq_to_clean(cq);
++		enic_rq_cq_desc_dec(cq_desc, &type, &color, &q_number,
++				    &completed_index);
 +	}
 +
 +	return work_done;
 +}
-diff --git a/drivers/net/ethernet/cisco/enic/enic_wq.h b/drivers/net/ethernet/cisco/enic/enic_wq.h
-index cc4d6a969a9fb11d6ec3b0e8e56ac106b6d34be2..12acb3f2fbc94e5dab04e300c55c95deb7576de7 100644
---- a/drivers/net/ethernet/cisco/enic/enic_wq.h
-+++ b/drivers/net/ethernet/cisco/enic/enic_wq.h
-@@ -2,13 +2,6 @@
-  * Copyright 2025 Cisco Systems, Inc.  All rights reserved.
+diff --git a/drivers/net/ethernet/cisco/enic/enic_rq.h b/drivers/net/ethernet/cisco/enic/enic_rq.h
+index a75d07562686af0a1ad618803f5f70a77fbc1eec..98476a7297afbba83aa0f4281bf9314ea3fd9f27 100644
+--- a/drivers/net/ethernet/cisco/enic/enic_rq.h
++++ b/drivers/net/ethernet/cisco/enic/enic_rq.h
+@@ -2,9 +2,7 @@
+  * Copyright 2024 Cisco Systems, Inc.  All rights reserved.
   */
  
--unsigned int vnic_cq_service(struct vnic_cq *cq, unsigned int work_to_do,
--			     int (*q_service)(struct vnic_dev *vdev,
--					      struct cq_desc *cq_desc, u8 type,
--					      u16 q_number, u16 completed_index,
--					      void *opaque), void *opaque);
--
- void enic_free_wq_buf(struct vnic_wq *wq, struct vnic_wq_buf *buf);
--
--int enic_wq_service(struct vnic_dev *vdev, struct cq_desc *cq_desc, u8 type,
+-int enic_rq_service(struct vnic_dev *vdev, struct cq_desc *cq_desc, u8 type,
 -		    u16 q_number, u16 completed_index, void *opaque);
-+unsigned int enic_wq_cq_service(struct enic *enic, unsigned int cq_index,
+-void enic_rq_indicate_buf(struct vnic_rq *rq, struct cq_desc *cq_desc,
+-			  struct vnic_rq_buf *buf, int skipped, void *opaque);
++unsigned int enic_rq_cq_service(struct enic *enic, unsigned int cq_index,
 +				unsigned int work_to_do);
+ int enic_rq_alloc_buf(struct vnic_rq *rq);
+ void enic_free_rq_buf(struct vnic_rq *rq, struct vnic_rq_buf *buf);
+diff --git a/drivers/net/ethernet/cisco/enic/vnic_cq.h b/drivers/net/ethernet/cisco/enic/vnic_cq.h
+index eed5bf59e5d2c87bf240a96638cc4f58cd17c79c..21d97c01f9424fde3d3c1d9b6cb4b7ef6de144b1 100644
+--- a/drivers/net/ethernet/cisco/enic/vnic_cq.h
++++ b/drivers/net/ethernet/cisco/enic/vnic_cq.h
+@@ -97,6 +97,20 @@ static inline unsigned int vnic_cq_service(struct vnic_cq *cq,
+ 	return work_done;
+ }
+ 
++static inline void *vnic_cq_to_clean(struct vnic_cq *cq)
++{
++	return ((u8 *)cq->ring.descs + cq->ring.desc_size * cq->to_clean);
++}
++
++static inline void vnic_cq_inc_to_clean(struct vnic_cq *cq)
++{
++	cq->to_clean++;
++	if (cq->to_clean == cq->ring.desc_count) {
++		cq->to_clean = 0;
++		cq->last_color = cq->last_color ? 0 : 1;
++	}
++}
++
+ void vnic_cq_free(struct vnic_cq *cq);
+ int vnic_cq_alloc(struct vnic_dev *vdev, struct vnic_cq *cq, unsigned int index,
+ 	unsigned int desc_count, unsigned int desc_size);
 
 -- 
 2.48.1
