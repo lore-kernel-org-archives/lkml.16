@@ -1,107 +1,121 @@
-Received: from mail-40133.protonmail.ch (mail-40133.protonmail.ch [185.70.40.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AFD6567D
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 16:15:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.40.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50CA6433AB
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 16:15:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741191334; cv=none; b=rpTKANaj7U7sX8ma0TYDUixkM1Jm1j3Vm6+6bV4RN0I6vDXp1Lk6ved9rHu6zNLzoy5c3CeGGGFMh4wRvqaPwl6oA9mpe/JzgdXvu0+WRe58qyJisCRQ81Y4pyPhyuK5ogCM/Ptz0HDDOtdrMcOnCpv3h/HoWIbsQVXB+zAwbTY=
+	t=1741191360; cv=none; b=lnqxuW6zI0LKRiYRW2Ek3shmmzn8rF7NF1+X33FjWnG+y5oigKXufvD6fxfJAwzQaHFy0BLawzx6fq5p2ph5NYrBwscuwYrmGAbrXsD5TKkHUHjOtD3aqgHapj2z1aC9HTTUNFiNJ8UO3botmmJY7VHddyIz0dUli4i1vGeFna4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741191334; c=relaxed/simple;
-	bh=IdZ3nf7VAZ660GL9R/aTibYxlcwVB9z84VmLqX3uZ8Q=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=fkOk0vTPa1LqoCYjTWfLk21KJyiNLJT1ToxPrXsRN/vTIGsMwNplFltx8/pQnBdnN3Rc6Z2qHqJxAvuUhK6zh8dUFXZaaM13b9eFBxeIH+pNCpX+hMYmJHM630Q4rb9OvC1JRjCpTKGHmyX+Sul0NOs+xoADslLOglbAKDLhUYs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me; spf=pass smtp.mailfrom=pm.me; dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b=R2KFyiqY; arc=none smtp.client-ip=185.70.40.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pm.me
+	s=arc-20240116; t=1741191360; c=relaxed/simple;
+	bh=fv4YhRvlWbb2xsBRPo+vB8HbRXMqdTqTfwRar1qvmx0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nO485fZc6bK+uvaXRlIUacnoelZWDb2BEKAKgUfAyPCGW8zx/wv6f8lCFU9j+MJFbtdZmXA7IQCGpXBcGNTlBXsAFPZ2Rax7/hNo+TNnEMREMZ3Dq+g1/qgBEkf2SG7sPDYsEm5eBqbclyHm4Aru4JXHxR5w2bNtLp+y2lfc0M0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=elU4xBBE; arc=none smtp.client-ip=209.85.221.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b="R2KFyiqY"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pm.me;
-	s=protonmail3; t=1741191329; x=1741450529;
-	bh=IdZ3nf7VAZ660GL9R/aTibYxlcwVB9z84VmLqX3uZ8Q=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
-	b=R2KFyiqY6ILC7LUVMFzJFULQ628oVdFGBUO20rzGIbq1H/sxUKdM5Kl2NaTW9ZNEX
-	 m0Qv0tlvqBG3yTQoRQUgahPHsQYtxiP/XKUR7x/Mwdk1TXf04mmruze1UBLAt1hvfy
-	 VkscpVZrWGMpF0OPa39ka/HmkKHi0gjz0NWLW+rXYow8wzl9G2fNs1A+Gbt9LZ0WVr
-	 g0DbxBnztWRFz+5jlGKMBEh+fQgs3+lSzj1qq5WdiXdFP+2W917jvk+JXUCtxzxdO1
-	 Mo/Z9wiUlhKmt721SuLWGOwoMX0LYwANvFpqQYhQFPkOfPnKSj0RpvvApRzK0peNPx
-	 fR+II4Wka2YEg==
-Date: Wed, 05 Mar 2025 16:15:24 +0000
-To: Alice Ryhl <aliceryhl@google.com>
-From: Oliver Mangold <oliver.mangold@pm.me>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4] rust: adding UniqueRefCounted and UniqueRef types
-Message-ID: <Z8h4mO_deAi_V3mf@laptop>
-In-Reply-To: <CAH5fLgjFBknTmhxQBPUdB-iNMjEkcyuLiu22-Nj-DGB1Gb7NkA@mail.gmail.com>
-References: <20250305-unique-ref-v4-1-a8fdef7b1c2c@pm.me> <Z8hUIPtE_9P60fAf@google.com> <Z8hmCkeZGPwc5MuU@mango> <CAH5fLgjFBknTmhxQBPUdB-iNMjEkcyuLiu22-Nj-DGB1Gb7NkA@mail.gmail.com>
-Feedback-ID: 31808448:user:proton
-X-Pm-Message-ID: 8e5a2126ce62b3025aa6befed3ce0e4e2d6cc60d
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="elU4xBBE"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-390dd362848so5390004f8f.3
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Mar 2025 08:15:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1741191356; x=1741796156; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=PNAB44QyhnX4KFdgTgmL60qRg10qylEcS57fI8BPRcw=;
+        b=elU4xBBEmJhkTMqQ484vLEvFMK7m+hheKUitkLhNtXdoiIP5glSwKQPE2kOQvSDCQr
+         jD7KUAHnWsxjV4UyQU/5ITcXa7/Jpans53w4omNE4c1Bs1UaOFY/9sE/bcezQUQs+FhY
+         nuR8iQLKnKicUmIbLQ+ZiBxfrSFnlrwX292pSoIeKnutTy0eFNzwaDc/tpXz7Eb080fF
+         RKni5sr6M//lpq+HXifkHZUvEzL7gNMii7VCX7F02s1QlqpYr3ULkTArOpGtcHMqObF0
+         PKqhuQkH6XyXlYKBbw+11iBaxETGI4bvki887+ebJR+FeMnPLx96hdROq+lOV27y2Uhz
+         WSmA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741191356; x=1741796156;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PNAB44QyhnX4KFdgTgmL60qRg10qylEcS57fI8BPRcw=;
+        b=WFiFJQKAMB733BoQeIy23Tu58QcxpXROoVPaZZ2Xhg8DskXJEhKx8Jjd27CfpRiIjh
+         XPqGsIIhu1AQD0s1u4AqMJXjJDUOt1xrk8qM8mgv+WzQegnnUbpYWQbUbT0LFAoLFezb
+         lp5SlxsYzcezHrjP0Q2SPp8mbnq8HAphK23y2/6LFngDrwrUuryS3zd8cQ3drIhnp9Gd
+         4v+O89MM5sRjnz+EOD3FXFjc1cms1/xMZ2FLZdNSSMKPuulTwtvqTc6525BAbBt1scZp
+         GyjG5XoNl9bYweCuNjGPVdcLfjkIxeXqQ+QgzpN5/sR9lZ+EAYHOXu6Co1q713Ie06WA
+         6H7Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWytqZKz1GMDlelWjdNRXHkAGS1P9jtxKBSlsfdN4BGhb8zd/2wmbILHcta+HigeYUbDeK5ByyUeh/gVgE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyIU+WjMR+dFhcQBEecZkyZ4lzNqgGzrR41VD7oxop/zZllCr+r
+	9l+1y6lOVY+tqgyNWBuKxl+PAtzwWwoFRNFdqH+LsnRHGRJ7M+AIC3ut2VKeTJk=
+X-Gm-Gg: ASbGncsB0+hd1Qxn+TkR/vxXdFJKw2h3fNY9G1AATy1ZkPH+Efs0HCEx6JCZL6iWV6o
+	MJSSVsroA6JtRH8L43O6k3IdIJFENjo7HODv1VE4/iM2qJ6WQOIegcLcHxUc6+PBh1jyLkrTI0u
+	nA3+5zohDhn/iOXZr/I5X372QpGGk+6GtRgCjM95ui6f6UiRledAdOkSDertSH0+GMZ0cbmqctu
+	9hHNIqxfNFMcBHVQhnsV4pfCKyVGu5WjRZFY2qZ8qB9q9vOviJRCtr+fkyj3/cMqwzHOd0O5a+c
+	Nyxk5J8PaWKd7e8uMYjfrEAPtw06F+7l1mJFXHbJeDxZhlk=
+X-Google-Smtp-Source: AGHT+IFSFHy1G7JXs9LS6Zp9vf6qrgDOnTuLsUnVpuP6RU8IBq/z8lBT5ioxtv8qoOlGoLHFx2uA7A==
+X-Received: by 2002:a05:6000:4185:b0:391:5f:fa4e with SMTP id ffacd0b85a97d-3911f7476b5mr2262201f8f.29.1741191356432;
+        Wed, 05 Mar 2025 08:15:56 -0800 (PST)
+Received: from blackdock.suse.cz ([193.86.92.181])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-390e47b7ddesm21704636f8f.57.2025.03.05.08.15.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Mar 2025 08:15:56 -0800 (PST)
+Date: Wed, 5 Mar 2025 17:15:54 +0100
+From: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
+To: shashank.mahadasyam@sony.com
+Cc: Tejun Heo <tj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>, 
+	Jonathan Corbet <corbet@lwn.net>, Waiman Long <longman@redhat.com>, cgroups@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Shinya Takumi <shinya.takumi@sony.com>
+Subject: Re: [PATCH 1/2] cgroup, docs: Be explicit about independence of
+ RT_GROUP_SCHED and non-cpu controllers
+Message-ID: <h7xbvvv3727yobsl7vx3vvcpqhdulagmogbuulp3dny4jgggym@gb3yaeuiuwa2>
+References: <20250305-rt-and-cpu-controller-doc-v1-0-7b6a6f5ff43d@sony.com>
+ <20250305-rt-and-cpu-controller-doc-v1-1-7b6a6f5ff43d@sony.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="mohu66pwpewgjwac"
+Content-Disposition: inline
+In-Reply-To: <20250305-rt-and-cpu-controller-doc-v1-1-7b6a6f5ff43d@sony.com>
+
+
+--mohu66pwpewgjwac
+Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH 1/2] cgroup, docs: Be explicit about independence of
+ RT_GROUP_SCHED and non-cpu controllers
+MIME-Version: 1.0
 
-On 250305 1613, Alice Ryhl wrote:
-> On Wed, Mar 5, 2025 at 3:56=E2=80=AFPM Oliver Mangold <oliver.mangold@pm.=
-me> wrote:
-> > >
-> > > What stops people from doing this?
-> > >
-> > > let my_unique: UniqueRef<T> =3D ...;
-> > > let my_ref: &T =3D &*my_unique;
-> > > let my_shared: ARef<T> =3D ARef::from(my_ref);
-> > >
-> > > Now it is no longer unique.
-> > >
-> > Oh, indeed. That's a serious problem. I see 2 options to deal with that=
-:
-> >
-> > 1. remove ARef::From<&T>
-> >
-> > I checked the users of this, and it looks to me like there is rather
-> > a limited number and they are easy to fix by replacing the &T with ARef=
-<T>.
-> > But I assume that wouldn't be welcome as it is intrusive nonetheless
-> > and of course there is ergonomic value in having the function around.
+On Wed, Mar 05, 2025 at 01:12:43PM +0900, Shashank Balaji via B4 Relay <dev=
+null+shashank.mahadasyam.sony.com@kernel.org> wrote:
+> From: Shashank Balaji <shashank.mahadasyam@sony.com>
 >=20
-> Definitely not an option. There are many users of this function that
-> are in the process of being upstreamed. The ability to go &T ->
-> ARef<T> is pretty fundamental for ARef.
-
-Ok. Suspected something like that.
+> The cgroup v2 cpu controller has a limitation that if
+> CONFIG_RT_GROUP_SCHED is enabled, the cpu controller can be enabled only
+> if all the realtime processes are in the root cgroup. The other
+> controllers have no such restriction. They can be used for the resource
+> control of realtime processes irrespective of whether
+> CONFIG_RT_GROUP_SCHED is enabled or not.
 >=20
-> I do think that you essentially need two structs to use this at all -
-> one for the shared and one for the unique case. Sounds pretty
-> unergonomic.
->
-Sorry, but can you explain? Why does one need structs?
+> Signed-off-by: Shashank Balaji <shashank.mahadasyam@sony.com>
+> ---
+>  Documentation/admin-guide/cgroup-v2.rst | 23 ++++++++++++++---------
+>  1 file changed, 14 insertions(+), 9 deletions(-)
+>=20
 
-> What is the use-case for these abstractions?
->
-It came up in the block subsystem. For mq::Request it is rather essential
-to be able to ensure that one has a unique reference.
+Acked-by: Michal Koutn=FD <mkoutny@suse.com>
 
-Maybe Andreas can explain a bit more.
+--mohu66pwpewgjwac
+Content-Type: application/pgp-signature; name="signature.asc"
 
-We can work around that there, with special wrappers specific for block,
-sure.
+-----BEGIN PGP SIGNATURE-----
 
-But are you sure it isn't much more widely useful? Correct me if I'm wrong,
-but as I understand, currently for AlwaysRefCounted objects you can never
-safely obtain an &mut. So you cannot use the static safety checks
-that come with '&' vs. '&mut'. This means you have to rely on interior
-mutability, requiring runtime checks in the wrapper functions, no?
+iHUEABYKAB0WIQTd6mfF2PbEZnpdoAkt3Wney77BSQUCZ8h4twAKCRAt3Wney77B
+Sa/MAQCsVpx3ngjUqnES7cUlQY3BJhxMyIKDkx8/OleeglUqqAEAxOHtAu3BJJAS
+Ccs3+43hdTpTkLZ4OmOk8HTZf1FlMgA=
+=478H
+-----END PGP SIGNATURE-----
 
-Isn't that, for example, the reason that Page is not AlwaysRefCounted,
-as write access is protected by requiring an '&mut'?
-
-Best,
-
-Oliver
-
+--mohu66pwpewgjwac--
