@@ -1,55 +1,107 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-182.mta1.migadu.com (out-182.mta1.migadu.com [95.215.58.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE3B0254B10;
-	Wed,  5 Mar 2025 20:26:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A9B417B50B
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 20:26:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741206416; cv=none; b=tPNf8BaIhRnbHDmrS42n5nm/odSbryeNedMOVq9BYdAX5sPNNQTwq39WJUq+zglxN9o0fPikqFJqeUrbKlUzzQN2BpbIn9AQ5cbQAl8zOEo9b7PA+TNEUCrtTNLh6F226rVze9dl+as9QUuTGLH7k0S1ZTKtCIQrde7rAexEvto=
+	t=1741206416; cv=none; b=s4vBUmjrtqVE0IzWOBR6sikrhqKPaqElxjQFslaWyNl7arKhUJzuDr63d/COVWIbTxOYdiHj4BF0FBpME8KqZ9DyHEk0eMVtV2FVnmYGtas+D+pAe3+f7l3GWhKdM2iFHGjwcSrDRK7FoGXF34D46zYO7NFGsrCrCMibP7EoOa0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1741206416; c=relaxed/simple;
-	bh=JEFJDp2hZxLOrBDwuUNK7mVx/nx9Vm2rrb1sSMLKFsY=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=CWeGiwQKJbmkXEh92D1MtD9jyB3wp+F4TVxeUg1m4CW+6+1m92nP60K+9UxCGdWBlFQVZ9Z79BWCTzw/tByvb1h0ZtabiWjwzwfsOFd6DcKOxCSMVbGkwWZSuhMYhOfY6pSWyLLanKXDvRX1ExiO/l2w9XP32hdZA5ZD7VeHKag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sKf3Mckm; arc=none smtp.client-ip=10.30.226.201
+	bh=d6Rr6XQlxAVZ+mE6RfpK/xi1nsseOYVsqwUcmX//sH0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=OKO2QUMDiB34ghoPZKfa3xHH/Sjg89KGgh7yl7lxtNo7tGRGF/3F5a+3RCTKY+akXFkIWJn1FCHBwtu1ZP9p96wOH9L7nT4DH/o1iXbjP5XbhfvvwtRHuDTYfkmB4DyA5C55Av9Lvm5nKNZbgEj0vrmGxMnZjpU06ho/Hp+UM+M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=PbKbEfsq; arc=none smtp.client-ip=95.215.58.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sKf3Mckm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E0E2C4CEE0;
-	Wed,  5 Mar 2025 20:26:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741206416;
-	bh=JEFJDp2hZxLOrBDwuUNK7mVx/nx9Vm2rrb1sSMLKFsY=;
-	h=Date:From:To:Cc:Subject:From;
-	b=sKf3Mckme/ViMkNIGclmOLzZ/SYtj5BLD+rozrDKVa+uTzogH5yfkoGzy4/PkWpI7
-	 WTy/axxCf45m6LrZ5Hzs3hIjdrfq4k/X2Pl3swqYRyXaoAN2d0j99cRqhJRvlqpbQN
-	 UJfqeYwUuYJbTxm3VDVD7qjvRlBMsf5QR0GSzD+NAAPkRHJEsVynvB60QYxkRs1dUI
-	 M+bj9rRI1knYqY9xNg5wA+bXeJI0wl+ks00f/du5QZfcrbgM4ABmnYHGcvKo0yBlTd
-	 dwvo4FotFbtcEV1I79uvzI6fa71uvFsD/bqS4un6+3IOF+vWe4MitY903XpENgHMmA
-	 NLRchPM49qw1A==
-Date: Wed, 5 Mar 2025 21:26:52 +0100
-From: Nathan Chancellor <nathan@kernel.org>
-To: llvm@lists.linux.dev, linux-kernel@vger.kernel.org
-Cc: ojeda@kernel.org
-Subject: Prebuilt LLVM 20.1.0 uploaded
-Message-ID: <20250305202652.GA2791050@ax162>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="PbKbEfsq"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1741206413;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=/RePMasBxWLOq6wL+myI83nPFWKCp36b5QRiMaqR5Jo=;
+	b=PbKbEfsqG25jqb/39HbNK2rqZCcaXv8jbOTnrWTOo7yyt1Mew0xNFcRBUL/jiv2vgRu2EP
+	ftTcCC0Sscpq52P3sOzgSOnnkwA875AAedBcNW2U9yzSWikcmV7ZMUJEi7xkZ7MC9uOZ9x
+	BNNvhiCV1CmzyuhluPPJ1c80CbIZKf8=
+From: Oliver Upton <oliver.upton@linux.dev>
+To: kvmarm@lists.linux.dev
+Cc: Marc Zyngier <maz@kernel.org>,
+	Joey Gouly <joey.gouly@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	Mingwei Zhang <mizhang@google.com>,
+	Colton Lewis <coltonlewis@google.com>,
+	Raghavendra Rao Ananta <rananta@google.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Janne Grunau <j@jannau.net>,
+	Oliver Upton <oliver.upton@linux.dev>
+Subject: [PATCH v3 00/14] KVM: arm64: FEAT_PMUv3 on Apple hardware
+Date: Wed,  5 Mar 2025 12:26:27 -0800
+Message-Id: <20250305202641.428114-1-oliver.upton@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-Hi all,
+Hopefully close to the last spin, this time addressing Marc's comments
+on v2.
 
-I have built and uploaded LLVM 20.1.0 to
-https://mirrors.edge.kernel.org/pub/tools/llvm/.
+Full details found in the v1 cover letter.
 
-If there are any issues found, please let us know via email or
-https://github.com/ClangBuiltLinux/linux/issues/new, so that we have an
-opportunity to get them fixed in main and backported before the 20.x
-series is no longer supported.
+v1: https://lore.kernel.org/kvmarm/20241217212048.3709204-1-oliver.upton@linux.dev/
+v2: https://lore.kernel.org/kvmarm/20250203183111.191519-1-oliver.upton@linux.dev/
 
-Cheers,
-Nathan
+v2 -> v3:
+ - Reorder and restructure patches to include map_pmuv3_event()
+   definition w/ KVM usage.
+ - Disallow events that lack a valid PMUv3 -> HW mapping
+ - Various minor fixes/typos
+
+Oliver Upton (14):
+  drivers/perf: apple_m1: Refactor event select/filter configuration
+  drivers/perf: apple_m1: Support host/guest event filtering
+  KVM: arm64: Compute PMCEID from arm_pmu's event bitmaps
+  KVM: arm64: Always support SW_INCR PMU event
+  KVM: arm64: Use a cpucap to determine if system supports FEAT_PMUv3
+  KVM: arm64: Drop kvm_arm_pmu_available static key
+  KVM: arm64: Use guard() to cleanup usage of arm_pmus_lock
+  KVM: arm64: Move PMUVer filtering into KVM code
+  KVM: arm64: Compute synthetic sysreg ESR for Apple PMUv3 traps
+  KVM: arm64: Advertise PMUv3 if IMPDEF traps are present
+  KVM: arm64: Remap PMUv3 events onto hardware
+  drivers/perf: apple_m1: Provide helper for mapping PMUv3 events
+  KVM: arm64: Provide 1 event counter on IMPDEF hardware
+  arm64: Enable IMP DEF PMUv3 traps on Apple M*
+
+ arch/arm64/include/asm/apple_m1_pmu.h   |   1 +
+ arch/arm64/include/asm/cpucaps.h        |   2 +
+ arch/arm64/include/asm/cpufeature.h     |  28 +----
+ arch/arm64/kernel/cpu_errata.c          |  44 ++++++++
+ arch/arm64/kernel/cpufeature.c          |  28 +++++
+ arch/arm64/kernel/image-vars.h          |   5 -
+ arch/arm64/kvm/arm.c                    |   4 +-
+ arch/arm64/kvm/hyp/include/hyp/switch.h |   4 +-
+ arch/arm64/kvm/hyp/vhe/switch.c         |  22 ++++
+ arch/arm64/kvm/pmu-emul.c               | 138 +++++++++++++++++-------
+ arch/arm64/kvm/pmu.c                    |  10 +-
+ arch/arm64/tools/cpucaps                |   2 +
+ drivers/perf/apple_m1_cpu_pmu.c         | 101 +++++++++++++----
+ include/kvm/arm_pmu.h                   |  12 +--
+ include/linux/perf/arm_pmu.h            |   4 +
+ 15 files changed, 301 insertions(+), 104 deletions(-)
+
+
+base-commit: 0ad2507d5d93f39619fc42372c347d6006b64319
+-- 
+2.39.5
+
