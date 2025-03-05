@@ -1,72 +1,118 @@
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A90D516CD1D
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 23:51:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C315207A2A;
+	Wed,  5 Mar 2025 23:53:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741218687; cv=none; b=UstIvfjb4i+u2QsS3oo8L4hFkD0n1EZNSwz7U0pxRexv6/vWu893ThbXgegxzHjk8swDfcfMMkBhqlOBeMDC856nmdncppZ/IXRhdWyAL46A47JFUF5f0SxPJSqUC2HdjO/tTFfzLjU5bgvobrTfY7uaw2kiypTiPNO545wVcYY=
+	t=1741218830; cv=none; b=L0K1Sc0veAe8tLCqWcLU5/cFaH+SNqWwTe2kAMzYG0nEq3uDG6OUEzYVVLjjYszClfQQCyqi+NsNrjySNOerlLQ25ssU87al+hiEWLmR1gwtzjI3XSdod1+Z9QZOW84YU7013VJyJ84cGqQUcANEqWQnSfiRXANORGrhmv7QNts=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741218687; c=relaxed/simple;
-	bh=EGtXC5kBwI+LGxYsg5fT3yG7Ka8j8ZrLxJ6c+D9qq1A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=C6MDj4fDX5/cBIxI52vpu0q6vpFPS7+T6BpEus5g/2IHqxCNvzBcM1Cvgbu1P95f5Co2M4w8OPUqQpObG8rgj5VqGbE1kKJMIWHxReqHCzgsecwY/fGmmCI72TctOV//OVs7Z+nKSZSp68RKZZc4S6qa9GJ2ZmjtSM+/hmtQWoQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id 347BB68BEB; Thu,  6 Mar 2025 00:51:20 +0100 (CET)
-Date: Thu, 6 Mar 2025 00:51:19 +0100
-From: Christoph Hellwig <hch@lst.de>
-To: Keith Busch <kbusch@kernel.org>
-Cc: Christoph Hellwig <hch@lst.de>, Hannes Reinecke <hare@suse.de>,
-	Sagi Grimberg <sagi@grimberg.me>,
-	Nilay Shroff <nilay@linux.ibm.com>,
-	John Meneghini <jmeneghi@redhat.com>, bmarzins@redhat.com,
-	Bryan Gurney <bgurney@redhat.com>, linux-nvme@lists.infradead.org,
-	linux-kernel@vger.kernel.org, Marco Patalano <mpatalan@redhat.com>,
-	axboe@kernel.dk
-Subject: Re: [PATCH] nvme: remove multipath module parameter
-Message-ID: <20250305235119.GB896@lst.de>
-References: <7c588344-f019-4939-8a93-0a450481d4bc@redhat.com> <Z7Sh-3yHbXVmRbNL@kbusch-mbp> <8a1730a1-1faf-4722-99e1-c3a85257b6f4@redhat.com> <Z7TARX-tFY3mnuU7@kbusch-mbp> <2ff87386-c6db-4f2e-be91-213504d99a78@linux.ibm.com> <0656b66c-dd9c-495d-b1fc-4f09e763fa66@grimberg.me> <Z7dct_AbaSO7uZ2h@kbusch-mbp> <91ae613a-7b56-4ca0-b91c-6bc1eee798b8@suse.de> <20250305141554.GA18065@lst.de> <Z8hrJ5JVqi7TgFCn@kbusch-mbp>
+	s=arc-20240116; t=1741218830; c=relaxed/simple;
+	bh=9kNx/Y9dmyuYaa9jYYDv0MT4hUIbvIKYUHEGwb0744M=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=DppKr2kHMo9a2eBrP6F76FJxMcvlT3614G/Ls9ncXPF7iSdv3AV3keSxBfo6NQ/DFSXoY0BsM8wIfN4lLkr942NPkZXzBA5umUgm1UuEMysD4cUMZXSOPD5YvnxxbBbghcwSffDbStqlVAPikcNXkSmBRpUJThP+olFi/Fej/BY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Q3lE4eoG; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q3lE4eoG"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-438a39e659cso36755e9.2;
+        Wed, 05 Mar 2025 15:53:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741218827; x=1741823627; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=sr8OyA99gxEcrXQuYqZWkpenxbkE9mbapOFjkmx5LG4=;
+        b=Q3lE4eoGR+hXXJXlpdZ2Q+BtXLnNr26Wf9t5cIf1xd2b5pAJCDLvEUclQSvpoYsxQz
+         rbZqryFyp/D3e/bczh85GLp3Rx76SYGhPKTD5N8/eF82pOqfIRl8dKoK1ACX0FXo7Kys
+         ncThP0QoKImyqDPpmzeWANEWQyHnKZ6HOHhVuAj9rgk3qjg2ZrMLefXjOEPJrKPRt/f+
+         FYVCFai9pUVd3cdg7M8FHsBnAN4dQlq6w/FJdu1rHLgfqeC5tO+69ch/LivdpXD70Tpk
+         1lxm0eWMSotKixnJJqMioahKrQEJrehee7NRIwsKESB4g4r7i89OHIZSdOQq7/nWFkA6
+         1Tjg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741218827; x=1741823627;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=sr8OyA99gxEcrXQuYqZWkpenxbkE9mbapOFjkmx5LG4=;
+        b=mkQ4nLe/3d758f1BS9/eULToAvGEJtGA8mLVR3Er5KTBYGPHEhQ/UdfposhpDPQlFw
+         J/kQzwJ+3NoI9FTYyTNYf3j6qFHf+LpfKnkk6PL6wdc1e795u+Gtit8yqOIDK014KU7z
+         2sWtaoTW1pmxZ6r0boIY3bX7zhKhU5Hf6pVbCw49fycn+L//fyRFvEUyiJRDt9L3ga4n
+         /1el5yPv8YtSYLE07S1PVQNdgxTk3NIvB9vjBnndFOQusdz0NMqr7qpqfyyu1Qw780Np
+         YqoHglNIAGvptfvy1uU/WeyMIDRcqjGLnMkYRp/sH1/H1gFBXhBh7wH1X8mOz73LRY7F
+         f7lw==
+X-Forwarded-Encrypted: i=1; AJvYcCWN3f/szNLFMqTuEE8dFbnjBWX4o5wp1/8+btWORG5QNXTaCiSpBe68sYWSo6gz5ZWYbfONWRk/Ph760n0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzY8Li63zRKOtdcophRxJ4tf0q4LN46S9Wx7nNvt+tT/aj1gIff
+	6VrmMxPGIkCL5HDN+rzdT6HoNPwVVchK3iZxzhQ9XcqvL+ugGsy2
+X-Gm-Gg: ASbGncsU2E7Hc8RiZTFbVje5z4k4/zRgT0DcRIyJKuVzXZMNnES3YtYSLcbvNnGa+IX
+	4lf/AQj5+MA1XrN4Q98SodID/7vc3PvwhBMVKX/FIhvbqtckz8fP63n1kVFXsvhctW8CepBLrIX
+	GYpgpa2xwQOCBrhudOiRM7VcEvB6+gtythRL96S4S8zr1OHDyjroCdzAT8fD0w2FkrwIwx9TTwN
+	y5dY3J3Qi6J92oKQ4dXzas58OLYleW69zw1CUbSTLQqd+HYpyzg55Zljrt3xQ742xOcpHVnlRuq
+	qey9J+ATy96UwOu97OOiazW4+ANWYzvRHMomNqt+BYfCrA==
+X-Google-Smtp-Source: AGHT+IGOCvVjVaI+2/pVJM7+aGb9FA5XuNO7nYXA3tNg7UvAjXnWkdmyPPruP4fBCgqg3QlGtZTR1g==
+X-Received: by 2002:a05:600c:5119:b0:43b:c390:b773 with SMTP id 5b1f17b1804b1-43bd29b41f8mr36153235e9.24.1741218826863;
+        Wed, 05 Mar 2025 15:53:46 -0800 (PST)
+Received: from qasdev.Home ([2a02:c7c:6696:8300:e538:5de4:1d6b:3509])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43bd42badefsm31861715e9.18.2025.03.05.15.53.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Mar 2025 15:53:46 -0800 (PST)
+From: Qasim Ijaz <qasdev00@gmail.com>
+To: davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	horms@kernel.org,
+	atenart@kernel.org,
+	jdamato@fastly.com,
+	aleksander.lobakin@intel.com
+Cc: netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] net-sysfs: fix NULL pointer dereference
+Date: Wed,  5 Mar 2025 23:53:07 +0000
+Message-Id: <20250305235307.14829-1-qasdev00@gmail.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z8hrJ5JVqi7TgFCn@kbusch-mbp>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Transfer-Encoding: 8bit
 
-On Wed, Mar 05, 2025 at 08:17:59AM -0700, Keith Busch wrote:
-> > > Plus there are some NVMe devices out there which _despite_ being PCIe do 
-> > > report NMIC and CMIC set (I won't name names, if you came across them 
-> > > you'll know)
-> > 
-> > ?????
-> > 
-> > NMIC and CMIC is perfectly normal and expected for multiported PCIe.
-> > WTF are you talking about?
-> 
-> Obviously he's not talking about multiported PCIe.
+Commit <79c61899b5ee> introduces a potential NULL pointer dereference 
+in the sysfs_rtnl_lock() function when initialising kn:
 
-Why is that obvious?  At least based on the stated works he talks about
-PCIe and not about multi-port.  The only not multiported devices I've
-seen that report NMIC and CMIC are a specific firmware so that the
-customer would get multipath behavior, which is a great workaround for
-instable heavily switched fabrics.  Note that multiported isn't always
-obvious as there are quite a few hacks using lane splitting around that
-a normal host can't really see.
+	kn = sysfs_break_active_protection(kobj, attr);
+	
+The commit overlooks the fact that sysfs_break_active_protection can 
+return NULL if kernfs_find_and_get() fails to find and get the kernfs_node 
+with the given name. 
 
-> And he's right, the
-> behavior of a PCIe hot plug is very different and often undesirable when
-> it's under native multipath.
+Later on the code calls sysfs_unbreak_active_protection(kn) 
+unconditionally, which could lead to a NULL pointer dereference.
 
-If you do actual hotplug and expect the device to go away it's indeed
-not desirable.  If you want the same device to come back after switched
-fabric issues it is so desirable that people hack to devices to get it.
-People talked about adding a queue_if_no_path-like parameter to control
-keeping the multipath node alive a lot, but no one has ever invested
-work into actually implementing it.
+Resolve this bug by introducing a NULL check before using kn
+in the sysfs_unbreak_active_protection() call.
+
+Signed-off-by: Qasim Ijaz <qasdev00@gmail.com>
+Fixes: 79c61899b5ee ("net-sysfs: remove rtnl_trylock from device attributes")
+---
+ net/core/net-sysfs.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/net/core/net-sysfs.c b/net/core/net-sysfs.c
+index 8d9dc048a548..c5085588e536 100644
+--- a/net/core/net-sysfs.c
++++ b/net/core/net-sysfs.c
+@@ -117,7 +117,8 @@ static int sysfs_rtnl_lock(struct kobject *kobj, struct attribute *attr,
+ 	 * the rtnl lock.
+ 	 */
+ unbreak:
+-	sysfs_unbreak_active_protection(kn);
++	if (kn)
++		sysfs_unbreak_active_protection(kn);
+ 	dev_put(ndev);
+ 
+ 	return ret;
+-- 
+2.39.5
+
