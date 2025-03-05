@@ -1,152 +1,278 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52DBB20E003;
-	Wed,  5 Mar 2025 10:30:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A091521147B
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 10:30:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741170621; cv=none; b=LKhc2UTz15Db8mEr2RX2hGa0rQb67aKx3LrLjMVzkBuYVdz0cCIHhc3YOEGYAGN7mhN0g/72EQVJqVXbPpAuh4xt+ZDk1n8PPACHsZLOWYTel+4s271qmoAKncvzyf0ZMSSCUVUpjLrdYODmuWfuijuyl07eodA8ayG+DZJ43Go=
+	t=1741170624; cv=none; b=IEnUzS1fKe3Sx4cSy8hIfxwdAi/wTj9k9Yp5jMIW/hHAFsqXVg6A3jpYw6Ms/PsEktcDyRZYyksDMV1Ukl1f6Kp57jmL5o9xokG/Ay9M3fVrO09TjrVRM/gw+SU7YuyHxdZ0ai54mb4p3gd7DoIDCOjBIdyz7LtKVYvP8g1dazg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741170621; c=relaxed/simple;
-	bh=nk13k6wj03cZHg9dHsnlBzPD6tzHgIxvMuOve1nbFK4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=oU5jbhscZ0p5myckuxdh5eGa5gj7fHj7TTAeaNlyW5fwcHepFn5zYHnDx/PfhRjtuUpVRb8VNUhKVlVe6+XETt1N1SzocTP9muKdt2cilXbNbe+AFWFcs+rnrTEngVcAMx96mtEZhR4qXGWop++xnfhsrWIOmKrEUZFtrKYNDqw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SGqYz3yS; arc=none smtp.client-ip=209.85.218.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SGqYz3yS"
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-abfe7b5fbe8so439083766b.0;
-        Wed, 05 Mar 2025 02:30:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741170617; x=1741775417; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZIyBMmpEX16BmxV1lcAMHYOSL+4ClOY5xXpYYnXA1xg=;
-        b=SGqYz3ySFNxI3tABxyFnHBKVpUUY+1aJdV1KS+hf2fMBKIvd0UGwgnZKJbC3U0MeXc
-         az7NzlNdnIwJjl823iRUwrX521wFmdxWYUEbdxXNg51WsNU/Ofd/JZJIyffp/3a6tUY2
-         i0Ds4xZRVpXVMw7s6X8dTMhbaHcf04hjK64xOSII3zK6smKYe8G9c5ayeOqbF7aaftPd
-         bwh/5w210cSxWRnpOKE0/LygOKDJJY+/ZXMpU8go3aj+mvC72PMWLYt7PjjrfaGM3P3T
-         R75tvfkj+yDGkLktqj5Fgij0f6lA/+/2WTOj3cLdHxMd/wxkXslm4sZaFO5E3VQ/AryK
-         VR6Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741170617; x=1741775417;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ZIyBMmpEX16BmxV1lcAMHYOSL+4ClOY5xXpYYnXA1xg=;
-        b=Oz1CTGgUNS/uj1/HHrlMy3zoQZd/JB4V46XS6b93c1FULSz3i6oIJ8XJp5ofyA5Ds0
-         jkkHuz4llSXvCfBafSVz692oMWZnxDEqm4T6HowdvCJ+UR0KKcHf6Swt5eEopZLJ1/9/
-         rj32GnPGmu3C0xMC+3PpBbTNu1g3DrZfPV9/10qOGvOVrzLqg+a4aHiLDTw167mufTqt
-         KdVUOrsz/eTR0Ze5M+QXFJiyqdciw0HisV0VJyV8HFWwZxrq/BfLc5MpZD8MGVz+kNDz
-         eoudnCByW+lMA1oX0IsgJhoBG/3qx8DDce6HR/Cq7JBfSFlfSRVPEGtmEwZq4ru0SvVy
-         Nv3A==
-X-Forwarded-Encrypted: i=1; AJvYcCUSMbz3hKlERATw6w7C/tKBb9rT5pWXLTIh4Bln4d12tERppGmg/pc8mQIrUojFs4FESqT/pAKElPYBBeEyRb0k@vger.kernel.org, AJvYcCVhid6sa+3oQBje3sndXfLdczjLvehDZTj2wi30qRKLunDilTkjNp6HgQ0JXyD3G14fEIGdQWKzfj9/kXCFOX8=@vger.kernel.org, AJvYcCWcXFdoBn9IUGG5el0D9mTaLdvoCquGNzweyeC60Q68JWWGdy3IFOGxEddU268xZhnsnBO4qq6y5CjSs9qX@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyn8eYnr/jvvUNMpi4UMv31XXRJfYhd6x1UMrXGiay2nIFWlkiW
-	vDcfV5R68Q2tRHmG2VmrNnYrzWG5RxvFyVlGNc6ytpcRcvvvOKrF
-X-Gm-Gg: ASbGncujK3jENOUhaQwYeZ/l42eYAuBxJK2OMUz6CDFeWjldUXjAfnyT3tiFHl4ofVJ
-	lvNNafw43JDXy/H+PY9aNLObxc/0ieMGPDIhOMc85WyepvxBSwtgyfVTb8xYZT2GGwII7aMpEQh
-	Z9MKfAs3FbWzTsfpGFQHEeQ8tBf6f0aRUUS/BBL5ItJP9w0r0dwQdRXfjOYeObUf3hPw1zTUXb1
-	KN8NA82x8cwj2GOxeCDDW4nXxDtiTR9B3ClYVfd/qgBa0MX5mYd7S/71+1sHyNttdJq5YI8U8LJ
-	6WKk5MduUxAjAVMFcrV8LocRBCGuh1xqzTgJgZyRn/vtRtwpSGWtsw+4B2PfBaQFPp1O4bDhi7s
-	YuJ9AZF55utkD4C/9x8//dSAAlBR145TNZUC+uJ3OMf7xAbZFs7qnPJcnuc/lSQ==
-X-Google-Smtp-Source: AGHT+IFpDcHd77fpjokL8xxmcGiwz3SLhwhSLzmlQa1UAPVTwjRjFufxV/YyrDHwyugNXvXH+p5hhQ==
-X-Received: by 2002:a05:6402:5109:b0:5e0:8b68:e2c3 with SMTP id 4fb4d7f45d1cf-5e59f4b6e02mr6129743a12.29.1741170616901;
-        Wed, 05 Mar 2025 02:30:16 -0800 (PST)
-Received: from corebook.localdomain (2001-1c00-020d-1300-1b1c-4449-176a-89ea.cable.dynamic.v6.ziggo.nl. [2001:1c00:20d:1300:1b1c:4449:176a:89ea])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac1f7161a4esm247154266b.161.2025.03.05.02.30.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Mar 2025 02:30:16 -0800 (PST)
-From: Eric Woudstra <ericwouds@gmail.com>
-To: Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Pablo Neira Ayuso <pablo@netfilter.org>,
-	Jozsef Kadlecsik <kadlec@netfilter.org>,
-	Jiri Pirko <jiri@resnulli.us>,
-	Ivan Vecera <ivecera@redhat.com>,
-	Roopa Prabhu <roopa@nvidia.com>,
-	Nikolay Aleksandrov <razor@blackwall.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Kuniyuki Iwashima <kuniyu@amazon.com>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Ahmed Zaki <ahmed.zaki@intel.com>,
-	Alexander Lobakin <aleksander.lobakin@intel.com>,
-	Vladimir Oltean <olteanv@gmail.com>,
-	"Frank Wunderlich" <frank-w@public-files.de>,
-	Daniel Golle <daniel@makrotopia.org>
-Cc: netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	netfilter-devel@vger.kernel.org,
-	coreteam@netfilter.org,
-	bridge@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	linux-hardening@vger.kernel.org,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Eric Woudstra <ericwouds@gmail.com>
-Subject: [PATCH v9 nf 11/15] netfilter: nft_flow_offload: Add DEV_PATH_MTK_WDMA to nft_dev_path_info()
-Date: Wed,  5 Mar 2025 11:29:45 +0100
-Message-ID: <20250305102949.16370-12-ericwouds@gmail.com>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <20250305102949.16370-1-ericwouds@gmail.com>
-References: <20250305102949.16370-1-ericwouds@gmail.com>
+	s=arc-20240116; t=1741170624; c=relaxed/simple;
+	bh=PAvmWz1PFQmaSlup+6X0UngFEKHUKJvNzD6IL6zjxG8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mtZnneeMVYTzyuYXCh0Wq+XfWfFiVJujX2K2lN6+ASTQI2zpBmJDeeVgdBFUcEDgkLmmp5xIx9MCqIRBZsGec0SGn5kPz50edzPzYKghapoBuPYor7Bm9E7rlE+PzeaG7piemwXI4seVx8PBJ9khuuZI8laBqiLySUMehZ97BZI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 395F9FEC;
+	Wed,  5 Mar 2025 02:30:34 -0800 (PST)
+Received: from [10.57.67.16] (unknown [10.57.67.16])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B565D3F673;
+	Wed,  5 Mar 2025 02:30:18 -0800 (PST)
+Message-ID: <6506d660-cbb6-42b6-893e-25ded19c5f11@arm.com>
+Date: Wed, 5 Mar 2025 10:30:17 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 2/2] drm/panthor: Avoid sleep locking in the internal
+ BO size path
+To: =?UTF-8?Q?Adri=C3=A1n_Larumbe?= <adrian.larumbe@collabora.com>,
+ Boris Brezillon <boris.brezillon@collabora.com>,
+ Liviu Dudau <liviu.dudau@arm.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Mihail Atanassov <mihail.atanassov@arm.com>
+Cc: kernel@collabora.com, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org
+References: <20250303190923.1639985-1-adrian.larumbe@collabora.com>
+ <20250303190923.1639985-2-adrian.larumbe@collabora.com>
+From: Steven Price <steven.price@arm.com>
+Content-Language: en-GB
+In-Reply-To: <20250303190923.1639985-2-adrian.larumbe@collabora.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-In case of using mediatek wireless, in nft_dev_fill_forward_path(), the
-forward path is filled, ending with mediatek wlan1.
+On 03/03/2025 19:08, Adrián Larumbe wrote:
+> Commit 434e5ca5b5d7 ("drm/panthor: Expose size of driver internal BO's over
+> fdinfo") locks the VMS xarray, to avoid UAF errors when the same VM is
+> being concurrently destroyed by another thread. However, that puts the
+> current thread in atomic context, which means taking the VMS' heap locks
+> will trigger a warning as the thread is no longer allowed to sleep.
+> 
+> Because in this case replacing the heap mutex with a spinlock isn't
+> feasible, the fdinfo handler no longer traverses the list of heaps for
+> every single VM associated with an open DRM file. Instead, when a new heap
+> chunk is allocated, its size is accumulated into a pool-wide tally, which
+> also makes the atomic context code path somewhat faster.
+> 
+> Signed-off-by: Adrián Larumbe <adrian.larumbe@collabora.com>
+> Fixes: 3e2c8c718567 ("drm/panthor: Expose size of driver internal BO's over fdinfo")
 
-Because DEV_PATH_MTK_WDMA is unknown inside nft_dev_path_info() it returns
-with info.indev = NULL. Then nft_dev_forward_path() returns without
-setting the direct transmit parameters.
+Reviewed-by: Steven Price <steven.price@arm.com>
 
-This results in a neighbor transmit, and direct transmit not possible.
-But we want to use it for flow between bridged interfaces.
-
-So this patch adds DEV_PATH_MTK_WDMA to nft_dev_path_info() and makes
-direct transmission possible.
-
-Reviewed-by: Nikolay Aleksandrov <razor@blackwall.org>
-Signed-off-by: Eric Woudstra <ericwouds@gmail.com>
----
- net/netfilter/nft_flow_offload.c | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/net/netfilter/nft_flow_offload.c b/net/netfilter/nft_flow_offload.c
-index 323c531c7046..b9e6d9e6df66 100644
---- a/net/netfilter/nft_flow_offload.c
-+++ b/net/netfilter/nft_flow_offload.c
-@@ -105,6 +105,7 @@ static void nft_dev_path_info(const struct net_device_path_stack *stack,
- 		switch (path->type) {
- 		case DEV_PATH_ETHERNET:
- 		case DEV_PATH_DSA:
-+		case DEV_PATH_MTK_WDMA:
- 		case DEV_PATH_VLAN:
- 		case DEV_PATH_PPPOE:
- 			info->indev = path->dev;
-@@ -117,6 +118,10 @@ static void nft_dev_path_info(const struct net_device_path_stack *stack,
- 				i = stack->num_paths;
- 				break;
- 			}
-+			if (path->type == DEV_PATH_MTK_WDMA) {
-+				i = stack->num_paths;
-+				break;
-+			}
- 
- 			/* DEV_PATH_VLAN and DEV_PATH_PPPOE */
- 			if (info->num_encaps >= NF_FLOW_TABLE_ENCAP_MAX) {
--- 
-2.47.1
+> ---
+>  drivers/gpu/drm/panthor/panthor_heap.c | 62 +++++++++++++-------------
+>  drivers/gpu/drm/panthor/panthor_mmu.c  |  8 +---
+>  2 files changed, 31 insertions(+), 39 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/panthor/panthor_heap.c b/drivers/gpu/drm/panthor/panthor_heap.c
+> index db0285ce5812..3bdf61c14264 100644
+> --- a/drivers/gpu/drm/panthor/panthor_heap.c
+> +++ b/drivers/gpu/drm/panthor/panthor_heap.c
+> @@ -97,6 +97,9 @@ struct panthor_heap_pool {
+>  
+>  	/** @gpu_contexts: Buffer object containing the GPU heap contexts. */
+>  	struct panthor_kernel_bo *gpu_contexts;
+> +
+> +	/** @size: Size of all chunks across all heaps in the pool. */
+> +	atomic_t size;
+>  };
+>  
+>  static int panthor_heap_ctx_stride(struct panthor_device *ptdev)
+> @@ -118,7 +121,7 @@ static void *panthor_get_heap_ctx(struct panthor_heap_pool *pool, int id)
+>  	       panthor_get_heap_ctx_offset(pool, id);
+>  }
+>  
+> -static void panthor_free_heap_chunk(struct panthor_vm *vm,
+> +static void panthor_free_heap_chunk(struct panthor_heap_pool *pool,
+>  				    struct panthor_heap *heap,
+>  				    struct panthor_heap_chunk *chunk)
+>  {
+> @@ -127,12 +130,13 @@ static void panthor_free_heap_chunk(struct panthor_vm *vm,
+>  	heap->chunk_count--;
+>  	mutex_unlock(&heap->lock);
+>  
+> +	atomic_sub(heap->chunk_size, &pool->size);
+> +
+>  	panthor_kernel_bo_destroy(chunk->bo);
+>  	kfree(chunk);
+>  }
+>  
+> -static int panthor_alloc_heap_chunk(struct panthor_device *ptdev,
+> -				    struct panthor_vm *vm,
+> +static int panthor_alloc_heap_chunk(struct panthor_heap_pool *pool,
+>  				    struct panthor_heap *heap,
+>  				    bool initial_chunk)
+>  {
+> @@ -144,7 +148,7 @@ static int panthor_alloc_heap_chunk(struct panthor_device *ptdev,
+>  	if (!chunk)
+>  		return -ENOMEM;
+>  
+> -	chunk->bo = panthor_kernel_bo_create(ptdev, vm, heap->chunk_size,
+> +	chunk->bo = panthor_kernel_bo_create(pool->ptdev, pool->vm, heap->chunk_size,
+>  					     DRM_PANTHOR_BO_NO_MMAP,
+>  					     DRM_PANTHOR_VM_BIND_OP_MAP_NOEXEC,
+>  					     PANTHOR_VM_KERNEL_AUTO_VA);
+> @@ -180,6 +184,8 @@ static int panthor_alloc_heap_chunk(struct panthor_device *ptdev,
+>  	heap->chunk_count++;
+>  	mutex_unlock(&heap->lock);
+>  
+> +	atomic_add(heap->chunk_size, &pool->size);
+> +
+>  	return 0;
+>  
+>  err_destroy_bo:
+> @@ -191,17 +197,16 @@ static int panthor_alloc_heap_chunk(struct panthor_device *ptdev,
+>  	return ret;
+>  }
+>  
+> -static void panthor_free_heap_chunks(struct panthor_vm *vm,
+> +static void panthor_free_heap_chunks(struct panthor_heap_pool *pool,
+>  				     struct panthor_heap *heap)
+>  {
+>  	struct panthor_heap_chunk *chunk, *tmp;
+>  
+>  	list_for_each_entry_safe(chunk, tmp, &heap->chunks, node)
+> -		panthor_free_heap_chunk(vm, heap, chunk);
+> +		panthor_free_heap_chunk(pool, heap, chunk);
+>  }
+>  
+> -static int panthor_alloc_heap_chunks(struct panthor_device *ptdev,
+> -				     struct panthor_vm *vm,
+> +static int panthor_alloc_heap_chunks(struct panthor_heap_pool *pool,
+>  				     struct panthor_heap *heap,
+>  				     u32 chunk_count)
+>  {
+> @@ -209,7 +214,7 @@ static int panthor_alloc_heap_chunks(struct panthor_device *ptdev,
+>  	u32 i;
+>  
+>  	for (i = 0; i < chunk_count; i++) {
+> -		ret = panthor_alloc_heap_chunk(ptdev, vm, heap, true);
+> +		ret = panthor_alloc_heap_chunk(pool, heap, true);
+>  		if (ret)
+>  			return ret;
+>  	}
+> @@ -226,7 +231,7 @@ panthor_heap_destroy_locked(struct panthor_heap_pool *pool, u32 handle)
+>  	if (!heap)
+>  		return -EINVAL;
+>  
+> -	panthor_free_heap_chunks(pool->vm, heap);
+> +	panthor_free_heap_chunks(pool, heap);
+>  	mutex_destroy(&heap->lock);
+>  	kfree(heap);
+>  	return 0;
+> @@ -308,8 +313,7 @@ int panthor_heap_create(struct panthor_heap_pool *pool,
+>  	heap->max_chunks = max_chunks;
+>  	heap->target_in_flight = target_in_flight;
+>  
+> -	ret = panthor_alloc_heap_chunks(pool->ptdev, vm, heap,
+> -					initial_chunk_count);
+> +	ret = panthor_alloc_heap_chunks(pool, heap, initial_chunk_count);
+>  	if (ret)
+>  		goto err_free_heap;
+>  
+> @@ -342,7 +346,7 @@ int panthor_heap_create(struct panthor_heap_pool *pool,
+>  	return id;
+>  
+>  err_free_heap:
+> -	panthor_free_heap_chunks(pool->vm, heap);
+> +	panthor_free_heap_chunks(pool, heap);
+>  	mutex_destroy(&heap->lock);
+>  	kfree(heap);
+>  
+> @@ -389,6 +393,7 @@ int panthor_heap_return_chunk(struct panthor_heap_pool *pool,
+>  			removed = chunk;
+>  			list_del(&chunk->node);
+>  			heap->chunk_count--;
+> +			atomic_sub(heap->chunk_size, &pool->size);
+>  			break;
+>  		}
+>  	}
+> @@ -466,7 +471,7 @@ int panthor_heap_grow(struct panthor_heap_pool *pool,
+>  	 * further jobs in this queue fail immediately instead of having to
+>  	 * wait for the job timeout.
+>  	 */
+> -	ret = panthor_alloc_heap_chunk(pool->ptdev, pool->vm, heap, false);
+> +	ret = panthor_alloc_heap_chunk(pool, heap, false);
+>  	if (ret)
+>  		goto out_unlock;
+>  
+> @@ -560,6 +565,8 @@ panthor_heap_pool_create(struct panthor_device *ptdev, struct panthor_vm *vm)
+>  	if (ret)
+>  		goto err_destroy_pool;
+>  
+> +	atomic_add(pool->gpu_contexts->obj->size, &pool->size);
+> +
+>  	return pool;
+>  
+>  err_destroy_pool:
+> @@ -594,8 +601,10 @@ void panthor_heap_pool_destroy(struct panthor_heap_pool *pool)
+>  	xa_for_each(&pool->xa, i, heap)
+>  		drm_WARN_ON(&pool->ptdev->base, panthor_heap_destroy_locked(pool, i));
+>  
+> -	if (!IS_ERR_OR_NULL(pool->gpu_contexts))
+> +	if (!IS_ERR_OR_NULL(pool->gpu_contexts)) {
+> +		atomic_sub(pool->gpu_contexts->obj->size, &pool->size);
+>  		panthor_kernel_bo_destroy(pool->gpu_contexts);
+> +	}
+>  
+>  	/* Reflects the fact the pool has been destroyed. */
+>  	pool->vm = NULL;
+> @@ -605,27 +614,16 @@ void panthor_heap_pool_destroy(struct panthor_heap_pool *pool)
+>  }
+>  
+>  /**
+> - * panthor_heap_pool_size() - Calculate size of all chunks across all heaps in a pool
+> - * @pool: Pool whose total chunk size to calculate.
+> + * panthor_heap_pool_size() - Get a heap pool's total size
+> + * @pool: Pool whose total chunks size to return
+>   *
+> - * This function adds the size of all heap chunks across all heaps in the
+> - * argument pool. It also adds the size of the gpu contexts kernel bo.
+> - * It is meant to be used by fdinfo for displaying the size of internal
+> - * driver BO's that aren't exposed to userspace through a GEM handle.
+> + * Returns the aggregated size of all chunks for all heaps in the pool
+>   *
+>   */
+>  size_t panthor_heap_pool_size(struct panthor_heap_pool *pool)
+>  {
+> -	struct panthor_heap *heap;
+> -	unsigned long i;
+> -	size_t size = 0;
+> -
+> -	down_read(&pool->lock);
+> -	xa_for_each(&pool->xa, i, heap)
+> -		size += heap->chunk_size * heap->chunk_count;
+> -	up_read(&pool->lock);
+> -
+> -	size += pool->gpu_contexts->obj->size;
+> +	if (!pool)
+> +		return 0;
+>  
+> -	return size;
+> +	return atomic_read(&pool->size);
+>  }
+> diff --git a/drivers/gpu/drm/panthor/panthor_mmu.c b/drivers/gpu/drm/panthor/panthor_mmu.c
+> index 8c6fc587ddc3..12a02e28f50f 100644
+> --- a/drivers/gpu/drm/panthor/panthor_mmu.c
+> +++ b/drivers/gpu/drm/panthor/panthor_mmu.c
+> @@ -1963,13 +1963,7 @@ void panthor_vm_heaps_sizes(struct panthor_file *pfile, struct drm_memory_stats
+>  
+>  	xa_lock(&pfile->vms->xa);
+>  	xa_for_each(&pfile->vms->xa, i, vm) {
+> -		size_t size = 0;
+> -
+> -		mutex_lock(&vm->heaps.lock);
+> -		if (vm->heaps.pool)
+> -			size = panthor_heap_pool_size(vm->heaps.pool);
+> -		mutex_unlock(&vm->heaps.lock);
+> -
+> +		size_t size = panthor_heap_pool_size(vm->heaps.pool);
+>  		stats->resident += size;
+>  		if (vm->as.id >= 0)
+>  			stats->active += size;
 
