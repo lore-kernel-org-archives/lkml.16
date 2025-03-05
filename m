@@ -1,118 +1,119 @@
-Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com [209.85.128.174])
+Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EBDF84D02
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 14:54:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0CBB24EAB6
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 14:54:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741186442; cv=none; b=P0JGTlLC1NdIFtF9fLC04UINg099lSVjKeRtC37iH4RzBw6XiT3F7XSalfKYzWPTHtbIF/3JUefVtBzqbTs/KebOI5V+9iaok/dxTLc2n23WvQ9c6Mj8rCrjk6qwRpjQSFmYRjmAotTZurC4NwGwxhcSVLcq3DMkHdRagh34974=
+	t=1741186448; cv=none; b=SHgVXlg4XmkYW4oKdHvNOpkRWIcYVl+mSnq4lDehPgkUJ+QHSPwve1ajXO9ed6bfzCDLjv7Q30mWBtPRQaVMqwE7871cKGf7Sfnns0uK1GsRhRpRahh/dsDnOM3IKNDiYTRxzINng7rG7fCo/IAWQSgPgb5T/mivqWGQLN+9GlM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741186442; c=relaxed/simple;
-	bh=jTkplcEsWFR/ytitWc/gZ9Jgm54mf9GXdauo+Q8kRBM=;
+	s=arc-20240116; t=1741186448; c=relaxed/simple;
+	bh=WwcEMSxxHLOGH9XJtwTKimEYpC2lcD67Srx1N2R9Nj8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JpTj9K4tQykRzXdf2INJavu6N+O2p/AVfyqywYKwtiNo8vWkRwe3Z3LBMOsUXzVk1QB5cGSK11VGJuRMDW0TaM+EYHXL609meFM+Lhu9ChsOZQlxFCZzegS53Z9gRBmR3XHHB5fJaiU1kS9vv03hc2TeLgXq1rySUjXg1y9pwVA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Y/FodS+J; arc=none smtp.client-ip=209.85.128.174
+	 To:Cc:Content-Type; b=GXOMS+Z7kSIYRUmXaYGieICnJ1l6WcwbMPjpEe2LW7DEr7492iQvWadS6Njmw0pypVJgcf/S4H7SVCXFjLn2TamKjkUFKnfpZlSVTMWRSqdI1Fz5rVOSGSGJtoZa/ItG3SUB9olbZMHC4kckbXMxkOuYJ7P+XbGRgrm1tcloZPQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=WYWrzSbi; arc=none smtp.client-ip=209.85.128.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Y/FodS+J"
-Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-6fd2587d059so42602057b3.3
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Mar 2025 06:54:00 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WYWrzSbi"
+Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-6fd2fca1cebso43706217b3.0
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Mar 2025 06:54:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741186440; x=1741791240; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1741186445; x=1741791245; darn=vger.kernel.org;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=/8e1NK0iHuTNXsrRQMu1Rap5op5xIoO/iE7QbD4E6K4=;
-        b=Y/FodS+J30C868V4Ywnu/qvS5RyRM7GvU7UH3gxg4aosQS+35Zz9gGhTj2bA6QY/hN
-         hJbLf3cd8k/mKfoFIxt1cCy2kSG4X5l2s+0SZaCJERv4LDnn2hvsQZ1LpYF/LKMOzaPw
-         ztnyU8DtXbnanSy5Q/7eI9f8ysQ0Qmp+8SRkie3HJZRaANHFXkN6hn048lfRNcRKYU0a
-         rQQbmtW54mUdVjEL0UbXrLYZ/9r90/g8PWZ5J8thB/to1Rzq8yxvYbSVQzIXlkT5Gnk6
-         bkWz+lP3PwtZ559klAsS1zpTSqTDk8fLgODAUh3uCXYBqWpZSUFWgKuK2aruAZr4Pteg
-         jgog==
+        bh=VeNLwaFo16zfbUMvLDVk5OOLd3X39XkqYnX5zvlPNF0=;
+        b=WYWrzSbiP/d/yY1ksRcSJUCn4y1DK7lmTatxizCLzUldPJ7vvnQ01CzaKgrxKxFX8h
+         MbI719Agtv6mPco3dXZ8ACO04azQY4Aj0a7SZuZep8w7Bqqc9EHJEPyPl9ZJ3e6JZe3Z
+         1tTH2dGEYwmlXfQTkexaosnP0NQvgEUpSu9eupcE0cTxfbd9Li9bIkROisDlMIFdRlJY
+         Ieyyp0hTpwhP6Q6hrRkOn9/T+tSY8Ma1EeQ3BmJlu6SWXDzK2jPIGfk2dKTKY7UU1yh/
+         vsv05aTb+JzTZWUyn1gKlJ3MQkpDd1FxMIZFca2HRst8Ns8/38dXgaqA0VQMKLDBfDZs
+         jZhA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741186440; x=1741791240;
+        d=1e100.net; s=20230601; t=1741186445; x=1741791245;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=/8e1NK0iHuTNXsrRQMu1Rap5op5xIoO/iE7QbD4E6K4=;
-        b=T3+K/AaFv5m0XvvjayQfJolfYIcVY31JXJqHqsig4W4g2iMprbeMf/MN6WyJ3ANOE8
-         XOVkFx5e9IlmK+i40EPKhOzMVb6SSkE0YjERuQDzJGtUk4dDkY/QEdfOFKNB7VzPAPYG
-         UOnJRy57K0Igl6C7uQnA2i2Jw4JhRFyI9yceTVjq2PixtO0u5t5uTMvuon0udAIEWcvg
-         A29HxRPd30V+Pyo8sonV5NCH19YveiPdxUKldYrn37G22vZ3+9yDjWXHvb6wQSN9H+JZ
-         lPqnTWzg6m5CbY6gg1p0YqeUmrN6oTGGCtfP7Ai6eQpr+ck0vmfJEuwGCjrbiuAjUR3f
-         +/7Q==
-X-Forwarded-Encrypted: i=1; AJvYcCX5OWHn51l3WpaTiLnvtbOxvyAvPHW33cLAQU6jF4rurhtyVKS5/THpc9mdpYXJw2F4oXqVq5uWRZKY0Xo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzlWfSKu9/AESoj8+fPMpr1o9LIVS4ElfFIK4FUOsDsyExkKAQG
-	DQIFMgYkNdcV1/eYoBzjugx9r61rHUaG9IF4yhFDMojtm8o2EmJemMt/42MZDgi3JhaYENBTqw1
-	Yc0PtFPBsMncP9Y9vbwxvk1O/mJ6zABQM9Doxyw==
-X-Gm-Gg: ASbGncucQJoRh+ykdDy/HGWMgQrXpFGlRkCp7K9qe6+BHJpBBUuZb9849GL/F56FCl+
-	MR0gTPLMHhLdNJCsH1jmx8NLekqWBEQPmkcZGU/LqgH235qAIxJjndwHqsFAJj7LUu/j4sV6zWZ
-	mGrEF8Oje3ZfmLHlzKXbaYr5O42MI=
-X-Google-Smtp-Source: AGHT+IHVMDgrxpiMAMts0+d6pAHMmbs+DKlyOlsJcQRgBdUnM1Arh/L/Y1HIIcETYwiUqxFlkWz35mNO77MdJGM7YEc=
-X-Received: by 2002:a05:690c:750d:b0:6f9:e609:6a4b with SMTP id
- 00721157ae682-6fda30be95dmr42050127b3.23.1741186440140; Wed, 05 Mar 2025
- 06:54:00 -0800 (PST)
+        bh=VeNLwaFo16zfbUMvLDVk5OOLd3X39XkqYnX5zvlPNF0=;
+        b=QVr3ZgnT1lJD3z/5Rauo9++zvXLbQHZY9o8E1C7Opgc1CjPfId54nOyrJhEcEa4SJW
+         qBYkT8iicDMxtLpGASfQM045OpeEGOeB5trCnfa7lPxbDQ0+gOT70j8nme04k+DzvEqs
+         O521ePmQuom3VJ0iN8ELno3xFcYiDNe0S/9+dBCBq3bJdLjCdcYctqo86teeqHu1gSPD
+         yYbIHiYC3uzxP/KmCGypyBmkh/HXzxqpD3plg5NsYsM61LtBKgd81xjRxHycEN0x5ebo
+         sG8lEWiOi3Kc0vUfXiafXU4BeOtuHEbqX7Zei65lp4TiN0uQ7ftJdzaaWEYFgDyrYcOr
+         hXoA==
+X-Forwarded-Encrypted: i=1; AJvYcCWdPL2ac4/1Uj0JXhyjgEJ+eFPPwznwNMoa4mCD55ZVt4iJSn7V35YbyirGh3S1yfUEafDo8XGYZzaQblM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyNHM1MWSXzOAYi5NS50DSm5onbhC3q3h1ZURGGujMBMzVRlqVk
+	+d1T/uh8Vy9CxjzuZ7qWlkKwgOoxk41517uGde4PHxeO6MnSxwlsEe7M8K9jSpQ9WGcMfxRsE4C
+	HyVeTNATupWfvJkRHibsAAIwMlMXmhSmj4F565g==
+X-Gm-Gg: ASbGncvaGN4uj1Ry2gLM+EfMqENjYHzLptxpt6d+EjfL9i5NixEDIZcaMpxmFJL4NGc
+	63zlDfuGA5AgSpdse3Xq/oacYJtzsFxhyTJwI8VGyfmwUNE7VPegRX28RGlK6lNcSq751g3FSNu
+	EqjqKpsbCF5q5OpDo/P4PHR0Zxxvg=
+X-Google-Smtp-Source: AGHT+IHaRzLfs4e0s/mjCkKbOX/Qq8AuRys4/xKKYjDcoyyp0XIFqNuIteg7ybYGY5j3p+l87FS/VuOkxSFDK6iD0FQ=
+X-Received: by 2002:a05:690c:3749:b0:6fb:b78a:c0e5 with SMTP id
+ 00721157ae682-6fda310bbf6mr42777697b3.28.1741186444835; Wed, 05 Mar 2025
+ 06:54:04 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250304142803.689201-1-arnd@kernel.org>
-In-Reply-To: <20250304142803.689201-1-arnd@kernel.org>
+References: <20250303-fix-t7-pwrc-v1-1-b563612bcd86@amlogic.com>
+In-Reply-To: <20250303-fix-t7-pwrc-v1-1-b563612bcd86@amlogic.com>
 From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Wed, 5 Mar 2025 15:53:24 +0100
-X-Gm-Features: AQ5f1Jop9maVmyVlQa4pDNjDZNA9U2rexGCX4_vVPocLK9GIMh5i3XadhUynJ5Y
-Message-ID: <CAPDyKFo79xyTOKxN7A52J2Et50++fifdosUpyb2mm3NMc+EC1Q@mail.gmail.com>
-Subject: Re: [PATCH] pmdomain: rockchip: add regulator dependency
-To: Arnd Bergmann <arnd@kernel.org>
-Cc: Heiko Stuebner <heiko@sntech.de>, Sebastian Reichel <sebastian.reichel@collabora.com>, 
-	Arnd Bergmann <arnd@arndb.de>, linux-pm@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, 
+Date: Wed, 5 Mar 2025 15:53:29 +0100
+X-Gm-Features: AQ5f1JpdUfHmjKXFkOL_14EaaLzX4OU9jP-SAbgoA1LHg0Ze3bkxnPXr7Krf_aI
+Message-ID: <CAPDyKFoTBt4g=M1rHrZEPLO1y61csy3_cHfJDANPbvV+bH+YXw@mail.gmail.com>
+Subject: Re: [PATCH] pmdomain: amlogic: fix T7 ISP secpower
+To: xianwei.zhao@amlogic.com
+Cc: Neil Armstrong <neil.armstrong@linaro.org>, Kevin Hilman <khilman@baylibre.com>, 
+	Jerome Brunet <jbrunet@baylibre.com>, 
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>, linux-pm@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, 
 	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-On Tue, 4 Mar 2025 at 15:28, Arnd Bergmann <arnd@kernel.org> wrote:
+On Mon, 3 Mar 2025 at 10:06, Xianwei Zhao via B4 Relay
+<devnull+xianwei.zhao.amlogic.com@kernel.org> wrote:
 >
-> From: Arnd Bergmann <arnd@arndb.de>
+> From: Xianwei Zhao <xianwei.zhao@amlogic.com>
 >
-> When CONFIG_REGULATOR is disabled, this pmdomain driver fails to build:
+> ISP and MIPI_ISP, these two have a parent-child relationship,
+> ISP depends on MIPI_ISP.
 >
-> drivers/pmdomain/rockchip/pm-domains.c:653:30: error: implicit declaration of function 'devm_of_regulator_get'; did you mean 'devm_regulator_get'? [-Wimplicit-function-declaration]
->   653 |                 pd->supply = devm_of_regulator_get(pmu->dev, pd->node, "domain");
->       |                              ^~~~~~~~~~~~~~~~~~~~~
->       |                              devm_regulator_get
-> drivers/pmdomain/rockchip/pm-domains.c:653:28: error: assignment to 'struct regulator *' from 'int' makes pointer from integer without a cast [-Wint-conversion]
->   653 |                 pd->supply = devm_of_regulator_get(pmu->dev, pd->node, "domain");
->       |                            ^
->
-> Add a Kconfig dependency.
->
-> Fixes: db6df2e3fc16 ("pmdomain: rockchip: add regulator support")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> Fixes: ca75e4b214c6 ("pmdomain: amlogic: Add support for T7 power domains controller")
+> Signed-off-by: Xianwei Zhao <xianwei.zhao@amlogic.com>
 
-Applied for next, thanks!
+Applied for fixes and by adding a stable tag, thanks!
 
 Kind regards
 Uffe
 
 
 > ---
->  drivers/pmdomain/rockchip/Kconfig | 1 +
->  1 file changed, 1 insertion(+)
+>  drivers/pmdomain/amlogic/meson-secure-pwrc.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> diff --git a/drivers/pmdomain/rockchip/Kconfig b/drivers/pmdomain/rockchip/Kconfig
-> index 7e4f9b628f0b..218d43186e5b 100644
-> --- a/drivers/pmdomain/rockchip/Kconfig
-> +++ b/drivers/pmdomain/rockchip/Kconfig
-> @@ -5,6 +5,7 @@ config ROCKCHIP_PM_DOMAINS
->         bool "Rockchip generic power domain"
->         depends on PM
->         depends on HAVE_ARM_SMCCC_DISCOVERY
-> +       depends on REGULATOR
->         select PM_GENERIC_DOMAINS
->         help
->           Say y here to enable power domain support.
+> diff --git a/drivers/pmdomain/amlogic/meson-secure-pwrc.c b/drivers/pmdomain/amlogic/meson-secure-pwrc.c
+> index 42ce41a2fe3a..ff76ea36835e 100644
+> --- a/drivers/pmdomain/amlogic/meson-secure-pwrc.c
+> +++ b/drivers/pmdomain/amlogic/meson-secure-pwrc.c
+> @@ -221,7 +221,7 @@ static const struct meson_secure_pwrc_domain_desc t7_pwrc_domains[] = {
+>         SEC_PD(T7_VI_CLK2,      0),
+>         /* ETH is for ethernet online wakeup, and should be always on */
+>         SEC_PD(T7_ETH,          GENPD_FLAG_ALWAYS_ON),
+> -       SEC_PD(T7_ISP,          0),
+> +       TOP_PD(T7_ISP,          0, PWRC_T7_MIPI_ISP_ID),
+>         SEC_PD(T7_MIPI_ISP,     0),
+>         TOP_PD(T7_GDC,          0, PWRC_T7_NIC3_ID),
+>         TOP_PD(T7_DEWARP,       0, PWRC_T7_NIC3_ID),
+>
+> ---
+> base-commit: 73e4ffb27bb8a093d557bb2dac1a271474cca99c
+> change-id: 20250303-fix-t7-pwrc-f33650b190ef
+>
+> Best regards,
 > --
-> 2.39.5
+> Xianwei Zhao <xianwei.zhao@amlogic.com>
+>
 >
