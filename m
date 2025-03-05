@@ -1,183 +1,94 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BAEB248860
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 13:04:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76BC824887F
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 13:04:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741179847; cv=none; b=m4hSmvjjmCXmOHri7oJyY3QcH2o9jmC8Ty2tPREtnUJFww5571vEUFdirVMy97iQRTYvBM1U2zbfiZ86lqpJYunDgmtC6oKtNplrALohYJEmtp0fh79dcf2ggzPHanegi/TG060qPihp14xl+z/MGncuNlnFyGNiZ7vxhiq80Tk=
+	t=1741179889; cv=none; b=PoqGyw9eVC8HeGNZJ5V5dVldw6Bczpe8AXVTuYbWPlk3TFMu7z3wI9OHOU5inNXbXsrHUQ+9nJgKbXHvoEt+lr3tek/nQK1CfMujpjxdc3EtCsF//si2UCxHEDWDN9cXj9o9QjLwFsNVyOjm78Cs+To5T4Xn+SnyVxJzgSnPAso=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741179847; c=relaxed/simple;
-	bh=d2G3CW84w/M9hF4/KFmE43z5KE1aWPCuGSkwntVryh8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ciOQNJqjYDuJuaNCWPiINNfnKh9B9RJjpJ/cqCerUi3Mja7Vp3pIxLBhRnd+8VJUSAjcXur/5pUiH+/4sSvjo7A4fWplqZ8TWIT/Z4cgMKXx8amfBkrnQPh5m8rHSr4ljlmiNg2Nn1q89Qzse0AEWPFrZd8m/rkkcSkG4WXcErg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DWkZAZ8Q; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1741179889; c=relaxed/simple;
+	bh=DzBcMuFqH6/qJ8HVhlls1y5BLnv+1fAdT2v63b3yASg=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=AIb9A6SSXScsZNl8TbQZeZVtChAAUr6gjuv3reXn6XZWg7PSpu5TsOLU7AuBCKsQAFWZz06RrKpr8YIoGPoe1OQar5y3HY/IzirWwdN6LnB93/MHZYfdWcHmte05E8HG+oiyxcgB/G0R+8ldrYvNhsf14ZG4DbRE5+zFMI2D0as=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=jsEXxU28; arc=none smtp.client-ip=217.70.183.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DWkZAZ8Q"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1741179844;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="jsEXxU28"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 26E0A440EC;
+	Wed,  5 Mar 2025 13:04:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1741179880;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=3vebGEkglLbQGNvLgWBY01sr8S/XdHoDaZpIyllA6Xw=;
-	b=DWkZAZ8Q7UKbjE5MjeYsum3n8BasUNE8l3xptIbAzx0R2rNOkzoVhA7InP+qZLNVae/RJI
-	i4UlKaykfv3h0XKXZT4eunUyiKfVHr3wg4VSp4aJzcy0+DiS91rPggm01YXzTdqJchu4Yp
-	GrR/ZoFbcpCqDGEgT+cgn9gwI/eBkMU=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-680-nMrrJipLOP2lh3M7pgBGpA-1; Wed, 05 Mar 2025 08:04:03 -0500
-X-MC-Unique: nMrrJipLOP2lh3M7pgBGpA-1
-X-Mimecast-MFC-AGG-ID: nMrrJipLOP2lh3M7pgBGpA_1741179842
-Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-abf5fc8f157so155273766b.1
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Mar 2025 05:04:02 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741179841; x=1741784641;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=3vebGEkglLbQGNvLgWBY01sr8S/XdHoDaZpIyllA6Xw=;
-        b=Huck6dQTI560ncircF2s8bpjm8xs8YY6cUnkdM+NTy0wrTIb6GQZBynGArroHwrGIY
-         wJv+DbwPcuOLR1VpmyY7sd+yMTxDR+SrGegPwaAxIFpTvjdzrnkkxkNw2lBQvUd6t+mo
-         /6WB/3sAmJd/ipIPgo/GtmCwgd2IZTcBAuAqARv2dWFnVAk9Exv8GOzfLEGpPyHGxgWS
-         gmTlUv+LmApfCBUN5pDhMbjjCVwwhVkJ7bKV9ClTREHkoRFEzuGdeA42aC+V2VqoY9+l
-         UkeM5mL/LSgEpWNY4fPbFe25K848tU2ltUJgJ+D6U4kN6B5X10aW/CXfdyE4jleJm/1m
-         +ArA==
-X-Forwarded-Encrypted: i=1; AJvYcCV4kDbEBg8x7a0MpauoUMc6sP4GObJEGsQ/Ws/l3LmCNOm9AG4JlIRPEjeIvuIDd+7TxqvLk/M/qD6MJSM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxsGV6r4Rdbl/JZAzBgTg3XCdHbGn2saFNCunRNbX1lLB5+VN5P
-	gJALlWhRdhbpCsd0qI97Z0kP/+lukx7At1i8PafMq5EgwSaQpHbyKRP2GBAxsCHZZ4a9QzT1MRK
-	B2YNKloJqr03f0BIGvfDhAhGXrB3OPwVbZhjl1os/MHnqTyqzsjw12WVL7GEGPMWezh/GkA==
-X-Gm-Gg: ASbGncvtaZvEIufrrILc90EarqT4CBttSFQ9EFm2nbFREMalGDg8CHhZvUovP8Uo8ve
-	sfmW8CkJwhuUcIPu6Fc5690lhKdOYFl+CPFm8gNlO5ZHC8YsbK13+ivORKQPMbbRJgCYeWbuqAP
-	UD0oVGNiLV1pA2Xvywt6iYyw7XFE9OW+2MMcdpUUNcum4Y6zd/XMOk6hznfXyUmCe0PdFiyIn4J
-	D5Ae82G+hhYUCHKh0XeKXFCrQ6V7hCJQAEhuhaq9E3+LYRYgu6H2OmgeYO3sVhKdZys95KU22oT
-	DXv/TBdmCNctVI3u8OTosH/VH6noq2m67AxNBPxxUe+1pdFne7RyP7go4lWhg/Pobl3pVWbzS8C
-	eVZKg/MdJFOB5XkrSbWmeVmNj5hzhMkBGQ2Gi7QOxMHHl8NPNshrD/d6cttYifqoE0g==
-X-Received: by 2002:a17:906:f587:b0:ac1:e1e1:1f37 with SMTP id a640c23a62f3a-ac20da4dd5cmr312299266b.10.1741179840715;
-        Wed, 05 Mar 2025 05:04:00 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFShHr2LzuqsAOqeJKefXa4r4HekaqcNv8nbDoeC6x2QQgLvVFTiX5O/hrBMPa48LhX9b89vg==
-X-Received: by 2002:a17:906:f587:b0:ac1:e1e1:1f37 with SMTP id a640c23a62f3a-ac20da4dd5cmr312284866b.10.1741179839394;
-        Wed, 05 Mar 2025 05:03:59 -0800 (PST)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abf7b3882dfsm498864766b.143.2025.03.05.05.03.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 05 Mar 2025 05:03:58 -0800 (PST)
-Message-ID: <2897ce12-bb32-4445-b7ed-0a835e089f03@redhat.com>
-Date: Wed, 5 Mar 2025 14:03:58 +0100
+	bh=a5cKEtirGP0Rs6xzOYVU1k4mOvhjvDHY1CUqXTEhlOU=;
+	b=jsEXxU282Zw46sinma0efR/mPTZgANVomjhkHqlfO1cy+Idd/VmHwO3ZQKP87d7UdnhiKh
+	asJRJT4AtKRNZDxgTtQ4oJ/bc0/cBgDsw//8oPtdoCglq/ZUl41+VD11WoYvDKm8UIs9ER
+	rwVnSM69MG20kE55V/6Vn/I8Gw3B0ti78t7wpW6W87p8W30UuR++NWbKmiSVNdXQxSr9HZ
+	598TXzrMGMEYaR0MLrvlqcbXsoNN3/TP/42z2kTsbcHMD0PRAuFqV1p08JlXqJ7AxeqhkC
+	7ix78TvKNnLgGbmcsgcWazsoIBvp9PJ3bsOLqPvi0YhAvLfyN5CU7NIIWucFxA==
+Date: Wed, 5 Mar 2025 14:04:36 +0100
+From: Luca Ceresoli <luca.ceresoli@bootlin.com>
+To: Maxime Ripard <mripard@kernel.org>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann
+ <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter
+ <simona@ffwll.ch>, Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong
+ <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, Laurent
+ Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman
+ <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, Douglas
+ Anderson <dianders@chromium.org>, Herve Codina <herve.codina@bootlin.com>,
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, Dmitry
+ Baryshkov <dmitry.baryshkov@linaro.org>
+Subject: Re: [PATCH v5 01/16] drm/bridge: Add encoder parameter to
+ drm_bridge_funcs.attach
+Message-ID: <20250305140436.2903b88d@booty>
+In-Reply-To: <20250304-bridge-connector-v5-1-aacf461d2157@kernel.org>
+References: <20250304-bridge-connector-v5-0-aacf461d2157@kernel.org>
+	<20250304-bridge-connector-v5-1-aacf461d2157@kernel.org>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] media: uvcvideo: Enable full UVC metadata for all devices
-To: Ricardo Ribalda <ribalda@chromium.org>,
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, linux-media@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250226-uvc-metadata-v1-1-6cd6fe5ec2cb@chromium.org>
- <c6ab8640-d96c-4a71-929a-a4ad6bb2647d@redhat.com>
- <20250303151346.GC32048@pendragon.ideasonboard.com>
- <1436dc95-68a6-456d-ab5d-117c7791ec48@redhat.com>
- <20250303161059.GA23684@pendragon.ideasonboard.com>
- <CANiDSCux1whD3yF+mPayajU6imE4t8yjtzeAjrpLPhqyLRc4OA@mail.gmail.com>
-Content-Language: en-US, nl
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <CANiDSCux1whD3yF+mPayajU6imE4t8yjtzeAjrpLPhqyLRc4OA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddutdegkeekucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtjeertdertddvnecuhfhrohhmpefnuhgtrgcuvegvrhgvshholhhiuceolhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepgeelffefgfehhfdtvdefueefieevkefggfelkeeiudetkeektedvhedukefgvddvnecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppedvrgdtvdemieejtdemvddtvddtmegvrgdtudemsggvgedumeelhegvjeemfeegfeemledufegvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddvmeeijedtmedvtddvtdemvggrtddumegsvgegudemleehvgejmeefgeefmeeludefvgdphhgvlhhopegsohhothihpdhmrghilhhfrhhomheplhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudeipdhrtghpthhtohepmhhrihhprghrugeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepmhgrrghrthgvnhdrlhgrnhhkhhhorhhstheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehtiihimhhmvghrmhgrn
+ hhnsehsuhhsvgdruggvpdhrtghpthhtoheprghirhhlihgvugesghhmrghilhdrtghomhdprhgtphhtthhopehsihhmohhnrgesfhhffihllhdrtghhpdhrtghpthhtoheprghnughriigvjhdrhhgrjhgurgesihhnthgvlhdrtghomhdprhgtphhtthhopehnvghilhdrrghrmhhsthhrohhngheslhhinhgrrhhordhorhhgpdhrtghpthhtoheprhhfohhssheskhgvrhhnvghlrdhorhhg
+X-GND-Sasl: luca.ceresoli@bootlin.com
 
-Hi,
+On Tue, 04 Mar 2025 12:10:44 +0100
+Maxime Ripard <mripard@kernel.org> wrote:
 
-On 3-Mar-25 5:22 PM, Ricardo Ribalda wrote:
-> On Mon, 3 Mar 2025 at 17:11, Laurent Pinchart
-> <laurent.pinchart@ideasonboard.com> wrote:
->>
->> On Mon, Mar 03, 2025 at 04:43:50PM +0100, Hans de Goede wrote:
->>> On 3-Mar-25 16:13, Laurent Pinchart wrote:
->>>> On Mon, Mar 03, 2025 at 03:47:51PM +0100, Hans de Goede wrote:
->>>>> On 26-Feb-25 14:00, Ricardo Ribalda wrote:
->>>>>> The UVC driver provides two metadata types V4L2_META_FMT_UVC, and
->>>>>> V4L2_META_FMT_D4XX. The only difference between the two of them is that
->>>>>> V4L2_META_FMT_UVC only copies PTS, SCR, size and flags, and
->>>>>> V4L2_META_FMT_D4XX copies the whole metadata section.
->>>>>>
->>>>>> Now we only enable V4L2_META_FMT_D4XX for the Intel D4xx family of
->>>>>> devices, but it is useful for any device where vendors include other
->>>>>> metadata, such as the one described by Microsoft:
->>>>>> - https://learn.microsoft.com/en-us/windows-hardware/drivers/stream/mf-capture-metadata
->>>>>>
->>>>>> This patch removes the UVC_INFO_META macro and enables
->>>>>> V4L2_META_FMT_D4XX for every device. It also updates the documentation
->>>>>> to reflect the change.
->>>>>>
->>>>>> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
->>>>>
->>>>> Thanks, patch looks good to me:
->>>>>
->>>>> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
->>>>
->>>> I don't quite agree, sorry.
->>>>
->>>> The reason why the current mechanism has been implemented this way is to
->>>> ensure we have documentation for the metadata format of devices that
->>>> expose metadata to userspace.
->>>>
->>>> If you want to expose the MS metadata, you can create a new metadata
->>>> format for that, and enable it on devices that implement it.
->>>
->>> Looking at the long list of quirks this removes just for the D4xx
->>> cameras I do not believe that having quirked based relaying of
->>> which metadata fmt is used to userspace is something which scales
->>> on the long term. Given the large amount of different UVC cameras
->>> I really think we should move the USB VID:PID -> metadata format
->>> mapping out of the kernel.
->>
->> If we can find a solution to ensure the metadata format gets documented,
->> sure.
+> The drm_bridge structure contains an encoder pointer that is widely used
+> by bridge drivers. This pattern is largely documented as deprecated in
+> other KMS entities for atomic drivers.
 > 
-> MS default metadata is already documented:
-> https://learn.microsoft.com/en-us/windows-hardware/drivers/stream/mf-capture-metadata
+> However, one of the main use of that pointer is done in attach to just
+> call drm_bridge_attach on the next bridge to add it to the bridge list.
+> While this dereferences the bridge->encoder pointer, it's effectively
+> the same encoder the bridge was being attached to.
 > 
-> I would not worry too much about vendors abusing the metadata for
-> custom magic if that is your concern.
-> This would not work with Windows default driver, and that is what most
-> camera modules are tested against.
+> We can make it more explicit by adding the encoder the bridge is
+> attached to to the list of attach parameters. This also removes the need
+> to dereference bridge->encoder in most drivers.
 > 
-> 
->>
->> When it comes to the MS metadata format, if I recall correctly, Ricardo
->> said there's an XU with a known GUID to detect the metadata format. We
->> therefore wouldn't need quirks.
-> 
-> There is MXSU control 	
-> https://learn.microsoft.com/en-us/windows-hardware/drivers/stream/uvc-extensions-1-5
-> But not all the vendors use it.
+> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> Reviewed-by: Douglas Anderson <dianders@chromium.org>
+> Tested-by: Douglas Anderson <dianders@chromium.org>
+> Signed-off-by: Maxime Ripard <mripard@kernel.org>
 
-Right so I actually already checked:
+Tested-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
+Reviewed-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
 
-https://learn.microsoft.com/en-us/windows-hardware/drivers/stream/uvc-extensions-1-5
-
-yesterday before my udev hwdb suggestion I was wondering if there was a way
-to just get if MSmetadata was used from the camera itself. What I found was this:
-
-"UVC metadata is opt-in. Every IHV/OEM that needs metadata support must be enabled through a custom INF file."
-
-which lead me to the udev + hwdb suggestion.
-
-It is good to know that some cameras have a a way to fet this from a known XU GUID,
-but the official way seems to be to have per camera info in .inf files. So for Linux
-that would translate to having a list of vid:pid combinations somewhere.
-
-The question then becomes where do we put the vid:pid list and IMHO hwdb is much
-better (easier to maintain / update) then hardcoding this in the kernel.
-
-Regards,
-
-Hans
-
-
+-- 
+Luca Ceresoli, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
