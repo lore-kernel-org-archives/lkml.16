@@ -1,85 +1,81 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com [209.85.128.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E8021F4611
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 08:17:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9ADA81C7007
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 08:17:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741162645; cv=none; b=d9TBVGSCGXnwo2ZHNBeqnzjJZ8gX4pjnLEB5Sl9qoL39eoX8j9FHcBxtZbeEykJeBd0RzTAG5udH9rDlcp4pGKjMymnWnFH/TIn7fjyJ4mGzCTAdcjj11uXGr1RGWQJtxvOn2I4gzNuU7aO4+zATBz63gtVAc8c1n6iMxDvu54c=
+	t=1741162662; cv=none; b=hEV26+31fYi4ffb1D9/nzlxIyX+cFCO7n5BPN284+KWjLnO1xRSCikw6KtF3XOv4d1uEg8LKQIui9Pm7MD6pLYWfkUXSFIAOGiwxCKSS3n+kIMrq+DMYSJcW1/RACX5FmCWvTPoXIrsXf8cMqTMk/KQef4c/wJHVntx3FaXDDsQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741162645; c=relaxed/simple;
-	bh=JJnrVQoYcy2Vl913UQWwg7PIxnpoJlbPZncOQybp9Dw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OLWWVwUv6pfqEPy21ob+h3qy30hR/v7kJX6DxbVGYEM7HfxSYG4/OHZjh4CP1RUNTOMhXWTUSOXzTCtVnAfYjkJxGVtD0sJV0Txv6CdDGQahCWpU9YU3Lu9zF+A+p6I8omCX8CXBzau6w+jnzbyjSexjJSOioG+AEuMHeo+68PI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=fK28Dh7m; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1741162662; c=relaxed/simple;
+	bh=unUXlRhpi9sFgYovBXVYDRg89FpRhkYUYq8VvpQ6o9I=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=D5f9X7ZOneX9u+CvOpODpbJ+HqaboC/YguLVKaq793KXXXGo4aLr1rlr/eLTufRUXvLu+1Vyb2/ejVkOhXyVQ4mEdvs1UqWx7yI1RWjLG53LtI/nvoLdzWrMD5wRPvKArXIsNOygS6938O80Hbz9QuWVloy1chcEviIlcer6SSw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Gh+p1s49; arc=none smtp.client-ip=209.85.128.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fK28Dh7m"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-2235c5818a3so663725ad.1
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Mar 2025 00:17:23 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gh+p1s49"
+Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-6f77b9e0a34so52094787b3.2
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Mar 2025 00:17:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1741162643; x=1741767443; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=hBrYGYkG3/uOX+m8XZikomKIbRAg1AjaPVwOGP9HNdk=;
-        b=fK28Dh7mi0P3kEXhfzPErJMqinKb/IDNyTFVqr8HvSoTiy289BlOK/jo0c4BsPOb9O
-         LqnFLz9IFE1JByhiK5W33WrgrJX0xYxYxJQT0W8Ju3CaRpIKHPAl9MSc5fcyC1X3x0IP
-         rM6SrJnpMWNnfCkw7W3TozjKeP6EHNhLkMWzw=
+        d=gmail.com; s=20230601; t=1741162659; x=1741767459; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=unUXlRhpi9sFgYovBXVYDRg89FpRhkYUYq8VvpQ6o9I=;
+        b=Gh+p1s49ZRrYIVuEnpegKxry0XUhAGlmxXdws22ATTr+tbC7xJPQtpVwxTF7l7Qddz
+         AFnIfmWNJ7Cjz7YNp733i6Pv6HxIGSonYLWv32CgB7Y8B3UeOBXCy9TSUAW23HsEujEw
+         WkruQ9laicibNEUn6KDTrXOmiltZuem5/IeP3uDbPWJMQ7Bnh2z+gWXqilZB+U2AfVPO
+         fCYwIZkiAiE7WxASU1/nfqUOiw6d+6OgBvrxsbs4tJBQxp01h+FWE9sJv6nrXFy9MKug
+         m0jmmnyOV6JwSWBV3UwI8LNb+0WAGet3DyBXGha/xqnOkvcACY/hCL+62Lssexz8A6iJ
+         oyuQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741162643; x=1741767443;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hBrYGYkG3/uOX+m8XZikomKIbRAg1AjaPVwOGP9HNdk=;
-        b=UGQ0LMtxofLzpWg+u6GwVVDIuu3hlUSyHGUQLlFEGn0UCpjr+2Vg0i9SEiS3VW1r1/
-         rCrcxTeHqj3cVCM0GbFPCTSgD5L/yFYkmd8m1vqb8FtDoiA/rv6i/cN0m8LK9nuiq0Sn
-         glx6kRww4jzo+x6KRdoB7LmsAXze40du+NWU8l+b0Uv5vntXYv+Ubw9+HVBomZUgo3KG
-         3zZhqkJ9vUxS9gOa8pJEzAZ4DqYWYVq6CPvu+kw4FJSyLy5Mt4tsKPqh9f27BgLgAV00
-         0v7jVH6ncNSF2a0gV+yHDdRWl2yWdVOqkmHonMgWKAgBYnqkreSlDsFsyGBnhW8701kA
-         94aQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXa242Ikv06nXhZsBFqXlSiLRfuQRRh94kKIUyOUKkY/bbkCTI9Z6Iiyg10gi0Cese1/GLzVHLs8Hg/3FI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwkHA1CsChA4MsCxTqBW7Pb/spwJJVSijwOIwA+BjCR1cuaATp7
-	8xzZL9BIL2sAmVr3RCuEc9ZBdcD1wzKEINeQH8KpI3xGAM95Da103+Z1Ass4sg==
-X-Gm-Gg: ASbGncs1a+bSjOPnRfDIevW/gmkIcAb/PM2XyQufc/K9It88Hx1CYwsk+Uw802ZDVM4
-	s1fFLAvP16wtaesImaOP4dPyiG5eOGwNn5J6vbTGcrIcoszBAONMFip8RVxMvjZ+6gz4jKg0g5N
-	DjtyavLXiCbTP9xFLGCD9IplFl2S6dB5Qdt6TmBjiGFHMrT4HmvNTGFtMFiIz5L6aazCTdBUJp/
-	XhQ2xaebHPNW2ttEK3U6CtFOyfTIlT+f0/o22h/uM7O9VO1baD/Gr8mVaW7ZRmry3EXmCa0t5bF
-	diXydpJ8xL51Xz3XiUjQbDn4CPtX0QPTWkb7jH05wH0Jgj4=
-X-Google-Smtp-Source: AGHT+IEZb+ikZ3wZQgwK7eoIYZ9zMOrbk8mbq9FH8fEgmGeKCMEKE+qkETYiZPwF80GgQYRjig0TQA==
-X-Received: by 2002:a05:6a00:460e:b0:736:46b4:bef2 with SMTP id d2e1a72fcca58-73682b7d47cmr3390892b3a.6.1741162642739;
-        Wed, 05 Mar 2025 00:17:22 -0800 (PST)
-Received: from google.com ([2401:fa00:8f:203:5a4:b795:7bd9:7ab7])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-734a003dd31sm12292993b3a.152.2025.03.05.00.17.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Mar 2025 00:17:22 -0800 (PST)
-Date: Wed, 5 Mar 2025 17:17:17 +0900
-From: Sergey Senozhatsky <senozhatsky@chromium.org>
-To: Yosry Ahmed <yosry.ahmed@linux.dev>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	Johannes Weiner <hannes@cmpxchg.org>, Nhat Pham <nphamcs@gmail.com>, 
-	Chengming Zhou <chengming.zhou@linux.dev>, Minchan Kim <minchan@kernel.org>, 
-	Sergey Senozhatsky <senozhatsky@chromium.org>, Herbert Xu <herbert@gondor.apana.org.au>, 
-	Thomas Gleixner <tglx@linutronix.de>, Peter Zijlstra <peterz@infradead.org>, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH mm-unstable 3/5] mm: zpool: Remove object mapping APIs
-Message-ID: <wiboon2ho2vkxsbipc2e4ehhihhhkun7dcyfyycbmfinfxcwg2@n6jbtakq3ncd>
-References: <20250305061134.4105762-1-yosry.ahmed@linux.dev>
- <20250305061134.4105762-4-yosry.ahmed@linux.dev>
+        d=1e100.net; s=20230601; t=1741162659; x=1741767459;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=unUXlRhpi9sFgYovBXVYDRg89FpRhkYUYq8VvpQ6o9I=;
+        b=OK2q2J7ebixIIhNBysteKTRD7T98pOsvozXtzdz8xbMZFOqN9RpORo1yDLpa/W2vHZ
+         Ft0AGk+W0OgwZWNSKK6IPTgmY9axnDTwluJs+anNVtnqDA2ELRTSaoki1s6ArZS7x6rb
+         ZO5lNiNTwqfsvNfWBtXPMAfidD7K+UHxeilJxD2HPZoj8UHKSAqQoIKgtwyXeTbt5hTR
+         Jfw2SFWDLWw00ynPpdvfp711SKSesT9zJWkmYFD80UNhdTYiJ2JGZxXIntz3I8HXOC/+
+         azCeAvA0tv0QX8LsVvnyWiicpIVPzr1omDWU5N4qk91jeEAEDdMF0gFfhaGJBZ90EDgh
+         CrxQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUEOnhqP5QhyWx/6xoBI3TblT1qU3z2AELnezLyC9ut6LlPiQDZXSAiiatFu9OCuJRMB1rtQEnlvFqdDSQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwV6QXjnJyXNCOtghr+xmTj5iOv39vFHj/yB2km11vgwEmfN8C4
+	xqhpd10HQ3d5lf5DnRibFz0bLXqjGN45jBjKDgS5cx8TRZvn5HkDn/omVBcJRUeUQraJzv0y1La
+	V8qc3fItv9a+aXJ8eUuKguBZPGXs=
+X-Gm-Gg: ASbGncuiSAInoc501MX1gMBq6AC5ZjI74pVt4ymahFoVD57RKiGdY1roi9c5H8zZCX+
+	gnZcylj+JyyXaU/4Y0jVhtjIdJCfI8iMxwuREgKfPRYXgQZOLCtIajxpSqHnHPoLNnOKsUGJlwt
+	HdKzwyF7VlThDo4u6xBldMFRtY4OA=
+X-Google-Smtp-Source: AGHT+IFH8tbkdolKMFQTBXwdPnhgEhIHcppznLYb0q6wu6PUrmMI5mnzlfbW6CZYpCojAT11BsO0ndoY1bNLhWNtILw=
+X-Received: by 2002:a05:690c:7307:b0:6fd:4670:80c6 with SMTP id
+ 00721157ae682-6fda30fa282mr29688317b3.37.1741162659401; Wed, 05 Mar 2025
+ 00:17:39 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250305061134.4105762-4-yosry.ahmed@linux.dev>
+References: <20250305020546.96564-1-jiapeng.chong@linux.alibaba.com>
+In-Reply-To: <20250305020546.96564-1-jiapeng.chong@linux.alibaba.com>
+From: Sasha Finkelstein <fnkl.kernel@gmail.com>
+Date: Wed, 5 Mar 2025 09:17:28 +0100
+X-Gm-Features: AQ5f1JpOTyDvXY3v1-JU3GbIR7BXMVjAHB0DwpN4ZcbevKt7RS7qwVJSQh96pnE
+Message-ID: <CAMT+MTRvuYGqfNEO-uHK7zcDWR1z=iMJ2kmK_-cQ+i3i1=7jaA@mail.gmail.com>
+Subject: Re: [PATCH -next] drm: adp: Remove unnecessary print function dev_err()
+To: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
+Cc: j@jannau.net, maarten.lankhorst@linux.intel.com, mripard@kernel.org, 
+	tzimmermann@suse.de, airlied@gmail.com, simona@ffwll.ch, 
+	dri-devel@lists.freedesktop.org, asahi@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, Abaci Robot <abaci@linux.alibaba.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On (25/03/05 06:11), Yosry Ahmed wrote:
-> zpool_map_handle(), zpool_unmap_handle(), and zpool_can_sleep_mapped()
-> are no longer used. Remove them with the underlying driver callbacks.
-> 
-> Signed-off-by: Yosry Ahmed <yosry.ahmed@linux.dev>
+On Wed, 5 Mar 2025 at 03:06, Jiapeng Chong
+<jiapeng.chong@linux.alibaba.com> wrote:
+>
+> The print function dev_err() is redundant because platform_get_irq_byname()
+> already prints an error.
 
-Reviewed-by: Sergey Senozhatsky <senozhatsky@chromium.org>
+Acked-by: Sasha Finkelstein <fnkl.kernel@gmail.com>
