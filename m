@@ -1,75 +1,105 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 94F4915DBA3;
-	Wed,  5 Mar 2025 02:32:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
+Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 777C835893;
+	Wed,  5 Mar 2025 02:32:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741141950; cv=none; b=dDIWXl+vmKnjROzAfMBgOREc2mVXnuyNwUtXph4Mfi0oeODCobCb3p55mAyGKRzp6rftZK+PoDY+NxG+S81Ja8lDbHrtVfH9IUHwFIfi+Ox/WV7A6y92x3Y3fU1M25lU8n1UHhubQeOg1Z6W0+479VWkajCMdNmB7rI9HUjjYNc=
+	t=1741141951; cv=none; b=Syq2QHeBIbdLNIQ9wBA3nT8ABkxU3OOGRNhMAM8iq/qNw2VTUfyXnpIuRIQVBCKcU04GJpYgKOBRInnmfsVamzBGB5UYddk758rOK19pt81sP1zU07i+Sewq/Uu4vYpAVqm4Tp5556M+Ui4dT2RV2dlNKABaBxnkYK4JPvc6uqY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741141950; c=relaxed/simple;
-	bh=VFHlaOkps4gELsNG93bMey9hkOJsRA3mqrGKinS7NNw=;
-	h=Date:From:To:Cc:Subject:Content-Type:MIME-Version:Message-ID; b=Uzpo4LuSLPDKDfOftsRCA9qDNwdb/IlFm33/aIPIk9HtWkIIzenyC3XFYylSU7LgwDc8DoHvXK+1o+ZTuRK4PrI5tvbxvzsdKKFdC07phWzjSs6dZ8Fdf+7qVhKnky6LaeelUmERkwERDQ6AhrixPi1/+mgBa0Fb3D/5L0jLitY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=fail (1024-bit key) header.d=163.com header.i=@163.com header.b=oTDXhF0a reason="signature verification failed"; arc=none smtp.client-ip=220.197.31.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1741141951; c=relaxed/simple;
+	bh=pm9Hd8/8WvBThhO6P9C3fMd6GbaDgDRpAYLM1zSCS+M=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Q+W8ZAWPFuDi8QtVn42Ks4G5YQ5JB6yW48vFVBMClqXGZ3FFlTnlwIkv9V8E+k4PFwWed638/jGS5Yl0nhuSuLWaWtk0XknPUBuA4AT7ySa4oQNzHuELOdFhjm2GYaH9xkVvzWDERYoUJ/wOsQY1PRUIt0BPgL8Mfwwt1YTQ/EI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=naXFAD64; arc=none smtp.client-ip=46.235.229.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="oTDXhF0a"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Date:From:Subject:Content-Type:MIME-Version:
-	Message-ID; bh=UOhnFF01l7HOjYg5x6uMcW+B9fbrcWjnbUnMIBSb6g4=; b=o
-	TDXhF0ao8rGr8j8jqZSvZyPwCn4bRtMbMUqolB3b0d33NLVtg8Do+zE4hoqyKSPc
-	zOJuUqn0UDL/56pNMjEk7XWHy1TvHLbfex2UCxGVCdwMmtrpxuop+RhsFVrPw0Fo
-	ipgMP4wcY2oyQyyBZFmm/QVjGPIMLLCZxeuxv5CPHg=
-Received: from andyshrk$163.com ( [58.22.7.114] ) by
- ajax-webmail-wmsvr-40-118 (Coremail) ; Wed, 5 Mar 2025 10:30:55 +0800 (CST)
-Date: Wed, 5 Mar 2025 10:30:55 +0800 (CST)
-From: "Andy Yan" <andyshrk@163.com>
-To: "Piotr Oniszczuk" <piotr.oniszczuk@gmail.com>
-Cc: heiko@sntech.de, neil.armstrong@linaro.org,
-	sebastian.reichel@collabora.com, devicetree@vger.kernel.org,
-	hjc@rock-chips.com, mripard@kernel.org, linux-kernel@vger.kernel.org,
-	linux-rockchip@lists.infradead.org, yubing.zhang@rock-chips.com,
-	dri-devel@lists.freedesktop.org,
-	"Andy Yan" <andy.yan@rock-chips.com>, krzk+dt@kernel.org,
-	robh@kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re:Re: [PATCH 0/6] Add support for RK3588 DisplayPort Controller
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20240801(9da12a7b)
- Copyright (c) 2002-2025 www.mailtech.cn 163com
-X-NTES-SC: AL_Qu2fA/2fvkAu4yiaZukfmkcVgOw9UcO5v/Qk3oZXOJF8jDDp2ycwUUJSDXLaweO0FQ+OmgmGXTtC9/R7f4VTVaQNuZe6Rui3nVzOCdmFQHxStA==
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8
+	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="naXFAD64"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
+	; s=bytemarkmx; h=MIME-Version:Message-ID:Date:Subject:From:Content-Type:From
+	:Subject; bh=6JUxpMTZb+VPOA3fx/psHXWyFCWtLj0EBW/8vAJ1oRE=; b=naXFAD64uWqbNum3
+	nHJUuPWJzKxtYzt5FQF6+2ekCyslbQVDOAfW4Dj+if2XooHUNec4BM+FpS1Fo8GlBr2Z7j2d84Oga
+	61L9TagYy9p+hmVDeuAV8aGSUwM9gKhHZxoYkAHUhXi9Z1Cn8GO/Xy4dGZGb6aHoSbSIB7++gfB0i
+	+armomG729M7y/OwxFOSVmG2h86k9TdAOp/I6b+d4rR3u8k+s5YZUiHadpvG+JFoHcDIR1msZ2LaQ
+	sj5Q8Uf/GqFFExHdNiXCw8awP5Nnjs2LHGQPPxINvg5nf2QkJhSmgQK7LnfVgD+813N+dwQIdvAMw
+	NXCuguqLZkpbWiJyuA==;
+Received: from localhost ([127.0.0.1] helo=dalek.home.treblig.org)
+	by mx.treblig.org with esmtp (Exim 4.96)
+	(envelope-from <linux@treblig.org>)
+	id 1tpeXl-002ic7-2O;
+	Wed, 05 Mar 2025 02:31:33 +0000
+From: linux@treblig.org
+To: irogers@google.com,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	adrian.hunter@intel.com,
+	kan.liang@linux.intel.com,
+	namhyung@kernel.org
+Cc: peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	"Dr. David Alan Gilbert" <linux@treblig.org>
+Subject: [PATCH 6/6] perf util: Remove unused perf_config__refresh
+Date: Wed,  5 Mar 2025 02:31:20 +0000
+Message-ID: <20250305023120.155420-7-linux@treblig.org>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250305023120.155420-1-linux@treblig.org>
+References: <20250305023120.155420-1-linux@treblig.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <25401bfa.291d.19564244e54.Coremail.andyshrk@163.com>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID:digvCgD3Xw5ft8dn2jd2AA--.4215W
-X-CM-SenderInfo: 5dqg52xkunqiywtou0bp/xtbBkAMHXmfHsp5IAwACsP
-X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
+Content-Transfer-Encoding: 8bit
 
-CkhpIFBpb3RyLAoK5ZyoIDIwMjUtMDMtMDQgMjE6MTI6NTDvvIwiUGlvdHIgT25pc3pjenVrIiA8
-cGlvdHIub25pc3pjenVrQGdtYWlsLmNvbT4g5YaZ6YGT77yaCj4KPgo+PiBXaWFkb21vxZvEhyBu
-YXBpc2FuYSBwcnpleiBBbmR5IFlhbiA8YW5keXNocmtAMTYzLmNvbT4gdyBkbml1IDEgbWFyIDIw
-MjUsIG8gZ29kei4gMTM6MjQ6Cj4+IAo+PiAKPj4gSGkgUGlvdHIsCj4+IAo+Pj4gCj4+PiBpcyBp
-dCB3b3J0aCB0byBwbGF5IHdpdGggdGhpcyBvciBpdCBpcyB0b28gZWFybHk/Cj4+IAo+PiBJIHRo
-aW5rIHlvdSBjb3VsZCBnaXZlIGl0IGEgdHJ5IGlmIGl0IHVzaW5nIHRoZSBTdGFuZGFyZCBEUO+8
-iG5vbi1BTFQgbW9kZe+8iSBwb3J0IGZvciBvdXRwdXQuIAo+PiBTaW5jZSBJIGRvbid0IGN1cnJl
-bnRseSBoYXZlIGEgZGV2ZWxvcG1lbnQgYm9hcmQgd2l0aCBEUDEgb3V0cHV0IGF2YWlsYWJsZSwg
-SSBoYXZlbid0IGJlZW4KPj4gYWJsZSB0byB0ZXN0IGl0IHlldC4gQXMgZm9yIHRoZSBUeXBlLUMg
-QWx0ZXJuYXRlIE1vZGUgb3V0cHV0LCBzb21lIHBhdGNoZXMgYXJlIHN0aWxsIHJlcXVpcmVkIAo+
-PiBJJ2xsICBzZW5kIGl0IHdpdGggVjIgdG9tb3Jyb3cgb3IgbmV4dCB3ZWVrLgo+PiBGZWVsIGZy
-ZWUgdG8gbGV0IG1lIGtub3cgaWYgSWYgeW91IGVuY291bnRlciBhbnkgaXNzdWVz44CCCj4+IAo+
-Cj5BbmR5LAo+SSBhZGRlZCBkcDEgZW5hYmxlbWVudCBpbiByb2NrNSBpdHggbGlrZSB0aGlzOiBo
-dHRwczovL2dpc3QuZ2l0aHViLmNvbS93YXJwbWUvYmRkZjc1OTEyMTkzZjU3NzI0YzQ5MjE2ZDVk
-ODVkNGEKPlVuZm9ydHVuYXRlbHkgaXQgbm90IHdvcmtzLgo+Rm9yIC9zeXMva2VybmVsL2RlYnVn
-L2RyaS8wL3N0YXRlIC0gcGxzIHNlZSBhYm92ZSBsaW5r4oCmCj5J4oCZbSBub3Qgc3VyZTogZG8g
-aSBtaXNzZWQgc29tZXRoaW5nIGluIGR0IG9yIHJhdGhlciBpc3N1ZSBpc3N1ZSAgaXMgaW4gZHAg
-Y29kZS4uLgoKSSBvbmx5IHNlZSB0aGUgSERNSSBjb25uZWN0b3IgZnJvbSB5b3VyIGRyaS9zdGF0
-ZSA7IHNvIGl0IGFwcGVhcnMgdGhlIERQIGRyaXZlciBoYXNuJ3QgYmVlbiBzdWNjZXNzZnVsbHkK
-aW5pdGlhbGl6ZWTvvIhJIHRoaW5rIGtlcm5lbCBkbWVzZyBjYW4gdGVsbCB0aGF077yJLiAKSGF2
-ZSB5b3UgZW5hYmxlZCBDT05GSUdfUk9DS0NISVBfRFdfRFAgPyBUaGlzIGlzIG5lZWRlZC4KCgo+
-Cj5GWUk6IHNjaGVtYXRpYzogaHR0cHM6Ly9kbC5yYWR4YS5jb20vcm9jazUvNWl0eC92MTExMC9y
-YWR4YV9yb2NrXzVpdHhfdjExMTBfc2NoZW1hdGljLnBkZgo+Cj4KPgo=
+From: "Dr. David Alan Gilbert" <linux@treblig.org>
+
+perf_config__refresh() was added in 2016 by
+commit 8a0a9c7e9146 ("perf config: Introduce new init() and exit()")
+but has remained unused.
+
+Remove it.
+
+Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
+---
+ tools/perf/util/config.c | 6 ------
+ tools/perf/util/config.h | 1 -
+ 2 files changed, 7 deletions(-)
+
+diff --git a/tools/perf/util/config.c b/tools/perf/util/config.c
+index 2d07c9257a1a..ae72b66b6ded 100644
+--- a/tools/perf/util/config.c
++++ b/tools/perf/util/config.c
+@@ -856,12 +856,6 @@ void perf_config__exit(void)
+ 	config_set = NULL;
+ }
+ 
+-void perf_config__refresh(void)
+-{
+-	perf_config__exit();
+-	perf_config__init();
+-}
+-
+ static void perf_config_item__delete(struct perf_config_item *item)
+ {
+ 	zfree(&item->name);
+diff --git a/tools/perf/util/config.h b/tools/perf/util/config.h
+index a727c95cb119..987b47cf54c3 100644
+--- a/tools/perf/util/config.h
++++ b/tools/perf/util/config.h
+@@ -49,7 +49,6 @@ void perf_config_set__delete(struct perf_config_set *set);
+ int perf_config_set__collect(struct perf_config_set *set, const char *file_name,
+ 			     const char *var, const char *value);
+ void perf_config__exit(void);
+-void perf_config__refresh(void);
+ int perf_config__set_variable(const char *var, const char *value);
+ 
+ /**
+-- 
+2.48.1
+
