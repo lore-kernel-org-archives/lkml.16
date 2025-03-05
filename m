@@ -1,97 +1,126 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com [209.85.219.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93CB019D06A;
-	Wed,  5 Mar 2025 20:12:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8508255229
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 20:12:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741205524; cv=none; b=h/JO84GA8sfY4FS0IK98aCmT4yEvba3BwUhgTb+pqh7/uTjujOAnmYtU9oiiT3gi/Z0LdzOmA6+B+AKQoGRkUH1xQkYUyHt2qo1cKnAAaI4gWaFuj4ENaZ+1Mdb/Klh2nQUv0bsc6V4x7KebnSKGnFCeYvUj6EjvbrgVIFg2CTU=
+	t=1741205579; cv=none; b=A7LcOSC/EOU9RKVXX9Ro23GlZ4KIn5XJIhyuyNODbF+hhUU3uImHtTZFhaE7JLTCpoyhAdKTjD03zODD79xAWOxquOoAx+ZryZjmrMVWLoeFUGn7lW9+pin4mkGgvpXcCz1dAouVcwRCkHhKLRT2QhoqNWInArv+Ir5nrumqEEs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741205524; c=relaxed/simple;
-	bh=xxlaja1M5ZzvELQDVXtt0CFRedwIrI6HNEgqbSGwixk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fSA7e9J+aKFTdbJGt9nFk4HqBD0qzekSEWJaIPN6ybB2J4wGt2yJbwGtRkXnEwRk/+xc59iLjmNGRd9/JPNT+1Yequ6d/ayqlL/5pG4cEu9ERa407M+HaCJR49Bxp2oRyBzomob1KywgLTEZb0W0dloIR8o7nMhbnp5X96HauEM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HGFmNq+R; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741205579; c=relaxed/simple;
+	bh=zNu+uO+qVUH2lHjGc7UpYzRsUdmyNBFYkU3NKGrAkMw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qMTGeGza8E9/lpmjU9pOkHGu7Nucjk0bIHXUKVG9+TwSfS9kfdNnHFxHpQgy44SxcxtO2jzv3z4SnHFocYjY4u82q6pZMEIwXaobe3njU9i2huzFvx52x3HaiXkAO3Sk/fBrQ9ubWqfsPFZvBWDn+jO4enjpXFtfcjSISnyKBtA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=e4DmnVf1; arc=none smtp.client-ip=209.85.219.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HGFmNq+R"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-43bcf9612f4so15226135e9.3;
-        Wed, 05 Mar 2025 12:12:02 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="e4DmnVf1"
+Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-e549be93d5eso7721817276.1
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Mar 2025 12:12:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741205521; x=1741810321; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=brW+pYPJwmA8bUp4jZVsRkg/nzzvoeD/T7yxjePWcwo=;
-        b=HGFmNq+Ra+YAldY+WqJSnpLrdrkNkAcT91Tf5PxPU0yC1YtvHNMZskaXcerPGwn2+o
-         VqiGZ0bwmbjEk3Z2RB/lhMdvdsVRyirADI8w+9DQnaUuGMarnSCBJ77Um7Y/5RRojjZT
-         C4Kb9tC2lC5mehJEo9NfToiI+sp8S8/XWmj+I2hcM7EJeSlrGKb5eFsBOgwMZn9McRpT
-         EIWHU6SKEmNEQUmffE7HcMhUV5bwxcP7ACvW+C5LtNvl5faasJrhrfDDeGId5DnjUbbn
-         s625HhSihb1wiNQulFSYebszr3hEGC18p0AXrM3P8wCPLo/TdLzFiX6QHXqNXeK8OLcl
-         MqlA==
+        d=paul-moore.com; s=google; t=1741205576; x=1741810376; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=20bCxuGfaDVAOpC3W+MtKdxzg/x4LtoR169fsBOSxiQ=;
+        b=e4DmnVf1JnnsCxVgdzaOP4TrtubowOesKiuaSgiG9QO+lp0h+qY9DOgENeER2dLmqG
+         CxOVClWd5YkgpuoYVRAk9UCwndpm11nb+Aysjyufc2MuYE/YqThJ3hv8ZfRuxosEZLkH
+         JCJaa0Ju0njoFu/iWOvAarrPbHJuCBNuG/90tnNI04Ja9zo3tyjdFREQHu9dHQ0+/DPm
+         8CQDPp1dRekR8F+Kn6j0PYfZUGm3RcmYatxnXY41ndACeTeg1YpEyxOsTLszIrqBLG9Z
+         xzqLmOhkUJAPTbZ5UPLnAFFVUq2JZh7x/bnjRkZNI4xnThy5Q4TXmXZ2y8xzJzBCsXLj
+         n1Lg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741205521; x=1741810321;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=brW+pYPJwmA8bUp4jZVsRkg/nzzvoeD/T7yxjePWcwo=;
-        b=jhCZKMbrSjznaEHZQWf/AtqhEumTM4CpoYUK+uyLlniC9phyjHsvxc09ZEH2mweoyk
-         m1On3331F5MkDHi3Ix3CAFRM5Hwtct5WQTapw15p9EoW6PiDiPw7SLuF7ag0BzUNWcMQ
-         Dmqt+ke6g36lsBBZ2eIcPFEKBciLS6+nfxITnw3A0FeBUzQO3+33tEnD3tSDJISrTvIQ
-         lf/b+6TFPV/AZ8g161ogFs3LAfXEYGfEnDkTrX6w99bRqGI6NlYbtgqCidGhsMjINrTq
-         SFT1dMOOaTvJAbWXy/JF16/3ZMWjooy4lo8YZeKzy1pcrhcgQ8D0wu2vI/l/8DcFxABG
-         jSqQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVpcY3/cUWDicVviuLiZJoiNMcEtTijqF3W6TLZPZRfZIcl21nF6OJiANKvNbk2orhoY+8IwGtsKg0NsCE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxaeMvImzoL4oKiwUXwhcr62vZ1n16s++AAJv5+R6XAPfp4YLHv
-	H93CIybUqzmOtTO8bJh0dnbMw+PV0a93o82ZaXO8LKwJcSHVyRqakOKG2MDt
-X-Gm-Gg: ASbGncvn19QsQUggWTjjjs4+KSiXUlcCjui0seb2GmkbxH1I2ll6L3QtshEPIAU9U0c
-	A8XBU8X0sp7iDTWL11xB/1JRRU1jw0E65GJ/cb8tlDFDWyNzkiUDd6Y+fojlIYu1GsgNmnjzgmP
-	z1WtfgJEEvzhPlLqlXhpCq5Pnn/XklzOdZFdzD5+xSpaR4YKm5jY3A45jycXPkcgJyR6v+MxXn6
-	oh6SpNnVLsCJn0JRIvTCM90S4m6vFSk/duzfY08NV5/Ej5jBGVZPwnIiAvLsOmugHK9T7IMJ03d
-	VYH8FU9NuX2M1Wpe8J3tJtcPI6xA54znDvlyZi60O01pGxA=
-X-Google-Smtp-Source: AGHT+IHHSlhkTQg0bA8WTfh3FL+5l2gFszvj8/9uJnqxNv7fFJD7FqP9JeC/cix2kc24r83fx6bhTQ==
-X-Received: by 2002:a05:600c:4f51:b0:439:92ca:f01b with SMTP id 5b1f17b1804b1-43bd29bb5f2mr31670395e9.13.1741205520566;
-        Wed, 05 Mar 2025 12:12:00 -0800 (PST)
-Received: from localhost ([2a00:a041:e509:7500:3a4a:9c50:c5b2:c109])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-43bd42e402bsm27052915e9.25.2025.03.05.12.11.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Mar 2025 12:11:59 -0800 (PST)
-From: Or Avni <oravni8899@gmail.com>
-To: rafael.j.wysocki@intel.com
-Cc: linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Or Avni <oravni8899@gmail.com>
-Subject: [PATCH] Staging: pnp: interface: fixed a pointer coding style issue
-Date: Thu,  6 Mar 2025 00:11:55 +0200
-Message-ID: <20250305221155.35981-1-oravni8899@gmail.com>
-X-Mailer: git-send-email 2.48.1
+        d=1e100.net; s=20230601; t=1741205576; x=1741810376;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=20bCxuGfaDVAOpC3W+MtKdxzg/x4LtoR169fsBOSxiQ=;
+        b=w+kl8/o40ky+10GRPpm1u3ZCS8cz64TQPE0raZT8scP4LOL1LeUOPiCRWNk/7zEGY+
+         FqVvVUGAVfLj0B0dz8IgXvJv0Bb1pKcE6MHDoYjLzIhNZIK9aetz+D6YX9vTXmq5Dzjz
+         X2yoI3N3mPTNCTppW7enrKPefa7KAwCNyQv2kQrVF+e8BxUY50QU2vpS+DsBOCWqwW35
+         /lxcBJ2gumabFocPJwkukkfAfFQa/WwfNWamvULFNvjFXwqbt+/05a8Y644bN8nWBNw3
+         XpkWuQkeH23BSaNL7Jo5k/G/IkBbT3JXk7mOLwhQ7wrpYkz467HgoPAMscm4RTzUNml1
+         WqQQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVED1gePmfQuMSyw4VUFzmOy5shYUqX6sXLZkkZk3fT+DOOYFZK4TlO1SvS3xqALqm5GHPt7mAGh+oWP2g=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwlOsMYIOk+oy2JY3/5XLY9hrSFDIr2L484Vsv/a+LINTrlZCLl
+	DhRwXmkl0SaQNNz97UVvtjt2VFxWzoFEnDbzOQa00yMi7vUNhvUq5QRjQjeyjbmB+HpL5riPfc/
+	QCLFgaMUXQHo9ukvSQ4NvmdFXeP/58I3C49OT
+X-Gm-Gg: ASbGnctM+lucm0ZW4rambhOySVraXSBChYAGgJyJL0eEcE4XLSIhCnajo76RroYJXMM
+	b4dYJknqiV+yi24sIde7DJWf7qaqeMywBEZaw6vyggRjwlif9NA0xgIfQV/PRnrO9/r+lhmo3wf
+	4iGFxWhbfEEt3EZeJuA+znfxcAzw==
+X-Google-Smtp-Source: AGHT+IFb1lQWxZfA+3Fj3IIMOvkgMjpy++obS3VPsP4HPWlePPjHMEfo/RAlFL+2ENHWUfAYeV2u1UeTQGpoYyph5bM=
+X-Received: by 2002:a05:6902:161b:b0:e5d:d2ce:a40a with SMTP id
+ 3f1490d57ef6-e611e30582dmr6534407276.34.1741205576740; Wed, 05 Mar 2025
+ 12:12:56 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250304203123.3935371-1-bboscaccy@linux.microsoft.com>
+ <20250304203123.3935371-3-bboscaccy@linux.microsoft.com> <CAHC9VhS5Gnj98K4fBCq3hDXjmj1Zt9WWqoOiTrwH85CDSTGEYA@mail.gmail.com>
+ <877c54jmjl.fsf@microsoft.com> <CAHC9VhQO_CVeg0sU_prvQ_Z8c9pSB02K3E5s84pngYN1RcxXGQ@mail.gmail.com>
+ <CAPhsuW6RrUiXaQe1HBYOvwUx2GFaA-RKx22955A2StsP2erTeA@mail.gmail.com>
+ <CAHC9VhQ1BHXfQSxMMbFtGDb2yVtBvuLD0b34=eSrCAKEtFq=OQ@mail.gmail.com> <CAADnVQJL77xLR+E18re88XwX0kSfkx_5O3=f8YQ1rVdVkf8-hQ@mail.gmail.com>
+In-Reply-To: <CAADnVQJL77xLR+E18re88XwX0kSfkx_5O3=f8YQ1rVdVkf8-hQ@mail.gmail.com>
+From: Paul Moore <paul@paul-moore.com>
+Date: Wed, 5 Mar 2025 15:12:44 -0500
+X-Gm-Features: AQ5f1Jp_oXF4bydH-aIRtYZmN6RTF7YwHfbbSgRNBrjTiC_WlFGzFQqTRg_361Q
+Message-ID: <CAHC9VhR5NmSU+eanprCk-osSMZnZ+ODwLJKWuqd8e1qDobim7A@mail.gmail.com>
+Subject: Re: [PATCH v4 bpf-next 2/2] selftests/bpf: Add is_kernel parameter to
+ LSM/bpf test programs
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: Song Liu <song@kernel.org>, Blaise Boscaccy <bboscaccy@linux.microsoft.com>, 
+	James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	John Fastabend <john.fastabend@gmail.com>, Andrii Nakryiko <andrii@kernel.org>, 
+	Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, 
+	Yonghong Song <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>, 
+	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Stephen Smalley <stephen.smalley.work@gmail.com>, Ondrej Mosnacek <omosnace@redhat.com>, 
+	LSM List <linux-security-module@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	bpf <bpf@vger.kernel.org>, selinux@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Fixed a pointer's declaration coding style issue.
+On Wed, Mar 5, 2025 at 12:08=E2=80=AFPM Alexei Starovoitov
+<alexei.starovoitov@gmail.com> wrote:
+> On Wed, Mar 5, 2025 at 8:12=E2=80=AFAM Paul Moore <paul@paul-moore.com> w=
+rote:
+> > On Tue, Mar 4, 2025 at 10:32=E2=80=AFPM Song Liu <song@kernel.org> wrot=
+e:
+> > > On Tue, Mar 4, 2025 at 6:14=E2=80=AFPM Paul Moore <paul@paul-moore.co=
+m> wrote:
+> > > > On Tue, Mar 4, 2025 at 8:26=E2=80=AFPM Blaise Boscaccy
+> > > > <bboscaccy@linux.microsoft.com> wrote:
+> > > > > Paul Moore <paul@paul-moore.com> writes:
+> > > > > > On Tue, Mar 4, 2025 at 3:31=E2=80=AFPM Blaise Boscaccy
+> > > > > > <bboscaccy@linux.microsoft.com> wrote:
+> >
+> > ...
+> >
+> > > Do we need this in the LSM tree before the upcoming merge window?
+> > > If not, we would prefer to carry it in bpf-next.
+> >
+> > As long as we can send this up to Linus during the upcoming merge
+> > window I'll be happy; if you feel strongly and want to take it via the
+> > BPF tree, that's fine by me.  I'm currently helping someone draft a
+> > patchset to implement the LSM/SELinux access control LSM callbacks for
+> > the BPF tokens and I'm also working on a fix for the LSM framework
+> > initialization code, both efforts may land in a development tree
+> > during the next dev cycle and may cause a merge conflict with Blaise's
+> > changes.  Not that a merge conflict is a terrible thing that we can't
+> > work around, but if we can avoid it I'd be much happier :)
+> >
+> > Please do make the /is_kernel/kernel/ change I mentioned in patch 1/2,
+> > and feel free to keep my ACK from this patchset revision.
+>
+> My preference is to go via bpf-next, since changes are bigger
+> on bpf side than on lsm side.
 
-Signed-off-by: Or Avni <oravni8899@gmail.com>
----
- drivers/pnp/interface.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Fine by me, the patch has my ACK already.
 
-diff --git a/drivers/pnp/interface.c b/drivers/pnp/interface.c
-index 44efcdb87e6f..5148c431ac0c 100644
---- a/drivers/pnp/interface.c
-+++ b/drivers/pnp/interface.c
-@@ -186,7 +186,7 @@ static void pnp_print_mem(pnp_info_buffer_t * buffer, char *space,
- 	pnp_printf(buffer, ", %s\n", s);
- }
- 
--static void pnp_print_option(pnp_info_buffer_t * buffer, char *space,
-+static void pnp_print_option(pnp_info_buffer_t *buffer, char *space,
- 			     struct pnp_option *option)
- {
- 	switch (option->type) {
--- 
-2.48.1
-
+--=20
+paul-moore.com
