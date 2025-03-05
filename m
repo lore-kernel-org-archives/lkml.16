@@ -1,89 +1,103 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mslow3.mail.gandi.net (mslow3.mail.gandi.net [217.70.178.249])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AA83131E49;
-	Wed,  5 Mar 2025 17:47:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0835F14884C;
+	Wed,  5 Mar 2025 17:48:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.178.249
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741196830; cv=none; b=fE/5801ony+Vdis+tmzKDPCLcKp8paV079hb9ym2LvxU8xG0/3D+iEjuSC+HSZE6G1XRjyF6H7WRSpxCWcvhankA7tzVqaLJEp0AoNd4TB9NyYBnu0xFn4XjclGXPzJblOZpVoJHvhZ4YTjfM6X5K8xscsu5gm8qv/O3bx31hkE=
+	t=1741196889; cv=none; b=MCZ96lIGAz5ybCqRxP0ZzrEHwpxtnPKmKY8CAxPepZpEGXmTrQUBsdRb0jzvzbWz2wT7gwhQuScgg+RK+ox1sX4Fvfqbggh4/V6cEBmYzgMUApcVXHTdd1c2mE8/xfJOP0F0leGkmkkRLiPE8y16K115FH/+t8TIaXpIHcQPzXs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741196830; c=relaxed/simple;
-	bh=XkXAEdfVFTFjbILONsA+SnhCkrqCKprR5pBsJCMVQb8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aHXglZHNMayUOEmUL7KM7XGzMO3/RGfXCaoDZ/Y+dXMJN/O1/Qq3HkkyvihVBty3a732BkONY1scIuXbbL/KaDwqFWAfmI5gVhAAqhyiPJ8RBdHr/WeT7PrO+k4xIuUSkyGfmGho/DHTWJJTTZgG7F6m4h4CdjV69vTWhOpfvzQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T5Gom0Lf; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741196889; c=relaxed/simple;
+	bh=hugcNLK7G+QyyTiNYXE/xDFTWLzXxYW9o4rB5vGvSBY=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=l2VHARkU9cN7kBt2q5aJR5hXxQhuOZrcqRNAdZ8kIRJq2IsiBhz9PzCoRv0YgYeWdVYY+Xj4RaKzoZqeGQdlI7xrxz4yFK5LrTwWOMs9j+oEPPTvgYPtDHcihZeQdovTnerLw9J7z/5h77e0TLyI/husPqoHCyREcQ7n7EqZTE8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Zf3QIoQi; arc=none smtp.client-ip=217.70.178.249
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T5Gom0Lf"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-2239f8646f6so82632195ad.2;
-        Wed, 05 Mar 2025 09:47:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741196828; x=1741801628; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Estk+5gNY3mVuOls1Vw/SWWGxf9dwhMg24EqUjgvQNM=;
-        b=T5Gom0LfAf95UTB0isy3UCAizrQrTyuy0c8Ex//W4ihTaui0Ou/E/CPHL6ZLeqnE+2
-         jfgY4T8xv0zTfqu+r0oz7QPE4y15idvOcZDFhNIWRctYKW9rs0udHsxa0BYB0ledlIOz
-         TyuvAt2uUZ/Wfc+YKle7Y/e1DQiSdgEJzBREcRNGWReAqjOID0C5HMYB7ham9vYEnzzq
-         PAhYmRvLvIb3cIGoGhN3jRMpA59WoubXfA2Trv8uZcVO76b4C3DOK4VqwuhxNncjYujo
-         m73vwFEx0rYB/sWJp2GC3kKvwzQBDPzxb1jq6mTFn9TwO4TPyPBb7DBkWK0OkgoM5AgR
-         RqRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741196828; x=1741801628;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Estk+5gNY3mVuOls1Vw/SWWGxf9dwhMg24EqUjgvQNM=;
-        b=KaBvMgJ/vbqzpNF0Ejt45w72IhBMpjKl58Yvx6A9LmfW+5sGseogLX+5GVL0Ef2If0
-         9d5dZ3C+IGfw7KCXvhHUYkN4p36NTFJWY48pBW80X63aSBJb/qVAI5Bz2dwyI+38as3o
-         rv5p1lHG1Q4AU2mvdI4cb8FIf+NDrMfzhQkDDHG2sd7Mf4Cdqu9bRfXibApGx5tfswzX
-         eaAuIaCP90Nzwlf12V15YYR8Brgi+ntZyfEAGwNF9QqyPvy9hQV3E1VnsmjGR8f0w9SC
-         OurCbg9pO8mR0x/SMErl1rg+i/fTWhLY/RjQV7VJSR5qtNoJxy9HoroHdD24GGxml+3d
-         nN1w==
-X-Forwarded-Encrypted: i=1; AJvYcCUCJbG3yvfs6ztwkFFfaRMPmx30oVqIaeeQnHW/o9N0RPvEplmwaYDIqe+wZWD0R5Y/D53+5S+BvI/acAYietM=@vger.kernel.org, AJvYcCWOSm3Vuj+9iPhFEwz2c1KP6JFbBaoSyfzlVzVIKNmOO/CTXTEoDyy+oBH6G0wL1IT2/stb2Q6WNPVZNYM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyAJkw71ErBV3VYpbxsDOVsR/Rh5lZBLc9nXc6qWC/P3dMGeov1
-	0pKLQSdKni1BNOYJldBcToaiKkL3nwR0oRX9YDySDT+kKCCXklP4S40c9g==
-X-Gm-Gg: ASbGncvK7vlBzHsMVyeOAZEPAbm+Hb9iYLHQPihtSqiMyq+Advkig7E73vrdCUwI41h
-	EyP0mjbz/ebDIu7fP5Tocey1ezb2iatrEBN7H28diFFksv0tf95Q3arXy8YJnH3v6VmIMzQ3o20
-	NppvnC2M0+cEDR2vMwrsXHxeU5os1l5suse2OUytNEGoyKNGKzKEmRbyfsKkLqRY6TP/H1CJFuK
-	5CnOx3AxyF71cTnf8hkN146Q+bjqf5NfXAjhVTudUwNS6B1p9IolNX6OP1Ppvoi06Ku14gvBPLQ
-	Ksf7cut0A587zI8g4tDAq/PoA7kmUGqjqXyuTEfNtg/7OWbCmvJjUZSZiw==
-X-Google-Smtp-Source: AGHT+IGw6eYJ7veWCt36hL7+GBC9zVtynhPDrspz/RhQVbez7BW33rd8wz3/PrUMvJldd5RU34gp6g==
-X-Received: by 2002:a17:902:f606:b0:223:f9a4:3f99 with SMTP id d9443c01a7336-223f9a457a2mr42108565ad.29.1741196828131;
-        Wed, 05 Mar 2025 09:47:08 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2235053181esm116366555ad.237.2025.03.05.09.47.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Mar 2025 09:47:07 -0800 (PST)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date: Wed, 5 Mar 2025 09:47:06 -0800
-From: Guenter Roeck <linux@roeck-us.net>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Wim Van Sebroeck <wim@linux-watchdog.org>,
-	linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/1] watchdog: nic7018_wdt: tidy up ACPI ID table
-Message-ID: <984b1101-5cf6-4b21-8bb9-db4491d97832@roeck-us.net>
-References: <20250304140114.1812452-1-andriy.shevchenko@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Zf3QIoQi"
+Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [IPv6:2001:4b98:dc4:8::229])
+	by mslow3.mail.gandi.net (Postfix) with ESMTP id 8FA37581112;
+	Wed,  5 Mar 2025 17:34:05 +0000 (UTC)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 5A6DF4328F;
+	Wed,  5 Mar 2025 17:34:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1741196043;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=vkPL5cH1HFXSJ/uIqPW2ORRCbhxLLXcEM9s5D6RXhYM=;
+	b=Zf3QIoQi22T0aYkuRUJpTDLQS0JmHx+6xyKS6WPbQaJCkchctHMOcBFhMnh/8sOfHhZzx5
+	rU5dpUUrQfiH/AmDpzuFm3yyUtVCc9hce1V1dXkLMJd3n3Zc+Xpr2CRD8chQoq3YK+GVZm
+	F7YapjXv6vaIIPwmqWPUB4ys2Y88FLico5STPjEFDZB5yLtm/VdIRVPYgYRri41LFpEnX/
+	yS58u+04aX4PX4iXhexFzIPJ0H9JTCPEfFIHg6r2h1hz+ZEGjp5HU4iwfWWa8fcw//xhgM
+	4enav7UpmWhKuhsJNGhbSnrQt8kNzDAwcfds4rOlVm0MhADgJ8CtSxxojckoyg==
+From: Kory Maincent <kory.maincent@bootlin.com>
+Subject: [PATCH ethtool-next 0/3] Add support for hardware timestamp
+ provider
+Date: Wed, 05 Mar 2025 18:33:36 +0100
+Message-Id: <20250305-feature_ptp-v1-0-f36f64f69aaa@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250304140114.1812452-1-andriy.shevchenko@linux.intel.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAPCKyGcC/x3MQQqDMBBG4avIrA2YYCj2KiIS7R8dKElIpkUQ7
+ 25w+S3eO6kgMwq9m5My/lw4hgrdNrTuLmxQ/Kkm05lem84qDye/jDlJUtZrjfXl7DJYqkXK8Hw
+ 8t5Egu8T4VQGH0HRdN8QPVsRrAAAA
+X-Change-ID: 20241205-feature_ptp-5f11ec7a5b95
+To: Michal Kubecek <mkubecek@suse.cz>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Andrew Lunn <andrew@lunn.ch>, 
+ Willem de Bruijn <willemdebruijn.kernel@gmail.com>, 
+ Jason Xing <kernelxing@tencent.com>, Russell King <linux@armlinux.org.uk>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ Maxime Chevallier <maxime.chevallier@bootlin.com>, 
+ Kory Maincent <kory.maincent@bootlin.com>
+X-Mailer: b4 0.14.2
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddutdehgeegucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhufffkfggtgfgvfevofesthekredtredtjeenucfhrhhomhepmfhorhihucforghinhgtvghnthcuoehkohhrhidrmhgrihhntggvnhhtsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpedugefgudfftefhtdeghedtieeiueevleeludeiieetjeekteehleehfeetuefggeenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplgduvdejrddtrddurddungdpmhgrihhlfhhrohhmpehkohhrhidrmhgrihhntggvnhhtsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedufedprhgtphhtthhopeifihhllhgvmhguvggsrhhuihhjnhdrkhgvrhhnvghlsehgmhgrihhlrdgtohhmpdhrtghpthhtohepkhhusggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkvghrnhgvlhigihhnghesthgvnhgtvghnthdrtghomhdprhgtphhtthhopehlihhnuhigsegrrhhmlhhinhhugidrohhrghdruhhkpdhrtghpthhtohepk
+ hhorhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomhdprhgtphhtthhopehmkhhusggvtggvkhesshhushgvrdgtiidprhgtphhtthhopehnvghtuggvvhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehprggsvghnihesrhgvughhrghtrdgtohhm
+X-GND-Sasl: kory.maincent@bootlin.com
 
-On Tue, Mar 04, 2025 at 03:45:35PM +0200, Andy Shevchenko wrote:
-> Tidy up ACPI ID table:
-> - drop ACPI_PTR() and hence replace acpi.h with mod_devicetable.h
-> - remove explicit driver_data initializer
-> - drop comma in the terminator entry
-> 
-> With that done, extend compile test coverage.
-> 
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Add support for reading tsinfo of a specific hardware timetstamp provider.
+Enable selecting the hwtstamp provider within the network topology of a
+network interface.
 
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
+---
+Kory Maincent (3):
+      update UAPI header copies
+      tsinfo: Add support for hwtstamp provider
+      netlink: Add support for tsconfig command
+
+ Makefile.am                            |   1 +
+ ethtool.8.in                           |  41 +-
+ ethtool.c                              |  14 +-
+ netlink/extapi.h                       |   4 +
+ netlink/ts.h                           |  22 +
+ netlink/tsconfig.c                     | 153 ++++++
+ netlink/tsinfo.c                       | 110 +++-
+ uapi/linux/ethtool.h                   |  31 ++
+ uapi/linux/ethtool_netlink.h           | 899 +--------------------------------
+ uapi/linux/ethtool_netlink_generated.h | 821 ++++++++++++++++++++++++++++++
+ uapi/linux/if_link.h                   |  26 +
+ uapi/linux/net_tstamp.h                |  11 +
+ uapi/linux/rtnetlink.h                 |  22 +-
+ uapi/linux/stddef.h                    |  13 +-
+ uapi/linux/types.h                     |   1 +
+ 15 files changed, 1262 insertions(+), 907 deletions(-)
+---
+base-commit: c62310eb2999e40545d0aa6f3a7489864b633607
+change-id: 20241205-feature_ptp-5f11ec7a5b95
+
+Best regards,
+-- 
+Köry Maincent, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
+
