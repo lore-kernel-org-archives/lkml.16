@@ -1,139 +1,114 @@
-Received: from out.smtpout.orange.fr (out-66.smtpout.orange.fr [193.252.22.66])
-	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-wr1-f67.google.com (mail-wr1-f67.google.com [209.85.221.67])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32E5F24BBF7
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 15:01:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.252.22.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C108724394F
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 15:01:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.67
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741186880; cv=none; b=FO2g5bgNxjgi07Sjq1MzsLeWCAwpzTAZil8dfgW4IIW1tSxdasGv5saapkmmYwkXe6EZKN+6i/l27sGafi/zwzt7E2C1l0k0c0VknoQY+I/LYJjMqUH3WLwnNCPm9rCxAukfAk3vMKiZDX7UodWbSzuMoQxcSk2gKMjRcvWURGc=
+	t=1741186892; cv=none; b=eMXp5AnFF6FoqHpBhXOi5aB7cPCQLEXkslaGwtJhfUGZXV6b6zof8XKxjminsNhJcKVBfnS3p79StRNoNLVbUXmKJ83V5Uiu4dXMReMV+C2AlWnYqahMpMDzhS3wkJVEncEPHE8eBy20ZoLh3Eh+AEpc4I5MFutQsTm+gRFBY/E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741186880; c=relaxed/simple;
-	bh=W+tboB6IgFEjPGx3WkSzqgQIUHHEdFH9Cj4qkUkDilM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=W44PL9MQ3o3o2Xnvo3r4RgU/Nfjm/Wbx9+6ReME/DOr4hmhImIvPqf3xGjR/bK7wxgccuadKoT6vhLMqOfsl+v2TxJ/638NLAyTpzA67xr0CF+v6o3OskEGRcE8S9WaytvfKu6KorDpbaLUykS8T3lFG4AUKGrdpASCCYLMA24A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=fUNemUP7; arc=none smtp.client-ip=193.252.22.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1741186892; c=relaxed/simple;
+	bh=tKRC44aN56m50sLOEeIaapl3gEiMoEks9dKhfkhvmkQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ACuhwTNrv7n1R93tzkysQAdKqnJImaUXY8kOYc88FI7Cy68kKGqt6ZRq06eny6aQJnWQOAAAn3HESV0kO9aNQJbkvRKUm701MtrC3vS5pVTqhcj4SS8hr8KZpulViYiCWdAPC4PEXISCS0rGkX0sMrQAcdHJUTf8prjtRDJzfoc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=YvecI0OO; arc=none smtp.client-ip=209.85.221.67
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="fUNemUP7"
-Received: from [172.16.82.72] ([124.33.176.97])
-	by smtp.orange.fr with ESMTPA
-	id pqDptJzz8mAhYpqE8tuPKl; Wed, 05 Mar 2025 16:00:07 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1741186807;
-	bh=aZ1JmONzMcP89ngQ1BiwOhPd9zDte7irRWei57QsOWo=;
-	h=From:Date:Subject:MIME-Version:Message-Id:To;
-	b=fUNemUP7GZeBHer6ykuQ2XeX0p5tS3qcFd5LH+i/IshFTPxC/f9ZmEm8zPxT/PHzY
-	 wR9fmOyO5nY71RHxLioTcs7Que6kWJp8P14vigbKKgfiz1Xs3AM08lRJHMIiArSmVu
-	 nMjaCjUYTuRtZJbgS7CZCGsGUESjBFTU5CjHOEeSIGxc0dv+LZr7yWEP42nIdFD+v8
-	 HTVbrWXwk10Wjmor+QexdjIdBRNjEYcTEgjBxIANVUEPk+bgtqRFBxWZP9+gkmgTZ8
-	 E8hcsHfW5yFsx1//hKXFyM/VOyv3S42rsErCzr2FSWisov+AJtBY5n1R4LhVrLwNxT
-	 h7ykJr4oO2v2A==
-X-ME-Helo: [172.16.82.72]
-X-ME-Auth: bWFpbGhvbC52aW5jZW50QHdhbmFkb28uZnI=
-X-ME-Date: Wed, 05 Mar 2025 16:00:07 +0100
-X-ME-IP: 124.33.176.97
-From: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
-Date: Wed, 05 Mar 2025 23:59:32 +0900
-Subject: [PATCH] treewide: fix typo 'unsigned __init128' -> 'unsigned
- __int128'
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="YvecI0OO"
+Received: by mail-wr1-f67.google.com with SMTP id ffacd0b85a97d-390f69f8083so4005980f8f.0
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Mar 2025 07:01:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1741186889; x=1741791689; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=tKRC44aN56m50sLOEeIaapl3gEiMoEks9dKhfkhvmkQ=;
+        b=YvecI0OOWqNntecpS8YB1v/wL7z4XVuqvW01pOiBzNqroj6RpwAimFuQI8uNiTMrc7
+         9C7OOMW//dcVMB409Zphf23fijU4NlLhzqZ2M4jiPoPwCQN0IrQleZ4oFkvo808jWgYf
+         P1BPCeUqtILBWTAZwUkpBC/vkaXWrtsxGngcMd32MEywzRtUa4CWqTl863Zz5AQaFKKs
+         atCYIDIMUqJQpLGz7sT/GS+OpfJ7b+5S5cQCWm2KH1IJvhtV4jLfav9jIBuCEn4OvlmN
+         z1aMn42goKvDx6BiGWwasJQiQFNYt1zPYW/YOmsLA7KECrT9byDL/Lw/9Na8aoyoUHEw
+         uwMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741186889; x=1741791689;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=tKRC44aN56m50sLOEeIaapl3gEiMoEks9dKhfkhvmkQ=;
+        b=MJbWrz/j86nCD1crxPjeDhp73p1whC9CfNkilyMdejQx79hq4JTKDH7ViTYQZDDqAJ
+         QisJmE5A+JRrAEqgfIMcbPTndxKaQVTCld3snv2k1/qd3Y300w1QRH9PngbWtROh7Myz
+         QhQImres8gUKws0tagcmYHSejmKY66472qRhbeONKXIZqx9tsQXCmlA0hQGbpLYdAMQR
+         l3yOrNpbPCNtZoMCPVSTLz6Ghl5E91AP8YPfsWH2LfNc/BAPcubRnIvjTFwmQR2IvM8y
+         +QIUeRGzUyqAufzSeMtGmOgilZp5QatsyNAlUq0M/UFA8dRE/pVON0ZgRobB5Oosc2Q8
+         rdUQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUH46Q9gsGwclxyVBQfTGXp/Bzpcjde9Kz3w/+YYzuqVEJiiv4TggnqNcNr5/vo0BBrl1qkZMhtql1nD5s=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxt5wonlEJYumsasPDELxnprpbdB51O2bpFVu8KuPTP8ziBXAFd
+	/mF7YIFpvMSxQ6gkiWJq4ovUR0jyee6t/brc+iXpwhNpaTJZp25kJxKQZ5C11EI=
+X-Gm-Gg: ASbGncvur9MUsjoWl8au4abfKa5tPRi9EcaKnaWuE5W3O26Dwxa9GjZjpDggKT512+l
+	7aLWJKBWbaByXhssXc6uwa86EUmJttd89qj4c2H4q13hgoJBXGQ1l02RnZyU506YnTHChKvc9fx
+	odTrPMcDz+XfThMrTNQeAFiJPtuxwPWMrAJjY+x533MGevO4esnG40nOnshSX3JZFvyfMbSjb7w
+	f+pH6CCxPKOPfgXHqx9d/aUPic/gz88bGtv3p0q7KdEs/vYexGba+1zCd4K599qJWv8PmptMxdy
+	ltX8zT2aCLEkViwJcD64y9yino9MSrlGy5zk+mDLf0g5udc=
+X-Google-Smtp-Source: AGHT+IFL/uZnnZy/SUNvCLntbKcDBOtXIcw9/1yqKN/3bUF7ymWLDynIz1Tnq4FdqZC6YXScqanCPg==
+X-Received: by 2002:a5d:64c7:0:b0:386:3835:9fec with SMTP id ffacd0b85a97d-3911f7b7bd7mr3630536f8f.44.1741186887521;
+        Wed, 05 Mar 2025 07:01:27 -0800 (PST)
+Received: from blackdock.suse.cz ([193.86.92.181])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-390e485db82sm20896991f8f.88.2025.03.05.07.01.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Mar 2025 07:01:27 -0800 (PST)
+Date: Wed, 5 Mar 2025 16:01:25 +0100
+From: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
+To: Aleksandr Mikhalitsyn <aleksandr.mikhalitsyn@canonical.com>
+Cc: brauner@kernel.org, stgraber@stgraber.org, tycho@tycho.pizza, 
+	cyphar@cyphar.com, yun.zhou@windriver.com, joel.granados@kernel.org, 
+	rostedt@goodmis.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/2] pid_namespace: namespacify sysctl kernel.pid_max
+Message-ID: <z54lsfeqvqvkqkgrlo72s7ftf7ltx55tg36ytcgwhtgtxlgckp@rytzoykb6csb>
+References: <20241122132459.135120-1-aleksandr.mikhalitsyn@canonical.com>
+ <bnxhqrq7tip6jl2hu6jsvxxogdfii7ugmafbhgsogovrchxfyp@kagotkztqurt>
+ <CAEivzxdPDC+sgRDYuv+RG57_RX0+RAdRDJTy8L4Bi=MffHmCuA@mail.gmail.com>
+ <ad4mel7m2tfybp54vqfl5c6sownjr5kq3xa5ytucfkqecfakga@aw65fx3rziyj>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250305-fix_init128_typo-v1-1-cbe5b8e54e7d@wanadoo.fr>
-X-B4-Tracking: v=1; b=H4sIANNmyGcC/x2MQQqAIBAAvyJ7TnCVIPtKhERutRcTlSikvycdB
- 2amQqbElGEUFRJdnPkMDbATsB5L2Emybwxa6V4Z1cuNb8eBC+rBlSee0i7KE6K31qzQspioOf9
- ymt/3A+xiBChiAAAA
-X-Change-ID: 20250305-fix_init128_typo-9a0de11d993c
-To: Yury Norov <yury.norov@gmail.com>, 
- Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc: linux-kernel@vger.kernel.org, 
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
- Vincent Mailhol <mailhol.vincent@wanadoo.fr>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3058;
- i=mailhol.vincent@wanadoo.fr; h=from:subject:message-id;
- bh=W+tboB6IgFEjPGx3WkSzqgQIUHHEdFH9Cj4qkUkDilM=;
- b=owGbwMvMwCV2McXO4Xp97WbG02pJDOkn0t4+X8GqmZ8jH2S+eoZr51tDm9SNW+6dNXsVs5bX2
- OtS+8P1HaUsDGJcDLJiiizLyjm5FToKvcMO/bWEmcPKBDKEgYtTACZy4gYjQ0/HPYHSFv0rBg3f
- Gd6kP7PiLMiKlMx3EA/qO+y/rNwwn5HhcXskw49PsUdyNr8Sm6u979Z0oa8nn8vf3hL0Qfo9X4A
- 2JwA=
-X-Developer-Key: i=mailhol.vincent@wanadoo.fr; a=openpgp;
- fpr=ED8F700574E67F20E574E8E2AB5FEB886DBB99C2
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="2aaqmwvs6n6ntrwq"
+Content-Disposition: inline
+In-Reply-To: <ad4mel7m2tfybp54vqfl5c6sownjr5kq3xa5ytucfkqecfakga@aw65fx3rziyj>
 
-"int" was misspelled as "init" the code comments in the bits.h and
-const.h files. Fix the typo.
 
-Signed-off-by: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
----
- include/linux/bits.h             | 2 +-
- include/uapi/linux/const.h       | 2 +-
- tools/include/linux/bits.h       | 2 +-
- tools/include/uapi/linux/const.h | 2 +-
- 4 files changed, 4 insertions(+), 4 deletions(-)
+--2aaqmwvs6n6ntrwq
+Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v2 0/2] pid_namespace: namespacify sysctl kernel.pid_max
+MIME-Version: 1.0
 
-diff --git a/include/linux/bits.h b/include/linux/bits.h
-index 61a75d3f294bfa96267383b5e2fd2a5d4593fcee..14fd0ca9a6cd17339dd2f69e449558312a8a001b 100644
---- a/include/linux/bits.h
-+++ b/include/linux/bits.h
-@@ -40,7 +40,7 @@
-  * Missing asm support
-  *
-  * __GENMASK_U128() depends on _BIT128() which would not work
-- * in the asm code, as it shifts an 'unsigned __init128' data
-+ * in the asm code, as it shifts an 'unsigned __int128' data
-  * type instead of direct representation of 128 bit constants
-  * such as long and unsigned long. The fundamental problem is
-  * that a 128 bit constant will get silently truncated by the
-diff --git a/include/uapi/linux/const.h b/include/uapi/linux/const.h
-index e16be0d37746e14b9eedcdb38be7d11f29b5113a..b8f629ef135f356f552b9aa9dd73356167503134 100644
---- a/include/uapi/linux/const.h
-+++ b/include/uapi/linux/const.h
-@@ -33,7 +33,7 @@
-  * Missing asm support
-  *
-  * __BIT128() would not work in the asm code, as it shifts an
-- * 'unsigned __init128' data type as direct representation of
-+ * 'unsigned __int128' data type as direct representation of
-  * 128 bit constants is not supported in the gcc compiler, as
-  * they get silently truncated.
-  *
-diff --git a/tools/include/linux/bits.h b/tools/include/linux/bits.h
-index 60044b6088172b3f26aa3f17cdaede9786863dae..8de2914e65101463667de45db7ade17c4a72ff40 100644
---- a/tools/include/linux/bits.h
-+++ b/tools/include/linux/bits.h
-@@ -41,7 +41,7 @@
-  * Missing asm support
-  *
-  * __GENMASK_U128() depends on _BIT128() which would not work
-- * in the asm code, as it shifts an 'unsigned __init128' data
-+ * in the asm code, as it shifts an 'unsigned __int128' data
-  * type instead of direct representation of 128 bit constants
-  * such as long and unsigned long. The fundamental problem is
-  * that a 128 bit constant will get silently truncated by the
-diff --git a/tools/include/uapi/linux/const.h b/tools/include/uapi/linux/const.h
-index e16be0d37746e14b9eedcdb38be7d11f29b5113a..b8f629ef135f356f552b9aa9dd73356167503134 100644
---- a/tools/include/uapi/linux/const.h
-+++ b/tools/include/uapi/linux/const.h
-@@ -33,7 +33,7 @@
-  * Missing asm support
-  *
-  * __BIT128() would not work in the asm code, as it shifts an
-- * 'unsigned __init128' data type as direct representation of
-+ * 'unsigned __int128' data type as direct representation of
-  * 128 bit constants is not supported in the gcc compiler, as
-  * they get silently truncated.
-  *
+On Fri, Feb 28, 2025 at 02:46:11PM +0100, Michal Koutn=FD <mkoutny@suse.com=
+> wrote:
+> One more idea I have, would be to rebase my original pid_max default
+> value elimination [1] on top of the namespaced pid_max and not to copy
+> from parent but start unlimited in the ns too. (Or keep global default
+> value and unlimit only descednants so that's similar semantics to
+> ucounts.)
 
----
-base-commit: d082ecbc71e9e0bf49883ee4afd435a77a5101b6
-change-id: 20250305-fix_init128_typo-9a0de11d993c
+This seems like a satisfactory conservative correction
+https://lore.kernel.org/r/20250305145849.55491-1-mkoutny@suse.com
 
-Best regards,
--- 
-Vincent Mailhol <mailhol.vincent@wanadoo.fr>
+Michal
 
+--2aaqmwvs6n6ntrwq
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQTd6mfF2PbEZnpdoAkt3Wney77BSQUCZ8hnQwAKCRAt3Wney77B
+SeP8AQDws6VAjmqqxEXXH4ydWha5/EV+KBhHcyU879z0vWXoOAEAvAX7F0WgtKcO
++uQt4b1iwIUlx+3bR479rYuAXyqMKgE=
+=KJX4
+-----END PGP SIGNATURE-----
+
+--2aaqmwvs6n6ntrwq--
