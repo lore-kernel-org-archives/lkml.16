@@ -1,125 +1,103 @@
-Received: from mail-wr1-f68.google.com (mail-wr1-f68.google.com [209.85.221.68])
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19D79221F29
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 14:59:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.68
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B179724E4AD
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 15:00:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741186782; cv=none; b=LT3JLRtgz8i4tDUdESzAQiurxtKeenW6uYYF7HgdiiYQ3jsVDHP315kDSWMrC7Ns2FYpxleA4xOYymSGNnSKp/9nrIDJtWJpPjqp3T0FTToZLGF4fQYPf1YsXo0C0grbP5sl+5UtPXJLVoiiF0PIxTmYOp8Kz+Jla5UhhnOjSQA=
+	t=1741186814; cv=none; b=JqsquwbmGCgX+4PWpUw6W2jIIql4A26NvK9AW01WchuNkYAYaFXqhALdN4v2l+AwaL64St/G6CLlzWNBLsr0yJczwYhTzM1Ch55DZm/NuglrKwkTCf5xaISMWcwzT6wkbzW+4onAqwvgA2HOyX/B/TCKzeo0M+AfjNBRyf9q65Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741186782; c=relaxed/simple;
-	bh=UlHxI0GLM+MucAlMjbb8mi/mWOr+BHb4r/ki3qFFvGg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=CZd9PzMxHPRI5qJ7ggYRiFrnBmoB2T0sqsq2pbiYoo2n8p7Suf/D+ulphAVwCNywdSMBLjOl0hp+xltZ7Uzvmmjb/d4Hn3H3cQMWrJ7x25/+6y+jPI5Sy/cJGh2J3PH/hd1GHAPO3ldP8Xz5OcdoST15lfi2ry32MNYLRBOXu1A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=PwhFruKd; arc=none smtp.client-ip=209.85.221.68
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1741186814; c=relaxed/simple;
+	bh=Q8DJ8fiTmNjeP/+2ks1wRurrJfcRDgtOToR7IsclVLQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=uBVOAyMMNvXEvH/kZzZcgB6CPSkG6CwgMmEKKFXuMMvpy204u8H+zP+gcucNCvDgSK5JyGAtkm2/3XOii8ofqPLsAQJ/2ReCagi369VZfTeEK5uY5Aq6iuy6JHp1XAAiWKyasW9hRJ+5rpfhj7SjxqFGzo+/I0LmUCNf90kPUsw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Z4XQwnFr; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="PwhFruKd"
-Received: by mail-wr1-f68.google.com with SMTP id ffacd0b85a97d-390dd3403fdso5894514f8f.0
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Mar 2025 06:59:39 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Z4XQwnFr"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-43bb6b0b898so33250195e9.1
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Mar 2025 07:00:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1741186778; x=1741791578; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=bPsHEh/NrQR2RMMobt6Nu3tWFHwHhhyGMgaAaqgXc7U=;
-        b=PwhFruKdaWn+y+MnuDa1rhe2FzB3ibyi0UaiRiiZKhO9h3Nq2LIqdQYynmRPk6jmHI
-         S3HdJlNi3o3S9yVBZIffqV25FP7COHI/twCZCZuXtKQbzH1FLVjpqftwb5OKcT6gRrut
-         rXrsm1otT7uwrOOJoQSB4t/uSTUVVhUpDksDotuzptw9l6duCkdIly1ecxVKp9he+6TK
-         eKfNTc59zS2/MAs5FpE2z+6f3k7pDFs1LFY+MIaxo1v9e6wsPRHtYr0AV5k5laYLXZs2
-         3gcmVO25mg9VBDbScyu0FarXNrEJpmzfOgNUrWrbA9DzWsNJ3t9Rs+D5PdUnhEWOXkcP
-         zdFA==
+        d=linaro.org; s=google; t=1741186811; x=1741791611; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=bXn+R30pfqAeO+ripC6gzbXJrYwc26V6TE4Knds++Rc=;
+        b=Z4XQwnFrXlxKwgfpMtsWoubHNjl00O57875c1XTaww2fGik1DcTZoywAX7je1NLgAC
+         WOPcwwKvMA6AVMesw7kZqb7SGR2mzfkQqaWRaVEVCpsWwrkJgUvcWqydEqOIDP4HsRKK
+         0wDVjHjlqxtADqXOWjLWRAcfiPnPQ3q6be/iGqNvN2tbM3TzFAwGYNWkKZi0qnV0UYVl
+         sixFDr6cYoh8c4D9XvyMALvvml/Z5Uy5t1PvsFqxbRDUbQbUmeaXbXODTOFDmhzeedgh
+         kxSgBvzMWDQ5BAv3zFOI1GLUQkaiVE8kilaP6nIr7CcZwtjZ08Ayi0HfaJYumXmcrRmU
+         2Ojw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741186778; x=1741791578;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=bPsHEh/NrQR2RMMobt6Nu3tWFHwHhhyGMgaAaqgXc7U=;
-        b=e54AEtn1x0oN3b6DRthf8AxqMlziHiR53RHNM41QEElNvwnpvmBP7sBXoVpn4QdhNC
-         z1kdqfjE/Kbk7jxkYvBA1+RXN3trMRT6c+WTXvDFlNpg1nxBa9gbhFNUGceSbcJqz/qP
-         HwtDPKQGsAYKvMTZ7HxR5T3hO8H8+6YCDCzlSyQV2Bber7R+GvN13jzcaWfn5shwRPk4
-         7bNjX5BPSctbEqm57eRXUlOB3fZkm5tULdyU+39QF1BxvuzFgs9vd5aWsbazyIPO/fU+
-         stDD5cBId6F/PvO/Q2mzFdly6FxcekiRZUByN4sxLd3weELZhwRe1HL/47ABSFTHHudm
-         o98w==
-X-Forwarded-Encrypted: i=1; AJvYcCWBrDGU9h8s5JBYnh6N69RYAvGfaonrQIceZpjRm3CKPu70Js6FiO5KsPWyUyD2hHlkYvfm6ukiYiQn9uo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzXTeD7q42yMi2bKxuoEttzC/ZsMth0tqLqiF9PNJnP3q82I/qW
-	M7Iz+Cv5rRmUdDsb5mYijLChM8yUHeFd49UJpeCjSKYBZeuiLqUewq97c8hZ+bK7m8KMU5sNkbn
-	WjaUbbg==
-X-Gm-Gg: ASbGncsp+T2nZUlo7ZJIJ7oHf3qY/XYs0c+UrV9njkLkQqw/8Rfj2CLCKQY94jimxVQ
-	PXpE+yobPB9z1lM4MghaUWqIbZ+Jw12MZw9+4Ys7zUk67D1FpVpQicyATyHXv7RItvAFVLcBATe
-	JW4xhAPr5yVjCS9WcnCOW965D6+uWP4siD1aG1DbcI3rv6M+dCFRLRRTVDXiUKVi0jyCpWlA5Pg
-	hlMjsh07o/lvyx2v5ZJat+2JrNI9p1YrqsopzMoOpznbijgYVj0bumqohJMwvq5JUMUQIDfgJYl
-	klo3M+zCPViVPiVk2aSxjRG2SnELL0JzXkmG7Y0KDR4rfM4=
-X-Google-Smtp-Source: AGHT+IHB6GyywhrgQ56YWawycgsn/CJT7lerxxfaKzX88S/TWipFnbD7TokNq4VvuAv7ie0NH429ow==
-X-Received: by 2002:a5d:6d87:0:b0:391:952:c758 with SMTP id ffacd0b85a97d-3911f7272dfmr2815656f8f.6.1741186778254;
-        Wed, 05 Mar 2025 06:59:38 -0800 (PST)
-Received: from blackdock.suse.cz ([193.86.92.181])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-390e47a66adsm21058750f8f.25.2025.03.05.06.59.37
+        d=1e100.net; s=20230601; t=1741186811; x=1741791611;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=bXn+R30pfqAeO+ripC6gzbXJrYwc26V6TE4Knds++Rc=;
+        b=hAjlYyqvVtCeEdr/lNvhLV+/4r8mbSa8imixU1aiUwShPHo83H7lJPSRwaYQJzdtL+
+         0kfaJGr5C7ON6Fqs1Q2yHJyuuTYAsqxgYSTEYUhRYCGSO96KKNorWb4VSgz0hDEi06jm
+         iWMo455RAnSeCKaRVABNsNehMd7EXSmvaC/1l16T+cKW9mnd8DYGoNprf89p7ck8oTvQ
+         1lb4j+jxp0NBCG0M8AduhUy3JgEOMuRuZVq68yjjB5BqY74lVIauNk37tUd/yfLgmyPq
+         VexLeVNjjATqCJ1ycbUxmb6qpv5rXlj059KY1wndxUmZQW2219fWh10X0CMD2GXV0Xjm
+         bCXg==
+X-Forwarded-Encrypted: i=1; AJvYcCVa/Al/Itoa7TU3qE6QHqOkZcc9DlcebssxPoeGBHgIF62ZItmdjtY7ZJKqvd23j2zxMl9e5Xs9A6t1smM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz35N4YDc3EgGVoSFnobGtQyMpXpAR+jjnqw7FcnSysZMKcnVXy
+	Zuh4onvsXOKYuc9TCu+QJAzkPyJxTS41BhjfO4rwSho4pj5yZJmJPc0UeKkSDpo=
+X-Gm-Gg: ASbGncvBB4iyvYQte1yXjB2TconB6DpsGBCe6/QVun5W/z/kKPNe4zS4Y4fzda/zZ6V
+	I6TIfBq+fY8HPKmJOU3KWzYNBDUrfYaEHy2Ac+DzOiO7FpOdRJa1uHh1908C2Pq2OTeM8undHR2
+	2k8AIRWs3uUBxJYdL+iieCYC0nJudMgM5wHQvGBLky6EwK/jxceTj4IiKbkkPsHd85Aik2YDoXG
+	JwD1SYuPNgGVQ7VVJKX8kYkPC9Moc1+/kSGvnrX8BFYEILeHsdXqHEJ3e+MSy/y7mt6vicXYkcq
+	sg0cO5jJs9ePmZvC+Lcr+BygD2OYWwJhLBudLS6cdwS59rSrcg==
+X-Google-Smtp-Source: AGHT+IHwAOMpL/YkvcIgyvX6we6SxWByrXnH2O7kDqMIwc9Mimc1XxnvaS/gUDf6T/jHttMfPf7cPQ==
+X-Received: by 2002:a5d:59a5:0:b0:390:ea4b:ea9 with SMTP id ffacd0b85a97d-3911f7b7459mr3110045f8f.39.1741186810870;
+        Wed, 05 Mar 2025 07:00:10 -0800 (PST)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-390e47b6cd8sm20988561f8f.44.2025.03.05.07.00.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Mar 2025 06:59:38 -0800 (PST)
-From: =?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>
-To: Christian Brauner <brauner@kernel.org>,
-	Alexander Mikhalitsyn <alexander@mihalicyn.com>,
-	linux-kernel@vger.kernel.org
-Cc: Joel Granados <joel.granados@kernel.org>,
-	Oleg Nesterov <oleg@redhat.com>,
-	"Eric W . Biederman" <ebiederm@xmission.com>,
-	"Martin K . Petersen" <martin.petersen@oracle.com>,
-	Wei Liu <wei.liu@kernel.org>,
-	Baoquan He <bhe@redhat.com>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	=?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>
-Subject: [PATCH] pid: Do not set pid_max in new pid namespaces
-Date: Wed,  5 Mar 2025 15:58:49 +0100
-Message-ID: <20250305145849.55491-1-mkoutny@suse.com>
-X-Mailer: git-send-email 2.48.1
+        Wed, 05 Mar 2025 07:00:10 -0800 (PST)
+Date: Wed, 5 Mar 2025 18:00:07 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Jingoo Han <jingoohan1@gmail.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Vidya Sagar <vidyas@nvidia.com>, Frank Li <Frank.Li@nxp.com>,
+	Niklas Cassel <cassel@kernel.org>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: [PATCH] PCI: dwc: ep: Return -ENOMEM for allocation failures
+Message-ID: <36dcb6fc-f292-4dd5-bd45-a8c6f9dc3df7@stanley.mountain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Mailer: git-send-email haha only kidding
 
-It is already difficult for users to troubleshoot which of multiple pid
-limits restricts their workload. The per-(hierarchical-)NS pid_max would
-contribute to the confusion.
-Also, the implementation copies the limit upon creation from
-parent, this pattern showed cumbersome with some attributes in legacy
-cgroup controllers -- it's subject to race condition between parent's
-limit modification and children creation and once copied it must be
-changed in the descendant.
+If the bitmap allocations fail then dw_pcie_ep_init_registers() currently
+returns success.  Return -ENOMEM instead.
 
-Let's do what other places do (ucounts or cgroup limits) -- create new
-pid namespaces without any limit at all. The global limit (actually any
-ancestor's limit) is still effectively in place, we avoid the
-set/unshare race and bumps of global (ancestral) limit have the desired
-effect on pid namespace that do not care.
-
-Link: https://lore.kernel.org/r/20240408145819.8787-1-mkoutny@suse.com/
-Link: https://lore.kernel.org/r/20250221170249.890014-1-mkoutny@suse.com/
-Fixes: 7863dcc72d0f4 ("pid: allow pid_max to be set per pid namespace")
-Signed-off-by: Michal Koutný <mkoutny@suse.com>
+Fixes: 869bc5253406 ("PCI: dwc: ep: Fix DBI access failure for drivers requiring refclk from host")
+Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
 ---
- kernel/pid_namespace.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pci/controller/dwc/pcie-designware-ep.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/kernel/pid_namespace.c b/kernel/pid_namespace.c
-index 8f6cfec87555a..7098ed44e717d 100644
---- a/kernel/pid_namespace.c
-+++ b/kernel/pid_namespace.c
-@@ -107,7 +107,7 @@ static struct pid_namespace *create_pid_namespace(struct user_namespace *user_ns
- 		goto out_free_idr;
- 	ns->ns.ops = &pidns_operations;
+diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+index 20f2436c7091..1b873d486b2d 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-ep.c
++++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+@@ -908,6 +908,7 @@ int dw_pcie_ep_init_registers(struct dw_pcie_ep *ep)
+ 	if (ret)
+ 		return ret;
  
--	ns->pid_max = parent_pid_ns->pid_max;
-+	ns->pid_max = PID_MAX_LIMIT;
- 	err = register_pidns_sysctls(ns);
- 	if (err)
- 		goto out_free_inum;
-
-base-commit: 48a5eed9ad584315c30ed35204510536235ce402
++	ret = -ENOMEM;
+ 	if (!ep->ib_window_map) {
+ 		ep->ib_window_map = devm_bitmap_zalloc(dev, pci->num_ib_windows,
+ 						       GFP_KERNEL);
 -- 
-2.48.1
+2.47.2
 
