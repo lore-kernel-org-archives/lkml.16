@@ -1,169 +1,126 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34EF818DF8D;
-	Wed,  5 Mar 2025 17:45:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3644A250C02
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 17:45:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741196724; cv=none; b=Ati04LTUwfLABSXHr+bCUVJt3rJYmp8dM3/rPwAl39DwKcLO7YXjmi0O1YuXHbNBWuGKbruq4h5UGy1k0p6XLrF3yvjGoqfs6+MCdk5fIfyq73smTcdIazOM8yFqFjqe3fm6I06pb9+FP4Jjc6ZxKHJb8jb9Y8AJ6jX04j66hbw=
+	t=1741196728; cv=none; b=FQhs89G3StkqzF6NXUXnrw7n7wWC1/ENvVZMkSUb3SvJ7WoSJhq3gVP6nDdYz94nuN1Bap23884mFuqejUnC/F5bNL7zlC3XNP+jFsLorJSFYZYpx8ecXZDhG8hs1VOfN1F+IonMbFlxosDRcuvF2Qwut0XBg2iNTt1jjn+Zvrs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741196724; c=relaxed/simple;
-	bh=ZUhCuM8H0R253y8eMtAf0airPgJTVO1TO4CiN5J2T4s=;
+	s=arc-20240116; t=1741196728; c=relaxed/simple;
+	bh=XjEOiS/qFvdC8RqvVQX+N3LEfTa/dkn8FPGhmC3N5cg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uzyozQ+PDiU5FKTKrGgPj9YT1lNeYIPER4zEFsi8vWGdBm6XKerGYnr07+As+halyqxEHKDwjJERQG23fr0/qb7MgAsM1LFsK8s2GFhvvJkvlx6TxhwSGFGcwjmhjRNDOQsxHsl/G8LeCIZ3BjhlbpNCRCJCULqmDOe1bcE3koM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WQiTZrKq; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=TR1rGa6u/sbiwTKhf+ZIuPk+4uxICdLMF+wPwYzX4LFdxdCrR1OCEuPwl8GXRJR2MJWTxUuo+Z+NTiKFCGOooLr4z4yU3WYJPrPzOEOspT4SJxFXbnzwmDel2HWE8dhrQloMOaPN/4HasP57q82QgOM5fvKINqAfWdZQsg+6JnM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mjL4ep04; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WQiTZrKq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 123D4C4CED1;
-	Wed,  5 Mar 2025 17:45:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741196723;
-	bh=ZUhCuM8H0R253y8eMtAf0airPgJTVO1TO4CiN5J2T4s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=WQiTZrKqj4+5GycZ1ZfH2pNAbCwF6tBpCADknMpLcL350XnvX7qiL+qPjOBZCLOYB
-	 rV//65NFg3HFBWUT3E2jdnwd9mD23qbfwSGGd+XlnTr+/uvgru0mV4YfLi4Xvg/QiE
-	 IlRFb0RB2YlBoLeT4xotwUttvjJSWijSH8wOfPvu5oeB09cNu5dfhMACVGbfrCwKlL
-	 AiniUKY9jLyfT1L51HTCLvAQ5zAnMrqWInNhZfTzwvaWJfeK7BZbrDcIUAJhcvT0hl
-	 T/ylRl57Y3/2Oglcnx67qlvblm5g43Ii58F3idRyWr0/jBhvZ358k2JhRf8xJdTDD1
-	 S+sWJFROJGJzw==
-Date: Wed, 5 Mar 2025 14:45:19 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 2/4] perf test: Skip perf probe tests when running as
- non-root
-Message-ID: <Z8iNr0Lh61o_GZgg@x1>
-References: <20250301040252.1586750-1-namhyung@kernel.org>
- <20250301040252.1586750-3-namhyung@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mjL4ep04"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741196727; x=1772732727;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=XjEOiS/qFvdC8RqvVQX+N3LEfTa/dkn8FPGhmC3N5cg=;
+  b=mjL4ep04t7YBDYb+wdDHdWr3yz0LJU6GzbnXEmPMD8V+sYkVmWgIDep3
+   ucDYs9lZDoRko4LYcjf53NzySveGVmHMZBw3lbOPMN8FTFUzAvk9ZlrHh
+   TKvy6NgFKNa/IoLwzPGiX+q5pcuFdDrKLZ1zPFTBivZ8pJu7DzxJb5bFO
+   hElovnUvXYmZuUnkAHoMJOEAsyn4ymy/wJkEI+xKX5LoLBHfnoddU6J73
+   TChq0XCnoN2PSqVSYjzK1UsjvAZ0URuNV+TBmvq+Kcy5wiuczeojBPAMJ
+   ciyJqKoLInacHfja0hRUBglPZsZSfthIErRbigYOLPkne8ER5H2sx/VQ2
+   A==;
+X-CSE-ConnectionGUID: tNaHxDqARvytJmWZsuGSdA==
+X-CSE-MsgGUID: 03clK3BdRS2XcbUYZXEJTA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11363"; a="42313829"
+X-IronPort-AV: E=Sophos;i="6.14,223,1736841600"; 
+   d="scan'208";a="42313829"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Mar 2025 09:45:16 -0800
+X-CSE-ConnectionGUID: eTHwaUUkQAiiW+OWn98utg==
+X-CSE-MsgGUID: tbds7TsvRSqUoqM3Yaunxw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,223,1736841600"; 
+   d="scan'208";a="118930553"
+Received: from lkp-server02.sh.intel.com (HELO 76cde6cc1f07) ([10.239.97.151])
+  by fmviesa008.fm.intel.com with ESMTP; 05 Mar 2025 09:45:05 -0800
+Received: from kbuild by 76cde6cc1f07 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tpsnk-000LLi-26;
+	Wed, 05 Mar 2025 17:45:00 +0000
+Date: Thu, 6 Mar 2025 01:44:41 +0800
+From: kernel test robot <lkp@intel.com>
+To: Nicolin Chen <nicolinc@nvidia.com>, jgg@nvidia.com,
+	kevin.tian@intel.com, robin.murphy@arm.com, joro@8bytes.org,
+	will@kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, iommu@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/3] iommu: Sort out domain user data
+Message-ID: <202503060130.fkBIRmys-lkp@intel.com>
+References: <74a3bf91b52563faaf7ef7de065931e4df47e63f.1741034886.git.nicolinc@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250301040252.1586750-3-namhyung@kernel.org>
+In-Reply-To: <74a3bf91b52563faaf7ef7de065931e4df47e63f.1741034886.git.nicolinc@nvidia.com>
 
-On Fri, Feb 28, 2025 at 08:02:50PM -0800, Namhyung Kim wrote:
-> perf trace requires root because it needs to use [ku]probes.
-> Skip those test when it's not run as root.
-> 
-> Before:
->   $ perf test probe
->    47: Probe SDT events                                                : Ok
->   104: test perf probe of function from different CU                   : FAILED!
->   115: perftool-testsuite_probe                                        : FAILED!
->   117: Add vfs_getname probe to get syscall args filenames             : FAILED!
->   118: probe libc's inet_pton & backtrace it with ping                 : FAILED!
->   119: Use vfs_getname probe to get syscall args filenames             : FAILED!
+Hi Nicolin,
 
-Do you have ShellCheck installed?
+kernel test robot noticed the following build warnings:
 
-  TEST    /tmp/build/perf-tools-next/tests/shell/probe_vfs_getname.sh.shellcheck_log
-  TEST    /tmp/build/perf-tools-next/tests/shell/record+probe_libc_inet_pton.sh.shellcheck_log
-  TEST    /tmp/build/perf-tools-next/tests/shell/record+script_probe_vfs_getname.sh.shellcheck_log
+[auto build test WARNING on 5e9f822c9c683ae884fa5e71df41d1647b2876c6]
 
-In tests/shell/probe_vfs_getname.sh line 11:
-[ "$(id -u)" == 0 ] || exit 2
-             ^-- SC3014 (warning): In POSIX sh, == in place of = is undefined.
+url:    https://github.com/intel-lab-lkp/linux/commits/Nicolin-Chen/iommu-Sort-out-domain-user-data/20250304-045529
+base:   5e9f822c9c683ae884fa5e71df41d1647b2876c6
+patch link:    https://lore.kernel.org/r/74a3bf91b52563faaf7ef7de065931e4df47e63f.1741034886.git.nicolinc%40nvidia.com
+patch subject: [PATCH v3 1/3] iommu: Sort out domain user data
+config: csky-randconfig-r111-20250305 (https://download.01.org/0day-ci/archive/20250306/202503060130.fkBIRmys-lkp@intel.com/config)
+compiler: csky-linux-gcc (GCC) 14.2.0
+reproduce: (https://download.01.org/0day-ci/archive/20250306/202503060130.fkBIRmys-lkp@intel.com/reproduce)
 
-For more information:
-  https://www.shellcheck.net/wiki/SC3014 -- In POSIX sh, == in place of = is ...
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202503060130.fkBIRmys-lkp@intel.com/
 
-In tests/shell/record+script_probe_vfs_getname.sh line 16:
-[ "$(id -u)" == 0 ] || exit 2
-             ^-- SC3014 (warning): In POSIX sh, == in place of = is undefined.
+sparse warnings: (new ones prefixed by >>)
+>> drivers/iommu/iommu.c:2040:9: sparse: sparse: statement expected after case label
+   drivers/iommu/iommu.c: note: in included file (through include/linux/mutex.h, include/linux/notifier.h, include/linux/clk.h, ...):
+   include/linux/list.h:83:21: sparse: sparse: self-comparison always evaluates to true
+   include/linux/list.h:83:21: sparse: sparse: self-comparison always evaluates to true
+   include/linux/list.h:83:21: sparse: sparse: self-comparison always evaluates to true
+   include/linux/list.h:83:21: sparse: sparse: self-comparison always evaluates to true
+   include/linux/list.h:83:21: sparse: sparse: self-comparison always evaluates to true
+   include/linux/list.h:83:21: sparse: sparse: self-comparison always evaluates to true
+   include/linux/list.h:83:21: sparse: sparse: self-comparison always evaluates to true
+   include/linux/list.h:83:21: sparse: sparse: self-comparison always evaluates to true
 
-For more information:
-  https://www.shellcheck.net/wiki/SC3014 -- In POSIX sh, == in place of = is ...
-make[4]: *** [tests/Build:91: /tmp/build/perf-tools-next/tests/shell/probe_vfs_getname.sh.shellcheck_log] Error 1
-make[4]: *** Waiting for unfinished jobs....
-make[4]: *** [tests/Build:91: /tmp/build/perf-tools-next/tests/shell/record+script_probe_vfs_getname.sh.shellcheck_log] Error 1
+vim +2040 drivers/iommu/iommu.c
 
-In tests/shell/record+probe_libc_inet_pton.sh line 108:
-[ "$(id -u)" == 0 ] || exit 2
-             ^-- SC3014 (warning): In POSIX sh, == in place of = is undefined.
+  2026	
+  2027	void iommu_domain_free(struct iommu_domain *domain)
+  2028	{
+  2029		switch (domain->cookie_type) {
+  2030		case IOMMU_COOKIE_DMA_IOVA:
+  2031			iommu_put_dma_cookie(domain);
+  2032			break;
+  2033		case IOMMU_COOKIE_DMA_MSI:
+  2034			iommu_put_msi_cookie(domain);
+  2035			break;
+  2036		case IOMMU_COOKIE_SVA:
+  2037			mmdrop(domain->mm);
+  2038			break;
+  2039		default:
+> 2040		}
+  2041		if (domain->ops->free)
+  2042			domain->ops->free(domain);
+  2043	}
+  2044	EXPORT_SYMBOL_GPL(iommu_domain_free);
+  2045	
 
-For more information:
-  https://www.shellcheck.net/wiki/SC3014 -- In POSIX sh, == in place of = is ...
-make[4]: *** [tests/Build:91: /tmp/build/perf-tools-next/tests/shell/record+probe_libc_inet_pton.sh.shellcheck_log] Error 1
-make[3]: *** [/home/acme/git/perf-tools-next/tools/build/Makefile.build:138: tests] Error 2
-make[2]: *** [Makefile.perf:810: /tmp/build/perf-tools-next/perf-test-in.o] Error 2
-make[2]: *** Waiting for unfinished jobs....
-make[1]: *** [Makefile.perf:321: sub-make] Error 2
-make: *** [Makefile:119: install-bin] Error 2
-make: Leaving directory '/home/acme/git/perf-tools-next/tools/perf'
-⬢ [acme@toolbox perf-tools-next]$
-
-The patch below seems to make it happy.
-
-But since it seems to be mixed up, i.e. its not a string comparision, so
-why the quotes?
-
-Probably it should be
-
-[ $(id -u) -eq 0 ] || exit 2
-
-?
-
-It all works with bash, but ShellCheck being installed stops the build
-with that POSIX error.
-
-⬢ [acme@toolbox perf-tools-next]$ [ "$(id -u)" == 1000 ] && echo bla
-bla
-⬢ [acme@toolbox perf-tools-next]$ [ "$(id -u)" = 1000 ] && echo bla
-bla
-⬢ [acme@toolbox perf-tools-next]$ [ $(id -u) -eq 1000 ] && echo bla
-bla
-⬢ [acme@toolbox perf-tools-next]$ id
-uid=1000(acme) gid=1000(acme) groups=1000(acme),10(wheel)
-⬢ [acme@toolbox perf-tools-next]
-
-- Arnaldo
-
-diff --git a/tools/perf/tests/shell/probe_vfs_getname.sh b/tools/perf/tests/shell/probe_vfs_getname.sh
-index b8e53a9d8473bf6b..c51a32931af6313e 100755
---- a/tools/perf/tests/shell/probe_vfs_getname.sh
-+++ b/tools/perf/tests/shell/probe_vfs_getname.sh
-@@ -8,7 +8,7 @@
- . "$(dirname $0)"/lib/probe.sh
- 
- skip_if_no_perf_probe || exit 2
--[ "$(id -u)" == 0 ] || exit 2
-+[ "$(id -u)" = 0 ] || exit 2
- 
- # shellcheck source=lib/probe_vfs_getname.sh
- . "$(dirname $0)"/lib/probe_vfs_getname.sh
-diff --git a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
-index 07a1527c5c03b93d..c4bab5b5cc59f0b3 100755
---- a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
-+++ b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
-@@ -105,7 +105,7 @@ delete_libc_inet_pton_event() {
- 
- # Check for IPv6 interface existence
- ip a sh lo | grep -F -q inet6 || exit 2
--[ "$(id -u)" == 0 ] || exit 2
-+[ "$(id -u)" = 0 ] || exit 2
- 
- skip_if_no_perf_probe && \
- add_libc_inet_pton_event && \
-diff --git a/tools/perf/tests/shell/record+script_probe_vfs_getname.sh b/tools/perf/tests/shell/record+script_probe_vfs_getname.sh
-index 0af3af90a8dcc742..fd5b10d469158b65 100755
---- a/tools/perf/tests/shell/record+script_probe_vfs_getname.sh
-+++ b/tools/perf/tests/shell/record+script_probe_vfs_getname.sh
-@@ -13,7 +13,7 @@
- . "$(dirname "$0")/lib/probe.sh"
- 
- skip_if_no_perf_probe || exit 2
--[ "$(id -u)" == 0 ] || exit 2
-+[ "$(id -u)" = 0 ] || exit 2
- 
- # shellcheck source=lib/probe_vfs_getname.sh
- . "$(dirname "$0")/lib/probe_vfs_getname.sh"
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
