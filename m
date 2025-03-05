@@ -1,79 +1,201 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03EF624FC18;
-	Wed,  5 Mar 2025 15:20:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C3E2524E005
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 15:20:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741188006; cv=none; b=PHZjG12k0Noj0VMmeD9ztDkK7KPpI6OE6nR8HquNYRoG/YBetqUlydRvmuYGfVrS+8U0itv+moSP1fKLCnsBt2PQ4VNvJIsag2Qb7ScCDpW1nyEdic1FuHYPQhLlyMckGQd0mUsX0r2jpHI+mUmoxz5+YFd868DF5Xgx09Tm63I=
+	t=1741188018; cv=none; b=ZWek0ZJpdfI9SYi1oIbfVkC2QrvX3pQWkRmibghBvJ/LjO+f1LddAt0yOXs+7ZJS1zL3YQMgpmB8ebTyO4gKrfAzQmoW1k5OKLZws3xJoWisKK8TqOiHAU8aCYounMf3A1FSQjN4gcUBNfLvAOmCmTM+s7fOnPgas49rxrGrT3Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741188006; c=relaxed/simple;
-	bh=sNP+NNEDqcfz55fVq14lJl9O8BqjCihgzDa7tqzQcgw=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=XUbyaYTaVmpJUPVyhIuPp0iqIti3Y/nt5x0J0WKwJJL7lLGj7rNeajB8Mn7gmOCFV1T/s/ncXJQZSpDEU2dA/amX8VcGluy+wbBS4nsXnFmkcT14gYGMNt3FpgWEodiEUaTdv8rrJ+A/OzRSuqIBki21ukYah5wHDyHdCy7nMBw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F748C4CED1;
-	Wed,  5 Mar 2025 15:20:04 +0000 (UTC)
-Date: Wed, 5 Mar 2025 10:21:01 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Petr Pavlu <petr.pavlu@suse.com>
-Cc: Luis Chamberlain <mcgrof@kernel.org>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Andrew Morton
- <akpm@linux-foundation.org>, Sami Tolvanen <samitolvanen@google.com>,
- Daniel Gomez <da.gomez@samsung.com>, linux-modules@vger.kernel.org
-Subject: Re: [PATCH v3 5/8] module: Add module_for_each_mod() function
-Message-ID: <20250305102101.2178feab@gandalf.local.home>
-In-Reply-To: <17c0cce7-03c7-488a-b61a-6c41d5bacfa1@suse.com>
-References: <20250304012516.282694507@goodmis.org>
-	<20250304012548.433669427@goodmis.org>
-	<20250304095714.47a171fa@gandalf.local.home>
-	<17c0cce7-03c7-488a-b61a-6c41d5bacfa1@suse.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1741188018; c=relaxed/simple;
+	bh=fkE57f6jwWdplqc4O/wQERskiE21bEGUDUnWXab1FEw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oC6p4ibfV5rrb3ZKIT00AinN1D1bRMZ64Sj1MylWO1BZ5x3RsX1gvr18g//ydXxmum7Jjqzd5jUvnxIjgGk6kRJDEMDeozhE0evFFQZ02VOC9gDxQSqsqrXW5MLcTJjv/77BHVrZD3ZIi8d1fflSrzUcK+cd26ZbWFgdi8QDhKE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 39BFFFEC;
+	Wed,  5 Mar 2025 07:20:28 -0800 (PST)
+Received: from localhost (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 852853F673;
+	Wed,  5 Mar 2025 07:20:14 -0800 (PST)
+Date: Wed, 5 Mar 2025 15:20:09 +0000
+From: Leo Yan <leo.yan@arm.com>
+To: James Clark <james.clark@linaro.org>
+Cc: Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Mike Leach <mike.leach@linaro.org>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	linux-kernel@vger.kernel.org, coresight@lists.linaro.org,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2] coresight: Add a KUnit test for
+ coresight_find_default_sink()
+Message-ID: <20250305152009.GH13418@e132581.arm.com>
+References: <20250305-james-cs-kunit-test-v2-1-83ba682b976c@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250305-james-cs-kunit-test-v2-1-83ba682b976c@linaro.org>
 
-On Wed, 5 Mar 2025 09:47:49 +0100
-Petr Pavlu <petr.pavlu@suse.com> wrote:
-
-> On 3/4/25 15:57, Steven Rostedt wrote:
-> > 
-> > Luis,
-> > 
-> > Can I get an Acked-by from you?
-> > 
-> > This follows the changes you have in linux-next.  
+On Wed, Mar 05, 2025 at 03:07:19PM +0000, James Clark wrote:
+> Add a test to confirm that default sink selection skips over an ETF
+> and returns an ETR even if it's further away.
 > 
-> Hi Steven,
+> This also makes it easier to add new unit tests in the future.
 > 
-> I'm not Luis, but we started rotating the modules maintenance every six
-> months and I'm currently looking after the modules tree. I see Luis
-> seemed ok with the change in the previous discussion and the patch looks
-> reasonable to me.
+> Signed-off-by: James Clark <james.clark@linaro.org>
 
-Ah, you may want to update the MAINTAINERS file. Right now it has:
+LGTM:
 
-M:      Luis Chamberlain <mcgrof@kernel.org>
-R:      Petr Pavlu <petr.pavlu@suse.com>
-R:      Sami Tolvanen <samitolvanen@google.com>
-R:      Daniel Gomez <da.gomez@samsung.com>
+Reviewed-by: Leo Yan <leo.yan@arm.com>
 
-Which puts Luis as maintainer and you as a reviewer. If you rotate
-maintainerships, you should update that to have an M: next to all that are
-in that rotation.
-
+> ---
+> Changes in v2:
+> - Let devm free everything rather than doing individual kfrees:
+>   "Like with managed drivers, KUnit-managed fake devices are
+>   automatically cleaned up when the test finishes, but can be manually
+>   cleaned up early with kunit_device_unregister()."
+> - Link to v1: https://lore.kernel.org/r/20250225164639.522741-1-james.clark@linaro.org
+> ---
+>  drivers/hwtracing/coresight/Kconfig                |  9 +++
+>  drivers/hwtracing/coresight/Makefile               |  3 +-
+>  drivers/hwtracing/coresight/coresight-core.c       |  1 +
+>  .../hwtracing/coresight/coresight-kunit-tests.c    | 77 ++++++++++++++++++++++
+>  4 files changed, 88 insertions(+), 2 deletions(-)
 > 
-> Acked-by: Petr Pavlu <petr.pavlu@suse.com>
+> diff --git a/drivers/hwtracing/coresight/Kconfig b/drivers/hwtracing/coresight/Kconfig
+> index ecd7086a5b83..f064e3d172b3 100644
+> --- a/drivers/hwtracing/coresight/Kconfig
+> +++ b/drivers/hwtracing/coresight/Kconfig
+> @@ -259,4 +259,13 @@ config CORESIGHT_DUMMY
+>  
+>  	  To compile this driver as a module, choose M here: the module will be
+>  	  called coresight-dummy.
+> +
+> +config CORESIGHT_KUNIT_TESTS
+> +	  tristate "Enable Coresight unit tests"
+> +	  depends on KUNIT
+> +	  default KUNIT_ALL_TESTS
+> +	  help
+> +	    Enable Coresight unit tests. Only useful for development and not
+> +	    intended for production.
+> +
+>  endif
+> diff --git a/drivers/hwtracing/coresight/Makefile b/drivers/hwtracing/coresight/Makefile
+> index 8e62c3150aeb..96f0dfedb1bf 100644
+> --- a/drivers/hwtracing/coresight/Makefile
+> +++ b/drivers/hwtracing/coresight/Makefile
+> @@ -51,5 +51,4 @@ coresight-cti-y := coresight-cti-core.o	coresight-cti-platform.o \
+>  		   coresight-cti-sysfs.o
+>  obj-$(CONFIG_ULTRASOC_SMB) += ultrasoc-smb.o
+>  obj-$(CONFIG_CORESIGHT_DUMMY) += coresight-dummy.o
+> -obj-$(CONFIG_CORESIGHT_CTCU) += coresight-ctcu.o
+> -coresight-ctcu-y := coresight-ctcu-core.o
+> +obj-$(CONFIG_CORESIGHT_KUNIT_TESTS) += coresight-kunit-tests.o
+> diff --git a/drivers/hwtracing/coresight/coresight-core.c b/drivers/hwtracing/coresight/coresight-core.c
+> index bd0a7edd38c9..b101aa133ceb 100644
+> --- a/drivers/hwtracing/coresight/coresight-core.c
+> +++ b/drivers/hwtracing/coresight/coresight-core.c
+> @@ -959,6 +959,7 @@ coresight_find_default_sink(struct coresight_device *csdev)
+>  	}
+>  	return csdev->def_sink;
+>  }
+> +EXPORT_SYMBOL_GPL(coresight_find_default_sink);
+>  
+>  static int coresight_remove_sink_ref(struct device *dev, void *data)
+>  {
+> diff --git a/drivers/hwtracing/coresight/coresight-kunit-tests.c b/drivers/hwtracing/coresight/coresight-kunit-tests.c
+> new file mode 100644
+> index 000000000000..a136af05eaf4
+> --- /dev/null
+> +++ b/drivers/hwtracing/coresight/coresight-kunit-tests.c
+> @@ -0,0 +1,77 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +#include <kunit/test.h>
+> +#include <kunit/device.h>
+> +#include <linux/coresight.h>
+> +
+> +#include "coresight-priv.h"
+> +
+> +static struct coresight_device *coresight_test_device(struct device *dev)
+> +{
+> +	struct coresight_device *csdev = devm_kcalloc(dev, 1,
+> +						     sizeof(struct coresight_device),
+> +						     GFP_KERNEL);
+> +	csdev->pdata = devm_kcalloc(dev, 1,
+> +				   sizeof(struct coresight_platform_data),
+> +				   GFP_KERNEL);
+> +	return csdev;
+> +}
+> +
+> +static int coresight_test_cpuid(struct coresight_device *csdev)
+> +{
+> +	return 0;
+> +}
+> +
+> +static void test_default_sink(struct kunit *test)
+> +{
+> +	/*
+> +	 * ETM -> ETF -> ETR -> CATU
+> +	 *                ^
+> +	 *                | default
+> +	 */
+> +	struct device *dev = kunit_device_register(test, "coresight_kunit");
+> +	struct coresight_device *etm = coresight_test_device(dev),
+> +				*etf = coresight_test_device(dev),
+> +				*etr = coresight_test_device(dev),
+> +				*catu = coresight_test_device(dev);
+> +	struct coresight_connection conn = {};
+> +	struct coresight_ops_source src_ops = {.cpu_id = coresight_test_cpuid };
+> +	struct coresight_ops etm_cs_ops = { .source_ops	= &src_ops };
+> +
+> +	etm->type = CORESIGHT_DEV_TYPE_SOURCE;
+> +	etm->ops = &etm_cs_ops;
+> +	etf->type = CORESIGHT_DEV_TYPE_LINKSINK;
+> +	etf->subtype.sink_subtype = CORESIGHT_DEV_SUBTYPE_SINK_BUFFER;
+> +	etr->type = CORESIGHT_DEV_TYPE_SINK;
+> +	etr->subtype.sink_subtype = CORESIGHT_DEV_SUBTYPE_SINK_SYSMEM;
+> +	catu->type = CORESIGHT_DEV_TYPE_HELPER;
+> +
+> +	conn.src_dev = etm;
+> +	conn.dest_dev = etf;
+> +	coresight_add_out_conn(dev, etm->pdata, &conn);
+> +
+> +	conn.src_dev = etf;
+> +	conn.dest_dev = etr;
+> +	coresight_add_out_conn(dev, etf->pdata, &conn);
+> +
+> +	conn.src_dev = etr;
+> +	conn.dest_dev = catu;
+> +	coresight_add_out_conn(dev, etr->pdata, &conn);
+> +
+> +	KUNIT_ASSERT_PTR_EQ(test, coresight_find_default_sink(etm), etr);
+> +}
+> +
+> +static struct kunit_case coresight_testcases[] = {
+> +	KUNIT_CASE(test_default_sink),
+> +	{}
+> +};
+> +
+> +static struct kunit_suite coresight_test_suite = {
+> +	.name = "coresight_test_suite",
+> +	.test_cases = coresight_testcases,
+> +};
+> +
+> +kunit_test_suites(&coresight_test_suite);
+> +MODULE_LICENSE("GPL");
+> +MODULE_AUTHOR("James Clark <james.clark@linaro.org>");
+> +MODULE_DESCRIPTION("Arm CoreSight KUnit tests");
 > 
-
-Appreciate it.
-
--- Steve
-
+> ---
+> base-commit: eeafe6a8790ea125252ca2e23c1a2469eaff1d9a
+> change-id: 20250305-james-cs-kunit-test-3af1df2401e6
+> 
+> Best regards,
+> -- 
+> James Clark <james.clark@linaro.org>
+> 
