@@ -1,97 +1,93 @@
-Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com [209.85.128.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.manjaro.org (mail.manjaro.org [116.203.91.91])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6227B2063F1
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 09:53:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7347C2054FA;
+	Wed,  5 Mar 2025 09:53:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.91.91
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741168396; cv=none; b=Rga9P9iwv0d70V2qbBg0mScqWYItCYV9MbiHbo09Nc45BDJEnLsR+5RxrRdhLsaPtF1fQzkbDbQztTTDc0YrQXY5QKbbKkASmrOGlhTbFxzBaba5u54UoZWJo6yJrIYT/woqPikFf5glck7HO1taBGbvAzKEuBeNTAptkaYXgmM=
+	t=1741168432; cv=none; b=gJfwpGsASr7K2RO3YqeOdaqWFl+KSOxajrO45dBQFi5RY6DA0kqdccE/uV9frALGzNHazP0Btd9cxkveF6XxvsCXFwUnXvIO01kiFl7o09cwonhAclyqx6eehFrikAW7RfcHNz3zPASgK6bOZDMGbGqGadyBWEu3HI5VOltES1M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741168396; c=relaxed/simple;
-	bh=HoQJfT/rFHWJRo/w02oVTwpBm6E1113uJMZPkO2so3Y=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=s2DrEWOLauxAIyIEiW0L8/WEkj5o9ctUffX6SjUcw7+m44MqysEgdM/+dKbMW6hlvDU4h3B6xONetNNg7SZgX5P9rk0y1AwTMU/H/jj2R78UBaOzVNPgcIfaJBWWKKSrSXC8N7HnaBcvVI5LTCPGRAQ+8IZpt4dECkTeo74VDaU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=cq8fU8CV; arc=none smtp.client-ip=209.85.128.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1741168432; c=relaxed/simple;
+	bh=ias0EnAhhayGJbHbMVVhKT1PU/RJx8ezmGLJc2aLVf8=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=BDFwoi/OgMCNAJOCzhDZtccfv/JfTRmtvMHBRT2gpso0cMp6SwHju4yE/BLmt9U/lTpLGZL1h0Y+EcPu0vWrtjqgLNGjPVCapT8XttelurEXPdNcOg6hC8cGmnVjEfsvFoIS7be94XgP5lyHIcnMYRZ5+yxPKSo/2mXgZ0nezK8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org; spf=pass smtp.mailfrom=manjaro.org; dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b=sG5+rQfb; arc=none smtp.client-ip=116.203.91.91
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=manjaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cq8fU8CV"
-Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-6fd6f7f8df9so5764297b3.1
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Mar 2025 01:53:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741168393; x=1741773193; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=QmssJ/v0i5j01lJBGvnparl8jLxew4PBDq3uO0lekbU=;
-        b=cq8fU8CVMYuMMMXXkJlOARDlnfNUk0RmQdiIAzmg++S2PRA9gP7r/xQB+2nQrUT1X3
-         AoilAz2ffVGmjvWrK93Y6nwM8cKdmSJRxeYtMZ080PMjxhkQZNKsPQ8OGEFY5j27J4JE
-         oZ/R+xyXeWZugTVnZwvUnoeSXYOgD3KUKvW7XEQ+8vxh4OmFLXTSaiRuX64ClIZjKWzl
-         dzvjQc1C/JJtLDtAlXWbz07rW+/+eXseinc1YGkkYkABARszSYWZjx5Dl3isy+WpSt36
-         BiE/q6CDlkdWIHfCK+0N7RPmwyHjGLKAipJsAIk9Fmljhx+ZGVitBFYwWqu94WOvnGST
-         wCaw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741168393; x=1741773193;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=QmssJ/v0i5j01lJBGvnparl8jLxew4PBDq3uO0lekbU=;
-        b=rGjBneCdjm4a/Fnd9WsxJUTYEDkccuTScHww0pzorobQ7MdskWttmRQmmqJ1FsTjBs
-         lYmMyzI+Kld2A4nJqbTkivz3B4a+UWHFjNfcOu6tEulp4bhjFf+Ok5+RDl3GPLGijTTF
-         pBi8cQkiL5tqIz0SztXSmsfAz6e2HE2HiyE5S+6x5nQVjjtr18NF/4uKhpsGeIUknkxy
-         vfRbQhYklK1YgoyuqBLK3Rg0lPCDa14DSI8W8sk+EjbXUMQcxGSV/OssgD0WQYWy/wSj
-         VTlnYyNSJqXDxEhTsN1Za1R3XlxlrCaW18J6YjXi+gXbPLhJXgu0HN2cJivdH3StQof0
-         rMGQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUmcky/b9wfE0d0Hxx1DJgutSgZJ5NRmuJgNEdc8Ox8m9f1l/zezGYC4zFYSuylVOU53kgNqXznzbgLQEk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzScvAx2fx65TH9eq0xcmf3SjLV/wl+noXHI4Q8u+U0gLPTp089
-	oAGwsKUlNR8FF+zmL6tdZ9PK3cEE8+8Am9k3y/J7y3S3NoEzHR7VyY++70uSEBPR8Zaf1KmnyTg
-	fDyoVdmky7NPokAzWbX6stjAAGiJq2olmrnzuJA==
-X-Gm-Gg: ASbGncsMAJatWeLjfpiBmZJRRoMDLmsyINUXAXcLAG/MWHJGuPFqPxxtLYzBn7BTIBk
-	762AyjzuAXaG4HVi7ancQUJ29gOdKjx2tmHAe6fPG41pKCCGW0oJsdgeqBCpN3RUd96JP5YyV99
-	hpuK+KPC+py3rwPus5K3zcVe1Pi1dcpEITU/ilF1QdlM7TPHZhWMHh9Qu00Q==
-X-Google-Smtp-Source: AGHT+IEGutT+zjkqQ3ATTBx4JIvA9Q3F7rEvdgRWipMrQxGQfkOkxCE0mT1COEBIClGaiCxKi9MsqIyKjbbm3vcPwwg=
-X-Received: by 2002:a05:690c:6413:b0:6f9:c8d9:50f with SMTP id
- 00721157ae682-6fd9411f614mr96778557b3.2.1741168393332; Wed, 05 Mar 2025
- 01:53:13 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b="sG5+rQfb"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250305203929.70283b9b@canb.auug.org.au>
-In-Reply-To: <20250305203929.70283b9b@canb.auug.org.au>
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Date: Wed, 5 Mar 2025 10:53:01 +0100
-X-Gm-Features: AQ5f1JpiBBDeRr2CNNwLxTLAV9GV1VBIlUX83g3DRCPQnKILf_mmS2GzkU3zVO4
-Message-ID: <CACMJSetEf-GRjbHh0qwDB0c4C0iXCOBbjV3D4u30x8NbZdAD6A@mail.gmail.com>
-Subject: Re: linux-next: build warnings after merge of the gpio-brgl tree
-To: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Linus Walleij <linus.walleij@linaro.org>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
-	Linux Next Mailing List <linux-next@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manjaro.org; s=2021;
+	t=1741168428;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=y1bVR4X0ePGK/oRqohewsCjBonguuJIp7QjmsiVlbb8=;
+	b=sG5+rQfbWLRZO2uOz7sFWLIAnRuEotqEHsUwvgJENU6SQjktontL9UNIjzHJGg6pyTCIGt
+	XMMkTEb5gl2FofrqqL91r1EzE93mTneVXY2DKXmRb/S1U9xiG8ky3o97e0o/E0RCYhPMFD
+	upyhJ87nlwGVA8ePobwV9MNldX77Z3orjQtH+BB80t7v8jnYtBjk63wBV6CEH8Cg0Mdu6u
+	8f2Sa1KgIYjy09MAFD+XxYFFZ30rJcZ3GwB15FcgjpU9bPSciPfXIyUw+CRinX2MSnqfTs
+	Y8RSSAh3nURiorJhk+gvNrvpKJkdmpe7BSQkgH/pghOCrSrpxHPstaG3OoWFKQ==
+Date: Wed, 05 Mar 2025 10:53:48 +0100
+From: Dragan Simic <dsimic@manjaro.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ heiko@sntech.de, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] docs: dt-bindings: Specify ordering for properties
+ within groups
+In-Reply-To: <166a7b77-74e3-40b7-a536-ee56850d9318@kernel.org>
+References: <47c51c10098f089e52fb14c5c5527611dc8daf32.1741164239.git.dsimic@manjaro.org>
+ <166a7b77-74e3-40b7-a536-ee56850d9318@kernel.org>
+Message-ID: <f05919742c34f5d4489d2cd711c7736f@manjaro.org>
+X-Sender: dsimic@manjaro.org
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Authentication-Results: ORIGINATING;
+	auth=pass smtp.auth=dsimic@manjaro.org smtp.mailfrom=dsimic@manjaro.org
 
-On Wed, 5 Mar 2025 at 10:39, Stephen Rothwell <sfr@canb.auug.org.au> wrote:
->
-> Hi all,
->
-> After merging the gpio-brgl tree, today's linux-next build (htmldocs)
-> produced these warnings:
->
-> include/linux/gpio/driver.h:551: warning: Incorrect use of kernel-doc format:          * of_node_instance_match:
-> include/linux/gpio/driver.h:569: warning: Function parameter or struct member 'of_node_instance_match' not described in 'gpio_chip'
->
-> Introduced by commit
->
->   bd3ce71078bd ("gpiolib: of: Handle threecell GPIO chips")
->
-> --
-> Cheers,
-> Stephen Rothwell
+Hello Krzysztof,
 
-Hi!
+On 2025-03-05 10:36, Krzysztof Kozlowski wrote:
+> On 05/03/2025 09:45, Dragan Simic wrote:
+>> 
+>> diff --git a/Documentation/devicetree/bindings/dts-coding-style.rst 
+>> b/Documentation/devicetree/bindings/dts-coding-style.rst
+>> index 8a68331075a0..15de3ede2d9c 100644
+>> --- a/Documentation/devicetree/bindings/dts-coding-style.rst
+>> +++ b/Documentation/devicetree/bindings/dts-coding-style.rst
+>> @@ -133,6 +133,12 @@ The above-described ordering follows this 
+>> approach:
+>>  3. Status is the last information to annotate that device node is or 
+>> is not
+>>     finished (board resources are needed).
+>> 
+>> +The above-described ordering specifies the preferred ordering of 
+>> property
+>> +groups, while the individual properties inside each group shall use 
+>> natural
+>> +sort order by the property name.  More specifically, natural sort 
+>> order shall
+>> +apply to multi-digit numbers found inside the property names, while 
+>> alpha-
+>> +numerical ordering shall apply otherwise.
+> 
+> The last sentence was not here and I don't get the point. Natural sort
+> order should be always preferred over alpha-numerical for properties.
+> About which other case ("...apply otherwise.") are you thinking?
 
-I just sent out a patch:
-https://lore.kernel.org/linux-gpio/20250305094939.40011-1-brgl@bgdev.pl/
-
-Bart
+Yes, I added that sentence in the v2 to, hopefully, clarify the natural
+sort order itself a bit.  I've researched the natural sort order a bit
+further, and it technically applies only to the multi-digit numbers 
+found
+inside the sorted strings.  That's what I wanted to explain, and "shall
+apply otherwise" refers to applying the alpha-numerical sort order to 
+the
+remainders of the sorted strings, i.e. to everything but the multi-digit
+numbers found in the property names.
