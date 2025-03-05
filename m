@@ -1,177 +1,118 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C523D24C68D;
-	Wed,  5 Mar 2025 15:02:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D7FDD24C68D
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 15:02:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741186937; cv=none; b=k2axe5WcxUFpBtJE3EQhSF6En6hpELACud+TGAbJ2UBcsANYLsOZz2x6bu0UWHjWc2ltj6jGD5n9ZDC1vvBvNYaMvKmIxmuV30bgmxMZodEqUlgGJ9ZuoEsqJ5EAu+EpEzf9kwVuoO1FzVkDF7l4yz4U69baD/NUSCS5OP8nXck=
+	t=1741186978; cv=none; b=Zdjq+B1GP6NEVRIbUhq4SCh8CCFywHgFekL1R2r4l5k11zP6qUFZjSE6wIYvww9KdfO5kcWxPckIZ3GO1naSny2aymgdIXKu9Ycsb0U5Qsem3W1QlZUk+1C+1G8K0pvZDKTXVC4oteRQ4AtFODqRTeYhzlBMQSKo1EO70ZgCmPM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741186937; c=relaxed/simple;
-	bh=NssrDju0ex2mZCCZUgAf8PQB3BikrUlFJe7buTpCxxs=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=XU8K0jqsN8Ow1O5R7Ae+uXvHr4i7FWU4OOs9e+BZx+Z666K9KnjqHLSBmFxPCs+ISqnRT381TRhBOJ/8qoZLxhwA29mm+/QaZy9qQ7Y6haAjYa7tJsl56amMx9g+jsldGqPD+2kHK7XxI1ARLbcbmkvuPd5aLa5lLkxYx9YuAVQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08294C4CED1;
-	Wed,  5 Mar 2025 15:02:11 +0000 (UTC)
-Date: Wed, 5 Mar 2025 10:03:06 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Menglong Dong <menglong8.dong@gmail.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>,
- mark.rutland@arm.com, alexei.starovoitov@gmail.com,
- catalin.marinas@arm.com, will@kernel.org, mhiramat@kernel.org,
- tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
- dave.hansen@linux.intel.com, x86@kernel.org, ast@kernel.org,
- daniel@iogearbox.net, andrii@kernel.org, martin.lau@linux.dev,
- eddyz87@gmail.com, yonghong.song@linux.dev, john.fastabend@gmail.com,
- kpsingh@kernel.org, sdf@fomichev.me, jolsa@kernel.org, davem@davemloft.net,
- dsahern@kernel.org, mathieu.desnoyers@efficios.com, nathan@kernel.org,
- nick.desaulniers+lkml@gmail.com, morbo@google.com, samitolvanen@google.com,
- kees@kernel.org, dongml2@chinatelecom.cn, akpm@linux-foundation.org,
- riel@surriel.com, rppt@kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- bpf@vger.kernel.org, netdev@vger.kernel.org, llvm@lists.linux.dev
-Subject: Re: [PATCH v4 1/4] x86/ibt: factor out cfi and fineibt offset
-Message-ID: <20250305100306.4685333a@gandalf.local.home>
-In-Reply-To: <CADxym3busXZKtX=+FY_xnYw7e1CKp5AiHSasZGjVJTdeCZao-g@mail.gmail.com>
-References: <20250303132837.498938-1-dongml2@chinatelecom.cn>
-	<20250303132837.498938-2-dongml2@chinatelecom.cn>
-	<20250303165454.GB11590@noisy.programming.kicks-ass.net>
-	<CADxym3aVtKx_mh7aZyZfk27gEiA_TX6VSAvtK+YDNBtuk_HigA@mail.gmail.com>
-	<20250304053853.GA7099@noisy.programming.kicks-ass.net>
-	<20250304061635.GA29480@noisy.programming.kicks-ass.net>
-	<CADxym3bS_6jpGC3vLAAyD20GsR+QZofQw0_GgKT8nN3c-HqG-g@mail.gmail.com>
-	<20250304094220.GC11590@noisy.programming.kicks-ass.net>
-	<6F9EF5C3-4CAE-4C5E-B70E-F73462AC7CA0@zytor.com>
-	<CADxym3busXZKtX=+FY_xnYw7e1CKp5AiHSasZGjVJTdeCZao-g@mail.gmail.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1741186978; c=relaxed/simple;
+	bh=rwxs2qHmdeQKe1U8LtwGFdJo7B87r155p+txMieverQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=X/15uvKZ5pgGYU3rQEGSi19ItiXYs7MomHAy5iRjaEVhVkSgvOe+pvw2NVv+RRNXQGIGDHfex0sxblBq1Z0C3+Se0+1i17R8F4AeuDLlJ/GbHAyQOPNZCuDb9Fq634oyvw7s+eQ5ADhjukkxnFxvAzZ4zRmVjTjWDITGI9ezXqQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9535FFEC;
+	Wed,  5 Mar 2025 07:03:08 -0800 (PST)
+Received: from [10.174.36.147] (unknown [10.174.36.147])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 065973F673;
+	Wed,  5 Mar 2025 07:02:52 -0800 (PST)
+Message-ID: <3c3f3cfe-9fa7-41d7-9759-cc67306f13f5@arm.com>
+Date: Wed, 5 Mar 2025 20:32:49 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [QUESTION] Plain dereference and READ_ONCE() in fault handler
+To: David Hildenbrand <david@redhat.com>, willy@infradead.org,
+ ziy@nvidia.com, hughd@google.com, ryan.roberts@arm.com,
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org
+References: <20250305102159.96420-1-dev.jain@arm.com>
+ <8477d9ec-b9ce-4a3d-b61f-1bd44d3360a5@redhat.com>
+Content-Language: en-US
+From: Dev Jain <dev.jain@arm.com>
+In-Reply-To: <8477d9ec-b9ce-4a3d-b61f-1bd44d3360a5@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Wed, 5 Mar 2025 09:19:09 +0800
-Menglong Dong <menglong8.dong@gmail.com> wrote:
 
-> Ok, let me explain it from the beginning. (My English is not good,
-> but I'll try to describe it as clear as possible :/)
 
-I always appreciate those who struggle with English having these
-conversations. Thank you for that, as I know I am horrible in speaking any
-other language. (I can get by in German, but even Germans tell me to switch
-back to English ;-)
+On 05/03/25 4:16 pm, David Hildenbrand wrote:
+> On 05.03.25 11:21, Dev Jain wrote:
+>> In __handle_mm_fault(),
+>>
+>> 1. Why is there a barrier() for the PUD logic?
+> 
+> Good question. It was added in
+> 
+> commit a00cc7d9dd93d66a3fb83fc52aa57a4bec51c517
+> Author: Matthew Wilcox <willy@infradead.org>
+> Date:   Fri Feb 24 14:57:02 2017 -0800
+> 
+>      mm, x86: add support for PUD-sized transparent hugepages
+> 
+> Maybe it was an alternative to performing a READ_ONCE(*vmf.pud).
+> 
+> Maybe it was done that way, because pudp_get_lockless() does not exist. 
+> And it would likely not be required, because on architectures where 
+> ptep_get_lockless() does some magic (see below, mostly 32bit), PUD THP 
+> are not applicable.
+
+Thanks for your reply David.
 
 > 
-> Many BPF program types need to depend on the BPF trampoline,
-> such as BPF_PROG_TYPE_TRACING, BPF_PROG_TYPE_EXT,
-> BPF_PROG_TYPE_LSM, etc. BPF trampoline is a bridge between
-> the kernel (or bpf) function and BPF program, and it acts just like the
-> trampoline that ftrace uses.
 > 
-> Generally speaking, it is used to hook a function, just like what ftrace
-> do:
+>> 2. For the PMD logic, in the if block, we use *vmf.pmd, and in the 
+>> else block
+>>     we use pmdp_get_lockless(); what if someone changes the pmd just 
+>> when we
+>>     have begun processing the conditions in the if block, fail in the 
+>> if block
+>>     and then the else block operates on a different pmd value. 
+>> Shouldn't we cache
+>>     the value of the pmd and operate on a single consistent value 
+>> until we take the
+>>     lock and then finally check using pxd_same() and friends?
 > 
-> foo:
->     endbr
->     nop5  -->  call trampoline_foo
->     xxxx
-> 
-> In short, the trampoline_foo can be this:
-> 
-> trampoline_foo:
->     prepare a array and store the args of foo to the array
->     call fentry_bpf1
->     call fentry_bpf2
->     ......
->     call foo+4 (origin call)
+> The pmd_none(*vmf.pmd) is fine. create_huge_pmd() must be able to deal 
+> with races, because we are not holding any locks.
 
-Note, I brought up this issue when I first heard about how BPF does this.
-The calling of the original function from the trampoline. I said this will
-cause issues, and is only good for a few functions. Once you start doing
-this for 1000s of functions, it's going to be a nightmare.
-
-Looks like you are now in the nightmare phase.
-
-My argument was once you have this case, you need to switch over to the
-kretprobe / function graph way of doing things, which is to have a shadow
-stack and hijack the return address. Yes, that has slightly more overhead,
-but it's better than having to add all theses hacks.
-
-And function graph has been updated so that it can do this for other users.
-fprobes uses it now, and bpf can too.
-
->     save the return value of foo
->     call fexit_bpf1 (this bpf can get the return value of foo)
->     call fexit_bpf2
->     .......
->     return to the caller of foo
-> 
-> We can see that the trampoline_foo can be only used for
-> the function foo, as different kernel function can be attached
-> different BPF programs, and have different argument count,
-> etc. Therefore, we have to create 1000 BPF trampolines if
-> we want to attach a BPF program to 1000 kernel functions.
-> 
-> The creation of the BPF trampoline is expensive. According to
-> my testing, It will spend more than 1 second to create 100 bpf
-> trampoline. What's more, it consumes more memory.
-> 
-> If we have the per-function metadata supporting, then we can
-> create a global BPF trampoline, like this:
-> 
-> trampoline_global:
->     prepare a array and store the args of foo to the array
->     get the metadata by the ip
->     call metadata.fentry_bpf1
->     call metadata.fentry_bpf2
->     ....
->     call foo+4 (origin call)
-
-So if this is a global trampoline, wouldn't this "call foo" need to be an
-indirect call? It can't be a direct call, otherwise you need a separate
-trampoline for that.
-
-This means you need to mitigate for spectre here, and you just lost the
-performance gain from not using function graph.
-
-
->     save the return value of foo
->     call metadata.fexit_bpf1 (this bpf can get the return value of foo)
->     call metadata.fexit_bpf2
->     .......
->     return to the caller of foo
-> 
-> (The metadata holds more information for the global trampoline than
-> I described.)
-> 
-> Then, we don't need to create a trampoline for every kernel function
-> anymore.
-> 
-> Another beneficiary can be ftrace. For now, all the kernel functions that
-> are enabled by dynamic ftrace will be added to a filter hash if there are
-> more than one callbacks. And hash lookup will happen when the traced
-> functions are called, which has an impact on the performance, see
-> __ftrace_ops_list_func() -> ftrace_ops_test(). With the per-function
-> metadata supporting, we can store the information that if the callback is
-> enabled on the kernel function to the metadata, which can make the performance
-> much better.
-
-Let me say now that ftrace will not use this. Looks like too much work for
-little gain. The only time this impacts ftrace is when there's two
-different callbacks tracing the same function, and it only impacts that
-function. All other functions being traced still call the appropriate
-trampoline for the callback.
-
--- Steve
+I had a mental hiccup, yes we don't need the cached value even before 
+the if block, as the relevant path will eventually check after taking 
+the lock. I was thinking of all sorts of weird races.
 
 > 
-> The per-function metadata storage is a basic function, and I think there
-> may be other functions that can use it for better performance in the feature
-> too.
+> We only have to use pmdp_get_lockless() when we want to effectively 
+> perform a READ_ONCE(), and make sure that we read something "reasonable" 
+> that we can operate on, even with concurrent changes. (e.g., not read a 
+> garbage PFN just because of some concurrent changes)
+
+Oh I just looked at the arm64 definition and assumed ptep_get_lockless() 
+== READ_ONCE() :) Now this makes sense. So I am guessing that we can 
+still get away with a *vmf.pmd on 64-bit arches?
+
+A separate question: When taking the create_huge_pmd() path with a read 
+fault and after taking the pmd lock, why shouldn't we check with 
+pmd_none(pmdp_get_lockless(vmf.pmd)) instead of plain *vmf.pmd...surely 
+now we must load the actual correct value from memory since we are 
+committing into mapping the huge zero folio?
+And after looking somewhat more, why even is a pmd_none(*pmd) there in 
+set_huge_zero_folio()...it should be the responsibility of the caller to 
+verify this? Any caller will just assume that it got the huge zero folio 
+mapped so this check should be redundant.
+
 > 
-> (Hope that I'm describing it clearly :/)
+> We'll store the value in vmf.orig_pmd, on which we'll operate and try to 
+> detect later changes using pmd_same(). So we really want something 
+> consistent in there.
+> 
+> See the description above ptep_get_lockless(), why we cannot simply do a 
+> READ_ONCE on architectures where a PTE cannot be read atomically (e.g., 
+> 8 byte PTEs on 32bit architecture).
+>
+
 
