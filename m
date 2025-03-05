@@ -1,133 +1,83 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D8BA17579;
-	Wed,  5 Mar 2025 00:29:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C6D627456;
+	Wed,  5 Mar 2025 00:29:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741134572; cv=none; b=e4HcSJzdTYbq2TsrsFudIlqu/J7Laf+7vEq+bly/c6SsMWYnoYLfVRLMs2nE4yP9m9RYfH8XdV9D45HN1HPmiFeoxB0RzVSXNkcAzzN49/dxL+sKfov5AhGbmajowWQdyDxaBdjpRunGlZJv7R05AlyZqvwpXUbfvHZS+WgVSUk=
+	t=1741134599; cv=none; b=WjVYYRoXnQFnA9qjqSTYPRKYk9l8nAIboOI9VuHo6sgkEGIQmSZSfqtNDCa2ND+lW57bI/D6bH2UMc//W97iC07zHKdvYAWL5DCQ9PtK4PmRKIjRNhE6GrajLZvaOrH29HCKG/3QlYLVUi6waG5niLLvW1Bu6lqqp6MQuspm3gU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741134572; c=relaxed/simple;
-	bh=ll7RRmYem5Y1GrzMRxIhpfncsuiytDg1O9oFC71uxG0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=jbZ1CThF0g38TeRGdKHCKEzD//tkPCjOYkRqHRbb9txtzOJB3+fCFLTxdneZG+oxKxKObHRhl2nSpi5G61++RIDuQkyW/gjEKlY1OyBUxGBuip35507YHqEobwDVmnmHfIdzHI7l6jkwtMObjiONIMB9h8PHM6NILtYnfFWkTRU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=FHfCmAIR; arc=none smtp.client-ip=212.227.15.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1741134599; c=relaxed/simple;
+	bh=Byb9Fn5sdn7q5Onud0bJf9pe9X56OHaqd58xQ8U6HHQ=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=lrGV4wt+gSU49Y0OiH04upXd045eh5J8C0sD7IlXEXNmROn2+XehcZUbcg4RWr2llts6e+1IcO3wupFXp6KtISsLFvzd2EH7ibJzR/ZL6X5bYOSoZ+fjfK+9YCsEMAWGLlR1ESeDx5ysKLV7utH99zY0UsCzUVLV0QEH1mhQ5XU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KxJKehgR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="FHfCmAIR"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1741134567; x=1741739367; i=w_armin@gmx.de;
-	bh=86aR1VeqAwIPLf53I3/MJ3n0rRnYudftjP6rX3IfOZc=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=FHfCmAIRKOMK8yQ9FDYTOt4cENvdDr7F0AmgrtAxywDjqLoOonMgZ6nBwN1bfpDH
-	 NOHdTf+5/7E3O+jZ2vFlKG9gDbIZ0AnzTzuy8lT5K7bnlOhdxIRWObSwwDC5ctGSl
-	 LskIVTXYVKHEs1WeCRTdt6I8AxosN+FbDbBEJntF7QoxfXCItsBQIH6x8WSbaxKay
-	 mLAr1h4qL8vAx0ogGB+efYiYH40mDWUr/zL71onTdDlF1pihsviaXl2Pcn7bCAqV6
-	 LwjopJYdKee+cNbL4frSuzdcMEf8y/QokhzBevtYdmH1Q2ExPDtjS47tqVkqsJS0j
-	 Z7rtaPYho3Q56n5PMg==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.0.24] ([87.177.78.219]) by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1N63Ra-1tEACk3nYG-00qrhD; Wed, 05
- Mar 2025 01:29:27 +0100
-Message-ID: <3f779992-1a3b-475b-b07b-3a4ca02f5b35@gmx.de>
-Date: Wed, 5 Mar 2025 01:29:24 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KxJKehgR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B537C4CEE5;
+	Wed,  5 Mar 2025 00:29:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741134599;
+	bh=Byb9Fn5sdn7q5Onud0bJf9pe9X56OHaqd58xQ8U6HHQ=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=KxJKehgRAd2bl+h+Yvv7nJkhM1Cby+CbdDXUXHyxBhsvw9mTUSofxgHtTERAYKT2K
+	 IXFuBRiIRI8ViMbun2iZAUc5cB1xBmu8N41a/3/ksDYIZjSvmfqQQ5nesJ3+nI92Ya
+	 mghuYFBsMlu5HIkspEe2jRywSosjZ9iT6vFYS8S1oEbNvxy4FMDjP++I8yEKoKq2e5
+	 VAhqF7bs7X3dDdr9CVstiyn0+Qcp8OosAdpTqt1xprluU1ahWZBAhK3bTFcUhWD4Y/
+	 zBkUPLaGW9yeHqMRujRGmJJ4d6TTj/uW5Xsm4XcxLcEli5AGChvGCdJO0dFWaAhG5B
+	 shoxThkaHcLkw==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 3434D380CFEB;
+	Wed,  5 Mar 2025 00:30:33 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] platform/x86: samsung-galaxybook: Fix block_recording
- not supported logic
-To: Joshua Grisham <josh@joshuagrisham.com>, thomas@t-8ch.de,
- kuurtb@gmail.com, ilpo.jarvinen@linux.intel.com, hdegoede@redhat.com,
- platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250303132433.348653-1-josh@joshuagrisham.com>
-Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <20250303132433.348653-1-josh@joshuagrisham.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:4fbc+RRPLpTjkPe2SlLqdjyFuK9KYbtHnM4aFnnHbkSROCchJdx
- 1zyuZDiN2pV87sU8wsxg4Qg13eYwJdmuNWxCsK3iCckxcJ01GhuCNQkvnMQ27q6qLH7IAHA
- rLAZalJNJlKEAqyIX3hAvmsSveizDE5hGRCHuPOHB1+FUpCrgqfiXikWswld2phFpX7vs/1
- ke5kZrlhsrFwyECAZg9tw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:oP7IkrN8iJA=;xeGJpYCYCb0hpKT3M9R3IwXwcOA
- KaRn++YhunMpZHkLoW7+YilONW1llI2FmT/qOPq/1e8TEgib7vBxV8k8BABZ5ISda2A/fg11f
- ImBI0KJ4/lVS3Ntiul1MJUy9NlF3tOfcdI6PZZF/wKZX76RbC+ZHynv8Hfj27gBBlPnOigDOw
- SiSI9OIG9xtnaH5gpoM2HaecfKmU3qpPw6JB/zxhNXkrY0b5Jy9Yp8tXcnxOJcMEcoPF1H0bv
- ZT9OMJjFsHekqz0BMAGF9/9xGKItkCisgdZ6ljp7gMomL/8H/0ewrCsFYjndOv+dTibmjH1bD
- XA8GoPbFz8OdmBLwQzFnlhEpPEyaiwnoOnMS2+M+H8VsgKOAbyVyxFMmGSLyqmIdYrP7a1RlD
- zClJDHssz6c/Kz4eP5lJELT/qlj8/jzMDur6BF+3D2GBs7cGXhbAJaVep5gzu1Alv56Qil/Y+
- xksuKy9UtQuTPvDomziSiQu5zv3p24JMXn3tY4yxVQsk1uRIWGsQ3vzwtPVnnhdBHhBv8Kl5x
- yNcqGVnAvjqAUr/AuhDo49vTY90L5InwnrH4ceNnJn9f8pjJeG0ZYL7wzTrHiiTUJ5ZtKPj4k
- cxPjiHcoTGiJSa/DMHJa/ZmUjKz6iDH3zKieK0/NBD8WDaHNhOHUURTzg+ypz3ein7xHmgb5K
- lPwUmFE4AhtqXLB+5XXmtiXBRoPUrmF3VVsh4Gms3UC+KpkRblrqJAzQdJ6Sq49Nmnim6MoO7
- 0dPLA81+ADZvSfAnPfzxxbR2TU+cJwFd8VFinNgEbxQFwvctoafjSo2aAji1JSSL5XB7Mw6wy
- CztB9W4zmAdKVobgO7zSELr8iosXNjpN8oZN2ffd3vZkJaSglSr0Ju0XSW5QEis9XIvcY6vjS
- hWn/k1tXA+5PuztJ4j5UZzXHTe1fzW1oLBTKJM7r2+tSAsdgAdGw6Gym6ShUqB2weUI8sUWyT
- P3Awv6RlSc46xGbZ9SkQKloNP0tvZdh++BFwIadjPxnLUxyrwtEnpDpOBbRopYTGPLXNtg88W
- vjT3eMLyK6oeS8+COSU7PwLLSWPcMf08PmjS9MqWzc2cvFhQdIVQIGwK1u57Hwtlb1Ld9jePO
- 6TzlgQKSmOEKIAXXAm7P5qi7XGUGcrCh1Paf1pxL8uVflatGgsCa3nqwzGXSVOWWLFrPeHszy
- hTA3nckFH+yEfZ1TtY8Kzpfo/2ODkotEOCYgES0R4s/r19oOpSDOPDaT29UUPdSLELWPH0Pzo
- 0JrxOKLTqrgfZynnxUluiC0+iyLi4XKsfNIGVwOuNPbmpjr3WdeGg8iFHGR3wj9yKDo9QMw36
- p5zI886GVb4YodzZMPe8xMTD5HuWUgEibY2bm+TTO9popTxiTIkLfpsCLes0unRdTqezp2X2k
- K6BlRzahtKf0KnFWyQY3gYBbmj2Ks2Cc55BHCet0pKBW8Vs1WnvcFmYz9n
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH 0/3] Fixes for IPA v4.7
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174113463200.345304.7962244845761048963.git-patchwork-notify@kernel.org>
+Date: Wed, 05 Mar 2025 00:30:32 +0000
+References: <20250227-ipa-v4-7-fixes-v1-0-a88dd8249d8a@fairphone.com>
+In-Reply-To: <20250227-ipa-v4-7-fixes-v1-0-a88dd8249d8a@fairphone.com>
+To: Luca Weiss <luca.weiss@fairphone.com>
+Cc: elder@kernel.org, andrew+netdev@lunn.ch, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org
 
-Am 03.03.25 um 14:24 schrieb Joshua Grisham:
+Hello:
 
-> Fixes logic error when block_recording is not supported but the fw attr =
-was
-> being added anyway (reported by GitHub user bbregeault).
->
-> Tested myself on a Samsung Galaxy Book2 Pro (has block_recording) and by
-> bbregeault on a Galaxy Book2 Business (does not have block_recording).
+This series was applied to netdev/net.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
-For the future you can use Tested-by tags to indicate who tested this patc=
-h.
-For now:
+On Thu, 27 Feb 2025 11:33:39 +0100 you wrote:
+> During bringup of IPA v4.7 unfortunately some bits were missed, and it
+> couldn't be tested much back then due to missing features in tqftpserv
+> which caused the modem to not enable correctly.
+> 
+> Especially the last commit is important since it makes mobile data
+> actually functional on SoCs with IPA v4.7 like SM6350 - used on the
+> Fairphone 4. Before that, you'd get an IP address on the interface but
+> then e.g. ping never got any response back.
+> 
+> [...]
 
-Reviewed-by: Armin Wolf <W_Armin@gmx.de>
+Here is the summary with links:
+  - [1/3] net: ipa: Fix v4.7 resource group names
+    https://git.kernel.org/netdev/net/c/5eb3dc1396aa
+  - [2/3] net: ipa: Fix QSB data for v4.7
+    https://git.kernel.org/netdev/net/c/6a2843aaf551
+  - [3/3] net: ipa: Enable checksum for IPA_ENDPOINT_AP_MODEM_{RX,TX} for v4.7
+    https://git.kernel.org/netdev/net/c/934e69669e32
 
-> Fixes: 56f529ce4370 ("platform/x86: samsung-galaxybook: Add samsung-gala=
-xybook driver")
->
-> Signed-off-by: Joshua Grisham <josh@joshuagrisham.com>
->
-> ---
-> v1->v2:
-> - Add Fixes tag with prior commit (thanks Ilpo for catching!)
-> ---
->   drivers/platform/x86/samsung-galaxybook.c | 8 +++++---
->   1 file changed, 5 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/platform/x86/samsung-galaxybook.c b/drivers/platfor=
-m/x86/samsung-galaxybook.c
-> index de1ed2dc6..5878a3519 100644
-> --- a/drivers/platform/x86/samsung-galaxybook.c
-> +++ b/drivers/platform/x86/samsung-galaxybook.c
-> @@ -1100,11 +1100,13 @@ static int galaxybook_fw_attrs_init(struct samsu=
-ng_galaxybook *galaxybook)
->   	}
->
->   	err =3D galaxybook_block_recording_init(galaxybook);
-> -	if (!err)
-> -		galaxybook->has_block_recording =3D true;
-> -	else if (err !=3D GB_NOT_SUPPORTED)
-> +	if (err =3D=3D GB_NOT_SUPPORTED)
-> +		return 0;
-> +	else if (err)
->   		return err;
->
-> +	galaxybook->has_block_recording =3D true;
-> +
->   	return galaxybook_fw_attr_init(galaxybook,
->   				       GB_ATTR_BLOCK_RECORDING,
->   				       &block_recording_acpi_get,
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
