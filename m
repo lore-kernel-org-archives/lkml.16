@@ -1,139 +1,142 @@
-Received: from mail-40133.protonmail.ch (mail-40133.protonmail.ch [185.70.40.133])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF3822629D
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 13:40:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.40.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10AA023372D;
+	Wed,  5 Mar 2025 13:41:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741182030; cv=none; b=QotfXTzpbLqDK0R4SFnFUBq3j1g9ssv3Wapvg3AS4b7SOjiXWveO/0wtdto78m5/QlJ/FxZf98Yc2/dlKVkio1OdpZMS1Tmdd0vmgkaq4anGE32t4iazjbO7ExD6GuPO6m80vQoCV+EIyYCHNOU7BrrNmDNYowsPkkznIlFy0vo=
+	t=1741182099; cv=none; b=GpbcBenAylEbm7kYN/39bTtx2mk1H0UJqXOQzaT6/j+rFnAt8l49CCs7RB10fwjKGqy2caT1Y2EaRxh7M6WSTfbSu+8oU+sMX0A28Zvql5WaOxal7HcBtrTwZQLcBdDzFgtZ32uLMLIHCzFyVQ/n/aZ3aCpaMXSK7ecYE+gCJhQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741182030; c=relaxed/simple;
-	bh=e7TwOMbFJdMvoNvcZfuVrdeGdnthTvDUILUYFsO8VBI=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=A2X9dAZx3URf6nLbNFp6Jck/tdY8sFfM2ISu5+LSB3sCxwOR3MioELSAtjpNpyQXxAFZOp5dQzgRKz4tQpucL3X1LmRGZYmRi4gBW+BsQvNfFya5i3g55oUpw1APV4F1T8E03ZWg+SYj7u6UiG1nfStxx1nG8hv31HbaIwghIcU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=XqpyKo8J; arc=none smtp.client-ip=185.70.40.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+	s=arc-20240116; t=1741182099; c=relaxed/simple;
+	bh=PO4Jsj4JkP9gtVNS500UraGCc0IXgiDkg5KwFz7FGp4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fBMmruQ+pP1EFNkS9AtmaqKrSq9SckmEKBbxKPnN/Lj7UzUYLGDY4KnyjHWMWga9I03qb3/oTcGJfYS9HOEcL0mNYB/9HqFnx7GeXN6mnT53/bLqNfcEUV1FvJgPhA/LZA00kzrb1LzqpPrgagq43VXrKc94WUZfTvDdgxyACCw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aWvcVARn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="XqpyKo8J"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=protonmail; t=1741182026; x=1741441226;
-	bh=/msXaYvJoXRol2eVFsyCSpVGRa8zIZ7dH7ygPIw/Gi0=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
-	b=XqpyKo8JRbrIZgKvxFwFPDDt8PMeOd0C40l00ZyDo4UlckLy4MdbyI4dNPLHTPqso
-	 DEHJIvr/zKJYpyYAywHCT1E+EjKj5d92ahqEO/TAns0EgMVaYkhapNI3OOuJSAOkk6
-	 HWp1sjRNDciTwBqJk0IQwY1mffNeR/LrxVMrPn630FUuEVjE98ZpaLDfYyiJz8EBe9
-	 CTOC2+YlXA4m39Dng3/YwLDc+Dsr/2qI6xMi5fe4SES25DtiQGoRo4R+IBNBnhMJYM
-	 feTZLevmHDvoXkDHtIcFUnFeYQ9FMtINYryQJzeru3EhABaPil6g78GJA2zZ/aA6xu
-	 krchaoJuLEimw==
-Date: Wed, 05 Mar 2025 13:40:19 +0000
-To: Andreas Hindborg <a.hindborg@kernel.org>
-From: Benno Lossin <benno.lossin@proton.me>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>, Waiman Long <longman@redhat.com>, linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, linux-block@vger.kernel.org
-Subject: Re: [PATCH 15/22] rust: make pin-init its own crate
-Message-ID: <D88DIE85YT01.11H51NPNE3HP6@proton.me>
-In-Reply-To: <87bjufd6bj.fsf@kernel.org>
-References: <20250304225245.2033120-1-benno.lossin@proton.me> <LBAOJwgDK3vs6V-k9Olh9PVQ69a3qCaCgLZctAshaNi73epZNKVgY4rKa-81-5us0Tpj3m3U_W3pCHFTKlIbVQ==@protonmail.internalid> <20250304225245.2033120-16-benno.lossin@proton.me> <87bjufd6bj.fsf@kernel.org>
-Feedback-ID: 71780778:user:proton
-X-Pm-Message-ID: 5a0669a79793708d4be68c804eb6d559404b7c94
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aWvcVARn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D975C4CEEB;
+	Wed,  5 Mar 2025 13:41:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741182098;
+	bh=PO4Jsj4JkP9gtVNS500UraGCc0IXgiDkg5KwFz7FGp4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=aWvcVARnA7fd8YWUBmT1HN8/fVMwWIkoCf3Q+QiRDKokF0+N5OBdbpD29PJHk/zkt
+	 Qfc5nroy/v48smGrRV68B7TDubZ6yba9xnMgfJtuqWImlkewSGNS5iEPGN7vQO/E4c
+	 rsHA/BFQFMu0/jbtYOJEpPaKeNGgWB5tezft2yePbf40aqmbrMdIKhOgBq5yJP6lTu
+	 999KHoBm3lNxsnsLcfuGSUDREmqcxOBq4TDAn+zakH54MpPpBguwlg4ADZ4XQETc+Z
+	 hNJoBH9snv4sgDSeBfBg3FqQo2cRcnLqkH/q1Ml5A7PzHEel+2iOI3Rd9Vdn3nptLz
+	 R8JJXx12MiVzg==
+Received: by mail-oo1-f45.google.com with SMTP id 006d021491bc7-5fc6fe05460so3881077eaf.1;
+        Wed, 05 Mar 2025 05:41:38 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUPbl/Ynz3ZR4Nnok4C+mDSk1P2/8YL0qvNyjy6+FK80MKMONMsBm0XQmWl8uT9uO9WjH/AdqqTWMYnaJmk@vger.kernel.org, AJvYcCW32u10CLLLpaXfuZzM2L+ojcEX7nH7VBqX3+8PIHJm9JAtC6eexKMfQ/z+R+6oeg/7/xO8s7zhmpXH@vger.kernel.org, AJvYcCXbRq1dxpAR1GcpGQN7PxKrWm8YdGrPEbxpMPb4VjTadLkBxsaL+4VpN9o9C0paONQObHEnWrft22W/@vger.kernel.org
+X-Gm-Message-State: AOJu0YxB8VYOPXeQrBy7iRKSZS5EybgiiQJxuk4wpwlXNQacc0QbyrH7
+	t69cP7XjHQTmdP3s1EYjpaA8aed1clfugbUDHUWEpeJetnuthpJoy67ewzO1QlJcBN9gtivaoG9
+	ZakvIN5s4HXKcFug2sPfeJv9Q7kg=
+X-Google-Smtp-Source: AGHT+IGPcCMLMQ2WrDCUyi/KjmpInyphx17IJnhTjXeEgLDqgtxF59DgweVVnVJ78q+UA0HlQWD5DVuGCMM18IdLS1g=
+X-Received: by 2002:a05:6820:1b1a:b0:5fc:b7f4:c013 with SMTP id
+ 006d021491bc7-6003358e57dmr1360365eaf.5.1741182097752; Wed, 05 Mar 2025
+ 05:41:37 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+References: <20241126151711.v5.1.Id0a0e78ab0421b6bce51c4b0b87e6aebdfc69ec7@changeid>
+ <20250228174509.GA58365@bhelgaas> <Z8IC_WDmix3YjOkv@google.com>
+In-Reply-To: <Z8IC_WDmix3YjOkv@google.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Wed, 5 Mar 2025 14:41:26 +0100
+X-Gmail-Original-Message-ID: <CAJZ5v0j_6jeMAQ7eFkZBe5Yi+USGzysxAgfemYh=-zq4h5W+Qg@mail.gmail.com>
+X-Gm-Features: AQ5f1JppUE7nECQCq6b9InHWQuU6lOpah0GYGxjTM0WTAGA_910spDA_NjX67D8
+Message-ID: <CAJZ5v0j_6jeMAQ7eFkZBe5Yi+USGzysxAgfemYh=-zq4h5W+Qg@mail.gmail.com>
+Subject: Re: [PATCH v5] PCI: Allow PCI bridges to go to D3Hot on all
+ Devicetree based platforms
+To: Brian Norris <briannorris@chromium.org>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, Hsin-Yi Wang <hsinyi@chromium.org>, 
+	linux-kernel@vger.kernel.org, mika.westerberg@linux.intel.com, 
+	linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org, lukas@wunner.de, 
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed Mar 5, 2025 at 1:12 PM CET, Andreas Hindborg wrote:
-> "Benno Lossin" <benno.lossin@proton.me> writes:
+On Fri, Feb 28, 2025 at 7:40=E2=80=AFPM Brian Norris <briannorris@chromium.=
+org> wrote:
 >
->> Rename relative paths inside of the crate to still refer to the same
->> items, also rename paths inside of the kernel crate and adjust the build
->> system to build the crate.
->>
->> Signed-off-by: Benno Lossin <benno.lossin@proton.me>
->> ---
+> Hi Bjorn,
 >
-> [...]
+> On Fri, Feb 28, 2025 at 11:45:09AM -0600, Bjorn Helgaas wrote:
+> > On Tue, Nov 26, 2024 at 03:17:11PM -0800, Brian Norris wrote:
+> > > From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > >
+> > > Unlike ACPI based platforms, there are no known issues with D3Hot for
+> > > the PCI bridges in Device Tree based platforms.
+> >
+> > Can we elaborate on this a little bit?  Referring to "known issues
+> > with ACPI-based platforms" depends on a lot of domain-specific history
+> > that most readers (including me) don't know.
 >
->> diff --git a/rust/macros/lib.rs b/rust/macros/lib.rs
->> index 7ff82c82ce0c..8e116e266524 100644
->> --- a/rust/macros/lib.rs
->> +++ b/rust/macros/lib.rs
->> @@ -2,23 +2,20 @@
->>
->>  //! Crate for all kernel procedural macros.
->>
->> +#![feature(lint_reasons)]
+> Well, to me, the background here is simply the surrounding code context,
+> and the past discussions that I linked:
 >
-> Commit message should probably say something about this.
-
-Done.
-
->> +
->>  // When fixdep scans this, it will find this string `CONFIG_RUSTC_VERSI=
-ON_TEXT`
->>  // and thus add a dependency on `include/config/RUSTC_VERSION_TEXT`, wh=
-ich is
->>  // touched by Kconfig when the version string from the compiler changes=
-.
->>
->>  #[macro_use]
->> +#[expect(unused_macros)]
->>  mod quote;
->>  mod concat_idents;
->>  mod helpers;
->>  mod module;
->>  mod paste;
->> -#[path =3D "../pin-init/internal/src/pin_data.rs"]
->> -mod pin_data;
->> -#[path =3D "../pin-init/internal/src/pinned_drop.rs"]
->> -mod pinned_drop;
->>  mod vtable;
->> -#[path =3D "../pin-init/internal/src/zeroable.rs"]
->> -mod zeroable;
->>
->>  use proc_macro::TokenStream;
->>
->> @@ -374,5 +371,3 @@ pub fn paste(input: TokenStream) -> TokenStream {
->>      paste::expand(&mut tokens);
->>      tokens.into_iter().collect()
->>  }
->> -
->> -include!("../pin-init/internal/src/lib.rs");
->> diff --git a/rust/macros/module.rs b/rust/macros/module.rs
->> index cdf94f4982df..bdd94c79b0d4 100644
->> --- a/rust/macros/module.rs
->> +++ b/rust/macros/module.rs
->> @@ -236,7 +236,7 @@ impl kernel::ModuleMetadata for {type_} {{
->>              mod __module_init {{
->>                  mod __module_init {{
->>                      use super::super::{type_};
->> -                    use kernel::init::PinInit;
->> +                    use pin_init::PinInit;
->>
->>                      /// The \"Rust loadable module\" mark.
->>                      //
->> diff --git a/rust/macros/quote.rs b/rust/macros/quote.rs
->> index 33a199e4f176..11d241b85ac3 100644
->> --- a/rust/macros/quote.rs
->> +++ b/rust/macros/quote.rs
->> @@ -2,6 +2,7 @@
->>
->>  use proc_macro::{TokenStream, TokenTree};
->>
->> +#[allow(dead_code)]
+> https://lore.kernel.org/linux-pci/20240227225442.GA249898@bhelgaas/
 >
-> #[expect(dead_code)] ?
+> The whole reason we need this patch is that:
+> (a) there's some vaguely specified reason this function (which prevents
+>     standard-specified behavior) exists; and
+> (b) that function includes a condition that allows all systems with a
+>     DMI/BIOS newer than year 2015 to use this feature.
+>
+> Digging a bit further, it seems like maybe the only reason this feature
+> is prevented on DT systems is from commit ("9d26d3a8f1b0 PCI: Put PCIe
+> ports into D3 during suspend"), where the subtext is that it was written
+> by and for Intel in 2016, with an arbitrary time-based cutoff ("year
+> this was being developed") that only works for DMI systems. DT systems
+> do not tend to support DMI.
+>
+> If any of this is what you're looking for, I can try to
+> copy/paste/summarize a few more of those bits, if it helps.
+>
+> > I don't think "ACPI-based" or "devicetree-based" are good
+> > justifications for changing the behavior because they don't identify
+> > any specific reasons.  It's like saying "we can enable this feature
+> > because the platform spec is written in French."
+>
+> AIUI, It's involved because of the general strategy of this function
+> (per its comments, "recent enough PCIe ports"). So far, it sounds like
+> that reason (presumably, old BIOS with poor power management code)
+> doesn't really apply to a system based on device tree, where the power
+> management code is mostly/entirely in the OS.
 
-`expect` can't be used here, since `quote.rs` is imported in
-`pin-init/internal/src/lib.rs` and used in that crate. But it is unused
-in the `macros` crate, hence we need to allow it.
+No, it was about PCIe hardware failing to handle PM correctly on ports.
 
----
-Cheers,
-Benno
+> But really, the original commit doesn't actually state reasons, so maybe
+> the "known issues" phrasing could be weakened a bit, to avoid implying
+> there were any stated reasons.
 
+There were hardware issues related to PM on x86 platforms predating
+the introduction of Connected Standby in Windows.  For instance,
+programming a port into D3hot by writing to its PMCSR might cause the
+PCIe link behind it to go down and the only way to revive it was to
+power cycle the Root Complex.  And similar.
+
+Also, PM has never really worked correctly on PCI (non-PCIe) bridges
+and there is this case where the platform firmware handles hotplug and
+doesn't want the OS to get in the way (the bridge->is_hotplug_bridge
+&& !pciehp_is_native(bridge) check in pci_bridge_d3_possible()).
+
+The DMI check at the end of pci_bridge_d3_possible() is really
+something to the effect of "there is no particular reason to prevent
+this bridge from going into D3, but try to avoid platforms where it
+may not work".
+
+Basically, as far as I'm concerned, this check can be changed into
+something like
+
+if (!IS_ENABLED(CONFIG_X86) || dmi_get_bios_year() >=3D 2015)
+        return true;
+
+which also requires updating the comment above it accordingly.
+
+This would have been better than the check added by the $subject patch IMV.
