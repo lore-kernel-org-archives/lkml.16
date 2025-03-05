@@ -1,122 +1,125 @@
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08A6F15DBA3
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 16:19:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E948567D;
+	Wed,  5 Mar 2025 16:20:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741191593; cv=none; b=vCZjzzx6fKCTuzYCWSADU13oCPtegDkil47Ocn537IqAniATzVPhfT/TzbPJrg8WzZKpTgsR5Y+1Yu0xgQuWwYJv5sZnAgi0yACc3olzjcB8j/lZA2Cyz/bw1gOIhxLjJJntu6e1czBIMV9O1Y1XCMTPvicQc8nB4Sfmds/76z0=
+	t=1741191644; cv=none; b=KpQl7BBkCF+oDE1fuo4cCvIm9PXgHBzZTGKp3W2vk6yHQFxJizgAzRgZV+RNmssbxGsYfheOkLPtyx0Sx1+kbmkk9A9gpTp6Z9gCPudap3KgjKIAxQnasmFfy/wWJROIqN1RXTd1JiBBIpa4LtYlvvr7h/snLtpkCJlwQvmyibk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741191593; c=relaxed/simple;
-	bh=lfd64ISt/RbrcjtvA7JF0gaXVbwwmUokpUC9i/vb/O8=;
+	s=arc-20240116; t=1741191644; c=relaxed/simple;
+	bh=HWjA/54qT1T38UrU9K3wIAlo9/R2j+5fLIVn8dgqyXI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Fv1mD61EugFj7q8+ElEo11Ph6WbkR9GynGZt6I1ELKW8XExIUrB5XMydCVf+Lv5KCAF3mQ2Md6sElQjZviXq3oQUxIwTr0K84sDNFsojpHMb0bH77HlTwfQ6TgCKYcH5DuhoKoor5hbno7jinZdDvnb71aF0uXWDSAQrTSW9gt8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=ZEzjGrd8; arc=none smtp.client-ip=209.85.221.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=BAQ75573B6daZTl6FOtAy8Zv+jcPmddFlLX7RLypSMXCBJOEHZ4qtoPsLwI7uwML0kGY14+U9zdpaQsPJcs6b8bFxDL897WmclY0aPxO4wAiOi3FXo2Vx4FdQ9dmWbJPIIUfy3re5ohAEubeWIOnbFTPkNoY5xfkGMLXK5vyqoc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Mk4MLJl+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="ZEzjGrd8"
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-390cf7458f5so6515908f8f.2
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Mar 2025 08:19:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1741191589; x=1741796389; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=lfd64ISt/RbrcjtvA7JF0gaXVbwwmUokpUC9i/vb/O8=;
-        b=ZEzjGrd8W77Dz+Gcck7iqywTksdbLXgtO58AMmFKoJ67Huug5Dt6P6ExpIYKKmPhSi
-         sXE6NDoX27fYT1/qUXzaxKWDKPqkF98VL6WtldXSAOeSd74nYIrgLAiXElQ0sDXenVLr
-         78A0dJ01ZgNkc1CyOtc+k3Xn661skl9qb/NL2HkcBV/yTjwN4wJau4KRWCKRM4Zkdu7v
-         RtYKBP51+ym4qJWwmDwvYPYePNFNe3HYgr6scmtvj9m4KgAh4gOLSL5kFqQndFrdalXm
-         qhXzDs9XJ+5ujYj5S2nRCfM9A+SSrdrYT5QunjVpqZfI6FtudCJ6TVoNJZ7CQVqBJClp
-         gbwA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741191589; x=1741796389;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lfd64ISt/RbrcjtvA7JF0gaXVbwwmUokpUC9i/vb/O8=;
-        b=kWQj+q3rHo13sE6l9Gy2UlRiTqSHnle0PPVxiqdQ+NnrJL+qMlwPn1kyap57hVjxie
-         CHChuUd629bAgGHaEUlkhQbVkYsueN5YvpEnffZr6xjVbzgViMiRopycfod5sc68vym8
-         7GS/xmupR/V1Y3Um5JSv290A6Tvls/+P581C5RroGu/8COEJ7xGypavB2mQq2JRtCZgF
-         RpMYtdwNX+F4h1c65NgIJ/z+GT/0zGM7bedr1jmHdX19aCPhavnyPnrxL5/V5qGsR8Ux
-         m1fM/klPIlk5Lio59RcIJr0ifyKWwjdEO8GNeLWxesTgkFddhx84AJfq1WjlKuuMMItv
-         +Tcg==
-X-Forwarded-Encrypted: i=1; AJvYcCXFeNoXhxxtT6MJaGxK8YjI7b3/YsKn/4jKifE1Kb9nF3N7XvHKwuINqtlXlXU7XLTDqekmbtXvG0XdnbA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzGhHfw/A8G7CYWRmsByn66hzFzcunOOAurpTiywODasrlc1vWv
-	OmhdA9d3jwdAco0WQbyAlybO7gNRS39+nRpg75kDD40RqrQDnohNrYRv4fjz12s=
-X-Gm-Gg: ASbGncsthI2qk7/xfmhCYAsigglBPhdzGRvbJEd5X657Zq6B79PkxcRuHeLbo0fJJ/u
-	8rOvzxb4h4iu2EokxEdtVFHpWvXCMJ1qmuXUZ+4gAM6A3UFjI9xe8nP8FNHr+LEpB6F4Nzq16Iv
-	MYqtj9vWltuQ/Q4hJFMWInjirXMgpuSlf7mFI+nSx90VecxVC+7wEqkP3HSi7L+3ZY0uC8/zsYd
-	Ag3Qk0buDBLJLfZHCPckwWxbjrcQcHJwtJbmsLHpLjKhlDSHMfbkytozLbeqxHSZfqUQspfvjRa
-	aVbHtDbGc7I6R1BRRYUc32nsial8KQCZJolUZ2JkBv2NCgA=
-X-Google-Smtp-Source: AGHT+IFoRFVOSxz4aXuAZrJ3O/Og36uum919iPEJQo0fgDe96HeJ4Jmhlw2xmiXGf0Dk1Ste551NFg==
-X-Received: by 2002:a05:6000:156d:b0:390:debd:70c3 with SMTP id ffacd0b85a97d-3911f7caa1fmr3937218f8f.54.1741191589084;
-        Wed, 05 Mar 2025 08:19:49 -0800 (PST)
-Received: from blackdock.suse.cz ([193.86.92.181])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-390e485db82sm21108816f8f.88.2025.03.05.08.19.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Mar 2025 08:19:48 -0800 (PST)
-Date: Wed, 5 Mar 2025 17:19:47 +0100
-From: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
-To: shashank.mahadasyam@sony.com
-Cc: Tejun Heo <tj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>, 
-	Jonathan Corbet <corbet@lwn.net>, Waiman Long <longman@redhat.com>, cgroups@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Shinya Takumi <shinya.takumi@sony.com>
-Subject: Re: [PATCH 2/2] cgroup, docs: Document interaction of RT processes
- with cpu controller
-Message-ID: <thhej7ngafu6ivtpcjs2czjidd5xqwihvrgqskvcrd3w65fnp4@inmu3wuofcpr>
-References: <20250305-rt-and-cpu-controller-doc-v1-0-7b6a6f5ff43d@sony.com>
- <20250305-rt-and-cpu-controller-doc-v1-2-7b6a6f5ff43d@sony.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Mk4MLJl+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B3DAC4CED1;
+	Wed,  5 Mar 2025 16:20:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741191643;
+	bh=HWjA/54qT1T38UrU9K3wIAlo9/R2j+5fLIVn8dgqyXI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Mk4MLJl+uuKL2Nffx6CigEQOKXqD4rQShmjlajABN45BiRggskUECk5yxrAhgRVpj
+	 NLku0mu9r4Ml+HRtk6VvXyPE0BTWlsTGYPa0FSX6WLr0elpiX7VVIFiCJImpKoE9Pr
+	 muGYG6bMan4XsqT/uRRFfWYINWUYKibRmUJ+jrQ2Wv9IoEzkZcPP/R0XzweUyCPUwW
+	 56wHr3athTy9mo3UFevOvmznabo1v+K94IYcUPClc9e3WRPykNyZ8hcKh/16tE4TNW
+	 59zSeG4YlSZ77m/4+KZ1jCk0zx/r9hSFpJrW8Rdd82qeCwvVXCTpFXulUDSJCVx7Ey
+	 2gtltonjeWO/w==
+Date: Wed, 5 Mar 2025 16:20:31 +0000
+From: Simon Horman <horms@kernel.org>
+To: Kuan-Wei Chiu <visitorckw@gmail.com>
+Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+	dave.hansen@linux.intel.com, x86@kernel.org, jk@ozlabs.org,
+	joel@jms.id.au, eajames@linux.ibm.com, andrzej.hajda@intel.com,
+	neil.armstrong@linaro.org, rfoss@kernel.org,
+	maarten.lankhorst@linux.intel.com, mripard@kernel.org,
+	tzimmermann@suse.de, airlied@gmail.com, simona@ffwll.ch,
+	dmitry.torokhov@gmail.com, mchehab@kernel.org,
+	awalls@md.metrocast.net, hverkuil@xs4all.nl,
+	miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
+	louis.peens@corigine.com, andrew+netdev@lunn.ch,
+	davem@davemloft.net, edumazet@google.com, pabeni@redhat.com,
+	parthiban.veerasooran@microchip.com, arend.vanspriel@broadcom.com,
+	johannes@sipsolutions.net, gregkh@linuxfoundation.org,
+	jirislaby@kernel.org, yury.norov@gmail.com,
+	akpm@linux-foundation.org, hpa@zytor.com, alistair@popple.id.au,
+	linux@rasmusvillemoes.dk, Laurent.pinchart@ideasonboard.com,
+	jonas@kwiboo.se, jernej.skrabec@gmail.com, kuba@kernel.org,
+	linux-kernel@vger.kernel.org, linux-fsi@lists.ozlabs.org,
+	dri-devel@lists.freedesktop.org, linux-input@vger.kernel.org,
+	linux-media@vger.kernel.org, linux-mtd@lists.infradead.org,
+	oss-drivers@corigine.com, netdev@vger.kernel.org,
+	linux-wireless@vger.kernel.org, brcm80211@lists.linux.dev,
+	brcm80211-dev-list.pdl@broadcom.com, linux-serial@vger.kernel.org,
+	bpf@vger.kernel.org, jserv@ccns.ncku.edu.tw,
+	david.laight.linux@gmail.com, andrew.cooper3@citrix.com,
+	Yu-Chun Lin <eleanor15x@gmail.com>
+Subject: Re: [PATCH v2 03/18] bitops: Add parity16(), parity32(), and
+ parity64() helpers
+Message-ID: <20250305162031.GO3666230@kernel.org>
+References: <20250301142409.2513835-1-visitorckw@gmail.com>
+ <20250301142409.2513835-4-visitorckw@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="grdslyhitlxydqpc"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250305-rt-and-cpu-controller-doc-v1-2-7b6a6f5ff43d@sony.com>
+In-Reply-To: <20250301142409.2513835-4-visitorckw@gmail.com>
 
+On Sat, Mar 01, 2025 at 10:23:54PM +0800, Kuan-Wei Chiu wrote:
+> Introduce parity16(), parity32(), and parity64() functions for
+> computing parity on 16-bit, 32-bit, and 64-bit integers, respectively.
+> These functions use __builtin_parity() or __builtin_parityll() when
+> available, ensuring efficient computation. If the input is a
+> compile-time constant, they expand using the _parity_const() macro to
+> allow constant folding.
+> 
+> These additions provide parity computation helpers for larger integer
+> types, ensuring consistency and performance across different
+> bit-widths.
+> 
+> Co-developed-by: Yu-Chun Lin <eleanor15x@gmail.com>
+> Signed-off-by: Yu-Chun Lin <eleanor15x@gmail.com>
+> Signed-off-by: Kuan-Wei Chiu <visitorckw@gmail.com>
+> ---
+>  include/linux/bitops.h | 63 ++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 63 insertions(+)
+> 
+> diff --git a/include/linux/bitops.h b/include/linux/bitops.h
+> index 4c307d9c1545..41e9e7fb894b 100644
+> --- a/include/linux/bitops.h
+> +++ b/include/linux/bitops.h
+> @@ -276,6 +276,69 @@ static inline __attribute_const__ int parity8(u8 val)
+>  	return __builtin_constant_p(val) ? _parity_const(val) : _parity8(val);
+>  }
+>  
+> +#ifndef _parity16
+> +static inline __attribute_const__ int _parity16(u16 val)
+> +{
+> +	return __builtin_parity(val);
+> +}
+> +#endif
+> +
+> +/**
+> + * parity16 - get the parity of an u16 value
+> + * @value: the value to be examined
 
---grdslyhitlxydqpc
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH 2/2] cgroup, docs: Document interaction of RT processes
- with cpu controller
-MIME-Version: 1.0
+nit: This really ought to be @val to match the function signature.
+     Likewise for parity8, parity32, and parity64.
 
-Hello Shashank.
+> + *
+> + * Determine the parity of the u16 argument.
+> + *
+> + * Returns:
+> + * 0 for even parity, 1 for odd parity
+> + */
+> +static inline __attribute_const__ int parity16(u16 val)
+> +{
+> +	return __builtin_constant_p(val) ? _parity_const(val) : _parity16(val);
+> +}
 
-On Wed, Mar 05, 2025 at 01:12:44PM +0900, Shashank Balaji via B4 Relay <dev=
-null+shashank.mahadasyam.sony.com@kernel.org> wrote:
-> From: Shashank Balaji <shashank.mahadasyam@sony.com>
->=20
-> If the cpu controller is enabled in a CONFIG_RT_GROUP_SCHED
-> disabled setting, cpu.stat and cpu.pressure account for realtime
-> processes, and cpu.uclamp.{min, max} affect realtime processes as well.
-> None of the other interface files are affected by or affect realtime
-> processes.
-
-I'm not sure the changed formulation make it clearer.
-What was the unexpected value with !CONFIG_RT_GROUP_SCHED that made you
-change this docs?
-
-(Please note the docs is for generic cgroup, not only root cgroup.)
-
-Michal
-
---grdslyhitlxydqpc
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQTd6mfF2PbEZnpdoAkt3Wney77BSQUCZ8h5oAAKCRAt3Wney77B
-SZS9AQCweGn9vmr0uVAY0ditk3HYDJkXqtlv44llDojm9l8lfwEA+VwWyZAHkc4M
-qf0ODOchzeAkh9aPU/wjv2zNmo43Iwk=
-=/JpA
------END PGP SIGNATURE-----
-
---grdslyhitlxydqpc--
+...
