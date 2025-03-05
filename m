@@ -1,143 +1,235 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 217CA23027C;
-	Wed,  5 Mar 2025 19:35:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEB9D78F3A
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 19:35:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741203330; cv=none; b=kFnJrr2pSKp4hsvL372pH3rUwSC6CV/nuFNilDhK/FpWQps45xZmIRJSWpVeX2d6z7A0tsFieplD3J0xSv6XYvIP1XWYxds+1AESn4045CI908LQGGxdPEHkLuHCAN8E1F6KwL+lc/slA5gPm6a6RxkjHZFbVs4/bZx65KwweKc=
+	t=1741203349; cv=none; b=kjsctSO564vJv/ijXr9B9qlNABrEUczUhyqtoxOlATiOWunMGVwOUT4xNOCxGfb9DHWmdl5EePPYivWn9gVAJ4Ir9SC5rxF5DIRrZr3+zAcAXJNXzDVa1RhTZP6OsP0k0MQO7SPlPch2ZXhGjZsllbV80MVnLZXpo8Oo4Z3lVJA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741203330; c=relaxed/simple;
-	bh=mGnbkd4hbQAQrMUImRI0AKMF6vtBST1nNXEtdhcVzCA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TZJIUQTY3v1NPbw1jzCpczcAO2O1fW93AwFgpUfN6cqCvDzZTySvE4eKFn+QyqPMXjD0rVLK9c3BJ+mO3xQUGzRYZALzM4uPAESQAAR+IzS5l3uZtf8NIe0PlnOYRpw570VoOSO2n0QKL3r9mwK8dijNkIkIqSWw3gG5k+KrsYY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mYb12lad; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1741203349; c=relaxed/simple;
+	bh=IC3+U9JNhJyiVBTHk5QNHp8oY/Ss/nsta9eRXdQVChI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=n0y04RY4Kqh5e1pEd+u+FiaWPKa4DEGKCqdvdSfVXKgj9e69i8T6qCH7saP8XeQVuqt4Om9yvCLneVZSt5mIRyZ6xErTJi0hZPamHVyIWxWVe/ehHbOmbg5INuwNLCbzHdwzOnIAiI1L6sOASNmkCfQ/E76Mr8BaTvPtT/lk2Iw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CVhMDqwI; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mYb12lad"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741203329; x=1772739329;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=mGnbkd4hbQAQrMUImRI0AKMF6vtBST1nNXEtdhcVzCA=;
-  b=mYb12ladYz3UCxsYrHwxUOUeDeOix19lR15KHQeNLITnA3Js3M3bZauh
-   uT3EnISy8Dp6+03s5oQ3iIahlbk9auu/z7BWJAeQcGGl5wNqWPWCNjszK
-   FHQR2KJYUI6gEz8ApIhgNfeo41FMNO1E8vbr739lbJ/qCIIBgeZcB+M0e
-   7b6rZrfGWdScALfSjE2QCGvd532TKCi+qKghNjoayE4UPYNCKsEiohNfZ
-   p9kVPVoT9qSR/mx7oCmwr3K9gZebiTLfCxcw/kWnUhYxOF2w1VVzTHJE1
-   YT+OoCMkTV+w3fDbX53Mlu6ZHlNrWZM9wxO9WmKfpiXclxGvN5u2CDcQP
-   w==;
-X-CSE-ConnectionGUID: oAtlXKrrRhym1v7SWOErUQ==
-X-CSE-MsgGUID: iw37rypxR0y8RVmEYXveAA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11363"; a="41361997"
-X-IronPort-AV: E=Sophos;i="6.14,224,1736841600"; 
-   d="scan'208";a="41361997"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Mar 2025 11:35:28 -0800
-X-CSE-ConnectionGUID: cFbw9MmTS7KDCoKNrjDK1A==
-X-CSE-MsgGUID: nWxLVTUGQbipBJHURc84/w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,224,1736841600"; 
-   d="scan'208";a="118807304"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Mar 2025 11:35:25 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1tpuWY-0000000HVTs-0cLz;
-	Wed, 05 Mar 2025 21:35:22 +0200
-Date: Wed, 5 Mar 2025 21:35:21 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Tamir Duberstein <tamird@gmail.com>
-Cc: Petr Mladek <pmladek@suse.com>, David Gow <davidgow@google.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Shuah Khan <shuah@kernel.org>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v8 4/4] scanf: break kunit into test cases
-Message-ID: <Z8ineT_g9gzcftWe@smile.fi.intel.com>
-References: <20250214-scanf-kunit-convert-v8-0-5ea50f95f83c@gmail.com>
- <20250214-scanf-kunit-convert-v8-4-5ea50f95f83c@gmail.com>
- <Z8hnXIrMV0ct1YR6@pathway.suse.cz>
- <CAJ-ks9k7G31uBqygXNtfXcwVQXWvkaAWJh1vkFw2_VZ5bAz=Vg@mail.gmail.com>
- <Z8hz8-Sa6XRC0W5Z@smile.fi.intel.com>
- <CAJ-ks9kz-fEH1YLiCn3fHR9AtYQLCZS77GKfOObifEL4GLwk8A@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CVhMDqwI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1741203346;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=Z30FTZj7gdsdVzcf6GlPnvMHkjnOzwx2rv8igST/6co=;
+	b=CVhMDqwIGkzhGuE86+421C9ptVmV2OJm9iMkGVMWTPiouSfH5PVauXyAd88nttJcUmfiQt
+	D6AlbuIBuP3awvW9mTUZIg/6l1nxaboDbdSdeH5HHS09VPoU69wyHloAm2b620ZGxuFbG7
+	WvZwlt/pi3tL7ohoVJRCu88elgyZLlE=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-627-4W0FJTDTMJKO20dhJ0R7-w-1; Wed, 05 Mar 2025 14:35:40 -0500
+X-MC-Unique: 4W0FJTDTMJKO20dhJ0R7-w-1
+X-Mimecast-MFC-AGG-ID: 4W0FJTDTMJKO20dhJ0R7-w_1741203339
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-39123912ff0so416016f8f.2
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Mar 2025 11:35:40 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741203339; x=1741808139;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Z30FTZj7gdsdVzcf6GlPnvMHkjnOzwx2rv8igST/6co=;
+        b=BzjAvfzK7wzHRMXrgqm5BjXz1CSWZZuQA/R6c0LI7FDb1EXx5FsYz5GAH+9emgN++N
+         EpYRCE8ZUh/IcSjjT5kWyRvBK0trnHRPEshk+hjsBAXurTWMESwHY6mTcIOULow3G8b8
+         m/zfyudy3osGoifC0WGeO5OUROwvsMlGE8UQE+HbnEXpcC3RTB+D+T1BpYVfm+nOtUsJ
+         wKKVwFYBWKaVm7toJB0yR0y5GV9FHRp2dqfc1dV2M0CvSqLwYU09S/Uv3o+kSE2av/+v
+         czmbn+nowsGqJ1Y7YEvVAs2UJKj9TIrY72I17FVRf1s8jGYQJeALy5/pQKpuWJm8nE3q
+         +IvA==
+X-Forwarded-Encrypted: i=1; AJvYcCWv+DZDVsu/K6cI/rY5TSlvkkwBGjbOTsnNhpTuTxPn+UJpNHrQvL3YNVouX3chpcB8FGr6enw54BRhPyM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzNl2VsCGMzFkxT1Cd51Xc6qqiD8HO3cuJ8uZRF6Nyy96sO2A3u
+	qOxauClCag6kZB8o6Nk5VuEbz262L8H/0Ir4jx0sOiJBeV/U0v5a4g1cPZToMmOTXcdxAx7dkxA
+	QMWhBypRRIhwJKDgEmkZb9BCQtr2Y5YGsb8Y2Ywvs9W+mzOllz5enXAxmu4URhA==
+X-Gm-Gg: ASbGncsZKzLsDyLWCXqLcsyk92joAw1dNJABT0PoJ0Haz4dOToIKJR70yHuUi7jFY0/
+	6n88lfmHyMt3KMXpJn419mqFE0fDEYsqrXY4hhf8Ju9/ojP9C1g5mFkVLkAs2QB1gXpKjS0C8z4
+	u87ujkC106aa88wtWLQoS0MZ/6qVBG/XpKA29ufrbYR2cqOXP7o6Cvxk8GphRfjEun/3GgqXVIN
+	Z/WAiAdGYozLXiHdN6p2yQuQg/BvFU6QIIrAbg9J+SBELXVa2/ro9rQOcJ6xPIdr2bzPkG65jvL
+	1F3yfn6ixWryZjhjz3+kzANyYU+Rh/y5Hvvbtr9g5nnXd2Z46Pp/4s2/v+Vub05Il2x4n+gobpX
+	tsYUjdgiJLIu1RbeyjG+db1Zm485+Nw/3rqYQUzKQqto=
+X-Received: by 2002:a5d:64e3:0:b0:391:1806:e25c with SMTP id ffacd0b85a97d-3911f740541mr3524724f8f.17.1741203339109;
+        Wed, 05 Mar 2025 11:35:39 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGD4SRn/gcrJ/xOZzRBjI1bFcRUWMd15cXXSg1hQ+M/Y9rvTLesfg4q3lBfUNCJnDO8Xd1+Bw==
+X-Received: by 2002:a5d:64e3:0:b0:391:1806:e25c with SMTP id ffacd0b85a97d-3911f740541mr3524709f8f.17.1741203338777;
+        Wed, 05 Mar 2025 11:35:38 -0800 (PST)
+Received: from ?IPV6:2003:cb:c739:5b00:84f2:50f3:bdc8:d500? (p200300cbc7395b0084f250f3bdc8d500.dip0.t-ipconnect.de. [2003:cb:c739:5b00:84f2:50f3:bdc8:d500])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-390e47a6a78sm21534902f8f.23.2025.03.05.11.35.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 05 Mar 2025 11:35:37 -0800 (PST)
+Message-ID: <f63146c0-0316-4182-9a62-48dfc39f27b7@redhat.com>
+Date: Wed, 5 Mar 2025 20:35:36 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJ-ks9kz-fEH1YLiCn3fHR9AtYQLCZS77GKfOObifEL4GLwk8A@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 00/16] mm/madvise: batch tlb flushes for MADV_DONTNEED
+ and MADV_FREE
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: Matthew Wilcox <willy@infradead.org>, SeongJae Park <sj@kernel.org>,
+ "Liam R. Howlett" <howlett@gmail.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Shakeel Butt <shakeel.butt@linux.dev>, Vlastimil Babka <vbabka@suse.cz>,
+ kernel-team@meta.com, linux-kernel@vger.kernel.org, linux-mm@kvack.org
+References: <20250305181611.54484-1-sj@kernel.org>
+ <Z8ieZVFEa6vAouvu@casper.infradead.org>
+ <46960f37-0d12-4cfd-a214-1ddae2495665@redhat.com>
+ <8c7714ca-a766-4a07-bfdc-f1d91aee379d@lucifer.local>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
+ dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
+ QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
+ XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
+ Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
+ PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
+ WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
+ UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
+ jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
+ B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABzSREYXZpZCBIaWxk
+ ZW5icmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT7CwZgEEwEIAEICGwMGCwkIBwMCBhUIAgkKCwQW
+ AgMBAh4BAheAAhkBFiEEG9nKrXNcTDpGDfzKTd4Q9wD/g1oFAl8Ox4kFCRKpKXgACgkQTd4Q
+ 9wD/g1oHcA//a6Tj7SBNjFNM1iNhWUo1lxAja0lpSodSnB2g4FCZ4R61SBR4l/psBL73xktp
+ rDHrx4aSpwkRP6Epu6mLvhlfjmkRG4OynJ5HG1gfv7RJJfnUdUM1z5kdS8JBrOhMJS2c/gPf
+ wv1TGRq2XdMPnfY2o0CxRqpcLkx4vBODvJGl2mQyJF/gPepdDfcT8/PY9BJ7FL6Hrq1gnAo4
+ 3Iv9qV0JiT2wmZciNyYQhmA1V6dyTRiQ4YAc31zOo2IM+xisPzeSHgw3ONY/XhYvfZ9r7W1l
+ pNQdc2G+o4Di9NPFHQQhDw3YTRR1opJaTlRDzxYxzU6ZnUUBghxt9cwUWTpfCktkMZiPSDGd
+ KgQBjnweV2jw9UOTxjb4LXqDjmSNkjDdQUOU69jGMUXgihvo4zhYcMX8F5gWdRtMR7DzW/YE
+ BgVcyxNkMIXoY1aYj6npHYiNQesQlqjU6azjbH70/SXKM5tNRplgW8TNprMDuntdvV9wNkFs
+ 9TyM02V5aWxFfI42+aivc4KEw69SE9KXwC7FSf5wXzuTot97N9Phj/Z3+jx443jo2NR34XgF
+ 89cct7wJMjOF7bBefo0fPPZQuIma0Zym71cP61OP/i11ahNye6HGKfxGCOcs5wW9kRQEk8P9
+ M/k2wt3mt/fCQnuP/mWutNPt95w9wSsUyATLmtNrwccz63XOwU0EVcufkQEQAOfX3n0g0fZz
+ Bgm/S2zF/kxQKCEKP8ID+Vz8sy2GpDvveBq4H2Y34XWsT1zLJdvqPI4af4ZSMxuerWjXbVWb
+ T6d4odQIG0fKx4F8NccDqbgHeZRNajXeeJ3R7gAzvWvQNLz4piHrO/B4tf8svmRBL0ZB5P5A
+ 2uhdwLU3NZuK22zpNn4is87BPWF8HhY0L5fafgDMOqnf4guJVJPYNPhUFzXUbPqOKOkL8ojk
+ CXxkOFHAbjstSK5Ca3fKquY3rdX3DNo+EL7FvAiw1mUtS+5GeYE+RMnDCsVFm/C7kY8c2d0G
+ NWkB9pJM5+mnIoFNxy7YBcldYATVeOHoY4LyaUWNnAvFYWp08dHWfZo9WCiJMuTfgtH9tc75
+ 7QanMVdPt6fDK8UUXIBLQ2TWr/sQKE9xtFuEmoQGlE1l6bGaDnnMLcYu+Asp3kDT0w4zYGsx
+ 5r6XQVRH4+5N6eHZiaeYtFOujp5n+pjBaQK7wUUjDilPQ5QMzIuCL4YjVoylWiBNknvQWBXS
+ lQCWmavOT9sttGQXdPCC5ynI+1ymZC1ORZKANLnRAb0NH/UCzcsstw2TAkFnMEbo9Zu9w7Kv
+ AxBQXWeXhJI9XQssfrf4Gusdqx8nPEpfOqCtbbwJMATbHyqLt7/oz/5deGuwxgb65pWIzufa
+ N7eop7uh+6bezi+rugUI+w6DABEBAAHCwXwEGAEIACYCGwwWIQQb2cqtc1xMOkYN/MpN3hD3
+ AP+DWgUCXw7HsgUJEqkpoQAKCRBN3hD3AP+DWrrpD/4qS3dyVRxDcDHIlmguXjC1Q5tZTwNB
+ boaBTPHSy/Nksu0eY7x6HfQJ3xajVH32Ms6t1trDQmPx2iP5+7iDsb7OKAb5eOS8h+BEBDeq
+ 3ecsQDv0fFJOA9ag5O3LLNk+3x3q7e0uo06XMaY7UHS341ozXUUI7wC7iKfoUTv03iO9El5f
+ XpNMx/YrIMduZ2+nd9Di7o5+KIwlb2mAB9sTNHdMrXesX8eBL6T9b+MZJk+mZuPxKNVfEQMQ
+ a5SxUEADIPQTPNvBewdeI80yeOCrN+Zzwy/Mrx9EPeu59Y5vSJOx/z6OUImD/GhX7Xvkt3kq
+ Er5KTrJz3++B6SH9pum9PuoE/k+nntJkNMmQpR4MCBaV/J9gIOPGodDKnjdng+mXliF3Ptu6
+ 3oxc2RCyGzTlxyMwuc2U5Q7KtUNTdDe8T0uE+9b8BLMVQDDfJjqY0VVqSUwImzTDLX9S4g/8
+ kC4HRcclk8hpyhY2jKGluZO0awwTIMgVEzmTyBphDg/Gx7dZU1Xf8HFuE+UZ5UDHDTnwgv7E
+ th6RC9+WrhDNspZ9fJjKWRbveQgUFCpe1sa77LAw+XFrKmBHXp9ZVIe90RMe2tRL06BGiRZr
+ jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <8c7714ca-a766-4a07-bfdc-f1d91aee379d@lucifer.local>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Mar 05, 2025 at 10:57:47AM -0500, Tamir Duberstein wrote:
-> On Wed, Mar 5, 2025 at 10:55 AM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> > On Wed, Mar 05, 2025 at 10:25:51AM -0500, Tamir Duberstein wrote:
-> > > On Wed, Mar 5, 2025 at 10:01 AM Petr Mladek <pmladek@suse.com> wrote:
-> > > > On Fri 2025-02-14 11:20:01, Tamir Duberstein wrote:
-
-...
-
-> > > > >  #include <kunit/test.h>
-> > > > > -#include <linux/bitops.h>
-> > > > > -#include <linux/kernel.h>
-> > > > >  #include <linux/module.h>
-> > > > > -#include <linux/overflow.h>
-> > > > > -#include <linux/printk.h>
-> > > > >  #include <linux/prandom.h>
-> > > > >  #include <linux/slab.h>
-> > > > > -#include <linux/string.h>
-> > > > > +#include <linux/sprintf.h>
-> > > > >
-> > > > >  #define BUF_SIZE 1024
-> > > >
-> > > > It would make more sense to do this clean up in the 3rd patch
-> > > > where some code was replaced by the kunit macros.
-> > > >
-> > > > Also I am not sure about the choice. It might make sense to remove
-> > > > <include/printk.h> because the pr_*() calls were removed.
-> > > > But what about the others? Did anyone request the clean up, please?
-> > > >
-> > > > I do not want to open a bike shadding because different people
-> > > > have different opinion.
-> > > >
-> > > > I would personally prefer to keep the explicit includes when the
-> > > > related API is still used. It helps to optimize nested includes
-> > > > in the header files which helps to speedup build. AFAIK, there
-> > > > are people working in this optimization and they might need
-> > > > to revert this change.
-> > >
-> > > Yeah, I don't feel strongly. I'll just restore all the includes.
-> >
-> > It will be blind approach. Please, try to look at them closely and include what
-> > you use (IWYU principle). I don't think anybody uses kernel.h here, for
-> > example.
+On 05.03.25 20:26, Lorenzo Stoakes wrote:
+> On Wed, Mar 05, 2025 at 08:19:41PM +0100, David Hildenbrand wrote:
+>> On 05.03.25 19:56, Matthew Wilcox wrote:
+>>> On Wed, Mar 05, 2025 at 10:15:55AM -0800, SeongJae Park wrote:
+>>>> For MADV_DONTNEED[_LOCKED] or MADV_FREE madvise requests, tlb flushes
+>>>> can happen for each vma of the given address ranges.  Because such tlb
+>>>> flushes are for address ranges of same process, doing those in a batch
+>>>> is more efficient while still being safe.  Modify madvise() and
+>>>> process_madvise() entry level code path to do such batched tlb flushes,
+>>>> while the internal unmap logics do only gathering of the tlb entries to
+>>>> flush.
+>>>
+>>> Do real applications actually do madvise requests that span multiple
+>>> VMAs?  It just seems weird to me.  Like, each vma comes from a separate
+>>> call to mmap [1], so why would it make sense for an application to
+>>> call madvise() across a VMA boundary?
+>>
+>> I had the same question. If this happens in an app, I would assume that a
+>> single MADV_DONTNEED call would usually not span multiples VMAs, and if it
+>> does, not that many (and that often) that we would really care about it.
+>>
+>> OTOH, optimizing tlb flushing when using a vectored MADV_DONTNEED version
+>> would make more sense to me. I don't recall if process_madvise() allows for
+>> that already, and if it does, is this series primarily tackling optimizing
+>> that?
 > 
-> I think I'm getting conflicting instructions here. IWYU is indeed what
-> I did: bitops, kernel, overflow, printk are all unused; string is used
-> only for sprintf, so I made that replacement.
+> Yeah it's weird, but people can get caught out by unexpected failures to merge
+> if they do fun stuff with mremap().
 > 
-> However Petr said "Did anyone request the clean up, please?" which
-> implies to me an aversion to unwanted cleanup. So, which is it please?
+> Then again mremap() itself _mandates_ that you only span a single VMA (or part
+> of one) :)
 
-I believe he asks the background of the change. And if it made in a separate
-patch it would be clearer to begin with (e.g., Suggested-by tag).
+Maybe some garbage collection use cases that shuffle individual pages, 
+and later free larger chunks using MADV_DONTNEED. Doesn't sound unlikely.
 
-But I don't know how you deducted that it's unwanted. With a separate patch
-we may discuss and see if it's wanted or not. In any case I would like to see
-such a patch.
+> 
+> Can we talk about the _true_ horror show that - you can span multiple VMAs _with
+> gaps_ and it'll allow you, only it'll return -ENOMEM at the end?
+> 
+> In madvise_walk_vmas():
+> 
+> 	for (;;) {
+> 		...
+> 
+> 		if (start < vma->vm_start) {
+> 			unmapped_error = -ENOMEM;
+> 			start = vma->vm_start;
+> 			...
+> 		}
+> 
+> 		...
+> 
+> 		error = visit(vma, &prev, start, tmp, arg);
+> 		if (error)
+> 			return error;
+> 
+> 		...
+> 	}
+> 
+> 	return unmapped_error;
+> 
+> So, you have no idea if that -ENOMEM is due to a gap, or do to the
+> operation returning an -ENOMEM?
+ > > I mean can we just drop this? Does anybody in their right mind rely on
+> this? Or is it intentional to deal with somehow a racing unmap?
+ > > But, no, we hold an mmap lock so that's not it.
+
+Races could still happen if user space would do it from separate 
+threads. But then, who would prevent user space from doing another 
+mmap() and getting pages zapped ... so that sounds unlikely.
+
+> 
+> Yeah OK so can we drop this madness? :) or am I missing some very important
+> detail about why we allow this?
+
+I stumbled over that myself a while ago. It's well documented behavior 
+in the man page :(
+
+At that point I stopped caring, because apparently somebody else cared 
+enough to document that clearly in the man page :)
+
+> 
+> I guess spanning multiple VMAs we _have_ to leave in because plausibly
+> there are users of that out there?
+
+Spanning multiple VMAs can probably easily happen. At least in QEMU I 
+know some sane ways to trigger it on guest memory. But, all corner 
+cases, so nothing relevant for performance.
+
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Cheers,
 
+David / dhildenb
 
