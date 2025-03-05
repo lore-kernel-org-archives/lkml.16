@@ -1,118 +1,152 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05179253B6C;
-	Wed,  5 Mar 2025 18:52:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDDB51C863A
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 18:53:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741200774; cv=none; b=o8T6h29wlZHL6Rb0QuhCb75A4EziyZAQklmOR1Kk0uhcMjQa6jlibM1vFpI5PZPpdqKpIZqKd7BESIHCLj/mRjUZAdN/pgRfdp8+2ECDvTFMh3JJ1Zn13z5v+YbZNb1cw6g/zMdQDtgu39yvc3wkfRj0uuVZebGxVxYQ/dESP+o=
+	t=1741200837; cv=none; b=DMNki7IQaw7aDYX3Z/QULJcXrjQZ0XvENa400gMYtdrL1bs2tL2rj7eJNF5PrV6ktekILqY7XYSJiTnrVunf8rXjhR6O4+oONj9IxrbKGoX8m/BY1Fq/fpqzGmY/HGeClFYWY9/++fFqA9nHQGdY3HLIOECRjkU9ZcO9/liaYeg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741200774; c=relaxed/simple;
-	bh=axHI+Ss0adljEBF8slC3n/3koLG2QkpC1C+hFdPLV/E=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=A80AS7P9ddRiyrofpuAjZeGm0Fh+gOG3wOp0SEmQPy2zw0s5DNXsF9NOvB9sqABKAjal+04UsxcpSPTZj2elNmmNzTofYMBOtS0H5KUQan1GMo88gndJiaFc6XOVjxnii9yRwIfIBJX47mdYTKbi9DccMmlKzposd7jiyrEDEwk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fsb+J33h; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741200837; c=relaxed/simple;
+	bh=3cq7gDHWYX9B5hkXU82IO10/vE5OhALp3Tf7wVmp8rQ=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=MiaNCRhkn7bodO9J0tBPwocy7VWyVRhIy98TmS+OklLtlWLGJxSieh6gZ5w1XC77ffPeD9svS9Z7dZ6OUXQTHpdk3kcREKQE7032fq25uagQ640kN3o09V5TIDgTeyMl1t4S7IjfDbeJP7KQCBiSyYlykTPKPxUDUAwxY+yXr4k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=PpqEfdfA; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=uaiZ7kje; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=2TiqfMOy; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=uaiZ7kje; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fsb+J33h"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-43bc0b8520cso24670395e9.1;
-        Wed, 05 Mar 2025 10:52:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741200771; x=1741805571; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hCk8RqcIdhP8uF9ql+DEh+iIumM5FUYrLBf68Hu79HM=;
-        b=fsb+J33hcYUni6D9uma3BE8r/dChRZ1Kx5SHNYLL2idUE+VqjJLp38jetTmNhGDHkq
-         rFPqrbA0IrUmv6f7wSoIZtghlWZr8Tfgytl765gOzFtxyuWvwjK7NzLoFR1IT3066cnN
-         jd+6v5NuUelmAoD/716O8ZyT7xK+OhgR97McLy1EOKUoYtwo6gkkq9fKo1AmctHFKiV8
-         egWCvm/lmLTlmevmx+kWiv4H23rfgbV4dQre1FidHTjusjmDrBQ0CIzaGjp504D3tczX
-         EcdgVSbBrRnXUa3XEbzKBExkQcARo0fHIcc/ljXPmOC/gRIGviT0sdGZfU/TRUVsI7hD
-         4myg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741200771; x=1741805571;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hCk8RqcIdhP8uF9ql+DEh+iIumM5FUYrLBf68Hu79HM=;
-        b=TWkSwLm00xoS3c1VqpvjoemEam8UouUxYRL9v7XUadlmybQc3aRNzNTMJvEPX+LCkn
-         wxNHK4U2npXwe8mbNKEAugcSdapdw1AXVZcy7WEDWvOuxvaDxj3NawhzTaGXsQXrPStp
-         Fvvrv5XeNg2+kFlyMQMuD72sIG3AI+w3MX7qyqFdDaJvGWOkbgzu5REk7CnmZOAseS4v
-         N8JrWboxr31xzwBXqGXVOyKQCsZT9N/Hnh0AJNHPRx/oX1KH3eT/Wu1MXkHDysVrpvJm
-         Q57x58BYcPjnSVixQ6HVmU0Y4sS/KTD0/SEkHY9oyvyjyJO0pH0r9YvSihoHuvUTXGyg
-         uNMQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU1qYnY12+OWwnbWr0ZsDky9gt32wIQPqYUrt4m8144JOauStG6qK4kkVLMK/nMToc3ET4k8hctZiDQW2g=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxXVPFwkPZFW93G98Se0aVinHiIygpufI2xLIvGbX9kBf62uDx6
-	t1fdtpBXlm4ji6nYOleUx0h8YT/ia4qUyy364EGlxWvFL8rUXh1K
-X-Gm-Gg: ASbGnctm4ZoIs24C4RGh7gFRAB28zbb8stvzBPGnFML0OVNrUaaHRo2B5TBchkanKY8
-	vQKZE3uGZW7Pn1zgQx27HUAuhIA/H5uWMSxZh5qDx/gswpl0vFMcpEOqZvQAod/Pm8Um3Eu5AbB
-	dWd0Oxbyavxsmy6OCSla1hGesFzmK9z3X/+shypCS22aVkI1iMJBHQ5P91XQ3CnxOwxt1VL/FYk
-	b3ZKNzjAO3WbJHzjkpr2alPyhfj0TP6jSmRQ+PvE3RS54PSgd68wFJrWHENCVtq3IMMtBzeeAZm
-	72YFJyUzX073FKHqooFqjjWrk7K2i1yuV/Yf9YbJJNw7aaixDaLhno+36vZILR0h+l7ik3BSea7
-	eUXuKvz/ohE0Kum1i5I8o
-X-Google-Smtp-Source: AGHT+IGuBKbnktunZBzzNzT71sHvzIIvBdO54em+1pB/n3NbwE4YkF3yitXy4CaCKxQdjWZt3gt1lg==
-X-Received: by 2002:a05:6000:144c:b0:38f:4d40:358 with SMTP id ffacd0b85a97d-3911f726343mr3775397f8f.9.1741200771124;
-        Wed, 05 Mar 2025 10:52:51 -0800 (PST)
-Received: from jernej-laptop.localnet (86-58-6-171.dynamic.telemach.net. [86.58.6.171])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-390e4796084sm22209780f8f.19.2025.03.05.10.52.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Mar 2025 10:52:50 -0800 (PST)
-From: Jernej =?UTF-8?B?xaBrcmFiZWM=?= <jernej.skrabec@gmail.com>
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
- Samuel Holland <samuel@sholland.org>, Andre Przywara <andre.przywara@arm.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject:
- Re: [PATCH v2 13/15] arm64: dts: allwinner: a523: add Radxa A5E support
-Date: Wed, 05 Mar 2025 19:52:49 +0100
-Message-ID: <1888259.atdPhlSkOF@jernej-laptop>
-In-Reply-To: <20250304222309.29385-14-andre.przywara@arm.com>
-References:
- <20250304222309.29385-1-andre.przywara@arm.com>
- <20250304222309.29385-14-andre.przywara@arm.com>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="PpqEfdfA";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="uaiZ7kje";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="2TiqfMOy";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="uaiZ7kje"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id F2B691F37E;
+	Wed,  5 Mar 2025 18:53:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1741200834; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+FZIZhHm+gbadO7RjQ23J/lkTdz43cQOamtvD4EPji0=;
+	b=PpqEfdfAEwiVTsoQxdtSgYl+now1WuXaBYfPGPFztY7fi6nk9NRe44wyXd14Al7U/oktez
+	wzJ2pUAiUhbnpTebE56Gzo0DoAwjhiX3XlIoTrb4e5deDKt+e7G89XmfES+/eJhWFBR4Ok
+	Wrcaw0fhIuJHJ+c8XPvfkxgtlS1/QH0=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1741200834;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+FZIZhHm+gbadO7RjQ23J/lkTdz43cQOamtvD4EPji0=;
+	b=uaiZ7kjeim1kvvgs7OdHbRBJQYmdiHaNx7N6Ax5xxw3ujVfVGTgeFCC6uiCGGNh7dKlU/M
+	yQwgLVDapbRWy7Cw==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=2TiqfMOy;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=uaiZ7kje
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1741200833; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+FZIZhHm+gbadO7RjQ23J/lkTdz43cQOamtvD4EPji0=;
+	b=2TiqfMOyDaAcDuT2fsd141QWDVuKrwAT47wUlbCKBK5waQuMcn+u8g1Xs6HajVeSWuDKIR
+	8rinkY+xXJktqY43QgCak8wViD3+/Yn4HE59h9cozYnbMQaEoIoSPBWtzimwSss7Jmf5Wy
+	RxpRukTPKBsr15PmOvrGBAqF68623Us=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1741200834;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+FZIZhHm+gbadO7RjQ23J/lkTdz43cQOamtvD4EPji0=;
+	b=uaiZ7kjeim1kvvgs7OdHbRBJQYmdiHaNx7N6Ax5xxw3ujVfVGTgeFCC6uiCGGNh7dKlU/M
+	yQwgLVDapbRWy7Cw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id BD1C613939;
+	Wed,  5 Mar 2025 18:53:53 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id k9N3LMGdyGc1KQAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Wed, 05 Mar 2025 18:53:53 +0000
+Date: Wed, 05 Mar 2025 19:53:53 +0100
+Message-ID: <87plivqpfi.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Stefan Binding <sbinding@opensource.cirrus.com>
+Cc: Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	<linux-sound@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>,
+	<patches@opensource.cirrus.com>
+Subject: Re: [PATCH v1 0/7] Add Support for various ASUS laptops using CS35L41
+In-Reply-To: <20250305170714.755794-1-sbinding@opensource.cirrus.com>
+References: <20250305170714.755794-1-sbinding@opensource.cirrus.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-Rspamd-Queue-Id: F2B691F37E
+X-Spam-Score: -3.51
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-3.51 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	TO_DN_SOME(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	ARC_NA(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[6];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DKIM_TRACE(0.00)[suse.de:+];
+	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
+	RCVD_TLS_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid,suse.de:dkim,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-Dne torek, 4. marec 2025 ob 23:23:07 Srednjeevropski standardni =C4=8Das je=
- Andre Przywara napisal(a):
-> The Radxa A5E is a development board using the Allwinner A527 SoC, which
-> is using the same die as the A523 SoC, just exposing the pins of more
-> peripherals (like HDMI or the 2nd MAC). The board features:
->=20
->   - Allwinner A527/T527 SoC: 8 ARM Cortex-A55 cores, Mali-G57 MC1 GPU
->   - 1GiB/2GiB/4GiB LPDDR4 DRAM
->   - AXP717 + AXP323 PMICs
->   - Raspberry-Pi-2 compatible 40pin GPIO header
->   - 1 USB 2.0 type C port (OTG), also power supply
->   - 1 USB 3.0 type A host port (multiplexed with M.2 slot)
->   - 1 M.2 M-key 2230 slot, with 1 PCIe2.1 lane connected (multiplexed
->     with USB 3.0 port)
->   - MicroSD slot
->   - optional eMMC, 8, 16 or 32GB available
->   - optional on-board 16MiB bootable SPI NOR flash
->   - two 1Gbps Ethernet ports (via MAXIO MAE0621A PHYs)
->   - PoE header for optional supply circuit on one Ethernet port
->   - WiFi 802.11 a/b/g/n/ac/ax (LB-Link BL-M8800DS2 module using AIC8800)
->   - HDMI port
->   - camera and LCD connectors
->   - power supply via USB-C connector (but no PD) or GPIO header pins
->=20
-> This .dts describes the devices as far as we support them at the moment.
-> The PMIC rails have been assigned as per the schematics.
->=20
-> Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+On Wed, 05 Mar 2025 18:06:44 +0100,
+Stefan Binding wrote:
+> 
+> Add support for several Commercial and Consumer laptops using CS35L41 HDA.
+> These laptops use combinations of Internal and External boost, as well as
+> SPI and I2C.
+> 
+> Stefan Binding (7):
+>   ALSA: hda/realtek: Add support for ASUS ROG Strix G814 Laptop using
+>     CS35L41 HDA
+>   ALSA: hda/realtek: Add support for ASUS ROG Strix GA603 Laptops using
+>     CS35L41 HDA
+>   ALSA: hda/realtek: Add support for ASUS ROG Strix G614 Laptops using
+>     CS35L41 HDA
+>   ALSA: hda/realtek: Add support for various ASUS Laptops using CS35L41
+>     HDA
+>   ALSA: hda/realtek: Add support for ASUS B3405 and B3605 Laptops using
+>     CS35L41 HDA
+>   ALSA: hda/realtek: Add support for ASUS B5405 and B5605 Laptops using
+>     CS35L41 HDA
+>   ALSA: hda/realtek: Add support for ASUS Zenbook UM3406KA Laptops using
+>     CS35L41 HDA
 
-Acked-by: Jernej Skrabec <jernej.skrabec@gmail.com>
-
-Best regards,
-Jernej
+Thanks, applied all patches now.
 
 
+Takashi
