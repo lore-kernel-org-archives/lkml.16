@@ -1,272 +1,287 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 505902505BF
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 15:26:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C68842500C5
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 15:26:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741188417; cv=none; b=g/bcVX7QGIaa/r0z7l6GMDpX+5oaIBsMy8cqLTh0RaDXSK8iiYzL22yQgkNi9QdvDgT/h0N8DGdcbf7F3bHS854Bb+87w/Zuc6nwQKZToFJArJV3K+7G0uBXYUHJ5u19uWnGbCxsc+lIVjdpWJl8F8Q8D/5zHdagZ5sUFXOfr+c=
+	t=1741188418; cv=none; b=PxNIN21VErjPCWiolF6ZitnZvlstGh3aHAF9ogUHHY6GZmf9pGkM6mG898AdIXkWX0e5W037bBdQGtIBaM5IRHf/tfxEla5vbz70e8dzFSv+lJjdG21OPGTsC5peZ71lH/Qc/23uD1YFu+yXahuNchzgvKlMRZ0UIrY/Xs6h7jQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741188417; c=relaxed/simple;
-	bh=rFm7PHeSc25dzGeWR07reNqJ158j+USs1E2yMw/XqQA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=sgmGWa5VfzEB1DiaUtsneXcB1IeDNQpMeo0e1IlttberqGxpkyvob6OgrrEYGEzw7NFY2gy8ldXeywPIJ5BVO1s6TVdTk34KMWzgChf4eQh2z9KI7Fuxt+FCEtMkT7duXzTVRxAUfgDbw7yuQhDwFzkSixxFq6Bn8gS5RhKMiqw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=A5wEvaY6; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1741188418; c=relaxed/simple;
+	bh=DQLJQEbSar6wdhkMvPdsQKCsY9/20ojKwZI2nZPlYbo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MXMm8l6+ysoKIKGzM5eHb2O/mlRjS0gmFDoCMfwReT9FOoyhXBK5+8p9k9Ex0wFSoqTkZYWQRlRxXzBIKFTcYg6lAg96WEGWrg7TPy1lskopxhALK2FgQonkWUtv2ooqdIbxvHoIX+LY3EfNSOOWcMIYl2rZkzhhBlKU0FD9eAg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LNKwr4dO; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="A5wEvaY6"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LNKwr4dO"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1741188414;
+	s=mimecast20190719; t=1741188415;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Mzd4XGn+uFEzS0vbdAuX3w3DrwjWbNhsj0Skkz0C+/o=;
-	b=A5wEvaY6oNjNBC3cMMIQcubzOGkcDPJWdUR5T4mWaDAmjrNr0Uvxd/imxbOe/Plze1Czik
-	Z1KsDNQMZdpXU39K+jP78YufnIckAYsanecnn5Umm1mpuocZDe0habLOq1O4cKnlC9nwDk
-	3WoutvjLb4Kjk0WsEldvFHyQGBGPwtc=
-Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com
- [209.85.214.200]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=xg3WsSbbabdBza8WhjItm9qFRXZmyL+gE9D8KXi0c28=;
+	b=LNKwr4dOKWt+/BioEQnkr2/PY8KhJhIUGBOyLvbBZuCEhET0BYAq24ZnF66cZR4ugw6yJu
+	6hkP2pI7DkC4iS9l/JiJWfEFtbPqRBGSFtgv+1MV3n8FPAc7bE2Fh0UYQUq8BbnzSz3El6
+	/zuubSu1yPG+0EkTEQsqDC1qow8+d7k=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-450-OEYr3QNgMjGxLpl2qH9g9Q-1; Wed, 05 Mar 2025 10:26:42 -0500
-X-MC-Unique: OEYr3QNgMjGxLpl2qH9g9Q-1
-X-Mimecast-MFC-AGG-ID: OEYr3QNgMjGxLpl2qH9g9Q_1741188401
-Received: by mail-pl1-f200.google.com with SMTP id d9443c01a7336-223d86b4df0so61900615ad.3
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Mar 2025 07:26:42 -0800 (PST)
+ us-mta-648--C1ULEFfNgSR6mev3Cka_w-1; Wed, 05 Mar 2025 10:26:49 -0500
+X-MC-Unique: -C1ULEFfNgSR6mev3Cka_w-1
+X-Mimecast-MFC-AGG-ID: -C1ULEFfNgSR6mev3Cka_w_1741188408
+Received: by mail-ed1-f71.google.com with SMTP id 4fb4d7f45d1cf-5daa661ec3dso2082317a12.3
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Mar 2025 07:26:49 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741188401; x=1741793201;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Mzd4XGn+uFEzS0vbdAuX3w3DrwjWbNhsj0Skkz0C+/o=;
-        b=OZPh7obKSQazNyTrI/GfZolZrs1vFhTCLD9449uDWOsG84OtGgLAhl+K6AX9CY4gkA
-         k8srcRYrkRyQLYKr+tfT7PgIUEJhc94KoMh73ii1sipW8AGyVXCFF9cNa7LJUNdjRLMl
-         pJv025gVJ05bg7Vr6gbSqF9+fAtLQJg1One7qXbP/7uMLiMuc+jlEN3KtpQ8HpJM6fa/
-         XpCCR2byy4S5sFkkSGhKX8V6i+tGGeLNVPd+N0enpVo07VirQqaugIoQDUuQQc/SNaic
-         jpxPJEmUeLbHgfmk8MBQJkzPzA2Rb7av4/tkmI+FhvzGT+CZxuy59UlaU5N5WqHawftu
-         b0jw==
-X-Forwarded-Encrypted: i=1; AJvYcCVIpjqfLWGpOZhYF7kG+3qGYl2CELAjwgK7DInwT0Yyrg/foezY4+K+XgLQavbqoFoo9aqqLEsLxEMH8fg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxNYJFnNX2sZNEdpnUXYSDxCBWTXf4nDNhm0mZHwVBq25RSZno9
-	OKhiTC7IIORN/VWH1bHI5/CMpaFhhntMCqhCCb6Sa0Wqvtx10H7Xu+vNk3IkAGtdGs4gsuZEqC/
-	BRLkaXQnlZ3nA/gfn9yvC5hcGCQDOmiG1Zgumfxk/6MIi7WVUOLWJL6zWphbLpQ==
-X-Gm-Gg: ASbGnctbMVCG3VR7moUCbmFiBXq2vgQEW+9HZ9PHQ7mc4FfcE8rMamJFIzoJIsuCbMY
-	X4CBPZ26iUE9pkzX0uyKW3xijsJ3z/LPlr28Hmo3XDCF5swKfU7HcJPHyOtklxPr/dSB1ypdRhG
-	c/ganjdVn0o+819h8eM0eqt1aueUD4xv01wbdmUVwm1bg7jjirfCiCvcKs7C97H3V66OE3rhpQI
-	9kmTH9R5idwOyz8g0xgIfB4RD/0y3uumQfmbIG8y9iDnG0vtXcKj1FccJJmpm4e6kx6KmDvYGwZ
-	ROLTjeoHf5ZpZ/yr
-X-Received: by 2002:a17:902:d4c5:b0:220:ea90:1925 with SMTP id d9443c01a7336-223f1d20313mr60493205ad.35.1741188401123;
-        Wed, 05 Mar 2025 07:26:41 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IECC+BX4uW9YAdKPYnu6dCDuOObXXtjhxLSSHWa2EsQXKtadkIakYvJhvOdDY/oZGXAYMQVLw==
-X-Received: by 2002:a17:902:d4c5:b0:220:ea90:1925 with SMTP id d9443c01a7336-223f1d20313mr60492655ad.35.1741188400762;
-        Wed, 05 Mar 2025 07:26:40 -0800 (PST)
-Received: from zeus.elecom ([240b:10:83a2:bd00:6e35:f2f5:2e21:ae3a])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7364b4eff66sm6983292b3a.83.2025.03.05.07.26.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Mar 2025 07:26:40 -0800 (PST)
-From: Ryosuke Yasuoka <ryasuoka@redhat.com>
-To: maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org,
-	tzimmermann@suse.de,
-	airlied@gmail.com,
-	simona@ffwll.ch,
-	kraxel@redhat.com,
-	gurchetansingh@chromium.org,
-	olvaffe@gmail.com,
-	akpm@linux-foundation.org,
-	urezki@gmail.com,
-	hch@infradead.org,
-	dmitry.osipenko@collabora.com,
-	jfalempe@redhat.com
-Cc: Ryosuke Yasuoka <ryasuoka@redhat.com>,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	virtualization@lists.linux.dev,
-	linux-mm@kvack.org
-Subject: [PATCH drm-next 1/2] vmalloc: Add atomic_vmap
-Date: Thu,  6 Mar 2025 00:25:53 +0900
-Message-ID: <20250305152555.318159-2-ryasuoka@redhat.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250305152555.318159-1-ryasuoka@redhat.com>
-References: <20250305152555.318159-1-ryasuoka@redhat.com>
+        d=1e100.net; s=20230601; t=1741188408; x=1741793208;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=xg3WsSbbabdBza8WhjItm9qFRXZmyL+gE9D8KXi0c28=;
+        b=U/XFqp69rLb7w8OqjVIxPjAoxfvtcFxTTyafApm/VPa44Wl1PKhfU7NuOKr/fk5MGz
+         pfTQPfPTlU2y9Tk+w7x7Xf8obWhSSZZz1UFPSWspziTg0GwGYTlgg2jIF9s/NvTrZylj
+         QMHEINLv60hN1jFi5jBtfumbWzfIZAz0RQBboj8x1TElORlsmIyPcAhsMdhkvRr2F48J
+         lsprYCaLESNtRk+VrOxkc0LvNcuS+VSV4tugJjLEIYqgPORiXuVGmLXKvzR2+dds4p6k
+         LIguYkxq2iDlvCXHE5W+9yja7x0VQYxbnPONV7t5n6O2y3sTnFasMbZG/ziohx9moDpQ
+         9uwA==
+X-Forwarded-Encrypted: i=1; AJvYcCV0Iqj1oXuWMWlhxslrEpN8RV6pVZQ/+WO8JnDQLyUUpb2o5XJvnI2e8/NwMqKeID19CEu1sRIvkPpPDoU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyQtVPLfglJ0Qmm0Qca/GQllQKVcGd9wZHAsL52A8hdPKR3yLaO
+	8wXj60XE4qTsqcGDmq0QEypQd9+9+cKFhXrxzUtZeVniRgF+KYDj2ETSM1DluqQ5Srv7cSOpusx
+	drNbUFYGlVowgMyuUvrPuq6ctLTn3GIr/Aa4HoHBgJqMwwCs+aVx82mKmkkOaCg==
+X-Gm-Gg: ASbGncv124Cr8C2HIsNJVD2jxkgf/LoQtP1ZUea9HRTDBWeXaIA7JqrGFZWvejpmeyx
+	PfbPAu+cQqfEUA1gUr2fSXtRDD8lQUktDBZud55vzT+3pDM1VhKY84NC9iyjlYfsJLA2xUJC5TP
+	l5Tx1NpBUOC81M7vQy8kWjMoWs2pen+wSXZkzKI17eUJlSrkXzn7p6/9xKhcA8RcFmpTWlfRQjn
+	1d5tsmBaPnoYIpq929LQD/jHeEUhTIutg9kai4e98kfnOhtPPWGlDbfqK/fZ3bXIXvV6xtJEfsL
+	Lt7pkXnNyTeEvxOVydbeI4HhTeugmqQoeyKVOc0a1fTds1d9Zadp5gT2IlCG6m09WBuF5+prQ/m
+	MWM7XyHptE9ocb3xE+PQ7/OCEI9GI9ONUFaBu4bUAysMyN+wf/ccNwDbHb+fuXKvPTg==
+X-Received: by 2002:a05:6402:d09:b0:5e5:49af:411d with SMTP id 4fb4d7f45d1cf-5e59f3e9424mr3490584a12.17.1741188407907;
+        Wed, 05 Mar 2025 07:26:47 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IF7f0okBMNauR5yQoPtz6CCt+SLIRMeLxuXvZXGEx+lVcJUM7S3PaNIKLXJXG4F4CbgUscmNw==
+X-Received: by 2002:a05:6402:d09:b0:5e5:49af:411d with SMTP id 4fb4d7f45d1cf-5e59f3e9424mr3490542a12.17.1741188407354;
+        Wed, 05 Mar 2025 07:26:47 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5e4c3fb633bsm9754114a12.63.2025.03.05.07.26.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 05 Mar 2025 07:26:46 -0800 (PST)
+Message-ID: <9b8c9eb7-c8d5-4c12-9ce5-c4b4df3b4223@redhat.com>
+Date: Wed, 5 Mar 2025 16:26:46 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] platform/x86: amd: Add ISP platform info
+To: "Nirujogi, Pratap" <pnirujog@amd.com>,
+ Pratap Nirujogi <pratap.nirujogi@amd.com>, ilpo.jarvinen@linux.intel.com,
+ "Limonciello, Mario" <Mario.Limonciello@amd.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+ benjamin.chan@amd.com, bin.du@amd.com, king.li@amd.com,
+ gjorgji.rosikopulos@amd.com, dominic.antony@amd.com
+References: <20250228170238.3484860-1-pratap.nirujogi@amd.com>
+ <cd25d131-bead-4a38-98dc-1011c2843286@redhat.com>
+ <3d57b624-7753-4a4d-9051-0a55cbdff1ec@amd.com>
+Content-Language: en-US, nl
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <3d57b624-7753-4a4d-9051-0a55cbdff1ec@amd.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Some drivers can use vmap in drm_panic, however, vmap is sleepable and
-takes locks. Since drm_panic will vmap in panic handler, atomic_vmap
-requests pages with GFP_ATOMIC and maps KVA without locks and sleep.
+Hi Pratap,
 
-Signed-off-by: Ryosuke Yasuoka <ryasuoka@redhat.com>
----
- include/linux/vmalloc.h |   2 +
- mm/internal.h           |   5 ++
- mm/vmalloc.c            | 105 ++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 112 insertions(+)
+On 4-Mar-25 12:14 AM, Nirujogi, Pratap wrote:
+> Hi Hans,
+> 
+> Thanks for your review. Please see the inline comments and let us know your insights.
+> 
+> Thanks,
+> Pratap
+> 
+> 
+> On 3/3/2025 8:41 AM, Hans de Goede wrote:
+>> Caution: This message originated from an External Source. Use proper caution when opening attachments, clicking links, or responding.
+>>
+>>
+>> Hi Pratap,
+>>
+>> Thank you for your patch.
+>>
+>> On 28-Feb-25 18:02, Pratap Nirujogi wrote:
+>>> Add ov05c i2c boardinfo and GPIO pin info for AMD ISP platform.
+>>>
+>>> Details of the resources added:
+>>>
+>>> - Added i2c bus number for AMD ISP platform is 99.
+>>> - Added GPIO 85 to allow ISP driver to enable and disable ISP access.
+>>> - Added GPIO 0 to allow sensor driver to enable and disable sensor module.
+>>>
+>>> Signed-off-by: Pratap Nirujogi <pratap.nirujogi@amd.com>
+>>> ---
+>>>   drivers/platform/x86/amd/Kconfig   | 11 +++++
+>>>   drivers/platform/x86/amd/Makefile  |  1 +
+>>>   drivers/platform/x86/amd/amd_isp.c | 72 ++++++++++++++++++++++++++++++
+>>>   3 files changed, 84 insertions(+)
+>>>   create mode 100644 drivers/platform/x86/amd/amd_isp.c
+>>>
+>>> diff --git a/drivers/platform/x86/amd/Kconfig b/drivers/platform/x86/amd/Kconfig
+>>> index c3e086ea64fc..4b373edd750d 100644
+>>> --- a/drivers/platform/x86/amd/Kconfig
+>>> +++ b/drivers/platform/x86/amd/Kconfig
+>>> @@ -32,3 +32,14 @@ config AMD_WBRF
+>>>
+>>>          This mechanism will only be activated on platforms that advertise a
+>>>          need for it.
+>>> +
+>>> +config AMD_ISP_PLATFORM
+>>> +     bool "AMD platform with ISP4 that supports Camera sensor device"
+>>> +     depends on I2C && X86_64 && AMD_ISP4
+>>> +     help
+>>> +       For AMD platform that support Image signal processor generation 4, it
+>>> +       is necessary to add platform specific camera sensor module board info
+>>> +       which includes the sensor driver device id and the i2c address.
+>>> +
+>>> +       If you have a AMD platform that support ISP4 and with a sensor
+>>> +       connected to it, say Y here
+>>> diff --git a/drivers/platform/x86/amd/Makefile b/drivers/platform/x86/amd/Makefile
+>>> index 56f62fc9c97b..0d89e2d4f7e6 100644
+>>> --- a/drivers/platform/x86/amd/Makefile
+>>> +++ b/drivers/platform/x86/amd/Makefile
+>>> @@ -10,3 +10,4 @@ obj-$(CONFIG_AMD_PMC)               += pmc/
+>>>   obj-$(CONFIG_AMD_HSMP)               += hsmp/
+>>>   obj-$(CONFIG_AMD_PMF)                += pmf/
+>>>   obj-$(CONFIG_AMD_WBRF)               += wbrf.o
+>>> +obj-$(CONFIG_AMD_ISP_PLATFORM)       += amd_isp.o
+>>> diff --git a/drivers/platform/x86/amd/amd_isp.c b/drivers/platform/x86/amd/amd_isp.c
+>>> new file mode 100644
+>>> index 000000000000..751f209e9509
+>>> --- /dev/null
+>>> +++ b/drivers/platform/x86/amd/amd_isp.c
+>>> @@ -0,0 +1,72 @@
+>>> +/* SPDX-License-Identifier: MIT */
+>>> +/*
+>>> + * Copyright 2025 Advanced Micro Devices, Inc.
+>>> + *
+>>> + * Permission is hereby granted, free of charge, to any person obtaining a
+>>> + * copy of this software and associated documentation files (the "Software"),
+>>> + * to deal in the Software without restriction, including without limitation
+>>> + * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+>>> + * and/or sell copies of the Software, and to permit persons to whom the
+>>> + * Software is furnished to do so, subject to the following conditions:
+>>> + *
+>>> + * The above copyright notice and this permission notice shall be included in
+>>> + * all copies or substantial portions of the Software.
+>>> + *
+>>> + * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+>>> + * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+>>> + * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
+>>> + * THE COPYRIGHT HOLDER(S) OR AUTHOR(S) BE LIABLE FOR ANY CLAIM, DAMAGES OR
+>>> + * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+>>> + * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+>>> + * OTHER DEALINGS IN THE SOFTWARE.
+>>> + */
+>>> +
+>>> +#include <linux/init.h>
+>>> +#include <linux/i2c.h>
+>>> +#include <linux/kernel.h>
+>>> +#include <linux/gpio/machine.h>
+>>> +
+>>> +#define AMDISP_I2C_BUS               99
+>>
+>> I'm not a fan of using static i2c-bus numbers for this. static bus numbers are
+>> something of the past and we typically do not use these on x86 anymore.
+>>
+>> Using this static number + i2c_register_board_info() also requires this code
+>> to be builtin rather then modular which is also undesirable.
+>>
+>> For a more dynamic way of manually adding i2c-devices see:
+>>
+>> https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/platform/x86/dell/dell-lis3lv02d.c
+>>
+>> But a better question here is why instantiate the sensor i2c device
+>> manually at all.
+>>
+>> ACPI has a standardized way to describe I2C-clients which tyically
+>> is used for all I2C devices on ACPI platforms like I2C touchscreens /
+>> touchpads / audio-codecs / accelerometers / etc.
+>> I don't see why the camera sensor on AMD platforms is so special that
+>> it could not be described in ACPI using an ACPI child-device of the
+>> i2c-controller with a ACPI resource (_CRS entry) of the I2cSerialBusV2()
+>> type.
+>>
+>> Likewise the sensor enable GPIO should also be described in the ACPI
+>> table as a Gpio type resource in the same _CRS table.
+>>
+> 
+> We have to take this approach because ISP is a child to GFX PCI device in AMD HW architectures, and since it is not an independent device, its device specific configuration (gpio pin ids, i2c-bus number etc.) is not registered in ACPI.
 
-diff --git a/include/linux/vmalloc.h b/include/linux/vmalloc.h
-index 31e9ffd936e3..c7a2a9a1976d 100644
---- a/include/linux/vmalloc.h
-+++ b/include/linux/vmalloc.h
-@@ -190,6 +190,8 @@ void * __must_check vrealloc_noprof(const void *p, size_t size, gfp_t flags)
- extern void vfree(const void *addr);
- extern void vfree_atomic(const void *addr);
- 
-+extern void *atomic_vmap(struct page **pages, unsigned int count,
-+			 unsigned long flags, pgprot_t prot);
- extern void *vmap(struct page **pages, unsigned int count,
- 			unsigned long flags, pgprot_t prot);
- void *vmap_pfn(unsigned long *pfns, unsigned int count, pgprot_t prot);
-diff --git a/mm/internal.h b/mm/internal.h
-index 109ef30fee11..134b332bf5b9 100644
---- a/mm/internal.h
-+++ b/mm/internal.h
-@@ -1278,6 +1278,11 @@ int numa_migrate_check(struct folio *folio, struct vm_fault *vmf,
- void free_zone_device_folio(struct folio *folio);
- int migrate_device_coherent_folio(struct folio *folio);
- 
-+struct vm_struct *atomic_get_vm_area_node(unsigned long size, unsigned long align,
-+					  unsigned long shift, unsigned long flags,
-+					  unsigned long start, unsigned long end, int node,
-+					  gfp_t gfp_mask, const void *caller);
-+
- struct vm_struct *__get_vm_area_node(unsigned long size,
- 				     unsigned long align, unsigned long shift,
- 				     unsigned long flags, unsigned long start,
-diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-index a6e7acebe9ad..f5c93779c60a 100644
---- a/mm/vmalloc.c
-+++ b/mm/vmalloc.c
-@@ -1945,6 +1945,57 @@ static inline void setup_vmalloc_vm(struct vm_struct *vm,
- 	va->vm = vm;
- }
- 
-+static struct vmap_area *atomic_alloc_vmap_area(unsigned long size,
-+						unsigned long align,
-+						unsigned long vstart, unsigned long vend,
-+						int node, gfp_t gfp_mask,
-+						unsigned long va_flags, struct vm_struct *vm)
-+{
-+	struct vmap_node *vn;
-+	struct vmap_area *va;
-+	unsigned long addr;
-+
-+	if (unlikely(!size || offset_in_page(size) || !is_power_of_2(align)))
-+		return ERR_PTR(-EINVAL);
-+
-+	if (unlikely(!vmap_initialized))
-+		return ERR_PTR(-EBUSY);
-+
-+	va = kmem_cache_alloc_node(vmap_area_cachep, gfp_mask, node);
-+	if (unlikely(!va))
-+		return ERR_PTR(-ENOMEM);
-+
-+	/*
-+	 * Only scan the relevant parts containing pointers to other objects
-+	 * to avoid false negatives.
-+	 */
-+	kmemleak_scan_area(&va->rb_node, SIZE_MAX, gfp_mask);
-+
-+	addr = __alloc_vmap_area(&free_vmap_area_root, &free_vmap_area_list,
-+				 size, align, vstart, vend);
-+
-+	trace_alloc_vmap_area(addr, size, align, vstart, vend, addr == vend);
-+
-+	va->va_start = addr;
-+	va->va_end = addr + size;
-+	va->vm = NULL;
-+	va->flags = va_flags;
-+
-+	vm->addr = (void *)va->va_start;
-+	vm->size = va_size(va);
-+	va->vm = vm;
-+
-+	vn = addr_to_node(va->va_start);
-+
-+	insert_vmap_area(va, &vn->busy.root, &vn->busy.head);
-+
-+	BUG_ON(!IS_ALIGNED(va->va_start, align));
-+	BUG_ON(va->va_start < vstart);
-+	BUG_ON(va->va_end > vend);
-+
-+	return va;
-+}
-+
- /*
-  * Allocate a region of KVA of the specified size and alignment, within the
-  * vstart and vend. If vm is passed in, the two will also be bound.
-@@ -3106,6 +3157,33 @@ static void clear_vm_uninitialized_flag(struct vm_struct *vm)
- 	vm->flags &= ~VM_UNINITIALIZED;
- }
- 
-+struct vm_struct *atomic_get_vm_area_node(unsigned long size, unsigned long align,
-+					  unsigned long shift, unsigned long flags,
-+					  unsigned long start, unsigned long end, int node,
-+					  gfp_t gfp_mask, const void *caller)
-+{
-+	struct vmap_area *va;
-+	struct vm_struct *area;
-+
-+	size = ALIGN(size, 1ul << shift);
-+	if (unlikely(!size))
-+		return NULL;
-+
-+	area = kzalloc_node(sizeof(*area), gfp_mask, node);
-+	if (unlikely(!area))
-+		return NULL;
-+
-+	size += PAGE_SIZE;
-+	area->flags = flags;
-+	area->caller = caller;
-+
-+	va = atomic_alloc_vmap_area(size, align, start, end, node, gfp_mask, 0, area);
-+	if (IS_ERR(va))
-+		return NULL;
-+
-+	return area;
-+}
-+
- struct vm_struct *__get_vm_area_node(unsigned long size,
- 		unsigned long align, unsigned long shift, unsigned long flags,
- 		unsigned long start, unsigned long end, int node,
-@@ -3418,6 +3496,33 @@ void vunmap(const void *addr)
- }
- EXPORT_SYMBOL(vunmap);
- 
-+void *atomic_vmap(struct page **pages, unsigned int count,
-+		  unsigned long flags, pgprot_t prot)
-+{
-+	struct vm_struct *area;
-+	unsigned long addr;
-+	unsigned long size;		/* In bytes */
-+
-+	if (count > totalram_pages())
-+		return NULL;
-+
-+	size = (unsigned long)count << PAGE_SHIFT;
-+	area = atomic_get_vm_area_node(size, 1, PAGE_SHIFT, flags,
-+				       VMALLOC_START, VMALLOC_END,
-+				       NUMA_NO_NODE, GFP_ATOMIC,
-+				       __builtin_return_address(0));
-+	if (!area)
-+		return NULL;
-+
-+	addr = (unsigned long)area->addr;
-+	if (vmap_pages_range(addr, addr + size, pgprot_nx(prot),
-+			     pages, PAGE_SHIFT) < 0) {
-+		return NULL;
-+	}
-+
-+	return area->addr;
-+}
-+
- /**
-  * vmap - map an array of pages into virtually contiguous space
-  * @pages: array of page pointers
--- 
-2.48.1
+The ISP still could and really should be an ACPI child device of
+the GFX PCI device in this case with its own _CRS for for example
+the enable ISP GPIO.
+
+>> Can you run acpidump -o acpidump.txt on a laptop with this camera
+>> sensor and send me the acpidupm.txt offlist ? Please run this
+>> on a production hardware laptop model using production firmware.
+>>
+> 
+> Please refer the attached acpidump.txt
+
+Thanks.
+
+So looking at this there are ACPI devices for the sensors, which
+unfortunately lack a _CRS with an I2CSerialBusV2 resource pointing
+to the ISP childdevice as bus-controller. So that i2c-client
+instantiating would be instant.
+
++Cc Mario
+
+Mario any chance that for the next (or the next-next) generation of
+AMD devices we can get the ACPI tables fixed to properly describe
+the sensors as having an I2cSerialBusV2 resource, just like how e.g.
+I2C touchpads / touchscreens have this ?  I suspect this will benefit
+Windows too. Likewise any enable GPIOs for the sensor really also
+should be proper ACPi Gpio resources in the ACPI device describing
+the sensor.
+
+Ok, back to the current generation devices. So there is an ACPI
+device for the sensor there. This should lead to a:
+/dev/bus/platform/devices/OMNI5C10:00 device getting created
+(please check this).
+
+So this driver for adding the sensor GPIO lookup + creating
+the i2c_client should be rewritten to be a platform_driver
+binding to that device and it should be a module rather then
+being builtin using module_platform_driver():
+
+- Binding using a struct acpi_device_id table to match the ACPI HID of
+  OMNI5C10 + using MODULE_DEVICE_TABLE(acpi, table_name) for auto module
+  loading.
+  The driver_data of the acpi_device_id should point to i2c_board_info to
+  use for that HID to future proof the driver for adding support for other
+  sensor models
+
+- Loading as module means this can be loaded after the i2c adapter driver,
+  so instead of registering board-info it should use the mechanism used
+  in drivers/platform/x86/dell/dell-lis3lv02d.c combined with a unique
+  adapter name, then the module load ordering does not matter and it is
+  also unnecessary to have a magic fixed i2c bus-number of 99
+
+- probe() should copy the const i2c_board_info info from
+  acpi_device_id.driver_data and then set the fwnode so that the sensor
+  driver can e.g. get to the _PLD info to determine sensor location
+  (e.g. front vs back)
+
+- The GPIO sensor lookup for the ISP enable should be registered by
+  the ISP driver itself. Also this seems to be something which might be
+  board specific so maybe this needs DMI matching?
+
+I'm looking forward to see a new version implementing the above approach
+which would be a big improvement IMHO.
+
+Regards,
+
+Hans
+
 
