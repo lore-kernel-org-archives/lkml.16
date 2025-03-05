@@ -1,123 +1,143 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F073133987;
-	Wed,  5 Mar 2025 12:34:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5C8B2459D7;
+	Wed,  5 Mar 2025 12:34:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741178047; cv=none; b=d8Cz9fsUcTCaWtTkQayrOFTbJrzL2MfkNwh+b8hP9XvrPb6RFQapIVgcuvASjjoLryAVmwb6T4XqIXY07EvgMRVT2buNmnmQzPB+lSYQseX4Ue4LJKxj7nfsnCyk9m9OAwR7VxCh7Kv4y4FHsNN+X7H2+KKUyj+6Ksu8VuNhn+8=
+	t=1741178049; cv=none; b=GrK/4rr9gtPPXS1lOtar5XMk0lii+U8HOI7ukGsdBq6PxvdPBCGHA82pf7y0UJBNugFA+qvQFAU5naVPau/NyFtq8cq8GubFhmcZbERV2fCqthDDfg1qN++zyIQkd8S3KLvLIk9Gf/5wKqguS/H/O0/p6P2RIbanBqBfdgLl24Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741178047; c=relaxed/simple;
-	bh=KXz7qN+UCvg/zXe/kDPAg/cy+msMPeJPVH/lqPdGHTo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fQ55wi2Gm/t4nrSDsS78f2AdvWH+HoXQ5QRsh8xUt5Ly0Ynrrrw3N4xSWDzfdrKU/WbPfh2W1H4aVd8tSgpznRhZ9EN6oaNS6ZicjP7Zi7ivmEcpNjEbU9YyOhDQDwtZlTKbxe4b9BFwYeHhhVS0sIzTeypupJFvH7vBh0p9Pj0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bLrVVClc; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1741178049; c=relaxed/simple;
+	bh=OcU4+ln57Mx3+12+GqCg48APIqwdDXzWbUa+3kLqSa4=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=m6HHN7Vnh4BK6Hf1oxRC082dr23jGh8SFdBIovqH8K48aHa4w91fofxE8RCqFDW0xW8SxdvGYPC+mw18yHBU0S73XE+8K/SdRA0rwS8qn1l79T7usObLmXSgGMd8MJKhS3PA1v2p/xz/iiVEfPlGawm6VukpiXV5sk1pvYUWlN8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Mzp9nCoQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bLrVVClc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741178046; x=1772714046;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=KXz7qN+UCvg/zXe/kDPAg/cy+msMPeJPVH/lqPdGHTo=;
-  b=bLrVVClcoy9z6vn3AvQfNDWHz6TlGLBX5Xi02/RIsj93kC7Cg80ZdtMJ
-   QRCRahzkmZ6E5sPNioVeJZNMh+cNyOeC4YPmmICGwlxXTK30a4xxBFdP0
-   Hvc6N6mnIgtvEKU2Z/IvPCaLkxc+jJhBFNVkfNk23eSG1XzwiagLpFGWe
-   EVCucO21LIypBMlGLFqXy/mS7SpcJGnX1ESYaznf9Lk74j0s0xYdzhpjr
-   cKEEyTMffiqUek0wrRx0bd9oog4yRd/AyxBN1L0g2Ez1pPepPH36EVSwC
-   cq8Q6+QsO2nQlJmeHGebnpTz29eBGBotOPB/2x9eTJLWLnDD/kBjXOwo4
-   w==;
-X-CSE-ConnectionGUID: GP1ghgVVSB6dFWu866pgpw==
-X-CSE-MsgGUID: THJlhIFHRze8D5E+f6Kgvw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11363"; a="46064865"
-X-IronPort-AV: E=Sophos;i="6.14,223,1736841600"; 
-   d="scan'208";a="46064865"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Mar 2025 04:34:05 -0800
-X-CSE-ConnectionGUID: N7Xoy4TzQJysW2kMb1XEUQ==
-X-CSE-MsgGUID: eBSnBMUbTKa2RR8mn5mMOA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,223,1736841600"; 
-   d="scan'208";a="118829798"
-Received: from mohdfai2-mobl.gar.corp.intel.com (HELO [10.247.123.55]) ([10.247.123.55])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Mar 2025 04:33:58 -0800
-Message-ID: <4882bd5b-1a64-4ac7-ba51-66143d029e8a@linux.intel.com>
-Date: Wed, 5 Mar 2025 20:33:55 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Mzp9nCoQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 744DCC4CEE2;
+	Wed,  5 Mar 2025 12:34:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741178049;
+	bh=OcU4+ln57Mx3+12+GqCg48APIqwdDXzWbUa+3kLqSa4=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=Mzp9nCoQHpaIQCSSg9ZH6omx0gzE5YeGEDCdT7cJwgvP3vSoab53xqfkdkoU9E9Q/
+	 4lYlIupjCTRQW9P/jnJA4cuXBllqYJjyiihf8wC1dkPZfzcja4BdrVR9U0IzEEZhwH
+	 Ce2+oYxZfsbAbfgdqAXWC5byAbrySsVT+ynPAk8E5/S8gJaGPQJioHwTdtfBDWHa+L
+	 yfjrZL4jCCRavF7RrTUY/q0QIEU65T0Mj7QcDEHKrzguN/puQKKjAcSZC6IDhx+64S
+	 PKBJpGQ0/FdbSyaJaMRvqCqRpMwI0H+z2lzuzXp9UxQfiBzqNsTWsq+xq5yUP3X3CN
+	 WhXy5HVOrvJNQ==
+From: Andreas Hindborg <a.hindborg@kernel.org>
+To: "Benno Lossin" <benno.lossin@proton.me>
+Cc: "Miguel Ojeda" <ojeda@kernel.org>,  "Alex Gaynor"
+ <alex.gaynor@gmail.com>,  "Boqun Feng" <boqun.feng@gmail.com>,  "Gary Guo"
+ <gary@garyguo.net>,  =?utf-8?Q?Bj=C3=B6rn?= Roy Baron
+ <bjorn3_gh@protonmail.com>,  "Alice
+ Ryhl" <aliceryhl@google.com>,  "Trevor Gross" <tmgross@umich.edu>,
+  "Danilo Krummrich" <dakr@kernel.org>,  "Masahiro Yamada"
+ <masahiroy@kernel.org>,  "Nathan Chancellor" <nathan@kernel.org>,
+  "Nicolas Schier" <nicolas@fjasle.eu>,  <linux-kernel@vger.kernel.org>,
+  <rust-for-linux@vger.kernel.org>,  <linux-kbuild@vger.kernel.org>
+Subject: Re: [PATCH 14/22] rust: add pin-init crate build infrastructure
+In-Reply-To: <D88BLHENDH8Y.HQUKEXN1XB7C@proton.me> (Benno Lossin's message of
+	"Wed, 05 Mar 2025 12:10:20 +0000")
+References: <20250304225245.2033120-1-benno.lossin@proton.me>
+	<jpQp16UCJ00pInqOI-QFULU6-FKl2bBtAlmnxtXWLgXPVb7gy6d727nr7THeyks3ERF5Yqu3R6bikD0OK4mqXA==@protonmail.internalid>
+	<20250304225245.2033120-15-benno.lossin@proton.me>
+	<87h647d6xg.fsf@kernel.org>
+	<cdfBMmuIl8Wl-KpI-koNDQJOCGBr9z9dOi5fxQvFbgNWQHHw6JtMizaMMbMniNlE841-9b7TdLuZ9Xh_hFsf7w==@protonmail.internalid>
+	<D88BLHENDH8Y.HQUKEXN1XB7C@proton.me>
+User-Agent: mu4e 1.12.7; emacs 29.4
+Date: Wed, 05 Mar 2025 13:31:25 +0100
+Message-ID: <87ldtjbqw2.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH iwl-next v7 5/9] igc: Add support for frame preemption
- verification
-To: Vladimir Oltean <vladimir.oltean@nxp.com>, ",chwee.lin.choong"@intel.com
-Cc: Tony Nguyen <anthony.l.nguyen@intel.com>,
- Przemek Kitszel <przemyslaw.kitszel@intel.com>,
- Andrew Lunn <andrew+netdev@lunn.ch>, "David S . Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>,
- Simon Horman <horms@kernel.org>, Russell King <linux@armlinux.org.uk>,
- Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
- Jesper Dangaard Brouer <hawk@kernel.org>,
- John Fastabend <john.fastabend@gmail.com>, Furong Xu <0x1207@gmail.com>,
- Russell King <rmk+kernel@armlinux.org.uk>,
- Serge Semin <fancer.lancer@gmail.com>,
- Xiaolei Wang <xiaolei.wang@windriver.com>,
- Suraj Jaiswal <quic_jsuraj@quicinc.com>,
- Kory Maincent <kory.maincent@bootlin.com>, Gal Pressman <gal@nvidia.com>,
- Jesper Nilsson <jesper.nilsson@axis.com>,
- Andrew Halaney <ahalaney@redhat.com>,
- Choong Yong Liang <yong.liang.choong@linux.intel.com>,
- Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
- Vinicius Costa Gomes <vinicius.gomes@intel.com>,
- intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
- linux-arm-kernel@lists.infradead.org, bpf@vger.kernel.org
-References: <20250303102658.3580232-1-faizal.abdul.rahim@linux.intel.com>
- <20250303102658.3580232-6-faizal.abdul.rahim@linux.intel.com>
- <20250304152644.y7j7eshr4qxhmxq2@skbuf>
-Content-Language: en-US
-From: "Abdul Rahim, Faizal" <faizal.abdul.rahim@linux.intel.com>
-In-Reply-To: <20250304152644.y7j7eshr4qxhmxq2@skbuf>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+
+"Benno Lossin" <benno.lossin@proton.me> writes:
+
+> On Wed Mar 5, 2025 at 12:59 PM CET, Andreas Hindborg wrote:
+>> "Benno Lossin" <benno.lossin@proton.me> writes:
+>>
+>>> From: Miguel Ojeda <ojeda@kernel.org>
+>>>
+>>> Add infrastructure for moving the initialization API to its own crate.
+>>> Covers all make targets such as `rust-analyzer` and `rustdoc`. The tests
+>>> of pin-init are not added to `rusttest`, as they are already tested in
+>>> the user-space repository [1].
+>>
+>> If it's not too much hassle, why not add them in the kernel as well? I
+>> would rather not have to go fetch the user space repo from github, in
+>> the event that I ever need to patch pin-init.
+>
+> I tried to add them, but encountered a lot of problems. Maybe the new
+> build system can help with that. But if you insist, I can try to get
+> them to work again in a different series now.
+>
+> The tests run every day in the GitHub CI and any changes that go through
+> the pin-init-next tree will also be tested there before I submit any
+> PRs.
+
+I _really_ think that the ability to run the tests should be present in
+the kernel repository. But I also do not want to block this series on it,
+if it is something that will be easier to achieve with the build system
+overhaul that is in the pipeline.
+
+>
+>>> Link: https://github.com/Rust-for-Linux/pin-init [1]
+>>> Signed-off-by: Miguel Ojeda <ojeda@kernel.org>
+>>> Co-developed-by: Benno Lossin <benno.lossin@proton.me>
+>>> Signed-off-by: Benno Lossin <benno.lossin@proton.me>
+>>> ---
+>>>  rust/Makefile                      | 75 +++++++++++++++++++++++-------
+>>>  rust/pin-init/internal/src/_lib.rs |  3 ++
+>>>  rust/pin-init/internal/src/lib.rs  |  4 ++
+>>>  rust/pin-init/src/_lib.rs          |  5 ++
+>>>  scripts/Makefile.build             |  2 +-
+>>>  scripts/generate_rust_analyzer.py  | 17 ++++++-
+>>>  6 files changed, 86 insertions(+), 20 deletions(-)
+>>>  create mode 100644 rust/pin-init/internal/src/_lib.rs
+>>>  create mode 100644 rust/pin-init/src/_lib.rs
+>>>
+>>> diff --git a/rust/Makefile b/rust/Makefile
+>>> index ea3849eb78f6..90310f0620eb 100644
+>>> --- a/rust/Makefile
+>>> +++ b/rust/Makefile
+>>
+>> [...]
+>>
+>>> @@ -110,11 +113,24 @@ rustdoc-compiler_builtins: $(src)/compiler_builtins.rs rustdoc-core FORCE
+>>>  rustdoc-ffi: $(src)/ffi.rs rustdoc-core FORCE
+>>>  	+$(call if_changed,rustdoc)
+>>>
+>>> -rustdoc-kernel: private rustc_target_flags = --extern ffi \
+>>> +rustdoc-pin_init_internal: private rustdoc_host = yes
+>>> +rustdoc-pin_init_internal: private rustc_target_flags = --cfg kernel \
+>>> +    --extern proc_macro --crate-type proc-macro
+>>> +rustdoc-pin_init_internal: $(src)/pin-init/internal/src/_lib.rs FORCE
+>>> +	+$(call if_changed,rustdoc)
+>>> +
+>>> +rustdoc-pin_init: private rustdoc_host = yes
+>>> +rustdoc-pin_init: private rustc_target_flags = --extern pin_init_internal \
+>>> +    --extern macros --extern alloc --cfg kernel --cfg feature=\"alloc\"
+>>> +rustdoc-pin_init: $(src)/pin-init/src/_lib.rs rustdoc-pin_init_internal \
+>>> +    rustdoc-macros FORCE
+>>> +	+$(call if_changed,rustdoc)
+>>
+>> Is it possible to do some code sharing here, such that when we add a
+>> crate, it's just a matter of putting the path/name on a list somewhere?
+>
+> Miguel informed me that this Makefile won't exist in the new build
+> system, so I'd rather not do that.
+
+OK, cool.
+
+
+Best regards,
+Andreas Hindborg
 
 
 
-On 4/3/2025 11:26 pm, Vladimir Oltean wrote:
-> On Mon, Mar 03, 2025 at 05:26:54AM -0500, Faizal Rahim wrote:
->> +static inline bool igc_fpe_is_verify_or_response(union igc_adv_rx_desc *rx_desc,
->> +						 unsigned int size)
->> +{
->> +	u32 status_error = le32_to_cpu(rx_desc->wb.upper.status_error);
->> +	int smd;
->> +
->> +	smd = FIELD_GET(IGC_RXDADV_STAT_SMD_TYPE_MASK, status_error);
->> +
->> +	return (smd == IGC_RXD_STAT_SMD_TYPE_V || smd == IGC_RXD_STAT_SMD_TYPE_R) &&
->> +		size == SMD_FRAME_SIZE;
->> +}
-> 
-> The NIC should explicitly not respond to frames which have an SMD-V but
-> are not "verify" mPackets (7 octets of 0x55 + 1 octet SMD-V + 60 octets
-> of 0x00 + mCRC - as per 802.3 definitions). Similarly, it should only
-> treat SMD-R frames which contain 7 octets of 0x55 + 1 octet SMD-R + 60
-> octets of 0x00 + mCRC as "respond" mPackets, and only advance its
-> verification state machine based on those.
-> 
-> Specifically, it doesn't look like you are ensuring the packet payload
-> contains 60 octets of zeroes. Is this something that the hardware
-> already does for you, or is it something that needs further validation
-> and differentiation in software?
-
-The hardware doesn’t handle this, so the igc driver have to do it manually. 
-I missed this handling, and Chwee Lin also noticed the issue while testing 
-this patch series—it wasn’t rejecting SMD-V and SMD-R with a non-zero 
-payload. I’ll update this patch to include the fix that Chwee Lin 
-implemented and tested. Thanks.
