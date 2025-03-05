@@ -1,234 +1,184 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out162-62-57-64.mail.qq.com (out162-62-57-64.mail.qq.com [162.62.57.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10AD624887F
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 15:07:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9174424EA9D
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 15:08:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741187270; cv=none; b=p1hmJY6GMaGDp38SQHpQSrLUOnDcRU/ngw2UcvDU+4AZN3uzdn891vog9yjO9+9EWLUUavJv8CthTh6SvGKo9fQ20HRC7+5rRyAjDMZMsgsBGVjNF478AjK8P4e5nbYXbWa0lzT5CbPRZ2hO5RT/F5e5kjNfFd9oyTvL44sk6hw=
+	t=1741187300; cv=none; b=ULzbOzOvcneRfqgoktDhrT2AqdweJrJkDtpcrRt28P0xX2DEvHF8uhSaln8c0phrw8dEr8go0LTqBQ5VVWisaGYsrWDhNv2wXhXvjknH4mgXsUlETlNJTz6l7pRq3QoyaZ87qNexfY9j1d4pKh8rzfSPfl+1kbNdn2Gw7a0rxU4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741187270; c=relaxed/simple;
-	bh=8X8tCRxnfrXE7+LnA3g5/pMoN4Xsv7iWEWPuk3orjyg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=flk7/Yo2S70Sv8zqmQ40twXttVK+xFtKHlUA492S8uoy6NaboPZDupJYJfpIV7KKcDZr5+qAAHUYsCkgZSFsENkb6KQd+O5e4u4ZPHpr9dGWiQnnTt1MIelXNIYI4F/dynJbl6YKfvuUIQQTf+nXCAucSgnvP1Bu94qdhElOMQE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=A004SGrZ; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1741187300; c=relaxed/simple;
+	bh=TxZZ5IxrmLu6uvQ6W9bb5/45JZbPTk7rVCI+RXFrWMI=;
+	h=In-Reply-To:References:From:To:Subject:Mime-Version:Content-Type:
+	 Date:Message-ID; b=OUOIjYJmPu4DI0d4HzuKOaN7HYqoJtOnbnzi/Q5hncYXfSHe6tdKHSSOF8K/bv2XsofSLnkc0v61mRl0PEpsuV6sdgYJOvU3oNRJL+OZ63wrCe340Y23gKtHjVkXPuDCu+e1QLLQyXr9jDltBnP3cP60hUXm3wd4mm6Oml1hUjE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=J8gaaTa6; arc=none smtp.client-ip=162.62.57.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="A004SGrZ"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-43bc31227ecso21619055e9.1
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Mar 2025 07:07:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741187266; x=1741792066; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=yT+d5B3DzOfQ1A2yZzKZbhntYkBCfJHpxkupFuJwOC0=;
-        b=A004SGrZw9vyeXMzAwvOoWJLE6qrqlbeySD6TvuVW9eDyAt8trpxPMl1qEHu8SpSTA
-         JWh8UHPZDh9e4KCUEa3UAtHiLQWA9ccicNUtsudNF+P22MDNnOHAVOoo/MEt2LYZPZ39
-         bivK6hNvDTA6PA8/LFdRquk21ys4YXrcAsa3P63S0BH9ydOGsx3JFQZ7ma4L6fkRkBVP
-         uwt3ZXQEQ3tGRNHgfgjyNSf09g6zjy/lmyZvd6/p9HIz8pt19DJRdiCyOn8pmgrUTflv
-         /y2e9xxrK9Ic4E8YcY8s+drPiIoFiXih/bde+j4f26qGPOrwvaVqCDHdRkH9D8xe9Jug
-         Al3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741187266; x=1741792066;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=yT+d5B3DzOfQ1A2yZzKZbhntYkBCfJHpxkupFuJwOC0=;
-        b=LHiq85ForefBvMQ9Mg9RCpNB6rJIW+FfMz0IeKqUc+Jk6t2c19uEnfyLkMKZXnjpv2
-         GcXRC2By24DRYxqxSoVoG/XHFpoYWSNoSusSv4E/s5koWJ5Mf34tNNKxNnrrs00+mPxU
-         97onQZTtEGG9zV0bsU97YrUAjjx9sr9OWVyvB3L5ym+Ct53xol6dnhmfWh657p6KYniU
-         mBOHRFbhebfeDZpVBP6WuHGWA4mKTc7hWfUY/Hj1x2Jqv8oJKAfsrmmZv3MMDKA4q88t
-         lMgvzDVgQv8tfsdr6e1kVHgkGfZp7vxQsBg/D3PmZpktQkp8pYugNd3/d7Q04EvRg6tk
-         m9LQ==
-X-Gm-Message-State: AOJu0Yy+H216zL6vyyCP95jJlOUJQrB+KSJwIMmxom0rPaFvFNU1dOzt
-	/3X8BSXwJ8DehhsTHOFDXUMCD8Ldtlvgo3SwwOPA3MoEUmKyGray2topgnvofeU=
-X-Gm-Gg: ASbGncup6OinbdhrKKDzoywfi454HJ7PAb8gT/d10b2+gIJBt4aioQ3FDQQeZkbJQWi
-	tiM4eAUmgYxaKJKLxbVbbK0QtN1RoysvWF3PyWz81dl/OIgJojzU+vHCwATbWjtrH8fb8zOxHTR
-	y3bnIioTkToGX/yPE0SDH5bAMKHqg0QAkp7DeBcy/Rkm1yP2l6EjwsoY+GoJJyMCZosT0HnIRHc
-	Ma5fJqjy48RRxqxlg6ux/BoqGtHDkweUpu/N7CJtmi/3pN/sKvYZ920FjS8DO6+VVEnGUigkxYc
-	iMAjah5TaYPz60a3+rKwrMjyRqQgX1Wozqi1IaJNd6p08BUJ
-X-Google-Smtp-Source: AGHT+IHzIPW0COtsbKy6olSoxC0NNJSd1yTzQfzQ9tFbnZt+lQ9G+iYYH4v0xt6Hk5YVZ6vJEql6xQ==
-X-Received: by 2002:a05:600c:2e48:b0:439:98ca:e3a4 with SMTP id 5b1f17b1804b1-43bd29b4cdbmr26703275e9.19.1741187265872;
-        Wed, 05 Mar 2025 07:07:45 -0800 (PST)
-Received: from pop-os.lan ([209.198.129.225])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-391288b54cbsm155121f8f.28.2025.03.05.07.07.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Mar 2025 07:07:45 -0800 (PST)
-From: James Clark <james.clark@linaro.org>
-Date: Wed, 05 Mar 2025 15:07:19 +0000
-Subject: [PATCH v2] coresight: Add a KUnit test for
- coresight_find_default_sink()
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="J8gaaTa6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1741186992; bh=TxZZ5IxrmLu6uvQ6W9bb5/45JZbPTk7rVCI+RXFrWMI=;
+	h=In-Reply-To:References:From:To:Subject:Date;
+	b=J8gaaTa63ssxeI17+YuitSRlfyrTi4tdAd5MWCSACHpxLzkptlitgtS+xWzAm0/Me
+	 dxHEW26DLPO1Fdcxag+TRdnu0fgh0oyCbDkqlsbkjW98c8VMW5ImUqjzlwJ3EFs/yJ
+	 pJNSJXKpC3eFwu7IpFq8eVrgXLAdGTj2laY4xv3k=
+X-QQ-FEAT: oHWrrGTW1dCni6VLWI7Xi3lwP5c1dnPf
+X-QQ-SSF: 00000000000000F0000000000000
+X-QQ-XMRINFO: Mp0Kj//9VHAxr69bL5MkOOs=
+X-QQ-XMAILINFO: MKh9C+w08TsBIBfIRqoFlg9xoakQWSab2b5pYQG5KJ3Zdh+vPLP9oUMR8BuoYu
+	 JSRbESZ4HUBhVMl+mQUKOC/owkcWTBDHeG99gxWZSHF4gQCjAbUw2y9ni4CMm0HnEFwPPLzTlFhYe
+	 +7AQUdGVwWV8M9BihCOn42JCeTAK6NzoWQ9FZDl9O3wK+b3LiplnMKfZx+n2cAkhQDkB1ODrbnuJP
+	 VUXXRAkwnKc2lSK4PGSGkDkV96PHMuueXxYLIi1PGazGIeK61JxvgfNyXPQY7nv7G8oZwRCA/9Mzb
+	 R/lrUc81SU6tQYoBWYXC8rKOAadOmad+lCzx89e5vW3wd0U3wQpDFEsEdZxB+H9NREKx3QmUugwM9
+	 jTggYwEQWKiCikc9zGtUWNKd2K9LxgnzF1pVuSK+nRWCmLJpGhmYhTWHQjkXFk5MXKSgLDxDWv0CM
+	 UsXB2otbO5oKFe9ETBOwXpHrMIJvGzCkPBwY6usFaDfkQFKdKNfAbXZw0BC1P6YSRTNn9knDP6qJG
+	 Q1krqJj5U3XS9BXU4qlj6fSupcztHSt+4adcGvreUnahfY5bRiYvGbM81jOACgt9wYuGiqedksc2I
+	 lkCSREnbYCtWtByd/XMD4JCDJyWNIITxq0nDDKmIDNCymyMqmMBURgiqS07ZBzLSjWkMtvvXKCc4R
+	 s7vFBeiPVucPEm3Ku9nIipWOlW43T6xYYfZzKNuDkyZjPTzABhb4bo6VKNUZKWAdH/9El7NXwcf5v
+	 oFR/85U7QyGA7vHQaAilkOjk0dAgL+GNLQmLBOvySEG0dWTXquiA8v0E3dtH55VnuRV2r5QKVjpkM
+	 ax2yNRcyLUrdSo6EkNzbQtuSIwJSuGBsPefhZg5i4sSOq3Jx7Et4W3ev/sgF5fpBWihg6j6EqlbVY
+	 HuxiimH5pVOYsyv+wP5Hqc/jXsOHu8ORWks3UPVVEvdDlq0GWOST9TKXLgaKzegBpN7Ia2PqNnk9F
+	 LefcQ76X9pG4lnPCqCNV1dV3MhKUIKIqjHASCe+5MbHASEaaD2t9G+qiNkysNSZ8oHWFvWqqFBCjc
+	 +tyE/Cb20qT0Mxos6hA2My3tN+w==
+X-HAS-ATTACH: no
+X-QQ-BUSINESS-ORIGIN: 2
+In-Reply-To: <tencent_6BF1F231EF7277B8B3EDF3999FC8CCB53B09@qq.com>
+References: <tencent_6BF1F231EF7277B8B3EDF3999FC8CCB53B09@qq.com>
+X-QQ-STYLE: 
+X-QQ-mid: webmail284t1741186991t95790
+From: "=?gb18030?B?ZmZoZ2Z2?=" <744439878@qq.com>
+To: "=?gb18030?B?bWluY2hhbg==?=" <minchan@kernel.org>, "=?gb18030?B?c2Vub3poYXRza3k=?=" <senozhatsky@chromium.org>, "=?gb18030?B?YWtwbQ==?=" <akpm@linux-foundation.org>, "=?gb18030?B?bGludXgtbW0=?=" <linux-mm@kvack.org>, "=?gb18030?B?bGludXgta2VybmVs?=" <linux-kernel@vger.kernel.org>
+Subject: =?gb18030?B?u9i4tKO6a2VybmVsIGJ1ZyBmb3VuZCBhbmQgc3Vn?=
+ =?gb18030?B?Z2VzdGlvbnMgZm9yIGZpeGluZyBpdA==?=
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250305-james-cs-kunit-test-v2-1-83ba682b976c@linaro.org>
-X-B4-Tracking: v=1; b=H4sIAKZoyGcC/yWNQQ6CMBBFr0K6tqQdKEZX3sOwaGCAEWxNpxIN6
- d2tsHwv+e9vgjEQsrgWmwi4EpN3GeBUiG6ybkRJfWYBCoyqlJEP+0SWHcv57SjKiBxlZQfdD1A
- rjY3Iy1fAgT579d5mnoijD9/9ZNV/e/QAjG7qprqUBuBca6mPfNktNsy3hZwNvvRhFG1K6Qemt
- o2JrAAAAA==
-To: Suzuki K Poulose <suzuki.poulose@arm.com>, 
- Mike Leach <mike.leach@linaro.org>, James Clark <james.clark@linaro.org>, 
- Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
- Leo Yan <leo.yan@arm.com>
-Cc: linux-kernel@vger.kernel.org, coresight@lists.linaro.org, 
- linux-arm-kernel@lists.infradead.org
-X-Mailer: b4 0.14.0
+Mime-Version: 1.0
+Content-Type: text/plain;
+	charset="gb18030"
+Content-Transfer-Encoding: base64
+Date: Wed, 5 Mar 2025 10:03:11 -0500
+X-Priority: 3
+Message-ID: <tencent_B6C93CB489F178301772C9B805EC5198ED09@qq.com>
+X-QQ-MIME: TCMime 1.0 by Tencent
+X-Mailer: QQMail 2.x
+X-QQ-Mailer: QQMail 2.x
 
-Add a test to confirm that default sink selection skips over an ETF
-and returns an ETR even if it's further away.
-
-This also makes it easier to add new unit tests in the future.
-
-Signed-off-by: James Clark <james.clark@linaro.org>
----
-Changes in v2:
-- Let devm free everything rather than doing individual kfrees:
-  "Like with managed drivers, KUnit-managed fake devices are
-  automatically cleaned up when the test finishes, but can be manually
-  cleaned up early with kunit_device_unregister()."
-- Link to v1: https://lore.kernel.org/r/20250225164639.522741-1-james.clark@linaro.org
----
- drivers/hwtracing/coresight/Kconfig                |  9 +++
- drivers/hwtracing/coresight/Makefile               |  3 +-
- drivers/hwtracing/coresight/coresight-core.c       |  1 +
- .../hwtracing/coresight/coresight-kunit-tests.c    | 77 ++++++++++++++++++++++
- 4 files changed, 88 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/hwtracing/coresight/Kconfig b/drivers/hwtracing/coresight/Kconfig
-index ecd7086a5b83..f064e3d172b3 100644
---- a/drivers/hwtracing/coresight/Kconfig
-+++ b/drivers/hwtracing/coresight/Kconfig
-@@ -259,4 +259,13 @@ config CORESIGHT_DUMMY
- 
- 	  To compile this driver as a module, choose M here: the module will be
- 	  called coresight-dummy.
-+
-+config CORESIGHT_KUNIT_TESTS
-+	  tristate "Enable Coresight unit tests"
-+	  depends on KUNIT
-+	  default KUNIT_ALL_TESTS
-+	  help
-+	    Enable Coresight unit tests. Only useful for development and not
-+	    intended for production.
-+
- endif
-diff --git a/drivers/hwtracing/coresight/Makefile b/drivers/hwtracing/coresight/Makefile
-index 8e62c3150aeb..96f0dfedb1bf 100644
---- a/drivers/hwtracing/coresight/Makefile
-+++ b/drivers/hwtracing/coresight/Makefile
-@@ -51,5 +51,4 @@ coresight-cti-y := coresight-cti-core.o	coresight-cti-platform.o \
- 		   coresight-cti-sysfs.o
- obj-$(CONFIG_ULTRASOC_SMB) += ultrasoc-smb.o
- obj-$(CONFIG_CORESIGHT_DUMMY) += coresight-dummy.o
--obj-$(CONFIG_CORESIGHT_CTCU) += coresight-ctcu.o
--coresight-ctcu-y := coresight-ctcu-core.o
-+obj-$(CONFIG_CORESIGHT_KUNIT_TESTS) += coresight-kunit-tests.o
-diff --git a/drivers/hwtracing/coresight/coresight-core.c b/drivers/hwtracing/coresight/coresight-core.c
-index bd0a7edd38c9..b101aa133ceb 100644
---- a/drivers/hwtracing/coresight/coresight-core.c
-+++ b/drivers/hwtracing/coresight/coresight-core.c
-@@ -959,6 +959,7 @@ coresight_find_default_sink(struct coresight_device *csdev)
- 	}
- 	return csdev->def_sink;
- }
-+EXPORT_SYMBOL_GPL(coresight_find_default_sink);
- 
- static int coresight_remove_sink_ref(struct device *dev, void *data)
- {
-diff --git a/drivers/hwtracing/coresight/coresight-kunit-tests.c b/drivers/hwtracing/coresight/coresight-kunit-tests.c
-new file mode 100644
-index 000000000000..a136af05eaf4
---- /dev/null
-+++ b/drivers/hwtracing/coresight/coresight-kunit-tests.c
-@@ -0,0 +1,77 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+#include <kunit/test.h>
-+#include <kunit/device.h>
-+#include <linux/coresight.h>
-+
-+#include "coresight-priv.h"
-+
-+static struct coresight_device *coresight_test_device(struct device *dev)
-+{
-+	struct coresight_device *csdev = devm_kcalloc(dev, 1,
-+						     sizeof(struct coresight_device),
-+						     GFP_KERNEL);
-+	csdev->pdata = devm_kcalloc(dev, 1,
-+				   sizeof(struct coresight_platform_data),
-+				   GFP_KERNEL);
-+	return csdev;
-+}
-+
-+static int coresight_test_cpuid(struct coresight_device *csdev)
-+{
-+	return 0;
-+}
-+
-+static void test_default_sink(struct kunit *test)
-+{
-+	/*
-+	 * ETM -> ETF -> ETR -> CATU
-+	 *                ^
-+	 *                | default
-+	 */
-+	struct device *dev = kunit_device_register(test, "coresight_kunit");
-+	struct coresight_device *etm = coresight_test_device(dev),
-+				*etf = coresight_test_device(dev),
-+				*etr = coresight_test_device(dev),
-+				*catu = coresight_test_device(dev);
-+	struct coresight_connection conn = {};
-+	struct coresight_ops_source src_ops = {.cpu_id = coresight_test_cpuid };
-+	struct coresight_ops etm_cs_ops = { .source_ops	= &src_ops };
-+
-+	etm->type = CORESIGHT_DEV_TYPE_SOURCE;
-+	etm->ops = &etm_cs_ops;
-+	etf->type = CORESIGHT_DEV_TYPE_LINKSINK;
-+	etf->subtype.sink_subtype = CORESIGHT_DEV_SUBTYPE_SINK_BUFFER;
-+	etr->type = CORESIGHT_DEV_TYPE_SINK;
-+	etr->subtype.sink_subtype = CORESIGHT_DEV_SUBTYPE_SINK_SYSMEM;
-+	catu->type = CORESIGHT_DEV_TYPE_HELPER;
-+
-+	conn.src_dev = etm;
-+	conn.dest_dev = etf;
-+	coresight_add_out_conn(dev, etm->pdata, &conn);
-+
-+	conn.src_dev = etf;
-+	conn.dest_dev = etr;
-+	coresight_add_out_conn(dev, etf->pdata, &conn);
-+
-+	conn.src_dev = etr;
-+	conn.dest_dev = catu;
-+	coresight_add_out_conn(dev, etr->pdata, &conn);
-+
-+	KUNIT_ASSERT_PTR_EQ(test, coresight_find_default_sink(etm), etr);
-+}
-+
-+static struct kunit_case coresight_testcases[] = {
-+	KUNIT_CASE(test_default_sink),
-+	{}
-+};
-+
-+static struct kunit_suite coresight_test_suite = {
-+	.name = "coresight_test_suite",
-+	.test_cases = coresight_testcases,
-+};
-+
-+kunit_test_suites(&coresight_test_suite);
-+MODULE_LICENSE("GPL");
-+MODULE_AUTHOR("James Clark <james.clark@linaro.org>");
-+MODULE_DESCRIPTION("Arm CoreSight KUnit tests");
-
----
-base-commit: eeafe6a8790ea125252ca2e23c1a2469eaff1d9a
-change-id: 20250305-james-cs-kunit-test-3af1df2401e6
-
-Best regards,
--- 
-James Clark <james.clark@linaro.org>
+U29ycnkgSSBwcm92aWRlZCB0aGUgY3Jhc2ggbG9nIGZvciA2LjktcmM3LCBidXQgYWZ0ZXIg
+YW5hbHlzaXMgaXQgc2VlbXMgbGlrZWx5IHRoYXQgdGhpcyBpc3N1ZSBhbHNvIGV4aXN0cyBp
+biB0aGUgbGF0ZXN0IHZlcnNpb24gb2YgdGhlIGtlcm5lbCAodjYuMTQtcmM1KS4KCgoKCgoK
+LS0tLS0tLS0tLS0tLS0tLS0tIE9yaWdpbmFsIGVtYWlsIC0tLS0tLS0tLS0tLS0tLS0tLQpI
+ZWxsbywgSSBmb3VuZCBhIGJ1ZyB0aXRsZWQgIiAgQlVHOiBjb3JydXB0ZWQgbGlzdCBpbiBm
+aXhfZnVsbG5lc3NfZ3JvdXAgIiB3aXRoIG1vZGlmaWVkIHN5emthbGxlciBpbiB0aGUgbGFz
+dGVkIHVwc3RyZWFtIHJlbGF0ZWQgdG8gIFpTTUFMTE9DLgpJZiB5b3UgZml4IHRoaXMgaXNz
+dWUsIHBsZWFzZSBhZGQgdGhlIGZvbGxvd2luZyB0YWcgdG8gdGhlIGNvbW1pdDogIFJlcG9y
+dGVkLWJ5OiBKaWFuemhvdSBaaGFvIDx4bnhjMjJ4bnhjMjJAcXEuY29tPiwgICAgeGluZ3dl
+aSBsZWUgPHhyaXZlbmRlbGw3QGdtYWlsLmNvbT4sIFpoaXpodW8gVGFuZyA8c3RyZm9yZXhj
+dHp6Y2hhbmdlQGZveG1haWwuY29tPgoKLS0tLS0tLS0tLS0tWyBjdXQgaGVyZSBdLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KIEJVRzogY29ycnVwdGVkIGxp
+c3QgaW4gZml4X2Z1bGxuZXNzX2dyb3VwCj09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PQpsaXN0X2FkZCBjb3JydXB0
+aW9uLiBuZXh0LSZndDtwcmV2IHNob3VsZCBiZSBwcmV2IChmZmZmODg4MDQzNmE0MDIwKSwg
+YnV0IHdhcyBmZmZmODg4MTQzNmE0MDIwLiAobmV4dD1mZmZmODg4MDQzNmE0MDIwKS4KLS0t
+LS0tLS0tLS0tWyBjdXQgaGVyZSBdLS0tLS0tLS0tLS0tCmtlcm5lbCBCVUcgYXQgbGliL2xp
+c3RfZGVidWcuYzoyOSEKaW52YWxpZCBvcGNvZGU6IDAwMDAgWyMxXSBQUkVFTVBUIFNNUCBL
+QVNBTiBOT1BUSQpDUFU6IDAgUElEOiA4NiBDb21tOiBrc3dhcGQwIE5vdCB0YWludGVkIDYu
+OS4wLXJjNyAjNTEKSGFyZHdhcmUgbmFtZTogUUVNVSBTdGFuZGFyZCBQQyAoaTQ0MEZYICsg
+UElJWCwgMTk5NiksIEJJT1MgMS4xNS4wLTEgMDQvMDEvMjAxNApSSVA6IDAwMTA6X19saXN0
+X2FkZF92YWxpZF9vcl9yZXBvcnQrMHhiNy8weDExMCBsaWIvbGlzdF9kZWJ1Zy5jOjI5CkNv
+ZGU6IDAyIGJkIDhhIGU4IDdiIGYzIDIyIGZkIDkwIDBmIDBiIDQ4IGM3IGM3IDYwIDAzIGJk
+IDhhIGU4IDZjIGYzIDIyIGZkIDkwIDBmIDBiIDRjIDg5IGUxIDQ4IGM3IGM3IGMwIDAzIGJk
+IDhhIGU4IDVhIGYzIDIyIGZkIDkwICZsdDswZiZndDsgMGIgNDggODkgZjEgNDggYzcgYzcg
+NDAgMDQgYmQgOGEgNGMgODkgZTYgZTggNDUgZjMgMjIgZmQgOTAgMGYKUlNQOiAwMDE4OmZm
+ZmY4ODgwMTE4ODZjODggRUZMQUdTOiAwMDAxMDI4MgpSQVg6IDAwMDAwMDAwMDAwMDAwNzUg
+UkJYOiBmZmZmODg4MDIzNDhjNjg4IFJDWDogZmZmZmZmZmY4MTY0YjMxMwpSRFg6IDAwMDAw
+MDAwMDAwMDAwMDAgUlNJOiBmZmZmZmZmZjgxNjUyZWFlIFJESTogMDAwMDAwMDAwMDAwMDAw
+MQpSQlA6IGZmZmY4ODgwMTE4ODZjYTAgUjA4OiBmZmZmODg4MDExODkwMDAwIFIwOTogZmZm
+ZmVkMTAwMjMxMGQ1MQpSMTA6IGZmZmZlZDEwMDIzMTBkNTAgUjExOiBmZmZmODg4MDExODg2
+YTg3IFIxMjogZmZmZjg4ODA0MzZhNDAyMApSMTM6IGZmZmY4ODgwMjM0OGM2YTAgUjE0OiBm
+ZmZmODg4MDQzNmE0MDIwIFIxNTogZmZmZjg4ODAyMzQ4YzZhMApGUzogIDAwMDAwMDAwMDAw
+MDAwMDAoMDAwMCkgR1M6ZmZmZjg4ODAyZDAwMDAwMCgwMDAwKSBrbmxHUzowMDAwMDAwMDAw
+MDAwMDAwCkNTOiAgMDAxMCBEUzogMDAwMCBFUzogMDAwMCBDUjA6IDAwMDAwMDAwODAwNTAw
+MzMKQ1IyOiAwMDAwN2ZkMjY2ZmM2MDE4IENSMzogMDAwMDAwMDAxZmM0NjAwMCBDUjQ6IDAw
+MDAwMDAwMDA3NTBlZjAKRFIwOiAwMDAwMDAwMDAwMDAwMDAwIERSMTogMDAwMDAwMDAwMDAw
+MDAwMCBEUjI6IDAwMDAwMDAwMDAwMDAwMDAKRFIzOiAwMDAwMDAwMDAwMDAwMDAwIERSNjog
+MDAwMDAwMDBmZmZlMGZmMCBEUjc6IDAwMDAwMDAwMDAwMDA0MDAKUEtSVTogNTU1NTU1NTQK
+Q2FsbCBUcmFjZToKIDx0YXNrPgogX19saXN0X2FkZF92YWxpZCBpbmNsdWRlL2xpbnV4L2xp
+c3QuaDo4OCBbaW5saW5lXQogX19saXN0X2FkZCBpbmNsdWRlL2xpbnV4L2xpc3QuaDoxNTAg
+W2lubGluZV0KIGxpc3RfYWRkIGluY2x1ZGUvbGludXgvbGlzdC5oOjE2OSBbaW5saW5lXQog
+aW5zZXJ0X3pzcGFnZSBtbS96c21hbGxvYy5jOjY3MiBbaW5saW5lXQogZml4X2Z1bGxuZXNz
+X2dyb3VwKzB4M2Y4LzB4NTQwIG1tL3pzbWFsbG9jLmM6NzA4CiB6c19tYWxsb2MrMHg1ODgv
+MHgxM2IwIG1tL3pzbWFsbG9jLmM6MTM1NQogenNfenBvb2xfbWFsbG9jKzB4MzUvMHhhMCBt
+bS96c21hbGxvYy5jOjM2NgogenBvb2xfbWFsbG9jKzB4OGIvMHhjMCBtbS96cG9vbC5jOjI1
+OAogenN3YXBfY29tcHJlc3MgbW0venN3YXAuYzoxMDQ5IFtpbmxpbmVdCiB6c3dhcF9zdG9y
+ZSsweGFhYS8weDI2YzAgbW0venN3YXAuYzoxNTgwCiBzd2FwX3dyaXRlcGFnZSsweDk5LzB4
+MmIwIG1tL3BhZ2VfaW8uYzoxOTgKIHBhZ2VvdXQrMHgzODQvMHg4MTAgbW0vdm1zY2FuLmM6
+NjYwCiBzaHJpbmtfZm9saW9fbGlzdCsweDEyZjMvMHgzYmQwIG1tL3Ztc2Nhbi5jOjEzMjMK
+IGV2aWN0X2ZvbGlvcysweDc1My8weDE4OTAgbW0vdm1zY2FuLmM6NDUzNwogdHJ5X3RvX3No
+cmlua19scnV2ZWMrMHg2YmUvMHhhMjAgbW0vdm1zY2FuLmM6NDczMwogc2hyaW5rX29uZSsw
+eDQxZS8weDdkMCBtbS92bXNjYW4uYzo0NzcyCiBzaHJpbmtfbWFueSBtbS92bXNjYW4uYzo0
+ODM1IFtpbmxpbmVdCiBscnVfZ2VuX3Nocmlua19ub2RlKzB4NmY2LzB4ZTYwIG1tL3Ztc2Nh
+bi5jOjQ5MzUKIHNocmlua19ub2RlKzB4MWE3MC8weDIzYTAgbW0vdm1zY2FuLmM6NTg5NAog
+a3N3YXBkX3Nocmlua19ub2RlIG1tL3Ztc2Nhbi5jOjY3MDQgW2lubGluZV0KIGJhbGFuY2Vf
+cGdkYXQrMHg5NzQvMHgxNWQwIG1tL3Ztc2Nhbi5jOjY4OTUKIGtzd2FwZCsweDUxMy8weGFm
+MCBtbS92bXNjYW4uYzo3MTY0CiBrdGhyZWFkKzB4MzEzLzB4NDEwIGtlcm5lbC9rdGhyZWFk
+LmM6Mzg4CiByZXRfZnJvbV9mb3JrKzB4NTYvMHg5MCBhcmNoL3g4Ni9rZXJuZWwvcHJvY2Vz
+cy5jOjE0NwogcmV0X2Zyb21fZm9ya19hc20rMHgxYS8weDMwIGFyY2gveDg2L2VudHJ5L2Vu
+dHJ5XzY0LlM6MjQ0CiA8L3Rhc2s+Ck1vZHVsZXMgbGlua2VkIGluOgotLS1bIGVuZCB0cmFj
+ZSAwMDAwMDAwMDAwMDAwMDAwIF0tLS0KUklQOiAwMDEwOl9fbGlzdF9hZGRfdmFsaWRfb3Jf
+cmVwb3J0KzB4YjcvMHgxMTAgbGliL2xpc3RfZGVidWcuYzoyOQpDb2RlOiAwMiBiZCA4YSBl
+OCA3YiBmMyAyMiBmZCA5MCAwZiAwYiA0OCBjNyBjNyA2MCAwMyBiZCA4YSBlOCA2YyBmMyAy
+MiBmZCA5MCAwZiAwYiA0YyA4OSBlMSA0OCBjNyBjNyBjMCAwMyBiZCA4YSBlOCA1YSBmMyAy
+MiBmZCA5MCAmbHQ7MGYmZ3Q7IDBiIDQ4IDg5IGYxIDQ4IGM3IGM3IDQwIDA0IGJkIDhhIDRj
+IDg5IGU2IGU4IDQ1IGYzIDIyIGZkIDkwIDBmClJTUDogMDAxODpmZmZmODg4MDExODg2Yzg4
+IEVGTEFHUzogMDAwMTAyODIKUkFYOiAwMDAwMDAwMDAwMDAwMDc1IFJCWDogZmZmZjg4ODAy
+MzQ4YzY4OCBSQ1g6IGZmZmZmZmZmODE2NGIzMTMKUkRYOiAwMDAwMDAwMDAwMDAwMDAwIFJT
+STogZmZmZmZmZmY4MTY1MmVhZSBSREk6IDAwMDAwMDAwMDAwMDAwMDEKUkJQOiBmZmZmODg4
+MDExODg2Y2EwIFIwODogZmZmZjg4ODAxMTg5MDAwMCBSMDk6IGZmZmZlZDEwMDIzMTBkNTEK
+UjEwOiBmZmZmZWQxMDAyMzEwZDUwIFIxMTogZmZmZjg4ODAxMTg4NmE4NyBSMTI6IGZmZmY4
+ODgwNDM2YTQwMjAKUjEzOiBmZmZmODg4MDIzNDhjNmEwIFIxNDogZmZmZjg4ODA0MzZhNDAy
+MCBSMTU6IGZmZmY4ODgwMjM0OGM2YTAKRlM6ICAwMDAwMDAwMDAwMDAwMDAwKDAwMDApIEdT
+OmZmZmY4ODgwMmQwMDAwMDAoMDAwMCkga25sR1M6MDAwMDAwMDAwMDAwMDAwMApDUzogIDAw
+MTAgRFM6IDAwMDAgRVM6IDAwMDAgQ1IwOiAwMDAwMDAwMDgwMDUwMDMzCkNSMjogMDAwMDdm
+ZDI2NmZjNjAxOCBDUjM6IDAwMDAwMDAwMWZjNDYwMDAgQ1I0OiAwMDAwMDAwMDAwNzUwZWYw
+CkRSMDogMDAwMDAwMDAwMDAwMDAwMCBEUjE6IDAwMDAwMDAwMDAwMDAwMDAgRFIyOiAwMDAw
+MDAwMDAwMDAwMDAwCkRSMzogMDAwMDAwMDAwMDAwMDAwMCBEUjY6IDAwMDAwMDAwZmZmZTBm
+ZjAgRFI3OiAwMDAwMDAwMDAwMDAwNDAwClBLUlU6IDU1NTU1NTU0Cgo9PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0K
+SSB1c2UgdGhlIHNhbWUga2VybmVsIGFzIHN5emJvdCBpbnN0YW5jZSB1cHN0cmVhbTogN2Vi
+MTcyMTQzZDU1MDhiNGRhNDY4ZWQ1OWVlODU3YzZlNWUwMWRhNgprZXJuZWwgY29uZmlnOiBo
+dHRwczovL3N5emthbGxlci5hcHBzcG90LmNvbS90ZXh0P3RhZz1LZXJuZWxDb25maWcmYW1w
+O3g9ZGE0YjA0YWU3OThiN2VmNgpjb21waWxlcjogZ2NjIHZlcnNpb24gMTEuNC4wCj09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT0KVW5mb3J0dW5hdGVseSwgdGhlIG1vZGlmaWVkIHN5emth
+bGxlciBkb2VzIG5vdCBnZW5lcmF0ZSBhbiBlZmZlY3RpdmUgcmVwZWF0IHByb2dyYW0uClRo
+ZSBmb2xsb3dpbmcgaXMgbXkgYW5hbHlzaXMgb2YgdGhlIGJ1ZyBhbmQgcmVwYWlyIHN1Z2dl
+c3Rpb25zLCBob3BpbmcgdG8gaGVscCB3aXRoIHRoZSByZXBhaXIgb2YgdGhlIGJ1ZzoKIyMg
+Um9vdCBjYXVzZSBhbmFseXNpcwpUaGUgY3Jhc2ggd2FzIGNhdXNlZCBieSBhIGxpc3Qgbm9k
+ZSBjb3JydXB0aW9uIHdoaWxlIHRoZSB6c21hbGxvYyBtZW1vcnkgYWxsb2NhdG9yIHdhcyBh
+ZGp1c3RpbmcgdGhlIG1lbW9yeSBwYWdlJ3MgZnVsbG5lc3MgbGlzdC4gVGhlIHNwZWNpZmlj
+IGNhdXNlIGNvdWxkIGJlOgoKQ29uY3VycmVudCBhY2Nlc3MgaXMgbm90IHN5bmNocm9uaXpl
+ZCBjb3JyZWN0bHkuIFRoZSBmaXhfZnVsbG5lc3NfZ3JvdXAoKSBkaWQgbm90IGhvbGQgdGhl
+IHpzcG9vbCBsb2NrIGNvcnJlY3RseSB3aGVuIG1hbmlwdWxhdGluZyB0aGUgY2xhc3MtJmd0
+O2Z1bGxuZXNzX2xpc3QgbGlua2VkIGxpc3QsIGNhdXNpbmcgbXVsdGlwbGUgQ1BVIGNvcmVz
+IChzdWNoIGFzIGtzd2FwZCBhbmQgbWVtb3J5IGFsbG9jYXRpb24gdGhyZWFkcykgdG8gbW9k
+aWZ5IHRoZSBsaW5rZWQgbGlzdCBub2RlIHNpbXVsdGFuZW91c2x5LgpNZW1vcnkgb3ZlcnJl
+YWNoIC9VQUYgKFVzZS1BZnRlci1GcmVlKS5JbiB0aGUgenNfbWFsbG9jIHBhdGgsIHRoZSBs
+aW5rZWQgbGlzdCBwb2ludGVyIG1heSBiZSBhYm5vcm1hbCBiZWNhdXNlIHRoZSBvYmplY3Qg
+bWV0YWRhdGEgaXMgb3ZlcndyaXR0ZW4uCgojIyMgUmVwYWlyIHN1Z2dlc3Rpb25zCkhhcmRl
+bmluZyBsb2NrIG1lY2hhbmlzbS4gRW5zdXJlIHRoYXQgdGhlIGNvcnJlY3QgcG9vbCBsb2Nr
+cyBhcmUgaGVsZCBpbiB6c19tYWxsb2MgYW5kIHBhZ2UgbWlncmF0aW9uIHBhdGhzLgpQYXRj
+aCBleGFtcGxlOgptbS96c21hbGxvYy5jOgpzdGF0aWMgaW50IGZpeF9mdWxsbmVzc19ncm91
+cChzdHJ1Y3Qgc2l6ZV9jbGFzcyAqY2xhc3MsIHN0cnVjdCB6c3BhZ2UgKnpzcGFnZSkKewpp
+bnQgbmV3Zmc7CgpuZXdmZyA9IGdldF9mdWxsbmVzc19ncm91cChjbGFzcywgenNwYWdlKTsK
+aWYgKG5ld2ZnID09IHpzcGFnZS0mZ3Q7ZnVsbG5lc3MpCmdvdG8gb3V0OworKyAgc3Bpbl9s
+b2NrKCZhbXA7Y2xhc3MtJmd0O2xvY2spOwpyZW1vdmVfenNwYWdlKGNsYXNzLCB6c3BhZ2Up
+OwppbnNlcnRfenNwYWdlKGNsYXNzLCB6c3BhZ2UsIG5ld2ZnKTsKKysgIHNwaW5fdW5sb2Nr
+KCZhbXA7Y2xhc3MtJmd0O2xvY2spOwpvdXQ6CnJldHVybiBuZXdmZzsKfQoKPT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PQpJIGhvcGUgaXQgaGVscHMuCkJlc3QgcmVnYXJkcwpKaWFuemhvdSBaaGFv
+Cnhpbmd3ZWkgbGVlClpoaXpodW8gVGFuZzwvc3RyZm9yZXhjdHp6Y2hhbmdlQGZveG1haWwu
+Y29tPjwveHJpdmVuZGVsbDdAZ21haWwuY29tPjwveG54YzIyeG54YzIyQHFxLmNvbT4=
 
