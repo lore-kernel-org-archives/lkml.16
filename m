@@ -1,358 +1,193 @@
-Received: from mail-oi1-f174.google.com (mail-oi1-f174.google.com [209.85.167.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR03-VI1-obe.outbound.protection.outlook.com (mail-vi1eur03on2088.outbound.protection.outlook.com [40.107.103.88])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 873052505BE
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 15:30:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.174
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741188615; cv=none; b=qhz/VCCO5R08M6YYWBThItFJ1P+uEpyUXfG2fi5Lv/kQkEwVWetyKBrXOGm729Nn0NdPtfKKxJPqcVZKw7/9ceBmn5Ht7DofyppqaMYtCck2h3eC9ZjEykaXnB3SoFk+Tbqbs5FSY8ZZkRxHCs/spx7aQAIG2OCMkNgP7SsfFc8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741188615; c=relaxed/simple;
-	bh=gHVlgN101n3+XVq8QXEPU23oKAm13pn+ne80d5rhJzw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NA1LBve21FXiJakAt5dJqxchI9DmvDA4ZKwXtoyf9TXSa6WQ1IcYuXzpUmXHgUkMWtrIjhcW3nbHrEOf+w5YFIjGocasd7g9LkGqVkG1zbe/90iWULz44ROGnHEg4oOM6yvhMhubmWouCZHd1vnt03IhCTnlj30PJtO1OiOUlKo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=aAkjUc4o; arc=none smtp.client-ip=209.85.167.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3FF113AA2D;
+	Wed,  5 Mar 2025 15:31:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.103.88
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741188718; cv=fail; b=qGVak4tlwL1kkG8jCiQ14NVFOPC/VrLyPH7gZG1DZTjhH5pwAZtLKge0xfQ4V5VoGM1GPycAgG10v676UoxujcoJauPs8L1yBeYv7AGMwmFdHhZJ83tLDo2yw9BNixRAjzd14602nlQHo8YSkzE64GuZEz71FHL+qPLz65NKRhk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741188718; c=relaxed/simple;
+	bh=Z4D9pe5DDplyxWfMtL95oTCz1AVDETJ7ltrVGaAV/P8=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 Content-Type:MIME-Version; b=BslxripIR2NepMcICooSB6xWYD3McviKQz2Wsr3qg0yuF0jcaBp6XuNQ8W+2meaZxgqlocFTSi4WkqucjQFRfyJBw6GCnRTkZ1ps67zR91NNsQbb3K46whIuGPN624+IAlZb9slAmWY38A+CYCjdYlykDzHPD6J5OwP6Jd5yqAw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=prevas.dk; spf=pass smtp.mailfrom=prevas.dk; dkim=pass (1024-bit key) header.d=prevas.dk header.i=@prevas.dk header.b=Fmr+C0me; arc=fail smtp.client-ip=40.107.103.88
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=prevas.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=prevas.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="aAkjUc4o"
-Received: by mail-oi1-f174.google.com with SMTP id 5614622812f47-3f20f9eef03so98942b6e.1
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Mar 2025 07:30:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1741188611; x=1741793411; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=UEdRnbd6ElHaf0cylSreE5si0Xhw1DFHYyknOm0Ao9g=;
-        b=aAkjUc4oPF2QdI1DCfTGId2n+mOWbk5IryzHhT0n3WiQNdhEVVy0L0ukT6JJmt3Lyx
-         T/DdLtq9lNfcfe1DPgl7HZUrv2kZ/ov0ZZV8GEQj4V9NhFQlVu+vMjUMH6hzDFMLGiDk
-         sSLkvEa6NlsLiI0S4E58gso9CoL9MwxDlPJtI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741188611; x=1741793411;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=UEdRnbd6ElHaf0cylSreE5si0Xhw1DFHYyknOm0Ao9g=;
-        b=VvQ6xKmUHbKfvHEOmrPX8rTjuPykOny1f8k5zOVlw4G7S6QFeyOy+8y0WpIoG95dGk
-         DkI61sNmo9WMk06ap3/xO6asqRPIypafnVZ7VM6EJVZ48I3/zf+jk58h3a8OtWdIADhP
-         3JA+uRayTy9+cGGwpqYcvHyFbpCaTqW2Igg+58laY1X3hychzIoSfkL79dQkeIoFX+w3
-         1R427jXdUzfs/Yf91FiUfHN7nAZGC2zhBrPwaomIycrJFnND/T5PnXbPyZ5Njun0KgxX
-         bup4EDXM8w2UdVyyGuIQCkIHQrips9FAsWSiFoSx+KYzFTTCpuvNYwpsu7jebApvas+2
-         elOg==
-X-Forwarded-Encrypted: i=1; AJvYcCXECP0ePXbUZkDdIb2ZFc8abLaeeEWIzghM7i8cfU6JiUTmABlO6Tg6eJ1CTGHVfLaEg4Bd8bat4OL/5jc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz17rEL1nk8m7qoedHNW4EBTQOY54w07D4QNKwLGSX5SdqAkIrv
-	o7Ixv6cESxuITPoyW3KT4EeQd/KZvQskhix5h/IaOsBydgD3VqOtrOaquwVzqR7x01GfdDRig2s
-	BCeRaSP0awpUzhCZxjYrEIY6/9fI+P/ocKZb+
-X-Gm-Gg: ASbGncu6Un0EsFW/AhZzoqd0UCPH3yL0bSWEu53+1DsCEGDqKKC0SBSH/C+mmvUi59J
-	S5SAeAJkrHsww6a6I7MbLYjX8Epq27I8rV98E/OujFU39PaK7plboOQe0YhJoydw7Ulxl7xtFpO
-	eM+mKx0NtsfGU/U//XTs2b0jcOa+37OIfcDi6EFzgg8oMprt0OM73UD+Mwe1E=
-X-Google-Smtp-Source: AGHT+IHSB04tBSW+Z7KYy5xTLyH1se2r+v919O73Ygx407YmZX9n7zbmBy8DtITaRXN/cqKLUXbKwVYEidOnAMnJqKE=
-X-Received: by 2002:a05:6808:181c:b0:3f6:769b:56e8 with SMTP id
- 5614622812f47-3f6831fe2a2mr745572b6e.7.1741188611147; Wed, 05 Mar 2025
- 07:30:11 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=prevas.dk header.i=@prevas.dk header.b="Fmr+C0me"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=mS6FCeK2nY27WxhQs62t2LU1LC/TIy/sa0jxo1f4Tt7mHQwISPyMGFQ3sOCPfZmSSjm6Bzyx43O3d/YDR8qNcfHW4WGyWvEiFtCYl87SFk2PaVZqrjOwd+IVGcitqJfQVBysX7fIswbz4+sBbjRmeLSwhN/U3YR+K6PHP0eBXOx6orFZzzvgIUCVOYeshwpgC8DSxPcRZfbVqd5b5yfvHS1rjKamqGtlrTeBeZayHWxaZjLxInPniUIWNIEVVr3ia4e9DPMyR0jx/om8n8x+ZbXqYnCJi9rl9XXaJ4U8zDAXp/FXK6s64D/BT4JOTlVhZw3Uet4ts9NX3sDzk/fTcw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=QrRLkda+/ayA+SGYsuWdegosvea75rGQYCPNhlNI4Zo=;
+ b=AVCeAIcBcv8/hupt016B4mZeEwXj2j44UUj/omBVlKI6MB6lZywhTU4X9b9kITpXkC6X7X4eSknS7fwkBGwRyOUXZjT7/qXEwqf76PaKcAgXXjsz6ibslzmBbN5MBI+697n5sZ3Cvie0DTTqsD2mxamn24ZHe6dyjh2cEgAmihWlPUxBQR0mI39Ft2bEWCY3+kKC508IOUxz+3R5bQh4xauyV7DXgVkR3ZBO7jrfrihC/u+gfH9XrZXqQRQbgS7r+41IeMq946B56COCe720kxfYZWzeZbKPqc7ZWt8isi0Alb9t8+yWlQS3774eso2Wuep50JkkivQAifmdwGqQaw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=prevas.dk; dmarc=pass action=none header.from=prevas.dk;
+ dkim=pass header.d=prevas.dk; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prevas.dk;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=QrRLkda+/ayA+SGYsuWdegosvea75rGQYCPNhlNI4Zo=;
+ b=Fmr+C0meO0phtojZmaOaCckdbakce0kBzbZr1lRTpGTj6TeFVjhQ2yQmuGX7Ybdl3Q03mynQfH1EYTa67VtvWnmr100hAMS+eN2RsN38brjhv+S4xv3gPufyGvJ0pnrkgx2eKCniwd22Cgm5aJGnlJ2xbI1Jq13Nrfyf7GjWQuM=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=prevas.dk;
+Received: from VI1PR10MB2477.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:803:87::20)
+ by DB5PR10MB7752.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:10:4aa::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.17; Wed, 5 Mar
+ 2025 15:31:48 +0000
+Received: from VI1PR10MB2477.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::4e8:da5:4265:ce59]) by VI1PR10MB2477.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::4e8:da5:4265:ce59%6]) with mapi id 15.20.8466.028; Wed, 5 Mar 2025
+ 15:31:48 +0000
+From: Rasmus Villemoes <ravi@prevas.dk>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Oleg Nesterov <oleg@redhat.com>,  Mateusz Guzik <mjguzik@gmail.com>,  K
+ Prateek Nayak <kprateek.nayak@amd.com>,  "Sapkal, Swapnil"
+ <swapnil.sapkal@amd.com>,  Manfred Spraul <manfred@colorfullife.com>,
+  Christian Brauner <brauner@kernel.org>,  David Howells
+ <dhowells@redhat.com>,  WangYuli <wangyuli@uniontech.com>,
+  linux-fsdevel@vger.kernel.org,  linux-kernel@vger.kernel.org,  "Shenoy,
+ Gautham Ranjal" <gautham.shenoy@amd.com>,  Neeraj.Upadhyay@amd.com,
+  Ananth.narayan@amd.com, Matthew Wilcox <willy@infradead.org>
+Subject: Re: [PATCH] pipe_read: don't wake up the writer if the pipe is
+ still full
+In-Reply-To: <CAHk-=wiA-7pdaQm2nV0iv-fihyhWX-=KjZwQTHNKoDqid46F0w@mail.gmail.com>
+	(Linus Torvalds's message of "Mon, 3 Mar 2025 10:46:10 -1000")
+References: <20250228143049.GA17761@redhat.com>
+	<20250228163347.GB17761@redhat.com>
+	<03a1f4af-47e0-459d-b2bf-9f65536fc2ab@amd.com>
+	<CAGudoHHA7uAVUmBWMy4L50DXb4uhi72iU+nHad=Soy17Xvf8yw@mail.gmail.com>
+	<CAGudoHE_M2MUOpqhYXHtGvvWAL4Z7=u36dcs0jh3PxCDwqMf+w@mail.gmail.com>
+	<741fe214-d534-4484-9cf3-122aabe6281e@amd.com>
+	<3jnnhipk2at3f7r23qb7fvznqg6dqw4rfrhajc7h6j2nu7twi2@wc3g5sdlfewt>
+	<CAHk-=whuLzj37umjCN9CEgOrZkOL=bQPFWA36cpb24Mnm3mgBw@mail.gmail.com>
+	<CAGudoHG2PuhHte91BqrnZi0VbhLBfZVsrFYmYDVrmx4gaLUX3A@mail.gmail.com>
+	<CAHk-=whVfFhEq=Hw4boXXqpnKxPz96TguTU5OfnKtCXo0hWgVw@mail.gmail.com>
+	<20250303202735.GD9870@redhat.com>
+	<CAHk-=wiA-7pdaQm2nV0iv-fihyhWX-=KjZwQTHNKoDqid46F0w@mail.gmail.com>
+Date: Wed, 05 Mar 2025 16:31:45 +0100
+Message-ID: <87h6475w9q.fsf@prevas.dk>
+User-Agent: Gnus/5.13 (Gnus v5.13)
+Content-Type: text/plain
+X-ClientProxiedBy: BE1P281CA0048.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:b10:23::20) To VI1PR10MB2477.EURPRD10.PROD.OUTLOOK.COM
+ (2603:10a6:803:87::20)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250305021711.3867874-1-jeffxu@google.com> <dfc9d260-ad0d-404d-8b90-fbcc5ce212df@lucifer.local>
-In-Reply-To: <dfc9d260-ad0d-404d-8b90-fbcc5ce212df@lucifer.local>
-From: Jeff Xu <jeffxu@chromium.org>
-Date: Wed, 5 Mar 2025 07:29:59 -0800
-X-Gm-Features: AQ5f1JpmPA1PDfBWtfjrkZLUmrQFxsJpyVBNI69QbozoCWMZFvLED0uZhWOGskk
-Message-ID: <CABi2SkX2zLNPdQMuS6JmYPaQCRa3WeKYa74rGu3UfmvqZY+HbA@mail.gmail.com>
-Subject: Re: [PATCH v9 0/7] mseal system mappings
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: akpm@linux-foundation.org, keescook@chromium.org, jannh@google.com, 
-	torvalds@linux-foundation.org, vbabka@suse.cz, Liam.Howlett@oracle.com, 
-	adhemerval.zanella@linaro.org, oleg@redhat.com, avagin@gmail.com, 
-	benjamin@sipsolutions.net, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, linux-mm@kvack.org, 
-	linux-kselftest@vger.kernel.org, jorgelo@chromium.org, sroettger@google.com, 
-	hch@lst.de, ojeda@kernel.org, thomas.weissschuh@linutronix.de, 
-	adobriyan@gmail.com, johannes@sipsolutions.net, pedro.falcato@gmail.com, 
-	hca@linux.ibm.com, willy@infradead.org, anna-maria@linutronix.de, 
-	mark.rutland@arm.com, linus.walleij@linaro.org, Jason@zx2c4.com, 
-	deller@gmx.de, rdunlap@infradead.org, davem@davemloft.net, peterx@redhat.com, 
-	f.fainelli@gmail.com, gerg@kernel.org, dave.hansen@linux.intel.com, 
-	mingo@kernel.org, ardb@kernel.org, mhocko@suse.com, 42.hyeyoo@gmail.com, 
-	peterz@infradead.org, ardb@google.com, enh@google.com, rientjes@google.com, 
-	groeck@chromium.org, mpe@ellerman.id.au, aleksandr.mikhalitsyn@canonical.com, 
-	mike.rapoport@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: VI1PR10MB2477:EE_|DB5PR10MB7752:EE_
+X-MS-Office365-Filtering-Correlation-Id: a0f80764-2173-4675-d3af-08dd5bfad7f8
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|52116014|7416014|376014|366016|1800799024|7053199007|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?dP3weQQTe42EQGqZOVI00TjMZ1/o8i5YZVVELwF4CLJ3JDBXsxTwhm1KkVNw?=
+ =?us-ascii?Q?jwDUEMj1P1PxV2Mb/Am1nVE/aT1cgQkOAjoMKMXeAsNVgJ/X3y7lKNXLXLvg?=
+ =?us-ascii?Q?XAG9VeSZXkL0ZOrWE9DppzvVuueJh2QdZW1xqWyvwZfRHC2rPd6QKBC4ZJ8t?=
+ =?us-ascii?Q?CPSNvGsKYdl5rVo3x0op3kwS1SGx38+4OZn0gUU/Od8XOARb7ymEl9D+aFA8?=
+ =?us-ascii?Q?N7T55ReGudAkGPvb2mnF1nDgb2lb9nxFghK4v4o7Iq/uWX4n8Hkyekvst9EH?=
+ =?us-ascii?Q?Be0PldeQiTGPLJS66NeSMJimcz0/vcaajg8gtq6bzaOP4zg6Q0i+/ra5xvOb?=
+ =?us-ascii?Q?VCf4SYoAGkB/iYdREx7qXJPOH4lZW0EfuTy2rCxU6ow7WP0LJswwobWwScmp?=
+ =?us-ascii?Q?Cy+8oCwAApcfNWtn5gtkJBRU4qbtxeqK0pf8YXmro+bl9zQRMWuC010s1gLu?=
+ =?us-ascii?Q?7EEcbTDDZ+tmZJF+lWxPRhz6m6x9wia7BPa3k/8bzPQYbDpSJj3HKDc3XLyZ?=
+ =?us-ascii?Q?AmO+9ucmv7JcJX9aJTCQn5ZDCtv3mD3KdMO67EfmCTEYkb5NEZz6eVdW0uQj?=
+ =?us-ascii?Q?40lsBT/nJw8cU00MGMdDPsR7wMgYtsaHcqWropfbO4fuJ3H2WZy8Na+8F67P?=
+ =?us-ascii?Q?UN+LPq44/yhQpIi0U5YR9dkaraD+eoY5Z2zlRfjs7ynpV7iehKXhzI43MHf3?=
+ =?us-ascii?Q?pn8ExCx3TMSdN2+eO1fsKHXZBsFxz8Y2ZZVUQPF2puF2/p7ycxI1JYQ98My2?=
+ =?us-ascii?Q?DBUyUTLNdjUxO4algKu9z5ED4TexA9RvE4yCfHFiHNHlgZTtT0DludfjHQWO?=
+ =?us-ascii?Q?gLAO3EgbfxFT8/tSIB/Mx49rrAe02dxC2wrom+XwNOCBb+4rtq//+47JCL+z?=
+ =?us-ascii?Q?rPLtWCHCLE4wYMgnNMIl9fSCza8SAumu1y6Pn5TbCuboSAm2LhlH/sbm/vx4?=
+ =?us-ascii?Q?tGCnyAmAaBcRikMjmr8H1D2tMQqkZVEJSMIKhwuVLtfqJ+sP01PxktgOx9Fp?=
+ =?us-ascii?Q?TYqaqseOrZi5MPWZvzAgSMyCVN2TiRMpqdOYO0N6OmyA/91EIwSsT0x33Dp0?=
+ =?us-ascii?Q?YDga7AXlgFnurC2cJMePn46ihYCCAm3Un4bhfuecokrNELGk84CiXeQfzQcy?=
+ =?us-ascii?Q?Z/gwqJqS6XhhfvlatuhrT4vPour7g7gaJUOLakNWFwvKdfOkgU7Xv3j4rkRm?=
+ =?us-ascii?Q?KkNceX1zIKM2ppHcvgn5nas3ehia5KKELHhWMH492MTbcmc12lhOsGEi0M8P?=
+ =?us-ascii?Q?OvOT4GbfymIvzJSDtM25K2qPzh+T+XrXMDFnblxyWciQhu7GdtHyomWBE53S?=
+ =?us-ascii?Q?yEPmjHv1wSoUgjA9wj6a6aWLrS+vz/bFuUKytl7wHpNpz5H6Y+UU7eLJ+h8y?=
+ =?us-ascii?Q?zri7/JSmaJArJWiIbGlPi5mIqd+VWwdSR1lRv2aV6gIC0Ec+62UwdPL8j0SK?=
+ =?us-ascii?Q?S0rFfmpkoCe/Ne29leBHpLF+4BgdIXY2?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR10MB2477.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(52116014)(7416014)(376014)(366016)(1800799024)(7053199007)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?kBYENrOLr17CukacpeeMvz8Nh3L7AN4EJOSMGxFaTseg8jMlOVHUE/kvM5uH?=
+ =?us-ascii?Q?dV9G+n4xaapca/y9Lv2DVmRaCwLk0Es4xVClBVA7ynY1IuzO5mQo5KZEk096?=
+ =?us-ascii?Q?d0p4gEpWICkwahDVvEFI1DCcZCrk12WDCo/T5THOIFwQzGdhFREH+NnNri7r?=
+ =?us-ascii?Q?2hIaCeN25hA5zo3gCUZksW2bhSV3WrqA2AzbBdNVsJz7wqMRlB8dqP84EMwp?=
+ =?us-ascii?Q?ck1DC3AEmEJd29YvMR4Kq3swi9i+bJfe9oGe20kojPwQfBrz4OuFcQ9LaYBt?=
+ =?us-ascii?Q?/l1bgGcEsN0f63c3vm7d96EAVpA9tvLoMusWSaoTUcqLq8U9KH9ZMzL0k8dj?=
+ =?us-ascii?Q?aedsRspdOKCph5KGO0RLoh317wM+OhHkMb9/1i6vWksdzFaC6EpLaigp72nL?=
+ =?us-ascii?Q?VY3pIi79HtI5ymuhrYUh44r1YXTvVIBGGq7Vf2XXEPIO8UFFJvK/Oywo9cn/?=
+ =?us-ascii?Q?SVzW5kRbyagUzRh3wmRImulTOyK9ThTS3Y9aKrhZwxMTJ7z5c4vY00pZgl/I?=
+ =?us-ascii?Q?x+ViLKgv8PnjPRfY9dqrwWNRIDwD6bX/qeuqi767kFrGRxf9yfQNa7MgDLSu?=
+ =?us-ascii?Q?3KomE9rMVxmI34xcKuyPxhXVQ0x5+vExjM3qBWeZc0Ia6U8rKV9jxR3hXo2N?=
+ =?us-ascii?Q?A19eQpwSjvWgNE+vsffj55AuBCst1wurjS6FS3bwyTRNFR238er0Tc/Pyvnx?=
+ =?us-ascii?Q?sJFXd9+TQxpby2bLQLuql109miHH7b8ilTORCP/AVmVdO6iijPamlJsd41Un?=
+ =?us-ascii?Q?L7EXsPr4151B5TGEsm70/5wlrJdwdcS6dYh91Wd/j0FrVTfuJp//Ux3byt6T?=
+ =?us-ascii?Q?RG3Psbmds0mwvuJycMp3yaRRp3ZdlXnzpFuLjWyN4E4o1Nl6LZJmw8bHfD3U?=
+ =?us-ascii?Q?xOR9VAZUAq+oIsw54rwlwA4BGPrEvjzvc3V2w4ky2G+FkhANHSvKvHSFyj6A?=
+ =?us-ascii?Q?/hx1fUwDzSfN2jnc9tA2u0PN/hgIVnMLXpZQlhdj1tuapbUJZsDXPOrQIVyz?=
+ =?us-ascii?Q?eO2LbZRvk7G5tV1HtuzCsCR6xEsDGalMMtgehfe2GA2qtyQ87IGWmbngNyPc?=
+ =?us-ascii?Q?9gl0tZpac9ole1xokBcsMx3WcQQAQGEOwoOFJI3qUWY5ZLpxKwPuSzKBajOJ?=
+ =?us-ascii?Q?biPH2SHE3joazilkhZoYOe/haF7cEzyUamwkFmwAtyDOldVgwv1UeR13ww1z?=
+ =?us-ascii?Q?qznw8ApaepLUQdE4WXjMcU626CRoUL8kzfIXnR7htkjHQqZ/xDanwCpaopmI?=
+ =?us-ascii?Q?03pbj+gYPrAgrEP9CQkLItowGDvxhirEutLPM94twu72hp8SL8Y4wpGdSuuL?=
+ =?us-ascii?Q?6sHnuXjJ3q1Ov8NvQ+bsbwzxXI7eRPtWxgemmE5yzosOho1VYOf8hGqomxMw?=
+ =?us-ascii?Q?vfTRVBgLkoky3vFvpN4NcKtY7SEjWT4E9TsbFyD7MlvWj2/EtTdocHYbXlHP?=
+ =?us-ascii?Q?TpD9MY7boXZ5nx2+TfnO6VW9kJgfwCAT5k0lBW92z20vFe2n2uaftZTImmr1?=
+ =?us-ascii?Q?k9ZHbMa8zThoyRFb3HUKRm9tWfK2DkPcAn44nq/Ibt268ElZVGZ4pg6X3YUY?=
+ =?us-ascii?Q?i2+q1QH8jQDHhN8Yhwwj0Khrygr+fYBa7mV26xSsrP8xF5jVEi2U3JkmRdyi?=
+ =?us-ascii?Q?0w=3D=3D?=
+X-OriginatorOrg: prevas.dk
+X-MS-Exchange-CrossTenant-Network-Message-Id: a0f80764-2173-4675-d3af-08dd5bfad7f8
+X-MS-Exchange-CrossTenant-AuthSource: VI1PR10MB2477.EURPRD10.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Mar 2025 15:31:48.3756
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: d350cf71-778d-4780-88f5-071a4cb1ed61
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: gu47hBGzOrWMNxzwWXmLPPh5chlBnWDNE5SGYGh/4GIjpdOHAh048xoMiBZ5Wo82jwhHBDTVSFhpdtXBbV1zSX5SZN0/lSAb4WCphdtDLAM=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB5PR10MB7752
 
-On Tue, Mar 4, 2025 at 9:51=E2=80=AFPM Lorenzo Stoakes
-<lorenzo.stoakes@oracle.com> wrote:
->
-> On Wed, Mar 05, 2025 at 02:17:04AM +0000, jeffxu@chromium.org wrote:
-> > From: Jeff Xu <jeffxu@chromium.org>
-> >
-> > This is V9 version, addressing comments from V8, without code logic
-> > change.
-> >
-> > -------------------------------------------------------------------
-> > As discussed during mseal() upstream process [1], mseal() protects
-> > the VMAs of a given virtual memory range against modifications, such
-> > as the read/write (RW) and no-execute (NX) bits. For complete
-> > descriptions of memory sealing, please see mseal.rst [2].
-> >
-> > The mseal() is useful to mitigate memory corruption issues where a
-> > corrupted pointer is passed to a memory management system. For
-> > example, such an attacker primitive can break control-flow integrity
-> > guarantees since read-only memory that is supposed to be trusted can
-> > become writable or .text pages can get remapped.
-> >
-> > The system mappings are readonly only, memory sealing can protect
-> > them from ever changing to writable or unmmap/remapped as different
-> > attributes.
-> >
-> > System mappings such as vdso, vvar, vvar_vclock,
-> > vectors (arm compat-mode), sigpage (arm compat-mode),
-> > are created by the kernel during program initialization, and could
-> > be sealed after creation.
-> >
-> > Unlike the aforementioned mappings, the uprobe mapping is not
-> > established during program startup. However, its lifetime is the same
-> > as the process's lifetime [3]. It could be sealed from creation.
-> >
-> > The vsyscall on x86-64 uses a special address (0xffffffffff600000),
-> > which is outside the mm managed range. This means mprotect, munmap, and
-> > mremap won't work on the vsyscall. Since sealing doesn't enhance
-> > the vsyscall's security, it is skipped in this patch. If we ever seal
-> > the vsyscall, it is probably only for decorative purpose, i.e. showing
-> > the 'sl' flag in the /proc/pid/smaps. For this patch, it is ignored.
-> >
-> > It is important to note that the CHECKPOINT_RESTORE feature (CRIU) may
-> > alter the system mappings during restore operations. UML(User Mode Linu=
-x)
-> > and gVisor, rr are also known to change the vdso/vvar mappings.
-> > Consequently, this feature cannot be universally enabled across all
-> > systems. As such, CONFIG_MSEAL_SYSTEM_MAPPINGS is disabled by default.
-> >
-> > To support mseal of system mappings, architectures must define
-> > CONFIG_ARCH_SUPPORTS_MSEAL_SYSTEM_MAPPINGS and update their special
-> > mappings calls to pass mseal flag. Additionally, architectures must
-> > confirm they do not unmap/remap system mappings during the process
-> > lifetime. The existence of this flag for an architecture implies that
-> > it does not require the remapping of thest system mappings during
-> > process lifetime, so sealing these mappings is safe from a kernel
-> > perspective.
-> >
-> > This version covers x86-64 and arm64 archiecture as minimum viable feat=
-ure.
-> >
-> > While no specific CPU hardware features are required for enable this
-> > feature on an archiecture, memory sealing requires a 64-bit kernel. Oth=
-er
-> > architectures can choose whether or not to adopt this feature. Currentl=
-y,
-> > I'm not aware of any instances in the kernel code that actively
-> > munmap/mremap a system mapping without a request from userspace. The PP=
-C
-> > does call munmap when _install_special_mapping fails for vdso; however,
-> > it's uncertain if this will ever fail for PPC - this needs to be
-> > investigated by PPC in the future [4]. The UML kernel can add this supp=
-ort
-> > when KUnit tests require it [5].
-> >
-> > In this version, we've improved the handling of system mapping sealing =
-from
-> > previous versions, instead of modifying the _install_special_mapping
-> > function itself, which would affect all architectures, we now call
-> > _install_special_mapping with a sealing flag only within the specific
-> > architecture that requires it. This targeted approach offers two key
-> > advantages: 1) It limits the code change's impact to the necessary
-> > architectures, and 2) It aligns with the software architecture by keepi=
-ng
-> > the core memory management within the mm layer, while delegating the
-> > decision of sealing system mappings to the individual architecture, whi=
-ch
-> > is particularly relevant since 32-bit architectures never require seali=
-ng.
-> >
-> > Prior to this patch series, we explored sealing special mappings from
-> > userspace using glibc's dynamic linker. This approach revealed several
-> > issues:
-> > - The PT_LOAD header may report an incorrect length for vdso, (smaller
-> >   than its actual size). The dynamic linker, which relies on PT_LOAD
-> >   information to determine mapping size, would then split and partially
-> >   seal the vdso mapping. Since each architecture has its own vdso/vvar
-> >   code, fixing this in the kernel would require going through each
-> >   archiecture. Our initial goal was to enable sealing readonly mappings=
-,
-> >   e.g. .text, across all architectures, sealing vdso from kernel since
-> >   creation appears to be simpler than sealing vdso at glibc.
-> > - The [vvar] mapping header only contains address information, not leng=
-th
-> >   information. Similar issues might exist for other special mappings.
-> > - Mappings like uprobe are not covered by the dynamic linker,
-> >   and there is no effective solution for them.
-> >
-> > This feature's security enhancements will benefit ChromeOS, Android,
-> > and other high security systems.
-> >
-> > Testing:
-> > This feature was tested on ChromeOS and Android for both x86-64 and ARM=
-64.
-> > - Enable sealing and verify vdso/vvar, sigpage, vector are sealed prope=
-rly,
-> >   i.e. "sl" shown in the smaps for those mappings, and mremap is blocke=
-d.
-> > - Passing various automation tests (e.g. pre-checkin) on ChromeOS and
-> >   Android to ensure the sealing doesn't affect the functionality of
-> >   Chromebook and Android phone.
-> >
-> > I also tested the feature on Ubuntu on x86-64:
-> > - With config disabled, vdso/vvar is not sealed,
-> > - with config enabled, vdso/vvar is sealed, and booting up Ubuntu is OK=
-,
-> >   normal operations such as browsing the web, open/edit doc are OK.
-> >
-> > Link: https://lore.kernel.org/all/20240415163527.626541-1-jeffxu@chromi=
-um.org/ [1]
-> > Link: Documentation/userspace-api/mseal.rst [2]
-> > Link: https://lore.kernel.org/all/CABi2SkU9BRUnqf70-nksuMCQ+yyiWjo3fM4X=
-kRkL-NrCZxYAyg@mail.gmail.com/ [3]
-> > Link: https://lore.kernel.org/all/CABi2SkV6JJwJeviDLsq9N4ONvQ=3DEFANsiW=
-kgiEOjyT9TQSt+HA@mail.gmail.com/ [4]
-> > Link: https://lore.kernel.org/all/202502251035.239B85A93@keescook/ [5]
-> >
-> > -------------------------------------------
-> > History:
-> >
-> > V9:
-> >  - Add negative test in selftest (Kees Cook)
-> >  - fx typos in text (Kees Cook)
->
-> You have a bad habit of missing stuff off these logs. Usually I don't
-> comment, as it's trivial, but while we're here :)
->
-> Please try to keep an accurate log of changes requested so you can popula=
-te
-> these properly.
->
-> Obviously this is not going to block anything. But for future reference..=
-.
->
->   - Add selftest to main selftest Makefile (Lorenzo Stoakes)
->
-> >
-> > V8:
->
-> Nit, but no lore link?
-https://lore.kernel.org/all/20250303050921.3033083-1-jeffxu@google.com/
+On Mon, Mar 03 2025, Linus Torvalds <torvalds@linux-foundation.org> wrote:
 
-Thanks for noticing this.
-
+> On Mon, 3 Mar 2025 at 10:28, Oleg Nesterov <oleg@redhat.com> wrote:
+>>
+>> Stupid question... but do we really need to change the code which update
+>> tail/head if we pack them into a single word?
 >
-> >   - Change ARCH_SUPPORTS_MSEAL_X to ARCH_SUPPORTS_MSEAL_X (Liam R. Howl=
-ett)
-> >   - Update comments in Kconfig and mseal.rst (Lorenzo Stoakes, Liam R. =
-Howlett)
-> >   - Change patch header perfix to "mseal sysmap" (Lorenzo Stoakes)
-> >   - Remove "vm_flags =3D" (Kees Cook, Liam R. Howlett,  Oleg Nesterov)
-> >   - Drop uml architecture (Lorenzo Stoakes, Kees Cook)
-> >   - Add a selftest to verify system mappings are sealed (Lorenzo Stoake=
-s)
-> >
-> > V7:
-> >   https://lore.kernel.org/all/20250224225246.3712295-1-jeffxu@google.co=
-m/
-> >   - Remove cover letter from the first patch (Liam R. Howlett)
-> >   - Change macro name to VM_SEALED_SYSMAP (Liam R. Howlett)
-> >   - logging and fclose() in selftest (Liam R. Howlett)
-> >
-> > V6:
-> >   https://lore.kernel.org/all/20250224174513.3600914-1-jeffxu@google.co=
-m/
-> >   - mseal.rst: fix a typo (Randy Dunlap)
-> >   - security/Kconfig: add rr into note (Liam R. Howlett)
-> >   - remove mseal_system_mappings() and use macro instead (Liam R. Howle=
-tt)
-> >   - mseal.rst: add incompatible userland software (Lorenzo Stoakes)
-> >   - remove RFC from title (Kees Cook)
-> >
-> > V5
-> >   https://lore.kernel.org/all/20250212032155.1276806-1-jeffxu@google.co=
-m/
-> >   - Remove kernel cmd line (Lorenzo Stoakes)
-> >   - Add test info (Lorenzo Stoakes)
-> >   - Add threat model info (Lorenzo Stoakes)
-> >   - Fix x86 selftest: test_mremap_vdso
-> >   - Restrict code change to ARM64/x86-64/UM arch only.
-> >   - Add userprocess.h to include seal_system_mapping().
-> >   - Remove sealing vsyscall.
-> >   - Split the patch.
-> >
-> > V4:
-> >   https://lore.kernel.org/all/20241125202021.3684919-1-jeffxu@google.co=
-m/
-> >   - ARCH_HAS_SEAL_SYSTEM_MAPPINGS (Lorenzo Stoakes)
-> >   - test info (Lorenzo Stoakes)
-> >   - Update  mseal.rst (Liam R. Howlett)
-> >   - Update test_mremap_vdso.c (Liam R. Howlett)
-> >   - Misc. style, comments, doc update (Liam R. Howlett)
-> >
-> > V3:
-> >   https://lore.kernel.org/all/20241113191602.3541870-1-jeffxu@google.co=
-m/
-> >   - Revert uprobe to v1 logic (Oleg Nesterov)
-> >   - use CONFIG_SEAL_SYSTEM_MAPPINGS instead of _ALWAYS/_NEVER (Kees Coo=
-k)
-> >   - Move kernel cmd line from fs/exec.c to mm/mseal.c and
-> >     misc. (Liam R. Howlett)
-> >
-> > V2:
-> >   https://lore.kernel.org/all/20241014215022.68530-1-jeffxu@google.com/
-> >   - Seal uprobe always (Oleg Nesterov)
-> >   - Update comments and description (Randy Dunlap, Liam R.Howlett, Oleg=
- Nesterov)
-> >   - Rebase to linux_main
-> >
-> > V1:
-> >  - https://lore.kernel.org/all/20241004163155.3493183-1-jeffxu@google.c=
-om/
-> >
-> > --------------------------------------------------
-> >
-> >
-> >
-> > Jeff Xu (7):
-> >   mseal sysmap: kernel config and header change
-> >   selftests: x86: test_mremap_vdso: skip if vdso is msealed
-> >   mseal sysmap: enable x86-64
-> >   mseal sysmap: enable arm64
-> >   mseal sysmap: uprobe mapping
-> >   mseal sysmap: update mseal.rst
-> >   selftest: test system mappings are sealed.
-> >
-> >  Documentation/userspace-api/mseal.rst         |  20 +++
-> >  arch/arm64/Kconfig                            |   1 +
-> >  arch/arm64/kernel/vdso.c                      |  12 +-
-> >  arch/x86/Kconfig                              |   1 +
-> >  arch/x86/entry/vdso/vma.c                     |   7 +-
-> >  include/linux/mm.h                            |  10 ++
-> >  init/Kconfig                                  |  22 ++++
-> >  kernel/events/uprobes.c                       |   3 +-
-> >  security/Kconfig                              |  21 ++++
-> >  tools/testing/selftests/Makefile              |   1 +
-> >  .../mseal_system_mappings/.gitignore          |   2 +
-> >  .../selftests/mseal_system_mappings/Makefile  |   6 +
-> >  .../selftests/mseal_system_mappings/config    |   1 +
-> >  .../mseal_system_mappings/sysmap_is_sealed.c  | 119 ++++++++++++++++++
-> >  .../testing/selftests/x86/test_mremap_vdso.c  |  43 +++++++
-> >  15 files changed, 261 insertions(+), 8 deletions(-)
-> >  create mode 100644 tools/testing/selftests/mseal_system_mappings/.giti=
-gnore
-> >  create mode 100644 tools/testing/selftests/mseal_system_mappings/Makef=
-ile
-> >  create mode 100644 tools/testing/selftests/mseal_system_mappings/confi=
-g
-> >  create mode 100644 tools/testing/selftests/mseal_system_mappings/sysma=
-p_is_sealed.c
-> >
-> > --
-> > 2.48.1.711.g2feabab25a-goog
-> >
+> No. It's only the READ_ONCE() parts that need changing.
+>
+> See this suggested patch, which does something very similar to what
+> you were thinking of.
+>
+> +/*
+> + * We have to declare this outside 'struct pipe_inode_info',
+> + * but then we can't use 'union pipe_index' for an anonymous
+> + * union, so we end up having to duplicate this declaration
+> + * below. Annoying.
+> + */
+> +union pipe_index {
+> +	unsigned long head_tail;
+> +	struct {
+> +		pipe_index_t head;
+> +		pipe_index_t tail;
+> +	};
+> +};
+> +
+
+-fms-extensions ? Willy wanted to add that for use in mm/ some years ago
+[*], and it has come up a few other times as well.
+
+[*] https://lore.kernel.org/lkml/20180419152817.GD25406@bombadil.infradead.org/
+
+Rasmus
