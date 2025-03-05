@@ -1,173 +1,124 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BBE53266B54;
-	Wed,  5 Mar 2025 22:22:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 038501FF61B;
+	Wed,  5 Mar 2025 22:23:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741213377; cv=none; b=Cw/CjMsYM9pJxqcEuo2kSdHR82QlxY8aJ4NLEznU1j3QTK0i/PiSZl9FFLTuscSwyEGyI7T3I4zd+toRKdVJIS+d6RfFdtsJE9/CVk7tXFXZbv1y2++7k3YhoRrmVk5EGgrZk104Zjjo5Mx2a8WS8sFAbjTJ2CMR55XIT7bGCKc=
+	t=1741213416; cv=none; b=MAugsdzuRWghEz48wO1u/mfEVqjvu6bmNp1534ABUwtjKZy2kPwjEMZgivtdPLFjHKh5MoCtH7qOsLcMFoAkzv60+2GKdy7ECOlbXfc/XkAMbZmDIxXkY5C8G7oQXibjBtL+IaNeSBv6hz5O/u54Se9fH1k6g0iOeGLhe6P0EqQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741213377; c=relaxed/simple;
-	bh=g5JO3k/TCEN3v+HtlCM2BxWRdcgkrqVfcfjTxgeDdvk=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=ZWxKrsW6SzUB85Jho5L+H6JAJN3zIAPJCevD8uScKEq2K5lBQO0mFdLDYtnIvROkmdieexDbMF0lI2dJV5Azchlg9ZwTXx96nX1lKwWlKMneqoNFOx/50d14NKXUw8ecz4JWkzDig1MZ5mngqJXE/4fezon3ZgnhvsgxaxAc9TI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxonhyperv.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linuxonhyperv.com header.i=@linuxonhyperv.com header.b=WCm/wayB; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxonhyperv.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1741213416; c=relaxed/simple;
+	bh=KBHpbC5osndmf5oDhHBlgu8LureeUZlnUDS/VBH0eSk=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=VHQuHMNnlEWsFxKjajzGUpLdBTAalOPN3YM4agYKjyYAnbcpFl3JI+PagOUJ3vC5oWaNMrTD2nWixaD6YlwqjK6Nmu+8PvpDXtRQkd5fyKHovcCZKhJ4xnG+Mp4MDAltZZrQkkaBev47ItpHrDuNgy1UWGVNP0E0SjSdflS8JjA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r1bZiT7N; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxonhyperv.com header.i=@linuxonhyperv.com header.b="WCm/wayB"
-Received: by linux.microsoft.com (Postfix, from userid 1202)
-	id 55C65210EAEE; Wed,  5 Mar 2025 14:22:55 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 55C65210EAEE
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linuxonhyperv.com;
-	s=default; t=1741213375;
-	bh=iFYkKTLKsLLpSWd4yx8EhrEWqYD3qaO53+zZwdPz6tg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=WCm/wayBFYkyM361wiC8ooftmxFgs21ha2rJaWATJYqutOnIlivhgfzXpWg8EZxG2
-	 POY6neYfi9ck8hXCHU98aqt47qs/9NNlyHwEDvdw+PnloglXe7+oKWI4O4ohGCKDU8
-	 3C/ddHoes0oSsHleCErlBGV5PKvllwTDYljpwlxo=
-From: longli@linuxonhyperv.com
-To: Jason Gunthorpe <jgg@ziepe.ca>,
-	Leon Romanovsky <leon@kernel.org>,
-	Konstantin Taranov <kotaranov@microsoft.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>
-Cc: linux-rdma@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-hyperv@vger.kernel.org,
-	Long Li <longli@microsoft.com>
-Subject: [patch rdma-next v4 2/2] RDMA/mana_ib: Handle net event for pointing to the current netdev
-Date: Wed,  5 Mar 2025 14:22:40 -0800
-Message-Id: <1741213360-14567-2-git-send-email-longli@linuxonhyperv.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1741213360-14567-1-git-send-email-longli@linuxonhyperv.com>
-References: <1741213360-14567-1-git-send-email-longli@linuxonhyperv.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r1bZiT7N"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E2B6C4CEE0;
+	Wed,  5 Mar 2025 22:23:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741213415;
+	bh=KBHpbC5osndmf5oDhHBlgu8LureeUZlnUDS/VBH0eSk=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=r1bZiT7NwYXoQhaCMEjbK91+E+DffB5/lm5IXRZH07OBdWXqtAT/BxJ2Od0VUGi1+
+	 +V8ak2pZsbo6pB3WgPW7CqW9OdFqupRAKSnxe42ZJZZYOUZUshM+Pq5b5Hox4xAGTJ
+	 abPigQ3XEnezCY0xXRv5xPm+9k23kl63eY3ObEj9RGuvCrXRG3mXYEu7uP2GPEH0Kf
+	 S4oaP8JUKwV6IcGwRpzMaKyDiEmbIpshEsn5HV1a0Lch6Ll6CGsnLS78SHXwhNFrhm
+	 CSfkgEVIQA39o/Gfwa2ut9h8px+uA0LeTr5YtRHO64jTYXHy/XUwZ701ZuORvoag6y
+	 ZnWPQa05voAfA==
+Date: Wed, 05 Mar 2025 16:23:34 -0600
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ dinguyen@kernel.org, conor+dt@kernel.org, krzk+dt@kernel.org
+To: Matthew Gerlach <matthew.gerlach@altera.com>
+In-Reply-To: <20250305194951.7226-1-matthew.gerlach@altera.com>
+References: <20250305194951.7226-1-matthew.gerlach@altera.com>
+Message-Id: <174121292996.2932278.13028328347189315075.robh@kernel.org>
+Subject: Re: [PATCH 0/2] Add bindings and DTS for the Agilex7 M-Series
+ SoCDK
 
-From: Long Li <longli@microsoft.com>
 
-When running under Hyper-V, the master device to the RDMA device is always
-bonded to this RDMA device. This is not user-configurable.
+On Wed, 05 Mar 2025 11:49:49 -0800, Matthew Gerlach wrote:
+> This patch set adds device tree bindings and a DTS for the Intel Agilex7
+> M-Series SoC Development Kit:
+> https://www.intel.com/content/www/us/en/products/details/fpga/development-kits/agilex/agm039.html
+> 
+> Patch 1:
+>   Define the device tree binding for the Agilex7 M-Series SoCDK.
+> 
+> Patch 2:
+>   Add the DTS for the Agilex7 M-Series SoCDK.
+> 
+> Matthew Gerlach (2):
+>   dt-bindings: intel: document Agilex7 M-Series SoCDK
+>   arm64: dts: socfpga: add Agilex7 M-Series SoCDK
+> 
+>  .../bindings/arm/intel,socfpga.yaml           |   5 +
+>  arch/arm64/boot/dts/intel/Makefile            |   1 +
+>  .../boot/dts/intel/socfpga_agilex7m_socdk.dts | 108 ++++++++++++++++++
+>  3 files changed, 114 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/intel/socfpga_agilex7m_socdk.dts
+> 
+> --
+> 2.35.3
+> 
+> 
+> 
 
-The master device can be unbind/bind from the kernel. During those events,
-the RDMA device should set to the current netdev to reflect the change of
-master device from those events.
 
-Signed-off-by: Long Li <longli@microsoft.com>
----
-Changes
-v2: Add missing error handling when register_netdevice_notifier() fails.
-v3: Change mana_get_primary_netdev() to return with netdev refcount held.
-v4: use netdev_put().
+My bot found new DTB warnings on the .dts files added or changed in this
+series.
 
- drivers/infiniband/hw/mana/device.c  | 47 ++++++++++++++++++++++++++--
- drivers/infiniband/hw/mana/mana_ib.h |  1 +
- 2 files changed, 46 insertions(+), 2 deletions(-)
+Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
+are fixed by another series. Ultimately, it is up to the platform
+maintainer whether these warnings are acceptable or not. No need to reply
+unless the platform maintainer has comments.
 
-diff --git a/drivers/infiniband/hw/mana/device.c b/drivers/infiniband/hw/mana/device.c
-index 2b4dd34a41ba..d71e1715aea8 100644
---- a/drivers/infiniband/hw/mana/device.c
-+++ b/drivers/infiniband/hw/mana/device.c
-@@ -51,6 +51,38 @@ static const struct ib_device_ops mana_ib_dev_ops = {
- 			   ib_ind_table),
- };
- 
-+static int mana_ib_netdev_event(struct notifier_block *this,
-+				unsigned long event, void *ptr)
-+{
-+	struct mana_ib_dev *dev = container_of(this, struct mana_ib_dev, nb);
-+	struct net_device *event_dev = netdev_notifier_info_to_dev(ptr);
-+	struct gdma_context *gc = dev->gdma_dev->gdma_context;
-+	struct mana_context *mc = gc->mana.driver_data;
-+	struct net_device *ndev;
-+
-+	/* Only process events from our parent device */
-+	if (event_dev != mc->ports[0])
-+		return NOTIFY_DONE;
-+
-+	switch (event) {
-+	case NETDEV_CHANGEUPPER:
-+		ndev = mana_get_primary_netdev(mc, 0);
-+		/*
-+		 * RDMA core will setup GID based on updated netdev.
-+		 * It's not possible to race with the core as rtnl lock is being
-+		 * held.
-+		 */
-+		ib_device_set_netdev(&dev->ib_dev, ndev, 1);
-+
-+		/* mana_get_primary_netdev() returns ndev with refcount held */
-+		netdev_put(ndev, NULL);
-+
-+		return NOTIFY_OK;
-+	default:
-+		return NOTIFY_DONE;
-+	}
-+}
-+
- static int mana_ib_probe(struct auxiliary_device *adev,
- 			 const struct auxiliary_device_id *id)
- {
-@@ -108,17 +140,25 @@ static int mana_ib_probe(struct auxiliary_device *adev,
- 	}
- 	dev->gdma_dev = &mdev->gdma_context->mana_ib;
- 
-+	dev->nb.notifier_call = mana_ib_netdev_event;
-+	ret = register_netdevice_notifier(&dev->nb);
-+	if (ret) {
-+		ibdev_err(&dev->ib_dev, "Failed to register net notifier, %d",
-+			  ret);
-+		goto deregister_device;
-+	}
-+
- 	ret = mana_ib_gd_query_adapter_caps(dev);
- 	if (ret) {
- 		ibdev_err(&dev->ib_dev, "Failed to query device caps, ret %d",
- 			  ret);
--		goto deregister_device;
-+		goto deregister_net_notifier;
- 	}
- 
- 	ret = mana_ib_create_eqs(dev);
- 	if (ret) {
- 		ibdev_err(&dev->ib_dev, "Failed to create EQs, ret %d", ret);
--		goto deregister_device;
-+		goto deregister_net_notifier;
- 	}
- 
- 	ret = mana_ib_gd_create_rnic_adapter(dev);
-@@ -147,6 +187,8 @@ static int mana_ib_probe(struct auxiliary_device *adev,
- 	mana_ib_gd_destroy_rnic_adapter(dev);
- destroy_eqs:
- 	mana_ib_destroy_eqs(dev);
-+deregister_net_notifier:
-+	unregister_netdevice_notifier(&dev->nb);
- deregister_device:
- 	mana_gd_deregister_device(dev->gdma_dev);
- free_ib_device:
-@@ -162,6 +204,7 @@ static void mana_ib_remove(struct auxiliary_device *adev)
- 	xa_destroy(&dev->qp_table_wq);
- 	mana_ib_gd_destroy_rnic_adapter(dev);
- 	mana_ib_destroy_eqs(dev);
-+	unregister_netdevice_notifier(&dev->nb);
- 	mana_gd_deregister_device(dev->gdma_dev);
- 	ib_dealloc_device(&dev->ib_dev);
- }
-diff --git a/drivers/infiniband/hw/mana/mana_ib.h b/drivers/infiniband/hw/mana/mana_ib.h
-index b53a5b4de908..d88187072899 100644
---- a/drivers/infiniband/hw/mana/mana_ib.h
-+++ b/drivers/infiniband/hw/mana/mana_ib.h
-@@ -64,6 +64,7 @@ struct mana_ib_dev {
- 	struct gdma_queue **eqs;
- 	struct xarray qp_table_wq;
- 	struct mana_ib_adapter_caps adapter_caps;
-+	struct notifier_block nb;
- };
- 
- struct mana_ib_wq {
--- 
-2.34.1
+If you already ran DT checks and didn't see these error(s), then
+make sure dt-schema is up to date:
+
+  pip3 install dtschema --upgrade
+
+
+New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/intel/' for 20250305194951.7226-1-matthew.gerlach@altera.com:
+
+arch/arm64/boot/dts/intel/socfpga_agilex7m_socdk.dtb: /firmware/svc: failed to match any schema with compatible: ['intel,agilex-svc']
+arch/arm64/boot/dts/intel/socfpga_agilex7m_socdk.dtb: /firmware/svc/fpga-mgr: failed to match any schema with compatible: ['intel,agilex-soc-fpga-mgr']
+arch/arm64/boot/dts/intel/socfpga_agilex7m_socdk.dtb: cb-intosc-hs-div2-clk: 'clock-frequency' is a required property
+	from schema $id: http://devicetree.org/schemas/clock/fixed-clock.yaml#
+arch/arm64/boot/dts/intel/socfpga_agilex7m_socdk.dtb: cb-intosc-ls-clk: 'clock-frequency' is a required property
+	from schema $id: http://devicetree.org/schemas/clock/fixed-clock.yaml#
+arch/arm64/boot/dts/intel/socfpga_agilex7m_socdk.dtb: f2s-free-clk: 'clock-frequency' is a required property
+	from schema $id: http://devicetree.org/schemas/clock/fixed-clock.yaml#
+arch/arm64/boot/dts/intel/socfpga_agilex7m_socdk.dtb: /soc@0/ethernet@ff800000: failed to match any schema with compatible: ['altr,socfpga-stmmac-a10-s10', 'snps,dwmac-3.74a', 'snps,dwmac']
+arch/arm64/boot/dts/intel/socfpga_agilex7m_socdk.dtb: /soc@0/ethernet@ff800000: failed to match any schema with compatible: ['altr,socfpga-stmmac-a10-s10', 'snps,dwmac-3.74a', 'snps,dwmac']
+arch/arm64/boot/dts/intel/socfpga_agilex7m_socdk.dtb: /soc@0/ethernet@ff802000: failed to match any schema with compatible: ['altr,socfpga-stmmac-a10-s10', 'snps,dwmac-3.74a', 'snps,dwmac']
+arch/arm64/boot/dts/intel/socfpga_agilex7m_socdk.dtb: /soc@0/ethernet@ff802000: failed to match any schema with compatible: ['altr,socfpga-stmmac-a10-s10', 'snps,dwmac-3.74a', 'snps,dwmac']
+arch/arm64/boot/dts/intel/socfpga_agilex7m_socdk.dtb: /soc@0/ethernet@ff804000: failed to match any schema with compatible: ['altr,socfpga-stmmac-a10-s10', 'snps,dwmac-3.74a', 'snps,dwmac']
+arch/arm64/boot/dts/intel/socfpga_agilex7m_socdk.dtb: /soc@0/ethernet@ff804000: failed to match any schema with compatible: ['altr,socfpga-stmmac-a10-s10', 'snps,dwmac-3.74a', 'snps,dwmac']
+arch/arm64/boot/dts/intel/socfpga_agilex7m_socdk.dtb: /soc@0/eccmgr: failed to match any schema with compatible: ['altr,socfpga-s10-ecc-manager', 'altr,socfpga-a10-ecc-manager']
+arch/arm64/boot/dts/intel/socfpga_agilex7m_socdk.dtb: /soc@0/eccmgr: failed to match any schema with compatible: ['altr,socfpga-s10-ecc-manager', 'altr,socfpga-a10-ecc-manager']
+arch/arm64/boot/dts/intel/socfpga_agilex7m_socdk.dtb: /soc@0/eccmgr/sdramedac: failed to match any schema with compatible: ['altr,sdram-edac-s10']
+arch/arm64/boot/dts/intel/socfpga_agilex7m_socdk.dtb: /soc@0/eccmgr/ocram-ecc@ff8cc000: failed to match any schema with compatible: ['altr,socfpga-s10-ocram-ecc', 'altr,socfpga-a10-ocram-ecc']
+arch/arm64/boot/dts/intel/socfpga_agilex7m_socdk.dtb: /soc@0/eccmgr/ocram-ecc@ff8cc000: failed to match any schema with compatible: ['altr,socfpga-s10-ocram-ecc', 'altr,socfpga-a10-ocram-ecc']
+arch/arm64/boot/dts/intel/socfpga_agilex7m_socdk.dtb: /soc@0/eccmgr/usb0-ecc@ff8c4000: failed to match any schema with compatible: ['altr,socfpga-s10-usb-ecc', 'altr,socfpga-usb-ecc']
+arch/arm64/boot/dts/intel/socfpga_agilex7m_socdk.dtb: /soc@0/eccmgr/usb0-ecc@ff8c4000: failed to match any schema with compatible: ['altr,socfpga-s10-usb-ecc', 'altr,socfpga-usb-ecc']
+arch/arm64/boot/dts/intel/socfpga_agilex7m_socdk.dtb: /soc@0/eccmgr/emac0-rx-ecc@ff8c0000: failed to match any schema with compatible: ['altr,socfpga-s10-eth-mac-ecc', 'altr,socfpga-eth-mac-ecc']
+arch/arm64/boot/dts/intel/socfpga_agilex7m_socdk.dtb: /soc@0/eccmgr/emac0-rx-ecc@ff8c0000: failed to match any schema with compatible: ['altr,socfpga-s10-eth-mac-ecc', 'altr,socfpga-eth-mac-ecc']
+arch/arm64/boot/dts/intel/socfpga_agilex7m_socdk.dtb: /soc@0/eccmgr/emac0-tx-ecc@ff8c0400: failed to match any schema with compatible: ['altr,socfpga-s10-eth-mac-ecc', 'altr,socfpga-eth-mac-ecc']
+arch/arm64/boot/dts/intel/socfpga_agilex7m_socdk.dtb: /soc@0/eccmgr/emac0-tx-ecc@ff8c0400: failed to match any schema with compatible: ['altr,socfpga-s10-eth-mac-ecc', 'altr,socfpga-eth-mac-ecc']
+arch/arm64/boot/dts/intel/socfpga_agilex7m_socdk.dtb: /soc@0/eccmgr/sdmmca-ecc@ff8c8c00: failed to match any schema with compatible: ['altr,socfpga-s10-sdmmc-ecc', 'altr,socfpga-sdmmc-ecc']
+arch/arm64/boot/dts/intel/socfpga_agilex7m_socdk.dtb: /soc@0/eccmgr/sdmmca-ecc@ff8c8c00: failed to match any schema with compatible: ['altr,socfpga-s10-sdmmc-ecc', 'altr,socfpga-sdmmc-ecc']
+
+
+
+
 
