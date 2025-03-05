@@ -1,165 +1,306 @@
-Received: from APC01-TYZ-obe.outbound.protection.outlook.com (mail-tyzapc01olkn2063.outbound.protection.outlook.com [40.92.107.63])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97FF924C668;
-	Wed,  5 Mar 2025 14:41:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.107.63
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741185710; cv=fail; b=qQU02gqzkXFVV8+94Tlp+pyepHjRsDeZXemPwHoUmgIH1N/BIbjQSj59nDutaM+qlcRX7v8+8Sth0l37srkRoTNr2kIBrS063xXOZJr+jQUr0jAuHOLTpJ5kdwOkjTJTum8UJQAVG61ePeynq5RWF9NKgYdjESkoCQ2sTphRo28=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741185710; c=relaxed/simple;
-	bh=ToiTULezg5kE6+h0FouvoSfBnoDIjC1hwCbvas8wPlk=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=SceI7t8wPK5xtFuppN3uDm2MtuyTeKqKikjMSscTpqprRcRcMnqDLr6ec4MRnjupAjPA1EzXUYV+ZAOB8RYsTkm4HVaJC+T2BL3j13R07jhZ3+sfRmsUBqgA1ANTDkzxuQVfqLJidWUfuiGljUEDisS0XDPOaxRNySO9BAyAOZ0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=l2jimK4e; arc=fail smtp.client-ip=40.92.107.63
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A14B3233708
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 14:42:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741185781; cv=none; b=Ud4eKjOHchg8MMPt9j3f/VYoQZZriT5o5Lvs1EwrBfHj4TaMeB6Uoi4gfUEHztmipfEc244BuOWyM8RXCjxmZnTa9O6s08LjMMXGvOR3AePHQ4+qaACChZCIpzC0fq9oLJGBNTCbx4S1AduJych0PvMnB2nVGXsMXfY+HrdwWr4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741185781; c=relaxed/simple;
+	bh=W/cFTtjUPjloF/TEE1KZm3u7DpwmHS8nwZr4v423BxE=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=FboQ9PElrKvfEtgIgVZ24gRSn+cnbGnZq+kACUw6VJfUP0S/GSwjhtEAplIBrfU2f8okFdnKE2/6lhA/5eecu9lE9vnBdIWjumLRGPaDxTQJ1rr+xyOsxdxGhqhDWOIMI//m609gBNIwFJ5odGBYXlLZWi2ttplBoC7qGz5Hmoc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Hs1AY+IA; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="l2jimK4e"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=NvDcyurluB3hw310+A86NS+2Znx6LsoiHiq90MepAXNbh4knvuE4uEgkX/573P1GfMqgk2+I0IDKXE9j0evkIV/UQVwW29p7L2yJt6GYxfzIkwsF5dBz7O330SD4l+Zlap1aPlzl2je8XcsA1IBT/EmC6Fhzn60sZNuiAYExuaMM+x/WKMbwJdcQ/eyQpLfGgcuqGAMX6VssOJ5/lVEtzRAjwFB8Unm8mItH7td606+I64iN0j0ZpurftDrq0wRwFGjA/WgexfB9FNO1pLXgjGkg02rgUPTIU+50JMYAPeB0/815iF/XvLw1+WnLPIFFoY7rRWjNV025Hl4UoH1Ilw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=geTB6TSNPSFi83y59qFFUV1xEhmnYTdDW0V4nYcahjA=;
- b=FohveXYNVAxokMXm017C3X0Xe3VdTCdros8uLGBmxQOMAX1Ih8LrUQydsZwdEDkyss68GvOumSEeEcahfDEaRNU7OQojRE/ikfjP/Op2nldsVz2ztiOnDx5eeMHvAAMI+MUBjDI7vJy+RluEc8Aa3kuFHqo4/cwbNwkNpj4IA49Y7oz92shxAPqvxXtIEApbZQ+uJ/4NAn9+BZcVrEz8KJWwImMMSYYcYx5kIDwDn6dLKflzS36KorwBFBG4AsMLizQVvBW5msGg/Z1GSUhdyi0KVgKz81imlbzhtZyZTCZpuKw5zlooX/RlEhBcuAVkxzJM4JC+iBtrP7xAMNOYFw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=geTB6TSNPSFi83y59qFFUV1xEhmnYTdDW0V4nYcahjA=;
- b=l2jimK4eFG0YyS5U2j+SrH+nxozoPr1t8A9PYmhLox7ukRM6CuQqd6FuQ1I8PLrE+DbIjr7iw9k39PiCiWfqesXliW/G1vwQkYGTNOEO6bCONb1fVWZ07mlHqtGxQ+3pLrO0OuUyWxaaAYE4y5chlg8Cq19zgj9V0elrpCPwIaKIjs8jlOaye5ERvluh8zTEC6YV9cI8DPkl7rvCdGMOKo/ZnLNIw9PrMokE0DW7JfQnV9rNDTna8Z8+ypV3NfYmGFpeECI7x3lEwDo/oVnZDsHZgEaXSwa14P18B/p+kGvdgdo88ivvs8yBVqLop3yx7RPbtrsrdpnPWI1Iauangg==
-Received: from TYZPR01MB5556.apcprd01.prod.exchangelabs.com
- (2603:1096:400:363::9) by SEZPR01MB6077.apcprd01.prod.exchangelabs.com
- (2603:1096:101:21e::9) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.25; Wed, 5 Mar
- 2025 14:41:44 +0000
-Received: from TYZPR01MB5556.apcprd01.prod.exchangelabs.com
- ([fe80::3641:305b:41e2:6094]) by TYZPR01MB5556.apcprd01.prod.exchangelabs.com
- ([fe80::3641:305b:41e2:6094%5]) with mapi id 15.20.8489.025; Wed, 5 Mar 2025
- 14:41:44 +0000
-Message-ID:
- <TYZPR01MB5556A389846BF8E8A49831CDC9CB2@TYZPR01MB5556.apcprd01.prod.exchangelabs.com>
-Date: Wed, 5 Mar 2025 22:41:42 +0800
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/1] wifi: ath11k: pcic: make memory access more readable
-To: Steev Klimaszewski <steev@kali.org>
-Cc: ath11k@lists.infradead.org, jjohnson@kernel.org,
- johannes@sipsolutions.net, linux-kernel@vger.kernel.org,
- linux-wireless@vger.kernel.org
-References: <TYZPR01MB55566065525ADA7F71F516D4C9C92@TYZPR01MB5556.apcprd01.prod.exchangelabs.com>
- <20250304063328.33762-1-steev@kali.org>
-From: Ziyang Huang <hzyitc@outlook.com>
-In-Reply-To: <20250304063328.33762-1-steev@kali.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SI1PR02CA0060.apcprd02.prod.outlook.com
- (2603:1096:4:1f5::17) To TYZPR01MB5556.apcprd01.prod.exchangelabs.com
- (2603:1096:400:363::9)
-X-Microsoft-Original-Message-ID:
- <60652338-4b91-47b0-8f95-fa3f1c042024@outlook.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Hs1AY+IA"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-390f69e71c8so666977f8f.0
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Mar 2025 06:42:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1741185778; x=1741790578; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=FRLdSry5OGKnrSFvS+LP96NBp0+rBD/EpukWTUX58+k=;
+        b=Hs1AY+IA6SS+nB9EnL97q9Hs0RU1ENouP1YrjQ5xi7TCwsM5r3b5bVu1Ubl6k4TIA2
+         sssFz//TjQq/jdgOueUgXLUChM5mIPxyWRLkoCZmQRqwS5Up8KxSXnhhpC32aeQv5mpS
+         GGfXjtcOmnk+1JTFQmcKJTdUhVvSvbjeOspm08BJ3Zm/pXaKnXE+wLxxDEF/Mi9FXFs0
+         dWnxT2Pp/w4FpCwdtDBPyEUCtbLmL28hQWUVXigqZCNQZtKtI+a3cAj2ownIwGLyeylJ
+         aUO8C23Zef8OgXyahWrr8xWXrUPsuIqqq/YSLKRn+43i2VaukQWeSVKH4vyGBhn1IaQg
+         Y5LA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741185778; x=1741790578;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=FRLdSry5OGKnrSFvS+LP96NBp0+rBD/EpukWTUX58+k=;
+        b=nxzO/xymZduwGtT+s4OjCU6yQppD1JLpKQovTf6UArExjLdQPghZ1SDSIS8urkk1AO
+         1q7Id9uf0+QoHZyC9wU/fzDl+XIooU5qXNxBb2tN455hhi4rsncIFDUip8k+iXnZuCkB
+         zy61ZaBLB98OgNJd/k3a9ZJixoOKIZ45Py2yu4p9oOXTIUiw3twxx+ADiYH9E7NVGojM
+         FiBLQ3HEuS5UWuRQpjO16JrKyT79tAFZy0mlfCbu2XjcLCYXvVwz+SygA21PUzg7q44b
+         wrkHkzXzqeNbzWyUI12PRJVDp9goA1gRiibYcrMGSdL8lQwAhREiXKPQ1net1zlYSmS5
+         e4rQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUrgu50voYpS4+RdVzb9lxaiwKwH5DAwxIsL9Yv9YYQJ5RCjkDwDEe64YuI68L0SPcLYctUF1zED0Y+G0Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwbxyOAhbRL1mxd4EV4VqT7KD5kJMtuvuYbn6q6R08Dz/ZGqUBt
+	mS7K43mHFkpSV8qcMiK+5cRRFucTfZ4u8zlOL5aGEKwSpK24cz5lVE60rlYZsWY=
+X-Gm-Gg: ASbGncuWifeMPt63csZ8OtGBkPzzTmF1rlO5FhH8wPYnKDWkVWPUZXHVxLCLN1umpuC
+	ccd9HrLtW/HEx8b+CD2nSpBQfyTq0GsxOyD3GG2TpbHk/nNGZFxRiJbhy3mFRMAibRrCqONixTi
+	tcAC+dSR0rops4b6oaEdrqKUivLbXsPYdd2KZPfu6p9u6MLH+7gt4CvXdKOIcpoAtNT+6wI2fQd
+	MgYa5X3cmJjXDb4fMf9PrXzHTl3y6mZej+DheD8Ec101lCz2+vJ98nF5afG2VBSBJAA1cD8f7iC
+	sPE0X15PcWqI9qCv4q03GihzlAvODq+cyCYZepgOHzv1mPLTmY+0sLtrEgyBxKsWltSuMh8DR+t
+	o4dwheGdxHro34xwiq2qdMg==
+X-Google-Smtp-Source: AGHT+IFiP6nXyFE7qfLHUsJAhYeWZSHp1CwIttpP4iE2kEDTy//u5ccfQX8sVcUhQe610fRL8SqZzw==
+X-Received: by 2002:a5d:64ab:0:b0:391:952:c74a with SMTP id ffacd0b85a97d-391155ffd95mr5535609f8f.8.1741185777755;
+        Wed, 05 Mar 2025 06:42:57 -0800 (PST)
+Received: from ?IPV6:2a01:e0a:982:cbb0:d001:4ab2:d11a:658b? ([2a01:e0a:982:cbb0:d001:4ab2:d11a:658b])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-390e4795d30sm21510078f8f.10.2025.03.05.06.42.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 05 Mar 2025 06:42:57 -0800 (PST)
+Message-ID: <997d4cf8-5256-4413-8059-569451962a83@linaro.org>
+Date: Wed, 5 Mar 2025 15:42:56 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: TYZPR01MB5556:EE_|SEZPR01MB6077:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4bd42e7e-8709-41aa-cc92-08dd5bf3d9ba
-X-Microsoft-Antispam:
-	BCL:0;ARA:14566002|13031999003|461199028|15080799006|8060799006|6090799003|19110799003|5072599009|3412199025|440099028;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?VXlEcTZrMWV1UTJ1aU5saGFTak9VQXVGUUlrR0xYbzduRWU2V3dRUEZqSEZo?=
- =?utf-8?B?WVMrc0VlengwZG5oYUtSTGZpSVdZbEUrRnIwS3N1MTNVS2h6WUZMbzlRWERX?=
- =?utf-8?B?Uk1QOHYzTHk5aWV5QjlIRXNtOENxL1prVWJKbE4rNDV3ZzlJZXVXRTlqN2g2?=
- =?utf-8?B?REE4ZEhKRkh3MEFCWFVkV1dkd25qZVFJOEJrRE1PbVZUeWdyK3RWb0N1ZVQv?=
- =?utf-8?B?cW5PcGhDTll5WVBxSER1cnFXWVdRQy9Hbmgwd0d5cnNOOWRTTVRhUk56TGlO?=
- =?utf-8?B?WDBXSHJBSmJ4RWdrbUw0anJ1VkN0Z3JUaks5Q1Z5V3puRnVMOE1YZHhNb3Ny?=
- =?utf-8?B?UFkrdVFmbDAyYlMvRzc1Sm5DRVY1UUM5RjYwNlM3RVo4dmI2NmtDU3VqRjZV?=
- =?utf-8?B?cldkaVp1UHNXWm04c0tlOFlEeXdHSjJSbXVseUt4V2tCdElrWnBOSDdDSEIx?=
- =?utf-8?B?QjR3QmpyOTRVSXpESlI3MVR5cHkzMVUvRWhER3BNeWFtSDhLSnExQ0FXbHVQ?=
- =?utf-8?B?UnZSakJlcVU5NTJVczBmV2UyN29lUzJCb1crbUtKc0tqdk9pRmdpSmFaVXBo?=
- =?utf-8?B?TVZ0cmZoOWhxdEE3dVQvNjZnL1l1UTN4RWFJVnZkUytTOEpoTlVlQTZLaHlz?=
- =?utf-8?B?ZzU5R1pkOFdQTHp6Q3B0QjJ6UlZoSHo2REhEcVdWVWRSdVFPSjBneHpRaS9y?=
- =?utf-8?B?akFOdDVlRTYyb0xtS29LTk5VVmZTWnV1Z0pVa0l5N29QZG9hbG9pQTZxWkhk?=
- =?utf-8?B?Ynh2dzhRYVM4Zjd5SHU0Q3ZaS05JZzIrZHYvdmI1U3BFQ2JrbDZETDY4dkNK?=
- =?utf-8?B?cUlNMXY5SmQ1cTNnVDg3OUdYeFpzb1IwRkFSdENYYkJQbE1Pb0k2WWhENWph?=
- =?utf-8?B?MkFIK0QvRUF2YmNUakJFU0c2WW1HVnh1NU5WbnFWbWtrUHZZcW1kUE5mb2Nv?=
- =?utf-8?B?OWVlL1BJTjE1QURCQlBYY0VBUmhCYjZFWG84bkFjZ3RTdkRFOXhwUWprNFNH?=
- =?utf-8?B?KytPdGJLemU3NlhMdi9OYkpxWDFRSzgxU2kvbVlWWDhmckJYZTNCdGRRKzhO?=
- =?utf-8?B?UklSenRPY3NVTXRydUJYaW13ZXdOSGsrNkJDcUVYVnloMzhTSVlEbkF2UHdv?=
- =?utf-8?B?blZnbXRmUktIMkc3YmYxeTlzNCtjcjB3aHNwOExYeHArbVdBeDdXNldTV1RK?=
- =?utf-8?B?cDJxYnd0VHBDb2VKK2YveVU2K2luTzlNaENwNzRXY1h3cTJEbHJlWEt2Q09k?=
- =?utf-8?B?SFg2Z204TC9aS2drRzFObHhUN0ZXUHpISW5SRldURTkyZzFsb0s2OExnOGln?=
- =?utf-8?B?TmtYRGxuMzl1SmYzRGxlMnFaTFcvdTE0U0lYR253WU9UOGVFTS80UlU1MXZ2?=
- =?utf-8?B?enRPL0RmWS9pS1Yvc2wwVGdORXZ6SVVNelB0QVBndGZUZG1SQTgySlh1ZjVp?=
- =?utf-8?B?ZlNvWWxGNHVHd3NvemZhb0l6bUd2VWVaTzIyRm9DOVlhVW1ocHNaeWx6Wkh3?=
- =?utf-8?Q?t0Ltag=3D?=
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?OGgzUkMxc2dXZlMvODFxc0RwVkpPUkJaekR4anZINCtlR0hoeFJ4b1JsMTFY?=
- =?utf-8?B?dUViVEhXUnJPZ2Q0TUdDd2loMnVZb3BzeFNMbnRlRUZsc2ZiajUzaTVod2Fa?=
- =?utf-8?B?WFJBNEZFVWFLQmIweDV2WU10ZDdHQ1cxdG9vbjZjODkvYXk2K3Z4UmRHWWdG?=
- =?utf-8?B?bStBZm02QkxmKzJDOGpZZ3hjcm1tbmFHSmxXM1FLOStjcjNvaWhZR2NkTWE2?=
- =?utf-8?B?RzZ1OER0RHhLR0oxSlh3MTZ0a00wTmhNSjFXc20rQ2NyRENjUFREL3Y1TEFV?=
- =?utf-8?B?NTZNV3BpbXBMMnZKY3I4ZHpOK1JQdUNZM0JWUHBIZ2lBMWZZeGNUcHlZT1NY?=
- =?utf-8?B?OU4wNTBRQXdTcmxOUGd3QmZUdVpDend2dHMxR083MTNzbUdIYVVwdkYzS0Jz?=
- =?utf-8?B?OHdjeVVHaWFEVGNTb2J4VkdUck1rZU1sMVRwaW1GTTlpOE4xYjhtWjFYd1B6?=
- =?utf-8?B?c0pPZWJKT2p4UElNRkcybVZpd2VqN0YzRUZQdDAwN2NPZDV4L0wzWURJTlNO?=
- =?utf-8?B?OHlpdERFL2FqOWVnTFNVWXNEclRuelRlRTVjMWVzb0ZCTnVJUUhYc1llQ2Ux?=
- =?utf-8?B?V0JJVVFoOVEzUkZJUFliOGpLbHRIcnJiVW5vWmVKM0lqS2h1MTI0VEZxMG83?=
- =?utf-8?B?ZEJoVndlbXQxNVJIdFJkY3Zjb2xpME1jODlUa1c0VGFMSHFxbzh6WmVPYkNF?=
- =?utf-8?B?TDI0Smx3Smd2NG5wTGRFbUZYOHhWVlNqVUd4eHJhbEtoSmYrV3BXOXBXY2dY?=
- =?utf-8?B?THBKYkoxTDRhTjZqa1JpdklUaUt5TGZEZnRJbG9zcVA1RFdveTZlbXpZNUpH?=
- =?utf-8?B?MjNiQ3VhaWhOcVFUWk5JVHpKZWs4UERpOTkxRHBKZ0JEVGMzNVRmLzc5UjJQ?=
- =?utf-8?B?MDFTdk82b0dUTGN6bUtzcnVNVjVqUmJ0SzFpeXJKN2VPT3FRcFk0Ly9KQWYx?=
- =?utf-8?B?WDN4MmVBV0JNQW1GNUN2Y1RlMmtmclNETktxak9FK01pZG1RWEJ2alFHVUpm?=
- =?utf-8?B?L3BNbXBocUVLUWNwUWdRNUFZUWVscFNhYWVZeWhrN2dvVjVseHh0bU45SStu?=
- =?utf-8?B?NUJZYzRybGt3Uk1LQkJRbXU4VTJUTmQ0d2FXQ0pYU0k5NGc2RitOdEhaWWw3?=
- =?utf-8?B?U2F0UVFQSkFDN2poLzRvNzJrOTd6bjZhNndsQjBjbVNFRGh4ZEp0aGs1RURM?=
- =?utf-8?B?c3pOZ3c4SS81STBwOW96eWcvSFUvUkFYK1hJUlZtRVJraTdPWktteGxSa2lP?=
- =?utf-8?B?YVlycExQaEprcHZhZDVmaTNEZmQ4WGluakI5cTRQZjJlSFB6STJsMlc4bXpp?=
- =?utf-8?B?RnNPWGR0WXltb0JaVFpIRlgyMmlvZHB5eUpFWDdWUzZZdzFLb0VMR09MTmFH?=
- =?utf-8?B?eDd1cGZmUVVJYnRWWjhsV21VOU1WdStoQklUM0lRT0UwZXZXdkEyY1JkZzV0?=
- =?utf-8?B?SjlRYWdDWTRpMjAxVllkdXo2UGRnRmpwN1l0Y2ZURE1iOEhzb0tOSnhCdUV4?=
- =?utf-8?B?S2k1QmxqdndzaFJKcWxmaGpVbytzNmJBUXo0aUtoejk3RzBqUlUySHJlRFpx?=
- =?utf-8?B?MGhHVGlHbVFEZTZOWFJvTithMHhiMEdvNjVpRGcwNmViWFNKWUpIUGZFUXJU?=
- =?utf-8?Q?ayUFLAV9KUlRO7R1e0rLDS9jKHvx/WgiwJlImdbzaWD0=3D?=
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4bd42e7e-8709-41aa-cc92-08dd5bf3d9ba
-X-MS-Exchange-CrossTenant-AuthSource: TYZPR01MB5556.apcprd01.prod.exchangelabs.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Mar 2025 14:41:44.8114
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEZPR01MB6077
+User-Agent: Mozilla Thunderbird
+From: neil.armstrong@linaro.org
+Reply-To: neil.armstrong@linaro.org
+Subject: Re: [PATCH RFC] leds: rgb: leds-qcom-lpg: Compute PWM value based on
+ period instead
+To: Abel Vesa <abel.vesa@linaro.org>, =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?=
+ <ukleinek@kernel.org>
+Cc: Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>,
+ Anjelique Melendez <anjelique.melendez@oss.qualcomm.com>,
+ Kamal Wadhwa <quic_kamalw@quicinc.com>,
+ Jishnu Prakash <jishnu.prakash@oss.qualcomm.com>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>, Johan Hovold <johan@kernel.org>,
+ Sebastian Reichel <sre@kernel.org>, Pavel Machek <pavel@ucw.cz>,
+ linux-leds@vger.kernel.org, linux-pwm@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250303-leds-qcom-lpg-compute-pwm-value-using-period-v1-1-833e729e3da2@linaro.org>
+ <ylnkjxnukss7askv7ip5htrb4tyjzhpw7jim2se6rloleq5h6w@ngk7lbk26hxj>
+ <Z8bGHV4PIkY4te6V@linaro.org>
+ <5uk75v3cpy2hymdgjyvqdwyda34t2pn7jqyupyvhmqgo3wlxkl@uim4lth7lipa>
+ <Z8hgj11p+TY1546x@linaro.org>
+Content-Language: en-US, fr
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro
+In-Reply-To: <Z8hgj11p+TY1546x@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-在 2025/3/4 14:33, Steev Klimaszewski 写道:
-> Hi Ziyang,
+On 05/03/2025 15:32, Abel Vesa wrote:
+> On 25-03-04 16:38:57, Uwe Kleine-König wrote:
+>> On Tue, Mar 04, 2025 at 11:21:33AM +0200, Abel Vesa wrote:
+>>> On 25-03-04 07:24:32, Uwe Kleine-König wrote:
+>>>> Hello Abel,
+>>>>
+>>>> On Mon, Mar 03, 2025 at 06:14:36PM +0200, Abel Vesa wrote:
+>>>>> Currently, the implementation computes the best matched period based
+>>>>> on the requested one, by looping through all possible register
+>>>>> configurations. The best matched period is below the requested period.
+>>>>
+>>>> The best matched period *isn't above* the requested one. An exact match
+>>>> is fine.
+>>>>
+>>>
+>>> Yep, that's better. Will re-word.
+>>>
+>>>>> This means the PWM consumer could request duty cycle values between
+>>>>> the best matched period and the requested period, which with the current
+>>>>> implementation for computing the PWM value, it will result in values out
+>>>>> of range with respect to the selected resolution.
+>>>>
+>>>> I still don't understand what you mean with resolution here.
+>>>
+>>> Resolution in this context means the number of bits the PWM value
+>>> (register value) is represented in. Currently, the driver supporst two PWM
+>>> HW subtypes: normal and Hi-Res. Normal ones recently got support for changing
+>>> the resolution between 6 bits or 9 bits. The high resolution ones support
+>>> anything between 8 bits and 15 bits.
+>>>
+>>>>
+>>>> I guess you spend some time understanding the workings of the driver and
+>>>> you also have an example request that results in a hardware
+>>>> configuration you don't like. Please share the latter to a) support your
+>>>> case and b) make it easier for your reviewers to judge if your change is
+>>>> indeed an improvement.
+>>>
+>>> Sure, will bring up the 5ms period scenario again.
+>>>
+>>> When the consumer requests a period of 5ms, the closest the HW can do in
+>>> this case is actually 4.26ms. Since the PWM API will continue to ask for
+>>> duty cycle values based on the 5ms period, for any duty cycle value
+>>> between 4.26ms and 5ms, the resulting PWM value will be above 255, which
+>>> has been selected as best resolution for the 4.26ms best matched period.
+>>>
+>>> For example, when 5ms duty cycle value is requested, it will result in a
+>>> PWM value of 300, which overflows the 255 selected resolution.
+>>
+>> this is the bug you have to fix then. The PWM value (that defines the
+>> duty cycle) has to be calculated based on .period = 4.26 ms and capped
+>> at 255. So assuming that 0 yields a duty cycle of 0 ms and 255 yields
+>> 4.26 ms, a request for .duty_cycle = 4; + .period = 5 should result in an
+>> actual .duty_cycle = 239 / 255 * 4.26 ms = 3.992705882352941 ms;
+>> + .period = 4.26 ms.
 > 
-> With this patch applied, on the Thinkpad X13s which has an ath11k, I am seeing
-> the following:
+> OK then. The patchset that fixes this according to your suggestion is
+> already on the list (re-spun):
 > 
->   ath11k_pci 0006:01:00.0: chip_id 0x2 chip_family 0xb board_id 0x8c soc_id 0x400c0210
->   ath11k_pci 0006:01:00.0: fw_version 0x11088c35 fw_build_timestamp 2024-04-17 08:34 fw_build_id WLAN.HSP.1.1-03125-QCAHSPSWPL_V1_V2_SILICONZ_LITE-3.6510.41
->   ath11k_pci 0006:01:00.0: firmware crashed: MHI_CB_EE_RDDM
->   ath11k_pci 0006:01:00.0: ignore reset dev flags 0xc800
->   ath11k_pci 0006:01:00.0: failed to receive control response completion, polling..
->   ath11k_pci 0006:01:00.0: ctl_resp never came in (-110)
->   ath11k_pci 0006:01:00.0: failed to connect to HTC: -110
->   ath11k_pci 0006:01:00.0: failed to start core: -110
->   failed to send QMI message
->   ath11k_pci 0006:01:00.0: failed to send wlan mode request (mode 4): -5
->   ath11k_pci 0006:01:00.0: qmi failed to send wlan mode off: -5
+> https://lore.kernel.org/all/20250305-leds-qcom-lpg-fix-max-pwm-on-hi-res-v4-0-bfe124a53a9f@linaro.org/
 > 
-> I'm pretty sure this isn't supposed to happen?
+>>
+>>>>> So change the way the PWM value is determined as a ratio between the
+>>>>> requested period and duty cycle, mapped on the resolution interval.
+>>>>
+>>>> Is the intention here that (for the picked period) a duty_cycle is
+>>>> selected that approximates the requested relative duty_cycle (i.e.
+>>>> .duty_cycle / .period)?
+>>>
+>>> Yes, that exactly what the intention is.
+>>>
+>>>> If it's that: Nack. This might be the right thing for your use case, but
+>>>> it's wrong for others, it complicates the driver because you have spend
+>>>> more effort in the calculation and (from my POV even worse) the driver's
+>>>> behaviour deviates from the usual one for pwm drivers. I admit there are
+>>>> some other lowlevel pwm drivers that are not aligned to the procedure I
+>>>> described that should be used to determine the register settings for a
+>>>> given request. But I target a common behaviour of all pwm drivers
+>>>> because that is the only way the pwm API functions can make a promise to
+>>>> its consumers about the resulting behaviour. Reaching this is difficult,
+>>>> because some consumers might depend on the "broken" behaviour of a given
+>>>> lowlevel driver (and also because analysing a driver to check and fix
+>>>> its behaviour is an effort). But "fixing" a driver to deviate from the
+>>>> declared right behaviour is wrong and includes all downsides that make
+>>>> me hesitate to align the old drivers to the common policy.
+>>>
+>>> OK, fair enough. But I still don't get what you expect from the provider
+>>> that can't give the exact requested period. Do you expect the consumer
+>>> to request a period, then provider compute a best matched one, which in
+>>> our case is pretty far, and then still give exact duty cycle values ?
+>>>
+>>> Like: request 5ms period, get 4.26ms instead, then request 4ms duty
+>>> cycle and get exact 4ms duty cycle when measured, instead of a
+>>> proportional value to the best matched period?
+>>
+>> Yes.
+>>   
+>>> If so, then what happens when consumer asks for 5ms duty cycle?
+>>> Everything above the 4.26ms will just represent 100% duty cycle.
+>>
+>> Yes.
 > 
-> --steev
+> I still think this is wrong.
 
-Oh, give me some time to check what happen.
+I also think this is very wrong, duty_cycle is a factor of the period,
+so if the HW gives a lower period, the term Pulse Width Modulation implies
+the ratio between the "duty_cycle" and the period is important,
+not the exact duration of the components of the modulation.
+
+So is this a defect of the PWM API ? why would the API insist on
+having an exact duty_cycle and a random period ?
+
+I mean if you look at the basis of PWM :
+https://en.wikipedia.org/wiki/Pulse-width_modulation
+
+The duty_cycle is expressed as a percentage of the period, because
+this is the key feature of PWM here, can you explain more in detail
+why we can't make an extra effort to keep the duty_cycle/period ratio ?
+
+Neil
+
+> 
+> I do agree with the exact value. I advocated for it on the other
+> thread.
+> 
+> But the fact that the API allows requests with values above what the
+> provider can do is wrong.
+> 
+> In this specific case, we are talking about top 15% that it just
+> thrown away. But it becomes even worse for others.
+> 
+>>
+>>>> The policy to pick a hardware setting is a compromise between consumer
+>>>> needs and what is straight forward to implement for (most) hardware
+>>>> drivers. Please stick to that. If you want more flexibility and
+>>>> precision in your consumer, please consider converting the pwm driver to
+>>>> the waveform API.
+>>>
+>>> That means the pwm_bl driver will have to switch to waveform API, IIUC.
+>>
+>> Yes, if the pwm_bl driver cares about that precision it has to switch.
+>>
+>> While the waveform API isn't expressive enough, just use 4260000 as
+>> period in the pwm_bl device, or ignore the missing precision.
+>>
+>>> That might break other providers for the pwm_bl consumer, wouldn't it?
+>>
+>> Given that the consumer side of the waveform API only works with drivers
+>> that are converted: maybe. You could fall-back to the legacy API.
+> 
+> Based on the provider's best matched period? Hm.
+> 
+>>   
+>>>>> [...]
+>>>>> ---
+>>>>> base-commit: 0067a4b21c9ab441bbe6bf3635b3ddd21f6ca7c3
+>>>>
+>>>> My git repo doesn't know that commit. Given that you said your patch
+>>>> bases on that other series, this isn't surprising. Please use a publicly
+>>>> available commit as base parameter, otherwise you (and I) don't benefit
+>>>> from the armada of build bots because they just silently fail to test in
+>>>> this case.
+>>>
+>>> Well, this is a pretty common practice. When the patch relies on other
+>>> patches that haven't been merged yet, but are still on the list, you
+>>> can't really base it on a publicly available commit.
+>>>
+>>> And the fixes patchset that this is based on is needed for this to work.
+>>>
+>>> So I really don't get how this can be done differently.
+>>
+>> You can still use --base=$newestpubliccommit and git-format-patch will
+>> at least give a chance to the build bots by emitting patch-ids for all
+>> the commits between the public base and the start of your patch series.
+> 
+> Got it. I use b4 for most patches nowadays. I'll try to make use of it's
+> --edit-deps and see where that lands.
+> 
+>>
+>> Best regards
+>> Uwe
+> 
+> Thanks,
+> Abel
+> 
+
