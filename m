@@ -1,269 +1,214 @@
-Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2069.outbound.protection.outlook.com [40.107.93.69])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49C5F1DE4D3;
-	Wed,  5 Mar 2025 19:45:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741203942; cv=none; b=crxyAXXWkJ/v9bkDel1lXrqHu+V8aCp+IF9VSbu7V6Ft+y9OrGx/VdH4U4kf7afCD0c/HhTMXweAzDWM0yeCRF3NsNGS1M4TVvMZt7V+WTK67Tfs/3vloGA52zxIoZ98VEh8BvvoD3H+bSJEm/0zDe4mswaMR6f4qg9K8dH+4As=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741203942; c=relaxed/simple;
-	bh=bL/x2ys+EM9SZYaqL9CiNuhB4mRB/IyUdJVwcVX0rig=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B50142512D9;
+	Wed,  5 Mar 2025 19:45:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.69
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741203959; cv=fail; b=GQUZREjUb7k+4c8B+bztcjUVmRFn/Nqk1gVac6JVK3rCnXAJPev+iNnzJye2yJdWmwbS0R/Zn9HXOIU2iBup7PX+rLvoNQ+DopgYPhpVfJtp7Sn+nxCT5k+ntY4oVwQLl29i5HFx6Eq5gZnFTHt94NmoFy3eIHQsdWVgmp3JG6w=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741203959; c=relaxed/simple;
+	bh=hftiWghKfdNF3/XKNLTA6DebwK5O4oYxaYshVLjefbE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fuQBh3XMf64XzgfVqG146HP9ymMXWqCV+SlVudHamrrJEzyd8RY21wgcCJoFxLsTMhs9D0qNl3ZsHKe/dJCuaX5wX3lQ11LMRgUG2YR3rzUS58cnkjxGPLQFic+J0DdH2A2nwd9u6uhHkWAtCGwdU3uleEZyfFuMW6XDwTGi9qA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=AjQKZBH9; arc=none smtp.client-ip=178.21.23.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
+	 Content-Type:MIME-Version; b=rbhYmNGwhIqC25u54wziwoSuB2ogCmwpPOksRJOHIJu+5uvBRbCaDjXyWE6AoAF9KOTivLe0w9x/jAg1PshOKrg/lXWEUSihro74dtiSllG3hxEYPlJfONVAeVf3f2ORTrqk575ndVrz5gHzSNN0/kDao9qvaVu9LMCpJaP4bj4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=e0QnEGXX; arc=fail smtp.client-ip=40.107.93.69
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="AjQKZBH9"
-Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id A923E25198;
-	Wed,  5 Mar 2025 20:45:38 +0100 (CET)
-X-Virus-Scanned: SPAM Filter at disroot.org
-Received: from layka.disroot.org ([127.0.0.1])
- by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id o9klg4k5iJZM; Wed,  5 Mar 2025 20:45:37 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1741203937; bh=bL/x2ys+EM9SZYaqL9CiNuhB4mRB/IyUdJVwcVX0rig=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=AjQKZBH9JtsZvyWpwgTJQCjvJxTXYFjSmX59M2TBawGd+6cjsa6Y2HqeKQmBhcN25
-	 qD71hl4Y8bzIei/fdqEMHOerI1pY0Yvb+GCJx/5DEa2sgAPuVz/ZPYEWnD5b1+0/Jc
-	 vAenVi1UGFegBG285MmVc775LS/OdvLnlz/CyOJa6ORfPk9BbTvZe4oCXycTrZev2p
-	 IahOk6c7oHhMNqgkpiuvNfgazCXnj8StRTNAFyrpUzlFIiYZ6bR3djuJ18R1U0Lfpt
-	 NNGv1tqKYbHzr2eYeLiidizAnysVu6cUWmczlc31YtGtSVoAsYBEPtUZMWE+xJ+NyA
-	 EniD8dg3XNHBQ==
-From: Yao Zi <ziyao@disroot.org>
-To: Ulf Hansson <ulf.hansson@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Shresth Prasad <shresthprasad7@gmail.com>,
-	Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
-	Detlev Casanova <detlev.casanova@collabora.com>,
-	Jonas Karlman <jonas@kwiboo.se>,
-	Chukun Pan <amadeus@jmu.edu.cn>
-Cc: linux-mmc@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-clk@vger.kernel.org,
-	Yao Zi <ziyao@disroot.org>
-Subject: [PATCH v2 5/8] clk: rockchip: Support MMC clocks in GRF region
-Date: Wed,  5 Mar 2025 19:45:13 +0000
-Message-ID: <20250305194513.47139-1-ziyao@disroot.org>
-In-Reply-To: <20250305194217.47052-1-ziyao@disroot.org>
-References: <20250305194217.47052-1-ziyao@disroot.org>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="e0QnEGXX"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=DXh97coZqds3hIvjXoJ6axyjlfU6BZH95iyQ2PeSJqo6EmN+HnEYH+K7NuJnGCtjlW0L3piTlsO6K6f9Mz61oSpzSRXHjE3HFBwrbMZR/pyDW63RyRKFGyFRXZsTaLCs9g4lo4qhgttf3aauY+IjqKZHZy0OXX2wpOgVDYxDhLQ8kn/elRJV48AoBfCGyGGEdbSb81Ox4+XVqG0OO9IGQRll96G2I2WA7P6j29ItPXXJK1E7HbB0bEmtf2j2OoZMnGzVrfcf2PiSC+lorZQ+UOT0frW2XHupcX+HeUIKvQHo7oHkgkyPKjBSwtbFybWVKVZFfgziuRfJosMfYTVH+w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=CtlYbt92Fg7Wcd8LttyOLmhaTEOcLNlDgVnJuBai4Zw=;
+ b=qLrVwKPOSj9ytv25RMikTg5TCGk2Z7yQVF+HNwx7ebowmCdddFpPeBNjpRa0t3gv12gn8BBBbbLnz45hZDJupankIxyig+a49g4TIzMfALEmN82niRxBfZpo/Rj9Xr2Eqb+3F1K/1aVKjlxOHBOUw26DX23yM4m/8K96aX2EE1sBDbswtMm9ONnlXquc/GOC+GIKqaeWbK+s8hB14ZVLesQVSq0rU+/fOeiqDu7dcdegOGtVMDfAcj7bjG2uaeInnJFo002743PtN1mODd+3eaEofIZmrECLSwmGm+EAIUC+bFIJx/1JvRS/3Mu1hiXi/J8jglXWq3mKDt6xx+y0Ig==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CtlYbt92Fg7Wcd8LttyOLmhaTEOcLNlDgVnJuBai4Zw=;
+ b=e0QnEGXX8GB0nUe/LvqRCftzrvUa9T8GhOF029i6lG7Mlqp+BY2hlW7FjYQfptf5hWxIw8K5FX8hc55LSqxMUM0QG5Gy4gW1x+hOxeCUALmcJFx9IdE1L0JfqyBpVsexloWVCLgbNCg4RYpyfyc3Jnlrau+FeidIlz/2Uwq8vWmBhYhb+H3imkaYeG16OPFqaDzS76WE+Sus3XBT6D5TlvSo+AP4AmvDycI1FYc1hT6OaQNwJLffBzYihJ73+QGc/sDVdyftBn59aMJ0MO+G1M2XYGr2d9M0Bxsp9qhMywN8/f2EVqgnECnL/WICx1Dk32CZ+UIds5d2oWAxuqT7lw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from DS7PR12MB9473.namprd12.prod.outlook.com (2603:10b6:8:252::5) by
+ DS0PR12MB8270.namprd12.prod.outlook.com (2603:10b6:8:fe::18) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8511.17; Wed, 5 Mar 2025 19:45:54 +0000
+Received: from DS7PR12MB9473.namprd12.prod.outlook.com
+ ([fe80::5189:ecec:d84a:133a]) by DS7PR12MB9473.namprd12.prod.outlook.com
+ ([fe80::5189:ecec:d84a:133a%5]) with mapi id 15.20.8511.017; Wed, 5 Mar 2025
+ 19:45:54 +0000
+From: Zi Yan <ziy@nvidia.com>
+To: Hugh Dickins <hughd@google.com>
+Cc: linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+ "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+ "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+ Ryan Roberts <ryan.roberts@arm.com>, David Hildenbrand <david@redhat.com>,
+ Yang Shi <yang@os.amperecomputing.com>, Miaohe Lin <linmiaohe@huawei.com>,
+ Kefeng Wang <wangkefeng.wang@huawei.com>, Yu Zhao <yuzhao@google.com>,
+ John Hubbard <jhubbard@nvidia.com>,
+ Baolin Wang <baolin.wang@linux.alibaba.com>, linux-kselftest@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Kairui Song <kasong@tencent.com>,
+ Liu Shixin <liushixin2@huawei.com>
+Subject: Re: [PATCH v9 2/8] mm/huge_memory: add two new (not yet used)
+ functions for folio_split()
+Date: Wed, 05 Mar 2025 14:45:49 -0500
+X-Mailer: MailMate (2.0r6233)
+Message-ID: <FB1376C8-E0AD-40CE-BDE8-AF9269EA68CC@nvidia.com>
+In-Reply-To: <2fae27fe-6e2e-3587-4b68-072118d80cf8@google.com>
+References: <20250226210032.2044041-1-ziy@nvidia.com>
+ <20250226210032.2044041-3-ziy@nvidia.com>
+ <2fae27fe-6e2e-3587-4b68-072118d80cf8@google.com>
+Content-Type: text/plain
+X-ClientProxiedBy: SJ0PR05CA0056.namprd05.prod.outlook.com
+ (2603:10b6:a03:33f::31) To DS7PR12MB9473.namprd12.prod.outlook.com
+ (2603:10b6:8:252::5)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS7PR12MB9473:EE_|DS0PR12MB8270:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4d7ce0fa-3907-4dc7-a1fe-08dd5c1e5755
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|7416014|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?jPplYyCMjdj2WhY7bXW2WdJeBGJO/SKKoBzyPa3gT9b86M113F/MnjuJK4h/?=
+ =?us-ascii?Q?1iCOWgiUgosTUsKayCb8V6UwRQgJ7GuAsJWzP16Dizw7qxIdM0MJYx0wVMP+?=
+ =?us-ascii?Q?eXmXEeLdW41hlnEwdh+poIrKH7y2mX0hc9fhakg56F62SAsV31CqX2wXlbK+?=
+ =?us-ascii?Q?CK8M+5oaYuBc9Fj0avU9uh85e3uY7owrxbbQAkaDlJT8oUSz6Rqk3evcAuVB?=
+ =?us-ascii?Q?zeSYYfic9l9V+73WmGURqvqa58PXcrIL3irzuqn89vUuEIQV5F0qyIQssksl?=
+ =?us-ascii?Q?hkG2H5BIzpIBSmRmyPYn+4fltuX3i6S6NQZ7CIN3cXgA8Q9Mi5QudfAyuc7b?=
+ =?us-ascii?Q?KVJ6E1dzxS0svyoF54d/zKK+iUviaAHxCAF98xKZCzGfv2yU5RLYrwvEZybi?=
+ =?us-ascii?Q?20ZzVk6C6s2OUu6EF7nf/zgUSf70L/nO9VFqr867kLlmjveA3SjIl57Gac0e?=
+ =?us-ascii?Q?zZDcTf/o5v2XEyCMvE+24pQ9LAMabvmn1eMlfgmx06VcYbf6v+1JyuiQw0zf?=
+ =?us-ascii?Q?e2R4i+BP/0lKRRaSkHxWOJKI72xirVV41bB7FmHcUxYIXuoqlr87e9KzEXBy?=
+ =?us-ascii?Q?mdRnJ9lyZ4gmbmMQqsSVT65Stu+sSaoeidrqEuaMflDrL2/nlgVKeggbsaRt?=
+ =?us-ascii?Q?rbXNMHHlBT9a3gy/WBxIAKf4AseaUXgWn9hI0nN4HnhwIqqG5kmGDsrTzuwQ?=
+ =?us-ascii?Q?NfB1e6kA2AzvCNQ8umufVa1DvHt6DR0362eiER5X3z0kSqShleOevZkr2qWu?=
+ =?us-ascii?Q?jj+S0pfNER59HXe0di0AgIn8hwFxLBvGF1qmnVvTgCmfCJVuulYQ2Q/38XZj?=
+ =?us-ascii?Q?0d4gY3wauFiltuj+DtguG8I2fq8+ysBuOhCr1bBuiL1y12ST+jJ7bI99n7gw?=
+ =?us-ascii?Q?OLw2EOeoNH3qRxaw+T/ebNuc4sxzVBJpXX+jHfCuSXw+KOQog7cuo1pBA4iV?=
+ =?us-ascii?Q?Jw+g78U+hvVFJKG2JDwIdu8Y085mVHo513jVhhrKdLk2FZDtnunlAWBUhmo/?=
+ =?us-ascii?Q?aYSiBL++uH16XA9OcFNS9HTrcZMI6q8FGrhlj9kqPKHPuziAtM5FCWpwhxWi?=
+ =?us-ascii?Q?XZhqUg+Y5aarJYBp2NcXqPQ4dsKBURBN1IhOrwbCtOF3GFjZdveNTqSz7fG8?=
+ =?us-ascii?Q?DCs1PaBsvb5/LBmomW8VKFtObIrjc7Xkuzrs5T4z6bsQ0r22NrU3xeSiFDrw?=
+ =?us-ascii?Q?78yl7QhNyoZeFCW/DrCd80Sj0EJzVrkt2zUM3fT3QnJ/cSw90s8+3MZs5H+m?=
+ =?us-ascii?Q?bs8Mb8bM7rlJSF8iOjTSc7RaS403L8/wOa6rf25mJ6Rq+oQw+1T8j5pEDtbU?=
+ =?us-ascii?Q?EO6ITrs2ef2SrXvna62gVmytiCFOMgNLyU0ZQEgDoW0LGl5quid1OhfQcO2o?=
+ =?us-ascii?Q?5mM1YOlClgJL+UwExdHJVtvWt/+2?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB9473.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?ypCUe36yX1MfF/exhiHnes419b1YecDMf78RSsSNlETEwoIVqpZQZSK3DvNs?=
+ =?us-ascii?Q?kj57/qKE1yU9DAjTUSnXvEJBSS5w3fb6CcOv7giQ1obMIno84LJfjjYM1Pq5?=
+ =?us-ascii?Q?evWE+RutXPJWrnTLLQaaQgjqn9oHBQdcIM34zu45xEMhGiSPb/LMhWVc0kd8?=
+ =?us-ascii?Q?euauIu10PHn7RcxiI3jijYw6X+Y5DYJ4vJuHxztcqEjCal/GGvRBOwrBz0SI?=
+ =?us-ascii?Q?obRBoAt2cpsQHFp0/UUFr7n3K2h4FSL3bW2WiSY7bi+0SsKDRrL5VEF7bmB+?=
+ =?us-ascii?Q?DormsunKIijCosQfFwr28wWO6+6PmtNkdBt/5XXvJb6dQpdVswD2BtYjfozj?=
+ =?us-ascii?Q?JR5HqJt2cuIi6R0vGwTi/gptbhFsmK4glpB0rgFiAWrGeOJHtjML2nWiZDrG?=
+ =?us-ascii?Q?GpMv3arAyX5zFMKwa/xd5OEL2OW1y4kw+pJJVprKO+SO7y/Eahn/x9bw70Iu?=
+ =?us-ascii?Q?B+Rouk1b6sfIU9Qa923vT5xPvsofwFpchpYvHYW4dwVG2Z2mU2ITBsdO0o/f?=
+ =?us-ascii?Q?pf2gG+pzHltMSHjOqKHrqun+BUnh5BKap/mkL/LqKsORudo3DZaQNZKQcLzo?=
+ =?us-ascii?Q?rpQA/lDAmk4amb11AQ8EWg/KyVYtF3CZtHjIt/fvv3OKIcMxt1HLaP6gs1uv?=
+ =?us-ascii?Q?Q/3OBRd/CabtlLyiLKbq+fGkCom7H6tRhkwHoSgI/XZVUcX2YT3wcih+vQv9?=
+ =?us-ascii?Q?Rp5RzZBrVVnoFrp6StN3/XwVHFUYj2UJDtVZ1M8KlGDltjfWX+KfALH9LqwW?=
+ =?us-ascii?Q?UyOEKBPc+6rHvgSk6qIhrW6ORWIIQjO2U3/i6E3G3siP5xN5ZQapmZ6bWIDY?=
+ =?us-ascii?Q?nvwPXku7Y9qlSu5bW5PneHjGWvxGeMC9VS4ZkNtl5REDRFfb0VNkXQlfHwp9?=
+ =?us-ascii?Q?Rwr7UIfz9yWPNr60+3xNOal0eZhkCwMcJjLaLEHFbWt5Kwi183Urue9WqbeZ?=
+ =?us-ascii?Q?HaxxKyXKB9BRmP+vJsqcdG9H6Z7yfjN+6lzo6cAGZLBoBIcRVfsmyI4a1Xrf?=
+ =?us-ascii?Q?v7eiNnmycLIy4QsLSVcUZKmKVypdooXRbRpXwJ1R1Ibw7jaczoDpLz0gNi3+?=
+ =?us-ascii?Q?QNudYymeyVBcSAQMS1ZOCznPlVo+RsH7KgjxmP5u6x7/lA/Sgtsrygk7AshV?=
+ =?us-ascii?Q?ON69MabiWRyrwJTOgo+sVX0p0uKXEX4PazGrgkdgVTB79eDnidKlyc+0K3Dp?=
+ =?us-ascii?Q?pUZBO8EO/HnAONCP0uHYcCZCl2BbXQvoFIz5fVpbZmHgw0TO7i93Go8x9yDk?=
+ =?us-ascii?Q?swWbr0iMRpk1+wai6DZEe6uyf+Q+iFTFYoxKHzBkhKsJ3YrmvnmxPKKF0/hx?=
+ =?us-ascii?Q?T1+Md6wodY8FxvlRZUFWmzHigutCIxkwYrdMnKRtaOrU/lWUJ5DobK6WOrmQ?=
+ =?us-ascii?Q?XUgIjjnFUnzLFu6LGrZhR1gl9xEwZaCx4FH3+hM9z+QGmEo2bU57I4CxuVM2?=
+ =?us-ascii?Q?xcK2qecGba8NfLv8D88LN2Mt1kCaOYzwzeW+8A1Gl0Kol0kZTJk8V0CZXzW4?=
+ =?us-ascii?Q?ar47HikT0YhKONyBqcEgGhgGfr9ePppZ9AVkQhinwjOoZzedgIKh+WFNukua?=
+ =?us-ascii?Q?ZY7CwzsuAnBSnbV0+Wk=3D?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4d7ce0fa-3907-4dc7-a1fe-08dd5c1e5755
+X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB9473.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Mar 2025 19:45:54.2057
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: qcAUgNxTxpcw7T4ul6EYxf+3LAH0+lkbAs2XYWzygMvVBx3RfnlPjyPjneZocuSv
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB8270
 
-Registers of MMC drive/sample clocks in Rockchip RV1106 and RK3528
-locate in GRF regions. Adjust MMC clock code to support register
-operations through regmap. Also add a helper to ease registration of GRF
-clocks.
+On 4 Mar 2025, at 6:49, Hugh Dickins wrote:
 
-Signed-off-by: Yao Zi <ziyao@disroot.org>
----
- drivers/clk/rockchip/clk-mmc-phase.c | 24 +++++++++++++---
- drivers/clk/rockchip/clk.c           | 42 ++++++++++++++++++++++++++++
- drivers/clk/rockchip/clk.h           | 20 ++++++++++++-
- 3 files changed, 81 insertions(+), 5 deletions(-)
+> On Wed, 26 Feb 2025, Zi Yan wrote:
+>
+>> This is a preparation patch, both added functions are not used yet.
+>>
+>> The added __split_unmapped_folio() is able to split a folio with its
+>> mapping removed in two manners: 1) uniform split (the existing way), and
+>> 2) buddy allocator like split.
+>>
+>> The added __split_folio_to_order() can split a folio into any lower order.
+>> For uniform split, __split_unmapped_folio() calls it once to split the
+>> given folio to the new order.  For buddy allocator split,
+>> __split_unmapped_folio() calls it (folio_order - new_order) times and each
+>> time splits the folio containing the given page to one lower order.
+>>
+>> Signed-off-by: Zi Yan <ziy@nvidia.com>
+>
+> Sorry, I'm tired and don't really want to be writing this yet, but the
+> migrate "hotfix" has tipped my hand, and I need to get this out to you
+> before more days pass.
+>
+> I'd been unable to complete even a single iteration of my "kernel builds
+> on huge tmpfs while swapping to SSD" testing during this current 6.14-rc
+> mm.git cycle (6.14-rc itself fine) - until the last week, when some
+> important fixes have come in, so I'm no longer getting I/O errors from
+> ext4-on-loop0-on-huge-tmpfs, and "Huh VM_FAULT_OOM leaked" warnings: good.
+>
+> But I still can't get beyond a few iterations, a few minutes: there's
+> some corruption of user data, which usually manifests as a kernel build
+> failing because fixdep couldn't find some truncated-on-the-left pathname.
+>
+> While it definitely bisected to your folio_split() series, it's quite
+> possible that you're merely exposing an existing bug to wider use.
+>
+> I've spent the last few days trying to track this down, but still not
+> succeeded: I'm still getting much the same corruption.  But have been
+> folding in various fixes as I found them, even though they have not
+> solved the main problem at all.  I'll return to trying to debug the
+> corruption "tomorrow".
+>
+> I think (might be wrong, I'm in a rush) my mods are all to this
+> "add two new (not yet used) functions for folio_split()" patch:
+> please merge them in if you agree.
+>
+> 1. From source inspection, it looks like a folio_set_order() was missed.
 
-diff --git a/drivers/clk/rockchip/clk-mmc-phase.c b/drivers/clk/rockchip/clk-mmc-phase.c
-index 91012078681b..b3ed8e7523e5 100644
---- a/drivers/clk/rockchip/clk-mmc-phase.c
-+++ b/drivers/clk/rockchip/clk-mmc-phase.c
-@@ -9,11 +9,14 @@
- #include <linux/clk-provider.h>
- #include <linux/io.h>
- #include <linux/kernel.h>
-+#include <linux/regmap.h>
- #include "clk.h"
- 
- struct rockchip_mmc_clock {
- 	struct clk_hw	hw;
- 	void __iomem	*reg;
-+	struct regmap	*grf;
-+	int		grf_reg;
- 	int		shift;
- 	int		cached_phase;
- 	struct notifier_block clk_rate_change_nb;
-@@ -54,7 +57,12 @@ static int rockchip_mmc_get_phase(struct clk_hw *hw)
- 	if (!rate)
- 		return 0;
- 
--	raw_value = readl(mmc_clock->reg) >> (mmc_clock->shift);
-+	if (mmc_clock->grf)
-+		regmap_read(mmc_clock->grf, mmc_clock->grf_reg, &raw_value);
-+	else
-+		raw_value = readl(mmc_clock->reg);
-+
-+	raw_value >>= mmc_clock->shift;
- 
- 	degrees = (raw_value & ROCKCHIP_MMC_DEGREE_MASK) * 90;
- 
-@@ -134,8 +142,12 @@ static int rockchip_mmc_set_phase(struct clk_hw *hw, int degrees)
- 	raw_value = delay_num ? ROCKCHIP_MMC_DELAY_SEL : 0;
- 	raw_value |= delay_num << ROCKCHIP_MMC_DELAYNUM_OFFSET;
- 	raw_value |= nineties;
--	writel(HIWORD_UPDATE(raw_value, 0x07ff, mmc_clock->shift),
--	       mmc_clock->reg);
-+	raw_value = HIWORD_UPDATE(raw_value, 0x07ff, mmc_clock->shift);
-+
-+	if (mmc_clock->grf)
-+		regmap_write(mmc_clock->grf, mmc_clock->grf_reg, raw_value);
-+	else
-+		writel(raw_value, mmc_clock->reg);
- 
- 	pr_debug("%s->set_phase(%d) delay_nums=%u reg[0x%p]=0x%03x actual_degrees=%d\n",
- 		clk_hw_get_name(hw), degrees, delay_num,
-@@ -189,7 +201,9 @@ static int rockchip_mmc_clk_rate_notify(struct notifier_block *nb,
- 
- struct clk *rockchip_clk_register_mmc(const char *name,
- 				const char *const *parent_names, u8 num_parents,
--				void __iomem *reg, int shift)
-+				void __iomem *reg,
-+				struct regmap *grf, int grf_reg,
-+				int shift)
- {
- 	struct clk_init_data init;
- 	struct rockchip_mmc_clock *mmc_clock;
-@@ -208,6 +222,8 @@ struct clk *rockchip_clk_register_mmc(const char *name,
- 
- 	mmc_clock->hw.init = &init;
- 	mmc_clock->reg = reg;
-+	mmc_clock->grf = grf;
-+	mmc_clock->grf_reg = grf_reg;
- 	mmc_clock->shift = shift;
- 
- 	clk = clk_register(NULL, &mmc_clock->hw);
-diff --git a/drivers/clk/rockchip/clk.c b/drivers/clk/rockchip/clk.c
-index cbf93ea119a9..ce2f3323d84e 100644
---- a/drivers/clk/rockchip/clk.c
-+++ b/drivers/clk/rockchip/clk.c
-@@ -590,6 +590,7 @@ void rockchip_clk_register_branches(struct rockchip_clk_provider *ctx,
- 				list->name,
- 				list->parent_names, list->num_parents,
- 				ctx->reg_base + list->muxdiv_offset,
-+				NULL, 0,
- 				list->div_shift
- 			);
- 			break;
-@@ -619,6 +620,11 @@ void rockchip_clk_register_branches(struct rockchip_clk_provider *ctx,
- 			break;
- 		case branch_linked_gate:
- 			/* must be registered late, fall-through for error message */
-+		case branch_mmc_grf:
-+			/*
-+			 * must be registered through rockchip_clk_register_grf_branches,
-+			 * fall-through for error message
-+			 */
- 			break;
- 		}
- 
-@@ -665,6 +671,42 @@ void rockchip_clk_register_late_branches(struct device *dev,
- }
- EXPORT_SYMBOL_GPL(rockchip_clk_register_late_branches);
- 
-+void rockchip_clk_register_grf_branches(struct rockchip_clk_provider *ctx,
-+					struct rockchip_clk_branch *list,
-+					struct regmap *grf,
-+					unsigned int nr_clk)
-+{
-+	unsigned int idx;
-+	struct clk *clk;
-+
-+	for (idx = 0; idx < nr_clk; idx++, list++) {
-+		clk = NULL;
-+
-+		switch (list->branch_type) {
-+		case branch_mmc_grf:
-+			clk = rockchip_clk_register_mmc(
-+				list->name,
-+				list->parent_names, list->num_parents,
-+				NULL,
-+				grf, list->muxdiv_offset,
-+				list->div_shift
-+			);
-+			break;
-+		default:
-+			pr_err("%s: unknown clock type %d\n",
-+			       __func__, list->branch_type);
-+			break;
-+		}
-+
-+		if (!clk)
-+			pr_err("%s: failed to register clock %s: %ld\n",
-+			       __func__, list->name, PTR_ERR(clk));
-+		else
-+			rockchip_clk_set_lookup(ctx, clk, list->id);
-+	}
-+}
-+EXPORT_SYMBOL_GPL(rockchip_clk_register_grf_branches);
-+
- void rockchip_clk_register_armclk(struct rockchip_clk_provider *ctx,
- 				  unsigned int lookup_id,
- 				  const char *name, const char *const *parent_names,
-diff --git a/drivers/clk/rockchip/clk.h b/drivers/clk/rockchip/clk.h
-index df2b2d706450..ec86ba1dd38c 100644
---- a/drivers/clk/rockchip/clk.h
-+++ b/drivers/clk/rockchip/clk.h
-@@ -594,7 +594,9 @@ struct clk *rockchip_clk_register_cpuclk(const char *name,
- 
- struct clk *rockchip_clk_register_mmc(const char *name,
- 				const char *const *parent_names, u8 num_parents,
--				void __iomem *reg, int shift);
-+				void __iomem *reg,
-+				struct regmap *grf, int grf_reg,
-+				int shift);
- 
- /*
-  * DDRCLK flags, including method of setting the rate
-@@ -633,6 +635,7 @@ enum rockchip_clk_branch_type {
- 	branch_gate,
- 	branch_linked_gate,
- 	branch_mmc,
-+	branch_mmc_grf,
- 	branch_inverter,
- 	branch_factor,
- 	branch_ddrclk,
-@@ -983,6 +986,17 @@ struct rockchip_clk_branch {
- 		.div_shift	= shift,			\
- 	}
- 
-+#define MMC_GRF(_id, cname, pname, offset, shift)		\
-+	{							\
-+		.id		= _id,				\
-+		.branch_type	= branch_mmc_grf,		\
-+		.name		= cname,			\
-+		.parent_names	= (const char *[]){ pname },	\
-+		.num_parents	= 1,				\
-+		.muxdiv_offset	= offset,			\
-+		.div_shift	= shift,			\
-+	}
-+
- #define INVERTER(_id, cname, pname, io, is, if)			\
- 	{							\
- 		.id		= _id,				\
-@@ -1132,6 +1146,10 @@ void rockchip_clk_register_late_branches(struct device *dev,
- 					 struct rockchip_clk_provider *ctx,
- 					 struct rockchip_clk_branch *list,
- 					 unsigned int nr_clk);
-+void rockchip_clk_register_grf_branches(struct rockchip_clk_provider *ctx,
-+					struct rockchip_clk_branch *list,
-+					struct regmap *grf,
-+					unsigned int nr_clk);
- void rockchip_clk_register_plls(struct rockchip_clk_provider *ctx,
- 				struct rockchip_pll_clock *pll_list,
- 				unsigned int nr_pll, int grf_lock_offset);
--- 
-2.48.1
+Actually no. folio_set_order(folio, new_order) is called multiple times
+in the for loop above. It is duplicated but not missing.
 
+>
+> 2. Why is swapcache only checked when folio_test_anon? I can see that
+>    you've just copied that over from the old __split_huge_page(), but
+>    it seems wrong to me here and there - I guess a relic from before
+>    shmem could swap out a huge page.
+
+Yes, it is a relic, but it is still right before I change another relic
+in __folio_split() or split_huge_page_to_list_to_order() from mainline,
+if (!mapping) { ret = -EBUSY; goto out; }. It excludes the shmem in swap
+cache case. I probably will leave it as is in my next folio_split() version
+to avoid adding more potential bugs, but will come back later in another
+patch.
+
+
+Best Regards,
+Yan, Zi
