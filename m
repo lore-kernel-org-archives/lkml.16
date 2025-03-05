@@ -1,124 +1,111 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DFE21DD9AC;
-	Wed,  5 Mar 2025 18:48:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B80862512EB
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 18:48:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741200515; cv=none; b=j6Y+bBTgUxnJeXiTMvxJSVbK7yTOa81M1YBuCPQp8flScD8ZUhXnCvpyh4eW1ut/XO/VWOfuA+pm9bbwXHjfuVfZl+rkn+1th8zcRNLVhCqW7F/bTZB+45ic9B32iavYEYq3gt1qyjLBSqRS3b7TqqLSGm0apCrbTnSTCVd51jU=
+	t=1741200515; cv=none; b=Ho/BQQXx+1/GQgnNkH/QeAwuQl/INjAIAs2GeYITJb0T7QKBalediicBSUvZLQTRES05eJ64MHfSiIlj0FrhGdEP4fxErrY/AGJEptz1TqJ4+rB9NuFZch4Nj9haLEuCx614EH3xzB1rjd0Q/jSqBESs4qt4Fpweo1gWhf9tJp0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1741200515; c=relaxed/simple;
-	bh=IIRR0j0EA6OllIlVa1v7J4whrRpxr5hO1hZ4BQoMq6s=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nWRwY7wV4UTgMgvOJoCx1g7KF1MK84Q9wHHP/BHrn4KnVix+mZTggID7bpe3R/bcuROshFr24W95Q701FJz19zLbKAGIIG9xGQfbI2CbOBnyOU8hCcqO0JukG3NqFz9rbrfuaq0qjzbH074ezmUaPXaL+06sJuofN1heWhvWC8c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=Fc1mXLoh; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	bh=C11VRQlXgloAHIxlkDazcBVWyuIx7+EUap5lDdoh7tk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=pOEpSYMqlxpeN6NGnJgZXi8CG/SqfagIWLx68kVV2286oF2xgKx/+KwdcmqWoFlic6ExrzpWqTOca/JpdSSqJhSIW3SHWl88bnRm+jgszTZ8BpJc8vl2SI1OSSPH0uO/o5Mz6XoS83z+tEHMBai9wT7kh6pqozljbJDmuRl5bZk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=a7u8ZoTr; arc=none smtp.client-ip=209.85.216.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="Fc1mXLoh"
-Received: from terminus.zytor.com (terminus.zytor.com [IPv6:2607:7c80:54:3:0:0:0:136])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 525IlQXt3341787
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-	Wed, 5 Mar 2025 10:47:31 -0800
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 525IlQXt3341787
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025021701; t=1741200452;
-	bh=Kv2mG8/ef/H2lxxHE6kayNM8PX7zHm64gBQrRGDUHAg=;
-	h=From:To:Cc:Subject:Date:From;
-	b=Fc1mXLohNFtkW7wXQe5HLKN/knDyc2mTSzQU061jF/CVHF8z1SAj9Bce3VzPWo8Vf
-	 PgDJAAetP/lrw4zp1Ub1yjTfuCDKiyDEHVyPl4/j16wnOLjr/CWmYpZaAipq4QUc4T
-	 qs4cxklmepnKVd9bJLmh/4RazVKG7PvNNSeYZcmgAsSoWRndsGXsggwqRW219aDp7m
-	 iTjV3MixWSQ3jg5XCU9EFpvE1wkAGnkCey9B6eN1vpGKAG1evU52UUknBQ9Ghm0xy3
-	 /QaQN49vE3So8Hrq1tZkBHQsmDkVmjgj87Us6bUUv/lbYxULxWgSzDwGPQjhAma+yM
-	 mRHR87J1ufp1Q==
-From: "Xin Li (Intel)" <xin@zytor.com>
-To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        will@kernel.org, peterz@infradead.org, yury.norov@gmail.com,
-        akpm@linux-foundation.org, acme@kernel.org, namhyung@kernel.org,
-        brgerst@gmail.com, andrew.cooper3@citrix.com, nik.borisov@suse.com,
-        sraithal@amd.com, philip.li@intel.com
-Subject: [PATCH v7 0/4] x86/cpufeatures: Automatically generate required and disabled feature masks
-Date: Wed,  5 Mar 2025 10:47:20 -0800
-Message-ID: <20250305184725.3341760-1-xin@zytor.com>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a7u8ZoTr"
+Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-2ff5544af03so203474a91.1
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Mar 2025 10:48:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741200513; x=1741805313; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FLW0d7wXv47ixRls1JtfTqesQTLc2Su7rB4a8OZt/Z4=;
+        b=a7u8ZoTrmtulIZnzxm4ORVqSKmSnDMNBGd/+PGvCC6k6jpQVuZ6frEfG9HwTFfk13O
+         kxMEv4r80JpZi2KdlXuPUXdIt7KnRIndiydN4zMPm3//kwasVeXgPSC4Cwy9wF7MFvA1
+         W1sxF0ppjMQjtZo1fXYRDIMZca/m+e4mvwt9EU0BDIzUWMdO01vtdgtqLX5zeLBleLDp
+         ewl1za/Q6UGfRv8Zv/d755gZloN9cu7D+y2/JYg0cGZlDbiFId9HECNKwxu5n5332ulI
+         klcqsNOx0kfK9dUHiw1EzvQZBggNRGUJoW6Xqmnw+i/2E9kh/pWxzSyishipvrn4cw6F
+         oZyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741200513; x=1741805313;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=FLW0d7wXv47ixRls1JtfTqesQTLc2Su7rB4a8OZt/Z4=;
+        b=eF5f1pzKBPJCxxcNyEsBtkq5I7/bTcNx8L4gyTrwMJ6wtGyYSRw3K0Y9m1SXdC7X5s
+         jpgEh85tLG4/0Vw74pyIk+Om7hDw4g8kCp2QRNeh6+n2sMgRjKw1HE58MMgY93MHLtG3
+         aJIuTUmEQSpmUdQLvRCcSEL/M0M2t/x29ATYwV0VFICpoKy0/zXwhsIBM2VsOZ5ufhzj
+         zLuzsgCJugEZ9mpFQFcx2N6/4ogSkFPkqfsL1gzj9QR+T9URTiKufwjXJ4I9brFOMPCY
+         nCC3WJHEyEpSKNJnprFy//+SIiZvicFJMbHqs+Znau8ASFrDLrHU2EzrR5EA+dv3jrFP
+         8wcQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVX4rSh/bsZe5ybcbJLFgWN/xXHx4H1bPq1uY8s6UrnJbHWO96N7ISRDqMDJgOdHjpI4DZeHflpq3+tydA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxCWrwEReJ01jVyoK1+uJb3kkH36yol4oWdaBihzFjUcTbiZ3Lh
+	4WSRfVldpvDc5VUAw/BhVW6A9jJ72EehYKztIx07ny4RpvJ2LYOVkzU3jQ5WWDdPT2VLi5BAkEc
+	Pa03JmL96b/p+JL9hhC3RJLq+u3A=
+X-Gm-Gg: ASbGnctsNXO2FI5seGAlI77y9hvoeKroodWvQV9792iNbTsReCi9PBPMJbmNPXsQ5zT
+	m+yBY13uP+DfA2hY+LjQONb3gTJMhY4g2nYeEb5F8odztl+F+sCsjGcyYsOHkvRoQBfSh2TkqWN
+	W7StSjRthJq5xAQtDnrZu9OJwSAA==
+X-Google-Smtp-Source: AGHT+IHNy0Uh0i/4Vrewjh6yuoSTfhZDAoTT3pE5NxHvmoBeQzOjLRKXO8Aq7wY5/pRC2taKbqHofwdvOoPmBHTX1JE=
+X-Received: by 2002:a17:90b:568b:b0:2ff:4be6:c5e2 with SMTP id
+ 98e67ed59e1d1-2ff4be6c73amr2014043a91.7.1741200512864; Wed, 05 Mar 2025
+ 10:48:32 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250305104057.3416-1-hanchunchao@inspur.com>
+In-Reply-To: <20250305104057.3416-1-hanchunchao@inspur.com>
+From: Alex Deucher <alexdeucher@gmail.com>
+Date: Wed, 5 Mar 2025 13:48:21 -0500
+X-Gm-Features: AQ5f1Jroiidha8Du4iLEC0d4NUHuwmGgvoqBM2eAEDIOIX64Uk9J5X65ktxjK1w
+Message-ID: <CADnq5_MveLhZFX0qjp5=RsK1FV5n1jM13giX3BA4Lz3vXvsVKA@mail.gmail.com>
+Subject: Re: [PATCH] drm/amdgpu: fix inconsistent indenting warning
+To: Charles Han <hanchunchao@inspur.com>
+Cc: alexander.deucher@amd.com, christian.koenig@amd.com, airlied@gmail.com, 
+	simona@ffwll.ch, Jesse.zhang@amd.com, Hawking.Zhang@amd.com, 
+	mario.limonciello@amd.com, tim.huang@amd.com, Likun.Gao@amd.com, 
+	kevinyang.wang@amd.com, dan.carpenter@linaro.org, 
+	amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The x86 build process first generates required and disabled feature
-masks based on current build config, and then uses these generated
-masks to compile the source code.  When a CPU feature is not enabled
-in a build config, e.g., when CONFIG_X86_FRED=n, its feature disable
-flag, i.e., DISABLE_FRED, needs to be properly defined and added to
-a specific disabled CPU features mask in <asm/disabled-features.h>,
-as the following patch does:
-https://lore.kernel.org/all/20231205105030.8698-8-xin3.li@intel.com/.
-As a result, the FRED feature bit is surely cleared in the generated
-kernel binary when CONFIG_X86_FRED=n.
+Applied.  Thanks!
 
-Recently there is another case to repeat the same exercise for the
-AMD SEV-SNP CPU feature:
-https://lore.kernel.org/all/20240126041126.1927228-2-michael.roth@amd.com/.
-https://lore.kernel.org/all/20240126041126.1927228-23-michael.roth@amd.com/.
+Alex
 
-It was one thing when there were four of CPU feature masks, but with
-over 20 it is going to cause mistakes, e.g.,
-https://lore.kernel.org/lkml/aaed79d5-d683-d1bc-7ba1-b33c8d6db618@suse.com/.
-
-We want to eliminate the stupidly repeated exercise to manually assign
-features to CPU feature words through introducing an AWK script to
-automatically generate a header with required and disabled CPU feature
-masks based on current build config, and this patch set does that.
-
-Link to v6:
-https://lore.kernel.org/lkml/20250228082338.73859-1-xin@zytor.com/
-
-Changes in v7:
-* Fix build error with "make distclean; make headers" (Aithal, Srikanth)
-* Collect reviewed-bys.
-
-
-H. Peter Anvin (Intel) (2):
-  x86/cpufeatures: Add {required,disabled} feature configs
-  x86/cpufeatures: Generate a feature mask header based on build config
-
-Xin Li (Intel) (2):
-  x86/cpufeatures: Remove {disabled,required}-features.h
-  x86/cpufeatures: Use AWK to generate {REQUIRED|DISABLED}_MASK_BIT_SET
-
- arch/x86/Kconfig                              |   2 +
- arch/x86/Kconfig.cpufeatures                  | 197 ++++++++++++++++++
- arch/x86/Makefile                             |  15 ++
- arch/x86/boot/cpucheck.c                      |   3 +-
- arch/x86/boot/cpuflags.c                      |   1 -
- arch/x86/boot/mkcpustr.c                      |   3 +-
- arch/x86/include/asm/Kbuild                   |   1 +
- arch/x86/include/asm/cpufeature.h             |  70 +------
- arch/x86/include/asm/cpufeatures.h            |   8 -
- arch/x86/include/asm/disabled-features.h      | 161 --------------
- arch/x86/include/asm/required-features.h      | 105 ----------
- arch/x86/kernel/verify_cpu.S                  |   4 +
- arch/x86/tools/featuremasks.awk               |  88 ++++++++
- tools/arch/x86/include/asm/cpufeatures.h      |   8 -
- .../arch/x86/include/asm/disabled-features.h  | 161 --------------
- .../arch/x86/include/asm/required-features.h  | 105 ----------
- tools/perf/check-headers.sh                   |   2 -
- 17 files changed, 311 insertions(+), 623 deletions(-)
- create mode 100644 arch/x86/Kconfig.cpufeatures
- delete mode 100644 arch/x86/include/asm/disabled-features.h
- delete mode 100644 arch/x86/include/asm/required-features.h
- create mode 100755 arch/x86/tools/featuremasks.awk
- delete mode 100644 tools/arch/x86/include/asm/disabled-features.h
- delete mode 100644 tools/arch/x86/include/asm/required-features.h
-
-
-base-commit: 32dc26a2f55f71907af0874468298c6ab8a8f7f9
--- 
-2.48.1
-
+On Wed, Mar 5, 2025 at 5:41=E2=80=AFAM Charles Han <hanchunchao@inspur.com>=
+ wrote:
+>
+> Fix below inconsistent indenting smatch warning.
+> smatch warnings:
+> drivers/gpu/drm/amd/amdgpu/amdgpu_sdma.c:582 amdgpu_sdma_reset_engine() w=
+arn: inconsistent indenting
+>
+> Signed-off-by: Charles Han <hanchunchao@inspur.com>
+> ---
+>  drivers/gpu/drm/amd/amdgpu/amdgpu_sdma.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_sdma.c b/drivers/gpu/drm/a=
+md/amdgpu/amdgpu_sdma.c
+> index 42a7b86e41c3..1037a2f9e3b9 100644
+> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_sdma.c
+> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_sdma.c
+> @@ -579,5 +579,5 @@ int amdgpu_sdma_reset_engine(struct amdgpu_device *ad=
+ev, uint32_t instance_id, b
+>         if (suspend_user_queues)
+>                 amdgpu_amdkfd_resume(adev, false);
+>
+> -       return ret;
+> +       return ret;
+>  }
+> --
+> 2.43.0
+>
