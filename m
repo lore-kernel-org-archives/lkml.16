@@ -1,124 +1,153 @@
-Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 979021C860B;
-	Wed,  5 Mar 2025 05:18:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E52EB5103F;
+	Wed,  5 Mar 2025 05:21:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741151928; cv=none; b=DTyfa5Xeh6tkbxotVCYMnYZKWSOI5Swn1oQn75cu0OMV19jiX5LLtQrqCwAh37aBE1u/PRG3IhUu+30pHD/NEWPKmBFvrOkQD9kWAsSxMIdZGdOjtUQXLWzlvCvRVaNe+en1oKZOHznQ31FzVo8oHBy406iWa0CFJAC6K2f6XUA=
+	t=1741152087; cv=none; b=GFwhnVAwaMHyayjtuwY/JF2hIqGw86GuZLvXB43AaKkzQ0x8xa2Dlfpr7XGmk0ZN4EyX12TiHldGEvHfcGmAhEPi/gbK9zP+2vATID/D/GHwexi+WKAwAZyxeyxnsezS6+ENzRTG/OLkbiS6ywkRt7YIyruR1+Gv/lbhrk2/ovQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741151928; c=relaxed/simple;
-	bh=kC87oeOMtl04lb5WrpnzUnxVnwsFKi0GNcv5vmYteyc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jFq0O06BrJKVbx/UTh3SQX3w2lOBRPA54ecxewiJej5JrLMeGmVTtlOEivFMF1EKj0vE4awGq9fSh3fOCtmzQNfA3gm0DiNWAReYGiNfUEq3+0KfDmkcAiVF8oe1rHCQhW4Ay1PH/zZPHjl32udNpfoXn8le68soXFDdIo4nX98=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nqI9M0qx; arc=none smtp.client-ip=209.85.160.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741152087; c=relaxed/simple;
+	bh=FHL8mgJUPxbUe+Hq6oSBmF+pjKynbkkOWQzLA/C/blA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=dHfGLHk0cqUuLZuknom4Imr4gc166z3+6cWQtc7FtcDOvve7TA27ucf9NP+mIqh/tzNFe8/drWud1B3VupBv+zkKrSfPlLXxIhgSJZep75tV2G+/kbAX/yY8FkFv1+OPKbAhd9VapmM+eYlJrDK/bv1h/aLSDFXrAMWi6pAbw2g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=d3k3IzMM; arc=none smtp.client-ip=198.47.19.246
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nqI9M0qx"
-Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-47208e35f9cso74221361cf.3;
-        Tue, 04 Mar 2025 21:18:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741151925; x=1741756725; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=1P3+iYzJ+YpQ9FI2rKYP4r/ocmp23KFw2lq/RJsTz1Y=;
-        b=nqI9M0qxWGD86tY3SCfSarYGX2THSffymq518qCorOYwkLs6rEQOM+5APuSiR32/mC
-         MEn/s7R/oBAOznXoVzEKa6tsBZ4ZuFIzHU3P8keIIktEIf5AdeCUxr+6+9iMaBmxnsL2
-         jaon7YPUEIN6HBkCxiX/AZPitY2PX1+zkmkzQmC1l6HbxLaJt7lKvHv+pEyVR9TY1ayE
-         wHwlxzZ2HczEKmKaqdUIUVrF1x08RAVje6O7LBuclB4nb1RuIevJJyJpyLnTB5VyhTcY
-         wqfdzKGO6tFXNL+kG4DiFe9Gawtvi5X1YWCXjstvqO3i8J+Wb/DXLykusiZuxoGj73w6
-         4XXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741151925; x=1741756725;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1P3+iYzJ+YpQ9FI2rKYP4r/ocmp23KFw2lq/RJsTz1Y=;
-        b=TZS3Y8pX5V2g/l/4puEXr6o/1H9SAQQY7GqTu0tm5nCJ9Fzks8Xm8689GKtwAHbRnM
-         LrCcccUh32aMPeYAIydZSRg+8K7xhKS/r/hkzgRc3KJXeIYf7HNnDFTyUtY8BpgORvk2
-         b7VdNw8w9hk2y9pSep6Mgty+zCWbyS6g8uP/RHB0GGLLytqrJbwCY/PE8Nri7ljJttPG
-         3B2G7bKpwJAKgI3hwW86lXY8Rp1BbwkyJQHazM2krn/1d8joCFRs0ZPYBSAC/Tg+GJEP
-         tyGRXB2egBAM+dlhXxdyr9/DUGupRdnLjsKAcrcD0G0h3sGnv/rat+qIUjMZErWZQ7rH
-         652g==
-X-Forwarded-Encrypted: i=1; AJvYcCVN24ClVz7byggYs2MCEjznFTMT4s/6PwF9j0LYAZNKVyH/zenKj9ExrwJ/IkGavXYyoH3IwgzCkUCk@vger.kernel.org, AJvYcCWDvGeVwntI5dRZCT4uyO/cTmmkgEm5L5Ju34NkUZyPD7y+IFVUibIAHOG6q2FHy8tdGB0cw+8GAQEqehk9@vger.kernel.org
-X-Gm-Message-State: AOJu0YzZRVZCdy2M+w6fn1LUDQcPFogo2EZ60GFkw9FJzKGJQ+qRzlAU
-	bJE0Xg1A7jN4b83CsLwP3gJIQTwRphApFRzLum8F/aDsH6pO2CAq
-X-Gm-Gg: ASbGnctA/ZOZ6PiZDpu+FMHstUzuikv3Wp5Wa/Lgs0JCB0sLuYWulS9cPNUfb6f/Vwq
-	78bnWCNtsavaGwrV3KUCcOrJXP2qa36rB5vkqVVz79169QQQC1btbuAhSzjJCb1T5bkWJSCXMyX
-	mHpfOhCEg+G+R5y2TOeAUNipqw0pZ5Ks8cZttBCep34rs0rYqK1nZfPq9GzTGvr4Z5aSflJTWSu
-	7Hwz324ch0qsTMzDnY96K8NQrOKZrj2WnlnqtIkF3/dnUn8G2jndkeJ4NrAPIi1mlPajbP45nxg
-	2fG8ZnE8K8I+02nCoJ20
-X-Google-Smtp-Source: AGHT+IEL+SRXWaxNqoLf2fRqsU51Nuz6KF+mx2D44cet7M+NDkMLl3pM/VonNiECdPjeLo+ew7jsDA==
-X-Received: by 2002:ac8:5715:0:b0:471:bbd5:aff2 with SMTP id d75a77b69052e-4750b23bd92mr21798421cf.10.1741151924641;
-        Tue, 04 Mar 2025 21:18:44 -0800 (PST)
-Received: from localhost ([2001:da8:7001:11::cb])
-        by smtp.gmail.com with UTF8SMTPSA id d75a77b69052e-474f73d8145sm27595631cf.55.2025.03.04.21.18.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Mar 2025 21:18:44 -0800 (PST)
-Date: Wed, 5 Mar 2025 13:18:17 +0800
-From: Inochi Amaoto <inochiama@gmail.com>
-To: Chen Wang <unicorn_wang@outlook.com>, 
-	Inochi Amaoto <inochiama@gmail.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Johan Hovold <johan+linaro@kernel.org>, 
-	Shashank Babu Chinta Venkata <quic_schintav@quicinc.com>, Niklas Cassel <cassel@kernel.org>
-Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
-	sophgo@lists.linux.dev, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	Yixun Lan <dlan@gentoo.org>, Longbin Li <looong.bin@gmail.com>
-Subject: Re: [PATCH 2/2] PCI: sophgo-dwc: Add Sophgo SG2044 PCIe driver
-Message-ID: <borpjzjwtdeigqs4szogy2ozzqsqj3ucvppl3k6cdzfoukgdur@23wwl55dmrfj>
-References: <20250304071239.352486-1-inochiama@gmail.com>
- <20250304071239.352486-3-inochiama@gmail.com>
- <PN0PR01MB10393134B6BD714C1F070F0BEFEC82@PN0PR01MB10393.INDPRD01.PROD.OUTLOOK.COM>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="d3k3IzMM"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 5255KrIT3769565
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 4 Mar 2025 23:20:53 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1741152053;
+	bh=ijoXj6D3ao9xjhKDSHIBWiEm1mRJLo6+iyZj8hvRuuk=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=d3k3IzMMwQHMqRvHIz1I3WSFLblEUfV3ckhP5Qq3G+yJxAUkwldRjER9dxjHSQ/cM
+	 wPY1FFGyDl3rxZA+I/UgPXsEFix7rod1VUimOi8Wk/y8Apqw8+3ukjImUrl/GTipVb
+	 2Ke63Sx08evB8dIGxDSJiYd93XWZ/04huCX5ofMY=
+Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 5255Kqao026316
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Tue, 4 Mar 2025 23:20:53 -0600
+Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 4
+ Mar 2025 23:20:52 -0600
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Tue, 4 Mar 2025 23:20:52 -0600
+Received: from [10.24.69.25] (danish-tpc.dhcp.ti.com [10.24.69.25])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 5255KmhZ080040;
+	Tue, 4 Mar 2025 23:20:48 -0600
+Message-ID: <cf468c08-6808-49a2-b6d9-5c2b00d654de@ti.com>
+Date: Wed, 5 Mar 2025 10:50:47 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <PN0PR01MB10393134B6BD714C1F070F0BEFEC82@PN0PR01MB10393.INDPRD01.PROD.OUTLOOK.COM>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next] net: ti: icssg-prueth: Add ICSSG FW Stats
+To: Jakub Kicinski <kuba@kernel.org>
+CC: Meghana Malladi <m-malladi@ti.com>, Diogo Ivo <diogo.ivo@siemens.com>,
+        Paolo Abeni <pabeni@redhat.com>, Eric Dumazet <edumazet@google.com>,
+        "David
+ S. Miller" <davem@davemloft.net>,
+        Andrew Lunn <andrew+netdev@lunn.ch>, <linux-kernel@vger.kernel.org>,
+        <netdev@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <srk@ti.com>, Vignesh Raghavendra
+	<vigneshr@ti.com>,
+        Roger Quadros <rogerq@kernel.org>
+References: <20250227093712.2130561-1-danishanwar@ti.com>
+ <20250303172543.249a4fc2@kernel.org>
+ <33c38844-4fbe-469c-bb5f-06bdb7721114@ti.com>
+ <20250304162437.0160f687@kernel.org>
+Content-Language: en-US
+From: MD Danish Anwar <danishanwar@ti.com>
+In-Reply-To: <20250304162437.0160f687@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Wed, Mar 05, 2025 at 07:57:14AM +0800, Chen Wang wrote:
+Hi Jakub,
+
+On 05/03/25 5:54 am, Jakub Kicinski wrote:
+> On Tue, 4 Mar 2025 13:46:39 +0530 MD Danish Anwar wrote:
+>> On 04/03/25 6:55 am, Jakub Kicinski wrote:
+>>> On Thu, 27 Feb 2025 15:07:12 +0530 MD Danish Anwar wrote:  
+>>>> +	ICSSG_PA_STATS(FW_PREEMPT_BAD_FRAG),
+>>>> +	ICSSG_PA_STATS(FW_PREEMPT_ASSEMBLY_ERR),
+>>>> +	ICSSG_PA_STATS(FW_PREEMPT_FRAG_CNT_TX),
+>>>> +	ICSSG_PA_STATS(FW_PREEMPT_ASSEMBLY_OK),
+>>>> +	ICSSG_PA_STATS(FW_PREEMPT_FRAG_CNT_RX),  
+>>>
+>>> I presume frame preemption is implemented in silicon? If yes -
+>>> what makes these "FW statistics"? Does the FW collect them from   
+>>
+>> The statistics are maintained / updated by firmware and thus the name.
+>>
+>> Preemption is implemented partially in both the hardware and firmware.
+>> The STATE MACHINE for preemption is in the firmware. The decision to
+>> when to PREEMEPT / ASSEMBLE a packet is made in firmware.
+>>
+>> These preemption statistics are updated by the firmware based on the
+>> action performed by the firmware. Driver can read these to know the
+>> statistics of preemption. These stats will be able used by
+>> ethtool_mm_stats once the support for Preemption is added in the driver.
 > 
-> On 2025/3/4 15:12, Inochi Amaoto wrote:
-> > Add support for DesignWare-based PCIe controller in SG2044 SoC.
-> > 
-> > Signed-off-by: Inochi Amaoto <inochiama@gmail.com>
-> > ---
-> >   drivers/pci/controller/dwc/Kconfig          |  10 +
-> >   drivers/pci/controller/dwc/Makefile         |   1 +
-> >   drivers/pci/controller/dwc/pcie-dw-sophgo.c | 270 ++++++++++++++++++++
-> Will this driver work for all sophgo chips using dw's IP? If not, it is
-> recommended to rename it to "pcie-dw-sg2044.c".
+> That was going to be my next question. If the statistic is suitable 
+> for a standard interface it should not be reported via ethtool -S.
+> 
 
-It should. As the DesignWare PCIe ip is widely used and I saw
-limit changed across the vendor. And the implement on SG2044
-is almost like the Synopsys one. I think it is possible to 
-represent all DesignWare based PCIe driver for the Sophgo SoCs.
+Sure. I will not report it via `ethtool -S`. This will only be reported
+via ethtool_get_mm_stats. I will do something similar to
+`icssg_miig_stats`. Have a boolean to indicate whether the stat is
+getting reported by some standard interface or not.
 
-Also, please think twice before giving some suggestion like
-this. Although it is a good practice to keep the driver
-specifc. keeping everythings specifc make us miss some common
-things. 
+> Please leave the stats for unimplemented features out.
+> 
 
-Regards,
-Inochi
+Sure. For now I will remove the FW_PREEMPT stats since the feature is
+not implemented yet. Once the implementation is done, I will add the
+stats to icssg_all_pa_stats() and read it via
+emac_update_hardware_stats() and report it via ethtool_get_mm_stats.
 
-> >   3 files changed, 281 insertions(+)
-> >   create mode 100644 drivers/pci/controller/dwc/pcie-dw-sophgo.c
-> > 
-> > [...]
-> > +
-> > +static void sophgo_intx_irq_eoi(struct irq_data *d)
-> > +{
-> > +}
-> Why define this empty callback function? Please add a comment if it is
-> really needed.
+>>>> +/* Incremented if a packet is dropped at PRU because of a rule violation */
+>>>> +#define FW_DROPPED_PKT		0x00F8  
+>>>
+>>> Instead of adding comments here please add a file under
+>>> Documentation/networking/device_drivers/ with the explanations.
+>>> That's far more likely to be discovered by users, no?  
+>>
+>> Sure I will drop these MACRO comments and create a .rst file in
+>> Documentation/networking/device_drivers/
+>>
+>> One question though, should I create a table for the stats and it's
+>> description or should I create a section for each stats?
+>>
+>> Something like this,
+>>
+>> FW_RTU_PKT_DROP
+>> ---------------
+> 
+> Let's document the user-visible names! The strings from ethtool -S
+> 
+>> Diagnostic error counter which increments when RTU drops a locally
+>> injected packet due to port being disabled or rule violation.
+>>
+>> Please let me know what do you think.
+> 
+> Taking inspiration from:
+>   Documentation/networking/device_drivers/ethernet/meta/fbnic.rst
+> should be a safe choice, I hope.
 
-See https://lore.kernel.org/all/bxwsvluj6amgoelk7r55gqhmhjwpewnfyhvvw6zpxen7kqzvwc@fxcebjzo5axk/
+This looks to be a good choice. I will do the changes and send out a v2.
+Thanks for the review.
+
+-- 
+Thanks and Regards,
+Danish
