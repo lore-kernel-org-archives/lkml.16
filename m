@@ -1,150 +1,137 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out203-205-221-235.mail.qq.com (out203-205-221-235.mail.qq.com [203.205.221.235])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 355BC5228
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 13:50:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5320413F434
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 13:50:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.235
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741182612; cv=none; b=ddDn5w7pINoiVHZSJLd6w6Py7/KEZiE7q4cCaB5/mjDMxE50q5mykcizCR6s7nsd1xTPl2AXbytgymrDMqzA+epA23Add7Ahlr6wrIrAvzu5MjV/lGHt1TPn/+zmbMdi2x0NLIv5HDzZ11srv1ESaxlsnVddT2Xo5SwN8W067Vs=
+	t=1741182632; cv=none; b=iy6ENUyXxMZR5MSwjghxeuJ8nHByLJtwvs7Jgh9Txq/12F45jWrqrwwGBYumGJWHA2HpdCUAKGD1WFAMF29RkS3EZ6hQU91B6WvLxrP6y8XDzI1pGKD8v1qn9JIZKJ8rLoHRxZM3W+G7+GFY7K0YXAZv7eSjIjMRtsxb//aH2X0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741182612; c=relaxed/simple;
-	bh=bjt9tZ2tdXOXmOh5Sw2/IQfSK8Z1N8A0v424PK7WQJA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BR/JeAtHXq3/O2aSZWdy+93bV4l+0EyrX7tMelpj69XSHxbvqCMpstfjNIbl6mC6WThPG2WE+FM7yue1WmqoYOgN0IS7vsKPM4sZFornHLWRlHB0wY3XMqb52rWfr1PquAjyKoSje/juYoeSojSZcAJNoX5sOb6UaRWa0mWUf+k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=r9+I4QfB; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=4g5at+CI; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=r9+I4QfB; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=4g5at+CI; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1741182632; c=relaxed/simple;
+	bh=Z78A2Ut63ccQctrfEqo/o8QkPvu7dQSsf3z6DlR2STY=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=nFv7Ah0+tVq42OlcBnCt91pFUiqTSLABmfUrAv/VKVEq6Gw1Zd/9Nm3x6wkTSb3Ts+pPlAVfI+HCdDGudDrshyiJxokSIyIOXFNvS5xGg7SVZ3oIJRJA8cjOqDLAeoM+FzePmpfFP+88NNk14KQPhjSLIXZGBiz/7YupmJlultE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=Y7JdlIeC; arc=none smtp.client-ip=203.205.221.235
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="r9+I4QfB";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="4g5at+CI";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="r9+I4QfB";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="4g5at+CI"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 45FB6211A0;
-	Wed,  5 Mar 2025 13:50:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1741182609; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Pt57O7QxbgvWtfgO/L+BQo09K7eD75rcFiR0x5kH3Xs=;
-	b=r9+I4QfBHqoqitpKz5iJ9FFQJIIbv0X1kh1zqARFO0OPcmUtUR5r9vCOeLlcKLp0I5mTEa
-	hY1R/ILkGuioZlIqVEEyT28ZKh6NVjnv1Qq9z/LKR6MKsn1T3ZOlh5jmOxwSUqAbECKTzt
-	vWDijno35d/6plaN6V7dZbaHi0HvwUc=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1741182609;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Pt57O7QxbgvWtfgO/L+BQo09K7eD75rcFiR0x5kH3Xs=;
-	b=4g5at+CIp6BjfjhtCpyQJw+EY6QdT7+pe5/d1mHcczE52f9Jy0glg+zU7GXNF8kWI8xH8I
-	sb9+Z6YNwQl+jgCw==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=r9+I4QfB;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=4g5at+CI
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1741182609; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Pt57O7QxbgvWtfgO/L+BQo09K7eD75rcFiR0x5kH3Xs=;
-	b=r9+I4QfBHqoqitpKz5iJ9FFQJIIbv0X1kh1zqARFO0OPcmUtUR5r9vCOeLlcKLp0I5mTEa
-	hY1R/ILkGuioZlIqVEEyT28ZKh6NVjnv1Qq9z/LKR6MKsn1T3ZOlh5jmOxwSUqAbECKTzt
-	vWDijno35d/6plaN6V7dZbaHi0HvwUc=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1741182609;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Pt57O7QxbgvWtfgO/L+BQo09K7eD75rcFiR0x5kH3Xs=;
-	b=4g5at+CIp6BjfjhtCpyQJw+EY6QdT7+pe5/d1mHcczE52f9Jy0glg+zU7GXNF8kWI8xH8I
-	sb9+Z6YNwQl+jgCw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 1660D1366F;
-	Wed,  5 Mar 2025 13:50:09 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id isRFBJFWyGfSRAAAD6G6ig
-	(envelope-from <jroedel@suse.de>); Wed, 05 Mar 2025 13:50:09 +0000
-Date: Wed, 5 Mar 2025 14:50:07 +0100
-From: Joerg Roedel <jroedel@suse.de>
-To: Joerg Roedel <joro@8bytes.org>
-Cc: x86@kernel.org, hpa@zytor.com, Tom Lendacky <thomas.lendacky@amd.com>,
-	Nikunj A Dadhania <nikunj@amd.com>, linux-kernel@vger.kernel.org,
-	Larry.Dewey@amd.com
-Subject: Re: [PATCH] x86/sev: Make SEV_STATUS available via SYSFS
-Message-ID: <Z8hWj5yDc-CsIv9L@suse.de>
-References: <20250305105234.235553-1-joro@8bytes.org>
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="Y7JdlIeC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1741182324; bh=ccq0Av38nSs+iwKBCGzoZ5cXsA3RMZ/QqLCdQ+42KWw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=Y7JdlIeCw9NsMpDrzQaNSv2o+aWcJbRWY6IdEhPdkGQbxfg+8tHAyS8NaqaQisLY5
+	 dDY035BHoK0YbvgQFvhB7Pkiv1Q+ZEvtV+QqkN36nqlAmXIVKFANu/RURbmyRmcFOn
+	 kbl1UVYRHshELROpl2IH+w6Dm2cHa6z+GNxqP3pY=
+Received: from pek-lxu-l1.wrs.com ([114.244.57.157])
+	by newxmesmtplogicsvrszgpua8-1.qq.com (NewEsmtp) with SMTP
+	id B569CC67; Wed, 05 Mar 2025 21:45:22 +0800
+X-QQ-mid: xmsmtpt1741182322t02ur8g1f
+Message-ID: <tencent_CF336E8362896EE3B7C45CB77E976686D505@qq.com>
+X-QQ-XMAILINFO: N0jQ/i/W/QNTLe2SDmV1OE5LlP0DhzLTKi9/e+zAlGUTrLnS6rILSmuVnzmmuR
+	 oYmfUwKfBrJr7JrwmHLZBJi1AG5QXXpflS2Xy535RpkED5gYHTPA9odGjMmJU9Jrr71oAFTZjExh
+	 jOJdK+h4w4uWX+IehDVKHkT70klEPW8GvRPdisvjpc+ViOQWyJbjukPyOwaAdLbirHutYeIOnkhG
+	 oMHpuLnlTBr7fwfW+IDlU4J3q1VIuFrVYEcgbFV0Kdgl/I69MagQklb5MALOTyY6TtiEBVXLSJoB
+	 hjtsOB7gj8s1Hpg6heS8f7yqfBxCMzMq3n4yPtsQayyeuP5Wp7SqdXGH96Ridj4TgfwvXP5E18vI
+	 ivvlZyYIX5LKIn6fA7yETXoigwOgsOeusV7J2ycqVWVOdXLu1xyBg8DrMwRbOBAmmSO7mQ1RpBjl
+	 VfxB57W7UWqGerB8wkcSZCWHuK77Zw+3W0YoUdt5hmhQyJf7nqeeF1TJPeLCzErso0HhB6yb9iIe
+	 txsZPbM24TrgLOORChJIkzgfJWQXTFs2gVhOFUxMhfP+i87/QUyg94VdfNSN7GJol3tnZ9JjHIIL
+	 vhc6DVQ6i4eXO2nc67C+i1xWQ5pu0T8xukN+txlCbTVODVvozjclc5VjAjLaugBVfStAD0OsQNQX
+	 6fvWfWLhsNtWcRpitnsum9whl5FZ0fINN0r2K2RCX4+x+FXe/Oqlgzom8YzY8xzbfcIaMWy3XAzp
+	 v9gZ3dQPjbTcPX90W4/gBdrF7MKOyCI9Qi88XzD+L2ECmr9DP8J+TdsSkAKuvuNcTgmpRPT6W7e9
+	 ykPxsDixjIots6fATOlYAPXhKXi2uIkl02dfWJDqFHTD9XdxdzSrRgPwChVIYPsqJnsaNHylWkms
+	 JtgMJlnvVIz28SfdW8bi1msR0G/sBqOzup1wqHu1asI/SA5CuD3+k=
+X-QQ-XMRINFO: Mp0Kj//9VHAxr69bL5MkOOs=
+From: Edward Adam Davis <eadavis@qq.com>
+To: syzbot+8f9f411152c9539f4e59@syzkaller.appspotmail.com
+Cc: linux-kernel@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [xfs?] [mm?] WARNING: bad unlock balance in __mm_populate
+Date: Wed,  5 Mar 2025 21:45:23 +0800
+X-OQ-MSGID: <20250305134522.1522377-2-eadavis@qq.com>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <67c49230.050a0220.55417.04d5.GAE@google.com>
+References: <67c49230.050a0220.55417.04d5.GAE@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250305105234.235553-1-joro@8bytes.org>
-X-Rspamd-Queue-Id: 45FB6211A0
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	MIME_TRACE(0.00)[0:+];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,suse.de:dkim,suse.de:mid,suse.com:url];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	DKIM_TRACE(0.00)[suse.de:+]
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Action: no action
-X-Spam-Score: -4.51
-X-Spam-Flag: NO
 
-On Wed, Mar 05, 2025 at 11:52:34AM +0100, Joerg Roedel wrote:
->  arch/x86/coco/sev/core.c | 9 +++++++++
->  1 file changed, 9 insertions(+)
+#syz test
 
-And here are the changes to the snpguest tool to make use of the sysfs
-as created with this patch:
+diff --git a/mm/gup.c b/mm/gup.c
+index 3883b307780e..c32c0854dd4f 100644
+--- a/mm/gup.c
++++ b/mm/gup.c
+@@ -1194,6 +1194,7 @@ static int faultin_page(struct vm_area_struct *vma,
+ 	}
+ 
+ 	ret = handle_mm_fault(vma, address, fault_flags, NULL);
++	printk("1mm: %p, map held lock: %d, vma: %p, %s\n", vma->vm_mm, lockdep_is_held(&vma->vm_mm->mmap_lock), vma, __func__);
+ 
+ 	if (ret & VM_FAULT_COMPLETED) {
+ 		/*
+@@ -1216,8 +1217,11 @@ static int faultin_page(struct vm_area_struct *vma,
+ 	if (ret & VM_FAULT_ERROR) {
+ 		int err = vm_fault_to_errno(ret, flags);
+ 
+-		if (err)
++		printk("mm: %p, map held lock: %d, vma: %p, err: %d, %s\n", vma->vm_mm, lockdep_is_held(&vma->vm_mm->mmap_lock), vma, err, __func__);
++		if (err) {
++			*locked = err != -EFAULT;
+ 			return err;
++		}
+ 		BUG();
+ 	}
+ 
+@@ -1487,6 +1491,7 @@ static long __get_user_pages(struct mm_struct *mm,
+ 		cond_resched();
+ 
+ 		page = follow_page_mask(vma, start, gup_flags, &ctx);
++		printk("<after resched and follow page mask> mm: %p, map lock held: %d, %s\n", mm, lockdep_is_held(&mm->mmap_lock), __func__);
+ 		if (!page || PTR_ERR(page) == -EMLINK) {
+ 			ret = faultin_page(vma, start, gup_flags,
+ 					   PTR_ERR(page) == -EMLINK, locked);
+@@ -1500,6 +1505,7 @@ static long __get_user_pages(struct mm_struct *mm,
+ 			case -EFAULT:
+ 			case -ENOMEM:
+ 			case -EHWPOISON:
++				printk("mm2: %p, map held lock: %d, vma: %p, ret: %d, %s\n", mm, lockdep_is_held(&mm->mmap_lock), vma, ret, __func__);
+ 				goto out;
+ 			}
+ 			BUG();
+@@ -2029,7 +2035,12 @@ int __mm_populate(unsigned long start, unsigned long len, int ignore_errors)
+ 		 * double checks the vma flags, so that it won't mlock pages
+ 		 * if the vma was already munlocked.
+ 		 */
++		printk("1mm: %p, vma: %p, mmap lock held: %d, locked: %d, vma is acc: %d, %s\n",
++			mm, vma, lockdep_is_held(&mm->mmap_lock), locked, vma_is_accessible(vma), __func__);
+ 		ret = populate_vma_page_range(vma, nstart, nend, &locked);
++		printk("mm: %p, vma: %p, mmap lock held: %d, locked: %d, ret: %ld, mm addr is valid: %d, %s\n",
++			mm, vma, lockdep_is_held(&mm->mmap_lock), locked, ret, virt_addr_valid((void*)mm), __func__);
++
+ 		if (ret < 0) {
+ 			if (ignore_errors) {
+ 				ret = 0;
+diff --git a/mm/memory.c b/mm/memory.c
+index b4d3d4893267..43e35a0c2841 100644
+--- a/mm/memory.c
++++ b/mm/memory.c
+@@ -6206,10 +6206,14 @@ vm_fault_t handle_mm_fault(struct vm_area_struct *vma, unsigned long address,
+ 
+ 	lru_gen_enter_fault(vma);
+ 
++	printk("mm: %p, map held lock: %d, vma: %p, is vm hugetlb page: %d, %s\n",
++		vma->vm_mm, lockdep_is_held(&vma->vm_mm->mmap_lock), vma, is_vm_hugetlb_page(vma), __func__);
+ 	if (unlikely(is_vm_hugetlb_page(vma)))
+ 		ret = hugetlb_fault(vma->vm_mm, vma, address, flags);
+ 	else
+ 		ret = __handle_mm_fault(vma, address, flags);
++	printk("2mm: %p, map held lock: %d, vma: %p, is vm hugetlb page: %d, %s\n",
++		vma->vm_mm, lockdep_is_held(&vma->vm_mm->mmap_lock), vma, is_vm_hugetlb_page(vma), __func__);
+ 
+ 	/*
+ 	 * Warning: It is no longer safe to dereference vma-> after this point,
 
-	https://github.com/virtee/snpguest/pull/88
-
-I plan to update the PR as this patch changes.
-
-Regards,
-
--- 
-Jörg Rödel
-jroedel@suse.de
-
-SUSE Software Solutions Germany GmbH
-Frankenstraße 146
-90461 Nürnberg
-Germany
-https://www.suse.com/
-
-Geschäftsführer: Ivo Totev, Andrew McDonald, Werner Knoblich
-(HRB 36809, AG Nürnberg)
