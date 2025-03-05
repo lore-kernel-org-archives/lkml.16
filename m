@@ -1,71 +1,198 @@
-Received: from mail-40134.protonmail.ch (mail-40134.protonmail.ch [185.70.40.134])
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10olkn2087.outbound.protection.outlook.com [40.92.40.87])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32B8024A068;
-	Wed,  5 Mar 2025 13:43:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.40.134
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741182184; cv=none; b=hpRUNvE35FaZ2XnSn15qssqdhyqgbB9J+odNPe8fP4DaScypU1rKX1m+KKdkfOU6qtKne5DqKQGnK32X/iTOeuh3+qpo4Yv++anSFZLKl6s4KOMoqsk+q6mmTtAZnHr0qW5KkZDNc819FXN0bFB8iGMB4PMmSn5SclPbp0K7M6g=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741182184; c=relaxed/simple;
-	bh=PCw+fsFCg4iMevxCZ3WDBtFP6dh7QpfE1KSQU7/sx0o=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=nelxqKYUeauHEQ2Hvs45hz49h7fmiBym8/8kQbE0DfF3Rqhzjiq+Ey/Hqt0VQHExoq/HR37WIhCOO+16K1XznGMJTWBfJZu2Kiug1oyfeRcmCkv9PpAkGx47V9LANLjQbn9L0G0jw2t8NwZ0fv7yvslwLCj89y8v9L1wt1aOv3k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=VtkbnWZG; arc=none smtp.client-ip=185.70.40.134
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 781E923372D;
+	Wed,  5 Mar 2025 13:43:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.40.87
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741182190; cv=fail; b=MhjbnpPx7gN2/UqyojOIHM3XORtRjatkOvokhaWyBjrDVhnlbjh7wSHckMwSKJyD3ZKjd2B/BZSLzoGNsWyujkplrXjHtkma3MdyCPJeAeYTdkER1GY6OGOPPcftAyN/xnHAYAuCw2eXQg5jUh5UzAfNZkI5ohVTveEfvGkeeoI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741182190; c=relaxed/simple;
+	bh=1tTBZun0tEJn+W/regELtZV84Bs7DVFwAJXUXNhBMLI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=duY2OeMTSqPSnk4gc9oNXYvZYOjdR3++HqbjdTt3n6MG5tCYW1f/hvUtP3D4UReE8QT/U6LuLId3XE3Jn6ISTldO6pcpoRV1mmO8Z9JDhXt/O8s6aIkdaTzKxWhoaoPawdKDOJZqXdgeggXiLtg2VJpu3+MjP3S3K52yWB+yilg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=HqsbuGpe; arc=fail smtp.client-ip=40.92.40.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="VtkbnWZG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=islx75xhinebhcqxkzeybsabfi.protonmail; t=1741182181; x=1741441381;
-	bh=PCw+fsFCg4iMevxCZ3WDBtFP6dh7QpfE1KSQU7/sx0o=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
-	b=VtkbnWZGyDqEYMboWBjvPEvvqvtZp+BX7QOyNE0XKXPYbu2MlEZQugMq4JdIPYi1f
-	 21czmgoO9P6i8ASWaWiBx8/K4881UlkCicx8vL0BB8F/5gdm116QZbPlW1yifOeJqK
-	 3csnHyr/qH77xBjw+Rrgug92SN25PN37Pvg3r62Yluq+cza1/eswLTDI1h+vil7cil
-	 glI8lOgbtSWYFld6norsR2aO0bmypklm8icdsxurTtqy+JU9ujczIgVtr+3MpVWfHq
-	 QnQQY536TEo19ee7DwGzo2DI81vqPUYnExRvuPHj2XMy9Jax2HAzsjR7Yhmdt0esqa
-	 VsHC9hv/ia4ow==
-Date: Wed, 05 Mar 2025 13:42:55 +0000
-To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>
-From: Benno Lossin <benno.lossin@proton.me>
-Cc: stable@vger.kernel.org, rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] rust: init: fix `Zeroable` implementation for `Option<NonNull<T>>` and `Option<KBox<T>>`
-Message-ID: <D88DKEJ9LHA0.3324DAQAUEI9T@proton.me>
-In-Reply-To: <20250305132836.2145476-1-benno.lossin@proton.me>
-References: <20250305132836.2145476-1-benno.lossin@proton.me>
-Feedback-ID: 71780778:user:proton
-X-Pm-Message-ID: b9f1163ef793328134ca0cf594bc4a3f8403279e
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="HqsbuGpe"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=urYu7ZibyhpjjT+Ngwd0D4fIfxzJjuejilGZG7Hjq/NDCnS1tHfAlr10EwdAbLIMLE9eM3TE2uAn3I5WM+3pF5dAE/lQYL8+fX0Qd7/c6uEmGVM86kNrItzegLMXPF7F0py/3EqBgDMvoaIW6ZMwyTp6+Kj8i9QNYdw96oRESypNSvM1GEuXlDWHlpfyQ/pbPFGXdVbbDESvtJV+S/x4zcef6QaoelfQsRbz7IQsSXndHeT9wIal0ggBzWx+bBLYFu6iZFvLpyNO9jeAriMfoF4zao3ueZlEJ7dJZqbaDYrKIPR3w9wDB5gOprg90JypVgkcztAQizfELGDSo0dKuw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=lW/QQynphTA6Fcq6XZvrBXh4x/2H4gbrIdKMAzUOo3w=;
+ b=enkdSHOvW6cxrYPudrO/S/+Vwj9+WgpgCZtLV6NVE7B7UG//0HaNCJojBG5qLbFeQl/Bcflvk3c0Qr+aovs70BRt8iPftgypEA2qbXIkut7GUpGGjyC9/ZNUytq448vEzFCu65U8BwRdFVAxyZIa7AAkmxL1rkGXuERYUyXvZWo//GYWklyA9rkmv7c0ktauHqkOuGOOsiyX01/ynlWjKuhg4vF92lky2RjLPxDlzci8AJpZJpb8wYlm8677yO7zP58ADnNW+dItJg9H3Ow1kvnUyfTWmnvht6zyhsWtzelB4R5ChPslCSDX2EX0/PA/g5OqurUoc3IXP+jND5PQZQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lW/QQynphTA6Fcq6XZvrBXh4x/2H4gbrIdKMAzUOo3w=;
+ b=HqsbuGpe9v/xxWJlTXO3WzEzR4Ooz50fK+VVlkHhGXb/dGmw8l94cwnn/J6hcek9CpOhHq1qXngEomRqJk8AB8QxVWaYv0iZftl8fCF8AOHxP9uO+qQrQPEp9J+RC9hDy0eIjZ/woHhRmPyzO7gxIyXadkJ1hlX6YvF+UoSwjKuBCIIsXHdtcblHGuyRGO9zKDqiYbb6ZOZUCrznRQEnTogtIiR6h1whqPox6Cdqnq7LFYcS503pYq1iMooiSAqKO1cxwc975ZBH3D8dOLc3HMG64g23lZ6GN4f6V6XOV4w2BHik7YB+egX5Dpnb/+q428ZA/Yu93PwDcGbAlt73FA==
+Received: from DS7PR19MB8883.namprd19.prod.outlook.com (2603:10b6:8:253::16)
+ by CH2PR19MB8895.namprd19.prod.outlook.com (2603:10b6:610:283::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.27; Wed, 5 Mar
+ 2025 13:43:06 +0000
+Received: from DS7PR19MB8883.namprd19.prod.outlook.com
+ ([fe80::e0c2:5b31:534:4305]) by DS7PR19MB8883.namprd19.prod.outlook.com
+ ([fe80::e0c2:5b31:534:4305%6]) with mapi id 15.20.8489.025; Wed, 5 Mar 2025
+ 13:43:05 +0000
+From: George Moussalem <george.moussalem@outlook.com>
+To: linux-arm-msm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-phy@lists.infradead.org,
+	andersson@kernel.org,
+	bhelgaas@google.com,
+	conor+dt@kernel.org,
+	devicetree@vger.kernel.org,
+	dmitry.baryshkov@linaro.org,
+	kishon@kernel.org,
+	konradybcio@kernel.org,
+	krzk+dt@kernel.org,
+	kw@linux.com,
+	lpieralisi@kernel.org,
+	manivannan.sadhasivam@linaro.org,
+	p.zabel@pengutronix.de,
+	quic_nsekar@quicinc.com,
+	robh@kernel.org,
+	robimarko@gmail.com,
+	vkoul@kernel.org
+Cc: quic_srichara@quicinc.com,
+	George Moussalem <george.moussalem@outlook.com>
+Subject: [PATCH v3 0/6] Enable IPQ5018 PCI support
+Date: Wed,  5 Mar 2025 17:41:25 +0400
+Message-ID:
+ <DS7PR19MB8883B5F3CC99C0F943BEE9DE9DCB2@DS7PR19MB8883.namprd19.prod.outlook.com>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250305134239.2236590-1-george.moussalem@outlook.com>
+References: <20250305134239.2236590-1-george.moussalem@outlook.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: DX0P273CA0105.AREP273.PROD.OUTLOOK.COM
+ (2603:1086:300:5c::16) To DS7PR19MB8883.namprd19.prod.outlook.com
+ (2603:10b6:8:253::16)
+X-Microsoft-Original-Message-ID:
+ <20250305134239.2236590-2-george.moussalem@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS7PR19MB8883:EE_|CH2PR19MB8895:EE_
+X-MS-Office365-Filtering-Correlation-Id: c0656996-19d7-4c13-c72f-08dd5beba7fb
+X-Microsoft-Antispam:
+	BCL:0;ARA:14566002|7092599003|8060799006|19110799003|5072599009|461199028|15080799006|440099028|4302099013|10035399004|3412199025|1602099012|1710799026;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?OtAjtD34Nqbrpri/lEDshFo/eFBt7vaZlMod/FS1ZrwZxmYuzhlhnwIhzZRe?=
+ =?us-ascii?Q?BqZNcizQ5vTZEW3bZkfCWlxpyROozUAix8hfUGueS7I7QHBs8UcCxv6DS9b6?=
+ =?us-ascii?Q?iptYlyhyb5Zaz1aoGV/rUABeCudgYxxIMSHmys4sBETjbfjkE8HJvu5I+UAs?=
+ =?us-ascii?Q?NeTrZXO63819WAvjQA+1YzJpVYojZHaObTTJzvCQkCuj4UtFlVP2znlvUiMe?=
+ =?us-ascii?Q?vE+wLWNRm0RwC+I50m69+cmYTAK4isQjaHPty2Pjl+0xxCNpNMJiHHZnV2IU?=
+ =?us-ascii?Q?e+je+uIqtWNjWa20N+T88X7lp8vGmK9351RoQQXYF2H72JU0Z/X+yS91fZpH?=
+ =?us-ascii?Q?xRCVvMIuBvlTGzJbepxUt7U5ZRykOBSan9fvDpMTgDcMAHSd345dUJYhDWo0?=
+ =?us-ascii?Q?T3Ai6DM4dq7V2mml5zJ4J9XDqEw0fIDPQ7mK9ltUlowdVuC+1uWN8/Enlaf/?=
+ =?us-ascii?Q?3HpqTVIxU4w1ik4StNpZEyIFeYT4pdfGRPT6JKM0+ugaQotm3T8e/+DQZUG5?=
+ =?us-ascii?Q?bULGl7hG5c8bNFELx/kisDIz4XFjOSuLS7+XpP4PSxTmJtqRIV/nkVl6/4S3?=
+ =?us-ascii?Q?VZoErP9DTZmaasYNf1nXT4oNCFDbNZRqEC9YqYN/4fbnEQNivpMgvwJ4CPCQ?=
+ =?us-ascii?Q?mw8u7CgbFQblP7FGVc5U98RbnpfgapbobNmUHnRV/hbtxOkgIpPo+rrRKyqG?=
+ =?us-ascii?Q?oMMA7qODWB1WVZg7yUG81Oe5eN74h+dZXskCBPbNA/LIeRyTuxTQG82WsI/R?=
+ =?us-ascii?Q?NY1uIH9/qbilCWbNQYRJNS9lRRZiHO+yhCZxMm34mzN5BxzDtkB74N/WNt5u?=
+ =?us-ascii?Q?t16he/+99jlei+of1vIQbkHcxlc/gOAEgucF8Lm8ocxZDB5fc3I+LsJVQ27+?=
+ =?us-ascii?Q?PPeDWIIs/ze3PDle9/7ss4rV1S0PLthCULkxCNXya3Hmr3TcB6l6XmXFGkBz?=
+ =?us-ascii?Q?rA1ltx5dinc+yq1SmlUHjZHnZhP5UOaVleAQRFtjgNXyRZfwXtH+w2mjoWxO?=
+ =?us-ascii?Q?RGXZXkJzJrGSaqcwhm1QnIBUlFqr2/GTNJe1jKLGH4JJxjAYZMjq4WnWBwBj?=
+ =?us-ascii?Q?oWDVO0J4X9NqivFnYJ5jO6BGswrDPue2RIH/lzaO8gzVmSsxhyC49vZuyHaS?=
+ =?us-ascii?Q?upxbYEmY78wPE+5py3W+oSp8DlNJsAAWa7tzZ7+8Kt+IL83YNoTb3FQVmOtC?=
+ =?us-ascii?Q?O8A/0gCkqSOyJISgNAoFtkzfb6chsQkUWJ9UwsIS8fkCIolZNL3ZqrJmwng?=
+ =?us-ascii?Q?=3D?=
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?l7O96jgGMG7PyrAS3udI7e7R/t+NCyD3b44d4ceeWbLQ4bXYTkx/rReOWlbC?=
+ =?us-ascii?Q?4SSfnGcVd29l5FPKxA/OC5TLjsx0ru82Nmy+kXBr06Qc7B3/6+y/PQwZGbog?=
+ =?us-ascii?Q?TJ8Z7lRTVHqVdMqQkGz7iRWSzWSZjbUZ0vmuV+jao4e/rm5EnsqR7XRRueWv?=
+ =?us-ascii?Q?Xo8ArytzXcmJvQ2yT0TuCv2OSJunf3h74rjn689ypM8r+IScRg2YRg23SBhW?=
+ =?us-ascii?Q?Ylh0EQbRxKR1ScErqzfuAj3ljpsg9JeVgVIbe2+m6cEXiv7UxWn48lS+cOQM?=
+ =?us-ascii?Q?5nt7l62JYFqlsEIriLqGocEm8zi4S4q8HuuUoxxFAHQVq4+MOOnuwA9WrjuD?=
+ =?us-ascii?Q?q5sZsgFipDo30RGL8Ny8sxW8x1Yg3P2dRoyJ9MRBGNYi9SJuCjzHTkgqKqqC?=
+ =?us-ascii?Q?U5iOXJ/BeIv0TeNisZMoMR3Xl4dXNaBhdtLOnVAtGMR2BA6nDMFk3UWa176F?=
+ =?us-ascii?Q?tnlIDD72fQ8BzQGnfqjz1FFPRB5im0QA5i58m1sxv2RmQ4w9rlav7FaiUns5?=
+ =?us-ascii?Q?0ky5TGYKUVerXK3Zdpyhw2NrAgGM1BnkwfblHvH/MdJLQWsHBk5JcBANO/ff?=
+ =?us-ascii?Q?ijUXJAyU+bBeixbec4IKs4SL6qs6scWGlQT5c2or8TVanGVymnWDVH9tg0c9?=
+ =?us-ascii?Q?ozaJDBeprAUo4UvrC2Y/0yyF/1iC1FKPQMrdibbx7/f/GTrCalQg1Pglp8vP?=
+ =?us-ascii?Q?oEDauKzkI1jw+Wt/kBnX/2vuH4R5HOayka3QPRk3RPYgi0jtC0yAXqW2IzTR?=
+ =?us-ascii?Q?AUdQuQ9cDy3sRF2/N2aZmI5kS/zvI4PIj2i0XO1aYodEzDy2CLDRLueUvmLe?=
+ =?us-ascii?Q?cKhnaeIeTE7ZC4DlNsYISb7A8skCjMOxfD6DgqXyv7c6ozYjQTLPqtCKvSsB?=
+ =?us-ascii?Q?xPskMlXGWlRJoxvPUuRqHe4yqgfsZoe9xZLBLu4s3iYnJfI5rBmZMvOlnUov?=
+ =?us-ascii?Q?EWiiMOmUTBPlRQ/weKAo3bQaiKQKeiq6D4R6zmZEqqcztn3t9pBdoIzeggl/?=
+ =?us-ascii?Q?/gtyJ2wB5obzld8Tx4KqDcMwdMLE9f9ujYNc4nrNC0A5O54KoFGVHGFqNk1s?=
+ =?us-ascii?Q?2fdGqX5O53l7nB3jcLNC8O63XQdUpf29VElgLoSZUHb0K/zHrMdMpYRv03Q+?=
+ =?us-ascii?Q?j+Td3j/u0jS2+tzRhKPfmXuJ8rGi5o04TcXuM4UFlyrOLI3wGyo9J1HLRlEN?=
+ =?us-ascii?Q?dnO4n41IoEAFQOEfzHlj1kRt4GPIenT01dk8kLBXmVfReSokQV8oHgVri7ub?=
+ =?us-ascii?Q?OlXw+VL58D765NOnBtRv?=
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c0656996-19d7-4c13-c72f-08dd5beba7fb
+X-MS-Exchange-CrossTenant-AuthSource: DS7PR19MB8883.namprd19.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Mar 2025 13:43:05.5453
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR19MB8895
 
-On Wed Mar 5, 2025 at 2:29 PM CET, Benno Lossin wrote:
-> According to [1], `NonNull<T>` and `#[repr(transparent)]` wrapper types
-> such as our custom `KBox<T>` have the null pointer optimization only if
-> `T: Sized`. Thus remove the `Zeroable` implementation for the unsized
-> case.
->
-> Link: https://doc.rust-lang.org/stable/std/option/index.html#representati=
-on [1]
-> Cc: stable@vger.kernel.org # v6.12+ (a custom patch will be needed for 6.=
-6.y)
-> Fixes: 38cde0bd7b67 ("rust: init: add `Zeroable` trait and `init::zeroed`=
- function")
-> Signed-off-by: Benno Lossin <benno.lossin@proton.me>
+From: Sricharan Ramabadhran <quic_srichara@quicinc.com>
 
-Forgot to add this:
+This patch series adds the relevant phy and controller
+DT configurations for enabling PCI gen2 support
+on IPQ5018. IPQ5018 has two phys and two controllers, 
+one dual-lane and one single-lane.
 
-Reported-by: Alice Ryhl <aliceryhl@google.com>
+Last patch series (v2) submitted dates back to August 27, 2024.
+As I've worked to add IPQ5018 platform support in OpenWrt, I'm
+continuing the efforts to add Linux kernel support.
 
----
-Cheers,
-Benno
+v3:
+  *) Depends on: https://patchwork.kernel.org/project/linux-arm-msm/cover/20250220094251.230936-1-quic_varada@quicinc.com/
+  *) Added 8 MSI SPI and 1 global interrupts (Thanks Mani for confirming)
+  *) Added hw revision (internal/synopsys) and nr of lanes in patch 4
+     commit msg
+  *) Sorted reg addresses and moved PCIe nodes accordingly
+  *) Moved to GIC based interrupts
+  *) Added rootport node in controller nodes
+  *) Tested on Linksys devices (MX5500/SPNMX56)
+  *) Link to v2: https://lore.kernel.org/all/20240827045757.1101194-1-quic_srichara@quicinc.com/
+
+v2:
+  Fixed all review comments from Krzysztof, Robert Marko,
+  Dmitry Baryshkov, Manivannan Sadhasivam, Konrad Dybcio.
+  Updated the respective patches for their changes.
+
+v1:
+ https://lore.kernel.org/lkml/32389b66-48f3-8ee8-e2f1-1613feed3cc7@gmail.com/T/
+
+Sricharan Ramabadhran (6):
+  dt-bindings: phy: qcom: uniphy-pcie: Add ipq5018 compatible
+  phy: qualcomm: qcom-uniphy-pcie 28LP add support for IPQ5018
+  dt-bindings: PCI: qcom: Add IPQ5018 SoC
+  PCI: qcom: Add support for IPQ5018
+  arm64: dts: qcom: ipq5018: Add PCIe related nodes
+  arm64: dts: qcom: ipq5018: Enable PCIe
+
+ .../devicetree/bindings/pci/qcom,pcie.yaml    |  49 ++++
+ .../phy/qcom,ipq5332-uniphy-pcie-phy.yaml     |   3 +-
+ .../arm64/boot/dts/qcom/ipq5018-rdp432-c2.dts |  38 +++
+ arch/arm64/boot/dts/qcom/ipq5018.dtsi         | 232 +++++++++++++++++-
+ drivers/pci/controller/dwc/pcie-qcom.c        |   1 +
+ .../phy/qualcomm/phy-qcom-uniphy-pcie-28lp.c  |  45 ++++
+ 6 files changed, 365 insertions(+), 3 deletions(-)
+
+-- 
+2.48.1
 
