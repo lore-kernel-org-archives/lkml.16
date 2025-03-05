@@ -1,139 +1,106 @@
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E99D1FBC94
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 11:17:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 333E81FBC94;
+	Wed,  5 Mar 2025 11:19:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741173478; cv=none; b=V03W0oSPKhgl9NnTmgkc3mjDzBnpe/BDUvYS75QnXKYthWnVG5omH/9FVTdoc5oC+bPEe4dtJYTXi3Fps9YLB+w+3e79+hw9sFMCJXCUpydM4WXe0cesNcMOsMBnS1Q2INen+02p6ytYNQg8KaHhyLB7Ug2GFzHziKxvV46urps=
+	t=1741173543; cv=none; b=IgqszK4b7NyVc7nCcptKmA9vX1iPEDoM/9etXJU0FGgY4WKmD9AEMVD5Z7Yq9/D5UAQUF9wnv1Bo8Pv1DEHadfh3o71jrqFHS8HqfT3k/o+/u2RywMBRwJXu/be/WS/GFyCq6OQw6zD8KDWbKBjM7jfNSNyQvRA0EvIRcdUQEkA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741173478; c=relaxed/simple;
-	bh=yclqQDzQ3fuTbQrldeL31okzvYD3Yv7nodsLYHb0az8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=YwjBuAmQc/ZD31ovs4yJ6bGAvGtJ3VYwT03nWEEVg67vz5KLKhGwRQSr7gcs5GnBnWJoLLLm67TswJolfR8zQv8cd+lx58UPNHzO3/ImYz4Lj00SNC56TDXWQg8tdqn2ztI7TGy548LAsuWy5ZaigGk+vdq1cHZ/9O8r2SgBZaE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=R3QzpMd/; arc=none smtp.client-ip=209.85.208.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1741173543; c=relaxed/simple;
+	bh=uyQKnScFs1ZWrV5m1+YTXqWVV6jbnFVO0N/wtoZIWAc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cAg1X749bt4Gx0Wu3EUAb602zEMzchEfprm9I3tI6X1X4NcWSYlso7NBkHS30gM1ZqUITFHhiBQC/K+QmY0Q7QKsSJZYC7DNkL5nGLAdo3nyrN12dqmBEihY287KZ2LuFpN+m/FNBucEvTdbPWHFs+QCS225VC43B+ee3nWeKOY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aDfLzMPH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="R3QzpMd/"
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5e5b6f3025dso272322a12.1
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Mar 2025 03:17:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1741173474; x=1741778274; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=F5Za3WdMVvxWz3492jYv2JlXl0TBbBgskHE33VDHckU=;
-        b=R3QzpMd/5dJUQ3p3m+46sCd0tmZ4H8OlYTmIa+43QaZUXJSSrVDAqhxEARnGWBLaph
-         0XvflDIvrWIHiHBpeZjh2KNVFvtCIScuy1f8mb9YcLRdeZZ7PSMcDmtpQIgWgmloRwK1
-         KdDYIIJU0aqMCQQAYHR3zdYhYhs4bwLdMVlvU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741173474; x=1741778274;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=F5Za3WdMVvxWz3492jYv2JlXl0TBbBgskHE33VDHckU=;
-        b=vFRp06BJaUsm6oA8wyY+dzzLx33YRndvg/zeqXhOVE7ecMzteEOajBNawb9soE5KCM
-         87KRt18MyZKWbmGj77clsnJR5pdNOKY34OwJicBECAwjuco2QLyt8Oz9cy0tY2QYxms2
-         D9dxBjtiS+zEjFUQJMrYzzKsZZGz0HaoEKmZ7cU/VJoO/B2kvgEA8/MqBXd4Go5nL3UX
-         emil6fVyKLE32zflIJ06NDgdBmyWEwHeDcvOvLCCqPasyBimzbDCUDpMXPQWJtrKzwdm
-         wQpRrBCVFwrR+QqE7edOfVEWoOTLKucbd5lVOV1eWTmB+ixmP3rCAT12RB6nQUZJ8M/M
-         /p2Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVyk1YfTI+zeDOxb3KMdxcZ947o9GOCtcm4ynwjNv3WuJRQlCU3EH6+AGl3Agao2GagQ4ye+qgpX5dxEg0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxIvKMiBSh0mOuCJmYphxyej4wgxEpmg7Y5nAsLb8kpHKrvdfSl
-	Hf18kvRRuqJ+Jl4NPxtNSD8KK7fdaqCUPSEgZBK2Mb+RH4pmKwHJ8PWmWyxh+gdCVmRyIqjsHBy
-	Qdw==
-X-Gm-Gg: ASbGncvxDAgi9Ys9eSPO0+xaSJDgmpOVdak4TVL/80gttngrlyaYWpg0FC3KpgVAfJ6
-	MgB2EXCujq3QmcZfYXXnS46bl+S/DpXxY1F9Tdw/V48cUVEZ9a9RwdI7E1+9weeu5LxN2HrDiHP
-	1s6yWAiLzOhzyf1hQwHSx5JC9uX9Yd2C8pML64bc6l3hCUzk9uFhwXxwCl2BKRa/dISebe9OH4J
-	iDw5rrp4mmzrgipARH+ULGB+iOGoUziprZlITLECRHWpTfNhI2xWHXT9R1CT9bX5/OoLUCqGeCi
-	kZH4dsBw7FZ05RvrBYCSKK4kkrPEFn7u3YAWkAmf+hcn2zJEKWgIY/7flPlZPdlsCLdptz3sIlc
-	W+PcQsTbPqHILq5mCqE9S+bYAYD6B1oRyvX4=
-X-Google-Smtp-Source: AGHT+IEqyW5X4ASwkw6LFXhgxDPUVU1GXyMLlS7feXUfmf2zFsVab6nnqWKmqGmgg4CjQS89d0mm5g==
-X-Received: by 2002:a17:907:3da7:b0:ac0:4364:4091 with SMTP id a640c23a62f3a-ac20d844166mr259084666b.9.1741173474306;
-        Wed, 05 Mar 2025 03:17:54 -0800 (PST)
-Received: from akuchynski.c.googlers.com.com (140.20.91.34.bc.googleusercontent.com. [34.91.20.140])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac21e902cddsm35907966b.113.2025.03.05.03.17.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Mar 2025 03:17:52 -0800 (PST)
-From: Andrei Kuchynski <akuchynski@chromium.org>
-To: Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	Benson Leung <bleung@chromium.org>,
-	"Christian A. Ehrhardt" <lk@c--e.de>,
-	Jameson Thies <jthies@google.com>,
-	linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Andrei Kuchynski <akuchynski@chromium.org>,
-	stable@vger.kernel.org
-Subject: [PATCH v2 1/1] usb: typec: ucsi: Fix NULL pointer access
-Date: Wed,  5 Mar 2025 11:17:39 +0000
-Message-ID: <20250305111739.1489003-2-akuchynski@chromium.org>
-X-Mailer: git-send-email 2.49.0.rc0.332.g42c0ae87b1-goog
-In-Reply-To: <20250305111739.1489003-1-akuchynski@chromium.org>
-References: <20250305111739.1489003-1-akuchynski@chromium.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aDfLzMPH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B97F0C4CEE2;
+	Wed,  5 Mar 2025 11:18:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741173542;
+	bh=uyQKnScFs1ZWrV5m1+YTXqWVV6jbnFVO0N/wtoZIWAc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=aDfLzMPHNQoL77B+Ly+CjwnYWj94ed1bcH6xyZis7FUFNTvnCUSAe3VixYfzQNvPJ
+	 4axfKDmwJF5KF/M6dwW0/xmeC8UI9lD8euI60H97Q3rwzhINqV7GDtvjWzIpDJ1lXp
+	 pWGGCDoyaP9Yv3Vs0KRpqRRm7fUOB0NZbJI30VEgu+7i6ls19By5fnGAvpPrg2pAKo
+	 UthdE6nNiGqGloGxv1ay0yE2VjwQonNcRuPx/dg+PwRkripgM0+DKsyND/BB4HgJdx
+	 ZrBS22igx/hsQW1Z3a5Fi+uSUwdYnB2CB6WcSyFrt27Nye0ne/AATgvGrpIhzU6JmK
+	 pybbLGu5AtyZg==
+Date: Wed, 5 Mar 2025 12:18:56 +0100
+From: Niklas Cassel <cassel@kernel.org>
+To: Frank Li <Frank.Li@nxp.com>
+Cc: Jesper Nilsson <jesper.nilsson@axis.com>,
+	Lars Persson <lars.persson@axis.com>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-arm-kernel@axis.com,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org
+Subject: Re: [PATCH RFC NOT TESTED 0/2] PCI: artpec6: Try to clean up
+ artpec6_pcie_cpu_addr_fixup()
+Message-ID: <Z8gxdWaU1N71pyj-@ryzen>
+References: <20250304-axis-v1-0-ed475ab3a3ed@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250304-axis-v1-0-ed475ab3a3ed@nxp.com>
 
-Resources should be released only after all threads that utilize them
-have been destroyed.
-This commit ensures that resources are not released prematurely by waiting
-for the associated workqueue to complete before deallocating them.
+Hello Frank, all,
 
-Cc: stable@vger.kernel.org
-Fixes: b9aa02ca39a4 ("usb: typec: ucsi: Add polling mechanism for partner tasks like alt mode checking")
-Signed-off-by: Andrei Kuchynski <akuchynski@chromium.org>
----
- drivers/usb/typec/ucsi/ucsi.c | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+On Tue, Mar 04, 2025 at 12:49:34PM -0500, Frank Li wrote:
+> This patches basic on
+> https://lore.kernel.org/imx/20250128-pci_fixup_addr-v9-0-3c4bb506f665@nxp.com/
+> 
+> I have not hardware to test and there are not axis,artpec7-pcie in kernel
+> tree.
 
-diff --git a/drivers/usb/typec/ucsi/ucsi.c b/drivers/usb/typec/ucsi/ucsi.c
-index fcf499cc9458..43b4f8207bb3 100644
---- a/drivers/usb/typec/ucsi/ucsi.c
-+++ b/drivers/usb/typec/ucsi/ucsi.c
-@@ -1825,11 +1825,11 @@ static int ucsi_init(struct ucsi *ucsi)
- 
- err_unregister:
- 	for (con = connector; con->port; con++) {
-+		if (con->wq)
-+			destroy_workqueue(con->wq);
- 		ucsi_unregister_partner(con);
- 		ucsi_unregister_altmodes(con, UCSI_RECIPIENT_CON);
- 		ucsi_unregister_port_psy(con);
--		if (con->wq)
--			destroy_workqueue(con->wq);
- 
- 		usb_power_delivery_unregister_capabilities(con->port_sink_caps);
- 		con->port_sink_caps = NULL;
-@@ -2013,10 +2013,6 @@ void ucsi_unregister(struct ucsi *ucsi)
- 
- 	for (i = 0; i < ucsi->cap.num_connectors; i++) {
- 		cancel_work_sync(&ucsi->connector[i].work);
--		ucsi_unregister_partner(&ucsi->connector[i]);
--		ucsi_unregister_altmodes(&ucsi->connector[i],
--					 UCSI_RECIPIENT_CON);
--		ucsi_unregister_port_psy(&ucsi->connector[i]);
- 
- 		if (ucsi->connector[i].wq) {
- 			struct ucsi_work *uwork;
-@@ -2032,6 +2028,11 @@ void ucsi_unregister(struct ucsi *ucsi)
- 			destroy_workqueue(ucsi->connector[i].wq);
- 		}
- 
-+		ucsi_unregister_partner(&ucsi->connector[i]);
-+		ucsi_unregister_altmodes(&ucsi->connector[i],
-+					 UCSI_RECIPIENT_CON);
-+		ucsi_unregister_port_psy(&ucsi->connector[i]);
-+
- 		usb_power_delivery_unregister_capabilities(ucsi->connector[i].port_sink_caps);
- 		ucsi->connector[i].port_sink_caps = NULL;
- 		usb_power_delivery_unregister_capabilities(ucsi->connector[i].port_source_caps);
--- 
-2.49.0.rc0.332.g42c0ae87b1-goog
+If you do a simple:
+$ git grep artpec7
 
+You will see that there are just two drivers that support this SoC:
+drivers/pci/controller/dwc/pcie-artpec6.c
+drivers/crypto/axis/artpec6_crypto.c
+and their matching DT bindings:
+Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt
+Documentation/devicetree/bindings/crypto/artpec6-crypto.txt
+
+I think that at some point in the there was an intent to upstream support
+for the ARTPEC-7 SoC, but now many years later, that hasn't happened,
+as there is not even a artpec7 dtsi.
+
+I think the nicest thing to the community is to drop artpec7 support from
+these two drivers, and deprecate the artpec7 compatibles in the DT bindings,
+as it is obviously making your life harder when trying to do improvements.
+
+
+> 
+> Look for driver owner, who help test this and start move forward to remove
+> cpu_addr_fixup() work.
+
+While I'm the original author of this PCIe driver, I do no longer have
+access to the hardware and documentation, so I cannot test.
+
+For anyone interested in the cleanup Frank is doing, see:
+https://lore.kernel.org/linux-pci/Z8d96Qbggv117LlO@lizhi-Precision-Tower-5810/T/#m0ff14edaf871293ba16acd85e7942adacb603c6c
+
+Looking at your cover-letter for the series above,
+creating a simple-bus with:
+ranges = <0x0 0xc0000000 0x20000000>
+
+and handling that in PCIe DWC common code does look nicer compared to
+having a .cpu_addr_fixup() callback in each PCIe DWC glue driver.
+
+Hopefully someone with access to the hardware can test your series +
+this RFC.
+
+
+Kind regards,
+Niklas
