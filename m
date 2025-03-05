@@ -1,139 +1,189 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D81834A33;
-	Wed,  5 Mar 2025 21:23:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2ABC4A33
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 21:23:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741209817; cv=none; b=G81UNSwEIrY/0BYURt9m7IWB0lL8wlGa6OIxFbGD8enRMP/bX42gazDlnyBEak4hqBAMN92yc2ww658Ngy0RR2PSGb2cMIWHLlutIK6GhfPNWMv6ykMne6nlgBhyXjJEPxqtG+Mxrf1MnVWS06g98dcovrfmNN+QJNGi1w1X0xo=
+	t=1741209836; cv=none; b=iZTZp7iTyDAU0KFLHZBuV726mITuUQ2jo/kdWN7cdgKnFYuACbHntEV2VqbP51kkHcvNdN+g1bU/9Pl3nyMTX1s1DpVG5rEjaM3YyHDWjkTxcR0oiNGLZW7aqQcJYExfh5Xbnzb+BXwVtERESMLYHtyih3kxKXT4OGLGPxaHvPQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741209817; c=relaxed/simple;
-	bh=DvbHalLpCxkuRiwdqtO8seg1Zu43gShTi+7ZD18U1h8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZEL77KhA4W/Pmn28sTopP7ME3bPBKiV0t+bNvGdo5rjxgFbimQkf+Q1RUivef+Lk/FspEw/RwcOyYyoRMsrX7K7AfwO5/6TciQriHF9lh0Hfi1e3Ulh1/z8Zi7ofmeXn0FZ/HXIh5uwI5+JyzquhvgV2CookGk8DGRcM8XpeRO8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=udubEywU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741209836; c=relaxed/simple;
+	bh=8ySDjGy6ifVT9nBen+e+y8tngjg0FvnAc2do9GydDKU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Pt8Yi1MvHbw1veOb2TYer/4bHUhyUD6JhjzxB9vtlQWA8TWwXDW6zo8cha6hLBQo240n+3CtsnHg43R2tBi+K49MTuSKyp/5/bY3Rgsz3rDmK7FMVBqB/WIY561kV2cSa2LPW0IYe9fTP4BQuUoCni1m33cwnyR0ysQi4BCe+Fo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ic4KHpXX; arc=none smtp.client-ip=209.85.218.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="udubEywU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56472C4CEE8;
-	Wed,  5 Mar 2025 21:23:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741209816;
-	bh=DvbHalLpCxkuRiwdqtO8seg1Zu43gShTi+7ZD18U1h8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=udubEywU4g28gFPq/9N5lLM2nPK1lMawQ+GWUGIQt4obxSNbK7tbvj1DBi5YN/eM3
-	 2E1ekg9Wg36v2x08Of2jLE56mTUfeOMzOLoSWFjY8SA9zqgLY7qAfWJyTSRnkuz3C3
-	 VbLBIxk1bLSO9xongCpc+qWD9eBWh0d3z6PWABYjx3Iv0Ipmxia/DgeJtpTaXwFgnT
-	 vumj06ol2aIc4cN1EMP5Wr3OxlXmZ24xPqztZVnyZDHrDNCf5aZ0IrXN+Qh5MYC3In
-	 8rgqPuxDMH0A1CF5Pa45HOkyTtNnmW9BDaXb9Hmo/ThrparhMqIAc5PQ3YT90rDaIG
-	 iCM+4IundHthA==
-Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-e6119fc5e9bso1330683276.0;
-        Wed, 05 Mar 2025 13:23:36 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVyjZiARvlwfsy1T4b2XFZW2yNvVTJGv9I3P8Jg4sS9zmTlhW1Ar0yV7LJACzToeT63qlrYV6zYu5gX@vger.kernel.org, AJvYcCX0reZlse+DT9mvOySasA05Y4ega+fwlfYq2ea+K2gL1VQoC/VSRdSkfCcECyhhMM7LvNwY428miYkVOj3c@vger.kernel.org, AJvYcCXkGPqCQF0cEh8kovKNNznQLDo/mNYhBHq+5zK647IgT6nSpa/JLGcA3WCpZVF1qze2dDeYUntbhCrVFif5VLO+rWLFYlB6@vger.kernel.org, AJvYcCXwsXCS7kdCp23mD3C14viPssDHhkXT4Y327FJAgwl9KyYdAepS/F6XaAu1Kb5ebTgJYxPhBQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz59/eArWnYIvynSYImC0hwU8AHN9VwKxbrd0e4gxWG+Pldi6Sc
-	amDvu/ZM/irSzKE1+RDsCfVLd98ANiFW5ebfpW8ID6PhYYZhWvMXrTCPofXLLO+RwbrYEWzdyW+
-	38sbxKNebyitgnr/bse322Yuy810=
-X-Google-Smtp-Source: AGHT+IFclP7iVxvi0j9ekZjfJdMyS78JlgW+fr8ZvybEcumnXEaCDKm5SlFT/PVINMVVVcf+Uzsy3DGg4vx2Z/JvQhA=
-X-Received: by 2002:a05:6902:2a42:b0:e60:affa:673d with SMTP id
- 3f1490d57ef6-e611e333584mr6233902276.48.1741209815692; Wed, 05 Mar 2025
- 13:23:35 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ic4KHpXX"
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-abf42913e95so825002666b.2
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Mar 2025 13:23:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741209833; x=1741814633; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=k8Dkf2Am7BkCc6xwiEJIkFESnAy6N6xXMin3A5PDXG4=;
+        b=Ic4KHpXX6A+W7fmcFBhAKv15IfDjhrWdM/VvJS5xcMYx+41cEppoZzzk7edIftZD+N
+         i+zmJGTT7/FT3ChyjsZy1iyfc9/sKhlUZGtJZ2Q6v1VE0ufrJwp+wO0kcUPD+XlB8D65
+         T6eXuj4wrnghW3PB3nbppfhw2aGd6rxBp+CUhsdBhHR1vjq4lKE7OAjg1F4xuFsffjul
+         Jncb59WmAhW1k5dZmV2ZGGIIxMhIBhEP+fMuVpq0dIT41cd0k1js5eQSiHHyBH+20mAa
+         650I5dVsiu9cZ0vIau0wfax7Zeh5+Ykh0iMK97z0b1zBUw9GdId9ESNHko7SSb/yNs7j
+         kwcA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741209833; x=1741814633;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=k8Dkf2Am7BkCc6xwiEJIkFESnAy6N6xXMin3A5PDXG4=;
+        b=R0/yLC+gm2n20fm6V9Fd/7Zo8UWS2tvEDbmlj+SyMURKKxKPgIKzGRbVH7x3XsPrwv
+         bvMZtC+xTLMB8z8INXlyce4R+5heC+r7ZB9po/B+ZvlSDYYkGR9VHJSaDq88rpNVcifH
+         yjt/vn92iQBCiwJXpXPjtrba8ASYHO1d+sJWpPWUPgPi3XUm9B1m34t8BNGN4xhhV74G
+         aAoB8QemcPOzQwjsJkx6d50nsATnMlhIEd17oPbWk/25hBqdapzexJrpPKw93OLJM218
+         5UPwPkgHSAtLR5QJUCgHtj5WOZuepNTUCl/XQgio2h1Gezl7HZZyd083t3kYi6ZUO+tN
+         LN6g==
+X-Forwarded-Encrypted: i=1; AJvYcCV4rXE18UzTQ3xoSM1IQ+WqyHTUldD6r3bMFtRcxEnMBa9ZLza0brof4PWgnJjNMcz9qZDtMuIjixMCmXM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw7RUV8RqEcArQup/rfvulAysRmw2C3NkPxj8mGa77jQ4faBu76
+	GNvEUWBZEiqxbGV6LBkEKbXe5s051yWv100suyTfMSk66cVyV1R0
+X-Gm-Gg: ASbGncvQKNT9dJc5DIE8uPFQSveCDETwtAItF920dNNx7jNNvyuaoxNXs+/A/bLffun
+	wmmR1dh+/X6glQv/UWEYJ2OQ+xF1aGLVw1fBeMB1cHMsfzIOJbMnoNfi0bmjPsq0HW4wyGZnoz7
+	85Jg3wtiPGDsuyYi5/SOIFgPxunAGxuo/vculLCf9JukUh9sagLyI1OOjllXkNreg+6SacL9FoP
+	9eT3OacDGnzeUuyO2XZo9bFF0v4zfyWFlujBYeSngYZicyfJHDurggD8E9MgY16V2IvYesf/zU4
+	UuyqDgj0JQ0fklkn8aohH1SqZGvNfjnrQG6qLpD3UuwGCFZMrxk7TlgBXDRT
+X-Google-Smtp-Source: AGHT+IHCUgJSczMALJRUQsNQJij5yTp/ZhVwBJWdsbeRmE1+G/jwWDZcuvPQrej8azlFaVtQAjkeOQ==
+X-Received: by 2002:a17:907:c018:b0:abf:7964:f9e5 with SMTP id a640c23a62f3a-ac20e03b1d0mr507213766b.56.1741209832560;
+        Wed, 05 Mar 2025 13:23:52 -0800 (PST)
+Received: from localhost.localdomain ([196.235.231.34])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac1ea7dd823sm404025866b.109.2025.03.05.13.23.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Mar 2025 13:23:52 -0800 (PST)
+From: Salah Triki <salah.triki@gmail.com>
+To: Felix Kuehling <Felix.Kuehling@amd.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	amd-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org
+Cc: Salah Triki <salah.triki@gmail.com>
+Subject: [PATCH] drm: amdkfd: Replace (un)register_chrdev() by (unregister/alloc)_chrdev_region()
+Date: Wed,  5 Mar 2025 22:08:09 +0100
+Message-Id: <20250305210809.218138-1-salah.triki@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAKtyLkFyqFCcqUi7TPn9niUwYcHwv8nVq-joKc8kd8tFg58p-Q@mail.gmail.com>
- <1740784265-19829-1-git-send-email-jasjivsingh@linux.microsoft.com>
- <CAKtyLkGV4cGJzbvVUAeLBp=evc_QAWPD8FsskHNVvx-1UZJB-A@mail.gmail.com> <0a5e586a-9b55-4905-8663-6ef0112aa32d@linux.microsoft.com>
-In-Reply-To: <0a5e586a-9b55-4905-8663-6ef0112aa32d@linux.microsoft.com>
-From: Fan Wu <wufan@kernel.org>
-Date: Wed, 5 Mar 2025 13:23:23 -0800
-X-Gmail-Original-Message-ID: <CAKtyLkEveJbJ9HAufC1_x8J287qqDFYZOhK2Y0MEaPo+dkJm2Q@mail.gmail.com>
-X-Gm-Features: AQ5f1JpnHsTCDFfoCzh84MJkz2wEhzTGjo9BEiGagwu5LFjMWyeoqQInPgwF4J8
-Message-ID: <CAKtyLkEveJbJ9HAufC1_x8J287qqDFYZOhK2Y0MEaPo+dkJm2Q@mail.gmail.com>
-Subject: Re: [PATCH v3] ipe: add errno field to IPE policy load auditing
-To: Jasjiv Singh <jasjivsingh@linux.microsoft.com>
-Cc: Fan Wu <wufan@kernel.org>, audit@vger.kernel.org, corbet@lwn.net, 
-	eparis@redhat.com, jmorris@namei.org, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org, 
-	paul@paul-moore.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Tue, Mar 4, 2025 at 4:04=E2=80=AFPM Jasjiv Singh
-<jasjivsingh@linux.microsoft.com> wrote:
->
->
->
-> On 3/3/2025 2:11 PM, Fan Wu wrote:
-> > On Fri, Feb 28, 2025 at 3:11=E2=80=AFPM Jasjiv Singh
-> > <jasjivsingh@linux.microsoft.com> wrote:
-> >>
-> >> Users of IPE require a way to identify when and why an operation fails=
-,
-> >> allowing them to both respond to violations of policy and be notified
-> >> of potentially malicious actions on their systems with respect to IPE.
-> >>
-> >> This patch introduces a new error field to the AUDIT_IPE_POLICY_LOAD e=
-vent
-> >> to log policy loading failures. Currently, IPE only logs successful po=
-licy
-> >> loads, but not failures. Tracking failures is crucial to detect malici=
-ous
-> >> attempts and ensure a complete audit trail for security events.
-> >>
-> >> The new error field will capture the following error codes:
-> >>
-> >> * 0: no error
-> >> * -EPERM: Insufficient permission
-> >> * -EEXIST: Same name policy already deployed
-> >> * -EBADMSG: policy is invalid
-> >> * -ENOMEM: out of memory (OOM)
-> >> * -ERANGE: policy version number overflow
-> >> * -EINVAL: policy version parsing error
-> >>
-> >
-> > These error codes are not exhaustive. We recently introduced the
-> > secondary keyring and platform keyring to sign policy so the policy
-> > loading could return -ENOKEY or -EKEYREJECT. And also the update
-> > policy can return -ESTALE when the policy version is old.
-> > This is my fault that I forgot we should also update the documentation
-> > of the newly introduced error codes. Could you please go through the
-> > whole loading code and find all possible error codes?  Also this is a
-> > good chance to update the current stale function documents.
-> >
-> > ...
-> >
->
-> So, I looked into error codes when the policy loads. In ipe_new_policy,
-> the verify_pkcs7_signature can return a lot of errno codes (ex: ENOKEY,
-> EKEYREJECTED, EBADMSG, etc.) while parsing the pkcs7 and other functions
-> as well. Also, In ipe_new_policyfs_node used in new_policy(), I see the s=
-ame
-> issue with securityfs_create_dir and securityfs_create_file as they
-> return the errno directly from API to. So, what should we return?
+Replace (un)register_chrdev() by (unregister/alloc)_chrdev_region() as
+they are deprecated since kernel 2.6. alloc_chrdev_region() generates a
+dev_t value, so replace the kfd_char_dev_major int variable by the
+kfd_char_dev_id dev_t variable and drop the MKDEV() call. Initialize a
+cdev structure and add it to the device driver model as register_chrdev()
+used to do and since alloc_chrdev_region() does not do it. Drop the
+iminor() call since alloc_chrdev_region() allocates only one minor number.
+On error and in the module exit function, remove the cdev structure from
+the device driver model as unregister_chrdev() used to do.
 
-I think the key here is we need to document the errors in the ipe's
-context. For example, ENOKEY means the key used to sign the ipe policy
-is not found in the keyring, EKEYREJECTED means ipe signature
-verification failed. If an error does not have specific meaning for
-ipe then probably we don't need to document it.
+Signed-off-by: Salah Triki <salah.triki@gmail.com>
+---
+ drivers/gpu/drm/amd/amdkfd/kfd_chardev.c | 35 ++++++++++++++++--------
+ 1 file changed, 23 insertions(+), 12 deletions(-)
 
->
-> For other functions: I have complied the errno list:
->
-> * -ENOENT: Policy is not found while updating
+diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_chardev.c b/drivers/gpu/drm/amd/amdkfd/kfd_chardev.c
+index 065d87841459..55c74466d2c5 100644
+--- a/drivers/gpu/drm/amd/amdkfd/kfd_chardev.c
++++ b/drivers/gpu/drm/amd/amdkfd/kfd_chardev.c
+@@ -37,6 +37,8 @@
+ #include <linux/ptrace.h>
+ #include <linux/dma-buf.h>
+ #include <linux/processor.h>
++#include <linux/cdev.h>
++
+ #include "kfd_priv.h"
+ #include "kfd_device_queue_manager.h"
+ #include "kfd_svm.h"
+@@ -61,12 +63,14 @@ static const struct file_operations kfd_fops = {
+ 	.mmap = kfd_mmap,
+ };
+ 
+-static int kfd_char_dev_major = -1;
++static dev_t kfd_char_dev_id;
+ struct device *kfd_device;
+ static const struct class kfd_class = {
+ 	.name = kfd_dev_name,
+ };
+ 
++static struct cdev kfd_cdev;
++
+ static inline struct kfd_process_device *kfd_lock_pdd_by_id(struct kfd_process *p, __u32 gpu_id)
+ {
+ 	struct kfd_process_device *pdd;
+@@ -90,17 +94,24 @@ int kfd_chardev_init(void)
+ {
+ 	int err = 0;
+ 
+-	kfd_char_dev_major = register_chrdev(0, kfd_dev_name, &kfd_fops);
+-	err = kfd_char_dev_major;
++	err = alloc_chrdev_region(&kfd_char_dev_id, 0, 1, kfd_dev_name);
++
+ 	if (err < 0)
+-		goto err_register_chrdev;
++		goto err_alloc_chrdev_region;
++
++	cdev_init(&kfd_cdev, &kfd_fops);
++	kfd_cdev.owner = THIS_MODULE;
++
++	err = cdev_add(&kfd_cdev, kfd_char_dev_id, 1);
++	if (err)
++		goto err_cdev_add;
+ 
+ 	err = class_register(&kfd_class);
+ 	if (err)
+ 		goto err_class_create;
+ 
+ 	kfd_device = device_create(&kfd_class, NULL,
+-				   MKDEV(kfd_char_dev_major, 0),
++				   kfd_char_dev_id,
+ 				   NULL, kfd_dev_name);
+ 	err = PTR_ERR(kfd_device);
+ 	if (IS_ERR(kfd_device))
+@@ -111,16 +122,19 @@ int kfd_chardev_init(void)
+ err_device_create:
+ 	class_unregister(&kfd_class);
+ err_class_create:
+-	unregister_chrdev(kfd_char_dev_major, kfd_dev_name);
+-err_register_chrdev:
++	cdev_del(&kfd_cdev);
++err_cdev_add:
++	unregister_chrdev_region(kfd_char_dev_id, 1);
++err_alloc_chrdev_region:
+ 	return err;
+ }
+ 
+ void kfd_chardev_exit(void)
+ {
+-	device_destroy(&kfd_class, MKDEV(kfd_char_dev_major, 0));
++	device_destroy(&kfd_class, kfd_char_dev_id);
+ 	class_unregister(&kfd_class);
+-	unregister_chrdev(kfd_char_dev_major, kfd_dev_name);
++	cdev_del(&kfd_cdev);
++	unregister_chrdev_region(kfd_char_dev_id, 1);
+ 	kfd_device = NULL;
+ }
+ 
+@@ -130,9 +144,6 @@ static int kfd_open(struct inode *inode, struct file *filep)
+ 	struct kfd_process *process;
+ 	bool is_32bit_user_mode;
+ 
+-	if (iminor(inode) != 0)
+-		return -ENODEV;
+-
+ 	is_32bit_user_mode = in_compat_syscall();
+ 
+ 	if (is_32bit_user_mode) {
+-- 
+2.34.1
 
-This one means policy was deleted while updating, this only happens
-the update happened just after the policy deletion.
-
-> * -EEXIST: Same name policy already deployed
-> * -ERANGE: Policy version number overflow
-> * -EINVAL: Policy version parsing error
-> * -EPERM: Insufficient permission
-> * -ESTALE: Policy version is old
-
-Maybe make this one clearer, how about trying to update an ipe policy
-with an older version policy.
-
--Fan
