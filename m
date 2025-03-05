@@ -1,134 +1,195 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail-4322.protonmail.ch (mail-4322.protonmail.ch [185.70.43.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32259268698;
-	Wed,  5 Mar 2025 22:27:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AA254A33;
+	Wed,  5 Mar 2025 22:30:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741213670; cv=none; b=V78IMzTkG1f4xu/Su8woP8YkQThlt+7h73WQCjtI5ywVE8e510vdkAc23tPudGHN7Uw9V+2+bQpBjsNvtPl8AL2MYG6wGOASgyTpmp2ngHrgQaclrWjkYdn92twk6uOfCl17iHRwVBhjiHCNsTIa/OLB4zYML0II2jidySczZ9U=
+	t=1741213846; cv=none; b=HNWhQAaTxnJl6ROx2SC1hFI54ndytizsGFPNY35FufXtlspTzd/Cd/5D3GIkUK6/9eH5UStIWX12qUmIkJ7LLT+yCI8on4iBdtIMtB7UP9VB9pHWZUFCEwv0Az260YRktWyZdhVZIiyykFlUmnJHK0IffUOioWpqVJDgTIPTkKY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741213670; c=relaxed/simple;
-	bh=47X+eEoNM4cXPe501kkxrph0V2B2kHrGH6GZrrO40z0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=q4uzysONpOq36TvqMrjiCISqrFRVA1OPtGbTbYOfYW82IY9zoVFoAN7i5VlRdN3V+HvvDi7DNlaHmw93ek3Usap/m/fCGiohsaLS08kgc3OyAHnzuX6rUEGPpBt8aT2vBIxpA2tzqaOMNMA/10tIT/S6lJSfyrnB0rbj+NVq47Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A/8GAGHV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741213846; c=relaxed/simple;
+	bh=EYN/BSLLtdiTg/f7jeJ6J4AoAO07Udklbww6jnmiAaE=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=U2drmGUulmUO0UdeoJVOBOXjvwASH9gEGwCrOXwIa61qUMgtb2lzcRvIA1nK6WKpCm3phAGz1HErOmL0YxvvALrI3gDQELfnJWWxDnyT9taG7WbN+tXuYDNfazYRm5X+frcDuD2KJCRaLSO26OfasFKTpBUkcdS+A/KYNYiV70Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=ExIVDq+U; arc=none smtp.client-ip=185.70.43.22
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A/8GAGHV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DAAA9C4AF09;
-	Wed,  5 Mar 2025 22:27:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741213670;
-	bh=47X+eEoNM4cXPe501kkxrph0V2B2kHrGH6GZrrO40z0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=A/8GAGHVWwEyJKU9fX+3btSUYqcbCJkD5n70OIIlgDwm2SUWpPrPDbgxWw2cz96Es
-	 +WQAAgzNt4rpfKnvi2yeWDbQQc4vdZwg4Lr+Vuyi2vdRaSeakhTMsAIsJVw4iGjauD
-	 sRwiK15hqLuulWufZxCON720EA5i0DGS51il9e1f7VKcKWK5nYGkjos/8WRuZLonUg
-	 l2berudzd46p8iz7wleIwOxOdVYSNf2dVbJlSkUSs87VPX9Jj1bHydurGROmUaA5VU
-	 LF8KlS867WeivAEb9gS1mQbal5hzEOwS4i0X9B2bSr2ukZnVtnljz3Wh+iPGoTT9V0
-	 unPes/owhWHpg==
-From: SeongJae Park <sj@kernel.org>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: SeongJae Park <sj@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	damon@lists.linux.dev,
-	kernel-team@meta.com,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org
-Subject: [PATCH 8/8] Docs/admin-guide/mm/damon/usage: update for {core,ops}_filters directories
-Date: Wed,  5 Mar 2025 14:27:33 -0800
-Message-Id: <20250305222733.59089-9-sj@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250305222733.59089-1-sj@kernel.org>
-References: <20250305222733.59089-1-sj@kernel.org>
+	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="ExIVDq+U"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=protonmail; t=1741213841; x=1741473041;
+	bh=oA5VdBYqAl1FD7XLdd6ED5xak0jGnkmx5w36QBysOHU=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
+	b=ExIVDq+Ujn6KsOt67OMC7GxrAMIcWg00nU1tO3l1CRkkMfRDzJfhUvlOnbAFRRdwh
+	 QSIFakcquGfaPU+hFA+dg/eqEL5ljlXh9cxSrJd/gz0cypodCjxiFBhoA+FX/Jji5X
+	 KH9tXlAO+QzhvYchL/eCAymMTqJgYmpyXsPoMOAW7Gr5cGXq/BOJ6ZHwGC4mHfHXmO
+	 BINFIJj8ovd8c3iX/5R20OaEcbzFpvkmE3oMa7zRiD7ziMgat1ysdRpIkc0JjpKlzK
+	 O2U8nk7deejkOq6rODO8bJp9A0ftPXefTmSwnB6yDHUxkwVXMCmui6Z3aid/fg9nM2
+	 5DLkYeCXLmxGw==
+Date: Wed, 05 Mar 2025 22:30:31 +0000
+To: Danilo Krummrich <dakr@kernel.org>, airlied@gmail.com, simona@ffwll.ch, corbet@lwn.net, maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de, ajanulgu@redhat.com, lyude@redhat.com, pstanner@redhat.com, zhiw@nvidia.com, cjia@nvidia.com, jhubbard@nvidia.com, bskeggs@nvidia.com, acurrid@nvidia.com
+From: Benno Lossin <benno.lossin@proton.me>
+Cc: ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com, a.hindborg@kernel.org, aliceryhl@google.com, tmgross@umich.edu, gregkh@linuxfoundation.org, mcgrof@kernel.org, russ.weight@linux.dev, dri-devel@lists.freedesktop.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, nouveau@lists.freedesktop.org, rust-for-linux@vger.kernel.org
+Subject: Re: [PATCH v5 2/5] rust: firmware: introduce `firmware::ModInfoBuilder`
+Message-ID: <D88OSC9XJXZL.C5HXWFYCG9U6@proton.me>
+In-Reply-To: <20250304173555.2496-3-dakr@kernel.org>
+References: <20250304173555.2496-1-dakr@kernel.org> <20250304173555.2496-3-dakr@kernel.org>
+Feedback-ID: 71780778:user:proton
+X-Pm-Message-ID: fc5a88e7746fec47f7de82f7668300d12884367f
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Document {core,ops}_filters directories on usage document.
+On Tue Mar 4, 2025 at 6:34 PM CET, Danilo Krummrich wrote:
+> The `firmware` field of the `module!` only accepts literal strings,
+> which is due to the fact that it is implemented as a proc macro.
+>
+> Some drivers require a lot of firmware files (such as nova-core) and
+> hence benefit from more flexibility composing firmware path strings.
+>
+> The `firmware::ModInfoBuilder` is a helper component to flexibly compose
+> firmware path strings for the .modinfo section in const context.
+>
+> It is meant to be used in combination with `kernel::module_firmware!`,
+> which is introduced in a subsequent patch.
+>
+> Co-developed-by: Alice Ryhl <aliceryhl@google.com>
+> Signed-off-by: Alice Ryhl <aliceryhl@google.com>
+> Signed-off-by: Danilo Krummrich <dakr@kernel.org>
+> ---
+>  rust/kernel/firmware.rs | 98 +++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 98 insertions(+)
+>
+> diff --git a/rust/kernel/firmware.rs b/rust/kernel/firmware.rs
+> index c5162fdc95ff..6e6972d94597 100644
+> --- a/rust/kernel/firmware.rs
+> +++ b/rust/kernel/firmware.rs
+> @@ -115,3 +115,101 @@ unsafe impl Send for Firmware {}
+>  // SAFETY: `Firmware` only holds a pointer to a C `struct firmware`, ref=
+erences to which are safe to
+>  // be used from any thread.
+>  unsafe impl Sync for Firmware {}
+> +
+> +/// Builder for firmware module info.
+> +///
+> +/// [`ModInfoBuilder`] is a helper component to flexibly compose firmwar=
+e paths strings for the
+> +/// .modinfo section in const context.
+> +///
+> +/// It is meant to be used in combination with [`kernel::module_firmware=
+!`].
+> +///
+> +/// For more details and an example, see [`kernel::module_firmware!`].
+> +pub struct ModInfoBuilder<const N: usize> {
+> +    buf: [u8; N],
+> +    n: usize,
+> +    module_name: &'static CStr,
+> +}
+> +
+> +impl<const N: usize> ModInfoBuilder<N> {
+> +    /// Create an empty builder instance.
+> +    pub const fn new(module_name: &'static CStr) -> Self {
+> +        Self {
+> +            buf: [0; N],
+> +            n: 0,
+> +            module_name,
+> +        }
+> +    }
+> +
+> +    const fn push_internal(mut self, bytes: &[u8]) -> Self {
+> +        let mut j =3D 0;
+> +
+> +        if N =3D=3D 0 {
+> +            self.n +=3D bytes.len();
+> +            return self;
+> +        }
+> +
+> +        while j < bytes.len() {
+> +            if self.n < N {
+> +                self.buf[self.n] =3D bytes[j];
+> +            }
+> +            self.n +=3D 1;
+> +            j +=3D 1;
+> +        }
+> +        self
+> +    }
+> +
+> +    /// Push an additional path component.
+> +    ///
+> +    /// After a new [`ModInfoBuilder`] instance has been created, [`ModI=
+nfoBuilder::prepare`] must
+> +    /// be called before adding path components.
+> +    pub const fn push(self, s: &str) -> Self {
+> +        if N !=3D 0 && self.n =3D=3D 0 {
+> +            crate::build_error!("Must call prepare() before push().");
 
-Signed-off-by: SeongJae Park <sj@kernel.org>
+This will only prevent the first `prepare` call being missed, right?
+
+> +        }
+> +
+> +        self.push_internal(s.as_bytes())
+> +    }
+> +
+> +    const fn prepare_module_name(self) -> Self {
+> +        let mut this =3D self;
+> +        let module_name =3D this.module_name;
+> +
+> +        if !this.module_name.is_empty() {
+> +            this =3D this.push_internal(module_name.as_bytes_with_nul())=
+;
+> +
+> +            if N !=3D 0 {
+> +                // Re-use the space taken by the NULL terminator and swa=
+p it with the '.' separator.
+> +                this.buf[this.n - 1] =3D b'.';
+> +            }
+> +        }
+> +
+> +        this.push_internal(b"firmware=3D")
+> +    }
+> +
+> +    /// Prepare for the next module info entry.
+> +    ///
+> +    /// Must be called before [`ModInfoBuilder::push`] can be called.
+
+If you always have to call this before `push`, why not inline it there?
+
 ---
- Documentation/admin-guide/mm/damon/usage.rst | 31 ++++++++++++++------
- 1 file changed, 22 insertions(+), 9 deletions(-)
+Cheers,
+Benno
 
-diff --git a/Documentation/admin-guide/mm/damon/usage.rst b/Documentation/admin-guide/mm/damon/usage.rst
-index de549dd18107..ced2013db3df 100644
---- a/Documentation/admin-guide/mm/damon/usage.rst
-+++ b/Documentation/admin-guide/mm/damon/usage.rst
-@@ -83,7 +83,7 @@ comma (",").
-     │ │ │ │ │ │ │ │ :ref:`goals <sysfs_schemes_quota_goals>`/nr_goals
-     │ │ │ │ │ │ │ │ │ 0/target_metric,target_value,current_value
-     │ │ │ │ │ │ │ :ref:`watermarks <sysfs_watermarks>`/metric,interval_us,high,mid,low
--    │ │ │ │ │ │ │ :ref:`filters <sysfs_filters>`/nr_filters
-+    │ │ │ │ │ │ │ :ref:`{core_,ops_,}filters <sysfs_filters>`/nr_filters
-     │ │ │ │ │ │ │ │ 0/type,matching,allow,memcg_path,addr_start,addr_end,target_idx,min,max
-     │ │ │ │ │ │ │ :ref:`stats <sysfs_schemes_stats>`/nr_tried,sz_tried,nr_applied,sz_applied,sz_ops_filter_passed,qt_exceeds
-     │ │ │ │ │ │ │ :ref:`tried_regions <sysfs_schemes_tried_regions>`/total_bytes
-@@ -307,9 +307,10 @@ to ``N-1``.  Each directory represents each DAMON-based operation scheme.
- schemes/<N>/
- ------------
- 
--In each scheme directory, five directories (``access_pattern``, ``quotas``,
--``watermarks``, ``filters``, ``stats``, and ``tried_regions``) and three files
--(``action``, ``target_nid`` and ``apply_interval``) exist.
-+In each scheme directory, seven directories (``access_pattern``, ``quotas``,
-+``watermarks``, ``core_filters``, ``ops_filters``, ``filters``, ``stats``, and
-+``tried_regions``) and three files (``action``, ``target_nid`` and
-+``apply_interval``) exist.
- 
- The ``action`` file is for setting and getting the scheme's :ref:`action
- <damon_design_damos_action>`.  The keywords that can be written to and read
-@@ -420,13 +421,24 @@ The ``interval`` should written in microseconds unit.
- 
- .. _sysfs_filters:
- 
--schemes/<N>/filters/
----------------------
-+schemes/<N>/{core\_,ops\_,}filters/
-+-----------------------------------
- 
--The directory for the :ref:`filters <damon_design_damos_filters>` of the given
-+Directories for :ref:`filters <damon_design_damos_filters>` of the given
- DAMON-based operation scheme.
- 
--In the beginning, this directory has only one file, ``nr_filters``.  Writing a
-+``core_filters`` and ``ops_filters`` directories are for the filters handled by
-+the DAMON core layer and operations set layer, respectively.  ``filters``
-+directory can be used for installing filters regardless of their handled
-+layers.  Filters that requested by ``core_filters`` and ``ops_filters`` will be
-+installed before those of ``filters``.  All three directories have same files.
-+
-+Use of ``filters`` directory can make expecting evaluation orders of given
-+filters with the files under directory bit confusing.  Users are hence
-+recommended to use ``core_filters`` and ``ops_filters`` directories.  The
-+``filters`` directory could be deprecated in future.
-+
-+In the beginning, the directory has only one file, ``nr_filters``.  Writing a
- number (``N``) to the file creates the number of child directories named ``0``
- to ``N-1``.  Each directory represents each filter.  The filters are evaluated
- in the numeric order.
-@@ -435,7 +447,7 @@ Each filter directory contains nine files, namely ``type``, ``matching``,
- ``allow``, ``memcg_path``, ``addr_start``, ``addr_end``, ``min``, ``max``
- and ``target_idx``.  To ``type`` file, you can write the type of the filter.
- Refer to :ref:`the design doc <damon_design_damos_filters>` for available type
--names and their meanings.
-+names, their meaning and on what layer those are handled.
- 
- For ``memcg`` type, you can specify the memory cgroup of the interest by
- writing the path of the memory cgroup from the cgroups mount point to
-@@ -455,6 +467,7 @@ the ``type`` and ``matching`` should be allowed or not.
- For example, below restricts a DAMOS action to be applied to only non-anonymous
- pages of all memory cgroups except ``/having_care_already``.::
- 
-+    # cd ops_filters/0/
-     # echo 2 > nr_filters
-     # # disallow anonymous pages
-     echo anon > 0/type
--- 
-2.39.5
+> +    pub const fn prepare(self) -> Self {
+> +        self.push_internal(b"\0").prepare_module_name()
+> +    }
+> +
+> +    /// Build the byte array.
+> +    pub const fn build(self) -> [u8; N] {
+> +        // Add the final NULL terminator.
+> +        let this =3D self.push_internal(b"\0");
+> +
+> +        if this.n =3D=3D N {
+> +            this.buf
+> +        } else {
+> +            crate::build_error!("Length mismatch.");
+> +        }
+> +    }
+> +}
+> +
+> +impl ModInfoBuilder<0> {
+> +    /// Return the length of the byte array to build.
+> +    pub const fn build_length(self) -> usize {
+> +        // Compensate for the NULL terminator added by `build`.
+> +        self.n + 1
+> +    }
+> +}
+> --
+> 2.48.1
+
+
