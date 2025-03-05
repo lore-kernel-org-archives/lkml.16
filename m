@@ -1,47 +1,47 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 962472066FF
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 23:07:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EB8220E010
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 23:07:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741216079; cv=none; b=E+OrRnQ2qY20UkvnYYkaeaVPp+PIJhTQQQXQlEpVq/mfWnE8g5Vh3cDowoajoDKgMZRWOF58HuurkmgsOlJFaOQ1n3VjZDfP36UrZGpQ5jbidk0hoOS9h15HLicWo/oRSFQtgqUg/x3eCSVWytZlTQ+Gpn1vMo993/V/RWwhdBA=
+	t=1741216081; cv=none; b=XfKiHjeGlbCA47+TY/Sk0w325Yw5hlM3I3mi5wxQw77pv4EpE8n0P+7nKnPbGtg2D/hbsfPfTcnfA35k4GCrma4kgSh90rX3Yx4TTkWT6cRAZi2XnhZWi2hZoQe10bIB1fpsiiXJ1qVOJK+BGdol1NypEvwuvLJgZ3ZthN6IzfM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741216079; c=relaxed/simple;
-	bh=0ZuwPDudrCakJsAqrir16bTSWYDMXS0Di7v5Px72Guk=;
+	s=arc-20240116; t=1741216081; c=relaxed/simple;
+	bh=aaLSN9RN3gmYzBHJpU5ewiDXbcZaSZXt4IfHYWgoc/Q=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=LPLy7bvN70/7oCNE5ALrB10xfjpmAOJHR8Ej4zRbGkWbZfKQeN4pGaxFwwu6pemXTDemhNy+vSSclLx76AKwVRcCgCayPr66Qe1iEGuxUpKDLrpOUp2yun4zC7ZytBTUMjx684Dwzr+7OIS4KozZL1QTtrkNpWhyLzdY1DpCAMw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=eGM6kt2a; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version; b=V9koSV6+msMKDm3YZ1+jxJYmS655FqE41e2ZJ2lql32+btFc0RTIGbwRgtEBRgyE+Amyr13yJvdoR04OaBdllKZzuirvnXH2hk7jTLrn7zjNaDhfNzhwBjJRfr+tAPrnjVQ34Mr1wm4b6E0TjyZnggUJtA5VyDdD+I/o3tOqLn0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SIiG+4VY; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eGM6kt2a"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SIiG+4VY"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1741216076;
+	s=mimecast20190719; t=1741216079;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=3Sa15p0zk9/0E89lqNYU9Y3htAIogxJ6GNdp/TIXh9E=;
-	b=eGM6kt2aOXAEpis+tdf3QF9BsC2L4zkOMbFtv3j6IQuHRdQG87lL1LiSH570yxacCN2zlB
-	qjxHrm3DZZ35RFphrtye2DoYnCSE/vUrxpzY6IsgZ+s3yxVGvoowBFHLnH8oX1fQ33NJcS
-	qUUZ7hB/xlDLvTxaB7LmBZr3yyBTwsA=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+	bh=9knJ5NY3utv62oPTmxDgFn+ShbZu7msy2bjZd2Ss7KQ=;
+	b=SIiG+4VYbKWVLYRWv78cjsCeIBWVBIw1pNTNEesg3jxjjNtQauGZbEoC1oVmlg583g7J2t
+	8tEekDcdLwa/MZy8DRXr39O5ncM7hbs4XFFHzWyXMupUd42F63QLpoqmDsWMICMXBViUVW
+	deV5t4B6uZURLn4tslpyYIe96FfLKmk=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-590-gMt0t3KrPU-Esgh-380sOA-1; Wed,
- 05 Mar 2025 18:07:36 -0500
-X-MC-Unique: gMt0t3KrPU-Esgh-380sOA-1
-X-Mimecast-MFC-AGG-ID: gMt0t3KrPU-Esgh-380sOA_1741216054
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-460-49tX_X7rPSCi0De8hFzj0Q-1; Wed,
+ 05 Mar 2025 18:07:50 -0500
+X-MC-Unique: 49tX_X7rPSCi0De8hFzj0Q-1
+X-Mimecast-MFC-AGG-ID: 49tX_X7rPSCi0De8hFzj0Q_1741216068
 Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E452E18001D0;
-	Wed,  5 Mar 2025 23:07:33 +0000 (UTC)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9481E19560BA;
+	Wed,  5 Mar 2025 23:07:48 +0000 (UTC)
 Received: from chopper.redhat.com (unknown [10.22.88.81])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 802F5300019E;
-	Wed,  5 Mar 2025 23:07:30 +0000 (UTC)
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id EA261300019E;
+	Wed,  5 Mar 2025 23:07:44 +0000 (UTC)
 From: Lyude Paul <lyude@redhat.com>
 To: dri-devel@lists.freedesktop.org,
 	rust-for-linux@vger.kernel.org
@@ -60,9 +60,9 @@ Cc: Danilo Krummrich <dakr@kernel.org>,
 	Andreas Hindborg <a.hindborg@kernel.org>,
 	Trevor Gross <tmgross@umich.edu>,
 	linux-kernel@vger.kernel.org (open list)
-Subject: [RFC v3 20/33] rust: drm/kms: Add DriverPlane::atomic_update()
-Date: Wed,  5 Mar 2025 17:59:36 -0500
-Message-ID: <20250305230406.567126-21-lyude@redhat.com>
+Subject: [RFC v3 22/33] rust: drm/kms: Add RawCrtcState::active()
+Date: Wed,  5 Mar 2025 17:59:38 -0500
+Message-ID: <20250305230406.567126-23-lyude@redhat.com>
 In-Reply-To: <20250305230406.567126-1-lyude@redhat.com>
 References: <20250305230406.567126-1-lyude@redhat.com>
 Precedence: bulk
@@ -74,81 +74,32 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-A mandatory trait method used for implementing DRM's atomic plane update
-callback.
+A binding for checking drm_crtc_state.active.
 
 Signed-off-by: Lyude Paul <lyude@redhat.com>
 ---
- rust/kernel/drm/kms/plane.rs | 45 +++++++++++++++++++++++++++++++++++-
- 1 file changed, 44 insertions(+), 1 deletion(-)
+ rust/kernel/drm/kms/crtc.rs | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/rust/kernel/drm/kms/plane.rs b/rust/kernel/drm/kms/plane.rs
-index 4e73c2966ca22..b090aebc35649 100644
---- a/rust/kernel/drm/kms/plane.rs
-+++ b/rust/kernel/drm/kms/plane.rs
-@@ -70,7 +70,11 @@ pub trait DriverPlane: Send + Sync + Sized {
-             begin_fb_access: None,
-             end_fb_access: None,
-             atomic_check: None,
--            atomic_update: None,
-+            atomic_update: if Self::HAS_ATOMIC_UPDATE {
-+                Some(atomic_update_callback::<Self>)
-+            } else {
-+                None
-+            },
-             atomic_enable: None,
-             atomic_disable: None,
-             atomic_async_check: None,
-@@ -98,6 +102,21 @@ pub trait DriverPlane: Send + Sync + Sized {
-     ///
-     /// Drivers may use this to instantiate their [`DriverPlane`] object.
-     fn new(device: &Device<Self::Driver>, args: Self::Args) -> impl PinInit<Self, Error>;
+diff --git a/rust/kernel/drm/kms/crtc.rs b/rust/kernel/drm/kms/crtc.rs
+index 50f5b68f4a3fe..99719c4e288e6 100644
+--- a/rust/kernel/drm/kms/crtc.rs
++++ b/rust/kernel/drm/kms/crtc.rs
+@@ -607,6 +607,14 @@ fn crtc(&self) -> &Self::Crtc {
+         //   state
+         unsafe { <Self::Crtc as AsRawCrtc>::from_raw((*self.as_raw()).crtc) }
+     }
 +
-+    /// The optional [`drm_plane_helper_funcs.atomic_update`] hook for this plane.
-+    ///
-+    /// Drivers may use this to customize the atomic update phase of their [`Plane`] objects. If not
-+    /// specified, this function is a no-op.
-+    ///
-+    /// [`drm_plane_helper_funcs.atomic_update`]: srctree/include/drm/drm_modeset_helper_vtables.h
-+    fn atomic_update(
-+        _plane: &Plane<Self>,
-+        _new_state: PlaneStateMutator<'_, PlaneState<Self::State>>,
-+        _old_state: &PlaneState<Self::State>,
-+        _state: &AtomicStateMutator<Self::Driver>,
-+    ) {
-+        build_error::build_error("This should not be reachable")
++    /// Returns whether or not the CRTC is active in this atomic state.
++    fn active(&self) -> bool {
++        // SAFETY: `active` and the rest of its containing bitfield can only be modified from the
++        // atomic check context, and are invariant beyond that point - so our interface can ensure
++        // this access is serialized
++        unsafe { (*self.as_raw()).active }
 +    }
  }
+ impl<T: AsRawCrtcState> RawCrtcState for T {}
  
- /// The generated C vtable for a [`DriverPlane`].
-@@ -931,3 +950,27 @@ fn <D, P>(PlaneStateMutator<'a, OpaquePlaneState<D>>) -> Self
-     // - The cast to `drm_plane_state` is safe via `PlaneState`s type invariants.
-     unsafe { bindings::__drm_atomic_helper_plane_reset(plane, KBox::into_raw(new).cast()) };
- }
-+
-+unsafe extern "C" fn atomic_update_callback<T: DriverPlane>(
-+    plane: *mut bindings::drm_plane,
-+    state: *mut bindings::drm_atomic_state,
-+) {
-+    // SAFETY:
-+    // - We're guaranteed `plane` is of type `Plane<T>` via type invariants.
-+    // - We're guaranteed by DRM that `plane` is pointing to a valid initialized state.
-+    let plane = unsafe { Plane::from_raw(plane) };
-+
-+    // SAFETY: DRM guarantees `state` points to a valid `drm_atomic_state`
-+    let state = unsafe { AtomicStateMutator::new(NonNull::new_unchecked(state)) };
-+
-+    // SAFETY: Since we are in the atomic update callback, we're guaranteed by DRM that both the old
-+    // and new atomic state are present within `state`
-+    let (old_state, new_state) = unsafe {
-+        (
-+            state.get_old_plane_state(plane).unwrap_unchecked(),
-+            state.get_new_plane_state(plane).unwrap_unchecked(),
-+        )
-+    };
-+
-+    T::atomic_update(plane, new_state, old_state, &state);
-+}
 -- 
 2.48.1
 
