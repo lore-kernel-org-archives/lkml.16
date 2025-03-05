@@ -1,135 +1,146 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2047.outbound.protection.outlook.com [40.107.237.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C10C4200115;
-	Wed,  5 Mar 2025 10:03:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741169015; cv=none; b=iq0Z5BZGk2WDlS1oMxzYrIkrXrhi3uJLrOFL/aQn1pMj7tfCX/KU2Gyk2qgTbyTVKJyeEANfaK9v72EUHaeWiB/kKakCaEkK5D4eSxrPRjsg8fdGRy02Ob+GmynisBMG+gEJIU37Z45TzKCfJ2U2HDdTquBGn/oCvr0pFztQ040=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741169015; c=relaxed/simple;
-	bh=aPO9RIxkIdPPlvg9pyNhJAW0yHevN9pV1Ngaf4quIxA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cWoDAPQUaNgKYIsTXibUVjY/tEkDWm6EjXVOdGKLBi8/3lUvZD5jxqxircgdx+9qy5G2qKtbiVftXdPevzNxkuWbYzGBiCQqeffE1S9cEtv01S62Vd4PtWKlKkOhY+OXZuPewOZC8Ifc+hfZg4qW8AgcPFtU53w+dh1Ka9Z+3hQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lW/QLoWn; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3290513AC1;
+	Wed,  5 Mar 2025 10:04:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.47
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741169060; cv=fail; b=XeKOd3PGXz6D7y5PYSjnXeB0w2U5nimMRP3OtMMHqOot9qEwOqWBGZ3eKonUv0HGqCOZSAkvlzl9v9++lh88Fh5IZKYjGKkKbs9sSGPl75FaSROf42RwX8ApqXlpVUYGdtPtzVp6vFcKaobFkoOgcUZ9IVAzpKb5cVxsX+x7w7I=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741169060; c=relaxed/simple;
+	bh=ytKTmbbthJYLorl5CoASnmB3SLBEM3HmcNW4kG6l0i4=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=BbysLpKKNbifedf6vybmmQroLrGfuHSdbn3qXrZoyKGBBWSYYtB0H57ZMcRWqtBdWVShNxudHgHAqaOAtqBY9nnCt0g3tq5dyrhlOLtkDGok0gKw6mNyU6MfGdojmv7ArbtpfF5MPmpfuQCqrcUfrff1crxveFr1rfmZhYjTHTk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=wA3Ruo08; arc=fail smtp.client-ip=40.107.237.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lW/QLoWn"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-43996e95114so44594895e9.3;
-        Wed, 05 Mar 2025 02:03:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741169012; x=1741773812; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jm2urNCVqHoRd5wzReBKDuMQJhyZ7sqv+hIxAxQv+aQ=;
-        b=lW/QLoWnzZQSlr/F7JYj4JMQ3j9lOu2fHhczkla6Uv/2LvIWv791IvXTBhW+70NpED
-         eH3w7J4hgTOc7C2ggKNzyjldZZMHs7m5E1mI9Q/uo6NWM3A4G3OF8TJyBpavNuGas+KM
-         Gf6+jScheijOb/C4+7Ud3IvdQSro33QhAxKGbeE3otTN5PZTjyG8rpduTpjDCYoAuxAm
-         /ruGr5Hkj/3ee04IrvxIjN77hkSGamoSv+abMUMi/IAQNIPz9dGsnyoIjnCAKNTZA492
-         EfXKPNMN7KYyu5Cbe7XNG9TTYUsxGiFVDVdOLgnpxBYdzy3deQMdsyA13mYEH1ITB+X3
-         MNqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741169012; x=1741773812;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jm2urNCVqHoRd5wzReBKDuMQJhyZ7sqv+hIxAxQv+aQ=;
-        b=arNQHO6c0i+c8glAm/wb4RNFyrR6PQ5H3JMjTPoJsuoolTzyswXz17SM1UYm1I8KjC
-         8WKa6aKFtYvsKGq/cwdRZBoEi2F0rUt1GO7nt5UJ8UdmHK8m9eu4o7lWOpvrsw5NJDxF
-         J51XJc/0mx3MjFz9owZby6enXmsbbNFTt3Tz5HlnGkRsDQK5yJDbaiv5r5lNJNwHcuxQ
-         W7/Iz96+0Kj/5Kyq3a2P9H92jUUj6thNWVRZ6UpDSvDK0TkKnhVV8dK5oXrWZnJqHdF6
-         GZvcmNef/l/HZZk6KbGDHuLj9A7RDTofdte6Apc4oaRI44IuSlGvb35yYmZ83fwewI0l
-         cflA==
-X-Forwarded-Encrypted: i=1; AJvYcCWcdk/KuA4x3eUAV8DPtacOU0qKauLy6cezjx2PHcdG2m42JtlAAjaL1UlS5A1kUiO9waNFJPdCopWzLL9o@vger.kernel.org, AJvYcCWrcJa1udJ6fKBVQvO+zgamk9XB059VZ4KjykCQvtBEjJeyLT7Orc311TwZIacXbkHRNbV0VgUS4vuI@vger.kernel.org
-X-Gm-Message-State: AOJu0YwWYuw5ymO5PSfnrkUGHKtje6LnfXGPWtt7/4yCna2zV8a3NnWA
-	EDQhWUKsvAumXPuba0oMB8fr1x4wLmRQGYUx82CkO2EtHmQzCTMt+13GptIbIB/RXIZzFEnojeo
-	VRTsxyf8g6hI6BK3CL2jK4qVXi68=
-X-Gm-Gg: ASbGnctC8PnjG0yChpAZlCyTfRjk7OIkvD1PghmbddRlUEQh3lairM4yihjKal9PG4A
-	HWlUxN86iMUzRnFuYWftIPqYsVKiDBAeZOgJBmeQLXHb1/3d2tjFRRfN5FHLcDySimjmvjqhMxd
-	TBksDiVzSnkNdC74gisV/MKY0GeqQ=
-X-Google-Smtp-Source: AGHT+IEyE65DoXnnzoaY6Dd+bifIHkN+aBqHyvN9ORkP7Eg8LfPANJc22dF9nbVoro3kxEoOzWoqCz33vSTiT8uZe5I=
-X-Received: by 2002:a05:6000:1f8c:b0:390:f116:d230 with SMTP id
- ffacd0b85a97d-3911f74bc14mr2432921f8f.16.1741169011692; Wed, 05 Mar 2025
- 02:03:31 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="wA3Ruo08"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Ffus4s1qvF7UqiK1doKlTO+0Iloyo6ycp9a5ZHJSVR5P342o7D1qlgRWpCk65zdf0BRk1zUaIxbUcRyzRPWyM2mMa9WKdNu8W4Yh/UD+0QAfGGo4vOAOErxj/DjV0k73xZMhanSpkAxXighDaKQBPAmjkfr1GGX4/FXsW4Juhiiw8OpKVpf0gGmZEIvutiYj/jRf7SzwVVHZRFOl29o06gSweUU92wFIEsDNWqmcjuRenAU+1fMCHvFkB+6GqHrbTYtSEvyv1036LDgjCODlj9FDGMN1hD7SRaW39+bqQNuokVseJ1pfymz1eCSGmd8rGjLZSuZIkkzgEyb8qDk7/g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=SjF+htxNyPCGYsSmRvENj+XublfHTJwjZVZVRcR0Mi4=;
+ b=YYqfjW/clZxNcUVT5sw5oGWYzgnHbRC0B0PNqUiThcw3lFMIvjYe3wm9kcS4kHXOFilcIcGbzWDI79bVkYFLAJfcE0nXPAxaEzk8z2fN1F5DC5urxJSZ0lb20yM5iX5r2zPMfOjjLkfOzXo1WaLVgRcf21vBz6LW/GGevEJJL/yR1Rnn+xc6Y9m4iTi95BNqW9ybjFIxS2NlTPoYoxC4EhwwlkJn/8ULBdPn2/e0gcMSrIeKqiNut/Fr5OxI7nu8qflyJ4Lp+LhUIGNRGI/LiSemqW+C8qJXVYeS9ndo53L0g21mmxduE6JIRjhGPj3Q5oExkxyYia7eY5drSBGuag==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=SjF+htxNyPCGYsSmRvENj+XublfHTJwjZVZVRcR0Mi4=;
+ b=wA3Ruo08okuCuGYRJ+PErAptaCUJxHoAaBu5UJz46c4EFrkpDQQJlgtJxVPLOhrwW910khCngnlWdllQgvfxPUB/5rp4DFrfgMEoUVvI+QgBsjOmrmxL7mFnm22e8rqcB1Z9iGqynCWTCnWJdRd6zTbCMT1ckdqsWH+89ZDQVtk=
+Received: from BYAPR05CA0059.namprd05.prod.outlook.com (2603:10b6:a03:74::36)
+ by IA1PR12MB9465.namprd12.prod.outlook.com (2603:10b6:208:593::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.25; Wed, 5 Mar
+ 2025 10:04:14 +0000
+Received: from CO1PEPF000066EB.namprd05.prod.outlook.com
+ (2603:10b6:a03:74:cafe::3c) by BYAPR05CA0059.outlook.office365.com
+ (2603:10b6:a03:74::36) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8511.15 via Frontend Transport; Wed,
+ 5 Mar 2025 10:04:14 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CO1PEPF000066EB.mail.protection.outlook.com (10.167.249.7) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8511.15 via Frontend Transport; Wed, 5 Mar 2025 10:04:13 +0000
+Received: from rric.localdomain (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 5 Mar
+ 2025 03:59:27 -0600
+From: Robert Richter <rrichter@amd.com>
+To: Alison Schofield <alison.schofield@intel.com>, Vishal Verma
+	<vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan Williams
+	<dan.j.williams@intel.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>, Davidlohr Bueso <dave@stgolabs.net>
+CC: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Gregory Price
+	<gourry@gourry.net>, Terry Bowman <terry.bowman@amd.com>, Robert Richter
+	<rrichter@amd.com>
+Subject: [PATCH 0/2] cxl/pci: Inactive downstream port handling
+Date: Wed, 5 Mar 2025 10:58:36 +0100
+Message-ID: <20250305095839.3076198-1-rrichter@amd.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250303122151.91557-1-clamor95@gmail.com> <20250303122151.91557-2-clamor95@gmail.com>
- <08f305fa-0dbe-4ed9-bec5-cf8b5bbecfdb@arm.com>
-In-Reply-To: <08f305fa-0dbe-4ed9-bec5-cf8b5bbecfdb@arm.com>
-From: Svyatoslav Ryhel <clamor95@gmail.com>
-Date: Wed, 5 Mar 2025 12:03:20 +0200
-X-Gm-Features: AQ5f1JoUlqaP2Ry2sjnxepz1PGhvPG05_H2GZBUkF7PlNMR63DMRDp_U0g1avRQ
-Message-ID: <CAPVz0n0G+0_f3MONV0Y-tYAb1KOwkUNiY2Pms8CZ6ZGtxRmFFA@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] dt-bindings: thermal: generic-adc: Add optional
- io-channel-cells property
-To: Lukasz Luba <lukasz.luba@arm.com>
-Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, 
-	Laxman Dewangan <ldewangan@nvidia.com>, Conor Dooley <conor+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Rob Herring <robh@kernel.org>, Zhang Rui <rui.zhang@intel.com>, 
-	Daniel Lezcano <daniel.lezcano@linaro.org>, linux-kernel@vger.kernel.org, 
-	"Rafael J. Wysocki" <rafael@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CO1PEPF000066EB:EE_|IA1PR12MB9465:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7a04dab8-0631-44e6-e82a-08dd5bcd155a
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|36860700013|1800799024|7416014|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?SmjJy7kFp+tiJ/qgeAb4Bh8yQKXpYrg4JW3awL+m5cKXjZbWPYbSJEBfDleR?=
+ =?us-ascii?Q?Q04KYLSPq8yqpHLl6AEXtT7q8f+UVQEDhof3rCQG5C5yKZZzqP0KbrjoTRYC?=
+ =?us-ascii?Q?fj0L36JJhKp8Xz4QjrEZTANrfSBEeYl0CW34PdtqvpFvLXv6R1q6eiwVIvaq?=
+ =?us-ascii?Q?lEJgIF3ohW+WmoZKDLi7BMCg2bSFEAp9BcwlhFegs4X0M0ESxhyMXMluLZP/?=
+ =?us-ascii?Q?wttcpLVQ3pUGlk8FLiwTdTGvQRbqvYl6gAsjqXMdtGOZ0e2IVmltbtzqiAZH?=
+ =?us-ascii?Q?B7xbY6hefGBYv6UEg49YXcjyxxICJ0n7tep+RZQIUMHKBQUJY5PP6UjPH3UY?=
+ =?us-ascii?Q?PoXQoyN7aoTo2yZSY4DHnUfU3/Ff61q+sQr4YBI+LC/SyaYi3kG6WoS0NbmI?=
+ =?us-ascii?Q?qlcYtrLCk2+11M3XipJygwvMIyD1Eq2RgvVbJa+N11eLiS3/qOQ9UwpIf9dM?=
+ =?us-ascii?Q?c2uHGUQHaI8mNpk4RGyQ0v/WNGqMORpDnW909uB9HkO/5YbjZq4xvpX6Y2fv?=
+ =?us-ascii?Q?EbhgSdui4Z31SsXBeSNr99UQDDc0nJO8sZ7GxBq3LcNZ8E7Ep5Ng4VtAsHqN?=
+ =?us-ascii?Q?c7qsJqrCqpsID+k4rY/zQSPtP4yukm66pg8nTU/9IP159Lhfkfdv75yFyE2/?=
+ =?us-ascii?Q?47FBNXijPcRnlQWbWR3wwelL8qZ9UV2Pqmserkz+NVmWd19VyrDZ7VbuWSSc?=
+ =?us-ascii?Q?1teZgY0YTLOiOMeSzkPi5wiTTMkYHF+cvFReYlSNkku3crfuH+K8YBRTS9yR?=
+ =?us-ascii?Q?nB4hR8Fl0rELeVOB//1iSr5bil2qnhIvMq79IbJX+AlDFOLdo4ZPSLO15GB4?=
+ =?us-ascii?Q?hdogw3/fat1VEJODTIvzqEprpOWjn7Ug/YcibX5x50DULn3d1CULOfePrgUR?=
+ =?us-ascii?Q?fOxVBKedwHVov8Cr+6MqdHcSFmkxUi0xhnorjkl6s6IpvOzcu1KQdWgV1h3G?=
+ =?us-ascii?Q?bnkX3svkci9h1lWvPgx4yDCHoVUgWVbj8UZSiqAvg7WTpAYQvi/IW+yczqt4?=
+ =?us-ascii?Q?/Gup+9Y+hC+rcdxx3TYEqA5c96sJRp9/LqhQXoUV0ZD3fAXSE6f2HMXZvH3c?=
+ =?us-ascii?Q?R7DcK+yZVgNybFvQ7R0aI3g3OAlga1r1F+MDsgRLnTiA85tdBQwbpoSoMWem?=
+ =?us-ascii?Q?zY6A62WES8pkafDaSNLKeslMp0/gJaaJ2Gw1uv8d+Ysp27kh5N50QFNO4CnU?=
+ =?us-ascii?Q?Ql3T9pm4OpVc7/dZQqqF1cicV/F9ZBWJTPDP6cuiZFQkHqSVh3P+UGs6qXSZ?=
+ =?us-ascii?Q?xTDxXfS4lc/7gm8es+xQqc3lztwRC11pQ6MkV7E3okX56e+VOcq5SFZlOjcg?=
+ =?us-ascii?Q?cy2otXzDZMI/udioYsVHLmD+eekQG5j+ED7SwmqNlQFhuyGs/NIP0BoepLrY?=
+ =?us-ascii?Q?HP7/pX+JBnjsLrjWj/eWk/XSEzGFoepDBzr3cABRZDaTFeI3BnIbtTKQkdbn?=
+ =?us-ascii?Q?cYaocicOyWAGFWGXXWJcA4XVedJZQWgP9LbBWgv2IsZMBjG/J6OJRDdoP1DU?=
+ =?us-ascii?Q?GjMfcDWehQ3NdDc=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(36860700013)(1800799024)(7416014)(376014);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Mar 2025 10:04:13.9462
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7a04dab8-0631-44e6-e82a-08dd5bcd155a
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CO1PEPF000066EB.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB9465
 
-=D1=81=D1=80, 5 =D0=B1=D0=B5=D1=80. 2025=E2=80=AF=D1=80. =D0=BE 12:00 Lukas=
-z Luba <lukasz.luba@arm.com> =D0=BF=D0=B8=D1=88=D0=B5:
->
->
->
-> On 3/3/25 12:21, Svyatoslav Ryhel wrote:
-> > This implements a mechanism to derive temperature values from an existi=
-ng ADC IIO
-> > channel, effectively creating a temperature IIO channel. This approach =
-avoids adding
-> > a new sensor and its associated conversion table, while providing IIO-b=
-ased temperature
-> > data for devices that may not utilize hwmon.
-> >
-> > Signed-off-by: Svyatoslav Ryhel <clamor95@gmail.com>
-> > ---
-> >   .../devicetree/bindings/thermal/generic-adc-thermal.yaml      | 4 +++=
-+
-> >   1 file changed, 4 insertions(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/thermal/generic-adc-ther=
-mal.yaml b/Documentation/devicetree/bindings/thermal/generic-adc-thermal.ya=
-ml
-> > index 12e6418dc24d..4bc2cff0593c 100644
-> > --- a/Documentation/devicetree/bindings/thermal/generic-adc-thermal.yam=
-l
-> > +++ b/Documentation/devicetree/bindings/thermal/generic-adc-thermal.yam=
-l
-> > @@ -30,6 +30,9 @@ properties:
-> >     io-channel-names:
-> >       const: sensor-channel
-> >
-> > +  '#io-channel-cells':
-> > +    const: 1
-> > +
-> >     temperature-lookup-table:
-> >       description: |
-> >         Lookup table to map the relation between ADC value and temperat=
-ure.
-> > @@ -60,6 +63,7 @@ examples:
-> >           #thermal-sensor-cells =3D <0>;
-> >           io-channels =3D <&ads1015 1>;
-> >           io-channel-names =3D "sensor-channel";
-> > +        #io-channel-cells =3D <1>;
-> >           temperature-lookup-table =3D <
-> >                 (-40000) 2578
-> >                 (-39000) 2577
->
-> Do we really need this change in the DT?
-> Won't the code in the thermal driver that registers a new iio device
-> would just be enough?
->
-> I agree with Rob that it looks odd.
+A small series with individual patches to handle inactive downstream
+ports during enumeration. First patch changes downstream port
+enumeration to ignore those with duplicate port IDs. Second patch only
+enables active downstream ports with the link status up.
 
-Building tree will complain on missing cells property if you try to
-bind it. It is not in required category anyway.
+Patches are independent each and can be applied individually.
+
+Robert Richter (2):
+  cxl/pci: Ignore downstream ports with duplicate port IDs
+  cxl/pci: Check link status and only enable active dports
+
+ drivers/cxl/core/pci.c  | 40 ++++++++++++++++++++++++++++++++++------
+ drivers/cxl/core/port.c |  2 +-
+ 2 files changed, 35 insertions(+), 7 deletions(-)
+
+
+-- 
+2.39.5
+
