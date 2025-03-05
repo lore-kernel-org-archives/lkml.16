@@ -1,69 +1,99 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C8AF1EDA26;
-	Wed,  5 Mar 2025 12:56:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 315E22441A3;
+	Wed,  5 Mar 2025 12:56:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741179383; cv=none; b=lBsNN58kBBsYnWwO9LI/uAiNHUHAoofEBG/ru5bN3Ok+HTwBed/vKCTKRWOtPftun1DgnVw4dMb8m+tv4wLsIvkV5syIatPhbebqrkRB2J9p2WeXeCHNpktfkA9QgFiH9ctJjc6pcIjU8c9W6f+BL28v5Afr6vjjvJsMqRAOLq8=
+	t=1741179390; cv=none; b=Vuf8k6J7GygU+Xx45KgzL3toY6d6Rnk5sFsxWzfPqTPTmbM7CV4G+DhyxGZ9wwq84eI0vOFgjRhoXc3mz/Kq7X+CNBZzOdqcrUf9uUmjut9Tb57gcSL8N+4AQO3XemBHOO6Zrtkc1dIqEwnY4qS86g2hzBq7hbpowgp+B8wH8AQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741179383; c=relaxed/simple;
-	bh=qc1K/kIkRfZuvwIsAOsONSpdl4JDXrZ3Wf6+6uyvkFs=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Y0QczLbO8Zzydmgx9xnW/+26Jf/R+uzr+dhjN05y6MMFvNlaD1sym96Z3Fw5pfpeq53BZ4+l9/mzth8t1vB/wHXNB2yD69GHnld5lxrAyCFRFUniyd9iP8kYZJYeKTgN/29YBoCZXgqnGWPnkzPEIHUDuDu1iyL0Y410XFJcFzg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NQDM+46I; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741179390; c=relaxed/simple;
+	bh=stO30UINr/S9gQ16bMvr3QhTLQeKnh2AdaLOeIE1diY=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=kZmEj7UA1r7Jq4gx0qttMokYNw4sBnNUkgLYqsiKwSrNffNdn5XG77LwIJ0Plz4JbuKjPqappJseV9VhsLF1+76mv12hi7qlRyW2yf1Iji62GnTQNzlySRnKE6wbIQQI9BhYpt7Jx6qppvCAk1akwQAUtQu+dO8kJPay9jqHKQA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=TlsTQG1+; arc=none smtp.client-ip=168.119.38.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NQDM+46I"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B76EAC4CEE2;
-	Wed,  5 Mar 2025 12:56:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741179382;
-	bh=qc1K/kIkRfZuvwIsAOsONSpdl4JDXrZ3Wf6+6uyvkFs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=NQDM+46I/jHwoZwUfheBotBKs8XkqR0ggvH9aYun6dbBltHA22JpEcc3sT6F/qNtk
-	 Qv6eugZoNWmEqMbw9H+2hMUmlnxSbkJkRJ8JdiZ9cbf4kBKrjz6prB6hiloT3JRn6a
-	 xXOKXh68BUbJXfuq6BKPphFJlVqqPcxqM3wwSd00VFkf+RFsdkA3hl3yiStiMgOOx7
-	 hbXwbXMGykEfVWWyN2n1KZaZcvr7FSUny2r8JTjzVqrvR9gJFFisgMd6rZfwuHtUkV
-	 tNXtrn+n7HEyjp1i9d02e/Hn9eKvRKrNK2GZF/Gj7PsreV/XvD4EDQbx1mKjLvU5ws
-	 nrcNSehec1/Zg==
-Date: Wed, 5 Mar 2025 12:56:12 +0000
-From: Jonathan Cameron <jic23@kernel.org>
-To: Jorge Marques <jorge.marques@analog.com>
-Cc: Lars-Peter Clausen <lars@metafoo.de>, <linux-iio@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] iio: Mark iio_dev as const in getter methods
-Message-ID: <20250305125612.28ac7bc9@jic23-huawei>
-In-Reply-To: <20250303-b4-iio-dev-const-v1-1-c2d9d5fe5ac1@analog.com>
-References: <20250303-b4-iio-dev-const-v1-1-c2d9d5fe5ac1@analog.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="TlsTQG1+"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
+	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
+	Resent-Cc:Resent-Message-ID; bh=WMkvl/IfsPF/ua4f4IZM2b3fgvXuqFq8/FIpoBLz03A=;
+	t=1741179389; x=1742388989; b=TlsTQG1+VkttdHsp9iDu4PBvskR/RMNGOY1xNnzvQGkODCl
+	oFUgBEtK10pCeamV2gkKCoXkTfDlWtaZnHvTnMwYzJe/v4ewLbGsSJoAlA/q3VxC72J9ZQwABG0eN
+	9QUxvFh0Dnpv32W3p056nD8JMY6vjGycXMRc/C8i9i7jhLuAIVDI2qkN9QZp3823xV+54DjGBYxha
+	Z04eM8hj/6PWiZQTudhUgvvzgPyA5kdgPMxZ8IbztuvBSu5CW23JHZye27Eunl8j00UihVbpPWHxr
+	J99kPutwKeYGy/ENq5y7qjJHeBHXelUSPYsmBGPGMO/+hN/wQOHwva4XeSpfkDJw==;
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.98)
+	(envelope-from <johannes@sipsolutions.net>)
+	id 1tpoIO-00000001kWp-0uLh;
+	Wed, 05 Mar 2025 13:56:20 +0100
+Message-ID: <db6e127f5f7cfaf76bbf4438ae8962993f4aba03.camel@sipsolutions.net>
+Subject: Re: [regression] Significant WiFi Speed Reduction with Kernel
+ Versions > 6.8.12 on Intel Wi-Fi 6 AX203
+From: Johannes Berg <johannes@sipsolutions.net>
+To: Bjorn Helgaas <helgaas@kernel.org>, Miri Korenblit
+	 <miriam.rachel.korenblit@intel.com>, emmanuel.grumbach@intel.com
+Cc: "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>, LKML
+	 <linux-kernel@vger.kernel.org>
+Date: Wed, 05 Mar 2025 13:56:19 +0100
+In-Reply-To: <20250303222700.GA202089@bhelgaas>
+References: <20250303222700.GA202089@bhelgaas>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-malware-bazaar: not-scanned
 
-On Mon, 3 Mar 2025 15:46:25 +0100
-Jorge Marques <jorge.marques@analog.com> wrote:
+[removing folks no longer involved]
 
-> get_current_scan_type read-only method allows to support multiple
-> scan types per channel, which may also depend on a buffer enabled state.
-> Mark iio_dev as const in iio_device_id, iio_device_get_current_mode,
-> iio_buffer_enabled read-only methods so they can be used from other
-> read-only methods.
-> 
-> Signed-off-by: Jorge Marques <jorge.marques@analog.com>
+Hi,
 
-Hi Jorge,
+So ... it's complicated, but I think it's a bug.
 
-I'm not against this, but I would like to see this patch as part of
-a series that uses it from a read-only method.
+> 4886460c4d15 ("iwlwifi: Fix IWL_SUBDEVICE_NO_160 macro to use the
+> correct bit.") updated IWL_SUBDEVICE_NO_160() to identify devices that
+> should not support 160MHz:
+>=20
+>   -#define IWL_SUBDEVICE_NO_160(subdevice)        ((u16)((subdevice) & 0x=
+0100) >> 9)
+>   +#define IWL_SUBDEVICE_NO_160(subdevice)        ((u16)((subdevice) & 0x=
+0200) >> 9)
 
-Until then this looks like noise unless there is other reasoning.
+I'm not even entirely sure this logic is correct; however, it doesn't
+really matter.
 
-Thanks,
+> The submitter's device has Subdevice ID 0x1652.  Prior to
+> 4886460c4d15, that did not match IWL_SUBDEVICE_NO_160(), but
+> afterwards it does:
+>=20
+>   0000:00:14.3 Network controller [0280]: Intel Corporation Alder Lake-P =
+PCH CNVi WiFi [8086:51f0] (rev 01)
+>     Subsystem: Rivet Networks Dual Band Wi-Fi 6(802.11ax) Killer AX1650i =
+160MHz 2x2 [Cyclone Peak] [1a56:1652]
 
-Jonathan
+According to our internal information (SKUMAP-362, for the Intel folks
+who know what that means), this name is correct, it should be 160 Mhz.
 
+> But apparently it wasn't until 84ec2d2e960f ("wifi: iwlwifi: disable
+> 160 MHz based on subsystem device ID"), that 160MHz support actually
+> got disabled for devices that match IWL_SUBDEVICE_NO_160():
+
+I've also found information elsewhere (WREQ-269994) that the whole
+IWL_SUBDEVICE_NO_160 (now actually a bit different to take no-320 into
+account on newer hardware) is *not* applicable to "Killer" branded
+devices at all.
+
+So I think it's a bug, but I'm not sure right now *how* we can fix it.
+It looks like our matching must skip the bandwidth restriction thing for
+Killer devices.
+
+johannes
