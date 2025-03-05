@@ -1,311 +1,177 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2088.outbound.protection.outlook.com [40.107.93.88])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A374B1C6FE1
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 08:39:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741163963; cv=none; b=ALMDGCe39lP7CN+v6L8gmb41i2WyR7zZP0ZaKYsZbDCip5gbx+I9KmR+yOr7DGYJqxvgBlyTmg60l52QOrWFIuNUNuhEK25hfJzS1spBNCeZiVjeDR9b724kX+o81hNuedSm+/q1NeMPfdT4GtfLyGo5A2Pnl+ujqpmJFvz+WUU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741163963; c=relaxed/simple;
-	bh=T2uzEUAxDb++pE0xa2jPenyN7MzNZe3VrOV1gDygbas=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NAY/4CLNf9HCxjDH4UxxKVOvO6cgMfoUs+JhUXxVNRNJINBMrir4Sf48i5Go57YZbCDVBr40xfl0AR2deuzbGRVFh/0EvffIVdpx94F17ZtIPCK72o0ugFXf+3oUmAIOEV9b9kReKbXgP5Pp6EtpuHXLOE0ZCPaKoOYbPAEIi18=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=AkQMG99w; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33F9142AAF;
+	Wed,  5 Mar 2025 08:41:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.88
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741164073; cv=fail; b=YW/tC4SrMsUdEEu9jhcfz8+V2/sNvnVGp67J2BUAmKzihskDAs46RLf7kInTxAF4EWs9rXMIypmeFEdvgpqLIOtA0adGkR8J1vRS+lxH3qXK7bsXCk3Kr4mSLQhrZ/Vpynx1cN4srTHD/Rhlmd7qaqhzqZ31r6+qmRTpo7t9/dY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741164073; c=relaxed/simple;
+	bh=Oh0ugGWFtllahK7ljAvy/HBScQO2/yYQrN8UyZFaQVg=;
+	h=From:To:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=gsAer59VlhPXFUXK52N5JDgm7HD7LBCH24k3FSeNSF5ep11eUTUpx3cjxSxwShWZ3bMPlrqj9ScE0NaItiWCUGzlQQ5OXh6ylhdHZnQTbiJVcUyCyq3qwZ3/gKUsknvB/szvfm148LX3AEgtbn6Mp0pXt6mb/awzLKGy7VOYGsQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=b9o0mnC4; arc=fail smtp.client-ip=40.107.93.88
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AkQMG99w"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-223a0da61easo119305ad.0
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Mar 2025 00:39:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1741163961; x=1741768761; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=faXqYYFydBMQa6qJbhlVoXW0EZv6eA+uFvOUudXNaZg=;
-        b=AkQMG99woOtqECtiuraoEMF0Pe7sq5qgUCa025vqu+3gamMt32Uh91DrsB4zKgu1k8
-         VFD86sxYRoPJSjYlHVAZaZ8Iz43nbI4xYRN63MhegVkWTdCH3JSm9197x+i1y6kyN6a1
-         iddM3ppQHZj8jCSAsqrgBGpfuNnfLLtAzrSaOxQ+daHkoNIiaKTrtdE4VOz77XMk7SAG
-         cfxAt863NBQmI/9+6yqes+pM6qEvk09k2lQiQd0tqheKMiVa6Iik3H83AnmBAP7rIwOc
-         9hxSZ1GrOm+YS1mt21v4+x45eH6PjWuKYITnbzkcOzHE6cCu7nQsi8gstn11FKJ6Szna
-         +3+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741163961; x=1741768761;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=faXqYYFydBMQa6qJbhlVoXW0EZv6eA+uFvOUudXNaZg=;
-        b=C7CqV0yUrWgYW+vrpEgHxwFGd6z6EJIVlHWEsxBozZ1U/rFBThrVdxB2EIM3GzSRee
-         6MOng5H/rD/OuFsHtndMn05jb+cc2dsU/oyWY0xl93WgEQY/d30j3GqzFVG31v1vpEj/
-         F6HYXI+yl+KtlAbN+p0/lrJYwvTkU/RxJuDt9ZxcoIezQH2tC1R9Y3ZLKm7NXOeCpthc
-         LAQwVEGUATgnhGPAQxcF3OpOcRvPWqDsntCHla1pL21/I+WsuZf+6bhSlmZpx3AV2TJG
-         C5i+5BFOiYOC56UfimH6hW2zTg0/d504lSF+mEt6zSs9eZDh15bYCmGqXT4uL42woEcL
-         ns1g==
-X-Forwarded-Encrypted: i=1; AJvYcCXZgdd2KnYT5ocwCmuxKVc2suDOAKYg28K09LQ/57G3dQ05e0tckOaC4TM5ykRbjCwQDAriyRl85Ev1hdc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwlMh4mdVGTJszmigXSxzjYGFb4yqD16U9XlY2GFhHZ6m0UQ8Z4
-	UcfK88dz79/ANXsyDa8ijL1kUayttbXkNudRAnnH2Mvqvo+ZS0sht12ChTE9h1kt2BfDGvawSLO
-	+XwEya6mbMZAuiShodwEu2nxlAszeNVuLhlz7
-X-Gm-Gg: ASbGncvE43KrpSr7CBtZUFEhGrsxNkCd05Whn/7bemYkqq+4q1poBkbaFU2j0Q7O3x+
-	CbQYEJolbZIofNW9RMtB2E9dl0XVtVN+xqxSNsM8N0NXeuXaPVKby7V73U40mASOLIYsGmjFTaz
-	Zgukz+aMl/t9mH2ztxhuhMOqX1618=
-X-Google-Smtp-Source: AGHT+IFTr+mTXGjHME0fA15wPDlvb2+eWputm0PGeq6g9djMSkfkA89JdLu2aJkfgGyTzz8VppJkYb1qjLqZyvheoMY=
-X-Received: by 2002:a17:902:f9cb:b0:223:ff93:322f with SMTP id
- d9443c01a7336-223ff93338cmr43755ad.2.1741163960618; Wed, 05 Mar 2025 00:39:20
- -0800 (PST)
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="b9o0mnC4"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=yBNWPpV7daGzOLg7DT1/nlXbUUznogByLwrsBmiq03oqNYMJiFwegUw3jDxFN4UKf5nZrTgzTrgLPZVYPTXzERIjP27HK4KbN2A8E6GRj1JE7ZDwFCjg+999fXnN1UgZYqJF/iXbq5RuFBRsFpyf5swdkaC6N8Jh7xVUfU8EYN3JlDSPRpoxn+WUWfOgL5QvyUfVlq1JzgNdJxVT9Uy2ehJF/hyFvWz6B4uB6ZOv6Ta0axsfLyxnPgeczkSRg4p54fNKAYv+FrQ2UuooJ9Z+6QNbjvCFEb6lvsOI1crDtvNzabgmdIRIZzIrPnspykO4x2Q2iFFpshFLnr4462BXbg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Oh0ugGWFtllahK7ljAvy/HBScQO2/yYQrN8UyZFaQVg=;
+ b=Vsru4mmzAEWhqe3vUztMRLPiEN2WshDASzN64ICWTABrY/6fz1f52X3ltNjNKFFjaqZlnMkYMyd7+V00N66hcp9rT75WVUWmAISL3Jf66Bsulmy3pruY8hDLoLMWlJg/1h412UEY7j/K2MQIajPw7OP0NJBLmlAlMShfffUR1q3N/jR6JLcttTJnN3XZEpO2FlGJ2HXK3s/B2TvX4ZZQbRccUuQOb90I4copHVem2IpIEqmOxeozrRq2//hTQAzJsA/0E8xOkIB8C0eVb9AwlMyJ18ST5MgXs25D38XRBrVqC/UIqIzRD6oCtWDtmv52Jm6vTG/6sSKrtZeGAtNSgQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microchip.com; dmarc=pass action=none
+ header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microchip.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Oh0ugGWFtllahK7ljAvy/HBScQO2/yYQrN8UyZFaQVg=;
+ b=b9o0mnC4UMx2Zqwgy9VIBe0mz8GQ8NbZQ0gMozDppVmi850+DDGyHItE4P8zYOww1DyWCG2M4yfYtg49xd+9/h+TNhKpXk5V5qlBqwq/+MC3igtA7pL24HjqBgoVaxGuMQdiOnCBbNG/DVoLmOLpjiGHeheAABhu5FdE7dnmvzvmgdIW3uSXxwCQlawq8/Hx8Ord2WwejfP3mzszT3kFJZEaUcaq1SF8KrtElvTta8hIgxOQuF0f0ZiDP+jIUxRI9bSfvLFIA/J0A94h+cNKH73mNkXXAskW7uosn31tBjVSWvVTuIL6kfvac/O97PUgMDVE+vAmxY2dRl8RnoP4Gw==
+Received: from SA0PR11MB4719.namprd11.prod.outlook.com (2603:10b6:806:95::17)
+ by CY8PR11MB6820.namprd11.prod.outlook.com (2603:10b6:930:60::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.28; Wed, 5 Mar
+ 2025 08:41:08 +0000
+Received: from SA0PR11MB4719.namprd11.prod.outlook.com
+ ([fe80::5303:b2dc:d84b:f3b2]) by SA0PR11MB4719.namprd11.prod.outlook.com
+ ([fe80::5303:b2dc:d84b:f3b2%7]) with mapi id 15.20.8511.017; Wed, 5 Mar 2025
+ 08:41:08 +0000
+From: <Varshini.Rajendran@microchip.com>
+To: <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+	<Nicolas.Ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
+	<claudiu.beznea@tuxon.dev>, <sre@kernel.org>, <p.zabel@pengutronix.de>,
+	<Mihai.Sain@microchip.com>, <devicetree@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+	<linux-pm@vger.kernel.org>
+Subject: Re: [PATCH v8 0/9] Add support for sam9x7 SoC family
+Thread-Topic: [PATCH v8 0/9] Add support for sam9x7 SoC family
+Thread-Index: AQHbGww0eNfdnuYAy0uOwjFkVwXjc7NlHpGA
+Date: Wed, 5 Mar 2025 08:41:08 +0000
+Message-ID: <e984d79a-f687-4c2a-ae70-32645ba6d14e@microchip.com>
+References: <20241010120142.92057-1-varshini.rajendran@microchip.com>
+In-Reply-To: <20241010120142.92057-1-varshini.rajendran@microchip.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-GB
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microchip.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SA0PR11MB4719:EE_|CY8PR11MB6820:EE_
+x-ms-office365-filtering-correlation-id: a32ccba0-3c32-48fc-4343-08dd5bc179c6
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|1800799024|366016|376014|7416014|38070700018|921020;
+x-microsoft-antispam-message-info:
+ =?utf-8?B?M1ZZMncwRi80UzdoendyUWxRdHc5OWtRVU1zV1hEZ3I3SlZNTm9MMzArNTdV?=
+ =?utf-8?B?N2hxbVI0R0ZRQkdLUW9lZlB2NnoxTWlySHVDdDVkdExXNW9HcFZWYWR2MnA0?=
+ =?utf-8?B?elRKRkN0cVJZRk9nRzhxSG5oWDhYeWNtUUpQTC9PY2p4UzdJejlpZWpGWmxq?=
+ =?utf-8?B?cXRQdEVOZnNacXJOUnhSeXNGKzY5YVdGVXdPUDl5S1ZMUTZuUVhBb1Jjc0ZD?=
+ =?utf-8?B?TWNCR2lpczRRUnRhbTZaV1k3dk9iSDhWZTRITlVJYWh2cXNJVjdodHkrdDFE?=
+ =?utf-8?B?by9zaThBa2VLUENPVUhHUndYWWdLVnVxZitsczBKWjVRbzMySzJucTFwWUsy?=
+ =?utf-8?B?Z2FhWkZWTnFUbTJha1NNVFhnQ1ZMT3p6b0lSeDNwc3Ywd1hZUUtCMFBEa1Fm?=
+ =?utf-8?B?WWJtSEhySGhHUHI4bjVFTmJrakFqTmk3Zy9wK2dpQTh6TnpjcWdWZTZVMEg3?=
+ =?utf-8?B?NWdKcU1kc0tqMldscVJyeDBHczdLU3pyZ244VkM0N3F3cU5GU3E5bm9FRGdn?=
+ =?utf-8?B?cHFqZ0FyWGxWM0RHVlhhcXo3VWZXczBmRVRoK3FkTlpWOUVtd3Y0UVVacFJv?=
+ =?utf-8?B?Q01HaExhbGduU0t1T2RHOFFOaERNUkVZU3FkdDhRaTQrRE5SeE5Pb0k3WjBT?=
+ =?utf-8?B?OSs4dVVLMS9ieGpMUE5PSTN5SDl5NitZOFFDcFFrY1BOUWJDRE1Fdy9WQ2px?=
+ =?utf-8?B?YzdxZ2tsaHFYMkdHVEN1N2FPbjF3TTNCSFdVRUNONEUrZTgvR0QxMWpXMjhU?=
+ =?utf-8?B?UmJZcXJBL3R1cjBXRm96OVROZjBHeFExUlFDMmJreTdvejR6VU9pT3JXcWNM?=
+ =?utf-8?B?VHZRaGJ5dTBSbnVpWWRkSXZPTE1FQmwwUll1ZHE3emVjbkN2bEM0M0RYT2xU?=
+ =?utf-8?B?TXlYZWhXbGJKc29WU1F3VmtEdGNmRmJ6Sko4UmwvbmZGMGNVSjZ3WGZ5MmpY?=
+ =?utf-8?B?Mk8xMU9GL1BWall5Q0lMd0VsZ2VKb1RTWHc1eTRhRkVwZUxUVDIrakNVanBh?=
+ =?utf-8?B?UC9wbUlzUnpjYlYzN2hpT3FaYmZmUEY5L01VUk5pTXVlWVg1cjRHR2dQTGUv?=
+ =?utf-8?B?NXB1Vy9Odm5TNmwvS0t1aDNYS1lCem5FY1U4SHl0ckkwaW9vaWNlVnlpMHNZ?=
+ =?utf-8?B?R05vNzk1VHRlaU5HZGpFZE13clQ0bGEySUdDSVgvOW81U2pIVFZRMm5DWmRa?=
+ =?utf-8?B?VFpPREdxWExmWHA5TElCREU1MWVzS1p3NzVYbkQ5dzJ5RjhtZE9WNE9odlBn?=
+ =?utf-8?B?YU0vNHdVK2xxSGRlK29BbUNvZU9hMGt0cmpzdy9FbDZyUVR0SnhkZUxGblBo?=
+ =?utf-8?B?ZDFWVTAzRktweVRUVU9KeWRKekIrSlZKZjlZRlBGaDBqKzF6TDBqcXJYSUxv?=
+ =?utf-8?B?R1dGd0VpeG02bEFXSnIzbitWV1BxbmN6REFrdXpRSXZnUlh5cG4vZnRsWE5s?=
+ =?utf-8?B?YlhxdlFhVHh3dXZOa1NJemEwVkYyVW1IbkpoVzlyczdIU3Z0RnhFZWxmNkE2?=
+ =?utf-8?B?MjllUUxlbEdTZCsvcDFwV3U0STlvSTduK0x4VDNTNUZESDUrU040YnB6WVVL?=
+ =?utf-8?B?NXVyaVNCanJ6WWd2dFMzYUJnM3UrY2drZmNTbUxZM3p4VllYSGQ5NjVyamlx?=
+ =?utf-8?B?SjFTUkFYQjVvWnhLeUFhMFNNZ2lrN0FsejFCSjhpZ0N6SVRCTUZoOWZ3dm9E?=
+ =?utf-8?B?UmErMHlYWkJUaHFacUtJWlM1SWJvak9sZTd0Y0xLc21xbmc5ZVlYdmFwaEow?=
+ =?utf-8?B?dkVKRWcxQWNITlFPQkFNM05vM0wwUFgwL0xQQ3NkSElCVUJ5SDNRK2ZTR2tz?=
+ =?utf-8?B?ellLREpPY3dzQXhiQ2tmeFdzb1IzMkJqNm8xamxvandZNWV6Yk5PSFJJVkF2?=
+ =?utf-8?B?YU5iVlF5cnJ5RGU4Zkc4TFNqZlQ2MEpQcm9OT1ZMUDY2RFA5K2p0eUpPbTRS?=
+ =?utf-8?B?V1p5bFJLMHFLTVdWa2RDLzFkUHk5M1lmR0lCY2dWcXV4THVIb2o1aWxsVUhm?=
+ =?utf-8?B?WWZ3a0FxT1BRPT0=?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA0PR11MB4719.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014)(38070700018)(921020);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?ZFFCejEzdWR1dlFmdlg0M2hUTVUrcUpYN3BlZllIL0ZnUjhTTWJxN1drTVJo?=
+ =?utf-8?B?dlhBTm5pdTRieTc5SWx4YkNXVnpLTkNrS1JOenVyOGk2RVQrSnVVQmxYT3Vx?=
+ =?utf-8?B?Nkt5U1l3QSthMU1tanpLL1lxNVQyZzAyRWJVOG5KTTFTdnl3bTdGNUFaRVFk?=
+ =?utf-8?B?RTZrNkFvTjJVZjMxNjJWNFJ3d2dHOUxETUpGcjFNbTdWWUl6K3Vhbm1FVlhG?=
+ =?utf-8?B?ODVVZlovTnMvYlFTcVRNWCtSTVczRDJFZDN3K2c2VUtLUEpJbnk1S3Z2TW10?=
+ =?utf-8?B?MkoxMUUzcSs2YlhoVVFhL083aVFseVFrOFR4WmlscEhxNXU3SWJhNXdZS094?=
+ =?utf-8?B?a2hINlNmU2cxak9rRnRwYnBoOEN5OWlwMXR6NmtuQzdWTFFIWENWZXphUjlh?=
+ =?utf-8?B?a1pMOFF1MW5SdEs3dWQyclRLQTVhZ2p1WWtTb1UwUFZLYWdxTjI5bHF5cmJD?=
+ =?utf-8?B?VjlmNWlzaTYrVjdTNEJSSlArRklhTjliVk5nOHU3N3JDb3Qyc3lIbXVxMEVL?=
+ =?utf-8?B?OHdBOWx1ZnZML3FOQTFVM1ZKNitOVHdiRnJISTcyVjVZQXB6QzFwWjBkVjVs?=
+ =?utf-8?B?NnJEY2xFeWdRQ3RRNnR4c1FUNEg0M0J2V1hMRnRKcDJraEhEK3lLQ244aTdx?=
+ =?utf-8?B?djNkUmN1NUJZR2V2NnB2VFU2K3JBTUsrWnlFSFBnbDlPcENVWStySEJpb01M?=
+ =?utf-8?B?YmQ2a05zVkpMVWhUVy83cXpsRUZuTXFVWExTTGxuc2tOb2p0SG5Wc0xjL1Nv?=
+ =?utf-8?B?UjBNUzZ4Ri9KRHNTdU9rSThmNk94NXc0bUozYnB6dVlQME9GMzRnaFgvTXNP?=
+ =?utf-8?B?a1E2NXJQbVV4cHZ2VWpRZnhJUDBYcUNjaUMwT3d5c0x6dlJyT2Z6SFFvRU1k?=
+ =?utf-8?B?TmxCaVV3UURBdHZYUFp3c3Nad2hzQTJONUtVcXhIekxvRk5RajVDdkRsMVBZ?=
+ =?utf-8?B?N0prYmJFT0V4SXdaa3ZUL3AwM2c2QUUwWUx0V3k2OUhWdk5hZ3FGRFRZT0pQ?=
+ =?utf-8?B?RFV2Q2Vjd0tGcTA1UitpUGNveE1BbDdUbVFwei93YS9kQ1QxNEdRMmV1c2tI?=
+ =?utf-8?B?VmhYSHVKd2pWNVM1L25QeWJPaWNxL1B4ZXBJNFFERzFGUGdCSUR4V0l1OTNq?=
+ =?utf-8?B?RVZabEFDOW8wUnB3VEJOVWhoNUI5a2NKNzJZNUFFdnJrYWxLdXJUbTZsK1Bs?=
+ =?utf-8?B?cFZPZ0t3NU4yaDc5R0d2M29PSDNxd09xTTV6MTdBYTVMZ2FhRFhORmtKczQ2?=
+ =?utf-8?B?T2pHSXdoQytNaUk3ZkdtTENDSjJvRFRNWDk1REhLUTJuVGRUSFQ1dnR1dlFu?=
+ =?utf-8?B?VjZwb2FjVFZSVzZ1a2E5N0g3c3crRnV0bmFlUkd6TURiQ25iN1NLOUp0NE15?=
+ =?utf-8?B?NUF3ZHZIOVV2SzVEVnJXb0FHdkZIYmNIQTZ5cDBPTk1vNURPWWdCdExsdUVh?=
+ =?utf-8?B?L1ZTNjgvZTRkMjZxcjdyaHMxM2c4dnYrS2YrMTRZYWxpS1FkMjNpVy91aTIz?=
+ =?utf-8?B?RWt5S2JYalVPZXcvU0krbFVrTk5oM283ZXQraCtmRzRkNHdxZHEyOExPeU1O?=
+ =?utf-8?B?L1VOMTJpai93emwwMnkvblJoRXRLQmo5dElJSFYwK0hXU2xWUnExalVLRGZV?=
+ =?utf-8?B?OE1wS3o0OTVFM0djYmZIZG96ZXNIZFN0aE44SUxRY2ZYRjVtdGs1QXhPQk9n?=
+ =?utf-8?B?UzZsMGNwTzI1dm8reVh6aDVYQ29PR3RjZFJIMk81VU1HNGxXdi83OXN5Q3Fs?=
+ =?utf-8?B?cVdWcTdRbEhsUGFXZ2x5Sk0wRitkRG9ISmpyMC9FSjNQY1R3ejl5Q1cya3ZF?=
+ =?utf-8?B?M1ZOc3ViWmN1T3NzQS8yd1N5NmRkQk5CS25YelJqM2p6enFZNjBvRzFqQVJN?=
+ =?utf-8?B?eXY5RWlWRU01bXFzQWRHYzZGZFBlNVlDRm9KajBTaDZZT2RPQjM2eGV3ZVRB?=
+ =?utf-8?B?Q25XN2h5K0MrTlJGMGpHVC81WFRaN0d6VFZMdGtuMHpPMHBnNTYzaHNEbjEz?=
+ =?utf-8?B?VkV2TTFvWGNFd3lVdTRFcHh6a3BXYWo2VXJBWll4ZTBxSy9oSFk2bUZDS3NF?=
+ =?utf-8?B?R3BEMTdZbklTWTVCeTJsZWpjVTFKVnEwOFZ5bGZIMG8rbW1ycFhMMkpPOEYv?=
+ =?utf-8?B?MHAwL2VyVVNDVzF0V0taNnAvR2VmYTNnNDNIU0RFdlpLanY3VHZlYUhnMFI5?=
+ =?utf-8?B?cGc9PQ==?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <92DF9E1C8DC7C84AAC074D9AABD9B9CC@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250224083306.71813-1-dapeng1.mi@linux.intel.com>
- <20250224083306.71813-2-dapeng1.mi@linux.intel.com> <CAP-5=fW4QQk6fFMUyr+KFekA+sfkzsg-vKeCvaQYk0Srwsr4bQ@mail.gmail.com>
-In-Reply-To: <CAP-5=fW4QQk6fFMUyr+KFekA+sfkzsg-vKeCvaQYk0Srwsr4bQ@mail.gmail.com>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 5 Mar 2025 00:39:09 -0800
-X-Gm-Features: AQ5f1Jq6OtsJUORQccnOzWeTiMHp0FZDFT4mNjFBCGT1a294wYhts5MczzJGUBg
-Message-ID: <CAP-5=fWdKNT2sLXeRj7r-WpsE2Xg7ZTOxVKy6D_Cg_NYA0AXGQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2] perf tools/tests: Fix topdown groups test on hybrid platforms
-To: Dapeng Mi <dapeng1.mi@linux.intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Dapeng Mi <dapeng1.mi@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-OriginatorOrg: microchip.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SA0PR11MB4719.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a32ccba0-3c32-48fc-4343-08dd5bc179c6
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Mar 2025 08:41:08.5984
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: tMfWEou6f0BX1rLsRZ4DWc/AbjTmHdT06mSmVULmIRoPPSrE7OU+J5BiUS6v69+R3XnQ3NLmrj0vNlUrTj0rw8MzJm0Gwzteh8kcsQPRqL9SPkHrdslSR2kRFUwSBIxR
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR11MB6820
 
-On Tue, Mar 4, 2025 at 10:07=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
-te:
->
-> On Sun, Feb 23, 2025 at 5:43=E2=80=AFPM Dapeng Mi <dapeng1.mi@linux.intel=
-.com> wrote:
-> >
-> > When running topdown groups test on hybrid platforms like LNL/ARL, we
-> > see the following 2 commands fail.
-> >
-> > perf stat $cputype -e '{instructions,slots},topdown-retiring' true
-> > perf stat $cputype -e '{instructions,slots},{topdown-retiring}' true
-> >
-> > Take the 1st command as an example, 5 events are created on hybrid
-> > platform. They are cpu_atom/instructions/, cpu_core/instructions/,
-> > cpu_core/slots/, cpu_atom/topdown-retiring/ and
-> > cpu_core/topdown-retiring/ events. The former 3 events are in a group
-> > and the latter 2 topdown-retiring events are independent events.
-> >
-> > As the limitation of current implementation, the
-> > cpu_core/topdown-retiring/ event can't be moved into previous group as
-> > long as there are other events before it. That's the reason why we see
-> > the failure.
-> >
-> > Thus add "--cputype core" option to limit only P-core events are tested=
-.
-> >
-> > Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
-> > ---
-> >  tools/perf/arch/x86/util/evlist.c | 26 +++++++++++++++++++++++---
-> >  tools/perf/tests/shell/stat.sh    | 20 ++++++++++++++++++--
-> >  2 files changed, 41 insertions(+), 5 deletions(-)
-> >
-> > diff --git a/tools/perf/arch/x86/util/evlist.c b/tools/perf/arch/x86/ut=
-il/evlist.c
-> > index 447a734e591c..0a71ba975871 100644
-> > --- a/tools/perf/arch/x86/util/evlist.c
-> > +++ b/tools/perf/arch/x86/util/evlist.c
-> > @@ -9,7 +9,7 @@ int arch_evlist__cmp(const struct evsel *lhs, const str=
-uct evsel *rhs)
-> >  {
-> >         /*
-> >          * Currently the following topdown events sequence are supporte=
-d to
-> > -        * move and regroup correctly.
-> > +        * move and regroup correctly on non-hybrid platforms.
-> >          *
-> >          * a. all events in a group
-> >          *    perf stat -e "{instructions,topdown-retiring,slots}" -C0 =
-sleep 1
-> > @@ -44,7 +44,7 @@ int arch_evlist__cmp(const struct evsel *lhs, const s=
-truct evsel *rhs)
-> >          * topdown metrics events must be first event after the slots e=
-vent group,
-> >          * otherwise topdown metrics events can't be regrouped correctl=
-y, e.g.
-> >          *
-> > -        * a. perf stat -e "{instructions,slots},cycles,topdown-retirin=
-g" -C0 sleep 1
-> > +        * e. perf stat -e "{instructions,slots},cycles,topdown-retirin=
-g" -C0 sleep 1
-> >          *    WARNING: events were regrouped to match PMUs
-> >          *     Performance counter stats for 'CPU(s) 0':
-> >          *         17,923,134      slots
-> > @@ -56,11 +56,31 @@ int arch_evlist__cmp(const struct evsel *lhs, const=
- struct evsel *rhs)
-> >          * has topdown metrics events must contain only the topdown met=
-rics event,
-> >          * otherwise topdown metrics event can't be regrouped correctly=
- as well, e.g.
-> >          *
-> > -        * a. perf stat -e "{instructions,slots},{topdown-retiring,cycl=
-es}" -C0 sleep 1
-> > +        * f. perf stat -e "{instructions,slots},{topdown-retiring,cycl=
-es}" -C0 sleep 1
-> >          *    WARNING: events were regrouped to match PMUs
-> >          *    Error:
-> >          *    The sys_perf_event_open() syscall returned with 22 (Inval=
-id argument) for
-> >          *    event (topdown-retiring)
-> > +        *
-> > +        * For hybrid platforms, the sequences 'c' and 'd' are not supp=
-orted as well
-> > +        * besides above sequences 'e' and 'f'.
-> > +        *
-> > +        *    perf stat -e "{instructions,slots},topdown-retiring" -C0 =
-sleep 1
-> > +        *    perf stat -e "{instructions,slots},{topdown-retiring}" -C=
-0 sleep 1
-> > +        *
-> > +        * On hybrid platforms each event would create an instance on a=
-ll types of PMU
-> > +        * if the event can be supported by the PMU, i.e., the "topdown=
--retiring" event
-> > +        * would create two instances on hybrid platforms with P-cores =
-and E-cores,
-> > +        * "cpu_core/topdown-retiring/" and "cpu_atom/topdown_retiring"=
-.
-> > +        *
-> > +        * Take the first command as an example, the events list would =
-be converted to
-> > +        * below list in fact.
-> > +        *
-> > +        * "{cpu_atom/instructions/,cpu_core/instructions/,cpu_core/slo=
-ts/},
-> > +        *  cpu_atom/topdown-retiring/,cpu_core/topdown-retiring/"
-> > +        *
-> > +        * This is actually same with event list in case 'e', "cpu_core=
-/topdown-retiring/"
-> > +        * event can't be moved into previous events group.
-> >          */
-> >         if (topdown_sys_has_perf_metrics() &&
-> >             (arch_evsel__must_be_in_group(lhs) || arch_evsel__must_be_i=
-n_group(rhs))) {
-> > diff --git a/tools/perf/tests/shell/stat.sh b/tools/perf/tests/shell/st=
-at.sh
-> > index 68323d636fb7..cdfe27c25528 100755
-> > --- a/tools/perf/tests/shell/stat.sh
-> > +++ b/tools/perf/tests/shell/stat.sh
-> > @@ -5,6 +5,16 @@
-> >  set -e
-> >
-> >  err=3D0
-> > +is_hybrid=3Dfalse
-> > +
-> > +check_hybrid_platform() {
-> > +  pmus=3D$(ls /sys/bus/event_source/devices/*/cpus 2>/dev/null | wc -l=
-)
-> > +  if [ "$pmus" -gt 1 ]
-> > +  then
-> > +    is_hybrid=3Dtrue
-> > +  fi
-> > +}
-> > +
-> >  test_default_stat() {
-> >    echo "Basic stat command test"
-> >    if ! perf stat true 2>&1 | grep -E -q "Performance counter stats for=
- 'true':"
-> > @@ -62,6 +72,11 @@ test_topdown_groups() {
-> >    # Topdown events must be grouped with the slots event first. Test th=
-at
-> >    # parse-events reorders this.
-> >    echo "Topdown event group test"
-> > +  cputype=3D""
-> > +  if $is_hybrid
-> > +  then
-> > +    cputype=3D"--cputype core"
-> > +  fi
-> >    if ! perf stat -e '{slots,topdown-retiring}' true > /dev/null 2>&1
-> >    then
-> >      echo "Topdown event group test [Skipped event parsing failed]"
-> > @@ -85,13 +100,13 @@ test_topdown_groups() {
-> >      err=3D1
-> >      return
-> >    fi
-> > -  if perf stat -e '{instructions,slots},topdown-retiring' true 2>&1 | =
-grep -E -q "<not supported>"
-> > +  if perf stat $cputype -e '{instructions,slots},topdown-retiring' tru=
-e 2>&1 | grep -E -q "<not supported>"
->
-> So I can make this test fail on non-hybrid with:
-> ```
-> $ perf stat -e '{instructions,slots},faults,topdown-retiring' true
-> WARNING: events were regrouped to match PMUs
->
-> Performance counter stats for 'true':
->
->         5,312,770      slots
->         1,078,401      instructions
->                56      faults
->   <not supported>      topdown-retiring
-> ```
-> The issue is that the slots isn't a group leader, so the "force group
-> index" we try to insert must be grouped events into is miscalculated
-> to be topdown-retiring. The following fixes this:
-> ```
-> diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-event=
-s.c
-> index 35e48fe56dfa..68ddc335cde4 100644
-> --- a/tools/perf/util/parse-events.c
-> +++ b/tools/perf/util/parse-events.c
-> @@ -2056,8 +2056,7 @@ static int
-> parse_events__sort_events_and_fix_groups(struct list_head *list)
->                 pos->core.idx =3D idx++;
->
->                 /* Remember an index to sort all forced grouped events
-> together to. */
-> -               if (force_grouped_idx =3D=3D -1 && pos =3D=3D pos_leader =
-&&
-> pos->core.nr_members < 2 &&
-> -                   arch_evsel__must_be_in_group(pos))
-> +               if (force_grouped_idx =3D=3D -1 &&
-> arch_evsel__must_be_in_group(pos))
->                         force_grouped_idx =3D pos->core.idx;
->         }
-> ```
->
-> >    then
-> >      echo "Topdown event group test [Failed topdown metrics event not m=
-ove into slots group]"
-> >      err=3D1
-> >      return
-> >    fi
-> > -  if perf stat -e '{instructions,slots},{topdown-retiring}' true 2>&1 =
-| grep -E -q "<not supported>"
-> > +  if perf stat $cputype -e '{instructions,slots},{topdown-retiring}' t=
-rue 2>&1 | grep -E -q "<not supported>"
->
-> So this is trickier as '{topdown-retiring}' ends up looking as a 2
-> event group. I'll post a proposed fix.
-
-Patch here:
-https://lore.kernel.org/lkml/20250305083735.393333-2-irogers@google.com/
-
-Thanks,
-Ian
-
->
-> >    then
-> >      echo "Topdown event group test [Failed topdown metrics group not m=
-erge into slots group]"
-> >      err=3D1
-> > @@ -200,6 +215,7 @@ test_hybrid() {
-> >    echo "hybrid test [Success]"
-> >  }
-> >
-> > +check_hybrid_platform
-> >  test_default_stat
-> >  test_stat_record_report
-> >  test_stat_record_script
-> > --
-> > 2.40.1
-> >
+SGkgYWxsLA0KDQpUaGUgcGF0Y2hlcyBiZWxvdyBoYXZlIGJlZW4gbWlzc2VkIHRvIGJlIG1lcmdl
+ZCBmcm9tIHNlcmllcy4gSSBoYXZlIHNlbnQgDQphIHJlbWluZGVyIGEgd2hpbGUgYmFjayBbMV0g
+YW5kIFsyXS4gU2hvdWxkIEkgcmVzZW5kIHRoZSBwYXRjaGVzIHRvIGhhdmUgDQppdCBtZXJnZWQg
+PyBQbGVhc2UgbGV0IG1lIGtub3cuDQoNClsxXSANCmh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL2xr
+bWwvMjAyNDEwMTAxMjAzNDUuOTI4NDQtMS12YXJzaGluaS5yYWplbmRyYW5AbWljcm9jaGlwLmNv
+bS8NCg0KWzJdIA0KaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvbGttbC9jYWI0YWQ2OC1jZjNlLTQz
+ODUtODcyMS04MzczNzJkZjJlMTJAbWljcm9jaGlwLmNvbS8NCg0KDQpPbiAxMC8xMC8yNCA1OjMx
+IHBtLCBWYXJzaGluaSBSYWplbmRyYW4gd3JvdGU6DQo+IFZhcnNoaW5pIFJhamVuZHJhbiAoOSk6
+DQo+ICAgIGR0LWJpbmRpbmdzOiBhdG1lbC1zc2M6IGFkZCBtaWNyb2NoaXAsc2FtOXg3LXNzYyA+
+ICAgIGR0LWJpbmRpbmdzOiByZXNldDogYXRtZWwsYXQ5MXNhbTkyNjAtcmVzZXQ6IGFkZCBzYW05
+eDcNCg0KDQotLSANClRoYW5rcyBhbmQgUmVnYXJkcywNClZhcnNoaW5pIFJhamVuZHJhbi4NCg0K
