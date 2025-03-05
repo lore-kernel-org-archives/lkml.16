@@ -1,127 +1,84 @@
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD5671C5F11;
-	Wed,  5 Mar 2025 17:08:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F32919C542;
+	Wed,  5 Mar 2025 17:09:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741194526; cv=none; b=Iwg7Oh4dOVZ/tR/DpzWQpyGdUAG1MqsmhYBruKsAh763uQpv7URLVykgBt4HIlJ7d7HjR+91sYHrwgLRbUKW9UQTifCLNZCL7DT94x3oxDp0M1IYKrFIaw9PL0r3IiNP8ExYUV0fnS9ZBYAC9BxrH+rNR3tLqVhUoNCtaxGyj/k=
+	t=1741194553; cv=none; b=Kdqc531wtKza86/a9Vc4OZe4PoewjDhpi1oXK9D6d3gT0iGQ47Hw1mti2UNy1fpdhmumU4ja7qE3NFuTSAz/ddoI+x4ThwV3+EK2ttQzfBkCeRWHkJCSTy33B4HO+qwj182leSZhSzHCClVfQ7EjkhpJEzkkF+6DqqsQcOe0zt4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741194526; c=relaxed/simple;
-	bh=BvrpRLEjubg+uBgW0PQjlbnPvYou/AIaycZ0Uh7wWfU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=H9/PXjl18wEPUyb88oDucpFcNcPIX/SiC6EInTOgnNc5beVRtI58YH+Itbb72xQTuFmfr2c71UG5ihM5qObVo6KSu8JGszCjSYaucL8/xdpu4ZGQHtn+UVkDGTCxxvz16lejS1HaM26WQCvV6GKaruz9BR93D2UafKzDEts/0S4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FQoHmrXd; arc=none smtp.client-ip=209.85.221.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741194553; c=relaxed/simple;
+	bh=WEjrtOD5SRlKTyy/y4mcSiqWzrehr6/dzujDScRVSXo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mV5zA9UAO1XKUsfbEjfQ0bA6Gcb6Et4f8H/4bxkw/vIOXew1pkOyNcxCn4wKvbOXzJZg9bA99O42AJ7sLaim5oCX5zAPtkRJTLqDVPfSuzql6nMDUefiFgIynNMu420LApCfB5uvAdIjEiMXmoCrAwBcitFJfSie93sLELyZfBM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=JIUlbDIH; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FQoHmrXd"
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-390f69e71c8so797811f8f.0;
-        Wed, 05 Mar 2025 09:08:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741194522; x=1741799322; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JCmHH2sBXFrU1aD2JeP8UinBUcmUwStB8VTMjRRTo3M=;
-        b=FQoHmrXdqO0w+XXlB//31Jxe+OAGHe+Nzz4tPapIiA7SSAPVBG9JpOVQ3PiiE00KDR
-         8GONP7edeJJ4F5lANFGmQCEjELagKZf/URAISfLvDQ2Hup9DvfSP6kSjSmvnDYPL/ImT
-         D7WfJ0mcaWY/UFZb2l4bNa3PYiIXcF6lnFzMCs5HyIT39GcQUXb8mjqvk5oMFSaSI3ov
-         hWt3CJrOUKFck+oR/rp+CyDsDyrFuGmytxCTHlkm6TZz17Jsb0xQf9SN+TrG0+qPeG81
-         VsY7NSV6VfAM69IZjZqn3HW/72a4E1rHFEg2GKuOFoEssBJ49DTYvnmFuoA127K+MkbM
-         mcLg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741194522; x=1741799322;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=JCmHH2sBXFrU1aD2JeP8UinBUcmUwStB8VTMjRRTo3M=;
-        b=F5moFPO7gwksMHz0iJT1vmOAprn13lR3oLwu1UyyfH4mjpqhAEfHLHikYgH7DE5REt
-         9FjFFVDfA1p3svNz75ynyU8heZHcAXXEOp3LLqYjoFMOJ1+XT6uA54p+Bw8gwIYpfW5A
-         GnPhDNOL4MAYT4wtmByHjeBsRoXafPCq1I9RNRrb5kOx2JnmmyjFCPOnQN4E3GWgVBOF
-         Il2jmegRO9OdHoMTIEZl6dma1uDhBDbV21ddF0xzMAs5GJzIvl2Fzy4vIM1aiFaebTOR
-         rXNUgLdxfMNjZxsDfB6B16irINGsl/aE3PiLpmWaOScW5Plh79EWRzqzh+KoyAEEbv+q
-         6nJA==
-X-Forwarded-Encrypted: i=1; AJvYcCU0Cpr2M1UQZqpnngdAytqsymIEieChuBHuEcd5p3b+KrPhV9MXME8Y04zoOedkubHb3UuvjmJSPHvSNpO/@vger.kernel.org, AJvYcCWww2VKavtVte2q1TNnu6Neufy8OXHEkoBKSpkGIqlDDsR+pJhR5fAtfFqqS63oNELOX3I=@vger.kernel.org, AJvYcCX+EVoI3lSkg86m8bNKt+Ll7Eu+I+b2AS1XJ4QeXitNd8sNmR5QMiL1Th+neErE1i8zncLsoiQw+c9gXGCGTXaqgrumcYdu@vger.kernel.org, AJvYcCXK6s0FTdDOkuaie5BLyRj/QbFkXo1Gp38etKL33sMB6w/SOsvYrSEyPymy2j/ADbaMFrukLbQ/fQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyesdwu+XeOVHWUqmneKHocYQ154ROTeehwvEZSt11YhMI48yP4
-	+uMaCAYYzR5UTaZzoz6515GfUltniFGP41S1JDP8V677KeqeVSN02I9OueXBTU3nwCnp7pxI0Kv
-	7tSw0P1rZpW0QT9ODnXms6Ve5n6s=
-X-Gm-Gg: ASbGncssJL5J3TMcRbEBvh/H8m7ee0yZ2YvrA2y7z7NofGHezRIQ1/gcH/ipxkqC0o7
-	DKxbvvkpPp/hvE83LwgugUrhCJfKh3nehnlWI/M6+aj+8TGfdAgFQmF0qRYRtx+299/7RoXGO4V
-	pCnSINugguJs5IWgQ/n10bh9NXHZG+2a4CWnFwtQMqmQ==
-X-Google-Smtp-Source: AGHT+IFhLsvM9iNsC7Z9Gk77B7oPmq2594HIGrrnihVI9DffiOarfWHTZWxnq+tOuVUjiytsYWy3FUj5+D18DIphGKg=
-X-Received: by 2002:a05:6000:154c:b0:390:ff84:532b with SMTP id
- ffacd0b85a97d-391296d894dmr55899f8f.7.1741194521507; Wed, 05 Mar 2025
- 09:08:41 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="JIUlbDIH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1741194549;
+	bh=WEjrtOD5SRlKTyy/y4mcSiqWzrehr6/dzujDScRVSXo=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=JIUlbDIHNioNd7WrpDtDuKtKn8bWX7d+oG8SQ2P2MeP9y5iWDknHOvrKE/09WnNbA
+	 8HE+45oVuLOBSgwZanuL02KBAV1DJ47m1oHlQN6M+nWZoOi2jdUNTVrrFRMgYTmt8g
+	 gWxQGel+PA5OQB/a0xCtVo6HemRRlBgwr2ruk6ZwiGgRsefROFVhmlNSDLH2YYwF87
+	 hkoHuXC4rW0GsXoLOYfSNxbMPg0uAsMNk9pZMas6lS9yy/7DIOOqjcXoDm/nDh5XqI
+	 WU6sj5qJ7VnEqU8r7daNnnI/GTSslVRAMwmGiWQuLW9m2myoALHlsnXSK8oSmaLvQe
+	 64VBNtKkvYiBw==
+Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id C659917E0599;
+	Wed,  5 Mar 2025 18:09:08 +0100 (CET)
+Message-ID: <dc68cb1c-0304-4ebf-ae38-444817a02f78@collabora.com>
+Date: Wed, 5 Mar 2025 18:09:08 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250304203123.3935371-1-bboscaccy@linux.microsoft.com>
- <20250304203123.3935371-3-bboscaccy@linux.microsoft.com> <CAHC9VhS5Gnj98K4fBCq3hDXjmj1Zt9WWqoOiTrwH85CDSTGEYA@mail.gmail.com>
- <877c54jmjl.fsf@microsoft.com> <CAHC9VhQO_CVeg0sU_prvQ_Z8c9pSB02K3E5s84pngYN1RcxXGQ@mail.gmail.com>
- <CAPhsuW6RrUiXaQe1HBYOvwUx2GFaA-RKx22955A2StsP2erTeA@mail.gmail.com> <CAHC9VhQ1BHXfQSxMMbFtGDb2yVtBvuLD0b34=eSrCAKEtFq=OQ@mail.gmail.com>
-In-Reply-To: <CAHC9VhQ1BHXfQSxMMbFtGDb2yVtBvuLD0b34=eSrCAKEtFq=OQ@mail.gmail.com>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Wed, 5 Mar 2025 09:08:30 -0800
-X-Gm-Features: AQ5f1JpbqWJ2U2ge5hW2KG36R4uPAlWjU6dS7IbAVApjbqNIyD5ZAKIyRS1MGwQ
-Message-ID: <CAADnVQJL77xLR+E18re88XwX0kSfkx_5O3=f8YQ1rVdVkf8-hQ@mail.gmail.com>
-Subject: Re: [PATCH v4 bpf-next 2/2] selftests/bpf: Add is_kernel parameter to
- LSM/bpf test programs
-To: Paul Moore <paul@paul-moore.com>
-Cc: Song Liu <song@kernel.org>, Blaise Boscaccy <bboscaccy@linux.microsoft.com>, 
-	James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, 
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	John Fastabend <john.fastabend@gmail.com>, Andrii Nakryiko <andrii@kernel.org>, 
-	Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, 
-	Yonghong Song <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>, 
-	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Stephen Smalley <stephen.smalley.work@gmail.com>, Ondrej Mosnacek <omosnace@redhat.com>, 
-	LSM List <linux-security-module@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	bpf <bpf@vger.kernel.org>, selinux@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] arm64: dts: mediatek: mt8390-genio-common: Add jack
+ detection with accdet
+To: =?UTF-8?B?TsOtY29sYXMgRi4gUi4gQS4gUHJhZG8=?= <nfraprado@collabora.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>
+Cc: kernel@collabora.com, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org
+References: <20250304-genio700-accdet-dts-v1-1-86d77c5cc745@collabora.com>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Content-Language: en-US
+In-Reply-To: <20250304-genio700-accdet-dts-v1-1-86d77c5cc745@collabora.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Wed, Mar 5, 2025 at 8:12=E2=80=AFAM Paul Moore <paul@paul-moore.com> wro=
-te:
->
-> On Tue, Mar 4, 2025 at 10:32=E2=80=AFPM Song Liu <song@kernel.org> wrote:
-> > On Tue, Mar 4, 2025 at 6:14=E2=80=AFPM Paul Moore <paul@paul-moore.com>=
- wrote:
-> > > On Tue, Mar 4, 2025 at 8:26=E2=80=AFPM Blaise Boscaccy
-> > > <bboscaccy@linux.microsoft.com> wrote:
-> > > > Paul Moore <paul@paul-moore.com> writes:
-> > > > > On Tue, Mar 4, 2025 at 3:31=E2=80=AFPM Blaise Boscaccy
-> > > > > <bboscaccy@linux.microsoft.com> wrote:
->
-> ...
->
-> > Do we need this in the LSM tree before the upcoming merge window?
-> > If not, we would prefer to carry it in bpf-next.
->
-> As long as we can send this up to Linus during the upcoming merge
-> window I'll be happy; if you feel strongly and want to take it via the
-> BPF tree, that's fine by me.  I'm currently helping someone draft a
-> patchset to implement the LSM/SELinux access control LSM callbacks for
-> the BPF tokens and I'm also working on a fix for the LSM framework
-> initialization code, both efforts may land in a development tree
-> during the next dev cycle and may cause a merge conflict with Blaise's
-> changes.  Not that a merge conflict is a terrible thing that we can't
-> work around, but if we can avoid it I'd be much happier :)
->
-> Please do make the /is_kernel/kernel/ change I mentioned in patch 1/2,
-> and feel free to keep my ACK from this patchset revision.
+Il 04/03/25 22:43, Nícolas F. R. A. Prado ha scritto:
+> Enable audio jack detection for the Genio 700 and 510 EVK boards. This
+> is handled by the MT6359 ACCDET block, which on these boards has the
+> HP_EINT pin pulled high and connected to a normally open 3.5mm jack.
+> 
+> Add a phandle to the accdet in the sound card node so the machine sound
+> driver can initialize the accdet.
+> 
+> Signed-off-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
 
-My preference is to go via bpf-next, since changes are bigger
-on bpf side than on lsm side.
+For the next merge cycle;
 
-Re: selftest.
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 
-Why change them at all if 'bool kernel' attribute is unused ?
-Addition of the attr should be backward compatible change,
-so all tests should still pass as-is.
-
-You probably should add a new test where 'kernel' arg is actually
-used for something. That would be patch 2.
+> ---
+> This patch depends on both "Allow retrieving accessory detection
+> reference on MT8188" [1] and "Get mt6359-accdet ready for usage in
+> Devicetree" [2].
+> 
+> [1] https://lore.kernel.org/all/20250304-mt8188-accdet-v2-0-27f496c4aede@collabora.com
+> [2] https://lore.kernel.org/all/20250304-mt6359-accdet-dts-v3-0-5b0eafc29f5b@collabora.com
+> ---
+>   arch/arm64/boot/dts/mediatek/mt8390-genio-common.dtsi | 1 +
+>   1 file changed, 1 insertion(+)
+> 
