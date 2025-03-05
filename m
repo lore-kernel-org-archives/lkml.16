@@ -1,114 +1,102 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3A28205AB0;
-	Wed,  5 Mar 2025 10:01:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F7AC205E09;
+	Wed,  5 Mar 2025 10:02:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741168902; cv=none; b=XMgDClmZjc0YvG8yupyvvbdVfQuOVpZziKzBqPCLf6E+DFR6qNbDjRJvVPjOb5wp6gEKnUYlu5zh0hVZR7kGaP1CQbI+tGAqYtzA4Cek7IQikaOzAE+nvLnmZu3+7OHqGmXYlIJfiEaGKmOGAtNGgpXNqB+MAZ8cYTwXx2gxQGQ=
+	t=1741168942; cv=none; b=UYLK0aMg2nQceQEO4+6/fA455bkRrySfqQZPM43+8sXODHrzvTL4xlvFp2A8qm2fUxLY1h3akRfWv8GdZUFhZjb1u0QzMyctrOim3AfYhtJOH3Mvue9fn7IRrnVIwOLW24xCwR/IU0wJeIhpXUq2K+j1xn1VEMykQI0Xq5CxhBY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741168902; c=relaxed/simple;
-	bh=1nIsRNc3Lh78MiadvQxVA9dZBYCTinDpe9nUk8DVt+g=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=gbHqY+Xm6QrcBJFTNkeQEiSkPoGxH+kBu/bmE9t5/saAnYDhwVMuYlEpXCymFgmBGr+2BQagvW0ZxZ4oRLqdY4byqyKv6fKdMRgUNmqbLFgPFkDGtXxi3q2lJaMmJAmyFMdlnHlopFNeLu+RaHji8zGLg3q7AVgulE71Xue0qWk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X6hAhl49; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741168942; c=relaxed/simple;
+	bh=4JCFsrT2zb8UXbPhImj5AFIqomJ1rAKZQeo0+RoriJU=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=mcCEIoJ5to284x0PoUZNyNcQIsjae94XcZLi0GJUYgfIVoBZ22j51uyoCQMwq66NFQbhArTePs7niV+LfedFMXFGL0DoIy2uLTnx01kUoo/DW4nLQFTua0/YnMJuL40j60oZXoKSgBlO3nRx+Htq2yk7eMyqbwBsIQoYOrHE+U8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=mJwfWkV2; arc=none smtp.client-ip=68.232.153.233
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X6hAhl49"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 203DDC4CEE2;
-	Wed,  5 Mar 2025 10:01:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741168902;
-	bh=1nIsRNc3Lh78MiadvQxVA9dZBYCTinDpe9nUk8DVt+g=;
-	h=From:Date:Subject:To:Cc:From;
-	b=X6hAhl49+hDCpkMEOjmGnpsNm4VU9eLFAEo3RPawtan9YFA9ZrZ8ycCxQ4+GERR99
-	 qLZgiiJsnJ/IkxmALY+uBXBA53+mDJRfqIrKQ/57GCLv6Mn25Tb+TRm4ZHXxn74c7v
-	 SrMlAZO4QdKfc5sf0txRVsi+CTrtZO9GNnJdAwLoTr1bSsjMveoOvp9vGWX2f1TR7n
-	 RyQdUv2f8p+ogv8ZVC1zHDPMpY2cwkigS/wPI8X3KaqLAkN3dZCtIVNU4BpzV8Xavu
-	 Oxv+nTyyH3WHQptgqe9L7oeZQjtepHBpFUNj9NEFIz7C+9QIWixEllvf76ZFX3yNbY
-	 5kEf+DtqXcH7w==
-From: William Breathitt Gray <wbg@kernel.org>
-Date: Wed, 05 Mar 2025 19:01:19 +0900
-Subject: [PATCH] counter: microchip-tcb-capture: Fix undefined counter
- channel state on probe
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="mJwfWkV2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1741168941; x=1772704941;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=4JCFsrT2zb8UXbPhImj5AFIqomJ1rAKZQeo0+RoriJU=;
+  b=mJwfWkV2O5yozJu/5thc/d4QVXOy7TEq58j2MUQBBb0r3mkDhUfqI5iV
+   9gPUquBuVSZ5fINhD7Jf1POocwAwC35MDnFkoLzwsMzKVJe62EWSPaxBG
+   DyCKmFFWjGyNCufILYh+OjYx/3QlGGoMwj/3+uoVdTflODLX6H9cdT6QO
+   Cp5Fw+u5whUcJRYvk+JLRFVeO0x540rie/EBjmVV8FZC9p2W+tivQiNCr
+   FAQ6QW+ccyAY8fo88LejYGZzrgrdASlydKWG+OarUw0SyfbeBbBNYnRhD
+   /aP5OkwAA/2SLZfBIcrH0Tlny9bExLYYRd7wV4dbqBTggGIo+f6zL+ZUs
+   g==;
+X-CSE-ConnectionGUID: RIEadWJlSxmIHHqHflXrKA==
+X-CSE-MsgGUID: W7gZ41UASgOJJTu0KDXMpA==
+X-IronPort-AV: E=Sophos;i="6.14,222,1736838000"; 
+   d="scan'208";a="38444126"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 05 Mar 2025 03:02:20 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.87.72) by
+ chn-vm-ex02.mchp-main.com (10.10.87.72) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Wed, 5 Mar 2025 03:02:12 -0700
+Received: from che-lt-i67131.microchip.com (10.10.85.11) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
+ 15.1.2507.35 via Frontend Transport; Wed, 5 Mar 2025 03:02:05 -0700
+From: Manikandan Muralidharan <manikandan.m@microchip.com>
+To: <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+	<nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
+	<claudiu.beznea@tuxon.dev>, <tudor.ambarus@linaro.org>,
+	<pratyush@kernel.org>, <mwalle@kernel.org>, <miquel.raynal@bootlin.com>,
+	<richard@nod.at>, <vigneshr@ti.com>, <devicetree@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+	<linux-mtd@lists.infradead.org>
+CC: <manikandan.m@microchip.com>
+Subject: [PATCH 2/2] ARM: dts: microchip: sama5d29_curiosity: Add nvmem-layout in QSPI to describe EUI48 MAC address region
+Date: Wed, 5 Mar 2025 15:31:34 +0530
+Message-ID: <20250305100134.1171124-2-manikandan.m@microchip.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20250305100134.1171124-1-manikandan.m@microchip.com>
+References: <20250305100134.1171124-1-manikandan.m@microchip.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250305-preset-capture-mode-microchip-tcb-capture-v1-1-632c95c6421e@kernel.org>
-X-B4-Tracking: v=1; b=H4sIAO4gyGcC/z2NsQrDMAxEfyVorsBJqqH9ldLBVeRGQ2Mju6EQ8
- u8RGbocPI53t0EVU6lw7zYwWbVqXhz6Swc8x+UtqJMzDGGgMAbCYlKlIcfSvib4yZOHsmWetWD
- j179KceyJgiS6XcH33Ez6O78ez30/AL3L2DN7AAAA
-X-Change-ID: 20250305-preset-capture-mode-microchip-tcb-capture-fa31550ef594
-To: =?utf-8?q?Cs=C3=B3k=C3=A1s_Bence?= <csokas.bence@prolan.hu>, 
- Kamel Bouhara <kamel.bouhara@bootlin.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-iio@vger.kernel.org, 
- linux-kernel@vger.kernel.org, William Breathitt Gray <wbg@kernel.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2137; i=wbg@kernel.org;
- h=from:subject:message-id; bh=1nIsRNc3Lh78MiadvQxVA9dZBYCTinDpe9nUk8DVt+g=;
- b=owGbwMvMwCW21SPs1D4hZW3G02pJDOknFFkcyyYYzr5cwv16hz/rr9W/2cuLw/m6b1WFHOhr6
- vunLDS7o5SFQYyLQVZMkaXX/OzdB5dUNX68mL8NZg4rE8gQBi5OAZjIGQ1GhtYdH04vfRIT6LrZ
- xPL8/qqTaTa2yrcTwloUEk29TeP/cjH84WCdeXSnU+Rs+YrAmUdfTtjGxygTz1P/weeDVJpIfmo
- WHwA=
-X-Developer-Key: i=wbg@kernel.org; a=openpgp;
- fpr=8D37CDDDE0D22528F8E89FB6B54856CABE12232B
+Content-Type: text/plain
 
-Hardware initialize of the timer counter channel does not occur on probe
-thus leaving the Count in an undefined state until the first
-function_write() callback is executed. Fix this by performing the proper
-hardware initialization during probe.
+Add nvmem-layout in QSPI to describe EUI48 MAC address region.
+This is useful for cases where U-Boot is skipped and the Ethernet
+MAC address is needed to be configured in Linux.
 
-Fixes: 106b104137fd ("counter: Add microchip TCB capture counter")
-Reported-by: Csókás Bence <csokas.bence@prolan.hu>
-Closes: https://lore.kernel.org/all/bfa70e78-3cc3-4295-820b-3925c26135cb@prolan.hu/
-Signed-off-by: William Breathitt Gray <wbg@kernel.org>
+Signed-off-by: Manikandan Muralidharan <manikandan.m@microchip.com>
 ---
-This should fix the issue where a user needs to set the count function
-before they can use the counter. I don't have this hardware in person,
-so please test this patch and let me know whether it works for you.
----
- drivers/counter/microchip-tcb-capture.c | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+ .../arm/boot/dts/microchip/at91-sama5d29_curiosity.dts | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/drivers/counter/microchip-tcb-capture.c b/drivers/counter/microchip-tcb-capture.c
-index 2f096a5b973d18edf5de5a2b33f2f72571deefb7..c391ac38b990939c6764a9120a4bd03289f68469 100644
---- a/drivers/counter/microchip-tcb-capture.c
-+++ b/drivers/counter/microchip-tcb-capture.c
-@@ -368,6 +368,25 @@ static int mchp_tc_probe(struct platform_device *pdev)
- 			channel);
- 	}
+diff --git a/arch/arm/boot/dts/microchip/at91-sama5d29_curiosity.dts b/arch/arm/boot/dts/microchip/at91-sama5d29_curiosity.dts
+index 7be215781549..81aca8502195 100644
+--- a/arch/arm/boot/dts/microchip/at91-sama5d29_curiosity.dts
++++ b/arch/arm/boot/dts/microchip/at91-sama5d29_curiosity.dts
+@@ -480,6 +480,16 @@ flash@0 {
+ 		label = "atmel_qspi1";
+ 		status = "okay";
  
-+	/* Disable Quadrature Decoder and position measure */
-+	ret = regmap_update_bits(regmap, ATMEL_TC_BMR, ATMEL_TC_QDEN | ATMEL_TC_POSEN, 0);
-+	if (ret)
-+		return ret;
++		nvmem-layout {
++			compatible = "fixed-layout";
++			#address-cells = <1>;
++			#size-cells = <1>;
 +
-+	/* Setup the period capture mode */
-+	ret = regmap_update_bits(regmap, ATMEL_TC_REG(priv->channel[0], CMR),
-+				 ATMEL_TC_WAVE | ATMEL_TC_ABETRG | ATMEL_TC_CMR_MASK |
-+				 ATMEL_TC_TCCLKS,
-+				 ATMEL_TC_CMR_MASK);
-+	if (ret)
-+		return ret;
++			mac_address_eui48: mac-address@261 {
++				reg = <0x261 0x6>;
++			};
++		};
 +
-+	/* Enable clock and trigger counter */
-+	ret = regmap_write(regmap, ATMEL_TC_REG(priv->channel[0], CCR),
-+			   ATMEL_TC_CLKEN | ATMEL_TC_SWTRG);
-+	if (ret)
-+		return ret;
-+
- 	priv->tc_cfg = tcb_config;
- 	priv->regmap = regmap;
- 	counter->name = dev_name(&pdev->dev);
-
----
-base-commit: 8744dcd4fc7800de2eb9369410470bb2930d4c14
-change-id: 20250305-preset-capture-mode-microchip-tcb-capture-fa31550ef594
-
-Best regards,
+ 		at91bootstrap@0 {
+ 			label = "at91bootstrap";
+ 			reg = <0x0 0x40000>;
 -- 
-William Breathitt Gray <wbg@kernel.org>
+2.25.1
 
