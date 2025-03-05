@@ -1,90 +1,79 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FCC024DFEB;
-	Wed,  5 Mar 2025 16:07:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5FF8318FC90;
+	Wed,  5 Mar 2025 16:09:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741190861; cv=none; b=arb/X1sey+A6/8cjxXfiqrtNd6axZBmU7sfGnF9nfNywydpNswDorhdSeGs2pwOM39oTh32Jny+ZmT5zm2fBs1Wqo5SzFC30AxZGNOPSwfgztTKo2Y5SE2F38x0OgbFzyF0vbrcCsrMasjydckQUMCm9h9eC5lNjZFbl7q+dZDg=
+	t=1741190962; cv=none; b=n077AEagBZDMSaw7pePJ6OyAkItq1BSSJA8PhtaKlY9CVfPpMp6IRFQtTQN7avLEMQcovGDSh3rTN3ZoqdZYTOpTOtOreUXgkSOg9aXRVHqK6p8p5waxezAMEltrcjO/G8DmHXbfmWn0ld8RIMvGOyGLgLd9AN1ckGRALZ0eiUQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741190861; c=relaxed/simple;
-	bh=emBW38wWtDL/t2xJoZdgV8JTXN56OwGFKlh27l9aGHg=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=THcbNxCXnP7JwmJzVJixMsplRk1kjRJ7zrV1VLRiLF/A6+MAI/jLwbFYl6/CsGijY7BZDGEqqNfG34ihSYetSnCiG8BS7CSdQkxtd8PybnDIIfAUHyPNJjc38dfj1azon+9Qf+9QKvhI0S3pNYx3CPjChu+qBsBFOvT9hFw2JMw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bfq2xiVe; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bfq2xiVe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B221BC4CED1;
-	Wed,  5 Mar 2025 16:07:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741190861;
-	bh=emBW38wWtDL/t2xJoZdgV8JTXN56OwGFKlh27l9aGHg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=bfq2xiVe8OQHXcskcir/pjBGyzpCZQNetxsz5dMM3oBLLsjgAu5JYtPKrtg1m9J1b
-	 9Okk3CRnWshYAWjyd1mnjrLDOk2xztioeOvMTupmshxo9gLjGG6klenyr6c4/QQqJa
-	 8VAUPU22pxxpRxEDh+7zzjXZChNjY+nS+he5OAHV6aulgaQMP6cakvTsloWl6Bv8C4
-	 tfjfiNu9YyayDm0f2E9miOE3opilc8lwV7LoNMdD5EPHfo0r5GtVlrvL0G6WPB1jUa
-	 RlJ/5e/AF6ZVsQvHI/t8nsquVt+2MCotm29rVjHgnpudp6qMbbxazesTKMtuZt0asd
-	 ZEeKdXhLEKDBA==
-Date: Wed, 5 Mar 2025 08:07:40 -0800
-From: Jakub Kicinski <kuba@kernel.org>
-To: Breno Leitao <leitao@debian.org>
-Cc: "David S. Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Simon Horman
- <horms@kernel.org>, Amerigo Wang <amwang@redhat.com>,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org, kernel-team@meta.com
-Subject: Re: [PATCH net] netpoll: guard __netpoll_send_skb() with RCU read
- lock
-Message-ID: <20250305080740.68749058@kernel.org>
-In-Reply-To: <20250305-tamarin-of-amusing-luck-b9c84f@leitao>
-References: <20250303-netpoll_rcu_v2-v1-1-6b34d8a01fa2@debian.org>
-	<20250304174732.2a1f2cb5@kernel.org>
-	<20250305-tamarin-of-amusing-luck-b9c84f@leitao>
+	s=arc-20240116; t=1741190962; c=relaxed/simple;
+	bh=QlRhJpb/e5hXiFz0CcYu2ha8VdnvKoFkYUAtASfFzTg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kwpXfjv4LndjiH+LB1suAEFlayUW2WIXoyPTxc3lXDV6SErX4XR/6yiVoiSQNFQFbJbpX+nIgiBPLueiV6kL3iRvm+0IUJDSVgM6x7mWYnXm92rVG4UivfYeq3O8x8H9X3Z/MJbpTp7EQevKmWmCKW0RWv/VXaGoNjKRSXUFMB4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 93949FEC;
+	Wed,  5 Mar 2025 08:09:32 -0800 (PST)
+Received: from [10.122.49.92] (unknown [10.122.49.92])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F38FE3F5A1;
+	Wed,  5 Mar 2025 08:09:18 -0800 (PST)
+Message-ID: <d1270a11-6587-432e-9ea5-5fb3b4ca559a@arm.com>
+Date: Wed, 5 Mar 2025 10:09:18 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 0/5] Add support for the TPM FF-A start method
+To: Jarkko Sakkinen <jarkko@kernel.org>, Jason Gunthorpe <jgg@ziepe.ca>
+Cc: linux-integrity@vger.kernel.org, peterhuewe@gmx.de, sudeep.holla@arm.com,
+ rafael@kernel.org, lenb@kernel.org, linux-acpi@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250217224946.113951-1-stuart.yoder@arm.com>
+ <Z8SypwnbJR4g8Bho@kernel.org> <20250303165535.GT5011@ziepe.ca>
+ <3b9141a372e9e787089a28beeb4bf11d5a144553.camel@kernel.org>
+Content-Language: en-US
+From: Stuart Yoder <stuart.yoder@arm.com>
+In-Reply-To: <3b9141a372e9e787089a28beeb4bf11d5a144553.camel@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Wed, 5 Mar 2025 01:09:49 -0800 Breno Leitao wrote:
-> On Tue, Mar 04, 2025 at 05:47:32PM -0800, Jakub Kicinski wrote:
-> > On Mon, 03 Mar 2025 03:44:12 -0800 Breno Leitao wrote:  
-> > > +	guard(rcu)();  
-> > 
-> > Scoped guards if you have to.
-> > Preferably just lock/unlock like a normal person..  
+
+
+On 3/4/25 10:02 AM, Jarkko Sakkinen wrote:
+> On Mon, 2025-03-03 at 12:55 -0400, Jason Gunthorpe wrote:
+>> On Sun, Mar 02, 2025 at 09:33:59PM +0200, Jarkko Sakkinen wrote:
+>>> WARNING: line length of 102 exceeds 100 columns
+>>> #764: FILE: drivers/char/tpm/tpm_crb.c:821:
+>>> +                              FW_BUG "TPM2 ACPI table has wrong
+>>> size %u for start method type %d\n",
+>>
+>> Just ignore that, it is an error in checkpatch. Strings are required
+>> to
+>> be long. I suspect FW_BUG confused it.
 > 
-> Sure, I thought that we would be moving to scoped guards all across the
-> board, at least that was my reading for a similar patch I sent a while
-> ago:
+> Yep, as its own issue I think you are right.
 > 
-> 	https://lore.kernel.org/all/20250224123016.GA17456@noisy.programming.kicks-ass.net/
+> I also noticed couple of additional style issues not picked
+> by checkpatch:
 > 
-> Anyway, in which case should I use scoped guard instead 
+> 	if (rc == -ENOENT) {  // FF-A driver is not available yet
+> 		rc = -EPROBE_DEFER;
+> 	}
+> 
+> I.e. extra curly braces and "//" comment.
+> 
+> Should be:
+> 
+> 	/* If driver is not available yet, request probe retry: */
+> 	if (rc == -ENOENT)
+> 		rc = -EPROBE_DEFER;
+> 
 
-We are certainly not moving to guards in networking. Too C++-sy.
-Just lock / unlock please, correctly around the variable you actually
-intend to protect.
+I will respin and fix this.
 
-Quoting documentation:
-
-  Using device-managed and cleanup.h constructs
-  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  
-  Netdev remains skeptical about promises of all "auto-cleanup" APIs,
-  including even ``devm_`` helpers, historically. They are not the preferred
-  style of implementation, merely an acceptable one.
-  
-  Use of ``guard()`` is discouraged within any function longer than 20 lines,
-  ``scoped_guard()`` is considered more readable. Using normal lock/unlock is
-  still (weakly) preferred.
-  
-  Low level cleanup constructs (such as ``__free()``) can be used when building
-  APIs and helpers, especially scoped iterators. However, direct use of
-  ``__free()`` within networking core and drivers is discouraged.
-  Similar guidance applies to declaring variables mid-function.
-  
-See: https://www.kernel.org/doc/html/next/process/maintainer-netdev.html#using-device-managed-and-cleanup-h-constructs
+Thanks,
+Stuart
