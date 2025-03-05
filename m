@@ -1,181 +1,187 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF3D62066C1;
-	Wed,  5 Mar 2025 10:02:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72CB2204F8E
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 10:02:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741168947; cv=none; b=o3JTrP6+fC2D/my+mz3Sr0i9deuXPwIb7Euo9R/WKt6Y26/Bua6YVWlJk33roibyEBEgJLI0NemNrahNa9A0a9hUMZWrfqjzsDufZ+iRlj1JJFvv5NTZhrt1GPW55PxNYUe2ZmYwR/OjRaAXRUiLp0CzY7QP/48Ue7B/tTJKTwU=
+	t=1741168968; cv=none; b=e0w0G0XpXKA6+aMgHB0BIYb7MlVwQmIi8MAZFVI2q6B8s+d9fvb3L+MJastbjr0RRgcl7HhYZxHC2Jd9d9NsOURYyfp0peKlkap74OrOODvwk2fpXbEl8PcvbqA0fTjEwnj304eNK81+Q0BQyWBNsQwk6GnYET2UEpfq1ZLcufs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741168947; c=relaxed/simple;
-	bh=1GtvXobR4QJuxhCHEMflNdXfof/DYGcFZWntS1I2zN8=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=UlZAqv79bpBDlYIGE0hVldVFdVVVrB+TGm7/D8muKXvgJ7MMo6i+J81Wo9x4ayUEbbWzDH7OzDyL3vDLhxOKhuFdWxU2TrBIDX2ycnm3feIcLnQHHBpFyqSYt3JISYOqQye8JyjADNNrbUnsziCSSQyOoBR2ZtVkJN1kYD8aWIo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=peay0k+J; arc=none smtp.client-ip=68.232.154.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1741168968; c=relaxed/simple;
+	bh=mmktcQvaAaxjJ58+pq7rtgtn+dxe+ysiWTRYTE8jI4U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZKUKk9aTAWko7sWlfnbYYk9TpmHZtXj9NXnNWfuVotDUY4WxBZoGw3o1JUAfb5WsWbzEjJfLQGicKBNQCfINx21xPc04giYiN+Rh7OLphWkJwArcEe1QjL+QUZreM9mrhzS6WA8sy8xZpSypEyyHhPacu9rbcKz7g0caChpv/Ms=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Viv6OaeD; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="peay0k+J"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1741168945; x=1772704945;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=1GtvXobR4QJuxhCHEMflNdXfof/DYGcFZWntS1I2zN8=;
-  b=peay0k+JNBzizW8HxqdR+fAv0dzI3GBW9lOD+GJ8l15bp0TMr4LA3SuH
-   s4zIHyhtkvtFyNLpQPwmhpoR75CZth5v85iQXezCHV987VNYsilxt0ll/
-   1Gzv/OkTSxG3kQQ41Cdphf/v5AJAsXJRsTU2uIEOw0ejSlTC/tL7aDqvE
-   XRIf4vPzogYJ/2UAzYECRtLgyW5sq/Q4AjUn9ItBCcV02lKsp719xZ6qj
-   qNmGaLjmaCPIRk/7DdoEB85a57TJuHs353Q+j03uU/QjAC2ubu4zizK/7
-   1ff+QM8S3mryb28iUU4ut88jC8JB3EESPbMCEmh5fN4S8677lRi+TgKh0
-   A==;
-X-CSE-ConnectionGUID: KcHvf2KYQPGphZh43VuJpQ==
-X-CSE-MsgGUID: TYea7XcjRjqr57KKC+M1iQ==
-X-IronPort-AV: E=Sophos;i="6.14,222,1736838000"; 
-   d="scan'208";a="205983630"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 05 Mar 2025 03:02:24 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Wed, 5 Mar 2025 03:01:54 -0700
-Received: from che-lt-i67131.microchip.com (10.10.85.11) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
- 15.1.2507.35 via Frontend Transport; Wed, 5 Mar 2025 03:01:47 -0700
-From: Manikandan Muralidharan <manikandan.m@microchip.com>
-To: <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-	<nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
-	<claudiu.beznea@tuxon.dev>, <tudor.ambarus@linaro.org>,
-	<pratyush@kernel.org>, <mwalle@kernel.org>, <miquel.raynal@bootlin.com>,
-	<richard@nod.at>, <vigneshr@ti.com>, <devicetree@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<linux-mtd@lists.infradead.org>
-CC: <manikandan.m@microchip.com>, Varshini Rajendran
-	<varshini.rajendran@microchip.com>
-Subject: [PATCH 1/2] mtd: spi-nor: sst: register SFDP region into NVMEM framework to read MAC Address
-Date: Wed, 5 Mar 2025 15:31:33 +0530
-Message-ID: <20250305100134.1171124-1-manikandan.m@microchip.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Viv6OaeD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1741168965;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=fW7+rAgDKlzOI88XIbHmS2aOHp/CrzdKRrtFKo42XLM=;
+	b=Viv6OaeDRJSOzLiaY3M9vuCXkcT4Cg2tAWgB0GBsirtwYOSsQvE5XLK1/sG4bPGkrgVHd0
+	ruLXDqk230j85DGzeA71JRW2LK7YaZ68HpwUkCubYJO55qhMKuvWXwGa660w1TQevyfd5/
+	gIs41ykS8JJhdDT9+jeCqXBuqjUrCC4=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-185-um8LX2hKPjinaZv39n2qug-1; Wed,
+ 05 Mar 2025 05:02:30 -0500
+X-MC-Unique: um8LX2hKPjinaZv39n2qug-1
+X-Mimecast-MFC-AGG-ID: um8LX2hKPjinaZv39n2qug_1741168948
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 3C08B1954B36;
+	Wed,  5 Mar 2025 10:02:28 +0000 (UTC)
+Received: from localhost (unknown [10.72.112.32])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 47A2A193EFD8;
+	Wed,  5 Mar 2025 10:02:25 +0000 (UTC)
+Date: Wed, 5 Mar 2025 18:02:19 +0800
+From: Baoquan He <bhe@redhat.com>
+To: liuye <liuye@kylinos.cn>
+Cc: Uladzislau Rezki <urezki@gmail.com>, akpm@linux-foundation.org,
+	hch@infradead.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/4] mm/vmalloc: Remove unnecessary size ALIGN in
+ __vmalloc_node_range_noprof
+Message-ID: <Z8ghK22l7USzuBWY@MiWiFi-R3L-srv>
+References: <20250303094410.437985-1-liuye@kylinos.cn>
+ <20250303094410.437985-2-liuye@kylinos.cn>
+ <Z8X1U-3f35-JZTUr@pc636>
+ <6701d375-8d7c-4e13-b0db-486a48088446@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+In-Reply-To: <6701d375-8d7c-4e13-b0db-486a48088446@kylinos.cn>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-From: Varshini Rajendran <varshini.rajendran@microchip.com>
+On 03/05/25 at 09:46am, liuye wrote:
+> 
+> 在 2025/3/4 02:30, Uladzislau Rezki 写道:
+> > On Mon, Mar 03, 2025 at 05:44:07PM +0800, Liu Ye wrote:
+> >> The same operation already exists in the function __get_vm_area_node,
+> >> so delete the duplicate operation to simplify the code.
+> >>
+> >> Signed-off-by: Liu Ye <liuye@kylinos.cn>
+> >> ---
+> >>  mm/vmalloc.c | 1 -
+> >>  1 file changed, 1 deletion(-)
+> >>
+> >> diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+> >> index dc658d4af181..20d9b9de84b1 100644
+> >> --- a/mm/vmalloc.c
+> >> +++ b/mm/vmalloc.c
+> >> @@ -3798,7 +3798,6 @@ void *__vmalloc_node_range_noprof(unsigned long size, unsigned long align,
+> >>  			shift = arch_vmap_pte_supported_shift(size);
+> >>  
+> >>  		align = max(real_align, 1UL << shift);
+> >> -		size = ALIGN(real_size, 1UL << shift);
+> >>  	}
+> >>  
+> >>  again:
+> >> -- 
+> >> 2.25.1
+> >>
+> > There is a mess with:
+> >
+> >  unsigned long real_size = size;
+> >  unsigned long real_align = align;
+> >
+> > "real_size" and "real_align". Those are useless. What is about:
+> 
+> Sorry, the order of the patches may be misleading.
+> 
+> The correct order is as follows：
+> 
+> PATCH1.  mm/vmalloc: Size should be used instead of real_size "
+> PATCH2.  mm/vmalloc: Remove unnecessary size ALIGN in __vmalloc_node_range_noprof                 
+> PATCH3.  mm/vmalloc: Remove the real_size variable to simplify the code "
+> PATCH4.  mm/vmalloc: Rename the variable real_align to original_align to prevent misunderstanding
+> 
+> If PATCH1 is the correct fix, then consider PATCH2, PATCH3, and PATCH4.
 
-EUI identifier and the MAC Address of the Ethernet Interface is stored
-after the SFDP table of contents starting at address 0x260 in the
-QSPI memory.
-Register the entire SFDP region read by the spi-nor (nor->sfdp) into the
-NVMEM framework and read the MAC Address when requested using the nvmem
-properties in the DT by the net drivers.
+Well, seems the patch split is done too subtly. It's only about the
+size/align inside one function, maybe one patch is enough in this case.
+My personal opinion.
 
-In kernel the Ethernet MAC address relied on U-Boot env variables or
-generated a random address, which posed challenges for boards without
-on-board EEPROMs or with multiple Ethernet ports.
-This change ensures consistent and reliable MAC address retrieval from QSPI,
-benefiting boards like the sama5d29 curiosity and sam9x75 curiosity.
-
-Signed-off-by: Varshini Rajendran <varshini.rajendran@microchip.com>
-[manikandan.m@microchip.com: Integrate the nvmem->read callback framework]
-Signed-off-by: Manikandan Muralidharan <manikandan.m@microchip.com>
----
- drivers/mtd/spi-nor/sst.c | 62 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 62 insertions(+)
-
-diff --git a/drivers/mtd/spi-nor/sst.c b/drivers/mtd/spi-nor/sst.c
-index 175211fe6a5e..a0abf201ad41 100644
---- a/drivers/mtd/spi-nor/sst.c
-+++ b/drivers/mtd/spi-nor/sst.c
-@@ -5,6 +5,7 @@
-  */
- 
- #include <linux/mtd/spi-nor.h>
-+#include <linux/nvmem-provider.h>
- 
- #include "core.h"
- 
-@@ -13,6 +14,8 @@
- 
- #define SST26VF_CR_BPNV		BIT(3)
- 
-+#define SST26VF_SFDP_EUI48	0x30
-+
- static int sst26vf_nor_lock(struct spi_nor *nor, loff_t ofs, u64 len)
- {
- 	return -EOPNOTSUPP;
-@@ -56,8 +59,67 @@ static int sst26vf_nor_late_init(struct spi_nor *nor)
- 	return 0;
- }
- 
-+/**
-+ * sst26vf_sfdp_mac_addr_read() - check if the EUI-48 MAC Address is programmed
-+ * and read the data from the prestored SFDP data
-+ *
-+ * @priv: User context passed to read callbacks.
-+ * @offset: Offset within the NVMEM device.
-+ * @val: pointer where to fill the ethernet address
-+ * @bytes: Length of the NVMEM cell
-+ *
-+ * Return: 0 on success, -EINVAL  otherwise.
-+ */
-+static int sst26vf_sfdp_mac_addr_read(void *priv, unsigned int off,
-+				      void *val, size_t bytes)
-+{
-+	struct spi_nor *nor = priv;
-+	struct sfdp *sfdp = nor->sfdp;
-+	loff_t offset = off;
-+	size_t sfdp_size;
-+
-+	/*
-+	 * Check if the EUI-48 MAC address is programmed in the next six address
-+	 * locations.
-+	 * @off is programmed in the DT and stores the start of MAC Address
-+	 * byte, (off - 1) stores the bit length of the Extended Unique
-+	 * Identifier
-+	 */
-+	if (SST26VF_SFDP_EUI48 != *((u8 *)sfdp->dwords + (offset - 1)))
-+		return -EINVAL;
-+
-+	sfdp_size = sfdp->num_dwords * sizeof(*sfdp->dwords);
-+	memory_read_from_buffer(val, bytes, &offset, sfdp->dwords,
-+				sfdp_size);
-+	return 0;
-+}
-+
-+static struct nvmem_config sst26vf_sfdp_nvmem_config = {
-+	.word_size = 1,
-+	.stride = 1,
-+};
-+
-+static int sst26vf_nor_post_sfdp(struct spi_nor *nor)
-+{
-+	struct nvmem_device *nvmem;
-+
-+	sst26vf_sfdp_nvmem_config.dev = nor->dev;
-+	sst26vf_sfdp_nvmem_config.size = nor->sfdp->num_dwords * sizeof(*nor->sfdp->dwords);
-+	sst26vf_sfdp_nvmem_config.priv = nor;
-+	sst26vf_sfdp_nvmem_config.reg_read = sst26vf_sfdp_mac_addr_read;
-+
-+	nvmem = devm_nvmem_register(nor->dev, &sst26vf_sfdp_nvmem_config);
-+	if (IS_ERR(nvmem)) {
-+		dev_err(nor->dev, "failed to register NVMEM device: %ld\n", PTR_ERR(nvmem));
-+		return PTR_ERR(nvmem);
-+	}
-+
-+	return 0;
-+}
-+
- static const struct spi_nor_fixups sst26vf_nor_fixups = {
- 	.late_init = sst26vf_nor_late_init,
-+	.post_sfdp = sst26vf_nor_post_sfdp,
- };
- 
- static const struct flash_info sst_nor_parts[] = {
--- 
-2.25.1
+> 
+> > diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+> > index 5c88d0e90c20..a381ffee1595 100644
+> > --- a/mm/vmalloc.c
+> > +++ b/mm/vmalloc.c
+> > @@ -3771,8 +3771,6 @@ void *__vmalloc_node_range_noprof(unsigned long size, unsigned long align,
+> >  	struct vm_struct *area;
+> >  	void *ret;
+> >  	kasan_vmalloc_flags_t kasan_flags = KASAN_VMALLOC_NONE;
+> > -	unsigned long real_size = size;
+> > -	unsigned long real_align = align;
+> >  	unsigned int shift = PAGE_SHIFT;
+> >  
+> >  	if (WARN_ON_ONCE(!size))
+> > @@ -3781,7 +3779,7 @@ void *__vmalloc_node_range_noprof(unsigned long size, unsigned long align,
+> >  	if ((size >> PAGE_SHIFT) > totalram_pages()) {
+> >  		warn_alloc(gfp_mask, NULL,
+> >  			"vmalloc error: size %lu, exceeds total pages",
+> > -			real_size);
+> > +			size);
+> >  		return NULL;
+> >  	}
+> >  
+> > @@ -3798,19 +3796,18 @@ void *__vmalloc_node_range_noprof(unsigned long size, unsigned long align,
+> >  		else
+> >  			shift = arch_vmap_pte_supported_shift(size);
+> >  
+> > -		align = max(real_align, 1UL << shift);
+> > -		size = ALIGN(real_size, 1UL << shift);
+> > +		align = max(align, 1UL << shift);
+> >  	}
+> >  
+> >  again:
+> > -	area = __get_vm_area_node(real_size, align, shift, VM_ALLOC |
+> > +	area = __get_vm_area_node(size, align, shift, VM_ALLOC |
+> >  				  VM_UNINITIALIZED | vm_flags, start, end, node,
+> >  				  gfp_mask, caller);
+> >  	if (!area) {
+> >  		bool nofail = gfp_mask & __GFP_NOFAIL;
+> >  		warn_alloc(gfp_mask, NULL,
+> >  			"vmalloc error: size %lu, vm_struct allocation failed%s",
+> > -			real_size, (nofail) ? ". Retrying." : "");
+> > +			size, (nofail) ? ". Retrying." : "");
+> >  		if (nofail) {
+> >  			schedule_timeout_uninterruptible(1);
+> >  			goto again;
+> > @@ -3860,7 +3857,7 @@ void *__vmalloc_node_range_noprof(unsigned long size, unsigned long align,
+> >  	    (gfp_mask & __GFP_SKIP_ZERO))
+> >  		kasan_flags |= KASAN_VMALLOC_INIT;
+> >  	/* KASAN_VMALLOC_PROT_NORMAL already set if required. */
+> > -	area->addr = kasan_unpoison_vmalloc(area->addr, real_size, kasan_flags);
+> > +	area->addr = kasan_unpoison_vmalloc(area->addr, size, kasan_flags);
+> >  
+> >  	/*
+> >  	 * In this function, newly allocated vm_struct has VM_UNINITIALIZED
+> > @@ -3878,8 +3875,6 @@ void *__vmalloc_node_range_noprof(unsigned long size, unsigned long align,
+> >  fail:
+> >  	if (shift > PAGE_SHIFT) {
+> >  		shift = PAGE_SHIFT;
+> > -		align = real_align;
+> > -		size = real_size;
+> >  		goto again;
+> >  	}
+> >  
+> > ?
+> >
+> > --
+> > Uladzislau Rezki
+> 
 
