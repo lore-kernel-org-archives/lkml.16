@@ -1,146 +1,112 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.5])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DC862134D4
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 13:33:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.5
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9283438DE1
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 13:37:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741181617; cv=none; b=RpNmHif9U8V1jBC9CRYN33GpAtC6o9651m3qWYqSNjO2afxqm47KlN5fRlIgkI7ZQCuFtifbIezmSi8ZfTSZrdTmhAU7nZcM0mkc36KTnw9J+UT8xW6cNqP+ledFTMp4juXFVjiXMgSXVzDIQGG9H8rNwqMG9cKdQJAlBKbEGKQ=
+	t=1741181845; cv=none; b=qZj5V4+v6/jcJKQ7q63vLJPPe7HI0aF2tX7xPkVFyyTTD0PM3QRQTKwV82Nd50ZuADglsUfw9VYR6K9TAan4AGpe26uHu6NSxdmeOkMZHJKgebztf6btvTpJfIrKDjtkp0WvM6oOnaRPeLoUv5Z2Pu44N1qwfF2eXIwG87xXSmk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741181617; c=relaxed/simple;
-	bh=nLZuTD4O5TfThTjoxxiTaCOFqFsWGfW7NribwesxYKs=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=tZ5wuM6hQfpJ/Vz2ZENtW5I2yfRREGW9+02bifC6KrMSXZarEo03m1HQgz2CVwdJ6q4RyMMdWyn/9E9ghDBAtVBFuWcpx/C5CK7uaRVMQe1Ucl8MAtbjRMNWpz086hfN/u+X5h5wT+MUqj6G4Ljlz+gWOB5xS5m915pkFpzbPWQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=JPbIWMSJ; arc=none smtp.client-ip=117.135.210.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1741181845; c=relaxed/simple;
+	bh=CCEWgqLj4aiuDzP1CDbs8EIm+Xpm8K8kSq2O/SBGEZM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ZbjisjsyjrJ/SeVsqvJLXrJkSB3m5DyVicrEMX9ksqIfnl6CwIgvzy/fUBFNkF2bs92ztp5CBvHXqqE40LCUIlAswUFivRtMpddzmMOuZj5znEI75ym7SiOgD3YYNE9nEAjtG0sgf5Cy6s1FvT92SGfum3UxTfvTv1Dgk2+ojSg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=l9Mm3tv7; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="JPbIWMSJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=ivZMd
-	f8K4NKd/IimW5p+hBinu9acvKGE4BCqgwtiLqM=; b=JPbIWMSJVIv0dAK4ODLX9
-	Pi1rFdmHQhH8jaYRX7vmwVVrEULWkVRBXBOBESS43vTWObTkm+rWSvITvWmNBrDU
-	jcabFpAxdMAx6BqIBzHa9XUwMzkOEBUnh4lmoKMlBHSvwYtXb7JUXlVE/hLgai/c
-	yesEO2IBey/9vYrZhjtfEI=
-Received: from zhuxin.hobot.cc (unknown [])
-	by gzga-smtp-mtada-g0-4 (Coremail) with SMTP id _____wAn_3qXUshn_yNfQQ--.11325S2;
-	Wed, 05 Mar 2025 21:33:19 +0800 (CST)
-From: Zxyan Zhu <zxyan20@163.com>
-To: gregkh@linuxfoundation.org
-Cc: broonie@kernel.org,
-	rafael@kernel.org,
-	dakr@kernel.org,
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="l9Mm3tv7"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-43bd5644de8so6025795e9.3
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Mar 2025 05:37:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1741181842; x=1741786642; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FDpxU5tOoSGV884CeIJTg60HSzdLE+BUNCutu1HhCPQ=;
+        b=l9Mm3tv7n5tFsioiIu0R2wdseU6DjxtkyUw0teCQ2ieQCqx+vlVD57NpQZN+1YOqOx
+         BK+6CCq92rSVF/IB3w8T1AticzwEOz0+ISlfsvz13VRGykzgXwarXCEgyG52sm8Bi9Nr
+         ZAbQd6IUZW0IucDdC2ZMp12OMF6ulgvl+a1jEWgmszVn5ezUuzF96hEwpbSygTADFErO
+         6Lh878ewU8a0KsodfqbnAscBTP2Kv5KqwVgzLro4dzyQMb5UchK5iQjDgHzo+8yURj+5
+         bprfS+kwBOYB+P4Q9lNUUbiZwF8Iinbma9O2yD9kVYNCbYJ5WGZx7Lwj7vfGwgUzBSxw
+         yJKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741181842; x=1741786642;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=FDpxU5tOoSGV884CeIJTg60HSzdLE+BUNCutu1HhCPQ=;
+        b=XrbX4VVNPBi9zyV1wgOP5030yRopJobI/4akalTUmqLUMao9uvDx7QnoVHGVU1w6wD
+         1CEJYCE2A71Z7YJplAC2SpQ4bZ/M7y2ZtvVZQk5kaKng6IJSIIPzZoUxBORflxu14/xE
+         zhXEqFw50xqhqOm05xIYWyoRcbk0h7Nn6D7VvYH11HyZjTsIOkXvmLJr3pB1O3JPJJFf
+         BGKSwMkK0bH1l7884YPm5krjTiL0KHQsDEhyAPqFyrgHMHwxWXEicqRTtW02cuDOa3w7
+         LOHF8n1yN1sw73MitGAN5m8R+/r0FZUfFtPLeA5zGdeKvfg5R7PzoipjCf5I5tE6Yt40
+         ZCDA==
+X-Forwarded-Encrypted: i=1; AJvYcCUC1kSpU2epVw4UifOCpVIsQ8bl9iiqewE4HnEObe0ze53wpjKK5zy9paQBvP7PIYYxwBSpvjFiqRlvfjQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwZ9wT6oAdJe/U1uD6ASwNdOp9wiq8E0M5OJAvmsVSetzspkGu1
+	6rZ4lkXkKdq3TOW3Jxc/sXWkEcHRGOoHgYdCvxu+sVXKQRws15/jGISb+E0kd8U=
+X-Gm-Gg: ASbGnctHTHcHEBLVT7dR9Ls1hU/Z5hUpWLNWjheE0OlHAA2ZGRajzG4zrklniyTjU/w
+	qTbpJLdS1TlU1EOAQHqdoq0JZ8HxJXSu40vatSz1EHlJthC8VDPlaZ3l2BWmxrmmlevKeFZ3zCI
+	QbHbzRAW6aL2H7CJMOI2vFse0mSSbeU87hHRf0u3REjww8izCrze5UYyrz+2isZ9QCOhtQs5iGE
+	tzEd37ake8ItP6hw/EE/Hr7+ebufcwvGBsECFDp0anotsCqzbwUYL5ylcOjSrC5ZanfMkeMIqwf
+	zDNC8TFaNUPLR0CsVRoOc8ONDg4o7a007uJ3Lgp/RD0S
+X-Google-Smtp-Source: AGHT+IEf85Rj96IsphN4XwesJwrtgwxuE8nIHMoDHAnmsOaZvl8juQN14Y2RcAgYKNr2utbNi6Vg2w==
+X-Received: by 2002:a5d:648c:0:b0:38e:d026:820 with SMTP id ffacd0b85a97d-3911f740634mr3591774f8f.16.1741181841692;
+        Wed, 05 Mar 2025 05:37:21 -0800 (PST)
+Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:e514:53b3:5af8:e408])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-390e47b7a73sm21487179f8f.50.2025.03.05.05.37.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Mar 2025 05:37:21 -0800 (PST)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Matti Vaittinen <mazziesaccount@gmail.com>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	linux-gpio@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Zxyan Zhu <zxyan20@163.com>
-Subject: [PATCH v3] regmap: debugfs: Fix name collision without atomic operations
-Date: Wed,  5 Mar 2025 21:32:52 +0800
-Message-Id: <20250305133251.44082-1-zxyan20@163.com>
-X-Mailer: git-send-email 2.34.1
+	Biju Das <biju.das.jz@bp.renesas.com>,
+	Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v3 0/4] gpio: Hide and obey valid_mask
+Date: Wed,  5 Mar 2025 14:37:15 +0100
+Message-ID: <174118182949.69056.4837861377864682454.b4-ty@linaro.org>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <cover.1741180097.git.mazziesaccount@gmail.com>
+References: <cover.1741180097.git.mazziesaccount@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wAn_3qXUshn_yNfQQ--.11325S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxWr47Ww47ur4xKFW8Jr4xZwb_yoW5ZFWDpa
-	1kG3WrKwsrAr4rJrWYya18CFySk392vFy3A3yru3W5Zwnaqr47JF4vgFWYyryDuryUXw1U
-	XF4ay34UCr1UtaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0piF_M3UUUUU=
-X-CM-SenderInfo: p201t0isq6il2tof0z/1tbioBYHXmfIUpsAQAAAsJ
 
-The `dummy_index` global variable caused debugfs file name conflicts
-during re-entry, leading to creation failures. Use atomic operations
-to ensure safe and unique debugfs `dummy%d` naming.
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Signed-off-by: Zxyan Zhu <zxyan20@163.com>
----
 
-Changes since v2:
-- Remove atomic_dec operation if kasprintf() fails
+On Wed, 05 Mar 2025 15:11:59 +0200, Matti Vaittinen wrote:
+> GPIO controllers may have some pins which can be excluded from the GPIO
+> usage on certain hardware configurations. The valid_mask member of the
+> struct gpio_chip has been used to denote usable pins if some pins should
+> be excluded.
+> 
+> The GPIO request should fail for GPIOs which are masked. Under certain
+> conditions this was only done when GPIO chip provided the 'request'
+> callback. We fix this to be always done.
+> 
+> [...]
 
-Changes since v1:
-- Replaced atomic_read + atomic_inc with atomic_inc_return.
-- Added atomic_dec in the error path to maintain index consistency.
-- Updated the commit message to clarify the fix.
+Applied, thanks!
 
-At 2025-03-05 00:23:02, "Greg KH" <gregkh@linuxfoundation.org> wrote:
->On Tue, Mar 04, 2025 at 10:24:52PM +0800, Zxyan Zhu wrote:
->>  	if (!strcmp(name, "dummy")) {
->>  		kfree(map->debugfs_name);
->> -		map->debugfs_name = kasprintf(GFP_KERNEL, "dummy%d",
->> -						dummy_index);
->> -		if (!map->debugfs_name)
->> +		index = atomic_inc_return(&dummy_index);
->> +		map->debugfs_name = kasprintf(GFP_KERNEL, "dummy%d", index);
->> +		if (!map->debugfs_name) {
->> +			atomic_dec(&dummy_index);
->>  			return;
->> +		}
->>  		name = map->debugfs_name;
->> -		dummy_index++;
->
->Shouldn't you just use an idr here if there is a race condition?
->There's a lock built into it that should solve all of these issues.
->
->thanks,
->
->greg k-h
+[1/4] gpio: Respect valid_mask when requesting GPIOs
+      commit: a501624864f3fd9ab785f1f674f48dca535b198c
+[2/4] gpio: Add a valid_mask getter
+      commit: f636d4f60ac477187a466a573f947731fa762059
+[3/4] gpio: gpio-rcar: Drop direct use of valid_mask
+      commit: 43b665c961a6468fa8416805ef71daa5e7a152e7
+[4/4] gpio: Hide valid_mask from direct assignments
+      commit: 8015443e24e76fac97268603e91c4793970ce657
 
-Thanks for the feedback! I think using atomic_t is a better fit here
-than idr because:
-1. It's lighter and simpler for our basic indexing needs.
-2. No extra resource management is needed. If we use idr, we'd have to
- handle resource cleanup and add locks for debugfs_init/debugfs_exit
- concurrency.
-3. As Mark mentioned, id continuity isn't a hard requirement, so we
- can even skip the atomic_dec on kasprintf failure.
-
-If you still think idr has clear advantages here, I'm happy to adjust
-the code, but it'd be great to understand the specific benefits in
-this context.
-
-Cheers,
-
-Zxyan Zhu
-
- drivers/base/regmap/regmap-debugfs.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/base/regmap/regmap-debugfs.c b/drivers/base/regmap/regmap-debugfs.c
-index fb84cda92a75..8811c42dccb7 100644
---- a/drivers/base/regmap/regmap-debugfs.c
-+++ b/drivers/base/regmap/regmap-debugfs.c
-@@ -20,7 +20,7 @@ struct regmap_debugfs_node {
- 	struct list_head link;
- };
- 
--static unsigned int dummy_index;
-+static atomic_t dummy_index = ATOMIC_INIT(0);
- static struct dentry *regmap_debugfs_root;
- static LIST_HEAD(regmap_debugfs_early_list);
- static DEFINE_MUTEX(regmap_debugfs_early_lock);
-@@ -549,6 +549,7 @@ void regmap_debugfs_init(struct regmap *map)
- 	struct regmap_range_node *range_node;
- 	const char *devname = "dummy";
- 	const char *name = map->name;
-+	int index;
- 
- 	/*
- 	 * Userspace can initiate reads from the hardware over debugfs.
-@@ -595,12 +596,11 @@ void regmap_debugfs_init(struct regmap *map)
- 
- 	if (!strcmp(name, "dummy")) {
- 		kfree(map->debugfs_name);
--		map->debugfs_name = kasprintf(GFP_KERNEL, "dummy%d",
--						dummy_index);
-+		index = atomic_inc_return(&dummy_index);
-+		map->debugfs_name = kasprintf(GFP_KERNEL, "dummy%d", index);
- 		if (!map->debugfs_name)
- 			return;
- 		name = map->debugfs_name;
--		dummy_index++;
- 	}
- 
- 	map->debugfs = debugfs_create_dir(name, regmap_debugfs_root);
+Best regards,
 -- 
-2.34.1
-
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
