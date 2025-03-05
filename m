@@ -1,95 +1,63 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8D0324EA91
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 15:29:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C88424A067;
+	Wed,  5 Mar 2025 15:30:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741188585; cv=none; b=UtKwaWFkjW2OlyCRml9SGaJprKFbQsNVHeLXuaR/RYLgTTfJ8a/1RmXBw5njNTp4e/kfTTMLfqckJB1R77DUtEw09E93MM3zRmrHZM7dwsIWfz011yKeNpV9yvqMNYpgYGCYjorJiW+RsXe2KZOS9QVFS3EfJtIfwLSgnabsWMQ=
+	t=1741188613; cv=none; b=dCmzJx4x0f7ycMbSZZUMLOMwns+ftOrQMFPJ7fd48BbMzEGsZ6x5x+jMxMoOT8qkyGjV1BrO2DgR3fqFr1qDPxE65O6+S5x+xYS6z3gSVcj7y8Gku7Eqht1Qb+1WzZ845QFvhamBg1YoNqMWgl73/tMMiILEo+xR74yXzRiQ1Gw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741188585; c=relaxed/simple;
-	bh=ia/vjAL7X8fJ4nhg0DN9VuRCOBMtpAkeQSqGFInxi5k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gDBEbNlUm/kn0DkCg3zibLZxfUhSX1OzjVStgJjEvwCTBUEgn9sjix+mns4Nfo/UdlKqovi1m7op/FCdAjemY0SF6CfkFzeWRO9DQxlrpq1qQKI0U0Buur9ZyVi3kD32JJlBbRthUos+t5/7mmZFYh6V0ofwBWYKqRCpZX4BqqY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=MoA5xs0p; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="MoA5xs0p"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-22359001f1aso160262795ad.3
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Mar 2025 07:29:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1741188583; x=1741793383; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=HJupkM+49yv8MwK8wcb6WNoJ1NpGq4LlpEvaQpfLjVU=;
-        b=MoA5xs0pwfmmixixhkvDb4rt53KmUj8HJ4kqJQKyWL1DLzkNKOQyMIUxpWKKl21Dzp
-         ENh9P9u1P/JrMKRdXABmYcRbDTWYW4c63jHywNHtu6JVJyETXeT3inI5+XAjUoC6MCNW
-         nNUBVOFnEa+GfjkESlaTD9soJE2UlmCxiQfWM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741188583; x=1741793383;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HJupkM+49yv8MwK8wcb6WNoJ1NpGq4LlpEvaQpfLjVU=;
-        b=M1t7OXdMBzIqnyRUFnYCNm+itKc06E23XyC04+zrxkzpGgPPNyC9t3bpmpgYCEUgvm
-         s9KnX/4MGNlEc0K10kFv1XbP9Wd2D0vmiINdGwrC6RCENldMuJTszGb0hwITuUsjVPuT
-         iAq0exhpbPb+q+8ASeTWDtsWGXSqqY/RPIOq1iVzvcyDTMGZKdMzZWp4VPGlziUruJGw
-         mSFNpLrqQelJ6W949Z4sVMLhgpX7Hk+jU53ic3Z2c5H+iAInRawBE41ra4WOdopeWFaW
-         dNJHv1/eaIu0e6w/fzgJrMvz+BGBSMDlCFbHkPfU9bI71peuqzf543W1VCCVUaZ8ZPib
-         J1Vg==
-X-Forwarded-Encrypted: i=1; AJvYcCWg41VxuELjbQ6rlhww3eguA1HtAL7GA3YcwpPoSJjKtplGi2g9Pn+8ZtaImYMgTlmhTtryQVBA35J8qFM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywxs00FL88taUndiUzQupo8tkS90NrtQmBoZknk6Uylj1sCVmgO
-	ei7Urdg6ty11PNiZaXjSAll7jxOYjogEJoaqniuQQTOmhstyAUinQe22z7ONTA==
-X-Gm-Gg: ASbGncsA9FwLMG8nT6AxVnc29eYLkoQMvhL+OukqrxS+5Ow7HaLirMmiQNTI7ywhI9P
-	xHlslIKLFHQH5aM/9vi2mUb1MFeixtQlZ+xYTtaYYnhMbcfTY7O/DKDE/QCn00yss/n7J8191/z
-	ny7aXBD2Sf1yd1su4hwXSQ/7voOPEgstjsWqLKrnLo7whRrAyjhSq0t1/wmH/qALRQO7fR2LzFl
-	wvD64BtqvclmdDI/4qLJJpBL6C7NPQnl0NnqDV8nkgdOMRwvtLHjAGp24CKUzhlHTrK1IoitN0v
-	b4flEnQCtAik9BXwUXJuFZS9TlBau4VRQooKWKhkUuW+EKE=
-X-Google-Smtp-Source: AGHT+IHlNaCE6Hu5QstTVt76LsHlgPtKPgJoDodoeCDDsIrWsN0DOA2kft0VN0kYtpvgulqgypLrVw==
-X-Received: by 2002:a17:902:dacc:b0:223:501c:7581 with SMTP id d9443c01a7336-223f1c985d6mr55423855ad.16.1741188582954;
-        Wed, 05 Mar 2025 07:29:42 -0800 (PST)
-Received: from google.com ([2401:fa00:8f:203:5a4:b795:7bd9:7ab7])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-223504c596esm114569435ad.152.2025.03.05.07.29.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Mar 2025 07:29:42 -0800 (PST)
-Date: Thu, 6 Mar 2025 00:29:37 +0900
-From: Sergey Senozhatsky <senozhatsky@chromium.org>
-To: ffhgfv <744439878@qq.com>
-Cc: minchan <minchan@kernel.org>, senozhatsky <senozhatsky@chromium.org>, 
-	akpm <akpm@linux-foundation.org>, linux-mm <linux-mm@kvack.org>, 
-	linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: kernel bug found and suggestions for fixing it
-Message-ID: <hom2of3ookiuoizx6r6ye3fixnhimcl7kxpqk6kebhyzul2hmk@3h3nkrvpfddo>
-References: <tencent_6BF1F231EF7277B8B3EDF3999FC8CCB53B09@qq.com>
+	s=arc-20240116; t=1741188613; c=relaxed/simple;
+	bh=/C+McU4v1umcl0Ys6cBPzqL+uPU8wosa8nl6yfiPRZg=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Moejf1snI+tLEUc8K1dCfnIH0V5W4/AOSJPVn4WCHm69nU2unCT2U6g/ivqifgnl12AsIRf+pufPPaGIuWbShNdilf/tg0VmLQnV5wm1Ab9Rys174WBCm7uCqBiTUIjmCZKJ2Vb3vgYa6rSQD2hb3NrflRvfiVvVM/9vjCzXrOc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2DE4C4CED1;
+	Wed,  5 Mar 2025 15:30:11 +0000 (UTC)
+Date: Wed, 5 Mar 2025 10:31:08 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Jani Nikula <jani.nikula@intel.com>
+Cc: Shuah Khan <shuah@kernel.org>, gregkh@linuxfoundation.org,
+ corbet@lwn.net, workflows@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, conduct@kernel.org, tab@lists.linux.dev,
+ Miguel Ojeda <ojeda@kernel.org>
+Subject: Re: [PATCH] Documentation/CoC: Spell out the TAB role in
+ enforcement decisions
+Message-ID: <20250305103108.4943e301@gandalf.local.home>
+In-Reply-To: <87h647yf8r.fsf@intel.com>
+References: <20250304194813.11049-1-shuah@kernel.org>
+	<87h647yf8r.fsf@intel.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <tencent_6BF1F231EF7277B8B3EDF3999FC8CCB53B09@qq.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On (25/03/05 09:49), ffhgfv wrote:
-> Hello, I found a bug titled "  BUG: corrupted list in fix_fullness_group "
-> with modified syzkaller in the lasted upstream related to  ZSMALLOC.
-[..]
-> static int fix_fullness_group(struct size_class *class, struct zspage *zspage)
-> {
-> 	int newfg;
+On Wed, 05 Mar 2025 11:54:28 +0200
+Jani Nikula <jani.nikula@intel.com> wrote:
+
+> 2/3 actually means 7/10 for the TAB.
 > 
-> 	newfg = get_fullness_group(class, zspage);
-> 	if (newfg == zspage-&gt;fullness)
-> 		goto out;
-> ++  spin_lock(&amp;class-&gt;lock);
-> 	remove_zspage(class, zspage);
-> 	insert_zspage(class, zspage, newfg);
-> ++  spin_unlock(&amp;class-&gt;lock);
-> out:
-> 	return newfg;
-> }
+> Except two of the CoC committee members currently serve on the TAB, and
+> will not vote. Assuming they will also not count for the total, 2/3
+> means 6/8 = 75%.
+> 
+> All of a sudden you actually need 3/4 majority in the TAB to approve any
+> CoC measures.
+> 
+> Perhaps consider using a simple majority instead? The numbers become
+> 6/10 and 5/8.
 
-fix_fullness_group() is *always* called under class->lock.
-zs_malloc() calls it under class->lock, so does  zs_free().
+I'm a TAB member but I'm speaking for myself and not on behalf of the TAB.
+
+I rather keep it as is and not move it to a simple majority. If the TAB is
+going to make a decision that may affect the ability of a developer to get
+their work done, the issue had better be substantial where it should have no
+problem getting to 75%. Ideally, it should even be unanimous, but there are
+cases where a member may be involved, and decides to abstain.
+
+-- Steve
