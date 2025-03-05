@@ -1,201 +1,254 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C3E2524E005
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 15:20:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DA9284D02
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 15:22:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741188018; cv=none; b=ZWek0ZJpdfI9SYi1oIbfVkC2QrvX3pQWkRmibghBvJ/LjO+f1LddAt0yOXs+7ZJS1zL3YQMgpmB8ebTyO4gKrfAzQmoW1k5OKLZws3xJoWisKK8TqOiHAU8aCYounMf3A1FSQjN4gcUBNfLvAOmCmTM+s7fOnPgas49rxrGrT3Q=
+	t=1741188125; cv=none; b=nZwB4f9+SdPhhcxW6gcWs5RTuwm+2M1Z1i0Sr7Vm0abeO8EybR4t/Kg31lOWTvIFa5RepnXJZ7g3bzQZ6IcNWDum0voIVAWc3WDs5ZV3kS67dI88PIbfoQTv94z3A2Egg60C54mPeQKQasxZDl0CI5lLUtUvdkKCYiQGcnLOYb4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741188018; c=relaxed/simple;
-	bh=fkE57f6jwWdplqc4O/wQERskiE21bEGUDUnWXab1FEw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oC6p4ibfV5rrb3ZKIT00AinN1D1bRMZ64Sj1MylWO1BZ5x3RsX1gvr18g//ydXxmum7Jjqzd5jUvnxIjgGk6kRJDEMDeozhE0evFFQZ02VOC9gDxQSqsqrXW5MLcTJjv/77BHVrZD3ZIi8d1fflSrzUcK+cd26ZbWFgdi8QDhKE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 39BFFFEC;
-	Wed,  5 Mar 2025 07:20:28 -0800 (PST)
-Received: from localhost (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 852853F673;
-	Wed,  5 Mar 2025 07:20:14 -0800 (PST)
-Date: Wed, 5 Mar 2025 15:20:09 +0000
-From: Leo Yan <leo.yan@arm.com>
-To: James Clark <james.clark@linaro.org>
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Mike Leach <mike.leach@linaro.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	linux-kernel@vger.kernel.org, coresight@lists.linaro.org,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2] coresight: Add a KUnit test for
- coresight_find_default_sink()
-Message-ID: <20250305152009.GH13418@e132581.arm.com>
-References: <20250305-james-cs-kunit-test-v2-1-83ba682b976c@linaro.org>
+	s=arc-20240116; t=1741188125; c=relaxed/simple;
+	bh=g4To4NJ/kWMJ6NbFWOmRxZy5ginIDFLKgGir/dhBXlA=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=NBOFKgmxi+zm2pzpoqky0PkR38Lg5rWuTvaP4h/rqCaZVP+5P2zYMka0i+W7sXakq8QDYRRwFSE4BTJTn3dpnuhZoD7WjkEuQmSQsLKvmVNP8s0u4r4wkeF0UxA6/bRiKdxgdBm3jBn250xCyNmwMIijo+oKwhvbbnyWyIXsxB8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3d2b3882febso54864675ab.1
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Mar 2025 07:22:02 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741188122; x=1741792922;
+        h=content-transfer-encoding:to:from:subject:message-id:in-reply-to
+         :date:mime-version:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=eLUgStS0aIc57rDwTMm2Bqw2QpbMS8AM1r907Hj2gLM=;
+        b=p/UuLY0BtOBa1ZjDjvTLvKOSN5/B1AFtKAGXH6o/6oc9PTS0qyyg3HC0qcsHWWZwzv
+         GMP+w2StOgq0D6CB5wtODmn8AorLWdURLNtDHZc6AcW805c2xWcKDOXwXrGDEhkq/pXd
+         FCO6a8vlt7bbgkDE4HOxCxjzZsyFJB53mc35rvd/2hXxrHIsrhXD+/XJ0BrI80P5+y9z
+         AJkayiXbHfOZWsPouJ276ICN6j+QfkBK6QrihufG78x4TFtUBWk7fWMIji1yNpK1n3au
+         TJSDvMstFZvVIAaTkqG4vuMExWtWLxqkkYZ7YyvZq1PeJ5IbupS1weSl0DAy/jHxBsUe
+         hEIA==
+X-Forwarded-Encrypted: i=1; AJvYcCVseZPcPY77gg2W2dQDB1hg6PquxXj1LQPo5b5B6Aar07PHsOvoUS6Og8t2Ts3W96x2cC/lIlBm70Q9GCY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyVRDxzjubksmrjegdETqY1hYKiYgZlWfl/nQYm/F/EcN0y1EXG
+	KRZ4yqhGdBXS1Afs+uxEPJEZ0mJBRpEDhxxjP0SPckZI1SanNXBHI5yGeFSHQIjDKtuW18su8Np
+	CsxpWp/eeRRkZ++uR3NwoPCQ/1THlkT9CT2eDmn5Sm7z0ofT5Pb71Fn0=
+X-Google-Smtp-Source: AGHT+IF32AIiGGHYG0TU9f+ACI5R8o9cgsYgfeJ34Igk9uXRFwPO8I/+sVZsDZ9kzYwHQhjZvAw4hL/LaO8G5Y+7ReXMN/6l0Ouc
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250305-james-cs-kunit-test-v2-1-83ba682b976c@linaro.org>
+X-Received: by 2002:a05:6e02:2207:b0:3cf:c9b9:3eb with SMTP id
+ e9e14a558f8ab-3d42b753dddmr43666625ab.0.1741188122306; Wed, 05 Mar 2025
+ 07:22:02 -0800 (PST)
+Date: Wed, 05 Mar 2025 07:22:02 -0800
+In-Reply-To: <tencent_10C152FCC67009A26ED12ED48CB0E7C28606@qq.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67c86c1a.050a0220.15b4b9.0025.GAE@google.com>
+Subject: Re: [syzbot] [xfs?] [mm?] WARNING: bad unlock balance in __mm_populate
+From: syzbot <syzbot+8f9f411152c9539f4e59@syzkaller.appspotmail.com>
+To: eadavis@qq.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Mar 05, 2025 at 03:07:19PM +0000, James Clark wrote:
-> Add a test to confirm that default sink selection skips over an ETF
-> and returns an ETR even if it's further away.
-> 
-> This also makes it easier to add new unit tests in the future.
-> 
-> Signed-off-by: James Clark <james.clark@linaro.org>
+Hello,
 
-LGTM:
+syzbot tried to test the proposed patch but the build/boot failed:
 
-Reviewed-by: Leo Yan <leo.yan@arm.com>
+failed to copy syz-execprog to VM: timedout after 1m0s ["scp" "-P" "22" "-F=
+" "/dev/null" "-o" "UserKnownHostsFile=3D/dev/null" "-o" "IdentitiesOnly=3D=
+yes" "-o" "BatchMode=3Dyes" "-o" "StrictHostKeyChecking=3Dno" "-o" "Connect=
+Timeout=3D10" "-v" "/syzkaller/jobs/linux/gopath/src/github.com/google/syzk=
+aller/bin/linux_arm64/syz-execprog" "root@10.128.1.159:./syz-execprog"]
+Executing: program /usr/bin/ssh host 10.128.1.159, user root, command sftp
+OpenSSH_9.2p1 Debian-2+deb12u4, OpenSSL 3.0.15 3 Sep 2024
+debug1: Reading configuration data /dev/null
+debug1: Connecting to 10.128.1.159 [10.128.1.159] port 22.
+debug1: fd 3 clearing O_NONBLOCK
+debug1: Connection established.
+debug1: identity file /root/.ssh/id_rsa type -1
+debug1: identity file /root/.ssh/id_rsa-cert type -1
+debug1: identity file /root/.ssh/id_ecdsa type -1
+debug1: identity file /root/.ssh/id_ecdsa-cert type -1
+debug1: identity file /root/.ssh/id_ecdsa_sk type -1
+debug1: identity file /root/.ssh/id_ecdsa_sk-cert type -1
+debug1: identity file /root/.ssh/id_ed25519 type -1
+debug1: identity file /root/.ssh/id_ed25519-cert type -1
+debug1: identity file /root/.ssh/id_ed25519_sk type -1
+debug1: identity file /root/.ssh/id_ed25519_sk-cert type -1
+debug1: identity file /root/.ssh/id_xmss type -1
+debug1: identity file /root/.ssh/id_xmss-cert type -1
+debug1: identity file /root/.ssh/id_dsa type -1
+debug1: identity file /root/.ssh/id_dsa-cert type -1
+debug1: Local version string SSH-2.0-OpenSSH_9.2p1 Debian-2+deb12u4
+debug1: Remote protocol version 2.0, remote software version OpenSSH_9.1
+debug1: compat_banner: match: OpenSSH_9.1 pat OpenSSH* compat 0x04000000
+debug1: Authenticating to 10.128.1.159:22 as 'root'
+debug1: load_hostkeys: fopen /etc/ssh/ssh_known_hosts: No such file or dire=
+ctory
+debug1: load_hostkeys: fopen /etc/ssh/ssh_known_hosts2: No such file or dir=
+ectory
+debug1: SSH2_MSG_KEXINIT sent
+debug1: SSH2_MSG_KEXINIT received
+debug1: kex: algorithm: sntrup761x25519-sha512@openssh.com
+debug1: kex: host key algorithm: ssh-ed25519
+debug1: kex: server->client cipher: chacha20-poly1305@openssh.com MAC: <imp=
+licit> compression: none
+debug1: kex: client->server cipher: chacha20-poly1305@openssh.com MAC: <imp=
+licit> compression: none
+debug1: expecting SSH2_MSG_KEX_ECDH_REPLY
+debug1: SSH2_MSG_KEX_ECDH_REPLY received
+debug1: Server host key: ssh-ed25519 SHA256:JxoRyAn13fCyQtNtBXvSgkCC2njD9yP=
+7DAIyaauX8OU
+debug1: load_hostkeys: fopen /etc/ssh/ssh_known_hosts: No such file or dire=
+ctory
+debug1: load_hostkeys: fopen /etc/ssh/ssh_known_hosts2: No such file or dir=
+ectory
+Warning: Permanently added '10.128.1.159' (ED25519) to the list of known ho=
+sts.
+debug1: rekey out after 134217728 blocks
+debug1: SSH2_MSG_NEWKEYS sent
+debug1: expecting SSH2_MSG_NEWKEYS
+debug1: SSH2_MSG_NEWKEYS received
+debug1: rekey in after 134217728 blocks
+debug1: Will attempt key: /root/.ssh/id_rsa=20
+debug1: Will attempt key: /root/.ssh/id_ecdsa=20
+debug1: Will attempt key: /root/.ssh/id_ecdsa_sk=20
+debug1: Will attempt key: /root/.ssh/id_ed25519=20
+debug1: Will attempt key: /root/.ssh/id_ed25519_sk=20
+debug1: Will attempt key: /root/.ssh/id_xmss=20
+debug1: Will attempt key: /root/.ssh/id_dsa=20
+debug1: SSH2_MSG_EXT_INFO received
+debug1: kex_input_ext_info: server-sig-algs=3D<ssh-ed25519,sk-ssh-ed25519@o=
+penssh.com,ssh-rsa,rsa-sha2-256,rsa-sha2-512,ssh-dss,ecdsa-sha2-nistp256,ec=
+dsa-sha2-nistp384,ecdsa-sha2-nistp521,sk-ecdsa-sha2-nistp256@openssh.com,we=
+bauthn-sk-ecdsa-sha2-nistp256@openssh.com>
+debug1: kex_input_ext_info: publickey-hostbound@openssh.com=3D<0>
+debug1: SSH2_MSG_SERVICE_ACCEPT received
+Authenticated to 10.128.1.159 ([10.128.1.159]:22) using "none".
+debug1: channel 0: new session [client-session] (inactive timeout: 0)
+debug1: Requesting no-more-sessions@openssh.com
+debug1: Entering interactive session.
+debug1: pledge: network
+debug1: client_input_global_request: rtype hostkeys-00@openssh.com want_rep=
+ly 0
+debug1: Sending subsystem: sftp
+debug1: pledge: fork
+scp: debug1: stat remote: No such file or directory
 
-> ---
-> Changes in v2:
-> - Let devm free everything rather than doing individual kfrees:
->   "Like with managed drivers, KUnit-managed fake devices are
->   automatically cleaned up when the test finishes, but can be manually
->   cleaned up early with kunit_device_unregister()."
-> - Link to v1: https://lore.kernel.org/r/20250225164639.522741-1-james.clark@linaro.org
-> ---
->  drivers/hwtracing/coresight/Kconfig                |  9 +++
->  drivers/hwtracing/coresight/Makefile               |  3 +-
->  drivers/hwtracing/coresight/coresight-core.c       |  1 +
->  .../hwtracing/coresight/coresight-kunit-tests.c    | 77 ++++++++++++++++++++++
->  4 files changed, 88 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/hwtracing/coresight/Kconfig b/drivers/hwtracing/coresight/Kconfig
-> index ecd7086a5b83..f064e3d172b3 100644
-> --- a/drivers/hwtracing/coresight/Kconfig
-> +++ b/drivers/hwtracing/coresight/Kconfig
-> @@ -259,4 +259,13 @@ config CORESIGHT_DUMMY
->  
->  	  To compile this driver as a module, choose M here: the module will be
->  	  called coresight-dummy.
-> +
-> +config CORESIGHT_KUNIT_TESTS
-> +	  tristate "Enable Coresight unit tests"
-> +	  depends on KUNIT
-> +	  default KUNIT_ALL_TESTS
-> +	  help
-> +	    Enable Coresight unit tests. Only useful for development and not
-> +	    intended for production.
-> +
->  endif
-> diff --git a/drivers/hwtracing/coresight/Makefile b/drivers/hwtracing/coresight/Makefile
-> index 8e62c3150aeb..96f0dfedb1bf 100644
-> --- a/drivers/hwtracing/coresight/Makefile
-> +++ b/drivers/hwtracing/coresight/Makefile
-> @@ -51,5 +51,4 @@ coresight-cti-y := coresight-cti-core.o	coresight-cti-platform.o \
->  		   coresight-cti-sysfs.o
->  obj-$(CONFIG_ULTRASOC_SMB) += ultrasoc-smb.o
->  obj-$(CONFIG_CORESIGHT_DUMMY) += coresight-dummy.o
-> -obj-$(CONFIG_CORESIGHT_CTCU) += coresight-ctcu.o
-> -coresight-ctcu-y := coresight-ctcu-core.o
-> +obj-$(CONFIG_CORESIGHT_KUNIT_TESTS) += coresight-kunit-tests.o
-> diff --git a/drivers/hwtracing/coresight/coresight-core.c b/drivers/hwtracing/coresight/coresight-core.c
-> index bd0a7edd38c9..b101aa133ceb 100644
-> --- a/drivers/hwtracing/coresight/coresight-core.c
-> +++ b/drivers/hwtracing/coresight/coresight-core.c
-> @@ -959,6 +959,7 @@ coresight_find_default_sink(struct coresight_device *csdev)
->  	}
->  	return csdev->def_sink;
->  }
-> +EXPORT_SYMBOL_GPL(coresight_find_default_sink);
->  
->  static int coresight_remove_sink_ref(struct device *dev, void *data)
->  {
-> diff --git a/drivers/hwtracing/coresight/coresight-kunit-tests.c b/drivers/hwtracing/coresight/coresight-kunit-tests.c
-> new file mode 100644
-> index 000000000000..a136af05eaf4
-> --- /dev/null
-> +++ b/drivers/hwtracing/coresight/coresight-kunit-tests.c
-> @@ -0,0 +1,77 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +#include <kunit/test.h>
-> +#include <kunit/device.h>
-> +#include <linux/coresight.h>
-> +
-> +#include "coresight-priv.h"
-> +
-> +static struct coresight_device *coresight_test_device(struct device *dev)
-> +{
-> +	struct coresight_device *csdev = devm_kcalloc(dev, 1,
-> +						     sizeof(struct coresight_device),
-> +						     GFP_KERNEL);
-> +	csdev->pdata = devm_kcalloc(dev, 1,
-> +				   sizeof(struct coresight_platform_data),
-> +				   GFP_KERNEL);
-> +	return csdev;
-> +}
-> +
-> +static int coresight_test_cpuid(struct coresight_device *csdev)
-> +{
-> +	return 0;
-> +}
-> +
-> +static void test_default_sink(struct kunit *test)
-> +{
-> +	/*
-> +	 * ETM -> ETF -> ETR -> CATU
-> +	 *                ^
-> +	 *                | default
-> +	 */
-> +	struct device *dev = kunit_device_register(test, "coresight_kunit");
-> +	struct coresight_device *etm = coresight_test_device(dev),
-> +				*etf = coresight_test_device(dev),
-> +				*etr = coresight_test_device(dev),
-> +				*catu = coresight_test_device(dev);
-> +	struct coresight_connection conn = {};
-> +	struct coresight_ops_source src_ops = {.cpu_id = coresight_test_cpuid };
-> +	struct coresight_ops etm_cs_ops = { .source_ops	= &src_ops };
-> +
-> +	etm->type = CORESIGHT_DEV_TYPE_SOURCE;
-> +	etm->ops = &etm_cs_ops;
-> +	etf->type = CORESIGHT_DEV_TYPE_LINKSINK;
-> +	etf->subtype.sink_subtype = CORESIGHT_DEV_SUBTYPE_SINK_BUFFER;
-> +	etr->type = CORESIGHT_DEV_TYPE_SINK;
-> +	etr->subtype.sink_subtype = CORESIGHT_DEV_SUBTYPE_SINK_SYSMEM;
-> +	catu->type = CORESIGHT_DEV_TYPE_HELPER;
-> +
-> +	conn.src_dev = etm;
-> +	conn.dest_dev = etf;
-> +	coresight_add_out_conn(dev, etm->pdata, &conn);
-> +
-> +	conn.src_dev = etf;
-> +	conn.dest_dev = etr;
-> +	coresight_add_out_conn(dev, etf->pdata, &conn);
-> +
-> +	conn.src_dev = etr;
-> +	conn.dest_dev = catu;
-> +	coresight_add_out_conn(dev, etr->pdata, &conn);
-> +
-> +	KUNIT_ASSERT_PTR_EQ(test, coresight_find_default_sink(etm), etr);
-> +}
-> +
-> +static struct kunit_case coresight_testcases[] = {
-> +	KUNIT_CASE(test_default_sink),
-> +	{}
-> +};
-> +
-> +static struct kunit_suite coresight_test_suite = {
-> +	.name = "coresight_test_suite",
-> +	.test_cases = coresight_testcases,
-> +};
-> +
-> +kunit_test_suites(&coresight_test_suite);
-> +MODULE_LICENSE("GPL");
-> +MODULE_AUTHOR("James Clark <james.clark@linaro.org>");
-> +MODULE_DESCRIPTION("Arm CoreSight KUnit tests");
-> 
-> ---
-> base-commit: eeafe6a8790ea125252ca2e23c1a2469eaff1d9a
-> change-id: 20250305-james-cs-kunit-test-3af1df2401e6
-> 
-> Best regards,
-> -- 
-> James Clark <james.clark@linaro.org>
-> 
+
+
+
+syzkaller build log:
+go env (err=3D<nil>)
+GO111MODULE=3D'auto'
+GOARCH=3D'amd64'
+GOBIN=3D''
+GOCACHE=3D'/syzkaller/.cache/go-build'
+GOENV=3D'/syzkaller/.config/go/env'
+GOEXE=3D''
+GOEXPERIMENT=3D''
+GOFLAGS=3D''
+GOHOSTARCH=3D'amd64'
+GOHOSTOS=3D'linux'
+GOINSECURE=3D''
+GOMODCACHE=3D'/syzkaller/jobs/linux/gopath/pkg/mod'
+GONOPROXY=3D''
+GONOSUMDB=3D''
+GOOS=3D'linux'
+GOPATH=3D'/syzkaller/jobs/linux/gopath'
+GOPRIVATE=3D''
+GOPROXY=3D'https://proxy.golang.org,direct'
+GOROOT=3D'/syzkaller/jobs/linux/gopath/pkg/mod/golang.org/toolchain@v0.0.1-=
+go1.23.6.linux-amd64'
+GOSUMDB=3D'sum.golang.org'
+GOTMPDIR=3D''
+GOTOOLCHAIN=3D'auto'
+GOTOOLDIR=3D'/syzkaller/jobs/linux/gopath/pkg/mod/golang.org/toolchain@v0.0=
+.1-go1.23.6.linux-amd64/pkg/tool/linux_amd64'
+GOVCS=3D''
+GOVERSION=3D'go1.23.6'
+GODEBUG=3D''
+GOTELEMETRY=3D'local'
+GOTELEMETRYDIR=3D'/syzkaller/.config/go/telemetry'
+GCCGO=3D'gccgo'
+GOAMD64=3D'v1'
+AR=3D'ar'
+CC=3D'gcc'
+CXX=3D'g++'
+CGO_ENABLED=3D'1'
+GOMOD=3D'/syzkaller/jobs/linux/gopath/src/github.com/google/syzkaller/go.mo=
+d'
+GOWORK=3D''
+CGO_CFLAGS=3D'-O2 -g'
+CGO_CPPFLAGS=3D''
+CGO_CXXFLAGS=3D'-O2 -g'
+CGO_FFLAGS=3D'-O2 -g'
+CGO_LDFLAGS=3D'-O2 -g'
+PKG_CONFIG=3D'pkg-config'
+GOGCCFLAGS=3D'-fPIC -m64 -pthread -Wl,--no-gc-sections -fmessage-length=3D0=
+ -ffile-prefix-map=3D/tmp/go-build303386079=3D/tmp/go-build -gno-record-gcc=
+-switches'
+
+git status (err=3D<nil>)
+HEAD detached at c3901742785
+nothing to commit, working tree clean
+
+
+tput: No value for $TERM and no -T specified
+tput: No value for $TERM and no -T specified
+Makefile:31: run command via tools/syz-env for best compatibility, see:
+Makefile:32: https://github.com/google/syzkaller/blob/master/docs/contribut=
+ing.md#using-syz-env
+go list -f '{{.Stale}}' ./sys/syz-sysgen | grep -q false || go install ./sy=
+s/syz-sysgen
+make .descriptions
+tput: No value for $TERM and no -T specified
+tput: No value for $TERM and no -T specified
+Makefile:31: run command via tools/syz-env for best compatibility, see:
+Makefile:32: https://github.com/google/syzkaller/blob/master/docs/contribut=
+ing.md#using-syz-env
+bin/syz-sysgen
+touch .descriptions
+GOOS=3Dlinux GOARCH=3Darm64 go build "-ldflags=3D-s -w -X github.com/google=
+/syzkaller/prog.GitRevision=3Dc3901742785ff25afdc6f470af7b25b69d7c4f2f -X '=
+github.com/google/syzkaller/prog.gitRevisionDate=3D20250301-144328'" -o ./b=
+in/linux_arm64/syz-execprog github.com/google/syzkaller/tools/syz-execprog
+mkdir -p ./bin/linux_arm64
+aarch64-linux-gnu-g++ -o ./bin/linux_arm64/syz-executor executor/executor.c=
+c \
+	-O2 -pthread -Wall -Werror -Wparentheses -Wunused-const-variable -Wframe-l=
+arger-than=3D16384 -Wno-stringop-overflow -Wno-array-bounds -Wno-format-ove=
+rflow -Wno-unused-but-set-variable -Wno-unused-command-line-argument -stati=
+c-pie -std=3Dc++17 -I. -Iexecutor/_include   -DGOOS_linux=3D1 -DGOARCH_arm6=
+4=3D1 \
+	-DHOSTGOOS_linux=3D1 -DGIT_REVISION=3D\"c3901742785ff25afdc6f470af7b25b69d=
+7c4f2f\"
+/usr/lib/gcc-cross/aarch64-linux-gnu/12/../../../../aarch64-linux-gnu/bin/l=
+d: /tmp/cchp7I18.o: in function `Connection::Connect(char const*, char cons=
+t*)':
+executor.cc:(.text._ZN10Connection7ConnectEPKcS1_[_ZN10Connection7ConnectEP=
+KcS1_]+0xd8): warning: Using 'gethostbyname' in statically linked applicati=
+ons requires at runtime the shared libraries from the glibc version used fo=
+r linking
+
+
+
+Tested on:
+
+commit:         e056da87 Merge remote-tracking branch 'will/for-next/p..
+git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.g=
+it for-kernelci
+kernel config:  https://syzkaller.appspot.com/x/.config?x=3Dd6b7e15dc5b5e77=
+6
+dashboard link: https://syzkaller.appspot.com/bug?extid=3D8f9f411152c9539f4=
+e59
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debia=
+n) 2.40
+userspace arch: arm64
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=3D109d75a85800=
+00
+
