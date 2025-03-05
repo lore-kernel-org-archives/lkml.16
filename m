@@ -1,35 +1,40 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-179.mta1.migadu.com (out-179.mta1.migadu.com [95.215.58.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DFC9282EE;
-	Wed,  5 Mar 2025 01:10:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EEB72746B
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 01:11:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741137010; cv=none; b=JQMy4ONwLpJZ0qerMH4ntQx6+iVxraRhY3NS3qnLLdBug+YMSyNh4QN+Hq5nMxa/44LCDohAJXDiWX7ix1r7H2NtM/+YmX4ziUr8Hx2+dJCwCYWIyOHifJInkYRrDQHaSRoGlydu72Q9iri5WtkhN0RZ8cmSx5aBgHcHtGbWyVc=
+	t=1741137094; cv=none; b=d4QxQB5y4miz6JevsUw2w0abyBOloS2VI9muS9GrZLkwa5rEE23iNqE3ODUMVMcWZjA2HccmPX3fwUJOUNUiXG0626K1uB7s7God17XNoNt2jnrAl7vdwX0W6A5SCuFIsXDv+qwbjdPQNmuxJV2fKCFPUw+/1/tcE0QuaziUezY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741137010; c=relaxed/simple;
-	bh=o2GS4bqqE977OqAGP8Gc1WH1R92Ml4Sy3dtY91sTP1c=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=I3U0KqkYKo5mXayJCv37rJ+ftafZnRxTNxRkTfC0HrMiI4RORncGCEN7btgHdWMRiPnlFYvxzT+s84GuNWAPfVdWPY+3U4DlZkl+kCLwrpjb3w5mmcH8xVh0XGR3OdZP/o1Ugdyi3BCVuMhu3FvLujTOu18r9/jl1kC2BFvY1Zs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MIBs/HvY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741137094; c=relaxed/simple;
+	bh=FNxvJ4i5f2XwuDmA6j1Sa8aqNIwlPZW0fGf9vRBkM4A=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cibnau8oCTKxldr/YYKJ/WIR9UfKje5e87CEcdNraqp5qcglNckWsEh2cvWT80hRp2fTEqahhEiMoA6UcaI63WnEIzQ5gNZdtR6+EMXAdwBj9PivcIRfWt4lu0owSpfjxRO4o6Dqk4htufEx2TtT/O0sG41PfCRczvcA2we74O0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=FJIJu1+P; arc=none smtp.client-ip=95.215.58.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MIBs/HvY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9050AC4CEE5;
-	Wed,  5 Mar 2025 01:10:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741137009;
-	bh=o2GS4bqqE977OqAGP8Gc1WH1R92Ml4Sy3dtY91sTP1c=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=MIBs/HvYoceKM6s3CP46Kv7DLdc7J5vFMIqW7wXABFnd3wmYrxt8DEc3NycgW+Yn3
-	 BxLIYp9wKh/07ldbNG0h09RTuY9VYsOf4cnqUiZc1KqItIC5ERhAMOxHkCjUslS9xD
-	 VQ6wW8BQRqLp0g0YAC9k9ofAWwkiEWWwqX9xzFuVdbEcsB1hb6l/cb9g78Vgq9Qy9Y
-	 PojeabFho7z7OHPRm9dD5XsCihqxhMlwrroiT1zvnc65KAPe9uuDgEfpWgId3L9sCp
-	 qeA8zi8IOg6EwWLK7lWlwQ9i8rpVgKs8UrI3IBiYX8hCvnJjr53Oj+8Eq33Ht84poV
-	 068afxA5xpWdQ==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id AE531380CFEB;
-	Wed,  5 Mar 2025 01:10:43 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="FJIJu1+P"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1741137088;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=RHS2qHcb2Sj4DUzb5BVeKI8CQswnw3nvUmflGuif8EA=;
+	b=FJIJu1+P8A8CQmcUZXFpmID4+e+gh6xjVKgrXKKcfy+WtH5yRGaPIoGI/jkXx8unO6kmSj
+	Dvmhg/O+yBBrp7NiEQ0zuYcDe9aT+XwCCDQVw1p3et/i+z1Hzt/5M0DPjVi/wFaRJ5Rpcr
+	lmON1K4IAmZj6oRUnC2niGXM47rYIRg=
+From: Thorsten Blum <thorsten.blum@linux.dev>
+To: Carlos Maiolino <cem@kernel.org>,
+	"Darrick J. Wong" <djwong@kernel.org>
+Cc: Thorsten Blum <thorsten.blum@linux.dev>,
+	linux-hardening@vger.kernel.org,
+	linux-xfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] xfs: Replace deprecated strncpy() with strscpy()
+Date: Wed,  5 Mar 2025 02:10:21 +0100
+Message-ID: <20250305011020.160220-2-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -37,50 +42,35 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next 0/5] mptcp: improve code coverage and small
- optimisations
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <174113704249.354590.10497092944102408031.git-patchwork-notify@kernel.org>
-Date: Wed, 05 Mar 2025 01:10:42 +0000
-References: <20250228-net-next-mptcp-coverage-small-opti-v1-0-f933c4275676@kernel.org>
-In-Reply-To: <20250228-net-next-mptcp-coverage-small-opti-v1-0-f933c4275676@kernel.org>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev, martineau@kernel.org, geliang@kernel.org,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- horms@kernel.org, shuah@kernel.org, linux-kernel@vger.kernel.org,
- netdev@vger.kernel.org, linux-kselftest@vger.kernel.org, yangang@kylinos.cn
+X-Migadu-Flow: FLOW_OUT
 
-Hello:
+strncpy() is deprecated for NUL-terminated destination buffers. Use
+strscpy() instead and remove the manual NUL-termination.
 
-This series was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
+No functional changes intended.
 
-On Fri, 28 Feb 2025 15:38:34 +0100 you wrote:
-> This small series have various unrelated patches:
-> 
-> - Patch 1 and 2: improve code coverage by validating mptcp_diag_dump_one
->   thanks to a new tool displaying MPTCP info for a specific token.
-> 
-> - Patch 3: a fix for a commit which is only in net-next.
-> 
-> [...]
+Link: https://github.com/KSPP/linux/issues/90
+Cc: linux-hardening@vger.kernel.org
+Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+---
+ fs/xfs/xfs_xattr.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-Here is the summary with links:
-  - [net-next,1/5] selftests: mptcp: Add a tool to get specific msk_info
-    https://git.kernel.org/netdev/net-next/c/00f5e338cf7e
-  - [net-next,2/5] selftests: mptcp: add a test for mptcp_diag_dump_one
-    https://git.kernel.org/netdev/net-next/c/ba2400166570
-  - [net-next,3/5] mptcp: pm: in-kernel: avoid access entry without lock
-    https://git.kernel.org/netdev/net-next/c/e85d33b35508
-  - [net-next,4/5] mptcp: pm: in-kernel: reduce parameters of set_flags
-    https://git.kernel.org/netdev/net-next/c/70c575d5a94f
-  - [net-next,5/5] mptcp: pm: exit early with ADD_ADDR echo if possible
-    https://git.kernel.org/netdev/net-next/c/f0de92479a09
-
-You are awesome, thank you!
+diff --git a/fs/xfs/xfs_xattr.c b/fs/xfs/xfs_xattr.c
+index 0f641a9091ec..9f9a866ab803 100644
+--- a/fs/xfs/xfs_xattr.c
++++ b/fs/xfs/xfs_xattr.c
+@@ -243,9 +243,7 @@ __xfs_xattr_put_listent(
+ 	offset = context->buffer + context->count;
+ 	memcpy(offset, prefix, prefix_len);
+ 	offset += prefix_len;
+-	strncpy(offset, (char *)name, namelen);			/* real name */
+-	offset += namelen;
+-	*offset = '\0';
++	strscpy(offset, (char *)name, namelen + 1);		/* real name */
+ 
+ compute_size:
+ 	context->count += prefix_len + namelen + 1;
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+2.48.1
 
