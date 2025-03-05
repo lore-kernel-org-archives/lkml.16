@@ -1,45 +1,52 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4940A248885;
-	Wed,  5 Mar 2025 14:46:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4321B248863;
+	Wed,  5 Mar 2025 14:47:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741186012; cv=none; b=GDFQ679KkzR9aUgr4gSis44LlWohnFr3VuXFLBHWriLJM+8Mh1e2oIWsQxondPriMCyJ5oI7/CKkVGvNqTTOtbKhyjecMD14GyoFp8I0QlronXYec2hOdVjmG0xPwzg1vLlmChxjmkaxfP4TTbBxYByqkGk5aFf69B8dH3FL7zo=
+	t=1741186064; cv=none; b=WrUUoquAUMsMyF+BR1L+AgL5pZzfePVQdPF3ANvglmYhX79skSCFVv6Zr7NNcPFJ7hnYmvgHzc1pZr1u9jEmsY5MNnlq3/1dTI0IFTsX/ZUttbfbf8zG/Mfn8D+9muq/y0BBFiBPKKQ3ZQIYNyCoiYzjLC69ETI0RS8ud1aAbLA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741186012; c=relaxed/simple;
-	bh=td9GWGpZCmiEAG4NRmj3Vt6e3H57F2nliCpx9zjtguE=;
+	s=arc-20240116; t=1741186064; c=relaxed/simple;
+	bh=0nKpmpCNxYH8Z+0rlZ74ZK5vY3M1YKDKBq8UNZOSqbw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=s5H7Pbv4TMGZdayLO+UdTdtuuZSykns3bFcVUGHfWdoSXGM6BG2yOGrFsU1xr1bf7fRBVEvNZGAMemm0RLTmDwN0mlFs0rAymKNdTzQNEJSy4Sd5JT6v0HPJVTImZEGZrhBPmn1TRccFI4t0Y7ky08dKOJXSTlPAOJx8Dh+BmyU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=MU/UkorE; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=O5CQ6YYajVwWaggBOn4Z0oAkLtmCrERg5eK+rDtArqv40MOWUvfPKCVn6U57+P0Y4ZsIGbhAFrDXWPMFeDvFiuAyRNJ6Dg25ddak/WNR3nGP9QCT+qZWgDbrve+D+v7bB1/ymf8TctcctoRrYPEtTV0MgRB7U6PkqRN/WYMH9I8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YOdXTj3H; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="MU/UkorE"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=NQiHiWBYuLEjIBCwbtDawYA0OWXgtE0nlWIHtE9qJ/A=; b=MU/UkorEJtYCTL/69PWWpAlTQS
-	lJT1aQCWoVw57XnjyZJ0/P/XqTFLRedcJCU/f1ph8GVU+cS34ocBKwUyk7YDkboGQ1zN1L0hJ23+n
-	AxGrg6p5FVoU6pKjYlwxPQAqU8cSdK/N1A1JnJouGIYJEhw7/qa2ds+gGhv59Fhkvr986eXOI8CWU
-	ckgI4iliDeVkHKL8ZTJeK4hKJDMx+Mq6QwYwIgHV3WVVEc8Mol+cUeB9v+P+iolg18BqA7S/Qp5Zk
-	58aBWO3aRzO0sinW0PiM/q/9BZMU+1+jCAH0mR6wOp6E01O9xWbHa3+jkcMaB1A2bKkjezmhmQ1/h
-	CboY8POA==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
-	id 1tpq1K-00000008Or0-3uVK;
-	Wed, 05 Mar 2025 14:46:50 +0000
-Date: Wed, 5 Mar 2025 06:46:50 -0800
-From: Christoph Hellwig <hch@infradead.org>
-To: Eric Biggers <ebiggers@kernel.org>
-Cc: Chao Yu <chao@kernel.org>, jaegeuk@kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-f2fs-devel@lists.sourceforge.net,
-	linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH] f2fs: support F2FS_NOLINEAR_LOOKUP_FL
-Message-ID: <Z8hj2g_fj1zH1t_m@infradead.org>
-References: <20250303034606.1355224-1-chao@kernel.org>
- <20250303230644.GA3695685@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YOdXTj3H"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37A65C4CED1;
+	Wed,  5 Mar 2025 14:47:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741186063;
+	bh=0nKpmpCNxYH8Z+0rlZ74ZK5vY3M1YKDKBq8UNZOSqbw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=YOdXTj3H2plhn/BST20bnDuxSY0RJXeFrcQ+3aimzVjoikkWSpG4KPnwlAGy/Q2Ds
+	 bcl6/jUFIbhI+klJk8IGwwlXaXnuot8803FSwmKJtc/iF9huCwhzhmrzzreYYDLiAm
+	 Q7dZghjwPCIhzy0BjCxU4KEzueELzuipHClRssnK+eGFdxQF7wLkGWZHbR92iNYRLx
+	 IYDw/MfgKjHu1J4QjnLUZu15e55b0xIJlsBCOXd94J/HqWvoLgvPqi2ZnkxARWyEQn
+	 vn0QVhAeaX/w7+5njaRddoNM87jv95lSBy5QauWLw3L7xENZZe4ZuIgVdnR3fBfLy6
+	 qRcCn9RO/FN6A==
+Date: Wed, 5 Mar 2025 15:47:39 +0100
+From: Joel Granados <joel.granados@kernel.org>
+To: Jan Harkes <jaharkes@cs.cmu.edu>
+Cc: nicolas.bouchinet@clip-os.org, linux-kernel@vger.kernel.org, 
+	linux-rdma@vger.kernel.org, linux-scsi@vger.kernel.org, linux-nfs@vger.kernel.org, 
+	Nicolas Bouchinet <nicolas.bouchinet@ssi.gouv.fr>, Joel Granados <j.granados@samsung.com>, 
+	Clemens Ladisch <clemens@ladisch.de>, Arnd Bergmann <arnd@arndb.de>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jason Gunthorpe <jgg@ziepe.ca>, 
+	Leon Romanovsky <leon@kernel.org>, "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, 
+	"Martin K. Petersen" <martin.petersen@oracle.com>, Chuck Lever <chuck.lever@oracle.com>, 
+	Jeff Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>, 
+	Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, 
+	Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
+	Bart Van Assche <bvanassche@acm.org>, Zhu Yanjun <yanjun.zhu@linux.dev>, 
+	Al Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>
+Subject: Re: [PATCH v2 3/6] sysctl/coda: Fixes timeout bounds
+Message-ID: <ukkrk6tcf4peempwyutpruupqjkyrbeizrqz2ymjsjpmj6tds5@zb5vp5rh7qoe>
+References: <20250224095826.16458-1-nicolas.bouchinet@clip-os.org>
+ <20250224095826.16458-4-nicolas.bouchinet@clip-os.org>
+ <u7q5rpzw6mohtnnhpa2j3u4photckmgllsl3noafnyfttepbui@rzmndu533xcv>
+ <20250303143937.etzv7idjbenugsgw@cs.cmu.edu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,22 +55,42 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250303230644.GA3695685@google.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20250303143937.etzv7idjbenugsgw@cs.cmu.edu>
 
-On Mon, Mar 03, 2025 at 11:06:44PM +0000, Eric Biggers wrote:
-> > +/* used for FS_IOC_GETFLAGS and FS_IOC_SETFLAGS */
-> > +enum {
-> > +	F2FS_NOLINEAR_LOOKUP_FLAG = 0x08000000,
-> > +};
+On Mon, Mar 03, 2025 at 09:39:37AM -0500, Jan Harkes wrote:
+> On Mon, Mar 03, 2025 at 09:16:10AM -0500, Joel Granados wrote:
+> > On Mon, Feb 24, 2025 at 10:58:18AM +0100, nicolas.bouchinet@clip-os.org wrote:
+> > > From: Nicolas Bouchinet <nicolas.bouchinet@ssi.gouv.fr>
+> > > 
+> > > Bound coda timeout sysctl writings between SYSCTL_ZERO
+> > > and SYSCTL_INT_MAX.
+> > > 
+> > > The proc_handler has thus been updated to proc_dointvec_minmax.
+> > > 
+> > > Signed-off-by: Nicolas Bouchinet <nicolas.bouchinet@ssi.gouv.fr>
+> > > ---
+> > >  fs/coda/sysctl.c | 4 +++-
+> > >  1 file changed, 3 insertions(+), 1 deletion(-)
+> > > 
+> > > diff --git a/fs/coda/sysctl.c b/fs/coda/sysctl.c
+> > > index 0df46f09b6cc5..d6f8206c51575 100644
+> > > --- a/fs/coda/sysctl.c
+> > > +++ b/fs/coda/sysctl.c
+> > > @@ -20,7 +20,9 @@ static const struct ctl_table coda_table[] = {
+> > >  		.data		= &coda_timeout,
+> > I noticed that coda_timeout is an unsigned long. With that in mind I
+> > would change it to unsigned int. It seems to be a value that can be
+> > ranged within [0,INT_MAX]
 > 
-> FS_IOC_GETFLAGS and FS_IOC_SETFLAGS are not filesystem-specific, and the
-> supported flags are declared in include/uapi/linux/fs.h.  You can't just
-> randomly give an unused bit a filesystem specific meaning.
+> That seems fine by me.
+> 
+> It is a timeout in seconds and it is typically set to some value well
+> under a minute.
+> 
 
-Eww, yes.  This needs to be reverted ASAP.
+Thx for the confirmation. I'll let nicolas take care of the change
+Best
 
-And I'd like to repeat my reminder that we need to stop file systems
-(and f2fs is particularly bad for this) to stop just adding random
-uapis without review from linux-fsdevel and linux-api.
+-- 
 
+Joel Granados
