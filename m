@@ -1,102 +1,107 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4A02257424;
-	Wed,  5 Mar 2025 18:59:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB6D62580C8;
+	Wed,  5 Mar 2025 18:59:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741201188; cv=none; b=bbrrL2gHcDeEedLXObzdg9phWIkOlEXdO1ouEegD8oMgl2Z3P54l7LkGtkJ+BucTPEIPWO0MT1ykR8tDH7j5/qHRpwSgcTc8sEDSEQ7J0rw0Zb2Xi10K6LXPhvSZVtYg8QkTg5eef6jzERChIyYzhuGZb92Vqv3/XXAToHOMD4Y=
+	t=1741201192; cv=none; b=RXfukYa3F5w0yzWxd5MTaPOILxHNsYKKc7Utnt6ji+MCUwbBA3uRmf73liBODS3KdBMpJzPi06DjI1iXkjyoF5ZpFr/DuLa/Vd0oi4p/a+qmJKsgV2/tv9k4I90vizYoPGpZFgtwokA1llVTNFlNmnqanaCrvRVk125fmmQHlx0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741201188; c=relaxed/simple;
-	bh=KOntfY2GF79iwDM2QQoQy22zDcX3Cb1Ne2iCHZjE6+w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jnUssadkE74NfTaj+dTB858lFyM45hCkVYpowxWmufb9bZ/z2uyp2iAxhCheQLvXNkbUzpCKu9Z+npOVisV4QeZYA8TUDBt7rZEVu/GsMo4HiijtVtcYaHjD9VuEdfN/eGUia7O4VBa/WTi6x3cFNIg2HKDi6CDsH2TGVEz0SO0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5ADD8C4CED1;
-	Wed,  5 Mar 2025 18:59:45 +0000 (UTC)
-Date: Wed, 5 Mar 2025 18:59:43 +0000
-From: Catalin Marinas <catalin.marinas@arm.com>
-To: Zhenhua Huang <quic_zhenhuah@quicinc.com>
-Cc: anshuman.khandual@arm.com, david@redhat.com, will@kernel.org,
-	ardb@kernel.org, ryan.roberts@arm.com, mark.rutland@arm.com,
-	joey.gouly@arm.com, dave.hansen@linux.intel.com,
-	akpm@linux-foundation.org, chenfeiyang@loongson.cn,
-	chenhuacai@kernel.org, linux-mm@kvack.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	quic_tingweiz@quicinc.com, stable@vger.kernel.org
-Subject: Re: [PATCH v9] arm64: mm: Populate vmemmap at the page level if not
- section aligned
-Message-ID: <Z8ifH6HILN_7sZDk@arm.com>
-References: <20250304072700.3405036-1-quic_zhenhuah@quicinc.com>
+	s=arc-20240116; t=1741201192; c=relaxed/simple;
+	bh=oENbZq9wxTXMu0zGgWXBpMvdBFjW1P8NsiaK44heerA=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=aTafld018ZytCKSNuAyb81vytZgo7f2/EXmZCt1OtJMrW0vBq95EtrLOm09KMc/7LWjc+MlL1sev8VlRRO81pXNInmD3lOIKwqg4Q7aWiOMyZfQD1Ivyyxh3o4QepVpmf10fX9a5g1JrLjcyZdMcYXgmCQFhXzMWuMl5Qt74s/w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=AdLBpMEW; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="AdLBpMEW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1741201189;
+	bh=oENbZq9wxTXMu0zGgWXBpMvdBFjW1P8NsiaK44heerA=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=AdLBpMEWWs1CWBuswRd67tsyOyvWg5NHhTBhApz8Hkdp3knGYg/ATT+lvO7r2TXwK
+	 r/efCet+eFfeG0k2slA6aAjm+ZLWv+qywI65WTVwVuhB+Z73rFZf4XyMEGxTHeOuGh
+	 iLB88PWR8zCyneg9c3HjbIpI2nfQ/u+dPaVMp8RJVrOkrcKP4nnMYjzDAl0OWdE0+W
+	 iVpm6qTLvieVuHmJJwF5nOJjWb7pH/kc+1eNKkV5z2vknpUZJL2oB9lwIqUaTC5N99
+	 yVQREWBj4gN9qi9tnLYouYTYqPUdH8ozbsWz9WRm+DSaToCO7+8I9pTLzgR7Gt2j0W
+	 hsRCsNNXi5ldg==
+Received: from [192.168.0.47] (unknown [IPv6:2804:14c:1a9:53ee::1004])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: nfraprado)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 2E3A217E017D;
+	Wed,  5 Mar 2025 19:59:43 +0100 (CET)
+From: =?utf-8?q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= <nfraprado@collabora.com>
+Date: Wed, 05 Mar 2025 15:58:20 -0300
+Subject: [PATCH v4 05/19] ASoC: mediatek: mt6359-accdet: Implement HP_EINT
+ polarity configuration
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250304072700.3405036-1-quic_zhenhuah@quicinc.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20250305-mt6359-accdet-dts-v4-5-e5ffa5ee9991@collabora.com>
+References: <20250305-mt6359-accdet-dts-v4-0-e5ffa5ee9991@collabora.com>
+In-Reply-To: <20250305-mt6359-accdet-dts-v4-0-e5ffa5ee9991@collabora.com>
+To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Matthias Brugger <matthias.bgg@gmail.com>, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+ Sen Chu <sen.chu@mediatek.com>, Sean Wang <sean.wang@mediatek.com>, 
+ Macpaul Lin <macpaul.lin@mediatek.com>, Lee Jones <lee@kernel.org>, 
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
+Cc: kernel@collabora.com, linux-sound@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
+ linux-pm@vger.kernel.org, 
+ =?utf-8?q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= <nfraprado@collabora.com>, 
+ Andrew Perepech <andrew.perepech@mediatek.com>
+X-Mailer: b4 0.14.2
 
-On Tue, Mar 04, 2025 at 03:27:00PM +0800, Zhenhua Huang wrote:
-> On the arm64 platform with 4K base page config, SECTION_SIZE_BITS is set
-> to 27, making one section 128M. The related page struct which vmemmap
-> points to is 2M then.
-> Commit c1cc1552616d ("arm64: MMU initialisation") optimizes the
-> vmemmap to populate at the PMD section level which was suitable
-> initially since hot plug granule is always one section(128M). However,
-> commit ba72b4c8cf60 ("mm/sparsemem: support sub-section hotplug")
-> introduced a 2M(SUBSECTION_SIZE) hot plug granule, which disrupted the
-> existing arm64 assumptions.
-> 
-> The first problem is that if start or end is not aligned to a section
-> boundary, such as when a subsection is hot added, populating the entire
-> section is wasteful.
-> 
-> The next problem is if we hotplug something that spans part of 128 MiB
-> section (subsections, let's call it memblock1), and then hotplug something
-> that spans another part of a 128 MiB section(subsections, let's call it
-> memblock2), and subsequently unplug memblock1, vmemmap_free() will clear
-> the entire PMD entry which also supports memblock2 even though memblock2
-> is still active.
-> 
-> Assuming hotplug/unplug sizes are guaranteed to be symmetric. Do the
-> fix similar to x86-64: populate to pages levels if start/end is not aligned
-> with section boundary.
-> 
-> Cc: <stable@vger.kernel.org> # v5.4+
-> Fixes: ba72b4c8cf60 ("mm/sparsemem: support sub-section hotplug")
-> Acked-by: David Hildenbrand <david@redhat.com>
-> Signed-off-by: Zhenhua Huang <quic_zhenhuah@quicinc.com>
-> ---
->  arch/arm64/mm/mmu.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
+From: Andrew Perepech <andrew.perepech@mediatek.com>
 
-Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
+The driver currently reads the HP_EINT polarity from the Devicetree but
+never actually configures the hardware accordingly.
 
-Will, another bug that has been around for ages. Do you want to take it
-as a fix?
+Implement the polarity configuration in hardware.
 
-> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
-> index b4df5bc5b1b8..1dfe1a8efdbe 100644
-> --- a/arch/arm64/mm/mmu.c
-> +++ b/arch/arm64/mm/mmu.c
-> @@ -1177,8 +1177,11 @@ int __meminit vmemmap_populate(unsigned long start, unsigned long end, int node,
->  		struct vmem_altmap *altmap)
->  {
->  	WARN_ON((start < VMEMMAP_START) || (end > VMEMMAP_END));
-> +	/* [start, end] should be within one section */
-> +	WARN_ON_ONCE(end - start > PAGES_PER_SECTION * sizeof(struct page));
->  
-> -	if (!IS_ENABLED(CONFIG_ARM64_4K_PAGES))
-> +	if (!IS_ENABLED(CONFIG_ARM64_4K_PAGES) ||
-> +	    (end - start < PAGES_PER_SECTION * sizeof(struct page)))
->  		return vmemmap_populate_basepages(start, end, node, altmap);
->  	else
->  		return vmemmap_populate_hugepages(start, end, node, altmap);
-> -- 
-> 2.25.1
-> 
+Signed-off-by: Andrew Perepech <andrew.perepech@mediatek.com>
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Signed-off-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
+---
+ sound/soc/codecs/mt6359-accdet.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+
+diff --git a/sound/soc/codecs/mt6359-accdet.c b/sound/soc/codecs/mt6359-accdet.c
+index ca3be59d2d0ecaadccd9ba399649ba93f20490c4..1d4481109f6e4f473610e0797c9d3c636bdf12cf 100644
+--- a/sound/soc/codecs/mt6359-accdet.c
++++ b/sound/soc/codecs/mt6359-accdet.c
+@@ -730,6 +730,17 @@ static void config_digital_init_by_mode(struct mt6359_accdet *priv)
+ 					   BIT(ACCDET_EINT1_INVERTER_SW_EN_SFT));
+ 		}
+ 	}
++
++	if (priv->data->hp_eint_high) {
++		/* EINT polarity inverse */
++		regmap_update_bits(priv->regmap, ACCDET_EINT_IN_INVERSE_ADDR,
++				   ACCDET_EINT_IN_INVERSE_MASK_SFT,
++				   BIT(ACCDET_EINT_IN_INVERSE_SFT));
++	} else {
++		/* EINT polarity normal */
++		regmap_update_bits(priv->regmap, ACCDET_EINT_IN_INVERSE_ADDR,
++				   ACCDET_EINT_IN_INVERSE_MASK_SFT, 0);
++	}
+ }
+ 
+ static void config_eint_init_by_mode(struct mt6359_accdet *priv)
 
 -- 
-Catalin
+2.48.1
+
