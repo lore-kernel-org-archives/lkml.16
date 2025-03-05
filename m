@@ -1,135 +1,179 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47DD41F416D;
-	Wed,  5 Mar 2025 11:40:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCB1F233733
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 11:40:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741174804; cv=none; b=laBcePFDTFOyPjIXLuOzC8YyYhaLr9G7sl2cafZ7NylRJbAJsKoClI82ahqdEdhKyuIr/vp3eKTlZs2+FuPN8k5Fl6/ewqPPrNzj69N/rFiJredtTy+SuV4E4a9c7GGixBLdaI+A+GEqz5j6ZX6xbLu5g14TMv4+qh0WDW9RWuU=
+	t=1741174826; cv=none; b=lh54Y2psgssS0tZNn3YpVA/jOX3cQVQTzzGhq0eU5ckPMiWW3e3JyDEW4N+An1GZzkDS07Qc7LkQzzRsOO5NeNn5/F+X+3eyjBLXtPTju6pcVWVxxAw3RbqUKimHKXNBdVVs8gKnrzH6NVE/ZwrhfG7ThJDOSwcHfiYKnDskEZI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741174804; c=relaxed/simple;
-	bh=3du4Vh0sMLXdjfQ6YEWUdnO0O4zpGTmTPbz3ghs/piI=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=eSAT7/Dcig3yybQqYjtxW1xjk5s2KM92157rDJXcdHTsdDk8/CjR/1fKV/v2qwGo8N5b32N3fShyVTdXwxItYwYSiQpJXcyGp07Zx5QRzTv5y6qTqzN63lbQUiA6APavxQYvtiZpS4nod94gVZ/CVqxaiKdflFangFir/mlPFeQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=K8FdW9LQ; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="K8FdW9LQ"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 525BUeBD018854;
-	Wed, 5 Mar 2025 11:34:36 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=OEHbrE
-	wynpPoc/PQYISTWGJJizTmVH8mOpEoVx0LCqA=; b=K8FdW9LQ442qJW1CW823GB
-	PSOP9e7mXMs9QQG9u0vY7suMNgvUeZP0ae+2oWLzSHj4Y6r7RgBruhl3B6piqY6u
-	hLtzIPs4I2sy7SSmjmvp9sMG32CShVibq/04dHGhh8eXxsR2BK3onyzPlzqbRcxS
-	l2in6zKu22i2JQE5KNelkaaozpWkt+aD3dM5leROSrwiANHUgV1xqyWckcA2LR3U
-	we/+8K+OeuphwOcU6j9ylXj6lnr7C7Hd5v2DoD81TE+IgzCC5g0XL2CthQap0vEH
-	yvycPjUdAB2t9yPvv56Hp/vzTNOz2pol2OLX5E+G81GAsbtUE8zWukWENT75EQHw
-	==
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4562xpn6b9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 05 Mar 2025 11:34:36 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 525AmSWv008929;
-	Wed, 5 Mar 2025 11:34:34 GMT
-Received: from smtprelay01.wdc07v.mail.ibm.com ([172.16.1.68])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 454cxyjnxp-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 05 Mar 2025 11:34:34 +0000
-Received: from smtpav03.dal12v.mail.ibm.com (smtpav03.dal12v.mail.ibm.com [10.241.53.102])
-	by smtprelay01.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 525BYYiO24511044
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 5 Mar 2025 11:34:34 GMT
-Received: from smtpav03.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 3DC9B5803F;
-	Wed,  5 Mar 2025 11:34:34 +0000 (GMT)
-Received: from smtpav03.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 263B758063;
-	Wed,  5 Mar 2025 11:34:33 +0000 (GMT)
-Received: from li-43857255-d5e6-4659-90f1-fc5cee4750ad.ibm.com (unknown [9.61.124.31])
-	by smtpav03.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Wed,  5 Mar 2025 11:34:33 +0000 (GMT)
-Message-ID: <d9c6cd2a5e27df0fbc5ccb5f2945c33b2dbe34ae.camel@linux.ibm.com>
-Subject: Re: [PATCH v9 1/7] ima: copy only complete measurement records
- across kexec
-From: Mimi Zohar <zohar@linux.ibm.com>
-To: steven chen <chenste@linux.microsoft.com>, stefanb@linux.ibm.com,
-        roberto.sassu@huaweicloud.com, roberto.sassu@huawei.com,
-        eric.snowberg@oracle.com, ebiederm@xmission.com, paul@paul-moore.com,
-        code@tyhicks.com, bauermann@kolabnow.com,
-        linux-integrity@vger.kernel.org, kexec@lists.infradead.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: madvenka@linux.microsoft.com, nramas@linux.microsoft.com,
-        James.Bottomley@HansenPartnership.com, bhe@redhat.com,
-        vgoyal@redhat.com, dyoung@redhat.com
-Date: Wed, 05 Mar 2025 06:34:32 -0500
-In-Reply-To: <3aadae5d35af3f984b9e8bc548d73bb878d666bd.camel@linux.ibm.com>
-References: <20250304190351.96975-1-chenste@linux.microsoft.com>
-	 <20250304190351.96975-2-chenste@linux.microsoft.com>
-	 <3aadae5d35af3f984b9e8bc548d73bb878d666bd.camel@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
+	s=arc-20240116; t=1741174826; c=relaxed/simple;
+	bh=KjbdCa5mHmz6tOrINizK6azCxgWEUUVZ4E5WLiHWBWI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mlczxoKa39HqDiIUqv8UkUaS/IVhVoTuByZIl2BFEqgBh3oPor0ylHdGQPXn3srWHPfqoussS9l9sZOkjrGml0nAtNVb52FSOp/HDe5Jq8/DdXffTYStlxXjKWeJEqkQAjtp9MnbY5GdV7TYYLsoVTLaqJQobicQvnbm49W2Xes=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from ptz.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::77] helo=[127.0.0.1])
+	by metis.whiteo.stw.pengutronix.de with esmtp (Exim 4.92)
+	(envelope-from <a.fatoum@pengutronix.de>)
+	id 1tpn64-0004on-HO; Wed, 05 Mar 2025 12:39:32 +0100
+Message-ID: <28d0ea70-db7a-40e7-aac9-86808320f252@pengutronix.de>
+Date: Wed, 5 Mar 2025 12:39:27 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: bZRj979JBHaiqKCOApV6k42MuXH5lncF
-X-Proofpoint-GUID: bZRj979JBHaiqKCOApV6k42MuXH5lncF
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-05_04,2025-03-05_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 malwarescore=0
- mlxlogscore=999 spamscore=0 bulkscore=0 priorityscore=1501 adultscore=0
- lowpriorityscore=0 phishscore=0 mlxscore=0 impostorscore=0 clxscore=1015
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2502100000
- definitions=main-2503050093
+User-Agent: Mozilla Thunderbird
+Subject: Re: [EXTERNAL] Re: [PATCH v4 0/2] Add stop_on_panic support for
+ watchdog
+To: George Cherian <gcherian@marvell.com>,
+ "linux@roeck-us.net" <linux@roeck-us.net>,
+ "wim@linux-watchdog.org" <wim@linux-watchdog.org>,
+ "jwerner@chromium.org" <jwerner@chromium.org>,
+ "evanbenn@chromium.org" <evanbenn@chromium.org>,
+ "kabel@kernel.org" <kabel@kernel.org>, "krzk@kernel.org" <krzk@kernel.org>,
+ "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
+ "thomas.richard@bootlin.com" <thomas.richard@bootlin.com>,
+ "lma@chromium.org" <lma@chromium.org>,
+ "bleung@chromium.org" <bleung@chromium.org>,
+ "support.opensource@diasemi.com" <support.opensource@diasemi.com>,
+ "shawnguo@kernel.org" <shawnguo@kernel.org>,
+ "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+ "kernel@pengutronix.de" <kernel@pengutronix.de>,
+ "festevam@gmail.com" <festevam@gmail.com>, "andy@kernel.org"
+ <andy@kernel.org>, "paul@crapouillou.net" <paul@crapouillou.net>,
+ "alexander.usyskin@intel.com" <alexander.usyskin@intel.com>,
+ "andreas.werner@men.de" <andreas.werner@men.de>,
+ "daniel@thingy.jp" <daniel@thingy.jp>,
+ "romain.perier@gmail.com" <romain.perier@gmail.com>,
+ "avifishman70@gmail.com" <avifishman70@gmail.com>,
+ "tmaimon77@gmail.com" <tmaimon77@gmail.com>,
+ "tali.perry1@gmail.com" <tali.perry1@gmail.com>,
+ "venture@google.com" <venture@google.com>,
+ "yuenn@google.com" <yuenn@google.com>,
+ "benjaminfair@google.com" <benjaminfair@google.com>,
+ "maddy@linux.ibm.com" <maddy@linux.ibm.com>,
+ "mpe@ellerman.id.au" <mpe@ellerman.id.au>,
+ "npiggin@gmail.com" <npiggin@gmail.com>,
+ "christophe.leroy@csgroup.eu" <christophe.leroy@csgroup.eu>,
+ "naveen@kernel.org" <naveen@kernel.org>,
+ "mwalle@kernel.org" <mwalle@kernel.org>,
+ "xingyu.wu@starfivetech.com" <xingyu.wu@starfivetech.com>,
+ "ziv.xu@starfivetech.com" <ziv.xu@starfivetech.com>,
+ "hayashi.kunihiko@socionext.com" <hayashi.kunihiko@socionext.com>,
+ "mhiramat@kernel.org" <mhiramat@kernel.org>
+Cc: "chrome-platform@lists.linux.dev" <chrome-platform@lists.linux.dev>,
+ "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
+ "imx@lists.linux.dev" <imx@lists.linux.dev>,
+ "patches@opensource.cirrus.com" <patches@opensource.cirrus.com>,
+ "openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>,
+ "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+ "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+References: <20250305101025.2279951-1-george.cherian@marvell.com>
+ <43fb0965-04b7-41dc-ae3f-54676eefdbb5@pengutronix.de>
+ <PH8PR18MB53817EC09B918852B78DF3AAC5CB2@PH8PR18MB5381.namprd18.prod.outlook.com>
+Content-Language: en-US
+From: Ahmad Fatoum <a.fatoum@pengutronix.de>
+In-Reply-To: <PH8PR18MB53817EC09B918852B78DF3AAC5CB2@PH8PR18MB5381.namprd18.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:900:1d::77
+X-SA-Exim-Mail-From: a.fatoum@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-On Tue, 2025-03-04 at 21:08 -0500, Mimi Zohar wrote:
-> On Tue, 2025-03-04 at 11:03 -0800, steven chen wrote:
-> >=20
-> >  - Compared the memory size allocated with memory size of the entire=
-=20
-> >    measurement record. Copy only complete measurement records if there=
-=20
-> >    is enough memory. If there is not enough memory, it will not copy
-> >    any IMA measurement records, and this situation will result in a=20
-> >    failure of remote attestation.
->=20
-> In discussions with Tushar, I was very clear that as many measurement rec=
-ords as
-> possible should be carried over to the kexec'ed kernel.  The main change =
-between
-> v8 and v9 was to make sure the last record copied was a complete record.
+Hi George,
 
-Steven, let me clarify=C2=A0my comment on v8.  The patch description said,
+On 05.03.25 12:28, George Cherian wrote:
+> Hi Ahmad,
+>> Hi George,
+>> On 05.03.25 11:10, George Cherian wrote:
+>>> This series adds a new kernel command line option to watchdog core to
+>>> stop the watchdog on panic. This is useul in certain systems which prevents
+>>> successful loading of kdump kernel due to watchdog reset.
+>>>
+>>> Some of the watchdog drivers stop function could sleep. For such
+>>> drivers the stop_on_panic is not valid as the notifier callback happens
+>>> in atomic context. Introduce WDIOF_STOP_MAYSLEEP flag to watchdog_info
+>>> options to indicate whether the stop function would sleep.
+>>
+>> Did you consider having a reset_on_panic instead, which sets a user-specified
+>> timeout on panic? This would make the mechanism useful also for watchdogs
+> 
+> /proc/sys/kernel/panic already provides that support. You may echo a non-zero value 
+> and the system tries for a soft reboot after those many seconds. But this doesn't happen 
+> in case of a kdump kernel load after panic.
 
-"Separate allocating the buffer and copying the measurement records into
-separate functions in order to allocate the buffer at kexec 'load' and copy=
- the
-measurements at kexec 'execute'."
+The timeout specified to the Watchdog reset_on_panic option would be programmed into
+the active watchdogs and not be used to trigger a software-induced reboot.
 
-The intention is fine, but it also did other things:
-- only copied a full last measurement
-- if there wasn't enough room, it didn't copy any measurement records.
+>> that can't be disabled and would protect against system lock up: 
+>> Consider a memory-corruption bug (perhaps externally via DMA), which partially
+>> overwrites both main and kdump kernel. With a disabled watchdog, the system
+>> may not be able to recover on its own.
+> 
+> Yes, that is the reason why the kernel command-line is optional and by default it is set to zero.
+> So that in cases if you have a corrupted kdump kernel then watchdog kicks in.
 
-Copying a full last measurement should be a separate, new patch to simplify
-review.  I'm asking you to separate that change from the rest of the patch,=
- so
-that it can be back ported independently of the rest of the patch set.
+The existing option isn't enough for the kdump kernel use case.
+If we (i.e. you) are going to do something about it, wouldn't it be
+better to have a solution that's applicable to a wider number of
+watchdog devices?
 
-When splitting the function "that allocates the buffer and copies the
-measurement records into separate functions", please make sure it still cop=
-ies
-as many measurement records as possible.
+>> If you did consider it, what made you decide against it?
+> watchdog.stop_on_panic=1 is specifically for systems which can't boot a kdump kernel due to the fact 
+> that the kdump kernel gets a watchdog reset while booting, may be due to a shorter watchdog time.
+> For eg: a 32-bit watchdog down counter running at 1GHz.
+> reset_on_panic can guarantee only the largest watchdog timeout supported by HW, 
+> since there is no one to ping the watchdog.
 
-thanks,
+If you are serious with the watchdog use, you'll want to use the watchdog to
+monitor kernel startup as well. If the bootloader can set a watchdog timeout
+just before starting the kernel and it doesn't expire before the kernel watchdog
+driver takes over, why can't we do the same just before starting the dumpkernel?
 
-Mimi
+Thanks,
+Ahmad
+
+ 
+>>
+>> Thanks,
+>> Ahmad
+>>
+>>>
+>>>
+>> Changelog:
+>> v1 -> v2
+>> - Remove the per driver flag setting option
+>> - Take the parameter via kernel command-line parameter to watchdog_core.
+>>
+>> v2 -> v3
+>> - Remove the helper function watchdog_stop_on_panic() from watchdog.h.
+>> - There are no users for this. 
+>>
+>> v3 -> v4
+>> - Since the panic notifier is in atomic context, watchdog functions
+>>   which sleep can't be called. 
+>> - Add an options flag WDIOF_STOP_MAYSLEEP to indicate whether stop
+>>   function sleeps.
+>> - Simplify the stop_on_panic kernel command line parsing.
+>> - Enable the panic notiffier only if the watchdog stop function doesn't
+>>   sleep
+>>
+>> George Cherian (2):
+>>   watchdog: Add a new flag WDIOF_STOP_MAYSLEEP
+>>   drivers: watchdog: Add support for panic notifier callback
+> 
+> - George
+
+
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
