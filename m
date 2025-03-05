@@ -1,97 +1,136 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34438233D98
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 11:32:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2F6D1F416D
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 11:34:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741174338; cv=none; b=YDrcwGjBiL66hxB+UuQmHraWDTwLdWn8g8ZGWW7YZec/Kutm1Np7xkLEgwlvcqiSL7xwhbtUvh75Tgg+dflKepL1nSFEISPtJ4CgQ08y2kSvwNt9qAfzGSoIB4OHRXffpohUd+E0+k2YW4BZIQtCcmNwnH4rvwgWpi/skeO/tU4=
+	t=1741174463; cv=none; b=DcvirLIX17ya1vrxnGVLIEVevzLNfb+cCsALA8sgWRaJQ6uxa9X9FxZplr7tFKbUZYLycSuy0TgB4R+aVmEQVDkdGW+047F8CexOFOrelNdDK7pCRV+URdMNN+bVipF/g5i/mJYcx4LffxUVvUHrRJCIOZ49DYhYAtmuvXe+LRU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741174338; c=relaxed/simple;
-	bh=TBuQZ+E7NbRLslxayK95jJR+DlTqhUnTVK28bckaJ3E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ik1MKFzPDdB98E1E2qox3PkouDmeVKwh6TKYnCNpK3AtZsZkuRRbtDm+D6QvYgyBeIbXggslIjQ/LifOs2MQaAsQAmbQOJG+bygQOvhG+hCt6VIxYjEgw2z6gvl5uUpzJo7wUjdLly92QA5CeW4iGQNsF/J/Go3rFKgIHiiUmu8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=T6Qf3J16; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="T6Qf3J16"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 3DBC440E0176;
-	Wed,  5 Mar 2025 11:32:13 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id jWaunfXrpJ11; Wed,  5 Mar 2025 11:32:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1741174330; bh=QWrmXwMWd7f6Az6UZQ7dtBbxsckRMuPuVSLJbHOMLU8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=T6Qf3J16gW6WBJlv0q3GL6lae4GDIC8dTFSnT8tgm5Yyg+efg5ncSw6bHOQYHmdXQ
-	 W7dzGLA+dXG0z7XtG0ESy1bDXKTpQ7ZbKeZYqpuCwvAlBmkX+bqA7aXq+2/vmUXhm0
-	 BUXakxv5A8M2b9m2JhVs4SpNy3AV36IlhB9TmwqOSgpTR7yXEsAXOWXpGF+kfa0rlV
-	 Hzk7iq4QnHswazyogOea2ixWNyKeRFjQ1jpuRmnTflT7OvSsVYVEZt5S1SQpSF/hXy
-	 jptMJqf28UpOwIfC1WeMP169vd2fqDJkOtqz1yZvhs5r5q/Z3zommo5Z6t/fDlXQDF
-	 FGxKyPRccSd4YbjelhZj4oD6HPd579I1+W4Wp1O3ZTCkqYUalq8U+XauskaMwMrncl
-	 cB357XeicPv1C+8AGYPddBYEqSmDrCCR/ynQR7tt5dE3dPvsNaBxbWesiM7oqh+dh1
-	 3TudG0+93IoIG/CCdv1MxU0cAtXBSTS7dXPzgzYtPd5pFOMoDCIH3FgEkrCVV0ZHDv
-	 6Bu8JW5K7sab9/tmorDWNx/r5g0aN3emaRp81rhLO0BdaN6E+WfKcLUKVrb9bix5R3
-	 3SUe00di1fTxqDOLrjJY3RKN2w425bneqajPvJdvHF3j8eGRm5W1D/Ku3h3MnlkRP0
-	 wzWu8udNNKcrBuk/AOI44Jq0=
-Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id C5F3C40E016D;
-	Wed,  5 Mar 2025 11:32:00 +0000 (UTC)
-Date: Wed, 5 Mar 2025 12:31:55 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Joerg Roedel <joro@8bytes.org>, x86@kernel.org, hpa@zytor.com,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	Nikunj A Dadhania <nikunj@amd.com>, linux-kernel@vger.kernel.org,
-	Larry.Dewey@amd.com, Joerg Roedel <jroedel@suse.de>
-Subject: Re: [PATCH] x86/sev: Make SEV_STATUS available via SYSFS
-Message-ID: <20250305113155.GCZ8g2K1XEdgynTA9D@fat_crate.local>
-References: <20250305105234.235553-1-joro@8bytes.org>
- <20250305111251.GBZ8gxs_6O7g3gLVEh@fat_crate.local>
- <Z8g01YhM_FtdB5n6@gmail.com>
+	s=arc-20240116; t=1741174463; c=relaxed/simple;
+	bh=ZYTpFkmNAEQJwKEuD4gJlu2PogaXw5/X2opWwZ8l+6c=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=lRJ2AjiNhIdbc9MVEUurAsYNeGVm0srV+EQ2mAV0pseihO4b6Yk5o1S9mvdnbAcKrpTi2/FiCImtD4T2OalCeBKwVVHqbFM3KzZnih91ivSu2w5vaCynmuxKwE2Y21RTe6kdJoopufdaL7neFd4buIgsDMvbLgw643w88t00HYk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.44])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4Z79MK3Rf2z1ltYQ;
+	Wed,  5 Mar 2025 19:30:05 +0800 (CST)
+Received: from kwepemd500013.china.huawei.com (unknown [7.221.188.12])
+	by mail.maildlp.com (Postfix) with ESMTPS id F2B6A1402DE;
+	Wed,  5 Mar 2025 19:34:17 +0800 (CST)
+Received: from localhost.huawei.com (10.169.71.169) by
+ kwepemd500013.china.huawei.com (7.221.188.12) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.34; Wed, 5 Mar 2025 19:34:16 +0800
+From: Yongbang Shi <shiyongbang@huawei.com>
+To: <xinliang.liu@linaro.org>, <tiantao6@hisilicon.com>,
+	<maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
+	<tzimmermann@suse.de>, <airlied@gmail.com>, <daniel@ffwll.ch>,
+	<kong.kongxinwei@hisilicon.com>
+CC: <liangjian010@huawei.com>, <chenjianmin@huawei.com>,
+	<lidongming5@huawei.com>, <shiyongbang@huawei.com>, <libaihan@huawei.com>,
+	<shenjian15@huawei.com>, <shaojijie@huawei.com>,
+	<dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v4 drm-dp 0/8] Add HPD, getting EDID, colorbar features in DP function
+Date: Wed, 5 Mar 2025 19:26:39 +0800
+Message-ID: <20250305112647.2344438-1-shiyongbang@huawei.com>
+X-Mailer: git-send-email 2.33.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <Z8g01YhM_FtdB5n6@gmail.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ kwepemd500013.china.huawei.com (7.221.188.12)
 
-On Wed, Mar 05, 2025 at 12:26:13PM +0100, Ingo Molnar wrote:
-> It's *far* better to expose this via a targeted sysfs entry than 
-> polluting /proc/cpuinfo with it that everyone and their dog is parsing 
-> all the time ...
+From: Baihan Li <libaihan@huawei.com>
 
-Pasting what we're talking on IRC:
+To support DP HPD, edid printing, and colorbar display features based on
+the Hisislcon DP devices. 
+---
+ChangeLog:
+v3 -> v4:
+  - fix the serdes cfg in hibmc_dp_serdes_set_tx_cfg(), suggested by Dmitry Baryshkov.
+  - move the dp serdes registers to dp_reg.h, suggested by Dmitry Baryshkov.
+  - add comments for if-statement of dp_init(), suggested by Dmitry Baryshkov.
+  - fix the comment log to imperative sentence, suggested by Dmitry Baryshkov.
+  - add comments in hibmc_control_write(), suggested by Dmitry Baryshkov.
+  - add link reset of rates and lanes in pre link training process, suggested by Dmitry Baryshkov.
+  - add vdac detect and connected/disconnected status to enable HPD process, suggested by Dmitry Baryshkov.
+  - remove a drm_client, suggested by Dmitry Baryshkov.
+  - fix build errors reported by kernel test robot <lkp@intel.com>
+    Closes: https://lore.kernel.org/oe-kbuild-all/202502231304.BCzV4Y8D-lkp@intel.com/
+v2 -> v3:
+  - restructuring the header p_reg.h, suggested by Dmitry Baryshkov.
+  - add commit log about dp serdes, suggested by Dmitry Baryshkov.
+  - return value in hibmc_dp_serdes_init(), suggested by Dmitry Baryshkov.
+  - add static const in the array of serdes_tx_cfg[], suggested by Dmitry Baryshkov.
+  - change drm_warn to drm_dbg_dp, suggested by Dmitry Baryshkov.
+  - add explanations about dp serdes macros, suggested by Dmitry Baryshkov.
+  - change commit to an imperative sentence, suggested by Dmitry Baryshkov.
+  - put HIBMC_DP_HOST_SERDES_CTRL in dp_serdes.h, suggested by Dmitry Baryshkov.
+  - split the patch into two parts, suggested by Dmitry Baryshkov.
+  - Capitalized EDID and AUX, suggested by Dmitry Baryshkov.
+  - rewrite the commit log, suggested by Dmitry Baryshkov.
+  - move colorbar debugfs entry to this patch, suggested by Dmitry Baryshkov.
+  - change binary format to integer format, suggested by Dmitry Baryshkov.
+  - remove mdelay(100) hpd function in ISR, suggested by Dmitry Baryshkov.
+  - remove enble_display in ISR, suggested by Dmitry Baryshkov.
+  - change drm_kms_helper_connector_hotplug_event() to
+    drm_connector_helper_hpd_irq_event(), suggested by Dmitry Baryshkov.
+  - move macros to dp_reg.h, suggested by Dmitry Baryshkov.
+  - remove struct irqs, suggested by Dmitry Baryshkov.
+  - split this patch into two parts, suggested by Dmitry Baryshkov.
+v1 -> v2:
+  - splittting the patch and add more detailed the changes in the commit message, suggested by Dmitry Baryshkov.
+  - changing all names of dp phy to dp serdes.
+  - deleting type conversion, suggested by Dmitry Baryshkov.
+  - deleting hibmc_dp_connector_get_modes() and using drm_connector_helper_get_modes(), suggested by Dmitry Baryshkov.
+  - add colorbar introduction in commit, suggested by Dmitry Baryshkov.
+  - deleting edid decoder and its debugfs, suggested by Dmitry Baryshkov.
+  - using debugfs_init() callback, suggested by Dmitry Baryshkov.
+  - splittting colorbar and debugfs in different patches, suggested by Dmitry Baryshkov.
+  - optimizing the description in commit message, suggested by Dmitry Baryshkov.
+  - add mdelay(100) comments, suggested by Dmitry Baryshkov.
+  - deleting display enable in hpd event, suggested by Dmitry Baryshkov.
+---
 
-- we don't want to expose a naked MSR u64 to userspace. Might as well use
-  msr-tools
+Baihan Li (8):
+  drm/hisilicon/hibmc: Restructuring the header dp_reg.h
+  drm/hisilicon/hibmc: Add dp serdes cfg to adjust serdes rate, voltage
+    and pre-emphasis
+  drm/hisilicon/hibmc: Add dp serdes cfg in dp process
+  drm/hisilicon/hibmc: Refactor the member of drm_aux in struct hibmc_dp
+  drm/hisilicon/hibmc: Getting connector info and EDID by using AUX
+    channel
+  drm/hisilicon/hibmc: Add colorbar-cfg feature and its debugfs file
+  drm/hisilicon/hibmc: Enable this hot plug detect of irq feature
+  drm/hisilicon/hibmc: Add MSI irq getting and requesting for HPD
 
-- the backstory is, there are a bunch of tools which wanna know this so we
-  need to agree on how to supply it to them
-
-- I think /proc/cpuinfo is the best option right now
-
-- and then TDX can use the same thing too
-
-- we have a general need to expose what a confidential guest supports
-
-- a .../sev sysfs file clearly doesn't cut it because TDX doesn't have "sev"
-  - it is the Intel version of a confidential guest
-
-- and I don't want to have "0xdeadbeef" in some sys file but "SEV SEV-ES TDX
-  SecureTSC" and so on user-readable strings
+ 1                                             |   0
+ drivers/gpu/drm/hisilicon/hibmc/Makefile      |   3 +-
+ drivers/gpu/drm/hisilicon/hibmc/dp/dp_aux.c   |  16 ++-
+ drivers/gpu/drm/hisilicon/hibmc/dp/dp_comm.h  |  10 +-
+ .../gpu/drm/hisilicon/hibmc/dp/dp_config.h    |   2 +
+ drivers/gpu/drm/hisilicon/hibmc/dp/dp_hw.c    |  91 +++++++++++-
+ drivers/gpu/drm/hisilicon/hibmc/dp/dp_hw.h    |  36 +++++
+ drivers/gpu/drm/hisilicon/hibmc/dp/dp_link.c  |  57 +++++---
+ drivers/gpu/drm/hisilicon/hibmc/dp/dp_reg.h   | 130 +++++++++++++-----
+ .../gpu/drm/hisilicon/hibmc/dp/dp_serdes.c    |  71 ++++++++++
+ .../drm/hisilicon/hibmc/hibmc_drm_debugfs.c   | 104 ++++++++++++++
+ .../gpu/drm/hisilicon/hibmc/hibmc_drm_dp.c    |  67 ++++++++-
+ .../gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c   |  88 +++++++++---
+ .../gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h   |  12 ++
+ .../gpu/drm/hisilicon/hibmc/hibmc_drm_vdac.c  |   3 +
+ 15 files changed, 601 insertions(+), 89 deletions(-)
+ create mode 100644 1
+ create mode 100644 drivers/gpu/drm/hisilicon/hibmc/dp/dp_serdes.c
+ create mode 100644 drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_debugfs.c
 
 -- 
-Regards/Gruss,
-    Boris.
+2.33.0
 
-https://people.kernel.org/tglx/notes-about-netiquette
