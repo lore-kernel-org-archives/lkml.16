@@ -1,81 +1,53 @@
-Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 236F12512EB
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 18:50:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C6F118A6B5
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 18:51:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741200659; cv=none; b=ctp4qCG9oZkr+jlb+VUompub0S+5oKJ4783teXfja8/+oqIRVrGqsgzuNrlQmdT2ZfQRnI232MRsy2V1wkRf8gEFvjFtG2D6MSQnJk8bs4+VOl60JsVPogM9wMsTJU3VYu/fgEmB6cw3chQ/NAhzi4k4aDVJOVwJeh4giN47jdI=
+	t=1741200712; cv=none; b=CV8JL2Cup97bSF1ZLKG8luaUfrggs7pEcYElsDAZjl37Nho3gnJVWxWHk2AEFevq+drCY5XDzOp5SPMbRnylQQJ90PMnmdMFvmuZRHXdT+c7Tuy1QfrMY3aM+8aG9GKHhQnh5qelj2ZYtbhuLoFU6KDuyNuXWzrvS0OjqcAa5ts=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741200659; c=relaxed/simple;
-	bh=QbaAYVsuHtR4sFbwYlItPyeMtj1+0TldiW7il+PRxZc=;
+	s=arc-20240116; t=1741200712; c=relaxed/simple;
+	bh=RfmfL0IS+LyFgRufp3oTF1BFRsEV9ReRdkYc7pkwIBA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=F4nv2jahyUC8VnynXKPvhbessRDO5GSVMFyAZxImjcrb77cNm84uP4xHSYlmLqbaihfkor4jU0fMo8op1iJqxnw3ApWYJjnJ+Z85wgB+rQormBRi9F6npLqeLG7m5zO6ZCfKzEjDjVrYEDl3k9RN5c6KgJR+LCNVPtvSAj1sRYE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=YdKISRre; arc=none smtp.client-ip=209.85.160.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
+	 Content-Type:Content-Disposition:In-Reply-To; b=KeqMgqpxf7Xv1OVH7T3VfyeL08Ee0Ox9MC3nONAHDmCzrkPEX0LjsjXk0jLfrVC9IKyq8t1BZ8H4RI5Me3A4ntOWfExDZf8LK2nVQ6p2mUFTVq54gjiXagKGC2SrG3nVQ0HMFFYKeV5Wb7zs1drLP2Ma72NqzUf/8AD4kWD9WD4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=g1sIXQ0J; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="YdKISRre"
-Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-471fe5e0a80so64131431cf.1
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Mar 2025 10:50:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1741200654; x=1741805454; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Z7/tB8dYiu5A38nEKy58/W/Pt5oX/QvBFHO/wQ46XSc=;
-        b=YdKISRre2vQzP5L91LnjrMPLlIWIMUyv0FCKNrb8H8ZEwRFG3hWoxi3tw6UQImAN8P
-         dC2T8/fDqHcn71EDd95kew5KAHCLbRwWCmexzmO8KLYbo76tEQX/rL+/kFE13HKznSXJ
-         VPIvClo7wJ+3I28B+lVMxtM19Ei0Rhm8tDZojPF9tqbMc+e8OOrMiHTNSgHxNPlw5Rxr
-         Vy16yI2bw8ut1ptKtqydSYdWwQSjMtnzG3m6YpR914NO6TEEAmife16dDa1QUsA40Exw
-         D+fz4MvGGySafE1nvAuaB1u0tWCggL2iFCW27B0Lh86hakThRBKcKgstH3wz4mk1Bz2X
-         HM/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741200654; x=1741805454;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Z7/tB8dYiu5A38nEKy58/W/Pt5oX/QvBFHO/wQ46XSc=;
-        b=WWCTm6uV/aUMZz1DRxwLIKXMP/3CryyuF8o9WLBzkizW7S8bhRW73Wjemi9d/14qh5
-         p/GIvtiM0CKPAaIDrskUKgGAQveVmRQneiBS+HOMst5BvfP9Apx+7+hQknBVSbjEnsWu
-         jgDsIVKWybMnIZCc7mZm65t+tzWW6G8yJ4jNiiH6jkP67CvtVF1XbTfqQ9a7JOb5+GGz
-         m69DdxfRCTPSVeerFwHxaA7v18YO6O7EF64090v+vS0BMINbiRV/rHDn/iuvnsSWY9vT
-         St4FlBkE/TN0ZqjI7PPyryNtZ+nIsuqBKSnGpHhpAFXnaQwY4fwGwe11V4SWEAOZvBbj
-         NpMg==
-X-Forwarded-Encrypted: i=1; AJvYcCVacIOFAsECkMap8fiHvcQ8HmhaoDl0unIB5qSeJZxO1VOZiQ8MslgyagflLhgLbPLywhWy2QlnkgwVBB4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw1lCUTejgGScWRCGBEEjJ5JH6iKSR9QC4q27kCIVDNj/bMC2ea
-	6N/yT0mBUDLo9bzqtjKPmjL6ajwlQSjuvOv2dZ/ZzOMSs6AD3pfZ56vVmYsEFtE=
-X-Gm-Gg: ASbGncuw7PWNxMTN49UGAASN6D6zE+77jblDN+Aaavgblnimsb7b7PTodIpuuO4bCfO
-	MdPLACJr1+ZV3rZjhI1Rrd6D38RBGFyaiy/Wx4FD2tRgYKB4Z2e52ayTo+8Wphoe/o7iC2aKfcS
-	XeMWsUFGeg8DzUNrJvPv5rZ0HgeEMKpYkvCAtKYNOpmInZmCQ5HFpdoohrkNvz0+5+lRor/5r1k
-	fGTa9fKapUy6ZzoByg/0H2P0m4OpcmWhLCSKAyAaHOZnogqj4XFP07cG2Ip42XW5j7IfQMfMejh
-	60D6I2/yDpkq0tqORjuuywyl6k8cZ+LptIkC8mnL1m4uBHyvjrhT0ovdJxCwRBQ8LpC5bnGOd/3
-	T02rFtkdI5B4s8PGPQg==
-X-Google-Smtp-Source: AGHT+IHBfk4VjAwwmewmwy7/cD04QxrX3NO7CkQZxs6uiHniAKBSHBOE/omselhSlxfJQQW6JbT7mg==
-X-Received: by 2002:a05:6214:518b:b0:6e6:60f6:56cf with SMTP id 6a1803df08f44-6e8e6cfffa9mr54007756d6.5.1741200653911;
-        Wed, 05 Mar 2025 10:50:53 -0800 (PST)
-Received: from ziepe.ca (hlfxns017vw-142-68-128-5.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.128.5])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e8e8f52086sm10432506d6.63.2025.03.05.10.50.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Mar 2025 10:50:53 -0800 (PST)
-Received: from jgg by wakko with local (Exim 4.97)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1tptpU-00000001UT9-2uWT;
-	Wed, 05 Mar 2025 14:50:52 -0400
-Date: Wed, 5 Mar 2025 14:50:52 -0400
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: longli@linuxonhyperv.com
-Cc: Leon Romanovsky <leon@kernel.org>,
-	Konstantin Taranov <kotaranov@microsoft.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
-	Long Li <longli@microsoft.com>
-Subject: Re: [patch rdma-next v3 1/2] net: mana: Change the function
- signature of mana_get_primary_netdev_rcu
-Message-ID: <20250305185052.GA354403@ziepe.ca>
-References: <1741132802-26795-1-git-send-email-longli@linuxonhyperv.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="g1sIXQ0J"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=ezOs1RA2PMdRaE8a2I0woDGQvoaxmyX96aKleIL4//s=; b=g1sIXQ0Jf8DI6ZYbvF038gQjrB
+	cp/c8KUBs+7VxZDugWYDbTZIOpUTwfRzDyUrlOP2RnM4tkHkVmCHNksqwmn78NQ4fKU8ynMUftOG0
+	IJQd+474/XV5udfbijLYOw5Z41frOj6cyNMg2TctzvIgSRqMdcbRd3weXyUE2UjbSidapyhF+zMFc
+	pO4n/PTwDIR5R1wR58wOn8BhP9g62+Fvtzov+oGQsG14A5tk0S236A6Wujk4S6mst55ecpZ7Q1Pug
+	ldsCdMEg8xzIafE8LA2rSxAmITBMfeBsL7mw39+fEhxKjOQS/+X+wp8mg7wyLJgg3Qom39xAPIH75
+	fN5tRq+A==;
+Received: from willy by casper.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
+	id 1tptqG-000000062MY-3Hw2;
+	Wed, 05 Mar 2025 18:51:41 +0000
+Date: Wed, 5 Mar 2025 18:51:40 +0000
+From: Matthew Wilcox <willy@infradead.org>
+To: Zi Yan <ziy@nvidia.com>
+Cc: Baolin Wang <baolin.wang@linux.alibaba.com>,
+	Liu Shixin <liushixin2@huawei.com>, linux-mm@kvack.org,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Barry Song <baohua@kernel.org>,
+	David Hildenbrand <david@redhat.com>,
+	Hugh Dickins <hughd@google.com>,
+	Kefeng Wang <wangkefeng.wang@huawei.com>,
+	Lance Yang <ioworker0@gmail.com>,
+	Ryan Roberts <ryan.roberts@arm.com>,
+	Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: Softlockup when test shmem swapout-swapin and compaction
+Message-ID: <Z8idPCkaJW1IChjT@casper.infradead.org>
+References: <28546fb4-5210-bf75-16d6-43e1f8646080@huawei.com>
+ <c4a07dd6-fffa-41f4-b6ff-3e333d1b5fc2@linux.alibaba.com>
+ <376D50C9-6DC8-4F58-9C43-173EDCD412DD@nvidia.com>
+ <3812C3CC-DC05-46D2-9A87-920797227105@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -84,33 +56,74 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1741132802-26795-1-git-send-email-longli@linuxonhyperv.com>
+In-Reply-To: <3812C3CC-DC05-46D2-9A87-920797227105@nvidia.com>
 
-On Tue, Mar 04, 2025 at 04:00:01PM -0800, longli@linuxonhyperv.com wrote:
->  
-> -struct net_device *mana_get_primary_netdev_rcu(struct mana_context *ac, u32 port_index)
-> +struct net_device *mana_get_primary_netdev(struct mana_context *ac, u32 port_index)
->  {
->  	struct net_device *ndev;
->  
-> -	RCU_LOCKDEP_WARN(!rcu_read_lock_held(),
-> -			 "Taking primary netdev without holding the RCU read lock");
->  	if (port_index >= ac->num_ports)
->  		return NULL;
->  
-> +	rcu_read_lock();
-> +
->  	/* When mana is used in netvsc, the upper netdevice should be returned. */
->  	if (ac->ports[port_index]->flags & IFF_SLAVE)
->  		ndev = netdev_master_upper_dev_get_rcu(ac->ports[port_index]);
->  	else
->  		ndev = ac->ports[port_index];
->  
-> +	dev_hold(ndev);
-> +	rcu_read_unlock();
+On Wed, Mar 05, 2025 at 01:44:29PM -0500, Zi Yan wrote:
+> OK, it is probably still caused by the __folio_migrate_mapping() bug, since
+> writing to sibling entries of a multi-index entry breaks the multi-index entry.
+> Thank Matthew for doing the experiments.
 
-That's much better, yes
+Here's what I did:
 
-Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
+diff --git a/lib/test_xarray.c b/lib/test_xarray.c
+index 0e865bab4a10..4f38db416ff6 100644
+--- a/lib/test_xarray.c
++++ b/lib/test_xarray.c
+@@ -645,6 +645,26 @@ static noinline void check_multi_store_3(struct xarray *xa, unsigned long index,
 
-Jason
+        xa_destroy(xa);
+ }
++
++static noinline void check_multi_store_4(struct xarray *xa, unsigned long index,
++               unsigned int order)
++{
++       XA_STATE(xas, xa, index);
++       int i;
++
++       xa_store_order(xa, index, order, xa_mk_value(0), GFP_KERNEL);
++       xa_dump(xa);
++
++       xas_lock(&xas);
++       for (i = 0; i < (1 << order); i++) {
++               xas_store(&xas, xa_mk_value(index));
++               xas_next(&xas);
++       }
++       xas_unlock(&xas);
++       xa_dump(xa);
++
++       xa_destroy(xa);
++}
+ #endif
+
+ static noinline void check_multi_store(struct xarray *xa)
+@@ -724,6 +744,7 @@ static noinline void check_multi_store(struct xarray *xa)
+                check_multi_store_3(xa, 0, i);
+                check_multi_store_3(xa, 1UL << i, i);
+        }
++       check_multi_store_4(xa, 16, 4);
+ #endif
+ }
+
+
+The xa_dump before shows sibling entries:
+
+$ ./tools/testing/radix-tree/xarray
+xarray: 0x55b2335be180x head 0x516004c75b82x flags 0 marks 0 0 0
+0-63: node 0x516004c75b80x max 0 parent (nil)x shift 0 count 16 values 16 array 0x55b2335be180x list 0x516004c75b98x 0x516004c75b98x marks 0 0 0
+16: value 0 (0x0) [0x1x]
+17: sibling (slot 16)
+18: sibling (slot 16)
+19: sibling (slot 16)
+[...]
+
+And then after shows them turned into normal entries:
+
+xarray: 0x55b2335be180x head 0x516004c75b82x flags 0 marks 0 0 0
+0-63: node 0x516004c75b80x max 0 parent (nil)x shift 0 count 16 values 31 array 0x55b2335be180x list 0x516004c75b98x 0x516004c75b98x marks 0 0 0
+16: value 16 (0x10) [0x21x]
+17: value 16 (0x10) [0x21x]
+18: value 16 (0x10) [0x21x]
+19: value 16 (0x10) [0x21x]
+
+so I understand why this took a long time to show up.  For most uses,
+you can't tell the difference between these situations.
