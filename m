@@ -1,118 +1,161 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 256581C6FE4
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 05:39:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F5A4191F75
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 05:47:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741153171; cv=none; b=MJQXAwNRIXFhayVpRDO2LWNY3fxaHay7LwY88/V5DMKN1jsYfur5Nyt04SRSVk8OYPXRUej5tP6qwGPHTYe4FBVCcHsIwyG45IbXw9SkxnsSThhECK88xHcZbYy5cKNsVgVpMl0JnWZgg94RtJXsktnDKbPetXpTHDyVztAu/1s=
+	t=1741153632; cv=none; b=SmWHYYzyaZGpCYZ2OZNAbXe93OIB3rmC8DJQ2r1lJJxaNJg/XDf22SYI7U8LUzj/NCLidK/kmgZGSTgo1GYBTRPzvn1Bsy/QYXqcwTaHneXm21wrOqgO86Mu5XBKgnVUtub1oGSHuxVKRvAvpTTppesexKJxezrVzfzopTjhSxM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741153171; c=relaxed/simple;
-	bh=AmrnCmsQvKDavdaqMUpAgT8D+53xpeBI3PNIM0WAudY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hXoZw56SFRqC1tMkG8oUc76b8Idt7NE5veGFRCNTkaCMps9gu8u+gqPvDjD8OsreoXTHi9mzYrLiAJEo9o9/y3tKWvAGUrMnTufHoPOxRLDKgr7Ds+pRCrwbiYWZquWd1HkZ2MDp3c51yzLsqlR2jaFxYrH5eGS05xiK+KrZeSQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gWI0k/hh; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1741153632; c=relaxed/simple;
+	bh=Yr2zEleQP5OB9VQnCOvN96Nz1sM+C0j+qfjDSd3R7qM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=QaCLKRAkmCpCd9Gqki+FGOXo7XIJJ9WU27R8Mzs7j8H+AmX6CpOQB6nFO3iDl+tawurcwu3tqefu1LyAFcylUivIxC1iN3wdxGYr+MZL8Oo/J9RwMS8QDC8ADGOgyLC85R1CJoBqxADEOmx/VKBtbvPzTKOLZfzzfmbr4diWx50=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MP4e13DS; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gWI0k/hh"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741153170; x=1772689170;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=AmrnCmsQvKDavdaqMUpAgT8D+53xpeBI3PNIM0WAudY=;
-  b=gWI0k/hhDaG9IeeRZKqjophgBNqKqgTDOYzrQmQqlQuh4h28dGR0O75h
-   SYs0kxRZHjTG8zTG4ejHzLiO/N+NbInasZnZGTUbpJHh+EKY8mj+N5FDJ
-   ABLO5Mblz07PqhvfgW0So7NMvhPjaqBZdBRyeHTEVowWNRrdsXoiW8nw8
-   GcsTURLmZAZEfeytW6qJ01Gh2KB1Yr2ZsMH16KguKHj10/QsxDynwOt8o
-   x4ATY8bJXTrITir+XVi/NUWjCsoY5Xp/TWRQWlKyqLpzLMPTDhnKOPAeM
-   Q4RNiBb225gYeqHFm9/OaYAW1OcvzPIyey1n0xS6SkhkTcJAztGzxNERT
-   A==;
-X-CSE-ConnectionGUID: DtrdedG/T02Qs5lU1p3xvg==
-X-CSE-MsgGUID: ZG7zho19TX6wrj8M+Bs/Lg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11363"; a="41349595"
-X-IronPort-AV: E=Sophos;i="6.14,222,1736841600"; 
-   d="scan'208";a="41349595"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2025 21:39:29 -0800
-X-CSE-ConnectionGUID: sJmDI49ERvKccI/5alj7UQ==
-X-CSE-MsgGUID: E7UbQgR4QI6+MASRlWaZFg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,222,1736841600"; 
-   d="scan'208";a="118736138"
-Received: from allen-sbox.sh.intel.com (HELO [10.239.159.30]) ([10.239.159.30])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2025 21:39:26 -0800
-Message-ID: <c6d20839-f4c1-429c-b12c-c8d06ae0ce03@linux.intel.com>
-Date: Wed, 5 Mar 2025 13:36:00 +0800
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MP4e13DS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1741153629;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=TckiHzoidmvghQ6zu3pJdp/CUVWbSHOgWhuCociTv5w=;
+	b=MP4e13DSP8GrWaJJOc1aGnMtzaCTvmRk3WFx1PSgx0UGjAn7Ro07JHfr0YhNBk/KMLTIiK
+	x84/JOLp0f/SqOmwW+Wq+r+r1IkRGPwG/XzjA+jWjYxerSwMcm2L6/mf2u2SqBJ+JNkdSA
+	+NETmOhvMQTN+k9/J2wzm/yGUiRTx04=
+Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com
+ [209.85.216.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-606-6_pUkw6HNliSWmDcRR8YVQ-1; Wed, 05 Mar 2025 00:47:07 -0500
+X-MC-Unique: 6_pUkw6HNliSWmDcRR8YVQ-1
+X-Mimecast-MFC-AGG-ID: 6_pUkw6HNliSWmDcRR8YVQ_1741153627
+Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-2ff53a4754aso55408a91.2
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Mar 2025 21:47:07 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741153627; x=1741758427;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=TckiHzoidmvghQ6zu3pJdp/CUVWbSHOgWhuCociTv5w=;
+        b=QDJl0FSopZfNXVRI0Dgj+ZoVqeYhAhcHjne58rqM0DbqdIGZh9RVOjVNy1ZIAxLYQc
+         7OaCaaBHonnZlDtL64UVy4e6HTJMEybnGut4id5xnS8P2+K1W9Gw5IpvYA5DfqDXCCzp
+         6GPAV+3h0a9Pw+EP/0xeAMNqSXvZcLkXGF2PeuLBhFvOInYnjYV0J3OlVxv+kd2VJyD8
+         H1j/gOgoqsHhoj2Ae18zl3qgfFy9p1dNlVdYeSoWuuckXEzAx5jwVGMQxw631RKZN9zC
+         pP1cuCi6AwWQtpqNlyOkPYdkkkQXA7ZDFfazSs+hk4MEZWfVxuVz9+Aq9Iy2CHupE5uN
+         1qpg==
+X-Forwarded-Encrypted: i=1; AJvYcCXd1TliNyGaTA1MMSH6lWa/fdbkQ682eWyYY+j7PXT4hQXgmx7FfNEj4iFwd5waLWNCo7CazOSrCuq95Uc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzJo/U0hTp16Uwv8pIBmwS/c5ldVXjQdRc9UkHpN7aRadaJIy8z
+	NEUp1j4hsqZpphabSYq1gUD3rP4V344PVIx4ruRJnFe9YMKoEUwfZO6fb+09tP5UP2CVAJr95Re
+	azoIGEZyzdnaKgL9FqdvzMKs7cIia067JPUXIO/g5I/qujEvMqod3wJeDybcbmmxReT9uO5tFI0
+	tDu5VYCILFgBIMIlTxQmCxGUy+mHfdZ8d90aHa
+X-Gm-Gg: ASbGncvuz36s7pBfLputb164PIW4BumftdG8Z8aLRUhrSFoq5vC0vtBRgNEBIJQIxP3
+	o5p/ESAAUrcvNkro/pgXFLKEai/9csC1s2Imw6BTU5y9/AQG8XNcsJ1aGyUHwy5AQsWOkcta1DA
+	==
+X-Received: by 2002:a17:90b:1d52:b0:2ee:dcf6:1c8f with SMTP id 98e67ed59e1d1-2ff497cb040mr4004275a91.16.1741153626847;
+        Tue, 04 Mar 2025 21:47:06 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IE7tLwkzpVQv2Fhj6KJP/g5jr88+NKViP8f9P/MLEqloHXqeIoNFWMkg7gOLyvweXjBE7QjXpxFd7/tryglpqM=
+X-Received: by 2002:a17:90b:1d52:b0:2ee:dcf6:1c8f with SMTP id
+ 98e67ed59e1d1-2ff497cb040mr4004247a91.16.1741153626527; Tue, 04 Mar 2025
+ 21:47:06 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 06/12] iommu/vt-d: Cleanup
- intel_context_flush_present()
-To: Yi Liu <yi.l.liu@intel.com>, Joerg Roedel <joro@8bytes.org>,
- Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
- Jason Gunthorpe <jgg@ziepe.ca>, Kevin Tian <kevin.tian@intel.com>
-Cc: Dave Jiang <dave.jiang@intel.com>, Vinod Koul <vkoul@kernel.org>,
- Fenghua Yu <fenghuay@nvidia.com>, Zhangfei Gao <zhangfei.gao@linaro.org>,
- Zhou Wang <wangzhou1@hisilicon.com>, iommu@lists.linux.dev,
- linux-kernel@vger.kernel.org
-References: <20250224051627.2956304-1-baolu.lu@linux.intel.com>
- <20250224051627.2956304-7-baolu.lu@linux.intel.com>
- <f7d84e3d-a648-4292-a652-408f704411c7@intel.com>
- <51cb2ef8-3cce-4af7-b6ce-c3e3d490e6a3@linux.intel.com>
- <338ee285-ae28-4e3f-a7de-57205d9e9873@intel.com>
-Content-Language: en-US
-From: Baolu Lu <baolu.lu@linux.intel.com>
-In-Reply-To: <338ee285-ae28-4e3f-a7de-57205d9e9873@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20200116172428.311437-1-sgarzare@redhat.com> <20200427142518.uwssa6dtasrp3bfc@steredhat>
+ <224cdc10-1532-7ddc-f113-676d43d8f322@redhat.com> <20200428160052.o3ihui4262xogyg4@steredhat>
+ <Z8edJjqAqAaV3Vkt@devvm6277.cco0.facebook.com>
+In-Reply-To: <Z8edJjqAqAaV3Vkt@devvm6277.cco0.facebook.com>
+From: Jason Wang <jasowang@redhat.com>
+Date: Wed, 5 Mar 2025 13:46:54 +0800
+X-Gm-Features: AQ5f1JrNByKY7PtEfXG0ORfP7FScyD2MAlIYCt0mdU5F_0VbeZRH2Dv5bfH1am0
+Message-ID: <CACGkMEtTgmFVDU+ftDKEvy31JkV9zLLUv25LrEPKQyzgKiQGSQ@mail.gmail.com>
+Subject: Re: [PATCH net-next 0/3] vsock: support network namespace
+To: Bobby Eshleman <bobbyeshleman@gmail.com>
+Cc: Stefano Garzarella <sgarzare@redhat.com>, davem@davemloft.net, 
+	Stefan Hajnoczi <stefanha@redhat.com>, "Michael S. Tsirkin" <mst@redhat.com>, linux-kernel@vger.kernel.org, 
+	Jorgen Hansen <jhansen@vmware.com>, kvm@vger.kernel.org, 
+	virtualization@lists.linux-foundation.org, linux-hyperv@vger.kernel.org, 
+	Dexuan Cui <decui@microsoft.com>, netdev@vger.kernel.org, 
+	Jakub Kicinski <kuba@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 3/5/25 11:34, Yi Liu wrote:
-> On 2025/3/5 10:21, Baolu Lu wrote:
->> On 3/4/25 16:43, Yi Liu wrote:
->>> On 2025/2/24 13:16, Lu Baolu wrote:
->>>> The intel_context_flush_present() is called in places where either the
->>>> scalable mode is disabled, or scalable mode is enabled but all PASID
->>>> entries are known to be non-present. In these cases, the flush_domains
->>>> path within intel_context_flush_present() will never execute. This dead
->>>> code is therefore removed.
->>>
->>> The reason for this path is the remaining caller of
->>> intel_context_flush_present() is only the domain_context_clear_one() 
->>> which
->>> is called in legacy mode path. Is it?
->>> If so, it seems unnecessary to keep __context_flush_dev_iotlb(info); 
->>> in the
->>> end of the new intel_context_flush_present(). Also, since this helper 
->>> is more for legacy mode, might be good to move it out of pasid.c.:)
->>
->> This helper is for invalidating various caches when a context entry is
->> present and certain fields are changed. It is used in both legacy and
->> scalable modes.
-> 
-> hmmm. the kdoc says all the pasid entries are non-present, is it necessary
-> to flush dev_tlb in such scenario? I suppose no present pasid entry means
-> no pagetable as well.
+On Wed, Mar 5, 2025 at 8:39=E2=80=AFAM Bobby Eshleman <bobbyeshleman@gmail.=
+com> wrote:
+>
+> On Tue, Apr 28, 2020 at 06:00:52PM +0200, Stefano Garzarella wrote:
+> > On Tue, Apr 28, 2020 at 04:13:22PM +0800, Jason Wang wrote:
+> > >
+> > >
+> > > As we've discussed, it should be a netdev probably in either guest or=
+ host
+> > > side. And it would be much simpler if we want do implement namespace =
+then.
+> > > No new API is needed.
+> > >
+> >
+> > Thanks Jason!
+> >
+> > It would be cool, but I don't have much experience on netdev.
+> > Do you see any particular obstacles?
+> >
+> > I'll take a look to understand how to do it, surely in the guest would
+> > be very useful to have the vsock device as a netdev and maybe also in t=
+he host.
+> >
+>
+> WRT netdev, do we foresee big gains beyond just leveraging the netdev's
+> namespace?
 
-The spec has defined the software behavior for cache invalidation in
-"Table 28: Guidance to Software for Invalidations". This helper was
-written according to it.
+It's a leverage of the network subsystem (netdevice, steering, uAPI,
+tracing, probably a lot of others), not only its namespace. It can
+avoid duplicating existing mechanisms in a vsock specific way. If we
+manage to do that, namespace support will be a "byproduct".
 
-> 
->> In the past, this helper would work even if some PASIDs were still in
->> use. After the changes introduced in this series, this PASID-in-use case
->> is removed. So remove the dead code.
-> 
-> yeah, I got this part. As I mentioned, the only caller now is the
-> domain_context_clear_one() which is used in the legacy path. That's why I
-> feel like it is now more for legacy mode path now after this series.
+>
+> IIUC, the idea is that we could follow the tcp/ip model and introduce
+> vsock-supported netdevs. This would allow us to have a netdev associated
+> with the virtio-vsock device and create virtual netdev pairs (i.e.,
+> veth) that can bridge namespaces. Then, allocate CIDs or configure port
+> mappings for those namespaces?
 
-It's also called by device_pasid_table_teardown().
+Probably.
 
-Thanks,
-baolu
+>
+> I think it might be a lot of complexity to bring into the picture from
+> netdev, and I'm not sure there is a big win since the vsock device could
+> also have a vsock->net itself?
+
+Yes, it can. I think we need to evaluate both approaches (that's why I
+raise the approach of reusing netdevice). We can hear from others.
+
+> I think the complexity will come from the
+> address translation, which I don't think netdev buys us because there
+> would still be all of the work work to support vsock in netfilter?
+
+Netfilter should not work as vsock will behave as a separate protocol
+other than TCP/IP (e.g ETH_P_VSOCK)  if we try to implement netdevice.
+
+>
+> Some other thoughts I had: netdev's flow control features would all have
+> to be ignored or disabled somehow (I think dev_direct_xmit()?), because
+> queueing introduces packet loss and the vsock protocol is unable to
+> survive packet loss.
+
+Or just allow it and then configuring a qdisc that may drop packets
+could be treated as a misconfiguration.
+
+> Netfilter's ability to drop packets would have to
+> be disabled too.
+>
+> Best,
+> Bobby
+>
+
+Thanks
+
