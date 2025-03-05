@@ -1,104 +1,189 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 868AB1A2397;
-	Wed,  5 Mar 2025 11:05:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 678D31A2397;
+	Wed,  5 Mar 2025 11:05:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741172708; cv=none; b=GF0Fqfdv+apoCFt9Jj8bfKiBzW11uAquWHTYyhodXJMb2NPlMnRPJWKFpB9pJejgNZ+OTqccpYOfun+fQoBQUBJzMrBA2vcWGv1AyQA16bPyLbfveQKpn2mrGubofMQSSlbHIouVpJIGb14oYl5SGk80qxO+2M9d+Bwt12orj54=
+	t=1741172712; cv=none; b=PDUuxiBC/lQXWmq7jHuuGg5ht37M+EzmgrXMQsyGnVH5qQN8Lw0L5d5Ixk9+vO1QSHR5L5vuJoeyJTLnvdyp8h1Kn83Zn08JVFWuj8agCaUMSKBi7v/jWTn2/cTSrxln3IqUC+zZxVS/vfe5lrWl+LJXqSaKHRxS1GEACP7cllo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741172708; c=relaxed/simple;
-	bh=HQ0QTVZ3R5LoqNs//ormBERFF3chfVglnFHba8lkORQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=D5eXLaFB4Q8PH8le20NOw9FE2ZZIBclgNpMARVEiTOvSQMI8+zWTOIYj+vZ9Jhy4s3aEMdPZzigKe8Tili1auh+llXJx7uKnOieqGfq+20bum5bHHdMmVDrUOXZjOUhaUMsiBs55eD5Bn135dyrTaGKp0fzfLRClxPuAIuMSPu8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QB5FiU+k; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741172712; c=relaxed/simple;
+	bh=Wn+HkeuykAgkMxuLx9Wzsoz+97Luiz91NvrSXcwMjaw=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=C/Tkh9WHCGmQhgZ55+pYB3yTmwq902YYitd2EY+VsgjBQqGWLxJmyfSO4ZZnKdtoasmnZeT6+3mhZGUHbVgyR3DUiuRuXe/2nR5tm0C1Ll3IZmXAwT3J+Ci2lWtNkyCrv224/E1Yh/woZpOhG8mi7Hbs5mvHGmPi5+udDiG0hW4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qBVkWa+T; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QB5FiU+k"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-22400301e40so247075ad.1;
-        Wed, 05 Mar 2025 03:05:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741172707; x=1741777507; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HQ0QTVZ3R5LoqNs//ormBERFF3chfVglnFHba8lkORQ=;
-        b=QB5FiU+kL9WXGL6jhBFV0ggbMg1qnuKpUuGkGiQiy/0JgXVpLY+VWNqhmnhUahcSmI
-         fnfiOYAV9UZAY035nj60hjnv7ikhPFGCYQ4+SA+2e4AGwaq4yWr+BUUkYazWi3rEWjyM
-         v0/gOBJ4X0+riCBrL+rk+h/rT2139eWk84oJh9hWRyWoQwzwymb3nRAXjj6N541KMfkh
-         ZOSNH2jcFpAFfC9fHgtqJqJQurn+o9tZxZ0w9opYFkFJKClREAgeUnIhEhuw0Mthtf2K
-         4fggoOg33EDp/KGi6q3Tmg2HG/xu6wRFARPgGydTW25HtaqEMl6NHiudjl0DGaTH4xCm
-         Ynmw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741172707; x=1741777507;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=HQ0QTVZ3R5LoqNs//ormBERFF3chfVglnFHba8lkORQ=;
-        b=mIc7OcLQ4V6bMSAuWvpZDyJ5A6ZQdMdGaV2Rq9UjvrkAQ7J676x6zZVGB62R5LJO07
-         lyd9gjKTrc2x5q1YusHQwGuZ+Zv/B+mX89xFMCSf5i3hO/OQ2icCLU1HJg30jR/uxx6G
-         hYM4q0cLRVvQ74yjpt49huUD/s6O+3qGc/3ZUXtDJT2h0GEhwFZmyKybnCDiI11/17m2
-         pMxPsKQ12bkOuCa0LSJX+3YSJd+L0SWMJglRjoPLAefK+J23CcF0MB2HSKt84ueXAZoB
-         C5RjgFG2/K5vLiOHpd5ZeHON663LxTeGJlEokt5c+XOVjqWbbLGlN1ZI0d5XNlEQqNN0
-         SdbQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXoIBhen+LEh5CtzptitYHqCErZH8ls+oLTxrCXl8FyKYsbma+FPpCLcD7bRS1LbBg64itW3lOnRZ8AhlY=@vger.kernel.org, AJvYcCXquViZyvdThTpQ3tnKfGp4ZlV7k7A500uXBu/GGBs02Z/Ezo5EMkzkSaPM7nHTNoLciNg7PEzrNekz2k0vcgU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw1LsinAsWPtqlDBjITMQ75M4EI6EJIAwuCR5W2EydS0w6fpL1c
-	p6CuEvoVlSml5QC4Y37imJQhnlwlTwSLIm4FmvKGXyjmrSQsCALWj7X+y4R6vYsU4gHu+Zk8PdM
-	IswUMscAYNw4lNwOZQCEr/mTjbBw=
-X-Gm-Gg: ASbGncveGByQYdXgTlKLaarY5XSsY+xDId4s5ojsBNq0tfxUT2f70SnoxJH1poX3h/L
-	RuUrjkuYYBM1bpEW1szvxuXulDyoMfIJ7d/0loXczePxzlIMAp+0YGOXc+/YlLS8fx0h01tHGfb
-	AgPplTYBr8lITFWNBXQ68TJwsU
-X-Google-Smtp-Source: AGHT+IEg7PgdT4aEeeQR60HiwXdxh2jox4AxEq3uxwMm8kTNjq49YMJ2i3+iA5hZs9CDFRHyFKVrztP4nTpVP4dB+mo=
-X-Received: by 2002:a17:902:e881:b0:21f:1365:8bcf with SMTP id
- d9443c01a7336-223f1d33ae6mr17479845ad.10.1741172706720; Wed, 05 Mar 2025
- 03:05:06 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qBVkWa+T"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id E63F0C4CEE9;
+	Wed,  5 Mar 2025 11:05:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741172712;
+	bh=Wn+HkeuykAgkMxuLx9Wzsoz+97Luiz91NvrSXcwMjaw=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=qBVkWa+TLzXxlfX4DDUSH4nq9ONz+wRBPrDRFEtsnC1JtdrbntnlD4+5zDdn+TpNf
+	 8XdkHi05I4IgJkNEj6GiNjPFidGSTd5Sq3z3rihU24JnouQmUBxJWaGjrh14fGzQf1
+	 J5GnDnUEe2TPnshIO2fIE80llYIBnpnNjRHFHNMX0MZyqtqQbYInzCiM3PTNwIKRI0
+	 RyU/qkoI0All4z17Lk6T6bagQKh8e3BpQHquXg4kIfiQYhNimWOAgjr5PhMqDdolzF
+	 VQelBSkQOIxgER1EqNwnCoAxifC79sK0v1FFlFVxuznTP4KXexU6MfYcBNM4ig51pq
+	 vuZE5MlthWNmw==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4081C19F32;
+	Wed,  5 Mar 2025 11:05:11 +0000 (UTC)
+From: Keguang Zhang via B4 Relay <devnull+keguang.zhang.gmail.com@kernel.org>
+Date: Wed, 05 Mar 2025 19:05:04 +0800
+Subject: [PATCH v13 1/2] dt-bindings: mtd: Add Loongson-1 NAND Controller
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <87tt89gfe4.fsf@kernel.org> <20250304205054.207285-1-trintaeoitogc@gmail.com>
- <CANiq72koDba445gMYtC_VEcFk2+O-Xg2-2y6uMyp7onBy=7rcw@mail.gmail.com>
- <4D_uEoEtgYCzOLuPzhX9Vs7J1uScCFl9I8iUfPXkglvk62R7uBUyCd-_o9rqmINGO1eVIm5gGyfC2_25bhigHQ==@protonmail.internalid>
- <CANiq72kNG7jZf+hZARjyAp-uG=x99CrUKZvJYT_icaF0x0G6iw@mail.gmail.com> <87v7sngbgx.fsf@kernel.org>
-In-Reply-To: <87v7sngbgx.fsf@kernel.org>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Wed, 5 Mar 2025 12:04:54 +0100
-X-Gm-Features: AQ5f1JqZf0nDTmEUcfyYnOline9I6JcDBwaHjIR1efP4SRernMDboH64pAgQynE
-Message-ID: <CANiq72md_orajH_TREr=ng8Y=o3Xkgw-V5oxbX8vYXOE2UDNaQ@mail.gmail.com>
-Subject: Re: [PATCH V6 2/2] checkpatch: check format of Vec<String> in modules
-To: Andreas Hindborg <a.hindborg@kernel.org>
-Cc: Guilherme Giacomo Simoes <trintaeoitogc@gmail.com>, alex.gaynor@gmail.com, aliceryhl@google.com, 
-	apw@canonical.com, arnd@arndb.de, aswinunni01@gmail.com, axboe@kernel.dk, 
-	benno.lossin@proton.me, bhelgaas@google.com, bjorn3_gh@protonmail.com, 
-	boqun.feng@gmail.com, dakr@kernel.org, dwaipayanray1@gmail.com, 
-	ethan.twardy@gmail.com, fujita.tomonori@gmail.com, gary@garyguo.net, 
-	gregkh@linuxfoundation.org, joe@perches.com, linux-kernel@vger.kernel.org, 
-	lukas.bulwahn@gmail.com, ojeda@kernel.org, pbonzini@redhat.com, 
-	rust-for-linux@vger.kernel.org, tmgross@umich.edu, walmeida@microsoft.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250305-loongson1-nand-v13-1-a5bac21631cd@gmail.com>
+References: <20250305-loongson1-nand-v13-0-a5bac21631cd@gmail.com>
+In-Reply-To: <20250305-loongson1-nand-v13-0-a5bac21631cd@gmail.com>
+To: Miquel Raynal <miquel.raynal@bootlin.com>, 
+ Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-mips@vger.kernel.org, 
+ Keguang Zhang <keguang.zhang@gmail.com>, 
+ Krzysztof Kozlowski <krzk@kernel.org>
+X-Mailer: b4 0.14.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1741172709; l=3113;
+ i=keguang.zhang@gmail.com; s=20231129; h=from:subject:message-id;
+ bh=EoSyInd/tPhcSSV/G9oyENpJ97B1jinURWqxESSsYu4=;
+ b=nlQ8VE3UGDfj1uy6AWCHyUafsaGiIs4oXzhdyhTBrg+wQYX2jV1K0eIlDZPkAWQkMLHQxDUHk
+ W+LvJ9mUJBCDEXmySc3RVeyMrLqbFeE2DkCNJ0D++RyyXAFYMPBjTAp
+X-Developer-Key: i=keguang.zhang@gmail.com; a=ed25519;
+ pk=FMKGj/JgKll/MgClpNZ3frIIogsh5e5r8CeW2mr+WLs=
+X-Endpoint-Received: by B4 Relay for keguang.zhang@gmail.com/20231129 with
+ auth_id=102
+X-Original-From: Keguang Zhang <keguang.zhang@gmail.com>
+Reply-To: keguang.zhang@gmail.com
 
-On Wed, Mar 5, 2025 at 8:53=E2=80=AFAM Andreas Hindborg <a.hindborg@kernel.=
-org> wrote:
->
-> Right, it needs a bit more tool support than running checkpatch.pl
-> needs. Perhaps we could move it from checkpatch.pl to the rustfmt make
-> target?
+From: Keguang Zhang <keguang.zhang@gmail.com>
 
-That could perhaps be an option for this case, though not sure if it
-applies to all cases, i.e. `checkpatch.pl` also checks things that
-only make sense to check in a patch and also things that are not
-related to formatting.
+Add devicetree binding document for Loongson-1 NAND controller.
 
-Perhaps we want an entirely separate thing in `tools/` eventually, or
-even out of the kernel tree, so that it can be easily run as a bot
-etc. like in the past.
+Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
+Signed-off-by: Keguang Zhang <keguang.zhang@gmail.com>
+---
+Changes in v13:
+- None
 
-In any case, landing checks here is fine (as long as Joe et al.
-agree), they can be moved or removed later if needed.
+Changes in v12:
+- Add MTD label in the example.
 
-Cheers,
-Miguel
+Changes in v11:
+- Remove the requirement for 'nand-use-soft-ecc-engine' and 'nand-ecc-algo'.
+- Add 'reg-names' to support DMA address.
+
+Changes in v10:
+- None
+
+Changes in v9:
+- Change the compatible to 'loongson,ls1*-nand-controller'.
+- Rename the file to loongson,ls1b-nand-controller.yaml
+- Some minor adjustments.
+
+Changes in v8:
+- Add a description part.
+- Adjust the compatible because the match data for ls1c-nfc differs from ls1b-nfc.
+- Mark 'nand-use-soft-ecc-engine' and 'nand-ecc-algo' as mandatory.
+- Delete the superfluous blank lines.
+
+Changes in v7:
+- rename the file to loongson,ls1b-nfc.yaml
+
+Changes in v6:
+- A newly added patch
+---
+ .../mtd/loongson,ls1b-nand-controller.yaml         | 72 ++++++++++++++++++++++
+ 1 file changed, 72 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/mtd/loongson,ls1b-nand-controller.yaml b/Documentation/devicetree/bindings/mtd/loongson,ls1b-nand-controller.yaml
+new file mode 100644
+index 000000000000..a09e92e416c4
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mtd/loongson,ls1b-nand-controller.yaml
+@@ -0,0 +1,72 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/mtd/loongson,ls1b-nand-controller.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Loongson-1 NAND Controller
++
++maintainers:
++  - Keguang Zhang <keguang.zhang@gmail.com>
++
++description:
++  The Loongson-1 NAND controller abstracts all supported operations,
++  meaning it does not support low-level access to raw NAND flash chips.
++  Moreover, the controller is paired with the DMA engine to perform
++  READ and PROGRAM functions.
++
++allOf:
++  - $ref: nand-controller.yaml
++
++properties:
++  compatible:
++    oneOf:
++      - enum:
++          - loongson,ls1b-nand-controller
++          - loongson,ls1c-nand-controller
++      - items:
++          - enum:
++              - loongson,ls1a-nand-controller
++          - const: loongson,ls1b-nand-controller
++
++  reg:
++    maxItems: 2
++
++  reg-names:
++    items:
++      - const: nand
++      - const: nand-dma
++
++  dmas:
++    maxItems: 1
++
++  dma-names:
++    const: rxtx
++
++required:
++  - compatible
++  - reg
++  - reg-names
++  - dmas
++  - dma-names
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    nand-controller@1fe78000 {
++        compatible = "loongson,ls1b-nand-controller";
++        reg = <0x1fe78000 0x24>, <0x1fe78040 0x4>;
++        reg-names = "nand", "nand-dma";
++        dmas = <&dma 0>;
++        dma-names = "rxtx";
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        nand@0 {
++            reg = <0>;
++            label = "ls1x-nand";
++            nand-use-soft-ecc-engine;
++            nand-ecc-algo = "hamming";
++        };
++    };
+
+-- 
+2.43.0
+
+
