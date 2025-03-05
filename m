@@ -1,92 +1,102 @@
-Received: from cstnet.cn (smtp81.cstnet.cn [159.226.251.81])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EC5C24EA94;
-	Wed,  5 Mar 2025 15:51:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8FAB18FC90
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 15:51:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741189873; cv=none; b=eL0TFLYJgQxMLX9QchE92G5ZbbAwpF/gzxOpItdS1kVlUcB+rgm5v6HhUCrWOoFpDzFpA4WYrLdnH19kzxxMquJyI0S5j4qC9TEC8lxzg3JaoCDwVhdCd4WqVdBNyN7xmuMbDZn1y1CPqsnh49DQijtGbgeG8W4YfkxzsmIzbdQ=
+	t=1741189911; cv=none; b=sM3m+UsBmbpP/T0RXBwQmH0vusznGW4SGaSQxjENGlSOeme7EBgmIfQba52pmYWZ8iBwniQkzcJWmF2Rq9D9BRMHUxN8cXE9LOdd4vo3cMWE5jmoFO2U28MZg0900rLC+fqP3+bM5Dbh9ofGG66L9z1FN4mGbi9MLeXr/e+yaV8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741189873; c=relaxed/simple;
-	bh=bcZ3Y1maZR/FkCTZAmhpnI9rOg3F5c8NqHwJtJ8fpwg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=R1HUgGwIWFzvUouB3DiuOjXqQR9/PB+JwzgPIASYmAqP5QIIaeoB9AgZKoKRenGRpkLRE7w+xCLlvX+4sLV86krp2VjiJQDuojgURqhFNelQQj+cuNdc2ZHHTZW38yANH8DbN1FwOaw1igmaiyvjCl0vIOW73bpcrUEezulvnhw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost.localdomain (unknown [124.16.141.245])
-	by APP-03 (Coremail) with SMTP id rQCowACXfTAAcchnVHqTEg--.44952S2;
-	Wed, 05 Mar 2025 23:43:02 +0800 (CST)
-From: Wentao Liang <vulab@iscas.ac.cn>
-To: thierry.reding@gmail.com,
-	mperttunen@nvidia.com,
-	airlied@gmail.com,
-	simona@ffwll.ch,
-	jonathanh@nvidia.com
-Cc: dri-devel@lists.freedesktop.org,
-	linux-tegra@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Wentao Liang <vulab@iscas.ac.cn>,
-	stable@vger.kernel.org
-Subject: [PATCH] drm/tegra: Handle EDID allocation failures in tegra_output_connector_get_modes()
-Date: Wed,  5 Mar 2025 23:40:38 +0800
-Message-ID: <20250305154038.2062-1-vulab@iscas.ac.cn>
-X-Mailer: git-send-email 2.42.0.windows.2
+	s=arc-20240116; t=1741189911; c=relaxed/simple;
+	bh=O/cTFmq280CPrxPXEkld2Dj3tT2/ZM0b/LQwLiDBrBo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=D/064pYWQw68k9PzZXSMMsg6IM48xL03iW26lOhrsS8N5auU/bsKpbW1jF4ePgoS1qCJ1j+5O24Gc0HAekKhye3VLAtJf6WHrV4jEUWhTvND2xrptO3SFyX7ID/RnvtW/wFORto2V7q/Abx1DbNB7Bd2GsS/ur0ArlO2jsOz5L8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=itUGPaAO; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="itUGPaAO"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-43bc38bb6baso22254575e9.3
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Mar 2025 07:51:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1741189908; x=1741794708; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=DZ2S+gHwbsXckxzFFhUyQLhk9IBYR1YjauglVfzrk5M=;
+        b=itUGPaAO7cVl+fwidqUHgI3zpFFfdrhDDvpGOggCgETt1tL1ZgiyvFMLH/rA6y5mar
+         XKFzfX2Qnrc4YOFCjloT9rwowl41vdaSgZD1lk4q0f/OEc5AeuNVl594wEsQAmVQL1tb
+         cwaFVcYoyAjIBSK/gpYLAIYmOlFPMm+cqEoDPxAaD1Gpdw2KWa59tgno2jDVsPVyoEzF
+         yRsa6D/50rDuOO/MLee+WM/T6F2axlhqHBDBmImJGxG9lDa597abpMKTkeo/kpov2f5g
+         R46leZPju2hDVOz976uSq0Z/JS4JlWQgm8Zgg9OV1eKGBjsasiA27C+Udf7UXz8QcaK0
+         VHpA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741189908; x=1741794708;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=DZ2S+gHwbsXckxzFFhUyQLhk9IBYR1YjauglVfzrk5M=;
+        b=UcukYYAcPmkrtXdrtjRlIV3vGh4z1Ls6deBPi2VvPxxUfAZBhu7V/tVnCR5etHL47G
+         rFMHDpEJPntb8vwKarEribuVUy1PADTNGnXYtclLLDokcXW4SEgq6NZOG2jxAAdrnkYi
+         ytmQPhswiaERqfOCHvTROXTIHD6A5a8kwoP660rFOsho6VBTZ8MtcY1s4bdJ7lVWmVL7
+         n7gttMHMS8X+kOfldAs6QG9/ftBGlJwjxgkSWP3YZaF4FZu4KF3QYc9y64gGoeFWS26J
+         yd5lxZuuPi6hf7l3gkJIIMxLkujy6mygZPuZcb6XzquNwgFsl+i135t8D0kvVF/qdqxZ
+         mEnw==
+X-Forwarded-Encrypted: i=1; AJvYcCVqqcrwo3X0ZGks67HKnIBa5cly3hEA1gWL+/5igURXvnnh99LmzpmUX5xpZe1+ZEm/IxZLt3jM0YZp384=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyzyiu1ffFSLkmv2brRZ11CYBJNA7DxJb8hrqEJeB3DgDXUahOv
+	jUqlBLG15fHNtLshq7B/jWHqU1xSqsX/305B7hr6dIkDytbjqd3MPShW4r7pPxk=
+X-Gm-Gg: ASbGnct9sbUAkgvw6TKCQbMc+kKNn3cgChihsCEDs+yxZsqf42TxtpCdktgbZn0+oiR
+	L4ljgleoAjH8by2xP8RZcpz+b4nZheN6FITcjz5xUn2oy6o8SsHfVi7gudDVLV/HjegiNX9eO5A
+	SLUUHehL8J92BKkwrQuWEjMhmRy4uHPL0Vb1JsKg0tay+Tptl1toTX5cYnt0Me5rN8NYlzg8XDf
+	SF+ct+W06sMOP0YB0Vxt6wQhaRYXNh2FkxANbYAqZXXiJx0dacfMIzXD4vZ0xo5F8rXMgLTKpnT
+	xdyHWyeYolOdKdbr4PJwIceH3H8y2JbJTn14zk/N59Wvi893Fc/EyQI=
+X-Google-Smtp-Source: AGHT+IG7qv+nb9cXjGGw9HHaPPCvBWbDrCLu9uLjG/6FTP2fC03dynof25NfR+yCRjeYdVlhkyXSaw==
+X-Received: by 2002:a05:600c:3b95:b0:43b:cfbb:3806 with SMTP id 5b1f17b1804b1-43bd29d2d84mr29598645e9.14.1741189907949;
+        Wed, 05 Mar 2025 07:51:47 -0800 (PST)
+Received: from [192.168.1.247] ([209.198.129.225])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43bd4352eb1sm20794925e9.31.2025.03.05.07.51.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 05 Mar 2025 07:51:47 -0800 (PST)
+Message-ID: <7ac4947b-76b1-4748-8ea0-a949613a3cfc@linaro.org>
+Date: Wed, 5 Mar 2025 15:51:46 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:rQCowACXfTAAcchnVHqTEg--.44952S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7Ww1UWryxArWrXFyxuF1Utrb_yoW8JFWUpF
-	srtFyY9ryktrWFkF1jyF18uFy3uas2kFWUK3s5Ca1q9rs0yr9Fqr45tw1UWFWUGr98JF13
-	tanFqrW7JFyxCF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9j14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r1j
-	6r4UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r
-	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628v
-	n2kIc2xKxwCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7x
-	kEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E
-	67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCw
-	CI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1x
-	MIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvf
-	C2KfnxnUUI43ZEXa7VUb8hL5UUUUU==
-X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiCQ4MA2fILwlxYQABsQ
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] coresight: docs: Remove target sink from examples
+To: coresight@lists.linaro.org
+Cc: yeoreum.yun@arm.com, Suzuki K Poulose <suzuki.poulose@arm.com>,
+ Mike Leach <mike.leach@linaro.org>, Jonathan Corbet <corbet@lwn.net>,
+ Leo Yan <leo.yan@linux.dev>, Namhyung Kim <namhyung@kernel.org>,
+ linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20241210144933.295798-1-james.clark@linaro.org>
+Content-Language: en-US
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <20241210144933.295798-1-james.clark@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-The return values of `drm_edid_dup()` and `drm_edid_read_ddc()` must
-be checked in `tegra_output_connector_get_modes()` to prevent NULL
-pointer dereferences. If either function fails, the function should
-immediately return 0, indicating that no display modes can be retrieved.
 
-A proper implementation can be found in `vidi_get_modes()`, where the
-return values are carefully validated, and the function returns 0 upon
-failure.
 
-Fixes: 98365ca74cbf ("drm/tegra: convert to struct drm_edid")
-Cc: stable@vger.kernel.org # 6.12+
-Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
----
- drivers/gpu/drm/tegra/output.c | 3 +++
- 1 file changed, 3 insertions(+)
+On 10/12/2024 2:49 pm, James Clark wrote:
+> Previously the sink had to be specified, but now it auto selects one by
+> default. Including a sink in the examples causes issues when copy
+> pasting the command because it might not work if that sink isn't
+> present. Remove the sink from all the basic examples and create a new
+> section specifically about overriding the default one.
+> 
+> Make the text a but more concise now that it's in the advanced section,
+> and similarly for removing the old kernel advice.
+> 
+> Signed-off-by: James Clark <james.clark@linaro.org>
+> ---
 
-diff --git a/drivers/gpu/drm/tegra/output.c b/drivers/gpu/drm/tegra/output.c
-index 49e4f63a5550..360c4f83a4f8 100644
---- a/drivers/gpu/drm/tegra/output.c
-+++ b/drivers/gpu/drm/tegra/output.c
-@@ -39,6 +39,9 @@ int tegra_output_connector_get_modes(struct drm_connector *connector)
- 	else if (output->ddc)
- 		drm_edid = drm_edid_read_ddc(connector, output->ddc);
- 
-+	if (!drm_edid)
-+		return 0;
-+
- 	drm_edid_connector_update(connector, drm_edid);
- 	cec_notifier_set_phys_addr(output->cec,
- 				   connector->display_info.source_physical_address);
--- 
-2.42.0.windows.2
+Ping, thanks.
+
+I think Steve's comments are somewhat related, but shouldn't block this 
+change going in.
 
