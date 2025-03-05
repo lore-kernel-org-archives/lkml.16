@@ -1,53 +1,109 @@
-Received: from out-189.mta1.migadu.com (out-189.mta1.migadu.com [95.215.58.189])
+Received: from mx0b-000eb902.pphosted.com (mx0b-000eb902.pphosted.com [205.220.177.212])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3D6925CC68
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 20:27:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.189
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741206454; cv=none; b=PrcUx5/4H/nkt6NcONrpoLgAbJxMzZGkYXU++fnNXPQn7zZ2xnrwBogh0nSIjvQI43tend3UNIWulW28zsPhoBCJb09jnQfFYG2r2ivDtFrpLFd1sJM3tETfKb/JMaAldhbA6BUIGtwB8qJfJpvtDJuQCU965+gnGajukW8di1A=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741206454; c=relaxed/simple;
-	bh=OWgwLOrMv67MfxJKRE8m5Kf8eyoz3earbUPxJfEF97k=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=hyFa8LboiLJ2VJ0+VZlfdW6V2xdYTmb6TPjiprvNjDNc/IE/J/NY9ALUkixo4+k0mlGiHEnHy/2ZOux8ynVuG1hVLtA69RxoWZaRmOERQaaZPYU+m9UQ6Xn11rv1vZQETfZQCQ/9xmOuqZA0E9dKRV8Sv0fNdPsyQuJJd2b2Is0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=qHLt63Lw; arc=none smtp.client-ip=95.215.58.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 642FD255E20;
+	Wed,  5 Mar 2025 20:29:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.212
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741206551; cv=fail; b=ToxYS2pRN1F0/z3jPGs/Oi3t7MBGjQ7CBYWssNwQ/qlLzT4lFfzKhrZOcqFeKn+0ozkQqYjpByfNj1rjtjt16T51M3pYhiphYqLTm7+Pfr/rGB6p9+B4KguY0D0TLdaqqfVRfe2iF4MczaNnRvH0CZ0d97SMJ4T9eqCmIKcKUcQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741206551; c=relaxed/simple;
+	bh=3FJoO7RwPY8zzem/9amIPLmCwFz2ki9kv8SPXphSFXo=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=BQeoHjq7VkKtSEr47qJENYZz2jaQx89wtkEXJn6waYee181jHza+RmqU13R/kwmLHHzgNUbRgwfY7YzTIZ+tNG84+bO9lgA6I8C8FGC7mQNNp+NpWBtuj3WPpbfqVV9mDrk4oxkzUcplB1VaLYTtb/vkQbbp7Ul43uCAoCb0grg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=garmin.com; spf=pass smtp.mailfrom=garmin.com; dkim=pass (2048-bit key) header.d=garmin.com header.i=@garmin.com header.b=KwXmiWuE; dkim=pass (2048-bit key) header.d=garmin.com header.i=@garmin.com header.b=Apa034+w; arc=fail smtp.client-ip=205.220.177.212
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=garmin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=garmin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="qHLt63Lw"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1741206450;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=eVgORfieP46l47Y1ih2whfkZuPDhyjhKZ7HsIZ/P4wo=;
-	b=qHLt63LwDOhaaKkpSvpjMTafkL8FU+ocgC4c55iKIgyMeGtObQlJP9epa1dm8OCP8d8gOY
-	whBbL0oLMGC55muBrjOTs838M030O5QGwKLmMdrA109Lv7YNDMtUmTsapkEX+evQbRy51K
-	Ee7G8j7EWbhVgIwo7e0hMUdLaqeb9cg=
-From: Oliver Upton <oliver.upton@linux.dev>
-To: kvmarm@lists.linux.dev
-Cc: Marc Zyngier <maz@kernel.org>,
-	Joey Gouly <joey.gouly@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	Mingwei Zhang <mizhang@google.com>,
-	Colton Lewis <coltonlewis@google.com>,
-	Raghavendra Rao Ananta <rananta@google.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Janne Grunau <j@jannau.net>,
-	Oliver Upton <oliver.upton@linux.dev>
-Subject: [PATCH v3 12/14] drivers/perf: apple_m1: Provide helper for mapping PMUv3 events
-Date: Wed,  5 Mar 2025 12:26:39 -0800
-Message-Id: <20250305202641.428114-13-oliver.upton@linux.dev>
-In-Reply-To: <20250305202641.428114-1-oliver.upton@linux.dev>
-References: <20250305202641.428114-1-oliver.upton@linux.dev>
+	dkim=pass (2048-bit key) header.d=garmin.com header.i=@garmin.com header.b="KwXmiWuE";
+	dkim=pass (2048-bit key) header.d=garmin.com header.i=@garmin.com header.b="Apa034+w"
+Received: from pps.filterd (m0220298.ppops.net [127.0.0.1])
+	by mx0a-000eb902.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 525IHEpv021287;
+	Wed, 5 Mar 2025 14:28:44 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=garmin.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pps1; bh=n55kS
+	dJl4CzuIEZx96lk6jVMa2PXPjDYqTCmJjyBw4U=; b=KwXmiWuEQ1WLQ7gWoFMao
+	k1swErVLCPdL8ocHSe8zd+LtCdRQLU3ECA7btkhZ5j1FMNRWvuf3qiJWOCzlMF3s
+	yQoLupXkFfSjoz6OVF5gOApV5lQIT2wULHLFJOQ9iHM0vozi9shyIEohR1VmhS1n
+	8aMj6elnwxsCTiF1YHIOnZjyGKX6YpMYvZx6DBzmsgEW0awPj4E5gUscPypl5yRM
+	Lgd52qHGZ+aMYa7pITeOtOOaHWWjPpgd1iecXFtuP98tBFMKcB9XaHkJy8z6HU+8
+	PFF0A77fRjR84dSY6ezgYiN+lMMXMbn1sEEqqtOTzwkLroXKUFRLFkARK4TOZtuY
+	g==
+Received: from bl0pr05cu006.outbound.protection.outlook.com (mail-BL0PR05CU006.outbound1701.protection.outlook.com [40.93.2.11])
+	by mx0a-000eb902.pphosted.com (PPS) with ESMTPS id 456nes95um-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 05 Mar 2025 14:28:44 -0600 (CST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=rjK03FnqPaQMyJLyBmpGurcwPFS6Xbe+wwOfRTq92wab+MJ+YgKqFMqRzJm5nG3xdjqUiFp5gzVkTM/7QN/E9c4IN+jMatzNC3Kosa48LICOKeDpEuctqUkOw1T1vmJ/OQ7au4QsA29M0xhns2JsLRvVacXvJzfMis+diF9AFCJOS0YFICjMN52L1IZMvAKChXS2IfDjur4UPKqROY8ZeqzXMXGgFX52mBm83rhzmdXwQHAN/fuAvGhynBtIPDL/K6kP2nmu8LikmBDFwCEgB1TevfRtkuR6SXnK3dKLdsNl4tGHNPX6K7EzX0CP1HgH5OVJMJBWu3C7C8DooMToiA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=n55kSdJl4CzuIEZx96lk6jVMa2PXPjDYqTCmJjyBw4U=;
+ b=H4NGZtH/h+Fe1oyfNGhhCyPMycW2uWj+exZ/REHjO7jd4wSLcclsvvK+m07Vwi7vko948HauQ3PmRPAXe39V22P2n7JIjuDTKRDVVdJom/qipNgfycP9syTlV9BNnHXrJJEV8MTPr9B8RDsx+/AmoO93o79/sUNHsuyrO0Cs0xqv+Q7IE/GDrrOXYrh/8Ecfr98U8i9/bT6c/sJ6VYm2QVijSY8oS1GAv13IxlKi86a05qz2MMrG5UbrjWggbsB1HYQb0QEs2Rbb2+yFND1Cn8UZNKSJHwG7obNTCwuKb3OExEzFotSRG6qTwmfwIlXazTv5mSOA1fn43Wlc3KWsMg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 204.77.163.244) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=garmin.com;
+ dmarc=pass (p=reject sp=quarantine pct=100) action=none
+ header.from=garmin.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=garmin.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=n55kSdJl4CzuIEZx96lk6jVMa2PXPjDYqTCmJjyBw4U=;
+ b=Apa034+wp5o0gjpD1I/YZKe4I2ZDvHIPG5l3i4++bm8Z9qU4jVuoaMTPDjc3yrThfI/vMAz02nzPgXF3krHo7CSgWbzRVGBuUN53sW4W6slzYd/aykH9BKsYpmb2JucQ9SGWowp3oE/+7muy6ulJBjLRnMc29U8jedqjmCguTUqNFrXxes2HGwjSmErUE7yfHnIwzadE/f6FlRcuGA+YMUR+2h91Hvi8r9HtlFqLMZLKOv8xdg4moo/kB4G/Q0SvSUcbe3sKOf5FVKeQYoaeR66FfbEjY++AObzPEiqmypTMP/XKhsu2T+ZaO6WVbSZsXifunxZB3fw05P5qnRtIJA==
+Received: from CH5P220CA0018.NAMP220.PROD.OUTLOOK.COM (2603:10b6:610:1ef::25)
+ by BY1PR04MB9563.namprd04.prod.outlook.com (2603:10b6:a03:5af::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.17; Wed, 5 Mar
+ 2025 20:28:36 +0000
+Received: from CH3PEPF00000009.namprd04.prod.outlook.com
+ (2603:10b6:610:1ef:cafe::d5) by CH5P220CA0018.outlook.office365.com
+ (2603:10b6:610:1ef::25) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8489.29 via Frontend Transport; Wed,
+ 5 Mar 2025 20:28:35 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 204.77.163.244)
+ smtp.mailfrom=garmin.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=garmin.com;
+Received-SPF: Pass (protection.outlook.com: domain of garmin.com designates
+ 204.77.163.244 as permitted sender) receiver=protection.outlook.com;
+ client-ip=204.77.163.244; helo=edgetransport.garmin.com; pr=C
+Received: from edgetransport.garmin.com (204.77.163.244) by
+ CH3PEPF00000009.mail.protection.outlook.com (10.167.244.36) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8511.15 via Frontend Transport; Wed, 5 Mar 2025 20:28:35 +0000
+Received: from kc3wpa-exmb4.ad.garmin.com (10.65.32.84) by cv1wpa-edge1
+ (10.60.4.255) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Wed, 5 Mar 2025
+ 14:28:33 -0600
+Received: from cv1wpa-exmb4.ad.garmin.com (10.5.144.74) by
+ kc3wpa-exmb4.ad.garmin.com (10.65.32.84) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.2.1258.34; Wed, 5 Mar 2025 14:28:35 -0600
+Received: from cv1wpa-exmb2.ad.garmin.com (10.5.144.72) by
+ CV1WPA-EXMB4.ad.garmin.com (10.5.144.74) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Wed, 5 Mar 2025 14:28:34 -0600
+Received: from CAR-4RCMR33.ad.garmin.com (10.5.209.17) by smtp.garmin.com
+ (10.5.144.72) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
+ Transport; Wed, 5 Mar 2025 14:28:33 -0600
+From: Joseph Huang <Joseph.Huang@garmin.com>
+To: <netdev@vger.kernel.org>
+CC: Joseph Huang <Joseph.Huang@garmin.com>,
+        Joseph Huang
+	<joseph.huang.2024@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>, Vladimir Oltean
+	<olteanv@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet
+	<edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni
+	<pabeni@redhat.com>, Guenter Roeck <linux@roeck-us.net>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2 net 1/1] net: dsa: mv88e6xxx: Verify after ATU Load ops
+Date: Wed, 5 Mar 2025 15:28:27 -0500
+Message-ID: <20250305202828.3545731-1-Joseph.Huang@garmin.com>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250304235352.3259613-1-Joseph.Huang@garmin.com>
+References: <20250304235352.3259613-1-Joseph.Huang@garmin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -55,90 +111,194 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH3PEPF00000009:EE_|BY1PR04MB9563:EE_
+X-MS-Office365-Filtering-Correlation-Id: d2d6e17e-479b-4b05-355f-08dd5c244e59
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|36860700013|82310400026|376014|7416014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?oZVdS9+Jqhr8wlONrNRauNLuBbGLYKB66/9yUh1cbo3/xxqoNdTMRY3Q8Hn3?=
+ =?us-ascii?Q?y6w2grXlSc8/WrBGc46OcJYySZb6iIgCNglV2wXodagbqoVKUPz/Gb9OsePP?=
+ =?us-ascii?Q?ewKfzjb98wYp3I4jyNq4XDGGXhSWu1xhIjaZNM+6zySjTA77eAc+cTBD7cJx?=
+ =?us-ascii?Q?pfMk5yh74dbzX+LK1U+vbljrcLKbbF32MGosCI0ZeOLSumOaGZcyl9I/VaNC?=
+ =?us-ascii?Q?DYW8a+7XAG8bRc/ILtPa78rVOBLIArSHvPCttLJ6jim11yAgf3iL6bXEPPpe?=
+ =?us-ascii?Q?D2YttnC5ClL57sQ8Xy5QCGg6pjEtv8Q+/1U1KkeZTau0Do3zKUvoP6JHA9Lw?=
+ =?us-ascii?Q?DvzBwrlpMSgbqLb+uBugagvZIOCatS8U/TtOm2A6/RTQU6eIBqjKnzsYhU3j?=
+ =?us-ascii?Q?4piZSK4iIeOJjQnOT2cocwEkagvteW2QHnE+0uoiznzDOEBbbJG+Loi/+URV?=
+ =?us-ascii?Q?ns9zW+42oJx8xhffqLgT7fHIAp0MaT6dC/Ed+uEEuD0XGdrskVXAeldMNuXB?=
+ =?us-ascii?Q?iM9gOfdbBmUfQolnW9DAonqUF+m0fanjYf8jApWS3FJDI0qNfTWREh7ZwDqX?=
+ =?us-ascii?Q?q26KxjMW+x4Olmah0SBwOhX5SDKsp3t5MSm88Q4zRxuOf/FVUUQAL586J82b?=
+ =?us-ascii?Q?Q9HxmJ1iDy3WKFf6TBhWujNKJM8fPKwpYpGOnNPXpMNzil55lHCDDQv2HuDG?=
+ =?us-ascii?Q?/f6WY4eAZlyAuGG31i311Q8jy5iSzc922Xu4GVVZC0bKHIPMi7HF+h7sshJw?=
+ =?us-ascii?Q?Wyiwqf/bsQvcIySFrcXHAxuIAMY8O80hS+yptZLeNJSnwPP+U7SwfniOiPyN?=
+ =?us-ascii?Q?j7wmBhLNfY441jJkrfDxXCmTh7nnuMfFMCBscFqC2Jd3+zlj2PHyLFEL8YLb?=
+ =?us-ascii?Q?llMjjrIm9mztnOBXxWK7C4H7bLDPcrwq62qEAdCsH1uwHicYgcWGty+g14By?=
+ =?us-ascii?Q?zLjVMrQP6m/B5wOyOQ55Le+WWqqtw5ZG6lziSMgJaTwKoWVuoJZN1H/Ab/aU?=
+ =?us-ascii?Q?zxtU2WPk2CIS4SyfJ2V06gVCBK12NYAoGKAidrWAlyE31kgjT50CoLMvqXrh?=
+ =?us-ascii?Q?hcDDewLytoHduq3581Mn2V9YmSrE2SUt/D1EHsDOzds9jgvqP1PrDnyM6G0M?=
+ =?us-ascii?Q?E1gpnZwt9OTfiN6qKm9wSVBkHZlzF8IMzy84Bc2RfPEqnIOX/Sm3G2Szw/1h?=
+ =?us-ascii?Q?rLJ7le1XHDu1l4flmxZ/MlgzYHhyCK7V8o3PExoU+lK5G0Gw14hi9HQQAmib?=
+ =?us-ascii?Q?vlsB66j5z3L3wWI5bld0weYlmC6GOazySRPF/goPeAqqQglc14tcRP7TtkFc?=
+ =?us-ascii?Q?2WClVW1mSil3pM9zyBmZizfe1QxUUp7nqqKto32G10XVXOZo7+y2xt+yj9kG?=
+ =?us-ascii?Q?3IWKjdgUonnEDCZe2xbA5nYwBxGUYkiB5/EqH4UIBS3DJHg/3mOaNaw26rp8?=
+ =?us-ascii?Q?opuWUcnSOqIm5gINTjkbyQUfdi1xwXCN4rjjdb5E+eQ/o0hbIyloUU07HDUs?=
+ =?us-ascii?Q?N7a9oi31MEiH5z4=3D?=
+X-Forefront-Antispam-Report:
+	CIP:204.77.163.244;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:edgetransport.garmin.com;PTR:extedge.garmin.com;CAT:NONE;SFS:(13230040)(1800799024)(36860700013)(82310400026)(376014)(7416014);DIR:OUT;SFP:1102;
+X-OriginatorOrg: garmin.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Mar 2025 20:28:35.8431
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: d2d6e17e-479b-4b05-355f-08dd5c244e59
+X-MS-Exchange-CrossTenant-Id: 38d0d425-ba52-4c0a-a03e-2a65c8e82e2d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=38d0d425-ba52-4c0a-a03e-2a65c8e82e2d;Ip=[204.77.163.244];Helo=[edgetransport.garmin.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CH3PEPF00000009.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY1PR04MB9563
+X-Authority-Analysis: v=2.4 cv=XZdzzJ55 c=1 sm=1 tr=0 ts=67c8b3fc cx=c_pps a=XJbScVYJ+YTk0JuXi+vtpg==:117 a=YA0UzX50FYCGjWi3QxTvkg==:17 a=h8e1o3o8w34MuCiiGQrqVE4VwXA=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=Vs1iUdzkB0EA:10
+ a=qm69fr9Wx_0A:10 a=VwQbUJbxAAAA:8 a=NbHB2C0EAAAA:8 a=mfjfP0T1MaGNimHTBpYA:9 a=VYcpXjmDHnEIALPoEwzu:22 cc=ntf
+X-Proofpoint-ORIG-GUID: yrQorQMOdrJZzFURgcu8CO_0gR9kR1Hq
+X-Proofpoint-GUID: yrQorQMOdrJZzFURgcu8CO_0gR9kR1Hq
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-05_08,2025-03-05_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 malwarescore=0
+ lowpriorityscore=0 phishscore=0 impostorscore=0 mlxscore=0
+ priorityscore=1501 adultscore=0 spamscore=0 suspectscore=0 clxscore=1015
+ mlxlogscore=752 classifier=spam authscore=0 authtc=n/a authcc=notification
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.21.0-2502100000
+ definitions=main-2503050156
 
-Apple M* parts carry some IMP DEF traps for guest accesses to PMUv3
-registers, even though the underlying hardware doesn't implement PMUv3.
-This means it is possible to virtualize PMUv3 for KVM guests.
+ATU Load operations could fail silently if there's not enough space
+on the device to hold the new entry. When this happens, the symptom
+depends on the unknown flood settings. If unknown multicast flood is
+disabled, the multicast packets are dropped when the ATU table is
+full. If unknown multicast flood is enabled, the multicast packets
+will be flooded to all ports. Either way, IGMP snooping is broken
+when the ATU Load operation fails silently.
 
-Add a helper for mapping common PMUv3 event IDs onto hardware event IDs,
-keeping the implementation-specific crud in the PMU driver rather than
-KVM proper. Populate the pmceid_bitmap based on the supported events so
-KVM can provide synthetic PMCEID* values to the guest.
+Do a Read-After-Write verification after each fdb/mdb add operation
+to make sure that the operation was really successful, and return
+-ENOSPC otherwise.
 
-Tested-by: Janne Grunau <j@jannau.net>
-Signed-off-by: Oliver Upton <oliver.upton@linux.dev>
+Fixes: defb05b9b9b4 ("net: dsa: mv88e6xxx: Add support for fdb_add, fdb_del, and fdb_getnext")
+Signed-off-by: Joseph Huang <Joseph.Huang@garmin.com>
 ---
- drivers/perf/apple_m1_cpu_pmu.c | 35 +++++++++++++++++++++++++++++++++
- 1 file changed, 35 insertions(+)
+V1: https://lore.kernel.org/lkml/20250304235352.3259613-1-Joseph.Huang@garmin.com/
+V2: Add helper function to check the existence of an entry and only
+    call it in mv88e6xxx_port_fdb/mdb_add().
+---
+ drivers/net/dsa/mv88e6xxx/chip.c | 59 ++++++++++++++++++++++++++------
+ 1 file changed, 48 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/perf/apple_m1_cpu_pmu.c b/drivers/perf/apple_m1_cpu_pmu.c
-index d6d4ff6da862..6be703619a97 100644
---- a/drivers/perf/apple_m1_cpu_pmu.c
-+++ b/drivers/perf/apple_m1_cpu_pmu.c
-@@ -12,6 +12,7 @@
- 
- #include <linux/of.h>
- #include <linux/perf/arm_pmu.h>
-+#include <linux/perf/arm_pmuv3.h>
- #include <linux/platform_device.h>
- 
- #include <asm/apple_m1_pmu.h>
-@@ -174,6 +175,17 @@ static const unsigned m1_pmu_perf_map[PERF_COUNT_HW_MAX] = {
- 	[PERF_COUNT_HW_BRANCH_MISSES]		= M1_PMU_PERFCTR_BRANCH_MISPRED_NONSPEC,
- };
- 
-+#define M1_PMUV3_EVENT_MAP(pmuv3_event, m1_event)				\
-+	[ARMV8_PMUV3_PERFCTR_##pmuv3_event]	= M1_PMU_PERFCTR_##m1_event
-+
-+static const u16 m1_pmu_pmceid_map[ARMV8_PMUV3_MAX_COMMON_EVENTS] = {
-+	[0 ... ARMV8_PMUV3_MAX_COMMON_EVENTS - 1]	= HW_OP_UNSUPPORTED,
-+	M1_PMUV3_EVENT_MAP(INST_RETIRED,	INST_ALL),
-+	M1_PMUV3_EVENT_MAP(CPU_CYCLES,		CORE_ACTIVE_CYCLE),
-+	M1_PMUV3_EVENT_MAP(BR_RETIRED,		INST_BRANCH),
-+	M1_PMUV3_EVENT_MAP(BR_MIS_PRED_RETIRED,	BRANCH_MISPRED_NONSPEC),
-+};
-+
- /* sysfs definitions */
- static ssize_t m1_pmu_events_sysfs_show(struct device *dev,
- 					struct device_attribute *attr,
-@@ -558,6 +570,26 @@ static int m2_pmu_map_event(struct perf_event *event)
- 	return armpmu_map_event(event, &m1_pmu_perf_map, NULL, M1_PMU_CFG_EVENT);
+diff --git a/drivers/net/dsa/mv88e6xxx/chip.c b/drivers/net/dsa/mv88e6xxx/chip.c
+index 68d1e891752b..1a2b51598275 100644
+--- a/drivers/net/dsa/mv88e6xxx/chip.c
++++ b/drivers/net/dsa/mv88e6xxx/chip.c
+@@ -2208,13 +2208,11 @@ mv88e6xxx_port_vlan_prepare(struct dsa_switch *ds, int port,
+ 	return err;
  }
  
-+static int m1_pmu_map_pmuv3_event(unsigned int eventsel)
-+{
-+	u16 m1_event = HW_OP_UNSUPPORTED;
-+
-+	if (eventsel < ARMV8_PMUV3_MAX_COMMON_EVENTS)
-+		m1_event = m1_pmu_pmceid_map[eventsel];
-+
-+	return m1_event == HW_OP_UNSUPPORTED ? -EOPNOTSUPP : m1_event;
-+}
-+
-+static void m1_pmu_init_pmceid(struct arm_pmu *pmu)
-+{
-+	unsigned int event;
-+
-+	for (event = 0; event < ARMV8_PMUV3_MAX_COMMON_EVENTS; event++) {
-+		if (m1_pmu_map_pmuv3_event(event) >= 0)
-+			set_bit(event, pmu->pmceid_bitmap);
-+	}
-+}
-+
- static void m1_pmu_reset(void *info)
+-static int mv88e6xxx_port_db_load_purge(struct mv88e6xxx_chip *chip, int port,
+-					const unsigned char *addr, u16 vid,
+-					u8 state)
++static int mv88e6xxx_port_db_get(struct mv88e6xxx_chip *chip,
++				 const unsigned char *addr, u16 vid,
++				 u16 *fid, struct mv88e6xxx_atu_entry *entry)
  {
- 	int i;
-@@ -618,6 +650,9 @@ static int m1_pmu_init(struct arm_pmu *cpu_pmu, u32 flags)
- 	cpu_pmu->reset		  = m1_pmu_reset;
- 	cpu_pmu->set_event_filter = m1_pmu_set_event_filter;
+-	struct mv88e6xxx_atu_entry entry;
+ 	struct mv88e6xxx_vtu_entry vlan;
+-	u16 fid;
+ 	int err;
  
-+	cpu_pmu->map_pmuv3_event  = m1_pmu_map_pmuv3_event;
-+	m1_pmu_init_pmceid(cpu_pmu);
+ 	/* Ports have two private address databases: one for when the port is
+@@ -2225,7 +2223,7 @@ static int mv88e6xxx_port_db_load_purge(struct mv88e6xxx_chip *chip, int port,
+ 	 * VLAN ID into the port's database used for VLAN-unaware bridging.
+ 	 */
+ 	if (vid == 0) {
+-		fid = MV88E6XXX_FID_BRIDGED;
++		*fid = MV88E6XXX_FID_BRIDGED;
+ 	} else {
+ 		err = mv88e6xxx_vtu_get(chip, vid, &vlan);
+ 		if (err)
+@@ -2235,14 +2233,39 @@ static int mv88e6xxx_port_db_load_purge(struct mv88e6xxx_chip *chip, int port,
+ 		if (!vlan.valid)
+ 			return -EOPNOTSUPP;
+ 
+-		fid = vlan.fid;
++		*fid = vlan.fid;
+ 	}
+ 
+-	entry.state = 0;
+-	ether_addr_copy(entry.mac, addr);
+-	eth_addr_dec(entry.mac);
++	entry->state = 0;
++	ether_addr_copy(entry->mac, addr);
++	eth_addr_dec(entry->mac);
 +
- 	bitmap_set(cpu_pmu->cntr_mask, 0, M1_PMU_NR_COUNTERS);
- 	cpu_pmu->attr_groups[ARMPMU_ATTR_GROUP_EVENTS] = &m1_pmu_events_attr_group;
- 	cpu_pmu->attr_groups[ARMPMU_ATTR_GROUP_FORMATS] = &m1_pmu_format_attr_group;
++	return mv88e6xxx_g1_atu_getnext(chip, *fid, entry);
++}
++
++static bool mv88e6xxx_port_db_find(struct mv88e6xxx_chip *chip,
++				   const unsigned char *addr, u16 vid)
++{
++	struct mv88e6xxx_atu_entry entry;
++	u16 fid;
++	int err;
+ 
+-	err = mv88e6xxx_g1_atu_getnext(chip, fid, &entry);
++	err = mv88e6xxx_port_db_get(chip, addr, vid, &fid, &entry);
++	if (err)
++		return false;
++
++	return entry.state && ether_addr_equal(entry.mac, addr);
++}
++
++static int mv88e6xxx_port_db_load_purge(struct mv88e6xxx_chip *chip, int port,
++					const unsigned char *addr, u16 vid,
++					u8 state)
++{
++	struct mv88e6xxx_atu_entry entry;
++	u16 fid;
++	int err;
++
++	err = mv88e6xxx_port_db_get(chip, addr, vid, &fid, &entry);
+ 	if (err)
+ 		return err;
+ 
+@@ -2847,6 +2870,13 @@ static int mv88e6xxx_port_fdb_add(struct dsa_switch *ds, int port,
+ 	err = mv88e6xxx_port_db_load_purge(chip, port, addr, vid,
+ 					   MV88E6XXX_G1_ATU_DATA_STATE_UC_STATIC);
+ 	mv88e6xxx_reg_unlock(chip);
++	if (err)
++		return err;
++
++	mv88e6xxx_reg_lock(chip);
++	if (!mv88e6xxx_port_db_find(chip, addr, vid))
++		err = -ENOSPC;
++	mv88e6xxx_reg_unlock(chip);
+ 
+ 	return err;
+ }
+@@ -6615,6 +6645,13 @@ static int mv88e6xxx_port_mdb_add(struct dsa_switch *ds, int port,
+ 	err = mv88e6xxx_port_db_load_purge(chip, port, mdb->addr, mdb->vid,
+ 					   MV88E6XXX_G1_ATU_DATA_STATE_MC_STATIC);
+ 	mv88e6xxx_reg_unlock(chip);
++	if (err)
++		return err;
++
++	mv88e6xxx_reg_lock(chip);
++	if (!mv88e6xxx_port_db_find(chip, mdb->addr, mdb->vid))
++		err = -ENOSPC;
++	mv88e6xxx_reg_unlock(chip);
+ 
+ 	return err;
+ }
 -- 
-2.39.5
+2.48.1
 
