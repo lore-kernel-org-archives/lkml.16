@@ -1,96 +1,70 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 430211078F
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 00:18:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD4D538DE1;
+	Wed,  5 Mar 2025 00:19:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741133935; cv=none; b=g3UrV5X0uXwdnogRNYocMkbgEcePGOKEbc5c/K/+IMdzhp0qt2WXlbPx2Ls4lzu4uuq1bZDt0gY1K3dWU0C+98VBk5q7DYK7mxdY63HZx1Y8wFOtMDpG6xDbMpKVg5KEUd+Y3UmMmKUbQQevFpKZTm0GwpBRvz9IvOdsCl0IMBs=
+	t=1741133953; cv=none; b=h6VFJTSy28GabKvzPEj+DZPEKsW1qMlkw4PVtB1ygC9YyDNmvhPG+/i/833kCzHmsKS6p6kAPrHkNWyfN0IKlrxRG8oLnY9LkV4HqYpX5GC4KR6RqyGUGSFs9uzabuVhKSD/78CoifUad815BPV91u9TLVdXqBVWPQkt/PU+oFM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741133935; c=relaxed/simple;
-	bh=phhBcgYZ6Wa5Ew8fl7nA64kfa6V3GPXYg9e0b02aaP0=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=kQB3hpECpczX9Smi+vDik1Zeoer33wGX0bFOTvq4nFvYcxuqZPuBDjIkseIkgmqYmq7/gesvryISzwYk4ygBucG1q2/6KgE1RDpPCsF9DShypC4AFEXxXpBr5gpaHIMnObyLeJIm0d6o/YLQLrYfq0OEhaaJkxbR7Rn0jR+Wadw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IpjiRK6a; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1741133953; c=relaxed/simple;
+	bh=LvuMnlvN9J07K8g58fWqbDkGdxz8BL6D4q8fb+iXypU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=adet/B4Yyhq/Fl6qijaARXP2uxwwyAdBDDNrJ/+cqtEJ1s+o2Bo2XNf/h58ADx0g1oJGwMU+gJtePeDntsXI8RXbrL4b4snVviVO7XmD8CXlRIWbfKqsGqM4eBLAyU2yuZ8ViqgVxCNoa80OR+rtu9qgM8ah03ubR8HsUVIm9EM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ieJN7/kM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IpjiRK6a"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741133934; x=1772669934;
-  h=date:from:to:cc:subject:message-id;
-  bh=phhBcgYZ6Wa5Ew8fl7nA64kfa6V3GPXYg9e0b02aaP0=;
-  b=IpjiRK6aqYNroB0YEmRLy6E43mAHNdrQ8kGy7v03GLgJLunDE2lXvZFq
-   C/KS1uhZtuiwUNQ5qwf76KfWesCC23m/Wyut0RKVSqKZGM+Pd/LDLfIp+
-   q3R2VStE1yQNkla2ya2oiX5DcIOdR4R8077e70m1+Bm47ajHqdhH1zICN
-   tjZE7qcl+0aG/0icPMdo1u156/DYQ4HjpE2NFIKR1qmy/gaGJlp1W82sS
-   IsFNDaMQrq/y/b5lmiYl/g8FGYzXMk60LkzZyDOi1kSA42CwtTAPW9+QF
-   Q9tvubnwSkKYS6g4q0CQAw5XUR1668KGbxmjpiPtJVGFJF2Ir530vd3JS
-   g==;
-X-CSE-ConnectionGUID: Y3+PV6SAQDSX5vN+PwU8Pw==
-X-CSE-MsgGUID: FJj9HZjeQO+jLXLXi1l+uQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11363"; a="44886062"
-X-IronPort-AV: E=Sophos;i="6.14,221,1736841600"; 
-   d="scan'208";a="44886062"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2025 16:18:53 -0800
-X-CSE-ConnectionGUID: kKt2Inq9Q+2E9RmBwVJ5uA==
-X-CSE-MsgGUID: fRO2sXotQfiX1Ak/vh2xcQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="118431936"
-Received: from lkp-server02.sh.intel.com (HELO 76cde6cc1f07) ([10.239.97.151])
-  by orviesa010.jf.intel.com with ESMTP; 04 Mar 2025 16:18:52 -0800
-Received: from kbuild by 76cde6cc1f07 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tpcTK-000KP8-01;
-	Wed, 05 Mar 2025 00:18:50 +0000
-Date: Wed, 05 Mar 2025 08:18:25 +0800
-From: kernel test robot <lkp@intel.com>
-To: "x86-ml" <x86@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: [tip:x86/urgent] BUILD SUCCESS
- f6bdaab79ee4228a143ee1b4cb80416d6ffc0c63
-Message-ID: <202503050819.8Odm6yzN-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ieJN7/kM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9AC09C4CEE5;
+	Wed,  5 Mar 2025 00:19:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741133953;
+	bh=LvuMnlvN9J07K8g58fWqbDkGdxz8BL6D4q8fb+iXypU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ieJN7/kMl4Ef2TMN0t+mICwSeXBYuE/24BZzt+zAK+BmFWAeqVIN2ibVgQBqKc6j9
+	 Mw8zzwVjvwhAX9jLMQ6um0u9JAWHXawzNZqln/UnbNqMnc7CeQVuCf+jf/n2fDiGnX
+	 Ydklh3Sq7rD0a7ZMW6BYuUL1pKPWvzkuVL0YA67aM7PAIZUEzPs/mqgzjFwvg/CIBL
+	 rmi5yGtIRmFCtch/m1I0DT8TQsYiZaK5+VS79SROj5ef5URjkAnXqL+EpMwnR92uw1
+	 aXURXJwfb5lBgxwMTY+cYteyTPQD/haf4NNLAoG7p3WE1UE+3CYwDkEPfyJD6vCTsM
+	 JLryDI3iIwClw==
+Date: Wed, 5 Mar 2025 02:19:08 +0200
+From: Jarkko Sakkinen <jarkko@kernel.org>
+To: Dave Hansen <dave.hansen@intel.com>
+Cc: linux-integrity@vger.kernel.org,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+	Dan Carpenter <dan.carpenter@linaro.org>, linux-sgx@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] arch/x86: Fix size overflows in sgx_encl_create()
+Message-ID: <Z8eYfALmwN68F39V@kernel.org>
+References: <20250305000602.127665-1-jarkko@kernel.org>
+ <8255b211-5510-4c09-b13f-c4e3bd0d0aba@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8255b211-5510-4c09-b13f-c4e3bd0d0aba@intel.com>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/urgent
-branch HEAD: f6bdaab79ee4228a143ee1b4cb80416d6ffc0c63  x86/cpu: Properly parse CPUID leaf 0x2 TLB descriptor 0x63
+On Tue, Mar 04, 2025 at 04:18:03PM -0800, Dave Hansen wrote:
+> On 3/4/25 16:06, Jarkko Sakkinen wrote:
+> > +	/*
+> > +	 * This is a micro-architectural requirement. ECREATE would detect this
+> > +	 * too without mentionable overhead but this check guarantees also that
+> > +	 * the space calculations for EPC and shmem allocations never overflow.
+> > +	 */
+> > +	if (!is_power_of_2(secs->size))
+> > +		return -EINVAL;
+> 
+> Isn't it a plain old documented architectural requirement?
 
-elapsed time: 840m
+Yes, but it requires some explanation why it exists here instead of
+counting on ECREATE.
 
-configs tested: 19
-configs skipped: 126
+What do you suggest?
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-tested configs:
-i386                         allmodconfig    gcc-12
-i386                          allnoconfig    gcc-12
-i386                         allyesconfig    gcc-12
-i386    buildonly-randconfig-001-20250304    clang-19
-i386    buildonly-randconfig-002-20250304    clang-19
-i386    buildonly-randconfig-003-20250304    gcc-12
-i386    buildonly-randconfig-004-20250304    gcc-11
-i386    buildonly-randconfig-005-20250304    gcc-11
-i386    buildonly-randconfig-006-20250304    gcc-12
-i386                            defconfig    clang-19
-x86_64                        allnoconfig    clang-19
-x86_64                       allyesconfig    clang-19
-x86_64  buildonly-randconfig-001-20250304    clang-19
-x86_64  buildonly-randconfig-002-20250304    gcc-12
-x86_64  buildonly-randconfig-003-20250304    gcc-12
-x86_64  buildonly-randconfig-004-20250304    gcc-12
-x86_64  buildonly-randconfig-005-20250304    gcc-12
-x86_64  buildonly-randconfig-006-20250304    gcc-12
-x86_64                          defconfig    gcc-11
-
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+BR, Jarkko
