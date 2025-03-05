@@ -1,94 +1,120 @@
-Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76BC824887F
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 13:04:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F62F24A070
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 13:06:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741179889; cv=none; b=PoqGyw9eVC8HeGNZJ5V5dVldw6Bczpe8AXVTuYbWPlk3TFMu7z3wI9OHOU5inNXbXsrHUQ+9nJgKbXHvoEt+lr3tek/nQK1CfMujpjxdc3EtCsF//si2UCxHEDWDN9cXj9o9QjLwFsNVyOjm78Cs+To5T4Xn+SnyVxJzgSnPAso=
+	t=1741179962; cv=none; b=QDQfZQO6dImwW/qEgTpEc8QGuaLEqFkNeORQzkp7CVFwGV+tLT9tKXqPJVQXy+WXr+lzBVvihOXKC4blQA4YhVuwaszrq5Wfhj8nujZfBkXkWjUf8SbzRa1b0AVtjC6UQ6TGnp2tUfHoGKlOrbkArDHFad07LU9lNgKVZqHigF4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741179889; c=relaxed/simple;
-	bh=DzBcMuFqH6/qJ8HVhlls1y5BLnv+1fAdT2v63b3yASg=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=AIb9A6SSXScsZNl8TbQZeZVtChAAUr6gjuv3reXn6XZWg7PSpu5TsOLU7AuBCKsQAFWZz06RrKpr8YIoGPoe1OQar5y3HY/IzirWwdN6LnB93/MHZYfdWcHmte05E8HG+oiyxcgB/G0R+8ldrYvNhsf14ZG4DbRE5+zFMI2D0as=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=jsEXxU28; arc=none smtp.client-ip=217.70.183.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1741179962; c=relaxed/simple;
+	bh=LRCjF4OfWgUdrLVSHUh/AiNipL4Jl4BHFHjUmsczaPc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=eUnvBEVuLFQ3M8KAOZoWtEBCllaoDC5PFZxrum0xvBBcCmu9oZMIw/EL+9yiVcPBcGENeLTV62CzuXTg93kgJAO6VkCHuYBvyM3vvQdFbM/aQNJ1WpMqpObhL9FxOfw48nAAdX1dNW+oydVUurhaM3ZDKeAJVdjbwPwDpjEtv7c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V5XF2zMK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="jsEXxU28"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 26E0A440EC;
-	Wed,  5 Mar 2025 13:04:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1741179880;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=a5cKEtirGP0Rs6xzOYVU1k4mOvhjvDHY1CUqXTEhlOU=;
-	b=jsEXxU282Zw46sinma0efR/mPTZgANVomjhkHqlfO1cy+Idd/VmHwO3ZQKP87d7UdnhiKh
-	asJRJT4AtKRNZDxgTtQ4oJ/bc0/cBgDsw//8oPtdoCglq/ZUl41+VD11WoYvDKm8UIs9ER
-	rwVnSM69MG20kE55V/6Vn/I8Gw3B0ti78t7wpW6W87p8W30UuR++NWbKmiSVNdXQxSr9HZ
-	598TXzrMGMEYaR0MLrvlqcbXsoNN3/TP/42z2kTsbcHMD0PRAuFqV1p08JlXqJ7AxeqhkC
-	7ix78TvKNnLgGbmcsgcWazsoIBvp9PJ3bsOLqPvi0YhAvLfyN5CU7NIIWucFxA==
-Date: Wed, 5 Mar 2025 14:04:36 +0100
-From: Luca Ceresoli <luca.ceresoli@bootlin.com>
-To: Maxime Ripard <mripard@kernel.org>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann
- <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter
- <simona@ffwll.ch>, Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong
- <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, Laurent
- Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman
- <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, Douglas
- Anderson <dianders@chromium.org>, Herve Codina <herve.codina@bootlin.com>,
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, Dmitry
- Baryshkov <dmitry.baryshkov@linaro.org>
-Subject: Re: [PATCH v5 01/16] drm/bridge: Add encoder parameter to
- drm_bridge_funcs.attach
-Message-ID: <20250305140436.2903b88d@booty>
-In-Reply-To: <20250304-bridge-connector-v5-1-aacf461d2157@kernel.org>
-References: <20250304-bridge-connector-v5-0-aacf461d2157@kernel.org>
-	<20250304-bridge-connector-v5-1-aacf461d2157@kernel.org>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V5XF2zMK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91318C4CEE2;
+	Wed,  5 Mar 2025 13:05:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741179962;
+	bh=LRCjF4OfWgUdrLVSHUh/AiNipL4Jl4BHFHjUmsczaPc=;
+	h=From:To:Cc:Subject:Date:From;
+	b=V5XF2zMKMXEtPOdlVG7l7pd12VGChbIQNQ5AB5iEyS+tHuTnHqnjeiqbcCAXikmNu
+	 gyXxqunjIf6fq1tDfRtjCtu64Zl2cuc0n+RZdRhODtQsxqWlf+ye8GliRJUn0z0dBI
+	 sTaWbdVoKHA0UuG+KQKl3FFecJQVi24DiKEAUYFkdYB3/9iBjvOWdExKg9LSK6IJz/
+	 e6Iw+y6VGsbVMwAqb4U+x8we0SgXWrEqcgvnBeN//AJzi5Cf1UVFzehkqdF7Xl/nGX
+	 smA8zlr+LH53gXy/LtkAw8I9VnfskSaRkdhO1av+M8nKi6FylC/LM6R2AqlVvNvEjd
+	 cEOzc2mjJiPDg==
+From: Philipp Stanner <phasta@kernel.org>
+To: Matthew Brost <matthew.brost@intel.com>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Philipp Stanner <phasta@kernel.org>,
+	=?UTF-8?q?Christian=20K=C3=B6nig?= <ckoenig.leichtzumerken@gmail.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Sumit Semwal <sumit.semwal@linaro.org>
+Cc: dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v7 0/3] drm/sched: Documentation and refcount improvements
+Date: Wed,  5 Mar 2025 14:05:49 +0100
+Message-ID: <20250305130551.136682-2-phasta@kernel.org>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddutdegkeekucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtjeertdertddvnecuhfhrohhmpefnuhgtrgcuvegvrhgvshholhhiuceolhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepgeelffefgfehhfdtvdefueefieevkefggfelkeeiudetkeektedvhedukefgvddvnecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppedvrgdtvdemieejtdemvddtvddtmegvrgdtudemsggvgedumeelhegvjeemfeegfeemledufegvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddvmeeijedtmedvtddvtdemvggrtddumegsvgegudemleehvgejmeefgeefmeeludefvgdphhgvlhhopegsohhothihpdhmrghilhhfrhhomheplhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudeipdhrtghpthhtohepmhhrihhprghrugeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepmhgrrghrthgvnhdrlhgrnhhkhhhorhhstheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehtiihimhhmvghrmhgrn
- hhnsehsuhhsvgdruggvpdhrtghpthhtoheprghirhhlihgvugesghhmrghilhdrtghomhdprhgtphhtthhopehsihhmohhnrgesfhhffihllhdrtghhpdhrtghpthhtoheprghnughriigvjhdrhhgrjhgurgesihhnthgvlhdrtghomhdprhgtphhtthhopehnvghilhdrrghrmhhsthhrohhngheslhhinhgrrhhordhorhhgpdhrtghpthhtoheprhhfohhssheskhgvrhhnvghlrdhorhhg
-X-GND-Sasl: luca.ceresoli@bootlin.com
+Content-Transfer-Encoding: 8bit
 
-On Tue, 04 Mar 2025 12:10:44 +0100
-Maxime Ripard <mripard@kernel.org> wrote:
+Changes in v7:
+  - Add Christian's info about violated dma_fence rules. (Christian)
+  - Fix some typos
 
-> The drm_bridge structure contains an encoder pointer that is widely used
-> by bridge drivers. This pattern is largely documented as deprecated in
-> other KMS entities for atomic drivers.
-> 
-> However, one of the main use of that pointer is done in attach to just
-> call drm_bridge_attach on the next bridge to add it to the bridge list.
-> While this dereferences the bridge->encoder pointer, it's effectively
-> the same encoder the bridge was being attached to.
-> 
-> We can make it more explicit by adding the encoder the bridge is
-> attached to to the list of attach parameters. This also removes the need
-> to dereference bridge->encoder in most drivers.
-> 
-> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> Reviewed-by: Douglas Anderson <dianders@chromium.org>
-> Tested-by: Douglas Anderson <dianders@chromium.org>
-> Signed-off-by: Maxime Ripard <mripard@kernel.org>
+Changes in v6:
+  - Switch patches 1 and 2. (Maira)
+  - Move section related to run_job() out of timedout_job() patch.
+    (Maira).
+  - Fix some places for correct crosslink references.
+  - Add comment to inform about run_job() incrementing the refcount.
+    (Danilo)
 
-Tested-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
-Reviewed-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
+Changes in v5:
+  - Fix broken enumarated list in timedout_job's docu.
+  - Add TODO for documenting the dma_fence rules in timedout_job one
+    day.
+
+Changes in v4:
+  - Remove mention of vague "dma_fence rules" in timedout_job() again
+    since I couldn't get input on what those rules precisely are.
+  - Address a forgotten TODO. (Me)
+  - Reposition "Return:" statements to make them congruent with the
+    official kernel style. (Tvrtko)
+  - Change formatting a bit because of crazy make htmldocs errors. (Me)
+
+Changes in v3:
+  - timedout_job(): various docu wording improvements. (Danilo)
+  - Use the term "ring" consistently. (Danilo)
+  - Add fully fledged docu for enum drm_gpu_sched_stat. (Danilo)
+
+Changes in v2:
+  - Document what run_job() is allowed to return. (Tvrtko)
+  - Delete confusing comment about putting the fence. (Danilo)
+  - Apply Danilo's RB to patch 1.
+  - Delete info about job recovery for entities in patch 3. (Danilo, me)
+  - Set the term "ring" as fix term for both HW rings and FW rings. A
+    ring shall always be the thingy on the CPU ;) (Danilo)
+  - Many (all) other comments improvements in patch 3. (Danilo)
+
+This is as series succeeding my previous patch [1].
+
+I recognized that we are still referring to a non-existing function and
+a deprecated one in the callback docu. We should probably also point out
+the important distinction between hardware and firmware schedulers more
+cleanly.
+
+Please give me feedback, especially on the RFC comments in patch3.
+
+(This series still fires docu-build-warnings. I want to gather feedback
+on the opion questions first and will solve them in v2.)
+
+Thank you,
+Philipp
+
+[1] https://lore.kernel.org/all/20241220124515.93169-2-phasta@kernel.org/
+
+Philipp Stanner (3):
+  drm/sched: Adjust outdated docu for run_job()
+  drm/sched: Document run_job() refcount hazard
+  drm/sched: Update timedout_job()'s documentation
+
+ drivers/gpu/drm/scheduler/sched_main.c |   9 +-
+ include/drm/gpu_scheduler.h            | 112 +++++++++++++++++--------
+ 2 files changed, 83 insertions(+), 38 deletions(-)
 
 -- 
-Luca Ceresoli, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.48.1
+
