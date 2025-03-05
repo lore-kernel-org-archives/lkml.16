@@ -1,93 +1,165 @@
-Received: from the.earth.li (the.earth.li [93.93.131.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4D051C8612;
-	Wed,  5 Mar 2025 10:05:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.93.131.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C09861F3D30
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 10:05:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741169119; cv=none; b=FKfMktuMCqMUy4RbgItAy1CIItAMr10q8QOo0uhfTNFCNn6D/cuWPoIaPjWJ/I1GOwTVs4pAIqe+jWO7TKabdey9l3K4NPL8Nqm8s+Toexu45aT+eyl1i8egR04BlwSnASn+n045xgcMUQnkD119IvPOXo5L/CSZHfvkd1Lzn5Y=
+	t=1741169161; cv=none; b=ZBtIicmxIR5uuE4VVsPUHlRi8jMqWg03Ii6crLWZZc5jx1oKWCSjs6JVVKvJxlr/hGzS/dDnEW9E+dn8zaikXAHa5jTSm5jiSWd4w2kmXQSr7/vU7YbIQkvjKCxlpBehwyqjVloZLSEOifbAvmit5Kped9tY5XqT/n+q5kVOuCk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741169119; c=relaxed/simple;
-	bh=Q+UcLBGbaunhRK9+TGvci4Rf/Tm3PJ1T8ztM7cMxtkQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=ejWb47d94XqlTzKSWyqW6Vj6HZ1d3Rh1PHRUgysHBonGmV8P+Q/egY4k8uXQuqfwmLkwih3Pnym8oUvgE3014QMjAM4F8aUKcYl8N6YLQcPkuH2b0l+fIqcHg8B5b+Qu+5t4TjrQi1p3e+6Pjl2RsLTEKsO8Ups0+lkkgjmYAxw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=earth.li; spf=pass smtp.mailfrom=earth.li; dkim=pass (2048-bit key) header.d=earth.li header.i=@earth.li header.b=moFFaNTZ; arc=none smtp.client-ip=93.93.131.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=earth.li
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=earth.li
+	s=arc-20240116; t=1741169161; c=relaxed/simple;
+	bh=WY+zIeVUgJIaWQiX/gYofVRzNoFUY/a9OcyVS0cUUHE=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=K764wWm5AE7M58UUMMruvc53ZXOSov3no2rV6SmByMf58YiwsfSendyu7SGvzNo7iADGfLOf88u4gLqoIV8+TFJRqcf20p9bKgAH0sNy6wKbtYYLgOwBQJY7PnFxvbn014S19sFWq88AOPkPv9y970OQ4zKu267qHYSZSos0nRU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=E5jc2OjL; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=earth.li header.i=@earth.li header.b="moFFaNTZ"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=earth.li;
-	s=the; h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:
-	Subject:Cc:To:From:Date:Sender:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=9zRxtVYKtcy4a7k9RzqyNji6yQAZKeaZJwhRvL0/Bm4=; b=moFFaNTZwRmnRwOJdJOorSVwFq
-	vINEORDiAWAOXxD9sbqvNjTfmDP4fSLE7bmcpV8S9CUHYX9iaEkgH7lhdGTrKI7Bilii8tz2uwiqx
-	yTjL0PfDoeHvfYO/YuogwaxR/GU9ZUQw5l0q+M+Xx9d6k45H3d3B9gF3EokK4lPd04V08hBDM/k25
-	f94v2BnT/Q1cmMXZuaMFBD7wH66CU6Ypvp5MFG3VTXqy7Nb5JQWn5JBW2Jiz5qKpNi15VqDXbuF27
-	8dQqdnvhYdStjCTZZ1AJI9vxMyu2DvRp4wiKSXl/yx7TrAPN70QB1iiow81JC1jwcxFP38v/lvEgn
-	du7lUSPQ==;
-Received: from noodles by the.earth.li with local (Exim 4.96)
-	(envelope-from <noodles@earth.li>)
-	id 1tplJT-00AWMV-1C;
-	Wed, 05 Mar 2025 09:45:15 +0000
-Date: Wed, 5 Mar 2025 09:45:15 +0000
-From: Jonathan McDowell <noodles@earth.li>
-To: Jarkko Sakkinen <jarkko@kernel.org>, Peter Huewe <peterhuewe@gmx.de>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Lino Sanfilippo <l.sanfilippo@kunbus.com>
-Cc: linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] tpm, tpm_tis: Fix timeout handling when waiting for TPM
- status
-Message-ID: <Z8gdKxsw2unC5UID@earth.li>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="E5jc2OjL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1741169158;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=NNFkD3yJMXGsZ7dYT9vi/qSLfD1JtRCchFs48x32YvA=;
+	b=E5jc2OjLuQ5KW5P5EJEkgzQ2Zb43JrXp1l2S7UpkM/qklsj41exAP8DduL3uup4sXKfYeG
+	ouHH4eRt+RBTWszSLeeqKX1uJ9bBVngcmuFJyl7ptqypsMPK030lc34zOmLejoAXKEAS41
+	dTcEvSI/Vlhip14HfuYgzOWyJ+rPS9Q=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-288-Uh1bRLk3POGNmUZQ4CSghA-1; Wed, 05 Mar 2025 05:05:57 -0500
+X-MC-Unique: Uh1bRLk3POGNmUZQ4CSghA-1
+X-Mimecast-MFC-AGG-ID: Uh1bRLk3POGNmUZQ4CSghA_1741169156
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-4394c489babso35490315e9.1
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Mar 2025 02:05:56 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741169156; x=1741773956;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:from:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=NNFkD3yJMXGsZ7dYT9vi/qSLfD1JtRCchFs48x32YvA=;
+        b=AyHOsA6Z5Xr7O8x6JHInorAJqA0twOF8HImVjkVmF9BLr6Ld1PSMbiiHOLAXrDU8Nr
+         J7kvuIjbl9rdVRdu/IPDKoQDBA8YeWjcup1D9+DK0iOIjLMJjrF2l5v8zuuMGmdejXYu
+         19d2RSbjWntlamHBeF7lAssMmqD09CrudYNwxbd+0r8ngXDGfZbO08lqeTJCNLAEm2ir
+         Y+sva6ucQFTWVLs9jkkUyoXKiJyCaE0tBgJ34j2QBFa1ccSB3nOPBDy05Xg54IMPz+8B
+         znxpsgvSLsFYmsXkNMkEcbSn6+wbw11pD60INkv7ZmiYH8dvThDSzsd6w6bg1xGnrcxL
+         dw5A==
+X-Gm-Message-State: AOJu0Yzblur8l65SIGgh82r7ZGHyuJwmDOl/8seG2kShsps5qbXm0AEy
+	ClJfsHvJ+u3Ws6ELNPpAqbgbS4qrSbxFXBxW/UaX6XwSHIVXk7OvR3dbAOGgFUa0bBKHhsCdGuL
+	SqHu0+RpPwoSUOujmjXN2Ne2HtZ1oiA/j5W9ufMagxJAtGPDPAfRENYbJkBCRU7fejoC1YiCS
+X-Gm-Gg: ASbGncsXvJA9WRbQgSHYBqQymuDgSmSnhMI6/c9wn3FPVIJaI3EW4lqE1yPsHDCnH1R
+	6FBp+WjYjiQReO+HSin9oC8FIbnrOU9Gmk+zViMihx+FbgYDc5QuYcZIyb2wYHxliJOLa+tWLNq
+	QU+NyxotMZV+/yv7HZmra1K1GI1RQybpFw6Uvgt69rx9cVJyUGsNCEGz+/fxRSiufi3rFMwccZu
+	iaRW8bo4ncM5nwiLKRwm09GwO9abRClglRU+p65N3dn7A6SpREi6ya/I8zHZShUq2BUze11Z3EU
+	gnOc5zMPxyr4Eczlz+ZLkYcpMCWbuqUnp7hvRlMWQWf4cg8mpw==
+X-Received: by 2002:a05:600c:510f:b0:43b:cf12:2ca5 with SMTP id 5b1f17b1804b1-43bd29bdf43mr16028485e9.8.1741169155942;
+        Wed, 05 Mar 2025 02:05:55 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHJeURn3xSuMkANSUI7T/FJM9SVUqsXBCIFmFMOgfPzlxfScJZ0uRgF6ZPa7hJFUZvSASU/LQ==
+X-Received: by 2002:a05:600c:510f:b0:43b:cf12:2ca5 with SMTP id 5b1f17b1804b1-43bd29bdf43mr16028335e9.8.1741169155644;
+        Wed, 05 Mar 2025 02:05:55 -0800 (PST)
+Received: from ?IPV6:2a09:80c0:192:0:5dac:bf3d:c41:c3e7? ([2a09:80c0:192:0:5dac:bf3d:c41:c3e7])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43bd429215asm12569075e9.11.2025.03.05.02.05.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 05 Mar 2025 02:05:55 -0800 (PST)
+Message-ID: <787bc86c-b49e-4120-9eb3-0c5e0156a5eb@redhat.com>
+Date: Wed, 5 Mar 2025 11:05:54 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: linux-next: build warnings after merge of the mm tree
+From: David Hildenbrand <david@redhat.com>
+To: Stephen Rothwell <sfr@canb.auug.org.au>,
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Next Mailing List <linux-next@vger.kernel.org>
+References: <20250305204243.0458b36e@canb.auug.org.au>
+ <016b7cb8-451c-4d81-b3c2-e98fa0bc330a@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <016b7cb8-451c-4d81-b3c2-e98fa0bc330a@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: Jonathan McDowell <noodles@meta.com>
+On 05.03.25 10:53, David Hildenbrand wrote:
+> On 05.03.25 10:42, Stephen Rothwell wrote:
+>> Hi all,
+>>
+>> After merging the mm tree, today's linux-next build (htmldocs) produced
+>> these warnings:
+>>
+>> include/linux/mm_types.h:482: warning: Function parameter or struct member '_usable_1' not described in 'folio'
+>> include/linux/mm_types.h:482: warning: Function parameter or struct member '_mapcount_1' not described in 'folio'
+>> include/linux/mm_types.h:482: warning: Function parameter or struct member '_refcount_1' not described in 'folio'
+>>
+>> Introduced by commit
+>>
+>>     bbde3b621cf7 ("mm: let _folio_nr_pages overlay memcg_data in first tail page")
+>>
+>> from the mm-unstable branch of the mm tree.
+> 
+> Hm, we also don't document other dummy placeholders like:
+> 
+> * _flags_1
+> * _head_1
+> * __page_1
+> 
+> So I assume there must be one way to silence these warnings, let me dig ...
 
-The change to only use interrupts to handle supported status changes,
-then switch to polling for the rest, inverted the status test and sleep
-such that we can end up sleeping beyond our timeout and not actually
-checking the status. This can result in spurious TPM timeouts,
-especially on a more loaded system. Fix by switching the order back so
-we sleep *then* check. We've done a up front check when we enter the
-function so this won't cause an additional delay when the status is
-already what we're looking for.
+Ah, likely because they are part of the "private:" section.
 
-Cc: stable@vger.kernel.org # v6.4+
-Fixes: e87fcf0dc2b4 ("tpm, tpm_tis: Only handle supported interrupts")
-Signed-off-by: Jonathan McDowell <noodles@meta.com>
-Reviewed-by: Michal Suchánek <msuchanek@suse.de>
----
- drivers/char/tpm/tpm_tis_core.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/char/tpm/tpm_tis_core.c b/drivers/char/tpm/tpm_tis_core.c
-index fdef214b9f6b..167d71747666 100644
---- a/drivers/char/tpm/tpm_tis_core.c
-+++ b/drivers/char/tpm/tpm_tis_core.c
-@@ -114,11 +114,11 @@ static int wait_for_tpm_stat(struct tpm_chip *chip, u8 mask,
- 		return 0;
- 	/* process status changes without irq support */
- 	do {
-+		usleep_range(priv->timeout_min,
-+			     priv->timeout_max);
- 		status = chip->ops->status(chip);
- 		if ((status & mask) == mask)
- 			return 0;
--		usleep_range(priv->timeout_min,
--			     priv->timeout_max);
- 	} while (time_before(jiffies, stop));
- 	return -ETIME;
- }
 -- 
-2.48.1
+Cheers,
+
+David / dhildenb
 
