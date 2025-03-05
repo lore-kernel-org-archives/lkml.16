@@ -1,71 +1,62 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2045.outbound.protection.outlook.com [40.107.223.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BE09BA2E
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 03:53:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741146802; cv=none; b=J6hO7nRAPzHBtH0wGrYAAKdLut86HfDX4ZmFaTGzdElM9gyR9yFHda7sR8TrBAlZmR6TXGVnTrCHTWl7C3UkczDT23LQ5Y8NO95kA+AtatbIpFLoCXsGyyAICi8NPJ2jlnI+TB0bzAc3kIEbPDz7LHUIHLFDsHCG/0s3Dz931OQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741146802; c=relaxed/simple;
-	bh=KYu15OTxtFs2mF10JuE1RcryLYxEkKONS/St8WU9dMw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kzr+xRsJ7t/X3nnZH0rhX4HJadhtmVP2IWfLqoLWNSZoCQcsL0jK9zNITzj0Dg2YYHxNLRwJ8p3OFemdPVXVMOwfhU6DyppEMtPmzLBLY4PSSv2WFcMPqRx2SHDRkN2Y5X7UaQU7h9UviosUpNCYYqhcVw+HJgbJxWjPV3m4owM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NXY1OvN/; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3898E2E3388
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 03:54:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.45
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741146885; cv=fail; b=cb3b8IVNUl14LNUuXvVL9y5Xa2izJIyo1DiSmk/Cn+qFCrYIutKoQvync5nssPXd6XZJMr+QsB/WPETNkJZ+Jgq1PCsKG8H13X5NrZAcSt70pM0UIZZYM0PfhcSh6Iv1eOVolKboalUQH5KmuGJjPtPt6rwZQxMDRaK53JnApuk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741146885; c=relaxed/simple;
+	bh=vYdZAXe3gkj4uoyYi25OV5nQ9HjV4SPN3CCNN6mMOWI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=FgEJmjsi0Go5arrQiQmdpGSihzHPtd3UKSK+57WkCUS68DxeaxcEZbdOLgoYgt89GBNnd9t+AjFZwtgUmwc7nzdnX4kqeXyBHzvM4HwSA0NPBCrnTmlV/e4bQInkwV3iV+YL0We4cmGMuBNiON5FkxJ3kOj/VqwUbKE9O9/tPPY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=2FbP/iJt; arc=fail smtp.client-ip=40.107.223.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NXY1OvN/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1741146798;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+mJRNWDqZaDl0D1j/RlDn06NEO5jFGolr9VYIE5+CIg=;
-	b=NXY1OvN/rhS34ZM5E5L7oVpgC1wVUWzkhXLTJzFsZlwV7r51m1fyNceQ3FFSrHDMr7S0no
-	qDgSQbABITHcbAdW72EMVle2IKz09NIF5SrX5GXx6X8ObiOfz4w9xzyPdMTeJLgUg3jQ89
-	bHjGzgh31KR8vvsXF4kMnGHs1Xs91ng=
-Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com
- [209.85.214.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-533-4TeJKAFqOPCH6_WjmnaKWQ-1; Tue, 04 Mar 2025 22:53:17 -0500
-X-MC-Unique: 4TeJKAFqOPCH6_WjmnaKWQ-1
-X-Mimecast-MFC-AGG-ID: 4TeJKAFqOPCH6_WjmnaKWQ_1741146796
-Received: by mail-pl1-f200.google.com with SMTP id d9443c01a7336-223477ba158so189635005ad.0
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Mar 2025 19:53:17 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741146796; x=1741751596;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+mJRNWDqZaDl0D1j/RlDn06NEO5jFGolr9VYIE5+CIg=;
-        b=oxqf3n5sgX7Hi0UYOv2PxkDZ6oBDfLgGKD5TPfgJG10Nq92TrBmTl1Lb1tnYf3Ff/G
-         220nQ77TlpiW0tnbDvwqz43j5YxNLx76G60tjYvAAea2ClbQCxtygWDmDln84BqEcLpC
-         UO07qJwsYRuvonJF7Zw9zmwIpWfyMbIF8PQcoytrUi702nx4rSFabINAiNSS/UePc20T
-         XTnq93fGl+8WbHTdorPkzCCgr/1xF4IQX77dHm/21wac9HmcisXgydQSQn//8N19alEq
-         6zoHMtGQyX+5LT7MMbDGTGB3B722w2ZQVx6EeaugDrk3sVuX2yUSz/ycbJ41CLrYxmi2
-         QbDA==
-X-Forwarded-Encrypted: i=1; AJvYcCUZTd7UuPmSBCvV3VvCGnMLcJtK7bntgD6tqtKD3iSwWYR4bAn9ncPG4p4ieii56KMiEq2OaLn52b3Gdkk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy5ufI5W2xXhRsBUR4Ep+EpYsVjEfcIMpXZvqo4wgCWgj90ZqkC
-	o/wVs5Pt8/llo1r0XmT+A4MqJtBGTJoPyXo1w6iUDiZF3Z4CsYzcQ0mB6oRYn89duLqpuwircfm
-	6elpuYhDzRprCvmHRjMxjfg5d30vZKqOLEs9CZHFF+HHU7DQiKRCDFNqecePVfg==
-X-Gm-Gg: ASbGncs3LeDgNcYbbmtqrOhRDfu/3SMb3HGM3/djL0N6RoOn/GrPiRyyEFALu0udQ2E
-	AXIBbt38XOy0Mn7/ihHhJ+LtTLgtPmRayzOLLidcSK2rOsmx2WfX2ntcydfxgV9rjdaPg3nfuVl
-	7RQy6gqgCRjFCLdD5lzkFD0XrRC50zr7W8kdomb58WEeTQFTDL0yUeTkPXC7BwvN359opo7tCHz
-	9+eImE2Pu8IgGXlR6qpDQVfTljbLyCShTQATWv5qKwV0tNn+TIg4DmWKKpG+AIU4gZuaIxCP5hu
-	mz7dElr2esekk0g=
-X-Received: by 2002:a05:6a21:150c:b0:1ee:cf13:d4b5 with SMTP id adf61e73a8af0-1f3495afc1dmr2823093637.39.1741146796421;
-        Tue, 04 Mar 2025 19:53:16 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFuyA16zIv02ugj3FPLruOV0ZdxdHMNTCUw0ZHSpkP3eGnIKTFgv0oqMKMfRXj1Nc/YwnybSw==
-X-Received: by 2002:a05:6a21:150c:b0:1ee:cf13:d4b5 with SMTP id adf61e73a8af0-1f3495afc1dmr2823058637.39.1741146796108;
-        Tue, 04 Mar 2025 19:53:16 -0800 (PST)
-Received: from [192.168.68.55] ([180.233.125.1])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-aee7ddf20b8sm11041231a12.7.2025.03.04.19.53.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 04 Mar 2025 19:53:15 -0800 (PST)
-Message-ID: <af65c1ea-202a-4a60-ab13-0c325385b7ec@redhat.com>
-Date: Wed, 5 Mar 2025 13:53:06 +1000
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="2FbP/iJt"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=LuM/Q/azXmXVH+3CRNhA2JxNl4rs0apPK5AmAPpqE10ilN2CxV6Swhhp8Xpad3m5P0Tl8f5Z/1qDpgBEKsfSfNl+kdDH44+YVE6lTZYcRDpxI2DrxzwwrjrQq/cVG/jmYuxh5X8UF3z8LV+XM4Gcs3Jk33hGwdVtrm9iel/07GqaS32jb9+2CglC1REhrXUaRUFO6eMMP/f9E9BpFxwetmSBoNVYPkmvBTWjAclTIyOQyKzOnXjzBU9wXaep8HtGiFI/vh2WT4HWIduIjb94Z6SmVx5okZAIYtgp98vforxUXAOpSRLs54lucItJYMYPxwRSR+XRgWsx0+AQFo+Clg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=kiV8N8tPXK5EFOrMkDnbrwvzjOzMXrqN1vOxDnlQQfE=;
+ b=cwnXYsMNj1yIu6eNjvTC4KYLRd68Q8ovTvrF0+5wfCCOC209Di1CgQUS8CIgVdJpm5PAO+PiWMFsWYWGHQ89E7m/tHqU5dMXC8btNmBD4HaatBe2oy630jiS24CZoJJjoaG7xWZc/SjwQAlFdfB43VTJ2Dr1ziWABzNn9k5hPuQrZMR7GYjKZUgChPd65vKJIcktRjUJ9Y3iIQu0+gk/yHkcLmpXmPSSV8Dw9sm8wi2c68dzzPkZYphaeVeNXRV5KW5FYb3YO744H/1zWZYCocXETaLyzBLt7Xnjx/+X6W4AHkII73hhrRKYgxR2C/VXSLXcbt2xOHEvJ31y1fY6QQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=kiV8N8tPXK5EFOrMkDnbrwvzjOzMXrqN1vOxDnlQQfE=;
+ b=2FbP/iJtG06Aa/3LMmGw+pQvxc/DMpI1kj5by1OSppppAZXZbzzFjPxRLfjq0nPKXRIcTxFfElR868whnOuu+M1sbfFs56O8nPLgFS5gIvR9iJPHTcfCHlV5PdJTiJmOqTYQVxuxlY6F6ecVWKv3IXRO/x8MEV5LFEYHSVZp/z0=
+Received: from CH2PR17CA0011.namprd17.prod.outlook.com (2603:10b6:610:53::21)
+ by CH3PR12MB9148.namprd12.prod.outlook.com (2603:10b6:610:19d::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.29; Wed, 5 Mar
+ 2025 03:54:42 +0000
+Received: from CH1PEPF0000AD81.namprd04.prod.outlook.com
+ (2603:10b6:610:53:cafe::a6) by CH2PR17CA0011.outlook.office365.com
+ (2603:10b6:610:53::21) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8511.16 via Frontend Transport; Wed,
+ 5 Mar 2025 03:54:42 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CH1PEPF0000AD81.mail.protection.outlook.com (10.167.244.89) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8511.15 via Frontend Transport; Wed, 5 Mar 2025 03:54:42 +0000
+Received: from [10.252.205.52] (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 4 Mar
+ 2025 21:54:37 -0600
+Message-ID: <6409142e-d535-4ddd-b58d-41ea793f61b4@amd.com>
+Date: Wed, 5 Mar 2025 09:24:34 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -73,111 +64,153 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 00/45] arm64: Support for Arm CCA in KVM
-To: Steven Price <steven.price@arm.com>, kvm@vger.kernel.org,
- kvmarm@lists.linux.dev
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Marc Zyngier <maz@kernel.org>,
- Will Deacon <will@kernel.org>, James Morse <james.morse@arm.com>,
- Oliver Upton <oliver.upton@linux.dev>,
- Suzuki K Poulose <suzuki.poulose@arm.com>, Zenghui Yu
- <yuzenghui@huawei.com>, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, Joey Gouly <joey.gouly@arm.com>,
- Alexandru Elisei <alexandru.elisei@arm.com>,
- Christoffer Dall <christoffer.dall@arm.com>, Fuad Tabba <tabba@google.com>,
- linux-coco@lists.linux.dev,
- Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>,
- Shanker Donthineni <sdonthineni@nvidia.com>, Alper Gun
- <alpergun@google.com>, "Aneesh Kumar K . V" <aneesh.kumar@kernel.org>
-References: <20250213161426.102987-1-steven.price@arm.com>
+Subject: Re: [PATCH] sched/fair: Fix potential memory corruption in
+ child_cfs_rq_on_list
+To: Zecheng Li <zecheng@google.com>, Ingo Molnar <mingo@redhat.com>, Peter
+ Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>, Vincent
+ Guittot <vincent.guittot@linaro.org>
+CC: Dietmar Eggemann <dietmar.eggemann@arm.com>, Steven Rostedt
+	<rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, Mel Gorman
+	<mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>, Josh Don
+	<joshdon@google.com>, <linux-kernel@vger.kernel.org>
+References: <20250304214031.2882646-1-zecheng@google.com>
 Content-Language: en-US
-From: Gavin Shan <gshan@redhat.com>
-In-Reply-To: <20250213161426.102987-1-steven.price@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+From: K Prateek Nayak <kprateek.nayak@amd.com>
+In-Reply-To: <20250304214031.2882646-1-zecheng@google.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH1PEPF0000AD81:EE_|CH3PR12MB9148:EE_
+X-MS-Office365-Filtering-Correlation-Id: 62fb8a89-0659-4f04-5caf-08dd5b9975f6
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|36860700013|1800799024|376014|7416014|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?S1FVWXd2VlBLUStPY0llenNTSk9MTm4rZ0JocTZoVG5hOVBhSGFvQ1I5RjBo?=
+ =?utf-8?B?T2dNall5MUYvdnk5VFhVRlBiMEh0NVF6NWtqeVhyd2E4YXRqVnROTmNtNTVa?=
+ =?utf-8?B?QUFnNVJOdWxyQ3hWV1NTQkhhVUZ2clJhdk1JSGJJOFY4Zy8yZXYxSEVGUURZ?=
+ =?utf-8?B?alo4SmxCNUdPYm5SOG44TEtnTHhzMmtYNTR4WnJ2THpoTU4rUUJOVlZQVldC?=
+ =?utf-8?B?Tk1yUFRLSmlnYTV0TGtNQml5UjJERjREZmZvMjZzcWg1N25FL0syaWJKMXFK?=
+ =?utf-8?B?YVBnTjd0RjljMHozYXNLYVdWR3pPVndvcTBrd2ZEOSsra25JWWJkMUVmRmMy?=
+ =?utf-8?B?aXVTSzVtZ0p4OU9TT0RDdzhBMVNjN2JWNUR1YXp4YXFFZVlHS2VaNWxrMXRV?=
+ =?utf-8?B?UTJGNmVRUGJHQ3VkYkh1bmwySEtEMlZwSEM5VUNrZWZEeVFaM1FMVEN3d05p?=
+ =?utf-8?B?Mkh1VVFodUgrUUZsQ1lwc0FrQTA1aklHRytoOFgzTG5DeDNPYjFCNnVoMkRT?=
+ =?utf-8?B?dWQrQkJaazVOQ1RtMlByZmFCZnFVWmtZc0E1U3BmRUFIWWpoVHVmb3hXeElz?=
+ =?utf-8?B?OURZSUg4WE9RV09Wd055SXlTWkIvQnZrSHpqTUkzdlpkTFR3ZXk5WlRPKy9o?=
+ =?utf-8?B?NXR6MXJWdHVGVjYrZGMyVkwxclE5U2djSGRuYXFsQnBSYUNtbHVEK0tZUFFJ?=
+ =?utf-8?B?T0Q0M0RrbGpmaWd4Yis3RW5ZZjFNS0lGWjlhZEllS3d4d3Ryd0NXZjI5Ynhu?=
+ =?utf-8?B?RndnM0p6eitmaGgrVHpDRzF4c3J2ZjQ2ZFkrSnRDcW1uVlVoVVgxWlhabG9T?=
+ =?utf-8?B?LzM2Y1hGZlIwS01wWG5ZQzFDN0NUOCtqWUpRS2lxalZXQVFGamZLbGhHTEow?=
+ =?utf-8?B?NDBybDBSRC9vTGd4RVk3SW9jMzJCenVFQmlqSVk2Zm9PVXBLZnBFcjFqdTZH?=
+ =?utf-8?B?MVZieGFQKy92ZUVtVDQ3czhic1ZrZjIzVFd2a0RYNXZDb1FMZUIyb2lUcnZL?=
+ =?utf-8?B?Mm1hcEU1SEtpL01nTTQxeXo5alFUM3o0bXZMT0x1THZSMXQ2RmJwT1AzN2k3?=
+ =?utf-8?B?aUQzdldGUW4rUDlsakwxc2VxT3EwYnlJVzUzdGdQWTBTcTFweVlmVFo5MXZL?=
+ =?utf-8?B?YVd4Rk9JOHFoQnN5VGJHRWZCZldrMTVYVklqVHUzMExYdEM2aUl2ZU1jS1ll?=
+ =?utf-8?B?QWdncnpzei9PV0hFb3NGL1pXUVFuZ0dOQnpZcWFFMTYrKzE2aVZzejFFNjYy?=
+ =?utf-8?B?Z2xvM2JSQmR0ZzhOVVdKMVdNSGtpeTlQOVNZUGZHWE5naUhlNGVSZVZLRDRl?=
+ =?utf-8?B?bkdUa08vMHNrQW1SR2VVMmpZNzFFK3JSQUk2cHpBK1hXdWZHV1AwN0dnRUcw?=
+ =?utf-8?B?REkxUWZCNCsxVUhKZk43bUl6cTAzbEk5MmZPcmtmMmltMHd1dGREZFluSkNw?=
+ =?utf-8?B?YTl4TGxkdWEyUmp4UWhMYkQxOGJvdSt0bHZ5M05DQnBkbUlQODVMdCtmcmF4?=
+ =?utf-8?B?cUNJQnc4bGpPUW9iSzRCbEVkdXczVXJPaUNnZE8wTDYvaEYzZ0VKbUs4OFB0?=
+ =?utf-8?B?RGhxVWs5VzBZV0p6ZzJOZGFscnpDZ0FOWUtEVW5UZzJWZlhjdStpYkhyV3RB?=
+ =?utf-8?B?QVo1QVBiQTlDQ1ovdHV1SjdCSm93MmtXcVRIQlBmcXFkUlg1OG1iV2JiTVVt?=
+ =?utf-8?B?MHVZMUZLMlkwZUcwWG13RUJPd0pnVnh0cVdzN0tLWUhxemZYWG5TYnYzNFJO?=
+ =?utf-8?B?WnNKdTFTOHRySUx5YlBlSXVIMUhWWjVJL0tGNUVrVjViWEJHTjMzTTJ5QU1B?=
+ =?utf-8?B?VXF1WG02MmtiN1p2S05ZbkdicEhyZzZZSTAycmZrSmlCY2RDRk9QMXZUUE5Y?=
+ =?utf-8?B?Zkg1SmlZWEw5L3p3alJVNEE2WERkS09WM2tpUmMzajd5SjkvVGd2ZENQUTU5?=
+ =?utf-8?B?NjBIejNVMEc4ODdvc25SbkVjdVN4MTVxVEpHdkRpMGs4dkUxeURhSzlZZ3Vz?=
+ =?utf-8?Q?iZvTE1Daxh8rfNlUs3dCUMLahSMN9Y=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(36860700013)(1800799024)(376014)(7416014)(7053199007);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Mar 2025 03:54:42.3057
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 62fb8a89-0659-4f04-5caf-08dd5b9975f6
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CH1PEPF0000AD81.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB9148
 
-On 2/14/25 2:13 AM, Steven Price wrote:
+Hello Li,
 
-[...]
-
+On 3/5/2025 3:10 AM, Zecheng Li wrote:
+> child_cfs_rq_on_list attempts to convert a 'prev' pointer to a cfs_rq.
+> This 'prev' pointer can originate from struct rq's leaf_cfs_rq_list,
+> making the conversion invalid and potentially leading to memory
+> corruption. Depending on the relative positions of leaf_cfs_rq_list and
+> the task group (tg) pointer within the struct, this can cause a memory
+> fault or access garbage data.
 > 
-> The ABI to the RMM (the RMI) is based on RMM v1.0-rel0 specification[1].
+> The issue arises in list_add_leaf_cfs_rq, where both
+> cfs_rq->leaf_cfs_rq_list and rq->leaf_cfs_rq_list are added to the same
+> leaf list. Also, rq->tmp_alone_branch can be set to rq->leaf_cfs_rq_list.
 > 
-> This series is based on v6.14-rc1. It is also available as a git
-> repository:
+> This adds a check `if (prev == &rq->leaf_cfs_rq_list)` after the main
+> conditional in child_cfs_rq_on_list. This ensures that the container_of
+> operation will convert a correct cfs_rq struct.
 > 
-> https://gitlab.arm.com/linux-arm/linux-cca cca-host/v7
+> This check is sufficient because only cfs_rqs on the same CPU are added
+> to the list, so verifying the 'prev' pointer against the current rq's list
+> head is enough.
 > 
-> Work in progress changes for kvmtool are available from the git
-> repository below:
+> Fixes a potential memory corruption issue that due to current struct
+> layout might not be manifesting as a crash but could lead to unpredictable
+> behavior when the layout changes.
 > 
-> https://gitlab.arm.com/linux-arm/kvmtool-cca cca/v5
+> Signed-off-by: Zecheng Li <zecheng@google.com>
+> ---
+>   kernel/sched/fair.c | 6 ++++--
+>   1 file changed, 4 insertions(+), 2 deletions(-)
 > 
-> [1] https://developer.arm.com/documentation/den0137/1-0rel0/
-> [2] https://lore.kernel.org/r/a7011738-a084-46fa-947f-395d90b37f8b%40arm.com
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index 857808da23d8..9dafb374d76d 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -4061,15 +4061,17 @@ static inline bool child_cfs_rq_on_list(struct cfs_rq *cfs_rq)
+>   {
+>   	struct cfs_rq *prev_cfs_rq;
+>   	struct list_head *prev;
+> +	struct rq *rq = rq_of(cfs_rq);
+>   
+>   	if (cfs_rq->on_list) {
+>   		prev = cfs_rq->leaf_cfs_rq_list.prev;
+>   	} else {
+> -		struct rq *rq = rq_of(cfs_rq);
+> -
+>   		prev = rq->tmp_alone_branch;
+>   	}
+
+A "SCHED_WARN_ON(prev == &rq->leaf_cfs_rq_list)" here is easily tripped
+during early boot on my setup before this fix.
+
+Only nit. is perhaps that return can go into the else clause above since
+"cfs_rq->on_list" case will guarantee a "leaf_cfs_rq_list" pointer that
+is embedded in a valid cfs_rq struct but I've no strong feelings.
+
+Feel free to add:
+
+Reviewed-and-tested-by: K Prateek Nayak <kprateek.nayak@amd.com>
+
+-- 
+Thanks and Regards,
+Prateek
+
+>   
+> +	if (prev == &rq->leaf_cfs_rq_list)
+> +		return false;
+> +
+>   	prev_cfs_rq = container_of(prev, struct cfs_rq, leaf_cfs_rq_list);
+>   
+>   	return (prev_cfs_rq->tg->parent == cfs_rq->tg);
 > 
+> base-commit: 7ab02bd36eb444654183ad6c5b15211ddfa32a8f
 
-I had a chance to test it by following Jean's instructions [1-2]. The guest can
-boot up and kvmtool also can boot the guest. I'm listing the repositories I used
-in case some body else want to give it a try.
 
-[1] Jean's guide to build software components needed by ARM CCA stack
-     https://linaro.atlassian.net/wiki/spaces/QEMU/pages/29051027459/Building+an+RME+stack+for+QEMU
-[2] Jean's guide to build firmware needed by the emulated host
-
-host
-====
-tf-rmm    https://git.codelinaro.org/linaro/dcap/rmm.git                       (cca/v4)
-edk2:     git@github.com:tianocore/edk2.git                                    (edk2-stable202411)
-tf-a:     https://git.codelinaro.org/linaro/dcap/tf-a/trusted-firmware-a.git   (cca/v4)
-qemu      https://git.qemu.org/git/qemu.git                                    (stable-9.2)
-linux     https://git.gitlab.arm.com/linux-arm/linux-cca.git                   (cca-host/v7)
-buildroot https://github.com/buildroot/buildroot                               (master)
-
-guest
-=====
-qemu      https://git.codelinaro.org/linaro/dcap/qemu.git                      (cca/latest)
-kvmtool   https://gitlab.arm.com/linux-arm/kvmtool-cca                         (cca/latest)
-linux     https://git.gitlab.arm.com/linux-arm/linux-cca.git                   (cca-guest/v7)
-
-Command lines to start the host
-================================
-[gshan@virtlab723 host]$ cat start.sh
-#!/bin/sh
-HOST_PATH=/home/gshan/sandbox/qemu/host
-GUEST_PATH=/home/gshan/sandbox/qemu/guest
-
-sudo ${HOST_PATH}/qemu/build/qemu-system-aarch64                      \
--M virt,virtualization=on,secure=on,gic-version=3,acpi=off            \
--cpu max,x-rme=on -m 4G -smp 8                                        \
--serial mon:stdio -monitor none -nographic -nodefaults                \
--bios ${HOST_PATH}/tf-a/flash.bin                                     \
--kernel ${HOST_PATH}/linux/arch/arm64/boot/Image                      \
--initrd ${HOST_PATH}/buildroot/output/images/rootfs.cpio.xz           \
--device pcie-root-port,bus=pcie.0,chassis=1,id=pcie.1                 \
--device pcie-root-port,bus=pcie.0,chassis=2,id=pcie.2                 \
--device pcie-root-port,bus=pcie.0,chassis=3,id=pcie.3                 \
--device pcie-root-port,bus=pcie.0,chassis=4,id=pcie.4                 \
--device virtio-9p-device,fsdev=shr0,mount_tag=shr0                    \
--fsdev local,security_model=none,path=${GUEST_PATH},id=shr0           \
--netdev tap,id=tap1,script=/etc/qemu-ifup,downscript=/etc/qemu-ifdown \
--device virtio-net-pci,bus=pcie.2,netdev=tap1,mac=78:ac:44:2b:43:f0
-
-Command lines to start the guest
-================================
-[gshan@virtlab723 guest]$ cat start_guest.sh
-#!/bin/sh
-key="VGhlIHJlYWxtIGd1ZXN0IHBlcnNvbmFsaXphdGlvbiBrZXkga"
-key+="W4gZm9ybWF0IG9mIGJhc2U2NCAgICAgICAgIA=="
-
-qemu-system-aarch64 -enable-kvm                                                     \
--object rme-guest,id=rme0,measurement-algorithm=sha512,personalization-value=${key} \
--M virt,gic-version=3,its=on,confidential-guest-support=rme0                        \
--cpu host -smp 2 -m 1024M                                                           \
--serial mon:stdio -monitor none -nographic -nodefaults                              \
--kernel /mnt/linux/arch/arm64/boot/Image                                            \
--initrd /mnt/buildroot/output/images/rootfs.cpio.xz                                 \
--append earlycon=pl011,mmio,0x10009000000
-
-Thanks,
-Gavin
 
