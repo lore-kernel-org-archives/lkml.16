@@ -1,192 +1,223 @@
-Received: from EUR02-DB5-obe.outbound.protection.outlook.com (mail-db5eur02on2056.outbound.protection.outlook.com [40.107.249.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12E39DF5C;
-	Wed,  5 Mar 2025 02:16:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.249.56
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741140987; cv=fail; b=FvXauvIXBWuiuD8ksrxff/bTFnE1iYAr6bmfqHtjpvJBkcg7TMi4lsqBD7uWh/PLBntalxSEPhy2GQwALxZKABHuW85wI0oqS4XKL3j3fVsB3A17yBr1SFNAgxmUPhpUM4lBu/LJ72yVh9KsuCM92Y1Pk8z96WOTux7x32F2UBU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741140987; c=relaxed/simple;
-	bh=E/FsSLMJWZ13cW1bFjVA+NBfZ9MyY/o08St0LeSCPLc=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=IdPf+TcsJbH9BquZ+j/W8fLYvM8jnFSUamntpD8yScFTm1EU+AC4pphAJ6jqVNJGCOkApVf4oC8MG91az931EIu1GQqYfxD1kmXVZ/ypJYo1Wsh92dXZZeSCnTDJwvfvSvN3QjDPcFd8Y06pIMMpYyFPRFw7Eoeeok4Vp9U4T+4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=iVVJu22h; arc=fail smtp.client-ip=40.107.249.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1E43152E12
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 02:17:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741141044; cv=none; b=pw5G4lGVEiZmJZKa2zUJ7fuzkuj6q2oTj3R/N7zGsR/YUF7Eb5qsxCcjEK8TpaIz9QpbLLkScQm/py7KkWQsA/cd6OsU/GEeGBrVXtHRGfBXjM6FaVPH+jmLZf+FCeXtzXps9K8KRcLwqaRwRcVZaL23GsQfUhERd89Rm5GDHVg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741141044; c=relaxed/simple;
+	bh=Lwirzx82Cwj4cIROcGyzk0QJ025NE1gG42EW69viQ5o=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=kNT8JR5uWhfL59i8vdsk5sM1pFn/8OlltanmySy9g9GU4IBuDaai9cdXQINANxFADaPzyqkDPrP1y3UO2MYsc3IZhWumrJibh7nF12c20lNUzzj+6JVdVtgdN0+m9MaQe0S9wmW5fBON+NAS2fJBG3EU+k/PAzB0odbw/uzZW6I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=PiHN9kP5; arc=none smtp.client-ip=209.85.218.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="iVVJu22h"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ZVDrDXN02HYvEkO7gnjWzMicziwW6nKSnU0ktAnXOH4pTS1qfMex9osw+WxmPnznhPSIjlOBBVTLKnuh4ADn8wEaIBX1PkHw4yugY9M30Nqre9MyyH5w/A+gpvhhVHD4bFp4YOXIjzeZiCMDaFnRurrWYJ/07EcL90aSsznoq3p30ukC9yVGofiiCLRoyu1GeKCXhlQgH5rs0R/Kwx37Abp4SsWgBZ71ffOH8Kj4rxtE5ET8udfs36guoe/vrowbGkwu7eOcWfbkOAOvPkewH0w4Dc9rhKCECpR7dR6hvBd+W4ZBMWK8FuiQ0ELSNfOeirnQIBpnDlBio0OYimBeXg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ty6FIwPnWv4kTM/WXZKYTxqdU6oj8CVv0kYT4MwcSQ4=;
- b=B5wSt0CoavQ6L4caXRNJnYmEyoB5tU8JN+Ko5pi2I7qQlKVtY/yUlAdWy840GV7pn42f4rkgR6hYUGctvgmy89KWq3dlFgkomdTDY2wKTBsJaHqcWaQ8UZcNGjqcKYbg1WgaophOQQSeVddzq+B8GQEJ9jyuah7VN7EV2wYTFh5Ihwlv34LH1Ddr0SQqyL5jCd3IspwBFfEGXN/0+3ophmgUScUzB17DtI18Aa98/GlK4ddmi2GKdOxg43668XKqEgZ/NGQD3ZA6Mc+zWQM4upfWgHDRSRHpSceKkgZYYwNv5k6EHsw5MzxIKcO+9AgWxdZyxpHQfKEyE+Ak8ym5WQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector1-NXP1-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ty6FIwPnWv4kTM/WXZKYTxqdU6oj8CVv0kYT4MwcSQ4=;
- b=iVVJu22hdjM4is8OevkxeO88HNZWNGHqu1zWGfuVSAh206UK27Asd7IUE6jXzIh00lew/3QlIpwzBMimsIU1RUfF28wFXG8TuDrE95I4u1huV3L4RSQE92Dct14jwYqEcbPE4afeXyQPooqH0YhzwIIieKiy3mfhdVDC5pCHh9bSBWFWPbOzMqHMqohsbteF65qlnUkhqN3T4dfrUk2PjBnXp+uNE7UncC3C05xaCDSoef86wYBkdWsawuHRv+bS18BjpSAEYa9Qv4VoPsOCJEQTTZy65YqrEjy2QP0CbSK1MFJbD9gcv39xa/emMgZjJiF6swldINB7PgvcrQrkUw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=oss.nxp.com;
-Received: from PAXPR04MB8254.eurprd04.prod.outlook.com (2603:10a6:102:1cd::24)
- by AS1PR04MB9479.eurprd04.prod.outlook.com (2603:10a6:20b:4d7::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.26; Wed, 5 Mar
- 2025 02:16:21 +0000
-Received: from PAXPR04MB8254.eurprd04.prod.outlook.com
- ([fe80::2755:55ac:5d6f:4f87]) by PAXPR04MB8254.eurprd04.prod.outlook.com
- ([fe80::2755:55ac:5d6f:4f87%6]) with mapi id 15.20.8511.015; Wed, 5 Mar 2025
- 02:16:21 +0000
-From: ming.qian@oss.nxp.com
-To: mchehab@kernel.org,
-	hverkuil-cisco@xs4all.nl,
-	mirela.rabulea@oss.nxp.com
-Cc: shawnguo@kernel.org,
-	s.hauer@pengutronix.de,
-	kernel@pengutronix.de,
-	festevam@gmail.com,
-	xiahong.bao@nxp.com,
-	eagle.zhou@nxp.com,
-	linux-imx@nxp.com,
-	imx@lists.linux.dev,
-	linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH] media: imx-jpeg: Drop the first error frames
-Date: Wed,  5 Mar 2025 10:25:13 +0800
-Message-Id: <20250305022513.2312731-1-ming.qian@oss.nxp.com>
-X-Mailer: git-send-email 2.34.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SG2PR02CA0010.apcprd02.prod.outlook.com
- (2603:1096:3:17::22) To PAXPR04MB8254.eurprd04.prod.outlook.com
- (2603:10a6:102:1cd::24)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PiHN9kP5"
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ac08167634bso46058366b.1
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Mar 2025 18:17:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1741141041; x=1741745841; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6rvSTlkpvpW7p+80Sjr3aDnt6o0B0yeaCG4YXkElwWc=;
+        b=PiHN9kP5LAPdvY8W/S2XGXdoZ0jJmrTepauuM/T9EbcQz5csksWhfLMk4NjXwc0BsF
+         sOtpQ3Rzi3Z5P+88EVT5PXbpUJM9a5B094Kim1ixzaKZjtAPqPtLdqc0gcKE4gPyuss3
+         BUDQpeGcXSkLBn92q0+IzfP+MOyyAb5Uh8qPk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741141041; x=1741745841;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=6rvSTlkpvpW7p+80Sjr3aDnt6o0B0yeaCG4YXkElwWc=;
+        b=PEhhAaxsKOtpDhr43VE84Q26xtc5qmNPKvpmSWmD0POvM8Fh7tkAFgenGbgoi0y/7u
+         MfVUkLqLN90udn2oXiBjdQqsh33SfEujcqxmGrEHPw0KUUnhHEWr1dIcr1U0u0EcqV2M
+         RJrm+WiDQf/wxhinKDmZhxtUrv+W1na6R2YY8Dlh0vxeru81XdECMj3NSYZZIuKtalob
+         MmZUI5yzewQlheHpFe6EMONawkbuhv6eE+2vO/vwj+3JwNPv/WuhNx3e2YkfGrQe2zQh
+         18ZAu7xixAMxKlgN1mbU94AvrBemZzQU6Xt5U/1aTwyT5VHW47qArK1Gs8c/2jfJ+W24
+         mwvg==
+X-Gm-Message-State: AOJu0Yzms7e8SZe7d/Cb261JWmLllR1pFPXX2XWLbdHbBWnQbruwGyJj
+	3poK4ehVxn41j1b7CX8oNBgOq2yzBGSuzVRluMqwAvwq0sDFT5a6EepmcTOofQ==
+X-Gm-Gg: ASbGncvlxtaMTV/9k9kb3RtHMWGQqbYqrEHFHw4GgbvR2RrKVXjgXj7E7AL7jpPUflv
+	KUDuHzcg0IelsuRQ1pRzZW9vgWVyCe5vCFt0bB05/n6HKH1maNTQ+rLf7F/GyhvMf96OXd6+D6z
+	Gb878+wvgcId1yQ6YMI0uyjiSXp4I5FjmGv/ts0P3P5wKVLr0SefgF9Mi53APhD1W/F4fkGLHTi
+	S0G6d4nE72d8iXYI8EPmNOAO8faslq3ZWcAOcl6yoJpcKKFY2v5LUV6GdOTlv7INV/WU/9w6Dkj
+	xDbw+YEfQfC77/7n+rvBtSNIAlRUlpx7/4gkEZXeOv+qWcYLVabKEHKKyu2igfZCqAFNacod8kB
+	v
+X-Google-Smtp-Source: AGHT+IG4LOJECTRz17K9A3USe11OyP2C9IBySPUjmXUBtjR0nV5q11MemrUEwg48VpC14wTFHsEuNQ==
+X-Received: by 2002:a05:6402:34d1:b0:5de:ce71:badf with SMTP id 4fb4d7f45d1cf-5e59f45048dmr459772a12.6.1741141040807;
+        Tue, 04 Mar 2025 18:17:20 -0800 (PST)
+Received: from cfish.c.googlers.com.com (40.162.204.35.bc.googleusercontent.com. [35.204.162.40])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5e4c43a55besm8891211a12.72.2025.03.04.18.17.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Mar 2025 18:17:20 -0800 (PST)
+From: jeffxu@chromium.org
+To: akpm@linux-foundation.org,
+	keescook@chromium.org,
+	jannh@google.com,
+	torvalds@linux-foundation.org,
+	vbabka@suse.cz,
+	lorenzo.stoakes@oracle.com,
+	Liam.Howlett@Oracle.com,
+	adhemerval.zanella@linaro.org,
+	oleg@redhat.com,
+	avagin@gmail.com,
+	benjamin@sipsolutions.net
+Cc: linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-kselftest@vger.kernel.org,
+	jorgelo@chromium.org,
+	sroettger@google.com,
+	hch@lst.de,
+	ojeda@kernel.org,
+	thomas.weissschuh@linutronix.de,
+	adobriyan@gmail.com,
+	johannes@sipsolutions.net,
+	pedro.falcato@gmail.com,
+	hca@linux.ibm.com,
+	willy@infradead.org,
+	anna-maria@linutronix.de,
+	mark.rutland@arm.com,
+	linus.walleij@linaro.org,
+	Jason@zx2c4.com,
+	deller@gmx.de,
+	rdunlap@infradead.org,
+	davem@davemloft.net,
+	peterx@redhat.com,
+	f.fainelli@gmail.com,
+	gerg@kernel.org,
+	dave.hansen@linux.intel.com,
+	mingo@kernel.org,
+	ardb@kernel.org,
+	mhocko@suse.com,
+	42.hyeyoo@gmail.com,
+	peterz@infradead.org,
+	ardb@google.com,
+	enh@google.com,
+	rientjes@google.com,
+	groeck@chromium.org,
+	mpe@ellerman.id.au,
+	aleksandr.mikhalitsyn@canonical.com,
+	mike.rapoport@gmail.com,
+	Jeff Xu <jeffxu@chromium.org>,
+	Kees Cook <kees@kernel.org>
+Subject: [PATCH v9 1/7] mseal sysmap: kernel config and header change
+Date: Wed,  5 Mar 2025 02:17:05 +0000
+Message-ID: <20250305021711.3867874-2-jeffxu@google.com>
+X-Mailer: git-send-email 2.48.1.711.g2feabab25a-goog
+In-Reply-To: <20250305021711.3867874-1-jeffxu@google.com>
+References: <20250305021711.3867874-1-jeffxu@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB8254:EE_|AS1PR04MB9479:EE_
-X-MS-Office365-Filtering-Correlation-Id: de0922b1-32d5-480d-323c-08dd5b8bb8be
-X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|366016|52116014|7416014|376014|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?eZVins9kumVB/J+BWgywQlupRND1zQAjAZytp2f3E6R2gC3qHrpuVqlU9U6h?=
- =?us-ascii?Q?cwQzRoQVOGRIgUsG3Q/x5Ou6LAkeSdfi3uLMRtLrNnntawD5IkCacewUlMQJ?=
- =?us-ascii?Q?oDqriLLdLjYHpE0zB3PPETZog9H0c/CtR4WRxdOGEApKhskJVbltQGMebYOw?=
- =?us-ascii?Q?GBULcw+EldGAeRcVfPZEUJIskjLoL061gj6yXq6JqZZrVDV8/jLAk37oiNDI?=
- =?us-ascii?Q?fdJtQOZ4hS4Kakl8qWuvEiThrAH1K03FHRVqRQOcpM6NVZjj2RBKB6PHMWGA?=
- =?us-ascii?Q?WSGuxZUZv/IZjMn+GB94aU2gZeNnIoc1tWFEvhze7pifhgY7S+KnTmY03Fr3?=
- =?us-ascii?Q?aPz1LewwcPwUIWdHLisZkTgmZ9GI2pbj3fK8oRL5jvRm1XwONzf4SHXW3L8b?=
- =?us-ascii?Q?+1vvaUfneWAMrnSJ4l+9MCUSdQxzh8XS508oC77r/B2hatze3gK6guvMMg64?=
- =?us-ascii?Q?vWICd1/k5KZLOqtKvY7rwm+DDZZRsUHHVo1DY3cRzT8acYshRY4ABTh/vpvS?=
- =?us-ascii?Q?BgZlSFQlSJKJcUWV2BqZWU5md93EAky9bSY9qnGEn4BpmcS3Y6/DXtcNWLKX?=
- =?us-ascii?Q?Ke3w7LaPKwASuE8Ma1rA2u8xx3B5EhJsVgSkbK04cWuCNLFHm3uxzs/CBl/b?=
- =?us-ascii?Q?kPxce+M9gxMLelAi4zpvLTYMJv7f9T4fOsPE6yYv5Hi1n1SFRTqdQIsa9B7k?=
- =?us-ascii?Q?Ca46TpQd22p64yfAfPR5q8VLkgVKsd4N+sGl2a1Wfya9+OmeMBtUt8zIYYDK?=
- =?us-ascii?Q?r3NfADmDFs4WFxJCvhb8MhVALeNdc5U5yxzJK6tAec7tg1unIurayREID75e?=
- =?us-ascii?Q?W6R6gryKtmM7IYy4mh1I+N4wP3ZaMoUdu0UG9TMRWIzisetsOxh/b6uPYP3H?=
- =?us-ascii?Q?QjqDbRW4N0NWjo484QTeKaM5Jg7bkdo5rQkkOlZSbV69P9Fr6YLZswq+W9O0?=
- =?us-ascii?Q?qAujii8wzt7sfVVjmn1SBW8ojkLTwCRiX7ylaY1kPdCLGql+Sux7Y4fioUM6?=
- =?us-ascii?Q?lmYM8OrM4WIeSRY6YAewf3DoAuw3FicC0q5TKN9ErkSiGVXFHbnGUeAe0hxl?=
- =?us-ascii?Q?4eVkM45H91bMWidr3kxLzjCp5oRM7jYQ49LpxsiVPfyXwwWA1eFCE4Ov4OEF?=
- =?us-ascii?Q?bKPnro4WmndsgxhFfv/fPqojxGVME9ae+i+KkCkzhbAzbALvHzKVgHn6Lj0R?=
- =?us-ascii?Q?nFN9WuFnEvrQSJ1gKwS8BR/CGWEMAEIWccDEIgyFUAfWtnNVKq8BfP5Gaqdh?=
- =?us-ascii?Q?jdB3su8a3O6NfKXbDV2twBR3QHEaLUkPyGmTfasyk5FM2BWc6MKDHQ9xZAun?=
- =?us-ascii?Q?1kOJs9A3KlXNXzo9EjeTIS3fK5O1TkHBS7RiCto7+B5u1gyrMsChRqwgXy6D?=
- =?us-ascii?Q?IM/uTph+qfZMHtVx6IuAz0REmWhrAAJdJz88cIZ6J/J7k0oh71gVgn0wLF79?=
- =?us-ascii?Q?zSuCH6suzy413jOp0VlU8Ra/BpQD9XZP?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB8254.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(52116014)(7416014)(376014)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?gOFkT1KmGTGPNB904luYBmeoAddqJ7P7o24TCGt0ifTXC0ILAFCCxiPlmlzJ?=
- =?us-ascii?Q?kUX90nQjDjdmmNgu6C8xuPNY495+lwPSYVlpPCyJoRaXomtwCUMW6j7LuzMv?=
- =?us-ascii?Q?A/GdQoCXK5rT/QfkLAMgXZqD6qhB/t7eGI1M5wBwPUMbodf3XNN3V2i1Hcit?=
- =?us-ascii?Q?WahSS0SyMeZRzIc3R1DBBwIPv3M0ziaObv9LTjUzOpQ4WzzpaSjAY2d8lB9F?=
- =?us-ascii?Q?e3JMK6FZ8a0sL518kl2XnQPUmoSpXhCHAzroAEt4S2n/eiyTs0pRjOY7+tM/?=
- =?us-ascii?Q?27zG0mU6U99cKPbQwV6SEz6u2Hid2LVLARRU8XMItDdMjK3UhtQRuNSRiKAC?=
- =?us-ascii?Q?WoPQU/9XlXc6cBVEf74s3eTDBmO2pFWVATrODXO1FT8NlLu0OE+dKfM6ejFL?=
- =?us-ascii?Q?CWoLeVKVEDnt4RkO6Ddur5UrOw2yRiFnZUvAgaOazRL2qn0WITVSlgNIiNcU?=
- =?us-ascii?Q?nfi6qTYHX+Jaicab0zjySeOSao7ghI+aX4S2oA7ySr8vkhZis6qMw9CLNbqr?=
- =?us-ascii?Q?noX+Zpcl3tbV/c+aAwizQNknEyXwKg/yNC1a9NAngLj2zkHwp/D+n2N2f1V8?=
- =?us-ascii?Q?mmFpzB1XQAS9Sd5UM4jcYTILFk2c7hlTLznaeanVIMfR3jbwqCQ3++AdDjF8?=
- =?us-ascii?Q?xn6KO54Z/eJJijWC1r2/WpdYi2cl3LGbrVrwF8/g4rhZZZfGlbv4ad0UrTPa?=
- =?us-ascii?Q?DwjUHjBv73bazXAQ1bJjCog6/LemWOr8qXpO2m7/l/O2ajVD3BpC8v9W4KQw?=
- =?us-ascii?Q?id81ijNO2g7h9tq+Zu8FICbRrgCFj0BeMZvJmgQlC5KgGoezcTbVJ5mCHRHP?=
- =?us-ascii?Q?vCYtRqV29d92N4oq8i0u5pYTXUUAUUoi8ssd6/Ge70bb9uD4TVFUsrRS1ZLI?=
- =?us-ascii?Q?95YvTvHpPB/Xt6Q2stlUriQ+HyvqExf7OA83tIaNy/9k7mzWLEfwsholhBQR?=
- =?us-ascii?Q?vVy0HJUMcOU7ZmbL7klvbPGuX0IYYOsGqzmAWPvCGNjUmbngEt9Yn402YL0D?=
- =?us-ascii?Q?JWaTbMNKxtOBqTgmsLAxejc/cu2zpLhYC3mdFhlGUrZUKwoTfYLOtC+OepiL?=
- =?us-ascii?Q?FJbMVNTob8lCGCZPHJbnojsfuhDkv6JR4pH1fcdJD3uSPNF6qLodBqd48Dfx?=
- =?us-ascii?Q?qhG2m9RBT6YjYDnTScmK4j4fe5uv8mxjdZ97ZEKH7KyMaNxUjFgAP/d4+v7E?=
- =?us-ascii?Q?astq3i9Dbmadr3IAlm64KJOnFiYChm5Fjw+7jTvkJmlFhXb0keh0WiQfLOiO?=
- =?us-ascii?Q?d5NVf6QBb2g7i79H/xEXnRUMVkDqd/lk37x2fA8OPTMI4SRqga61s9N/VAOL?=
- =?us-ascii?Q?1G23OXMuC2NjblZqn+y2Kz/M2McWAdnc+7FI4rmq71HLguqDwOyb2xG/MIoc?=
- =?us-ascii?Q?pPzZBe4LJBX8e1UMBtOiDfon7rO7fI2HKLKaxwjpHKCRf0BsWIizxLTei9PX?=
- =?us-ascii?Q?m5qu8PduYByB1Ir34JCNS3YJ+QPlB+zDBfGCQRygSkblRVhFUYrK10jAa4GZ?=
- =?us-ascii?Q?HuCd4h7/MAiB/s14RoPnbHgfA/l1YCtP+SzB790TKF0izAmlKuytGsHzJ+NF?=
- =?us-ascii?Q?hkH03PMCR/9XlFqlISogXKwsYO6YPvIKoQsAdSpx?=
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: de0922b1-32d5-480d-323c-08dd5b8bb8be
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB8254.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Mar 2025 02:16:21.6395
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Bf1t9JLScLhCf9iKDuOzb+sA3s4MMkxTRPyRqPg5TXJXiqfMzSBWAKEMwqUJn1KQdS5NRdsDBfY1GsKVx9hZqA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS1PR04MB9479
+Content-Transfer-Encoding: 8bit
 
-From: Ming Qian <ming.qian@oss.nxp.com>
+From: Jeff Xu <jeffxu@chromium.org>
 
-When an output buffer contains error frame header,
-v4l2_jpeg_parse_header() will return error, then driver will mark this
-buffer and a capture buffer done with error flag in device_run().
+Provide infrastructure to mseal system mappings. Establish
+two kernel configs (CONFIG_MSEAL_SYSTEM_MAPPINGS,
+ARCH_SUPPORTS_MSEAL_SYSTEM_MAPPINGS) and VM_SEALED_SYSMAP
+macro for future patches.
 
-But if the error occurs in the first frames, before setup the capture
-queue, there is no chance to schedule device_run(), and there may be no
-capture to mark error.
-
-So we need to drop this buffer with error flag, and make the decoding
-can continue.
-
-Signed-off-by: Ming Qian <ming.qian@oss.nxp.com>
+Signed-off-by: Jeff Xu <jeffxu@chromium.org>
+Reviewed-by: Kees Cook <kees@kernel.org>
 ---
- drivers/media/platform/nxp/imx-jpeg/mxc-jpeg.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ include/linux/mm.h | 10 ++++++++++
+ init/Kconfig       | 22 ++++++++++++++++++++++
+ security/Kconfig   | 21 +++++++++++++++++++++
+ 3 files changed, 53 insertions(+)
 
-diff --git a/drivers/media/platform/nxp/imx-jpeg/mxc-jpeg.c b/drivers/media/platform/nxp/imx-jpeg/mxc-jpeg.c
-index 1221b309a916..0e6ee997284b 100644
---- a/drivers/media/platform/nxp/imx-jpeg/mxc-jpeg.c
-+++ b/drivers/media/platform/nxp/imx-jpeg/mxc-jpeg.c
-@@ -1921,6 +1921,15 @@ static void mxc_jpeg_buf_queue(struct vb2_buffer *vb)
- 	if (ret)
- 		jpeg_src_buf->jpeg_parse_error = true;
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index 7b1068ddcbb7..8b800941678d 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -4155,4 +4155,14 @@ int arch_get_shadow_stack_status(struct task_struct *t, unsigned long __user *st
+ int arch_set_shadow_stack_status(struct task_struct *t, unsigned long status);
+ int arch_lock_shadow_stack_status(struct task_struct *t, unsigned long status);
  
-+	/*
-+	 * if the capture queue is not setup, the device_run() won't be scheduled,
-+	 * need to drop the error buffer, so that the decoding can continue
-+	 */
-+	if (jpeg_src_buf->jpeg_parse_error &&
-+	    !vb2_is_streaming(v4l2_m2m_get_dst_vq(ctx->fh.m2m_ctx))) {
-+		v4l2_m2m_buf_done(vbuf, VB2_BUF_STATE_ERROR);
-+		return;
-+	}
- end:
- 	v4l2_m2m_buf_queue(ctx->fh.m2m_ctx, vbuf);
- }
++
++/*
++ * mseal of userspace process's system mappings.
++ */
++#ifdef CONFIG_MSEAL_SYSTEM_MAPPINGS
++#define VM_SEALED_SYSMAP	VM_SEALED
++#else
++#define VM_SEALED_SYSMAP	VM_NONE
++#endif
++
+ #endif /* _LINUX_MM_H */
+diff --git a/init/Kconfig b/init/Kconfig
+index d0d021b3fa3b..7f67d8942a09 100644
+--- a/init/Kconfig
++++ b/init/Kconfig
+@@ -1882,6 +1882,28 @@ config ARCH_HAS_MEMBARRIER_CALLBACKS
+ config ARCH_HAS_MEMBARRIER_SYNC_CORE
+ 	bool
+ 
++config ARCH_SUPPORTS_MSEAL_SYSTEM_MAPPINGS
++	bool
++	help
++	  Control MSEAL_SYSTEM_MAPPINGS access based on architecture.
++
++	  A 64-bit kernel is required for the memory sealing feature.
++	  No specific hardware features from the CPU are needed.
++
++	  To enable this feature, the architecture needs to update their
++	  special mappings calls to include the sealing flag and confirm
++	  that it doesn't unmap/remap system mappings during the life
++	  time of the process. The existence of this flag for an architecture
++	  implies that it does not require the remapping of the system
++	  mappings during process lifetime, so sealing these mappings is safe
++	  from a kernel perspective.
++
++	  After the architecture enables this, a distribution can set
++	  CONFIG_MSEAL_SYSTEM_MAPPING to manage access to the feature.
++
++	  For complete descriptions of memory sealing, please see
++	  Documentation/userspace-api/mseal.rst
++
+ config HAVE_PERF_EVENTS
+ 	bool
+ 	help
+diff --git a/security/Kconfig b/security/Kconfig
+index f10dbf15c294..a914a02df27e 100644
+--- a/security/Kconfig
++++ b/security/Kconfig
+@@ -51,6 +51,27 @@ config PROC_MEM_NO_FORCE
+ 
+ endchoice
+ 
++config MSEAL_SYSTEM_MAPPINGS
++	bool "mseal system mappings"
++	depends on 64BIT
++	depends on ARCH_SUPPORTS_MSEAL_SYSTEM_MAPPINGS
++	depends on !CHECKPOINT_RESTORE
++	help
++	  Apply mseal on system mappings.
++	  The system mappings includes vdso, vvar, vvar_vclock,
++	  vectors (arm compat-mode), sigpage (arm compat-mode), uprobes.
++
++	  A 64-bit kernel is required for the memory sealing feature.
++	  No specific hardware features from the CPU are needed.
++
++	  WARNING: This feature breaks programs which rely on relocating
++	  or unmapping system mappings. Known broken software at the time
++	  of writing includes CHECKPOINT_RESTORE, UML, gVisor, rr. Therefore
++	  this config can't be enabled universally.
++
++	  For complete descriptions of memory sealing, please see
++	  Documentation/userspace-api/mseal.rst
++
+ config SECURITY
+ 	bool "Enable different security models"
+ 	depends on SYSFS
 -- 
-2.43.0-rc1
+2.48.1.711.g2feabab25a-goog
 
