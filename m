@@ -1,103 +1,88 @@
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 258481EEA5D
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 07:40:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6208B1DE4EC;
+	Wed,  5 Mar 2025 07:41:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741160441; cv=none; b=chSWsYFchdncUoT/82LlBk/GCKVx6DY4LvpPjYWUTfn64XtmIRHANAt2SYrjFBr3J5JE6p6AkHXledpXTQGzG+kIPjxvzbHi8Zjc6ZSD3JG1lIeB29H+cPRbm1uKiavGli1eUgMqoDlNgE8OefT+tDH4OZV9wW0vm2lwlB65UCY=
+	t=1741160472; cv=none; b=OBnIlFP72oJz/0zURh5NNAXSSW9P8OUNypYN2EWJoY1qH4dk9Sz6hB8i+rPqrSPr+OYUcdwvOh88RFAIDDgOjjApI19S2lsTFz6I82BJa83e7DYwYQBv6NkqwRNXkBIPyUD9eDT9P1S5FZ4bUW9umS9ixp+HlEYLIpin1cBokYQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741160441; c=relaxed/simple;
-	bh=VDTDjXL2VmXwu5SJw3B4Qg8I7zdkWtnn7A7EnShICWQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BmyxZ09nTNvdx3TxZnN1gT/IVUOhkfDUUkzGYMcAIRmFOE5T+oV1+bbsau2707K0R2W1SEEVyDDCOh6uPFhA0P8797xqMvswj5PONrzZMeibai8h6vJUuFQcK5LDlyNPNZrPPoZUPTN7pEPoZdF3nytS2SRpP6YCWFx7LV9eX+Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=BLnx6i7j; arc=none smtp.client-ip=209.85.208.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1741160472; c=relaxed/simple;
+	bh=LtWIFnniiqHthw+orxCSjnxOicCCXctZRD9e2kWFt+E=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=VqW6hzpGUTwbUcDvwq5KO9vcc9Kc0B1tSisJDfRwx8gDITkk4X/xqwmc3a4WBN1bd7CYDl7dkFzxlId9pQJ3m/oz3WQ2AJPX18BUhqVLfieb0SJFAtMWfRn3ntXlydHvJjhuktJGzalJ9bOgK95bAA+S0oFLSZCzHN6ZLhXEvOA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=gktz8Uhk; arc=none smtp.client-ip=168.119.38.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BLnx6i7j"
-Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-307bc125e2eso71985451fa.3
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Mar 2025 23:40:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741160438; x=1741765238; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VDTDjXL2VmXwu5SJw3B4Qg8I7zdkWtnn7A7EnShICWQ=;
-        b=BLnx6i7jGlmHnQuSbg0Mesv+Qbc8vu8kKur26c+UmhcRUaUE+QUMmkgjqK8DcpidNS
-         HkqZFwSXw+C55RUszX46OC9J441awi6L/Q1nYtsOZyIrWrgeKirkAID34j0CNvGLfgKf
-         HNDXzKSiSWM1NtbfliWcUqWpEHkobfPIOoO6f5AJ1UCv3VefQ2A/3I5wo74Dmvgz8z6c
-         nMMHIAbiwX+7w0DZi/WitzGmg7Z6XRr1640lUjZFI3UkQFxRQQ8Gnf1RRF65YBb+eObP
-         Ui5UZeL7982Ub01JPiX0MyohOuKLYIayN9gixaH8LQhYaWif//IkH4lfEf1SDby9Luy2
-         B2NQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741160438; x=1741765238;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VDTDjXL2VmXwu5SJw3B4Qg8I7zdkWtnn7A7EnShICWQ=;
-        b=aDGS+QZeRk5j8RbJV+l+hkfpwh++JIwIwtSi56mAqn2xdLi8w1xnLnGtAW4+NFBfAg
-         M4D8uv7g1x3PsX8yKC6UD9gRoC/ITTcNPtA1aMNCiY24WHjnC7hz87CdP1xWISViTjTF
-         8C5AKbDqtrfMCi0g21h4k9bi5FRS6SM82lx9RFZhgeaajiD/T8iAvWn71lslHhpZNnna
-         k+PyfWlFGGreURND1nSfc4HKW9bwP26uky9PvQ5WdZxAgT6WBgJfSKqbVY0N6QdJgh2m
-         kpxs3KCdSjFprn0YaDfjXjyO3vVWIVuvjpf7UW64ZfPj/wpgijBIXuMTDs6jKY8lZfVT
-         NkNQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWmtQ3rYjHx2qDIP15GxrB61zJHV/ZzE6CJW9xg9qxm750m82XLXaxnvlUoZ7C97Vf+m3a53vDSiMRifKg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzZao/d/Cr9nNL25zJfm/BwZ0JDygavX+ExT+6zWOBR2BlNArmL
-	5ejtgdNivmO01wufOiWem6KHGEXALt1VigMmFwwwPuVujn6E94LYCVPcuv1YrQa2TM3h1kGRnrJ
-	1seBbQywLIahDqRT8q+BaIHvIV0cor857ZMubJg==
-X-Gm-Gg: ASbGncueIYb2MatnqBH+eisbWmfRqmW6MVv4Yv6jgAvW7WkTRd9LkJ6DEWQq6UCt+OM
-	f0n4w5mbRWFAQ3cOZdu3Dqgtu0cR5izSVIB2D+LiKgQzHMMo/6SkprVSd1uMOqyU6/r9y31rxEg
-	/1itUI3QQL95bkeZODTs8GcYxF+A==
-X-Google-Smtp-Source: AGHT+IGcwWgEry+6tzHBD+mNnxIVE6sKBlzFgi1RRA6m0uvCysoF6DsDJJB/fX8qwDEYMA9UPY6ZXQV3WzLO+Ixih90=
-X-Received: by 2002:a05:651c:556:b0:30b:d44d:e76a with SMTP id
- 38308e7fff4ca-30bd7acab1bmr7711201fa.25.1741160438099; Tue, 04 Mar 2025
- 23:40:38 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="gktz8Uhk"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
+	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
+	Resent-Cc:Resent-Message-ID; bh=pL0ILPUfiLo8D7078PGmpAnb8Y1iCaIIVKVFNqbbuys=;
+	t=1741160466; x=1742370066; b=gktz8UhkOKZ+gaeM6Vc+P6pysmrdHQIjpuBomsTO/IZKqvy
+	FbHB8J/SQ40UcdLVDfF0x1hV8DD+3QlMfSeeYppZe3UdeaJPxh3pUHxZ5fOLaN8kntYtI3ozqqtiW
+	RP0lrjYALKAT6U1vHrSKFxqXUQHEhY5brdqMzghiy2enjWPytlHkBc5dqdYRylx0bDUQw8IA7QbdM
+	8g2wglkE2CoGzsEJFnkgDVynE6QWcW5934DoQvKJmwz6jLs88Lc/x2yzCvx2xqn6TTsxvyf1lTK6p
+	NcSaKEQuTWhOcxh45AEkUsq9Y9g+8vofMEMA0+je0EPCyWq6t7ZflnZ5GpH5a8KQ==;
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.98)
+	(envelope-from <johannes@sipsolutions.net>)
+	id 1tpjN5-00000001bf5-3dpq;
+	Wed, 05 Mar 2025 08:40:52 +0100
+Message-ID: <98e39be3351190ec71ffb067c062c82883ebef24.camel@sipsolutions.net>
+Subject: Re: [PATCH v2 0/5] wfx: add support for WoWLAN on Silabs WF200
+From: Johannes Berg <johannes@sipsolutions.net>
+To: =?ISO-8859-1?Q?J=E9r=F4me?= Pouiller <jerome.pouiller@silabs.com>, 
+	linux-wireless@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, Kalle Valo <kvalo@kernel.org>, 
+	linux-devel@silabs.com
+Date: Wed, 05 Mar 2025 08:40:51 +0100
+In-Reply-To: <2018315.usQuhbGJ8B@nb0018864>
+References: <20250302144731.117409-1-jerome.pouiller@silabs.com>
+	 <f808c48596ae1929c62704c226fb109cc03bbd2a.camel@sipsolutions.net>
+	 <2018315.usQuhbGJ8B@nb0018864>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250303164928.1466246-1-andriy.shevchenko@linux.intel.com>
- <20250303164928.1466246-4-andriy.shevchenko@linux.intel.com>
- <CACRpkdbCfhqRGOGrCgP-e3AnK_tmHX+eUpZKjitbfemzAXCcWg@mail.gmail.com>
- <Z8YThNku95-oPPNB@surfacebook.localdomain> <CACRpkdbqYoY1vYGii1SyPL1mkULGXYX7vFwu+U9u2w9--EYAsQ@mail.gmail.com>
- <Z8bgYFUds3UU96Mo@smile.fi.intel.com>
-In-Reply-To: <Z8bgYFUds3UU96Mo@smile.fi.intel.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Wed, 5 Mar 2025 08:40:27 +0100
-X-Gm-Features: AQ5f1JqBv5lkq_yKaz9gG-53y85X9EsVUbvHy0t75prGe4GI8Z-EcKjHUiR6o4k
-Message-ID: <CACRpkdYCxPjF2E-jd1OkdYawYJLnFfHUDSL737sr_Zkjz9gVkQ@mail.gmail.com>
-Subject: Re: [PATCH net-next v2 3/3] ieee802154: ca8210: Switch to using gpiod API
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: linux-wpan@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	Alexander Aring <alex.aring@gmail.com>, Stefan Schmidt <stefan@datenfreihafen.org>, 
-	Miquel Raynal <miquel.raynal@bootlin.com>, Andrew Lunn <andrew+netdev@lunn.ch>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Bartosz Golaszewski <brgl@bgdev.pl>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-malware-bazaar: not-scanned
 
-On Tue, Mar 4, 2025 at 12:13=E2=80=AFPM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
-> On Tue, Mar 04, 2025 at 01:03:41AM +0100, Linus Walleij wrote:
-> > On Mon, Mar 3, 2025 at 9:39=E2=80=AFPM Andy Shevchenko
-> > <andy.shevchenko@gmail.com> wrote:
-> >
-> > > > Maybe add a comment in the code that this is wrong and the
-> > > > driver and DTS files should be fixed.
-> > >
-> > > Or maybe fix in the driver and schema and add a quirk to gpiolib-of.c=
-?
-> >
-> > Even better!
->
-> I am about to send a v3, I'm going to leave your tag despite a few change=
-s as
-> discussed. I hope this is okay with you.
+On Tue, 2025-03-04 at 16:22 +0100, J=C3=A9r=C3=B4me Pouiller wrote:
+>=20
+> Patchwork also reports two warnings that I am going to ignore:
+>=20
+>   - "Target tree name not specified in the subject", I assume it
+>     is "wireless-next", but in the doubt I prefer to refrain.
 
-Of course!
+It should be wireless-next for anything that isn't fixes for the current
+cycle, and please do add it - without it the checker won't always be
+able to pick up the patches to test them:
 
-Linus Walleij
+https://lore.kernel.org/linux-wireless/ec3a3d891acfe5ed8763271a1df4151d75da=
+f25f.camel@sipsolutions.net/
+
+>   - Lines are larger then 80 columns. Checkpatch.pl now accepts up
+>     to 100 columns. I am not aware any local exception in net/, right?
+
+It looks like that's not documented
+(https://docs.kernel.org/process/maintainer-netdev.html), but I had a
+conversation with Jakub about this in the past and he prefers to have
+the checks still at 80 because people were, in his telling, abusing it
+in a way and making really long lines for no good reason.
+
+I'm not going to be super strict about it, but I'd encourage everyone
+who sees that warning to see if they can do better.
+
+In this particular case, it's just a comment, so could trivially be
+wrapped, but I'm not going to complain about 85 columns. If someone's
+going to 100 columns with (text) comments though then I think that'd
+raise some eyebrows. Narrower text is easier to read anyway.
+
+johannes
