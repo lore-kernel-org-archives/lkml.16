@@ -1,57 +1,57 @@
 Received: from mx0b-001ae601.pphosted.com (mx0b-001ae601.pphosted.com [67.231.152.168])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2F921A316B;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2FDB1A317E;
 	Wed,  5 Mar 2025 17:07:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.152.168
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741194457; cv=none; b=E7rKmYE1C5AJlgN4toDlvzespPllOkQNp22iv5KPAnF1i06m26BSwbtBtcpziIFCmkdKdM+bg8Fy//GkSZ5rWNdGvYr1oeBlIXh9Ms5tDh63SI3Hw5mIPnoTm+OGbKrsSeCSBS6Yd7QdKAaikdyNYWK7xa+JiCuD02jaXhr7d7E=
+	t=1741194457; cv=none; b=XOk5thdXwrdXPyTR+Tj+yW4xoOqEZxYWOll5K3FUasYCaH/iTl/n1Uh0JIrzZg+ifQMkwJVFejbOHaafk72CLrDEUAM2fPo2VyR54zknYtE6yXzyUKyWN9gZEVX6BkoTY4cUudd/W59uEfiuFjFZXK/BoTpCJl4+T7PQK7YDJ+w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1741194457; c=relaxed/simple;
-	bh=xKF3QOuLjEao9ch6bimlkjR/xiqs57DCjyFdPX3khmM=;
+	bh=Y7YxX2l3iQb0IM6oa8fgI0o/1U7mMHeD27C0mht4JVo=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=TvPWrjQk6ocYXLtvq5yzZZoStPcVZrcL8sYe2GvhuP5uUb+CawGLJwywhi8y5Rhti2jgLHNN33zsop3N7/mZRzWMwGDiBQXSD01i1Tj3tSwZh2ISbL5RnvjmfGM3DAxJ+T2HNbKfrkiQtSxT/w+lVl7qZlJpJLTDGfFnEIqajhA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=nv2MR6VK; arc=none smtp.client-ip=67.231.152.168
+	 MIME-Version:Content-Type; b=W9ksMY1o+h6a2jsN7CRW5dRwazk4e5yLrSKFtDcswemEn+j33aW8DrI2uHOyiDtrl1c6HAMLT1Iv/n633WwS1wRXvHywxpScvzBpBJJ0FDkYm56uy7107bwUvw2U54wFWRQW6RItVcMFBz9DquJvKVGlr3/cTGpcZNalzdbToKQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=YEzWvUz5; arc=none smtp.client-ip=67.231.152.168
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="nv2MR6VK"
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="YEzWvUz5"
 Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
-	by mx0b-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5254p2QC002458;
-	Wed, 5 Mar 2025 11:07:23 -0600
+	by mx0b-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5254p2Q9002458;
+	Wed, 5 Mar 2025 11:07:22 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=cc
 	:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=
-	PODMain02222019; bh=tsOYMuT3YzJOQbuUEuocUjoexHb6aFf6KIBIxMxNndQ=; b=
-	nv2MR6VKO6XLhzulxONVdY16sJ92np3XlnScWZ+OyPH5+tdP4mj9R/3wz5VKiElf
-	GwqlM40yBuzHeQp32HVIWY6K42QYj5Se8BmgpgsvF5O+ylvwv+Tm6HKjFdSW4E8b
-	Rm9i32xaXYEBAkIkp6Orltqe+0Yaw0BRllUt//cu7dtlIgZ4//7bLAGr7TMlHEpz
-	HEiwPy7/HhHjPuNzTFSNfcT+z1eNbW8Ckx9Ef/DPkI4b0/ubFgTnWu8oWFnhFRdN
-	GAXO2H1dB4N/KDqb+ZzwXIHHE2/cAL6axjClS4PtVmDeJ5UlQl9Xtkqpe8IPlsmf
-	oJv55wnUquJ7tG5wvS54wQ==
+	PODMain02222019; bh=2iNKt25cL2fH0qIHZYEWmxjSeXZcVc6Ql1ZfIJljUy8=; b=
+	YEzWvUz5GBIjzEashYY+irQYknsTNkJG4NGeHtJCzx5X3yCPD/QM2sTGVg9dM5Ho
+	hCktQgDpNra5BMurpeFUkgjCoSdjnGbFwI0sfBFkYGcDQ8JOiZeKUMjFnS+K4Sci
+	OjmXt6ALX3UOz4dCLgRAJ7wXydgpGeKhs4KFZPwMovDSzHNHxeLRcLH1nUW36gtq
+	7WeaobsVjK2viSoOHE60oqtdgLBoaJ3WpABYJbF2NYML5i2HVSir/ndXHIxAAxdR
+	Dfi6Ln+plKkY4sx7Ga3AO4G1uz3EdKSqs0bSKIxFwlricBI28QSglRHdmFwedam/
+	xG0/rlDaaEa/VaXnpx4aVA==
 Received: from ediex01.ad.cirrus.com ([84.19.233.68])
-	by mx0b-001ae601.pphosted.com (PPS) with ESMTPS id 456e8nsap8-5
+	by mx0b-001ae601.pphosted.com (PPS) with ESMTPS id 456e8nsap8-2
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 05 Mar 2025 11:07:23 -0600 (CST)
+	Wed, 05 Mar 2025 11:07:21 -0600 (CST)
 Received: from ediex01.ad.cirrus.com (198.61.84.80) by ediex01.ad.cirrus.com
  (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Wed, 5 Mar
- 2025 17:07:21 +0000
+ 2025 17:07:19 +0000
 Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
  anon-ediex01.ad.cirrus.com (198.61.84.80) with Microsoft SMTP Server id
- 15.2.1544.14 via Frontend Transport; Wed, 5 Mar 2025 17:07:21 +0000
+ 15.2.1544.14 via Frontend Transport; Wed, 5 Mar 2025 17:07:19 +0000
 Received: from lonswws02.ad.cirrus.com (lonswws02.ad.cirrus.com [198.90.188.42])
-	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id 0964C820270;
-	Wed,  5 Mar 2025 17:07:21 +0000 (UTC)
+	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id B5FE182026B;
+	Wed,  5 Mar 2025 17:07:19 +0000 (UTC)
 From: Stefan Binding <sbinding@opensource.cirrus.com>
 To: Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
 CC: <linux-sound@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <patches@opensource.cirrus.com>,
         Stefan Binding
 	<sbinding@opensource.cirrus.com>
-Subject: [PATCH v1 7/7] ALSA: hda/realtek: Add support for ASUS Zenbook UM3406KA Laptops using CS35L41 HDA
-Date: Wed, 5 Mar 2025 17:06:51 +0000
-Message-ID: <20250305170714.755794-8-sbinding@opensource.cirrus.com>
+Subject: [PATCH v1 1/7] ALSA: hda/realtek: Add support for ASUS ROG Strix G814 Laptop using CS35L41 HDA
+Date: Wed, 5 Mar 2025 17:06:45 +0000
+Message-ID: <20250305170714.755794-2-sbinding@opensource.cirrus.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250305170714.755794-1-sbinding@opensource.cirrus.com>
 References: <20250305170714.755794-1-sbinding@opensource.cirrus.com>
@@ -63,30 +63,33 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-Authority-Analysis: v=2.4 cv=DpWs+H/+ c=1 sm=1 tr=0 ts=67c884cb cx=c_pps a=uGhh+3tQvKmCLpEUO+DX4w==:117 a=uGhh+3tQvKmCLpEUO+DX4w==:17 a=Vs1iUdzkB0EA:10 a=w1d2syhTAAAA:8 a=cGFEEDjkhq4frd4CDRsA:9 a=YXXWInSmI4Sqt1AkVdoW:22
-X-Proofpoint-GUID: c6AAFzmJ871WaojTXMw7Ab0F5LSYt1EZ
-X-Proofpoint-ORIG-GUID: c6AAFzmJ871WaojTXMw7Ab0F5LSYt1EZ
+X-Authority-Analysis: v=2.4 cv=DpWs+H/+ c=1 sm=1 tr=0 ts=67c884ca cx=c_pps a=uGhh+3tQvKmCLpEUO+DX4w==:117 a=uGhh+3tQvKmCLpEUO+DX4w==:17 a=Vs1iUdzkB0EA:10 a=w1d2syhTAAAA:8 a=v0MoPBhksWDeor11JeoA:9 a=YXXWInSmI4Sqt1AkVdoW:22
+X-Proofpoint-GUID: X-XO4k_0SzOoRLoV_aXDLYMfMHxHwACN
+X-Proofpoint-ORIG-GUID: X-XO4k_0SzOoRLoV_aXDLYMfMHxHwACN
 X-Proofpoint-Spam-Reason: safe
 
-Laptop uses 2 CS35L41 Amps with HDA, using External boost with I2C
+Add support for ASUS G814PH/PM/PP and G814FH/FM/FP.
+
+Laptops use 2 CS35L41 Amps with HDA, using Internal boost, with I2C.
 
 Signed-off-by: Stefan Binding <sbinding@opensource.cirrus.com>
 ---
- sound/pci/hda/patch_realtek.c | 1 +
- 1 file changed, 1 insertion(+)
+ sound/pci/hda/patch_realtek.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
 diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
-index 99be1220de63..cda2596f294e 100644
+index ca10b9e9e3a4..d23d6fafd009 100644
 --- a/sound/pci/hda/patch_realtek.c
 +++ b/sound/pci/hda/patch_realtek.c
-@@ -10645,6 +10645,7 @@ static const struct hda_quirk alc269_fixup_tbl[] = {
- 	SND_PCI_QUIRK(0x1043, 0x10d3, "ASUS K6500ZC", ALC294_FIXUP_ASUS_SPK),
- 	SND_PCI_QUIRK(0x1043, 0x1154, "ASUS TP3607SH", ALC287_FIXUP_TAS2781_I2C),
- 	SND_PCI_QUIRK(0x1043, 0x115d, "Asus 1015E", ALC269_FIXUP_LIMIT_INT_MIC_BOOST),
-+	SND_PCI_QUIRK(0x1043, 0x1194, "ASUS UM3406KA", ALC287_FIXUP_CS35L41_I2C_2),
- 	SND_PCI_QUIRK(0x1043, 0x11c0, "ASUS X556UR", ALC255_FIXUP_ASUS_MIC_NO_PRESENCE),
- 	SND_PCI_QUIRK(0x1043, 0x1204, "ASUS Strix G615JHR_JMR_JPR", ALC287_FIXUP_TAS2781_I2C),
- 	SND_PCI_QUIRK(0x1043, 0x1214, "ASUS Strix G615LH_LM_LP", ALC287_FIXUP_TAS2781_I2C),
+@@ -10743,6 +10743,8 @@ static const struct hda_quirk alc269_fixup_tbl[] = {
+ 	SND_PCI_QUIRK(0x1043, 0x3a40, "ASUS G814JZR", ALC285_FIXUP_ASUS_SPI_REAR_SPEAKERS),
+ 	SND_PCI_QUIRK(0x1043, 0x3a50, "ASUS G834JYR/JZR", ALC285_FIXUP_ASUS_SPI_REAR_SPEAKERS),
+ 	SND_PCI_QUIRK(0x1043, 0x3a60, "ASUS G634JYR/JZR", ALC285_FIXUP_ASUS_SPI_REAR_SPEAKERS),
++	SND_PCI_QUIRK(0x1043, 0x3e00, "ASUS G814FH/FM/FP", ALC287_FIXUP_CS35L41_I2C_2),
++	SND_PCI_QUIRK(0x1043, 0x3e20, "ASUS G814PH/PM/PP", ALC287_FIXUP_CS35L41_I2C_2),
+ 	SND_PCI_QUIRK(0x1043, 0x3e30, "ASUS TP3607SA", ALC287_FIXUP_TAS2781_I2C),
+ 	SND_PCI_QUIRK(0x1043, 0x3ee0, "ASUS Strix G815_JHR_JMR_JPR", ALC287_FIXUP_TAS2781_I2C),
+ 	SND_PCI_QUIRK(0x1043, 0x3ef0, "ASUS Strix G635LR_LW_LX", ALC287_FIXUP_TAS2781_I2C),
 -- 
 2.43.0
 
