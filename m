@@ -1,97 +1,96 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B391C288DA;
-	Wed,  5 Mar 2025 00:17:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 430211078F
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 00:18:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741133871; cv=none; b=nWpEkgWyHGDzEN3mavyv3mQQciUjkimd3WWqYKmVoeS5CJxV4A0gareEgaVapwPauvmrD3mk0WG06bxNgmX7U8BasspzCJ7RrkUkOwwdhHhm4ketbFJl4VGkRDIokXd8IAjvJiK+/lCAsvN2lR8tfrmGnrgXQHutWEjKR0ASchM=
+	t=1741133935; cv=none; b=g3UrV5X0uXwdnogRNYocMkbgEcePGOKEbc5c/K/+IMdzhp0qt2WXlbPx2Ls4lzu4uuq1bZDt0gY1K3dWU0C+98VBk5q7DYK7mxdY63HZx1Y8wFOtMDpG6xDbMpKVg5KEUd+Y3UmMmKUbQQevFpKZTm0GwpBRvz9IvOdsCl0IMBs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741133871; c=relaxed/simple;
-	bh=0yno/DE+/JPPbpjlTDp+6AS6Y5WufQLFUtooXTkZzOg=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hcMEaSGBb0En8C0lPS38caGpxDPLEg7yZOSOgV6vMyADODspEw6gKYWNVXy2ICL8HZ1562v8svTXGifliNah8SE+MJrK0m/2mQFJwDX5+RYMgas9FCIVYxzFPFxxeKpnmoY3xqLHd8s7fx75so4Dkmc+aC2Hr0kBoe2hXJBVZrg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Qiy9Zl6y; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741133935; c=relaxed/simple;
+	bh=phhBcgYZ6Wa5Ew8fl7nA64kfa6V3GPXYg9e0b02aaP0=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=kQB3hpECpczX9Smi+vDik1Zeoer33wGX0bFOTvq4nFvYcxuqZPuBDjIkseIkgmqYmq7/gesvryISzwYk4ygBucG1q2/6KgE1RDpPCsF9DShypC4AFEXxXpBr5gpaHIMnObyLeJIm0d6o/YLQLrYfq0OEhaaJkxbR7Rn0jR+Wadw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IpjiRK6a; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qiy9Zl6y"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E4BDC4CEE5;
-	Wed,  5 Mar 2025 00:17:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741133871;
-	bh=0yno/DE+/JPPbpjlTDp+6AS6Y5WufQLFUtooXTkZzOg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Qiy9Zl6yv/aKjE9r7FltyhR99JNSR3mZEy7tHtEeAZwJx9e8I+OyYUOIVNR/AvgN4
-	 8y/TJexVAPwro/TnXD3bQGzwmuDowlMMQPnXQozziTqqfk4ft5fYlNG2Ew0+QbtsnO
-	 eIyPdgpKMmQ/18DHZ7SRDJQb5iNtOpCEkY2L7uSer+P0ci0NrVCxLl100RUgrg3zvo
-	 nx1DwfGtnJq5RIvZj/2QasoTO5Pwq+9XrYxDI9iJO7LOaPsIW5g2kdovUQlNW0r6l7
-	 j9E0YzHkyykZLrOevBWIxL8cVwlHZEmcr6184buXgx5OLsUD/wTj9miuN8+PRGiuqt
-	 lYFzVKL3eR5nQ==
-Date: Tue, 4 Mar 2025 16:17:48 -0800
-From: Jakub Kicinski <kuba@kernel.org>
-To: Mina Almasry <almasrymina@google.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, kvm@vger.kernel.org,
- virtualization@lists.linux.dev, linux-kselftest@vger.kernel.org, Donald
- Hunter <donald.hunter@gmail.com>, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Simon
- Horman <horms@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Andrew Lunn
- <andrew+netdev@lunn.ch>, Jeroen de Borst <jeroendb@google.com>, Harshitha
- Ramamurthy <hramamurthy@google.com>, Kuniyuki Iwashima <kuniyu@amazon.com>,
- Willem de Bruijn <willemb@google.com>, David Ahern <dsahern@kernel.org>,
- Neal Cardwell <ncardwell@google.com>, "Michael S. Tsirkin"
- <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, Xuan Zhuo
- <xuanzhuo@linux.alibaba.com>, Eugenio =?UTF-8?B?UMOpcmV6?=
- <eperezma@redhat.com>, Stefan Hajnoczi <stefanha@redhat.com>, Stefano
- Garzarella <sgarzare@redhat.com>, Shuah Khan <shuah@kernel.org>,
- sdf@fomichev.me, asml.silence@gmail.com, dw@davidwei.uk, Jamal Hadi Salim
- <jhs@mojatatu.com>, Victor Nogueira <victor@mojatatu.com>, Pedro Tammela
- <pctammela@mojatatu.com>, Samiullah Khawaja <skhawaja@google.com>
-Subject: Re: [PATCH net-next v6 7/8] net: check for driver support in netmem
- TX
-Message-ID: <20250304161748.42b71228@kernel.org>
-In-Reply-To: <CAHS8izOJfSCM+qZ=npPOK3kwuA1pyGHrPo73brRq2VXg8G450g@mail.gmail.com>
-References: <20250227041209.2031104-1-almasrymina@google.com>
-	<20250227041209.2031104-8-almasrymina@google.com>
-	<20250228164301.07af6753@kernel.org>
-	<CAHS8izO-N4maVtjhgH7CFv5D-QEtjQaYKSrHUrth=aJje4NZgg@mail.gmail.com>
-	<20250303162901.7fa57cd0@kernel.org>
-	<CAHS8izOJfSCM+qZ=npPOK3kwuA1pyGHrPo73brRq2VXg8G450g@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IpjiRK6a"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741133934; x=1772669934;
+  h=date:from:to:cc:subject:message-id;
+  bh=phhBcgYZ6Wa5Ew8fl7nA64kfa6V3GPXYg9e0b02aaP0=;
+  b=IpjiRK6aqYNroB0YEmRLy6E43mAHNdrQ8kGy7v03GLgJLunDE2lXvZFq
+   C/KS1uhZtuiwUNQ5qwf76KfWesCC23m/Wyut0RKVSqKZGM+Pd/LDLfIp+
+   q3R2VStE1yQNkla2ya2oiX5DcIOdR4R8077e70m1+Bm47ajHqdhH1zICN
+   tjZE7qcl+0aG/0icPMdo1u156/DYQ4HjpE2NFIKR1qmy/gaGJlp1W82sS
+   IsFNDaMQrq/y/b5lmiYl/g8FGYzXMk60LkzZyDOi1kSA42CwtTAPW9+QF
+   Q9tvubnwSkKYS6g4q0CQAw5XUR1668KGbxmjpiPtJVGFJF2Ir530vd3JS
+   g==;
+X-CSE-ConnectionGUID: Y3+PV6SAQDSX5vN+PwU8Pw==
+X-CSE-MsgGUID: FJj9HZjeQO+jLXLXi1l+uQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11363"; a="44886062"
+X-IronPort-AV: E=Sophos;i="6.14,221,1736841600"; 
+   d="scan'208";a="44886062"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2025 16:18:53 -0800
+X-CSE-ConnectionGUID: kKt2Inq9Q+2E9RmBwVJ5uA==
+X-CSE-MsgGUID: fRO2sXotQfiX1Ak/vh2xcQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="118431936"
+Received: from lkp-server02.sh.intel.com (HELO 76cde6cc1f07) ([10.239.97.151])
+  by orviesa010.jf.intel.com with ESMTP; 04 Mar 2025 16:18:52 -0800
+Received: from kbuild by 76cde6cc1f07 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tpcTK-000KP8-01;
+	Wed, 05 Mar 2025 00:18:50 +0000
+Date: Wed, 05 Mar 2025 08:18:25 +0800
+From: kernel test robot <lkp@intel.com>
+To: "x86-ml" <x86@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Subject: [tip:x86/urgent] BUILD SUCCESS
+ f6bdaab79ee4228a143ee1b4cb80416d6ffc0c63
+Message-ID: <202503050819.8Odm6yzN-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
 
-On Mon, 3 Mar 2025 19:53:44 -0800 Mina Almasry wrote:
-> > Upper devices and BPF access is covered I think, by the skbuff checks.
-> > But I think we missed adding a check in validate_xmit_skb() to protect
-> > the xmit paths of HW|virt drivers. You can try to add a TC rule which
-> > forwards all traffic from your devmem flow back out to the device and
-> > see if it crashes on net-next ?  
-> 
-> No crash, but by adding debug logs I'm detecting that we're passing
-> unreadable netmem dma-addresses to the dma_unmap_*() APIs, which is
-> known to be unsafe. I just can't reproduce an issue because my
-> platform has the IOMMU disabled.
-> 
-> I guess I do need to send the hunk from validate_xmit_skb() as a fix
-> to net and CC stable.
-> 
-> Another thing I'm worried about is ip_forward() inserting an
-> unreadable skb into the tx path somewhere higher up the stack which
-> calls more code that isn't expecting unreadable skbs? Specifically
-> worried about skb_frag_ref/unref. Does this sound like a concern as
-> well? Or is it a similar code path to tc?
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/urgent
+branch HEAD: f6bdaab79ee4228a143ee1b4cb80416d6ffc0c63  x86/cpu: Properly parse CPUID leaf 0x2 TLB descriptor 0x63
 
-I'd say similar to tc. We can protect drivers with a check in
-validate_xmit_skb(). The second API surface we need to filter on
-is skb / skb_frag helpers. The third is socket API / opt-in for
-in-kernel socket readers.
+elapsed time: 840m
 
-Driver and socket should be "easy" to cover with an explicit
-opt in. You already covered skb APIs but it's less centralized
-and there may be some abuses we are not aware of. Which is why
-patch 1 worries me a little.
+configs tested: 19
+configs skipped: 126
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+tested configs:
+i386                         allmodconfig    gcc-12
+i386                          allnoconfig    gcc-12
+i386                         allyesconfig    gcc-12
+i386    buildonly-randconfig-001-20250304    clang-19
+i386    buildonly-randconfig-002-20250304    clang-19
+i386    buildonly-randconfig-003-20250304    gcc-12
+i386    buildonly-randconfig-004-20250304    gcc-11
+i386    buildonly-randconfig-005-20250304    gcc-11
+i386    buildonly-randconfig-006-20250304    gcc-12
+i386                            defconfig    clang-19
+x86_64                        allnoconfig    clang-19
+x86_64                       allyesconfig    clang-19
+x86_64  buildonly-randconfig-001-20250304    clang-19
+x86_64  buildonly-randconfig-002-20250304    gcc-12
+x86_64  buildonly-randconfig-003-20250304    gcc-12
+x86_64  buildonly-randconfig-004-20250304    gcc-12
+x86_64  buildonly-randconfig-005-20250304    gcc-12
+x86_64  buildonly-randconfig-006-20250304    gcc-12
+x86_64                          defconfig    gcc-11
+
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
