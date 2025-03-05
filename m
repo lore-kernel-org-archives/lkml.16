@@ -1,141 +1,90 @@
-Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx.denx.de (mx.denx.de [89.58.32.78])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A32C253B7C
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 19:37:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6D64254AE3;
+	Wed,  5 Mar 2025 19:37:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.58.32.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741203475; cv=none; b=EoBx9mj2PZiiXtANcwi2xIEMG7TUJvigC8F1CE8vEY8Dhr4e7gwHzXkw3tOZlpIxDwh7KH5YuDLweB15sWN2jFQwXKpr/gHp/xu2y8NFUMy/4JHEKG+6fWKMrGXSuwgSzBbTtoWQLSoJxxThfVgL10an0q3zrx/bGJJ71z6WpvY=
+	t=1741203481; cv=none; b=EInZm/jUo8Js73ZFSknf5YN5muiUUNIfbR5ezJ9T9mA1avLwmLdvEdksWSe2rmQau7rXYtIIiACoEHgHVykURanjn6kSbNaNb7EGXOpRW6GO5owpHyDGafTZ3Yo6ht8g9oYc4Gc76f3lnl8tErds8eItBcugerX5/wcC/5+vahU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741203475; c=relaxed/simple;
-	bh=r/JCkE1A/VLSmSiv7YzZkQknfhDehP9WWEoKTpqyRXk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=S4KT+yxkf7QKM9/+jC+hKDpN0byIR9FhbirAQsNJ1Xvpvf9aXWmFd2R4g4diW88ivetAyEsiundD5AJ7iLNiMSh65hg49JEjZCqq6I0zEYlRqEJeXu4LpjxrzvXfpgWcd3hPWAaOfgg4E4QWeLZWdQ+ZI+XaX76NBQs0M0errkY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=g92+gyt8; arc=none smtp.client-ip=209.85.216.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741203481; c=relaxed/simple;
+	bh=YaeXAIalc5DmxyKI0ax248xGq1aSY2e1Rppfasxvec0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mJ2brlAkMb9o8T/Zk9+TzoTIlJq8ThgpQGa4LBmcDYtgWKX4k7uqb+V+wW5y2hZ+54WzGWNIiWIUGoE7fiDr1doVileKO/L+i+R1GP0obrCiWglrRWFBcQUe52OZTC8n960o7NKJN/qATv1o9ziddL1Pmid3N779hJxhhxLaQ9g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=Ygv6KX9z; arc=none smtp.client-ip=89.58.32.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g92+gyt8"
-Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-2ff53b26af2so227295a91.0
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Mar 2025 11:37:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741203474; x=1741808274; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XVL5x+1w+5pdmFPSNp6O0gS3bmjeUt72DJ16wn3q7tw=;
-        b=g92+gyt8PafJK68hqTKBTTJ5LyaNNmL4ZOUOB5icOMxcbVjR/Fwt6lyJTh8erMX1IO
-         HaR5b8seqw1SNUHUiThPzOWiNjkp3ugfgO5CkXEN6bNS/abP4AiqCuQG13QeyAniqQHP
-         NjRg1iCedZBzGRuhC0ROOHxkX2Nb/2JWpetB6F2iSTpV7Qb42pwDlGfQ3ZWUIciXYues
-         MSu2snhsDSMdpAvs3olSotqnRN7ez0fZwn+0KuvPtY2s1ZF58kF7ZBSHM1Ibg/rXERFC
-         4eR9m+GXJMC/PODAHaU834sZmsi4R6T2dOEbnc8n+mzZPIqESHElmIS9JVfQmsDc+OFG
-         UfLg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741203474; x=1741808274;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=XVL5x+1w+5pdmFPSNp6O0gS3bmjeUt72DJ16wn3q7tw=;
-        b=AKtfkFCIKhXLFF4jhJdqv3kTjkUjsxTlRbwzmG4NlSuKrU/xEm+V+TLoRN2M3Z5UMU
-         aOm2xcDLtqRGe8UBh82FrcsJmT7lbQEPnMWYmPeKLBuWLUCNSUOn2OFYvsPILCZI8S6d
-         EfDD/1A4w2anwunXS6iNOhCbyOhUyvqb/FFO1jASuisKwppjbS1HaInZSwYa0L0mfql+
-         pv/wGjxL5IY8I4pRTKA5TRalvhSMRhIngdIcAmN4Gs0O8yR8Tdiy5pgckQ3bEptZ5Wte
-         kNzi3qNhOx1Ty1Ns0+RPF8tteSJcelSboBRT3CguwxhetEzMslDDqbTvHiSCNlQXyUOg
-         6tvw==
-X-Forwarded-Encrypted: i=1; AJvYcCUYoppatg9/ETy5kUfV1Aysow4pEFE7jYhgWbTAorYl6x1C9MA3N3fq9KYM+ZbplQlWRuLwAeT8IQpM2aE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzYPc/Wit5XnAp52UQA0avR1rg1FQivf52Jc/ja7clADw0JRdo6
-	CuqWGiOdCcjDleCRJTOkoSIKCP7XztZmn//MDOng993v1xaYvNlc
-X-Gm-Gg: ASbGncvGkxUAMvLTI/ROan4FrUIytyQtVJXWRVrGrReIyVWLPN+LAi0gwBGLr9gEtPm
-	6n2wxM5UedWFQ6VgZOVo1/cp5oLcLxmOJ0Wa3vhysX2qzvPXondk/vGt5c3C4ortpVfav/+PzN3
-	7U21gF7N9eqQ+3Utd77d/mNltbEt1VMQH37QbCdxTCyGZNJo/va9d3lAVJJY759XYrhDZrgvUAW
-	ymZdIQtwVTWeDEI/Co6HbWRd/C+jFO3WDOLy500aD6gSv4gkT2bquZP3WjX8sqKpvs2eRRg2keC
-	0vx3YhMAgWsXG9ai9sfe/d49J2YrsggvVPIS3TABeUIJvh67YUd65N1QJLEx
-X-Google-Smtp-Source: AGHT+IHNsyo24/zrvRg4XtHFBGu5hJ7yR3l2dvNxqCeNbui3/L/DlOgNcf1xKJT/5yBT8maOJNvE1Q==
-X-Received: by 2002:a17:90b:1a8f:b0:2fa:6055:17e7 with SMTP id 98e67ed59e1d1-2ff497df3d2mr2866356a91.8.1741203473716;
-        Wed, 05 Mar 2025 11:37:53 -0800 (PST)
-Received: from localhost.lp.veng.com.ar ([200.10.125.114])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2ff4e7a2bbesm1898148a91.37.2025.03.05.11.37.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Mar 2025 11:37:53 -0800 (PST)
-From: Gaston Gonzalez <gascoar@gmail.com>
-To: linux-staging@lists.linux.dev
-Cc: dpenkler@gmail.com,
-	gregkh@linuxfoundation.org,
-	dan.carpenter@linaro.org,
-	arnd@arndb.de,
-	niharchaithanya@gmail.com,
-	jiapeng.chong@linux.alibaba.com,
-	linux-kernel@vger.kernel.org,
-	Gaston Gonzalez <gascoar@gmail.com>
-Subject: [PATCH v2 3/4] staging: gpib: fix kernel-doc section for usb_gpib_line_status() function
-Date: Wed,  5 Mar 2025 16:32:20 -0300
-Message-ID: <20250305193614.39604-7-gascoar@gmail.com>
-X-Mailer: git-send-email 2.49.0.rc0
-In-Reply-To: <20250305193614.39604-1-gascoar@gmail.com>
-References: <20250305193614.39604-1-gascoar@gmail.com>
+	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="Ygv6KX9z"
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 4865010382C18;
+	Wed,  5 Mar 2025 20:37:53 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de; s=mx-20241105;
+	t=1741203477; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 in-reply-to:references; bh=pfqBtTAyM0wNbUUeMeWy6C19KVMVCE7Zn0dvNPi44FY=;
+	b=Ygv6KX9ztc+yAMGd5LBvD38tYzNnuWy+d/ptEMM1kW9VsnSmJf1KzhP9+JOeyxRdhci4pW
+	c0w7sRYt0hI3D5JmZvLVYVgGI10cww8nP5/EGEvhse9ysN2opE2LBiC9cNulcyEEeCurft
+	5KaHzgHTLqrrQDJq1tlcYEOrGTBXaKgeIAX9wg2s4/AfT/Gree+hU5LqrTDMzO/SSf/2s7
+	5F6Or20X3fuQxbXzOFBPPDBzKf0peiSMERRX6VCt500OdA/WAf2TjuK7uHL26Qr4mg5Gbp
+	pZLWTkfa6hwFlW7LZAXbbu7HtrdueyY9cxoCMkFBwlrd2nJARuqzTJBTGXNhNA==
+Date: Wed, 5 Mar 2025 20:37:50 +0100
+From: Pavel Machek <pavel@denx.de>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev,
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
+	jonathanh@nvidia.com, f.fainelli@gmail.com,
+	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
+	conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
+Subject: Re: [PATCH 6.1 000/176] 6.1.130-rc1 review
+Message-ID: <Z8ioDomrJ9pcv4MW@duo.ucw.cz>
+References: <20250305174505.437358097@linuxfoundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="A/bYaBZRBTYrYPQ0"
+Content-Disposition: inline
+In-Reply-To: <20250305174505.437358097@linuxfoundation.org>
+X-Last-TLS-Session-Version: TLSv1.3
 
-The function name field in the kernel-doc section for the
-usb_gpib_line_status() is defined as 'line_status'. In addition, after
-the kernel-doc section, there are three macro definition instead of the
-function definition.
 
-These issues trigger the warning:
+--A/bYaBZRBTYrYPQ0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-warning: expecting prototype for line_status(). Prototype was for WQT()
-instead.
+Hi!
 
-Fix the warning by renaming the function in the kernel-doc section and
-by moving the macros to the beginning of the file with the rest of
-macros definition.
+> This is the start of the stable review cycle for the 6.1.130 release.
+> There are 176 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 
-Signed-off-by: Gaston Gonzalez <gascoar@gmail.com>
----
-v1 -> v2: remove extra blank line added by mistake in v1.
+CIP testing did not find any problems here:
 
- drivers/staging/gpib/lpvo_usb_gpib/lpvo_usb_gpib.c | 11 +++++------
- 1 file changed, 5 insertions(+), 6 deletions(-)
+https://gitlab.com/cip-project/cip-testing/linux-stable-rc-ci/-/tree/linux-=
+6.1.y
 
-diff --git a/drivers/staging/gpib/lpvo_usb_gpib/lpvo_usb_gpib.c b/drivers/staging/gpib/lpvo_usb_gpib/lpvo_usb_gpib.c
-index 090857824d07..4a8e5905daf9 100644
---- a/drivers/staging/gpib/lpvo_usb_gpib/lpvo_usb_gpib.c
-+++ b/drivers/staging/gpib/lpvo_usb_gpib/lpvo_usb_gpib.c
-@@ -78,6 +78,10 @@ module_param(debug, int, 0644);
- 			dev_dbg(board->gpib_dev, format, ## __VA_ARGS__); } \
- 	while (0)
- 
-+#define WQT wait_queue_entry_t
-+#define WQH head
-+#define WQE entry
-+
- /* standard and extended command sets of the usb-gpib adapter */
- 
- #define USB_GPIB_ON	 "\nIB\n"
-@@ -644,17 +648,12 @@ static void usb_gpib_interface_clear(gpib_board_t *board, int assert)
- }
- 
- /**
-- * line_status() - Read the status of the bus lines.
-+ * usb_gpib_line_status() - Read the status of the bus lines.
-  *
-  *  @board:    the gpib_board data area for this gpib interface
-  *
-  *    We can read all lines.
-  */
--
--#define WQT wait_queue_entry_t
--#define WQH head
--#define WQE entry
--
- static int usb_gpib_line_status(const gpib_board_t *board)
- {
- 	int buffer;
--- 
-2.49.0.rc0
+Tested-by: Pavel Machek (CIP) <pavel@denx.de>
 
+Best regards,
+                                                                Pavel
+--=20
+DENX Software Engineering GmbH,        Managing Director: Erika Unter
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+
+--A/bYaBZRBTYrYPQ0
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCZ8ioDgAKCRAw5/Bqldv6
+8qerAJ9lpnQHt2XVKls1G/LcFTVRwpRUHQCfbp7qkY7Rq5GohWl0nJZQc0tgrqQ=
+=Ew1O
+-----END PGP SIGNATURE-----
+
+--A/bYaBZRBTYrYPQ0--
