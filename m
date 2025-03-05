@@ -1,256 +1,135 @@
-Received: from DB3PR0202CU003.outbound.protection.outlook.com (mail-northeuropeazon11011063.outbound.protection.outlook.com [52.101.65.63])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0487235BE4;
-	Wed,  5 Mar 2025 11:38:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.65.63
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741174722; cv=fail; b=L7plCDwoJ7P0k0SSb4C2kRewl+kSty+YgDekgGs7hg6pNtMg93D/Op2mO7cHJyXXMowkr+JX0sCnvqV1nHQClWdNRE2MjHD1+aOlr+9itjx50Z/OBv0R60s9pzO53PJ314CJba5GICDfd1lyt1FLw6c8+EjzbBgaGSBhR3d1XTo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741174722; c=relaxed/simple;
-	bh=zrZJE1SQwUV8YIDym7vMruuUPOPAdciS04ObPbl7GKQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Zo0G0dJn1itCywtC6V7VYaF2z/2i1jNBOaTeVSz6RSuYUo/04rM/g2Llx+xAW5NEf9LH+OchUtJuA/NzIF9GTuoey5TpxiH2CGeiTESxv9oaO28Z3QBghbKY9auaHkfiL04XSFYUXHMwo+N1Onp5FyF0P/l5G2S127vK1vhhne4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mt.com; spf=pass smtp.mailfrom=mt.com; dkim=pass (2048-bit key) header.d=mt.com header.i=@mt.com header.b=hh9ogRET; arc=fail smtp.client-ip=52.101.65.63
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mt.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mt.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47DD41F416D;
+	Wed,  5 Mar 2025 11:40:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741174804; cv=none; b=laBcePFDTFOyPjIXLuOzC8YyYhaLr9G7sl2cafZ7NylRJbAJsKoClI82ahqdEdhKyuIr/vp3eKTlZs2+FuPN8k5Fl6/ewqPPrNzj69N/rFiJredtTy+SuV4E4a9c7GGixBLdaI+A+GEqz5j6ZX6xbLu5g14TMv4+qh0WDW9RWuU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741174804; c=relaxed/simple;
+	bh=3du4Vh0sMLXdjfQ6YEWUdnO0O4zpGTmTPbz3ghs/piI=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=eSAT7/Dcig3yybQqYjtxW1xjk5s2KM92157rDJXcdHTsdDk8/CjR/1fKV/v2qwGo8N5b32N3fShyVTdXwxItYwYSiQpJXcyGp07Zx5QRzTv5y6qTqzN63lbQUiA6APavxQYvtiZpS4nod94gVZ/CVqxaiKdflFangFir/mlPFeQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=K8FdW9LQ; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mt.com header.i=@mt.com header.b="hh9ogRET"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ZPfSATkrTUhJhVk+S8aNXKEttf0BMheXMabhfkwWvRSzqGMftyECIzSFfxL0/6aUPQPoyFMN+PhLmV8JGjwR1LnTgyazVFFg0K/Heg+UEmgHkGz6XiYXlHfaT+j/izXK9pLEmd1ZqFqWK7InlLeEjBvzqCz2DJoEQm1dELBb5KlAEzgfk1DR/Y881hsREhlgMQKQkwRkjtassC4moCk1qvVE28snD0hCVnf+2prVs0V1P7+0sTB8r1HyNimgqh5iYF/4S4H2/HkLDiJFuj9eq8B829TBTNJk2BuyOAXTYqZAYPN4KX1CXtqjMo9wo9HJo1Bh5UqH1hqIrEdmIMinkg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ON3V7YtH/qR1tqarWspQ7zeUE8pqKgUK7jAGyBfOzfo=;
- b=QyqNUhNB5dbu/ZB8j2eiMe5qlR97Xp5+J49FL0TvK1Ckk70x+wm6Wb8Q3MuTy3M9KmZxqwxgrXhBgjuKxMGNGLQ14joTkR+mXeg1VNi0p2D+UI33y8M03AMWRzRPVYbXYUmF8L+OKzB5hrPt4NrG9gpPThahpxxHeiC6y+AISSFWZs+taZF4SiwszkR7C0/qWcxaIUls+OgEk8G6HQSw8tVtZE/kN4n4pF0yYPcKhOmdspE9UMhzGDk6tiZL7qu2v80Dcyz96eHt+/+6IjiFuxGaYygDpxiwoj5D59ScLobvghIuz4G0fQs/uhaimF3cT7xQ7fSKXhEA4U8RHkkW6Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mt.com; dmarc=pass action=none header.from=mt.com; dkim=pass
- header.d=mt.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mt.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ON3V7YtH/qR1tqarWspQ7zeUE8pqKgUK7jAGyBfOzfo=;
- b=hh9ogRETXqbBY0zVwD7JtlMRBt5Tz2pVOrgyaHFW98wLamDThlJqIuPSH4ZRScrToGmjHKgoe1nPmqNcafAV3z5icY9hkE/AHMOGPWwwvfHFDOm/V03byrsKJzmuwkQ/zpQJsioc8iSm7gqsNG8qEQkKnCqHQRnAIk7Z+uSa2uineQ44ESjFSFLXH1xN7KBzQEBC5/4DdWPM6GxCVdA6rrTx7O3F+r8eXqQ7kriGvxqpSNoHxysTo4FpAH3YOf9CriZTt9Ck3UfbwTox4oXLhaYj/SzzvB1YueF5CBBd6bdxhdcv0Kb4V3Hv+zEH2RD3DAClg3QbjiGJ80F7hERnrA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=mt.com;
-Received: from DBBPR03MB10396.eurprd03.prod.outlook.com (2603:10a6:10:53a::11)
- by VI1PR03MB6574.eurprd03.prod.outlook.com (2603:10a6:800:17f::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.17; Wed, 5 Mar
- 2025 11:38:38 +0000
-Received: from DBBPR03MB10396.eurprd03.prod.outlook.com
- ([fe80::ee3c:c9be:681:c0bf]) by DBBPR03MB10396.eurprd03.prod.outlook.com
- ([fe80::ee3c:c9be:681:c0bf%7]) with mapi id 15.20.8511.015; Wed, 5 Mar 2025
- 11:38:38 +0000
-From: Mathis Foerst <mathis.foerst@mt.com>
-To: linux-kernel@vger.kernel.org
-Cc: Mathis Foerst <mathis.foerst@mt.com>,
-	Steve Longerbeam <slongerbeam@gmail.com>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	linux-media@vger.kernel.org,
-	linux-staging@lists.linux.dev,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	manuel.traut@mt.com,
-	mathis.foerst@zuehlke.com
-Subject: [PATCH v1 1/1] media: imx: csi: Parse link configuration from fw_node
-Date: Wed,  5 Mar 2025 12:38:02 +0100
-Message-Id: <20250305113802.897087-2-mathis.foerst@mt.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250305113802.897087-1-mathis.foerst@mt.com>
-References: <20250305113802.897087-1-mathis.foerst@mt.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: ZR0P278CA0195.CHEP278.PROD.OUTLOOK.COM
- (2603:10a6:910:44::11) To DBBPR03MB10396.eurprd03.prod.outlook.com
- (2603:10a6:10:53a::11)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="K8FdW9LQ"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 525BUeBD018854;
+	Wed, 5 Mar 2025 11:34:36 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=OEHbrE
+	wynpPoc/PQYISTWGJJizTmVH8mOpEoVx0LCqA=; b=K8FdW9LQ442qJW1CW823GB
+	PSOP9e7mXMs9QQG9u0vY7suMNgvUeZP0ae+2oWLzSHj4Y6r7RgBruhl3B6piqY6u
+	hLtzIPs4I2sy7SSmjmvp9sMG32CShVibq/04dHGhh8eXxsR2BK3onyzPlzqbRcxS
+	l2in6zKu22i2JQE5KNelkaaozpWkt+aD3dM5leROSrwiANHUgV1xqyWckcA2LR3U
+	we/+8K+OeuphwOcU6j9ylXj6lnr7C7Hd5v2DoD81TE+IgzCC5g0XL2CthQap0vEH
+	yvycPjUdAB2t9yPvv56Hp/vzTNOz2pol2OLX5E+G81GAsbtUE8zWukWENT75EQHw
+	==
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4562xpn6b9-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 05 Mar 2025 11:34:36 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 525AmSWv008929;
+	Wed, 5 Mar 2025 11:34:34 GMT
+Received: from smtprelay01.wdc07v.mail.ibm.com ([172.16.1.68])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 454cxyjnxp-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 05 Mar 2025 11:34:34 +0000
+Received: from smtpav03.dal12v.mail.ibm.com (smtpav03.dal12v.mail.ibm.com [10.241.53.102])
+	by smtprelay01.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 525BYYiO24511044
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 5 Mar 2025 11:34:34 GMT
+Received: from smtpav03.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 3DC9B5803F;
+	Wed,  5 Mar 2025 11:34:34 +0000 (GMT)
+Received: from smtpav03.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 263B758063;
+	Wed,  5 Mar 2025 11:34:33 +0000 (GMT)
+Received: from li-43857255-d5e6-4659-90f1-fc5cee4750ad.ibm.com (unknown [9.61.124.31])
+	by smtpav03.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Wed,  5 Mar 2025 11:34:33 +0000 (GMT)
+Message-ID: <d9c6cd2a5e27df0fbc5ccb5f2945c33b2dbe34ae.camel@linux.ibm.com>
+Subject: Re: [PATCH v9 1/7] ima: copy only complete measurement records
+ across kexec
+From: Mimi Zohar <zohar@linux.ibm.com>
+To: steven chen <chenste@linux.microsoft.com>, stefanb@linux.ibm.com,
+        roberto.sassu@huaweicloud.com, roberto.sassu@huawei.com,
+        eric.snowberg@oracle.com, ebiederm@xmission.com, paul@paul-moore.com,
+        code@tyhicks.com, bauermann@kolabnow.com,
+        linux-integrity@vger.kernel.org, kexec@lists.infradead.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: madvenka@linux.microsoft.com, nramas@linux.microsoft.com,
+        James.Bottomley@HansenPartnership.com, bhe@redhat.com,
+        vgoyal@redhat.com, dyoung@redhat.com
+Date: Wed, 05 Mar 2025 06:34:32 -0500
+In-Reply-To: <3aadae5d35af3f984b9e8bc548d73bb878d666bd.camel@linux.ibm.com>
+References: <20250304190351.96975-1-chenste@linux.microsoft.com>
+	 <20250304190351.96975-2-chenste@linux.microsoft.com>
+	 <3aadae5d35af3f984b9e8bc548d73bb878d666bd.camel@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DBBPR03MB10396:EE_|VI1PR03MB6574:EE_
-X-MS-Office365-Filtering-Correlation-Id: 70779bdb-1e49-49a0-bfce-08dd5bda4562
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|366016|7416014|376014|52116014|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?YtFZQUlrg/mOQx+iFsH/w7qtupRqhSEMDrmpYbbFOzMP1QW/kbe14qqtbkgi?=
- =?us-ascii?Q?6qcZHNmJlSlJyTOMY6sGR6uyhTuXuQwXP2Y9B27d3/9c4BRSL0G3hTlGU7S3?=
- =?us-ascii?Q?v4BtVpF/aUoCbWJVPnejrEmBxl5Ol76yEwhmQWgSxD+ApzDenwXiAt3jdy84?=
- =?us-ascii?Q?4N3l9w3Hrh08xs4w0Uk4Fo/6GAu0Ka25y8MsUFy0hQNT/UCUe70t9sX8x/vm?=
- =?us-ascii?Q?v2UZnkB4EmupKglJMv8bGcnO4LB7xHDejoYwvRI1/lSWPQdesq6S78ZmF/Ba?=
- =?us-ascii?Q?TodrvuzKqeTouLsVpkfN434NQr+gRa6wSvLkpkwj0lMdWsHUOCenj6O3yMUE?=
- =?us-ascii?Q?wgm6Y8r88rW3d4YzBs3WuvX9aKpxM4h8iR3iUiY1tNAeleC27E85P+f6SUJr?=
- =?us-ascii?Q?MqtvI5DL77eAZjnpa+rXNpLwNWoicHsvSsrJiWtieqyfw2s36E0QeaW8OXqt?=
- =?us-ascii?Q?dh1HXUD3FCMy77oPLZivHMN/yLHNO7xY/PFWLmsbHYxkG60gYurd3twXHVgL?=
- =?us-ascii?Q?I40OIsbulQRmqJfyYv4kSYvAsgQJntnedB8sSkKu6SfaoczLC8dgtw/W1Aaa?=
- =?us-ascii?Q?1iYzWfVh6epHXHgo/3mTs/fk+6aWW08kJO1dNcwC7nMP/SAl2YWdFp4LkG0m?=
- =?us-ascii?Q?eJrxeCj0MFLTCxgNAynEkU93o9D4hvoorFpJDhf+7qLYegYLPaZWt79Blv/Q?=
- =?us-ascii?Q?H3bcAOZb2Ekw2mih8r3JxLIBz4ggfMj/Zr0wj/CL5rXpmghuQ64ZSE2BIaXf?=
- =?us-ascii?Q?RmJXD5i7ngjUM5T15ivE1p3aYHPMLosIx0q+fwOuJ3COhjQ5Zdy5UAJBg1KA?=
- =?us-ascii?Q?AuR+Hyj1l6DL15jvgP1dvtQXzgvKHcYBcPTM5SkGy0q6CRDIzTqyrqcSmzny?=
- =?us-ascii?Q?XGgaY+nXXjN92y+ogdVyBGN5vfwVTq1iy6d/8/YC/Co7PL9XmEdFba5Ehg/p?=
- =?us-ascii?Q?6gFWzDfu0h+/8IuO/rzC04MIV8U+QiyQmSqRJA0qPcN0Qg6EYF6+s8nRzcKz?=
- =?us-ascii?Q?PJNhW9KOFzSTYpW7feyty9X5oBUELP/HS4ilDEID3fVtiWtlbMqriJih3fgN?=
- =?us-ascii?Q?rNfkqes9gQCv95sopXnsUHdH8OHbsrayqiUcllnlhl9AkPduYor6TyfTYODf?=
- =?us-ascii?Q?JXNyCTXpjHs7+HIpksSJgxMcIPLtt3KKCpOE1UEEe98V4BkhqMmQGdqdH717?=
- =?us-ascii?Q?LiHNR6DUibNSFyqUNUESM4avHQskc5pGgNl6AsrxubvXJ3zQwJvJAISlvznE?=
- =?us-ascii?Q?ZAGSsQamqnybz3JkhgzFwqLQH85W3qDGd39yvTuPj+shCjqs+HxXecZg1MZP?=
- =?us-ascii?Q?1Aan2a+TTB3UmjJZ7FVyVp9vf6JgM8dmAAiK774VeXZfwwkOPNhHswMK1N19?=
- =?us-ascii?Q?HSXpTQdIBN4nRytfUr8rMZs1+b4TVQIZ98ZR/2Ui6GiHT6YEu4hrlthIYmmo?=
- =?us-ascii?Q?KRIVe+ohszPLNSMarzJzAjNmXDCSIeQ9?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DBBPR03MB10396.eurprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014)(52116014)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?YJ+rZTHwIzYuMI/a3Fxo9FwWXcG2iMvlCkSwURWK54hB+ZxQD1JTMjUcDABj?=
- =?us-ascii?Q?f0n8tv+UHQM3x9OqjF3+89dP/PW4SxL5yFd2alU5t/5T6FmhmrcAzcxLs9Mv?=
- =?us-ascii?Q?hB+NiD0haBjOfMVa3wy4lfI09V0SmvSCC41+/AhiTT48cjWNMakfPTAqHt/x?=
- =?us-ascii?Q?73Go0VEuxiHuxc5LjiiJDeLOAbhf9nzb8tZ1U8xblDaOxOE0V+LRZzakK1P2?=
- =?us-ascii?Q?0PyTlBeVEfxscek6dYteM1RS0OurDK4/Fr15aICOOYHlj3yVqtXoSBLclVHE?=
- =?us-ascii?Q?9hXWzDT8h1jYr8nCzNTLMryg834OjrFMEWPN9vF8NVM0QQb0sve1YIEm7J/l?=
- =?us-ascii?Q?qy9k+85qAPDkiCoqrPwkt+XRMLxOt7J1YuitJ6mo8pE4ntHgqAzuJqCkhD+d?=
- =?us-ascii?Q?pyfEGd5CDKyQFDVpnjI5YbSTdbSysxgpH62rjaBKmnVCwtlqwIX+ugAFke9H?=
- =?us-ascii?Q?NAUB/LAMdzP9hQVIiZpIGCgtIA1kmFV+o2asm9kPyQvccf3k6JFHFqEZGVpj?=
- =?us-ascii?Q?Lt8G4NnAY8bXy5rH5xk4UmJUPpe4Q9M1N9FXI/A0qR36ScCUF2Kc/w/zDuh/?=
- =?us-ascii?Q?/DGbWm+y4JtitZsaIM5cl6Al4Eo20XCtvyhXQ9y57jqOMlk+GhmakAK1+pg6?=
- =?us-ascii?Q?PChkV3YwB9pTv4UpSD+ZkKqBFZ3uwxN4ABkHYfNLbF+Hr8squUEfOU3pUbiD?=
- =?us-ascii?Q?laCm3RsnlD/+p64G5fqTXwGnIFLSZDJi83huz6Dp27i/Dq/+C3/QkhdYraKI?=
- =?us-ascii?Q?oLCPjGYqPueLIWT5JB8Zis6nza7jdGYxNtBcmR1mu5hKTYqu1FseJFKsVbRf?=
- =?us-ascii?Q?R2FFh84pXuMX+nv8R4TYNKNOGBpvmgv13tl5hml/Yvnl/1K/QaCjU4CiROpp?=
- =?us-ascii?Q?HAQuVdaC1tZIQ44aJnqKFfITaRG0c+OqTRPE8IU/l0Iwk1Fze8XXzQqkgqiX?=
- =?us-ascii?Q?f6H+i31C8FvN9qiTgCWRTJ3DVKTawKUlDpaSolv3Pxe6283Flt0d7yTV0BuA?=
- =?us-ascii?Q?t1iooeIGNYoY1QCgRTf8TTj6KGuEu6nKwbPYLOnWYSQH6690HxDkvHvccueU?=
- =?us-ascii?Q?Hj3ExwaEdlvbEYiXIYOa5j1ZMCe7ZcwLmg8rx8sN9eUfikDLqXPU5FojOw/L?=
- =?us-ascii?Q?6nJrnfGATG8sPzR0gh0PmgHuWR41xCNBTdnXYL0p9sMVshuhY4LQ7b2ufepp?=
- =?us-ascii?Q?AA/3Vl62R97Y8RVlshd0jAq3WpFq796QdoUgiry7KzTgiqDAheh3RsWf4ai4?=
- =?us-ascii?Q?pjmjZxiUqqUx4iexWiWoHjFPs5FpplATAVDKxHRz5ZUD98XLZHQeEvLB4Gfm?=
- =?us-ascii?Q?opmAvt1CIq6AnSP09FGri4Y1N9HtyPTcmRyYaNe8i+NolWqlDb0aa4evDF5B?=
- =?us-ascii?Q?rGIzNPWsUdVcF6CGRbPsoqNJmddqc8yg8Es3DQlMhEOKn+tbBqDZYrCnf2Il?=
- =?us-ascii?Q?TcKcQjNry8KzY1EMooT1LgZTHJY0kBQ7BrxeM4DgRTMqAgQd5YgCpUtEkuu/?=
- =?us-ascii?Q?Gr+RVdDHuFaqihIJNXpTq901tvNUj14Fg7XS8yKwFfC60BK9MYC9tAo0/eDO?=
- =?us-ascii?Q?RSc4iyyurZnZO9D5gQt3goUIDJ6Iu7zG/wbwc8LY?=
-X-OriginatorOrg: mt.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 70779bdb-1e49-49a0-bfce-08dd5bda4562
-X-MS-Exchange-CrossTenant-AuthSource: DBBPR03MB10396.eurprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Mar 2025 11:38:38.3072
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: fb4c0aee-6cd2-482f-a1a5-717e7c02496b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ylKkhgYGfM862H7ivK+CaREFCZCcPoBOD909QSpEEvv+EXHTgQPO+1Kd5RKTaflzc30a8RBPzlgh1YHvfCgGJQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR03MB6574
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: bZRj979JBHaiqKCOApV6k42MuXH5lncF
+X-Proofpoint-GUID: bZRj979JBHaiqKCOApV6k42MuXH5lncF
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-05_04,2025-03-05_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 malwarescore=0
+ mlxlogscore=999 spamscore=0 bulkscore=0 priorityscore=1501 adultscore=0
+ lowpriorityscore=0 phishscore=0 mlxscore=0 impostorscore=0 clxscore=1015
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2502100000
+ definitions=main-2503050093
 
-The imx-media-csi driver requires upstream camera drivers to implement
-the subdev-pad-op "get_mbus_config" [0]. Camera drivers that don't
-implement this function are not usable on the i.MX6.
+On Tue, 2025-03-04 at 21:08 -0500, Mimi Zohar wrote:
+> On Tue, 2025-03-04 at 11:03 -0800, steven chen wrote:
+> >=20
+> >  - Compared the memory size allocated with memory size of the entire=
+=20
+> >    measurement record. Copy only complete measurement records if there=
+=20
+> >    is enough memory. If there is not enough memory, it will not copy
+> >    any IMA measurement records, and this situation will result in a=20
+> >    failure of remote attestation.
+>=20
+> In discussions with Tushar, I was very clear that as many measurement rec=
+ords as
+> possible should be carried over to the kexec'ed kernel.  The main change =
+between
+> v8 and v9 was to make sure the last record copied was a complete record.
 
-The docs for get_mbus_config [1] say:
-@get_mbus_config: get the media bus configuration of a remote sub-device.
-            The media bus configuration is usually retrieved from the
-            firmware interface at sub-device probe time, immediately
-            applied to the hardware and eventually adjusted by the
-            driver.
+Steven, let me clarify=C2=A0my comment on v8.  The patch description said,
 
-Currently, the imx-media-csi driver is not incorporating the information
-from the firmware interface and therefore relies on the implementation of
-get_mbus_config by the camera driver.
+"Separate allocating the buffer and copying the measurement records into
+separate functions in order to allocate the buffer at kexec 'load' and copy=
+ the
+measurements at kexec 'execute'."
 
-To be compatible with camera drivers not implementing get_mbus_config
-(which is the usual case), use the bus information from the fw interface:
+The intention is fine, but it also did other things:
+- only copied a full last measurement
+- if there wasn't enough room, it didn't copy any measurement records.
 
-The camera does not necessarily has a direct media bus link to the CSI as
-the video-mux and/or the MIPI CSI-2 receiver of the i.MX6 might be in
-between them on the media pipeline.
-The CSI driver already implements the functionality to find the connected
-camera sub-device to call get_mbus_config on it.
+Copying a full last measurement should be a separate, new patch to simplify
+review.  I'm asking you to separate that change from the rest of the patch,=
+ so
+that it can be back ported independently of the rest of the patch set.
 
-At this point the driver is modified as follows:
-In the case that get_mbus_config is not implemented by the upstream
-camera, try to get its endpoint configuration from the firmware interface
-usign v4l2_fwnode_endpoint_parse.
-For the supported mbus_types (V4L2_MBUS_PARALLEL, V4L2_MBUS_BT656 and
-V4L2_MBUS_CSI2_DPHY), extract the mbus_config from the endpoint
-configuration.
-For all other mbus_types, return an error.
+When splitting the function "that allocates the buffer and copies the
+measurement records into separate functions", please make sure it still cop=
+ies
+as many measurement records as possible.
 
-Note that parsing the mbus_config from the fw interface is not done during
-probing because the camera that's connected to the CSI can change based on
-the selected input of the video-mux at runtime.
+thanks,
 
-[0] drivers/staging/media/imx/imx-media-csi.c - line 211..216
-[1] include/media/v4l2-subdev.h - line 814
-
-Signed-off-by: Mathis Foerst <mathis.foerst@mt.com>
----
- drivers/staging/media/imx/imx-media-csi.c | 36 ++++++++++++++++++++---
- 1 file changed, 32 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/staging/media/imx/imx-media-csi.c b/drivers/staging/media/imx/imx-media-csi.c
-index 3edbc57be2ca..394a9321a10b 100644
---- a/drivers/staging/media/imx/imx-media-csi.c
-+++ b/drivers/staging/media/imx/imx-media-csi.c
-@@ -169,6 +169,8 @@ static int csi_get_upstream_mbus_config(struct csi_priv *priv,
- {
- 	struct v4l2_subdev *sd, *remote_sd;
- 	struct media_pad *remote_pad;
-+	struct fwnode_handle *ep_node;
-+	struct v4l2_fwnode_endpoint ep = { .bus_type = 0 };
- 	int ret;
- 
- 	if (!priv->src_sd)
-@@ -210,11 +212,37 @@ static int csi_get_upstream_mbus_config(struct csi_priv *priv,
- 
- 	ret = v4l2_subdev_call(remote_sd, pad, get_mbus_config,
- 			       remote_pad->index, mbus_cfg);
--	if (ret == -ENOIOCTLCMD)
--		v4l2_err(&priv->sd,
--			 "entity %s does not implement get_mbus_config()\n",
--			 remote_pad->entity->name);
-+	if (ret == -ENOIOCTLCMD) {
-+		/*
-+		 * If the upstream sd does not implement get_mbus_config,
-+		 * try to parse the link configuration from its fw_node
-+		 */
-+		ep_node = fwnode_graph_get_endpoint_by_id(dev_fwnode(remote_sd->dev),
-+							  0, 0,
-+							  FWNODE_GRAPH_ENDPOINT_NEXT);
-+		if (!ep_node)
-+			return -ENOTCONN;
-+
-+		ret = v4l2_fwnode_endpoint_parse(ep_node, &ep);
-+		fwnode_handle_put(ep_node);
-+		if (ret)
-+			return ret;
- 
-+		mbus_cfg->type = ep.bus_type;
-+		switch (ep.bus_type) {
-+		case V4L2_MBUS_PARALLEL:
-+		case V4L2_MBUS_BT656:
-+			mbus_cfg->bus.parallel = ep.bus.parallel;
-+			break;
-+		case V4L2_MBUS_CSI2_DPHY:
-+			mbus_cfg->bus.mipi_csi2 = ep.bus.mipi_csi2;
-+			break;
-+		default:
-+			v4l2_err(&priv->sd, "Unsupported mbus_type: %i\n",
-+				 ep.bus_type);
-+			return -EINVAL;
-+		}
-+	}
- 	return ret;
- }
- 
--- 
-2.34.1
-
+Mimi
