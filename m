@@ -1,151 +1,131 @@
-Received: from ksmg01.maxima.ru (ksmg01.maxima.ru [81.200.124.38])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FC2824C68D;
-	Wed,  5 Mar 2025 15:13:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=81.200.124.38
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E6738635D
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 15:14:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741187611; cv=none; b=RCrBCzhyXhqP4kzssgZ3FKwA3POuUod26902kFwiMtM0Cb8Zu6qVsGtSOB2IMY5EAIadOk4nz80VKKm6cAtmd935rbB3rZYb03MWe/GZWLWsJOL8ExJWj3aYw4NjNpH7r8aSM1uPJ0BWKYA4XDBQWEOXDng2GxJR0ZgBW1u8czk=
+	t=1741187665; cv=none; b=qIrAMTLercrNlHlRVOWHcjqvunB0tIZ00gj3mSIddHUOsX2CG59w4IYvxEKZ0UD08sPOTcrWU0Fy5dl8QUFghYSJL0x/bu4xPyoHjE18XVEET6OfMlp96OiqUlGIanoIb0JH/IcL9k6DTLaFWmH23gqVenzvDT80ci7rDHuptgg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741187611; c=relaxed/simple;
-	bh=A30K9ZC21AEWOAnZDI/LtiVBGGSU4L6zt2FCIEN/Wog=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=hBp8mUFx3Pjt5WitRTDnMQOhpMCnde86/HHmRdzodABoxILcFvWgm1T8Kx3nTZzDWgiDZ0WJxoKLewCDXOFZzAw5OGWuPwLDUpibBbrZvGpILTRkir/TdSxzuRRfexIbCXN3UKLUsYXPXnp3w3LASdBEVzROehpFgy/iTDVJ06E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mt-integration.ru; spf=pass smtp.mailfrom=mt-integration.ru; dkim=pass (2048-bit key) header.d=mt-integration.ru header.i=@mt-integration.ru header.b=Bqv864iw; arc=none smtp.client-ip=81.200.124.38
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mt-integration.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mt-integration.ru
+	s=arc-20240116; t=1741187665; c=relaxed/simple;
+	bh=u+MmNU5cYsqecXTGaOd49fcR+qNB9ijTR8fhCcnqgkY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=E8EAi86DsoEwK9Yk6modxU6U4yqdUa2jal+MVPzfQSbGyLTITm+m0QrYO3hoxxZbqjS+wXRQQaJD4R3Zkgsogl/ruZUIiGHDYurk3lDYrlXx4i5AnIkHwH8xtoc11aYBJZALL2lL+xRp8XMPp97TUdwAtBTC+52HMdhpuDDongc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=q2X6tnJO; arc=none smtp.client-ip=209.85.221.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mt-integration.ru header.i=@mt-integration.ru header.b="Bqv864iw"
-Received: from ksmg01.maxima.ru (localhost [127.0.0.1])
-	by ksmg01.maxima.ru (Postfix) with ESMTP id 1F3B9C001C;
-	Wed,  5 Mar 2025 18:13:25 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 ksmg01.maxima.ru 1F3B9C001C
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mt-integration.ru;
-	s=sl; t=1741187605; bh=n5v3qc83BGal1rN0v71QU7IveSQvkixZaWHpHWiEcIQ=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
-	b=Bqv864iwas3lLZxl3csNK+tXIldo4W/kctViiASVgRtIBWOFZl/o1fLLcbVkbysP3
-	 LkdVKuD5yCHygC96t5bj6cC4wwfbRe4tzXr6y2Y9qYUSwjlfc9HllfxYduxYEoUeI6
-	 jxuJp7Sljfu+irrKPqtNAQxDWE89veg0s8m4AtO5ieaAAVHJtZjiNntnBkBlBVsW+S
-	 qFUhFRx8OWMyXTDQeQzhpcHO6o9A1iV7IPcOZ4qhTOnDxaEjL4Gp3c+eq6Wb0aGSoM
-	 5GbfCID1X2Qci5Yh5hB+K0avuO1+pimOscq2RBnd9Z2OFn8zvb+pXfHK/6BWy54K/l
-	 J6NwhXgeDTblA==
-Received: from ksmg01.maxima.ru (autodiscover.maxima.ru [81.200.124.61])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(Client CN "*.maxima.ru", Issuer "GlobalSign GCC R3 DV TLS CA 2020" (verified OK))
-	by ksmg01.maxima.ru (Postfix) with ESMTPS;
-	Wed,  5 Mar 2025 18:13:24 +0300 (MSK)
-Received: from localhost.maximatelecom.ru (5.1.51.168) by mmail-p-exch01.mt.ru
- (81.200.124.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.2.1544.4; Wed, 5 Mar 2025
- 18:13:23 +0300
-From: Vitaliy Shevtsov <v.shevtsov@mt-integration.ru>
-To: Hans Verkuil <hverkuil@xs4all.nl>
-CC: Vitaliy Shevtsov <v.shevtsov@mt-integration.ru>, Mauro Carvalho Chehab
-	<mchehab@kernel.org>, Jani Nikula <jani.nikula@intel.com>,
-	<linux-media@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<lvc-project@linuxtesting.org>
-Subject: [PATCH v2] media: cec: use us_to_ktime() where appropriate
-Date: Wed, 5 Mar 2025 20:11:25 +0500
-Message-ID: <20250305151212.13660-1-v.shevtsov@mt-integration.ru>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="q2X6tnJO"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-390effd3e85so5417036f8f.0
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Mar 2025 07:14:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1741187662; x=1741792462; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=USPDd1qR6qH3mxfI/NByy4u8tquEDn6DJ2yFUkVbl7k=;
+        b=q2X6tnJO5pNJ2I5WU+na7HCs79D92reFfLyhqnTIGN0dpF2iyWh1kQLoL8EdqzxZW2
+         kqumBeQExVV53bflOOlO+HQiSfiKfyg2RslSPlmb99B1UbAS4ZtJa2CDE988uCiy9lSx
+         ek2ELzFWClHGGEkMrUhxiakvErTqgJ6QOdY+dOEpv3EZmvxrlFDuKXq1pVRZpMssIcXY
+         EQ3xrCllP2snNl8yydVQKujAihjzLsOxQPayu0B6enpbCqS3B8JwDwUt4mtJwKVC8GQ4
+         Rn0GAlis351PYme4BwIV14e0iRDHPgXu+593vRb2M8k9rLiSOBjGpuXNuWWtMHME6G/4
+         WGog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741187662; x=1741792462;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=USPDd1qR6qH3mxfI/NByy4u8tquEDn6DJ2yFUkVbl7k=;
+        b=nz+PM4GCYnpV7Jqc6ZOHhiN+y0YyLiXztft6/HYgUFlgw6yF08496w9a77uIxuupnn
+         UgfnlQrUGXiWEfAYwU99VWkH7VFIz0JLh7Mi36NSjuK99Ie9SMXktjXTOo298aDq90Fo
+         8DjkHq8t98C1tpFNfiFPxAldPQZeRpy4m7PoGPNR4jPaZs9bNaBwK0LwGXUrxpCLwnyM
+         3yyhSQ1BTTZFxPlP+917eNdmKUONcYuZ0WMD6WCOBfqCImV3iZXSr1kdgFuUSggjsgbW
+         3tIdavgcfjU2z2FLeS9R/e7V7Lhs3nB5xe7gMpo0N+LpSHgFzpyQOwRsTCZMq8Rub44S
+         NC2A==
+X-Forwarded-Encrypted: i=1; AJvYcCUEYbMQFZwf323o6ZUtPZaZLUwQw0Je9nYYChWDwGTaqEXKirC/n8Tj9LoshGvrflE0cyLGyJmrTwQL6xU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyiA8BXLN4R/4oYvEMc/VeCHMqz+WvOOTWL0VANE6qAQ39dGOKN
+	zwDsNfnU/4xlwPQ+ORzP13zY+IqyLty9DOgq6B6CPJoWtFgYhGbv+z92lesqzxB9dSd7CTrW93e
+	cWB2tIW3Kvv77ZcySSrYlGwy6NZGJ7ggjQ3E6
+X-Gm-Gg: ASbGnctKFAg3KWdbMMWNq44rOq2KvzFRO4m20yfwTfvVuMbQPSW98S6uOk01bd/Kd0m
+	n/PDStAMyCVUzEnOchUbXsbRlYx7MIV+yks0iK/8ZpdaDHAK/A1tt9X7lUgW1v2hBud2LFwP8Oy
+	bBflK2yRFyCqtTmBX2JKX+lBMsyxFfWIaw9umAyn7sYLVqG+Lfblv23NYo
+X-Google-Smtp-Source: AGHT+IFqCXmZxfeWdf6AUeawOXjP06fV+krKTSUdJEOiVcttMtOIN51sUxb5euhwgZAPfdDxI7qE9nMbSSez3B280Go=
+X-Received: by 2002:a5d:5f42:0:b0:390:df83:1f5d with SMTP id
+ ffacd0b85a97d-3911f7a84fdmr3713711f8f.35.1741187662149; Wed, 05 Mar 2025
+ 07:14:22 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: mt-exch-01.mt.ru (91.220.120.210) To mmail-p-exch01.mt.ru
- (81.200.124.61)
-X-KSMG-AntiPhishing: NotDetected, bases: 2025/03/05 13:16:00
-X-KSMG-AntiSpam-Auth: dmarc=none header.from=mt-integration.ru;spf=none smtp.mailfrom=mt-integration.ru;dkim=none
-X-KSMG-AntiSpam-Envelope-From: v.shevtsov@mt-integration.ru
-X-KSMG-AntiSpam-Info: LuaCore: 51 0.3.51 68896fb0083a027476849bf400a331a2d5d94398, {rep_avail}, {Tracking_uf_ne_domains}, {Tracking_from_domain_doesnt_match_to}, ksmg01.maxima.ru:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;127.0.0.199:7.1.2;mt-integration.ru:7.1.1;lore.kernel.org:7.1.1;81.200.124.61:7.1.2, FromAlignment: s, ApMailHostAddress: 81.200.124.61
-X-KSMG-AntiSpam-Interceptor-Info: scan successful
-X-KSMG-AntiSpam-Lua-Profiles: 191511 [Mar 05 2025]
-X-KSMG-AntiSpam-Method: none
-X-KSMG-AntiSpam-Rate: 0
-X-KSMG-AntiSpam-Status: not_detected
-X-KSMG-AntiSpam-Version: 6.1.1.11
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.1.1.8310, bases: 2025/03/05 13:56:00 #27617700
-X-KSMG-AntiVirus-Status: NotDetected, skipped
-X-KSMG-LinksScanning: NotDetected, bases: 2025/03/05 13:16:00
-X-KSMG-Message-Action: skipped
-X-KSMG-Rule-ID: 7
+References: <20250305-unique-ref-v4-1-a8fdef7b1c2c@pm.me> <Z8hUIPtE_9P60fAf@google.com>
+ <Z8hmCkeZGPwc5MuU@mango>
+In-Reply-To: <Z8hmCkeZGPwc5MuU@mango>
+From: Alice Ryhl <aliceryhl@google.com>
+Date: Wed, 5 Mar 2025 16:13:59 +0100
+X-Gm-Features: AQ5f1JrBXGxw1rKdzyIsN_nlrdaRKvKhTO3oHwvMg3FPvBcmlxl8QNPV-S8hcws
+Message-ID: <CAH5fLgjFBknTmhxQBPUdB-iNMjEkcyuLiu22-Nj-DGB1Gb7NkA@mail.gmail.com>
+Subject: Re: [PATCH v4] rust: adding UniqueRefCounted and UniqueRef types
+To: Oliver Mangold <oliver.mangold@pm.me>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Trevor Gross <tmgross@umich.edu>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-[Why]
-There are several ns_to_ktime() calls that require using nanoseconds. It is
-better to replace them with us_to_ktime() to make code clear, getting rid
-of multiplication by 1000.
+On Wed, Mar 5, 2025 at 3:56=E2=80=AFPM Oliver Mangold <oliver.mangold@pm.me=
+> wrote:
+>
+> Hi Alice,
+>
+> On 250305 1339, Alice Ryhl wrote:
+> > On Wed, Mar 05, 2025 at 11:31:44AM +0000, Oliver Mangold wrote:
+> >
+> > > +impl<T: UniqueRefCounted> Deref for UniqueRef<T> {
+> > > +    type Target =3D T;
+> > > +
+> > > +    fn deref(&self) -> &Self::Target {
+> > > +        // SAFETY: The type invariants guarantee that the object is =
+valid.
+> > > +        unsafe { self.ptr.as_ref() }
+> > > +    }
+> > > +}
+> >
+> > What stops people from doing this?
+> >
+> > let my_unique: UniqueRef<T> =3D ...;
+> > let my_ref: &T =3D &*my_unique;
+> > let my_shared: ARef<T> =3D ARef::from(my_ref);
+> >
+> > Now it is no longer unique.
+> >
+> Oh, indeed. That's a serious problem. I see 2 options to deal with that:
+>
+> 1. remove ARef::From<&T>
+>
+> I checked the users of this, and it looks to me like there is rather
+> a limited number and they are easy to fix by replacing the &T with ARef<T=
+>.
+> But I assume that wouldn't be welcome as it is intrusive nonetheless
+> and of course there is ergonomic value in having the function around.
 
-Also the timer function code may have an integer wrap-around issue. Since
-both tx_custom_low_usecs and tx_custom_high_usecs can be set to up to
-9999999 from the user space via cec_pin_error_inj_parse_line(), this may
-cause usecs to be overflowed when adap->monitor_pin_cnt is zero and usecs
-is multiplied by 1000.
+Definitely not an option. There are many users of this function that
+are in the process of being upstreamed. The ability to go &T ->
+ARef<T> is pretty fundamental for ARef.
 
-[How]
-Take advantage of using an appropriate helper func us_to_ktime() instead of
-ns_to_ktime() to improve readability and to make the code clearer. And this
-also mitigates possible integer wrap-arounds when usecs value is too large
-and it is multiplied by 1000.
+> 2. add some new traits so implementers can opt in/out of that function.
+>
+> Basically one would have to pick if one wants to ARef::From<&T> or
+> UniqueRef<T> for one's type.
 
-Found by Linux Verification Center (linuxtesting.org) with Svace.
+I do think that you essentially need two structs to use this at all -
+one for the shared and one for the unique case. Sounds pretty
+unergonomic.
 
-Signed-off-by: Vitaliy Shevtsov <v.shevtsov@mt-integration.ru>
----
-v2: Wrapped some lines in the commit description to fit into 75 characters.
-    Reported by Patchwork Integration <patchwork@media-ci.org>
+What is the use-case for these abstractions?
 
-This patch was created after the Christophe JAILLET's comment at
-https://lore.kernel.org/all/cff4d412-abbf-44b5-9705-ba14dff7d5d0@wanadoo.fr/
-
- drivers/media/cec/core/cec-pin.c | 11 +++++------
- 1 file changed, 5 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/media/cec/core/cec-pin.c b/drivers/media/cec/core/cec-pin.c
-index a70451d99ebc..f232c3df7ee1 100644
---- a/drivers/media/cec/core/cec-pin.c
-+++ b/drivers/media/cec/core/cec-pin.c
-@@ -873,19 +873,19 @@ static enum hrtimer_restart cec_pin_timer(struct hrtimer *timer)
- 		if (pin->wait_usecs > 150) {
- 			pin->wait_usecs -= 100;
- 			pin->timer_ts = ktime_add_us(ts, 100);
--			hrtimer_forward_now(timer, ns_to_ktime(100000));
-+			hrtimer_forward_now(timer, us_to_ktime(100));
- 			return HRTIMER_RESTART;
- 		}
- 		if (pin->wait_usecs > 100) {
- 			pin->wait_usecs /= 2;
- 			pin->timer_ts = ktime_add_us(ts, pin->wait_usecs);
- 			hrtimer_forward_now(timer,
--					ns_to_ktime(pin->wait_usecs * 1000));
-+					us_to_ktime(pin->wait_usecs));
- 			return HRTIMER_RESTART;
- 		}
- 		pin->timer_ts = ktime_add_us(ts, pin->wait_usecs);
- 		hrtimer_forward_now(timer,
--				    ns_to_ktime(pin->wait_usecs * 1000));
-+				    us_to_ktime(pin->wait_usecs));
- 		pin->wait_usecs = 0;
- 		return HRTIMER_RESTART;
- 	}
-@@ -1020,13 +1020,12 @@ static enum hrtimer_restart cec_pin_timer(struct hrtimer *timer)
- 	if (!adap->monitor_pin_cnt || usecs <= 150) {
- 		pin->wait_usecs = 0;
- 		pin->timer_ts = ktime_add_us(ts, usecs);
--		hrtimer_forward_now(timer,
--				ns_to_ktime(usecs * 1000));
-+		hrtimer_forward_now(timer, us_to_ktime(usecs));
- 		return HRTIMER_RESTART;
- 	}
- 	pin->wait_usecs = usecs - 100;
- 	pin->timer_ts = ktime_add_us(ts, 100);
--	hrtimer_forward_now(timer, ns_to_ktime(100000));
-+	hrtimer_forward_now(timer, us_to_ktime(100));
- 	return HRTIMER_RESTART;
- }
- 
--- 
-2.48.1
-
+Alice
