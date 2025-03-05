@@ -1,218 +1,92 @@
-Received: from szxga06-in.huawei.com (szxga06-in.huawei.com [45.249.212.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68DD124394C
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 11:34:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.32
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 08FFF233709;
+	Wed,  5 Mar 2025 11:34:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741174473; cv=none; b=IPrtxawY2fC/aveA/l+R/r0GEKRsc3iQqigzFiiAU4JTp7uPwIWON7t4yuD+KHGPJKNBOO1z6wPA/Fs9QwHAjJP/moWbtkH2kZMMvSoa78Vmt4lpZC4d1bdHBxkwhEuT2gh/X3LMESyvIhgdr+bGdq+NGcuP8RoGO9R23rzjKrk=
+	t=1741174473; cv=none; b=DhSluGB+1gdbDMevzhcMSF33cJmQi2IseE1G5mR3cW40116PXMAow61S9wGSrlnj0RFHrnyiEUT9wdrnV2U/+vBM0ZUcuuAarzxjTkmzbgjUqOf0IBWbR5ud4LgRlwc8QNL610GAv1SKr76kh4BYeo4726+QYrgRRzrhGaxEXLg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1741174473; c=relaxed/simple;
-	bh=6UJKGlmdGivwMHxMlXpwMO7SxD02BvwZHYFn3ohrFbw=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Pr5zNKRLoZmB2Wi/B0YdcFtTfoyVkQfTaJ5wS25MiDOFCzPCbX89hvxr8XysD/ZvA2c/8C+jMcb8qjOccIdXHPD5yzNZjmpOndyM3mkGPNKDlLqo3Xn7A3+LwuY6qsRhgfifAAbRWmC2UfMq1q/h9qts/qcL7zu4c4vpcqA1MXY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.44])
-	by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4Z79T1530Sz17NSv;
-	Wed,  5 Mar 2025 19:35:01 +0800 (CST)
-Received: from kwepemd500013.china.huawei.com (unknown [7.221.188.12])
-	by mail.maildlp.com (Postfix) with ESMTPS id 167891402DE;
-	Wed,  5 Mar 2025 19:34:28 +0800 (CST)
-Received: from localhost.huawei.com (10.169.71.169) by
- kwepemd500013.china.huawei.com (7.221.188.12) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.34; Wed, 5 Mar 2025 19:34:26 +0800
-From: Yongbang Shi <shiyongbang@huawei.com>
-To: <xinliang.liu@linaro.org>, <tiantao6@hisilicon.com>,
-	<maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
-	<tzimmermann@suse.de>, <airlied@gmail.com>, <daniel@ffwll.ch>,
-	<kong.kongxinwei@hisilicon.com>
-CC: <liangjian010@huawei.com>, <chenjianmin@huawei.com>,
-	<lidongming5@huawei.com>, <shiyongbang@huawei.com>, <libaihan@huawei.com>,
-	<shenjian15@huawei.com>, <shaojijie@huawei.com>,
-	<dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v4 drm-dp 8/8] drm/hisilicon/hibmc: Add MSI irq getting and requesting for HPD
-Date: Wed, 5 Mar 2025 19:26:47 +0800
-Message-ID: <20250305112647.2344438-9-shiyongbang@huawei.com>
-X-Mailer: git-send-email 2.33.0
-In-Reply-To: <20250305112647.2344438-1-shiyongbang@huawei.com>
-References: <20250305112647.2344438-1-shiyongbang@huawei.com>
+	bh=CVeBM0o9l0ZM7IBmK7B6KZMclTmgW0FKADOZmS1viRc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ouco6AdxuXHqVQ9OACXxMgjxconG8B3FIB0uaVjShbWmUNyWWscPIjQycgNhMCLiIuAByN4gTwavmv1a04GLWaBaGVaicU3aoFczSj6NR0Rb1fy/c9f2Q2JfX4SmV3JcAomm+jCEiZaT3t0pq/WEjTfTwBr3Y8MICFkQQrjj57Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 48A42FEC;
+	Wed,  5 Mar 2025 03:34:44 -0800 (PST)
+Received: from bogus (unknown [10.57.37.20])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B29093F673;
+	Wed,  5 Mar 2025 03:34:29 -0800 (PST)
+Date: Wed, 5 Mar 2025 11:34:26 +0000
+From: Sudeep Holla <sudeep.holla@arm.com>
+To: "lihuisong (C)" <lihuisong@huawei.com>
+Cc: linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Sudeep Holla <sudeep.holla@arm.com>,
+	Jassi Brar <jassisinghbrar@gmail.com>,
+	Adam Young <admiyo@os.amperecomputing.com>
+Subject: Re: [PATCH 10/14] soc: hisilicon: kunpeng_hccs: Simplify PCC shared
+ memory region handling
+Message-ID: <20250305113426.bt2lebp2rfyngcpl@bogus>
+References: <20250303-pcc_fixes_updates-v1-0-3b44f3d134b1@arm.com>
+ <20250303-pcc_fixes_updates-v1-10-3b44f3d134b1@arm.com>
+ <1e7560ab-2545-843a-e42a-2d37f6b7ef93@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- kwepemd500013.china.huawei.com (7.221.188.12)
+In-Reply-To: <1e7560ab-2545-843a-e42a-2d37f6b7ef93@huawei.com>
 
-From: Baihan Li <libaihan@huawei.com>
+On Wed, Mar 05, 2025 at 03:14:50PM +0800, lihuisong (C) wrote:
+> 
+> 在 2025/3/3 18:51, Sudeep Holla 写道:
+> > The PCC driver now handles mapping and unmapping of shared memory
+> > areas as part of pcc_mbox_{request,free}_channel(). Without these before,
+> > this Kunpeng HCCS driver did handling of those mappings like several
+> > other PCC mailbox client drivers.
+> > 
+> > There were redundant operations, leading to unnecessary code. Maintaining
+> > the consistency across these driver was harder due to scattered handling
+> > of shmem.
+> > 
+> > Just use the mapped shmem and remove all redundant operations from this
+> > driver.
+> > 
+> > Cc: Huisong Li <lihuisong@huawei.com>
+> > Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+> With belows to change,
+> Reviewed-by: Huisong Li <lihuisong@huawei.com>
 
-To realize HPD feature, request irq for HPD , add its handler function.
-We use pci_alloc_irq_vectors() to get our msi irq, because we have two
-interrupts now.
+Thanks!
 
-Signed-off-by: Baihan Li <libaihan@huawei.com>
-Signed-off-by: Yongbang Shi <shiyongbang@huawei.com>
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
----
- drivers/gpu/drm/hisilicon/hibmc/dp/dp_reg.h   |  3 +
- .../gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c   | 76 +++++++++++++++----
- .../gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h   |  3 +
- 3 files changed, 68 insertions(+), 14 deletions(-)
+[...]
 
-diff --git a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_reg.h b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_reg.h
-index 4a31334f0420..37dadcd67194 100644
---- a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_reg.h
-+++ b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_reg.h
-@@ -99,6 +99,9 @@
- 
- #define HIBMC_DP_TIMING_SYNC_CTRL		0xFF0
- 
-+#define HIBMC_DP_INTSTAT			0x1e0724
-+#define HIBMC_DP_INTCLR				0x1e0728
-+
- /* dp serdes reg */
- #define HIBMC_DP_HOST_OFFSET		0x10000
- #define HIBMC_DP_LANE0_RATE_OFFSET	0x4
-diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
-index 8586f7bb11eb..30c2ac2a3da7 100644
---- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
-+++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
-@@ -32,6 +32,8 @@
- 
- DEFINE_DRM_GEM_FOPS(hibmc_fops);
- 
-+static const char *g_irqs_names_map[HIBMC_MAX_VECTORS] = { "vblank", "hpd" };
-+
- static irqreturn_t hibmc_interrupt(int irq, void *arg)
- {
- 	struct drm_device *dev = (struct drm_device *)arg;
-@@ -49,6 +51,22 @@ static irqreturn_t hibmc_interrupt(int irq, void *arg)
- 	return IRQ_HANDLED;
- }
- 
-+static irqreturn_t hibmc_dp_interrupt(int irq, void *arg)
-+{
-+	struct drm_device *dev = (struct drm_device *)arg;
-+	struct hibmc_drm_private *priv = to_hibmc_drm_private(dev);
-+	u32 status;
-+
-+	status = readl(priv->mmio + HIBMC_DP_INTSTAT);
-+	if (status) {
-+		priv->dp.irq_status = status;
-+		writel(status, priv->mmio + HIBMC_DP_INTCLR);
-+		return IRQ_WAKE_THREAD;
-+	}
-+
-+	return IRQ_HANDLED;
-+}
-+
- static int hibmc_dumb_create(struct drm_file *file, struct drm_device *dev,
- 			     struct drm_mode_create_dumb *args)
- {
-@@ -250,15 +268,50 @@ static int hibmc_hw_init(struct hibmc_drm_private *priv)
- 	return 0;
- }
- 
--static int hibmc_unload(struct drm_device *dev)
-+static void hibmc_unload(struct drm_device *dev)
- {
--	struct pci_dev *pdev = to_pci_dev(dev->dev);
--
- 	drm_atomic_helper_shutdown(dev);
- 
--	free_irq(pdev->irq, dev);
--
- 	pci_disable_msi(to_pci_dev(dev->dev));
-+}
-+
-+static int hibmc_msi_init(struct drm_device *dev)
-+{
-+	struct pci_dev *pdev = to_pci_dev(dev->dev);
-+	char name[32] = {0};
-+	int valid_irq_num;
-+	int irq;
-+	int ret;
-+
-+	ret = pci_alloc_irq_vectors(pdev, HIBMC_MIN_VECTORS,
-+				    HIBMC_MAX_VECTORS, PCI_IRQ_MSI);
-+	if (ret < 0) {
-+		drm_err(dev, "enabling MSI failed: %d\n", ret);
-+		return ret;
-+	}
-+
-+	valid_irq_num = ret;
-+
-+	for (int i = 0; i < valid_irq_num; i++) {
-+		snprintf(name, ARRAY_SIZE(name) - 1, "%s-%s-%s",
-+			 dev->driver->name, pci_name(pdev), g_irqs_names_map[i]);
-+
-+		irq = pci_irq_vector(pdev, i);
-+
-+		if (i)
-+			/* PCI devices require shared interrupts. */
-+			ret = devm_request_threaded_irq(&pdev->dev, irq,
-+							hibmc_dp_interrupt,
-+							hibmc_dp_hpd_isr,
-+							IRQF_SHARED, name, dev);
-+		else
-+			ret = devm_request_irq(&pdev->dev, irq, hibmc_interrupt,
-+					       IRQF_SHARED, name, dev);
-+		if (ret) {
-+			drm_err(dev, "install irq failed: %d\n", ret);
-+			return ret;
-+		}
-+	}
- 
- 	return 0;
- }
-@@ -290,15 +343,10 @@ static int hibmc_load(struct drm_device *dev)
- 		goto err;
- 	}
- 
--	ret = pci_enable_msi(pdev);
-+	ret = hibmc_msi_init(dev);
- 	if (ret) {
--		drm_warn(dev, "enabling MSI failed: %d\n", ret);
--	} else {
--		/* PCI devices require shared interrupts. */
--		ret = request_irq(pdev->irq, hibmc_interrupt, IRQF_SHARED,
--				  dev->driver->name, dev);
--		if (ret)
--			drm_warn(dev, "install irq failed: %d\n", ret);
-+		drm_err(dev, "hibmc msi init failed, ret:%d\n", ret);
-+		goto err;
- 	}
- 
- 	/* reset all the states of crtc/plane/encoder/connector */
-@@ -374,7 +422,7 @@ static void hibmc_pci_remove(struct pci_dev *pdev)
- 
- static void hibmc_pci_shutdown(struct pci_dev *pdev)
- {
--	drm_atomic_helper_shutdown(pci_get_drvdata(pdev));
-+	hibmc_pci_remove(pdev);
- }
- 
- static const struct pci_device_id hibmc_pci_table[] = {
-diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h
-index daed1330b961..274feabe7df0 100644
---- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h
-+++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h
-@@ -22,6 +22,9 @@
- 
- #include "dp/dp_hw.h"
- 
-+#define HIBMC_MIN_VECTORS	1
-+#define HIBMC_MAX_VECTORS	2
-+
- struct hibmc_vdac {
- 	struct drm_device *dev;
- 	struct drm_encoder encoder;
--- 
-2.33.0
+> > -	if (!pcc_chan->shmem_base_addr ||
+> > -	    pcc_chan->shmem_size != HCCS_PCC_SHARE_MEM_BYTES) {
+> > +	if (pcc_chan->shmem_size != HCCS_PCC_SHARE_MEM_BYTES) {
+> >   		dev_err(dev, "The base address or size (%llu) of PCC communication region is invalid.\n",
+> >   			pcc_chan->shmem_size);
+> 
+> Now the check of shared base address is not here. The log about this address
+> no need to be printed.
+> 
+> Can you help me fix it like:
+> 
+> dev_err(dev, "The base size (%llu) of PCC communication region must be %d Byte.\n",
+>  			pcc_chan->shmem_size, HCCS_PCC_SHARE_MEM_BYTES
+> );
 
+Sure.
+
+Did you get a chance to validate this driver and any other users of PCC
+on your platform with these changes + the error handling fix you pointed
+out ? That would be very useful as I don't have any set up to test.
+
+--
+Regards,
+Sudeep
