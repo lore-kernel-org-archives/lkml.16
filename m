@@ -1,262 +1,569 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7D6413AC1
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 10:14:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.17
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741169671; cv=fail; b=Da9NhdOHkw4r/y2XqQYfQVbNLkyH2g8EENypD3pZuiEiqwOYQcQkNeqJyWDVa+w+9kTH3CLMVyyXsu8IvNOIc7WCz7kG2KawkKpgPKNbEpinIW9orXuBnoyUHwOLSNthuSHpELdL+fadoSIvwchomuwLgvIDhTe/OnsHWxVLzlM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741169671; c=relaxed/simple;
-	bh=N2I4a2NrLqadckFRmSMZ9TU2EJ0Bw/pfk8JMNohMy/M=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=FKFF/vG6W5nEwk1aFzHLBvmx+0K0V7kfi4NFdGAm2dYkQoqA5wk2UskkqpOig856i/oG2AwCqi2NNHWGtfCr0nnrxIo1ULxS30N/co18USBYgtX7swgDGJOXe23OGTrG4weQ3/5CjV8JrF/XFXx5i+gs3XFDLLD76ynLLYr7SKY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mrqynyN5; arc=fail smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AE42205ACB;
+	Wed,  5 Mar 2025 10:15:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741169714; cv=none; b=I9c84PiD8Kl9SGhahylmwafMkK6pkEXrNQCweZBVPZIoyMbMsGKG8IQM61D3k40Ye3mvoE8QeNLTPbZSpKNnk7iL5nx/jibqvkQ9XyKDFsE/tJWOLt+t2p2QtbOyHGEP2PJJfJ9JIB/VHYVJni9jdmeEEANw4w4xCW5oY5O2LfU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741169714; c=relaxed/simple;
+	bh=JdsijZu1EfVvvNIS1D9odn18sDPAashGiVVdxuRv4Ww=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=DkXuSlO5SLlBuD7TTj3IRyIb94GTarwcBg1xjh3Drmd+ztgNlX//bXL8eaAA9IQHryEVdPWz/XT7pyl4bP8ED++WeDEvRZXIi3OJnVQNfk1fZBObwzOwUCkOuFsl0SHPL9wv53TFN/9CpTI7Yot8/Qf6mVksbiW8F81WEUyCwM0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=JreROxho; arc=none smtp.client-ip=198.47.19.245
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mrqynyN5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741169669; x=1772705669;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=N2I4a2NrLqadckFRmSMZ9TU2EJ0Bw/pfk8JMNohMy/M=;
-  b=mrqynyN5rC3n50AoMqfqghXzkh5w5zb8KLLTslBBtqkLLd6zr7O4B/Nn
-   6UzwVh0YtD8dKiVRLfPexVIyOZm+k8w0di41Ttu+Bk0Ao1pf0fLKaxzIQ
-   BezZlz0AuphUsmf58V4sqqaxQ6A90uu9q5v8ezA9VEmvH9hw41OgSZLrH
-   6UP0dKKbvtCW3wiiMd8/98wkXdZTcxDw1OdqeO0kBxhFXbK4zFnWM+L9t
-   3RCrS6D9N6qXbjoVRf+vdjJTafEXICVjnCIlCI2I96QlKyxItWOctuBSc
-   Nf0b6QpUHQGRlk4OQ5aRRrYuxEthweNvHUzAcVLYWlUEWybwXMKztXyJ6
-   Q==;
-X-CSE-ConnectionGUID: Jmovm5R4SSajcYNp+/xWTg==
-X-CSE-MsgGUID: vwJ/tmciRWK0s7haHUP13Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11363"; a="42015275"
-X-IronPort-AV: E=Sophos;i="6.14,222,1736841600"; 
-   d="scan'208";a="42015275"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Mar 2025 02:14:29 -0800
-X-CSE-ConnectionGUID: xz14gJzwQ2qci24h1+bnwQ==
-X-CSE-MsgGUID: ldO2BZlaTpq9e5HzfZtsgg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,222,1736841600"; 
-   d="scan'208";a="123670055"
-Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
-  by orviesa004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Mar 2025 02:14:28 -0800
-Received: from orsmsx603.amr.corp.intel.com (10.22.229.16) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.2.1544.14; Wed, 5 Mar 2025 02:14:28 -0800
-Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
- orsmsx603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44 via Frontend Transport; Wed, 5 Mar 2025 02:14:28 -0800
-Received: from NAM02-SN1-obe.outbound.protection.outlook.com (104.47.57.42) by
- edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Wed, 5 Mar 2025 02:14:27 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=avjnVsLg0ypd81EQfAfOftRNFhvACgyD3F71CsrUkk2X7Zi2IzL7EuLXOV25bjCB3n8tX4JFf02aeOqPHMDtmb7WBTmoAgH795iGHkZYkUD+Btn//zWKNj0OlMGbsVQuCOLNSpvAMIHEzOzijtDMEFrJ/cEZud6IM20VcnvuwZo9ebG09NKdvYpZNPySxbO81hnp/+J4d/GeudPFAOvbgzGaQaxbS0Cuh0LnaOY/DIyIRjNEl1sdH2wEcScCbSSyCtbxBz7F63eQtnHj5usarXhJSiQEv5LHoeE8qBZOeJJMZSCGljvBxLoCQ/SspOWQcw9IfEjJCmgbG9ywlkpM+g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=N2I4a2NrLqadckFRmSMZ9TU2EJ0Bw/pfk8JMNohMy/M=;
- b=x8pP11u4BcSfCK1jHGq6ON0S446dyuurG5BT+RtGb5yJfNO9VQUNeApldq2xptEylmZBN1bXqVinYlo7668LlisbR09VQoxuzz0Hb0PXG9522o4T1NqT6ZRlZxBtgOIGl9AhFUEh4HIjsc0mkBSTqMgwY7yXNL4xA2+bqEzLfo8SYzfbJTmkOQQt1Idi/wX5AvYijRstWrTdwq7kOrtfPsqcVene6wyensRxnxepPknf8GhV0u+EKGm7dsqknymQgYRXssuH+KKjGREJ4nyq1XzPTjiENXIzZyBKULQwNBEVAFux0mrdVYXRRmmbIj86flBPGv+ghWt/VQITXlUrng==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from SJ0PR11MB5866.namprd11.prod.outlook.com (2603:10b6:a03:429::10)
- by CY8PR11MB7009.namprd11.prod.outlook.com (2603:10b6:930:57::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.28; Wed, 5 Mar
- 2025 10:13:56 +0000
-Received: from SJ0PR11MB5866.namprd11.prod.outlook.com
- ([fe80::265f:31c0:f775:c25b]) by SJ0PR11MB5866.namprd11.prod.outlook.com
- ([fe80::265f:31c0:f775:c25b%4]) with mapi id 15.20.8489.025; Wed, 5 Mar 2025
- 10:13:56 +0000
-From: "Loktionov, Aleksandr" <aleksandr.loktionov@intel.com>
-To: Kyungwook Boo <bookyungwook@gmail.com>, "Nguyen, Anthony L"
-	<anthony.l.nguyen@intel.com>, "Kitszel, Przemyslaw"
-	<przemyslaw.kitszel@intel.com>
-CC: "intel-wired-lan@lists.osuosl.org" <intel-wired-lan@lists.osuosl.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [Intel-wired-lan] MMIO write access to an invalid page in
- i40e_clear_hw()
-Thread-Topic: [Intel-wired-lan] MMIO write access to an invalid page in
- i40e_clear_hw()
-Thread-Index: AQHbjFeboY2QFMlphk6AK6PA+x/DLLNkVFvw
-Date: Wed, 5 Mar 2025 10:13:56 +0000
-Message-ID: <SJ0PR11MB5866F240386177564F78E8AEE5CB2@SJ0PR11MB5866.namprd11.prod.outlook.com>
-References: <ffc91764-1142-4ba2-91b6-8c773f6f7095@gmail.com>
-In-Reply-To: <ffc91764-1142-4ba2-91b6-8c773f6f7095@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SJ0PR11MB5866:EE_|CY8PR11MB7009:EE_
-x-ms-office365-filtering-correlation-id: 6c9878dd-e95a-4e2e-1b22-08dd5bce7036
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|366016|1800799024|376014|38070700018;
-x-microsoft-antispam-message-info: =?utf-8?B?cFoyTzJDR2NybWQxeUVYaG1sK1hHbWFqS2RvbS85d1h6M2VSZWZIeFpGVDJM?=
- =?utf-8?B?WE9jcW9razVJWHB1RlZPZXBFZU0vbU83WUdRMTF2VFpSa0QxM2JtWE9HSDRv?=
- =?utf-8?B?SWJoeFVic21rUkY4VkpQbmx3OGh4SDl1THpHRGZzQTFCUHdhMVE4NU9TaHN2?=
- =?utf-8?B?OFZTbW9IL2JIWnZQcVU1SHEwckMybUpybStRTVdmTzFCbUdocVNVRHlsNmJN?=
- =?utf-8?B?MERCdVpUTGxhQ3dOaVBkNnhRSEF2ZHlxdzZEL0g3ZDFQVWErbFdNQ0ZjTVcv?=
- =?utf-8?B?MGZnaSthOHgrL0hqNkN4RUxDOVBTVHREUkM2WkhjK2p1dXFob01NSmpaV3Q1?=
- =?utf-8?B?b0ZSNGdjdk1vQUtDYUR4MnhlQmo2TGtuQ2hOR1luWXl2dzgvU3l4MXk2MlRv?=
- =?utf-8?B?WVk2SXBPeXBiejNBOFRvTDVSWmFqMGhtdVNFUk9nMTNiLzRNTktjMElEUTY5?=
- =?utf-8?B?M1kwdE1PZ3psd3VxMEJ3VW0xMDBDdlhNaFUydDNhY1o5Q0ZFZDNwQWdKS1Q5?=
- =?utf-8?B?Yll4djRyM0hUcXQ2d3lwREtoelJacEVhWGk3cUhwb1huZjRsbkk4THlNdm5D?=
- =?utf-8?B?bFc4WlhWNHBRTmFqaEtMZ2JvYWFhckNhWXRNbjg1d2Z4WUxFZGlkbU45SVlY?=
- =?utf-8?B?OVpIbzJqemtRdWREamV2VzhSY1VTUkxoNVU3MHJMRFBna2gyNElCTlgzUmhp?=
- =?utf-8?B?SWlBQzBXZnREL05Jb3pRWHlxN2VxZzNzU21GNjJYSi82TVNhSjNVSVdtdFZT?=
- =?utf-8?B?Q1RZbnVPQUhQQTVUYlhuUnoyVWgyaGE1WjFBcEhuakd2b1cxVE5zWDkvbFJo?=
- =?utf-8?B?SFBpVHgrMmd3cmxVY3BSaElQZDdOaVg5VnlIU3U1dGw3ZFhkdWs4RDY3Q1Yv?=
- =?utf-8?B?U3h2Q0ZyOGdhSmpBVVVZM3I2RDhmMmVMNEFGZ3ZBS3lKYkZLTC9qRVFOeE11?=
- =?utf-8?B?QWIrZ3kvdlNCTnd6emgyV0Frd0hJaElxbFBTTWVTMlphZkIxMEdMZXJGcERz?=
- =?utf-8?B?L0t4bGlKL3BwT1IwZjhBS0FlK1lkYXBla1dqWldGWU5SbmgyWnFraDFXVjJh?=
- =?utf-8?B?VDdXMk0zVUxoQjJzSDdEYkgvanhmY0haT2JQYjlLNkhodUYxbFgwK283Rk9n?=
- =?utf-8?B?Z1NlWjVDSk8zS3VEK2c5aHhIaFpBYTVvQTdsN0JMNlA5UUpBZDFjZlo2QUJy?=
- =?utf-8?B?cWFvQWQ0Q2pTMkxDZXlMSkMyZFlZQUt2NHg2YWRxaVlaRlFyY3F3c3hLQWNw?=
- =?utf-8?B?eEFsWW9KK2VEdTBXWDJWTVJtdXVpZXMzbDZFZzg3ei95b0RyVFRwUlY3RkZV?=
- =?utf-8?B?bkRmSDZua3M0c0ZwaGlLV3pOK1cyUVkxUUt5QVBVT1loK3lFUk04TkRwSnBS?=
- =?utf-8?B?Y0NWSGxJZzhIL1lIdXZGQ3ZyblhQeVFscFduWE0vSHlSb2MvL1FwMmw5NzhW?=
- =?utf-8?B?WW9OcXo4aVNoamwyYjJtQkJiUGNWay8xNDdIVVNBelFUSzM1QmRFSGFMK3dV?=
- =?utf-8?B?SGVBSGE0VzRsSlJNd0hsOE41UnR3Q3pJTklKdy9KN1Zleml5MDZQaUFnQkxw?=
- =?utf-8?B?U09adXIrN2lNcmVaZm5kUHdzYlkzcHd1Y0FxTW5Fa3BIUkQ5aTNMU0N2cmtk?=
- =?utf-8?B?L0ljSzFBZ0R0b05mTmRSeGs1OUdLRTZkMmRuMkUveEZKT3RXMG9Bb20vVUFJ?=
- =?utf-8?B?V2ZtR2o1cTRYTnF2WDhITHhGZ3hXeTBsUXg0VktWcCt5TkRMb2dzdzUxVCtE?=
- =?utf-8?B?SldxM3lSWlJCd3hQQnBweDBFNGhJWEh0bmY5eXlFNjl1MWZnYUM5MUVvZkp3?=
- =?utf-8?B?dEdEc3lWNUdsN2hpU3dOL21zSkhZcjNqNXgremRWZGZnRGFid3lZRVRTTmVq?=
- =?utf-8?B?eVlmRXBwZmpFRFZIakZTOVdnLzc4WFc2SzVjUkhOVHFjc3JRU2E5cjE2aWlW?=
- =?utf-8?Q?ocxpvjxGmbLkmwaPgL7jUiw5qIa+ohIv?=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR11MB5866.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?VUtidS9tY0EyK1ZYQ1ozc2I3L0NFekY1SE55am1YcHAzdlJoc29PRktsbzNy?=
- =?utf-8?B?YmlXM1c3cVNzS2IrMHFqK3JGL2hVVEVra3VlZzR0RDUwQUkyOTczV1hXSjMv?=
- =?utf-8?B?OU56Q3BRdjk2Zzh6S0xxU3ZNZy93dW8xV09iMDZ4Y1BjV1BkYnZndXdTRDdi?=
- =?utf-8?B?Tjcxem5weW4reTgvQVR4eHhPdytWOFFoQXMxdjhOUXBjRjY2ckJKeTAwSyt3?=
- =?utf-8?B?TlJGcGJVWnkzWFZveW9ubmdseWJyS3g1WjYvWGZBditVYVgyeGxNVUlxZ1JU?=
- =?utf-8?B?SityKzN1VTRnOEZqclNhaXIrZjdQbFQ5bWVYTHN0blh0OGRIWTVyOWJPOTA3?=
- =?utf-8?B?dUt6OEJTeHNoOW42QkFIdjB2Y3FTUUhIOVk0bitKYndDM1hOZURoMm5odTRZ?=
- =?utf-8?B?dG4yQ1VZbHlhaEpMT05hZmRBT3RWZlNxcGNnZDJYZWVML1dQRTVTWE5SKzNR?=
- =?utf-8?B?MDF3c0h2L0FsdEtJY3Nva04wVUNLd3dJMXgyZnlrNDBLS21JajBsNGZ3N1Ri?=
- =?utf-8?B?VmhDMURlN3h6c29OUHVWb21qcXFxZmZNNmdwclBGZEk3YXBRRVh4TnU0ZlYz?=
- =?utf-8?B?VTd6aE5uL1poUjBDeXVOYlFaWWhIcGU2WkJiV0ZoQTVYdk1xUDg2TlhpN1Zr?=
- =?utf-8?B?QTdwQzZJUUoxbUQ1MG1ia3RsZHRBbnN3OHQ4NGNqelg2MGNSRkZlR2RVa1dp?=
- =?utf-8?B?ZkxXek4rMWR4YjBwSHUwMzE1SEJQZU4yck51TDFYVzdUeXdiQWVvdDRzZmNG?=
- =?utf-8?B?V0cyVDhzcXdhdWd1eXVmQjloVUpRcStGWGpscWNXN0xEMlp2ZHppQmZkSExj?=
- =?utf-8?B?S05kUk5YSERvT3dyb1o4K3lVY0xvNzNISUx4MmxWYXVzTmxWV3dsa1FZUDRI?=
- =?utf-8?B?SG9kT25WNm5lQnljVFZVSUZtbDlMSDNzSUVyQUdZUHlIYmFWY3ZIckRHZE9v?=
- =?utf-8?B?bngvM1EvdjVRaGQvMGNadjVPbkd5ZUI2RmJha2pJSUZRSnhEMlpJeGJpVUhi?=
- =?utf-8?B?TEJJOUtzRGpVRVBWd0hMZTFuc0lLeWNOVk5ESjZjaEpLbW10SGF1a0JKbVZK?=
- =?utf-8?B?WjhiL2lnSGlkV0hJb0lxemJVZWQ5YXBJZmFBRzA1VEowbkFRQk8zZzFqVVNm?=
- =?utf-8?B?aUdRcDAvSVhXaW96RmNWWC82L3VrRURiN3RKeHQ1SjJhVTkvWFdGdHdmYWJP?=
- =?utf-8?B?YWhKalBrWjZUVDRlaEgwS2l1dWhNbS9NazREOXRJQWo5TThEdDRHbUpYSXYx?=
- =?utf-8?B?NjNTbHVRUWZ2bTV1VEdCTXpMOTMxcmNnY0l4N1lOR0FUQ0oraXYxb05RblMz?=
- =?utf-8?B?Q1B2MTdLbTVxL3VnQldUYm1Id3BiYWpyYzEwcjZuTTYxcE56cDlTelZpL3VV?=
- =?utf-8?B?U1FFbFQ5SWNPNDF6ejhMT3ZBc2xWL2o0Q01Zd0RSdERxM3IzMzdsYnliS1lG?=
- =?utf-8?B?NENYOUhOdStjVWY5cFRGTEdVRDMwSFdEb0FsT1RUZlgzWHkrc2cxbXJVVlFj?=
- =?utf-8?B?Mk5PeGx3RlM4cU5lREtnQmxnVEJ3d1VMc3ZLNU0xcVVtNjExSlFPWlBLV3Bp?=
- =?utf-8?B?a2dCT3pHZ3U1aHhEejNISG5BVkI2YmZLc1IxMmZVVFBtUnFhTDRGVGE0b2V4?=
- =?utf-8?B?aUNGWkd4TWtlT2w3dDRjbzFwT09yc2hHQitVTjUvSXhERVZ5VnYzd2dYZks5?=
- =?utf-8?B?SWlTSkZhbjZQTjJJZGpmM2JvQW44UjA1NmhLQ2pjb3o4YngxbVpZZS85czUy?=
- =?utf-8?B?cmV3dE42bW1QUU5COTJFQ2IybTV1UkUxWEsrenBpTWNiNHFFbEFiTzlDMTA5?=
- =?utf-8?B?M0xyMURxMU1ETmlFb2Z5SzJDQWpFSlBBaE95d2Q5SVRBT2tZYy9FZ0xSY0lj?=
- =?utf-8?B?VVlJbGRwNjJDeDIvRk0wb2cyb2lZdUdUa2lrTC9NVzJxYWdSMCtDcUFuQkFo?=
- =?utf-8?B?SVo1bUZqbURhbzFWVENOTWRORmJ4M3ZCM3E3WkwzQmN4dFRYNFlFa2hXUVFL?=
- =?utf-8?B?eHZEMzc3cEVIQ0NjbERSMFJWT0lJRW5NWVpxT2E3M2J3WnpZMkRHSjdwMTJD?=
- =?utf-8?B?VE5oeWNiUW1SeFZmVkFVSnJIV3h5eDg5aFNxWlZ5UVY2Ykd2WEFkemJ3R0VZ?=
- =?utf-8?B?aGwreWczaGN4QWVRdEY3YjhMbXZFUVNidS9VRkwzREtlaHB1bUl0UnlScHF5?=
- =?utf-8?B?TEE9PQ==?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="JreROxho"
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 525AEUSU3282302
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 5 Mar 2025 04:14:30 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1741169670;
+	bh=SXrxm4giKxEyAMhzZdzR0r0C/bgsOLVqYh/xhsQVV4M=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=JreROxhovoqm43MfyTa2kusu8DrxJpaOrpimplrVuDwaSMm/hCcTsaAzBF0JnLN6I
+	 Q4g1C2H3gD85P436FV0EH0HDC0FOuRwDbSX8adxXtVvDEyCbOFNO0UydMVSGkzT09B
+	 Przwrtwe7ThUdAs10Did/lnVjizViIWR1dtq6ynI=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 525AEUw1085819
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Wed, 5 Mar 2025 04:14:30 -0600
+Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 5
+ Mar 2025 04:14:30 -0600
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Wed, 5 Mar 2025 04:14:30 -0600
+Received: from lelv0854.itg.ti.com (lelv0854.itg.ti.com [10.181.64.140])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 525AEUcI101108;
+	Wed, 5 Mar 2025 04:14:30 -0600
+Received: from localhost (meghana-pc.dhcp.ti.com [10.24.69.13] (may be forged))
+	by lelv0854.itg.ti.com (8.14.7/8.14.7) with ESMTP id 525AETnR005827;
+	Wed, 5 Mar 2025 04:14:29 -0600
+From: Meghana Malladi <m-malladi@ti.com>
+To: <rogerq@kernel.org>, <danishanwar@ti.com>, <pabeni@redhat.com>,
+        <kuba@kernel.org>, <edumazet@google.com>, <davem@davemloft.net>,
+        <andrew+netdev@lunn.ch>
+CC: <bpf@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <matthias.schiffer@ew.tq-group.com>, <krzysztof.kozlowski@linaro.org>,
+        <dan.carpenter@linaro.org>, <m-malladi@ti.com>,
+        <diogo.ivo@siemens.com>, <s.hauer@pengutronix.de>,
+        <glaroque@baylibre.com>, <schnelle@linux.ibm.com>, <arnd@kernel.org>,
+        <john.fastabend@gmail.com>, <hawk@kernel.org>, <daniel@iogearbox.net>,
+        <ast@kernel.org>, <srk@ti.com>, Vignesh Raghavendra
+	<vigneshr@ti.com>
+Subject: [PATCH net-next v4 1/3] net: ti: icssg-prueth: Use page_pool API for RX buffer allocation
+Date: Wed, 5 Mar 2025 15:44:20 +0530
+Message-ID: <20250305101422.1908370-2-m-malladi@ti.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250305101422.1908370-1-m-malladi@ti.com>
+References: <20250305101422.1908370-1-m-malladi@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SJ0PR11MB5866.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6c9878dd-e95a-4e2e-1b22-08dd5bce7036
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Mar 2025 10:13:56.0413
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 1jNZPCQoOGuRDmwuTnDQMhc9+/H+ITe8SpkfO7n4nbul+kd6dzaEW3aqWu8Cispxu3pnZHya7lshULf1I0oiEEpsQJx30qpn6bc8umbd+S0=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR11MB7009
-X-OriginatorOrg: intel.com
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogSW50ZWwtd2lyZWQtbGFu
-IDxpbnRlbC13aXJlZC1sYW4tYm91bmNlc0Bvc3Vvc2wub3JnPiBPbiBCZWhhbGYgT2YNCj4gS3l1
-bmd3b29rIEJvbw0KPiBTZW50OiBNb25kYXksIE1hcmNoIDMsIDIwMjUgMTE6MjAgQU0NCj4gVG86
-IE5ndXllbiwgQW50aG9ueSBMIDxhbnRob255Lmwubmd1eWVuQGludGVsLmNvbT47IEtpdHN6ZWws
-IFByemVteXNsYXcNCj4gPHByemVteXNsYXcua2l0c3plbEBpbnRlbC5jb20+DQo+IENjOiBpbnRl
-bC13aXJlZC1sYW5AbGlzdHMub3N1b3NsLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9y
-Zw0KPiBTdWJqZWN0OiBbSW50ZWwtd2lyZWQtbGFuXSBNTUlPIHdyaXRlIGFjY2VzcyB0byBhbiBp
-bnZhbGlkIHBhZ2UgaW4NCj4gaTQwZV9jbGVhcl9odygpDQo+IA0KUGxlYXNlIHN0YXJ0IGNvbW1p
-dCB0aXRsZSB3aXRoICdmaXgnIHRvIGV4cGxpY2l0bHkgdGVsbCB3aGF0IHlvdXIgcGF0Y2ggZG8g
-aS5lLiA6DQpJY2U6IGZpeCBNTUlPIHdyaXRlIGFjY2VzcyB0byBhbiBpbnZhbGlkIHBhZ2UgaW4g
-IGk0MGVfY2xlYXJfaHcNCg0KDQo+IEhlbGxvLA0KPiANCj4gSXQgc2VlbXMgdGhhdCB0aGVyZSBh
-cmUgaW52YWxpZCBwYWdlIE1NSU8gd3JpdGUgYWNjZXNzIGluIGk0MGVfY2xlYXJfaHcoKSBkdWUN
-Cj4gdG8gYW4gaW50ZWdlciB1bmRlcmZsb3cgZnJvbSBudW1fcGZfaW50KGFsc28gbnVtX3ZmX2lu
-dCBzZWVtcyBwb3NzaWJsZSkuDQo+IA0KPiBUaGUgZm9sbG93aW5nIGlzIGEgc2FtcGxlIGNvZGUg
-aW4gaTQwZV9jbGVhcl9odygpOg0KPiANCj4gdmFsID0gcmQzMihodywgSTQwRV9HTFBDSV9DTkYy
-KTsgLy8gKDEpDQo+IG51bV9wZl9pbnQgPSBGSUVMRF9HRVQoSTQwRV9HTFBDSV9DTkYyX01TSV9Y
-X1BGX05fTUFTSywgdmFsKTsgLy8gKDIpDQo+IG51bV92Zl9pbnQgPSBGSUVMRF9HRVQoSTQwRV9H
-TFBDSV9DTkYyX01TSV9YX1ZGX05fTUFTSywgdmFsKTsgLi4uDQo+IGZvciAoaSA9IDA7IGkgPCBu
-dW1fcGZfaW50IC0gMjsgaSsrKSAgICAgIC8vICgzKQ0KPiAJd3IzMihodywgSTQwRV9QRklOVF9E
-WU5fQ1RMTihpKSwgdmFsKTsgIC8vICg0KSAuLi4NCj4gZm9yIChpID0gMDsgaSA8IG51bV9wZl9p
-bnQgLSAyOyBpKyspCQkJLy8gKDUpDQo+IAl3cjMyKGh3LCBJNDBFX1BGSU5UX0xOS0xTVE4oaSks
-IHZhbCk7DQo+IC4uLg0KPiBmb3IgKGkgPSAwOyBpIDwgbnVtX3ZmX2ludCAtIDI7IGkrKykJCQkv
-LyAoNikNCj4gCXdyMzIoaHcsIEk0MEVfVlBJTlRfTE5LTFNUTihpKSwgdmFsKTsNCj4gDQo+IEFu
-IGV4YW1wbGUgc2NlbmFyaW8gZm9yIG51bV9wZl9pbnQ6DQo+ICgxKSB2YWwgPSAwIChpZiBNTUlP
-IHJlYWQgdmFsdWUgd2FzIDApDQo+ICgyKSBudW1fcGZfaW50ID0gMCAoYWxzbyB6ZXJvIGFmdGVy
-IGJpdCBmaWVsZCBleHRyYWN0aW9uIGZyb20gdmFsKQ0KPiAoMykgQW4gaW50ZWdlciB1bmRlcmZs
-b3cgb2NjdXJzIChudW1fcGZfaW50IC0gMiA9PSAweGZmZmZmZmZlKQ0KPiAoNCkgT3V0LW9mLWJv
-dW5kcyBNTUlPIHdyaXRlIGFjY2VzcyBpZiBhY2Nlc3MgYWRkcmVzcyBleGNlZWRzIHRoZSBleHBl
-Y3RlZA0KPiByYW5nZS4NCj4gDQo+IEZyb20gYWJvdmUgZXhhbXBsZSBzY2VuYXJpbywgdGhlIG1h
-eGltdW0gYWNjZXNzIG9mZnNldCB2YWx1ZSBjYW4gYmUNCj4gYXJvdW5kDQo+IDB4NDAwMDM0N2Y4
-KD0xNzJHKSB3aGljaCBzZWVtcyBsaWtlIHRoaXMgdW5kZXJmbG93IGlzIG5vdCBpbnRlbmRlZChh
-bHNvDQo+IHRoZXJlIGFyZSBtYXNraW5nIG9wZXJhdGlvbnMgbGlrZSAoMikgZm9yIG51bV9wZl9p
-bnQpLCBzbyBJIHJlcG9ydCB0aGlzIGlzc3VlLg0KPiANCj4gSSB0aGluayBzaW1pbGFyIGlzc3Vl
-IGFsc28gY291bGQgaGFwcGVuIGF0ICg1KSBhbmQgKDYpLg0KPiANCj4gVGhlIGZvbGxvd2luZyBp
-cyB0aGUgcGF0Y2ggbWV0aG9kIEkgcHJvcG9zZToNCj4gDQpQbGVhc2UgYWRkIEZpeGVzOiB0YWcg
-IGh0dHBzOi8vd3d3Lmtlcm5lbC5vcmcvZG9jL2h0bWwvbGF0ZXN0L3Byb2Nlc3Mvc3VibWl0dGlu
-Zy1wYXRjaGVzLmh0bWwNCg0KDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL25ldC9ldGhlcm5ldC9p
-bnRlbC9pNDBlL2k0MGVfY29tbW9uLmMNCj4gYi9kcml2ZXJzL25ldC9ldGhlcm5ldC9pbnRlbC9p
-NDBlL2k0MGVfY29tbW9uLmMNCj4gaW5kZXggMzcwYjRiZGRlZTQ0Li45N2VmNzliZTM5YjMgMTAw
-NjQ0DQo+IC0tLSBhL2RyaXZlcnMvbmV0L2V0aGVybmV0L2ludGVsL2k0MGUvaTQwZV9jb21tb24u
-Yw0KPiArKysgYi9kcml2ZXJzL25ldC9ldGhlcm5ldC9pbnRlbC9pNDBlL2k0MGVfY29tbW9uLmMN
-Cj4gQEAgLTg0OCwxOSArODQ4LDI1IEBAIHZvaWQgaTQwZV9jbGVhcl9odyhzdHJ1Y3QgaTQwZV9o
-dyAqaHcpDQo+ICAJLyogc3RvcCBhbGwgdGhlIGludGVycnVwdHMgKi8NCj4gIAl3cjMyKGh3LCBJ
-NDBFX1BGSU5UX0lDUjBfRU5BLCAwKTsNCj4gIAl2YWwgPSAweDMgPDwgSTQwRV9QRklOVF9EWU5f
-Q1RMTl9JVFJfSU5EWF9TSElGVDsNCj4gLQlmb3IgKGkgPSAwOyBpIDwgbnVtX3BmX2ludCAtIDI7
-IGkrKykNCj4gLQkJd3IzMihodywgSTQwRV9QRklOVF9EWU5fQ1RMTihpKSwgdmFsKTsNCj4gKwlp
-ZiAobnVtX3BmX2ludCA+IDEpIHsNCj4gKwkJZm9yIChpID0gMDsgaSA8IG51bV9wZl9pbnQgLSAy
-OyBpKyspDQo+ICsJCQl3cjMyKGh3LCBJNDBFX1BGSU5UX0RZTl9DVExOKGkpLCB2YWwpOw0KPiAr
-CX0NCj4gDQo+ICAJLyogU2V0IHRoZSBGSVJTVFFfSU5EWCBmaWVsZCB0byAweDdGRiBpbiBQRklO
-VF9MTktMU1R4ICovDQo+ICAJdmFsID0gZW9sIDw8IEk0MEVfUEZJTlRfTE5LTFNUMF9GSVJTVFFf
-SU5EWF9TSElGVDsNCj4gIAl3cjMyKGh3LCBJNDBFX1BGSU5UX0xOS0xTVDAsIHZhbCk7DQo+IC0J
-Zm9yIChpID0gMDsgaSA8IG51bV9wZl9pbnQgLSAyOyBpKyspDQo+IC0JCXdyMzIoaHcsIEk0MEVf
-UEZJTlRfTE5LTFNUTihpKSwgdmFsKTsNCj4gKwlpZiAobnVtX3BmX2ludCA+IDEpIHsNCj4gKwkJ
-Zm9yIChpID0gMDsgaSA8IG51bV9wZl9pbnQgLSAyOyBpKyspDQo+ICsJCQl3cjMyKGh3LCBJNDBF
-X1BGSU5UX0xOS0xTVE4oaSksIHZhbCk7DQo+ICsJfQ0KQ2FuIHlvdSBjb25zaWRlciBtb3Zpbmcg
-dGhpcyBpZiB1cHBlciBhbmQgdXNlIGl0IG9uY2UgaW5zdGVhZCBvZiBkdXBsaWNhdGluZyB0aGUg
-Y29kZT8NCkkgdGhpbmsgaXQgY2FuIGhlbHAgdG8gbWFpbnRhaW4gdGhlIGNvZGUuIFdoYXQgZG8g
-eW91IHRoaW5rPw0KDQo+ICAJdmFsID0gZW9sIDw8IEk0MEVfVlBJTlRfTE5LTFNUMF9GSVJTVFFf
-SU5EWF9TSElGVDsNCj4gIAlmb3IgKGkgPSAwOyBpIDwgbnVtX3ZmczsgaSsrKQ0KPiAgCQl3cjMy
-KGh3LCBJNDBFX1ZQSU5UX0xOS0xTVDAoaSksIHZhbCk7DQo+IC0JZm9yIChpID0gMDsgaSA8IG51
-bV92Zl9pbnQgLSAyOyBpKyspDQo+IC0JCXdyMzIoaHcsIEk0MEVfVlBJTlRfTE5LTFNUTihpKSwg
-dmFsKTsNCj4gKwlpZiAobnVtX3ZmX2ludCA+IDEpIHsNCj4gKwkJZm9yIChpID0gMDsgaSA8IG51
-bV92Zl9pbnQgLSAyOyBpKyspDQo+ICsJCQl3cjMyKGh3LCBJNDBFX1ZQSU5UX0xOS0xTVE4oaSks
-IHZhbCk7DQo+ICsJfQ0KPiANCj4gIAkvKiB3YXJuIHRoZSBIVyBvZiB0aGUgY29taW5nIFR4IGRp
-c2FibGVzICovDQo+ICAJZm9yIChpID0gMDsgaSA8IG51bV9xdWV1ZXM7IGkrKykgew0KPiANCj4g
-DQo+IENvdWxkIHlvdSBjaGVjayB0aGlzPw0KPiANCj4gQmVzdCByZWdhcmRzLA0KPiBLeXVuZ3dv
-b2sgQm9vDQo=
+From: Roger Quadros <rogerq@kernel.org>
+
+This is to prepare for native XDP support.
+
+The page pool API is more faster in allocating pages than
+__alloc_skb(). Drawback is that it works at PAGE_SIZE granularity
+so we are not efficient in memory usage.
+i.e. we are using PAGE_SIZE (4KB) memory for 1.5KB max packet size.
+
+Signed-off-by: Roger Quadros <rogerq@kernel.org>
+Signed-off-by: MD Danish Anwar <danishanwar@ti.com>
+Signed-off-by: Meghana Malladi <m-malladi@ti.com>
+---
+Changes from v3 (v4-v3):
+- Get rid of skb from Rx management code in SR1 as suggested by 
+Roger Quadros <rogerq@kernel.org>
+
+ drivers/net/ethernet/ti/Kconfig               |   1 +
+ drivers/net/ethernet/ti/icssg/icssg_common.c  | 174 ++++++++++++------
+ drivers/net/ethernet/ti/icssg/icssg_prueth.h  |  14 +-
+ .../net/ethernet/ti/icssg/icssg_prueth_sr1.c  |  51 +++--
+ 4 files changed, 150 insertions(+), 90 deletions(-)
+
+diff --git a/drivers/net/ethernet/ti/Kconfig b/drivers/net/ethernet/ti/Kconfig
+index 3a13d60a947a..a07c910c497a 100644
+--- a/drivers/net/ethernet/ti/Kconfig
++++ b/drivers/net/ethernet/ti/Kconfig
+@@ -205,6 +205,7 @@ config TI_ICSSG_PRUETH_SR1
+ 	select PHYLIB
+ 	select TI_ICSS_IEP
+ 	select TI_K3_CPPI_DESC_POOL
++	select PAGE_POOL
+ 	depends on PRU_REMOTEPROC
+ 	depends on NET_SWITCHDEV
+ 	depends on ARCH_K3 && OF && TI_K3_UDMA_GLUE_LAYER
+diff --git a/drivers/net/ethernet/ti/icssg/icssg_common.c b/drivers/net/ethernet/ti/icssg/icssg_common.c
+index 74f0f200a89d..acbb79ad8b0c 100644
+--- a/drivers/net/ethernet/ti/icssg/icssg_common.c
++++ b/drivers/net/ethernet/ti/icssg/icssg_common.c
+@@ -45,6 +45,11 @@ void prueth_cleanup_rx_chns(struct prueth_emac *emac,
+ 			    struct prueth_rx_chn *rx_chn,
+ 			    int max_rflows)
+ {
++	if (rx_chn->pg_pool) {
++		page_pool_destroy(rx_chn->pg_pool);
++		rx_chn->pg_pool = NULL;
++	}
++
+ 	if (rx_chn->desc_pool)
+ 		k3_cppi_desc_pool_destroy(rx_chn->desc_pool);
+ 
+@@ -461,17 +466,17 @@ int prueth_init_rx_chns(struct prueth_emac *emac,
+ }
+ EXPORT_SYMBOL_GPL(prueth_init_rx_chns);
+ 
+-int prueth_dma_rx_push(struct prueth_emac *emac,
+-		       struct sk_buff *skb,
+-		       struct prueth_rx_chn *rx_chn)
++int prueth_dma_rx_push_mapped(struct prueth_emac *emac,
++			      struct prueth_rx_chn *rx_chn,
++			      struct page *page, u32 buf_len)
+ {
+ 	struct net_device *ndev = emac->ndev;
+ 	struct cppi5_host_desc_t *desc_rx;
+-	u32 pkt_len = skb_tailroom(skb);
+ 	dma_addr_t desc_dma;
+ 	dma_addr_t buf_dma;
+ 	void **swdata;
+ 
++	buf_dma = page_pool_get_dma_addr(page) + PRUETH_HEADROOM;
+ 	desc_rx = k3_cppi_desc_pool_alloc(rx_chn->desc_pool);
+ 	if (!desc_rx) {
+ 		netdev_err(ndev, "rx push: failed to allocate descriptor\n");
+@@ -479,25 +484,18 @@ int prueth_dma_rx_push(struct prueth_emac *emac,
+ 	}
+ 	desc_dma = k3_cppi_desc_pool_virt2dma(rx_chn->desc_pool, desc_rx);
+ 
+-	buf_dma = dma_map_single(rx_chn->dma_dev, skb->data, pkt_len, DMA_FROM_DEVICE);
+-	if (unlikely(dma_mapping_error(rx_chn->dma_dev, buf_dma))) {
+-		k3_cppi_desc_pool_free(rx_chn->desc_pool, desc_rx);
+-		netdev_err(ndev, "rx push: failed to map rx pkt buffer\n");
+-		return -EINVAL;
+-	}
+-
+ 	cppi5_hdesc_init(desc_rx, CPPI5_INFO0_HDESC_EPIB_PRESENT,
+ 			 PRUETH_NAV_PS_DATA_SIZE);
+ 	k3_udma_glue_rx_dma_to_cppi5_addr(rx_chn->rx_chn, &buf_dma);
+-	cppi5_hdesc_attach_buf(desc_rx, buf_dma, skb_tailroom(skb), buf_dma, skb_tailroom(skb));
++	cppi5_hdesc_attach_buf(desc_rx, buf_dma, buf_len, buf_dma, buf_len);
+ 
+ 	swdata = cppi5_hdesc_get_swdata(desc_rx);
+-	*swdata = skb;
++	*swdata = page;
+ 
+-	return k3_udma_glue_push_rx_chn(rx_chn->rx_chn, 0,
++	return k3_udma_glue_push_rx_chn(rx_chn->rx_chn, PRUETH_RX_FLOW_DATA,
+ 					desc_rx, desc_dma);
+ }
+-EXPORT_SYMBOL_GPL(prueth_dma_rx_push);
++EXPORT_SYMBOL_GPL(prueth_dma_rx_push_mapped);
+ 
+ u64 icssg_ts_to_ns(u32 hi_sw, u32 hi, u32 lo, u32 cycle_time_ns)
+ {
+@@ -541,12 +539,16 @@ static int emac_rx_packet(struct prueth_emac *emac, u32 flow_id)
+ 	u32 buf_dma_len, pkt_len, port_id = 0;
+ 	struct net_device *ndev = emac->ndev;
+ 	struct cppi5_host_desc_t *desc_rx;
+-	struct sk_buff *skb, *new_skb;
+ 	dma_addr_t desc_dma, buf_dma;
++	struct page *page, *new_page;
++	struct page_pool *pool;
++	struct sk_buff *skb;
+ 	void **swdata;
+ 	u32 *psdata;
++	void *pa;
+ 	int ret;
+ 
++	pool = rx_chn->pg_pool;
+ 	ret = k3_udma_glue_pop_rx_chn(rx_chn->rx_chn, flow_id, &desc_dma);
+ 	if (ret) {
+ 		if (ret != -ENODATA)
+@@ -558,15 +560,9 @@ static int emac_rx_packet(struct prueth_emac *emac, u32 flow_id)
+ 		return 0;
+ 
+ 	desc_rx = k3_cppi_desc_pool_dma2virt(rx_chn->desc_pool, desc_dma);
+-
+ 	swdata = cppi5_hdesc_get_swdata(desc_rx);
+-	skb = *swdata;
+-
+-	psdata = cppi5_hdesc_get_psdata(desc_rx);
+-	/* RX HW timestamp */
+-	if (emac->rx_ts_enabled)
+-		emac_rx_timestamp(emac, skb, psdata);
+-
++	page = *swdata;
++	page_pool_dma_sync_for_cpu(pool, page, 0, PAGE_SIZE);
+ 	cppi5_hdesc_get_obuf(desc_rx, &buf_dma, &buf_dma_len);
+ 	k3_udma_glue_rx_cppi5_to_dma_addr(rx_chn->rx_chn, &buf_dma);
+ 	pkt_len = cppi5_hdesc_get_pktlen(desc_rx);
+@@ -574,32 +570,51 @@ static int emac_rx_packet(struct prueth_emac *emac, u32 flow_id)
+ 	pkt_len -= 4;
+ 	cppi5_desc_get_tags_ids(&desc_rx->hdr, &port_id, NULL);
+ 
+-	dma_unmap_single(rx_chn->dma_dev, buf_dma, buf_dma_len, DMA_FROM_DEVICE);
+ 	k3_cppi_desc_pool_free(rx_chn->desc_pool, desc_rx);
+ 
+-	skb->dev = ndev;
+-	new_skb = netdev_alloc_skb_ip_align(ndev, PRUETH_MAX_PKT_SIZE);
+ 	/* if allocation fails we drop the packet but push the
+-	 * descriptor back to the ring with old skb to prevent a stall
++	 * descriptor back to the ring with old page to prevent a stall
+ 	 */
+-	if (!new_skb) {
++	new_page = page_pool_dev_alloc_pages(pool);
++	if (unlikely(!new_page)) {
++		new_page = page;
+ 		ndev->stats.rx_dropped++;
+-		new_skb = skb;
+-	} else {
+-		/* send the filled skb up the n/w stack */
+-		skb_put(skb, pkt_len);
+-		if (emac->prueth->is_switch_mode)
+-			skb->offload_fwd_mark = emac->offload_fwd_mark;
+-		skb->protocol = eth_type_trans(skb, ndev);
+-		napi_gro_receive(&emac->napi_rx, skb);
+-		ndev->stats.rx_bytes += pkt_len;
+-		ndev->stats.rx_packets++;
++		goto requeue;
++	}
++
++	/* prepare skb and send to n/w stack */
++	pa = page_address(page);
++	skb = napi_build_skb(pa, PAGE_SIZE);
++	if (!skb) {
++		ndev->stats.rx_dropped++;
++		page_pool_recycle_direct(pool, page);
++		goto requeue;
+ 	}
+ 
++	skb_reserve(skb, PRUETH_HEADROOM);
++	skb_put(skb, pkt_len);
++	skb->dev = ndev;
++
++	psdata = cppi5_hdesc_get_psdata(desc_rx);
++	/* RX HW timestamp */
++	if (emac->rx_ts_enabled)
++		emac_rx_timestamp(emac, skb, psdata);
++
++	if (emac->prueth->is_switch_mode)
++		skb->offload_fwd_mark = emac->offload_fwd_mark;
++	skb->protocol = eth_type_trans(skb, ndev);
++
++	skb_mark_for_recycle(skb);
++	napi_gro_receive(&emac->napi_rx, skb);
++	ndev->stats.rx_bytes += pkt_len;
++	ndev->stats.rx_packets++;
++
++requeue:
+ 	/* queue another RX DMA */
+-	ret = prueth_dma_rx_push(emac, new_skb, &emac->rx_chns);
++	ret = prueth_dma_rx_push_mapped(emac, &emac->rx_chns, new_page,
++					PRUETH_MAX_PKT_SIZE);
+ 	if (WARN_ON(ret < 0)) {
+-		dev_kfree_skb_any(new_skb);
++		page_pool_recycle_direct(pool, new_page);
+ 		ndev->stats.rx_errors++;
+ 		ndev->stats.rx_dropped++;
+ 	}
+@@ -611,22 +626,16 @@ static void prueth_rx_cleanup(void *data, dma_addr_t desc_dma)
+ {
+ 	struct prueth_rx_chn *rx_chn = data;
+ 	struct cppi5_host_desc_t *desc_rx;
+-	struct sk_buff *skb;
+-	dma_addr_t buf_dma;
+-	u32 buf_dma_len;
++	struct page_pool *pool;
++	struct page *page;
+ 	void **swdata;
+ 
++	pool = rx_chn->pg_pool;
+ 	desc_rx = k3_cppi_desc_pool_dma2virt(rx_chn->desc_pool, desc_dma);
+ 	swdata = cppi5_hdesc_get_swdata(desc_rx);
+-	skb = *swdata;
+-	cppi5_hdesc_get_obuf(desc_rx, &buf_dma, &buf_dma_len);
+-	k3_udma_glue_rx_cppi5_to_dma_addr(rx_chn->rx_chn, &buf_dma);
+-
+-	dma_unmap_single(rx_chn->dma_dev, buf_dma, buf_dma_len,
+-			 DMA_FROM_DEVICE);
++	page = *swdata;
++	page_pool_recycle_direct(pool, page);
+ 	k3_cppi_desc_pool_free(rx_chn->desc_pool, desc_rx);
+-
+-	dev_kfree_skb_any(skb);
+ }
+ 
+ static int prueth_tx_ts_cookie_get(struct prueth_emac *emac)
+@@ -907,29 +916,71 @@ int icssg_napi_rx_poll(struct napi_struct *napi_rx, int budget)
+ }
+ EXPORT_SYMBOL_GPL(icssg_napi_rx_poll);
+ 
++static struct page_pool *prueth_create_page_pool(struct prueth_emac *emac,
++						 struct device *dma_dev,
++						 int size)
++{
++	struct page_pool_params pp_params = { 0 };
++	struct page_pool *pool;
++
++	pp_params.order = 0;
++	pp_params.flags = PP_FLAG_DMA_MAP | PP_FLAG_DMA_SYNC_DEV;
++	pp_params.pool_size = size;
++	pp_params.nid = dev_to_node(emac->prueth->dev);
++	pp_params.dma_dir = DMA_BIDIRECTIONAL;
++	pp_params.dev = dma_dev;
++	pp_params.napi = &emac->napi_rx;
++	pp_params.max_len = PAGE_SIZE;
++
++	pool = page_pool_create(&pp_params);
++	if (IS_ERR(pool))
++		netdev_err(emac->ndev, "cannot create rx page pool\n");
++
++	return pool;
++}
++
+ int prueth_prepare_rx_chan(struct prueth_emac *emac,
+ 			   struct prueth_rx_chn *chn,
+ 			   int buf_size)
+ {
+-	struct sk_buff *skb;
++	struct page_pool *pool;
++	struct page *page;
+ 	int i, ret;
+ 
++	pool = prueth_create_page_pool(emac, chn->dma_dev, chn->descs_num);
++	if (IS_ERR(pool))
++		return PTR_ERR(pool);
++
++	chn->pg_pool = pool;
++
+ 	for (i = 0; i < chn->descs_num; i++) {
+-		skb = __netdev_alloc_skb_ip_align(NULL, buf_size, GFP_KERNEL);
+-		if (!skb)
+-			return -ENOMEM;
++		/* NOTE: we're not using memory efficiently here.
++		 * 1 full page (4KB?) used here instead of
++		 * PRUETH_MAX_PKT_SIZE (~1.5KB?)
++		 */
++		page = page_pool_dev_alloc_pages(pool);
++		if (!page) {
++			netdev_err(emac->ndev, "couldn't allocate rx page\n");
++			ret = -ENOMEM;
++			goto recycle_alloc_pg;
++		}
+ 
+-		ret = prueth_dma_rx_push(emac, skb, chn);
++		ret = prueth_dma_rx_push_mapped(emac, chn, page, buf_size);
+ 		if (ret < 0) {
+ 			netdev_err(emac->ndev,
+-				   "cannot submit skb for rx chan %s ret %d\n",
++				   "cannot submit page for rx chan %s ret %d\n",
+ 				   chn->name, ret);
+-			kfree_skb(skb);
+-			return ret;
++			page_pool_recycle_direct(pool, page);
++			goto recycle_alloc_pg;
+ 		}
+ 	}
+ 
+ 	return 0;
++
++recycle_alloc_pg:
++	prueth_reset_rx_chan(&emac->rx_chns, PRUETH_MAX_RX_FLOWS, false);
++
++	return ret;
+ }
+ EXPORT_SYMBOL_GPL(prueth_prepare_rx_chan);
+ 
+@@ -958,6 +1009,9 @@ void prueth_reset_rx_chan(struct prueth_rx_chn *chn,
+ 					  prueth_rx_cleanup, !!i);
+ 	if (disable)
+ 		k3_udma_glue_disable_rx_chn(chn->rx_chn);
++
++	page_pool_destroy(chn->pg_pool);
++	chn->pg_pool = NULL;
+ }
+ EXPORT_SYMBOL_GPL(prueth_reset_rx_chan);
+ 
+diff --git a/drivers/net/ethernet/ti/icssg/icssg_prueth.h b/drivers/net/ethernet/ti/icssg/icssg_prueth.h
+index 329b46e9ee53..c7b906de18af 100644
+--- a/drivers/net/ethernet/ti/icssg/icssg_prueth.h
++++ b/drivers/net/ethernet/ti/icssg/icssg_prueth.h
+@@ -33,6 +33,8 @@
+ #include <linux/dma/k3-udma-glue.h>
+ 
+ #include <net/devlink.h>
++#include <net/xdp.h>
++#include <net/page_pool/helpers.h>
+ 
+ #include "icssg_config.h"
+ #include "icss_iep.h"
+@@ -131,6 +133,7 @@ struct prueth_rx_chn {
+ 	u32 descs_num;
+ 	unsigned int irq[ICSSG_MAX_RFLOWS];	/* separate irq per flow */
+ 	char name[32];
++	struct page_pool *pg_pool;
+ };
+ 
+ /* There are 4 Tx DMA channels, but the highest priority is CH3 (thread 3)
+@@ -210,6 +213,10 @@ struct prueth_emac {
+ 	struct netdev_hw_addr_list vlan_mcast_list[MAX_VLAN_ID];
+ };
+ 
++/* The buf includes headroom compatible with both skb and xdpf */
++#define PRUETH_HEADROOM_NA (max(XDP_PACKET_HEADROOM, NET_SKB_PAD) + NET_IP_ALIGN)
++#define PRUETH_HEADROOM  ALIGN(PRUETH_HEADROOM_NA, sizeof(long))
++
+ /**
+  * struct prueth_pdata - PRUeth platform data
+  * @fdqring_mode: Free desc queue mode
+@@ -410,9 +417,10 @@ int prueth_init_rx_chns(struct prueth_emac *emac,
+ 			struct prueth_rx_chn *rx_chn,
+ 			char *name, u32 max_rflows,
+ 			u32 max_desc_num);
+-int prueth_dma_rx_push(struct prueth_emac *emac,
+-		       struct sk_buff *skb,
+-		       struct prueth_rx_chn *rx_chn);
++int prueth_dma_rx_push_mapped(struct prueth_emac *emac,
++			      struct prueth_rx_chn *rx_chn,
++			      struct page *page, u32 buf_len);
++unsigned int prueth_rxbuf_total_len(unsigned int len);
+ void emac_rx_timestamp(struct prueth_emac *emac,
+ 		       struct sk_buff *skb, u32 *psdata);
+ enum netdev_tx icssg_ndo_start_xmit(struct sk_buff *skb, struct net_device *ndev);
+diff --git a/drivers/net/ethernet/ti/icssg/icssg_prueth_sr1.c b/drivers/net/ethernet/ti/icssg/icssg_prueth_sr1.c
+index 64a19ff39562..8f5719a98614 100644
+--- a/drivers/net/ethernet/ti/icssg/icssg_prueth_sr1.c
++++ b/drivers/net/ethernet/ti/icssg/icssg_prueth_sr1.c
+@@ -268,15 +268,15 @@ static int emac_phy_connect(struct prueth_emac *emac)
+  * Returns skb pointer if packet found else NULL
+  * Caller must free the returned skb.
+  */
+-static struct sk_buff *prueth_process_rx_mgm(struct prueth_emac *emac,
+-					     u32 flow_id)
++static struct page *prueth_process_rx_mgm(struct prueth_emac *emac,
++					  u32 flow_id)
+ {
+ 	struct prueth_rx_chn *rx_chn = &emac->rx_mgm_chn;
+ 	struct net_device *ndev = emac->ndev;
+ 	struct cppi5_host_desc_t *desc_rx;
+-	struct sk_buff *skb, *new_skb;
++	struct page *page, *new_page;
+ 	dma_addr_t desc_dma, buf_dma;
+-	u32 buf_dma_len, pkt_len;
++	u32 buf_dma_len;
+ 	void **swdata;
+ 	int ret;
+ 
+@@ -299,34 +299,31 @@ static struct sk_buff *prueth_process_rx_mgm(struct prueth_emac *emac,
+ 	}
+ 
+ 	swdata = cppi5_hdesc_get_swdata(desc_rx);
+-	skb = *swdata;
++	page = *swdata;
+ 	cppi5_hdesc_get_obuf(desc_rx, &buf_dma, &buf_dma_len);
+-	pkt_len = cppi5_hdesc_get_pktlen(desc_rx);
+ 
+ 	dma_unmap_single(rx_chn->dma_dev, buf_dma, buf_dma_len, DMA_FROM_DEVICE);
+ 	k3_cppi_desc_pool_free(rx_chn->desc_pool, desc_rx);
+ 
+-	new_skb = netdev_alloc_skb_ip_align(ndev, PRUETH_MAX_PKT_SIZE);
++	new_page = page_pool_dev_alloc_pages(rx_chn->pg_pool);
+ 	/* if allocation fails we drop the packet but push the
+ 	 * descriptor back to the ring with old skb to prevent a stall
+ 	 */
+-	if (!new_skb) {
++	if (!new_page) {
+ 		netdev_err(ndev,
+-			   "skb alloc failed, dropped mgm pkt from flow %d\n",
++			   "page alloc failed, dropped mgm pkt from flow %d\n",
+ 			   flow_id);
+-		new_skb = skb;
+-		skb = NULL;	/* return NULL */
+-	} else {
+-		/* return the filled skb */
+-		skb_put(skb, pkt_len);
++		new_page = page;
++		page = NULL;	/* return NULL */
+ 	}
+ 
+ 	/* queue another DMA */
+-	ret = prueth_dma_rx_push(emac, new_skb, &emac->rx_mgm_chn);
++	ret = prueth_dma_rx_push_mapped(emac, &emac->rx_chns, new_page,
++					PRUETH_MAX_PKT_SIZE);
+ 	if (WARN_ON(ret < 0))
+-		dev_kfree_skb_any(new_skb);
++		page_pool_recycle_direct(rx_chn->pg_pool, new_page);
+ 
+-	return skb;
++	return page;
+ }
+ 
+ static void prueth_tx_ts_sr1(struct prueth_emac *emac,
+@@ -362,14 +359,14 @@ static void prueth_tx_ts_sr1(struct prueth_emac *emac,
+ static irqreturn_t prueth_rx_mgm_ts_thread_sr1(int irq, void *dev_id)
+ {
+ 	struct prueth_emac *emac = dev_id;
+-	struct sk_buff *skb;
++	struct page *page;
+ 
+-	skb = prueth_process_rx_mgm(emac, PRUETH_RX_MGM_FLOW_TIMESTAMP_SR1);
+-	if (!skb)
++	page = prueth_process_rx_mgm(emac, PRUETH_RX_MGM_FLOW_TIMESTAMP_SR1);
++	if (!page)
+ 		return IRQ_NONE;
+ 
+-	prueth_tx_ts_sr1(emac, (void *)skb->data);
+-	dev_kfree_skb_any(skb);
++	prueth_tx_ts_sr1(emac, (void *)page_address(page));
++	page_pool_recycle_direct(page->pp, page);
+ 
+ 	return IRQ_HANDLED;
+ }
+@@ -377,15 +374,15 @@ static irqreturn_t prueth_rx_mgm_ts_thread_sr1(int irq, void *dev_id)
+ static irqreturn_t prueth_rx_mgm_rsp_thread(int irq, void *dev_id)
+ {
+ 	struct prueth_emac *emac = dev_id;
+-	struct sk_buff *skb;
++	struct page *page;
+ 	u32 rsp;
+ 
+-	skb = prueth_process_rx_mgm(emac, PRUETH_RX_MGM_FLOW_RESPONSE_SR1);
+-	if (!skb)
++	page = prueth_process_rx_mgm(emac, PRUETH_RX_MGM_FLOW_RESPONSE_SR1);
++	if (!page)
+ 		return IRQ_NONE;
+ 
+ 	/* Process command response */
+-	rsp = le32_to_cpu(*(__le32 *)skb->data) & 0xffff0000;
++	rsp = le32_to_cpu(*(__le32 *)page_address(page)) & 0xffff0000;
+ 	if (rsp == ICSSG_SHUTDOWN_CMD_SR1) {
+ 		netdev_dbg(emac->ndev, "f/w Shutdown cmd resp %x\n", rsp);
+ 		complete(&emac->cmd_complete);
+@@ -394,7 +391,7 @@ static irqreturn_t prueth_rx_mgm_rsp_thread(int irq, void *dev_id)
+ 		complete(&emac->cmd_complete);
+ 	}
+ 
+-	dev_kfree_skb_any(skb);
++	page_pool_recycle_direct(page->pp, page);
+ 
+ 	return IRQ_HANDLED;
+ }
+-- 
+2.43.0
+
