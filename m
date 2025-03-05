@@ -1,140 +1,148 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from ksmg01.maxima.ru (ksmg01.maxima.ru [81.200.124.38])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 847261EA7DB;
-	Wed,  5 Mar 2025 12:28:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 881BB2A1BF;
+	Wed,  5 Mar 2025 12:30:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=81.200.124.38
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741177695; cv=none; b=GC0MbJ83jPA6EKzr3HG8/366ge0Pl3jTEHEamHoSqXtAeHOuZxuOboqirX8i/YZ/nCD5ypgwgBmRjAl0EfoJPewK+4shSqO5/1/h07I+B99WDhHmI0R3bWaIYzNEtnfHycqKmVD0UMVEqMGhLaK2tDOpmM1lcUlseNrD5YDiebc=
+	t=1741177813; cv=none; b=muS2W1ofiQgA2ThAoLjwyVFJVjtmiuYBsZ9jEKeXDAHQbjj5wM75iVjKzuTkVsOWJasl0Ynnou2RggOVCSkv4953bwwudSYD+TvS9NKJ908oDeueXIrDQ6bPcJzCBKHmx517XA3Ac1J74OyVN4nOrdcPbjDV0SgbQeEdy7B3DXs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741177695; c=relaxed/simple;
-	bh=Y3/gEqSNTPTGDmKmgZmEHhOnQWViQQKthNK4JDKCRSQ=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=ATKZfouSUT+oadLRoE09SICOVt3poxOzWclvtsxV14jqLI8reAEJnx5dVwx3zkdkZSUnpoakGxI7aUtiDht/QW4VW5uXyNKwMthS53fR1rziNW0x29CljYMxFHOdtMMLWVhZCUENQCRi/DxvnncJaoMsHegAkaMtqodAdJICiUk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=WwfjqxBS; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1741177813; c=relaxed/simple;
+	bh=XUYFquD2kF7krYW6kimapa9xXRvl53m+sHdaVBDWrg0=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=vA/XAN7jvw5Ch8/mafxeJI9OHZOZb4FLMD5LUepjmBqa0zrMgYQ4NSc3bmbxDEMYqlEUMuS26eMzOD7iiyMIIh9BJLiK5movSO8yq0CG0mQD0tqePz9AQKzbZ8R3AUgz5B+5Wv9d66tjftp6KLdu4+a4mDs1ns461f6SjEd21qY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mt-integration.ru; spf=pass smtp.mailfrom=mt-integration.ru; dkim=pass (2048-bit key) header.d=mt-integration.ru header.i=@mt-integration.ru header.b=LmI72CSt; arc=none smtp.client-ip=81.200.124.38
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mt-integration.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mt-integration.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="WwfjqxBS"
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 525A7vNi014667;
-	Wed, 5 Mar 2025 12:27:44 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=Md/Snk
-	5p9sNZnLIho40zGrrO+am14oZcFnJQ7JNna9U=; b=WwfjqxBS/+97sKDxCVYFlL
-	vMdNh4h4lVwyIbj5kKBtpjCNMeXhrk72pvbnqZ6OnMSybU+uXjWG8UJ6EsO7AmDs
-	ksy1w6VrSbVTrj6r/xT89Nc8uFK/K6vxNDVmZJedYzS+SbgvK1KtFkkcIPxcFH/e
-	E9kfoVCHVsiX31puZKqy2m/cAWRx+WD/DvJvAMdO2Zr6J1ybevE//5+yW7ho2FtP
-	A53oQdYkFik29+vIhVBUTKzh491xvxwKQLdBC8pTEjJYzJnm9QRBEduDHVlW/lRW
-	GcDlTvfXnsj/bb7jzOs6L6jcShZJ5eQfo+7cPwIhlT5Nz4FE86GsdVZ2KQIMztbA
-	==
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4568r0kfdc-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 05 Mar 2025 12:27:44 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5258mWB6020800;
-	Wed, 5 Mar 2025 12:27:43 GMT
-Received: from smtprelay06.dal12v.mail.ibm.com ([172.16.1.8])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 454esk2e2x-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 05 Mar 2025 12:27:43 +0000
-Received: from smtpav05.wdc07v.mail.ibm.com (smtpav05.wdc07v.mail.ibm.com [10.39.53.232])
-	by smtprelay06.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 525CRhVQ33030860
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 5 Mar 2025 12:27:43 GMT
-Received: from smtpav05.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 038685805F;
-	Wed,  5 Mar 2025 12:27:43 +0000 (GMT)
-Received: from smtpav05.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 3B05658053;
-	Wed,  5 Mar 2025 12:27:41 +0000 (GMT)
-Received: from li-43857255-d5e6-4659-90f1-fc5cee4750ad.ibm.com (unknown [9.61.124.31])
-	by smtpav05.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Wed,  5 Mar 2025 12:27:41 +0000 (GMT)
-Message-ID: <fe6e3c1333a50d66dc876b5a196d3491170802a8.camel@linux.ibm.com>
-Subject: Re: [PATCH v9 1/7] ima: copy only complete measurement records
- across kexec
-From: Mimi Zohar <zohar@linux.ibm.com>
-To: Baoquan He <bhe@redhat.com>, steven chen <chenste@linux.microsoft.com>
-Cc: stefanb@linux.ibm.com, roberto.sassu@huaweicloud.com,
-        roberto.sassu@huawei.com, eric.snowberg@oracle.com,
-        ebiederm@xmission.com, paul@paul-moore.com, code@tyhicks.com,
-        bauermann@kolabnow.com, linux-integrity@vger.kernel.org,
-        kexec@lists.infradead.org, linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, madvenka@linux.microsoft.com,
-        nramas@linux.microsoft.com, James.Bottomley@hansenpartnership.com,
-        vgoyal@redhat.com, dyoung@redhat.com
-Date: Wed, 05 Mar 2025 07:27:40 -0500
-In-Reply-To: <Z8g+uhZQ6totYLmp@MiWiFi-R3L-srv>
-References: <20250304190351.96975-1-chenste@linux.microsoft.com>
-	 <20250304190351.96975-2-chenste@linux.microsoft.com>
-	 <Z8g+uhZQ6totYLmp@MiWiFi-R3L-srv>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
+	dkim=pass (2048-bit key) header.d=mt-integration.ru header.i=@mt-integration.ru header.b="LmI72CSt"
+Received: from ksmg01.maxima.ru (localhost [127.0.0.1])
+	by ksmg01.maxima.ru (Postfix) with ESMTP id 1DB85C001B;
+	Wed,  5 Mar 2025 15:30:01 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 ksmg01.maxima.ru 1DB85C001B
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mt-integration.ru;
+	s=sl; t=1741177801; bh=jwfiOKN+C1alB3gS3qmr0uc2qIJJ9i/ducBeeGQwW5k=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
+	b=LmI72CStgcWWaWzQbPfDk2TeA2dNAw1/zxz9w4rltvJGmKJZmLg9PXkYa8PRzKBVT
+	 UGjoA21Hu+cXHtOOHmAL5TJHVKEnEqf46aH025ZhpVbmH0Y4ywdQVFnJz4d8POQ7Ef
+	 Fsmmxz3CaSccae4tValibP5bwu4CuA6NDgcVzG4OnQV/aJFAGp4RVMdvXD2C7tRohY
+	 ZzjNrQPRkS28SOwBVtTfHHZ3tHWk+90/hWCAmeCua/fdakNDARAPK91ZUzDzIMUnxC
+	 PLOYqCLKabmkNH3fzPAyexycXydUgKMNvm0qRgEILHAVjKuaTRblBvGftrK2nyTDuY
+	 LKwiV/RLW9MYA==
+Received: from ksmg01.maxima.ru (autodiscover.maxima.ru [81.200.124.61])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(Client CN "*.maxima.ru", Issuer "GlobalSign GCC R3 DV TLS CA 2020" (verified OK))
+	by ksmg01.maxima.ru (Postfix) with ESMTPS;
+	Wed,  5 Mar 2025 15:30:00 +0300 (MSK)
+Received: from localhost.maximatelecom.ru (178.236.220.168) by
+ mmail-p-exch01.mt.ru (81.200.124.61) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.2.1544.4; Wed, 5 Mar 2025 15:29:59 +0300
+From: Vitaliy Shevtsov <v.shevtsov@mt-integration.ru>
+To: Hans Verkuil <hverkuil@xs4all.nl>
+CC: Vitaliy Shevtsov <v.shevtsov@mt-integration.ru>, Mauro Carvalho Chehab
+	<mchehab@kernel.org>, Jani Nikula <jani.nikula@intel.com>,
+	<linux-media@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<lvc-project@linuxtesting.org>
+Subject: [PATCH] media: cec: use us_to_ktime() where appropriate
+Date: Wed, 5 Mar 2025 17:26:39 +0500
+Message-ID: <20250305122728.2317-1-v.shevtsov@mt-integration.ru>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: UwpSgXRFf13zE8n_AFST4KQ1dLsi0RaD
-X-Proofpoint-ORIG-GUID: UwpSgXRFf13zE8n_AFST4KQ1dLsi0RaD
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-05_05,2025-03-05_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
- suspectscore=0 impostorscore=0 priorityscore=1501 bulkscore=0 spamscore=0
- mlxscore=0 phishscore=0 clxscore=1015 adultscore=0 lowpriorityscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502100000 definitions=main-2503050099
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: mt-exch-01.mt.ru (91.220.120.210) To mmail-p-exch01.mt.ru
+ (81.200.124.61)
+X-KSMG-AntiPhishing: NotDetected, bases: 2025/03/05 10:40:00
+X-KSMG-AntiSpam-Auth: dmarc=none header.from=mt-integration.ru;spf=none smtp.mailfrom=mt-integration.ru;dkim=none
+X-KSMG-AntiSpam-Envelope-From: v.shevtsov@mt-integration.ru
+X-KSMG-AntiSpam-Info: LuaCore: 51 0.3.51 68896fb0083a027476849bf400a331a2d5d94398, {rep_avail}, {Tracking_uf_ne_domains}, {Tracking_from_domain_doesnt_match_to}, mt-integration.ru:7.1.1;ksmg01.maxima.ru:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;lore.kernel.org:7.1.1;127.0.0.199:7.1.2;81.200.124.61:7.1.2, FromAlignment: s, ApMailHostAddress: 81.200.124.61
+X-KSMG-AntiSpam-Interceptor-Info: scan successful
+X-KSMG-AntiSpam-Lua-Profiles: 191499 [Mar 05 2025]
+X-KSMG-AntiSpam-Method: none
+X-KSMG-AntiSpam-Rate: 0
+X-KSMG-AntiSpam-Status: not_detected
+X-KSMG-AntiSpam-Version: 6.1.1.11
+X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.1.1.8310, bases: 2025/03/05 09:56:00 #27614020
+X-KSMG-AntiVirus-Status: NotDetected, skipped
+X-KSMG-LinksScanning: NotDetected, bases: 2025/03/05 10:40:00
+X-KSMG-Message-Action: skipped
+X-KSMG-Rule-ID: 7
 
-On Wed, 2025-03-05 at 20:08 +0800, Baoquan He wrote:
-> On 03/04/25 at 11:03am, steven chen wrote:
-> > Carrying the IMA measurement list across kexec requires allocating a
-> > buffer and copying the measurement records.  Separate allocating the
-> > buffer and copying the measurement records into separate functions in
-> > order to allocate the buffer at kexec 'load' and copy the measurements
-> > at kexec 'execute'.
-> >=20
-> > This patch includes the following changes:
->=20
-> I don't know why one patch need include so many changes. From below log,
-> it should be split into separate patches. It may not need to make one
-> patch to reflect one change, we should at least split and wrap several
-> kind of changes to ease patch understanding and reviewing. My personal
-> opinion.
+[Why]
+There are several ns_to_ktime() calls that require using nanoseconds. It is
+better to replace them with us_to_ktime() to make code clear, getting rid
+of multiplication by 1000.
 
-Agreed, well explained.
+Also the timer function code may have an integer wrap-around issue. Since
+both tx_custom_low_usecs and tx_custom_high_usecs can be set to up to
+9999999 from the user space via cec_pin_error_inj_parse_line(), this may
+cause usecs to be overflowed when adap->monitor_pin_cnt is zero and usecs
+is multiplied by 1000.
 
-Mimi
+[How]
+Take advantage of using an appropriate helper func us_to_ktime() instead of
+ns_to_ktime() to improve readability and to make the code clearer. This also
+mitigates possible integer wrap-arounds when usecs value is too large and
+it is multiplied by 1000.
 
->=20
-> >  - Refactor ima_dump_measurement_list() to move the memory allocation
-> >    to a separate function ima_alloc_kexec_file_buf() which allocates
-> >    buffer of size 'kexec_segment_size' at kexec 'load'.
-> >  - Make the local variable ima_kexec_file in ima_dump_measurement_list(=
-)
-> >    a local static to the file, so that it can be accessed from=20
-> >    ima_alloc_kexec_file_buf(). Compare actual memory required to ensure=
-=20
-> >    there is enough memory for the entire measurement record.
-> >  - Copy only complete measurement records.
-> >  - Make necessary changes to the function ima_add_kexec_buffer() to cal=
-l
-> >    the above two functions.
-> >  - Compared the memory size allocated with memory size of the entire=
-=20
-> >    measurement record. Copy only complete measurement records if there=
-=20
-> >    is enough memory. If there is not enough memory, it will not copy
-> >    any IMA measurement records, and this situation will result in a=20
-> >    failure of remote attestation.
-> >=20
-> > Suggested-by: Mimi Zohar <zohar@linux.ibm.com>
-> > Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
-> > Signed-off-by: steven chen <chenste@linux.microsoft.com>
+Found by Linux Verification Center (linuxtesting.org) with Svace.
+
+Signed-off-by: Vitaliy Shevtsov <v.shevtsov@mt-integration.ru>
+---
+This patch was created after the Christophe JAILLET's comment at
+https://lore.kernel.org/all/cff4d412-abbf-44b5-9705-ba14dff7d5d0@wanadoo.fr/
+
+ drivers/media/cec/core/cec-pin.c | 11 +++++------
+ 1 file changed, 5 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/media/cec/core/cec-pin.c b/drivers/media/cec/core/cec-pin.c
+index a70451d99ebc..f232c3df7ee1 100644
+--- a/drivers/media/cec/core/cec-pin.c
++++ b/drivers/media/cec/core/cec-pin.c
+@@ -873,19 +873,19 @@ static enum hrtimer_restart cec_pin_timer(struct hrtimer *timer)
+ 		if (pin->wait_usecs > 150) {
+ 			pin->wait_usecs -= 100;
+ 			pin->timer_ts = ktime_add_us(ts, 100);
+-			hrtimer_forward_now(timer, ns_to_ktime(100000));
++			hrtimer_forward_now(timer, us_to_ktime(100));
+ 			return HRTIMER_RESTART;
+ 		}
+ 		if (pin->wait_usecs > 100) {
+ 			pin->wait_usecs /= 2;
+ 			pin->timer_ts = ktime_add_us(ts, pin->wait_usecs);
+ 			hrtimer_forward_now(timer,
+-					ns_to_ktime(pin->wait_usecs * 1000));
++					us_to_ktime(pin->wait_usecs));
+ 			return HRTIMER_RESTART;
+ 		}
+ 		pin->timer_ts = ktime_add_us(ts, pin->wait_usecs);
+ 		hrtimer_forward_now(timer,
+-				    ns_to_ktime(pin->wait_usecs * 1000));
++				    us_to_ktime(pin->wait_usecs));
+ 		pin->wait_usecs = 0;
+ 		return HRTIMER_RESTART;
+ 	}
+@@ -1020,13 +1020,12 @@ static enum hrtimer_restart cec_pin_timer(struct hrtimer *timer)
+ 	if (!adap->monitor_pin_cnt || usecs <= 150) {
+ 		pin->wait_usecs = 0;
+ 		pin->timer_ts = ktime_add_us(ts, usecs);
+-		hrtimer_forward_now(timer,
+-				ns_to_ktime(usecs * 1000));
++		hrtimer_forward_now(timer, us_to_ktime(usecs));
+ 		return HRTIMER_RESTART;
+ 	}
+ 	pin->wait_usecs = usecs - 100;
+ 	pin->timer_ts = ktime_add_us(ts, 100);
+-	hrtimer_forward_now(timer, ns_to_ktime(100000));
++	hrtimer_forward_now(timer, us_to_ktime(100));
+ 	return HRTIMER_RESTART;
+ }
+ 
+-- 
+2.48.1
 
