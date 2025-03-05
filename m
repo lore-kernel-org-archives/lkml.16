@@ -1,102 +1,122 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8FAB18FC90
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 15:51:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BC6C2054FA
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 15:53:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741189911; cv=none; b=sM3m+UsBmbpP/T0RXBwQmH0vusznGW4SGaSQxjENGlSOeme7EBgmIfQba52pmYWZ8iBwniQkzcJWmF2Rq9D9BRMHUxN8cXE9LOdd4vo3cMWE5jmoFO2U28MZg0900rLC+fqP3+bM5Dbh9ofGG66L9z1FN4mGbi9MLeXr/e+yaV8=
+	t=1741189987; cv=none; b=gH2MoKD80155SGFPqc4rFHqXTvuDlTJ10X7TReqA/kI7va3S4iXbNBDZpwoiAt9cQWNzOGX9JnSSYGx0fi9M91CAUJxzJ7nyu6KrH9Sy5hh//nOS+aib4/0UthCatOLLux0/sG2G7IslBXlcoKzmtJIqjCp+QCoy5OrY3QsQnbk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741189911; c=relaxed/simple;
-	bh=O/cTFmq280CPrxPXEkld2Dj3tT2/ZM0b/LQwLiDBrBo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=D/064pYWQw68k9PzZXSMMsg6IM48xL03iW26lOhrsS8N5auU/bsKpbW1jF4ePgoS1qCJ1j+5O24Gc0HAekKhye3VLAtJf6WHrV4jEUWhTvND2xrptO3SFyX7ID/RnvtW/wFORto2V7q/Abx1DbNB7Bd2GsS/ur0ArlO2jsOz5L8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=itUGPaAO; arc=none smtp.client-ip=209.85.128.46
+	s=arc-20240116; t=1741189987; c=relaxed/simple;
+	bh=ejgUc/LZ/UfsVpSHUflxnnj8E8T50vAH+ZXLjI7I/3Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=lmSz6L7bToT1ZsAgwEsyrINlb4Uv1D8gr4PrD105OEvKNkYd/5a4DyG92oAk0cu9lshKzKrK43vqJ0jXtbz5qMo1RnyL1p6EmGjuwZYZurhTvRzBZ/f1KxUY2oXwSayTwomsQoOWOgX8TaJ7bRdV3jtNOsbGYCUhX7DQr1L2crc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=DznLa6bP; arc=none smtp.client-ip=209.85.128.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="itUGPaAO"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-43bc38bb6baso22254575e9.3
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Mar 2025 07:51:49 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DznLa6bP"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-43bd45e4d91so5214295e9.1
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Mar 2025 07:53:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741189908; x=1741794708; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+        d=linaro.org; s=google; t=1741189983; x=1741794783; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=DZ2S+gHwbsXckxzFFhUyQLhk9IBYR1YjauglVfzrk5M=;
-        b=itUGPaAO7cVl+fwidqUHgI3zpFFfdrhDDvpGOggCgETt1tL1ZgiyvFMLH/rA6y5mar
-         XKFzfX2Qnrc4YOFCjloT9rwowl41vdaSgZD1lk4q0f/OEc5AeuNVl594wEsQAmVQL1tb
-         cwaFVcYoyAjIBSK/gpYLAIYmOlFPMm+cqEoDPxAaD1Gpdw2KWa59tgno2jDVsPVyoEzF
-         yRsa6D/50rDuOO/MLee+WM/T6F2axlhqHBDBmImJGxG9lDa597abpMKTkeo/kpov2f5g
-         R46leZPju2hDVOz976uSq0Z/JS4JlWQgm8Zgg9OV1eKGBjsasiA27C+Udf7UXz8QcaK0
-         VHpA==
+        bh=c462OaYKk6lfJmqhikiFrNOzY7hRupVX/eToM6qJ92c=;
+        b=DznLa6bPiJv/ps+xhkey3XUjjpmqIEBGRR0oWlk2LrWU4JMr63j02Urpy/CW9L1STK
+         9QfiHJefR+586E42t53Luj6ySZxNFrM1CjWK17OyDIRViTPnsD0hETMK4JGlD6FiLWQW
+         xvk04Pow4chehYBbqyp4wre7ZpEFeGP4wjzmfumWfF4+ci0rYr6Hgs0bPqmXEg3mbTPB
+         aa8n+eVGuEcmGf+j5eVxqqUdMCZ057salpTopGJYLanC7rnZMAJsMSqjti1H1hODB+P7
+         +ndjOzjd36aVIL8ZS6CqP0oBgzJ1LFJqx8K6jX3MbNJPTN7gj2MpN7dECvUOKXtyqv1N
+         RBAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741189908; x=1741794708;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1741189983; x=1741794783;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=DZ2S+gHwbsXckxzFFhUyQLhk9IBYR1YjauglVfzrk5M=;
-        b=UcukYYAcPmkrtXdrtjRlIV3vGh4z1Ls6deBPi2VvPxxUfAZBhu7V/tVnCR5etHL47G
-         rFMHDpEJPntb8vwKarEribuVUy1PADTNGnXYtclLLDokcXW4SEgq6NZOG2jxAAdrnkYi
-         ytmQPhswiaERqfOCHvTROXTIHD6A5a8kwoP660rFOsho6VBTZ8MtcY1s4bdJ7lVWmVL7
-         n7gttMHMS8X+kOfldAs6QG9/ftBGlJwjxgkSWP3YZaF4FZu4KF3QYc9y64gGoeFWS26J
-         yd5lxZuuPi6hf7l3gkJIIMxLkujy6mygZPuZcb6XzquNwgFsl+i135t8D0kvVF/qdqxZ
-         mEnw==
-X-Forwarded-Encrypted: i=1; AJvYcCVqqcrwo3X0ZGks67HKnIBa5cly3hEA1gWL+/5igURXvnnh99LmzpmUX5xpZe1+ZEm/IxZLt3jM0YZp384=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyzyiu1ffFSLkmv2brRZ11CYBJNA7DxJb8hrqEJeB3DgDXUahOv
-	jUqlBLG15fHNtLshq7B/jWHqU1xSqsX/305B7hr6dIkDytbjqd3MPShW4r7pPxk=
-X-Gm-Gg: ASbGnct9sbUAkgvw6TKCQbMc+kKNn3cgChihsCEDs+yxZsqf42TxtpCdktgbZn0+oiR
-	L4ljgleoAjH8by2xP8RZcpz+b4nZheN6FITcjz5xUn2oy6o8SsHfVi7gudDVLV/HjegiNX9eO5A
-	SLUUHehL8J92BKkwrQuWEjMhmRy4uHPL0Vb1JsKg0tay+Tptl1toTX5cYnt0Me5rN8NYlzg8XDf
-	SF+ct+W06sMOP0YB0Vxt6wQhaRYXNh2FkxANbYAqZXXiJx0dacfMIzXD4vZ0xo5F8rXMgLTKpnT
-	xdyHWyeYolOdKdbr4PJwIceH3H8y2JbJTn14zk/N59Wvi893Fc/EyQI=
-X-Google-Smtp-Source: AGHT+IG7qv+nb9cXjGGw9HHaPPCvBWbDrCLu9uLjG/6FTP2fC03dynof25NfR+yCRjeYdVlhkyXSaw==
-X-Received: by 2002:a05:600c:3b95:b0:43b:cfbb:3806 with SMTP id 5b1f17b1804b1-43bd29d2d84mr29598645e9.14.1741189907949;
-        Wed, 05 Mar 2025 07:51:47 -0800 (PST)
-Received: from [192.168.1.247] ([209.198.129.225])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43bd4352eb1sm20794925e9.31.2025.03.05.07.51.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 05 Mar 2025 07:51:47 -0800 (PST)
-Message-ID: <7ac4947b-76b1-4748-8ea0-a949613a3cfc@linaro.org>
-Date: Wed, 5 Mar 2025 15:51:46 +0000
+        bh=c462OaYKk6lfJmqhikiFrNOzY7hRupVX/eToM6qJ92c=;
+        b=RukJmK5/RZUE5x2ah5S/RDAtgzMdrIs8t6osaBkrQKhWiuiQukT7x6TcOwa4awuhms
+         RnN+tfx6BsZCTJ7LDXROOnP4A0pjI1SmpHc+6crEX/70ofr+Vffj2OYmXFrIl5T526bQ
+         RcbZYVZcKAHfImN4y7XzzOL8Tx3vuv31r7++mSugMKJf4hKh2GoOg98gQ0eqLabe08Tf
+         JHUuY7CRbQrvm+s3atVhNpe3P8G4F+hhwmqX4ePI8zJ5abqPiuc+W0qwdTs22ahTtDhj
+         hPuHK7PuIiS9seGdhYWI5nBMcMUJcZivHvn+x4lbLHulY/OZQv/JsMtQiQ/v+DlKXgjc
+         7G9w==
+X-Forwarded-Encrypted: i=1; AJvYcCWmotpL4OmSKc0UvBsF4cmqor5wZ4XoypJr5fCTO/wsaT6Ng+h/U4b+Ac0I812DLC0WDpv1HHIQxPeGOIM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx7AOpOOzZYP3oYogwofGV9PztIkLTU5MDZpG7JHdMMYtNx+k5m
+	MHi9gWDTu2OlejU3oRY19V62btg5Ngboo9RDXuVlFrty84yNgsqH3XZxAiKYh/E=
+X-Gm-Gg: ASbGncs7sCK+VDfSuCb1kolUDtcTVqZkGL0WoztbGc4o/J9uEg4+vDtvP3pAbPSaojQ
+	f7mXq3NYFX5U6rVVA0DNgYc+uB/SF7SST98Sfc/fu31lxvybd/cPo06/Al8ZFNqgLKIO7AXOB4M
+	81FPFF3wslq61iBD/qzav9rHCcTHXInlbqDnPTJpIrdx+7q80ZKhEh5bBKL3dk8sysCRtre87cf
+	c84DUsNvkSF+OYeJSLj7H1bqN1OBRUmz3ENy36+qgHSIKDrI5VYagQ1CEjLGIDPs9XMV2jjbGAL
+	B9+zerr2h2nHKlpQaiDTJzbYuHRMqXa43ogjMQzi55NUa2D4VQ==
+X-Google-Smtp-Source: AGHT+IEqknS+DmHCo8DS6gOa0BLl6DqpnB9v43dYGVNmBmhgHO9bWC9dVwlJMAbbJBAtRqT0CdjIig==
+X-Received: by 2002:a05:600c:310d:b0:439:9737:675b with SMTP id 5b1f17b1804b1-43bd20b5147mr31087475e9.7.1741189983473;
+        Wed, 05 Mar 2025 07:53:03 -0800 (PST)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-43bd41c7cc7sm22761795e9.0.2025.03.05.07.53.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Mar 2025 07:53:03 -0800 (PST)
+Date: Wed, 5 Mar 2025 18:52:59 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Caleb Sander Mateos <csander@purestorage.com>
+Cc: Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>,
+	Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
+	Hannes Reinecke <hare@suse.de>, linux-nvme@lists.infradead.org,
+	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: [PATCH v2] nvme-tcp: fix signedness bug in nvme_tcp_init_connection()
+Message-ID: <d3661d33-096a-45e3-8304-1123fd031527@stanley.mountain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] coresight: docs: Remove target sink from examples
-To: coresight@lists.linaro.org
-Cc: yeoreum.yun@arm.com, Suzuki K Poulose <suzuki.poulose@arm.com>,
- Mike Leach <mike.leach@linaro.org>, Jonathan Corbet <corbet@lwn.net>,
- Leo Yan <leo.yan@linux.dev>, Namhyung Kim <namhyung@kernel.org>,
- linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20241210144933.295798-1-james.clark@linaro.org>
-Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <20241210144933.295798-1-james.clark@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Mailer: git-send-email haha only kidding
 
+The kernel_recvmsg() function returns an int which could be either
+negative error codes or the number of bytes received.  The problem is
+that the condition:
 
+        if (ret < sizeof(*icresp)) {
 
-On 10/12/2024 2:49 pm, James Clark wrote:
-> Previously the sink had to be specified, but now it auto selects one by
-> default. Including a sink in the examples causes issues when copy
-> pasting the command because it might not work if that sink isn't
-> present. Remove the sink from all the basic examples and create a new
-> section specifically about overriding the default one.
-> 
-> Make the text a but more concise now that it's in the advanced section,
-> and similarly for removing the old kernel advice.
-> 
-> Signed-off-by: James Clark <james.clark@linaro.org>
-> ---
+is type promoted to type unsigned long and negative values are treated
+as high positive values which is success, when they should be treated as
+failure.  Handle invalid positive returns separately from negative
+error codes to avoid this problem.
 
-Ping, thanks.
+Fixes: 578539e09690 ("nvme-tcp: fix connect failure on receiving partial ICResp PDU")
+Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+Reviewed-by: Caleb Sander Mateos <csander@purestorage.com>
+Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
+Reviewed-by: Chaitanya Kulkarni <kch@nvidia.com>
+---
+v2: Change the style.  Add the Reviewed-by tags.  (I will feel really bad
+    if I introduced a bug in between v1 and v2 and cause everyone
+    embarrassment with the R-b tags.)
 
-I think Steve's comments are somewhat related, but shouldn't block this 
-change going in.
+ drivers/nvme/host/tcp.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/nvme/host/tcp.c b/drivers/nvme/host/tcp.c
+index 8a9131c95a3d..b23ce31df97d 100644
+--- a/drivers/nvme/host/tcp.c
++++ b/drivers/nvme/host/tcp.c
+@@ -1495,11 +1495,11 @@ static int nvme_tcp_init_connection(struct nvme_tcp_queue *queue)
+ 	msg.msg_flags = MSG_WAITALL;
+ 	ret = kernel_recvmsg(queue->sock, &msg, &iov, 1,
+ 			iov.iov_len, msg.msg_flags);
+-	if (ret < sizeof(*icresp)) {
++	if (ret >= 0 && ret < sizeof(*icresp))
++		ret = -ECONNRESET;
++	if (ret < 0) {
+ 		pr_warn("queue %d: failed to receive icresp, error %d\n",
+ 			nvme_tcp_queue_id(queue), ret);
+-		if (ret >= 0)
+-			ret = -ECONNRESET;
+ 		goto free_icresp;
+ 	}
+ 	ret = -ENOTCONN;
+-- 
+2.47.2
 
