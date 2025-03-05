@@ -1,62 +1,62 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C6D2200BBD;
-	Wed,  5 Mar 2025 21:36:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41369257AF5;
+	Wed,  5 Mar 2025 21:36:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741210586; cv=none; b=VFZpAqC8EQmfv6laiBpOJBG81ynJ+csR9U6vYpRYH1SvqYgE4gU52CupLSFzOMCqvb2GnwVrrzdFLjRlnyd5w0DyziNW+ekKCM5n3nRz8RY/SBZ2jDD+TZMYYHxmgvpVbXUXLkh+LA/HnSRNpDHcswVfeY+QqWjfIlJ+GBHC1xE=
+	t=1741210587; cv=none; b=eIXawYdCKFcOny+HA97y4PLJkNXPyqC2mme2IF7g06tvQhSIiKQmNbiSeIIDwPXDveyLS5Tabl6Ev4cylWoh0ufXExb2jaqTPxf5pUlAZ+VMoSSV22AtRoVVKawCsSREmRlul7Nq0qc3Yg4XjvMhQvVCyrp8SX2N8oe2y5EJot0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741210586; c=relaxed/simple;
-	bh=0I0C62Eg0IuQ/vEb/v6pih6oOreEyqt2DYBEd4bM6Ck=;
+	s=arc-20240116; t=1741210587; c=relaxed/simple;
+	bh=IY+K7GlkOhG50Xs2Txts2kMXcY50LXd1LuqqQFmRBCI=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=IRkkWhyYQB3FD3/3p6Cqfo5dP81HBsmL+JW+/m+0dzd+uNs5MR+GYmG6skwlE7QUqN8/CepBsrRkIWaPnVas3zH7Mkgbu7W366QGYiyLOdUz8268rWazdxT0IcAa5aLwD3xelIvJHMzQ3X/d64kCxaZjAZ+IDtWjtmqCaifZqsY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=dr5Ms9P5; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=woz6Yhk1; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=QTh+BiZpYUxEAbqd68oyU7ldeBjIH+6Y4lqAQpse5Nf51hjrytBBB2LVca0/eSldW+9ALubpmKc2m0t9ktxPWIbcllWZlpgJcKRXwciRGUZDtGKfTkX6+UCRwMBX+rrrRA0pH09vPuRT7gzP6CD3Lz4EWOOtMaVBlE6n8GQkgZk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=yWMOn6+/; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=r4TLSmQY; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="dr5Ms9P5";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="woz6Yhk1"
-Date: Wed, 05 Mar 2025 21:36:22 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="yWMOn6+/";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="r4TLSmQY"
+Date: Wed, 05 Mar 2025 21:36:24 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1741210583;
+	s=2020; t=1741210584;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=99GlMlqxBmNIzqets5thWn2elM4WjMXDSvn+1ZxHMbE=;
-	b=dr5Ms9P5BNKfHD9BP695YmTY1QFZpyIDSQ3rkOw9u3mXEz8cubtYCA060T0Xiw5z9kX97w
-	vC0uL1x7lkp1Cb0LDjfXJlcNQCy27YKEAqX4Ok7DKPFRtQZI0hRav2BLb5rpEhuf9VTtu+
-	m7EGANNPwXExGr7C6B2iAC6TInA9zhHYOn4S3gnlECcbdrEApoTV2RFIlLkcqqAVV26L3C
-	MJQn4FI0PvB8nu3wocxB/CTCC94kn4MZmIH68rzsTu6SABwrRVoNVyXRvp7+3BhIJ0b1ea
-	jb2oZi2k7txqIjDZvYGRzQkAFrp2AlxL9kpP+gyvYsLfThfdCYR7hEuFKj43cw==
+	bh=r/oXkGQyNh2peOWpluNyT6RiUksBlMXUWWzLfycgHfw=;
+	b=yWMOn6+/CfaMvdSgP0cuEVrFMCWeMGhYufxXATV2fePg501hbguH5BgV5Cpiga1Y++If4A
+	QHHX7068SPw6atODEkjd2h+snT7WnkHbxH5k/7Qt034hn66o0z6OCC/0LkoFbjTBf1iHES
+	2GRXFLtyts3sfxGSSrlV7EebWnzdTF36TkMrnaeEmxuI49FQPoGiW3aRVxFXfIq2Mi+fZV
+	2Y/QkEkHqFGyXW4mpS0pdKaFHcyUv3K/HhdMsGMl72C4OgrOlJ5pvL8P0pkpiE4P3BZwDJ
+	UqTZIzcqYG088bMQC545D7IZDp2zDRoei85V/qwz5uRVpnVSVKUTScOH2S0UGQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1741210583;
+	s=2020e; t=1741210584;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=99GlMlqxBmNIzqets5thWn2elM4WjMXDSvn+1ZxHMbE=;
-	b=woz6Yhk1z8IGIdhCnJ+2gO6/qFn91PXVwotWHoOSNOZ89s9qElD4Nt30ZCtr5mJWXZNqh4
-	qcN8ZnOzfFuD3uAw==
+	bh=r/oXkGQyNh2peOWpluNyT6RiUksBlMXUWWzLfycgHfw=;
+	b=r4TLSmQYPcHj1EEWcfgKXtjnDjQP5NmBYYrdHxO38dkoKVKDBCwe0dBw8HsJIiEjMqPoQb
+	8wiy8oNX2tFreIDw==
 From: "tip-bot2 for Rik van Riel" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/mm] x86/mm: Enable AMD translation cache extensions
+Subject: [tip: x86/mm] x86/mm: Add global ASID process exit helpers
 Cc: Rik van Riel <riel@surriel.com>, "Borislav Petkov (AMD)" <bp@alien8.de>,
  x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250226030129.530345-13-riel@surriel.com>
-References: <20250226030129.530345-13-riel@surriel.com>
+In-Reply-To: <20250226030129.530345-10-riel@surriel.com>
+References: <20250226030129.530345-10-riel@surriel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174121058250.14745.1312436108807852558.tip-bot2@tip-bot2>
+Message-ID: <174121058403.14745.12767917226754475731.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -66,96 +66,99 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the x86/mm branch of tip:
 
-Commit-ID:     b95ef870dcd67c0fbfc57f808c4a0efd0bc2f144
-Gitweb:        https://git.kernel.org/tip/b95ef870dcd67c0fbfc57f808c4a0efd0bc2f144
+Commit-ID:     26a3633bfddfcdd57f5f2e3d157806d68aff5ac4
+Gitweb:        https://git.kernel.org/tip/26a3633bfddfcdd57f5f2e3d157806d68aff5ac4
 Author:        Rik van Riel <riel@surriel.com>
-AuthorDate:    Tue, 25 Feb 2025 22:00:47 -05:00
+AuthorDate:    Tue, 25 Feb 2025 22:00:44 -05:00
 Committer:     Borislav Petkov (AMD) <bp@alien8.de>
-CommitterDate: Wed, 05 Mar 2025 22:18:16 +01:00
+CommitterDate: Wed, 05 Mar 2025 17:19:53 +01:00
 
-x86/mm: Enable AMD translation cache extensions
+x86/mm: Add global ASID process exit helpers
 
-With AMD TCE (translation cache extensions) only the intermediate mappings
-that cover the address range zapped by INVLPG / INVLPGB get invalidated,
-rather than all intermediate mappings getting zapped at every TLB invalidation.
+A global ASID is allocated for the lifetime of a process. Free the global ASID
+at process exit time.
 
-This can help reduce the TLB miss rate, by keeping more intermediate mappings
-in the cache.
-
->From the AMD manual:
-
-Translation Cache Extension (TCE) Bit. Bit 15, read/write. Setting this bit to
-1 changes how the INVLPG, INVLPGB, and INVPCID instructions operate on TLB
-entries. When this bit is 0, these instructions remove the target PTE from the
-TLB as well as all upper-level table entries that are cached in the TLB,
-whether or not they are associated with the target PTE.  When this bit is set,
-these instructions will remove the target PTE and only those upper-level
-entries that lead to the target PTE in the page table hierarchy, leaving
-unrelated upper-level entries intact.
-
-  [ bp: use cpu_has()... I know, it is a mess. ]
+  [ bp: Massage, create helpers, hide details inside them. ]
 
 Signed-off-by: Rik van Riel <riel@surriel.com>
 Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
-Link: https://lore.kernel.org/r/20250226030129.530345-13-riel@surriel.com
+Link: https://lore.kernel.org/r/20250226030129.530345-10-riel@surriel.com
 ---
- arch/x86/include/asm/msr-index.h       | 2 ++
- arch/x86/kernel/cpu/amd.c              | 4 ++++
- tools/arch/x86/include/asm/msr-index.h | 2 ++
- 3 files changed, 8 insertions(+)
+ arch/x86/include/asm/mmu_context.h |  8 +++++++-
+ arch/x86/include/asm/tlbflush.h    |  9 +++++++++
+ 2 files changed, 16 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
-index 72765b2..1aacd6b 100644
---- a/arch/x86/include/asm/msr-index.h
-+++ b/arch/x86/include/asm/msr-index.h
-@@ -25,6 +25,7 @@
- #define _EFER_SVME		12 /* Enable virtualization */
- #define _EFER_LMSLE		13 /* Long Mode Segment Limit Enable */
- #define _EFER_FFXSR		14 /* Enable Fast FXSAVE/FXRSTOR */
-+#define _EFER_TCE		15 /* Enable Translation Cache Extensions */
- #define _EFER_AUTOIBRS		21 /* Enable Automatic IBRS */
+diff --git a/arch/x86/include/asm/mmu_context.h b/arch/x86/include/asm/mmu_context.h
+index a2c70e4..2398058 100644
+--- a/arch/x86/include/asm/mmu_context.h
++++ b/arch/x86/include/asm/mmu_context.h
+@@ -2,7 +2,6 @@
+ #ifndef _ASM_X86_MMU_CONTEXT_H
+ #define _ASM_X86_MMU_CONTEXT_H
  
- #define EFER_SCE		(1<<_EFER_SCE)
-@@ -34,6 +35,7 @@
- #define EFER_SVME		(1<<_EFER_SVME)
- #define EFER_LMSLE		(1<<_EFER_LMSLE)
- #define EFER_FFXSR		(1<<_EFER_FFXSR)
-+#define EFER_TCE		(1<<_EFER_TCE)
- #define EFER_AUTOIBRS		(1<<_EFER_AUTOIBRS)
+-#include <asm/desc.h>
+ #include <linux/atomic.h>
+ #include <linux/mm_types.h>
+ #include <linux/pkeys.h>
+@@ -13,6 +12,7 @@
+ #include <asm/paravirt.h>
+ #include <asm/debugreg.h>
+ #include <asm/gsseg.h>
++#include <asm/desc.h>
+ 
+ extern atomic64_t last_mm_ctx_id;
+ 
+@@ -139,6 +139,9 @@ static inline void mm_reset_untag_mask(struct mm_struct *mm)
+ #define enter_lazy_tlb enter_lazy_tlb
+ extern void enter_lazy_tlb(struct mm_struct *mm, struct task_struct *tsk);
+ 
++#define mm_init_global_asid mm_init_global_asid
++extern void mm_init_global_asid(struct mm_struct *mm);
++
+ extern void mm_free_global_asid(struct mm_struct *mm);
  
  /*
-diff --git a/arch/x86/kernel/cpu/amd.c b/arch/x86/kernel/cpu/amd.c
-index 7a72ef4..7058533 100644
---- a/arch/x86/kernel/cpu/amd.c
-+++ b/arch/x86/kernel/cpu/amd.c
-@@ -1075,6 +1075,10 @@ static void init_amd(struct cpuinfo_x86 *c)
- 
- 	/* AMD CPUs don't need fencing after x2APIC/TSC_DEADLINE MSR writes. */
- 	clear_cpu_cap(c, X86_FEATURE_APIC_MSRS_FENCE);
+@@ -163,6 +166,8 @@ static inline int init_new_context(struct task_struct *tsk,
+ 		mm->context.execute_only_pkey = -1;
+ 	}
+ #endif
 +
-+	/* Enable Translation Cache Extension */
-+	if (cpu_has(c, X86_FEATURE_TCE))
-+		msr_set_bit(MSR_EFER, _EFER_TCE);
++	mm_init_global_asid(mm);
+ 	mm_reset_untag_mask(mm);
+ 	init_new_context_ldt(mm);
+ 	return 0;
+@@ -172,6 +177,7 @@ static inline int init_new_context(struct task_struct *tsk,
+ static inline void destroy_context(struct mm_struct *mm)
+ {
+ 	destroy_context_ldt(mm);
++	mm_free_global_asid(mm);
  }
  
- #ifdef CONFIG_X86_32
-diff --git a/tools/arch/x86/include/asm/msr-index.h b/tools/arch/x86/include/asm/msr-index.h
-index 3ae84c3..dc1c105 100644
---- a/tools/arch/x86/include/asm/msr-index.h
-+++ b/tools/arch/x86/include/asm/msr-index.h
-@@ -25,6 +25,7 @@
- #define _EFER_SVME		12 /* Enable virtualization */
- #define _EFER_LMSLE		13 /* Long Mode Segment Limit Enable */
- #define _EFER_FFXSR		14 /* Enable Fast FXSAVE/FXRSTOR */
-+#define _EFER_TCE		15 /* Enable Translation Cache Extensions */
- #define _EFER_AUTOIBRS		21 /* Enable Automatic IBRS */
+ extern void switch_mm(struct mm_struct *prev, struct mm_struct *next,
+diff --git a/arch/x86/include/asm/tlbflush.h b/arch/x86/include/asm/tlbflush.h
+index 1f61a39..e6c3be0 100644
+--- a/arch/x86/include/asm/tlbflush.h
++++ b/arch/x86/include/asm/tlbflush.h
+@@ -261,6 +261,14 @@ static inline u16 mm_global_asid(struct mm_struct *mm)
+ 	return asid;
+ }
  
- #define EFER_SCE		(1<<_EFER_SCE)
-@@ -34,6 +35,7 @@
- #define EFER_SVME		(1<<_EFER_SVME)
- #define EFER_LMSLE		(1<<_EFER_LMSLE)
- #define EFER_FFXSR		(1<<_EFER_FFXSR)
-+#define EFER_TCE		(1<<_EFER_TCE)
- #define EFER_AUTOIBRS		(1<<_EFER_AUTOIBRS)
- 
- /*
++static inline void mm_init_global_asid(struct mm_struct *mm)
++{
++	if (cpu_feature_enabled(X86_FEATURE_INVLPGB)) {
++		mm->context.global_asid = 0;
++		mm->context.asid_transition = false;
++	}
++}
++
+ static inline void mm_assign_global_asid(struct mm_struct *mm, u16 asid)
+ {
+ 	/*
+@@ -281,6 +289,7 @@ static inline bool mm_in_asid_transition(struct mm_struct *mm)
+ }
+ #else
+ static inline u16 mm_global_asid(struct mm_struct *mm) { return 0; }
++static inline void mm_init_global_asid(struct mm_struct *mm) { }
+ static inline void mm_assign_global_asid(struct mm_struct *mm, u16 asid) { }
+ static inline bool mm_in_asid_transition(struct mm_struct *mm) { return false; }
+ #endif /* CONFIG_BROADCAST_TLB_FLUSH */
