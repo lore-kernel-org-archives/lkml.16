@@ -1,87 +1,84 @@
-Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
+Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8BA624BC1D
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 14:38:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F6AB24BC17
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 14:38:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741185507; cv=none; b=bDe+SRyMtjTDHG22MWS3BbXNeIIB9GA/t9xefMaaqJEHOnlL2mefL1JDPaJC+d22om2FuomoacxIqeocbNFWJotFNhrcp58QXLv7NnzrmJP/q2lE18JLI2bsEXifWQrFdOa5ZnZot40VfzD7j/OhF0ZTsH9RHNoGIQl7HJ8xvY0=
+	t=1741185517; cv=none; b=o/nbG6z6Q5I09V0xtN/MrpndhLF+3HY3gpt+jo8t9aJD8z5JUXt0hg3hJX6tyop7/dQSp6JaU76g/jJALuvQYb9ib8ziIVv/uSeBvXj9p3Dxxj4H3ME5i/L02iWA+USE+TOwwfAeID2vDLht2ZqJ9EBhXY+Cp+DynhnXSJTUNAo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741185507; c=relaxed/simple;
-	bh=BqeLWYpmzx08akl6bVj7sB5B/GwdFFEes1rYrt+d1vU=;
+	s=arc-20240116; t=1741185517; c=relaxed/simple;
+	bh=YvS57e8ESu3hNAzBGbxJcfZx+xnKhbMdFMO3xzI2/y8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ujW8LvtbyOMqE9FgHK/oj6UkLH/nP5JAkBKg9kSJokJ/akcgAlGp2JvrBl32Jzjz32bXZphk6wZAaCX+k/XICbb+YQX07/7Rtz+CrQgMVlt6F6xAV+ek+mQFqiUmNmQXu1Y+m5JfR3YkgHzayhIIKpPfFPMXMWaNpHxBX1Iag1Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cs.cmu.edu; spf=fail smtp.mailfrom=andrew.cmu.edu; dkim=pass (2048-bit key) header.d=cs.cmu.edu header.i=@cs.cmu.edu header.b=QNyf5eB2; arc=none smtp.client-ip=209.85.160.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cs.cmu.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=andrew.cmu.edu
+	 Content-Type:Content-Disposition:In-Reply-To; b=E2hSekKHxWiXAlcHPq7RPeMwGQ5uWHc6zRIMY4dUthwmVKHXsnDE8V1/wXkaIagAveg3Ovkn25D1Rf/NcRlWq49AfFe1uy5eNAelFMxztkO5jlnOB5yn9L7WiRg+0eokovSzhR2Z+dX9OqDwmx/jrg9gnEp3+ignwTxfE3rHgww=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IHAcsRTA; arc=none smtp.client-ip=209.85.216.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cs.cmu.edu header.i=@cs.cmu.edu header.b="QNyf5eB2"
-Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-474fba180cfso19037281cf.3
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Mar 2025 06:38:24 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IHAcsRTA"
+Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-2ff4a4f901fso1372289a91.2
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Mar 2025 06:38:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cs.cmu.edu; s=google-2021; t=1741185503; x=1741790303; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1741185515; x=1741790315; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ka/zF6Ds/g/dxAZATcvUkbSWy5jstJ9gLeo9m4izlug=;
-        b=QNyf5eB2mqnQQeMpgkW87arbJgUtBEc7JWfQd6ZrCE1OKOEnIsCxlYQe5kgl7a5ilu
-         XDmJ1mTraa+K0plwSwHUIuj+aLWBotfgSiLcMfT1OtNIg+vZRxN19amUAsXCKZRj2Hbv
-         g7uFMr7UrUrnuOmVC2qTouuHc5PYMNisNyIBFXI/DgNRK6LJ7kfjug1uFy0krYnG7kuG
-         ElsX6MGo+aRMMuKUThCRIu1ur6FZpJp0Sa6yAtb+TQuxGY2zLW24kEYIdZQzwX7ITKYk
-         2rYOV0Ftx4EoLDzgaMDJ13w55D6mv4CVdZQva18GNi/F52M46Ia95g9QrCEoQmxiR82B
-         Bqiw==
+        bh=bHAZgZUTDFwSbGDNSh6zOBEYSG38f9voYXlfP6pI9Oc=;
+        b=IHAcsRTAkfRayep7MJ5UsmDWYXEkV5MJWtzKTDwJyavLfK2paA67B9AfTt/NHEhXrW
+         rHBW+80AGRJDBK28YhRgJmkHxc6hKpTfSQCa5l6xBttQaJL+C4opwXou9GX5SqXkcqKg
+         l4hfQ53NONFNBjKivt9zmroPJHK8DLbMes/Wq7cb9th33KGvFb0xlYQ3xvr8FvJ+Zacd
+         LocIv7emWryfOID37MQT69i/t8qaYoxWE531ewc2VLVJ4Nqta+BYuPwRPEm4xAcxQVHi
+         NMLPolqHCgMXi8ty4dZVHtke6t71CFn9exOqeP7tOCwSRqZz5HAlrdWPNCDjtBJkg/Jz
+         kMSA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741185503; x=1741790303;
+        d=1e100.net; s=20230601; t=1741185515; x=1741790315;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Ka/zF6Ds/g/dxAZATcvUkbSWy5jstJ9gLeo9m4izlug=;
-        b=d3r4SRQKIzEEAJDdPGJeyaLs+tO5M5rn3dSrKGH8lPpAsIFBb5Y1w4K+wrLOMYw0Rt
-         mmHzwbHp7iBQYfiZtaGo5M3+5fab7dHtsZeJ/jbYNFdB+xIFiY6pXGJDHpGp72u+0jAm
-         5kMpXMHUpt8Hxf6uvuYvcrlUW2WeD1vJ8dtw5/weydeNF0RzzAHbp8zYotFdQAV2BT0W
-         4wMeQJUmrcYVeQRv81YcxHlIw5U6/927dWZjQbrEzKnhLrLsGHnqyVUmeLS/H/W7ScmY
-         vUPpgWVSTfC23GUU3mVlfaf9oK7qoMuD54PgX8R950P6uHu4GKdnlMZ0k33t5IT94UJr
-         139A==
-X-Forwarded-Encrypted: i=1; AJvYcCVzdSj+7VH4oDdtdIbNRHbCHCZ3jkuDq5l2koWRweym38yFkuV3nSBayc0wYT0JZx9LQEyDdkbaP/OGpIM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx4b2sICfVGpa15eD5OPky8wJDGk9c3A0XdCrBQ8RSs2qgKxWV8
-	YRiGOWy8UZ4PsJKFQc+C1et+Ml5KceELe56RAVEw1kjGuSUdN7+hUGManMUTeQ==
-X-Gm-Gg: ASbGncvBsH3oFOAkXOLkL+c0MdkTq2O5HUO49hTiNg3nYtJmkRnBB3THfoJlaTZ8shf
-	KpKNE43WiNDevhf7tQLtMArafLNW0+PmdziVhJbHKKayhv9oNO+LZJG4efiofBm9lrS3yXaPLMM
-	t9ti8b5bcK92oZ93XqbBpyXjGG7Gz66Ul1bXvXpBtJEfTf85+MrsmXbCBvM2zCI8NJD1IMnloGM
-	bP1cN68mkl6MiV68qH1HpGLOjl1dZj6O61OZoYS9sm6OXvPzj+ouq6AE6N0yaW+gTYmIbzX2wAC
-	o6RnS9Cc8+GJAgK4ruQwi+PYQaIrgrd5N6XwKatc24VWTpDBC/KJK/Uye6tHLyYoGYhSDvzW0JV
-	PR7YQin4AQy4Y7XzJ+ZjNwQI0dA==
-X-Google-Smtp-Source: AGHT+IHgmaMykJuMYvv7QD/ziX2omMhk+AntnG0Px6ZBZpdvG36UzbAoKiAqQ2mp1n2eBu3/c1Y5Xw==
-X-Received: by 2002:a05:6214:2241:b0:6e6:602f:ef68 with SMTP id 6a1803df08f44-6e8e6d1065cmr44842656d6.10.1741185503461;
-        Wed, 05 Mar 2025 06:38:23 -0800 (PST)
-Received: from localhost.localhost (pool-74-98-231-160.pitbpa.fios.verizon.net. [74.98.231.160])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e8976346fcsm79902296d6.14.2025.03.05.06.38.22
+        bh=bHAZgZUTDFwSbGDNSh6zOBEYSG38f9voYXlfP6pI9Oc=;
+        b=IBrNqzf2XK+E0wBxH0lMGNpdfKpdC10SPcYyEQvnq2rCQWIzMsY8DLs0nug+2JC16b
+         8H9RYNoyUWl3Evm+f70wmKyVgfb5jPpmUvZxw0O7Y6id/uEzXmT5YJOMiFMPovU9JxfQ
+         24B+yfrdDNGYqTtPiWfYaKGT7GKNd0n0LNGsehPdxFPEuND2l97fofZ8q/j1hTvYgqQW
+         aifnd2Mk4AwnPmj1rERRIyRjHCs8lHucP6obHe6aSDTo2d29mqtiinoBAuxMmCojODU5
+         VgR2rw7b34GXIyIiQK3xzBPMrrMYPyx9Jqk9RNj3KzMZy7ggyJ4D6yjje0Hnom/LuVSi
+         KMlw==
+X-Forwarded-Encrypted: i=1; AJvYcCUDGk+lQGO90TwiriUjzTktHJTeJ9DEDouMrfxTNmgB4xJL/Sd+uWCt4fv06wz1yfLGQtKqdjEN8whhDHo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzUJQjeVVCyyIxZmyqD6H7oKEpaioq39yd3n9TtvATl3kprl6l/
+	/Ym49kVYfg7hY4rZPVgNabFHy9QCG9oY4LzJ1v6XDXo6gVNJT+dq
+X-Gm-Gg: ASbGncur0gomshoN9osIfS6vjy4aQ96QP/p9pr6Rk/0H+k6AhQbc8WEyMjSoRLuWWVS
+	CTXawnZR8wt2pLpH8WXvJOSHzEGdnm2DOPnU8SeUjq14BF1EoZAA8auPavev+m5gRWLrUSJzinJ
+	Fl+/kuCWPuOCQs2aDA78h248mtCHdgiwuBewhxapbqWWrMv02Mr90rAUbGu35btiUZPkPmvELEK
+	KvV5Xx3mlD7V8/ZLDMYbwgxjqCLJSxehADhP5eqEFz4UwuvIBDDaIU/dbEPULdTqAXnm8aJJ8NH
+	OdSE6jsRgMFZor/yF+50pcIEQIOLF3gxsqeLS3LyEp3m
+X-Google-Smtp-Source: AGHT+IFsZODIVTdy4Yu9YdJ48Ff3wL9QVGH26zYvwfX2f1Hy2D8uL4un//uW6Hr678bpVZApdOSPXw==
+X-Received: by 2002:a05:6a21:329f:b0:1f3:3e91:fac0 with SMTP id adf61e73a8af0-1f3494b6b33mr5017332637.11.1741185515467;
+        Wed, 05 Mar 2025 06:38:35 -0800 (PST)
+Received: from localhost ([216.228.125.131])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-aee7dec49f1sm12031704a12.58.2025.03.05.06.38.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Mar 2025 06:38:23 -0800 (PST)
-Date: Wed, 5 Mar 2025 14:38:14 +0000
-From: Kaiyang Zhao <kaiyang2@cs.cmu.edu>
-To: Chen Yu <yu.c.chen@intel.com>
-Cc: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
+        Wed, 05 Mar 2025 06:38:34 -0800 (PST)
+Date: Wed, 5 Mar 2025 09:38:32 -0500
+From: Yury Norov <yury.norov@gmail.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: mailhol.vincent@wanadoo.fr, Lucas De Marchi <lucas.demarchi@intel.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Jani Nikula <jani.nikula@linux.intel.com>,
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Tvrtko Ursulin <tursulin@ursulin.net>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
 	Andrew Morton <akpm@linux-foundation.org>,
-	Rik van Riel <riel@redhat.com>, Mel Gorman <mgorman@suse.de>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Michal Hocko <mhocko@kernel.org>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	Muchun Song <muchun.song@linux.dev>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	"Huang, Ying" <ying.huang@linux.alibaba.com>,
-	Tim Chen <tim.c.chen@intel.com>, Aubrey Li <aubrey.li@intel.com>,
-	Michael Wang <yun.wang@linux.alibaba.com>,
-	David Rientjes <rientjes@google.com>,
-	Raghavendra K T <raghavendra.kt@amd.com>, cgroups@vger.kernel.org,
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 0/3] sched/numa: Introduce per cgroup numa balance
- control
-Message-ID: <Z8hh1urLnpmMxHqW@localhost.localhost>
-References: <cover.1740483690.git.yu.c.chen@intel.com>
+	linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org,
+	Andi Shyti <andi.shyti@linux.intel.com>,
+	David Laight <David.Laight@aculab.com>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Subject: Re: [PATCH v4 1/8] bits: fix typo 'unsigned __init128' -> 'unsigned
+ __int128'
+Message-ID: <Z8hh6BZgD3lmyBKp@thinkpad>
+References: <20250305-fixed-type-genmasks-v4-0-1873dcdf6723@wanadoo.fr>
+ <20250305-fixed-type-genmasks-v4-1-1873dcdf6723@wanadoo.fr>
+ <Z8hf_MNL3MeoXW5O@thinkpad>
+ <Z8hhXHporoJ6Y39X@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -90,34 +87,21 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cover.1740483690.git.yu.c.chen@intel.com>
+In-Reply-To: <Z8hhXHporoJ6Y39X@smile.fi.intel.com>
 
-On Tue, Feb 25, 2025 at 09:59:33PM +0800, Chen Yu wrote:
-> This per-cgroup NUMA balancing control was once proposed in
-> 2019 by Yun Wang[1]. Then, in 2024, Kaiyang Zhao mentioned
-> that he was working with Meta on per-cgroup NUMA control[2]
-> during a discussion with David Rientjes.
+On Wed, Mar 05, 2025 at 04:36:12PM +0200, Andy Shevchenko wrote:
+> On Wed, Mar 05, 2025 at 09:30:20AM -0500, Yury Norov wrote:
+> > On Wed, Mar 05, 2025 at 10:00:13PM +0900, Vincent Mailhol via B4 Relay wrote:
+> > > From: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
+> > > 
+> > > "int" was misspelled as "init" in GENMASK_U128() comments. Fix the typo.
+> > 
+> > Thanks for respinning the series. I'll take this fix in bitmap-for-next, so
+> > if you need v2, you'll not have to bear this thing too.
 > 
-> I could not find further discussion regarding per-cgroup NUMA
-> balancing from that point on. This set of RFC patches is a
-> rough and compile-passed version, and may have unhandled cases
-> (for example, THP). It has not been thoroughly tested and is
-> intended to initiate or resume the discussion on the topic of
-> per-cgroup NUMA load balancing.
+> Before doing that, please read my comment first.
 
-Hello Chen,
+Already did. Yes, you're right.
 
-It's nice to see people interested in this. I posted a set of RFC patches
-later[1] that focuses on the fairness issue in memory tiering. It mostly
-concerns the demotion side of things, and the promotion / NUMA balancing
-side of things was left out of the patch set.
-
-I don't work for Meta now, but my understanding is that they'll attempt
-to push through a solution for per-cgroup control of memory tiering that
-is in the same vein as my RFC patches, and it may include controls for
-per-group NUMA balancing in the context of tiered memory.
-
-Best,
-Kaiyang
-
-[1] https://lore.kernel.org/linux-mm/20240920221202.1734227-1-kaiyang2@cs.cmu.edu/
+Vincent, can you send the fix separately, so I'll move it in the
+upcoming merge window?
