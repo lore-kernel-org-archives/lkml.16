@@ -1,105 +1,78 @@
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 170B515854F
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 02:39:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3068C17588;
+	Wed,  5 Mar 2025 02:40:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741142342; cv=none; b=Q7ejADiFebgtfPm5VbgUMq1d4+HjLi3jxSIF6hZw6LeaDdbA1hsput0QAc/YY9AjcW248GpnvbpsQ4Da+dAS7POXVveZ7pDZn58g3kgf8daKIzwLKMdeH646fYZq+vdzO5rJL09mZJWGq1um8qpxJrl/TDfyIbekIQt4ZPKk0Jw=
+	t=1741142401; cv=none; b=FgGhK4NK6/XDwuW8vY6W8VlWLMkeejhImaD7Km6YB3nQoXhwcFmlvynCRIsAN35uWwHRNHZX1NrkIchzpg8NvioaqfiRw/SH75B3v4+IRGDBCyI0rPc3wYtDMuhYxPUgta7nR1dfq8kF1y5U3oPfXDYMFpDreDkkekXtHzrAb1c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741142342; c=relaxed/simple;
-	bh=SQ76C5rbHLEvyAuhYgb5Co9/owZstZm6x8yOx43jG5M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Cv4bSAfU6J8VDzZj8EHclh8QNZBQP36YlAx75GftmrOFi6xWUJktYH+1WJFCpiCJk032VQ2w8XKZnefSAI1JvbdSuiR3xasaETpec6BkJXvge9c2f2hZbGjdWwA0641CbGSzSDrHmJ3GAaY7gcP4rj4U33dDUkSXIMWE4oNUvPY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=SlHfb1P2; arc=none smtp.client-ip=209.85.208.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1741142401; c=relaxed/simple;
+	bh=x/otOXX3/PTZDGX1QqbpHudKWYHSUBeNnYt2ewCOZTE=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=RTSy0cf+9Q9Efh9Nvre8WM6p4F2fDVvhd/iOeil6/TrtqGtDgM805oUjHRLSq2jTaexFDQd40RqUwnnsUcp8cT9fE1LxFrtL94v0spu5Zw8IwQS0vujkd9fQzyhyigd8kuKd5SNxsG4KQTVuHJnIr+A48nCazX6FTo2sGX42E+w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KhfcHWHx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SlHfb1P2"
-Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-30bb64a4060so25262091fa.2
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Mar 2025 18:39:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741142339; x=1741747139; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=rLGnKKW2QVH83jr7sLdLSDsyrmFRn2bnko/hsD8r/Pg=;
-        b=SlHfb1P2pCA7U6vK37ufNaTFRopWHxWdF1P00AQ6/MbSz+Szm4jtA5qrnWmqw5PmM7
-         0V+BNr2GDF7UM3JUeyDn180pppEeohFPpu3co9NQZx8IHKZNY334KFjwSbB6fPdUrQ8P
-         t3Kcid+zofCRqp7E44UTQM5hZdJsmEzjoVamE8rrZdVU6/3bJNm1/Wur9LoscYJuDF6D
-         gG4b6ZEaly0lv1QlpXO8KHlpHu6YbD/ccxdGRFIhx+kcD7LDgiAQWcJuHiwQKjIL+rDT
-         QUFTILOoy0/3ziCasly9sx1TUOYp2yQbQKkeeXzI/Wm00p63939oRaw45zGyeEpsge0r
-         V8/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741142339; x=1741747139;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rLGnKKW2QVH83jr7sLdLSDsyrmFRn2bnko/hsD8r/Pg=;
-        b=KkGrCeAtxUbZR8FbdB1T4/VzDziCr7oY3P2gk8UIYOQc/JaF0f4eFJqmQ+B1xth+CF
-         9arwcdJqwikEfK8xSxv8qGMbfXvYDCwbA0GVp5f45GS3Yn2AKBmiYxi0VIh6itPnRrhL
-         Tiu4qn4bwmC0j6vbNvvQm29SXt5y5Kll7pbUjCES4pSIsg9SZPymP4eaM+xdCnnESPo/
-         vRXw4J3OawrVegOdxjEnTg/9xs7DWurCrNsNVt1kMMPLlKzr1o2tt6CDOPh1GPD6FACx
-         o3RkDjFxxi4xIYgrdlwlNM7jDe3kUrArS6mkL+BeMUcnGDU3B25dUoMHEaMRJYkseayK
-         w4+w==
-X-Forwarded-Encrypted: i=1; AJvYcCUzNGrOZG8jUTvV2nuun1yWW4bMHPIBA+DRrA3yrAHrFkSYVlSzHT2oVaE+p83efdiVCK1rIqOePCYIX8A=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwalWj4JWdjqtsEVIezKTZgLwrHiXW5+oQHVQARXsOSrUXvg++q
-	VVYkrMUW9yCiSmdMkgqKiMgLM7p9RmIigF8bbbWS9RE+Vh9BFctmKE7lkKXKKqw=
-X-Gm-Gg: ASbGnctLmKF/3ftl9zVcds/n6g0UBhZPnUjKSoCayhD+N7RAHsHBVgcr6JbxVj4RYfr
-	NHKXNw30mVMLuzRTucxlq9D680QWoNkL3deUsaU/9kIJLPA4Y1GTwQeB3A/IjcJTieeZCzWhZ+4
-	kEGdMd9R+FqO2S2Ngqgr64WNlPPPHSGvgSwClDpsYnuXdfCTvyAO3lJOT0+sGJ1+GStN2dKrhWs
-	O7X37Dus2VervtFKBVNAJqNjYUK3IFTR/DABGyuDG8fW5TLlGP6csfEYYU7Qnzwi6MXZiYpXyMk
-	vG7v91X1rCfyp5p54MGBETFk+VZSvGg2JRRMWVNW/s0zeChmPal5Avedk615xEbq6qUwWxYpzeE
-	MjEO0Cmh0pwofRSIN5FwUAs1o
-X-Google-Smtp-Source: AGHT+IFcXeQaKKWQj1dnu4UH8WH8BgBFKYFWB8PfbtIdp7r23eOpCjIksDm9zsbkHWStqwV0YfIVwg==
-X-Received: by 2002:a2e:be10:0:b0:308:e5e8:9d4c with SMTP id 38308e7fff4ca-30bd7af5da7mr4043671fa.28.1741142339042;
-        Tue, 04 Mar 2025 18:38:59 -0800 (PST)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30bc7264141sm5553261fa.13.2025.03.04.18.38.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Mar 2025 18:38:57 -0800 (PST)
-Date: Wed, 5 Mar 2025 04:38:55 +0200
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Melody Olvera <quic_molvera@quicinc.com>
-Cc: Vinod Koul <vkoul@kernel.org>, 
-	Kishon Vijay Abraham I <kishon@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Wesley Cheng <quic_wcheng@quicinc.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Philipp Zabel <p.zabel@pengutronix.de>, Bjorn Andersson <andersson@kernel.org>, 
-	Konrad Dybcio <konradybcio@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>, linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 5/9] phy: qcom: Update description for QCOM based
- eUSB2 repeater
-Message-ID: <6e742b2dke3pcqq3v6nzs3gfvwau4sk4gtadzgca2zk5merzvi@ubc6l3hsafok>
-References: <20250304-sm8750_usb_master-v2-0-a698a2e68e06@quicinc.com>
- <20250304-sm8750_usb_master-v2-5-a698a2e68e06@quicinc.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KhfcHWHx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B479C4CEE5;
+	Wed,  5 Mar 2025 02:40:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741142400;
+	bh=x/otOXX3/PTZDGX1QqbpHudKWYHSUBeNnYt2ewCOZTE=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=KhfcHWHx1u09Ekjf2FAaWZoc3MfL2FZWpJb+svW5R/DXh9kCOcT1E5BELzOWt0vIU
+	 OW8vzXglnuEu2SK1mptA5cAICEYvkL4J+5VT79GYe2RzG9MB+3M2Q/lVM/U6A2Xarb
+	 3rtGAQUpCEqpACyQA/msE98QIcJk/RYYvXQvjMJd1TrxNWRXcZveP+uSmRblZUJOLK
+	 6pyU2A8R2GbDwr3k19m1CGAiCucwb+Aa/wScB+IFdoUrUeJbNCCVC4CqLGKLrsv6HI
+	 /RmtLmLKMYLkQXAqKhghpIPUpw2EoUDwSjS1AbxSDCG6jb/lQXjI+WgtoqHaZG4UnO
+	 oYSD46YuVV74A==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id AE03A380CFEB;
+	Wed,  5 Mar 2025 02:40:34 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250304-sm8750_usb_master-v2-5-a698a2e68e06@quicinc.com>
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next] net: Prevent use after free in
+ netif_napi_set_irq_locked()
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174114243351.377491.13624948013005852967.git-patchwork-notify@kernel.org>
+Date: Wed, 05 Mar 2025 02:40:33 +0000
+References: <5a9c53a4-5487-4b8c-9ffa-d8e5343aaaaf@stanley.mountain>
+In-Reply-To: <5a9c53a4-5487-4b8c-9ffa-d8e5343aaaaf@stanley.mountain>
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: ahmed.zaki@intel.com, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, horms@kernel.org, kuniyu@amazon.com,
+ bigeasy@linutronix.de, aleksander.lobakin@intel.com, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
 
-On Tue, Mar 04, 2025 at 01:56:38PM -0800, Melody Olvera wrote:
-> From: Wesley Cheng <quic_wcheng@quicinc.com>
-> 
-> The eUSB2 repeater that exists in the QCOM PMICs are utilized for several
-> different eUSB2 PHY vendors, such as M31 or Synopsys.  Hence, the wording
-> needs to be updated to remove associations to a specific vendor.
-> 
-> Signed-off-by: Wesley Cheng <quic_wcheng@quicinc.com>
-> Signed-off-by: Melody Olvera <quic_molvera@quicinc.com>
-> ---
->  drivers/phy/qualcomm/Kconfig | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
+Hello:
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+This patch was applied to netdev/net-next.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
+On Mon, 3 Mar 2025 15:02:12 +0300 you wrote:
+> The cpu_rmap_put() will call kfree() when the last reference is dropped
+> so it could result in a use after free when we dereference the same
+> pointer the next line.  Move the cpu_rmap_put() after the dereference.
+> 
+> Fixes: bd7c00605ee0 ("net: move aRFS rmap management and CPU affinity to core")
+> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+> 
+> [...]
+
+Here is the summary with links:
+  - [net-next] net: Prevent use after free in netif_napi_set_irq_locked()
+    https://git.kernel.org/netdev/net-next/c/f252f23ab657
+
+You are awesome, thank you!
 -- 
-With best wishes
-Dmitry
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
