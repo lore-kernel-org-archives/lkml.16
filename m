@@ -1,118 +1,118 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D7FDD24C68D
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 15:02:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35E0924EF98
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 15:04:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741186978; cv=none; b=Zdjq+B1GP6NEVRIbUhq4SCh8CCFywHgFekL1R2r4l5k11zP6qUFZjSE6wIYvww9KdfO5kcWxPckIZ3GO1naSny2aymgdIXKu9Ycsb0U5Qsem3W1QlZUk+1C+1G8K0pvZDKTXVC4oteRQ4AtFODqRTeYhzlBMQSKo1EO70ZgCmPM=
+	t=1741187055; cv=none; b=nVVWc4E6jXKItU2KCXefAhwkOf39ApFT1p0YITZlSTHrP54HpfNwg8i1hSn5L8oVNIEwtw/qElLbR04whbxMRJ5S5RvDdKoAm5bnQVARFkqj9NwUFM1+nhAiWdg57fe6fcwTbm6tdjx7UP+B9QvTSxCwZ80jKnZyLFGzwnS6hco=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741186978; c=relaxed/simple;
-	bh=rwxs2qHmdeQKe1U8LtwGFdJo7B87r155p+txMieverQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=X/15uvKZ5pgGYU3rQEGSi19ItiXYs7MomHAy5iRjaEVhVkSgvOe+pvw2NVv+RRNXQGIGDHfex0sxblBq1Z0C3+Se0+1i17R8F4AeuDLlJ/GbHAyQOPNZCuDb9Fq634oyvw7s+eQ5ADhjukkxnFxvAzZ4zRmVjTjWDITGI9ezXqQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9535FFEC;
-	Wed,  5 Mar 2025 07:03:08 -0800 (PST)
-Received: from [10.174.36.147] (unknown [10.174.36.147])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 065973F673;
-	Wed,  5 Mar 2025 07:02:52 -0800 (PST)
-Message-ID: <3c3f3cfe-9fa7-41d7-9759-cc67306f13f5@arm.com>
-Date: Wed, 5 Mar 2025 20:32:49 +0530
+	s=arc-20240116; t=1741187055; c=relaxed/simple;
+	bh=t5eNaNrX2l+tZef9ZgJzRD8AjzR4E3n2CK9UhuofW3g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=n1SsSE8s96M7DYCKAG0aKoOMnyyp1e8zfaEcnqInrrnubhGe3hbXdgY3jGrMaIsqo/3dMnKzSRf3Ym94VacM5FIoFeWaSbOEQwMKDHCNZ3xpgDktgQtywHdiDXCxzgkuWNgKr/lLUc/I+5qf4p0l3dm423rIEWR+3cAqhDdK3Qw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=E0fyhTpI; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="E0fyhTpI"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-43bc6a6aaf7so26869265e9.2
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Mar 2025 07:04:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1741187051; x=1741791851; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=NLmgp+4BNcFGyEe+zA1DNg0CWSPx2N1T/nc5ywlKYT8=;
+        b=E0fyhTpId/xgNl4mabkCJHJlzGzPtK4E5BvoAhvo19Y0up2Rdhafm/wcZoHuPEKFQx
+         thcCC4Mief+uWfCxeVps+muFMU2CrE+XNW7ZbIQOJEjt0eWJxROgfS1uL/CeDzKK+4Op
+         0aSHbmv2iKKppZ60uvwgMNpbi8NEn21B2+VKGKWGFOdKqDEnt5eBlRNrD7Sxn/uwuKWL
+         a+oX1rIJw4Gz7ur+HjoVXgdkHz2P58fagKBc3B4Wq1vgaBclSwWjSJCugyhFCTLUP3lW
+         T8agu8SD68LHPYdh6kXkb4EI0waExr0BWcscMWRCgRNbzbqMHrIU9OyfMSEPNPZ6wtiz
+         i1Pw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741187051; x=1741791851;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NLmgp+4BNcFGyEe+zA1DNg0CWSPx2N1T/nc5ywlKYT8=;
+        b=Ji7XdnjVwHMfK4P7fece3hlHM+1UXXXAOrZWUqK8bFdCafigmRv/OgtenXN/cv/scF
+         D4HnGDwp9FQwDn3KHt+OazrKRVT7ZnqlQlkH/VEmyyO9nrqpvAFTYuzfEKbME9+dtElk
+         pRiaZ1hPQLwUkhZh3GH4ymht4ClizprA9+WOoy697v8kFXlSckApZgIHIAtUz+pC6RAC
+         7bEMxBgNaLJG4Ce1W348tejoq71uI+bgyzrflqrAJLEfJNXAPcILXHK7TM+/TBu+834Z
+         eO5kry1NKbejWAwQbcl/uaLD9+x3UC1JNGctyDiXsZtoGfiO4Rc1ZwFjZsv/MvBkF9kF
+         j8Qg==
+X-Forwarded-Encrypted: i=1; AJvYcCV9THPZZhJtgMXc9984dSOfGsUV4K7ulo/3fkOy7dgTiM3D3vDkYXHDyloolBQ8jev/c2xc6rDIm6wNxWQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwDbI9lcltWj25SZaIWxG1fn+lJHtUlwsj5+Er8essQWIWmquIl
+	LmQMWJEO4ZttdUWZdGQEfgxGWh1qDzgJS1dFjN+HLZkOknSxjWVztd+dC5LmC70=
+X-Gm-Gg: ASbGncv4SaWIHBgsr1TEJykigrBCKsdrKfouvWMFwuP7Cr1NyYKIukaTotPjd9MmypG
+	IX7bAMFlxLrxy1VHUmccXmsIDRoCnk/4pByhznwtdlbx8Z4uBIKoB9yVgb47BeWvAFKuaBYd8mc
+	dg2MGnV01a2IajYAeEEuTSnNPK3NLVWqMoQSvnTgwoH5NIdXYc9tDsT26ptnICXQc5i9kqOLFPl
+	KyiHPKXL5bv0isnwwBHsBKMtoQzZAsAkYprozo1YO/EAyo6nUOuplM25QJGvZQkF6geqmqclegI
+	uIeQcSX+uEr+U5ipL6YTEyEP9BNV1b0jsCs2/+73R8f82rk=
+X-Google-Smtp-Source: AGHT+IGlWpXBw5ri3FaDBssVibQSzlL8JZY/24FSPaE5MWfcweC0DmUsA0HmZ1zjcuQDZS2k9Zzqjw==
+X-Received: by 2002:a5d:59a5:0:b0:390:f1c1:d399 with SMTP id ffacd0b85a97d-3911f7bb9b8mr2998938f8f.41.1741187051174;
+        Wed, 05 Mar 2025 07:04:11 -0800 (PST)
+Received: from blackdock.suse.cz ([193.86.92.181])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-390e485d8e4sm20907920f8f.85.2025.03.05.07.04.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Mar 2025 07:04:10 -0800 (PST)
+Date: Wed, 5 Mar 2025 16:04:08 +0100
+From: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Christian Brauner <brauner@kernel.org>, 
+	Alexander Mikhalitsyn <alexander@mihalicyn.com>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	Jonathan Corbet <corbet@lwn.net>, Kees Cook <kees@kernel.org>, 
+	"Eric W . Biederman" <ebiederm@xmission.com>, Oleg Nesterov <oleg@redhat.com>
+Subject: Re: [PATCH 2/2] pid: Optional first-fit pid allocation
+Message-ID: <glmbovmv7ahln6omzoas5lrktaafbmxdkbs4mfoummhrlayl7u@s2nv66r7yx43>
+References: <20250221170249.890014-1-mkoutny@suse.com>
+ <20250221170249.890014-3-mkoutny@suse.com>
+ <20250221161854.8ea0dd0b2da05d38574cefc4@linux-foundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [QUESTION] Plain dereference and READ_ONCE() in fault handler
-To: David Hildenbrand <david@redhat.com>, willy@infradead.org,
- ziy@nvidia.com, hughd@google.com, ryan.roberts@arm.com,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org
-References: <20250305102159.96420-1-dev.jain@arm.com>
- <8477d9ec-b9ce-4a3d-b61f-1bd44d3360a5@redhat.com>
-Content-Language: en-US
-From: Dev Jain <dev.jain@arm.com>
-In-Reply-To: <8477d9ec-b9ce-4a3d-b61f-1bd44d3360a5@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="yphetxzk2ql5urd5"
+Content-Disposition: inline
+In-Reply-To: <20250221161854.8ea0dd0b2da05d38574cefc4@linux-foundation.org>
 
 
+--yphetxzk2ql5urd5
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Subject: Re: [PATCH 2/2] pid: Optional first-fit pid allocation
+MIME-Version: 1.0
 
-On 05/03/25 4:16 pm, David Hildenbrand wrote:
-> On 05.03.25 11:21, Dev Jain wrote:
->> In __handle_mm_fault(),
->>
->> 1. Why is there a barrier() for the PUD logic?
-> 
-> Good question. It was added in
-> 
-> commit a00cc7d9dd93d66a3fb83fc52aa57a4bec51c517
-> Author: Matthew Wilcox <willy@infradead.org>
-> Date:   Fri Feb 24 14:57:02 2017 -0800
-> 
->      mm, x86: add support for PUD-sized transparent hugepages
-> 
-> Maybe it was an alternative to performing a READ_ONCE(*vmf.pud).
-> 
-> Maybe it was done that way, because pudp_get_lockless() does not exist. 
-> And it would likely not be required, because on architectures where 
-> ptep_get_lockless() does some magic (see below, mostly 32bit), PUD THP 
-> are not applicable.
+Hi.
 
-Thanks for your reply David.
+On Fri, Feb 21, 2025 at 04:18:54PM -0800, Andrew Morton <akpm@linux-foundation.org> wrote:
+> This seems thin.  Is there more we can tell our users?  What are the
+> visible effects of this?  What are the benefits?  Why would they want
+> to turn it on?
 
-> 
-> 
->> 2. For the PMD logic, in the if block, we use *vmf.pmd, and in the 
->> else block
->>     we use pmdp_get_lockless(); what if someone changes the pmd just 
->> when we
->>     have begun processing the conditions in the if block, fail in the 
->> if block
->>     and then the else block operates on a different pmd value. 
->> Shouldn't we cache
->>     the value of the pmd and operate on a single consistent value 
->> until we take the
->>     lock and then finally check using pxd_same() and friends?
-> 
-> The pmd_none(*vmf.pmd) is fine. create_huge_pmd() must be able to deal 
-> with races, because we are not holding any locks.
+Thanks for review and comments (also Alexander).
 
-I had a mental hiccup, yes we don't need the cached value even before 
-the if block, as the relevant path will eventually check after taking 
-the lock. I was thinking of all sorts of weird races.
+> I mean, there are veritable paragraphs in the changelogs, but just a
+> single line in the user-facing docs.  Seems there could be more...
 
-> 
-> We only have to use pmdp_get_lockless() when we want to effectively 
-> perform a READ_ONCE(), and make sure that we read something "reasonable" 
-> that we can operate on, even with concurrent changes. (e.g., not read a 
-> garbage PFN just because of some concurrent changes)
+I decided not to fiddle with allocation strategies and disable pid_max
+in namespaces by default.
 
-Oh I just looked at the arm64 definition and assumed ptep_get_lockless() 
-== READ_ONCE() :) Now this makes sense. So I am guessing that we can 
-still get away with a *vmf.pmd on 64-bit arches?
+Michal
 
-A separate question: When taking the create_huge_pmd() path with a read 
-fault and after taking the pmd lock, why shouldn't we check with 
-pmd_none(pmdp_get_lockless(vmf.pmd)) instead of plain *vmf.pmd...surely 
-now we must load the actual correct value from memory since we are 
-committing into mapping the huge zero folio?
-And after looking somewhat more, why even is a pmd_none(*pmd) there in 
-set_huge_zero_folio()...it should be the responsibility of the caller to 
-verify this? Any caller will just assume that it got the huge zero folio 
-mapped so this check should be redundant.
+--yphetxzk2ql5urd5
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> 
-> We'll store the value in vmf.orig_pmd, on which we'll operate and try to 
-> detect later changes using pmd_same(). So we really want something 
-> consistent in there.
-> 
-> See the description above ptep_get_lockless(), why we cannot simply do a 
-> READ_ONCE on architectures where a PTE cannot be read atomically (e.g., 
-> 8 byte PTEs on 32bit architecture).
->
+-----BEGIN PGP SIGNATURE-----
 
+iHUEABYKAB0WIQTd6mfF2PbEZnpdoAkt3Wney77BSQUCZ8hn5QAKCRAt3Wney77B
+SeH/AQCl7M3g6jWcHR92iwej1BFLEym+t1kmSZ8IyoLg8iToxwEAolDqAbNbU2Vi
+T/noTfl//D4KGYDllskbpZOuGNvu2gQ=
+=t4Hk
+-----END PGP SIGNATURE-----
 
+--yphetxzk2ql5urd5--
