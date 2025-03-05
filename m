@@ -1,88 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com [209.85.128.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6197D205518;
-	Wed,  5 Mar 2025 09:53:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6227B2063F1
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 09:53:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741168394; cv=none; b=KG8/Vbq2lwEoWM6GcOR+TVCeokv794tleZpC3Myv8h1Y1WJ6IGIN49mkxrZl88CaXR/ITy3+WHgiiahBZMTvExj+gPY6GU/yf8UFZECnBSIHukTyuh9kzyrjhWUEuk/M1iMwdrK+AHXZhB5upKe7VCpPMtjzZZIA0E6q539BZuk=
+	t=1741168396; cv=none; b=Rga9P9iwv0d70V2qbBg0mScqWYItCYV9MbiHbo09Nc45BDJEnLsR+5RxrRdhLsaPtF1fQzkbDbQztTTDc0YrQXY5QKbbKkASmrOGlhTbFxzBaba5u54UoZWJo6yJrIYT/woqPikFf5glck7HO1taBGbvAzKEuBeNTAptkaYXgmM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741168394; c=relaxed/simple;
-	bh=UML+iHb2dTlgk19CzW49qLsC4xLAUZs1v41pgqomKkU=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=WNHJSjdoAa+UKBn2cxO5DkD3Pq68kYWeJyOlgQsn8YXbu0QJdd1iNMQR7Fy+J2NZUXVeRCnsQXE2aFFo1PPsqqVTLUw83euxPn5HMg0lQTjtY3yot1EB3/e3Pg2gy5iyoPRLzMZT6mSy0jFbmftCzgkdcVTOJk+AbUttDAdevyA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FumxnhAf; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741168396; c=relaxed/simple;
+	bh=HoQJfT/rFHWJRo/w02oVTwpBm6E1113uJMZPkO2so3Y=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=s2DrEWOLauxAIyIEiW0L8/WEkj5o9ctUffX6SjUcw7+m44MqysEgdM/+dKbMW6hlvDU4h3B6xONetNNg7SZgX5P9rk0y1AwTMU/H/jj2R78UBaOzVNPgcIfaJBWWKKSrSXC8N7HnaBcvVI5LTCPGRAQ+8IZpt4dECkTeo74VDaU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=cq8fU8CV; arc=none smtp.client-ip=209.85.128.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FumxnhAf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 287AEC4CEE2;
-	Wed,  5 Mar 2025 09:53:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741168393;
-	bh=UML+iHb2dTlgk19CzW49qLsC4xLAUZs1v41pgqomKkU=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=FumxnhAfZ61FgXfJiNgxadYUcoWd9QhgLpStY2IJ5W8kXY412KeyaVvVkFPzC4vJF
-	 KfJgK5egnM4lVpcJnFeMEGcHytIqeUf/JGpABOFCBDuwCqT49ZPtSc9Qnx9gWgvNi2
-	 eDWxCDIfHaxBS69T7ynbLFaA2keRkWu4u2GLG2v8MvqaqSZxcNkLQ6q81JAt8fd4hR
-	 YkMJPWP7BdmLl5VDTtxqXQWMyvoi3Jwilvkh5deRRVp/VDOm7SCV8tF1wjhPkLNkOO
-	 +GAOUZ/2gC1GJiNcb9rPP0ZKdOyr4wV8Ow3Zv4jSznYePGfvyjsanE4TetohjxmsUo
-	 2RO3zKPNMk5Zg==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-To: "Benno Lossin" <benno.lossin@proton.me>
-Cc: "Miguel Ojeda" <ojeda@kernel.org>,  "Alex Gaynor"
- <alex.gaynor@gmail.com>,  "Boqun Feng" <boqun.feng@gmail.com>,  "Gary Guo"
- <gary@garyguo.net>,  =?utf-8?Q?Bj=C3=B6rn?= Roy Baron
- <bjorn3_gh@protonmail.com>,  "Alice
- Ryhl" <aliceryhl@google.com>,  "Trevor Gross" <tmgross@umich.edu>,
-  "Danilo Krummrich" <dakr@kernel.org>,  <linux-kernel@vger.kernel.org>,
-  <rust-for-linux@vger.kernel.org>
-Subject: Re: [PATCH 02/22] rust: move pin-init API into its own directory
-In-Reply-To: <20250304225245.2033120-3-benno.lossin@proton.me> (Benno Lossin's
-	message of "Tue, 04 Mar 2025 22:53:16 +0000")
-References: <20250304225245.2033120-1-benno.lossin@proton.me>
-	<tvMbtzZXTxG78GP05XwEiqdeUOb_IML2s97GEvGeEMHTYdJh2PKo7gRP7FPhaTlJnS16gC34KvGWMg16mR69VQ==@protonmail.internalid>
-	<20250304225245.2033120-3-benno.lossin@proton.me>
-User-Agent: mu4e 1.12.7; emacs 29.4
-Date: Wed, 05 Mar 2025 10:03:59 +0100
-Message-ID: <87jz93g874.fsf@kernel.org>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cq8fU8CV"
+Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-6fd6f7f8df9so5764297b3.1
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Mar 2025 01:53:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1741168393; x=1741773193; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=QmssJ/v0i5j01lJBGvnparl8jLxew4PBDq3uO0lekbU=;
+        b=cq8fU8CVMYuMMMXXkJlOARDlnfNUk0RmQdiIAzmg++S2PRA9gP7r/xQB+2nQrUT1X3
+         AoilAz2ffVGmjvWrK93Y6nwM8cKdmSJRxeYtMZ080PMjxhkQZNKsPQ8OGEFY5j27J4JE
+         oZ/R+xyXeWZugTVnZwvUnoeSXYOgD3KUKvW7XEQ+8vxh4OmFLXTSaiRuX64ClIZjKWzl
+         dzvjQc1C/JJtLDtAlXWbz07rW+/+eXseinc1YGkkYkABARszSYWZjx5Dl3isy+WpSt36
+         BiE/q6CDlkdWIHfCK+0N7RPmwyHjGLKAipJsAIk9Fmljhx+ZGVitBFYwWqu94WOvnGST
+         wCaw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741168393; x=1741773193;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=QmssJ/v0i5j01lJBGvnparl8jLxew4PBDq3uO0lekbU=;
+        b=rGjBneCdjm4a/Fnd9WsxJUTYEDkccuTScHww0pzorobQ7MdskWttmRQmmqJ1FsTjBs
+         lYmMyzI+Kld2A4nJqbTkivz3B4a+UWHFjNfcOu6tEulp4bhjFf+Ok5+RDl3GPLGijTTF
+         pBi8cQkiL5tqIz0SztXSmsfAz6e2HE2HiyE5S+6x5nQVjjtr18NF/4uKhpsGeIUknkxy
+         vfRbQhYklK1YgoyuqBLK3Rg0lPCDa14DSI8W8sk+EjbXUMQcxGSV/OssgD0WQYWy/wSj
+         VTlnYyNSJqXDxEhTsN1Za1R3XlxlrCaW18J6YjXi+gXbPLhJXgu0HN2cJivdH3StQof0
+         rMGQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUmcky/b9wfE0d0Hxx1DJgutSgZJ5NRmuJgNEdc8Ox8m9f1l/zezGYC4zFYSuylVOU53kgNqXznzbgLQEk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzScvAx2fx65TH9eq0xcmf3SjLV/wl+noXHI4Q8u+U0gLPTp089
+	oAGwsKUlNR8FF+zmL6tdZ9PK3cEE8+8Am9k3y/J7y3S3NoEzHR7VyY++70uSEBPR8Zaf1KmnyTg
+	fDyoVdmky7NPokAzWbX6stjAAGiJq2olmrnzuJA==
+X-Gm-Gg: ASbGncsMAJatWeLjfpiBmZJRRoMDLmsyINUXAXcLAG/MWHJGuPFqPxxtLYzBn7BTIBk
+	762AyjzuAXaG4HVi7ancQUJ29gOdKjx2tmHAe6fPG41pKCCGW0oJsdgeqBCpN3RUd96JP5YyV99
+	hpuK+KPC+py3rwPus5K3zcVe1Pi1dcpEITU/ilF1QdlM7TPHZhWMHh9Qu00Q==
+X-Google-Smtp-Source: AGHT+IEGutT+zjkqQ3ATTBx4JIvA9Q3F7rEvdgRWipMrQxGQfkOkxCE0mT1COEBIClGaiCxKi9MsqIyKjbbm3vcPwwg=
+X-Received: by 2002:a05:690c:6413:b0:6f9:c8d9:50f with SMTP id
+ 00721157ae682-6fd9411f614mr96778557b3.2.1741168393332; Wed, 05 Mar 2025
+ 01:53:13 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20250305203929.70283b9b@canb.auug.org.au>
+In-Reply-To: <20250305203929.70283b9b@canb.auug.org.au>
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Date: Wed, 5 Mar 2025 10:53:01 +0100
+X-Gm-Features: AQ5f1JpiBBDeRr2CNNwLxTLAV9GV1VBIlUX83g3DRCPQnKILf_mmS2GzkU3zVO4
+Message-ID: <CACMJSetEf-GRjbHh0qwDB0c4C0iXCOBbjV3D4u30x8NbZdAD6A@mail.gmail.com>
+Subject: Re: linux-next: build warnings after merge of the gpio-brgl tree
+To: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Linus Walleij <linus.walleij@linaro.org>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
+	Linux Next Mailing List <linux-next@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-"Benno Lossin" <benno.lossin@proton.me> writes:
-
-> In preparation of splitting off the pin-init crate from the kernel
-> crate, move all pin-init API code (including proc-macros) into
-> `rust/pin-init`.
+On Wed, 5 Mar 2025 at 10:39, Stephen Rothwell <sfr@canb.auug.org.au> wrote:
 >
-> Moved modules have their import path adjusted via the `#[path = "..."]`
-> attribute. This allows the files to still be imported in the kernel
-> crate even though the files are in different directories.
+> Hi all,
 >
-> Code that is moved out of files (but the file itself stays where it is)
-> is imported via the `include!` macro. This also allows the code to be
-> moved while still being part of the kernel crate.
+> After merging the gpio-brgl tree, today's linux-next build (htmldocs)
+> produced these warnings:
 >
-> Note that this commit moves the generics parsing code out of the GPL-2.0
-> file `rust/macros/helpers.rs` into the Apache-2.0 OR MIT file
-> `rust/pin_init/internal/src/helpers.rs`. I am the sole author of that
-> code and it already is available with that license at [1].
-> The same is true for the entry-points of the proc-macros `pin_data`,
-> `pinned_drop` and `derive_zeroable` in `rust/macros/lib.rs` that are
-> moved to `rust/pin_data/internal/src/lib.rs`. Although there are some
-> smaller patches that fix the doctests.
+> include/linux/gpio/driver.h:551: warning: Incorrect use of kernel-doc format:          * of_node_instance_match:
+> include/linux/gpio/driver.h:569: warning: Function parameter or struct member 'of_node_instance_match' not described in 'gpio_chip'
 >
-> Link: https://github.com/Rust-for-Linux/pinned-init [1]
-> Signed-off-by: Benno Lossin <benno.lossin@proton.me>
+> Introduced by commit
+>
+>   bd3ce71078bd ("gpiolib: of: Handle threecell GPIO chips")
+>
+> --
+> Cheers,
+> Stephen Rothwell
 
-Reviewed-by: Andreas Hindborg <a.hindborg@kernel.org>
+Hi!
 
+I just sent out a patch:
+https://lore.kernel.org/linux-gpio/20250305094939.40011-1-brgl@bgdev.pl/
 
-Best regards,
-Andreas Hindborg
-
-
-
+Bart
