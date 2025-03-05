@@ -1,50 +1,88 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C879F24C081
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 13:06:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC55B1FCF4F
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 13:06:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741179971; cv=none; b=dpfAcCa5rIjlgJGM48SNRbeFSOMbHrXT4nbvXsSH9wBwNMrxdByxOCBfRxY3GK7kjW5m8QTFGjg1fKjmyrwL07MsVIuzfXui0THHYELd6530Ym2bh0ewEYhKMSrqjKRZHwHvwn8FKmnhuYPqO4TGR8g7S0cUc4+kaJkLZA3WwJM=
+	t=1741180005; cv=none; b=B0rd5hcRm/0I5OWH/gSlO4OiPETR/6FgtxHnarilJQH9IiwjBNrXSs5CIHl76ByNbJUWT7jHzxMQi7TkncEIT8XBXdn6w2EUkDNgTUUSjVWP9J5PYuugi7Y/k7nJXYEWG3PIGR9jN+cKiBTYOAUZBWRyFI3Aw9L8I9gA+xBjZYw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741179971; c=relaxed/simple;
-	bh=g0qXb7qT37d8NawbNDtCoQfOOQYTUFtVMfWi8jZyKsY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=vEZdB5yrkb6sA58qHx75Jw3CVZgiSYRce7PfJcZ3e08KgV8fHh5vYS/HUd0Umi7XyT5UC212Dyo1BHV8NAD5/KpeAeIwVvybpR+96xigQMpWxrdFaNkCS8dif46ECtvtk3uc2+LGcjwq/2bYTL2IB0AtyPzj0nH4lB4WDUm84nE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tATyV5Ui; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741180005; c=relaxed/simple;
+	bh=56sqqOEqGriHtOFEYlo9hGHgSO0l2VpnsflbgQyFSf0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BuKh173+4s6WMfgCyYDCo2HzTzxnZZv4VzN0gnO7umeEemJlGolFrR+kD7Gpt0J7H3th3R8cylMRuY+/tnktnBPq+yfJ4WAwkAYqhE2WGyoqVLsnd/XuIU+0ayHO/Guhcce0NlRUi56IfiM9Qw9Xrztqf1N3XzjyN+eJlqkovWs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=VhotKfS6; arc=none smtp.client-ip=209.85.208.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tATyV5Ui"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CABE9C4CEE7;
-	Wed,  5 Mar 2025 13:06:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741179971;
-	bh=g0qXb7qT37d8NawbNDtCoQfOOQYTUFtVMfWi8jZyKsY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=tATyV5UiMxIS7HQvYHGcsTmAJkTZ1KYGzyVCVE598ENI8gNwnllRSg560rfrI9Xvl
-	 bLjn6A2iKI1rJL/9eC1aklp3FltF+Z9MlFTIxGpj6VW9jFK93XFSDx0XCAv+ZgEbNq
-	 C6oNhxO9RRlxnPNQM/RXxRDP2hKP0I7arthPhcgAdr7g3tTQMYJF0qv+/qt9kjOAPt
-	 5gYBe/J0wluncGtCD8VWp6jOygkfTjR06k+jiVM1xu7TRlThLszlmDw4NOu9GD8byD
-	 xJGcfzB5JLB8fpkhfiJrl2D4gSQyLax0/kymmRFf0eoqCKIEbPieC7F/puUVNC6y23
-	 eOxKQpyplgIpg==
-From: Philipp Stanner <phasta@kernel.org>
-To: Matthew Brost <matthew.brost@intel.com>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Philipp Stanner <phasta@kernel.org>,
-	=?UTF-8?q?Christian=20K=C3=B6nig?= <ckoenig.leichtzumerken@gmail.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Sumit Semwal <sumit.semwal@linaro.org>
-Cc: dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v7 3/3] drm/sched: Update timedout_job()'s documentation
-Date: Wed,  5 Mar 2025 14:05:52 +0100
-Message-ID: <20250305130551.136682-5-phasta@kernel.org>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250305130551.136682-2-phasta@kernel.org>
-References: <20250305130551.136682-2-phasta@kernel.org>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VhotKfS6"
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5e539ea490dso4863681a12.0
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Mar 2025 05:06:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1741180000; x=1741784800; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=7SQjgG6U13+uAQOBhn9HhQeG3VGEtTdqOEuDMKUhZ7o=;
+        b=VhotKfS6sQi/QNWvKJHQwoibQAluNbMSCQVhrwAr3989u2DHFZUQsUH/cgKazRl1K3
+         Ub798VQsBXeDBNQ+YSC/PS9YGbxNgOnUk+1ys+aHr0wI68T8tpxqwvFSlwskv6iROmkT
+         mY443uGuosLOSF2uWqxuUotNfWn+gEZ4lHi7RJrkAlLEypo0VR0fhHOXWEOe/NgsAIOi
+         Rn4puUGzRAlSV8rzHovGuRMfpPUb8aosVSoYEC4bMYzAZREs40e+H7lBK9UqWTmtc3kt
+         mg8azee1DrJrcmF4Nf5lzwUIV3w6KmTJByQ17OdRpXqsbnC1Hwg51F8d+o7GBkfWlYY+
+         VGew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741180000; x=1741784800;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=7SQjgG6U13+uAQOBhn9HhQeG3VGEtTdqOEuDMKUhZ7o=;
+        b=HQ5tl5q57la1d7sHXHRphvyPZZ1B+HODwVQdpvAu67YMXQyuS8b1vRM8a/EzSu5Hc3
+         fYjBp45uPZJx5JmJx6dWMyEUGlQTDlzGjMFTbrX/Q2ndRWgD0B54cvwiDK2zmoT/zX+K
+         IHmZNFAyS3ChYgcWwt12Tlz/juysWYv1AFnTwuEuB5wa9816N6GY33onGU3vKaRGu5Gz
+         XtxYRgnVmN5BTlYBdD6nTJ0/hhszvEaTzWY8nUbxK5KE6w+EhpdkOkEF66DcAT9Dpt9N
+         G8jAUqChPxnwbjjaxh+wbnZn2KEWWrUsYqWr8zSNXkqmxTTRrpvNlu9VpSgjD3pw2Sxm
+         Hd9g==
+X-Gm-Message-State: AOJu0YzghqAqzj6iyMqGChvS6Z1cMVXdf6Z2AtRcC7DBdbZ6+eAXmEGi
+	EM2CCvalx874JGpI2saErJq4f+anHjkdBnrc1veClRtckhj21S4i5I/f+I8LQuyNTDUdzXjTp7m
+	rCCA=
+X-Gm-Gg: ASbGncv73OJMteectJqbQOjotUy+YOQWFfN4gls884C1UpELg7WUZiQa5Nxd/sE7F/J
+	sCNtzbcE3EmXZUBK6TxY124ZV6RDFxXEgXeKGsAXyTpnsF21Z6+3XKVzSCUYts+HcpHdevy1HLf
+	dCUwVwNDygdM8iK8RshbmiWwZV9jqqO0gLs7hRyQ3qhQopWDHZ+m/vZJYZzZ2bhLwikQ9bIy4YM
+	JkDOHXW6U1XMpQbBMaF8g+BMenHodLUZdCY4xD5Cope1i6wYWgd1RJAoiaH0HqAzo8cFMglbrBs
+	09jb/i4A91rUk4+cSLkrZM82gqhGTE+JKljoMSQBLRMnONXrXuY72uZOSFGC5gWQ+W7Rk3bVRtL
+	ki3kHMuIHxUbmFssJ1015MQ==
+X-Google-Smtp-Source: AGHT+IHuCz71jYp7eU0HTiLFptbPk6lrg0W55Lpw1DSz92hnpN7BGzAC+85g1xWfhNsyzgUyDK+bpg==
+X-Received: by 2002:a05:6402:13cd:b0:5dc:74fd:abf1 with SMTP id 4fb4d7f45d1cf-5e59f3ee29amr7186053a12.15.1741180000374;
+        Wed, 05 Mar 2025 05:06:40 -0800 (PST)
+Received: from rayden.urgonet (h-98-128-140-123.A175.priv.bahnhof.se. [98.128.140.123])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5e5bcd1595bsm65714a12.42.2025.03.05.05.06.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Mar 2025 05:06:39 -0800 (PST)
+From: Jens Wiklander <jens.wiklander@linaro.org>
+To: linux-kernel@vger.kernel.org,
+	linux-media@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	linaro-mm-sig@lists.linaro.org,
+	op-tee@lists.trustedfirmware.org,
+	linux-arm-kernel@lists.infradead.org
+Cc: Olivier Masse <olivier.masse@nxp.com>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Yong Wu <yong.wu@mediatek.com>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	Benjamin Gaignard <benjamin.gaignard@collabora.com>,
+	Brian Starkey <Brian.Starkey@arm.com>,
+	John Stultz <jstultz@google.com>,
+	"T . J . Mercier" <tjmercier@google.com>,
+	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+	Sumit Garg <sumit.garg@linaro.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	azarrabi@qti.qualcomm.com,
+	Simona Vetter <simona.vetter@ffwll.ch>,
+	Daniel Stone <daniel@fooishbar.org>,
+	Jens Wiklander <jens.wiklander@linaro.org>
+Subject: [PATCH v6 00/10] TEE subsystem for restricted dma-buf allocations
+Date: Wed,  5 Mar 2025 14:04:06 +0100
+Message-ID: <20250305130634.1850178-1-jens.wiklander@linaro.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -53,130 +91,178 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-drm_sched_backend_ops.timedout_job()'s documentation is outdated. It
-mentions the deprecated function drm_sched_resubmit_jobs(). Furthermore,
-it does not point out the important distinction between hardware and
-firmware schedulers.
+Hi,
 
-Since firmware schedulers typically only use one entity per scheduler,
-timeout handling is significantly more simple because the entity the
-faulted job came from can just be killed without affecting innocent
-processes.
+This patch set allocates the restricted DMA-bufs from a DMA-heap
+instantiated from the TEE subsystem.
 
-Update the documentation with that distinction and other details.
+The TEE subsystem handles the DMA-buf allocations since it is the TEE
+(OP-TEE, AMD-TEE, TS-TEE, or perhaps a future QTEE) which sets up the
+restrictions for the memory used for the DMA-bufs.
 
-Reformat the docstring to work to a unified style with the other
-handles.
+The DMA-heap uses a restricted memory pool provided by the backend TEE
+driver, allowing it to choose how to allocate the restricted physical
+memory.
 
-Signed-off-by: Philipp Stanner <phasta@kernel.org>
----
- include/drm/gpu_scheduler.h | 78 ++++++++++++++++++++++---------------
- 1 file changed, 47 insertions(+), 31 deletions(-)
+The allocated DMA-bufs must be imported with a new TEE_IOC_SHM_REGISTER_FD
+before they can be passed as arguments when requesting services from the
+secure world.
 
-diff --git a/include/drm/gpu_scheduler.h b/include/drm/gpu_scheduler.h
-index 6381baae8024..1a7e377d4cbb 100644
---- a/include/drm/gpu_scheduler.h
-+++ b/include/drm/gpu_scheduler.h
-@@ -383,8 +383,15 @@ struct drm_sched_job {
- 	struct xarray			dependencies;
- };
- 
-+/**
-+ * enum drm_gpu_sched_stat - the scheduler's status
-+ *
-+ * @DRM_GPU_SCHED_STAT_NONE: Reserved. Do not use.
-+ * @DRM_GPU_SCHED_STAT_NOMINAL: Operation succeeded.
-+ * @DRM_GPU_SCHED_STAT_ENODEV: Error: Device is not available anymore.
-+ */
- enum drm_gpu_sched_stat {
--	DRM_GPU_SCHED_STAT_NONE, /* Reserve 0 */
-+	DRM_GPU_SCHED_STAT_NONE,
- 	DRM_GPU_SCHED_STAT_NOMINAL,
- 	DRM_GPU_SCHED_STAT_ENODEV,
- };
-@@ -447,43 +454,52 @@ struct drm_sched_backend_ops {
- 	 * @timedout_job: Called when a job has taken too long to execute,
- 	 * to trigger GPU recovery.
- 	 *
--	 * This method is called in a workqueue context.
-+	 * @sched_job: The job that has timed out
- 	 *
--	 * Drivers typically issue a reset to recover from GPU hangs, and this
--	 * procedure usually follows the following workflow:
-+	 * Drivers typically issue a reset to recover from GPU hangs.
-+	 * This procedure looks very different depending on whether a firmware
-+	 * or a hardware scheduler is being used.
- 	 *
--	 * 1. Stop the scheduler using drm_sched_stop(). This will park the
--	 *    scheduler thread and cancel the timeout work, guaranteeing that
--	 *    nothing is queued while we reset the hardware queue
--	 * 2. Try to gracefully stop non-faulty jobs (optional)
--	 * 3. Issue a GPU reset (driver-specific)
--	 * 4. Re-submit jobs using drm_sched_resubmit_jobs()
--	 * 5. Restart the scheduler using drm_sched_start(). At that point, new
--	 *    jobs can be queued, and the scheduler thread is unblocked
-+	 * For a FIRMWARE SCHEDULER, each ring has one scheduler, and each
-+	 * scheduler has one entity. Hence, the steps taken typically look as
-+	 * follows:
-+	 *
-+	 * 1. Stop the scheduler using drm_sched_stop(). This will pause the
-+	 *    scheduler workqueues and cancel the timeout work, guaranteeing
-+	 *    that nothing is queued while the ring is being removed.
-+	 * 2. Remove the ring. The firmware will make sure that the
-+	 *    corresponding parts of the hardware are resetted, and that other
-+	 *    rings are not impacted.
-+	 * 3. Kill the entity and the associated scheduler.
-+	 *
-+	 *
-+	 * For a HARDWARE SCHEDULER, a scheduler instance schedules jobs from
-+	 * one or more entities to one ring. This implies that all entities
-+	 * associated with the affected scheduler cannot be torn down, because
-+	 * this would effectively also affect innocent userspace processes which
-+	 * did not submit faulty jobs (for example).
-+	 *
-+	 * Consequently, the procedure to recover with a hardware scheduler
-+	 * should look like this:
-+	 *
-+	 * 1. Stop all schedulers impacted by the reset using drm_sched_stop().
-+	 * 2. Kill the entity the faulty job stems from.
-+	 * 3. Issue a GPU reset on all faulty rings (driver-specific).
-+	 * 4. Re-submit jobs on all schedulers impacted by re-submitting them to
-+	 *    the entities which are still alive.
-+	 * 5. Restart all schedulers that were stopped in step #1 using
-+	 *    drm_sched_start().
- 	 *
- 	 * Note that some GPUs have distinct hardware queues but need to reset
- 	 * the GPU globally, which requires extra synchronization between the
--	 * timeout handler of the different &drm_gpu_scheduler. One way to
--	 * achieve this synchronization is to create an ordered workqueue
--	 * (using alloc_ordered_workqueue()) at the driver level, and pass this
--	 * queue to drm_sched_init(), to guarantee that timeout handlers are
--	 * executed sequentially. The above workflow needs to be slightly
--	 * adjusted in that case:
-+	 * timeout handlers of different schedulers. One way to achieve this
-+	 * synchronization is to create an ordered workqueue (using
-+	 * alloc_ordered_workqueue()) at the driver level, and pass this queue
-+	 * as drm_sched_init()'s @timeout_wq parameter. This will guarantee
-+	 * that timeout handlers are executed sequentially.
- 	 *
--	 * 1. Stop all schedulers impacted by the reset using drm_sched_stop()
--	 * 2. Try to gracefully stop non-faulty jobs on all queues impacted by
--	 *    the reset (optional)
--	 * 3. Issue a GPU reset on all faulty queues (driver-specific)
--	 * 4. Re-submit jobs on all schedulers impacted by the reset using
--	 *    drm_sched_resubmit_jobs()
--	 * 5. Restart all schedulers that were stopped in step #1 using
--	 *    drm_sched_start()
-+	 * Return: The scheduler's status, defined by &enum drm_gpu_sched_stat
- 	 *
--	 * Return DRM_GPU_SCHED_STAT_NOMINAL, when all is normal,
--	 * and the underlying driver has started or completed recovery.
--	 *
--	 * Return DRM_GPU_SCHED_STAT_ENODEV, if the device is no longer
--	 * available, i.e. has been unplugged.
- 	 */
- 	enum drm_gpu_sched_stat (*timedout_job)(struct drm_sched_job *sched_job);
- 
+Three use-cases (Secure Video Playback, Trusted UI, and Secure Video
+Recording) has been identified so far to serve as examples of what can be
+expected. The use-cases has predefined DMA-heap names,
+"restricted,secure-video", "restricted,trusted-ui", and
+"restricted,secure-video-record". The backend driver registers restricted
+memory pools for the use-cases it supports.
+
+Each use-case has it's own restricted memory pool since different use-cases
+requires isolation from different parts of the system. A restricted memory
+pool can be based on a static carveout instantiated while probing the TEE
+backend driver, or dynamically allocated from CMA and made restricted as
+needed by the TEE.
+
+This can be tested on a RockPi 4B+ with the following steps:
+repo init -u https://github.com/jenswi-linaro/manifest.git -m rockpi4.xml \
+        -b prototype/sdp-v6
+repo sync -j8
+cd build
+make toolchains -j$(nproc)
+make all -j$(nproc)
+# Copy ../out/rockpi4.img to an SD card and boot the RockPi from that
+# Connect a monitor to the RockPi
+# login and at the prompt:
+gst-launch-1.0 videotestsrc ! \
+        aesenc key=1f9423681beb9a79215820f6bda73d0f \
+                iv=e9aa8e834d8d70b7e0d254ff670dd718 serialize-iv=true ! \
+        aesdec key=1f9423681beb9a79215820f6bda73d0f ! \
+        kmssink
+
+The aesdec module has been hacked to use an OP-TEE TA to decrypt the stream
+into restricted DMA-bufs which are consumed by the kmssink.
+
+The primitive QEMU tests from previous patch set can be tested on RockPi
+in the same way with:
+xtest --sdp-basic
+
+The primitive test are tested on QEMU with the following steps:
+repo init -u https://github.com/jenswi-linaro/manifest.git -m qemu_v8.xml \
+        -b prototype/sdp-v6
+repo sync -j8
+cd build
+make toolchains -j$(nproc)
+make SPMC_AT_EL=1 all -j$(nproc)
+make SPMC_AT_EL=1 run-only
+# login and at the prompt:
+xtest --sdp-basic
+
+The SPMC_AT_EL=1 parameter configures the build with FF-A and an SPMC at
+S-EL1 inside OP-TEE. The parameter can be changed into SPMC_AT_EL=n to test
+without FF-A using the original SMC ABI instead. Please remember to do
+%rm -rf ../trusted-firmware-a/build/qemu
+for TF-A to be rebuilt properly using the new configuration.
+
+https://optee.readthedocs.io/en/latest/building/prerequisites.html
+list dependencies needed to build the above.
+
+The tests are pretty basic, mostly checking that a Trusted Application in
+the secure world can access and manipulate the memory. There are also some
+negative tests for out of bounds buffers etc.
+
+Thanks,
+Jens
+
+Changes since V5:
+* Removing "tee: add restricted memory allocation" and
+  "tee: add TEE_IOC_RSTMEM_FD_INFO"
+* Adding "tee: implement restricted DMA-heap",
+  "tee: new ioctl to a register tee_shm from a dmabuf file descriptor",
+  "tee: add tee_shm_alloc_cma_phys_mem()",
+  "optee: pass parent device to tee_device_alloc()", and
+  "tee: tee_device_alloc(): copy dma_mask from parent device"
+* The two TEE driver OPs "rstmem_alloc()" and "rstmem_free()" are replaced
+  with a struct tee_rstmem_pool abstraction.
+* Replaced the the TEE_IOC_RSTMEM_ALLOC user space API with the DMA-heap API
+
+Changes since V4:
+* Adding the patch "tee: add TEE_IOC_RSTMEM_FD_INFO" needed by the
+  GStreamer demo
+* Removing the dummy CPU access and mmap functions from the dma_buf_ops
+* Fixing a compile error in "optee: FF-A: dynamic restricted memory allocation"
+  reported by kernel test robot <lkp@intel.com>
+
+Changes since V3:
+* Make the use_case and flags field in struct tee_shm u32's instead of
+  u16's
+* Add more description for TEE_IOC_RSTMEM_ALLOC in the header file
+* Import namespace DMA_BUF in module tee, reported by lkp@intel.com
+* Added a note in the commit message for "optee: account for direction
+  while converting parameters" why it's needed
+* Factor out dynamic restricted memory allocation from
+  "optee: support restricted memory allocation" into two new commits
+  "optee: FF-A: dynamic restricted memory allocation" and
+  "optee: smc abi: dynamic restricted memory allocation"
+* Guard CMA usage with #ifdef CONFIG_CMA, effectively disabling dynamic
+  restricted memory allocate if CMA isn't configured
+
+Changes since the V2 RFC:
+* Based on v6.12
+* Replaced the flags for SVP and Trusted UID memory with a u32 field with
+  unique id for each use case
+* Added dynamic allocation of restricted memory pools
+* Added OP-TEE ABI both with and without FF-A for dynamic restricted memory
+* Added support for FF-A with FFA_LEND
+
+Changes since the V1 RFC:
+* Based on v6.11
+* Complete rewrite, replacing the restricted heap with TEE_IOC_RSTMEM_ALLOC
+
+Changes since Olivier's post [2]:
+* Based on Yong Wu's post [1] where much of dma-buf handling is done in
+  the generic restricted heap
+* Simplifications and cleanup
+* New commit message for "dma-buf: heaps: add Linaro restricted dmabuf heap
+  support"
+* Replaced the word "secure" with "restricted" where applicable
+
+Etienne Carriere (1):
+  tee: new ioctl to a register tee_shm from a dmabuf file descriptor
+
+Jens Wiklander (9):
+  tee: tee_device_alloc(): copy dma_mask from parent device
+  optee: pass parent device to tee_device_alloc()
+  optee: account for direction while converting parameters
+  optee: sync secure world ABI headers
+  tee: implement restricted DMA-heap
+  tee: add tee_shm_alloc_cma_phys_mem()
+  optee: support restricted memory allocation
+  optee: FF-A: dynamic restricted memory allocation
+  optee: smc abi: dynamic restricted memory allocation
+
+ drivers/tee/Makefile              |   1 +
+ drivers/tee/optee/Makefile        |   1 +
+ drivers/tee/optee/call.c          |  10 +-
+ drivers/tee/optee/core.c          |   1 +
+ drivers/tee/optee/ffa_abi.c       | 194 +++++++++++-
+ drivers/tee/optee/optee_ffa.h     |  27 +-
+ drivers/tee/optee/optee_msg.h     |  65 ++++-
+ drivers/tee/optee/optee_private.h |  55 +++-
+ drivers/tee/optee/optee_smc.h     |  71 ++++-
+ drivers/tee/optee/rpc.c           |  31 +-
+ drivers/tee/optee/rstmem.c        | 329 +++++++++++++++++++++
+ drivers/tee/optee/smc_abi.c       | 190 ++++++++++--
+ drivers/tee/tee_core.c            | 147 +++++++---
+ drivers/tee/tee_heap.c            | 470 ++++++++++++++++++++++++++++++
+ drivers/tee/tee_private.h         |   7 +
+ drivers/tee/tee_shm.c             | 199 ++++++++++++-
+ include/linux/tee_core.h          |  67 +++++
+ include/linux/tee_drv.h           |  10 +
+ include/uapi/linux/tee.h          |  29 ++
+ 19 files changed, 1781 insertions(+), 123 deletions(-)
+ create mode 100644 drivers/tee/optee/rstmem.c
+ create mode 100644 drivers/tee/tee_heap.c
+
+
+base-commit: 7eb172143d5508b4da468ed59ee857c6e5e01da6
 -- 
-2.48.1
+2.43.0
 
