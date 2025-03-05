@@ -1,130 +1,139 @@
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35B4C151992
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 16:50:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F2B0151992;
+	Wed,  5 Mar 2025 16:52:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741193449; cv=none; b=ZJOJTv+bsNqE5ebhVg2vv3d5DIUjEy8bStwdAg7rLmKIOczu3IWybh/q4yjyrgeuBrZte4fuBHcJrZ3BaJX8aAzU25LfuaKgQWjRbMC/v0c5On67mkTikBB7UualFjHU619cfZAjWF/ulBh5DsxGOfCu/NdqhDJzDam6cUTmZgU=
+	t=1741193538; cv=none; b=WK/L02wfSlmSN94FoewaVhqDIfL475co5s+yYkGJU93G+QgPUX+LTxZoNkiYGW5ZycfmEKgbIU5vNTU+tUZTdz4gvtDOADPvSUmWqzyzb3hc0nHF3s5UTuu5Liul4XZMB77YiyaCRWRCLsRYsPTz6M2J8qjNcUHk9t2OWa7zEt4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741193449; c=relaxed/simple;
-	bh=ES3B4ydqeVIBq5AhSYvRXGBPwvfrSwoyy7i06aA6QKY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Nr0mGVYzxqFXxSmNM3ff4vRB9C5qKVZhX4IAawxkHgWqYkWmwG+ISbXfGAKQLu87cJqJ30UZ2RxEkWbZ68n+1fdMrOQ0ZCaq83Rnuyvr1NDSUVqaKUZFH/4fWQqTL918HBcuGWuDYr9TUYyDASyCFfwZ3NjqLBGJDt6NtRoPpSw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=XAG77zRq; arc=none smtp.client-ip=209.85.218.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1741193538; c=relaxed/simple;
+	bh=YTnJljWItT/TZiEZ+iXZU1PBs+E2Gtx+J6Pg8f6NAKA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=iuFBM1LpgVkwi92et+ZwbAPnVI4zYWzNnRCvpEKZZ96ujl6JycGb7fqqwo4NvqDVL4NkqfavP1Kkb6RHnuqUFgq+4Bdip14xqWRWmt7OjydQyuhTeDad1Vmg1z/FYkjgsGvlrTkF6rlzd1k74pMs4ftYozdWwxWScuUisPkeijs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jeVR+l4P; arc=none smtp.client-ip=209.85.208.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="XAG77zRq"
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-abf42913e95so786907766b.2
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Mar 2025 08:50:46 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jeVR+l4P"
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5e53b3fa7daso6231888a12.2;
+        Wed, 05 Mar 2025 08:52:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1741193445; x=1741798245; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=IKNxmurIaMvHrB/Je+WV/izNtxkUNd8xxxAxHkdSWn8=;
-        b=XAG77zRqi256ZBkkXBYBfb/abAuN+FNRLaOlpX75xeI7b34GBRPTs55FqcWL6O9bqx
-         JDiD00ps+LuIGYKBP37lmGW91/fj9OadGfvI/rWBAjy5LGp1N/waXNQT8BvmPsBLBfYB
-         Jc1/No4VHJCmOfMPEykiPj+gG5jgsPOvLTGsg=
+        d=gmail.com; s=20230601; t=1741193535; x=1741798335; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=TN7dJ7nISnXyySEUqU25KmhCCTIJAKDIXS/YmlH1ZlU=;
+        b=jeVR+l4Pe6MBW4Pe6EDvz+n8DUHy/OhPYfDV3ju876P+P2uI949mbqpmOoa4H8H5kz
+         7SRKDkS/7vK5CAi6co/u6U0op4rcRDzRP3QMnkdUmqnCF+SIzZ7SOzHmRXQPtqx1TVrm
+         J21iasyNHCOEpiKjSqAjYdwIBpXjKyRWITXhhp8XFk6oXx8d4V7DVkpo8YtubbsoBX8N
+         EBh9oqCwclF13itI3cpUPSJcVASHIMfbu0rD4hxxGRtv92B65Px6G4f3Fm4dvSeR/Dxx
+         UPflyE3uDx5iYw2t4HCAZ5Zc9NQoZn0SGFRq1NzXQLv5OwFlTAB/QDNG2DG2zPNfX7ye
+         vong==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741193445; x=1741798245;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=IKNxmurIaMvHrB/Je+WV/izNtxkUNd8xxxAxHkdSWn8=;
-        b=TesEv7P2xyNpiId9ILJXkrlNBItJ5YWr4jUf13Z2RyFEX2XRrgaNQQW2O9KF8q+WRd
-         g3QCqWY9lWCnaSjSLy+qmNsxmBkG9WETrkABoXFU+YN/7p7WmqT18jFHTuDgFiu3/iG9
-         cDwdZ8bDEfUUYuEJYrSvG4aDV8fBndT1h0/hSHu9lNm4AufHFibBC3dKlqvc029B++V+
-         I+3jSPMPjT8U0vCAqxA3KnXB3BSlI0/ksXH6e/WNAOjarooFdctljRHwI3hkMVF6rmFJ
-         YVProSKTZ9pq03vnsAaASFbHmeMAhtFHGnZLflDgQtwow0m8VRfKQK8CCXhMAvU5PYoc
-         0bEg==
-X-Forwarded-Encrypted: i=1; AJvYcCWxVDSJmQRn639/S1IQLhNaXpaz6JG3b81pZfAuA3O9SEk5dYYpsqzvFyc/RAlInjemC6hIfbaTW9OQxcE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyUSzY1EfopYcmgeEuG3/0Hdy0x7v9Vdtxe8aRFJ8stk9cJAn4G
-	L3GDgdnvpTMR22hZqLHPzBfHg6ghjaTg1xiR5AFo1mKJifLRZV+R2eka/PgTg1qUhvrB3Nn3WfP
-	/7foFGw==
-X-Gm-Gg: ASbGncspZBx7TOAQpHUfPod/dU7v2KK2i4Zc+UH4oq4fCo+dXcBqr3WnHCx5lG3kNLG
-	s60uCmCJTCjoke+/8ecCRPTwwJ//CM5bNKMpGsCMJQ5SYO0ta+D6bMv/saEQ10ifpj2D1cc/Ou/
-	v4VFhiApzLBOeUGGcnb54tr3jG5dmGuOMffCsoM3A5fJPkrctG5yQ1Y62gsqI125ziyJUdrv2rA
-	yoCJ6oXETGY03iKvnttFOE7YtLAWjQwKC6jCqlrgNrRG/MfA964iaNphADEYLHvIRaR2V7vHKkn
-	2KA2pql2XHguWU+4IRLrGv4JIeUtIiKWl/qA76Xjy2fSzLHuwX5+MKl8NDEqSePqRmGNFgobQ+B
-	/o3dIeFOJ2lFkM5kNA8s=
-X-Google-Smtp-Source: AGHT+IGmDphLvI1T8GpCvIXYvDHYZO2VPJO6uuNL21qt0W0velrmzhsXL8Xjac4nz1HIRTs2A4mnSw==
-X-Received: by 2002:a17:907:7245:b0:abf:5fe7:40db with SMTP id a640c23a62f3a-ac20da540b4mr382844466b.31.1741193444980;
-        Wed, 05 Mar 2025 08:50:44 -0800 (PST)
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com. [209.85.218.48])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abf3a8e2f53sm941138266b.115.2025.03.05.08.50.44
-        for <linux-kernel@vger.kernel.org>
+        d=1e100.net; s=20230601; t=1741193535; x=1741798335;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=TN7dJ7nISnXyySEUqU25KmhCCTIJAKDIXS/YmlH1ZlU=;
+        b=r267j/IJqNQBnEUiwNS3oiJnAyVDhJSMEAWmligtXp+fKfMUaLXntXcZmBrjqFn2FQ
+         DcJa+L4LD90LFtM0JZT8fWRrwdb4TV3FJNhP/WDNTq9EftbFDvHBCjGpV0vbE3liovjL
+         2+/xZLJvhPmO+6Yw/XkuW6kcDc90DEdi6w/L+YkaTWoMIe+dJVWaGk1zka3Mec/qCF2M
+         2pHTAEFj/1vj6RruGQ64xZFVzanBb08Zh5nLkDBkI0KGnBIWlTd6Mwokrt8jURjt9edZ
+         2zffXg+KttHGeQXrbV6nCugH79PBl7W6b1IRZe1o+NWS0R3ZPwwc4wQvBInaJeyrV7bD
+         Xelg==
+X-Forwarded-Encrypted: i=1; AJvYcCVDdx7XN1WM0eNdCguL+ncUNQCezNhrl0NQNmhb4Veoa1LmuwvSjlJE73wD61/KGqxMonljhaI3paLW@vger.kernel.org, AJvYcCVlVa2xDfWVSuRmKBbJC1q3tWIS9YVNVdxEZ7/Ipu/uKnTwTwhcdk9AY0IXN/9kElIP8+1IoxdaYBhql9+z@vger.kernel.org
+X-Gm-Message-State: AOJu0YxbUEV9aLmFqSni4XQM2yuZMckAqoDAnl9Lcs15c08QwX0y0eA7
+	9OKCGfyVbA2SWkI/OCPl5vkD16hGWmQYJMusxI5ANuZS894E2YpK
+X-Gm-Gg: ASbGncs6OZ70lUgOqgNAMz0WDKzArPNec8M/U8nLhXbRRfZpseOU8EugGBd6FdaqF5l
+	ImS934gqUT1lHbTmkznuL1gDwPsHW1wi5K8jo6GAUqVr6yBQfDUSX5t6oJ6T2+RS4E35ubY2W0S
+	PGGJd5OikRhpzm2A50H4FC/2uKAvUaxKW7hurvTHZq3jEqQ8jKoErHiAvAtX/znZ1+qlqmplFOJ
+	HjmRjpGw7ICW26mP9pEEytzOakQ1rEmUkWZ6gaSww/0kLRTeExK+z5XTJzk+9O/6FO/04Bsrft3
+	jjhvfWL/Q2BWCmljuERds4+JBoMlnGDB4eSgRAtGpyqgXJkxKEdeQMute4t9eIP/2VAs0sx4INc
+	bBqXkV3j0PvOva8a1TtM=
+X-Google-Smtp-Source: AGHT+IGa33gWH8DfappKMWnwXtxakFLXNeMsVDV2sfglAO9PuEomgg6n3nyUhy0aaBLlS6tO2n4JYg==
+X-Received: by 2002:a05:6402:2356:b0:5dc:d10a:1be8 with SMTP id 4fb4d7f45d1cf-5e59f405bafmr4178199a12.19.1741193534946;
+        Wed, 05 Mar 2025 08:52:14 -0800 (PST)
+Received: from [192.168.50.244] (83.8.122.142.ipv4.supernova.orange.pl. [83.8.122.142])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5e5992d29e3sm1978178a12.31.2025.03.05.08.52.13
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 05 Mar 2025 08:50:44 -0800 (PST)
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ac1f5157c90so363198266b.0
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Mar 2025 08:50:44 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWO8KiGCy1tPPJKhRXdc668GD5iNbzyt3HtJWQ89UdoQlLbqgQYli5uIbg5X7GPWUVFkvrTJSBjt2i+U04=@vger.kernel.org
-X-Received: by 2002:a17:907:7b87:b0:abf:6b14:6cf0 with SMTP id
- a640c23a62f3a-ac20d97e7e8mr378423166b.12.1741193443692; Wed, 05 Mar 2025
- 08:50:43 -0800 (PST)
+        Wed, 05 Mar 2025 08:52:13 -0800 (PST)
+Message-ID: <51cefa7f-df05-49d4-9006-59ed216915a4@gmail.com>
+Date: Wed, 5 Mar 2025 17:52:12 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250228143049.GA17761@redhat.com> <20250228163347.GB17761@redhat.com>
- <03a1f4af-47e0-459d-b2bf-9f65536fc2ab@amd.com> <CAGudoHHA7uAVUmBWMy4L50DXb4uhi72iU+nHad=Soy17Xvf8yw@mail.gmail.com>
- <CAGudoHE_M2MUOpqhYXHtGvvWAL4Z7=u36dcs0jh3PxCDwqMf+w@mail.gmail.com>
- <741fe214-d534-4484-9cf3-122aabe6281e@amd.com> <3jnnhipk2at3f7r23qb7fvznqg6dqw4rfrhajc7h6j2nu7twi2@wc3g5sdlfewt>
- <CAHk-=whuLzj37umjCN9CEgOrZkOL=bQPFWA36cpb24Mnm3mgBw@mail.gmail.com>
- <CAGudoHG2PuhHte91BqrnZi0VbhLBfZVsrFYmYDVrmx4gaLUX3A@mail.gmail.com>
- <CAHk-=whVfFhEq=Hw4boXXqpnKxPz96TguTU5OfnKtCXo0hWgVw@mail.gmail.com>
- <20250303202735.GD9870@redhat.com> <CAHk-=wiA-7pdaQm2nV0iv-fihyhWX-=KjZwQTHNKoDqid46F0w@mail.gmail.com>
- <87h6475w9q.fsf@prevas.dk>
-In-Reply-To: <87h6475w9q.fsf@prevas.dk>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Wed, 5 Mar 2025 06:50:26 -1000
-X-Gmail-Original-Message-ID: <CAHk-=wh6Ra8=dBUTo1vKT5Wao1hFq3+2x1mDwmBcVx2Ahp_rag@mail.gmail.com>
-X-Gm-Features: AQ5f1JpWO33IMmOwg7UfUdLzDWyAOlX4zxQSS4AWUM-aJeee9tnDsKOQREulDIo
-Message-ID: <CAHk-=wh6Ra8=dBUTo1vKT5Wao1hFq3+2x1mDwmBcVx2Ahp_rag@mail.gmail.com>
-Subject: Re: [PATCH] pipe_read: don't wake up the writer if the pipe is still full
-To: Rasmus Villemoes <ravi@prevas.dk>
-Cc: Oleg Nesterov <oleg@redhat.com>, Mateusz Guzik <mjguzik@gmail.com>, 
-	K Prateek Nayak <kprateek.nayak@amd.com>, "Sapkal, Swapnil" <swapnil.sapkal@amd.com>, 
-	Manfred Spraul <manfred@colorfullife.com>, Christian Brauner <brauner@kernel.org>, 
-	David Howells <dhowells@redhat.com>, WangYuli <wangyuli@uniontech.com>, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	"Shenoy, Gautham Ranjal" <gautham.shenoy@amd.com>, Neeraj.Upadhyay@amd.com, Ananth.narayan@amd.com, 
-	Matthew Wilcox <willy@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 02/10] dt-bindings: mfd: brcm,bcm59056: Add compatible
+ for BCM59054
+To: Rob Herring <robh@kernel.org>
+Cc: Lee Jones <lee@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
+ Mark Brown <broonie@kernel.org>,
+ Florian Fainelli <florian.fainelli@broadcom.com>, Ray Jui
+ <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
+ Broadcom internal kernel review list
+ <bcm-kernel-feedback-list@broadcom.com>,
+ Stanislav Jakubek <stano.jakubek@gmail.com>, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ ~postmarketos/upstreaming@lists.sr.ht
+References: <20250304-bcm59054-v6-0-ae8302358443@gmail.com>
+ <20250304-bcm59054-v6-2-ae8302358443@gmail.com>
+ <20250304141933.GA2543583-robh@kernel.org>
+From: Artur Weber <aweber.kernel@gmail.com>
+Content-Language: en-US
+In-Reply-To: <20250304141933.GA2543583-robh@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, 5 Mar 2025 at 05:31, Rasmus Villemoes <ravi@prevas.dk> wrote:
->
-> On Mon, Mar 03 2025, Linus Torvalds <torvalds@linux-foundation.org> wrote:
->
-> > +/*
-> > + * We have to declare this outside 'struct pipe_inode_info',
-> > + * but then we can't use 'union pipe_index' for an anonymous
-> > + * union, so we end up having to duplicate this declaration
-> > + * below. Annoying.
-> > + */
-> > +union pipe_index {
-> > +     unsigned long head_tail;
-> > +     struct {
-> > +             pipe_index_t head;
-> > +             pipe_index_t tail;
-> > +     };
-> > +};
-> > +
->
-> -fms-extensions ? Willy wanted to add that for use in mm/ some years ago
-> [*], and it has come up a few other times as well.
->
-> [*] https://lore.kernel.org/lkml/20180419152817.GD25406@bombadil.infradead.org/
+On 4.03.2025 15:19, Rob Herring wrote:
+> On Tue, Mar 04, 2025 at 07:20:33AM +0100, Artur Weber wrote:
+>> The BCM59054 MFD is fairly similar to the BCM59056, and will use
+>> the same driver. Add compatible and specify the allowed regulator
+>> nodes.
+>>
+>> Signed-off-by: Artur Weber <aweber.kernel@gmail.com>
+>> ...
+> And drop the allOf below.
+> 
+>>   
+>>   required:
+>>     - compatible
+>> @@ -30,6 +31,27 @@ required:
+>>   
+>>   additionalProperties: false
+>>   
+>> +allOf:
+>> +  - if:
+>> +      properties:
+>> +        compatible:
+>> +          contains:
+>> +            const: brcm,bcm59054
+>> +    then:
+>> +      properties:
+>> +        regulators:
+>> +          $ref: /schemas/regulator/brcm,bcm59054.yaml#
+>> +
+>> +  - if:
+>> +      properties:
+>> +        compatible:
+>> +          contains:
+>> +            const: brcm,bcm59056
+>> +    then:
+>> +      properties:
+>> +        regulators:
+>> +          $ref: /schemas/regulator/brcm,bcm59056.yaml#
+>> +
+>>   examples:
+>>     - |
+>>       #include <dt-bindings/interrupt-controller/arm-gic.h>
 
-Oh, I was unaware of that extension, and yes, it would have been
-lovely here, avoiding that duplicate union declaration.
+"Drop the allOf" as in, drop just the "allOf" line or the entire block
+with "if" statements? If it's the latter - wouldn't that break the
+bindings for the "regulators" subnode?
 
-But it does require clang support - I see that clang has a
-'-fms-extensions' as well, so it's presumably there.
-
-I don't know if it's worth it for the (small handful) of cases we'd
-have in the kernel, but it does seem useful.
-
-                 Linus
+Best regards
+Artur
