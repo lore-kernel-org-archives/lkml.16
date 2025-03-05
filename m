@@ -1,233 +1,200 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7015A204694
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 10:49:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.9
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741171747; cv=fail; b=ek4YjPFrWPEo20n27/FZ2XP0RixjLGkfa0FJz4lfkAeFYSpGHJzCUvKiQGs+lpvBNJ0QLC80x97GFw7A9s3rKO3ykPTkOZJZdEq0PZ4fMp2T4VmIQxbhQCDybw86aBhUR0nLa08Ot5V1spHl6ICC0uDI65OXz+yaCHhX6C93qu0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741171747; c=relaxed/simple;
-	bh=fqbbBAGrRQjqz46EESftVyE1bp/jTmnrSMJFyQNYG8s=;
-	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=YS7Vq05Ct/y08acc/o6U9EfONiNZlGY7F+FjlhO2VNuvniez2zHaHG55qlcCm+k75b5yb8S+75XgA2yE+WTtjfJQ+4cn7azFn/jRHoGD9TNRK4Fodigxw6uzzzJ4ZQGNJWMeccfxY6FTiLl37gqeeD0IJe+orYuGwIYmlXwzigg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ldT3oIAH; arc=fail smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44A461E505;
+	Wed,  5 Mar 2025 10:49:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741171792; cv=none; b=cAOBBoKWuwuKphHkEAbogjvcXvpMcwFku8cZ3uL8/SvOLVCqgIuionGxe0CXC9ODZiljuGPDLNLd7vKbJJ2cOcssF0CccOFW2pT+gI5ZpYN4O+2RGsGaxziZlTLkeEBe9h3uAsshjIlD4l2R1xg0wN97H8qTW3MuokmJIKJu3y8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741171792; c=relaxed/simple;
+	bh=wgTlAmCGnVX91xFXCJyKBsX4ZXpvOeTLGhXPWzgA7qE=;
+	h=Content-Type:MIME-Version:In-Reply-To:References:Subject:From:Cc:
+	 To:Date:Message-ID; b=b3KYX6z0oddwv+Lx1h5ErtxJ/e4rTaamyU/LlnBsSgMWgivjBr7iUzj5tJQDiWhqSUDIbcfcHyDTPf6KTe/NW4GP+Vwr35A1jqwbfGrqch+7dQnpRuk0BvlLkqP1/ixZELFcpiF5qBcWp6iB5NhJXTRtaXh/b1LKRDncRbNZVJ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=gYhobCx2; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ldT3oIAH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741171745; x=1772707745;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=fqbbBAGrRQjqz46EESftVyE1bp/jTmnrSMJFyQNYG8s=;
-  b=ldT3oIAHZOOpeykZJgmbx/nfj7XoFADpL2AuokFS8lqAJzB18C6mznib
-   H7/Ngixr+dFz8OGPH4D8+WRWwHqpzVCKw+W5J8QyROElAYxDmrMxEfBL6
-   M7/XqCcjyG6cGh1rIcSDwy6I6XEIFtoxh9fq8YaPpFNaTUDdwv3OC1y4F
-   htOqqVTsVdlScdzO1CSvA8AXbrj5i0n7y9Gujy42Gyk/DdIFpldyyxbXx
-   4AlOJeurbED+RgG96Bba0alF86rrP3nfGAO5ZCs7CyN/VK32eRzCR+ytb
-   U+VBuRFg6lca5Or+51lnThB1Vb/GT74Wzs7dtrRRCv7cbRzGn9dpDkzWW
-   A==;
-X-CSE-ConnectionGUID: bNBxhfBWQaOkjVlDvgFBUQ==
-X-CSE-MsgGUID: 6kz7ekiaTRiBEtbt3BjEVg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11363"; a="64569561"
-X-IronPort-AV: E=Sophos;i="6.14,222,1736841600"; 
-   d="scan'208";a="64569561"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Mar 2025 02:49:01 -0800
-X-CSE-ConnectionGUID: vnx7LOuuTPaiZfUN4TFYQg==
-X-CSE-MsgGUID: rHhIhCmqR7qwwSM4FybTXA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,222,1736841600"; 
-   d="scan'208";a="123751149"
-Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
-  by fmviesa004.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Mar 2025 02:49:00 -0800
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14; Wed, 5 Mar 2025 02:48:59 -0800
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14 via Frontend Transport; Wed, 5 Mar 2025 02:48:59 -0800
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.168)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Wed, 5 Mar 2025 02:48:59 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=br3zYsYvvd/qfNPaqGpw4zvBrngkD0Vzc3C+jWigT3frKOtZ4b0S3TCrWxpBvRmI+69Wist5Oa3NAidgu0BnrNJHr8y8egPLwjRrwg5cY/ZFO8Iaidyjt0fDHlqmGi6Mg953utsGZO70BodprkAXSsy3Hsp4iQ81SXzz1xjSnsypwORLDJ2JIbd/5bTT40fHnrmOteLpfAtDq+26QqMx6qbCrvXTPoKjXvO/WYOWUCsto0M2mu900qlg26dQ/ELB4X8QDLLK818ixLmuOB1UO/4LF89JvRsycNJ8TV0qaQRo/5IAiyK3kZbQrEn1cEBd32xltMlo30uLcU2uYMJfxg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=78DE2yhkph1Z7d79yNQnmwi+h2MEiV+EhhHb9qcShYo=;
- b=bZNkoHUkMjAVBW+IhU9YBcrNyhCNDg1ujW1Rtg1nlpE6yhRZWAUoJ8eYFR6zkGZOmGrpfVduKTrXUi0K9XXBixAKd4YQ72kojK/nL5f6ZW1slWi+cNCJ+HlFV59SJiaq59zxJOEQQQPaLwrK/rOAuTa/85S/JekXSlCx1uYEMrGvE8DnAKgFd86WprClpQgFrJaS6B7CrsYFS5RFoLCbB7/XnSstatLdzzzYrdYZOrrUGzdXP1Uzc5DvjUIsMdzbTYxiaq/D/7rfjpLyQFcRG6/JyJ17ZVn7TNC/FINtqNzIFL2Y8k5vzCj2HbChu8cb+PwhQRhiuApNTHSGs6TMlA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from DM4PR11MB5549.namprd11.prod.outlook.com (2603:10b6:5:388::7) by
- MW4PR11MB6570.namprd11.prod.outlook.com (2603:10b6:303:1e3::6) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8511.16; Wed, 5 Mar 2025 10:48:57 +0000
-Received: from DM4PR11MB5549.namprd11.prod.outlook.com
- ([fe80::6c31:ab8a:d70:2555]) by DM4PR11MB5549.namprd11.prod.outlook.com
- ([fe80::6c31:ab8a:d70:2555%4]) with mapi id 15.20.8511.017; Wed, 5 Mar 2025
- 10:48:57 +0000
-Message-ID: <dc139f06-3f5a-4216-93c2-1e8b3b9c27ba@intel.com>
-Date: Wed, 5 Mar 2025 12:48:52 +0200
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/1] MAINTAINERS: Change habanalabs maintainer
-To: Ofir Bitton <obitton@habana.ai>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "airlied@gmail.com" <airlied@gmail.com>,
-	"daniel@ffwll.ch" <daniel@ffwll.ch>, "gregkh@linuxfoundation.org"
-	<gregkh@linuxfoundation.org>, "dri-devel@lists.freedesktop.org"
-	<dri-devel@lists.freedesktop.org>, "sfr@canb.auug.org.au"
-	<sfr@canb.auug.org.au>
-CC: "jgg@nvidia.com" <jgg@nvidia.com>, <koby.elbaz@intel.com>,
-	<konstantin.sinyuk@intel.com>
-References: <20240729121718.540489-1-obitton@habana.ai>
- <20240729121718.540489-2-obitton@habana.ai>
-Content-Language: en-US
-From: "Avizrat, Yaron" <yaron.avizrat@intel.com>
-In-Reply-To: <20240729121718.540489-2-obitton@habana.ai>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: TL2P290CA0023.ISRP290.PROD.OUTLOOK.COM
- (2603:1096:950:3::12) To DM4PR11MB5549.namprd11.prod.outlook.com
- (2603:10b6:5:388::7)
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="gYhobCx2"
+Received: from pendragon.ideasonboard.com (cpc89244-aztw30-2-0-cust6594.18-1.cable.virginm.net [86.31.185.195])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id ABFEB605;
+	Wed,  5 Mar 2025 11:48:16 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1741171696;
+	bh=wgTlAmCGnVX91xFXCJyKBsX4ZXpvOeTLGhXPWzgA7qE=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+	b=gYhobCx20jKM3XQ4vOP0xodleyxT41oczpL9V3No0fcJuyuYVzwVV0YRzyFmYHcbW
+	 5pH6xDL0ScGvr32813VzeNhkkSllMZM4N4nbAEmbcSx6topvw1T/hIYoqZK/1GXODB
+	 17MAZ37JiDdOFTKce1+9nt6dPwb//j5+G+5UdPTU=
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR11MB5549:EE_|MW4PR11MB6570:EE_
-X-MS-Office365-Filtering-Correlation-Id: 572a1991-dcef-4247-1109-08dd5bd3546c
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024|7053199007;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?cmVYa0tpOUNFb1p0bkVRYlB2STlHbSs2bEYyTWVqT2lnRFE2V3RpNHg0RUtv?=
- =?utf-8?B?UEtKVkp1S0t3VmxmM3paS0RkVyt3R2VaN3ZPS3h3aEMydUVQRWVSZFpYeFJB?=
- =?utf-8?B?Y3BQMDJBTms2TFVjVVJjc200WHRnQXFuMDN3aEVBL1p5dXJsbXkrQkF5SFhs?=
- =?utf-8?B?SENDVklaK0NiMGJ5Q1lXdHo2QnNsZytmR2lYb3Rsd1haN0NlODdIOCttL01N?=
- =?utf-8?B?dnJrS1ZodEljMVRxc0Z6WkxsbktIVVNXZWl6ZVJhQVRMWFZ3TVU1WHhVUkpV?=
- =?utf-8?B?emFoaTJydThoc2RVaGZUTXZjN2pQekxFMmdoRENPdWlpWkttZVg2SmZLeGU2?=
- =?utf-8?B?a2FPY24ra0tQUkhtcGpvZWpoWFdnNkFIYWVJZ1N5OE52WkhBSThGTmhEb3VO?=
- =?utf-8?B?LzZNcnUwcUpkVkVXbXBuT2d3aEZIa1Q0Rk5JWlZuWmFuZ3UzZXpqYWZiSTNK?=
- =?utf-8?B?enp5NEhoZE5nNnZvWmhSSDN3cmFkaVNuOWkwTTBJUzhXVVhVY2haUEgrdENj?=
- =?utf-8?B?cy9VdEp6QTkzSTQvREt3emt4TjRHQ3kxeTVNVjZaeFZJV1ZabHBTbjlMcVVT?=
- =?utf-8?B?WWR4SUg0RFlOU2tiVWZSYmRBV09NcVJmTURlRkR4amZyY0l0THFoVjJjZGk0?=
- =?utf-8?B?ZGVaeVRJNlVOQ25YMTFERWZXbWVDem9wd2NxbmVXR2MxS3FuWXljVXRyWk05?=
- =?utf-8?B?L09CWVhqUkJrWkNGQy9FMnBEL1E5QUZUbGpaVlhiWkcya1NQbXVEaHFyV3dE?=
- =?utf-8?B?RkN2VnViNXF0a1JYRVNmc0xWcXJ2T3dEeUZlYWdHSVg0RXUybjlybVlWYkw5?=
- =?utf-8?B?cXoxd2I0YlhpKzNIOWZMWGhkTHdBQnZzM1lOSEtkdTRUNG90Rnh6aUdCZ05K?=
- =?utf-8?B?L2NIWkREMkk4VEhCOFQrZTB3V1Z4bS9WYmZ4TGV2cFNEdk02NmNEYXQvSWd1?=
- =?utf-8?B?SkFhYWxZS09IeWJMa2hIV0I0R0g0M3FtMnp5TW80QmtzNWJiSGV1R1RvbHJh?=
- =?utf-8?B?Unk4QWwrWjVTNzBhVUJUTUJCZWo3SGlLWE5DVkxmZDRUWEtkUWIvMjMyVzZl?=
- =?utf-8?B?eGJveTJlc1MxZU0zQndlTjEyZE1LRHB5aExIS2FvUFBiNVhDdm5aSW5ieWJK?=
- =?utf-8?B?MWl4bTc0Y3Y5RnVEcUd0UWpwMEVjZzFRNEsrVXg0Y0EyZzFLWHpLbzJhaW8r?=
- =?utf-8?B?bFZuaFJDdm1iT01XL1laS3Z3Q0pMeVBIc2R2ellFL21QcE9TUllGQkoyRGlL?=
- =?utf-8?B?VVI0YlJhQlg5VUNEQU1GeE11UWQzRGV3L0NOWjVrTUtKcmJSQ2Z6MEk1eG5q?=
- =?utf-8?B?ZkhiZ3VybjhtcUt1dCtJQllCalpFY1pZS0hJang2M3E2WHNtT0tBa0NhQXZB?=
- =?utf-8?B?N0t0MHlpcWlRUkdPVDRDWWVFRGpIL2h3L2xlck5ENC9IV0pzcE1qejNJYjE0?=
- =?utf-8?B?cm8reUxxcllVVG9idkZhaU9RT3JxcFY1dllULzFJeDJrMnYwMFdDTXZJeWlt?=
- =?utf-8?B?eXg3QnZrSm9mRElMWlhGSWwwVWpMZElOUS9Gb3pBc1RaY1dHeEt6anhGclVG?=
- =?utf-8?B?bEtzWFdmVk5iRGNHTTZyVUhZbm9UR1owa0Jmd0RMOHpZOFoxK3R1VTdDWDJn?=
- =?utf-8?B?TjgxblZGc2tvaEt5VklJVGRuS0tMTUxMWHhpL0FIR0dGVGtkaHZEOWVJWnNQ?=
- =?utf-8?B?WW92cE1MdnpZYStuMFVWYjFkQTJ1azk5cGs2bS9JV0ZjWXhTdzJvcGM1c2Jp?=
- =?utf-8?B?TjFOS0xPN3VXbEVySldpM1dXa3phZ1hJU0JpODBEZG8xcHRCMEhzT3RWbmRO?=
- =?utf-8?B?dXJWQmQrbzlSa0gyR1QwQVFDaVdodG84ZzZ6L0R5bWd4ZCthbmVVMGd4Uk5m?=
- =?utf-8?Q?6EVt11F/nfvfK?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR11MB5549.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?VUtvTi8xck1FTDVOQWhkRmdiWDdQcEN0ODFJeTZ5Tjhoc013SVdDSlh6MmJZ?=
- =?utf-8?B?eDBMZjVtOXZ4Yms0ZFhkSXc3Yk4xYUdTeUUvazlENVBrejVxeWlQL2Nod2tl?=
- =?utf-8?B?L2lWeWVqVGdQaFBXL2c5K3MvUDhsM29vcXA2L053bWcweWRhWHdGNFMvQ2tv?=
- =?utf-8?B?NEJsMExMYTd4VDZGcmoxRVNLVzhPWDlHL1h6QXlEQStFdDUvdkRXdGo3eVpT?=
- =?utf-8?B?azBqNjJpdlNOQmVqc3lzdW4rSkNQdFRQZnozdTVWVGJxdk1hOU9WNTVXWU9N?=
- =?utf-8?B?WEtsQVVRazY3dG9LNlpOeUY4QUZkSjJEQnlabDJ2OHkvNW5aN0VsYjVka3By?=
- =?utf-8?B?aWw2bGJKMEo1ZzBCcUthdXRIVmc1VjFZaG80Q3V5RlJENGF1d2hnS2FETEZJ?=
- =?utf-8?B?eGtUMGJYYm1weWJ3dXpoUFltb0RMdmJOQXVlRy9PK0FaRFVOK2VEenhhZnZL?=
- =?utf-8?B?eGJaZE9Ra2RadGlTWmlzUGFuOW1uRkJReDZRZlMvbGFWWE1BVzBUbnRERHRK?=
- =?utf-8?B?NFJqc0NpbG1hTHlaaXRvbEM5SG16OHZiUnYxYzdoMCtvMFYyU0FJVklSTkVY?=
- =?utf-8?B?SldOL05vMDZQempPMTMvbWFiY1Vwd0VIT3RXd3NZSUkyQUM5M2FnY1ZSTzBy?=
- =?utf-8?B?VHFnWWlRTmpvUjcwWkRrV0ZxZWxsa2ZTbmtSRjJ4Z21kOURJZnFDdENEZWZX?=
- =?utf-8?B?b2dVNy9wOXp5a1NkSEQ3cEpMT2JzNGtleG9wcXQrTmFBSmh1NnNlWTM0YW9D?=
- =?utf-8?B?ZVByOSswbmw5VUFYb0svNG5yZlNMYktFZnNpM1lDNHFlRmlKNjYyZUx2c2Zr?=
- =?utf-8?B?TUwxTHRHc05OUDVKR2k5RDJoRGtzZXFMVUc3MktrUHF2R1ZOSUlPQjVJYlNE?=
- =?utf-8?B?NG9QaVc5d3F5K0YwLzBELzRhR1NLQU1zQkZzRStmVHFqcmJoN3JvK05IVmcw?=
- =?utf-8?B?SVFBczRlcTJCbDdYN0dyeDBPMU9XUmxzdkV6bmtZUS90K3N0dVV4TXhROFZh?=
- =?utf-8?B?SWRzMEtnYllteG1JUkt6TWpSTFJlc1FiRXNnVEhET2o1U0FmTlRkcUpNblZS?=
- =?utf-8?B?UDhOZXM0SnJOVjdXVkhlNDV2UkFBbXRCb0gzaVoxTGFUK3lIeGRCQUg0ZFIv?=
- =?utf-8?B?QlFlWmlNanZVL1Z3R1lycW1uelAxZzEwdDFicHhIcWF2aXJycnI1ZmRLa1lx?=
- =?utf-8?B?bHYyTGZhRUFvMUxZWE5TNWhMcDhjMnc2NWJtUVNRd3h1QzVjbC9TM1QrKzBm?=
- =?utf-8?B?b0dHL25wSXByaVcwR0FUZnYzTGZIVnNPamc3RklPSWYxemkwUnUrM2tUQmtS?=
- =?utf-8?B?eWExTDNDcm9Wb05jTDVybHE1S21nMDd6ZFVUbUdpaDN3M0EvSWhjYVRTTXNU?=
- =?utf-8?B?VHVoQVhzZ2RQalRZcDUreWRBelNvZlp5SnlpSXVFZUtwanFSL3RtVlY0RVMr?=
- =?utf-8?B?RGtvRlEwYW1IdjBkM0hpYzM5ZjV1YVU5U2tvNmUrVlFqbWNNbE8vRW81UzJp?=
- =?utf-8?B?bDYvSld3cDFVTVM2WWpmM3ROVXhuYmdDWFk0dWFyMER3d295cjYrOTk0Vksv?=
- =?utf-8?B?RVZ0MG5naklaa1ZQbmhKS3JDMmR5QTdQdDI0Q0ZMdXFvT3pGUVlpQkgzSGM5?=
- =?utf-8?B?bnU2MjhXYVpYZzdZam8yRDhPcUlTTG5DQXFJNCtaVjVrRXc1cjJieVNKSEhy?=
- =?utf-8?B?dkhKR0xnM1BsTm9HbHdGQ3RIRkJ6MW96MXJ3a1lMY00vUU90OG1QbEZSOEY2?=
- =?utf-8?B?L25hRk5qcWpzTmpHTXZKTFZiV29nOTBIQUxuZDJVN1lmMS82dGxDTm9GcXdQ?=
- =?utf-8?B?bGxTN2M4MWgyLzdKdzg4TWM3eDh2WHVhOXlEdlVBeXAxaU13aHZ4WTkwajVG?=
- =?utf-8?B?WDd2MVl0aUlCVWQwTk1nbWxGY3BpeFZYeGxTTW9WWi9RQ1pQMnlINGxxMDBu?=
- =?utf-8?B?S3YxZkQvUDdnWnZNSm02QUYrOFBjdDg5anBVekdzZzA5eXdBeks1NlJVNnp0?=
- =?utf-8?B?SDFaZUllRGZES2d4SllzMjVmT1FDYm1jTnArbTVMUG1sNUladUx0V01tYmJx?=
- =?utf-8?B?eXA3U0ZueGo3OEwxTC9NTW8vWHB3Q1ZBNllaTTQ1cjhDbms1ekdnK3FLeDZp?=
- =?utf-8?B?WXdZZXdtOVBtbFVjRjVzTkZIRWErRlM5c3dHbHFpTmJJV01QU2tyZStsS29R?=
- =?utf-8?B?OHc9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 572a1991-dcef-4247-1109-08dd5bd3546c
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR11MB5549.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Mar 2025 10:48:57.1627
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: g+7/uWj30WXgptuKgVaCo+9JWeHjtd1g3M9UCxyhg4Lqrt0rkmXLgmJsxrr5ptbq+0F0vMo3x+FDemaqvMr2Jw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR11MB6570
-X-OriginatorOrg: intel.com
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <PN3P287MB182928F331D4494E423BA3158BCB2@PN3P287MB1829.INDP287.PROD.OUTLOOK.COM>
+References: <20250305051442.3716817-1-shravan.chippa@microchip.com> <20250305051442.3716817-5-shravan.chippa@microchip.com> <174116732611.2914008.9738053002324304147@ping.linuxembedded.co.uk> <PH0PR11MB5611988F18EF02394E983AA881CB2@PH0PR11MB5611.namprd11.prod.outlook.com> <PN3P287MB182928F331D4494E423BA3158BCB2@PN3P287MB1829.INDP287.PROD.OUTLOOK.COM>
+Subject: Re: [PATCH V7 4/4] media: i2c: imx334: add modes for 720p and 480p resolutions
+From: Kieran Bingham <kieran.bingham@ideasonboard.com>
+Cc: mchehab@kernel.org <mchehab@kernel.org>, linux-media@vger.kernel.org <linux-media@vger.kernel.org>, linux-kernel@vger.kernel.org <linux-kernel@vger.kernel.org>, Conor.Dooley@microchip.com <Conor.Dooley@microchip.com>, Valentina.FernandezAlanis@microchip.com <Valentina.FernandezAlanis@microchip.com>, Praveen.Kumar@microchip.com <Praveen.Kumar@microchip.com>, sakari.ailus@linux.intel.com <sakari.ailus@linux.intel.com>
+To:
+Date: Wed, 05 Mar 2025 10:49:46 +0000
+Message-ID: <174117178677.2914008.11448984679927360944@ping.linuxembedded.co.uk>
+User-Agent: alot/0.10
+
+Quoting Tarang Raval (2025-03-05 10:40:18)
+> Hi Kieran, Shravan
+>=20
+> > > -----Original Message-----
+> > > From: Kieran Bingham <kieran.bingham@ideasonboard.com>
+> > > Sent: Wednesday, March 5, 2025 3:05 PM
+> > > To: mchehab@kernel.org; sakari.ailus@linux.intel.com; shravan Chippa -
+> > > I35088 <Shravan.Chippa@microchip.com>
+> > > Cc: linux-media@vger.kernel.org; linux-kernel@vger.kernel.org; Conor =
+Dooley
+> > > - M52691 <Conor.Dooley@microchip.com>; Valentina Fernandez Alanis -
+> > > M63239 <Valentina.FernandezAlanis@microchip.com>; Praveen Kumar -
+> > > I30718 <Praveen.Kumar@microchip.com>; shravan Chippa - I35088
+> > > <Shravan.Chippa@microchip.com>
+> > > Subject: Re: [PATCH V7 4/4] media: i2c: imx334: add modes for 720p an=
+d 480p
+> > > resolutions
+> > >
+> > > EXTERNAL EMAIL: Do not click links or open attachments unless you kno=
+w the
+> > > content is safe
+> > >
+> > > Quoting shravan kumar (2025-03-05 05:14:42)
+> > > > From: Shravan Chippa <shravan.chippa@microchip.com>
+> > > >
+> > > > Added support for 1280x720@30 and 640x480@30 resolutions
+> > > >
+> > > > Signed-off-by: Shravan Chippa <shravan.chippa@microchip.com>
+> > > > ---
+> > > >=EF=BF=BD drivers/media/i2c/imx334.c | 66
+> > > > ++++++++++++++++++++++++++++++++++++++
+> > > >=EF=BF=BD 1 file changed, 66 insertions(+)
+> > > >
+> > > > diff --git a/drivers/media/i2c/imx334.c b/drivers/media/i2c/imx334.c
+> > > > index a7c0bd38c9b8..8cd1eecd0143 100644
+> > > > --- a/drivers/media/i2c/imx334.c
+> > > > +++ b/drivers/media/i2c/imx334.c
+> > > > @@ -314,6 +314,46 @@ static const struct imx334_reg
+> > > > common_mode_regs[] =3D {
+> > > >=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=
+=BF=BD {0x3002, 0x00},
+> > > >=EF=BF=BD };
+> > > >
+> > > > +/* Sensor mode registers for 640x480@30fps */ static const struct
+> > > > +imx334_reg mode_640x480_regs[] =3D {
+> > > > +=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD {0x302c, 0x=
+70},
+> > > > +=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD {0x302d, 0x=
+06},
+> > >
+> > > These two are a single 16 bit register HTRIMMING_START =3D 1648
+> > >
+> > > > +=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD {0x302e, 0x=
+80},
+> > > > +=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD {0x302f, 0x=
+02},
+> > >
+> > > These two are a single 16 bit register HNUM =3D 640
+> > >
+> > > > +=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD {0x3074, 0x=
+48},
+> > > > +=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD {0x3075, 0x=
+07},
+> > >
+> > > These two are a single 16 bit (well, 12 bit value) AREA3_ST_ADR_1 =3D=
+ 1864
+> > >
+> > > > +=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD {0x308e, 0x=
+49},
+> > > > +=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD {0x308f, 0x=
+07},
+> > >
+> > > These two are a single 16 bit register AREA3_ST_ADR_2 =3D 1865
+> > >
+> > > > +=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD {0x3076, 0x=
+e0},
+> > > > +=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD {0x3077, 0x=
+01},
+> > >
+> > > These two are a single 16 bit register AREA3_WIDTH_1 =3D 480
+> > >
+> > > > +=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD {0x3090, 0x=
+e0},
+> > > > +=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD {0x3091, 0x=
+01},
+> > >
+> > > These two are a single 16 bit register AREA3_WIDTH_2 =3D 480
+> > >
+> > > > +=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD {0x3308, 0x=
+e0},
+> > > > +=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD {0x3309, 0x=
+01},
+> > >
+> > > These two are a single 16 bit register Y_OUT_SIZE
+> > >
+> > > Don't you think
+> > >=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=
+=BD { Y_OUT_SIZE, 480 },
+> > >
+> > > Is so much more readable and easier to comprehend and maintain?
+> > >
+> > >
+> > > > +=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD {0x30d8, 0x=
+30},
+> > > > +=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD {0x30d9, 0x=
+0b},
+> > >
+> > > These two are a single 16 bit register UNREAD_ED_ADR =3D 2864
+> > >
+> > > > +};
+> > >
+> > > I'm still sad that we can all know the names of all these registers a=
+nd yet this
+> > > is writing new tables of hex values.
+> >
+> > Do you want me use call like bellow API with register names:
+> > CCI_REG16_LE(0x30d8);
+> > cci_write();
+> > cci_multi_reg_write();
+> > devm_cci_regmap_init_i2c();
+>=20
+> I have made a patch series for this sensor driver's improvement, in which=
+=20
+> I added the V4L2 CCI helper.
+>=20
+
+Has it been posted yet ?
+
+> I am just waiting for this patch series to be applied so I can send my=20
+> changes on top of it.
+
+If the conversion will happen after I'm fine with that - but it will
+need to be tested by someone with the hardware. Changing to CCI regs can
+have impacts that are hard to catch unless you really check and re-test
+the driver - so Shravan is best placed if he is actively working on the
+sensor.
+
+Personally - I would like to see the CCI conversion happen *first* and
+then Shravan's changes go on top of that ! It would be /far/ more
+reviewable and readable that way.
+
+(And we'd have more confidence that Shravan will have tested the full
+CCI implementation on that version).
+
+--
+Kieran
 
 
-On 29/07/2024 15:17, Ofir Bitton wrote:
-> I will be leaving Intel soon, Yaron Avizrat will take the role
-> of habanalabs driver maintainer.
->
-> Signed-off-by: Ofir Bitton <obitton@habana.ai>
-> ---
->  MAINTAINERS | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index ed2d2dbcec81..a4b36590061e 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -9599,7 +9599,7 @@ S:	Maintained
->  F:	block/partitions/efi.*
->  
->  HABANALABS PCI DRIVER
-> -M:	Ofir Bitton <obitton@habana.ai>
-> +M:	Yaron Avizrat <yaron.avizrat@intel.com>
->  L:	dri-devel@lists.freedesktop.org
->  S:	Supported
->  C:	irc://irc.oftc.net/dri-devel
-
-Acked-by: Yaron Avizrat <yaron.avizrat@intel.com>
-
-Apologies for the long silence — it’s been a challenging period with the Habanalabs-Intel merger, but we're back and ready to continue contributing.
-
-We'll be moving forward with our roadmap — upstreaming the latest HabanaLabs driver, including recent changes and full support for the entire GaudiX series.
-
-To support this effort, Koby Elbaz and Konstantin Sinyuk will join me as co-maintainers on a regular basis.
-
-Regards
-
-Yaron Avizrat
-
-
-
-
+>=20
+> However, if Shravan wants to make these changes on his own, I don=EF=BF=
+=BDt mind.
+>=20
+> Best Regards,
+> Tarang
