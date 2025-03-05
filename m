@@ -1,142 +1,85 @@
-Received: from out.smtpout.orange.fr (out-13.smtpout.orange.fr [193.252.22.13])
-	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3710024E01A
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 14:49:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.252.22.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C157F24EF60;
+	Wed,  5 Mar 2025 14:49:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741186174; cv=none; b=Ezla9qRtt8a4mpvqo7Gn/+O+SY2iFSrEbjfnM90ypZ1KeFjywbXqMIsmL9MsV8AT3xW7udWzw+EZEyxZVwUVtbmb26Tt9RV47NETSn/1iwzncgyCAHWJHCp5PXITvdKLl4VmPiA3Yf0j8SGGw+irQsJCiu/Z3v8RKCe0J9OjpLo=
+	t=1741186175; cv=none; b=sU8AooIxTPj1R9U6cdWEepxtdFU72qmMEAzMgiOzTBlOLuMbXSz5DwU1ABuPBQjClKu4GVxFhybnZTjWxeOWLW5/khG4RsWEmMYOZ8kbCkMzsvCIFMcHAqtnuTZYy9p6jmeNtyLV0fpsI65rDbBQeNaXvgIletZ6pV33Rm+RNeI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741186174; c=relaxed/simple;
-	bh=CdZEXDdmycGNnqgioi99HXlao+olh8It264ntQrW6VY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=t6Et1f+HQ3c27tiCeMi8LT5LfjzmG6DC319jNh1TsRMFdajjjlTUiua6QINQ+nWpf6FMjqCd60z4pD7FwPEwHUlQBnuNVbBUinVp5SlJiGiaPhR30c7I3AYq0roj0LZ2LwSG+nqsjfSPTucIuQgH3J4gHVu3RtdwFCGvUBwbvlw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=oQcqbkBE; arc=none smtp.client-ip=193.252.22.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1741186175; c=relaxed/simple;
+	bh=D84ci62grFcuJO70CerFjW0xkC4+IeGaiwJ4WHWUeUk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=embmpk/5aPjpaoPoAPQ8YJJHTGpKlZ3RHScG6qTixuyvzhL54sihu0NveAcCGq6Ub4pX+JrcdmTasGLJb+HaKAPuwtOA1E68QsLp755bAkW+P7o6wuPyS1eEdAVgTCpB/xX/5rt30VH2wHBtDW28YKrIOjGNWQlWHVHidg6cl+o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jlXYD95U; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="oQcqbkBE"
-Received: from [172.16.82.72] ([124.33.176.97])
-	by smtp.orange.fr with ESMTPA
-	id pq2dtPvcTgWbapq2htQk0O; Wed, 05 Mar 2025 15:48:22 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1741186102;
-	bh=3RcUUtJiVQIxZzOfKMrWa4tzRtxjWdXUh2HCxF6cfvM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From;
-	b=oQcqbkBEl+UgQi3Rr0ez6Ckv1SOIbEYh7API3Jf6hBUllX0xuBTJh6r8Cf9qGqd/u
-	 aS8Fbd2QKZImx/ILnJHSjpW3GuB9NAG/OfXXiNisriLhgcsNFE/4IRvuOjTL94XsAZ
-	 luNP+vlrQkN2DrSL2CD+alqysspVK2wC7QsaBEjY932I+CplGBHlr3218gx6GpEwya
-	 ilVUXKiOtsSoZ5cCeoH+VNzVZ5hJoo9ej6TMpHJoo9UVvvax9m4YrR8cgpD+8HHFBk
-	 FU6JChb2VY1Gc1e5vaf0op62DUYeL/yFOeG0gtOy4sQ7mlcq99zjgBTB60KkzqZKO+
-	 SKXWpnYX6mUnA==
-X-ME-Helo: [172.16.82.72]
-X-ME-Auth: bWFpbGhvbC52aW5jZW50QHdhbmFkb28uZnI=
-X-ME-Date: Wed, 05 Mar 2025 15:48:22 +0100
-X-ME-IP: 124.33.176.97
-Message-ID: <d7f3150d-0167-44be-90b2-17f8a050687c@wanadoo.fr>
-Date: Wed, 5 Mar 2025 23:48:10 +0900
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jlXYD95U"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B002FC4CEE2;
+	Wed,  5 Mar 2025 14:49:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741186175;
+	bh=D84ci62grFcuJO70CerFjW0xkC4+IeGaiwJ4WHWUeUk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=jlXYD95UtYNurBOZKb7cznBPK2Ow4UV4h8WGuk0pIvNT8xpqMzzyAFFzzodRE2QGq
+	 rPWIeyzOGSoilrex9Fqs9HFgGLuSn0DPB0xK/j7lPS240PsPTR9OiO1F/T7cKxczmO
+	 XPn+C4W0p9aZW7PBPYW2q5jzfU0KKV+sEZIxwN/eknFrJcUZNG/CBD42G3GWtUVE49
+	 FPkpinv0EFJFBpc3unSkvG6ySZ1UEYUZMjTsu96JGVCuNaxlgkL1iK0Iu1q/bLKv/T
+	 4tYXNGX1jbisd+KuiW/BauHUirM8tAxxEK/aP4U1RthJof5GEvN6cg/a4Ro26MwJjn
+	 ch7/fVAQWdbWQ==
+Date: Wed, 5 Mar 2025 15:49:30 +0100
+From: Joel Granados <joel.granados@kernel.org>
+To: cel@kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org, 
+	linux-scsi@vger.kernel.org, codalist@coda.cs.cmu.edu, linux-nfs@vger.kernel.org, 
+	nicolas.bouchinet@clip-os.org, Chuck Lever <chuck.lever@oracle.com>, 
+	Nicolas Bouchinet <nicolas.bouchinet@ssi.gouv.fr>, Clemens Ladisch <clemens@ladisch.de>, 
+	Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>, 
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, "Martin K. Petersen" <martin.petersen@oracle.com>, 
+	Jan Harkes <jaharkes@cs.cmu.edu>, Jeff Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>, 
+	Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, 
+	Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
+	Bart Van Assche <bvanassche@acm.org>, Zhu Yanjun <yanjun.zhu@linux.dev>, 
+	Al Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>
+Subject: Re: [PATCH v2 2/6] sysctl: Fixes nsm_local_state bounds
+Message-ID: <nh4mo25vhojzwf6djsocdmbylu4xrzlle3zoqoxvif3dobygoh@qkwjicufplpq>
+References: <20250224095826.16458-1-nicolas.bouchinet@clip-os.org>
+ <20250224095826.16458-3-nicolas.bouchinet@clip-os.org>
+ <174103811019.30862.13359233350686241870.b4-ty@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 4/8] bits: introduce fixed-type BIT
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Yury Norov <yury.norov@gmail.com>,
- Lucas De Marchi <lucas.demarchi@intel.com>,
- Rasmus Villemoes <linux@rasmusvillemoes.dk>,
- Jani Nikula <jani.nikula@linux.intel.com>,
- Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
- Rodrigo Vivi <rodrigo.vivi@intel.com>, Tvrtko Ursulin
- <tursulin@ursulin.net>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>, Andrew Morton <akpm@linux-foundation.org>,
- linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org,
- dri-devel@lists.freedesktop.org, Andi Shyti <andi.shyti@linux.intel.com>,
- David Laight <David.Laight@aculab.com>,
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
- Jani Nikula <jani.nikula@intel.com>
-References: <20250305-fixed-type-genmasks-v4-0-1873dcdf6723@wanadoo.fr>
- <20250305-fixed-type-genmasks-v4-4-1873dcdf6723@wanadoo.fr>
- <Z8hgqOB5Ym-GGykS@smile.fi.intel.com>
-Content-Language: en-US
-From: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
-Autocrypt: addr=mailhol.vincent@wanadoo.fr; keydata=
- xjMEZluomRYJKwYBBAHaRw8BAQdAf+/PnQvy9LCWNSJLbhc+AOUsR2cNVonvxhDk/KcW7FvN
- LFZpbmNlbnQgTWFpbGhvbCA8bWFpbGhvbC52aW5jZW50QHdhbmFkb28uZnI+wrIEExYKAFoC
- GwMFCQp/CJcFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AWIQTtj3AFdOZ/IOV06OKrX+uI
- bbuZwgUCZx41XhgYaGtwczovL2tleXMub3BlbnBncC5vcmcACgkQq1/riG27mcIYiwEAkgKK
- BJ+ANKwhTAAvL1XeApQ+2NNNEwFWzipVAGvTRigA+wUeyB3UQwZrwb7jsQuBXxhk3lL45HF5
- 8+y4bQCUCqYGzjgEZx4y8xIKKwYBBAGXVQEFAQEHQJrbYZzu0JG5w8gxE6EtQe6LmxKMqP6E
- yR33sA+BR9pLAwEIB8J+BBgWCgAmFiEE7Y9wBXTmfyDldOjiq1/riG27mcIFAmceMvMCGwwF
- CQPCZwAACgkQq1/riG27mcJU7QEA+LmpFhfQ1aij/L8VzsZwr/S44HCzcz5+jkxnVVQ5LZ4B
- ANOCpYEY+CYrld5XZvM8h2EntNnzxHHuhjfDOQ3MAkEK
-In-Reply-To: <Z8hgqOB5Ym-GGykS@smile.fi.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <174103811019.30862.13359233350686241870.b4-ty@oracle.com>
 
-On 05/03/2025 at 23:33, Andy Shevchenko wrote:
-> On Wed, Mar 05, 2025 at 10:00:16PM +0900, Vincent Mailhol via B4 Relay wrote:
->> From: Lucas De Marchi <lucas.demarchi@intel.com>
->>
->> Implement fixed-type BIT to help drivers add stricter checks, like was
+On Mon, Mar 03, 2025 at 04:42:17PM -0500, cel@kernel.org wrote:
+> From: Chuck Lever <chuck.lever@oracle.com>
 > 
-> Here and in the Subject I would use BIT_Uxx().
+> On Mon, 24 Feb 2025 10:58:17 +0100, nicolas.bouchinet@clip-os.org wrote:
+> > Bound nsm_local_state sysctl writings between SYSCTL_ZERO
+> > and SYSCTL_INT_MAX.
+> > 
+> > The proc_handler has thus been updated to proc_dointvec_minmax.
+> > 
+> > 
 > 
->> done for GENMASK().
+> Applied to nfsd-testing with modifications, thanks!
 > 
-> ...
+> [2/6] sysctl: Fixes nsm_local_state bounds
+>       commit: 8e6d33ea0159b39d670b7986324bd6135ee9d5f7
 > 
->> +/*
->> + * Fixed-type variants of BIT(), with additional checks like GENMASK_t(). The
-> 
-> GENMASK_t() is not a well named macro.
+> --
+> Chuck Lever
+Thx!
 
-Ack. I will rename to GENMASK_TYPE().
+@nicolas: remove this one from your next Version
 
->> + * following examples generate compiler warnings due to shift-count-overflow:
->> + *
->> + * - BIT_U8(8)
->> + * - BIT_U32(-1)
->> + * - BIT_U32(40)
->> + */
->> +#define BIT_INPUT_CHECK(type, b) \
->> +	BUILD_BUG_ON_ZERO(const_true((b) >= BITS_PER_TYPE(type)))
->> +
->> +#define BIT_U8(b) (BIT_INPUT_CHECK(u8, b) + (unsigned int)BIT(b))
->> +#define BIT_U16(b) (BIT_INPUT_CHECK(u16, b) + (unsigned int)BIT(b))
-> 
-> Why not u8 and u16? This inconsistency needs to be well justified.
+Best
 
-Because of the C integer promotion rules, if casted to u8 or u16, the
-expression will immediately become a signed integer as soon as it is get
-used. For example, if casted to u8
+-- 
 
-  BIT_U8(0) + BIT_U8(1)
-
-would be a signed integer. And that may surprise people.
-
-David also pointed this in the v3:
-
-https://lore.kernel.org/intel-xe/d42dc197a15649e69d459362849a37f2@AcuMS.aculab.com/
-
-and I agree with his comment.
-
-I explained this in the changelog below the --- cutter, but it is
-probably better to make the explanation more visible. I will add a
-comment in the code to explain this.
-
->> +#define BIT_U32(b) (BIT_INPUT_CHECK(u32, b) + (u32)BIT(b))
->> +#define BIT_U64(b) (BIT_INPUT_CHECK(u64, b) + (u64)BIT_ULL(b))
-> 
-> Can you also use a TAB between the parentheses for better readability?
-> E.g.,
-> 
-> #define BIT_U64(b)r	(BIT_INPUT_CHECK(u64, b) + (u64)BIT_ULL(b))
-
-Sure. I prefer it with space, but no strong opinion. I will put tab in v5.
-
-Yours sincerely,
-Vincent Mailhol
-
+Joel Granados
