@@ -1,41 +1,25 @@
-Received: from mout.web.de (mout.web.de [212.227.17.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A548D156F44;
-	Wed,  5 Mar 2025 08:41:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.11
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C477C1FC10C;
+	Wed,  5 Mar 2025 08:42:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741164091; cv=none; b=MmF1Cp8g5fjwVtt0/zG76aTwmX5xXCj9x5DrkUuuEQaPmEOn1rGnfrBB6fpScjs+b3jBHy/lMIBps/xddgGv49UKSDMZB1pskqHbMC5wjMC1qXZWOxJ3Gd8vRJ2E/7e4wIYjX+BxK377hywOzQ719FSyOUwlqsJbJbYvn6/RMKM=
+	t=1741164139; cv=none; b=RfHZAnaIrpPI0VLDv/YEnPIMIb1K6YihWrcHbpVnbjnaxBT1Csv3H7S/EupLuYCeszC98xqv0i+ZnGKZw3H03ocjlm6WiQNLk0DOuOqEp3ere20lpiW7ym9jJ4EO1IAFs0Cx4WKyAUOrNqa7CRqsSXWXmsGV8kfA1BZ0Z+9HcWE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741164091; c=relaxed/simple;
-	bh=fCDaLEF1BjQDk6gvMN7vVYiHfOJ4vTdNlSKUXs5nPuw=;
+	s=arc-20240116; t=1741164139; c=relaxed/simple;
+	bh=ip+xY+hrtB8A1Wl/yTyq2dvEsFrmdQG6g+oTOPZIVoE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=udApOJHPJvegNzTgvAADEF8ZOn/9cciwFfOaNvoHblZtifzrEbhzQtunQmqsogFxXgyfg5z1I9PRMvZfMqszQBvPedtWdxZDyWYE1wz0td3Qed/RxFr4Jv6ZoHaj7C4nMn/L0fqSgHS31kdSsVhN/UANlVZRUcCOUgi7U+a5qac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=FyL38Wzi; arc=none smtp.client-ip=212.227.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="FyL38Wzi"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1741164058; x=1741768858; i=markus.elfring@web.de;
-	bh=fCDaLEF1BjQDk6gvMN7vVYiHfOJ4vTdNlSKUXs5nPuw=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=FyL38WzipPEoGUYCtfkJPKsUeSQADSAFq4nNhTF7P+2Uv+w7VuuXPjKrszxmz47s
-	 7WExlwuD+KFc4CXaP594d5s5VJne7kXDhHMeuLX2EHe9VGUZw2G2ksajtN06jStjv
-	 EtwtxlByz8URebq+vUyWh/+KwwxKi/q2KLizqeaTaUyIpBPYlbZQ+YehxQqursD8M
-	 l9d1L16lFo3KZYNQa/R/EhLGrysPeHvI5xPjdKBVoFIYzXfTR6FqlonKjZ6OzkRFu
-	 jYHuCHO4Igg3qKQ1DqGrOjPAxtgA/53VYO6dfsEOPRTWO+kLPDonnRUzZbZFaBK1u
-	 uIF8ZWy88JP03+C2tg==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.70.10]) by smtp.web.de (mrweb106
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1MqZQY-1tTw9i2MMK-00fxB5; Wed, 05
- Mar 2025 09:40:58 +0100
-Message-ID: <e665514b-5a62-4afb-b267-7c320e4872af@web.de>
-Date: Wed, 5 Mar 2025 09:40:43 +0100
+	 In-Reply-To:Content-Type; b=FfW8ZYFup3XNBBBoIE2KBWtfQyu7TkfZUPchsHj85sEvKzfj7CtFCxPO32RyGKtUbIAvm/0Tct1W/kKkal3Iyj9xkJWP7p/hvNBFkBHs8nDlEpYB9OphJzU9XxBWC+JusQQgnHhYcZfOzrvZSkY2WdPMFUP3Zwl/VpvuzMMGdro=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id ED9E4FEC;
+	Wed,  5 Mar 2025 00:42:28 -0800 (PST)
+Received: from [10.57.64.200] (unknown [10.57.64.200])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7D35A3F66E;
+	Wed,  5 Mar 2025 00:42:13 -0800 (PST)
+Message-ID: <7a1cac10-b065-4b4c-b048-10d6b4132f3d@arm.com>
+Date: Wed, 5 Mar 2025 08:42:11 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,81 +27,223 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: =?UTF-8?Q?Re=3A_=5BRFC=5D_Clarification_for_=E2=80=9Cundefined_beha?=
- =?UTF-8?B?dmlvdXLigJ0/?=
-To: Dan Carpenter <dan.carpenter@linaro.org>,
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
- kernel-janitors@vger.kernel.org, freedreno@lists.freedesktop.org,
- dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org
-Cc: Abhinav Kumar <quic_abhinavk@quicinc.com>,
- Archit Taneja <architt@codeaurora.org>, Daniel Vetter <daniel@ffwll.ch>,
- David Airlie <airlied@gmail.com>, Jeykumar Sankaran <jsanka@codeaurora.org>,
- Jordan Crouse <jordan@cosmicpenguin.net>,
- Marijn Suijten <marijn.suijten@somainline.org>,
- Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
- Simona Vetter <simona@ffwll.ch>, Vinod Koul <vkoul@kernel.org>,
- cocci@inria.fr, LKML <linux-kernel@vger.kernel.org>
-References: <40c60719-4bfe-b1a4-ead7-724b84637f55@web.de>
- <1a11455f-ab57-dce0-1677-6beb8492a257@web.de>
- <13566308-9a80-e4aa-f64e-978c02b1406d@web.de>
- <54c30a69-71cf-4582-9086-50eb0d39f273@web.de>
- <k7un3bjavyt4ogscgc7jn7thfobegaguqqiy7gtypmq6vq7zox@l4bsevbsjrud>
- <29b32b0d-312d-4848-9e26-9e5e76e527a7@stanley.mountain>
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <29b32b0d-312d-4848-9e26-9e5e76e527a7@stanley.mountain>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:Is8r5OqTz1HEt5DAHK+q9bpWIsAC/ftPgUCj2FJLpX8MmfLUBid
- fT2UpE/JSWmezrvupm7xHOXC7YUQsVaEZC0V5+3kNBaub/aDJDNC2yqQbgrscneRvnBq5VX
- VMQxX2+7fAtLBuT/Uboe9GP66LH+LXdN/9wgjWAmtPLeF4ULKk2+AEV7mhfygbzhNi9V9wB
- tkXDOy8yRt6oKzQuoNYUA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:MuuCeMBVWnM=;BzFg+FxRcOm4BpAgy0enxRtgIHL
- 4qupdcjxA6scJ3cX8W3kBIpdy/H4k+t7A4eNhegIC5Q6XRp9nWJQBpjEoqrBVWV3aH4tD043x
- N0gU9isZlYOwtTS2+LyVl4XTSrwTsx9DGUqM8FclDGpDUzwCX2k0jzWg5RyxTvsZnqJKQCe4u
- JVZTuYJciWMQninqJsMPiUKYGOP00FXKKXKNld2DOhORcvClqkBI2QfRW4VVhKwkZZwITIohN
- oczZRh0+LBz6HVJb6wvF/gdUDVSC6wA0UQSRVGmRuhEHP3tdilb/NDq38+A7X6ie/ca198CGY
- oAomEVGBLJox4XYcY4QknL7NBQ3MnFVBu1ZZBLq2A4jzTeym3S87sf+KERld9cMLN71ZaZDRt
- QqmBh1UbLqQmvai/mDJzSO26qqsemIOf6rxIlEuAJMzIoFjB8NR71+5N0PWrzjpQNE4hSb2uU
- Ez8c79sMcApnHnfe+9EBwBwq6fPsSd0fnYIUY189mQgmb4nRhFg/c604l9Wg03W1tABL2eimo
- rHlDCgJtEa2YT7asXccZOr5+Vh+lS719rBY9ATeYjD20CymYIqFDviVhNOmIPcVZrDAk9ycB0
- fd9+3wj+9egR5Rm8TWep22kj2sqrk8t80TtPvP3SyoHITgIrrQFQDSPgTiiej2xcC6Uvn4ekS
- G5bib8BotNmdMcUBYyx0+iyiMTq/dYaOtHM5VycArSykz4QiKJLSe2QgSlaZA9ewnudX6ojvN
- ovWqLR3GQ5/ITBaschxQkJO5zAdWz7Ksv/9OORtm9iN83sgtdPEYyYrJpapIRS75p3/YONcb4
- YM781c0t19a/FMrXy27nVhTRSItb3lp39Eq8S1Cr1Mc5YWYVK9lVKriOavWh0vfSGv+b5wrtp
- 4FxP4/kHn3bejmofRFRHDhydYsF++px1Z15ojeihiJbo5tsFqawhNk06ujULAPg7BewFds+bi
- TKEj4DZrPxdrkO3inYqmFm34uIw4RYfsvC3zUUW+jUsMQxSRSiBzuVp3wVM7Y6YbuPVghbTUw
- JpzrWYGYycUc2jKFuj4pcACdAeklii9U/6zuww4yAxDqYncKhWcLsNwA9omLPovtZVmKRhCsB
- PGkL9tts+aYt9K1JYYWIltzHeoLjzIt2cfs2F4KvQEKy4XhAW7oIASNELcIwklQP6MU+5IixI
- baJTU5mzorsYPb8a1ruASEdY3uOry7NjOUjLoBlgzkH2o8Tc+YG3U2cfn/UMSMdyrQXs+cucJ
- zUzG5qFlhXJbak8Fh/rJrfct5PDE62PaRceFlW/z8jAYf+nAZye5+yMTAq8kyg26/im3np92p
- oeQ9Xn6WleJZtWsVOphZEbFXw03x9jODGJXYF7633qYzfD+pOLMxUZrzYKMozCrd6V9zc/DgV
- IJ7dM6wYNVQXmq7yYsUr8HNhRjW3XZAvSIhs54WzvxvXbY4LTNW9at5SvzPYTfJcM1K2DRVXz
- SgLwmhV+mstgAnG2q0CJRo1aqMEI=
+Subject: Re: [PATCH v3 4/4] drivers/thermal/exymos: Use guard notation when
+ acquiring mutex
+To: Anand Moon <linux.amoon@gmail.com>
+Cc: Bartlomiej Zolnierkiewicz <bzolnier@gmail.com>,
+ "open list:SAMSUNG THERMAL DRIVER" <linux-samsung-soc@vger.kernel.org>,
+ "open list:SAMSUNG THERMAL DRIVER" <linux-pm@vger.kernel.org>,
+ Alim Akhtar <alim.akhtar@samsung.com>,
+ Daniel Lezcano <daniel.lezcano@linaro.org>,
+ open list <linux-kernel@vger.kernel.org>,
+ "moderated list:ARM/SAMSUNG S3C, S5P AND EXYNOS ARM ARCHITECTURES"
+ <linux-arm-kernel@lists.infradead.org>, Zhang Rui <rui.zhang@intel.com>,
+ Krzysztof Kozlowski <krzk@kernel.org>, "Rafael J. Wysocki"
+ <rafael@kernel.org>
+References: <20250216195850.5352-1-linux.amoon@gmail.com>
+ <20250216195850.5352-5-linux.amoon@gmail.com>
+ <f44efd1a-1f6e-456d-9395-de2a55ef2279@arm.com>
+ <CANAwSgTpV_kGFEU-ND0N+OEtT6+j4ceq37xAoLyC7iHPWAuLjg@mail.gmail.com>
+ <CANAwSgSWf_YxSi-pzWPaRoiJx7RLrWUz+HTWx5hf+E2x1ZGmoQ@mail.gmail.com>
+Content-Language: en-US
+From: Lukasz Luba <lukasz.luba@arm.com>
+In-Reply-To: <CANAwSgSWf_YxSi-pzWPaRoiJx7RLrWUz+HTWx5hf+E2x1ZGmoQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
->>> The address of a data structure member was determined before
->>> a corresponding null pointer check in the implementation of
->>> the functions =E2=80=9Cdpu_hw_pp_enable_te=E2=80=9D and =E2=80=9Cdpu_h=
-w_pp_get_vsync_info=E2=80=9D.
+
+
+On 3/4/25 12:20, Anand Moon wrote:
+> Hi Lukasz,
+> 
+> On Sat, 1 Mar 2025 at 00:06, Anand Moon <linux.amoon@gmail.com> wrote:
+>>
+>> Hi Lukasz,
+>>
+>> On Fri, 28 Feb 2025 at 22:58, Lukasz Luba <lukasz.luba@arm.com> wrote:
 >>>
->>> Thus avoid the risk for undefined behaviour by removing extra
->>> initialisations for the variable =E2=80=9Cc=E2=80=9D (also because it =
-was already
->>> reassigned with the same value behind this pointer check).
-> There is no undefined behavior here.
+>>>
+>>>
+>>> On 2/16/25 19:58, Anand Moon wrote:
+>>>> Using guard notation makes the code more compact and error handling
+>>>> more robust by ensuring that mutexes are released in all code paths
+>>>> when control leaves critical section.
+>>>>
+>>>> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+>>>> ---
+>>>> v3: new patch
+>>>> ---
+>>>>    drivers/thermal/samsung/exynos_tmu.c | 21 +++++++--------------
+>>>>    1 file changed, 7 insertions(+), 14 deletions(-)
+>>>>
+>>>> diff --git a/drivers/thermal/samsung/exynos_tmu.c b/drivers/thermal/samsung/exynos_tmu.c
+>>>> index fe090c1a93ab..a34ba3858d64 100644
+>>>> --- a/drivers/thermal/samsung/exynos_tmu.c
+>>>> +++ b/drivers/thermal/samsung/exynos_tmu.c
+>>>> @@ -256,7 +256,7 @@ static int exynos_tmu_initialize(struct platform_device *pdev)
+>>>>        unsigned int status;
+>>>>        int ret = 0;
+>>>>
+>>>> -     mutex_lock(&data->lock);
+>>>> +     guard(mutex)(&data->lock);
+>>>>        clk_enable(data->clk);
+>>>>        clk_enable(data->clk_sec);
+>>>>
+>>>> @@ -270,7 +270,6 @@ static int exynos_tmu_initialize(struct platform_device *pdev)
+>>>>
+>>>>        clk_disable(data->clk_sec);
+>>>>        clk_disable(data->clk);
+>>>> -     mutex_unlock(&data->lock);
+>>>>
+>>>>        return ret;
+>>>>    }
+>>>> @@ -292,13 +291,12 @@ static int exynos_thermal_zone_configure(struct platform_device *pdev)
+>>>>                return ret;
+>>>>        }
+>>>>
+>>>> -     mutex_lock(&data->lock);
+>>>> +     guard(mutex)(&data->lock);
+>>>>        clk_enable(data->clk);
+>>>>
+>>>>        data->tmu_set_crit_temp(data, temp / MCELSIUS);
+>>>>
+>>>>        clk_disable(data->clk);
+>>>> -     mutex_unlock(&data->lock);
+>>>>
+>>>>        return 0;
+>>>>    }
+>>>> @@ -325,12 +323,11 @@ static void exynos_tmu_control(struct platform_device *pdev, bool on)
+>>>>    {
+>>>>        struct exynos_tmu_data *data = platform_get_drvdata(pdev);
+>>>>
+>>>> -     mutex_lock(&data->lock);
+>>>> +     guard(mutex)(&data->lock);
+>>>>        clk_enable(data->clk);
+>>>>        data->tmu_control(pdev, on);
+>>>>        data->enabled = on;
+>>>>        clk_disable(data->clk);
+>>>> -     mutex_unlock(&data->lock);
+>>>>    }
+>>>>
+>>>>    static void exynos_tmu_update_bit(struct exynos_tmu_data *data, int reg_off,
+>>>> @@ -645,7 +642,7 @@ static int exynos_get_temp(struct thermal_zone_device *tz, int *temp)
+>>>>                 */
+>>>>                return -EAGAIN;
+>>>>
+>>>> -     mutex_lock(&data->lock);
+>>>> +     guard(mutex)(&data->lock);
+>>>>        clk_enable(data->clk);
+>>>>
+>>>>        value = data->tmu_read(data);
+>>>> @@ -655,7 +652,6 @@ static int exynos_get_temp(struct thermal_zone_device *tz, int *temp)
+>>>>                *temp = code_to_temp(data, value) * MCELSIUS;
+>>>>
+>>>>        clk_disable(data->clk);
+>>>> -     mutex_unlock(&data->lock);
+>>>>
+>>>>        return ret;
+>>>>    }
+>>>> @@ -720,11 +716,10 @@ static int exynos_tmu_set_emulation(struct thermal_zone_device *tz, int temp)
+>>>>        if (temp && temp < MCELSIUS)
+>>>>                goto out;
+>>>>
+>>>> -     mutex_lock(&data->lock);
+>>>> +     guard(mutex)(&data->lock);
+>>>>        clk_enable(data->clk);
+>>>>        data->tmu_set_emulation(data, temp);
+>>>>        clk_disable(data->clk);
+>>>> -     mutex_unlock(&data->lock);
+>>>>        return 0;
+>>>>    out:
+>>>>        return ret;
+>>>> @@ -760,14 +755,13 @@ static irqreturn_t exynos_tmu_threaded_irq(int irq, void *id)
+>>>>
+>>>>        thermal_zone_device_update(data->tzd, THERMAL_EVENT_UNSPECIFIED);
+>>>>
+>>>> -     mutex_lock(&data->lock);
+>>>> +     guard(mutex)(&data->lock);
+>>>>        clk_enable(data->clk);
+>>>>
+>>>>        /* TODO: take action based on particular interrupt */
+>>>>        data->tmu_clear_irqs(data);
+>>>>
+>>>>        clk_disable(data->clk);
+>>>> -     mutex_unlock(&data->lock);
+>>>>
+>>>>        return IRQ_HANDLED;
+>>>>    }
+>>>> @@ -987,7 +981,7 @@ static int exynos_set_trips(struct thermal_zone_device *tz, int low, int high)
+>>>>    {
+>>>>        struct exynos_tmu_data *data = thermal_zone_device_priv(tz);
+>>>>
+>>>> -     mutex_lock(&data->lock);
+>>>> +     guard(mutex)(&data->lock);
+>>>>        clk_enable(data->clk);
+>>>>
+>>>>        if (low > INT_MIN)
+>>>> @@ -1000,7 +994,6 @@ static int exynos_set_trips(struct thermal_zone_device *tz, int low, int high)
+>>>>                data->tmu_disable_high(data);
+>>>>
+>>>>        clk_disable(data->clk);
+>>>> -     mutex_unlock(&data->lock);
+>>>>
+>>>>        return 0;
+>>>>    }
+>>
+>> Thanks for your review comments.
+>>>
+>>> IMO you should be able to even use something like we have
+>>> core framework:
+>>>
+>>> guard(thermal_zone)(tz);
+>>>
+>>> Your mutex name is simply 'lock' in the struct exynos_tmu_data
+>>> so you should be able to leverage this by:
+>>>
+>>> guard(exynos_tmu_data)(data);
+>>>
+> 
+> If I introduce the guard it creates a compilation error
+> 
+> amoon@anand-m920q:~/mainline/linux-exynos-6.y-devel$ vi
+> drivers/thermal/samsung/exynos_tmu.c +306
+> amoon@anand-m920q:~/mainline/linux-exynos-6.y-devel$ make -j$(nproc)
+> ARCH=arm CROSS_COMPILE=arm-none-eabi- LOCALVERSION=-u3ml dtbs zImage
+> modules
+>    CALL    scripts/checksyscalls.sh
+>    CHK     kernel/kheaders_data.tar.xz
+>    CC      drivers/thermal/samsung/exynos_tmu.o
+>    CC [M]  drivers/md/raid10.o
+> In file included from ./include/linux/irqflags.h:17,
+>                   from ./arch/arm/include/asm/bitops.h:28,
+>                   from ./include/linux/bitops.h:68,
+>                   from ./include/linux/kernel.h:23,
+>                   from ./include/linux/clk.h:13,
+>                   from drivers/thermal/samsung/exynos_tmu.c:14:
+> drivers/thermal/samsung/exynos_tmu.c: In function 'exynos_tmu_update_bit':
+> ./include/linux/cleanup.h:258:9: error: unknown type name
+> 'class_exynos_tmu_data_t'
+>    258 |         class_##_name##_t var
+> __cleanup(class_##_name##_destructor) =   \
+>        |         ^~~~~~
+> ./include/linux/cleanup.h:309:9: note: in expansion of macro 'CLASS'
+>    309 |         CLASS(_name, __UNIQUE_ID(guard))
+>        |         ^~~~~
+> drivers/thermal/samsung/exynos_tmu.c:338:9: note: in expansion of macro 'guard'
+>    338 |         guard(exynos_tmu_data)(data);
+>        |         ^~~~~
+> drivers/thermal/samsung/exynos_tmu.c:338:9: error: cleanup argument
+> not a function
 
-Is there a need to improve the wording precision?
+[snip]
 
-There are words which denote a special meaning according to aspects of
-the programming language =E2=80=9CC=E2=80=9D.
-https://en.cppreference.com/w/c/language/behavior
+Right, you're missing the definition at the begging, like:
 
-Dereferences of null pointers are treated in special ways.
-The system might be configurable to collaborate also with data accesses
-together with the address =E2=80=9Czero=E2=80=9D.
-Would you like to distinguish supported software functionality any further=
-?
+DEFINE_GUARD(exynos_tmu_data, struct exynos_tmu_data *, 
+mutex_lock(&_T->lock),
+              mutex_unlock(&_T->lock))
 
-Regards,
-Markus
+below the struct exynos_tmu_data definition.
+
+Also, make sure you include the cleanup.h (it might not complain,
+but it would be explicit and more clear)
