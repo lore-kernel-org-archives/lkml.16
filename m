@@ -1,130 +1,161 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DF25254852
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 21:35:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C6D2200BBD;
+	Wed,  5 Mar 2025 21:36:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741210556; cv=none; b=UqgFQUXWpYMysVU14vKajxns+WVFDksD+D12Ibh0QT/AT8p5VN6lOd0wWPG1d1XnCS0kp/nONMIv+WnmzvAaRG7Fafi7/oSYfz9BkxRwK3Exgz9SZidInQjsS6naBrPuCkWV6kUzBRczdLS9aqxUmYUoYXgyQyBCcFf8EQxl1vg=
+	t=1741210586; cv=none; b=VFZpAqC8EQmfv6laiBpOJBG81ynJ+csR9U6vYpRYH1SvqYgE4gU52CupLSFzOMCqvb2GnwVrrzdFLjRlnyd5w0DyziNW+ekKCM5n3nRz8RY/SBZ2jDD+TZMYYHxmgvpVbXUXLkh+LA/HnSRNpDHcswVfeY+QqWjfIlJ+GBHC1xE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741210556; c=relaxed/simple;
-	bh=kJB/BuKpNJuMmYfW3eeM1K+X6HuiYJFeiFZWiMKXpQU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-type; b=GsF/0Wc4UmJp9W1jiIXFneHmhla7LCmlTjGIf9XGa+wIS5Hexyqs/j0W4iDOaedzxdODt0/5VAl+0tIh0mKTD5VhEQuG/sb7ZfILCJPv2SruQTDFOcGpLsjMrw166PYfN8gcgc1nz8UA4vxHl/3t+zxTUyObTvwNKclG8bUYoxA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Etu1NK/B; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1741210586; c=relaxed/simple;
+	bh=0I0C62Eg0IuQ/vEb/v6pih6oOreEyqt2DYBEd4bM6Ck=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=IRkkWhyYQB3FD3/3p6Cqfo5dP81HBsmL+JW+/m+0dzd+uNs5MR+GYmG6skwlE7QUqN8/CepBsrRkIWaPnVas3zH7Mkgbu7W366QGYiyLOdUz8268rWazdxT0IcAa5aLwD3xelIvJHMzQ3X/d64kCxaZjAZ+IDtWjtmqCaifZqsY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=dr5Ms9P5; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=woz6Yhk1; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Etu1NK/B"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1741210554;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="dr5Ms9P5";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="woz6Yhk1"
+Date: Wed, 05 Mar 2025 21:36:22 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1741210583;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=j/065lj+K5RVB5JDzFKvemDu1XmMmEIECpSK6YxUCzE=;
-	b=Etu1NK/BeIPIyt7azzmt+y73gOBPUFsDN5YgV1b8pictyk0Zaw+UdAVvZSrgz2yT4a0yHF
-	jbap491JDeI8+5aQLH7hQSpp1C+sSUmtdnuRNEiZrMI5yUs47iSdb4b9yC2XBX+ppmqe8L
-	SPbjyuBFxBWGNu6ICIciaxxMY5cmDXg=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-504-1-a3N_2zPBmhY8ApvHz-ig-1; Wed,
- 05 Mar 2025 16:35:45 -0500
-X-MC-Unique: 1-a3N_2zPBmhY8ApvHz-ig-1
-X-Mimecast-MFC-AGG-ID: 1-a3N_2zPBmhY8ApvHz-ig_1741210543
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 311BF1954B20;
-	Wed,  5 Mar 2025 21:35:43 +0000 (UTC)
-Received: from madcap2.tricolour.com (unknown [10.22.76.19])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 306121955DCE;
-	Wed,  5 Mar 2025 21:35:39 +0000 (UTC)
-From: Richard Guy Briggs <rgb@redhat.com>
-To: Linux-Audit Mailing List <linux-audit@lists.linux-audit.osci.io>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-fsdevel@vger.kernel.org,
-	Linux Kernel Audit Mailing List <audit@vger.kernel.org>
-Cc: Paul Moore <paul@paul-moore.com>,
-	Eric Paris <eparis@parisplace.org>,
-	Steve Grubb <sgrubb@redhat.com>,
-	Richard Guy Briggs <rgb@redhat.com>,
-	Jan Kara <jack@suse.cz>,
-	Amir Goldstein <amir73il@gmail.com>
-Subject: [PATCH v1 1/2] audit: record fanotify event regardless of presence of rules
-Date: Wed,  5 Mar 2025 16:33:19 -0500
-Message-ID: <3c2679cb9df8a110e1e21b7f387b77ddfaacc289.1741210251.git.rgb@redhat.com>
-In-Reply-To: <cover.1741210251.git.rgb@redhat.com>
-References: <cover.1741210251.git.rgb@redhat.com>
+	bh=99GlMlqxBmNIzqets5thWn2elM4WjMXDSvn+1ZxHMbE=;
+	b=dr5Ms9P5BNKfHD9BP695YmTY1QFZpyIDSQ3rkOw9u3mXEz8cubtYCA060T0Xiw5z9kX97w
+	vC0uL1x7lkp1Cb0LDjfXJlcNQCy27YKEAqX4Ok7DKPFRtQZI0hRav2BLb5rpEhuf9VTtu+
+	m7EGANNPwXExGr7C6B2iAC6TInA9zhHYOn4S3gnlECcbdrEApoTV2RFIlLkcqqAVV26L3C
+	MJQn4FI0PvB8nu3wocxB/CTCC94kn4MZmIH68rzsTu6SABwrRVoNVyXRvp7+3BhIJ0b1ea
+	jb2oZi2k7txqIjDZvYGRzQkAFrp2AlxL9kpP+gyvYsLfThfdCYR7hEuFKj43cw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1741210583;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=99GlMlqxBmNIzqets5thWn2elM4WjMXDSvn+1ZxHMbE=;
+	b=woz6Yhk1z8IGIdhCnJ+2gO6/qFn91PXVwotWHoOSNOZ89s9qElD4Nt30ZCtr5mJWXZNqh4
+	qcN8ZnOzfFuD3uAw==
+From: "tip-bot2 for Rik van Riel" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/mm] x86/mm: Enable AMD translation cache extensions
+Cc: Rik van Riel <riel@surriel.com>, "Borislav Petkov (AMD)" <bp@alien8.de>,
+ x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250226030129.530345-13-riel@surriel.com>
+References: <20250226030129.530345-13-riel@surriel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-type: text/plain
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
+Message-ID: <174121058250.14745.1312436108807852558.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-When no audit rules are in place, fanotify event results are
-unconditionally dropped due to an explicit check for the existence of
-any audit rules.  Given this is a report from another security
-sub-system, allow it to be recorded regardless of the existence of any
-audit rules.
+The following commit has been merged into the x86/mm branch of tip:
 
-To test, install and run the fapolicyd daemon with default config.  Then
-as an unprivileged user, create and run a very simple binary that should
-be denied.  Then check for an event with
-	ausearch -m FANOTIFY -ts recent
+Commit-ID:     b95ef870dcd67c0fbfc57f808c4a0efd0bc2f144
+Gitweb:        https://git.kernel.org/tip/b95ef870dcd67c0fbfc57f808c4a0efd0bc2f144
+Author:        Rik van Riel <riel@surriel.com>
+AuthorDate:    Tue, 25 Feb 2025 22:00:47 -05:00
+Committer:     Borislav Petkov (AMD) <bp@alien8.de>
+CommitterDate: Wed, 05 Mar 2025 22:18:16 +01:00
 
-Link: https://issues.redhat.com/browse/RHEL-1367
-Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
+x86/mm: Enable AMD translation cache extensions
+
+With AMD TCE (translation cache extensions) only the intermediate mappings
+that cover the address range zapped by INVLPG / INVLPGB get invalidated,
+rather than all intermediate mappings getting zapped at every TLB invalidation.
+
+This can help reduce the TLB miss rate, by keeping more intermediate mappings
+in the cache.
+
+>From the AMD manual:
+
+Translation Cache Extension (TCE) Bit. Bit 15, read/write. Setting this bit to
+1 changes how the INVLPG, INVLPGB, and INVPCID instructions operate on TLB
+entries. When this bit is 0, these instructions remove the target PTE from the
+TLB as well as all upper-level table entries that are cached in the TLB,
+whether or not they are associated with the target PTE.  When this bit is set,
+these instructions will remove the target PTE and only those upper-level
+entries that lead to the target PTE in the page table hierarchy, leaving
+unrelated upper-level entries intact.
+
+  [ bp: use cpu_has()... I know, it is a mess. ]
+
+Signed-off-by: Rik van Riel <riel@surriel.com>
+Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
+Link: https://lore.kernel.org/r/20250226030129.530345-13-riel@surriel.com
 ---
- include/linux/audit.h | 8 +-------
- kernel/auditsc.c      | 2 +-
- 2 files changed, 2 insertions(+), 8 deletions(-)
+ arch/x86/include/asm/msr-index.h       | 2 ++
+ arch/x86/kernel/cpu/amd.c              | 4 ++++
+ tools/arch/x86/include/asm/msr-index.h | 2 ++
+ 3 files changed, 8 insertions(+)
 
-diff --git a/include/linux/audit.h b/include/linux/audit.h
-index 0050ef288ab3..d0c6f23503a1 100644
---- a/include/linux/audit.h
-+++ b/include/linux/audit.h
-@@ -418,7 +418,7 @@ extern void __audit_log_capset(const struct cred *new, const struct cred *old);
- extern void __audit_mmap_fd(int fd, int flags);
- extern void __audit_openat2_how(struct open_how *how);
- extern void __audit_log_kern_module(char *name);
--extern void __audit_fanotify(u32 response, struct fanotify_response_info_audit_rule *friar);
-+extern void audit_fanotify(u32 response, struct fanotify_response_info_audit_rule *friar);
- extern void __audit_tk_injoffset(struct timespec64 offset);
- extern void __audit_ntp_log(const struct audit_ntp_data *ad);
- extern void __audit_log_nfcfg(const char *name, u8 af, unsigned int nentries,
-@@ -525,12 +525,6 @@ static inline void audit_log_kern_module(char *name)
- 		__audit_log_kern_module(name);
+diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
+index 72765b2..1aacd6b 100644
+--- a/arch/x86/include/asm/msr-index.h
++++ b/arch/x86/include/asm/msr-index.h
+@@ -25,6 +25,7 @@
+ #define _EFER_SVME		12 /* Enable virtualization */
+ #define _EFER_LMSLE		13 /* Long Mode Segment Limit Enable */
+ #define _EFER_FFXSR		14 /* Enable Fast FXSAVE/FXRSTOR */
++#define _EFER_TCE		15 /* Enable Translation Cache Extensions */
+ #define _EFER_AUTOIBRS		21 /* Enable Automatic IBRS */
+ 
+ #define EFER_SCE		(1<<_EFER_SCE)
+@@ -34,6 +35,7 @@
+ #define EFER_SVME		(1<<_EFER_SVME)
+ #define EFER_LMSLE		(1<<_EFER_LMSLE)
+ #define EFER_FFXSR		(1<<_EFER_FFXSR)
++#define EFER_TCE		(1<<_EFER_TCE)
+ #define EFER_AUTOIBRS		(1<<_EFER_AUTOIBRS)
+ 
+ /*
+diff --git a/arch/x86/kernel/cpu/amd.c b/arch/x86/kernel/cpu/amd.c
+index 7a72ef4..7058533 100644
+--- a/arch/x86/kernel/cpu/amd.c
++++ b/arch/x86/kernel/cpu/amd.c
+@@ -1075,6 +1075,10 @@ static void init_amd(struct cpuinfo_x86 *c)
+ 
+ 	/* AMD CPUs don't need fencing after x2APIC/TSC_DEADLINE MSR writes. */
+ 	clear_cpu_cap(c, X86_FEATURE_APIC_MSRS_FENCE);
++
++	/* Enable Translation Cache Extension */
++	if (cpu_has(c, X86_FEATURE_TCE))
++		msr_set_bit(MSR_EFER, _EFER_TCE);
  }
  
--static inline void audit_fanotify(u32 response, struct fanotify_response_info_audit_rule *friar)
--{
--	if (!audit_dummy_context())
--		__audit_fanotify(response, friar);
--}
--
- static inline void audit_tk_injoffset(struct timespec64 offset)
- {
- 	/* ignore no-op events */
-diff --git a/kernel/auditsc.c b/kernel/auditsc.c
-index 0627e74585ce..936825114bae 100644
---- a/kernel/auditsc.c
-+++ b/kernel/auditsc.c
-@@ -2880,7 +2880,7 @@ void __audit_log_kern_module(char *name)
- 	context->type = AUDIT_KERN_MODULE;
- }
+ #ifdef CONFIG_X86_32
+diff --git a/tools/arch/x86/include/asm/msr-index.h b/tools/arch/x86/include/asm/msr-index.h
+index 3ae84c3..dc1c105 100644
+--- a/tools/arch/x86/include/asm/msr-index.h
++++ b/tools/arch/x86/include/asm/msr-index.h
+@@ -25,6 +25,7 @@
+ #define _EFER_SVME		12 /* Enable virtualization */
+ #define _EFER_LMSLE		13 /* Long Mode Segment Limit Enable */
+ #define _EFER_FFXSR		14 /* Enable Fast FXSAVE/FXRSTOR */
++#define _EFER_TCE		15 /* Enable Translation Cache Extensions */
+ #define _EFER_AUTOIBRS		21 /* Enable Automatic IBRS */
  
--void __audit_fanotify(u32 response, struct fanotify_response_info_audit_rule *friar)
-+void audit_fanotify(u32 response, struct fanotify_response_info_audit_rule *friar)
- {
- 	/* {subj,obj}_trust values are {0,1,2}: no,yes,unknown */
- 	switch (friar->hdr.type) {
--- 
-2.43.5
-
+ #define EFER_SCE		(1<<_EFER_SCE)
+@@ -34,6 +35,7 @@
+ #define EFER_SVME		(1<<_EFER_SVME)
+ #define EFER_LMSLE		(1<<_EFER_LMSLE)
+ #define EFER_FFXSR		(1<<_EFER_FFXSR)
++#define EFER_TCE		(1<<_EFER_TCE)
+ #define EFER_AUTOIBRS		(1<<_EFER_AUTOIBRS)
+ 
+ /*
