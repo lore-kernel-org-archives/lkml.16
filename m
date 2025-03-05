@@ -1,111 +1,121 @@
-Received: from mail-4316.protonmail.ch (mail-4316.protonmail.ch [185.70.43.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F81924E4B5
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 14:56:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC127241CA0;
+	Wed,  5 Mar 2025 14:57:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741186586; cv=none; b=BkZ2J9npYhnVcxAHJ88x0gfOnXM8MLs2IyXmIOKiVjWnGnkWR4Ml9twv6Mr2gkX/OxiSv6mnr/F0pv3NcuNLOX6lXiEzTaXu8LTFhJvA+/ZeqIge5ILlxJGKYId/fk1xq9p4J+R2XDL/fnyvHeP4+rF2myyAzO4pvz4xg/w60UU=
+	t=1741186665; cv=none; b=GxZ+nDvkNL1LT3fu4nvX34fx9n47vPWYxpmlApki4UK9Lx6VOTaPyyHTrmBa2mz3iCIh5erDPV2TDYgR/1JTisDbRxVNcbJuuiknQT0hi/dpo1voaX0Y/xxc8vyKSGBnmzz9CJzwVCMV9OHpyoWZkeueUQVisacCPC/8p9Z5bfM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741186586; c=relaxed/simple;
-	bh=eCzs6z/1ZaCc9kZkxUuGSc2H1XvV4MIOgYBJbjL04NU=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BpEGoAeJXlkitALd4xwl32Y/v7FML1MdRJmv/rlvSd5Lt3oVCiK/wA8Sfi3+utRT8N66ypQ3P/yoS+XLSUiwSh/hHfZcQ5d/m9PMrHY2EAJo4UPn2vT51lNG78sNlrfXGPKhXCTlsUrVbthUVdxlko4O4QuCsmFqHk9zUGJrVOE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me; spf=pass smtp.mailfrom=pm.me; dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b=RE7qFyrB; arc=none smtp.client-ip=185.70.43.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pm.me
+	s=arc-20240116; t=1741186665; c=relaxed/simple;
+	bh=1Gl63dkDn6YzbWhpJHr86mBXDaJRRA0A/VL5dyST0Ro=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=XZuc2ptwcLfLnSK/eYaeyv53OmfIatdletRjU0uC+92R1fiX3rUSluMj/6Zq10XNTxMDh+t2YcAC4yFTtHROOFstjx8VJAEdOfcZP8LrI7hTWGu9z7qc5DLeoxp16jGqT1FXTfCrfRQVOgNvo8Jdofkkpsfq6UYxtBkv4uIkbqg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BpW3yggm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b="RE7qFyrB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pm.me;
-	s=protonmail3; t=1741186582; x=1741445782;
-	bh=lNsOywLr42ifpKIYbHm0FRmw4MVYLujGcEk8RLbJlYg=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
-	b=RE7qFyrBqjco0UkDuwTf/31sqOEGMwi5fVniTj5VVCpoHVPGUuV1Ow7XlTo0HsFRz
-	 9YSb1M1Cu9NrdEwikTjKKQ+cWX1KxRF4i963UxwecIr3jQooJ/Eh0ELVmVqouqtnZP
-	 1n37eVbq9KLCkaKhYCmZwp84m4DBS7sve7KqlCfebxUbf/ZXOFgvi1jb50iVTiK6ol
-	 tQjOGBdB3eHUtO0iWY4URiOBMMXgkEUgNUpGgiS1Z4vma6QUv2noSoIJJee6JWJQ0z
-	 kdgw9U7aV+PCBGtNtFLt9wBS9UA8MIjlFzvGLzfEuy6qTRRCTOQS3IrLleBBt40+Wd
-	 I4XYbwlUy61aw==
-Date: Wed, 05 Mar 2025 14:56:15 +0000
-To: Alice Ryhl <aliceryhl@google.com>
-From: Oliver Mangold <oliver.mangold@pm.me>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4] rust: adding UniqueRefCounted and UniqueRef types
-Message-ID: <Z8hmCkeZGPwc5MuU@mango>
-In-Reply-To: <Z8hUIPtE_9P60fAf@google.com>
-References: <20250305-unique-ref-v4-1-a8fdef7b1c2c@pm.me> <Z8hUIPtE_9P60fAf@google.com>
-Feedback-ID: 31808448:user:proton
-X-Pm-Message-ID: 375abdb427c4e02d70ff4548d076416d6c4e46a7
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BpW3yggm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A709C4CEEA;
+	Wed,  5 Mar 2025 14:57:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741186664;
+	bh=1Gl63dkDn6YzbWhpJHr86mBXDaJRRA0A/VL5dyST0Ro=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=BpW3yggmd7ODf5pzH0d5SReTzmSwrcsqOPrOUG8ua8kCKHH1C7zt+Vna2GsFPM89z
+	 Y4hS+ilKjgM4Ma328JcmNeHtmY0+yBkci2CTwTDexDbFKZrI22MkYLrelsL+FnzmLs
+	 k7hFixlnHi8pAS+JnonJXvpPt8gfiEpPXuL1H2cuz/qAxLjL3m/VQN+H4IPJk9dQ9a
+	 ++7qHUF9si/CRgKal/Lg+OXYnvT75HoY/fepSLoEM6sNl3AXGdWr3AXMFjNO/D2/6S
+	 75Mi7PKqeVTNiRsl7l/UBsjMTZkUzm0M0it/anIFAi4k+KBBtHv7AiefmSFyMaR2ww
+	 SnkOrYTYJ9N5g==
+Received: by mail-oo1-f45.google.com with SMTP id 006d021491bc7-6001060115bso1602392eaf.3;
+        Wed, 05 Mar 2025 06:57:44 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWPrq8kIA4rKSSmVDaOKySR+jP4qQKXgMSukyvFGST/Qj0tZvmArY2Gdcrh+N3Jcd+SYbTDO4b09mA=@vger.kernel.org, AJvYcCX68M2BHrcNWBo8X7RBqBlgOkYyeDRCBAqxRVA37t1s92veOhK/YqVd7k1BsvBulDwbjcg1q9kdu6ivXEY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzE5S9HoQ2TpzutlQA0a5iW34uQ1m1cvtMoY38929Px7u3b85Ep
+	k8Rz40dwRh+bx/11FqalxKCc5k9k7ne+QBBSTgKaSwIg/aiNAI/ZVWlU0au2nHHgtHrpKXfjUOH
+	+EZhvGVgHf4lNEsNB2TwcndtgbEM=
+X-Google-Smtp-Source: AGHT+IFrp15y/CCHFHM8ClNOdliUQk6Gp8kcuTU19LoJl8SFC7OzoexHyamhW/uvTFwPp3lLv4Y4oc8fNnMXq6XFVjs=
+X-Received: by 2002:a05:6820:a01:b0:5fa:6805:645b with SMTP id
+ 006d021491bc7-600336499dbmr1682833eaf.6.1741186663541; Wed, 05 Mar 2025
+ 06:57:43 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+References: <20241219091109.10050-1-xuewen.yan@unisoc.com> <a43ebb14-be7f-4f8a-8892-cdb63eec4043@arm.com>
+ <CAB8ipk-qYR4LncOi2ue6Rbdc6CqX67_OydcOp14Yj=afYZPe=Q@mail.gmail.com> <7bc89310-c0db-4940-8cd7-86566ecb5c65@arm.com>
+In-Reply-To: <7bc89310-c0db-4940-8cd7-86566ecb5c65@arm.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Wed, 5 Mar 2025 15:57:32 +0100
+X-Gmail-Original-Message-ID: <CAJZ5v0j3+TFB22FKcGMdy6bfvczAcp+egWv5WjY9dWmHKh8fpA@mail.gmail.com>
+X-Gm-Features: AQ5f1JoSo8eNhPNHqvOq89t9K7B1E5EMRUYkiyzEstbu4yChAy-xnfDK2hhxN58
+Message-ID: <CAJZ5v0j3+TFB22FKcGMdy6bfvczAcp+egWv5WjY9dWmHKh8fpA@mail.gmail.com>
+Subject: Re: [PATCH] power: energy_model: Rework the depends on for CONFIG_ENERGY_MODEL
+To: Lukasz Luba <lukasz.luba@arm.com>, Xuewen Yan <xuewen.yan94@gmail.com>
+Cc: Xuewen Yan <xuewen.yan@unisoc.com>, linux-pm@vger.kernel.org, len.brown@intel.com, 
+	linux-kernel@vger.kernel.org, ke.wang@unisoc.com, jeson.gao@unisoc.com, 
+	di.shen@unisoc.com, pavel@ucw.cz
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Alice,
+Hi,
 
-On 250305 1339, Alice Ryhl wrote:
-> On Wed, Mar 05, 2025 at 11:31:44AM +0000, Oliver Mangold wrote:
->=20
-> > +impl<T: UniqueRefCounted> Deref for UniqueRef<T> {
-> > +    type Target =3D T;
-> > +
-> > +    fn deref(&self) -> &Self::Target {
-> > +        // SAFETY: The type invariants guarantee that the object is va=
-lid.
-> > +        unsafe { self.ptr.as_ref() }
-> > +    }
-> > +}
->=20
-> What stops people from doing this?
->=20
-> let my_unique: UniqueRef<T> =3D ...;
-> let my_ref: &T =3D &*my_unique;
-> let my_shared: ARef<T> =3D ARef::from(my_ref);
->=20
-> Now it is no longer unique.
+On Wed, Mar 5, 2025 at 10:51=E2=80=AFAM Lukasz Luba <lukasz.luba@arm.com> w=
+rote:
 >
-Oh, indeed. That's a serious problem. I see 2 options to deal with that:
+> Hi Rafael,
+>
+> On 2/13/25 02:18, Xuewen Yan wrote:
+> > Hi Rafael,
+> >
+> > I noticed that this patch has not been merged yet. Do you have any comm=
+ents?
+> >
+> > BR
+> >
+> > On Thu, Dec 19, 2024 at 5:17=E2=80=AFPM Lukasz Luba <lukasz.luba@arm.co=
+m> wrote:
+> >>
+> >>
+> >>
+> >> On 12/19/24 09:11, Xuewen Yan wrote:
+> >>> From: Jeson Gao <jeson.gao@unisoc.com>
+> >>>
+> >>> Now not only CPUs can use energy efficiency models, but GPUs
+> >>> can also use. On the other hand, even with only one CPU, we can also
+> >>> use energy_model to align control in thermal.
+> >>> So remove the dependence of SMP, and add the DEVFREQ.
+> >>
+> >> That's true, there are 1-CPU platforms supported. Also, GPU can have
+> >> the EM alone.
+> >>
+> >>>
+> >>> Signed-off-by: Jeson Gao <jeson.gao@unisoc.com>
+> >>> ---
+> >>>    kernel/power/Kconfig | 3 +--
+> >>>    1 file changed, 1 insertion(+), 2 deletions(-)
+> >>>
+> >>> diff --git a/kernel/power/Kconfig b/kernel/power/Kconfig
+> >>> index afce8130d8b9..c532aee09e12 100644
+> >>> --- a/kernel/power/Kconfig
+> >>> +++ b/kernel/power/Kconfig
+> >>> @@ -361,8 +361,7 @@ config CPU_PM
+> >>>
+> >>>    config ENERGY_MODEL
+> >>>        bool "Energy Model for devices with DVFS (CPUs, GPUs, etc)"
+> >>> -     depends on SMP
+> >>> -     depends on CPU_FREQ
+> >>> +     depends on CPU_FREQ || PM_DEVFREQ
+> >>>        help
+> >>>          Several subsystems (thermal and/or the task scheduler for ex=
+ample)
+> >>>          can leverage information about the energy consumed by device=
+s to
+> >>
+> >> Reviewed-by: Lukasz Luba <lukasz.luba@arm.com>
+>
+> Gentle ping. You probably have missed that change for the v6.15 queue
 
-1. remove ARef::From<&T>
+Indeed, I have missed this one.
 
-I checked the users of this, and it looks to me like there is rather
-a limited number and they are easy to fix by replacing the &T with ARef<T>.
-But I assume that wouldn't be welcome as it is intrusive nonetheless
-and of course there is ergonomic value in having the function around.
-
-2. add some new traits so implementers can opt in/out of that function.
-
-Basically one would have to pick if one wants to ARef::From<&T> or
-UniqueRef<T> for one's type.
-
-> > +impl<T: UniqueRefCounted> DerefMut for UniqueRef<T> {
-> > +    fn deref_mut(&mut self) -> &mut Self::Target {
-> > +        // SAFETY: The type invariants guarantee that the object is va=
-lid.
-> > +        unsafe { self.ptr.as_mut() }
-> > +    }
-> > +}
->=20
-> This DerefMut will make it almost impossible for C types to implement
-> UniqueRefCounted because it is incompatible with pinning. You probably
-> want `T: UniqueRefCounted + Unpin` here.
->=20
-> For `T: !Unpin` (i.e. almost all C types), you can at most produce an
-> `Pin<&mut Self>`.
-
-I think I only understand 70% of that incompatiblity, but I will do a
-bit more reading.
-
-In any case I think I can work around that, but doing as you say,
-and maybe adding an extra method deref_pin() to get a pinned reference.
-
-Best,
-
-Oliver
-
+Now applied as 6.15 material, thanks!
