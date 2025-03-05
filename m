@@ -1,167 +1,127 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 984FD1AB531;
-	Wed,  5 Mar 2025 17:08:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD5671C5F11;
+	Wed,  5 Mar 2025 17:08:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741194498; cv=none; b=UFt/3NvK/1qJq36S/galWnqiH8uKwB4Xwk6ubx4rTPTcIhD8c2TXaV0jvfMI43jjOLgyg9rrhzgn1vcJUsukEXxOyu6qY79Hv8Yp5FZP+Ow1UDzWmlL5XEwv16cVn1R60JBuwVOf0loB90ZUmwpyv0W79/FbC0Are0nBRv3oAh4=
+	t=1741194526; cv=none; b=Iwg7Oh4dOVZ/tR/DpzWQpyGdUAG1MqsmhYBruKsAh763uQpv7URLVykgBt4HIlJ7d7HjR+91sYHrwgLRbUKW9UQTifCLNZCL7DT94x3oxDp0M1IYKrFIaw9PL0r3IiNP8ExYUV0fnS9ZBYAC9BxrH+rNR3tLqVhUoNCtaxGyj/k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741194498; c=relaxed/simple;
-	bh=HqVm3gpnbOTavUq6YuIgtLcvVRLsxQpX257b2yUTtHc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=I3h11AhhcsKTJ9tGkaGGPae40LSux6Ykmd25KIKi2mMNI0+l9J6XVukhsH0GMF2xBEv9qSzH/HfYvv85pWUF0hwKcSWln31t/olXoJjOVp1erDYGz0N4459SEf0oHzXktWTWdS25Ek5UBBmZ1GeYD+WPj0lx3DMvyrdBtX3x4+o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=deller@gmx.de header.b=VLZt800F; arc=none smtp.client-ip=212.227.15.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1741194526; c=relaxed/simple;
+	bh=BvrpRLEjubg+uBgW0PQjlbnPvYou/AIaycZ0Uh7wWfU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=H9/PXjl18wEPUyb88oDucpFcNcPIX/SiC6EInTOgnNc5beVRtI58YH+Itbb72xQTuFmfr2c71UG5ihM5qObVo6KSu8JGszCjSYaucL8/xdpu4ZGQHtn+UVkDGTCxxvz16lejS1HaM26WQCvV6GKaruz9BR93D2UafKzDEts/0S4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FQoHmrXd; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=deller@gmx.de header.b="VLZt800F"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1741194465; x=1741799265; i=deller@gmx.de;
-	bh=qSFgqG5zZ8uB7/EdqFI+tBOKNwncrau+EHb9ROl1Elw=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=VLZt800FdvjEs4Wqu2oAd1ndh0gQt+LYR1bd9ct4ymHbjq5inIR0VsniqcXzEiFU
-	 4CzNxJ71unLvywDgSbhWNd/jYc60J8jbdoA10YFT4krLPsAWkzPwxS849M5eNgCCu
-	 o3d1AxHq1n5dypUshP5255PeVKSoMAT5izhHY/Ta2rGeboC80ughh0Yen88yWrcCs
-	 EFgh9Ft3Swj1dQX016nJtahLCO2NREWlek7aXz0nDFABzebkmo68N2/MXV3VkXUog
-	 igBg84iiQRpQ7lKDYEu7RIwiWBQ1aa9bS8zTSK9w7GQr/4j7i6spp5XD25UaLnrMZ
-	 /ImaYIOcsoChvOAbzg==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.20.173] ([109.250.63.121]) by mail.gmx.net (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MEV3I-1u1U8R0Cni-008r0T; Wed, 05
- Mar 2025 18:07:45 +0100
-Message-ID: <81a620bb-205f-45f7-9036-e8e44a8e7be9@gmx.de>
-Date: Wed, 5 Mar 2025 18:07:41 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FQoHmrXd"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-390f69e71c8so797811f8f.0;
+        Wed, 05 Mar 2025 09:08:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741194522; x=1741799322; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JCmHH2sBXFrU1aD2JeP8UinBUcmUwStB8VTMjRRTo3M=;
+        b=FQoHmrXdqO0w+XXlB//31Jxe+OAGHe+Nzz4tPapIiA7SSAPVBG9JpOVQ3PiiE00KDR
+         8GONP7edeJJ4F5lANFGmQCEjELagKZf/URAISfLvDQ2Hup9DvfSP6kSjSmvnDYPL/ImT
+         D7WfJ0mcaWY/UFZb2l4bNa3PYiIXcF6lnFzMCs5HyIT39GcQUXb8mjqvk5oMFSaSI3ov
+         hWt3CJrOUKFck+oR/rp+CyDsDyrFuGmytxCTHlkm6TZz17Jsb0xQf9SN+TrG0+qPeG81
+         VsY7NSV6VfAM69IZjZqn3HW/72a4E1rHFEg2GKuOFoEssBJ49DTYvnmFuoA127K+MkbM
+         mcLg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741194522; x=1741799322;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=JCmHH2sBXFrU1aD2JeP8UinBUcmUwStB8VTMjRRTo3M=;
+        b=F5moFPO7gwksMHz0iJT1vmOAprn13lR3oLwu1UyyfH4mjpqhAEfHLHikYgH7DE5REt
+         9FjFFVDfA1p3svNz75ynyU8heZHcAXXEOp3LLqYjoFMOJ1+XT6uA54p+Bw8gwIYpfW5A
+         GnPhDNOL4MAYT4wtmByHjeBsRoXafPCq1I9RNRrb5kOx2JnmmyjFCPOnQN4E3GWgVBOF
+         Il2jmegRO9OdHoMTIEZl6dma1uDhBDbV21ddF0xzMAs5GJzIvl2Fzy4vIM1aiFaebTOR
+         rXNUgLdxfMNjZxsDfB6B16irINGsl/aE3PiLpmWaOScW5Plh79EWRzqzh+KoyAEEbv+q
+         6nJA==
+X-Forwarded-Encrypted: i=1; AJvYcCU0Cpr2M1UQZqpnngdAytqsymIEieChuBHuEcd5p3b+KrPhV9MXME8Y04zoOedkubHb3UuvjmJSPHvSNpO/@vger.kernel.org, AJvYcCWww2VKavtVte2q1TNnu6Neufy8OXHEkoBKSpkGIqlDDsR+pJhR5fAtfFqqS63oNELOX3I=@vger.kernel.org, AJvYcCX+EVoI3lSkg86m8bNKt+Ll7Eu+I+b2AS1XJ4QeXitNd8sNmR5QMiL1Th+neErE1i8zncLsoiQw+c9gXGCGTXaqgrumcYdu@vger.kernel.org, AJvYcCXK6s0FTdDOkuaie5BLyRj/QbFkXo1Gp38etKL33sMB6w/SOsvYrSEyPymy2j/ADbaMFrukLbQ/fQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyesdwu+XeOVHWUqmneKHocYQ154ROTeehwvEZSt11YhMI48yP4
+	+uMaCAYYzR5UTaZzoz6515GfUltniFGP41S1JDP8V677KeqeVSN02I9OueXBTU3nwCnp7pxI0Kv
+	7tSw0P1rZpW0QT9ODnXms6Ve5n6s=
+X-Gm-Gg: ASbGncssJL5J3TMcRbEBvh/H8m7ee0yZ2YvrA2y7z7NofGHezRIQ1/gcH/ipxkqC0o7
+	DKxbvvkpPp/hvE83LwgugUrhCJfKh3nehnlWI/M6+aj+8TGfdAgFQmF0qRYRtx+299/7RoXGO4V
+	pCnSINugguJs5IWgQ/n10bh9NXHZG+2a4CWnFwtQMqmQ==
+X-Google-Smtp-Source: AGHT+IFhLsvM9iNsC7Z9Gk77B7oPmq2594HIGrrnihVI9DffiOarfWHTZWxnq+tOuVUjiytsYWy3FUj5+D18DIphGKg=
+X-Received: by 2002:a05:6000:154c:b0:390:ff84:532b with SMTP id
+ ffacd0b85a97d-391296d894dmr55899f8f.7.1741194521507; Wed, 05 Mar 2025
+ 09:08:41 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: video: au1100fb: Move a variable assignment behind a null pointer
- check in au1100fb_setmode()
-To: Markus Elfring <Markus.Elfring@web.de>,
- Dan Carpenter <dan.carpenter@linaro.org>,
- =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
- kernel-janitors@vger.kernel.org, linux-fbdev@vger.kernel.org,
- dri-devel@lists.freedesktop.org
-Cc: Antonino Daplas <adaplas@pol.net>, Thomas Zimmermann
- <tzimmermann@suse.de>, Yihao Han <hanyihao@vivo.com>, cocci@inria.fr,
- LKML <linux-kernel@vger.kernel.org>
-References: <40c60719-4bfe-b1a4-ead7-724b84637f55@web.de>
- <1a11455f-ab57-dce0-1677-6beb8492a257@web.de>
- <86551e6f-d529-1ff6-6ce6-b9669d10e6cb@web.de>
- <3f1e7aaa-501a-44f1-8122-28e9efa0a33c@web.de>
- <ugymllbkcsg22ffgyofvkquh5afbvoyv2nna5udmy3xfhv2rjz@jhgghzldzm4u>
- <eebf8c0c-7a6a-405f-aaab-2a8a8c2bd91f@stanley.mountain>
- <hwk2nf62owdo3olxrwt5tu7nwfpjkrr3yawizfpb3xn6ydeekx@xwz7nh5ece2c>
- <47c37d1a-5740-4f48-ac0f-635d8b6f51b2@stanley.mountain>
- <9d042e6a-6d93-4ae4-8373-28b9dec21867@web.de>
-Content-Language: en-US
-From: Helge Deller <deller@gmx.de>
-Autocrypt: addr=deller@gmx.de; keydata=
- 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
-In-Reply-To: <9d042e6a-6d93-4ae4-8373-28b9dec21867@web.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+References: <20250304203123.3935371-1-bboscaccy@linux.microsoft.com>
+ <20250304203123.3935371-3-bboscaccy@linux.microsoft.com> <CAHC9VhS5Gnj98K4fBCq3hDXjmj1Zt9WWqoOiTrwH85CDSTGEYA@mail.gmail.com>
+ <877c54jmjl.fsf@microsoft.com> <CAHC9VhQO_CVeg0sU_prvQ_Z8c9pSB02K3E5s84pngYN1RcxXGQ@mail.gmail.com>
+ <CAPhsuW6RrUiXaQe1HBYOvwUx2GFaA-RKx22955A2StsP2erTeA@mail.gmail.com> <CAHC9VhQ1BHXfQSxMMbFtGDb2yVtBvuLD0b34=eSrCAKEtFq=OQ@mail.gmail.com>
+In-Reply-To: <CAHC9VhQ1BHXfQSxMMbFtGDb2yVtBvuLD0b34=eSrCAKEtFq=OQ@mail.gmail.com>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Wed, 5 Mar 2025 09:08:30 -0800
+X-Gm-Features: AQ5f1JpbqWJ2U2ge5hW2KG36R4uPAlWjU6dS7IbAVApjbqNIyD5ZAKIyRS1MGwQ
+Message-ID: <CAADnVQJL77xLR+E18re88XwX0kSfkx_5O3=f8YQ1rVdVkf8-hQ@mail.gmail.com>
+Subject: Re: [PATCH v4 bpf-next 2/2] selftests/bpf: Add is_kernel parameter to
+ LSM/bpf test programs
+To: Paul Moore <paul@paul-moore.com>
+Cc: Song Liu <song@kernel.org>, Blaise Boscaccy <bboscaccy@linux.microsoft.com>, 
+	James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	John Fastabend <john.fastabend@gmail.com>, Andrii Nakryiko <andrii@kernel.org>, 
+	Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, 
+	Yonghong Song <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>, 
+	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Stephen Smalley <stephen.smalley.work@gmail.com>, Ondrej Mosnacek <omosnace@redhat.com>, 
+	LSM List <linux-security-module@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	bpf <bpf@vger.kernel.org>, selinux@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:WFCzdqPmtr/uOmd6GBJqupGfFplz0KM/ko2XNaecD3XCxy8tVLM
- H5nDyRb4i4/pCvIoqvQDEIHQdzIgGt1tlvK4W2MRNAtkH00Y965x+n7rWASwu3HfGDQk4EZ
- 3h8VLzErjad8IVoyLgvMW9CIB/wfMGorhp7qopi9tv4q9IqZRBFDuIKA5WJxRO/zaAwxO7o
- lv7M8NeXLDx14Qs5Kp5TA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:ZTjjDObThpw=;QUkTbV5tHNceAYaWzt1VoI4+tl7
- XGq6xbDKyijcXMXQdr4OxVGxAqp0z59T86Z87Ecs/LkY0f0cHtQUGkXSF/MJtQM5HeS2TUC6z
- ahJMY1fqhLwCIuLeFQl5/orQTlf+JY0dwnkaWiPhSCl7YJXpV35v65WEF1teGcRBvL2M9yLZg
- dAl1OtW2aGwcEL7FT2vR3aGUg+leKA3qOlu1ySvdDGoJvf44RK7QYep91ERHKfQeuZjdvLERC
- GbCQpTh26i8xBvJqo41+h1G7aSROIhzOhVg2vLTeNguaBLXgR+uy6suuklrfb6hJPkRJz0E9d
- +9vg63qLUS8KCk/v0aLJkPH80iokVr9tp4eFkJBBI4MZK/1p00dvAD1x6BNRBiQzXF1Ia3HiT
- s+Dk44aOSyuMop6tEAqtvt1XvqU/R9+kgngbDi39qW3ej6+BMOMykTs+etmcJy5gI9SD2gRXG
- 6Bx1HRPNVdK2csjAY4obtXGr+SFsvpjzidO+9IDAjKIdi2AFFjgjw1ks7QoZl77fjhVb5/sjf
- UzpX8ziakIzDbOjb5ywv2Kj4Gj4LWL5N/ef8s/bSnZRVhM8FXdhmk5wwyarRBwUOJRF3wzqXt
- xhhfaFYCdvoMz3UKhvMyJ7pPMUNs4DfGStou4qbFTM4Eq2EcYpxNN3nZiKkuAPuXsRDTozvXo
- Wk+x87X9UnNM8Q/510HmrZ8HajJvwQzKAah/r4NkUhNniTEJenXZl9Aj7NP7UttP29x0QRVB7
- pKWwsWrb7tKqypP1P+0SznW5hujv0k2sbQziUN3xXLTswbgmFyLeH4sWHJGrfBc4LfRo1G7oT
- VxEIqjOitgmHVHL07LwKbdYqlQDMYLcGQddu9q/sEzkhvgegRvHv75RPCR6fIRsGHDfVfTbec
- Q9pD7GEBv4gS4sP4CperWATqvofFcVNdJeJFaSIiiA7aBpc32IbXqBzbvICCRkI5MsAq78ZeV
- +202OzXmjLeEu1Jb4nijmtOSKkfKmcvUDLRHAp4Bxh3AyAXOu60AwmL0Wj70bKY7LFpSVrVZH
- qYCsMP9m8JdhaRx2ecdjYR6ChUPxp2NvO6VbZ2ykIqr4LJ79w0PgejItZJGi3PNsqrwk6TQtc
- uFVnrz6BnqKyR80/A9crQjgcKEbycz8aASxsiFVXj3npPDHf7G5XIp+q2AgaEHdEhJ3z0UYTY
- W2IiA5YHpDS6ewVU9bMHOQaVp8+aWDIBE+cUogyktjDrIQTHUwSLjVi6pBrbAUIDRT15wZ5Ar
- C0RR/l8w1L7Ke3foW58ZPtOT0HFqAVcUm8cBsMuPwW808pdFCAbcHdc03qjfrlV6l/2tDMIay
- 3uLmVYVQGX1mopLPhbtBAC3FGzwbKw7P2R44DcnXvQbBUdkbnqj7naobetDhHwdn4cXmIekTp
- 5UsbywibX3IzkNtFcIOuBATyn87vhA04agxuRzK6v60TKjbZFC7bpHHTxF
 
-On 3/5/25 13:14, Markus Elfring wrote:
->> Anyway, none of that applies here, because this is just pointer math.
-> Which data processing do you expect to be generally supported at the dis=
-cussed
-> source code place (according to the rules of the programming language =
-=E2=80=9CC=E2=80=9D)?
-> https://en.cppreference.com/w/c/language/behavior
+On Wed, Mar 5, 2025 at 8:12=E2=80=AFAM Paul Moore <paul@paul-moore.com> wro=
+te:
+>
+> On Tue, Mar 4, 2025 at 10:32=E2=80=AFPM Song Liu <song@kernel.org> wrote:
+> > On Tue, Mar 4, 2025 at 6:14=E2=80=AFPM Paul Moore <paul@paul-moore.com>=
+ wrote:
+> > > On Tue, Mar 4, 2025 at 8:26=E2=80=AFPM Blaise Boscaccy
+> > > <bboscaccy@linux.microsoft.com> wrote:
+> > > > Paul Moore <paul@paul-moore.com> writes:
+> > > > > On Tue, Mar 4, 2025 at 3:31=E2=80=AFPM Blaise Boscaccy
+> > > > > <bboscaccy@linux.microsoft.com> wrote:
+>
+> ...
+>
+> > Do we need this in the LSM tree before the upcoming merge window?
+> > If not, we would prefer to carry it in bpf-next.
+>
+> As long as we can send this up to Linus during the upcoming merge
+> window I'll be happy; if you feel strongly and want to take it via the
+> BPF tree, that's fine by me.  I'm currently helping someone draft a
+> patchset to implement the LSM/SELinux access control LSM callbacks for
+> the BPF tokens and I'm also working on a fix for the LSM framework
+> initialization code, both efforts may land in a development tree
+> during the next dev cycle and may cause a merge conflict with Blaise's
+> changes.  Not that a merge conflict is a terrible thing that we can't
+> work around, but if we can avoid it I'd be much happier :)
+>
+> Please do make the /is_kernel/kernel/ change I mentioned in patch 1/2,
+> and feel free to keep my ACK from this patchset revision.
 
-There is nothing to discuss.
-Dan is correct.
+My preference is to go via bpf-next, since changes are bigger
+on bpf side than on lsm side.
 
-We have:
-struct au1100fb_device {
-         struct fb_info info;
-...
+Re: selftest.
 
-so:
+Why change them at all if 'bool kernel' attribute is unused ?
+Addition of the attr should be backward compatible change,
+so all tests should still pass as-is.
 
-struct fb_info *info =3D &fbdev->info;
-gets translated by the compiler to a trivial pointer math:
-info =3D <value of fbdev> + 0     # 0 is there offset of "info" in the str=
-uct.
-
-No crash or anything can or will happen here.
-
-Markus, maybe you missed the "&" in front of "&fbdev->info" ?
-
-Helge
+You probably should add a new test where 'kernel' arg is actually
+used for something. That would be patch 2.
