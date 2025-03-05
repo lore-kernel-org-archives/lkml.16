@@ -1,125 +1,279 @@
-Received: from fhigh-a2-smtp.messagingengine.com (fhigh-a2-smtp.messagingengine.com [103.168.172.153])
+Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4965320DD6D;
-	Wed,  5 Mar 2025 11:14:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.153
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DA982E3377
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 11:14:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741173244; cv=none; b=gL18zIReYejnVM9inLbRmuSGBm84igInsRwM0d/AY2TKhgwsNqAZp0WFFDSq+F7q9iC2yPAaO/rQ2w8zUcCzK4ezYu3j41DD1lhYqXFew6Zpdov3NrqvaeQMuj1bKBC9X91lxhZN7N9pGBAzRWSnRJlzb73yg2Cdetvo7pCD9NM=
+	t=1741173282; cv=none; b=XvxVcl3ORceCnaY+QQUOQnPVoyi/BKVyOkeIpApfz87dWTPTQb0hpZtP40Gy8Yp1miB6tkykvXtJwZ2Ol8P3VmzN63pIW+RWiSRJyQKHcTAt5z9TOtY2s5Ri6x4JUIV8kT4dsNfSxhS7fyLRrgADtAF5qe8uR8ii5ji4Hi9xXQ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741173244; c=relaxed/simple;
-	bh=qvW7Pwf0BHUfLdz4/ffzDft+TDlxo8yRzDf7LYcSjBs=;
-	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JCTEI9HXxARe7RXRN3jbjCcqyl92FAFGL/1lJg+phqAEUd+vdw1nso6beytanz2P8zwA4HpnB/QxXnWnvUnrV4hkNOB10QDvR99PNSqQMu0zqKiwkMHafXRLHPsTOEZ9KVOTNWTr4La5qOVydY//SEET1h4eWGfx85lzPjRlC1c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sakamocchi.jp; spf=pass smtp.mailfrom=sakamocchi.jp; dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b=aWrZ8EOC; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=hyD82Zjq; arc=none smtp.client-ip=103.168.172.153
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sakamocchi.jp
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sakamocchi.jp
+	s=arc-20240116; t=1741173282; c=relaxed/simple;
+	bh=jdLDJbaQQsoDFa4s+c02wBLg7YrqNZ8Jn1IQPeKEYaI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type:
+	 References; b=EmB2G1z+osRAjLFQWQtNixQwRk/cLffy9d91ehcUK1pX+LQb/SU7Nvp70oKGQwsGHmGNfTxpeh8hbyoCxxvNzsRZG0X1EovyoWRXbJt6jDvwfX9/XuYkHYgikrtaDRb56fXq1LjNTYE7b47W/jo/caRyiJLmj1xX677XRBGwfW0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=D/CzNPdY; arc=none smtp.client-ip=203.254.224.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b="aWrZ8EOC";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="hyD82Zjq"
-Received: from phl-compute-12.internal (phl-compute-12.phl.internal [10.202.2.52])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id 3810D11401A0;
-	Wed,  5 Mar 2025 06:14:00 -0500 (EST)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-12.internal (MEProxy); Wed, 05 Mar 2025 06:14:00 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sakamocchi.jp;
-	 h=cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm1; t=1741173240; x=1741259640; bh=N7EyxBWyLy
-	ajrG4+9lXdCeKumGTXiAwsgiBLJZor9Cw=; b=aWrZ8EOC+RieG3O+SaJvHntFdP
-	aWuLIDSDSs51YA7BIgut+4JUr0QziAtOEDsStpO5P2PcKC17StOwTnvMlA3kza/1
-	DJUAI/B55g1foagX9u6pbFNin1f7mbPdqUM39Kh59pZ3AEnFYiFRDI7SdtC+JbZU
-	L+IRHgfOVb+0aESCK+vObDZSD7I1RfIFhPO/ir2PxF9c6k8xe+JD+4oCFh6GxzvV
-	hwjsF0KO2fiI6/+FpVy2I5paKFTP7jejJfcCv2zMPhMqv7dFsEx91BzJNOaMdars
-	/vb0THG8IVj90o/953ajBq+kqWJ67FPrpG9c09Svy0kjp+nUCd5lQH7c71oA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
-	1741173240; x=1741259640; bh=N7EyxBWyLyajrG4+9lXdCeKumGTXiAwsgiB
-	LJZor9Cw=; b=hyD82ZjqGGBxAT50kQ+JdEuzR64zcpMQcNAwlRMNy3K8sTtzoY9
-	vsDfERzKSeFggASzD5CxDsxyNe/RzzmcO9/KZRz0a284CQYvyn0Yk7i6cFe1BOvh
-	I8EIFrAhDe727en3iZoi6n7hqM/cNqMJhIPutnZOP7zmdns75MBLZQcNG6/Lmi7s
-	ucfXbeV6xZ5lW4a4IsF/DK5xakHk5hzbb+Lm2XiNNaCT3JXtnwAk6Nf3Nlelgp1I
-	BA4V8Fq/Fi4x9WFsbAOp1Ka6QA6yE9tHQmihtdIj0+YXmuL0FcnEHR2yJZW6mgw3
-	qYa/6zN5ELeFHoXtGaiF89QsJLfiC07tv7A==
-X-ME-Sender: <xms:9zHIZ3PZ2R2SjXmY10CFjU_jjEJgAZpRCPLq2XvAS_4fzyUQwCbfDA>
-    <xme:9zHIZx8EGec3GHlnT1xJUFb1U9RezQ-9acsdTNBgUqnvqfIObe04qDAyz6ue3t_01
-    s8BCfKb5Z79bhy1iQk>
-X-ME-Received: <xmr:9zHIZ2TzToUAh_ktBodC_iCb9yvJOcU6QKod7TEHroIka6cqYLsIjpI7kUZKZYlTuDL_Esvc-DNPiqRY3CftuQehZg76OqBPRV0>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddutdegieeiucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepfffhvffukfhfgggtuggjsehttdertddttddv
-    necuhfhrohhmpefvrghkrghshhhiucfurghkrghmohhtohcuoehoqdhtrghkrghshhhise
-    hsrghkrghmohgttghhihdrjhhpqeenucggtffrrghtthgvrhhnpeejgeeifeeuveeufeei
-    geegjeelvdfgjeegffejgfdvkeelhefgtdefteejleekjeenucffohhmrghinhepkhgvrh
-    hnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhf
-    rhhomhepohdqthgrkhgrshhhihesshgrkhgrmhhotggthhhirdhjphdpnhgspghrtghpth
-    htohephedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepmhgthhgvhhgrsgdohhhu
-    rgifvghisehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdguohgtsehvgh
-    gvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheptghorhgsvghtsehlfihnrdhnvght
-    pdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorh
-    hgpdhrtghpthhtoheplhhinhhugidufeelgedquggvvhgvlheslhhishhtshdrshhouhhr
-    tggvfhhorhhgvgdrnhgvth
-X-ME-Proxy: <xmx:9zHIZ7vlXA4cHOGuY_Qfi0GPXXKwYMkab50FI_C6aG1eVqZ0svdaxg>
-    <xmx:9zHIZ_eWm8JQxNMzqVpBmL8ldeeeE15ygXvImEuCnl3-87aIKzx23g>
-    <xmx:9zHIZ33Ne4R2-e44jbY_DmGf0XABMUbE1UGHmS0fWwWd4bd6OsCWZQ>
-    <xmx:9zHIZ79dLutUTnROV69x7zShglQrEDtYebtnKBUY_TfgQg2RsQfQWQ>
-    <xmx:-DHIZwFa71z7HJNY6SaamS-uL37tUjTTzEJPXlG9SY5ujxrgoRqPhpmc>
-Feedback-ID: ie8e14432:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 5 Mar 2025 06:13:58 -0500 (EST)
-Date: Wed, 5 Mar 2025 20:13:55 +0900
-From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
-To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-	Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org,
-	linux1394-devel@lists.sourceforge.net
-Subject: Re: [PATCH 03/27] drivers: firewire: firewire-cdev.h: fix identation
- on a kernel-doc markup
-Message-ID: <20250305111355.GA143843@workstation.local>
-Mail-Followup-To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-	Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org,
-	linux1394-devel@lists.sourceforge.net
-References: <cover.1739952783.git.mchehab+huawei@kernel.org>
- <56d88f897214cbfc4593b4bb4b2a04d0168865d7.1739952783.git.mchehab+huawei@kernel.org>
- <20250220050313.GA414097@workstation.local>
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="D/CzNPdY"
+Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
+	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20250305111438epoutp0280f821d73c409a02d0a5d3de514459fd~p498eiTHD3070430704epoutp02k
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 11:14:38 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20250305111438epoutp0280f821d73c409a02d0a5d3de514459fd~p498eiTHD3070430704epoutp02k
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1741173278;
+	bh=zHdQi7kjXKUJJwwKVQr1SUHzVf3qWJSfUQ7rXz+WnZo=;
+	h=From:To:Cc:Subject:Date:References:From;
+	b=D/CzNPdY3AlrRJJ9x2iBoPqlu4wDvVlGtd3pWFfwE66jBXa9Yu97GNKmP/ocwDxzs
+	 iDnA6WrLxDdM3RlcmsAm/mWhjnXQVwixwQP3RuFQ6Jd7pj7fLQhugJRmVmzP0rfaTb
+	 596BrIHTw/pbFLW7F39/pNYL8hWeXhwLILGF4UwU=
+Received: from epsmges5p3new.samsung.com (unknown [182.195.42.75]) by
+	epcas5p1.samsung.com (KnoxPortal) with ESMTP id
+	20250305111437epcas5p1d4310e39928fbd78a049d7cc482138bf~p497_ScKQ1240812408epcas5p1C;
+	Wed,  5 Mar 2025 11:14:37 +0000 (GMT)
+Received: from epcas5p2.samsung.com ( [182.195.41.40]) by
+	epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	6E.3D.19956.D1238C76; Wed,  5 Mar 2025 20:14:37 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+	epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
+	20250305093229epcas5p477214b3cd1e48e3d862531b647d34585~p3kw3UZFW2244022440epcas5p49;
+	Wed,  5 Mar 2025 09:32:29 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+	20250305093229epsmtrp2f08a84e8a960b2d9e5c7947bc1061fab~p3kw2oTYy1328613286epsmtrp2N;
+	Wed,  5 Mar 2025 09:32:29 +0000 (GMT)
+X-AuditID: b6c32a4b-fd1f170000004df4-a0-67c8321d6ad6
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+	epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	9E.36.18729.D2A18C76; Wed,  5 Mar 2025 18:32:29 +0900 (KST)
+Received: from localhost.localdomain (unknown [107.109.224.44]) by
+	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+	20250305093227epsmtip23e0862b1356075548972219d708d42ad~p3kvBSwTX2504625046epsmtip2L;
+	Wed,  5 Mar 2025 09:32:27 +0000 (GMT)
+From: Maninder Singh <maninder1.s@samsung.com>
+To: chuck.lever@oracle.com, jlayton@kernel.org, neilb@suse.de,
+	okorniev@redhat.com, Dai.Ngo@oracle.com, tom@talpey.com
+Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, Maninder Singh
+	<maninder1.s@samsung.com>, Shubham Rana <s9.rana@samsung.com>
+Subject: [PATCH 1/1] fs/nfsd/nfsctl.c: fix race between nfsd registration
+ and exports_proc
+Date: Wed,  5 Mar 2025 15:02:22 +0530
+Message-Id: <20250305093222.1051935-1-maninder1.s@samsung.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250220050313.GA414097@workstation.local>
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrAKsWRmVeSWpSXmKPExsWy7bCmhq6s0Yl0gzO/dCz+333OZDF/0WY2
+	i5/LVrFbXN41h83iwoHTrBaH57exWOyd38BiMenZJ3aL748vMVqc+nWKyYHLY9OqTjaPj09v
+	sXi833eVzaNvyypGj82nqz0uP7nC6PF5k1wAexSXTUpqTmZZapG+XQJXxqyfLxgL/qpV3J33
+	hL2BsUuxi5GTQ0LARGL9hh62LkYuDiGB3YwSx3u3MEM4nxglZm+7xgLhfGOUmNp1kbWLkQOs
+	5fZzqI69jBJHV7xhhXC+MEpMedDMBjKXTUBPYtWuPSwgtohAhcTk228YQYqYBboZJf5PPsgE
+	khAWiJHYveU3WAOLgKrE/UMTGEFsXgE7ibW7upghDpSXmHnpOztEXFDi5MwnYEOZgeLNW2eD
+	3Soh8JNd4ubcBjaIBheJ1tlv2SFsYYlXx7dA2VISn9/tZYN4oVxi64R6iN4WRon9c6ZA9dpL
+	PLm4EOxNZgFNifW79CHCshJTT61jgtjLJ9H7+wkTRJxXYsc8GFtVouXmBlYIW1ri88ePLBCr
+	PCT2rQS7QEggVuLc/inMExjlZyH5ZhaSb2YhLF7AyLyKUTK1oDg3PbXYtMA4L7Vcrzgxt7g0
+	L10vOT93EyM4EWl572B89OCD3iFGJg7GQ4wSHMxKIryvTx1PF+JNSaysSi3Kjy8qzUktPsQo
+	zcGiJM7bvLMlXUggPbEkNTs1tSC1CCbLxMEp1cB0If9DhfzLo9sUVpybPU9IXU9y/fJik/sv
+	s6qZb0XfuWSSIOvJGydy3U/pT0q0DAtHwR9H+cX+LZ99+tWUyrWqlhwRTUjRaH+1RrujUDSt
+	cCt3pdv3r9zX13AE59y9pTbhT1J5/I/4iNNGTgeOhayt+rSsNqF5bdGBmKzV8bZFZxYLHtl3
+	Z7b8lDaPz8cW7F3zda982Z1L79VjZ06ZOO/P5ej/omwZbfMrNBXSk14+Eq4Tzjp2Ly1syomU
+	XG7/zxFOKSdFfq35ltAQMvWt9h+W83+efSgS6999l11m8bLoae5lz80UFJQ4GB7cvlKVtfpI
+	1LMLrOs8rm6YcfNv8D6Gb99dFk2/xNV86xx71/nFSizFGYmGWsxFxYkA/LJPt7MDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrBLMWRmVeSWpSXmKPExsWy7bCSvK6u1Il0g7UT9S3+333OZDF/0WY2
+	i5/LVrFbXN41h83iwoHTrBaH57exWOyd38BiMenZJ3aL748vMVqc+nWKyYHLY9OqTjaPj09v
+	sXi833eVzaNvyypGj82nqz0uP7nC6PF5k1wAexSXTUpqTmZZapG+XQJXxqyfLxgL/qpV3J33
+	hL2BsUuxi5GDQ0LAROL2c7YuRi4OIYHdjBJ/p+9j72LkBIpLS/z8954FwhaWWPnvOTtE0SdG
+	ieU7PoIVsQnoSazatYcFJCEi0MAo8fjLX7BRzAL9jBJb1r5lBqkSFoiSmNtzgQ3EZhFQlbh/
+	aAIjiM0rYCexdlcXM8QKeYmZl76zQ8QFJU7OfAK2mhko3rx1NvMERr5ZSFKzkKQWMDKtYpRM
+	LSjOTc8tNiwwzEst1ytOzC0uzUvXS87P3cQIDmwtzR2M21d90DvEyMTBeIhRgoNZSYT39anj
+	6UK8KYmVValF+fFFpTmpxYcYpTlYlMR5xV/0pggJpCeWpGanphakFsFkmTg4pRqYtu0U+fUi
+	beLLf67Xm0U9JKLffJstze1jZdvHfr+Yw6jz/vpr8zo7eY+z5UY4Sh3KatKJmRMWJpKQWGgd
+	82v2/Mmz96y3Ner5bRbK592QuLe27M6FjEmGiTU/3G5cU52wj3f57t7JYh9My+ZF3JrrYKZj
+	e2/ZnXrBz8+UL+iIHTv8RU7tlJ+3J7vIlliNqFm7dsW/+V5vdGMGo2i7S5dgtGz9k0cePaFF
+	ByevbTZOszohINmno8pwMFrq/+nYA6pRDMv1Fy0uFK1bMdXhzJL6gFV/jc788/kUvEfuud0+
+	l6JY1udy1zmYLsu2H/y4nz98ctrduRO3rwidcWzPYaOoEJMdOxWbmC7/j7jiI7lDiaU4I9FQ
+	i7moOBEAZNrNc9sCAAA=
+X-CMS-MailID: 20250305093229epcas5p477214b3cd1e48e3d862531b647d34585
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+X-CMS-RootMailID: 20250305093229epcas5p477214b3cd1e48e3d862531b647d34585
+References: <CGME20250305093229epcas5p477214b3cd1e48e3d862531b647d34585@epcas5p4.samsung.com>
 
-Hi,
+1) As of now nfsd calls create_proc_exports_entry() at start of init_nfsd
+and cleanup by remove_proc_entry() at last of exit_nfsd.
 
-On Thu, Feb 20, 2025 at 02:03:13PM +0900, Takashi Sakamoto wrote:
-> Hi,
-> 
-> On Wed, Feb 19, 2025 at 09:32:19AM +0100, Mauro Carvalho Chehab wrote:
-> > The description of @tstamp parameter has one line that starts at the
-> > beginning. This moves such line to the description, which is not the
-> > intent here.
-> > 
-> > Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-> > ---
-> >  include/uapi/linux/firewire-cdev.h | 3 ++-
-> >  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> Applied to for-next branch.
+Which causes kernel OOPS if there is race between below 2 operations:
+(i) exportfs -r
+(ii) mount -t nfsd none /proc/fs/nfsd
 
-I dropped the patch from for-next branch since it already exists in
-jc_docs tree.
+for 5.4 kernel ARM64:
 
-https://lore.kernel.org/lkml/20250305135637.51f92f44@canb.auug.org.au/
+CPU 1:
+el1_irq+0xbc/0x180
+arch_counter_get_cntvct+0x14/0x18
+running_clock+0xc/0x18
+preempt_count_add+0x88/0x110
+prep_new_page+0xb0/0x220
+get_page_from_freelist+0x2d8/0x1778
+__alloc_pages_nodemask+0x15c/0xef0
+__vmalloc_node_range+0x28c/0x478
+__vmalloc_node_flags_caller+0x8c/0xb0
+kvmalloc_node+0x88/0xe0
+nfsd_init_net+0x6c/0x108 [nfsd]
+ops_init+0x44/0x170
+register_pernet_operations+0x114/0x270
+register_pernet_subsys+0x34/0x50
+init_nfsd+0xa8/0x718 [nfsd]
+do_one_initcall+0x54/0x2e0
 
+CPU 2 :
+Unable to handle kernel NULL pointer dereference at virtual address 0000000000000010
 
-Regards
+PC is at : exports_net_open+0x50/0x68 [nfsd]
 
-Takashi Sakamoto
+Call trace:
+exports_net_open+0x50/0x68 [nfsd]
+exports_proc_open+0x2c/0x38 [nfsd]
+proc_reg_open+0xb8/0x198
+do_dentry_open+0x1c4/0x418
+vfs_open+0x38/0x48
+path_openat+0x28c/0xf18
+do_filp_open+0x70/0xe8
+do_sys_open+0x154/0x248
+exports_net_open+0x50/0x68 [nfsd]
+exports_proc_open+0x2c/0x38 [nfsd]
+
+Sometimes it crashes at exports_net_open() and sometimes cache_seq_next_rcu().
+
+and same is happening on latest 6.14 kernel as well:
+
+[    0.000000] Linux version 6.14.0-rc5-next-20250304-dirty
+...
+[  285.455918] Unable to handle kernel paging request at virtual address 00001f4800001f48
+...
+[  285.464902] pc : cache_seq_next_rcu+0x78/0xa4
+...
+[  285.469695] Call trace:
+[  285.470083]  cache_seq_next_rcu+0x78/0xa4 (P)
+[  285.470488]  seq_read+0xe0/0x11c
+[  285.470675]  proc_reg_read+0x9c/0xf0
+[  285.470874]  vfs_read+0xc4/0x2fc
+[  285.471057]  ksys_read+0x6c/0xf4
+[  285.471231]  __arm64_sys_read+0x1c/0x28
+[  285.471428]  invoke_syscall+0x44/0x100
+[  285.471633]  el0_svc_common.constprop.0+0x40/0xe0
+[  285.471870]  do_el0_svc_compat+0x1c/0x34
+[  285.472073]  el0_svc_compat+0x2c/0x80
+[  285.472265]  el0t_32_sync_handler+0x90/0x140
+[  285.472473]  el0t_32_sync+0x19c/0x1a0
+[  285.472887] Code: f9400885 93407c23 937d7c27 11000421 (f86378a3)
+[  285.473422] ---[ end trace 0000000000000000 ]---
+
+It reproduced simply with below script:
+while [ 1 ]
+do
+/exportfs -r
+done &
+
+while [ 1 ]
+do
+insmod /nfsd.ko
+mount -t nfsd none /proc/fs/nfsd
+umount /proc/fs/nfsd
+rmmod nfsd
+done &
+
+So exporting interfaces to user space shall be done at last and
+cleanup at first place.
+
+With change no Kernel OOPs.
+
+2) Also unregister of register_filesystem() was missed in case
+genl_register_family() fails.
+Corrected that also.
+
+Co-developed-by: Shubham Rana <s9.rana@samsung.com>
+Signed-off-by: Shubham Rana <s9.rana@samsung.com>
+Signed-off-by: Maninder Singh <maninder1.s@samsung.com>
+---
+ fs/nfsd/nfsctl.c | 24 ++++++++++++++----------
+ 1 file changed, 14 insertions(+), 10 deletions(-)
+
+diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
+index ac265d6fde35..d936a99ada2a 100644
+--- a/fs/nfsd/nfsctl.c
++++ b/fs/nfsd/nfsctl.c
+@@ -2291,12 +2291,10 @@ static int __init init_nfsd(void)
+ 	if (retval)
+ 		goto out_free_pnfs;
+ 	nfsd_lockd_init();	/* lockd->nfsd callbacks */
+-	retval = create_proc_exports_entry();
+-	if (retval)
+-		goto out_free_lockd;
++
+ 	retval = register_pernet_subsys(&nfsd_net_ops);
+ 	if (retval < 0)
+-		goto out_free_exports;
++		goto out_free_lockd;
+ 	retval = register_cld_notifier();
+ 	if (retval)
+ 		goto out_free_subsys;
+@@ -2305,22 +2303,28 @@ static int __init init_nfsd(void)
+ 		goto out_free_cld;
+ 	retval = register_filesystem(&nfsd_fs_type);
+ 	if (retval)
+-		goto out_free_all;
++		goto out_free_nfsd4;
+ 	retval = genl_register_family(&nfsd_nl_family);
++	if (retval)
++		goto out_free_filesystem;
++	retval = create_proc_exports_entry();
+ 	if (retval)
+ 		goto out_free_all;
++
+ 	nfsd_localio_ops_init();
+ 
+ 	return 0;
++
+ out_free_all:
++	genl_unregister_family(&nfsd_nl_family);
++out_free_filesystem:
++	unregister_filesystem(&nfsd_fs_type);
++out_free_nfsd4:
+ 	nfsd4_destroy_laundry_wq();
+ out_free_cld:
+ 	unregister_cld_notifier();
+ out_free_subsys:
+ 	unregister_pernet_subsys(&nfsd_net_ops);
+-out_free_exports:
+-	remove_proc_entry("fs/nfs/exports", NULL);
+-	remove_proc_entry("fs/nfs", NULL);
+ out_free_lockd:
+ 	nfsd_lockd_shutdown();
+ 	nfsd_drc_slab_free();
+@@ -2333,14 +2337,14 @@ static int __init init_nfsd(void)
+ 
+ static void __exit exit_nfsd(void)
+ {
++	remove_proc_entry("fs/nfs/exports", NULL);
++	remove_proc_entry("fs/nfs", NULL);
+ 	genl_unregister_family(&nfsd_nl_family);
+ 	unregister_filesystem(&nfsd_fs_type);
+ 	nfsd4_destroy_laundry_wq();
+ 	unregister_cld_notifier();
+ 	unregister_pernet_subsys(&nfsd_net_ops);
+ 	nfsd_drc_slab_free();
+-	remove_proc_entry("fs/nfs/exports", NULL);
+-	remove_proc_entry("fs/nfs", NULL);
+ 	nfsd_lockd_shutdown();
+ 	nfsd4_free_slabs();
+ 	nfsd4_exit_pnfs();
+-- 
+2.25.1
+
