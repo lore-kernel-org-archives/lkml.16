@@ -1,121 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E340F1C5D4E;
-	Wed,  5 Mar 2025 18:26:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21EF91C863D
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 18:26:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741199187; cv=none; b=mcK2IArh2CCemRpBrhdJNKLfOQ1j6srOlRkm0H93qP1X7nKZ9/ze+BB7IeXiOUXs+VuozghfRqEOC/G39yfM0QANIhWfMgLlGZcGA9+oPk7JHPrtFvk0havySu2PMVDbUBqaGmq8zUl6e8+UqtPz9vgX9x1Uh5YUPfoptVN3pVk=
+	t=1741199193; cv=none; b=QFnn5YH8e3Kn6A/UFkVsch7g5+uZK0LCGBbWfrJDJyWSqLXxJu4lctYbVVKLVuBnkPM6eYorvzHHYknYgeMHbsnY1FsEZJI3j6477UYdWeFp4kdE/qugBFDUbqBtyMUwnfXkHX+3nqeIodKf67dXg2yH1iR+cFUZMUpjm9MJNT0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741199187; c=relaxed/simple;
-	bh=48DnJO3qW9Xs9zwpNZ50ar/9+kQ5TVK9X1F4TNoalcI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qghCfJQGWbF9CyuQwgKgZTNVngA2zdJlADrBGBt6kCKx1Ccb4IUXG63WM3nE5wTF7cTipjll5aSuq+OP0gkSqVl8gr7+xRj6Tpwefrt40AQ9s1p33Z3X0Q7mYnL2LJ9nN5525RyXBe6uig6HFflj+B1H4Cl4TpCJRejIxzACdVw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=NAHvzRD8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741199193; c=relaxed/simple;
+	bh=VGwMgyKpCt9HHv8lSloTP5AZN+IECQ/wTTW3r2R9a4w=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=bjJ2M6sSN1hZ79vwu/aDoZMpdUlgtvbe7SIzUVDuLw7RhTPUQsZ0/yzzVKaXiCOcc39VfCK3sL4cHC+aDFtGGcmtozIGHtx2gcjJqH/ZlqPDWYgqxrqm21a1y4JtyHyUq+Oeje/6H3+dIHC8mFMas05j4M5iopOo5qHj89EJ9Mg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=dqbAWYei; arc=none smtp.client-ip=209.85.218.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="NAHvzRD8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4998C4CED1;
-	Wed,  5 Mar 2025 18:26:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1741199186;
-	bh=48DnJO3qW9Xs9zwpNZ50ar/9+kQ5TVK9X1F4TNoalcI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NAHvzRD8+X7g/AegMw7cyR1jIwlwz5qCxdSl8q5jhYOT4xNzXEaGJZB9Fdj+MeCy0
-	 zQCXdrTiF2LVuVJcDNOHIsvh5R7txnOr32WZiGaQgPeQy2LJV7s5axeUkJNO5y1Fcf
-	 ZdLkD4jegXk2G1loOK//y6wV7Kq4PNp1UoUjKgwU=
-Date: Wed, 5 Mar 2025 19:09:49 +0100
-From: Greg KH <gregkh@linuxfoundation.org>
-To: =?iso-8859-1?Q?Se=EFfane?= Idouchach <seifane53@gmail.com>
-Cc: dirk.behme@de.bosch.com, rafael@kernel.org, dakr@kernel.org,
-	linux-kernel@vger.kernel.org, regressions@lists.linux.dev,
-	stable@vger.kernel.org
-Subject: Re: [REGRESSION] Long boot times due to USB enumeration
-Message-ID: <2025030559-radiated-reviver-eebb@gregkh>
-References: <CAMpRfLORiuJOgUmpmjgCC1LZC1Kp0KFzPGXd9KQZELtr35P+eQ@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="dqbAWYei"
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-aaeec07b705so1084065266b.2
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Mar 2025 10:26:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1741199189; x=1741803989; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=o+lWuYggNESirpcNjr2CXdSJcsNp4dxN7SSz7x3TDdE=;
+        b=dqbAWYei32ON4aDBTAZ9XqrtMSlr2Am11oh/Wx0ptOUag71hAuKg//c6FEGTp98yC8
+         4vWOMR+0JwYN8YLvlAmvGkfv9+ynlY1DGrHXAstOpHxn/Gk0dfHFOUzr4v9DIuJBH2q9
+         PbRbW71H4wXz+aX8WL7gFdX3zvMjuFVtxqrLQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741199189; x=1741803989;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=o+lWuYggNESirpcNjr2CXdSJcsNp4dxN7SSz7x3TDdE=;
+        b=JbcywtKPIWn3VJgR4MVhDpmAKr6r4jEyuRK5zEAAfknmiTnOBG6JR6++3XyAwyyzyb
+         HdFOvp+tk8oE+yOUzYaL7idp7Hrwmyhk3C1M1TIdQm0rtr8IENlV7nYcNNCPCQWo5+In
+         kYVr24Z1O+sxQvVMKheOfTXcrLXswEIV1D4J+7Mj9Abw+mg58lY5DEmadWfWX9xlGRDk
+         MPLEfWjx3MKJvcZoJ6k8q1+dz4TuIaiDa+0z86hHmUwhjhtdSdZKokzyhYryN89ACp75
+         NV6Bfxpu5CNM32ESEurQVsLnBBXx+BwR34rQom+5glM2uQBtlXkA2jnND4JtAOmvAee9
+         M/tQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU/zYs1S5xiNBObsHxvp2dqUk/2UzcNd4x1uJYFYuzWM0yNIgHTbgOu5RyyaiwHOtLWzlYymgpCrd4v7Kc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwvK8a+XWwc9A6Nf+b1Y/TwyD3eZAL5i0I4eSl37FUmpq0JGmmk
+	cnV/PYhBtCmowQJ5w6atwl9cNRXsWE9tzShzrYD5G+Y0kSwCG44bo/gABYs/13+Wipv05IgGFso
+	U95yM5w==
+X-Gm-Gg: ASbGncs+lRQzC/U5GG5HiDFsK3csnQKbR8E5xbnfmrp2ssrV39W/S9u1VT1fJssovD3
+	q7B/Cdha2i5N1171omvMWihOQFog881dI/yGm7CkmPhfWiYwSnd3JOgSXHh7lm4/JsH3d3LAIxN
+	il9MWvx/yAmYrltkHlzmm0G9KGv+fdts4cUQJrDKP4M+Xl/3cmngeLW8PNy4jMR7jCzXFsCMVTt
+	FJwIyhRnhO8hBP3I0oVWrnlqMpEP6szIpR7pZPAC86+s4YdJfigKMaBmXz6P631aclACNGF5Mnm
+	jwEYAN6iMPgH5AKf0DObGbj5tyXhyCQIz+pd8XrBSKWz3pCfVwoA9Tl6KnPNrS9K5bjWK1GDCUh
+	1ocJdN5J5M/vUEFy6s4s=
+X-Google-Smtp-Source: AGHT+IGwaJvjR3agqkz8r2uA78CVFbILzH3oACIzUU8lOk3v79XiGRFeMK1aevP8Hjeo2/GhiLUkAw==
+X-Received: by 2002:a17:907:7e8a:b0:abf:67d7:7816 with SMTP id a640c23a62f3a-ac20d844744mr425504466b.3.1741199189116;
+        Wed, 05 Mar 2025 10:26:29 -0800 (PST)
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com. [209.85.208.42])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac1fc1070b5sm277927466b.43.2025.03.05.10.26.28
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 05 Mar 2025 10:26:28 -0800 (PST)
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5e4b410e48bso10707367a12.0
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Mar 2025 10:26:28 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCW/ApuCffTXHeyWBT7em1/Ki3o81iXCji4+Wvr68rG9L5o9p8lZrgR0HBTv3davHGoBRW997mObAJJufGA=@vger.kernel.org
+X-Received: by 2002:a17:907:3da2:b0:ac1:e1da:8744 with SMTP id
+ a640c23a62f3a-ac20da862abmr386757466b.38.1741199187743; Wed, 05 Mar 2025
+ 10:26:27 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMpRfLORiuJOgUmpmjgCC1LZC1Kp0KFzPGXd9KQZELtr35P+eQ@mail.gmail.com>
+References: <20250305204609.5e64768e@canb.auug.org.au> <20250305112301.2897-1-kprateek.nayak@amd.com>
+ <CAHk-=whuh+f8C4u+gCkxRZyrt7Gw_FFw_pKn-2SnTovZOvEKmg@mail.gmail.com> <e6cb4e60-9525-4d42-8912-7ce3f7fa4abb@amd.com>
+In-Reply-To: <e6cb4e60-9525-4d42-8912-7ce3f7fa4abb@amd.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Wed, 5 Mar 2025 08:26:10 -1000
+X-Gmail-Original-Message-ID: <CAHk-=wivSEhRG3zJHd0WYz6rO9Gwzek6CMRMSmcHd2c6-01KuQ@mail.gmail.com>
+X-Gm-Features: AQ5f1JqpKUUFPnHc3jSY-R0TPnXsPYIBThz6_u7E-ytiat3EmHPTia73VBP0gTI
+Message-ID: <CAHk-=wivSEhRG3zJHd0WYz6rO9Gwzek6CMRMSmcHd2c6-01KuQ@mail.gmail.com>
+Subject: Re: [PATCH] include/linux/pipe_fs_i: Add htmldoc annotation for
+ "head_tail" member
+To: K Prateek Nayak <kprateek.nayak@amd.com>
+Cc: Oleg Nesterov <oleg@redhat.com>, Stephen Rothwell <sfr@canb.auug.org.au>, linux-kernel@vger.kernel.org, 
+	Linux Next Mailing List <linux-next@vger.kernel.org>, Swapnil Sapkal <swapnil.sapkal@amd.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, Mar 06, 2025 at 12:32:59AM +0800, Seïfane Idouchach wrote:
-> Dear all,
-> 
-> I am reporting what I believe to be regression due to
-> c0a40097f0bc81deafc15f9195d1fb54595cd6d0.
-> 
-> After this change I am experiencing long boot times on a setup that
-> has what seems like a bad usb.
-> The progress of the boot gets halted while retrying (and ultimately
-> failing) to enumerate the USB device and is only allowed to continue
-> after giving up enumerating the USB device.
-> On Arch Linux this manifests itself by a message from SystemD having a
-> wait job on journald. Journald starts just after the enumeration fails
-> with "unable to enumerate USB device".
-> This results in longer boot times on average 1 minute longer than
-> usual (usually around 10s).
-> No stable kernel before this change exhibits the issue all stable
-> kernels after this change exhibit the issue.
-> 
-> See the related USB messages attached below (these messages are
-> continuous and have not been snipped) :
-> 
-> [...]
-> [    9.640854] usb 1-9: device descriptor read/64, error -110
-> [   25.147505] usb 1-9: device descriptor read/64, error -110
-> [   25.650779] usb 1-9: new high-speed USB device number 5 using xhci_hcd
-> [   30.907482] usb 1-9: device descriptor read/64, error -110
-> [   46.480900] usb 1-9: device descriptor read/64, error -110
-> [   46.589883] usb usb1-port9: attempt power cycle
-> [   46.990815] usb 1-9: new high-speed USB device number 6 using xhci_hcd
-> [   51.791571] usb 1-9: Device not responding to setup address.
-> [   56.801594] usb 1-9: Device not responding to setup address.
-> [   57.010803] usb 1-9: device not accepting address 6, error -71
-> [   57.137485] usb 1-9: new high-speed USB device number 7 using xhci_hcd
-> [   61.937624] usb 1-9: Device not responding to setup address.
-> [   66.947485] usb 1-9: Device not responding to setup address.
-> [   67.154086] usb 1-9: device not accepting address 7, error -71
-> [   67.156426] usb usb1-port9: unable to enumerate USB device
+On Wed, 5 Mar 2025 at 08:08, K Prateek Nayak <kprateek.nayak@amd.com> wrote:
+>
+> > And it turns out my worry about pipe_discard_from() was unnecessary.
+> > Yes, the code is buggy. But no, it doesn't matter. Why? There are no
+> > callers of that function ;)
+>
+]> I don't see any in kernel user of this helper currently so can the
+> wrap-around issue be addressed and the helper be removed later?
 
-That's a real issue, but should not be due to the commit id you
-referenced.
+Yes. That's what I did. I still would love to see
 
-> [...]
-> 
-> This issue does not manifest in 44a45be57f85.
+ - more testing
 
-What does that commit have to do with this?  That's just a build break
-fix.
+ - explicit limit checking in pipe_resize_ring()
 
-> I am available to test any patches to address this on my system since
-> I understand this could be quite hard to replicate on any system.
-> I am available to provide more information if I am able or with
-> guidance to help troubleshoot the issue further.
-> 
-> Wishing you all a good day.
-> 
-> #regzbot introduced: c0a40097f0bc81deafc15f9195d1fb54595cd6d0
-> 
+and then I think we could make CONFIG_64BIT use the 16-bit
+pipe_index_t too (because not doing so clearly was a mistake: it meant
+that people didn't test the 32-bit case, so the wrap-around bugs
+weren't as obvious).
 
-We know there are issues here.  That commit was "fixed" by commit
-15fffc6a5624 ("driver core: Fix uevent_show() vs driver detach race"),
-but then that caused a different problem, so it was reverted by commit
-9a71892cbcdb ("Revert "driver core: Fix uevent_show() vs driver detach
-race"").
+                 Linus
 
-There are many discussions about this on the mailing list, with a
-proposal to add Dan's "fix" back.  If you could try that, it would be
-great to see.
-
-I think your USB problem is different here, but if you add 15fffc6a5624
-("driver core: Fix uevent_show() vs driver detach race") to your kernel,
-that would be great to see.
-
-thanks,
-
-greg k-h
+                    Linus
