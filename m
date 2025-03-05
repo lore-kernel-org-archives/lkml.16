@@ -1,122 +1,122 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15D77200100;
-	Wed,  5 Mar 2025 09:04:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741165485; cv=pass; b=lo3wkWET7nN2aiUFmcbLzB14JwnsIXKeT1Unb30fkXugk9ZRtnuQd50WkCPPX0DD1VMjt8vGFZ62e+8qLvLdxuec8IqZAr74lAEQR2hiTvcmpnWDnMMnAMJVFhy/yhE64xfE3Ycr3T2eNZYKjhSvu9zdgd9M9hWGvpXdsN27ztc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741165485; c=relaxed/simple;
-	bh=S991R8nHQ4KUci924RH3qwTCx89uQStWo80Kg/17WnU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JLLTT8w+286Q0MV6EBE12mum1Suyo3bOFpYwdUuiWLxEEFwg8sTUUt27ZMk9F/ofxz8tH+3h/T+zmbt7NgnhJ7zWAblE7cvpkutb2xayCe6Op+d1dZx0ypzmWDuoc9L0Tx2cdXViWD528aqXY3NKHkNEqX56mWSJrID+iEeBCqU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b=bLjhNTZX; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCF521FC7EE;
+	Wed,  5 Mar 2025 09:05:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741165545; cv=none; b=MrNjizHIDTkrAiC7CWV64mEswJ2AoJDB0eBrVWcuWOoUzSf4l+SSy3K8xwCAHpwcRmuwfl1peIR/FmBqdI1K+GmFXuZYsSebRGV8DUQSdHM3e3I8xchYpiPWQ0DOH8WWAsP+kIM/qB2vYW4BlxOQMNn+XEJ5GywKoD2XXsyWNlA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741165545; c=relaxed/simple;
+	bh=eXrGlKvyBxB5Yi9UQBmkNPI0Y6dMFyz6zVG+qsJ5PdM=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=PA7AkotdPY0cfw+mxcPj+69vwZYgighg6yOuuiYk/D1eaR1jJ1SGts6WIRxIoM335/IToc0LY5c8/xkHV7PjVfhJKr7V+/vZpX6nTwKXnpqGdE3PfiLuXu+aV3pdiDYhX4kDm82YP2nUS+0ZbK6nOwrncaAkXQXxAPaNT/L2Uzc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Wrab8fv8; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ceHpbqXJ; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b="bLjhNTZX"
-ARC-Seal: i=1; a=rsa-sha256; t=1741165421; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=aML6y84URqQeEpfaGBbocAOoCx9shK7lRLeSoL7zs5SX1eAi6LRKAG6UI4Di7Arvi4hBDCRvQNQY2QzEonJ9e8ueAyxRozm/BByW/Mwp7JxLk7NWxqlqzlZG6Hgs4UyJd8bKOeErF7BkfGaex0X2Cwg2a4hG/P8wZWpMAKQgYmE=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1741165421; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=fyOnL4r76M4sHB9HhMIqMpDlTkHpMyvnwL+qPFwOmHY=; 
-	b=oDbow1UE+BO/cf067TxihaoptsAymW8fmn0K/GWMOsQcewdMgSnRY8WL/r6MzQK2jEORnLKABs/+d2dpVsB6sKOrGVcbb5GoMfvadhoVxOjP0rkp9WEmQrfSAX3BkhCQzklrHMQPJU29lgzhUSNRt+RgiQBUFIcawqpO/s56AuM=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=dmitry.osipenko@collabora.com;
-	dmarc=pass header.from=<dmitry.osipenko@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1741165421;
-	s=zohomail; d=collabora.com; i=dmitry.osipenko@collabora.com;
-	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=fyOnL4r76M4sHB9HhMIqMpDlTkHpMyvnwL+qPFwOmHY=;
-	b=bLjhNTZXN88/2j7YByNhNOVK6VW1ivb+lAa2CKiF/l1zS2F9ScBlygN+utrENZI5
-	GepaEGfOUzYlfgTyLOgoyKqD6unUF8OQcNEs2XeSQHrv7W7b60GFHPcvLYVPwmyPI6l
-	j11vOC6LEwLoY3gl5lo7lnSQrYsVA+P44FEhQPgI=
-Received: by mx.zohomail.com with SMTPS id 1741165419515412.81218800288195;
-	Wed, 5 Mar 2025 01:03:39 -0800 (PST)
-Message-ID: <88054acf-3051-414c-aef7-4c0f085d5182@collabora.com>
-Date: Wed, 5 Mar 2025 12:03:33 +0300
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Wrab8fv8";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ceHpbqXJ"
+Date: Wed, 05 Mar 2025 09:05:40 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1741165541;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=RrEB+oxxeOEbmk9wRgE7Nost4IAnxx1d16HIx+43vJc=;
+	b=Wrab8fv8wft+6k62BPNshZl0odzU+pB7IGCdEMenpNZ1th0vXxz/7n+uexOFcULqEQkrdr
+	WgWHdtFipw0rK7ZfvYnV54dYPxpzuziSyoOXCsdREyspEJdXL80Y4K5+yrcaCGpMev1CWn
+	HMvQTp1Kbky5PN51SFZ1lgp8jsj1mcAUaNyHMepHeFi09t298aDB5LT9DGu5SET6N3zGUY
+	J+nV9suNBJXAiibPbnnJo9DN/35MQkCWNxDnqFpGGwcTUlZL1h6ja6WKdNiZmf895TPpPa
+	tVlVWR4nhsLzA16JlI7OK6iOfEIa11KSx6a2bfs7ftwX7yZz8IwaaAYqWx2fsQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1741165541;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=RrEB+oxxeOEbmk9wRgE7Nost4IAnxx1d16HIx+43vJc=;
+	b=ceHpbqXJiVuMsax4ztia6pPrRFxXtlSEQBCv+sGEfovHOx/vEIA69cy+P4hx3Urm0AKnqg
+	IdC6+q6hXDzePiCQ==
+From: "tip-bot2 for Jarkko Sakkinen" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/urgent] x86/sgx: Fix size overflows in sgx_encl_create()
+Cc: Dan Carpenter <dan.carpenter@linaro.org>,
+ Jarkko Sakkinen <jarkko@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+ Dave Hansen <dave.hansen@intel.com>, Peter Zijlstra <peterz@infradead.org>,
+ "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250305050006.43896-1-jarkko@kernel.org>
+References: <20250305050006.43896-1-jarkko@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v13 0/6] Add Synopsys DesignWare HDMI RX Controller
-To: Hans Verkuil <hverkuil@xs4all.nl>, Tim Surber <me@timsurber.de>,
- Shreeya Patel <shreeya.patel@collabora.com>, Heiko Stuebner
- <heiko@sntech.de>, Mauro Carvalho Chehab <mchehab@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, jose.abreu@synopsys.com,
- nelson.costa@synopsys.com, shawn.wen@rock-chips.com,
- nicolas.dufresne@collabora.com,
- Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc: kernel@collabora.com, linux-media@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-rockchip@lists.infradead.org,
- Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
- Diederik de Haas <didi.debian@cknow.org>
-References: <20250304085819.108067-1-dmitry.osipenko@collabora.com>
- <78ff36f6-01a7-4df4-b653-c4509fb93af4@timsurber.de>
- <1039aca7-89b9-44ef-9775-e7852e956362@timsurber.de>
- <9b4b1e65-127d-422b-a359-a1d8e25652f9@xs4all.nl>
-From: Dmitry Osipenko <dmitry.osipenko@collabora.com>
-Content-Language: en-US
-In-Reply-To: <9b4b1e65-127d-422b-a359-a1d8e25652f9@xs4all.nl>
-Content-Type: text/plain; charset=UTF-8
+Message-ID: <174116554044.14745.885486771542250636.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-ZohoMailClient: External
 
-On 3/5/25 11:10, Hans Verkuil wrote:
-> On 05/03/2025 01:59, Tim Surber wrote:
->> Hi Dmitry,
->>
->> I did some more testing. That the Apple TV did not work was a bit 
->> misleading.
->>
->> It was just, that the Apple TV defaulted to 4:4:4 Chroma which does not 
->> work at all for me. (The same happens using the vendor driver).
->>
->> When I changed the EDID to match the vendor driver the HDMI handshake 
->> happened with 4:2:0 chroma, where I could verify even 4k60fps using your 
->> driver, nice!
->>
->> So the remaining problems I see are:
->> - 4:4:4 chroma not working in any resolution
->> - 4:2:2 and RGB not working in 4k60fps (is this a hardware limitation?)
->>
->> A possible workaround could be to disable these non supported formats in 
->> the default EDID.
-> I would like to merge this driver this week, since otherwise it will likely
-> slip to v6.16. So if there is a working EDID, perhaps it can be used for now,
-> and later on it can be patched if there is a better EDID.
-> 
-> Would this EDID work? Tim, can you try this?
-> 
-> v4l2-ctl --set-edid type=hdmi-4k-600mhz,ycbcr444,ycbcr422
-> 
-> Alternatively, if there is indeed a HW limitation that prevents 4kp60 to work,
-> try this:
-> 
-> v4l2-ctl --set-edid type=hdmi-4k-300mhz,ycbcr444,ycbcr422
-> 
-> Whichever of the two works is what we can use as default EDID.
+The following commit has been merged into the x86/urgent branch of tip:
 
-Disabling 444 and 422 is an option. Though, they work on my setup at
-4k@60p.
+Commit-ID:     0d3e0dfd68fb9e6b0ec865be9f3377cc3ff55733
+Gitweb:        https://git.kernel.org/tip/0d3e0dfd68fb9e6b0ec865be9f3377cc3ff55733
+Author:        Jarkko Sakkinen <jarkko@kernel.org>
+AuthorDate:    Wed, 05 Mar 2025 07:00:05 +02:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Wed, 05 Mar 2025 09:51:41 +01:00
 
-In general, it often a challenge to get 4k@60p properly with any of
-these small board devices. 4k@60p works only using a short HDMI cable
-for me. Also, not everyone aware that the micro HDMI adapter needs to be
-compliant with HDMI 2.0 for 4k@60, that's why 300MHz is the default.
+x86/sgx: Fix size overflows in sgx_encl_create()
 
-Will be nice to have the good EDID enabled by default in the defconfig.
-Dealing with problems like that will be a headache for majority of
-people, IMO.
+The total size calculated for EPC can overflow u64 given the added up page
+for SECS.  Further, the total size calculated for shmem can overflow even
+when the EPC size stays within limits of u64, given that it adds the extra
+space for 128 byte PCMD structures (one for each page).
 
--- 
-Best regards,
-Dmitry
+Address this by pre-evaluating the micro-architectural requirement of
+SGX: the address space size must be power of two. This is eventually
+checked up by ECREATE but the pre-check has the additional benefit of
+making sure that there is some space for additional data.
+
+Fixes: 888d24911787 ("x86/sgx: Add SGX_IOC_ENCLAVE_CREATE")
+Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+Signed-off-by: Jarkko Sakkinen <jarkko@kernel.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Acked-by: Dave Hansen <dave.hansen@intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Link: https://lore.kernel.org/r/20250305050006.43896-1-jarkko@kernel.org
+
+Closes: https://lore.kernel.org/linux-sgx/c87e01a0-e7dd-4749-a348-0980d3444f04@stanley.mountain/
+---
+ arch/x86/kernel/cpu/sgx/ioctl.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/arch/x86/kernel/cpu/sgx/ioctl.c b/arch/x86/kernel/cpu/sgx/ioctl.c
+index b65ab21..776a201 100644
+--- a/arch/x86/kernel/cpu/sgx/ioctl.c
++++ b/arch/x86/kernel/cpu/sgx/ioctl.c
+@@ -64,6 +64,13 @@ static int sgx_encl_create(struct sgx_encl *encl, struct sgx_secs *secs)
+ 	struct file *backing;
+ 	long ret;
+ 
++	/*
++	 * ECREATE would detect this too, but checking here also ensures
++	 * that the 'encl_size' calculations below can never overflow.
++	 */
++	if (!is_power_of_2(secs->size))
++		return -EINVAL;
++
+ 	va_page = sgx_encl_grow(encl, true);
+ 	if (IS_ERR(va_page))
+ 		return PTR_ERR(va_page);
