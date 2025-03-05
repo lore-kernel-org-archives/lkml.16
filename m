@@ -1,141 +1,156 @@
-Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
+Received: from out-188.mta0.migadu.com (out-188.mta0.migadu.com [91.218.175.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 123CB1DE8A5
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 06:22:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00C94249E5
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 06:27:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741155770; cv=none; b=Otf8WVwdsGEhaCsQeo+76fW5D3MzWAZu2GdAspPLdIJ+B42WkeaYfIfQHBZKky37K15o8Uhwd5ub8W5GMcaR+DN2U5uqNiMDlDWguH6AshNPU0lrxJjYdEPtaEyKq7qfSBtC4SMFmHEUxfWjoueljVQl8820cbKtkE02uMLEL7A=
+	t=1741156050; cv=none; b=lsElD+CQd1xvIaf3ExsI6RzcX5BWL6Hby4S0UWmb75pf5vzuXz6xEpXRaEEoy2LlNvKVX/9TCP9QhtZOC3X8YcYo7RBgT6kLxWciAns4wUE+61IL0NqVHuD4sTQPpN3Sns5sJ6WPfHoTHXFW8u+eYjmmdr+WA0JRzGPhWMlBIwk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741155770; c=relaxed/simple;
-	bh=Hp/3hLQszbQpC4Dkavwf3pq6VtFVA0LTPkBh/vhoZIw=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:References; b=R9N8ZiJl/k6Bc+3on4PlkNrFZxF/me8FgAY7nAuYavYJwN9zvZfVLaRnizILUnXjo35QdhGaySvl5Pk1h8sI2RCJ+JxJhkoLA5i0UzXMMfl0+ieVYIA/C2bRKLO87s/r9FFrYBpuV/sVTf5MxRU0BCxwre8ErByLc7d7Zv+yY9Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=W0PBd+yi; arc=none smtp.client-ip=203.254.224.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1741156050; c=relaxed/simple;
+	bh=xUBbBcwbZqUD8Vm7e59Q9x1gr2CHqGZKe8rVhv4iKc0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QZZagtG5Bn6CnmM+TP/Lgbgc0dTWadDVpXPnjjIMF2vdPH8SqoS7nuZZMQfr5DF98xBbRZuesUwQUb3PZNxFHArcMjeFmVGEVCX/LeSrk7YY7ovxl7FB0nMx72BFumsy/zDNPqYBsAj7xi9mnsgt7X10GVLI32ul/7iUoCKGveg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=TE0DTZPA; arc=none smtp.client-ip=91.218.175.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="W0PBd+yi"
-Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
-	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20250305062246epoutp020f51c451d1b4b1bd4663243e8849b24c~p0-HFEoLL0208202082epoutp02z
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 06:22:46 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20250305062246epoutp020f51c451d1b4b1bd4663243e8849b24c~p0-HFEoLL0208202082epoutp02z
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1741155766;
-	bh=skXfz601zwxGnlS1FM693PJw5hGibXY8CTNZiA2Lo4I=;
-	h=From:To:Cc:Subject:Date:References:From;
-	b=W0PBd+yi6The5YrQkeDh0UCvBO0stflph3otVBGx4s98U0wiT6Eq62pXemkHABil9
-	 Hb1KguJQCCUOj6jnLSzdWl+MLDNx+RE+vqKQZH0FGqLU/7ODqc9etxf3wqJ5dngZVM
-	 aYHy9pQIACdPhhFZ5S9ijR7fRf5Q8dN4iKd7vSds=
-Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
-	epcas5p2.samsung.com (KnoxPortal) with ESMTP id
-	20250305062245epcas5p23067eadd0e690fbee68023f2774468ac~p0-GUv7ny1813318133epcas5p2X;
-	Wed,  5 Mar 2025 06:22:45 +0000 (GMT)
-Received: from epsmges5p2new.samsung.com (unknown [182.195.38.181]) by
-	epsnrtp1.localdomain (Postfix) with ESMTP id 4Z72Xg2Z94z4x9Q0; Wed,  5 Mar
-	2025 06:22:43 +0000 (GMT)
-Received: from epcas5p2.samsung.com ( [182.195.41.40]) by
-	epsmges5p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	32.02.19933.3BDE7C76; Wed,  5 Mar 2025 15:22:43 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-	epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
-	20250305060259epcas5p20c02f4c4b4ff84b0f790b4ea446056e6~p0t1X1d2e1988819888epcas5p2W;
-	Wed,  5 Mar 2025 06:02:59 +0000 (GMT)
-Received: from epsmgmcp1.samsung.com (unknown [182.195.42.82]) by
-	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20250305060259epsmtrp11bd6866051780894bf24883dc4b2621b~p0t1W9LDS0144901449epsmtrp1K;
-	Wed,  5 Mar 2025 06:02:59 +0000 (GMT)
-X-AuditID: b6c32a4a-b87c770000004ddd-7f-67c7edb3dabb
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-	epsmgmcp1.samsung.com (Symantec Messaging Gateway) with SMTP id
-	5E.5E.33707.219E7C76; Wed,  5 Mar 2025 15:02:58 +0900 (KST)
-Received: from cheetah.samsungds.net (unknown [107.109.115.53]) by
-	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20250305060256epsmtip2ebb003603dcf4055c8070785ac5dc092~p0tzO5xUE2406324063epsmtip2J;
-	Wed,  5 Mar 2025 06:02:56 +0000 (GMT)
-From: Inbaraj E <inbaraj.e@samsung.com>
-To: linux-media@vger.kernel.org, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: pankaj.dubey@samsung.com, rmfrfs@gmail.com,
-	laurent.pinchart@ideasonboard.com, martink@posteo.de, kernel@puri.sm,
-	mchehab@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
-	kernel@pengutronix.de, festevam@gmail.com, gost.dev@samsung.com, Inbaraj E
-	<inbaraj.e@samsung.com>
-Subject: [PATCH] media: imx-mipi-csis: Fix v4l2 mbus frame descriptor type
-Date: Wed,  5 Mar 2025 11:26:55 +0530
-Message-Id: <20250305055655.6622-1-inbaraj.e@samsung.com>
-X-Mailer: git-send-email 2.17.1
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprCJsWRmVeSWpSXmKPExsWy7bCmhu7mt8fTDZ5/5rV4eNXf4uaBnUwW
-	M++1slnc/TOJzWLV1J0sFvPbZrBYdE5cwm6x6fE1VovLu+awWfRs2MpqcW3FRFaLZZv+MFks
-	2vqF3aJxwXsWi7/bN7FYvNgi7iDgsXPWXXaP2R0zWT02repk89i8pN7jxeaZjB79fw08fh0W
-	9Xi04xajR9+WVYwenzfJBXBFZdtkpCampBYppOYl56dk5qXbKnkHxzvHm5oZGOoaWlqYKynk
-	Jeam2iq5+AToumXmAP2hpFCWmFMKFApILC5W0rezKcovLUlVyMgvLrFVSi1IySkwKdArTswt
-	Ls1L18tLLbEyNDAwMgUqTMjOWL/3AlvBRI6KLZt+sjUwNrF3MXJySAiYSPTPWsHYxcjFISSw
-	m1Hi/JWXzBDOJ0aJv382M8I511YeZ4RpWf/oCTOILSSwk1HiyW89iKIvjBLPV31iAkmwCahL
-	bOj+ztbFyMEhIlAl0btSBaSGWWAhk8TrawfYQGqEBbwk+g72gt3BIqAqsXTuUbBeXgFLib4l
-	S1kglslLrN5wAOwkCYFODom767awQSRcJD7feM0KYQtLvDq+BeohKYmX/W1Qto/E/jm/oK7O
-	kDi2fTlUvb3EgStzWECOYxbQlFi/Sx8iLCsx9dQ6sBuYBfgken8/YYKI80rsmAdjK0vMPHIf
-	6gRJiZ2Xd0Ld6SFxf/cGJkigxEqs+/eZeQKj7CyEDQsYGVcxSqYWFOempxabFhjlpZbDIyo5
-	P3cTIzh5anntYHz44IPeIUYmDsZDjBIczEoivK9PHU8X4k1JrKxKLcqPLyrNSS0+xGgKDLOJ
-	zFKiyfnA9J1XEm9oYmlgYmZmZmJpbGaoJM7bvLMlXUggPbEkNTs1tSC1CKaPiYNTqoFp/yeX
-	fW/95x6umugfIr46pDaQgSfQc7mK8bKmrgkWfKcDUhmPbDYykCq/bf35yOpkux/3rzbuP2y4
-	4mlMzbxfWveTbBhzt9W9Xlky/+7VJWwVbtxPuAv8LO0cFgeeaGc5Z/ei4diF2jkmDD+S5s0p
-	qji1j+eO1epDhW2MCZOVV+mZrDDLMFt/Oy/T/ZwYd7C0Wo9FkralP7cu5+6Nzrf3i+gmzin1
-	frfk4zOe5Que71S7z3YjykP7vUBP1KQ7+fuzVx0y2+pw4EqFU2ueVFHYpufPV7Y9LvCu7ZBt
-	qnOPlvpX9LzSNZNpLkv+L59ZK718+F8YxwYdt5v3b61E+slpU/w7+45f/jnvcPY9sU9KLMUZ
-	iYZazEXFiQCh3jAxJwQAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrLLMWRmVeSWpSXmKPExsWy7bCSvK7Qy+PpBhd+W1o8vOpvcfPATiaL
-	mfda2Szu/pnEZrFq6k4Wi/ltM1gsOicuYbfY9Pgaq8XlXXPYLHo2bGW1uLZiIqvFsk1/mCwW
-	bf3CbtG44D2Lxd/tm1gsXmwRdxDw2DnrLrvH7I6ZrB6bVnWyeWxeUu/xYvNMRo/+vwYevw6L
-	ejzacYvRo2/LKkaPz5vkAriiuGxSUnMyy1KL9O0SuDLW773AVjCRo2LLpp9sDYxN7F2MnBwS
-	AiYS6x89Ye5i5OIQEtjOKNG5eAcTREJSYvbv6VBFwhIr/z1nhyj6xChxafV9RpAEm4C6xIbu
-	72wgtohAncT8B3NZQIqYBdYzSXx9DzKWk0NYwEui72Av2CQWAVWJpXOPgm3gFbCU6FuylAVi
-	g7zE6g0HmCcw8ixgZFjFKJpaUJybnptcYKhXnJhbXJqXrpecn7uJERzCWkE7GJet/6t3iJGJ
-	g/EQowQHs5II7+tTx9OFeFMSK6tSi/Lji0pzUosPMUpzsCiJ8yrndKYICaQnlqRmp6YWpBbB
-	ZJk4OKUamOb9rnWOEN4a8zeXsW5n+o31ilpGq33b7367nKhgk9O6iP/zvZueN/Z/rGv7eHJd
-	fUxGlBdvT1HH1qbXhfca779alqk96dVJ19p/G6Otn+e0t8pMdRZb5Lv6Wlc8p9JvnuVhn4w/
-	sc9WXPXk+a2++Q6G++YdqXa49sZCv9yV1z+s+LF6d/5CrdVqvE+MUy9EypzROOL670hSAGva
-	3dw9BT1P/wjrzNo1N1EgPzs1e8u8Yt9tTN0n9XULC9PO5OdM26HQP8XxcNHr7Q9uWc9xZlar
-	rLnwZX7cwm+VrN2sghNjNmZwGS21OrdBN+dsZyfX5/05a1Yoz816pe+j4Fd1920Vb3pj8fVT
-	dXrxf/NalViKMxINtZiLihMBPJ9jr9ACAAA=
-X-CMS-MailID: 20250305060259epcas5p20c02f4c4b4ff84b0f790b4ea446056e6
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20250305060259epcas5p20c02f4c4b4ff84b0f790b4ea446056e6
-References: <CGME20250305060259epcas5p20c02f4c4b4ff84b0f790b4ea446056e6@epcas5p2.samsung.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="TE0DTZPA"
+Date: Wed, 5 Mar 2025 07:27:12 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1741156035;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=LFOzxyIWi+Af1k95MeLykF95QwfQQ5HvrGk7FuDDePY=;
+	b=TE0DTZPA9LYDv8nR49q/MIOQuU4h0vO0VcNuHXWB9PJGzK2BqkPm+++pm1gOGMPcYtRMAp
+	lICXaXP5ib6Wo8A16mNaZE3wJQX8uJYVKDnb7Kuu+UzPJrn1DwCTlrQq30otC1Dbp3SsjT
+	DS0k+pxiba0nyUyO0f6FXNwshvzRtyw=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Richard Leitner <richard.leitner@linux.dev>
+To: Dave Stevenson <dave.stevenson@raspberrypi.com>
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, 
+	Mauro Carvalho Chehab <mchehab@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
+	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/3] media: i2c: ov9282: add led_mode v4l2 control
+Message-ID: <plphzp7nebljvmmgg66awjumdsabydaduxpcthjstogbgew64w@f6nrszdkt3db>
+References: <20250303-ov9282-flash-strobe-v1-0-0fd57a1564ba@linux.dev>
+ <20250303-ov9282-flash-strobe-v1-2-0fd57a1564ba@linux.dev>
+ <CAPY8ntAQnN+Ea4oMKK5RkCa+EZMwbCjX4uJx2ex5E=peuz0vAA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPY8ntAQnN+Ea4oMKK5RkCa+EZMwbCjX4uJx2ex5E=peuz0vAA@mail.gmail.com>
+X-Migadu-Flow: FLOW_OUT
 
-For MIPI CSI2 v4l2 mbus frame descriptor type should be set to
-V4L2_MBUS_FRAME_DESC_TYPE_CSI2. Now frame descriptor type is set to
-V4L2_MBUS_FRAME_DESC_TYPE_PARALLEL. So changing the frame descriptor
-type to V4L2_MBUS_FRAME_DESC_TYPE_CSI2.
+Hi Dave,
+thanks for the review.
+I really appreciate your quick responses.
 
-Fixes: d200de90de2a0 ("media: imx: imx-mipi-csis: Implement the .get_frame_desc() operation")
-Signed-off-by: Inbaraj E <inbaraj.e@samsung.com>
----
- drivers/media/platform/nxp/imx-mipi-csis.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On Tue, Mar 04, 2025 at 05:27:34PM +0000, Dave Stevenson wrote:
+> Hi Richard
+> 
+> On Mon, 3 Mar 2025 at 22:59, Richard Leitner <richard.leitner@linux.dev> wrote:
+> >
+> > Add V4L2_CID_FLASH_LED_MODE support using the "strobe output enable"
+> > feature of the sensor. This implements following modes:
+> >
+> >  - V4L2_FLASH_LED_MODE_NONE, which disables the strobe output
+> >  - V4L2_FLASH_LED_MODE_FLASH, which enables the strobe output
+> >
+> > All values are based on the OV9281 datasheet v1.53 (january 2019) and
+> > tested using an ov9281 VisionComponents module.
+> >
+> > Signed-off-by: Richard Leitner <richard.leitner@linux.dev>
+> > ---
+> >  drivers/media/i2c/ov9282.c | 29 +++++++++++++++++++++++++++++
+> >  1 file changed, 29 insertions(+)
+> >
+> > diff --git a/drivers/media/i2c/ov9282.c b/drivers/media/i2c/ov9282.c
+> > index f42e0d439753e74d14e3a3592029e48f49234927..c98ba466e9aea29baff0b13578d760bf69c958c5 100644
+> > --- a/drivers/media/i2c/ov9282.c
+> > +++ b/drivers/media/i2c/ov9282.c
+> > @@ -192,6 +192,7 @@ struct ov9282_mode {
+> >   * @exp_ctrl: Pointer to exposure control
+> >   * @again_ctrl: Pointer to analog gain control
+> >   * @pixel_rate: Pointer to pixel rate control
+> > + * @flash_led_mode: Pointer to flash led mode control
+> >   * @vblank: Vertical blanking in lines
+> >   * @noncontinuous_clock: Selection of CSI2 noncontinuous clock mode
+> >   * @cur_mode: Pointer to current selected sensor mode
+> > @@ -214,6 +215,7 @@ struct ov9282 {
+> >                 struct v4l2_ctrl *again_ctrl;
+> >         };
+> >         struct v4l2_ctrl *pixel_rate;
+> > +       struct v4l2_ctrl *flash_led_mode;
+> 
+> As with 3/3, you only use this control from within ov9282_set_ctrl
+> where you are given the struct v4l2_ctrl, so there is no need to store
+> it in the device state structure.
 
-diff --git a/drivers/media/platform/nxp/imx-mipi-csis.c b/drivers/media/platform/nxp/imx-mipi-csis.c
-index 29523bb84d95..bb6550bed230 100644
---- a/drivers/media/platform/nxp/imx-mipi-csis.c
-+++ b/drivers/media/platform/nxp/imx-mipi-csis.c
-@@ -1137,7 +1137,7 @@ static int mipi_csis_get_frame_desc(struct v4l2_subdev *sd, unsigned int pad,
- 	if (!csis_fmt)
- 		return -EPIPE;
- 
--	fd->type = V4L2_MBUS_FRAME_DESC_TYPE_PARALLEL;
-+	fd->type = V4L2_MBUS_FRAME_DESC_TYPE_CSI2;
- 	fd->num_entries = 1;
- 
- 	entry->flags = 0;
--- 
-2.17.1
+Sure. Thanks for bringing this up. Will fix that in v2.
 
+> 
+> >         u32 vblank;
+> >         bool noncontinuous_clock;
+> >         const struct ov9282_mode *cur_mode;
+> > @@ -670,6 +672,23 @@ static int ov9282_set_ctrl_vflip(struct ov9282 *ov9282, int value)
+> >                                 current_val);
+> >  }
+> >
+> > +static int ov9282_set_ctrl_flash_led_mode(struct ov9282 *ov9282, int mode)
+> > +{
+> > +       u32 current_val;
+> > +       int ret = ov9282_read_reg(ov9282, OV9282_REG_OUTPUT_ENABLE6, 1,
+> > +                                 &current_val);
+> > +       if (ret)
+> > +               return ret;
+> > +
+> > +       if (mode == V4L2_FLASH_LED_MODE_FLASH)
+> > +               current_val |= OV9282_OUTPUT_ENABLE6_STROBE;
+> > +       else
+> > +               current_val &= ~OV9282_OUTPUT_ENABLE6_STROBE;
+> > +
+> > +       return ov9282_write_reg(ov9282, OV9282_REG_OUTPUT_ENABLE6, 1,
+> > +                               current_val);
+> > +}
+> > +
+> >  /**
+> >   * ov9282_set_ctrl() - Set subdevice control
+> >   * @ctrl: pointer to v4l2_ctrl structure
+> > @@ -736,6 +755,9 @@ static int ov9282_set_ctrl(struct v4l2_ctrl *ctrl)
+> >                 ret = ov9282_write_reg(ov9282, OV9282_REG_TIMING_HTS, 2,
+> >                                        (ctrl->val + ov9282->cur_mode->width) >> 1);
+> >                 break;
+> > +       case V4L2_CID_FLASH_LED_MODE:
+> > +               ret = ov9282_set_ctrl_flash_led_mode(ov9282, ctrl->val);
+> > +               break;
+> >         default:
+> >                 dev_err(ov9282->dev, "Invalid control %d", ctrl->id);
+> >                 ret = -EINVAL;
+> > @@ -1391,6 +1413,13 @@ static int ov9282_init_controls(struct ov9282 *ov9282)
+> >                                                 OV9282_TIMING_HTS_MAX - mode->width,
+> >                                                 1, hblank_min);
+> >
+> > +       /* Flash/Strobe controls */
+> > +       ov9282->flash_led_mode = v4l2_ctrl_new_std_menu(ctrl_hdlr, &ov9282_ctrl_ops,
+> > +                                                       V4L2_CID_FLASH_LED_MODE,
+> > +                                                       V4L2_FLASH_LED_MODE_TORCH,
+> > +                                                       (1 << V4L2_FLASH_LED_MODE_TORCH),
+> > +                                                       V4L2_FLASH_LED_MODE_NONE);
+> > +
+> >         ret = v4l2_fwnode_device_parse(ov9282->dev, &props);
+> >         if (!ret) {
+> >                 /* Failure sets ctrl_hdlr->error, which we check afterwards anyway */
+> >
+> > --
+> > 2.47.2
+> >
+> >
+
+regards;rl
