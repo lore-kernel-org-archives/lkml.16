@@ -1,149 +1,125 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-181.mta1.migadu.com (out-181.mta1.migadu.com [95.215.58.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AB1C230BC6;
-	Wed,  5 Mar 2025 12:23:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27C8B1EA7DB
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 12:24:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741177386; cv=none; b=B/Ogu2yatUZ9ZxXkQUxx5ZTvLa+umZjkooVumDzK+erXbkv4X032tkZw3tI1vejGBg07riVoluOOJo1XHNXdbovGJitnKmfpxZPrDGfZutUZItKtN0BufB0lsRNUD7qKuWSt44y0+YeXC7TLpQ8yUlHmCjrql2ur7riS+KSNc9E=
+	t=1741177478; cv=none; b=YrEkYNgfz52TGuyVHn7WW3RHPSq43UGYVfTpDYWYF1cxOsM15VUXY/nCYt4gZH63r+pJ4fUliMgM/sFtSAqpCZAwB8yuYRA0tufW+ObSw5Vc4OqFwmu8Uk/Gj46bI4VhVYv2evaEdoPcCshWeiYsa8TJO74RM8UldzT5WMitWfQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741177386; c=relaxed/simple;
-	bh=s/9I1InuYpZxK//KrKXsxt+XDSwpdDwGwl+90MDRa4o=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=tZ6b1vdrL4GRIO888db1GiRPL2kiaiB78TbxnblvhBmUNk/N3YD7D3usiFCcJG1hpc4qGENPCOZ0IWX5HHRm5zO/kVNntrfB3Z41Xbx8/Ekf7DsVylVrCp3SQHQvZUMmSmIHctzaqM+Hof8/BEJUCfEpBSM85BsQTgKzAbpbDto=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UdYVsiAi; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741177478; c=relaxed/simple;
+	bh=Wba23t8y4zeAzzGOgYyj3RMEi3ZmOBs6WmgEB1JM6xs=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=mfniMulmhv8H2ISwmYWImGUZLTopyOuBhr0PQPEP96bkwsIdLGL2KnO+YpRBiCj2LCdqVUa8MAs8q9y1fh4zu8gcgCRSSCG0tdQcYkLKyZkjk7ljuqYlDFdVLEZhFUDXw4HEQziycllKWvEa99Avh3Ff4aF9E79e+biO0Jvovw4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=iX+VRdPu; arc=none smtp.client-ip=95.215.58.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UdYVsiAi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 309B3C4CEE2;
-	Wed,  5 Mar 2025 12:23:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741177385;
-	bh=s/9I1InuYpZxK//KrKXsxt+XDSwpdDwGwl+90MDRa4o=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=UdYVsiAiket9rKVXzmxwgRkSNbUbJP0lrRcZQ/Dx4Yu8Gc3+6nK3LI7drWbanrI4d
-	 UD3ho32DWS+UkLIUAURh6+0qq2RGTpwkv6f5dW/dyMDnF50SrXrESJ/5pYx/pA1dzK
-	 i/gOgiHwj5cnOm+309DeSN4od4bhxFUyRTGJ9rXV62Cr/mLbLmVkpNnRyqzpHLGhbU
-	 gk6CgENSvmHtYEX58vV1TEizo3qBbEaPhux9UrleQgQZPQ0X5loVgbuhZSReRkCiFK
-	 ifaR/ezjldHS7FfIl17oaAV94YSeht7BlKPtdiOiiP9nOIQ2QngwJpoR4sBh8rzVQK
-	 ZFzFRGYOvWEUA==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-To: "Benno Lossin" <benno.lossin@proton.me>
-Cc: "Miguel Ojeda" <ojeda@kernel.org>,  "Alex Gaynor"
- <alex.gaynor@gmail.com>,  "Boqun Feng" <boqun.feng@gmail.com>,  "Gary Guo"
- <gary@garyguo.net>,  =?utf-8?Q?Bj=C3=B6rn?= Roy Baron
- <bjorn3_gh@protonmail.com>,  "Alice
- Ryhl" <aliceryhl@google.com>,  "Trevor Gross" <tmgross@umich.edu>,
-  "Danilo Krummrich" <dakr@kernel.org>,  <linux-kernel@vger.kernel.org>,
-  <rust-for-linux@vger.kernel.org>
-Subject: Re: [PATCH 16/22] rust: pin-init: add `std` and `alloc` support
- from the user-space version
-In-Reply-To: <20250304225245.2033120-17-benno.lossin@proton.me> (Benno
-	Lossin's message of "Tue, 04 Mar 2025 22:55:32 +0000")
-References: <20250304225245.2033120-1-benno.lossin@proton.me>
-	<qEIYcaF5eMmpiaRI_4rpApjyuiQMjms1LdZhmHXO5l9_HqN32upj8ZVbCnvI3hfDDTJeYT_9N7z3kyvOR-whRg==@protonmail.internalid>
-	<20250304225245.2033120-17-benno.lossin@proton.me>
-User-Agent: mu4e 1.12.7; emacs 29.4
-Date: Wed, 05 Mar 2025 13:22:37 +0100
-Message-ID: <8734frd5v6.fsf@kernel.org>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="iX+VRdPu"
+Content-Type: text/plain;
+	charset=us-ascii
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1741177464;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=PaXpS2qkRKWHzM6dsXV1e2J5mXqRVuhX+G+d5r7JJMk=;
+	b=iX+VRdPuH9ACyHY1AGshnkdwBKtlzIS2BUu9J8U03WQUDacjSygQIZ1GncW2L7PPMp5xu1
+	DX+o00cUrv0E4qkO/QfEOc4h8Dzia4w0KwbAI/kwOQa9Dxm/RBqKapSizeviuDpbmWGoEg
+	2xBpIPVfF1D3KhYHTKOHTL4pZLoaSdw=
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3776.700.51.11.1\))
+Subject: Re: [tip: perf/core] perf/x86: Annotate struct bts_buffer with
+ __counted_by()
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Thorsten Blum <thorsten.blum@linux.dev>
+In-Reply-To: <Z8gvYIYXMHRC-btB@gmail.com>
+Date: Wed, 5 Mar 2025 13:24:11 +0100
+Cc: linux-kernel@vger.kernel.org,
+ linux-tip-commits@vger.kernel.org,
+ Peter Zijlstra <peterz@infradead.org>,
+ x86@kernel.org,
+ linux-hardening@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <0921EF60-73BB-481C-AC5E-152470BBAB79@linux.dev>
+References: <20250304183056.78920-2-thorsten.blum@linux.dev>
+ <174111554764.14745.14213573362217486017.tip-bot2@tip-bot2>
+ <Z8gW1rihV0aIp8Oo@gmail.com> <04A79410-77DA-40F9-8904-44DC2DE1E810@linux.dev>
+ <Z8gvYIYXMHRC-btB@gmail.com>
+To: Ingo Molnar <mingo@kernel.org>
+X-Migadu-Flow: FLOW_OUT
 
-"Benno Lossin" <benno.lossin@proton.me> writes:
+On 5. Mar 2025, at 12:02, Ingo Molnar wrote:
+> * Thorsten Blum <thorsten.blum@linux.dev> wrote:
+>> On 5. Mar 2025, at 10:18, Ingo Molnar wrote:
+>>> Actually, on a second thought:
+>>>=20
+>>>> - buf =3D kzalloc_node(offsetof(struct bts_buffer, buf[nbuf]), =
+GFP_KERNEL, node);
+>>>> + buf =3D kzalloc_node(struct_size(buf, buf, nbuf), GFP_KERNEL, =
+node);
+>>>=20
+>>> Firstly, in what world is 'buf, buf' more readable? One is a member =
+of=20
+>>> a structure, the other is the name of the structure - and they =
+match,=20
+>>> which shows that this function's naming conventions are a mess.
+>>>=20
+>>> Which should be fixed first ...
+>>=20
+>> Yes, I noticed this too, but since buf->buf[] is used all over the =
+place
+>> (also in other functions), I didn't rename it in this patch.
+>>=20
+>> We could just keep offsetof(struct bts_buffer, buf[nbuf]), or use
+>> struct_size_t(struct bts_buffer, buf, nbuf) and still benefit from
+>> additional compile-time checks, or rename the local variable to =
+struct
+>> bts_buffer *bts and use struct_size(bts, buf, nbuf), for example. Any
+>> preferences or other ideas?
+>=20
+> To clean up this code before changing it, so that the changes become=20=
 
-> To synchronize the kernel's version of pin-init with the user-space
-> version, introduce support for `std` and `alloc`. While the kernel uses
-> neither, the user-space version has to support both. Thus include the
-> required `#[cfg]`s and additional code.
->
-> Signed-off-by: Benno Lossin <benno.lossin@proton.me>
-> ---
->  rust/pin-init/src/__internal.rs |  27 ++++++
->  rust/pin-init/src/alloc.rs      | 158 ++++++++++++++++++++++++++++++++
->  rust/pin-init/src/lib.rs        |  17 ++--
->  3 files changed, 196 insertions(+), 6 deletions(-)
->  create mode 100644 rust/pin-init/src/alloc.rs
->
-> diff --git a/rust/pin-init/src/__internal.rs b/rust/pin-init/src/__internal.rs
-> index 74086365a18a..27d4a8619c04 100644
-> --- a/rust/pin-init/src/__internal.rs
-> +++ b/rust/pin-init/src/__internal.rs
-> @@ -186,6 +186,33 @@ pub fn init<E>(self: Pin<&mut Self>, init: impl PinInit<T, E>) -> Result<Pin<&mu
->      }
->  }
->
-> +#[test]
+> obvious to review.
+>=20
+> Please also split out the annotation for instrumentation, it's =
+separate=20
+> from any struct_size() changes, right?
 
-I think the kunit support we have in the pipeline will pick this up?
+Yes, I'll send a v2 with the __counted_by() annotation and submit a
+separate patch for struct_size() and other changes.
 
-> +fn stack_init_reuse() {
-> +    use ::std::{borrow::ToOwned, println, string::String};
-> +    use core::pin::pin;
-> +
-> +    #[derive(Debug)]
-> +    struct Foo {
-> +        a: usize,
-> +        b: String,
-> +    }
-> +    let mut slot: Pin<&mut StackInit<Foo>> = pin!(StackInit::uninit());
-> +    let value: Result<Pin<&mut Foo>, core::convert::Infallible> =
-> +        slot.as_mut().init(crate::init!(Foo {
-> +            a: 42,
-> +            b: "Hello".to_owned(),
-> +        }));
-> +    let value = value.unwrap();
-> +    println!("{value:?}");
-> +    let value: Result<Pin<&mut Foo>, core::convert::Infallible> =
-> +        slot.as_mut().init(crate::init!(Foo {
-> +            a: 24,
-> +            b: "world!".to_owned(),
-> +        }));
-> +    let value = value.unwrap();
-> +    println!("{value:?}");
-> +}
-> +
+>>> I'm also not sure the code is correct ...
+>>=20
+>> Which part of it?
+>=20
+> The size calculation. On a second reading I *think* it's correct, but=20=
 
-[...]
+> it's unnecessarily confusing due to the buf<->buf aliasing.
+>=20
+> So in a cleaned up version of the code:
+>=20
+> - If we name 'struct bts_buffer' objects 'bb'
+> - and bb:buf[] is the var-array
+> - and we rename 'nbuf' to 'nr_buf' (the number of bb:buf[] elements)
+>=20
+> then the code right now does:
+>=20
+>       bb =3D kzalloc_node(offsetof(struct bts_buffer, bb[nr_buf]), =
+GFP_KERNEL, node);
+>=20
+> ... which looks correct.
 
-> diff --git a/rust/pin-init/src/lib.rs b/rust/pin-init/src/lib.rs
-> index 55d8953620f0..1fdca35906a0 100644
-> --- a/rust/pin-init/src/lib.rs
-> +++ b/rust/pin-init/src/lib.rs
-> @@ -204,8 +204,8 @@
->  //! [structurally pinned fields]:
->  //!     https://doc.rust-lang.org/std/pin/index.html#pinning-is-structural-for-field
->  //! [stack]: crate::stack_pin_init
-> -//! [`Arc<T>`]: ../kernel/sync/struct.Arc.html
-> -//! [`Box<T>`]: ../kernel/alloc/struct.KBox.html
-> +//! [`Arc<T>`]: https://doc.rust-lang.org/stable/alloc/sync/struct.Arc.html
-> +//! [`Box<T>`]: https://doc.rust-lang.org/stable/alloc/boxed/struct.Box.html
+If bb:buf[] is the flexible array, it should be buf[nr_buf] like this:
 
-Now these will render incorrect in the kernel docs, right?
+	bb =3D kzalloc_node(offsetof(struct bts_buffer, buf[nr_buf]), =
+GFP_KERNEL, node);
 
->  //! [`impl PinInit<Foo>`]: PinInit
->  //! [`impl PinInit<T, E>`]: PinInit
->  //! [`impl Init<T, E>`]: Init
-> @@ -239,6 +239,11 @@
->  #[doc(hidden)]
->  pub mod macros;
->
-> +#[cfg(any(feature = "std", feature = "alloc"))]
-> +mod alloc;
-> +#[cfg(any(feature = "std", feature = "alloc"))]
-> +pub use alloc::InPlaceInit;
-
-Do we really need to have this entire file sitting dead in the kernel
-tree? If you are not building the user space version from the kernel
-sources, I don't think we need it here. Even when you want to sync
-between the two repositories, it should be easy to handle an entire file
-being not present on one side.
-
-
-Best regards,
-Andreas Hindborg
-
+Thanks,
+Thorsten
 
