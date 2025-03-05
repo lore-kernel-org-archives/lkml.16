@@ -1,92 +1,57 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02B0B136672
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 01:06:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40E2C14658D;
+	Wed,  5 Mar 2025 01:06:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741136773; cv=none; b=GQ0JjVA5O52ne+2qHMnNt/n1zFFv1cHPD9o2BEbWBELgSlCJB+MTpMcKq72GCMxbr6y7QAccRZiKnSG6+/OTvVvcw/PQ+t0ctueAH2izNbHwb/7GRFYsOyNulG2fUxg481NV1IQ1+NtKsaB0vvjYOHIFsA0E8jlsDSDVZY+UonU=
+	t=1741136779; cv=none; b=eu9Upymr3bOWJ6ZKiwPJqXDRG8/b0Tz9yQm7Galg+GrGTX3WIe8+5KNtvoht+2Og/bPiL6nMo+RsYwgcIa8Mx8psL7nB5InNBIJnOwwREcX+exKyn5O4+Qj7GhgoWsgOib3Fl1Bdt/3lqyMrJC8uNIYT8qTHovD5T9u+rcoizsc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741136773; c=relaxed/simple;
-	bh=SXzjYBAmbixh9anaRr1dJ7QeFFB+ALNffscWjHcghG0=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=oupl1zuN5C1f1T7jygMsJSaI/Di1i0FmaPh36UzdbiiVVP5CGXT1cVo0iQC0G8Nvi306386QxyULI3wnsWk+VGpFERgzRWw87dUe79Nk3ZsN67DpA2U1TflmXd1jlv+6aLm1V1s4AUexD3xtL8rNsI0Ic1k6zdDwf/IKUAx3EvI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qCdbfATg; arc=none smtp.client-ip=209.85.216.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1741136779; c=relaxed/simple;
+	bh=NFjI1EHuABG7s0eSffnKl9hWTBsGsWfNfqbWCI+12aw=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=GSSkFnJFrncatiXg51OPdR/nPea2D4YXYaoR8LQ1i+cxcTVFCI06oWIBVrT8GJgp2dIKZ2bVfhSDnAIftclvBeV5MrbgdRqy1d1Tm+0ALGBJ7L2fGs5neOAAFKZXrpicsjya9s8MuA5n9XpoXYIHb9hq9zUX1ng/bYB7pqildgg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tuf4utLm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qCdbfATg"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2fee7f85d03so10374076a91.3
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Mar 2025 17:06:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1741136771; x=1741741571; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=9dQMVONACc/ChRDXXSj2E+97tCqbKUw9XyI1vlcsxSA=;
-        b=qCdbfATguF9tMgJYnfARBowRR1ttJaSweCJC5ZmzROf6uFT/af4T8ttPHeC6oQAw1M
-         Q5gpLPQyugj/L8QFMTlchzw9iL++QfMQ0Ky903PkLEDAcc2IMqe0GCe4lPL4PGOZVJDB
-         l+kvwoGVn54V7DI74E+kNfHXJ8sMwHAL6j9/QwmMG0H3GF8P3SCvj/kgJcblwNaqiF4d
-         R1NxxEQjPUc2LJtsnTVHpInaEQaYl7fteI5iVgSrENbQDeQC21ohoguK/+jyrJuXaj68
-         2PjwykNtrSlMtHow/JmZtL/070w8StuA82d5FG9TzBCVdRCHyNjuV72ZDoj9yDScdbD3
-         JsqA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741136771; x=1741741571;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9dQMVONACc/ChRDXXSj2E+97tCqbKUw9XyI1vlcsxSA=;
-        b=dzuGXKwaGFK5Y0MRUrTQ8/WiTe6YF2JvdT2yPJCowRrHPUzg8ZZOxE89UmcAGbKnf3
-         o2zKlhJODDdFxz8fRqRKGFo3PSLvST0bAVUid54wh9B8OH1M7FtxIM56eZTooFVImGS+
-         3kJcFQWJ4ocDck5P5bnq2zxRLoXgIFS0Knbu0XeOLJvwfdL2RI6JjVM1ET/Q4+BaD/eA
-         yTy3tljcSNLSweXt1cdTsOCVSr9HFQcShYTofzB7p91iFaC3VYddzsRRjWtj6R+augBr
-         MJ4t3co44vovEbeuywwaDHrLMeDGfLQ1tM44/gHi7zW+1AZDrmUQcnuEsq4DDlmMeKHK
-         gJVg==
-X-Forwarded-Encrypted: i=1; AJvYcCXl+HRh5SBvvuv57laRiEODZLoczM7EBLpu8PjN56VUeke9hs34XaXIsTGsAU1a7EQZXqIJHViz3IB/YwQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxZYAtCEIZOiHs4SZsu4x1b1non3/oUwUjUpOaIxGTk1a7yGjnN
-	xEZ23+vy6GgkvXwyh/h8x/9hsxnCuZ0UMcpxGVkDGP4PmKJ/24wxAL5BZlxKxKWkn71aUzyMKZd
-	tgA==
-X-Google-Smtp-Source: AGHT+IFJyL5DSsPfc7J5dgze+5EPuz9vZ84n5U1hHAIRYR+TQzk1rbdMEvItgD8yqCyw/CELtjntpL3YSIs=
-X-Received: from pjboe13.prod.google.com ([2002:a17:90b:394d:b0:2f4:4222:ebba])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:51cb:b0:2ee:d193:f3d5
- with SMTP id 98e67ed59e1d1-2ff4978fe91mr2442244a91.7.1741136771305; Tue, 04
- Mar 2025 17:06:11 -0800 (PST)
-Date: Tue,  4 Mar 2025 17:05:16 -0800
-In-Reply-To: <20250226231809.3183093-1-seanjc@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tuf4utLm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EED5BC4CEE5;
+	Wed,  5 Mar 2025 01:06:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741136778;
+	bh=NFjI1EHuABG7s0eSffnKl9hWTBsGsWfNfqbWCI+12aw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=tuf4utLm8wRDgL8Ga/dAwN/B4O1akbW0V7KqoyMrYlnTCA3HsOqhdlF+q6dZE3fyC
+	 M+vtntkhBDwypJ47u9mTKkTTEak1aJhZoJmycUpXto+hg37CXryNameXS8Pmn3i8t+
+	 nB4tJvZLHLc+E+OCEnwl5tDBsr5/0uRHnH1GJWPnODYUev2VHMU8Y3A9P6+a57nXOi
+	 uvcQ/Ev4AjR3vP4VtJeyWccPql7mjFErbHFnohmR9va3Df5vxxyIGnJ5+6+YQGHKaj
+	 5BUDLSBxF1DLDsYO0KAPrmz7CHS26TR1ymkJU6x/Dmp5JXoU/tjJJGdKtYtj2wp7r7
+	 Yy0KSyjhZvR1A==
+Date: Tue, 4 Mar 2025 17:06:16 -0800
+From: Jakub Kicinski <kuba@kernel.org>
+To: Markus Elfring <Markus.Elfring@web.de>
+Cc: netdev@vger.kernel.org, Andrew Lunn <andrew+netdev@lunn.ch>, Brett
+ Creeley <brett.creeley@amd.com>, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jacob Keller
+ <jacob.e.keller@intel.com>, Paolo Abeni <pabeni@redhat.com>, Shannon Nelson
+ <shannon.nelson@amd.com>, LKML <linux-kernel@vger.kernel.org>,
+ kernel-janitors@vger.kernel.org, Qasim Ijaz <qasdev00@gmail.com>, Natalie
+ Vock <natalie.vock@gmx.de>
+Subject: Re: [PATCH net-next] ionic: Simplify maximum determination in
+ ionic_adminq_napi()
+Message-ID: <20250304170616.22763ca3@kernel.org>
+In-Reply-To: <cbbc2dbd-2028-4623-8cb3-9d01be341daa@web.de>
+References: <cbbc2dbd-2028-4623-8cb3-9d01be341daa@web.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250226231809.3183093-1-seanjc@google.com>
-X-Mailer: git-send-email 2.48.1.711.g2feabab25a-goog
-Message-ID: <174078621049.3857714.9685413190678445101.b4-ty@google.com>
-Subject: Re: [PATCH] KVM: selftests: Relax assertion on HLT exits if CPU
- supports Idle HLT
-From: Sean Christopherson <seanjc@google.com>
-To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Manali Shukla <Manali.Shukla@amd.com>
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, 26 Feb 2025 15:18:09 -0800, Sean Christopherson wrote:
-> If the CPU supports Idle HLT, which elides HLT VM-Exits if the vCPU has an
-> unmasked pending IRQ or NMI, relax the xAPIC IPI test's assertion on the
-> number of HLT exits to only require that the number of exits is less than
-> or equal to the number of HLT instructions that were executed.  I.e. don't
-> fail the test if Idle HLT does what it's supposed to do.
-> 
-> Note, unfortunately there's no way to determine if *KVM* supports Idle HLT,
-> as this_cpu_has() checks raw CPU support, and kvm_cpu_has() checks what can
-> be exposed to L1, i.e. the latter would check if KVM supports nested Idle
-> HLT.  But, since the assert is purely bonus coverage, checking for CPU
-> support is good enough.
-> 
-> [...]
+On Sat, 1 Mar 2025 11:12:31 +0100 Markus Elfring wrote:
+> Reduce nested max() calls by a single max3() call in this
 
-Applied to kvm-x86 selftests, thanks!
-
-[1/1] KVM: selftests: Relax assertion on HLT exits if CPU supports Idle HLT
-      https://github.com/kvm-x86/linux/commit/62838fa5eade
-
---
-https://github.com/kvm-x86/linux/tree/next
+max3() is literally a wrapper for max(a, max(b, c))
+This patch is pointless.
