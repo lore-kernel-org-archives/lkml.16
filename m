@@ -1,155 +1,160 @@
-Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76DC51D63C3;
-	Wed,  5 Mar 2025 04:30:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1017A2E3364
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 04:32:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741149027; cv=none; b=PaRXkJfRzbUWluR32k5YC5BcpVVBzl/WE9uVJEXKQ8W7J//Y2kLVJ35khIIBwynMKRhvbuJ0AUohl1/yAxi10HdZKBAyfINVaWvCDh6FwFx9MrUvXAY6aX0gnUfhtMBD0gygE5D4k7tZJ3xTmVm1xRBm27MlUlrV2UYGd1qfCPQ=
+	t=1741149167; cv=none; b=e60lgqn4Tz08fGfdbZrE26GNGSFLt75rbVqHIJkgAwdM/2EPNNxKFFGsNk+Wi75/L21TwOdwDfBrD7Z+Vs8k5w813E/ElL2jSULn/pNEvyTmCSehC0HviWpaoNwV+9+SKDR5LdphqVwjXdkyWa17X69uAUrJgFTMWxJ61T8Augg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741149027; c=relaxed/simple;
-	bh=/rtDbi7uSjBFCc9+l01/GCl/ObmCJylChTnhbJQIO7M=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Uslsw6rCOjPyYuhbTx0cyADelWQnAmT5w+Yhj7v0VuxTnLIvmSCH514roVwJn+0fdMLYslmFtE0RFXuFYpuZVkIefY1rp8jrUdMTV9Vrz5Hr2crll29Yb1igvAsWxrrBys4h/hadVmrOT7QyNqeNP7l5Vx2niYgcePiiypm/Hxo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Tmyiaj2/; arc=none smtp.client-ip=209.85.222.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741149167; c=relaxed/simple;
+	bh=nFWeksWwiHDRuocIyS5OZv5DOPyfdCfqD6Zc0mGUK2w=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hd5wobOV5l0RSnUnGhLIjOSk8tRQUTBDaO341M/4LqhvqK4G8xHrsVc6zkRdNsaoLPF67gHokL8jDp80EDExXbDU6Enkni3v85LBXcLpA8wCF/ezzmv2SVsnpsUQgfStr32mmSRnbtBz6nyXLKMWARpxwmDiFlBhqZN03LNoEPM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UYQeNz3r; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Tmyiaj2/"
-Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-7be49f6b331so620466785a.1;
-        Tue, 04 Mar 2025 20:30:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741149024; x=1741753824; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rjB9uUIaqtE9vOEIpWwNSuqq5SDBhNaUIjyLRrZ2+yo=;
-        b=Tmyiaj2/mhLpZxRsAMjLBcoO5YuNxUrxg9lyn/K1yVLxk/DGqfqU2UvVXfeYtTKWDh
-         BQoJxaTw+J84JrwxfKyXWP8KPOVaPmXjVDPngbNuGUwHtQ9nC1Dgz5bEsZ5shhChxQT8
-         BoIYXO9/2Srzjbcljfj/NM2uNqPMoLnBZzrXwVBtiHW3AvlMNmqwCT1SGW0Tal1rPX1x
-         UbXGdlhMmTVWO1JeXrRG0FW2FHaXoM/PK9kydouxqKEalNgGeY+XdOk0XOzXLfG7onvF
-         Feh73XekPVR5NpvQwwtONVH4q+XUX+nmiIkZrazwHD+3EWFr9wxRKVwvspec0HhaiV7k
-         1jQw==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UYQeNz3r"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1741149165;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=bjVevVXOLmssCLAAJ8imF8PLNyoL6QY0RzG5Mf1zavQ=;
+	b=UYQeNz3r0nIi97ZIzAsc99L0yI58eQMN9BwXbj1FfXDvhMzdnbTsKhk1WodMDxquVOfv3h
+	RMPsPwW/UadfY3a60anEyaz68bz4q7fGmswOS1HX//eNf4MFhrKR170ZU2UtkkjCMB2QyB
+	vr0jB63rRfoPq4YtdZBeV8GK5yyDEUI=
+Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com
+ [209.85.216.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-662-Ft7v-4giN1iu-ZGXdyvUuQ-1; Tue, 04 Mar 2025 23:32:33 -0500
+X-MC-Unique: Ft7v-4giN1iu-ZGXdyvUuQ-1
+X-Mimecast-MFC-AGG-ID: Ft7v-4giN1iu-ZGXdyvUuQ_1741149153
+Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-2fec3e38c2dso14596997a91.2
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Mar 2025 20:32:33 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741149024; x=1741753824;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1741149152; x=1741753952;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=rjB9uUIaqtE9vOEIpWwNSuqq5SDBhNaUIjyLRrZ2+yo=;
-        b=QoUjGHElj7pNpxU9KoHf/B0pcff+rdc5MRchmSB63/gaRlNWiOx5UmPNPtnhz9hbUK
-         4KA1HSBwu9bBlaqDFmxFtl1Q/tooN+o3DJDYWuhgRl8p/89cbQqvieAfxL12lkRhoNuI
-         Com3fyC9y5C1daiaYCzqaz1HVX6KNz85xes1mvCUJtlPpLbMq6OoHEKo5QO9Kik/WfaC
-         pWdr29eT9Bm9yzg7sNjMXXd2o2ILfy+3Be4CiHqmDWOAvcWLRKKua1CZqbw2Eqe1h4T9
-         MOQt8PZULvWq6m3BZJ9MMhMZKy2JHbT6Zc1BJzMmuIlGJTcUnoeaPDqqHVFHPdCg8nlQ
-         fdTg==
-X-Forwarded-Encrypted: i=1; AJvYcCX6GMx6ICk3h4emNmbnZynGCz5pSret22whjMf9e5gYgtSuzOd3ClomLIHmPKVxci4YbBQqmyUcQQPpgDY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxYcLlBSZEXi61UFxDbeHfok57wseyhWSzYms5XrGGlipn+n3JW
-	D9fMCeNYQ6SZlJEXutSAJRN6v+IM6XawqYwAfDred9bXulPKCgNGeHDky19u
-X-Gm-Gg: ASbGncsBlbXWpJJp2fDVeDgCJLVcu4edLaMEiHGHjIMUTi+uR8c6zEQfAovcqk6rP/s
-	fhsOyivYjvbMvqRYWL0QfvTmwsj0LP1e8UjYrleQsw8EzOFwOYT5miSDPNNKVXGPPpaiKVlwH2L
-	l1wrsXLhnedIdhQFRqD70GYpCcJSsntmsW5yQbr0JdBZNxs1u23LTn3E9+n3EqFtoelQHgrqppq
-	Bmi1Ru25RMY7LKFhsAaa3CaJ9LMWRSYRrQESdA4WPSTVWGRS7AX7i2RZATpSUGzuoSf5A+W2+cc
-	hCAwCKBacIqV7G1VE5+upuwqz5V05s+V5GYKPoucsRvU4HEAak4s8PBnuDhBjLZXMBa3k8e5D8v
-	+I6lmPbI=
-X-Google-Smtp-Source: AGHT+IGWDx0RkZd6Nu9XMl3P81+xGGY29EFnXdhoJHvCCiaa+rmUCdY6b51hp0aq9gPRkLbOBpWKyw==
-X-Received: by 2002:a05:620a:8908:b0:7c3:d45b:c0bc with SMTP id af79cd13be357-7c3d8ee1838mr399822985a.36.1741149023860;
-        Tue, 04 Mar 2025 20:30:23 -0800 (PST)
-Received: from nerdopolis2.mynetworksettings.com ([2600:4040:5e66:a800:a5b9:4b66:4113:9357])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c36fee8b4dsm834060785a.15.2025.03.04.20.30.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Mar 2025 20:30:22 -0800 (PST)
-From: adamsimonelli@gmail.com
-To: linux-serial@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Jiri Slaby <jirislaby@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Andy Shevchenko <andy.shevchenko@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	John Ogness <john.ogness@linutronix.de>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Petr Mladek <pmladek@suse.com>
-Cc: Adam Simonelli <adamsimonelli@gmail.com>
-Subject: [PATCH v7 3/3] tty: Change order of ttynull to be linked sooner if enabled as a console.
-Date: Tue,  4 Mar 2025 23:29:30 -0500
-Message-ID: <20250305042930.3453265-4-adamsimonelli@gmail.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250305042930.3453265-1-adamsimonelli@gmail.com>
-References: <20250305042930.3453265-1-adamsimonelli@gmail.com>
+        bh=bjVevVXOLmssCLAAJ8imF8PLNyoL6QY0RzG5Mf1zavQ=;
+        b=ZK/ZGcFJ3VWceilVmDy1xp3OdK4i7kN4prjhxbV7o9A46J3N+wZGbQFk0YOFUf5ZQx
+         pHcxEamUc5KdJuTt+YdEAdyfa0ElbdIFZvmpq2uz5RoxvEOBlFlkYrPeEC+GVeLHjR3w
+         UcTvC+WDXIFp/dhnTc8uDTfXW1wZ3h/Xy7bkHhrQphZKqzZJK/tPMjnHuG5PJwmqZti5
+         raLAma2bJss3HHs282c1eT/kzJaO9csveUaZBZfjCBbfh93sprW4JnELnGaqaD+UeBrv
+         OTfn106cF9KWKltJYqA8YL8zAdHQ2QqQzYorzc1rUhcJw6vgcrQoav74o1/l2EKiUecC
+         nlxA==
+X-Forwarded-Encrypted: i=1; AJvYcCWmt5B24QkwI5zDDgpyJdB6seck3jgGudATDQ/nD3l9GufjvTAEVoR1LxMZDU4HbBIf2KMUUICjvHzkX5o=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwlX6K14wXoTcy9vC8lVpCgVH7I2t4i53iITd8hmE/4ErWzRm2u
+	nOfYQ+34tJyxDrEED8GKL9XWjedt1wPWEQB1Ob6QH/czcpQaAmG7wmSq0Lhdn6RI6/ghza2XqHm
+	gXmbiohhA9eecNiH86Kc78q9QUzqttapu2I0o/ED6z2ZUsAVfYxMd71uvBfjIsFydDZcao5sWhb
+	u+U+uubV86De4f93ygOyF0ovYOVZuQ/az7+R2E
+X-Gm-Gg: ASbGncv/Z0MUWB2djNztAj6lNuQMv298/ysJaVt6W1Gv4jPJhoaC+2dR55G1kxu3P4x
+	yY7xvImamCNxRC3qAIzsfCZnvtxdiUShGyGzvX1bUMnlIufC9xruBRolCk0ouTSuKT5EycD68NA
+	==
+X-Received: by 2002:a17:90b:1cd0:b0:2ea:a25d:3baa with SMTP id 98e67ed59e1d1-2ff4978e92amr2977188a91.5.1741149152687;
+        Tue, 04 Mar 2025 20:32:32 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEhHW7v4PkX/3ohSqeT1tugqPYgOYC7QtruOmWg6dZQg09TZ3e6iZmJF1+UJ3XPL9kMzJDnCsDVq/d2f1hpDUo=
+X-Received: by 2002:a17:90b:1cd0:b0:2ea:a25d:3baa with SMTP id
+ 98e67ed59e1d1-2ff4978e92amr2977160a91.5.1741149152309; Tue, 04 Mar 2025
+ 20:32:32 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250121103346.1030165-1-eperezma@redhat.com> <20250224164956-mutt-send-email-mst@kernel.org>
+ <CAJaqyWfir7+oVtC3Z+eC+jbDxkACs0J9a4-wnx_dgU5VeFhr8A@mail.gmail.com> <20250225072222-mutt-send-email-mst@kernel.org>
+In-Reply-To: <20250225072222-mutt-send-email-mst@kernel.org>
+From: Jason Wang <jasowang@redhat.com>
+Date: Wed, 5 Mar 2025 12:32:19 +0800
+X-Gm-Features: AQ5f1Jqvzx_MszP7oKSb_mOembHoEYJVKAnXmXCk5PO3hJR0roqLasWY_CV6zvM
+Message-ID: <CACGkMEte+TcMk5BRrcp4h+53p1oCs7uR+6OtSZzGj33kG3WL-Q@mail.gmail.com>
+Subject: Re: [PATCH] vduse: add virtio_fs to allowed dev id
+To: "Michael S. Tsirkin" <mst@redhat.com>
+Cc: Eugenio Perez Martin <eperezma@redhat.com>, virtualization@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, Hanna Reitz <hreitz@redhat.com>, 
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>, German Maglione <gmaglione@redhat.com>, stefanha@redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Adam Simonelli <adamsimonelli@gmail.com>
+On Tue, Feb 25, 2025 at 8:31=E2=80=AFPM Michael S. Tsirkin <mst@redhat.com>=
+ wrote:
+>
+> On Tue, Feb 25, 2025 at 01:17:02PM +0100, Eugenio Perez Martin wrote:
+> > On Mon, Feb 24, 2025 at 10:51=E2=80=AFPM Michael S. Tsirkin <mst@redhat=
+.com> wrote:
+> > >
+> > > On Tue, Jan 21, 2025 at 11:33:46AM +0100, Eugenio P=C3=A9rez wrote:
+> > > > A VDUSE device that implements virtiofs device works fine just by
+> > > > adding the device id to the whitelist.
+> > > >
+> > > > Signed-off-by: Eugenio P=C3=A9rez <eperezma@redhat.com>
+> > >
+> > >
+> > > OK, but the commit log really should say why
+> > > you are doing this.
+> >
+> > Sure I can expand on the motivation.
+> >
+> > Something like "Allowing VDUSE FS type allows to build filesystems
+> > that run in userspace and can be presented transparently to the host
+> > and the guest. After modifying userland's libfuse, this allows to
+> > expose a good amount to already available userland FS through vDPA."
+> >
+> > I'd add using the high performance virtio protocol but I still need to
+> > do more tests for this TBH.
+> >
+> > > And also why is it safe.
+> > >
+> >
+> > Can you expand on the scenarios you think this is insecure? While I
+> > understand it's security sensitive, you already need root to perform
+> > vdpa device operations. Is FS different from net or block?
+> >
+> > Thanks!
+>
+> I did not say it was insecure, just that you need to explain the
+> security considerations in the commit log.
+> The issue is that when one gave access to vdpa user device previously
+> it would only allow mounting blk now a filesystem.
+>
+> Net is different, it is gated by CAP_NET_ADMIN.
+>
+> When net was introduced, selinux was there initially then it
+> was deferred and never surfaced.
+> Maybe we should revive it so it is possible to control which
+> devices can be created in a granular way.
 
-If CONFIG_NULL_TTY_DEFAULT_CONSOLE is enabled, and CONFIG_VT is disabled,
-ttynull will become the default primary console device, based on the link
-order.
+Can we simply start from CAP_SYS_ADMIN?
 
-Many distributions ship with CONFIG_VT enabled. On tested desktop hardware
-if CONFIG_VT is disabled, the default console device falls back to
-/dev/ttyS0 instead of /dev/tty.
+Thanks
 
-This could cause issues in user space, and hardware problems:
-
-1. The user space issues include the case where  /dev/ttyS0 is
-disconnected, and the TCGETS ioctl, which some user space libraries use
-as a probe to determine if a file is a tty, is called on /dev/console and
-fails. Programs that call isatty() on /dev/console and get an incorrect
-false value may skip expected logging to /dev/console.
-
-2. The hardware issues include the case if a user has a science instrument
-or other device connected to the /dev/ttyS0 port, and they were to upgrade
-to a kernel that is disabling the CONFIG_VT option, kernel logs will then be
-sent to the device connected to /dev/ttyS0 unless they edit their kernel
-command line manually.
-
-The new CONFIG_NULL_TTY_CONSOLE option will give users and distribution
-maintainers an option to avoid this. Disabling CONFIG_VT and enabling
-CONFIG_NULL_TTY_CONSOLE will ensure the default kernel console behavior
-is not dependant on hardware configuration by default, and avoid
-unexpected new behavior on devices connected to the /dev/ttyS0 serial
-port.
-
-Signed-off-by: Adam Simonelli <adamsimonelli@gmail.com>
----
- drivers/tty/Makefile | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
-
-diff --git a/drivers/tty/Makefile b/drivers/tty/Makefile
-index 07aca5184a55..7d0414dc31ed 100644
---- a/drivers/tty/Makefile
-+++ b/drivers/tty/Makefile
-@@ -11,6 +11,12 @@ obj-$(CONFIG_N_HDLC)		+= n_hdlc.o
- obj-$(CONFIG_N_GSM)		+= n_gsm.o
- 
- obj-y				+= vt/
-+
-+# If ttynull is configured to be a console by default, ensure that it is linked
-+# earlier before a real one is selected.
-+obj-$(CONFIG_NULL_TTY_DEFAULT_CONSOLE) \
-+				+= ttynull.o
-+
- obj-$(CONFIG_HVC_DRIVER)	+= hvc/
- obj-y				+= serial/
- obj-$(CONFIG_SERIAL_DEV_BUS)	+= serdev/
-@@ -20,7 +26,13 @@ obj-$(CONFIG_AMIGA_BUILTIN_SERIAL) += amiserial.o
- obj-$(CONFIG_MOXA_INTELLIO)	+= moxa.o
- obj-$(CONFIG_MOXA_SMARTIO)	+= mxser.o
- obj-$(CONFIG_NOZOMI)		+= nozomi.o
-+
-+# If ttynull is enabled, but not as a boot console, it is linked and used later
-+# after the real ones.
-+ifneq ($(CONFIG_NULL_TTY_DEFAULT_CONSOLE),y)
- obj-$(CONFIG_NULL_TTY)	        += ttynull.o
-+endif
-+
- obj-$(CONFIG_SYNCLINK_GT)	+= synclink_gt.o
- obj-$(CONFIG_PPC_EPAPR_HV_BYTECHAN) += ehv_bytechan.o
- obj-$(CONFIG_GOLDFISH_TTY)	+= goldfish.o
--- 
-2.45.2
+>
+> > > > ---
+> > > >  drivers/vdpa/vdpa_user/vduse_dev.c | 1 +
+> > > >  1 file changed, 1 insertion(+)
+> > > >
+> > > > diff --git a/drivers/vdpa/vdpa_user/vduse_dev.c b/drivers/vdpa/vdpa=
+_user/vduse_dev.c
+> > > > index 7ae99691efdf..6a9a37351310 100644
+> > > > --- a/drivers/vdpa/vdpa_user/vduse_dev.c
+> > > > +++ b/drivers/vdpa/vdpa_user/vduse_dev.c
+> > > > @@ -144,6 +144,7 @@ static struct workqueue_struct *vduse_irq_bound=
+_wq;
+> > > >  static u32 allowed_device_id[] =3D {
+> > > >       VIRTIO_ID_BLOCK,
+> > > >       VIRTIO_ID_NET,
+> > > > +     VIRTIO_ID_FS,
+> > > >  };
+> > > >
+> > > >  static inline struct vduse_dev *vdpa_to_vduse(struct vdpa_device *=
+vdpa)
+> > > > --
+> > > > 2.48.1
+> > >
+>
 
