@@ -1,300 +1,135 @@
-Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com [209.85.219.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EAD322E400
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 13:00:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C96D01E531;
+	Wed,  5 Mar 2025 13:00:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741179624; cv=none; b=LP/a4HUvw31GxX2W0XXtpZn3zHpRjQAHW0DHVX8tDnaYUrL/jQZG5UqtYLl3sJ2NePzP0vK4hd8rL3vF+XAXvo2H7H1uw/eF/3d87DMaWVLjkTe0P6vSzmjwefz7kvkZcduaxNhwQSe+/KJmJDcHUWQajpb1vnlHgBUD7awg+Z0=
+	t=1741179632; cv=none; b=WZNamCM/I6/ooV6DfKX30JDIkqiuBqvFqNl40EqfzAXIgbzfsbQ6ViV7PugLYS+1EO7VQYGOsHFHWCvNZXSq+GcojhJKDOqfwYH7c9MQxOHAcv9+vJuLotJ9Jx3+/X+MR+xVbLSnw/VIHV74ORwGYNb1csD5CU5JU58cG9ItHhY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741179624; c=relaxed/simple;
-	bh=oDXTVw3eEEC3yng1vICnNZ71OXdSEj/QsNena9l7j6c=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bFh76W6U70wcyEBlEsiwnGS5SoVGZNfhlYmeW0J6UUnMtDwyqg8ldrHEWoTLZDerixD2zkqp0sKEpoIInPyRoa5ob3TBoa1gt+lXiudvtfhqKqPdtEAI1f7YHPx9pOJkGwNm9Az2nJji34HeVBf12j5VLsvHNz6BIjaZ4Qp1sZo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=raspberrypi.com; spf=pass smtp.mailfrom=raspberrypi.com; dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b=crmADee2; arc=none smtp.client-ip=209.85.219.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=raspberrypi.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=raspberrypi.com
+	s=arc-20240116; t=1741179632; c=relaxed/simple;
+	bh=CGxNrwrJ/7w+lrFYd7rIJRRXjnZsn89/CuKNM7OkM3s=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Q9voSnIwx4PXabroFR9PdfkgWNlfThx71VGtX7NuZaqYZet9dinf84xibfNt+jUFxtdZvBNPeHTULq2UqDqksZWVXYhoXMj7SoKXrMsckwcGCSffEv6fRf2wMldUU4+beZmGkfcVGiyibVfXl3ObdkaCg07ME5YURr0en2QA170=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EP2n4+y2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b="crmADee2"
-Received: by mail-yb1-f181.google.com with SMTP id 3f1490d57ef6-e60f212fee7so2567364276.1
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Mar 2025 05:00:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=raspberrypi.com; s=google; t=1741179619; x=1741784419; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=tbTRkPeLnT4t7RG89jSVZDnvU7AWOOoQFXkBGI6AsUU=;
-        b=crmADee2isgmJ8lXrCvSHjt0kSJctlyAgC0emHrW6/PL/xA2aE5AMrgGOYUWw/pjo9
-         kFuARwS8gACr+VyYxt9VVN2hihIhX+EkJ5rY6k7Fzr9M1PYL1tJPOv+B0TY/j8sxM0mC
-         BHz8dkqLw2Au4+ID/YAu+LhJGHqqHcFgKUudVgoF5IceR556leyo7dTY6RREu1Eiwu8S
-         FzpFvSievNNQzIs7w0rhg/HEpaHD9qPL+xrlfMgqJBMrFXG525ycuIxFAEHzsvLL+wtp
-         jLV/QXse0JM/7QSWsG/TuamyZsX061C5Fjk0zGnllsB/JfDE/lnP3AXHlq/aDJVtKLfV
-         R3Kg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741179619; x=1741784419;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=tbTRkPeLnT4t7RG89jSVZDnvU7AWOOoQFXkBGI6AsUU=;
-        b=LQESb4ZvMb5UyrnXKs5ik5oKgJIPBEPKZCOLQ9ThCaE1ECIJa6V85abVfO/GIy0osR
-         zpB4jpuCh7dS/YHfM7scQGkfJ7Xcp2dhmlx8NwlL7qGY6XZEPv5qF6uLsAta/NZJ2ryS
-         znhA2IuoU2/Qkrhk1obRMwA3WgFKNBHLSVXAmAf4dZt1lGOpTjJ93QGpFbsHHTmlILzx
-         XYKZJq7qx5l2tN/dYSQTbM0QAAsf0gVtGd5xfgdFKhTs36UKiyK4icNsO4hjKjFO7PAM
-         Q5AF0ZsYzlj4uo+kUgfnFpB7hUT/Zo2OMOBcZmYlXD6y63QIpkdUcMu8yYaGJ48Luske
-         gJjg==
-X-Forwarded-Encrypted: i=1; AJvYcCX6fjdo5zx2IciGiBG7RQ5EWxCV5jNPoIkFluIk2/4cCgVeDWs7fqFI6bgP5iC4EYd5mE/B296skmdiMws=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyR8mi4O4452PChlbqAMoz04CBAuzPSB3ofb1KyuP/ZqERriwvX
-	DtTitcZHMcK9wzE6U9XKf/ywKqqFNn/sFPgsdLtXikp+KsR0ELuk+yAzivHq+7D8ePrLf0QKEl0
-	6F0ugIm78JrTFfnt9kDVMpCjJMN1QLbvoS9Q+cQ==
-X-Gm-Gg: ASbGncvAbqVskLJ08s83CHs/TSWnSIpClwWKDxMJgRebG+ntvdg5XohYu+nTQaVVmyx
-	1S4s3BVMm8PVKQVFGearAiF2uOkBAOk8UWLKjl7h9ya92qyGMd0q7/dSnTykhtAQXdBDxXu07Kq
-	cdjx9pImE5ENbBBbzSXO1V1nAyGdsmrw3WJuGaEJ1dVBMY/QZ3ofjMpw5oNw==
-X-Google-Smtp-Source: AGHT+IFw6AUPeASwjb7EXKL+ooSQ218zFQKD/vfWZq92pVuKcMipQ2jIYfgwZypmF42qh9XMuqpoanJeZiqmSxboPjs=
-X-Received: by 2002:a05:690c:3588:b0:6f9:7fe6:9d48 with SMTP id
- 00721157ae682-6fda303799amr38246287b3.7.1741179619028; Wed, 05 Mar 2025
- 05:00:19 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EP2n4+y2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E836DC4CEE7;
+	Wed,  5 Mar 2025 13:00:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741179632;
+	bh=CGxNrwrJ/7w+lrFYd7rIJRRXjnZsn89/CuKNM7OkM3s=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=EP2n4+y2C1tZto3KAGAQwvOqYFJhi6RgUpMXAJhopRbxwTF5nGiPdPZf3a3zLBpC4
+	 4kaVTVMBeIxli7zErFRQDkulWI5bazRHpjcSo91gcmXvZGR2F+hpArnhJ8EQPIvuKe
+	 CLqP1n/F+97HRGlZKuN53tMUEPWvUUSKdD5VxJF9ks7WtebcBtxf2Yv5+JIk/VaZMW
+	 N/OC36dU++um0aF68U5ynCiJBZmP/1/zW8saNKB/wyssDzS7nDd2kph7QOWQPXuJyh
+	 4lX/SvCDj679HKbmd1MOv3fDZ9JFibxx57yZNoyKcmHgknmM1XuCTtUn2Ga1QNlgfR
+	 QNiNgekVD2Ebg==
+Date: Wed, 5 Mar 2025 13:00:20 +0000
+From: Jonathan Cameron <jic23@kernel.org>
+To: David Lechner <dlechner@baylibre.com>
+Cc: Nuno =?UTF-8?B?U8Oh?= <noname.nuno@gmail.com>, Antoniu Miclaus
+ <antoniu.miclaus@analog.com>, robh@kernel.org, conor+dt@kernel.org,
+ linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 14/14] Documentation: ABI: testing: ad4080 docs
+Message-ID: <20250305130020.7e78f3a6@jic23-huawei>
+In-Reply-To: <d1af7490-5d91-4b30-a86f-8df3a8d17af7@baylibre.com>
+References: <20250220135429.8615-1-antoniu.miclaus@analog.com>
+	<20250220135429.8615-15-antoniu.miclaus@analog.com>
+	<8f588f4b88d122815df694660d19672e8ccd3d70.camel@gmail.com>
+	<fd3ba169-c5e0-4405-961f-d7c11c68dffb@baylibre.com>
+	<3f4bb345c1d76e7521d8bdbf4b4552e727c7dc1c.camel@gmail.com>
+	<d1af7490-5d91-4b30-a86f-8df3a8d17af7@baylibre.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250305051442.3716817-1-shravan.chippa@microchip.com>
- <20250305051442.3716817-5-shravan.chippa@microchip.com> <174116732611.2914008.9738053002324304147@ping.linuxembedded.co.uk>
- <PH0PR11MB5611988F18EF02394E983AA881CB2@PH0PR11MB5611.namprd11.prod.outlook.com>
- <174117154242.2914008.10875320688605396953@ping.linuxembedded.co.uk>
- <Z8g6nWDe2cjumixt@kekkonen.localdomain> <174117701537.2914008.10570966567213022443@ping.linuxembedded.co.uk>
-In-Reply-To: <174117701537.2914008.10570966567213022443@ping.linuxembedded.co.uk>
-From: Dave Stevenson <dave.stevenson@raspberrypi.com>
-Date: Wed, 5 Mar 2025 12:59:56 +0000
-X-Gm-Features: AQ5f1Jr_i7cj-B9y9QSgwJDBmxkJp89iE8j6_doew5kmxSD2c9tdVqssH2vJmkc
-Message-ID: <CAPY8ntCW+bRFMY4OxzKV2-NfzWb_g0dJoPW8_irkmLmNttBVQg@mail.gmail.com>
-Subject: Re: [PATCH V7 4/4] media: i2c: imx334: add modes for 720p and 480p resolutions
-To: Kieran Bingham <kieran.bingham@ideasonboard.com>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, Shravan.Chippa@microchip.com, 
-	mchehab@kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Conor.Dooley@microchip.com, Valentina.FernandezAlanis@microchip.com, 
-	Praveen.Kumar@microchip.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-Hi Kieran, Sakari, Shravan, and Tarang
+On Tue, 25 Feb 2025 09:26:56 -0600
+David Lechner <dlechner@baylibre.com> wrote:
 
-On Wed, 5 Mar 2025 at 12:17, Kieran Bingham
-<kieran.bingham@ideasonboard.com> wrote:
->
-> Quoting Sakari Ailus (2025-03-05 11:50:53)
-> > Hi Kieran, Shravan,
-> >
-> > On Wed, Mar 05, 2025 at 10:45:42AM +0000, Kieran Bingham wrote:
-> > > Quoting Shravan.Chippa@microchip.com (2025-03-05 10:22:12)
-> > > > Hi Kieran
-> > > >
-> > > > > -----Original Message-----
-> > > > > From: Kieran Bingham <kieran.bingham@ideasonboard.com>
-> > > > > Sent: Wednesday, March 5, 2025 3:05 PM
-> > > > > To: mchehab@kernel.org; sakari.ailus@linux.intel.com; shravan Chippa -
-> > > > > I35088 <Shravan.Chippa@microchip.com>
-> > > > > Cc: linux-media@vger.kernel.org; linux-kernel@vger.kernel.org; Conor Dooley
-> > > > > - M52691 <Conor.Dooley@microchip.com>; Valentina Fernandez Alanis -
-> > > > > M63239 <Valentina.FernandezAlanis@microchip.com>; Praveen Kumar -
-> > > > > I30718 <Praveen.Kumar@microchip.com>; shravan Chippa - I35088
-> > > > > <Shravan.Chippa@microchip.com>
-> > > > > Subject: Re: [PATCH V7 4/4] media: i2c: imx334: add modes for 720p and 480p
-> > > > > resolutions
-> > > > >
-> > > > > EXTERNAL EMAIL: Do not click links or open attachments unless you know the
-> > > > > content is safe
-> > > > >
-> > > > > Quoting shravan kumar (2025-03-05 05:14:42)
-> > > > > > From: Shravan Chippa <shravan.chippa@microchip.com>
-> > > > > >
-> > > > > > Added support for 1280x720@30 and 640x480@30 resolutions
+> On 2/25/25 3:16 AM, Nuno S=C3=A1 wrote:
+> > On Thu, 2025-02-20 at 12:27 -0600, David Lechner wrote: =20
+> >> On 2/20/25 8:53 AM, Nuno S=C3=A1 wrote: =20
+> >>> On Thu, 2025-02-20 at 15:54 +0200, Antoniu Miclaus wrote: =20
+>=20
+> ...
+>=20
+> >>>> +
+> >>>> +What:		/sys/bus/iio/devices/iio:deviceX/sinc_dec_rate
+> >>>> +Date:		February 2025
+> >>>> +KernelVersion:
+> >>>> +Contact:	linux-iio@vger.kernel.org
+> >>>> +Description:
+> >>>> +		Set the filter=E2=80=99s decimation rate.
+> >>>> +
+> >>>> +What:		/sys/bus/iio/devices/iio:deviceX/sinc_dec_rate_available
+> >>>> +Date:		February 2025
+> >>>> +KernelVersion:
+> >>>> +Contact:	linux-iio@vger.kernel.org
+> >>>> +Description:
+> >>>> +		Return the available filter's decimation rates.
+> >>>> +
+> >>>> + =20
+> >>>
+> >>> I'm not yet convinced we need the dec_rate custom attr. I'll add more
+> >>> comments
+> >>> in the driver. =20
+> >>
+> >> If we do need it, in another driver recently we concluded that
+> >> decimation rate is the same as oversampling ratio and there is
+> >> already a standard attribute for oversampling ratio, so we used
+> >> that.
+> >> =20
+> >=20
+> > Yeah, in theory decimation is about averaging samples. Makes sense to m=
+e even
+> > though I never thought about using the oversampling ratio attr. I was b=
+iased by
+> > the IMUs drivers where we configure the dec_rate as part of the sampling
+> > frequency attr since these filters directly affect the chip ODR.=C2=A0
+> >=20
+> > Out of curiosity, how did you handled this in the other driver? I would=
+ be
+> > tempted to only allow reading the sampling frequency attribute which me=
+ans that
+> > the oversampling ratio attr is the one we can write (which then directl=
+y affects
+> > sampling frequency).
+> >=20
+> > - Nuno S=C3=A1 =20
+>=20
+> The other driver is still under review:
+>=20
+> https://lore.kernel.org/linux-iio/2c3ce1701545e435238605342397e45657a0fb2=
+a.1739368121.git.Jonathan.Santos@analog.com/
+>=20
+> It is modifying an existing driver, so in that case, we still have to pre=
+serve
+> writing to sampling_frequency even if that isn't the ideal way to set it =
+up.
 
-Silly question - why is the frame rate specified here? Is that the
-minimum, maximum, or default framerate, as we have V4L2_CID_VBLANK for
-varying the frame rate.
+It's pretty rare from what I recall to see a device sophisticated enough to=
+ do
+over sampling that doesn't also support a sequencer that will allow configu=
+ring
+the sampling frequency at a given oversampling ratio (by adding space, or m=
+ore
+settling time if a mux is involved which looks the same as space to softwar=
+e).
 
-> > > > > >
-> > > > > > Signed-off-by: Shravan Chippa <shravan.chippa@microchip.com>
-> > > > > > ---
-> > > > > >  drivers/media/i2c/imx334.c | 66
-> > > > > > ++++++++++++++++++++++++++++++++++++++
-> > > > > >  1 file changed, 66 insertions(+)
-> > > > > >
-> > > > > > diff --git a/drivers/media/i2c/imx334.c b/drivers/media/i2c/imx334.c
-> > > > > > index a7c0bd38c9b8..8cd1eecd0143 100644
-> > > > > > --- a/drivers/media/i2c/imx334.c
-> > > > > > +++ b/drivers/media/i2c/imx334.c
-> > > > > > @@ -314,6 +314,46 @@ static const struct imx334_reg
-> > > > > common_mode_regs[] = {
-> > > > > >         {0x3002, 0x00},
-> > > > > >  };
-> > > > > >
-> > > > > > +/* Sensor mode registers for 640x480@30fps */ static const struct
-> > > > > > +imx334_reg mode_640x480_regs[] = {
-> > > > > > +       {0x302c, 0x70},
-> > > > > > +       {0x302d, 0x06},
-> > > > >
-> > > > > These two are a single 16 bit register HTRIMMING_START = 1648
-> > > > >
-> > > > > > +       {0x302e, 0x80},
-> > > > > > +       {0x302f, 0x02},
-> > > > >
-> > > > > These two are a single 16 bit register HNUM = 640
-> > > > >
-> > > > > > +       {0x3074, 0x48},
-> > > > > > +       {0x3075, 0x07},
-> > > > >
-> > > > > These two are a single 16 bit (well, 12 bit value) AREA3_ST_ADR_1 = 1864
-> > > > >
-> > > > > > +       {0x308e, 0x49},
-> > > > > > +       {0x308f, 0x07},
-> > > > >
-> > > > > These two are a single 16 bit register AREA3_ST_ADR_2 = 1865
-> > > > >
-> > > > > > +       {0x3076, 0xe0},
-> > > > > > +       {0x3077, 0x01},
-> > > > >
-> > > > > These two are a single 16 bit register AREA3_WIDTH_1 = 480
-> > > > >
-> > > > > > +       {0x3090, 0xe0},
-> > > > > > +       {0x3091, 0x01},
-> > > > >
-> > > > > These two are a single 16 bit register AREA3_WIDTH_2 = 480
-> > > > >
-> > > > > > +       {0x3308, 0xe0},
-> > > > > > +       {0x3309, 0x01},
-> > > > >
-> > > > > These two are a single 16 bit register Y_OUT_SIZE
-> > > > >
-> > > > > Don't you think
-> > > > >         { Y_OUT_SIZE, 480 },
-> > > > >
-> > > > > Is so much more readable and easier to comprehend and maintain?
-> > > > >
-> > > > >
-> > > > > > +       {0x30d8, 0x30},
-> > > > > > +       {0x30d9, 0x0b},
-> > > > >
-> > > > > These two are a single 16 bit register UNREAD_ED_ADR = 2864
-> > > > >
-> > > > > > +};
-> > > > >
-> > > > > I'm still sad that we can all know the names of all these registers and yet this
-> > > > > is writing new tables of hex values.
-> > > >
-> > > > Do you want me use call like bellow API with register names:
-> > > > CCI_REG16_LE(0x30d8);
-> > > > cci_write();
-> > > > cci_multi_reg_write();
-> > > > devm_cci_regmap_init_i2c();
-> > >
-> > >
-> > > Yes please, I would want that very much. I'm not very good at reading
-> > > and storing hex values in my head! That's why I broke down the above
-> > > registers to strings and decimal values.
-> >
-> > I agree, it'd be good to do these while changing the driver now. I think it
-> > could be done after adding the new modes, now that the patches already
-> > exist.
->
-> That's ok with me! Either way I'm happy to see the drivers are getting
-> cleaned up!
->
-> >
-> > >
-> > >
-> > > The discussions at
-> > > https://lore.kernel.org/all/PH0PR11MB5611FD22CF6E12F7226FA9C081E12@PH0PR11MB5611.namprd11.prod.outlook.com/
-> > > reports the full datasheet, and I stated:
-> > >
-> > >
-> > > > > > This is an enormous amount of duplicated data that could be factored
-> > > > > > out.
-> > > > > >
-> > > > > > These are also /very/ common against the existing mode register
-> > > > > > tables too.
-> > > > > >
-> > > > > > I think several things need to happen in this driver:
-> > > > > >
-> > > > > >  1. It should be converted to use the CCI helpers.
-> > > > > >  2. Whereever identifiable, the register names should be used
-> > > > > > instead of
-> > > > > >     just the addresses.
-> > > > > >  3. The common factors of these tables should be de-duplicated.
-> > > > > >
-> > > > > > In your additions you only have differences in the following
-> > > > > > registers from those entire tables:
-> > >
-> > > You replied with
-> > >
-> > > > >
-> > > > > I will try to optimize camera resolution array register value usage by
-> > > > > writing common register array values.
-> > >
-> > > which you have done (point 3), and is great progress in the series.
-> > >
-> > > Further down in the thread I stated:
-> > >
-> > >
-> > > > > >  4. And ideally - the differences which determine the modes should
-> > > > > > be
-> > > > > >     factored out to calculations so that we are not writing out
-> > > > > > large
-> > > > > >     tables just to write a parameterised frame size.
-> > > > > >
-> > > > > >
-> > > > > > I would beleive that at least steps 1 and 3 would be achievable, 2
-> > > > > > and 4 would depend upon access to the datasheet.
-> > > > > >
-> > >
-> > >
-> > > I still believe steps 1 is important to this development. You have done
-> > > step 3 I think. And now both step 2 and (later) step 4 are possible as we
-> > > have the datasheet.
-> >
-> > In this case the datasheet doesn't appear to be documenting the PLL.
->
-> :-(
->
-> But at least we will have enough to handle all the vmax/and cropping
-> more directly.
+I guess there is always a first and to me in that case oversampling is the =
+natural
+control rather than sampling frequency.
 
-I haven't fully analysed the datasheet, but isn't this just another
-Sony Starvis sensor, working in the same way as imx415 and imx290?
-
-I don't think you can reasonably treat it as generic PLLs without
-effectively reverse engineering the hardware.
-INCK gets handled by the registers as specified in "INCK Setting" to
-get the source clocks consistent regardless of INCK.
-Source clock vs link frequency registers need to be teased out of the
-"INCK Setting Register" table. Quick analysis:
-- BCWAIT_TIME, CP_WAIT, INCKSEL2, INCKSEL3, and INCKSEL4 only change with INCK.
-- PLL_IF_GC and SYS_MODE only change with link frequency.
-- INCKSEL1 is the awkward one if there is a need to support the
-1188Mbit/s data rate, otherwise it only changes with INCK.
-
-The pixel rate stays the same for all modes (binning may be the exception here)
-HMAX (V4L2_CID_HBLANK) is changed to vary the line time.
-Whilst VMAX is listed as a constant for each mode, it can be changed
-to alter frame rate.
-
-Link frequency is independent of resolution, but HMAX has to be set to
-ensure that we don't overflow the FIFO between array and CSI block.
+Jonathan
+Jonathan
 
 
-Is there anyone selling an IMX334 module for use with SBCs at a
-sensible price? I'm always up for tinkering with sensors, even if I'm
-not meant to be!
-
-  Dave
-
-> --
-> Kieran
->
->
-> >
-> > --
-> > Regards,
-> >
-> > Sakari Ailus
->
