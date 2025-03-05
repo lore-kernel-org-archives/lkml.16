@@ -1,60 +1,40 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mail-m155101.qiye.163.com (mail-m155101.qiye.163.com [101.71.155.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DF5F24A06E
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 14:05:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F181E24BC19;
+	Wed,  5 Mar 2025 14:05:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=101.71.155.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741183526; cv=none; b=aaefRVmpClcpKXEQ5czqfLEbqKpybxJYXMd6sKa2LVnHI+kgFOlLM/p3OlmTK68ut3xZupyWi0MtsnKPErUks4G5BV3LEiOlitpLXHjY4O8GLADPcB2kKUJZbF1iXGlOyRGkl61s6ct1SqGO3FBPM7ZHIgk/dCvmVHiMpWhxC+E=
+	t=1741183533; cv=none; b=kSXj2zV0LBCo/Aq98BZRzgbg0xwTKoALnawS7xNQF2S3iM/Sdpntxo59Kex/OMxyTFk7ZfiksLDtD2U3q8NMqMhXe7t9tvo4W0osJptay62hgXynuEF7UoLHUWzNbFdbRiViIy+YHGEFSYZcosi+t0Pe8vlS5SPyH3iMq+CsIZQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741183526; c=relaxed/simple;
-	bh=MFyJzG3kxv6rgiXk0F67ley3QB9Ga1PK84Oojs3YhRQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=go08GkpNH8B+ONoR6etgvbosrvHmURvpwouBkDd2cxSlb2g0qcsuXt/rJ3JNda+9/uVhUuv1uHanfcLpEWkS7MNmhE+1Gi2gVbKamZDexQYBh72ql1zRfB3jLZBTJmEBx2Tx3MkzFmFpZ60vhQvibGuJ+A213L3sx/2p4WBNcsU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DTwuTzpg; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DTwuTzpg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1741183524;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BnR6oqxI0UEcO9ewCzZls4ELgDlHtvYrPUmSJgsWcEQ=;
-	b=DTwuTzpgp8bxGxvRjHfbLbIwVT3Gr3+Tvu4XaiH9vh2W5gMeGspIZSgfoy6dzvpbOXu8OB
-	g4Rk813m31KFAe6UFWmJFyxzf6YbgQ6FNfXFrm7aVAy3B5IPp4hGbaalX49fGqOVxvNMo0
-	/P/Pzi9OpCyIxHUtFUvZPiB560p3xxE=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-314-_hBvETbaMWeDYKRSjKorAQ-1; Wed,
- 05 Mar 2025 09:05:21 -0500
-X-MC-Unique: _hBvETbaMWeDYKRSjKorAQ-1
-X-Mimecast-MFC-AGG-ID: _hBvETbaMWeDYKRSjKorAQ_1741183520
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 0D1561954126;
-	Wed,  5 Mar 2025 14:05:20 +0000 (UTC)
-Received: from gmonaco-thinkpadt14gen3.rmtit.com (unknown [10.45.226.192])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 35B663000708;
-	Wed,  5 Mar 2025 14:05:16 +0000 (UTC)
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: linux-kernel@vger.kernel.org,
-	Steven Rostedt <rostedt@goodmis.org>,
-	linux-trace-kernel@vger.kernel.org
-Cc: Gabriele Monaco <gmonaco@redhat.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Juri Lelli <juri.lelli@redhat.com>
-Subject: [PATCH v5 9/9] tools/rv: Allow rv list to filter for container
-Date: Wed,  5 Mar 2025 15:04:02 +0100
-Message-ID: <20250305140406.350227-10-gmonaco@redhat.com>
-In-Reply-To: <20250305140406.350227-1-gmonaco@redhat.com>
-References: <20250305140406.350227-1-gmonaco@redhat.com>
+	s=arc-20240116; t=1741183533; c=relaxed/simple;
+	bh=qLgQ7hqXvB84rjpiCvPUIb5zzLPY1fnebfK09uf2liI=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=T3+vVHqLmUOZ2XirKtlU/ZxI+k0LG5oAWNRmKgGMZw/rgtwR4eK7gXYZjEG4VWpSi7xN2hXrEaka26kT+rpNxfNRyG47eBNltBPn3qVKCHdFVY2VGGhzUGC0xBAHfjPtOMG8cCWoM8vC0npxeE82VF2ARlE/2TyUEsKqKYsfqpE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jmu.edu.cn; spf=pass smtp.mailfrom=jmu.edu.cn; arc=none smtp.client-ip=101.71.155.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jmu.edu.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jmu.edu.cn
+Received: from amadeus-Vostro-3710.lan (unknown [IPV6:240e:3b3:2c02:1dd0:e727:1623:c5c6:9622])
+	by smtp.qiye.163.com (Hmail) with ESMTP id d0a1b692;
+	Wed, 5 Mar 2025 22:00:17 +0800 (GMT+08:00)
+From: Chukun Pan <amadeus@jmu.edu.cn>
+To: Yao Zi <ziyao@disroot.org>
+Cc: Lee Jones <lee@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	Chukun Pan <amadeus@jmu.edu.cn>
+Subject: [PATCH 2/2] arm64: dts: rockchip: Add rk3528 QoS register node
+Date: Wed,  5 Mar 2025 22:00:09 +0800
+Message-Id: <20250305140009.2485859-2-amadeus@jmu.edu.cn>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20250305140009.2485859-1-amadeus@jmu.edu.cn>
+References: <20250305140009.2485859-1-amadeus@jmu.edu.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,180 +42,195 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlCTksZVk1DGktKGRpIHUhPS1YeHw5VEwETFhoSFy
+	QUDg9ZV1kYEgtZQVlJT0seQUgZSEFJGEtJQUofH0tBHkxJTEFKTUlIQRhOGE1BQk1JSVlXWRYaDx
+	IVHRRZQVlPS0hVSktJQkNDTVVKS0tVS1kG
+X-HM-Tid: 0a95669b70b503a2kunmd0a1b692
+X-HM-MType: 10
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6PCo6SCo4CDJRTT8CFCsJFiEi
+	STEwC09VSlVKTE9KSkNISUpDTkNPVTMWGhIXVRoWGh8eDgg7ERYOVR4fDlUYFUVZV1kSC1lBWUlP
+	Sx5BSBlIQUkYS0lBSh8fS0EeTElMQUpNSUhBGE4YTUFCTUlJWVdZCAFZQU9DTEM3Bg++
 
-Add possibility to supply the container name to rv list:
+Copy QoS nodes and add rk3528 compatible from bsp kernel,
+these can be used for power-domain.
 
-  # rv list sched
-  mon1
-  mon2
-  mon3
-
-This lists only monitors in sched, without indentation.
-Supplying -h, any option (string starting with -) or more than 1
-argument will still print the usage.
-Passing a non-existent container prints nothing and passing no container
-continues to print all monitors, showing indentation for nested
-monitors, reported after their container.
-
-Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
+Signed-off-by: Chukun Pan <amadeus@jmu.edu.cn>
 ---
- tools/verification/rv/include/in_kernel.h |  2 +-
- tools/verification/rv/src/in_kernel.c     | 36 +++++++++++++++------
- tools/verification/rv/src/rv.c            | 38 +++++++++++++++--------
- 3 files changed, 53 insertions(+), 23 deletions(-)
+ arch/arm64/boot/dts/rockchip/rk3528.dtsi | 160 +++++++++++++++++++++++
+ 1 file changed, 160 insertions(+)
 
-diff --git a/tools/verification/rv/include/in_kernel.h b/tools/verification/rv/include/in_kernel.h
-index 3090638c8d710..f3bfd3b9895fe 100644
---- a/tools/verification/rv/include/in_kernel.h
-+++ b/tools/verification/rv/include/in_kernel.h
-@@ -1,3 +1,3 @@
- // SPDX-License-Identifier: GPL-2.0
--int ikm_list_monitors(void);
-+int ikm_list_monitors(char *container);
- int ikm_run_monitor(char *monitor, int argc, char **argv);
-diff --git a/tools/verification/rv/src/in_kernel.c b/tools/verification/rv/src/in_kernel.c
-index 032b851019290..c0dcee795c0de 100644
---- a/tools/verification/rv/src/in_kernel.c
-+++ b/tools/verification/rv/src/in_kernel.c
-@@ -180,19 +180,25 @@ static char *ikm_read_desc(char *monitor_name)
- /*
-  * ikm_fill_monitor_definition - fill monitor's definition
-  *
-- * Returns -1 on error, 0 otherwise.
-+ * Returns -1 on error, 1 if the monitor does not belong in the container, 0 otherwise.
-+ * container can be NULL
-  */
--static int ikm_fill_monitor_definition(char *name, struct monitor *ikm)
-+static int ikm_fill_monitor_definition(char *name, struct monitor *ikm, char *container)
- {
- 	int enabled;
- 	char *desc, *nested_name;
+diff --git a/arch/arm64/boot/dts/rockchip/rk3528.dtsi b/arch/arm64/boot/dts/rockchip/rk3528.dtsi
+index 5b334690356a..794f35654975 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3528.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3528.dtsi
+@@ -122,6 +122,166 @@ gic: interrupt-controller@fed01000 {
+ 			#interrupt-cells = <3>;
+ 		};
  
- 	nested_name = strstr(name, ":");
- 	if (nested_name) {
-+		/* it belongs in container if it starts with "container:" */
-+		if (container && strstr(name, container) != name)
-+			return 1;
- 		*nested_name = '/';
- 		++nested_name;
- 		ikm->nested = 1;
- 	} else {
-+		if (container)
-+			return 1;
- 		nested_name = name;
- 		ikm->nested = 0;
- 	}
-@@ -328,12 +334,12 @@ static int ikm_has_id(char *monitor_name)
-  *
-  * Returns 0 on success, -1 otherwise.
-  */
--int ikm_list_monitors(void)
-+int ikm_list_monitors(char *container)
- {
- 	char *available_monitors;
- 	struct monitor ikm = {0};
- 	char *curr, *next;
--	int retval;
-+	int retval, list_monitor = 0;
- 
- 	available_monitors = tracefs_instance_file_read(NULL, "rv/available_monitors", NULL);
- 
-@@ -347,17 +353,29 @@ int ikm_list_monitors(void)
- 		next = strstr(curr, "\n");
- 		*next = '\0';
- 
--		retval = ikm_fill_monitor_definition(curr, &ikm);
--		if (retval)
-+		retval = ikm_fill_monitor_definition(curr, &ikm, container);
-+		if (retval < 0)
- 			err_msg("ikm: error reading %d in kernel monitor, skipping\n", curr);
- 
--		printf("%s%-*s %s %s\n", ikm.nested ? " - " : "",
--		       ikm.nested ? MAX_DA_NAME_LEN - 3 : MAX_DA_NAME_LEN,
--		       ikm.name, ikm.desc, ikm.enabled ? "[ON]" : "[OFF]");
-+		if (!retval) {
-+			int indent = ikm.nested && !container;
++		qos_crypto_a: qos@ff200000 {
++			compatible = "rockchip,rk3528-qos", "syscon";
++			reg = <0x0 0xff200000 0x0 0x20>;
++		};
 +
-+			list_monitor = 1;
-+			printf("%s%-*s %s %s\n", indent ? " - " : "",
-+			       indent ? MAX_DA_NAME_LEN - 3 : MAX_DA_NAME_LEN,
-+			       ikm.name, ikm.desc, ikm.enabled ? "[ON]" : "[OFF]");
-+		}
- 		curr = ++next;
- 
- 	} while (strlen(curr));
- 
-+	if (!list_monitor) {
-+		if (container)
-+			printf("-- No monitor found in container %s --\n", container);
-+		else
-+			printf("-- No monitor found --\n");
-+	}
++		qos_crypto_p: qos@ff200080 {
++			compatible = "rockchip,rk3528-qos", "syscon";
++			reg = <0x0 0xff200080 0x0 0x20>;
++		};
 +
- 	free(available_monitors);
- 
- 	return 0;
-diff --git a/tools/verification/rv/src/rv.c b/tools/verification/rv/src/rv.c
-index 1ddb855328165..239de054d1e06 100644
---- a/tools/verification/rv/src/rv.c
-+++ b/tools/verification/rv/src/rv.c
-@@ -41,30 +41,42 @@ static void rv_list(int argc, char **argv)
- {
- 	static const char *const usage[] = {
- 		"",
--		"  usage: rv list [-h]",
-+		"  usage: rv list [-h] [container]",
- 		"",
- 		"	list all available monitors",
- 		"",
- 		"	-h/--help: print this menu",
-+		"",
-+		"	[container]: list only monitors in this container",
- 		NULL,
- 	};
--	int i;
--
--	if (argc > 1) {
-+	int i, print_help = 0, retval = 0;
-+	char *container = NULL;
++		qos_dcf: qos@ff200100 {
++			compatible = "rockchip,rk3528-qos", "syscon";
++			reg = <0x0 0xff200100 0x0 0x20>;
++		};
 +
-+	if (argc == 2) {
-+		if (!strcmp(argv[1], "-h") || !strcmp(argv[1], "--help")) {
-+			print_help = 1;
-+			retval = 0;
-+		} else if (argv[1][0] == '-') {
-+			/* assume invalid option */
-+			print_help = 1;
-+			retval = 1;
-+		} else
-+			container = argv[1];
-+	} else if (argc > 2) {
-+		/* more than 2 is always usage */
-+		print_help = 1;
-+		retval = 1;
-+	}
-+	if (print_help) {
- 		fprintf(stderr, "rv version %s\n", VERSION);
--
--		/* more than 1 is always usage */
- 		for (i = 0; usage[i]; i++)
- 			fprintf(stderr, "%s\n", usage[i]);
--
--		/* but only -h is valid */
--		if (!strcmp(argv[1], "-h") || !strcmp(argv[1], "--help"))
--			exit(0);
--		else
--			exit(1);
-+		exit(retval);
- 	}
- 
--	ikm_list_monitors();
-+	ikm_list_monitors(container);
++		qos_dft2apb: qos@ff200200 {
++			compatible = "rockchip,rk3528-qos", "syscon";
++			reg = <0x0 0xff200200 0x0 0x20>;
++		};
 +
- 	exit(0);
- }
- 
++		qos_dma2ddr: qos@ff200280 {
++			compatible = "rockchip,rk3528-qos", "syscon";
++			reg = <0x0 0xff200280 0x0 0x20>;
++		};
++
++		qos_dmac: qos@ff200300 {
++			compatible = "rockchip,rk3528-qos", "syscon";
++			reg = <0x0 0xff200300 0x0 0x20>;
++		};
++
++		qos_keyreader: qos@ff200380 {
++			compatible = "rockchip,rk3528-qos", "syscon";
++			reg = <0x0 0xff200380 0x0 0x20>;
++		};
++
++		qos_cpu: qos@ff210000 {
++			compatible = "rockchip,rk3528-qos", "syscon";
++			reg = <0x0 0xff210000 0x0 0x20>;
++		};
++
++		qos_debug: qos@ff210080 {
++			compatible = "rockchip,rk3528-qos", "syscon";
++			reg = <0x0 0xff210080 0x0 0x20>;
++		};
++
++		qos_gpu_m0: qos@ff220000 {
++			compatible = "rockchip,rk3528-qos", "syscon";
++			reg = <0x0 0xff220000 0x0 0x20>;
++		};
++
++		qos_gpu_m1: qos@ff220080 {
++			compatible = "rockchip,rk3528-qos", "syscon";
++			reg = <0x0 0xff220080 0x0 0x20>;
++		};
++
++		qos_pmu_mcu: qos@ff240000 {
++			compatible = "rockchip,rk3528-qos", "syscon";
++			reg = <0x0 0xff240000 0x0 0x20>;
++		};
++
++		qos_rkvdec: qos@ff250000 {
++			compatible = "rockchip,rk3528-qos", "syscon";
++			reg = <0x0 0xff250000 0x0 0x20>;
++		};
++
++		qos_rkvenc: qos@ff260000 {
++			compatible = "rockchip,rk3528-qos", "syscon";
++			reg = <0x0 0xff260000 0x0 0x20>;
++		};
++
++		qos_gmac0: qos@ff270000 {
++			compatible = "rockchip,rk3528-qos", "syscon";
++			reg = <0x0 0xff270000 0x0 0x20>;
++		};
++
++		qos_hdcp: qos@ff270080 {
++			compatible = "rockchip,rk3528-qos", "syscon";
++			reg = <0x0 0xff270080 0x0 0x20>;
++		};
++
++		qos_jpegdec: qos@ff270100 {
++			compatible = "rockchip,rk3528-qos", "syscon";
++			reg = <0x0 0xff270100 0x0 0x20>;
++		};
++
++		qos_rga2_m0ro: qos@ff270200 {
++			compatible = "rockchip,rk3528-qos", "syscon";
++			reg = <0x0 0xff270200 0x0 0x20>;
++		};
++
++		qos_rga2_m0wo: qos@ff270280 {
++			compatible = "rockchip,rk3528-qos", "syscon";
++			reg = <0x0 0xff270280 0x0 0x20>;
++		};
++
++		qos_sdmmc0: qos@ff270300 {
++			compatible = "rockchip,rk3528-qos", "syscon";
++			reg = <0x0 0xff270300 0x0 0x20>;
++		};
++
++		qos_usb2host: qos@ff270380 {
++			compatible = "rockchip,rk3528-qos", "syscon";
++			reg = <0x0 0xff270380 0x0 0x20>;
++		};
++
++		qos_vdpp: qos@ff270480 {
++			compatible = "rockchip,rk3528-qos", "syscon";
++			reg = <0x0 0xff270480 0x0 0x20>;
++		};
++
++		qos_vop: qos@ff270500 {
++			compatible = "rockchip,rk3528-qos", "syscon";
++			reg = <0x0 0xff270500 0x0 0x20>;
++		};
++
++		qos_emmc: qos@ff280000 {
++			compatible = "rockchip,rk3528-qos", "syscon";
++			reg = <0x0 0xff280000 0x0 0x20>;
++		};
++
++		qos_fspi: qos@ff280080 {
++			compatible = "rockchip,rk3528-qos", "syscon";
++			reg = <0x0 0xff280080 0x0 0x20>;
++		};
++
++		qos_gmac1: qos@ff280100 {
++			compatible = "rockchip,rk3528-qos", "syscon";
++			reg = <0x0 0xff280100 0x0 0x20>;
++		};
++
++		qos_pcie: qos@ff280180 {
++			compatible = "rockchip,rk3528-qos", "syscon";
++			reg = <0x0 0xff280180 0x0 0x20>;
++		};
++
++		qos_sdio0: qos@ff280200 {
++			compatible = "rockchip,rk3528-qos", "syscon";
++			reg = <0x0 0xff280200 0x0 0x20>;
++		};
++
++		qos_sdio1: qos@ff280280 {
++			compatible = "rockchip,rk3528-qos", "syscon";
++			reg = <0x0 0xff280280 0x0 0x20>;
++		};
++
++		qos_tsp: qos@ff280300 {
++			compatible = "rockchip,rk3528-qos", "syscon";
++			reg = <0x0 0xff280300 0x0 0x20>;
++		};
++
++		qos_usb3otg: qos@ff280380 {
++			compatible = "rockchip,rk3528-qos", "syscon";
++			reg = <0x0 0xff280380 0x0 0x20>;
++		};
++
++		qos_vpu: qos@ff280400 {
++			compatible = "rockchip,rk3528-qos", "syscon";
++			reg = <0x0 0xff280400 0x0 0x20>;
++		};
++
+ 		cru: clock-controller@ff4a0000 {
+ 			compatible = "rockchip,rk3528-cru";
+ 			reg = <0x0 0xff4a0000 0x0 0x30000>;
 -- 
-2.48.1
+2.25.1
 
