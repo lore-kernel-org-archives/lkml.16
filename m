@@ -1,111 +1,182 @@
-Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B80862512EB
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 18:48:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E042250C0E;
+	Wed,  5 Mar 2025 18:48:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741200515; cv=none; b=Ho/BQQXx+1/GQgnNkH/QeAwuQl/INjAIAs2GeYITJb0T7QKBalediicBSUvZLQTRES05eJ64MHfSiIlj0FrhGdEP4fxErrY/AGJEptz1TqJ4+rB9NuFZch4Nj9haLEuCx614EH3xzB1rjd0Q/jSqBESs4qt4Fpweo1gWhf9tJp0=
+	t=1741200515; cv=none; b=RC7B2s+KD20jbeo2ArUjxI3WSBzLv/6jyxlre8xYDzuB/S6Yt0NXaMo3MfXgZA3P7TyWFvAwho8tNoJOe8olng+KlPFGVgxZlcMM9hSelXKj2e+R4L0DEP/wjT7Izu1CPuwuc1m9au8+kWlNQbh7oiGZdoE2wHwUBAIByA5ty7I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1741200515; c=relaxed/simple;
-	bh=C11VRQlXgloAHIxlkDazcBVWyuIx7+EUap5lDdoh7tk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pOEpSYMqlxpeN6NGnJgZXi8CG/SqfagIWLx68kVV2286oF2xgKx/+KwdcmqWoFlic6ExrzpWqTOca/JpdSSqJhSIW3SHWl88bnRm+jgszTZ8BpJc8vl2SI1OSSPH0uO/o5Mz6XoS83z+tEHMBai9wT7kh6pqozljbJDmuRl5bZk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=a7u8ZoTr; arc=none smtp.client-ip=209.85.216.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	bh=S9RmkoypLdEsxV5/SqrzEwtSf4tN5fmn5VG2+bNrMHs=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=jPAe7h5kq5/AIDXNYAOe4aMmSa4nNEVNq8ZI5na98kkPaRztzRthJ1G/JDVqz7foq/c6OXNwgnX5xszjEE8THgWGMaNTAAXv0fCMYvhXY4RO0IEUqxVvpVMw3XaXU8nlKTn2Brw0QEj43OyRp1E4ZUeg4npKdnr8ui2Ejlz8k3U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=E7FB4yXe; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a7u8ZoTr"
-Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-2ff5544af03so203474a91.1
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Mar 2025 10:48:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741200513; x=1741805313; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FLW0d7wXv47ixRls1JtfTqesQTLc2Su7rB4a8OZt/Z4=;
-        b=a7u8ZoTrmtulIZnzxm4ORVqSKmSnDMNBGd/+PGvCC6k6jpQVuZ6frEfG9HwTFfk13O
-         kxMEv4r80JpZi2KdlXuPUXdIt7KnRIndiydN4zMPm3//kwasVeXgPSC4Cwy9wF7MFvA1
-         W1sxF0ppjMQjtZo1fXYRDIMZca/m+e4mvwt9EU0BDIzUWMdO01vtdgtqLX5zeLBleLDp
-         ewl1za/Q6UGfRv8Zv/d755gZloN9cu7D+y2/JYg0cGZlDbiFId9HECNKwxu5n5332ulI
-         klcqsNOx0kfK9dUHiw1EzvQZBggNRGUJoW6Xqmnw+i/2E9kh/pWxzSyishipvrn4cw6F
-         oZyQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741200513; x=1741805313;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=FLW0d7wXv47ixRls1JtfTqesQTLc2Su7rB4a8OZt/Z4=;
-        b=eF5f1pzKBPJCxxcNyEsBtkq5I7/bTcNx8L4gyTrwMJ6wtGyYSRw3K0Y9m1SXdC7X5s
-         jpgEh85tLG4/0Vw74pyIk+Om7hDw4g8kCp2QRNeh6+n2sMgRjKw1HE58MMgY93MHLtG3
-         aJIuTUmEQSpmUdQLvRCcSEL/M0M2t/x29ATYwV0VFICpoKy0/zXwhsIBM2VsOZ5ufhzj
-         zLuzsgCJugEZ9mpFQFcx2N6/4ogSkFPkqfsL1gzj9QR+T9URTiKufwjXJ4I9brFOMPCY
-         nCC3WJHEyEpSKNJnprFy//+SIiZvicFJMbHqs+Znau8ASFrDLrHU2EzrR5EA+dv3jrFP
-         8wcQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVX4rSh/bsZe5ybcbJLFgWN/xXHx4H1bPq1uY8s6UrnJbHWO96N7ISRDqMDJgOdHjpI4DZeHflpq3+tydA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxCWrwEReJ01jVyoK1+uJb3kkH36yol4oWdaBihzFjUcTbiZ3Lh
-	4WSRfVldpvDc5VUAw/BhVW6A9jJ72EehYKztIx07ny4RpvJ2LYOVkzU3jQ5WWDdPT2VLi5BAkEc
-	Pa03JmL96b/p+JL9hhC3RJLq+u3A=
-X-Gm-Gg: ASbGnctsNXO2FI5seGAlI77y9hvoeKroodWvQV9792iNbTsReCi9PBPMJbmNPXsQ5zT
-	m+yBY13uP+DfA2hY+LjQONb3gTJMhY4g2nYeEb5F8odztl+F+sCsjGcyYsOHkvRoQBfSh2TkqWN
-	W7StSjRthJq5xAQtDnrZu9OJwSAA==
-X-Google-Smtp-Source: AGHT+IHNy0Uh0i/4Vrewjh6yuoSTfhZDAoTT3pE5NxHvmoBeQzOjLRKXO8Aq7wY5/pRC2taKbqHofwdvOoPmBHTX1JE=
-X-Received: by 2002:a17:90b:568b:b0:2ff:4be6:c5e2 with SMTP id
- 98e67ed59e1d1-2ff4be6c73amr2014043a91.7.1741200512864; Wed, 05 Mar 2025
- 10:48:32 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="E7FB4yXe"
+Received: from terminus.zytor.com (terminus.zytor.com [IPv6:2607:7c80:54:3:0:0:0:136])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 525IlQXx3341787
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+	Wed, 5 Mar 2025 10:47:35 -0800
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 525IlQXx3341787
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025021701; t=1741200456;
+	bh=ZFEBVjKlUUTl/5spCv5uV1kp2wfbEgloCHMGnuYJRxk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=E7FB4yXeX5SWQyeMeelsLOTRrcecTW4XNjAO955SD3CNIUt8Ov60Xo4J+pZcRlM4r
+	 hFXaNLxpUzTtiDzgphzPYiH57bFiYRIbsR5igKcJr13scG8u+WL9YzT56ix7/P2KqG
+	 fyWozZZnlcUOM8+VBGyIlZ0g/RZQWry5wo18mLTyZHbzfIJ4hYBcgB3b2lhfiBGOSf
+	 otEWSe/jrhqn/9ptE64aW0fHPyokp3ccvFj90swmWofgsJum56cM+w2vzeQmXxocqY
+	 9GnwoQ0pI2iCtTza2Dte9zNPRxQCILgwoKKjedyQYdFbp5LQgXxnEPUPaHhdYOP4VH
+	 bzwuQbqQxzhnA==
+From: "Xin Li (Intel)" <xin@zytor.com>
+To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        will@kernel.org, peterz@infradead.org, yury.norov@gmail.com,
+        akpm@linux-foundation.org, acme@kernel.org, namhyung@kernel.org,
+        brgerst@gmail.com, andrew.cooper3@citrix.com, nik.borisov@suse.com,
+        sraithal@amd.com, philip.li@intel.com
+Subject: [PATCH v7 4/4] x86/cpufeatures: Use AWK to generate {REQUIRED|DISABLED}_MASK_BIT_SET
+Date: Wed,  5 Mar 2025 10:47:24 -0800
+Message-ID: <20250305184725.3341760-5-xin@zytor.com>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250305184725.3341760-1-xin@zytor.com>
+References: <20250305184725.3341760-1-xin@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250305104057.3416-1-hanchunchao@inspur.com>
-In-Reply-To: <20250305104057.3416-1-hanchunchao@inspur.com>
-From: Alex Deucher <alexdeucher@gmail.com>
-Date: Wed, 5 Mar 2025 13:48:21 -0500
-X-Gm-Features: AQ5f1Jroiidha8Du4iLEC0d4NUHuwmGgvoqBM2eAEDIOIX64Uk9J5X65ktxjK1w
-Message-ID: <CADnq5_MveLhZFX0qjp5=RsK1FV5n1jM13giX3BA4Lz3vXvsVKA@mail.gmail.com>
-Subject: Re: [PATCH] drm/amdgpu: fix inconsistent indenting warning
-To: Charles Han <hanchunchao@inspur.com>
-Cc: alexander.deucher@amd.com, christian.koenig@amd.com, airlied@gmail.com, 
-	simona@ffwll.ch, Jesse.zhang@amd.com, Hawking.Zhang@amd.com, 
-	mario.limonciello@amd.com, tim.huang@amd.com, Likun.Gao@amd.com, 
-	kevinyang.wang@amd.com, dan.carpenter@linaro.org, 
-	amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Applied.  Thanks!
+Generate macros {REQUIRED|DISABLED}_MASK_BIT_SET in the newly added AWK
+script that generates the required and disabled feature mask header.
 
-Alex
+Suggested-by: Brian Gerst <brgerst@gmail.com>
+Signed-off-by: Xin Li (Intel) <xin@zytor.com>
+Reviewed-by: Brian Gerst <brgerst@gmail.com>
+Reviewed-by: Nikolay Borisov <nik.borisov@suse.com>
+Reviewed-by: Ingo Molnar <mingo@kernel.org>
+---
 
-On Wed, Mar 5, 2025 at 5:41=E2=80=AFAM Charles Han <hanchunchao@inspur.com>=
- wrote:
->
-> Fix below inconsistent indenting smatch warning.
-> smatch warnings:
-> drivers/gpu/drm/amd/amdgpu/amdgpu_sdma.c:582 amdgpu_sdma_reset_engine() w=
-arn: inconsistent indenting
->
-> Signed-off-by: Charles Han <hanchunchao@inspur.com>
-> ---
->  drivers/gpu/drm/amd/amdgpu/amdgpu_sdma.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_sdma.c b/drivers/gpu/drm/a=
-md/amdgpu/amdgpu_sdma.c
-> index 42a7b86e41c3..1037a2f9e3b9 100644
-> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_sdma.c
-> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_sdma.c
-> @@ -579,5 +579,5 @@ int amdgpu_sdma_reset_engine(struct amdgpu_device *ad=
-ev, uint32_t instance_id, b
->         if (suspend_user_queues)
->                 amdgpu_amdkfd_resume(adev, false);
->
-> -       return ret;
-> +       return ret;
->  }
-> --
-> 2.43.0
->
+Change in v7:
+* Collect reviewed-bys.
+
+Changes in v4:
+* Use '1U' instead of '1' in feature mask shifting (Andrew Cooper).
+* Checking NCAPINTS isn't necessary anymore.  It was needed when these
+  macros had to be manually updated, but now if cpufeatures.h changes
+  this header will be regenerated (Brian Gerst).
+---
+ arch/x86/include/asm/cpufeature.h | 69 -------------------------------
+ arch/x86/tools/featuremasks.awk   |  9 +++-
+ 2 files changed, 8 insertions(+), 70 deletions(-)
+
+diff --git a/arch/x86/include/asm/cpufeature.h b/arch/x86/include/asm/cpufeature.h
+index d521759fe40d..7937823ded89 100644
+--- a/arch/x86/include/asm/cpufeature.h
++++ b/arch/x86/include/asm/cpufeature.h
+@@ -51,75 +51,6 @@ extern const char * const x86_bug_flags[NBUGINTS*32];
+ #define test_cpu_cap(c, bit)						\
+ 	 arch_test_bit(bit, (unsigned long *)((c)->x86_capability))
+ 
+-/*
+- * There are 32 bits/features in each mask word.  The high bits
+- * (selected with (bit>>5) give us the word number and the low 5
+- * bits give us the bit/feature number inside the word.
+- * (1UL<<((bit)&31) gives us a mask for the feature_bit so we can
+- * see if it is set in the mask word.
+- */
+-#define CHECK_BIT_IN_MASK_WORD(maskname, word, bit)	\
+-	(((bit)>>5)==(word) && (1UL<<((bit)&31) & maskname##word ))
+-
+-/*
+- * {REQUIRED,DISABLED}_MASK_CHECK below may seem duplicated with the
+- * following BUILD_BUG_ON_ZERO() check but when NCAPINTS gets changed, all
+- * header macros which use NCAPINTS need to be changed. The duplicated macro
+- * use causes the compiler to issue errors for all headers so that all usage
+- * sites can be corrected.
+- */
+-#define REQUIRED_MASK_BIT_SET(feature_bit)		\
+-	 ( CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK,  0, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK,  1, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK,  2, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK,  3, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK,  4, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK,  5, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK,  6, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK,  7, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK,  8, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK,  9, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK, 10, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK, 11, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK, 12, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK, 13, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK, 14, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK, 15, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK, 16, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK, 17, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK, 18, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK, 19, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK, 20, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK, 21, feature_bit) ||	\
+-	   REQUIRED_MASK_CHECK					  ||	\
+-	   BUILD_BUG_ON_ZERO(NCAPINTS != 22))
+-
+-#define DISABLED_MASK_BIT_SET(feature_bit)				\
+-	 ( CHECK_BIT_IN_MASK_WORD(DISABLED_MASK,  0, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK,  1, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK,  2, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK,  3, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK,  4, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK,  5, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK,  6, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK,  7, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK,  8, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK,  9, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK, 10, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK, 11, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK, 12, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK, 13, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK, 14, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK, 15, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK, 16, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK, 17, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK, 18, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK, 19, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK, 20, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK, 21, feature_bit) ||	\
+-	   DISABLED_MASK_CHECK					  ||	\
+-	   BUILD_BUG_ON_ZERO(NCAPINTS != 22))
+-
+ #define cpu_has(c, bit)							\
+ 	(__builtin_constant_p(bit) && REQUIRED_MASK_BIT_SET(bit) ? 1 :	\
+ 	 test_cpu_cap(c, bit))
+diff --git a/arch/x86/tools/featuremasks.awk b/arch/x86/tools/featuremasks.awk
+index fd3e72147157..2d9201c841cb 100755
+--- a/arch/x86/tools/featuremasks.awk
++++ b/arch/x86/tools/featuremasks.awk
+@@ -74,7 +74,14 @@ END {
+ 		for (i = 0; i < ncapints; i++)
+ 			printf "#define %s_MASK%d\t0x%08xU\n", s, i, masks[i];
+ 
+-		printf "#define %s_MASK_CHECK BUILD_BUG_ON_ZERO(NCAPINTS != %d)\n\n", s, ncapints;
++		printf "\n#define %s_MASK_BIT_SET(x)\t\t\t\\\n", s;
++		printf "\t((\t\t\t\t\t";
++		for (i = 0; i < ncapints; i++) {
++			if (masks[i])
++				printf "\t\\\n\t\t((x) >> 5) == %2d ? %s_MASK%d :", i, s, i;
++		}
++		printf " 0\t\\\n";
++		printf "\t) & (1U << ((x) & 31)))\n\n";
+ 	}
+ 
+ 	printf "#endif /* _ASM_X86_FEATUREMASKS_H */\n";
+-- 
+2.48.1
+
