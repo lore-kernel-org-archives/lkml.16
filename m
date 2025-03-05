@@ -1,48 +1,50 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E9AA26AFC;
-	Wed,  5 Mar 2025 01:40:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14F1C4C8F;
+	Wed,  5 Mar 2025 01:41:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741138817; cv=none; b=fr/2YoMhHPgi6xJ+0+uDKiyZMx6uDlmw+GR14E5nU4QhuuEBhgKYSFcuA502tegCs+RDL6GJewAp+wJ2nSFuA13rgCML35ti8pHVKTdU+nGJXiB80WgRo6ewcO9zjvb69IMw2AemLUKy/ZlBBlo1mz6R513duAJ8IdRHpxkRIMY=
+	t=1741138895; cv=none; b=ag4hMxXxZ4FcwSARiMbakYDt2SI+YzeqRtu4KB6FCtTovSBKB6g9bn/wpZNu3AGGakBUX9MtA16nxsdgQLAMTpdELPQ+iWgrNfK3du40VmLdrggUS5Hoh0pMEbuHb15B7R4eDaoKDajv0Yvn8qaK9nDbe6ZoirQVn/huTY0E6ZE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741138817; c=relaxed/simple;
-	bh=KUIYRJ0FB7uctHIDx0chIWbJKrcDx7PXtdgf/xQ5Ck4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=OX9WrQq9Xvk7a2RHuj57bm9Fcqld+dWAejUDQj0DO+l8me5pgbejnPmF5WA3UQEU+vbU1jX/fqvxxhM5tpYMVUK2E1Qer8A/AuCZ8K+9EuWr1RGj1TruPvceWUdPX38yboMNLxT9YNHGaUxkm1HaQfIVSo5hkQO7jfe44K8AqA4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=hnpSOT8o; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1741138895; c=relaxed/simple;
+	bh=we7gVSDwOrHiHsKUcyKkJPqMAz8+16UeGux/dgmOjpM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Ur3M+Ll9xYlGH63FkHAkXV9G29gNxm0gfRPFYyGiR+r+ynR2HiA9g5PghbTQrXcaVzf6ya6mgZ+pYtG3wwWCqF3bYsUqfU/mJHSxu3UTyh/h6UHjwatYKmokOE5/1uYmWaOoTluKQJbimY48IUQPOdlHAnoL0vnh2zOlABBDYxg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jJTIn91g; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="hnpSOT8o"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 524NA3GP022009;
-	Wed, 5 Mar 2025 01:39:54 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	u9vvkvyV4t5XH40aBxvK8nQrrgwumF6fOch6vU0Td0k=; b=hnpSOT8o8cUUub4d
-	5g+BxaD/H+jCy93jgyKHX9i/9tAySMmKIbTkGUX0B68KBm2JSdwqrbWByuauU44G
-	GXQAJHalZo2tD80F/joslbM6SwXIi5fZmX8eICoBX6KicDxkxQ5Tf2oFKuEAJHFz
-	xXR6t8Ihq9e8MZ4fqBZlhd230FrcF90hvYD6S6rUIqzEPsuTV2Xsk7xNmKPwpeUN
-	UgF1G3ljvCseW1FHfub4G92B4SR9NwlTSZbbt/mlO8gnwm3m7MUYUvIDnAUKN5GQ
-	OJwbkgsbK2+RyFAGE8FyI1aK8RUCuZckWl9U7SVniy9ws/ut0oBBMUjtkXHx0Thd
-	H1DZ9Q==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 455p6t3rgb-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 05 Mar 2025 01:39:53 +0000 (GMT)
-Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5251drEg032134
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 5 Mar 2025 01:39:53 GMT
-Received: from [10.64.68.153] (10.80.80.8) by nalasex01c.na.qualcomm.com
- (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 4 Mar 2025
- 17:39:48 -0800
-Message-ID: <2ab83252-fe17-489c-b103-28ce769123a3@quicinc.com>
-Date: Wed, 5 Mar 2025 09:39:45 +0800
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jJTIn91g"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741138895; x=1772674895;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=we7gVSDwOrHiHsKUcyKkJPqMAz8+16UeGux/dgmOjpM=;
+  b=jJTIn91ghjcMGk+CeedZJh8a3XJLEVfmdqB7N62sruZioF1pn+CElGQw
+   9VXb54uLxpNglW3adAOxIcLxQAJIXj9Hj8vaB8jRKUda/aD8+2XfXsK9g
+   +g/3Dt8a37AYifNrRhgyAP//ku1AZX4T4l9+RQVrgZIc0ga/6zzwVvlv9
+   pA3xCt5pA8olfCZya3zdGmMxOS4r7r5cFSFshKi4IcqRdE4XznE/GT9oO
+   lyiKqd2NU9qy5aKXNgHM37MYf9BjI5Z0NDR69UTy+46ATPZW1oxyjXKji
+   i1QkD3Kp6J/86uAOre+vZ4WO/r4B2bXjLUvnDTXAw4KaE7zFK4rgbcZUi
+   Q==;
+X-CSE-ConnectionGUID: IT8f9VSuSVGdiq7cqq0ncQ==
+X-CSE-MsgGUID: UNj7ZPX7T6Smc6s/MeJUsg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11363"; a="42109144"
+X-IronPort-AV: E=Sophos;i="6.14,221,1736841600"; 
+   d="scan'208";a="42109144"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2025 17:41:34 -0800
+X-CSE-ConnectionGUID: 3szEw2DeRnKO40PJSlYBzQ==
+X-CSE-MsgGUID: k2M+gLJBTPyeqXesPisk0w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="119050926"
+Received: from unknown (HELO [10.238.2.135]) ([10.238.2.135])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2025 17:41:31 -0800
+Message-ID: <0496c7b0-098c-4b2f-9c71-a258a398c5a8@linux.intel.com>
+Date: Wed, 5 Mar 2025 09:41:27 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,110 +52,94 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v15 09/10] Coresight: Add Coresight TMC Control Unit
- driver
-To: Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach
-	<mike.leach@linaro.org>,
-        James Clark <james.clark@linaro.org>,
-        "Alexander
- Shishkin" <alexander.shishkin@linux.intel.com>,
-        Maxime Coquelin
-	<mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>
-CC: Tingwei Zhang <quic_tingweiz@quicinc.com>,
-        Jinlong Mao
-	<quic_jinlmao@quicinc.com>, <coresight@lists.linaro.org>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>
-References: <20250303032931.2500935-1-quic_jiegan@quicinc.com>
- <20250303032931.2500935-10-quic_jiegan@quicinc.com>
- <1b05e832-6d41-463a-a52a-6ff340d0d6f8@arm.com>
+Subject: Re: [Patch v2 13/24] perf/x86/intel: Update dyn_constranit base on
+ PEBS event precise level
+To: "Liang, Kan" <kan.liang@linux.intel.com>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ Dapeng Mi <dapeng1.mi@intel.com>
+References: <20250218152818.158614-1-dapeng1.mi@linux.intel.com>
+ <20250218152818.158614-14-dapeng1.mi@linux.intel.com>
+ <afdc5b07-9795-4049-8941-c2e3d2bbaa87@linux.intel.com>
 Content-Language: en-US
-From: Jie Gan <quic_jiegan@quicinc.com>
-In-Reply-To: <1b05e832-6d41-463a-a52a-6ff340d0d6f8@arm.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01c.na.qualcomm.com (10.47.97.35)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: olhOWdusO9i-OZhGYmJNpEUPDrL-OFAR
-X-Authority-Analysis: v=2.4 cv=P5XAhjAu c=1 sm=1 tr=0 ts=67c7ab69 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=KKAkSRfTAAAA:8 a=COk6AnOGAAAA:8 a=73M6xUdCWGYtzQJonWAA:9
- a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=cvBusfyB2V15izCimMoJ:22 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: olhOWdusO9i-OZhGYmJNpEUPDrL-OFAR
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-05_01,2025-03-04_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 impostorscore=0
- bulkscore=0 priorityscore=1501 suspectscore=0 clxscore=1015
- lowpriorityscore=0 malwarescore=0 phishscore=0 adultscore=0 spamscore=0
- mlxlogscore=846 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502100000
- definitions=main-2503050011
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <afdc5b07-9795-4049-8941-c2e3d2bbaa87@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 
-
-On 3/4/2025 10:59 PM, Suzuki K Poulose wrote:
-> On 03/03/2025 03:29, Jie Gan wrote:
->> The Coresight TMC Control Unit hosts miscellaneous configuration 
->> registers
->> which control various features related to TMC ETR sink.
+On 2/27/2025 10:06 PM, Liang, Kan wrote:
+>
+> On 2025-02-18 10:28 a.m., Dapeng Mi wrote:
+>> arch-PEBS provides CPUIDs to enumerate which counters support PEBS
+>> sampling and precise distribution PEBS sampling. Thus PEBS constraints
+>> should be dynamically configured base on these counter and precise
+>> distribution bitmap instead of defining them statically.
 >>
->> Based on the trace ID, which is programmed in the related CTCU ATID
->> register of a specific ETR, trace data with that trace ID gets into
->> the ETR buffer, while other trace data gets dropped.
+>> Update event dyn_constraint base on PEBS event precise level.
 >>
->> Enabling source device sets one bit of the ATID register based on
->> source device's trace ID.
->> Disabling source device resets the bit according to the source
->> device's trace ID.
+>> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+>> ---
+>>  arch/x86/events/intel/core.c | 6 ++++++
+>>  arch/x86/events/intel/ds.c   | 1 +
+>>  2 files changed, 7 insertions(+)
 >>
->> Reviewed-by: James Clark <james.clark@linaro.org>
->> Signed-off-by: Jie Gan <quic_jiegan@quicinc.com>
-> 
-> ...
-> 
->> --- /dev/null
->> +++ b/drivers/hwtracing/coresight/coresight-ctcu.h
->> @@ -0,0 +1,39 @@
->> +/* SPDX-License-Identifier: GPL-2.0-only */
->> +/*
->> + * Copyright (c) 2024-2025 Qualcomm Innovation Center, Inc. All 
->> rights reserved.
->> + */
+>> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+>> index 472366c3db22..c777e0531d40 100644
+>> --- a/arch/x86/events/intel/core.c
+>> +++ b/arch/x86/events/intel/core.c
+>> @@ -4033,6 +4033,8 @@ static int intel_pmu_hw_config(struct perf_event *event)
+>>  		return ret;
+>>  
+>>  	if (event->attr.precise_ip) {
+>> +		struct arch_pebs_cap pebs_cap = hybrid(event->pmu, arch_pebs_cap);
 >> +
->> +#ifndef _CORESIGHT_CTCU_H
->> +#define _CORESIGHT_CTCU_H
->> +#include "coresight-trace-id.h"
+>>  		if ((event->attr.config & INTEL_ARCH_EVENT_MASK) == INTEL_FIXED_VLBR_EVENT)
+>>  			return -EINVAL;
+>>  
+>> @@ -4046,6 +4048,10 @@ static int intel_pmu_hw_config(struct perf_event *event)
+>>  		}
+>>  		if (x86_pmu.pebs_aliases)
+>>  			x86_pmu.pebs_aliases(event);
 >> +
->> +/* Maximum number of supported ETR devices for a single CTCU. */
->> +#define ETR_MAX_NUM     2
->> +
-> 
-> WARNING: please, no space before tabs
-> #413: FILE: drivers/hwtracing/coresight/coresight-ctcu.h:11:
-> +#define ETR_MAX_NUM ^I2$
-> 
-> total: 0 errors, 2 warnings, 397 lines checked
-> 
-> Another checkpatch warning. Please take care in the future.
-> 
-> Suzuki
+>> +		if (x86_pmu.arch_pebs)
+>> +			event->hw.dyn_constraint = event->attr.precise_ip >= 3 ?
+>> +						   pebs_cap.pdists : pebs_cap.counters;
+>>  	}
+> The dyn_constraint is only required when the counter mask is different.
+> I think the pebs_cap.counters should be very likely the same as the
+> regular counter mask. Maybe something as below (not test).
+>
+> 	if (x86_pmu.arch_pebs) {
+> 		u64 cntr_mask = event->attr.precise_ip >= 3 ?
+> 				pebs_cap.pdists : pebs_cap.counters;
+> 		if (cntr_mask != hybrid(event->pmu, intel_ctrl))
+> 			event->hw.dyn_constraint = cntr_mask;
+> 	}
 
-Hi Suzuki,
+Sure. Thanks.
 
-Got it. Will take care in the future. Thanks for help to deal with them 
-this time.
 
-Jie
-
-> 
-> 
-
+>
+> Thanks,
+> Kan
+>>  
+>>  	if (needs_branch_stack(event)) {
+>> diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
+>> index 519767fc9180..615aefb4e52e 100644
+>> --- a/arch/x86/events/intel/ds.c
+>> +++ b/arch/x86/events/intel/ds.c
+>> @@ -2948,6 +2948,7 @@ static void __init intel_arch_pebs_init(void)
+>>  	x86_pmu.pebs_buffer_size = PEBS_BUFFER_SIZE;
+>>  	x86_pmu.drain_pebs = intel_pmu_drain_arch_pebs;
+>>  	x86_pmu.pebs_capable = ~0ULL;
+>> +	x86_pmu.flags |= PMU_FL_PEBS_ALL;
+>>  
+>>  	x86_pmu.pebs_enable = __intel_pmu_pebs_enable;
+>>  	x86_pmu.pebs_disable = __intel_pmu_pebs_disable;
+>
