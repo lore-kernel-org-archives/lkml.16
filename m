@@ -1,72 +1,138 @@
-Received: from mail-4316.protonmail.ch (mail-4316.protonmail.ch [185.70.43.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13E6F246326;
-	Wed,  5 Mar 2025 13:00:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73D262A1CA
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 13:01:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741179653; cv=none; b=SjyKixYfaq7dIT9wTc091AtR27Q53aQF/Ld/7EiPnygWS3d0uSesFcpQtkjyJVvD84Tn5MUsxjEUFLYyeRucwzGY2rZptyJKvRsaas9Lax3fPPPmd5zEqTRlZQkkOkRJ9KJs2SBL1ndwvD9B+QS3r8wEmpZvT12uYUw16PxdAKo=
+	t=1741179663; cv=none; b=pW5Tto9Elg4/Js6eReHgr+5fRLx2bGYq7r0YRnxoLcL0d9FrtYiw4uTtHXBcaAaWEHSj59djg4jhd2LfwQxNkPJZjzgE4sDVi2ywJn4fmRWbpfrkrbIKXI8MfKSe0BiPGj586R68qqplSFu196WEzAkijAbQMf/Oc8n9uptDZew=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741179653; c=relaxed/simple;
-	bh=buAfl18cwutAaGqn56IrPYceRXH1ohbCKggs9h9M5+o=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=AwdzKghTBPVkAhxdbLFpJh3Hw+gDp9siBpL/3qrucfkE8Zm/EP0c2ZSDs9TI193F8IgM5v74IMD08pPpy72DypEsudZv03j4SbhtbiGWPHdXa8gTA0UOVH/tzPBhXAfI5ot3xmYCp3WCKG1IcYUf1Ak4eXUtQ6uJcwMIM55tEi4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=LkYlpps4; arc=none smtp.client-ip=185.70.43.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+	s=arc-20240116; t=1741179663; c=relaxed/simple;
+	bh=n0fFRuhHRihK5Ss638hxm2XFfikVwOkjc/8x8iOccTc=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=Wq/srN2l9yuSnsGyfb5+e0DTN9vCWIlAKYGtTz/n6yETJwFvpF6ntd0icoNp5sInVZL8w/DAu4AMYmkU7bv/UGsugqZKQE2WfuMJK7lDHD9gm//EGtH8x76/yj1rCCPJ2pRXLSN7XE31LWUChK0PPCLsZ1RYBovr30vadoyZOtc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IjgW0rzb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="LkYlpps4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=protonmail; t=1741179648; x=1741438848;
-	bh=buAfl18cwutAaGqn56IrPYceRXH1ohbCKggs9h9M5+o=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
-	b=LkYlpps4VjVxc5S/PujdbAY6Bntkgf7I5CoWCkmouLfhTRzmFu7epNKAcAJqSAINN
-	 maRdWM2/yAFT5RigX+z5UjZzNO04fW0DrpTT32rjBFjClrs18omkvQWqgXd3m6qmZ8
-	 I0VuO7ghb2JtWrMNNeI3gi/816UAbtUC0HHCgxG93rwUrZJhMARHO71XqhuI/lgejh
-	 EuiPtyLOFp73OjhrYX2Pj30tN/OrZRGscQBPr2lTa9JiF6+AReUhHBkIDi6rdVa473
-	 rn/AL0svldPk1Ipb8buyK2EK/1F265/sNsvcop5HZmvzNjfSjC+/6wcaPgsEjeGnK6
-	 FRs/Y/kB5m9mw==
-Date: Wed, 05 Mar 2025 13:00:41 +0000
-To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, Andreas Hindborg <a.hindborg@kernel.org>
-From: Benno Lossin <benno.lossin@proton.me>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, linux-kbuild@vger.kernel.org
-Subject: Re: [PATCH 14/22] rust: add pin-init crate build infrastructure
-Message-ID: <D88CO20HCT55.1C84SLGUXA0XH@proton.me>
-In-Reply-To: <CANiq72k=KiYhKr9XHU38==Rx0df4rERyOL1abRG_cDo+4NNa0g@mail.gmail.com>
-References: <20250304225245.2033120-1-benno.lossin@proton.me> <jpQp16UCJ00pInqOI-QFULU6-FKl2bBtAlmnxtXWLgXPVb7gy6d727nr7THeyks3ERF5Yqu3R6bikD0OK4mqXA==@protonmail.internalid> <20250304225245.2033120-15-benno.lossin@proton.me> <87h647d6xg.fsf@kernel.org> <cdfBMmuIl8Wl-KpI-koNDQJOCGBr9z9dOi5fxQvFbgNWQHHw6JtMizaMMbMniNlE841-9b7TdLuZ9Xh_hFsf7w==@protonmail.internalid> <D88BLHENDH8Y.HQUKEXN1XB7C@proton.me> <87ldtjbqw2.fsf@kernel.org> <CANiq72k=KiYhKr9XHU38==Rx0df4rERyOL1abRG_cDo+4NNa0g@mail.gmail.com>
-Feedback-ID: 71780778:user:proton
-X-Pm-Message-ID: ec7890daa8d5c024fb19c204703c35dbb21cafbe
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IjgW0rzb"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 512E4C4CEE2;
+	Wed,  5 Mar 2025 13:01:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741179663;
+	bh=n0fFRuhHRihK5Ss638hxm2XFfikVwOkjc/8x8iOccTc=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=IjgW0rzb5cvCxl1tLdS+qKkQLO/qXnvdlQx+Lv9OO552fJ2gh4PKIrdvcJN54CnMw
+	 YmCMkoOmK2fgD07M3Vxn5HmVwKNfdoGT/v4nbgxGvZMWY/MH9v72ml8Bpk+N/t8kaA
+	 TuD59TA/hYVO71E4QHP39Uu5FN2c7GY4WiOeZOUUny2QbXz4gn4Qo0Eh8gesFuGgtn
+	 rF3/DMBjB0Kz9krKFHLOtAN/Sauw28kv34gbHcWGm0HEYzN5deKMwNtdMmpbGTCTcD
+	 SpJoStOy75jV0PfF3pdxTPsINgt+lI3L0KnG6xp5UVqZxYDZihGWBATx42KCyz1OTI
+	 zchO5t+OHUZpw==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43068C28B23;
+	Wed,  5 Mar 2025 13:01:03 +0000 (UTC)
+From: Vincent Mailhol via B4 Relay <devnull+mailhol.vincent.wanadoo.fr@kernel.org>
+Date: Wed, 05 Mar 2025 22:00:14 +0900
+Subject: [PATCH v4 2/8] bits: split the definition of the asm and non-asm
+ GENMASK()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250305-fixed-type-genmasks-v4-2-1873dcdf6723@wanadoo.fr>
+References: <20250305-fixed-type-genmasks-v4-0-1873dcdf6723@wanadoo.fr>
+In-Reply-To: <20250305-fixed-type-genmasks-v4-0-1873dcdf6723@wanadoo.fr>
+To: Yury Norov <yury.norov@gmail.com>, 
+ Lucas De Marchi <lucas.demarchi@intel.com>, 
+ Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
+ Jani Nikula <jani.nikula@linux.intel.com>, 
+ Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, 
+ Rodrigo Vivi <rodrigo.vivi@intel.com>, 
+ Tvrtko Ursulin <tursulin@ursulin.net>, David Airlie <airlied@gmail.com>, 
+ Simona Vetter <simona@ffwll.ch>, Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org, 
+ dri-devel@lists.freedesktop.org, Andi Shyti <andi.shyti@linux.intel.com>, 
+ David Laight <David.Laight@ACULAB.COM>, 
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+ Vincent Mailhol <mailhol.vincent@wanadoo.fr>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1671;
+ i=mailhol.vincent@wanadoo.fr; h=from:subject:message-id;
+ bh=8ZMKzF5zIF0GZ21khxd7rKfGPQljVe1hrWQ81ny4PLk=;
+ b=owGbwMvMwCV2McXO4Xp97WbG02pJDOknvH7tb7504iaTa5t6js2mbJeOxt0P2+Kbk6eFaRjss
+ yx7kWzZUcrCIMbFICumyLKsnJNboaPQO+zQX0uYOaxMIEMYuDgFYCLyVxgZWuuCGgWa1gZ3TeNR
+ WzuH0euLw4YvTRoWUQ1HzmXavF3rxfCH99SUuc7xTD8DZ91rPDxZ5KeFSa1LqOinr/qGa+wKU6s
+ ZAA==
+X-Developer-Key: i=mailhol.vincent@wanadoo.fr; a=openpgp;
+ fpr=ED8F700574E67F20E574E8E2AB5FEB886DBB99C2
+X-Endpoint-Received: by B4 Relay for mailhol.vincent@wanadoo.fr/default
+ with auth_id=291
+X-Original-From: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
+Reply-To: mailhol.vincent@wanadoo.fr
 
-On Wed Mar 5, 2025 at 1:50 PM CET, Miguel Ojeda wrote:
-> On Wed, Mar 5, 2025 at 1:34=E2=80=AFPM Andreas Hindborg <a.hindborg@kerne=
-l.org> wrote:
->>
->> I _really_ think that the ability to run the tests should be present in
->> the kernel repository. But I also do not want to block this series on it=
-,
->> if it is something that will be easier to achieve with the build system
->> overhaul that is in the pipeline.
->
-> No, that is not the plan. Even with the new build system, this is
-> supposed to be developed upstream as far as I understand, so you will
-> need to run them there anyway.
+From: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
 
-Yes, the plan is that development will happen on GitHub. I will of
-course continue to take patches via the list, but I would prefer if
-people make changes via GitHub PRs, since those run the CI (which also
-includes a lot more tests that I haven't vendored here).
+In an upcoming change, GENMASK() and its friends will indirectly
+depend on sizeof() which is not available in asm.
 
+Instead of adding further complexity to __GENMASK() to make it work
+for both asm and non asm, just split the definition of the two
+variants.
+
+Signed-off-by: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
 ---
-Cheers,
-Benno
+ include/linux/bits.h | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
+
+diff --git a/include/linux/bits.h b/include/linux/bits.h
+index 14fd0ca9a6cd17339dd2f69e449558312a8a001b..5f68980a1b98d771426872c74d7b5c0f79e5e802 100644
+--- a/include/linux/bits.h
++++ b/include/linux/bits.h
+@@ -19,23 +19,17 @@
+  * GENMASK_ULL(39, 21) gives us the 64bit vector 0x000000ffffe00000.
+  */
+ #if !defined(__ASSEMBLY__)
++
+ #include <linux/build_bug.h>
+ #include <linux/compiler.h>
++
+ #define GENMASK_INPUT_CHECK(h, l) BUILD_BUG_ON_ZERO(const_true((l) > (h)))
+-#else
+-/*
+- * BUILD_BUG_ON_ZERO is not available in h files included from asm files,
+- * disable the input check if that is the case.
+- */
+-#define GENMASK_INPUT_CHECK(h, l) 0
+-#endif
+ 
+ #define GENMASK(h, l) \
+ 	(GENMASK_INPUT_CHECK(h, l) + __GENMASK(h, l))
+ #define GENMASK_ULL(h, l) \
+ 	(GENMASK_INPUT_CHECK(h, l) + __GENMASK_ULL(h, l))
+ 
+-#if !defined(__ASSEMBLY__)
+ /*
+  * Missing asm support
+  *
+@@ -48,6 +42,12 @@
+  */
+ #define GENMASK_U128(h, l) \
+ 	(GENMASK_INPUT_CHECK(h, l) + __GENMASK_U128(h, l))
+-#endif
++
++#else /* defined(__ASSEMBLY__) */
++
++#define GENMASK(h, l) __GENMASK(h, l)
++#define GENMASK_ULL(h, l) __GENMASK_ULL(h, l)
++
++#endif /* !defined(__ASSEMBLY__) */
+ 
+ #endif	/* __LINUX_BITS_H */
+
+-- 
+2.45.3
+
 
