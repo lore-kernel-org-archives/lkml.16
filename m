@@ -1,121 +1,119 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx11lb.world4you.com (mx11lb.world4you.com [81.19.149.121])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8E492561B8;
-	Wed,  5 Mar 2025 19:56:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A85BC2566D0;
+	Wed,  5 Mar 2025 19:56:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=81.19.149.121
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741204566; cv=none; b=snDU2iUx2or62K+L0z9Hpsa4Uim0vs8x5tHnr6xrVnbrOKcGkC3j6aN+kXVZrFR2mOjUHepqS0aBVBb9yRRquwvaOMm6/RcBRRHPF2Taw19ZXcgxx3Ter1+tMzT9RB/udIx3s6txDsUQciWViYavuso2Uz6BXX26uHRX0JjJnpU=
+	t=1741204573; cv=none; b=qoc2sLc3KZi4LQ+XiVOvd497Y9pWr0x+N99EEI5xwMFYIDR1631vosDhq2Xt6Env+8oWPPzIpxutlous/3/B/B+4bU8vKwPsyTCc785tNzZo7FeuzrCrhMzpzJKb1ZdPCNVoOR8P/MoCmggFctQOFfLXtqaIWNkcXsv9rTQdwzw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741204566; c=relaxed/simple;
-	bh=UnaG/Y3D2RaEknxGey8mFGsnuniQGtB239GqK+8Ei7E=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=FXsoKLnsM8myU6zYJd1pA8mXAST3jDvcXj5XA+dV6cpxSCFL6O/4/85xWWKpZCoE41+PFyXqCvfmZaoSffPD566zsjmmGIpGzTNv40T0ILc/cpuBdTelTmHIixzfIGGuSBrTisF/mYNqrfzwdE4x6rIJyIpRkyRL6bSqUGBEC38=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Kd29LuLx; arc=none smtp.client-ip=209.85.221.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741204573; c=relaxed/simple;
+	bh=WYEC+ArfSwlKN3FeDLKk0TQMOhpIceugzbJo5Kd8ysc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HOXDGoKO3wFoPPW2tFyXpRI/TqTETtWJ7579ZLzZn4xwBSXlo8IaHb1+rQW98z3iaJfbxBDOc04Ilro2rBfx1vBscGkucTPpoUasQ3ir7kW2daScV360EdUAUpQvS5xLVwrwomA2MM0jvWq1+x20KRbdX/keP5LAvQYYdGYX+q4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=engleder-embedded.com; spf=pass smtp.mailfrom=engleder-embedded.com; dkim=pass (1024-bit key) header.d=engleder-embedded.com header.i=@engleder-embedded.com header.b=RI+/h5ml; arc=none smtp.client-ip=81.19.149.121
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=engleder-embedded.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=engleder-embedded.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kd29LuLx"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-390e3b3d432so4792195f8f.2;
-        Wed, 05 Mar 2025 11:56:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741204563; x=1741809363; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=obQQoluSZXQiJyFNJHehlGp6Bxo7iUgFTG6ZT/ix8QI=;
-        b=Kd29LuLx2M7WX/iALMjoWRlshEhGaL5FlyXMAAtCOqBHXQjw/yFZ/ETm469sfK2WZs
-         ezpKhWeIjB8r1cOxvMzD2WA6TjbYAfk3F9l6IQXWCHV8N6o4aslM0IwavlAMtD3FAGQ/
-         viGgc3vQWDAq2nin/NbhQVVrcPsxoNrVlus3toUEWIQN1f6armwIJSf6YPExxre3VPMv
-         BNYwUyg0hK9AHOd/YDt2KW2q/GwoiFraj0QlkhuIqNaBmuFBtrEVcE1SFMVELQEDVkCk
-         hs1F7TIIlyH7Wd+1yuagFuEXc8lcN2wGF+yIJW2JYPBuLtzpjrHbw0bvu82m+1a2ZHbr
-         G1JQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741204563; x=1741809363;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=obQQoluSZXQiJyFNJHehlGp6Bxo7iUgFTG6ZT/ix8QI=;
-        b=a5fDnYd/UPVc3Fl/MxLdV+udDY2VIt+jdn1z9fjENUGjXbevYYCjQhCBB/efiMScnv
-         lppwcpxkztoNHyGHd/ZIAqaSiGW04h3w76iW6QcqVzMjEG0DHFkr5eALYN5akYa9GVAq
-         P8Ai0KCNdPVe93XaDh+VhmyLdDVoT7GQL+iSS7AxataBs6dJ62KSsOFh6ymNEyMc00xA
-         /Ske2fAAWy9E6Fdo6eGq7UmtZRFyNqAWVS+VH1YdDsAiXaXZoEk3iX2x6bkHYwi541Uo
-         8K4v9+OLngzz7EXMkaTQGql5QEgihPev21sNrFQzfxArHgN4gxpT47Juncweb1pFMyUy
-         b2Ew==
-X-Forwarded-Encrypted: i=1; AJvYcCVT9LU8/8TTXN0vvf0i61++2Bj11/eNEvkJuUWHZPnfLy/n4GhiKpJDN8ktHGHGO1ztU+z26WjgLOvhDSs=@vger.kernel.org, AJvYcCXTkcLXUDS3bFYsIxroVTQZWoE0Wv1p08PMKqmpKKMRkvamsOPtpKvigzqXmuUcI0RPj36wNyoyE6c1@vger.kernel.org
-X-Gm-Message-State: AOJu0YxYe7GkaJQ3pldzYk+Uy6fAtSh40AcMkPgxhsLjRE47WsdumVwM
-	J9ZfsmydHSUSqXY8Lx9Ut1aj7WJvnwzV7KpA5G7j6K7YpHzil0n4HhA0YA==
-X-Gm-Gg: ASbGncszmwIgPbHfJSrz0w1NyH6PQm/hR8duUI/nbnLrDYLo6fJZxvOazk8LdKMuWcJ
-	GZTV0hikf5MC1n+FUJj3/fWnF3h25I0tyHNUhF/AXyTAg6DhmM43V6QrIj3uZzjZcoZkTdjvCYE
-	/LDrkdcIknRhpQ9hA+SECM6ASzDDkkoLnRbgV7rtd6nj6L6+kYU+CVULfeNfPwJyYhSgl7LAS+L
-	yE+pwilMi+DF60RdWVNyDf69FBYZDx8o/SH4xs12HEHxDWoCzJyII61xwUtINs0k9f/JxrmeCh3
-	8ehp6tKTBPxf4V7arDA/VqBBtlF5QFT7WQnuHEGU2xEvidkDP47qFRj/wwgjsEu/5kRGCHeGXJA
-	FwoT9VMU=
-X-Google-Smtp-Source: AGHT+IHwhwN03Rano/W7g7TpcC3KAu4AHu8XRY4nSHbUDqGpseFs6elK+kPo9+eCu78mIs5dhyNNNA==
-X-Received: by 2002:a05:6000:2cd:b0:390:ea34:7d83 with SMTP id ffacd0b85a97d-3911f76f519mr4587194f8f.31.1741204562674;
-        Wed, 05 Mar 2025 11:56:02 -0800 (PST)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43bd42c588dsm26580635e9.21.2025.03.05.11.56.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Mar 2025 11:56:02 -0800 (PST)
-Date: Wed, 5 Mar 2025 19:56:01 +0000
-From: David Laight <david.laight.linux@gmail.com>
-To: Johan Hovold <johan@kernel.org>
-Cc: Boon Khai Ng <boon.khai.ng@intel.com>, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org,
- linux-kernel@vger.kernel.org, Tien Sung Ang <tien.sung.ang@intel.com>, Tien
- Sung Ang <tien.sung.ang@altera.com>, Boon Khai Ng <boon.khai.ng@altera.com>
-Subject: Re: [PATCH v1] USB: serial: ftdi_sio: add support for Altera USB
- Blaster 3
-Message-ID: <20250305195601.1dc6a1f6@pumpkin>
-In-Reply-To: <Z8hetcRinFXXVAdy@hovoldconsulting.com>
-References: <20250203084822.18356-1-boon.khai.ng@intel.com>
-	<Z8hetcRinFXXVAdy@hovoldconsulting.com>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+	dkim=pass (1024-bit key) header.d=engleder-embedded.com header.i=@engleder-embedded.com header.b="RI+/h5ml"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=engleder-embedded.com; s=dkim11; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=x0KQuzyFQUEThFLdYlVvZUJ1cH4hBNZAmoJdDiFksag=; b=RI+/h5mlwDs65E0J/YyCgTt05p
+	a//6ia9q7THHUJjoOvsmkpQr52QzRjnYVtgNBGH+dTSvVXju2HjaUP30mnI4VLvlMfrNn9FnnhTmr
+	+tv+B9/4GtcBM88IRfc6S0l7fbJXX/wnygN3l0PkoOx7ZlndkhxJAnvKBkjWP4Ckx3yk=;
+Received: from [80.121.79.4] (helo=[10.0.0.160])
+	by mx11lb.world4you.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.97.1)
+	(envelope-from <gerhard@engleder-embedded.com>)
+	id 1tpuDg-000000006hj-2m9f;
+	Wed, 05 Mar 2025 20:15:53 +0100
+Message-ID: <c0adcf60-4fb5-411f-84ef-e409cecf8a75@engleder-embedded.com>
+Date: Wed, 5 Mar 2025 20:15:51 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH iwl-net] igc: Fix XSK queue NAPI ID mapping
+To: Joe Damato <jdamato@fastly.com>
+Cc: vitaly.lifshits@intel.com, avigailx.dahan@intel.com,
+ anthony.l.nguyen@intel.com, stable@vger.kernel.org,
+ Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
+ Jesper Dangaard Brouer <hawk@kernel.org>,
+ John Fastabend <john.fastabend@gmail.com>,
+ Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+ Andrew Lunn <andrew+netdev@lunn.ch>, Eric Dumazet <edumazet@google.com>,
+ Paolo Abeni <pabeni@redhat.com>,
+ "open list:XDP (eXpress Data Path)" <bpf@vger.kernel.org>,
+ "moderated list:INTEL ETHERNET DRIVERS" <intel-wired-lan@lists.osuosl.org>,
+ open list <linux-kernel@vger.kernel.org>, netdev@vger.kernel.org
+References: <20250305180901.128286-1-jdamato@fastly.com>
+Content-Language: en-US
+From: Gerhard Engleder <gerhard@engleder-embedded.com>
+In-Reply-To: <20250305180901.128286-1-jdamato@fastly.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-AV-Do-Run: Yes
 
-On Wed, 5 Mar 2025 15:24:53 +0100
-Johan Hovold <johan@kernel.org> wrote:
-
-> On Mon, Feb 03, 2025 at 04:48:22PM +0800, Boon Khai Ng wrote:
-> > The Altera on board USB Blaster 3 utilizes a FT2232 and FT4232
-> > chip.  
+On 05.03.25 19:09, Joe Damato wrote:
+> In commit b65969856d4f ("igc: Link queues to NAPI instances"), the XSK
+> queues were incorrectly unmapped from their NAPI instances. After
+> discussion on the mailing list and the introduction of a test to codify
+> the expected behavior, we can see that the unmapping causes the
+> check_xsk test to fail:
 > 
-> I assume it's either an FT2243 or an FT4232 and not both?
+> NETIF=enp86s0 ./tools/testing/selftests/drivers/net/queues.py
 > 
-> > Add VID/PID for the on board USB Blaster 3 so it can be used
-> > as a serial device via ftdi_sio.  
+> [...]
+>    # Check|     ksft_eq(q.get('xsk', None), {},
+>    # Check failed None != {} xsk attr on queue we configured
+>    not ok 4 queues.check_xsk
 > 
-> Can you say something more about these devices? I guess they are used
-> for programming FPGAs? Are they embedded in other products? And can the
-> same PID be used for more than one type of device that they are embedded
-> in?
-
-Also, is there any actual software that can use them through this driver?
-The Altera 'quartus' software that is usually used to program (etc) the
-fpga is pretty proprietary.
-I think some bits have been reverse engineered, but only for a few simple
-actions.
-
-I'm not even sure the Altera code even loads a driver - just uses the userspace
-USB library.
-I'll have used it on a system with a custom kernel to program (etc) a CycloneV.
-No hint of needing to recompile a driver.
-(The sheer amount of software you need to command-line program a device is
-stunning! - I had to parcel it all up so we could use a usb to jtag cable
-to in-situ program one of the smaller PLD devices on a small board.)
-
-So what is the real 'use case'?
-
-	David
-
+> After this commit, the test passes:
 > 
-> Or are the PIDs tied to different types of "USB Blaster 3"s? If so this,
-> should also be reflected in the naming of the defines.
+>    ok 4 queues.check_xsk
+> 
+> Note that the test itself is only in net-next, so I tested this change
+> by applying it to my local net-next tree, booting, and running the test.
+> 
+> Cc: stable@vger.kernel.org
+> Fixes: b65969856d4f ("igc: Link queues to NAPI instances")
+> Signed-off-by: Joe Damato <jdamato@fastly.com>
+> ---
+>   drivers/net/ethernet/intel/igc/igc_xdp.c | 2 --
+>   1 file changed, 2 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/intel/igc/igc_xdp.c b/drivers/net/ethernet/intel/igc/igc_xdp.c
+> index 13bbd3346e01..869815f48ac1 100644
+> --- a/drivers/net/ethernet/intel/igc/igc_xdp.c
+> +++ b/drivers/net/ethernet/intel/igc/igc_xdp.c
+> @@ -86,7 +86,6 @@ static int igc_xdp_enable_pool(struct igc_adapter *adapter,
+>   		napi_disable(napi);
+>   	}
+>   
+> -	igc_set_queue_napi(adapter, queue_id, NULL);
+>   	set_bit(IGC_RING_FLAG_AF_XDP_ZC, &rx_ring->flags);
+>   	set_bit(IGC_RING_FLAG_AF_XDP_ZC, &tx_ring->flags);
+>   
+> @@ -136,7 +135,6 @@ static int igc_xdp_disable_pool(struct igc_adapter *adapter, u16 queue_id)
+>   	xsk_pool_dma_unmap(pool, IGC_RX_DMA_ATTR);
+>   	clear_bit(IGC_RING_FLAG_AF_XDP_ZC, &rx_ring->flags);
+>   	clear_bit(IGC_RING_FLAG_AF_XDP_ZC, &tx_ring->flags);
+> -	igc_set_queue_napi(adapter, queue_id, napi);
+>   
+>   	if (needs_reset) {
+>   		napi_enable(napi);
+> 
+> base-commit: 3c9231ea6497dfc50ac0ef69fff484da27d0df66
+
+igc_set_queue_napi() could be made static as it only used within
+igc_main.c after this change.
+
+Reviewed-by: Gerhard Engleder <gerhard@engleder-embedded.com>
