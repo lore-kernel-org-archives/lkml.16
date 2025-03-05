@@ -1,65 +1,70 @@
-Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
+Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DA982E3377
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 11:14:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCE191FBC94;
+	Wed,  5 Mar 2025 11:16:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741173282; cv=none; b=XvxVcl3ORceCnaY+QQUOQnPVoyi/BKVyOkeIpApfz87dWTPTQb0hpZtP40Gy8Yp1miB6tkykvXtJwZ2Ol8P3VmzN63pIW+RWiSRJyQKHcTAt5z9TOtY2s5Ri6x4JUIV8kT4dsNfSxhS7fyLRrgADtAF5qe8uR8ii5ji4Hi9xXQ8=
+	t=1741173411; cv=none; b=g5Dc+JMje54tV5Je1UMXsahcbLzo9wbwElL0LY9zbOxnCiiwjrYt7Spd+oJdtu3L69qzNJPdSuZsQruOdc3TwGKeor0oaz5aAiHB2BMmiLx3tPPeqV76QYcWPYhgwEu8ghxEWt3ef4D8n7nGOy4rBkh5AYEz6b5FqrbJV3ceTTA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741173282; c=relaxed/simple;
-	bh=jdLDJbaQQsoDFa4s+c02wBLg7YrqNZ8Jn1IQPeKEYaI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type:
-	 References; b=EmB2G1z+osRAjLFQWQtNixQwRk/cLffy9d91ehcUK1pX+LQb/SU7Nvp70oKGQwsGHmGNfTxpeh8hbyoCxxvNzsRZG0X1EovyoWRXbJt6jDvwfX9/XuYkHYgikrtaDRb56fXq1LjNTYE7b47W/jo/caRyiJLmj1xX677XRBGwfW0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=D/CzNPdY; arc=none smtp.client-ip=203.254.224.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1741173411; c=relaxed/simple;
+	bh=oDeP14IAUCRnH4j6RavLjdXfuFH/GC4EiIFhWi0jTu4=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ZAShOLxg73Ge9GWo0sihh2rYsSdkGMoy9jkUSJney1wChRO/WhaqlXd5ithHQ7AJCk6Wb6xFL23ldpLiEt6CsVK/9oYKKjs+SLh5mhU1X5quMrskgUOdbnSRf886ZzMecHZFx1lBwI0u+GYMqogSmEaOS1/Ismzeb5P3j+Pw1GI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=FzhJGJGN; arc=none smtp.client-ip=198.47.23.235
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="D/CzNPdY"
-Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
-	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20250305111438epoutp0280f821d73c409a02d0a5d3de514459fd~p498eiTHD3070430704epoutp02k
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 11:14:38 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20250305111438epoutp0280f821d73c409a02d0a5d3de514459fd~p498eiTHD3070430704epoutp02k
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1741173278;
-	bh=zHdQi7kjXKUJJwwKVQr1SUHzVf3qWJSfUQ7rXz+WnZo=;
-	h=From:To:Cc:Subject:Date:References:From;
-	b=D/CzNPdY3AlrRJJ9x2iBoPqlu4wDvVlGtd3pWFfwE66jBXa9Yu97GNKmP/ocwDxzs
-	 iDnA6WrLxDdM3RlcmsAm/mWhjnXQVwixwQP3RuFQ6Jd7pj7fLQhugJRmVmzP0rfaTb
-	 596BrIHTw/pbFLW7F39/pNYL8hWeXhwLILGF4UwU=
-Received: from epsmges5p3new.samsung.com (unknown [182.195.42.75]) by
-	epcas5p1.samsung.com (KnoxPortal) with ESMTP id
-	20250305111437epcas5p1d4310e39928fbd78a049d7cc482138bf~p497_ScKQ1240812408epcas5p1C;
-	Wed,  5 Mar 2025 11:14:37 +0000 (GMT)
-Received: from epcas5p2.samsung.com ( [182.195.41.40]) by
-	epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	6E.3D.19956.D1238C76; Wed,  5 Mar 2025 20:14:37 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-	epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
-	20250305093229epcas5p477214b3cd1e48e3d862531b647d34585~p3kw3UZFW2244022440epcas5p49;
-	Wed,  5 Mar 2025 09:32:29 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20250305093229epsmtrp2f08a84e8a960b2d9e5c7947bc1061fab~p3kw2oTYy1328613286epsmtrp2N;
-	Wed,  5 Mar 2025 09:32:29 +0000 (GMT)
-X-AuditID: b6c32a4b-fd1f170000004df4-a0-67c8321d6ad6
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-	epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	9E.36.18729.D2A18C76; Wed,  5 Mar 2025 18:32:29 +0900 (KST)
-Received: from localhost.localdomain (unknown [107.109.224.44]) by
-	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20250305093227epsmtip23e0862b1356075548972219d708d42ad~p3kvBSwTX2504625046epsmtip2L;
-	Wed,  5 Mar 2025 09:32:27 +0000 (GMT)
-From: Maninder Singh <maninder1.s@samsung.com>
-To: chuck.lever@oracle.com, jlayton@kernel.org, neilb@suse.de,
-	okorniev@redhat.com, Dai.Ngo@oracle.com, tom@talpey.com
-Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, Maninder Singh
-	<maninder1.s@samsung.com>, Shubham Rana <s9.rana@samsung.com>
-Subject: [PATCH 1/1] fs/nfsd/nfsctl.c: fix race between nfsd registration
- and exports_proc
-Date: Wed,  5 Mar 2025 15:02:22 +0530
-Message-Id: <20250305093222.1051935-1-maninder1.s@samsung.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="FzhJGJGN"
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 525BGBwo3933778
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 5 Mar 2025 05:16:11 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1741173371;
+	bh=pUoO09MYFSY7H1znYvfGa7jL/ZGhwkgxZ+hya5/sw48=;
+	h=From:To:CC:Subject:Date;
+	b=FzhJGJGNYNeIBow1V/v7Va3m4j+tDD/yAR5RSBeFtOa4L7ZMKLXFQ1bEFP4aU3jhQ
+	 C5tvZ+Mip0EAc4pFQeqVUs09Q/Y4i7MCuRZaNjPG2x/sZp5MoTCiO7eS3FCvy7xrB2
+	 nSzllldVO/ZSJuMgnkNsdOAn3Uv3KNvSqlaGwyUM=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 525BGBKv120467
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Wed, 5 Mar 2025 05:16:11 -0600
+Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 5
+ Mar 2025 05:16:10 -0600
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Wed, 5 Mar 2025 05:16:10 -0600
+Received: from fllv0122.itg.ti.com (fllv0122.itg.ti.com [10.247.120.72])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 525BGARA106207;
+	Wed, 5 Mar 2025 05:16:10 -0600
+Received: from localhost (danish-tpc.dhcp.ti.com [10.24.69.25])
+	by fllv0122.itg.ti.com (8.14.7/8.14.7) with ESMTP id 525BG9WE014392;
+	Wed, 5 Mar 2025 05:16:10 -0600
+From: MD Danish Anwar <danishanwar@ti.com>
+To: Vignesh Raghavendra <vigneshr@ti.com>, Meghana Malladi <m-malladi@ti.com>,
+        Diogo Ivo <diogo.ivo@siemens.com>, Lee Trager <lee@trager.us>,
+        Andrew Lunn
+	<andrew+netdev@lunn.ch>,
+        Roger Quadros <rogerq@kernel.org>,
+        MD Danish Anwar
+	<danishanwar@ti.com>,
+        Jonathan Corbet <corbet@lwn.net>, Simon Horman
+	<horms@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>, Jakub Kicinski
+	<kuba@kernel.org>,
+        Eric Dumazet <edumazet@google.com>,
+        "David S. Miller"
+	<davem@davemloft.net>
+CC: <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <linux-doc@vger.kernel.org>, <netdev@vger.kernel.org>, <srk@ti.com>
+Subject: [PATCH net-next v2] net: ti: icssg-prueth: Add ICSSG FW Stats
+Date: Wed, 5 Mar 2025 16:46:08 +0530
+Message-ID: <20250305111608.520042-1-danishanwar@ti.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,213 +72,272 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrAKsWRmVeSWpSXmKPExsWy7bCmhq6s0Yl0gzO/dCz+333OZDF/0WY2
-	i5/LVrFbXN41h83iwoHTrBaH57exWOyd38BiMenZJ3aL748vMVqc+nWKyYHLY9OqTjaPj09v
-	sXi833eVzaNvyypGj82nqz0uP7nC6PF5k1wAexSXTUpqTmZZapG+XQJXxqyfLxgL/qpV3J33
-	hL2BsUuxi5GTQ0LARGL9hh62LkYuDiGB3YwSx3u3MEM4nxglZm+7xgLhfGOUmNp1kbWLkQOs
-	5fZzqI69jBJHV7xhhXC+MEpMedDMBjKXTUBPYtWuPSwgtohAhcTk228YQYqYBboZJf5PPsgE
-	khAWiJHYveU3WAOLgKrE/UMTGEFsXgE7ibW7upghDpSXmHnpOztEXFDi5MwnYEOZgeLNW2eD
-	3Soh8JNd4ubcBjaIBheJ1tlv2SFsYYlXx7dA2VISn9/tZYN4oVxi64R6iN4WRon9c6ZA9dpL
-	PLm4EOxNZgFNifW79CHCshJTT61jgtjLJ9H7+wkTRJxXYsc8GFtVouXmBlYIW1ri88ePLBCr
-	PCT2rQS7QEggVuLc/inMExjlZyH5ZhaSb2YhLF7AyLyKUTK1oDg3PbXYtMA4L7Vcrzgxt7g0
-	L10vOT93EyM4EWl572B89OCD3iFGJg7GQ4wSHMxKIryvTx1PF+JNSaysSi3Kjy8qzUktPsQo
-	zcGiJM7bvLMlXUggPbEkNTs1tSC1CCbLxMEp1cB0If9DhfzLo9sUVpybPU9IXU9y/fJik/sv
-	s6qZb0XfuWSSIOvJGydy3U/pT0q0DAtHwR9H+cX+LZ99+tWUyrWqlhwRTUjRaH+1RrujUDSt
-	cCt3pdv3r9zX13AE59y9pTbhT1J5/I/4iNNGTgeOhayt+rSsNqF5bdGBmKzV8bZFZxYLHtl3
-	Z7b8lDaPz8cW7F3zda982Z1L79VjZ06ZOO/P5ej/omwZbfMrNBXSk14+Eq4Tzjp2Ly1syomU
-	XG7/zxFOKSdFfq35ltAQMvWt9h+W83+efSgS6999l11m8bLoae5lz80UFJQ4GB7cvlKVtfpI
-	1LMLrOs8rm6YcfNv8D6Gb99dFk2/xNV86xx71/nFSizFGYmGWsxFxYkA/LJPt7MDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrBLMWRmVeSWpSXmKPExsWy7bCSvK6u1Il0g7UT9S3+333OZDF/0WY2
-	i5/LVrFbXN41h83iwoHTrBaH57exWOyd38BiMenZJ3aL748vMVqc+nWKyYHLY9OqTjaPj09v
-	sXi833eVzaNvyypGj82nqz0uP7nC6PF5k1wAexSXTUpqTmZZapG+XQJXxqyfLxgL/qpV3J33
-	hL2BsUuxi5GDQ0LAROL2c7YuRi4OIYHdjBJ/p+9j72LkBIpLS/z8954FwhaWWPnvOTtE0SdG
-	ieU7PoIVsQnoSazatYcFJCEi0MAo8fjLX7BRzAL9jBJb1r5lBqkSFoiSmNtzgQ3EZhFQlbh/
-	aAIjiM0rYCexdlcXM8QKeYmZl76zQ8QFJU7OfAK2mhko3rx1NvMERr5ZSFKzkKQWMDKtYpRM
-	LSjOTc8tNiwwzEst1ytOzC0uzUvXS87P3cQIDmwtzR2M21d90DvEyMTBeIhRgoNZSYT39anj
-	6UK8KYmVValF+fFFpTmpxYcYpTlYlMR5xV/0pggJpCeWpGanphakFsFkmTg4pRqYtu0U+fUi
-	beLLf67Xm0U9JKLffJstze1jZdvHfr+Yw6jz/vpr8zo7eY+z5UY4Sh3KatKJmRMWJpKQWGgd
-	82v2/Mmz96y3Ner5bRbK592QuLe27M6FjEmGiTU/3G5cU52wj3f57t7JYh9My+ZF3JrrYKZj
-	e2/ZnXrBz8+UL+iIHTv8RU7tlJ+3J7vIlliNqFm7dsW/+V5vdGMGo2i7S5dgtGz9k0cePaFF
-	ByevbTZOszohINmno8pwMFrq/+nYA6pRDMv1Fy0uFK1bMdXhzJL6gFV/jc788/kUvEfuud0+
-	l6JY1udy1zmYLsu2H/y4nz98ctrduRO3rwidcWzPYaOoEJMdOxWbmC7/j7jiI7lDiaU4I9FQ
-	i7moOBEAZNrNc9sCAAA=
-X-CMS-MailID: 20250305093229epcas5p477214b3cd1e48e3d862531b647d34585
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-X-CMS-RootMailID: 20250305093229epcas5p477214b3cd1e48e3d862531b647d34585
-References: <CGME20250305093229epcas5p477214b3cd1e48e3d862531b647d34585@epcas5p4.samsung.com>
+Content-Type: text/plain
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-1) As of now nfsd calls create_proc_exports_entry() at start of init_nfsd
-and cleanup by remove_proc_entry() at last of exit_nfsd.
+The ICSSG firmware maintains set of stats called PA_STATS.
+Currently the driver only dumps 4 stats. Add support for dumping more
+stats.
 
-Which causes kernel OOPS if there is race between below 2 operations:
-(i) exportfs -r
-(ii) mount -t nfsd none /proc/fs/nfsd
+The offset for different stats are defined as MACROs in icssg_switch_map.h
+file. All the offsets are for Slice0. Slice1 offsets are slice0 + 4.
+The offset calculation is taken care while reading the stats in
+emac_update_hardware_stats().
 
-for 5.4 kernel ARM64:
+The statistics are documented in
+Documentation/networking/device_drivers/icssg_prueth.rst
 
-CPU 1:
-el1_irq+0xbc/0x180
-arch_counter_get_cntvct+0x14/0x18
-running_clock+0xc/0x18
-preempt_count_add+0x88/0x110
-prep_new_page+0xb0/0x220
-get_page_from_freelist+0x2d8/0x1778
-__alloc_pages_nodemask+0x15c/0xef0
-__vmalloc_node_range+0x28c/0x478
-__vmalloc_node_flags_caller+0x8c/0xb0
-kvmalloc_node+0x88/0xe0
-nfsd_init_net+0x6c/0x108 [nfsd]
-ops_init+0x44/0x170
-register_pernet_operations+0x114/0x270
-register_pernet_subsys+0x34/0x50
-init_nfsd+0xa8/0x718 [nfsd]
-do_one_initcall+0x54/0x2e0
-
-CPU 2 :
-Unable to handle kernel NULL pointer dereference at virtual address 0000000000000010
-
-PC is at : exports_net_open+0x50/0x68 [nfsd]
-
-Call trace:
-exports_net_open+0x50/0x68 [nfsd]
-exports_proc_open+0x2c/0x38 [nfsd]
-proc_reg_open+0xb8/0x198
-do_dentry_open+0x1c4/0x418
-vfs_open+0x38/0x48
-path_openat+0x28c/0xf18
-do_filp_open+0x70/0xe8
-do_sys_open+0x154/0x248
-exports_net_open+0x50/0x68 [nfsd]
-exports_proc_open+0x2c/0x38 [nfsd]
-
-Sometimes it crashes at exports_net_open() and sometimes cache_seq_next_rcu().
-
-and same is happening on latest 6.14 kernel as well:
-
-[    0.000000] Linux version 6.14.0-rc5-next-20250304-dirty
-...
-[  285.455918] Unable to handle kernel paging request at virtual address 00001f4800001f48
-...
-[  285.464902] pc : cache_seq_next_rcu+0x78/0xa4
-...
-[  285.469695] Call trace:
-[  285.470083]  cache_seq_next_rcu+0x78/0xa4 (P)
-[  285.470488]  seq_read+0xe0/0x11c
-[  285.470675]  proc_reg_read+0x9c/0xf0
-[  285.470874]  vfs_read+0xc4/0x2fc
-[  285.471057]  ksys_read+0x6c/0xf4
-[  285.471231]  __arm64_sys_read+0x1c/0x28
-[  285.471428]  invoke_syscall+0x44/0x100
-[  285.471633]  el0_svc_common.constprop.0+0x40/0xe0
-[  285.471870]  do_el0_svc_compat+0x1c/0x34
-[  285.472073]  el0_svc_compat+0x2c/0x80
-[  285.472265]  el0t_32_sync_handler+0x90/0x140
-[  285.472473]  el0t_32_sync+0x19c/0x1a0
-[  285.472887] Code: f9400885 93407c23 937d7c27 11000421 (f86378a3)
-[  285.473422] ---[ end trace 0000000000000000 ]---
-
-It reproduced simply with below script:
-while [ 1 ]
-do
-/exportfs -r
-done &
-
-while [ 1 ]
-do
-insmod /nfsd.ko
-mount -t nfsd none /proc/fs/nfsd
-umount /proc/fs/nfsd
-rmmod nfsd
-done &
-
-So exporting interfaces to user space shall be done at last and
-cleanup at first place.
-
-With change no Kernel OOPs.
-
-2) Also unregister of register_filesystem() was missed in case
-genl_register_family() fails.
-Corrected that also.
-
-Co-developed-by: Shubham Rana <s9.rana@samsung.com>
-Signed-off-by: Shubham Rana <s9.rana@samsung.com>
-Signed-off-by: Maninder Singh <maninder1.s@samsung.com>
+Reviewed-by: Simon Horman <horms@kernel.org>
+Signed-off-by: MD Danish Anwar <danishanwar@ti.com>
 ---
- fs/nfsd/nfsctl.c | 24 ++++++++++++++----------
- 1 file changed, 14 insertions(+), 10 deletions(-)
+v1 - v2:
+*) Created icssg_prueth.rst and added Documentation of firmware statistics
+as suggested by Jakub Kicinski <kuba@kernel.org>
+*) Removed unimplemented preemption statistics.
+*) Collected RB tag from Simon Horman <horms@kernel.org>
 
-diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
-index ac265d6fde35..d936a99ada2a 100644
---- a/fs/nfsd/nfsctl.c
-+++ b/fs/nfsd/nfsctl.c
-@@ -2291,12 +2291,10 @@ static int __init init_nfsd(void)
- 	if (retval)
- 		goto out_free_pnfs;
- 	nfsd_lockd_init();	/* lockd->nfsd callbacks */
--	retval = create_proc_exports_entry();
--	if (retval)
--		goto out_free_lockd;
+v1 - https://lore.kernel.org/all/20250227093712.2130561-1-danishanwar@ti.com/
+
+ .../device_drivers/ethernet/index.rst         |  1 +
+ .../ethernet/ti/icssg_prueth.rst              | 56 ++++++++++++++++++
+ drivers/net/ethernet/ti/icssg/icssg_prueth.h  |  2 +-
+ drivers/net/ethernet/ti/icssg/icssg_stats.c   |  6 +-
+ drivers/net/ethernet/ti/icssg/icssg_stats.h   | 58 ++++++++++++-------
+ .../net/ethernet/ti/icssg/icssg_switch_map.h  | 33 +++++++++++
+ 6 files changed, 129 insertions(+), 27 deletions(-)
+ create mode 100644 Documentation/networking/device_drivers/ethernet/ti/icssg_prueth.rst
+
+diff --git a/Documentation/networking/device_drivers/ethernet/index.rst b/Documentation/networking/device_drivers/ethernet/index.rst
+index 6fc1961492b7..cd5f31dd07ce 100644
+--- a/Documentation/networking/device_drivers/ethernet/index.rst
++++ b/Documentation/networking/device_drivers/ethernet/index.rst
+@@ -55,6 +55,7 @@ Contents:
+    ti/cpsw_switchdev
+    ti/am65_nuss_cpsw_switchdev
+    ti/tlan
++   ti/icssg_prueth
+    toshiba/spider_net
+    wangxun/txgbe
+    wangxun/ngbe
+diff --git a/Documentation/networking/device_drivers/ethernet/ti/icssg_prueth.rst b/Documentation/networking/device_drivers/ethernet/ti/icssg_prueth.rst
+new file mode 100644
+index 000000000000..da21ddf431bb
+--- /dev/null
++++ b/Documentation/networking/device_drivers/ethernet/ti/icssg_prueth.rst
+@@ -0,0 +1,56 @@
++.. SPDX-License-Identifier: GPL-2.0
 +
- 	retval = register_pernet_subsys(&nfsd_net_ops);
- 	if (retval < 0)
--		goto out_free_exports;
-+		goto out_free_lockd;
- 	retval = register_cld_notifier();
- 	if (retval)
- 		goto out_free_subsys;
-@@ -2305,22 +2303,28 @@ static int __init init_nfsd(void)
- 		goto out_free_cld;
- 	retval = register_filesystem(&nfsd_fs_type);
- 	if (retval)
--		goto out_free_all;
-+		goto out_free_nfsd4;
- 	retval = genl_register_family(&nfsd_nl_family);
-+	if (retval)
-+		goto out_free_filesystem;
-+	retval = create_proc_exports_entry();
- 	if (retval)
- 		goto out_free_all;
++==============================================
++Texas Instruments ICSSG PRUETH ethernet driver
++==============================================
 +
- 	nfsd_localio_ops_init();
++:Version: 1.0
++
++ICSSG Firmware
++==============
++
++Every ICSSG core has two Programmable Real-Time Unit(PRUs), two auxiliary
++Real-Time Transfer Unit (RTUs), and two Transmit Real-Time Transfer Units
++(TX_PRUs). Each one of these runs its own firmware. The firmwares combnined are
++referred as ICSSG Firmware.
++
++Firmware Statistics
++===================
++
++The ICSSG firmware maintains certain statistics which are dumped by the driver
++via ``ethtool -S <interface>``
++
++These statistics are as follows,
++
++ - ``FW_RTU_PKT_DROP``: Diagnostic error counter which increments when RTU drops a locally injected packet due to port being disabled or rule violation.
++ - ``FW_Q0_OVERFLOW``: TX overflow counter for queue0
++ - ``FW_Q1_OVERFLOW``: TX overflow counter for queue1
++ - ``FW_Q2_OVERFLOW``: TX overflow counter for queue2
++ - ``FW_Q3_OVERFLOW``: TX overflow counter for queue3
++ - ``FW_Q4_OVERFLOW``: TX overflow counter for queue4
++ - ``FW_Q5_OVERFLOW``: TX overflow counter for queue5
++ - ``FW_Q6_OVERFLOW``: TX overflow counter for queue6
++ - ``FW_Q7_OVERFLOW``: TX overflow counter for queue7
++ - ``FW_DROPPED_PKT``: This counter is incremented when a packet is dropped at PRU because of rule violation.
++ - ``FW_RX_ERROR``: Incremented if there was a CRC error or Min/Max frame error at PRU
++ - ``FW_RX_DS_INVALID``: Incremented when RTU detects Data Status invalid condition
++ - ``FW_TX_DROPPED_PACKET``: Counter for packets dropped via TX Port
++ - ``FW_TX_TS_DROPPED_PACKET``: Counter for packets with TS flag dropped via TX Port
++ - ``FW_INF_PORT_DISABLED``: Incremented when RX frame is dropped due to port being disabled
++ - ``FW_INF_SAV``: Incremented when RX frame is dropped due to Source Address violation
++ - ``FW_INF_SA_DL``: Incremented when RX frame is dropped due to Source Address being in the denylist
++ - ``FW_INF_PORT_BLOCKED``: Incremented when RX frame is dropped due to port being blocked and frame being a special frame
++ - ``FW_INF_DROP_TAGGED`` : Incremented when RX frame is dropped for being tagged
++ - ``FW_INF_DROP_PRIOTAGGED``: Incremented when RX frame is dropped for being priority tagged
++ - ``FW_INF_DROP_NOTAG``: Incremented when RX frame is dropped for being untagged
++ - ``FW_INF_DROP_NOTMEMBER``: Incremented when RX frame is dropped for port not being member of VLAN
++ - ``FW_RX_EOF_SHORT_FRMERR``: Incremented if End Of Frame (EOF) task is scheduled without seeing RX_B1
++ - ``FW_RX_B0_DROP_EARLY_EOF``: Incremented when frame is dropped due to Early EOF
++ - ``FW_TX_JUMBO_FRM_CUTOFF``: Incremented when frame is cut off to prevent packet size > 2000 Bytes
++ - ``FW_RX_EXP_FRAG_Q_DROP``: Incremented when express frame is received in the same queue as the previous fragment
++ - ``FW_RX_FIFO_OVERRUN``: RX fifo overrun counter
++ - ``FW_CUT_THR_PKT``: Incremented when a packet is forwarded using Cut-Through forwarding method
++ - ``FW_HOST_RX_PKT_CNT``: Number of valid packets sent by Rx PRU to Host on PSI
++ - ``FW_HOST_TX_PKT_CNT``: Number of valid packets copied by RTU0 to Tx queues
++ - ``FW_HOST_EGRESS_Q_PRE_OVERFLOW``: Host Egress Q (Pre-emptible) Overflow Counter
++ - ``FW_HOST_EGRESS_Q_EXP_OVERFLOW``: Host Egress Q (Pre-emptible) Overflow Counter
+diff --git a/drivers/net/ethernet/ti/icssg/icssg_prueth.h b/drivers/net/ethernet/ti/icssg/icssg_prueth.h
+index 329b46e9ee53..ff7fce26e851 100644
+--- a/drivers/net/ethernet/ti/icssg/icssg_prueth.h
++++ b/drivers/net/ethernet/ti/icssg/icssg_prueth.h
+@@ -50,7 +50,7 @@
  
- 	return 0;
-+
- out_free_all:
-+	genl_unregister_family(&nfsd_nl_family);
-+out_free_filesystem:
-+	unregister_filesystem(&nfsd_fs_type);
-+out_free_nfsd4:
- 	nfsd4_destroy_laundry_wq();
- out_free_cld:
- 	unregister_cld_notifier();
- out_free_subsys:
- 	unregister_pernet_subsys(&nfsd_net_ops);
--out_free_exports:
--	remove_proc_entry("fs/nfs/exports", NULL);
--	remove_proc_entry("fs/nfs", NULL);
- out_free_lockd:
- 	nfsd_lockd_shutdown();
- 	nfsd_drc_slab_free();
-@@ -2333,14 +2337,14 @@ static int __init init_nfsd(void)
+ #define ICSSG_MAX_RFLOWS	8	/* per slice */
  
- static void __exit exit_nfsd(void)
- {
-+	remove_proc_entry("fs/nfs/exports", NULL);
-+	remove_proc_entry("fs/nfs", NULL);
- 	genl_unregister_family(&nfsd_nl_family);
- 	unregister_filesystem(&nfsd_fs_type);
- 	nfsd4_destroy_laundry_wq();
- 	unregister_cld_notifier();
- 	unregister_pernet_subsys(&nfsd_net_ops);
- 	nfsd_drc_slab_free();
--	remove_proc_entry("fs/nfs/exports", NULL);
--	remove_proc_entry("fs/nfs", NULL);
- 	nfsd_lockd_shutdown();
- 	nfsd4_free_slabs();
- 	nfsd4_exit_pnfs();
+-#define ICSSG_NUM_PA_STATS	4
++#define ICSSG_NUM_PA_STATS	32
+ #define ICSSG_NUM_MIIG_STATS	60
+ /* Number of ICSSG related stats */
+ #define ICSSG_NUM_STATS (ICSSG_NUM_MIIG_STATS + ICSSG_NUM_PA_STATS)
+diff --git a/drivers/net/ethernet/ti/icssg/icssg_stats.c b/drivers/net/ethernet/ti/icssg/icssg_stats.c
+index 8800bd3a8d07..3f1400e0207c 100644
+--- a/drivers/net/ethernet/ti/icssg/icssg_stats.c
++++ b/drivers/net/ethernet/ti/icssg/icssg_stats.c
+@@ -11,7 +11,6 @@
+ 
+ #define ICSSG_TX_PACKET_OFFSET	0xA0
+ #define ICSSG_TX_BYTE_OFFSET	0xEC
+-#define ICSSG_FW_STATS_BASE	0x0248
+ 
+ static u32 stats_base[] = {	0x54c,	/* Slice 0 stats start */
+ 				0xb18,	/* Slice 1 stats start */
+@@ -44,9 +43,8 @@ void emac_update_hardware_stats(struct prueth_emac *emac)
+ 
+ 	if (prueth->pa_stats) {
+ 		for (i = 0; i < ARRAY_SIZE(icssg_all_pa_stats); i++) {
+-			reg = ICSSG_FW_STATS_BASE +
+-			      icssg_all_pa_stats[i].offset *
+-			      PRUETH_NUM_MACS + slice * sizeof(u32);
++			reg = icssg_all_pa_stats[i].offset +
++			      slice * sizeof(u32);
+ 			regmap_read(prueth->pa_stats, reg, &val);
+ 			emac->pa_stats[i] += val;
+ 		}
+diff --git a/drivers/net/ethernet/ti/icssg/icssg_stats.h b/drivers/net/ethernet/ti/icssg/icssg_stats.h
+index e88b919f532c..5ec0b38e0c67 100644
+--- a/drivers/net/ethernet/ti/icssg/icssg_stats.h
++++ b/drivers/net/ethernet/ti/icssg/icssg_stats.h
+@@ -155,24 +155,10 @@ static const struct icssg_miig_stats icssg_all_miig_stats[] = {
+ 	ICSSG_MIIG_STATS(tx_bytes, true),
+ };
+ 
+-/**
+- * struct pa_stats_regs - ICSSG Firmware maintained PA Stats register
+- * @fw_rx_cnt: Number of valid packets sent by Rx PRU to Host on PSI
+- * @fw_tx_cnt: Number of valid packets copied by RTU0 to Tx queues
+- * @fw_tx_pre_overflow: Host Egress Q (Pre-emptible) Overflow Counter
+- * @fw_tx_exp_overflow: Host Egress Q (Express) Overflow Counter
+- */
+-struct pa_stats_regs {
+-	u32 fw_rx_cnt;
+-	u32 fw_tx_cnt;
+-	u32 fw_tx_pre_overflow;
+-	u32 fw_tx_exp_overflow;
+-};
+-
+-#define ICSSG_PA_STATS(field)			\
+-{						\
+-	#field,					\
+-	offsetof(struct pa_stats_regs, field),	\
++#define ICSSG_PA_STATS(field)	\
++{				\
++	#field,			\
++	field,			\
+ }
+ 
+ struct icssg_pa_stats {
+@@ -181,10 +167,38 @@ struct icssg_pa_stats {
+ };
+ 
+ static const struct icssg_pa_stats icssg_all_pa_stats[] = {
+-	ICSSG_PA_STATS(fw_rx_cnt),
+-	ICSSG_PA_STATS(fw_tx_cnt),
+-	ICSSG_PA_STATS(fw_tx_pre_overflow),
+-	ICSSG_PA_STATS(fw_tx_exp_overflow),
++	ICSSG_PA_STATS(FW_RTU_PKT_DROP),
++	ICSSG_PA_STATS(FW_Q0_OVERFLOW),
++	ICSSG_PA_STATS(FW_Q1_OVERFLOW),
++	ICSSG_PA_STATS(FW_Q2_OVERFLOW),
++	ICSSG_PA_STATS(FW_Q3_OVERFLOW),
++	ICSSG_PA_STATS(FW_Q4_OVERFLOW),
++	ICSSG_PA_STATS(FW_Q5_OVERFLOW),
++	ICSSG_PA_STATS(FW_Q6_OVERFLOW),
++	ICSSG_PA_STATS(FW_Q7_OVERFLOW),
++	ICSSG_PA_STATS(FW_DROPPED_PKT),
++	ICSSG_PA_STATS(FW_RX_ERROR),
++	ICSSG_PA_STATS(FW_RX_DS_INVALID),
++	ICSSG_PA_STATS(FW_TX_DROPPED_PACKET),
++	ICSSG_PA_STATS(FW_TX_TS_DROPPED_PACKET),
++	ICSSG_PA_STATS(FW_INF_PORT_DISABLED),
++	ICSSG_PA_STATS(FW_INF_SAV),
++	ICSSG_PA_STATS(FW_INF_SA_DL),
++	ICSSG_PA_STATS(FW_INF_PORT_BLOCKED),
++	ICSSG_PA_STATS(FW_INF_DROP_TAGGED),
++	ICSSG_PA_STATS(FW_INF_DROP_PRIOTAGGED),
++	ICSSG_PA_STATS(FW_INF_DROP_NOTAG),
++	ICSSG_PA_STATS(FW_INF_DROP_NOTMEMBER),
++	ICSSG_PA_STATS(FW_RX_EOF_SHORT_FRMERR),
++	ICSSG_PA_STATS(FW_RX_B0_DROP_EARLY_EOF),
++	ICSSG_PA_STATS(FW_TX_JUMBO_FRM_CUTOFF),
++	ICSSG_PA_STATS(FW_RX_EXP_FRAG_Q_DROP),
++	ICSSG_PA_STATS(FW_RX_FIFO_OVERRUN),
++	ICSSG_PA_STATS(FW_CUT_THR_PKT),
++	ICSSG_PA_STATS(FW_HOST_RX_PKT_CNT),
++	ICSSG_PA_STATS(FW_HOST_TX_PKT_CNT),
++	ICSSG_PA_STATS(FW_HOST_EGRESS_Q_PRE_OVERFLOW),
++	ICSSG_PA_STATS(FW_HOST_EGRESS_Q_EXP_OVERFLOW),
+ };
+ 
+ #endif /* __NET_TI_ICSSG_STATS_H */
+diff --git a/drivers/net/ethernet/ti/icssg/icssg_switch_map.h b/drivers/net/ethernet/ti/icssg/icssg_switch_map.h
+index 424a7e945ea8..490a9cc06fb0 100644
+--- a/drivers/net/ethernet/ti/icssg/icssg_switch_map.h
++++ b/drivers/net/ethernet/ti/icssg/icssg_switch_map.h
+@@ -231,4 +231,37 @@
+ /* Start of 32 bits PA_STAT counters */
+ #define PA_STAT_32b_START_OFFSET                           0x0080
+ 
++#define FW_RTU_PKT_DROP			0x0088
++#define FW_Q0_OVERFLOW			0x0090
++#define FW_Q1_OVERFLOW			0x0098
++#define FW_Q2_OVERFLOW			0x00A0
++#define FW_Q3_OVERFLOW			0x00A8
++#define FW_Q4_OVERFLOW			0x00B0
++#define FW_Q5_OVERFLOW			0x00B8
++#define FW_Q6_OVERFLOW			0x00C0
++#define FW_Q7_OVERFLOW			0x00C8
++#define FW_DROPPED_PKT			0x00F8
++#define FW_RX_ERROR			0x0100
++#define FW_RX_DS_INVALID		0x0108
++#define FW_TX_DROPPED_PACKET		0x0110
++#define FW_TX_TS_DROPPED_PACKET		0x0118
++#define FW_INF_PORT_DISABLED		0x0120
++#define FW_INF_SAV			0x0128
++#define FW_INF_SA_DL			0x0130
++#define FW_INF_PORT_BLOCKED		0x0138
++#define FW_INF_DROP_TAGGED		0x0140
++#define FW_INF_DROP_PRIOTAGGED		0x0148
++#define FW_INF_DROP_NOTAG		0x0150
++#define FW_INF_DROP_NOTMEMBER		0x0158
++#define FW_RX_EOF_SHORT_FRMERR		0x0188
++#define FW_RX_B0_DROP_EARLY_EOF		0x0190
++#define FW_TX_JUMBO_FRM_CUTOFF		0x0198
++#define FW_RX_EXP_FRAG_Q_DROP		0x01A0
++#define FW_RX_FIFO_OVERRUN		0x01A8
++#define FW_CUT_THR_PKT			0x01B0
++#define FW_HOST_RX_PKT_CNT		0x0248
++#define FW_HOST_TX_PKT_CNT		0x0250
++#define FW_HOST_EGRESS_Q_PRE_OVERFLOW	0x0258
++#define FW_HOST_EGRESS_Q_EXP_OVERFLOW	0x0260
++
+ #endif /* __NET_TI_ICSSG_SWITCH_MAP_H  */
+
+base-commit: f252f23ab657cd224cb8334ba69966396f3f629b
 -- 
-2.25.1
+2.34.1
 
