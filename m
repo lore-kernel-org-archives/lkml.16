@@ -1,138 +1,124 @@
-Received: from out162-62-58-211.mail.qq.com (out162-62-58-211.mail.qq.com [162.62.58.211])
+Received: from mout.web.de (mout.web.de [212.227.17.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CA4B245009
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 14:20:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.58.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC09924BC18;
+	Wed,  5 Mar 2025 14:20:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741184429; cv=none; b=Rz7n4y+QhEqq6wLgDylcm9tr2OcfYFiQkBIBLL2TFOX3O1pj87aS4s4xsPsI00eN8CAUWBmN544fXGc15BZ5dIRfOCuCK4sW7ASIYIR5sLRQImzEx5r0SenhBPfJY0gHxGQuPMYlX0rktGWQYaPu3daar2qj44fq4nNS7wQZOKw=
+	t=1741184452; cv=none; b=Alp6AqohuF0yaYyqoOpibynLW5EX2pS4SGsgpb80z7qWbCJCkkKpar1xwprwaHplQ1eU0hkdPIwCL9Qg1NRIioO5k4cN/h4J3Hn0qvIxA0FOkzVXYRiTciRWA2qm3fIvi7QC5Be/wdjTN6LxyuyCSUWm+x3pGzlEFxYERQ8AW8k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741184429; c=relaxed/simple;
-	bh=+C6+kiSpVE5KfXsZ+T78U7flNYEuG4uRKZzZ3SXkawY=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=EpUxq4WU9FPjXe+rWWN/HhLA5fR9Fe1RwmjUcm09ROQWUqhnJW+Rxe3Ge3YQGmkrE9yGQ7cCMOMO0ad7o+8qYl6/dGSjaBT/V5mGh+g9Lx5wQBieABun/xw2KaGBf+pS7gIS8FV3UDzhejle25880K/X8e4v4K9X7pwO40ZlJq8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=L4LvnuYy; arc=none smtp.client-ip=162.62.58.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1741184452; c=relaxed/simple;
+	bh=xpcQbs4tyQQ+SW3I3wZ517Ns00JpxHyOOR9gZd4k3L4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mMkS7Y2wL+xiZrlprRuWCwkG7dE6laCuUaT7zn3br6H35B5BXW0QrmSVq5ZiLXCOyGfei9gNPS4VMy9owiNGS3gcLL1wfTpqqIrZcFH2nRGlzEUYhpvArgNga72oqipUaq4NBpXOL6Z8xWoODTsjAnzeahJMmTCzfo63t/5NZr0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=OlThstys; arc=none smtp.client-ip=212.227.17.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="L4LvnuYy"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1741184116; bh=acioOzHhQ2ctbG30Uphm9oLX1bxxFczzdidUNA2813k=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=L4LvnuYyzfu3l+hiNg5mVqw5Y23Q+dHvpGe8uSrcOlYG4yJhKlhhpyRMux5HE2P7i
-	 Fv5IWUEFzJoSO47Asr3KmMTXp9FcN0xH/m8c4E3D8557QQyIn0nWu3kYH90XsZgzQc
-	 KJQFcIH1a1+VQ49bVTi7R9TfIlNQJqWqwWVE9nv8=
-Received: from pek-lxu-l1.wrs.com ([114.244.57.157])
-	by newxmesmtplogicsvrszc13-0.qq.com (NewEsmtp) with SMTP
-	id 3CEB345F; Wed, 05 Mar 2025 22:15:14 +0800
-X-QQ-mid: xmsmtpt1741184114t8ehv03j0
-Message-ID: <tencent_10C152FCC67009A26ED12ED48CB0E7C28606@qq.com>
-X-QQ-XMAILINFO: NbgegmlEc3Jup2Xm74q428qmahtaGlLadXgv5ntn9kJGPloZGZ+z8q83vHazmW
-	 tyqF0S63gsDSyHT7VwVsAwowVOmtQSrwMlsvnFjDGeirmEb4X69du1pvzuSIORu9E5Szz9A7ZLL7
-	 oeMTHgubWSoMPv+Ua/NgMrGlXv4lsnyPDkzNWExv5mTiy6V/Gl6CrB/7j5iKoBxHU9vzSjnS7d38
-	 +QQ0FAuuM+8KcYQTvovwjj4gyt4FFGBR2NKwoWtHWkTL3Sqp6d/hahQjVUK+FP8tl4NtxPDM3724
-	 C2pN63uSqWUSyVK52YdXr1Ub8nZ8X4lH2LOtnK/DE7JzF/ezUVExElGttqhZOllgYI5oGsuus3hH
-	 eLkpiNc9uRAY4i74tC96eLzDSjdN1DnPmGd21/QG9Y6u2ze924N/P4B1trGeDFcryahEXSH0tz06
-	 89DQchj8WWkuFSWYGWY7zELEvEu1KJUcm+N5IprYZLaFqv2NThIV8jS3bTwo169lDimTQpC0Vgqc
-	 voLbfJGjnqewikIqX5+4iwH7vbbCCY+opG/OIuEnQiMdxL70jQvMmBitn3GpskiW8lgR5Ec0E9e1
-	 BfMGIS3bLRIpX31i2Km6AvC7ZFE33gbeOVNYSjiop9sjmQp9ciyUrMw8rh6D/S7hJTbxXqZOArg7
-	 w7N97pT5F5xt+zUiXobLSf9kWXxFE1kb+bx1P/qwE6NgibvwBOQ0Iyr4kmSFg25iCx7PNG/XDlTa
-	 /ngi+rF70fEoAIgPinNTptb8V0QPeYCQzKWW2s2tBSrSBcrMT2ulGg9I66MmsD3SeTBFOxuxHXqO
-	 95qwI83Xy6c0MrxzANNCKnWvq6XU75vBgzSfhKy5ySdURMIJ7oaeBcMCA6uv2s2rdyOzP5lHVZKB
-	 xeeUGwE7HNb7CabVT5UI3nYKwQ8QgfQA6+xCPWP5N1AOmqxekemUYSZKVaP+1hVvFLHl6TmVjr37
-	 LR4p3pEbptcaSc7fPf7Byat3R4jJmn9MnSRkBW9gc=
-X-QQ-XMRINFO: Nq+8W0+stu50PRdwbJxPCL0=
-From: Edward Adam Davis <eadavis@qq.com>
-To: syzbot+8f9f411152c9539f4e59@syzkaller.appspotmail.com
-Cc: linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [xfs?] [mm?] WARNING: bad unlock balance in __mm_populate
-Date: Wed,  5 Mar 2025 22:15:15 +0800
-X-OQ-MSGID: <20250305141514.1549498-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <67c49230.050a0220.55417.04d5.GAE@google.com>
-References: <67c49230.050a0220.55417.04d5.GAE@google.com>
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="OlThstys"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1741184442; x=1741789242; i=markus.elfring@web.de;
+	bh=C1xWGzwYPulTit0Q4OqYEAYIGUZud3a18Yr5KId4AB8=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=OlThstys6j83TWzkyFcMswl/GOTcM3VEpAu3qt2qK287aJw8yBDslqMH3mQ/imIc
+	 ynQHBbnKQG5Ku/za3XWJ5+m3vA/mZH4zv/KYgsSIHBDHSgA7/u7mxkHI9WuyaXFH+
+	 uCOkNJq52SDtbgZ/26funprLFb4NWXM8wuA3/+OQHNl5A9761SFHclRVPxQflTdws
+	 4RMzskm0NStsYCiPDTo/wZlPopdK1S+5b+wDDYy8uD2xPyKTJXaSkF3TmeymsJi8C
+	 w8WQEPCUwEB9J04At8isQwHb9dQy6u8ztBApGfpf4LXZyixHJC30zN1OWrm/jnAZt
+	 sMqhz2G6D4M2sdfkXQ==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.29] ([94.31.70.10]) by smtp.web.de (mrweb105
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1MN6Fj-1tZX9L08H7-00I6c4; Wed, 05
+ Mar 2025 15:20:42 +0100
+Message-ID: <20a1a47c-8906-44e8-92e6-9b3e698b1491@web.de>
+Date: Wed, 5 Mar 2025 15:20:41 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: [PATCH] RDMA/erdma: Prevent use-after-free in erdma_accept_newconn()
+To: kernel-janitors@vger.kernel.org, linux-rdma@vger.kernel.org,
+ Cheng Xu <chengyou@linux.alibaba.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+ Kai Shen <kaishen@linux.alibaba.com>, Leon Romanovsky <leon@kernel.org>,
+ Yang Li <yang.lee@linux.alibaba.com>
+Cc: cocci@inria.fr, LKML <linux-kernel@vger.kernel.org>
+References: <f9303bdc-b1a7-be5e-56c6-dfa8232b8b55@web.de>
+ <f0f96f74-21d1-f5bf-1086-1c3ce0ea18f5@web.de>
+ <167179d0-e1ea-39a8-4143-949ad57294c2@linux.alibaba.com>
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <167179d0-e1ea-39a8-4143-949ad57294c2@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:K5YWpl1afCIz0GSstMdQrjpKFA5E9zL+d6oUnGlMOn9oeASRXMM
+ cxOSbYvrdMcL5omgjTJmGrvhAgOtgemjkpRpepr+oDPbfmNlOhHZBpyRHqrh7cZ7doD1Ioy
+ EiDLvYTClCslBiG7DVhc9QPEG9vvNLD9gmYVv1EgQCmnXuJaR/anSsQ/o/eDgMZV1CRGZay
+ k0BnV2DvSPWrF3Z170RuA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:gkDAiXcZH1k=;xz6JkpFjlNnnbsnyId4VAAQBYB9
+ gj4Beb6FayFHM+1bAX90V/bSG3/gQmPupHRKxKzdED9+llmecmGpdQnrUTdasLiJ7oQ/8PEaQ
+ zn+NaH5ZETr5WC0U47QwQQFrwZn/poog0ZDEUs2AKFsHlyMGMQ6sO2pYhHXbQsWZZ4qXIiyhv
+ bgKWlf1CJPC/2AuLxrk0WZWIBF6Hs0yG68fbjCFl1o8KXdutMD/LufdhzdhZdjdZaNnAWU2QJ
+ yWyFLulaOpFNT0fHwx+AgrGJbEKigSIPLM3Du9kYJYBy3h9rQDjdx9vQGClDCs9Q0BiVoxVH+
+ 85AGZPGzYGhK8kgZuaO02XX8WaP4Rsf9WZpc4weY0A5Hw+atGKJnJUQ4nSMLnZLO6qFOfz/Zc
+ 1Nx6ezUnWDFFyQffJOKJJpX6R0RA2IrMjXvvojeJAKytVrk8nx+c/9rKw/LQmOnLYKts+lo9B
+ /Uc1aLKXi6oaHYE/XaMG5cuLyrwUwVBVrE7UH2J1eoF8wNsQDWRYYSj03nw5yaPivMsTPX/sE
+ EGuhlXedguV7tvfa4yS5LQDZc6XlGWcxEOFFpTmxhHUCygUr002AQtANhzNA7TfytfSP0Sk0H
+ qrQpVo6c8qNk/TyARLXSwrFOs/cq0Idb86qSZjD/OK5x/VlKCGyDuZrkhBdTGC9uUKj4UgU2C
+ h8XYp0qRz/hpf7mmgEHR50eiBnG4AFCzZ3rNRvrOhONSOvkIlvW5JO/UH/Bp3ySsMWRVcGHqT
+ wgIFVGOUrCdB1tErrx5DBJ+aruL7TQhouko8vWxlz5r7tvyD84TFi8B/PneQEc6MTIskZm9Xs
+ o4vL91KQ/rqLx0e2aKQyLHVEV6wkRwfx0nha+UF//r9sXleqZ+0bmUZm+WDRSo/5xg9vUt0FQ
+ +0k9RUnnpILrviowSwiwSQ8vqHAd2ZyLAWSigXVca6ZC3ZI/JekwWPSAhdmzO89j/k6wLV+5F
+ iPmj4Ud9diSnNOqarGsbbTJo4oR1UlgIm34w2aaAdEnAhbNcBmKLtZCpH2g8ZhiGBSRmY5/M5
+ lnsTAGHxnIISkPnULX/RcI8UlS47DRqE+WVky3nRng1SGq3V8tM0ibq7QgnAOtq48L3tIpOPm
+ xBjJXJp28BArO2+pkH+SVh45iDfnzwQfqjNuFPEfxK66aK5RaNb1+QvTL3L78DDj9/+LMSdi8
+ KbL8JvI8pa0CDu6YxCRBcK71mnnhq0i/LuLMATBifXFX6UAfGDcTpkAXcfMFsQqOcLlgErtqx
+ t3Mt9dbeEQe4YZnomN9dKlTX2QE+r8aneg8h7XiRCjEItR9Itp2UYgqA65mRuIe547q0/fAz9
+ go/TF8a/wRy7S89tN567WnVAp08wKSMMPcJFL/lw2s6UyuEvq8SnApJJDLt31+AmWV71H3XdP
+ FHtEE/450w7P9JH+VL220PGPgt6m2BkYgMYmWUOwBSaKYmj6V87D/NO7OiZwNsDvrJJ/5d0Kw
+ sw0WY6+fVlliAzq2pP77dif5eDBk=
 
-#syz test
+From: Markus Elfring <elfring@users.sourceforge.net>
+Date: Wed, 5 Mar 2025 15:07:51 +0100
 
-diff --git a/mm/gup.c b/mm/gup.c
-index 3883b307780e..9f740d607919 100644
---- a/mm/gup.c
-+++ b/mm/gup.c
-@@ -1194,6 +1194,7 @@ static int faultin_page(struct vm_area_struct *vma,
+The implementation of the function =E2=80=9Cerdma_accept_newconn=E2=80=9D =
+contained
+still the statement =E2=80=9Cnew_cep->sock =3D NULL=E2=80=9D after
+the function call =E2=80=9Cerdma_cep_put(new_cep)=E2=80=9D.
+Thus delete an inappropriate reset action.
+
+Reported-by: Cheng Xu <chengyou@linux.alibaba.com>
+Link: https://lore.kernel.org/cocci/167179d0-e1ea-39a8-4143-949ad57294c2@l=
+inux.alibaba.com/
+Link: https://lkml.org/lkml/2023/3/19/191
+Fixes: 920d93eac8b9 ("RDMA/erdma: Add connection management (CM) support")
+Cc: stable@vger.kernel.org
+Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+=2D--
+ drivers/infiniband/hw/erdma/erdma_cm.c | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/drivers/infiniband/hw/erdma/erdma_cm.c b/drivers/infiniband/h=
+w/erdma/erdma_cm.c
+index 1b23c698ec25..e0acc185e719 100644
+=2D-- a/drivers/infiniband/hw/erdma/erdma_cm.c
++++ b/drivers/infiniband/hw/erdma/erdma_cm.c
+@@ -709,7 +709,6 @@ static void erdma_accept_newconn(struct erdma_cep *cep=
+)
+ 		erdma_cancel_mpatimer(new_cep);
+
+ 		erdma_cep_put(new_cep);
+-		new_cep->sock =3D NULL;
  	}
- 
- 	ret = handle_mm_fault(vma, address, fault_flags, NULL);
-+	printk("1mm: %p, map held lock: %d, vma: %p, %s\n", vma->vm_mm, lockdep_is_held(&vma->vm_mm->mmap_lock), vma, __func__);
- 
- 	if (ret & VM_FAULT_COMPLETED) {
- 		/*
-@@ -1216,8 +1217,11 @@ static int faultin_page(struct vm_area_struct *vma,
- 	if (ret & VM_FAULT_ERROR) {
- 		int err = vm_fault_to_errno(ret, flags);
- 
--		if (err)
-+		printk("mm: %p, map held lock: %d, vma: %p, err: %d, %s\n", vma->vm_mm, lockdep_is_held(&vma->vm_mm->mmap_lock), vma, err, __func__);
-+		if (err) {
-+			*locked = *locked ? err != -EFAULT : 0;
- 			return err;
-+		}
- 		BUG();
- 	}
- 
-@@ -1487,6 +1491,7 @@ static long __get_user_pages(struct mm_struct *mm,
- 		cond_resched();
- 
- 		page = follow_page_mask(vma, start, gup_flags, &ctx);
-+		printk("<after resched and follow page mask> mm: %p, map lock held: %d, %s\n", mm, lockdep_is_held(&mm->mmap_lock), __func__);
- 		if (!page || PTR_ERR(page) == -EMLINK) {
- 			ret = faultin_page(vma, start, gup_flags,
- 					   PTR_ERR(page) == -EMLINK, locked);
-@@ -1500,6 +1505,7 @@ static long __get_user_pages(struct mm_struct *mm,
- 			case -EFAULT:
- 			case -ENOMEM:
- 			case -EHWPOISON:
-+				printk("mm2: %p, map held lock: %d, vma: %p, ret: %d, %s\n", mm, lockdep_is_held(&mm->mmap_lock), vma, ret, __func__);
- 				goto out;
- 			}
- 			BUG();
-@@ -2029,7 +2035,12 @@ int __mm_populate(unsigned long start, unsigned long len, int ignore_errors)
- 		 * double checks the vma flags, so that it won't mlock pages
- 		 * if the vma was already munlocked.
- 		 */
-+		printk("1mm: %p, vma: %p, mmap lock held: %d, locked: %d, vma is acc: %d, %s\n",
-+			mm, vma, lockdep_is_held(&mm->mmap_lock), locked, vma_is_accessible(vma), __func__);
- 		ret = populate_vma_page_range(vma, nstart, nend, &locked);
-+		printk("mm: %p, vma: %p, mmap lock held: %d, locked: %d, ret: %ld, mm addr is valid: %d, %s\n",
-+			mm, vma, lockdep_is_held(&mm->mmap_lock), locked, ret, virt_addr_valid((void*)mm), __func__);
-+
- 		if (ret < 0) {
- 			if (ignore_errors) {
- 				ret = 0;
-diff --git a/mm/memory.c b/mm/memory.c
-index b4d3d4893267..43e35a0c2841 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -6206,10 +6206,14 @@ vm_fault_t handle_mm_fault(struct vm_area_struct *vma, unsigned long address,
- 
- 	lru_gen_enter_fault(vma);
- 
-+	printk("mm: %p, map held lock: %d, vma: %p, is vm hugetlb page: %d, %s\n",
-+		vma->vm_mm, lockdep_is_held(&vma->vm_mm->mmap_lock), vma, is_vm_hugetlb_page(vma), __func__);
- 	if (unlikely(is_vm_hugetlb_page(vma)))
- 		ret = hugetlb_fault(vma->vm_mm, vma, address, flags);
- 	else
- 		ret = __handle_mm_fault(vma, address, flags);
-+	printk("2mm: %p, map held lock: %d, vma: %p, is vm hugetlb page: %d, %s\n",
-+		vma->vm_mm, lockdep_is_held(&vma->vm_mm->mmap_lock), vma, is_vm_hugetlb_page(vma), __func__);
- 
- 	/*
- 	 * Warning: It is no longer safe to dereference vma-> after this point,
+
+ 	if (new_s) {
+=2D-
+2.48.1
 
