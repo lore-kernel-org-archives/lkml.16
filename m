@@ -1,127 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA1FD1A9B2C;
-	Wed,  5 Mar 2025 17:34:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66F0517B401
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Mar 2025 17:35:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741196071; cv=none; b=ME4QUDWdpIDa9fxMj82enEra+xhc0Vd3jVwKqtFMaFVO6mZlY/bBBIvM/cqy+aZnI3oGel2SMHv4TAAv0Jzg6njXJMeFPE+KY54peGnTm7QOgx6B8nMlI3lqESeFLjTjl2V3vRgHX9IiQmWpXQ1KRIv3MUCTshPFC6rhxydQhHg=
+	t=1741196132; cv=none; b=mvrF4skoK+oHCSf42lNV1k4xN/kdRqIT/oLgD3Un3WVpJjfSKWdrq91HWpYz6xADK1uPtRkE1T+kOz3tZRw8BeEslHUhDBWmB4pDkEtXo9BFl87le6N5O5qDzEX2s1rl/23TFRvmoHscZ/wCK7VTqlOIqXHb588PmyjSjtFFCSs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741196071; c=relaxed/simple;
-	bh=Q7tZdGiz//alVM/39HNaFeqFv5iOuMH45TZOP69sPZI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=A0RZe85hrRPVpYzOCppEwKeqsYxkLf8hzxGxzSWro/dnhqofD2tyoDclKC1nvhq1LoZE91FVYVdsTKI5OaEEsTiNAIAzuNYNqBkZOC2NoXbGfSR3sqeVb6BlsjyAYnymtEMaGTsoZN/qYNq3vZTML4Ag1lEk9yJpP9EuGOZp0gc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b8slCI8w; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741196132; c=relaxed/simple;
+	bh=dCSKp6S7TqGAaoFAyXZ/KmSzLuHl1Ms0KkMOq+yQ+1M=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qtpZoAgbDILKAwxnRwkvMH2nNQs04yA/9qVQjKSe8lZDcF063lzqRzQ79w2BLFpUoVAZK70Fx5YxFsIE7LIYvi3r7BAd0YmKIG89J52AMBp28NDRlBW1rw+OSqXhjT5JxXJ2DURI8CW9wgIpl2ubzCNSbfEr643Wj5TK7cDIQWg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lFJon8we; arc=none smtp.client-ip=209.85.219.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b8slCI8w"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA5CBC4CED1;
-	Wed,  5 Mar 2025 17:34:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741196070;
-	bh=Q7tZdGiz//alVM/39HNaFeqFv5iOuMH45TZOP69sPZI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=b8slCI8webvsNko6Qht67wOJqNXeDy9d/AdScjQSNtzDlZ38aJ/3F8uj2Cb8R1scg
-	 AgFvRae2Dtp5v+YOB2y8PzvyFzFm/0/jw4gzk9Eh5TGfcHZc9NXlnrNBDCWuaQk79z
-	 qpqg+gd0Z3nBnAPcgnU+QVs47QLh3JGmtU1AldkqwXBuDahh0ANgP9QHNaTFEQzpEg
-	 KVeHcJzxB+M/pY6bQmloITS+/b37SPTVqfcjqQ+lDzl6P/X63ffHErqpakMy6bTMeq
-	 3lrdfAgQtpeugssSPQS0QybY5Jewvs3hPaPpMw0vA0fOBt1AgBqG0tf9QBZrjE1PKx
-	 kABHWIld3GiQA==
-Date: Wed, 5 Mar 2025 18:34:27 +0100
-From: Frederic Weisbecker <frederic@kernel.org>
-To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc: Andreas Hindborg <a.hindborg@kernel.org>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Miguel Ojeda <ojeda@kernel.org>, Danilo Krummrich <dakr@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Lyude Paul <lyude@redhat.com>, Guangbo Cui <2407018371@qq.com>,
-	Dirk Behme <dirk.behme@gmail.com>,
-	Daniel Almeida <daniel.almeida@collabora.com>,
-	Tamir Duberstein <tamird@gmail.com>, rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v8 00/14] hrtimer Rust API
-Message-ID: <Z8iLIyofy6KGOsq5@localhost.localdomain>
-References: <aIJ0ymzdUceCN05hwJpth4erH5u2SHYzYl52wGeT3uiO9bdk92ZkEmEEq9a9NXsInJYSz9uziwq-1fvdsXoeDA==@protonmail.internalid>
- <20250218-hrtimer-v3-v6-12-rc2-v8-0-48dedb015eb3@kernel.org>
- <877c5mci3p.fsf@kernel.org>
- <5kF-NYTBZbEqnnQud5LKnRXO0lfM0i6I2PoeFrpKDhCYwUuk_bG2Li1T1Nuv82r3VFD8adTcdx7yenXSIfTwmw==@protonmail.internalid>
- <Z7eYp_vZo5yDVOdI@pavilion.home>
- <87frk7hera.fsf@kernel.org>
- <Z7hheOSAuKdhq-1C@pavilion.home>
- <CANiq72mpYoig2Ro76K0E-sUtP31fW+0403zYWd6MumCgFKfTDQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lFJon8we"
+Received: by mail-qv1-f45.google.com with SMTP id 6a1803df08f44-6e41e17645dso68659226d6.2
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Mar 2025 09:35:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741196130; x=1741800930; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4YU5arGVoyN98aQkzfZ8DYAD7OwxEWSSdhhvoB0BPEQ=;
+        b=lFJon8weH+5ymZ1Xbz/FXc4Mx1B4mL0NXKiJxQgHniAzk50gYGq6MRoInNNSdrb95O
+         R0EBf0cx+7WnadbR2WSSNGtAqi7z3Uw3dP2IyXW17Y2geKLgnVWrmir0t4PafIl3fUHe
+         5URdU94186LD1M5M3obiUwC4E4On2rLLoBuNceEeItChJ2lzxKQ3AXXWXxrd5MKCOjYK
+         tR3FlvnaAHXXUUaa0rgOmFkbhEd7+js7cbI75itpsNlkmd1YBsKLud7IHDfH7JUNqiAo
+         lAQ8lCLw6FmighkvFlWulVRKrOeGOAZ6TYVBkVZm5FrGOtPKIPQrXoDJ3ex2ir3uZt5q
+         tX8A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741196130; x=1741800930;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4YU5arGVoyN98aQkzfZ8DYAD7OwxEWSSdhhvoB0BPEQ=;
+        b=fsMBUwPjIXJD+zAoNLx76hg9DlXa9oq3E5Y2Qc93fkEOuRTRQA2+bGvjB5FM517Bj2
+         GVFt7apm4o+o0mZ6cSWurcFNasrfpVPFKVLgIgXOPX2fPy+/dUpL3j8IiRlKq8biqB4b
+         Ud1Ch9yWU/dmHi5eZBy5+K4lDhqPH3lJjWKs2VIO5mtvPL3JGeW+1PiAv8AAD0Gx+YbY
+         OW/YjVZesd0/z2ulfcLnUQCG05RpceaQX+wT1HRnXI2RN3LsAQTHX5+RqrBX3ew0f2Ur
+         BYWRbOLNV8U3TghcDlO1At1EQzg4lStRHi6mCMrUigUGMNf55kMsFasIz1Zs0HhFHhD3
+         xtww==
+X-Forwarded-Encrypted: i=1; AJvYcCUw7phn9N7CK6s91PjaTSaQAP9hTEQzeFgnyo+r3sxKzmvEb8LW2bR32Qi/dRPn07L9OvYWj14c8O/Deto=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz7Qnktp3FpvXavYmfbQAErCcLeUqsB9ZF7ct1cfNRsduycpMQl
+	MbK4ugJB0sFLRWYShRzAq8/Pnw9TJHlafiFlrL1L9gkgQR+FPh0heAeLj9tCuATA4dc4I0DeBOk
+	SHNu6Nu8nGnQR7LLZxK2u16ZBANk=
+X-Gm-Gg: ASbGncvmxKrnc6O1V03FypXzUy1z1iGmUix7MSByPBXTHwG0GREsrduHtgyPlWiv08d
+	a1saYl1jm30Z8qJP+O1RsH2u3P2ORSlp03Udwru6FETHkVMQl62B1q/BW29FXTAUWYfh1q6mdWw
+	Tl7V2EcZFksOM63p8uBpz1DU6Tge5Ffc3NeYlklcdEQm061Gpsz4INI3fGHw==
+X-Google-Smtp-Source: AGHT+IGoyou1UM/EKvVtwG182FyP3LABmO+os1y10h5Qy06r4wnpS4vsxyQGfMRg16b84vLVME+ZCaLKofqMxgYTaUo=
+X-Received: by 2002:a05:6214:d0c:b0:6e6:5bda:a47b with SMTP id
+ 6a1803df08f44-6e8e6d13e78mr59009566d6.9.1741196128398; Wed, 05 Mar 2025
+ 09:35:28 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CANiq72mpYoig2Ro76K0E-sUtP31fW+0403zYWd6MumCgFKfTDQ@mail.gmail.com>
+References: <20250305061134.4105762-1-yosry.ahmed@linux.dev> <20250305061134.4105762-3-yosry.ahmed@linux.dev>
+In-Reply-To: <20250305061134.4105762-3-yosry.ahmed@linux.dev>
+From: Nhat Pham <nphamcs@gmail.com>
+Date: Wed, 5 Mar 2025 09:35:16 -0800
+X-Gm-Features: AQ5f1JpJccBQEJKHl-pNq80vDOB2AlzXXuelleyPiCpry_Pqmg7lz0mFztWrqeM
+Message-ID: <CAKEwX=OSKa34Kg2ukzCMpUWiRGgonTHn3pON4LdfJvtexNgu=A@mail.gmail.com>
+Subject: Re: [PATCH mm-unstable 2/5] mm: zswap: Use object read/write APIs
+ instead of object mapping APIs
+To: Yosry Ahmed <yosry.ahmed@linux.dev>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Johannes Weiner <hannes@cmpxchg.org>, 
+	Chengming Zhou <chengming.zhou@linux.dev>, Minchan Kim <minchan@kernel.org>, 
+	Sergey Senozhatsky <senozhatsky@chromium.org>, Herbert Xu <herbert@gondor.apana.org.au>, 
+	Thomas Gleixner <tglx@linutronix.de>, Peter Zijlstra <peterz@infradead.org>, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Le Sat, Feb 22, 2025 at 02:04:16PM +0100, Miguel Ojeda a écrit :
-> On Fri, Feb 21, 2025 at 12:20 PM Frederic Weisbecker
-> <frederic@kernel.org> wrote:
-> >
-> > I was thinking the patchset would be better routed towards the Rust tree?
-> >
-> > How do you guys proceed usually with bindings tree maintainance?
-> 
-> So far, what we have been doing is ask maintainers, first, if they
-> would be willing take the patches themselves -- they are the experts
-> of the subsystem, know what changes are incoming, etc. Some subsystems
-> have done this (e.g. KUnit). That is ideal, because the goal is to
-> scale and allows maintainers to be in full control.
-> 
-> Of course, sometimes maintainers are not fully comfortable doing that,
-> since they may not have the bandwidth, or the setup, or the Rust
-> knowledge. In those cases, we typically ask if they would be willing
-> to have a co-maintainer (i.e. in their entry, e.g. like locking did),
-> or a sub-maintainer (i.e. in a new entry, e.g. like block did), that
-> would take care of the bulk of the work from them.
-> 
-> I think that is a nice middle-ground -- the advantage of doing it like
-> that is that you get the benefits of knowing best what is going on
-> without too much work (hopefully), and it may allow you to get more
-> and more involved over time and confident on what is going on with the
-> Rust callers, typical issues that appear, etc. Plus the sub-maintainer
-> gets to learn more about the subsystem, its timelines, procedures,
-> etc., which you may welcome (if you are looking for new people to get
-> involved).
-> 
-> I think that would be a nice middle-ground. As far as I understand,
-> Andreas would be happy to commit to maintain the Rust side as a
-> sub-maintainer (for instance). He would also need to make sure the
-> tree builds properly with Rust enabled and so on. He already does
-> something similar for Jens. Would that work for you?
-> 
-> You could take the patches directly with his RoBs or Acked-bys, for
-> instance. Or perhaps it makes more sense to take PRs from him (on the
-> Rust code only, of course), to save you more work. Andreas does not
-> send PRs to anyone yet, but I think it would be a good time for him to
-> start learning how to apply patches himself etc.
-> 
-> If not, then the last fallback would be putting it in the Rust tree as
-> a sub-entry or similar.
-> 
-> I hope that clarifies (and thanks whatever you decide!).
+On Tue, Mar 4, 2025 at 10:11=E2=80=AFPM Yosry Ahmed <yosry.ahmed@linux.dev>=
+ wrote:
+>
+> Use the new object read/write APIs instead of mapping APIs.
+>
+> On compress side, zpool_obj_write() is more concise and provides exactly
+> what zswap needs to write the compressed object to the zpool, instead of
+> map->copy->unmap.
+>
+> On the decompress side, zpool_obj_read_begin() is sleepable, which
+> allows avoiding the memcpy() for zsmalloc and slightly simplifying the
+> code by:
+> - Avoiding checking if the zpool driver is sleepable, reducing special
+>   cases and shrinking the huge comment.
+> - Having a single zpool_obj_read_end() call rather than multiple
+>   conditional zpool_unmap_handle() calls.
+>
+> The !virt_addr_valid() case can be removed in the future if the crypto
+> API supports kmap addresses or by using kmap_to_page(), completely
+> eliminating the memcpy() path in zswap_decompress(). This a step toward
+> that. In that spirit, opportunistically make the comment more specific
+> about the kmap case instead of generic non-linear addresses. This is the
+> only case that needs to be handled in practice, and the generic comment
+> makes it seem like a bigger problem that it actually is.
+>
+> Signed-off-by: Yosry Ahmed <yosry.ahmed@linux.dev>
 
-Yes this clarifies a lot, thanks for the detailed options.
-I think it's preferrable that you guys maintain it because you
-are the experts with these Rust bindings and you'll be much
-more flexible committing and pushing to your own tree instead
-of waiting on us lagging to comprehend the content of each
-pull requests.
-
-Just keep us in Cc so we stay in touch with what's going on.
-
-Thanks a lot!
-
-> 
-> Cheers,
-> Miguel
+Acked-by: Nhat Pham <nphamcs@gmail.com>
