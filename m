@@ -1,71 +1,51 @@
-Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DEFD1A01B9;
-	Thu,  6 Mar 2025 18:25:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.242.62
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0151913D509
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 18:26:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741285517; cv=none; b=ss/qSQBBflFOSFOYsEtIqJy59X3GDGazp+R2X0zXyDuXWbwYlH017TRHFX3OCqcTkcRTZ2isfLYtdsRdWKBoDlZyxfDAeiuMtn57iLrzrEVF/honIfnEpdJWr3Jzx2szzzsQqLUdLID/AF+1+MLHTHXL58Jzlzylh8JK/RlI2YQ=
+	t=1741285566; cv=none; b=p52iQ/e2fCDG8J05q3YpAU50u2JL3mR4QRElDUxV6/NlO5NmW5syfEyTZcBPSIAlDPC7fupGXH1TfkpkCOY+C1DYPdFxiVIdQDn0OK2IGrvHmOIIQ4mqqyVkQyyeJRN5ZAkeZungLaghmHD+np5z0Vw0J7Dh68eT9KK4kxwqVgs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741285517; c=relaxed/simple;
-	bh=Xq+XQYMHYGkmTz8iLRFLigF6QisLFRgLCNzHoNhQ3cA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=C49A9wBjTKKbnVVd8EnJEm4wefI/G6TUsA+xVKi0lHoLWwa1cc7+crnEa+jHbOVWfUsP6t6GSJw7Rxa9nczODQd/pSl4cynPphkGt6l3U7+Bt7LDw98eRBAUJy9c1aeuYVcMjSdVebrWVpsjMDVuOrEG2s5+oOzAUGsx4wnS+Fc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=176.9.242.62
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout3.hostsharing.net (Postfix) with ESMTPS id C2547100D9429;
-	Thu,  6 Mar 2025 19:18:53 +0100 (CET)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 9AC1825EB1; Thu,  6 Mar 2025 19:18:53 +0100 (CET)
-Date: Thu, 6 Mar 2025 19:18:53 +0100
-From: Lukas Wunner <lukas@wunner.de>
-To: Kenneth Crudup <kenny@panix.com>
-Cc: Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Bjorn Helgaas <helgaas@kernel.org>, ilpo.jarvinen@linux.intel.com,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Jian-Hong Pan <jhp@endlessos.org>, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Nikl??vs Ko??es??ikovs <pinkflames.linux@gmail.com>,
-	Andreas Noever <andreas.noever@gmail.com>,
-	Michael Jamet <michael.jamet@intel.com>,
-	Yehezkel Bernat <YehezkelShB@gmail.com>, linux-usb@vger.kernel.org
-Subject: Re: diagnosing resume failures after disconnected USB4 drives (Was:
- Re: PCI/ASPM: Fix L1SS saving (linus/master commit 7507eb3e7bfac))
-Message-ID: <Z8nnDTfGCUvl8K9I@wunner.de>
-References: <a8d6ca75-8f50-4c46-8c67-fcf20d870dcc@panix.com>
- <20250214162948.GJ3713119@black.fi.intel.com>
- <661459dd-67d0-4e1c-bb28-9adf1417f660@panix.com>
- <20250226084404.GM3713119@black.fi.intel.com>
- <Z77ak-4YsdAKXbHr@wunner.de>
- <20250226091958.GN3713119@black.fi.intel.com>
- <Z8YKXC1IXYXctQrZ@wunner.de>
- <20250304082314.GE3713119@black.fi.intel.com>
- <Z8nRI6xjGl3frMe5@wunner.de>
- <8d270603-4604-4c1c-b3a9-f596e2e8af6d@panix.com>
+	s=arc-20240116; t=1741285566; c=relaxed/simple;
+	bh=BkibElEiOWuR0hTTh6VYRN1SX9HUX6x4eWUjtp46PYI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=EJj2TgwTR9Asu8VbjDYNpA082pZe/ZA278jZXPdrgf2YaG+aHyWGvEdKAt9KgonRzRmhUq2j10UFjYHVVUNRskMLEYTQB2ALosKroFiYuQnGoe6uqhaDsC/Ekz6Pv1QZUgyRS6+Lnjs03Q+hu/rTuYpBWMDmkNjiYCeXdkYpOCc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4404C4CEE0;
+	Thu,  6 Mar 2025 18:26:04 +0000 (UTC)
+Date: Thu, 6 Mar 2025 13:26:05 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: linux-kernel@vger.kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
+ <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [for-next][PATCH 0/3] tracing: Updates for v6.15
+Message-ID: <20250306132605.4cc45349@gandalf.local.home>
+In-Reply-To: <20250227001235.355892523@goodmis.org>
+References: <20250227001235.355892523@goodmis.org>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8d270603-4604-4c1c-b3a9-f596e2e8af6d@panix.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, Mar 06, 2025 at 08:56:44AM -0800, Kenneth Crudup wrote:
-> On 3/6/25 08:45, Lukas Wunner wrote:
-> > Thanks for testing.  Would you mind giving the below a spin?
-> 
-> Is this a separate commit on top of master, or along with your previous fix?
+On Wed, 26 Feb 2025 19:12:35 -0500
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-It's a separate commit on top of master.
+> Masami Hiramatsu (Google) (2):
+>       mm/memblock: Add reserved memory release function
+>       tracing: Freeable reserved ring buffer
 
-Thanks,
+Masami,
 
-Lukas
+I'm going to revert these two patches from the trace/for-next tree and
+rebase them on top of the ring-buffer/for-next, as they conflict, and I
+rather not send Linus a pull request that has conflicts between two of my
+topic branches.
+
+-- Steve
