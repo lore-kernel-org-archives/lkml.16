@@ -1,145 +1,95 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9C5020B1F3;
-	Thu,  6 Mar 2025 11:35:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08E1521147B
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 11:35:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741260953; cv=none; b=rWQpQo0LKQMETMN+gS2bsaYbQ8Hr9FlesCcrZVAz6kzhixckoow1A0yvQjga4VGnePBRJ7zJx4QsDgozm2tlcO2GbFMTpvORYYL++/RgMEN9gHlwCBz9VLKj0u7U1wjsPp2a74j1Pm3eYW5f46rZHDGKtxukBeeqXbDR8I2B8UU=
+	t=1741260959; cv=none; b=o2bpV/zQ9qyR9MeVEHq54pOegMqpaLnfiMtRTgYTp469HK8PvISYYIzEFPgI34H14vgjsFRlGNw9xBYN2FviNTIf6RJ0pZ5OedaXgaGXGn4LhYG70TtlRoM5FWKihKYkBLFe97fMhA+hND+MEm4sr6vn6lcG9bBb0blLJkbzAj4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741260953; c=relaxed/simple;
-	bh=Leu1gIlGz01KC2qXmkX9EuXv0fktHfYgkAuj3cjXmYc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=W7+26HCbdzx0Qb8tcyp/dR7EGjLUzVfODGOYat2bOAscA8ZuwLLAiWKsclCC8eqIkxw9ZTXMvXuCa/8ZAg6I0rXRWprtB5p4O74Skr/D1K9DSK+VjG9OT5M0Feb2id9g31+kD14RDqPmXPg/W/NCgiGpZFXdi0nedDR01q5HTBU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t0ZjVSbH; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741260959; c=relaxed/simple;
+	bh=wE0XHXR6nqEKsVcSdvuh0LfsQm3Tu2aGta4ii19Feok=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fUu5opMxiwFzRifprWpYthBrpYzvJ+TkTy8l9i6IXn+svdsOGihwWPmdAKzyCxbVCl31IlvapC91TfqYcJjLQJwfzgIlZBI0d6rRbRBFNPv+0qXmhCPnxHkEkuzwOv8u2tUGQ3JY5B3Br9IukguX1trFRPk0AE++DqPsOMPC05M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=xWTDk3TK; arc=none smtp.client-ip=209.85.208.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t0ZjVSbH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BFD17C4CEE0;
-	Thu,  6 Mar 2025 11:35:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741260952;
-	bh=Leu1gIlGz01KC2qXmkX9EuXv0fktHfYgkAuj3cjXmYc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=t0ZjVSbHtMk/AGk/0+5zsZZmWz1J7zYKKn+hgJMgEH/5yGLibX4OccWyYTsj6JiFn
-	 8uT1wq0eVoMClAebU6guvInopQZS8/Z7J88QvR4dOVuk18BEu/PWpZR3tzmot/iiO/
-	 mbda0FdpDb2a0eZe48pUemGsg1lyySxbs+kaP6TFgD7xicZK4+X30SBzNQ/3G4AHuR
-	 LK4tmDjTqwl6YLhd6bVVOZWyQ0nFwnzYBLXnhXzO/FcR6W8DYoBXYhi7SjrzKVE8a9
-	 wfABHD6hbH43LxKxNNbnRiWgm2tZKFRvVltOdPlqRzWkHne7xu2MAfN/j6QBtwBqEp
-	 aIerDMl4OwgAA==
-Date: Thu, 6 Mar 2025 12:35:49 +0100
-From: Maxime Ripard <mripard@kernel.org>
-To: Liu Ying <victor.liu@nxp.com>
-Cc: Rob Herring <robh@kernel.org>, 
-	Alexander Stein <alexander.stein@ew.tq-group.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, andrzej.hajda@intel.com, 
-	neil.armstrong@linaro.org, rfoss@kernel.org, Laurent.pinchart@ideasonboard.com, 
-	jonas@kwiboo.se, jernej.skrabec@gmail.com, maarten.lankhorst@linux.intel.com, 
-	tzimmermann@suse.de, airlied@gmail.com, simona@ffwll.ch
-Subject: Re: [PATCH 3/5] dt-bindings: display: simple-bridge: Document DPI
- color encoder
-Message-ID: <20250306-kangaroo-of-pastoral-typhoon-8aefb2@houat>
-References: <20250304101530.969920-1-victor.liu@nxp.com>
- <20250304101530.969920-4-victor.liu@nxp.com>
- <20250304152320.GA2630063-robh@kernel.org>
- <1891036.atdPhlSkOF@steina-w>
- <20250305163805.GA2071011-robh@kernel.org>
- <7d98163d-10c8-457d-92e7-6a1d6e379beb@nxp.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xWTDk3TK"
+Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-30bb184ab24so4647121fa.0
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Mar 2025 03:35:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1741260956; x=1741865756; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=koqRd4APX0wnsxAaTRkwWjS/3ijbfY8HBfEo6EAo4wU=;
+        b=xWTDk3TKz3GnHtcy080IguR1Eb/ygXROmKK5J8g2WYtTk4Onukr+ZtxNfEMXN8a8LD
+         PbJI25KWCSwDJWJZUut7f13If0afa7I+bEv5e4dM6J4l/7pHVj0eSUb0DEicdIiiUMFZ
+         MSZoEyK7bXtl/JSgPqKqAeNKaFcDb/JATe1REqOlIh+I/LVzuSUuZ8gaUDp2LoN30tF5
+         CZbIXos3IbHR9RB/4xW2Y1MfhTZGHr5RvJjPIhK3I70CDSk220qcnbHUGPH+LokMFs20
+         DfCgfYq9DzHn7+VHSMxgxj7yr/bQ9oWf4FtsCggN+6tWToTyZUUlmgaYR9iRdI3MUp7G
+         mtOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741260956; x=1741865756;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=koqRd4APX0wnsxAaTRkwWjS/3ijbfY8HBfEo6EAo4wU=;
+        b=B3bLyJ5JEfHDhBCezrs5rkzRxRg6jNLWXNTR/6sIaG4DAbVgA8buth2zqAAKUtq1K1
+         GUtPCFjiaaTWVSrllYpvANIGyOlaIC67enTbnUUn/6QJAXkQ6MY4H/41kT/XVRCJAUGn
+         78L6otWUqTmSnajI665MJS1g4kSvKPYPxC44UF3Vb106SJll8A+lNtieRRs9W7jYldwN
+         i+CKBfFV4D5YNdU+zum+Jzfdphxlafjmv/NxTRNZpKjxwZF5ETJzHymBjW232CEFXhV1
+         SheCQTGqp072jwq+IKSWLuIF3uPyTpNxCElLCzWwwDv5sIexJoJhvI/TflWCtHChhSDz
+         DHqA==
+X-Forwarded-Encrypted: i=1; AJvYcCXo1rYRm73Akqd+RLkD0c+ZRsK71/9+7CEM/cuHuck6lB9yYqLaUESr6Re+jrhkGqP/EQY1u8+PRN/FaHM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwraiWLvOj6VsUyLTAhMFfYBW2tw2Cy7ovL3uNRg67N9wK8+UoI
+	jJR8z2GtNIgtPFyMUKDKy6Lpjq7m+NwxziqH4ObD1DDMyMZzohva/SIyZ6sFmPw=
+X-Gm-Gg: ASbGncvSLsqmzaIDH81yOpo6JxaqX2F8jdJrLDBg2u9HU0Hw6IiCQqHdiSV/EgFAhGf
+	MTicgw/PAmTWZ8w1zBjrtuK6zK/W4GjVFpIxrzxPxh+q3Y6+Zw7LRyOwN9BuxO/hYDMFvg/HOBd
+	cJmz9ayZpYK1SmBip9gK7YqWjLZnnrU5vgBXXgJKM1476yRP5rwQV4RPPDm5a0SYG9n7N9Ji1z/
+	BSqAyiJ67EJ78BobROnJWh1Fqd2jnog6GOO21IRmyy4KYuVy1P7/NMcvheDKzLfz/ZNtj3DSwTe
+	c6v2CC1O0syhSYFkdrfBbFDCs/H2hGgCC6WYGkqDyBenUk2FQtrF5TtN4dMBsu6felkGjZhaAPX
+	xRtyb7W3pz1BNIdmw7GY=
+X-Google-Smtp-Source: AGHT+IGvhVCvrTJYtOe0f5Z+wlP8TVv9YwPwB9pxjrMJLEmfXqGPhLQZUmk5FXV48QUWuIm1wY6nnw==
+X-Received: by 2002:a2e:964d:0:b0:30b:d656:1485 with SMTP id 38308e7fff4ca-30bd7b1c8abmr21290181fa.32.1741260955997;
+        Thu, 06 Mar 2025 03:35:55 -0800 (PST)
+Received: from uffe-tuxpro14.. (h-178-174-189-39.A498.priv.bahnhof.se. [178.174.189.39])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30be9918086sm1809511fa.54.2025.03.06.03.35.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Mar 2025 03:35:55 -0800 (PST)
+From: Ulf Hansson <ulf.hansson@linaro.org>
+To: "Rafael J . Wysocki" <rafael@kernel.org>,
+	linux-pm@vger.kernel.org
+Cc: Len Brown <len.brown@intel.com>,
+	Pavel Machek <pavel@kernel.org>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 0/2] PM: s2idle: A couple of minor lock-simplifications
+Date: Thu,  6 Mar 2025 12:35:39 +0100
+Message-ID: <20250306113549.796524-1-ulf.hansson@linaro.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha384;
-	protocol="application/pgp-signature"; boundary="qxu4bxugckchmvib"
-Content-Disposition: inline
-In-Reply-To: <7d98163d-10c8-457d-92e7-6a1d6e379beb@nxp.com>
+Content-Transfer-Encoding: 8bit
 
+While working on s2idle a few things caught my attention when looking
+closer in the code in the s2idle_enter(), in regards to locks. These two
+patches tries to improve the situation a bit.
 
---qxu4bxugckchmvib
-Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH 3/5] dt-bindings: display: simple-bridge: Document DPI
- color encoder
-MIME-Version: 1.0
+Kind regards
+Ulf Hansson
 
-On Thu, Mar 06, 2025 at 03:02:41PM +0800, Liu Ying wrote:
-> On 03/06/2025, Rob Herring wrote:
-> > On Wed, Mar 05, 2025 at 10:35:26AM +0100, Alexander Stein wrote:
-> >> Hi,
-> >>
-> >> Am Dienstag, 4. M=E4rz 2025, 16:23:20 CET schrieb Rob Herring:
-> >>> On Tue, Mar 04, 2025 at 06:15:28PM +0800, Liu Ying wrote:
-> >>>> A DPI color encoder, as a simple display bridge, converts input DPI =
-color
-> >>>> coding to output DPI color coding, like Adafruit Kippah DPI hat[1] w=
-hich
-> >>>> converts input 18-bit pixel data to 24-bit pixel data(with 2 low pad=
-ding
-> >>>> bits in every color component though). Document the DPI color encode=
-r.
-> >>>
-> >>> Why do we need a node for this? Isn't this just wired how it is wired=
-=20
-> >>> and there's nothing for s/w to see or do? I suppose if you are trying=
- to=20
-> >>> resolve the mode with 24-bit on one end and 18-bit on the other end, =
-you=20
-> >>> need to allow that and not require an exact match. You still might ne=
-ed=20
-> >>> to figure out which pins the 18-bit data comes out on, but you have t=
-hat=20
-> >>> problem with an 18-bit panel too. IOW, how is this any different if y=
-ou=20
-> >>> have an 18-bit panel versus 24-bit panel?
-> >>
-> >> Especially panel-simple.c has a fixed configuration for each display, =
-such as:
-> >>> .bus_format =3D MEDIA_BUS_FMT_RGB666_1X18
-> >>
-> >> How would you allow or even know it should be addressed as
-> >> MEDIA_BUS_FMT_RGB888_1X24 instead? I see different ways:
-> >> 1. Create a new display setting/compatible
-> >> 2. Add an overwrite property to the displays
-> >> 3. Use a (transparent) bridge (this series)
-> >>
-> >> Number 1 is IMHO out of question.=20
-> >=20
-> > Agreed.
-> >=20
-> >> I personally don't like number 2 as this
-> >> feels like adding quirks to displays, which they don't have.
-> >=20
-> > This is what I would do except apply it to the controller side. We know=
-=20
-> > the panel side already. This is a board variation, so a property makes=
-=20
-> > sense. I don't think you need any more than knowing what's on each end.=
-=20
->=20
-> With option 2, no matter putting a property in source side or sink side,
-> impacted display drivers and DT bindings need to be changed, once a board
-> manipulates the DPI color coding.  This adds burdens and introduces new
-> versions of those DT bindings.  Is this what we want?
+Ulf Hansson (2):
+  PM: s2idle: Drop redundant locks when entering s2idle
+  PM: s2idle: Avoid holding the s2idle_lock when calling
+    pm_wakeup_pending()
 
-There's an option 4: make it a property of the OF graph endpoints. In
-essence, it's similar to properties that are already there like
-lane-mapping, and it wouldn't affect the panel drivers, or create an
-intermediate bridge.
+ kernel/power/suspend.c | 9 ++-------
+ 1 file changed, 2 insertions(+), 7 deletions(-)
 
-Maxime
+-- 
+2.43.0
 
---qxu4bxugckchmvib
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCZ8mIlQAKCRAnX84Zoj2+
-dnSoAYDBB/bDc4oiForTt6hTu2T7k5fxsgOo6hpzAFvD1SElI/SAR1gLrEg+btZA
-V7TvczkBgLPm3LiHqD7N6MPlIcKl0SPzNFbP8/UcGvqUWcgBigVdJhw6AY6uj4Ey
-73K5s0Sz4A==
-=a1cs
------END PGP SIGNATURE-----
-
---qxu4bxugckchmvib--
