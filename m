@@ -1,137 +1,99 @@
-Received: from out162-62-58-216.mail.qq.com (out162-62-58-216.mail.qq.com [162.62.58.216])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8DBC20B80B
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 12:59:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.58.216
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 733F8204590;
+	Thu,  6 Mar 2025 12:59:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741265950; cv=none; b=WXJQjLCLXTPr8dDSX4JtEqIq0YvvDPpPS/n9biKbOrzSiI4DYZ4KohNSOl94naLgqKXYHZZ7CvpoXAXZITYLxeA/jAz6Njy6RndqT+axZbBj5FhYHlqipXGAa/9uXKuP7OxPEGCiGZcChbxpyiYfSICNl/YbXVk5U8gW4r48wk8=
+	t=1741265985; cv=none; b=F9eMxBR9W1QjHe+Iuhvc+bo+FWDqfPvx6C0clCczIqo7X7CB07tE4XQx0s7EnY5ab8Dp3MdVOMsnK0yPSHWq/yfz1xvDNqPE7ikS4mpyf7y7ffimkPa6HdCBd0o73qKPnGr/yISNkH3fB7s0XkvmkmSnnBSeqcnBdFF6hgTAb0A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741265950; c=relaxed/simple;
-	bh=+C6+kiSpVE5KfXsZ+T78U7flNYEuG4uRKZzZ3SXkawY=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=rzPWkjOrswTj0mRMGOu6ZyC0ykEWduKt2pdOerY++V6OYmz4f7KBucMJCDL7xdUfLGYOzwsxgtjkavVEpuVI7aq4jwFglgif4yKPP9DOWm8PqWT/fR8+dbnaFKLeGqJ5rJ8h4uGKfUS5pTrkZ4QnRavBQHuaW8iTFC8RwICXkmY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=VJfDy2DU; arc=none smtp.client-ip=162.62.58.216
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="VJfDy2DU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1741265941; bh=acioOzHhQ2ctbG30Uphm9oLX1bxxFczzdidUNA2813k=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=VJfDy2DUwpX5XfCKnT0SUoEzvWeH9nTnFPFakMr1K7ZpOakNSaCfgmDEw3qWIpvnA
-	 4+mUqdK8KuOHSGTrY9sITRt/EaZVuFMwXfPhYIf2X4QDpovhicV4ACz5vko6Zr25om
-	 5akRQMRXH8/XC1fXcYEyOB54ZPnvaVnmltu/9mVY=
-Received: from pek-lxu-l1.wrs.com ([114.244.57.157])
-	by newxmesmtplogicsvrszb21-0.qq.com (NewEsmtp) with SMTP
-	id D35AE069; Thu, 06 Mar 2025 20:52:53 +0800
-X-QQ-mid: xmsmtpt1741265573txfnhenz0
-Message-ID: <tencent_B91EEF32CDAC780A6FF82FD56DE49590EB0A@qq.com>
-X-QQ-XMAILINFO: Nq1uWKlIb9DMOHggUw40dwNIxovu2BK7gG0Y0hWe4T/kSZwlFD3oUyW85KZ6wS
-	 0X1MCZvQyVnv6eQhg72SoVrBTk5q2K3vWqOb+cgYNOcnhlT+rRDEjlDFKrIUNtPTBVvUlGAWVpap
-	 UGaXd7G1CKuTYztCzvW6RvdM/vjGJuwI4h/BWYnaIozso92qrkMmY/+d7h14CMtw5+LaKVa1hV3A
-	 IDDAn6jN00lHHUKscSp6tc9nR7r4uppLQUf/fshYLONN8Gs9FDqoaFMVAmUr+c9IC2xBxuySJuvr
-	 1Mk2GkpYgkX+kVU+q9pbSkne+u5ubQ+afTOaI3WXYnf1GIZJBGXmDDE1aprRddu4WBMICygKvCZx
-	 It/2zw3AAtKUSZqzkavuQXxImH9x92oqq/GG6J2iFsZG1Hd4suVMkUWZyz0JNPhsRzh5JWbaitpS
-	 USYtetgLI2NvNd1TRCfpZdA9Zekw2pGwLgCE/LBL1MnF0ReF+9cnTRJ16II87RLlkcHMrNVpa07J
-	 b3Sy87wfrh8T4PquJVgtZTyJSutc92xlbv/g3dxo3FSwBDIJnWQdxNkovfMqzYYlGXWsaf5eR5qk
-	 ltUUXpLaV4wn0t6eZiTowL/76oPysfpEmfzNjee7D7KQOJaeVosVy/xedc/okRWoCI8KdAIDCedX
-	 3cLf1EfJnvJdriU+H+AhUEOWspTMXohyi8M1NSJE6ONuUbe3Z0IWadOOvow38hiix0pNC7XiPcN5
-	 x9pI2S7pR2ZxRSaKdAR1eKVv9ZBRSRozfJ3JaXBPqYmkR2tr/OulrCkKH897MIi/FL/Ae3KsL5+e
-	 o/p/+IZSVDxPmN1TBXE0y42cBNGVyAU7vZz7omz8ybZhY1K2W6RPrROT0JS6bqI+Dh5BxG+sM2QB
-	 TJFwcXv5mZqRo4TP3kSqHFv2IVYD8YTfF6oe8tYm6n5lu97adDbCpri57Yz0BorA==
-X-QQ-XMRINFO: MPJ6Tf5t3I/ycC2BItcBVIA=
-From: Edward Adam Davis <eadavis@qq.com>
-To: syzbot+8f9f411152c9539f4e59@syzkaller.appspotmail.com
-Cc: linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [xfs?] [mm?] WARNING: bad unlock balance in __mm_populate
-Date: Thu,  6 Mar 2025 20:52:52 +0800
-X-OQ-MSGID: <20250306125251.1597826-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <67c49230.050a0220.55417.04d5.GAE@google.com>
-References: <67c49230.050a0220.55417.04d5.GAE@google.com>
+	s=arc-20240116; t=1741265985; c=relaxed/simple;
+	bh=xUm6f5Z+U5Dg9T+/xMzH7X6StiSVpIrgpbnfs1y8T/A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AVG5X2BgA4xQjZpseQ+wMtnWDkjCjim3tLsk2xqBCArU66l04Vc0UVjDYEuOusTTQpATkD1noRVZTry2+jb+aJKeZEirQ+vYj1A2McSAR5ktcpP09gg/JlVwCew6aV4wUsvBIZAtSK78jlr4mR7p9fc7K5Qt81RobcYf7GoFGTc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-223785beedfso9295255ad.1;
+        Thu, 06 Mar 2025 04:59:44 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741265984; x=1741870784;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dXr7uDsRH7CN7dqPEAo/8hwLOM1h86DbnHP38hRdbbI=;
+        b=GEJ5jBx/JWWmouR9K6oELvOAjXw6sR6tSYxGGBIa8rmM14XG7oxhfd2HQ8r/WVwXv8
+         3D0aJfEQ+PftgX+GjVMmF1Xtr9D6foz4QbHOsFdeU1sJtDGP6MDtndcxseYdWfwXQZO8
+         cPcwGFt+T7oaYMOPXeIIomZFH5a7bbjcDkqXdD4ZZDgyEhBD3Z4WlVD12e+aFjv/RlyT
+         DA5j9aYu1ypTG8rEPRc2CZ7WKML2G+Dwn45NvD2m0JZI2xVcTEGcSXiN1w4S5s3fDVu8
+         RoUSPFlKLYlTNHxyF91qW5qLln3hJz7NFlfRP2VKQx5R3G2gehMiUQKh9+U5DF9ezwkB
+         uEyA==
+X-Forwarded-Encrypted: i=1; AJvYcCU+OJ1eBv+M/4RjUI9YvUQBNk555Du6pirbPrlxJu8l0PRwXc7swR/snFyusccGlRwp0+LyaAS+ie/W@vger.kernel.org, AJvYcCU9aAy63g/ByjXBubjC3tdKwIYzdaszxF5MmbPQFkG72yWFUQWZ8iHdQ4CSK62nWlAXTo9XbqgWbaDL@vger.kernel.org, AJvYcCUgEnmAWKkHxgwbl5AeZRNlOjzGk3GnRLBEy65roYe2e/6VqoZCoR+92TvL1tqkMjNdkg74sBbyMojgANqOpA==@vger.kernel.org, AJvYcCVEBeUY4+HLYSX4HSMkRRVBKVnsMgnx3laVok8A/vXm4L59ZxhPFp+VMsjS+Yo6xUd4cJBBnnfrjzhbbyrF@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx4Zt9sMvXJVLQ4jzCDkyr00E58+4vYo4cwSyc9XhqxSXGhPqRG
+	4S1nAjGMO4TLWSH17ej8WBKSXXnoBzoywcmgoiYaXw+NHQUO+7F8
+X-Gm-Gg: ASbGnctU6Drko2ovZCHGAk7JpUyX/NwTQBu9/lJzVulJ1qjlsQZmxJZfSDSan/q0P6n
+	q/pmPPIxzz9sw8J9xM/4FZ+szOwxxBf6WRY8CnktL2F2cSMHP2hFXa37+YrbX0FbG1sXNeRPsJ7
+	rANT6z1FXjqvdt1wlqDIXvgW0jMTVsJcz2QqxMunuAfQ9+OG0l6KtwJBqISSmntml6IdAAkW+Cu
+	T6ktqygauS5KKK3vECCZ9PM20xhZZNDCpPK1/DcZ/NrFLYzb68IXbBTsv89zZGdAausZ2X6PKhc
+	JssAMUoCnAEUD+3/aPaIXSYfSJ8saxtavfZK/0+dK9ShrUpO2annemlFqUIf2GUk/lhI4f4Ls+m
+	mVh0=
+X-Google-Smtp-Source: AGHT+IHHCa1Mc9CIwvi5u0s8WOcN8dtXSdGTpXdZKm7WGs3OoKGtYXz/T4gD/S03NyAlHNoX9UMNIA==
+X-Received: by 2002:a05:6a00:2e20:b0:736:3954:d78c with SMTP id d2e1a72fcca58-73682b737c4mr9780918b3a.6.1741265983562;
+        Thu, 06 Mar 2025 04:59:43 -0800 (PST)
+Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
+        by smtp.gmail.com with UTF8SMTPSA id 41be03b00d2f7-af2855c63besm894935a12.12.2025.03.06.04.59.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Mar 2025 04:59:43 -0800 (PST)
+Date: Thu, 6 Mar 2025 21:59:40 +0900
+From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Varadarajan Narayanan <quic_varada@quicinc.com>, bhelgaas@google.com,
+	lpieralisi@kernel.org, manivannan.sadhasivam@linaro.org,
+	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+	vkoul@kernel.org, kishon@kernel.org, andersson@kernel.org,
+	konradybcio@kernel.org, p.zabel@pengutronix.de,
+	quic_nsekar@quicinc.com, dmitry.baryshkov@linaro.org,
+	linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-phy@lists.infradead.org
+Subject: Re: [PATCH v11 0/7] Add PCIe support for Qualcomm IPQ5332
+Message-ID: <20250306125940.GC478887@rocinante>
+References: <20250220094251.230936-1-quic_varada@quicinc.com>
+ <20250220144551.GB1777078@rocinante>
+ <d399a2be-3010-43fc-9531-e4f3560ea6df@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d399a2be-3010-43fc-9531-e4f3560ea6df@kernel.org>
 
-#syz test
+Hello,
 
-diff --git a/mm/gup.c b/mm/gup.c
-index 3883b307780e..9f740d607919 100644
---- a/mm/gup.c
-+++ b/mm/gup.c
-@@ -1194,6 +1194,7 @@ static int faultin_page(struct vm_area_struct *vma,
- 	}
- 
- 	ret = handle_mm_fault(vma, address, fault_flags, NULL);
-+	printk("1mm: %p, map held lock: %d, vma: %p, %s\n", vma->vm_mm, lockdep_is_held(&vma->vm_mm->mmap_lock), vma, __func__);
- 
- 	if (ret & VM_FAULT_COMPLETED) {
- 		/*
-@@ -1216,8 +1217,11 @@ static int faultin_page(struct vm_area_struct *vma,
- 	if (ret & VM_FAULT_ERROR) {
- 		int err = vm_fault_to_errno(ret, flags);
- 
--		if (err)
-+		printk("mm: %p, map held lock: %d, vma: %p, err: %d, %s\n", vma->vm_mm, lockdep_is_held(&vma->vm_mm->mmap_lock), vma, err, __func__);
-+		if (err) {
-+			*locked = *locked ? err != -EFAULT : 0;
- 			return err;
-+		}
- 		BUG();
- 	}
- 
-@@ -1487,6 +1491,7 @@ static long __get_user_pages(struct mm_struct *mm,
- 		cond_resched();
- 
- 		page = follow_page_mask(vma, start, gup_flags, &ctx);
-+		printk("<after resched and follow page mask> mm: %p, map lock held: %d, %s\n", mm, lockdep_is_held(&mm->mmap_lock), __func__);
- 		if (!page || PTR_ERR(page) == -EMLINK) {
- 			ret = faultin_page(vma, start, gup_flags,
- 					   PTR_ERR(page) == -EMLINK, locked);
-@@ -1500,6 +1505,7 @@ static long __get_user_pages(struct mm_struct *mm,
- 			case -EFAULT:
- 			case -ENOMEM:
- 			case -EHWPOISON:
-+				printk("mm2: %p, map held lock: %d, vma: %p, ret: %d, %s\n", mm, lockdep_is_held(&mm->mmap_lock), vma, ret, __func__);
- 				goto out;
- 			}
- 			BUG();
-@@ -2029,7 +2035,12 @@ int __mm_populate(unsigned long start, unsigned long len, int ignore_errors)
- 		 * double checks the vma flags, so that it won't mlock pages
- 		 * if the vma was already munlocked.
- 		 */
-+		printk("1mm: %p, vma: %p, mmap lock held: %d, locked: %d, vma is acc: %d, %s\n",
-+			mm, vma, lockdep_is_held(&mm->mmap_lock), locked, vma_is_accessible(vma), __func__);
- 		ret = populate_vma_page_range(vma, nstart, nend, &locked);
-+		printk("mm: %p, vma: %p, mmap lock held: %d, locked: %d, ret: %ld, mm addr is valid: %d, %s\n",
-+			mm, vma, lockdep_is_held(&mm->mmap_lock), locked, ret, virt_addr_valid((void*)mm), __func__);
-+
- 		if (ret < 0) {
- 			if (ignore_errors) {
- 				ret = 0;
-diff --git a/mm/memory.c b/mm/memory.c
-index b4d3d4893267..43e35a0c2841 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -6206,10 +6206,14 @@ vm_fault_t handle_mm_fault(struct vm_area_struct *vma, unsigned long address,
- 
- 	lru_gen_enter_fault(vma);
- 
-+	printk("mm: %p, map held lock: %d, vma: %p, is vm hugetlb page: %d, %s\n",
-+		vma->vm_mm, lockdep_is_held(&vma->vm_mm->mmap_lock), vma, is_vm_hugetlb_page(vma), __func__);
- 	if (unlikely(is_vm_hugetlb_page(vma)))
- 		ret = hugetlb_fault(vma->vm_mm, vma, address, flags);
- 	else
- 		ret = __handle_mm_fault(vma, address, flags);
-+	printk("2mm: %p, map held lock: %d, vma: %p, is vm hugetlb page: %d, %s\n",
-+		vma->vm_mm, lockdep_is_held(&vma->vm_mm->mmap_lock), vma, is_vm_hugetlb_page(vma), __func__);
- 
- 	/*
- 	 * Warning: It is no longer safe to dereference vma-> after this point,
+> >> Patch series adds support for enabling the PCIe controller and
+> >> UNIPHY found on Qualcomm IPQ5332 platform. PCIe0 is Gen3 X1 and
+> >> PCIe1 is Gen3 X2 are added.
+> > 
+> > Applied to dt-bindings, thank you!
+> I will send reverts for these. This patchset affects users without
+> mentioning it and without providing any rationale.
+> 
+> What's more, it introduces known to author warnings just to fix them
+> later...
 
+The following commit:
+
+  829aa3693f8d ("dt-bindings: PCI: qcom: Use SDX55 'reg' definition for IPQ9574")
+
+Should no longer be present.  However, we still carry the following commit:
+
+  f67d04b18337 ("dt-bindings: PCI: qcom: Document the IPQ5332 PCIe controller")
+
+Let me know if you want it to be removed, too.
+
+Thank you!
+
+	Krzysztof
