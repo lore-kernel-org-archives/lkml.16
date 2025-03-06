@@ -1,195 +1,144 @@
-Received: from mail-il1-f206.google.com (mail-il1-f206.google.com [209.85.166.206])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04083191F75
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 09:21:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.206
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E9D819F438
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 09:21:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741252887; cv=none; b=M/ivG7Vbqv+e0rkQihhAHifC3dw3LrlYqHkANnJ0qkOTI6rT0ydeoBG9XkT54pLJAAZhqwhRpKOgbV6fukDIC3uJuopA8cccLZObwQjpgzvhSGo6XfVDbmOpaJTD+Pr0W1UHhZsJAflsY5eiAH5D8GuDZ3+vGeuY4HjTxmJ7xvQ=
+	t=1741252905; cv=none; b=sL2n7p0b73wFpiA4Q/Hq4hhOm8dBzY3vUYHV9aYJ2n/PFhs9p/6Nq7yCPbrt7kZ/PJrpLqr8Ex+nNsHfm+F0TmMqHu2g9J+t44CwT/2MDmw7HIpN4kjmsvHy+IL+oPo8gJzLwU3KNRYDVFtZws48hVC2X9C+k+SKtXtI/lufB58=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741252887; c=relaxed/simple;
-	bh=JjVu+7TRzz/OKxXUU/zMbsyjosOvmHWcyR9cGQBUbhg=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=UwpLnlpTwIsjJhUgRu8EQVWLr25M8LTCi4YWYCl7YnMIlm0QfQL4Z+hIuc7qbhLRwB3hv9AVDfNLeKlAokmK7D+PR9aZJ378n3rz1Q6EXFfP/Qfh/bDYwCK/VTU+eJPEhHtn86FZ4YyZdM1DDeCB6zuPFf2GoLrenTRwXOI1C2c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.206
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f206.google.com with SMTP id e9e14a558f8ab-3d2b3a2f2d4so8198745ab.0
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Mar 2025 01:21:25 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741252885; x=1741857685;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qKh+qkgk//kD57cMJIkxDdTHAK9Ls+enC1HVwmYISvg=;
-        b=WrDG/B+/LsT6RntyUCHVsarRL95D5nPKYqv5M2n8VI+Pu4yyazIDGnGDZPer+tgWus
-         P8GE6H7qZNy83lMSs7FPzePm9OrGQS0l9JJYEj7tVL/d4Jjfwr3kAhfeRrBLSxopoSoi
-         fUNj6KznwWKsJA2fOXdYfF7FT8WJLHqk3/3epncnNrB7NEEBcFQH22T14EIEdGXkjw66
-         SbQP7VUpBc3sobEfft00ikq1ckmEbaoHBTbxmtqXwhSL1hTwkgbywOm6azw+aL8dlzDk
-         Swu2AT7uvDRX0Nkq66/MvrYcfgfrelLDjkZt6XQ2/SnXjcmV4mca0aGByrwurBFWJ169
-         lsyA==
-X-Forwarded-Encrypted: i=1; AJvYcCUI52VdGsHeI49HfL5T2fJI4j0cI3VcOQZv9/RyFiGn7Toawo5PnlB8UVNemS3rGbjxj1oLWBooy87B9Jw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzFserk+TxYjT+16eYi6v2o9f1m5zvEZN4mVE6guyBM/TK+AY5Y
-	COU/REc3Fz4rtUd83XpnQT7VdtVJFGv6n22EbrPIkIb9wk3cC9JOTweIJiaOx2R1bZznyOOXueT
-	mA2Kspetn5s4ya2Crs7YVDRHiRm1dZK+7+M4/kM6pmCd2EzZ5yCY2xtY=
-X-Google-Smtp-Source: AGHT+IFRPZRRMlfz4ASDFn56s/zN3T1ewWEqOHNPyuCNdiCSu+fLQHspg+HmoOzvEOSmeRVAsfBOeMW5xqoWmGPp+OwaTzcl2Z18
+	s=arc-20240116; t=1741252905; c=relaxed/simple;
+	bh=igiWiALYXwjEteRk6UoxxKnhoarx91n3W2Cd8shQTfQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type:
+	 References; b=Wa7ZrE1u72p3khzOo+u6NOWrPUGffAW6sVJMkJ9yl/1EG6/Z6RXHvze+W+taAgo0BK5tDWW3SwkCfNFjqZqXwo9nJTKOByourjhYW7d+BrS+Df1ctmlnCbhbguW0JPvj8jin6I2izTHmoRn7qsEn7H63sWhFJEZ3vbKe/U4DVTw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=Yr5hOScH; arc=none smtp.client-ip=203.254.224.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Yr5hOScH"
+Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
+	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20250306092141epoutp025cb74253530c7283a678e2320741fd14~qLEm8UoKX2888628886epoutp02Y
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 09:21:41 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20250306092141epoutp025cb74253530c7283a678e2320741fd14~qLEm8UoKX2888628886epoutp02Y
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1741252901;
+	bh=IOfj8ymR5McL3adj486jINgYZ9PZWay98r+rIJbAXhQ=;
+	h=From:To:Cc:Subject:Date:References:From;
+	b=Yr5hOScHx0JV1K/R+Mffc688E3y/7/E+nSx0pL3SCUtLCAx0S3I6PbEPZmJbNHvKJ
+	 zzWt7cSc6r+SIvTbHG/cNJP6V/WmYLpNFQ74Cnv0UF/EER0PSWORQXUCOd/w1UpEAu
+	 fLx5fupy+AHaje2x/Y2RUje1WduXVrlwwjSVi+Fk=
+Received: from epsmges5p2new.samsung.com (unknown [182.195.42.74]) by
+	epcas5p3.samsung.com (KnoxPortal) with ESMTP id
+	20250306092140epcas5p35290680200699fb2fbe7bdb6cacf0a1d~qLEmSAy_B2441724417epcas5p3l;
+	Thu,  6 Mar 2025 09:21:40 +0000 (GMT)
+Received: from epcas5p4.samsung.com ( [182.195.41.42]) by
+	epsmges5p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	D3.45.19933.42969C76; Thu,  6 Mar 2025 18:21:40 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+	epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
+	20250306092017epcas5p30812b135b484fdea1f96739635df1d79~qLDYt3ClV0847608476epcas5p3W;
+	Thu,  6 Mar 2025 09:20:17 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+	20250306092017epsmtrp15786e7b236d2ed5f734c3133e6024de5~qLDYtEM_42217522175epsmtrp1H;
+	Thu,  6 Mar 2025 09:20:17 +0000 (GMT)
+X-AuditID: b6c32a4a-b87c770000004ddd-bb-67c969241e14
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+	epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	D5.1E.18949.0D869C76; Thu,  6 Mar 2025 18:20:17 +0900 (KST)
+Received: from localhost.localdomain (unknown [107.109.224.44]) by
+	epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20250306092015epsmtip1d7d24c04edaa40d14ee7ae45a2367066~qLDWykwQG1436514365epsmtip18;
+	Thu,  6 Mar 2025 09:20:14 +0000 (GMT)
+From: Maninder Singh <maninder1.s@samsung.com>
+To: chuck.lever@oracle.com, jlayton@kernel.org, neilb@suse.de,
+	okorniev@redhat.com, Dai.Ngo@oracle.com, tom@talpey.com, lorenzo@kernel.org
+Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+	chungki0201.woo@samsung.com, Maninder Singh <maninder1.s@samsung.com>
+Subject: [PATCH 1/2] NFSD: unregister filesystem in case
+ genl_register_family() fails
+Date: Thu,  6 Mar 2025 14:50:06 +0530
+Message-Id: <20250306092007.1419237-1-maninder1.s@samsung.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1fc7:b0:3d0:4bce:cfa8 with SMTP id
- e9e14a558f8ab-3d42b873b36mr86092665ab.3.1741252885078; Thu, 06 Mar 2025
- 01:21:25 -0800 (PST)
-Date: Thu, 06 Mar 2025 01:21:25 -0800
-In-Reply-To: <674db1c7.050a0220.ad585.0051.GAE@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67c96915.050a0220.15b4b9.0031.GAE@google.com>
-Subject: Re: [syzbot] [bcachefs?] INFO: task hung in vfs_unlink (5)
-From: syzbot <syzbot+6983c03a6a28616e362f@syzkaller.appspotmail.com>
-To: brauner@kernel.org, jack@suse.cz, kent.overstreet@linux.dev, 
-	linkinjeon@kernel.org, linux-bcachefs@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	sj1557.seo@samsung.com, syzkaller-bugs@googlegroups.com, 
-	viro@zeniv.linux.org.uk, yuezhang.mo@sony.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrKKsWRmVeSWpSXmKPExsWy7bCmlq5K5sl0g+aLIhb/7z5nsjj9/Qq7
+	xfxFm9ksfi5bxW5xedccNosLB06zWvStnsVocXh+G4vF3vkNLBaTnn1itzj16xSTA7fHplWd
+	bB4fn95i8Xi/7yqbR9+WVYwem09Xe1x+coXR4/MmuQD2KC6blNSczLLUIn27BK6Muet/MRU0
+	clScXNzP2sB4na2LkZNDQsBE4lPbfSCbi0NIYDejxMr9/awgCSGBT4wSp3YkQ9jfGCUW//CE
+	aXix5CEzRMNeRompr+YwQThfGCWO3nzFBFLFJqAnsWrXHhaQhIhAD6PEtjl7wKqYBVoYJfae
+	f8oIUiUsEC4xdcE1FhCbRUBV4sL/b0A2BwevgJ3E1l2hEOvkJWZe+s4OYvMKCEqcnPkErJwZ
+	KN68dTbYGRICf9klXv7vYYVocJF4NfE+M4QtLPHq+BZ2CFtK4mV/GzvIfAmBcomtE+oheoHu
+	2T9nCjQw7CWeXFzIClLDLKApsX6XPkRYVmLqqXVMEHv5JHp/P2GCiPNK7JgHY6tKtNzcAHWC
+	tMTnjx9ZIGwPiSNXHrBDgjFWov3qQbYJjPKzkLwzC8k7sxA2L2BkXsUomVpQnJueWmxaYJSX
+	Wq5XnJhbXJqXrpecn7uJEZyStLx2MD588EHvECMTB+MhRgkOZiUR3ot+J9OFeFMSK6tSi/Lj
+	i0pzUosPMUpzsCiJ8zbvbEkXEkhPLEnNTk0tSC2CyTJxcEo1MDkF/e8qkvu6/U7S0+5zqs/M
+	vluzlR2658ITdyXVyc/R2lDh7dzMYGdJh8MXfq5Yu6mrNLR76TKjxL02188JN3woyAyI/rzH
+	QUXpmYHynB6fY6wn1Qt/7HxZHOTMsby+NZzr2F0/kcXNT8R9OqQW1z3IKeqac2jOCW/XkviT
+	cg/fP8kUyFZ3dWqMO+n7ICpr8h3Vgi/NTM8YnSba6HrO3hZseIG9oix+6kTeD93t+3T3BHB9
+	v1khXnNhWsn666uX6VxbOuWX6aHgDtbjbrrTfxRz76quOCqkaMj3f+Ki+R+6C5ncP689eeR8
+	27HXDU6bxdYvUV7/dmJSou7KW3PmzmzkENm8fLParjc/pmber1RiKc5INNRiLipOBABtESiX
+	uAMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrLLMWRmVeSWpSXmKPExsWy7bCSnO7FjJPpBhdWMlv8v/ucyeL09yvs
+	FvMXbWaz+LlsFbvF5V1z2CwuHDjNatG3ehajxeH5bSwWe+c3sFhMevaJ3eLUr1NMDtwem1Z1
+	snl8fHqLxeP9vqtsHn1bVjF6bD5d7XH5yRVGj8+b5ALYo7hsUlJzMstSi/TtErgy5q7/xVTQ
+	yFFxcnE/awPjdbYuRk4OCQETiRdLHjJ3MXJxCAnsZpRofP6SCSIhLfHz33sWCFtYYuW/5+wQ
+	RZ8YJZZ/2A2WYBPQk1i1aw8LSEJEYBqjxKKuOWBVzAIdjBLv/jaxglQJC4RKdK/5DtbBIqAq
+	ceH/NyCbg4NXwE5i665QiA3yEjMvfWcHsXkFBCVOznwCVs4MFG/eOpt5AiPfLCSpWUhSCxiZ
+	VjFKphYU56bnFhsWGOWllusVJ+YWl+al6yXn525iBIe4ltYOxj2rPugdYmTiYDzEKMHBrCTC
+	e9HvZLoQb0piZVVqUX58UWlOavEhRmkOFiVx3m+ve1OEBNITS1KzU1MLUotgskwcnFINTMny
+	J9gb1uZrqMy78WHr40OGkQE777fdmLoo+6u0WqvGFEs/blvJdZkfVffPmMHiotuTfeVWqrJY
+	7+enE7WeT2+pkJu2Q/5X9LrE8pwJfBuTd12LlzW+/5L9mdY/Addfeff6Puh73o2PvJA9I0yF
+	YbEcu7Hhph8h5qrd8dEizGnqpj/4lrGy6ugcvmU0bydD8vdb9047r/J8Xv923rF9cyQObZ2j
+	9Zvf6MqDqDcN7THzeGOWBN19EnzmlgDD3DVX90xonprMzFHDHHikLTr6U9TClW2VX9h2ZwQ+
+	cspf61UYv2az4pqpGjkTlT5zJ9ySSnyy5L6Y3tqGivgLhR/6c35f4ohMM4zg/zf5+V+Be0os
+	xRmJhlrMRcWJAEMUS5LgAgAA
+X-CMS-MailID: 20250306092017epcas5p30812b135b484fdea1f96739635df1d79
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+X-CMS-RootMailID: 20250306092017epcas5p30812b135b484fdea1f96739635df1d79
+References: <CGME20250306092017epcas5p30812b135b484fdea1f96739635df1d79@epcas5p3.samsung.com>
 
-syzbot has found a reproducer for the following issue on:
+With rpc_status netlink support, unregister of register_filesystem()
+was missed in case of genl_register_family() fails.
 
-HEAD commit:    bb2281fb05e5 Merge tag 'x86_microcode_for_v6.14_rc6' of gi..
-git tree:       upstream
-console+strace: https://syzkaller.appspot.com/x/log.txt?x=159144b7980000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=523d3ff8e053340a
-dashboard link: https://syzkaller.appspot.com/bug?extid=6983c03a6a28616e362f
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12cf7078580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10197da8580000
+Correcting it by making new label.
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/7f163a5da7e8/disk-bb2281fb.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/6841e1105518/vmlinux-bb2281fb.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/3295ae6e86c0/bzImage-bb2281fb.xz
-mounted in repro: https://storage.googleapis.com/syzbot-assets/8d22fecc87c0/mount_0.gz
-  fsck result: failed (log: https://syzkaller.appspot.com/x/fsck.log?x=17e97da8580000)
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+6983c03a6a28616e362f@syzkaller.appspotmail.com
-
-INFO: task syz-executor399:5826 blocked for more than 143 seconds.
-      Not tainted 6.14.0-rc5-syzkaller-00023-gbb2281fb05e5 #0
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-task:syz-executor399 state:D stack:27224 pid:5826  tgid:5823  ppid:5821   task_flags:0x400040 flags:0x00004006
-Call Trace:
- <TASK>
- context_switch kernel/sched/core.c:5378 [inline]
- __schedule+0x18bc/0x4c40 kernel/sched/core.c:6765
- __schedule_loop kernel/sched/core.c:6842 [inline]
- schedule+0x14b/0x320 kernel/sched/core.c:6857
- schedule_preempt_disabled+0x13/0x30 kernel/sched/core.c:6914
- rwsem_down_write_slowpath+0xeee/0x13b0 kernel/locking/rwsem.c:1176
- __down_write_common kernel/locking/rwsem.c:1304 [inline]
- __down_write kernel/locking/rwsem.c:1313 [inline]
- down_write+0x1d7/0x220 kernel/locking/rwsem.c:1578
- inode_lock include/linux/fs.h:877 [inline]
- vfs_unlink+0xe4/0x650 fs/namei.c:4514
- do_unlinkat+0x4ae/0x830 fs/namei.c:4589
- __do_sys_unlink fs/namei.c:4637 [inline]
- __se_sys_unlink fs/namei.c:4635 [inline]
- __x64_sys_unlink+0x47/0x50 fs/namei.c:4635
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7fb1339de6f9
-RSP: 002b:00007fb133974218 EFLAGS: 00000246 ORIG_RAX: 0000000000000057
-RAX: ffffffffffffffda RBX: 00007fb133a665f8 RCX: 00007fb1339de6f9
-RDX: 00007fb1339b7dc6 RSI: 0000000000000000 RDI: 0000400000000100
-RBP: 00007fb133a665f0 R08: 00007ffcb7766927 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0031656c69662f2e
-R13: 0000400000000100 R14: 0000400000000080 R15: 0000400000000240
- </TASK>
-
-Showing all locks held in the system:
-1 lock held by khungtaskd/30:
- #0: ffffffff8eb392e0 (rcu_read_lock){....}-{1:3}, at: rcu_lock_acquire include/linux/rcupdate.h:337 [inline]
- #0: ffffffff8eb392e0 (rcu_read_lock){....}-{1:3}, at: rcu_read_lock include/linux/rcupdate.h:849 [inline]
- #0: ffffffff8eb392e0 (rcu_read_lock){....}-{1:3}, at: debug_show_all_locks+0x55/0x2a0 kernel/locking/lockdep.c:6746
-2 locks held by getty/5580:
- #0: ffff88814e4bb0a0 (&tty->ldisc_sem){++++}-{0:0}, at: tty_ldisc_ref_wait+0x25/0x70 drivers/tty/tty_ldisc.c:243
- #1: ffffc900033332f0 (&ldata->atomic_read_lock){+.+.}-{4:4}, at: n_tty_read+0x616/0x1770 drivers/tty/n_tty.c:2211
-2 locks held by syz-executor399/5825:
-3 locks held by syz-executor399/5826:
- #0: ffff888076078420 (sb_writers#10){.+.+}-{0:0}, at: mnt_want_write+0x3f/0x90 fs/namespace.c:547
- #1: ffff888073c182a0 (&sb->s_type->i_mutex_key#14/1){+.+.}-{4:4}, at: inode_lock_nested include/linux/fs.h:912 [inline]
- #1: ffff888073c182a0 (&sb->s_type->i_mutex_key#14/1){+.+.}-{4:4}, at: do_unlinkat+0x26a/0x830 fs/namei.c:4576
- #2: ffff888073c18910 (&sb->s_type->i_mutex_key#14){++++}-{4:4}, at: inode_lock include/linux/fs.h:877 [inline]
- #2: ffff888073c18910 (&sb->s_type->i_mutex_key#14){++++}-{4:4}, at: vfs_unlink+0xe4/0x650 fs/namei.c:4514
-
-=============================================
-
-NMI backtrace for cpu 0
-CPU: 0 UID: 0 PID: 30 Comm: khungtaskd Not tainted 6.14.0-rc5-syzkaller-00023-gbb2281fb05e5 #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:94 [inline]
- dump_stack_lvl+0x241/0x360 lib/dump_stack.c:120
- nmi_cpu_backtrace+0x49c/0x4d0 lib/nmi_backtrace.c:113
- nmi_trigger_cpumask_backtrace+0x198/0x320 lib/nmi_backtrace.c:62
- trigger_all_cpu_backtrace include/linux/nmi.h:162 [inline]
- check_hung_uninterruptible_tasks kernel/hung_task.c:236 [inline]
- watchdog+0x1058/0x10a0 kernel/hung_task.c:399
- kthread+0x7a9/0x920 kernel/kthread.c:464
- ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:148
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
- </TASK>
-Sending NMI from CPU 0 to CPUs 1:
-NMI backtrace for cpu 1
-CPU: 1 UID: 0 PID: 5825 Comm: syz-executor399 Not tainted 6.14.0-rc5-syzkaller-00023-gbb2281fb05e5 #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
-RIP: 0010:__sanitizer_cov_trace_pc+0x0/0x70 kernel/kcov.c:210
-Code: 89 fb e8 23 00 00 00 48 8b 3d a4 04 92 0c 48 89 de 5b e9 23 5e 59 00 0f 1f 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 <f3> 0f 1e fa 48 8b 04 24 65 48 8b 0c 25 00 d5 03 00 65 8b 15 30 06
-RSP: 0018:ffffc900040c78e8 EFLAGS: 00000246
-RAX: 0000000000000000 RBX: ffff888023a2ce00 RCX: ffffffff824af6cf
-RDX: ffff8880330e5a00 RSI: 0000000000000001 RDI: 0000000000000000
-RBP: 0000000000000001 R08: ffffffff824af6f1 R09: 1ffff1100f76b200
-R10: dffffc0000000000 R11: ffffed100f76b201 R12: 0000000000000008
-R13: ffff888023a2c500 R14: 0000000000000200 R15: ffff88807bb59000
-FS:  00007fb1339956c0(0000) GS:ffff8880b8700000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00005592141bc600 CR3: 0000000035948000 CR4: 00000000003526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <NMI>
- </NMI>
- <TASK>
- __bread_gfp+0xca/0x400 fs/buffer.c:1487
- sb_bread include/linux/buffer_head.h:346 [inline]
- __exfat_ent_get fs/exfat/fatent.c:48 [inline]
- exfat_ent_get+0x14d/0x400 fs/exfat/fatent.c:97
- exfat_find_last_cluster+0x15d/0x380 fs/exfat/fatent.c:263
- exfat_cont_expand fs/exfat/file.c:40 [inline]
- exfat_setattr+0xa8d/0x1a90 fs/exfat/file.c:295
- notify_change+0xbca/0xe90 fs/attr.c:552
- do_truncate+0x220/0x310 fs/open.c:65
- vfs_truncate+0x492/0x530 fs/open.c:115
- do_sys_truncate+0xdb/0x190 fs/open.c:138
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7fb1339de6f9
-Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 81 18 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007fb133995218 EFLAGS: 00000246 ORIG_RAX: 000000000000004c
-RAX: ffffffffffffffda RBX: 00007fb133a665e8 RCX: 00007fb1339de6f9
-RDX: ffffffffffffffb0 RSI: 000000000000f000 RDI: 0000400000000080
-RBP: 00007fb133a665e0 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0031656c69662f2e
-R13: 0000400000000100 R14: 0000400000000080 R15: 0000400000000240
- </TASK>
-
-
+Fixes: bd9d6a3efa97 ("NFSD: add rpc_status netlink support")
+Signed-off-by: Maninder Singh <maninder1.s@samsung.com>
 ---
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
+ fs/nfsd/nfsctl.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
+index ac265d6fde35..d773481bcf10 100644
+--- a/fs/nfsd/nfsctl.c
++++ b/fs/nfsd/nfsctl.c
+@@ -2305,7 +2305,7 @@ static int __init init_nfsd(void)
+ 		goto out_free_cld;
+ 	retval = register_filesystem(&nfsd_fs_type);
+ 	if (retval)
+-		goto out_free_all;
++		goto out_free_nfsd4;
+ 	retval = genl_register_family(&nfsd_nl_family);
+ 	if (retval)
+ 		goto out_free_all;
+@@ -2313,6 +2313,8 @@ static int __init init_nfsd(void)
+ 
+ 	return 0;
+ out_free_all:
++	unregister_filesystem(&nfsd_fs_type);
++out_free_nfsd4:
+ 	nfsd4_destroy_laundry_wq();
+ out_free_cld:
+ 	unregister_cld_notifier();
+-- 
+2.25.1
+
