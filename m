@@ -1,176 +1,126 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 797CB823DE;
-	Thu,  6 Mar 2025 14:03:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF4CF13C9B8;
+	Thu,  6 Mar 2025 14:03:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741269808; cv=none; b=pCHibRbZKaaq2/i15zb4nccTU1Rwf95GFtyA1Z0dwpvzHY9DcKVEagxdFI2PMAnfzbb86rnGDn6+O26FvKwoP/rDYKG8k0gEc5RSdMurTWFeEa4FLdPzblMfVOTBOjfM1FKJOhRtPxGH69L0OdbhcUxiwhD4frW046SOGHwNO5Q=
+	t=1741269823; cv=none; b=AIvFpss/8ZpugIh8KXGTh06w3RAOJYwvuAXuDMXk9MNWDg3uyLowZ4BrytFkasLlisnqvcX5EFZ8T5piwQ32f6sto0Jgm3gaq7vgU4SkwSdkcr+PfhBDIetZd6iJUPYGOsiPFlrRdCf071AU5JMg3Fdk1J+n/x/iC/XkI6nAeuw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741269808; c=relaxed/simple;
-	bh=/BuLHcCIGXRIYVKJCuf+dvgwPEDJO2Qr9HcpSrXU6EA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KFBnHnhDV7nb/8EGfpsodqFqZkPamKZ44fCdjl4hk/YKSl4S+6ehm6BqHrdlFvm5/X7exRYPasZSDfik+YH/FTDGsckwXYtiMw57HGaRWJx2CNxzlcSv6zBVy9RDoPtw4cTTpQI9W4YlU9B4FzIR3pz0D/p/QwgajE9FHtlfP3Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A68GK8Yh; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741269823; c=relaxed/simple;
+	bh=SUWfRHt3+o6PkKiiZQSPnjQs4j0CrDv+922ALxaOa+Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qyv4hWqQ7vaf6CSZoQ6OpAU7itkx2Z7p9s0nPhmYNMpSJvpwHHNxLO248ufe4sTfM8TNFuixpPxPAoDj90Jx08ept3dsROhI/o6RoCbC8NaMsN+t9h7qj/tyb6Q5LO9Yq/YGqbjTmLlCBu5x7xFPM6tECkPk0g91o6sMKirT/kw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h8WkNDUU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A68GK8Yh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E014FC4CEE5;
-	Thu,  6 Mar 2025 14:03:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h8WkNDUU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 049DCC4CEE0;
+	Thu,  6 Mar 2025 14:03:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741269807;
-	bh=/BuLHcCIGXRIYVKJCuf+dvgwPEDJO2Qr9HcpSrXU6EA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=A68GK8YhfK/9HDnKSG6Wx1WyZlq1YdfJfNSgwd4/6Jpqnwgb1FOq25dXbeEFvi87Q
-	 0EsDn34BJX7nx935O8MJQkcbTHl0+8V9ex76nARmgedRFnEzq17m6G5cicIWcmQEin
-	 9cEfRFB2qejMjC7NV6RvGLFwTGaA1fA4VQwIEakW4d1X2KNoEte1BWlgSkXFNt2f6q
-	 d/SpNE3LFowlDUsgQK/SRHBi0peytncLlSUb3zkFxZBfBgDYw81DuYKOIduq8eGvs7
-	 vORJfu9Zna3o+SYQujdLnGNt20qRJN0r8HD6G2vciW9TEcP3q3yJaPqs82Jergo+nJ
-	 ioL2qlXoQoJ/g==
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-5497590ffbbso884904e87.1;
-        Thu, 06 Mar 2025 06:03:27 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVPrdcqUgrV5v+fHDq8HlCo+15zYGeNhfr9BD8RdTQUFJIeT4suki1svv/rgHA7V/+oL56yiPOmqTA2CFM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz+nFCOeOnsCNzTokUYcF2poNsIfOJcgmpZtJ+hzQmxmWYoV6Bf
-	yka0HHKyEWrqMVIPSFSME9iueGN2f4/zunX87xgECklCZTrt1MfzdJq4eixcFOgzLAV77ra2ZWR
-	byGqgpYFIG4Ur2kaxD51NnE7Uq+g=
-X-Google-Smtp-Source: AGHT+IHqaIWrWvhQZHVT31BbRrv3p02mYjqO1VoTm+3hyyNM1G8zigzk22q4InIcx246jrQL9pcSZsnlOvGzOsRTfJE=
-X-Received: by 2002:a05:6512:2815:b0:545:f0a:bf50 with SMTP id
- 2adb3069b0e04-5497d3774d5mr2592605e87.35.1741269806413; Thu, 06 Mar 2025
- 06:03:26 -0800 (PST)
+	s=k20201202; t=1741269821;
+	bh=SUWfRHt3+o6PkKiiZQSPnjQs4j0CrDv+922ALxaOa+Q=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=h8WkNDUUARmoKHf+FRC3jkp3D5bno9PkLfB5haf2THOPT4+UrEcvp1PJ/xyfla4Xp
+	 xXthPKmuWiPB+6EsJoMDoZVBTMemlAD9ndqi7DtdPz3/lT0INXoTXPp2gJwUh4RTOc
+	 DBW5+wjtrr1K6eAdr6Bb3FzvwH/EOyRdjpAYzpmvOwj98kQyIScuwCJj2uRlLSy4r4
+	 Pg6rlpzT7iZPnz7c6a48qDxxA9nCFBVuD/8mb35qdJ9G/+ZmlUyAHWrX7CCy1nFYus
+	 0guFGnkIEM2r5VglE+/KszkjdsuB6PBDHJ+mbQCJ+NojJFSKVqDrpok8Z4V3E7/oHO
+	 BoRfWYCZG5NoQ==
+Message-ID: <aa837beb-ef4e-43ec-b8fa-54a21df1202c@kernel.org>
+Date: Thu, 6 Mar 2025 15:03:32 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250207193133.506076-1-masahiroy@kernel.org> <20250224-vivid-merry-oriole-f0cb8a@l-nschier-z2>
-In-Reply-To: <20250224-vivid-merry-oriole-f0cb8a@l-nschier-z2>
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Thu, 6 Mar 2025 23:02:48 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATdpJ9uprUTowFjA8XFWk1_wttWPcG11-X+A3b-CwLZ5g@mail.gmail.com>
-X-Gm-Features: AQ5f1Jq0v6PU-fDPJCVcuQv5kmI-4ZowOC8UQTigSXwLfuWpvrl6ko47dyUUY40
-Message-ID: <CAK7LNATdpJ9uprUTowFjA8XFWk1_wttWPcG11-X+A3b-CwLZ5g@mail.gmail.com>
-Subject: Re: [PATCH] kbuild: add Kbuild bash completion
-To: Nicolas Schier <n.schier@avm.de>
-Cc: linux-kbuild@vger.kernel.org, Nathan Chancellor <nathan@kernel.org>, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] arm64: dts: qcom: Add device tree for TUXEDO Elite 14
+ Gen1
+To: Georg Gottleuber <g.gottleuber@tuxedocomputers.com>,
+ Georg Gottleuber <ggo@tuxedocomputers.com>,
+ Bjorn Andersson <andersson@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Konrad Dybcio
+ <konrad.dybcio@oss.qualcomm.com>, wse@tuxedocomputers.com,
+ cs@tuxedocomputers.com
+References: <57589859-fec1-4875-9127-d1f99e40a827@tuxedocomputers.com>
+ <75c17309-3072-4321-ab15-69d60190f2f7@kernel.org>
+ <d98ad83e-6479-4453-bd1d-4f3703b0dad2@tuxedocomputers.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <d98ad83e-6479-4453-bd1d-4f3703b0dad2@tuxedocomputers.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Mon, Feb 24, 2025 at 11:25=E2=80=AFPM Nicolas Schier <n.schier@avm.de> w=
-rote:
+On 06/03/2025 14:56, Georg Gottleuber wrote:
+> 
+>> ...
+>>
+>>> +
+>>> +       eusb3_repeater: redriver@47 {
+>>> +               compatible = "nxp,ptn3222";
+>>> +               reg = <0x47>;
+>>> +               #phy-cells = <0>;
+>>> +
+>>> +               vdd1v8-supply = <&vreg_l4b_1p8>;
+>>> +               vdd3v3-supply = <&vreg_l13b_3p0>;
+>>> +
+>>> +               reset-gpios = <&tlmm 124 GPIO_ACTIVE_LOW>;
+>>> +
+>>> +               pinctrl-0 = <&eusb3_reset_n>;
+>>> +               pinctrl-names = "default";
+>>
+>> No graph? Isn't it needed?
+> 
+> What do you mean by ‘no graph’?
 
-> > +     O | KBUILD_OUTPUT | M | KBUILD_EXTMOD | MO | KBUILD_EXTMOD_OUTPUT=
- | *_PATH)
-> > +             # variables that take a directory.
-> > +             _filedir -d
->
-> Would it make sense to temporarily switch cwd to ${srctree} to allow
-> completion of KBUILD_OUTPUT and friends with relative paths from
-> ${srctree}?
+ports connecting this within USB graph between controller and connector.
+Just like other devices with redriver.
 
-I do not think so.
-The completion should work against the current working directory
-
-This usually matches to ${srctree}, as many people work
-at the top of the kernel source tree. However, it is not necessary
-to start the kernel build at the top of the kernel source tree.
-You can start Kbuild at any arbitrary directory by using
-the -f option to specify the top-level Makefile.
-
-
-> A simple approach (probably with some bad side-effects), works for me:
->
->                 local opwd=3D$OLDPWD
->                 cd ${srctree} && _filedir -d && cd $OLDPWD
->                 OLDPWD=3D$opwd
->
-> But this is quite a step further, if there is no clean solution right
-> now, I'd prefer leaving it as it is for now.
-
-
-
-
-
-
-
-> > +             return
-> > +             ;;
-> > +     KBUILD_EXTRA_SYMBOL | KBUILD_KCONFIG | KCONFIG_CONFIG)
-> > +             # variables that take a file.
-> > +             _filedir
-> > +             return
-> > +     esac
-> > +
-> > +     COMPREPLY+=3D($(compgen -W "${keywords[*]}" -- "${cur}"))
-> > +}
-> > +
-> > +# Check the -C, -f options and 'source' symlink. Return the source tre=
-e we are
-> > +# working in.
-> > +__kbuild_get_srctree()
-> > +{
-> > +     local words=3D("$@")
-> > +     local cwd makef_dir
-> > +
-> > +        # see if a path was specified with -C/--directory
-> > +        for ((i =3D 1; i < ${#words[@]}; i++)); do
->
-> indent ^^: spaces instead of tab
-
-Thanks. I fixed all indentation errors.
-
-> > +             if [[ ${words[i]} =3D=3D -@(f|-?(make)file) ]]; then
->
-> (I am really impressed: everytime I am reviewing one of your new shell
-> scripts, I learn something new.  TIL: '-@()' and '?()'.)
-
-This line was copy-pasted from the bash-completion project.  :-)
-
-You can find the same code in
-/usr/share/bash-completion/completions/make
-
-
-
-
-> > +     KBUILD_*)
-> > +             # There are many variables prefixed with 'KBUILD_'.
-> > +             # Display them only when 'KBUILD_' is entered.
-> > +             # shellcheck disable=3DSC2191 # '=3D' is appended for var=
-iables
-> > +             keywords+=3D(
-> > +                     KBUILD_{CHECKSRC,EXTMOD,EXTMOD_OUTPUT,VERBOSE,EXT=
-RA_WARN,CLIPPY}=3D
-> > +                     KBUILD_BUILD_{USER,HOST,TIMESTAMP}=3D
-> > +                     KBUILD_MODPOST_{NOFINAL,WARN}=3D
-> > +                     KBUILD_{ABS_SRCTREE,EXTRA_SYMBOLS,KCONFIG}=3D
->
-> Did you leave-out KBUILD_OUTPUT by intention?  I think it would be nice
-> to complete it here, too.
-
-I just forgot to add it.
-Will fix it.
-
-
->
-> I am unsure, if I like the mix of quoted and unquoted use of variables.
-> But as they all look correct to me, this is just a question of personal
-> style.
-
-I added quotes where required (i.e. shellcheck warns).
-Otherwise, I do not add quotes.
-
-
-
-
->
->
-> Thanks, I really appreciate this kbuild bash-completion.
->
-> Reviewed-by: Nicolas Schier <n.schier@avm.de>
-> Tested-by: Nicolas Schier <n.schier@avm.de>
-
-Thanks for the review.
-
---
-Best Regards
-Masahiro Yamada
+Best regards,
+Krzysztof
