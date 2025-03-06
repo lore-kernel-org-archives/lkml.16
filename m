@@ -1,23 +1,23 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6AA4720B803
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 12:11:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CEF0620DD5B
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 12:11:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741263101; cv=none; b=a2J0ttMefj1xIOUJPKcSp5xbSiqgbwT424b5/AW4zpFusV8tRxRVl3O7NfKM2KfGBmm9UW928MQU9Al9Gl6ASxK+xaNPrupHeELOF6BRV1lgOt5mdLUPwfABS1RvRGuaho2R5VhRbvWUGkVDnA/XUtT+oPthc3ydaFZ1L3KCHAw=
+	t=1741263105; cv=none; b=thKD1li7Wk72x0k3v12SUIj9rH3o1JfkCqIiEBERLqCMr4VTi1BayRo3LeSjEm9em+ZzUcXJP8dWQxKocEZMizBwBCUSsGERWmOQqo/zTujglklBW2SUZUul/aWsAQUcGRzFTPNocLbF9FidkpbOZe3bKmIeIQexX6fiOPM30iw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741263101; c=relaxed/simple;
-	bh=qkd1t71drJ6W7pHT5e59hqeyQYJUG9fWKod/5k7xJ5E=;
+	s=arc-20240116; t=1741263105; c=relaxed/simple;
+	bh=RIe/5ZaCtNLHo29qreZI0j1qk+lpe9VGGmd6j6rEDJ4=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ZZUvlES/SmkWde2oGII8+Fx6jApwCl+oPXk/PeVfveMFrzcmIq418dVxAq/x5qpOW7KQ2nbeWdRO+3tlZz+oEUL3odFJ/Zk632EvbvRQm7zDi6jSVhgkEpuzVe9Fm42SASgDYxa3Q2eLX7EGOee/i6aUi92/kc39fahmU86+Q1c=
+	 MIME-Version; b=ucFCEIkTjTsVQmzTD99R4mYMyqeWrtK8YXTPUIiJmclKrk1cAeYee94Mb2Mi2V6exj4OahvCnWrcceYzlNEyKSDzn8xPJDau7N8be4jRmy5S2rWINPK7ZdJZvsUVLcanK5RmJ6PWbMz/By4piJESgvVm8b2cRgUQFeGDANa4OwA=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1239B1BC0;
-	Thu,  6 Mar 2025 04:11:52 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3B4151BC0;
+	Thu,  6 Mar 2025 04:11:56 -0800 (PST)
 Received: from e129823.cambridge.arm.com (e129823.arm.com [10.1.197.6])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 582293F673;
-	Thu,  6 Mar 2025 04:11:37 -0800 (PST)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 816673F673;
+	Thu,  6 Mar 2025 04:11:41 -0800 (PST)
 From: Yeoreum Yun <yeoreum.yun@arm.com>
 To: suzuki.poulose@arm.com,
 	mike.leach@linaro.org,
@@ -31,9 +31,9 @@ Cc: coresight@lists.linaro.org,
 	linux-kernel@vger.kernel.org,
 	linux-rt-devel@lists.linux.dev,
 	Yeoreum Yun <yeoreum.yun@arm.com>
-Subject: [PATCH v6 7/9] coresight-replicator: change replicator_drvdata spinlock's type to raw_spinlock_t
-Date: Thu,  6 Mar 2025 12:11:08 +0000
-Message-Id: <20250306121110.1647948-8-yeoreum.yun@arm.com>
+Subject: [PATCH v6 9/9] coresight/ultrasoc: change smb_drv_data spinlock's type to raw_spinlock_t
+Date: Thu,  6 Mar 2025 12:11:10 +0000
+Message-Id: <20250306121110.1647948-10-yeoreum.yun@arm.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250306121110.1647948-1-yeoreum.yun@arm.com>
 References: <20250306121110.1647948-1-yeoreum.yun@arm.com>
@@ -45,82 +45,96 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-In coresight-replicator drivers, replicator_drvdata->spinlock can be held
+In ultrasoc-smb drivers, smb_drv_data->spinlock can be held
 during __schedule() by perf_event_task_sched_out()/in().
 
-Since replicator_drvdata->spinlock type is spinlock_t and
+Since smb__drv_data->spinlock type is spinlock_t and
 perf_event_task_sched_out()/in() is called after acquiring rq_lock,
 which is raw_spinlock_t (an unsleepable lock),
 this poses an issue in PREEMPT_RT kernel where spinlock_t is sleepable.
 
-To address this, change type replicator_drvdata->spinlock in
-coresight-replicator drivers, which can be called
-by perf_event_task_sched_out()/in(), from spinlock_t to raw_spinlock_t.
+To address this, change type smb_drv_data->spinlock in ultrasoc-smb drivers,
+which can be called by perf_event_task_sched_out()/in(),
+from spinlock_t to raw_spinlock_t.
 
 Reviewed-by: James Clark <james.clark@linaro.org>
-Reviewed-by: Mike Leach <mike.leach@linaro.org>
 Signed-off-by: Yeoreum Yun <yeoreum.yun@arm.com>
 ---
- drivers/hwtracing/coresight/coresight-replicator.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/hwtracing/coresight/ultrasoc-smb.c | 12 ++++++------
+ drivers/hwtracing/coresight/ultrasoc-smb.h |  2 +-
+ 2 files changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/hwtracing/coresight/coresight-replicator.c b/drivers/hwtracing/coresight/coresight-replicator.c
-index a1181c9048c0..ee7ee79f6cf7 100644
---- a/drivers/hwtracing/coresight/coresight-replicator.c
-+++ b/drivers/hwtracing/coresight/coresight-replicator.c
-@@ -41,7 +41,7 @@ struct replicator_drvdata {
- 	struct clk		*atclk;
- 	struct clk		*pclk;
- 	struct coresight_device	*csdev;
--	spinlock_t		spinlock;
-+	raw_spinlock_t		spinlock;
- 	bool			check_idfilter_val;
- };
+diff --git a/drivers/hwtracing/coresight/ultrasoc-smb.c b/drivers/hwtracing/coresight/ultrasoc-smb.c
+index dc3c9504dd7c..26cfc939e5bd 100644
+--- a/drivers/hwtracing/coresight/ultrasoc-smb.c
++++ b/drivers/hwtracing/coresight/ultrasoc-smb.c
+@@ -98,7 +98,7 @@ static int smb_open(struct inode *inode, struct file *file)
+ 	struct smb_drv_data *drvdata = container_of(file->private_data,
+ 					struct smb_drv_data, miscdev);
  
-@@ -125,7 +125,7 @@ static int replicator_enable(struct coresight_device *csdev,
- 	unsigned long flags;
- 	bool first_enable = false;
+-	guard(spinlock)(&drvdata->spinlock);
++	guard(raw_spinlock)(&drvdata->spinlock);
  
--	spin_lock_irqsave(&drvdata->spinlock, flags);
-+	raw_spin_lock_irqsave(&drvdata->spinlock, flags);
- 	if (out->src_refcnt == 0) {
- 		if (drvdata->base)
- 			rc = dynamic_replicator_enable(drvdata, in->dest_port,
-@@ -135,7 +135,7 @@ static int replicator_enable(struct coresight_device *csdev,
- 	}
- 	if (!rc)
- 		out->src_refcnt++;
--	spin_unlock_irqrestore(&drvdata->spinlock, flags);
-+	raw_spin_unlock_irqrestore(&drvdata->spinlock, flags);
+ 	if (drvdata->reading)
+ 		return -EBUSY;
+@@ -152,7 +152,7 @@ static int smb_release(struct inode *inode, struct file *file)
+ 	struct smb_drv_data *drvdata = container_of(file->private_data,
+ 					struct smb_drv_data, miscdev);
  
- 	if (first_enable)
- 		dev_dbg(&csdev->dev, "REPLICATOR enabled\n");
-@@ -179,14 +179,14 @@ static void replicator_disable(struct coresight_device *csdev,
- 	unsigned long flags;
- 	bool last_disable = false;
+-	guard(spinlock)(&drvdata->spinlock);
++	guard(raw_spinlock)(&drvdata->spinlock);
+ 	drvdata->reading = false;
  
--	spin_lock_irqsave(&drvdata->spinlock, flags);
-+	raw_spin_lock_irqsave(&drvdata->spinlock, flags);
- 	if (--out->src_refcnt == 0) {
- 		if (drvdata->base)
- 			dynamic_replicator_disable(drvdata, in->dest_port,
- 						   out->src_port);
- 		last_disable = true;
- 	}
--	spin_unlock_irqrestore(&drvdata->spinlock, flags);
-+	raw_spin_unlock_irqrestore(&drvdata->spinlock, flags);
+ 	return 0;
+@@ -245,7 +245,7 @@ static int smb_enable(struct coresight_device *csdev, enum cs_mode mode,
+ 	struct smb_drv_data *drvdata = dev_get_drvdata(csdev->dev.parent);
+ 	int ret = 0;
  
- 	if (last_disable)
- 		dev_dbg(&csdev->dev, "REPLICATOR disabled\n");
-@@ -277,7 +277,7 @@ static int replicator_probe(struct device *dev, struct resource *res)
- 	}
- 	dev->platform_data = pdata;
+-	guard(spinlock)(&drvdata->spinlock);
++	guard(raw_spinlock)(&drvdata->spinlock);
  
+ 	/* Do nothing, the trace data is reading by other interface now */
+ 	if (drvdata->reading)
+@@ -280,7 +280,7 @@ static int smb_disable(struct coresight_device *csdev)
+ {
+ 	struct smb_drv_data *drvdata = dev_get_drvdata(csdev->dev.parent);
+ 
+-	guard(spinlock)(&drvdata->spinlock);
++	guard(raw_spinlock)(&drvdata->spinlock);
+ 
+ 	if (drvdata->reading)
+ 		return -EBUSY;
+@@ -378,7 +378,7 @@ static unsigned long smb_update_buffer(struct coresight_device *csdev,
+ 	if (!buf)
+ 		return 0;
+ 
+-	guard(spinlock)(&drvdata->spinlock);
++	guard(raw_spinlock)(&drvdata->spinlock);
+ 
+ 	/* Don't do anything if another tracer is using this sink. */
+ 	if (csdev->refcnt != 1)
+@@ -563,7 +563,7 @@ static int smb_probe(struct platform_device *pdev)
+ 
+ 	smb_reset_buffer(drvdata);
+ 	platform_set_drvdata(pdev, drvdata);
 -	spin_lock_init(&drvdata->spinlock);
 +	raw_spin_lock_init(&drvdata->spinlock);
- 	desc.type = CORESIGHT_DEV_TYPE_LINK;
- 	desc.subtype.link_subtype = CORESIGHT_DEV_SUBTYPE_LINK_SPLIT;
- 	desc.ops = &replicator_cs_ops;
+ 	drvdata->pid = -1;
+ 
+ 	ret = smb_register_sink(pdev, drvdata);
+diff --git a/drivers/hwtracing/coresight/ultrasoc-smb.h b/drivers/hwtracing/coresight/ultrasoc-smb.h
+index a91d39cfccb8..c4c111275627 100644
+--- a/drivers/hwtracing/coresight/ultrasoc-smb.h
++++ b/drivers/hwtracing/coresight/ultrasoc-smb.h
+@@ -115,7 +115,7 @@ struct smb_drv_data {
+ 	struct coresight_device	*csdev;
+ 	struct smb_data_buffer sdb;
+ 	struct miscdevice miscdev;
+-	spinlock_t spinlock;
++	raw_spinlock_t spinlock;
+ 	bool reading;
+ 	pid_t pid;
+ };
 -- 
 LEVI:{C3F47F37-75D8-414A-A8BA-3980EC8A46D7}
 
