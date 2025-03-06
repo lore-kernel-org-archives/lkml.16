@@ -1,214 +1,138 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74A5420E03A
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 09:57:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BAEE20AF69
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 09:57:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741255058; cv=none; b=J7jBNAwbAlX8Ab8T2HfWRlIu5zISXgnkNQ9+JORbC9i/3hl7gpvxYsFRJIi1wjFj5nBamWuh2Eiw8DpnwEoSNlbxr8X1+h7iE8Ffv5LbF8Tvcjf4TC3mJ6CYfMEjpIhjyeSEYPXLgVJlEATYugvX1As2ha+helDlnhnPNU+vfvU=
+	t=1741255075; cv=none; b=HigtySCGkgU7nYrfJ3zOVUErL4Erv2ePkxi0Egl7mcitm8RoUFhzcTLUNQ4C85jMwLXQPQkPz/O7A/WQZz07rHw9X0YbDtc0rkzMRLSA8qgaFWie8xFame7PBFdaoXSrmmzJIR+GXGjM91uBQInvz1d3BnXB1jziJ+berW9y2Yo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741255058; c=relaxed/simple;
-	bh=efUQp3xn6WYS8yAIVpG+8nNESAbDYNoZwtefI4rJo8g=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To; b=N0YHYbIaTIFuNRY3kcwZbCkDdCI+L8y628usVO3HYJihH53scX1f5SxhLspvWgbwzQ02BPNwcDYei7CwDt25jGH1IPeNyEpYp3xFfI+fzLKS8xkZFNUDZMHjGIujUwQwP1z2P7yrqoCPhZ96mDULUFhOzcL7pWHf+hUf0+NpoR0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=daynix.com; spf=pass smtp.mailfrom=daynix.com; dkim=pass (2048-bit key) header.d=daynix-com.20230601.gappssmtp.com header.i=@daynix-com.20230601.gappssmtp.com header.b=liTDfdTi; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=daynix.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=daynix.com
+	s=arc-20240116; t=1741255075; c=relaxed/simple;
+	bh=Ao19rpVVji7s5n35VmpbbTgcnwYhjv4subEZAwg1LOE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RrIqVcDjhRDkfguY6sW/lwrpHxk6RTEzryn1dI6YvI82MFXkRL4nSHh+JyWr2kp88ol3/316qpWE9cC2Jnq78VDHJ24fbGMDwtZUgNSScT/MJ9kwiJ7cJss4jqasxVDMaJQZdwvg4WqY7rstjos+EMlNw+LKJGrBjg5XEFHVN+A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ffjkQmJu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=daynix-com.20230601.gappssmtp.com header.i=@daynix-com.20230601.gappssmtp.com header.b="liTDfdTi"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-22334203781so32930485ad.0
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Mar 2025 01:57:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=daynix-com.20230601.gappssmtp.com; s=20230601; t=1741255057; x=1741859857; darn=vger.kernel.org;
-        h=to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=CnuaMjhFxZ/6ziAA9dAFSZFZKEXkUeKJopwW9aMJd8c=;
-        b=liTDfdTiAJZ/79okWEDZNcbgi7+Hp66nqq9EZCfTbn2l7x4IhDeyq5Hn/bi1lpczj0
-         ORpVll2qWNQ+89fV7LDV/Eh1lR8HK015UvQZu/eitRX4VLlosUTS6em93Awo6Ofqz0d8
-         m37RFcDHHI+c0Gbm2ZKVUwbAm54vMtsM6Mut8pwWAMDDORC48Sqm0wmsnYHKnxh+pX5o
-         iZNrWzyJaESgGSI6LdUqfhVKnrb2k1Tbyf1jkCBYqCp8LenuvXvtzJZv50Fg+V9NLtLg
-         dBtaf+U2HIV//gwDRQQHm3wvNZTA/sIFJf6JhUen7QfpiCZnwHEXSA3G4OcHc3/Pdwfp
-         zBTQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741255057; x=1741859857;
-        h=to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=CnuaMjhFxZ/6ziAA9dAFSZFZKEXkUeKJopwW9aMJd8c=;
-        b=tCTAyOj6S06oeo6Nkma0bCvv2/mPP9ISJaxSuhn9kpIY143h/jnVVGFN6YVB/gFSrE
-         EVAwLwvUCFCZRymzqtceUktm+r+FIbdcW7Z0k2CH0cj9+ZLm8T0aW0ngLFELrk5XxUfU
-         0nA65FEXgwOJcY0+JM32Lz236ON45o04iISkGHVgvoxjLIj9VS4Pull/ZkXWfURGG0cN
-         Y69DqfuTb/krag7JSbEap2QLC9rjmGVYHd/QeXK+jj9H6iCPUkaqfTLFMGxFocUBy1S+
-         zCHEdZh6Z+YVIRlvmkdRrbwEs44cJAbP0IgqN8G1uNx7tAHGHvywZTJ9vl3PtfdvB+Bf
-         sCcw==
-X-Forwarded-Encrypted: i=1; AJvYcCVkVZQpKJjlJURq/HniyTGW1z7SbCf/OfasJnlvBt/AhJqfgyIeDdiThLysvVwtIpHToUY4QzTHg/V5iP4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywlrc0ISLFCMz6jKM0wOMX2hWEjOpiCswM1ft3ALhhCr0n/nBjb
-	NlLuS48F8qKqmm19+LZmgr2DEt05sIWYK6FOeD/w5wjCz52jAWd4A7q9aqj+dqY=
-X-Gm-Gg: ASbGnct3CzyM97fPWVh9G2PW9W9U0DfV9252jo0isJELeo1CJmA9YXuNraohtJkzmiW
-	m4yLQnbKImx/5mUFzJivn+7qkc9ciifM4dRCBrPPrMgAvZymihoYv+WkcTlVmxxAAvgtgHlnTni
-	Pa6Vq8I5hYJetWAgtIvNE7y2b04GuT3lM64GG++1PEzb1BEpUqLkSd0juxORFRL4qW2n9KbmK58
-	l5iGx9Jh+nbYpN/idT39u/kyL8CqG49lQgPXvmFu7CaUV/grk/CrnjLhdCfStQ3cJMPpl6BPxMW
-	Wye5+13ZEmt4zTv0w1BQ7C5WUPsejTszWAlNzL4EJy6W3EE3
-X-Google-Smtp-Source: AGHT+IHJGksHinhnEKP7Vul6y/8p6O/KEECmCOaw6lnVXA484Y6gp9ZfN9uJUdcGYFrU6DtyYorN0g==
-X-Received: by 2002:a05:6a00:3397:b0:734:26c6:26d3 with SMTP id d2e1a72fcca58-73693e85ddcmr5480443b3a.5.1741255056584;
-        Thu, 06 Mar 2025 01:57:36 -0800 (PST)
-Received: from localhost ([157.82.207.107])
-        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-73698514f58sm948820b3a.133.2025.03.06.01.57.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 Mar 2025 01:57:36 -0800 (PST)
-From: Akihiko Odaki <akihiko.odaki@daynix.com>
-Date: Thu, 06 Mar 2025 18:56:36 +0900
-Subject: [PATCH net-next v8 6/6] vhost/net: Support
- VIRTIO_NET_F_HASH_REPORT
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ffjkQmJu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63E71C4CEE2;
+	Thu,  6 Mar 2025 09:57:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741255074;
+	bh=Ao19rpVVji7s5n35VmpbbTgcnwYhjv4subEZAwg1LOE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ffjkQmJuIYIQPi9YQBxWzCIPS+FkgqyBj8qGeikJ3QcACPRAm/Uveq7qX27octhp1
+	 qBshRrMGuj9iz78AHyCoObXfJoDX3Y0GbmGlHnWVjWOlQr0ZyW5BcqdXgCwfTyTRWM
+	 4mZVzWTbH2x9B9uib9NVhRgZW36vxUi+p22oFxv00JVTmLL8FbCam6uq9jSLnwx/fT
+	 pKnTe3Y3Cz+Ujum7DRFTPRb/22WT48mA19sMka02RipucqxfUjILexmeRnVmbIcqnI
+	 4jGDWRbpQOHz8Y/ow3h02o6Adav1pDebWeWz7Kmp1EvhOB5/hmoVnXGSn14QaIv1tR
+	 +z7bxChXS8UXA==
+Date: Thu, 6 Mar 2025 10:57:44 +0100
+From: Ingo Molnar <mingo@kernel.org>
+To: Uros Bizjak <ubizjak@gmail.com>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH -tip] x86/locking/atomic: Use asm_inline for atomic
+ locking insns
+Message-ID: <Z8lxmPmnJhBmPRvl@gmail.com>
+References: <20250228123825.2729925-1-ubizjak@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250306-rss-v8-6-7ab4f56ff423@daynix.com>
-References: <20250306-rss-v8-0-7ab4f56ff423@daynix.com>
-In-Reply-To: <20250306-rss-v8-0-7ab4f56ff423@daynix.com>
-To: Jonathan Corbet <corbet@lwn.net>, 
- Willem de Bruijn <willemdebruijn.kernel@gmail.com>, 
- Jason Wang <jasowang@redhat.com>, "David S. Miller" <davem@davemloft.net>, 
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>, "Michael S. Tsirkin" <mst@redhat.com>, 
- Xuan Zhuo <xuanzhuo@linux.alibaba.com>, Shuah Khan <shuah@kernel.org>, 
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
- netdev@vger.kernel.org, kvm@vger.kernel.org, 
- virtualization@lists.linux-foundation.org, linux-kselftest@vger.kernel.org, 
- Yuri Benditovich <yuri.benditovich@daynix.com>, 
- Andrew Melnychenko <andrew@daynix.com>, 
- Stephen Hemminger <stephen@networkplumber.org>, gur.stavi@huawei.com, 
- Lei Yang <leiyang@redhat.com>, Simon Horman <horms@kernel.org>, 
- Akihiko Odaki <akihiko.odaki@daynix.com>
-X-Mailer: b4 0.14.2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250228123825.2729925-1-ubizjak@gmail.com>
 
-VIRTIO_NET_F_HASH_REPORT allows to report hash values calculated on the
-host. When VHOST_NET_F_VIRTIO_NET_HDR is employed, it will report no
-hash values (i.e., the hash_report member is always set to
-VIRTIO_NET_HASH_REPORT_NONE). Otherwise, the values reported by the
-underlying socket will be reported.
 
-VIRTIO_NET_F_HASH_REPORT requires VIRTIO_F_VERSION_1.
+* Uros Bizjak <ubizjak@gmail.com> wrote:
 
-Signed-off-by: Akihiko Odaki <akihiko.odaki@daynix.com>
----
- drivers/vhost/net.c | 49 +++++++++++++++++++++++++++++--------------------
- 1 file changed, 29 insertions(+), 20 deletions(-)
+> According to:
+> 
+>   https://gcc.gnu.org/onlinedocs/gcc/Size-of-an-asm.html
+> 
+> the usage of asm pseudo directives in the asm template can confuse
+> the compiler to wrongly estimate the size of the generated
+> code.
+> 
+> The LOCK_PREFIX macro expands to several asm pseudo directives, so
+> its usage in atomic locking insns causes instruction length estimate
+> to fail significantly (the specially instrumented compiler reports
+> the estimated length of these asm templates to be 6 instructions long).
+> 
+> This incorrect estimate further causes unoptimal inlining decisions,
+> unoptimal instruction scheduling and unoptimal code block alignments
+> for functions that use these locking primitives.
+> 
+> Use asm_inline instead:
+> 
+>   https://gcc.gnu.org/pipermail/gcc-patches/2018-December/512349.html
+> 
+> which is a feature that makes GCC pretend some inline assembler code
+> is tiny (while it would think it is huge), instead of just asm.
+> 
+> For code size estimation, the size of the asm is then taken as
+> the minimum size of one instruction, ignoring how many instructions
+> compiler thinks it is.
+> 
+> The code size of the resulting x86_64 defconfig object file increases
+> for 33.264 kbytes, representing 1.2% code size increase:
+> 
+>    text    data     bss     dec     hex filename
+> 27450107        4633332  814148 32897587        1f5fa33 vmlinux-old.o
+> 27483371        4633784  814148 32931303        1f67de7 vmlinux-new.o
+> 
+> mainly due to different inlining decisions of -O2 build.
 
-diff --git a/drivers/vhost/net.c b/drivers/vhost/net.c
-index b9b9e9d40951856d881d77ac74331d914473cd56..16b241b44f89820a42c302f3586ea6bb5e0d4289 100644
---- a/drivers/vhost/net.c
-+++ b/drivers/vhost/net.c
-@@ -73,6 +73,7 @@ enum {
- 	VHOST_NET_FEATURES = VHOST_FEATURES |
- 			 (1ULL << VHOST_NET_F_VIRTIO_NET_HDR) |
- 			 (1ULL << VIRTIO_NET_F_MRG_RXBUF) |
-+			 (1ULL << VIRTIO_NET_F_HASH_REPORT) |
- 			 (1ULL << VIRTIO_F_ACCESS_PLATFORM) |
- 			 (1ULL << VIRTIO_F_RING_RESET)
- };
-@@ -1097,9 +1098,11 @@ static void handle_rx(struct vhost_net *net)
- 		.msg_controllen = 0,
- 		.msg_flags = MSG_DONTWAIT,
- 	};
--	struct virtio_net_hdr hdr = {
--		.flags = 0,
--		.gso_type = VIRTIO_NET_HDR_GSO_NONE
-+	struct virtio_net_hdr_v1_hash hdr = {
-+		.hdr = {
-+			.flags = 0,
-+			.gso_type = VIRTIO_NET_HDR_GSO_NONE
-+		}
- 	};
- 	size_t total_len = 0;
- 	int err, mergeable;
-@@ -1110,7 +1113,6 @@ static void handle_rx(struct vhost_net *net)
- 	bool set_num_buffers;
- 	struct socket *sock;
- 	struct iov_iter fixup;
--	__virtio16 num_buffers;
- 	int recv_pkts = 0;
- 
- 	mutex_lock_nested(&vq->mutex, VHOST_NET_VQ_RX);
-@@ -1191,30 +1193,30 @@ static void handle_rx(struct vhost_net *net)
- 			vhost_discard_vq_desc(vq, headcount);
- 			continue;
- 		}
-+		hdr.hdr.num_buffers = cpu_to_vhost16(vq, headcount);
- 		/* Supply virtio_net_hdr if VHOST_NET_F_VIRTIO_NET_HDR */
- 		if (unlikely(vhost_hlen)) {
--			if (copy_to_iter(&hdr, sizeof(hdr),
--					 &fixup) != sizeof(hdr)) {
-+			if (copy_to_iter(&hdr, vhost_hlen,
-+					 &fixup) != vhost_hlen) {
- 				vq_err(vq, "Unable to write vnet_hdr "
- 				       "at addr %p\n", vq->iov->iov_base);
- 				goto out;
- 			}
--		} else {
-+		} else if (likely(set_num_buffers)) {
- 			/* Header came from socket; we'll need to patch
- 			 * ->num_buffers over if VIRTIO_NET_F_MRG_RXBUF
- 			 */
--			iov_iter_advance(&fixup, sizeof(hdr));
-+			iov_iter_advance(&fixup, offsetof(struct virtio_net_hdr_v1, num_buffers));
-+
-+			if (copy_to_iter(&hdr.hdr.num_buffers, sizeof(hdr.hdr.num_buffers),
-+					 &fixup) != sizeof(hdr.hdr.num_buffers)) {
-+				vq_err(vq, "Failed num_buffers write");
-+				vhost_discard_vq_desc(vq, headcount);
-+				goto out;
-+			}
- 		}
- 		/* TODO: Should check and handle checksum. */
- 
--		num_buffers = cpu_to_vhost16(vq, headcount);
--		if (likely(set_num_buffers) &&
--		    copy_to_iter(&num_buffers, sizeof num_buffers,
--				 &fixup) != sizeof num_buffers) {
--			vq_err(vq, "Failed num_buffers write");
--			vhost_discard_vq_desc(vq, headcount);
--			goto out;
--		}
- 		nvq->done_idx += headcount;
- 		if (nvq->done_idx > VHOST_NET_BATCH)
- 			vhost_net_signal_used(nvq);
-@@ -1607,10 +1609,13 @@ static int vhost_net_set_features(struct vhost_net *n, u64 features)
- 	size_t vhost_hlen, sock_hlen, hdr_len;
- 	int i;
- 
--	hdr_len = (features & ((1ULL << VIRTIO_NET_F_MRG_RXBUF) |
--			       (1ULL << VIRTIO_F_VERSION_1))) ?
--			sizeof(struct virtio_net_hdr_mrg_rxbuf) :
--			sizeof(struct virtio_net_hdr);
-+	if (features & (1ULL << VIRTIO_NET_F_HASH_REPORT))
-+		hdr_len = sizeof(struct virtio_net_hdr_v1_hash);
-+	else if (features & ((1ULL << VIRTIO_NET_F_MRG_RXBUF) |
-+			     (1ULL << VIRTIO_F_VERSION_1)))
-+		hdr_len = sizeof(struct virtio_net_hdr_mrg_rxbuf);
-+	else
-+		hdr_len = sizeof(struct virtio_net_hdr);
- 	if (features & (1 << VHOST_NET_F_VIRTIO_NET_HDR)) {
- 		/* vhost provides vnet_hdr */
- 		vhost_hlen = hdr_len;
-@@ -1691,6 +1696,10 @@ static long vhost_net_ioctl(struct file *f, unsigned int ioctl,
- 			return -EFAULT;
- 		if (features & ~VHOST_NET_FEATURES)
- 			return -EOPNOTSUPP;
-+		if ((features & ((1ULL << VIRTIO_F_VERSION_1) |
-+				 (1ULL << VIRTIO_NET_F_HASH_REPORT))) ==
-+		    (1ULL << VIRTIO_NET_F_HASH_REPORT))
-+			return -EINVAL;
- 		return vhost_net_set_features(n, features);
- 	case VHOST_GET_BACKEND_FEATURES:
- 		features = VHOST_NET_BACKEND_FEATURES;
+So my request here would be not more benchmark figures (I don't think 
+it's a realistic expectation for contributors to be able to measure 
+much of an effect with such a type of change, let alone be certain
+what a macro or micro-benchmark measures is causally connected with
+the patch), but I'd like to ask for some qualitative analysis on the
+code generation side:
 
--- 
-2.48.1
+ - +1.2% code size increase is a lot, especially if it's under the 
+   default build flags of the kernel. Where does the extra code come 
+   from?
 
+ - Is there any effect on Clang? Are its inlining decisions around 
+   these asm() statements comparable, worse/better?
+
+A couple of concrete examples would go a long way:
+
+ - "Function XXX was inlined 3 times before the patch, and it was 
+    inlined 30 times after the patch. I have reviewed two such inlining 
+    locations, and they have added more code to unlikely or 
+    failure-handling branches collected near the function epilogue, 
+    while the fast-path of the function was more optimal."
+
+Or you might end up finding:
+
+ - "Function YYY was inlined 3x more frequently after the patch, but 
+    the inlining decision increased register pressure and created less 
+    optimal code in the fast-path, increasing both code size and likely 
+    decreasing fast-path performance."
+
+Obviously we'd be sad about the second case, but it's well within the 
+spectrum of possibilities when we look at "+1.2% object code size 
+increase".
+
+What we cannot do is to throw up our hands and claim "-O2 trades 
+performance for size, and thus this patch improves performance".
+We don't know that for sure and 30 years of kernel development
+created a love-and-hate relationship and a fair level of distrust
+between kernel developers and compiler inlining decisions,
+especially around x86 asm() statements ...
+
+So these are roughly the high level requirements around such patches.
+Does this make sense?
+
+Thanks,
+
+	Ingo
