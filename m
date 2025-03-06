@@ -1,34 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DBC0210F65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC42E211713
 	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 15:26:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741274777; cv=none; b=ZfrrtzzV8kvCWyPARBWiYpGHgD7xecCyMzMByD7QeR5H3QjGkZqPgi7eoP/cwovw72eppCUmSJ3KqvNsIol0jP0kg6AizZmb5/qpX4+NMG8/H3FaxjcD8WR389+wtVWvACNSuRzsAS0/Oi+s2oVfmVuE02gEFCta/H0xEzd2uxM=
+	t=1741274777; cv=none; b=ZbSE2foJ1vxskYkF0oKDJtEvbAx0DiDIN08LpBkvS3KCpXCtVhFpMJofuvL+/BeQVQGBusYt4UpAUJfnZIWfaOXbQ+onkDg9rC7EWxF0ilh3ZQ79BhZ5S4WAYT2wZcdlGBP/WqLGg+RQYPZp2N0Fcfzh/gTzLZEH756KDprJsGs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1741274777; c=relaxed/simple;
-	bh=0qCDHvdoEngc03XGjEYMX1CcSk+AHkizS6HfMqn21eA=;
+	bh=17mbOD+r0B2B1PL26H423Jn9W2tJow3UEGD4nNcawrY=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=NAYf9OB3fsogPavO7j7ej3ym7hRxmL85FMjQGt2RWrdedUXW3SPS+JaCcCTabRVqbUUa0BXD8s1DRgASy2T1Z5hUgKJOZIhLErV4fEgETKUthtc5s57/7w9OmoJuqWSFyviOOE5+6XAkCucZ3in3n6YDNzuTuRi/lsUqwjNE31E=
+	 Content-Type; b=qHhubTD+Qv2v7vpzDiUzUcjwyJN4j6u19/SE+YZJqUMDl1kSeCGLgZz/n2Jwpo+aPJMv/ahUYIsLeOgdHcKmriWohZJHXFxCLbrlMtviQZ8Y+GFCcpMqG9Rb6IapAKqWyNWw2PzhjhfymfR0SOyGuBjDCu6JHDcCppHEZf5bG48=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0037BC4CEE8;
-	Thu,  6 Mar 2025 15:26:16 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F9A6C4CEEB;
+	Thu,  6 Mar 2025 15:26:17 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.98)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1tqD74-00000000Mar-1ZWr;
+	id 1tqD74-00000000Mbp-2xxe;
 	Thu, 06 Mar 2025 10:26:18 -0500
-Message-ID: <20250306152618.232745847@goodmis.org>
+Message-ID: <20250306152618.563300109@goodmis.org>
 User-Agent: quilt/0.68
-Date: Thu, 06 Mar 2025 10:25:49 -0500
+Date: Thu, 06 Mar 2025 10:25:51 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org
 Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Mark Rutland <mark.rutland@arm.com>,
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Vincent Donnefort <vdonnefort@google.com>
-Subject: [for-next][PATCH 01/10] ring-buffer: Allow persistent ring buffers to be mmapped
+ Andrew Morton <akpm@linux-foundation.org>
+Subject: [for-next][PATCH 03/10] ring-buffer: Use kaslr address instead of text delta
 References: <20250306152548.763044302@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -40,172 +39,247 @@ Content-Type: text/plain; charset=UTF-8
 
 From: Steven Rostedt <rostedt@goodmis.org>
 
-The persistent ring buffer uses vmap()'d memory to map the reserved memory
-from boot. But the user space mmap() to the ring buffer requires
-virt_to_page() to return a valid page. But that only works for core kernel
-addresses and not for vmap() addresses.
+Instead of saving off the text and data pointers and using them to compare
+with the current boot's text and data pointers, just save off the KASLR
+offset. Then that can be used to figure out how to read the previous boots
+buffer.
 
-If virt_addr_valid() fails on the page to be mapped, use vmalloc_to_page()
-instead.
+The last_boot_info will now show this offset, but only if it is for a
+previous boot:
 
-Also, the persistent memory uses the page->id for its own purpose where as
-the user mmap buffer currently uses that for the subbuf array mapped to
-user space. If the buffer is a persistent buffer, use the page index into
-that buffer as the identifier instead of the page->id.
+  ~# cat instances/boot_mapped/last_boot_info
+  39000000	[kernel]
 
-That is, the page->id for a persistent buffer, represents the order of the
-buffer is in the link list. ->id == 0 means it is the reader page.
-When a reader page is swapped, the new reader page's ->id gets zero, and
-the old reader page gets the ->id of the page that it swapped with.
+  ~# echo function > instances/boot_mapped/current_tracer
+  ~# cat instances/boot_mapped/last_boot_info
+  # Current
 
-The user space mapping has the ->id is the index of where it was mapped in
-user space and does not change while it is mapped.
+If the KASLR offset saved is for the current boot, the last_boot_info will
+show the value of "current".
 
-Since the persistent buffer is fixed in its location, the index of where
-a page is in the memory range can be used as the "id" to put in the meta
-page array, and it can be mapped in the same order to user space as it is
-in the persistent memory.
-
+Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Vincent Donnefort <vdonnefort@google.com>
-Link: https://lore.kernel.org/20250214130442.3f4fee5d@gandalf.local.home
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Link: https://lore.kernel.org/20250305164608.274956504@goodmis.org
 Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-Tested-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- kernel/trace/ring_buffer.c | 49 ++++++++++++++++++++++++++++++++------
- kernel/trace/trace.c       |  4 ----
- 2 files changed, 42 insertions(+), 11 deletions(-)
+ include/linux/ring_buffer.h |  3 +--
+ kernel/trace/ring_buffer.c  | 31 ++++++++++++-------------------
+ kernel/trace/trace.c        | 30 +++++++++++++++++++++---------
+ kernel/trace/trace.h        |  9 +++++----
+ 4 files changed, 39 insertions(+), 34 deletions(-)
 
+diff --git a/include/linux/ring_buffer.h b/include/linux/ring_buffer.h
+index 17fbb7855295..8de035f4f0d9 100644
+--- a/include/linux/ring_buffer.h
++++ b/include/linux/ring_buffer.h
+@@ -94,8 +94,7 @@ struct trace_buffer *__ring_buffer_alloc_range(unsigned long size, unsigned flag
+ 					       unsigned long range_size,
+ 					       struct lock_class_key *key);
+ 
+-bool ring_buffer_last_boot_delta(struct trace_buffer *buffer, long *text,
+-				 long *data);
++bool ring_buffer_last_boot_delta(struct trace_buffer *buffer, unsigned long *kaslr_addr);
+ 
+ /*
+  * Because the ring buffer is generic, if other users of the ring buffer get
 diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index bb6089c2951e..87caf9d48edb 100644
+index 7b6bd1f3daf4..49c3c46fe2f4 100644
 --- a/kernel/trace/ring_buffer.c
 +++ b/kernel/trace/ring_buffer.c
-@@ -5950,12 +5950,18 @@ static void rb_clear_buffer_page(struct buffer_page *page)
- static void rb_update_meta_page(struct ring_buffer_per_cpu *cpu_buffer)
- {
- 	struct trace_buffer_meta *meta = cpu_buffer->meta_page;
-+	struct page *page;
+@@ -31,6 +31,7 @@
  
- 	if (!meta)
- 		return;
+ #include <asm/local64.h>
+ #include <asm/local.h>
++#include <asm/setup.h>
  
- 	meta->reader.read = cpu_buffer->reader_page->read;
--	meta->reader.id = cpu_buffer->reader_page->id;
-+	/* For boot buffers, the id is the index */
-+	if (cpu_buffer->ring_meta)
-+		meta->reader.id = rb_meta_subbuf_idx(cpu_buffer->ring_meta,
-+						     cpu_buffer->reader_page->page);
-+	else
-+		meta->reader.id = cpu_buffer->reader_page->id;
- 	meta->reader.lost_events = cpu_buffer->lost_events;
+ #include "trace.h"
  
- 	meta->entries = local_read(&cpu_buffer->entries);
-@@ -5963,7 +5969,12 @@ static void rb_update_meta_page(struct ring_buffer_per_cpu *cpu_buffer)
- 	meta->read = cpu_buffer->read;
+@@ -49,8 +50,7 @@ static void update_pages_handler(struct work_struct *work);
+ struct ring_buffer_meta {
+ 	int		magic;
+ 	int		struct_size;
+-	unsigned long	text_addr;
+-	unsigned long	data_addr;
++	unsigned long	kaslr_addr;
+ 	unsigned long	first_buffer;
+ 	unsigned long	head_buffer;
+ 	unsigned long	commit_buffer;
+@@ -550,8 +550,7 @@ struct trace_buffer {
+ 	unsigned long			range_addr_start;
+ 	unsigned long			range_addr_end;
  
- 	/* Some archs do not have data cache coherency between kernel and user-space */
--	flush_dcache_folio(virt_to_folio(cpu_buffer->meta_page));
-+	if (virt_addr_valid(cpu_buffer->meta_page))
-+		page = virt_to_page(cpu_buffer->meta_page);
-+	else
-+		page = vmalloc_to_page(cpu_buffer->meta_page);
-+
-+	flush_dcache_folio(page_folio(page));
+-	long				last_text_delta;
+-	long				last_data_delta;
++	unsigned long			kaslr_addr;
+ 
+ 	unsigned int			subbuf_size;
+ 	unsigned int			subbuf_order;
+@@ -1891,16 +1890,13 @@ static void rb_meta_validate_events(struct ring_buffer_per_cpu *cpu_buffer)
+ 	}
  }
  
- static void
-@@ -6883,23 +6894,38 @@ static void rb_setup_ids_meta_page(struct ring_buffer_per_cpu *cpu_buffer,
- 	struct trace_buffer_meta *meta = cpu_buffer->meta_page;
- 	unsigned int nr_subbufs = cpu_buffer->nr_pages + 1;
- 	struct buffer_page *first_subbuf, *subbuf;
-+	int cnt = 0;
- 	int id = 0;
+-/* Used to calculate data delta */
+-static char rb_data_ptr[] = "";
+-
+-#define THIS_TEXT_PTR		((unsigned long)rb_meta_init_text_addr)
+-#define THIS_DATA_PTR		((unsigned long)rb_data_ptr)
+-
+ static void rb_meta_init_text_addr(struct ring_buffer_meta *meta)
+ {
+-	meta->text_addr = THIS_TEXT_PTR;
+-	meta->data_addr = THIS_DATA_PTR;
++#ifdef CONFIG_RANDOMIZE_BASE
++	meta->kaslr_addr = kaslr_offset();
++#else
++	meta->kaslr_addr = 0;
++#endif
+ }
  
--	subbuf_ids[id] = (unsigned long)cpu_buffer->reader_page->page;
--	cpu_buffer->reader_page->id = id++;
-+	if (cpu_buffer->ring_meta)
-+		id = rb_meta_subbuf_idx(cpu_buffer->ring_meta,
-+					cpu_buffer->reader_page->page);
-+	else
-+		cpu_buffer->reader_page->id = id;
-+
-+	subbuf_ids[id++] = (unsigned long)cpu_buffer->reader_page->page;
-+	cnt++;
- 
- 	first_subbuf = subbuf = rb_set_head_page(cpu_buffer);
- 	do {
-+		if (cpu_buffer->ring_meta)
-+			id = rb_meta_subbuf_idx(cpu_buffer->ring_meta,
-+						subbuf->page);
-+		else
-+			subbuf->id = id;
-+
- 		if (WARN_ON(id >= nr_subbufs))
- 			break;
- 
- 		subbuf_ids[id] = (unsigned long)subbuf->page;
--		subbuf->id = id;
- 
- 		rb_inc_page(&subbuf);
- 		id++;
-+		cnt++;
- 	} while (subbuf != first_subbuf);
- 
-+	WARN_ON(cnt != nr_subbufs);
-+
- 	/* install subbuf ID to kern VA translation */
- 	cpu_buffer->subbuf_ids = subbuf_ids;
- 
-@@ -7064,7 +7090,10 @@ static int __rb_map_vma(struct ring_buffer_per_cpu *cpu_buffer,
- 			goto out;
+ static void rb_range_meta_init(struct trace_buffer *buffer, int nr_pages)
+@@ -1928,8 +1924,7 @@ static void rb_range_meta_init(struct trace_buffer *buffer, int nr_pages)
+ 			meta->first_buffer += delta;
+ 			meta->head_buffer += delta;
+ 			meta->commit_buffer += delta;
+-			buffer->last_text_delta = THIS_TEXT_PTR - meta->text_addr;
+-			buffer->last_data_delta = THIS_DATA_PTR - meta->data_addr;
++			buffer->kaslr_addr = meta->kaslr_addr;
+ 			continue;
  		}
  
--		page = virt_to_page((void *)cpu_buffer->subbuf_ids[s]);
-+		if (virt_addr_valid(cpu_buffer->subbuf_ids[s]))
-+			page = virt_to_page((void *)cpu_buffer->subbuf_ids[s]);
-+		else
-+			page = vmalloc_to_page((void *)cpu_buffer->subbuf_ids[s]);
+@@ -2482,17 +2477,15 @@ struct trace_buffer *__ring_buffer_alloc_range(unsigned long size, unsigned flag
+  *
+  * Returns: The true if the delta is non zero
+  */
+-bool ring_buffer_last_boot_delta(struct trace_buffer *buffer, long *text,
+-				 long *data)
++bool ring_buffer_last_boot_delta(struct trace_buffer *buffer, unsigned long *kaslr_addr)
+ {
+ 	if (!buffer)
+ 		return false;
  
- 		for (; off < (1 << (subbuf_order)); off++, page++) {
- 			if (p >= nr_pages)
-@@ -7210,6 +7239,7 @@ int ring_buffer_map_get_reader(struct trace_buffer *buffer, int cpu)
- 	unsigned long missed_events;
- 	unsigned long reader_size;
- 	unsigned long flags;
-+	struct page *page;
+-	if (!buffer->last_text_delta)
++	if (!buffer->kaslr_addr)
+ 		return false;
  
- 	cpu_buffer = rb_get_mapped_buffer(buffer, cpu);
- 	if (IS_ERR(cpu_buffer))
-@@ -7278,7 +7308,12 @@ int ring_buffer_map_get_reader(struct trace_buffer *buffer, int cpu)
+-	*text = buffer->last_text_delta;
+-	*data = buffer->last_data_delta;
++	*kaslr_addr = buffer->kaslr_addr;
  
- out:
- 	/* Some archs do not have data cache coherency between kernel and user-space */
--	flush_dcache_folio(virt_to_folio(cpu_buffer->reader_page->page));
-+	if (virt_addr_valid(cpu_buffer->meta_page))
-+		page = virt_to_page(cpu_buffer->meta_page);
-+	else
-+		page = vmalloc_to_page(cpu_buffer->meta_page);
-+
-+	flush_dcache_folio(page_folio(page));
- 
- 	rb_update_meta_page(cpu_buffer);
- 
+ 	return true;
+ }
 diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 0e6d517e74e0..25ff37aab00f 100644
+index 25ff37aab00f..41d463e5327c 100644
 --- a/kernel/trace/trace.c
 +++ b/kernel/trace/trace.c
-@@ -8279,10 +8279,6 @@ static int tracing_buffers_mmap(struct file *filp, struct vm_area_struct *vma)
- 	struct trace_iterator *iter = &info->iter;
- 	int ret = 0;
+@@ -50,7 +50,7 @@
+ #include <linux/irq_work.h>
+ #include <linux/workqueue.h>
  
--	/* Currently the boot mapped buffer is not supported for mmap */
--	if (iter->tr->flags & TRACE_ARRAY_FL_BOOT)
--		return -ENODEV;
--
- 	ret = get_snapshot_map(iter->tr);
- 	if (ret)
- 		return ret;
+-#include <asm/setup.h> /* COMMAND_LINE_SIZE */
++#include <asm/setup.h> /* COMMAND_LINE_SIZE and kaslr_offset() */
+ 
+ #include "trace.h"
+ #include "trace_output.h"
+@@ -4193,7 +4193,7 @@ static enum print_line_t print_trace_fmt(struct trace_iterator *iter)
+ 		 * safe to use if the array has delta offsets
+ 		 * Force printing via the fields.
+ 		 */
+-		if ((tr->text_delta || tr->data_delta) &&
++		if ((tr->text_delta) &&
+ 		    event->type > __TRACE_LAST_TYPE)
+ 			return print_event_fields(iter, event);
+ 
+@@ -5990,7 +5990,7 @@ ssize_t tracing_resize_ring_buffer(struct trace_array *tr,
+ 
+ static void update_last_data(struct trace_array *tr)
+ {
+-	if (!tr->text_delta && !tr->data_delta)
++	if (!(tr->flags & TRACE_ARRAY_FL_LAST_BOOT))
+ 		return;
+ 
+ 	/*
+@@ -6003,7 +6003,8 @@ static void update_last_data(struct trace_array *tr)
+ 
+ 	/* Using current data now */
+ 	tr->text_delta = 0;
+-	tr->data_delta = 0;
++
++	tr->flags &= ~TRACE_ARRAY_FL_LAST_BOOT;
+ }
+ 
+ /**
+@@ -6821,8 +6822,17 @@ tracing_last_boot_read(struct file *filp, char __user *ubuf, size_t cnt, loff_t
+ 
+ 	seq_buf_init(&seq, buf, 64);
+ 
+-	seq_buf_printf(&seq, "text delta:\t%ld\n", tr->text_delta);
+-	seq_buf_printf(&seq, "data delta:\t%ld\n", tr->data_delta);
++	/*
++	 * Do not leak KASLR address. This only shows the KASLR address of
++	 * the last boot. When the ring buffer is started, the LAST_BOOT
++	 * flag gets cleared, and this should only report "current".
++	 * Otherwise it shows the KASLR address from the previous boot which
++	 * should not be the same as the current boot.
++	 */
++	if (tr->flags & TRACE_ARRAY_FL_LAST_BOOT)
++		seq_buf_printf(&seq, "%lx\t[kernel]\n", tr->kaslr_addr);
++	else
++		seq_buf_puts(&seq, "# Current\n");
+ 
+ 	return simple_read_from_buffer(ubuf, cnt, ppos, buf, seq_buf_used(&seq));
+ }
+@@ -9206,8 +9216,10 @@ allocate_trace_buffer(struct trace_array *tr, struct array_buffer *buf, int size
+ 						      tr->range_addr_start,
+ 						      tr->range_addr_size);
+ 
+-		ring_buffer_last_boot_delta(buf->buffer,
+-					    &tr->text_delta, &tr->data_delta);
++#ifdef CONFIG_RANDOMIZE_BASE
++		if (ring_buffer_last_boot_delta(buf->buffer, &tr->kaslr_addr))
++			tr->text_delta = kaslr_offset() - tr->kaslr_addr;
++#endif
+ 		/*
+ 		 * This is basically the same as a mapped buffer,
+ 		 * with the same restrictions.
+@@ -10455,7 +10467,7 @@ __init static void enable_instances(void)
+ 		 * to it.
+ 		 */
+ 		if (start) {
+-			tr->flags |= TRACE_ARRAY_FL_BOOT;
++			tr->flags |= TRACE_ARRAY_FL_BOOT | TRACE_ARRAY_FL_LAST_BOOT;
+ 			tr->ref++;
+ 		}
+ 
+diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+index 9c21ba45b7af..abe8169c3e87 100644
+--- a/kernel/trace/trace.h
++++ b/kernel/trace/trace.h
+@@ -348,8 +348,8 @@ struct trace_array {
+ 	unsigned int		mapped;
+ 	unsigned long		range_addr_start;
+ 	unsigned long		range_addr_size;
++	unsigned long		kaslr_addr;
+ 	long			text_delta;
+-	long			data_delta;
+ 
+ 	struct trace_pid_list	__rcu *filtered_pids;
+ 	struct trace_pid_list	__rcu *filtered_no_pids;
+@@ -433,9 +433,10 @@ struct trace_array {
+ };
+ 
+ enum {
+-	TRACE_ARRAY_FL_GLOBAL	= BIT(0),
+-	TRACE_ARRAY_FL_BOOT	= BIT(1),
+-	TRACE_ARRAY_FL_MOD_INIT	= BIT(2),
++	TRACE_ARRAY_FL_GLOBAL		= BIT(0),
++	TRACE_ARRAY_FL_BOOT		= BIT(1),
++	TRACE_ARRAY_FL_LAST_BOOT	= BIT(2),
++	TRACE_ARRAY_FL_MOD_INIT		= BIT(3),
+ };
+ 
+ #ifdef CONFIG_MODULES
 -- 
 2.47.2
 
