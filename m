@@ -1,133 +1,78 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from outgoing.mit.edu (outgoing-auth-1.mit.edu [18.9.28.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13B89272931
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 18:04:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F83126B080
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 18:05:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.9.28.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741284280; cv=none; b=GCvxBYVVWRh+wkkSN57/2ePnJkEphWhWWPEZsoBGQ4j66gPVwpe09VjxXY5nVdpHKiWQNvjF5tBNMWw2UJmxIgr2D3KtOO1IefH4EcL+qyTp8gDb2YNc+mCBa67ldPj1tdJCHyWt///3Yy4FtyZcJ7vjQCx2WeTQkBJ6/hxCSbk=
+	t=1741284308; cv=none; b=QO0y9rf+e5pxao9P+lrW88J8RfInPx+GEquZT1iUDLhVnN4uLHJmq0pKCK6ehCt2p2yAyPxTXQQKRL9w0sgJDTBtn/wnuHb5+27PwA/fMItM7UmHGjKn5ivf1riGeA41MY3kF7X6jnscptbHjtRiPX/m1PSdJ0N/NVgbkdip9ww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741284280; c=relaxed/simple;
-	bh=y5+pGGebbUWRK5H1usbDrXzuwMWW4SWe1mdJ6KkEhaU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=t8I+dAkiK6qjcm+oi4h/s2QS6Pq/NyoPTVZCTJDZk3lGSLy3jXAl4MfeWpswes2/ABM6zBKeK7Vu1rLbz68X+xsyS11vYJADyFKqnPAmEOFOtkveh4Ingk4qhTWfguy+mVYz85yPq8vLo53jsjW53Dmsr5LEHy14Xa8U2QgSWa0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=KDjGor+r; arc=none smtp.client-ip=209.85.218.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="KDjGor+r"
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-ac2400d1c01so128722266b.1
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Mar 2025 10:04:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1741284276; x=1741889076; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=vd2MF6jMwWmVMWwx4ZMQ8WJbC3PZ2CeCHabSL+mH+8U=;
-        b=KDjGor+rO4KqsgRj1yw8/cCUEF3q5CezEmsFGAXeFd7G/GZvy4lpOyy4Yr4rx4DM2C
-         uosK1PQlArnGN8ydAKmSuPfIHDlPKCeCbadff9W6960aff3dTGi0I/weQT7k5kcP8ZXu
-         FnYoUKNxo4+aF+Nb2l0jx6L8GucHyEM0z0RkM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741284276; x=1741889076;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=vd2MF6jMwWmVMWwx4ZMQ8WJbC3PZ2CeCHabSL+mH+8U=;
-        b=lNY7cPVdKbTN7AXr6AeYadznOBNV6ReQC5HRxOs+X8K1vzOUcijXM/C4G5mg91KHPr
-         nU65roL7X4FW2KhAkg2zeUShWDxTjjERHsbD5nsbXfDMdeiNvUJMK6z06cPBivWX/5jS
-         AVEZvHX7mylJRzkJXTYVF2ZwrAkNaRjix4XiFXZbULDXE5gTJQvC6A7VhbgISy5RWfV4
-         YwhtpbkLLJPVdZs/0ELi4EfLqCwQEhhdduppyS3uS3+SFC+qCUOF0I2ZQT6RxbI+uU5v
-         KQJm+gx6vN7gTOQy/3ZdwHnlzSEZ0ZKfes32qfMBzxj27gbzht6NpQ5oyB+ee60cRQdD
-         13cA==
-X-Forwarded-Encrypted: i=1; AJvYcCV1oZO7sPRVujCdmd2nlBGT926wXbi4fewvusuIBk/Zp4A48q7HncnuEa6ohnJIVzPwnlk+j/ocZUn8/2g=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzN1PB60V8AZqd9V/fLBXIX4hPO0Xy7L939uwa9pNLy1Q7SIuIg
-	HMBnjpz4HpIDb3eOVyX6Nf7lk9eperSo3piTd0epussYHKb3X39X2LIoUwa0FfPnalCjokTtxAy
-	IsRE=
-X-Gm-Gg: ASbGnct+eQKSJzxjyGElJzrTU82VqPwfJeWMHl3bYxoCNeevxkRUVBB2ptkP1rIakgH
-	OuwO4lSmi61Ecj5C+CJ4l9w6+L7SlchhNEjOi1OxtL+RdD5d6107fnGKaC7xfDf4yAwvySBZ0ki
-	VFNLcT493eCVodE3lxwAVp2szcHdSBeAHo55ZybZ7tIfKbWnwUX5TqMK/BsGf9sUFdq6MtvnN4n
-	zPDmhYkO75/dl0jATJ8vO5B/8p4RccdaSr65MXCgMhN3AgFzLZC8EuGwFz7PVsB/CnbtG9Rj9w8
-	ieY6+dJg94KpjyYdvupXrgOMHeDFCmac4uB/Yudm04cG3Ft58McnOUIx2UQ4w45zHrMeo1HRQpj
-	yoSnn52FqqUx+GNzi/vI=
-X-Google-Smtp-Source: AGHT+IEZ0X0Hg5tMjEJ/DWhHzajPR4+V+cOd9RyzmJwLzaL5vDCzg4pT5BhMVvPQbOevkW1ycO8o/A==
-X-Received: by 2002:a17:906:c39b:b0:ac2:3a1:5a81 with SMTP id a640c23a62f3a-ac24ebe6bc7mr44919666b.26.1741284276010;
-        Thu, 06 Mar 2025 10:04:36 -0800 (PST)
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com. [209.85.208.49])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac239888261sm129551966b.127.2025.03.06.10.04.35
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 Mar 2025 10:04:35 -0800 (PST)
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5e56b229d60so4012178a12.0
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Mar 2025 10:04:35 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXAj+gslrZeAH9I3i8wSrqxbpRBYcDYw6qB09g4z9y5BDhJtxvHWzthRgfaMkhwEJM/XAgxTd9H2VH2PC8=@vger.kernel.org
-X-Received: by 2002:a17:907:61a2:b0:ac1:e08c:6ac8 with SMTP id
- a640c23a62f3a-ac24e8a57dcmr59352966b.2.1741284274683; Thu, 06 Mar 2025
- 10:04:34 -0800 (PST)
+	s=arc-20240116; t=1741284308; c=relaxed/simple;
+	bh=HnOiXdIEGgi0ajA46Ao4q0OHXUgw4cbdKL3Zt6BVsoQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=t6g53x+SgYATTTHYm+g8AFJhoX6rCE60xWyaIcmMHgEAWz0YB/UZI+F9l2PwrplY0GEBshwPIhL/2sQ+g/JWPUqiHX7XxX9kSRsXDuUuOdUASQbB9VApBo0X2v0QSnCFTKK6ID0Fv7ZLIKnlTuFcW13EL6Ku61gQBMQQCAoz/4E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu; spf=pass smtp.mailfrom=mit.edu; arc=none smtp.client-ip=18.9.28.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mit.edu
+Received: from trampoline.thunk.org (pool-173-48-112-92.bstnma.fios.verizon.net [173.48.112.92])
+	(authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+	by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 526I4Rql015568
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 6 Mar 2025 13:04:27 -0500
+Received: by trampoline.thunk.org (Postfix, from userid 15806)
+	id 419262E010B; Thu, 06 Mar 2025 13:04:27 -0500 (EST)
+Date: Thu, 6 Mar 2025 13:04:27 -0500
+From: "Theodore Ts'o" <tytso@mit.edu>
+To: Aditya Garg <gargaditya08@live.com>
+Cc: Ethan Carter Edwards <ethan@ethancedwards.com>,
+        Sven Peter <sven@svenpeter.dev>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-staging@lists.linux.dev" <linux-staging@lists.linux.dev>,
+        "asahi@lists.linux.dev" <asahi@lists.linux.dev>,
+        "ernesto@corellium.com" <ernesto@corellium.com>
+Subject: Re: [RFC] apfs: thoughts on upstreaming an out-of-tree module
+Message-ID: <20250306180427.GB279274@mit.edu>
+References: <rxefeexzo2lol3qph7xo5tgnykp5c6wcepqewrze6cqfk22leu@wwkiu7yzkpvp>
+ <d0be518b-3abf-497a-b342-ff862dd985a7@app.fastmail.com>
+ <upqd7zp2cwg2nzfuc7spttzf44yr3ylkmti46d5udutme4cpgv@nbi3tpjsbx5e>
+ <795A00D4-503C-4DCB-A84F-FACFB28FA159@live.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAHk-=wjyHsGLx=rxg6PKYBNkPYAejgo7=CbyL3=HGLZLsAaJFQ@mail.gmail.com>
- <20250306113924.20004-1-kprateek.nayak@amd.com> <20250306113924.20004-4-kprateek.nayak@amd.com>
- <20250306123245.GE19868@redhat.com> <20250306124120.GF19868@redhat.com> <39574d99-51a2-4314-989e-6331ca7c0d75@amd.com>
-In-Reply-To: <39574d99-51a2-4314-989e-6331ca7c0d75@amd.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Thu, 6 Mar 2025 08:04:18 -1000
-X-Gmail-Original-Message-ID: <CAHk-=wg10syD6-3BwuQCCKxua3_bdK1gfjiw_DtCqNqe8zXFaA@mail.gmail.com>
-X-Gm-Features: AQ5f1JoHVwZMPlgVDTPqJEc90ra_MHfbaLp-G-nJPvd2lDeghC0Pw92_liw9JP4
-Message-ID: <CAHk-=wg10syD6-3BwuQCCKxua3_bdK1gfjiw_DtCqNqe8zXFaA@mail.gmail.com>
-Subject: Re: [RFC PATCH 3/3] treewide: pipe: Convert all references to
- pipe->{head,tail,max_usage,ring_size} to unsigned short
-To: K Prateek Nayak <kprateek.nayak@amd.com>
-Cc: Oleg Nesterov <oleg@redhat.com>, Rasmus Villemoes <ravi@prevas.dk>, Miklos Szeredi <miklos@szeredi.hu>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Hugh Dickins <hughd@google.com>, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, Jan Kara <jack@suse.cz>, 
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>, Mateusz Guzik <mjguzik@gmail.com>, 
-	"Gautham R. Shenoy" <gautham.shenoy@amd.com>, Neeraj.Upadhyay@amd.com, Ananth.narayan@amd.com, 
-	Swapnil Sapkal <swapnil.sapkal@amd.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <795A00D4-503C-4DCB-A84F-FACFB28FA159@live.com>
 
-On Thu, 6 Mar 2025 at 05:33, K Prateek Nayak <kprateek.nayak@amd.com> wrote:
-> >>
-> >> I dunno... but if we do this, perhaps we should
-> >> s/unsigned int/pipe_index_t instead?
-> >>
-> >> At least this would be more grep friendly.
->
-> Ack. I'll leave the typedef untouched and convert these to use
-> pipe_index_t. This was an experiment so see if anything breaks with u16
-> conversion just to get more testing on that scenario. As Rasmus
-> mentioned, leaving the head and tail as u32 on 64bit will lead to
-> better code generation.
+On Wed, Mar 05, 2025 at 07:23:55AM +0000, Aditya Garg wrote:
+> 
+> This driver tbh will not ‘really’ be helpful as far as T2 Macs are
+> concerned.
+> 
+> On these Macs, the T2 Security Chip encrypts all the APFS partitions
+> on the internal SSD, and the key is in the T2 Chip. Even proprietary
+> APFS drivers cannot read these partitions.  I dunno how it works in
+> Apple Silicon Macs.
 
-Yes, I was going to say the same - please don't change to 'unsigned short'.
+How this workings on Apple Silicon Macs is described in this article:
 
-Judicious use of 'pipe_index_t' may be a good idea, but as I fixed
-some issues Rasmus found, I was also looking at the generated code,
-and on at least x86 where 16-bit generates extra instructions and
-prefixes, it seems marginally better to treat the values as 32-bit,
-and then only do the compares in 16 bits.
+   https://eclecticlight.co/2022/04/23/explainer-filevault/
 
-That only causes a few "movzwl" instructions (at load time), and then
-the occasional "cmpw" (empty check) and "movw" (store) etc.
+It appears such a driver will also be useful if there are external
+SSD's using APFS.  (Although I suspect many external SSD's would end
+up using some other file system that might be more portable like VFS.)
 
-But I only did a very quick "let's look at a few cases of x86-64 also
-using a 16-bit pipe_index_t".
+In terms of making it work with the internal SSD, it sounds like Linux
+would need to talk to the secure enclave on the T2 Security Chip and
+convince it to upload the encryption key into the hardware in-line
+encryption engine.  I don't know if presenting the user's password is
+sufficient, or if there is a requirement that the OS prove that it is
+"approved" software that was loaded via a certified boot chain, which
+various secure enclaves (such as TPM) are wont to do.
 
-So for testing purposes your patch looks fine, but not as something to apply.
-
-If anything, I think we should actively try to remove as many direct
-accesses to these pipe fields as humanly possible. As Oleg said, a lot
-of them should just be cleaned up to use the helpers we already have.
-
-Rasmus found a few cases of that already, like that FIONREAD case
-where it was just doing a lot of open-coding of things that shouldn't
-be open-coded.
-
-I've fixed the two cases he pointed at up as obvious bugs, but it
-would be good to see where else issues like this might lurk.
-
-                 Linus
+	       		      	      - Ted
