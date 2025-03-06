@@ -1,39 +1,44 @@
-Received: from outgoing.mit.edu (outgoing-auth-1.mit.edu [18.9.28.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B01B20E71F
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 16:04:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.9.28.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05B7E145A0B
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 16:06:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741277100; cv=none; b=STDIry4T0Mc7fxl6/x/+Tm0QApaeIcDH0QgtkeA88mk89fCSY+RFgBmKgKfXeEtd2vX7P/aWGu1ajaWRBVpQoJjGyPtvwx21zgcHazB2c980NyBh/Nc0j78ylRiMC6dgdQ1+5HvXju8Zk0lpvGjhGHb4nLFBCCR8iiALfx1kUug=
+	t=1741277172; cv=none; b=GvS4CZ6S1BGcRi8mbwVSzvi9iZKa5VjYAXkbBbINH8OpDacAHTNaKO8DTrc0fKV2HQs/WVGwyoWKpP3k6T0Rev+vhVvLSfH25mVtmZFCApg6qIZTJFHn5ALodJ6GmF7yFKeT/sI/Pvy+bPyRiiV/cLqKXYGklF6MnboCkLVR4ew=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741277100; c=relaxed/simple;
-	bh=cOoGxtcebT3u8VgggsX55aYM+nUJo9Wlfp8eesUGY+M=;
+	s=arc-20240116; t=1741277172; c=relaxed/simple;
+	bh=AGz2/+jVEH/UpIDgDMw9RAN0js7FQBt8mSC8PyN6TBM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZvDbboIv7dSoUVIqiyWvPSZ1x20xvALl7150oe//Ry2IIqsu705EY0HH8ubvpjmXYrLQINDVAhrP9+8tAEE/lQjhtIYsm/d0SKQoBTRsBWZdcULU704Z+hXzRBKMC0QIY6N/VGeWFqHSzapMecQbWfEoHXvhsSpQjdGkjnyNGkE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu; spf=pass smtp.mailfrom=mit.edu; arc=none smtp.client-ip=18.9.28.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mit.edu
-Received: from trampoline.thunk.org (pool-173-48-112-92.bstnma.fios.verizon.net [173.48.112.92])
-	(authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-	by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 526FxGlE006357
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 6 Mar 2025 10:59:16 -0500
-Received: by trampoline.thunk.org (Postfix, from userid 15806)
-	id 3D1372E010B; Thu, 06 Mar 2025 10:59:16 -0500 (EST)
-Date: Thu, 6 Mar 2025 10:59:16 -0500
-From: "Theodore Ts'o" <tytso@mit.edu>
-To: Ojaswin Mujoo <ojaswin@linux.ibm.com>
-Cc: linux-ext4@vger.kernel.org, Jan Kara <jack@suse.com>,
-        Ritesh Harjani <ritesh.list@gmail.com>, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, Baokun Li <libaokun1@huawei.com>,
-        Jan Kara <jack@suse.cz>
-Subject: Re: [PATCH v2 2/2] ext4: protect ext4_release_dquot against freezing
-Message-ID: <20250306155916.GA279274@mit.edu>
-References: <20241121123855.645335-1-ojaswin@linux.ibm.com>
- <20241121123855.645335-3-ojaswin@linux.ibm.com>
- <Z8lBGaJGnM3SZZ-g@li-dc0c254c-257c-11b2-a85c-98b6c1322444.ibm.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=kBxbGlQJOKP4ucHZFvZb9eUwEEd8RK3L/55FQ5fQLON4qEaOgmiKvlTOGy6K2HIdooNlQSgFGiwp0O/PdmwMftbmnK6At1gwVPT9b8MUjIxFVQMuQ/XzqtPR01hhPLccfHDN+l7y9AHw+QySrfm79qeLFydh2NHe7NoxrFAmd1A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JAA4wyOM; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JAA4wyOM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69E5CC4CEE0;
+	Thu,  6 Mar 2025 16:06:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741277171;
+	bh=AGz2/+jVEH/UpIDgDMw9RAN0js7FQBt8mSC8PyN6TBM=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=JAA4wyOMZCR2xqfjUee5QChNp9l2vP/vLtYqKrwV14KnpT34pb2smRVQAJ1JVu3ut
+	 m1XctH0O+udLMxfiCLjRRI/dolqhkmaE+mlGBRj7BKVP0EQyy3GwB3js2T9Sj+PpVe
+	 t854L/R4h2M+wQpiHJ/ZpT8NFs1lWa12O7LWZlQXoVXMF6u2VA0JqUU0J6/PfS5C/I
+	 Ozba9QgXVwf0n3mpGHczWVX7utUlOCbwMbOgeaBX2DgCJa5JYR1eFLZ8eMNtRPzL8/
+	 ylEHDstx+jEwpJWcc/wJWFtIwHJ/E1x3sg3qTuWihH2OH5eIv3rsoswhMDsBZ2ur4l
+	 3zmeXSbOrgwxA==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id 15487CE13D4; Thu,  6 Mar 2025 08:06:11 -0800 (PST)
+Date: Thu, 6 Mar 2025 08:06:11 -0800
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: linux-kernel@vger.kernel.org, jstultz@google.com, sboyd@kernel.org,
+	christian@heusel.eu, kernel-team@meta.com
+Subject: Re: [PATCH clocksource] Defer marking clocksources unstable to
+ kthread
+Message-ID: <e344af94-6516-4bfa-bb28-ea65f6bb81f2@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <f6bb6dd3-7183-42db-8e7e-c9103c0bd5ff@paulmck-laptop>
+ <871pva5zww.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,29 +47,32 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Z8lBGaJGnM3SZZ-g@li-dc0c254c-257c-11b2-a85c-98b6c1322444.ibm.com>
+In-Reply-To: <871pva5zww.ffs@tglx>
 
-On Thu, Mar 06, 2025 at 12:00:49PM +0530, Ojaswin Mujoo wrote:
-> On Thu, Nov 21, 2024 at 06:08:55PM +0530, Ojaswin Mujoo wrote:
-> > Protect ext4_release_dquot against freezing so that we
-> > don't try to start a transaction when FS is frozen, leading
-> > to warnings.
-> > 
-> > Further, avoid taking the freeze protection if a transaction
-> > is already running so that we don't need end up in a deadlock
-> > as described in
-> > 
-> >   46e294efc355 ext4: fix deadlock with fs freezing and EA inodes
-> > 
-> > Suggested-by: Jan Kara <jack@suse.cz>
-> > Signed-off-by: Ojaswin Mujoo <ojaswin@linux.ibm.com>
+On Thu, Mar 06, 2025 at 09:25:19AM +0100, Thomas Gleixner wrote:
+> Paul!
 > 
-> Hey Ted,
+> On Wed, Mar 05 2025 at 09:43, Paul E. McKenney wrote:
 > 
-> Just a ping, I think you might have missed this patch. Let me know if
-> anything else is needed from my side.
+> I'm pretty sure, that I pointed this out to you before:
+> 
+>    "[PATCH subsys] Short description"
+> 
+> is not a valid subject line.
+> 
+> The canonical and documented form is:
+> 
+>    [PATCH] subsys: Short description
+> 
+> Can you please stop making your own rules and thereby breaking the
+> automated workflow of people so they have to manually fix up your stuff?
 
-Yes, I did miss this patch; thanks for the reminder. It looks good
-and I've added it to my tree.
+Apologies!
 
-				- Ted
+I do not recall being chastised on this particular issue, but I clearly
+do need to reread submittingpatches.rst more often.
+
+I have adjusted my scripts for this particular issue and will resend v2
+of this patch.
+
+							Thanx, Paul
