@@ -1,104 +1,115 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EA651FE47F
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 08:48:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0245B195FEC
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Mar 2025 08:49:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741250910; cv=none; b=Ha/2N9a4ESIVL7zBOqowTC9bezwP6A8OKc7bu6fBhgQM75WIoV8RdIJ7jUkdN4nhshY7g8Q/FCvcJCYiNnMvPT4kv/pNmp399cWuBkCu18QPsfH8TQs36DfWaEjIhym+IFV/xd5ApAeePZezEyMP/5QUxavUYCzKwHglLuVxvks=
+	t=1741250982; cv=none; b=aLSwA58otW1aw6tI0pouGU6D1Akl6mZkaZMCGLVo3yDWO6yQ34bBebMDw5oP5jQ/Zh52Btu7gyYpNlhffddG3lJHxaMcfIeHXnIIexPwQfoRfuH6pESJkLUKj3VIOojI9qlxrRvAsrHULbMoKRgT52ISauWvyufv/GNnGqVC8CU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741250910; c=relaxed/simple;
-	bh=fQNHc8Wr/wKivk7VE5YqGJHPEgb1EJ6erNAHT7rMeNE=;
+	s=arc-20240116; t=1741250982; c=relaxed/simple;
+	bh=+JMIF5nv1JW6AAUeomgberOu7YOgUGgzWRtym6vZ8jg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Z38SNRzq5JPzxBy8CbJpgpRyOjlhaOHYBMkQ7TFe7Vke6ly8UovlHKkVfQOmcGa0b/gWePWzw/hlPJgISt45afpXJmxG5PSrNtHmmlEVSsCQqaVusmP5cFZtfYCyJMdcWAV3D/UWdD8prFgJdHDD3wrR2MiJCh6p84nvmhG2px8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ore@pengutronix.de>)
-	id 1tq6th-0003qy-MK; Thu, 06 Mar 2025 09:48:05 +0100
-Received: from pty.whiteo.stw.pengutronix.de ([2a0a:edc0:2:b01:1d::c5])
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <ore@pengutronix.de>)
-	id 1tq6tg-004HjX-0x;
-	Thu, 06 Mar 2025 09:48:04 +0100
-Received: from ore by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ore@pengutronix.de>)
-	id 1tq6tg-00GCes-0a;
-	Thu, 06 Mar 2025 09:48:04 +0100
-Date: Thu, 6 Mar 2025 09:48:04 +0100
-From: Oleksij Rempel <o.rempel@pengutronix.de>
-To: Mark Brown <broonie@kernel.org>
-Cc: "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Woojung Huh <woojung.huh@microchip.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>, Andrew Lunn <andrew@lunn.ch>,
-	kernel@pengutronix.de, linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org, UNGLinuxDriver@microchip.com,
-	Phil Elwell <phil@raspberrypi.org>
-Subject: Re: [PATCH net-next v2 06/10] net: usb: lan78xx: Improve error
- handling in EEPROM and OTP operations
-Message-ID: <Z8lhRCkxvtkB_U3x@pengutronix.de>
-References: <20241204084142.1152696-1-o.rempel@pengutronix.de>
- <20241204084142.1152696-7-o.rempel@pengutronix.de>
- <ac965de8-f320-430f-80f6-b16f4e1ba06d@sirena.org.uk>
+	 Content-Type:Content-Disposition:In-Reply-To; b=rggMXV0MpmJCNszF/OW7214eaqxzKTf7+tetAckLZG7SvAPYj29uezmuTvCyi7VUQ7EGZ3J4tOuMz3OhQzYuYjOubPgefq+Poaxw5mxcmw8lQGVMLq6xEDYUuKQwMCgozFfct/dZRXZo1L6nfnNFHiVcTsO8N5guEwSnWa1noCs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=1n/7bGar; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="1n/7bGar"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-223959039f4so6220495ad.3
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Mar 2025 00:49:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1741250980; x=1741855780; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=XOTsx+ET2udwRwOl4LMvTIaV72hOacAVf21e+cPMpSk=;
+        b=1n/7bGar67f7nv7s2bsctXJIjPlBnjDFsBuskeuLyasftc+5aQC04T+ga68F+rzSqe
+         N8f1pYgF+sbmsy71wPEmpy3ahw8DkhsGIUd2zWV/qnVZ8tDxylG5A3zfNsPRLk6ZR1rD
+         VPwkEGUIrCkAQ2cRzg3y17ydHocL265Y+h3c9VbiArQrO+FdZcTYVuw00/Ebw6pAgwqh
+         DlRp1Sp05j0b8HoxBjDJF/r1RbXjhb5dbhezIxPsDlMoYNLqx/wMLh/BhGvagQJslwbz
+         Ua8bOk2HThV0WtzaodfmaK9pnJAag0UjXxqgpAxmjoZBwVnkjRmFOh5hLuCTfp8vmXDo
+         184Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741250980; x=1741855780;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XOTsx+ET2udwRwOl4LMvTIaV72hOacAVf21e+cPMpSk=;
+        b=RUkYx7yC7rS6NeO0n9+ZLh8Ui05iYNeIynBeqJuHuYgEWZX+PkYvTUwZ1xqCmslr0K
+         Ri7qM4bz1zuwzHRjJMYiK4lVLXIj3/hYj+8mFVEn/vpaTHYLqLbRX2HLf5tiUPIKJQbY
+         w1jC82OroqWnuqZlmbhWIMkHZqmzEAU0wCHiISHGROBCXGyUq/L/UmOvGeA0u9J/eVCu
+         KKqaDWMCEanAX250kiXGsWv+LMhGOzl6qRGLSZecgXqRqi8CBab/Ipi2dVOZO/dD+DqN
+         9v9smrzmz0Sd3frS7EJXGEXBj58/edw7Y34QDOjNQJGtsGHpdBFRCFBR7vqN/L2jMFIt
+         8UCw==
+X-Forwarded-Encrypted: i=1; AJvYcCVHkKUQWMbsVSi8Rhn3lRiw3zqU0WixCi7Wxw2pn2SvEeOJwdyaAQfd19Zfaea7W4XvVj8Gfg3PJM05ELw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzwMKljIqZyhm/09V4KfhFgLfFwe0Zsw4ReeDddB9/7HestUdPM
+	+wy+oVIuEDMNIEWnnNtSXjNGhwtsDWb1iLbkNPLXG8/4vuGtfapwJ1u0kfhk0Jk=
+X-Gm-Gg: ASbGncvHcJNNLi1ZNAruv7qYaOo4+SnApPyWzfQ1g7QF+LeRcWFot2+lSILQFCTxQeS
+	+hpUEKPIX4QgnyjEurHsqMWB/G/W8cdAGCZy+KpS5g5aoQSOPB/djDHTBNtrFtiLEADmNxn1HzU
+	nRszGayDWnz+4nt7dUDQ0KKlO9HXfM9MoTOSOa9vDLJm6npoJwQ8c3Ro+8Z2jM8Jp6U+zKLoRPQ
+	+7ttKTsFXjwe6p9ZOUhyM49PIFyWUrD6IxVaT3CshAlcmKLHk0Y3e24tLOGz4RXXcR9C4AgNKlu
+	W2yHmtXOSiqR1PUEYK4tfuiqHelE0zYv4OP816/5
+X-Google-Smtp-Source: AGHT+IH1GEQtPc3doXxTnYpQvOe64EMdhiCow6f81zGlmJXK3+o6BGbwtqTdcVYdbtsYbbFP1fY7vQ==
+X-Received: by 2002:a05:6a00:148a:b0:736:3fa8:cf7b with SMTP id d2e1a72fcca58-73682beac25mr8907211b3a.13.1741250980111;
+        Thu, 06 Mar 2025 00:49:40 -0800 (PST)
+Received: from ghost ([2601:647:6700:64d0:2536:10cf:d064:60bb])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-736982077dfsm799045b3a.35.2025.03.06.00.49.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Mar 2025 00:49:39 -0800 (PST)
+Date: Thu, 6 Mar 2025 00:49:37 -0800
+From: Charlie Jenkins <charlie@rivosinc.com>
+To: Ignacio Encinas Rubio <ignacio@iencinas.com>
+Cc: linux-kernel-mentees@lists.linux.dev, skhan@linuxfoundation.org,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Alexandre Ghiti <alex@ghiti.fr>, linux-kselftest@vger.kernel.org,
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] selftests: riscv: fix v_exec_initval_nolibc.c
+Message-ID: <Z8lhoTd3BwPWQ0f_@ghost>
+References: <20250305-fix-v_exec_initval_nolibc-v1-1-b87b60e43002@iencinas.com>
+ <Z8jG1ViOUbw79cEN@ghost>
+ <f3bde84d-b53e-4b81-b995-3b81d614b789@iencinas.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ac965de8-f320-430f-80f6-b16f4e1ba06d@sirena.org.uk>
-X-Sent-From: Pengutronix Hildesheim
-X-URL: http://www.pengutronix.de/
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <f3bde84d-b53e-4b81-b995-3b81d614b789@iencinas.com>
 
-Hi Mark,
-
-On Mon, Mar 03, 2025 at 06:02:23PM +0000, Mark Brown wrote:
-> On Wed, Dec 04, 2024 at 09:41:38AM +0100, Oleksij Rempel wrote:
-> > Refine error handling in EEPROM and OTP read/write functions by:
-> > - Return error values immediately upon detection.
-> > - Avoid overwriting correct error codes with `-EIO`.
-> > - Preserve initial error codes as they were appropriate for specific
-> >   failures.
-> > - Use `-ETIMEDOUT` for timeout conditions instead of `-EIO`.
+On Thu, Mar 06, 2025 at 07:31:22AM +0100, Ignacio Encinas Rubio wrote:
 > 
-> This patch (which is in Linus' tree) appears to break booting with a NFS
-> root filesystem on Raspberry Pi 3B+.  There appears to be at least no
-> incoming traffic seen on the device, I've not checked if there's
-> anything outgoing:
 > 
-> [   19.234086] usb 1-1.1.1: new high-speed USB device number 6 using dwc2
-> [   19.394134] brcmfmac: brcmf_sdio_htclk: HT Avail timeout (1000000): clkctl 0x50
-> [   19.710839] lan78xx 1-1.1.1:1.0 enxb827ebea22ac: renamed from eth0
-> Device /sys/class/net/enxb827ebea22ac found
-> done.
-> Begin: Waiting up to 180 secs for any network device to become available ... done.
-> IP-Config: enxb827ebea22ac hardware address b8:27:eb:ea:22:ac mt[   20.663606] lan78xx 1-1.1.1:1.0 enxb827ebea22ac: Link is Down
-> u 1500 DHCP
-> [   22.708103] lan78xx 1-1.1.1:1.0 enxb827ebea22ac: Link is Up - 1Gbps/Full - flow control off
-> IP-Config: no response after 2 secs - giving up
+> On 5/3/25 22:49, Charlie Jenkins wrote:
+> > On Wed, Mar 05, 2025 at 05:39:28PM +0100, Ignacio Encinas wrote:
+> >> Vector registers are zero initialized by the kernel. Stop accepting
+> >> "all ones" as a clean value.
+> >>
+> >> Note that this was not working as expected given that
+> >> 	value == 0xff
+> >> can be assumed to be always false by the compiler as value's range is
+> >> [-128, 127]. Both GCC (-Wtype-limits) and clang
+> >> (-Wtautological-constant-out-of-range-compare) warn about this.
+> > 
+> > This check was included because the "dirty" value is an implementation
+> > detail that I believe is not strongly defined in the ABI. Since linux
+> > does always set this value to zero (currently) we can safely remove this
+> > check. 
+> 
+> Thanks for the review. Just after sending the patch I noticed it should
+> also remove some code that becomes useless after this change: 
+> _prev_value_ and _first_ variables were only needed because two "clean" 
+> values were supported.
+> 
+> I'll send a v2 tomorrow. I'm guessing keeping your "Reviewed-by" and
+> "Tested-by" is the appropriate thing to do as the changes are very
+> simple. Let me know if that's not the case.
+> 
+> Thanks again!
 
-I can't reproduce it without U-boot. Since netboot is used, this adapter
-stays in some kind of preconfugured state. Where can I get the SD image
-which is used on this system?
+Yes, those changes seem small so you can keep the tags :)
 
-Best Regards,
-Oleksij
--- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+- Charlie
+
